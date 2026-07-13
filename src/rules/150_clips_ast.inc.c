@@ -10,12 +10,12 @@ signed int  AST_NewNode(__int16 a1, int a2)
   signed int result; // eax
 
   v2 = a1;
-  v3 = *(_DWORD **)(dword_54DBA8 + 56);
+  v3 = *(_DWORD **)(g_ClipsMemoryTable + 56);
   if ( v3 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 56);
-    *(_DWORD *)(dword_54DBA8 + 56) = *v3;
-    result = dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(g_ClipsMemoryTable + 56) = *v3;
+    result = g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -75,10 +75,10 @@ LABEL_7:
           result = Output_Write(v8, (int)v7, v6);
           break;
         default:
-          v9 = dword_51A960;
-          dword_51A960 = (int)v3;
+          v9 = g_ClipsCurrentExpression;
+          g_ClipsCurrentExpression = (int)v3;
           result = Rules_PrintAtomValue(v2, *v3, *(int **)(v3 + 1));
-          dword_51A960 = v9;
+          g_ClipsCurrentExpression = v9;
           break;
       }
       v3 = *(__int16 **)(v3 + 5);
@@ -108,11 +108,11 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *a2)
     return a2;
   if ( a2 )
   {
-    if ( dword_54E65C != *(_DWORD *)((char *)result + 2) || dword_54E65C == *(_DWORD *)((char *)a2 + 2) )
+    if ( g_Clips_SymbolAnd != *(_DWORD *)((char *)result + 2) || g_Clips_SymbolAnd == *(_DWORD *)((char *)a2 + 2) )
     {
-      if ( dword_54E65C == *(_DWORD *)((char *)result + 2) || dword_54E65C != *(_DWORD *)((char *)a2 + 2) )
+      if ( g_Clips_SymbolAnd == *(_DWORD *)((char *)result + 2) || g_Clips_SymbolAnd != *(_DWORD *)((char *)a2 + 2) )
       {
-        if ( dword_54E65C == *(_DWORD *)((char *)result + 2) && dword_54E65C == *(_DWORD *)((char *)a2 + 2) )
+        if ( g_Clips_SymbolAnd == *(_DWORD *)((char *)result + 2) && g_Clips_SymbolAnd == *(_DWORD *)((char *)a2 + 2) )
         {
           v6 = *(_DWORD *)((char *)result + 6);
           if ( v6 )
@@ -120,22 +120,22 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *a2)
             while ( *(_DWORD *)(v6 + 10) )
               v6 = *(_DWORD *)(v6 + 10);
             *(_DWORD *)(v6 + 10) = *(_DWORD *)((char *)a2 + 6);
-            dword_54DBAC = (int)a2;
-            *a2 = *(_DWORD *)(dword_54DBA8 + 56);
-            *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+            g_ClipsMemFreeListTemp = (int)a2;
+            *a2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+            *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
             return v2;
           }
           else
           {
-            dword_54DBAC = (int)v2;
-            *v2 = *(_DWORD *)(dword_54DBA8 + 56);
-            *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+            g_ClipsMemFreeListTemp = (int)v2;
+            *v2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+            *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
             return a2;
           }
         }
         else
         {
-          result = (_DWORD *)AST_NewNode(10, dword_54E65C);
+          result = (_DWORD *)AST_NewNode(10, g_Clips_SymbolAnd);
           *(_DWORD *)((char *)result + 6) = v7;
           *(_DWORD *)(v7 + 10) = a2;
         }
@@ -151,9 +151,9 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *a2)
         }
         else
         {
-          dword_54DBAC = (int)a2;
-          *a2 = *(_DWORD *)(dword_54DBA8 + 56);
-          *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+          g_ClipsMemFreeListTemp = (int)a2;
+          *a2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+          *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
           return v2;
         }
       }
@@ -170,9 +170,9 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *a2)
       }
       else
       {
-        dword_54DBAC = (int)v2;
-        *v2 = *(_DWORD *)(dword_54DBA8 + 56);
-        *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+        g_ClipsMemFreeListTemp = (int)v2;
+        *v2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
         return a2;
       }
     }
@@ -204,12 +204,12 @@ int  AST_AppendNodeList(int a1, int a2)
 //----- (00494690) --------------------------------------------------------
 void Rules_FlushPPBuffer()
 {
-  if ( dword_51AA28 )
+  if ( g_Clips_PPBuffer )
   {
-    dword_51AA20 = 0;
-    dword_51AA24 = 0;
-    dword_51AA18 = 0;
-    *(_BYTE *)dword_51AA28 = 0;
+    g_ClipsPPBackupOnce = 0;
+    g_Rules_PPBackupTwicePos = 0;
+    g_PPBufferLength = 0;
+    *(_BYTE *)g_Clips_PPBuffer = 0;
   }
 }
 // 51AA18: using guessed type int dword_51AA18;
@@ -222,13 +222,13 @@ signed int Rules_DestroyPPBuffer()
 {
   signed int result; // eax
 
-  dword_51AA20 = 0;
-  dword_51AA24 = 0;
-  dword_51AA18 = 0;
-  if ( dword_51AA28 )
-    result = Mem_SmallBlockFree((_DWORD *)dword_51AA28, dword_51AA1C);
-  dword_51AA28 = 0;
-  dword_51AA1C = 0;
+  g_ClipsPPBackupOnce = 0;
+  g_Rules_PPBackupTwicePos = 0;
+  g_PPBufferLength = 0;
+  if ( g_Clips_PPBuffer )
+    result = Mem_SmallBlockFree((_DWORD *)g_Clips_PPBuffer, g_ClipsPPBufferMax);
+  g_Clips_PPBuffer = 0;
+  g_ClipsPPBufferMax = 0;
   return result;
 }
 // 51AA18: using guessed type int dword_51AA18;
@@ -243,18 +243,18 @@ char * Rules_SavePPBuffer(char *result)
   const char *v1; // esi
 
   v1 = result;
-  if ( dword_51AA10 )
+  if ( g_Rules_PPBufferEnabled )
   {
     strlen(result);
-    if ( (int)(strlen(result) + 1 + dword_51AA18) >= dword_51AA1C )
+    if ( (int)(strlen(result) + 1 + g_PPBufferLength) >= g_ClipsPPBufferMax )
     {
-      dword_51AA28 = (int)Mem_Realloc((char *)dword_51AA28, dword_51AA1C, dword_51AA1C + 512);
-      dword_51AA1C += 512;
+      g_Clips_PPBuffer = (int)Mem_Realloc((char *)g_Clips_PPBuffer, g_ClipsPPBufferMax, g_ClipsPPBufferMax + 512);
+      g_ClipsPPBufferMax += 512;
     }
-    dword_51AA24 = dword_51AA20;
-    dword_51AA20 = dword_51AA18;
-    result = Str_Append(v1, (char *)dword_51AA28, (unsigned int *)&dword_51AA1C, &dword_51AA18);
-    dword_51AA28 = (int)result;
+    g_Rules_PPBackupTwicePos = g_ClipsPPBackupOnce;
+    g_ClipsPPBackupOnce = g_PPBufferLength;
+    result = Str_Append(v1, (char *)g_Clips_PPBuffer, (unsigned int *)&g_ClipsPPBufferMax, &g_PPBufferLength);
+    g_Clips_PPBuffer = (int)result;
   }
   return result;
 }
@@ -271,15 +271,15 @@ int Rules_BackupPPBuffer()
   int v0; // ebx
   int result; // eax
 
-  if ( dword_51AA10 )
+  if ( g_Rules_PPBufferEnabled )
   {
-    if ( dword_51AA28 )
+    if ( g_Clips_PPBuffer )
     {
-      dword_51AA18 = dword_51AA20;
-      v0 = dword_51AA20;
-      dword_51AA20 = dword_51AA24;
-      result = dword_51AA28 + v0;
-      *(_BYTE *)(dword_51AA28 + v0) = 0;
+      g_PPBufferLength = g_ClipsPPBackupOnce;
+      v0 = g_ClipsPPBackupOnce;
+      g_ClipsPPBackupOnce = g_Rules_PPBackupTwicePos;
+      result = g_Clips_PPBuffer + v0;
+      *(_BYTE *)(g_Clips_PPBuffer + v0) = 0;
     }
   }
   return result;
@@ -300,8 +300,8 @@ char *Rules_CopyPPBuffer()
   char v4; // al
   char v5; // al
 
-  v0 = (char *)Mem_SmallBlockAlloc(strlen((const char *)dword_51AA28) + 1);
-  v1 = (char *)dword_51AA28;
+  v0 = (char *)Mem_SmallBlockAlloc(strlen((const char *)g_Clips_PPBuffer) + 1);
+  v1 = (char *)g_Clips_PPBuffer;
   v2 = v0;
   v3 = v0;
   do
@@ -323,7 +323,7 @@ char *Rules_CopyPPBuffer()
 //----- (00494860) --------------------------------------------------------
 int Rules_GetPPBuffer()
 {
-  return dword_51AA28;
+  return g_Clips_PPBuffer;
 }
 // 51AA28: using guessed type int dword_51AA28;
 
@@ -337,9 +337,9 @@ char *__fastcall AST_Append(int a1, int a2)
   *(_DWORD *)&v6[124] = a1;
   v6[0] = 10;
   v2 = 1;
-  if ( dword_51AA14 >= 1 )
+  if ( g_Rules_PPIndentDepth >= 1 )
   {
-    v3 = dword_51AA14;
+    v3 = g_Rules_PPIndentDepth;
     do
       v6[v2++] = 32;
     while ( v2 <= v3 );
@@ -352,7 +352,7 @@ char *__fastcall AST_Append(int a1, int a2)
 //----- (004948C0) --------------------------------------------------------
 int  Rules_IncrementIndentDepth(int result)
 {
-  dword_51AA14 += result;
+  g_Rules_PPIndentDepth += result;
   return result;
 }
 // 51AA14: using guessed type int dword_51AA14;
@@ -360,7 +360,7 @@ int  Rules_IncrementIndentDepth(int result)
 //----- (004948D0) --------------------------------------------------------
 int  Rules_DecrementIndentDepth(int result)
 {
-  dword_51AA14 -= result;
+  g_Rules_PPIndentDepth -= result;
   return result;
 }
 // 51AA14: using guessed type int dword_51AA14;
@@ -368,7 +368,7 @@ int  Rules_DecrementIndentDepth(int result)
 //----- (004948E0) --------------------------------------------------------
 int  Rules_SetIndentDepth(int result)
 {
-  dword_51AA14 = result;
+  g_Rules_PPIndentDepth = result;
   return result;
 }
 // 51AA14: using guessed type int dword_51AA14;
@@ -376,7 +376,7 @@ int  Rules_SetIndentDepth(int result)
 //----- (004948F0) --------------------------------------------------------
 int  Rules_SetPPBufferStatus(int result)
 {
-  dword_51AA10 = result;
+  g_Rules_PPBufferEnabled = result;
   return result;
 }
 // 51AA10: using guessed type int dword_51AA10;
@@ -384,7 +384,7 @@ int  Rules_SetPPBufferStatus(int result)
 //----- (00494900) --------------------------------------------------------
 int Rules_GetPPBufferStatus()
 {
-  return dword_51AA10;
+  return g_Rules_PPBufferEnabled;
 }
 // 51AA10: using guessed type int dword_51AA10;
 
@@ -703,25 +703,25 @@ int Rules_BloadAtomTables()
   Rules_BloadSymbolTable();
   Rules_BloadFloatTable();
   Rules_BloadIntegerTable();
-  Rules_BloadReadBlock((uintptr_t)&dword_51AA38, 4u);
+  Rules_BloadReadBlock((uintptr_t)&g_Rules_BloadBitmapCount, 4u);
   result = Rules_BloadReadBlock((uintptr_t)&byte_count, 4u);
-  if ( dword_51AA38 )
+  if ( g_Rules_BloadBitmapCount )
   {
     buffer = (int)(uintptr_t)Mem_NewArray(byte_count);
     Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, byte_count);
-    table = (int)(uintptr_t)Mem_NewArray(4 * dword_51AA38);
-    dword_54E67C = table;
+    table = (int)(uintptr_t)Mem_NewArray(4 * g_Rules_BloadBitmapCount);
+    g_ClipsBloadBitmapPointerTable = table;
     entry = (unsigned __int8 *)(uintptr_t)(unsigned int)buffer;
-    for ( i = 0; i < dword_51AA38; ++i )
+    for ( i = 0; i < g_Rules_BloadBitmapCount; ++i )
     {
-      *(_DWORD *)(dword_54E67C + 4 * i) = Rules_AddBitmapValue(entry + 1, *entry);
+      *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * i) = Rules_AddBitmapValue(entry + 1, *entry);
       entry += *entry + 1;
     }
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, byte_count);
   }
   else
   {
-    dword_54E67C = 0;
+    g_ClipsBloadBitmapPointerTable = 0;
   }
   return result;
 }
@@ -738,25 +738,25 @@ int Rules_BloadSymbolTable()
   int i; // ebx
   int byte_count; // [esp+0h] [ebp-Ch] BYREF
 
-  Rules_BloadReadBlock((uintptr_t)&dword_51AA2C, 4u);
+  Rules_BloadReadBlock((uintptr_t)&g_Rules_BloadSymbolCount, 4u);
   result = Rules_BloadReadBlock((uintptr_t)&byte_count, 4u);
-  if ( dword_51AA2C )
+  if ( g_Rules_BloadSymbolCount )
   {
     buffer = (int)(uintptr_t)Mem_NewArray(byte_count);
     Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, byte_count);
-    table = (int)(uintptr_t)Mem_NewArray(4 * dword_51AA2C);
-    dword_54E674 = table;
+    table = (int)(uintptr_t)Mem_NewArray(4 * g_Rules_BloadSymbolCount);
+    g_ClipsBloadSymbolPointerArray = table;
     symbol_name = (char *)(uintptr_t)(unsigned int)buffer;
-    for ( i = 0; i < dword_51AA2C; ++i )
+    for ( i = 0; i < g_Rules_BloadSymbolCount; ++i )
     {
-      *(_DWORD *)(dword_54E674 + 4 * i) = (int)(uintptr_t)Str_Intern(symbol_name, 0);
+      *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * i) = (int)(uintptr_t)Str_Intern(symbol_name, 0);
       symbol_name += strlen(symbol_name) + 1;
     }
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, byte_count);
   }
   else
   {
-    dword_54E674 = 0;
+    g_ClipsBloadSymbolPointerArray = 0;
   }
   return result;
 }
@@ -771,20 +771,20 @@ int Rules_BloadFloatTable()
   double *numbers; // edx
   int i; // ecx
 
-  result = Rules_BloadReadBlock((uintptr_t)&dword_51AA30, 4u);
-  if ( dword_51AA30 )
+  result = Rules_BloadReadBlock((uintptr_t)&g_BloadFloatTableCount, 4u);
+  if ( g_BloadFloatTableCount )
   {
-    buffer = (int)(uintptr_t)Mem_NewArray(8 * dword_51AA30);
-    Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, 8 * dword_51AA30);
-    dword_54E670 = (int)(uintptr_t)Mem_NewArray(4 * dword_51AA30);
+    buffer = (int)(uintptr_t)Mem_NewArray(8 * g_BloadFloatTableCount);
+    Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, 8 * g_BloadFloatTableCount);
+    g_Clips_FloatConstantTable = (int)(uintptr_t)Mem_NewArray(4 * g_BloadFloatTableCount);
     numbers = (double *)(uintptr_t)(unsigned int)buffer;
-    for ( i = 0; i < dword_51AA30; ++i )
-      *(_DWORD *)(dword_54E670 + 4 * i) = Rules_AddDoubleValue(numbers[i]);
-    return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 8 * dword_51AA30);
+    for ( i = 0; i < g_BloadFloatTableCount; ++i )
+      *(_DWORD *)(g_Clips_FloatConstantTable + 4 * i) = Rules_AddDoubleValue(numbers[i]);
+    return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 8 * g_BloadFloatTableCount);
   }
   else
   {
-    dword_54E670 = 0;
+    g_Clips_FloatConstantTable = 0;
   }
   return result;
 }
@@ -799,20 +799,20 @@ int Rules_BloadIntegerTable()
   int *integers; // ecx
   int i; // edx
 
-  result = Rules_BloadReadBlock((uintptr_t)&dword_51AA34, 4u);
-  if ( dword_51AA34 )
+  result = Rules_BloadReadBlock((uintptr_t)&g_BloadIntegerTableCount, 4u);
+  if ( g_BloadIntegerTableCount )
   {
-    buffer = (int)(uintptr_t)Mem_NewArray(4 * dword_51AA34);
-    Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, 4 * dword_51AA34);
-    dword_54E678 = (int)(uintptr_t)Mem_NewArray(4 * dword_51AA34);
+    buffer = (int)(uintptr_t)Mem_NewArray(4 * g_BloadIntegerTableCount);
+    Rules_BloadReadBlock((uintptr_t)(unsigned int)buffer, 4 * g_BloadIntegerTableCount);
+    g_Clips_IntegerConstantTable = (int)(uintptr_t)Mem_NewArray(4 * g_BloadIntegerTableCount);
     integers = (int *)(uintptr_t)(unsigned int)buffer;
-    for ( i = 0; i < dword_51AA34; ++i )
-      *(_DWORD *)(dword_54E678 + 4 * i) = Rules_AddIntegerValue(integers[i]);
-    return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 4 * dword_51AA34);
+    for ( i = 0; i < g_BloadIntegerTableCount; ++i )
+      *(_DWORD *)(g_Clips_IntegerConstantTable + 4 * i) = Rules_AddIntegerValue(integers[i]);
+    return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 4 * g_BloadIntegerTableCount);
   }
   else
   {
-    dword_54E678 = 0;
+    g_Clips_IntegerConstantTable = 0;
   }
   return result;
 }
@@ -824,14 +824,14 @@ signed int Rules_FreeBloadAtomTables()
 {
   signed int result; // eax
 
-  if ( dword_54E674 )
-    result = Mem_SmallBlockRelease((_DWORD *)dword_54E674, 4 * dword_51AA2C);
-  if ( dword_54E670 )
-    result = Mem_SmallBlockRelease((_DWORD *)dword_54E670, 4 * dword_51AA30);
-  if ( dword_54E678 )
-    result = Mem_SmallBlockRelease((_DWORD *)dword_54E678, 4 * dword_51AA34);
-  if ( dword_54E67C )
-    return Mem_SmallBlockRelease((_DWORD *)dword_54E67C, 4 * dword_51AA38);
+  if ( g_ClipsBloadSymbolPointerArray )
+    result = Mem_SmallBlockRelease((_DWORD *)g_ClipsBloadSymbolPointerArray, 4 * g_Rules_BloadSymbolCount);
+  if ( g_Clips_FloatConstantTable )
+    result = Mem_SmallBlockRelease((_DWORD *)g_Clips_FloatConstantTable, 4 * g_BloadFloatTableCount);
+  if ( g_Clips_IntegerConstantTable )
+    result = Mem_SmallBlockRelease((_DWORD *)g_Clips_IntegerConstantTable, 4 * g_BloadIntegerTableCount);
+  if ( g_ClipsBloadBitmapPointerTable )
+    return Mem_SmallBlockRelease((_DWORD *)g_ClipsBloadBitmapPointerTable, 4 * g_Rules_BloadBitmapCount);
   return result;
 }
 // 51AA2C: using guessed type int dword_51AA2C;
@@ -848,15 +848,15 @@ int Rules_BloadAllocExpressionArray()
 {
   int result; // eax
 
-  result = Rules_BloadReadBlock((uintptr_t)&dword_54E684, 4u);
-  if ( dword_54E684 )
+  result = Rules_BloadReadBlock((uintptr_t)&g_ClipsBloadExpressionCount, 4u);
+  if ( g_ClipsBloadExpressionCount )
   {
-    result = Mem_HeapAllocWithRetry((_DWORD *)(14 * dword_54E684));
-    dword_54E688 = result;
+    result = Mem_HeapAllocWithRetry((_DWORD *)(14 * g_ClipsBloadExpressionCount));
+    g_ClipsPackedExpressionArray = result;
   }
   else
   {
-    dword_54E688 = 0;
+    g_ClipsPackedExpressionArray = 0;
   }
   return result;
 }
@@ -866,8 +866,8 @@ int Rules_BloadAllocExpressionArray()
 //----- (004951A0) --------------------------------------------------------
 void Rules_BloadRefreshExpressions()
 {
-  if ( dword_54E688 )
-    Rules_BloadAndRefresh(dword_54E684, 14, (void (__fastcall *)(signed int, signed int))Rules_RefreshExpressionEntry);
+  if ( g_ClipsPackedExpressionArray )
+    Rules_BloadAndRefresh(g_ClipsBloadExpressionCount, 14, (void (__fastcall *)(signed int, signed int))Rules_RefreshExpressionEntry);
 }
 // 54E684: using guessed type int dword_54E684;
 // 54E688: using guessed type int dword_54E688;
@@ -895,31 +895,31 @@ int  Rules_RefreshExpressionEntry(__int16 *a1, int a2)
 
   v4 = 14 * a2;
   v5 = *a1;
-  *(_WORD *)(dword_54E688 + 14 * a2) = *a1;
+  *(_WORD *)(g_ClipsPackedExpressionArray + 14 * a2) = *a1;
   if ( v5 < 8u )
   {
     if ( v5 < 3u )
     {
       if ( !v5 )
       {
-        v6 = dword_54E670;
+        v6 = g_Clips_FloatConstantTable;
         v7 = 4 * *(_DWORD *)(a1 + 1);
 LABEL_5:
-        *(_DWORD *)(dword_54E688 + 14 * a2 + 2) = *(_DWORD *)(v7 + v6);
+        *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * a2 + 2) = *(_DWORD *)(v7 + v6);
         v8 = 14 * a2;
 LABEL_6:
-        ++*(_DWORD *)(*(_DWORD *)(v8 + dword_54E688 + 2) + 4);
+        ++*(_DWORD *)(*(_DWORD *)(v8 + g_ClipsPackedExpressionArray + 2) + 4);
         goto LABEL_7;
       }
       if ( v5 <= 1u )
       {
-        v7 = dword_54E678;
+        v7 = g_Clips_IntegerConstantTable;
         v6 = 4 * *(_DWORD *)(a1 + 1);
         goto LABEL_5;
       }
 LABEL_12:
       v8 = 14 * a2;
-      *(_DWORD *)(dword_54E688 + 14 * a2 + 2) = *(_DWORD *)(dword_54E674 + 4 * *(_DWORD *)(a1 + 1));
+      *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * a2 + 2) = *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * *(_DWORD *)(a1 + 1));
       goto LABEL_6;
     }
     if ( v5 <= 3u )
@@ -928,27 +928,27 @@ LABEL_12:
     {
       if ( v5 > 6u )
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = &g_Instance_DummyInstanceRecord;
-        Rules_IncrementRefCountField40(*(_DWORD *)(v4 + dword_54E688 + 2));
+        *(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2) = &g_Instance_DummyInstanceRecord;
+        Rules_IncrementRefCountField40(*(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2));
       }
       else
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = &g_Rules_DummyFactPtr;
-        Rules_IncrementFactRefCount(*(_DWORD *)(v4 + dword_54E688 + 2));
+        *(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2) = &g_Rules_DummyFactPtr;
+        Rules_IncrementFactRefCount(*(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2));
       }
       goto LABEL_7;
     }
     if ( v5 == 5 )
     {
-      *(_DWORD *)(14 * a2 + dword_54E688 + 2) = 0;
+      *(_DWORD *)(14 * a2 + g_ClipsPackedExpressionArray + 2) = 0;
       goto LABEL_7;
     }
 LABEL_26:
-    v16 = dword_54E530[*a1];
+    v16 = g_Clips_PrimitiveEntityTable[*a1];
     if ( !v16 || (*(_BYTE *)(v16 + 1) & 0x40) == 0 )
       goto LABEL_7;
     v8 = 14 * a2;
-    *(_DWORD *)(14 * a2 + dword_54E688 + 2) = *(_DWORD *)(dword_54E67C + 4 * *(_DWORD *)(a1 + 1));
+    *(_DWORD *)(14 * a2 + g_ClipsPackedExpressionArray + 2) = *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * *(_DWORD *)(a1 + 1));
     goto LABEL_6;
   }
   if ( v5 <= 8u )
@@ -961,7 +961,7 @@ LABEL_26:
     {
       if ( v5 == 35 )
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = dword_54E840 + 36 * *(_DWORD *)(a1 + 1);
+        *(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2) = g_DeftemplateRecordTable + 36 * *(_DWORD *)(a1 + 1);
         goto LABEL_7;
       }
       goto LABEL_26;
@@ -972,7 +972,7 @@ LABEL_26:
         goto LABEL_26;
       if ( v5 <= 0x3Cu )
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = dword_51B370 + 56 * *(_DWORD *)(a1 + 1);
+        *(_DWORD *)(v4 + g_ClipsPackedExpressionArray + 2) = g_DefglobalBloadRecords + 56 * *(_DWORD *)(a1 + 1);
         goto LABEL_7;
       }
       if ( v5 != 105 )
@@ -984,8 +984,8 @@ LABEL_26:
       if ( v14 == -1 )
         v15 = 0;
       else
-        v15 = 124 * v14 + dword_51B3AC;
-      *(_DWORD *)(14 * a2 + dword_54E688 + 2) = v15;
+        v15 = 124 * v14 + g_Clips_DefclassArrayBase;
+      *(_DWORD *)(14 * a2 + g_ClipsPackedExpressionArray + 2) = v15;
     }
   }
   else
@@ -994,7 +994,7 @@ LABEL_26:
     {
       if ( v5 == 10 )
       {
-        *(_DWORD *)(dword_54E688 + v4 + 2) = *(_DWORD *)(4 * *(_DWORD *)(a1 + 1) + dword_54DD24);
+        *(_DWORD *)(g_ClipsPackedExpressionArray + v4 + 2) = *(_DWORD *)(4 * *(_DWORD *)(a1 + 1) + g_Rules_BloadFunctionPtrTable);
         goto LABEL_7;
       }
       goto LABEL_26;
@@ -1005,8 +1005,8 @@ LABEL_26:
       if ( v19 == -1 )
         v20 = 0;
       else
-        v20 = 46 * v19 + dword_51B3A0;
-      *(_DWORD *)(14 * a2 + dword_54E688 + 2) = v20;
+        v20 = 46 * v19 + g_DeffunctionBloadRecordArray;
+      *(_DWORD *)(14 * a2 + g_ClipsPackedExpressionArray + 2) = v20;
     }
     else
     {
@@ -1014,24 +1014,24 @@ LABEL_26:
       if ( v17 == -1 )
         v18 = 0;
       else
-        v18 = 40 * v17 + dword_51B378;
-      *(_DWORD *)(dword_54E688 + 14 * a2 + 2) = v18;
+        v18 = 40 * v17 + g_DefgenericMethodArray;
+      *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * a2 + 2) = v18;
     }
   }
 LABEL_7:
   v9 = *(_DWORD *)(a1 + 5);
   v10 = 14 * a2;
   if ( v9 == -1 )
-    *(_DWORD *)(v10 + dword_54E688 + 10) = 0;
+    *(_DWORD *)(v10 + g_ClipsPackedExpressionArray + 10) = 0;
   else
-    *(_DWORD *)(v10 + dword_54E688 + 10) = dword_54E688 + 14 * v9;
+    *(_DWORD *)(v10 + g_ClipsPackedExpressionArray + 10) = g_ClipsPackedExpressionArray + 14 * v9;
   v11 = *(_DWORD *)(a1 + 3);
   v12 = 14 * a2;
-  result = dword_54E688;
+  result = g_ClipsPackedExpressionArray;
   if ( v11 == -1 )
-    *(_DWORD *)(v12 + dword_54E688 + 6) = 0;
+    *(_DWORD *)(v12 + g_ClipsPackedExpressionArray + 6) = 0;
   else
-    *(_DWORD *)(v12 + dword_54E688 + 6) = dword_54E688 + 14 * v11;
+    *(_DWORD *)(v12 + g_ClipsPackedExpressionArray + 6) = g_ClipsPackedExpressionArray + 14 * v11;
   return result;
 }
 // 49526E: variable 'a2' is possibly undefined
@@ -1061,13 +1061,13 @@ signed int Rules_FreeBloadedExpressions()
   int v5; // edi
 
   v0 = 0;
-  if ( dword_54E684 )
+  if ( g_ClipsBloadExpressionCount )
   {
     v1 = 0;
     do
     {
-      v2 = v1 + dword_54E688;
-      v3 = *(_WORD *)(v1 + dword_54E688);
+      v2 = v1 + g_ClipsPackedExpressionArray;
+      v3 = *(_WORD *)(v1 + g_ClipsPackedExpressionArray);
       if ( v3 >= 6u )
       {
         if ( v3 <= 6u )
@@ -1101,13 +1101,13 @@ signed int Rules_FreeBloadedExpressions()
           if ( v3 >= 4u )
           {
 LABEL_13:
-            v5 = dword_54E530[*(__int16 *)(v1 + dword_54E688)];
+            v5 = g_Clips_PrimitiveEntityTable[*(__int16 *)(v1 + g_ClipsPackedExpressionArray)];
             if ( v5 && (*(_BYTE *)(v5 + 1) & 0x40) != 0 )
-              Rules_DecrementBitmapCount(*(_DWORD *)(v1 + dword_54E688 + 2), v1);
+              Rules_DecrementBitmapCount(*(_DWORD *)(v1 + g_ClipsPackedExpressionArray + 2), v1);
             goto LABEL_6;
           }
 LABEL_21:
-          Rules_DecrementSymbolCount(*(_DWORD *)(v1 + dword_54E688 + 2), v1);
+          Rules_DecrementSymbolCount(*(_DWORD *)(v1 + g_ClipsPackedExpressionArray + 2), v1);
           goto LABEL_6;
         }
         Rules_DecrementFloatCount(*(_DWORD *)(v2 + 2), v1);
@@ -1116,11 +1116,11 @@ LABEL_6:
       ++v0;
       v1 += 14;
     }
-    while ( v0 < dword_54E684 );
+    while ( v0 < g_ClipsBloadExpressionCount );
   }
-  result = 14 * dword_54E684;
-  if ( 14 * dword_54E684 )
-    return Mem_ReleasePoolBlock(dword_54E688, 14 * dword_54E684);
+  result = 14 * g_ClipsBloadExpressionCount;
+  if ( 14 * g_ClipsBloadExpressionCount )
+    return Mem_ReleasePoolBlock(g_ClipsPackedExpressionArray, 14 * g_ClipsBloadExpressionCount);
   return result;
 }
 // 49564B: simplified comparisons for 'ax.2': >=3u && !=3 became >=4u
@@ -1140,13 +1140,13 @@ int Rules_CountHashedExpressions()
 
   for ( i = 0; i != 2012; i += 4 )
   {
-    result = dword_51A9FC;
-    for ( j = *(_DWORD *)(i + dword_51A9FC); j; j = *(_DWORD *)(v4 + 12) )
+    result = g_ExpressionHashTable;
+    for ( j = *(_DWORD *)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(v4 + 12) )
     {
       Rules_MarkReferencedFunctions(*(__int16 **)(j + 8));
-      *(_DWORD *)(v3 + 16) = dword_54E680;
+      *(_DWORD *)(v3 + 16) = g_ClipsExpressionNodeIndex;
       result = AST_CountTreeNodes(*(_DWORD *)(v3 + 8));
-      dword_54E680 += result;
+      g_ClipsExpressionNodeIndex += result;
     }
   }
   return result;
@@ -1167,8 +1167,8 @@ __int16 * Rules_AssignHashedExpressionIndices(int a1)
 
   for ( i = 0; i != 2012; i += 4 )
   {
-    result = (__int16 *)dword_51A9FC;
-    for ( j = *(_DWORD *)(i + dword_51A9FC); j; j = *(_DWORD *)(v5 + 12) )
+    result = (__int16 *)g_ExpressionHashTable;
+    for ( j = *(_DWORD *)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(v5 + 12) )
       result = Rules_BsaveWriteExpression(*(__int16 **)(j + 8), a1);
   }
   return result;
@@ -1183,7 +1183,7 @@ int Rules_InvokeConstructCallbacks()
   int result; // eax
   int v2; // edx
 
-  for ( i = dword_51AA3C; i; i = *(_DWORD *)(v2 + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(v2 + 36) )
   {
     while ( !*(_DWORD *)(i + 20) )
     {
@@ -1219,14 +1219,14 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int a2)
 
   for ( i = result; i; i = *(__int16 **)(v7 + 10) )
   {
-    v4 = ++dword_54E680;
+    v4 = ++g_ClipsExpressionNodeIndex;
     v14 = *i;
     if ( *(_DWORD *)(i + 3) )
       v16 = v4;
     else
       v16 = -1;
     if ( *(_DWORD *)(i + 5) )
-      v17 = dword_54E680 + AST_CountTreeNodes(*(_DWORD *)(i + 3));
+      v17 = g_ClipsExpressionNodeIndex + AST_CountTreeNodes(*(_DWORD *)(i + 3));
     else
       v17 = -1;
     v5 = *i;
@@ -1309,7 +1309,7 @@ LABEL_42:
       if ( v5 > 4u )
         goto LABEL_42;
     }
-    v10 = dword_54E530[*i];
+    v10 = g_Clips_PrimitiveEntityTable[*i];
     if ( v10 && (*(_BYTE *)(v10 + 1) & 0x40) != 0 )
     {
 LABEL_8:
@@ -1352,7 +1352,7 @@ const void * Rules_BsaveWriteConstraints(int a1)
   v12[0] = 0;
   do
   {
-    for ( i = *(_DWORD *)(dword_54E694 + v2); i; ++v3 )
+    for ( i = *(_DWORD *)(g_ConstraintHashTable + v2); i; ++v3 )
     {
       *(_WORD *)(i + 4) = v3;
       ++v12[0];
@@ -1373,8 +1373,8 @@ const void * Rules_BsaveWriteConstraints(int a1)
   {
     for ( j = 0; j != 668; j += 4 )
     {
-      result = (const void *)dword_54E694;
-      for ( k = *(int **)(j + dword_54E694); k; k = *(int **)(v10 + 30) )
+      result = (const void *)g_ConstraintHashTable;
+      for ( k = *(int **)(j + g_ConstraintHashTable); k; k = *(int **)(v10 + 30) )
       {
         Rules_PackConstraintRecord(k, (int)v11);
         result = Rules_BsaveWriteBlock(24, a1, v11);
@@ -1484,11 +1484,11 @@ int Rules_BloadConstraints()
 {
   int result; // eax
 
-  result = Rules_BloadReadBlock((uintptr_t)&dword_54E690, 4u);
-  if ( dword_54E690 )
+  result = Rules_BloadReadBlock((uintptr_t)&g_Clips_BloadedConstraintCount, 4u);
+  if ( g_Clips_BloadedConstraintCount )
   {
-    dword_54E68C = Mem_HeapAllocWithRetry((_DWORD *)(42 * dword_54E690));
-    return Rules_BloadAndRefresh(dword_54E690, 24, (void (__fastcall *)(signed int, signed int))Rules_UpdateBloadedConstraint);
+    g_ClipsConstraintRecordArrayBase = Mem_HeapAllocWithRetry((_DWORD *)(42 * g_Clips_BloadedConstraintCount));
+    return Rules_BloadAndRefresh(g_Clips_BloadedConstraintCount, 24, (void (__fastcall *)(signed int, signed int))Rules_UpdateBloadedConstraint);
   }
   return result;
 }
@@ -1528,7 +1528,7 @@ int  Rules_UpdateBloadedConstraint(_DWORD *a1, int a2)
   int v30; // edi
   int v31; // edx
 
-  result = dword_54E68C + 42 * a2;
+  result = g_ClipsConstraintRecordArrayBase + 42 * a2;
   v4 = *a1;
   *(_BYTE *)result &= ~1u;
   *(_DWORD *)result |= v4 & 1;
@@ -1585,25 +1585,25 @@ int  Rules_UpdateBloadedConstraint(_DWORD *a1, int a2)
   if ( v21 == -1 )
     v23 = 0;
   else
-    v23 = dword_54E688 + 14 * v21;
+    v23 = g_ClipsPackedExpressionArray + 14 * v21;
   *(_DWORD *)(result + 6) = v23;
   v24 = v22[2];
   if ( v24 == -1 )
     v25 = 0;
   else
-    v25 = dword_54E688 + 14 * v24;
+    v25 = g_ClipsPackedExpressionArray + 14 * v24;
   *(_DWORD *)(result + 10) = v25;
   v26 = v22[3];
   if ( v26 == -1 )
     v27 = 0;
   else
-    v27 = dword_54E688 + 14 * v26;
+    v27 = g_ClipsPackedExpressionArray + 14 * v26;
   *(_DWORD *)(result + 14) = v27;
   v28 = v22[4];
   if ( v28 == -1 )
     v29 = 0;
   else
-    v29 = dword_54E688 + 14 * v28;
+    v29 = g_ClipsPackedExpressionArray + 14 * v28;
   *(_DWORD *)(result + 18) = v29;
   v30 = v22[5];
   if ( v30 == -1 )
@@ -1613,7 +1613,7 @@ int  Rules_UpdateBloadedConstraint(_DWORD *a1, int a2)
   }
   else
   {
-    v31 = 14 * v30 + dword_54E688;
+    v31 = 14 * v30 + g_ClipsPackedExpressionArray;
     *(_DWORD *)(result + 26) = 0;
     *(_DWORD *)(result + 22) = v31;
   }
@@ -1627,10 +1627,10 @@ signed int Rules_ClearBloadedConstraints()
 {
   signed int result; // eax
 
-  if ( dword_54E690 )
+  if ( g_Clips_BloadedConstraintCount )
   {
-    result = Mem_ReleasePoolBlock(dword_54E68C, 42 * dword_54E690);
-    dword_54E690 = 0;
+    result = Mem_ReleasePoolBlock(g_ClipsConstraintRecordArrayBase, 42 * g_Clips_BloadedConstraintCount);
+    g_Clips_BloadedConstraintCount = 0;
   }
   return result;
 }
@@ -1694,7 +1694,7 @@ signed int  Rules_PerformBsave(const CHAR *a1, DWORD a2, int a3)
     {
       Module_BeginEnum();
       Rules_BsaveWriteHeader(v5);
-      dword_54E680 = v6;
+      g_ClipsExpressionNodeIndex = v6;
       Event_ClearHandlers();
       Rules_ClearAtomInUseMarks();
       Rules_CountHashedExpressions();
@@ -1702,8 +1702,8 @@ signed int  Rules_PerformBsave(const CHAR *a1, DWORD a2, int a3)
       Rules_SetAtomicValueIndices(0);
       Rules_BsaveWriteFunctionNames(v5);
       Rules_BsaveAtomTables(v5);
-      Rules_BsaveWriteBlock(v7, v5, &dword_54E680);
-      for ( i = dword_51AA3C; i; i = *(_DWORD *)(i + 36) )
+      Rules_BsaveWriteBlock(v7, v5, &g_ClipsExpressionNodeIndex);
+      for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(i + 36) )
       {
         if ( *(_DWORD *)(i + 24) )
         {
@@ -1713,12 +1713,12 @@ signed int  Rules_PerformBsave(const CHAR *a1, DWORD a2, int a3)
         }
       }
       Rules_BsaveWriteEndTag(v8, v8);
-      dword_54E680 = 0;
+      g_ClipsExpressionNodeIndex = 0;
       Rules_AssignHashedExpressionIndices(v11);
       Rules_InvokeConstructCallbacks();
-      dword_54E680 = v12;
+      g_ClipsExpressionNodeIndex = v12;
       Rules_BsaveWriteConstraints(v13);
-      for ( j = dword_51AA3C; j; j = *(_DWORD *)(j + 36) )
+      for ( j = g_BinaryItemListHead; j; j = *(_DWORD *)(j + 36) )
       {
         if ( *(_DWORD *)(j + 28) )
         {

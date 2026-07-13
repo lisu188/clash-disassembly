@@ -148,28 +148,28 @@ TEST(cov3_04_parser, register_procedural_full_success_chain) {
  * of bugs described at the top of this file). */
 TEST(cov3_04_dependents, token_mismatch_returns_early) {
   static unsigned char argnode[256];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argnode, 0, sizeof argnode);
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   CHECK_EQ((intptr_t)Rules_Dependents(0.0), -1);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_04_dependents, token_match_enters_body) {
   static unsigned char anchor[64];
   static unsigned char node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   *(_DWORD *)(anchor + 6) = (int)(intptr_t)node; /* one arg node -> count 1 */
   *(_DWORD *)(node + 10) = 0;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   TOUCH(Rules_Dependents(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_ClassSlotsCommand: previously reached only 3/6 lines. The
@@ -188,15 +188,15 @@ TEST(cov3_04_dependents, token_match_enters_body) {
 TEST(cov3_04_classslots, empty_args_reaches_error_branch) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argnode, 0, sizeof argnode);
   memset(funcrec, 0, sizeof funcrec);
   memset(symnode, 0, sizeof symnode);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec; /* Rules_RtnArgCount()==0 */
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Class_ClassSlotsCommand(1, 1.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_FloatFunction: the existing test (test_cov16.c) uses an empty
@@ -209,15 +209,15 @@ TEST(cov3_04_classslots, empty_args_reaches_error_branch) {
 TEST(cov3_04_floatfn, token_match_enters_parsevaluelist_line) {
   static unsigned char anchor[64];
   static unsigned char node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   *(_DWORD *)(anchor + 6) = (int)(intptr_t)node;
   *(_DWORD *)(node + 2) = (int)(intptr_t)node; /* self-pointer: avoids a NULL deref */
   *(_DWORD *)(node + 10) = 0;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_FloatFunction(1, 2, 3, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_MathParseSingleArg: same shape as Rules_FloatFunction above --
@@ -228,16 +228,16 @@ TEST(cov3_04_floatfn, token_match_enters_parsevaluelist_line) {
 TEST(cov3_04_mathparse, token_match_enters_parsevaluelist_line) {
   static unsigned char anchor[64];
   static unsigned char node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   double out = 0.0;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   *(_DWORD *)(anchor + 6) = (int)(intptr_t)node;
   *(_DWORD *)(node + 2) = (int)(intptr_t)node;
   *(_DWORD *)(node + 10) = 0;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MathParseSingleArg(&out, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_TestConstraintAttributeParsedFlag: every branch past the first

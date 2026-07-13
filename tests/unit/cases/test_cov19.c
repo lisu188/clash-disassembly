@@ -469,7 +469,7 @@ TEST(cov19_range, loop_entered_with_nonzero_bound) {
 
   *(void **)((char *)constraint + 10) = bound; /* v4 valid; v5 unavoidably bogus */
   TOUCH(Rules_ValueSatisfiesRangeConstraint(
-      1, (int)dword_54DD60, (int)(intptr_t)constraint));
+      1, (int)g_Clips_NegativeInfinitySymbol, (int)(intptr_t)constraint));
 }
 
 /* ---- IO_ScanfDigitValue ----

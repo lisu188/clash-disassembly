@@ -86,18 +86,18 @@ static void cov3_07_arg1(unsigned char *anchor, unsigned char *node,
   *(int *)(node + 2) = (int)(intptr_t)valptr;
   *(int *)(node + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 TEST(cov3_07_rulesload, filename_open_fails_cleanly) {
   static unsigned char anchor[32], node[32];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov3_07_missing_star_file.bin";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   valnode[4] = (int)(intptr_t)path; /* offset+16 payload slot */
   cov3_07_arg1(anchor, node, 3, valnode);
   CHECK_EQ(Rules_LoadStarCommand(0, 0.0), 0);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* Rules_HostRemoveFile has the exact same Lexer_TokenExpect(1) +
@@ -109,11 +109,11 @@ TEST(cov3_07_hostremovefile, filename_resolves_to_real_string) {
   static unsigned char anchor[32], node[32];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov3_07_missing_bload_file.bin";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   valnode[4] = (int)(intptr_t)path;
   cov3_07_arg1(anchor, node, 3, valnode);
   TOUCH(Rules_HostRemoveFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =======================================================================
@@ -133,12 +133,12 @@ TEST(cov3_07_hostremovefile, filename_resolves_to_real_string) {
  * scope of this batch. ==================================================== */
 TEST(cov3_07_rulespatch, module_enum_one_trip_then_end) {
   static _DWORD fakeModule[16];
-  int savedNextEnum = dword_51A9AC;
+  int savedNextEnum = g_DefmoduleListHead;
   Mem_InitReserveBlock(0, 0);
   memset(fakeModule, 0, sizeof fakeModule);
-  dword_51A9AC = (int)(intptr_t)fakeModule;
+  g_DefmoduleListHead = (int)(intptr_t)fakeModule;
   TOUCH(Rules_PatchDeftemplateSlotModuleRef(0, 42));
-  dword_51A9AC = savedNextEnum;
+  g_DefmoduleListHead = savedNextEnum;
 }
 
 /* =======================================================================
@@ -156,14 +156,14 @@ TEST(cov3_07_rulesmath, csch_retry_for_leftover_register_luck) {
   static unsigned char argnode[256];
   char pad[256]; /* perturb stack contents between calls */
   int i;
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argnode, 0, sizeof argnode);
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   for (i = 0; i < 4; ++i) {
     memset(pad, i, (size_t)(37 + i * 11));
     TOUCH(Rules_MathCsch(0, 0, 0, 0.0));
   }
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =======================================================================

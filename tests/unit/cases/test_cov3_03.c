@@ -89,11 +89,11 @@ TEST(cov3_03_castle, request_management_screen_exit) {
  * the guard: `return Class_MessageHandlerListFunction(0, 0);`. */
 TEST(cov3_03_class, getdefmessagehandlerlist_zero_args) {
   static unsigned char argctx[64];
-  int savedCtx = dword_51A960;
+  int savedCtx = g_ClipsCurrentExpression;
   memset(argctx, 0, sizeof argctx);
-  dword_51A960 = (int)(intptr_t)argctx;
+  g_ClipsCurrentExpression = (int)(intptr_t)argctx;
   TOUCH(Class_GetDefmessageHandlerListCommand(1, 1.0));
-  dword_51A960 = savedCtx;
+  g_ClipsCurrentExpression = savedCtx;
 }
 
 /* ---- Class_ParseClassNameArg ----
@@ -113,20 +113,20 @@ TEST(cov3_03_class, getdefmessagehandlerlist_zero_args) {
 TEST(cov3_03_class, parseclassnamearg_evaluation_halted) {
   static unsigned char argctx[64];
   static _DWORD funcrec[8], symnode[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
   memset(argctx, 0, sizeof argctx);
   memset(funcrec, 0, sizeof funcrec);
   memset(symnode, 0, sizeof symnode);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argctx + 2) = (_DWORD)(intptr_t)funcrec;
-  dword_51A960 = (int)(intptr_t)argctx;
-  dword_51A964 = 1;
+  g_ClipsCurrentExpression = (int)(intptr_t)argctx;
+  g_ClipsEvaluationError = 1;
 
   TOUCH(Class_ParseClassNameArg(1, 1.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* ---- Defgeneric_ClearDefgenerics / Defgeneric_RemoveConstruct ----
@@ -190,29 +190,29 @@ TEST(cov3_03_instances, list_for_class_or_module_a3_nonzero_a4_nonzero) {
 TEST(cov3_03_rules, bload_command_one_arg) {
   static unsigned char argctx[64];
   static unsigned char argnode1[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argctx, 0, sizeof argctx);
   memset(argnode1, 0, sizeof argnode1);
   *(int *)(argctx + 6) = (int)(intptr_t)argnode1; /* one-node chain, next==0 */
-  dword_51A960 = (int)(intptr_t)argctx;
+  g_ClipsCurrentExpression = (int)(intptr_t)argctx;
 
   TOUCH(Rules_BloadCommand(0, 0.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_03_rules, host_floatp_one_arg) {
   static unsigned char argctx[64];
   static unsigned char argnode1[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argctx, 0, sizeof argctx);
   memset(argnode1, 0, sizeof argnode1);
   *(int *)(argctx + 6) = (int)(intptr_t)argnode1;
-  dword_51A960 = (int)(intptr_t)argctx;
+  g_ClipsCurrentExpression = (int)(intptr_t)argctx;
 
   TOUCH(Rules_HostFloatp(0.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_ResetDataObjectValue ----

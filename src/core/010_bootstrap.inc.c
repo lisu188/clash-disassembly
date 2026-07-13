@@ -11,7 +11,7 @@ int App_Shutdown()
   Noop_AppShutdownPreAudioCloseHook();
   CSS_Close();
   Noop_AppShutdownPostAudioCloseHook(v0);
-  return Render_BeginModeSwitch(&unk_51D4C0);
+  return Render_BeginModeSwitch(&g_MainRenderDevice);
 }
 // 401036: variable 'v0' is possibly undefined
 // 4207F0: using guessed type int __thiscall nullsub_2(_DWORD);
@@ -32,7 +32,7 @@ int  Game_Init(int a1, char a2, DWORD a3)
   {
     gameData = 0;
   }
-  dword_5202C0 = 0;
+  g_WorldMapBackgroundSpriteSet = 0;
   return result;
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);

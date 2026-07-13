@@ -187,18 +187,18 @@ TEST(cov2_05_numformcompat, via_parseform_invalid_tag) {
  * through to Rules_Save/Rules_OpenFileErrorMessage. */
 TEST(cov2_05_savecmd, empty_arglist) {
   static _DWORD anchor[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_SaveCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_05_savecmd, one_arg_filename) {
   static _DWORD anchor[16];
   static _DWORD node[16];
   static char fname[32] = "/tmp/cov2_05_save.tmp";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
   memset(node, 0, sizeof(node));
   *(short *)node = 2;                              /* success tag */
@@ -206,9 +206,9 @@ TEST(cov2_05_savecmd, one_arg_filename) {
   node[4] = (_DWORD)(intptr_t)fname;               /* value at node+16 */
   *(_DWORD *)((char *)node + 10) = 0;               /* terminate chain */
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_SaveCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_FloatFunction: Lexer_TokenExpect(1) + Lexer_ParseValueList(1,
@@ -217,18 +217,18 @@ TEST(cov2_05_savecmd, one_arg_filename) {
  * needs the atom/reserve arenas bootstrapped. */
 TEST(cov2_05_floatfn, empty_arglist) {
   static _DWORD anchor[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_FloatFunction(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_05_floatfn, integer_arg_coerced) {
   static _DWORD anchor[16];
   static _DWORD node[16];
   static _DWORD valrec[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   memset(anchor, 0, sizeof(anchor));
@@ -239,9 +239,9 @@ TEST(cov2_05_floatfn, integer_arg_coerced) {
   *(_DWORD *)((char *)node + 2) = (_DWORD)(intptr_t)valrec;
   *(_DWORD *)((char *)node + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_FloatFunction(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- WCIsvListBase_PopUntilMatchOrEmpty: the empty-immediately case was
@@ -285,11 +285,11 @@ TEST(cov2_05_wcisv, pop_until_match_found) {
  * per-node recipe as test_cov11.c), followed by Rules_RenameFile. */
 TEST(cov2_05_hostrenamefile, empty_arglist) {
   static _DWORD anchor[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_HostRenameFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_05_hostrenamefile, two_args_success) {
@@ -297,7 +297,7 @@ TEST(cov2_05_hostrenamefile, two_args_success) {
   static _DWORD node1[16], node2[16];
   static char nameA[32] = "/tmp/cov2_05_old.tmp";
   static char nameB[32] = "/tmp/cov2_05_new.tmp";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
   memset(node1, 0, sizeof(node1));
   memset(node2, 0, sizeof(node2));
@@ -313,9 +313,9 @@ TEST(cov2_05_hostrenamefile, two_args_success) {
   *(_DWORD *)((char *)node2 + 10) = 0;
 
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node1;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_HostRenameFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- MainMenu_RequestCreditsCinematic: never called by any prior batch. */
@@ -364,11 +364,11 @@ TEST(cov2_05_moduleinit, register_defmodules) {
  * fallback. */
 TEST(cov2_05_deletefn, empty_arglist) {
   static _DWORD a1buf[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(a1buf, 0, sizeof(a1buf));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
   TOUCH(Rules_DeleteFunction(a1buf, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_05_deletefn, three_arg_chain) {
@@ -376,7 +376,7 @@ TEST(cov2_05_deletefn, three_arg_chain) {
   static _DWORD anchor[16];
   static _DWORD node1[16], node2[16], node3[16];
   static _DWORD val1[8], val2[8], val3[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -409,9 +409,9 @@ TEST(cov2_05_deletefn, three_arg_chain) {
   *(_DWORD *)((char *)node3 + 10) = 0;
 
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node1;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_DeleteFunction(a1buf, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_GenerateDefaultSlotHandlersAndFlag: two independent do-while
@@ -473,16 +473,16 @@ TEST(cov2_05_asthashidx, null_and_nonnull) {
 TEST(cov2_05_hostintegerp, single_integer_arg) {
   static _DWORD anchor[16];
   static _DWORD node[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
   memset(node, 0, sizeof(node));
   *(short *)node = 1; /* integer tag */
   *(_DWORD *)((char *)node + 2) = (_DWORD)(intptr_t)node;
   *(_DWORD *)((char *)node + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_HostIntegerp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_ClassSlotsCommand: Class_ParseClassNameAndInheritFlag against a
@@ -557,11 +557,11 @@ TEST(cov2_05_garrisoncount, one_non_special_occupied_slot) {
  * under isolation). */
 TEST(cov2_05_resetcmd, empty_arglist_reset) {
   static _DWORD anchor[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof(anchor));
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_ResetCommand());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_CoshBuiltin: Rules_MathParseSingleArg's failure path is already
@@ -572,7 +572,7 @@ TEST(cov2_05_coshbuiltin, single_integer_arg_success) {
   static _DWORD anchor[16];
   static _DWORD node[16];
   static _DWORD valrec[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   memset(anchor, 0, sizeof(anchor));
@@ -583,9 +583,9 @@ TEST(cov2_05_coshbuiltin, single_integer_arg_success) {
   *(_DWORD *)((char *)node + 2) = (_DWORD)(intptr_t)valrec;
   *(_DWORD *)((char *)node + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_CoshBuiltin(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Instance_MakeInstanceFunction: never directly exercised; a cold call

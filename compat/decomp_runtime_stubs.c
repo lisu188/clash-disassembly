@@ -69,8 +69,8 @@ _DWORD __stdcall GetLastError(void);
 extern __int64 (__fastcall *off_51A568)(_DWORD, _DWORD);
 extern int dword_51A648;
 extern void *lpTlsValue;
-extern int dword_543CC8[11];
-extern int dword_520728;
+extern int g_FileSystemMountTable[11];
+extern int g_ActiveTextSpriteSlot;
 extern _UNKNOWN *g_RenderDevice;
 extern char IsTable[256];
 
@@ -2704,16 +2704,16 @@ static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palett
   query_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
   if ( !query_vtable || !query_vtable[5] )
   {
-    Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
     return 0;
   }
   if ( ((int (*)(int, void *, int))(uintptr_t)query_vtable[5])(query_handle, palette_bytes, sizeof(palette_bytes))
     != (int)sizeof(palette_bytes) )
   {
-    Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
     return 0;
   }
-  Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
   palette_offset = 0;
   for ( palette_index = 0; palette_index < 256; ++palette_index )
   {
@@ -2737,7 +2737,7 @@ int Render_LoadResourceSprite_v3(_BYTE *a1)
   const unsigned char *cursor;
   int total_width;
 
-  slot = TextSprite_GetResourceSlot(dword_520728);
+  slot = TextSprite_GetResourceSlot(g_ActiveTextSpriteSlot);
   cursor = (const unsigned char *)a1;
   total_width = 0;
   if ( !slot || !slot->cached_sprite_set || !cursor || !*cursor )
@@ -2804,7 +2804,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
-      Compat_FileSystemQueryRelease((int)&dword_543CC8, &cache_query_handle);
+      Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &cache_query_handle);
       sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
       if ( sprite_set )
         sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);

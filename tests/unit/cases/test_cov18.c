@@ -181,10 +181,10 @@ TEST(cov18_classenum, a1_nonzero)
 
 TEST(cov18_classenum, a1_zero_result_zero)
 {
-    int saved = dword_51A9B0;
-    dword_51A9B0 = 0;
+    int saved = g_Clips_CurrentModule;
+    g_Clips_CurrentModule = 0;
     TOUCH(Class_Enum(0, 0));
-    dword_51A9B0 = saved;
+    g_Clips_CurrentModule = saved;
 }
 
 TEST(cov18_classenum, a1_zero_result_nonzero)
@@ -192,24 +192,24 @@ TEST(cov18_classenum, a1_zero_result_nonzero)
     static int leafBuf[8];
     static int itemArr[4];
     static int modRec[4];
-    int saved = dword_51A9B0;
+    int saved = g_Clips_CurrentModule;
     memset(leafBuf, 0, sizeof(leafBuf));
     memset(itemArr, 0, sizeof(itemArr));
     memset(modRec, 0, sizeof(modRec));
     itemArr[0] = (int)(intptr_t)leafBuf;
     modRec[2] = (int)(intptr_t)itemArr; /* offset +8 */
-    dword_51A9B0 = (int)(intptr_t)modRec;
+    g_Clips_CurrentModule = (int)(intptr_t)modRec;
     TOUCH(Class_Enum(0, 0));
-    dword_51A9B0 = saved;
+    g_Clips_CurrentModule = saved;
 }
 
 /* ---- Rules_GetModuleConstructData ---- */
 TEST(cov18_getmoduleconstructdata, a1_zero)
 {
-    int saved = dword_51A9B0;
-    dword_51A9B0 = 0;
+    int saved = g_Clips_CurrentModule;
+    g_Clips_CurrentModule = 0;
     TOUCH(Rules_GetModuleConstructData(0, 0));
-    dword_51A9B0 = saved;
+    g_Clips_CurrentModule = saved;
 }
 
 TEST(cov18_getmoduleconstructdata, a1_nonzero)
@@ -223,8 +223,8 @@ TEST(cov18_getmoduleconstructdata, a1_nonzero)
 TEST(cov18_initmodulerecord, basic)
 {
     static int fakeModRec[8];
-    int savedList = dword_51A9BC;
-    int savedCur = dword_51A9B0;
+    int savedList = g_ModuleItemDescriptorListHead;
+    int savedCur = g_Clips_CurrentModule;
     unsigned char constructData[64];
     const char *name = "cov18_modname";
 
@@ -234,14 +234,14 @@ TEST(cov18_initmodulerecord, basic)
     fakeModRec[1] = 0;                   /* index used as a2 for Module_GetItem */
     fakeModRec[7] = 0;                   /* offset 28 -> next == NULL */
 
-    dword_51A9BC = (int)(intptr_t)fakeModRec;
-    dword_51A9B0 = 0; /* keeps Module_GetItem(0, idx) path safe */
+    g_ModuleItemDescriptorListHead = (int)(intptr_t)fakeModRec;
+    g_Clips_CurrentModule = 0; /* keeps Module_GetItem(0, idx) path safe */
 
     TOUCH(Rules_InitConstructModuleRecord((int)(intptr_t)name, (int)(intptr_t)constructData));
     TOUCH(sub_4A94D0_Impl((int)(intptr_t)name, (int)(intptr_t)constructData, (int)(intptr_t)constructData));
 
-    dword_51A9BC = savedList;
-    dword_51A9B0 = savedCur;
+    g_ModuleItemDescriptorListHead = savedList;
+    g_Clips_CurrentModule = savedCur;
 }
 
 /* ---- Instance_InitializeInstanceFunction / Instance_MakeInstanceFunction ---- */
@@ -249,32 +249,32 @@ TEST(cov18_instanceinit, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
 
     memset(fakeParserCtx, 0, sizeof(fakeParserCtx));
     memset(fakeExprNode, 0, sizeof(fakeExprNode));
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Instance_InitializeInstanceFunction(1, 2, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov18_instancemake, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
 
     memset(fakeParserCtx, 0, sizeof(fakeParserCtx));
     memset(fakeExprNode, 0, sizeof(fakeExprNode));
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Instance_MakeInstanceFunction(1, 2, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Instance_RegisterModifyAndDuplicateFunctions ---- */

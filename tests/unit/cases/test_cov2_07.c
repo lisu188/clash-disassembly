@@ -90,7 +90,7 @@ TEST(cov2_07_rules, build_fact_address_list) {
 TEST(cov2_07_rules, load_command_with_filename_arg) {
   static unsigned char strNode[32], exprNode[32], argHead[32];
   static const char filename[] = "COV2_07_NOFILE.CLP";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(strNode, 0, sizeof strNode);
   memset(exprNode, 0, sizeof exprNode);
@@ -98,11 +98,11 @@ TEST(cov2_07_rules, load_command_with_filename_arg) {
   *(intptr_t *)(strNode + 16) = (intptr_t)filename;
   cov2_07_set_node(exprNode, 3 /* STRING */, (int)(intptr_t)strNode, 0, 0);
   cov2_07_set_node(argHead, 0, 0, exprNode, 0);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
 
   TOUCH(Rules_LoadCommand(0, 0.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Deffacts_CommandDefinitions: straight-line registration chain, same
@@ -139,49 +139,49 @@ static void cov2_07_set_math_arg(unsigned char *argHead, unsigned char *exprNode
 
 TEST(cov2_07_math, coth_zero_and_nonzero) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 0);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Rules_MathCoth(0, 0, 0, 0.0)); /* v6 == 0.0 -> singularity error */
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 3);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Rules_MathCoth(0, 0, 0, 0.0)); /* v6 == 3.0 -> 1.0/tanh(v6) */
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_07_math, acsch_zero_and_nonzero) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 0);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Rules_MathAcsch(0, 0, 0, 0.0)); /* v5 == 0.0 -> domain error */
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 2);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Rules_MathAcsch(0, 0, 0, 0.0)); /* v5 == 2.0 -> asinh(1.0/v5) */
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_07_math, tanh_success_path) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 4);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Rules_MathTanh(0, 0, 0, 0.0)); /* parse succeeds -> return tanh(v5[0]) */
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_PlaceInDepthList: the first-pass test (test_cov10.c) already
@@ -206,8 +206,8 @@ TEST(cov2_07_agenda, place_in_depth_list_tie_no_break) {
  * with our own distinctly-named statics to avoid cross-file aliasing. */
 TEST(cov2_07_construct, module_record_impl) {
   static int fakeModRec[8];
-  int savedList = dword_51A9BC;
-  int savedCur = dword_51A9B0;
+  int savedList = g_ModuleItemDescriptorListHead;
+  int savedCur = g_Clips_CurrentModule;
   static unsigned char constructData[64];
   static const char name[] = "cov2_07_modname";
 
@@ -217,14 +217,14 @@ TEST(cov2_07_construct, module_record_impl) {
   fakeModRec[1] = 0;                   /* index used as a2 for Module_GetItem */
   fakeModRec[7] = 0;                   /* offset 28 -> next == NULL */
 
-  dword_51A9BC = (int)(intptr_t)fakeModRec;
-  dword_51A9B0 = 0;
+  g_ModuleItemDescriptorListHead = (int)(intptr_t)fakeModRec;
+  g_Clips_CurrentModule = 0;
 
   TOUCH(sub_4A94D0_Impl((int)(intptr_t)name, (int)(intptr_t)constructData,
                         (int)(intptr_t)constructData));
 
-  dword_51A9BC = savedList;
-  dword_51A9B0 = savedCur;
+  g_ModuleItemDescriptorListHead = savedList;
+  g_Clips_CurrentModule = savedCur;
 }
 
 /* ---- MainMenu_RequestLoadGameMenu / PlayGameMenu_HandleCloseButton: both
@@ -264,20 +264,20 @@ TEST(cov2_07_defgeneric, set_method_trace_flag_no_methods) {
  * guard into the deeper class-name/generic-name parsing calls. */
 TEST(cov2_07_class, get_defmessage_handler_list_nonzero_argcount) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 5);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Class_GetDefmessageHandlerListCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_07_defgeneric, get_defmethod_list_nonzero_argcount) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 5);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   TOUCH(Defgeneric_GetDefmethodListCommand((_DWORD *)0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_DecrementFactRefCount: never called at all in the first pass
@@ -297,14 +297,14 @@ TEST(cov2_07_rules, decrement_fact_ref_count) {
  * never reached before. */
 TEST(cov2_07_rules, pointerp_function_true_branch) {
   static unsigned char argHead[32], exprNode[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(argHead, 0, sizeof argHead);
   memset(exprNode, 0, sizeof exprNode);
   cov2_07_set_node(exprNode, 5, 0, 0, 0);
   cov2_07_set_node(argHead, 0, 0, exprNode, 0);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   CHECK_EQ(Rules_PointerpFunction(0.0), 1);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_ParseStandardConstraintAttribute: the first-pass test
@@ -350,17 +350,17 @@ TEST(cov2_07_castle, invoke_prisoner_panel) {
 TEST(cov2_07_rules, host_army_has_normal_combat_units) {
   static unsigned char argHead[32], exprNode[32], intValNode[32];
   static unsigned char fakeGameData[2200000];
-  int savedCtx = dword_51A960;
+  int savedCtx = g_ClipsCurrentExpression;
   int savedGD = gameData;
 
   cov2_07_set_math_arg(argHead, exprNode, intValNode, 0);
   memset(fakeGameData, 0, sizeof fakeGameData);
-  dword_51A960 = (int)(intptr_t)argHead;
+  g_ClipsCurrentExpression = (int)(intptr_t)argHead;
   gameData = (int)(intptr_t)fakeGameData;
 
   TOUCH(Rules_HostArmyHasNormalCombatUnits(0, 0.0));
 
-  dword_51A960 = savedCtx;
+  g_ClipsCurrentExpression = savedCtx;
   gameData = savedGD;
 }
 

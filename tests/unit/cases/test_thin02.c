@@ -281,16 +281,16 @@ static void thin02_arg1(unsigned char *anchor, unsigned char *node,
  * sibling of cov11's already-tested tag 2) branches. ---- */
 TEST(thin02_filearg, get_file_name_arg_tag3_and_wrong_type) {
   static unsigned char anchor[32], node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   thin02_arg1(anchor, node, 1); /* tag != 2 && != 3 -> error branch */
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_GetFileNameArg(1, 0, 0.0));
 
   thin02_arg1(anchor, node, 3); /* tag == 3 -> success branch */
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_GetFileNameArg(1, 0, 0.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 

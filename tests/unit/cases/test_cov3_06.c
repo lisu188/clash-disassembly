@@ -26,7 +26,7 @@ static void cov3_06_arg1(unsigned char *anchor, unsigned char *node, short tag,
   *(int *)(node + 2) = (int)(intptr_t)valptr;
   *(int *)(node + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 static void cov3_06_arg2(unsigned char *anchor, unsigned char *node1,
@@ -42,21 +42,21 @@ static void cov3_06_arg2(unsigned char *anchor, unsigned char *node1,
   *(int *)(node2 + 2) = (int)(intptr_t)val2;
   *(int *)(node2 + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node1;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 #define COV3_06_SAVE_ARGCTX()                                                \
-  int cov3_06_saved960 = dword_51A960;                                       \
-  int cov3_06_saved964 = dword_51A964;                                       \
-  int cov3_06_saved968 = dword_51A968;                                       \
-  dword_51A964 = 0;                                                          \
-  dword_51A968 = 0
+  int cov3_06_saved960 = g_ClipsCurrentExpression;                                       \
+  int cov3_06_saved964 = g_ClipsEvaluationError;                                       \
+  int cov3_06_saved968 = g_ClipsHaltExecution;                                       \
+  g_ClipsEvaluationError = 0;                                                          \
+  g_ClipsHaltExecution = 0
 
 #define COV3_06_RESTORE_ARGCTX()                                             \
   do {                                                                       \
-    dword_51A960 = cov3_06_saved960;                                         \
-    dword_51A964 = cov3_06_saved964;                                         \
-    dword_51A968 = cov3_06_saved968;                                         \
+    g_ClipsCurrentExpression = cov3_06_saved960;                                         \
+    g_ClipsEvaluationError = cov3_06_saved964;                                         \
+    g_ClipsHaltExecution = cov3_06_saved968;                                         \
   } while (0)
 
 /* ---- Rules_MathPow: both Lexer_ParseValueList calls request wanted_type==0

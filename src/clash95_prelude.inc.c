@@ -88,8 +88,8 @@
 #define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)g_PortSpawnRingOffsetsTable)
 #define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
 #define unit_stats g_UnitTypeCorpseSpriteBaseIndex
-#define dword_532060 g_UnitBattleChargeModeActive
-#define dword_532074 g_UnitBattleChargeModeStartTick
+#define g_UnitBattleChargeModeActive_532060 g_UnitBattleChargeModeActive
+#define g_UnitBattleChargeModeStartTick_532074 g_UnitBattleChargeModeStartTick
 
 extern int g_BootstrapSkipIntroAviPlayback;
 
@@ -250,9 +250,9 @@ typedef struct TileHighlightSlot
 #define g_QueenWhimRecords ((QueenWhimRecord *)&g_QueenWhimRecords_5191F0)
 #define dword_5451A8 (g_InputBackendState.mouse_delta_x)
 #define dword_5451AC (g_InputBackendState.mouse_delta_y)
-#define byte_5451C0 (*((signed char *)&g_InputBackendState.mouse_button_primary))
-#define byte_5451C8 (*((signed char *)&g_InputBackendState.mouse_button_secondary))
-#define byte_5451CC ((signed char *)&g_InputBackendState.keyboard_state[0])
+#define g_InputMousePrimaryButtonState (*((signed char *)&g_InputBackendState.mouse_button_primary))
+#define g_InputMouseSecondaryButtonState (*((signed char *)&g_InputBackendState.mouse_button_secondary))
+#define g_Input_KeyStateArray ((signed char *)&g_InputBackendState.keyboard_state[0])
 
 // Compatibility aliases while stat-callsite cleanup is still in progress.
 #define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
@@ -351,14 +351,14 @@ typedef struct EvalMultifieldEntry {
   int reserved1;
 } EvalMultifieldEntry;
 
-extern RenderPrimarySurfaceStorage unk_51D4C0;
-extern RenderSurfaceStorage unk_51D9A0;
-extern _BYTE byte_51DE60[1024];
+extern RenderPrimarySurfaceStorage g_MainRenderDevice;
+extern RenderSurfaceStorage g_RenderDeviceStorage;
+extern _BYTE g_PaletteScratchSurfaceBuffer[1024];
 extern _UNKNOWN g_WorldMapTopMenuHitTargetA;
 extern char *g_UnitTypeMetadataRecordsStorage[102];
-extern _BYTE byte_5441A0[11];
+extern _BYTE g_MultiplayerPlayerNameEditTable[11];
 extern _UNKNOWN g_Audio_DriverModuleTableBase;
-extern _UNKNOWN unk_51A8EC;
+extern _UNKNOWN g_Rules_FactPatternEntityRecord;
 extern char g_CLIPS_BsaveHeaderMagic[];
 extern _DWORD g_Rules_ObjectPatternVTable[11];
 extern _UNKNOWN g_Runtime_CompactEvalClipsSignature[];
@@ -367,26 +367,26 @@ typedef struct __attribute__((packed)) RenderSpriteRemapEntry {
   unsigned char timing;
 } RenderSpriteRemapEntry;
 
-extern RenderSpriteRemapEntry word_520738[1024];
-#define byte_52073A (((unsigned char *)word_520738) + 2)
-#define TERRAIN_ANIMATION_REMAP_COUNT ((int)(sizeof(word_520738) / sizeof(word_520738[0])))
-extern unsigned char byte_521043;
-extern int dword_520290;
-extern unsigned short word_522B28[1038];
-#define word_522FCE (word_522B28[595])
-#define word_522B36 (&word_522B28[7])
-#define word_522B38 (&word_522B28[8])
-extern RenderSpriteRemapEntry word_521338[1024];
-#define byte_52133A (((unsigned char *)word_521338) + 2)
-extern __int16 word_522CF6;
+extern RenderSpriteRemapEntry g_TerrainAnimationRemapTable[1024];
+#define g_TerrainAnimFrameDurationTable (((unsigned char *)g_TerrainAnimationRemapTable) + 2)
+#define TERRAIN_ANIMATION_REMAP_COUNT ((int)(sizeof(g_TerrainAnimationRemapTable) / sizeof(g_TerrainAnimationRemapTable[0])))
+extern unsigned char g_SpecialTileAnimFrameDuration;
+extern int g_WorldMap_NextPaletteAnimTime;
+extern unsigned short g_Render_AnimatedFrameTable[1038];
+#define g_ColorCyclePrimaryFrameIndex (g_Render_AnimatedFrameTable[595])
+#define g_ColorCycleStateArrayBase (&g_Render_AnimatedFrameTable[7])
+#define g_Font_GlyphRemapTable (&g_Render_AnimatedFrameTable[8])
+extern RenderSpriteRemapEntry g_SpriteCodeRemapTable[1024];
+#define g_Render_SpriteAnimDelayBytes (((unsigned char *)g_SpriteCodeRemapTable) + 2)
+extern __int16 g_ColorCycleDelayLookupIndex;
 extern __int16 g_WorldMapAmbientAnimFramesSetA[7];
 extern __int16 g_WorldMapAmbientAnimFramesSetB[2];
 extern __int16 g_WorldMapAmbientAnimFramesSetC[5];
-extern int dword_520294;
-extern int dword_5202A4;
-extern int dword_5202A8;
-extern int dword_5202AC;
-extern int dword_5202B0;
+extern int g_WorldMap_NextTileStateAnimTime;
+extern int g_WorldMap_CursorTileEnterTime;
+extern int g_WorldMap_LastCursorTileX;
+extern int g_WorldMap_LastCursorTileY;
+extern int g_WorldMap_HoverTooltipActiveFlag;
 extern char aTerenNieodkryt[];
 extern char aUnexploredTerr[];
 extern char aUnerforschtesT[];
@@ -422,7 +422,7 @@ extern int g_CursorDesc_CannotEnter[];
 extern int g_CursorDesc_GoTo[];
 extern int g_CursorDesc_DeliverCargo[];
 extern int g_CursorDesc_VisitBuilding[];
-extern int dword_5202B4;
+extern int g_WorldMapActionHoverActive;
 extern char *g_ShrineTexts[21];
 extern char *g_EmptyShrineTexts[18];
 extern char *g_CultPlaceTexts[15];
@@ -496,7 +496,7 @@ extern char *g_QueenCastleWellPoisoningTexts[];
 extern char *g_QueenCastleArsonTexts[];
 extern __int16 g_QueenWhimRecords_5191F0;
 extern char g_QueenBirthMessageBuffer[];
-#define dword_51ACC4 HIDWORD(qword_51ACC0)
+#define g_ClipsBreakFlag HIDWORD(g_ClipsHaltExecutionFlag)
 _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
@@ -8925,11 +8925,11 @@ static int RenderHandle_InvokeCopyDispatch(int source_handle, int destination_ha
 
 static _DWORD *RenderSurface_ResolvePrimaryCompanion(_DWORD *surface)
 {
-  if ( surface == (_DWORD *)&unk_51D4C0 )
+  if ( surface == (_DWORD *)&g_MainRenderDevice )
   {
     _DWORD *companion;
 
-    companion = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
+    companion = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)((unsigned char *)&g_MainRenderDevice + 0xD0);
     if ( companion )
       return companion;
   }
@@ -9195,8 +9195,8 @@ int g_CRT_LeapMonthDayTable = 365; // weak
 char g_LanguageIndex = '\x01'; // weak
 int g_SdlTransitionAnimSkipRequested = 1; // weak
 _UNKNOWN g_CDPathTemplate; // weak
-_UNKNOWN *g_RenderDevice = &unk_51D9A0; // weak
-char (*g_BuildingTransferTargetListSurfaceBuffer)[1024] = &byte_51DE60; // weak
+_UNKNOWN *g_RenderDevice = &g_RenderDeviceStorage; // weak
+char (*g_BuildingTransferTargetListSurfaceBuffer)[1024] = &g_PaletteScratchSurfaceBuffer; // weak
 char aGfx_7[5] = "gfx\\"; // weak
 char aGfx_0[5] = "gfx\\"; // weak
 char aGfx_8[5] = "gfx\\"; // weak
@@ -11379,7 +11379,7 @@ char *g_MissionStatusFormatsByLanguage[3] = { "Misja %d\n\n%s", "Misssion %d\n\n
 _BYTE g_MainMenuButtonWidgetsTemplate[371]; // weak
 _BYTE g_CampaignMenuButtonWidgetsTemplate[159]; // weak
 char aKarkhan[8] = "Karkhan"; // weak
-char *g_MultiplayerDefaultRulerNamesTable = &byte_5441A0; // weak
+char *g_MultiplayerDefaultRulerNamesTable = &g_MultiplayerPlayerNameEditTable; // weak
 _UNKNOWN g_MultiplayerSetupWidgetTemplateBlob; // weak
 unsigned __int16 g_OptionsMenuSliderThumbPositions[6] = { 323u, 0u, 473u, 0u, 140u, 0u }; // weak
 int g_Options_BrightnessSliderValue = 128; // weak
@@ -11905,7 +11905,7 @@ char g_FileSystem_CurrentDirectoryBuffer[116] =
   '\0'
 }; // weak
 int g_Rules_FactListChangedFlag = 0; // weak
-void *g_Rules_DummyFactPtr = &unk_51A8EC; // weak
+void *g_Rules_DummyFactPtr = &g_Rules_FactPatternEntityRecord; // weak
 int g_Rules_WatchFactsFlag = 0; // weak
 int g_Rules_GarbageFactListHead = 0; // weak
 int g_Rules_LastFactPointer = 0; // weak
@@ -12055,169 +12055,169 @@ int g_Lexer_PendingLineCharIndex = -1; // weak
 int (*g_CRT_LockEnterHookTable[3])() = { &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub }; // weak
 int (*g_CRT_LockLeaveHookTable[2])() = { &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub }; // weak
 int (__fastcall *g_CRT_LockSlotResetHook)(_DWORD, _DWORD) = &Noop_CrtLockEnterLeaveResetStub; // weak
-__int16 word_51A644 = 0; // weak
+__int16 g_FatalRuntimeErrorOnceGuard = 0; // weak
 int g_CrtFinalizerListHead = 0; // weak
-int dword_51A64C = 0; // weak
-int dword_51A768 = 20; // weak
+int g_CRT_DefaultCommitMode = 0; // weak
+int g_CRT_MaxFileDescriptor = 20; // weak
 LPSTR lpCmdLine = NULL; // idb
-int dword_51A868 = 0; // weak
-int dword_51A86C = 0; // weak
-int dword_51A870 = 0; // weak
-int dword_51A874 = 0; // weak
-int dword_51A878 = 0; // weak
-_UNKNOWN unk_51A884; // weak
-int dword_51A8A1 = 0; // weak
-int dword_51A8A7 = 0; // weak
-int dword_51A8AB = 0; // weak
-int dword_51A8AF = 0; // weak
-int dword_51A8B3 = 0; // weak
-int dword_51A8B7 = 0; // weak
-int (*off_51A8BB)() = &Noop_CrtIoInitHook; // weak
-_UNKNOWN unk_51A8EC; // weak
-int dword_51A928 = 0; // weak
-int dword_51A92C = 0; // weak
-int dword_51A930 = 0; // weak
-int dword_51A934 = 0; // weak
-int dword_51A938 = 0; // weak
-int dword_51A93C = 1000; // weak
-int dword_51A940 = 10240; // weak
-int dword_51A944 = -1; // weak
-int dword_51A948 = 0; // weak
-int dword_51A94C = 0; // weak
-int dword_51A950 = 0; // weak
-int dword_51A954 = 0; // weak
-int dword_51A958 = 0; // weak
-int dword_51A95C = 0; // weak
-int dword_51A960 = 0; // weak
-int dword_51A964 = 0; // weak
-int dword_51A968 = 0; // weak
-int dword_51A96C = 0; // weak
-int dword_51A970 = 0; // weak
-int dword_51A974 = 0; // weak
-int dword_51A978 = 0; // weak
-int dword_51A97C = 0; // weak
-int dword_51A980 = 0; // weak
-int dword_51A984 = 0; // weak
-int dword_51A988 = 0; // weak
-int (*dword_51A994)(void) = NULL; // weak
-int dword_51A998 = 0; // weak
-int dword_51A99C = 0; // weak
-int dword_51A9A0 = 0; // weak
-int dword_51A9A4 = 0; // weak
-int dword_51A9A8 = 1; // weak
-int dword_51A9AC = 0; // weak
-int dword_51A9B0 = 0; // weak
-int dword_51A9B4 = 0; // weak
-int dword_51A9B8 = 0; // weak
-int dword_51A9BC = 0; // weak
-int dword_51A9C0 = 0; // weak
-int dword_51A9C4 = 1; // weak
-int dword_51A9C8 = 0; // weak
-EvalNodeDescriptor unk_51A9CC = { 35, 0x20, { 0 }, 0, { 0 } }; // weak
-int dword_51A9FC = 0; // weak
+int g_CRT_ExecutablePathA = 0; // weak
+int g_CRT_ModulePathA = 0; // weak
+int g_CRT_WideCommandLine = 0; // weak
+int g_CRT_ExecutablePathW = 0; // weak
+int g_CRT_ModulePathW = 0; // weak
+_UNKNOWN g_CRT_StartupThreadDataBlock; // weak
+int g_CRT_EnvironmentStringsPtr = 0; // weak
+int g_WindowsVersionDword = 0; // weak
+int g_CRT_OsBuildNumber = 0; // weak
+int g_CRT_WinMajorVersion = 0; // weak
+int g_CRT_WinMinorVersion = 0; // weak
+int g_CRT_WinVersion = 0; // weak
+int (*g_CRT_InitHookPtr)() = &Noop_CrtIoInitHook; // weak
+_UNKNOWN g_Rules_FactPatternEntityRecord; // weak
+int g_Rules_FactDuplicationEnabled = 0; // weak
+int g_CLIPS_PeriodicFunctionListHead = 0; // weak
+int g_Rules_PeriodicFunctionListHead = 0; // weak
+int g_ClipsEphemeralItemCount = 0; // weak
+int g_ClipsEphemeralItemBytes = 0; // weak
+int g_Rules_EphemeralCountGCThreshold = 1000; // weak
+int g_Rules_EphemeralSizeThreshold = 10240; // weak
+int g_Rules_LastCleanupEvalDepth = -1; // weak
+int g_Rules_DeftemplateWatchFlag = 0; // weak
+int g_WatchItemListHead = 0; // weak
+int g_ClipsEphemeralMultifieldListHead = 0; // weak
+int g_Rules_JoinOperationInProgress = 0; // weak
+int g_ClipsPendingDependencyDestructorList = 0; // weak
+int g_Rules_FlushingDependencyDestructors = 0; // weak
+int g_ClipsCurrentExpression = 0; // weak
+int g_ClipsEvaluationError = 0; // weak
+int g_ClipsHaltExecution = 0; // weak
+int g_ClipsCurrentEvaluationDepth = 0; // weak
+int g_ClipsDeferredJoinDriveListHead = 0; // weak
+int g_PartialMatchFreeListHead = 0; // weak
+int g_ReteGarbageAlphaMatchList = 0; // weak
+int g_ClipsCommandEvalInProgress = 0; // weak
+int g_Lexer_PendingTokenBuffer = 0; // weak
+int g_Lexer_TokenBufferCapacity = 0; // weak
+int g_Rules_EvaluatingTopLevelCommand = 0; // weak
+int (*g_CLIPS_AfterPromptCallback)(void) = NULL; // weak
+int g_Rules_EntityTimeTagCounter = 0; // weak
+int g_Module_ItemListTail = 0; // weak
+int g_CLIPS_AfterModuleChangeListHead = 0; // weak
+int g_Module_SavedEnumStackTop = 0; // weak
+int g_Module_ChangeNotifyEnabled = 1; // weak
+int g_DefmoduleListHead = 0; // weak
+int g_Clips_CurrentModule = 0; // weak
+int g_ClipsDefmoduleListTail = 0; // weak
+int g_ClipsModuleItemCount = 0; // weak
+int g_ModuleItemDescriptorListHead = 0; // weak
+int g_Module_ChangeGeneration = 0; // weak
+int g_Module_MainRedefinable = 1; // weak
+int g_StringRouterListHead = 0; // weak
+EvalNodeDescriptor g_EvalDescriptor_Deftemplate = { 35, 0x20, { 0 }, 0, { 0 } }; // weak
+int g_ExpressionHashTable = 0; // weak
 int g_TokenBuf = 0; // weak
 int g_TokenLen = 0; // weak
 int g_TokenCap = 0; // weak
-int dword_51AA0C = 0; // weak
-int dword_51AA10 = 0; // weak
-int dword_51AA14 = 0; // weak
-int dword_51AA18 = 0; // weak
-int dword_51AA1C = 0; // weak
-int dword_51AA20 = 0; // weak
-int dword_51AA24 = 0; // weak
-int dword_51AA28 = 0; // weak
-int dword_51AA2C = 0; // weak
-int dword_51AA30 = 0; // weak
-int dword_51AA34 = 0; // weak
-int dword_51AA38 = 0; // weak
-int dword_51AA3C = 0; // weak
-int dword_51AA40 = 0; // weak
-int dword_51AAB0 = 1; // weak
+int g_Lexer_SuppressEofError = 0; // weak
+int g_Rules_PPBufferEnabled = 0; // weak
+int g_Rules_PPIndentDepth = 0; // weak
+int g_PPBufferLength = 0; // weak
+int g_ClipsPPBufferMax = 0; // weak
+int g_ClipsPPBackupOnce = 0; // weak
+int g_Rules_PPBackupTwicePos = 0; // weak
+int g_Clips_PPBuffer = 0; // weak
+int g_Rules_BloadSymbolCount = 0; // weak
+int g_BloadFloatTableCount = 0; // weak
+int g_BloadIntegerTableCount = 0; // weak
+int g_Rules_BloadBitmapCount = 0; // weak
+int g_BinaryItemListHead = 0; // weak
+int g_ClipsConstructQueueHead = 0; // weak
+int g_CLIPS_StaticConstraintCheckingFlag = 1; // weak
 int dword_51AAB4 = 0; // weak
-_UNKNOWN unk_51AAB8; // weak
-int dword_51AAE8 = 0; // weak
-_UNKNOWN unk_51AAEC; // weak
-int dword_51AB1C = 0; // weak
-EvalNodeDescriptorCompact unk_51AB20 = { 0x0000000D }; // weak
-EvalNodeDescriptorCompact unk_51AB50 = { 0x0000003C }; // weak
-_UNKNOWN unk_51AB88; // weak
-int dword_51ABB8 = 0; // weak
-int dword_51ABBC = 0; // weak
-int dword_51ABC0 = 0; // weak
-int dword_51ABC4 = 0; // weak
-int dword_51ABC8 = 0; // weak
-int dword_51ABCC = 0; // weak
-int (*dword_51ABD0)(void) = NULL; // weak
-EvalNodeDescriptor unk_51ABD4 = { 65, 0x40, { 0 }, (void *)ProcParam_GetArgumentValue, { 0 } }; // weak
-EvalNodeDescriptor unk_51AC04 = { 66, 0x40, { 0 }, (void *)ProcParam_GetWildcardArgumentValue, { 0 } }; // weak
-EvalNodeDescriptor unk_51AC34 = { 67, 0x40, { 0 }, (void *)ProcParam_GetBoundVariableValue, { 0 } }; // weak
-EvalNodeDescriptor unk_51AC64 = { 68, 0x40, { 0 }, (void *)ProcParam_BindLocalVariable, { 0 } }; // weak
-int dword_51AC94 = -1; // weak
-int dword_51AC98 = 0; // weak
-int dword_51AC9C = 0; // weak
-int dword_51ACA0 = 0; // weak
-int (__thiscall *dword_51ACA4)(_DWORD) = NULL; // weak
-int dword_51ACA8 = 0; // weak
-int dword_51ACAC = 0; // weak
-int dword_51ACB0 = 0; // weak
-int dword_51ACB4 = 0; // weak
-int dword_51ACB8 = 0; // weak
-int dword_51ACBC = 1; // weak
-__int64 qword_51ACC0 = 0LL; // weak
-int dword_51ACC8 = 0; // weak
-int dword_51ACCC = 0; // weak
-int dword_51ACD0 = 1; // weak
-int dword_51ACD4 = 1; // weak
-int dword_51ACD8 = 0; // weak
-int dword_51ACDC = 0; // weak
-int dword_51ACE0 = 0; // weak
-int dword_51ACE4 = 0; // weak
-int dword_51ACE8 = 0; // weak
-int dword_51ACEC = 0; // weak
-int dword_51ACF0 = 2000; // weak
-int dword_51ACF4 = 0; // weak
-int dword_51ACF8 = 0; // weak
-int dword_51ACFC = 0; // weak
-int dword_51AD00 = 0; // weak
-int dword_51AD04 = 0; // weak
-int dword_51AD08 = 0; // weak
-int dword_51AD0C = 0; // weak
-int dword_51AD10 = 0; // weak
-int dword_51AD14 = 0; // weak
-int dword_51AD18 = 0; // weak
-int dword_51AD1C = 0; // weak
+_UNKNOWN g_EvalDescriptor_Defgeneric; // weak
+int g_Rules_WatchDeffunctions = 0; // weak
+_UNKNOWN g_EvalDescriptor_Deffunction; // weak
+int g_Defglobal_ChangedFlag = 0; // weak
+EvalNodeDescriptorCompact g_CLIPS_DefglobalEvalNodeDescriptor = { 0x0000000D }; // weak
+EvalNodeDescriptorCompact g_Defglobal_PtrEntityRecord = { 0x0000003C }; // weak
+_UNKNOWN g_EvalDescriptor_Defclass; // weak
+int g_ClipsProcParamArray = 0; // weak
+int g_ClipsProcParamCount = 0; // weak
+int g_Clips_ProcParamArgChain = 0; // weak
+int g_ProcParamSavedFrameStack = 0; // weak
+int g_ClipsProcParamWildcardValue = 0; // weak
+int g_ClipsProcFrameDataObjectArray = 0; // weak
+int (*g_ProcParam_ErrorContextCallback)(void) = NULL; // weak
+EvalNodeDescriptor g_EvalDescriptor_ProcArgument = { 65, 0x40, { 0 }, (void *)ProcParam_GetArgumentValue, { 0 } }; // weak
+EvalNodeDescriptor g_EvalDescriptor_ProcWildcardArgument = { 66, 0x40, { 0 }, (void *)ProcParam_GetWildcardArgumentValue, { 0 } }; // weak
+EvalNodeDescriptor g_EvalDescriptor_ProcBoundVariable = { 67, 0x40, { 0 }, (void *)ProcParam_GetBoundVariableValue, { 0 } }; // weak
+EvalNodeDescriptor g_EvalDescriptor_ProcBindLocalVariable = { 68, 0x40, { 0 }, (void *)ProcParam_BindLocalVariable, { 0 } }; // weak
+int g_ProcParamCachedWildcardArgIndex = -1; // weak
+int g_DribbleFileHandle = 0; // weak
+int g_DribbleBufferLength = 0; // weak
+int g_Dribble_BufferCapacity = 0; // weak
+int (__thiscall *g_Dribble_StatusChangeCallback)(_DWORD) = NULL; // weak
+int g_CurrentStringInputSource = 0; // weak
+int g_BatchEchoBufferLength = 0; // weak
+int g_ClipsBatchLineBufferCapacity = 0; // weak
+int g_Rules_BatchStackTop = 0; // weak
+int g_Batch_ListTail = 0; // weak
+int g_Dribble_LineStartNeedsTimestamp = 1; // weak
+__int64 g_ClipsHaltExecutionFlag = 0LL; // weak
+int g_LoopForCountBindingStack = 0; // weak
+int g_BoundVariableList = 0; // weak
+int g_ClipsGensymCounter = 1; // weak
+int g_Rules_AutoFloatDividendEnabled = 1; // weak
+int g_PrognFieldBindingStack = 0; // weak
+int g_EvalStringRouterCounter = 0; // weak
+int g_HelpLoadedTopicFileList = 0; // weak
+int g_ClipsHelpCurrentTopicNode = 0; // weak
+int g_HelpSystemInitialized = 0; // weak
+int g_ClipsHelpFilePath = 0; // weak
+int g_ClipsCodeMaxIndicesPerArray = 2000; // weak
+int g_CodeGeneratorItemList = 0; // weak
+int g_Rules_CodeGeneratorItemIndex = 0; // weak
+int g_Clips_CurrentPartialMatch = 0; // weak
+int g_Rules_GlobalRHSBinds = 0; // weak
+int g_CurrentPatternEntityPtr = 0; // weak
+int g_WatchRulesFlag = 0; // weak
+int g_Clips_InstanceListHead = 0; // weak
+int g_Rules_ActiveInstanceCount = 0; // weak
+int g_ClipsInstanceUnderConstruction = 0; // weak
+int g_Instance_GlobalListTail = 0; // weak
+int g_InstanceDirectMessageGuardActive = 0; // weak
 _UNKNOWN g_Runtime_CompactEvalClipsSignature[] = { 5, 6, 7, 'C', 'L', 'I', 'P', 'S', 0, 0 }; // weak
-void *off_51AD20 = g_Runtime_CompactEvalClipsSignature; // weak
-char *off_51AD24 = "V6.00"; // weak
-int dword_51AD28 = 0; // weak
-int dword_51AD2C = 0; // weak
-int dword_51AD30 = 0; // weak
-int dword_51AD34 = 0; // weak
-int dword_51AD38 = 0; // weak
-char *off_51AD3C[4] = { "around", "before", "primary", "after" }; // weak
-char *off_51AD44[2] = { "primary", "after" }; // weak
-int dword_51AD4C = 0; // weak
-int dword_51AD50 = 0; // weak
-int dword_51AD54 = 0; // weak
-int dword_51AD58 = 0; // weak
-int dword_51AD5C = 0; // weak
-int dword_51AD60 = 0; // weak
-int dword_51AD64 = 0; // weak
-int dword_51AD68 = 0; // weak
-__int16 word_51AD6C = 0; // weak
-int dword_51AD70 = 0; // weak
-int dword_51AD74 = 0; // weak
-int dword_51AD78[] = { 0 }; // weak
-int dword_51AD7C[] = { 0 }; // weak
-int dword_51AD80 = 0; // weak
-int dword_51AD84 = 0; // weak
-int dword_51AD88 = 0; // weak
-int dword_51AD8C = 0; // weak
-int dword_51AD90 = 0; // weak
-int dword_51AD94 = 0; // weak
-int dword_51AD98 = 0; // weak
-int dword_51AD9C = 0; // weak
-char byte_51ADA0 = '\0'; // weak
+void *g_Bload_SignaturePtr = g_Runtime_CompactEvalClipsSignature; // weak
+char *g_Bload_VersionString = "V6.00"; // weak
+int g_ClipsBloadReadBuffer = 0; // weak
+int g_Clips_BloadBufferSize = 0; // weak
+int g_BloadReadBufferOffset = 0; // weak
+int g_MessageHandler_InitSymbol = 0; // weak
+int g_ClipsDeleteMessageSymbol = 0; // weak
+char *g_MessageHandlerTypeNames[4] = { "around", "before", "primary", "after" }; // weak
+char *g_MessageHandler_PrimaryAfterTypeNames[2] = { "primary", "after" }; // weak
+int g_Rules_WatchMessageHandlers = 0; // weak
+int g_MessageHandler_WatchMessages = 0; // weak
+int g_CurrentMessageHandler = 0; // weak
+int g_ClipsCurrentHandlerCore = 0; // weak
+int g_MessageHandler_CurrentDispatchCore = 0; // weak
+int g_ClipsMessageHandlerCursor = 0; // weak
+int g_ClipsDefclassIdTable = 0; // weak
+int g_DefclassHashTable = 0; // weak
+__int16 g_ClipsDefclassIdCount = 0; // weak
+int g_Defclass_SlotNameHashTablePtr = 0; // weak
+int g_Rules_WatchInstances = 0; // weak
+int g_Class_WatchSlots[] = { 0 }; // weak
+int g_ClipsPrimitiveTypeClassMap[] = { 0 }; // weak
+int g_ClipsIntegerClass = 0; // weak
+int g_ClipsSymbolClass = 0; // weak
+int g_ClipsStringClass = 0; // weak
+int g_ClipsMultifieldClass = 0; // weak
+int g_ClipsExternalAddressClass = 0; // weak
+int g_ClipsFactAddressClass = 0; // weak
+int g_Class_InstanceAddress = 0; // weak
+int g_Class_InstanceName = 0; // weak
+char g_Class_TraversalIDCounter = '\0'; // weak
 char IsTable[256] =
 {
   '\0',
@@ -12477,130 +12477,130 @@ char IsTable[256] =
   '\0',
   '\0'
 }; // weak
-int dword_51AEA8 = 0; // weak
-int dword_51AEAC = 0; // weak
-int dword_51AEB0 = 0; // weak
-int dword_51AEB4 = 0; // weak
-int dword_51AEB8 = 0; // weak
-int dword_51AEBC = 0; // weak
-char byte_51AEC0[8] = { '\x01', '\x02', '\x04', '\b', '\x10', ' ', '@', '\x80' }; // weak
-int dword_51AED0 = 0; // weak
-int (__fastcall *dword_51AEDC)(_DWORD, _DWORD) = NULL; // weak
-int (*dword_51AEE0)(void) = NULL; // weak
-char byte_51AEE4[] = { '0' }; // weak
-int dword_51AEF8 = 0; // weak
-int dword_51AF00 = 244; // weak
-int (*off_51AF04)() = &_no_support_loaded; // weak
-int (__fastcall *off_51AF08)(_DWORD, _DWORD) = &_no_support_loaded; // weak
-int dword_51AF64 = 0; // weak
-_DWORD dword_51AF68[9] = { 0, 0, 2, 1, 3, 0, 0, 0, 0 }; // weak
-int dword_51AF8C = 0; // weak
-int dword_51AF90 = 0; // weak
-int dword_51AF94 = 1; // weak
-char byte_51AFB0 = 'E'; // weak
-char byte_51B030 = '\0'; // weak
-char byte_51B031 = 'E'; // weak
-char byte_51B0B1 = '\0'; // weak
-char *off_51B0B6 = &byte_51B031; // weak
-int dword_51B0BA = 18000; // weak
-int dword_51B0BE = 1; // weak
-int dword_51B0C2 = 3600; // weak
-int dword_51B0C6 = 1; // weak
-EvalNodeDescriptorCompact unk_51B0D8 = { 0x0000401D }; // weak
-EvalNodeDescriptorCompact unk_51B108 = { 0x0000401E }; // weak
-EvalNodeDescriptorCompact unk_51B138 = { 0x0000401F }; // weak
-EvalNodeDescriptorCompact unk_51B168 = { 0x0000401A }; // weak
-EvalNodeDescriptorCompact unk_51B198 = { 0x0000401B }; // weak
-EvalNodeDescriptorCompact unk_51B1C8 = { 0x0000401C }; // weak
-EvalNodeDescriptorCompact unk_51B1F8 = { 0x0000C017 }; // weak
-EvalNodeDescriptorCompact unk_51B228 = { 0x0000C018 }; // weak
-EvalNodeDescriptorCompact unk_51B258 = { 0x0000C016 }; // weak
-EvalNodeDescriptorCompact unk_51B288 = { 0x00004022 }; // weak
-EvalNodeDescriptorCompact unk_51B2B8 = { 0x00004019 }; // weak
-EvalNodeDescriptorCompact unk_51B2E8 = { 0x0000C020 }; // weak
-EvalNodeDescriptorCompact unk_51B318 = { 0x0000C021 }; // weak
-int dword_51B348 = 0; // weak
-int dword_51B34C = 0; // weak
-int dword_51B350 = 0; // weak
-int dword_51B354 = 0; // weak
-int dword_51B358 = 1; // weak
-int dword_51B35C = 0; // weak
-int dword_51B360 = 0; // weak
-int dword_51B364 = 0; // weak
-int dword_51B368 = 0; // weak
-int dword_51B36C = 0; // weak
-int dword_51B370 = 0; // weak
-int dword_51B374 = 0; // weak
-int dword_51B378 = 0; // weak
-int dword_51B37C = 0; // weak
-int dword_51B380 = 0; // weak
-int dword_51B384 = 0; // weak
-int dword_51B388 = 0; // weak
-int dword_51B38C = 0; // weak
-int dword_51B390 = 0; // weak
-int dword_51B394 = 0; // weak
-int dword_51B398 = 0; // weak
-int dword_51B39C = 0; // weak
-int dword_51B3A0 = 0; // weak
-int dword_51B3A4 = 0; // weak
-int dword_51B3A8 = 0; // weak
-int dword_51B3AC = 0; // weak
-int dword_51B3B0 = 0; // weak
-int dword_51B3B4 = 0; // weak
-int dword_51B3B8 = 0; // weak
-int dword_51B3BC = 0; // weak
-int dword_51B3C0 = 0; // weak
-int dword_51B3C4 = 0; // weak
-int dword_51B3C8 = 0; // weak
-int dword_51B3CC = 0; // weak
-int dword_51B3D0 = 0; // weak
-int dword_51B3D4 = 0; // weak
-int dword_51B3D8 = 0; // weak
-int dword_51B3DC = 0; // weak
-int dword_51B3E0 = 0; // weak
-int dword_51B3E4 = 0; // weak
-int dword_51B3E8 = 0; // weak
-int dword_51B3EC = 0; // weak
-int dword_51B3F0 = 1; // weak
-_DWORD unk_51B3F4[12] = { 0x0000C03A }; // weak
-_DWORD unk_51B424[12] = { 0x0000C03B }; // weak
-EvalNodeDescriptorCompact unk_51B488 = { 0x0000402F }; // weak
-EvalNodeDescriptorCompact unk_51B4B8 = { 0x00004030 }; // weak
-EvalNodeDescriptorCompact unk_51B4E8 = { 0x0000402D }; // weak
-EvalNodeDescriptorCompact unk_51B518 = { 0x0000402E }; // weak
-EvalNodeDescriptorCompact unk_51B548 = { 0x0000C032 }; // weak
-EvalNodeDescriptorCompact unk_51B578 = { 0x00004031 }; // weak
-EvalNodeDescriptorCompact unk_51B5A8 = { 0x0000C033 }; // weak
-EvalNodeDescriptorCompact unk_51B5D8 = { 0x0000C035 }; // weak
-EvalNodeDescriptorCompact unk_51B608 = { 0x0000C037 }; // weak
-EvalNodeDescriptorCompact unk_51B638 = { 0x0000C034 }; // weak
-EvalNodeDescriptorCompact unk_51B668 = { 0x0000C036 }; // weak
-EvalNodeDescriptorCompact unk_51B698 = { 0x0000C038 }; // weak
-int dword_51B454 = 0; // weak
-int dword_51B458 = 0; // weak
-int dword_51B45C = 0; // weak
-int dword_51B460 = 0; // weak
-int dword_51B478 = 0; // weak
-int dword_51B47C = 0; // weak
-int dword_51B480 = 1; // weak
-int dword_51B484 = 0; // weak
+int g_ClipsObjectMatchQueueHead = 0; // weak
+int g_Rules_ObjectPatternNetworkRoot = 0; // weak
+int g_ReactiveRuleListHead = 0; // weak
+int g_Rules_ObjectMatchDelayFlag = 0; // weak
+int g_RuleTraversalMarkCounter = 0; // weak
+int g_Rules_ObjectMatchTimeTag = 0; // weak
+char g_BitPositionMaskTable[8] = { '\x01', '\x02', '\x04', '\b', '\x10', ' ', '@', '\x80' }; // weak
+int g_CRT_OsHandleTable = 0; // weak
+int (__fastcall *g_CRT_ExceptionHandlerCallback)(_DWORD, _DWORD) = NULL; // weak
+int (*g_FpuExceptionResignalFn)(void) = NULL; // weak
+char g_HexDigitCharTable[] = { '0' }; // weak
+int g_IO_LogicalNameFileListHead = 0; // weak
+int g_CRT_ThreadDataBlockSize = 244; // weak
+int (*g_FloatEfgFormatFn)() = &_no_support_loaded; // weak
+int (__fastcall *g_StringToDoubleScanFn)(_DWORD, _DWORD) = &_no_support_loaded; // weak
+int g_CRT_OpenModeStripMask = 0; // weak
+_DWORD g_CRT_TzDstStartRule[9] = { 0, 0, 2, 1, 3, 0, 0, 0, 0 }; // weak
+int g_CRT_TzDstEndRule = 0; // weak
+int g_CRT_TzDstEndRuleMinute = 0; // weak
+int g_CRT_TzDstEndRuleHour = 1; // weak
+char g_TzStandardNameBuffer = 'E'; // weak
+char g_CRT_TzStandardNameBufEnd = '\0'; // weak
+char g_TzDaylightName = 'E'; // weak
+char g_CRT_TzDaylightNameBufEnd = '\0'; // weak
+char *g_CRT_TzDaylightNamePtr = &g_TzDaylightName; // weak
+int g_CRT_TimezoneSeconds = 18000; // weak
+int g_TzDaylightFlag = 1; // weak
+int g_CRT_DaylightBiasSeconds = 3600; // weak
+int g_TzInitFlags = 1; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchJoinBindingFieldRecord = { 0x0000401D }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchJoinBindingFieldSimple = { 0x0000401E }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchJoinBindingNestedField = { 0x0000401F }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchPatternFieldRecord = { 0x0000401A }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchPatternFieldSimple = { 0x0000401B }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_FetchPatternNestedFieldRecord = { 0x0000401C }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_TestJoinBindingFieldsEqual = { 0x0000C017 }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_TestJoinBindingFieldsEqualRanged = { 0x0000C018 }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_EvalPatternFieldsEqual = { 0x0000C016 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescCopyMultifieldBinding = { 0x00004022 }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_EvalMultifieldIndexInRange = { 0x00004019 }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_TestPatternFieldSimple = { 0x0000C020 }; // weak
+EvalNodeDescriptorCompact g_EvalDesc_TestPatternNestedField = { 0x0000C021 }; // weak
+int g_PatternParserListHead = 0; // weak
+int g_PatternParserCount = 0; // weak
+int g_Rules_ReservedPatternSymbolList = 0; // weak
+int g_IncrementalResetInProgress = 0; // weak
+int g_Rules_IncrementalResetEnabled = 1; // weak
+int g_ClipsParseContextSaveStack = 0; // weak
+int g_SequenceOperatorRecognition = 0; // weak
+int g_ClipsDefrulePreservedWatchBreakFlags = 0; // weak
+int g_Module_PortConstructList = 0; // weak
+int g_Module_AfterDefineCallbackList = 0; // weak
+int g_DefglobalBloadRecords = 0; // weak
+int g_Defglobal_Count = 0; // weak
+int g_DefgenericMethodArray = 0; // weak
+int g_DefgenericBloadCount = 0; // weak
+int g_Defgeneric_MethodRecordCount = 0; // weak
+int g_Defgeneric_RestrictionRecordCount = 0; // weak
+int g_Defgeneric_RestrictionTypeCount = 0; // weak
+int g_Defgeneric_PackedExpressionCount = 0; // weak
+int g_DefgenericBloadModuleRefArray = 0; // weak
+int g_DefgenericRestrictionRecords = 0; // weak
+int g_ClipsDefgenericBloadRestrictionTypeArray = 0; // weak
+int g_DefgenericBloadRestrictionTypeArray = 0; // weak
+int g_DeffunctionBloadRecordArray = 0; // weak
+int g_Deffunction_Count = 0; // weak
+int g_Clips_DeffunctionCount = 0; // weak
+int g_Clips_DefclassArrayBase = 0; // weak
+int g_DefclassLinkTable = 0; // weak
+int g_DefclassSlotDescriptorArrayPtr = 0; // weak
+int g_DefclassBloadSlotNameLinkArray = 0; // weak
+int g_DefclassSlotTable = 0; // weak
+int g_Class_BloadClassLinkArray = 0; // weak
+int g_DefclassBloadTemplateSlotArray = 0; // weak
+int g_Class_BloadSlotNameMapArray = 0; // weak
+int g_ClipsDeffactsBloadArray = 0; // weak
+int g_DeffactsBsaveCount = 0; // weak
+int g_ClipsCurrentGeneric = 0; // weak
+int g_ClipsCurrentMethod = 0; // weak
+int g_Method_CurrentArgParamPtr = 0; // weak
+int g_Rules_WatchGenericFunctions = 0; // weak
+int g_Rules_WatchMethods = 0; // weak
+int g_CurrentDeffunction = 0; // weak
+int g_Rules_WatchGlobals = 0; // weak
+int g_DefglobalResetGlobalsFlag = 1; // weak
+_DWORD g_EvalDesc_GetSelfSlotDirect[12] = { 0x0000C03A }; // weak
+_DWORD g_EvalDesc_PutSelfSlotDirect[12] = { 0x0000C03B }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescFetchJoinObjectSlotFieldRecord = { 0x0000402F }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescFetchJoinObjectSlotFieldSimple = { 0x00004030 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescFetchObjectSlotFieldRecord = { 0x0000402D }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescFetchObjectSlotFieldSimple = { 0x0000402E }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotBoundVariableEqual = { 0x0000C032 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotIndexInRange = { 0x00004031 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotFieldsEqual = { 0x0000C033 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotElementFieldEqual = { 0x0000C035 }; // weak
+EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotElementsEqual = { 0x0000C037 }; // weak
+EvalNodeDescriptorCompact g_EvalDescriptor_JoinObjectSlotFieldsEqual = { 0x0000C034 }; // weak
+EvalNodeDescriptorCompact g_EvalDescriptor_JoinObjectSlotElementFieldEqual = { 0x0000C036 }; // weak
+EvalNodeDescriptorCompact g_EvalDescriptor_JoinObjectSlotElementsEqual = { 0x0000C038 }; // weak
+int g_InternedSym_Qds = 0; // weak
+int g_ClipsQueryCore = 0; // weak
+int g_ClipsInstanceQueryCoreStack = 0; // weak
+int g_InstanceQuery_AbortFlag = 0; // weak
+int g_ClipsObjectReteCurrentInstance = 0; // weak
+int g_ObjectPatternActiveClassNode = 0; // weak
+int g_ObjectPatternMatchFieldCount = 1; // weak
+int g_ObjectPatternMarkerListHead = 0; // weak
 UINT CodePage = 1u; // idb
-int dword_51C6F0 = 0; // weak
-int dword_51C6F4 = 0; // weak
-int dword_51C6F8 = 0; // weak
-int dword_51C6FC = 0; // weak
-int dword_51C700 = 0; // weak
+int g_Parser_InsideNegatedCEFlag = 0; // weak
+int g_ClipsParsedFormAst = 0; // weak
+int g_ClipsBsaveModuleCount = 0; // weak
+int g_ClipsBloadPortItemCount = 0; // weak
+int g_Defmodule_PortItemArrayPtr = 0; // weak
 int dword_51C704 = 0; // weak
-int dword_51C708 = 0; // weak
-int dword_51C70C = 0; // weak
-int dword_51C710 = 0; // weak
-int dword_51C714 = 0; // weak
-int dword_51C718 = 0; // weak
-int dword_51C71C = 0; // weak
-int dword_51C720 = 0; // weak
-int dword_51C724 = 0; // weak
-char *off_51C790[2] = { "mod", "cotan" }; // weak
-_UNKNOWN unk_51C9F8; // weak
+int g_MessageHandler_SelfSymbol = 0; // weak
+int g_ClipsDefinstancesBloadArray = 0; // weak
+int g_Definstances_Count = 0; // weak
+int g_Clips_DefinstancesCount = 0; // weak
+int g_ReactiveRuleBloadCount = 0; // weak
+int g_ObjectPatternNetworkBloadCount = 0; // weak
+int g_ReactiveRuleArrayPtr = 0; // weak
+int g_ObjectPatternNetworkArrayPtr = 0; // weak
+char *g_StrToLongOverflowLimitTable[2] = { "mod", "cotan" }; // weak
+_UNKNOWN g_AviQueryInterfaceIid; // weak
 IID stru_51CA08 = { 3014063072u, 11075u, 4559u, { 162u, 222u, 0u, 170u, 0u, 185u, 51u, 86u } }; // weak
 _UNKNOWN g_InputBackendMouseDeviceGuid; // weak
 _UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
@@ -12608,238 +12608,238 @@ _UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
 _UNKNOWN g_RenderBackbufferScanlineBuffer; // weak
 _UNKNOWN g_RenderPaletteRemapBuffer; // weak
 int g_MousePresentAtStartup; // weak
-int dword_51D01C; // weak
+int g_ManualTacticalBattleEnabled; // weak
 int g_AppCommandLine; // weak
 CHAR Text[128]; // idb
-_BYTE unk_51D0B0[0x408]; // weak
-int dword_51D4B8; // weak
-RenderPrimarySurfaceStorage unk_51D4C0; // weak
-#define word_51D4C2 (*(__int16 *)((unsigned char *)&unk_51D4C0 + 2))
-#define dword_51D578 (*(int *)((unsigned char *)&unk_51D4C0 + 0xB8))
-#define dword_51D57C (*(int *)((unsigned char *)&unk_51D4C0 + 0xBC))
-#define dword_51D584 (*(int *)((unsigned char *)&unk_51D4C0 + 0xC4))
-#define dword_51D588 (*(int *)((unsigned char *)&unk_51D4C0 + 0xC8))
-#define dword_51D58C (*(int *)((unsigned char *)&unk_51D4C0 + 0xCC))
-#define dword_51D594 (*(int *)((unsigned char *)&unk_51D4C0 + 0xD4))
-#define unk_51D59C (*(_UNKNOWN *)((unsigned char *)&unk_51D4C0 + 0xDC))
-RenderSurfaceStorage unk_51D9A0; // weak
-_BYTE unk_51DA60[1024]; // weak
-_BYTE byte_51DE60[1024]; // idb
-_BYTE unk_51E260[5]; // weak
-char byte_51E265; // weak
-char byte_51E266; // weak
-char byte_51E267[]; // weak
-char byte_51E268[32]; // weak
-int dword_51E288[]; // weak
-int dword_51E28C[1024]; // weak
-char byte_51F28C; // weak
-int dword_51F290[]; // weak
-int dword_51F294[1022]; // weak
-int dword_52028C; // weak
-int dword_520290 = 0; // weak
-int dword_520294 = 0; // weak
-int dword_520298; // weak
-int dword_52029C; // weak
-int dword_5202A0; // weak
-int dword_5202A4 = 0; // weak
-int dword_5202A8 = 0; // weak
-int dword_5202AC = 0; // weak
-int dword_5202B0 = 0; // weak
-int dword_5202B4 = 0; // weak
-int dword_5202BC; // weak
-int dword_5202C0; // weak
+_BYTE g_PaletteCrossfadeSourceBuffer[0x408]; // weak
+int g_ActiveBlitCursor; // weak
+RenderPrimarySurfaceStorage g_MainRenderDevice; // weak
+#define g_RenderDeviceClipRightX (*(__int16 *)((unsigned char *)&g_MainRenderDevice + 2))
+#define g_RenderDeviceDisplayContextPtr (*(int *)((unsigned char *)&g_MainRenderDevice + 0xB8))
+#define g_DDrawDevicePtr (*(int *)((unsigned char *)&g_MainRenderDevice + 0xBC))
+#define g_RenderContext (*(int *)((unsigned char *)&g_MainRenderDevice + 0xC4))
+#define g_RenderDeviceAviModeChangePending (*(int *)((unsigned char *)&g_MainRenderDevice + 0xC8))
+#define g_RenderDeviceAviModeChangeGuard (*(int *)((unsigned char *)&g_MainRenderDevice + 0xCC))
+#define g_DisplaySurfaceBitDepth (*(int *)((unsigned char *)&g_MainRenderDevice + 0xD4))
+#define g_RenderEnvPaletteContext (*(_UNKNOWN *)((unsigned char *)&g_MainRenderDevice + 0xDC))
+RenderSurfaceStorage g_RenderDeviceStorage; // weak
+_BYTE g_DefaultPaletteTable[1024]; // weak
+_BYTE g_PaletteScratchSurfaceBuffer[1024]; // idb
+_BYTE g_PaletteRegionUnusedBuffer5[5]; // weak
+char g_Render_BackgroundColorIndex; // weak
+char g_PaletteRemapRegionUnusedByte; // weak
+char g_PaletteShadowRemapTableMinus1[]; // weak
+char g_Video_LowColorRemapTable[32]; // weak
+int g_DlxDirectoryEntryStartOffsets[]; // weak
+int g_DlxDirectoryEntryEndOffsets[1024]; // weak
+char g_TextSprite_StyleFlag; // weak
+int g_DlxSpriteSetOffsetTable[]; // weak
+int g_DlxDirEntryEndOffsetTable[1022]; // weak
+int g_DlxDirTotalDataOffset; // weak
+int g_WorldMap_NextPaletteAnimTime = 0; // weak
+int g_WorldMap_NextTileStateAnimTime = 0; // weak
+int g_WorldMap_PaletteFlashStep; // weak
+int g_PaletteCrossfadeNextStepTime; // weak
+int g_WorldMapKeyScrollRepeatTime; // weak
+int g_WorldMap_CursorTileEnterTime = 0; // weak
+int g_WorldMap_LastCursorTileX = 0; // weak
+int g_WorldMap_LastCursorTileY = 0; // weak
+int g_WorldMap_HoverTooltipActiveFlag = 0; // weak
+int g_WorldMapActionHoverActive = 0; // weak
+int g_ActiveUiSpriteSet; // weak
+int g_WorldMapBackgroundSpriteSet; // weak
 int g_FogOverlaySpriteSet; // weak
-int dword_5202C8; // weak
-int dword_5202CC; // weak
-int dword_5202D0; // weak
-int dword_5202D4; // weak
-int dword_5202D8; // weak
-int dword_5202DC; // weak
-int dword_5202E0; // weak
+int g_MarksSpriteSet; // weak
+int g_MovePathStepSpriteSet; // weak
+int g_WhirlSpriteSet; // weak
+int g_FlagSpriteSet; // weak
+int g_TreeSpriteSet; // weak
+int g_WorldMapTurnBannerSpriteSet; // weak
+int g_PrimaryRenderSurface; // weak
 int gameData; // weak
-int dword_5202E8; // weak
+int g_WorldMapJoinUnitsModeActive; // weak
 int g_CurrentPlayerIndex; // weak
-int dword_5202F0; // weak
-int dword_5202F4; // weak
-int dword_5202F8; // weak
-int dword_5202FC; // weak
-int dword_520300; // weak
-int dword_520304; // weak
-int dword_520308; // weak
-int dword_52030C; // weak
-int dword_520310; // weak
-unsigned __int8 byte_520320[512]; // weak, original 0x520320..0x52051F
-unsigned __int8 byte_520520[516]; // weak
-int dword_520724; // weak
-int dword_520728; // weak
-RenderSpriteRemapEntry word_520738[1024]; // weak
-unsigned char byte_521043 = 0; // weak
-RenderSpriteRemapEntry word_521338[1024]; // weak
-_WORD word_521F38[1528]; // weak
-unsigned short word_522B28[1038]; // weak
-__int16 word_522CF6 = 0; // weak
+int g_WorldMapViewportScrolledFlag; // weak
+int g_MapPalettePtr; // weak
+int g_WorldMapTurnLoopExitFlag; // weak
+int g_AdvanceToNextPlayerFlag; // weak
+int g_WorldMapGameLostExitFlag; // weak
+int g_TurnEndedByCompletionFlag; // weak
+int g_WorldMapBuilderMenuAction; // weak
+int g_ActionButtonSpriteSet; // weak
+int g_WorldMapFrameRedrawDisabled; // weak
+unsigned __int8 g_UiDrawTextBuffer[512]; // weak, original 0x520320..0x52051F
+unsigned __int8 g_UiDrawTextFmtBuffer[516]; // weak
+int g_TextSpriteLastActivatedSlotIndex; // weak
+int g_ActiveTextSpriteSlot; // weak
+RenderSpriteRemapEntry g_TerrainAnimationRemapTable[1024]; // weak
+unsigned char g_SpecialTileAnimFrameDuration = 0; // weak
+RenderSpriteRemapEntry g_SpriteCodeRemapTable[1024]; // weak
+_WORD g_FontGlyphFallbackTable3[1528]; // weak
+unsigned short g_Render_AnimatedFrameTable[1038]; // weak
+__int16 g_ColorCycleDelayLookupIndex = 0; // weak
 __int16 g_MiniMapRectLeft; // weak
 __int16 g_MiniMapRectTop; // weak
 __int16 g_MiniMapRectWidth; // weak
 __int16 g_MiniMapRectHeight; // weak
 int g_MiniMapSurface; // weak
-unsigned char byte_523350[0x400]; // weak
-unsigned char unk_523750[0x400]; // weak
-unsigned char unk_523B50[0x400]; // weak
+unsigned char g_MiniMapTileColorTableTheme0[0x400]; // weak
+unsigned char g_MiniMapTerrainColorTableVariant1[0x400]; // weak
+unsigned char g_MiniMapTerrainColorTableVariant2[0x400]; // weak
 int g_MiniMapTerrainColorTable; // weak
 char g_MiniMapPixelsPerTile; // weak
 #define g_MiniMapDrawMask_511FF0 g_MiniMapDrawMask
-#define word_523344 g_MiniMapRectLeft
-#define word_523346 g_MiniMapRectTop
-#define word_523348 g_MiniMapRectWidth
-#define word_52334A g_MiniMapRectHeight
-#define dword_52334C g_MiniMapSurface
-#define dword_523F50 g_MiniMapTerrainColorTable
-#define byte_523F54 g_MiniMapPixelsPerTile
-int dword_523F5C; // weak
-int dword_523F60; // weak
-int dword_523F68; // weak
-int dword_523F70; // weak
-int dword_523F74; // weak
-int dword_523F78; // weak
-int dword_523F7C; // weak
+#define g_MiniMapRectLeft_523344 g_MiniMapRectLeft
+#define g_MiniMapRectTop_523346 g_MiniMapRectTop
+#define g_MiniMapRectWidth_523348 g_MiniMapRectWidth
+#define g_MiniMapRectHeight_52334A g_MiniMapRectHeight
+#define g_MiniMapSurface_52334C g_MiniMapSurface
+#define g_MiniMapTerrainColorTable_523F50 g_MiniMapTerrainColorTable
+#define g_MiniMapPixelsPerTile_523F54 g_MiniMapPixelsPerTile
+int g_MapPanelSpriteSet; // weak
+int g_WorldMapTargetSurface; // weak
+int g_WorldMapUnitWalkStepCounter; // weak
+int g_UnitMoveAnimOffsetX; // weak
+int g_UnitMoveAnimOffsetY; // weak
+int g_ActiveUnitAnimSpriteSet; // weak
+int g_UnitAnimFrameIndex; // weak
 #define UNIT_SPRITE_CACHE_RECORD_STRIDE 15
 #define UNIT_SPRITE_CACHE_RECORD_COUNT 100
 #define UNIT_SPRITE_CACHE_BYTES (UNIT_SPRITE_CACHE_RECORD_STRIDE * UNIT_SPRITE_CACHE_RECORD_COUNT)
 static unsigned char g_UnitSpriteCacheRecords[UNIT_SPRITE_CACHE_BYTES]; // weak, original 0x523F88..0x524563
 #define UNIT_SPRITE_CACHE_DWORD(offset) (*(int *)(void *)(g_UnitSpriteCacheRecords + (offset)))
-#define dword_523F88 UNIT_SPRITE_CACHE_DWORD(0)
-#define byte_523F8C (g_UnitSpriteCacheRecords + 4)
-#define byte_523F8D (g_UnitSpriteCacheRecords + 5)
-#define byte_523F8E (g_UnitSpriteCacheRecords + 6)
-#define dword_523F8F UNIT_SPRITE_CACHE_DWORD(7)
-#define dword_523F93 UNIT_SPRITE_CACHE_DWORD(11)
-int dword_524568; // weak
+#define g_UnitSpriteCacheTableBase UNIT_SPRITE_CACHE_DWORD(0)
+#define g_UnitSpriteCacheRecordOwnerKey (g_UnitSpriteCacheRecords + 4)
+#define g_UnitSpriteCacheRecordPoseKey (g_UnitSpriteCacheRecords + 5)
+#define g_UnitSpriteCacheRecordFacingKey (g_UnitSpriteCacheRecords + 6)
+#define g_UnitSpriteCacheRecordSpriteHandle UNIT_SPRITE_CACHE_DWORD(7)
+#define g_UnitSpriteCacheRecordLastUseTick UNIT_SPRITE_CACHE_DWORD(11)
+int g_TerrainMoveProfileOffsetsMinus1; // weak
 int g_TerrainMoveProfileOffsets[1024]; // weak
 int g_PathingAllowBridgeCrossings; // weak
-int dword_525570; // weak
-int dword_525578; // weak
-int dword_526980; // weak
-int dword_526984; // weak
-int (__fastcall *dword_52698C)(_DWORD, _DWORD); // weak
-int (*dword_526990)(void); // weak
-int dword_526994; // weak
-int dword_526998; // weak
+int g_UnitPathfindingScratchDword; // weak
+int g_RngState; // weak
+int g_MapConstructionSwayAnimLastTick; // weak
+int g_MapIdleBuildingAnimLastTick; // weak
+int (__fastcall *g_WorldMapTileOverlayDrawHook)(_DWORD, _DWORD); // weak
+int (*g_WorldMapDrawExtensionHook)(void); // weak
+int g_UnitStackSelectionModeActive; // weak
+int g_MapFlagAnimationFrame; // weak
 int g_WorldMapAttentionFlashStartTick; // weak
-int dword_5269A0; // weak
-int dword_5269A4; // weak
-int dword_5269A8; // weak
-int dword_5269AC; // weak
-int dword_5269B0; // weak
-_UNKNOWN unk_5269B4; // weak
-char byte_5269B7[]; // weak
-char byte_5269B8[]; // weak
-char byte_5269B9[31]; // weak
+int g_UnitBlinkFlashTickTime; // weak
+int g_UnitBlinkFlashFrame; // weak
+int g_BlinkFlashTileX; // weak
+int g_BlinkFlashTileY; // weak
+int g_TileBlinkFlashFrame; // weak
+_UNKNOWN g_TileBlinkFlashTickTime; // weak
+char g_BuildingSwayJitterOffsetsOdd[]; // weak
+char g_BuildingSwayJitterOffsetsX[]; // weak
+char g_BuildingSwayJitterOffsetsY[31]; // weak
 TileHighlightSlot g_TileHighlightSlots[8]; // weak
 int logEnabled; // weak
-int dword_526A20; // weak
-int dword_526A24; // weak
-int dword_526A2C; // weak
-int (*dword_526A30)(void); // weak
-int dword_526A34; // weak
+int g_BattleInProgressFlag; // weak
+int g_TooltipCursorActive; // weak
+int g_ActiveWidgetSpriteTableIndex; // weak
+int (*g_ActiveDialogAnimationTickHook)(void); // weak
+int g_SavedCursorDescriptor; // weak
 LARGE_INTEGER Frequency; // idb
 int g_SelectedBuildingRecord; // weak
 int g_CastleScreenSurface; // weak
-_BYTE byte_526A70[1024]; // weak
+_BYTE g_CastleScreenPaletteBuffer[1024]; // weak
 int g_ActiveCastleOwnerIsChristian; // weak
 int g_CastleSceneIconSpriteSet; // weak
 int g_CastleAmbientSpriteSet; // weak
 int g_CastleStatusSpriteSet; // weak
 int g_CastleScreenExitRequested; // weak
 int g_CastleDestroyConfirmed; // weak
-int dword_526E88; // weak
-int dword_526E8C; // weak
-int dword_526E90; // weak
-int dword_526E94; // weak
-int dword_526E98; // weak
-int dword_526E9C; // weak
-int dword_526EA0; // weak
-int dword_526EA4; // weak
-int dword_526EA8; // weak
-int dword_526EAC; // weak
-int dword_526EB0; // weak
-int dword_526EB4; // weak
-int dword_526EB8; // weak
-int dword_526EBC; // weak
-int dword_526EC0; // weak
-int dword_526EC4; // weak
-int dword_526EC8; // weak
-int dword_526ECC; // weak
-int dword_526ED0; // weak
-int dword_526ED4; // weak
-int dword_526ED8; // weak
-int dword_526EDC; // weak
-int dword_526EE0; // weak
-int dword_526EE4; // weak
-int dword_526EE8; // weak
+int g_CastleAmbientLayer1_LastTick; // weak
+int g_CastleAmbientLayer1_Frame; // weak
+int g_CastleAmbientLayer2_LastTick; // weak
+int g_CastleAmbientLayer2_Frame; // weak
+int g_CastleAmbientLayer4_LastTick; // weak
+int g_CastleAmbientLayer4_Frame; // weak
+int g_CastleAmbientLayer3_NextDueTick; // weak
+int g_CastleAmbientLayer3_LastTick; // weak
+int g_CastleAmbientLayer3AnimFrame; // weak
+int g_CastleAmbientLayer5_NextDueTick; // weak
+int g_CastleAmbientLayer5_LastTick; // weak
+int g_CastleAmbientLayer5_Frame; // weak
+int g_CastleAmbientLayer6_LastTick; // weak
+int g_CastleAmbientLayer6_Frame; // weak
+int g_CastleAmbientLayer7_LastTick; // weak
+int g_CastleAmbientLayer7_Frame; // weak
+int g_CastleAmbientLayer8_NextDueTick; // weak
+int g_CastleAmbientLayer8_LastFrameTimeMs; // weak
+int g_CastleAmbientLayer8_Frame; // weak
+int g_CastleAmbientLayer9_NextPlayTimeMs; // weak
+int g_CastleAmbientLayer9_LastFrameTimeMs; // weak
+int g_CastleAmbientLayer9_Frame; // weak
+int g_CastleAmbientLayer10_NextPlayTimeMs; // weak
+int g_CastleAmbientLayer10_LastFrameTimeMs; // weak
+int g_CastleAmbientLayer10AnimFrame; // weak
 int g_TooltipBackdropSurface; // weak
 int g_TooltipTop; // weak
 int g_TooltipLeft; // weak
 int g_TooltipBottom; // weak
 int g_TooltipRight; // weak
 int g_TooltipResourceHandle; // weak
-int dword_526F0C; // weak
+int g_TooltipCaptureArg5; // weak
 char g_TooltipTextBuffer[0x68]; // weak
-_DWORD dword_526F78[10]; // weak
-int dword_526FA0; // weak
-int dword_527C24; // weak
+_DWORD g_UnitStackSlotSelectedFlags[10]; // weak
+int g_SelectedUnitStackRecordPtr; // weak
+int g_CurrentPlayerInfoSpriteSet; // weak
 int g_RoadBuildModeLastAnimationTick; // weak
 int g_RoadBuildModeExitRequested; // weak
-int dword_527C34; // weak
+int g_RoadBuildModeHasBuildTarget; // weak
 int g_RoadBuildModeAnimationFrameIndex; // weak
-int dword_527C40; // weak
+int g_BattleUnitMoveAnimStepCounter; // weak
 char g_TilePassabilityMask[1023]; // weak
-char byte_531C8F[]; // weak
-char byte_531C90[40]; // weak
+char g_UnitTypeBattleMoveFlagsMinus1[]; // weak
+char g_UnitTypeFlatMoveCostFlags[40]; // weak
 int g_MapIgnoreUnitOccupancy; // weak
-int dword_531CBC; // weak
-int dword_531CC0; // weak
-int dword_531CC4; // weak
-int dword_531CD0; // weak
-int dword_531CD4; // weak
-__int64 qword_531CD8; // weak
+int g_UnitMoveTrackPackedNodeScratch; // weak
+int g_UnitMoveAnimTickParityCounter; // weak
+int g_UnitArrivalAnimTickParityCounter; // weak
+int g_BuildPlacementLoopDone; // weak
+int g_BuildCursorBuildingType; // weak
+__int64 g_BuildPlacementTileXY; // weak
 int g_BuildingEconomyDialogSpriteSet; // weak
 int g_BuildingEconomyDialogExitSignal; // weak
 int g_BuildingEconomyDialogPendingPeasantTransfer; // weak
 int g_BuildingEconomyDialogPendingGoldTransfer; // weak
 int g_BuildingEconomyDialogBuilding; // weak
-int dword_532040; // weak
+int g_BattleViewportScrollRepeatDelayBias; // weak
 int g_MapData; // weak
 int g_BattleHudSprites; // weak
-int dword_532050; // weak
-int dword_532054; // weak
-int dword_532058; // weak
-int dword_53205C; // weak
-int dword_532060; // weak
+int g_BattleButtonsSpriteSet; // weak
+int g_BattleUnitPanelIconSpriteSet; // weak
+int g_BattleCasualtySpriteSet; // weak
+int g_Battle_ShootModeEnabled; // weak
+int g_UnitBattleChargeModeActive_532060; // weak
 int g_BattleLoopExitCode; // weak
 int g_UnitBattleActionLoopExitRequested; // weak
 int g_AttackerStartsOnLeft; // weak
 int g_DefenderStartsOnLeft; // weak
-int dword_532074; // weak
-int dword_532078; // weak
+int g_UnitBattleChargeModeStartTick_532074; // weak
+int g_UnitBattleAiTurnCounter; // weak
 int g_UnitBattlePromptDialogResult; // weak
-char byte_532088[]; // weak
-_BYTE dword_532090[92]; // idb
-int dword_5320EC; // weak
-int dword_5320F0; // weak
-int dword_5320F4; // weak
-int dword_5320F8; // weak
-int dword_5320FC; // weak
-int dword_532100; // weak
-int dword_532104; // weak
-int dword_53210C; // weak
-_UNKNOWN unk_53211C; // weak
-char byte_53211F[]; // weak
+char g_UnitBattlePanelStatAnimCounters[]; // weak
+_BYTE g_BattleUnitOrderBitsBackup[92]; // idb
+int g_UnitBattleHitAnimFrame; // weak
+int g_UnitBattleAnimatingUnitSpriteSet; // weak
+int g_UnitFadeAnimCurrentOffset; // weak
+int g_UnitFadeAnimLastUpdateTime; // weak
+int g_UnitBattleProjectileSpriteSet; // weak
+int g_BattleShotAnimFrameIndex; // weak
+int g_BattleWallGateLastSpriteChar; // weak
+int g_BattlePanelUnitFatiguePercent; // weak
+_UNKNOWN g_GarrisonDialogExitScratch; // weak
+char g_BattleStateRegionUnusedByte[]; // weak
 char g_BattleSavedActionPointsBySlot[24]; // weak
-int dword_532138; // weak
-int dword_53213C; // weak
+int g_BuildingGarrisonDialogExitCountdownLastTickMs; // weak
+int g_BuildingGarrisonDialogSelectedUnitAnimLastTickMs; // weak
 int g_BuildingGarrisonDialogUiSpriteSet; // weak
-int dword_532148; // weak
+int g_BuildingGarrisonDialogCloseRequested; // weak
 int g_BuildingGarrisonDialogUseChrTheme; // weak
 int g_BuildingGarrisonDialogActiveBuilding; // weak
 int g_BuildingGarrisonDialogResourceHandle; // weak
@@ -12848,412 +12848,412 @@ int g_BuildingGarrisonDialogSelectedSlotIndex; // weak
 int g_BuildingGarrisonDialogSelectedUnitSpriteSet; // weak
 int g_BuildingGarrisonDialogSelectedUnitAnimFrame; // weak
 int g_BuildingGarrisonDialogSlotSpriteSets[12]; // weak
-int dword_5321C4[12]; // weak
+int g_BuildingGarrisonDialogSlotAnimFrames[12]; // weak
 int g_BuildingGarrisonDialogPendingExitCountdown; // weak
-int dword_5321F8; // weak
-int dword_532200; // weak
-int dword_532204; // weak
-int dword_53220C; // weak
+int g_GarrisonUnitCellSurface; // weak
+int g_CastleProductionPortraitAnimLastTickMs; // weak
+int g_CastleProductionLicenceGridAnimLastTickMs; // weak
+int g_BuildingUiDlxSpriteSet; // weak
 int g_CastleProductionExitSignal; // weak
-int dword_532214; // weak
-int dword_532218; // weak
-int dword_53221C; // weak
+int g_CastleProductionUseChrTheme; // weak
+int g_CastleProductionBuildingPtr; // weak
+int g_CastleProductionPaletteBuffer; // weak
 int g_CastleProductionSelectedAvailableUnitIndex; // weak
-unit_type dword_532224[41]; // weak
-int dword_532228[40]; // weak
-int dword_5322C8; // weak
-int dword_5322CC; // weak
+unit_type g_CastleProduction_AvailableUnitTypes[41]; // weak
+int g_CastleProductionAvailableUnitTypesLookahead[40]; // weak
+int g_ProductionGridSelectedIndex; // weak
+int g_CastleProductionUnitPortraitFrame; // weak
 int g_CastleProductionSelectedUnitSpriteSet; // weak
-int dword_5322D4[]; // weak
-int dword_532304[12]; // weak
-int dword_532334; // weak
-int dword_532338; // weak
-int dword_53233C; // weak
-int dword_53234C; // weak
-int dword_532350; // weak
-int dword_532354; // weak
+int g_CastleProductionSlotAnimFrames[]; // weak
+int g_CastleProduction_LicenceSlotSpriteHandles[12]; // weak
+int g_LicenceGridAddAnimSlotIndex; // weak
+int g_CastleLicenceRemovalSlotIndex; // weak
+int g_CastleProductionLicenceTransitionFrame; // weak
+int g_BuildingTransferDialogExitScratch; // weak
+int g_Building_TransferAmount; // weak
+int g_BuildingTransferSourcePtr; // weak
 int g_BuildingTransferTargetListIndex; // weak
 __int16 g_BuildingTransferTargetIds[BUILDING_TRANSFER_TARGET_LIST_CAPACITY]; // weak
-#define word_532362 (g_BuildingTransferTargetIds + 1)
+#define g_BuildingTransferTargetIdsLookahead (g_BuildingTransferTargetIds + 1)
 int g_BuildingTransferTargetListSpriteSet; // weak
 int g_BuildingTransferTargetListDrawX; // weak
 int g_BuildingTransferTargetListDrawY; // weak
-int dword_532440; // weak
-int dword_532444; // weak
-int dword_532448[]; // weak
-int dword_53244C[17621]; // weak
-int dword_5437A0; // weak
-int dword_5437A4; // weak
-int dword_5437A8; // weak
-int dword_5437AC; // weak
-int dword_5437B0; // weak
-int dword_5437B4; // weak
-int dword_5437B8; // weak
-int dword_5437C0; // weak
-int dword_5437C4; // weak
-int dword_5437C8; // weak
-int dword_5437CC; // weak
-int dword_5437D0; // weak
-int dword_5437D4; // weak
+int g_UnitBattleAiReachGrid; // weak
+int g_UnitBattleAiReachGridCellSecondField; // weak
+int g_BattleCellStateGrid[]; // weak
+int g_UnitBattleTileScoreGrid[17621]; // weak
+int g_UnitBattleScanTileRow; // weak
+int g_BattleTargetTileCol; // weak
+int g_BattleAiActionAttemptCount; // weak
+int g_BattleShootingUnitMoveActiveFlag; // weak
+int g_UnitBattleWallScanTileRow; // weak
+int g_BattleWallScanColumn; // weak
+int g_BattleWallScanTileX; // weak
+int g_UnitBattleAiCandidateQueue; // weak
+int g_BattleAiCandidateQueue_Vtable; // weak
+int g_UnitBattleAiCandidateQueueTail; // weak
+int g_BattleAiUnitQueueCount; // weak
+int g_BattleAiCandidateQueue_AllocFn; // weak
+int g_BattleAiCandidateQueue_FreeFn; // weak
 int g_BattleDeploymentBucketStorage[48]; // recovered contiguous block at 0x5437DC..0x54389B
-#define dword_5437DC (g_BattleDeploymentBucketStorage)
-#define dword_543808 (g_BattleDeploymentBucketStorage + 11)
-#define dword_543838 (g_BattleDeploymentBucketStorage + 23)
-#define dword_54386C (g_BattleDeploymentBucketStorage + 36)
-int dword_5438A0; // weak
-int dword_5438A4; // weak
-int dword_5438AC; // weak
-int dword_5438B0; // weak
-int dword_5438B8; // weak
-int dword_5438BC; // weak
-int dword_5438C4; // weak
-int dword_5438C8; // weak
-char byte_5438DB[13]; // weak
-char byte_5438E8[650]; // weak
-#define byte_5438E9 (byte_5438E8 + 1)
-#define byte_5438EA (byte_5438E8 + 2)
-#define byte_5438EB (byte_5438E8 + 3)
-#define byte_5438EC (byte_5438E8 + 4)
-#define dword_5438ED (*(int *)(byte_5438E8 + 5))
-#define dword_5438F1 (*(int *)(byte_5438E8 + 9))
+#define g_BattleDeploymentBucketStorage_5437DC (g_BattleDeploymentBucketStorage)
+#define g_BattleDeploymentBucketRole1 (g_BattleDeploymentBucketStorage + 11)
+#define g_BattleDeploymentBucketRole2 (g_BattleDeploymentBucketStorage + 23)
+#define g_BattleDeploymentBucketRole3 (g_BattleDeploymentBucketStorage + 36)
+int g_GateDoorDialogV1SpriteSet; // weak
+int g_GateDoorDialogExitFlag_V1; // weak
+int g_GateDoorDialogV2SpriteSet; // weak
+int g_GateDoorDialogExitFlag_V2; // weak
+int g_GateDoorDialogV3SpriteSet; // weak
+int g_GateDoorDialogExitFlag_V3; // weak
+int g_GateDoorDialogV4SpriteSet; // weak
+int g_GateDoorDialogExitFlag_V4; // weak
+char g_BuildingSpriteCacheRegionBuffer13[13]; // weak
+char g_BuildingSpriteCache[650]; // weak
+#define g_BuildingSpriteCacheKeyCol2 (g_BuildingSpriteCache + 1)
+#define g_BuildingSpriteCacheKeyCol3 (g_BuildingSpriteCache + 2)
+#define g_BuildingSpriteCacheKeyCol4Signed (g_BuildingSpriteCache + 3)
+#define g_BuildingSpriteCacheKeyCol5 (g_BuildingSpriteCache + 4)
+#define g_BuildingSpriteCacheRecordSpriteHandle (*(int *)(g_BuildingSpriteCache + 5))
+#define g_BuildingSpriteCacheRecordLastUseTick (*(int *)(g_BuildingSpriteCache + 9))
 #define BUILDING_SPRITE_CACHE_RECORD_STRIDE 13
 #define BUILDING_SPRITE_CACHE_RECORD_COUNT 50
-int dword_543C54; // weak
-int dword_543C58[]; // weak
-int dword_543C80; // weak
-int dword_543C84; // weak
-char byte_543C88[20]; // weak
-int dword_543C9C; // weak
+int g_DemoTextDLXSpriteSet; // weak
+int g_BuildingUnitsPopupSlotSpriteSets[]; // weak
+int g_BuildingUIRecordPtr; // weak
+int g_TempleOutcomePopupCloseFlag; // weak
+char g_BuildingUnitsPopupSelectedSlots[20]; // weak
+int g_MainMapMusicHandle; // weak
 int g_LastUnitActivateSoundHandle; // weak
 int g_CurrentUnitMoveSoundHandle; // weak
 int g_CurrentUnitMoveSoundVariant; // weak
 int g_CurrentUnitMoveSoundTypeId; // weak
-int dword_543CC8[11]; // weak
-int dword_543D14; // weak
-int dword_543D18; // weak
-int dword_543D1C; // weak
-int dword_543D20; // weak
-int dword_543D24; // weak
-char byte_543D28[28]; // weak
-int dword_543D44; // weak
-char byte_543D48[12]; // weak
+int g_FileSystemMountTable[11]; // weak
+int g_SaveSlotDialogDone; // weak
+int g_SaveSlotDialogSelectedRow; // weak
+int g_SaveSlotDialogIsSaveMode; // weak
+int g_SaveSlotDialogResult; // weak
+int g_TextInputCaretPos; // weak
+char g_SaveSlotNameEditBuffer[28]; // weak
+int g_CheatEditCaretIndex; // weak
+char g_CheatEntryTextBuffer[12]; // weak
 int g_DecisionDialogExitSignal; // weak
 int g_DecisionDialogResult; // weak
 int g_DecisionDialogConfirmDisabled; // weak
 int g_PlayGameMenuSpriteSetHandle; // weak
 int g_PlayGameMenuExitRequested; // weak
 int g_MainMenuRequestedScreen; // weak
-unsigned __int8 byte_543D80[1024]; // weak
+unsigned __int8 g_MenuScreenPaletteBuffer[1024]; // weak
 int g_MainMenuMusicHandle; // weak
-int dword_544184; // weak
-char byte_544188[]; // weak
-char byte_544189; // weak
-char byte_54418A; // weak
-char byte_54418B; // weak
-int dword_544190; // weak
-int dword_544194; // weak
-int dword_544198; // weak
-_BYTE byte_5441A0[11]; // weak
-int dword_5441D8; // weak
-int dword_5441DC; // weak
-int dword_5441E0; // weak
-_UNKNOWN unk_5441F0; // weak
-_UNKNOWN unk_5442C0; // weak
-int dword_5443F0; // weak
-int dword_5443F4; // weak
-int dword_5443F8; // weak
-int dword_5443FC; // weak
-int dword_54453C; // weak
-int dword_544540; // weak
-int dword_54454C; // weak
-int dword_544550; // weak
-int dword_544554; // weak
-int dword_544558; // weak
+int g_PlayGameMenuSelectedAction; // weak
+char g_MultiplayerPlayerSlotTypes[]; // weak
+char g_MultiplayerPlayerSlot1Type; // weak
+char g_MultiplayerPlayerSlot2Type; // weak
+char g_MultiplayerPlayerSlot3Type; // weak
+int g_PlayGameMenuLaunchGameFlag; // weak
+int g_PlayerNameEditCaretPos; // weak
+int g_MpEditNameSlotIndex; // weak
+_BYTE g_MultiplayerPlayerNameEditTable[11]; // weak
+int g_MultiplayerSelectedMapIndex; // weak
+int g_MultiplayerOpponentListScrollOffset; // weak
+int g_LoadMenuSelectedSlotIndex; // weak
+_UNKNOWN g_PrisonerIntakeMessageBuffer; // weak
+_UNKNOWN g_InfoWindowFormatBuffer; // weak
+int g_StatScreenSpriteSet; // weak
+int g_PrisonerDialogExitSignal; // weak
+int g_StatScreenPaletteBuffer; // weak
+int g_CurrentPrisonBuildingRecord; // weak
+int g_InGameOptionsDialogExitSignal; // weak
+int g_InGameOptionsSpriteSet; // weak
+int g_AITurnLogFactHandle_Turn; // weak
+int g_AITurnPlayerIntelligenceFactHandle; // weak
+int g_AITurnCastleCountFactHandle; // weak
+int g_AiTurnFortressCountFactHandle; // weak
 enum { CASTLE_SITE_ANCHOR_CACHE_COUNT = 100 };
 int g_CastleSiteAnchorRows[CASTLE_SITE_ANCHOR_CACHE_COUNT]; // weak
 int g_CastleSiteAnchorColumns[CASTLE_SITE_ANCHOR_CACHE_COUNT]; // weak
-int dword_544578; // weak
-int dword_54457C; // weak
-int dword_5448A0; // weak
-int dword_5448B0; // weak
-int dword_5448B4; // weak
-_UNKNOWN unk_5448B8; // weak
-__int16 word_544CBA; // weak
-__int16 word_544CBC; // weak
-char byte_544CBE; // weak
-int dword_544CC0; // weak
-int dword_544CC4; // weak
-int dword_544CC8; // weak
-char byte_544CCC; // weak
-int dword_544CD0; // weak
+int g_CastleSiteRegionUnusedDwordA; // weak
+int g_CastleSiteRegionUnusedDwordB; // weak
+int g_CheatForceWinMissionFlag; // weak
+int g_RenderStateNextRefreshTick; // weak
+int g_DDPageFlipWasInProgressFlag; // weak
+_UNKNOWN g_CursorSpritePalette; // weak
+__int16 g_DeviceRecordLastX; // weak
+__int16 g_DeviceRecordLastY; // weak
+char g_DeviceRecordLastFlipLostState; // weak
+int g_DeviceRectTweenTimeBase; // weak
+int g_DeviceReplaySegmentBaseTick; // weak
+int g_DeviceReplaySegmentTargetTick; // weak
+char g_DemoPlaybackCursorButtonState; // weak
+int g_DemoScriptCurrentTick; // weak
 _DWORD g_RenderState[286]; // weak
-#define dword_544CFC (*((int *)&g_RenderState[9]))
-#define dword_544D00 (*((int *)&g_RenderState[10]))
-int dword_544D10; // weak
-int dword_544D14; // weak
-char byte_54512C; // weak
-int dword_545140; // weak
-int dword_545150; // weak
-_UNKNOWN unk_545158; // weak
-int dword_54517C; // weak
+#define g_MouseCursorRawX (*((int *)&g_RenderState[9]))
+#define g_MouseCursorRawY (*((int *)&g_RenderState[10]))
+int g_CursorOverlayPresented; // weak
+int g_ActiveCursorDescriptorPtr; // weak
+char g_CursorCoordShift; // weak
+int g_WorldMap_KeyboardInputDisabled; // weak
+int g_ActiveCursorDescriptor; // weak
+_UNKNOWN g_BootstrapCursorDescriptor; // weak
+int g_Input_LastRepeatKeyCode; // weak
 int g_SoundPausedForInactiveApp; // weak
 InputBackendState g_InputBackendState; // weak
 int g_ShouldPresentOnReactivate; // weak
 HWND hWnd; // idb
-int dword_5452E4; // weak
-int dword_5452E8; // weak
-char byte_5452EC[32788]; // weak
-_DWORD dword_54D340[4]; // idb
+int g_VideoModeSwitchStartTick; // weak
+int g_MissionDefeatVideoPlayedGuard; // weak
+char g_Rgb15ToPaletteLut[32788]; // weak
+_DWORD g_AviFrameRectInitScratch[4]; // idb
 struct _RTL_CRITICAL_SECTION stru_54D350; // idb
-int dword_54D368; // weak
-int dword_54D36C; // weak
-int dword_54D370; // weak
-int dword_54D374; // weak
-int dword_54D378; // weak
-int (__cdecl *dword_54D37C)(_DWORD, _DWORD, _DWORD, _DWORD); // weak
-int dword_54D380; // weak
-int dword_54D384; // weak
-int dword_54D388; // weak
-int dword_54D38C; // weak
-int dword_54D390; // weak
-int dword_54D394; // weak
-int dword_54D398; // weak
-int dword_54D39C; // weak
-int dword_54D3A0; // weak
-int dword_54D3A4; // weak
-int dword_54D3B8; // weak
-int dword_54D3BC; // weak
-int dword_54D3C0; // weak
-int dword_54D3C4; // weak
-int dword_54D3C8; // weak
-int dword_54D3CC; // weak
-int dword_54D3D0; // weak
-int dword_54D3D8; // weak
+int g_DirectSoundDevice; // weak
+int g_DSoundStreamWriteOffset; // weak
+int g_DSoundPrimaryBuffer; // weak
+int g_CSS_DSoundPlayCursor; // weak
+int g_DSoundCoopWindowHandle; // weak
+int (__cdecl *g_Audio_MixToOutputConvertFn)(_DWORD, _DWORD, _DWORD, _DWORD); // weak
+int g_CSS_DSoundWritePrimaryMode; // weak
+int g_MixerFormatFlags; // weak
+int g_CSS_SampleFrameBytes; // weak
+int g_DSoundStreamBufferBytes; // weak
+int g_Audio_MixChunkSampleCount; // weak
+int g_CSS_MixChunkSamplesRemaining; // weak
+int g_DSoundRefillThresholdBytes; // weak
+int g_AudioSampleRateHz; // weak
+int g_CSS_AudioHadForegroundFocus; // weak
+int g_DSoundStallTickTimestamp; // weak
+int g_SampleCacheListHead; // weak
+int g_CSS_SampleCacheBytesUsed; // weak
+int g_CSS_SampleCacheByteBudget; // weak
+int g_CSS_ActiveVoiceCount; // weak
+int g_CssVoicePoolSize; // weak
+int g_CSS_StreamBufferMs; // weak
+int g_SoundChannelArrayBase; // weak
+int g_StreamServiceLockEntryCount; // weak
 struct _RTL_CRITICAL_SECTION CriticalSection; // idb
-int dword_54D3F8; // weak
+int g_CSS_MixerLockNestingCount; // weak
 struct _RTL_CRITICAL_SECTION stru_54D3FC; // idb
-int dword_54D414; // weak
+int g_CSS_StreamReadingActive; // weak
 HANDLE hThread; // idb
-int dword_54D41C; // weak
-int dword_54D420; // weak
+int g_CSS_StreamThreadHandle; // weak
+int g_CSS_StreamReadThreadLockRefCount; // weak
 struct _RTL_CRITICAL_SECTION stru_54D424; // idb
-int dword_54D440; // weak
+int g_CSS_StreamServiceThreadLockRefCount; // weak
 struct _RTL_CRITICAL_SECTION stru_54D444; // idb
-int dword_54D45C; // weak
-int dword_54D460; // weak
-int dword_54D468; // weak
-int dword_54D46C; // weak
-int dword_54D470; // weak
-int dword_54D474; // weak
-int dword_54D478; // weak
-int dword_54D47C; // weak
-int dword_54D480; // weak
-int dword_54D488; // weak
-int dword_54D48C; // weak
-int dword_54D490; // weak
-int dword_54D498; // weak
+int g_CSS_StreamThreadRunning; // weak
+int g_CSS_DevicePollPending; // weak
+int g_CSS_ActiveSoundDriver; // weak
+int g_CSS_DeviceConfigDefaultZero; // weak
+int g_AudioWindowHandle; // weak
+int g_CSS_DeviceSampleRateHz; // weak
+int g_CSS_DeviceOpenParam2; // weak
+int g_CSS_DeviceConfigDefaultNegOne; // weak
+int g_CSS_VoiceCount; // weak
+int g_CSS_AudioDeviceActive; // weak
+int g_CSS_DeviceSearchIndex; // weak
+int g_CSS_FatalErrorHandler; // weak
+int g_CSS_DeviceSearchThreadRefCount; // weak
 struct _RTL_CRITICAL_SECTION stru_54D49C; // idb
-int dword_54D4B4; // weak
-int dword_54D4B8; // weak
-int dword_54D4C0[32]; // weak
-int dword_54D540[]; // weak
-int dword_54D5BC[]; // weak
-int dword_54D5C0[32]; // weak
-int dword_54D640[]; // weak
+int g_CSS_DevicePollThreadRunning; // weak
+int g_MediaFileStreamProvider; // weak
+int g_CSS_WaveBufferDataPtrs[32]; // weak
+int g_CSS_WaveBufferMemHandles[]; // weak
+int g_CSS_WaveBufferStateArray[]; // weak
+int g_CSS_WaveHeaderPreparedFlags[32]; // weak
+int g_CSS_WaveHeaderMemHandles[]; // weak
 LPWAVEHDR pwh[32]; // weak
-int dword_54D740; // weak
-int dword_54D744; // weak
-int dword_54D748; // weak
-int dword_54D74C; // weak
-int (__cdecl *dword_54D750)(_DWORD, _DWORD, _DWORD, _DWORD); // weak
-_DWORD dword_54D754; // idb
+int g_WaveOutBufferRingIndex; // weak
+int g_CSS_WaveBlockAlign; // weak
+int g_CSS_WaveOutChunkSampleCount; // weak
+int g_CSS_WaveOutRefillRemaining; // weak
+int (__cdecl *g_AudioMixToOutputFunc)(_DWORD, _DWORD, _DWORD, _DWORD); // weak
+_DWORD g_CSS_WaveOutFillByteOffset; // idb
 HWAVEOUT hwo; // idb
-int dword_54D75C; // weak
-int dword_54D760; // weak
+int g_WaveOutFormatFlags; // weak
+int g_CSS_MixChannelCount; // weak
 SIZE_T dwBytes; // idb
-int dword_54D768; // weak
-int dword_54D76C[]; // weak
-int dword_54D770; // weak
-int dword_54D968[]; // weak
-int dword_54DB6C; // weak
-int dword_54DB70; // weak
-int dword_54DB74; // weak
-int dword_54DB78; // weak
-int dword_54DB7C; // weak
-int dword_54DB80; // weak
-int dword_54DB84; // weak
-int dword_54DB88; // weak
-int dword_54DB8C; // weak
-int dword_54DB90; // weak
-int dword_54DB94; // weak
-int dword_54DB98; // weak
-int dword_54DB9C; // weak
-_DWORD dword_54DBA0; // idb
-int dword_54DBA4; // weak
-int dword_54DBA8; // weak
-int dword_54DBAC; // weak
-int dword_54DBB0; // weak
-int dword_54DBB4; // weak
-int dword_54DBB8; // weak
-int dword_54DBBC; // weak
-int dword_54DBC0; // weak
-_UNKNOWN unk_54DBE0; // weak
-int dword_54DCF0; // weak
-int dword_54DCF4; // weak
-char byte_54DCF8; // weak
-int dword_54DD00; // weak
-int dword_54DD04; // weak
-int dword_54DD08; // weak
-int dword_54DD0C; // weak
-int dword_54DD10; // weak
-int dword_54DD14; // weak
-int dword_54DD18; // weak
+int g_CSS_SampleRateHz; // weak
+int g_CSS_MixLookupTable[]; // weak
+int g_CSS_MixLookupTableWriteBase; // weak
+int g_CSS_MixLookupComplementTable[]; // weak
+int g_CSS_MixIdleChannelFlag; // weak
+int g_CSS_MixBufferAllocBase; // weak
+int g_CSS_MixSuspendedFlag; // weak
+int g_CssMixChannelsReadyFlag; // weak
+int g_CSS_CurrentVolumeScaleLevel; // weak
+int g_CssMixChannelCount; // weak
+int g_CSS_MixBufferSampleCount; // weak
+int g_CSS_MixMasterVolume; // weak
+int g_CssMixBufferAlignedBase; // weak
+int g_CssMixChannels; // weak
+int g_CSS_QueuedSoundSlotTable; // weak
+int g_CssMixBufferSizeBytes; // weak
+int g_CSS_MixSampleRate; // weak
+_DWORD g_CSS_MixAccumBufferPtr; // idb
+int g_CSS_MixChannelCount_54DBA4; // weak
+int g_ClipsMemoryTable; // weak
+int g_ClipsMemFreeListTemp; // weak
+int g_Rules_MemPoolFreeBucketIndex; // weak
+int g_ClipsMemPoolReturnBucketIndex; // weak
+int g_HeapChunkHeaderSize; // weak
+int g_MemPoolListHead; // weak
+int g_MemPoolBlockHeaderSize; // weak
+_UNKNOWN g_DirectDrawErrorMessageBuffer; // weak
+int g_FS_ResolvedPathEntryHolder; // weak
+int g_CurrentDirPathHolder_VtablePtr; // weak
+char g_FileSystem_CwdHolderInitFlag; // weak
+int g_FileSystemStrippedPathHolderText; // weak
+int g_CurrentEntryPathHolder_VtablePtr; // weak
+int g_FileSystemMountOpenMode; // weak
+int g_FS_ArchiveRecordCacheAccessCount; // weak
+int g_FS_ArchiveRecordCacheMissCount; // weak
+int g_FS_ResolvePathByParentLeafCount; // weak
+int g_FS_PathEntryCacheMissCount; // weak
 int g_InputBackendTempJoystickDevice; // weak
-int dword_54DD24; // weak
-int dword_54DD30; // weak
-int dword_54DD40; // weak
-int dword_54DD50; // weak
-int dword_54DD54; // weak
-int dword_54DD58; // weak
-int dword_54DD5C; // weak
-int dword_54DD60; // weak
-int dword_54DD64; // weak
-int dword_54DD68; // weak
-int dword_54DD6C; // weak
-int dword_54DD70; // weak
-int dword_54DD88; // weak
-int dword_54DD8C; // weak
-_DWORD dword_54DD90; // idb
+int g_Rules_BloadFunctionPtrTable; // weak
+int g_ClipsBloadFileHandle; // weak
+int g_ClipsFunctionNameHashTable; // weak
+int g_Clips_SymbolHashTable; // weak
+int g_ClipsIntegerHashTable; // weak
+int g_ClipsFloatHashTable; // weak
+int g_ClipsBitmapHashTable; // weak
+int g_Clips_NegativeInfinitySymbol; // weak
+int g_ClipsTrueSymbol; // weak
+int g_ClipsPositiveInfinitySymbol; // weak
+int g_CLIPS_IntegerZeroValueNode; // weak
+int g_ClipsFalseSymbol; // weak
+int g_CRT_OpenStreamListHead; // weak
+int g_IO_OpenStreamListHead; // weak
+_DWORD g_CrtThreadDataMgmtDisabledFlag; // idb
 LPVOID lpTlsValue; // idb
-int dword_54DD98; // weak
-_UNKNOWN unk_54DD9C; // weak
-_UNKNOWN unk_54DDAC; // weak
-_UNKNOWN unk_54DDBC; // weak
-_UNKNOWN unk_54DEBC; // weak
-int dword_54DECC; // weak
-int dword_54DED0; // weak
-_UNKNOWN unk_54DEDC; // weak
-int dword_54DEFC; // weak
-_UNKNOWN unk_54DF00; // weak
-char byte_54E511; // weak
-int dword_54E514; // weak
-int dword_54E518; // weak
-int dword_54E51C; // weak
-int dword_54E520; // weak
-int dword_54E524; // weak
-int dword_54E528; // weak
-int dword_54E52C; // weak
-int dword_54E530[70]; // weak
-int dword_54E648; // weak
-int dword_54E64C; // weak
-int dword_54E650; // weak
-int dword_54E654; // weak
-int dword_54E658; // weak
-int dword_54E65C; // weak
-int dword_54E660; // weak
-int dword_54E664; // weak
-int dword_54E668; // weak
-int dword_54E670; // weak
-int dword_54E674; // weak
-int dword_54E678; // weak
-int dword_54E67C; // weak
-int dword_54E680; // weak
-int dword_54E684; // weak
-int dword_54E688; // weak
-int dword_54E68C; // weak
-int dword_54E690; // weak
-int dword_54E694; // weak
-int dword_54E698; // weak
-int dword_54E69C; // weak
-int dword_54E6A0; // weak
-int dword_54E6A4; // weak
-int dword_54E6A8; // weak
-int dword_54E6AC; // weak
-int dword_54E6B0; // weak
-int dword_54E6B4; // weak
-int dword_54E6B8; // weak
-int dword_54E6BC; // weak
-int dword_54E6C0; // weak
-int dword_54E6C4; // weak
-int dword_54E6C8; // weak
-int dword_54E6CC; // weak
-int dword_54E6D0; // weak
-int dword_54E6D4; // weak
-int dword_54E6D8; // weak
-int dword_54E6DC; // weak
-int dword_54E6E0; // weak
-int dword_54E6E4; // weak
-int dword_54E6E8; // weak
-int dword_54E6EC; // weak
-int dword_54E6F0; // weak
-int dword_54E6F4; // weak
-int dword_54E6F8; // weak
-int dword_54E6FC; // weak
-int dword_54E700; // weak
-int dword_54E704; // weak
-int dword_54E708; // weak
-char byte_54E710; // weak
-int dword_54E718; // weak
-char byte_54E71C[]; // weak
-char byte_54E71D[255]; // weak
-int dword_54E81C[]; // weak
-int dword_54E820[]; // weak
-int dword_54E840; // weak
-int dword_54E844; // weak
-int dword_54E848; // weak
-int dword_54E84C; // weak
-int dword_54E850; // weak
-int dword_54E854; // weak
-int dword_54E858; // weak
-int dword_54E85C; // weak
-int dword_54E860; // weak
-int dword_54E864; // weak
-int dword_54E868; // weak
-int dword_54E86C; // weak
-int dword_54E870; // weak
-int dword_54E874; // weak
-int dword_54E878; // weak
-int dword_54E87C; // weak
-int dword_54E880; // weak
-int dword_54E884; // weak
-int dword_54E888; // weak
-int dword_54E88C; // weak
-int dword_54E890; // weak
-int dword_54E894; // weak
-int dword_54E898; // weak
-int dword_54E89C; // weak
-int dword_54E8A0; // weak
-int dword_54E8A4; // weak
-int dword_54E8A8; // weak
-int dword_54E8AC; // weak
-int dword_54E8B0; // weak
-int dword_54E8B4; // weak
-int dword_54E8B8; // weak
-int dword_54E8BC; // weak
-int dword_54E8C0; // weak
-int dword_54E8C4; // weak
-int dword_54E8C8; // weak
-int dword_54E8CC; // weak
-int dword_54E8D0; // weak
-int dword_54E8D4; // weak
-int dword_54E8D8; // weak
-int dword_54E8DC; // weak
-_DWORD dword_54E8E0[2]; // weak
-int dword_54E8E8; // weak
-int dword_54E8EC; // weak
-int dword_54E8F0; // weak
-int dword_54E8F4; // weak
-int dword_54E8F8; // weak
-int dword_54E8FC; // weak
-int dword_54E900; // weak
-int dword_54E904; // weak
-int dword_54E908; // weak
-int dword_54E90C; // weak
-int dword_54E910; // weak
-int dword_54E914; // weak
-int dword_54E918; // weak
-int dword_54E91C; // weak
-_DWORD dword_54E920[440]; // idb
+int g_IO_RouterExitHandledFlag; // weak
+_UNKNOWN g_CRT_StaticLock1; // weak
+_UNKNOWN g_CRT_StaticLock3; // weak
+_UNKNOWN g_CRT_FileHandleLockSlots; // weak
+_UNKNOWN g_CRT_StaticLock2; // weak
+int g_CRT_LockInitCriticalSection; // weak
+int g_CRT_ThreadLockSystemInitialized; // weak
+_UNKNOWN g_CRT_StaticLock4; // weak
+int g_CRT_UsedLockSlotCount; // weak
+_UNKNOWN g_CRT_LockSlotPool; // weak
+char g_CRT_HeapCoalesceStateByte; // weak
+int g_ClipsDeftemplateBeingParsedPtr; // weak
+int g_ClipsFactHashTable; // weak
+int g_ClipsFactPatternNodeBloadArray; // weak
+int g_FactPatternNodeCount; // weak
+int g_ClipsFactPatternNetworkCodeGenItem; // weak
+int g_CurrentPatternFact; // weak
+int g_ClipsFactMatchMarkerList; // weak
+int g_Clips_PrimitiveEntityTable[70]; // weak
+int g_DefruleConstructTypePtr; // weak
+int g_DefruleConstructClass; // weak
+int g_DeftemplateConstructType; // weak
+int g_ClipsDeftemplateModuleItemId; // weak
+int g_ClipsSymbolEq; // weak
+int g_Clips_SymbolAnd; // weak
+int g_ClipsNotSymbol; // weak
+int g_ClipsSymbolOr; // weak
+int g_ClipsSymbolNeq; // weak
+int g_Clips_FloatConstantTable; // weak
+int g_ClipsBloadSymbolPointerArray; // weak
+int g_Clips_IntegerConstantTable; // weak
+int g_ClipsBloadBitmapPointerTable; // weak
+int g_ClipsExpressionNodeIndex; // weak
+int g_ClipsBloadExpressionCount; // weak
+int g_ClipsPackedExpressionArray; // weak
+int g_ClipsConstraintRecordArrayBase; // weak
+int g_Clips_BloadedConstraintCount; // weak
+int g_ConstraintHashTable; // weak
+int g_ClipsDeffactsModuleItemId; // weak
+int g_ClipsDeffactsConstructType; // weak
+int g_Clips_DefgenericConstructType; // weak
+int g_DefgenericModuleItemIndex; // weak
+int g_Clips_DeffunctionModuleItemIndex; // weak
+int g_ClipsDeffunctionConstructType; // weak
+int g_ClipsDefglobalModuleItemId; // weak
+int g_ClipsDefglobalConstructType; // weak
+int g_ClipsDefclassConstructType; // weak
+int g_CLIPS_DefclassModuleItemIndex; // weak
+int g_CLIPS_DribbleClockCentisecsPtr; // weak
+int g_Clips_DribbleBuffer; // weak
+int g_ClipsBatchEchoLineBuffer; // weak
+int g_ClipsBatchSourceIsStringFlag; // weak
+int g_ConstructsToCImageId; // weak
+int g_ClipsCodeDataFile; // weak
+int g_ClipsExpressionCodeFileVersion; // weak
+int g_ClipsConstructCodeEntryIndexInFile; // weak
+int g_Rules_ExprCodeNeedNewFileFlag; // weak
+int g_Rules_ConstructsToCodeBaseName; // weak
+int g_ClipsCodeHeaderFile; // weak
+int g_ClipsBsaveInstanceDataSpace; // weak
+int g_Rules_BloadBytesConsumed; // weak
+int g_Rules_InitialObjectSymbol; // weak
+int g_Clips_NameSymbol; // weak
+int g_Symbol_IsA; // weak
+int g_RuntimeGrowableByteFlagArrayPtr; // weak
+int g_CRT_EnvVarPointerArray; // weak
+int g_CrtWideEnvironTable; // weak
+char g_CRT_FpuExceptionActiveFlag; // weak
+int g_CRT_MbcsCodePageActive; // weak
+char g_CRT_MbcsLeadByteTable[]; // weak
+char g_Clips_DbcsLeadByteTable[255]; // weak
+int g_Rules_PatternParserTable[]; // weak
+int g_CLIPS_PatternParserTableByTypeId[]; // weak
+int g_DeftemplateRecordTable; // weak
+int g_DeftemplateSlotTable; // weak
+int g_DeftemplateBsaveCount; // weak
+int g_ClipsDeftemplateModuleItemArray; // weak
+int g_DeftemplateModuleItemCount; // weak
+int g_Deftemplate_SlotCount; // weak
+int g_Clips_DeftemplateCodeGenItem; // weak
+int g_DefruleModuleBloadCount; // weak
+int g_ClipsBloadJoinArray; // weak
+int g_RuleJoinNodeBsaveCount; // weak
+int g_Clips_JoinTestCount; // weak
+int g_ClipsJoinNodeArray; // weak
+int g_ClipsJoinNetworkModuleBloadArray; // weak
+int g_DeftemplateSlotParseErrorFlag; // weak
+int g_ParserBreakContextFlag; // weak
+int g_ClipsParseReturnContext; // weak
+int g_ClipsLoopContextStackTop; // weak
+int g_ClipsDefruleCodeGenItem; // weak
+int g_Module_DefModuleCount; // weak
+int g_DefglobalModuleItemCount; // weak
+int g_ClipsDefglobalModuleItemArray; // weak
+int g_Clips_DeffunctionRecordArray; // weak
+int g_DefclassNameTableCount; // weak
+int g_ClipsBloadSlotRecordCount; // weak
+int g_ClipsDefclassBsaveIndexArrayCount; // weak
+int g_Defclass_SlotNameLinkCount; // weak
+int g_ClipsBloadClassLinkCount; // weak
+int g_Defclass_SlotRecordCount; // weak
+int g_ClipsBloadDefclassCount; // weak
+int g_ClipsDefclassBsaveHandlerCount; // weak
+int g_Class_BloadModuleArray; // weak
+int g_DeffactsModuleItemCount; // weak
+int g_Deffacts_BloadModuleArray; // weak
+int g_Clips_DeffactsCodeGeneratorItem; // weak
+int g_Defgeneric_SavedBusyCount; // weak
+int g_DefgenericCodeGenItem; // weak
+int g_ClipsMethodParserToken; // weak
+int g_Clips_CurrentTokenValue; // weak
+int g_CLIPS_GenericParseTokenPrintStr; // weak
+int g_DeffunctionCodeGeneratorItem; // weak
+_DWORD g_Rules_ParsedConstructNameComment[2]; // weak
+int g_Clips_DeffunctionEchoToken; // weak
+int g_ClipsDefglobalCodeGenItem; // weak
+int g_Clips_DefinstancesModuleItemIndex; // weak
+int g_ClipsDefinstancesConstructType; // weak
+int g_ClipsConstructCompilerData; // weak
+int g_ParserCurrentTokenType; // weak
+int g_ClipsParserTokenValue; // weak
+int g_ClipsScanTokenPrintForm; // weak
+int g_ClipsDefmoduleCompilerItem; // weak
+int g_Rules_DeclaredAutoFocusFlag; // weak
+int g_CLIPS_CurrentRuleSalience; // weak
+int g_DefinstancesBloadModuleRefArray; // weak
+int g_DefinstancesCodeGenItem; // weak
+int g_ObjectPatternNetworkCodeGenItem; // weak
+_DWORD g_AviDecompressorBlitRectTemplate[440]; // idb
 
 
 static void Rules_EnsureObjectPatternVTable(void)

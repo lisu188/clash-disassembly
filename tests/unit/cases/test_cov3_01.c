@@ -127,7 +127,7 @@ TEST(cov3_01_formatcount, primed_two_node_chain_mismatch_count) {
   static _DWORD valnode[8];
   static char fmt[16] = "a%dbc";
   static _DWORD lexTarget[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(node1, 0, sizeof node1);
@@ -144,11 +144,11 @@ TEST(cov3_01_formatcount, primed_two_node_chain_mismatch_count) {
   *(_DWORD *)((char *)node1 + 10) = (int)(intptr_t)termBuf; /* node1 -> node2(termBuf) */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)node1;   /* chain head -> node1 */
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   cov3_01_stack_prime((int)(intptr_t)lexTarget);
   /* a1=2 expected specs, format has 1 -> count-mismatch error branch */
   TOUCH(Rules_FormatCountConversionSpecs(2, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_01_formatcount, primed_two_node_chain_matching_count) {
@@ -158,7 +158,7 @@ TEST(cov3_01_formatcount, primed_two_node_chain_matching_count) {
   static _DWORD valnode2[8];
   static char fmt2[16] = "no-percent-signs";
   static _DWORD lexTarget2[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor2, 0, sizeof anchor2);
   memset(node1b, 0, sizeof node1b);
@@ -175,12 +175,12 @@ TEST(cov3_01_formatcount, primed_two_node_chain_matching_count) {
   *(_DWORD *)((char *)node1b + 10) = (int)(intptr_t)termBuf2;
   *(_DWORD *)((char *)anchor2 + 6) = (int)(intptr_t)node1b;
 
-  dword_51A960 = (int)(intptr_t)anchor2;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor2;
   cov3_01_stack_prime((int)(intptr_t)lexTarget2);
   /* a1=2 expected specs (a1-2==0), format has 0 -> count-match success
    * return branch (previously entirely unreached). */
   TOUCH(Rules_FormatCountConversionSpecs(2, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =====================================================================
@@ -236,7 +236,7 @@ TEST(cov3_01_refreshagenda, primed_exact_match_one_arg) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -246,10 +246,10 @@ TEST(cov3_01_refreshagenda, primed_exact_match_one_arg) {
   *(_DWORD *)((char *)termBuf + 10) = 0; /* argcount == 1 */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   cov3_01_stack_prime(0); /* Lexer_TokenExpect's mode local -> 0 (exact) */
   TOUCH(Rules_RefreshAgendaCommand(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_01_refreshagenda, primed_at_least_mode_two_args) {
@@ -257,7 +257,7 @@ TEST(cov3_01_refreshagenda, primed_at_least_mode_two_args) {
   static _DWORD termBuf2[64];
   static _DWORD termBuf3[64];
   static _DWORD valnode2[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor2, 0, sizeof anchor2);
   memset(termBuf2, 0, sizeof termBuf2);
@@ -271,10 +271,10 @@ TEST(cov3_01_refreshagenda, primed_at_least_mode_two_args) {
   *(_DWORD *)((char *)termBuf3 + 10) = 0;
   *(_DWORD *)((char *)anchor2 + 6) = (int)(intptr_t)termBuf2;
 
-  dword_51A960 = (int)(intptr_t)anchor2;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor2;
   cov3_01_stack_prime(1); /* mode -> 1 ("at least"), count(2) > a1(1) */
   TOUCH(Rules_RefreshAgendaCommand(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =====================================================================
@@ -287,7 +287,7 @@ TEST(cov3_01_hoststringp, primed_string_arg_matches) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -297,10 +297,10 @@ TEST(cov3_01_hoststringp, primed_string_arg_matches) {
   *(_DWORD *)((char *)termBuf + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   cov3_01_stack_prime(0);
   CHECK_EQ(Rules_HostStringp(0.0), 1);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =====================================================================

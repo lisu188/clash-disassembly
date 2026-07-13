@@ -143,8 +143,8 @@ TEST(thin03_msghandler, undefine_for_all_classes_busy_handler_fails_remove) {
   static _DWORD nameHolderBuf[8];
   static _DWORD handlerRecord[16];
   static int nameHolder = 0x4008;
-  int savedCurrentModule = dword_51A9B0;
-  int savedClassEnumSlot = dword_54E6BC;
+  int savedCurrentModule = g_Clips_CurrentModule;
+  int savedClassEnumSlot = g_CLIPS_DefclassModuleItemIndex;
 
   memset(moduleStruct, 0, sizeof moduleStruct);
   memset(itemsArray, 0, sizeof itemsArray);
@@ -153,11 +153,11 @@ TEST(thin03_msghandler, undefine_for_all_classes_busy_handler_fails_remove) {
   memset(nameHolderBuf, 0, sizeof nameHolderBuf);
   memset(handlerRecord, 0, sizeof handlerRecord);
 
-  dword_54E6BC = 0; /* class construct-type slot index (0 by default) */
+  g_CLIPS_DefclassModuleItemIndex = 0; /* class construct-type slot index (0 by default) */
   moduleStruct[2] = (_DWORD)(intptr_t)itemsArray;     /* +8: items array */
   itemsArray[0] = (_DWORD)(intptr_t)listWrapper;       /* index 0 == dword_54E6BC */
   listWrapper[1] = (_DWORD)(intptr_t)fakeClassRecord;  /* +4: list head */
-  dword_51A9B0 = (int)(intptr_t)moduleStruct;
+  g_Clips_CurrentModule = (int)(intptr_t)moduleStruct;
 
   nameHolderBuf[4] = (_DWORD)(intptr_t)"Thin03MsgHandlerClass"; /* +16 */
   fakeClassRecord[0] = (_DWORD)(intptr_t)nameHolderBuf; /* Rules_GetConstructNameString */
@@ -169,6 +169,6 @@ TEST(thin03_msghandler, undefine_for_all_classes_busy_handler_fails_remove) {
 
   TOUCH(MessageHandler_UndefineForClassOrAll(0, (signed int *)&nameHolder, 0, 0));
 
-  dword_51A9B0 = savedCurrentModule;
-  dword_54E6BC = savedClassEnumSlot;
+  g_Clips_CurrentModule = savedCurrentModule;
+  g_CLIPS_DefclassModuleItemIndex = savedClassEnumSlot;
 }

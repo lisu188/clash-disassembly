@@ -27,7 +27,7 @@ static void cov2_00_setup_argctx(unsigned char *argnode, _DWORD *funcrec,
   memset(symnode, 0, 32);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* ---- Rules_RegisterMiscFunctions / Rules_RegisterFactCommands /
@@ -249,16 +249,16 @@ TEST(cov2_00_rules, print_fact_label) {
 TEST(cov2_00_rules, batch_command_matching_arg_count) {
   static _DWORD anchor[16];
   static _DWORD node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   *(short *)node = 2;                  /* Rules_GetFileNameArg success tag */
   *(_DWORD *)((char *)node + 2) = (int)(intptr_t)node;
   *(_DWORD *)((char *)node + 10) = 0;   /* terminate the 1-node arg-count walk */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_BatchCommand(1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Lexer_TokenExpect: cov11 already drives both the match and mismatch
@@ -269,11 +269,11 @@ TEST(cov2_00_rules, batch_command_matching_arg_count) {
  * Rules_HostStringp/Rules_BatchCommand above. ---- */
 TEST(cov2_00_lexer, token_expect_fresh_site) {
   static _DWORD fake_expr[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Lexer_TokenExpect(2));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_HostStringp: same Lexer_TokenExpect(1) + Rules_RtnUnknown shape
@@ -281,10 +281,10 @@ TEST(cov2_00_lexer, token_expect_fresh_site) {
 TEST(cov2_00_rules, host_stringp) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_00_setup_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_HostStringp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Deffunction_CloseCodeFiles: cov21 already drives all four a1/a2
@@ -353,7 +353,7 @@ TEST(cov2_00_class, slot_exist_pcommand_safe_parse_failure) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static int a1val;
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   cov2_00_bootstrap_engine();
   cov2_00_setup_argctx(argnode, funcrec, symnode);
@@ -361,7 +361,7 @@ TEST(cov2_00_class, slot_exist_pcommand_safe_parse_failure) {
 
   TOUCH(Class_SlotExistPCommand(&a1val, 1.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- CastleProduction_ReloadLicenceSlotSprites: the `for` loop's
@@ -391,10 +391,10 @@ TEST(cov2_00_compat, string_holder_copy_text_noop) {
 TEST(cov2_00_rules, get_file_name_arg_not_found) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_00_setup_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_GetFileNameArg(1, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- ProcParam_GetWildcardArgumentValue: simple pointer-chasing wrapper
@@ -415,14 +415,14 @@ TEST(cov2_00_procparam, get_wildcard_argument_value) {
 TEST(cov2_00_rules, math_exp_matching_arg_count) {
   static _DWORD anchor[16];
   static _DWORD node[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)node; /* 1-node chain, count 1 */
   *(_DWORD *)((char *)node + 10) = 0;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MathExp(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_IsDeletableAlt: dword_51A1AC (Rules_IsBloaded's backing flag) is

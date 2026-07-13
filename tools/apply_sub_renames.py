@@ -16,11 +16,15 @@ Rules enforced here:
 Accepted mappings are appended to docs/archive/SUB_RENAME_INDEX.md by the
 caller (this script prints an index-row block on stdout).
 """
+import glob
 import json
 import os
 import re
 import sys
 
+# clash95.c is a thin aggregator that #includes the recovered source fragments
+# under src/**/*.inc.c (module split, PR #65). Scan those fragments too, so
+# renames reach the actual recovered code, not just the aggregator.
 CODE_FILES = [
     "clash95.c",
     "bootstrap_main.c",
@@ -29,7 +33,7 @@ CODE_FILES = [
     "defs.h",
     "windows.h",
     "compat/decomp_runtime_stubs.c",
-]
+] + sorted(glob.glob("src/**/*.inc.c", recursive=True))
 
 IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 

@@ -23,7 +23,7 @@ static void cov17_set_fake_argnode(unsigned char *argnode, int size) {
   memset(innerBuf, 0, sizeof(innerBuf));
   *(_DWORD **)(argnode + 2) = (_DWORD *)midNode;
   *(_DWORD *)(midNode + 0) = (_DWORD)(intptr_t)innerBuf;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* ---- Rules_RegisterStringBuiltins / Rules_RegisterMathBuiltins /
@@ -80,7 +80,7 @@ TEST(cov17_str, strcat_builtin) {
   memset(obj, 0, sizeof(obj));
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_StrCatBuiltin((int)(intptr_t)obj, 0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov17_str, symcat_builtin) {
@@ -91,7 +91,7 @@ TEST(cov17_str, symcat_builtin) {
   memset(obj, 0, sizeof(obj));
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_SymCatBuiltin((int)(intptr_t)obj, 0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_StrCompareBuiltin: Rules_ArgRangeCheck(aStrCompare,3) reads
@@ -105,7 +105,7 @@ TEST(cov17_str, str_compare_builtin) {
   static unsigned char argnode[256];
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_StrCompareBuiltin(0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_MathParseSingleArg: Lexer_TokenExpect(1) consults the same
@@ -117,7 +117,7 @@ TEST(cov17_math, math_parse_single_arg) {
   double out = 0.0;
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_MathParseSingleArg(&out, 0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_MathIsNearZero: pure double comparison, no parser state
@@ -158,7 +158,7 @@ TEST(cov17_math, single_arg_builtins_parse_fail_path) {
   TOUCH(Rules_MathLog10(0, 0, 0, 0.0));
   TOUCH(Rules_MathSqrt(0, 0, 0, 0.0));
 
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_MathPow: Lexer_TokenExpect(2) against the fake zeroed chain
@@ -168,7 +168,7 @@ TEST(cov17_math, math_pow_parse_fail_path) {
   static unsigned char argnode[256];
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_MathPow(0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_MathMod: same Lexer_TokenExpect(2) guard; on failure it
@@ -184,7 +184,7 @@ TEST(cov17_math, math_mod_parse_fail_path) {
   Mem_InitReserveBlock(0, 0);
   cov17_set_fake_argnode(argnode, sizeof(argnode));
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Help_RouterQueryMatchesWhelp: plain strcmp against the literal

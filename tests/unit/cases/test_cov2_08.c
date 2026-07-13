@@ -37,7 +37,7 @@ static void cov2_08_setup_one_arg(unsigned char *ctx, unsigned char *formnode,
   *(uint32_t *)(formnode + 10) = 0; /* single-argument chain */
   memcpy(valnode + 16, value_bits, value_size);
   *(uint32_t *)(ctx + 6) = (uint32_t)(uintptr_t)formnode;
-  dword_51A960 = (int)(intptr_t)ctx;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
 }
 
 /* ---- Rules_MultifieldInsertRange: two remaining gaps not exercised by
@@ -136,11 +136,11 @@ TEST(cov2_08_mvdelete, first_arg_parses_second_call_now_reached) {
  * cannot affect other tests). */
 TEST(cov2_08_subseq, no_args_first_call_fails) {
   static _DWORD out[8];
-  int saved960 = dword_51A960;
+  int saved960 = g_ClipsCurrentExpression;
   memset(out, 0, sizeof out);
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
   TOUCH(Rules_SubseqFunction(out, 0.0));
-  dword_51A960 = saved960;
+  g_ClipsCurrentExpression = saved960;
 }
 
 /* ---- Rules_ReorderAgenda: `result` truthy takes the outer if directly
@@ -512,25 +512,25 @@ TEST(cov2_08_syncarmyfact, cold_call_zeroed_stack) {
  * Parser_ParseForm/value validation needed), taking the direct
  * `return result;` branch instead. */
 TEST(cov2_08_focusstack, empty_chain_takes_success_path) {
-  int saved960 = dword_51A960;
-  dword_51A960 = 0;
+  int saved960 = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = 0;
   TOUCH(Rules_GetFocusStackFunction());
-  dword_51A960 = saved960;
+  g_ClipsCurrentExpression = saved960;
 }
 
 TEST(cov2_08_focusstack, nonempty_chain_mismatch_returns_error) {
   static unsigned char ctx[64], node[64];
-  int saved960 = dword_51A960;
+  int saved960 = g_ClipsCurrentExpression;
   memset(ctx, 0, sizeof ctx);
   memset(node, 0, sizeof node);
   *(uint32_t *)(node + 10) = 0; /* single-node chain -> RtnArgCount() == 1 */
   *(uint32_t *)(ctx + 6) = (uint32_t)(uintptr_t)node;
-  dword_51A960 = (int)(intptr_t)ctx;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   /* Expected to return -1 (count/request mismatch), but Lexer_TokenExpect's
    * own decompiler-lost comparison mode could in principle take a different
    * branch, so just touch it rather than hard-asserting the exact value. */
   TOUCH(Rules_GetFocusStackFunction());
-  dword_51A960 = saved960;
+  g_ClipsCurrentExpression = saved960;
 }
 
 /* ---- Rules_FindLogicalDependencyEntry: the count field is packed into

@@ -18,7 +18,7 @@ signed int Lexer_ParseValueList(int a1, _DWORD *a2, int a3, double a4)
   int v18; // [esp+Ch] [ebp-Ch]
 
   Rules_RtnUnknown(a1, a2, a4);
-  if ( dword_51A964 )
+  if ( g_ClipsEvaluationError )
     return 0;
   if ( a3 == *(_DWORD *)(v7 + 4) || a3 == 110 && a2[1] < 2u )
     return 1;

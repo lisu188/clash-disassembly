@@ -8,7 +8,7 @@ int  BuildingGarrisonDialog_RequestClose(int a1)
   int result; // eax
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
-  dword_532148 = 1;
+  g_BuildingGarrisonDialogCloseRequested = 1;
   return result;
 }
 // 532148: using guessed type int dword_532148;
@@ -30,7 +30,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
   result = g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 2) != 0 )
   {
-    Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+    Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
     Render_Pump();
     Castle_ShowUnitProductionPanel(g_BuildingGarrisonDialogActiveBuilding, a2, a3);
     if ( g_BuildingGarrisonDialogUseChrTheme )
@@ -38,7 +38,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
     else
       v4 = aCastle_pogD_15;
     v5 = g_BuildingGarrisonDialogResourceHandle;
-    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, v4);
+    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, v4);
     if ( g_BuildingGarrisonDialogUseChrTheme )
       v6 = aCastle_chrD_16;
     else
@@ -47,15 +47,15 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
     RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, a2);
     Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, v5, a2);
     Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, v5, a2);
-    Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, v5, a2);
-    g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+    Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, v5, a2);
+    g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
     BuildingGarrisonDialog_EnsureActionWidgets(g_BuildingGarrisonDialogActiveBuilding);
     UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
     (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, a2);
-    Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
+    Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
     Render_Present((int)g_RenderState);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
     Render_Present((int)g_RenderState);
@@ -207,10 +207,10 @@ int  BuildingGarrisonDialog_TickAnimations(double a1)
 {
   int previous_resource_handle;
 
-  previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   BuildingGarrisonDialog_AnimateSelectedUnit(0);
   BuildingGarrisonDialog_TickExitCountdown(0, a1);
-  return Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
 }
 
 //----- (00434110) --------------------------------------------------------
@@ -226,10 +226,10 @@ int CastleProduction_DrawSelectedUnitPortrait()
   v0 = g_RenderDevice;
   DLX_GetSpriteHeight(g_CastleProductionSelectedUnitSpriteSet, 0);
   SpriteWidth = DLX_GetSpriteWidth(g_CastleProductionSelectedUnitSpriteSet, 0);
-  v2 = dword_544D10;
+  v2 = g_CursorOverlayPresented;
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
-  g_RenderDevice = &unk_51D4C0;
-  SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, dword_5322CC);
+  g_RenderDevice = &g_MainRenderDevice;
+  SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, g_CastleProductionUnitPortraitFrame);
   result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
                                                                                     + 52))(
              193,
@@ -260,11 +260,11 @@ unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this)
   unsigned int v2; // edx
   int v3; // ecx
 
-  result = Time_Now((int)this, dword_532200 + 10);
+  result = Time_Now((int)this, g_CastleProductionPortraitAnimLastTickMs + 10);
   if ( v2 <= result )
   {
-    dword_532200 = Time_Now(v3, v2);
-    dword_5322CC = ((_BYTE)dword_5322CC + 1) & 7;
+    g_CastleProductionPortraitAnimLastTickMs = Time_Now(v3, v2);
+    g_CastleProductionUnitPortraitFrame = ((_BYTE)g_CastleProductionUnitPortraitFrame + 1) & 7;
     return CastleProduction_DrawSelectedUnitPortrait();
   }
   return result;
@@ -315,26 +315,26 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
 
   if ( g_CastleProductionSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
-  Unit_BuildSelectedUnitPanelIconSpritePath(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], a1);
+  Unit_BuildSelectedUnitPanelIconSpritePath(v37, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], a1);
   v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, a3);
   if ( v6 )
     v6 = DLXSpriteSet_Load(v6, v37);
   v35 = v7;
   g_CastleProductionSelectedUnitSpriteSet = (int)v6;
-  Unit_BuildSelectedUnitPanelIconPalettePath(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v7);
+  Unit_BuildSelectedUnitPanelIconPalettePath(v37, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v7);
   Palette_LoadFromQueryHandle(v8, a3);
   v9 = 224;
   v10 = &v36;
   do
   {
     ++v10;
-    v11 = (_DWORD *)(dword_53221C + 4 * v9++);
+    v11 = (_DWORD *)(g_CastleProductionPaletteBuffer + 4 * v9++);
     *v11 = *(v10 - 1);
   }
   while ( v9 <= 255 );
   v39 = g_RenderDevice;
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  SpriteForChar = DLX_GetSpriteForChar(dword_53220C, 20);
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 20);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD, int, int, int, int))(*((_DWORD *)g_RenderDevice
                                                                                                   + 46)
                                                                                                 + 52))(
@@ -357,7 +357,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   v15 = 4 * (g_CastleProductionSelectedAvailableUnitIndex - 2);
   while ( v13 <= g_CastleProductionSelectedAvailableUnitIndex + 2 )
   {
-    if ( v13 < 0 || (v16 = dword_532224[v15 / 4], v16 == -1) )
+    if ( v13 < 0 || (v16 = g_CastleProduction_AvailableUnitTypes[v15 / 4], v16 == -1) )
     {
       v15 += 4;
       ++v13;
@@ -377,7 +377,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
     }
     else
     {
-      if ( Building_HasUnitLicence(dword_532218, v16) )
+      if ( Building_HasUnitLicence(g_CastleProductionBuildingPtr, v16) )
       {
         Render_ReleaseSurface(20, 0x2Du);
         UI_DrawText(
@@ -398,8 +398,8 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
       v14 += 17;
     }
   }
-  v22 = 88 * dword_532224[g_CastleProductionSelectedAvailableUnitIndex];
-  v23 = DLX_GetSpriteForChar(dword_53220C, 17);
+  v22 = 88 * g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
+  v23 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 17);
   v24 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int))(v24 + 52))(186, v23, -1, -1, -1);
   v25 = (char *)&g_UnitTypeMetadataRecords + v22;
@@ -419,7 +419,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
     }
     else
     {
-      DLX_GetSpriteForChar(dword_53220C, 19);
+      DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 19);
       v38 = *((_DWORD *)g_RenderDevice + 46);
       v26 = v38;
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v38 + 52))(-1, -1, -1, -1, 1, 0, 0);
@@ -428,25 +428,25 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   }
   else
   {
-    DLX_GetSpriteForChar(dword_53220C, 18);
+    DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 18);
     v38 = *((_DWORD *)g_RenderDevice + 46);
     v26 = v38;
     (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v38 + 52))(-1, -1, -1, -1, 1, 0, 0);
     UI_DrawTextFmt(154, 154, 174, v40 + 95, 2, (int)aD_71);
   }
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 340, 72, 0x138u, 0x16Eu, 0x48u, 0x154u);
-  g_RenderDevice = &unk_51D4C0;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 340, 72, 0x138u, 0x16Eu, 0x48u, 0x154u);
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, v26);
   UI_DrawTextFmt(-1, 0, 119, 348, 2, (int)aD_75);
   UI_DrawTextFmt(-1, 0, 215, 348, 2, (int)aD_76);
   UI_DrawTextFmt(-1, 0, 311, 348, 2, (int)aD_77);
-  v32 = DLX_GetSpriteWidth(dword_53220C, 0x14u) + 28;
-  SpriteHeight = DLX_GetSpriteHeight(dword_53220C, 0x14u);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 28, 40, SpriteHeight + 40, v32, 0x28u, 0x1Cu);
-  v33 = DLX_GetSpriteWidth(dword_53220C, 0x11u) + 186;
-  v30 = DLX_GetSpriteHeight(dword_53220C, 0x11u);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 186, 69, v30 + 69, v33, 0x45u, 0xBAu);
-  Render_SaveBackbuffer((int)&unk_51D4C0);
+  v32 = DLX_GetSpriteWidth(g_BuildingUiDlxSpriteSet, 0x14u) + 28;
+  SpriteHeight = DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x14u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 28, 40, SpriteHeight + 40, v32, 0x28u, 0x1Cu);
+  v33 = DLX_GetSpriteWidth(g_BuildingUiDlxSpriteSet, 0x11u) + 186;
+  v30 = DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x11u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 186, 69, v30 + 69, v33, 0x45u, 0xBAu);
+  Render_SaveBackbuffer((int)&g_MainRenderDevice);
   CastleProduction_DrawSelectedUnitPortrait();
   result = v39;
   g_RenderDevice = v39;
@@ -495,7 +495,7 @@ void * CastleProduction_DrawLicenceGrid()
 
   v0 = 0;
   v11 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   v10 = 0;
   do
   {
@@ -503,11 +503,11 @@ void * CastleProduction_DrawLicenceGrid()
     v12 = 82 * ((v0 - (__CFSHL__(v0 >> 31, 2) + 4 * (v0 >> 31))) >> 2) + 32;
     if ( v0 % 4 >= 2 )
       v1 = 48 * (v0 % 4) + 425;
-    v9 = dword_544D10;
+    v9 = g_CursorOverlayPresented;
     RenderState_PumpIfRectInViewBounds(g_RenderState, v1, v1 + 31, v12, v12 + 63);
-    if ( *(char *)(v0 + dword_532218 + 402) == -1 )
+    if ( *(char *)(v0 + g_CastleProductionBuildingPtr + 402) == -1 )
     {
-      SpriteForChar = DLX_GetSpriteForChar(dword_53220C, 22);
+      SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 22);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v12,
         SpriteForChar,
@@ -521,7 +521,7 @@ void * CastleProduction_DrawLicenceGrid()
     }
     else
     {
-      v2 = DLX_GetSpriteForChar(dword_532304[v10], dword_5322D4[v10]);
+      v2 = DLX_GetSpriteForChar(g_CastleProduction_LicenceSlotSpriteHandles[v10], g_CastleProductionSlotAnimFrames[v10]);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v12,
         v2,
@@ -532,9 +532,9 @@ void * CastleProduction_DrawLicenceGrid()
         1,
         0,
         0);
-      if ( v0 == dword_5322C8 )
+      if ( v0 == g_ProductionGridSelectedIndex )
       {
-        v3 = DLX_GetSpriteForChar(dword_53220C, 32);
+        v3 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 32);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
           82 * ((v0 - (__CFSHL__(v0 >> 31, 2) + 4 * (v0 >> 31))) >> 2) + 33,
           v3,
@@ -546,9 +546,9 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(dword_532218) == v0 )
+      if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) == v0 )
       {
-        v4 = DLX_GetSpriteForChar(dword_53220C, 21);
+        v4 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 21);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
           v12,
           v4,
@@ -560,9 +560,9 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( v0 == dword_532334 )
+      if ( v0 == g_LicenceGridAddAnimSlotIndex )
       {
-        v5 = DLX_GetSpriteForChar(dword_53220C, dword_53233C + 22);
+        v5 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, g_CastleProductionLicenceTransitionFrame + 22);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
           v12,
           v5,
@@ -574,9 +574,9 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( v0 == dword_532338 )
+      if ( v0 == g_CastleLicenceRemovalSlotIndex )
       {
-        v6 = DLX_GetSpriteForChar(dword_53220C, 30 - dword_53233C);
+        v6 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 30 - g_CastleProductionLicenceTransitionFrame);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
           v12,
           v6,
@@ -618,29 +618,29 @@ int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2)
   DWORD sprite_set; // ebp
   char v9[112]; // [esp+0h] [ebp-70h] BYREF
 
-  result = *(char *)(a1 + dword_532218 + 402);
+  result = *(char *)(a1 + g_CastleProductionBuildingPtr + 402);
   if ( result == -1 )
   {
-    if ( dword_532304[a1] )
+    if ( g_CastleProduction_LicenceSlotSpriteHandles[a1] )
     {
-      result = nfree_(dword_532304[a1]);
-      dword_532304[a1] = 0;
+      result = nfree_(g_CastleProduction_LicenceSlotSpriteHandles[a1]);
+      g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
     }
-    dword_532304[a1] = 0;
+    g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
   }
   else
   {
-    sprite_set = dword_532304[a1];
+    sprite_set = g_CastleProduction_LicenceSlotSpriteHandles[a1];
     if ( sprite_set )
     {
       nfree_(sprite_set);
-      dword_532304[a1] = 0;
+      g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
     }
-    Unit_BuildGarrisonSlotIconSpritePath(v9, *(_BYTE *)(a1 + dword_532218 + 402), a1);
+    Unit_BuildGarrisonSlotIconSpritePath(v9, *(_BYTE *)(a1 + g_CastleProductionBuildingPtr + 402), a1);
     result = Mem_Alloc(4112, 0x1010, a2, sprite_set);
     if ( result )
       result = (int)DLXSpriteSet_Load((_DWORD *)result, v9);
-    dword_532304[a1] = result;
+    g_CastleProduction_LicenceSlotSpriteHandles[a1] = result;
   }
   return result;
 }
@@ -667,24 +667,24 @@ void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2)
   int v4; // ecx
   int i; // eax
 
-  result = (void *)Time_Now(a1, dword_532204 + 10);
+  result = (void *)Time_Now(a1, g_CastleProductionLicenceGridAnimLastTickMs + 10);
   if ( v3 <= (unsigned int)result )
   {
-    dword_532204 = Time_Now(v4, v3);
+    g_CastleProductionLicenceGridAnimLastTickMs = Time_Now(v4, v3);
     for ( i = 0; i != 12; ++i )
-      dword_5322D4[i] = (dword_5322D4[i] + 1) & 7;
-    if ( (dword_532334 != -1 || dword_532338 != -1) && ++dword_53233C == 8 )
+      g_CastleProductionSlotAnimFrames[i] = (g_CastleProductionSlotAnimFrames[i] + 1) & 7;
+    if ( (g_LicenceGridAddAnimSlotIndex != -1 || g_CastleLicenceRemovalSlotIndex != -1) && ++g_CastleProductionLicenceTransitionFrame == 8 )
     {
-      if ( dword_532338 != -1 )
+      if ( g_CastleLicenceRemovalSlotIndex != -1 )
       {
-        Building_RemoveUnitLicence(dword_532218, *(char *)(dword_532338 + dword_532218 + 402), a2);
-        nfree_(dword_532304[dword_532338]);
-        dword_5322C8 = -1;
-        dword_532304[dword_532338] = 0;
+        Building_RemoveUnitLicence(g_CastleProductionBuildingPtr, *(char *)(g_CastleLicenceRemovalSlotIndex + g_CastleProductionBuildingPtr + 402), a2);
+        nfree_(g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex]);
+        g_ProductionGridSelectedIndex = -1;
+        g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex] = 0;
       }
-      dword_53233C = 0;
-      dword_532338 = -1;
-      dword_532334 = -1;
+      g_CastleProductionLicenceTransitionFrame = 0;
+      g_CastleLicenceRemovalSlotIndex = -1;
+      g_LicenceGridAddAnimSlotIndex = -1;
     }
     return CastleProduction_DrawLicenceGrid();
   }
@@ -719,18 +719,18 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
   char *v11; // [esp+44h] [ebp-28h]
   int v12[9]; // [esp+48h] [ebp-24h]
 
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
-  g_RenderDevice = &unk_51D4C0;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, a1);
-  result = dword_532218;
-  if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(dword_532218) != -1 )
+  result = g_CastleProductionBuildingPtr;
+  if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) != -1 )
   {
-    if ( Building_CountGarrison(dword_532218) < 12 || BUILDING_PRODUCTION_TURNS_REMAINING(dword_532218) > 1 )
+    if ( Building_CountGarrison(g_CastleProductionBuildingPtr) < 12 || BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) > 1 )
     {
       v10[0] = (int)UI_Locale_StatusHeader[0];
       v10[1] = (int)UI_Locale_StatusHeader[1];
       v11 = UI_Locale_StatusHeader[2];
-      if ( BUILDING_PRODUCTION_TURNS_REMAINING(dword_532218) == 1 )
+      if ( BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) == 1 )
         v2 = aDZugBisZum;
       else
         v2 = aDZbgeBisZum;
@@ -750,7 +750,7 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
       UI_DrawTextFmt((int)v6, 401, 593, 297, 3, v10[(unsigned __int8)g_LanguageIndex]);
       v3 = v7[(unsigned __int8)g_LanguageIndex];
       UI_DrawTextFmt(v3, 401, 593, 317, 3, v3);
-      v4 = BUILDING_PRODUCTION_TURNS_REMAINING(dword_532218);
+      v4 = BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr);
       if ( v4 == 1 )
       {
         return UI_DrawTextFmt(v3, 401, 593, 337, 3, v9[(unsigned __int8)g_LanguageIndex]);
@@ -797,8 +797,8 @@ int  UI_DrawActionBox(int a1)
   int result; // eax
 
   v1 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 425, 285, 0x15Eu, 0x1C2u, 0x11Du, 0x1A9u);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 425, 285, 0x15Eu, 0x1C2u, 0x11Du, 0x1A9u);
   result = UI_DrawTextFmt(a1, 285, 349, 430, 3, (int)aD_38);
   g_RenderDevice = v1;
   return result;
@@ -815,10 +815,10 @@ int UI_GetGridIndexFromMouse()
   int v2; // ecx
   int v3; // eax
 
-  v0 = dword_544CFC >> byte_54512C;
-  if ( dword_544CFC >> byte_54512C >= 426
-    && dword_544D00 >> byte_54512C >= 32
-    && (v1 = (dword_544D00 >> byte_54512C) - 32, (v0 - 426) % 48 <= 33)
+  v0 = g_MouseCursorRawX >> g_CursorCoordShift;
+  if ( g_MouseCursorRawX >> g_CursorCoordShift >= 426
+    && g_MouseCursorRawY >> g_CursorCoordShift >= 32
+    && (v1 = (g_MouseCursorRawY >> g_CursorCoordShift) - 32, (v0 - 426) % 48 <= 33)
     && v1 % 82 <= 64
     && (v2 = (v0 - 426) / 48, v3 = v1 / 82, v2 < 4)
     && v3 < 3 )
@@ -857,7 +857,7 @@ int  CastleProduction_SelectPreviousAvailableUnit(int a1, int a2, DWORD a3, int 
   if ( g_CastleProductionSelectedAvailableUnitIndex )
     --g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
-  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43565E: variable 'v5' is possibly undefined
@@ -872,10 +872,10 @@ int  CastleProduction_SelectNextAvailableUnit(int a1, int a2, DWORD a3, int a4, 
   int v6; // ecx
 
   UIWidget_ShowPressedState(a1);
-  if ( dword_532224[g_CastleProductionSelectedAvailableUnitIndex + 1] != -1 )
+  if ( g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex + 1] != -1 )
     ++g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
-  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43569E: variable 'v5' is possibly undefined
@@ -898,17 +898,17 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   int v13; // [esp-Ch] [ebp-10h]
 
   UIWidget_ShowPressedState(a1);
-  if ( !Building_BuyUnitLicence(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
+  if ( !Building_BuyUnitLicence(g_CastleProductionBuildingPtr, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
     return UIWidget_ShowReleasedState(a1, v5);
   v13 = v5;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
   for ( i = 0; ; ++i )
   {
-    v8 = dword_532224[g_CastleProductionSelectedAvailableUnitIndex];
-    if ( *(char *)(i + dword_532218 + 402) == v8 )
+    v8 = g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
+    if ( *(char *)(i + g_CastleProductionBuildingPtr + 402) == v8 )
       break;
   }
-  dword_532334 = i;
+  g_LicenceGridAddAnimSlotIndex = i;
   Audio_PlaySoundEffectByName(aDopen, 64);
   CastleProduction_ReloadLicenceSlotSprite(i, a1);
   UI_DrawActionBox(a3);
@@ -937,9 +937,9 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
 
   UIWidget_ShowPressedState(a1);
   Render_Begin((int)g_RenderState, 0);
-  if ( dword_5322C8 != -1 )
+  if ( g_ProductionGridSelectedIndex != -1 )
   {
-    dword_532338 = dword_5322C8;
+    g_CastleLicenceRemovalSlotIndex = g_ProductionGridSelectedIndex;
     Audio_PlaySoundEffectByName(aDclose_0, 64);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
@@ -957,11 +957,11 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
 {
   int v4; // ecx
 
-  if ( dword_5322C8 != -1 )
+  if ( g_ProductionGridSelectedIndex != -1 )
   {
     UIWidget_ShowPressedState(result);
     Render_Begin((int)g_RenderState, 0);
-    Building_SetUnitProduction(dword_532218, a2, a3);
+    Building_SetUnitProduction(g_CastleProductionBuildingPtr, a2, a3);
     CastleProduction_DrawLicenceGrid();
     CastleProduction_DrawProductionStatus(a3);
     return UIWidget_ShowReleasedState(v4, v4);
@@ -1004,30 +1004,30 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   v11 = a2;
   UIWidget_PlayPressedReleaseAnimation(a1);
   Render_Pump();
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  Unit_BuildBigInfoGraphicPath(v10, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v5);
-  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, v10);
-  (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  Unit_BuildBigInfoGraphicPath(v10, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v5);
+  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, v10);
+  (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) )
     DD_Pump((int)g_RenderState, (char)g_RenderState);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  if ( dword_532214 )
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  if ( g_CastleProductionUseChrTheme )
     v6 = aCastle_chrD_23;
   else
     v6 = aCastle_pogD_23;
-  v7 = *(_DWORD *)(dword_5202E0 + 184);
+  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   (*(void (__fastcall **)(_DWORD, char *))(v7 + 48))(0, v6);
-  Palette_QuantizeChannelsInPlace((_BYTE *)dword_53221C, 6);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v8, 20, a3, a4, v7);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(a3);
   UI_DrawActionBox(a4);
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   return Render_Present((int)g_RenderState);
 }
 // 43589A: variable 'v5' is possibly undefined
@@ -1050,15 +1050,15 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
   BOOL result; // eax
 
   (void)this;
-  memset(dword_532224, 0xFF, 0xA4);
+  memset(g_CastleProduction_AvailableUnitTypes, 0xFF, 0xA4);
   metadata_offset = 0;
   out_index = 0;
   unitType = UNIT_TYPE_PEASANT;
   do
   {
-    result = Building_IsUnitLicenceEligible((char *)dword_532218, unitType);
+    result = Building_IsUnitLicenceEligible((char *)g_CastleProductionBuildingPtr, unitType);
     if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
-      dword_532224[out_index++] = unitType;
+      g_CastleProduction_AvailableUnitTypes[out_index++] = unitType;
     ++unitType;
     metadata_offset += 88;
   }
@@ -1085,31 +1085,31 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
     v4 = result;
     if ( result != -1 )
     {
-      result = *(char *)(result + dword_532218 + 402);
-      if ( result != -1 && v4 != dword_5322C8 )
+      result = *(char *)(result + g_CastleProductionBuildingPtr + 402);
+      if ( result != -1 && v4 != g_ProductionGridSelectedIndex )
       {
         Audio_PlaySoundEffectByName(aMarker_0, 64);
-        dword_5322C8 = v5;
+        g_ProductionGridSelectedIndex = v5;
         v6 = 0;
-        v7 = *(char *)(v5 + dword_532218 + 402);
+        v7 = *(char *)(v5 + g_CastleProductionBuildingPtr + 402);
         result = 0;
-        if ( dword_532224[0] != -1 )
+        if ( g_CastleProduction_AvailableUnitTypes[0] != -1 )
         {
           do
           {
-            if ( v7 == dword_532224[v6] )
+            if ( v7 == g_CastleProduction_AvailableUnitTypes[v6] )
               break;
-            a3 = dword_532228[v6];
+            a3 = g_CastleProductionAvailableUnitTypesLookahead[v6];
             result += sizeof(int);
             ++v6;
           }
           while ( a3 != -1 );
         }
-        if ( v7 == dword_532224[v6] && v6 != g_CastleProductionSelectedAvailableUnitIndex )
+        if ( v7 == g_CastleProduction_AvailableUnitTypes[v6] && v6 != g_CastleProductionSelectedAvailableUnitIndex )
         {
           g_CastleProductionSelectedAvailableUnitIndex = v6;
-          CastleProduction_RedrawSelectedUnitPanel(v7, dword_532224[0], a1, a2, a3);
-          return Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+          CastleProduction_RedrawSelectedUnitPanel(v7, g_CastleProduction_AvailableUnitTypes[0], a1, a2, a3);
+          return Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
         }
       }
     }
@@ -1132,23 +1132,23 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
   int result; // eax
   int v5; // ecx
 
-  v3 = ((dword_544D00 >> byte_54512C) - 35) / 17 - 2;
+  v3 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 35) / 17 - 2;
   result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
-    if ( dword_544CFC >> byte_54512C >= 40 )
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= 40 )
     {
-      result = (unsigned __int16)DLX_GetSpriteHeight(dword_53220C, 0x14u) + 40;
-      if ( dword_544CFC >> byte_54512C <= result
+      result = (unsigned __int16)DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x14u) + 40;
+      if ( g_MouseCursorRawX >> g_CursorCoordShift <= result
         && v3 >= -2
         && v3 <= 2
         && v3 + g_CastleProductionSelectedAvailableUnitIndex >= 0
-        && dword_532224[v3 + g_CastleProductionSelectedAvailableUnitIndex] != -1 )
+        && g_CastleProduction_AvailableUnitTypes[v3 + g_CastleProductionSelectedAvailableUnitIndex] != -1 )
       {
         g_CastleProductionSelectedAvailableUnitIndex += v3;
         Render_Pump();
         CastleProduction_RedrawSelectedUnitPanel(v5, v3, a1, a2, a3);
-        Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+        Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
         Render_Present((int)g_RenderState);
         return Render_Begin((int)g_RenderState, 0);
       }
@@ -1173,10 +1173,10 @@ int  CastleProduction_TickAnimations(DWORD a1)
   void *v2; // ecx
   int v3; // ecx
 
-  v1 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  v1 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   CastleProduction_AnimateSelectedUnitPortrait(v2);
   CastleProduction_TickLicenceGridAnimations(v3, a1);
-  return Render_SetResourceHandle((int)&unk_51D4C0, v1);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, v1);
 }
 // 435B9F: variable 'v2' is possibly undefined
 // 435BA4: variable 'v3' is possibly undefined
@@ -1208,47 +1208,47 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   int v24; // edx
   int v25; // ecx
 
-  dword_532218 = a1;
-  dword_532214 = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
+  g_CastleProductionBuildingPtr = a1;
+  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
   g_CastleProductionSelectedAvailableUnitIndex = 0;
   g_CastleProductionSelectedUnitSpriteSet = 0;
-  memset(dword_532304, 0, sizeof(dword_532304));
+  memset(g_CastleProduction_LicenceSlotSpriteHandles, 0, sizeof(g_CastleProduction_LicenceSlotSpriteHandles));
   for ( v24 = 0; v24 != 12; ++v24 )
-    dword_5322D4[v24] = Rng_RandRange(0, 7);
-  dword_532338 = -1;
-  dword_532334 = -1;
-  dword_5322C8 = -1;
+    g_CastleProductionSlotAnimFrames[v24] = Rng_RandRange(0, 7);
+  g_CastleLicenceRemovalSlotIndex = -1;
+  g_LicenceGridAddAnimSlotIndex = -1;
+  g_ProductionGridSelectedIndex = -1;
   CastleProduction_RebuildAvailableUnitList(0);
   v6 = Mem_Alloc(1024, v5, -1, a2);
   if ( v6 )
     v6 = _wcpp_4_ctor_array__(v7, 256);
-  v8 = dword_532214;
-  dword_53221C = v6;
-  if ( dword_532214 )
+  v8 = g_CastleProductionUseChrTheme;
+  g_CastleProductionPaletteBuffer = v6;
+  if ( g_CastleProductionUseChrTheme )
     v9 = aCastle_chrD_17;
   else
     v9 = aCastle_pogD_17;
-  v10 = *(_DWORD *)(dword_5202E0 + 184);
-  v11 = dword_53221C;
+  v10 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  v11 = g_CastleProductionPaletteBuffer;
   (*(void (__fastcall **)(_DWORD, char *))(v10 + 48))(0, v9);
-  Palette_QuantizeChannelsInPlace((_BYTE *)dword_53221C, 6);
+  Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
   v13 = (_DWORD *)Mem_Alloc(4112, v12, v11, v8);
   if ( v13 )
-    v13 = DLXSpriteSet_Load(v13, dword_532214 ? aCastle_chrD_19 : aCastle_pogD_19);
-  dword_53220C = (int)v13;
-  if ( dword_532214 )
+    v13 = DLXSpriteSet_Load(v13, g_CastleProductionUseChrTheme ? aCastle_chrD_19 : aCastle_pogD_19);
+  g_BuildingUiDlxSpriteSet = (int)v13;
+  if ( g_CastleProductionUseChrTheme )
     v14 = aCastle_chrD_19;
   else
     v14 = aCastle_pogD_19;
-  Palette_LoadOrBuildBlendLookupTable(v14, dword_53221C, dword_532214, v8);
-  Render_LoadResourceSprite_v4(5, (_BYTE *)dword_53221C, v15, v11, v8);
-  Render_LoadResourceSprite_v4(20, (_BYTE *)dword_53221C, v16, v11, v8);
-  Render_LoadResourceSprite_v4(9, (_BYTE *)dword_53221C, v17, v11, v8);
-  Render_LoadResourceSprite_v4(7, (_BYTE *)dword_53221C, v18, v11, v8);
-  Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)dword_53221C, v19, v11, v8);
+  Palette_LoadOrBuildBlendLookupTable(v14, g_CastleProductionPaletteBuffer, g_CastleProductionUseChrTheme, v8);
+  Render_LoadResourceSprite_v4(5, (_BYTE *)g_CastleProductionPaletteBuffer, v15, v11, v8);
+  Render_LoadResourceSprite_v4(20, (_BYTE *)g_CastleProductionPaletteBuffer, v16, v11, v8);
+  Render_LoadResourceSprite_v4(9, (_BYTE *)g_CastleProductionPaletteBuffer, v17, v11, v8);
+  Render_LoadResourceSprite_v4(7, (_BYTE *)g_CastleProductionPaletteBuffer, v18, v11, v8);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_CastleProductionPaletteBuffer, v19, v11, v8);
   UI_SetActiveWidgetTable(8);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, dword_53221C, v20, v8);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_CastleProductionPaletteBuffer, v20, v8);
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
@@ -1256,38 +1256,38 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(v8);
   UI_DrawActionBox(a3);
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   Render_Present((int)g_RenderState);
   g_CastleProductionExitSignal = 0;
-  dword_526A30 = (int (*)(void))CastleProduction_TickAnimations;
+  g_ActiveDialogAnimationTickHook = (int (*)(void))CastleProduction_TickAnimations;
   do
   {
     DD_Pump((int)g_RenderState, 0);
     CastleProduction_TickAnimations(v8);
     UI_RunHoverTooltipZones(g_CastleUnitProductionTooltipZone);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     if ( !UIWidgetTable_PollHoverAndActions(g_CastleUnitProductionWidgetTable, v8) )
     {
-      CastleProduction_HandleLicenceGridClick(v8, (int)&unk_51D4C0, (int)g_CastleUnitProductionWidgetTable);
-      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&unk_51D4C0, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleLicenceGridClick(v8, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
     }
   }
   while ( !g_CastleProductionExitSignal );
-  dword_526A30 = v23;
-  DLXSpriteSet_ReleaseAndClear(&dword_53220C);
+  g_ActiveDialogAnimationTickHook = v23;
+  DLXSpriteSet_ReleaseAndClear(&g_BuildingUiDlxSpriteSet);
   if ( g_CastleProductionSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
   for ( v24 = 0; v24 != 12; ++v24 )
   {
-    if ( dword_532304[v24] )
+    if ( g_CastleProduction_LicenceSlotSpriteHandles[v24] )
     {
-      nfree_(dword_532304[v24]);
-      dword_532304[v24] = 0;
+      nfree_(g_CastleProduction_LicenceSlotSpriteHandles[v24]);
+      g_CastleProduction_LicenceSlotSpriteHandles[v24] = 0;
     }
   }
   Render_Pump();
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  return nfree_(dword_53221C);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  return nfree_(g_CastleProductionPaletteBuffer);
 }
 // 435C1C: variable 'v4' is possibly undefined
 // 435C48: variable 'v5' is possibly undefined
@@ -1344,15 +1344,15 @@ int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
     cube_size = 1u << g_Palette_ColorCubeBits;
     cube_size *= cube_size * cube_size;
     g_Palette_ActivePalettePtr = a2;
-    Compat_QueryRead(query_handle, byte_5452EC, (int)cube_size);
-    return Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+    Compat_QueryRead(query_handle, g_Rgb15ToPaletteLut, (int)cube_size);
+    return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
   }
 
   Palette_BuildNearestColorLUT(a2);
   output_handle = IO_FOpen(path, (unsigned __int8 *)aWb_0, 0, a4);
   cube_size = 1u << g_Palette_ColorCubeBits;
   cube_size *= cube_size * cube_size;
-  fwrite_(byte_5452EC, (int)cube_size, output_handle, 1);
+  fwrite_(g_Rgb15ToPaletteLut, (int)cube_size, output_handle, 1);
   return fclose_(output_handle);
 }
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
@@ -1367,10 +1367,10 @@ int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD a1, int a2)
   int result; // eax
 
   v2 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, a1);
   Render_SaveBackbuffer(v3);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 48, 400, 0x1BBu, 0x3Cu, 0x190u, 0x30u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 48, 400, 0x1BBu, 0x3Cu, 0x190u, 0x30u);
   result = UI_DrawTextFmt(a2, 347, 445, 48, 3, (int)aD_39);
   g_RenderDevice = v2;
   return result;
@@ -1388,10 +1388,10 @@ int  BuildingTransferDialog_DrawTransferAmountValue(DWORD a1, int a2)
   int result; // eax
 
   v2 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, a1);
   Render_SaveBackbuffer(v3);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 272, 548, 0x259u, 0x12Cu, 0x224u, 0x110u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x12Cu, 0x224u, 0x110u);
   result = UI_DrawTextFmt(a2, 548, 601, 272, 3, (int)aD_40);
   g_RenderDevice = v2;
   return result;
@@ -1408,7 +1408,7 @@ int  BuildingTransferDialog_HandleExitButtonPress(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_53234C = v4;
+  g_BuildingTransferDialogExitScratch = v4;
   return result;
 }
 // 4360EB: variable 'v4' is possibly undefined
@@ -1421,13 +1421,13 @@ int  BuildingTransferDialog_CommitTransfer(int a1, int a2, DWORD a3, double a4)
   int v6; // esi
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  if ( dword_532350 )
+  if ( g_Building_TransferAmount )
   {
     v6 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
     if ( v6 == -2 )
       v6 = -1;
-    Building_Transfer((dword_532354 - (gameData + 509674)) / 467, v6, 1, dword_532350, a4);
-    dword_532350 = 0;
+    Building_Transfer((g_BuildingTransferSourcePtr - (gameData + 509674)) / 467, v6, 1, g_Building_TransferAmount, a4);
+    g_Building_TransferAmount = 0;
     BuildingTransferDialog_DrawTransferAmountValue(a3, 467);
     return BuildingTransferDialog_DrawSourceRemainingValue(a3, 467);
   }
@@ -1458,21 +1458,21 @@ int  BuildingTransferDialog_IncreaseTransferAmount(int a1)
   UIWidget_ShowPressedState(a1);
   Render_Pump();
   Time_Now(v3, v2);
-  dword_532350 += 10;
-  v4 = dword_532350;
+  g_Building_TransferAmount += 10;
+  v4 = g_Building_TransferAmount;
   do
   {
     DD_Pump((int)g_RenderState, v4);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
-    dword_532350 = 10 * ((v4 + (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
-    if ( dword_532350 > 1000 )
-      dword_532350 = 1000;
-    v12 = *(_DWORD *)(dword_532354 + 438);
-    if ( dword_532350 > v12 )
+    g_Building_TransferAmount = 10 * ((v4 + (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
+    if ( g_Building_TransferAmount > 1000 )
+      g_Building_TransferAmount = 1000;
+    v12 = *(_DWORD *)(g_BuildingTransferSourcePtr + 438);
+    if ( g_Building_TransferAmount > v12 )
     {
       v12 = 10;
-      dword_532350 = 10 * (*(_DWORD *)(dword_532354 + 438) / 0xAu);
+      g_Building_TransferAmount = 10 * (*(_DWORD *)(g_BuildingTransferSourcePtr + 438) / 0xAu);
     }
     BuildingTransferDialog_DrawTransferAmountValue(v12, (int)g_RenderState);
   }
@@ -1510,16 +1510,16 @@ int  BuildingTransferDialog_DecreaseTransferAmount(int a1)
   UIWidget_ShowPressedState(a1);
   Render_Pump();
   Time_Now(v3, v2);
-  dword_532350 -= 10;
-  v4 = dword_532350;
+  g_Building_TransferAmount -= 10;
+  v4 = g_Building_TransferAmount;
   do
   {
     DD_Pump((int)g_RenderState, v4);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
-    dword_532350 = 10 * ((v4 - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
-    if ( dword_532350 < 0 )
-      dword_532350 = 0;
+    g_Building_TransferAmount = 10 * ((v4 - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
+    if ( g_Building_TransferAmount < 0 )
+      g_Building_TransferAmount = 0;
     BuildingTransferDialog_DrawTransferAmountValue((DWORD)g_RenderState, 0);
   }
   while ( DD_IsFlipping((int)g_RenderState) );
@@ -1564,7 +1564,7 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
   int row_bottom; // [esp+24h] [ebp-20h]
 
   saved_render_device = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   if ( !g_BuildingTransferTargetListSpriteSet )
   {
     v2 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
@@ -1580,7 +1580,7 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
   while ( row_index <= g_BuildingTransferTargetListIndex + 2 )
   {
     Render_FillRect(
-      (_DWORD *)dword_5202E0,
+      (_DWORD *)g_PrimaryRenderSurface,
       0,
       (unsigned __int16)(row_y_offset + g_BuildingTransferTargetListDrawY),
       (unsigned __int16)g_BuildingTransferTargetListDrawX,
@@ -1686,7 +1686,7 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
 
   old_index = g_BuildingTransferTargetListIndex;
   UIWidget_ShowPressedState(a1);
-  if ( word_532362[g_BuildingTransferTargetListIndex] != -1 )
+  if ( g_BuildingTransferTargetIdsLookahead[g_BuildingTransferTargetListIndex] != -1 )
     ++g_BuildingTransferTargetListIndex;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
@@ -1748,14 +1748,14 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
   int v2; // ebx
   int result; // eax
 
-  v2 = ((dword_544D00 >> byte_54512C) - g_BuildingTransferTargetListDrawY) / 18 - 2;
+  v2 = ((g_MouseCursorRawY >> g_CursorCoordShift) - g_BuildingTransferTargetListDrawY) / 18 - 2;
   result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
-    if ( dword_544CFC >> byte_54512C >= g_BuildingTransferTargetListDrawX )
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= g_BuildingTransferTargetListDrawX )
     {
       result = g_BuildingTransferTargetListDrawX + 266;
-      if ( dword_544CFC >> byte_54512C <= g_BuildingTransferTargetListDrawX + 266
+      if ( g_MouseCursorRawX >> g_CursorCoordShift <= g_BuildingTransferTargetListDrawX + 266
         && v2 >= -2
         && v2 <= 2
         && v2 + g_BuildingTransferTargetListIndex >= 0 )
@@ -1831,7 +1831,7 @@ int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
         *v12 = 0;
         UI_DrawTextFmt(a1, a1, a2, a4, 4, v13);
         *v14 = v17;
-        a4 += UI_GetTextXOffset(dword_520728);
+        a4 += UI_GetTextXOffset(g_ActiveTextSpriteSlot);
       }
       UI_DrawTextFmt(a1, a1, a2, a4, 1, (int)v11);
     }
@@ -1839,7 +1839,7 @@ int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
     {
       UI_DrawTextFmt(a1, a1, a2, a4, *v8, *(_DWORD *)(v8 + 1));
     }
-    result = UI_GetTextXOffset(dword_520728);
+    result = UI_GetTextXOffset(g_ActiveTextSpriteSlot);
     a4 += result;
     v16 = v9 + 5;
   }
@@ -1858,12 +1858,12 @@ int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
 //----- (00436C10) --------------------------------------------------------
 int __thiscall UnitBattle_ConstructAiCandidateQueue(void *this)
 {
-  dword_5437C0 = 0;
-  dword_5437C8 = 0;
-  dword_5437CC = 0;
-  dword_5437D0 = 0;
-  dword_5437D4 = 0;
-  dword_5437C4 = (int)&g_WCIsvListBaseVariant134_Vtable;
+  g_UnitBattleAiCandidateQueue = 0;
+  g_UnitBattleAiCandidateQueueTail = 0;
+  g_BattleAiUnitQueueCount = 0;
+  g_BattleAiCandidateQueue_AllocFn = 0;
+  g_BattleAiCandidateQueue_FreeFn = 0;
+  g_BattleAiCandidateQueue_Vtable = (int)&g_WCIsvListBaseVariant134_Vtable;
   return CRT_RegisterFinalizableObject(this, 0);
 }
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -1902,8 +1902,8 @@ int  UnitBattle_ResetAiReachGridForSide(int a1)
           do
           {
             result += 8;
-            *(int *)((char *)&dword_532440 + result) = 0;
-            *(int *)((char *)&dword_532444 + result) = 0;
+            *(int *)((char *)&g_UnitBattleAiReachGrid + result) = 0;
+            *(int *)((char *)&g_UnitBattleAiReachGridCellSecondField + result) = 0;
           }
           while ( result != v4 );
           ++v3;
@@ -1991,9 +1991,9 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
                   {
                     v6[2] = v20;
                     v6[3] = v19;
-                    dword_5437A0 = *(unsigned __int16 *)(v10 + g_MapData + 856);
+                    g_UnitBattleScanTileRow = *(unsigned __int16 *)(v10 + g_MapData + 856);
                     v8 = v21;
-                    dword_5437A4 = *(unsigned __int16 *)(v10 + g_MapData + 858);
+                    g_BattleTargetTileCol = *(unsigned __int16 *)(v10 + g_MapData + 858);
                     v12 = UnitBattle_MoveTrack(a1, v22, (int)v6, v21, j);
                     *(_DWORD *)((char *)v6 + 23) = v12;
                     if ( v12 )
@@ -2094,14 +2094,14 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
   Debug_Log(a1, a3, a4, (int)aRuch_oddzialem);
   v5 = 31 * v4;
   v6 = g_MapData + 852 + 31 * v4;
-  dword_5437AC = 1;
-  if ( UnitBattle_IsTileWithinRange(v7, dword_5437A0, dword_5437A4) )
+  g_BattleShootingUnitMoveActiveFlag = 1;
+  if ( UnitBattle_IsTileWithinRange(v7, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
-    v9 = g_MapData + 40 * dword_5437A0;
-    v10 = *(__int16 *)(v9 + 2 * dword_5437A4 + 1534);
+    v9 = g_MapData + 40 * g_UnitBattleScanTileRow;
+    v10 = *(__int16 *)(v9 + 2 * g_BattleTargetTileCol + 1534);
     if ( v10 != -1 )
     {
-      v11 = *(__int16 *)(v9 + 2 * dword_5437A4 + 1534);
+      v11 = *(__int16 *)(v9 + 2 * g_BattleTargetTileCol + 1534);
       v12 = 31 * v10;
       while ( 1 )
       {
@@ -2119,27 +2119,27 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
       return 0;
     }
   }
-  if ( UnitBattle_IsTileWithinMinRange(v8, dword_5437A0, dword_5437A4) )
+  if ( UnitBattle_IsTileWithinMinRange(v8, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
-    result = UnitBattle_RetreatUnit(v16, v16, dword_5437A4, v5);
+    result = UnitBattle_RetreatUnit(v16, v16, g_BattleTargetTileCol, v5);
     if ( !result )
       return result;
   }
-  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+  if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
     && *(unsigned __int8 *)(g_MapData + 31 * v16 + 854) == *(_DWORD *)(g_MapData + 836) )
   {
-    v17 = UnitBattle_MoveTrackNearWall(v16, dword_5437A0, dword_5437A4, v5);
+    v17 = UnitBattle_MoveTrackNearWall(v16, g_UnitBattleScanTileRow, g_BattleTargetTileCol, v5);
   }
   else
   {
-    v17 = (int *)UnitBattle_MoveTrackNear(v16, v16, dword_5437A4, v5);
+    v17 = (int *)UnitBattle_MoveTrackNear(v16, v16, g_BattleTargetTileCol, v5);
   }
   *(_DWORD *)(v6 + 23) = v17;
   if ( !*(_DWORD *)(v6 + 23) )
-    *(_DWORD *)(v6 + 23) = UnitBattle_MoveTrackForce(v18, dword_5437A4, v5);
+    *(_DWORD *)(v6 + 23) = UnitBattle_MoveTrackForce(v18, g_BattleTargetTileCol, v5);
   if ( !*(_DWORD *)(v6 + 23) )
     return 0;
-  if ( UnitBattle_IsTileWithinRange(v18, dword_5437A0, dword_5437A4) )
+  if ( UnitBattle_IsTileWithinRange(v18, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
     if ( !*(_DWORD *)(v6 + 23) )
       goto LABEL_41;
@@ -2153,7 +2153,7 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
     LOBYTE(v38) = *(_BYTE *)(v6 + 4);
     while ( HIWORD(v38) <= *(unsigned __int8 *)(v6 + 8) - 5 && **(_DWORD **)(v6 + 23) && v20 == -1 )
     {
-      if ( UnitBattle_IsTileWithinRange(v19, dword_5437A0, dword_5437A4) )
+      if ( UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
       {
         v20 = 1;
       }
@@ -2191,14 +2191,14 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
 LABEL_40:
   *(_DWORD *)(v6 + 23) = 0;
 LABEL_41:
-  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) <= 0
+  if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) <= 0
     || *(unsigned __int8 *)(g_MapData + 31 * v19 + 854) != *(_DWORD *)(g_MapData + 836)
-    || (v25 = *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), v25 != -1)
+    || (v25 = *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), v25 != -1)
     && *(unsigned __int8 *)(31 * v25 + g_MapData + 854) != a2 )
   {
-    if ( UnitBattle_IsTileWithinRange(v19, dword_5437A0, dword_5437A4) )
+    if ( UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     {
-      v30 = *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534);
+      v30 = *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534);
       v31 = 31 * v29;
       while ( 1 )
       {
@@ -2216,15 +2216,15 @@ LABEL_41:
     }
     return 0;
   }
-  if ( !UnitBattle_IsTileWithinRange(v19, dword_5437A0, dword_5437A4) )
+  if ( !UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     return 0;
   v27 = 31 * v26;
   do
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( *(char *)(dword_5437A4 + 20 * dword_5437A0 + g_MapData + 3134) <= 0 )
+    if ( *(char *)(g_BattleTargetTileCol + 20 * g_UnitBattleScanTileRow + g_MapData + 3134) <= 0 )
       return 1;
-    v34 = UnitBattle_ShotWall(v28, dword_5437A0);
+    v34 = UnitBattle_ShotWall(v28, g_UnitBattleScanTileRow);
     if ( !v34 && *(unsigned __int8 *)(v27 + g_MapData + 860) < 5u )
       return 0;
   }
@@ -3004,19 +3004,19 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
           v184 = *(unsigned __int16 *)(g_MapData + v177 + 858);
           v140 = 160 * v171 + v175 * 4;
           v141 = 2 * v184 + g_MapData + 40 * v171;
-          *(int *)((char *)&dword_53244C[2 * v184] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v177 + 852)]];
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v184] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v177 + 852)]];
           v142 = *(_WORD *)(v141 + 1534);
           *(_WORD *)(v141 + 1534) = -1;
           v198 = v142;
-          v143 = *(int *)((char *)&dword_53244C[2 * v184] + v140) - 800;
-          *(int *)((char *)&dword_53244C[2 * v184] + v140) = v143;
+          v143 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v184] + v140) - 800;
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v184] + v140) = v143;
           v144 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v211);
-          v146 = *(int *)((char *)&dword_53244C[2 * v145] + v140) - 15 * (_DWORD)v144;
+          v146 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) - 15 * (_DWORD)v144;
           v147 = v177 + g_MapData;
-          *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146;
-          *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146;
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
           v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v211, a2, v143);
-          *(int *)((char *)&dword_53244C[2 * v149] + v140) -= 2 * v148;
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v149] + v140) -= 2 * v148;
           v208 = v149;
           Debug_Log(v149, v140, v171, (int)aOddzial_w_zasi);
           v150 = v186 + g_MapData + 852;
@@ -3120,13 +3120,13 @@ LABEL_279:
               if ( v153 > -1 )
               {
 LABEL_280:
-                dword_53244C[40 * v171 + 2 * v184 + v175] -= 5 * (v153 / 5);
+                g_UnitBattleTileScoreGrid[40 * v171 + 2 * v184 + v175] -= 5 * (v153 / 5);
 LABEL_281:
                 *(_WORD *)(40 * v171 + g_MapData + 2 * v184 + 1534) = v198;
                 goto LABEL_282;
               }
 LABEL_294:
-              dword_53244C[40 * v171 + 2 * v184 + v175] += 700;
+              g_UnitBattleTileScoreGrid[40 * v171 + 2 * v184 + v175] += 700;
               goto LABEL_281;
             }
           }
@@ -3174,7 +3174,7 @@ LABEL_282:
              *(unsigned __int16 *)(31 * a1 + g_MapData + 856) + 3 * a4,
              *(unsigned __int16 *)(31 * a1 + g_MapData + 858)) )
       {
-        dword_53244C[120 * a4
+        g_UnitBattleTileScoreGrid[120 * a4
                    + 40 * *(unsigned __int16 *)(g_MapData + v5 + 856)
                    + 2 * *(unsigned __int16 *)(g_MapData + v5 + 858)
                    + v6] -= 500;
@@ -3185,7 +3185,7 @@ LABEL_282:
              4 * a4 + *(unsigned __int16 *)(v5 + g_MapData + 856),
              *(unsigned __int16 *)(v5 + g_MapData + 858)) )
       {
-        dword_53244C[160 * a4
+        g_UnitBattleTileScoreGrid[160 * a4
                    + 40 * *(unsigned __int16 *)(g_MapData + v8 + 856)
                    + 2 * *(unsigned __int16 *)(g_MapData + v8 + 858)
                    + v6] -= 500;
@@ -3198,7 +3198,7 @@ LABEL_282:
       {
         v10 = g_MapData + v9;
         v11 = 160 * (*(unsigned __int16 *)(v10 + 856) + 2 * a4) + v6 * 4;
-        *(int *)((char *)&dword_53244C[2 * *(unsigned __int16 *)(v10 + 858)] + v11) -= 500;
+        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(v10 + 858)] + v11) -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
@@ -3206,7 +3206,7 @@ LABEL_282:
              5 * a4 + *(unsigned __int16 *)(v9 + g_MapData + 856),
              *(unsigned __int16 *)(v9 + g_MapData + 858)) )
       {
-        dword_53244C[200 * a4
+        g_UnitBattleTileScoreGrid[200 * a4
                    + 40 * *(unsigned __int16 *)(g_MapData + v12 + 856)
                    + 2 * *(unsigned __int16 *)(g_MapData + v12 + 858)
                    + v6] -= 500;
@@ -3218,7 +3218,7 @@ LABEL_282:
       {
         v19 = g_MapData + v14;
         v20 = 160 * (v13 + *(unsigned __int16 *)(v19 + 856)) + v6 * 4;
-        *(int *)((char *)&dword_53244C[2 * *(unsigned __int16 *)(v19 + 858)] + v20) -= 500;
+        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(v19 + 858)] + v20) -= 500;
         return 0;
       }
       for ( i = 0; i < 682; i += 31 )
@@ -3230,7 +3230,7 @@ LABEL_282:
           if ( v17 && *v17 > 3 )
           {
             v18 = v17[*v17 - 3];
-            dword_53244C[801 * a1 + 40 * (unsigned __int8)v18 + 2 * BYTE1(v18)] -= 500;
+            g_UnitBattleTileScoreGrid[801 * a1 + 40 * (unsigned __int8)v18 + 2 * BYTE1(v18)] -= 500;
             j__nfree_();
             return 0;
           }
@@ -3257,20 +3257,20 @@ LABEL_29:
     v167 = 0;
     v21 = 160 * v170 + v194 * 4;
     v22 = 40 * v170 + g_MapData + 2 * v172;
-    *(int *)((char *)&dword_53244C[2 * v172] + v21) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v172] + v21) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
                                                                                                * *(__int16 *)(g_MapData + v205 + 852)]];
     v23 = *(_WORD *)(v22 + 1534);
     *(_WORD *)(v22 + 1534) = -1;
     v168 = v23;
-    *(int *)((char *)&dword_53244C[2 * v172] + v21) -= 800;
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v172] + v21) -= 800;
     v24 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v178);
-    v26 = *(int *)((char *)&dword_53244C[2 * v25] + v21) - 15 * (_DWORD)v24;
+    v26 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) - 15 * (_DWORD)v24;
     v27 = v205 + g_MapData;
-    *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26;
-    *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) = v26;
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
     v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v178, a2, a3);
-    v30 = *(int *)((char *)&dword_53244C[2 * v29] + v21) - 2 * v28;
-    *(int *)((char *)&dword_53244C[2 * v29] + v21) = v30;
+    v30 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + v21) - 2 * v28;
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + v21) = v30;
     Debug_Log(v29, v21, v30, (int)aOddzial_w_zasi);
     v31 = v179 + g_MapData + 852;
     a3 = v32;
@@ -3316,7 +3316,7 @@ LABEL_83:
     if ( !v87 )
     {
 LABEL_88:
-      dword_53244C[40 * v170 + 2 * v172 + v194] += 700;
+      g_UnitBattleTileScoreGrid[40 * v170 + 2 * v172 + v194] += 700;
       goto LABEL_38;
     }
     if ( !*v87 )
@@ -3396,20 +3396,20 @@ LABEL_36:
     if ( v34 <= -1 )
       goto LABEL_88;
 LABEL_37:
-    dword_53244C[40 * v170 + 2 * v172 + v194] -= 5 * (v34 / 5);
+    g_UnitBattleTileScoreGrid[40 * v170 + 2 * v172 + v194] -= 5 * (v34 / 5);
 LABEL_38:
     *(_WORD *)(g_MapData + 40 * v170 + 2 * v172 + 1534) = v168;
 LABEL_39:
     v205 += 31;
     if ( (int)++v178 >= 22 )
     {
-      v35 = dword_5437B0;
-      if ( dword_5437B0 <= 0 || *(unsigned __int16 *)(g_MapData + 31 * a1 + 856) == dword_5437B0 )
+      v35 = g_UnitBattleWallScanTileRow;
+      if ( g_UnitBattleWallScanTileRow <= 0 || *(unsigned __int16 *)(g_MapData + 31 * a1 + 856) == g_UnitBattleWallScanTileRow )
         return v167;
-      v36 = dword_5437B4;
-      if ( *(char *)(dword_5437B4 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
+      v36 = g_BattleWallScanColumn;
+      if ( *(char *)(g_BattleWallScanColumn + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
         goto LABEL_49;
-      Debug_Log(31 * a1, dword_5437B4, dword_5437B0, (int)aOddzial_w_zasi);
+      Debug_Log(31 * a1, g_BattleWallScanColumn, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
       v38 = v37 + g_MapData + 852;
       v39 = v36;
       if ( UnitBattle_IsTileWithinRange(a1, v35, v36)
@@ -3449,10 +3449,10 @@ LABEL_39:
       if ( !v97 )
       {
 LABEL_49:
-        dword_5437B8 = dword_5437B4 + 1;
-        if ( *(char *)(dword_5437B4 + 1 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
+        g_BattleWallScanTileX = g_BattleWallScanColumn + 1;
+        if ( *(char *)(g_BattleWallScanColumn + 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
           goto LABEL_56;
-        v48 = dword_5437B0;
+        v48 = g_UnitBattleWallScanTileRow;
         Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
         v35 = v49;
         v50 = 31 * a1 + g_MapData + 852;
@@ -3497,10 +3497,10 @@ LABEL_49:
         if ( !v107 )
         {
 LABEL_56:
-          dword_5437B8 = dword_5437B4 - 1;
-          if ( *(char *)(dword_5437B4 - 1 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
+          g_BattleWallScanTileX = g_BattleWallScanColumn - 1;
+          if ( *(char *)(g_BattleWallScanColumn - 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
             goto LABEL_63;
-          v55 = dword_5437B0;
+          v55 = g_UnitBattleWallScanTileRow;
           Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
           v35 = v56;
           v57 = 31 * a1 + g_MapData + 852;
@@ -3545,13 +3545,13 @@ LABEL_56:
           if ( !v115 )
           {
 LABEL_63:
-            dword_5437B8 = dword_5437B4 + 2;
-            if ( *(char *)(dword_5437B4 + 2 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
+            g_BattleWallScanTileX = g_BattleWallScanColumn + 2;
+            if ( *(char *)(g_BattleWallScanColumn + 2 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
               goto LABEL_70;
-            v35 = dword_5437B0;
-            v62 = dword_5437B4 + 2;
-            v36 = dword_5437B4 + 2;
-            Debug_Log(a1, dword_5437B4 + 2, dword_5437B0, (int)aOddzial_w_zasi);
+            v35 = g_UnitBattleWallScanTileRow;
+            v62 = g_BattleWallScanColumn + 2;
+            v36 = g_BattleWallScanColumn + 2;
+            Debug_Log(a1, g_BattleWallScanColumn + 2, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
             v63 = g_MapData + 852;
             v64 = UnitBattle_IsTileWithinRange(a1, v35, v36);
             v66 = v65 + v63;
@@ -3593,9 +3593,9 @@ LABEL_63:
             if ( !v123 )
             {
 LABEL_70:
-              dword_5437B8 = dword_5437B4 - 2;
-              v71 = dword_5437B4 - 2;
-              v72 = dword_5437B4 - 2 + 20 * dword_5437B0 + g_MapData;
+              g_BattleWallScanTileX = g_BattleWallScanColumn - 2;
+              v71 = g_BattleWallScanColumn - 2;
+              v72 = g_BattleWallScanColumn - 2 + 20 * g_UnitBattleWallScanTileRow + g_MapData;
               if ( *(char *)(v72 + 3134) <= 0 )
                 return v167;
               Debug_Log(v72, v36, v35, (int)aOddzial_w_zasi);
@@ -3670,13 +3670,13 @@ LABEL_70:
 LABEL_265:
                     v78 = 0;
 LABEL_76:
-                    v79 = 8 * dword_5437B8 + 3204 * a1 + 160 * dword_5437B0;
-                    v80 = *(int *)((char *)dword_53244C + v79) - 640 - 5 * (v78 / 5);
-                    v81 = dword_5437B8;
-                    v82 = g_MapData + 20 * dword_5437B0;
-                    *(int *)((char *)dword_53244C + v79) -= 640;
-                    *(int *)((char *)dword_53244C + v79) = v80;
-                    *(int *)((char *)dword_53244C + v79) = *(char *)(v81 + v82 + 3134) + v80;
+                    v79 = 8 * g_BattleWallScanTileX + 3204 * a1 + 160 * g_UnitBattleWallScanTileRow;
+                    v80 = *(int *)((char *)g_UnitBattleTileScoreGrid + v79) - 640 - 5 * (v78 / 5);
+                    v81 = g_BattleWallScanTileX;
+                    v82 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
+                    *(int *)((char *)g_UnitBattleTileScoreGrid + v79) -= 640;
+                    *(int *)((char *)g_UnitBattleTileScoreGrid + v79) = v80;
+                    *(int *)((char *)g_UnitBattleTileScoreGrid + v79) = *(char *)(v81 + v82 + 3134) + v80;
                     return v167;
                   }
 LABEL_268:
@@ -3765,14 +3765,14 @@ LABEL_67:
 LABEL_233:
                 v67 = 0;
 LABEL_69:
-                v68 = 3204 * a1 + 160 * dword_5437B0 + 8 * dword_5437B8;
-                v35 = *(int *)((char *)dword_53244C + v68) - 640 - 5 * (v67 / 5);
-                v69 = dword_5437B8;
-                v70 = g_MapData + 20 * dword_5437B0;
-                *(int *)((char *)dword_53244C + v68) -= 640;
-                *(int *)((char *)dword_53244C + v68) = v35;
+                v68 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
+                v35 = *(int *)((char *)g_UnitBattleTileScoreGrid + v68) - 640 - 5 * (v67 / 5);
+                v69 = g_BattleWallScanTileX;
+                v70 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
+                *(int *)((char *)g_UnitBattleTileScoreGrid + v68) -= 640;
+                *(int *)((char *)g_UnitBattleTileScoreGrid + v68) = v35;
                 v36 = *(char *)(v69 + v70 + 3134) + v35;
-                *(int *)((char *)dword_53244C + v68) = v36;
+                *(int *)((char *)g_UnitBattleTileScoreGrid + v68) = v36;
                 goto LABEL_70;
               }
 LABEL_236:
@@ -3859,14 +3859,14 @@ LABEL_60:
 LABEL_201:
               v58 = 0;
 LABEL_62:
-              v59 = 160 * dword_5437B0 + 3204 * a1 + 8 * dword_5437B8;
-              *(int *)((char *)dword_53244C + v59) -= 640;
-              v60 = *(int *)((char *)dword_53244C + v59) - 5 * (v58 / 5);
+              v59 = 160 * g_UnitBattleWallScanTileRow + 3204 * a1 + 8 * g_BattleWallScanTileX;
+              *(int *)((char *)g_UnitBattleTileScoreGrid + v59) -= 640;
+              v60 = *(int *)((char *)g_UnitBattleTileScoreGrid + v59) - 5 * (v58 / 5);
               LOBYTE(v36) = g_MapData;
-              v61 = dword_5437B8 + g_MapData + 20 * dword_5437B0;
-              *(int *)((char *)dword_53244C + v59) = v60;
+              v61 = g_BattleWallScanTileX + g_MapData + 20 * g_UnitBattleWallScanTileRow;
+              *(int *)((char *)g_UnitBattleTileScoreGrid + v59) = v60;
               v35 = v60 + *(char *)(v61 + 3134);
-              *(int *)((char *)dword_53244C + v59) = v35;
+              *(int *)((char *)g_UnitBattleTileScoreGrid + v59) = v35;
               goto LABEL_63;
             }
 LABEL_204:
@@ -3953,14 +3953,14 @@ LABEL_53:
 LABEL_169:
             v51 = 0;
 LABEL_55:
-            v52 = 3204 * a1 + 160 * dword_5437B0 + 8 * dword_5437B8;
-            *(int *)((char *)dword_53244C + v52) -= 640;
-            v53 = *(int *)((char *)dword_53244C + v52) - 5 * (v51 / 5);
+            v52 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
+            *(int *)((char *)g_UnitBattleTileScoreGrid + v52) -= 640;
+            v53 = *(int *)((char *)g_UnitBattleTileScoreGrid + v52) - 5 * (v51 / 5);
             LOBYTE(v36) = g_MapData;
-            v54 = dword_5437B8 + g_MapData + 20 * dword_5437B0;
-            *(int *)((char *)dword_53244C + v52) = v53;
+            v54 = g_BattleWallScanTileX + g_MapData + 20 * g_UnitBattleWallScanTileRow;
+            *(int *)((char *)g_UnitBattleTileScoreGrid + v52) = v53;
             v35 = v53 + *(char *)(v54 + 3134);
-            *(int *)((char *)dword_53244C + v52) = v35;
+            *(int *)((char *)g_UnitBattleTileScoreGrid + v52) = v35;
             goto LABEL_56;
           }
 LABEL_172:
@@ -4048,18 +4048,18 @@ LABEL_46:
 LABEL_137:
           v41 = 0;
 LABEL_48:
-          v42 = 3204 * a1 + 160 * dword_5437B0 + 8 * dword_5437B4;
+          v42 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanColumn;
           v43 = v41;
-          v44 = dword_5437B0;
-          v36 = *(int *)((char *)dword_53244C + v42) - 5 * (v43 / 5);
-          v45 = 4 * dword_5437B0;
-          *(int *)((char *)dword_53244C + v42) = v36;
+          v44 = g_UnitBattleWallScanTileRow;
+          v36 = *(int *)((char *)g_UnitBattleTileScoreGrid + v42) - 5 * (v43 / 5);
+          v45 = 4 * g_UnitBattleWallScanTileRow;
+          *(int *)((char *)g_UnitBattleTileScoreGrid + v42) = v36;
           v46 = v36 - 650;
           LOBYTE(v36) = g_MapData;
-          v47 = dword_5437B4 + g_MapData + 4 * (v44 + v45);
-          *(int *)((char *)dword_53244C + v42) = v46;
+          v47 = g_BattleWallScanColumn + g_MapData + 4 * (v44 + v45);
+          *(int *)((char *)g_UnitBattleTileScoreGrid + v42) = v46;
           v35 = v46 + *(char *)(v47 + 3134);
-          *(int *)((char *)dword_53244C + v42) = v35;
+          *(int *)((char *)g_UnitBattleTileScoreGrid + v42) = v35;
           goto LABEL_49;
         }
 LABEL_140:
@@ -4284,14 +4284,14 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
 
   v68 = a1;
   v63 = a2;
-  dword_5437A4 = -1;
-  dword_5437A0 = -1;
+  g_BattleTargetTileCol = -1;
+  g_UnitBattleScanTileRow = -1;
   v2 = g_MapData + 31 * a1;
   v3 = 0;
   if ( g_UnitTypeRole[88 * *(__int16 *)(v2 + 852)] == 4
     && (*(_BYTE *)(v2 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v2 + 864)) >> 5) <= 0 )
   {
-    dword_532448[801 * v68 - 42] = 5;
+    g_BattleCellStateGrid[801 * v68 - 42] = 5;
     return 1;
   }
   v4 = 0;
@@ -4303,11 +4303,11 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
     while ( v5 < *(_DWORD *)(g_MapData + 800) )
     {
       v8 = v6 + v61 + 3204 * v68;
-      if ( v3 > *(int *)((char *)dword_53244C + v8) )
+      if ( v3 > *(int *)((char *)g_UnitBattleTileScoreGrid + v8) )
       {
-        dword_5437A0 = v4;
-        dword_5437A4 = v5;
-        v3 = *(int *)((char *)dword_53244C + v8);
+        g_UnitBattleScanTileRow = v4;
+        g_BattleTargetTileCol = v5;
+        v3 = *(int *)((char *)g_UnitBattleTileScoreGrid + v8);
       }
       v6 += 8;
       ++v5;
@@ -4317,7 +4317,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   }
   if ( g_UnitBattleAiCurrentPlanMode == 2 || g_UnitBattleAiCurrentPlanMode == 6 )
   {
-    dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 6;
+    g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 6;
     return 1;
   }
   v9 = 801 * v68;
@@ -4328,28 +4328,28 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
     {
       if ( (*(_BYTE *)(v11 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v11 + 864)) >> 5) > 0 )
       {
-        LOBYTE(v3) = dword_5437A4;
-        if ( UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
+        LOBYTE(v3) = g_BattleTargetTileCol;
+        if ( UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
         {
-          if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+          if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
             && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
-            && *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534) == -1 )
+            && *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534) == -1 )
           {
-            dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v9] = 8;
+            g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + v9] = 8;
             return 1;
           }
           else
           {
-            dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 1;
+            g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 1;
             return 1;
           }
         }
       }
     }
-    v12 = dword_5437A4;
+    v12 = g_BattleTargetTileCol;
     v71 = v68;
-    v67 = dword_5437A0;
-    Debug_Log(31 * v68, v3, dword_5437A4, (int)aOddzial_w_zasi);
+    v67 = g_UnitBattleScanTileRow;
+    Debug_Log(31 * v68, v3, g_BattleTargetTileCol, (int)aOddzial_w_zasi);
     v14 = g_MapData + 852 + v13;
     if ( UnitBattle_IsTileWithinRange(v68, v67, v12)
       && (*(_BYTE *)(g_MapData + v15 + 864) & 3)
@@ -4430,17 +4430,17 @@ LABEL_80:
 LABEL_25:
                 if ( v16 >= 5 )
                 {
-                  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+                  if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
                     && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
-                    && *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534) == -1 )
+                    && *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534) == -1 )
                   {
-                    v17 = 160 * dword_5437A0 + 3204 * v68;
-                    *(int *)((char *)&dword_532448[2 * dword_5437A4] + v17) = 8;
+                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * v68;
+                    *(int *)((char *)&g_BattleCellStateGrid[2 * g_BattleTargetTileCol] + v17) = 8;
                   }
                   else
                   {
-                    v17 = 160 * dword_5437A0 + 3204 * v68;
-                    *(int *)((char *)&dword_532448[2 * dword_5437A4] + v17) = 1;
+                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * v68;
+                    *(int *)((char *)&g_BattleCellStateGrid[2 * g_BattleTargetTileCol] + v17) = 1;
                   }
                   goto LABEL_30;
                 }
@@ -4449,15 +4449,15 @@ LABEL_63:
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v34 + 852)]
                   && (*(_BYTE *)(v34 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v34 + 864)) >> 5) <= 0 )
                 {
-                  dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 5;
+                  g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
                   return 1;
                 }
                 v17 = 3204 * v68;
-                dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 7;
+                g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 7;
 LABEL_30:
-                v18 = (int *)UnitBattle_MoveTrackNear(v68, v17, dword_5437A4, v12);
+                v18 = (int *)UnitBattle_MoveTrackNear(v68, v17, g_BattleTargetTileCol, v12);
                 if ( !v18 )
-                  v18 = UnitBattle_MoveTrackForce(v68, dword_5437A4, v12);
+                  v18 = UnitBattle_MoveTrackForce(v68, g_BattleTargetTileCol, v12);
                 if ( v18 && *v18 )
                 {
                   v19 = v63;
@@ -4480,16 +4480,16 @@ LABEL_30:
                     }
                     v20 += 31;
                   }
-                  v24 = UnitBattle_MoveTrackNear(v68, v22, dword_5437A4, v19);
+                  v24 = UnitBattle_MoveTrackNear(v68, v22, g_BattleTargetTileCol, v19);
                   for ( j = 0; j != 66; j += 3 )
                   {
                     if ( v53[j] != -1 )
                       *(_WORD *)(40 * v53[j + 1] + g_MapData + 2 * v53[j + 2] + 1534) = v53[j];
                   }
-                  v26 = dword_5437A8++;
+                  v26 = g_BattleAiActionAttemptCount++;
                   if ( v26 > 20 )
                   {
-                    dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 5;
+                    g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
                     if ( v24 )
                       j__nfree_();
 LABEL_123:
@@ -4508,7 +4508,7 @@ LABEL_123:
                     v64 = *(unsigned __int16 *)(v43 + 858);
                     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v43 + 852)]
                       && (*(_BYTE *)(v43 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v43 + 864)) >> 5) > 0
-                      && UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
+                      && UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
                     {
                       return 1;
                     }
@@ -4526,7 +4526,7 @@ LABEL_123:
                         *(_WORD *)(v46 + 856) = (unsigned __int8)v66;
                         *(_WORD *)(g_MapData + v44 + 858) = BYTE1(v66);
                         if ( *(__int16 *)(40 * (unsigned __int8)v66 + g_MapData + 2 * BYTE1(v66) + 1534) == -1
-                          && UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
+                          && UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
                         {
                           *(_WORD *)(v44 + g_MapData + 856) = v65;
                           *(_WORD *)(g_MapData + v44 + 858) = v64;
@@ -4549,9 +4549,9 @@ LABEL_123:
                           v58 = 0;
                           v55 = &g_WCIsvListBaseVariant124_Vtable;
                           v59 = 0;
-                          WCIsvListBase_CopyAppendAll(&v54, &dword_5437C0, (int)v42);
+                          WCIsvListBase_CopyAppendAll(&v54, &g_UnitBattleAiCandidateQueue, (int)v42);
                           v55 = &g_WCIsvListBaseVariant134_Vtable;
-                          v51 = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&v54) && dword_5437A8 < 20;
+                          v51 = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&v54) && g_BattleAiActionAttemptCount < 20;
                           WCIsvListBase_DestroyElementsAndDtor(v50, (int)&v54);
                           if ( v51 )
                           {
@@ -4612,10 +4612,10 @@ LABEL_24:
     v31 = (int *)UnitBattle_MoveTrackNear(v29, v27, v30, v12);
     goto LABEL_58;
   }
-  v10 = dword_5437A8++;
+  v10 = g_BattleAiActionAttemptCount++;
   if ( v10 < 20 )
     return 0;
-  dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v9] = 5;
+  g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + v9] = 5;
   return 1;
 }
 // 43ADF3: conditional instruction was optimized away because edi.4!=0
@@ -4688,16 +4688,16 @@ int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
   v5 = 31 * v4 + g_MapData + 852;
   v35 = *(unsigned __int8 *)(v5 + 8);
   v37 = v5;
-  v6 = 40 * dword_5437A0 + g_MapData;
-  if ( *(__int16 *)(v6 + 2 * dword_5437A4 + 1534) == -1 )
+  v6 = 40 * g_UnitBattleScanTileRow + g_MapData;
+  if ( *(__int16 *)(v6 + 2 * g_BattleTargetTileCol + 1534) == -1 )
   {
-    v7 = dword_5437A4;
-    v8 = UnitBattle_MoveTrackNear(a1, v6, dword_5437A4, a4);
+    v7 = g_BattleTargetTileCol;
+    v8 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a4);
     *(_DWORD *)(v37 + 23) = v8;
     if ( !v8 )
     {
-      v7 = dword_5437A4;
-      *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, dword_5437A4, a4);
+      v7 = g_BattleTargetTileCol;
+      *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a4);
     }
     if ( *(_DWORD *)(v37 + 23) )
       UnitBattle_Move(a1, v9, v7, a4);
@@ -4706,13 +4706,13 @@ int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
       goto LABEL_7;
     goto LABEL_8;
   }
-  LOWORD(v10) = dword_5437A4;
-  v12 = UnitBattle_MoveTrackNear(a1, v6, dword_5437A4, a4);
+  LOWORD(v10) = g_BattleTargetTileCol;
+  v12 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a4);
   *(_DWORD *)(v37 + 23) = v12;
   if ( !v12 )
   {
-    LOWORD(v10) = dword_5437A4;
-    *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, dword_5437A4, a4);
+    LOWORD(v10) = g_BattleTargetTileCol;
+    *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a4);
   }
   if ( *(_DWORD *)(v37 + 23) )
   {
@@ -4760,7 +4760,7 @@ LABEL_8:
         v43 = BYTE1(v14[a4 + 1]);
         v42 = v14[a4 + 1];
       }
-      v15 = 31 * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534);
+      v15 = 31 * *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534);
       v10 = (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v15 + 852)];
       if ( v10 != 4 )
         break;
@@ -4797,17 +4797,17 @@ LABEL_35:
     v36 = Unit_CalcEffectivenessA((char *)(v15 + g_MapData + 852), 0);
     if ( v36 < Unit_CalcEffectivenessC((__int16 *)(31
                                                  * *(__int16 *)(g_MapData
-                                                              + 40 * dword_5437A0
-                                                              + 2 * dword_5437A4
+                                                              + 40 * g_UnitBattleScanTileRow
+                                                              + 2 * g_BattleTargetTileCol
                                                               + 1534)
                                                  + g_MapData
                                                  + 852)) )
       v36 = Unit_CalcEffectivenessC((__int16 *)(31
-                                              * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
+                                              * *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534)
                                               + g_MapData
                                               + 852));
     LOWORD(v10) = BYTE1(v34);
-    v16 = *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534);
+    v16 = *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534);
     Debug_Log(v16, SBYTE1(v34), a4, (int)aOddzial_w_zasi);
     v17 = g_MapData + 852 + 31 * v16;
     a4 = v18;
@@ -4983,8 +4983,8 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
   v5 = 801 * a1;
   v23 = 0;
   UnitBattle_UpdateIdleAnimatedUnits();
-  v6 = dword_5437A0;
-  switch ( dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v5] )
+  v6 = g_UnitBattleScanTileRow;
+  switch ( g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + v5] )
   {
     case 1:
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v4 + g_MapData + 852)] )
@@ -4993,8 +4993,8 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
         if ( v6 > 0 )
           goto LABEL_4;
       }
-      v11 = dword_5437A4;
-      v12 = UnitBattle_MoveTrackNear(a1, v6, dword_5437A4, a3);
+      v11 = g_BattleTargetTileCol;
+      v12 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a3);
       *(_DWORD *)((char *)v25 + 23) = v12;
       if ( v12 )
         UnitBattle_Move(a1, v13, v11, a3);
@@ -5007,26 +5007,26 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v14 = *(char *)(31 * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
+        v14 = *(char *)(31 * *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534)
                       + g_MapData
                       + 861);
         v15 = *((char *)v25 + 9);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), &v21, &v20, 0);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 0);
         v22 = v14 - v21 - (v15 - v20);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534), &v21, &v20, 1);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 1);
         v16 = v14 - v21;
         v17 = v15 - v20;
         if ( v16 <= 0 && v17 <= 0
           || !UnitBattle_Attack(
                 a1,
-                *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534),
+                *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534),
                 v16 - v17 > v22)
           || *(__int16 *)(g_MapData + v24 + 852) == -1 )
         {
           goto LABEL_5;
         }
       }
-      while ( *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534) != -1 );
+      while ( *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534) != -1 );
       if ( *(unsigned __int8 *)(g_MapData + v24 + 860) <= 4u )
         goto LABEL_5;
       v23 = 1;
@@ -5036,8 +5036,8 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       result = 0;
       break;
     case 6:
-      v8 = dword_5437A4;
-      v9 = UnitBattle_MoveTrackForce(a1, dword_5437A4, a3);
+      v8 = g_BattleTargetTileCol;
+      v9 = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a3);
       *(_DWORD *)((char *)v25 + 23) = v9;
       if ( v9 )
         UnitBattle_Move(a1, v10, v8, a3);
@@ -5049,7 +5049,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       result = 0;
       break;
     case 7:
-      result = UnitBattle_ApproachToSafeDistance(a1, dword_5437A0, v4, a3);
+      result = UnitBattle_ApproachToSafeDistance(a1, g_UnitBattleScanTileRow, v4, a3);
       break;
     case 8:
       if ( g_UnitTypeMaxRange_512582[88 * *v25] && (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5) > 0 )
@@ -5063,10 +5063,10 @@ LABEL_4:
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( !UnitBattle_AttackWall(a1, dword_5437A0, v19, dword_5437A4) || *(__int16 *)(g_MapData + v18 + 852) == -1 )
+        if ( !UnitBattle_AttackWall(a1, g_UnitBattleScanTileRow, v19, g_BattleTargetTileCol) || *(__int16 *)(g_MapData + v18 + 852) == -1 )
           goto LABEL_5;
       }
-      while ( *(_BYTE *)(dword_5437A4 + 20 * dword_5437A0 + g_MapData + 3134) );
+      while ( *(_BYTE *)(g_BattleTargetTileCol + 20 * g_UnitBattleScanTileRow + g_MapData + 3134) );
       if ( *(unsigned __int8 *)(g_MapData + v18 + 860) <= 4u )
         goto LABEL_5;
       v23 = 1;
@@ -5143,7 +5143,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   int v51; // [esp+56h] [ebp-1Ch]
 
   v46 = a1;
-  WCIsvListBase_base_destroy((WCIsvListBase *)&dword_5437C0);
+  WCIsvListBase_base_destroy((WCIsvListBase *)&g_UnitBattleAiCandidateQueue);
   memset(v34, 0xFF, 20);
   v51 = 0;
   v44 = 0;
@@ -5190,7 +5190,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
           if ( result != -1 )
           {
             v36 = *(__int16 *)((char *)v34 + i);
-            result = WCIsvListBase_AppendValue((int)&dword_5437C0, v36);
+            result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v36);
           }
         }
       }
@@ -5202,7 +5202,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
           if ( result != -1 )
           {
             v37 = *(__int16 *)((char *)v34 + j);
-            result = WCIsvListBase_AppendValue((int)&dword_5437C0, v37);
+            result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v37);
           }
         }
       }
@@ -5239,7 +5239,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       if ( *((__int16 *)v34 + v49) != -1 )
       {
         v38 = *((__int16 *)v34 + v49);
-        WCIsvListBase_AppendValue((int)&dword_5437C0, v38);
+        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v38);
       }
       *((_WORD *)v34 + v49) = -1;
     }
@@ -5250,7 +5250,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       if ( v9 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v9 + g_MapData + 852)] == 4 )
       {
         v39 = *(__int16 *)((char *)v34 + k);
-        WCIsvListBase_AppendValue((int)&dword_5437C0, v39);
+        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v39);
         *(_WORD *)((char *)v34 + k) = -1;
       }
     }
@@ -5262,7 +5262,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * result + g_MapData + 852)] )
         {
           v40 = *(__int16 *)((char *)v34 + m);
-          result = WCIsvListBase_AppendValue((int)&dword_5437C0, v40);
+          result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v40);
           *(_WORD *)((char *)v34 + m) = -1;
         }
       }
@@ -5275,7 +5275,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     if ( v27 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v27 + g_MapData + 852)] == 4 )
     {
       v41 = *(__int16 *)((char *)v34 + n);
-      WCIsvListBase_AppendValue((int)&dword_5437C0, v41);
+      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v41);
       *(_WORD *)((char *)v34 + n) = -1;
     }
   }
@@ -5285,7 +5285,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     if ( v29 != -1 && g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * v29 + 852)] )
     {
       v42 = *(__int16 *)((char *)v34 + ii);
-      WCIsvListBase_AppendValue((int)&dword_5437C0, v42);
+      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v42);
       *(_WORD *)((char *)v34 + ii) = -1;
     }
   }
@@ -5325,7 +5325,7 @@ LABEL_63:
     if ( *((__int16 *)v34 + v50) != -1 )
     {
       v43 = *((__int16 *)v34 + v50);
-      WCIsvListBase_AppendValue((int)&dword_5437C0, v43);
+      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v43);
     }
     result = v50;
     v32 = v48;
@@ -5581,40 +5581,40 @@ void UnitBattle_ScanAiWallTargetColumns()
   battle_width = *(_DWORD *)(g_MapData + 800);
   battle_height = *(_DWORD *)(g_MapData + 804);
   wall_column = *(_DWORD *)(g_MapData + 828);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_enter", wall_column, battle_width, battle_height, dword_5437B0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_enter", wall_column, battle_width, battle_height, g_UnitBattleWallScanTileRow);
   if ( wall_column < 0 || wall_column >= battle_width || battle_width <= 2 || battle_height <= 2 )
   {
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_skip", wall_column, battle_width, battle_height, dword_5437B0);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_skip", wall_column, battle_width, battle_height, g_UnitBattleWallScanTileRow);
     return;
   }
-  dword_5437B0 = 1;
+  g_UnitBattleWallScanTileRow = 1;
   v0 = 1;
   v1 = 20;
   while ( v0 < battle_height - 1 )
   {
     if ( *(char *)(g_MapData + v1 + wall_column + 3135) > 0 )
-      dword_5437B0 = v0;
+      g_UnitBattleWallScanTileRow = v0;
     v1 += 20;
     ++v0;
   }
-  dword_5437B4 = wall_column;
-  dword_5437B8 = dword_5437B4 + 1;
+  g_BattleWallScanColumn = wall_column;
+  g_BattleWallScanTileX = g_BattleWallScanColumn + 1;
   v2 = 1;
-  v3 = 20 * dword_5437B0;
+  v3 = 20 * g_UnitBattleWallScanTileRow;
   while ( v2 < battle_width - 1 )
   {
     v4 = g_MapData + v3 + v2;
-    if ( *(char *)(v4 + 3134) >= 0 && *(_BYTE *)(v4 + 3134) < *(_BYTE *)(dword_5437B4 + g_MapData + v3 + 3134) )
+    if ( *(char *)(v4 + 3134) >= 0 && *(_BYTE *)(v4 + 3134) < *(_BYTE *)(g_BattleWallScanColumn + g_MapData + v3 + 3134) )
     {
-      dword_5437B8 = dword_5437B4;
-      dword_5437B4 = v2++;
+      g_BattleWallScanTileX = g_BattleWallScanColumn;
+      g_BattleWallScanColumn = v2++;
     }
     else
     {
       ++v2;
     }
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_exit", dword_5437B0, dword_5437B4, dword_5437B8, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_exit", g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX, 0);
   return;
 }
 // 43CBE0: control flows out of bounds to 43C853
@@ -5629,15 +5629,15 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
   int v2; // edx
 
   v2 = a1;
-  if ( dword_532078 <= 3 && UnitBattle_ScanAiPlanRangeLine(a1, a2) )
+  if ( g_UnitBattleAiTurnCounter <= 3 && UnitBattle_ScanAiPlanRangeLine(a1, a2) )
     return 2;
   if ( *(int *)(g_MapData + 828) <= 0 )
     return 4;
-  if ( dword_532078 == 1 && v2 == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
+  if ( g_UnitBattleAiTurnCounter == 1 && v2 == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
     return 6;
-  if ( v2 == *(_DWORD *)(g_MapData + 836) && dword_532078 < 3 )
+  if ( v2 == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter < 3 )
     return 0;
-  if ( v2 == *(_DWORD *)(g_MapData + 836) && dword_532078 >= 3 )
+  if ( v2 == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter >= 3 )
     return 4;
   return 1;
 }
@@ -5676,9 +5676,9 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
 
   v2 = 1;
   v26 = 0;
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", a1, g_CurrentPlayerIndex, dword_532078, 0);
-  dword_5437A8 = 0;
-  ++dword_532078;
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", a1, g_CurrentPlayerIndex, g_UnitBattleAiTurnCounter, 0);
+  g_BattleAiActionAttemptCount = 0;
+  ++g_UnitBattleAiTurnCounter;
   if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
@@ -5688,18 +5688,18 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
       *(_DWORD *)(g_MapData + 800),
       *(_DWORD *)(g_MapData + 804));
     UnitBattle_ScanAiWallTargetColumns();
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", a1, dword_5437B0, dword_5437B4, dword_5437B8);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", a1, g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX);
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", a1, g_SelectedUnitIndex, dword_532078, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", a1, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_idle", a1, g_SelectedUnitIndex, dword_532078, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_idle", a1, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
   g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", a1, g_UnitBattleAiCurrentPlanMode, dword_532078, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiTurnCounter, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
   UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", a1, g_UnitBattleAiCurrentPlanMode, dword_5437C8, dword_5437CC);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
   UnitBattle_UpdateIdleAnimatedUnits();
-  dword_5437AC = 0;
+  g_BattleShootingUnitMoveActiveFlag = 0;
   switch ( g_UnitBattleAiCurrentPlanMode )
   {
     case 0:
@@ -5707,10 +5707,10 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
     case 4:
       goto LABEL_13;
     case 2:
-      while ( dword_5437C8 )
+      while ( g_UnitBattleAiCandidateQueueTail )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v4 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
+        v4 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
         v26 = v4;
         UnitBattle_ResetAiReachGridForSide(a1);
         UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, 1);
@@ -5722,17 +5722,17 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
         }
         else
         {
-          WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
+          WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
         }
       }
       goto LABEL_8;
     case 6:
 LABEL_8:
       v10 = 0;
-      for ( i = dword_5437CC; v10 < i; ++v10 )
+      for ( i = g_BattleAiUnitQueueCount; v10 < i; ++v10 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v12 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
+        v12 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
         v26 = v12;
         UnitBattle_ResetAiReachGridForSide(a1);
         UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v10);
@@ -5742,17 +5742,17 @@ LABEL_8:
           UnitBattle_UpdateIdleAnimatedUnits();
           UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
         }
-        WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
+        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
       g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
       UnitBattle_UpdateIdleAnimatedUnits();
       v2 = 0;
       UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", a1, g_UnitBattleAiCurrentPlanMode, dword_5437C8, dword_5437CC);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
       UnitBattle_UpdateIdleAnimatedUnits();
 LABEL_13:
-      if ( !dword_5437C8 )
+      if ( !g_UnitBattleAiCandidateQueueTail )
         goto LABEL_21;
       break;
     default:
@@ -5761,17 +5761,17 @@ LABEL_13:
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    v26 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", v26, a1, dword_5437C8, v2);
+    v26 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", v26, a1, g_UnitBattleAiCandidateQueueTail, v2);
     v19 = g_MapData + 31 * v26;
     if ( *(__int16 *)(v19 + 852) != -1 && a1 == *(_BYTE *)(v19 + 854) )
       break;
 LABEL_20:
-    if ( !dword_5437C8 )
+    if ( !g_UnitBattleAiCandidateQueueTail )
     {
 LABEL_21:
-      WCIsvListBase_base_destroy((WCIsvListBase *)&dword_5437C0);
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_exit", a1, v2, dword_5437C8, 0);
+      WCIsvListBase_base_destroy((WCIsvListBase *)&g_UnitBattleAiCandidateQueue);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_exit", a1, v2, g_UnitBattleAiCandidateQueueTail, 0);
       return v2;
     }
   }
@@ -5784,7 +5784,7 @@ LABEL_21:
     UnitBattle_UpdateIdleAnimatedUnits();
     if ( !UnitBattle_SelectAiActionForUnit(v26, a1) )
     {
-      WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
+      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
 LABEL_19:
       v2 = 0;
       goto LABEL_20;
@@ -6338,7 +6338,7 @@ int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
   int v9; // [esp+4h] [ebp-20h]
   unsigned __int8 v10; // [esp+Ch] [ebp-18h]
 
-  memset(dword_5437DC, 0, 0xC0);
+  memset(g_BattleDeploymentBucketStorage_5437DC, 0, 0xC0);
   result = 0;
   v4 = (__int16 *)(uintptr_t)(unsigned int)a1;
   v5 = 0;
@@ -6351,14 +6351,14 @@ int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
     {
       v10 = g_BattleRoleDeploymentBucketTable[7 * a3 + (unsigned __int8)g_UnitTypeRole[88 * *v4]];
       if ( (v10 - v10 % 10) / 10 == 1 )
-        dword_543808[++v6] = (int)v4;
+        g_BattleDeploymentBucketRole1[++v6] = (int)v4;
       if ( (v10 - v10 % 10) / 10 == 2 )
-        dword_543838[++v7] = (int)v4;
+        g_BattleDeploymentBucketRole2[++v7] = (int)v4;
       result = (v10 - v10 % 10) / 10;
       if ( result == 3 )
       {
         result = v9 * 4;
-        dword_54386C[v9++] = (int)v4;
+        g_BattleDeploymentBucketRole3[v9++] = (int)v4;
       }
       ++v5;
       v4 = (__int16 *)((char *)v4 + 31);
@@ -6486,7 +6486,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
       do
       {
         result = v23;
-        if ( *(int *)((char *)dword_5437DC + v23) )
+        if ( *(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + v23) )
         {
           v21 = 1;
           if ( !v3 )
@@ -6528,10 +6528,10 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
       if ( v21 )
       {
         v7 = 48 * v3 + 4 * v4;
-        if ( *(int *)((char *)dword_5437DC + v7) )
+        if ( *(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + v7) )
         {
           result = Battle_PlaceUnitAtNextOpenDeploymentTile(BattleDeploymentBucketReadPointer(v7), &v14, v17, &v13);
-          *(int *)((char *)dword_5437DC + v7) = 0;
+          *(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + v7) = 0;
         }
       }
       ++v20;
@@ -6553,7 +6553,7 @@ int  Building_HandleGateDoorDialogClose_v1(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_5438A4 = v4;
+  g_GateDoorDialogExitFlag_V1 = v4;
   return result;
 }
 // 43D8CB: variable 'v4' is possibly undefined
@@ -6585,13 +6585,13 @@ int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
     v6 = aCastle_chrDw_3;
   else
     v6 = aCastle_pogDw_3;
-  v7 = *(_DWORD *)(dword_5202E0 + 184);
+  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
   v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
   v11 = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
-  dword_5438A0 = (int)v9;
+  g_GateDoorDialogV1SpriteSet = (int)v9;
   if ( v4 )
     v12 = aCastle_chrDw_5;
   else
@@ -6599,27 +6599,27 @@ int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
   Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_6);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V1);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
-  dword_5438A4 = v18;
+  g_GateDoorDialogExitFlag_V1 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V1, a3);
   }
-  while ( !dword_5438A4 );
-  DLXSpriteSet_ReleaseAndClear(&dword_5438A0);
+  while ( !g_GateDoorDialogExitFlag_V1 );
+  DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV1SpriteSet);
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 43D934: variable 'v5' is possibly undefined
 // 43D93C: variable 'v8' is possibly undefined
@@ -6647,7 +6647,7 @@ int  Building_HandleGateDoorDialogClose_v2(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_5438B0 = v4;
+  g_GateDoorDialogExitFlag_V2 = v4;
   return result;
 }
 // 43DACB: variable 'v4' is possibly undefined
@@ -6679,13 +6679,13 @@ int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
     v6 = aCastle_chrDw_6;
   else
     v6 = aCastle_pogDw_6;
-  v7 = *(_DWORD *)(dword_5202E0 + 184);
+  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
   v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
   v11 = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
-  dword_5438AC = (int)v9;
+  g_GateDoorDialogV2SpriteSet = (int)v9;
   if ( v4 )
     v12 = aCastle_chrDw_8;
   else
@@ -6693,27 +6693,27 @@ int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
   Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_7);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V2);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
-  dword_5438B0 = v18;
+  g_GateDoorDialogExitFlag_V2 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V2, a3);
   }
-  while ( !dword_5438B0 );
-  DLXSpriteSet_ReleaseAndClear(&dword_5438AC);
+  while ( !g_GateDoorDialogExitFlag_V2 );
+  DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV2SpriteSet);
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 43DB34: variable 'v5' is possibly undefined
 // 43DB3C: variable 'v8' is possibly undefined
@@ -6741,7 +6741,7 @@ int  Building_HandleGateDoorDialogClose_v3(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_5438BC = v4;
+  g_GateDoorDialogExitFlag_V3 = v4;
   return result;
 }
 // 43DCCB: variable 'v4' is possibly undefined
@@ -6773,13 +6773,13 @@ int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
     v6 = aCastle_chrDw_9;
   else
     v6 = aCastle_pogDw_9;
-  v7 = *(_DWORD *)(dword_5202E0 + 184);
+  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
   v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
   v11 = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
-  dword_5438B8 = (int)v9;
+  g_GateDoorDialogV3SpriteSet = (int)v9;
   if ( v4 )
     v12 = aCastle_chrD_11;
   else
@@ -6787,27 +6787,27 @@ int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
   Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_8);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V3);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
-  dword_5438BC = v18;
+  g_GateDoorDialogExitFlag_V3 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V3, a3);
   }
-  while ( !dword_5438BC );
-  DLXSpriteSet_ReleaseAndClear(&dword_5438B8);
+  while ( !g_GateDoorDialogExitFlag_V3 );
+  DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV3SpriteSet);
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 43DD34: variable 'v5' is possibly undefined
 // 43DD3C: variable 'v8' is possibly undefined
@@ -6835,7 +6835,7 @@ int  Building_HandleGateDoorDialogClose_v4(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_5438C8 = v4;
+  g_GateDoorDialogExitFlag_V4 = v4;
   return result;
 }
 // 43DECB: variable 'v4' is possibly undefined
@@ -6867,13 +6867,13 @@ int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
     v6 = aCastle_chrD_12;
   else
     v6 = aCastle_pogD_12;
-  v7 = *(_DWORD *)(dword_5202E0 + 184);
+  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
   v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
   v11 = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
-  dword_5438C4 = (int)v9;
+  g_GateDoorDialogV4SpriteSet = (int)v9;
   if ( v4 )
     v12 = aCastle_chrD_14;
   else
@@ -6881,27 +6881,27 @@ int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
   Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_9);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V4);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
-  dword_5438C8 = v18;
+  g_GateDoorDialogExitFlag_V4 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V4, a3);
   }
-  while ( !dword_5438C8 );
-  DLXSpriteSet_ReleaseAndClear(&dword_5438C4);
+  while ( !g_GateDoorDialogExitFlag_V4 );
+  DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV4SpriteSet);
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 43DF34: variable 'v5' is possibly undefined
 // 43DF3C: variable 'v8' is possibly undefined
@@ -8029,7 +8029,7 @@ int BuildingSpriteCache_Reset()
   int result; // eax
 
   for ( result = 0; result != 650; result += 13 )
-    byte_5438E8[result] = -1;
+    g_BuildingSpriteCache[result] = -1;
   return result;
 }
 
@@ -8061,7 +8061,7 @@ int  BuildingSpriteCache_LoadEntry(
   entry_index = -1;
   for ( i = 0; i < BUILDING_SPRITE_CACHE_RECORD_COUNT; ++i )
   {
-    if ( byte_5438E8[BUILDING_SPRITE_CACHE_RECORD_STRIDE * i] == -1 )
+    if ( g_BuildingSpriteCache[BUILDING_SPRITE_CACHE_RECORD_STRIDE * i] == -1 )
     {
       entry_index = i;
       break;
@@ -8076,22 +8076,22 @@ int  BuildingSpriteCache_LoadEntry(
       int last_used_tick;
 
       entry_offset = BUILDING_SPRITE_CACHE_RECORD_STRIDE * i;
-      last_used_tick = *(int *)(void *)(byte_5438E8 + entry_offset + 9);
+      last_used_tick = *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 9);
       if ( oldest_tick > (unsigned int)last_used_tick )
       {
         oldest_tick = (unsigned int)last_used_tick;
         entry_index = i;
       }
     }
-    DLXSprite_ReleaseAndClear((int *)(void *)(byte_5438E8 + BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index + 5));
+    DLXSprite_ReleaseAndClear((int *)(void *)(g_BuildingSpriteCache + BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index + 5));
   }
   entry_offset = BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index;
-  byte_5438E8[entry_offset] = (char)a1;
-  byte_5438E9[entry_offset] = (char)a2;
-  byte_5438EA[entry_offset] = (char)a4;
-  byte_5438EB[entry_offset] = (char)a3;
-  byte_5438EC[entry_offset] = (char)a7;
-  *(int *)(void *)(byte_5438E8 + entry_offset + 9) = Time_Now(entry_index, entry_offset);
+  g_BuildingSpriteCache[entry_offset] = (char)a1;
+  g_BuildingSpriteCacheKeyCol2[entry_offset] = (char)a2;
+  g_BuildingSpriteCacheKeyCol3[entry_offset] = (char)a4;
+  g_BuildingSpriteCacheKeyCol4Signed[entry_offset] = (char)a3;
+  g_BuildingSpriteCacheKeyCol5[entry_offset] = (char)a7;
+  *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 9) = Time_Now(entry_index, entry_offset);
   if ( a1 )
   {
     if ( a3 >= 3 )
@@ -8130,26 +8130,26 @@ int  BuildingSpriteCache_LoadEntry(
     v22 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v22 )
       v22 = DLXSprite_LoadCachedEntry(v22, aBuildin1_s32, v18);
-    *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v22;
-    return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
+    *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v22;
+    return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
   if ( v19 == 1 )
   {
     v25 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v25 )
       v25 = DLXSprite_LoadCachedEntry(v25, aBuildin2_s32, v18);
-    *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v25;
-    return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
+    *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v25;
+    return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
   if ( v19 == 2 )
   {
     v27 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v27 )
       v27 = DLXSprite_LoadCachedEntry(v27, aBuildin3_s32, v18);
-    *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v27;
-    return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
+    *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v27;
+    return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
-  return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
+  return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
 }
 // 5202E4: using guessed type int gameData;
 // 5438ED: using guessed type int dword_5438ED;
@@ -8165,18 +8165,18 @@ int  BuildingSpriteCache_GetOrLoadEntry(DWORD a1, int a2, signed int a3, int a4,
     int entry_offset;
 
     entry_offset = BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index;
-    if ( (signed char)byte_5438E8[entry_offset] == (int)a1 )
+    if ( (signed char)g_BuildingSpriteCache[entry_offset] == (int)a1 )
     {
-      if ( (unsigned char)byte_5438E9[entry_offset] == (unsigned int)a2 )
+      if ( (unsigned char)g_BuildingSpriteCacheKeyCol2[entry_offset] == (unsigned int)a2 )
       {
-        if ( (unsigned char)byte_5438EA[entry_offset] == (unsigned int)a4 )
+        if ( (unsigned char)g_BuildingSpriteCacheKeyCol3[entry_offset] == (unsigned int)a4 )
         {
-          if ( (signed char)byte_5438EB[entry_offset] == a3 )
+          if ( (signed char)g_BuildingSpriteCacheKeyCol4Signed[entry_offset] == a3 )
           {
-            if ( (unsigned char)byte_5438EC[entry_offset] == (unsigned int)a5 )
+            if ( (unsigned char)g_BuildingSpriteCacheKeyCol5[entry_offset] == (unsigned int)a5 )
             {
-              *(int *)(void *)(byte_5438E8 + entry_offset + 9) = Time_Now(a5, entry_index);
-              return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
+              *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 9) = Time_Now(a5, entry_index);
+              return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
             }
           }
         }
@@ -8198,16 +8198,16 @@ int BuildingSpriteCache_Clear()
   {
     while ( 1 )
     {
-      result = byte_5438E8[i];
+      result = g_BuildingSpriteCache[i];
       if ( result != -1 )
         break;
       i += 13;
       if ( i == 650 )
         return result;
     }
-    byte_5438E8[i] = -1;
-    result = DLXSprite_ReleaseAndClear((int *)(void *)&byte_5438E8[i + 5]);
-    *(int *)(void *)(byte_5438E8 + i + 5) = 0;
+    g_BuildingSpriteCache[i] = -1;
+    result = DLXSprite_ReleaseAndClear((int *)(void *)&g_BuildingSpriteCache[i + 5]);
+    *(int *)(void *)(g_BuildingSpriteCache + i + 5) = 0;
   }
   return result;
 }
@@ -8222,7 +8222,7 @@ int BuildingSpriteCache_CountEntries()
   v0 = 0;
   for ( i = 0; i != 650; i += 13 )
   {
-    if ( byte_5438E8[i] != -1 )
+    if ( g_BuildingSpriteCache[i] != -1 )
       ++v0;
   }
   return v0;
@@ -8471,7 +8471,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
     v5 = DLXSpriteSet_Load(v5, a4);
   v20 = v5;
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   DLX_GetSpriteWidth((int)v20, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v20, 0x16u);
   v8 = v7 + 6;
@@ -8483,7 +8483,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
     Surface = Render_CreateSurface((int)Surface, 640, v24);
   v10 = (int)Surface;
   Render_FillRect(0, Surface, 150, 0, 0x27Fu, v24 + 149, 0, 0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v20, 22);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(
@@ -8883,7 +8883,7 @@ int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2)
   int v4; // edx
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_543C84 = v4;
+  g_TempleOutcomePopupCloseFlag = v4;
   return result;
 }
 // 440A2B: variable 'v4' is possibly undefined
@@ -8893,8 +8893,8 @@ int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2)
 _DWORD * Temple_OutcomePopup_HandleDestroyBuildingClick(int a1, int a2, char a3, DWORD a4, double a5)
 {
   UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_543C84 = 1;
-  return Building_Destroy(dword_543C80, a3, a4, a5);
+  g_TempleOutcomePopupCloseFlag = 1;
+  return Building_Destroy(g_BuildingUIRecordPtr, a3, a4, a5);
 }
 // 543C80: using guessed type int dword_543C80;
 // 543C84: using guessed type int dword_543C84;
@@ -8927,7 +8927,7 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
   v6 = 0;
   do
   {
-    if ( byte_543C88[result] )
+    if ( g_BuildingUnitsPopupSelectedSlots[result] )
     {
       ++v6;
       ++v5;
@@ -8939,10 +8939,10 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
   v19[v5] = -1;
   if ( v19[0] != -1 )
   {
-    Building_UnitsLeave((unsigned __int8 *)dword_543C80, v19, a3);
+    Building_UnitsLeave((unsigned __int8 *)g_BuildingUIRecordPtr, v19, a3);
     Audio_PlaySoundEffectByName(aDclose_1, 64);
     v21 = 12;
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     v10 = Time_Now(v8, v7);
     do
     {
@@ -8952,9 +8952,9 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
       v13 = v21;
       for ( i = 0; i < 10; ++i )
       {
-        if ( byte_543C88[i] )
+        if ( g_BuildingUnitsPopupSelectedSlots[i] )
         {
-          SpriteForChar = DLX_GetSpriteForChar(dword_543C54, v13);
+          SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, v13);
           v18 = 0;
           v20 = *((_DWORD *)g_RenderDevice + 46);
           (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v20 + 52))(
@@ -8976,7 +8976,7 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
     }
     while ( v17 != 5 );
   }
-  dword_543C84 = 1;
+  g_TempleOutcomePopupCloseFlag = 1;
   return result;
 }
 // 440AE9: variable 'v8' is possibly undefined
@@ -9014,13 +9014,13 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   Surface = (_DWORD *)Mem_Alloc(188, a1, a2, a3);
   if ( Surface )
   {
-    v14 = DLX_GetSpriteWidth(dword_543C54, 0) + 1;
-    SpriteHeight = DLX_GetSpriteHeight(dword_543C54, 0);
+    v14 = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) + 1;
+    SpriteHeight = DLX_GetSpriteHeight(g_DemoTextDLXSpriteSet, 0);
     Surface = Render_CreateSurface(v16, SpriteHeight + 1, v14);
   }
   v19 = Surface;
   g_RenderDevice = Surface;
-  SpriteForChar = DLX_GetSpriteForChar(dword_543C54, 0);
+  SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 0);
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     0,
     SpriteForChar,
@@ -9036,9 +9036,9 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   v20 = 0;
   do
   {
-    if ( *(__int16 *)(v7 + dword_543C80 + 18) == -1 )
+    if ( *(__int16 *)(v7 + g_BuildingUIRecordPtr + 18) == -1 )
     {
-      DLX_GetSpriteForChar(dword_543C54, 5);
+      DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 5);
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         -1,
         -1,
@@ -9050,12 +9050,12 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
     }
     else
     {
-      DLX_GetSpriteForChar(dword_543C58[v20], 0);
+      DLX_GetSpriteForChar(g_BuildingUnitsPopupSlotSpriteSets[v20], 0);
       v8 = *((_DWORD *)g_RenderDevice + 46);
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v8 + 52))(-1, -1, -1, -1, 1, 0, 0);
-      if ( byte_543C88[v6] )
+      if ( g_BuildingUnitsPopupSelectedSlots[v6] )
       {
-        v9 = DLX_GetSpriteForChar(dword_5202C8, 5);
+        v9 = DLX_GetSpriteForChar(g_MarksSpriteSet, 5);
         v8 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v8 + 52))(
           78 * (v6 / 5) + 50,
@@ -9068,9 +9068,9 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
           0,
           0);
       }
-      if ( *(_BYTE *)(v7 + dword_543C80 + 28) )
+      if ( *(_BYTE *)(v7 + g_BuildingUIRecordPtr + 28) )
       {
-        v10 = DLX_GetSpriteForChar(dword_543C54, 3);
+        v10 = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 3);
         v8 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v8 + 52))(
           v11 + 49,
@@ -9098,8 +9098,8 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   }
   while ( v6 < 10 );
   Render_Pump();
-  v17 = DLX_GetSpriteWidth(dword_543C54, 0) - 1;
-  v12 = DLX_GetSpriteHeight(dword_543C54, 0);
+  v17 = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) - 1;
+  v12 = DLX_GetSpriteHeight(g_DemoTextDLXSpriteSet, 0);
   Render_BlitSurfaceRect(v19, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
   Render_Present((int)g_RenderState);
   if ( v19 )
@@ -9146,25 +9146,25 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
 
   v27 = a2;
   v26 = g_RenderDevice;
-  dword_543C80 = UNIT_RECORD(a1);
-  dword_543C84 = 0;
+  g_BuildingUIRecordPtr = UNIT_RECORD(a1);
+  g_TempleOutcomePopupCloseFlag = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, a3);
-  dword_543C54 = (int)v5;
+  g_DemoTextDLXSpriteSet = (int)v5;
   v6 = 0;
   memset_(0, 0);
   do
   {
-    v8 = v6 + dword_543C80;
-    if ( *(__int16 *)(v6 + dword_543C80 + 18) != -1 )
+    v8 = v6 + g_BuildingUIRecordPtr;
+    if ( *(__int16 *)(v6 + g_BuildingUIRecordPtr + 18) != -1 )
     {
       v9 = *(_BYTE *)(v8 + 20);
       UI_BeginUnitInfo(v25, *(_BYTE *)(v8 + 18), v9);
       v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, a4);
       if ( v11 )
         v11 = DLXSpriteSet_Load(v11, v9);
-      *(int *)((char *)dword_543C58 + v7) = (int)v11;
+      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + v7) = (int)v11;
     }
     v7 += 4;
     v6 += 31;
@@ -9176,13 +9176,13 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   g_RenderDevice = v14;
   Render_Begin((int)g_RenderState, 0);
-  while ( !dword_543C84 )
+  while ( !g_TempleOutcomePopupCloseFlag )
   {
     DD_Pump((int)g_RenderState, (char)v12);
     v12 = 0;
-    v18 = ((dword_544D00 >> byte_54512C) - 148) / 78;
+    v18 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 148) / 78;
     v19 = 0;
-    v20 = (dword_544CFC >> byte_54512C) - 200;
+    v20 = (g_MouseCursorRawX >> g_CursorCoordShift) - 200;
     do
     {
       v21 = (unsigned __int16)g_DemoTextColumnXOffsets[v19];
@@ -9195,35 +9195,35 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
     if ( v18 <= 1 && (unsigned int)v12 <= 4 )
     {
       v12 += 5 * v18;
-      if ( *(__int16 *)(31 * (_DWORD)v12 + dword_543C80 + 18) != -1 )
+      if ( *(__int16 *)(31 * (_DWORD)v12 + g_BuildingUIRecordPtr + 18) != -1 )
       {
         if ( DD_IsFlipping((int)g_RenderState) )
         {
-          byte_543C88[(_DWORD)v12] ^= 1u;
+          g_BuildingUnitsPopupSelectedSlots[(_DWORD)v12] ^= 1u;
           Audio_PlaySoundEffectByName(aMarker, 64);
           RenderHook_DemoText(v22, (char)v12, a4);
           Render_Begin((int)g_RenderState, 0);
         }
         else if ( DD_IsLost((int)g_RenderState) )
         {
-          v23 = Building_HasSpecialPersonageGarrisonEntries(dword_543C80);
-          v12 = (unsigned __int8 *)(dword_543C80 + 18 + v24);
+          v23 = Building_HasSpecialPersonageGarrisonEntries(g_BuildingUIRecordPtr);
+          v12 = (unsigned __int8 *)(g_BuildingUIRecordPtr + 18 + v24);
           Unit_Info(100, 100, v23, v12, a4, 0);
         }
       }
     }
     UIWidgetTable_PollHoverAndActions(g_DemoTextHoverWidgetTable, a4);
   }
-  DLXSpriteSet_ReleaseAndClear(&dword_543C54);
+  DLXSpriteSet_ReleaseAndClear(&g_DemoTextDLXSpriteSet);
   v15 = 0;
   g_RenderDevice = v26;
   v16 = 0;
   do
   {
-    if ( v16 != dword_543C58[v15] )
+    if ( v16 != g_BuildingUnitsPopupSlotSpriteSets[v15] )
     {
       nfree_(v16);
-      dword_543C58[v15] = v16;
+      g_BuildingUnitsPopupSlotSpriteSets[v15] = v16;
     }
     ++v15;
   }
@@ -9543,10 +9543,10 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
       sprintf_(v17, "sfx\\music\\mainmap%d.wav", v15);
       loadFileSusp(v17, v16);
     }
-    dword_543C9C = CSS_PlaySound((int)v16, 64, 0, 2000);
-    CSS_SetSoundLoop(dword_543C9C, 0, -1);
-    result = dword_543C9C;
-    g_Audio_ActiveSoundHandle = dword_543C9C;
+    g_MainMapMusicHandle = CSS_PlaySound((int)v16, 64, 0, 2000);
+    CSS_SetSoundLoop(g_MainMapMusicHandle, 0, -1);
+    result = g_MainMapMusicHandle;
+    g_Audio_ActiveSoundHandle = g_MainMapMusicHandle;
   }
   return result;
 }
@@ -9577,7 +9577,7 @@ int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2)
 
   if ( !g_Audio_MusicActiveFlag )
     return 0;
-  CSS_PauseSound(dword_543C9C, 2000);
+  CSS_PauseSound(g_MainMapMusicHandle, 2000);
   Sound_BuildMusicTrackPath(v6, a1, a2);
   v5 = CSS_PlaySound((int)v6, 64, 0, 2000);
   CSS_SetSoundLoop(v5, 0, -1);
@@ -9596,10 +9596,10 @@ int  Audio_ResumeMusicAndStopLoopedSound(int result)
   v1 = result;
   if ( g_Audio_MusicActiveFlag )
   {
-    CSS_ResumeSound(dword_543C9C, 2000);
-    CSS_SetSoundVolume(dword_543C9C, 64, 1000);
+    CSS_ResumeSound(g_MainMapMusicHandle, 2000);
+    CSS_SetSoundVolume(g_MainMapMusicHandle, 64, 1000);
     result = CSS_StopSound(v1, 0);
-    g_Audio_ActiveSoundHandle = dword_543C9C;
+    g_Audio_ActiveSoundHandle = g_MainMapMusicHandle;
   }
   return result;
 }
@@ -9610,7 +9610,7 @@ int  Audio_ResumeMusicAndStopLoopedSound(int result)
 //----- (004418E0) --------------------------------------------------------
 int Audio_StopMainMusic()
 {
-  return Audio_StopMusicWithFade(dword_543C9C);
+  return Audio_StopMusicWithFade(g_MainMapMusicHandle);
 }
 // 543C9C: using guessed type int dword_543C9C;
 
@@ -9631,7 +9631,7 @@ int  Audio_StopMusicWithFade(int result)
 void Audio_DuckMusicVolume()
 {
   if ( g_Audio_MusicActiveFlag )
-    CSS_SetSoundVolume(dword_543C9C, 16, 1000);
+    CSS_SetSoundVolume(g_MainMapMusicHandle, 16, 1000);
 }
 // 5174D8: using guessed type int dword_5174D8;
 // 543C9C: using guessed type int dword_543C9C;
@@ -9640,7 +9640,7 @@ void Audio_DuckMusicVolume()
 void Audio_RestoreMusicVolume()
 {
   if ( g_Audio_MusicActiveFlag )
-    CSS_SetSoundVolume(dword_543C9C, 64, 1000);
+    CSS_SetSoundVolume(g_MainMapMusicHandle, 64, 1000);
 }
 // 5174D8: using guessed type int dword_5174D8;
 // 543C9C: using guessed type int dword_543C9C;
@@ -9651,7 +9651,7 @@ int  Audio_SetMusicVolume(int a1, signed int a2)
   int result; // eax
 
   if ( g_Audio_MusicActiveFlag )
-    return CSS_SetSoundVolume(dword_543C9C, a1, a2);
+    return CSS_SetSoundVolume(g_MainMapMusicHandle, a1, a2);
   return result;
 }
 // 5174D8: using guessed type int dword_5174D8;

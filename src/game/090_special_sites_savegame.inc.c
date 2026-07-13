@@ -624,7 +624,7 @@ int  FileSystem_InitRootMount(int a1, char a2, DWORD a3)
   const char **filesystem_root; // eax
 
   filesystem_root = FileSystem_DiskMountCreate(a1, a2, a3);
-  FileSystem_ConstructMountTable((int)&dword_543CC8, (int)filesystem_root, 0, a3);
+  FileSystem_ConstructMountTable((int)&g_FileSystemMountTable, (int)filesystem_root, 0, a3);
   return CRT_RegisterFinalizableObject((int)&g_FileSystemRootMountObject, 0);
 }
 
@@ -658,14 +658,14 @@ int  FileSystem_ResolveReadPath(char *a1, int a2)
   int v14; // [esp+64h] [ebp-18h]
 
   v14 = a2;
-  dword_54DD08 = 6;
-  v3 = Compat_FileSystemQuery((int)&dword_543CC8, a1, 0, FileSystem_TryOpenEntryCallback);
+  g_FileSystemMountOpenMode = 6;
+  v3 = Compat_FileSystemQuery((int)&g_FileSystemMountTable, a1, 0, FileSystem_TryOpenEntryCallback);
   if ( !v3 )
   {
     strcpy(v13, aCClash);
     strcat(v13, a1);
-    dword_54DD08 = 6;
-    v3 = Compat_FileSystemQuery((int)&dword_543CC8, v13, 0, FileSystem_TryOpenEntryCallback);
+    g_FileSystemMountOpenMode = 6;
+    v3 = Compat_FileSystemQuery((int)&g_FileSystemMountTable, v13, 0, FileSystem_TryOpenEntryCallback);
     if ( !v3 && v14 )
       App_RequestQuit((int)aIOCouldnTOpenF);
   }
@@ -731,7 +731,7 @@ int  FileSystem_MountArchiveAtIndex(int a1, const CHAR *a2, DWORD a3)
     }
   }
   v5 = File_AllocateReadOnlySource(v21, a3, 0, a3, (int)v21);
-  return FileSystem_AddMountEntry(dword_543CC8, (const CHAR *)(uintptr_t)(unsigned int)a1, 0, (DWORD)v5);
+  return FileSystem_AddMountEntry(g_FileSystemMountTable, (const CHAR *)(uintptr_t)(unsigned int)a1, 0, (DWORD)v5);
 }
 // 442A16: variable 'v3' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
@@ -799,7 +799,7 @@ LABEL_6:
   }
 LABEL_7:
   FileSystem_MountArchiveAtIndex((int)aSfxMusic_0, aDataMusic_res, 1u);
-  CSS_SetFileSystem((int)dword_543CC8);
+  CSS_SetFileSystem((int)g_FileSystemMountTable);
   v10[0] = FileSystem_ResolveReadPath(aGfxBackgr1_s32, 0);
   if ( !v10[0] )
   {
@@ -843,7 +843,7 @@ int  loadFileSusp(char *a1, const CHAR *a2)
       fwrite_(copy_buffer, bytes_read, output_handle, 1);
   }
   while ( bytes_read == 0x80000 );
-  Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
   fclose_(output_handle);
   Compat_FreeLow32Bytes((int)(uintptr_t)copy_buffer);
   return 0;
@@ -1371,7 +1371,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   int v23; // [esp+40h] [ebp-1Ch]
 
   v21 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
   v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
   if ( v3 )
@@ -2004,9 +2004,9 @@ int  SaveSlotDialog_RepaintRow(int a1)
 
   v12 = a1;
   v2 = g_RenderDevice;
-  if ( dword_543D1C && a1 == dword_543D18 )
+  if ( g_SaveSlotDialogIsSaveMode && a1 == g_SaveSlotDialogSelectedRow )
   {
-    v3 = byte_543D28;
+    v3 = g_SaveSlotNameEditBuffer;
     v4 = v11;
     do
     {
@@ -2025,18 +2025,18 @@ int  SaveSlotDialog_RepaintRow(int a1)
   {
     SaveSlot_LoadLabelOrPlaceholder(v12, v11, (DWORD)g_RenderDevice);
   }
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   v7 = (unsigned __int16)(22 * v12 + 157);
   v8 = 22 * v12 + 137;
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, v8, v7);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, v8, 244, 0x1A4u, v7, 0xF4u, v8);
-  if ( v12 == dword_543D18 )
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, v8, 244, 0x1A4u, v7, 0xF4u, v8);
+  if ( v12 == g_SaveSlotDialogSelectedRow )
     v9 = 18;
   else
     v9 = 21;
   Render_ReleaseSurface(v9, (DWORD)v2);
-  if ( dword_543D1C )
-    UI_SetTextCursorPosition(dword_543D24);
+  if ( g_SaveSlotDialogIsSaveMode )
+    UI_SetTextCursorPosition(g_TextInputCaretPos);
   UI_DrawTextFmt(v7, 244, 410, 22 * v12 + 137, 3, (int)v11);
   UI_SetTextCursorPosition(-1);
   result = Render_Present((int)g_RenderState);
@@ -2055,8 +2055,8 @@ int  SaveSlotDialog_HandleCancel(int result, int a2)
 {
   if ( result )
     result = UIWidget_PlayPressedReleaseAnimationWithDelay(result, a2);
-  dword_543D20 = -1;
-  dword_543D14 = 1;
+  g_SaveSlotDialogResult = -1;
+  g_SaveSlotDialogDone = 1;
   return result;
 }
 // 543D14: using guessed type int dword_543D14;
@@ -2070,22 +2070,22 @@ signed int  SaveSlotDialog_HandleConfirm(int a1, int a2, DWORD a3, double a4)
 
   if ( a1 )
     UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  if ( dword_543D1C && dword_543D18 != -1 )
+  if ( g_SaveSlotDialogIsSaveMode && g_SaveSlotDialogSelectedRow != -1 )
   {
-    result = saveGame(dword_543D18, (DWORD)byte_543D28, a4);
-    dword_543D14 = 1;
+    result = saveGame(g_SaveSlotDialogSelectedRow, (DWORD)g_SaveSlotNameEditBuffer, a4);
+    g_SaveSlotDialogDone = 1;
     goto LABEL_6;
   }
-  result = SaveSlot_HasDataFile(dword_543D18, a3);
+  result = SaveSlot_HasDataFile(g_SaveSlotDialogSelectedRow, a3);
   if ( !result )
   {
 LABEL_6:
     g_RenderDevice = v6;
     return result;
   }
-  result = dword_543D18;
-  dword_543D20 = dword_543D18;
-  dword_543D14 = 1;
+  result = g_SaveSlotDialogSelectedRow;
+  g_SaveSlotDialogResult = g_SaveSlotDialogSelectedRow;
+  g_SaveSlotDialogDone = 1;
   g_RenderDevice = v6;
   return result;
 }
@@ -2143,18 +2143,18 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, a2);
   v40 = v5;
-  v43 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v43 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v42 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v6, 0, a3, (int)aSetrhS08x_22);
-  dword_543D1C = v7;
-  dword_543D24 = 0;
-  dword_543D18 = -1;
+  g_SaveSlotDialogIsSaveMode = v7;
+  g_TextInputCaretPos = 0;
+  g_SaveSlotDialogSelectedRow = -1;
   Render_Pump();
   RenderState_SelectCursorDescriptor((int)g_RenderState, v8);
-  dword_545150 = (int)&g_CursorDesc_Default;
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  SpriteForChar = DLX_GetSpriteForChar((int)v40, dword_543D1C != 0);
+  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  SpriteForChar = DLX_GetSpriteForChar((int)v40, g_SaveSlotDialogIsSaveMode != 0);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     51,
     SpriteForChar,
@@ -2165,8 +2165,8 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     1,
     0,
     0);
-  g_RenderDevice = &unk_51D4C0;
-  v11 = DLX_GetSpriteForChar((int)v40, dword_543D1C != 0);
+  g_RenderDevice = &g_MainRenderDevice;
+  v11 = DLX_GetSpriteForChar((int)v40, g_SaveSlotDialogIsSaveMode != 0);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     51,
     v11,
@@ -2182,60 +2182,60 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   qmemcpy(v38, &g_SaveSlotDialogWidgetTemplateBlob, 0x9Fu);
   v38[3] = &v40;
   *(_DWORD *)((char *)&v38[16] + 1) = &v40;
-  if ( dword_543D1C )
+  if ( g_SaveSlotDialogIsSaveMode )
     v13 = -1;
   else
     v13 = 4;
-  LOBYTE(v14) = dword_543D1C;
+  LOBYTE(v14) = g_SaveSlotDialogIsSaveMode;
   *(_DWORD *)((char *)&v38[17] + 1) = v13;
-  *(_DWORD *)((char *)&v38[18] + 1) = (dword_543D1C != 0) + 2;
-  g_RenderDevice = &unk_51D4C0;
+  *(_DWORD *)((char *)&v38[18] + 1) = (g_SaveSlotDialogIsSaveMode != 0) + 2;
+  g_RenderDevice = &g_MainRenderDevice;
   UIWidgetTable_InitDrawStates(v38);
-  dword_543D14 = 0;
+  g_SaveSlotDialogDone = 0;
   Render_Present((int)g_RenderState);
-  v16 = Render_SetResourceHandle((int)&unk_51D4C0, v15);
-  v17 = dword_543D14;
+  v16 = Render_SetResourceHandle((int)&g_MainRenderDevice, v15);
+  v17 = g_SaveSlotDialogDone;
   v41 = v16;
-  while ( !dword_543D14 )
+  while ( !g_SaveSlotDialogDone )
   {
-    if ( dword_543D1C && dword_543D18 != -1 )
+    if ( g_SaveSlotDialogIsSaveMode && g_SaveSlotDialogSelectedRow != -1 )
     {
       if ( Input_IsKeyPressed(203) )
       {
-        LOBYTE(v14) = dword_543D24;
-        if ( dword_543D24 )
+        LOBYTE(v14) = g_TextInputCaretPos;
+        if ( g_TextInputCaretPos )
         {
-          --dword_543D24;
-          SaveSlotDialog_RepaintRow(dword_543D18);
+          --g_TextInputCaretPos;
+          SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
           Input_ClearKey(203, v23);
         }
       }
-      if ( Input_IsKeyPressed(205) && strlen(byte_543D28) > dword_543D24 )
+      if ( Input_IsKeyPressed(205) && strlen(g_SaveSlotNameEditBuffer) > g_TextInputCaretPos )
       {
-        v17 = ++dword_543D24;
-        SaveSlotDialog_RepaintRow(dword_543D18);
+        v17 = ++g_TextInputCaretPos;
+        SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
         Input_ClearKey(205, v24);
       }
       if ( Input_IsKeyPressed(211) )
       {
-        LOBYTE(v14) = strlen(&byte_543D28[dword_543D24 + 1]) + 1;
+        LOBYTE(v14) = strlen(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1]) + 1;
         memmove_(
-          &byte_543D28[dword_543D24],
-          &byte_543D28[dword_543D24 + 1],
-          strlen(&byte_543D28[dword_543D24 + 1]) + 1);
-        SaveSlotDialog_RepaintRow(dword_543D18);
+          &g_SaveSlotNameEditBuffer[g_TextInputCaretPos],
+          &g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1],
+          strlen(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1]) + 1);
+        SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
         Input_ClearKey(211, v25);
       }
       if ( Input_IsKeyPressed(14) )
       {
-        LOBYTE(v14) = dword_543D24;
-        if ( dword_543D24 )
+        LOBYTE(v14) = g_TextInputCaretPos;
+        if ( g_TextInputCaretPos )
         {
-          v26 = &byte_543D28[dword_543D24--];
+          v26 = &g_SaveSlotNameEditBuffer[g_TextInputCaretPos--];
           v27 = strlen(v26) + 1;
           LOBYTE(v14) = v27;
-          memmove_(&byte_543D28[dword_543D24], &byte_543D28[dword_543D24 + 1], v27);
-          SaveSlotDialog_RepaintRow(dword_543D18);
+          memmove_(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos], &g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1], v27);
+          SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
           Input_ClearKey(14, v28);
         }
       }
@@ -2250,11 +2250,11 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
         v44 = Input_KeyToChar(v31);
         if ( v44 )
         {
-          if ( strlen(byte_543D28) < 0x10 )
+          if ( strlen(g_SaveSlotNameEditBuffer) < 0x10 )
           {
-            if ( dword_543D1C )
+            if ( g_SaveSlotDialogIsSaveMode )
             {
-              v32 = byte_543D28;
+              v32 = g_SaveSlotNameEditBuffer;
               v33 = v39;
               do
               {
@@ -2271,20 +2271,20 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
             }
             else
             {
-              SaveSlot_LoadLabelOrPlaceholder(dword_543D18, v39, v17);
+              SaveSlot_LoadLabelOrPlaceholder(g_SaveSlotDialogSelectedRow, v39, v17);
             }
             Render_ReleaseSurface(21, v17);
             if ( (unsigned __int16)Render_LoadResourceSprite_v3(v39) < 0x97u )
             {
-              LOBYTE(v14) = strlen(&byte_543D28[dword_543D24]) + 1;
+              LOBYTE(v14) = strlen(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos]) + 1;
               memmove_(
-                &byte_543D28[dword_543D24 + 1],
-                &byte_543D28[dword_543D24],
-                strlen(&byte_543D28[dword_543D24]) + 1);
-              v36 = dword_543D24;
-              byte_543D28[dword_543D24] = v44;
-              dword_543D24 = v36 + 1;
-              SaveSlotDialog_RepaintRow(dword_543D18);
+                &g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1],
+                &g_SaveSlotNameEditBuffer[g_TextInputCaretPos],
+                strlen(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos]) + 1);
+              v36 = g_TextInputCaretPos;
+              g_SaveSlotNameEditBuffer[g_TextInputCaretPos] = v44;
+              g_TextInputCaretPos = v36 + 1;
+              SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
               Input_ClearKey(v17, v37);
             }
           }
@@ -2294,25 +2294,25 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     DD_Pump((int)g_RenderState, v14);
     if ( DD_IsFlipping((int)g_RenderState) )
     {
-      if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
+      if ( g_MouseCursorRawX >> g_CursorCoordShift >= 244 && g_MouseCursorRawX >> g_CursorCoordShift <= 410 )
       {
-        v18 = ((dword_544D00 >> byte_54512C) - 142) / 22;
+        v18 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 142) / 22;
         if ( v18 <= 9 )
         {
-          v14 = dword_543D18;
-          if ( v18 != dword_543D18 )
+          v14 = g_SaveSlotDialogSelectedRow;
+          if ( v18 != g_SaveSlotDialogSelectedRow )
           {
-            dword_543D18 = ((dword_544D00 >> byte_54512C) - 142) / 22;
-            dword_543D24 = 0;
+            g_SaveSlotDialogSelectedRow = ((g_MouseCursorRawY >> g_CursorCoordShift) - 142) / 22;
+            g_TextInputCaretPos = 0;
             if ( v14 != -1 )
               SaveSlotDialog_RepaintRow(v14);
-            if ( dword_543D1C )
+            if ( g_SaveSlotDialogIsSaveMode )
             {
-              SaveSlot_LoadLabelOrPlaceholder(dword_543D18, byte_543D28, v17);
+              SaveSlot_LoadLabelOrPlaceholder(g_SaveSlotDialogSelectedRow, g_SaveSlotNameEditBuffer, v17);
               if ( !strcmp_(v19, asc_4F94C2) )
-                byte_543D28[0] = 0;
+                g_SaveSlotNameEditBuffer[0] = 0;
             }
-            SaveSlotDialog_RepaintRow(dword_543D18);
+            SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
           }
           if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
             SaveSlotDialog_HandleConfirm(0, v20, v17, a4);
@@ -2321,13 +2321,13 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     }
     UIWidgetTable_PollHoverAndActions(v38, v17);
   }
-  Render_SetResourceHandle((int)&unk_51D4C0, v41);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v41);
   Render_Begin((int)g_RenderState, 0);
   Debug_Log(v21, v14, (DWORD)g_RenderHook, (int)aUnsetrh08x_22);
   g_RenderHook = v42;
-  Render_SetResourceHandle((int)&unk_51D4C0, v43);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v43);
   DLXSpriteSet_ReleaseAndClear((int *)&v40);
-  return dword_543D20;
+  return g_SaveSlotDialogResult;
 }
 // 444FB0: simplified comparisons for 'eax.4': <0 || >=A became >=Au
 // 444DC0: variable 'v6' is possibly undefined
@@ -2408,12 +2408,12 @@ int  UI_ShowInfoWindow(
 
   v31 = a1;
   Debug_Log(a3, a2, a4, (int)aWindowmessageS);
-  v35 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v35 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v30 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a2, a4, (int)aSetrhS08x_10);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   v7 = 0;
   Render_ReleaseSurface(17, 0);
   v29 = 0;
@@ -2442,7 +2442,7 @@ int  UI_ShowInfoWindow(
         a6 + SpriteWidth - 1,
         0,
         0);
-      g_RenderDevice = &unk_51D4C0;
+      g_RenderDevice = &g_MainRenderDevice;
       SpriteForChar = DLX_GetSpriteForChar((int)v29, 3);
       v33 = *((_DWORD *)g_RenderDevice + 46);
       v7 = v33;
@@ -2472,7 +2472,7 @@ int  UI_ShowInfoWindow(
         a6 + SpriteWidth - 1,
         0,
         0);
-      g_RenderDevice = &unk_51D4C0;
+      g_RenderDevice = &g_MainRenderDevice;
       v26 = DLX_GetSpriteForChar((int)v29, 2);
       v7 = *((_DWORD *)g_RenderDevice + 46);
       Compat_RenderDeviceDrawMenuSprite(a6, a5, v26, 1);
@@ -2499,7 +2499,7 @@ int  UI_ShowInfoWindow(
       v16 = Render_CreateSurface((int)v16, 640, SpriteWidth);
     v32 = v16;
     Render_FillRect(0, v16, 150, 0, 0x27Fu, SpriteWidth + 149, 0, 0);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     v17 = DLX_GetSpriteForChar((int)v29, 22);
     Compat_RenderDeviceDrawMenuSprite(150, 0, v17, 1);
     info_header_height = (unsigned __int16)DLX_GetSpriteHeight((int)v29, 0x16u);
@@ -2517,7 +2517,7 @@ int  UI_ShowInfoWindow(
   Render_Pump();
   Debug_Log((int)g_RenderHook, 0, v7, (int)aUnsetrh08x_10);
   g_RenderHook = v30;
-  Render_SetResourceHandle((int)&unk_51D4C0, v35);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v35);
   if ( (uintptr_t)v32 >> 32 )
     v32 = 0;
   if ( v32 )
@@ -2619,14 +2619,14 @@ int  UI_CheatEditRepaint(DWORD a1, int a2)
   unsigned __int16 v3; // cx
   char v5; // [esp+0h] [ebp-10h]
 
-  v5 = byte_543D48[0];
+  v5 = g_CheatEntryTextBuffer[0];
   strupr_(440, 200);
-  byte_543D48[0] = v5;
+  g_CheatEntryTextBuffer[0] = v5;
   RenderState_PumpIfRectInViewBounds(g_RenderState, v2, v3, 0x104u, 0x122u);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
   Render_ReleaseSurface(22, a1);
-  UI_SetTextCursorPosition(dword_543D44);
-  UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)byte_543D48);
+  UI_SetTextCursorPosition(g_CheatEditCaretIndex);
+  UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)g_CheatEntryTextBuffer);
   UI_SetTextCursorPosition(-1);
   return Render_Present((int)g_RenderState);
 }
@@ -2688,7 +2688,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
 
   v46 = a1;
   Debug_Log(a2, a3, a4, (int)aMessage_buildf);
-  v45 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v45 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v44 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v4, a3, a4, (int)aSetrhS08x_11);
@@ -2698,7 +2698,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
   v40[0] = (int)g_BuildingCompleteNoticeTextAlt[0];
   v40[1] = (int)g_BuildingCompleteNoticeTextAlt[1];
   v40[2] = (int)g_BuildingCompleteNoticeTextAlt[2];
-  v6 = byte_543D48;
+  v6 = g_CheatEntryTextBuffer;
   v7 = (char *)(v46 + 5);
   do
   {
@@ -2712,14 +2712,14 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
     v6 += 2;
   }
   while ( v9 );
-  v10 = byte_543D48;
+  v10 = g_CheatEntryTextBuffer;
   v11 = (_DWORD *)Mem_Alloc(4112, v5, a3, a4);
   if ( v11 )
     v11 = DLXSpriteSet_Load(v11, a3);
   v42 = v11;
   Render_Pump();
   v47 = v12;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   DLX_GetSpriteWidth((int)v42, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v42, 0x16u);
   v15 = v14 + 6;
@@ -2731,7 +2731,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
     Surface = Render_CreateSurface((int)Surface, 640, v43);
   v17 = (DWORD)Surface;
   Render_FillRect(0, Surface, (unsigned __int16)v47, 0, 0x27Fu, v43 + v47 - 1, 0, 0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v42, 22);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     v47,
@@ -2760,50 +2760,50 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
     v20 = v41[(unsigned __int8)g_LanguageIndex];
   else
     v20 = v40[(unsigned __int8)g_LanguageIndex];
-  UI_DrawTextFmt((int)byte_543D48, 70, 569, v47 + 60, 6, v20);
+  UI_DrawTextFmt((int)g_CheatEntryTextBuffer, 70, 569, v47 + 60, 6, v20);
   v21 = -56;
-  Render_FillRect(0, (_DWORD *)dword_5202E0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
-  UI_CheatEditRepaint(v17, (int)byte_543D48);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
+  UI_CheatEditRepaint(v17, (int)g_CheatEntryTextBuffer);
   Render_Present((int)g_RenderState);
   Render_Begin((int)g_RenderState, 0);
   g_DecisionDialogExitSignal = 0;
   while ( !DD_IsFlipping((int)g_RenderState) && !g_DecisionDialogExitSignal )
   {
     DD_Pump((int)g_RenderState, v21);
-    if ( Input_IsKeyPressed(203) && dword_543D44 )
+    if ( Input_IsKeyPressed(203) && g_CheatEditCaretIndex )
     {
-      --dword_543D44;
+      --g_CheatEditCaretIndex;
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(203, v22);
     }
     if ( Input_IsKeyPressed(205) )
     {
-      v23 = strlen(byte_543D48) + 1;
-      v10 = &byte_543D48[v23];
-      v21 = dword_543D44;
-      if ( v23 - 1 > dword_543D44 )
+      v23 = strlen(g_CheatEntryTextBuffer) + 1;
+      v10 = &g_CheatEntryTextBuffer[v23];
+      v21 = g_CheatEditCaretIndex;
+      if ( v23 - 1 > g_CheatEditCaretIndex )
       {
-        ++dword_543D44;
+        ++g_CheatEditCaretIndex;
         UI_CheatEditRepaint(v17, (int)v10);
         Input_ClearKey(205, v24);
       }
     }
     if ( Input_IsKeyPressed(211) )
     {
-      v25 = strlen(&byte_543D48[dword_543D44 + 1]) + 1;
-      v10 = (char *)dword_543D44;
+      v25 = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1]) + 1;
+      v10 = (char *)g_CheatEditCaretIndex;
       v21 = v25;
-      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v25);
+      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], v25);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(211, v26);
     }
-    if ( Input_IsKeyPressed(14) && dword_543D44 )
+    if ( Input_IsKeyPressed(14) && g_CheatEditCaretIndex )
     {
-      v27 = &byte_543D48[dword_543D44--];
+      v27 = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex--];
       v28 = strlen(v27) + 1;
       v10 = (char *)&v27[v28];
       v21 = v28;
-      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v28);
+      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], v28);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(14, v29);
     }
@@ -2816,17 +2816,17 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
       v48 = Input_KeyToChar(v30);
       if ( v48 )
       {
-        v32 = strlen(byte_543D48) + 1;
-        v10 = &byte_543D48[v32];
+        v32 = strlen(g_CheatEntryTextBuffer) + 1;
+        v10 = &g_CheatEntryTextBuffer[v32];
         if ( v32 - 1 < 0xA )
         {
-          v33 = strlen(&byte_543D48[dword_543D44]) + 1;
-          v10 = &byte_543D48[dword_543D44 + v33];
+          v33 = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex]) + 1;
+          v10 = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + v33];
           v21 = v33;
-          memmove_(&byte_543D48[dword_543D44 + 1], &byte_543D48[dword_543D44], v33);
-          v34 = dword_543D44 + 1;
-          *((_BYTE *)&dword_543D44 + v34 + 3) = v48;
-          dword_543D44 = v34;
+          memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex], v33);
+          v34 = g_CheatEditCaretIndex + 1;
+          *((_BYTE *)&g_CheatEditCaretIndex + v34 + 3) = v48;
+          g_CheatEditCaretIndex = v34;
           UI_CheatEditRepaint(v17, (int)v10);
           Input_ClearKey(v31, v35);
         }
@@ -2837,12 +2837,12 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
   Render_Pump();
   Debug_Log(v36, (char)g_RenderHook, v17, (int)aUnsetrh08x_11);
   g_RenderHook = v44;
-  Render_SetResourceHandle((int)&unk_51D4C0, v45);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v45);
   Render_FillRect((_DWORD *)v17, 0, 0, 0, 0x27Fu, v43 - 1, 0, v47);
   Render_Present((int)g_RenderState);
   if ( v17 )
     (**(void (__cdecl ***)(int, int, int, int, int, int))(v17 + 184))(v40[0], v40[1], v40[2], v41[0], v41[1], v41[2]);
-  v37 = byte_543D48;
+  v37 = g_CheatEntryTextBuffer;
   v38 = (char *)(v46 + 5);
   DLXSpriteSet_ReleaseAndClear((int *)&v42);
   do
@@ -2911,7 +2911,7 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   void *v27; // [esp+6Ch] [ebp-20h]
   int (*v28)(); // [esp+70h] [ebp-1Ch]
 
-  v2 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v2 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v28 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v3, a1, a2, (int)aSetrhS08x_23);
@@ -2930,9 +2930,9 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   v12 = Surface;
   v13 = DLX_GetSpriteWidth((int)v25, 0);
   Render_FillRect(0, v11, 0, 0, 0x27Fu, v13 - 1, 0, 0);
-  DLXSpriteSet_DrawText((int)v25, 0, (int)&unk_51D59C, (unsigned __int8 *)dword_5202F4);
+  DLXSpriteSet_DrawText((int)v25, 0, (int)&g_RenderEnvPaletteContext, (unsigned __int8 *)g_MapPalettePtr);
   v27 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v25, 0);
   v26 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v26 + 52))(
@@ -2947,7 +2947,7 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
     0);
   g_RenderDevice = v27;
   Time_Now(v15, 1);
-  Render_BlitSurface(&unk_51D4C0, v16, 0, (DWORD)v12);
+  Render_BlitSurface(&g_MainRenderDevice, v16, 0, (DWORD)v12);
   v17 = g_RenderState;
   while ( !Input_PollEventsUntil((int)v17, (char)&g_InputBackendState) )
   {
@@ -2958,7 +2958,7 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   }
   Debug_Log(v19, (char)g_RenderHook, (DWORD)v12, (int)aUnsetrh08x_23);
   g_RenderHook = v28;
-  Render_SetResourceHandle((int)&unk_51D4C0, v2);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v2);
   v22 = DLX_GetSpriteWidth((int)v25, 0);
   Render_FillRect(v12, 0, 0, 0, 0x27Fu, v22 - 1, 0, 0);
   return DLXSpriteSet_ReleaseAndClear((int *)&v25);
@@ -3095,12 +3095,12 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
   v25 = a1;
   v19 = a4;
   Debug_Log(a3, a4, a5, (int)aQueenwhimmessa);
-  v24 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v24 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v23 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a4, a5, (int)aSetrhS08x_18);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, a5);
   v18 = 0;
   v7 = (_DWORD *)Mem_Alloc(4112, v6, 0, a5);
@@ -3124,7 +3124,7 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
     SpriteWidth + v21 - 1,
     0,
     0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v18, 0);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(v27, v21, SpriteForChar, 1);
@@ -3156,7 +3156,7 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
   Render_Pump();
   Debug_Log(v15, (char)g_RenderState, v10, (int)aUnsetrh08x_18);
   g_RenderHook = v23;
-  Render_SetResourceHandle((int)&unk_51D4C0, v24);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v24);
   Render_FillRect((_DWORD *)v10, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v27, v21);
   Render_Present((int)g_RenderState);
   if ( v10 )
@@ -3261,12 +3261,12 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] enter text=%p image=%p\n", (void *)(uintptr_t)a1, (void *)a2);
   Debug_Log(a3, a4, a5, (int)aYesnowindowS);
-  v29 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v29 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v28 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a4, a5, (int)aSetrhS08x_12);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, a5);
   if ( a2 )
     Render_LoadResourceSprite_v4(17, a2, v6, a4, a5);
@@ -3283,9 +3283,9 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   {
     for ( i = 4; i <= 8; ++i )
     {
-      v7 = dword_5202F4;
+      v7 = g_MapPalettePtr;
       v10 = i;
-      DLXSpriteSet_DrawText((int)v25, v10, (int)a2, (unsigned __int8 *)dword_5202F4);
+      DLXSpriteSet_DrawText((int)v25, v10, (int)a2, (unsigned __int8 *)g_MapPalettePtr);
     }
   }
   v32 = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)v25, 4u)) / 2;
@@ -3305,7 +3305,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     SpriteWidth + v26 - 1,
     0,
     0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v25, 4);
   v15 = *((_DWORD *)g_RenderDevice + 46);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -3337,7 +3337,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   Render_Pump();
   Debug_Log(v22, (char)g_RenderState, v13, (int)aUnsetrh08x_12);
   g_RenderHook = v28;
-  Render_SetResourceHandle((int)&unk_51D4C0, v29);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v29);
   Render_FillRect((_DWORD *)v13, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v32, v26);
   Render_Present((int)g_RenderState);
   if ( v13 )
@@ -3386,12 +3386,12 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4)
 
   v20 = a1;
   Debug_Log(a2, a3, a4, (int)aInfowindowS);
-  v16 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v16 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v18 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a3, a4, (int)aSetrhS08x_13);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, a4);
   v15 = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, 0, a4);
@@ -3417,7 +3417,7 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4)
     SpriteWidth + v23 - 1,
     0,
     0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v15, 9);
   v11 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v11 + 52))(
@@ -3434,7 +3434,7 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4)
   Render_Begin((int)g_RenderState, 0);
   Debug_Log(v12, v6, v11, (int)aUnsetrh08x_13);
   g_RenderHook = v18;
-  Render_SetResourceHandle((int)&unk_51D4C0, v16);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v16);
   Render_FillRect(v9, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v6, v13);
   Render_Present((int)g_RenderState);
   if ( v9 )
@@ -3485,7 +3485,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
     a1,
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
-  v25 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v25 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v23 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v3, a2, a3, (int)aSetrhS08x_17);
@@ -3496,11 +3496,11 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_render_pump",
     g_SelectedUnitIndex,
-    dword_545150,
+    g_ActiveCursorDescriptor,
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
   Render_ReleaseSurface(17, 0);
@@ -3551,7 +3551,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
     SpriteWidth + v21 - 1,
     0,
     0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v20, 0);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_background_lookup",
@@ -3652,7 +3652,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
   Render_Pump();
   Debug_Log(v16, (char)g_RenderState, v8, (int)aUnsetrh08x_17);
   g_RenderHook = v23;
-  Render_SetResourceHandle((int)&unk_51D4C0, v25);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v25);
   Render_FillRect((_DWORD *)v8, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v22, v21);
   Render_Present((int)g_RenderState);
   if ( v8 )
@@ -3705,12 +3705,12 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
 
   v16 = a1;
   Debug_Log(a2, a3, a4, (int)aQueenmessageS);
-  v20 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v20 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v18 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a3, a4, (int)aSetrhS08x_16);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, a4);
   v15 = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, 0, a4);
@@ -3725,7 +3725,7 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
     Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
   v19 = Surface;
   Render_FillRect(0, Surface, 150, (unsigned __int16)v6, v6 + SpriteHeight - 1, SpriteWidth + 149, 0, 0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v15, 14);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     150,
@@ -3757,7 +3757,7 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
   Render_Pump();
   Debug_Log(v13, 0, (DWORD)g_RenderHook, (int)aUnsetrh08x_16);
   g_RenderHook = v18;
-  Render_SetResourceHandle((int)&unk_51D4C0, v20);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v20);
   Render_FillRect(v19, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v6, 0x96u);
   Render_Present((int)g_RenderState);
   if ( v19 )
@@ -4105,11 +4105,11 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   int previous_resource_handle; // esi
 
   Debug_Log(a1, a2, a3, (int)aStartanims);
-  previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   previous_render_hook = g_RenderHook;
   g_RenderHook = 0;
   Debug_Log(0, 0, a3, (int)aSetrhS08x_14, aNull, 0);
-  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
+  Palette_ApplyDefaultPalette((int *)&g_MainRenderDevice);
   DD_Pump((int)g_RenderState, 0);
   Sleep(0x4B0u);
   Video_Avi_playIn(aLogo_0, 0, 1, 0, 1, 0);
@@ -4133,7 +4133,7 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   DD_Pump((int)g_RenderState, 0);
   Debug_Log(0, 0, a3, (int)aUnsetrh08x_14, g_RenderHook);
   g_RenderHook = previous_render_hook;
-  Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
   Debug_Log(0, 0, a3, (int)aStartanimsEnd);
   return a3;
 }
@@ -4225,9 +4225,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     LOBYTE(a2) = -32;
     Surface = Render_CreateSurface((int)Surface, 640, 480);
   }
-  dword_5202E0 = (int)Surface;
+  g_PrimaryRenderSurface = (int)Surface;
   UI_StartAnims(0, a2, (DWORD)a3);
-  v126 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v126 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v110 = Render_DefaultRH;
   v127 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
@@ -4240,18 +4240,18 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     if ( v10 )
       v10 = DLXSpriteSet_Load(v10, "menu\\main.s32");
     g_PlayGameMenuSpriteSetHandle = (int)v10;
-    Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, (uintptr_t)byte_543D80);
-    Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
+    Render_LoadPCXImage(g_PrimaryRenderSurface, aMenuMain_gfx, 0, (uintptr_t)g_MenuScreenPaletteBuffer);
+    Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)g_MenuScreenPaletteBuffer, v12, (DWORD)a3);
     if ( v128 && g_Options_MusicEnabledFlag )
       g_MainMenuMusicHandle = Sound_PlayNamedSfxFile(aMusicMenu, 64);
     DD_Pump((int)g_RenderState, 0);
     if ( v128 )
-      Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
+      Palette_ApplyDefaultPalette((int *)&g_MainRenderDevice);
     DD_Pump((int)g_RenderState, 0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw1);
-    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw2);
-    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
     Debug_Log(0, 0, (DWORD)a3, (int)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
     v17 = 0;
@@ -4265,18 +4265,18 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       *(_DWORD *)((char *)v119 + v17) = (unsigned __int8)g_LanguageIndex + v21;
     }
     while ( v17 != 371 );
-    a2 = (signed int)&unk_51D4C0;
-    g_RenderDevice = &unk_51D4C0;
+    a2 = (signed int)&g_MainRenderDevice;
+    g_RenderDevice = &g_MainRenderDevice;
     UIWidgetTable_InitDrawStates(v120);
     if ( v128 )
     {
       a2 = 60;
-      Palette_FadeInFromBlack((int *)&unk_51D4C0, byte_543D80, 60);
+      Palette_FadeInFromBlack((int *)&g_MainRenderDevice, g_MenuScreenPaletteBuffer, 60);
     }
     g_PlayGameMenuExitRequested = 0;
-    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
+    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-    dword_545150 = (int)&g_CursorDesc_Default;
+    g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
     Render_Present((int)g_RenderState);
     v128 = 0;
     if ( !g_PlayGameMenuExitRequested )
@@ -4299,20 +4299,20 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           v25 = DLXSpriteSet_Load(v25, "menu\\kamp.s32");
         g_PlayGameMenuSpriteSetHandle = (int)v25;
         RenderSurface_InvokeSlot48LoadPCX(
-          (_DWORD *)(uintptr_t)(unsigned int)dword_5202E0,
+          (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
           aMenuMain_gfx_0,
           0,
-          (uintptr_t)byte_543D80);
-        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+          (uintptr_t)g_MenuScreenPaletteBuffer);
+        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
         CampaignMenu_RebuildButtonWidgetTemplate();
         qmemcpy(v124, g_CampaignMenuButtonWidgetsTemplate, sizeof(g_CampaignMenuButtonWidgetsTemplate));
-        g_RenderDevice = &unk_51D4C0;
+        g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(v124);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
         a3 = (char *)&g_CursorDesc_Default;
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        dword_545150 = (int)&g_CursorDesc_Default;
+        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
@@ -4328,11 +4328,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         }
         Render_Pump();
         if ( !campaign_menu_cancelled_by_escape )
-          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+          Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
-        if ( !campaign_menu_cancelled_by_escape && dword_544184 != -1 )
+        if ( !campaign_menu_cancelled_by_escape && g_PlayGameMenuSelectedAction != -1 )
         {
-          if ( dword_544184 == 1 )
+          if ( g_PlayGameMenuSelectedAction == 1 )
           {
             LOBYTE(a2) = 1;
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
@@ -4349,130 +4349,130 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         break;
       case MAIN_MENU_REQUEST_CREDITS:
         CSS_StopSound(g_MainMenuMusicHandle, 1000);
-        Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+        Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
         LOBYTE(a2) = 0;
         Video_Avi_playIn(aCre_an, 0, 1, 0, 1, 1);
         v128 = 1;
         break;
       case MAIN_MENU_REQUEST_MULTIPLAYER:
-        memset(byte_544188, 5, 5);
-        byte_544188[0] = 3;
-        byte_544189 = 0;
-        byte_54418B = 1;
-        byte_54418A = 2;
+        memset(g_MultiplayerPlayerSlotTypes, 5, 5);
+        g_MultiplayerPlayerSlotTypes[0] = 3;
+        g_MultiplayerPlayerSlot1Type = 0;
+        g_MultiplayerPlayerSlot3Type = 1;
+        g_MultiplayerPlayerSlot2Type = 2;
         qmemcpy(v125, &g_MultiplayerDefaultRulerNamesTable, sizeof(v125));
         Player_AssignRandomUniqueRulerNames(5, v125);
-        dword_5441D8 = 0;
-        dword_544198 = -1;
-        dword_5441DC = 0;
+        g_MultiplayerSelectedMapIndex = 0;
+        g_MpEditNameSlotIndex = -1;
+        g_MultiplayerOpponentListScrollOffset = 0;
         v40 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v40 )
           v40 = DLXSpriteSet_Load(v40, aMenuMultipl_s32);
         g_PlayGameMenuSpriteSetHandle = (int)v40;
-        a2 = (signed int)byte_543D80;
-        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMultipl_gf);
-        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
-        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
-        g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+        a2 = (signed int)g_MenuScreenPaletteBuffer;
+        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuMultipl_gf);
+        Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
         MultiplayerSetup_RedrawPlayerSlotIcons();
-        (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
+        (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
         for ( j = 0; j < 5; ++j )
           MultiplayerSetup_RepaintPlayerSlotRow(j, j + 1, 0);
         MultiplayerSetup_RedrawOpponentNameList();
         qmemcpy(v122, &g_MultiplayerSetupWidgetTemplateBlob, 265);
-        g_RenderDevice = &unk_51D4C0;
+        g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(v122);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        dword_545150 = (int)&g_CursorDesc_Default;
+        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
           DD_Pump((int)g_RenderState, 0);
           if ( DD_IsFlipping((int)g_RenderState)
-            && dword_544CFC >> byte_54512C >= 176
-            && dword_544CFC >> byte_54512C <= 236
-            && (unsigned int)(((dword_544D00 >> byte_54512C) - 129) / 53) <= 4 )
+            && g_MouseCursorRawX >> g_CursorCoordShift >= 176
+            && g_MouseCursorRawX >> g_CursorCoordShift <= 236
+            && (unsigned int)(((g_MouseCursorRawY >> g_CursorCoordShift) - 129) / 53) <= 4 )
           {
-            multiplayer_player_type_slot = ((dword_544D00 >> byte_54512C) - 129) / 53;
+            multiplayer_player_type_slot = ((g_MouseCursorRawY >> g_CursorCoordShift) - 129) / 53;
             Audio_PlayButtonSound(aMale_2);
-            byte_544188[multiplayer_player_type_slot] = ((unsigned __int8)byte_544188[multiplayer_player_type_slot] + 1) % 6;
+            g_MultiplayerPlayerSlotTypes[multiplayer_player_type_slot] = ((unsigned __int8)g_MultiplayerPlayerSlotTypes[multiplayer_player_type_slot] + 1) % 6;
             MultiplayerSetup_RedrawPlayerSlotIcons();
             MultiplayerSetup_RepaintPlayerSlotRow(multiplayer_player_type_slot, 0, 0);
             Render_Begin((int)g_RenderState, 0);
           }
           if ( DD_IsFlipping((int)g_RenderState) )
           {
-            if ( dword_544CFC >> byte_54512C >= 239 && dword_544CFC >> byte_54512C <= 339 )
+            if ( g_MouseCursorRawX >> g_CursorCoordShift >= 239 && g_MouseCursorRawX >> g_CursorCoordShift <= 339 )
             {
-              multiplayer_selected_name_slot = ((dword_544D00 >> byte_54512C) - 144) / 53;
+              multiplayer_selected_name_slot = ((g_MouseCursorRawY >> g_CursorCoordShift) - 144) / 53;
               if ( multiplayer_selected_name_slot <= 4 )
               {
-                multiplayer_previous_name_slot = dword_544198;
-                if ( multiplayer_selected_name_slot != dword_544198 )
+                multiplayer_previous_name_slot = g_MpEditNameSlotIndex;
+                if ( multiplayer_selected_name_slot != g_MpEditNameSlotIndex )
                 {
-                  dword_544198 = multiplayer_selected_name_slot;
-                  dword_544194 = 0;
+                  g_MpEditNameSlotIndex = multiplayer_selected_name_slot;
+                  g_PlayerNameEditCaretPos = 0;
                   if ( multiplayer_previous_name_slot != -1 )
                     MultiplayerSetup_RepaintPlayerSlotRow(multiplayer_previous_name_slot, 0, 0);
-                  MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, 0, 0);
+                  MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, 0, 0);
                 }
               }
             }
           }
-          if ( dword_544198 != -1 )
+          if ( g_MpEditNameSlotIndex != -1 )
           {
             if ( Input_IsKeyPressed(203) )
             {
-              v69 = dword_544194;
-              if ( dword_544194 )
+              v69 = g_PlayerNameEditCaretPos;
+              if ( g_PlayerNameEditCaretPos )
               {
-                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v69, --dword_544194);
+                MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v69, --g_PlayerNameEditCaretPos);
                 Input_ClearKey(203, v70);
               }
             }
             if ( Input_IsKeyPressed(205) )
             {
-              v72 = strlen(&byte_5441A0[11 * dword_544198]) + 1;
-              if ( v72 - 1 > dword_544194 )
+              v72 = strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex]) + 1;
+              if ( v72 - 1 > g_PlayerNameEditCaretPos )
               {
-                ++dword_544194;
-                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v71, v72 - 1);
+                ++g_PlayerNameEditCaretPos;
+                MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v71, v72 - 1);
                 Input_ClearKey(205, v73);
               }
             }
             if ( Input_IsKeyPressed(211) )
             {
-              LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + 1 + dword_544194]) + 1;
+              LOBYTE(a2) = strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + 1 + g_PlayerNameEditCaretPos]) + 1;
               memmove_(
-                &byte_5441A0[11 * dword_544198 + dword_544194],
-                &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
-                strlen(&byte_5441A0[11 * dword_544198 + dword_544194 + 1]) + 1);
-              MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v74, v75);
+                &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
+                &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos + 1],
+                strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos + 1]) + 1);
+              MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v74, v75);
               Input_ClearKey(211, v76);
             }
             if ( Input_IsKeyPressed(14) )
             {
-              LOBYTE(a2) = dword_544194;
-              if ( dword_544194 )
+              LOBYTE(a2) = g_PlayerNameEditCaretPos;
+              if ( g_PlayerNameEditCaretPos )
               {
-                v77 = &byte_5441A0[11 * dword_544198 + dword_544194--];
+                v77 = &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos--];
                 v78 = strlen(v77) + 1;
-                a3 = (char *)dword_544194;
+                a3 = (char *)g_PlayerNameEditCaretPos;
                 LOBYTE(a2) = v78;
                 memmove_(
-                  &byte_5441A0[11 * dword_544198 + dword_544194],
-                  &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                  &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
+                  &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos + 1],
                   v78);
-                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v79, v80);
+                MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v79, v80);
                 Input_ClearKey(14, v81);
               }
             }
             if ( Input_IsKeyPressed(28) )
             {
-              v83 = dword_544198;
-              dword_544198 = -1;
+              v83 = g_MpEditNameSlotIndex;
+              g_MpEditNameSlotIndex = -1;
               MultiplayerSetup_RepaintPlayerSlotRow(v83, -1, v82);
             }
             v84 = Input_PopKey();
@@ -4482,24 +4482,24 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               v129 = Input_KeyToChar(v84);
               if ( v129 )
               {
-                if ( strlen(&byte_5441A0[11 * dword_544198]) < 0xA )
+                if ( strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex]) < 0xA )
                 {
                   Render_LoadResourceSprite_v3(aW);
-                  LOBYTE(a2) = dword_544198;
-                  v85 = Render_LoadResourceSprite_v3(&byte_5441A0[11 * dword_544198]);
+                  LOBYTE(a2) = g_MpEditNameSlotIndex;
+                  v85 = Render_LoadResourceSprite_v3(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex]);
                   if ( v85 < v86 )
                   {
-                    LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1;
+                    LOBYTE(a2) = strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos]) + 1;
                     memmove_(
-                      &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
-                      &byte_5441A0[11 * dword_544198 + dword_544194],
-                      strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1);
-                    v87 = 11 * dword_544198;
-                    v88 = dword_544194 + 1;
+                      &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos + 1],
+                      &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
+                      strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos]) + 1);
+                    v87 = 11 * g_MpEditNameSlotIndex;
+                    v88 = g_PlayerNameEditCaretPos + 1;
                     LOBYTE(v87) = v129;
-                    byte_5441A0[11 * dword_544198 + dword_544194] = v129;
-                    dword_544194 = v88;
-                    MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v87, v88);
+                    g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos] = v129;
+                    g_PlayerNameEditCaretPos = v88;
+                    MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v87, v88);
                     Input_ClearKey(v84, v89);
                   }
                 }
@@ -4508,16 +4508,16 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           }
           if ( DD_IsFlipping((int)g_RenderState) )
           {
-            if ( dword_544CFC >> byte_54512C >= 356 && dword_544CFC >> byte_54512C <= 477 )
+            if ( g_MouseCursorRawX >> g_CursorCoordShift >= 356 && g_MouseCursorRawX >> g_CursorCoordShift <= 477 )
             {
-              multiplayer_map_row = ((dword_544D00 >> byte_54512C) - 134) / 22;
+              multiplayer_map_row = ((g_MouseCursorRawY >> g_CursorCoordShift) - 134) / 22;
               if ( multiplayer_map_row <= 0xA )
               {
-                LOBYTE(a2) = dword_5441DC;
-                v54 = dword_5441DC + multiplayer_map_row;
-                if ( v54 != dword_5441D8 )
+                LOBYTE(a2) = g_MultiplayerOpponentListScrollOffset;
+                v54 = g_MultiplayerOpponentListScrollOffset + multiplayer_map_row;
+                if ( v54 != g_MultiplayerSelectedMapIndex )
                 {
-                  dword_5441D8 = v54;
+                  g_MultiplayerSelectedMapIndex = v54;
                   Audio_PlayButtonSound(aMale_1);
                   MultiplayerSetup_RedrawOpponentNameList();
                   Render_Begin((int)g_RenderState, 0);
@@ -4528,11 +4528,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           UIWidgetTable_PollHoverAndActions(v122, 0);
         }
         Render_Pump();
-        if ( dword_544190 )
-          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+        if ( g_PlayGameMenuLaunchGameFlag )
+          Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
-        v128 = dword_544190;
-        if ( dword_544190 )
+        v128 = g_PlayGameMenuLaunchGameFlag;
+        if ( g_PlayGameMenuLaunchGameFlag )
         {
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
           WorldMap_Initialize(0, (DWORD)a3);
@@ -4541,7 +4541,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             multiplayer_player_state = &multiplayer_player_states[PLAYER_DATA_STRIDE * multiplayer_player_index];
             PlayerRuntimeState_ResetDefaults((uintptr_t)multiplayer_player_state);
             *(_DWORD *)multiplayer_player_state = 1;
-            multiplayer_player_type = (unsigned __int8)byte_544188[multiplayer_player_index];
+            multiplayer_player_type = (unsigned __int8)g_MultiplayerPlayerSlotTypes[multiplayer_player_index];
             switch ( multiplayer_player_type )
             {
               case 0:
@@ -4572,9 +4572,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               default:
                 break;
             }
-            strcpy(multiplayer_player_state + PLAYER_DISPLAY_NAME_OFFSET, &byte_5441A0[11 * multiplayer_player_index]);
+            strcpy(multiplayer_player_state + PLAYER_DISPLAY_NAME_OFFSET, &g_MultiplayerPlayerNameEditTable[11 * multiplayer_player_index]);
           }
-          Scenario_LoadMultiplayerMapAndSeedPlayers(dword_5441D8, (uintptr_t)multiplayer_player_states);
+          Scenario_LoadMultiplayerMapAndSeedPlayers(g_MultiplayerSelectedMapIndex, (uintptr_t)multiplayer_player_states);
           PlayGame(0, 0, (DWORD)a3, 0, a4);
         }
         break;
@@ -4587,24 +4587,24 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         {
           if ( (unsigned __int8)g_LanguageIndex <= 1u )
           {
-            a2 = (signed int)byte_543D80;
-            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuOpt_a_gfx);
+            a2 = (signed int)g_MenuScreenPaletteBuffer;
+            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_a_gfx);
           }
           else if ( g_LanguageIndex == 2 )
           {
-            a2 = (signed int)byte_543D80;
-            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuOpt_g_gfx);
+            a2 = (signed int)g_MenuScreenPaletteBuffer;
+            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_g_gfx);
           }
         }
         else
         {
-          a2 = (signed int)byte_543D80;
-          (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuOpt_p_gfx);
+          a2 = (signed int)g_MenuScreenPaletteBuffer;
+          (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_p_gfx);
         }
-        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
-        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
-        g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-        (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(92);
+        Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+        (*(void (__thiscall **)(int))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(92);
         v93 = 0;
         qmemcpy(v113, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
@@ -4634,13 +4634,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_Options_MouseSpeedSliderValue = (((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8)
                       - (__CFSHL__((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31, 4)
                        + 16 * ((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31))) >> 4;
-        g_RenderDevice = &unk_51D4C0;
+        g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(v113);
         Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, v97);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        dword_545150 = (int)&g_CursorDesc_Default;
+        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         if ( !g_PlayGameMenuExitRequested )
         {
@@ -4686,43 +4686,43 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         break;
       case MAIN_MENU_REQUEST_LOAD_GAME:
-        dword_5441E0 = -1;
+        g_LoadMenuSelectedSlotIndex = -1;
         v104 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v104 )
           v104 = DLXSpriteSet_Load(v104, aMenuLoad_s32);
         g_PlayGameMenuSpriteSetHandle = (int)v104;
-        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuLoad_gfx);
-        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
-        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
-        (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
+        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuLoad_gfx);
+        Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
+        (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
         for ( k = 0; k < 10; ++k )
           LoadMenu_RedrawSaveSlotRow(k, (DWORD)a3);
         LoadMenu_RebuildButtonWidgetTemplate();
         qmemcpy(v123, &g_LoadMenuButtonWidgetsTemplate, 0x9Fu);
-        g_RenderDevice = &unk_51D4C0;
+        g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(v123);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        dword_545150 = (int)&g_CursorDesc_Default;
+        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
           DD_Pump((int)g_RenderState, 0);
           if ( DD_IsFlipping((int)g_RenderState) )
           {
-            if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
+            if ( g_MouseCursorRawX >> g_CursorCoordShift >= 244 && g_MouseCursorRawX >> g_CursorCoordShift <= 410 )
             {
-              v108 = ((dword_544D00 >> byte_54512C) - 155) / 22;
+              v108 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 155) / 22;
               if ( v108 <= 9 )
               {
-                previous_load_slot = dword_5441E0;
-                if ( v108 != dword_5441E0 )
+                previous_load_slot = g_LoadMenuSelectedSlotIndex;
+                if ( v108 != g_LoadMenuSelectedSlotIndex )
                 {
-                  dword_5441E0 = ((dword_544D00 >> byte_54512C) - 155) / 22;
+                  g_LoadMenuSelectedSlotIndex = ((g_MouseCursorRawY >> g_CursorCoordShift) - 155) / 22;
                   if ( previous_load_slot != -1 )
                     LoadMenu_RedrawSaveSlotRow(previous_load_slot, (DWORD)a3);
-                  LoadMenu_RedrawSaveSlotRow(dword_5441E0, (DWORD)a3);
+                  LoadMenu_RedrawSaveSlotRow(g_LoadMenuSelectedSlotIndex, (DWORD)a3);
                 }
                 if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
                   LoadMenu_HandleSlotConfirmButtonRelease(0, (DWORD)a3);
@@ -4732,12 +4732,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           UIWidgetTable_PollHoverAndActions(v123, 0);
         }
         Render_Pump();
-        if ( dword_544190 )
-          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+        if ( g_PlayGameMenuLaunchGameFlag )
+          Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
-        if ( !dword_544190 )
-          dword_5441E0 = -1;
-        selected_load_slot = dword_5441E0;
+        if ( !g_PlayGameMenuLaunchGameFlag )
+          g_LoadMenuSelectedSlotIndex = -1;
+        selected_load_slot = g_LoadMenuSelectedSlotIndex;
         if ( selected_load_slot != -1 )
         {
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
@@ -4753,12 +4753,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   }
   while ( g_MainMenuRequestedScreen );
   CSS_StopSound(g_MainMenuMusicHandle, 1000);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  Render_UnlockBackbuffer((int)&unk_51D4C0);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  Render_UnlockBackbuffer((int)&g_MainRenderDevice);
   HIBYTE(v110) = HIBYTE(g_RenderHook);
   Debug_Log(v33, a2, (DWORD)g_RenderHook, (int)aUnsetrh08x_15);
   g_RenderHook = v127;
-  return Render_SetResourceHandle((int)&unk_51D4C0, v126);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, v126);
 }
 // 44806D: simplified comparisons for 'eax.4': <0 || >=5 became >=5u
 // 4480F9: simplified comparisons for 'eax.4': <0 || >=B became >=Bu
@@ -4835,7 +4835,7 @@ int  MultiplayerSetup_HandleConfirmButtonRelease(uintptr_t a1)
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
-  dword_544184 = 1;
+  g_PlayGameMenuSelectedAction = 1;
   return result;
 }
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
@@ -4848,7 +4848,7 @@ int  MultiplayerSetup_HandleCancelButtonRelease(uintptr_t a1)
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
-  dword_544184 = 0;
+  g_PlayGameMenuSelectedAction = 0;
   return result;
 }
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
@@ -4866,20 +4866,20 @@ int  MultiplayerSetup_RepaintPlayerSlotRow(int a1, int a2, int a3)
   int v10; // [esp+0h] [ebp-1Ch]
 
   v4 = 53 * a1;
-  Str_TitleCase(&byte_5441A0[11 * dword_544198], a2, a3);
-  v10 = dword_544D10;
+  Str_TitleCase(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex], a2, a3);
+  v10 = g_CursorOverlayPresented;
   v5 = (unsigned __int16)(v4 + 167);
   v9 = v4 + 167;
   v6 = (unsigned __int16)(v4 + 144);
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xEFu, 0x153u, v6, v9);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, v6, 234, 0x15Du, v5, 0xEAu, v6);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, v6, 234, 0x15Du, v5, 0xEAu, v6);
   Render_ReleaseSurface(18, v5);
-  if ( a1 == dword_544198 )
-    UI_SetTextCursorPosition(dword_544194);
-  v7 = (unsigned __int8)byte_544188[a1];
-  g_RenderDevice = &unk_51D4C0;
+  if ( a1 == g_MpEditNameSlotIndex )
+    UI_SetTextCursorPosition(g_PlayerNameEditCaretPos);
+  v7 = (unsigned __int8)g_MultiplayerPlayerSlotTypes[a1];
+  g_RenderDevice = &g_MainRenderDevice;
   if ( v7 != 5 )
-    UI_DrawTextFmt(v6, 239, 339, 53 * a1 + 144, 3, (int)&byte_5441A0[11 * a1]);
+    UI_DrawTextFmt(v6, 239, 339, 53 * a1 + 144, 3, (int)&g_MultiplayerPlayerNameEditTable[11 * a1]);
   result = UI_SetTextCursorPosition(-1);
   if ( v10 )
     return Render_Present((int)g_RenderState);
@@ -4903,7 +4903,7 @@ signed int  MultiplayerSetup_HandleStartButtonRelease(int a1)
   UIWidget_PlayPressedReleaseAnimation(a1);
   for ( result = 0; result < 5; ++result )
   {
-    v3 = (unsigned __int8)byte_544188[result];
+    v3 = (unsigned __int8)g_MultiplayerPlayerSlotTypes[result];
     if ( v3 == 3 )
       break;
     if ( v3 == 4 )
@@ -4914,12 +4914,12 @@ signed int  MultiplayerSetup_HandleStartButtonRelease(int a1)
     v4 = 0;
     for ( result = 0; result < 5; ++result )
     {
-      if ( byte_544188[result] != 5 )
+      if ( g_MultiplayerPlayerSlotTypes[result] != 5 )
         ++v4;
     }
-    if ( v4 > 1 && dword_5441D8 != -1 )
+    if ( v4 > 1 && g_MultiplayerSelectedMapIndex != -1 )
     {
-      dword_544190 = 1;
+      g_PlayGameMenuLaunchGameFlag = 1;
       g_PlayGameMenuExitRequested = 1;
     }
   }
@@ -4936,7 +4936,7 @@ int  MultiplayerSetup_HandleBackButtonRelease(int a1)
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
-  dword_544190 = 0;
+  g_PlayGameMenuLaunchGameFlag = 0;
   return result;
 }
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
@@ -4953,12 +4953,12 @@ int MultiplayerSetup_RedrawPlayerSlotIcons()
   int v5; // [esp+1Ch] [ebp-1Ch]
 
   v0 = 129;
-  v5 = dword_544D10;
+  v5 = g_CursorOverlayPresented;
   v1 = 0;
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xB0u, 0xECu, 0x81u, 0x18Au);
   do
   {
-    SpriteForChar = DLX_GetSpriteForChar(g_PlayGameMenuSpriteSetHandle, (unsigned __int8)byte_544188[v1] + 8);
+    SpriteForChar = DLX_GetSpriteForChar(g_PlayGameMenuSpriteSetHandle, (unsigned __int8)g_MultiplayerPlayerSlotTypes[v1] + 8);
     v3 = v0;
     ++v1;
     v0 += 53;
@@ -4993,23 +4993,23 @@ int MultiplayerSetup_RedrawOpponentNameList()
   int result; // eax
   int v4; // eax
 
-  v0 = dword_544D10;
-  if ( dword_544D10 )
+  v0 = g_CursorOverlayPresented;
+  if ( g_CursorOverlayPresented )
     RenderState_PumpIfRectInViewBounds(g_RenderState, 0x164u, 0x1DDu, 0x86u, 0x175u);
   v1 = 134;
   v2 = 0;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   do
   {
-    result = Render_FillRect((_DWORD *)dword_5202E0, 0, (unsigned __int16)v1, 356, 0x1DDu, v1 + 22, 0x164u, v1);
-    if ( v2 + dword_5441DC < 20 )
+    result = Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)v1, 356, 0x1DDu, v1 + 22, 0x164u, v1);
+    if ( v2 + g_MultiplayerOpponentListScrollOffset < 20 )
     {
-      if ( v2 + dword_5441DC == dword_5441D8 )
+      if ( v2 + g_MultiplayerOpponentListScrollOffset == g_MultiplayerSelectedMapIndex )
         v4 = 21;
       else
         v4 = 18;
       Render_ReleaseSurface(v4, v0);
-      result = UI_DrawText(356, v1, (int)&aKarkhan[13 * v2 + 13 * dword_5441DC]);
+      result = UI_DrawText(356, v1, (int)&aKarkhan[13 * v2 + 13 * g_MultiplayerOpponentListScrollOffset]);
     }
     ++v2;
     v1 += 22;
@@ -5030,8 +5030,8 @@ int MultiplayerSetup_RedrawOpponentNameList()
 int  MultiplayerSetup_HandleScrollListDownButton(int a1)
 {
   UIWidget_PlayPressedReleaseAnimation(a1);
-  if ( dword_5441DC < 19 )
-    ++dword_5441DC;
+  if ( g_MultiplayerOpponentListScrollOffset < 19 )
+    ++g_MultiplayerOpponentListScrollOffset;
   return MultiplayerSetup_RedrawOpponentNameList();
 }
 // 5441DC: using guessed type int dword_5441DC;
@@ -5040,8 +5040,8 @@ int  MultiplayerSetup_HandleScrollListDownButton(int a1)
 int  PlayGameMenu_HandleScrollButtonRelease(int a1)
 {
   UIWidget_PlayPressedReleaseAnimation(a1);
-  if ( dword_5441DC )
-    --dword_5441DC;
+  if ( g_MultiplayerOpponentListScrollOffset )
+    --g_MultiplayerOpponentListScrollOffset;
   return MultiplayerSetup_RedrawOpponentNameList();
 }
 // 5441DC: using guessed type int dword_5441DC;
@@ -5134,10 +5134,10 @@ int  LoadMenu_HandleSlotConfirmButtonRelease(int a1, DWORD a2)
 
   if ( a1 )
     UIWidget_PlayPressedReleaseAnimation(a1);
-  result = SaveSlot_HasDataFile(dword_5441E0, a2);
+  result = SaveSlot_HasDataFile(g_LoadMenuSelectedSlotIndex, a2);
   if ( result )
   {
-    dword_544190 = 1;
+    g_PlayGameMenuLaunchGameFlag = 1;
     g_PlayGameMenuExitRequested = 1;
   }
   return result;
@@ -5161,12 +5161,12 @@ void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2)
   if ( !row_label )
     return v8;
   SaveSlot_LoadLabelOrPlaceholder(a1, row_label, a2);
-  v9 = dword_544D10;
-  g_RenderDevice = &unk_51D4C0;
+  v9 = g_CursorOverlayPresented;
+  g_RenderDevice = &g_MainRenderDevice;
   v4 = (unsigned __int16)(22 * a1 + 155);
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, v4, 22 * a1 + 175);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, (unsigned __int16)v4, 244, 0x1A4u, 22 * a1 + 175, 0xF4u, v4);
-  if ( a1 == dword_5441E0 )
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)v4, 244, 0x1A4u, 22 * a1 + 175, 0xF4u, v4);
+  if ( a1 == g_LoadMenuSelectedSlotIndex )
     v5 = 18;
   else
     v5 = 21;
@@ -5207,7 +5207,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *a1, char a2, DWORD a3)
   __int16 v20; // [esp+20h] [ebp-1Ch]
 
   Render_Pump();
-  v5 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  v5 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   v19 = g_RenderDevice;
   if ( *((_DWORD *)a1 + 8) )
   {
@@ -5233,7 +5233,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *a1, char a2, DWORD a3)
     v10 = DLX_GetSpriteHeight(**((_DWORD **)a1 + 5), a1[12]);
     Render_FillRect(0, *((_DWORD **)a1 + 8), a1[4], *a1, a1[2] + v10 - 1, v15, 0, 0);
   }
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar(**((_DWORD **)a1 + 5), *((_DWORD *)a1 + 6));
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     *((_DWORD *)a1 + 2),
@@ -5247,7 +5247,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *a1, char a2, DWORD a3)
     0);
   g_RenderDevice = v19;
   Render_Present((int)g_RenderState);
-  result = Render_SetResourceHandle((int)&unk_51D4C0, v5);
+  result = Render_SetResourceHandle((int)&g_MainRenderDevice, v5);
   if ( *((_DWORD *)a1 + 7) )
     return (*((int (**)(void))a1 + 7))();
   return result;
@@ -5278,20 +5278,20 @@ unsigned int  Options_AnimateSliderThumbDrag(int a1)
   {
     v3 = *(_DWORD *)(a1 + 12) * (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1);
     v4 = *(_DWORD *)a1 + ((v3 - (__CFSHL__(v3 >> 31, 8) + (v3 >> 31 << 8))) >> 8);
-    result = dword_544D00 >> byte_54512C;
-    if ( dword_544D00 >> byte_54512C >= *(_DWORD *)(a1 + 8) )
+    result = g_MouseCursorRawY >> g_CursorCoordShift;
+    if ( g_MouseCursorRawY >> g_CursorCoordShift >= *(_DWORD *)(a1 + 8) )
     {
       v5 = (unsigned __int16)DLX_GetSpriteWidth(**(_DWORD **)(a1 + 20), *(_WORD *)(a1 + 24)) + *(_DWORD *)(a1 + 8);
-      result = dword_544D00 >> byte_54512C;
-      if ( dword_544D00 >> byte_54512C <= v5 )
+      result = g_MouseCursorRawY >> g_CursorCoordShift;
+      if ( g_MouseCursorRawY >> g_CursorCoordShift <= v5 )
       {
-        if ( v4 > dword_544CFC >> byte_54512C
-          || dword_544CFC >> byte_54512C > (unsigned __int16)DLX_GetSpriteHeight(
+        if ( v4 > g_MouseCursorRawX >> g_CursorCoordShift
+          || g_MouseCursorRawX >> g_CursorCoordShift > (unsigned __int16)DLX_GetSpriteHeight(
                                                                **(_DWORD **)(a1 + 20),
                                                                *(_WORD *)(a1 + 24))
                                          + v4 )
         {
-          v10 = dword_544CFC;
+          v10 = g_MouseCursorRawX;
           v11 = *(_DWORD *)a1;
           SpriteHeight = DLX_GetSpriteHeight(**(_DWORD **)(a1 + 20), *(_WORD *)(a1 + 24));
           result = (int)(((v10 >> v13) - v11 - SpriteHeight / 2) << 8) / (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1);
@@ -5303,8 +5303,8 @@ unsigned int  Options_AnimateSliderThumbDrag(int a1)
         }
         else
         {
-          v6 = dword_544CFC >> byte_54512C;
-          v7 = dword_544CFC >> byte_54512C;
+          v6 = g_MouseCursorRawX >> g_CursorCoordShift;
+          v7 = g_MouseCursorRawX >> g_CursorCoordShift;
           v8 = *(_DWORD *)(a1 + 12);
           while ( 1 )
           {
@@ -5312,9 +5312,9 @@ unsigned int  Options_AnimateSliderThumbDrag(int a1)
             if ( !result )
               break;
             DD_Pump((int)g_RenderState, a1);
-            if ( v6 != dword_544CFC >> byte_54512C )
+            if ( v6 != g_MouseCursorRawX >> g_CursorCoordShift )
             {
-              v9 = (((dword_544CFC >> byte_54512C) - v7) << 8) / (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1) + v8;
+              v9 = (((g_MouseCursorRawX >> g_CursorCoordShift) - v7) << 8) / (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1) + v8;
               *(_DWORD *)(a1 + 12) = v9;
               if ( v9 < 0 )
               {
@@ -5325,7 +5325,7 @@ unsigned int  Options_AnimateSliderThumbDrag(int a1)
                 *(_DWORD *)(a1 + 12) = 256;
               }
               Options_DrawSliderThumb((unsigned __int16 *)a1, a1, v8);
-              v6 = dword_544CFC >> byte_54512C;
+              v6 = g_MouseCursorRawX >> g_CursorCoordShift;
             }
           }
         }
@@ -5457,9 +5457,9 @@ void  Options_ApplyRecordSettings(int a1, int a2, DWORD a3)
   _DWORD v6[260]; // [esp-40Ch] [ebp-410h] BYREF
 
   v6[258] = a2;
-  Palette_SetBrightnessOffset((int)&unk_51D4C0, *(char *)(a1 + 26));
+  Palette_SetBrightnessOffset((int)&g_MainRenderDevice, *(char *)(a1 + 26));
   _wcpp_4_copy_array__(v6[0]);
-  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, v6);
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, v6);
   RenderState_SetMouseSpeed((int)g_RenderState, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
   if ( (int *)a1 == &g_OptionsConfigRecordBase )
   {
@@ -5663,7 +5663,7 @@ int  Map_LoadFromFile(uintptr_t a1)
   }
   while ( v25 < 100 );
   Compat_QueryRead(v46, (void *)(uintptr_t)(unsigned int)(gameData + 0x222F0), 1);
-  Compat_FileSystemQueryRelease((int)&dword_543CC8, &v46);
+  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &v46);
   Compat_FreeLow32Bytes(v3);
   v30 = 0;
   v31 = 0;
@@ -6816,25 +6816,25 @@ BOOL  UI_RunHoverTooltipZones(__int16 *a1)
       if ( v2 == -1 )
         break;
       v3 = a1[3];
-      if ( dword_544CFC >> byte_54512C < v2
-        || dword_544D00 >> byte_54512C < a1[1]
-        || dword_544CFC >> byte_54512C > a1[2]
-        || dword_544D00 >> byte_54512C > v3
+      if ( g_MouseCursorRawX >> g_CursorCoordShift < v2
+        || g_MouseCursorRawY >> g_CursorCoordShift < a1[1]
+        || g_MouseCursorRawX >> g_CursorCoordShift > a1[2]
+        || g_MouseCursorRawY >> g_CursorCoordShift > v3
         || !*(_DWORD *)&a1[2 * (unsigned __int8)g_LanguageIndex + 4] )
       {
         goto LABEL_4;
       }
       Render_ReleaseSurface(8, v3);
-      v35 = dword_544D00 >> byte_54512C;
+      v35 = g_MouseCursorRawY >> g_CursorCoordShift;
       v37 = (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)&a1[2 * (unsigned __int8)g_LanguageIndex + 4])
-          + (dword_544CFC >> byte_54512C);
-      v4 = dword_544D00 >> byte_54512C;
-      v7 = UI_GetTextXOffset(dword_520728) + v4;
+          + (g_MouseCursorRawX >> g_CursorCoordShift);
+      v4 = g_MouseCursorRawY >> g_CursorCoordShift;
+      v7 = UI_GetTextXOffset(g_ActiveTextSpriteSlot) + v4;
       v32 = v5;
       v36 = v7;
-      if ( v5 + *(_DWORD *)(dword_544D14 + 12) > v37 )
-        v37 = v5 + *(_DWORD *)(dword_544D14 + 12);
-      v8 = *(_DWORD *)(dword_544D14 + 16);
+      if ( v5 + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12) > v37 )
+        v37 = v5 + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12);
+      v8 = *(_DWORD *)(g_ActiveCursorDescriptorPtr + 16);
       v9 = v7;
       if ( v35 + v8 > v7 )
         v36 = v35 + v8;
@@ -6863,7 +6863,7 @@ BOOL  UI_RunHoverTooltipZones(__int16 *a1)
         v15 = Render_CreateSurface((int)v15, v37 - v32 + 1, v36 - v35 + 1);
       v16 = (int)v15;
       Render_FillRect(0, (_DWORD *)v14, (unsigned __int16)v35, (unsigned __int16)v32, v37, v36, 0, 0);
-      Render_SaveBackbuffer((int)&unk_51D4C0);
+      Render_SaveBackbuffer((int)&g_MainRenderDevice);
       Render_Pump();
       Render_FillRect(0, (_DWORD *)v16, (unsigned __int16)v35, (unsigned __int16)v32, v37, v36, 0, 0);
       Render_Present((int)g_RenderState);
@@ -7093,9 +7093,9 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
     message_table[1] = (int)g_PrisonerCastleIntakeTexts[1];
     message_table[2] = (int)g_PrisonerCastleIntakeTexts[2];
     message_format = (const char *)message_table[(unsigned __int8)g_LanguageIndex];
-    sprintf_(&unk_5441F0, message_format, building + 5);
+    sprintf_(&g_PrisonerIntakeMessageBuffer, message_format, building + 5);
     result = UI_ShowInfoWindow(
-               (int)&unk_5441F0,
+               (int)&g_PrisonerIntakeMessageBuffer,
                0,
                0,
                building_offset,
@@ -7370,8 +7370,8 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       v27[2] = (int)g_PrisonerTortureRichestCastleRevealTexts[2];
       v12 = &g_PrisonerTortureRichestCastleRevealTexts[3];
       v14 = (int *)v27[(unsigned __int8)g_LanguageIndex];
-      sprintf_(&unk_5442C0, (const char *)v14, v13 + 5);
-      return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v14, v13 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)v14, (int)v12);
     case 1u:
     case 6u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_1);
@@ -7385,8 +7385,8 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       v25[2] = (int)g_PrisonerTortureCastleRevealTexts[2];
       v14 = v26;
       v12 = (char **)v25[(unsigned __int8)g_LanguageIndex];
-      sprintf_(&unk_5442C0, (const char *)v12, v18 + 5);
-      return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v12, v18 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)v14, (int)v12);
     case 2u:
     case 7u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_2);
@@ -7400,8 +7400,8 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       v29[2] = (int)g_PrisonerTortureEnemyStackRevealTexts[2];
       v12 = &g_PrisonerTortureEnemyStackRevealTexts[3];
       v14 = &v29[3];
-      sprintf_(&unk_5442C0, (const char *)v29[(unsigned __int8)g_LanguageIndex], v21 + 5);
-      return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v29[(unsigned __int8)g_LanguageIndex], v21 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)v14, (int)v12);
     case 3u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_3);
       Prisoner_Kill(v22, a4, a5);
@@ -7410,8 +7410,8 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       v28[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
       v12 = &g_PrisonerTortureNoConfessionDeathTexts[3];
       v14 = v29;
-      sprintf_(&unk_5442C0, (const char *)v28[(unsigned __int8)g_LanguageIndex], v23 + 5);
-      return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v28[(unsigned __int8)g_LanguageIndex], v23 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)v14, (int)v12);
     case 4u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_4);
       BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = BUILDING_PRISONER_ACTION_NONE;
@@ -7420,8 +7420,8 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       v26[2] = (int)g_PrisonerTortureResistanceTexts[2];
       v12 = &g_PrisonerTortureResistanceTexts[3];
       v14 = v27;
-      sprintf_(&unk_5442C0, (const char *)v26[(unsigned __int8)g_LanguageIndex], v24 + 5);
-      return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v26[(unsigned __int8)g_LanguageIndex], v24 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)v14, (int)v12);
     default:
       return result;
   }
@@ -7509,8 +7509,8 @@ unsigned int  Prisoner_Pay(int a1, int a2, DWORD a3, double a4)
     v12[1] = (int)g_PrisonerBriberyDefectionTexts[1];
     v12[2] = (int)g_PrisonerBriberyDefectionTexts[2];
     v10 = (const char *)v12[(unsigned __int8)g_LanguageIndex];
-    sprintf_(&unk_5442C0, v10, v9 + 5);
-    return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v11, a3, (int)&v12[3], (int)v10);
+    sprintf_(&g_InfoWindowFormatBuffer, v10, v9 + 5);
+    return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v11, a3, (int)&v12[3], (int)v10);
   }
   return result;
 }
@@ -7622,7 +7622,7 @@ int  Building_CountPrisoners(int a1)
 //----- (0044F510) --------------------------------------------------------
 BOOL  BuildingPrisonerActionWidget_HasPrisoner(int a1)
 {
-  return *(char *)(dword_5443FC + 6 * ((a1 - (int)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
+  return *(char *)(g_CurrentPrisonBuildingRecord + 6 * ((a1 - (int)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
 }
 // 5443FC: using guessed type int dword_5443FC;
 
@@ -7744,7 +7744,7 @@ int  BuildingPrisonerPanel_BackButton(int a1)
   int v3; // edx
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
-  dword_5443F4 = v3;
+  g_PrisonerDialogExitSignal = v3;
   return result;
 }
 // 44F6DB: variable 'v3' is possibly undefined
@@ -7761,14 +7761,14 @@ int  Building_DrawPrisonerRows(DWORD a1)
 
   v1 = 0;
   v2 = 0;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(18, a1);
   do
   {
-    result = *(char *)(v1 + dword_5443FC + 445);
+    result = *(char *)(v1 + g_CurrentPrisonBuildingRecord + 445);
     if ( result != -1 )
     {
-      SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, 5);
+      SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 5);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         368,
         SpriteForChar,
@@ -7779,7 +7779,7 @@ int  Building_DrawPrisonerRows(DWORD a1)
         1,
         0,
         0);
-      v5 = DLX_GetSpriteForChar(dword_5443F0, *(unsigned __int8 *)(v1 + dword_5443FC + 446));
+      v5 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, *(unsigned __int8 *)(v1 + g_CurrentPrisonBuildingRecord + 446));
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         378,
         v5,
@@ -7815,11 +7815,11 @@ int  Queen_DrawRelationshipPanel(DWORD a1, int a2)
   int SpriteForChar; // eax
   int queenRelationshipState; // eax
 
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   queenRelationshipState = PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex);
   if ( queenRelationshipState > 0 )
   {
-    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 25);
+    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 25);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       199,
       SpriteForChar,
@@ -7917,13 +7917,13 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   int v66; // [esp+108h] [ebp-20h]
   int v67; // [esp+10Ch] [ebp-1Ch]
 
-  dword_5443FC = a1;
+  g_CurrentPrisonBuildingRecord = a1;
   for ( i = 0; i != 477; *(char **)((char *)g_PrisonerDeathByExhaustionTexts + i + 3) = (char *)1 )
     i += 53;
   v4 = g_PrisonerActionButtonWidgets;
   for ( j = 0; j < 3; ++j )
   {
-    v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
+    v6 = BuildingPrisoner_GetAction(g_CurrentPrisonBuildingRecord, j);
     if ( v6 >= BUILDING_PRISONER_ACTION_TORTURE )
     {
       if ( v6 <= BUILDING_PRISONER_ACTION_TORTURE )
@@ -7947,24 +7947,24 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
     a2 = &g_Runtime_PaletteArrayCtorDescriptor;
     v8 = _wcpp_4_ctor_array__(v9, 256);
   }
-  dword_5443F8 = v8;
+  g_StatScreenPaletteBuffer = v8;
   v10 = (_DWORD *)Mem_Alloc(4112, v9, (char)a2, a3);
   if ( v10 )
     v10 = DLXSpriteSet_Load(v10, (char)a2);
-  dword_5443F0 = (int)v10;
-  v11 = dword_5443F8;
-  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aStat_gfx);
-  Palette_LoadOrBuildBlendLookupTable(aStat, dword_5443F8, v12, a3);
-  Render_LoadResourceSprite_v4(8, (_BYTE *)dword_5443F8, v13, v11, a3);
-  Render_LoadResourceSprite_v4(18, (_BYTE *)dword_5443F8, v14, v11, a3);
-  Render_LoadResourceSprite_v4(17, (_BYTE *)dword_5443F8, v15, v11, a3);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, dword_5443F8, v16, a3);
-  (*(void (__thiscall **)(void *))(*(_DWORD *)(dword_5202E0 + 184) + 36))(&unk_51D4C0);
+  g_StatScreenSpriteSet = (int)v10;
+  v11 = g_StatScreenPaletteBuffer;
+  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aStat_gfx);
+  Palette_LoadOrBuildBlendLookupTable(aStat, g_StatScreenPaletteBuffer, v12, a3);
+  Render_LoadResourceSprite_v4(8, (_BYTE *)g_StatScreenPaletteBuffer, v13, v11, a3);
+  Render_LoadResourceSprite_v4(18, (_BYTE *)g_StatScreenPaletteBuffer, v14, v11, a3);
+  Render_LoadResourceSprite_v4(17, (_BYTE *)g_StatScreenPaletteBuffer, v15, v11, a3);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_StatScreenPaletteBuffer, v16, a3);
+  (*(void (__thiscall **)(void *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
   if ( *(_DWORD *)(gameData + 140024) )
   {
-    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 140063) == 0) + 13);
+    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 140063) == 0) + 13);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       SpriteForChar,
@@ -7979,7 +7979,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   }
   if ( *(_DWORD *)(gameData + 141447) )
   {
-    v19 = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 141486) == 0) + 15);
+    v19 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 141486) == 0) + 15);
     j = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(j + 52))(
       8,
@@ -7995,7 +7995,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   }
   if ( *(_DWORD *)(gameData + 142870) )
   {
-    v20 = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 142909) == 0) + 17);
+    v20 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 142909) == 0) + 17);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       v20,
@@ -8010,7 +8010,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   }
   if ( *(_DWORD *)(gameData + 144293) )
   {
-    v21 = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 144332) == 0) + 19);
+    v21 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 144332) == 0) + 19);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       52,
       v21,
@@ -8025,7 +8025,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   }
   if ( *(_DWORD *)(gameData + 145716) )
   {
-    v59 = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 145755) == 0) + 21);
+    v59 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 145755) == 0) + 21);
     v60 = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v60 + 52))(
       52,
@@ -8081,8 +8081,8 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
     ++v22;
   }
   while ( v25 < 5 );
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  v35 = DLX_GetSpriteForChar(dword_5443F0, 24);
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  v35 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   v36 = v23 - v65;
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
@@ -8094,7 +8094,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
     1,
     0,
     0);
-  v37 = DLX_GetSpriteForChar(dword_5443F0, 24);
+  v37 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
     v37,
@@ -8105,7 +8105,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
     1,
     0,
     0);
-  v38 = DLX_GetSpriteForChar(dword_5443F0, 24);
+  v38 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   v39 = 0;
   v40 = *((_DWORD *)g_RenderDevice + 46);
   v66 = 0;
@@ -8145,7 +8145,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
         v49 = 1;
       v63[v41] = v48 / v49;
       Render_FillRect(
-        (_DWORD *)dword_5202E0,
+        (_DWORD *)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         299,
@@ -8154,7 +8154,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
         0x12Bu,
         g_PrisonerRowBarTopYTable[v39] + 107);
       Render_FillRect(
-        (_DWORD *)dword_5202E0,
+        (_DWORD *)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         88,
@@ -8163,7 +8163,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
         0x58u,
         g_PrisonerRowBarTopYTable[v39] + 107);
       Render_FillRect(
-        (_DWORD *)dword_5202E0,
+        (_DWORD *)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         510,
@@ -8180,26 +8180,26 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   Building_DrawPrisonerRows(v36);
   Queen_DrawRelationshipPanel(v36, 10);
   UIWidgetTable_InitDrawStates(g_PrisonerActionButtonWidgets);
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_StatScreenPaletteBuffer, 20);
   Render_Present((int)g_RenderState);
-  dword_5443F4 = v50;
+  g_PrisonerDialogExitSignal = v50;
   do
   {
     DD_Pump((int)g_RenderState, (char)g_RenderState);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     UIWidgetTable_PollHoverAndActions(g_PrisonerActionButtonWidgets, v36);
   }
-  while ( v51 == dword_5443F4 );
+  while ( v51 == g_PrisonerDialogExitSignal );
   if ( g_PrisonerActionButtonState0 == 2 )
   {
     v52 = BUILDING_PRISONER_ACTION_BEHEAD;
 LABEL_48:
-    v53 = dword_5443FC;
+    v53 = g_CurrentPrisonBuildingRecord;
     goto LABEL_49;
   }
   if ( g_PrisonerActionButtonState1 == 2 )
   {
-    v53 = dword_5443FC;
+    v53 = g_CurrentPrisonBuildingRecord;
     v52 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else
@@ -8209,7 +8209,7 @@ LABEL_48:
       v52 = BUILDING_PRISONER_ACTION_PAY;
       goto LABEL_48;
     }
-    v53 = dword_5443FC;
+    v53 = g_CurrentPrisonBuildingRecord;
     v52 = BUILDING_PRISONER_ACTION_NONE;
   }
 LABEL_49:
@@ -8217,49 +8217,49 @@ LABEL_49:
   if ( g_PrisonerActionButtonState3 == 2 )
   {
     v54 = BUILDING_PRISONER_ACTION_BEHEAD;
-    v55 = dword_5443FC;
+    v55 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState4 == 2 )
   {
-    v55 = dword_5443FC;
+    v55 = g_CurrentPrisonBuildingRecord;
     v54 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else if ( g_PrisonerActionButtonState5 == 2 )
   {
     v54 = BUILDING_PRISONER_ACTION_PAY;
-    v55 = dword_5443FC;
+    v55 = g_CurrentPrisonBuildingRecord;
   }
   else
   {
-    v55 = dword_5443FC;
+    v55 = g_CurrentPrisonBuildingRecord;
     v54 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v55, v54, v36);
   if ( g_PrisonerActionButtonState6 == 2 )
   {
     v56 = BUILDING_PRISONER_ACTION_BEHEAD;
-    v57 = dword_5443FC;
+    v57 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState7 == 2 )
   {
     v56 = BUILDING_PRISONER_ACTION_TORTURE;
-    v57 = dword_5443FC;
+    v57 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState8 == 2 )
   {
     v56 = BUILDING_PRISONER_ACTION_PAY;
-    v57 = dword_5443FC;
+    v57 = g_CurrentPrisonBuildingRecord;
   }
   else
   {
-    v57 = dword_5443FC;
+    v57 = g_CurrentPrisonBuildingRecord;
     v56 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v57, v56, g_PrisonerActionButtonState6);
-  DLXSpriteSet_ReleaseAndClear(&dword_5443F0);
+  DLXSpriteSet_ReleaseAndClear(&g_StatScreenSpriteSet);
   j__nfree_();
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 44FEBB: variable 'v7' is possibly undefined
 // 44FEE2: variable 'v9' is possibly undefined

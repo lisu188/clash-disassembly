@@ -94,9 +94,9 @@ TEST(cov10_facts, register_fact_commands) {
 TEST(cov10_facts, get_fact_duplication_command) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_GetFactDuplicationCommand());
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_ParsePositiveIntArg: a1 > a2 short-circuits to -1 without
@@ -111,9 +111,9 @@ TEST(cov10_parse, positive_int_arg_range_short_circuit) {
 TEST(cov10_parse, positive_int_arg_with_fake_argnode) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_ParsePositiveIntArg(1, 3, 0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_ParseLoadFactsCommand: Lexer_TokenExpect(1) will fail (arg
@@ -122,9 +122,9 @@ TEST(cov10_parse, load_facts_command_bad_args) {
   TOUCH(Rules_ParseLoadFactsCommand(0, 0.0));
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_ParseLoadFactsCommand(0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_AssertParsedFact: frees a1 (AST_Free tolerates 0), logs a
@@ -142,10 +142,10 @@ TEST(cov10_parse, assert_parsed_fact) {
 TEST(cov10_cmds, clear_and_reset_command) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_ClearCommand());
   TOUCH(Rules_ResetCommand());
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_BloadCommand: Lexer_TokenExpect(1) against the same fake empty
@@ -154,9 +154,9 @@ TEST(cov10_cmds, clear_and_reset_command) {
 TEST(cov10_cmds, bload_command) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_BloadCommand(0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* ---- Rules_RegisterBuiltinFunctionGroups: chains a dozen "Rules_Register*"
@@ -301,8 +301,8 @@ TEST(cov10_agenda, reorder_agenda_no_modules) {
 TEST(cov10_agenda, refresh_command_and_agenda_command) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_RefreshCommand(0, 0.0));
   TOUCH(Rules_RefreshAgendaCommand(0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }

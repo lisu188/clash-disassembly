@@ -49,7 +49,7 @@ static void cov3_02_install_arg_chain(unsigned char *argnode, _DWORD *funcrec,
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)head_node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* =========================================================================
@@ -125,8 +125,8 @@ TEST(cov3_02_mathmod, integer_mod_nonzero_divisor) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov3_02_mathmod, integer_divide_by_zero) {
@@ -149,8 +149,8 @@ TEST(cov3_02_mathmod, integer_divide_by_zero) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov3_02_mathmod, float_positive_quotient_takes_floor) {
@@ -173,8 +173,8 @@ TEST(cov3_02_mathmod, float_positive_quotient_takes_floor) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov3_02_mathmod, float_negative_quotient_takes_ceil) {
@@ -197,8 +197,8 @@ TEST(cov3_02_mathmod, float_negative_quotient_takes_ceil) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================
@@ -372,8 +372,8 @@ TEST(cov3_02_nthfunction, two_arg_index_and_multifield) {
   Rules_InitAtomTables();
   TOUCH(Rules_NthFunction((int)(intptr_t)out, 5, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================
@@ -399,8 +399,8 @@ TEST(cov3_02_mathlog10, negative_argument_domain_error) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathLog10(0, 0, 0, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov3_02_mathlog10, zero_argument_overflow_error) {
@@ -417,8 +417,8 @@ TEST(cov3_02_mathlog10, zero_argument_overflow_error) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathLog10(0, 0, 0, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov3_02_mathlog10, positive_argument_success) {
@@ -435,8 +435,8 @@ TEST(cov3_02_mathlog10, positive_argument_success) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathLog10(0, 0, 0, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================
@@ -455,13 +455,13 @@ TEST(cov3_02_fie, found_construct_with_exports_flag) {
   static _DWORD fakeModule[16];
   static _DWORD a2[4];
   static char a3[16];
-  int saved51A9BC = dword_51A9BC;
+  int saved51A9BC = g_ModuleItemDescriptorListHead;
 
   memset(fakeModule, 0, sizeof fakeModule);
   fakeModule[0] = (_DWORD)(intptr_t)fie_name; /* offset0: module name ptr */
   fakeModule[6] = 1;                          /* offset24: nonzero flag */
   fakeModule[7] = 0;                          /* offset28: next == 0 */
-  dword_51A9BC = (int)(intptr_t)fakeModule;
+  g_ModuleItemDescriptorListHead = (int)(intptr_t)fakeModule;
 
   memset(a2, 0, sizeof a2);
   strcpy(a3, "plain");
@@ -470,7 +470,7 @@ TEST(cov3_02_fie, found_construct_with_exports_flag) {
   Rules_InitAtomTables();
   TOUCH(Rules_FindImportExportConstruct((char *)fie_name, a2, (_BYTE *)a3, 0, 0));
 
-  dword_51A9BC = saved51A9BC;
+  g_ModuleItemDescriptorListHead = saved51A9BC;
 }
 
 /* =========================================================================
@@ -500,8 +500,8 @@ TEST(cov3_02_defgeneric_getmethodrestrictions, real_symbol_argument) {
   Rules_InitAtomTables();
   TOUCH(Defgeneric_GetMethodRestrictionsCommand(out, 0, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================
@@ -550,8 +550,8 @@ TEST(cov3_02_integerfunction, real_integer_argument_success) {
   Rules_InitAtomTables();
   TOUCH(Rules_IntegerFunction(1, 0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================
@@ -595,10 +595,10 @@ static int *cov3_02_register_fake_class(const char *name) {
   classRecord[26] = (_DWORD)(intptr_t)scopeInfo; /* offset104: scope info ptr */
 
   classTable[bucket % 0xA7u] = (_DWORD)(intptr_t)classRecord;
-  dword_51AD68 = (int)(intptr_t)classTable;
+  g_DefclassHashTable = (int)(intptr_t)classTable;
 
   fakeModule[6] = 0; /* offset24: bit index 0 into the scope bitmask */
-  dword_51A9B0 = (int)(intptr_t)fakeModule;
+  g_Clips_CurrentModule = (int)(intptr_t)fakeModule;
 
   return (int *)(intptr_t)classRecord;
 }
@@ -608,8 +608,8 @@ TEST(cov3_02_classsubclasses, real_class_lookup_success) {
   static _DWORD funcrec[8], symnode[8];
   static unsigned char val[32];
   static const char class_name[] = "Cov3_02FakeClassA";
-  int saved51AD68 = dword_51AD68;
-  int saved51A9B0 = dword_51A9B0;
+  int saved51AD68 = g_DefclassHashTable;
+  int saved51A9B0 = g_Clips_CurrentModule;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -622,9 +622,9 @@ TEST(cov3_02_classsubclasses, real_class_lookup_success) {
 
   TOUCH(Class_ClassSubclassesCommand(1, 1.0));
 
-  dword_51A960 = 0;
-  dword_51AD68 = saved51AD68;
-  dword_51A9B0 = saved51A9B0;
+  g_ClipsCurrentExpression = 0;
+  g_DefclassHashTable = saved51AD68;
+  g_Clips_CurrentModule = saved51A9B0;
 }
 
 TEST(cov3_02_subclasspcommand, real_two_class_lookup_success) {
@@ -632,8 +632,8 @@ TEST(cov3_02_subclasspcommand, real_two_class_lookup_success) {
   static _DWORD funcrec[8], symnode[8];
   static unsigned char val1[32], val2[32];
   static const char class_name[] = "Cov3_02FakeClassB";
-  int saved51AD68 = dword_51AD68;
-  int saved51A9B0 = dword_51A9B0;
+  int saved51AD68 = g_DefclassHashTable;
+  int saved51A9B0 = g_Clips_CurrentModule;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -649,9 +649,9 @@ TEST(cov3_02_subclasspcommand, real_two_class_lookup_success) {
 
   TOUCH(Class_SubclassPCommand(1.0));
 
-  dword_51A960 = 0;
-  dword_51AD68 = saved51AD68;
-  dword_51A9B0 = saved51A9B0;
+  g_ClipsCurrentExpression = 0;
+  g_DefclassHashTable = saved51AD68;
+  g_Clips_CurrentModule = saved51A9B0;
 }
 
 /* =========================================================================
@@ -718,8 +718,8 @@ TEST(cov3_02_hostnumberp, real_integer_argument) {
   Rules_InitAtomTables();
   TOUCH(Rules_HostNumberp(0.0));
 
-  dword_51A964 = 0;
-  dword_51A960 = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 /* =========================================================================

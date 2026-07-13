@@ -21,11 +21,11 @@ TEST(cov11_salience, mode_name_all_branches) {
 
 TEST(cov11_focus, clear_focus_stack_command) {
   static _DWORD fake_expr[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Rules_ClearFocusStackCommand());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* Rules_GetFocusStackFunction passes an uninitialized local ('v1' in the
@@ -34,11 +34,11 @@ TEST(cov11_focus, clear_focus_stack_command) {
  * garbage happened to be on the stack; harness catches it via siglongjmp. */
 TEST(cov11_focus, get_focus_stack_function) {
   static _DWORD fake_expr[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Rules_GetFocusStackFunction());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_SetBreakFlag / Rules_ClearBreakFlag / Rules_RuleHasBreakFlag:
@@ -97,13 +97,13 @@ TEST(cov11_break, remove_all_break_flags_empty_module_list) {
 
 TEST(cov11_lexer, token_expect_match_and_mismatch) {
   static _DWORD fake_expr[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Lexer_TokenExpect(0));
   TOUCH(Lexer_TokenExpect(1));
   TOUCH(Lexer_TokenExpect(-1));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_ListInstancesForClassOrModule: only the a3==0 branches are
@@ -209,70 +209,70 @@ TEST(cov11_coerce, form_to_numeric_via_parse_form_error_branch) {
 TEST(cov11_filearg, get_file_name_arg_wrong_type) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
   *(short *)termBuf = 1; /* tag != 2 && != 3 -> error branch */
   *(_DWORD *)((char *)termBuf + 2) = (int)(intptr_t)termBuf; /* v7 -> readable */
   *(_DWORD *)((char *)termBuf + 10) = 0; /* terminate arg-list walk */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_GetFileNameArg(1, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov11_filearg, get_file_name_arg_success) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
   *(short *)termBuf = 2; /* tag == 2 -> success branch, reads *(v7+16) */
   *(_DWORD *)((char *)termBuf + 2) = (int)(intptr_t)termBuf;
   *(_DWORD *)((char *)termBuf + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_GetFileNameArg(1, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov11_constructarg, get_construct_name_arg_wrong_arg_count) {
   static _DWORD anchor[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
-  dword_51A960 = (int)(intptr_t)anchor; /* Rules_RtnArgCount() -> 0 != 1 */
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor; /* Rules_RtnArgCount() -> 0 != 1 */
   CHECK_EQ(Rules_GetConstructNameArg(0, 0, 0.0), 0);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov11_constructarg, get_construct_name_arg_wrong_type) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
   *(short *)termBuf = 1; /* tag != 2 -> error branch */
   *(_DWORD *)((char *)termBuf + 2) = (int)(intptr_t)termBuf;
   *(_DWORD *)((char *)termBuf + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   CHECK_EQ(Rules_GetConstructNameArg(0, 0, 0.0), 0);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov11_constructarg, get_construct_name_arg_success) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
   *(short *)termBuf = 2; /* tag == 2 -> success branch */
   *(_DWORD *)((char *)termBuf + 2) = (int)(intptr_t)termBuf;
   *(_DWORD *)((char *)termBuf + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_GetConstructNameArg(0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_ReportSymbolTypeError: Rules_MakeSymbol looks the interned name

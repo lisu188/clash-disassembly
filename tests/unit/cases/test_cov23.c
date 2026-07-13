@@ -222,30 +222,30 @@ TEST(cov23_parseinstqueryna, basic)
 /* ---- Compiler_AssignObjectPatternAndRuleCodeIndices ---- */
 TEST(cov23_assignobjpatruleidx, empty_lists)
 {
-    int savedRoot = dword_51AEAC;
-    int savedList = dword_51AEB0;
-    dword_51AEAC = 0;
-    dword_51AEB0 = 0;
+    int savedRoot = g_Rules_ObjectPatternNetworkRoot;
+    int savedList = g_ReactiveRuleListHead;
+    g_Rules_ObjectPatternNetworkRoot = 0;
+    g_ReactiveRuleListHead = 0;
     TOUCH(Compiler_AssignObjectPatternAndRuleCodeIndices());
-    dword_51AEAC = savedRoot;
-    dword_51AEB0 = savedList;
+    g_Rules_ObjectPatternNetworkRoot = savedRoot;
+    g_ReactiveRuleListHead = savedList;
 }
 
 TEST(cov23_assignobjpatruleidx, single_node_each_list)
 {
     static _DWORD patNode[16];
     static _DWORD ruleNode[16];
-    int savedRoot = dword_51AEAC;
-    int savedList = dword_51AEB0;
+    int savedRoot = g_Rules_ObjectPatternNetworkRoot;
+    int savedList = g_ReactiveRuleListHead;
     memset(patNode, 0, sizeof(patNode));
     memset(ruleNode, 0, sizeof(ruleNode));
     /* patNode: child(4)=0, sibling(7)=0, parent(5)=0 -> next-node() returns NULL after 1 step */
-    dword_51AEAC = (int)(intptr_t)patNode;
+    g_Rules_ObjectPatternNetworkRoot = (int)(intptr_t)patNode;
     /* ruleNode: next(9)=0 -> loop stops after 1 step */
-    dword_51AEB0 = (int)(intptr_t)ruleNode;
+    g_ReactiveRuleListHead = (int)(intptr_t)ruleNode;
     TOUCH(Compiler_AssignObjectPatternAndRuleCodeIndices());
-    dword_51AEAC = savedRoot;
-    dword_51AEB0 = savedList;
+    g_Rules_ObjectPatternNetworkRoot = savedRoot;
+    g_ReactiveRuleListHead = savedList;
 }
 
 /* ---- Rules_GetNextObjectPatternNode ---- */
@@ -288,13 +288,13 @@ TEST(cov23_getnextobjpatnode, parent_walk_then_sibling)
 /* ---- Compiler_WriteObjectPatternsAndRulesToCode ---- */
 TEST(cov23_writeobjpatandrules, empty_networks)
 {
-    int savedRoot = dword_51AEAC;
-    int savedList = dword_51AEB0;
-    dword_51AEAC = 0;
-    dword_51AEB0 = 0;
+    int savedRoot = g_Rules_ObjectPatternNetworkRoot;
+    int savedList = g_ReactiveRuleListHead;
+    g_Rules_ObjectPatternNetworkRoot = 0;
+    g_ReactiveRuleListHead = 0;
     TOUCH(Compiler_WriteObjectPatternsAndRulesToCode("cov23test", 0, 0, 0, 0));
-    dword_51AEAC = savedRoot;
-    dword_51AEB0 = savedList;
+    g_Rules_ObjectPatternNetworkRoot = savedRoot;
+    g_ReactiveRuleListHead = savedList;
 }
 
 /* ---- Rules_BuildSlotBoundTestNode / Rules_BuildSlotBoundTestExpression /

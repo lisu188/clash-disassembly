@@ -30,7 +30,7 @@ static void cov2_02_arg1(unsigned char *anchor, unsigned char *node, short tag,
   *(int *)(node + 2) = (int)(intptr_t)valptr;
   *(int *)(node + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 static void cov2_02_arg2(unsigned char *anchor, unsigned char *node1,
@@ -46,21 +46,21 @@ static void cov2_02_arg2(unsigned char *anchor, unsigned char *node1,
   *(int *)(node2 + 2) = (int)(intptr_t)val2;
   *(int *)(node2 + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node1;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 #define COV2_02_SAVE_ARGCTX()                                                \
-  int cov2_02_saved960 = dword_51A960;                                       \
-  int cov2_02_saved964 = dword_51A964;                                       \
-  int cov2_02_saved968 = dword_51A968;                                       \
-  dword_51A964 = 0;                                                          \
-  dword_51A968 = 0
+  int cov2_02_saved960 = g_ClipsCurrentExpression;                                       \
+  int cov2_02_saved964 = g_ClipsEvaluationError;                                       \
+  int cov2_02_saved968 = g_ClipsHaltExecution;                                       \
+  g_ClipsEvaluationError = 0;                                                          \
+  g_ClipsHaltExecution = 0
 
 #define COV2_02_RESTORE_ARGCTX()                                             \
   do {                                                                       \
-    dword_51A960 = cov2_02_saved960;                                         \
-    dword_51A964 = cov2_02_saved964;                                         \
-    dword_51A968 = cov2_02_saved968;                                         \
+    g_ClipsCurrentExpression = cov2_02_saved960;                                         \
+    g_ClipsEvaluationError = cov2_02_saved964;                                         \
+    g_ClipsHaltExecution = cov2_02_saved968;                                         \
   } while (0)
 
 /* ---- Rules_MathMod: two-argument numeric parse. First pass only reached
@@ -227,21 +227,21 @@ TEST(cov2_02_posintarg, negative_value_reports_error) {
 TEST(cov2_02_litslot, enabled_reports_violation) {
   static _DWORD fieldnode[8];
   static _DWORD a2buf[8];
-  int saved = dword_51AAB0;
+  int saved = g_CLIPS_StaticConstraintCheckingFlag;
   memset(fieldnode, 0, sizeof fieldnode);
   memset(a2buf, 0, sizeof a2buf);
   *(short *)fieldnode = 105; /* not a constant-type tag, not ==10 either */
-  dword_51AAB0 = 1;
+  g_CLIPS_StaticConstraintCheckingFlag = 1;
   TOUCH(Rules_CheckLiteralSlotValueConstraint((int *)fieldnode,
                                                (int)(intptr_t)a2buf));
-  dword_51AAB0 = saved;
+  g_CLIPS_StaticConstraintCheckingFlag = saved;
 }
 
 TEST(cov2_02_litslot, disabled_fast_return) {
-  int saved = dword_51AAB0;
-  dword_51AAB0 = 0;
+  int saved = g_CLIPS_StaticConstraintCheckingFlag;
+  g_CLIPS_StaticConstraintCheckingFlag = 0;
   CHECK_EQ(Rules_CheckLiteralSlotValueConstraint(0, 0), 1);
-  dword_51AAB0 = saved;
+  g_CLIPS_StaticConstraintCheckingFlag = saved;
 }
 
 /* ---- Rules_ParseLoadFactsCommand: Lexer_TokenExpect(1) success (one-node

@@ -1196,7 +1196,7 @@ char  Building_GetInto(int a1, char a2, DWORD a3)
     if ( !*(_BYTE *)(buildingPtr + 4) )
     {
       previousResourceHandle = Render_SetResourceHandle(
-                                 (int)&unk_51D4C0,
+                                 (int)&g_MainRenderDevice,
                                  (char *)RenderHook_DemoText == (char *)Render_DefaultRH);
       previousRenderHook = g_RenderHook;
       g_RenderHook = (int (*)())RenderHook_DemoText;
@@ -1204,11 +1204,11 @@ char  Building_GetInto(int a1, char a2, DWORD a3)
       UI_DemoTextPresent(a1, a1, (char)previousRenderHook, (DWORD)RenderHook_DemoText);
       Debug_Log(a1, (char)previousRenderHook, (DWORD)RenderHook_DemoText, (int)aUnsetrh08x_4, previousRenderHook);
       g_RenderHook = previousRenderHook;
-      return Render_SetResourceHandle((int)&unk_51D4C0, previousResourceHandle);
+      return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
     }
     if ( (unsigned __int8)*(_BYTE *)(buildingPtr + 4) <= 2u )
     {
-      previousResourceHandle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+      previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
       previousRenderHook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
       Debug_Log(a1, (char)previousRenderHook, a3, (int)aSetrhS08x_5, aStdrh_3, Render_DefaultRH);
@@ -1225,7 +1225,7 @@ char  Building_GetInto(int a1, char a2, DWORD a3)
         fprintf(stderr, "[castle] building_getinto_return building_idx=%d\n", a1);
       Debug_Log(a1, (char)previousRenderHook, a3, (int)aUnsetrh08x_5, previousRenderHook);
       g_RenderHook = previousRenderHook;
-      return Render_SetResourceHandle((int)&unk_51D4C0, previousResourceHandle);
+      return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
     }
   }
   return buildingPtr;
@@ -1925,7 +1925,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *a1, char a2, int a3)
   int v40; // [esp+68h] [ebp-1Ch]
 
   v39 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
   v5 = (_DWORD *)Mem_Alloc(4112, v4, a2, (DWORD)a1);
   if ( v5 )
@@ -2112,7 +2112,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
 
   v47 = a1;
   v46 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
   v5 = (_DWORD *)Mem_Alloc(4112, v4, a2, a3);
   if ( v5 )
@@ -2181,7 +2181,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   {
     UI_DrawTextFmt(v33[(unsigned __int8)g_LanguageIndex], v13, v17, v20, 3, v33[(unsigned __int8)g_LanguageIndex]);
   }
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_Present((int)g_RenderState);
   Render_Begin((int)g_RenderState, 0);
   v42 = v48 + 103;
@@ -2197,18 +2197,18 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
     do
       DD_Pump((int)g_RenderState, v22);
     while ( !DD_IsFlipping((int)g_RenderState) );
-    if ( dword_544CFC >> byte_54512C >= v44
-      && dword_544D00 >> byte_54512C >= v22
-      && dword_544CFC >> byte_54512C <= v23
-      && dword_544D00 >> byte_54512C <= v24 )
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= v44
+      && g_MouseCursorRawY >> g_CursorCoordShift >= v22
+      && g_MouseCursorRawX >> g_CursorCoordShift <= v23
+      && g_MouseCursorRawY >> g_CursorCoordShift <= v24 )
     {
       break;
     }
-    LOBYTE(v25) = byte_54512C;
-    if ( dword_544CFC >> byte_54512C >= v21
-      && dword_544D00 >> byte_54512C >= v42
-      && dword_544CFC >> byte_54512C <= v43
-      && dword_544D00 >> byte_54512C <= v45 )
+    LOBYTE(v25) = g_CursorCoordShift;
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= v21
+      && g_MouseCursorRawY >> g_CursorCoordShift >= v42
+      && g_MouseCursorRawX >> g_CursorCoordShift <= v43
+      && g_MouseCursorRawY >> g_CursorCoordShift <= v45 )
     {
       Building_Stop(v47, v25, v22, v23, a4);
       break;
@@ -2358,13 +2358,13 @@ void *Castle_ShowNewBuildingMenu()
   void *v13; // [esp+1Ch] [ebp-1Ch]
 
   v13 = g_RenderDevice;
-  if ( !DD_IsFlipping((int)g_RenderState) || dword_544CFC >> byte_54512C <= 509 || dword_544D00 >> byte_54512C >= 66 )
+  if ( !DD_IsFlipping((int)g_RenderState) || g_MouseCursorRawX >> g_CursorCoordShift <= 509 || g_MouseCursorRawY >> g_CursorCoordShift >= 66 )
     goto LABEL_4;
   Castle_RebuildMissingAddonFlags();
-  v2 = &unk_51D4C0;
+  v2 = &g_MainRenderDevice;
   v3 = -5;
   v4 = 0;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   do
   {
     v5 = Time_Now(v1, (int)v2);
@@ -2396,9 +2396,9 @@ void *Castle_ShowNewBuildingMenu()
   }
   while ( v3 <= 5 );
   Render_Pump();
-  Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 300, 0x27Fu, 0x12Cu, 0x12Cu, 0);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 300, 0x27Fu, 0x12Cu, 0x12Cu, 0);
   Render_Present((int)g_RenderState);
-  dword_523F60 = dword_5202E0;
+  g_WorldMapTargetSurface = g_PrimaryRenderSurface;
   v12 = (void (*)(void))UI_RunMenu(g_CastleNewBuildingMenu, v11);
   if ( v12 )
   {
@@ -2495,7 +2495,7 @@ int  Castle_PlayAddonConstructionReveal(int a1, int a2)
     v14 = Time_Now(v18, v12);
     Render_BlendSurfaceRect(
       0,
-      dword_5202E0,
+      g_PrimaryRenderSurface,
       (unsigned __int16)v7,
       g_CastleScreenSurface,
       v21,
@@ -2509,7 +2509,7 @@ int  Castle_PlayAddonConstructionReveal(int a1, int a2)
   g_SelectedBuildingRecord = v16;
   Render_FillRect(
     (_DWORD *)g_CastleScreenSurface,
-    (_DWORD *)dword_5202E0,
+    (_DWORD *)g_PrimaryRenderSurface,
     (unsigned __int16)v21,
     (unsigned __int16)v7,
     v20,
@@ -2518,7 +2518,7 @@ int  Castle_PlayAddonConstructionReveal(int a1, int a2)
     v21);
   Render_FillRect((_DWORD *)g_CastleScreenSurface, 0, (unsigned __int16)v21, (unsigned __int16)v7, v20, v22, v7, v21);
   Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, 1, g_SelectedBuildingRecord, 0);
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Castle_DrawStatusPanel();
   return Render_Present((int)g_RenderState);
 }
@@ -2735,7 +2735,7 @@ int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4)
   v6[0] = (int)g_CastleConfirmDestroyPrompt[0];
   v6[1] = (int)g_CastleConfirmDestroyPrompt[1];
   v6[2] = (int)g_CastleConfirmDestroyPrompt[2];
-  result = YesNoWindow(v6[(unsigned __int8)g_LanguageIndex], byte_526A70, a1, a2, a3);
+  result = YesNoWindow(v6[(unsigned __int8)g_LanguageIndex], g_CastleScreenPaletteBuffer, a1, a2, a3);
   if ( result )
   {
     Building_Destroy(g_SelectedBuildingRecord, a2, a3, a4);
@@ -3013,7 +3013,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
                     (_DWORD *)(uintptr_t)(unsigned int)v4,
                     v61,
                     0,
-                    (uintptr_t)byte_526A70);
+                    (uintptr_t)g_CastleScreenPaletteBuffer);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(stderr, "[castle] load_layer path=%s transparent=0 result=%d target=%08x\n", v61, load_result, v4);
     LOBYTE(a1) = load_result;
@@ -3180,8 +3180,8 @@ int  Castle_DrawAmbientAnimationSprite(
   int result; // eax
   unsigned __int16 v11; // [esp-4h] [ebp-1Ch]
 
-  v6 = dword_544D10;
-  if ( dword_544D10 )
+  v6 = g_CursorOverlayPresented;
+  if ( g_CursorOverlayPresented )
   {
     v11 = a2 + DLX_GetSpriteWidth(a4, a3);
     SpriteHeight = DLX_GetSpriteHeight(a4, a3);
@@ -3217,7 +3217,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
           result = Castle_DrawAmbientAnimationSprite(
                      g_CastleAmbientLayer1_SpriteIds[20 * g_CurrentPlayerIndex],
                      g_CastleAmbientLayer1_XOffsets[20 * g_CurrentPlayerIndex],
-                     dword_526E8C,
+                     g_CastleAmbientLayer1_Frame,
                      g_CastleAmbientSpriteSet,
                      1u);
       }
@@ -3229,7 +3229,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer2_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer2_XOffsets[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer2_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer2_Frame + 12, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 3:
@@ -3238,7 +3238,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer3_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer3_XOffsets[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer3_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer3AnimFrame + 24, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 4:
@@ -3250,14 +3250,14 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
         {
           result = g_CastleAmbientLayer4_SpriteIds[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
-            result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer4_XOffsets[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleAmbientSpriteSet, 1u);
+            result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer4_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer4_Frame + 36, g_CastleAmbientSpriteSet, 1u);
         }
       }
       break;
     case 5:
       result = g_CastleAmbientLayer5_SpriteIds[20 * g_CurrentPlayerIndex];
       if ( result != -1 )
-        result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer5_XOffsets[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleAmbientSpriteSet, 0);
+        result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer5_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer5_Frame + 48, g_CastleAmbientSpriteSet, 0);
       break;
     case 6:
       result = *(char *)(g_SelectedBuildingRecord + 4);
@@ -3265,7 +3265,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer6_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer6_XOffsets[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer6_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer6_Frame + 71, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 7:
@@ -3274,7 +3274,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer7_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer7_XOffsets[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer7_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer7_Frame + 83, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 8:
@@ -3283,7 +3283,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer8_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer8_XOffsets[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer8_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer8_Frame + 95, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 9:
@@ -3292,7 +3292,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer9_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer9_XOffsets[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer9_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer9_Frame + 136, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 10:
@@ -3301,7 +3301,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = g_CastleAmbientLayer10_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer10_XOffsets[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer10_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer10AnimFrame + 167, g_CastleAmbientSpriteSet, 0);
       }
       break;
     default:
@@ -3410,125 +3410,125 @@ unsigned int Castle_UpdateAmbientAnimationLayers()
   int v47; // ecx
 
   v1 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
-  v2 = Time_Now(dword_526E88 + 10, (int)&unk_51D4C0);
+  g_RenderDevice = &g_MainRenderDevice;
+  v2 = Time_Now(g_CastleAmbientLayer1_LastTick + 10, (int)&g_MainRenderDevice);
   if ( v4 < v2 )
   {
-    dword_526E88 = Time_Now(v4, v3);
-    v3 = ++dword_526E8C % 0xCu;
-    dword_526E8C %= 0xCu;
+    g_CastleAmbientLayer1_LastTick = Time_Now(v4, v3);
+    v3 = ++g_CastleAmbientLayer1_Frame % 0xCu;
+    g_CastleAmbientLayer1_Frame %= 0xCu;
     Castle_DrawAmbientAnimationLayer(1);
   }
-  v5 = Time_Now(dword_526E90 + 10, v3);
+  v5 = Time_Now(g_CastleAmbientLayer2_LastTick + 10, v3);
   if ( v7 < v5 )
   {
-    dword_526E90 = Time_Now(v7, v6);
-    v6 = (dword_526E94 + 1) % 0xCu;
-    dword_526E94 = v6;
+    g_CastleAmbientLayer2_LastTick = Time_Now(v7, v6);
+    v6 = (g_CastleAmbientLayer2_Frame + 1) % 0xCu;
+    g_CastleAmbientLayer2_Frame = v6;
     Castle_DrawAmbientAnimationLayer(2);
   }
-  v8 = Time_Now(dword_526E98 + 10, v6);
+  v8 = Time_Now(g_CastleAmbientLayer4_LastTick + 10, v6);
   if ( v10 < v8 )
   {
-    dword_526E98 = Time_Now(v10, v9);
-    v9 = (dword_526E9C + 1) % 0xCu;
-    dword_526E9C = v9;
+    g_CastleAmbientLayer4_LastTick = Time_Now(v10, v9);
+    v9 = (g_CastleAmbientLayer4_Frame + 1) % 0xCu;
+    g_CastleAmbientLayer4_Frame = v9;
     Castle_DrawAmbientAnimationLayer(4);
   }
-  if ( Time_Now(v10, v9) >= (unsigned int)dword_526EA0 )
+  if ( Time_Now(v10, v9) >= (unsigned int)g_CastleAmbientLayer3_NextDueTick )
   {
-    v13 = Time_Now(g_CastleAmbientLayer3_DelayJitter + dword_526EA4, v11);
+    v13 = Time_Now(g_CastleAmbientLayer3_DelayJitter + g_CastleAmbientLayer3_LastTick, v11);
     if ( v12 < v13 )
     {
-      dword_526EA4 = Time_Now(v12, v11);
+      g_CastleAmbientLayer3_LastTick = Time_Now(v12, v11);
       Castle_DrawAmbientAnimationLayer(3);
-      v12 = dword_526EA8 + 1;
-      dword_526EA8 = v12;
+      v12 = g_CastleAmbientLayer3AnimFrame + 1;
+      g_CastleAmbientLayer3AnimFrame = v12;
       if ( v12 == 12 )
       {
-        dword_526EA8 = Rng_RandRange(0, 10);
+        g_CastleAmbientLayer3AnimFrame = Rng_RandRange(0, 10);
         Time_Now(v14, 500);
         v16 = Rng_RandRange(0, v15);
-        dword_526EA0 = v16 + v17;
+        g_CastleAmbientLayer3_NextDueTick = v16 + v17;
         g_CastleAmbientLayer3_DelayJitter = Rng_RandRange(2, 10);
       }
     }
   }
-  if ( Time_Now(v12, v11) >= (unsigned int)dword_526EAC )
+  if ( Time_Now(v12, v11) >= (unsigned int)g_CastleAmbientLayer5_NextDueTick )
   {
-    v19 = Time_Now(dword_526EB0 + 10, v18);
+    v19 = Time_Now(g_CastleAmbientLayer5_LastTick + 10, v18);
     if ( v20 < v19 )
     {
-      dword_526EB0 = Time_Now(v20, v18);
+      g_CastleAmbientLayer5_LastTick = Time_Now(v20, v18);
       Castle_DrawAmbientAnimationLayer(5);
-      if ( ++dword_526EB4 == 23 )
+      if ( ++g_CastleAmbientLayer5_Frame == 23 )
       {
-        dword_526EB4 = 0;
+        g_CastleAmbientLayer5_Frame = 0;
         Time_Now(v21, 0);
         v22 = Rng_RandRange(500, 2000);
-        dword_526EAC = v22 + v23;
+        g_CastleAmbientLayer5_NextDueTick = v22 + v23;
       }
     }
   }
-  v24 = Time_Now(dword_526EB8 + g_CastleAmbientLayer6_DelayJitter, v18);
+  v24 = Time_Now(g_CastleAmbientLayer6_LastTick + g_CastleAmbientLayer6_DelayJitter, v18);
   if ( v26 < v24 )
   {
-    dword_526EB8 = Time_Now(v26, v25);
-    dword_526EBC = (dword_526EBC + 1) % 0xCu;
+    g_CastleAmbientLayer6_LastTick = Time_Now(v26, v25);
+    g_CastleAmbientLayer6_Frame = (g_CastleAmbientLayer6_Frame + 1) % 0xCu;
     g_CastleAmbientLayer6_DelayJitter = Rng_RandRange(5, 15);
     Castle_DrawAmbientAnimationLayer(6);
   }
-  v27 = Time_Now(dword_526EC0 + 10, v25);
+  v27 = Time_Now(g_CastleAmbientLayer7_LastTick + 10, v25);
   if ( v29 < v27 )
   {
-    dword_526EC0 = Time_Now(v29, v28);
-    v28 = (dword_526EC4 + 1) % 0xCu;
-    dword_526EC4 = v28;
+    g_CastleAmbientLayer7_LastTick = Time_Now(v29, v28);
+    v28 = (g_CastleAmbientLayer7_Frame + 1) % 0xCu;
+    g_CastleAmbientLayer7_Frame = v28;
     Castle_DrawAmbientAnimationLayer(7);
   }
-  if ( Time_Now(v29, v28) >= (unsigned int)dword_526EC8 )
+  if ( Time_Now(v29, v28) >= (unsigned int)g_CastleAmbientLayer8_NextDueTick )
   {
-    v32 = Time_Now(dword_526ECC + 10, v30);
+    v32 = Time_Now(g_CastleAmbientLayer8_LastFrameTimeMs + 10, v30);
     if ( v31 < v32 )
     {
-      dword_526ECC = Time_Now(v31, v30);
+      g_CastleAmbientLayer8_LastFrameTimeMs = Time_Now(v31, v30);
       Castle_DrawAmbientAnimationLayer(8);
-      if ( ++dword_526ED0 == 41 )
+      if ( ++g_CastleAmbientLayer8_Frame == 41 )
       {
-        dword_526ED0 = 0;
+        g_CastleAmbientLayer8_Frame = 0;
         Time_Now(0, 2000);
         v34 = Rng_RandRange(500, v33);
         v31 = v34 + v35;
-        dword_526EC8 = v31;
+        g_CastleAmbientLayer8_NextDueTick = v31;
       }
     }
   }
-  if ( Time_Now(v31, v30) >= (unsigned int)dword_526ED4 )
+  if ( Time_Now(v31, v30) >= (unsigned int)g_CastleAmbientLayer9_NextPlayTimeMs )
   {
-    v38 = Time_Now(dword_526ED8 + 10, v36);
+    v38 = Time_Now(g_CastleAmbientLayer9_LastFrameTimeMs + 10, v36);
     if ( v37 < v38 )
     {
-      dword_526ED8 = Time_Now(v37, v36);
+      g_CastleAmbientLayer9_LastFrameTimeMs = Time_Now(v37, v36);
       Castle_DrawAmbientAnimationLayer(9);
-      if ( ++dword_526EDC == 31 )
+      if ( ++g_CastleAmbientLayer9_Frame == 31 )
       {
-        dword_526EDC = 0;
+        g_CastleAmbientLayer9_Frame = 0;
         Time_Now(v37, 2000);
         v40 = Rng_RandRange(500, v39);
         v37 = v40 + v41;
-        dword_526ED4 = v37;
+        g_CastleAmbientLayer9_NextPlayTimeMs = v37;
       }
     }
   }
   result = Time_Now(v37, v36);
-  if ( result >= dword_526EE0
-    && (result = Time_Now(dword_526EE4 + 10, v43), v45 < result)
-    && (dword_526EE4 = Time_Now(v45, v44), result = Castle_DrawAmbientAnimationLayer(10), ++dword_526EE8, dword_526EE8 == 31) )
+  if ( result >= g_CastleAmbientLayer10_NextPlayTimeMs
+    && (result = Time_Now(g_CastleAmbientLayer10_LastFrameTimeMs + 10, v43), v45 < result)
+    && (g_CastleAmbientLayer10_LastFrameTimeMs = Time_Now(v45, v44), result = Castle_DrawAmbientAnimationLayer(10), ++g_CastleAmbientLayer10AnimFrame, g_CastleAmbientLayer10AnimFrame == 31) )
   {
-    dword_526EE8 = 0;
+    g_CastleAmbientLayer10AnimFrame = 0;
     Time_Now(31, 2000);
     result = Rng_RandRange(500, v46);
-    dword_526EE0 = result + v47;
+    g_CastleAmbientLayer10_NextPlayTimeMs = result + v47;
     g_RenderDevice = v1;
   }
   else
@@ -3610,43 +3610,43 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   unsigned int primary_surface_handle;
 
   v12 = a1;
-  Castle_RenderCompositeSceneLayers(dword_5202E0, 0, g_SelectedBuildingRecord, 0);
+  Castle_RenderCompositeSceneLayers(g_PrimaryRenderSurface, 0, g_SelectedBuildingRecord, 0);
   strcpy(v11, "zamek_1");
   v11[6] = g_CurrentPlayerIndex + 49;
-  Palette_LoadOrBuildBlendLookupTable(v11, (int)byte_526A70, v3, a2);
-  Render_LoadResourceSprite_v4(8, byte_526A70, v4, 0, a2);
-  Render_LoadResourceSprite_v4(7, byte_526A70, v5, 0, a2);
-  Render_LoadResourceSprite_v4(13, byte_526A70, v6, 0, a2);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  Palette_LoadOrBuildBlendLookupTable(v11, (int)g_CastleScreenPaletteBuffer, v3, a2);
+  Render_LoadResourceSprite_v4(8, g_CastleScreenPaletteBuffer, v4, 0, a2);
+  Render_LoadResourceSprite_v4(7, g_CastleScreenPaletteBuffer, v5, 0, a2);
+  Render_LoadResourceSprite_v4(13, g_CastleScreenPaletteBuffer, v6, 0, a2);
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   Castle_DrawStatusPanel();
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_526A70, 0, a2);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_CastleScreenPaletteBuffer, 0, a2);
   RenderState_DrawCursorSpriteToPrimarySurface((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
   {
-    primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
+    primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&g_MainRenderDevice + 0xD0);
     fprintf(
       stderr,
       "[castle] before_surface_copy map_surface=%08x primary_surface=%08x map_sum=%08x primary_sum=%08x\n",
-      (unsigned int)dword_5202E0,
+      (unsigned int)g_PrimaryRenderSurface,
       primary_surface_handle,
-      Diagnostics_SurfaceByteChecksum(dword_5202E0),
+      Diagnostics_SurfaceByteChecksum(g_PrimaryRenderSurface),
       Diagnostics_SurfaceByteChecksum(primary_surface_handle));
   }
-  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
   {
-    primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
+    primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&g_MainRenderDevice + 0xD0);
     fprintf(
       stderr,
       "[castle] after_surface_copy map_surface=%08x primary_surface=%08x map_sum=%08x primary_sum=%08x\n",
-      (unsigned int)dword_5202E0,
+      (unsigned int)g_PrimaryRenderSurface,
       primary_surface_handle,
-      Diagnostics_SurfaceByteChecksum(dword_5202E0),
+      Diagnostics_SurfaceByteChecksum(g_PrimaryRenderSurface),
       Diagnostics_SurfaceByteChecksum(primary_surface_handle));
   }
   Castle_UpdateAmbientAnimationLayers();
   Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, 1, g_SelectedBuildingRecord, 0);
-  return Palette_FadeInFromBlack((int *)&unk_51D4C0, byte_526A70, 20);
+  return Palette_FadeInFromBlack((int *)&g_MainRenderDevice, g_CastleScreenPaletteBuffer, 20);
 }
 // 422057: variable 'v3' is possibly undefined
 // 422066: variable 'v4' is possibly undefined
@@ -3837,14 +3837,14 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   memset(g_BuildingGarrisonDialogSlotSpriteSets, 0, 12 * sizeof(g_BuildingGarrisonDialogSlotSpriteSets[0]));
   memset(g_BuildingGarrisonDialogSelectedSlots, 0, sizeof(g_BuildingGarrisonDialogSelectedSlots));
   for ( slot_index = 0; slot_index < 12; ++slot_index )
-    dword_5321C4[slot_index] = Rng_RandRange(0, 7);
+    g_BuildingGarrisonDialogSlotAnimFrames[slot_index] = Rng_RandRange(0, 7);
   g_BuildingGarrisonDialogPendingExitCountdown = 0;
   g_BuildingGarrisonDialogSelectedSlotIndex = -1;
 
   surface = (_DWORD *)Mem_Alloc(188, 0, 0, runtime_context);
   if ( surface )
     surface = Render_CreateSurface((int)surface, 33, 64);
-  dword_5321F8 = (int)(uintptr_t)surface;
+  g_GarrisonUnitCellSurface = (int)(uintptr_t)surface;
   scratch_surface = (_DWORD *)Mem_Alloc(188, 0, 0, runtime_context);
   if ( scratch_surface )
     scratch_surface = Render_CreateSurface((int)scratch_surface, 33, 64);
@@ -3858,7 +3858,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   sprite_path = g_BuildingGarrisonDialogUseChrTheme ? castle_chr_dw12_s32 : castle_pog_dw12_s32;
   resource_base = g_BuildingGarrisonDialogUseChrTheme ? aCastle_chrD_16 : aCastle_pogD_16;
   RenderSurface_InvokeSlot48LoadPCX(
-    (_DWORD *)(uintptr_t)(unsigned int)dword_5202E0,
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
     (char *)gfx_path,
     0,
     (uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
@@ -3875,17 +3875,17 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
     fprintf(stderr, "[barracks] palette_loaded base=%s\n", resource_base);
   Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
   Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
-  Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
-    fprintf(stderr, "[barracks] resource_sprites_loaded cursor_base=%d\n", dword_526A2C);
+    fprintf(stderr, "[barracks] resource_sprites_loaded cursor_base=%d\n", g_ActiveWidgetSpriteTableIndex);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
   UI_SetActiveWidgetTable(8);
   BuildingGarrisonDialog_EnsureActionWidgets(building_record);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_ready\n");
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
-  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_drawn\n");
   BuildingGarrisonDialog_RebuildSlotSprites(20, runtime_context);
@@ -3897,7 +3897,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   BuildingGarrisonDialog_DrawSelectedUnitPanel();
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] selected_panel_drawn\n");
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   Render_Pump();
@@ -3905,14 +3905,14 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] initial_present_done\n");
 
-  dword_532148 = 0;
-  saved_tick_callback = dword_526A30;
-  dword_526A30 = (int (*)(void))BuildingGarrisonDialog_TickAnimations;
-  while ( !dword_532148 && !Input_IsKeyPressed(1) )
+  g_BuildingGarrisonDialogCloseRequested = 0;
+  saved_tick_callback = g_ActiveDialogAnimationTickHook;
+  g_ActiveDialogAnimationTickHook = (int (*)(void))BuildingGarrisonDialog_TickAnimations;
+  while ( !g_BuildingGarrisonDialogCloseRequested && !Input_IsKeyPressed(1) )
   {
     BuildingGarrisonDialog_TickAnimations((double)runtime_context);
     DD_Pump((int)g_RenderState, 0);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     handled_widget = UIWidgetTable_PollHoverAndActions((_DWORD *)BuildingGarrisonDialogActions, runtime_context);
     if ( handled_widget )
       continue;
@@ -3972,7 +3972,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
       Render_Present((int)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_present idx=%d\n", slot_index);
-      Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
+      Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
       while ( DD_IsLost((int)g_RenderState) )
       {
         DD_Pump((int)g_RenderState, 0);
@@ -3986,7 +3986,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
     }
   }
 
-  dword_526A30 = saved_tick_callback;
+  g_ActiveDialogAnimationTickHook = saved_tick_callback;
   DLXSpriteSet_ReleaseAndClear(&g_BuildingGarrisonDialogUiSpriteSet);
   if ( g_BuildingGarrisonDialogSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_BuildingGarrisonDialogSelectedUnitSpriteSet);
@@ -3999,19 +3999,19 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
     }
   }
   Render_Pump();
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   if ( g_BuildingGarrisonDialogResourceHandle )
     nfree_(g_BuildingGarrisonDialogResourceHandle);
   g_BuildingGarrisonDialogResourceHandle = 0;
-  if ( dword_5321F8 )
+  if ( g_GarrisonUnitCellSurface )
   {
-    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)dword_5321F8, 2);
-    dword_5321F8 = 0;
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_GarrisonUnitCellSurface, 2);
+    g_GarrisonUnitCellSurface = 0;
   }
   if ( scratch_surface )
     RenderSurface_InvokeSlot0(scratch_surface, 2);
-  saved_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
-  Render_SetResourceHandle((int)&unk_51D4C0, saved_resource_handle);
+  saved_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, saved_resource_handle);
   return 0;
 }
 
@@ -4203,7 +4203,7 @@ static int Diagnostics_CountBattleDeploymentBucketEntries(void)
   count = 0;
   for ( index = 0; index < 48; ++index )
   {
-    if ( dword_5437DC[index] )
+    if ( g_BattleDeploymentBucketStorage_5437DC[index] )
       ++count;
   }
   return count;
@@ -4211,7 +4211,7 @@ static int Diagnostics_CountBattleDeploymentBucketEntries(void)
 
 static unsigned __int8 *BattleDeploymentBucketReadPointer(int byte_offset)
 {
-  return (unsigned __int8 *)(uintptr_t)(unsigned int)*(int *)((char *)dword_5437DC + byte_offset);
+  return (unsigned __int8 *)(uintptr_t)(unsigned int)*(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + byte_offset);
 }
 
 static int Diagnostics_IsBattleTileDrawTraceEnabled(void)
@@ -4437,8 +4437,8 @@ static void Diagnostics_TraceWorldMapClickEvent(
     stderr,
     "[world_click] %s cursor=%d,%d tile=%d,%d left=%d top=%d selected=%d current_player=%d viewed_player=%d turn_owner=%d flipping=%d lost=%d own_stack=%d enemy_stack=%d building=%d own_building=%d enemy_building=%d building_idx=%d building_owner=%d building_kind=%d building_construction=%d building_origin=%d,%d port=%d site=%d in_bounds=%d\n",
     stage,
-    dword_544CFC >> byte_54512C,
-    dword_544D00 >> byte_54512C,
+    g_MouseCursorRawX >> g_CursorCoordShift,
+    g_MouseCursorRawY >> g_CursorCoordShift,
     tile_x,
     tile_y,
     left,
@@ -4496,8 +4496,8 @@ static void Diagnostics_TraceBattlefieldClickEvent(
     stderr,
     "[battle_click] %s cursor=%d,%d local=%d,%d tile=%d,%d viewport=%d,%d selected=%d selected_type=%d current_player=%d occupant=%d occupant_type=%d occupant_owner=%d occupant_ap=%d occupant_flags=0x%02x shoot=%d charge=%d flipping=%d lost=%d\n",
     stage,
-    dword_544CFC >> byte_54512C,
-    dword_544D00 >> byte_54512C,
+    g_MouseCursorRawX >> g_CursorCoordShift,
+    g_MouseCursorRawY >> g_CursorCoordShift,
     local_x,
     local_y,
     tile_x,
@@ -4512,8 +4512,8 @@ static void Diagnostics_TraceBattlefieldClickEvent(
     occupant_owner,
     occupant_ap,
     occupant_flags,
-    dword_53205C,
-    dword_532060,
+    g_Battle_ShootModeEnabled,
+    g_UnitBattleChargeModeActive_532060,
     DD_IsFlipping((int)&g_RenderState),
     DD_IsLost((int)&g_RenderState));
 }
@@ -4537,8 +4537,8 @@ static void Diagnostics_TraceWorldMapActionEvent(
     detail_a,
     detail_b,
     detail_c,
-    dword_544CFC >> byte_54512C,
-    dword_544D00 >> byte_54512C,
+    g_MouseCursorRawX >> g_CursorCoordShift,
+    g_MouseCursorRawY >> g_CursorCoordShift,
     DD_IsFlipping((int)&g_RenderState),
     DD_IsLost((int)&g_RenderState));
   fflush(stderr);
@@ -4649,8 +4649,8 @@ static void Diagnostics_TraceWorldMapCursorSample(
 
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() )
     return;
-  cursor_x = dword_544CFC >> byte_54512C;
-  cursor_y = dword_544D00 >> byte_54512C;
+  cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
+  cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
   flipping = DD_IsFlipping((int)&g_RenderState);
   lost = DD_IsLost((int)&g_RenderState);
   if ( initialized
@@ -4732,7 +4732,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[castle] open_enter building_idx=%u current_player=%d\n", (unsigned int)a1, g_CurrentPlayerIndex);
   Diagnostics_ResetFrameDumpOnCastleEnter();
-  v48 = Render_SetResourceHandle((int)&unk_51D4C0, (char *)Castle_RebuildSceneBuffers == (char *)Render_DefaultRH);
+  v48 = Render_SetResourceHandle((int)&g_MainRenderDevice, (char *)Castle_RebuildSceneBuffers == (char *)Render_DefaultRH);
   v47 = g_RenderHook;
   g_RenderHook = (int (*)())Castle_RebuildSceneBuffers;
   Debug_Log(v4, a2, a1, (int)aSetrhS08x_6);
@@ -4775,17 +4775,17 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   if ( v16 )
     v16 = DLXSpriteSet_Load(v16, aDz_info_s32);
   g_CastleStatusSpriteSet = (int)v16;
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   Render_Pump();
   Surface = (_DWORD *)Mem_Alloc(188, v17, a2, a1);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, 640, 480);
   v19 = 467 * a1;
   g_CastleScreenSurface = (int)Surface;
-  Castle_RebuildSceneBuffers((int)byte_526A70, v19);
-  DLXSpriteSet_DrawFormattedText(dword_523F5C, 3, (int)byte_526A70, aMap_pal_0);
-  DLXSpriteSet_DrawFormattedText(dword_523F5C, 4, (int)byte_526A70, aMap_pal_1);
-  DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)byte_526A70, (unsigned __int8 *)dword_5202F4);
+  Castle_RebuildSceneBuffers((int)g_CastleScreenPaletteBuffer, v19);
+  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 3, (int)g_CastleScreenPaletteBuffer, aMap_pal_0);
+  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 4, (int)g_CastleScreenPaletteBuffer, aMap_pal_1);
+  DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)g_CastleScreenPaletteBuffer, (unsigned __int8 *)g_MapPalettePtr);
   CSS_ResumeStreamReading();
   LOBYTE(v22) = -57;
   Tooltip_CaptureBackdrop(190, 455, 7, 455, 248);
@@ -4795,7 +4795,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Diagnostics_TraceCastleHotspots(g_CastleScreenSurface);
   g_CastleDestroyConfirmed = 0;
   g_CastleScreenExitRequested = 0;
-  dword_545150 = (int)&g_CursorDesc_Default;
+  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   v23 = 0;
   castle_loop_iterations = 0;
@@ -4806,17 +4806,17 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
     Castle_UpdateAmbientAnimationLayers();
     Castle_ShowNewBuildingMenu();
     UI_RunHoverTooltipZones(g_CastleHoverTooltipZones);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     Castle_EnsureCompositeStatusWidget();
     UIWidgetTable_PollHoverAndActions((_DWORD *)g_CastleStatusWidgetRecord, v19);
-    LOBYTE(v32) = byte_54512C;
+    LOBYTE(v32) = g_CursorCoordShift;
     g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-    v22 = (char *)(dword_544D00 >> byte_54512C);
+    v22 = (char *)(g_MouseCursorRawY >> g_CursorCoordShift);
     castle_panel_callback = NULL;
     switch ( RenderSurface_InvokeSlot16ReadPixel(
                (_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface,
-               dword_544CFC >> byte_54512C,
-               dword_544D00 >> byte_54512C) )
+               g_MouseCursorRawX >> g_CursorCoordShift,
+               g_MouseCursorRawY >> g_CursorCoordShift) )
     {
       case 248:
         castle_panel_callback = Castle_InvokePrisonerPanel;
@@ -4894,24 +4894,24 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
           "[castle] callback_trigger pixel=%d cursor=%d,%d loop=%d\n",
           RenderSurface_InvokeSlot16ReadPixel(
              (_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface,
-             dword_544CFC >> byte_54512C,
-             dword_544D00 >> byte_54512C),
-          dword_544CFC >> byte_54512C,
-          dword_544D00 >> byte_54512C,
+             g_MouseCursorRawX >> g_CursorCoordShift,
+             g_MouseCursorRawY >> g_CursorCoordShift),
+          g_MouseCursorRawX >> g_CursorCoordShift,
+          g_MouseCursorRawY >> g_CursorCoordShift,
           castle_loop_iterations);
       UI_SetActiveWidgetTable(8);
       Render_Pump();
-      Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+      Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
       if ( g_CastleScreenSurface )
         RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
-      v36 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+      v36 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
       v22 = (char *)g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
       Debug_Log(v34, (char)v22, v19, (int)aSetrhS08x_7);
       castle_panel_callback(g_SelectedBuildingRecord, 0, v19);
       Debug_Log((int)g_RenderHook, (char)v22, v19, (int)aUnsetrh08x_7);
       g_RenderHook = (int (*)())v22;
-      Render_SetResourceHandle((int)&unk_51D4C0, v36);
+      Render_SetResourceHandle((int)&g_MainRenderDevice, v36);
       v38 = (_DWORD *)Mem_Alloc(188, v37, (char)v22, v19);
       if ( v38 )
       {
@@ -4921,10 +4921,10 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       g_CastleScreenSurface = (int)v38;
       Castle_RebuildSceneBuffers(v39, v19);
       g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-      RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_526A70, v40, v19);
-      Render_LoadResourceSprite_v4(8, byte_526A70, v41, (char)v22, v19);
-      Render_LoadResourceSprite_v4(7, byte_526A70, v42, (char)v22, v19);
-      Render_LoadResourceSprite_v4(13, byte_526A70, v43, (char)v22, v19);
+      RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_CastleScreenPaletteBuffer, v40, v19);
+      Render_LoadResourceSprite_v4(8, g_CastleScreenPaletteBuffer, v41, (char)v22, v19);
+      Render_LoadResourceSprite_v4(7, g_CastleScreenPaletteBuffer, v42, (char)v22, v19);
+      Render_LoadResourceSprite_v4(13, g_CastleScreenPaletteBuffer, v43, (char)v22, v19);
       RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
       Render_Present((int)g_RenderState);
     }
@@ -4940,13 +4940,13 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Render_Pump();
   RenderState_LoadDefaultCursorSprite((int)g_RenderState);
   Audio_SetMusicVolume(v24, 400);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  DLXSpriteSet_ReleaseAndClear(&dword_523F5C);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  DLXSpriteSet_ReleaseAndClear(&g_MapPanelSpriteSet);
   v26 = (_DWORD *)Mem_Alloc(4112, v25, 144, v19);
   if ( v26 )
     v26 = DLXSpriteSet_Load(v26, "menu.s32");
   v27 = g_CastleScreenSurface;
-  dword_523F5C = (int)v26;
+  g_MapPanelSpriteSet = (int)v26;
   if ( g_CastleScreenSurface )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
   DLXSpriteSet_ReleaseAndClear(&g_CastleSceneIconSpriteSet);
@@ -4954,11 +4954,11 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   DLXSpriteSet_ReleaseAndClear(&g_CastleStatusSpriteSet);
   TextSprite_ReleaseAllResourceSlots();
   CSS_EmptySampleCache();
-  Palette_LoadOrBuildBlendLookupTable(aMainmap_2, dword_5202F4, v28, v19);
+  Palette_LoadOrBuildBlendLookupTable(aMainmap_2, g_MapPalettePtr, v28, v19);
   Audio_ResumeMusicAndStopLoopedSound(v46);
   Debug_Log(v29, v27, v19, (int)aUnsetrh08x_6);
   g_RenderHook = v47;
-  Render_SetResourceHandle((int)&unk_51D4C0, v48);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v48);
   Diagnostics_ResetFrameDumpOnCastleReturn();
   result = WorldMap_RenderHook(v19);
   if ( g_CastleDestroyConfirmed )
@@ -5031,7 +5031,7 @@ int  Tooltip_CaptureBackdrop(int a1, int a2, int a3, int a4, int a5)
 
   v5 = a4;
   Render_ReleaseSurface(a3, a3);
-  for ( i = a4 + UI_GetTextXOffset(a3); i >= (unsigned __int16)word_51D4C2; --i )
+  for ( i = a4 + UI_GetTextXOffset(a3); i >= (unsigned __int16)g_RenderDeviceClipRightX; --i )
     --v5;
   if ( g_TooltipBackdropSurface )
     Compat_InvokeCompactSurfaceDestructor(g_TooltipBackdropSurface, 2);
@@ -5046,7 +5046,7 @@ int  Tooltip_CaptureBackdrop(int a1, int a2, int a3, int a4, int a5)
   g_TooltipBottom = a2;
   result = a5;
   g_TooltipResourceHandle = a3;
-  dword_526F0C = a5;
+  g_TooltipCaptureArg5 = a5;
   return result;
 }
 // 42289A: variable 'v7' is possibly undefined
@@ -5086,8 +5086,8 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
   va_list args;
 
   v9 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
-  v3 = dword_520728;
+  g_RenderDevice = &g_MainRenderDevice;
+  v3 = g_ActiveTextSpriteSlot;
   RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
     (_DWORD *)g_TooltipBackdropSurface,
@@ -5422,21 +5422,21 @@ _DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int a1, int a2, char a3, DWORD a4)
 
   v8 = a2;
   v4 = a1;
-  if ( dword_527C24 )
+  if ( g_CurrentPlayerInfoSpriteSet )
   {
-    nfree_(dword_527C24);
-    dword_527C24 = 0;
+    nfree_(g_CurrentPlayerInfoSpriteSet);
+    g_CurrentPlayerInfoSpriteSet = 0;
   }
   sprintf_(v7, "info%d.s32", v4 + 1);
   result = (_DWORD *)Mem_Alloc(4112, v5, a3, a4);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, v7);
-    dword_527C24 = (int)result;
+    g_CurrentPlayerInfoSpriteSet = (int)result;
   }
   else
   {
-    dword_527C24 = 0;
+    g_CurrentPlayerInfoSpriteSet = 0;
   }
   return result;
 }
@@ -5451,9 +5451,9 @@ int UI_FreeCurrentPlayerInfoSpriteSet()
 {
   int result; // eax
 
-  if ( dword_527C24 )
-    result = nfree_(dword_527C24);
-  dword_527C24 = 0;
+  if ( g_CurrentPlayerInfoSpriteSet )
+    result = nfree_(g_CurrentPlayerInfoSpriteSet);
+  g_CurrentPlayerInfoSpriteSet = 0;
   return result;
 }
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
@@ -5491,49 +5491,49 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
       v2 = result;
       v3 = 8 * result;
     }
-    dword_526FA0 = 5 * (v2 + 16 * (v2 + v3)) + gameData + 147174;
+    g_SelectedUnitStackRecordPtr = 5 * (v2 + 16 * (v2 + v3)) + gameData + 147174;
     memset(v13, 0, sizeof(v13));
     v4 = v13;
-    UnitStackSelection_BuildSelectedSlotIndexList((int)dword_526F78, 10, v13);
+    UnitStackSelection_BuildSelectedSlotIndexList((int)g_UnitStackSlotSelectedFlags, 10, v13);
     UI_ClearTileHighlight(0);
-    if ( (unsigned int)*(__int16 *)(dword_526FA0 + 6) <= 0x28 && UnitStackSelection_HasSelectedSlots() )
+    if ( (unsigned int)*(__int16 *)(g_SelectedUnitStackRecordPtr + 6) <= 0x28 && UnitStackSelection_HasSelectedSlots() )
     {
       for ( i = 0; i < 12; ++i )
       {
-        neighbor_column = Map_NeighborDY[2 * i] + *(__int16 *)(dword_526FA0 + 2);
-        neighbor_row = Map_NeighborDX[2 * i] + *(__int16 *)dword_526FA0;
+        neighbor_column = Map_NeighborDY[2 * i] + *(__int16 *)(g_SelectedUnitStackRecordPtr + 2);
+        neighbor_row = Map_NeighborDX[2 * i] + *(__int16 *)g_SelectedUnitStackRecordPtr;
         if ( Map_IsTilePlacable(g_SelectedUnitIndex, v13, neighbor_column, neighbor_row) )
           UI_HighlightTile(neighbor_row, neighbor_column);
       }
     }
-    g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-    v7 = *(unsigned __int8 *)(dword_526FA0 + 4);
+    g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+    v7 = *(unsigned __int8 *)(g_SelectedUnitStackRecordPtr + 4);
     if ( v7 != g_CurrentPlayerIndex )
       UI_LoadCurrentPlayerInfoSpriteSet(v7, v6, (char)v4, a2);
-    SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 35);
+    SpriteForChar = DLX_GetSpriteForChar(g_MarksSpriteSet, 35);
     Compat_RenderDeviceDrawMenuSprite(400, 29, SpriteForChar, 1);
     for ( j = 0; j < 10; ++j )
     {
-      if ( *(__int16 *)(31 * j + dword_526FA0 + 6) == -1 )
+      if ( *(__int16 *)(31 * j + g_SelectedUnitStackRecordPtr + 6) == -1 )
         break;
-      v10 = DLX_GetSpriteForChar(dword_527C24, *(__int16 *)(31 * j + dword_526FA0 + 6));
+      v10 = DLX_GetSpriteForChar(g_CurrentPlayerInfoSpriteSet, *(__int16 *)(31 * j + g_SelectedUnitStackRecordPtr + 6));
       Compat_RenderDeviceDrawMenuSprite(401, 38 * j + 35, v10, 1);
-      if ( (*(_BYTE *)(dword_526FA0 + 31 * j + 19) & 4) != 0 )
+      if ( (*(_BYTE *)(g_SelectedUnitStackRecordPtr + 31 * j + 19) & 4) != 0 )
       {
-        v11 = DLX_GetSpriteForChar(dword_5202C8, 33);
+        v11 = DLX_GetSpriteForChar(g_MarksSpriteSet, 33);
         Compat_RenderDeviceDrawMenuSprite(405, 38 * j + 40, v11, 1);
       }
       Render_ReleaseSurface(7, a2);
       v9 = g_CurrentPlayerIndex;
-      if ( *(unsigned __int8 *)(dword_526FA0 + 4) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(g_SelectedUnitStackRecordPtr + 4) == g_CurrentPlayerIndex )
         UI_DrawTextFmt(j, 38 * j + 32, 38 * j + 70, 450, 3, (int)aD_5);
-      if ( dword_526F78[j] )
+      if ( g_UnitStackSlotSelectedFlags[j] )
       {
-        v12 = DLX_GetSpriteForChar(dword_5202C8, (*(unsigned __int8 *)(dword_526FA0 + 31 * j + 14) >= 4u) + 4);
+        v12 = DLX_GetSpriteForChar(g_MarksSpriteSet, (*(unsigned __int8 *)(g_SelectedUnitStackRecordPtr + 31 * j + 14) >= 4u) + 4);
         Compat_RenderDeviceDrawMenuSprite(402, 38 * j + 58, v12, 1);
       }
     }
-    result = *(unsigned __int8 *)(dword_526FA0 + 4);
+    result = *(unsigned __int8 *)(g_SelectedUnitStackRecordPtr + 4);
     if ( result != g_CurrentPlayerIndex )
       return (int)UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
   }
@@ -5566,12 +5566,12 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   int v7; // [esp+30h] [ebp-18h]
 
   v7 = g_UnitStackSelectionActiveUnitIndex;
-  v6 = dword_526994;
-  v5 = dword_526FA0;
-  qmemcpy(v4, dword_526F78, sizeof(v4));
-  dword_526994 = 1;
+  v6 = g_UnitStackSelectionModeActive;
+  v5 = g_SelectedUnitStackRecordPtr;
+  qmemcpy(v4, g_UnitStackSlotSelectedFlags, sizeof(v4));
+  g_UnitStackSelectionModeActive = 1;
   g_UnitStackSelectionActiveUnitIndex = a1;
-  memset(dword_526F78, 0, sizeof(dword_526F78));
+  memset(g_UnitStackSlotSelectedFlags, 0, sizeof(g_UnitStackSlotSelectedFlags));
   UnitStackSelection_RedrawPanel(a1, a1);
   WorldMap_RedrawViewport(1);
   while ( DD_IsLost((int)g_RenderState) )
@@ -5580,10 +5580,10 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
     WorldMap_HandleScrollKeysAndIdle(a1);
     WorldMap_RedrawFrame(a2);
   }
-  dword_526994 = v6;
+  g_UnitStackSelectionModeActive = v6;
   g_UnitStackSelectionActiveUnitIndex = v7;
-  dword_526FA0 = v5;
-  qmemcpy(dword_526F78, v4, sizeof(dword_526F78));
+  g_SelectedUnitStackRecordPtr = v5;
+  qmemcpy(g_UnitStackSlotSelectedFlags, v4, sizeof(g_UnitStackSlotSelectedFlags));
   UnitStackSelection_RedrawPanel(-1, a1);
   return WorldMap_RedrawViewport(1);
 }
@@ -5608,56 +5608,56 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 
   if ( g_UnitStackSelectionActiveUnitIndex == -1 )
     return 0;
-  slot_index = ((dword_544CFC >> byte_54512C) - 35) / 38;
+  slot_index = ((g_MouseCursorRawX >> g_CursorCoordShift) - 35) / 38;
   handled_panel_input = 0;
-  if ( dword_544D00 >> byte_54512C >= 400
-    && dword_544D00 >> byte_54512C < 464
+  if ( g_MouseCursorRawY >> g_CursorCoordShift >= 400
+    && g_MouseCursorRawY >> g_CursorCoordShift < 464
     && slot_index >= 0
     && slot_index <= 9 )
   {
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-    if ( DD_IsLost((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
+    if ( DD_IsLost((int)g_RenderState) && *(__int16 *)(g_SelectedUnitStackRecordPtr + 31 * slot_index + 6) != -1 )
     {
-      special_unit_info = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
-      Unit_Info(100, 100, special_unit_info, (unsigned __int8 *)(dword_526FA0 + 31 * slot_index + 6), a1, 0);
+      special_unit_info = UnitStack_HasSpecialPersonageUnits(g_SelectedUnitStackRecordPtr);
+      Unit_Info(100, 100, special_unit_info, (unsigned __int8 *)(g_SelectedUnitStackRecordPtr + 31 * slot_index + 6), a1, 0);
       WorldMap_RedrawViewport(1);
     }
-    if ( DD_IsFlipping((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
+    if ( DD_IsFlipping((int)g_RenderState) && *(__int16 *)(g_SelectedUnitStackRecordPtr + 31 * slot_index + 6) != -1 )
     {
-      LOBYTE(dword_526F78[slot_index]) ^= 1u;
+      LOBYTE(g_UnitStackSlotSelectedFlags[slot_index]) ^= 1u;
       Diagnostics_TraceWorldMapActionEvent(
         "selection_slot_toggle",
         g_SelectedUnitIndex,
         slot_index,
-        dword_526F78[slot_index],
+        g_UnitStackSlotSelectedFlags[slot_index],
         g_UnitStackSelectionActiveUnitIndex);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_toggle_set",
         g_SelectedUnitIndex,
         g_UnitStackSelectionActiveUnitIndex,
-        dword_526F78[0],
-        dword_526F78[slot_index]);
+        g_UnitStackSlotSelectedFlags[0],
+        g_UnitStackSlotSelectedFlags[slot_index]);
       UnitStackSelection_RedrawPanel(-1, a1);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_redraw",
         g_SelectedUnitIndex,
         g_UnitStackSelectionActiveUnitIndex,
-        dword_526F78[0],
-        dword_526F78[slot_index]);
+        g_UnitStackSlotSelectedFlags[0],
+        g_UnitStackSlotSelectedFlags[slot_index]);
       WorldMap_RedrawViewport(1);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_refresh",
         g_SelectedUnitIndex,
         g_UnitStackSelectionActiveUnitIndex,
-        dword_526F78[0],
-        dword_526F78[slot_index]);
+        g_UnitStackSlotSelectedFlags[0],
+        g_UnitStackSlotSelectedFlags[slot_index]);
       Render_Begin((int)g_RenderState, 0);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_render_begin",
         g_SelectedUnitIndex,
         g_UnitStackSelectionActiveUnitIndex,
-        dword_526F78[0],
-        dword_526F78[slot_index]);
+        g_UnitStackSlotSelectedFlags[0],
+        g_UnitStackSlotSelectedFlags[slot_index]);
     }
     handled_panel_input = 1;
   }
@@ -5667,26 +5667,26 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
       "selection_split_probe",
       g_SelectedUnitIndex,
       g_UnitStackSelectionActiveUnitIndex,
-      dword_526F78[0],
+      g_UnitStackSlotSelectedFlags[0],
       UnitStackSelection_HasSelectedSlots());
   }
   if ( DD_IsFlipping((int)g_RenderState) && UnitStackSelection_HasSelectedSlots() )
   {
-    target_tile_x = ((dword_544CFC >> byte_54512C) - 32) / 64 + *(_DWORD *)(gameData + 140008);
-    target_tile_y = ((dword_544D00 >> byte_54512C) - 16) / 64 + *(_DWORD *)(gameData + 140012);
-    distance_x = *(__int16 *)dword_526FA0 - target_tile_x;
+    target_tile_x = ((g_MouseCursorRawX >> g_CursorCoordShift) - 32) / 64 + *(_DWORD *)(gameData + 140008);
+    target_tile_y = ((g_MouseCursorRawY >> g_CursorCoordShift) - 16) / 64 + *(_DWORD *)(gameData + 140012);
+    distance_x = *(__int16 *)g_SelectedUnitStackRecordPtr - target_tile_x;
     if ( distance_x < 0 )
       distance_x = -distance_x;
     if ( distance_x <= 1 )
     {
-      distance_y = *(__int16 *)(dword_526FA0 + 2) - target_tile_y;
+      distance_y = *(__int16 *)(g_SelectedUnitStackRecordPtr + 2) - target_tile_y;
       if ( distance_y < 0 )
         distance_y = -distance_y;
       if ( distance_y <= 1 )
       {
         Render_Begin((int)g_RenderState, 0);
         memset(selected_slot_indices, 0, sizeof(selected_slot_indices));
-        UnitStackSelection_BuildSelectedSlotIndexList((int)dword_526F78, 10, selected_slot_indices);
+        UnitStackSelection_BuildSelectedSlotIndexList((int)g_UnitStackSlotSelectedFlags, 10, selected_slot_indices);
         Diagnostics_TraceWorldMapActionEvent(
           "selection_split_attempt",
           g_SelectedUnitIndex,
@@ -5707,7 +5707,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
             target_tile_x,
             target_tile_y,
             selected_slot_indices[0]);
-          memset(dword_526F78, 0, sizeof(dword_526F78));
+          memset(g_UnitStackSlotSelectedFlags, 0, sizeof(g_UnitStackSlotSelectedFlags));
         }
         Render_LoadResourceSprite_v2();
         UnitStackSelection_RedrawPanel(-1, a1);
@@ -5737,14 +5737,14 @@ signed int UnitStackSelection_HasSelectedSlots()
   if ( g_UnitStackSelectionActiveUnitIndex != -1 )
   {
     byte_offset = 0;
-    if ( *(_DWORD *)dword_526F78 )
+    if ( *(_DWORD *)g_UnitStackSlotSelectedFlags )
       return 1;
     while ( 1 )
     {
       byte_offset += 4;
       if ( byte_offset >= 40 )
         break;
-      if ( *(_DWORD *)((char *)dword_526F78 + byte_offset) )
+      if ( *(_DWORD *)((char *)g_UnitStackSlotSelectedFlags + byte_offset) )
         return 1;
     }
   }
@@ -5755,15 +5755,15 @@ signed int UnitStackSelection_HasSelectedSlots()
 //----- (00423B00) --------------------------------------------------------
 int  UnitStackSelection_BeginForSelectedStack(DWORD a1)
 {
-  dword_526994 = 1;
+  g_UnitStackSelectionModeActive = 1;
   g_UnitStackSelectionActiveUnitIndex = g_SelectedUnitIndex;
   Diagnostics_TraceWorldMapActionEvent(
     "selection_begin_clear",
     g_SelectedUnitIndex,
     g_UnitStackSelectionActiveUnitIndex,
-    dword_526F78[0],
+    g_UnitStackSlotSelectedFlags[0],
     0);
-  memset(dword_526F78, 0, sizeof(dword_526F78));
+  memset(g_UnitStackSlotSelectedFlags, 0, sizeof(g_UnitStackSlotSelectedFlags));
   UnitStackSelection_RedrawPanel(-1, a1);
   return WorldMap_RedrawViewport(1);
 }
@@ -5775,7 +5775,7 @@ int  UnitStackSelection_BeginForSelectedStack(DWORD a1)
 int __thiscall UnitStackSelection_End(void *this)
 {
   UI_ClearTileHighlight(this);
-  dword_526994 = 0;
+  g_UnitStackSelectionModeActive = 0;
   g_UnitStackSelectionActiveUnitIndex = -1;
   return WorldMap_RedrawViewport(1);
 }
@@ -5790,10 +5790,10 @@ int __thiscall UnitStackSelection_ClearMask(void *this)
     "selection_mask_clear",
     g_SelectedUnitIndex,
     g_UnitStackSelectionActiveUnitIndex,
-    dword_526F78[0],
+    g_UnitStackSlotSelectedFlags[0],
     0);
-  memset(dword_526F78, 0, sizeof(dword_526F78));
-  return (int)(uintptr_t)dword_526F78;
+  memset(g_UnitStackSlotSelectedFlags, 0, sizeof(g_UnitStackSlotSelectedFlags));
+  return (int)(uintptr_t)g_UnitStackSlotSelectedFlags;
 }
 
 //----- (00423B90) --------------------------------------------------------
@@ -6555,7 +6555,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     && (result = UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174), result >= v14)
     && (result = Map_GetTileSurfaceClassOrUnexplored(a1, a2), result != 185) )
   {
-    dword_527C34 = 1;
+    g_RoadBuildModeHasBuildTarget = 1;
     return UIWidget_RefreshActionButtonState((int)&g_RoadBuildModeNorthMarkerX + 53 * v6, v7);
   }
   return result;
@@ -6600,9 +6600,9 @@ int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3)
     default:
       break;
   }
-  dword_52698C = 0;
+  g_WorldMapTileOverlayDrawHook = 0;
   Road_Build(g_SelectedUnitIndex, v4, (char)RoadBuildMode_HighlightBuildableAdjacentTile, a2, a3);
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
+  g_WorldMapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
   return WorldMap_RedrawViewport(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
@@ -6630,9 +6630,9 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
   if ( result != 185 )
   {
     v4 = 0;
-    dword_545150 = (int)&g_CursorDesc_ActionBusy;
+    g_ActiveCursorDescriptor = (int)&g_CursorDesc_ActionBusy;
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
-    dword_52698C = v5;
+    g_WorldMapTileOverlayDrawHook = v5;
     g_RoadBuildModeExitRequested = 0;
     g_RoadBuildModeControlWidgetState = 2;
     WorldMap_RedrawViewport(1);
@@ -6663,7 +6663,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
         }
         if ( !UIWidgetTable_PollHoverAndActions(g_RoadBuildModeControlWidgets, a1) )
         {
-          RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+          RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
           if ( UI_TrySelectFriendlyStackUnderCursor() )
           {
             Render_Begin((int)g_RenderState, 0);
@@ -6672,19 +6672,19 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
         }
         if ( DD_IsFlipping((int)g_RenderState) )
         {
-          LOBYTE(v6) = byte_54512C;
+          LOBYTE(v6) = g_CursorCoordShift;
           v10 = 725 * g_SelectedUnitIndex + gameData;
-          v4 = (((dword_544CFC >> byte_54512C)
+          v4 = (((g_MouseCursorRawX >> g_CursorCoordShift)
                - 32
-               - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-                + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
+               - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
+                + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
              + *(_DWORD *)(gameData + 140008)
              - *(__int16 *)(v10 + 147174);
           v11 = *(_DWORD *)(gameData + 140012)
-              + (((dword_544D00 >> byte_54512C)
+              + (((g_MouseCursorRawY >> g_CursorCoordShift)
                 - 16
-                - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-                 + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6)
+                - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+                 + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
               - *(__int16 *)(v10 + 147176);
           v12 = 0;
           if ( v4 || v11 != -1 )
@@ -6714,9 +6714,9 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
           {
             v12[2] = 2;
             RoadBuildMode_BuildInSelectedDirection((int)v12, a1, a2);
-            dword_527C34 = 0;
+            g_RoadBuildModeHasBuildTarget = 0;
             WorldMap_RedrawViewport(1);
-            if ( !dword_527C34 )
+            if ( !g_RoadBuildModeHasBuildTarget )
               break;
           }
         }
@@ -6726,11 +6726,11 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
       g_RoadBuildModeExitRequested = 1;
     }
 LABEL_13:
-    dword_52698C = 0;
+    g_WorldMapTileOverlayDrawHook = 0;
     g_RoadBuildModeControlWidgetState = 1;
     UIWidget_RefreshActionButtonState((int)g_RoadBuildModeControlWidgets, v6);
     result = WorldMap_RedrawViewport(1);
-    dword_545150 = (int)&g_CursorDesc_Default;
+    g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
   }
   return result;
 }
@@ -6816,7 +6816,7 @@ int UnitBattle_InitPathingTables()
     ++v5;
     result = g_UnitTypeFlags[v6] & 1;
     v6 += 22;
-    byte_531C8F[v5] = result;
+    g_UnitTypeBattleMoveFlagsMinus1[v5] = result;
   }
   while ( v5 < 40 );
   return result;
@@ -6829,7 +6829,7 @@ signed int  UnitBattle_GetTileMoveCostOrZero(int a1, int a2, int a3)
 {
   if ( !g_MapIgnoreUnitOccupancy && *(__int16 *)(40 * a2 + g_MapData + 2 * a3 + 1534) != -1 )
     return 0;
-  if ( byte_531C90[a1] )
+  if ( g_UnitTypeFlatMoveCostFlags[a1] )
     return 5;
   if ( *(_BYTE *)(g_MapData + 20 * a2 + a3 + 3134) )
     return 0;
@@ -7068,7 +7068,7 @@ LABEL_30:
     v80 = v60;
     if ( v29 )
       *v29 = 0;
-    HIWORD(v70) = HIWORD(dword_531CBC);
+    HIWORD(v70) = HIWORD(g_UnitMoveTrackPackedNodeScratch);
     LOBYTE(v70) = v79;
     v65 = v29;
     BYTE1(v70) = v80;
@@ -7495,15 +7495,15 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
     v13 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
     if ( v13 )
       v13 = DLXSpriteSet_Load(v13, v48);
-    dword_523F78 = (int)v13;
+    g_ActiveUnitAnimSpriteSet = (int)v13;
     v14 = *v5;
     if ( v14 == 27 || v14 == 30 )
       v15 = *((_BYTE *)v5 + 17) & 7;
     else
       v15 = 0;
-    dword_523F7C = v15;
-    dword_523F74 = 0;
-    dword_523F70 = 0;
+    g_UnitAnimFrameIndex = v15;
+    g_UnitMoveAnimOffsetY = 0;
+    g_UnitMoveAnimOffsetX = 0;
     g_UnitBattleAnimFrameCount = 8;
     if ( *v53 )
     {
@@ -7534,8 +7534,8 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
             UnitBattle_CenterViewOnUnit(v50);
             UnitBattle_RedrawVisibleGrid();
           }
-          dword_523F70 %= 64;
-          dword_523F74 %= 64;
+          g_UnitMoveAnimOffsetX %= 64;
+          g_UnitMoveAnimOffsetY %= 64;
           v29 = *(_WORD *)(v51 + g_MapData + 858);
           v57 = ((unsigned __int8)v54 - *(unsigned __int16 *)(v51 + g_MapData + 856)) << 6;
           v56 = (BYTE1(v54) - v29) << 6;
@@ -7545,18 +7545,18 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           v55 = 8 * v7;
           while ( 1 )
           {
-            v31 = dword_523F70;
-            if ( dword_523F70 <= 0 )
-              v31 = -dword_523F70;
+            v31 = g_UnitMoveAnimOffsetX;
+            if ( g_UnitMoveAnimOffsetX <= 0 )
+              v31 = -g_UnitMoveAnimOffsetX;
             v32 = v31;
             v33 = v57;
             if ( v57 <= 0 )
               v33 = -v57;
             if ( v32 >= v33 )
             {
-              v43 = dword_523F74;
-              if ( dword_523F74 <= 0 )
-                v43 = -dword_523F74;
+              v43 = g_UnitMoveAnimOffsetY;
+              if ( g_UnitMoveAnimOffsetY <= 0 )
+                v43 = -g_UnitMoveAnimOffsetY;
               LOWORD(v11) = v56;
               v44 = v43;
               v45 = v56 <= 0 ? -v56 : v56;
@@ -7570,26 +7570,26 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
             v35 = Time_Now(0, 0);
             if ( v35 - v36 >= v37 )
             {
-              v38 = dword_527C40;
-              v39 = ++dword_527C40;
+              v38 = g_BattleUnitMoveAnimStepCounter;
+              v39 = ++g_BattleUnitMoveAnimStepCounter;
               if ( (v38 & 1) != 0 )
               {
-                dword_523F7C = ((_BYTE)dword_523F7C + 1) & 7;
-                Audio_PlayBattleMapUnitMoveSound((unsigned __int16)v5[2], (unsigned __int16)v5[3], dword_523F7C, *v5);
+                g_UnitAnimFrameIndex = ((_BYTE)g_UnitAnimFrameIndex + 1) & 7;
+                Audio_PlayBattleMapUnitMoveSound((unsigned __int16)v5[2], (unsigned __int16)v5[3], g_UnitAnimFrameIndex, *v5);
               }
               v36 = Time_Now(0, 0);
-              v40 = dword_523F70;
-              if ( dword_523F70 <= 0 )
-                v40 = -dword_523F70;
+              v40 = g_UnitMoveAnimOffsetX;
+              if ( g_UnitMoveAnimOffsetX <= 0 )
+                v40 = -g_UnitMoveAnimOffsetX;
               v41 = v40;
               v42 = v57;
               if ( v57 <= 0 )
                 v42 = -v57;
               if ( v41 >= v42 )
               {
-                v46 = dword_523F74;
-                if ( dword_523F74 <= 0 )
-                  v46 = -dword_523F74;
+                v46 = g_UnitMoveAnimOffsetY;
+                if ( g_UnitMoveAnimOffsetY <= 0 )
+                  v46 = -g_UnitMoveAnimOffsetY;
                 LOWORD(v11) = v56;
                 if ( v56 <= 0 )
                 {
@@ -7628,8 +7628,8 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
               v30 = 0;
               v49 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + g_MapData + 852)];
               LOBYTE(v11) = v49;
-              dword_523F70 += v49 * Map_NeighborDX[v55 / 4];
-              dword_523F74 += Map_NeighborDY[v55 / 4]
+              g_UnitMoveAnimOffsetX += v49 * Map_NeighborDX[v55 / 4];
+              g_UnitMoveAnimOffsetY += Map_NeighborDY[v55 / 4]
                             * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + g_MapData + 852)];
             }
           }
@@ -7659,7 +7659,7 @@ LABEL_15:
     *(_DWORD *)((char *)v5 + 23) = 0;
     *(_DWORD *)(gameData + v21 + 140073) = 1;
     Audio_StopUnitMoveSound();
-    DLXSpriteSet_ReleaseAndClear(&dword_523F78);
+    DLXSpriteSet_ReleaseAndClear(&g_ActiveUnitAnimSpriteSet);
     g_ActiveUnitMoveTileIndex = -1;
     UnitBattle_RedrawVisibleGrid();
     Diagnostics_TraceWorldMapActionEvent(
@@ -8000,7 +8000,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   v8 = (_DWORD *)Mem_Alloc(4112, v7, v6, (DWORD)a5);
   if ( v8 )
     v8 = DLXSpriteSet_Load(v8, v97);
-  dword_523F78 = (int)v8;
+  g_ActiveUnitAnimSpriteSet = (int)v8;
   if ( v101 != -1 )
   {
     v9 = *((_BYTE *)v100 + 2);
@@ -8008,7 +8008,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, (DWORD)a5);
     if ( v11 )
       v11 = DLXSpriteSet_Load(v11, v97);
-    dword_5320F0 = (int)v11;
+    g_UnitBattleAnimatingUnitSpriteSet = (int)v11;
   }
   v12 = 0;
   v13 = *((unsigned __int8 *)v5 + 3);
@@ -8022,30 +8022,30 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     v14 = 8 * *((unsigned __int8 *)v5 + 3);
     if ( v13 == 7 || v13 == 6 || v13 == 5 )
     {
-      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
+      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, v14);
       v12 = -UnitBattle_ScanSpriteFirstOpaqueRunLength(attacker_sprite) - UnitBattle_ScanSpriteMinOpaqueRunLength(defender_sprite);
     }
     else if ( v13 == 1 || v13 == 2 || v13 == 3 )
     {
-      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
+      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, v14);
       v12 = UnitBattle_ScanSpriteMinOpaqueRunLength(attacker_sprite) + UnitBattle_ScanSpriteFirstOpaqueRunLength(defender_sprite);
     }
     if ( v13 == 7 || v13 < 2 )
     {
-      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
+      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, v14);
       v22 = -UnitBattle_CountLeadingBlankSpriteRows(attacker_sprite) - UnitBattle_CountTrailingBlankSpriteRows(defender_sprite);
     }
     else
     {
       if ( v13 != 5 && v13 != 4 && v13 != 3 )
         goto LABEL_20;
-      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
+      attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, v14);
       v22 = UnitBattle_CountTrailingBlankSpriteRows(attacker_sprite) + UnitBattle_CountLeadingBlankSpriteRows(defender_sprite);
     }
     v103 = v22;
     goto LABEL_20;
   }
-  v48 = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, 8 * v13);
+  v48 = (unsigned __int16 *)DLX_GetSpriteForChar(g_ActiveUnitAnimSpriteSet, 8 * v13);
   if ( v13 == 6 )
   {
     v12 = -UnitBattle_ScanSpriteFirstOpaqueRunLength(v48);
@@ -8098,24 +8098,24 @@ LABEL_21:
   v23 = 8;
   v24 = 0;
   g_ActiveUnitMoveTileIndex = v102;
-  dword_523F70 = 0;
-  dword_523F74 = 0;
-  dword_523F7C = 0;
+  g_UnitMoveAnimOffsetX = 0;
+  g_UnitMoveAnimOffsetY = 0;
+  g_UnitAnimFrameIndex = 0;
   g_UnitBattleAnimFrameCount = 8;
 LABEL_22:
   v26 = Time_Now(v24, v23);
   while ( 1 )
   {
-    v27 = dword_523F70;
-    if ( dword_523F70 <= 0 )
-      v27 = -dword_523F70;
+    v27 = g_UnitMoveAnimOffsetX;
+    if ( g_UnitMoveAnimOffsetX <= 0 )
+      v27 = -g_UnitMoveAnimOffsetX;
     v28 = v27;
     v29 = v12 <= 0 ? -v12 : v12;
     if ( v28 >= v29 )
     {
-      v56 = dword_523F74;
-      if ( dword_523F74 <= 0 )
-        v56 = -dword_523F74;
+      v56 = g_UnitMoveAnimOffsetY;
+      if ( g_UnitMoveAnimOffsetY <= 0 )
+        v56 = -g_UnitMoveAnimOffsetY;
       v57 = v56;
       v58 = v103;
       if ( v103 <= 0 )
@@ -8129,12 +8129,12 @@ LABEL_22:
     v32 = Time_Now(v31, v30);
     if ( v32 - v26 >= (unsigned int)v30 )
     {
-      v34 = dword_531CC0++;
+      v34 = g_UnitMoveAnimTickParityCounter++;
       if ( (v34 & 1) != 0 )
-        dword_523F7C = ((_BYTE)dword_523F7C + 1) & 7;
-      v35 = dword_523F70;
-      if ( dword_523F70 <= 0 )
-        v35 = -dword_523F70;
+        g_UnitAnimFrameIndex = ((_BYTE)g_UnitAnimFrameIndex + 1) & 7;
+      v35 = g_UnitMoveAnimOffsetX;
+      if ( g_UnitMoveAnimOffsetX <= 0 )
+        v35 = -g_UnitMoveAnimOffsetX;
       v36 = v35;
       if ( v12 <= 0 )
         v37 = -v12;
@@ -8142,9 +8142,9 @@ LABEL_22:
         v37 = v12;
       if ( v36 >= v37 )
       {
-        v73 = dword_523F74;
-        if ( dword_523F74 <= 0 )
-          v73 = -dword_523F74;
+        v73 = g_UnitMoveAnimOffsetY;
+        if ( g_UnitMoveAnimOffsetY <= 0 )
+          v73 = -g_UnitMoveAnimOffsetY;
         if ( v103 <= 0 )
         {
           if ( v73 >= -v103 )
@@ -8187,9 +8187,9 @@ LABEL_22:
             break;
         }
       }
-      if ( v12 - dword_523F70 <= 0 )
+      if ( v12 - g_UnitMoveAnimOffsetX <= 0 )
       {
-        if ( v12 == dword_523F70 )
+        if ( v12 == g_UnitMoveAnimOffsetX )
           v39 = v24;
         else
           v39 = -1;
@@ -8198,37 +8198,37 @@ LABEL_22:
       {
         v39 = 1;
       }
-      dword_523F70 += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v39;
+      g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v39;
       v23 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5];
-      if ( v103 - dword_523F74 <= 0 )
+      if ( v103 - g_UnitMoveAnimOffsetY <= 0 )
       {
-        if ( v103 == dword_523F74 )
-          dword_523F74 += v23 * v24;
+        if ( v103 == g_UnitMoveAnimOffsetY )
+          g_UnitMoveAnimOffsetY += v23 * v24;
         else
-          dword_523F74 -= v23;
+          g_UnitMoveAnimOffsetY -= v23;
       }
       else
       {
-        dword_523F74 += v23;
+        g_UnitMoveAnimOffsetY += v23;
       }
       goto LABEL_22;
     }
   }
-  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
+  DLXSpriteSet_ReleaseAndClear(&g_ActiveUnitAnimSpriteSet);
   v59 = *((_BYTE *)v5 + 2);
   Unit_BuildAttackAnimSpritePath(v97, *(_BYTE *)v5, v59);
   v61 = (_DWORD *)Mem_Alloc(4112, v60, v59, v12);
   if ( v61 )
     v61 = DLXSpriteSet_Load(v61, v97);
-  dword_523F78 = (int)v61;
-  dword_523F70 = v12;
-  dword_523F7C = 0;
-  dword_523F74 = v103;
+  g_ActiveUnitAnimSpriteSet = (int)v61;
+  g_UnitMoveAnimOffsetX = v12;
+  g_UnitAnimFrameIndex = 0;
+  g_UnitMoveAnimOffsetY = v103;
   g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeAttackAnimationFrameCount[88 * *v5];
   v63 = Time_Now(v62, 0);
   v64 = 31 * v102;
   v65 = v63;
-  while ( dword_523F7C < g_UnitBattleAnimFrameCount )
+  while ( g_UnitAnimFrameIndex < g_UnitBattleAnimFrameCount )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)g_RenderState, v65);
@@ -8239,7 +8239,7 @@ LABEL_22:
     {
       v69 = *(__int16 *)(v64 + g_MapData + 852);
       v70 = (unsigned __int8)g_UnitTypeAttackSoundFrameIndex[88 * v69];
-      if ( v70 == dword_523F7C )
+      if ( v70 == g_UnitAnimFrameIndex )
         Audio_PlayUnitMeleeAttackSound(v69);
       v65 = Time_Now(v64, v70);
       UnitBattle_RedrawTile((unsigned __int16)v5[2] - 1, (unsigned __int16)v5[3] - 1);
@@ -8251,10 +8251,10 @@ LABEL_22:
       UnitBattle_RedrawTile((unsigned __int16)v5[2] - 1, (unsigned __int16)v5[3] + 1);
       UnitBattle_RedrawTile((unsigned __int16)v5[2], (unsigned __int16)v5[3] + 1);
       UnitBattle_RedrawTile((unsigned __int16)v5[2] + 1, (unsigned __int16)v5[3] + 1);
-      ++dword_523F7C;
+      ++g_UnitAnimFrameIndex;
     }
   }
-  dword_523F7C = 0;
+  g_UnitAnimFrameIndex = 0;
   if ( v101 != -1 )
   {
     if ( v98 )
@@ -8265,7 +8265,7 @@ LABEL_22:
     {
       Audio_PlayUnitHitSound((__int16)*v100);
       g_UnitBattleAnimatingUnitIndex = v101;
-      dword_5320EC = Rng_RandRange(0, 7);
+      g_UnitBattleHitAnimFrame = Rng_RandRange(0, 7);
       v64 = Time_Now(0, 3);
       v12 = Rng_RandRange(1, 3);
       while ( v12 >= 0 )
@@ -8277,9 +8277,9 @@ LABEL_22:
         {
           v64 = Time_Now(0, 0);
           UnitBattle_RedrawUnitNeighborhood(v101);
-          LOBYTE(v65) = (dword_5320EC + 1) & 7;
+          LOBYTE(v65) = (g_UnitBattleHitAnimFrame + 1) & 7;
           --v12;
-          dword_5320EC = (unsigned __int8)v65;
+          g_UnitBattleHitAnimFrame = (unsigned __int8)v65;
         }
       }
       g_UnitBattleAnimatingUnitIndex = -1;
@@ -8287,12 +8287,12 @@ LABEL_22:
   }
   if ( v99 )
   {
-    if ( dword_532060 )
+    if ( g_UnitBattleChargeModeActive_532060 )
       UnitBattle_RefreshSelectedUnitUI();
     UnitBattle_PlayDeathAnimation(v102, v64, v65, v12);
   }
   v71 = v99;
-  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
+  DLXSpriteSet_ReleaseAndClear(&g_ActiveUnitAnimSpriteSet);
   if ( !v71 )
   {
     v81 = *((_BYTE *)v5 + 2);
@@ -8301,11 +8301,11 @@ LABEL_22:
     if ( v83 )
       v83 = DLXSpriteSet_Load(v83, v97);
     LOBYTE(v85) = 8;
-    dword_523F78 = (int)v83;
-    dword_523F7C = 0;
+    g_ActiveUnitAnimSpriteSet = (int)v83;
+    g_UnitAnimFrameIndex = 0;
     g_UnitBattleAnimFrameCount = 8;
     v88 = Time_Now(0, v84);
-    while ( dword_523F70 || dword_523F74 )
+    while ( g_UnitMoveAnimOffsetX || g_UnitMoveAnimOffsetY )
     {
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, 0);
@@ -8313,10 +8313,10 @@ LABEL_22:
       v87 = Time_Now(v86, v89);
       if ( v87 - v88 >= v89 )
       {
-        v90 = dword_531CC4++;
+        v90 = g_UnitArrivalAnimTickParityCounter++;
         if ( (v90 & 1) != 0 )
-          dword_523F7C = ((_BYTE)dword_523F7C + 1) & 7;
-        if ( !dword_523F70 && !dword_523F74 )
+          g_UnitAnimFrameIndex = ((_BYTE)g_UnitAnimFrameIndex + 1) & 7;
+        if ( !g_UnitMoveAnimOffsetX && !g_UnitMoveAnimOffsetY )
           break;
         v91 = *v5;
         if ( v91 == 27 || v91 == 30 )
@@ -8350,11 +8350,11 @@ LABEL_22:
               break;
           }
         }
-        v92 = dword_523F70;
-        v85 = dword_523F74;
-        if ( -dword_523F70 < 0 || dword_523F70 == 0 )
+        v92 = g_UnitMoveAnimOffsetX;
+        v85 = g_UnitMoveAnimOffsetY;
+        if ( -g_UnitMoveAnimOffsetX < 0 || g_UnitMoveAnimOffsetX == 0 )
         {
-          if ( dword_523F70 )
+          if ( g_UnitMoveAnimOffsetX )
             v93 = -1;
           else
             v93 = 0;
@@ -8363,10 +8363,10 @@ LABEL_22:
         {
           v93 = 1;
         }
-        dword_523F70 += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v93;
-        if ( -dword_523F74 < 0 || dword_523F74 == 0 )
+        g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v93;
+        if ( -g_UnitMoveAnimOffsetY < 0 || g_UnitMoveAnimOffsetY == 0 )
         {
-          if ( dword_523F74 )
+          if ( g_UnitMoveAnimOffsetY )
             v94 = -1;
           else
             v94 = 0;
@@ -8375,21 +8375,21 @@ LABEL_22:
         {
           v94 = 1;
         }
-        v95 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v94 + dword_523F74;
-        v96 = dword_523F70 * v92;
-        dword_523F74 = v95;
+        v95 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v94 + g_UnitMoveAnimOffsetY;
+        v96 = g_UnitMoveAnimOffsetX * v92;
+        g_UnitMoveAnimOffsetY = v95;
         if ( v96 < 0 )
-          dword_523F70 = 0;
-        if ( v85 * dword_523F74 < 0 )
-          dword_523F74 = 0;
+          g_UnitMoveAnimOffsetX = 0;
+        if ( v85 * g_UnitMoveAnimOffsetY < 0 )
+          g_UnitMoveAnimOffsetY = 0;
         v88 = Time_Now(v95, v96);
       }
     }
-    DLXSpriteSet_ReleaseAndClear(&dword_523F78);
+    DLXSpriteSet_ReleaseAndClear(&g_ActiveUnitAnimSpriteSet);
   }
-  if ( dword_5320F0 )
-    DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
-  dword_5320F0 = 0;
+  if ( g_UnitBattleAnimatingUnitSpriteSet )
+    DLXSpriteSet_ReleaseAndClear(&g_UnitBattleAnimatingUnitSpriteSet);
+  g_UnitBattleAnimatingUnitSpriteSet = 0;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
   g_ActiveUnitMoveTileIndex = -1;
   return UnitBattle_RedrawVisibleGrid();
@@ -8529,7 +8529,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
   else
   {
     UnitBattle_InitUnitFadeAnimation(a1, 255, -8, 255);
-    if ( dword_5320F4 )
+    if ( g_UnitFadeAnimCurrentOffset )
     {
       v24 = v6;
       do
@@ -8555,9 +8555,9 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
           UnitBattle_RedrawTile(v17 - 1, v18);
         if ( v16 == 7 )
           UnitBattle_RedrawTile(v17 - 1, v18 - 1);
-        *(_BYTE *)(40 * (unsigned __int16)v7[2] + g_MapData + 2 * (unsigned __int16)v7[3] + 2335) = -1 - dword_5320F4;
+        *(_BYTE *)(40 * (unsigned __int16)v7[2] + g_MapData + 2 * (unsigned __int16)v7[3] + 2335) = -1 - g_UnitFadeAnimCurrentOffset;
       }
-      while ( dword_5320F4 );
+      while ( g_UnitFadeAnimCurrentOffset );
     }
   }
   v19 = 31 * a1;
@@ -8936,12 +8936,12 @@ __int16  UnitBattle_PlayShotAnimation(
   v18 = (_DWORD *)Mem_Alloc(4112, v17, v16, (DWORD)v111);
   if ( v18 )
     v18 = DLXSpriteSet_Load(v18, v16);
-  dword_523F78 = (int)v18;
+  g_ActiveUnitAnimSpriteSet = (int)v18;
   v19 = 0;
-  dword_523F70 = 0;
+  g_UnitMoveAnimOffsetX = 0;
   g_ActiveUnitMoveTileIndex = a1;
-  dword_523F74 = 0;
-  dword_523F7C = 0;
+  g_UnitMoveAnimOffsetY = 0;
+  g_UnitAnimFrameIndex = 0;
   g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeShotAnimationFrameCount[88 * *v125];
   if ( a2 != -1 )
   {
@@ -8950,7 +8950,7 @@ __int16  UnitBattle_PlayShotAnimation(
     v21 = (_DWORD *)Mem_Alloc(4112, v20, v19, (DWORD)v111);
     if ( v21 )
       v21 = DLXSpriteSet_Load(v21, v19);
-    dword_5320F0 = (int)v21;
+    g_UnitBattleAnimatingUnitSpriteSet = (int)v21;
   }
   qmemcpy(v109, &g_UnitBattleShotAnimTemplate, sizeof(v109));
   Unit_BuildShotAnimPaletteSpritePath(v112, *(_BYTE *)v125);
@@ -9056,7 +9056,7 @@ __int16  UnitBattle_PlayShotAnimation(
     *(_DWORD *)((char *)&a16 + 2) = 5;
   }
   v124 = Time_Now(v28, v26);
-  if ( v31 >= dword_523F7C )
+  if ( v31 >= g_UnitAnimFrameIndex )
   {
     v32 = 31 * a1;
     do
@@ -9069,14 +9069,14 @@ __int16  UnitBattle_PlayShotAnimation(
       {
         v37 = *(__int16 *)(v32 + g_MapData + 852);
         v38 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v37];
-        if ( v38 == dword_523F7C )
+        if ( v38 == g_UnitAnimFrameIndex )
           Audio_PlayUnitRangedAttackSound(v37);
         v124 = Time_Now(v35, v38);
         UnitBattle_RedrawTile(*(unsigned __int16 *)(v32 + g_MapData + 856), *(unsigned __int16 *)(v32 + g_MapData + 858));
-        ++dword_523F7C;
+        ++g_UnitAnimFrameIndex;
       }
     }
-    while ( v35 >= dword_523F7C );
+    while ( v35 >= g_UnitAnimFrameIndex );
   }
   if ( v132 != -1 )
   {
@@ -9103,26 +9103,26 @@ __int16  UnitBattle_PlayShotAnimation(
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, v44);
       v48 = g_UnitBattleAnimFrameCount;
-      v49 = dword_523F7C % g_UnitBattleAnimFrameCount;
-      dword_523F7C = v49;
+      v49 = g_UnitAnimFrameIndex % g_UnitBattleAnimFrameCount;
+      g_UnitAnimFrameIndex = v49;
       if ( v49 )
       {
         v50 = Time_Now(v128, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v128 + g_MapData + 852)]);
         if ( v50 - v124 >= v49 )
         {
           v51 = *(__int16 *)(v48 + g_MapData + 852);
-          v52 = dword_523F7C;
+          v52 = g_UnitAnimFrameIndex;
           v53 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v51];
-          if ( v53 == dword_523F7C )
+          if ( v53 == g_UnitAnimFrameIndex )
             Audio_PlayUnitRangedAttackSound(v51);
           v124 = Time_Now(v52, v53);
           UnitBattle_RedrawTile(*(unsigned __int16 *)(v128 + g_MapData + 856), *(unsigned __int16 *)(v128 + g_MapData + 858));
           v48 = g_UnitBattleAnimFrameCount;
-          v49 = (dword_523F7C + 1) % g_UnitBattleAnimFrameCount;
-          dword_523F7C = v49;
+          v49 = (g_UnitAnimFrameIndex + 1) % g_UnitBattleAnimFrameCount;
+          g_UnitAnimFrameIndex = v49;
         }
       }
-      g_RenderDevice = &unk_51D4C0;
+      g_RenderDevice = &g_MainRenderDevice;
       if ( *v125 == UNIT_TYPE_CATAPULT )
       {
         v54 = 8 * (Time_Now(v48, v49) - v130) / (unsigned int)v127;
@@ -9136,7 +9136,7 @@ __int16  UnitBattle_PlayShotAnimation(
         v126 = (Time_Now(v48, v49) - v130) / 0xAu % *(_DWORD *)((char *)&a16 + 2);
       }
       v129 = v133;
-      Render_SaveBackbuffer((int)&unk_51D4C0);
+      Render_SaveBackbuffer((int)&g_MainRenderDevice);
       v56 = v43;
       v108 = v43 + DLX_GetSpriteWidth(v131, v57);
       SpriteHeight = DLX_GetSpriteHeight(v131, v132);
@@ -9151,7 +9151,7 @@ __int16  UnitBattle_PlayShotAnimation(
         LOWORD(v43) = 16;
       v107 = v60;
       v61 = DLX_GetSpriteHeight(v131, v132);
-      Render_FillRect((_DWORD *)dword_5202E0, 0, v62, (unsigned __int16)v133, v133 + v61 + 1, v107, v133, v43);
+      Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, v62, (unsigned __int16)v133, v133 + v61 + 1, v107, v133, v43);
       v65 = Time_Now(v64, v63);
       v66 = Time_Now(v130, (v65 - v130) * v116 / v127 + v118);
       v133 = v67;
@@ -9218,7 +9218,7 @@ __int16  UnitBattle_PlayShotAnimation(
       Render_Present((int)g_RenderState);
     }
   }
-  dword_523F7C %= g_UnitBattleAnimFrameCount;
+  g_UnitAnimFrameIndex %= g_UnitBattleAnimFrameCount;
   UnitBattle_RedrawTile(*(unsigned __int16 *)(g_MapData + 31 * a1 + 856), *(unsigned __int16 *)(g_MapData + 31 * a1 + 858));
   v72 = *v125;
   v73 = v72 == UNIT_TYPE_CATAPULT
@@ -9248,11 +9248,11 @@ LABEL_57:
           v78 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
           if ( v78 )
             v78 = DLXSpriteSet_Load(v78, v25);
-          dword_5320FC = (int)v78;
+          g_UnitBattleProjectileSpriteSet = (int)v78;
         }
         g_UnitBattleShotProjectileTileX = v122;
         g_UnitBattleShotProjectileTileY = a3;
-        dword_532100 = 0;
+        g_BattleShotAnimFrameIndex = 0;
         Audio_PlayUnitShotSound(*(__int16 *)(g_MapData + 31 * a1 + 852));
         goto LABEL_62;
       }
@@ -9260,7 +9260,7 @@ LABEL_57:
       if ( v76 )
         goto LABEL_55;
     }
-    dword_5320FC = (int)v76;
+    g_UnitBattleProjectileSpriteSet = (int)v76;
     goto LABEL_57;
   }
 LABEL_62:
@@ -9279,27 +9279,27 @@ LABEL_62:
       g_UnitBattleAnimatingUnitIndex = a2;
     }
   }
-  dword_5320EC = Rng_RandRange(3, 7);
+  g_UnitBattleHitAnimFrame = Rng_RandRange(3, 7);
   if ( v113 )
     Audio_PlayUnitHitSound(*(__int16 *)v113);
   v84 = Time_Now(v83, v82);
   v88 = Time_Now(v86, v85);
-  while ( v87 && (unsigned __int16)DLXSpriteSet_GetLastCharIndex(dword_5320FC) >= dword_532100 || v113 && dword_5320EC )
+  while ( v87 && (unsigned __int16)DLXSpriteSet_GetLastCharIndex(g_UnitBattleProjectileSpriteSet) >= g_BattleShotAnimFrameIndex || v113 && g_UnitBattleHitAnimFrame )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     v90 = Time_Now(v89, v84 + 5);
     if ( v90 >= v91 && v113 )
     {
-      v93 = dword_5320EC;
-      if ( dword_5320EC )
-        dword_5320EC = ((_BYTE)dword_5320EC + 1) & 7;
+      v93 = g_UnitBattleHitAnimFrame;
+      if ( g_UnitBattleHitAnimFrame )
+        g_UnitBattleHitAnimFrame = ((_BYTE)g_UnitBattleHitAnimFrame + 1) & 7;
       UnitBattle_RedrawUnitNeighborhood(a2);
       v84 = Time_Now(v94, v93);
     }
-    dword_532100 = (unsigned int)(Time_Now(v92, v91) - v88) >> 1;
+    g_BattleShotAnimFrameIndex = (unsigned int)(Time_Now(v92, v91) - v88) >> 1;
     if ( v95 )
     {
-      if ( (unsigned __int16)DLXSpriteSet_GetLastCharIndex(dword_5320FC) <= dword_532100 )
+      if ( (unsigned __int16)DLXSpriteSet_GetLastCharIndex(g_UnitBattleProjectileSpriteSet) <= g_BattleShotAnimFrameIndex )
         break;
     }
     UnitBattle_RedrawTile(v122, a3);
@@ -9307,13 +9307,13 @@ LABEL_62:
   g_UnitBattleShotProjectileTileY = -1;
   g_UnitBattleShotProjectileTileX = -1;
   UnitBattle_RedrawTile(v122, a3);
-  if ( dword_5320FC )
-    DLXSpriteSet_ReleaseAndClear(&dword_5320FC);
+  if ( g_UnitBattleProjectileSpriteSet )
+    DLXSpriteSet_ReleaseAndClear(&g_UnitBattleProjectileSpriteSet);
   g_UnitBattleAnimatingUnitIndex = -1;
-  if ( dword_5320F0 )
-    DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
-  dword_5320F0 = 0;
-  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
+  if ( g_UnitBattleAnimatingUnitSpriteSet )
+    DLXSpriteSet_ReleaseAndClear(&g_UnitBattleAnimatingUnitSpriteSet);
+  g_UnitBattleAnimatingUnitSpriteSet = 0;
+  DLXSpriteSet_ReleaseAndClear(&g_ActiveUnitAnimSpriteSet);
   if ( v105 )
     nfree_(v105);
   result = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
@@ -9562,7 +9562,7 @@ LABEL_18:
   *(_BYTE *)(v7 + 3) = Facing_DirectionFromDelta8(a2 - *(unsigned __int16 *)(v7 + 4), a4 - *(unsigned __int16 *)(v7 + 6));
   UnitBattle_PlayAttackAnimation(a1, -1, 0, 0, (unsigned __int16 *)a2);
   UnitBattle_RedrawTile(a2, a4);
-  v20 = dword_532104;
+  v20 = g_BattleWallGateLastSpriteChar;
   v19 = a4 + g_MapData + 20 * a2;
   wall_hp_before = *(unsigned __int8 *)(v19 + 3134);
   wall_kind = *(_DWORD *)(g_MapData + 820);
@@ -9597,9 +9597,9 @@ LABEL_18:
       wall_damage,
       *(_DWORD *)(g_MapData + 828),
       *(_DWORD *)(g_MapData + 832),
-      dword_532104);
+      g_BattleWallGateLastSpriteChar);
   UnitBattle_RedrawTile(a2, a4);
-  if ( v20 != dword_532104 )
+  if ( v20 != g_BattleWallGateLastSpriteChar )
     Audio_PlaySoundEffectByName(aBattleMurek, 64);
   UnitBattle_RedrawTile(a2 + 1, a4);
   *(_DWORD *)(1423 * *(unsigned __int8 *)(v7 + 2) + gameData + 140073) = 1;
@@ -9632,7 +9632,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   int v13; // eax
   int v14; // eax
 
-  v4 = dword_5437A4;
+  v4 = g_BattleTargetTileCol;
   Debug_Log(a1, a2, v4, (int)aUnitbattle_s_0, a1, a2, v4);
   v3 = (char *)(g_MapData + 852 + 31 * a1);
   if ( !UnitBattle_IsTileWithinRange(a1, a2, v4) )
@@ -9647,7 +9647,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   g_SelectedUnitIndex = a1;
   UnitBattle_PlayShotAnimation(a1, -1, v4, a2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   UnitBattle_RedrawTile(a2, v4);
-  v10 = dword_532104;
+  v10 = g_BattleWallGateLastSpriteChar;
   v6 = Unit_CalcEffectivenessC((__int16 *)v3);
   v7 = (unsigned __int16)*(unsigned __int16 *)(v3 + 4) - a2;
   if ( v7 < 0 )
@@ -9671,7 +9671,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
       *(_DWORD *)(g_MapData + 832) = 0;
   }
   UnitBattle_RedrawTile(a2, v4);
-  if ( v10 != dword_532104 )
+  if ( v10 != g_BattleWallGateLastSpriteChar )
     Audio_PlaySoundEffectByName((int)aBattleMurek_0, 64);
   UnitBattle_RedrawTile(a2 + 1, v4);
   *(_DWORD *)(1423 * *(unsigned __int8 *)(v3 + 2) + gameData + 140073) = 1;
@@ -9701,7 +9701,7 @@ int  BuildCursor_HandleCancelButtonPress(int a1, int a2)
   int result; // eax
 
   result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  dword_531CD0 = 1;
+  g_BuildPlacementLoopDone = 1;
   return result;
 }
 // 531CD0: using guessed type int dword_531CD0;
@@ -9709,7 +9709,7 @@ int  BuildCursor_HandleCancelButtonPress(int a1, int a2)
 //----- (00429EB0) --------------------------------------------------------
 void BuildCursor_RequestExit()
 {
-  dword_531CD0 = 1;
+  g_BuildPlacementLoopDone = 1;
 }
 // 531CD0: using guessed type int dword_531CD0;
 
@@ -9731,14 +9731,14 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
     v8 = 215;
   else
     v8 = 76;
-  if ( !dword_531CD4 || dword_531CD4 == 3 )
+  if ( !g_BuildCursorBuildingType || g_BuildCursorBuildingType == 3 )
   {
-    if ( (_DWORD)result == (_DWORD)qword_531CD8 )
+    if ( (_DWORD)result == (_DWORD)g_BuildPlacementTileXY )
     {
-      LODWORD(result) = HIDWORD(qword_531CD8);
-      if ( HIDWORD(result) == HIDWORD(qword_531CD8) )
+      LODWORD(result) = HIDWORD(g_BuildPlacementTileXY);
+      if ( HIDWORD(result) == HIDWORD(g_BuildPlacementTileXY) )
       {
-        if ( BuildCursor_IsPlacementValid(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex)
+        if ( BuildCursor_IsPlacementValid(v1, SHIDWORD(g_BuildPlacementTileXY), g_BuildCursorBuildingType, g_SelectedUnitIndex)
           && v1 != __PAIR64__(
                      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
                      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174)) )
@@ -9756,9 +9756,9 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
   }
   else
   {
-    if ( result == qword_531CD8 )
+    if ( result == g_BuildPlacementTileXY )
     {
-      if ( BuildCursor_IsPlacementValid(result, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
+      if ( BuildCursor_IsPlacementValid(result, SHIDWORD(result), g_BuildCursorBuildingType, g_SelectedUnitIndex) )
       {
         v2 = (unsigned __int16)v2;
         (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -9775,9 +9775,9 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
       }
       goto LABEL_26;
     }
-    if ( result == __PAIR64__(HIDWORD(qword_531CD8), (int)qword_531CD8 + 1) )
+    if ( result == __PAIR64__(HIDWORD(g_BuildPlacementTileXY), (int)g_BuildPlacementTileXY + 1) )
     {
-      if ( BuildCursor_IsPlacementValid(result - 1, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
+      if ( BuildCursor_IsPlacementValid(result - 1, SHIDWORD(result), g_BuildCursorBuildingType, g_SelectedUnitIndex) )
       {
         v4 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -9794,9 +9794,9 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
       }
       goto LABEL_26;
     }
-    if ( result == __PAIR64__(HIDWORD(qword_531CD8) + 1, (int)qword_531CD8 + 1) )
+    if ( result == __PAIR64__(HIDWORD(g_BuildPlacementTileXY) + 1, (int)g_BuildPlacementTileXY + 1) )
     {
-      if ( BuildCursor_IsPlacementValid(result - 1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
+      if ( BuildCursor_IsPlacementValid(result - 1, SHIDWORD(g_BuildPlacementTileXY), g_BuildCursorBuildingType, g_SelectedUnitIndex) )
       {
         v5 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -9813,12 +9813,12 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
       }
       goto LABEL_26;
     }
-    if ( (_DWORD)result == (_DWORD)qword_531CD8 )
+    if ( (_DWORD)result == (_DWORD)g_BuildPlacementTileXY )
     {
-      LODWORD(result) = HIDWORD(qword_531CD8) + 1;
-      if ( HIDWORD(result) == HIDWORD(qword_531CD8) + 1 )
+      LODWORD(result) = HIDWORD(g_BuildPlacementTileXY) + 1;
+      if ( HIDWORD(result) == HIDWORD(g_BuildPlacementTileXY) + 1 )
       {
-        if ( BuildCursor_IsPlacementValid(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
+        if ( BuildCursor_IsPlacementValid(v1, SHIDWORD(g_BuildPlacementTileXY), g_BuildCursorBuildingType, g_SelectedUnitIndex) )
         {
           v2 = (unsigned __int16)v2;
           (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -9834,7 +9834,7 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
           return result;
         }
 LABEL_26:
-        SpriteForChar = DLX_GetSpriteForChar(dword_5202BC, 8);
+        SpriteForChar = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 8);
         LODWORD(result) = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
                             v3,
                             SpriteForChar,
@@ -9879,24 +9879,24 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   int v22[9]; // [esp+0h] [ebp-24h] BYREF
 
   Debug_Log(a2, a3, a1, (int)aBuildbuildingD, a1);
-  dword_531CD4 = a1;
+  g_BuildCursorBuildingType = a1;
   v5 = 53 * (a1 + 2);
-  dword_531CD0 = 0;
-  v6 = byte_54512C;
-  v7 = dword_544CFC >> byte_54512C;
+  g_BuildPlacementLoopDone = 0;
+  v6 = g_CursorCoordShift;
+  v7 = g_MouseCursorRawX >> g_CursorCoordShift;
   *(int *)((char *)&g_BuildBuildingActionWidgetStateBase + v5) = 2;
   *(int (**)())((char *)&g_BuildBuildingActionWidgetHandlerBase + v5) = BuildCursor_HandleCancelButtonPress;
   v8 = gameData;
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))BuildCursor_DrawPlacementOverlay;
-  LODWORD(qword_531CD8) = *(_DWORD *)(gameData + 140008)
+  g_WorldMapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))BuildCursor_DrawPlacementOverlay;
+  LODWORD(g_BuildPlacementTileXY) = *(_DWORD *)(gameData + 140008)
                         + ((v7 - 32 - (__CFSHL__((v7 - 32) >> 31, 6) + ((v7 - 32) >> 31 << 6))) >> 6);
-  HIDWORD(qword_531CD8) = *(_DWORD *)(gameData + 140012)
-                        + (((dword_544D00 >> v6)
+  HIDWORD(g_BuildPlacementTileXY) = *(_DWORD *)(gameData + 140012)
+                        + (((g_MouseCursorRawY >> v6)
                           - 16
-                          - (__CFSHL__(((dword_544D00 >> v6) - 16) >> 31, 6)
-                           + (((dword_544D00 >> v6) - 16) >> 31 << 6))) >> 6);
+                          - (__CFSHL__(((g_MouseCursorRawY >> v6) - 16) >> 31, 6)
+                           + (((g_MouseCursorRawY >> v6) - 16) >> 31 << 6))) >> 6);
   WorldMap_RedrawViewport(1);
-  while ( !dword_531CD0 )
+  while ( !g_BuildPlacementLoopDone )
   {
     DD_Pump((int)&g_RenderState, v8, (char)BuildCursor_DrawPlacementOverlay);
     WorldMap_RedrawFrame(v8);
@@ -9906,28 +9906,28 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
       break;
     }
     WorldMap_HandleScrollKeysAndIdle(v9);
-    v10 = (((dword_544CFC >> byte_54512C)
+    v10 = (((g_MouseCursorRawX >> g_CursorCoordShift)
           - 32
-          - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-           + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
+          - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
+           + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
         + *(_DWORD *)(gameData + 140008);
-    v8 = qword_531CD8;
+    v8 = g_BuildPlacementTileXY;
     if ( __PAIR64__(
            *(_DWORD *)(gameData + 140012)
-         + (((dword_544D00 >> byte_54512C)
+         + (((g_MouseCursorRawY >> g_CursorCoordShift)
            - 16
-           - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-            + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6),
-           v10) != qword_531CD8 )
+           - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+            + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6),
+           v10) != g_BuildPlacementTileXY )
     {
-      v8 = HIDWORD(qword_531CD8);
-      HIDWORD(qword_531CD8) = *(_DWORD *)(gameData + 140012)
-                            + (((dword_544D00 >> byte_54512C)
+      v8 = HIDWORD(g_BuildPlacementTileXY);
+      HIDWORD(g_BuildPlacementTileXY) = *(_DWORD *)(gameData + 140012)
+                            + (((g_MouseCursorRawY >> g_CursorCoordShift)
                               - 16
-                              - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-                               + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6);
-      v11 = qword_531CD8;
-      LODWORD(qword_531CD8) = v10;
+                              - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+                               + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6);
+      v11 = g_BuildPlacementTileXY;
+      LODWORD(g_BuildPlacementTileXY) = v10;
       WorldMap_RedrawTileIfVisible(v11, v8);
       if ( a1 == 2 || a1 == 1 )
       {
@@ -9937,12 +9937,12 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
         WorldMap_RedrawTileIfVisible(v15, v8);
         WorldMap_RedrawTileIfVisible(v13, v8);
       }
-      WorldMap_RedrawTileIfVisible(qword_531CD8, SHIDWORD(qword_531CD8));
+      WorldMap_RedrawTileIfVisible(g_BuildPlacementTileXY, SHIDWORD(g_BuildPlacementTileXY));
       if ( a1 == 2 || a1 == 1 )
       {
-        WorldMap_RedrawTileIfVisible(qword_531CD8 + 1, SHIDWORD(qword_531CD8));
-        WorldMap_RedrawTileIfVisible(qword_531CD8, HIDWORD(qword_531CD8) + 1);
-        WorldMap_RedrawTileIfVisible(qword_531CD8 + 1, HIDWORD(qword_531CD8) + 1);
+        WorldMap_RedrawTileIfVisible(g_BuildPlacementTileXY + 1, SHIDWORD(g_BuildPlacementTileXY));
+        WorldMap_RedrawTileIfVisible(g_BuildPlacementTileXY, HIDWORD(g_BuildPlacementTileXY) + 1);
+        WorldMap_RedrawTileIfVisible(g_BuildPlacementTileXY + 1, HIDWORD(g_BuildPlacementTileXY) + 1);
       }
     }
     if ( DD_IsFlipping((int)&g_RenderState) )
@@ -9950,7 +9950,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
       if ( a1 == 3 )
       {
         v8 = g_SelectedUnitIndex;
-        if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, g_SelectedUnitIndex, a4) == 1 )
+        if ( Trap_New(g_BuildPlacementTileXY, SHIDWORD(g_BuildPlacementTileXY), v16, g_SelectedUnitIndex, a4) == 1 )
         {
           Win_PlayModeChangeFrameTransition(aZakl_pul, 1, v20, v8, 3u);
           v22[0] = (int)g_BuildBuildingCompletionMessageStrings[0];
@@ -9958,7 +9958,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
           v22[2] = (int)g_BuildBuildingCompletionMessageStrings[2];
           UI_ShowInfoWindow(v22[(unsigned __int8)g_LanguageIndex], 0, v21, 3u, (int)&v22[3], (int)&g_BuildBuildingCompletionMessageStrings[3]);
           Render_Begin((int)&g_RenderState, 0, (char)&v22[3]);
-          dword_531CD0 = 1;
+          g_BuildPlacementLoopDone = 1;
           break;
         }
       }
@@ -9966,7 +9966,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
       {
         v8 = g_SelectedUnitIndex;
         if ( ((BOOL (__cdecl *)(__int64, int, int, double, char *, int))Building_New)(
-               qword_531CD8,
+               g_BuildPlacementTileXY,
                a1,
                g_SelectedUnitIndex,
                a4,
@@ -9975,7 +9975,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
         {
           Audio_PlaySoundEffectByName((int)aStruktur_2, 64);
           Render_Begin((int)&g_RenderState, 0, (char)BuildCursor_DrawPlacementOverlay);
-          dword_531CD0 = 1;
+          g_BuildPlacementLoopDone = 1;
           break;
         }
       }
@@ -9985,7 +9985,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   *(int *)((char *)&g_BuildBuildingActionWidgetStateBase + v17) = 1;
   *(int (**)())((char *)&g_BuildBuildingActionWidgetHandlerBase + v17) = (int (*)())BuildCursor_RequestExit;
   UIWidget_RefreshActionButtonState((int)&g_BuildBuildingActionWidgetTable + v17, 1);
-  dword_52698C = 0;
+  g_WorldMapTileOverlayDrawHook = 0;
   return WorldMap_RedrawViewport(v18);
 }
 // 42A425: variable 'v9' is possibly undefined
@@ -10018,9 +10018,9 @@ int  UI_DrawNoticeBoxSmall(DWORD a1, int a2)
   int SpriteForChar; // eax
   int tax_rate; // ecx
 
-  g_RenderDevice = &unk_51D4C0;
-  Render_SaveBackbuffer((int)&unk_51D4C0);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 198, 208, 0x104u, 0xDAu, 0xD0u, 0xC6u);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_SaveBackbuffer((int)&g_MainRenderDevice);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 198, 208, 0x104u, 0xDAu, 0xD0u, 0xC6u);
   Render_ReleaseSurface(5, a1);
   tax_rate = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
   UI_DrawTextFmt(208, 208, 260, 198, 3, aD_D, tax_rate / 10, tax_rate % 10);
@@ -10052,10 +10052,10 @@ int  UI_DrawConfirmTop(DWORD a1, int a2)
   int result; // eax
 
   v2 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, a1);
-  Render_SaveBackbuffer((int)&unk_51D4C0);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 360, 548, 0x259u, 0x17Cu, 0x224u, 0x168u);
+  Render_SaveBackbuffer((int)&g_MainRenderDevice);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 360, 548, 0x259u, 0x17Cu, 0x224u, 0x168u);
   result = UI_DrawTextFmt(548, 548, 601, 360, 3, aD_8, g_BuildingEconomyDialogPendingPeasantTransfer);
   g_RenderDevice = v2;
   return result;
@@ -10071,10 +10071,10 @@ int  UI_DrawConfirmBottom(DWORD a1, int a2)
   int result; // eax
 
   v2 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, a1);
-  Render_SaveBackbuffer((int)&unk_51D4C0);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 272, 548, 0x259u, 0x124u, 0x224u, 0x110u);
+  Render_SaveBackbuffer((int)&g_MainRenderDevice);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x124u, 0x224u, 0x110u);
   result = UI_DrawTextFmt(548, 548, 601, 272, 3, aD_9, g_BuildingEconomyDialogPendingGoldTransfer);
   g_RenderDevice = v2;
   return result;
@@ -10323,14 +10323,14 @@ int  BuildingEconomyDialog_CommitTransfers(
   }
   UI_DrawConfirmTop(a3, a4);
   UI_DrawConfirmBottom(a3, a4);
-  g_RenderDevice = &unk_51D4C0;
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
   Render_ReleaseSurface(16, a3);
-  UI_DrawTextFmt((int)&unk_51D4C0, 0, 370, 20, 2, (int)aD_47);
-  g_RenderDevice = &unk_51D4C0;
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
+  UI_DrawTextFmt((int)&g_MainRenderDevice, 0, 370, 20, 2, (int)aD_47);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, a3);
-  return UI_DrawTextFmt((int)&unk_51D4C0, 545, 602, 30, 3, (int)aD_46);
+  return UI_DrawTextFmt((int)&g_MainRenderDevice, 545, 602, 30, 3, (int)aD_46);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
@@ -10686,14 +10686,14 @@ int  BuildingEconomyDialog_Run(int a1)
   BuildingTransferTargetList_Rebuild(a1, 1);
   g_BuildingEconomyDialogPendingPeasantTransfer = 0;
   g_BuildingEconomyDialogPendingGoldTransfer = 0;
-  palette_buffer = byte_526A70;
+  palette_buffer = g_CastleScreenPaletteBuffer;
   memset(palette_buffer, 0, 0x400u);
   if ( player_has_religion )
     background_path = aCastle_chrDw_1;
   else
     background_path = aCastle_pogDw_1;
   RenderSurface_InvokeSlot48LoadPCX(
-    (_DWORD *)(uintptr_t)(unsigned int)dword_5202E0,
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
     background_path,
     0,
     (uintptr_t)palette_buffer);
@@ -10710,21 +10710,21 @@ int  BuildingEconomyDialog_Run(int a1)
   else
     resource_base_path = aCastle_pogDw_2;
   Palette_LoadOrBuildBlendLookupTable(resource_base_path, (int)(uintptr_t)palette_buffer, (int)dialog_sprite_set, 0);
-  g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingEconomyDialogSpriteSet, (unsigned __int8)g_LanguageIndex);
   Compat_RenderDeviceDrawMenuSprite(267, 149, SpriteForChar, 0);
-  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
-  g_RenderDevice = &unk_51D4C0;
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
+  g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, 0);
-  Render_LoadResourceSprite_v4(dword_526A2C, palette_buffer, 0, (char)&unk_51D4C0, 0);
-  Render_LoadResourceSprite_v4(5, palette_buffer, 0, (char)&unk_51D4C0, 0);
-  Render_LoadResourceSprite_v4(9, palette_buffer, 0, (char)&unk_51D4C0, 0);
-  Render_LoadResourceSprite_v4(16, palette_buffer, 0, (char)&unk_51D4C0, 0);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(5, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(9, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(16, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
   UI_DrawTextFmt(267, 267, 343, 90, 2, aD_32, *(signed char *)(a1 + 434));
   UI_DrawTextFmt(444, 444, 503, 198, 3, aD_33, *(unsigned __int16 *)(a1 + 442));
   UI_DrawNoticeBoxSmall(0, 0);
-  g_RenderDevice = &unk_51D4C0;
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
   Render_ReleaseSurface(16, 0);
   UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(g_BuildingEconomyDialogBuilding + 430));
   BuildingEconomyDialog_EnsureWidgets();
@@ -10733,11 +10733,11 @@ int  BuildingEconomyDialog_Run(int a1)
   BuildingTransferTargetList_Draw((int)(uintptr_t)palette_buffer, 0);
   UI_DrawConfirmTop(0, 0);
   UI_DrawConfirmBottom(0, 0);
-  g_RenderDevice = &unk_51D4C0;
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
+  g_RenderDevice = &g_MainRenderDevice;
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, 0);
   UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, palette_buffer, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, palette_buffer, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
@@ -10768,7 +10768,7 @@ int  BuildingEconomyDialog_Run(int a1)
   BuildingTransferTargetList_FreeSpriteSet();
   DLXSpriteSet_ReleaseAndClear(&g_BuildingEconomyDialogSpriteSet);
   Render_Pump();
-  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -11094,7 +11094,7 @@ int  Trap_ShowPitfallDiscoveryDialog(int a1, int a2, char a3, DWORD a4)
   v35 = a1;
   v36 = a2;
   v37 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
+  g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
   v5 = (_DWORD *)Mem_Alloc(4112, v4, a3, a4);
   if ( v5 )
@@ -11150,7 +11150,7 @@ int  Trap_ShowPitfallDiscoveryDialog(int a1, int a2, char a3, DWORD a4)
   }
   UI_DrawTextFmt((int)&v30, v38 + 30, v38 + 250, v32 + 42, 3, v29[(unsigned __int8)g_LanguageIndex]);
 LABEL_9:
-  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   Render_Present((int)g_RenderState);
   v39 = v38 + 175;
   v34 = v38 + 220;
@@ -11165,17 +11165,17 @@ LABEL_9:
     do
       DD_Pump((int)g_RenderState, v15);
     while ( !DD_IsFlipping((int)g_RenderState) );
-    if ( dword_544CFC >> byte_54512C >= v15
-      && dword_544D00 >> byte_54512C >= v16
-      && dword_544CFC >> byte_54512C <= v40
-      && dword_544D00 >> byte_54512C <= v17 )
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= v15
+      && g_MouseCursorRawY >> g_CursorCoordShift >= v16
+      && g_MouseCursorRawX >> g_CursorCoordShift <= v40
+      && g_MouseCursorRawY >> g_CursorCoordShift <= v17 )
     {
       break;
     }
-    if ( dword_544CFC >> byte_54512C >= v39
-      && dword_544D00 >> byte_54512C >= v14
-      && dword_544CFC >> byte_54512C <= v34
-      && dword_544D00 >> byte_54512C <= v33 )
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= v39
+      && g_MouseCursorRawY >> g_CursorCoordShift >= v14
+      && g_MouseCursorRawX >> g_CursorCoordShift <= v34
+      && g_MouseCursorRawY >> g_CursorCoordShift <= v33 )
     {
       Trap_ClearTileOwnerMask(v35, v36);
       break;
@@ -11403,33 +11403,33 @@ int  GodAnger(DWORD a1, int a2, char a3)
     for ( i = 0; i < 300; ++i )
     {
       v12 = (__lock *)i;
-      Palette_CrossfadeStep((int *)&unk_51D4C0, v23, v12, 450);
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, v23, v12, 450);
     }
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     SpriteForChar = DLX_GetSpriteForChar((int)v26, 0);
     Compat_RenderDeviceDrawMenuSprite(16, 100, SpriteForChar, 1);
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_lightning_draw", (int)a1, (int)(uintptr_t)v26, SpriteForChar, 0);
     Audio_PlayArtifactSound(0);
-    Palette_CrossfadeStep((int *)&unk_51D4C0, v24, 150, 200);
+    Palette_CrossfadeStep((int *)&g_MainRenderDevice, v24, 150, 200);
     Timer_BusyWaitWithCallback(10, 0, 0);
     v22 = DLX_GetSpriteWidth((int)v26, 0) + 16;
     SpriteHeight = DLX_GetSpriteHeight((int)v26, 0);
     v18 = 150;
-    Render_FillRect((_DWORD *)dword_5202E0, 0, 16, 50, SpriteHeight + 200, v22, 0x32u, 0x10u);
+    Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 50, SpriteHeight + 200, v22, 0x32u, 0x10u);
     do
     {
       v19 = (__lock *)v18;
       v18 -= 60;
-      Palette_CrossfadeStep((int *)&unk_51D4C0, v24, v19, 200);
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, v24, v19, 200);
     }
     while ( v18 > 0 );
-    Palette_CrossfadeStep((int *)&unk_51D4C0, v23, (__lock *)0x96, 200);
+    Palette_CrossfadeStep((int *)&g_MainRenderDevice, v23, (__lock *)0x96, 200);
     for ( j = 0; j < 150; ++j )
     {
       v21 = (__lock *)j;
-      Palette_CrossfadeStep((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 150);
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, v21, 150);
     }
-    Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_5202F4);
+    Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_MapPalettePtr);
     DLXSpriteSet_ReleaseAndClear((int *)&v26);
     g_RenderDevice = v27;
     Render_Present((int)g_RenderState);
@@ -11688,7 +11688,7 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
   int v13; // eax
 
   (void)this;
-  scroll_deadline = 16 - *(unsigned __int8 *)(gameData + 147171) + dword_532040;
+  scroll_deadline = 16 - *(unsigned __int8 *)(gameData + 147171) + g_BattleViewportScrollRepeatDelayBias;
   v3 = Time_Now(0, 0);
   if ( v3 > scroll_deadline && !Input_IsKeyPressed(56) )
   {
@@ -11723,16 +11723,16 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
   }
   result = *(__int16 *)(40
                       * (*(_DWORD *)(g_MapData + 808)
-                       + (((dword_544CFC >> byte_54512C)
+                       + (((g_MouseCursorRawX >> g_CursorCoordShift)
                          - 32
-                         - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-                          + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6))
+                         - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
+                          + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6))
                       + g_MapData
                       + 2
-                      * ((((dword_544D00 >> byte_54512C)
+                      * ((((g_MouseCursorRawY >> g_CursorCoordShift)
                          - 16
-                         - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-                          + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6)
+                         - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+                          + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
                        + *(_DWORD *)(g_MapData + 812))
                       + 1534);
   if ( result == -1 )
@@ -11741,30 +11741,30 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
     if ( result )
     {
       Render_Pump();
-      v8 = dword_544CFC >> byte_54512C;
-      v9 = dword_544D00 >> byte_54512C;
+      v8 = g_MouseCursorRawX >> g_CursorCoordShift;
+      v9 = g_MouseCursorRawY >> g_CursorCoordShift;
       while ( DD_IsLost((int)g_RenderState) )
       {
         DD_Pump((int)g_RenderState, v9);
-        v10 = (dword_544CFC >> byte_54512C) - v8;
+        v10 = (g_MouseCursorRawX >> g_CursorCoordShift) - v8;
         if ( v10 <= 0 )
-          v10 = v8 - (dword_544CFC >> byte_54512C);
+          v10 = v8 - (g_MouseCursorRawX >> g_CursorCoordShift);
         if ( v10 < 8 )
         {
-          v13 = (dword_544D00 >> byte_54512C) - v9;
+          v13 = (g_MouseCursorRawY >> g_CursorCoordShift) - v9;
           if ( v13 <= 0 )
-            v13 = v9 - (dword_544D00 >> byte_54512C);
+            v13 = v9 - (g_MouseCursorRawY >> g_CursorCoordShift);
           if ( v13 < 8 )
             continue;
         }
-        *(_DWORD *)(g_MapData + 808) += ((dword_544CFC >> byte_54512C)
+        *(_DWORD *)(g_MapData + 808) += ((g_MouseCursorRawX >> g_CursorCoordShift)
                                           - v8
-                                          - (__CFSHL__(((dword_544CFC >> byte_54512C) - v8) >> 31, 3)
-                                           + 8 * (((dword_544CFC >> byte_54512C) - v8) >> 31))) >> 3;
-        *(_DWORD *)(g_MapData + 812) += ((dword_544D00 >> byte_54512C)
+                                          - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - v8) >> 31, 3)
+                                           + 8 * (((g_MouseCursorRawX >> g_CursorCoordShift) - v8) >> 31))) >> 3;
+        *(_DWORD *)(g_MapData + 812) += ((g_MouseCursorRawY >> g_CursorCoordShift)
                                           - v9
-                                          - (__CFSHL__(((dword_544D00 >> byte_54512C) - v9) >> 31, 3)
-                                           + 8 * (((dword_544D00 >> byte_54512C) - v9) >> 31))) >> 3;
+                                          - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - v9) >> 31, 3)
+                                           + 8 * (((g_MouseCursorRawY >> g_CursorCoordShift) - v9) >> 31))) >> 3;
         if ( *(int *)(g_MapData + 808) < 0 )
           *(_DWORD *)(g_MapData + 808) = 0;
         v11 = *(_DWORD *)(g_MapData + 804);
@@ -11776,8 +11776,8 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
         if ( *(_DWORD *)(g_MapData + 812) + 7 > v12 )
           *(_DWORD *)(g_MapData + 812) = v12 - 7;
         UnitBattle_RedrawVisibleGrid();
-        v8 = dword_544CFC >> byte_54512C;
-        v9 = dword_544D00 >> byte_54512C;
+        v8 = g_MouseCursorRawX >> g_CursorCoordShift;
+        v9 = g_MouseCursorRawY >> g_CursorCoordShift;
       }
       UnitBattle_RedrawVisibleGrid();
       return Render_Present((int)g_RenderState);

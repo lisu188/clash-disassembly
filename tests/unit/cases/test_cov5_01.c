@@ -61,7 +61,7 @@ static void cov5_01_install_safe_argctx(unsigned char *argnode,
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)head_node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* =========================================================================
@@ -80,8 +80,8 @@ TEST(cov5_01_mathmod, token_expect_exact_mismatch_reaches_label20) {
   static _DWORD result_slot[16];
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(result_slot, 0, sizeof result_slot);
   cov5_01_install_safe_argctx(argnode, funcrec, symnode, 0 /* empty chain */);
@@ -99,16 +99,16 @@ TEST(cov5_01_mathmod, token_expect_exact_mismatch_reaches_label20) {
   cov5_01_stack_prime(0);
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 TEST(cov5_01_mathmod, token_expect_atmost_mode_reaches_first_parse_failure) {
   static _DWORD result_slot[16];
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(result_slot, 0, sizeof result_slot);
   cov5_01_install_safe_argctx(argnode, funcrec, symnode, 0 /* empty chain */);
@@ -128,8 +128,8 @@ TEST(cov5_01_mathmod, token_expect_atmost_mode_reaches_first_parse_failure) {
   cov5_01_stack_prime(2);
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* Documented hard-ceiling attempt (harmless, isolated): a real 2-argument
@@ -142,8 +142,8 @@ TEST(cov5_01_mathmod, real_two_arg_chain_hard_ceiling_attempt) {
   static _DWORD funcrec[8], symnode[8];
   static unsigned char val1[32], val2[32];
   static _DWORD result_slot[16];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(node1, 0, sizeof node1);
   memset(node2, 0, sizeof node2);
@@ -164,8 +164,8 @@ TEST(cov5_01_mathmod, real_two_arg_chain_hard_ceiling_attempt) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathMod((int)(intptr_t)result_slot, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* =========================================================================
@@ -182,8 +182,8 @@ TEST(cov5_01_nthfunction, token_expect_atmost_mode_reaches_first_parse_call) {
   static _DWORD out[8];
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(out, 0, sizeof out);
   cov5_01_install_safe_argctx(argnode, funcrec, symnode, 0 /* empty chain */);
@@ -193,8 +193,8 @@ TEST(cov5_01_nthfunction, token_expect_atmost_mode_reaches_first_parse_call) {
   cov5_01_stack_prime(2);
   TOUCH(Rules_NthFunction((int)(intptr_t)out, 0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* =========================================================================
@@ -212,8 +212,8 @@ TEST(cov5_01_nthfunction, token_expect_atmost_mode_reaches_first_parse_call) {
 TEST(cov5_01_mathcsch, real_float_arg_hard_ceiling_attempt) {
   static unsigned char argnode[256], node[32], val[32];
   static _DWORD funcrec[8], symnode[8];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(node, 0, sizeof node);
   memset(val, 0, sizeof val);
@@ -227,8 +227,8 @@ TEST(cov5_01_mathcsch, real_float_arg_hard_ceiling_attempt) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathCsch(0, 0, 0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* =========================================================================
@@ -307,20 +307,20 @@ TEST(cov5_01_exprconstraint, safe_token_tag_primed_shared_slot) {
   static _DWORD fake54E694_table[4];
   static _DWORD sharedbuf[16];
   static __int16 tokbuf[8];
-  int saved54E694 = dword_54E694;
+  int saved54E694 = g_ConstraintHashTable;
 
   memset(fake54E694_table, 0, sizeof fake54E694_table);
   memset(sharedbuf, 0, sizeof sharedbuf);
   memset(tokbuf, 0, sizeof tokbuf);
   tokbuf[0] = 12; /* Rules_BuildLHSNodeFromToken's safe Rules_CreateLHSParseNode() dispatch */
 
-  dword_54E694 = (int)(intptr_t)fake54E694_table;
+  g_ConstraintHashTable = (int)(intptr_t)fake54E694_table;
   Mem_InitReserveBlock(0, 0);
 
   cov5_01_stack_prime((int)(intptr_t)sharedbuf);
   TOUCH(Rules_ExpressionConstraintsCompatible(tokbuf));
 
-  dword_54E694 = saved54E694;
+  g_ConstraintHashTable = saved54E694;
 }
 
 /* =========================================================================
@@ -417,10 +417,10 @@ static int *cov5_01_register_fake_class(const char *name) {
   classRecord[26] = (_DWORD)(intptr_t)scopeInfo;
 
   classTable[bucket % 0xA7u] = (_DWORD)(intptr_t)classRecord;
-  dword_51AD68 = (int)(intptr_t)classTable;
+  g_DefclassHashTable = (int)(intptr_t)classTable;
 
   fakeModule[6] = 0;
-  dword_51A9B0 = (int)(intptr_t)fakeModule;
+  g_Clips_CurrentModule = (int)(intptr_t)fakeModule;
 
   return (int *)(intptr_t)classRecord;
 }
@@ -459,9 +459,9 @@ TEST(cov5_01_listinstances, class_lookup_by_module_hard_ceiling_attempt) {
 TEST(cov5_01_listinstances, scope_walk_one_instance) {
   static _DWORD fakeInstance[32];
   int *fakeClass;
-  int saved51AD0C = dword_51AD0C;
-  int saved51AD68 = dword_51AD68;
-  int saved51A9B0 = dword_51A9B0;
+  int saved51AD0C = g_Clips_InstanceListHead;
+  int saved51AD68 = g_DefclassHashTable;
+  int saved51A9B0 = g_Clips_CurrentModule;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -470,15 +470,15 @@ TEST(cov5_01_listinstances, scope_walk_one_instance) {
   memset(fakeInstance, 0, sizeof fakeInstance);
   fakeInstance[11] = (_DWORD)(intptr_t)fakeClass; /* offset44: owning class ptr */
   ((unsigned char *)fakeInstance)[24] |= 2;        /* skip Rules_GetInstanceClassName's own risky deref */
-  dword_51AD0C = (int)(intptr_t)fakeInstance;
+  g_Clips_InstanceListHead = (int)(intptr_t)fakeInstance;
 
   /* Reconstructs Rules_GetNextInstanceInScope's lost v1->v3 hand-off. */
   cov5_01_stack_prime((int)(intptr_t)fakeInstance);
   TOUCH(Rules_ListInstancesForClassOrModule(0, 0, 0, 0));
 
-  dword_51AD0C = saved51AD0C;
-  dword_51AD68 = saved51AD68;
-  dword_51A9B0 = saved51A9B0;
+  g_Clips_InstanceListHead = saved51AD0C;
+  g_DefclassHashTable = saved51AD68;
+  g_Clips_CurrentModule = saved51A9B0;
 }
 
 /* =========================================================================
@@ -539,8 +539,8 @@ TEST(cov5_01_defgeneric, clear_defgenerics_one_entry_loop_attempt) {
   static _DWORD itemArray[8];
   static _DWORD moduleItemRecord[8];
   static _DWORD fakeDefgeneric[64];
-  int saved51A9B0 = dword_51A9B0;
-  int saved54E6A4 = dword_54E6A4;
+  int saved51A9B0 = g_Clips_CurrentModule;
+  int saved54E6A4 = g_DefgenericModuleItemIndex;
 
   memset(fakeModule, 0, sizeof fakeModule);
   memset(itemArray, 0, sizeof itemArray);
@@ -553,14 +553,14 @@ TEST(cov5_01_defgeneric, clear_defgenerics_one_entry_loop_attempt) {
   fakeDefgeneric[4] = 0;  /* offset+16: Class_Enum(v2,...)'s "next" link -> end */
   fakeDefgeneric[8] = 0;  /* offset+32: method count -> 0, skips the risky walk */
 
-  dword_54E6A4 = 0;
-  dword_51A9B0 = (int)(intptr_t)fakeModule;
+  g_DefgenericModuleItemIndex = 0;
+  g_Clips_CurrentModule = (int)(intptr_t)fakeModule;
 
   cov5_01_stack_prime((int)(intptr_t)fakeDefgeneric);
   TOUCH(Defgeneric_ClearDefgenerics());
 
-  dword_51A9B0 = saved51A9B0;
-  dword_54E6A4 = saved54E6A4;
+  g_Clips_CurrentModule = saved51A9B0;
+  g_DefgenericModuleItemIndex = saved54E6A4;
 }
 
 /* =========================================================================

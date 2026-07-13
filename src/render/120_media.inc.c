@@ -59,7 +59,7 @@ void  CAviDecompressor_Init(
 
   v4 = *a1;
   v7[0] = 0;
-  if ( !(**a2)(a2, &unk_51C9F8, v7) )
+  if ( !(**a2)(a2, &g_AviQueryInterfaceIid, v7) )
   {
     *(_DWORD *)(v4 + 1952) = a2;
     CAviDecompressor_ApplyDecoderFormatParams(a4, a3);
@@ -264,7 +264,7 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
   v21 = 0;
   if ( !*(_BYTE *)(v4 + 2062) )
   {
-    v17 = *(RECT *)dword_54D340;
+    v17 = *(RECT *)g_AviFrameRectInitScratch;
     v17.left = a2;
     v17.top = a4;
     v17.right = *(_DWORD *)(*(_DWORD *)(v4 + 151) + 4) + a2;
@@ -387,7 +387,7 @@ void  CAviDecompressor_BlitTo(int *a1, LONG a2, int a3, LONG a4)
   v4 = *a1;
   if ( *(_BYTE *)(*a1 + 2191) )
   {
-    v9 = *(RECT *)dword_54E920;
+    v9 = *(RECT *)g_AviDecompressorBlitRectTemplate;
     v9.left = a2;
     v9.top = a4;
     v5 = CAviDecompressor_GetVideoFormat(v4);
@@ -3911,7 +3911,7 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
     v9 = 0;
     return CRT_ThrowExcStringException();
   }
-  else if ( (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 2013))(*(_DWORD *)(a1 + 2013), &unk_51C9F8, a1 + 2017) )
+  else if ( (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 2013))(*(_DWORD *)(a1 + 2013), &g_AviQueryInterfaceIid, a1 + 2017) )
   {
     ExcString_Ctor();
     v9 = 3;
@@ -3959,7 +3959,7 @@ int  AviPlayer_CreateOverlaySurface(int a1, int a2, int a3)
   v7[26] = 16448;
   result = (*(int (__stdcall **)(int, _DWORD *, int, _DWORD))(*(_DWORD *)v5 + 24))(v5, v7, a1 + 1960, 0);
   if ( !result )
-    return (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &unk_51C9F8, a1 + 1964);
+    return (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &g_AviQueryInterfaceIid, a1 + 1964);
   return result;
 }
 // 46955F: variable 'v5' is possibly undefined
@@ -3998,7 +3998,7 @@ int  AviPlayer_CreateOverlaySurfaceAndEnable(int a1, int a2)
   result = (*(int (__stdcall **)(int, int *, int, _DWORD))(*(_DWORD *)v6 + 24))(v6, &v8, a1 + 1960, 0);
   if ( !result )
   {
-    result = (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &unk_51C9F8, a1 + 1964);
+    result = (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &g_AviQueryInterfaceIid, a1 + 1964);
     *(_BYTE *)(a1 + 1968) = 1;
     *(_BYTE *)(a1 + 2051) = 0;
   }
@@ -4526,10 +4526,10 @@ int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int a1)
 {
   unsigned int v1; // eax
 
-  v1 = 100 * dword_54D39C / a1 + 1;
+  v1 = 100 * g_AudioSampleRateHz / a1 + 1;
   LOBYTE(v1) = v1 & 0xFE;
-  dword_54D390 = v1;
-  dword_54D394 = v1;
+  g_Audio_MixChunkSampleCount = v1;
+  g_CSS_MixChunkSamplesRemaining = v1;
   return 0;
 }
 // 54D390: using guessed type int dword_54D390;
@@ -4546,10 +4546,10 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
 
   if ( g_CSS_DSoundAccelDetectEnabled )
   {
-    if ( dword_54D470 )
+    if ( g_AudioWindowHandle )
     {
-      dword_54D378 = dword_54D470;
-      if ( DirectSoundCreate(0, &dword_54D368, 0) )
+      g_DSoundCoopWindowHandle = g_AudioWindowHandle;
+      if ( DirectSoundCreate(0, &g_DirectSoundDevice, 0) )
       {
         *a1 = 0;
         return 0;
@@ -4558,16 +4558,16 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
       {
         memset_(&v3, 0);
         v3 = 96;
-        if ( (*(int (__stdcall **)(int, int))(*(_DWORD *)dword_54D368 + 16))(dword_54D368, v2) || (v4 & 0x20) != 0 )
+        if ( (*(int (__stdcall **)(int, int))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, v2) || (v4 & 0x20) != 0 )
         {
           *a1 = 0;
-          (*(void (__stdcall **)(int))(*(_DWORD *)dword_54D368 + 8))(dword_54D368);
+          (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
         else
         {
           *a1 = 1;
-          (*(void (__stdcall **)(int))(*(_DWORD *)dword_54D368 + 8))(dword_54D368);
+          (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
       }
@@ -4604,15 +4604,15 @@ int __thiscall Audio_ComputeBytesPerFrame(void *this)
   v4 = this;
   memset_(this, 0);
   v2 = 96;
-  (*(void (__stdcall **)(int, int *))(*(_DWORD *)dword_54D368 + 16))(dword_54D368, &v2);
+  (*(void (__stdcall **)(int, int *))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, &v2);
   if ( (v3 & 8) == 0 )
-    LOBYTE(dword_54D384) = dword_54D384 & 0xF7;
+    LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags & 0xF7;
   if ( (v3 & 2) == 0 )
-    LOBYTE(dword_54D384) = dword_54D384 & 0xFD;
-  result = ((dword_54D384 & 8) != 0) + 1;
-  dword_54D388 = result;
-  if ( (dword_54D384 & 2) != 0 )
-    dword_54D388 = 2 * result;
+    LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags & 0xFD;
+  result = ((g_MixerFormatFlags & 8) != 0) + 1;
+  g_CSS_SampleFrameBytes = result;
+  if ( (g_MixerFormatFlags & 2) != 0 )
+    g_CSS_SampleFrameBytes = 2 * result;
   return result;
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
@@ -4647,20 +4647,20 @@ signed int Audio_InitDSoundDevice()
   __int16 v22; // [esp+5Ah] [ebp-1Eh]
   __int16 v23; // [esp+5Ch] [ebp-1Ch]
 
-  if ( !dword_54D470 )
+  if ( !g_AudioWindowHandle )
     return 1;
-  dword_54D378 = dword_54D470;
-  dword_54D380 = 0;
-  v1 = DirectSoundCreate(0, &dword_54D368, 0);
+  g_DSoundCoopWindowHandle = g_AudioWindowHandle;
+  g_CSS_DSoundWritePrimaryMode = 0;
+  v1 = DirectSoundCreate(0, &g_DirectSoundDevice, 0);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
   Audio_ComputeBytesPerFrame(v2);
   if ( g_CSS_DSoundAccelDetectEnabled != 2
-    || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)dword_54D368 + 24))(dword_54D368, dword_54D378, 4) )
+    || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 4) )
   {
-    if ( !dword_54D380 )
+    if ( !g_CSS_DSoundWritePrimaryMode )
     {
-      v1 = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)dword_54D368 + 24))(dword_54D368, dword_54D378, 3);
+      v1 = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 3);
       if ( v1 )
         return Audio_ReturnDSoundError(v1);
       memset_(&v13, 0);
@@ -4668,63 +4668,63 @@ signed int Audio_InitDSoundDevice()
       v16 = 0;
       v13 = 20;
       v14 = 1;
-      v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)dword_54D368 + 12))(
-             dword_54D368,
+      v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+             g_DirectSoundDevice,
              v7,
-             &dword_54D370,
+             &g_DSoundPrimaryBuffer,
              0);
       if ( v1 )
         return Audio_ReturnDSoundError(v1);
       memset_(v8, 0);
       v17 = 1;
-      v18 = ((dword_54D384 & 2) != 0) + 1;
-      v19 = dword_54D39C;
-      v20 = dword_54D39C * dword_54D388;
-      v21 = dword_54D388;
-      if ( (dword_54D384 & 8) != 0 )
+      v18 = ((g_MixerFormatFlags & 2) != 0) + 1;
+      v19 = g_AudioSampleRateHz;
+      v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+      v21 = g_CSS_SampleFrameBytes;
+      if ( (g_MixerFormatFlags & 8) != 0 )
         v22 = 16;
       else
         v22 = 8;
       v23 = 0;
-      (*(void (__stdcall **)(int, __int16 *))(*(_DWORD *)dword_54D370 + 56))(dword_54D370, &v17);
+      (*(void (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &v17);
     }
   }
   else
   {
-    dword_54D380 = 1;
+    g_CSS_DSoundWritePrimaryMode = 1;
   }
-  v4 = dword_54D388 * 3 * dword_54D39C / (unsigned int)g_CSS_MixUpdateRateHz;
+  v4 = g_CSS_SampleFrameBytes * 3 * g_AudioSampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz;
   v5 = v4 + 15;
-  dword_54D36C = 0;
+  g_DSoundStreamWriteOffset = 0;
   LOWORD(v5) = (v4 + 15) & 0xFFF0;
-  if ( !dword_54D380 )
+  if ( !g_CSS_DSoundWritePrimaryMode )
   {
-    dword_54D38C = v5;
-    dword_54D398 = 16;
+    g_DSoundStreamBufferBytes = v5;
+    g_DSoundRefillThresholdBytes = 16;
     memset_(v3, 0);
     v17 = 1;
-    v18 = ((dword_54D384 & 2) != 0) + 1;
-    v19 = dword_54D39C;
-    v20 = dword_54D39C * dword_54D388;
-    v21 = dword_54D388;
-    if ( (dword_54D384 & 8) != 0 )
+    v18 = ((g_MixerFormatFlags & 2) != 0) + 1;
+    v19 = g_AudioSampleRateHz;
+    v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+    v21 = g_CSS_SampleFrameBytes;
+    if ( (g_MixerFormatFlags & 8) != 0 )
       v22 = 16;
     else
       v22 = 8;
     v23 = 0;
     memset_(20, 0);
     v13 = v6;
-    v15 = dword_54D38C;
+    v15 = g_DSoundStreamBufferBytes;
     v16 = &v17;
     v14 = 0x10000;
-    v1 = (*(int (__stdcall **)(int, int *, int *, _DWORD))(*(_DWORD *)dword_54D368 + 12))(
-           dword_54D368,
+    v1 = (*(int (__stdcall **)(int, int *, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+           g_DirectSoundDevice,
            &v13,
-           &dword_54D370,
+           &g_DSoundPrimaryBuffer,
            0);
     if ( !v1 )
     {
-      v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)dword_54D370 + 48))(dword_54D370, 0, 0, 1);
+      v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
       if ( !v1 )
         return 0;
     }
@@ -4735,37 +4735,37 @@ signed int Audio_InitDSoundDevice()
   v15 = 0;
   v16 = 0;
   v14 = 1;
-  v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)dword_54D368 + 12))(
-         dword_54D368,
+  v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+         g_DirectSoundDevice,
          v9,
-         &dword_54D370,
+         &g_DSoundPrimaryBuffer,
          0);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
   memset_(1, 0);
   v17 = v10;
-  v18 = v10 + ((dword_54D384 & 2) != 0);
-  v19 = dword_54D39C;
-  v20 = dword_54D39C * dword_54D388;
-  v21 = dword_54D388;
-  v22 = (dword_54D384 & 8) != 0 ? 16 : 8;
+  v18 = v10 + ((g_MixerFormatFlags & 2) != 0);
+  v19 = g_AudioSampleRateHz;
+  v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+  v21 = g_CSS_SampleFrameBytes;
+  v22 = (g_MixerFormatFlags & 8) != 0 ? 16 : 8;
   v23 = 0;
-  v1 = (*(int (__stdcall **)(int, __int16 *))(*(_DWORD *)dword_54D370 + 56))(dword_54D370, &v17);
+  v1 = (*(int (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &v17);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
   memset_(v11, 0);
   v12[0] = 20;
-  v1 = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)dword_54D370 + 12))(dword_54D370, v12);
+  v1 = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)g_DSoundPrimaryBuffer + 12))(g_DSoundPrimaryBuffer, v12);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
-  dword_54D38C = v12[2];
-  v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)dword_54D370 + 48))(dword_54D370, 0, 0, 1);
+  g_DSoundStreamBufferBytes = v12[2];
+  v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
-  if ( v5 + 16 >= (unsigned int)dword_54D38C )
-    dword_54D398 = 16;
+  if ( v5 + 16 >= (unsigned int)g_DSoundStreamBufferBytes )
+    g_DSoundRefillThresholdBytes = 16;
   else
-    dword_54D398 = dword_54D38C - v5;
+    g_DSoundRefillThresholdBytes = g_DSoundStreamBufferBytes - v5;
   return 0;
 }
 // 46A794: variable 'v2' is possibly undefined
@@ -4797,11 +4797,11 @@ unsigned int Audio_ReleaseDSoundDevice()
 {
   unsigned int v0; // eax
 
-  v0 = (*(int (__stdcall **)(int))(*(_DWORD *)dword_54D370 + 72))(dword_54D370);
+  v0 = (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 72))(g_DSoundPrimaryBuffer);
   if ( v0 )
     return Audio_ReturnDSoundError(v0);
-  (*(void (__stdcall **)(int))(*(_DWORD *)dword_54D370 + 8))(dword_54D370);
-  (*(void (__stdcall **)(int))(*(_DWORD *)dword_54D368 + 8))(dword_54D368);
+  (*(void (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 8))(g_DSoundPrimaryBuffer);
+  (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
   return 0;
 }
 // 54D368: using guessed type int dword_54D368;
@@ -4815,38 +4815,38 @@ signed int __cdecl Audio_InitSoundSystem(int a1, char a2)
 
   if ( g_CSS_MixUpdateRateHz < 30 )
     g_CSS_MixUpdateRateHz = 30;
-  dword_54D39C = a1;
+  g_AudioSampleRateHz = a1;
   InitializeCriticalSection(&stru_54D350);
   EnterCriticalSection(&stru_54D350);
-  dword_54D384 = ((a2 & 1) == 0) + 1;
+  g_MixerFormatFlags = ((a2 & 1) == 0) + 1;
   if ( (a2 & 4) != 0 )
-    LOBYTE(dword_54D384) = dword_54D384 | 4;
+    LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags | 4;
   else
-    LOBYTE(dword_54D384) = dword_54D384 | 8;
-  dword_54D388 = ((dword_54D384 & 8) != 0) + 1;
-  if ( (dword_54D384 & 2) != 0 )
-    dword_54D388 = 2 * (((dword_54D384 & 8) != 0) + 1);
+    LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags | 8;
+  g_CSS_SampleFrameBytes = ((g_MixerFormatFlags & 8) != 0) + 1;
+  if ( (g_MixerFormatFlags & 2) != 0 )
+    g_CSS_SampleFrameBytes = 2 * (((g_MixerFormatFlags & 8) != 0) + 1);
   v2 = Audio_InitDSoundDevice();
-  if ( v2 || (CSS_InitMixBuffers(dword_54D39C, ((dword_54D384 & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * g_CSS_MixUpdateRateHz)) != 0) )
+  if ( v2 || (CSS_InitMixBuffers(g_AudioSampleRateHz, ((g_MixerFormatFlags & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * g_CSS_MixUpdateRateHz)) != 0) )
   {
     LeaveCriticalSection(&stru_54D350);
     return v2;
   }
   else
   {
-    switch ( dword_54D384 )
+    switch ( g_MixerFormatFlags )
     {
       case 5:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
+        g_Audio_MixToOutputConvertFn = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
         goto LABEL_11;
       case 6:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
+        g_Audio_MixToOutputConvertFn = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
         goto LABEL_11;
       case 9:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
+        g_Audio_MixToOutputConvertFn = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
         goto LABEL_11;
       case 10:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
+        g_Audio_MixToOutputConvertFn = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
 LABEL_11:
         LeaveCriticalSection(&stru_54D350);
         result = 0;
@@ -4883,7 +4883,7 @@ unsigned int Audio_ShutdownSoundSystem()
 //----- (0046AD60) --------------------------------------------------------
 int __cdecl Audio_GetSoundFormatFlags(_DWORD *a1)
 {
-  *a1 = dword_54D384;
+  *a1 = g_MixerFormatFlags;
   return 0;
 }
 // 54D384: using guessed type int dword_54D384;
@@ -4896,10 +4896,10 @@ unsigned int Audio_RefreshPlayCursor()
   _BYTE v3[4]; // [esp+10h] [ebp-4h] BYREF
 
   EnterCriticalSection(&stru_54D350);
-  v0 = (*(int (__stdcall **)(int, int *, _BYTE *))(*(_DWORD *)dword_54D370 + 16))(dword_54D370, &v2, v3);
+  v0 = (*(int (__stdcall **)(int, int *, _BYTE *))(*(_DWORD *)g_DSoundPrimaryBuffer + 16))(g_DSoundPrimaryBuffer, &v2, v3);
   if ( v0 )
     return Audio_ReturnDSoundError(v0);
-  dword_54D374 = v2;
+  g_CSS_DSoundPlayCursor = v2;
   LeaveCriticalSection(&stru_54D350);
   return 0;
 }
@@ -4924,68 +4924,68 @@ unsigned int __cdecl Audio_FillDSoundBuffer(_DWORD *a1)
   _DWORD v14[5]; // [esp+2Ch] [ebp-14h] BYREF
 
   EnterCriticalSection(&stru_54D350);
-  v1 = (unsigned int)dword_54DB98 >> 2;
-  if ( (dword_54D384 & 2) != 0 )
-    v1 = (unsigned int)dword_54DB98 >> 3;
-  if ( dword_54D36C > (unsigned int)dword_54D374 )
-    v2 = dword_54D374 + dword_54D38C - dword_54D36C;
+  v1 = (unsigned int)g_CssMixBufferSizeBytes >> 2;
+  if ( (g_MixerFormatFlags & 2) != 0 )
+    v1 = (unsigned int)g_CssMixBufferSizeBytes >> 3;
+  if ( g_DSoundStreamWriteOffset > (unsigned int)g_CSS_DSoundPlayCursor )
+    v2 = g_CSS_DSoundPlayCursor + g_DSoundStreamBufferBytes - g_DSoundStreamWriteOffset;
   else
-    v2 = dword_54D374 - dword_54D36C;
-  if ( v2 > dword_54D398 )
+    v2 = g_CSS_DSoundPlayCursor - g_DSoundStreamWriteOffset;
+  if ( v2 > g_DSoundRefillThresholdBytes )
   {
     TickCount = 0;
-    v4 = v2 - dword_54D398;
+    v4 = v2 - g_DSoundRefillThresholdBytes;
 LABEL_7:
-    dword_54D3A4 = TickCount;
+    g_DSoundStallTickTimestamp = TickCount;
     goto LABEL_8;
   }
   v4 = 0;
-  if ( GetForegroundWindow() == (HWND)dword_54D378 )
+  if ( GetForegroundWindow() == (HWND)g_DSoundCoopWindowHandle )
   {
-    if ( dword_54D3A0 )
+    if ( g_CSS_AudioHadForegroundFocus )
     {
-      if ( !dword_54D3A4 || GetTickCount() < dword_54D3A4 )
+      if ( !g_DSoundStallTickTimestamp || GetTickCount() < g_DSoundStallTickTimestamp )
       {
         TickCount = GetTickCount();
         goto LABEL_7;
       }
-      if ( GetTickCount() - dword_54D3A4 > 0x3E8 )
+      if ( GetTickCount() - g_DSoundStallTickTimestamp > 0x3E8 )
       {
-        (*(void (__stdcall **)(int))(*(_DWORD *)dword_54D370 + 80))(dword_54D370);
-        (*(void (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)dword_54D370 + 48))(dword_54D370, 0, 0, 1);
-        dword_54D3A4 = 0;
+        (*(void (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer);
+        (*(void (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+        g_DSoundStallTickTimestamp = 0;
       }
     }
     else
     {
-      dword_54D3A0 = 1;
+      g_CSS_AudioHadForegroundFocus = 1;
     }
   }
   else
   {
-    dword_54D3A0 = 0;
+    g_CSS_AudioHadForegroundFocus = 0;
   }
 LABEL_8:
-  v5 = v4 / dword_54D388;
+  v5 = v4 / g_CSS_SampleFrameBytes;
   while ( v5 )
   {
-    if ( !dword_54D394 )
+    if ( !g_CSS_MixChunkSamplesRemaining )
       break;
-    if ( v5 <= dword_54D394 )
+    if ( v5 <= g_CSS_MixChunkSamplesRemaining )
       v6 = v5;
     else
-      v6 = dword_54D394;
+      v6 = g_CSS_MixChunkSamplesRemaining;
     if ( v6 > v1 )
       v6 = v1;
     v5 -= v6;
-    dword_54D394 -= v6;
+    g_CSS_MixChunkSamplesRemaining -= v6;
     CSS_TickChannelLevels(v1, v6);
     while ( 1 )
     {
-      v7 = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)dword_54D370 + 44))(
-             dword_54D370,
-             dword_54D36C,
-             v6 * dword_54D388,
+      v7 = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 44))(
+             g_DSoundPrimaryBuffer,
+             g_DSoundStreamWriteOffset,
+             v6 * g_CSS_SampleFrameBytes,
              &v11,
              &v13,
              &v12,
@@ -4996,26 +4996,26 @@ LABEL_8:
         break;
       if ( v7 != -2005401450 )
         goto LABEL_19;
-      if ( (*(int (__stdcall **)(int))(*(_DWORD *)dword_54D370 + 80))(dword_54D370) )
+      if ( (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer) )
       {
         LeaveCriticalSection(&stru_54D350);
         *a1 = 0;
         return 0;
       }
-      v8 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)dword_54D370 + 48))(dword_54D370, 0, 0, 1);
+      v8 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
       if ( v8 )
         goto LABEL_19;
     }
     if ( v13 )
-      dword_54D37C(v13 / dword_54D388, v11, 0, dword_54DBA0);
+      g_Audio_MixToOutputConvertFn(v13 / g_CSS_SampleFrameBytes, v11, 0, g_CSS_MixAccumBufferPtr);
     if ( v14[0] )
-      dword_54D37C(v14[0] / (unsigned int)dword_54D388, v12, 0, dword_54DBA0 + 4 * (v13 >> 1));
-    v10 = v14[0] + v13 + dword_54D36C;
-    dword_54D36C = v10;
-    if ( v10 >= dword_54D38C )
-      dword_54D36C = v10 - dword_54D38C;
-    v8 = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(*(_DWORD *)dword_54D370 + 76))(
-           dword_54D370,
+      g_Audio_MixToOutputConvertFn(v14[0] / (unsigned int)g_CSS_SampleFrameBytes, v12, 0, g_CSS_MixAccumBufferPtr + 4 * (v13 >> 1));
+    v10 = v14[0] + v13 + g_DSoundStreamWriteOffset;
+    g_DSoundStreamWriteOffset = v10;
+    if ( v10 >= g_DSoundStreamBufferBytes )
+      g_DSoundStreamWriteOffset = v10 - g_DSoundStreamBufferBytes;
+    v8 = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 76))(
+           g_DSoundPrimaryBuffer,
            v11,
            v13,
            v12,
@@ -5027,13 +5027,13 @@ LABEL_19:
       return Audio_ReturnDSoundError(v8);
     }
   }
-  if ( dword_54D394 )
+  if ( g_CSS_MixChunkSamplesRemaining )
   {
     *a1 = 0;
   }
   else
   {
-    dword_54D394 = dword_54D390;
+    g_CSS_MixChunkSamplesRemaining = g_Audio_MixChunkSampleCount;
     *a1 = 1;
   }
   LeaveCriticalSection(&stru_54D350);
@@ -5150,7 +5150,7 @@ int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2)
   char v15[4]; // [esp+24h] [ebp-1Ch] BYREF
   int v16; // [esp+28h] [ebp-18h]
 
-  result = (*(int (__fastcall **)(int, int))(*(_DWORD *)dword_54D4B8 + 12))(a1, a1);
+  result = (*(int (__fastcall **)(int, int))(*(_DWORD *)g_MediaFileStreamProvider + 12))(a1, a1);
   v16 = result;
   if ( !result )
     return result;
@@ -5165,7 +5165,7 @@ int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2)
         memcmp(v15, aData, 4)) )
   {
 LABEL_3:
-    (*(void (**)(void))(*(_DWORD *)dword_54D4B8 + 20))();
+    (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
     return 0;
   }
   (*(void (**)(void))(*(_DWORD *)v16 + 20))();
@@ -5221,9 +5221,9 @@ void  Audio_MixResampledVoice(int *a1)
 
   g_Audio_MixVoice_SamplesRemaining = a1[5];
   g_Audio_MixVoice_ChannelIndexArg = a1[2];
-  g_Audio_MixVoice_AccumBufferPtr = dword_54DBA0;
+  g_Audio_MixVoice_AccumBufferPtr = g_CSS_MixAccumBufferPtr;
   g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))a1[3];
-  v2 = (unsigned int *)(108 * a1[2] + dword_54DB90);
+  v2 = (unsigned int *)(108 * a1[2] + g_CssMixChannels);
   g_Audio_CurrentVoiceRecordPtr = (int)v2;
   g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))v2[26];
   g_Audio_MixVoice_LoopDirection = v2[16];
@@ -5237,7 +5237,7 @@ void  Audio_MixResampledVoice(int *a1)
     v3 = v2[15];
     LODWORD(v4) = v3 << 16;
     HIDWORD(v4) = HIWORD(v3);
-    g_Audio_MixVoice_ResampleStep = v4 / (unsigned int)dword_54DB9C;
+    g_Audio_MixVoice_ResampleStep = v4 / (unsigned int)g_CSS_MixSampleRate;
     g_Audio_MixVoice_MaxSourceAdvance = (((unsigned int)g_Audio_MixVoice_ResampleStep * (unsigned __int64)(unsigned int)a1[5]) >> 16) + 2;
 LABEL_4:
     v5 = v2[24];
@@ -5257,7 +5257,7 @@ LABEL_4:
 LABEL_11:
           g_Audio_MixVoice_LoopFinalFlag = v2[18]
                       && (v2[3] == 5 || v2[3] == 4)
-                      && ((v6 = 40 * v2[17] + dword_54DB94, *(_DWORD *)(v6 + 12) == 4) || *(_DWORD *)(v6 + 12) == 5);
+                      && ((v6 = 40 * v2[17] + g_CSS_QueuedSoundSlotTable, *(_DWORD *)(v6 + 12) == 4) || *(_DWORD *)(v6 + 12) == 5);
           v7 = *v2;
           v8 = v2[1];
           switch ( v8 )
@@ -5545,7 +5545,7 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
     LOBYTE(v6) = (a3 >> 2) + 1;
     g_Audio_MixVoice_StepIntArg = a2 >> 16;
     HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
-    return v5(((unsigned int)dword_54DB8C >> 2) + (v6 & 0xFF00));
+    return v5(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (v6 & 0xFF00));
   }
   return result;
 }
@@ -5628,7 +5628,7 @@ static unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
     LOBYTE(v6) = (a3 >> 2) + 1;
     g_Audio_MixVoice_StepIntArg = a2 >> 16;
     HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
-    return v5(((unsigned int)dword_54DB8C >> 2) + (v6 & 0xFF00));
+    return v5(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (v6 & 0xFF00));
   }
   return result;
 }
@@ -5726,7 +5726,7 @@ unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int a2, un
 //----- (0046D2B5) --------------------------------------------------------
 int __cdecl Audio_ClearGlobalMixBuffer(int a1)
 {
-  Audio_ZeroMixAccumulatorBuffer(a1, (void *)dword_54DBA0);
+  Audio_ZeroMixAccumulatorBuffer(a1, (void *)g_CSS_MixAccumBufferPtr);
   return 0;
 }
 
@@ -5738,7 +5738,7 @@ int  Audio_ZeroMixAccumulatorBuffer(int a1, void *a2)
   if ( a1 )
   {
     result = 0;
-    if ( dword_54DBA4 == 2 )
+    if ( g_CSS_MixChannelCount_54DBA4 == 2 )
       a1 *= 2;
     memset(a2, 0, 4 * a1);
   }
@@ -5862,7 +5862,7 @@ _DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5)
   {
     *a1 = g_CSSFileStream_VTable;
     CSS_Mem_FreeIfSet(a1[15]);
-    (*(void (__cdecl **)(int, int, int))(*(_DWORD *)dword_54D4B8 + 20))(a3, a5, a4);
+    (*(void (__cdecl **)(int, int, int))(*(_DWORD *)g_MediaFileStreamProvider + 20))(a3, a5, a4);
     if ( (a2 & 2) != 0 )
       j__nfree_();
     return a1;
@@ -6094,16 +6094,16 @@ int CSS_InitStreamingLocks()
   int v6; // edx
   int v7; // ecx
 
-  dword_54D3D8 = 0;
+  g_StreamServiceLockEntryCount = 0;
   InitializeCriticalSection(&CriticalSection);
   CRT_RegisterFinalizableObject(v1, v0);
-  dword_54D3F8 = 0;
+  g_CSS_MixerLockNestingCount = 0;
   InitializeCriticalSection(&stru_54D3FC);
   CRT_RegisterFinalizableObject(v3, v2);
-  dword_54D420 = 0;
+  g_CSS_StreamReadThreadLockRefCount = 0;
   InitializeCriticalSection(&stru_54D424);
   CRT_RegisterFinalizableObject(v5, v4);
-  dword_54D440 = 0;
+  g_CSS_StreamServiceThreadLockRefCount = 0;
   InitializeCriticalSection(&stru_54D444);
   return CRT_RegisterFinalizableObject(v7, v6);
 }
@@ -6137,16 +6137,16 @@ unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   result = 52 * a1;
-  v4 = (int *)(result + dword_54D3D0);
-  if ( *(_DWORD *)(result + dword_54D3D0 + 40) )
+  v4 = (int *)(result + g_SoundChannelArrayBase);
+  if ( *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
   {
     v4[10] = 0;
     if ( (v4[9] & 0xC) != 0 )
     {
       CSS_ChannelStop(a1);
-      ++dword_54D3D8;
+      ++g_StreamServiceLockEntryCount;
       EnterCriticalSection(&CriticalSection);
-      ++dword_54D3F8;
+      ++g_CSS_MixerLockNestingCount;
       EnterCriticalSection(&stru_54D3FC);
       v4[9] = 0;
       v4[11] = 0;
@@ -6160,11 +6160,11 @@ unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
           &g_CSSCloseChannel_EHScopeTable,
           1);
       v4[5] = 0;
-      --dword_54D3C4;
+      --g_CSS_ActiveVoiceCount;
       LeaveCriticalSection(&CriticalSection);
-      --dword_54D3D8;
+      --g_StreamServiceLockEntryCount;
       LeaveCriticalSection(&stru_54D3FC);
-      return dword_54D3F8--;
+      return g_CSS_MixerLockNestingCount--;
     }
     else
     {
@@ -6233,14 +6233,14 @@ void  CSS_Channel_ServiceStream(unsigned int a1)
   int v12; // [esp+0h] [ebp-14h] BYREF
   int v13; // [esp+4h] [ebp-10h]
 
-  v2 = dword_54D3D0 + 52 * a1;
-  if ( (!*(_DWORD *)(dword_54D468 + 28) || *(_DWORD *)(v2 + 28) >= *(_DWORD *)(v2 + 8))
+  v2 = g_SoundChannelArrayBase + 52 * a1;
+  if ( (!*(_DWORD *)(g_CSS_ActiveSoundDriver + 28) || *(_DWORD *)(v2 + 28) >= *(_DWORD *)(v2 + 8))
     && (*(int (**)(void))(**(_DWORD **)(v2 + 20) + 8))() )
   {
     *(_DWORD *)(v2 + 48) = 1;
     return;
   }
-  if ( *(_DWORD *)v2 && *(_DWORD *)(dword_54D468 + 28) )
+  if ( *(_DWORD *)v2 && *(_DWORD *)(g_CSS_ActiveSoundDriver + 28) )
   {
     CSS_ChannelGetPlayPosition(a1, &v12);
     if ( v12 )
@@ -6306,7 +6306,7 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
 
   v13 = a3;
   v12 = 0;
-  v9 = (_DWORD *)(52 * a1 + dword_54D3D0);
+  v9 = (_DWORD *)(52 * a1 + g_SoundChannelArrayBase);
   CSS_Channel_StoreFormatParams((int)v9, *a2);
   v10 = 3 * a2[2] / g_CSS_StreamServiceRateHz;
   LOBYTE(v10) = v10 & 0xFC;
@@ -6326,7 +6326,7 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
   v9[10] = v11;
   *v9 = v12;
   CSS_Channel_ServiceStream(a1);
-  ++dword_54D3C4;
+  ++g_CSS_ActiveVoiceCount;
 }
 // 519CB0: using guessed type int dword_519CB0;
 // 519CB4: using guessed type int dword_519CB4;
@@ -6336,7 +6336,7 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
 //----- (0046E100) --------------------------------------------------------
 int  CSS_SampleCache_FreeEntry(int *a1)
 {
-  dword_54D3BC -= a1[2];
+  g_CSS_SampleCacheBytesUsed -= a1[2];
   CSS_Mem_FreeIfSet(*a1);
   CSS_Mem_FreeIfSet(a1[4]);
   return CSS_Mem_FreeIfSet((int)a1);
@@ -6351,7 +6351,7 @@ signed int  CSS_SampleCache_EvictEntry(int **a1)
   int *v4; // eax
 
   v2 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
   {
 LABEL_7:
     v4 = *a1;
@@ -6362,11 +6362,11 @@ LABEL_7:
   else
   {
     v3 = 0;
-    while ( !*(_DWORD *)(v3 + dword_54D3D0 + 40) || *(_DWORD *)(v3 + dword_54D3D0) != **a1 || !CSS_ChannelIsPlaying(v2) )
+    while ( !*(_DWORD *)(v3 + g_SoundChannelArrayBase + 40) || *(_DWORD *)(v3 + g_SoundChannelArrayBase) != **a1 || !CSS_ChannelIsPlaying(v2) )
     {
       ++v2;
       v3 += 52;
-      if ( v2 >= dword_54D3C8 )
+      if ( v2 >= g_CssVoicePoolSize )
         goto LABEL_7;
     }
     return 0;
@@ -6383,18 +6383,18 @@ int  CSS_SampleCache_MakeRoom(int a1)
   int result; // eax
   int v4; // edx
 
-  v1 = (int **)&dword_54D3B8;
+  v1 = (int **)&g_SampleCacheListHead;
   v2 = a1;
-  while ( v2 + dword_54D3BC > dword_54D3C0 && CSS_SampleCache_EvictEntry(v1) )
+  while ( v2 + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget && CSS_SampleCache_EvictEntry(v1) )
     ;
-  result = v2 + dword_54D3BC;
-  if ( v2 + dword_54D3BC > dword_54D3C0 )
+  result = v2 + g_CSS_SampleCacheBytesUsed;
+  if ( v2 + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget )
   {
-    v4 = dword_54D3B8;
+    v4 = g_SampleCacheListHead;
     while ( 1 )
     {
-      result = v2 + dword_54D3BC;
-      if ( v2 + dword_54D3BC <= dword_54D3C0 || !*(_DWORD *)(v4 + 20) )
+      result = v2 + g_CSS_SampleCacheBytesUsed;
+      if ( v2 + g_CSS_SampleCacheBytesUsed <= g_CSS_SampleCacheByteBudget || !*(_DWORD *)(v4 + 20) )
         break;
       if ( !CSS_SampleCache_EvictEntry((int **)(v4 + 20)) )
         v4 = *(_DWORD *)(v4 + 20);
@@ -6438,9 +6438,9 @@ int  CSS_SampleCache_FindAndTouch(int a1)
   int v3; // ecx
   int v4; // ecx
 
-  if ( !dword_54D3B8 )
+  if ( !g_SampleCacheListHead )
     return 0;
-  if ( stricmp_(dword_54D3B8, a1) )
+  if ( stricmp_(g_SampleCacheListHead, a1) )
   {
     while ( *(_DWORD *)(v3 + 20) )
     {
@@ -6450,7 +6450,7 @@ int  CSS_SampleCache_FindAndTouch(int a1)
     }
     return 0;
   }
-  return CSS_SampleCache_TouchEntry(&dword_54D3B8);
+  return CSS_SampleCache_TouchEntry(&g_SampleCacheListHead);
 }
 // 46E293: variable 'v3' is possibly undefined
 // 46E2AA: variable 'v4' is possibly undefined
@@ -6466,9 +6466,9 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v0 = 0;
-  for ( i = 0; i < dword_54D3C8; v0 += 52 )
+  for ( i = 0; i < g_CssVoicePoolSize; v0 += 52 )
   {
-    if ( *(_DWORD *)(v0 + dword_54D3D0 + 48) )
+    if ( *(_DWORD *)(v0 + g_SoundChannelArrayBase + 48) )
       CSS_CloseChannel(i, 0);
     ++i;
   }
@@ -6495,15 +6495,15 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
   v6 = &g_CSSServiceStreamingChannels_EHScopeTable;
   v7 = 0;
   CSS_StreamService_NoOpHook();
-  for ( i = 0; i < dword_54D3C8; v0 += 52 )
+  for ( i = 0; i < g_CssVoicePoolSize; v0 += 52 )
   {
-    v2 = v0 + dword_54D3D0;
-    if ( *(_DWORD *)(v0 + dword_54D3D0 + 44)
+    v2 = v0 + g_SoundChannelArrayBase;
+    if ( *(_DWORD *)(v0 + g_SoundChannelArrayBase + 44)
       && *(_DWORD *)(v2 + 40)
       && (*(_BYTE *)(v2 + 36) & 0xC) != 0
       && CSS_ChannelIsPlaying(i) )
     {
-      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v0 + dword_54D3D0 + 20)
+      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v0 + g_SoundChannelArrayBase + 20)
                                                                                            + 32))(
         ExceptionList,
         v5,
@@ -6524,19 +6524,19 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
 //----- (0046E400) --------------------------------------------------------
 int __stdcall CSS_StreamReadingThreadProc(int a1)
 {
-  ++dword_54D420;
+  ++g_CSS_StreamReadThreadLockRefCount;
   EnterCriticalSection(&stru_54D424);
-  while ( dword_54D414 )
+  while ( g_CSS_StreamReadingActive )
   {
-    ++dword_54D3D8;
+    ++g_StreamServiceLockEntryCount;
     EnterCriticalSection(&CriticalSection);
     CSS_ServiceStreamingChannels();
-    LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D3D8 + 1));
-    --dword_54D3D8;
+    LeaveCriticalSection((LPCRITICAL_SECTION)(&g_StreamServiceLockEntryCount + 1));
+    --g_StreamServiceLockEntryCount;
     Sleep(1000 / g_CSS_StreamServiceRateHz);
   }
-  LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D420 + 1));
-  --dword_54D420;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_StreamReadThreadLockRefCount + 1));
+  --g_CSS_StreamReadThreadLockRefCount;
   return 0;
 }
 // 519CB0: using guessed type int dword_519CB0;
@@ -6558,10 +6558,10 @@ _DWORD *__stdcall CSS_PauseStreamReading()
   v2[1] = &j____wcpp_4_fs_handler_rtn_;
   v2[2] = &g_CSSPauseStreamReading_EHScopeTable;
   v3 = 0;
-  if ( dword_54D414 )
+  if ( g_CSS_StreamReadingActive )
   {
-    v4 = &dword_54D3D8;
-    ++dword_54D3D8;
+    v4 = &g_StreamServiceLockEntryCount;
+    ++g_StreamServiceLockEntryCount;
     EnterCriticalSection(&CriticalSection);
     v3 = 1;
     SuspendThread(hThread);
@@ -6588,20 +6588,20 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
   int v2; // esi
   int v3; // eax
 
-  ++dword_54D440;
+  ++g_CSS_StreamServiceThreadLockRefCount;
   EnterCriticalSection(&stru_54D444);
-  while ( dword_54D45C )
+  while ( g_CSS_StreamThreadRunning )
   {
-    ++dword_54D3F8;
+    ++g_CSS_MixerLockNestingCount;
     EnterCriticalSection(&stru_54D3FC);
     v1 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       v2 = 0;
       do
       {
-        v3 = v2 + dword_54D3D0;
-        if ( *(_DWORD *)(v2 + dword_54D3D0 + 44)
+        v3 = v2 + g_SoundChannelArrayBase;
+        if ( *(_DWORD *)(v2 + g_SoundChannelArrayBase + 44)
           && *(_DWORD *)(v3 + 40)
           && (*(_BYTE *)(v3 + 36) & 0xC) != 0
           && CSS_ChannelIsPlaying(v1) )
@@ -6611,14 +6611,14 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
         ++v1;
         v2 += 52;
       }
-      while ( v1 < dword_54D3C8 );
+      while ( v1 < g_CssVoicePoolSize );
     }
-    LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D3F8 + 1));
-    --dword_54D3F8;
+    LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_MixerLockNestingCount + 1));
+    --g_CSS_MixerLockNestingCount;
     Sleep(1000 / g_CSS_StreamServiceRateHz);
   }
-  LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D440 + 1));
-  --dword_54D440;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_StreamServiceThreadLockRefCount + 1));
+  --g_CSS_StreamServiceThreadLockRefCount;
   return 0;
 }
 // 519CB0: using guessed type int dword_519CB0;
@@ -6644,18 +6644,18 @@ _DWORD *__stdcall CSS_EmptySampleCache()
   v5[1] = &j____wcpp_4_fs_handler_rtn_;
   v5[2] = &g_CSSEmptySampleCache_EHScopeTable;
   v5[3] = 0;
-  for ( i = 0; i < dword_54D3C8; v1 += 52 )
+  for ( i = 0; i < g_CssVoicePoolSize; v1 += 52 )
   {
-    result = (_DWORD *)(v1 + dword_54D3D0);
-    v3 = *(_BYTE *)(v1 + dword_54D3D0 + 36);
+    result = (_DWORD *)(v1 + g_SoundChannelArrayBase);
+    v3 = *(_BYTE *)(v1 + g_SoundChannelArrayBase + 36);
     if ( (v3 & 1) != 0 || (v3 & 2) != 0 )
       result = (_DWORD *)CSS_CloseChannel(i, 0);
     ++i;
   }
-  while ( dword_54D3B8 )
+  while ( g_SampleCacheListHead )
   {
-    v4 = (int *)dword_54D3B8;
-    dword_54D3B8 = *(_DWORD *)(dword_54D3B8 + 20);
+    v4 = (int *)g_SampleCacheListHead;
+    g_SampleCacheListHead = *(_DWORD *)(g_SampleCacheListHead + 20);
     result = (_DWORD *)CSS_SampleCache_FreeEntry(v4);
   }
   return result;
@@ -6671,9 +6671,9 @@ void  CSS_Channel_StartMemSound(unsigned int a1, int a2, int a3, int *a4, int a5
   int v8; // edx
   int v9; // ecx
 
-  CSS_Channel_StoreFormatParams(52 * a1 + dword_54D3D0, a4[1]);
-  v8 = dword_54D3D0;
-  *(_DWORD *)(v9 + dword_54D3D0 + 36) = 1;
+  CSS_Channel_StoreFormatParams(52 * a1 + g_SoundChannelArrayBase, a4[1]);
+  v8 = g_SoundChannelArrayBase;
+  *(_DWORD *)(v9 + g_SoundChannelArrayBase + 36) = 1;
   *(_DWORD *)(v9 + v8 + 48) = 0;
   *(_DWORD *)(v9 + v8 + 40) = a2;
   *(_DWORD *)(v8 + v9) = *a4;
@@ -6698,21 +6698,21 @@ int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
   v5 = -1;
   v6 = 0;
   v7 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
-  if ( dword_54D3C8 > 0 )
+  if ( g_CssVoicePoolSize > 0 )
   {
     v8 = 0;
     do
     {
-      v9 = *(_DWORD *)(v8 + dword_54D3D0 + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40) < v7 )
+      v9 = *(_DWORD *)(v8 + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + g_SoundChannelArrayBase + 40) < v7 )
       {
-        v7 = g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40);
+        v7 = g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + g_SoundChannelArrayBase + 40);
         v5 = v6;
       }
       ++v6;
       v8 += 52;
     }
-    while ( v6 < dword_54D3C8 );
+    while ( v6 < g_CssVoicePoolSize );
   }
   if ( v5 == -1 )
     return 0;
@@ -6755,17 +6755,17 @@ _DWORD * CSS_CreateSampleCacheEntry(int a1, int a2, _DWORD *a3)
   while ( v6 );
   CSS_Mem_TryAlloc(a3[1], v10);
   (*(void (**)(void))(*(_DWORD *)a1 + 20))();
-  (*(void (**)(void))(*(_DWORD *)dword_54D4B8 + 20))();
+  (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
   v10[5] = 0;
   v7 = v10 + 1;
   v10[1] = *a3;
   *++v7 = a3[1];
   v7[1] = a3[2];
-  if ( dword_54D3B8 )
-    CSS_SampleCache_AppendEntry(dword_54D3B8, (int)v10);
+  if ( g_SampleCacheListHead )
+    CSS_SampleCache_AppendEntry(g_SampleCacheListHead, (int)v10);
   else
-    dword_54D3B8 = (int)v10;
-  dword_54D3BC += a3[1];
+    g_SampleCacheListHead = (int)v10;
+  g_CSS_SampleCacheBytesUsed += a3[1];
   return v10;
 }
 // 54D3B8: using guessed type int dword_54D3B8;
@@ -6787,32 +6787,32 @@ int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5)
   v6 = -1;
   v7 = 0;
   v8 = g_CSS_SampleVoiceStealBias + g_CSS_VoiceSequenceCounter;
-  if ( dword_54D3C8 > 0 )
+  if ( g_CssVoicePoolSize > 0 )
   {
     v9 = 0;
     do
     {
-      v10 = *(_DWORD *)(v9 + dword_54D3D0 + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40) < v8 )
+      v10 = *(_DWORD *)(v9 + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + g_SoundChannelArrayBase + 40) < v8 )
       {
-        v8 = g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40);
+        v8 = g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + g_SoundChannelArrayBase + 40);
         v6 = v7;
       }
       ++v7;
       v9 += 52;
     }
-    while ( v7 < dword_54D3C8 );
+    while ( v7 < g_CssVoicePoolSize );
   }
   if ( v6 != -1 )
     CSS_CloseChannel(v6, 0);
   v11 = 52 * v6;
-  v12 = dword_54D3CC * a2[2] / 1000;
+  v12 = g_CSS_StreamBufferMs * a2[2] / 1000;
   v13 = CSS_GetFormatSampleSize(*a2);
-  *(_DWORD *)(dword_54D3D0 + v11 + 20) = CSS_FileStream_New(a1, v13 * v12);
+  *(_DWORD *)(g_SoundChannelArrayBase + v11 + 20) = CSS_FileStream_New(a1, v13 * v12);
   CSS_Channel_StartFileStream(v6, a2, a3, a4, a5, 4);
-  *(_DWORD *)(v11 + dword_54D3D0 + 44) = 1;
+  *(_DWORD *)(v11 + g_SoundChannelArrayBase + 44) = 1;
   CSS_ChannelMarkPlaying(v6);
-  return *(_DWORD *)(dword_54D3D0 + 52 * v6 + 40);
+  return *(_DWORD *)(g_SoundChannelArrayBase + 52 * v6 + 40);
 }
 // 46EB80: could not find valid save-restore pair for ebx
 // 519C8C: using guessed type int dword_519C8C[];
@@ -6832,19 +6832,19 @@ int __stdcall CSS_ResumeStream(int a1)
   if ( a1 )
   {
     v2 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + dword_54D3D0 + 40) )
+      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++v2;
-        if ( result >= 52 * dword_54D3C8 )
+        if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
       if ( v2 != -1 )
       {
-        *(_DWORD *)(result + dword_54D3D0 + 44) = 1;
+        *(_DWORD *)(result + g_SoundChannelArrayBase + 44) = 1;
         return CSS_ChannelMarkPlaying(v2);
       }
     }
@@ -6871,7 +6871,7 @@ int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
 
   v17 = a2;
   v16 = a3;
-  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
+  if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
   if ( *(_WORD *)(*(_DWORD *)(a1 + 363) + 2) == 1 )
     v8 = 1;
@@ -6888,27 +6888,27 @@ int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
   v9 = -1;
   v10 = 0;
   v11 = g_CSS_StreamVoiceStealBias + g_CSS_VoiceSequenceCounter;
-  if ( dword_54D3C8 > 0 )
+  if ( g_CssVoicePoolSize > 0 )
   {
     v12 = 0;
     do
     {
-      v13 = *(_DWORD *)(v12 + dword_54D3D0 + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v11 )
+      v13 = *(_DWORD *)(v12 + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40) < v11 )
       {
-        v11 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
+        v11 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40);
         v9 = v10;
       }
       ++v10;
       v12 += 52;
     }
-    while ( v10 < dword_54D3C8 );
+    while ( v10 < g_CssVoicePoolSize );
   }
   if ( v9 != -1 )
     CSS_CloseChannel(v9, 0);
-  *(_DWORD *)(dword_54D3D0 + 52 * v9 + 20) = v15;
+  *(_DWORD *)(g_SoundChannelArrayBase + 52 * v9 + 20) = v15;
   CSS_Channel_StartFileStream(v9, v14, a4, v17, v16, 8);
-  return *(_DWORD *)(52 * v9 + dword_54D3D0 + 40);
+  return *(_DWORD *)(52 * v9 + g_SoundChannelArrayBase + 40);
 }
 // 46EDCD: variable 'v7' is possibly undefined
 // 519C8C: using guessed type int dword_519C8C[];
@@ -6926,16 +6926,16 @@ void __stdcall CSS_LoadSample(int a1)
   int v3; // esi
   _DWORD v4[4]; // [esp+0h] [ebp-10h] BYREF
 
-  if ( dword_54D468 )
+  if ( g_CSS_ActiveSoundDriver )
   {
-    if ( dword_54D3D0 )
+    if ( g_SoundChannelArrayBase )
     {
       if ( !CSS_SampleCache_FindAndTouch(a1) )
       {
         v3 = Audio_ReadWavHeaderFromStream(v1, v4);
         if ( v3 )
         {
-          if ( v4[1] < dword_54D3C0 )
+          if ( v4[1] < g_CSS_SampleCacheByteBudget )
             CSS_CreateSampleCacheEntry(v3, v2, v4);
         }
       }
@@ -6960,34 +6960,34 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
   int v15; // eax
   int v16; // ecx
 
-  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
+  if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
   v9 = -1;
   v10 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
   v11 = 0;
-  if ( dword_54D3C8 > 0 )
+  if ( g_CssVoicePoolSize > 0 )
   {
     v12 = 0;
     do
     {
-      v13 = *(_DWORD *)(v12 + dword_54D3D0 + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v10 )
+      v13 = *(_DWORD *)(v12 + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40) < v10 )
       {
-        v10 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
+        v10 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40);
         v9 = v11;
       }
       ++v11;
       v12 += 52;
     }
-    while ( v11 < dword_54D3C8 );
+    while ( v11 < g_CssVoicePoolSize );
   }
   if ( v9 == -1 )
     return 0;
   CSS_CloseChannel(v9, 0);
   v14 = g_CSS_VoiceSequenceCounter++;
-  CSS_Channel_StoreFormatParams(52 * v9 + dword_54D3D0, a2);
-  v15 = dword_54D3D0;
-  *(_DWORD *)(v16 + dword_54D3D0 + 36) = 1;
+  CSS_Channel_StoreFormatParams(52 * v9 + g_SoundChannelArrayBase, a2);
+  v15 = g_SoundChannelArrayBase;
+  *(_DWORD *)(v16 + g_SoundChannelArrayBase + 36) = 1;
   *(_DWORD *)(v16 + v15 + 48) = 0;
   *(_DWORD *)(v16 + v15 + 40) = v14;
   *(_DWORD *)(v16 + v15) = a1;
@@ -7013,7 +7013,7 @@ int __stdcall CSS_PlaySound(int a1, int a2, int a3, signed int a4)
   int *v8; // esi
   int v9[7]; // [esp+14h] [ebp-1Ch] BYREF
 
-  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
+  if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
   v6 = (int *)CSS_SampleCache_FindAndTouch(a1);
   if ( v6 )
@@ -7021,7 +7021,7 @@ int __stdcall CSS_PlaySound(int a1, int a2, int a3, signed int a4)
   v7 = Audio_ReadWavHeaderFromStream(a1, v9);
   if ( !v7 )
     return 0;
-  if ( v9[1] >= dword_54D3C0 )
+  if ( v9[1] >= g_CSS_SampleCacheByteBudget )
     return CSS_StartSampleVoice(v7, v9, a3, a2, a4);
   CSS_PauseStreamReading();
   v8 = CSS_CreateSampleCacheEntry(v7, a1, v9);
@@ -7047,14 +7047,14 @@ int __stdcall CSS_StopSound(int a1, signed int a2)
   if ( a1 )
   {
     v3 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(dword_54D3D0 + result + 40) )
+      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
       {
         result += 52;
         ++v3;
-        if ( result >= 52 * dword_54D3C8 )
+        if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
       if ( v3 != -1 )
@@ -7075,14 +7075,14 @@ int __stdcall CSS_GetSoundPos(int a1)
   int v4; // ecx
   unsigned int v6[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  if ( a1 && (v1 = 0, dword_54D3C8 > 0) )
+  if ( a1 && (v1 = 0, g_CssVoicePoolSize > 0) )
   {
     v2 = 0;
-    while ( a1 != *(_DWORD *)(dword_54D3D0 + v2 + 40) )
+    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
     {
       v2 += 52;
       ++v1;
-      if ( v2 >= 52 * dword_54D3C8 )
+      if ( v2 >= 52 * g_CssVoicePoolSize )
         goto LABEL_10;
     }
   }
@@ -7094,12 +7094,12 @@ LABEL_10:
   v3 = v1;
   if ( v1 == -1 )
     return 0;
-  v4 = *(_DWORD *)(52 * v1 + dword_54D3D0 + 36);
+  v4 = *(_DWORD *)(52 * v1 + g_SoundChannelArrayBase + 36);
   if ( v4 == 4 || v4 == 8 )
-    v6[0] = (*(int (**)(void))(**(_DWORD **)(dword_54D3D0 + 52 * v1 + 20) + 24))();
+    v6[0] = (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * v1 + 20) + 24))();
   else
     CSS_ChannelGetPlayPosition(v1, v6);
-  return v6[0] / *(_DWORD *)(dword_54D3D0 + 52 * v3 + 16);
+  return v6[0] / *(_DWORD *)(g_SoundChannelArrayBase + 52 * v3 + 16);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
@@ -7118,14 +7118,14 @@ void __stdcall CSS_SetSoundPos(int a1, int a2)
   unsigned int v10[6]; // [esp+14h] [ebp-18h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  if ( a1 && (v2 = 0, dword_54D3C8 > 0) )
+  if ( a1 && (v2 = 0, g_CssVoicePoolSize > 0) )
   {
     v3 = 0;
-    while ( a1 != *(_DWORD *)(dword_54D3D0 + v3 + 40) )
+    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
     {
       v3 += 52;
       ++v2;
-      if ( v3 >= 52 * dword_54D3C8 )
+      if ( v3 >= 52 * g_CssVoicePoolSize )
         goto LABEL_12;
     }
   }
@@ -7137,20 +7137,20 @@ LABEL_12:
   v4 = v2;
   if ( v2 != -1 )
   {
-    v5 = dword_54D3D0 + 52 * v2;
+    v5 = g_SoundChannelArrayBase + 52 * v2;
     v6 = *(_DWORD *)(v5 + 36);
     if ( v6 == 4 || v6 == 8 )
     {
-      ++dword_54D3D8;
+      ++g_StreamServiceLockEntryCount;
       EnterCriticalSection(&CriticalSection);
-      ++dword_54D3F8;
+      ++g_CSS_MixerLockNestingCount;
       EnterCriticalSection(&stru_54D3FC);
       (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v5 + 20) + 28))(
         ExceptionList,
         &j____wcpp_4_fs_handler_rtn_,
         &g_CSSSetSoundPos_EHScopeTable,
         1);
-      v7 = (_DWORD *)(52 * v4 + dword_54D3D0);
+      v7 = (_DWORD *)(52 * v4 + g_SoundChannelArrayBase);
       if ( *v7 )
       {
         CSS_ChannelGetPlayPosition(v4, v10);
@@ -7160,9 +7160,9 @@ LABEL_12:
       }
       CSS_Channel_ServiceStream(v4);
       LeaveCriticalSection(&CriticalSection);
-      --dword_54D3D8;
+      --g_StreamServiceLockEntryCount;
       LeaveCriticalSection(&stru_54D3FC);
-      --dword_54D3F8;
+      --g_CSS_MixerLockNestingCount;
     }
     else
     {
@@ -7185,19 +7185,19 @@ int __stdcall CSS_PauseSound(int a1, signed int a2)
   if ( a1 )
   {
     v3 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + dword_54D3D0 + 40) )
+      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++v3;
-        if ( result >= 52 * dword_54D3C8 )
+        if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
       if ( v3 != -1 )
       {
-        CSS_ChannelGetVolume(v3, (_DWORD *)(result + dword_54D3D0 + 32));
+        CSS_ChannelGetVolume(v3, (_DWORD *)(result + g_SoundChannelArrayBase + 32));
         return CSS_ChannelBeginVolumeFade(v3, 0, a2);
       }
     }
@@ -7217,18 +7217,18 @@ int __stdcall CSS_ResumeSound(int a1, signed int a2)
   if ( a1 )
   {
     v3 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + dword_54D3D0 + 40) )
+      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++v3;
-        if ( result >= 52 * dword_54D3C8 )
+        if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
       if ( v3 != -1 )
-        return CSS_ChannelBeginVolumeFade(v3, *(_DWORD *)(result + dword_54D3D0 + 32), a2);
+        return CSS_ChannelBeginVolumeFade(v3, *(_DWORD *)(result + g_SoundChannelArrayBase + 32), a2);
     }
   }
   return result;
@@ -7247,17 +7247,17 @@ void __stdcall CSS_SetSoundLoop(int a1, int a2, int a3)
   if ( a1 )
   {
     v3 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       v4 = 0;
       while ( 1 )
       {
-        v5 = v4 + dword_54D3D0;
-        if ( a1 == *(_DWORD *)(v4 + dword_54D3D0 + 40) )
+        v5 = v4 + g_SoundChannelArrayBase;
+        if ( a1 == *(_DWORD *)(v4 + g_SoundChannelArrayBase + 40) )
           break;
         v4 += 52;
         ++v3;
-        if ( v4 >= 52 * dword_54D3C8 )
+        if ( v4 >= 52 * g_CssVoicePoolSize )
           return;
       }
       if ( v3 != -1 )
@@ -7294,17 +7294,17 @@ int __stdcall CSS_GetSoundLoop(int a1, _DWORD *a2, _DWORD *a3)
   if ( !a1 )
     goto LABEL_10;
   v4 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
     goto LABEL_10;
   result = 0;
   while ( 1 )
   {
-    v5 = result + dword_54D3D0;
-    if ( a1 == *(_DWORD *)(result + dword_54D3D0 + 40) )
+    v5 = result + g_SoundChannelArrayBase;
+    if ( a1 == *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       break;
     result += 52;
     ++v4;
-    if ( result >= 52 * dword_54D3C8 )
+    if ( result >= 52 * g_CssVoicePoolSize )
       goto LABEL_10;
   }
   if ( v4 == -1 )
@@ -7316,7 +7316,7 @@ LABEL_10:
   else
   {
     v6 = *(_DWORD *)(v5 + 36);
-    v7 = result + dword_54D3D0;
+    v7 = result + g_SoundChannelArrayBase;
     if ( v6 == 4 || v6 == 8 )
     {
       (*(void (**)(void))(**(_DWORD **)(v5 + 20) + 16))();
@@ -7343,14 +7343,14 @@ int __stdcall CSS_UnLoopSound(int a1)
   int v4; // esi
 
   result = a1;
-  if ( a1 && (v2 = 0, dword_54D3C8 > 0) )
+  if ( a1 && (v2 = 0, g_CssVoicePoolSize > 0) )
   {
     result = 0;
-    while ( a1 != *(_DWORD *)(dword_54D3D0 + result + 40) )
+    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
     {
       result += 52;
       ++v2;
-      if ( result >= 52 * dword_54D3C8 )
+      if ( result >= 52 * g_CssVoicePoolSize )
         goto LABEL_11;
     }
   }
@@ -7362,16 +7362,16 @@ LABEL_11:
   if ( v2 != -1 )
   {
     v3 = 52 * v2;
-    v4 = *(_DWORD *)(52 * v2 + dword_54D3D0 + 36);
+    v4 = *(_DWORD *)(52 * v2 + g_SoundChannelArrayBase + 36);
     if ( v4 == 4 || v4 == 8 )
     {
-      return (*(int (**)(void))(**(_DWORD **)(dword_54D3D0 + 52 * v2 + 20) + 20))();
+      return (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * v2 + 20) + 20))();
     }
     else
     {
       CSS_ClearMixChannelLoopPoints(v2);
-      result = dword_54D3D0;
-      *(_DWORD *)(v3 + dword_54D3D0 + 36) = 1;
+      result = g_SoundChannelArrayBase;
+      *(_DWORD *)(v3 + g_SoundChannelArrayBase + 36) = 1;
     }
   }
   return result;
@@ -7388,14 +7388,14 @@ void __stdcall CSS_SetSoundRate(int a1, unsigned __int32 a2)
   if ( a1 )
   {
     v2 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       v3 = 0;
-      while ( a1 != *(_DWORD *)(dword_54D3D0 + v3 + 40) )
+      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
       {
         v3 += 52;
         ++v2;
-        if ( v3 >= 52 * dword_54D3C8 )
+        if ( v3 >= 52 * g_CssVoicePoolSize )
           return;
       }
       if ( v2 != -1 )
@@ -7416,14 +7416,14 @@ int __stdcall CSS_GetSoundRate(int a1)
   if ( !a1 )
     return 0;
   v1 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
     return 0;
   v2 = 0;
-  while ( a1 != *(_DWORD *)(dword_54D3D0 + v2 + 40) )
+  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
   {
     v2 += 52;
     ++v1;
-    if ( v2 >= 52 * dword_54D3C8 )
+    if ( v2 >= 52 * g_CssVoicePoolSize )
       return 0;
   }
   if ( v1 == -1 )
@@ -7444,19 +7444,19 @@ int __stdcall CSS_SetSoundVolume(int a1, int a2, signed int a3)
   if ( a1 )
   {
     v4 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + dword_54D3D0 + 40) )
+      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++v4;
-        if ( result >= 52 * dword_54D3C8 )
+        if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
       if ( v4 != -1 )
       {
-        *(_DWORD *)(result + dword_54D3D0 + 32) = a2;
+        *(_DWORD *)(result + g_SoundChannelArrayBase + 32) = a2;
         return CSS_ChannelBeginVolumeFade(v4, a2, a3);
       }
     }
@@ -7476,14 +7476,14 @@ int __stdcall CSS_GetSoundVolume(int a1)
   if ( !a1 )
     return 0;
   v1 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
     return 0;
   v2 = 0;
-  while ( a1 != *(_DWORD *)(dword_54D3D0 + v2 + 40) )
+  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
   {
     v2 += 52;
     ++v1;
-    if ( v2 >= 52 * dword_54D3C8 )
+    if ( v2 >= 52 * g_CssVoicePoolSize )
       return 0;
   }
   if ( v1 == -1 )
@@ -7503,14 +7503,14 @@ void __stdcall CSS_SetSoundPanning(int a1, int a2)
   if ( a1 )
   {
     v2 = 0;
-    if ( dword_54D3C8 > 0 )
+    if ( g_CssVoicePoolSize > 0 )
     {
       v3 = 0;
-      while ( a1 != *(_DWORD *)(dword_54D3D0 + v3 + 40) )
+      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
       {
         v3 += 52;
         ++v2;
-        if ( v3 >= 52 * dword_54D3C8 )
+        if ( v3 >= 52 * g_CssVoicePoolSize )
           return;
       }
       if ( v2 != -1 )
@@ -7531,14 +7531,14 @@ int __stdcall CSS_GetSoundPanning(int a1)
   if ( !a1 )
     return 0;
   v1 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
     return 0;
   v2 = 0;
-  while ( a1 != *(_DWORD *)(dword_54D3D0 + v2 + 40) )
+  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
   {
     v2 += 52;
     ++v1;
-    if ( v2 >= 52 * dword_54D3C8 )
+    if ( v2 >= 52 * g_CssVoicePoolSize )
       return 0;
   }
   if ( v1 == -1 )
@@ -7558,14 +7558,14 @@ BOOL __stdcall CSS_IsPlaying(int a1)
   if ( !a1 )
     return 0;
   v1 = 0;
-  if ( dword_54D3C8 <= 0 )
+  if ( g_CssVoicePoolSize <= 0 )
     return 0;
   v2 = 0;
-  while ( a1 != *(_DWORD *)(dword_54D3D0 + v2 + 40) )
+  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
   {
     v2 += 52;
     ++v1;
-    if ( v2 >= 52 * dword_54D3C8 )
+    if ( v2 >= 52 * g_CssVoicePoolSize )
       return 0;
   }
   return v1 != -1 && CSS_ChannelIsPlaying(v1);
@@ -7581,16 +7581,16 @@ signed int  CSS_InitVoicePool(int a1, int a2, int a3)
   int v8; // edx
   _BYTE v10[20]; // [esp+14h] [ebp-14h] BYREF
 
-  dword_54D3C8 = a1;
+  g_CssVoicePoolSize = a1;
   v6 = 52 * a1;
-  CSS_Mem_TryAlloc(52 * a1, &dword_54D3D0);
+  CSS_Mem_TryAlloc(52 * a1, &g_SoundChannelArrayBase);
   if ( a1 > 0 )
   {
     v7 = 0;
     do
     {
-      v8 = dword_54D3D0;
-      *(_DWORD *)(dword_54D3D0 + v7) = 0;
+      v8 = g_SoundChannelArrayBase;
+      *(_DWORD *)(g_SoundChannelArrayBase + v7) = 0;
       v7 += 52;
       *(_DWORD *)(v8 + v7 - 12) = 0;
       *(_DWORD *)(v8 + v7 - 16) = 0;
@@ -7598,13 +7598,13 @@ signed int  CSS_InitVoicePool(int a1, int a2, int a3)
     }
     while ( v7 < v6 );
   }
-  dword_54D3CC = a2;
-  dword_54D3C0 = a3 << 10;
-  dword_54D414 = 1;
-  dword_54D45C = 1;
+  g_CSS_StreamBufferMs = a2;
+  g_CSS_SampleCacheByteBudget = a3 << 10;
+  g_CSS_StreamReadingActive = 1;
+  g_CSS_StreamThreadRunning = 1;
   hThread = (HANDLE)beginthreadex_(0, v10);
-  dword_54D41C = beginthreadex_(0, v10);
-  SetThreadPriority((HANDLE)dword_54D41C, 2);
+  g_CSS_StreamThreadHandle = beginthreadex_(0, v10);
+  SetThreadPriority((HANDLE)g_CSS_StreamThreadHandle, 2);
   return 1;
 }
 // 484E65: using guessed type _DWORD __stdcall beginthreadex_(_DWORD, _DWORD);
@@ -7634,24 +7634,24 @@ _DWORD *CSS_ShutdownVoicePool()
   v5[1] = &j____wcpp_4_fs_handler_rtn_;
   v5[2] = &g_CSSShutdownVoicePool_EHScopeTable;
   v6 = 0;
-  if ( dword_54D3D0 )
+  if ( g_SoundChannelArrayBase )
   {
-    dword_54D414 = 0;
-    dword_54D45C = 0;
-    v7 = &dword_54D420;
-    ++dword_54D420;
+    g_CSS_StreamReadingActive = 0;
+    g_CSS_StreamThreadRunning = 0;
+    v7 = &g_CSS_StreamReadThreadLockRefCount;
+    ++g_CSS_StreamReadThreadLockRefCount;
     EnterCriticalSection(&stru_54D424);
     v6 = 1;
-    v8 = &dword_54D440;
-    ++dword_54D440;
+    v8 = &g_CSS_StreamServiceThreadLockRefCount;
+    ++g_CSS_StreamServiceThreadLockRefCount;
     EnterCriticalSection(&stru_54D444);
     v6 = 2;
     CRT_WatcomEHUnwindToExceptionList(v2, v1);
-    for ( i = 0; i < dword_54D3C8; i = v4 + 1 )
+    for ( i = 0; i < g_CssVoicePoolSize; i = v4 + 1 )
       CSS_CloseChannel(i, 0);
     CSS_EmptySampleCache();
-    result = (_DWORD *)CSS_Mem_FreeIfSet(dword_54D3D0);
-    dword_54D3D0 = 0;
+    result = (_DWORD *)CSS_Mem_FreeIfSet(g_SoundChannelArrayBase);
+    g_SoundChannelArrayBase = 0;
   }
   return result;
 }
@@ -7668,9 +7668,9 @@ _DWORD *CSS_ShutdownVoicePool()
 //----- (0046FB70) --------------------------------------------------------
 int  CSS_LockAudioThreads(int a1)
 {
-  ++dword_54D3D8;
+  ++g_StreamServiceLockEntryCount;
   EnterCriticalSection(&CriticalSection);
-  ++dword_54D3F8;
+  ++g_CSS_MixerLockNestingCount;
   EnterCriticalSection(&stru_54D3FC);
   return a1;
 }
@@ -7681,9 +7681,9 @@ int  CSS_LockAudioThreads(int a1)
 int  CSS_UnlockAudioThreads(int a1)
 {
   LeaveCriticalSection(&CriticalSection);
-  --dword_54D3D8;
+  --g_StreamServiceLockEntryCount;
   LeaveCriticalSection(&stru_54D3FC);
-  --dword_54D3F8;
+  --g_CSS_MixerLockNestingCount;
   return a1;
 }
 // 54D3D8: using guessed type int dword_54D3D8;
@@ -7695,7 +7695,7 @@ int CSS_InitDeviceSearchState()
   int v0; // edx
   int v1; // ecx
 
-  dword_54D498 = 0;
+  g_CSS_DeviceSearchThreadRefCount = 0;
   InitializeCriticalSection(&stru_54D49C);
   return CRT_RegisterFinalizableObject(v1, v0);
 }
@@ -7707,7 +7707,7 @@ int CSS_InitDeviceSearchState()
 //----- (0046FC30) --------------------------------------------------------
 BOOL CSS_IsNullSoundDevice()
 {
-  return dword_54D468 == (_DWORD)&g_CSS_NullDriverSentinel;
+  return g_CSS_ActiveSoundDriver == (_DWORD)&g_CSS_NullDriverSentinel;
 }
 // 54D468: using guessed type int dword_54D468;
 
@@ -7717,11 +7717,11 @@ int CSS_PollAudioDeviceChange()
   _DWORD *v0; // eax
   int result; // eax
 
-  v0 = (_DWORD *)(*(int (**)(void))(dword_54D468 + 88))();
+  v0 = (_DWORD *)(*(int (**)(void))(g_CSS_ActiveSoundDriver + 88))();
   CSS_AdvanceVolumeFades(v0);
   do
-    result = (*(int (__cdecl **)(int *))(dword_54D468 + 92))(&dword_54D460);
-  while ( !result && dword_54D460 );
+    result = (*(int (__cdecl **)(int *))(g_CSS_ActiveSoundDriver + 92))(&g_CSS_DevicePollPending);
+  while ( !result && g_CSS_DevicePollPending );
   return result;
 }
 // 54D460: using guessed type int dword_54D460;
@@ -7730,15 +7730,15 @@ int CSS_PollAudioDeviceChange()
 //----- (0046FC80) --------------------------------------------------------
 int __stdcall CSS_DeviceSearchThreadProc(int a1)
 {
-  ++dword_54D498;
+  ++g_CSS_DeviceSearchThreadRefCount;
   EnterCriticalSection(&stru_54D49C);
-  while ( dword_54D4B4 )
+  while ( g_CSS_DevicePollThreadRunning )
   {
     CSS_PollAudioDeviceChange();
     Sleep(1000 / g_CSS_MixUpdateRateHz);
   }
-  LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D498 + 1));
-  --dword_54D498;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_DeviceSearchThreadRefCount + 1));
+  --g_CSS_DeviceSearchThreadRefCount;
   return 0;
 }
 // 519CF4: using guessed type int dword_519CF4;
@@ -7751,7 +7751,7 @@ int __stdcall CSS_SetDirectSoundHWnd(int a1)
   int result; // eax
 
   result = a1;
-  dword_54D470 = a1;
+  g_AudioWindowHandle = a1;
   return result;
 }
 // 54D470: using guessed type int dword_54D470;
@@ -7762,7 +7762,7 @@ int __stdcall CSS_SetDeviceSearch(int a1)
   int result; // eax
 
   result = a1;
-  dword_54D48C = a1;
+  g_CSS_DeviceSearchIndex = a1;
   return result;
 }
 // 54D48C: using guessed type int dword_54D48C;
@@ -7773,16 +7773,16 @@ signed int CSS_ResetDeviceConfigDefaults()
   signed int result; // eax
 
   result = 10;
-  dword_54D488 = 0;
-  dword_54D480 = 0;
-  dword_54D478 = 0;
-  dword_54D474 = 44100;
-  dword_54D47C = -1;
-  dword_54D46C = 0;
+  g_CSS_AudioDeviceActive = 0;
+  g_CSS_VoiceCount = 0;
+  g_CSS_DeviceOpenParam2 = 0;
+  g_CSS_DeviceSampleRateHz = 44100;
+  g_CSS_DeviceConfigDefaultNegOne = -1;
+  g_CSS_DeviceConfigDefaultZero = 0;
   g_CSS_MixUpdateRateHz = 10;
-  dword_54D468 = 0;
+  g_CSS_ActiveSoundDriver = 0;
   g_CSS_DSoundAccelDetectEnabled = 1;
-  dword_54D490 = (int)CSS_FatalErrorExit;
+  g_CSS_FatalErrorHandler = (int)CSS_FatalErrorExit;
   return result;
 }
 // 519CF4: using guessed type int dword_519CF4;
@@ -7827,20 +7827,20 @@ void CSS_ResetDeviceHandleCache()
 //----- (0046FEF0) --------------------------------------------------------
 void __stdcall CSS_Close()
 {
-  dword_54D4B4 = 0;
-  ++dword_54D498;
+  g_CSS_DevicePollThreadRunning = 0;
+  ++g_CSS_DeviceSearchThreadRefCount;
   EnterCriticalSection(&stru_54D49C);
-  LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D498 + 1));
-  --dword_54D498;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_DeviceSearchThreadRefCount + 1));
+  --g_CSS_DeviceSearchThreadRefCount;
   CSS_ResetDeviceHandleCache();
-  if ( dword_54D488 )
+  if ( g_CSS_AudioDeviceActive )
   {
     CSS_ShutdownVoicePool();
     CSS_FreeMixChannels();
-    dword_54D480 = 0;
-    (*(void (**)(void))(dword_54D468 + 56))();
-    dword_54D488 = 0;
-    dword_54D468 = 0;
+    g_CSS_VoiceCount = 0;
+    (*(void (**)(void))(g_CSS_ActiveSoundDriver + 56))();
+    g_CSS_AudioDeviceActive = 0;
+    g_CSS_ActiveSoundDriver = 0;
   }
 }
 // 54D468: using guessed type int dword_54D468;
@@ -7855,7 +7855,7 @@ int __stdcall CSS_SetFileSystem(int a1)
   int result; // eax
 
   result = a1;
-  dword_54D4B8 = a1;
+  g_MediaFileStreamProvider = a1;
   return result;
 }
 // 54D4B8: using guessed type int dword_54D4B8;
@@ -7873,10 +7873,10 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   CSS_ResetDeviceConfigDefaults();
   if ( g_CSS_DeviceHandleCache_DriverIndex == -1 )
   {
-    v4 = dword_54D48C;
-    if ( dword_54D48C < 3 )
+    v4 = g_CSS_DeviceSearchIndex;
+    if ( g_CSS_DeviceSearchIndex < 3 )
     {
-      v5 = 4 * dword_54D48C;
+      v5 = 4 * g_CSS_DeviceSearchIndex;
       do
       {
         if ( g_CSS_DeviceHandleCache_DriverIndex != -1 )
@@ -7894,28 +7894,28 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
     (*((void (__cdecl **)(int *))*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex) + 12))(&v10);
   }
   v6 = (int)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
-  dword_54D468 = v6;
+  g_CSS_ActiveSoundDriver = v6;
   if ( g_CSS_DeviceHandleCache_Param1 != -1 )
     *(_DWORD *)(v6 + 8) = g_CSS_DeviceHandleCache_Param1;
   if ( g_CSS_DeviceHandleCache_Param2 != -1 )
-    *(_DWORD *)(dword_54D468 + 12) = g_CSS_DeviceHandleCache_Param2;
+    *(_DWORD *)(g_CSS_ActiveSoundDriver + 12) = g_CSS_DeviceHandleCache_Param2;
   if ( g_CSS_DeviceHandleCacheParam3 != -1 )
-    *(_DWORD *)(dword_54D468 + 16) = g_CSS_DeviceHandleCacheParam3;
+    *(_DWORD *)(g_CSS_ActiveSoundDriver + 16) = g_CSS_DeviceHandleCacheParam3;
   if ( g_CSS_DeviceHandleCacheParam4 != -1 )
-    *(_DWORD *)(dword_54D468 + 20) = g_CSS_DeviceHandleCacheParam4;
-  if ( (*(int (__cdecl **)(int, int))(dword_54D468 + 52))(dword_54D474, dword_54D478) )
+    *(_DWORD *)(g_CSS_ActiveSoundDriver + 20) = g_CSS_DeviceHandleCacheParam4;
+  if ( (*(int (__cdecl **)(int, int))(g_CSS_ActiveSoundDriver + 52))(g_CSS_DeviceSampleRateHz, g_CSS_DeviceOpenParam2) )
   {
-    dword_54D468 = 0;
+    g_CSS_ActiveSoundDriver = 0;
     g_CSS_DeviceHandleCache_DriverIndex = -1;
     return 0;
   }
   else
   {
-    dword_54D480 = a1;
-    dword_54D488 = 1;
+    g_CSS_VoiceCount = a1;
+    g_CSS_AudioDeviceActive = 1;
     CSS_InitMixChannels(a1);
     CSS_BuildVolumeScaleTable(a2);
-    dword_54D4B4 = 1;
+    g_CSS_DevicePollThreadRunning = 1;
     v9 = (void *)beginthreadex_(0, v11);
     SetThreadPriority(v9, 2);
     CSS_InitVoicePool(a1, a3, a4);
@@ -8019,70 +8019,70 @@ unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char a2)
   struct tagWAVEOUTCAPSA pwoc; // [esp+0h] [ebp-58h] BYREF
   WAVEFORMATEX pwfx; // [esp+34h] [ebp-24h] BYREF
 
-  dword_54D768 = 44100;
-  dword_54D75C = ((a2 & 1) == 0) + 1;
+  g_CSS_SampleRateHz = 44100;
+  g_WaveOutFormatFlags = ((a2 & 1) == 0) + 1;
   if ( (a2 & 4) != 0 )
-    LOBYTE(dword_54D75C) = dword_54D75C | 4;
+    LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags | 4;
   else
-    LOBYTE(dword_54D75C) = dword_54D75C | 8;
+    LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags | 8;
   waveOutGetDevCapsA(0xFFFFFFFF, &pwoc, 0x34u);
-  if ( (dword_54D75C & 8) != 0 && (pwoc.dwFormats & 0x40) == 0 )
-    LOBYTE(dword_54D75C) = dword_54D75C & 0xF7;
-  if ( (dword_54D75C & 2) != 0 && SLOBYTE(pwoc.dwFormats) >= 0 && (pwoc.dwFormats & 2) == 0 )
-    LOBYTE(dword_54D75C) = dword_54D75C & 0xFD;
-  if ( (dword_54D75C & 2) != 0 )
+  if ( (g_WaveOutFormatFlags & 8) != 0 && (pwoc.dwFormats & 0x40) == 0 )
+    LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags & 0xF7;
+  if ( (g_WaveOutFormatFlags & 2) != 0 && SLOBYTE(pwoc.dwFormats) >= 0 && (pwoc.dwFormats & 2) == 0 )
+    LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags & 0xFD;
+  if ( (g_WaveOutFormatFlags & 2) != 0 )
   {
-    if ( (dword_54D75C & 8) != 0 )
+    if ( (g_WaveOutFormatFlags & 8) != 0 )
     {
       if ( (pwoc.dwFormats & 0x800) == 0 )
-        dword_54D768 = 22050;
+        g_CSS_SampleRateHz = 22050;
       if ( SLOBYTE(pwoc.dwFormats) >= 0 )
-        dword_54D768 = 11025;
+        g_CSS_SampleRateHz = 11025;
       v2 = (pwoc.dwFormats & 8) == 0;
 LABEL_17:
       if ( v2 )
-        LOBYTE(dword_54D75C) = dword_54D75C & 0xF7;
+        LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags & 0xF7;
       goto LABEL_19;
     }
     if ( (pwoc.dwFormats & 0x200) == 0 )
-      dword_54D768 = 22050;
+      g_CSS_SampleRateHz = 22050;
     if ( (pwoc.dwFormats & 0x20) == 0 )
-      dword_54D768 = 11025;
+      g_CSS_SampleRateHz = 11025;
     if ( (pwoc.dwFormats & 2) == 0 )
-      LOBYTE(dword_54D75C) = dword_54D75C & 0xFD;
+      LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags & 0xFD;
   }
   else
   {
-    if ( (dword_54D75C & 8) != 0 )
+    if ( (g_WaveOutFormatFlags & 8) != 0 )
     {
       if ( (pwoc.dwFormats & 0x400) == 0 )
-        dword_54D768 = 22050;
+        g_CSS_SampleRateHz = 22050;
       if ( (pwoc.dwFormats & 0x40) == 0 )
-        dword_54D768 = 11025;
+        g_CSS_SampleRateHz = 11025;
       v2 = (pwoc.dwFormats & 4) == 0;
       goto LABEL_17;
     }
     if ( (pwoc.dwFormats & 0x100) == 0 )
-      dword_54D768 = 22050;
+      g_CSS_SampleRateHz = 22050;
     if ( (pwoc.dwFormats & 0x10) == 0 )
-      dword_54D768 = 11025;
+      g_CSS_SampleRateHz = 11025;
   }
 LABEL_19:
-  dword_54D744 = ((dword_54D75C & 8) != 0) + 1;
-  if ( (dword_54D75C & 2) != 0 )
-    dword_54D744 = 2 * (((dword_54D75C & 8) != 0) + 1);
-  dword_54D760 = 8;
-  dword_54D754 = 0;
-  dword_54D740 = 0;
-  v3 = dword_54D744 * (3 * dword_54D768 / (unsigned int)g_CSS_MixUpdateRateHz) / 8 + 15;
+  g_CSS_WaveBlockAlign = ((g_WaveOutFormatFlags & 8) != 0) + 1;
+  if ( (g_WaveOutFormatFlags & 2) != 0 )
+    g_CSS_WaveBlockAlign = 2 * (((g_WaveOutFormatFlags & 8) != 0) + 1);
+  g_CSS_MixChannelCount = 8;
+  g_CSS_WaveOutFillByteOffset = 0;
+  g_WaveOutBufferRingIndex = 0;
+  v3 = g_CSS_WaveBlockAlign * (3 * g_CSS_SampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz) / 8 + 15;
   LOBYTE(v3) = v3 & 0xF0;
   pwfx.wFormatTag = 1;
   dwBytes = v3;
-  pwfx.nChannels = ((dword_54D75C & 2) != 0) + 1;
-  pwfx.nSamplesPerSec = dword_54D768;
-  pwfx.nAvgBytesPerSec = dword_54D768 * dword_54D744;
-  pwfx.nBlockAlign = dword_54D744;
-  if ( (dword_54D75C & 8) != 0 )
+  pwfx.nChannels = ((g_WaveOutFormatFlags & 2) != 0) + 1;
+  pwfx.nSamplesPerSec = g_CSS_SampleRateHz;
+  pwfx.nAvgBytesPerSec = g_CSS_SampleRateHz * g_CSS_WaveBlockAlign;
+  pwfx.nBlockAlign = g_CSS_WaveBlockAlign;
+  if ( (g_WaveOutFormatFlags & 8) != 0 )
     pwfx.wBitsPerSample = 16;
   else
     pwfx.wBitsPerSample = 8;
@@ -8091,22 +8091,22 @@ LABEL_19:
   if ( v4 )
     return CSS_TranslateWaveOutError(v4);
   v5 = 0;
-  if ( dword_54D760 )
+  if ( g_CSS_MixChannelCount )
   {
     v6 = 0;
     while ( 1 )
     {
       v7 = GlobalAlloc(0x2002u, dwBytes);
-      dword_54D540[v6] = (int)v7;
+      g_CSS_WaveBufferMemHandles[v6] = (int)v7;
       if ( !v7 )
         return 2;
       v9 = GlobalLock(v7);
-      dword_54D4C0[v6] = (int)v9;
+      g_CSS_WaveBufferDataPtrs[v6] = (int)v9;
       if ( !v9 )
         return 43;
       ++v5;
       ++v6;
-      if ( v5 >= dword_54D760 )
+      if ( v5 >= g_CSS_MixChannelCount )
         goto LABEL_50;
     }
   }
@@ -8114,28 +8114,28 @@ LABEL_19:
   {
 LABEL_50:
     v10 = 0;
-    if ( dword_54D760 )
+    if ( g_CSS_MixChannelCount )
     {
       v11 = 0;
       while ( 1 )
       {
         v12 = GlobalAlloc(0x2002u, 0x20u);
-        dword_54D640[v11] = (int)v12;
+        g_CSS_WaveHeaderMemHandles[v11] = (int)v12;
         if ( !v12 )
           return 2;
         v13 = (struct wavehdr_tag *)GlobalLock(v12);
         *(LPWAVEHDR *)((char *)&pwh + v11 * 4) = v13;
         if ( !v13 )
           return 43;
-        v13->lpData = (LPSTR)dword_54D4C0[v11];
+        v13->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[v11];
         v14 = dwBytes;
         v13->dwFlags = 1;
         ++v11;
         v13->dwLoops = 0;
         ++v10;
         v13->dwBufferLength = v14;
-        v15 = dword_54D760;
-        dword_54D5BC[v11] = 0;
+        v15 = g_CSS_MixChannelCount;
+        g_CSS_WaveBufferStateArray[v11] = 0;
         if ( v10 >= v15 )
           goto LABEL_57;
       }
@@ -8143,23 +8143,23 @@ LABEL_50:
     else
     {
 LABEL_57:
-      CSS_InitMixBuffers(dword_54D768, ((dword_54D75C & 2) != 0) + 1);
+      CSS_InitMixBuffers(g_CSS_SampleRateHz, ((g_WaveOutFormatFlags & 2) != 0) + 1);
       result = CSS_SetWaveOutRefillThreshold(100 * g_CSS_MixUpdateRateHz);
       if ( !result )
       {
-        switch ( dword_54D75C )
+        switch ( g_WaveOutFormatFlags )
         {
           case 5:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
+            g_AudioMixToOutputFunc = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
             goto LABEL_60;
           case 6:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
+            g_AudioMixToOutputFunc = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
             goto LABEL_60;
           case 9:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
+            g_AudioMixToOutputFunc = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
             goto LABEL_60;
           case 10:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
+            g_AudioMixToOutputFunc = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
 LABEL_60:
             result = 0;
             break;
@@ -8206,7 +8206,7 @@ signed int CSS_CloseWaveOutDevice()
   {
     v1 = 1;
     v2 = 0;
-    if ( dword_54D760 )
+    if ( g_CSS_MixChannelCount )
     {
       v3 = 0;
       do
@@ -8216,19 +8216,19 @@ signed int CSS_CloseWaveOutDevice()
         ++v2;
         v3 += 4;
       }
-      while ( v2 < dword_54D760 );
+      while ( v2 < g_CSS_MixChannelCount );
     }
     if ( v1 )
       break;
     Sleep(0x14u);
   }
   v4 = 0;
-  if ( dword_54D760 )
+  if ( g_CSS_MixChannelCount )
   {
     v5 = 0;
     do
     {
-      if ( dword_54D5C0[v5] )
+      if ( g_CSS_WaveHeaderPreparedFlags[v5] )
       {
         v0 = waveOutUnprepareHeader(hwo, *(LPWAVEHDR *)((char *)&pwh + v5 * 4), 0x20u);
         if ( v0 )
@@ -8237,20 +8237,20 @@ signed int CSS_CloseWaveOutDevice()
       ++v4;
       ++v5;
     }
-    while ( v4 < dword_54D760 );
+    while ( v4 < g_CSS_MixChannelCount );
   }
   v0 = waveOutClose(hwo);
   if ( v0 )
     return CSS_TranslateWaveOutError(v0);
   v6 = 0;
-  if ( dword_54D760 )
+  if ( g_CSS_MixChannelCount )
   {
     v7 = 0;
-    while ( (GlobalUnlock((HGLOBAL)dword_54D540[v7]) || !GetLastError()) && !GlobalFree((HGLOBAL)dword_54D540[v7]) )
+    while ( (GlobalUnlock((HGLOBAL)g_CSS_WaveBufferMemHandles[v7]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveBufferMemHandles[v7]) )
     {
       ++v6;
       ++v7;
-      if ( v6 >= dword_54D760 )
+      if ( v6 >= g_CSS_MixChannelCount )
         goto LABEL_20;
     }
     return 3;
@@ -8259,11 +8259,11 @@ signed int CSS_CloseWaveOutDevice()
   {
 LABEL_20:
     v8 = 0;
-    if ( dword_54D760 )
+    if ( g_CSS_MixChannelCount )
     {
-      for ( i = 0; (GlobalUnlock((HGLOBAL)dword_54D640[i]) || !GetLastError()) && !GlobalFree((HGLOBAL)dword_54D640[i]); ++i )
+      for ( i = 0; (GlobalUnlock((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]); ++i )
       {
-        if ( ++v8 >= (unsigned int)dword_54D760 )
+        if ( ++v8 >= (unsigned int)g_CSS_MixChannelCount )
           return 0;
       }
       return 3;
@@ -8282,7 +8282,7 @@ LABEL_20:
 //----- (004707B0) --------------------------------------------------------
 int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *a1)
 {
-  *a1 = dword_54D75C;
+  *a1 = g_WaveOutFormatFlags;
   return 0;
 }
 // 54D75C: using guessed type int dword_54D75C;
@@ -8292,10 +8292,10 @@ int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int a1)
 {
   unsigned int v1; // eax
 
-  v1 = 100 * dword_54D768 / a1 + 1;
+  v1 = 100 * g_CSS_SampleRateHz / a1 + 1;
   LOBYTE(v1) = v1 & 0xFE;
-  dword_54D748 = v1;
-  dword_54D74C = v1;
+  g_CSS_WaveOutChunkSampleCount = v1;
+  g_CSS_WaveOutRefillRemaining = v1;
   return 0;
 }
 // 54D748: using guessed type int dword_54D748;
@@ -8312,52 +8312,52 @@ unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1)
   HWAVEOUT v6; // [esp-Ch] [ebp-1Ch]
   struct wavehdr_tag *v7; // [esp-8h] [ebp-18h]
 
-  v1 = (unsigned int)dword_54DB98 >> 2;
-  if ( (dword_54D75C & 2) != 0 )
-    v1 = (unsigned int)dword_54DB98 >> 3;
+  v1 = (unsigned int)g_CssMixBufferSizeBytes >> 2;
+  if ( (g_WaveOutFormatFlags & 2) != 0 )
+    v1 = (unsigned int)g_CssMixBufferSizeBytes >> 3;
   while ( 1 )
   {
-    v2 = pwh[dword_54D740];
+    v2 = pwh[g_WaveOutBufferRingIndex];
     if ( (v2->dwFlags & 1) == 0 )
       break;
-    if ( dword_54D5C0[dword_54D740] )
+    if ( g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] )
     {
       v5 = waveOutUnprepareHeader(hwo, v2, 0x20u);
       if ( v5 )
         return CSS_TranslateWaveOutError(v5);
-      dword_54D5C0[dword_54D740] = 0;
+      g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] = 0;
     }
-    v3 = (dwBytes - dword_54D754) / dword_54D744;
-    if ( v3 > dword_54D74C )
-      v3 = dword_54D74C;
+    v3 = (dwBytes - g_CSS_WaveOutFillByteOffset) / g_CSS_WaveBlockAlign;
+    if ( v3 > g_CSS_WaveOutRefillRemaining )
+      v3 = g_CSS_WaveOutRefillRemaining;
     if ( v3 > v1 )
       v3 = v1;
-    dword_54D74C -= v3;
-    CSS_TickChannelLevels(dword_54D744, v3);
-    dword_54D754 = dword_54D750(v3, dword_54D4C0[dword_54D740], dword_54D754, dword_54DBA0);
-    if ( dword_54D754 >= dwBytes )
+    g_CSS_WaveOutRefillRemaining -= v3;
+    CSS_TickChannelLevels(g_CSS_WaveBlockAlign, v3);
+    g_CSS_WaveOutFillByteOffset = g_AudioMixToOutputFunc(v3, g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex], g_CSS_WaveOutFillByteOffset, g_CSS_MixAccumBufferPtr);
+    if ( g_CSS_WaveOutFillByteOffset >= dwBytes )
     {
-      pwh[dword_54D740]->dwFlags = 0;
-      pwh[dword_54D740]->lpData = (LPSTR)dword_54D4C0[dword_54D740];
-      pwh[dword_54D740]->dwBufferLength = dwBytes;
-      pwh[dword_54D740]->dwFlags = 0;
-      pwh[dword_54D740]->dwLoops = 0;
-      v5 = waveOutPrepareHeader(hwo, pwh[dword_54D740], 0x20u);
+      pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
+      pwh[g_WaveOutBufferRingIndex]->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex];
+      pwh[g_WaveOutBufferRingIndex]->dwBufferLength = dwBytes;
+      pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
+      pwh[g_WaveOutBufferRingIndex]->dwLoops = 0;
+      v5 = waveOutPrepareHeader(hwo, pwh[g_WaveOutBufferRingIndex], 0x20u);
       if ( v5 )
         return CSS_TranslateWaveOutError(v5);
-      v7 = pwh[dword_54D740];
+      v7 = pwh[g_WaveOutBufferRingIndex];
       v6 = hwo;
-      dword_54D5C0[dword_54D740] = 1;
+      g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] = 1;
       v5 = waveOutWrite(v6, v7, 0x20u);
       if ( v5 )
         return CSS_TranslateWaveOutError(v5);
-      dword_54D754 = 0;
-      if ( ++dword_54D740 >= (unsigned int)dword_54D760 )
-        dword_54D740 = 0;
+      g_CSS_WaveOutFillByteOffset = 0;
+      if ( ++g_WaveOutBufferRingIndex >= (unsigned int)g_CSS_MixChannelCount )
+        g_WaveOutBufferRingIndex = 0;
     }
-    if ( !dword_54D74C )
+    if ( !g_CSS_WaveOutRefillRemaining )
     {
-      dword_54D74C = dword_54D748;
+      g_CSS_WaveOutRefillRemaining = g_CSS_WaveOutChunkSampleCount;
       *a1 = 1;
       return 0;
     }
@@ -8434,10 +8434,10 @@ int  CSS_BuildMixLookupTables(int a1, int a2)
     v3 = (double)i / g_CSS_MixLookupIndexScale + g_CSS_MixLookupIndexBias;
     _CHP(v9, v10);
     if ( v4 - (int)v3 > v6 )
-      *(int *)((char *)&dword_54D770 + v5) = v4;
+      *(int *)((char *)&g_CSS_MixLookupTableWriteBase + v5) = v4;
   }
-  for ( result = 0; result != 128; dword_54D968[result] = v8 - 1 )
-    v8 = -dword_54D76C[result++];
+  for ( result = 0; result != 128; g_CSS_MixLookupComplementTable[result] = v8 - 1 )
+    v8 = -g_CSS_MixLookupTable[result++];
   return result * 4;
 }
 // 470A60: could not find valid save-restore pair for ebx
@@ -8461,28 +8461,28 @@ int __cdecl CSS_InitMixBuffers(int a1, int a2)
   int v5; // eax
   int v6; // ecx
 
-  dword_54DB9C = a1;
-  dword_54DBA4 = a2;
-  dword_54DB80 = 0;
-  dword_54DB78 = 0;
-  dword_54DB90 = 0;
-  dword_54DB6C = 0;
-  dword_54DB74 = 0;
-  dword_54DB88 = 64;
-  dword_54DB84 = 5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz;
+  g_CSS_MixSampleRate = a1;
+  g_CSS_MixChannelCount_54DBA4 = a2;
+  g_CssMixChannelCount = 0;
+  g_CssMixChannelsReadyFlag = 0;
+  g_CssMixChannels = 0;
+  g_CSS_MixIdleChannelFlag = 0;
+  g_CSS_MixSuspendedFlag = 0;
+  g_CSS_MixMasterVolume = 64;
+  g_CSS_MixBufferSampleCount = 5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz;
   if ( a2 == 2 )
-    dword_54DB84 = 2 * (5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz);
-  v2 = 4 * dword_54DB84 + 15;
+    g_CSS_MixBufferSampleCount = 2 * (5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz);
+  v2 = 4 * g_CSS_MixBufferSampleCount + 15;
   LOBYTE(v2) = v2 & 0xF0;
-  dword_54DB98 = v2;
+  g_CssMixBufferSizeBytes = v2;
   v3 = v2 + 34832;
-  CSS_Mem_TryAlloc(v2 + 34832, &dword_54DB70);
+  CSS_Mem_TryAlloc(v2 + 34832, &g_CSS_MixBufferAllocBase);
   memset_(v4, 0);
-  v5 = dword_54DB70 + 1023;
-  LOWORD(v5) = (dword_54DB70 + 1023) & 0xFC00;
-  dword_54DB8C = v5;
-  dword_54DBA0 = v5 + 33792;
-  CSS_Mem_TryAlloc(160, &dword_54DB94);
+  v5 = g_CSS_MixBufferAllocBase + 1023;
+  LOWORD(v5) = (g_CSS_MixBufferAllocBase + 1023) & 0xFC00;
+  g_CssMixBufferAlignedBase = v5;
+  g_CSS_MixAccumBufferPtr = v5 + 33792;
+  CSS_Mem_TryAlloc(160, &g_CSS_QueuedSoundSlotTable);
   return CSS_BuildMixLookupTables(v6, v3);
 }
 // 470B8C: variable 'v4' is possibly undefined
@@ -8506,8 +8506,8 @@ int __cdecl CSS_InitMixBuffers(int a1, int a2)
 //----- (00470BD0) --------------------------------------------------------
 int CSS_FreeMixBuffers()
 {
-  CSS_Mem_FreeIfSet(dword_54DB70);
-  return CSS_Mem_FreeIfSet(dword_54DB94);
+  CSS_Mem_FreeIfSet(g_CSS_MixBufferAllocBase);
+  return CSS_Mem_FreeIfSet(g_CSS_QueuedSoundSlotTable);
 }
 // 54DB70: using guessed type int dword_54DB70;
 // 54DB94: using guessed type int dword_54DB94;
@@ -8517,8 +8517,8 @@ int __cdecl CSS_GetMixSampleRate(_DWORD *a1)
 {
   int result; // eax
 
-  result = dword_54DB9C;
-  *a1 = dword_54DB9C;
+  result = g_CSS_MixSampleRate;
+  *a1 = g_CSS_MixSampleRate;
   return result;
 }
 // 54DB9C: using guessed type int dword_54DB9C;
@@ -8528,13 +8528,13 @@ int __cdecl CSS_InitMixChannels(int a1)
 {
   int result; // eax
 
-  dword_54DB78 = 0;
-  dword_54DB80 = a1;
-  dword_54DB6C = 0;
-  dword_54DB74 = 0;
-  CSS_Mem_TryAlloc(108 * a1, &dword_54DB90);
+  g_CssMixChannelsReadyFlag = 0;
+  g_CssMixChannelCount = a1;
+  g_CSS_MixIdleChannelFlag = 0;
+  g_CSS_MixSuspendedFlag = 0;
+  CSS_Mem_TryAlloc(108 * a1, &g_CssMixChannels);
   result = CSS_ResetAllMixChannels();
-  dword_54DB78 = 1;
+  g_CssMixChannelsReadyFlag = 1;
   return result;
 }
 // 54DB6C: using guessed type int dword_54DB6C;
@@ -8548,11 +8548,11 @@ int CSS_FreeMixChannels()
 {
   int result; // eax
 
-  if ( dword_54DB80 )
+  if ( g_CssMixChannelCount )
   {
-    dword_54DB78 = 0;
-    result = CSS_Mem_FreeIfSet(dword_54DB90);
-    dword_54DB80 = 0;
+    g_CssMixChannelsReadyFlag = 0;
+    result = CSS_Mem_FreeIfSet(g_CssMixChannels);
+    g_CssMixChannelCount = 0;
   }
   return result;
 }
@@ -8566,7 +8566,7 @@ int CSS_ResetAllMixChannels()
   unsigned int i; // ebx
   int result; // eax
 
-  for ( i = 0; i < dword_54DB80; ++i )
+  for ( i = 0; i < g_CssMixChannelCount; ++i )
     result = CSS_ResetMixChannelRecord(i);
   return result;
 }
@@ -8578,7 +8578,7 @@ int __cdecl CSS_SetMixIdleChannelFlag(int a1)
   int result; // eax
 
   result = a1;
-  dword_54DB6C = a1;
+  g_CSS_MixIdleChannelFlag = a1;
   return result;
 }
 // 54DB6C: using guessed type int dword_54DB6C;
@@ -8589,7 +8589,7 @@ int __cdecl CSS_SetMixSuspended(int a1)
   int result; // eax
 
   result = a1;
-  dword_54DB74 = a1;
+  g_CSS_MixSuspendedFlag = a1;
   return result;
 }
 // 54DB74: using guessed type int dword_54DB74;
@@ -8600,7 +8600,7 @@ int __cdecl CSS_SetMixMasterVolume(int a1)
   int result; // eax
 
   result = a1;
-  dword_54DB88 = a1;
+  g_CSS_MixMasterVolume = a1;
   return result;
 }
 // 54DB88: using guessed type int dword_54DB88;
@@ -8610,8 +8610,8 @@ int __cdecl CSS_GetMixMasterVolume(_DWORD *a1)
 {
   int result; // eax
 
-  result = dword_54DB88;
-  *a1 = dword_54DB88;
+  result = g_CSS_MixMasterVolume;
+  *a1 = g_CSS_MixMasterVolume;
   return result;
 }
 // 54DB88: using guessed type int dword_54DB88;
@@ -8627,10 +8627,10 @@ int __cdecl CSS_BuildVolumeScaleTable(int a1)
   int v6; // [esp+0h] [ebp-18h]
   int v7; // [esp+4h] [ebp-14h]
 
-  v1 = dword_54DB8C;
-  if ( dword_54DB8C )
+  v1 = g_CssMixBufferAlignedBase;
+  if ( g_CssMixBufferAlignedBase )
   {
-    dword_54DB7C = a1;
+    g_CSS_CurrentVolumeScaleLevel = a1;
     v7 = 0;
     v6 = 0;
     do
@@ -8639,7 +8639,7 @@ int __cdecl CSS_BuildVolumeScaleTable(int a1)
       v3 = -512 * v7;
       do
       {
-        v4 = v3 * a1 / (32 * dword_54DB80);
+        v4 = v3 * a1 / (32 * g_CssMixChannelCount);
         v1 += 4;
         ++v2;
         v3 += v6;
@@ -8665,8 +8665,8 @@ int __cdecl CSS_ResetMixChannelRecord(int a1)
   int result; // eax
 
   v1 = 108 * a1;
-  result = dword_54DB90;
-  *(_DWORD *)(v1 + dword_54DB90 + 96) = 0;
+  result = g_CssMixChannels;
+  *(_DWORD *)(v1 + g_CssMixChannels + 96) = 0;
   *(_DWORD *)(v1 + result + 68) = 0;
   *(_DWORD *)(v1 + result + 72) = 0;
   *(_DWORD *)(v1 + result + 4) = 0;
@@ -8688,9 +8688,9 @@ int __cdecl CSS_ResetMixChannelRecord(int a1)
 //----- (00470E60) --------------------------------------------------------
 void __cdecl CSS_StartMixChannelPlayback(unsigned int a1, int a2)
 {
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    *(_DWORD *)(dword_54DB90 + 108 * a1 + 96) = 2;
+    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 2;
     CSS_ChannelSetRate(a1, a2);
     CSS_ChannelSetPlayPosition(a1, 0);
   }
@@ -8708,17 +8708,17 @@ void __cdecl CSS_SetMixChannelLoopPoints(unsigned int a1, int a2, int a3)
   int v7; // edx
 
   v3 = a3;
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
     v4 = 108 * a1;
-    v5 = dword_54DB90;
-    *(_DWORD *)(dword_54DB90 + v4 + 12) = 1;
+    v5 = g_CssMixChannels;
+    *(_DWORD *)(g_CssMixChannels + v4 + 12) = 1;
     *(_DWORD *)(v5 + v4 + 16) = a2;
     if ( a3 == -1 )
       v3 = *(_DWORD *)(v5 + v4 + 8);
     v6 = 108 * a1;
-    v7 = dword_54DB90;
-    *(_DWORD *)(dword_54DB90 + v6 + 20) = v3;
+    v7 = g_CssMixChannels;
+    *(_DWORD *)(g_CssMixChannels + v6 + 20) = v3;
     *(_DWORD *)(v7 + v6 + 24) = 1;
   }
 }
@@ -8731,11 +8731,11 @@ unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int a1)
   unsigned int result; // eax
   int v2; // edx
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
     result = 108 * a1;
-    v2 = dword_54DB90;
-    *(_DWORD *)(dword_54DB90 + result + 12) = 0;
+    v2 = g_CssMixChannels;
+    *(_DWORD *)(g_CssMixChannels + result + 12) = 0;
     *(_DWORD *)(v2 + result + 16) = 0;
     *(_DWORD *)(v2 + result + 20) = 0;
     *(_DWORD *)(v2 + result + 24) = 0;
@@ -8750,10 +8750,10 @@ int __cdecl CSS_ChannelGetLoopRange(unsigned int a1, _DWORD *a2, _DWORD *a3)
 {
   int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    *a2 = *(_DWORD *)(dword_54DB90 + 108 * a1 + 16);
-    result = *(_DWORD *)(dword_54DB90 + 108 * a1 + 20);
+    *a2 = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 16);
+    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 20);
     *a3 = result;
   }
   return result;
@@ -8766,10 +8766,10 @@ unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int a1)
 {
   unsigned int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
     result = 108 * a1;
-    *(_DWORD *)(dword_54DB90 + 108 * a1 + 96) = 0;
+    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 0;
   }
   return result;
 }
@@ -8781,10 +8781,10 @@ unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int a1)
 {
   unsigned int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
     result = 108 * a1;
-    *(_DWORD *)(dword_54DB90 + 108 * a1 + 96) = 3;
+    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 3;
   }
   return result;
 }
@@ -8796,9 +8796,9 @@ BOOL __cdecl CSS_ChannelIsPlaying(unsigned int a1)
 {
   unsigned int v1; // eax
 
-  if ( a1 >= dword_54DB80 )
+  if ( a1 >= g_CssMixChannelCount )
     return 0;
-  v1 = dword_54DB90 + 108 * a1;
+  v1 = g_CssMixChannels + 108 * a1;
   return *(_DWORD *)(v1 + 96) == 3 || *(_DWORD *)(v1 + 96) == 2;
 }
 // 54DB80: using guessed type int dword_54DB80;
@@ -8812,9 +8812,9 @@ int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3)
   int result; // eax
 
   v3 = a3;
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v4 = (_DWORD *)(108 * a1 + dword_54DB90);
+    v4 = (_DWORD *)(108 * a1 + g_CssMixChannels);
     if ( !a3 )
       v3 = 1;
     v4[21] = 1000 * (1000 * a2 - v4[20]) / (g_CSS_MixUpdateRateHz * v3);
@@ -8837,14 +8837,14 @@ _DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
   int v3; // edx
 
   v1 = 0;
-  if ( dword_54DB80 > 0 )
+  if ( g_CssMixChannelCount > 0 )
   {
     v2 = 0;
     do
     {
-      result = (_DWORD *)(v2 + dword_54DB90);
-      v3 = *(_DWORD *)(v2 + dword_54DB90 + 80);
-      if ( *(int *)(v2 + dword_54DB90 + 84) <= 0 )
+      result = (_DWORD *)(v2 + g_CssMixChannels);
+      v3 = *(_DWORD *)(v2 + g_CssMixChannels + 80);
+      if ( *(int *)(v2 + g_CssMixChannels + 84) <= 0 )
       {
         if ( (int)result[21] < 0 )
         {
@@ -8871,7 +8871,7 @@ _DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
       ++v1;
       v2 += 108;
     }
-    while ( v1 < dword_54DB80 );
+    while ( v1 < g_CssMixChannelCount );
   }
   return result;
 }
@@ -8883,9 +8883,9 @@ unsigned int __cdecl CSS_ChannelSetRate(unsigned int a1, int a2)
 {
   unsigned int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    result = dword_54DB90 + 108 * a1;
+    result = g_CssMixChannels + 108 * a1;
     *(_DWORD *)(result + 60) = a2;
   }
   return result;
@@ -8898,9 +8898,9 @@ void __cdecl CSS_ChannelGetRate(unsigned int a1, _DWORD *a2)
 {
   unsigned int v2; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v2 = dword_54DB90 + 108 * a1;
+    v2 = g_CssMixChannels + 108 * a1;
     if ( *(_DWORD *)(v2 + 96) > 1u )
       *a2 = *(_DWORD *)(v2 + 60);
     else
@@ -8917,10 +8917,10 @@ unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int a1, int a2)
   unsigned int result; // eax
 
   result = a1;
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
     result = 108 * a1;
-    *(_DWORD *)(dword_54DB90 + 108 * a1 + 80) = 1000 * a2;
+    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 80) = 1000 * a2;
   }
   return result;
 }
@@ -8932,9 +8932,9 @@ unsigned int __cdecl CSS_ChannelGetVolume(unsigned int a1, _DWORD *a2)
 {
   unsigned int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(dword_54DB90 + 108 * a1 + 80) / 0x3E8u;
+    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 80) / 0x3E8u;
     *a2 = result;
   }
   return result;
@@ -8948,10 +8948,10 @@ void __cdecl CSS_ChannelAssignQueueSlot(unsigned int a1, int a2)
   _DWORD *v2; // edx
   int v3; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v2 = (_DWORD *)(108 * a1 + dword_54DB90);
-    v3 = dword_54DB94 + 40 * (a2 - 1);
+    v2 = (_DWORD *)(108 * a1 + g_CssMixChannels);
+    v3 = g_CSS_QueuedSoundSlotTable + 40 * (a2 - 1);
     v2[17] = a2;
     v2[18] = 1;
     if ( *(_DWORD *)(v3 + 12) == 5 && v2[24] == 1 )
@@ -8989,7 +8989,7 @@ unsigned int __cdecl CSS_QueueSoundDescriptor(int a1, signed int a2, int a3)
   v4 = v3;
   if ( v3 >= 4 )
     g_CSS_SoundDescriptorRingIndex = 0;
-  v5 = (_DWORD *)(40 * (v3 - 1) + dword_54DB94);
+  v5 = (_DWORD *)(40 * (v3 - 1) + g_CSS_QueuedSoundSlotTable);
   *v5 = a1;
   v6 = CSS_GetFormatTableValue(a3);
   v5[3] = 0;
@@ -9012,8 +9012,8 @@ _DWORD *__cdecl CSS_ChannelLoadQueuedSound(int a1)
   _DWORD *result; // eax
   _DWORD *v2; // edx
 
-  result = (_DWORD *)(dword_54DB90 + 108 * a1);
-  v2 = (_DWORD *)(dword_54DB94 + 40 * (result[17] - 1));
+  result = (_DWORD *)(g_CssMixChannels + 108 * a1);
+  v2 = (_DWORD *)(g_CSS_QueuedSoundSlotTable + 40 * (result[17] - 1));
   *result = *v2;
   result[2] = v2[2];
   result[3] = v2[3];
@@ -9040,9 +9040,9 @@ void __cdecl CSS_ChannelSetPlayPosition(unsigned int a1, unsigned int a2)
   unsigned int v4; // eax
   unsigned int v5; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v2 = (int *)(dword_54DB90 + 108 * a1);
+    v2 = (int *)(g_CssMixChannels + 108 * a1);
     v3 = a2 >> CSS_GetFormatTableValue(v2[1]);
     if ( !v2[18] || (CSS_ChannelLoadQueuedSound(a1), v2[3] == 2) || v2[3] == 3 || v2[24] != 4 )
     {
@@ -9161,9 +9161,9 @@ int __cdecl CSS_ChannelGetPlayPosition(unsigned int a1, _DWORD *a2)
   unsigned int v2; // ebx
   int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v2 = 108 * a1 + dword_54DB90;
+    v2 = 108 * a1 + g_CssMixChannels;
     result = *(_DWORD *)(v2 + 48) << CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
     *a2 = result;
   }
@@ -9179,12 +9179,12 @@ void __cdecl CSS_ChannelSetPanning(unsigned int a1, int a2)
   unsigned int v3; // eax
 
   v2 = a2;
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v3 = 108 * a1 + dword_54DB90;
+    v3 = 108 * a1 + g_CssMixChannels;
     if ( *(_DWORD *)(v3 + 4) != 1 && *(_DWORD *)(v3 + 4) != 2 && *(_DWORD *)(v3 + 4) != 5 && a2 == 128 )
       v2 = 0;
-    *(_DWORD *)(dword_54DB90 + 108 * a1 + 76) = v2;
+    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 76) = v2;
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
@@ -9195,9 +9195,9 @@ int __cdecl CSS_ChannelGetPanning(unsigned int a1, _DWORD *a2)
 {
   int result; // eax
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(dword_54DB90 + 108 * a1 + 76);
+    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 76);
     *a2 = result;
   }
   return result;
@@ -9211,22 +9211,22 @@ void  CSS_TickChannelLevels(int a1, int a2)
   unsigned int v2; // ebx
   int v3; // esi
 
-  if ( !dword_54DB74 && dword_54DB80 && dword_54DB78 )
+  if ( !g_CSS_MixSuspendedFlag && g_CssMixChannelCount && g_CssMixChannelsReadyFlag )
   {
     v2 = 0;
-    if ( dword_54DB80 )
+    if ( g_CssMixChannelCount )
     {
       v3 = 0;
       do
       {
-        if ( !*(_DWORD *)(v3 + dword_54DB90 + 92) && !dword_54DB6C )
+        if ( !*(_DWORD *)(v3 + g_CssMixChannels + 92) && !g_CSS_MixIdleChannelFlag )
           a1 = 1000;
         v3 += 108;
         Audio_MixResampledVoice((int *)a1);
-        a1 = dword_54DB80;
+        a1 = g_CssMixChannelCount;
         ++v2;
       }
-      while ( v2 < dword_54DB80 );
+      while ( v2 < g_CssMixChannelCount );
     }
   }
   else
@@ -9249,9 +9249,9 @@ unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int a1, int a2, unsigned i
   _DWORD *v6; // ebx
 
   result = a1;
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v6 = (_DWORD *)(108 * a1 + dword_54DB90);
+    v6 = (_DWORD *)(108 * a1 + g_CssMixChannels);
     *v6 = a2;
     v6[3] = 1;
     v6[13] = 0;
@@ -9296,9 +9296,9 @@ void __cdecl CSS_ChannelSetPositionOffset(unsigned int a1, unsigned int a2)
 {
   unsigned int v2; // ebx
 
-  if ( a1 < dword_54DB80 )
+  if ( a1 < g_CssMixChannelCount )
   {
-    v2 = 108 * a1 + dword_54DB90;
+    v2 = 108 * a1 + g_CssMixChannels;
     *(_DWORD *)(v2 + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
   }
 }
@@ -9753,7 +9753,7 @@ void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3)
   if ( g_CRT_ExitProcessFinalizerHook )
     g_CRT_ExitProcessFinalizerHook();
   v5 = v3;
-  if ( dword_54DD90 )
+  if ( g_CrtThreadDataMgmtDisabledFlag )
   {
     if ( g_CRT_ProcessExitThreadHook )
       g_CRT_ProcessExitThreadHook(v4, 255);
@@ -9785,15 +9785,15 @@ int __fastcall Mem_InitReserveBlock(int a1, int a2)
 
   (void)a1;
   (void)a2;
-  dword_54DBA8 = nmalloc_(0x7D0, 0);
-  if ( !dword_54DBA8 )
+  g_ClipsMemoryTable = nmalloc_(0x7D0, 0);
+  if ( !g_ClipsMemoryTable )
   {
     Rules_PrintErrorID((int)aMemory, 1, 1);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfMemory_, v3);
     IO_RunRouterExitCallbacks();
   }
   for ( result = 0; result != 2000; result += 4 )
-    *(_DWORD *)(dword_54DBA8 + result) = 0;
+    *(_DWORD *)(g_ClipsMemoryTable + result) = 0;
   return result;
 }
 // 472605: variable 'v3' is possibly undefined
@@ -9971,7 +9971,7 @@ int  Mem_PurgeFreeListsForSpace(int a1, int a2, int a3)
   v6 = 1996;
   do
   {
-    v7 = *(_DWORD *)(v6 + dword_54DBA8);
+    v7 = *(_DWORD *)(v6 + g_ClipsMemoryTable);
     if ( v7 )
     {
       do
@@ -9983,7 +9983,7 @@ int  Mem_PurgeFreeListsForSpace(int a1, int a2, int a3)
       }
       while ( v8 );
     }
-    *(_DWORD *)(v6 + dword_54DBA8) = 0;
+    *(_DWORD *)(v6 + g_ClipsMemoryTable) = 0;
     if ( v4 > a1 && a1 > 0 )
       break;
     --v5;
@@ -10021,7 +10021,7 @@ _BYTE * Mem_SmallBlockAllocZeroed(unsigned int a1)
   {
     v1 = 4;
   }
-  free_list_slot = 4 * v1 + dword_54DBA8;
+  free_list_slot = 4 * v1 + g_ClipsMemoryTable;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
@@ -10064,7 +10064,7 @@ _DWORD * Mem_SmallBlockAlloc(unsigned int a1)
   {
     a1 = 4;
   }
-  free_list_slot = dword_54DBA8 + 4 * a1;
+  free_list_slot = g_ClipsMemoryTable + 4 * a1;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
@@ -10090,7 +10090,7 @@ _DWORD * Mem_NewArray(unsigned int a1)
   {
     a1 = 4;
   }
-  free_list_slot = dword_54DBA8 + 4 * a1;
+  free_list_slot = g_ClipsMemoryTable + 4 * a1;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
@@ -10116,8 +10116,8 @@ signed int  Mem_SmallBlockFree(_DWORD *a1, int a2)
   {
     v3 = 4;
 LABEL_5:
-    *a1 = *(_DWORD *)(dword_54DBA8 + 4 * v3);
-    *(_DWORD *)(dword_54DBA8 + 4 * v3) = a1;
+    *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v3);
+    *(_DWORD *)(g_ClipsMemoryTable + 4 * v3) = a1;
     return 1;
   }
   if ( v3 < 500 )
@@ -10142,8 +10142,8 @@ signed int  Mem_SmallBlockRelease(_DWORD *a1, int a2)
   {
     v3 = 4;
 LABEL_5:
-    *a1 = *(_DWORD *)(dword_54DBA8 + 4 * v3);
-    *(_DWORD *)(dword_54DBA8 + 4 * v3) = a1;
+    *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v3);
+    *(_DWORD *)(g_ClipsMemoryTable + 4 * v3) = a1;
     return 1;
   }
   if ( v3 < 500 )
@@ -10170,23 +10170,23 @@ signed int  Mem_InitPool(unsigned int a1, char a2)
   int tail_header;
 
   request_size = a1;
-  dword_54DBC0 = 16;
-  dword_54DBB8 = 16;
+  g_MemPoolBlockHeaderSize = 16;
+  g_HeapChunkHeaderSize = 16;
   if ( a1 < 0x3E800 )
     a1 = 256000;
-  block_header_bytes = 2 * dword_54DBC0;
-  available_size = 8 * ((dword_54DBB8 + block_header_bytes + a1 - 1) >> 3) + 8 - block_header_bytes - dword_54DBB8;
-  if ( request_size < 0x3E800 && (unsigned int)available_size <= request_size + dword_54DBC0 )
-    available_size = 8 * ((dword_54DBB8 + request_size + block_header_bytes - 1) >> 3) + 8 - block_header_bytes - dword_54DBB8;
-  dword_54DBBC = nmalloc_(available_size, 0);
-  if ( dword_54DBBC )
+  block_header_bytes = 2 * g_MemPoolBlockHeaderSize;
+  available_size = 8 * ((g_HeapChunkHeaderSize + block_header_bytes + a1 - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
+  if ( request_size < 0x3E800 && (unsigned int)available_size <= request_size + g_MemPoolBlockHeaderSize )
+    available_size = 8 * ((g_HeapChunkHeaderSize + request_size + block_header_bytes - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
+  g_MemPoolListHead = nmalloc_(available_size, 0);
+  if ( g_MemPoolListHead )
   {
-    *(_DWORD *)dword_54DBBC = 0;
-    *(_DWORD *)(dword_54DBBC + 4) = 0;
-    first_block = dword_54DBBC + dword_54DBB8;
-    *(_DWORD *)(dword_54DBBC + 8) = first_block;
-    *(_DWORD *)(dword_54DBBC + 12) = available_size;
-    tail_header = dword_54DBBC + dword_54DBB8 + dword_54DBC0 + available_size;
+    *(_DWORD *)g_MemPoolListHead = 0;
+    *(_DWORD *)(g_MemPoolListHead + 4) = 0;
+    first_block = g_MemPoolListHead + g_HeapChunkHeaderSize;
+    *(_DWORD *)(g_MemPoolListHead + 8) = first_block;
+    *(_DWORD *)(g_MemPoolListHead + 12) = available_size;
+    tail_header = g_MemPoolListHead + g_HeapChunkHeaderSize + g_MemPoolBlockHeaderSize + available_size;
     *(_DWORD *)(tail_header + 4) = 0;
     *(_DWORD *)(tail_header + 8) = 0;
     *(_DWORD *)(tail_header + 12) = 0;
@@ -10221,17 +10221,17 @@ int  Mem_GrowPoolChain(int a1, unsigned int a2)
 
   if ( a2 < 0x3E800 )
     a2 = 256000;
-  available_size = 8 * ((a2 + 2 * dword_54DBC0 + dword_54DBB8 - 1) >> 3) + 8 - dword_54DBB8 - 2 * dword_54DBC0;
+  available_size = 8 * ((a2 + 2 * g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize - 1) >> 3) + 8 - g_HeapChunkHeaderSize - 2 * g_MemPoolBlockHeaderSize;
   new_pool = nmalloc_(available_size, 0);
   if ( new_pool )
   {
     *(_DWORD *)new_pool = 0;
     *(_DWORD *)(new_pool + 4) = a1;
-    first_block = new_pool + dword_54DBB8;
+    first_block = new_pool + g_HeapChunkHeaderSize;
     *(_DWORD *)(new_pool + 12) = available_size;
     *(_DWORD *)(new_pool + 8) = first_block;
     *(_DWORD *)a1 = new_pool;
-    tail_header = new_pool + dword_54DBB8 + dword_54DBC0 + available_size;
+    tail_header = new_pool + g_HeapChunkHeaderSize + g_MemPoolBlockHeaderSize + available_size;
     *(_DWORD *)(tail_header + 4) = 0;
     *(_DWORD *)(tail_header + 8) = 0;
     *(_DWORD *)(tail_header + 12) = 0;
@@ -10265,18 +10265,18 @@ signed int  Mem_PoolAllocBlock(unsigned int a1, _DWORD *a2)
     IO_AddRouter((int)aBmexit, -2000, 0, 0, 0, 0, (int)Mem_HeapExitHandler);
   }
   requested_size = 8 * ((a1 - 1) >> 3) + 8;
-  if ( dword_54DBBC )
+  if ( g_MemPoolListHead )
   {
-    pool = (_DWORD *)(uintptr_t)dword_54DBBC;
+    pool = (_DWORD *)(uintptr_t)g_MemPoolListHead;
     while ( 1 )
     {
       block = (_DWORD *)(uintptr_t)pool[2];
       while ( block )
       {
-        if ( requested_size == (unsigned int)block[3] || requested_size + dword_54DBC0 < (unsigned int)block[3] )
+        if ( requested_size == (unsigned int)block[3] || requested_size + g_MemPoolBlockHeaderSize < (unsigned int)block[3] )
         {
           Mem_PoolSplitBlock((int)(uintptr_t)pool, block, requested_size);
-          return (int)(uintptr_t)((char *)block + dword_54DBC0);
+          return (int)(uintptr_t)((char *)block + g_MemPoolBlockHeaderSize);
         }
         block = (_DWORD *)(uintptr_t)block[1];
       }
@@ -10342,9 +10342,9 @@ int  Mem_PoolSplitBlock(int result, _DWORD *a2, int a3)
   }
   else
   {
-    tail_header = (_DWORD *)((char *)a2 + dword_54DBC0 + block_size);
-    split_block = (_DWORD *)((char *)a2 + dword_54DBC0 + a3);
-    split_block[3] = block_size - (a3 + dword_54DBC0);
+    tail_header = (_DWORD *)((char *)a2 + g_MemPoolBlockHeaderSize + block_size);
+    split_block = (_DWORD *)((char *)a2 + g_MemPoolBlockHeaderSize + a3);
+    split_block[3] = block_size - (a3 + g_MemPoolBlockHeaderSize);
     *split_block = a2;
     split_block[1] = a2[1];
     split_block[2] = a2[2];
@@ -10390,8 +10390,8 @@ signed int  Mem_PoolFreeCoalesce(int a1, int a2)
   int v22; // ecx
 
   v3 = 8 * ((unsigned int)(a2 - 1) >> 3) + 8;
-  v4 = (_DWORD *)(a1 - dword_54DBC0);
-  if ( a1 == dword_54DBC0 )
+  v4 = (_DWORD *)(a1 - g_MemPoolBlockHeaderSize);
+  if ( a1 == g_MemPoolBlockHeaderSize )
     return 0;
   v5 = v4[3];
   if ( v5 >= 0 || -v3 != v5 )
@@ -10405,7 +10405,7 @@ signed int  Mem_PoolFreeCoalesce(int a1, int a2)
       v8 = (_DWORD *)*v8;
     while ( *v8 );
   }
-  v9 = (_DWORD *)((char *)v8 - dword_54DBB8);
+  v9 = (_DWORD *)((char *)v8 - g_HeapChunkHeaderSize);
   v10 = (_DWORD *)(a1 + v3);
   v11 = v9[2];
   v12 = (_DWORD *)*v4;
@@ -10420,7 +10420,7 @@ signed int  Mem_PoolFreeCoalesce(int a1, int a2)
     v14 = v12[3];
     if ( v14 > 0 )
     {
-      v12[3] = v4[3] + dword_54DBC0 + v14;
+      v12[3] = v4[3] + g_MemPoolBlockHeaderSize + v14;
       if ( !v10 )
         return 0;
       *v10 = v12;
@@ -10445,8 +10445,8 @@ signed int  Mem_PoolFreeCoalesce(int a1, int a2)
   v17 = v10[3];
   if ( v17 > 0 )
   {
-    v4[3] += v17 + dword_54DBC0;
-    v18 = (_DWORD *)((char *)v10 + v10[3] + dword_54DBC0);
+    v4[3] += v17 + g_MemPoolBlockHeaderSize;
+    v18 = (_DWORD *)((char *)v10 + v10[3] + g_MemPoolBlockHeaderSize);
     if ( v18 )
     {
       *v18 = v4;
@@ -10479,7 +10479,7 @@ LABEL_27:
   if ( !*v9 )
     return 1;
   *(_DWORD *)(v22 + 4) = 0;
-  dword_54DBBC = *v9;
+  g_MemPoolListHead = *v9;
   nfree_(v22);
   return 1;
 }
@@ -10497,18 +10497,18 @@ int __thiscall Mem_ReleaseAllPools(void *this)
 
   (void)this;
 
-  if ( dword_54DBBC )
+  if ( g_MemPoolListHead )
   {
     do
     {
-      next_pool = *(_DWORD *)dword_54DBBC;
-      nfree_(dword_54DBBC);
-      dword_54DBBC = next_pool;
+      next_pool = *(_DWORD *)g_MemPoolListHead;
+      nfree_(g_MemPoolListHead);
+      g_MemPoolListHead = next_pool;
     }
     while ( next_pool );
   }
   result = g_Mem_ReservedBlockListHead;
-  dword_54DBBC = 0;
+  g_MemPoolListHead = 0;
   if ( g_Mem_ReservedBlockListHead )
   {
     do
@@ -11413,7 +11413,7 @@ void  __noreturn Render_HandleDirectDrawFatalError(unsigned int a1, int a2)
           sprintf_(v3, aDderr_nodc);
         }
 LABEL_11:
-        sprintf_(&unk_54DBE0, "DirectDraw Error %s", v3);
+        sprintf_(&g_DirectDrawErrorMessageBuffer, "DirectDraw Error %s", v3);
         App_RequestQuit((int)aDirectdrawEr_0);
       }
       if ( a1 <= 0x8876024E )
@@ -12296,7 +12296,7 @@ int  IO_ParseOpenModeFlags(unsigned __int8 *a1, _DWORD *a2)
   v6 = 0;
   Value = 0;
   if ( a2 )
-    *a2 = dword_51A64C == 1;
+    *a2 = g_CRT_DefaultCommitMode == 1;
   v7 = *a1;
   if ( *v2 < 0x72u )
   {
@@ -12487,7 +12487,7 @@ int  IO_CloseStream(int a1, int a2)
   int v9; // edx
 
   g_CRT_StaticLock1AcquireHook();
-  for ( i = (_DWORD *)dword_54DD88; i; i = (_DWORD *)*i )
+  for ( i = (_DWORD *)g_CRT_OpenStreamListHead; i; i = (_DWORD *)*i )
   {
     v5 = i[1];
     if ( a1 == v5 )
@@ -12499,7 +12499,7 @@ LABEL_6:
       return a1;
     }
   }
-  for ( j = &dword_54DD8C; ; j = (int *)*j )
+  for ( j = &g_IO_OpenStreamListHead; ; j = (int *)*j )
   {
     v8 = (int *)*j;
     if ( !*j )
@@ -12507,8 +12507,8 @@ LABEL_6:
     if ( a1 == v8[1] )
     {
       *j = *v8;
-      v9 = dword_54DD88;
-      dword_54DD88 = (int)v8;
+      v9 = g_CRT_OpenStreamListHead;
+      g_CRT_OpenStreamListHead = (int)v8;
       *v8 = v9;
       goto LABEL_6;
     }
@@ -12616,9 +12616,9 @@ int Output_WriteFormatted(int a1, int a2, int a3, int a4, ...)
 //----- (00476A0C) --------------------------------------------------------
 void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this)
 {
-  if ( !word_51A644 )
+  if ( !g_FatalRuntimeErrorOnceGuard )
   {
-    word_51A644 = 1;
+    g_FatalRuntimeErrorOnceGuard = 1;
     _wcpp_4_fatal_runtime_error__(this, 1);
   }
 }
@@ -12628,8 +12628,8 @@ void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this)
 //----- (00476A80) --------------------------------------------------------
 int FileSystem_InitCurrentEntryPathHolder()
 {
-  dword_54DD00 = 0;
-  dword_54DD04 = (int)&g_PathEntry_Vtable;
+  g_FileSystemStrippedPathHolderText = 0;
+  g_CurrentEntryPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
   return CRT_RegisterFinalizableObject(&g_PathEntry_Vtable, 0);
 }
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -12964,8 +12964,8 @@ int  FileSystem_ResolveAndInvokeForPath(int a1, int a2, int (*a3)(void))
       matched_index = FileSystem_FindMatchingMountIndex(a1, &v11, next_index);
       if ( matched_index == -1 )
         break;
-      Compat_StringHolderDestructor(&dword_54DD00);
-      FileSystem_StripMountPrefix(a1, matched_index, matched_index, (const char **)&dword_54DD00);
+      Compat_StringHolderDestructor(&g_FileSystemStrippedPathHolderText);
+      FileSystem_StripMountPrefix(a1, matched_index, matched_index, (const char **)&g_FileSystemStrippedPathHolderText);
       callback_result = a3();
       if ( callback_result != a2 )
       {
@@ -13003,8 +13003,8 @@ static int Compat_FileSystemQuery(int filesystem, const char *requested_path, in
       current_entry = FileSystem_FindMatchingMountIndex(filesystem, &normalized_path, next_entry);
       if ( current_entry == -1 )
         break;
-      Compat_StringHolderCopyText(&dword_54DD00, Compat_StringHolderGetText((_DWORD *)&normalized_path));
-      FileSystem_StripMountPrefix(filesystem, current_entry, current_entry, (const char **)&dword_54DD00);
+      Compat_StringHolderCopyText(&g_FileSystemStrippedPathHolderText, Compat_StringHolderGetText((_DWORD *)&normalized_path));
+      FileSystem_StripMountPrefix(filesystem, current_entry, current_entry, (const char **)&g_FileSystemStrippedPathHolderText);
       callback_result = callback(entry_base + 16 * current_entry);
       if ( callback_result != expected_result )
       {
@@ -13023,15 +13023,15 @@ int  FileSystem_TryOpenEntryCallback(int a1)
 {
   int v3; // ebx
 
-  v3 = Compat_FileSystemOpenIfReady(*(_DWORD *)a1, dword_54DD08);
+  v3 = Compat_FileSystemOpenIfReady(*(_DWORD *)a1, g_FileSystemMountOpenMode);
   if ( !*(_DWORD *)(a1 + 12) )
     return v3;
   if ( v3 )
   {
-    Output_WriteFormatted(a1 + 12, dword_54DD00, *(_DWORD *)(a1 + 12), (int)aS_15, dword_54DD00);
+    Output_WriteFormatted(a1 + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(a1 + 12), (int)aS_15, g_FileSystemStrippedPathHolderText);
     return v3;
   }
-  Output_WriteFormatted(a1 + 12, dword_54DD00, *(_DWORD *)(a1 + 12), (int)aS_2, dword_54DD00);
+  Output_WriteFormatted(a1 + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(a1 + 12), (int)aS_2, g_FileSystemStrippedPathHolderText);
   return v3;
 }
 // 54DD00: using guessed type int dword_54DD00;
@@ -13096,19 +13096,19 @@ int  FileSystem_ResolveRelativeToCurrentDir(int a1, int a2)
   _DWORD v6[4]; // [esp-Ch] [ebp-10h] BYREF
 
   v3 = a1;
-  if ( (byte_54DCF8 & 1) == 0 )
+  if ( (g_FileSystem_CwdHolderInitFlag & 1) == 0 )
   {
     v5 = a2;
-    byte_54DCF8 |= 1u;
-    dword_54DCF0 = 0;
-    dword_54DCF4 = (int)&g_PathEntry_Vtable;
+    g_FileSystem_CwdHolderInitFlag |= 1u;
+    g_FS_ResolvedPathEntryHolder = 0;
+    g_CurrentDirPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
     CRT_RegisterFinalizableObject(0, a1);
     a2 = v5;
   }
   Compat_StringHolderConstructJoined(v6, a2, *(const char **)(v3 + 12));
-  Compat_StringHolderDestructor(&dword_54DCF0);
+  Compat_StringHolderDestructor(&g_FS_ResolvedPathEntryHolder);
   Compat_StringHolderScalarDeletingDtor((int)v6, 1);
-  return dword_54DCF0;
+  return g_FS_ResolvedPathEntryHolder;
 }
 // 477312: variable 'v3' is possibly undefined
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -13611,7 +13611,7 @@ int  Compat_FileSystemForEachMountInvokeSlot0(int a1)
 //----- (00477C20) --------------------------------------------------------
 int  Compat_FileSystemForEachMountPrintSearchResult(int a1, int a2)
 {
-  dword_54DD08 = a2;
+  g_FileSystemMountOpenMode = a2;
   return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))FileSystem_TryOpenEntryCallback);
 }
 // 54DD08: using guessed type int dword_54DD08;
@@ -13619,7 +13619,7 @@ int  Compat_FileSystemForEachMountPrintSearchResult(int a1, int a2)
 //----- (00477C40) --------------------------------------------------------
 int  Compat_FileSystemForEachMountInvokeSlot16(int a1, int a2)
 {
-  dword_54DD08 = a2;
+  g_FileSystemMountOpenMode = a2;
   return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))Compat_FileSystemMountInvokeSlot16);
 }
 // 54DD08: using guessed type int dword_54DD08;
@@ -13633,7 +13633,7 @@ int  Compat_FileSystemForEachMountInvokeSlot32(int a1)
 //----- (00477C80) --------------------------------------------------------
 int  Compat_FileSystemForEachMountInvokeSlot24(int a1, int a2)
 {
-  dword_54DD08 = a2;
+  g_FileSystemMountOpenMode = a2;
   return FileSystem_ResolveAndInvokeForPath(a1, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot24);
 }
 // 54DD08: using guessed type int dword_54DD08;
@@ -14341,12 +14341,12 @@ int  FileSystem_ArchiveRecordCacheGetRecord(_DWORD *a1, int a2)
 {
   int v3; // ebp
 
-  ++dword_54DD0C;
+  ++g_FS_ArchiveRecordCacheAccessCount;
   v3 = a1[1];
   if ( a2 >= v3 && a2 < a1[2] + v3 )
     return a1[4] + 26 * (a2 - a1[1]);
   FileSystem_ArchiveRecordCacheLoadWindow(a1, a2);
-  ++dword_54DD10;
+  ++g_FS_ArchiveRecordCacheMissCount;
   return a1[4] + 26 * (a2 - a1[1]);
 }
 // 54DD0C: using guessed type int dword_54DD0C;
@@ -15344,7 +15344,7 @@ int  File_ResolveCachedPathEntry(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a
     a1[10] = cache_node[1];
     cache_node = (_DWORD *)(uintptr_t)(unsigned int)a1[10];
   }
-  ++dword_54DD18;
+  ++g_FS_PathEntryCacheMissCount;
   parent_holder[0] = 0;
   parent_holder[1] = (int)&g_PathEntry_Vtable;
   last_slash = Compat_StrrchrChar(path_text, '\\');
@@ -15374,7 +15374,7 @@ int  File_ResolvePathByParentAndLeaf(_DWORD *a1, const char *a2, DWORD a3)
   int parent_entry; // ebx
   int result; // ecx
 
-  ++dword_54DD14;
+  ++g_FS_ResolvePathByParentLeafCount;
   if ( !a2 || !*a2 )
     return 0;
   Compat_StringHolderBuildParentPath(parent_path_holder, a2);
@@ -15725,7 +15725,7 @@ _DWORD * File_OpenMountRootEntry(int a1, char a2, DWORD a3)
 
   if ( (a2 & 8) != 0 )
     return 0;
-  v5 = File_ResolvePathByParentAndLeaf((_DWORD *)a1, (const char *)(uintptr_t)(unsigned int)dword_54DD00, a3);
+  v5 = File_ResolvePathByParentAndLeaf((_DWORD *)a1, (const char *)(uintptr_t)(unsigned int)g_FileSystemStrippedPathHolderText, a3);
   if ( !v5 )
     return 0;
   result = (_DWORD *)Mem_Alloc(20, a1, a2, a3);
@@ -16004,7 +16004,7 @@ signed int  Rules_RetractFact(int a1, double a2)
   uintptr_t fact; // ecx
 
   fact = (uintptr_t)(unsigned int)a1;
-  if ( dword_51A954 )
+  if ( g_Rules_JoinOperationInProgress )
   {
     Rules_PrintErrorID((int)aFactmngr, 1, 1);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeR, 0);
@@ -16045,19 +16045,19 @@ signed int  Rules_RetractFact(int a1, double a2)
       *(_DWORD *)((uintptr_t)(unsigned int)new_head + 32) = 0;
   }
   Rules_DeinstallFact((int)fact);
-  ++dword_51A934;
-  dword_51A938 += 6 * *(_DWORD *)(fact + 46) + 60;
+  ++g_ClipsEphemeralItemCount;
+  g_ClipsEphemeralItemBytes += 6 * *(_DWORD *)(fact + 46) + 60;
   *(_DWORD *)(fact + 36) = g_Rules_GarbageFactListHead;
   g_Rules_GarbageFactListHead = (int)fact;
   *(_BYTE *)(fact + 29) |= 0x80u;
   Lexer_ErrorRecover(0);
-  dword_51A954 = 1;
+  g_Rules_JoinOperationInProgress = 1;
   Rules_RetractFactFromNetwork(*(_DWORD **)(fact + 20), a2);
-  dword_51A954 = 0;
+  g_Rules_JoinOperationInProgress = 0;
   if ( !g_Rules_CurrentlyExecutingRule )
     Rules_FlushPendingNetworkGarbage();
   Rules_FlushPendingDependencyDestructors();
-  if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+  if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
     Rules_RunPeriodicCleanup(1, 0);
   return 1;
 }
@@ -16091,14 +16091,14 @@ _DWORD *Rules_RemoveGarbageFacts()
       while ( 1 )
       {
         v1 = result[9];
-        if ( !result[2] && (result[7] & 0x7FFF) > dword_51A96C )
+        if ( !result[2] && (result[7] & 0x7FFF) > g_ClipsCurrentEvaluationDepth )
           break;
         result = (_DWORD *)result[9];
         if ( !v1 )
           return result;
       }
-      --dword_51A934;
-      dword_51A938 -= 6 * *(_DWORD *)((char *)result + 46) + 60;
+      --g_ClipsEphemeralItemCount;
+      g_ClipsEphemeralItemBytes -= 6 * *(_DWORD *)((char *)result + 46) + 60;
       Rules_ReturnFact(result);
       if ( v3 )
         *(_DWORD *)(v3 + 36) = v2;
@@ -16135,7 +16135,7 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
   int v16; // ecx
   _DWORD *v17; // ecx
 
-  if ( dword_51A954 )
+  if ( g_Rules_JoinOperationInProgress )
   {
     Rules_ReturnFact(a1);
     Rules_PrintErrorID((int)aFactmngr, 2, 1);
@@ -16179,7 +16179,7 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
     g_Rules_LastFactPointer = (int)a1;
     ++g_Rules_NextFactIndex;
     a1[6] = v12;
-    v13 = dword_51A998++;
+    v13 = g_Rules_EntityTimeTagCounter++;
     a1[3] = v13;
     Rules_InstallFact(a1);
     if ( (*(_BYTE *)(a1[4] + 24) & 2) != 0 )
@@ -16191,13 +16191,13 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
     g_Rules_FactListChangedFlag = 1;
     Rules_CheckFactAgainstSlotConstraints((int)a1);
     Lexer_ErrorRecover(0);
-    dword_51A954 = 1;
+    g_Rules_JoinOperationInProgress = 1;
     Rules_MatchFactAgainstPatternNetwork((int)a1, *(_DWORD *)(a1[4] + 32), 0, 0, a2, 0);
-    dword_51A954 = 0;
+    g_Rules_JoinOperationInProgress = 0;
     Rules_FlushPendingDependencyDestructors();
     if ( !g_Rules_CurrentlyExecutingRule )
       Rules_FlushPendingNetworkGarbage();
-    if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+    if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
       Rules_RunPeriodicCleanup(1, 0);
     return a1;
   }
@@ -16302,21 +16302,21 @@ _DWORD * Rules_CreateFact(signed int a1)
     v2 = 1;
   else
     v2 = a1;
-  if ( (unsigned int)(6 * (v2 - 1) + 60) < 0x1F4 && *(_DWORD *)(dword_54DBA8 + 24 * (v2 - 1) + 240) )
+  if ( (unsigned int)(6 * (v2 - 1) + 60) < 0x1F4 && *(_DWORD *)(g_ClipsMemoryTable + 24 * (v2 - 1) + 240) )
   {
-    v3 = dword_54DBA8 + 24 * (v2 - 1);
-    dword_54DBAC = *(_DWORD *)(v3 + 240);
-    *(_DWORD *)(v3 + 240) = *(_DWORD *)dword_54DBAC;
-    result = (_DWORD *)dword_54DBAC;
+    v3 = g_ClipsMemoryTable + 24 * (v2 - 1);
+    g_ClipsMemFreeListTemp = *(_DWORD *)(v3 + 240);
+    *(_DWORD *)(v3 + 240) = *(_DWORD *)g_ClipsMemFreeListTemp;
+    result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
     result = Mem_NewArray(6 * (v2 - 1) + 60);
   }
-  v5 = dword_51A96C;
+  v5 = g_ClipsCurrentEvaluationDepth;
   result[6] = 0;
   result[2] = 0;
-  *result = &unk_51A8EC;
+  *result = &g_Rules_FactPatternEntityRecord;
   result[1] = 0;
   result[4] = 0;
   v6 = *((_WORD *)result + 14);
@@ -16329,7 +16329,7 @@ _DWORD * Rules_CreateFact(signed int a1)
   LOBYTE(v5) = *((_BYTE *)result + 29);
   *(_DWORD *)((char *)result + 46) = v1;
   *((_BYTE *)result + 29) = v5 & 0x7F;
-  v8 = dword_51A96C;
+  v8 = g_ClipsCurrentEvaluationDepth;
   result[10] = 0;
   *((_WORD *)result + 22) = v8;
   return result;
@@ -16368,13 +16368,13 @@ _DWORD * Rules_ReturnFact(_DWORD *a1)
   else
     v5 = 1;
   v6 = 6 * (v5 - 1) + 60;
-  dword_54DBB4 = v6;
+  g_ClipsMemPoolReturnBucketIndex = v6;
   if ( v6 >= 0x1F4 )
     return (_DWORD *)Mem_SmallBlockRelease(a1, v6);
-  dword_54DBAC = (int)a1;
-  *a1 = *(_DWORD *)(dword_54DBA8 + 4 * v6);
-  result = (_DWORD *)(dword_54DBA8 + 4 * dword_54DBB4);
-  *result = dword_54DBAC;
+  g_ClipsMemFreeListTemp = (int)a1;
+  *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v6);
+  result = (_DWORD *)(g_ClipsMemoryTable + 4 * g_ClipsMemPoolReturnBucketIndex);
+  *result = g_ClipsMemFreeListTemp;
   return result;
 }
 // 47A86D: variable 'v3' is possibly undefined
@@ -16470,10 +16470,10 @@ int  Rules_GetNextFactInModule(int a1)
   else
   {
     v1 = g_Rules_FactListHead;
-    if ( g_Rules_LastFactModuleCache != dword_51A9C0 )
+    if ( g_Rules_LastFactModuleCache != g_Module_ChangeGeneration )
     {
       Lexer_MarkImpliedTemplates();
-      g_Rules_LastFactModuleCache = dword_51A9C0;
+      g_Rules_LastFactModuleCache = g_Module_ChangeGeneration;
     }
   }
   while ( v1 && (*(_BYTE *)(*(_DWORD *)(v1 + 16) + 24) & 4) == 0 )
@@ -16584,8 +16584,8 @@ _DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
   (void)a2;
   out = a1;
   *(_DWORD *)(out + 4) = 2;
-  *(_DWORD *)(out + 8) = dword_54DD70;
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)(dword_51A960 + 6);
+  *(_DWORD *)(out + 8) = g_ClipsFalseSymbol;
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsCurrentExpression + 6);
   deftemplate_record = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 2);
   multifield_reorder_needed = 0;
   if ( (*(_BYTE *)(deftemplate_record + 24) & 1) != 0 )
@@ -16614,7 +16614,7 @@ _DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
       multifield_reorder_needed = 1;
       Rules_ReportMultifieldAssertIntoSingleSlotError((int)slot_constraint, (int)deftemplate_record);
       parsed[1] = 2;
-      parsed[2] = dword_54DD70;
+      parsed[2] = g_ClipsFalseSymbol;
     }
     *(_WORD *)slot_value = parsed[1];
     *(_DWORD *)(slot_value + 2) = parsed[2];
@@ -16657,7 +16657,7 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
 
   v16 = a2;
   v15 = a1;
-  v3 = *(__int16 **)(dword_51A960 + 6);
+  v3 = *(__int16 **)(g_ClipsCurrentExpression + 6);
   for ( i = 1; v3; ++i )
   {
     while ( 1 )
@@ -16723,7 +16723,7 @@ int  Rules_SetFactDuplicationCommand(int a1, double a2)
     return v4;
   Rules_RtnUnknown(1, v6, a2);
   v5 = 1;
-  if ( v6[0] == 2 && v6[1] == dword_54DD70 )
+  if ( v6[0] == 2 && v6[1] == g_ClipsFalseSymbol )
     v5 = 0;
   unknown_libname_8(v5);
   return v3;
@@ -16920,7 +16920,7 @@ _DWORD * Rules_AssertStringFunction(int a1, int a2, double a3)
 
   v6[8] = a2;
   *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = dword_54DD70;
+  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
   result = (_DWORD *)Lexer_TokenExpect(1);
   if ( result != (_DWORD *)-1 )
   {
@@ -16979,7 +16979,7 @@ int  Rules_ParseSaveFactsCommand(double a1)
       }
     }
     if ( v9 > 2 )
-      v2 = *(_DWORD **)(*(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 10) + 10);
+      v2 = *(_DWORD **)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10) + 10);
     result = Rules_SaveFactsToFile(v6, v1, v2, a1);
     if ( result )
       return 1;
@@ -17161,7 +17161,7 @@ _DWORD * Rules_CollectFactsToArray(
   while ( 1 )
   {
     Parser_ParseForm((__int16 *)v5, v10, v8, a5);
-    if ( dword_51A964 )
+    if ( g_ClipsEvaluationError )
     {
       *v19 = 1;
       Mem_SmallBlockRelease(v18, 24 * *a4);
@@ -17201,7 +17201,7 @@ LABEL_11:
   }
   if ( v20 != 2 )
     goto LABEL_11;
-  v22 = Rules_FindImportExportConstruct(aDeftemplate_4, &v17, *(_BYTE **)(v10[2] + 16), 1, dword_51A964);
+  v22 = Rules_FindImportExportConstruct(aDeftemplate_4, &v17, *(_BYTE **)(v10[2] + 16), 1, g_ClipsEvaluationError);
   if ( v22 )
     goto LABEL_11;
   v16 = v21;
@@ -17249,7 +17249,7 @@ BOOL  Rules_LoadFactsFromFile(const CHAR *a1, int a2, DWORD a3, double a4)
   while ( v13[0] != 102 );
   IO_SetFastLoadFile(0);
   fclose_(v10);
-  return !dword_51A964;
+  return !g_ClipsEvaluationError;
 }
 // 47B8D3: variable 'v9' is possibly undefined
 // 47B8E8: variable 'v10' is possibly undefined
@@ -17744,7 +17744,7 @@ void Rules_Reset()
   if ( !g_Rules_ResetInProgressFlag )
   {
     g_Rules_ResetInProgressFlag = 1;
-    if ( !dword_51A96C )
+    if ( !g_ClipsCurrentEvaluationDepth )
       Rules_SetEvaluationErrorFlag(0);
     if ( !g_Rules_BeforeResetCallback || g_Rules_BeforeResetCallback() )
     {
@@ -17762,7 +17762,7 @@ void Rules_Reset()
       }
       v2 = Module_FindByName(aMain);
       Module_SetCurrent((int)v2);
-      if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+      if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
         Rules_RunPeriodicCleanup(1, 0);
       g_Rules_ResetInProgressFlag = 0;
     }
@@ -17806,7 +17806,7 @@ signed int Rules_Clear()
       clear_callback();
     }
     result = IO_DeactivateRouter((int)g_IO_LogicalNameTable_WTrace[0]);
-    if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+    if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
       result = Rules_RunPeriodicCleanup(1, 0);
     g_Rules_ClearInProgressFlag = 0;
   }
@@ -17920,7 +17920,7 @@ _DWORD * Module_BuildNameListMultifield(_DWORD *a1, int (*a2)(void), int (*a3)(v
   result = (_DWORD *)((int (__thiscall *)(int))a2)(1);
   if ( result )
   {
-    while ( dword_51A968 != 1 )
+    while ( g_ClipsHaltExecution != 1 )
     {
       *((_WORD *)v9 + 7) = 2;
       v9 = (_DWORD *)((char *)v9 + 6);
@@ -17974,12 +17974,12 @@ _DWORD * Rules_RegisterConstructType(
   _DWORD *v13; // edi
   _DWORD *result; // eax
 
-  v13 = *(_DWORD **)(dword_54DBA8 + 208);
+  v13 = *(_DWORD **)(g_ClipsMemoryTable + 208);
   if ( v13 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 208);
-    *(_DWORD *)(dword_54DBA8 + 208) = *v13;
-    result = (_DWORD *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 208);
+    *(_DWORD *)(g_ClipsMemoryTable + 208) = *v13;
+    result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -18068,7 +18068,7 @@ LABEL_20:
     if ( callback )
       ((void (*)(void))(uintptr_t)(unsigned int)callback)();
   }
-  dword_54DD24 = Rules_ReadNeededFunctions(&function_table_count, &missing_functions);
+  g_Rules_BloadFunctionPtrTable = Rules_ReadNeededFunctions(&function_table_count, &missing_functions);
   if ( missing_functions )
   {
     Rules_BloadCloseFile(0);
@@ -18080,7 +18080,7 @@ LABEL_20:
   Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
   while ( strncmp(construct_name, (const char *)g_Rules_BloadFileHeaderID, 0x14u) )
   {
-    construct = dword_51AA3C;
+    construct = g_BinaryItemListHead;
     if ( construct )
     {
       while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)construct, construct_name, 0x14u) )
@@ -18117,7 +18117,7 @@ LABEL_27:
   Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
   while ( strncmp(construct_name, (const char *)g_Rules_BloadFileHeaderID, 0x14u) )
   {
-    construct_table = dword_51AA3C;
+    construct_table = g_BinaryItemListHead;
     if ( !construct_table )
       goto LABEL_32;
     while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)construct_table, construct_name, 0x14u) )
@@ -18141,8 +18141,8 @@ LABEL_32:
     }
   }
   Rules_BloadCloseFile(0);
-  if ( dword_54DD24 )
-    Mem_ReleasePoolBlock(dword_54DD24, 4 * function_table_count);
+  if ( g_Rules_BloadFunctionPtrTable )
+    Mem_ReleasePoolBlock(g_Rules_BloadFunctionPtrTable, 4 * function_table_count);
   Rules_FreeBloadAtomTables();
   for ( i = g_Rules_AfterBloadCallbackListHead; i; i = *(_DWORD *)(i + 12) )
   {
@@ -18374,7 +18374,7 @@ signed int Rules_ClearBload()
   }
   else
   {
-    for ( construct_node = dword_51AA3C; construct_node; construct_node = *(_DWORD *)(construct_node + 36) )
+    for ( construct_node = g_BinaryItemListHead; construct_node; construct_node = *(_DWORD *)(construct_node + 36) )
     {
       callback = *(_DWORD *)(construct_node + 16);
       if ( callback )
@@ -18639,8 +18639,8 @@ signed int  Rules_BloadOpenFile(const CHAR *a1, DWORD a2)
 {
   int v2; // ecx
 
-  dword_54DD30 = IO_FOpen(a1, (unsigned __int8 *)aRb_1, (int)a1, a2);
-  if ( dword_54DD30 )
+  g_ClipsBloadFileHandle = IO_FOpen(a1, (unsigned __int8 *)aRb_1, (int)a1, a2);
+  if ( g_ClipsBloadFileHandle )
     return 1;
   Rules_OpenFileErrorMessage(v2, v2);
   return 0;
@@ -18653,14 +18653,14 @@ int  Rules_BloadReadBlock(uintptr_t a1, unsigned int a2)
 {
   if ( !a2 )
     return 0;
-  return fread_((void *)a1, a2, dword_54DD30, 1);
+  return fread_((void *)a1, a2, g_ClipsBloadFileHandle, 1);
 }
 // 54DD30: using guessed type int dword_54DD30;
 
 //----- (0047D600) --------------------------------------------------------
 signed int  Rules_BloadSeekFile(int a1, int a2)
 {
-  return IO_SeekStreamGuarded(dword_54DD30, a1, 1u, a2);
+  return IO_SeekStreamGuarded(g_ClipsBloadFileHandle, a1, 1u, a2);
 }
 // 54DD30: using guessed type int dword_54DD30;
 
@@ -18668,7 +18668,7 @@ signed int  Rules_BloadSeekFile(int a1, int a2)
 int __thiscall Rules_BloadCloseFile(void *this)
 {
   (void)this;
-  return fclose_(dword_54DD30);
+  return fclose_(g_ClipsBloadFileHandle);
 }
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 // 54DD30: using guessed type int dword_54DD30;
@@ -19330,12 +19330,12 @@ _DWORD * Rules_AddActivation(int a1, int a2, double a3)
     agenda = (uintptr_t)(unsigned int)*(_DWORD *)(join + 8);
     Rules_PushFocus(*(_DWORD *)agenda);
   }
-  free_head = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_54DBA8 + 128);
+  free_head = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsMemoryTable + 128);
   if ( free_head )
   {
-    dword_54DBAC = (int)free_head;
-    *(_DWORD *)((uintptr_t)(unsigned int)dword_54DBA8 + 128) = *(_DWORD *)free_head;
-    activation = (uintptr_t)(unsigned int)dword_54DBAC;
+    g_ClipsMemFreeListTemp = (int)free_head;
+    *(_DWORD *)((uintptr_t)(unsigned int)g_ClipsMemoryTable + 128) = *(_DWORD *)free_head;
+    activation = (uintptr_t)(unsigned int)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -19418,7 +19418,7 @@ int  Rules_GetNextActivation(int a1)
 
   if ( a1 )
     return *(_DWORD *)(a1 + 28);
-  result = Module_GetItem(0, dword_54E64C);
+  result = Module_GetItem(0, g_DefruleConstructClass);
   if ( result )
     return *(_DWORD *)(result + 12);
   return result;
@@ -19547,10 +19547,10 @@ int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
   --g_Rules_ActivationCount;
   if ( v4[4] )
     Rules_FreePartialMatch(v4[4]);
-  dword_54DBAC = (int)v4;
-  *v4 = *(_DWORD *)(dword_54DBA8 + 128);
-  result = dword_54DBA8;
-  *(_DWORD *)(dword_54DBA8 + 128) = dword_54DBAC;
+  g_ClipsMemFreeListTemp = (int)v4;
+  *v4 = *(_DWORD *)(g_ClipsMemoryTable + 128);
+  result = g_ClipsMemoryTable;
+  *(_DWORD *)(g_ClipsMemoryTable + 128) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 47E219: variable 'v8' is possibly undefined
@@ -20074,14 +20074,14 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     v61 = v64;
     v57 = Rules_TimeCommand();
   }
-  if ( !dword_51A96C )
+  if ( !g_ClipsCurrentEvaluationDepth )
     Rules_SetEvaluationErrorFlag(0);
   v50 = a2;
   g_Rules_HaltRulesFlag = 0;
   v4 = (int *)Rules_NextActivationToFire();
   while ( v4 )
   {
-    if ( !v66 || dword_51A968 || g_Rules_HaltRulesFlag )
+    if ( !v66 || g_ClipsHaltExecution || g_Rules_HaltRulesFlag )
       break;
     Rules_DetachActivation(v4);
     v6 = Rules_GetActivationRuleName((int)v4);
@@ -20102,8 +20102,8 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     v7[(*v7 << 17 >> 23) + 2] = 0;
     v8 = 0;
     *(_BYTE *)v7 |= 2u;
-    dword_51ACFC = (int)v7;
-    dword_51AD00 = 0;
+    g_Clips_CurrentPartialMatch = (int)v7;
+    g_Rules_GlobalRHSBinds = 0;
     v9 = v7;
     while ( v8 < *v7 << 17 >> 23 )
     {
@@ -20114,7 +20114,7 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
       ++v8;
     }
     g_Rules_CurrentLogicalJoin = *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 40);
-    ++dword_51A96C;
+    ++g_ClipsCurrentEvaluationDepth;
     Lexer_ErrorRecover(0);
     *(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) |= 0x80u;
     Rules_ExecuteRuleActions(
@@ -20127,8 +20127,8 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     *(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) &= ~0x80u;
     Lexer_ErrorRecover(0);
     g_Rules_CurrentLogicalJoin = v16;
-    --dword_51A96C;
-    if ( dword_51A968 || g_Rules_HaltRulesFlag && (*(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
+    --g_ClipsCurrentEvaluationDepth;
+    if ( g_ClipsHaltExecution || g_Rules_HaltRulesFlag && (*(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
       Rules_PrintErrorID((int)aPrccode, 4, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHalte, v17);
@@ -20180,9 +20180,9 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
       Rules_RefreshAgenda(a3);
     for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(v33 + 12) )
       (*(void (**)(void))(i + 4))();
-    if ( qword_51ACC0 == 1 )
+    if ( g_ClipsHaltExecutionFlag == 1 )
       Rules_RemoveModuleFocus(**(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8));
-    qword_51ACC0 = 0;
+    g_ClipsHaltExecutionFlag = 0;
     v34 = Rules_NextActivationToFire();
     v3 = v34;
     v4 = (int *)v34;
@@ -20342,10 +20342,10 @@ int  Rules_RemoveModuleFocus(int a1)
     if ( a1 == *v4 )
     {
       v6 = v4[2];
-      dword_54DBAC = (int)v4;
-      *v4 = *(_DWORD *)(dword_54DBA8 + 48);
+      g_ClipsMemFreeListTemp = (int)v4;
+      *v4 = *(_DWORD *)(g_ClipsMemoryTable + 48);
       v2 = 1;
-      *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+      *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
       v4 = (_DWORD *)v6;
       if ( v5 )
       {
@@ -20427,12 +20427,12 @@ int  Rules_PushFocus(int a1)
       }
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E94, 0);
     }
-    focus_entry = *(_DWORD *)(dword_54DBA8 + 48);
+    focus_entry = *(_DWORD *)(g_ClipsMemoryTable + 48);
     if ( focus_entry )
     {
-      dword_54DBAC = focus_entry;
-      *(_DWORD *)(dword_54DBA8 + 48) = *(_DWORD *)focus_entry;
-      focus_entry = dword_54DBAC;
+      g_ClipsMemFreeListTemp = focus_entry;
+      *(_DWORD *)(g_ClipsMemoryTable + 48) = *(_DWORD *)focus_entry;
+      focus_entry = g_ClipsMemFreeListTemp;
     }
     else
     {
@@ -20834,7 +20834,7 @@ int Rules_PopFocusFunction()
   if ( v0 )
     return *(_DWORD *)v0;
   else
-    return dword_54DD70;
+    return g_ClipsFalseSymbol;
 }
 // 54DD70: using guessed type int dword_54DD70;
 
@@ -20848,7 +20848,7 @@ int Rules_GetFocusFunction()
   if ( v0 )
     return *(_DWORD *)v0;
   else
-    return dword_54DD70;
+    return g_ClipsFalseSymbol;
 }
 // 54DD70: using guessed type int dword_54DD70;
 
@@ -20952,13 +20952,13 @@ signed int  Rules_RetractFactById(int a1, double a2)
   v2 = 1;
   if ( a1 )
     return Instance_DeleteInstance(a1, a2);
-  v3 = dword_51AD0C;
+  v3 = g_Clips_InstanceListHead;
   while ( v3 )
   {
     if ( !Instance_DeleteInstance(v3, a2) )
       v2 = 0;
   }
-  if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+  if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
     Rules_RunPeriodicCleanup(1, 0);
   return v2;
 }
@@ -20981,15 +20981,15 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
   g_Instance_PurgeInProgress = 1;
   if ( a1 )
   {
-    MessageHandler_SendToInstanceAddress(dword_51AD38, a1, 0, 0, a2);
+    MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, a1, 0, 0, a2);
     v3 = (*(_BYTE *)(a1 + 24) & 2) != 0;
   }
   else
   {
-    i = dword_51AD0C;
+    i = g_Clips_InstanceListHead;
     while ( i )
     {
-      MessageHandler_SendToInstanceAddress(dword_51AD38, i, 0, 0, a2);
+      MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, i, 0, 0, a2);
       if ( (*(_BYTE *)(i + 24) & 2) == 0 )
         v3 = 0;
       for ( i = *(_DWORD *)(i + 68); i; i = *(_DWORD *)(i + 68) )
@@ -21001,7 +21001,7 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
   }
   g_Instance_PurgeInProgress = v4;
   Instance_PurgeDeletedInstances();
-  if ( dword_51A96C || dword_51A97C || dword_51A960 )
+  if ( g_ClipsCurrentEvaluationDepth || g_ClipsCommandEvalInProgress || g_ClipsCurrentExpression )
     return v3;
   Rules_RunPeriodicCleanup(1, 0);
   return v3;
@@ -21144,7 +21144,7 @@ void  Rules_PrintInstancesByModule(int a1, int a2, int a3)
     }
     Module_EndEnum();
     Class_ReleaseTraversalID();
-    if ( !dword_51A968 )
+    if ( !g_ClipsHaltExecution )
       Rules_PrintTally(a1, v12, (int)aInstances, (int)aInstance_1);
   }
 }
@@ -21189,7 +21189,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   parse_buffer = (_DWORD *)(uintptr_t)(unsigned int)parse_buffer_ptr;
   token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
   parse_buffer[1] = 2;
-  parse_buffer[2] = dword_54DD70;
+  parse_buffer[2] = g_ClipsFalseSymbol;
   result = (_DWORD *)IO_OpenStringSource((int)aMkins, a1, 0);
   if ( result )
   {
@@ -21210,7 +21210,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
     }
     if ( token_buffer[0] == 100 )
     {
-      if ( !dword_54DD40 )
+      if ( !g_ClipsFunctionNameHashTable )
       {
         if ( trace_load_save )
           fprintf(stderr, "[menu-probe] rules-assert-seed-make-instance-symbol\n");
@@ -21269,7 +21269,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
     IO_CloseStringRouter((int)aMkins);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] rules-assert-after-router-remove\n");
-    if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+    if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
       Rules_RunPeriodicCleanup(1, 0);
     if ( trace_rules_assert )
     {
@@ -21278,12 +21278,12 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
         "[rules] assert-result-candidate type=%08x value=%08x nil=%08x fact=\"%s\"\n",
         parse_buffer[1],
         parse_buffer[2],
-        dword_54DD70,
+        g_ClipsFalseSymbol,
         a1 ? a1 : "<null>");
       fflush(stderr);
     }
-    if ( parse_buffer[1] == 2 && parse_buffer[2] == dword_54DD70 )
-      result = (_DWORD *)(dword_54DD70 ^ parse_buffer[2]);
+    if ( parse_buffer[1] == 2 && parse_buffer[2] == g_ClipsFalseSymbol )
+      result = (_DWORD *)(g_ClipsFalseSymbol ^ parse_buffer[2]);
     else
       result = Instance_FindByName(parse_buffer[2]);
   }
@@ -21311,8 +21311,8 @@ int  Rules_GetInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4)
   {
     Lexer_ErrorRecover(1);
     a4[1] = 2;
-    result = dword_54DD70;
-    a4[2] = dword_54DD70;
+    result = g_ClipsFalseSymbol;
+    a4[2] = g_ClipsFalseSymbol;
   }
   else
   {
@@ -21348,8 +21348,8 @@ signed int  Rules_PutInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4, do
       a2 ? (const char *)a2 : "(null)",
       a4 ? a4[1] : -1,
       a4 ? a4[2] : -1,
-      dword_544CFC >> byte_54512C,
-      dword_544D00 >> byte_54512C,
+      g_MouseCursorRawX >> g_CursorCoordShift,
+      g_MouseCursorRawY >> g_CursorCoordShift,
       DD_IsFlipping((int)&g_RenderState),
       DD_IsLost((int)&g_RenderState));
     fflush(stderr);
@@ -21359,7 +21359,7 @@ signed int  Rules_PutInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4, do
     result = Instance_PutSlotValue((_DWORD *)a1, v6, a4, a5);
     if ( result )
     {
-      if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+      if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
         Rules_RunPeriodicCleanup(1, 0);
       return 1;
     }
@@ -21387,7 +21387,7 @@ int  Rules_GetInstanceClassName(int a1)
 //----- (004801F0) --------------------------------------------------------
 int Rules_GetActiveInstanceCount()
 {
-  return dword_51AD10;
+  return g_Rules_ActiveInstanceCount;
 }
 // 51AD10: using guessed type int dword_51AD10;
 
@@ -21395,7 +21395,7 @@ int Rules_GetActiveInstanceCount()
 int  Rules_GetNextInstance(int a1)
 {
   if ( !a1 )
-    return dword_51AD0C;
+    return g_Clips_InstanceListHead;
   if ( (*(_BYTE *)(a1 + 24) & 2) != 0 )
     return 0;
   return *(_DWORD *)(a1 + 68);
@@ -21410,8 +21410,8 @@ int  Rules_GetNextInstanceInScope(int a1)
 
   if ( !a1 )
   {
-    v1 = dword_51AD0C;
-    if ( dword_51AD0C )
+    v1 = g_Clips_InstanceListHead;
+    if ( g_Clips_InstanceListHead )
       goto LABEL_7;
     return 0;
   }
@@ -21460,10 +21460,10 @@ int  Rules_ClassCommand(int a1, int a2, double a3)
   int v15; // [esp+1Ch] [ebp-4h]
 
   v15 = a2;
-  v3 = *(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16);
+  v3 = *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16);
   *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = dword_54DD70;
-  Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), &v12, a1, a3);
+  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v12, a1, a3);
   if ( v13 == 7 )
   {
     v4 = (_DWORD *)v14;
@@ -21493,7 +21493,7 @@ LABEL_5:
     case 4:
     case 5:
     case 6:
-      result = Rules_GetConstructNameSymbol(dword_51AD7C[v13]);
+      result = Rules_GetConstructNameSymbol(g_ClipsPrimitiveTypeClassMap[v13]);
       *(_DWORD *)(v7 + 8) = result;
       break;
     default:
@@ -21546,7 +21546,7 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
 
   v11 = a1;
   v3 = 1;
-  v4 = *(_DWORD *)(dword_51A960 + 6);
+  v4 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   v5 = 1;
   if ( v4 )
   {
@@ -21610,8 +21610,8 @@ signed int  Rules_SymbolToInstanceName(_DWORD *a1, double a2)
   else
   {
     a1[1] = 2;
-    result = dword_54DD70;
-    a1[2] = dword_54DD70;
+    result = g_ClipsFalseSymbol;
+    a1[2] = g_ClipsFalseSymbol;
   }
   return result;
 }
@@ -21626,7 +21626,7 @@ int  Rules_InstanceNameToSymbol(int a1, double a2)
   if ( Lexer_ParseValueList(1, v4, 8, a2) )
     return v4[2];
   else
-    return dword_54DD70;
+    return g_ClipsFalseSymbol;
 }
 // 54DD70: using guessed type int dword_54DD70;
 
@@ -21643,7 +21643,7 @@ _DWORD * Rules_InstanceAddressCommand(int a1, double a2)
   int v10; // [esp+8h] [ebp-28h]
 
   *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = dword_54DD70;
+  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
   if ( Rules_RtnArgCount() <= 1 )
   {
     result = (_DWORD *)Lexer_ParseValueList(1, v9, 112, a2);
@@ -21727,7 +21727,7 @@ int  Rules_InstanceNameCommand(int a1, int a2, double a3)
 
   v9 = a2;
   *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = dword_54DD70;
+  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
   result = Lexer_ParseValueList(1, v7, 112, a3);
   if ( result )
   {
@@ -21760,7 +21760,7 @@ BOOL  Rules_InstanceAddressPCommand(int a1, double a2)
 {
   _DWORD v3[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), v3, a1, a2);
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), v3, a1, a2);
   return v3[1] == 7;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -21770,7 +21770,7 @@ BOOL  Rules_InstanceNamePCommand(int a1, double a2)
 {
   _DWORD v3[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), v3, a1, a2);
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), v3, a1, a2);
   return v3[1] == 8;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -21781,7 +21781,7 @@ BOOL  Rules_InstancePCommand(int a1, double a2)
   int v3; // [esp-4h] [ebp-1Ch] BYREF
   int v4; // [esp+0h] [ebp-18h]
 
-  Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), &v3, a1, a2);
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v3, a1, a2);
   return v4 == 8 || v4 == 7;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -21794,7 +21794,7 @@ int  Rules_InstanceExistPCommand(int a1, double a2)
   int v4; // [esp+0h] [ebp-18h]
   int v5; // [esp+4h] [ebp-14h]
 
-  Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), &v3, a1, a2);
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v3, a1, a2);
   if ( v4 == 7 )
   {
     LOBYTE(result) = (*(_BYTE *)(v5 + 24) & 2) == 0;
@@ -21881,7 +21881,7 @@ int  Rules_ListInstancesOfClassRecursive(signed int a1, int a2, int a3, int a4, 
   v9 = *(_DWORD *)(a4 + 80);
   if ( v9 )
   {
-    while ( !dword_51A968 )
+    while ( !g_ClipsHaltExecution )
     {
       if ( a5 )
         Output_Write(a2, (int)asc_5034F8, v9);
@@ -21898,7 +21898,7 @@ LABEL_7:
     if ( a3 )
     {
       v11 = 0;
-      for ( i = 0; *(unsigned __int16 *)(a4 + 40) > i && !dword_51A968; ++i )
+      for ( i = 0; *(unsigned __int16 *)(a4 + 40) > i && !g_ClipsHaltExecution; ++i )
       {
         v8 += Rules_ListInstancesOfClassRecursive(a1, a2, a3, *(_DWORD *)(*(_DWORD *)(a4 + 42) + v11), a5);
         v11 += 4;
@@ -22007,12 +22007,12 @@ signed int  Rules_RegisterHostFunction(
   {
     return 0;
   }
-  free_node = *(_DWORD **)(dword_54DBA8 + 124);
+  free_node = *(_DWORD **)(g_ClipsMemoryTable + 124);
   if ( free_node )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 124);
-    *(_DWORD *)(dword_54DBA8 + 124) = *free_node;
-    host_function_ptr = dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 124);
+    *(_DWORD *)(g_ClipsMemoryTable + 124) = *free_node;
+    host_function_ptr = g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -22203,7 +22203,7 @@ int ** Rules_MakeSymbol(_BYTE *a1)
 
   hash_bucket = Rules_HashSymbolName(a1, 0x33u);
   interned_name = (int)Rules_FindSymbolEntry((int)a1);
-  bucket_entry = *(_DWORD *)(dword_54DD40 + 4 * hash_bucket);
+  bucket_entry = *(_DWORD *)(g_ClipsFunctionNameHashTable + 4 * hash_bucket);
   while ( bucket_entry )
   {
     symbol = *(_DWORD *)bucket_entry;
@@ -22220,9 +22220,9 @@ int Rules_InitFunctionNameHashTable()
 {
   int result; // eax
 
-  dword_54DD40 = (int)Mem_SmallBlockAlloc(0xCCu);
+  g_ClipsFunctionNameHashTable = (int)Mem_SmallBlockAlloc(0xCCu);
   for ( result = 0; result != 204; result += 4 )
-    *(_DWORD *)(dword_54DD40 + result) = 0;
+    *(_DWORD *)(g_ClipsFunctionNameHashTable + result) = 0;
   return result;
 }
 // 54DD40: using guessed type int dword_54DD40;
@@ -22237,14 +22237,14 @@ int * Rules_InsertFunctionHashEntry(int a1)
   int symbol_record; // eax
   int symbol_name; // eax
 
-  if ( !dword_54DD40 )
+  if ( !g_ClipsFunctionNameHashTable )
     Rules_InitFunctionNameHashTable();
-  free_node = *(_DWORD **)(dword_54DBA8 + 32);
+  free_node = *(_DWORD **)(g_ClipsMemoryTable + 32);
   if ( free_node )
   {
-    dword_54DBAC = (int)free_node;
-    *(_DWORD *)(dword_54DBA8 + 32) = *free_node;
-    host_function_ptr = dword_54DBAC;
+    g_ClipsMemFreeListTemp = (int)free_node;
+    *(_DWORD *)(g_ClipsMemoryTable + 32) = *free_node;
+    host_function_ptr = g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -22253,7 +22253,7 @@ int * Rules_InsertFunctionHashEntry(int a1)
   *(_DWORD *)(host_function_ptr + 0) = a1;
   symbol_record = *(_DWORD *)(uintptr_t)(unsigned int)a1;
   symbol_name = *(_DWORD *)((uintptr_t)(unsigned int)symbol_record + 16);
-  bucket_head_ptr = (int *)(dword_54DD40
+  bucket_head_ptr = (int *)(g_ClipsFunctionNameHashTable
                           + 4 * Rules_HashSymbolName((_BYTE *)(uintptr_t)(unsigned int)symbol_name, 0x33u));
   existing_head = *bucket_head_ptr;
   *bucket_head_ptr = host_function_ptr;
@@ -22273,7 +22273,7 @@ int  Rules_RtnLexeme(int a1, int a2, double a3)
   int v9; // [esp+0h] [ebp-1Ch]
   int v10; // [esp+4h] [ebp-18h]
 
-  v5 = *(_DWORD *)(dword_51A960 + 6);
+  v5 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   for ( i = 1; v5; ++i )
   {
     if ( i >= a1 )
@@ -22289,7 +22289,7 @@ int  Rules_RtnLexeme(int a1, int a2, double a3)
     }
     else
     {
-      Rules_ExpectedTypeError((int)aRtnlexeme, *(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16), a1);
+      Rules_ExpectedTypeError((int)aRtnlexeme, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       return 0;
@@ -22297,7 +22297,7 @@ int  Rules_RtnLexeme(int a1, int a2, double a3)
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16), a1);
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -22316,7 +22316,7 @@ double  Rules_RtnDouble(int a1, int a2, double a3)
   int v10; // [esp+8h] [ebp-28h]
   double v11; // [esp+18h] [ebp-18h]
 
-  v4 = *(_DWORD *)(dword_51A960 + 6);
+  v4 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   for ( i = 1; v4; ++i )
   {
     if ( i >= a1 )
@@ -22325,7 +22325,7 @@ double  Rules_RtnDouble(int a1, int a2, double a3)
   }
   if ( !v4 )
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16), a1);
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
     v11 = 1.0;
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
@@ -22341,7 +22341,7 @@ double  Rules_RtnDouble(int a1, int a2, double a3)
   }
   if ( v9 == 1 )
     return (double)*(int *)(v10 + 16);
-  Rules_ExpectedTypeError((int)aRtndouble, *(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16), a1);
+  Rules_ExpectedTypeError((int)aRtndouble, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
   HIDWORD(v11) = 1072693248;
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
@@ -22360,7 +22360,7 @@ signed int  Rules_RtnLong(int a1, int a2, double a3)
   uintptr_t function_symbol; // edx
   _DWORD parsed[6]; // [esp+0h] [ebp-28h] BYREF
 
-  expression = (uintptr_t)(unsigned int)dword_51A960;
+  expression = (uintptr_t)(unsigned int)g_ClipsCurrentExpression;
   current = expression ? (uintptr_t)(unsigned int)*(_DWORD *)(expression + 6) : 0;
   for ( i = 1; current; ++i )
   {
@@ -22398,7 +22398,7 @@ int  Rules_RtnUnknown(int a1, _DWORD *a2, double a3)
   int i; // edx
   int v8; // ecx
 
-  v5 = *(_DWORD *)(dword_51A960 + 6);
+  v5 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   for ( i = 1; v5; ++i )
   {
     if ( i >= a1 )
@@ -22412,7 +22412,7 @@ int  Rules_RtnUnknown(int a1, _DWORD *a2, double a3)
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(dword_51A960 + 2) + 16), a1);
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -22427,7 +22427,7 @@ int Rules_RtnArgCount()
   int v0; // eax
   int i; // edx
 
-  v0 = *(_DWORD *)(dword_51A960 + 6);
+  v0 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   for ( i = 0; v0; ++i )
     v0 = *(_DWORD *)(v0 + 10);
   return i;

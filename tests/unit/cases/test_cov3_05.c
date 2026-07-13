@@ -83,10 +83,10 @@ static void cov3_05_mvsubseq_case(short t1, short t2, short t3, int v3val,
   cov3_05_set_node_simple(node3, t3, header, 0);
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_MVSubseqFunction(out, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_05_mvsubseq, success_basic) {
@@ -151,10 +151,10 @@ static void cov3_05_first_case(int v8val, int v9val) {
   cov3_05_set_node_simple(node1, 4, header, 0);
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_FirstFunction(out, 1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_05_first, branch_v9_ge_v8) {
@@ -340,10 +340,10 @@ static void cov3_05_mathsqrt_case(double val) {
   cov3_05_set_node_simple(node1, 0, valObj, 0);
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_MathSqrt(0, 0, 1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_05_mathsqrt, positive_value) { cov3_05_mathsqrt_case(4.0); }
@@ -365,10 +365,10 @@ static void cov3_05_acot_case(double val) {
   cov3_05_set_node_simple(node1, 0, valObj, 0);
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_AcotBuiltin(0, 0, 1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_05_acot, near_zero) { cov3_05_acot_case(0.0); }
@@ -439,8 +439,8 @@ static void cov3_05_resolveslot_case(int threshold, int tableVal) {
   *(int *)(entryNode + 12) = (int)(intptr_t)slotDesc;   /* identity match */
   bucketTable[0] = (int)(intptr_t)entryNode;
 
-  saved = dword_51AD70;
-  dword_51AD70 = (int)(intptr_t)bucketTable;
+  saved = g_Defclass_SlotNameHashTablePtr;
+  g_Defclass_SlotNameHashTablePtr = (int)(intptr_t)bucketTable;
 
   *(int *)(inst + 76) = threshold;
   *(int *)(inst + 60) = (int)(intptr_t)slotTable;
@@ -448,7 +448,7 @@ static void cov3_05_resolveslot_case(int threshold, int tableVal) {
 
   TOUCH(Instance_ResolveSlotIndex((int)(intptr_t)inst, (int)(intptr_t)slotDesc));
 
-  dword_51AD70 = saved;
+  g_Defclass_SlotNameHashTablePtr = saved;
 }
 
 TEST(cov3_05_resolveslot, success_lookup) {
@@ -501,12 +501,12 @@ TEST(cov3_05_clearactivationsformodule, one_activation) {
   itemArray[0] = (int)(intptr_t)P;
   *(int *)(M + 8) = (int)(intptr_t)itemArray;
 
-  saved = dword_51A9B0;
-  dword_51A9B0 = (int)(intptr_t)M;
+  saved = g_Clips_CurrentModule;
+  g_Clips_CurrentModule = (int)(intptr_t)M;
 
   TOUCH(Rules_ClearActivationsForModule());
 
-  dword_51A9B0 = saved;
+  g_Clips_CurrentModule = saved;
 }
 
 /* =======================================================================
@@ -553,10 +553,10 @@ TEST(cov3_05_matchescommand, best_effort_arg_present) {
   cov3_05_set_node_simple(node1, 2, nameHolder, 0); /* type 2 == symbol */
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_MatchesCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =======================================================================
@@ -582,10 +582,10 @@ TEST(cov3_05_classsuperclasses, best_effort_arg_present) {
   cov3_05_set_node_simple(node1, 2, nameHolder, 0);
   cov3_05_set_ctx(ctx, node1);
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Class_ClassSuperclassesCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =======================================================================

@@ -47,10 +47,10 @@ TEST(cov3_00_rules, parse_load_facts_command_reaches_getfilenamearg) {
   cov3_00_mk_node(node1, 0, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_ParseLoadFactsCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_SaveCommand: identical shape/gating to the above; reaches the
@@ -66,10 +66,10 @@ TEST(cov3_00_rules, save_command_reaches_getfilenamearg) {
   cov3_00_mk_node(node1, 0, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_SaveCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_HostRenameFile: takes 2 args, so Lexer_TokenExpect(2) needs a
@@ -89,10 +89,10 @@ TEST(cov3_00_rules, host_rename_file_reaches_getfilenamearg) {
   *(int *)(head + 6) = (int)(intptr_t)node1;
   *(int *)(node1 + 10) = (int)(intptr_t)node2;
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_HostRenameFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_StrCompareBuiltin: Rules_ArgRangeCheck((int)aStrCompare, 3)
@@ -120,10 +120,10 @@ TEST(cov3_00_rules, strcompare_builtin_two_args_else_branch) {
   *(int *)(head + 6) = (int)(intptr_t)node1;
   *(int *)(node1 + 10) = (int)(intptr_t)node2;
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_StrCompareBuiltin(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov3_00_rules, strcompare_builtin_three_args_v2_eq_3_branch) {
@@ -151,10 +151,10 @@ TEST(cov3_00_rules, strcompare_builtin_three_args_v2_eq_3_branch) {
   *(int *)(node1 + 10) = (int)(intptr_t)node2;
   *(int *)(node2 + 10) = (int)(intptr_t)node3;
 
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_StrCompareBuiltin(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_MathCoth: Rules_MathParseSingleArg's OWN body uses a real
@@ -254,13 +254,13 @@ TEST(cov3_00_mainmenu, request_multiplayer_menu) {
 TEST(cov3_00_rules, check_literal_slot_value_constraint_enabled) {
   static int a1buf[8];
   static int a2buf[8];
-  int saved = dword_51AAB0;
+  int saved = g_CLIPS_StaticConstraintCheckingFlag;
 
   memset(a1buf, 0, sizeof a1buf);
   memset(a2buf, 0, sizeof a2buf);
-  dword_51AAB0 = 1;
+  g_CLIPS_StaticConstraintCheckingFlag = 1;
   TOUCH(Rules_CheckLiteralSlotValueConstraint(a1buf, (int)(intptr_t)a2buf));
-  dword_51AAB0 = saved;
+  g_CLIPS_StaticConstraintCheckingFlag = saved;
 }
 
 /* ---- WorldMap_HandleSaveGameAction: previously deliberately never called

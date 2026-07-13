@@ -335,10 +335,10 @@ TEST(cov14_rules, bsave_command_best_effort) {
    * a NULL pointer; downstream behavior is still best-effort. */
   static _DWORD fake_expr[64];
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   Mem_InitReserveBlock(0, 0);
   TOUCH(Rules_BsaveCommand(0, 0.0));
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov14_event, clear_handlers) {
@@ -393,7 +393,7 @@ TEST(cov14_defgeneric, set_method_trace_flag_best_effort) {
 TEST(cov14_defgeneric, get_defmethod_list_command_zero_args) {
   static _DWORD fake_expr[64];
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   Mem_InitReserveBlock(0, 0);
 
   static _DWORD a1[16];
@@ -403,7 +403,7 @@ TEST(cov14_defgeneric, get_defmethod_list_command_zero_args) {
    * memory-safe as long as the module system has no current module. */
   TOUCH(Defgeneric_GetDefmethodListCommand(a1, 0, 0.0));
 
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov14_defgeneric, get_method_restrictions_command_best_effort) {
@@ -412,14 +412,14 @@ TEST(cov14_defgeneric, get_method_restrictions_command_best_effort) {
   memset(inner, 0, sizeof inner);
   memset(outer, 0, sizeof outer);
   *(int *)((char *)outer + 2) = (int)(intptr_t)inner;
-  dword_51A960 = (int)(intptr_t)outer;
+  g_ClipsCurrentExpression = (int)(intptr_t)outer;
   Mem_InitReserveBlock(0, 0);
 
   static _DWORD a1[16];
   memset(a1, 0, sizeof a1);
   TOUCH(Defgeneric_GetMethodRestrictionsCommand(a1, 0, 0.0));
 
-  dword_51A960 = 0;
+  g_ClipsCurrentExpression = 0;
 }
 
 TEST(cov14_defgeneric, increment_generic_busy_count) {

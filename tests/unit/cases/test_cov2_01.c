@@ -74,7 +74,7 @@ TEST(cov2_01_multifieldreplace, prefix_loop_and_multifield_splice) {
 TEST(cov2_01_mathpow, two_arg_chain_attempt) {
   static unsigned char root[64], node1[64], node2[64];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   memset(node2, 0, sizeof node2);
@@ -87,9 +87,9 @@ TEST(cov2_01_mathpow, two_arg_chain_attempt) {
   *(_DWORD *)(node1 + 10) = (_DWORD)(intptr_t)node2;
   *(_DWORD *)(node2 + 10) = 0;
 
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_MathPow(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -368,17 +368,17 @@ TEST(cov2_01_buildingupgradebtn, can_start_upgrade_succeeds) {
 /* ------------------------------------------------------------------ */
 TEST(cov2_01_dependencies, empty_chain_safe) {
   static _DWORD fake_expr[16];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)(intptr_t)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Rules_Dependencies(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_01_dependencies, one_node_chain_attempt) {
   static unsigned char root[64], node1[64];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   memset(funcrec, 0, sizeof funcrec);
@@ -389,9 +389,9 @@ TEST(cov2_01_dependencies, one_node_chain_attempt) {
   *(_DWORD *)(root + 6) = (_DWORD)(intptr_t)node1;
   *(_DWORD *)(node1 + 10) = 0;
 
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_Dependencies(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -429,7 +429,7 @@ TEST(cov2_01_mergeconstraintvaluelist, immediate_match_prepends_node) {
 TEST(cov2_01_bloadcommand, one_node_chain_attempt) {
   static unsigned char root[64], node1[64];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   memset(funcrec, 0, sizeof funcrec);
@@ -440,15 +440,15 @@ TEST(cov2_01_bloadcommand, one_node_chain_attempt) {
   *(_DWORD *)(root + 6) = (_DWORD)(intptr_t)node1;
   *(_DWORD *)(node1 + 10) = 0;
 
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_BloadCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_01_batchstarcommand, one_node_chain_attempt) {
   static unsigned char root[64], node1[64];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   memset(funcrec, 0, sizeof funcrec);
@@ -459,9 +459,9 @@ TEST(cov2_01_batchstarcommand, one_node_chain_attempt) {
   *(_DWORD *)(root + 6) = (_DWORD)(intptr_t)node1;
   *(_DWORD *)(node1 + 10) = 0;
 
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_BatchStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -475,7 +475,7 @@ TEST(cov2_01_batchstarcommand, one_node_chain_attempt) {
 TEST(cov2_01_printppformbyname, found_with_ppform) {
   static _DWORD module_node[32];
   static const char ppform_text[] = "cov2-01 pretty-printed form";
-  int saved = dword_51A9AC;
+  int saved = g_DefmoduleListHead;
   void *atom;
 
   Mem_InitReserveBlock(0, 0);
@@ -487,10 +487,10 @@ TEST(cov2_01_printppformbyname, found_with_ppform) {
   module_node[1] = (_DWORD)(intptr_t)ppform_text; /* Module_GetPPForm result */
   module_node[7] = 0; /* next -> end of module list */
 
-  dword_51A9AC = (int)(intptr_t)module_node;
+  g_DefmoduleListHead = (int)(intptr_t)module_node;
   CHECK_EQ(Module_PrintPPFormByName((_BYTE *)"Cov2_01Module", (signed int)"cov2_01_out"), 1);
 
-  dword_51A9AC = saved;
+  g_DefmoduleListHead = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -532,7 +532,7 @@ TEST(cov2_01_reportsymboltypeerror, found_symbol_branch) {
 TEST(cov2_01_hostsymbolp, one_node_chain_variety) {
   static unsigned char root[64], node1[64];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   memset(funcrec, 0, sizeof funcrec);
@@ -543,9 +543,9 @@ TEST(cov2_01_hostsymbolp, one_node_chain_variety) {
   *(_DWORD *)(root + 6) = (_DWORD)(intptr_t)node1;
   *(_DWORD *)(node1 + 10) = 0;
 
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_HostSymbolp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -681,14 +681,14 @@ TEST(cov2_01_hashbitmapvalue, negative_remainder_branch) {
 /* ------------------------------------------------------------------ */
 TEST(cov2_01_dribbleoffcommand, mismatch_branch) {
   static unsigned char root[64], node1[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(root, 0, sizeof root);
   memset(node1, 0, sizeof node1);
   *(_DWORD *)(root + 6) = (_DWORD)(intptr_t)node1;
   *(_DWORD *)(node1 + 10) = 0;
-  dword_51A960 = (int)(intptr_t)root;
+  g_ClipsCurrentExpression = (int)(intptr_t)root;
   TOUCH(Rules_DribbleOffCommand());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ------------------------------------------------------------------ */
@@ -764,12 +764,12 @@ TEST(cov2_01_retractobjpatternmatches, removes_non_head_link) {
 /* ------------------------------------------------------------------ */
 TEST(cov2_01_writeobjpatandrules, populated_pattern_list) {
   static _DWORD patNode[16];
-  int savedRoot = dword_51AEAC;
-  int savedList = dword_51AEB0;
+  int savedRoot = g_Rules_ObjectPatternNetworkRoot;
+  int savedList = g_ReactiveRuleListHead;
   memset(patNode, 0, sizeof(patNode));
-  dword_51AEAC = (int)(intptr_t)patNode;
-  dword_51AEB0 = 0;
+  g_Rules_ObjectPatternNetworkRoot = (int)(intptr_t)patNode;
+  g_ReactiveRuleListHead = 0;
   TOUCH(Compiler_WriteObjectPatternsAndRulesToCode("cov2_01test", 0, 0, 0, 0));
-  dword_51AEAC = savedRoot;
-  dword_51AEB0 = savedList;
+  g_Rules_ObjectPatternNetworkRoot = savedRoot;
+  g_ReactiveRuleListHead = savedList;
 }

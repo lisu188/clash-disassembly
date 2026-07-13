@@ -87,14 +87,14 @@ static void cov5_00_stack_prime(int val) {
  * it.) ===================== */
 TEST(cov5_00_litslot, checking_enabled_v3_primed_zero) {
   static _DWORD v3buf[16];
-  int saved = dword_51AAB0;
+  int saved = g_CLIPS_StaticConstraintCheckingFlag;
   memset(v3buf, 0, sizeof v3buf);
   /* v3buf+8 == 0 -> the second arg to
    * Rules_CheckFieldExprListAgainstConstraint resolves to 0. */
-  dword_51AAB0 = 1; /* static constraint checking enabled */
+  g_CLIPS_StaticConstraintCheckingFlag = 1; /* static constraint checking enabled */
   cov5_00_stack_prime((int)(intptr_t)v3buf);
   CHECK_EQ(Rules_CheckLiteralSlotValueConstraint((int *)0, 0), 1);
-  dword_51AAB0 = saved;
+  g_CLIPS_StaticConstraintCheckingFlag = saved;
 }
 
 /* =====================================================================
@@ -151,7 +151,7 @@ TEST(cov5_00_extractmod, qualified_name_module_record_found) {
   static char name[64];
   static _DWORD moduleNode[16];
   int *presym;
-  int saved9AC = dword_51A9AC;
+  int saved9AC = g_DefmoduleListHead;
   strcpy(name, "ab::cd");
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -165,10 +165,10 @@ TEST(cov5_00_extractmod, qualified_name_module_record_found) {
   if (presym) {
     memset(moduleNode, 0, sizeof moduleNode);
     moduleNode[0] = (_DWORD)(intptr_t)presym; /* module record "symbol" slot */
-    dword_51A9AC = (int)(intptr_t)moduleNode; /* one-entry fake module list */
+    g_DefmoduleListHead = (int)(intptr_t)moduleNode; /* one-entry fake module list */
   }
 
   cov5_00_stack_prime((int)(intptr_t)name);
   TOUCH(Rules_ExtractModuleAndConstructName((_BYTE *)name));
-  dword_51A9AC = saved9AC;
+  g_DefmoduleListHead = saved9AC;
 }

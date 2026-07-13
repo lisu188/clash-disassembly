@@ -23,7 +23,7 @@ int  DD_GetSurfacePitch(int a1)
 //----- (00461570) --------------------------------------------------------
 BOOL  Input_IsKeyPressed(int a1)
 {
-  return byte_5451CC[a1] < 0;
+  return g_Input_KeyStateArray[a1] < 0;
 }
 
 //----- (00461580) --------------------------------------------------------
@@ -100,7 +100,7 @@ BOOL  Input_ClearKey(int a1, int a2)
   BOOL result; // eax
   int v10; // ecx
 
-  if ( a1 == dword_54517C )
+  if ( a1 == g_Input_LastRepeatKeyCode )
     ++g_Input_KeyRepeatCount;
   else
     g_Input_KeyRepeatCount = 1;
@@ -114,7 +114,7 @@ BOOL  Input_ClearKey(int a1, int a2)
   result = Input_IsKeyPressed(v5);
   if ( !result )
     g_Input_KeyRepeatCount = 0;
-  dword_54517C = v10;
+  g_Input_LastRepeatKeyCode = v10;
   return result;
 }
 // 461670: variable 'v3' is possibly undefined
@@ -155,7 +155,7 @@ BOOL Input_MouseAcquire()
 int  Render_DefaultRH(int a1, char a2, DWORD a3)
 {
   Debug_Log(a1, a2, a3, (int)aStdrhCall);
-  return Render_EndModeSwitch((int)&unk_51D4C0, a2, a3);
+  return Render_EndModeSwitch((int)&g_MainRenderDevice, a2, a3);
 }
 
 //----- (004617C0) --------------------------------------------------------
@@ -171,8 +171,8 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
   int v13; // ecx
 
   v5 = 0;
-  if ( dword_51D57C )
-    v5 = Compat_DirectDrawSurfaceHandleIsLost(dword_51D57C);
+  if ( g_DDrawDevicePtr )
+    v5 = Compat_DirectDrawSurfaceHandleIsLost(g_DDrawDevicePtr);
   v6 = v5;
   Debug_Log((int)this, Msg, v5, (int)aDmessage0x08xL);
   if ( Msg < 0xF )
@@ -191,12 +191,12 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
       DefWindowProcA(hWnd, Msg, wParam, lParam);
     else
       ValidateRect(hWnd, 0);
-    if ( g_AppIsActive != 1 || !dword_51D57C )
+    if ( g_AppIsActive != 1 || !g_DDrawDevicePtr )
       return 0;
     Debug_Log(v12, Msg, v6, (int)aRestoreD);
-    if ( dword_51D57C )
-      Render_RestoreLostSurfaceIfNeeded(dword_51D584);
-    if ( g_RenderHook && dword_51D594 == 8 )
+    if ( g_DDrawDevicePtr )
+      Render_RestoreLostSurfaceIfNeeded(g_RenderContext);
+    if ( g_RenderHook && g_DisplaySurfaceBitDepth == 8 )
     {
       Debug_Log((int)g_RenderHook, Msg, v6, (int)aRedrawhandler0);
       g_RenderHook(v13, Msg, v6);
@@ -215,8 +215,8 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
     {
       Debug_Log(v9, 1, v6, (int)aAcquire);
       InputBackend_Acquire(&g_InputBackendState);
-      if ( dword_51D57C )
-        Render_RestoreLostSurfaceIfNeeded(dword_51D584);
+      if ( g_DDrawDevicePtr )
+        Render_RestoreLostSurfaceIfNeeded(g_RenderContext);
       if ( g_ShouldPresentOnReactivate )
         Render_Present((int)g_RenderState);
       if ( g_SoundPausedForInactiveApp )
@@ -226,7 +226,7 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
     }
     if ( !(_WORD)wParam )
     {
-      g_ShouldPresentOnReactivate = dword_544D10;
+      g_ShouldPresentOnReactivate = g_CursorOverlayPresented;
       if ( !v6 )
         Render_Pump();
       Debug_Log(v9, 0, v6, (int)aUnacquire);
@@ -305,14 +305,14 @@ WPARAM  Platform_PumpMessagesAndBlitFrame(char a1)
   struct tagMSG Msg; // [esp+0h] [ebp-1Ch] BYREF
   _DWORD savedregs[6]; // [esp+1Ch] [ebp+0h] BYREF
 
-  Render_BlitSurface(&unk_51D4C0, 0, a1, (DWORD)savedregs);
+  Render_BlitSurface(&g_MainRenderDevice, 0, a1, (DWORD)savedregs);
   while ( 1 )
   {
     if ( !PeekMessageA(&Msg, 0, 0, 0, 0) && g_AppIsActive )
       return 1;
     hwnd = Msg.hwnd;
-    if ( dword_51D57C )
-      Compat_DirectDrawSurfaceHandleIsLost(dword_51D57C);
+    if ( g_DDrawDevicePtr )
+      Compat_DirectDrawSurfaceHandleIsLost(g_DDrawDevicePtr);
     Debug_Log((int)hwnd, 0, (DWORD)savedregs, (int)aAmessage0x08xL);
     if ( !GetMessageA(&Msg, 0, 0, 0) )
       break;
@@ -321,7 +321,7 @@ WPARAM  Platform_PumpMessagesAndBlitFrame(char a1)
     if ( !g_AppIsActive )
       WaitMessage();
   }
-  Render_BeginModeSwitch(&unk_51D4C0);
+  Render_BeginModeSwitch(&g_MainRenderDevice);
   return Msg.wParam;
 }
 // 461B87: variable 'hwnd' is possibly undefined
@@ -382,7 +382,7 @@ signed int  Win_BeginModeChange(const char *a1, char *a2)
   }
   if ( !query_handle && !direct_file_available )
     App_RequestQuit((int)g_UI_CdMissingMessageByLanguage[(unsigned __int8)g_LanguageIndex]);
-  Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
+  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
   return 1;
 }
 // 511130: using guessed type char g_LanguageIndex;
@@ -400,18 +400,18 @@ void  Win_EndModeChange(int a1, char *a2, int a3, int a4)
     {
       PlayAviStretch(
         a2,
-        *(IDirectDrawSurface **)(*(_DWORD *)(dword_51D584 + 4) + 164),
+        *(IDirectDrawSurface **)(*(_DWORD *)(g_RenderContext + 4) + 164),
         &v4,
         (int (*)(void))Video_CanContinuePlayback,
         1500);
     }
     else
     {
-      if ( dword_51D58C )
-        dword_51D588 = 1;
+      if ( g_RenderDeviceAviModeChangeGuard )
+        g_RenderDeviceAviModeChangePending = 1;
       PlayAvi(
         a2,
-        *(IDirectDrawSurface **)(dword_51D57C + 164),
+        *(IDirectDrawSurface **)(g_DDrawDevicePtr + 164),
         a4,
         a1,
         (int (*)(void))Video_CanContinuePlayback,
@@ -449,29 +449,29 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
   v20 = a2;
   v7 = a4;
   Debug_Log(a3, a4, (DWORD)a1, (int)aAvi_playIn);
-  v22 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v22 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v19 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v9, a4, (DWORD)a1, (int)aSetrhS08x_19);
-  v21 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
-  if ( a3 && dword_51D594 == 8 )
+  v21 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  if ( a3 && g_DisplaySurfaceBitDepth == 8 )
   {
-    Palette_FadeOutToBlack((int *)&unk_51D4C0, 40);
-    Render_UnlockBackbuffer((int)&unk_51D4C0);
+    Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 40);
+    Render_UnlockBackbuffer((int)&g_MainRenderDevice);
   }
-  else if ( dword_51D594 == 8 )
+  else if ( g_DisplaySurfaceBitDepth == 8 )
   {
-    Render_BlitSurface(&unk_51D4C0, 1, a4, (DWORD)a1);
+    Render_BlitSurface(&g_MainRenderDevice, 1, a4, (DWORD)a1);
   }
   TickCount = GetTickCount();
   v11 = a5;
-  dword_5452E4 = TickCount;
-  if ( a5 && dword_51D594 == 8 )
+  g_VideoModeSwitchStartTick = TickCount;
+  if ( a5 && g_DisplaySurfaceBitDepth == 8 )
   {
     Debug_Log(a5, a4, (DWORD)a1, (int)aInit16bpp);
     LOBYTE(a4) = 16;
-    Render_BeginModeSwitch(&unk_51D4C0);
-    Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 16, (DWORD)a1);
+    Render_BeginModeSwitch(&g_MainRenderDevice);
+    Render_SetPixelFormat((int)&g_MainRenderDevice, (int)(intptr_t)hWnd, 16, (DWORD)a1);
     DD_Pump((int)g_RenderState, 16);
     DD_Pump((int)g_RenderState, 16);
     DD_Pump((int)g_RenderState, 16);
@@ -486,12 +486,12 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     Win_EndModeChange(v7, v18, a3, v20);
     Render_Begin((int)g_RenderState, 0);
   }
-  if ( a6 && dword_51D594 != 8 )
+  if ( a6 && g_DisplaySurfaceBitDepth != 8 )
   {
     Debug_Log(v13, a4, (DWORD)a1, (int)aClose16bpp);
     LOBYTE(a4) = 8;
-    Render_BeginModeSwitch(&unk_51D4C0);
-    Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 8, (DWORD)a1);
+    Render_BeginModeSwitch(&g_MainRenderDevice);
+    Render_SetPixelFormat((int)&g_MainRenderDevice, (int)(intptr_t)hWnd, 8, (DWORD)a1);
     DD_Pump((int)g_RenderState, 8);
     DD_Pump((int)g_RenderState, 8);
     DD_Pump((int)g_RenderState, 8);
@@ -502,17 +502,17 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
   }
   else
   {
-    if ( dword_51D594 == 8 )
-      Render_ReleaseTempSurface((int *)&unk_51D4C0);
-    if ( dword_51D594 == 8 && !a5 )
-      Render_EndModeSwitch((int)&unk_51D4C0, a4, (DWORD)a1);
+    if ( g_DisplaySurfaceBitDepth == 8 )
+      Render_ReleaseTempSurface((int *)&g_MainRenderDevice);
+    if ( g_DisplaySurfaceBitDepth == 8 && !a5 )
+      Render_EndModeSwitch((int)&g_MainRenderDevice, a4, (DWORD)a1);
   }
-  dword_5452E4 = 0;
-  Render_SetResourceHandle((int)&unk_51D4C0, v21);
+  g_VideoModeSwitchStartTick = 0;
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v21);
   v14 = g_RenderHook;
   Debug_Log(v15, a4, (DWORD)g_RenderHook, (int)aUnsetrh08x_19);
   g_RenderHook = v19;
-  Render_SetResourceHandle((int)&unk_51D4C0, v22);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v22);
   Debug_Log(v16, a4, (DWORD)v14, (int)aAvi_playOut);
 }
 // 461E7C: variable 'v9' is possibly undefined
@@ -583,19 +583,19 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
     {
       if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       {
-        v7 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+        v7 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
         Diagnostics_TraceWorldMapActionEvent("transition_after_set_rh_std", g_SelectedUnitIndex, v7, 0, 0);
         v28 = g_RenderHook;
         g_RenderHook = (int (*)())Render_DefaultRH;
         Debug_Log(v8, a4, a5, (int)aSetrhS08x_20);
-        v27 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+        v27 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_set_rh_prev", g_SelectedUnitIndex, v27, 0, 0);
         Render_Pump();
         Diagnostics_TraceWorldMapActionEvent("transition_after_render_pump", g_SelectedUnitIndex, 0, 0, 0);
         LOBYTE(v9) = 0;
-        Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+        Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_backbuffer_fill", g_SelectedUnitIndex, 0, 0, 0);
-        Video_EnterGreyscaleTransition((int *)&unk_51D4C0, v10, 0, a5);
+        Video_EnterGreyscaleTransition((int *)&g_MainRenderDevice, v10, 0, a5);
         Diagnostics_TraceWorldMapActionEvent("transition_after_gray_palette", g_SelectedUnitIndex, 0, 0, 0);
         v12 = Mem_Alloc(1024, 0, 0, a5);
         if ( v12 )
@@ -605,8 +605,8 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         }
         v26 = v12;
         Diagnostics_TraceWorldMapActionEvent("transition_after_palette_alloc", g_SelectedUnitIndex, v26, 0, 0);
-        g_RenderDevice = &unk_51D4C0;
-        v14 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)&unk_51D4C0);
+        g_RenderDevice = &g_MainRenderDevice;
+        v14 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)&g_MainRenderDevice);
         if ( v14 )
           v14 = DLXSpriteSet_Load(v14, "anim_fr.s32");
         v24 = v14;
@@ -614,19 +614,19 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         if ( !v24 )
         {
           Win_EndModeChange(0, v23, 0, 0);
-          g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+          g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
           if ( v26 )
             j__nfree_(v26);
-          Render_SetResourceHandle((int)&unk_51D4C0, v27);
+          Render_SetResourceHandle((int)&g_MainRenderDevice, v27);
           g_RenderHook = v28;
-          Render_SetResourceHandle((int)&unk_51D4C0, v7);
+          Render_SetResourceHandle((int)&g_MainRenderDevice, v7);
           Diagnostics_TraceWorldMapActionEvent("transition_anim_missing_unwound", g_SelectedUnitIndex, 0, 0, 0);
           return 0;
         }
         SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)v14, 0);
         SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v24, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_anim_dims", g_SelectedUnitIndex, SpriteHeight, SpriteWidth, 0);
-        Surface = (_DWORD *)Mem_Alloc(188, 0, 0, (DWORD)&unk_51D4C0);
+        Surface = (_DWORD *)Mem_Alloc(188, 0, 0, (DWORD)&g_MainRenderDevice);
         if ( Surface )
           Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
         v17 = Surface;
@@ -650,10 +650,10 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         LOBYTE(v20) = 0;
         Render_FillRect(v17, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, 0x50u, 0x50u);
         Diagnostics_TraceWorldMapActionEvent("transition_after_restore_surface_fill", g_SelectedUnitIndex, 0, 0, 0);
-        g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+        g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
         if ( v29 )
         {
-          Video_ExitGreyscaleTransition((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 0, v18);
+          Video_ExitGreyscaleTransition((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, v21, 0, v18);
           Audio_RestoreMusicVolume();
           Diagnostics_TraceWorldMapActionEvent("transition_after_palette_restore", g_SelectedUnitIndex, 0, 0, 0);
         }
@@ -668,10 +668,10 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         v22 = v27;
         Render_Present((int)g_RenderState);
         Diagnostics_TraceWorldMapActionEvent("transition_after_present", g_SelectedUnitIndex, 0, 0, 0);
-        Render_SetResourceHandle((int)&unk_51D4C0, v22);
+        Render_SetResourceHandle((int)&g_MainRenderDevice, v22);
         Debug_Log((int)g_RenderHook, (char)v20, v18, (int)aUnsetrh08x_20);
         g_RenderHook = v28;
-        return Render_SetResourceHandle((int)&unk_51D4C0, v7);
+        return Render_SetResourceHandle((int)&g_MainRenderDevice, v7);
       }
     }
   }
@@ -700,13 +700,13 @@ void __fastcall Video_PlayAviWithModeGuard(int a1, const char *a2)
 {
   if ( !strcmp_(a1, aKon_por1_1) )
   {
-    if ( dword_5452E8 )
+    if ( g_MissionDefeatVideoPlayedGuard )
       return;
-    dword_5452E8 = 1;
+    g_MissionDefeatVideoPlayedGuard = 1;
   }
   Render_Pump();
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  Palette_ApplyDefaultPalette((int *)&g_MainRenderDevice);
   Video_Avi_playIn(a2, 0, 1, 0, 1, 1);
 }
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
@@ -762,7 +762,7 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
   _DWORD savedregs[6]; // [esp+448h] [ebp+0h] BYREF
 
   v44 = a1;
-  v42 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  v42 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v41 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v2, (char)a2, (DWORD)savedregs, (int)aSetrhS08x_21);
@@ -794,7 +794,7 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
   v8 = Mem_Alloc(188, v7, (char)a2, (DWORD)savedregs);
   if ( v8 )
     v8 = (int)Render_CreateSurface(v8, 640, 480);
-  RenderSurface_InvokeSlot56((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+  RenderSurface_InvokeSlot56((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   RenderSurface_InvokeSlot56(v43);
   v10 = v8;
   RenderSurface_InvokeSlot56((_DWORD *)(uintptr_t)(unsigned int)v10);
@@ -810,7 +810,7 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
     v13 = 67;
   sprintf_(v40, "misinfo\\%c_%02d_A.PCX", v13, v36);
   RenderSurface_InvokeSlot48LoadPCX(
-    (_DWORD *)(uintptr_t)(unsigned int)dword_5202E0,
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
     v40,
     0,
     (uintptr_t)v39);
@@ -837,16 +837,16 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
     v18 = 67;
   sprintf_(v40, "misinfo\\%c_%02d_C.PCX", v18, v38);
   RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)v10, v40, 0, (uintptr_t)v39);
-  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   intro_start_time = Time_Now(v20, v19);
   v21 = Sound_PlayNamedSfxFile(aMusicCampain, 21);
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v39, 50);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v39, 50);
   if ( !UI_WaitForAnyKeyOrClick(intro_start_time + 420, 0) )
   {
     RenderSurface_InvokeSlot36(v43);
     if ( !UI_WaitForAnyKeyOrClick(intro_start_time + 550, 0) )
     {
-      RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+      RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
       if ( !UI_WaitForAnyKeyOrClick(intro_start_time + 660, 0) )
       {
         RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)v10);
@@ -856,14 +856,14 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
           RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)v10);
         if ( g_LanguageIndex == 1 )
           CSS_StopSound(v45, 0);
-        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
         UI_WaitForKeyOrTimeout(30, v34);
       }
     }
   }
   IO_RemoveFileByPath((int)aDataLector_w_0, 0);
   Sleep(0x12Cu);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 60);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 60);
   Audio_StopMusicWithFade(v21);
   if ( v43 )
     RenderSurface_InvokeSlot0(v43, 2);
@@ -871,7 +871,7 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)v10, 2);
   Debug_Log(v42, (char)g_RenderHook, (DWORD)savedregs, (int)aUnsetrh08x_21);
   g_RenderHook = v41;
-  return Render_SetResourceHandle((int)&unk_51D4C0, v42);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, v42);
 }
 // 4624CE: variable 'v2' is possibly undefined
 // 462538: variable 'v3' is possibly undefined
@@ -923,7 +923,7 @@ int __cdecl Palette_BuildNearestColorLUT(int a1)
   {
     do
     {
-      byte_5452EC[1024 * v5 + 32 * v4 + v3] = Palette_FindNearestColorIndex(8 * v5, 8 * v4, 8 * v3);
+      g_Rgb15ToPaletteLut[1024 * v5 + 32 * v4 + v3] = Palette_FindNearestColorIndex(8 * v5, 8 * v4, 8 * v3);
       ++v5;
     }
     while ( v5 < 0x20 );
@@ -1053,7 +1053,7 @@ int __cdecl Palette_BlendIndexedPixelRun(char *a1, char *a2, unsigned __int8 *a3
     else
       v19 = v13 + v18;
     if ( v19 > 0x14 )
-      v14 = byte_5452EC[128 * (v21 & 0xF8) + 4 * (v20 & 0xF8) + ((unsigned int)(v12 + v13) >> 3)];
+      v14 = g_Rgb15ToPaletteLut[128 * (v21 & 0xF8) + 4 * (v20 & 0xF8) + ((unsigned int)(v12 + v13) >> 3)];
     else
       v14 = *a2;
     *a1 = v14;
@@ -1104,7 +1104,7 @@ int __cdecl Palette_OffsetIndexedPixelsRGB(unsigned __int8 *a1, int a2, int a3, 
       v10 = 0;
     if ( (unsigned int)v10 > 0xFF )
       v10 = 255;
-    *a1++ = byte_5452EC[128 * (v14 & 0xF8) + 4 * (v13 & 0xF8) + ((unsigned int)v10 >> 3)];
+    *a1++ = g_Rgb15ToPaletteLut[128 * (v14 & 0xF8) + 4 * (v13 & 0xF8) + ((unsigned int)v10 >> 3)];
     --v7;
   }
   while ( v11 != 1 );

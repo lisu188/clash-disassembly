@@ -35,7 +35,7 @@ static void cov4_06_arg1(unsigned char *anchor, unsigned char *node,
   *(int *)(node + 2) = (int)(intptr_t)valptr;
   *(int *)(node + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 static void cov4_06_arg2(unsigned char *anchor, unsigned char *node1,
@@ -51,21 +51,21 @@ static void cov4_06_arg2(unsigned char *anchor, unsigned char *node1,
   *(int *)(node2 + 2) = (int)(intptr_t)val2;
   *(int *)(node2 + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node1;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 #define COV4_06_SAVE_ARGCTX()                                                \
-  int cov4_06_saved960 = dword_51A960;                                       \
-  int cov4_06_saved964 = dword_51A964;                                       \
-  int cov4_06_saved968 = dword_51A968;                                       \
-  dword_51A964 = 0;                                                          \
-  dword_51A968 = 0
+  int cov4_06_saved960 = g_ClipsCurrentExpression;                                       \
+  int cov4_06_saved964 = g_ClipsEvaluationError;                                       \
+  int cov4_06_saved968 = g_ClipsHaltExecution;                                       \
+  g_ClipsEvaluationError = 0;                                                          \
+  g_ClipsHaltExecution = 0
 
 #define COV4_06_RESTORE_ARGCTX()                                             \
   do {                                                                       \
-    dword_51A960 = cov4_06_saved960;                                         \
-    dword_51A964 = cov4_06_saved964;                                         \
-    dword_51A968 = cov4_06_saved968;                                         \
+    g_ClipsCurrentExpression = cov4_06_saved960;                                         \
+    g_ClipsEvaluationError = cov4_06_saved964;                                         \
+    g_ClipsHaltExecution = cov4_06_saved968;                                         \
   } while (0)
 
 /* ---- Rules_ExtractModuleAndConstructName: reaching any of lines 114659-
@@ -99,7 +99,7 @@ TEST(cov4_06_posintarg, parse_list_fails) {
   memset(val, 0, sizeof val);
   val[4] = 7;
   cov4_06_arg1(anchor, node, 1, val);
-  dword_51A964 = 1;
+  g_ClipsEvaluationError = 1;
   CHECK_EQ(Rules_ParsePositiveIntArg(1, 1, 3, 0.0), -2);
   COV4_06_RESTORE_ARGCTX();
 }
@@ -255,7 +255,7 @@ TEST(cov4_06_refreshagendacmd, module_found_refreshes) {
   static _DWORD val[8];
   static _DWORD module_node[32];
   static const char modname[] = "Cov4_06Module";
-  int saved9AC = dword_51A9AC;
+  int saved9AC = g_DefmoduleListHead;
   void *atom;
   COV4_06_SAVE_ARGCTX();
 
@@ -266,14 +266,14 @@ TEST(cov4_06_refreshagendacmd, module_found_refreshes) {
   memset(module_node, 0, sizeof module_node);
   module_node[0] = (_DWORD)(intptr_t)atom; /* module's own symbol ptr */
   module_node[7] = 0;                      /* next -> end of list */
-  dword_51A9AC = (int)(intptr_t)module_node;
+  g_DefmoduleListHead = (int)(intptr_t)module_node;
 
   memset(val, 0, sizeof val);
   val[4] = (_DWORD)(intptr_t)modname;
   cov4_06_arg1(anchor, node, 2, val);
   TOUCH(Rules_RefreshAgendaCommand(0.0));
 
-  dword_51A9AC = saved9AC;
+  g_DefmoduleListHead = saved9AC;
   COV4_06_RESTORE_ARGCTX();
 }
 
@@ -313,7 +313,7 @@ TEST(cov4_06_reorderagenda, one_module_no_activations) {
   static _DWORD module_node[32];
   static _DWORD itemArray[32];
   static _DWORD P[8];
-  int saved9AC = dword_51A9AC;
+  int saved9AC = g_DefmoduleListHead;
 
   memset(module_node, 0, sizeof module_node);
   memset(itemArray, 0, sizeof itemArray);
@@ -323,11 +323,11 @@ TEST(cov4_06_reorderagenda, one_module_no_activations) {
     itemArray[i] = (_DWORD)(intptr_t)P; /* P+12 == 0: no activation list */
   module_node[2] = (_DWORD)(intptr_t)itemArray; /* *(module+8) */
   module_node[7] = 0;                           /* *(module+28): next */
-  dword_51A9AC = (int)(intptr_t)module_node;
+  g_DefmoduleListHead = (int)(intptr_t)module_node;
 
   TOUCH(Rules_ReorderAgenda(0));
 
-  dword_51A9AC = saved9AC;
+  g_DefmoduleListHead = saved9AC;
 }
 
 /* ---- Rules_ClearActivationsForModule: making Rules_GetDefruleModuleItem(0)
@@ -341,7 +341,7 @@ TEST(cov4_06_reorderagenda, one_module_no_activations) {
 TEST(cov4_06_clearactivationsformodule, no_activations_returns_immediately) {
   static unsigned char P[32], M[32];
   static _DWORD itemArray[8];
-  int saved9B0 = dword_51A9B0;
+  int saved9B0 = g_Clips_CurrentModule;
 
   memset(P, 0, sizeof P);
   memset(M, 0, sizeof M);
@@ -351,9 +351,9 @@ TEST(cov4_06_clearactivationsformodule, no_activations_returns_immediately) {
   itemArray[0] = (int)(intptr_t)P;
   *(int *)(M + 8) = (int)(intptr_t)itemArray;
 
-  dword_51A9B0 = (int)(intptr_t)M;
+  g_Clips_CurrentModule = (int)(intptr_t)M;
   CHECK_EQ((intptr_t)Rules_ClearActivationsForModule(), 0);
-  dword_51A9B0 = saved9B0;
+  g_Clips_CurrentModule = saved9B0;
 }
 
 /* ---- Rules_HostRenameFile: same double-Rules_GetFileNameArg-call shape as

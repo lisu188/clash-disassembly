@@ -168,10 +168,10 @@ static int *cov5_02_register_fake_class(const char *name) {
   classRecord[26] = (_DWORD)(intptr_t)scopeInfo;
 
   classTable[bucket % 0xA7u] = (_DWORD)(intptr_t)classRecord;
-  dword_51AD68 = (int)(intptr_t)classTable;
+  g_DefclassHashTable = (int)(intptr_t)classTable;
 
   fakeModule[6] = 0;
-  dword_51A9B0 = (int)(intptr_t)fakeModule;
+  g_Clips_CurrentModule = (int)(intptr_t)fakeModule;
 
   return (int *)(intptr_t)classRecord;
 }
@@ -188,7 +188,7 @@ static void cov5_02_install_arg_chain(unsigned char *argnode,
                                        unsigned char *head_node) {
   memset(argnode, 0, 32);
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)head_node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 TEST(cov5_02_class, slot_exist_p_command_fake_class_primed_chain) {
@@ -196,8 +196,8 @@ TEST(cov5_02_class, slot_exist_p_command_fake_class_primed_chain) {
   static _DWORD classval[8], slotval[8], inheritval[8];
   static _DWORD lexprime[8];
   static int a1out[8];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(classval, 0, sizeof classval);
   memset(slotval, 0, sizeof slotval);
@@ -224,12 +224,12 @@ TEST(cov5_02_class, slot_exist_p_command_fake_class_primed_chain) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   cov5_02_register_fake_class("Cov5_02FakeClass");
-  dword_51A964 = 0;
+  g_ClipsEvaluationError = 0;
   cov5_02_prime_int((int)(intptr_t)lexprime);
   TOUCH(Class_SlotExistPCommand(a1out, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* =========================================================================
@@ -332,7 +332,7 @@ TEST(cov5_02_wcmih, v12_nonzero_v15_zero) {
   static _DWORD itemstruct[8];
   static _DWORD v12target[8];
   int arrBase;
-  int savedModule = dword_51A9B0;
+  int savedModule = g_Clips_CurrentModule;
 
   memset(spraytarget, 0, sizeof spraytarget);
   memset(fakemodule, 0, sizeof fakemodule);
@@ -345,14 +345,14 @@ TEST(cov5_02_wcmih, v12_nonzero_v15_zero) {
 
   arrBase = (int)(intptr_t)itemarrayslot - 4 * (int)(intptr_t)spraytarget;
   fakemodule[2] = (_DWORD)arrBase; /* module+8: item array base */
-  dword_51A9B0 = (int)(intptr_t)fakemodule;
+  g_Clips_CurrentModule = (int)(intptr_t)fakemodule;
 
   /* spraytarget itself is zeroed, and v20 also aliases its address, so
    * *(v20+8) reads 0 -> v15 == 0 -> else branch (line 133203). */
   cov5_02_wcmih_prime((int)(intptr_t)spraytarget);
   TOUCH(Rules_WriteConstructModuleItemHeaderToCode(0, 0, 0, 0, 0));
 
-  dword_51A9B0 = savedModule;
+  g_Clips_CurrentModule = savedModule;
 }
 
 TEST(cov5_02_wcmih, v12_zero_v15_nonzero) {
@@ -362,7 +362,7 @@ TEST(cov5_02_wcmih, v12_zero_v15_nonzero) {
   static _DWORD itemstruct2[8];
   static _DWORD v15target[8];
   int arrBase;
-  int savedModule = dword_51A9B0;
+  int savedModule = g_Clips_CurrentModule;
 
   memset(spraytarget2, 0, sizeof spraytarget2);
   memset(fakemodule2, 0, sizeof fakemodule2);
@@ -375,7 +375,7 @@ TEST(cov5_02_wcmih, v12_zero_v15_nonzero) {
 
   arrBase = (int)(intptr_t)itemarrayslot2 - 4 * (int)(intptr_t)spraytarget2;
   fakemodule2[2] = (_DWORD)arrBase;
-  dword_51A9B0 = (int)(intptr_t)fakemodule2;
+  g_Clips_CurrentModule = (int)(intptr_t)fakemodule2;
 
   /* spraytarget2[2] (its own byte offset+8, read back as v20+8 == v15) is
    * set to point at a second real, zeroed struct -- so v15 is nonzero and
@@ -385,7 +385,7 @@ TEST(cov5_02_wcmih, v12_zero_v15_nonzero) {
   cov5_02_wcmih_prime((int)(intptr_t)spraytarget2);
   TOUCH(Rules_WriteConstructModuleItemHeaderToCode(0, 0, 0, 0, 0));
 
-  dword_51A9B0 = savedModule;
+  g_Clips_CurrentModule = savedModule;
 }
 
 /* =========================================================================
@@ -444,43 +444,43 @@ static void cov5_02_mathcoth_install_float_arg(double value) {
   *(_DWORD *)((char *)node + 10) = 0; /* single-node chain */
   *(_DWORD *)((char *)anchor + 6) = (_DWORD)(intptr_t)node;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 }
 
 TEST(cov5_02_mathcoth, zero_argument_singularity) {
   static _DWORD lexprime[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(lexprime, 0, sizeof lexprime);
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   cov5_02_mathcoth_install_float_arg(0.0);
   cov5_02_prime_int((int)(intptr_t)lexprime);
   TOUCH(Rules_MathCoth(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov5_02_mathcoth, normal_nonzero_argument) {
   static _DWORD lexprime[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(lexprime, 0, sizeof lexprime);
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   cov5_02_mathcoth_install_float_arg(2.0);
   cov5_02_prime_int((int)(intptr_t)lexprime);
   TOUCH(Rules_MathCoth(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov5_02_mathcoth, near_zero_nonzero_argument_overflow) {
   static _DWORD lexprime[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(lexprime, 0, sizeof lexprime);
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   cov5_02_mathcoth_install_float_arg(1.0e-30);
   cov5_02_prime_int((int)(intptr_t)lexprime);
   TOUCH(Rules_MathCoth(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -549,8 +549,8 @@ TEST(cov5_02_defgenericgetmethodrestrictions, empty_chain_else_branch) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[16];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(argnode, 0, 256);
   memset(funcrec, 0, sizeof funcrec);
@@ -558,13 +558,13 @@ TEST(cov5_02_defgenericgetmethodrestrictions, empty_chain_else_branch) {
   memset(out, 0, sizeof out);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
-  dword_51A960 = (int)(intptr_t)argnode; /* empty chain: offset+6 left 0 */
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode; /* empty chain: offset+6 left 0 */
 
-  dword_51A964 = 0;
+  g_ClipsEvaluationError = 0;
   TOUCH(Defgeneric_GetMethodRestrictionsCommand(out, 0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 TEST(cov5_02_defgenericgetmethodrestrictions, primed_symbol_reaches_checkgeneric) {
@@ -572,9 +572,9 @@ TEST(cov5_02_defgenericgetmethodrestrictions, primed_symbol_reaches_checkgeneric
   static _DWORD val[8];
   static _DWORD lexprime[8];
   static _DWORD out[16];
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved54E6A0 = dword_54E6A0;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved54E6A0 = g_Clips_DefgenericConstructType;
   static _DWORD safeModuleItem[8];
 
   memset(argnode, 0, 32);
@@ -591,20 +591,20 @@ TEST(cov5_02_defgenericgetmethodrestrictions, primed_symbol_reaches_checkgeneric
   *(_DWORD *)(node + 2) = (_DWORD)(intptr_t)val;
   *(_DWORD *)(node + 10) = 0;
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 
   /* avoid an immediate NULL-deref inside Symbol_LookupInModule's `*a1` read
    * (dword_54E6A0 defaults to 0/unregistered); a harmless zeroed "module
    * name" record lets it fail to find anything cleanly instead. */
-  dword_54E6A0 = (int)(intptr_t)safeModuleItem;
+  g_Clips_DefgenericConstructType = (int)(intptr_t)safeModuleItem;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  dword_51A964 = 0;
+  g_ClipsEvaluationError = 0;
   cov5_02_prime_int((int)(intptr_t)lexprime);
   TOUCH(Defgeneric_GetMethodRestrictionsCommand(out, 0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
-  dword_54E6A0 = saved54E6A0;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
+  g_Clips_DefgenericConstructType = saved54E6A0;
 }

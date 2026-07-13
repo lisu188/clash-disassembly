@@ -192,9 +192,9 @@ TEST(cov4_00_savecmd, save_command_open_fails) {
   static _DWORD funcrec[8], symnode[8];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov4_00_save_target.clp";
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
@@ -209,15 +209,15 @@ TEST(cov4_00_savecmd, save_command_open_fails) {
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(int *)(anchor + 2) = (int)(intptr_t)funcrec;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
-  dword_51A964 = 0;
-  dword_51A968 = 0;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
+  g_ClipsEvaluationError = 0;
+  g_ClipsHaltExecution = 0;
 
   TOUCH(Rules_SaveCommand(0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 TEST(cov4_00_dribblecmd, dribble_on_command_attempt) {
@@ -225,9 +225,9 @@ TEST(cov4_00_dribblecmd, dribble_on_command_attempt) {
   static _DWORD funcrec[8], symnode[8];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov4_00_dribble_target.txt";
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
@@ -242,15 +242,15 @@ TEST(cov4_00_dribblecmd, dribble_on_command_attempt) {
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(int *)(anchor + 2) = (int)(intptr_t)funcrec;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
-  dword_51A964 = 0;
-  dword_51A968 = 0;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
+  g_ClipsEvaluationError = 0;
+  g_ClipsHaltExecution = 0;
 
   TOUCH(Rules_DribbleOnCommand(0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* =========================================================================
@@ -329,8 +329,8 @@ TEST(cov4_00_subclassp, subclass_p_command_falsy) {
   static unsigned char anchor[32];
   static _DWORD funcrec[8], symnode[8];
   signed int r;
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
 
   memset(anchor, 0, sizeof anchor);
   memset(funcrec, 0, sizeof funcrec);
@@ -338,16 +338,16 @@ TEST(cov4_00_subclassp, subclass_p_command_falsy) {
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(int *)(anchor + 2) = (int)(intptr_t)funcrec; /* offset+2: "current function" record */
   /* offset+6 (first arg node) left 0: empty arg list, no Parser_ParseForm call */
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  dword_51A964 = 1;
+  g_ClipsEvaluationError = 1;
   r = Class_SubclassPCommand(0.0);
   CHECK_EQ(r, 0);
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
 }
 
 /* =========================================================================
@@ -384,7 +384,7 @@ TEST(cov4_00_instinitfn, initialize_instance_function) {
   static _DWORD outbuf[16];
   static unsigned char anchor[32], node[32];
   static _DWORD valnode[8];
-  int saved960 = dword_51A960;
+  int saved960 = g_ClipsCurrentExpression;
   int r;
 
   memset(outbuf, 0, sizeof outbuf);
@@ -395,14 +395,14 @@ TEST(cov4_00_instinitfn, initialize_instance_function) {
   *(int *)(node + 2) = (int)(intptr_t)valnode;
   *(int *)(node + 10) = 0;
   *(int *)(anchor + 6) = (int)(intptr_t)node; /* offset+6: first arg node */
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   r = Instance_InitializeInstanceFunction((uintptr_t)(intptr_t)outbuf, 0, 0.0);
   CHECK_EQ(r, 1);
 
-  dword_51A960 = saved960;
+  g_ClipsCurrentExpression = saved960;
 }
 
 /* =========================================================================

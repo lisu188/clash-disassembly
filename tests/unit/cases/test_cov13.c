@@ -215,12 +215,12 @@ TEST(cov13_mf, print_range_no_loop_with_brackets)
 // ---- Rules_CheckLiteralSlotValueConstraint ----
 TEST(cov13_constraint, literal_slot_value_disabled)
 {
-    int saved = dword_51AAB0;
-    dword_51AAB0 = 0; /* force "checking disabled" -> safe early return */
+    int saved = g_CLIPS_StaticConstraintCheckingFlag;
+    g_CLIPS_StaticConstraintCheckingFlag = 0; /* force "checking disabled" -> safe early return */
     static int a1[8];
     memset(a1, 0, sizeof a1);
     CHECK_EQ(Rules_CheckLiteralSlotValueConstraint(a1, 0), 1);
-    dword_51AAB0 = saved;
+    g_CLIPS_StaticConstraintCheckingFlag = saved;
 }
 
 // ---- Lexer_GetSlotByOrdinal ----

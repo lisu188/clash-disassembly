@@ -538,9 +538,9 @@ signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int a1)
     {
       Render_Pump();
       Audio_StopMainMusic();
-      Palette_FadeOutToBlack((int *)&unk_51D4C0, v4);
-      g_RenderDevice = &unk_51D4C0;
-      (*(void (**)(void))(dword_51D578 + 56))();
+      Palette_FadeOutToBlack((int *)&g_MainRenderDevice, v4);
+      g_RenderDevice = &g_MainRenderDevice;
+      (*(void (**)(void))(g_RenderDeviceDisplayContextPtr + 56))();
       Video_PlayAviWithModeGuard(v5, aZwy01);
       return 1;
     }
@@ -581,7 +581,7 @@ int  Options_HandleCloseButtonInGame(int a1)
   int v3; // edx
 
   result = UIWidget_PlayPressedReleaseAnimation(a1);
-  dword_54453C = v3;
+  g_InGameOptionsDialogExitSignal = v3;
   return result;
 }
 // 45123B: variable 'v3' is possibly undefined
@@ -665,8 +665,8 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   v4 = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
   if ( v4 )
     v4 = DLXSpriteSet_Load(v4, a2);
-  dword_544540 = (int)v4;
-  v5 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  g_InGameOptionsSpriteSet = (int)v4;
+  v5 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   v18 = Render_DefaultRH;
   *(_DWORD *)&v17[25] = aStdrh_19;
   v25 = g_RenderHook;
@@ -702,8 +702,8 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   g_OptionsInGameSoundVolumeRaw = ((*(unsigned __int8 *)(gameData + 147172) << 8)
                 - (__CFSHL__(*(unsigned __int8 *)(gameData + 147172) << 8 >> 31, 4)
                  + 16 * (*(unsigned __int8 *)(gameData + 147172) << 8 >> 31))) >> 4;
-  g_RenderDevice = &unk_51D4C0;
-  SpriteForChar = DLX_GetSpriteForChar(dword_544540, (unsigned __int8)g_LanguageIndex);
+  g_RenderDevice = &g_MainRenderDevice;
+  SpriteForChar = DLX_GetSpriteForChar(g_InGameOptionsSpriteSet, (unsigned __int8)g_LanguageIndex);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     82,
     SpriteForChar,
@@ -716,14 +716,14 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     0);
   UIWidgetTable_InitDrawStates(v19);
   Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, 132, v5);
-  dword_54453C = v13;
+  g_InGameOptionsDialogExitSignal = v13;
   do
   {
     DD_Pump((int)g_RenderState, 132);
     UIWidgetTable_PollHoverAndActions(v19, v5);
     Options_AnimateAllSliderThumbs(g_InGameSliderThumbPositions);
   }
-  while ( v14 == dword_54453C );
+  while ( v14 == g_InGameOptionsDialogExitSignal );
   *(_DWORD *)(gameData + 147159) = v20 == 2;
   *(_DWORD *)(gameData + 147147) = v22 == 2;
   *(_DWORD *)(gameData + 147163) = v23 == 2;
@@ -743,9 +743,9 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   v18 = (int ( *)(int, char, DWORD))g_RenderHook;
   Debug_Log(v15, (char)g_RenderHook, v5, (int)aUnsetrh08x_24);
   g_RenderHook = v25;
-  Render_SetResourceHandle((int)&unk_51D4C0, v5);
+  Render_SetResourceHandle((int)&g_MainRenderDevice, v5);
   WorldMap_RedrawViewport(1);
-  return DLXSpriteSet_ReleaseAndClear(&dword_544540);
+  return DLXSpriteSet_ReleaseAndClear(&g_InGameOptionsSpriteSet);
 }
 // 4513B8: variable 'v7' is possibly undefined
 // 4514FE: variable 'v13' is possibly undefined
@@ -828,7 +828,7 @@ signed int Cheat_ClearSelectedSquadDamageFlags()
 //----- (004517B0) --------------------------------------------------------
 void Cheat_ForceWinCurrentMission()
 {
-  dword_5448A0 = 1;
+  g_CheatForceWinMissionFlag = 1;
 }
 // 5448A0: using guessed type int dword_5448A0;
 
@@ -867,17 +867,17 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
 
   result = gameData
          + 200
-         * ((((dword_544CFC >> byte_54512C)
+         * ((((g_MouseCursorRawX >> g_CursorCoordShift)
             - 32
-            - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-             + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
+            - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
+             + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
           + *(_DWORD *)(gameData + 140008));
   v3 = *(unsigned __int16 *)(result
                            + 2
-                           * ((((dword_544D00 >> byte_54512C)
+                           * ((((g_MouseCursorRawY >> g_CursorCoordShift)
                               - 16
-                              - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-                               + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6)
+                              - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+                               + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
                             + *(_DWORD *)(gameData + 140012))
                            + 556374);
   if ( (unsigned __int16)v3 != 0xFFFF )
@@ -909,15 +909,15 @@ int Cheat_TeleportSelectedUnitToCursor()
   int result; // eax
   int v2; // edi
 
-  v0 = (((dword_544CFC >> byte_54512C)
+  v0 = (((g_MouseCursorRawX >> g_CursorCoordShift)
        - 32
-       - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-        + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
+       - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
+        + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
      + *(_DWORD *)(gameData + 140008);
-  result = ((dword_544D00 >> byte_54512C)
+  result = ((g_MouseCursorRawY >> g_CursorCoordShift)
           - 16
-          - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-           + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6;
+          - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
+           + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6;
   v2 = result + *(_DWORD *)(gameData + 140012);
   if ( g_SelectedUnitIndex != -1 )
   {
@@ -977,8 +977,8 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   _DWORD *v9; // [esp+0h] [ebp-1Ch]
 
   LOBYTE(v1) = 0;
-  Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   v3 = Mem_Alloc(1024, v2, 0, a1);
   if ( v3 )
   {
@@ -993,14 +993,14 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   v9 = Surface;
   (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
   (*(void (**)(void))(v7[46] + 36))();
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, v5, 20);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v5, 20);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) )
     DD_Pump((int)g_RenderState, 20);
   Render_Begin((int)g_RenderState, 0);
-  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  Render_FillRect((_DWORD *)dword_5202E0, 0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
   if ( v9 )
     (*(void (**)(void))v9[46])();
   return j__nfree_();
@@ -1250,9 +1250,9 @@ signed int Rules_ExecuteAITurn()
   Diagnostics_TraceWorldMapActionEvent("ai_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
   Map_RebuildCastleSiteAnchorCache();
   v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
-  dword_54454C = (int)Rules_Log(v21, 0, v1);
+  g_AITurnLogFactHandle_Turn = (int)Rules_Log(v21, 0, v1);
   v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
-  dword_544550 = (int)Rules_Log(v21, 0, v3);
+  g_AITurnPlayerIntelligenceFactHandle = (int)Rules_Log(v21, 0, v3);
   memset(v21, 0, 0xC8);
   v7 = 0;
   v8 = 0;
@@ -1270,7 +1270,7 @@ LABEL_2:
       goto LABEL_2;
   }
   v11 = sprintf_(v21, "(ilosc-zamkow %d %d)", g_CurrentPlayerIndex, v7);
-  dword_544554 = (int)Rules_Log(v21, 0, v11);
+  g_AITurnCastleCountFactHandle = (int)Rules_Log(v21, 0, v11);
   v13 = 0;
   v14 = 0;
 LABEL_11:
@@ -1287,15 +1287,15 @@ LABEL_11:
       goto LABEL_11;
   }
   v17 = sprintf_(v21, "(ilosc-twierdz %d %d)", g_CurrentPlayerIndex, v13);
-  dword_544558 = (int)Rules_Log(v21, 0, v17);
+  g_AiTurnFortressCountFactHandle = (int)Rules_Log(v21, 0, v17);
   Diagnostics_TraceWorldMapActionEvent("ai_turn_before_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, v7, v13);
   Rules_RunAgendaLoop(-1, 0, 0.0);
-  Diagnostics_TraceWorldMapActionEvent("ai_turn_after_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, dword_54454C, dword_544558);
-  Rules_RetractFact(dword_54454C, 0.0);
-  Rules_RetractFact(dword_544550, 0.0);
-  Rules_RetractFact(dword_544554, 0.0);
-  Diagnostics_TraceWorldMapActionEvent("ai_turn_before_cleanup_last_fact", g_SelectedUnitIndex, g_CurrentPlayerIndex, dword_544558, 0);
-  return Rules_RetractFact(dword_544558, 0.0);
+  Diagnostics_TraceWorldMapActionEvent("ai_turn_after_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_AITurnLogFactHandle_Turn, g_AiTurnFortressCountFactHandle);
+  Rules_RetractFact(g_AITurnLogFactHandle_Turn, 0.0);
+  Rules_RetractFact(g_AITurnPlayerIntelligenceFactHandle, 0.0);
+  Rules_RetractFact(g_AITurnCastleCountFactHandle, 0.0);
+  Diagnostics_TraceWorldMapActionEvent("ai_turn_before_cleanup_last_fact", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_AiTurnFortressCountFactHandle, 0);
+  return Rules_RetractFact(g_AiTurnFortressCountFactHandle, 0.0);
 }
 // 452060: conditional instruction was optimized away because eax.4<64u
 // 4520F3: conditional instruction was optimized away because eax.4<64u
@@ -4776,7 +4776,7 @@ int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4)
   {
     v6 = Time_Now(a3, 11);
     v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
-    SpriteForChar = DLX_GetSpriteForChar(dword_5202C0, 730);
+    SpriteForChar = DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 730);
     return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, v11, 0, 0, 0, 1u);
   }
   return result;
@@ -4812,7 +4812,7 @@ int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
     || v2 == 50 && a2 == 27 && (result = MapTile_HasHiddenTreasure(50, 27)) != 0
     || v2 == 35 && a2 == 63 && (result = MapTile_HasHiddenTreasure(35, 63)) != 0 )
   {
-    DLX_GetSpriteForChar(dword_5202C0, 962);
+    DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 962);
     return (*(int (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
              -1,
              -1,
@@ -4827,7 +4827,7 @@ int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
     result = MapTile_HasHiddenTreasure(14, 68);
     if ( result )
     {
-      DLX_GetSpriteForChar(dword_5202C0, 961);
+      DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 961);
       return (*(int (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
                -1,
                -1,
@@ -4854,7 +4854,7 @@ int  WorldMap_DrawMission11ShrineMarker(int result, int a2, int a3, int a4)
   {
     v6 = Time_Now(a3, 44);
     v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
-    SpriteForChar = DLX_GetSpriteForChar(dword_5202C0, 738);
+    SpriteForChar = DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 738);
     return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, 0, 0, v11, 0, 1u);
   }
   return result;
@@ -4884,7 +4884,7 @@ int  WorldMap_DrawMission17TreasureMarker(int result, int a2)
     || v2 == 77 && a2 == 34 && (result = MapTile_HasHiddenTreasure(77, 34)) != 0
     || v2 == 24 && a2 == 49 && (result = MapTile_HasHiddenTreasure(24, 49)) != 0 )
   {
-    DLX_GetSpriteForChar(dword_5202C0, 962);
+    DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 962);
     return (*(int (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
              -1,
              -1,
@@ -4964,10 +4964,10 @@ BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2)
   int v35; // eax
   BOOL result; // eax
 
-  if ( dword_5448A0 )
+  if ( g_CheatForceWinMissionFlag )
   {
     result = 1;
-    dword_5448A0 = 0;
+    g_CheatForceWinMissionFlag = 0;
     return result;
   }
   switch ( ACTIVE_MISSION_INDEX )
@@ -6628,9 +6628,9 @@ static _DWORD *Compat_RenderStateCursorDescriptor(int render_state);
 
 static void Compat_SyncRenderCursorGlobals(const _DWORD *render_state)
 {
-  dword_544CFC = render_state[9];
-  dword_544D00 = render_state[10];
-  byte_54512C = (unsigned char)render_state[277];
+  g_MouseCursorRawX = render_state[9];
+  g_MouseCursorRawY = render_state[10];
+  g_CursorCoordShift = (unsigned char)render_state[277];
 }
 
 typedef struct CompatRenderStateTail
@@ -6689,7 +6689,7 @@ static void Compat_MenuProbeTraceRenderInput(
     *(_DWORD *)(render_state + 36) >> *(_BYTE *)(render_state + 1108),
     *(_DWORD *)(render_state + 40) >> *(_BYTE *)(render_state + 1108),
     *(unsigned __int8 *)(render_state + 1108),
-    dword_5448B0);
+    g_RenderStateNextRefreshTick);
   fflush(stderr);
   ++trace_count;
 }
@@ -6725,7 +6725,7 @@ int  RenderState_InitCursorResources(int a1, int a2, char a3, DWORD a4)
   _DWORD *sprite_set;
   _DWORD *surface;
 
-  dword_544D10 = 0;
+  g_CursorOverlayPresented = 0;
   *(_DWORD *)(a1 + 44) = 0;
   sprite_set = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
   if ( sprite_set )
@@ -6809,19 +6809,19 @@ unsigned int  DD_Pump(int a1, int a2, ...)
     a1,
     message_pump_result,
     result,
-    dword_5448B0,
+    g_RenderStateNextRefreshTick,
     *(_DWORD *)(a1 + 1112));
-  if ( result >= dword_5448B0 || message_pump_result )
+  if ( result >= g_RenderStateNextRefreshTick || message_pump_result )
   {
-    dword_5448B0 = *(_DWORD *)(a1 + 1112) + Time_Now(v8, v7);
+    g_RenderStateNextRefreshTick = *(_DWORD *)(a1 + 1112) + Time_Now(v8, v7);
     Compat_RenderStateInvokeMethod(a1, 20);
-    if ( dword_5448B4 && !DD_IsFlipping(a1) )
+    if ( g_DDPageFlipWasInProgressFlag && !DD_IsFlipping(a1) )
     {
       *(_DWORD *)(a1 + 68) = Time_Now(v10, v9);
       *(_DWORD *)(a1 + 72) = *(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108);
       *(_DWORD *)(a1 + 76) = *(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108);
     }
-    dword_5448B4 = DD_IsFlipping(a1);
+    g_DDPageFlipWasInProgressFlag = DD_IsFlipping(a1);
     Compat_RenderStateInvokeMethod(a1, 4);
     cursor_descriptor = Compat_RenderStateCursorDescriptor(a1);
     v12 = (int)cursor_descriptor;
@@ -6844,8 +6844,8 @@ unsigned int  DD_Pump(int a1, int a2, ...)
     *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 20);
     v18 = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 24);
     *(_DWORD *)(a1 + 52) = v18;
-    result = dword_544D10;
-    if ( dword_544D10 )
+    result = g_CursorOverlayPresented;
+    if ( g_CursorOverlayPresented )
     {
       if ( message_pump_result
         || v14
@@ -6853,7 +6853,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
         || v18 != *(_DWORD *)(a1 + 4) )
       {
         v22 = g_RenderDevice;
-        v19 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+        v19 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
         primary_surface = Compat_RenderStateSurface(a1, 8);
         back_surface = Compat_RenderStateSurface(a1, 12);
         if ( *(_DWORD *)a1 == *(_DWORD *)(a1 + 48) && *(_DWORD *)(a1 + 52) == *(_DWORD *)(a1 + 4) )
@@ -6884,7 +6884,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
         }
         else
         {
-          g_RenderDevice = &unk_51D4C0;
+          g_RenderDevice = &g_MainRenderDevice;
           Render_FillRect(
             primary_surface,
             0,
@@ -6911,7 +6911,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
           *(_DWORD *)(a1 + 4) = *(_DWORD *)(a1 + 52);
         }
         g_RenderDevice = v22;
-        return Render_SetResourceHandle((int)&unk_51D4C0, v19);
+        return Render_SetResourceHandle((int)&g_MainRenderDevice, v19);
       }
     }
   }
@@ -6959,7 +6959,7 @@ BOOL  Input_PollEventsUntil(int a1, char a2)
   Platform_PumpMessagesAndBlitFrame(a2);
   *(_DWORD *)(a1 + 56) = previous_poll_state;
   InputBackend_PollState(&g_InputBackendState, a1, previous_poll_state);
-  return byte_5451C0 < 0 || byte_5451C8 < 0;
+  return g_InputMousePrimaryButtonState < 0 || g_InputMouseSecondaryButtonState < 0;
 }
 // 5451C0: using guessed type char byte_5451C0;
 // 5451C8: using guessed type char byte_5451C8;
@@ -7058,9 +7058,9 @@ int  RenderState_PollInputAndClampCursor(int a1, int a2)
   v4 = v2[10];
   v2[11] = 0;
   v2[10] = v3 + v4;
-  if ( byte_5451C0 < 0 )
+  if ( g_InputMousePrimaryButtonState < 0 )
     ++v2[11];
-  if ( byte_5451C8 < 0 )
+  if ( g_InputMouseSecondaryButtonState < 0 )
     v2[11] += 2;
   v5 = v2[4];
   if ( v2[9] < v5 )
@@ -7193,7 +7193,7 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD
     cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
-      Compat_FileSystemQueryRelease((int)&dword_543CC8, &cache_query_handle);
+      Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &cache_query_handle);
       result = (_DWORD *)Mem_Alloc(4112, 0, 0, a4);
       if ( result )
         result = DLXSpriteSet_Load(result, cache_path);
@@ -7250,12 +7250,12 @@ static void Compat_PresentPrimaryIndexedSurfaceToPlatform(void)
 {
   unsigned int primary_surface_handle;
 
-  primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
+  primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&g_MainRenderDevice + 0xD0);
   if ( primary_surface_handle )
   {
     Platform_PresentRecoveredIndexedSurfaceHandle(
       (void *)(uintptr_t)primary_surface_handle,
-      (const uint32_t *)(const void *)((unsigned char *)&unk_51D4C0 + 220));
+      (const uint32_t *)(const void *)((unsigned char *)&g_MainRenderDevice + 220));
   }
 }
 
@@ -7265,10 +7265,10 @@ static int Compat_RenderClearPresentedRect(int render_state)
   _DWORD *cursor_descriptor;
   int resource_handle;
 
-  if ( !dword_544D10 )
-    return dword_544D10;
-  dword_544D10 = 0;
-  resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  if ( !g_CursorOverlayPresented )
+    return g_CursorOverlayPresented;
+  g_CursorOverlayPresented = 0;
+  resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   present_surface = Compat_RenderStateSurface(render_state, 8);
   cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
   Render_FillRect(
@@ -7280,7 +7280,7 @@ static int Compat_RenderClearPresentedRect(int render_state)
     *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
     *(unsigned __int16 *)render_state,
     *(unsigned __int16 *)(render_state + 4));
-  return Render_SetResourceHandle((int)&unk_51D4C0, resource_handle);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
 }
 
 __int16  RenderState_SelectCursorDescriptor(int a1, int a2)
@@ -7300,10 +7300,10 @@ __int16  RenderState_SelectCursorDescriptor(int a1, int a2)
   if ( !active_descriptor )
     active_descriptor = *(_DWORD *)(a1 + 60);
   if ( active_descriptor )
-    dword_544D14 = active_descriptor;
+    g_ActiveCursorDescriptorPtr = active_descriptor;
   if ( a2 == *(_DWORD *)(a1 + 60) )
     return result;
-  was_presenting = (unsigned char)dword_544D10;
+  was_presenting = (unsigned char)g_CursorOverlayPresented;
   if ( was_presenting )
     Compat_RenderClearPresentedRect(a1);
   *(_DWORD *)(a1 + 60) = a2;
@@ -7346,11 +7346,11 @@ int  Render_Present(int a1)
 
   present_surface = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 8);
   cursor_descriptor = Compat_RenderStateCursorDescriptor(a1);
-  result = dword_544D10;
-  if ( !dword_544D10 )
+  result = g_CursorOverlayPresented;
+  if ( !g_CursorOverlayPresented )
   {
-    v3 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
-    dword_544D10 = 1;
+    v3 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+    g_CursorOverlayPresented = 1;
     v5 = g_RenderDevice;
     Render_FillRect(
       0,
@@ -7361,7 +7361,7 @@ int  Render_Present(int a1)
       *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(a1 + 52) - 1,
       0,
       0);
-    g_RenderDevice = &unk_51D4C0;
+    g_RenderDevice = &g_MainRenderDevice;
     SpriteForChar = DLX_GetSpriteForChar(
                       *(_DWORD *)(a1 + 64),
                       *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
@@ -7369,7 +7369,7 @@ int  Render_Present(int a1)
     *(_DWORD *)a1 = *(_DWORD *)(a1 + 48);
     *(_DWORD *)(a1 + 4) = *(_DWORD *)(a1 + 52);
     g_RenderDevice = v5;
-    result = Render_SetResourceHandle((int)&unk_51D4C0, v3);
+    result = Render_SetResourceHandle((int)&g_MainRenderDevice, v3);
     Compat_PresentPrimaryIndexedSurfaceToPlatform();
     return result;
   }
@@ -7388,11 +7388,11 @@ int Render_Pump()
   int render_state;
   int v1; // esi
 
-  result = dword_544D10;
-  if ( dword_544D10 )
+  result = g_CursorOverlayPresented;
+  if ( g_CursorOverlayPresented )
   {
-    dword_544D10 = 0;
-    v1 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+    g_CursorOverlayPresented = 0;
+    v1 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
     render_state = (int)g_RenderState;
     present_surface = Compat_RenderStateSurface(render_state, 8);
     cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
@@ -7405,7 +7405,7 @@ int Render_Pump()
       *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
       *(_WORD *)render_state,
       *(_WORD *)(render_state + 4));
-    return Render_SetResourceHandle((int)&unk_51D4C0, v1);
+    return Render_SetResourceHandle((int)&g_MainRenderDevice, v1);
   }
   return result;
 }
@@ -7414,7 +7414,7 @@ int Render_Pump()
 //----- (00461000) --------------------------------------------------------
 void Input_Flush()
 {
-  dword_544D10 = 0;
+  g_CursorOverlayPresented = 0;
 }
 // 544D10: using guessed type int dword_544D10;
 
@@ -7426,8 +7426,8 @@ int  RenderState_DrawCursorSpriteToPrimarySurface(int a1)
   int result; // eax
 
   v2 = g_RenderDevice;
-  g_RenderDevice = &unk_51D4C0;
-  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, &unk_5448B8);
+  g_RenderDevice = &g_MainRenderDevice;
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, &g_CursorSpritePalette);
   SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), g_CursorDesc_Busy[0] + 1);
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
   g_RenderDevice = v2;
@@ -7488,18 +7488,18 @@ __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
     current_flags = *(_DWORD *)(a1 + 44);
     current_x = *(unsigned int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108);
     current_y = *(unsigned int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108);
-    if ( (unsigned __int8)byte_544CBE != current_flags
-      || current_x != (unsigned __int16)word_544CBA
-      || current_y != (unsigned __int16)word_544CBC )
+    if ( (unsigned __int8)g_DeviceRecordLastFlipLostState != current_flags
+      || current_x != (unsigned __int16)g_DeviceRecordLastX
+      || current_y != (unsigned __int16)g_DeviceRecordLastY )
     {
-      word_544CBA = *(_WORD *)(a1 + 36);
-      word_544CBC = *(_WORD *)(a1 + 40);
-      byte_544CBE = (unsigned char)(2 * (DD_IsFlipping(a1) + DD_IsLost(a1)));
+      g_DeviceRecordLastX = *(_WORD *)(a1 + 36);
+      g_DeviceRecordLastY = *(_WORD *)(a1 + 40);
+      g_DeviceRecordLastFlipLostState = (unsigned char)(2 * (DD_IsFlipping(a1) + DD_IsLost(a1)));
       elapsed_ticks = Time_Now(0, 0) - tail->field_46C_ticks;
       record_handle = IO_FOpen(aDefault_rec, (unsigned __int8 *)aAb, 1, a2);
-      fwrite_(&word_544CBA, 2, record_handle, 1);
-      fwrite_(&word_544CBC, 2, record_handle, 1);
-      fwrite_(&byte_544CBE, 1, record_handle, 1);
+      fwrite_(&g_DeviceRecordLastX, 2, record_handle, 1);
+      fwrite_(&g_DeviceRecordLastY, 2, record_handle, 1);
+      fwrite_(&g_DeviceRecordLastFlipLostState, 1, record_handle, 1);
       fwrite_(&elapsed_ticks, 4, record_handle, 1);
       return fclose_(record_handle);
     }
@@ -7549,13 +7549,13 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
   if ( !tail->field_468_active )
     return RenderState_PollInputAndClampCursor((int)a1, a3);
   v4 = Time_Now(a3, a2);
-  v5 = dword_544CC0;
+  v5 = g_DeviceRectTweenTimeBase;
   v6 = tail->field_470_ticks;
-  v7 = v4 - v6 - dword_544CC0;
-  if ( v7 < dword_544CC8 - dword_544CC4 )
+  v7 = v4 - v6 - g_DeviceRectTweenTimeBase;
+  if ( v7 < g_DeviceReplaySegmentTargetTick - g_DeviceReplaySegmentBaseTick )
   {
-    v13 = ((Time_Now(v6, v7) - tail->field_470_ticks - dword_544CC0) << 8)
-        / (unsigned int)(dword_544CC8 - dword_544CC4);
+    v13 = ((Time_Now(v6, v7) - tail->field_470_ticks - g_DeviceRectTweenTimeBase) << 8)
+        / (unsigned int)(g_DeviceReplaySegmentTargetTick - g_DeviceReplaySegmentBaseTick);
     a1[9] = (unsigned __int16)g_DeviceRectLastWidth
           + ((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)
                  - (__CFSHL__((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31, 8)
@@ -7569,15 +7569,15 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
   }
   else
   {
-    dword_544CC0 = Time_Now(v6, v7) - tail->field_470_ticks;
-    dword_544CC4 = dword_544CC8;
+    g_DeviceRectTweenTimeBase = Time_Now(v6, v7) - tail->field_470_ticks;
+    g_DeviceReplaySegmentBaseTick = g_DeviceReplaySegmentTargetTick;
     g_DeviceRectLastWidth = g_DeviceRectTargetWidth;
     g_RenderCursor_TweenPrevY = g_DeviceRectTargetHeight;
     a1[9] = (unsigned __int16)g_DeviceRectTargetWidth;
     a1[10] = (unsigned __int16)g_DeviceRectTargetHeight;
     Compat_SyncRenderCursorGlobals(a1);
     v8 = tail->field_474_handle;
-    a1[11] = (unsigned __int8)byte_544CCC;
+    a1[11] = (unsigned __int8)g_DemoPlaybackCursorButtonState;
     if ( (*(_BYTE *)(v8 + 12) & 0x10) == 0 )
     {
       fread_();
@@ -7590,20 +7590,20 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
     v10 = 0;
     if ( g_DemoScript_TriggerTickTable[0] != -1 )
     {
-      while ( dword_544CD0 != g_DemoScript_TriggerTickTable[v10] )
+      while ( g_DemoScriptCurrentTick != g_DemoScript_TriggerTickTable[v10] )
       {
         v12 = g_DemoScript_MessageIdTable[v10++];
         ++v9;
         if ( v12 == -1 )
           goto LABEL_8;
       }
-      Demo_ShowNumberedTextScreen(v5, dword_544CD0);
+      Demo_ShowNumberedTextScreen(v5, g_DemoScriptCurrentTick);
     }
 LABEL_8:
     result = Input_IsKeyPressed(1);
     if ( result )
       App_RequestQuit((int)&g_App_QuitReason_DemoSkipKey);
-    ++dword_544CD0;
+    ++g_DemoScriptCurrentTick;
   }
   return result;
 }

@@ -19,7 +19,7 @@ int Event_InitHandlers()
   int result; // eax
   int v2; // edx
 
-  for ( i = dword_51AA3C; i; i = *(_DWORD *)(v2 + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(v2 + 36) )
   {
     while ( !*(_DWORD *)(i + 4) )
     {
@@ -110,12 +110,12 @@ _DWORD * Rules_ConstructQueuePush(int a1)
   _DWORD *result; // eax
   _DWORD *v4; // ecx
 
-  v2 = *(_DWORD **)(dword_54DBA8 + 32);
+  v2 = *(_DWORD **)(g_ClipsMemoryTable + 32);
   if ( v2 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 32);
-    *(_DWORD *)(dword_54DBA8 + 32) = *v2;
-    result = (_DWORD *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(g_ClipsMemoryTable + 32) = *v2;
+    result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -124,15 +124,15 @@ _DWORD * Rules_ConstructQueuePush(int a1)
   result[1] = 0;
   *result = a1;
   v4 = result;
-  if ( dword_51AA40 )
+  if ( g_ClipsConstructQueueHead )
   {
-    for ( result = (_DWORD *)dword_51AA40; result[1]; result = (_DWORD *)result[1] )
+    for ( result = (_DWORD *)g_ClipsConstructQueueHead; result[1]; result = (_DWORD *)result[1] )
       ;
     result[1] = v4;
   }
   else
   {
-    dword_51AA40 = (int)result;
+    g_ClipsConstructQueueHead = (int)result;
   }
   return result;
 }
@@ -146,13 +146,13 @@ int  Rules_ConstructQueuePop(_DWORD *a1)
   _DWORD *v1; // eax
   int result; // eax
 
-  *a1 = *(_DWORD *)dword_51AA40;
-  v1 = (_DWORD *)dword_51AA40;
-  dword_51AA40 = *(_DWORD *)(dword_51AA40 + 4);
-  dword_54DBAC = (int)v1;
-  *v1 = *(_DWORD *)(dword_54DBA8 + 32);
-  result = dword_54DBAC;
-  *(_DWORD *)(dword_54DBA8 + 32) = dword_54DBAC;
+  *a1 = *(_DWORD *)g_ClipsConstructQueueHead;
+  v1 = (_DWORD *)g_ClipsConstructQueueHead;
+  g_ClipsConstructQueueHead = *(_DWORD *)(g_ClipsConstructQueueHead + 4);
+  g_ClipsMemFreeListTemp = (int)v1;
+  *v1 = *(_DWORD *)(g_ClipsMemoryTable + 32);
+  result = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 51AA40: using guessed type int dword_51AA40;
@@ -186,7 +186,7 @@ __int16  Rules_MarkReferencedFunctions(__int16 *result)
             goto LABEL_4;
 LABEL_10:
           result = (__int16 *)(4 * *i);
-          v2 = *(int *)((char *)dword_54E530 + (_DWORD)result);
+          v2 = *(int *)((char *)g_Clips_PrimitiveEntityTable + (_DWORD)result);
           if ( !v2 || (*(_BYTE *)(v2 + 1) & 0x40) == 0 )
             goto LABEL_4;
         }
@@ -249,13 +249,13 @@ signed int  Rules_RegisterBinaryItem(
   int v15; // ebx
   int v16; // eax
 
-  v12 = *(_DWORD **)(dword_54DBA8 + 160);
+  v12 = *(_DWORD **)(g_ClipsMemoryTable + 160);
   v13 = 0;
   if ( v12 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 160);
-    *(_DWORD *)(dword_54DBA8 + 160) = *v12;
-    v14 = (_DWORD *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 160);
+    *(_DWORD *)(g_ClipsMemoryTable + 160) = *v12;
+    v14 = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -271,13 +271,13 @@ signed int  Rules_RegisterBinaryItem(
   v14[3] = a8;
   v14[4] = a9;
   v15 = (int)v14;
-  if ( !dword_51AA3C )
+  if ( !g_BinaryItemListHead )
   {
     v14[9] = 0;
-    dword_51AA3C = (int)v14;
+    g_BinaryItemListHead = (int)v14;
     return 1;
   }
-  v16 = dword_51AA3C;
+  v16 = g_BinaryItemListHead;
   do
   {
     if ( a2 >= *(_DWORD *)(v16 + 32) )
@@ -288,8 +288,8 @@ signed int  Rules_RegisterBinaryItem(
   while ( v16 );
   if ( !v13 )
   {
-    *(_DWORD *)(v15 + 36) = dword_51AA3C;
-    dword_51AA3C = v15;
+    *(_DWORD *)(v15 + 36) = g_BinaryItemListHead;
+    g_BinaryItemListHead = v15;
     return 1;
   }
   *(_DWORD *)(v15 + 36) = v16;
@@ -314,11 +314,11 @@ signed int Rules_RegisterConstraintCheckingCommands()
 {
   int i; // eax
 
-  dword_54E694 = (int)Mem_SmallBlockAlloc(0x29Cu);
-  if ( !dword_54E694 )
+  g_ConstraintHashTable = (int)Mem_SmallBlockAlloc(0x29Cu);
+  if ( !g_ConstraintHashTable )
     IO_RunRouterExitCallbacks();
   for ( i = 0; i != 668; i += 4 )
-    *(_DWORD *)(dword_54E694 + i) = 0;
+    *(_DWORD *)(g_ConstraintHashTable + i) = 0;
   Rules_RegisterHostFunction(aGetDynamicCons, 98, (int)aGdccommand, (int)Rules_GetDynamicConstraintCheckingCommand, (int)a00_14);
   Rules_RegisterHostFunction(aSetDynamicCons, 98, (int)aSdccommand, (int)Rules_SetDynamicConstraintCheckingCommand, (int)a11_0);
   Rules_RegisterHostFunction(aGetStaticConst, 98, (int)aGsccommand, (int)Rules_GetStaticConstraintCheckingCommand, (int)a00_14);
@@ -348,10 +348,10 @@ int  AST_FreeNodeChildren(int result)
       AST_Free(*(_DWORD *)(v6 + 22));
     }
     AST_FreeNodeChildren(*(_DWORD *)(v1 + 26));
-    dword_54DBAC = (int)v2;
-    *v2 = *(_DWORD *)(dword_54DBA8 + 168);
-    result = dword_54DBA8;
-    *(_DWORD *)(dword_54DBA8 + 168) = dword_54DBAC;
+    g_ClipsMemFreeListTemp = (int)v2;
+    *v2 = *(_DWORD *)(g_ClipsMemoryTable + 168);
+    result = g_ClipsMemoryTable;
+    *(_DWORD *)(g_ClipsMemoryTable + 168) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -443,7 +443,7 @@ _DWORD * AST_DecrementNodeRefCount(_DWORD *result)
     }
     else
     {
-      result = *(_DWORD **)(dword_54E694 + 4 * v3);
+      result = *(_DWORD **)(g_ConstraintHashTable + 4 * v3);
       if ( result )
       {
         while ( result != (_DWORD *)v1 )
@@ -463,7 +463,7 @@ _DWORD * AST_DecrementNodeRefCount(_DWORD *result)
           }
           else
           {
-            v2 = (_DWORD *)(4 * *(_DWORD *)(v1 + 34) + dword_54E694);
+            v2 = (_DWORD *)(4 * *(_DWORD *)(v1 + 34) + g_ConstraintHashTable);
             *v2 = *(_DWORD *)(v1 + 30);
           }
           AST_ReleaseNodeChildSlots(v1, (int)v2);
@@ -696,7 +696,7 @@ _DWORD * AST_InternNode(_DWORD *result)
   if ( result )
   {
     v2 = AST_HashNodeChildren(result);
-    v3 = *(_DWORD **)(dword_54E694 + 4 * v2);
+    v3 = *(_DWORD **)(g_ConstraintHashTable + 4 * v2);
     v4 = v2;
     if ( v3 )
     {
@@ -716,8 +716,8 @@ LABEL_5:
       AST_CollapseNodeChildSlots((int)v1, (int)v3);
       *(_DWORD *)((char *)v1 + 38) = 1;
       *(_DWORD *)((char *)v1 + 34) = v4;
-      *(_DWORD *)((char *)v1 + 30) = *(_DWORD *)(dword_54E694 + 4 * v4);
-      *(_DWORD *)(dword_54E694 + 4 * v4) = v1;
+      *(_DWORD *)((char *)v1 + 30) = *(_DWORD *)(g_ConstraintHashTable + 4 * v4);
+      *(_DWORD *)(g_ConstraintHashTable + 4 * v4) = v1;
       return v1;
     }
   }
@@ -811,7 +811,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int a1, double a2)
   if ( v3 == -1 )
     return v4;
   Rules_RtnUnknown(1, &v7, a2);
-  dword_51AAB4 = v8 != __PAIR64__(dword_54DD70, 2);
+  dword_51AAB4 = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49707E: variable 'v4' is possibly undefined
@@ -845,7 +845,7 @@ int  Rules_SetStaticConstraintCheckingCommand(int a1, double a2)
   if ( v3 == -1 )
     return v4;
   Rules_RtnUnknown(1, &v7, a2);
-  dword_51AAB0 = v8 != __PAIR64__(dword_54DD70, 2);
+  g_CLIPS_StaticConstraintCheckingFlag = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49711E: variable 'v4' is possibly undefined
@@ -885,7 +885,7 @@ int Rules_DynamicConstraintCheckingEnabled()
 //----- (004971D0) --------------------------------------------------------
 int Rules_StaticConstraintCheckingEnabled()
 {
-  return dword_51AAB0;
+  return g_CLIPS_StaticConstraintCheckingFlag;
 }
 // 51AAB0: using guessed type int dword_51AAB0;
 
@@ -909,7 +909,7 @@ _DWORD *Rules_InitDeffactsConstruct()
              (int)Rules_DeffactsIsDeletable,
              (int)Deffacts_DeleteConstruct,
              (int)Deffacts_FreeConstruct);
-  dword_54E69C = (int)result;
+  g_ClipsDeffactsConstructType = (int)result;
   return result;
 }
 // 497310: using guessed type int sub_497310();
@@ -927,7 +927,7 @@ int Rules_RegisterDeffactsModuleItem()
              (int)Rules_FreeDeffactsModuleData,
              (int)Deffacts_PrintModuleReference,
              (int)Rules_ParseDeffactsConstruct);
-  dword_54E698 = result;
+  g_ClipsDeffactsModuleItemId = result;
   return result;
 }
 // 54E698: using guessed type int dword_54E698;
@@ -937,12 +937,12 @@ signed int Rules_AllocDeffactsModuleData()
 {
   _DWORD *v0; // edx
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 48);
+  v0 = *(_DWORD **)(g_ClipsMemoryTable + 48);
   if ( !v0 )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = *v0;
-  return dword_54DBAC;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = *v0;
+  return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -952,10 +952,10 @@ int  Rules_FreeDeffactsModuleData(int a1)
 {
   int result; // eax
 
-  result = Rules_ClearModuleConstructList(a1, dword_54E69C, a1);
-  dword_54DBAC = a1;
-  *(_DWORD *)a1 = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+  result = Rules_ClearModuleConstructList(a1, g_ClipsDeffactsConstructType, a1);
+  g_ClipsMemFreeListTemp = a1;
+  *(_DWORD *)a1 = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -965,7 +965,7 @@ int  Rules_FreeDeffactsModuleData(int a1)
 //----- (004972E0) --------------------------------------------------------
 int  Rules_GetDeffactsModuleItem(int a1)
 {
-  return Rules_GetModuleConstructData(a1, dword_54E698);
+  return Rules_GetModuleConstructData(a1, g_ClipsDeffactsModuleItemId);
 }
 // 54E698: using guessed type int dword_54E698;
 
@@ -979,7 +979,7 @@ int  Rules_ParseDeffactsConstruct(_BYTE *a1, int a2)
 //----- (00497300) --------------------------------------------------------
 int  Rules_DeffactsGetNextItem(int a1)
 {
-  return Class_Enum(a1, dword_54E698);
+  return Class_Enum(a1, g_ClipsDeffactsModuleItemId);
 }
 // 54E698: using guessed type int dword_54E698;
 
@@ -1011,10 +1011,10 @@ int  Deffacts_FreeConstruct(int result)
     AST_DeinstallNodeChain((__int16 *)(uintptr_t)(unsigned int)expression);
     AST_FreePackedNodeChain(expression);
     Rules_FreeConstructHeaderString((int *)(uintptr_t)(unsigned int)fact, fact);
-    dword_54DBAC = fact;
-    *(_DWORD *)fact = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
-    result = dword_54DBA8;
+    g_ClipsMemFreeListTemp = fact;
+    *(_DWORD *)fact = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+    result = g_ClipsMemoryTable;
   }
   return result;
 }
@@ -1030,15 +1030,15 @@ int Defgeneric_SetupConstruct()
   int v3; // ecx
   int v4; // ecx
 
-  Rules_RegisterEvaluationHandler((int)&unk_51AAB8, 11);
-  dword_54E6A4 = Module_RegisterItem(
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_Defgeneric, 11);
+  g_DefgenericModuleItemIndex = Module_RegisterItem(
                    (int)aDefgeneric,
                    (int)Defgeneric_AllocateModule,
                    (int)Defgeneric_RecordAtIndex,
                    (int)Defgeneric_FreeModule,
                    (int)Defgeneric_PrintModuleReference,
                    (int)Defgeneric_ParseConstruct);
-  dword_54E6A0 = (int)Rules_RegisterConstructType(
+  g_Clips_DefgenericConstructType = (int)Rules_RegisterConstructType(
                         (int)aDefgeneric,
                         (int)aDefgenerics,
                         (int)Defgeneric_ParseConstruct,
@@ -1079,8 +1079,8 @@ int Defgeneric_SetupConstruct()
   Rules_RegisterHostFunction(aGetMethodRestr, 109, (int)aGetmethodrestr, (int)Defgeneric_GetMethodRestrictionsCommand, (int)a22iw);
   Rules_RegisterHostFunction(aDefgenericModu, 119, (int)aGetdefgenericm, (int)Defgeneric_ModuleCommand, (int)a11w_2);
   Rules_RegisterHostFunction(aType, 117, (int)aClasscommand, (int)Rules_ClassCommand, (int)a11_1);
-  Rules_AddWatchItem((int)aGenericFunctio, 0, 34, (int)&dword_51B3E0, (int)Defgeneric_WatchAccessFunction, (int)Defgeneric_WatchPrintFunction);
-  return Rules_AddWatchItem((int)aMethods, 0, 33, (int)&dword_51B3E4, (int)Defgeneric_MethodsWatchAccessFunction, (int)Defgeneric_MethodsWatchPrintFunction);
+  Rules_AddWatchItem((int)aGenericFunctio, 0, 34, (int)&g_Rules_WatchGenericFunctions, (int)Defgeneric_WatchAccessFunction, (int)Defgeneric_WatchPrintFunction);
+  return Rules_AddWatchItem((int)aMethods, 0, 33, (int)&g_Rules_WatchMethods, (int)Defgeneric_MethodsWatchAccessFunction, (int)Defgeneric_MethodsWatchPrintFunction);
 }
 // 497481: variable 'v0' is possibly undefined
 // 4974EC: variable 'v1' is possibly undefined
@@ -1102,21 +1102,21 @@ int  Defgeneric_ParseConstruct(_BYTE *a1, int a2)
 //----- (00497700) --------------------------------------------------------
 int  Defgeneric_LookupWithImports(_BYTE *a1)
 {
-  return Symbol_LookupInModule((char **)dword_54E6A0, a1, 1);
+  return Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, a1, 1);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497720) --------------------------------------------------------
 int  Defgeneric_LookupLocalOnly(_BYTE *a1)
 {
-  return Symbol_LookupInModule((char **)dword_54E6A0, a1, 0);
+  return Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, a1, 0);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497740) --------------------------------------------------------
 int  Defgeneric_GetNextInModule(int a1)
 {
-  return Class_Enum(a1, dword_54E6A4);
+  return Class_Enum(a1, g_DefgenericModuleItemIndex);
 }
 // 54E6A4: using guessed type int dword_54E6A4;
 
@@ -1158,14 +1158,14 @@ BOOL Defgeneric_IsDeletable()
 //----- (00497800) --------------------------------------------------------
 int __thiscall Defgeneric_UndefgenericCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, dword_54E6A0);
+  return Rules_UndefconstructCommand((int)this, g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497820) --------------------------------------------------------
 int __thiscall Defgeneric_ModuleCommand(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)dword_54E6A0);
+  return Rules_GetConstructModuleCommand((int)this, (const char **)g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1188,7 +1188,7 @@ signed int  Defgeneric_UndefmethodCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &v9, 2, a2);
   if ( result )
   {
-    if ( Symbol_LookupInModule((char **)dword_54E6A0, *(_BYTE **)(v11 + 16), 1) || !strcmp_(0, asc_50529C) )
+    if ( Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, *(_BYTE **)(v11 + 16), 1) || !strcmp_(0, asc_50529C) )
     {
       Rules_RtnUnknown(2, &v9, a2);
       if ( v10 == 2 )
@@ -1394,7 +1394,7 @@ int  Defgeneric_SetMethodTraceFlag(char a1, int a2, int a3)
 //----- (00497BB0) --------------------------------------------------------
 int __thiscall Defgeneric_PpdefgenericCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)dword_54E6A0);
+  return Rules_PPConstructCommand((int)this, (const char **)g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1461,7 +1461,7 @@ int  Defgeneric_ListDefmethodsCommand(int a1, double a2)
 //----- (00497D10) --------------------------------------------------------
 int  Defgeneric_ListDefgenericsCommand(int a1, double a2)
 {
-  return Rules_ListConstructsCommand(dword_54E6A0, a1, a2);
+  return Rules_ListConstructsCommand(g_Clips_DefgenericConstructType, a1, a2);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1480,10 +1480,10 @@ int  Defgeneric_ListMethodsAndTally(int a1, int a2, int a3)
   else
   {
     v4 = 0;
-    for ( i = Class_Enum(0, dword_54E6A4); i; i = Class_Enum(v7, dword_54E6A4) )
+    for ( i = Class_Enum(0, g_DefgenericModuleItemIndex); i; i = Class_Enum(v7, g_DefgenericModuleItemIndex) )
     {
       v4 += Defgeneric_PrintMethodsList(i, i);
-      if ( Class_Enum(v6, dword_54E6A4) )
+      if ( Class_Enum(v6, g_DefgenericModuleItemIndex) )
         Output_Write(a1, (int)asc_50537C, v7);
     }
   }
@@ -1496,7 +1496,7 @@ int  Defgeneric_ListMethodsAndTally(int a1, int a2, int a3)
 //----- (00497DD0) --------------------------------------------------------
 _DWORD * Defgeneric_GetDefgenericListCommand(int a1, double a2)
 {
-  return Rules_GetConstructListCommand(a1, dword_54E6A0, a2);
+  return Rules_GetConstructListCommand(a1, g_Clips_DefgenericConstructType, a2);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1538,19 +1538,19 @@ _DWORD * Defgeneric_BuildMethodListValue(int a1, _DWORD *a2)
 
   if ( a1 )
   {
-    v17 = Class_Enum(a1, dword_54E6A4);
+    v17 = Class_Enum(a1, g_DefgenericModuleItemIndex);
     Rules_SetConstructNextInModule(a1, 0);
   }
   else
   {
-    v4 = Class_Enum(0, dword_54E6A4);
+    v4 = Class_Enum(0, g_DefgenericModuleItemIndex);
     v5 = v4;
     if ( v4 )
-      v4 = Class_Enum(v4, dword_54E6A4);
+      v4 = Class_Enum(v4, g_DefgenericModuleItemIndex);
     v17 = v4;
   }
   v19 = v5;
-  for ( i = 0; v5; v5 = Class_Enum(v5, dword_54E6A4) )
+  for ( i = 0; v5; v5 = Class_Enum(v5, g_DefgenericModuleItemIndex) )
     i += *(_DWORD *)(v5 + 32);
   v7 = 2 * i;
   a2[1] = 4;
@@ -1580,7 +1580,7 @@ _DWORD * Defgeneric_BuildMethodListValue(int a1, _DWORD *a2)
         }
         while ( v16 < *(_DWORD *)(v10 + 32) );
       }
-      result = (_DWORD *)Class_Enum(v10, dword_54E6A4);
+      result = (_DWORD *)Class_Enum(v10, g_DefgenericModuleItemIndex);
       v10 = (int)result;
     }
     while ( result );
@@ -1701,9 +1701,9 @@ int * Defgeneric_BuildMethodRestrictionsValue(int a1, int a2, _DWORD *a3)
       v30 += 6;
       ++v31;
       if ( v16[1] )
-        v20 = dword_54DD64;
+        v20 = g_ClipsTrueSymbol;
       else
-        v20 = dword_54DD70;
+        v20 = g_ClipsFalseSymbol;
       *(_DWORD *)((char *)v35 + 6 * v18 + 10) = v20;
       *((_WORD *)v35 + 3 * v18 + 7) = 1;
       result = Rules_AddIntegerValue(v16[2]);
@@ -1752,9 +1752,9 @@ int  Defgeneric_EvaluateGenericFunctionCall(int a1, _DWORD *a2, double a3)
 {
   int v4; // eax
 
-  Method_DispatchGenericCall(a1, 0, *(_DWORD **)(dword_51A960 + 6), 0, a3, a2);
-  if ( a2[1] == 2 && (v4 = a2[2], v4 == dword_54DD70) )
-    return dword_54DD70 ^ v4;
+  Method_DispatchGenericCall(a1, 0, *(_DWORD **)(g_ClipsCurrentExpression + 6), 0, a3, a2);
+  if ( a2[1] == 2 && (v4 = a2[2], v4 == g_ClipsFalseSymbol) )
+    return g_ClipsFalseSymbol ^ v4;
   else
     return 1;
 }
@@ -1780,7 +1780,7 @@ int  Defgeneric_IncrementGenericBusyCount(int result)
 //----- (004982E0) --------------------------------------------------------
 int  Defgeneric_SaveConstructs(signed int a1)
 {
-  return Rules_SaveConstruct(a1, dword_54E6A0);
+  return Rules_SaveConstruct(a1, g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1939,14 +1939,14 @@ int __fastcall Defgeneric_PrintMethodsList(int a1, int a2)
 //----- (00498550) --------------------------------------------------------
 signed int  Defgeneric_WatchAccessFunction(int a1, int a2, double a3)
 {
-  return Rules_ApplyWatchFlagCommand(dword_54E6A0, a1, (int)Defgeneric_GetTraceFlag, a2, a3, (void (*)(void))Defgeneric_SetTraceFlag);
+  return Rules_ApplyWatchFlagCommand(g_Clips_DefgenericConstructType, a1, (int)Defgeneric_GetTraceFlag, a2, a3, (void (*)(void))Defgeneric_SetTraceFlag);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00498570) --------------------------------------------------------
 signed int  Defgeneric_WatchPrintFunction(int a1, int a2, double a3)
 {
-  return Rules_ListWatchFlagStatus(dword_54E6A0, a1, (int)Defgeneric_GetTraceFlag, a2, a3, (void (*)(void))Defgeneric_SetTraceFlag);
+  return Rules_ListWatchFlagStatus(g_Clips_DefgenericConstructType, a1, (int)Defgeneric_GetTraceFlag, a2, a3, (void (*)(void))Defgeneric_SetTraceFlag);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -2007,7 +2007,7 @@ signed int  Defgeneric_WatchMethodsDispatch(
         return 1;
       if ( Parser_ParseForm((__int16 *)a8, v23, v9, a6) )
         return 0;
-      if ( v23[1] != 2 || (v17 = Symbol_LookupInModule((char **)dword_54E6A0, *(_BYTE **)(v23[2] + 16), 1)) == 0 )
+      if ( v23[1] != 2 || (v17 = Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, *(_BYTE **)(v23[2] + 16), 1)) == 0 )
       {
         Parser_ReportError(v25, (int)aGenericFunct_4);
         return 0;
@@ -2059,7 +2059,7 @@ LABEL_20:
       Output_Write(a2, Name, v12);
       Output_Write(a2, (int)asc_5053F0, v13);
     }
-    for ( k = Class_Enum(0, dword_54E6A4); k; k = Class_Enum(k, dword_54E6A4) )
+    for ( k = Class_Enum(0, g_DefgenericModuleItemIndex); k; k = Class_Enum(k, g_DefgenericModuleItemIndex) )
     {
       for ( m = Class_NextMethod(k, 0); m; m = Class_NextMethod(k, v16) )
       {
@@ -2118,15 +2118,15 @@ int Deffunction_InitConstructType()
 {
   int v0; // ecx
 
-  Rules_RegisterEvaluationHandler((int)&unk_51AAEC, 12);
-  dword_54E6A8 = Module_RegisterItem(
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_Deffunction, 12);
+  g_Clips_DeffunctionModuleItemIndex = Module_RegisterItem(
                    (int)aDeffunction,
                    (int)Deffunction_AllocateModule,
                    (int)Deffunction_RecordAtIndex,
                    (int)Deffunction_FreeModule,
                    (int)Deffunction_WriteModuleItemReference,
                    (int)Deffunction_FindByName);
-  dword_54E6AC = (int)Rules_RegisterConstructType(
+  g_ClipsDeffunctionConstructType = (int)Rules_RegisterConstructType(
                         (int)aDeffunction,
                         (int)aDeffunctions,
                         (int)Deffunction_FindByName,
@@ -2150,7 +2150,7 @@ int Deffunction_InitConstructType()
   Rules_RegisterHostFunction(aDeffunctionMod, 119, (int)aGetdeffuncti_0, (int)Deffunction_ModuleCommand, (int)a11w_3);
   Deffunction_RegisterBinaryItem();
   Deffunction_RegisterCodeGenerator();
-  return Rules_AddWatchItem((int)aDeffunctions, 0, 32, (int)&dword_51AAE8, (int)Deffunction_SetWatchAll, (int)Deffunction_GetWatchAll);
+  return Rules_AddWatchItem((int)aDeffunctions, 0, 32, (int)&g_Rules_WatchDeffunctions, (int)Deffunction_SetWatchAll, (int)Deffunction_GetWatchAll);
 }
 // 4989CE: variable 'v0' is possibly undefined
 // 51AAE8: using guessed type int dword_51AAE8;
@@ -2167,7 +2167,7 @@ int  Deffunction_FindByName(_BYTE *a1, int a2)
 //----- (00498AB0) --------------------------------------------------------
 int  Deffunction_LookupByName(_BYTE *a1)
 {
-  return Symbol_LookupInModule((char **)dword_54E6AC, a1, 0);
+  return Symbol_LookupInModule((char **)g_ClipsDeffunctionConstructType, a1, 0);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -2197,7 +2197,7 @@ signed int Deffunction_Delete()
 //----- (00498B10) --------------------------------------------------------
 int  Deffunction_EnumNext(int a1)
 {
-  return Class_Enum(a1, dword_54E6A8);
+  return Class_Enum(a1, g_Clips_DeffunctionModuleItemIndex);
 }
 // 54E6A8: using guessed type int dword_54E6A8;
 
@@ -2228,10 +2228,10 @@ int  Deffunction_Free(int result)
     AST_DeinstallNodeChain(*(__int16 **)(v3 + 30));
     AST_FreePackedNodeChain(*(_DWORD *)(v4 + 30));
     Rules_ReplaceConstructPPForm(v6, v5);
-    dword_54DBAC = (int)v7;
-    *v7 = *(_DWORD *)(dword_54DBA8 + 184);
-    result = dword_54DBA8;
-    *(_DWORD *)(dword_54DBA8 + 184) = dword_54DBAC;
+    g_ClipsMemFreeListTemp = (int)v7;
+    *v7 = *(_DWORD *)(g_ClipsMemoryTable + 184);
+    result = g_ClipsMemoryTable;
+    *(_DWORD *)(g_ClipsMemoryTable + 184) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -2247,35 +2247,35 @@ int  Deffunction_Free(int result)
 //----- (00498BB0) --------------------------------------------------------
 int __thiscall Deffunction_UndeffunctionCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, dword_54E6AC);
+  return Rules_UndefconstructCommand((int)this, g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498BD0) --------------------------------------------------------
 int __thiscall Deffunction_ModuleCommand(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)dword_54E6AC);
+  return Rules_GetConstructModuleCommand((int)this, (const char **)g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498BF0) --------------------------------------------------------
 int __thiscall Deffunction_PPCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)dword_54E6AC);
+  return Rules_PPConstructCommand((int)this, (const char **)g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498C10) --------------------------------------------------------
 int  Deffunction_ListCommand(int a1, double a2)
 {
-  return Rules_ListConstructsCommand(dword_54E6AC, a1, a2);
+  return Rules_ListConstructsCommand(g_ClipsDeffunctionConstructType, a1, a2);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498C50) --------------------------------------------------------
 _DWORD * Deffunction_GetListCommand(int a1, double a2)
 {
-  return Rules_GetConstructListCommand(a1, dword_54E6AC, a2);
+  return Rules_GetConstructListCommand(a1, g_ClipsDeffunctionConstructType, a2);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -2314,9 +2314,9 @@ int  Deffunction_CallForBooleanResult(int a1, _DWORD *a2, double a3)
   int v3; // ecx
   int v4; // eax
 
-  Deffunction_CallDeffunction(a1, *(_DWORD **)(dword_51A960 + 6), a2, a3);
-  if ( *(_DWORD *)(v3 + 4) == 2 && (v4 = *(_DWORD *)(v3 + 8), v4 == dword_54DD70) )
-    return dword_54DD70 ^ v4;
+  Deffunction_CallDeffunction(a1, *(_DWORD **)(g_ClipsCurrentExpression + 6), a2, a3);
+  if ( *(_DWORD *)(v3 + 4) == 2 && (v4 = *(_DWORD *)(v3 + 8), v4 == g_ClipsFalseSymbol) )
+    return g_ClipsFalseSymbol ^ v4;
   else
     return 1;
 }
@@ -2345,12 +2345,12 @@ signed int Deffunction_AllocateModule()
 {
   _DWORD *v0; // edx
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 48);
+  v0 = *(_DWORD **)(g_ClipsMemoryTable + 48);
   if ( !v0 )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = *v0;
-  return dword_54DBAC;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = *v0;
+  return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -2361,11 +2361,11 @@ int  Deffunction_FreeModule(int a1)
   int result; // eax
   _DWORD *freed_node; // ecx
 
-  result = Rules_ClearModuleConstructList(a1, dword_54E6AC, a1);
+  result = Rules_ClearModuleConstructList(a1, g_ClipsDeffunctionConstructType, a1);
   freed_node = (_DWORD *)a1;
-  dword_54DBAC = a1;
-  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+  g_ClipsMemFreeListTemp = a1;
+  *freed_node = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -2375,7 +2375,7 @@ int  Deffunction_FreeModule(int a1)
 //----- (00498DB0) --------------------------------------------------------
 BOOL Deffunction_IsClearReady()
 {
-  return dword_51B3E8 == 0;
+  return g_CurrentDeffunction == 0;
 }
 // 51B3E8: using guessed type int dword_51B3E8;
 
@@ -2403,7 +2403,7 @@ signed int Deffunction_ClearAll()
   v0 = 1;
   if ( Rules_IsBloaded() == 1 )
     return 0;
-  for ( i = Class_Enum(0, dword_54E6A8); i; i = Class_Enum(v5, dword_54E6A8) )
+  for ( i = Class_Enum(0, g_Clips_DeffunctionModuleItemIndex); i; i = Class_Enum(v5, g_Clips_DeffunctionModuleItemIndex) )
   {
     if ( *(_DWORD *)(i + 24) )
     {
@@ -2420,14 +2420,14 @@ signed int Deffunction_ClearAll()
       *(_DWORD *)(v5 + 30) = 0;
     }
   }
-  v6 = Class_Enum(0, dword_54E6A8);
+  v6 = Class_Enum(0, g_Clips_DeffunctionModuleItemIndex);
   if ( !v6 )
     return v0;
   do
   {
     while ( 1 )
     {
-      v6 = Class_Enum(v6, dword_54E6A8);
+      v6 = Class_Enum(v6, g_Clips_DeffunctionModuleItemIndex);
       if ( !*(_DWORD *)(v7 + 24) )
         break;
 LABEL_11:
@@ -2526,21 +2526,21 @@ int  Deffunction_WriteHeaderForm(int a1, int a2)
 //----- (00498FE0) --------------------------------------------------------
 int  Deffunction_SaveBodies(signed int a1)
 {
-  return Rules_SaveConstruct(a1, dword_54E6AC);
+  return Rules_SaveConstruct(a1, g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498FF0) --------------------------------------------------------
 signed int  Deffunction_SetWatchAll(int a1, int a2, double a3)
 {
-  return Rules_ApplyWatchFlagCommand(dword_54E6AC, a1, (int)Deffunction_GetWatchFlagField, a2, a3, (void (*)(void))Deffunction_SetWatchFlagField);
+  return Rules_ApplyWatchFlagCommand(g_ClipsDeffunctionConstructType, a1, (int)Deffunction_GetWatchFlagField, a2, a3, (void (*)(void))Deffunction_SetWatchFlagField);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00499010) --------------------------------------------------------
 signed int  Deffunction_GetWatchAll(int a1, int a2, double a3)
 {
-  return Rules_ListWatchFlagStatus(dword_54E6AC, a1, (int)Deffunction_GetWatchFlagField, a2, a3, (void (*)(void))Deffunction_SetWatchFlagField);
+  return Rules_ListWatchFlagStatus(g_ClipsDeffunctionConstructType, a1, (int)Deffunction_GetWatchFlagField, a2, a3, (void (*)(void))Deffunction_SetWatchFlagField);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -2562,12 +2562,12 @@ _DWORD *Defglobal_InitConstructType()
 {
   _DWORD *result; // eax
 
-  unk_51AB20[4] = (int)(uintptr_t)Defglobal_EvaluateReference;
-  unk_51AB50[4] = (int)(uintptr_t)Mem_CopyDataObjectRecord;
-  unk_51AB50[6] = (int)(uintptr_t)Class_DecrementBusyCount;
-  unk_51AB50[7] = (int)(uintptr_t)Class_IncrementBusyCount;
-  Rules_RegisterEvaluationHandler((int)&unk_51AB20, 13);
-  Rules_RegisterEvaluationHandler((int)&unk_51AB50, 60);
+  g_CLIPS_DefglobalEvalNodeDescriptor[4] = (int)(uintptr_t)Defglobal_EvaluateReference;
+  g_Defglobal_PtrEntityRecord[4] = (int)(uintptr_t)Mem_CopyDataObjectRecord;
+  g_Defglobal_PtrEntityRecord[6] = (int)(uintptr_t)Class_DecrementBusyCount;
+  g_Defglobal_PtrEntityRecord[7] = (int)(uintptr_t)Class_IncrementBusyCount;
+  Rules_RegisterEvaluationHandler((int)&g_CLIPS_DefglobalEvalNodeDescriptor, 13);
+  Rules_RegisterEvaluationHandler((int)&g_Defglobal_PtrEntityRecord, 60);
   Defglobal_RegisterModuleItem();
   Defglobal_RegisterConstructCommands();
   Defglobal_RegisterResetGlobalsCommands();
@@ -2584,7 +2584,7 @@ _DWORD *Defglobal_InitConstructType()
              (int)Defglobal_IsDeletable,
              (int)Defglobal_DeleteConstructOrAll,
              (int)Defglobal_Free);
-  dword_54E6B4 = (int)result;
+  g_ClipsDefglobalConstructType = (int)result;
   return result;
 }
 // 54E6B4: using guessed type int dword_54E6B4;
@@ -2592,7 +2592,7 @@ _DWORD *Defglobal_InitConstructType()
 //----- (004990D0) --------------------------------------------------------
 int *Defglobal_RegisterModuleItem()
 {
-  dword_54E6B0 = Module_RegisterItem(
+  g_ClipsDefglobalModuleItemId = Module_RegisterItem(
                    (int)aDefglobal,
                    (int)Defglobal_AllocateModule,
                    (int)Rules_GetDefglobalModulePointer,
@@ -2608,12 +2608,12 @@ signed int Defglobal_AllocateModule()
 {
   _DWORD *v0; // edx
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 48);
+  v0 = *(_DWORD **)(g_ClipsMemoryTable + 48);
   if ( !v0 )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = *v0;
-  return dword_54DBAC;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = *v0;
+  return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -2624,11 +2624,11 @@ int  Defglobal_FreeModule(int a1)
   int result; // eax
   _DWORD *freed_node; // ecx
 
-  result = Rules_ClearModuleConstructList(a1, dword_54E6B4, a1);
+  result = Rules_ClearModuleConstructList(a1, g_ClipsDefglobalConstructType, a1);
   freed_node = (_DWORD *)a1;
-  dword_54DBAC = a1;
-  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+  g_ClipsMemFreeListTemp = a1;
+  *freed_node = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -2645,7 +2645,7 @@ int  Defglobal_FindByName(_BYTE *a1, int a2)
 //----- (004991A0) --------------------------------------------------------
 int  Defglobal_EnumNext(int a1)
 {
-  return Class_Enum(a1, dword_54E6B0);
+  return Class_Enum(a1, g_ClipsDefglobalModuleItemId);
 }
 // 54E6B0: using guessed type int dword_54E6B0;
 
@@ -2673,11 +2673,11 @@ int  Defglobal_Free(int result)
       Rules_ReturnMultifieldToPool(*(_DWORD **)(v1 + 36));
     AST_RemoveHashedNodeChain(*(__int16 **)(v2 + 52), v2);
     Rules_FreeConstructHeaderString(v3, (int)v3);
-    dword_54DBAC = (int)v4;
-    *v4 = *(_DWORD *)(dword_54DBA8 + 224);
-    result = dword_54DBAC;
-    *(_DWORD *)(dword_54DBA8 + 224) = dword_54DBAC;
-    dword_51AB1C = 1;
+    g_ClipsMemFreeListTemp = (int)v4;
+    *v4 = *(_DWORD *)(g_ClipsMemoryTable + 224);
+    result = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(g_ClipsMemoryTable + 224) = g_ClipsMemFreeListTemp;
+    g_Defglobal_ChangedFlag = 1;
   }
   return result;
 }
@@ -2700,10 +2700,10 @@ int  Defglobal_SetValue(int a1, _DWORD *a2, int a3, double a4)
   if ( a3 )
   {
     Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 52), a2, a1, a4);
-    if ( dword_51A964 )
+    if ( g_ClipsEvaluationError )
     {
       a2[1] = 2;
-      a2[2] = dword_54DD70;
+      a2[2] = g_ClipsFalseSymbol;
     }
   }
   if ( (*(_BYTE *)(record + 20) & 1) != 0 )
@@ -2726,9 +2726,9 @@ int  Defglobal_SetValue(int a1, _DWORD *a2, int a3, double a4)
   else
     *(_DWORD *)(record + 36) = a2[2];
   Rules_ValueInstall(record + 28, record);
-  result = dword_51A96C;
-  dword_51AB1C = 1;
-  if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
+  result = g_ClipsCurrentEvaluationDepth;
+  g_Defglobal_ChangedFlag = 1;
+  if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
     return Rules_RunPeriodicCleanup(1, 0);
   return result;
 }
@@ -2746,12 +2746,12 @@ _DWORD *Defglobal_FindNextChanged()
   _DWORD *result; // eax
   int v1; // ecx
 
-  result = (_DWORD *)Class_Enum(0, dword_54E6B0);
+  result = (_DWORD *)Class_Enum(0, g_ClipsDefglobalModuleItemId);
   if ( !result )
     return 0;
   while ( v1 != *result )
   {
-    result = (_DWORD *)Class_Enum((int)result, dword_54E6B0);
+    result = (_DWORD *)Class_Enum((int)result, g_ClipsDefglobalModuleItemId);
     if ( !result )
       return 0;
   }
@@ -2784,7 +2784,7 @@ signed int  Defglobal_EvaluateReference(int a1, _DWORD *a2, int a3)
     Rules_ReportAmbiguousReferenceError((int)aDefglobal, *(_DWORD *)(a1 + 16));
 LABEL_4:
     a2[1] = 2;
-    a2[2] = dword_54DD70;
+    a2[2] = g_ClipsFalseSymbol;
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -2855,7 +2855,7 @@ int Class_RefreshWatchFlags()
   result = Module_NextEnum(0);
   for ( i = result; result; i = result )
   {
-    for ( j = *(_BYTE **)(Module_GetItem(i, dword_54E6B0) + 4); j; j = (_BYTE *)Class_Enum((int)j, dword_54E6B0) )
+    for ( j = *(_BYTE **)(Module_GetItem(i, g_ClipsDefglobalModuleItemId) + 4); j; j = (_BYTE *)Class_Enum((int)j, g_ClipsDefglobalModuleItemId) )
     {
       if ( Rules_FindImportExportConstruct(aDefglobal, v3, *(_BYTE **)(*(_DWORD *)j + 16), 1, 0) )
         j[20] |= 2u;
@@ -2872,12 +2872,12 @@ int Class_RefreshWatchFlags()
 signed int __thiscall Rules_InitObjectSystem(void *this)
 {
   (void)this;
-  dword_54E6FC = (int)Str_Intern(aIsA, 0);
-  ++*(_DWORD *)(dword_54E6FC + 4);
-  dword_54E6F8 = (int)Str_Intern(aName, 0);
-  ++*(_DWORD *)(dword_54E6F8 + 4);
-  dword_54E6F4 = (int)Str_Intern(aInitialObject, 0);
-  ++*(_DWORD *)(dword_54E6F4 + 4);
+  g_Symbol_IsA = (int)Str_Intern(aIsA, 0);
+  ++*(_DWORD *)(g_Symbol_IsA + 4);
+  g_Clips_NameSymbol = (int)Str_Intern(aName, 0);
+  ++*(_DWORD *)(g_Clips_NameSymbol + 4);
+  g_Rules_InitialObjectSymbol = (int)Str_Intern(aInitialObject, 0);
+  ++*(_DWORD *)(g_Rules_InitialObjectSymbol + 4);
   Rules_RegisterDefclassConstruct();
   Rules_RegisterInstanceFunctions();
   MessageHandler_RegisterCommands();
@@ -2905,40 +2905,40 @@ int Class_CreateSystemClasses()
   int result; // eax
   int object_class; // [esp+Ch] [ebp-1Ch]
 
-  Class_InternSlotName((_DWORD *)dword_54E6FC, 0, 1);
-  Class_InternSlotName((_DWORD *)dword_54E6F8, 1, 1);
+  Class_InternSlotName((_DWORD *)g_Symbol_IsA, 0, 1);
+  Class_InternSlotName((_DWORD *)g_Clips_NameSymbol, 1, 1);
   object_class = Class_CreateSystemClass(aObject_0, 0, 0);
   primitive_class = Class_CreateSystemClass(aPrimitive, object_class, 0);
   user_class = Class_CreateSystemClass(aUser, object_class, 0);
   number_class = Class_CreateSystemClass(aNumber_1, primitive_class, 0);
-  dword_51AD80 = Class_CreateSystemClass(aInteger_2, number_class, 0);
-  dword_51AD7C[0] = Class_CreateSystemClass(aFloat_2, number_class, 0);
+  g_ClipsIntegerClass = Class_CreateSystemClass(aInteger_2, number_class, 0);
+  g_ClipsPrimitiveTypeClassMap[0] = Class_CreateSystemClass(aFloat_2, number_class, 0);
   lexeme_class = Class_CreateSystemClass(aLexeme_0, primitive_class, 0);
-  dword_51AD84 = Class_CreateSystemClass(aSymbol_3, lexeme_class, 0);
-  dword_51AD88 = Class_CreateSystemClass(aString_2, lexeme_class, 0);
-  dword_51AD8C = Class_CreateSystemClass(aMultifield_1, primitive_class, 0);
+  g_ClipsSymbolClass = Class_CreateSystemClass(aSymbol_3, lexeme_class, 0);
+  g_ClipsStringClass = Class_CreateSystemClass(aString_2, lexeme_class, 0);
+  g_ClipsMultifieldClass = Class_CreateSystemClass(aMultifield_1, primitive_class, 0);
   address_class = Class_CreateSystemClass(aAddress_0, primitive_class, 0);
-  dword_51AD90 = Class_CreateSystemClass(aExternalAddr_0, address_class, 0);
-  dword_51AD94 = Class_CreateSystemClass(aFactAddress_1, address_class, 0);
+  g_ClipsExternalAddressClass = Class_CreateSystemClass(aExternalAddr_0, address_class, 0);
+  g_ClipsFactAddressClass = Class_CreateSystemClass(aFactAddress_1, address_class, 0);
   instance_class = Class_CreateSystemClass(aInstance_3, primitive_class, 0);
-  dword_51AD98 = Class_CreateSystemClass(aInstanceAddr_7, instance_class, 0);
-  dword_51AD9C = Class_CreateSystemClass(aInstanceName_2, instance_class, 0);
+  g_Class_InstanceAddress = Class_CreateSystemClass(aInstanceAddr_7, instance_class, 0);
+  g_Class_InstanceName = Class_CreateSystemClass(aInstanceName_2, instance_class, 0);
   initial_object_class = Class_CreateSystemClass(aInitialObjec_0, user_class, 0);
   initial_object_flags = *(_BYTE *)(initial_object_class + 20) & 0xFB;
   *(_BYTE *)(initial_object_class + 20) = initial_object_flags;
   *(_BYTE *)(initial_object_class + 20) = initial_object_flags | 8;
-  Class_InsertLinkEntry((unsigned __int16 *)(dword_51AD98 + 34), address_class, -1);
-  Class_InsertLinkEntry((unsigned __int16 *)(dword_51AD98 + 46), address_class, 2);
-  Class_InsertLinkEntry((unsigned __int16 *)(address_class + 40), dword_51AD98, -1);
-  Rules_AppendConstructToModuleList(dword_51AD7C[0]);
-  Rules_AppendConstructToModuleList(dword_51AD80);
-  Rules_AppendConstructToModuleList(dword_51AD84);
-  Rules_AppendConstructToModuleList(dword_51AD88);
-  Rules_AppendConstructToModuleList(dword_51AD8C);
-  Rules_AppendConstructToModuleList(dword_51AD90);
-  Rules_AppendConstructToModuleList(dword_51AD94);
-  Rules_AppendConstructToModuleList(dword_51AD98);
-  Rules_AppendConstructToModuleList(dword_51AD9C);
+  Class_InsertLinkEntry((unsigned __int16 *)(g_Class_InstanceAddress + 34), address_class, -1);
+  Class_InsertLinkEntry((unsigned __int16 *)(g_Class_InstanceAddress + 46), address_class, 2);
+  Class_InsertLinkEntry((unsigned __int16 *)(address_class + 40), g_Class_InstanceAddress, -1);
+  Rules_AppendConstructToModuleList(g_ClipsPrimitiveTypeClassMap[0]);
+  Rules_AppendConstructToModuleList(g_ClipsIntegerClass);
+  Rules_AppendConstructToModuleList(g_ClipsSymbolClass);
+  Rules_AppendConstructToModuleList(g_ClipsStringClass);
+  Rules_AppendConstructToModuleList(g_ClipsMultifieldClass);
+  Rules_AppendConstructToModuleList(g_ClipsExternalAddressClass);
+  Rules_AppendConstructToModuleList(g_ClipsFactAddressClass);
+  Rules_AppendConstructToModuleList(g_Class_InstanceAddress);
+  Rules_AppendConstructToModuleList(g_Class_InstanceName);
   Rules_AppendConstructToModuleList(object_class);
   Rules_AppendConstructToModuleList(primitive_class);
   Rules_AppendConstructToModuleList(number_class);
@@ -2973,15 +2973,15 @@ int Rules_RegisterDefclassConstruct()
   int v0; // ecx
   int v1; // ecx
 
-  Rules_RegisterEvaluationHandler((int)&unk_51AB88, 57);
-  dword_54E6BC = Module_RegisterItem(
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_Defclass, 57);
+  g_CLIPS_DefclassModuleItemIndex = Module_RegisterItem(
                    (int)aDefclass,
                    (int)Class_AllocRecord,
                    (int)Class_RecordAtIndex,
                    (int)Class_FreeRecord,
                    (int)ObjectsCompiler_WriteModuleItemHeaderRef,
                    (int)Class_LookupCurrentScopedName);
-  dword_54E6B8 = (int)Rules_RegisterConstructType(
+  g_ClipsDefclassConstructType = (int)Rules_RegisterConstructType(
                         (int)aDefclass,
                         (int)aDefclasses,
                         (int)Class_LookupCurrentScopedName,
@@ -3028,8 +3028,8 @@ int Rules_RegisterDefclassConstruct()
   Rules_RegisterHostFunction(aSlotPublicp, 98, (int)aSlotpublicpcom, (int)Class_SlotPublicPCommand, (int)a22we);
   Rules_RegisterHostFunction(aSlotDirectAcce, 98, (int)aSlotdirectacce, (int)Class_SlotDirectAccessPCommand, (int)a22we);
   Rules_RegisterHostFunction(aDefclassModule, 119, (int)aGetdefclassmod, (int)Class_DefclassModuleCommand, (int)a11w_5);
-  Rules_AddWatchItem((int)aInstances_0, 0, 75, (int)&dword_51AD74, (int)Class_SetWatchFlagCommand, (int)Class_SetWatchFlagForModuleCommand);
-  return Rules_AddWatchItem((int)aSlots, 1, 74, (int)dword_51AD78, (int)Class_SetWatchFlagCommand, (int)Class_SetWatchFlagForModuleCommand);
+  Rules_AddWatchItem((int)aInstances_0, 0, 75, (int)&g_Rules_WatchInstances, (int)Class_SetWatchFlagCommand, (int)Class_SetWatchFlagForModuleCommand);
+  return Rules_AddWatchItem((int)aSlots, 1, 74, (int)g_Class_WatchSlots, (int)Class_SetWatchFlagCommand, (int)Class_SetWatchFlagForModuleCommand);
 }
 // 499A70: variable 'v0' is possibly undefined
 // 499AA2: variable 'v1' is possibly undefined
@@ -3079,8 +3079,8 @@ int  Class_CreateSystemClass(char *a1, int a2, int a3)
       ++inherited_index;
     }
   }
-  *(_DWORD *)(class_record + 100) = *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(class_record + 30));
-  *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(class_record + 30)) = class_record;
+  *(_DWORD *)(class_record + 100) = *(_DWORD *)(g_DefclassHashTable + 4 * *(_DWORD *)(class_record + 30));
+  *(_DWORD *)(g_DefclassHashTable + 4 * *(_DWORD *)(class_record + 30)) = class_record;
   class_bitmap = Mem_SmallBlockAlloc(1);
   Mem_AllocArray(class_bitmap, 1);
   class_bitmap[0] |= 1u;
@@ -3097,12 +3097,12 @@ signed int Class_AllocRecord()
 {
   _DWORD *v0; // edx
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 48);
+  v0 = *(_DWORD **)(g_ClipsMemoryTable + 48);
   if ( !v0 )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
-  *(_DWORD *)(dword_54DBA8 + 48) = *v0;
-  return dword_54DBAC;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = *v0;
+  return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -3115,16 +3115,16 @@ int  Class_FreeRecord(int a1)
   _DWORD *freed_node; // ecx
   int result; // eax
 
-  Rules_ClearModuleConstructList(a1, dword_54E6B8, a1);
+  Rules_ClearModuleConstructList(a1, g_ClipsDefclassConstructType, a1);
   v1 = (_DWORD *)Class_FindSlotNameEntryByID(0);
   Class_ReleaseSlotName(v1);
   v2 = (_DWORD *)Class_FindSlotNameEntryByID(1);
   Class_ReleaseSlotName(v2);
   freed_node = (_DWORD *)a1;
-  dword_54DBAC = a1;
-  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
-  result = dword_54DBA8;
-  *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+  g_ClipsMemFreeListTemp = a1;
+  *freed_node = *(_DWORD *)(g_ClipsMemoryTable + 48);
+  result = g_ClipsMemoryTable;
+  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 499F7F: variable 'v3' is possibly undefined
@@ -3160,7 +3160,7 @@ signed int Class_RefreshWatchExpressions()
   v13 = 1 << (v2 % 8);
   do
   {
-    v3 = *(int **)(v11 + dword_51AD68);
+    v3 = *(int **)(v11 + g_DefclassHashTable);
     if ( v3 )
     {
       v4 = v15;
@@ -3193,10 +3193,10 @@ signed int Class_RefreshWatchExpressions()
 //----- (0049A0E0) --------------------------------------------------------
 int __cdecl ProcParam_RegisterPrimitiveTypes(void)
 {
-  Rules_RegisterEvaluationHandler((int)&unk_51ABD4, 65);
-  Rules_RegisterEvaluationHandler((int)&unk_51AC04, 66);
-  Rules_RegisterEvaluationHandler((int)&unk_51AC34, 67);
-  return Rules_RegisterEvaluationHandler((int)&unk_51AC64, 68);
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_ProcArgument, 65);
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_ProcWildcardArgument, 66);
+  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_ProcBoundVariable, 67);
+  return Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_ProcBindLocalVariable, 68);
 }
 
 //----- (0049A120) --------------------------------------------------------
@@ -3425,18 +3425,18 @@ signed int  Parser_ReplaceProcVars(
             {
               if ( v21 == -1 )
               {
-                dword_54DBAC = (int)v20;
-                *v20 = *(_DWORD *)(dword_54DBA8 + 56);
-                *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+                g_ClipsMemFreeListTemp = (int)v20;
+                *v20 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+                *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
                 return 1;
               }
             }
             else
             {
-              dword_54DBAC = (int)v20;
-              *v20 = *(_DWORD *)(dword_54DBA8 + 56);
+              g_ClipsMemFreeListTemp = (int)v20;
+              *v20 = *(_DWORD *)(g_ClipsMemoryTable + 56);
               v30 = 0;
-              *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+              *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
             }
           }
           else
@@ -3498,9 +3498,9 @@ LABEL_6:
       *(_DWORD *)(v6 + 2) = Rules_AddBitmapValue(&v26, v23);
       v24 = *(_DWORD **)(v6 + 6);
       a3 = *(_DWORD *)((char *)v24 + 10);
-      dword_54DBAC = (int)v24;
-      *v24 = *(_DWORD *)(dword_54DBA8 + 56);
-      *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+      g_ClipsMemFreeListTemp = (int)v24;
+      *v24 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+      *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
       *(_DWORD *)(v6 + 6) = a3;
     }
     goto LABEL_6;
@@ -3547,40 +3547,40 @@ int (* ProcParam_PushEvaluatedArgumentFrame(
   _DWORD *v9; // esi
   int (*result)(void); // eax
 
-  v7 = *(_DWORD **)(dword_54DBA8 + 96);
+  v7 = *(_DWORD **)(g_ClipsMemoryTable + 96);
   if ( v7 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = *v7;
-    v8 = (_DWORD *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = *v7;
+    v8 = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
     v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
   }
-  *v8 = dword_51ABB8;
-  v8[2] = dword_51ABBC;
-  v8[4] = dword_51ABD0;
-  v8[5] = dword_51ABC4;
-  dword_51ABC4 = (int)v8;
+  *v8 = g_ClipsProcParamArray;
+  v8[2] = g_ClipsProcParamCount;
+  v8[4] = g_ProcParam_ErrorContextCallback;
+  v8[5] = g_ProcParamSavedFrameStack;
+  g_ProcParamSavedFrameStack = (int)v8;
   ProcParam_EvaluateArgumentExpressions(a1, a2, a3, a4, a5);
-  if ( dword_51A964 )
+  if ( g_ClipsEvaluationError )
   {
-    v9 = (_DWORD *)dword_51ABC4;
-    dword_51ABC4 = *(_DWORD *)(dword_51ABC4 + 20);
-    dword_54DBAC = (int)v9;
-    *v9 = *(_DWORD *)(dword_54DBA8 + 96);
-    result = (int (*)(void))dword_54DBAC;
-    *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
+    v9 = (_DWORD *)g_ProcParamSavedFrameStack;
+    g_ProcParamSavedFrameStack = *(_DWORD *)(g_ProcParamSavedFrameStack + 20);
+    g_ClipsMemFreeListTemp = (int)v9;
+    *v9 = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    result = (int (*)(void))g_ClipsMemFreeListTemp;
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
   }
   else
   {
-    v8[1] = dword_51ABC0;
-    dword_51ABC0 = 0;
-    v8[3] = dword_51ABC8;
+    v8[1] = g_Clips_ProcParamArgChain;
+    g_Clips_ProcParamArgChain = 0;
+    v8[3] = g_ClipsProcParamWildcardValue;
     result = a6;
-    dword_51ABC8 = 0;
-    dword_51ABD0 = a6;
+    g_ClipsProcParamWildcardValue = 0;
+    g_ProcParam_ErrorContextCallback = a6;
   }
   return result;
 }
@@ -3601,29 +3601,29 @@ int ProcParam_PopFrame()
   int *v0; // edx
   int result; // eax
 
-  if ( dword_51ABB8 )
-    Mem_SmallBlockFree((_DWORD *)dword_51ABB8, 24 * dword_51ABBC);
-  if ( dword_51ABC0 )
-    Mem_SmallBlockFree((_DWORD *)dword_51ABC0, 14 * dword_51ABBC);
-  v0 = (int *)dword_51ABC4;
-  dword_51ABC4 = *(_DWORD *)(dword_51ABC4 + 20);
-  dword_51ABB8 = *v0;
-  dword_51ABBC = v0[2];
-  dword_51ABC0 = v0[1];
-  if ( dword_51ABC8 )
+  if ( g_ClipsProcParamArray )
+    Mem_SmallBlockFree((_DWORD *)g_ClipsProcParamArray, 24 * g_ClipsProcParamCount);
+  if ( g_Clips_ProcParamArgChain )
+    Mem_SmallBlockFree((_DWORD *)g_Clips_ProcParamArgChain, 14 * g_ClipsProcParamCount);
+  v0 = (int *)g_ProcParamSavedFrameStack;
+  g_ProcParamSavedFrameStack = *(_DWORD *)(g_ProcParamSavedFrameStack + 20);
+  g_ClipsProcParamArray = *v0;
+  g_ClipsProcParamCount = v0[2];
+  g_Clips_ProcParamArgChain = v0[1];
+  if ( g_ClipsProcParamWildcardValue )
   {
-    Rules_DeinstallMultifield(*(__int16 **)(dword_51ABC8 + 8));
-    Rules_RegisterEphemeralMultifield(*(_DWORD *)(dword_51ABC8 + 8));
-    dword_54DBAC = dword_51ABC8;
-    *(_DWORD *)dword_51ABC8 = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
+    Rules_DeinstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
+    Rules_RegisterEphemeralMultifield(*(_DWORD *)(g_ClipsProcParamWildcardValue + 8));
+    g_ClipsMemFreeListTemp = g_ClipsProcParamWildcardValue;
+    *(_DWORD *)g_ClipsProcParamWildcardValue = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
   }
-  dword_51ABC8 = v0[3];
-  dword_51ABD0 = (int (*)(void))v0[4];
-  dword_54DBAC = (int)v0;
-  *v0 = *(_DWORD *)(dword_54DBA8 + 96);
-  result = dword_54DBA8;
-  *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
+  g_ClipsProcParamWildcardValue = v0[3];
+  g_ProcParam_ErrorContextCallback = (int (*)(void))v0[4];
+  g_ClipsMemFreeListTemp = (int)v0;
+  *v0 = *(_DWORD *)(g_ClipsMemoryTable + 96);
+  result = g_ClipsMemoryTable;
+  *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 49A853: variable 'v0' is possibly undefined
@@ -3646,34 +3646,34 @@ int ProcParam_BuildArgumentExpressionChain()
   int v5; // ebx
   int v6; // ebx
 
-  if ( !dword_51ABB8 || dword_51ABC0 )
-    return dword_51ABC0;
-  dword_51ABC0 = (int)Mem_SmallBlockAlloc(14 * dword_51ABBC);
+  if ( !g_ClipsProcParamArray || g_Clips_ProcParamArgChain )
+    return g_Clips_ProcParamArgChain;
+  g_Clips_ProcParamArgChain = (int)Mem_SmallBlockAlloc(14 * g_ClipsProcParamCount);
   v2 = 0;
-  if ( dword_51ABBC > 0 )
+  if ( g_ClipsProcParamCount > 0 )
   {
     v3 = 0;
     do
     {
-      *(_WORD *)(dword_51ABC0 + v3) = *(_WORD *)(dword_51ABB8 + v1 + 4);
-      v4 = v1 + dword_51ABB8;
-      if ( *(_DWORD *)(v1 + dword_51ABB8 + 4) != 4 )
+      *(_WORD *)(g_Clips_ProcParamArgChain + v3) = *(_WORD *)(g_ClipsProcParamArray + v1 + 4);
+      v4 = v1 + g_ClipsProcParamArray;
+      if ( *(_DWORD *)(v1 + g_ClipsProcParamArray + 4) != 4 )
         v4 = *(_DWORD *)(v4 + 8);
-      *(_DWORD *)(dword_51ABC0 + v3 + 2) = v4;
-      *(_DWORD *)(dword_51ABC0 + v3 + 6) = 0;
+      *(_DWORD *)(g_Clips_ProcParamArgChain + v3 + 2) = v4;
+      *(_DWORD *)(g_Clips_ProcParamArgChain + v3 + 6) = 0;
       v5 = v2 + 1;
-      if ( v2 + 1 == dword_51ABBC )
-        v6 = dword_51ABBC ^ v5;
+      if ( v2 + 1 == g_ClipsProcParamCount )
+        v6 = g_ClipsProcParamCount ^ v5;
       else
-        v6 = dword_51ABC0 + 14 * v5;
+        v6 = g_Clips_ProcParamArgChain + 14 * v5;
       v1 += 24;
-      *(_DWORD *)(dword_51ABC0 + v3 + 10) = v6;
+      *(_DWORD *)(g_Clips_ProcParamArgChain + v3 + 10) = v6;
       ++v2;
       v3 += 14;
     }
-    while ( v2 < dword_51ABBC );
+    while ( v2 < g_ClipsProcParamCount );
   }
-  return dword_51ABC0;
+  return g_Clips_ProcParamArgChain;
 }
 // 49A949: variable 'v1' is possibly undefined
 // 51ABB8: using guessed type int dword_51ABB8;
@@ -3701,21 +3701,21 @@ int  Rules_ExecuteRuleActions(
   int result; // eax
   int v20; // [esp+0h] [ebp-14h]
 
-  v20 = dword_51ABCC;
+  v20 = g_ClipsProcFrameDataObjectArray;
   if ( a4 )
     v9 = Mem_SmallBlockAlloc(24 * a4);
   else
     v9 = 0;
-  dword_51ABCC = (int)v9;
+  g_ClipsProcFrameDataObjectArray = (int)v9;
   if ( a4 > 0 )
   {
     v10 = 0;
     v11 = 24 * a4;
     do
     {
-      v12 = (_DWORD *)(dword_51ABCC + v10);
+      v12 = (_DWORD *)(g_ClipsProcFrameDataObjectArray + v10);
       v10 += 24;
-      *v12 = dword_54DD70;
+      *v12 = g_ClipsFalseSymbol;
     }
     while ( v10 < v11 );
   }
@@ -3725,26 +3725,26 @@ int  Rules_ExecuteRuleActions(
   if ( Parser_ParseForm(a2, a3, saved_module, a5) )
   {
     a3[1] = 2;
-    a3[2] = dword_54DD70;
+    a3[2] = g_ClipsFalseSymbol;
   }
   v14 = Module_GetCurrent();
   if ( saved_module != v14 )
     Module_SetCurrent(saved_module);
-  if ( a6 && dword_51A968 )
+  if ( a6 && g_ClipsHaltExecution )
   {
     Rules_PrintErrorID((int)aPrccode_0, 4, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHal_0, v16);
     a6();
   }
-  v17 = dword_51ABC8;
-  if ( dword_51ABC8 && a3[2] == *(_DWORD *)(dword_51ABC8 + 8) )
+  v17 = g_ClipsProcParamWildcardValue;
+  if ( g_ClipsProcParamWildcardValue && a3[2] == *(_DWORD *)(g_ClipsProcParamWildcardValue + 8) )
   {
-    Rules_DeinstallMultifield(*(__int16 **)(dword_51ABC8 + 8));
-    Rules_RegisterEphemeralMultifield(*(_DWORD *)(dword_51ABC8 + 8));
-    dword_54DBAC = dword_51ABC8;
-    *(_DWORD *)dword_51ABC8 = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
-    dword_51ABC8 = 0;
+    Rules_DeinstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
+    Rules_RegisterEphemeralMultifield(*(_DWORD *)(g_ClipsProcParamWildcardValue + 8));
+    g_ClipsMemFreeListTemp = g_ClipsProcParamWildcardValue;
+    *(_DWORD *)g_ClipsProcParamWildcardValue = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+    g_ClipsProcParamWildcardValue = 0;
   }
   if ( a4 )
   {
@@ -3753,16 +3753,16 @@ int  Rules_ExecuteRuleActions(
       v18 = 0;
       do
       {
-        if ( dword_54DD64 == *(_DWORD *)(v18 + dword_51ABCC) )
-          Rules_ValueDeinstall(v18 + dword_51ABCC, v17);
+        if ( g_ClipsTrueSymbol == *(_DWORD *)(v18 + g_ClipsProcFrameDataObjectArray) )
+          Rules_ValueDeinstall(v18 + g_ClipsProcFrameDataObjectArray, v17);
         v18 += 24;
       }
       while ( v18 < 24 * a4 );
     }
-    Mem_SmallBlockFree((_DWORD *)dword_51ABCC, 24 * a4);
+    Mem_SmallBlockFree((_DWORD *)g_ClipsProcFrameDataObjectArray, 24 * a4);
   }
   result = v20;
-  dword_51ABCC = v20;
+  g_ClipsProcFrameDataObjectArray = v20;
   return result;
 }
 // 49AAAB: variable 'v16' is possibly undefined
@@ -3786,18 +3786,18 @@ signed int  ProcParam_PrintArguments(int a1)
 
   Output_Write(a1, (int)asc_505CB4, a1);
   v2 = 0;
-  if ( dword_51ABBC > 0 )
+  if ( g_ClipsProcParamCount > 0 )
   {
     v3 = 0;
     do
     {
-      Rules_PrintDataObject(v1, v3 + dword_51ABB8);
-      if ( v2 != dword_51ABBC - 1 )
+      Rules_PrintDataObject(v1, v3 + g_ClipsProcParamArray);
+      if ( v2 != g_ClipsProcParamCount - 1 )
         Output_Write(v1, (int)asc_505C54, v1);
       ++v2;
       v3 += 24;
     }
-    while ( v2 < dword_51ABBC );
+    while ( v2 < g_ClipsProcParamCount );
   }
   return Output_Write(v1, (int)asc_505CB8, v1);
 }
@@ -3829,77 +3829,77 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *a1, int a2)
 
   a1[1] = 4;
   a1[3] = 0;
-  if ( dword_51ABC8 )
+  if ( g_ClipsProcParamWildcardValue )
   {
-    if ( a2 == dword_51AC94 )
+    if ( a2 == g_ProcParamCachedWildcardArgIndex )
     {
-      a1[4] = *(_DWORD *)(dword_51ABC8 + 16);
-      result = *(__int16 **)(dword_51ABC8 + 8);
+      a1[4] = *(_DWORD *)(g_ClipsProcParamWildcardValue + 16);
+      result = *(__int16 **)(g_ClipsProcParamWildcardValue + 8);
       a1[2] = result;
       return result;
     }
-    Rules_DeinstallMultifield(*(__int16 **)(dword_51ABC8 + 8));
-    Rules_RegisterEphemeralMultifield(*(_DWORD *)(dword_51ABC8 + 8));
+    Rules_DeinstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
+    Rules_RegisterEphemeralMultifield(*(_DWORD *)(g_ClipsProcParamWildcardValue + 8));
   }
   else
   {
-    v3 = *(_DWORD **)(dword_54DBA8 + 96);
+    v3 = *(_DWORD **)(g_ClipsMemoryTable + 96);
     if ( v3 )
     {
-      dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 96);
-      *(_DWORD *)(dword_54DBA8 + 96) = *v3;
-      v4 = dword_54DBAC;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 96);
+      *(_DWORD *)(g_ClipsMemoryTable + 96) = *v3;
+      v4 = g_ClipsMemFreeListTemp;
     }
     else
     {
       v4 = Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
-    dword_51ABC8 = v4;
+    g_ClipsProcParamWildcardValue = v4;
     *(_DWORD *)(v4 + 12) = 0;
   }
-  v5 = dword_51ABBC - a2 + 1;
-  dword_51AC94 = a2;
+  v5 = g_ClipsProcParamCount - a2 + 1;
+  g_ProcParamCachedWildcardArgIndex = a2;
   if ( v5 <= 0 )
   {
-    v16 = dword_51ABC8;
-    *(_DWORD *)(dword_51ABC8 + 16) = -1;
+    v16 = g_ClipsProcParamWildcardValue;
+    *(_DWORD *)(g_ClipsProcParamWildcardValue + 16) = -1;
     a1[4] = *(_DWORD *)(v16 + 16);
     v17 = Rules_CreateMultifield(0);
-    *(_DWORD *)(dword_51ABC8 + 8) = v17;
+    *(_DWORD *)(g_ClipsProcParamWildcardValue + 8) = v17;
     a1[2] = v17;
-    return Rules_InstallMultifield(*(__int16 **)(dword_51ABC8 + 8));
+    return Rules_InstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
   }
   else
   {
     v6 = a2 - 1;
-    if ( a2 - 1 < dword_51ABBC )
+    if ( a2 - 1 < g_ClipsProcParamCount )
     {
       v7 = 24 * v6;
       do
       {
-        if ( *(_DWORD *)(v7 + dword_51ABB8 + 4) == 4 )
-          v5 += *(_DWORD *)(v7 + dword_51ABB8 + 16) - *(_DWORD *)(v7 + dword_51ABB8 + 12);
+        if ( *(_DWORD *)(v7 + g_ClipsProcParamArray + 4) == 4 )
+          v5 += *(_DWORD *)(v7 + g_ClipsProcParamArray + 16) - *(_DWORD *)(v7 + g_ClipsProcParamArray + 12);
         v7 += 24;
         ++v6;
       }
-      while ( v7 < 24 * dword_51ABBC );
+      while ( v7 < 24 * g_ClipsProcParamCount );
     }
-    *(_DWORD *)(dword_51ABC8 + 16) = v5 - 1;
+    *(_DWORD *)(g_ClipsProcParamWildcardValue + 16) = v5 - 1;
     a1[4] = v5 - 1;
     v8 = Rules_CreateMultifield(v5);
-    *(_DWORD *)(dword_51ABC8 + 8) = v8;
+    *(_DWORD *)(g_ClipsProcParamWildcardValue + 8) = v8;
     v19 = a2 - 1;
     a1[2] = v8;
     v9 = 1;
-    if ( a2 - 1 < dword_51ABBC )
+    if ( a2 - 1 < g_ClipsProcParamCount )
     {
       v20 = 24 * (a2 - 1);
       do
       {
-        v10 = v20 + dword_51ABB8;
-        if ( *(_DWORD *)(v20 + dword_51ABB8 + 4) == 4 )
+        v10 = v20 + g_ClipsProcParamArray;
+        if ( *(_DWORD *)(v20 + g_ClipsProcParamArray + 4) == 4 )
         {
-          v11 = v20 + dword_51ABB8;
+          v11 = v20 + g_ClipsProcParamArray;
           v12 = *(_DWORD *)(v10 + 12) + 1;
           v13 = 6 * v9 - 6;
           v14 = 6 * v12 - 6;
@@ -3918,14 +3918,14 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *a1, int a2)
           v18 = 6 * (v9 - 1);
           *(_WORD *)(a1[2] + v18 + 14) = *(_WORD *)(v10 + 4);
           ++v9;
-          *(_DWORD *)(a1[2] + v18 + 16) = *(_DWORD *)(dword_51ABB8 + v20 + 8);
+          *(_DWORD *)(a1[2] + v18 + 16) = *(_DWORD *)(g_ClipsProcParamArray + v20 + 8);
         }
         v20 += 24;
         ++v19;
       }
-      while ( v19 < dword_51ABBC );
+      while ( v19 < g_ClipsProcParamCount );
     }
-    return Rules_InstallMultifield(*(__int16 **)(dword_51ABC8 + 8));
+    return Rules_InstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
   }
 }
 // 51ABB8: using guessed type int dword_51ABB8;
@@ -3982,14 +3982,14 @@ _DWORD * ProcParam_EvaluateArgumentExpressions(uintptr_t result, int a2, int a3,
     {
 LABEL_11:
       result = (uintptr_t)argument_values;
-      dword_51ABBC = a2;
-      dword_51ABB8 = (int)(uintptr_t)argument_values;
+      g_ClipsProcParamCount = a2;
+      g_ClipsProcParamArray = (int)(uintptr_t)argument_values;
     }
   }
   else
   {
-    dword_51ABB8 = 0;
-    dword_51ABBC = 0;
+    g_ClipsProcParamArray = 0;
+    g_ClipsProcParamCount = 0;
   }
   return (_DWORD *)result;
 }
@@ -4014,7 +4014,7 @@ signed int  ProcParam_GetArgumentValue(int a1, _DWORD *a2)
   int record; // eax
 
   payload = *(_DWORD *)((uintptr_t)(unsigned int)a1 + 16);
-  record = dword_51ABB8 + 24 * (*(_DWORD *)(uintptr_t)(unsigned int)payload - 1);
+  record = g_ClipsProcParamArray + 24 * (*(_DWORD *)(uintptr_t)(unsigned int)payload - 1);
   a2[1] = *(_DWORD *)((uintptr_t)(unsigned int)record + 4);
   a2[2] = *(_DWORD *)((uintptr_t)(unsigned int)record + 8);
   a2[3] = *(_DWORD *)((uintptr_t)(unsigned int)record + 12);
@@ -4033,10 +4033,10 @@ signed int  ProcParam_GetBoundVariableValue(int a1, _DWORD *a2, double a3)
 
   payload = *(_DWORD *)((uintptr_t)(unsigned int)a1 + 16);
   raw_index = *(_DWORD *)(uintptr_t)(unsigned int)payload;
-  record = dword_51ABCC + 24 * ((((unsigned int)raw_index << 16) >> 17) - 1);
-  if ( dword_54DD64 == *(_DWORD *)(uintptr_t)(unsigned int)record )
+  record = g_ClipsProcFrameDataObjectArray + 24 * ((((unsigned int)raw_index << 16) >> 17) - 1);
+  if ( g_ClipsTrueSymbol == *(_DWORD *)(uintptr_t)(unsigned int)record )
     goto LABEL_6;
-  expression = *(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = *(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( *(_DWORD *)((uintptr_t)(unsigned int)expression + 10) )
   {
     Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)expression + 10), a2, (int)(uintptr_t)a2, a3);
@@ -4046,7 +4046,7 @@ signed int  ProcParam_GetBoundVariableValue(int a1, _DWORD *a2, double a3)
   {
     if ( (*(_BYTE *)((uintptr_t)(unsigned int)payload + 2) & 1) == 0 )
     {
-      record = 24 * ((raw_index >> 17) - 1) + dword_51ABB8;
+      record = 24 * ((raw_index >> 17) - 1) + g_ClipsProcParamArray;
 LABEL_6:
       a2[1] = *(_DWORD *)((uintptr_t)(unsigned int)record + 4);
       a2[2] = *(_DWORD *)((uintptr_t)(unsigned int)record + 8);
@@ -4066,17 +4066,17 @@ LABEL_6:
       (int)g_IO_LogicalNameTable_WError[0],
       *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)expression + 2) + 16),
       0);
-    if ( dword_51ABD0 )
+    if ( g_ProcParam_ErrorContextCallback )
     {
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnboundIn, 0);
-      dword_51ABD0();
+      g_ProcParam_ErrorContextCallback();
     }
     else
     {
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnbound_, 0);
     }
     a2[1] = 2;
-    a2[2] = dword_54DD70;
+    a2[2] = g_ClipsFalseSymbol;
     return 1;
   }
 }
@@ -4096,24 +4096,24 @@ signed int  ProcParam_BindLocalVariable(int a1, _DWORD *a2, double a3)
   int expression; // edx
 
   payload = *(_DWORD *)((uintptr_t)(unsigned int)a1 + 16);
-  record = dword_51ABCC + 24 * (*(_DWORD *)(uintptr_t)(unsigned int)payload - 1);
-  expression = *(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  record = g_ClipsProcFrameDataObjectArray + 24 * (*(_DWORD *)(uintptr_t)(unsigned int)payload - 1);
+  expression = *(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
   {
-    if ( dword_54DD64 == *(_DWORD *)(uintptr_t)(unsigned int)record )
+    if ( g_ClipsTrueSymbol == *(_DWORD *)(uintptr_t)(unsigned int)record )
       Rules_ValueDeinstall(record, record);
-    *(_DWORD *)(uintptr_t)(unsigned int)record = dword_54DD70;
+    *(_DWORD *)(uintptr_t)(unsigned int)record = g_ClipsFalseSymbol;
     a2[1] = 2;
-    a2[2] = dword_54DD70;
+    a2[2] = g_ClipsFalseSymbol;
     return 1;
   }
   if ( *(_DWORD *)((uintptr_t)(unsigned int)expression + 10) )
     Rules_StoreEvaluatedNodesAsMultifield(a2, expression, 1, a3);
   else
     Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)expression, a2, record, a3);
-  if ( dword_54DD64 == *(_DWORD *)(uintptr_t)(unsigned int)record )
+  if ( g_ClipsTrueSymbol == *(_DWORD *)(uintptr_t)(unsigned int)record )
     Rules_ValueDeinstall(record, record);
-  *(_DWORD *)(uintptr_t)(unsigned int)record = dword_54DD64;
+  *(_DWORD *)(uintptr_t)(unsigned int)record = g_ClipsTrueSymbol;
   *(_DWORD *)((uintptr_t)(unsigned int)record + 4) = a2[1];
   *(_DWORD *)((uintptr_t)(unsigned int)record + 8) = a2[2];
   *(_DWORD *)((uintptr_t)(unsigned int)record + 12) = a2[3];
@@ -4223,15 +4223,15 @@ _DWORD * AST_UnwrapActionListWrapper(_DWORD *result)
     {
       v2 = result;
       result = *(_DWORD **)((char *)result + 6);
-      dword_54DBAC = (int)v2;
-      *v2 = *(_DWORD *)(dword_54DBA8 + 56);
-      *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+      g_ClipsMemFreeListTemp = (int)v2;
+      *v2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+      *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
     }
   }
   else
   {
     *(_WORD *)result = 2;
-    *(_DWORD *)((char *)result + 2) = dword_54DD70;
+    *(_DWORD *)((char *)result + 2) = g_ClipsFalseSymbol;
   }
   return result;
 }
@@ -4304,14 +4304,14 @@ signed int  Dribble_PrintRouter(int a1, unsigned __int8 *a2, int a3)
 
   v14 = a3;
   v4 = a2;
-  if ( dword_51ACBC )
+  if ( g_Dribble_LineStartNeedsTimestamp )
   {
     sprintf_(
       v13,
       "%03d:%02d:%02d ",
-      *(_DWORD *)dword_54E6C0 / 0x1770u % 0x3C,
-      *(_DWORD *)dword_54E6C0 / 0x64u % 0x3C,
-      *(_DWORD *)dword_54E6C0 % 0x64u);
+      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr / 0x1770u % 0x3C,
+      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr / 0x64u % 0x3C,
+      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr % 0x64u);
     v10 = 0;
     if ( v13[0] )
     {
@@ -4323,7 +4323,7 @@ signed int  Dribble_PrintRouter(int a1, unsigned __int8 *a2, int a3)
       }
       while ( v12 );
     }
-    dword_51ACBC = 0;
+    g_Dribble_LineStartNeedsTimestamp = 0;
   }
   v5 = v4;
   if ( *v4 )
@@ -4332,7 +4332,7 @@ signed int  Dribble_PrintRouter(int a1, unsigned __int8 *a2, int a3)
     {
       Dribble_AppendChar((char *)*v5, (int)v5, (int)v4);
       if ( *v6 == 10 )
-        dword_51ACBC = 1;
+        g_Dribble_LineStartNeedsTimestamp = 1;
       v7 = v6[1];
       v5 = v6 + 1;
     }
@@ -4378,33 +4378,33 @@ char * Dribble_AppendChar(char *result, int a2, int a3)
 {
   if ( result == (char *)-1 )
   {
-    if ( dword_51AC9C > 0 )
+    if ( g_DribbleBufferLength > 0 )
     {
-      Output_WriteFormatted(dword_51AC98, dword_54E6C4, dword_51AC98, (int)aS_3, dword_54E6C4);
-      result = (char *)dword_54E6C4;
-      dword_51AC9C = 0;
-      *(_BYTE *)dword_54E6C4 = 0;
+      Output_WriteFormatted(g_DribbleFileHandle, g_Clips_DribbleBuffer, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
+      result = (char *)g_Clips_DribbleBuffer;
+      g_DribbleBufferLength = 0;
+      *(_BYTE *)g_Clips_DribbleBuffer = 0;
     }
   }
   else if ( g_Lexer_PendingLineCharIndex >= 0 )
   {
     result = Str_AppendCharEscaping(
                (int)result,
-               (char *)dword_54E6C4,
-               (unsigned int *)&dword_51ACA0,
-               &dword_51AC9C,
-               dword_51ACA0 + 120);
-    dword_54E6C4 = (int)result;
+               (char *)g_Clips_DribbleBuffer,
+               (unsigned int *)&g_Dribble_BufferCapacity,
+               &g_DribbleBufferLength,
+               g_Dribble_BufferCapacity + 120);
+    g_Clips_DribbleBuffer = (int)result;
   }
   else
   {
-    if ( dword_51AC9C > 0 )
+    if ( g_DribbleBufferLength > 0 )
     {
-      Output_WriteFormatted(a3, a2, dword_51AC98, (int)aS_3, dword_54E6C4);
-      dword_51AC9C = 0;
-      *(_BYTE *)dword_54E6C4 = 0;
+      Output_WriteFormatted(a3, a2, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
+      g_DribbleBufferLength = 0;
+      *(_BYTE *)g_Clips_DribbleBuffer = 0;
     }
-    return (char *)CRT_PutcToStream(a3, dword_51AC98);
+    return (char *)CRT_PutcToStream(a3, g_DribbleFileHandle);
   }
   return result;
 }
@@ -4423,9 +4423,9 @@ int Dribble_UngetcRouter()
   signed int v1; // ecx
   int v2; // edx
 
-  if ( dword_51AC9C > 0 )
-    --dword_51AC9C;
-  *(_BYTE *)(dword_51AC9C + dword_54E6C4) = 0;
+  if ( g_DribbleBufferLength > 0 )
+    --g_DribbleBufferLength;
+  *(_BYTE *)(g_DribbleBufferLength + g_Clips_DribbleBuffer) = 0;
   IO_DeactivateRouter((int)aDribble);
   Lexer_SkipChar(v1, v0, v1);
   IO_ActivateRouter((int)aDribble);
@@ -4442,13 +4442,13 @@ int __fastcall Dribble_ExitRouter(int a1, int a2)
 {
   int v3; // [esp-4h] [ebp-8h]
 
-  if ( dword_51AC9C > 0 )
+  if ( g_DribbleBufferLength > 0 )
   {
     v3 = a1;
-    Output_WriteFormatted(dword_54E6C4, a2, dword_51AC98, (int)aS_3, dword_54E6C4);
+    Output_WriteFormatted(g_Clips_DribbleBuffer, a2, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
     a1 = v3;
   }
-  if ( dword_51AC98 )
+  if ( g_DribbleFileHandle )
     fclose_(a1);
   return 1;
 }
@@ -4479,15 +4479,15 @@ signed int  Dribble_TurnOn(const CHAR *a1, DWORD a2)
   int v3; // ecx
 
   v2 = a1;
-  if ( dword_51AC98 )
+  if ( g_DribbleFileHandle )
     Dribble_TurnOff();
-  dword_51AC98 = IO_FOpen(v2, (unsigned __int8 *)aW_3, (int)v2, a2);
-  if ( dword_51AC98 )
+  g_DribbleFileHandle = IO_FOpen(v2, (unsigned __int8 *)aW_3, (int)v2, a2);
+  if ( g_DribbleFileHandle )
   {
     IO_AddRouter((int)aDribble, 40, (int)Dribble_PrintRouter, (int)Dribble_QueryRouter, (int)Dribble_GetcRouter, (int)Dribble_UngetcRouter, (int)Dribble_ExitRouter);
-    dword_51AC9C = 0;
-    if ( dword_51ACA4 )
-      dword_51ACA4(0);
+    g_DribbleBufferLength = 0;
+    if ( g_Dribble_StatusChangeCallback )
+      g_Dribble_StatusChangeCallback(0);
     return 1;
   }
   else
@@ -4521,27 +4521,27 @@ signed int Dribble_TurnOff()
   signed int v3; // ecx
   signed int result; // eax
 
-  v0 = dword_51ACA4;
+  v0 = g_Dribble_StatusChangeCallback;
   v1 = 0;
-  if ( dword_51ACA4 )
-    dword_51ACA4(0);
-  if ( !dword_51AC98 )
+  if ( g_Dribble_StatusChangeCallback )
+    g_Dribble_StatusChangeCallback(0);
+  if ( !g_DribbleFileHandle )
     goto LABEL_7;
-  if ( dword_51AC9C > 0 )
-    Output_WriteFormatted(v1, (int)v0, dword_51AC98, (int)aS_3, dword_54E6C4);
+  if ( g_DribbleBufferLength > 0 )
+    Output_WriteFormatted(v1, (int)v0, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
   IO_DeleteRouter((int)aDribble);
   if ( !fclose_(v2) )
 LABEL_7:
     v3 = 1;
-  dword_51AC98 = 0;
-  if ( dword_54E6C4 )
+  g_DribbleFileHandle = 0;
+  if ( g_Clips_DribbleBuffer )
   {
-    Mem_SmallBlockFree((_DWORD *)dword_54E6C4, dword_51ACA0);
-    dword_54E6C4 = 0;
+    Mem_SmallBlockFree((_DWORD *)g_Clips_DribbleBuffer, g_Dribble_BufferCapacity);
+    g_Clips_DribbleBuffer = 0;
   }
   result = v3;
-  dword_51AC9C = 0;
-  dword_51ACA0 = 0;
+  g_DribbleBufferLength = 0;
+  g_Dribble_BufferCapacity = 0;
   return result;
 }
 // 49B8F1: variable 'v1' is possibly undefined
@@ -4585,18 +4585,18 @@ int  Rules_BatchReadChar(int a1, unsigned int a2)
   v4 = 1;
   do
   {
-    if ( dword_54E6CC )
+    if ( g_ClipsBatchSourceIsStringFlag )
     {
-      v6 = Lexer_PeekChar(dword_51ACA8, v4);
+      v6 = Lexer_PeekChar(g_CurrentStringInputSource, v4);
     }
     else
     {
-      v5 = *(_DWORD *)(dword_51ACA8 + 4);
-      if ( v5 > 0 && (a2 = **(unsigned __int8 **)dword_51ACA8 - 13, a2 > 0xFD) )
+      v5 = *(_DWORD *)(g_CurrentStringInputSource + 4);
+      if ( v5 > 0 && (a2 = **(unsigned __int8 **)g_CurrentStringInputSource - 13, a2 > 0xFD) )
       {
-        *(_DWORD *)(dword_51ACA8 + 4) = v5 - 1;
-        a2 = dword_51ACA8;
-        v9 = (unsigned __int8 *)(*(_DWORD *)dword_51ACA8)++;
+        *(_DWORD *)(g_CurrentStringInputSource + 4) = v5 - 1;
+        a2 = g_CurrentStringInputSource;
+        v9 = (unsigned __int8 *)(*(_DWORD *)g_CurrentStringInputSource)++;
         v6 = *v9;
       }
       else
@@ -4607,16 +4607,16 @@ int  Rules_BatchReadChar(int a1, unsigned int a2)
     v12 = v6;
     if ( v6 == -1 )
     {
-      if ( dword_51ACAC > 0 )
-        Output_Write((int)aStdout_2, dword_54E6C8, v4);
+      if ( g_BatchEchoBufferLength > 0 )
+        Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, v4);
       v4 = Rules_CloseBatch();
     }
   }
   while ( v12 == -1 && v4 == 1 );
   if ( v12 == -1 )
   {
-    if ( dword_51ACAC > 0 )
-      Output_Write((int)aStdout_2, dword_54E6C8, v4);
+    if ( g_BatchEchoBufferLength > 0 )
+      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, v4);
     IO_DeleteRouter((int)aBatch);
     Rules_CloseBatch();
     if ( v3 == 1 )
@@ -4628,22 +4628,22 @@ int  Rules_BatchReadChar(int a1, unsigned int a2)
   {
     appended = Str_AppendCharEscaping(
                  (unsigned __int8)v12,
-                 (char *)dword_54E6C8,
-                 (unsigned int *)&dword_51ACB0,
-                 &dword_51ACAC,
-                 dword_51ACB0 + 120);
-    dword_54E6C8 = (int)appended;
+                 (char *)g_ClipsBatchEchoLineBuffer,
+                 (unsigned int *)&g_ClipsBatchLineBufferCapacity,
+                 &g_BatchEchoBufferLength,
+                 g_ClipsBatchLineBufferCapacity + 120);
+    g_ClipsBatchEchoLineBuffer = (int)appended;
     if ( (_BYTE)v12 == 10 )
     {
       Output_Write((int)aStdout_2, (int)appended, v11);
-      dword_51ACAC = 0;
-      if ( dword_54E6C8 )
+      g_BatchEchoBufferLength = 0;
+      if ( g_ClipsBatchEchoLineBuffer )
       {
-        if ( dword_51ACB0 > 120 )
+        if ( g_ClipsBatchLineBufferCapacity > 120 )
         {
-          Mem_SmallBlockFree((_DWORD *)dword_54E6C8, dword_51ACB0);
-          dword_51ACB0 = 0;
-          dword_54E6C8 = 0;
+          Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+          g_ClipsBatchLineBufferCapacity = 0;
+          g_ClipsBatchEchoLineBuffer = 0;
         }
       }
     }
@@ -4664,12 +4664,12 @@ int  Rules_BatchReadChar(int a1, unsigned int a2)
 //----- (0049BB30) --------------------------------------------------------
 signed int  Rules_BatchUngetChar(signed int a1, int a2)
 {
-  if ( dword_51ACAC > 0 )
-    a2 = --dword_51ACAC;
-  if ( dword_54E6C8 )
-    *(_BYTE *)(dword_54E6C8 + dword_51ACAC) = 0;
-  if ( dword_54E6CC )
-    return Lexer_SkipChar(a1, dword_51ACA8, a2);
+  if ( g_BatchEchoBufferLength > 0 )
+    a2 = --g_BatchEchoBufferLength;
+  if ( g_ClipsBatchEchoLineBuffer )
+    *(_BYTE *)(g_ClipsBatchEchoLineBuffer + g_BatchEchoBufferLength) = 0;
+  if ( g_ClipsBatchSourceIsStringFlag )
+    return Lexer_SkipChar(a1, g_CurrentStringInputSource, a2);
   else
     return CRT_FlushBufferAndPutChar(a1, a2);
 }
@@ -4711,7 +4711,7 @@ signed int  Rules_OpenBatch(const CHAR *a1, int a2, int a3, DWORD a4)
   v7 = IO_FOpen(a1, (unsigned __int8 *)aR_1, a3, a4);
   if ( v7 )
   {
-    if ( !dword_51ACB4 )
+    if ( !g_Rules_BatchStackTop )
       IO_AddRouter((int)aBatch, 20, 0, (int)Rules_BatchQueryStdin, (int)Rules_BatchGetChar, (int)Rules_BatchUngetChar, (int)Rules_BatchExitFunction);
     Rules_AddBatchEntry(a2, v7, 0, 0);
     return 1;
@@ -4731,12 +4731,12 @@ _DWORD * Rules_AddBatchEntry(int a1, int a2, int a3, int a4)
   _DWORD *v5; // edi
   _DWORD *result; // eax
 
-  v5 = *(_DWORD **)(dword_54DBA8 + 64);
+  v5 = *(_DWORD **)(g_ClipsMemoryTable + 64);
   if ( v5 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 64);
-    *(_DWORD *)(dword_54DBA8 + 64) = *v5;
-    result = (_DWORD *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
+    *(_DWORD *)(g_ClipsMemoryTable + 64) = *v5;
+    result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -4746,29 +4746,29 @@ _DWORD * Rules_AddBatchEntry(int a1, int a2, int a3, int a4)
   *result = a4;
   result[1] = a2;
   result[2] = a3;
-  if ( dword_51ACB4 )
+  if ( g_Rules_BatchStackTop )
   {
     if ( a1 )
     {
-      *(_DWORD *)(dword_51ACB8 + 12) = result;
-      dword_51ACB8 = (int)result;
+      *(_DWORD *)(g_Batch_ListTail + 12) = result;
+      g_Batch_ListTail = (int)result;
     }
     else
     {
-      result[3] = dword_51ACB4;
-      dword_51ACB4 = (int)result;
-      dword_54E6CC = a4;
-      dword_51ACA8 = a2;
-      dword_51ACAC = 0;
+      result[3] = g_Rules_BatchStackTop;
+      g_Rules_BatchStackTop = (int)result;
+      g_ClipsBatchSourceIsStringFlag = a4;
+      g_CurrentStringInputSource = a2;
+      g_BatchEchoBufferLength = 0;
     }
   }
   else
   {
-    dword_51ACB4 = (int)result;
-    dword_51ACB8 = (int)result;
-    dword_54E6CC = a4;
-    dword_51ACA8 = a2;
-    dword_51ACAC = 0;
+    g_Rules_BatchStackTop = (int)result;
+    g_Batch_ListTail = (int)result;
+    g_ClipsBatchSourceIsStringFlag = a4;
+    g_CurrentStringInputSource = a2;
+    g_BatchEchoBufferLength = 0;
   }
   return result;
 }
@@ -4787,41 +4787,41 @@ signed int Rules_CloseBatch()
   _DWORD *v0; // eax
   signed int result; // eax
 
-  if ( !dword_51ACB4 )
+  if ( !g_Rules_BatchStackTop )
     return 0;
-  if ( *(_DWORD *)dword_51ACB4 )
+  if ( *(_DWORD *)g_Rules_BatchStackTop )
   {
-    IO_CloseStringRouter(*(_DWORD *)(dword_51ACB4 + 4));
-    Mem_SmallBlockFree(*(_DWORD **)(dword_51ACB4 + 8), strlen(*(const char **)(dword_51ACB4 + 8)) + 1);
+    IO_CloseStringRouter(*(_DWORD *)(g_Rules_BatchStackTop + 4));
+    Mem_SmallBlockFree(*(_DWORD **)(g_Rules_BatchStackTop + 8), strlen(*(const char **)(g_Rules_BatchStackTop + 8)) + 1);
   }
   else
   {
     fclose_(0);
   }
-  v0 = (_DWORD *)dword_51ACB4;
-  dword_51ACB4 = *(_DWORD *)(dword_51ACB4 + 12);
-  dword_54DBAC = (int)v0;
-  *v0 = *(_DWORD *)(dword_54DBA8 + 64);
-  *(_DWORD *)(dword_54DBA8 + 64) = dword_54DBAC;
-  if ( dword_51ACB4 )
+  v0 = (_DWORD *)g_Rules_BatchStackTop;
+  g_Rules_BatchStackTop = *(_DWORD *)(g_Rules_BatchStackTop + 12);
+  g_ClipsMemFreeListTemp = (int)v0;
+  *v0 = *(_DWORD *)(g_ClipsMemoryTable + 64);
+  *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+  if ( g_Rules_BatchStackTop )
   {
-    dword_54E6CC = *(_DWORD *)dword_51ACB4;
-    dword_51ACA8 = *(_DWORD *)(dword_51ACB4 + 4);
-    dword_51ACAC = 0;
+    g_ClipsBatchSourceIsStringFlag = *(_DWORD *)g_Rules_BatchStackTop;
+    g_CurrentStringInputSource = *(_DWORD *)(g_Rules_BatchStackTop + 4);
+    g_BatchEchoBufferLength = 0;
     return 1;
   }
   else
   {
-    dword_51ACB8 = 0;
-    dword_51ACA8 = 0;
-    if ( dword_54E6C8 )
+    g_Batch_ListTail = 0;
+    g_CurrentStringInputSource = 0;
+    if ( g_ClipsBatchEchoLineBuffer )
     {
-      Mem_SmallBlockFree((_DWORD *)dword_54E6C8, dword_51ACB0);
-      dword_54E6C8 = 0;
+      Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+      g_ClipsBatchEchoLineBuffer = 0;
     }
     result = 0;
-    dword_51ACAC = 0;
-    dword_51ACB0 = 0;
+    g_BatchEchoBufferLength = 0;
+    g_ClipsBatchLineBufferCapacity = 0;
   }
   return result;
 }
@@ -4839,7 +4839,7 @@ signed int Rules_CloseBatch()
 //----- (0049BE60) --------------------------------------------------------
 BOOL Rules_BatchIsActive()
 {
-  return dword_51ACB4 != 0;
+  return g_Rules_BatchStackTop != 0;
 }
 // 51ACB4: using guessed type int dword_51ACB4;
 
@@ -4848,14 +4848,14 @@ signed int __thiscall Rules_CloseAllBatchSources(void *this)
 {
   signed int result; // eax
 
-  if ( dword_54E6C8 )
+  if ( g_ClipsBatchEchoLineBuffer )
   {
-    if ( dword_51ACAC > 0 )
-      Output_Write((int)aStdout_2, dword_54E6C8, (int)this);
-    Mem_SmallBlockFree((_DWORD *)dword_54E6C8, dword_51ACB0);
-    dword_54E6C8 = 0;
-    dword_51ACAC = 0;
-    dword_51ACB0 = 0;
+    if ( g_BatchEchoBufferLength > 0 )
+      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, (int)this);
+    Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+    g_ClipsBatchEchoLineBuffer = 0;
+    g_BatchEchoBufferLength = 0;
+    g_ClipsBatchLineBufferCapacity = 0;
   }
   IO_DeleteRouter((int)aBatch);
   do
@@ -5102,7 +5102,7 @@ int  Rules_LoadConstructsFromLogicalName(int a1, int a2)
 
   v13[3] = a2;
   v13[0] = 1;
-  if ( !dword_51A96C )
+  if ( !g_ClipsCurrentEvaluationDepth )
     Rules_SetEvaluationErrorFlag(0);
   Lexer_ErrorRecover(0);
   Parser_NextToken(a1, v4);
@@ -5223,11 +5223,11 @@ signed int Rules_ParseConstruct()
   Rules_SetEvaluationErrorFlag(0);
   Parser_FreeLoopContextStack();
   Parser_PushFunctionParseState();
-  dword_54E87C = 0;
-  dword_54E878 = 0;
-  ++dword_51A96C;
+  g_ClipsParseReturnContext = 0;
+  g_ParserBreakContextFlag = 0;
+  ++g_ClipsCurrentEvaluationDepth;
   (*(void (**)(void))(v0 + 8))();
-  --dword_51A96C;
+  --g_ClipsCurrentEvaluationDepth;
   Parser_PopFunctionParseState();
   Parser_FreeLoopContextStack();
   Rules_SetPPBufferStatus(0);
@@ -5526,27 +5526,27 @@ int  Rules_WhileFunction(double a1)
   int v6; // [esp+Ch] [ebp-24h]
   int v7; // [esp+10h] [ebp-20h]
 
-  ++dword_51A96C;
+  ++g_ClipsCurrentEvaluationDepth;
   Rules_RtnUnknown(1, &v3, a1);
-  while ( v5 != dword_54DD70 || v4 != 2 )
+  while ( v5 != g_ClipsFalseSymbol || v4 != 2 )
   {
-    if ( dword_51A968 == 1 )
+    if ( g_ClipsHaltExecution == 1 )
       break;
-    if ( dword_51ACC4 == 1 )
+    if ( g_ClipsBreakFlag == 1 )
       break;
-    if ( qword_51ACC0 == 1 )
+    if ( g_ClipsHaltExecutionFlag == 1 )
       break;
     Rules_RtnUnknown(2, &v3, a1);
-    --dword_51A96C;
+    --g_ClipsCurrentEvaluationDepth;
     Rules_RunPeriodicCleanup(0, 1);
-    ++dword_51A96C;
-    if ( dword_51ACC4 == 1 || qword_51ACC0 == 1 )
+    ++g_ClipsCurrentEvaluationDepth;
+    if ( g_ClipsBreakFlag == 1 || g_ClipsHaltExecutionFlag == 1 )
       break;
     Rules_RtnUnknown(1, &v3, a1);
   }
-  dword_51ACC4 = 0;
-  --dword_51A96C;
-  if ( qword_51ACC0 == 1 )
+  g_ClipsBreakFlag = 0;
+  --g_ClipsCurrentEvaluationDepth;
+  if ( g_ClipsHaltExecutionFlag == 1 )
   {
     v1[1] = v4;
     v1[2] = v5;
@@ -5557,8 +5557,8 @@ int  Rules_WhileFunction(double a1)
   else
   {
     v1[1] = 2;
-    result = dword_54DD70;
-    v1[2] = dword_54DD70;
+    result = g_ClipsFalseSymbol;
+    v1[2] = g_ClipsFalseSymbol;
   }
   return result;
 }
@@ -5583,12 +5583,12 @@ int  Rules_LoopForCountFunction(_DWORD *a1, double a2)
   int v11; // [esp+Ch] [ebp-24h]
   int v12; // [esp+10h] [ebp-20h]
 
-  v3 = *(_DWORD **)(dword_54DBA8 + 32);
+  v3 = *(_DWORD **)(g_ClipsMemoryTable + 32);
   if ( v3 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 32);
-    *(_DWORD *)(dword_54DBA8 + 32) = *v3;
-    v4 = (int *)dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(g_ClipsMemoryTable + 32) = *v3;
+    v4 = (int *)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -5596,8 +5596,8 @@ int  Rules_LoopForCountFunction(_DWORD *a1, double a2)
   }
   *v4 = 0;
   v5 = v4;
-  v4[1] = dword_51ACC8;
-  dword_51ACC8 = (int)v4;
+  v4[1] = g_LoopForCountBindingStack;
+  g_LoopForCountBindingStack = (int)v4;
   if ( Lexer_ParseValueList(1, v9, 1, a2) )
   {
     *v4 = *(_DWORD *)(v10 + 16);
@@ -5607,27 +5607,27 @@ int  Rules_LoopForCountFunction(_DWORD *a1, double a2)
       {
         do
         {
-          if ( dword_51A968 == 1 )
+          if ( g_ClipsHaltExecution == 1 )
             break;
-          if ( dword_51ACC4 == 1 )
+          if ( g_ClipsBreakFlag == 1 )
             break;
-          if ( qword_51ACC0 == 1 )
+          if ( g_ClipsHaltExecutionFlag == 1 )
             break;
-          ++dword_51A96C;
+          ++g_ClipsCurrentEvaluationDepth;
           Rules_RtnUnknown(3, v9, a2);
-          --dword_51A96C;
+          --g_ClipsCurrentEvaluationDepth;
           Rules_RunPeriodicCleanup(0, 1);
-          if ( dword_51ACC4 == 1 )
+          if ( g_ClipsBreakFlag == 1 )
             break;
-          if ( qword_51ACC0 == 1 )
+          if ( g_ClipsHaltExecutionFlag == 1 )
             break;
           v8 = *v5 + 1;
           *v5 = v8;
         }
         while ( v7 >= v8 );
       }
-      dword_51ACC4 = 0;
-      if ( qword_51ACC0 == 1 )
+      g_ClipsBreakFlag = 0;
+      if ( g_ClipsHaltExecutionFlag == 1 )
       {
         a1[1] = v9[1];
         a1[2] = v10;
@@ -5637,34 +5637,34 @@ int  Rules_LoopForCountFunction(_DWORD *a1, double a2)
       else
       {
         a1[1] = 2;
-        a1[2] = dword_54DD70;
+        a1[2] = g_ClipsFalseSymbol;
       }
-      dword_51ACC8 = v5[1];
-      dword_54DBAC = (int)v5;
-      *v5 = *(_DWORD *)(dword_54DBA8 + 32);
-      result = dword_54DBAC;
-      *(_DWORD *)(dword_54DBA8 + 32) = dword_54DBAC;
+      g_LoopForCountBindingStack = v5[1];
+      g_ClipsMemFreeListTemp = (int)v5;
+      *v5 = *(_DWORD *)(g_ClipsMemoryTable + 32);
+      result = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     }
     else
     {
       a1[1] = 2;
-      a1[2] = dword_54DD70;
-      dword_51ACC8 = v4[1];
-      dword_54DBAC = (int)v4;
-      *v4 = *(_DWORD *)(dword_54DBA8 + 32);
-      result = dword_54DBAC;
-      *(_DWORD *)(dword_54DBA8 + 32) = dword_54DBAC;
+      a1[2] = g_ClipsFalseSymbol;
+      g_LoopForCountBindingStack = v4[1];
+      g_ClipsMemFreeListTemp = (int)v4;
+      *v4 = *(_DWORD *)(g_ClipsMemoryTable + 32);
+      result = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     }
   }
   else
   {
     a1[1] = 2;
-    a1[2] = dword_54DD70;
-    dword_51ACC8 = v4[1];
-    dword_54DBAC = (int)v4;
-    *v4 = *(_DWORD *)(dword_54DBA8 + 32);
-    result = dword_54DBA8;
-    *(_DWORD *)(dword_54DBA8 + 32) = dword_54DBAC;
+    a1[2] = g_ClipsFalseSymbol;
+    g_LoopForCountBindingStack = v4[1];
+    g_ClipsMemFreeListTemp = (int)v4;
+    *v4 = *(_DWORD *)(g_ClipsMemoryTable + 32);
+    result = g_ClipsMemoryTable;
+    *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -5684,8 +5684,8 @@ int Rules_GetLoopCountFunction()
   int v0; // eax
   _DWORD *i; // edx
 
-  v0 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 2) + 16);
-  for ( i = (_DWORD *)dword_51ACC8; v0 > 0; i = (_DWORD *)i[1] )
+  v0 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2) + 16);
+  for ( i = (_DWORD *)g_LoopForCountBindingStack; v0 > 0; i = (_DWORD *)i[1] )
     --v0;
   return *i;
 }
@@ -5706,20 +5706,20 @@ int  Rules_IfFunction(double a1)
   if ( result == -1 )
   {
     v2[1] = 2;
-    v2[2] = dword_54DD70;
+    v2[2] = g_ClipsFalseSymbol;
   }
   else
   {
     result = Rules_RtnUnknown(1, v2, a1);
-    if ( dword_51ACC4 != 1 && qword_51ACC0 != 1 )
+    if ( g_ClipsBreakFlag != 1 && g_ClipsHaltExecutionFlag != 1 )
     {
-      if ( dword_54DD70 == v4[2] && v4[1] == 2 && v3 == 3 )
+      if ( g_ClipsFalseSymbol == v4[2] && v4[1] == 2 && v3 == 3 )
       {
         return Rules_RtnUnknown(3, v4, a1);
       }
-      else if ( dword_54DD70 == v4[2] && v4[1] == 2 )
+      else if ( g_ClipsFalseSymbol == v4[2] && v4[1] == 2 )
       {
-        v4[2] = dword_54DD70;
+        v4[2] = g_ClipsFalseSymbol;
       }
       else
       {
@@ -5754,7 +5754,7 @@ __int16 * Rules_BindFunction(_DWORD *a1, double a2)
   int v16; // [esp+0h] [ebp-1Ch]
 
   v3 = 0;
-  v4 = *(_DWORD *)(dword_51A960 + 6);
+  v4 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   v5 = 0;
   v6 = 0;
   v16 = 0;
@@ -5767,7 +5767,7 @@ __int16 * Rules_BindFunction(_DWORD *a1, double a2)
     Parser_ParseForm((__int16 *)v4, a1, 0, a2);
     v6 = a1[2];
   }
-  v7 = *(_DWORD *)(dword_51A960 + 6);
+  v7 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   v8 = *(_DWORD *)(v7 + 10);
   if ( v8 )
   {
@@ -5784,8 +5784,8 @@ __int16 * Rules_BindFunction(_DWORD *a1, double a2)
   v9 = (_DWORD *)v16;
   if ( v16 )
     return (__int16 *)Defglobal_SetValue(v16, a1, v5, a2);
-  v10 = (_DWORD *)dword_51ACCC;
-  if ( dword_51ACCC )
+  v10 = (_DWORD *)g_BoundVariableList;
+  if ( g_BoundVariableList )
   {
     do
     {
@@ -5813,16 +5813,16 @@ __int16 * Rules_BindFunction(_DWORD *a1, double a2)
     {
 LABEL_21:
       a1[1] = 2;
-      result = (__int16 *)dword_54DD70;
-      a1[2] = dword_54DD70;
+      result = (__int16 *)g_ClipsFalseSymbol;
+      a1[2] = g_ClipsFalseSymbol;
       return result;
     }
-    v11 = *(_DWORD **)(dword_54DBA8 + 96);
+    v11 = *(_DWORD **)(g_ClipsMemoryTable + 96);
     if ( v11 )
     {
-      dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 96);
-      *(_DWORD *)(dword_54DBA8 + 96) = *v11;
-      v12 = (_DWORD *)dword_54DBAC;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 96);
+      *(_DWORD *)(g_ClipsMemoryTable + 96) = *v11;
+      v12 = (_DWORD *)g_ClipsMemFreeListTemp;
     }
     else
     {
@@ -5834,17 +5834,17 @@ LABEL_21:
     if ( v9 )
       v9[5] = v12;
     else
-      dword_51ACCC = (int)v12;
+      g_BoundVariableList = (int)v12;
   }
   if ( v5 )
   {
     if ( v9 )
       v9[5] = v13[5];
     else
-      dword_51ACCC = v13[5];
-    dword_54DBAC = (int)v13;
-    *v13 = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
+      g_BoundVariableList = v13[5];
+    g_ClipsMemFreeListTemp = (int)v13;
+    *v13 = *(_DWORD *)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
     goto LABEL_21;
   }
   v13[1] = a1[1];
@@ -5866,8 +5866,8 @@ signed int  Rules_FindBoundVariable(_DWORD *a1, int a2)
 {
   _DWORD *v3; // eax
 
-  v3 = (_DWORD *)dword_51ACCC;
-  if ( !dword_51ACCC )
+  v3 = (_DWORD *)g_BoundVariableList;
+  if ( !g_BoundVariableList )
     return 0;
   while ( a2 != *v3 )
   {
@@ -5889,8 +5889,8 @@ int Rules_FreeBoundVariableEntry()
   int result; // eax
   int v1; // edx
 
-  result = Rules_DeinstallValueChain(dword_51ACCC);
-  dword_51ACCC = v1;
+  result = Rules_DeinstallValueChain(g_BoundVariableList);
+  g_BoundVariableList = v1;
   return result;
 }
 // 49D01D: variable 'v1' is possibly undefined
@@ -5916,18 +5916,18 @@ int  Rules_PrognFunction(_DWORD *a1, double a2)
       if ( Rules_GetEvaluationErrorFlag() == 1 )
         break;
       Rules_RtnUnknown(v5, a1, a2);
-      if ( dword_51ACC4 == 1 )
+      if ( g_ClipsBreakFlag == 1 )
         break;
     }
-    while ( qword_51ACC0 != 1 && v6 + 1 <= v4 );
+    while ( g_ClipsHaltExecutionFlag != 1 && v6 + 1 <= v4 );
   }
   result = Rules_GetEvaluationErrorFlag();
   if ( result == 1 )
   {
 LABEL_8:
     a1[1] = 2;
-    result = dword_54DD70;
-    a1[2] = dword_54DD70;
+    result = g_ClipsFalseSymbol;
+    a1[2] = g_ClipsFalseSymbol;
   }
   return result;
 }
@@ -5950,10 +5950,10 @@ int  Rules_ReturnFunction(double a1)
   else
   {
     v1[1] = 105;
-    result = dword_54DD70;
-    v1[2] = dword_54DD70;
+    result = g_ClipsFalseSymbol;
+    v1[2] = g_ClipsFalseSymbol;
   }
-  qword_51ACC0 = 1;
+  g_ClipsHaltExecutionFlag = 1;
   return result;
 }
 // 49D0AC: variable 'v1' is possibly undefined
@@ -5963,7 +5963,7 @@ int  Rules_ReturnFunction(double a1)
 //----- (0049D0E0) --------------------------------------------------------
 void Rules_BreakFunction()
 {
-  dword_51ACC4 = 1;
+  g_ClipsBreakFlag = 1;
 }
 // 51ACC4: using guessed type int dword_51ACC4;
 
@@ -5982,17 +5982,17 @@ int  Rules_SwitchFunction(_DWORD *a1, int a2, double a3)
 
   v13 = a2;
   a1[1] = 2;
-  a1[2] = dword_54DD70;
-  result = Parser_ParseForm(*(__int16 **)(dword_51A960 + 6), &v10, a2, a3);
-  if ( !dword_51A964 )
+  a1[2] = g_ClipsFalseSymbol;
+  result = Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v10, a2, a3);
+  if ( !g_ClipsEvaluationError )
   {
-    v6 = *(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 10);
+    v6 = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10);
     if ( v6 )
     {
       while ( *(_WORD *)v6 != 105 )
       {
         result = Parser_ParseForm((__int16 *)v6, &v7, v6, a3);
-        if ( dword_51A964 )
+        if ( g_ClipsEvaluationError )
           return result;
         result = v11;
         if ( v11 == v8 )
@@ -6051,7 +6051,7 @@ signed int Rules_RegisterMiscFunctions()
 //----- (0049D460) --------------------------------------------------------
 _DWORD * Rules_CreateMultifieldFunction(_DWORD *a1, double a2)
 {
-  return Rules_StoreEvaluatedNodesAsMultifield(a1, *(_DWORD *)(dword_51A960 + 6), 1, a2);
+  return Rules_StoreEvaluatedNodesAsMultifield(a1, *(_DWORD *)(g_ClipsCurrentExpression + 6), 1, a2);
 }
 // 51A960: using guessed type int dword_51A960;
 
@@ -6065,16 +6065,16 @@ signed int  Rules_SetGenFunction(int a1, double a2)
 
   v5 = a1;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &v3, 1, a2) )
-    return dword_51ACD0;
+    return g_ClipsGensymCounter;
   result = *(_DWORD *)(v4 + 16);
   if ( result < 1 )
   {
     Parser_ReportError(1, (int)aNumberGreaterT);
-    return dword_51ACD0;
+    return g_ClipsGensymCounter;
   }
   else
   {
-    dword_51ACD0 = *(_DWORD *)(v4 + 16);
+    g_ClipsGensymCounter = *(_DWORD *)(v4 + 16);
   }
   return result;
 }
@@ -6088,8 +6088,8 @@ signed int *__fastcall Rules_GensymFunction(int a1, int a2)
 
   v4 = a1;
   Lexer_TokenExpect(0);
-  sprintf_(v3, "gen%ld", dword_51ACD0);
-  return Str_Intern(v3, ++dword_51ACD0);
+  sprintf_(v3, "gen%ld", g_ClipsGensymCounter);
+  return Str_Intern(v3, ++g_ClipsGensymCounter);
 }
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 51ACD0: using guessed type int dword_51ACD0;
@@ -6105,8 +6105,8 @@ signed int *__thiscall Rules_GensymStarFunction(void *this)
   Lexer_TokenExpect(0);
   do
   {
-    sprintf_(v3, "gen%ld", dword_51ACD0);
-    ++dword_51ACD0;
+    sprintf_(v3, "gen%ld", g_ClipsGensymCounter);
+    ++g_ClipsGensymCounter;
   }
   while ( Rules_FindSymbolEntry(v3) );
   return Str_Intern(v3, v1);
@@ -6533,22 +6533,22 @@ int  Rules_HostExpansionCall(int a1, double a2)
   int v14; // eax
   int v15[7]; // [esp+0h] [ebp-1Ch] BYREF
 
-  v15[0] = AST_CloneNodeList(*(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 6));
+  v15[0] = AST_CloneNodeList(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 6));
   Symbol = Rules_MakeSymbol(aExpand);
   Rules_ExpandFuncCallForm((int **)a1, (_DWORD *)v15[0], (int)Symbol, v15, a2);
-  v4 = *(_DWORD **)(dword_54DBA8 + 56);
+  v4 = *(_DWORD **)(g_ClipsMemoryTable + 56);
   if ( v4 )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 56);
-    *(_DWORD *)(dword_54DBA8 + 56) = *v4;
-    v5 = dword_54DBAC;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(g_ClipsMemoryTable + 56) = *v4;
+    v5 = g_ClipsMemFreeListTemp;
   }
   else
   {
     v5 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_WORD *)v5 = **(_WORD **)(dword_51A960 + 6);
-  v6 = *(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 2);
+  *(_WORD *)v5 = **(_WORD **)(g_ClipsCurrentExpression + 6);
+  v6 = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2);
   *(_DWORD *)(v5 + 10) = 0;
   *(_DWORD *)(v5 + 2) = v6;
   v7 = (__int16 *)v5;
@@ -6562,7 +6562,7 @@ int  Rules_HostExpansionCall(int a1, double a2)
     if ( !Rules_CheckFunctionArgCount(*(_DWORD *)(*(_DWORD *)v13 + 16), *(_BYTE **)(v13 + 17), v14) )
     {
       *(_DWORD *)(a1 + 4) = 2;
-      *(_DWORD *)(a1 + 8) = dword_54DD70;
+      *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
       return AST_Free(v5);
     }
   }
@@ -6572,7 +6572,7 @@ int  Rules_HostExpansionCall(int a1, double a2)
     if ( !Deffunction_CheckArgumentCount(*(_DWORD *)(v11 + 2), v10) )
     {
       *(_DWORD *)(a1 + 4) = 2;
-      *(_DWORD *)(a1 + 8) = dword_54DD70;
+      *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
       AST_Free(v5);
       return Lexer_ErrorRecover(1);
     }
@@ -6594,7 +6594,7 @@ signed int  Rules_HostExpandDummy(int a1)
   int v2; // ecx
 
   *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = dword_54DD70;
+  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
   Lexer_ErrorRecover(1);
   Rules_PrintErrorID((int)aMiscfun, v1, 0);
   return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpandMustBeUs, v2);
@@ -6637,20 +6637,20 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *a2, int a3, int *a4, doubl
       }
       Parser_ParseForm(*(__int16 **)((char *)v6 + 6), v5, a3, a5);
       AST_Free(*(_DWORD *)((char *)v6 + 6));
-      if ( dword_51A964 || v5[1] != (int *)4 )
+      if ( g_ClipsEvaluationError || v5[1] != (int *)4 )
         break;
       a3 = (int)v5[3] + 1;
-      v14 = dword_51A964;
-      v13 = dword_51A964;
+      v14 = g_ClipsEvaluationError;
+      v13 = g_ClipsEvaluationError;
       v7 = 6 * a3 - 6;
       while ( a3 <= (int)v5[4] + 1 )
       {
-        v8 = *(_DWORD **)(dword_54DBA8 + 56);
+        v8 = *(_DWORD **)(g_ClipsMemoryTable + 56);
         if ( v8 )
         {
-          dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 56);
-          *(_DWORD *)(dword_54DBA8 + 56) = *v8;
-          v9 = dword_54DBAC;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
+          *(_DWORD *)(g_ClipsMemoryTable + 56) = *v8;
+          v9 = g_ClipsMemFreeListTemp;
         }
         else
         {
@@ -6673,9 +6673,9 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *a2, int a3, int *a4, doubl
       {
         *(_DWORD *)(v14 + 10) = *(_DWORD *)((char *)v6 + 10);
         *a4 = v13;
-        dword_54DBAC = (int)v6;
-        *v6 = *(_DWORD *)(dword_54DBA8 + 56);
-        *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+        g_ClipsMemFreeListTemp = (int)v6;
+        *v6 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
         result = (int **)(v14 + 10);
         v6 = *(_DWORD **)(v14 + 10);
         a4 = (int *)(v14 + 10);
@@ -6685,22 +6685,22 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *a2, int a3, int *a4, doubl
       else
       {
         *a4 = *(_DWORD *)((char *)v6 + 10);
-        dword_54DBAC = (int)v6;
-        *v6 = *(_DWORD *)(dword_54DBA8 + 56);
-        result = (int **)dword_54DBA8;
-        *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
+        g_ClipsMemFreeListTemp = (int)v6;
+        *v6 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+        result = (int **)g_ClipsMemoryTable;
+        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
         v6 = (_DWORD *)*a4;
         if ( !*a4 )
           return result;
       }
     }
     *(_DWORD *)((char *)v6 + 6) = 0;
-    if ( !dword_51A964 && v5[1] != (int *)4 )
+    if ( !g_ClipsEvaluationError && v5[1] != (int *)4 )
       Rules_ReportSymbolTypeError(aExpand, 1);
     result = Rules_MakeSymbol(aSetEvaluationE);
     *(_DWORD *)((char *)v6 + 2) = result;
-    dword_51A964 = 0;
-    dword_51A968 = 0;
+    g_ClipsEvaluationError = 0;
+    g_ClipsHaltExecution = 0;
   }
   return result;
 }
@@ -6714,7 +6714,7 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *a2, int a3, int *a4, doubl
 int Rules_HostSetEvaluationError()
 {
   Lexer_ErrorRecover(1);
-  return dword_54DD70;
+  return g_ClipsFalseSymbol;
 }
 // 49E070: using guessed type int sub_49E070();
 // 54DD70: using guessed type int dword_54DD70;
@@ -6726,9 +6726,9 @@ int  Rules_HostSetSequenceOperatorRecognition(int a1, double a2)
 
   v4[7] = a1;
   if ( Lexer_ParseValueList(1, v4, 2, a2) )
-    return unknown_libname_13(v4[2] != dword_54DD70);
+    return unknown_libname_13(v4[2] != g_ClipsFalseSymbol);
   else
-    return dword_51B360;
+    return g_SequenceOperatorRecognition;
 }
 // 51B360: using guessed type int dword_51B360;
 // 54DD70: using guessed type int dword_54DD70;
@@ -6818,7 +6818,7 @@ int  Rules_HostPrintout(int a1, double a2)
       while ( 1 )
       {
         result = Rules_RtnUnknown(v6, &v10, a2);
-        if ( dword_51A968 )
+        if ( g_ClipsHaltExecution )
           return result;
         if ( v11 < 2 )
           goto LABEL_26;
@@ -7735,7 +7735,7 @@ int  Rules_HostEq(int a1, double a2)
   if ( result )
   {
     argument_index = 2;
-    expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+    expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
     if ( !expression )
       return 1;
     Parser_ParseForm((__int16 *)expression, first, (int)expression, a2);
@@ -7781,7 +7781,7 @@ int  Rules_HostNeq(double a1)
   if ( result )
   {
     argument_index = 2;
-    expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+    expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
     if ( !expression )
       return 1;
     Parser_ParseForm((__int16 *)expression, first, (int)expression, a1);
@@ -7950,12 +7950,12 @@ int  Rules_NotFunction(int a1, double a2)
   uintptr_t expression; // eax
   _DWORD parsed[6]; // [esp-4h] [ebp-1Ch] BYREF
 
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 0;
   if ( Parser_ParseForm((__int16 *)expression, parsed, a1, a2) )
     return 0;
-  return parsed[2] == dword_54DD70 && parsed[1] == 2;
+  return parsed[2] == g_ClipsFalseSymbol && parsed[1] == 2;
 }
 // 51A960: using guessed type int dword_51A960;
 // 54DD70: using guessed type int dword_54DD70;
@@ -7967,14 +7967,14 @@ int  Rules_AndFunction(int a1, double a2)
   _DWORD parsed[6]; // [esp-4h] [ebp-20h] BYREF
 
   (void)a1;
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
   while ( expression )
   {
     if ( Parser_ParseForm((__int16 *)expression, parsed, (int)expression, a2) )
       return 0;
-    if ( parsed[2] == dword_54DD70 && parsed[1] == 2 )
+    if ( parsed[2] == g_ClipsFalseSymbol && parsed[1] == 2 )
       return 0;
     expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
   }
@@ -7990,12 +7990,12 @@ int  Rules_OrFunction(int a1, double a2)
   _DWORD parsed[6]; // [esp-4h] [ebp-20h] BYREF
 
   (void)a1;
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   while ( expression )
   {
     if ( Parser_ParseForm((__int16 *)expression, parsed, (int)expression, a2) )
       return 0;
-    if ( parsed[2] != dword_54DD70 || parsed[1] != 2 )
+    if ( parsed[2] != g_ClipsFalseSymbol || parsed[1] != 2 )
       return 1;
     expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
   }
@@ -8023,7 +8023,7 @@ double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
 
   v15 = a1;
   v14 = a3;
-  v3 = *(_DWORD *)(dword_51A960 + 6);
+  v3 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
   if ( v3 )
   {
     result = Rules_CoerceFormToNumericArg((__int16 *)v3, 0, &v8, result, 1);
@@ -8132,7 +8132,7 @@ int  Rules_GreaterThanOrEqualFunction(int a1, double result, int a3)
   (void)a1;
   (void)a3;
 
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
   if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, previous, result, 1) )
@@ -8183,7 +8183,7 @@ int  Rules_LessThanFunction(int a1, double result, int a3)
   (void)a1;
   (void)a3;
 
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
   if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, previous, result, 1) )
@@ -8215,7 +8215,7 @@ int  Rules_GreaterThanFunction(int a1, double result, int a3)
   (void)a1;
   (void)a3;
 
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
   if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, previous, result, 1) )
@@ -8247,7 +8247,7 @@ int  Rules_NumericEqualFunction(int a1, double result, int a3)
   (void)a1;
   (void)a3;
 
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A960 + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
   if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, previous, result, 1) )

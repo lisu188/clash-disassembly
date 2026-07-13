@@ -178,11 +178,11 @@ TEST(cov20_parser, collect_function_arguments) {
 
 TEST(cov20_rules, matches_command) {
   static _DWORD fake_expr[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  dword_51A960 = (int)fake_expr;
+  g_ClipsCurrentExpression = (int)fake_expr;
   TOUCH(Rules_MatchesCommand(424242, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_ParseDefruleRHS: with no lexer input registered, the nested
@@ -284,44 +284,44 @@ TEST(cov20_rules, apply_pattern_keyword_flags) {
  * them directly instead of needing a real defmodule construct). ---- */
 
 TEST(cov20_module, save_all_pp_forms_to_file_empty_list) {
-  int saved = dword_51A9AC;
-  dword_51A9AC = 0;
+  int saved = g_DefmoduleListHead;
+  g_DefmoduleListHead = 0;
   TOUCH(Module_SaveAllPPFormsToFile((signed int)"werror"));
-  dword_51A9AC = saved;
+  g_DefmoduleListHead = saved;
 }
 
 TEST(cov20_module, save_all_pp_forms_to_file_one_node) {
   static _DWORD module_node[32];
   static const char *pp_form = "(defmodule FAKE)";
-  int saved = dword_51A9AC;
+  int saved = g_DefmoduleListHead;
   memset(module_node, 0, sizeof module_node);
   module_node[1] = (int)(intptr_t)pp_form; /* Module_GetPPForm -> offset 4 */
   module_node[7] = 0;                      /* next == 0: one iteration */
-  dword_51A9AC = (int)module_node;
+  g_DefmoduleListHead = (int)module_node;
   TOUCH(Module_SaveAllPPFormsToFile((signed int)"werror"));
-  dword_51A9AC = saved;
+  g_DefmoduleListHead = saved;
 }
 
 TEST(cov20_module, print_all_names_with_tally_empty_list) {
-  int saved = dword_51A9AC;
-  dword_51A9AC = 0;
+  int saved = g_DefmoduleListHead;
+  g_DefmoduleListHead = 0;
   TOUCH(Module_PrintAllNamesWithTally((int)"werror"));
-  dword_51A9AC = saved;
+  g_DefmoduleListHead = saved;
 }
 
 TEST(cov20_module, print_all_names_with_tally_one_node) {
   static _DWORD sym_entry[8];
   static _DWORD module_node[32];
   static const char *name = "FakeModule";
-  int saved = dword_51A9AC;
+  int saved = g_DefmoduleListHead;
   memset(sym_entry, 0, sizeof sym_entry);
   memset(module_node, 0, sizeof module_node);
   sym_entry[4] = (int)(intptr_t)name;      /* Module_GetName reads +16 off *a1 */
   module_node[0] = (int)(intptr_t)sym_entry;
   module_node[7] = 0;
-  dword_51A9AC = (int)module_node;
+  g_DefmoduleListHead = (int)module_node;
   TOUCH(Module_PrintAllNamesWithTally((int)"werror"));
-  dword_51A9AC = saved;
+  g_DefmoduleListHead = saved;
 }
 
 /* ---- Module_PrintPPFormByName: without a registered symbol table entry,

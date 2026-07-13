@@ -195,8 +195,8 @@ TEST(cov2_09_rules, remove_all_break_flags_one_module_one_rule) {
   static _DWORD itemsArray[32];
   static _DWORD listWrapper[8];
   static _DWORD fakeDefrule[16];
-  int savedNextEnum = dword_51A9AC;
-  int savedCurrentModule = dword_51A9B0;
+  int savedNextEnum = g_DefmoduleListHead;
+  int savedCurrentModule = g_Clips_CurrentModule;
 
   memset(outerModule, 0, sizeof outerModule);
   memset(moduleStruct, 0, sizeof moduleStruct);
@@ -212,13 +212,13 @@ TEST(cov2_09_rules, remove_all_break_flags_one_module_one_rule) {
   /* fakeDefrule+16 (next-in-Class_Enum chain) and +48 (break-flag chain) and
    * byte+29 all stay 0 from memset -> single safe iteration each. */
 
-  dword_51A9AC = (int)(intptr_t)outerModule;
-  dword_51A9B0 = (int)(intptr_t)moduleStruct;
+  g_DefmoduleListHead = (int)(intptr_t)outerModule;
+  g_Clips_CurrentModule = (int)(intptr_t)moduleStruct;
 
   TOUCH(Rules_RemoveAllBreakFlags());
 
-  dword_51A9AC = savedNextEnum;
-  dword_51A9B0 = savedCurrentModule;
+  g_DefmoduleListHead = savedNextEnum;
+  g_Clips_CurrentModule = savedCurrentModule;
 }
 
 /* ---- Rules_FindFactByIndex: dword_51A15C is the "first fact" global.
@@ -292,7 +292,7 @@ TEST(cov2_09_rules, matches_command_construct_arg_success_not_found) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static char ruleName[16] = "myrule";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -305,9 +305,9 @@ TEST(cov2_09_rules, matches_command_construct_arg_success_not_found) {
   *(_DWORD *)((char *)termBuf + 16) = (int)(intptr_t)ruleName;/* *(valNode+16) */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MatchesCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_DribbleOnCommand: same anchor/termBuf success recipe (this
@@ -321,7 +321,7 @@ TEST(cov2_09_rules, dribble_on_command_success_attempt) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static char fname[32] = "cov2_09_dribble_scratch.txt";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -331,9 +331,9 @@ TEST(cov2_09_rules, dribble_on_command_success_attempt) {
   *(_DWORD *)((char *)termBuf + 16) = (int)(intptr_t)fname;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_DribbleOnCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 
   remove(fname);
 }
@@ -347,7 +347,7 @@ TEST(cov2_09_rules, dribble_on_command_success_attempt2) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static char fname[32] = "cov2_09_dribble_scratch2.txt";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(padding, 0, sizeof padding);
   memset(anchor, 0, sizeof anchor);
@@ -358,9 +358,9 @@ TEST(cov2_09_rules, dribble_on_command_success_attempt2) {
   *(_DWORD *)((char *)termBuf + 16) = (int)(intptr_t)fname;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_DribbleOnCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 
   remove(fname);
 }
@@ -368,7 +368,7 @@ TEST(cov2_09_rules, dribble_on_command_success_attempt2) {
 TEST(cov2_09_rules, dribble_on_command_wrong_type_attempt) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -377,9 +377,9 @@ TEST(cov2_09_rules, dribble_on_command_wrong_type_attempt) {
   *(_DWORD *)((char *)termBuf + 10) = 0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_DribbleOnCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_RefreshAgendaCommand: an empty (but valid, zeroed) arg chain
@@ -396,7 +396,7 @@ TEST(cov2_09_rules, refresh_agenda_command_one_arg) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -406,9 +406,9 @@ TEST(cov2_09_rules, refresh_agenda_command_one_arg) {
   *(_DWORD *)((char *)termBuf + 10) = 0; /* argcount == 1 */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_RefreshAgendaCommand(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_HostSeed / Rules_MVSubseqFunction / Rules_FormatCountConversionSpecs
@@ -423,7 +423,7 @@ TEST(cov2_09_rules, host_seed_attempt) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -434,9 +434,9 @@ TEST(cov2_09_rules, host_seed_attempt) {
   valnode[4] = 7; /* +16: raw integer payload */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_HostSeed(1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_09_rules, mv_subseq_function_attempt) {
@@ -444,7 +444,7 @@ TEST(cov2_09_rules, mv_subseq_function_attempt) {
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
   static _DWORD out[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -456,9 +456,9 @@ TEST(cov2_09_rules, mv_subseq_function_attempt) {
   valnode[4] = 3;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MVSubseqFunction(out, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_09_rules, format_count_conversion_specs_attempt) {
@@ -466,7 +466,7 @@ TEST(cov2_09_rules, format_count_conversion_specs_attempt) {
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
   static char fmt[8] = "%d";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -477,16 +477,16 @@ TEST(cov2_09_rules, format_count_conversion_specs_attempt) {
   valnode[4] = (_DWORD)(intptr_t)fmt; /* +16: string payload pointer */
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_FormatCountConversionSpecs(2, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_09_rules, math_log10_and_asinh_attempt) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -497,16 +497,16 @@ TEST(cov2_09_rules, math_log10_and_asinh_attempt) {
   *(double *)((char *)valnode + 16) = 4.0;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MathLog10(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_09_rules, math_asinh_attempt) {
   static _DWORD anchor[16];
   static _DWORD termBuf[64];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(anchor, 0, sizeof anchor);
   memset(termBuf, 0, sizeof termBuf);
@@ -517,9 +517,9 @@ TEST(cov2_09_rules, math_asinh_attempt) {
   *(double *)((char *)valnode + 16) = 1.5;
   *(_DWORD *)((char *)anchor + 6) = (int)(intptr_t)termBuf;
 
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Rules_MathAsinh(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Parser_RegisterProceduralFunctionParsers: a straight-line chain of
@@ -570,7 +570,7 @@ TEST(cov2_09_rules, get_type_name_token_code_sweep) {
 TEST(cov2_09_instance, message_duplicate_instance_function_attempt) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
 
   memset(argnode, 0, sizeof argnode);
   memset(funcrec, 0, sizeof funcrec);
@@ -578,11 +578,11 @@ TEST(cov2_09_instance, message_duplicate_instance_function_attempt) {
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)funcrec; /* +10/+10 chase target */
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 
   TOUCH(Instance_MessageDuplicateInstanceFunction(0.0));
 
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_LookupClassOrReportError: best-effort at the "found" branch --

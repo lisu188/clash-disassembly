@@ -67,10 +67,10 @@ TEST(cov4_05_rules, parse_load_facts_command_early_return) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 0, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_ParseLoadFactsCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_BloadCommand: at this call site Lexer_TokenExpect(1) was
@@ -90,10 +90,10 @@ TEST(cov4_05_rules, bload_command_reaches_getfilenamearg) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 3, valbuf1); /* STRING type tag */
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_BloadCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ==== Confirmed hard ceilings (attempted, documented, harmless) ==== */
@@ -123,10 +123,10 @@ TEST(cov4_05_rules, rest_function_success_attempt) {
   memset(out, 0, sizeof out);
   cov4_05_mk_arg_node(node1, 4, valbuf1); /* MULTIFIELD type tag -> a3==4 */
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_RestFunction(out, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_05_rules, nth_function_success_attempt) {
@@ -143,10 +143,10 @@ TEST(cov4_05_rules, nth_function_success_attempt) {
   cov4_05_mk_arg_node(node2, 4, valbuf2); /* MULTIFIELD */
   *(int *)(node1 + 10) = (int)(intptr_t)node2;
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_NthFunction((int)(intptr_t)out, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_05_rules, float_function_success_attempt) {
@@ -157,10 +157,10 @@ TEST(cov4_05_rules, float_function_success_attempt) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 1, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_FloatFunction(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_05_rules, cos_builtin_success_attempt) {
@@ -171,10 +171,10 @@ TEST(cov4_05_rules, cos_builtin_success_attempt) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 1, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_CosBuiltin(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_05_rules, math_exp_success_attempt) {
@@ -185,10 +185,10 @@ TEST(cov4_05_rules, math_exp_success_attempt) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 1, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_MathExp(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_05_rules, math_acsch_success_attempt) {
@@ -199,10 +199,10 @@ TEST(cov4_05_rules, math_acsch_success_attempt) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 1, valbuf1);
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_MathAcsch(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_MarkConstraintAttributeParsed: every level past the first
@@ -234,10 +234,10 @@ TEST(cov4_05_rules, load_star_command_attempt) {
   cov4_05_mk_arg_node(node1, 3, valbuf1);
   *(int *)(valbuf1 + 16) = (int)(intptr_t)fname;
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_LoadStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Defglobal_CloseConstructCodeFiles: reaching 165963/165964/165965
@@ -315,10 +315,10 @@ TEST(cov4_05_rules, find_import_export_construct_attempt) {
   *(int *)(modnode + 0) = (int)(intptr_t)name; /* name ptr at offset 0 */
   *(int *)(modnode + 24) = 1;                  /* truthy flag at +24 */
   *(int *)(modnode + 28) = 0;                  /* next = NULL */
-  saved = dword_51A9BC;
-  dword_51A9BC = (int)(intptr_t)modnode;
+  saved = g_ModuleItemDescriptorListHead;
+  g_ModuleItemDescriptorListHead = (int)(intptr_t)modnode;
   TOUCH(Rules_FindImportExportConstruct(name, a2out, a3buf, 0, 0));
-  dword_51A9BC = saved;
+  g_ModuleItemDescriptorListHead = saved;
 }
 
 /* ---- MessageHandler_PrintHandlerListTally: the a2==0 branch's for-loop
@@ -391,10 +391,10 @@ TEST(cov4_05_rules, check_fact_existp_attempt) {
   memset(head, 0, sizeof head);
   cov4_05_mk_arg_node(node1, 6, valbuf1); /* FACT-ADDRESS type tag */
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Rules_CheckFactExistp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Instance_MessageDuplicateInstanceFunction: reaching line 136523
@@ -418,10 +418,10 @@ TEST(cov4_05_instance, message_duplicate_instance_function_attempt) {
   cov4_05_mk_arg_node(node2, 1, valbuf2);
   *(int *)(node1 + 10) = (int)(intptr_t)node2;
   *(int *)(head + 6) = (int)(intptr_t)node1;
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)head;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)head;
   TOUCH(Instance_MessageDuplicateInstanceFunction(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_LookupClassOrReportError: with no scope separator in the name,

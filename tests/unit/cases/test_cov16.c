@@ -28,7 +28,7 @@ static void cov16_setup_safe_argctx(unsigned char *argnode, _DWORD *funcrec, _DW
   memset(symnode, 0, 32);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* ---- Rules_Host{Stringp,Symbolp,Lexemep,Numberp,Floatp,Integerp,
@@ -42,9 +42,9 @@ static void cov16_setup_safe_argctx(unsigned char *argnode, _DWORD *funcrec, _DW
 TEST(cov16_hostpred, all_type_predicates) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
 
@@ -57,9 +57,9 @@ TEST(cov16_hostpred, all_type_predicates) {
   TOUCH(Rules_HostMultifieldp(0.0));
   TOUCH(Rules_PointerpFunction(0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_RegisterPredicateHostFunctions / Rules_RegisterArithmeticFunctions
@@ -97,16 +97,16 @@ TEST(cov16_register, register_multifield_functions) {
 TEST(cov16_format, count_conversion_specs_no_arg) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   CHECK_EQ(Rules_FormatCountConversionSpecs(2, 0.0), 0);
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_ReadLineWithEscaping: Lexer_PeekChar(a1, a4) with a1 distinct
@@ -191,17 +191,17 @@ TEST(cov16_parsenum, number_value_accessors) {
 TEST(cov16_arith, integer_and_float_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   CHECK_EQ(Rules_IntegerFunction(1, 0.0), 0);
   TOUCH(Rules_FloatFunction(1, 2, 3, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_DeleteFunction / Rules_MVDeleteFunction: guarded by
@@ -218,34 +218,34 @@ TEST(cov16_deletefn, delete_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_DeleteFunction(out, 3, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 TEST(cov16_deletefn, mv_delete_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_MVDeleteFunction(out, 3, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_SubseqFunction / Rules_MVSubseqFunction / Rules_FirstFunction /
@@ -257,68 +257,68 @@ TEST(cov16_multiseq, subseq_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_SubseqFunction(out, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 TEST(cov16_multiseq, mv_subseq_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_MVSubseqFunction(out, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 TEST(cov16_multiseq, first_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_FirstFunction(out, 2, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 TEST(cov16_multiseq, rest_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_RestFunction(out, 2, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_NthFunction: guarded by Lexer_TokenExpect(2) first; with the
@@ -334,9 +334,9 @@ TEST(cov16_multiseq, nth_function_no_args) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
   static _DWORD out[8];
-  int savedCtx = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int savedCtx = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(out, 0, sizeof out);
   Mem_InitReserveBlock(0, 0);
@@ -344,9 +344,9 @@ TEST(cov16_multiseq, nth_function_no_args) {
   cov16_setup_safe_argctx(argnode, funcrec, symnode);
   TOUCH(Rules_NthFunction((int)(intptr_t)out, 5, 0.0));
 
-  dword_51A960 = savedCtx;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = savedCtx;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* ---- Rules_MultifieldFindElementPosition: pure array scan over a

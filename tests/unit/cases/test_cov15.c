@@ -169,10 +169,10 @@ TEST(cov15_dribble, getc_router) {
 TEST(cov15_rules, dribble_on_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_DribbleOnCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_DribbleOffCommand: Lexer_TokenExpect(0) against the same zeroed
@@ -182,73 +182,73 @@ TEST(cov15_rules, dribble_on_command_bad_args) {
 TEST(cov15_rules, dribble_off_command) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_DribbleOffCommand());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, batch_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_BatchCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, batch_star_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_BatchStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, load_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_LoadCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, load_star_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_LoadStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, save_command_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_SaveCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, host_remove_file) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_HostRemoveFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, host_rename_file) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_HostRenameFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_HostRandom / Rules_HostSeed: also gated by Lexer_TokenExpect,
@@ -258,19 +258,19 @@ TEST(cov15_rules, host_rename_file) {
 TEST(cov15_rules, host_random) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_HostRandom());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov15_rules, host_seed_bad_args) {
   static unsigned char argnode[256];
   memset(argnode, 0, sizeof(argnode));
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)argnode;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_HostSeed(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_BatchQueryStdin: plain strcmp_ wrapper; strcmp_'s own recovered
@@ -293,10 +293,10 @@ TEST(cov15_rules, batch_query_stdin) {
 TEST(cov15_rules, batch_get_char) {
   static _DWORD streambuf[8];
   memset(streambuf, 0, sizeof(streambuf));
-  int saved = dword_51ACA8;
-  dword_51ACA8 = (_DWORD)(intptr_t)streambuf;
+  int saved = g_CurrentStringInputSource;
+  g_CurrentStringInputSource = (_DWORD)(intptr_t)streambuf;
   TOUCH(Rules_BatchGetChar(4242));
-  dword_51ACA8 = saved;
+  g_CurrentStringInputSource = saved;
 }
 
 /* ---- Rules_BatchExitFunction: delegates to Rules_CloseAllBatchSources,

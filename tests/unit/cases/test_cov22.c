@@ -163,30 +163,30 @@ TEST(cov22_superclasspcmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_SuperclassPCommand(1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov22_subclasspcmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_SubclassPCommand(1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_SlotExistPCommand ---- */
@@ -195,16 +195,16 @@ TEST(cov22_slotexistpcmd, basic)
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
     static int a1val;
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
     a1val = 0;
 
     TOUCH(Class_SlotExistPCommand(&a1val, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_LookupClassOrReportError ---- */
@@ -223,15 +223,15 @@ TEST(cov22_parseclassnamearg, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_ParseClassNameArg(1, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_PrintSeparatorLine ---- */
@@ -260,60 +260,60 @@ TEST(cov22_classslotscmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_ClassSlotsCommand(1, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov22_classsuperclassescmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_ClassSuperclassesCommand(1, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov22_classsubclassescmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_ClassSubclassesCommand(1, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov22_getdefmsghandlerlistcmd, basic)
 {
     static unsigned char fakeParserCtx[64];
     static __int16 fakeExprNode[64];
-    int saved = dword_51A960;
+    int saved = g_ClipsCurrentExpression;
     memset(fakeParserCtx, 0, sizeof fakeParserCtx);
     memset(fakeExprNode, 0, sizeof fakeExprNode);
     *(int *)(fakeParserCtx + 6) = (int)(intptr_t)fakeExprNode;
-    dword_51A960 = (int)(intptr_t)fakeParserCtx;
+    g_ClipsCurrentExpression = (int)(intptr_t)fakeParserCtx;
 
     TOUCH(Class_GetDefmessageHandlerListCommand(1, 1.0));
 
-    dword_51A960 = saved;
+    g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Class_IsAbstract ---- */
@@ -351,20 +351,20 @@ TEST(cov22_genconstructtables, basic)
 /* ---- Compiler_AssignModuleIndices ---- */
 TEST(cov22_assignmoduleidx, empty_list)
 {
-    int saved = dword_51A9AC;
-    dword_51A9AC = 0;
+    int saved = g_DefmoduleListHead;
+    g_DefmoduleListHead = 0;
     CHECK_EQ(Compiler_AssignModuleIndices(), 0);
-    dword_51A9AC = saved;
+    g_DefmoduleListHead = saved;
 }
 
 TEST(cov22_assignmoduleidx, one_module)
 {
     static _DWORD modBuf[16];
-    int saved = dword_51A9AC;
+    int saved = g_DefmoduleListHead;
     memset(modBuf, 0, sizeof modBuf); /* offset+28 == 0 terminates after one iteration */
-    dword_51A9AC = (int)(intptr_t)modBuf;
+    g_DefmoduleListHead = (int)(intptr_t)modBuf;
     TOUCH(Compiler_AssignModuleIndices());
-    dword_51A9AC = saved;
+    g_DefmoduleListHead = saved;
 }
 
 /* ---- Rules_FetchJoinObjectSlotFieldSimple ---- */

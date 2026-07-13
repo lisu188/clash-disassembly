@@ -13,7 +13,7 @@ static unsigned char cov_obj_gamedata[600000];
 static void cov_obj_reset(int mission) {
   memset(cov_obj_gamedata, 0, sizeof cov_obj_gamedata);
   gameData = (int)(intptr_t)cov_obj_gamedata;
-  dword_5448A0 = 0;
+  g_CheatForceWinMissionFlag = 0;
   ACTIVE_MISSION_INDEX = mission;
 }
 
@@ -30,49 +30,49 @@ static void cov_obj_set_capture(int castle_ref_off, int idx, int owner) {
  * (religious-site category 2), whose recovered tile-type values are
  * 0x2D9/0x2DB/0x2DD (see MapTile_GetReligiousSiteCategory). */
 TEST(objectives, mission01_shrine_complete) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(1);
   *(unsigned short *)(gameData + 1400 * 16 + 14 * 11 + 2) = 0x2D9; /* empty shrine */
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 TEST(objectives, mission01_shrine_blocked) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(1);
   *(unsigned short *)(gameData + 1400 * 16 + 14 * 11 + 2) = 0; /* not a shrine */
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 /* Mission 02 (Treg Rock capture): castle-ref at gameData+564710. */
 TEST(objectives, mission02_capture_complete_and_blocked) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(2);
   cov_obj_set_capture(564710, 3, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   cov_obj_reset(2);
   cov_obj_set_capture(564710, 3, 2);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 /* Mission 06 (capture): castle-ref at gameData+574456. */
 TEST(objectives, mission06_capture_complete_and_blocked) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(6);
   cov_obj_set_capture(574456, 2, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   cov_obj_reset(6);
   cov_obj_set_capture(574456, 2, 5);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 /* Mission 07 (treasure): complete iff NO hidden treasure remains at any of the
  * four map locations; hidden-treasure tile-type values are 752 and 755. */
 TEST(objectives, mission07_treasure_complete_when_all_dug) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(7);
   /* all four tiles cleared (not 752/755) -> complete */
   cov_obj_set_tile_word(55, 45, 0);
@@ -80,40 +80,40 @@ TEST(objectives, mission07_treasure_complete_when_all_dug) {
   cov_obj_set_tile_word(35, 63, 0);
   cov_obj_set_tile_word(14, 68, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 TEST(objectives, mission07_treasure_blocked_when_one_remains) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(7);
   cov_obj_set_tile_word(55, 45, 755); /* one hidden treasure still present */
   cov_obj_set_tile_word(50, 27, 0);
   cov_obj_set_tile_word(35, 63, 0);
   cov_obj_set_tile_word(14, 68, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 /* Missions 03 and 13 (survival): complete iff the game turn counter
  * (*(u16*)(gameData + 140022) == GAME_TURN_COUNTER) exceeds 10, i.e. the
  * player has survived through turn 11. */
 TEST(objectives, mission03_survival_gate_on_turn_counter) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(3);
   GAME_TURN_COUNTER = 11; /* > 10 -> survived */
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   cov_obj_reset(3);
   GAME_TURN_COUNTER = 10; /* not yet past 10 -> blocked */
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 TEST(objectives, mission13_shares_survival_gate) {
-  int gd = gameData, ch = dword_5448A0;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(13); /* case 0xD falls through to the same survival check */
   GAME_TURN_COUNTER = 25;
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch;
+  gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
 
 /* Mission 05 uses two language-dependent elimination branches. The nonzero
@@ -125,7 +125,7 @@ static unsigned char cov_m05_gamedata[600000];
 static void cov_m05_reset(int language_index) {
   memset(cov_m05_gamedata, 0, sizeof cov_m05_gamedata);
   gameData = (int)(intptr_t)cov_m05_gamedata;
-  dword_5448A0 = 0;
+  g_CheatForceWinMissionFlag = 0;
   ACTIVE_MISSION_INDEX = 5;
   g_LanguageIndex = language_index;
 }
@@ -152,48 +152,48 @@ static void cov_m05_set_stack(int index, int owner, int live) {
 }
 
 TEST(objectives, mission05_nonzero_language_complete_without_player3_survivors) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   cov_m05_set_building(4, 0, 1);
   cov_m05_set_stack(11, 0, 1);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_nonzero_language_blocked_by_live_player3_building) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   cov_m05_set_building(4, 3, 1);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_nonzero_language_ignores_destroyed_player3_building) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   cov_m05_set_building(4, 3, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_nonzero_language_blocked_by_live_player3_stack) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   cov_m05_set_stack(11, 3, 1);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_nonzero_language_ignores_empty_player3_stack) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   cov_m05_set_stack(11, 3, 0);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_zero_language_targets_players1_and2_not_player3) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(0);
   cov_m05_set_building(4, 3, 1);
   cov_m05_set_stack(11, 3, 1);
@@ -204,21 +204,21 @@ TEST(objectives, mission05_zero_language_targets_players1_and2_not_player3) {
   cov_m05_reset(0);
   cov_m05_set_stack(11, 2, 1);
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_friendly_attack_sets_failure_condition) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   CHECK_EQ(Mission_CheckFailureCondition(), 0);
   Mission05_MarkFailureOnFriendlyAttack(0, 1);
   CHECK_EQ(MISSION_FAILURE_FLAG, 1);
   CHECK_EQ(Mission_CheckFailureCondition(), 1);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }
 
 TEST(objectives, mission05_failure_ignores_enemy_attack_and_zero_language) {
-  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  int gd = gameData, ch = g_CheatForceWinMissionFlag, lang = g_LanguageIndex;
   cov_m05_reset(1);
   Mission05_MarkFailureOnFriendlyAttack(0, 3);
   Mission05_MarkFailureOnFriendlyAttack(1, 2);
@@ -228,5 +228,5 @@ TEST(objectives, mission05_failure_ignores_enemy_attack_and_zero_language) {
   Mission05_MarkFailureOnFriendlyAttack(0, 1);
   CHECK_EQ(MISSION_FAILURE_FLAG, 0);
   CHECK_EQ(Mission_CheckFailureCondition(), 0);
-  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+  gameData = gd; g_CheatForceWinMissionFlag = ch; g_LanguageIndex = lang;
 }

@@ -161,7 +161,7 @@ TEST(thin00_refreshcommand, name_not_found_reports_cant_find) {
   static unsigned char argnode[16], node[16];
   static _DWORD val[8];
   static const char *rule_name = "Thin00FakeRule";
-  int saved960 = dword_51A960;
+  int saved960 = g_ClipsCurrentExpression;
 
   memset(argnode, 0, sizeof argnode);
   memset(node, 0, sizeof node);
@@ -179,9 +179,9 @@ TEST(thin00_refreshcommand, name_not_found_reports_cant_find) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
 
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
   TOUCH(Rules_RefreshCommand(0, 0.0));
-  dword_51A960 = saved960;
+  g_ClipsCurrentExpression = saved960;
 }
 
 /* =========================================================================

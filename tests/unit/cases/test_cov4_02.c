@@ -69,35 +69,35 @@ TEST(cov4_02_treasure, log_and_retract_treasure_fact) {
  * (the requested join type). ============================================= */
 TEST(cov4_02_joinpm, direct_join_match_branch) {
   static _DWORD a1buf[16], a2buf[16], a3buf[16], joinbuf[16];
-  int saved = dword_51B354;
+  int saved = g_IncrementalResetInProgress;
   memset(a1buf, 0, sizeof a1buf);
   memset(a2buf, 0, sizeof a2buf);
   memset(a3buf, 0, sizeof a3buf);
   memset(joinbuf, 0, sizeof joinbuf);
   Mem_InitReserveBlock(0, 0);
-  dword_51B354 = 1; /* Rules_DriveJoinNetwork's bit-0x10 guard now short-circuits safely */
+  g_IncrementalResetInProgress = 1; /* Rules_DriveJoinNetwork's bit-0x10 guard now short-circuits safely */
   a3buf[9] = 0;      /* no action */
   a3buf[5] = (_DWORD)(intptr_t)joinbuf; /* join */
   joinbuf[4] = (_DWORD)(intptr_t)a3buf; /* join+16 == a3 -> direct-match branch (line 110772) */
   TOUCH(Rules_CreateJoinPartialMatch(a1buf, a2buf, a3buf, 0.0));
-  dword_51B354 = saved;
+  g_IncrementalResetInProgress = saved;
 }
 
 TEST(cov4_02_joinpm, join_network_loop_then_exit) {
   static _DWORD a1buf[16], a2buf[16], a3buf[16], joinbuf[16];
-  int saved = dword_51B354;
+  int saved = g_IncrementalResetInProgress;
   memset(a1buf, 0, sizeof a1buf);
   memset(a2buf, 0, sizeof a2buf);
   memset(a3buf, 0, sizeof a3buf);
   memset(joinbuf, 0, sizeof joinbuf);
   Mem_InitReserveBlock(0, 0);
-  dword_51B354 = 1;
+  g_IncrementalResetInProgress = 1;
   a3buf[9] = 0;
   a3buf[5] = (_DWORD)(intptr_t)joinbuf;
   joinbuf[4] = 0; /* join+16 != a3 -> do/while loop branch (line 110779) */
   joinbuf[7] = 0; /* join+28 == 0 -> "while (join);" (line 110781) exits after one pass */
   TOUCH(Rules_CreateJoinPartialMatch(a1buf, a2buf, a3buf, 0.0));
-  dword_51B354 = saved;
+  g_IncrementalResetInProgress = saved;
 }
 
 /* =========================================================================
@@ -192,9 +192,9 @@ TEST(cov4_02_batchstar, filename_parsed_open_fails) {
   static _DWORD funcrec[8], symnode[8];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov4_02_missing_batch.clp";
-  int saved960 = dword_51A960;
-  int saved964 = dword_51A964;
-  int saved968 = dword_51A968;
+  int saved960 = g_ClipsCurrentExpression;
+  int saved964 = g_ClipsEvaluationError;
+  int saved968 = g_ClipsHaltExecution;
 
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
@@ -209,15 +209,15 @@ TEST(cov4_02_batchstar, filename_parsed_open_fails) {
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(int *)(anchor + 2) = (int)(intptr_t)funcrec;
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
-  dword_51A964 = 0;
-  dword_51A968 = 0;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
+  g_ClipsEvaluationError = 0;
+  g_ClipsHaltExecution = 0;
 
   TOUCH(Rules_BatchStarCommand(0, 0.0));
 
-  dword_51A960 = saved960;
-  dword_51A964 = saved964;
-  dword_51A968 = saved968;
+  g_ClipsCurrentExpression = saved960;
+  g_ClipsEvaluationError = saved964;
+  g_ClipsHaltExecution = saved968;
 }
 
 /* =========================================================================
@@ -255,7 +255,7 @@ TEST(cov4_02_batchstar, filename_parsed_open_fails) {
  * instructions. */
 TEST(cov4_02_instmodify, modify_instance_function_attempt) {
   static unsigned char anchor[32], node[32];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(anchor, 0, sizeof anchor);
   memset(node, 0, sizeof node);
   /* anchor+6 must itself be a valid pointer (not just any nonzero anchor
@@ -263,9 +263,9 @@ TEST(cov4_02_instmodify, modify_instance_function_attempt) {
    * *(int*)(*(int*)(dword_51A960+6) + 10); a zeroed anchor+6 slot would
    * deref near-NULL address 10 before even reaching the a1-write hazard. */
   *(int *)(anchor + 6) = (int)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)anchor;
+  g_ClipsCurrentExpression = (int)(intptr_t)anchor;
   TOUCH(Instance_ModifyInstanceFunction(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -281,7 +281,7 @@ TEST(cov4_02_instmodify, modify_instance_function_attempt) {
 TEST(cov4_02_module, print_pp_form_found_no_pp_form) {
   static _DWORD moduleNode[16];
   static const char modname[] = "Cov4_02FakeModule";
-  int saved9AC = dword_51A9AC;
+  int saved9AC = g_DefmoduleListHead;
   int *symbol;
 
   memset(moduleNode, 0, sizeof moduleNode);
@@ -291,11 +291,11 @@ TEST(cov4_02_module, print_pp_form_found_no_pp_form) {
   moduleNode[0] = (_DWORD)(intptr_t)symbol; /* offset0: matches Module_FindByName's *result check */
   moduleNode[1] = 0;                        /* offset4: PPForm == NULL */
   moduleNode[7] = 0;                        /* offset28-ish "next" terminator field used elsewhere */
-  dword_51A9AC = (int)(intptr_t)moduleNode;
+  g_DefmoduleListHead = (int)(intptr_t)moduleNode;
 
   CHECK_EQ(Module_PrintPPFormByName((_BYTE *)modname, (signed int)"cov4_02_stream"), 1);
 
-  dword_51A9AC = saved9AC;
+  g_DefmoduleListHead = saved9AC;
 }
 
 /* =========================================================================

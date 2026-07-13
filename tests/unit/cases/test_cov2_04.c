@@ -26,7 +26,7 @@ static void cov2_04_setup_empty_ctx(unsigned char *argnode, _DWORD *funcrec,
   memset(symnode, 0, 32);
   funcrec[0] = (_DWORD)(intptr_t)symnode;
   *(_DWORD *)(argnode + 2) = (_DWORD)(intptr_t)funcrec;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* One-real-argument context: makes Rules_RtnArgCount's chain length exactly
@@ -56,7 +56,7 @@ static void cov2_04_setup_arg1_ctx(unsigned char *argnode, _DWORD *funcrec,
   *(_DWORD *)(node + 2) = (_DWORD)(intptr_t)valbuf;
   *(_DWORD *)(node + 10) = 0;
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* =======================================================================
@@ -242,30 +242,30 @@ TEST(cov2_04_msghandler, undefine_a1_present_a4_nonzero) {
 TEST(cov2_04_rulesload, token_mismatch_returns_error) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_empty_ctx(argnode, funcrec, symnode);
   TOUCH(Rules_LoadStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_04_rulesload, filename_arg_resolves_to_null) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 2);
   /* valbuf[4] (offset16) already zeroed by the helper -> "filename" == 0 */
   TOUCH(Rules_LoadStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_04_rulesload, filename_arg_resolves_nonzero_hits_load) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 2);
   valbuf[4] = 1; /* offset16 -> nonzero "filename" pointer (bogus) */
   TOUCH(Rules_LoadStarCommand(0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_RegisterFileIOCommands / Rules_RegisterIOHostFunctions:
@@ -358,19 +358,19 @@ TEST(cov2_04_rulesreset, reset_data_object_value) {
 TEST(cov2_04_rulescheckfact, token_mismatch_returns_error) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_empty_ctx(argnode, funcrec, symnode);
   TOUCH(Rules_CheckFactExistp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_04_rulescheckfact, resolves_argument_no_facts_asserted) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 1);
   CHECK_EQ(Rules_CheckFactExistp(0.0), 0);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_IntegerFunction: Lexer_TokenExpect(1) success drives it into
@@ -383,10 +383,10 @@ TEST(cov2_04_rulescheckfact, resolves_argument_no_facts_asserted) {
 TEST(cov2_04_rulesint, integer_function_success_chain_hits_known_bug) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 1);
   TOUCH(Rules_IntegerFunction(1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- MessageHandler_PreviewSendForSymbol: Rules_FindSymbolEntry only
@@ -424,28 +424,28 @@ TEST(cov2_04_ai, find_best_strategic_target_zero_radius) {
  * placeholder int there is not a valid pointer. ---- */
 TEST(cov2_04_iostrouter, print_inactive_router_returns_1) {
   static _DWORD router[8];
-  int saved = dword_51A9C8;
+  int saved = g_StringRouterListHead;
   memset(router, 0, sizeof router);
   router[0] = (_DWORD)(intptr_t)"cov2_04_router_a";
   router[4] = 0; /* != 1 -> immediate "return 1;" */
   router[5] = 0;
-  dword_51A9C8 = (int)(intptr_t)router;
+  g_StringRouterListHead = (int)(intptr_t)router;
   CHECK_EQ(IO_StringRouterPrint((int)(intptr_t)"cov2_04_router_a", "x"), 1);
-  dword_51A9C8 = saved;
+  g_StringRouterListHead = saved;
 }
 
 TEST(cov2_04_iostrouter, print_router_at_capacity_returns_flag) {
   static _DWORD router[8];
-  int saved = dword_51A9C8;
+  int saved = g_StringRouterListHead;
   memset(router, 0, sizeof router);
   router[0] = (_DWORD)(intptr_t)"cov2_04_router_b";
   router[4] = 1;   /* active */
   router[3] = 1;   /* capacity */
   router[2] = 100; /* position >= capacity - 1: never dereferenced here */
   router[5] = 0;
-  dword_51A9C8 = (int)(intptr_t)router;
+  g_StringRouterListHead = (int)(intptr_t)router;
   CHECK_EQ(IO_StringRouterPrint((int)(intptr_t)"cov2_04_router_b", "x"), 1);
-  dword_51A9C8 = saved;
+  g_StringRouterListHead = saved;
 }
 
 /* ---- Rules_HostFloatp: Lexer_TokenExpect(1) success calls
@@ -459,19 +459,19 @@ TEST(cov2_04_iostrouter, print_router_at_capacity_returns_flag) {
 TEST(cov2_04_ruleshostfloat, token_success_falsy_type_returns_1) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 0);
   CHECK_EQ(Rules_HostFloatp(0.0), 1);
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov2_04_ruleshostfloat, token_mismatch_returns_result) {
   static unsigned char argnode[256];
   static _DWORD funcrec[8], symnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_empty_ctx(argnode, funcrec, symnode);
   TOUCH(Rules_HostFloatp(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Unit_BuildAttackAnimSpritePath: near-fully covered already (57/59);
@@ -510,7 +510,7 @@ TEST(cov2_04_instance, get_slot_value_by_symbol_found) {
   static _DWORD bucketTable[0xA8];
   static _DWORD slotIndexTable[8];
   static _DWORD slotValueTable[8];
-  int saved51AD70 = dword_51AD70;
+  int saved51AD70 = g_Defclass_SlotNameHashTablePtr;
 
   memset(obj, 0, sizeof obj);
   memset(cls, 0, sizeof cls);
@@ -526,7 +526,7 @@ TEST(cov2_04_instance, get_slot_value_by_symbol_found) {
   slotNode[3] = (_DWORD)(intptr_t)symbolBuf; /* offset12: pointer-identity key */
   slotNode[5] = 0; /* offset20: next = NULL */
   bucketTable[0] = (_DWORD)(intptr_t)slotNode;
-  dword_51AD70 = (int)(intptr_t)bucketTable;
+  g_Defclass_SlotNameHashTablePtr = (int)(intptr_t)bucketTable;
 
   cls[19] = 5; /* offset76: max slot id (>= 0) */
   cls[15] = (_DWORD)(intptr_t)slotIndexTable; /* offset60 */
@@ -538,25 +538,25 @@ TEST(cov2_04_instance, get_slot_value_by_symbol_found) {
 
   CHECK_EQ(Instance_GetSlotValueBySymbol((int)(intptr_t)obj, (int)(intptr_t)symbolBuf), 12345);
 
-  dword_51AD70 = saved51AD70;
+  g_Defclass_SlotNameHashTablePtr = saved51AD70;
 }
 
 TEST(cov2_04_instance, get_slot_value_by_symbol_not_found) {
   static _DWORD obj[32];
   static _DWORD cls[32];
   static _DWORD symbolBuf[8];
-  int saved51AD70 = dword_51AD70;
+  int saved51AD70 = g_Defclass_SlotNameHashTablePtr;
 
   memset(obj, 0, sizeof obj);
   memset(cls, 0, sizeof cls);
   memset(symbolBuf, 0, sizeof symbolBuf);
   symbolBuf[3] = 0;
-  dword_51AD70 = 0; /* no hash table carved out -> Class_FindSlotNameID -1 */
+  g_Defclass_SlotNameHashTablePtr = 0; /* no hash table carved out -> Class_FindSlotNameID -1 */
   obj[11] = (_DWORD)(intptr_t)cls;
 
   CHECK_EQ(Instance_GetSlotValueBySymbol((int)(intptr_t)obj, (int)(intptr_t)symbolBuf), 0);
 
-  dword_51AD70 = saved51AD70;
+  g_Defclass_SlotNameHashTablePtr = saved51AD70;
 }
 
 /* ---- Rules_FetchJoinObjectSlotFieldSimple: best-effort. Backs
@@ -572,24 +572,24 @@ TEST(cov2_04_rulesjoin, fetch_join_object_slot_field_simple) {
   static unsigned char joinInfo[32];
   static _DWORD factListTable[64];
   static _DWORD factCell[8];
-  int saved51ACFC = dword_51ACFC;
-  int saved51AD00 = dword_51AD00;
+  int saved51ACFC = g_Clips_CurrentPartialMatch;
+  int saved51AD00 = g_Rules_GlobalRHSBinds;
 
   memset(a1buf, 0, sizeof a1buf);
   memset(joinInfo, 0, sizeof joinInfo);
   memset(factListTable, 0, sizeof factListTable);
   memset(factCell, 0, sizeof factCell);
 
-  dword_51AD00 = 0; /* keep Rules_ResolveJoinBindingRecord on its fallback branch */
+  g_Rules_GlobalRHSBinds = 0; /* keep Rules_ResolveJoinBindingRecord on its fallback branch */
   joinInfo[4] = 1;  /* offset4 byte -> (byte-1) == 0 -> offset 0 into the table */
   a1buf[4] = (_DWORD)(intptr_t)joinInfo; /* offset16 */
   factListTable[2] = (_DWORD)(intptr_t)factCell; /* offset8 relative to table base */
-  dword_51ACFC = (int)(intptr_t)factListTable;
+  g_Clips_CurrentPartialMatch = (int)(intptr_t)factListTable;
 
   TOUCH(Rules_FetchJoinObjectSlotFieldSimple((int)(intptr_t)a1buf, 0));
 
-  dword_51ACFC = saved51ACFC;
-  dword_51AD00 = saved51AD00;
+  g_Clips_CurrentPartialMatch = saved51ACFC;
+  g_Rules_GlobalRHSBinds = saved51AD00;
 }
 
 /* ---- Unit_NewTurnRegen: sweeps the outer countdown-flag branch (both the
@@ -644,10 +644,10 @@ TEST(cov2_04_building, count_special_personage_matches) {
 TEST(cov2_04_rulesclear, token_count_one_vs_expected_zero) {
   static unsigned char argnode[256], node[32];
   static _DWORD funcrec[8], symnode[8], valbuf[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 1);
   TOUCH(Rules_ClearCommand());
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- CRT_RegisterFinalizer: already exercised (and documented as an

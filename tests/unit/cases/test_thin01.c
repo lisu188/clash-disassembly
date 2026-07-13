@@ -78,7 +78,7 @@ TEST(thin01_reportsymerr, symbol_found_reaches_error_report) {
   hidx = Rules_HashSymbolName((_BYTE *)sym_name, 0x33u);
   bucket_node[0] = (_DWORD)(intptr_t)func_record;
   bucket_node[1] = 0;
-  *(_DWORD *)(dword_54DD40 + 4 * hidx) = (_DWORD)(intptr_t)bucket_node;
+  *(_DWORD *)(g_ClipsFunctionNameHashTable + 4 * hidx) = (_DWORD)(intptr_t)bucket_node;
 
   TOUCH(Rules_ReportSymbolTypeError((_BYTE *)sym_name, 0));
 }

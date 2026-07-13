@@ -32,7 +32,7 @@ static void cov4_03_install_arg_chain(unsigned char *argnode,
                                        unsigned char *head_node) {
   memset(argnode, 0, 32);
   *(_DWORD *)(argnode + 6) = (_DWORD)(intptr_t)head_node;
-  dword_51A960 = (int)(intptr_t)argnode;
+  g_ClipsCurrentExpression = (int)(intptr_t)argnode;
 }
 
 /* =========================================================================
@@ -268,13 +268,13 @@ TEST(cov4_03_rules, host_remove_file_filename_resolves) {
   static unsigned char argnode[32], node[32];
   static _DWORD valnode[8];
   static const char *path = "/nonexistent/cov4_03_missing_bload_file.bin";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(valnode, 0, sizeof valnode);
   valnode[4] = (int)(intptr_t)path; /* offset+16 payload slot */
   cov4_03_arg_node_init(node, 3, valnode, 0);
   cov4_03_install_arg_chain(argnode, node);
   TOUCH(Rules_HostRemoveFile(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -291,7 +291,7 @@ TEST(cov4_03_rulesmath, math_parse_single_arg_real_integer_arg) {
   static unsigned char argnode[32], node[32];
   static _DWORD valnode[8];
   double out = 0.0;
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(valnode, 0, sizeof valnode);
   valnode[4] = 7; /* offset+16 payload: integer value 7 */
   cov4_03_arg_node_init(node, 1 /* INTEGER */, valnode, 0);
@@ -300,7 +300,7 @@ TEST(cov4_03_rulesmath, math_parse_single_arg_real_integer_arg) {
   Rules_InitAtomTables();
   TOUCH(Rules_MathParseSingleArg(&out, 0, 0.0));
   TOUCH(Rules_MathSech(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -319,7 +319,7 @@ TEST(cov4_03_class, slot_exist_p_command_real_two_node_chain) {
   static _DWORD classval[8], inheritval[8];
   static const char *class_name = "Cov4_03FakeClass";
   static int a1out[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(classval, 0, sizeof classval);
   memset(inheritval, 0, sizeof inheritval);
   memset(a1out, 0, sizeof a1out);
@@ -331,7 +331,7 @@ TEST(cov4_03_class, slot_exist_p_command_real_two_node_chain) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   TOUCH(Class_SlotExistPCommand(a1out, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -378,7 +378,7 @@ TEST(cov4_03_defgeneric, get_method_restrictions_command_real_symbol) {
   static _DWORD symval[8];
   static _DWORD out[16];
   static const char *generic_name = "Cov4_03FakeGeneric";
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(symval, 0, sizeof symval);
   memset(out, 0, sizeof out);
   symval[4] = (int)(intptr_t)generic_name;
@@ -387,8 +387,8 @@ TEST(cov4_03_defgeneric, get_method_restrictions_command_real_symbol) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
   TOUCH(Defgeneric_GetMethodRestrictionsCommand(out, 0, 0.0));
-  dword_51A964 = 0;
-  dword_51A960 = saved;
+  g_ClipsEvaluationError = 0;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================
@@ -460,13 +460,13 @@ TEST(cov4_03_rules, parse_standard_constraint_attribute_type_not_parsed) {
 TEST(cov4_03_rules, dependencies_real_one_node_chain) {
   static unsigned char argnode[32], node[32];
   static _DWORD valnode[8];
-  int saved = dword_51A960;
+  int saved = g_ClipsCurrentExpression;
   memset(valnode, 0, sizeof valnode);
   valnode[4] = (int)(intptr_t)"Cov4_03FakeInstance";
   cov4_03_arg_node_init(node, 2 /* SYMBOL */, valnode, 0);
   cov4_03_install_arg_chain(argnode, node);
   TOUCH(Rules_Dependencies(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* =========================================================================

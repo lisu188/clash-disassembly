@@ -156,7 +156,7 @@ TEST(cov2_06_rules, nth_function_reach_second_parse) {
   static unsigned char expr_node[32];
   static unsigned char float_value_node[32];
   static _DWORD out[8];
-  int saved_ctx = dword_51A960;
+  int saved_ctx = g_ClipsCurrentExpression;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -171,11 +171,11 @@ TEST(cov2_06_rules, nth_function_reach_second_parse) {
   *(_DWORD *)(expr_node + 2) = (_DWORD)(intptr_t)float_value_node;
   *(_DWORD *)(expr_node + 10) = 0; /* terminate arg chain at length 1 */
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Rules_NthFunction((int)(intptr_t)out, 5, 0.0));
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 }
 
 /* ---------------------------------------------------------------------
@@ -191,7 +191,7 @@ TEST(cov2_06_rules, str_compare_builtin_one_arg_attempt) {
   static unsigned char arg_list_head[32];
   static unsigned char expr_node[32];
   static unsigned char int_value_node[32];
-  int saved_ctx = dword_51A960;
+  int saved_ctx = g_ClipsCurrentExpression;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -205,11 +205,11 @@ TEST(cov2_06_rules, str_compare_builtin_one_arg_attempt) {
   *(_DWORD *)(expr_node + 2) = (_DWORD)(intptr_t)int_value_node;
   *(_DWORD *)(expr_node + 10) = 0;
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Rules_StrCompareBuiltin(0, 0.0));
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 }
 
 /* ---------------------------------------------------------------------
@@ -247,28 +247,28 @@ TEST(cov2_06_math, csch_sqrt_acot_sinh_one_int_arg_attempt) {
     *(_DWORD *)(expr_node + 2) = (_DWORD)(intptr_t)int_value_node;           \
     *(_DWORD *)(expr_node + 10) = 0;                                         \
     *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;            \
-    dword_51A960 = (int)(intptr_t)arg_list_head;                             \
+    g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;                             \
   } while (0)
 
-  saved_ctx = dword_51A960;
+  saved_ctx = g_ClipsCurrentExpression;
   COV2_06_SETUP_ONE_INT_ARG(2);
   TOUCH(Rules_MathCsch(0, 0, 0, 0.0));
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 
-  saved_ctx = dword_51A960;
+  saved_ctx = g_ClipsCurrentExpression;
   COV2_06_SETUP_ONE_INT_ARG(9);
   TOUCH(Rules_MathSqrt(0, 0, 0, 0.0));
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 
-  saved_ctx = dword_51A960;
+  saved_ctx = g_ClipsCurrentExpression;
   COV2_06_SETUP_ONE_INT_ARG(2);
   TOUCH(Rules_AcotBuiltin(0, 0, 0, 0.0));
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 
-  saved_ctx = dword_51A960;
+  saved_ctx = g_ClipsCurrentExpression;
   COV2_06_SETUP_ONE_INT_ARG(2);
   TOUCH(Rules_SinhBuiltin(0, 0, 0, 0.0));
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 
 #undef COV2_06_SETUP_ONE_INT_ARG
 }
@@ -314,18 +314,18 @@ TEST(cov2_06_mainmenu, request_options_menu) {
  * bucket 0 to reach the "if (result) return *(a1+12)" success line too. */
 TEST(cov2_06_class, get_slot_name_by_id_not_found) {
   static _DWORD buckets[256];
-  int saved = dword_51AD70;
+  int saved = g_Defclass_SlotNameHashTablePtr;
   memset(buckets, 0, sizeof buckets);
-  dword_51AD70 = (int)(intptr_t)buckets;
+  g_Defclass_SlotNameHashTablePtr = (int)(intptr_t)buckets;
 
   CHECK_EQ(Class_GetSlotNameByID(999999), 0);
 
-  dword_51AD70 = saved;
+  g_Defclass_SlotNameHashTablePtr = saved;
 }
 
 TEST(cov2_06_class, get_slot_name_by_id_found) {
   static _DWORD entry[16];
-  int saved = dword_51AD70;
+  int saved = g_Defclass_SlotNameHashTablePtr;
   static _DWORD bucket0;
 
   memset(entry, 0, sizeof entry);
@@ -333,11 +333,11 @@ TEST(cov2_06_class, get_slot_name_by_id_found) {
   entry[3] = 0xABCD;       /* offset 12: name returned by GetSlotNameByID */
   entry[5] = 0;            /* offset 20: next link (terminate) */
   bucket0 = (_DWORD)(intptr_t)entry;
-  dword_51AD70 = (int)(intptr_t)&bucket0;
+  g_Defclass_SlotNameHashTablePtr = (int)(intptr_t)&bucket0;
 
   CHECK_EQ(Class_GetSlotNameByID(424242), (int)0xABCD);
 
-  dword_51AD70 = saved;
+  g_Defclass_SlotNameHashTablePtr = saved;
 }
 
 /* ---------------------------------------------------------------------
@@ -402,7 +402,7 @@ TEST(cov2_06_rules, host_multifieldp_success) {
   static unsigned char expr_node[32];
   static unsigned char mf_descriptor[32];
   static unsigned char value_list_header[32];
-  int saved_ctx = dword_51A960;
+  int saved_ctx = g_ClipsCurrentExpression;
 
   memset(arg_list_head, 0, sizeof arg_list_head);
   memset(expr_node, 0, sizeof expr_node);
@@ -418,11 +418,11 @@ TEST(cov2_06_rules, host_multifieldp_success) {
   *(_DWORD *)(expr_node + 10) = 0;
 
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Rules_HostMultifieldp(0.0));
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 }
 
 /* ---------------------------------------------------------------------
@@ -521,16 +521,16 @@ TEST(cov2_06_building, is_unit_licence_eligible_smiths_required_attempt) {
 TEST(cov2_06_rules, clear_focus_stack_command_nonempty_chain) {
   static unsigned char arg_list_head[32];
   static unsigned char expr_node[32];
-  int saved_ctx = dword_51A960;
+  int saved_ctx = g_ClipsCurrentExpression;
 
   memset(arg_list_head, 0, sizeof arg_list_head);
   memset(expr_node, 0, sizeof expr_node);
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Rules_ClearFocusStackCommand());
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 }
 
 /* ---------------------------------------------------------------------
@@ -560,7 +560,7 @@ TEST(cov2_06_rules, bsave_command_one_string_arg_attempt) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  saved_ctx = dword_51A960;
+  saved_ctx = g_ClipsCurrentExpression;
 
   memset(arg_list_head, 0, sizeof arg_list_head);
   memset(expr_node, 0, sizeof expr_node);
@@ -571,11 +571,11 @@ TEST(cov2_06_rules, bsave_command_one_string_arg_attempt) {
   *(_DWORD *)(expr_node + 2) = (_DWORD)(intptr_t)string_value_node;
   *(_DWORD *)(expr_node + 10) = 0;
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Rules_BsaveCommand(0, 0.0));
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
   remove("cov2_06_bsave_out.tmp");
 }
 
@@ -596,17 +596,17 @@ TEST(cov2_06_rules, bsave_command_one_string_arg_attempt) {
 TEST(cov2_06_class, subclasses_and_superclasses_commands_redundant) {
   static unsigned char arg_list_head[32];
   static unsigned char expr_node[32];
-  int saved_ctx = dword_51A960;
+  int saved_ctx = g_ClipsCurrentExpression;
 
   memset(arg_list_head, 0, sizeof arg_list_head);
   memset(expr_node, 0, sizeof expr_node);
   *(_DWORD *)(arg_list_head + 6) = (_DWORD)(intptr_t)expr_node;
-  dword_51A960 = (int)(intptr_t)arg_list_head;
+  g_ClipsCurrentExpression = (int)(intptr_t)arg_list_head;
 
   TOUCH(Class_ClassSubclassesCommand(2, 2.0));
   TOUCH(Class_ClassSuperclassesCommand(2, 2.0));
 
-  dword_51A960 = saved_ctx;
+  g_ClipsCurrentExpression = saved_ctx;
 }
 
 /* ---------------------------------------------------------------------

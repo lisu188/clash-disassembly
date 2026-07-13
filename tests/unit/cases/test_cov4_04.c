@@ -101,10 +101,10 @@ static void cov4_04_first_case(int v8val, int v9val, int need_loop_slot) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_FirstFunction(out, 1, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_04_first, branch_v9_ge_v8) {
@@ -139,7 +139,7 @@ TEST(cov4_04_writehdr, module_item_header) {
   static unsigned char stream[64], state[64];
   cov4_04_make_fake_stream(stream, state);
   CRT_InitializeThreadAndFileHandleHooks();
-  dword_51A9B0 = 0;
+  g_Clips_CurrentModule = 0;
   TOUCH(Rules_WriteConstructModuleItemHeaderToCode(
       (int)(intptr_t)stream, 0, 0, 0, 0));
 }
@@ -241,10 +241,10 @@ static void cov4_04_acot_case(double value) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_AcotBuiltin(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 TEST(cov4_04_acot, near_zero_branch) { cov4_04_acot_case(0.0); }
@@ -375,10 +375,10 @@ TEST(cov4_04_deps, dependents_found) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_Dependents(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Method_FindByIndex -- targets 161802,161803 (the loop's overflow
@@ -419,8 +419,8 @@ TEST(cov4_04_unit, build_shot_anim_palette_sprite_path) {
 TEST(cov4_04_castle, reload_licence_slot_sprites) {
   static unsigned char buf[16];
   memset(buf, 0, sizeof(buf));
-  dword_532218 = (int)(intptr_t)buf - 402;
-  memset(dword_532304, 0, sizeof(dword_532304));
+  g_CastleProductionBuildingPtr = (int)(intptr_t)buf - 402;
+  memset(g_CastleProduction_LicenceSlotSpriteHandles, 0, sizeof(g_CastleProduction_LicenceSlotSpriteHandles));
   TOUCH(CastleProduction_ReloadLicenceSlotSprites(0));
 }
 
@@ -494,10 +494,10 @@ TEST(cov4_04_hostlex, lexemep_symbol_match) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_HostLexemep(0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Rules_MathAsinh -- target 129882 (`return asinh(v5[0]);`). Same
@@ -514,10 +514,10 @@ TEST(cov4_04_asinh, math_asinh_success) {
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  int saved = dword_51A960;
-  dword_51A960 = (int)(intptr_t)ctx;
+  int saved = g_ClipsCurrentExpression;
+  g_ClipsCurrentExpression = (int)(intptr_t)ctx;
   TOUCH(Rules_MathAsinh(0, 0, 0, 0.0));
-  dword_51A960 = saved;
+  g_ClipsCurrentExpression = saved;
 }
 
 /* ---- Instance_DuplicateInstanceFunction -- target 136508 (the final
