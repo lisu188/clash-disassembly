@@ -1,4 +1,6 @@
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -23,6 +25,29 @@ sub_20000(
         parsed = matcher.parse_ida_c_text(text)
         self.assertEqual(parsed[0x20000]["name"], "sub_20000")
         self.assertEqual(parsed[0x20000]["literals"], ["shared"])
+
+    def test_feature_export_normalizes_structural_review_fields(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            path.write_text(json.dumps({"functions": [{
+                "ea": "0x20000",
+                "name": "sub_20000",
+                "bb": 3,
+                "size": 20,
+                "edges": 4,
+                "back_edges": 1,
+                "constants": ["0x20", "0x10"],
+                "callees": ["0x30000"],
+                "data_refs": ["0x40000"],
+                "literals": ["shared"]
+            }]}), encoding="utf-8")
+            row = matcher.load_feature_export(path)[0x20000]
+        self.assertEqual(row["constants"], ["0x10", "0x20"])
+        self.assertEqual(row["edges"], 4)
+        self.assertEqual(row["back_edges"], 1)
+        candidate = matcher.candidate_row(0x20000, 0x50000, ["shared"], row, row, {"name": "Named", "confidence": "high"})
+        self.assertEqual(candidate["dos_data_refs"], ["0x40000"])
+        self.assertEqual(candidate["dos_constants"], ["0x10", "0x20"])
 
     def test_shared_literal_must_be_unique_in_both_builds(self):
         dos = {
