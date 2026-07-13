@@ -82,7 +82,7 @@ def check_file(path: Path) -> list[str]:
 
     for match in BACKTICK_PATH_RE.finditer(text):
         target = clean_target(match.group(1))
-        if target and not path_exists(path, target, root_relative=True):
+        if target and not path_exists(path, target, root_relative=False):
             errors.append(f"{rel}: missing referenced path: {target}")
 
     return errors
