@@ -108,5 +108,8 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
-      - name: Build clash95_bootstrap
-        run: cmake --build build --target clash95_bootstrap -j2
+      - name: Build clash95_bootstrap and mission trace tests
+        run: cmake --build build --target clash95_bootstrap runtime_mission_trace_tests -j2
+
+      - name: Run mission trace unit test
+        run: ctest --test-dir build -R '^runtime_mission_trace_tests$' --output-on-failure
