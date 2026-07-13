@@ -1,0 +1,15 @@
+{
+  "pairs": [],
+  "schema": 1,
+  "status": "awaiting-clash95-feature-export-and-independent-review",
+  "summary": {
+    "complete": false,
+    "confirmation_ratio": 0.0,
+    "confirmed": 0,
+    "failure_count": 0,
+    "passed": false,
+    "reviewed": 0,
+    "selected": 0,
+    "threshold": 0.95
+  }
+}
