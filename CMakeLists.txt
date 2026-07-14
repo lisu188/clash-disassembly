@@ -9,47 +9,76 @@ pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 find_package(X11 REQUIRED)
 find_package(Threads REQUIRED)
 
-add_library(clash95_recovered STATIC
-  clash95.c
-  runtime_mission_trace.c
-  platform_sdl_runtime.c
-  compat/decomp_runtime_stubs.c
+set(CLASH95_PRIVATE_INCLUDE_DIRS
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/platform
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/compatibility
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/instrumentation
 )
 
-add_library(clash95_bootstrap_objects OBJECT
+add_library(clash95_recovered_objects OBJECT
   clash95.c
-  runtime_mission_trace.c
-  platform_sdl_runtime.c
-  compat/decomp_runtime_stubs.c
+)
+
+add_library(clash95_platform_objects OBJECT
+  src/platform/platform_sdl_runtime.c
+)
+
+add_library(clash95_instrumentation_objects OBJECT
+  src/instrumentation/runtime_mission_trace.c
+)
+
+add_library(clash95_compatibility_objects OBJECT
+  src/compatibility/decomp_runtime_stubs.c
+)
+
+set(CLASH95_OBJECT_TARGETS
+  clash95_recovered_objects
+  clash95_platform_objects
+  clash95_instrumentation_objects
+  clash95_compatibility_objects
+)
+
+foreach(target IN LISTS CLASH95_OBJECT_TARGETS)
+  target_include_directories(${target} PRIVATE ${CLASH95_PRIVATE_INCLUDE_DIRS})
+  target_link_libraries(${target} PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads)
+  if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(${target} PRIVATE
+      -std=gnu89
+      -w
+      -ffunction-sections
+      -fdata-sections
+      -fno-pie
+    )
+  endif()
+endforeach()
+
+add_library(clash95_recovered STATIC
+  $<TARGET_OBJECTS:clash95_recovered_objects>
+  $<TARGET_OBJECTS:clash95_platform_objects>
+  $<TARGET_OBJECTS:clash95_instrumentation_objects>
+  $<TARGET_OBJECTS:clash95_compatibility_objects>
 )
 
 add_executable(clash95_bootstrap
-  bootstrap_main.c
-  $<TARGET_OBJECTS:clash95_bootstrap_objects>
+  src/bootstrap/bootstrap_main.c
+  $<TARGET_OBJECTS:clash95_recovered_objects>
+  $<TARGET_OBJECTS:clash95_platform_objects>
+  $<TARGET_OBJECTS:clash95_instrumentation_objects>
+  $<TARGET_OBJECTS:clash95_compatibility_objects>
 )
 
-target_include_directories(clash95_recovered
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-)
-
-target_include_directories(clash95_bootstrap_objects
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-)
-
-target_include_directories(clash95_bootstrap
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-)
+target_include_directories(clash95_bootstrap PRIVATE ${CLASH95_PRIVATE_INCLUDE_DIRS})
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-  target_compile_options(clash95_recovered PRIVATE -std=gnu89 -w)
-  target_compile_options(clash95_bootstrap_objects PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
-  target_compile_options(clash95_bootstrap PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
+  target_compile_options(clash95_bootstrap PRIVATE
+    -std=gnu89
+    -w
+    -ffunction-sections
+    -fdata-sections
+    -fno-pie
+  )
   target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
@@ -236,10 +265,10 @@ add_campaign_route_regression_test(04 3900)
 
 add_executable(runtime_mission_trace_tests
   tests/runtime_mission_trace_test.c
-  runtime_mission_trace.c
+  src/instrumentation/runtime_mission_trace.c
 )
 target_include_directories(runtime_mission_trace_tests PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/instrumentation
 )
 target_compile_definitions(runtime_mission_trace_tests PRIVATE
   RUNTIME_MISSION_TRACE_DISABLE_CONSTRUCTOR=1
@@ -274,19 +303,18 @@ option(CLASH95_COVERAGE "Build instrumented clash95 unit tests" OFF)
 if(CLASH95_COVERAGE)
   add_executable(clash95_unit_tests
     tests/unit/test_all.c
-    platform_sdl_runtime.c
-    compat/decomp_runtime_stubs.c
+    src/platform/platform_sdl_runtime.c
+    src/compatibility/decomp_runtime_stubs.c
   )
   target_include_directories(clash95_unit_tests PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
+    ${CLASH95_PRIVATE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit
   )
   target_compile_options(clash95_unit_tests PRIVATE
     -std=gnu89 -w -g -O0 --coverage -fprofile-abs-path
     -ffunction-sections -fdata-sections -fno-pie)
   target_link_options(clash95_unit_tests PRIVATE --coverage -Wl,--gc-sections -no-pie)
-  target_link_libraries(clash95_unit_tests PRIVATE PkgConfig::SDL2 X11::X11 m)
+  target_link_libraries(clash95_unit_tests PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads m)
   set_target_properties(clash95_unit_tests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
