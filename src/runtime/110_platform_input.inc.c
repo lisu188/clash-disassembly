@@ -283,7 +283,7 @@ HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2)
   v3 = 0x80000000;
   if ( *(_BYTE *)g_AppCommandLine && *(_BYTE *)(g_AppCommandLine + 1) == 119 )
     v3 = -2133917696;
-  result = CreateWindowExA(0, ClassName, WindowName, v3, 0, 0, 640, 480, 0, 0, a1, 0);
+  result = CreateWindowExA(0, ClassName, WindowName, v3, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, a1, 0);
   hWnd = result;
   if ( result )
   {
@@ -593,7 +593,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         Render_Pump();
         Diagnostics_TraceWorldMapActionEvent("transition_after_render_pump", g_SelectedUnitIndex, 0, 0, 0);
         LOBYTE(v9) = 0;
-        Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+        Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_backbuffer_fill", g_SelectedUnitIndex, 0, 0, 0);
         Video_EnterGreyscaleTransition((int *)&g_MainRenderDevice, v10, 0, a5);
         Diagnostics_TraceWorldMapActionEvent("transition_after_gray_palette", g_SelectedUnitIndex, 0, 0, 0);
@@ -788,12 +788,12 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
   if ( Surface )
   {
     LOBYTE(a2) = -32;
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   }
   v43 = Surface;
   v8 = Mem_Alloc(188, v7, (char)a2, (DWORD)savedregs);
   if ( v8 )
-    v8 = (int)Render_CreateSurface(v8, 640, 480);
+    v8 = (int)Render_CreateSurface(v8, SCREEN_WIDTH, SCREEN_HEIGHT);
   RenderSurface_InvokeSlot56((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   RenderSurface_InvokeSlot56(v43);
   v10 = v8;

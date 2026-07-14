@@ -9,7 +9,7 @@ __int16 Render_LoadResourceBackbuffer()
   g_ActiveBlitCursor = (int)g_NullBlitCursor_Vtable;
   Surface_ConstructBackbufferInstance((int)&g_MainRenderDevice);
   CRT_RegisterFinalizableObject((int)&g_RenderBackbufferScanlineBuffer, 640);
-  Render_ConstructSurfaceObject((int)&g_RenderDeviceStorage, 640, 480);
+  Render_ConstructSurfaceObject((int)&g_RenderDeviceStorage, 640, SCREEN_HEIGHT);
   CRT_RegisterFinalizableObject((int)&g_RenderPaletteRemapBuffer, 256);
   _wcpp_4_ctor_array__((int)&g_DefaultPaletteTable, 256);
   g_Render_BackgroundColorIndex = 0;
@@ -227,7 +227,7 @@ _DWORD * Render_ConstructSurfaceObject(int a1, __int16 a2, __int16 a3)
 //----- (00401E30) --------------------------------------------------------
 int  Render_ClearGameScreen(_DWORD *a1)
 {
-  return Render_FillRect(a1, &g_MainRenderDevice, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  return Render_FillRect(a1, &g_MainRenderDevice, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
 }
 
 //----- (00401E60) --------------------------------------------------------
@@ -2993,10 +2993,10 @@ void * Video_EnterGreyscaleTransition(int *a1, int a2, char a3, DWORD a4)
   v25 = g_RenderDevice;
   Surface = (_DWORD *)Mem_Alloc(188, a2, a3, a4);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   v27 = Surface;
   g_RenderDevice = Surface;
-  Render_FillRect(a1, Surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect(a1, Surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   LoadPalPCX((int)g_PaletteScratchSurfaceBuffer, aPal_grey_pcx, 0);
   Palette_CrossfadeToTarget(a1, g_PaletteScratchSurfaceBuffer, 20);
   v7 = 0;
@@ -3090,10 +3090,10 @@ void * Video_ExitGreyscaleTransition(int *a1, unsigned __int8 *a2, int a3, char 
   v19 = g_RenderDevice;
   Surface = (_DWORD *)Mem_Alloc(188, a3, a4, a5);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   v7 = g_RenderDevice;
   v8 = Surface;
-  Render_FillRect(g_RenderDevice, Surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect(g_RenderDevice, Surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   for ( i = 0; i < 307200; ++i )
   {
     v10 = (_BYTE *)(i + v8[1]);
@@ -3109,7 +3109,7 @@ void * Video_ExitGreyscaleTransition(int *a1, unsigned __int8 *a2, int a3, char 
   }
   (void)v11;
   Palette_ApplyWithBrightnessOffset(a1, g_PaletteScratchSurfaceBuffer);
-  Render_FillRect(g_RenderDevice, v8, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect(g_RenderDevice, v8, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   for ( k = 0; k < 307200; ++k )
   {
     v14 = (_BYTE *)(k + v8[1]);
@@ -3120,7 +3120,7 @@ void * Video_ExitGreyscaleTransition(int *a1, unsigned __int8 *a2, int a3, char 
   (void)v15;
   LoadPalPCX((int)g_PaletteScratchSurfaceBuffer, aPal_grey_pcx, 0);
   Palette_ApplyWithBrightnessOffset(a1, g_PaletteScratchSurfaceBuffer);
-  Render_FillRect(g_RenderDevice, v8, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect(g_RenderDevice, v8, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   (void)v8;
   Palette_CrossfadeToTarget(a1, a2, 20);
   if ( v8 )
@@ -3485,7 +3485,7 @@ _BYTE * RenderSurface_CopyFourByteFields(_BYTE *result, _BYTE *a2)
 //----- (00405900) --------------------------------------------------------
 _DWORD * RenderSurface_ConstructFullScreenBuffer(int a1)
 {
-  return Render_ConstructSurfaceObject(a1, 640, 480);
+  return Render_ConstructSurfaceObject(a1, 640, SCREEN_HEIGHT);
 }
 
 //----- (00405920) --------------------------------------------------------

@@ -8480,9 +8480,9 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD gameContext)
   popupHeight = v8;
   Surface = (_DWORD *)Mem_Alloc(188, v7, a4, gameContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, popupHeight);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, popupHeight);
   surface = (int)Surface;
-  Render_FillRect(0, Surface, 150, 0, 0x27Fu, popupHeight + 149, 0, 0);
+  Render_FillRect(0, Surface, 150, 0, SCREEN_MAX_X, popupHeight + 149, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 22);
   v22 = *((_DWORD *)g_RenderDevice + 46);
@@ -8540,7 +8540,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD gameContext)
     Audio_PlayArtifactSound(v16);
   }
   Render_Pump();
-  Render_FillRect((_DWORD *)surface, 0, 0, 0, 0x27Fu, popupHeight - 1, 0, 0x96u);
+  Render_FillRect((_DWORD *)surface, 0, 0, 0, SCREEN_MAX_X, popupHeight - 1, 0, 0x96u);
   Render_Present((int)g_RenderState);
   if ( surface )
     (**(void (***)(void))(surface + 184))();

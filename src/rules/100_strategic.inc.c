@@ -977,7 +977,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   _DWORD *v9; // [esp+0h] [ebp-1Ch]
 
   LOBYTE(v1) = 0;
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   v3 = Mem_Alloc(1024, v2, 0, a1);
   if ( v3 )
@@ -988,7 +988,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   v5 = (unsigned __int8 *)v3;
   Surface = (_DWORD *)Mem_Alloc(188, v4, (char)v1, a1);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   v7 = Surface;
   v9 = Surface;
   (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
@@ -999,7 +999,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
     DD_Pump((int)g_RenderState, 20);
   Render_Begin((int)g_RenderState, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
   if ( v9 )
     (*(void (**)(void))v9[46])();

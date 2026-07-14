@@ -2396,7 +2396,7 @@ void *Castle_ShowNewBuildingMenu()
   }
   while ( v3 <= 5 );
   Render_Pump();
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 300, 0x27Fu, 0x12Cu, 0x12Cu, 0);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 300, SCREEN_MAX_X, 0x12Cu, 0x12Cu, 0);
   Render_Present((int)g_RenderState);
   g_WorldMapTargetSurface = g_PrimaryRenderSurface;
   v12 = (void (*)(void))UI_RunMenu(g_CastleNewBuildingMenu, v11);
@@ -4779,7 +4779,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Render_Pump();
   Surface = (_DWORD *)Mem_Alloc(188, v17, a2, a1);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   v19 = BUILDING_RECORD_SIZE * a1;
   g_CastleScreenSurface = (int)Surface;
   Castle_RebuildSceneBuffers((int)g_CastleScreenPaletteBuffer, v19);
@@ -4916,7 +4916,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       if ( v38 )
       {
         LOBYTE(v22) = -32;
-        v38 = Render_CreateSurface((int)v38, 640, 480);
+        v38 = Render_CreateSurface((int)v38, SCREEN_WIDTH, SCREEN_HEIGHT);
       }
       g_CastleScreenSurface = (int)v38;
       Castle_RebuildSceneBuffers(v39, v19);

@@ -2653,7 +2653,7 @@ int UnitBattle_RedrawVisibleGrid()
   if ( g_MouseCursorRawX >> g_CursorCoordShift >= 480 || cursorRight <= 32 )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_grid_before_full_restore", cursorX, cursorY, cursorRight, cursorBottom);
-    return Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 32, 0x1DFu, 0x1CFu, 0x20u, 0x10u);
+    return Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 32, SCREEN_MAX_Y, 0x1CFu, 0x20u, 0x10u);
   }
   overlayPresented = g_CursorOverlayPresented;
   if ( g_MouseCursorRawX >> g_CursorCoordShift < 32 )
@@ -2681,7 +2681,7 @@ int UnitBattle_RedrawVisibleGrid()
       Render_Pump();
   }
   Diagnostics_TraceWorldMapActionEvent("battle_grid_before_restore_top", cursorX, cursorY, cursorRight, cursorBottom);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 32, 0x1DFu, cursorY, 0x20u, 0x10u);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 32, SCREEN_MAX_Y, cursorY, 0x20u, 0x10u);
   Diagnostics_TraceWorldMapActionEvent("battle_grid_after_restore_top", cursorX, cursorY, cursorRight, cursorBottom);
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)cursorY, 32, cursorX, cursorBottom, 0x20u, cursorY);
   Diagnostics_TraceWorldMapActionEvent("battle_grid_after_restore_left", cursorX, cursorY, cursorRight, cursorBottom);
@@ -2703,13 +2703,13 @@ int UnitBattle_RedrawVisibleGrid()
   if ( cursorRight != 479 )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_grid_before_restore_right", cursorX, cursorY, cursorRight, cursorBottom);
-    result = Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)cursorY, (unsigned __int16)cursorRight, 0x1DFu, cursorBottom, cursorRight, cursorY);
+    result = Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)cursorY, (unsigned __int16)cursorRight, SCREEN_MAX_Y, cursorBottom, cursorRight, cursorY);
     Diagnostics_TraceWorldMapActionEvent("battle_grid_after_restore_right", cursorX, cursorY, cursorRight, cursorBottom);
   }
   if ( cursorBottom != 463 )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_grid_before_restore_bottom", cursorX, cursorY, cursorRight, cursorBottom);
-    if ( Compat_RenderSurfaceCopyRect((_DWORD *)g_PrimaryRenderSurface, 0, 32, (unsigned __int16)cursorBottom, 0x1DFu, 0x1CFu, 0x20u, cursorBottom) )
+    if ( Compat_RenderSurfaceCopyRect((_DWORD *)g_PrimaryRenderSurface, 0, 32, (unsigned __int16)cursorBottom, SCREEN_MAX_Y, 0x1CFu, 0x20u, cursorBottom) )
     {
       Diagnostics_TraceWorldMapActionEvent("battle_grid_after_restore_bottom", cursorX, cursorY, cursorRight, cursorBottom);
       return result;

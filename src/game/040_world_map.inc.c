@@ -1941,14 +1941,14 @@ int  WorldMap_RenderPlayerTurnIntroScreen(char a1, DWORD a2)
   // so the next map palette fade does not present stale banner pixels.
   saved_primary_surface = (_DWORD *)Mem_Alloc(188, 0, a1, a2);
   if ( saved_primary_surface )
-    saved_primary_surface = Render_CreateSurface((int)saved_primary_surface, 640, 480);
+    saved_primary_surface = Render_CreateSurface((int)saved_primary_surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   saved_map_surface = (_DWORD *)Mem_Alloc(188, 0, a1, a2);
   if ( saved_map_surface )
-    saved_map_surface = Render_CreateSurface((int)saved_map_surface, 640, 480);
+    saved_map_surface = Render_CreateSurface((int)saved_map_surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   if ( saved_primary_surface )
-    Render_FillRect(0, saved_primary_surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+    Render_FillRect(0, saved_primary_surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   if ( saved_map_surface )
-    Render_FillRect((_DWORD *)g_PrimaryRenderSurface, saved_map_surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+    Render_FillRect((_DWORD *)g_PrimaryRenderSurface, saved_map_surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   drawBufferRaw = Mem_Alloc(1024, 0, a1, a2);
   if ( drawBufferRaw )
@@ -1991,9 +1991,9 @@ int  WorldMap_RenderPlayerTurnIntroScreen(char a1, DWORD a2)
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   UI_EndDraw(6);
   if ( saved_map_surface )
-    Render_FillRect(saved_map_surface, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+    Render_FillRect(saved_map_surface, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   if ( saved_primary_surface )
-    Render_FillRect(saved_primary_surface, (_DWORD *)&g_MainRenderDevice, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
+    Render_FillRect(saved_primary_surface, (_DWORD *)&g_MainRenderDevice, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   if ( saved_map_surface )
     RenderSurface_InvokeSlot0(saved_map_surface, 2);
   if ( saved_primary_surface )
@@ -2317,7 +2317,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   {
     Surface = (_DWORD *)Mem_Alloc(188, 0, 0, 0);
     if ( Surface )
-      Surface = Render_CreateSurface((int)Surface, 640, 480);
+      Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
     g_PrimaryRenderSurface = (int)Surface;
   }
   mapPalette = Mem_Alloc(1024, 0, 0, 0);
@@ -4869,11 +4869,11 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   Render_Pump();
   previous_screen_handle = g_ActiveCursorDescriptorPtr;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
+  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
   Render_Present((int)g_RenderState);
   surface = (_DWORD *)Mem_Alloc(188, 0, 0, a2);
   if ( surface )
-    surface = Render_CreateSurface((int)surface, 640, 400);
+    surface = Render_CreateSurface((int)surface, SCREEN_WIDTH, 400);
   g_WorldMapTargetSurface = (int)surface;
   g_RenderDevice = surface;
   RenderSurface_InvokeSlot56(surface);
@@ -4936,7 +4936,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   if ( surface )
     RenderSurface_InvokeSlot0(surface, 2);
   Render_Pump();
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
   RenderState_SelectCursorDescriptor((int)g_RenderState, previous_screen_handle);
   Render_Present((int)g_RenderState);
   previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);

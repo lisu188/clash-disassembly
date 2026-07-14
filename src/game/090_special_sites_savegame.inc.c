@@ -2496,9 +2496,9 @@ int  UI_ShowInfoWindow(
     SpriteWidth = v15;
     v16 = (_DWORD *)Mem_Alloc(188, 0, 0, 0x280u);
     if ( v16 )
-      v16 = Render_CreateSurface((int)v16, 640, SpriteWidth);
+      v16 = Render_CreateSurface((int)v16, SCREEN_WIDTH, SpriteWidth);
     backdropSurface = v16;
-    Render_FillRect(0, v16, 150, 0, 0x27Fu, SpriteWidth + 149, 0, 0);
+    Render_FillRect(0, v16, 150, 0, SCREEN_MAX_X, SpriteWidth + 149, 0, 0);
     g_RenderDevice = &g_MainRenderDevice;
     v17 = DLX_GetSpriteForChar((int)scrollSpriteSet, 22);
     Compat_RenderDeviceDrawMenuSprite(150, 0, v17, 1);
@@ -2728,9 +2728,9 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
   panelWidth = v15;
   Surface = (_DWORD *)Mem_Alloc(188, v14, a3, a4);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, panelWidth);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, panelWidth);
   backdropSurface = (DWORD)Surface;
-  Render_FillRect(0, Surface, (unsigned __int16)panelLeft, 0, 0x27Fu, panelWidth + panelLeft - 1, 0, 0);
+  Render_FillRect(0, Surface, (unsigned __int16)panelLeft, 0, SCREEN_MAX_X, panelWidth + panelLeft - 1, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)v42, 22);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -2838,7 +2838,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
   Debug_Log(v36, (char)g_RenderHook, backdropSurface, (int)aUnsetrh08x_11);
   g_RenderHook = v44;
   Render_SetResourceHandle((int)&g_MainRenderDevice, v45);
-  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, 0x27Fu, panelWidth - 1, 0, panelLeft);
+  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, SCREEN_MAX_X, panelWidth - 1, 0, panelLeft);
   Render_Present((int)g_RenderState);
   if ( backdropSurface )
     (**(void (__cdecl ***)(int, int, int, int, int, int))(backdropSurface + 184))(buildingCompleteAltText[0], buildingCompleteAltText[1], buildingCompleteAltText[2], buildingCompleteText[0], buildingCompleteText[1], buildingCompleteText[2]);
@@ -2924,12 +2924,12 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   if ( Surface )
   {
     SpriteWidth = DLX_GetSpriteWidth((int)textSpriteSet, 0);
-    Surface = Render_CreateSurface(v10, 640, SpriteWidth);
+    Surface = Render_CreateSurface(v10, SCREEN_WIDTH, SpriteWidth);
   }
   v11 = Surface;
   v12 = Surface;
   v13 = DLX_GetSpriteWidth((int)textSpriteSet, 0);
-  Render_FillRect(0, v11, 0, 0, 0x27Fu, v13 - 1, 0, 0);
+  Render_FillRect(0, v11, 0, 0, SCREEN_MAX_X, v13 - 1, 0, 0);
   DLXSpriteSet_DrawText((int)textSpriteSet, 0, (int)&g_RenderEnvPaletteContext, (unsigned __int8 *)g_MapPalettePtr);
   v27 = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
@@ -2960,7 +2960,7 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   g_RenderHook = previousRenderHook;
   Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
   v22 = DLX_GetSpriteWidth((int)textSpriteSet, 0);
-  Render_FillRect(v12, 0, 0, 0, 0x27Fu, v22 - 1, 0, 0);
+  Render_FillRect(v12, 0, 0, 0, SCREEN_MAX_X, v22 - 1, 0, 0);
   return DLXSpriteSet_ReleaseAndClear((int *)&textSpriteSet);
 }
 // 446278: variable 'v3' is possibly undefined
@@ -4223,7 +4223,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   if ( Surface )
   {
     LOBYTE(a2) = -32;
-    Surface = Render_CreateSurface((int)Surface, 640, 480);
+    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   }
   g_PrimaryRenderSurface = (int)Surface;
   UI_StartAnims(0, a2, (DWORD)a3);

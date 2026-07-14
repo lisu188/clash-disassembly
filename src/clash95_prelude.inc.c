@@ -96,6 +96,14 @@
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE 2
 #define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
+/* Fixed 640x480 display surface. SCREEN_WIDTH/HEIGHT from CreateWindowExA
+ * (110_platform_input.inc.c:286) and g_Device_DefaultWindowRect {0,0,640,480};
+ * SCREEN_MAX_X/Y are the inclusive right/bottom edges (width-1/height-1) passed
+ * to Render_FillRect/blit as x1,y1 (e.g. 040_world_map.inc.c:1949). */
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+#define SCREEN_MAX_X 0x27F
+#define SCREEN_MAX_Y 0x1DF
 #define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)g_PortSpawnRingOffsetsTable)
 #define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
 #define unit_stats g_UnitTypeCorpseSpriteBaseIndex
@@ -11723,7 +11731,7 @@ char *g_UI_CdMissingMessageByLanguage[3] =
   "Clash CD not found!",
   "Clash CD nicht gefunden"
 }; // weak
-_DWORD g_Device_DefaultWindowRect[4] = { 0, 0, 640, 480 }; // idb
+_DWORD g_Device_DefaultWindowRect[4] = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT }; // idb
 int g_Palette_ActivePalettePtr = 268572261; // weak
 int g_Palette_BlendRatio = 34894308; // weak
 char g_Palette_ColorCubeBits = '\x05'; // weak

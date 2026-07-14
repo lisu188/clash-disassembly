@@ -1,5 +1,40 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign B5: screen dimensions
+
+Mints the 640x480 display-surface constants (none existed) and applies them at
+73 sites, regex-scoped so partial-height coordinates are untouched.
+
+| Constant | Value | Sites |
+|---|---|---|
+| `SCREEN_WIDTH` | `640` | 18 |
+| `SCREEN_HEIGHT` | `480` | 15 |
+| `SCREEN_MAX_X` | `0x27F` (639) | 23 |
+| `SCREEN_MAX_Y` | `0x1DF` (479) | 17 |
+
+Confidence **behavior-confirmed**: `CreateWindowExA(...,640,480,...)`
+(`src/runtime/110_platform_input.inc.c:286`) and
+`g_Device_DefaultWindowRect{0,0,640,480}` fix the window size;
+`Render_FillRect(...,0x27Fu,0x1DFu,...)` full-screen fills
+(`src/game/040_world_map.inc.c:1949`) fix the inclusive edges 639/479 =
+width-1/height-1. All 22+16 `0x27F`/`0x1DF` occurrences are rect/blit
+coordinate args (none are masks). `SCREEN_WIDTH` scoped to
+`Render_CreateSurface` first-arg / `CreateWindowExA` / the default rect;
+`SCREEN_HEIGHT` scoped to the `640, 480` adjacency (so the `640, 400` surface
+at `040_world_map.inc.c:4876` correctly keeps its raw 400).
+
+Proof: guard pins all four (build passes); `pp_token_diff --allow` confirms the
+only changes are the 38 declared suffixed-hex respellings (`0x27Fu`->`0x27F`,
+`0x1DFu`->`0x1DF`); the `640`/`480`/bare-`0x27F` sites are token-identical.
+Rules: `docs/archive/literal_rules/B5_screen.json`.
+
+### Deferred / Ambiguous (B5)
+
+- Bare `320` (screen half-width) collides with the unit-stack `+320` offset all
+  over `rules/100_strategic.inc.c` and was left raw.
+- `480` occurring outside a `640, 480` pair (standalone y-coordinates) was not
+  swept; only the full-screen-surface adjacency is proven `SCREEN_HEIGHT`.
+
 ## 2026-07-14 - Magic-number campaign B1: castle add-on flag bits
 
 First workstream-B batch (minting NEW named constants for previously unnamed
