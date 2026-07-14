@@ -1636,9 +1636,9 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
           v11 = neighborStackIndex - 0x8000;
           if ( v11 <= 0x64 )
           {
-            v12 = 467 * v11;
+            v12 = BUILDING_RECORD_SIZE * v11;
             LOBYTE(neighborStackIndex) = gameData;
-            v13 = v12 + gameData + 509674;
+            v13 = v12 + gameData + BUILDING_TABLE_OFFSET;
             if ( (unsigned int)*(char *)(v13 + 4) < 4
               && *(__int16 *)(v13 + 16) != -1
               && *(_BYTE *)(gameData + v12 + 509676) != *((_BYTE *)stackRecord + 4) )
@@ -2564,17 +2564,17 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
       result = *(unsigned __int8 *)(result + 509676);
       if ( result == g_CurrentPlayerIndex )
       {
-        Diagnostics_TraceWorldMapActionEvent("plague_notice_match", buildingRecordOffset / 467, buildingRecordOffset, g_CurrentPlayerIndex, 0);
+        Diagnostics_TraceWorldMapActionEvent("plague_notice_match", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
         Win_PlayModeChangeFrameTransition(aZaraza, 1, buildingRecordOffset, (char)a2, a3);
-        Diagnostics_TraceWorldMapActionEvent("plague_notice_after_transition", buildingRecordOffset / 467, buildingRecordOffset, g_CurrentPlayerIndex, 0);
+        Diagnostics_TraceWorldMapActionEvent("plague_notice_after_transition", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
         a2 = (const char *)noticeTextTable[(unsigned __int8)g_LanguageIndex];
-        sprintf_(messageBuffer, a2, gameData + buildingRecordOffset + 509674 + 5);
-        Diagnostics_TraceWorldMapActionEvent("plague_notice_before_info_window", buildingRecordOffset / 467, buildingRecordOffset, g_CurrentPlayerIndex, 0);
+        sprintf_(messageBuffer, a2, gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET + 5);
+        Diagnostics_TraceWorldMapActionEvent("plague_notice_before_info_window", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
         result = UI_ShowInfoWindow((const char *)messageBuffer, 0, 0, a3, (int)&noticeTextTable[3], (int)&g_PlagueOutbreakNoticeFmtText[3]);
-        Diagnostics_TraceWorldMapActionEvent("plague_notice_after_info_window", buildingRecordOffset / 467, buildingRecordOffset, g_CurrentPlayerIndex, result);
+        Diagnostics_TraceWorldMapActionEvent("plague_notice_after_info_window", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, result);
       }
     }
-    buildingRecordOffset += 467;
+    buildingRecordOffset += BUILDING_RECORD_SIZE;
   }
   while ( buildingRecordOffset != 46700 );
   return result;
@@ -5944,26 +5944,26 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   Unit_Create(UNIT_TYPE_RAM, 0, 5, 0, 5);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
   Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
-  *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674, v3);
-  *(_DWORD *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510112) = 1000;
+  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + BUILDING_TABLE_OFFSET, v3);
+  *(_DWORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510112) = 1000;
   v4 = gameData;
-  v5 = 467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000);
+  v5 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000);
   v6 = *(_BYTE *)(v5 + gameData + 510118) & 0xF8;
   *(_BYTE *)(v5 + gameData + 510118) = v6;
   *(_BYTE *)(v5 + v4 + 510118) = v6 | 2;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 2u;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 1u;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 8u;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 4u;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 0x10u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 2u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 1u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 8u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 4u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 0x10u;
   *(_DWORD *)(gameData + 140063) = 0;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510119) = 33;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510120) = 2;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510125) = 34;
-  *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510119) = 33;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510120) = 2;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510125) = 34;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
+    (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + BUILDING_TABLE_OFFSET));
   Unit_Create(UNIT_TYPE_BUILDER, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
   Unit_Create(UNIT_TYPE_ARCHER, 0, 7, 0, 7);
@@ -5997,10 +5997,10 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v17, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
-  *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674, this);
+  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + BUILDING_TABLE_OFFSET, this);
   result = Building_LogBuiltCastleFacts(
-             (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674));
+             (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + BUILDING_TABLE_OFFSET));
   g_CurrentPlayerIndex = v19;
   return result;
 }
@@ -6044,18 +6044,18 @@ signed int Game_InitPlayerViewState()
       castleRecordOffset = 0;
       while ( *(unsigned __int8 *)(gameData + castleRecordOffset + 509676) != playerIndex )
       {
-        castleRecordOffset += 467;
+        castleRecordOffset += BUILDING_RECORD_SIZE;
         ++castleIndex;
         if ( castleRecordOffset >= 46700 )
           goto LABEL_13;
       }
-      PLAYER_CAMERA_LEFT(playerIndex) = *(unsigned __int8 *)(gameData + castleRecordOffset + 509674) - 4;
+      PLAYER_CAMERA_LEFT(playerIndex) = *(unsigned __int8 *)(gameData + castleRecordOffset + BUILDING_TABLE_OFFSET) - 4;
       if ( PLAYER_CAMERA_LEFT(playerIndex) < 0 )
         PLAYER_CAMERA_LEFT(playerIndex) = 0;
       v4 = MAP_WIDTH_TILES - 9;
       if ( v4 < PLAYER_CAMERA_LEFT(playerIndex) )
         PLAYER_CAMERA_LEFT(playerIndex) = v4;
-      PLAYER_CAMERA_TOP(playerIndex) = *(unsigned __int8 *)(467 * castleIndex + gameData + 509675) - 3;
+      PLAYER_CAMERA_TOP(playerIndex) = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * castleIndex + gameData + 509675) - 3;
       if ( PLAYER_CAMERA_TOP(playerIndex) < 0 )
         PLAYER_CAMERA_TOP(playerIndex) = 0;
       v5 = MAP_HEIGHT_TILES - 7;
@@ -6234,7 +6234,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
                (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374) + gameData + UNIT_STACK_TABLE_OFFSET),
                0,
                0,
-               (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + 509674),
+               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + BUILDING_TABLE_OFFSET),
                a2,
                0);
     case 8:
@@ -6247,7 +6247,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
                (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374)),
                0,
                0,
-               (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + 509674),
+               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + BUILDING_TABLE_OFFSET),
                a2,
                0);
     case 9:
@@ -6369,17 +6369,17 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
           startRowPlus1,
           v4);
         Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(v42 + gameData + startColumnDoubled + 556374), v4, aCantbelly, 1);
-        *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509690) = 0;
-        v12 = 467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000);
+        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509690) = 0;
+        v12 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000);
         *(_DWORD *)(v12 + gameData + 510112) += 50;
         Unit_UpdatePerTurn(
-          467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509674,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + BUILDING_TABLE_OFFSET,
           v13);
         v14 = v38;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000)
+          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000)
                             + gameData
-                            + 509674));
+                            + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v14);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, v38);
         Unit_Create(UNIT_TYPE_ARCHER, playerIndex, v39, 0, v38);
@@ -6504,17 +6504,17 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
           startRowPlus1,
           v4);
         Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(startColumnDoubled + v42 + gameData + 556374), v4, aCantbelly_0, 1);
-        *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509690) = 0;
-        v18 = 467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000);
+        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509690) = 0;
+        v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000);
         *(_DWORD *)(v18 + gameData + 510112) += 100;
         Unit_UpdatePerTurn(
-          467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + 509674,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000) + gameData + BUILDING_TABLE_OFFSET,
           v19);
         v20 = v38;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000)
+          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + 556374) - 0x8000)
                             + gameData
-                            + 509674));
+                            + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v20);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, v38);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, v39, 0, v38);
@@ -7219,9 +7219,9 @@ int  Prisoner_FindRichestHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlaye
   {
     if ( *(_BYTE *)(castleRecordOffset + gameData + 509678) == 2
       && *(unsigned __int8 *)(castleRecordOffset + gameData + 509676) == enemyPlayerIndex
-      && !Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + 509674), viewerPlayerIndex) )
+      && !Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
     {
-      castleValue = Building_GetTotalValue(castleRecordOffset + gameData + 509674);
+      castleValue = Building_GetTotalValue(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET);
       if ( castleValue > bestValue )
       {
         bestValue = castleValue;
@@ -7248,13 +7248,13 @@ int  Prisoner_FindAnyHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlayerInd
   castleRecordOffset = 0;
   while ( *(_BYTE *)(gameData + castleRecordOffset + 509678) != 2
        || *(unsigned __int8 *)(gameData + castleRecordOffset + 509676) != enemyPlayerIndex
-       || Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + 509674), viewerPlayerIndex) )
+       || Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
   {
     castleRecordOffset += 467;
     if ( castleRecordOffset >= 46700 )
       return 0;
   }
-  return castleRecordOffset + gameData + 509674;
+  return castleRecordOffset + gameData + BUILDING_TABLE_OFFSET;
 }
 // 44EDF0: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;

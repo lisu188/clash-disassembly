@@ -1,5 +1,19 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A1-2: building table literals
+
+Same gated workstream-A substitution as A1-1, proven value-identical by the
+preprocessed-token-identity gate (1,135,130 tokens, 0 hunks).
+
+| Old | New | Kind | Subsystem | Confidence | Evidence | Sources |
+|---|---|---|---|---|---|---|
+| `467` | `BUILDING_RECORD_SIZE` | stride | buildings | repo-confirmed | Backs the prelude `BUILDING_RECORD(index)` accessor; building region `509674..556374 = 100*467` per `docs/SAVE_DAT_FORMAT.md`; 152 sites in multiplicative / `gameData`-anchored arithmetic | prelude, SAVE_DAT_FORMAT.md, token-identity gate |
+| `509674` | `BUILDING_TABLE_OFFSET` | offset | buildings | repo-confirmed | Building table base `gameData + 509674` per `docs/SAVE_DAT_FORMAT.md`; backs `BUILDING_RECORD(index)`; 65 sites in `gameData`-anchored additive expressions | prelude, SAVE_DAT_FORMAT.md, token-identity gate |
+
+217 sites across game/040,050,060,080,090 and rules/100. 35 sites deferred
+(`bare` equality/case, `increment_rhs` without function co-occurrence).
+Rules: `docs/archive/literal_rules/A1-2_buildings.json`.
+
 ## 2026-07-14 - Magic-number campaign A1-1: unit-stack table literals
 
 Replaced raw numeric literals with their existing prelude constant names at

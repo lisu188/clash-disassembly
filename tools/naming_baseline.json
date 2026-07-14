@@ -480,7 +480,7 @@
   },
   "file_count": 27,
   "magic_literals": {
-   "total_eligible": 1026,
+   "total_eligible": 809,
    "total_review": 58423,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
@@ -535,12 +535,12 @@
     },
     "BUILDING_RECORD_SIZE": {
      "value": 467,
-     "eligible": 169,
+     "eligible": 17,
      "review": 15
     },
     "BUILDING_TABLE_OFFSET": {
      "value": 509674,
-     "eligible": 65,
+     "eligible": 0,
      "review": 3
     },
     "BUILDING_TRANSFER_TARGET_LIST_CAPACITY": {

@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "name",
+    "value": 467,
+    "name": "BUILDING_RECORD_SIZE",
+    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored", "increment_rhs"],
+    "confidence": "repo-confirmed",
+    "evidence": "Prelude BUILDING_RECORD_SIZE=467 backs the BUILDING_RECORD(index) accessor (src/clash95_prelude.inc.c); building table region 509674..556374 = 100*467 per docs/SAVE_DAT_FORMAT.md; substitution class-gated to multiplicative/gameData-anchored address arithmetic; value identity proven by tools/pp_token_gate.sh.",
+    "area": "buildings"
+  },
+  {
+    "kind": "name",
+    "value": 509674,
+    "name": "BUILDING_TABLE_OFFSET",
+    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored", "increment_rhs"],
+    "confidence": "repo-confirmed",
+    "evidence": "Prelude BUILDING_TABLE_OFFSET=509674 backs the BUILDING_RECORD(index) accessor; building table base gameData+509674 per docs/SAVE_DAT_FORMAT.md region map (buildings 509674, 100x467); substitution gated to gameData-anchored additive expressions; token-identity gate proves value-identical.",
+    "area": "buildings"
+  }
+]

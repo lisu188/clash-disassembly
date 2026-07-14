@@ -14,8 +14,8 @@ LABEL_2:
   v3 = UNIT_RECORD(v2);
   if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
   {
-    v4 = *(char *)(gameData + 467 * v2 + 509678);
-    if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(gameData + 467 * v2 + 509676) == a1 )
+    v4 = *(char *)(gameData + BUILDING_RECORD_SIZE * v2 + 509678);
+    if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v2 + 509676) == a1 )
       return UNIT_RECORD(v2);
   }
   while ( ++v2 < 100 )
@@ -151,12 +151,12 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               v26 = Unit_FindById(g_CurrentPlayerIndex);
               if ( v26 != -1 )
               {
-                v27 = 467 * v26;
+                v27 = BUILDING_RECORD_SIZE * v26;
                 *(_DWORD *)(gameData + v27 + 510112) = 0;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleTreasuryTheftTexts[(unsigned __int8)g_LanguageIndex],
-                  gameData + 509674 + v27 + 5);
+                  gameData + BUILDING_TABLE_OFFSET + v27 + 5);
               }
               break;
             case 2u:
@@ -164,15 +164,15 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               v30 = Unit_FindById(g_CurrentPlayerIndex);
               if ( v30 != -1 )
               {
-                v31 = 467 * v30;
-                v32 = gameData + 467 * v30;
+                v31 = BUILDING_RECORD_SIZE * v30;
+                v32 = gameData + BUILDING_RECORD_SIZE * v30;
                 v33 = *(_BYTE *)(v32 + 510109) & 0xF8;
                 *(_BYTE *)(v32 + 510109) = v33;
                 *(_BYTE *)(v32 + 510109) = v33 | 5;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleWellPoisoningTexts[(unsigned __int8)g_LanguageIndex],
-                  v31 + gameData + 509674 + 5);
+                  v31 + gameData + BUILDING_TABLE_OFFSET + 5);
               }
               break;
             case 3u:
@@ -321,7 +321,7 @@ LABEL_2:
   v6 = UNIT_RECORD(v5);
   if ( (unsigned int)*(char *)(v6 + 4) < 4
     && *(__int16 *)(v6 + 16) != -1
-    && *(unsigned __int8 *)(gameData + 467 * v5 + 509676) == a1 )
+    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v5 + 509676) == a1 )
   {
     Building_Destroy(UNIT_RECORD(v5), a1, a3, a4);
   }
@@ -385,7 +385,7 @@ LABEL_2:
   v6 = UNIT_RECORD(result);
   if ( (unsigned int)*(char *)(v6 + 4) >= 4
     || *(__int16 *)(v6 + 16) == -1
-    || (v7 = gameData + 467 * result, !*(_BYTE *)(v7 + 509678))
+    || (v7 = gameData + BUILDING_RECORD_SIZE * result, !*(_BYTE *)(v7 + 509678))
     || *(unsigned __int8 *)(v7 + 509676) != v4 )
   {
     while ( ++result < 100 )
@@ -482,9 +482,9 @@ LABEL_9:
   v7 = UNIT_RECORD(v6);
   if ( (unsigned int)*(char *)(v7 + 4) < 4
     && *(__int16 *)(v7 + 16) != -1
-    && (*(_BYTE *)(gameData + 467 * v6 + 509678) || Building_CountGarrison(UNIT_RECORD(v6))) )
+    && (*(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v6 + 509678) || Building_CountGarrison(UNIT_RECORD(v6))) )
   {
-    v4 = *(unsigned __int8 *)(gameData + 467 * v6 + 509676);
+    v4 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v6 + 509676);
     if ( v4 == a1 )
       return a1 ^ v4;
   }
@@ -884,7 +884,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
   {
     if ( v3 > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v3 + 147180) > 0x28 )
     {
-      Building_Destroy(467 * (v3 - 0x8000) + gameData + 509674, gameData, a1, a2);
+      Building_Destroy(BUILDING_RECORD_SIZE * (v3 - 0x8000) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
     }
     else
@@ -1033,7 +1033,7 @@ void Cheat_SetFactionColorAndCastleFlags()
     v1 = UNIT_RECORD(v0);
     if ( (unsigned int)*(char *)(v1 + 4) < 4 && *(__int16 *)(v1 + 16) != -1 )
     {
-      v2 = gameData + 467 * v0;
+      v2 = gameData + BUILDING_RECORD_SIZE * v0;
       if ( *(unsigned __int8 *)(v2 + 509676) == g_CurrentPlayerIndex )
       {
         v3 = *(_BYTE *)(v2 + 510118) & 0xF8;
@@ -1260,7 +1260,7 @@ LABEL_2:
   v9 = UNIT_RECORD(v8);
   if ( (unsigned int)*(char *)(v9 + 4) < 4 && *(__int16 *)(v9 + 16) != -1 )
   {
-    v10 = gameData + 467 * v8;
+    v10 = gameData + BUILDING_RECORD_SIZE * v8;
     if ( *(unsigned __int8 *)(v10 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v10 + 509678) == 2 )
       ++v7;
   }
@@ -1277,7 +1277,7 @@ LABEL_11:
   v15 = UNIT_RECORD(v14);
   if ( (unsigned int)*(char *)(v15 + 4) < 4 && *(__int16 *)(v15 + 16) != -1 )
   {
-    v16 = gameData + 467 * v14;
+    v16 = gameData + BUILDING_RECORD_SIZE * v14;
     if ( *(unsigned __int8 *)(v16 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v16 + 509678) == 1 )
       ++v13;
   }
@@ -2746,7 +2746,7 @@ BOOL  Building_TryStartUpgradeByIndex(int a1)
 //----- (00455470) --------------------------------------------------------
 int  Building_GetTaxRateByIndex(int a1)
 {
-  return *(_BYTE *)(gameData + 467 * a1 + 510110) & 0x3F;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510110) & 0x3F;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2767,14 +2767,14 @@ signed int  Building_BuildSmithsByIndex(char a1, DWORD a2)
 //----- (004554D0) --------------------------------------------------------
 int  Building_GetWallStrengthByIndex(int a1)
 {
-  return *(unsigned __int8 *)(gameData + 467 * a1 + 510095);
+  return *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a1 + 510095);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004554F0) --------------------------------------------------------
 int  Building_GetMoneyByIndex(int a1)
 {
-  return *(_DWORD *)(gameData + 467 * a1 + 510112);
+  return *(_DWORD *)(gameData + BUILDING_RECORD_SIZE * a1 + 510112);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2802,14 +2802,14 @@ signed int  Building_BuildHospitalByIndex(char a1, DWORD a2)
 //----- (00455580) --------------------------------------------------------
 int  Building_GetTechLevelByIndex(int a1)
 {
-  return *(_BYTE *)(gameData + 467 * a1 + 510118) & 7;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510118) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004555A0) --------------------------------------------------------
 int  Building_GetTypeByIndex(int a1)
 {
-  return *(char *)(gameData + 467 * a1 + 509678);
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 509678);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2823,7 +2823,7 @@ signed int  Building_BuildWorkshopByIndex(char a1, DWORD a2)
 //----- (004555E0) --------------------------------------------------------
 int  Building_GetSatisfactionByIndex(int a1)
 {
-  return *(char *)(gameData + 467 * a1 + 510108);
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 510108);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2832,7 +2832,7 @@ int  Building_GetPeasantCountByIndex(int a1)
 {
   int result; // eax
 
-  LOWORD(result) = *(_WORD *)(gameData + 467 * a1 + 510104);
+  LOWORD(result) = *(_WORD *)(gameData + BUILDING_RECORD_SIZE * a1 + 510104);
   BYTE1(result) &= 0xFu;
   return (unsigned __int16)result;
 }
@@ -2841,7 +2841,7 @@ int  Building_GetPeasantCountByIndex(int a1)
 //----- (00455620) --------------------------------------------------------
 BOOL  Building_HasProductionByIndex(int a1)
 {
-  return *(char *)(gameData + 467 * a1 + 510088) != -1;
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 510088) != -1;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2903,7 +2903,7 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
   char v6; // ah
   float v7; // [esp+0h] [ebp-10h]
 
-  v3 = (double)(*(_BYTE *)(467 * a1 + gameData + 510110) & 0x3F) + a3;
+  v3 = (double)(*(_BYTE *)(BUILDING_RECORD_SIZE * a1 + gameData + 510110) & 0x3F) + a3;
   v7 = v3;
   if ( v3 <= g_Building_MaxTaxRate )
   {
@@ -2928,7 +2928,7 @@ signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2)
 //----- (004557E0) --------------------------------------------------------
 BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
 {
-  return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + 509674, a3);
+  return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + BUILDING_TABLE_OFFSET, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2952,7 +2952,7 @@ signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2)
   int v4; // ebx
 
   result = 0;
-  v4 = 467 * a1;
+  v4 = BUILDING_RECORD_SIZE * a1;
   while ( *(char *)(v4 + gameData + result + 510076) != a2 )
   {
     if ( ++result >= 12 )
@@ -2970,7 +2970,7 @@ signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
   int v4; // edx
 
   result = 0;
-  v3 = 467 * a1;
+  v3 = BUILDING_RECORD_SIZE * a1;
   while ( 1 )
   {
     v4 = *(char *)(v3 + gameData + result + 510076);
@@ -3003,7 +3003,7 @@ signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3)
   for ( i = 0; i != 10; v13[i - 1] = -1 )
     ++i;
   v5 = 0;
-  v15 = 467 * v14;
+  v15 = BUILDING_RECORD_SIZE * v14;
   v6 = 0;
   v7 = 0;
   do
@@ -3024,7 +3024,7 @@ signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3)
   if ( v13[0] == -1 )
     return 0;
   if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(UNIT_RECORD(v14))) )
-    return Building_UnitsLeave((unsigned __int8 *)(v11 + gameData + 509674), v13, a3);
+    return Building_UnitsLeave((unsigned __int8 *)(v11 + gameData + BUILDING_TABLE_OFFSET), v13, a3);
   return -1;
 }
 // 4559BC: variable 'v11' is possibly undefined
@@ -3040,7 +3040,7 @@ signed int  Building_HasTrainableIdleGarrisonUnit(int a1)
 
   v2 = 0;
   v3 = 0;
-  v4 = 467 * a1;
+  v4 = BUILDING_RECORD_SIZE * a1;
   while ( 1 )
   {
     v5 = v4 + gameData + v2;
@@ -3069,7 +3069,7 @@ signed int  Building_HasRepairableIdleGarrisonUnit(int a1)
 
   v2 = 0;
   v3 = 0;
-  v4 = 467 * a1;
+  v4 = BUILDING_RECORD_SIZE * a1;
   while ( 1 )
   {
     v5 = v4 + gameData + v2;
@@ -3099,7 +3099,7 @@ int  Building_StartTrainingIdleGarrisonUnits(int a1)
 
   v1 = 0;
   v2 = 0;
-  v3 = 467 * a1;
+  v3 = BUILDING_RECORD_SIZE * a1;
   do
   {
     v4 = gameData + v3;
@@ -3114,7 +3114,7 @@ int  Building_StartTrainingIdleGarrisonUnits(int a1)
         {
           result = (unsigned __int8)(4 * *(_BYTE *)(result + 510064)) >> 5;
           if ( !result )
-            result = (int)Building_TrainUnit(v3 + gameData + 509674, v2, v3);
+            result = (int)Building_TrainUnit(v3 + gameData + BUILDING_TABLE_OFFSET, v2, v3);
         }
       }
     }
@@ -3140,7 +3140,7 @@ __int16  Building_StartRepairIdleGarrisonUnits(int a1)
 
   v1 = 0;
   v2 = 0;
-  v3 = 467 * a1;
+  v3 = BUILDING_RECORD_SIZE * a1;
   do
   {
     result = gameData;
@@ -3150,7 +3150,7 @@ __int16  Building_StartRepairIdleGarrisonUnits(int a1)
     {
       v7 = v1 + v3 + gameData;
       if ( (*(_BYTE *)(v7 + 510064) & 7) == 0 && !((unsigned __int8)(4 * *(_BYTE *)(v7 + 510064)) >> 5) )
-        result = Building_RepairUnit(v3 + gameData + 509674, v1, v6);
+        result = Building_RepairUnit(v3 + gameData + BUILDING_TABLE_OFFSET, v1, v6);
     }
     ++v1;
     v2 += 31;
@@ -3175,7 +3175,7 @@ signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a
     ++i;
   v7 = 0;
   v8 = 0;
-  while ( *(__int16 *)(467 * a1 + gameData + v8 + 509692) != a2 )
+  while ( *(__int16 *)(BUILDING_RECORD_SIZE * a1 + gameData + v8 + 509692) != a2 )
   {
     v8 += 31;
     ++v7;
@@ -3190,9 +3190,9 @@ signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a
   if ( v7 == -1 )
     return 0;
 LABEL_10:
-  v10 = 467 * a1;
-  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(v10 + gameData + 509674)) )
-    return Building_UnitsLeave((unsigned __int8 *)(v10 + gameData + 509674), v12, a4);
+  v10 = BUILDING_RECORD_SIZE * a1;
+  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(v10 + gameData + BUILDING_TABLE_OFFSET)) )
+    return Building_UnitsLeave((unsigned __int8 *)(v10 + gameData + BUILDING_TABLE_OFFSET), v12, a4);
   else
     return -1;
 }
@@ -3297,7 +3297,7 @@ BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2)
   int v2; // ecx
   int v3; // eax
 
-  v2 = 467 * a1 + gameData;
+  v2 = BUILDING_RECORD_SIZE * a1 + gameData;
   v3 = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(v2 + 509674);
   return v3 != -1 && *(char *)(v2 + v3 + 510076) == a2;
 }
@@ -3343,7 +3343,7 @@ signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2)
   int v2; // ebx
   int v3; // eax
 
-  v2 = 467 * a1;
+  v2 = BUILDING_RECORD_SIZE * a1;
   v3 = 0;
   while ( *(__int16 *)(v2 + gameData + v3 + 509692) != a2 )
   {
@@ -3417,7 +3417,7 @@ int  Building_CalcGarrisonFactStrength(int a1)
   int meleeStrength; // eax
   int damageStrength; // eax
 
-  buildingOffset = 467 * a1;
+  buildingOffset = BUILDING_RECORD_SIZE * a1;
   totalStrength = 0;
   for ( slotOffset = 0; slotOffset != 372; slotOffset += 31 )
   {
@@ -3447,8 +3447,8 @@ int  Building_OnGarrisonChange(int a1, int a2, double a3)
   int v11; // [esp+1Ch] [ebp-8h]
 
   v11 = a2;
-  v4 = 467 * a1;
-  result = 467 * a1 + gameData;
+  v4 = BUILDING_RECORD_SIZE * a1;
+  result = BUILDING_RECORD_SIZE * a1 + gameData;
   if ( *(_DWORD *)(result + 510137) )
   {
     v9[1] = 1;
@@ -3581,7 +3581,7 @@ BOOL  UnitStack_FindPathToNearestHospitalCastle(DWORD a1)
 
   v2 = -1;
   v3 = 0;
-  v11 = gameData + 509674;
+  v11 = gameData + BUILDING_TABLE_OFFSET;
 LABEL_2:
   v4 = UNIT_RECORD(v3);
   v5 = *(char *)(v4 + 4);
@@ -3646,8 +3646,8 @@ const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int a1, int a2, do
   const void *result; // eax
   int v7; // [esp+8h] [ebp-18h]
 
-  v4 = *(unsigned __int8 *)(gameData + 467 * a2 + 509674);
-  v5 = *(unsigned __int8 *)(gameData + 467 * a2 + 509675);
+  v4 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a2 + BUILDING_TABLE_OFFSET);
+  v5 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a2 + 509675);
   if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490)
     || (v7 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320), (int)abs32(v4 - (unsigned __int8)v7) >= 3)
     || (int)abs32(v5 - BYTE1(v7)) >= 3
@@ -3700,9 +3700,9 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
   int v13; // [esp+1Ch] [ebp-20h]
   int v14; // [esp+20h] [ebp-1Ch]
 
-  v1 = 467 * a1;
+  v1 = BUILDING_RECORD_SIZE * a1;
   v14 = 0;
-  v2 = *(unsigned __int8 *)(gameData + v1 + 509674);
+  v2 = *(unsigned __int8 *)(gameData + v1 + BUILDING_TABLE_OFFSET);
   v3 = *(unsigned __int8 *)(gameData + v1 + 509675);
   v12 = v1;
   v4 = v2 - 1;
@@ -3742,7 +3742,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
 //----- (00457DA0) --------------------------------------------------------
 int  Building_GetPlagueState(int a1)
 {
-  return *(_BYTE *)(gameData + 467 * a1 + 510109) & 7;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510109) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -4296,28 +4296,28 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
 
   v47 = a1;
   v46 = a2;
-  v5 = 467 * a2;
+  v5 = BUILDING_RECORD_SIZE * a2;
   Debug_Log(a1, a3, a4, (int)aPrzegrupujza_0);
-  v7 = *(unsigned __int8 *)(gameData + v5 + 509674) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v6 + UNIT_STACK_TABLE_OFFSET);
+  v7 = *(unsigned __int8 *)(gameData + v5 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v6 + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v7) ^ v7) - HIDWORD(v7)) > 1
     || (v8 = *(unsigned __int8 *)(v5 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v6 + gameData + 147176),
         (int)((HIDWORD(v8) ^ v8) - HIDWORD(v8)) > 1) )
   {
-    v9 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
+    v9 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v9) ^ v9) - HIDWORD(v9)) > 1
-      || (v34 = *(unsigned __int8 *)(gameData + 467 * v46 + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+      || (v34 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
           (int)((HIDWORD(v34) ^ v34) - HIDWORD(v34)) > 1) )
     {
-      v10 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+      v10 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v10) ^ v10) - HIDWORD(v10)) > 1
-        || (v35 = *(unsigned __int8 *)(467 * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+        || (v35 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
             (int)((HIDWORD(v35) ^ v35) - HIDWORD(v35)) > 1) )
       {
         v11 = UNIT_STACK_STRIDE * v47;
-        v12 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+        v12 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
         if ( (int)abs32(v12) > 1
           || (v11 = *(__int16 *)(v11 + gameData + 147176),
-              v36 = *(unsigned __int8 *)(467 * v46 + gameData + 509675) + 1 - v11,
+              v36 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - v11,
               (int)((HIDWORD(v36) ^ v36) - HIDWORD(v36)) > 1) )
         {
           v13 = (const void *)Building_GenerateNearApproachTrack(v47, v46, v6, v11, v12);
@@ -4330,25 +4330,25 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
       }
     }
   }
-  v15 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+  v15 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v15) ^ v15) - HIDWORD(v15)) > 1
-    || (v37 = *(unsigned __int8 *)(467 * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+    || (v37 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
         (int)((HIDWORD(v37) ^ v37) - HIDWORD(v37)) > 1) )
   {
-    v16 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
+    v16 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v16) ^ v16) - HIDWORD(v16)) > 1
-      || (v38 = *(unsigned __int8 *)(467 * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+      || (v38 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
           (int)((HIDWORD(v38) ^ v38) - HIDWORD(v38)) > 1) )
     {
-      v17 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+      v17 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v17) ^ v17) - HIDWORD(v17)) > 1
-        || (v39 = *(unsigned __int8 *)(gameData + 467 * v46 + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+        || (v39 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
             (int)((HIDWORD(v39) ^ v39) - HIDWORD(v39)) > 1) )
       {
-        v18 = *(unsigned __int8 *)(gameData + 467 * v46 + 509674) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+        v18 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
         if ( (int)((HIDWORD(v18) ^ v18) - HIDWORD(v18)) > 1 )
           return 0;
-        v19 = *(unsigned __int8 *)(467 * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176);
+        v19 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176);
         if ( (int)((HIDWORD(v19) ^ v19) - HIDWORD(v19)) > 1 )
           return 0;
       }
@@ -4578,7 +4578,7 @@ void  AI_EvaluateStrategicTargetAtTile(
     }
     if ( (a1 == -1 || v12 == a1)
       && (a2 == -1
-       || (v12 != 1 || *(unsigned __int8 *)(gameData + 467 * v11 + 509676) == a2)
+       || (v12 != 1 || *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v11 + 509676) == a2)
        && (v12 != 2 || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * v11 + 147178) == a2)) )
     {
       AI_CalcStrategicPriorityScore(v12, a4, a5, a3, a6);
@@ -4754,12 +4754,12 @@ int  createCastle(
   Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374), st7_0, a6, 1);
   Diagnostics_TraceBootstrapEvent("createCastle-post-building-new");
   unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374) - 0x8000;
-  *(_WORD *)(467 * unit_index + gameData + 509690) = 0;
+  *(_WORD *)(BUILDING_RECORD_SIZE * unit_index + gameData + 509690) = 0;
   Diagnostics_TraceBootstrapEvent("createCastle-update-per-turn");
-  Unit_UpdatePerTurn(467 * unit_index + gameData + 509674, 0);
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET, 0);
   Diagnostics_TraceBootstrapEvent("createCastle-log-facts");
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(467 * unit_index + gameData + 509674));
+    (unsigned __int8 *)(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET));
   Diagnostics_TraceBootstrapEvent("createCastle-done");
   return unit_index;
 }
@@ -5003,13 +5003,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(1, 16, 11, MapTile_GetReligiousSiteCategory(16, 11));
       return 0;
     case 2:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         2,
         41,
         68,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676));
       return 0;
     case 3:
     case 0xD:
@@ -5018,13 +5018,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(ACTIVE_MISSION_INDEX, *(unsigned __int16 *)(gameData + 140022), 10, 0);
       return 0;
     case 4:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         4,
         56,
         69,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676));
       return 0;
     case 5:
       v3 = (unsigned __int8)g_LanguageIndex;
@@ -5035,7 +5035,7 @@ LABEL_35:
         v9 = UNIT_RECORD(v8);
         if ( (unsigned int)*(char *)(v9 + 4) >= 4
           || *(__int16 *)(v9 + 16) == -1
-          || *(_BYTE *)(gameData + 467 * v8 + 509676) != 3 )
+          || *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v8 + 509676) != 3 )
         {
           while ( ++v8 < 100 )
           {
@@ -5057,14 +5057,14 @@ LABEL_42:
           Mission_TraceObjectiveBlocked(5, v10, *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v10 + 147178), Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10));
           return 0;
         }
-        Mission_TraceObjectiveBlocked(5, v8, *(_BYTE *)(gameData + 467 * v8 + 509676), *(__int16 *)(v9 + 16));
+        Mission_TraceObjectiveBlocked(5, v8, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v8 + 509676), *(__int16 *)(v9 + 16));
         return 0;
       }
 LABEL_18:
       v4 = UNIT_RECORD(v3);
       if ( (unsigned int)*(char *)(v4 + 4) < 4 && *(__int16 *)(v4 + 16) != -1 )
       {
-        v5 = *(unsigned __int8 *)(467 * v3 + gameData + 509676);
+        v5 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v3 + gameData + 509676);
         if ( v5 == 1 || v5 == 2 )
         {
           Mission_TraceObjectiveBlocked(5, v3, v5, *(__int16 *)(v4 + 16));
@@ -5094,13 +5094,13 @@ LABEL_27:
       }
       return 1;
     case 6:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         6,
         90,
         41,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676));
       return 0;
     case 7:
       v11 = !MapTile_HasHiddenTreasure(55, 45) && !MapTile_HasHiddenTreasure(50, 27) && !MapTile_HasHiddenTreasure(35, 63) && !MapTile_HasHiddenTreasure(14, 68);
@@ -5145,7 +5145,7 @@ LABEL_27:
       }
     case 8:
       v19 = 0;
-      while ( *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
+      while ( *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
         v19 += 31;
         if ( v19 >= 372 )
@@ -5188,22 +5188,22 @@ LABEL_75:
       Mission_TraceObjectiveBlocked(11, 2, 44, MapTile_GetReligiousSiteCategory(2, 44));
       return 0;
     case 0xC:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         12,
         59,
         14,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676));
       return 0;
     case 0xE:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         14,
         52,
         24,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676));
       return 0;
     case 0xF:
       v22 = 0;
@@ -5211,9 +5211,9 @@ LABEL_86:
       v23 = UNIT_RECORD(v22);
       if ( (unsigned int)*(char *)(v23 + 4) < 4
         && *(__int16 *)(v23 + 16) != -1
-        && *(_BYTE *)(gameData + 467 * v22 + 509676) == 4 )
+        && *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v22 + 509676) == 4 )
       {
-        Mission_TraceObjectiveBlocked(15, v22, *(_BYTE *)(gameData + 467 * v22 + 509676), *(__int16 *)(v23 + 16));
+        Mission_TraceObjectiveBlocked(15, v22, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v22 + 509676), *(__int16 *)(v23 + 16));
         return 0;
       }
       while ( ++v22 < 100 )
@@ -5240,13 +5240,13 @@ LABEL_94:
       }
       return 1;
     case 0x10:
-      if ( *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         16,
         91,
         43,
-        *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676));
       return 0;
     case 0x11:
       v25 = !MapTile_HasHiddenTreasure(50, 34) && !MapTile_HasHiddenTreasure(51, 73) && !MapTile_HasHiddenTreasure(77, 34) && !MapTile_HasHiddenTreasure(24, 49);
@@ -5291,7 +5291,7 @@ LABEL_105:
       v32 = 0;
       for ( i = 0; i != 372; i += 31 )
       {
-        v34 = *(__int16 *)(467 * (*(unsigned __int16 *)(gameData + 573450) - 0x8000) + gameData + i + 509692);
+        v34 = *(__int16 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 573450) - 0x8000) + gameData + i + 509692);
         if ( v34 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v34 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
           ++v32;
       }
@@ -5374,7 +5374,7 @@ int Mission_CheckFailureCondition()
   switch ( ACTIVE_MISSION_INDEX )
   {
     case 3:
-      return *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 560616) - 0x8000) + gameData + 509676) != 0;
+      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 560616) - 0x8000) + gameData + 509676) != 0;
     case 4:
     case 0xE:
       return *(unsigned __int16 *)(gameData + 140022) > 0x14u;
@@ -5406,11 +5406,11 @@ LABEL_19:
       v6 = UNIT_RECORD(v5);
       if ( (unsigned int)*(char *)(v6 + 4) < 4
         && *(__int16 *)(v6 + 16) != -1
-        && !*(_BYTE *)(467 * v5 + gameData + 509676) )
+        && !*(_BYTE *)(BUILDING_RECORD_SIZE * v5 + gameData + 509676) )
       {
         for ( j = 0; j < 12; ++j )
         {
-          v8 = *(__int16 *)(31 * j + gameData + 467 * v5 + 509692);
+          v8 = *(__int16 *)(31 * j + gameData + BUILDING_RECORD_SIZE * v5 + 509692);
           if ( v8 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v8 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
             ++v1;
         }
@@ -5422,7 +5422,7 @@ LABEL_19:
       }
       return v1 < 12;
     case 0xD:
-      return *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 561026) - 0x8000) + gameData + 509676) != 1;
+      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 561026) - 0x8000) + gameData + 509676) != 1;
     case 0xF:
       return MISSION_FAILURE_FLAG;
     case 0x12:
@@ -5453,11 +5453,11 @@ LABEL_46:
   v14 = UNIT_RECORD(v13);
   if ( (unsigned int)*(char *)(v14 + 4) < 4
     && *(__int16 *)(v14 + 16) != -1
-    && *(_BYTE *)(467 * v13 + gameData + 509676) == 1 )
+    && *(_BYTE *)(BUILDING_RECORD_SIZE * v13 + gameData + 509676) == 1 )
   {
     for ( m = 0; m < 12; ++m )
     {
-      v16 = *(__int16 *)(31 * m + gameData + 467 * v13 + 509692);
+      v16 = *(__int16 *)(31 * m + gameData + BUILDING_RECORD_SIZE * v13 + 509692);
       if ( v16 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v16 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         ++v9;
     }

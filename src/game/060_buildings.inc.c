@@ -979,7 +979,7 @@ unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int playerIndex, i
   settlementCount = 0;
   buildingIndex = 0;
   Debug_Log(a2, playerIndex, a3, (int)aBuilding_check);
-  buildingPtr = (_BYTE *)(gameData + 509674);
+  buildingPtr = (_BYTE *)(gameData + BUILDING_TABLE_OFFSET);
   do
   {
     if ( (unsigned __int8)buildingPtr[3] == playerIndex )
@@ -1013,7 +1013,7 @@ unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int playerIndex, i
   {
     result[140071] = newTechLevel;
     updateIndex = 0;
-    result = (unsigned __int8 *)(gameData + 509674);
+    result = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET);
     do
     {
       if ( result[2] == playerIndex && (result[444] & 7) < newTechLevel )
@@ -1076,7 +1076,7 @@ void  LogAllBuildings(int a1, char a2, DWORD a3)
 
   Debug_Log(a1, a2, a3, (int)aLogallbuilding);
   buildingIndex = 0;
-  buildingPtr = gameData + 509674;
+  buildingPtr = gameData + BUILDING_TABLE_OFFSET;
   do
   {
     while ( *(char *)(buildingPtr + 4) == -1 )
@@ -1118,7 +1118,7 @@ unsigned __int8 * Building_NewTurn(
       v6 = g_CurrentPlayerIndex;
       if ( *(unsigned __int8 *)(gameData + i + 509676) == g_CurrentPlayerIndex )
       {
-        buildingPtr = (unsigned __int8 *)(gameData + 509674 + i);
+        buildingPtr = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + i);
         buildingPtr[420] &= ~1u;
         if ( *(__int16 *)(i + gameData + 509690) != -1 )
         {
@@ -1468,7 +1468,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   amount = transferAmount;
   transferGoldFlag = transferGold;
   Debug_Log(transferGold, targetStackIndex, (DWORD)savedregs, (int)aBuildingTransfer);
-  buildingPtr = (unsigned __int8 *)(gameData + 509674 + v6);
+  buildingPtr = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + v6);
   targetUnitRecord = 0;
   if ( targetStackIndex != -1 )
     targetUnitRecord = UNIT_RECORD(targetStackIndex);
@@ -1481,7 +1481,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
     if ( v7 < amount )
       return 0;
   }
-  if ( Building_FindFreeAdjacentSpawnTile(buildingPtr, &v36, gameData + 509674 + v6, &v37) != 1 )
+  if ( Building_FindFreeAdjacentSpawnTile(buildingPtr, &v36, gameData + BUILDING_TABLE_OFFSET + v6, &v37) != 1 )
     return 0;
   WorldMap_DisableFrameRedraw();
   *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = -1;
@@ -1692,12 +1692,12 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   int m; // edi
   int v28; // [esp+4h] [ebp-24h]
 
-  buildingByteOffset = 467 * buildingIndex;
+  buildingByteOffset = BUILDING_RECORD_SIZE * buildingIndex;
   v13 = buildingByteOffset;
   Debug_Log(a3, -45 * buildingIndex, buildingIndex, (int)aUnit_capturebu);
-  buildingPtr = buildingByteOffset + gameData + 509674;
+  buildingPtr = buildingByteOffset + gameData + BUILDING_TABLE_OFFSET;
   if ( *(_WORD *)(buildingByteOffset + gameData + 509690) )
-    return Building_Destroy(buildingByteOffset + gameData + 509674, buildingByteOffset, buildingIndex, a5);
+    return Building_Destroy(buildingByteOffset + gameData + BUILDING_TABLE_OFFSET, buildingByteOffset, buildingIndex, a5);
   *(_BYTE *)(buildingByteOffset + gameData + 509676) = *(_BYTE *)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178);
   v9 = buildingByteOffset + gameData;
   buildingTechLevel = *(_BYTE *)(buildingByteOffset + gameData + 510118) & 7;
@@ -1734,9 +1734,9 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
     v22 = k;
     Building_ClearGarrisonRepairTimer(v16, v22);
   }
-  v24 = 467 * buildingIndex;
-  v25 = 467 * buildingIndex;
-  for ( m = *(unsigned __int8 *)(gameData + 467 * buildingIndex + 509674); m <= *(unsigned __int8 *)(v24 + gameData + 509674) + 1; ++m )
+  v24 = BUILDING_RECORD_SIZE * buildingIndex;
+  v25 = BUILDING_RECORD_SIZE * buildingIndex;
+  for ( m = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + BUILDING_TABLE_OFFSET); m <= *(unsigned __int8 *)(v24 + gameData + BUILDING_TABLE_OFFSET) + 1; ++m )
   {
     for ( j = *(unsigned __int8 *)(v24 + gameData + 509675); j <= *(unsigned __int8 *)(v25 + gameData + 509675) + 1; ++j )
       MiniMap_DrawTileCell((void *)m, j);
@@ -1802,7 +1802,7 @@ LABEL_3:
   recordPtr = UNIT_RECORD(scanIndex);
   if ( (unsigned int)*(char *)(recordPtr + 4) >= 4
     || *(__int16 *)(recordPtr + 16) == -1
-    || (recordOffset = gameData + 467 * scanIndex, !*(_BYTE *)(recordOffset + 509678))
+    || (recordOffset = gameData + BUILDING_RECORD_SIZE * scanIndex, !*(_BYTE *)(recordOffset + 509678))
     || *(_BYTE *)(recordOffset + 509676) != *(_BYTE *)(buildingPtr + 2) )
   {
     while ( ++scanIndex < 100 )
@@ -4740,7 +4740,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   BuildingSpriteCache_Clear();
   UnitSpriteCache_FreeAllEntries(v5, a1);
   CSS_EmptySampleCache();
-  Debug_Log(467 * a1, a2, a1, (int)aCastleD);
+  Debug_Log(BUILDING_RECORD_SIZE * a1, a2, a1, (int)aCastleD);
   g_SelectedBuildingRecord = BUILDING_RECORD(a1);
   g_ActiveCastleOwnerIsChristian = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
   v46 = Audio_PauseMusicAndPlayLoopedSound(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
@@ -4780,7 +4780,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Surface = (_DWORD *)Mem_Alloc(188, v17, a2, a1);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, 640, 480);
-  v19 = 467 * a1;
+  v19 = BUILDING_RECORD_SIZE * a1;
   g_CastleScreenSurface = (int)Surface;
   Castle_RebuildSceneBuffers((int)g_CastleScreenPaletteBuffer, v19);
   DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 3, (int)g_CastleScreenPaletteBuffer, aMap_pal_0);
@@ -5841,7 +5841,7 @@ BOOL  MapTile_HasWestRoadConnection(int row, int column)
   result = 1;
   if ( neighborBuildingMarker < 0x8000
     || neighborBuildingMarker > 65534
-    || (neighborBuildingPtr = (unsigned __int8 *)(467 * (neighborBuildingMarker - 0x8000) + gameData + 509674), v6 = (char)neighborBuildingPtr[4], v6 != 2) && v6 != 1
+    || (neighborBuildingPtr = (unsigned __int8 *)(BUILDING_RECORD_SIZE * (neighborBuildingMarker - 0x8000) + gameData + BUILDING_TABLE_OFFSET), v6 = (char)neighborBuildingPtr[4], v6 != 2) && v6 != 1
     || (v7 = *neighborBuildingPtr, v7 != row)
     || (v8 = row ^ v7, LOBYTE(v8) = neighborBuildingPtr[1], v8 != column - 2) )
   {
@@ -10292,14 +10292,14 @@ int  BuildingEconomyDialog_CommitTransfers(
   if ( g_BuildingEconomyDialogPendingPeasantTransfer )
   {
     v5 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
-    if ( v5 == -2 || *(_BYTE *)(467 * v5 + gameData + 509678) != 1 )
+    if ( v5 == -2 || *(_BYTE *)(BUILDING_RECORD_SIZE * v5 + gameData + 509678) != 1 )
     {
       v6 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
       if ( v6 == -2 )
         v6 = -1;
       a4 = -45;
       Building_Transfer(
-        (g_BuildingEconomyDialogBuilding - (gameData + 509674)) / 467,
+        (g_BuildingEconomyDialogBuilding - (gameData + BUILDING_TABLE_OFFSET)) / BUILDING_RECORD_SIZE,
         v6,
         0,
         g_BuildingEconomyDialogPendingPeasantTransfer,
@@ -10314,7 +10314,7 @@ int  BuildingEconomyDialog_CommitTransfers(
       v7 = -1;
     a4 = -45;
     Building_Transfer(
-      (g_BuildingEconomyDialogBuilding - (gameData + 509674)) / 467,
+      (g_BuildingEconomyDialogBuilding - (gameData + BUILDING_TABLE_OFFSET)) / BUILDING_RECORD_SIZE,
       v7,
       1,
       g_BuildingEconomyDialogPendingGoldTransfer,
@@ -10674,7 +10674,7 @@ int  BuildingEconomyDialog_Run(int a1)
   unsigned __int8 *palette_buffer; // [esp+0h] [ebp-418h]
 
   g_BuildingEconomyDialogBuilding = a1;
-  building_index = (a1 - (gameData + 509674)) / 467;
+  building_index = (a1 - (gameData + BUILDING_TABLE_OFFSET)) / BUILDING_RECORD_SIZE;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
       stderr,

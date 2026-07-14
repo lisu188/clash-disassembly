@@ -1426,7 +1426,7 @@ int  BuildingTransferDialog_CommitTransfer(int widget, int delayTicks, DWORD ren
     targetBuildingId = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
     if ( targetBuildingId == -2 )
       targetBuildingId = -1;
-    Building_Transfer((g_BuildingTransferSourcePtr - (gameData + 509674)) / 467, targetBuildingId, 1, g_Building_TransferAmount, a4);
+    Building_Transfer((g_BuildingTransferSourcePtr - (gameData + BUILDING_TABLE_OFFSET)) / BUILDING_RECORD_SIZE, targetBuildingId, 1, g_Building_TransferAmount, a4);
     g_Building_TransferAmount = 0;
     BuildingTransferDialog_DrawTransferAmountValue(renderContext, 467);
     return BuildingTransferDialog_DrawSourceRemainingValue(renderContext, 467);
@@ -1731,7 +1731,7 @@ int  BuildingTransferTargetList_Rebuild(int sourceBuildingRecord, int reserveFir
       ++insert_index;
     }
     ++building_index;
-    result += 467;
+    result += BUILDING_RECORD_SIZE;
   }
   while ( building_index < 100 );
   g_BuildingTransferTargetListIndex = 0;
@@ -7895,7 +7895,7 @@ int  AI_TickNationPostTurn(int playerIndex)
     v4 = *(char *)(buildingOffset + gameData + 509678);
     if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
-      buildingRecord = buildingOffset + gameData + 509674;
+      buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
       if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
       {
         buildingValue = Building_GetTotalValue(buildingRecord);
@@ -7943,7 +7943,7 @@ int  Player_CalcAvailableStrongholdFunds(int playerIndex)
     buildingState = *(char *)(gameData + buildingOffset + 509678);
     if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
-      buildingRecord = buildingOffset + gameData + 509674;
+      buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
       if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
         totalFunds += *(_DWORD *)(buildingOffset + gameData + 510112);
     }

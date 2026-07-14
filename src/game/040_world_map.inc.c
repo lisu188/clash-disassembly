@@ -119,7 +119,7 @@ BOOL  MapTile_HasOwnBuilding(int tileX, int tileY)
     v3 = UNIT_RECORD(buildingIndex);
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
-      buildingRecord = gameData + 467 * buildingIndex;
+      buildingRecord = gameData + BUILDING_RECORD_SIZE * buildingIndex;
       if ( *(unsigned __int8 *)(buildingRecord + 509676) == g_CurrentPlayerIndex && *(__int16 *)(buildingRecord + 509690) != -1 )
         return 1;
     }
@@ -146,7 +146,7 @@ BOOL  MapTile_HasEnemyBuilding(int tileX, int tileY)
     v3 = UNIT_RECORD(buildingIndex);
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
-      buildingRecord = gameData + 467 * buildingIndex;
+      buildingRecord = gameData + BUILDING_RECORD_SIZE * buildingIndex;
       if ( *(unsigned __int8 *)(buildingRecord + 509676) != g_CurrentPlayerIndex && *(__int16 *)(buildingRecord + 509690) != -1 )
         return 1;
     }
@@ -525,7 +525,7 @@ LABEL_80:
     {
       if ( !UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
         || (v5 += gameData,
-            *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
+            *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
         && UnitStack_HasPeasantCargo(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
       {
         v7 = &g_CursorDesc_DeliverCargo;
@@ -573,9 +573,9 @@ LABEL_26:
     }
     else if ( MapTile_HasBuilding(tileX, tileY) )
     {
-      v18 = 467 * (*(unsigned __int16 *)(v8 + gameData + v9 + 556374) - 0x8000);
+      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + 556374) - 0x8000);
       v19 = gameData + v18;
-      v20 = v18 + gameData + 509674;
+      v20 = v18 + gameData + BUILDING_TABLE_OFFSET;
       if ( *(_WORD *)(gameData + v18 + 509690) )
       {
         if ( *(unsigned __int8 *)(v19 + 509676) == g_CurrentPlayerIndex && *(__int16 *)(v19 + 509690) != -1 )
@@ -742,8 +742,8 @@ LABEL_26:
     if ( g_SelectedUnitIndex == -1 && MapTile_HasOwnBuilding(tileX, tileY) )
     {
       buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - 0x8000;
-      buildingRecordOffset = 467 * buildingIndex;
-      constructionState = *(_WORD *)(gameData + 467 * buildingIndex + 509690);
+      buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
+      constructionState = *(_WORD *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509690);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(
           stderr,
@@ -758,7 +758,7 @@ LABEL_26:
       if ( constructionState )
       {
         if ( constructionState != -1 )
-          Building_ShowConstructionProgressDialog(buildingRecordOffset + gameData + 509674, buildingRecordOffset, tileX, a1);
+          Building_ShowConstructionProgressDialog(buildingRecordOffset + gameData + BUILDING_TABLE_OFFSET, buildingRecordOffset, tileX, a1);
       }
       else
       {
@@ -773,7 +773,7 @@ LABEL_26:
     if ( !hasOwnBuilding )
     {
       if ( g_SelectedUnitIndex != -1
-        && (*(_BYTE *)(467 * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
+        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
          || !UnitStack_HasPeasantCargo(v30 + gameData + UNIT_STACK_TABLE_OFFSET)) )
       {
         Unit_AttackBuilding(
@@ -786,7 +786,7 @@ LABEL_26:
       return;
     }
     targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000;
-    if ( *(_WORD *)(467 * targetBuildingIndex + gameData + 509690) )
+    if ( *(_WORD *)(BUILDING_RECORD_SIZE * targetBuildingIndex + gameData + 509690) )
       return;
     if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + 316, targetBuildingIndex) )
     {
@@ -1211,7 +1211,7 @@ int  WorldMap_CenterViewOnNextOwnedBuildingWithUnit(int widget, int a2)
       buildingRecord = UNIT_RECORD(g_UnitSearchCursor);
       if ( (unsigned int)*(char *)(buildingRecord + 4) < 4
         && *(__int16 *)(buildingRecord + 16) != -1
-        && *(unsigned __int8 *)(gameData + 467 * g_UnitSearchCursor + 509676) == g_CurrentPlayerIndex )
+        && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * g_UnitSearchCursor + 509676) == g_CurrentPlayerIndex )
       {
         break;
       }
@@ -1220,7 +1220,7 @@ int  WorldMap_CenterViewOnNextOwnedBuildingWithUnit(int widget, int a2)
   }
   UI_CenterWorldMapViewportOnTile(
     *(unsigned __int8 *)(UNIT_RECORD(g_UnitSearchCursor)),
-    *(unsigned __int8 *)(467 * g_UnitSearchCursor + gameData + 509675));
+    *(unsigned __int8 *)(BUILDING_RECORD_SIZE * g_UnitSearchCursor + gameData + 509675));
   g_SelectedUnitIndex = -1;
   WorldMap_RefreshActionButtonBarState(v5);
   return WorldMap_RedrawViewport(1);

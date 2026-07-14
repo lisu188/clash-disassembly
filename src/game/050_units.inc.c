@@ -897,7 +897,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         v32 = *(unsigned __int16 *)(gameData + v13 + v31 + 556374) - 0x8000;
         if ( v32 <= 0x64 )
         {
-          v99 = 467 * v32;
+          v99 = BUILDING_RECORD_SIZE * v32;
           v33 = UNIT_RECORD(v32);
           if ( (unsigned int)*(char *)(v33 + 4) < 4 && *(__int16 *)(v33 + 16) != -1 )
             break;
@@ -1713,7 +1713,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
        - 0x8000;
     if ( v9 <= 0x64 )
     {
-      slotIndex = 467 * v9;
+      slotIndex = BUILDING_RECORD_SIZE * v9;
       v10 = UNIT_RECORD(v9);
       if ( (unsigned int)*(char *)(v10 + 4) < 4
         && *(__int16 *)(v10 + 16) != -1
@@ -2936,7 +2936,7 @@ LABEL_2:
   v4 = UNIT_RECORD(buildingIndex);
   if ( (unsigned int)*(char *)(v4 + 4) < 4
     && *(__int16 *)(v4 + 16) != -1
-    && *(unsigned __int8 *)(gameData + 467 * buildingIndex + 509676) == playerIndex )
+    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509676) == playerIndex )
   {
     buildingStrength = Building_CalcGarrisonStrength(UNIT_RECORD(buildingIndex), playerIndex);
     totalStrength = buildingStrength + v6;
@@ -5230,9 +5230,9 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   int v27; // [esp+18h] [ebp-18h]
 
   buildingIndexWord = buildingIndex;
-  buildingRecordOffset = 467 * buildingIndex;
+  buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
   Debug_Log(a3, a4, a5, (int)aUnit_movetra_3);
-  HIDWORD(v7) = *(unsigned __int8 *)(gameData + buildingRecordOffset + 509674);
+  HIDWORD(v7) = *(unsigned __int8 *)(gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET);
   buildingKind = *(char *)(gameData + buildingRecordOffset + 509678);
   LODWORD(v7) = *(unsigned __int8 *)(gameData + buildingRecordOffset + 509675);
   *(_WORD *)(TILE_INDEX(HIDWORD(v7), v7)) = -1;
@@ -5672,7 +5672,7 @@ unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this)
     }
     for ( building_offset = 0; building_offset != 46700; building_offset += 467 )
     {
-      building_record = (unsigned __int8 *)(building_offset + gameData + 509674);
+      building_record = (unsigned __int8 *)(building_offset + gameData + BUILDING_TABLE_OFFSET);
       result = building_record;
       if ( *(__int16 *)(building_record + 16) == -1 )
       {
@@ -5709,7 +5709,7 @@ unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this)
     g_MapFlagAnimationFrame = ((_BYTE)g_MapFlagAnimationFrame + 1) & 0xF;
     for ( building_offset = 0; building_offset != 46700; building_offset += 467 )
     {
-      building_record = (unsigned __int8 *)(building_offset + gameData + 509674);
+      building_record = (unsigned __int8 *)(building_offset + gameData + BUILDING_TABLE_OFFSET);
       result = (unsigned int)building_record;
       if ( *(char *)(building_record + 4) != -1 && !*(_WORD *)(building_record + 16) )
       {
@@ -6003,7 +6003,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       v73 = *(unsigned __int16 *)(2 * tileColumn + 200 * tileRow + gameData + 556370);
       if ( (unsigned __int16)v73 >= 0x8000u && *(unsigned __int16 *)(2 * tileColumn + 200 * tileRow + gameData + 556370) != 0xFFFF )
       {
-        v74 = (unsigned __int8 *)(gameData + 509674 + 467 * (v73 - 0x8000));
+        v74 = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (v73 - 0x8000));
         v75 = (char)v74[4];
         if ( (v75 == 2 || v75 == 1) && *v74 == tileRow && v74[1] == tileColumn - 2 && !*((_WORD *)v74 + 8) )
         {
@@ -6223,15 +6223,15 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   if ( (unsigned __int16)v39 >= 0x8000u && *(unsigned __int16 *)(TILE_INDEX(tileRow, tileColumn)) != 0xFFFF )
   {
     v40 = v39 - 0x8000;
-    v41 = 467 * (v39 - 0x8000);
-    v102 = v41 + gameData + 509674;
+    v41 = BUILDING_RECORD_SIZE * (v39 - 0x8000);
+    v102 = v41 + gameData + BUILDING_TABLE_OFFSET;
     v42 = gameData + v41;
     v43 = *(__int16 *)(v102 + 16);
     v44 = *(char *)(v42 + 509678);
     if ( v43 != -1 )
       v43 = 3 * ((unsigned __int16)g_BuildingTypeMaxHitPoints[v44] - *(__int16 *)(v42 + 509690)) / (unsigned __int16)g_BuildingTypeMaxHitPoints[v44];
     v45 = v43;
-    v46 = (unsigned __int8 *)(467 * v40 + gameData);
+    v46 = (unsigned __int8 *)(BUILDING_RECORD_SIZE * v40 + gameData);
     v103 = tileRow + 2 * (tileColumn - v46[509675]) - v46[509674];
     v47 = BuildingSpriteCache_GetOrLoadEntry(v44, v46[509676], v45, v46[509677], v103);
     Compat_RenderDeviceDrawMenuSprite(screenX, screenY, v47, 1);
@@ -9095,7 +9095,7 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
   attackerStackIndex = attackerIndex;
   buildingIndex = buildingIndexArg;
   Debug_Log(attackerIndex, a3, a4, (int)aUnit_attackbui);
-  Render_DrawSprite_v3(attackerStackIndex, 467 * buildingIndex);
+  Render_DrawSprite_v3(attackerStackIndex, BUILDING_RECORD_SIZE * buildingIndex);
   attackerStack = (__int16 *)UNIT_STACK(attackerStackIndex);
   buildingRecord = (unsigned __int8 *)(UNIT_RECORD(buildingIndex));
   v8 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)attackerStack)) && PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
@@ -9183,10 +9183,10 @@ LABEL_47:
               Building_ClearGarrisonTrainingTimer((int)buildingRecord, v30);
               Building_ClearGarrisonRepairTimer((int)buildingRecord, v30);
             }
-            v32 = 467 * buildingIndex;
+            v32 = BUILDING_RECORD_SIZE * buildingIndex;
             if ( !useManualBattle )
             {
-              v53 = v32 + gameData + 509674;
+              v53 = v32 + gameData + BUILDING_TABLE_OFFSET;
               v52 = buildingHasSpecial;
               v51 = Building_CountGarrison(v53);
               v43 = attackerStack + 3;
@@ -9256,7 +9256,7 @@ LABEL_42:
             UnitSpriteCache_FreeAllEntries(v33, (DWORD)buildingRecord);
             CSS_EmptySampleCache();
             TextSprite_ReleaseAllResourceSlots();
-            v34 = (unsigned __int8 *)(gameData + 509674 + v32);
+            v34 = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + v32);
             Diagnostics_TraceWorldMapActionEvent(
               "unit_attack_building_battle_enter",
               attackerStackIndex,
