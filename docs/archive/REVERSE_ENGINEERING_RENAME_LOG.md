@@ -1,5 +1,21 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction EC1: ClipsConflictResolutionStrategy
+
+First CLIPS-engine enum (the gameplay enums are done; this begins the
+previously-deferred rules-engine set). Extracts the 7 canonical CLIPS
+conflict-resolution strategies as `typedef enum ClipsConflictResolutionStrategy`:
+`CLIPS_STRATEGY_DEPTH=0`, `_BREADTH=1`, `_LEX=2`, `_MEA=3`, `_COMPLEXITY=4`,
+`_SIMPLICITY=5`, `_RANDOM=6`.
+
+Confidence **behavior-confirmed** by two independent switches on
+`g_Rules_ConflictResolutionStrategy`, both in `src/render/120_media.inc.c`:
+`Rules_InsertActivationSorted` (:18692) dispatches each value to its self-named
+handler (`Rules_PlaceInDepthList` … `Rules_PlaceInRandomList`), and
+`Rules_GetStrategyName` (:19267) maps each to its name string
+(`aDepth`…`aRandom`). 14 case labels substituted (func-scoped). Object-identical
+(0 insn changes / 434,283); members guard-pinned.
+
 ## 2026-07-14 - Enum extraction E5: UnitBattleAiPlanMode + BattleAiCellAction
 
 Two battle-AI enums (the last of the gameplay enum-extraction batch).

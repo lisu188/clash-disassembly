@@ -208,6 +208,21 @@ typedef enum BattleAiCellAction
   BATTLE_AI_CELL_KITE = 7,           /* ApproachToSafeDistance */
   BATTLE_AI_CELL_SHOOT = 8           /* MoveShootingUnit (ranged) */
 } BattleAiCellAction;
+
+/* CLIPS conflict-resolution strategy (g_Rules_ConflictResolutionStrategy). The
+ * seven canonical CLIPS strategies; each value is dispatched to its self-named
+ * handler in Rules_InsertActivationSorted (render/120_media.inc.c:18692) and to
+ * its name string in Rules_GetStrategyName (:19267). */
+typedef enum ClipsConflictResolutionStrategy
+{
+  CLIPS_STRATEGY_DEPTH = 0,
+  CLIPS_STRATEGY_BREADTH = 1,
+  CLIPS_STRATEGY_LEX = 2,
+  CLIPS_STRATEGY_MEA = 3,
+  CLIPS_STRATEGY_COMPLEXITY = 4,
+  CLIPS_STRATEGY_SIMPLICITY = 5,
+  CLIPS_STRATEGY_RANDOM = 6
+} ClipsConflictResolutionStrategy;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per

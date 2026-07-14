@@ -1,0 +1,184 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "CLIPS_STRATEGY_DEPTH",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: DEPTH dispatches Rules_PlaceInDepthList / name aDepth (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "CLIPS_STRATEGY_BREADTH",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: BREADTH dispatches Rules_PlaceInBreadthList / name aBreadth (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "CLIPS_STRATEGY_LEX",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: LEX dispatches Rules_PlaceInLexList / name aLex (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "CLIPS_STRATEGY_MEA",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: MEA dispatches Rules_PlaceInMeaList / name aMea (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "CLIPS_STRATEGY_COMPLEXITY",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: COMPLEXITY dispatches Rules_PlaceInComplexityList / name aComplexity (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "CLIPS_STRATEGY_SIMPLICITY",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: SIMPLICITY dispatches Rules_PlaceInSimplicityList / name aSimplicity (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "CLIPS_STRATEGY_RANDOM",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_InsertActivationSorted",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: RANDOM dispatches Rules_PlaceInRandomList / name aRandom (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "CLIPS_STRATEGY_DEPTH",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: DEPTH dispatches Rules_PlaceInDepthList / name aDepth (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "CLIPS_STRATEGY_BREADTH",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: BREADTH dispatches Rules_PlaceInBreadthList / name aBreadth (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "CLIPS_STRATEGY_LEX",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: LEX dispatches Rules_PlaceInLexList / name aLex (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "CLIPS_STRATEGY_MEA",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: MEA dispatches Rules_PlaceInMeaList / name aMea (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "CLIPS_STRATEGY_COMPLEXITY",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: COMPLEXITY dispatches Rules_PlaceInComplexityList / name aComplexity (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "CLIPS_STRATEGY_SIMPLICITY",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: SIMPLICITY dispatches Rules_PlaceInSimplicityList / name aSimplicity (render/120_media.inc.c).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "CLIPS_STRATEGY_RANDOM",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/render/120_media.inc.c"
+  ],
+  "func": "Rules_GetStrategyName",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS conflict-resolution strategy: RANDOM dispatches Rules_PlaceInRandomList / name aRandom (render/120_media.inc.c).",
+  "area": "clips"
+ }
+]

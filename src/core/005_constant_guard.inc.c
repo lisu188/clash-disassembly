@@ -120,6 +120,13 @@ typedef char clash95_guard_BUILDING_PRISONER_ACTION_NONE[(BUILDING_PRISONER_ACTI
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_PAY[(BUILDING_PRISONER_ACTION_PAY) == (3) ? 1 : -1];
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_TORTURE[(BUILDING_PRISONER_ACTION_TORTURE) == (2) ? 1 : -1];
 typedef char clash95_guard_CASTLE_SITE_ANCHOR_CACHE_COUNT[(CASTLE_SITE_ANCHOR_CACHE_COUNT) == (100) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_BREADTH[(CLIPS_STRATEGY_BREADTH) == (1) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_COMPLEXITY[(CLIPS_STRATEGY_COMPLEXITY) == (4) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_DEPTH[(CLIPS_STRATEGY_DEPTH) == (0) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_LEX[(CLIPS_STRATEGY_LEX) == (2) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_MEA[(CLIPS_STRATEGY_MEA) == (3) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_RANDOM[(CLIPS_STRATEGY_RANDOM) == (6) ? 1 : -1];
+typedef char clash95_guard_CLIPS_STRATEGY_SIMPLICITY[(CLIPS_STRATEGY_SIMPLICITY) == (5) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_EAST[(DIRECTION8_EAST) == (4) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_NORTH[(DIRECTION8_NORTH) == (6) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_NORTHEAST[(DIRECTION8_NORTHEAST) == (5) ? 1 : -1];

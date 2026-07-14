@@ -18691,25 +18691,25 @@ _DWORD * Rules_InsertActivationSorted(int *agenda, _DWORD *activation)
   {
     switch ( g_Rules_ConflictResolutionStrategy )
     {
-      case 0:
+      case CLIPS_STRATEGY_DEPTH:
         predecessor = (uintptr_t)Rules_PlaceInDepthList((_DWORD *)current, (int)node);
         break;
-      case 1:
+      case CLIPS_STRATEGY_BREADTH:
         predecessor = (uintptr_t)Rules_PlaceInBreadthList((_DWORD *)current, (int)node);
         break;
-      case 2:
+      case CLIPS_STRATEGY_LEX:
         predecessor = (uintptr_t)Rules_PlaceInLexList((_DWORD *)current, (int)node);
         break;
-      case 3:
+      case CLIPS_STRATEGY_MEA:
         predecessor = (uintptr_t)Rules_PlaceInMeaList((_DWORD *)current, (int)node);
         break;
-      case 4:
+      case CLIPS_STRATEGY_COMPLEXITY:
         predecessor = (uintptr_t)Rules_PlaceInComplexityList((_DWORD *)current, (_DWORD *)node);
         break;
-      case 5:
+      case CLIPS_STRATEGY_SIMPLICITY:
         predecessor = (uintptr_t)Rules_PlaceInSimplicityList((_DWORD *)current, (_DWORD *)node);
         break;
-      case 6:
+      case CLIPS_STRATEGY_RANDOM:
         predecessor = (uintptr_t)Rules_PlaceInRandomList((_DWORD *)current, (_DWORD *)node);
         break;
       default:
@@ -19270,25 +19270,25 @@ char * Rules_GetStrategyName(int strategy)
 
   switch ( strategy )
   {
-    case 0:
+    case CLIPS_STRATEGY_DEPTH:
       result = aDepth;
       break;
-    case 1:
+    case CLIPS_STRATEGY_BREADTH:
       result = aBreadth;
       break;
-    case 2:
+    case CLIPS_STRATEGY_LEX:
       result = aLex;
       break;
-    case 3:
+    case CLIPS_STRATEGY_MEA:
       result = aMea;
       break;
-    case 4:
+    case CLIPS_STRATEGY_COMPLEXITY:
       result = aComplexity;
       break;
-    case 5:
+    case CLIPS_STRATEGY_SIMPLICITY:
       result = aSimplicity;
       break;
-    case 6:
+    case CLIPS_STRATEGY_RANDOM:
       result = aRandom_0;
       break;
     default:
