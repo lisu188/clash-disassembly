@@ -2087,8 +2087,8 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   int v32; // ecx
   int secondShotResult; // edx
   int wallShotResult; // edx
-  __int16 savedCol; // [esp+0h] [ebp-2Ch]
-  __int16 savedRow; // [esp+4h] [ebp-28h]
+  __int16 savedRow; // [esp+0h] [ebp-2Ch]
+  __int16 savedCol; // [esp+4h] [ebp-28h]
   int pathStep; // [esp+14h] [ebp-18h]
 
   Debug_Log(attackerIndex, a3, a4, (int)aRuch_oddzialem);
@@ -2147,9 +2147,9 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   else
   {
     reachedRange = -1;
-    savedCol = *(_WORD *)(unitRecord + 4);
+    savedRow = *(_WORD *)(unitRecord + 4);
     HIWORD(pathStep) = 0;
-    savedRow = *(_WORD *)(unitRecord + 6);
+    savedCol = *(_WORD *)(unitRecord + 6);
     LOBYTE(pathStep) = *(_BYTE *)(unitRecord + 4);
     while ( HIWORD(pathStep) <= *(unsigned __int8 *)(unitRecord + 8) - 5 && **(_DWORD **)(unitRecord + 23) && reachedRange == -1 )
     {
@@ -2177,9 +2177,9 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
       *(_DWORD *)(unitRecord + 23) = 0;
       return 0;
     }
-    *(_WORD *)(unitRecord + 4) = savedCol;
+    *(_WORD *)(unitRecord + 4) = savedRow;
     pathToFree = *(_DWORD *)(unitRecord + 23);
-    *(_WORD *)(unitRecord + 6) = savedRow;
+    *(_WORD *)(unitRecord + 6) = savedCol;
     if ( pathToFree )
       j__nfree_();
     *(_DWORD *)(unitRecord + 23) = UnitBattle_MoveTrack(v19, (unsigned __int8)pathStep, v19, BYTE1(pathStep), 0xFFFFFFFF);
@@ -2277,8 +2277,8 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   char savedActionPoints; // [esp+4h] [ebp-3Ch]
   int attackerHealthOut; // [esp+8h] [ebp-38h] BYREF
   int defenderHealthOut; // [esp+Ch] [ebp-34h] BYREF
-  int savedCol; // [esp+10h] [ebp-30h]
-  int savedRow; // [esp+14h] [ebp-2Ch]
+  int savedRow; // [esp+10h] [ebp-30h]
+  int savedCol; // [esp+14h] [ebp-2Ch]
   int effectiveness; // [esp+18h] [ebp-28h]
   int defenderHealth; // [esp+1Ch] [ebp-24h]
   __int16 *defenderRecord; // [esp+20h] [ebp-20h]
@@ -2286,8 +2286,8 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   int *movePath; // [esp+28h] [ebp-18h]
 
   attackerRecord = (__int16 *)(g_MapData + 852 + 31 * attackerIndex);
-  savedCol = (unsigned __int16)attackerRecord[2];
-  savedRow = (unsigned __int16)attackerRecord[3];
+  savedRow = (unsigned __int16)attackerRecord[2];
+  savedCol = (unsigned __int16)attackerRecord[3];
   savedActionPoints = *((_BYTE *)attackerRecord + 8);
   v5 = *attackerRecord;
   defenderRecord = (__int16 *)(31 * defenderIndex + g_MapData + 852);
@@ -2313,8 +2313,8 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
       {
         if ( i || !movePath )
         {
-          attackerRecord[2] = savedCol;
-          attackerRecord[3] = savedRow;
+          attackerRecord[2] = savedRow;
+          attackerRecord[3] = savedCol;
           v15 = movePath;
           *((_BYTE *)attackerRecord + 8) = savedActionPoints;
           if ( !v15 )
@@ -2332,8 +2332,8 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
         v21 = HIWORD(trackStep) - v16;
         if ( v21 > *((unsigned __int8 *)attackerRecord + 8) )
         {
-          attackerRecord[2] = savedCol;
-          attackerRecord[3] = savedRow;
+          attackerRecord[2] = savedRow;
+          attackerRecord[3] = savedCol;
           *((_BYTE *)attackerRecord + 8) = savedActionPoints;
 LABEL_41:
           j__nfree_();
@@ -2347,8 +2347,8 @@ LABEL_41:
         *((_BYTE *)attackerRecord + 8) -= 5;
       }
       defenderHealthOut = defenderHealth;
-      attackerRecord[2] = savedCol;
-      attackerRecord[3] = savedRow;
+      attackerRecord[2] = savedRow;
+      attackerRecord[3] = savedCol;
       v17 = defenderRecord;
       *((_BYTE *)attackerRecord + 8) = savedActionPoints;
       v18 = movePath;

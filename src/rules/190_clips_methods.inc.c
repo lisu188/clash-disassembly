@@ -1255,18 +1255,18 @@ int  Method_FindInsertionIndex(int gfunc, int params, int wildcardFlag, int rest
   unsigned int methodIndex; // esi
   int methodOffset; // edi
   signed int comparison; // eax
-  int minRestrictions; // [esp+4h] [ebp-18h]
-  int maxRestrictions; // [esp+8h] [ebp-14h]
+  int maxRestrictions; // [esp+4h] [ebp-18h]
+  int minRestrictions; // [esp+8h] [ebp-14h]
 
   if ( wildcardFlag )
   {
-    maxRestrictions = restrictionCount - 1;
-    minRestrictions = -1;
+    minRestrictions = restrictionCount - 1;
+    maxRestrictions = -1;
   }
   else
   {
-    minRestrictions = restrictionCount;
     maxRestrictions = restrictionCount;
+    minRestrictions = restrictionCount;
   }
   methodIndex = 0;
   if ( *(_DWORD *)(gfunc + 32) )
@@ -1274,7 +1274,7 @@ int  Method_FindInsertionIndex(int gfunc, int params, int wildcardFlag, int rest
     methodOffset = 0;
     while ( 1 )
     {
-      comparison = Method_CompareRestrictionOrder(params, restrictionCount, minRestrictions, maxRestrictions, (_DWORD *)(methodOffset + *(_DWORD *)(gfunc + 28)));
+      comparison = Method_CompareRestrictionOrder(params, restrictionCount, maxRestrictions, minRestrictions, (_DWORD *)(methodOffset + *(_DWORD *)(gfunc + 28)));
       if ( !comparison )
         break;
       if ( comparison != -1 )
@@ -2025,7 +2025,7 @@ _DWORD * Defgeneric_InsertMethodSlot(_DWORD *gfunc, int position, unsigned int m
 // 51B3E4: using guessed type int dword_51B3E4;
 
 //----- (004CA7F0) --------------------------------------------------------
-signed int  Method_CompareRestrictionOrder(int params, int restrictionCount, int minRestrictions, int maxRestrictions, _DWORD *method)
+signed int  Method_CompareRestrictionOrder(int params, int restrictionCount, int maxRestrictions, int minRestrictions, _DWORD *method)
 {
   int index; // ecx
   int restrictionPtr; // ebx
@@ -2044,9 +2044,9 @@ signed int  Method_CompareRestrictionOrder(int params, int restrictionCount, int
     v12 = restrictionCount - 1;
     while ( index < method[2] )
     {
-      if ( index == v12 && minRestrictions == -1 && method[4] != -1 )
+      if ( index == v12 && maxRestrictions == -1 && method[4] != -1 )
         return 1;
-      if ( index == method[2] - 1 && minRestrictions != -1 && method[4] == -1 )
+      if ( index == method[2] - 1 && maxRestrictions != -1 && method[4] == -1 )
         return -1;
       restrictionPtr = offset + method[7];
       paramRestriction = *(_DWORD *)(params + 6);
@@ -2068,7 +2068,7 @@ signed int  Method_CompareRestrictionOrder(int params, int restrictionCount, int
   }
   if ( restrictionCount == method[2] )
     return differs != 0;
-  if ( maxRestrictions <= method[3] && minRestrictions == -1 )
+  if ( minRestrictions <= method[3] && maxRestrictions == -1 )
     return 1;
   return -1;
 }
