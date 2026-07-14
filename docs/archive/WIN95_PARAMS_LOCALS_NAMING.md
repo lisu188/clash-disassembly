@@ -111,3 +111,18 @@ baseline after each major batch. The harness is **nondeterministic** (game-state
 ordering dependent): repeated runs of the *same* binary span ~997–1005 passed /
 546–554 crashed / 25 failed. All rename batches landed inside that band — renames are
 pure token substitution and cannot change behaviour once the build is green.
+
+**Fresh-context accuracy audit.** Independent adversarial reviewers (no memory of the
+proposing runs) sampled 43 renamed functions across game / CLIPS / render+runtime and
+checked every name against actual usage (struct offsets, API argument positions, RLE
+semantics, CLIPS record layouts). The sample was overwhelmingly accurate; the only
+defects were **reversed name pairs**, all corrected:
+- `savedCol`/`savedRow` in `UnitBattle_EstimateDamageScoreAgainstUnit` and
+  `UnitBattle_MoveShootingUnit` (the unit-record base is `g_MapData+852`, so `+4`=row,
+  `+6`=col — the saves were labelled backwards; symmetric save/restore, so harmless).
+- `minRestrictions`/`maxRestrictions` in `Method_FindInsertionIndex` and
+  `Method_CompareRestrictionOrder` (the `-1` unlimited sentinel belongs to the MAX
+  bound `methodSlot[4]`; equal in the non-wildcard path, so harmless).
+
+No misleading or over-specific names survived; un-named leftover `vN` were not counted
+(partial coverage is expected). The correcting commit is `b7ce44c`.
