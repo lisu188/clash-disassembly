@@ -3,56 +3,22 @@
   "total": {
    "func_sub_distinct": 0,
    "globals_distinct": {
-    "dword_": 682,
-    "word_": 18,
-    "byte_": 58,
-    "qword_": 2,
-    "off_": 9,
-    "unk_": 61,
+    "dword_": 0,
+    "word_": 0,
+    "byte_": 0,
+    "qword_": 0,
+    "off_": 0,
+    "unk_": 0,
     "dbl_": 0,
     "flt_": 0,
-    "loc_": 103
+    "loc_": 0
    },
-   "globals_distinct_total": 933,
-   "param_aN_occurrences": 37604,
-   "local_vN_occurrences": 85051
+   "globals_distinct_total": 0,
+   "param_aN_occurrences": 33878,
+   "local_vN_occurrences": 75823
   },
   "per_file": {
-   "src\\clash95_prelude.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 680,
-     "word_": 18,
-     "byte_": 58,
-     "qword_": 2,
-     "off_": 9,
-     "unk_": 61,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 103
-    },
-    "globals_distinct_total": 931,
-    "param_aN_occurrences": 7703,
-    "local_vN_occurrences": 0
-   },
-   "src\\core\\010_bootstrap.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 1,
-     "word_": 0,
-     "byte_": 0,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 1,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 2,
-    "param_aN_occurrences": 6,
-    "local_vN_occurrences": 35
-   },
-   "src\\core\\020_utilities.inc.c": {
+   "src/clash95_prelude.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
      "dword_": 0,
@@ -66,146 +32,27 @@
      "loc_": 0
     },
     "globals_distinct_total": 0,
-    "param_aN_occurrences": 82,
-    "local_vN_occurrences": 159
+    "param_aN_occurrences": 7703,
+    "local_vN_occurrences": 0
    },
-   "src\\game\\040_world_map.inc.c": {
+   "src/core/005_constant_guard.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 38,
-     "word_": 8,
-     "byte_": 6,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 4,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 56,
-    "param_aN_occurrences": 622,
-    "local_vN_occurrences": 1484
-   },
-   "src\\game\\050_units.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 41,
-     "word_": 1,
-     "byte_": 5,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 2,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 49,
-    "param_aN_occurrences": 1749,
-    "local_vN_occurrences": 5779
-   },
-   "src\\game\\060_buildings.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 69,
-     "word_": 1,
-     "byte_": 4,
-     "qword_": 1,
-     "off_": 0,
-     "unk_": 1,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 76,
-    "param_aN_occurrences": 1452,
-    "local_vN_occurrences": 6636
-   },
-   "src\\game\\070_battle.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 34,
+     "dword_": 0,
      "word_": 0,
-     "byte_": 2,
+     "byte_": 0,
      "qword_": 0,
      "off_": 0,
-     "unk_": 2,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 38,
-    "param_aN_occurrences": 446,
-    "local_vN_occurrences": 2333
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 0,
+    "local_vN_occurrences": 0
    },
-   "src\\game\\080_building_ui.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 64,
-     "word_": 1,
-     "byte_": 8,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 1,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 74,
-    "param_aN_occurrences": 1376,
-    "local_vN_occurrences": 5963
-   },
-   "src\\game\\090_special_sites_savegame.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 27,
-     "word_": 0,
-     "byte_": 9,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 4,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 40,
-    "param_aN_occurrences": 964,
-    "local_vN_occurrences": 4532
-   },
-   "src\\render\\030_render.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 22,
-     "word_": 7,
-     "byte_": 9,
-     "qword_": 0,
-     "off_": 0,
-     "unk_": 4,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 42,
-    "param_aN_occurrences": 1038,
-    "local_vN_occurrences": 2760
-   },
-   "src\\render\\120_media.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 121,
-     "word_": 1,
-     "byte_": 2,
-     "qword_": 1,
-     "off_": 0,
-     "unk_": 3,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 128,
-    "param_aN_occurrences": 5257,
-    "local_vN_occurrences": 8361
-   },
-   "src\\render\\120_media_part2.inc.c": {
+   "src/core/010_bootstrap.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
      "dword_": 0,
@@ -220,29 +67,199 @@
     },
     "globals_distinct_total": 0,
     "param_aN_occurrences": 4,
-    "local_vN_occurrences": 0
+    "local_vN_occurrences": 4
    },
-   "src\\rules\\100_strategic.inc.c": {
+   "src/core/020_utilities.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 22,
-     "word_": 2,
-     "byte_": 5,
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
      "qword_": 0,
      "off_": 0,
-     "unk_": 2,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
-     "loc_": 87
+     "loc_": 0
     },
-    "globals_distinct_total": 118,
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 2,
+    "local_vN_occurrences": 15
+   },
+   "src/game/040_world_map.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 214,
+    "local_vN_occurrences": 742
+   },
+   "src/game/050_units.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 656,
+    "local_vN_occurrences": 3507
+   },
+   "src/game/060_buildings.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 1053,
+    "local_vN_occurrences": 5504
+   },
+   "src/game/070_battle.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 134,
+    "local_vN_occurrences": 1094
+   },
+   "src/game/080_building_ui.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 373,
+    "local_vN_occurrences": 4322
+   },
+   "src/game/090_special_sites_savegame.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 567,
+    "local_vN_occurrences": 2539
+   },
+   "src/render/030_render.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 1038,
+    "local_vN_occurrences": 2760
+   },
+   "src/render/120_media.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 5257,
+    "local_vN_occurrences": 8361
+   },
+   "src/render/120_media_part2.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 2,
+    "local_vN_occurrences": 0
+   },
+   "src/rules/100_strategic.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 1872,
     "local_vN_occurrences": 2875
    },
-   "src\\rules\\130_clips_language.inc.c": {
+   "src/rules/130_clips_language.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 1,
+     "dword_": 0,
      "word_": 0,
      "byte_": 0,
      "qword_": 0,
@@ -252,48 +269,48 @@
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 1,
-    "param_aN_occurrences": 32,
-    "local_vN_occurrences": 42
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 2,
+    "local_vN_occurrences": 8
    },
-   "src\\rules\\130_clips_language_part2.inc.c": {
+   "src/rules/130_clips_language_part2.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 91,
+     "dword_": 0,
      "word_": 0,
-     "byte_": 1,
+     "byte_": 0,
      "qword_": 0,
-     "off_": 2,
-     "unk_": 8,
+     "off_": 0,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
-     "loc_": 1
+     "loc_": 0
     },
-    "globals_distinct_total": 103,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 2404,
     "local_vN_occurrences": 5602
    },
-   "src\\rules\\140_clips_objects.inc.c": {
+   "src/rules/140_clips_objects.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 22,
+     "dword_": 0,
      "word_": 0,
      "byte_": 0,
      "qword_": 0,
      "off_": 0,
-     "unk_": 1,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 23,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 441,
     "local_vN_occurrences": 1009
    },
-   "src\\rules\\150_clips_ast.inc.c": {
+   "src/rules/150_clips_ast.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 34,
+     "dword_": 0,
      "word_": 0,
      "byte_": 0,
      "qword_": 0,
@@ -303,126 +320,126 @@
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 34,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 187,
     "local_vN_occurrences": 754
    },
-   "src\\rules\\160_clips_events.inc.c": {
+   "src/rules/160_clips_events.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 74,
+     "dword_": 0,
      "word_": 0,
      "byte_": 0,
-     "qword_": 1,
-     "off_": 0,
-     "unk_": 9,
-     "dbl_": 0,
-     "flt_": 0,
-     "loc_": 0
-    },
-    "globals_distinct_total": 84,
-    "param_aN_occurrences": 1203,
-    "local_vN_occurrences": 3158
-   },
-   "src\\rules\\170_clips_symbols.inc.c": {
-    "func_sub_distinct": 0,
-    "globals_distinct": {
-     "dword_": 51,
-     "word_": 0,
-     "byte_": 0,
-     "qword_": 1,
+     "qword_": 0,
      "off_": 0,
      "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 52,
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 1203,
+    "local_vN_occurrences": 3158
+   },
+   "src/rules/170_clips_symbols.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 2027,
     "local_vN_occurrences": 5855
    },
-   "src\\rules\\180_clips_compiler.inc.c": {
+   "src/rules/180_clips_compiler.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 171,
-     "word_": 1,
-     "byte_": 9,
-     "qword_": 1,
-     "off_": 5,
-     "unk_": 14,
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 201,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 3781,
     "local_vN_occurrences": 12221
    },
-   "src\\rules\\190_clips_methods.inc.c": {
+   "src/rules/190_clips_methods.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 52,
+     "dword_": 0,
      "word_": 0,
      "byte_": 0,
-     "qword_": 1,
-     "off_": 2,
-     "unk_": 2,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 57,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 1172,
     "local_vN_occurrences": 3506
    },
-   "src\\runtime\\110_platform_input.inc.c": {
+   "src/runtime/110_platform_input.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 12,
+     "dword_": 0,
      "word_": 0,
-     "byte_": 2,
+     "byte_": 0,
      "qword_": 0,
      "off_": 0,
-     "unk_": 1,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 15,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 329,
     "local_vN_occurrences": 799
    },
-   "src\\runtime\\200_recovered_runtime.inc.c": {
+   "src/runtime/200_recovered_runtime.inc.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 80,
-     "word_": 1,
-     "byte_": 3,
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
      "qword_": 0,
-     "off_": 3,
-     "unk_": 12,
+     "off_": 0,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 99,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 3333,
     "local_vN_occurrences": 11188
    },
    "bootstrap_main.c": {
     "func_sub_distinct": 0,
     "globals_distinct": {
-     "dword_": 11,
+     "dword_": 0,
      "word_": 0,
-     "byte_": 2,
+     "byte_": 0,
      "qword_": 0,
      "off_": 0,
-     "unk_": 1,
+     "unk_": 0,
      "dbl_": 0,
      "flt_": 0,
      "loc_": 0
     },
-    "globals_distinct_total": 14,
+    "globals_distinct_total": 0,
     "param_aN_occurrences": 124,
     "local_vN_occurrences": 0
    },
@@ -461,6 +478,352 @@
     "local_vN_occurrences": 0
    }
   },
-  "file_count": 26
+  "file_count": 27,
+  "magic_literals": {
+   "total_eligible": 1710,
+   "total_review": 58423,
+   "per_value": {
+    "ACTIVE_MISSION_INDEX_OFFSET": {
+     "value": 140017,
+     "eligible": 0,
+     "review": 1
+    },
+    "BUILDING_ECONOMY_DIALOG_WIDGET_COUNT": {
+     "value": 10,
+     "eligible": 0,
+     "review": 1267
+    },
+    "BUILDING_GARRISON_DIALOG_WIDGET_COUNT": {
+     "value": 5,
+     "eligible": 0,
+     "review": 1154
+    },
+    "BUILDING_GARRISON_REPAIR_TURNS_MASK": {
+     "value": 56,
+     "eligible": 0,
+     "review": 212
+    },
+    "BUILDING_GARRISON_SERVICE_STATE_COUNT": {
+     "value": 12,
+     "eligible": 0,
+     "review": 1370
+    },
+    "BUILDING_GARRISON_SERVICE_STATE_OFFSET": {
+     "value": 390,
+     "eligible": 0,
+     "review": 3
+    },
+    "BUILDING_GARRISON_TRAINING_TURNS_MASK": {
+     "value": 7,
+     "eligible": 0,
+     "review": 918
+    },
+    "BUILDING_PRISONER_SLOT_BASE_OFFSET": {
+     "value": 445,
+     "eligible": 0,
+     "review": 9
+    },
+    "BUILDING_PRISONER_SLOT_COUNT": {
+     "value": 3,
+     "eligible": 0,
+     "review": 2407
+    },
+    "BUILDING_PRISONER_SLOT_STRIDE": {
+     "value": 6,
+     "eligible": 0,
+     "review": 1866
+    },
+    "BUILDING_RECORD_SIZE": {
+     "value": 467,
+     "eligible": 169,
+     "review": 15
+    },
+    "BUILDING_TABLE_OFFSET": {
+     "value": 509674,
+     "eligible": 65,
+     "review": 3
+    },
+    "BUILDING_TRANSFER_TARGET_LIST_CAPACITY": {
+     "value": 100,
+     "eligible": 0,
+     "review": 394
+    },
+    "GAME_TURN_COUNTER_OFFSET": {
+     "value": 140022,
+     "eligible": 11,
+     "review": 1
+    },
+    "MAP_HEIGHT_TILES_OFFSET": {
+     "value": 140004,
+     "eligible": 45,
+     "review": 1
+    },
+    "MAP_THEME_INDEX_OFFSET": {
+     "value": 140016,
+     "eligible": 28,
+     "review": 1
+    },
+    "MAP_VIEW_LEFT_OFFSET": {
+     "value": 140008,
+     "eligible": 82,
+     "review": 1
+    },
+    "MAP_VIEW_TOP_OFFSET": {
+     "value": 140012,
+     "eligible": 86,
+     "review": 1
+    },
+    "MAP_WIDTH_TILES_OFFSET": {
+     "value": 140000,
+     "eligible": 45,
+     "review": 5
+    },
+    "MISSION_FAILURE_FLAG_OFFSET": {
+     "value": 140021,
+     "eligible": 5,
+     "review": 1
+    },
+    "PLAYER_AI_INTELLIGENCE_OFFSET": {
+     "value": 31,
+     "eligible": 0,
+     "review": 913
+    },
+    "PLAYER_BATTLE_IDLE_FLAG_OFFSET": {
+     "value": 49,
+     "eligible": 0,
+     "review": 83
+    },
+    "PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET": {
+     "value": 53,
+     "eligible": 0,
+     "review": 66
+    },
+    "PLAYER_CAMERA_LEFT_OFFSET": {
+     "value": 15,
+     "eligible": 0,
+     "review": 356
+    },
+    "PLAYER_CAMERA_TOP_OFFSET": {
+     "value": 19,
+     "eligible": 0,
+     "review": 142
+    },
+    "PLAYER_DATA_STRIDE": {
+     "value": 1423,
+     "eligible": 116,
+     "review": 2
+    },
+    "PLAYER_DISPLAY_NAME_OFFSET": {
+     "value": 4,
+     "eligible": 0,
+     "review": 4068
+    },
+    "PLAYER_IS_HUMAN_OFFSET": {
+     "value": 27,
+     "eligible": 0,
+     "review": 122
+    },
+    "PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET": {
+     "value": 48,
+     "eligible": 0,
+     "review": 338
+    },
+    "PLAYER_MINIMAP_VISIBLE_OFFSET": {
+     "value": 23,
+     "eligible": 0,
+     "review": 293
+    },
+    "PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN_OFFSET": {
+     "value": 1421,
+     "eligible": 0,
+     "review": 1
+    },
+    "PLAYER_QUEEN_PORTRAIT_INDEX_OFFSET": {
+     "value": 1420,
+     "eligible": 0,
+     "review": 1
+    },
+    "PLAYER_QUEEN_RELATIONSHIP_STATE_OFFSET": {
+     "value": 1419,
+     "eligible": 0,
+     "review": 1
+    },
+    "PLAYER_RELIGION_FLAG_OFFSET": {
+     "value": 39,
+     "eligible": 0,
+     "review": 51
+    },
+    "PLAYER_REVEALED_TILES_OFFSET": {
+     "value": 57,
+     "eligible": 0,
+     "review": 49
+    },
+    "PLAYER_REVEALED_TILE_ROW_BYTES": {
+     "value": 13,
+     "eligible": 0,
+     "review": 418
+    },
+    "PLAYER_RUNTIME_STATE_OFFSET": {
+     "value": 140024,
+     "eligible": 20,
+     "review": 4
+    },
+    "PLAYER_TECH_LEVEL_OFFSET": {
+     "value": 47,
+     "eligible": 0,
+     "review": 41
+    },
+    "PORT_COLUMN_OFFSET": {
+     "value": 586378,
+     "eligible": 0,
+     "review": 1
+    },
+    "PORT_NEXT_REINFORCEMENT_TURN_OFFSET": {
+     "value": 586382,
+     "eligible": 0,
+     "review": 1
+    },
+    "PORT_REINFORCEMENT_READY_FLAG_OFFSET": {
+     "value": 586386,
+     "eligible": 0,
+     "review": 1
+    },
+    "PORT_REINFORCEMENT_UNIT_COUNT_OFFSET": {
+     "value": 586390,
+     "eligible": 0,
+     "review": 1
+    },
+    "PORT_ROW_OFFSET": {
+     "value": 586374,
+     "eligible": 0,
+     "review": 1
+    },
+    "PORT_SHORE_VARIANT_FLAG_OFFSET": {
+     "value": 586394,
+     "eligible": 0,
+     "review": 1
+    },
+    "QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING": {
+     "value": 9,
+     "eligible": 0,
+     "review": 543
+    },
+    "RELIGIOUS_SITE_CATEGORY_CULT_PLACE": {
+     "value": 3,
+     "eligible": 0,
+     "review": 2407
+    },
+    "RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE": {
+     "value": 4,
+     "eligible": 0,
+     "review": 4068
+    },
+    "RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE": {
+     "value": 2,
+     "eligible": 0,
+     "review": 5157
+    },
+    "RELIGIOUS_SITE_CATEGORY_SHRINE": {
+     "value": 1,
+     "eligible": 0,
+     "review": 12373
+    },
+    "TILE_MAP_OFFSET": {
+     "value": 556374,
+     "eligible": 86,
+     "review": 7
+    },
+    "TILE_ROW_STRIDE": {
+     "value": 200,
+     "eligible": 21,
+     "review": 153
+    },
+    "TILE_TERRAIN_RECORD_STRIDE": {
+     "value": 14,
+     "eligible": 49,
+     "review": 602
+    },
+    "TILE_TERRAIN_ROW_STRIDE": {
+     "value": 1400,
+     "eligible": 105,
+     "review": 5
+    },
+    "TILE_TRAP_OWNER_MASK_OFFSET": {
+     "value": 576374,
+     "eligible": 1,
+     "review": 1
+    },
+    "TILE_TRAP_OWNER_MASK_ROW_STRIDE": {
+     "value": 100,
+     "eligible": 1,
+     "review": 393
+    },
+    "TURN_OWNER_PLAYER_INDEX_OFFSET": {
+     "value": 147139,
+     "eligible": 0,
+     "review": 1
+    },
+    "UNIT_SLOT_FLAG_LOW_MORALE": {
+     "value": 4,
+     "eligible": 0,
+     "review": 4068
+    },
+    "UNIT_SLOT_FLAG_PLAGUE": {
+     "value": 8,
+     "eligible": 0,
+     "review": 2610
+    },
+    "UNIT_SLOT_FLAG_SPENT_TURN": {
+     "value": 2,
+     "eligible": 0,
+     "review": 5157
+    },
+    "UNIT_STACK_PATH_BYTES": {
+     "value": 404,
+     "eligible": 31,
+     "review": 15
+    },
+    "UNIT_STACK_PATH_OFFSET": {
+     "value": 316,
+     "eligible": 37,
+     "review": 21
+    },
+    "UNIT_STACK_SLOT_BASE_OFFSET": {
+     "value": 6,
+     "eligible": 0,
+     "review": 1866
+    },
+    "UNIT_STACK_SLOT_COUNT": {
+     "value": 10,
+     "eligible": 0,
+     "review": 1267
+    },
+    "UNIT_STACK_SLOT_STRIDE": {
+     "value": 31,
+     "eligible": 10,
+     "review": 903
+    },
+    "UNIT_STACK_STRIDE": {
+     "value": 725,
+     "eligible": 437,
+     "review": 4
+    },
+    "UNIT_STACK_TABLE_OFFSET": {
+     "value": 147174,
+     "eligible": 254,
+     "review": 25
+    },
+    "UNIT_TYPE_METADATA_STRIDE": {
+     "value": 88,
+     "eligible": 0,
+     "review": 191
+    },
+    "VIEWED_PLAYER_INDEX_OFFSET": {
+     "value": 147143,
+     "eligible": 6,
+     "review": 1
+    }
+   }
+  }
  }
 }

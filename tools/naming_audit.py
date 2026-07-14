@@ -18,6 +18,8 @@ counted as unresolved code identifiers.
 Usage:
   python tools/naming_audit.py               # human summary
   python tools/naming_audit.py --json out.json
+  python tools/naming_audit.py --literals    # add magic-literal counts
+                                             # (tools/constants_manifest.json)
 """
 import re, os, sys, json, glob
 
@@ -88,6 +90,37 @@ def summarize(res):
             "param_aN_occurrences": res["param_aN"],
             "local_vN_occurrences": res["local_vN"]}
 
+def audit_literals():
+    """Magic-literal progress counts (tools/constants_manifest.json values,
+    prelude-visible sources only -- see tools/literal_common.py)."""
+    sys.path.insert(0, os.path.join(REPO, "tools"))
+    import literal_common as lc
+    entries, families = lc.load_manifest()
+    by_value = {}
+    for e in entries:
+        by_value.setdefault(e["value"], []).append(e)
+    per_value = {}
+    total_eligible = total_review = 0
+    for rel in lc.apply_files():
+        with open(os.path.join(REPO, rel), errors="replace") as f:
+            text = f.read()
+        toks, sites = lc.iter_literal_sites(text, set(by_value))
+        for (idx, value) in sites:
+            for e in by_value[value]:
+                fam = families.get(e.get("family", ""), set())
+                cls, info = lc.classify_site(text, toks, idx, e, fam)
+                d = per_value.setdefault(
+                    e["name"], {"value": value, "eligible": 0, "review": 0})
+                if lc.eligible(cls, info, e):
+                    d["eligible"] += 1
+                    total_eligible += 1
+                else:
+                    d["review"] += 1
+                    total_review += 1
+    return {"total_eligible": total_eligible, "total_review": total_review,
+            "per_value": {k: per_value[k] for k in sorted(per_value)}}
+
+
 def main():
     out = {}
     # WIN95 track: aggregator fragments + standalone runtime/platform C
@@ -99,6 +132,8 @@ def main():
     for f in win_files:
         r = audit_file(f); per_win[os.path.relpath(f, REPO)] = summarize(r); merge(win, r)
     out["win95"] = {"total": summarize(win), "per_file": per_win, "file_count": len(win_files)}
+    if "--literals" in sys.argv:
+        out["win95"]["magic_literals"] = audit_literals()
 
     if "--json" in sys.argv:
         p = sys.argv[sys.argv.index("--json") + 1]
@@ -111,6 +146,10 @@ def main():
     print("  generated globals (distinct):", w["globals_distinct_total"], w["globals_distinct"])
     print("  positional params (a1..) occurrences:", w["param_aN_occurrences"])
     print("  generated locals (v1..) occurrences: ", w["local_vN_occurrences"])
+    ml = out["win95"].get("magic_literals")
+    if ml:
+        print("  magic literals: eligible-unreplaced:", ml["total_eligible"],
+              " review-only:", ml["total_review"])
 
 if __name__ == "__main__":
     main()

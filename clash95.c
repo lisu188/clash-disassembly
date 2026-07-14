@@ -6,6 +6,7 @@
  * compiled independently. */
 
 #include "src/clash95_prelude.inc.c"
+#include "src/core/005_constant_guard.inc.c"
 #include "src/core/010_bootstrap.inc.c"
 #include "src/core/020_utilities.inc.c"
 #include "src/render/030_render.inc.c"
