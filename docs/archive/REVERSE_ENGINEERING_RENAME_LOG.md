@@ -240,17 +240,27 @@ byte at `gameData + 140016`. Rules: `docs/archive/literal_rules/A2_respell.json`
   the class + tier-3 gate correctly left them raw. No tile-stride respellings
   were needed.
 
-### Deferred: accessor-macro upgrades
+### Deferred: accessor-macro upgrades (mechanically established, not just cautious)
 
 Upgrading fully-named address expressions to the typed accessor macros
 (`gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * i` ->
-`UNIT_STACK(i)`, and similarly `BUILDING_RECORD`/`PLAYER_DATA`/`TILE_INDEX`)
-is deferred deliberately. Those rewrites change the token stream structurally
-(no `pp_allow`-style proof of identity is possible term-by-term), they are
-stylistic rather than semantic recovery, and per AGENTS.md the campaign
-prefers small behavior-preserving repairs and preserving byte-offset macros
-until a typed overlay is clearly safer. The named offset/stride form already
-makes every site self-documenting. Left as an optional future pass.
+`UNIT_STACK(i)`, and similarly `BUILDING_RECORD`/`PLAYER_DATA`) is deferred, and
+this is now a proven conclusion, not a hunch. `tools/apply_accessor_upgrades.py`
+performs the 203 canonical upgrades (UNIT_STACK 188, BUILDING_RECORD 11,
+PLAYER_DATA 4); running it and then the new object-code-diff gate
+`tools/obj_diff_gate.sh` (compile clash95.c to an object before/after, diff
+normalized disassembly - 434,283 instructions) shows a **real object-code
+difference**: the accessor macro's canonical term order differs from the varied
+source term order, and at this repo's `-O0` build gcc emits code following the
+source structure literally (e.g. `imul`-then-`add` becomes `lea`-then-`imul` in
+`WorldMap_RefreshUnitStatusPanel`). The change is value-identical (integer
+addition is associative), but neither the preprocessed-token gate nor the
+object-diff gate can prove preservation, so it fails the campaign's "every
+change carries a mechanical proof" bar. Since it is a lateral readability change
+(the named offset/stride form is already self-documenting) and AGENTS.md prefers
+preserving byte-offset macros, it stays deferred. It would become provable only
+under term-order-preserving macros or an `-O1`+ build where the constant fold
+converges the object code. The tool + gate are committed for that future pass.
 
 ## 2026-07-14 - Magic-number campaign A1-5: unit-stack path offset
 
