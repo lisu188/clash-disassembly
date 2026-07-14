@@ -636,7 +636,7 @@
     "offset": 27,
     "name": "controller_mode",
     "type": "int32",
-    "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible."
+    "notes": "Multiplayer setup writes 0 (AI) or 1 (human) here via the MP-slot switch in PlayGame_Dispatch (090_special_sites_savegame.inc.c:4547-4567, MP_PLAYER_SLOT_* cases); many gameplay paths treat nonzero as locally controlled/human-visible. CORRECTION: the 0/1/2 three-way is the SEPARATE AI-intelligence field at +31 (PLAYER_AI_INTELLIGENCE / PlayerAiIntelligence enum), not this boolean; the earlier '0,1, or 2 here' note conflated the two fields."
    },
    {
     "offset": 39,

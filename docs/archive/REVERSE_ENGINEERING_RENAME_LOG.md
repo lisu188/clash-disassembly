@@ -1,5 +1,25 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E3: MultiplayerPlayerSlotType + PlayerAiIntelligence
+
+- **`MultiplayerPlayerSlotType`** (0..5) — the `switch(multiplayer_player_type)`
+  in `PlayGame_Dispatch` (`src/game/090_special_sites_savegame.inc.c:4545`):
+  `MP_PLAYER_SLOT_AI_EASY/NORMAL/HARD` (0..2, seed AI at intelligence 0..2),
+  `MP_PLAYER_SLOT_HUMAN_RELIGIOUS/SECULAR` (3/4, human with religion on/off),
+  `MP_PLAYER_SLOT_CLOSED` (5). 6 case labels substituted (func-scoped; the
+  sibling main-menu switch uses named `MAIN_MENU_REQUEST_*` labels so no numeric
+  collision).
+- **`PlayerAiIntelligence`** (0..2) — `PLAYER_AI_INTELLIGENCE_EASY/NORMAL/HARD`
+  written to PlayerRuntimeState +31; 4 write sites substituted.
+
+Object-identical (0 insn changes / 434,283); members guard-pinned.
+
+**RECOVERED_STRUCTURES.json correction:** the `controller_mode` (+27) note
+claimed it is written "0, 1, or 2". The MP-slot switch proves +27
+(`PLAYER_IS_HUMAN`) is written only 0 (AI) or 1 (human); the 0/1/2 three-way is
+the separate AI-intelligence field at +31. Note corrected to un-conflate the
+two fields.
+
 ## 2026-07-14 - Enum extraction E6: TaxBurdenTier + MapTheme
 
 - **`TaxBurdenTier`** (0..3) — `Building_GetTaxBurdenTier`

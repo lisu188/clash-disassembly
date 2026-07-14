@@ -160,6 +160,30 @@ typedef enum MapTheme
   MAP_THEME_B = 1,
   MAP_THEME_C = 2
 } MapTheme;
+
+/* AI difficulty/intelligence tier written to PlayerRuntimeState +31
+ * (PLAYER_AI_INTELLIGENCE). Proven value tier 0..2; difficulty labels inferred
+ * from the monotonic tier. */
+typedef enum PlayerAiIntelligence
+{
+  PLAYER_AI_INTELLIGENCE_EASY = 0,
+  PLAYER_AI_INTELLIGENCE_NORMAL = 1,
+  PLAYER_AI_INTELLIGENCE_HARD = 2
+} PlayerAiIntelligence;
+
+/* Multiplayer player-slot selector (g_MultiplayerPlayerSlotTypes[], mod-6 UI
+ * cycle) dispatched in PlayGame_Dispatch (090_special_sites_savegame.inc.c:4545):
+ * 0..2 seed an AI player at intelligence 0..2, 3/4 a human with religion on/off,
+ * 5 a closed slot. AI difficulty labels inferred from the intelligence tier. */
+typedef enum MultiplayerPlayerSlotType
+{
+  MP_PLAYER_SLOT_AI_EASY = 0,
+  MP_PLAYER_SLOT_AI_NORMAL = 1,
+  MP_PLAYER_SLOT_AI_HARD = 2,
+  MP_PLAYER_SLOT_HUMAN_RELIGIOUS = 3,
+  MP_PLAYER_SLOT_HUMAN_SECULAR = 4,
+  MP_PLAYER_SLOT_CLOSED = 5
+} MultiplayerPlayerSlotType;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per

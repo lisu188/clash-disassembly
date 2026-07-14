@@ -1,0 +1,116 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "MP_PLAYER_SLOT_AI_EASY",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "MP_PLAYER_SLOT_AI_NORMAL",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "MP_PLAYER_SLOT_AI_HARD",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "MP_PLAYER_SLOT_HUMAN_RELIGIOUS",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "MP_PLAYER_SLOT_HUMAN_SECULAR",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "MP_PLAYER_SLOT_CLOSED",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "func": "PlayGame_Dispatch",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(multiplayer_player_type) in PlayGame_Dispatch (090:4545) maps this slot type to the player-state writes.",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "PLAYER_AI_INTELLIGENCE_EASY",
+  "pattern": "PLAYER_AI_INTELLIGENCE_OFFSET\\) = (?P<lit>0);",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "AI intelligence tier written to PlayerRuntimeState +31 (090:4549-4557,5503).",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "PLAYER_AI_INTELLIGENCE_NORMAL",
+  "pattern": "PLAYER_AI_INTELLIGENCE_OFFSET\\) = (?P<lit>1);",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "AI intelligence tier written to PlayerRuntimeState +31 (090:4549-4557,5503).",
+  "area": "savegame"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "PLAYER_AI_INTELLIGENCE_HARD",
+  "pattern": "PLAYER_AI_INTELLIGENCE_OFFSET\\) = (?P<lit>2);",
+  "files": [
+   "src/game/090_special_sites_savegame.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "AI intelligence tier written to PlayerRuntimeState +31 (090:4549-4557,5503).",
+  "area": "savegame"
+ }
+]

@@ -127,6 +127,15 @@ typedef char clash95_guard_MAIN_MENU_REQUEST_OPTIONS[(MAIN_MENU_REQUEST_OPTIONS)
 typedef char clash95_guard_MAP_THEME_A[(MAP_THEME_A) == (0) ? 1 : -1];
 typedef char clash95_guard_MAP_THEME_B[(MAP_THEME_B) == (1) ? 1 : -1];
 typedef char clash95_guard_MAP_THEME_C[(MAP_THEME_C) == (2) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_AI_EASY[(MP_PLAYER_SLOT_AI_EASY) == (0) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_AI_HARD[(MP_PLAYER_SLOT_AI_HARD) == (2) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_AI_NORMAL[(MP_PLAYER_SLOT_AI_NORMAL) == (1) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_CLOSED[(MP_PLAYER_SLOT_CLOSED) == (5) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_HUMAN_RELIGIOUS[(MP_PLAYER_SLOT_HUMAN_RELIGIOUS) == (3) ? 1 : -1];
+typedef char clash95_guard_MP_PLAYER_SLOT_HUMAN_SECULAR[(MP_PLAYER_SLOT_HUMAN_SECULAR) == (4) ? 1 : -1];
+typedef char clash95_guard_PLAYER_AI_INTELLIGENCE_EASY[(PLAYER_AI_INTELLIGENCE_EASY) == (0) ? 1 : -1];
+typedef char clash95_guard_PLAYER_AI_INTELLIGENCE_HARD[(PLAYER_AI_INTELLIGENCE_HARD) == (2) ? 1 : -1];
+typedef char clash95_guard_PLAYER_AI_INTELLIGENCE_NORMAL[(PLAYER_AI_INTELLIGENCE_NORMAL) == (1) ? 1 : -1];
 typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_CULT_PLACE[(RELIGIOUS_SITE_CATEGORY_CULT_PLACE) == (3) ? 1 : -1];
 typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE[(RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE) == (4) ? 1 : -1];
 typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE[(RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE) == (2) ? 1 : -1];

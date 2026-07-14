@@ -1079,120 +1079,120 @@ int Port_IsReinforcementReady()
 //----- (00443240) --------------------------------------------------------
 int * Port_GenerateApproachTrack(int unitStackIndex)
 {
-  int v1; // ecx
+  int portRowValue; // ecx
   int portRow; // ebp
-  int v4; // edi
-  int v5; // edx
-  int v6; // ecx
-  int v7; // edx
-  __int16 v8; // ax
+  int topRowTileBase; // edi
+  int bottomRowTileBase; // edx
+  int bottomRowByteOffset; // ecx
+  int rightColumnByteOffset; // edx
+  __int16 bottomRightTile; // ax
   int stackColumn; // ebx
   int *trackList; // ecx
-  int *v11; // eax
-  int *v12; // ecx
-  int *v13; // edx
-  int v14; // ebx
-  int v15; // edi
-  int v16; // esi
-  int v17; // esi
-  int v18; // ebx
-  int v19; // edx
-  int v20; // ebp
-  int v21; // edx
-  int v22; // ebx
-  int v23; // esi
-  int v24; // esi
-  int v25; // eax
+  int *reversedTrack; // eax
+  int *sourceTrack; // ecx
+  int *trackReadPtr; // edx
+  int sourceIndex; // ebx
+  int outputCount; // edi
+  int stepValue; // esi
+  int reverseCount; // esi
+  int restoreTopRowByteOffset; // ebx
+  int leftColumnByteOffset; // edx
+  int restoreBottomRowByteOffset; // ebp
+  int restoreRightColumnByteOffset; // edx
+  int lastTrackPoint; // ebx
+  int trimmedCount; // esi
+  int reversedStep; // esi
+  int destCount; // eax
   __int16 savedTileTopLeft; // [esp+0h] [ebp-30h]
   __int16 savedTileBottomLeft; // [esp+4h] [ebp-2Ch]
   __int16 savedTileTopRight; // [esp+8h] [ebp-28h]
   __int16 savedTileBottomRight; // [esp+Ch] [ebp-24h]
   int portRowByteOffset; // [esp+10h] [ebp-20h]
-  int v31; // [esp+14h] [ebp-1Ch]
+  int bottomRowTileBaseCopy; // [esp+14h] [ebp-1Ch]
   int portColumn; // [esp+20h] [ebp-10h]
 
-  v1 = PORT_ROW;
-  if ( v1 == -1 )
+  portRowValue = PORT_ROW;
+  if ( portRowValue == -1 )
     return 0;
   portRow = PORT_ROW;
   portColumn = PORT_COLUMN;
-  portRowByteOffset = TILE_TERRAIN_ROW_STRIDE * v1;
-  v4 = TILE_TERRAIN_ROW_STRIDE * v1 + gameData;
-  savedTileTopLeft = *(_WORD *)(v4 + 14 * portColumn);
-  v5 = TILE_TERRAIN_ROW_STRIDE * (v1 + 1) + gameData;
-  v6 = TILE_TERRAIN_ROW_STRIDE * (v1 + 1);
-  savedTileBottomLeft = *(_WORD *)(v5 + 14 * portColumn);
-  v31 = v5;
-  v7 = 14 * (portColumn + 1);
-  savedTileTopRight = *(_WORD *)(v7 + v4);
-  v8 = *(_WORD *)(v7 + v31);
-  *(_WORD *)(v4 + 14 * portColumn) = 0;
-  savedTileBottomRight = v8;
-  *(_WORD *)(14 * portColumn + v6 + gameData) = 0;
-  *(_WORD *)(v7 + portRowByteOffset + gameData) = 0;
-  *(_WORD *)(v7 + v6 + gameData) = 0;
+  portRowByteOffset = TILE_TERRAIN_ROW_STRIDE * portRowValue;
+  topRowTileBase = TILE_TERRAIN_ROW_STRIDE * portRowValue + gameData;
+  savedTileTopLeft = *(_WORD *)(topRowTileBase + 14 * portColumn);
+  bottomRowTileBase = TILE_TERRAIN_ROW_STRIDE * (portRowValue + 1) + gameData;
+  bottomRowByteOffset = TILE_TERRAIN_ROW_STRIDE * (portRowValue + 1);
+  savedTileBottomLeft = *(_WORD *)(bottomRowTileBase + 14 * portColumn);
+  bottomRowTileBaseCopy = bottomRowTileBase;
+  rightColumnByteOffset = 14 * (portColumn + 1);
+  savedTileTopRight = *(_WORD *)(rightColumnByteOffset + topRowTileBase);
+  bottomRightTile = *(_WORD *)(rightColumnByteOffset + bottomRowTileBaseCopy);
+  *(_WORD *)(topRowTileBase + 14 * portColumn) = 0;
+  savedTileBottomRight = bottomRightTile;
+  *(_WORD *)(14 * portColumn + bottomRowByteOffset + gameData) = 0;
+  *(_WORD *)(rightColumnByteOffset + portRowByteOffset + gameData) = 0;
+  *(_WORD *)(rightColumnByteOffset + bottomRowByteOffset + gameData) = 0;
   stackColumn = *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176);
   trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), portRow, stackColumn, portRow, portColumn);
   if ( trackList )
   {
-    v11 = (int *)Mem_Alloc(404, (int)trackList, stackColumn, portRow);
-    v13 = v11;
-    if ( v11 )
-      *v11 = 0;
-    while ( *v12 )
+    reversedTrack = (int *)Mem_Alloc(404, (int)trackList, stackColumn, portRow);
+    trackReadPtr = reversedTrack;
+    if ( reversedTrack )
+      *reversedTrack = 0;
+    while ( *sourceTrack )
     {
-      v14 = *v12 - 1;
-      *v12 = v14;
-      v15 = *v11;
-      v16 = v12[v14 + 1];
-      if ( *v11 < 100 )
+      sourceIndex = *sourceTrack - 1;
+      *sourceTrack = sourceIndex;
+      outputCount = *reversedTrack;
+      stepValue = sourceTrack[sourceIndex + 1];
+      if ( *reversedTrack < 100 )
       {
-        *v11 = v15 + 1;
-        v11[v15 + 1] = v16;
+        *reversedTrack = outputCount + 1;
+        reversedTrack[outputCount + 1] = stepValue;
       }
     }
-    if ( *v11 )
+    if ( *reversedTrack )
     {
       do
       {
-        v22 = v11[*v11];
-        v23 = *v11 - 1;
-        if ( portRow > (unsigned __int8)v22 )
+        lastTrackPoint = reversedTrack[*reversedTrack];
+        trimmedCount = *reversedTrack - 1;
+        if ( portRow > (unsigned __int8)lastTrackPoint )
           break;
-        if ( (unsigned __int8)v22 > portRow + 1 )
+        if ( (unsigned __int8)lastTrackPoint > portRow + 1 )
           break;
-        if ( BYTE1(v22) < portColumn )
+        if ( BYTE1(lastTrackPoint) < portColumn )
           break;
-        if ( BYTE1(v22) > portColumn + 1 )
+        if ( BYTE1(lastTrackPoint) > portColumn + 1 )
           break;
-        *v11 = v23;
+        *reversedTrack = trimmedCount;
       }
-      while ( v23 );
+      while ( trimmedCount );
     }
     while ( 1 )
     {
-      v17 = *v13;
-      if ( !*v13 )
+      reverseCount = *trackReadPtr;
+      if ( !*trackReadPtr )
         break;
-      *v13 = v17 - 1;
-      v24 = v13[v17];
-      v25 = *v12;
-      if ( *v12 < 100 )
+      *trackReadPtr = reverseCount - 1;
+      reversedStep = trackReadPtr[reverseCount];
+      destCount = *sourceTrack;
+      if ( *sourceTrack < 100 )
       {
-        *v12 = v25 + 1;
-        v12[v25 + 1] = v24;
+        *sourceTrack = destCount + 1;
+        sourceTrack[destCount + 1] = reversedStep;
       }
     }
     j__nfree_();
   }
-  v18 = TILE_TERRAIN_ROW_STRIDE * portRow;
-  v19 = 14 * portColumn;
-  *(_WORD *)(v19 + gameData + TILE_TERRAIN_ROW_STRIDE * portRow) = savedTileTopLeft;
-  v20 = TILE_TERRAIN_ROW_STRIDE * (portRow + 1);
-  *(_WORD *)(v20 + gameData + v19) = savedTileBottomLeft;
-  v21 = 14 * (portColumn + 1);
-  *(_WORD *)(v21 + gameData + v18) = savedTileTopRight;
-  *(_WORD *)(v20 + gameData + v21) = savedTileBottomRight;
+  restoreTopRowByteOffset = TILE_TERRAIN_ROW_STRIDE * portRow;
+  leftColumnByteOffset = 14 * portColumn;
+  *(_WORD *)(leftColumnByteOffset + gameData + TILE_TERRAIN_ROW_STRIDE * portRow) = savedTileTopLeft;
+  restoreBottomRowByteOffset = TILE_TERRAIN_ROW_STRIDE * (portRow + 1);
+  *(_WORD *)(restoreBottomRowByteOffset + gameData + leftColumnByteOffset) = savedTileBottomLeft;
+  restoreRightColumnByteOffset = 14 * (portColumn + 1);
+  *(_WORD *)(restoreRightColumnByteOffset + gameData + restoreTopRowByteOffset) = savedTileTopRight;
+  *(_WORD *)(restoreBottomRowByteOffset + gameData + restoreRightColumnByteOffset) = savedTileBottomRight;
   return trackList;
 }
 // 443267: conditional instruction was optimized away because ecx.4!=FFFFFFFF
@@ -2099,13 +2099,13 @@ LABEL_6:
 //----- (00444D50) --------------------------------------------------------
 int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
 {
-  _DWORD *v5; // eax
+  _DWORD *spriteSet; // eax
   int v6; // ecx
   int v7; // ecx
   int v8; // edx
   int SpriteForChar; // eax
   int v10; // ecx
-  int v11; // eax
+  int mainDeviceSprite; // eax
   int i; // edx
   int v13; // eax
   int v14; // ebx
@@ -2129,7 +2129,7 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   char *nameCursor; // edi
   char nameChar; // al
   char nameNextChar; // al
-  int v36; // edx
+  int caretPos; // edx
   int v37; // edx
   _DWORD v38[40]; // [esp+2Ch] [ebp-E0h] BYREF
   char v39[20]; // [esp+CCh] [ebp-40h] BYREF
@@ -2139,10 +2139,10 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   int previousResourceHandleA; // [esp+ECh] [ebp-20h]
   char typedChar; // [esp+F0h] [ebp-1Ch]
 
-  v5 = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
-  if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a2);
-  dialogSpriteSet = v5;
+  spriteSet = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
+  if ( spriteSet )
+    spriteSet = DLXSpriteSet_Load(spriteSet, a2);
+  dialogSpriteSet = spriteSet;
   previousResourceHandleA = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
@@ -2166,10 +2166,10 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  v11 = DLX_GetSpriteForChar((int)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
+  mainDeviceSprite = DLX_GetSpriteForChar((int)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     51,
-    v11,
+    mainDeviceSprite,
     -1,
     -1,
     -1,
@@ -2281,9 +2281,9 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
                 &g_SaveSlotNameEditBuffer[g_TextInputCaretPos + 1],
                 &g_SaveSlotNameEditBuffer[g_TextInputCaretPos],
                 strlen(&g_SaveSlotNameEditBuffer[g_TextInputCaretPos]) + 1);
-              v36 = g_TextInputCaretPos;
+              caretPos = g_TextInputCaretPos;
               g_SaveSlotNameEditBuffer[g_TextInputCaretPos] = typedChar;
-              g_TextInputCaretPos = v36 + 1;
+              g_TextInputCaretPos = caretPos + 1;
               SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
               Input_ClearKey(v17, v37);
             }
@@ -2638,7 +2638,7 @@ int  UI_CheatEditRepaint(DWORD backdropSurface, int a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00445CE0) --------------------------------------------------------
-char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName, DWORD a4)
+char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteSetName, DWORD a4)
 {
   int v4; // ecx
   int v5; // ecx
@@ -2647,30 +2647,30 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
   char currentNameChar; // al
   char nextNameChar; // al
   char *editTextCursor; // edi
-  _DWORD *v11; // eax
+  _DWORD *spriteSetAlloc; // eax
   int v12; // ecx
   int SpriteWidth; // edx
   int v14; // ecx
-  int v15; // eax
+  int panelWidthMax; // eax
   _DWORD *Surface; // eax
   DWORD backdropSurface; // ebp
   int SpriteForChar; // eax
-  int v19; // eax
+  int spriteForChar23; // eax
   int completionText; // eax
   char v21; // bl
   int v22; // edx
-  unsigned int v23; // kr04_4
+  unsigned int textLength; // kr04_4
   int v24; // edx
-  unsigned int v25; // kr08_4
+  unsigned int deleteTailLen; // kr08_4
   int v26; // edx
-  const char *v27; // edi
-  unsigned int v28; // kr0C_4
+  const char *backspaceSrc; // edi
+  unsigned int backspaceTailLen; // kr0C_4
   int v29; // edx
-  unsigned int v30; // eax
+  unsigned int poppedKeyRaw; // eax
   int poppedKey; // esi
-  unsigned int v32; // kr10_4
-  unsigned int v33; // kr14_4
-  int v34; // eax
+  unsigned int currentTextLen; // kr10_4
+  unsigned int insertTailLen; // kr14_4
+  int newCaretIndex; // eax
   int v35; // edx
   int v36; // ecx
   char *copyBackSrc; // esi
@@ -2686,7 +2686,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
   int panelLeft; // [esp+64h] [ebp-20h]
   char typedChar; // [esp+68h] [ebp-1Ch]
 
-  buildingRecord = a1;
+  buildingRecord = building;
   Debug_Log(a2, spriteSetName, a4, (int)aMessage_buildf);
   previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
@@ -2713,19 +2713,19 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
   }
   while ( nextNameChar );
   editTextCursor = g_CheatEntryTextBuffer;
-  v11 = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, a4);
-  if ( v11 )
-    v11 = DLXSpriteSet_Load(v11, spriteSetName);
-  spriteSet = v11;
+  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, a4);
+  if ( spriteSetAlloc )
+    spriteSetAlloc = DLXSpriteSet_Load(spriteSetAlloc, spriteSetName);
+  spriteSet = spriteSetAlloc;
   Render_Pump();
   panelLeft = v12;
   RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   DLX_GetSpriteWidth((int)spriteSet, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)spriteSet, 0x16u);
-  v15 = v14 + 6;
+  panelWidthMax = v14 + 6;
   if ( (unsigned __int16)SpriteWidth > v14 + 6 )
-    v15 = SpriteWidth;
-  panelWidth = v15;
+    panelWidthMax = SpriteWidth;
+  panelWidth = panelWidthMax;
   Surface = (_DWORD *)Mem_Alloc(188, v14, spriteSetName, a4);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, panelWidth);
@@ -2744,10 +2744,10 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
     0,
     0);
   DLX_GetSpriteHeight((int)spriteSet, 0x16u);
-  v19 = DLX_GetSpriteForChar((int)spriteSet, 23);
+  spriteForChar23 = DLX_GetSpriteForChar((int)spriteSet, 23);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     panelLeft + 6,
-    v19,
+    spriteForChar23,
     -1,
     -1,
     -1,
@@ -2778,10 +2778,10 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
     }
     if ( Input_IsKeyPressed(205) )
     {
-      v23 = strlen(g_CheatEntryTextBuffer) + 1;
-      editTextCursor = &g_CheatEntryTextBuffer[v23];
+      textLength = strlen(g_CheatEntryTextBuffer) + 1;
+      editTextCursor = &g_CheatEntryTextBuffer[textLength];
       v21 = g_CheatEditCaretIndex;
-      if ( v23 - 1 > g_CheatEditCaretIndex )
+      if ( textLength - 1 > g_CheatEditCaretIndex )
       {
         ++g_CheatEditCaretIndex;
         UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
@@ -2790,43 +2790,43 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char spriteSetName
     }
     if ( Input_IsKeyPressed(211) )
     {
-      v25 = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1]) + 1;
+      deleteTailLen = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1]) + 1;
       editTextCursor = (char *)g_CheatEditCaretIndex;
-      v21 = v25;
-      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], v25);
+      v21 = deleteTailLen;
+      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], deleteTailLen);
       UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
       Input_ClearKey(211, v26);
     }
     if ( Input_IsKeyPressed(14) && g_CheatEditCaretIndex )
     {
-      v27 = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex--];
-      v28 = strlen(v27) + 1;
-      editTextCursor = (char *)&v27[v28];
-      v21 = v28;
-      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], v28);
+      backspaceSrc = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex--];
+      backspaceTailLen = strlen(backspaceSrc) + 1;
+      editTextCursor = (char *)&backspaceSrc[backspaceTailLen];
+      v21 = backspaceTailLen;
+      memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], backspaceTailLen);
       UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
       Input_ClearKey(14, v29);
     }
     if ( Input_IsKeyPressed(28) )
       g_DecisionDialogExitSignal = 1;
-    v30 = Input_PopKey();
-    poppedKey = v30;
-    if ( v30 != -1 )
+    poppedKeyRaw = Input_PopKey();
+    poppedKey = poppedKeyRaw;
+    if ( poppedKeyRaw != -1 )
     {
-      typedChar = Input_KeyToChar(v30);
+      typedChar = Input_KeyToChar(poppedKeyRaw);
       if ( typedChar )
       {
-        v32 = strlen(g_CheatEntryTextBuffer) + 1;
-        editTextCursor = &g_CheatEntryTextBuffer[v32];
-        if ( v32 - 1 < 0xA )
+        currentTextLen = strlen(g_CheatEntryTextBuffer) + 1;
+        editTextCursor = &g_CheatEntryTextBuffer[currentTextLen];
+        if ( currentTextLen - 1 < 0xA )
         {
-          v33 = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex]) + 1;
-          editTextCursor = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + v33];
-          v21 = v33;
-          memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex], v33);
-          v34 = g_CheatEditCaretIndex + 1;
-          *((_BYTE *)&g_CheatEditCaretIndex + v34 + 3) = typedChar;
-          g_CheatEditCaretIndex = v34;
+          insertTailLen = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex]) + 1;
+          editTextCursor = &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + insertTailLen];
+          v21 = insertTailLen;
+          memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex], insertTailLen);
+          newCaretIndex = g_CheatEditCaretIndex + 1;
+          *((_BYTE *)&g_CheatEditCaretIndex + newCaretIndex + 3) = typedChar;
+          g_CheatEditCaretIndex = newCaretIndex;
           UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
           Input_ClearKey(poppedKey, v35);
         }
@@ -4151,7 +4151,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v18; // ecx
   char *v19; // edi
   char *v20; // esi
-  int v21; // ecx
+  int mainMenuSecondLabelOffset; // ecx
   int v24; // ecx
   _DWORD *campaignSpriteSet; // eax
   bool i; // zf
@@ -4169,7 +4169,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v75; // ecx
   int v76; // edx
   const char *nameCharPtr; // edi
-  unsigned int v78; // kr10_4
+  unsigned int nameTailLength; // kr10_4
   int v79; // edx
   int v80; // ecx
   int v81; // edx
@@ -4179,12 +4179,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   unsigned __int16 nameTextWidth; // ax
   int maxNameWidth; // edx
   int v87; // edx
-  int v88; // ecx
+  int newCaretPos; // ecx
   int v89; // edx
   _DWORD *optionsSpriteSet; // eax
   int optionsWidgetOffset; // eax
-  DWORD v97; // ebp
-  int v98; // ecx
+  DWORD optionsFirstLabelOffset; // ebp
+  int optionsSecondLabelOffset; // ecx
   _DWORD *loadMenuSpriteSet; // eax
   int k; // edx
   unsigned int loadSlotRow; // eax
@@ -4260,9 +4260,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     {
       a3 = (char *)((unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v121 + mainMenuWidgetOffset));
       *(_DWORD *)((char *)v121 + mainMenuWidgetOffset) = a3;
-      v21 = *(_DWORD *)((char *)&v121[1] + mainMenuWidgetOffset);
+      mainMenuSecondLabelOffset = *(_DWORD *)((char *)&v121[1] + mainMenuWidgetOffset);
       mainMenuWidgetOffset += 53;
-      *(_DWORD *)((char *)v119 + mainMenuWidgetOffset) = (unsigned __int8)g_LanguageIndex + v21;
+      *(_DWORD *)((char *)v119 + mainMenuWidgetOffset) = (unsigned __int8)g_LanguageIndex + mainMenuSecondLabelOffset;
     }
     while ( mainMenuWidgetOffset != 371 );
     a2 = (signed int)&g_MainRenderDevice;
@@ -4458,13 +4458,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               if ( g_PlayerNameEditCaretPos )
               {
                 nameCharPtr = &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos--];
-                v78 = strlen(nameCharPtr) + 1;
+                nameTailLength = strlen(nameCharPtr) + 1;
                 a3 = (char *)g_PlayerNameEditCaretPos;
-                LOBYTE(a2) = v78;
+                LOBYTE(a2) = nameTailLength;
                 memmove_(
                   &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
                   &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos + 1],
-                  v78);
+                  nameTailLength);
                 MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v79, v80);
                 Input_ClearKey(14, v81);
               }
@@ -4495,11 +4495,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                       &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
                       strlen(&g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos]) + 1);
                     v87 = 11 * g_MpEditNameSlotIndex;
-                    v88 = g_PlayerNameEditCaretPos + 1;
+                    newCaretPos = g_PlayerNameEditCaretPos + 1;
                     LOBYTE(v87) = typedChar;
                     g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos] = typedChar;
-                    g_PlayerNameEditCaretPos = v88;
-                    MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v87, v88);
+                    g_PlayerNameEditCaretPos = newCaretPos;
+                    MultiplayerSetup_RepaintPlayerSlotRow(g_MpEditNameSlotIndex, v87, newCaretPos);
                     Input_ClearKey(poppedKey, v89);
                   }
                 }
@@ -4544,29 +4544,29 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             multiplayer_player_type = (unsigned __int8)g_MultiplayerPlayerSlotTypes[multiplayer_player_index];
             switch ( multiplayer_player_type )
             {
-              case 0:
+              case MP_PLAYER_SLOT_AI_EASY:
                 *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
-                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 0;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = PLAYER_AI_INTELLIGENCE_EASY;
                 break;
-              case 1:
+              case MP_PLAYER_SLOT_AI_NORMAL:
                 *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
-                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = PLAYER_AI_INTELLIGENCE_NORMAL;
                 break;
-              case 2:
+              case MP_PLAYER_SLOT_AI_HARD:
                 *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
-                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 2;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = PLAYER_AI_INTELLIGENCE_HARD;
                 break;
-              case 3:
+              case MP_PLAYER_SLOT_HUMAN_RELIGIOUS:
                 *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 1;
                 *(_DWORD *)(multiplayer_player_state + PLAYER_MINIMAP_VISIBLE_OFFSET) = 1;
                 *(_DWORD *)(multiplayer_player_state + PLAYER_RELIGION_FLAG_OFFSET) = 1;
                 break;
-              case 4:
+              case MP_PLAYER_SLOT_HUMAN_SECULAR:
                 *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 1;
                 *(_DWORD *)(multiplayer_player_state + PLAYER_MINIMAP_VISIBLE_OFFSET) = 1;
                 *(_DWORD *)(multiplayer_player_state + PLAYER_RELIGION_FLAG_OFFSET) = 0;
                 break;
-              case 5:
+              case MP_PLAYER_SLOT_CLOSED:
                 *(_DWORD *)multiplayer_player_state = 0;
                 break;
               default:
@@ -4609,11 +4609,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         qmemcpy(optionsWidgetTable, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
         {
-          v97 = (unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v115 + optionsWidgetOffset);
-          *(_DWORD *)((char *)v115 + optionsWidgetOffset) = v97;
-          v98 = *(_DWORD *)((char *)&v115[1] + optionsWidgetOffset);
+          optionsFirstLabelOffset = (unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v115 + optionsWidgetOffset);
+          *(_DWORD *)((char *)v115 + optionsWidgetOffset) = optionsFirstLabelOffset;
+          optionsSecondLabelOffset = *(_DWORD *)((char *)&v115[1] + optionsWidgetOffset);
           optionsWidgetOffset += 53;
-          *(_DWORD *)&v112[optionsWidgetOffset + 7079] = (unsigned __int8)g_LanguageIndex + v98;
+          *(_DWORD *)&v112[optionsWidgetOffset + 7079] = (unsigned __int8)g_LanguageIndex + optionsSecondLabelOffset;
         }
         while ( optionsWidgetOffset != 212 );
         if ( g_OptionsConfigRecordFlag0C )
@@ -4636,7 +4636,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                        + 16 * ((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31))) >> 4;
         g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(optionsWidgetTable);
-        Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, v97);
+        Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, optionsFirstLabelOffset);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
@@ -5500,7 +5500,7 @@ char  PlayerRuntimeState_ResetDefaults(uintptr_t playerState)
   *(_BYTE *)(playerState + 48) = 1;
   *(_DWORD *)(playerState + PLAYER_RELIGION_FLAG_OFFSET) = 1;
   *(_DWORD *)(playerState + PLAYER_IS_HUMAN_OFFSET) = 1;
-  *(_DWORD *)(playerState + PLAYER_AI_INTELLIGENCE_OFFSET) = 0;
+  *(_DWORD *)(playerState + PLAYER_AI_INTELLIGENCE_OFFSET) = PLAYER_AI_INTELLIGENCE_EASY;
   *(_DWORD *)playerState = 0;
   *(_WORD *)(playerState + 1417) = 0;
   queenSlotLoopEnd = playerState + 60;
@@ -7346,10 +7346,10 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
   int v22; // ecx
   int v23; // ecx
   int v24; // ecx
-  int v25[3]; // [esp+0h] [ebp-4Ch]
-  int v26[3]; // [esp+Ch] [ebp-40h] BYREF
-  int v27[3]; // [esp+18h] [ebp-34h] BYREF
-  int v28[3]; // [esp+24h] [ebp-28h]
+  int localizedCastleTexts[3]; // [esp+0h] [ebp-4Ch]
+  int localizedResistanceTexts[3]; // [esp+Ch] [ebp-40h] BYREF
+  int localizedRichestCastleTexts[3]; // [esp+18h] [ebp-34h] BYREF
+  int localizedNoConfessionTexts[3]; // [esp+24h] [ebp-28h]
   int v29[7]; // [esp+30h] [ebp-1Ch] BYREF
 
   v29[5] = prisonerRecord;
@@ -7365,11 +7365,11 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
         return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, a5);
       Prisoner_Kill(v9, (char)revealTarget, a5);
       Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v11 + 2));
-      v27[0] = (int)g_PrisonerTortureRichestCastleRevealTexts[0];
-      v27[1] = (int)g_PrisonerTortureRichestCastleRevealTexts[1];
-      v27[2] = (int)g_PrisonerTortureRichestCastleRevealTexts[2];
+      localizedRichestCastleTexts[0] = (int)g_PrisonerTortureRichestCastleRevealTexts[0];
+      localizedRichestCastleTexts[1] = (int)g_PrisonerTortureRichestCastleRevealTexts[1];
+      localizedRichestCastleTexts[2] = (int)g_PrisonerTortureRichestCastleRevealTexts[2];
       revealTextTablePtr = &g_PrisonerTortureRichestCastleRevealTexts[3];
-      revealFormatArg = (int *)v27[(unsigned __int8)g_LanguageIndex];
+      revealFormatArg = (int *)localizedRichestCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealFormatArg, v13 + 5);
       return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
     case 1u:
@@ -7380,11 +7380,11 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
         return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, a5);
       Prisoner_Kill(v9, (char)revealTarget, a5);
       Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v17 + 2));
-      v25[0] = (int)g_PrisonerTortureCastleRevealTexts[0];
-      v25[1] = (int)g_PrisonerTortureCastleRevealTexts[1];
-      v25[2] = (int)g_PrisonerTortureCastleRevealTexts[2];
-      revealFormatArg = v26;
-      revealTextTablePtr = (char **)v25[(unsigned __int8)g_LanguageIndex];
+      localizedCastleTexts[0] = (int)g_PrisonerTortureCastleRevealTexts[0];
+      localizedCastleTexts[1] = (int)g_PrisonerTortureCastleRevealTexts[1];
+      localizedCastleTexts[2] = (int)g_PrisonerTortureCastleRevealTexts[2];
+      revealFormatArg = localizedResistanceTexts;
+      revealTextTablePtr = (char **)localizedCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealTextTablePtr, v18 + 5);
       return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
     case 2u:
@@ -7405,22 +7405,22 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
     case 3u:
       Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_3);
       Prisoner_Kill(v22, slotIndex, a5);
-      v28[0] = (int)g_PrisonerTortureNoConfessionDeathTexts[0];
-      v28[1] = (int)g_PrisonerTortureNoConfessionDeathTexts[1];
-      v28[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
+      localizedNoConfessionTexts[0] = (int)g_PrisonerTortureNoConfessionDeathTexts[0];
+      localizedNoConfessionTexts[1] = (int)g_PrisonerTortureNoConfessionDeathTexts[1];
+      localizedNoConfessionTexts[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
       revealTextTablePtr = &g_PrisonerTortureNoConfessionDeathTexts[3];
       revealFormatArg = v29;
-      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v28[(unsigned __int8)g_LanguageIndex], v23 + 5);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedNoConfessionTexts[(unsigned __int8)g_LanguageIndex], v23 + 5);
       return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
     case 4u:
       Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_4);
       BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, prisonerSlot)) = BUILDING_PRISONER_ACTION_NONE;
-      v26[0] = (int)g_PrisonerTortureResistanceTexts[0];
-      v26[1] = (int)g_PrisonerTortureResistanceTexts[1];
-      v26[2] = (int)g_PrisonerTortureResistanceTexts[2];
+      localizedResistanceTexts[0] = (int)g_PrisonerTortureResistanceTexts[0];
+      localizedResistanceTexts[1] = (int)g_PrisonerTortureResistanceTexts[1];
+      localizedResistanceTexts[2] = (int)g_PrisonerTortureResistanceTexts[2];
       revealTextTablePtr = &g_PrisonerTortureResistanceTexts[3];
-      revealFormatArg = v27;
-      sprintf_(&g_InfoWindowFormatBuffer, (const char *)v26[(unsigned __int8)g_LanguageIndex], v24 + 5);
+      revealFormatArg = localizedRichestCastleTexts;
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedResistanceTexts[(unsigned __int8)g_LanguageIndex], v24 + 5);
       return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
     default:
       return result;
@@ -7860,7 +7860,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   int paletteBuffer; // eax
   int v9; // ecx
   _DWORD *spriteSet; // eax
-  char v11; // bl
+  char paletteBufferByte; // bl
   int v12; // ecx
   int v13; // ecx
   int v14; // ecx
@@ -7868,47 +7868,47 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   int v16; // ecx
   void *v17; // ecx
   int SpriteForChar; // eax
-  int v19; // eax
-  int v20; // eax
-  int v21; // eax
+  int nationFlagSpriteP1; // eax
+  int nationFlagSpriteP2; // eax
+  int nationFlagSpriteP3; // eax
   int barIndex; // edx
   int maxPopulation; // ebp
   int v24; // ecx
   int playerIndex; // esi
   int playerRecordOffset; // edi
   int playerRuntimeState; // ebx
-  int v28; // ebx
+  int prevMaxNationScore; // ebx
   int nationScore; // eax
-  int v30; // edx
-  int v31; // ebx
+  int nationScoreBarByteOffset; // edx
+  int prevMaxMilitaryStrength; // ebx
   int militaryStrength; // eax
   int population; // eax
-  int v34; // ebx
-  int v35; // eax
+  int currentPopulation; // ebx
+  int chartBgSprite1; // eax
   DWORD populationRange; // ebp
-  int v37; // eax
-  int v38; // eax
+  int chartBgSprite2; // eax
+  int chartBgSprite3; // eax
   int barRowIndex; // edi
-  int v40; // esi
+  int chartBgRenderMethods; // esi
   int barValueIndex; // esi
   int nationScoreDivisor; // ecx
-  int v43; // edx
-  int v44; // ebx
+  int militaryBarNumerator; // edx
+  int maxMilitaryStrengthValue; // ebx
   int militaryDivisor; // ecx
   int militaryBarWidth; // eax
   int playerPopulation; // edx
-  int v48; // edx
+  int populationBarNumerator; // edx
   int populationDivisor; // ecx
   int v50; // ecx
   int v51; // ecx
   char prisoner0Action; // bl
-  int v53; // eax
+  int prisonRecordSlot0; // eax
   char prisoner1Action; // bl
-  int v55; // eax
+  int prisonRecordSlot1; // eax
   char prisoner2Action; // bl
-  int v57; // eax
-  int v59; // eax
-  int v60; // edi
+  int prisonRecordSlot2; // eax
+  int nationFlagSpriteP4; // eax
+  int player5RenderMethods; // edi
   int militaryStrengthBars[5]; // [esp+C4h] [ebp-64h]
   int nationScoreBars[5]; // [esp+D8h] [ebp-50h]
   int populationBars[5]; // [esp+ECh] [ebp-3Ch]
@@ -7952,12 +7952,12 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, (char)a2);
   g_StatScreenSpriteSet = (int)spriteSet;
-  v11 = g_StatScreenPaletteBuffer;
+  paletteBufferByte = g_StatScreenPaletteBuffer;
   (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aStat_gfx);
   Palette_LoadOrBuildBlendLookupTable(aStat, g_StatScreenPaletteBuffer, v12, a3);
-  Render_LoadResourceSprite_v4(8, (_BYTE *)g_StatScreenPaletteBuffer, v13, v11, a3);
-  Render_LoadResourceSprite_v4(18, (_BYTE *)g_StatScreenPaletteBuffer, v14, v11, a3);
-  Render_LoadResourceSprite_v4(17, (_BYTE *)g_StatScreenPaletteBuffer, v15, v11, a3);
+  Render_LoadResourceSprite_v4(8, (_BYTE *)g_StatScreenPaletteBuffer, v13, paletteBufferByte, a3);
+  Render_LoadResourceSprite_v4(18, (_BYTE *)g_StatScreenPaletteBuffer, v14, paletteBufferByte, a3);
+  Render_LoadResourceSprite_v4(17, (_BYTE *)g_StatScreenPaletteBuffer, v15, paletteBufferByte, a3);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_StatScreenPaletteBuffer, v16, a3);
   (*(void (__thiscall **)(void *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
   g_RenderDevice = v17;
@@ -7979,11 +7979,11 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   if ( *(_DWORD *)(gameData + 141447) )
   {
-    v19 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 141486) == 0) + 15);
+    nationFlagSpriteP1 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 141486) == 0) + 15);
     j = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(j + 52))(
       8,
-      v19,
+      nationFlagSpriteP1,
       -1,
       -1,
       -1,
@@ -7995,10 +7995,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   if ( *(_DWORD *)(gameData + 142870) )
   {
-    v20 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 142909) == 0) + 17);
+    nationFlagSpriteP2 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 142909) == 0) + 17);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
-      v20,
+      nationFlagSpriteP2,
       -1,
       -1,
       -1,
@@ -8010,10 +8010,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   if ( *(_DWORD *)(gameData + 144293) )
   {
-    v21 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 144332) == 0) + 19);
+    nationFlagSpriteP3 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 144332) == 0) + 19);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       52,
-      v21,
+      nationFlagSpriteP3,
       -1,
       -1,
       -1,
@@ -8025,11 +8025,11 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   if ( *(_DWORD *)(gameData + 145716) )
   {
-    v59 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 145755) == 0) + 21);
-    v60 = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v60 + 52))(
+    nationFlagSpriteP4 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 145755) == 0) + 21);
+    player5RenderMethods = *((_DWORD *)g_RenderDevice + 46);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(player5RenderMethods + 52))(
       52,
-      v59,
+      nationFlagSpriteP4,
       -1,
       -1,
       -1,
@@ -8037,7 +8037,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       1,
       0,
       0);
-    UI_DrawTextFmt(v60, 336, 462, 75, 3, gameData + 145720);
+    UI_DrawTextFmt(player5RenderMethods, 336, 462, 75, 3, gameData + 145720);
   }
   barIndex = 0;
   maxPopulation = 0;
@@ -8058,22 +8058,22 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     }
     else
     {
-      v28 = maxNationScore;
+      prevMaxNationScore = maxNationScore;
       nationScore = AI_TickNationPostTurn(playerIndex);
-      *(int *)((char *)nationScoreBars + v30) = nationScore;
-      if ( nationScore > v28 )
+      *(int *)((char *)nationScoreBars + nationScoreBarByteOffset) = nationScore;
+      if ( nationScore > prevMaxNationScore )
         maxNationScore = nationScore;
-      v31 = maxMilitaryStrength;
+      prevMaxMilitaryStrength = maxMilitaryStrength;
       militaryStrength = Player_CalcMilitaryStrength(playerIndex);
       militaryStrengthBars[barIndex] = militaryStrength;
-      if ( militaryStrength > v31 )
+      if ( militaryStrength > prevMaxMilitaryStrength )
         maxMilitaryStrength = militaryStrength;
       population = *(__int16 *)(playerRecordOffset + gameData + 141441);
       populationBars[barIndex] = population;
       if ( maxPopulation < population )
         maxPopulation = population;
-      v34 = populationBars[barIndex];
-      if ( v24 > v34 && v34 < minPopulation )
+      currentPopulation = populationBars[barIndex];
+      if ( v24 > currentPopulation && currentPopulation < minPopulation )
         minPopulation = populationBars[barIndex];
     }
     playerRecordOffset += 1423;
@@ -8082,11 +8082,11 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   while ( playerIndex < 5 );
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  v35 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
+  chartBgSprite1 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   populationRange = maxPopulation - minPopulation;
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
-    v35,
+    chartBgSprite1,
     -1,
     -1,
     -1,
@@ -8094,10 +8094,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     1,
     0,
     0);
-  v37 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
+  chartBgSprite2 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
-    v37,
+    chartBgSprite2,
     -1,
     -1,
     -1,
@@ -8105,13 +8105,13 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     1,
     0,
     0);
-  v38 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
+  chartBgSprite3 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   barRowIndex = 0;
-  v40 = *((_DWORD *)g_RenderDevice + 46);
+  chartBgRenderMethods = *((_DWORD *)g_RenderDevice + 46);
   barPlayerOffset = 0;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v40 + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(chartBgRenderMethods + 52))(
     107,
-    v38,
+    chartBgSprite3,
     -1,
     -1,
     -1,
@@ -8128,22 +8128,22 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
         nationScoreDivisor = maxNationScore;
       else
         nationScoreDivisor = 1;
-      v43 = 123 * militaryStrengthBars[barValueIndex];
-      v44 = maxMilitaryStrength;
+      militaryBarNumerator = 123 * militaryStrengthBars[barValueIndex];
+      maxMilitaryStrengthValue = maxMilitaryStrength;
       nationScoreBars[barValueIndex] = 123 * nationScoreBars[barValueIndex] / nationScoreDivisor;
-      if ( v44 )
-        militaryDivisor = v44;
+      if ( maxMilitaryStrengthValue )
+        militaryDivisor = maxMilitaryStrengthValue;
       else
         militaryDivisor = 1;
-      militaryBarWidth = v43 / militaryDivisor;
+      militaryBarWidth = militaryBarNumerator / militaryDivisor;
       playerPopulation = populationBars[barValueIndex];
       militaryStrengthBars[barValueIndex] = militaryBarWidth;
-      v48 = 123 * (playerPopulation - minPopulation);
+      populationBarNumerator = 123 * (playerPopulation - minPopulation);
       if ( populationRange )
         populationDivisor = populationRange;
       else
         populationDivisor = 1;
-      populationBars[barValueIndex] = v48 / populationDivisor;
+      populationBars[barValueIndex] = populationBarNumerator / populationDivisor;
       Render_FillRect(
         (_DWORD *)g_PrimaryRenderSurface,
         0,
@@ -8194,12 +8194,12 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   {
     prisoner0Action = BUILDING_PRISONER_ACTION_BEHEAD;
 LABEL_48:
-    v53 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot0 = g_CurrentPrisonBuildingRecord;
     goto LABEL_49;
   }
   if ( g_PrisonerActionButtonState1 == 2 )
   {
-    v53 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot0 = g_CurrentPrisonBuildingRecord;
     prisoner0Action = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else
@@ -8209,53 +8209,53 @@ LABEL_48:
       prisoner0Action = BUILDING_PRISONER_ACTION_PAY;
       goto LABEL_48;
     }
-    v53 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot0 = g_CurrentPrisonBuildingRecord;
     prisoner0Action = BUILDING_PRISONER_ACTION_NONE;
   }
 LABEL_49:
-  BuildingPrisoner_SetAction(v53, prisoner0Action, populationRange);
+  BuildingPrisoner_SetAction(prisonRecordSlot0, prisoner0Action, populationRange);
   if ( g_PrisonerActionButtonState3 == 2 )
   {
     prisoner1Action = BUILDING_PRISONER_ACTION_BEHEAD;
-    v55 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot1 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState4 == 2 )
   {
-    v55 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot1 = g_CurrentPrisonBuildingRecord;
     prisoner1Action = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else if ( g_PrisonerActionButtonState5 == 2 )
   {
     prisoner1Action = BUILDING_PRISONER_ACTION_PAY;
-    v55 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot1 = g_CurrentPrisonBuildingRecord;
   }
   else
   {
-    v55 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot1 = g_CurrentPrisonBuildingRecord;
     prisoner1Action = BUILDING_PRISONER_ACTION_NONE;
   }
-  BuildingPrisoner_SetAction(v55, prisoner1Action, populationRange);
+  BuildingPrisoner_SetAction(prisonRecordSlot1, prisoner1Action, populationRange);
   if ( g_PrisonerActionButtonState6 == 2 )
   {
     prisoner2Action = BUILDING_PRISONER_ACTION_BEHEAD;
-    v57 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot2 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState7 == 2 )
   {
     prisoner2Action = BUILDING_PRISONER_ACTION_TORTURE;
-    v57 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot2 = g_CurrentPrisonBuildingRecord;
   }
   else if ( g_PrisonerActionButtonState8 == 2 )
   {
     prisoner2Action = BUILDING_PRISONER_ACTION_PAY;
-    v57 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot2 = g_CurrentPrisonBuildingRecord;
   }
   else
   {
-    v57 = g_CurrentPrisonBuildingRecord;
+    prisonRecordSlot2 = g_CurrentPrisonBuildingRecord;
     prisoner2Action = BUILDING_PRISONER_ACTION_NONE;
   }
-  BuildingPrisoner_SetAction(v57, prisoner2Action, g_PrisonerActionButtonState6);
+  BuildingPrisoner_SetAction(prisonRecordSlot2, prisoner2Action, g_PrisonerActionButtonState6);
   DLXSpriteSet_ReleaseAndClear(&g_StatScreenSpriteSet);
   j__nfree_();
   Render_Pump();
