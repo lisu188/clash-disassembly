@@ -227,24 +227,33 @@ def resolve(rules, entries_by_name, families, batch, enums=None):
         # ---- regex + enum rules: surgical, pattern-scoped -----------------
         # regex rules are #define-backed (token-identity or --allow respell);
         # enum rules are enum-member-backed and gated by the object-diff gate
-        # (tools/obj_diff_gate.sh), so they never carry pp_allow.
+        # (tools/obj_diff_gate.sh), so they never carry pp_allow. A rule may add
+        # "func": <name> to constrain matches to that function's body (needed
+        # for case-label / return substitution where the pattern recurs).
         toks2 = lc.tokenize(text)
         code_num_starts = {t.start for t in toks2 if t.kind == "num"}
         starts = lc.line_starts(text)
         import bisect as _b
-        for rule in regex_rules + enum_rules:
+        rx_enum_rules = regex_rules + enum_rules
+        rx_fn_lookup = None
+        if any(r.get("func") for r in rx_enum_rules):
+            rx_fn_lookup, _lo, _fr = lc.build_fn_map(text)
+        for rule in rx_enum_rules:
             if rel not in rule_files(rule):
                 continue
             is_enum = rule.get("kind") == "enum"
             value = rule["value"] if is_enum else entries_by_name[rule["name"]]["value"]
             spelling = None if is_enum else entries_by_name[rule["name"]]["spelling"]
             pat = re.compile(rule["pattern"])
+            want_fn = rule.get("func")
             for m in pat.finditer(text):
                 s, e = m.start("lit"), m.end("lit")
                 if s not in code_num_starts:
                     continue
                 raw = m.group("lit")
                 if lc.parse_num(raw) != value:
+                    continue
+                if want_fn and rx_fn_lookup and rx_fn_lookup(s) != want_fn:
                     continue
                 line = _b.bisect_right(starts, s)
                 site = {

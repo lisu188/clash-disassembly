@@ -8262,25 +8262,25 @@ signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY)
     case TILE_OVERLAY_SHRINE_A:
     case TILE_OVERLAY_SHRINE_B:
     case TILE_OVERLAY_SHRINE_C:
-      result = 1;
+      result = RELIGIOUS_SITE_CATEGORY_SHRINE;
       break;
     case TILE_OVERLAY_EMPTY_SHRINE_A:
     case TILE_OVERLAY_EMPTY_SHRINE_B:
     case TILE_OVERLAY_EMPTY_SHRINE_C:
-      result = 2;
+      result = RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE;
       break;
     case TILE_OVERLAY_CULT_PLACE_A:
     case TILE_OVERLAY_CULT_PLACE_B:
     case TILE_OVERLAY_CULT_PLACE_C:
-      result = 3;
+      result = RELIGIOUS_SITE_CATEGORY_CULT_PLACE;
       break;
     case TILE_OVERLAY_EMPTY_CULT_PLACE_A:
     case TILE_OVERLAY_EMPTY_CULT_PLACE_B:
     case TILE_OVERLAY_EMPTY_CULT_PLACE_C:
-      result = 4;
+      result = RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE;
       break;
     default:
-      result = 0;
+      result = RELIGIOUS_SITE_CATEGORY_NONE;
       break;
   }
   return result;

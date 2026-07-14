@@ -1,0 +1,67 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "RELIGIOUS_SITE_CATEGORY_NONE",
+  "pattern": "result = (?P<lit>0);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "MapTile_GetReligiousSiteCategory",
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) returns this category for the overlay-id switch; consumers already use RELIGIOUS_SITE_CATEGORY_* by name (040_world_map.inc.c:589-610).",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "RELIGIOUS_SITE_CATEGORY_SHRINE",
+  "pattern": "result = (?P<lit>1);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "MapTile_GetReligiousSiteCategory",
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) returns this category for the overlay-id switch; consumers already use RELIGIOUS_SITE_CATEGORY_* by name (040_world_map.inc.c:589-610).",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE",
+  "pattern": "result = (?P<lit>2);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "MapTile_GetReligiousSiteCategory",
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) returns this category for the overlay-id switch; consumers already use RELIGIOUS_SITE_CATEGORY_* by name (040_world_map.inc.c:589-610).",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "RELIGIOUS_SITE_CATEGORY_CULT_PLACE",
+  "pattern": "result = (?P<lit>3);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "MapTile_GetReligiousSiteCategory",
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) returns this category for the overlay-id switch; consumers already use RELIGIOUS_SITE_CATEGORY_* by name (040_world_map.inc.c:589-610).",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE",
+  "pattern": "result = (?P<lit>4);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "MapTile_GetReligiousSiteCategory",
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) returns this category for the overlay-id switch; consumers already use RELIGIOUS_SITE_CATEGORY_* by name (040_world_map.inc.c:589-610).",
+  "area": "map"
+ }
+]

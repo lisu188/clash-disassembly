@@ -105,10 +105,17 @@
 #define UNIT_SLOT_FLAG_SPENT_TURN 0x02
 #define UNIT_SLOT_FLAG_LOW_MORALE 0x04
 #define UNIT_SLOT_FLAG_PLAGUE 0x08
-#define RELIGIOUS_SITE_CATEGORY_SHRINE 1
-#define RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE 2
-#define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
-#define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
+/* Religious-site category returned by MapTile_GetReligiousSiteCategory
+ * (080_building_ui.inc.c:8256): the overlay id at terrain record +2 maps to one
+ * of these; 0 = not a religious site. */
+typedef enum ReligiousSiteCategory
+{
+  RELIGIOUS_SITE_CATEGORY_NONE = 0,
+  RELIGIOUS_SITE_CATEGORY_SHRINE = 1,
+  RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE = 2,
+  RELIGIOUS_SITE_CATEGORY_CULT_PLACE = 3,
+  RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE = 4
+} ReligiousSiteCategory;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per

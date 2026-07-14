@@ -96,10 +96,6 @@
     {"name": "UNIT_SLOT_FLAG_SPENT_TURN", "value": 2, "spelling": "0x02", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
     {"name": "UNIT_SLOT_FLAG_LOW_MORALE", "value": 4, "spelling": "0x04", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
     {"name": "UNIT_SLOT_FLAG_PLAGUE", "value": 8, "spelling": "0x08", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
-    {"name": "RELIGIOUS_SITE_CATEGORY_SHRINE", "value": 1, "spelling": "1", "kind": "value", "family": "religious_sites", "tier": 3, "deferred": true},
-    {"name": "RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE", "value": 2, "spelling": "2", "kind": "value", "family": "religious_sites", "tier": 3, "deferred": true},
-    {"name": "RELIGIOUS_SITE_CATEGORY_CULT_PLACE", "value": 3, "spelling": "3", "kind": "value", "family": "religious_sites", "tier": 3, "deferred": true},
-    {"name": "RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE", "value": 4, "spelling": "4", "kind": "value", "family": "religious_sites", "tier": 3, "deferred": true},
     {"name": "QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING", "value": 9, "spelling": "9", "kind": "value", "family": "player", "tier": 3, "deferred": true}
   ]
 }

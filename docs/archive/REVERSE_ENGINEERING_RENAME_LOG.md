@@ -1,5 +1,38 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E2: ReligiousSiteCategory
+
+First enum-extraction batch (categorical/state recovery, distinct from the
+magic-number offset/size naming). Converts the `RELIGIOUS_SITE_CATEGORY_*`
+#define family into a `typedef enum ReligiousSiteCategory` and adds the
+previously-unnamed `RELIGIOUS_SITE_CATEGORY_NONE = 0` (the switch default).
+
+| Member | Value |
+|---|---|
+| `RELIGIOUS_SITE_CATEGORY_NONE` | 0 |
+| `RELIGIOUS_SITE_CATEGORY_SHRINE` | 1 |
+| `RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE` | 2 |
+| `RELIGIOUS_SITE_CATEGORY_CULT_PLACE` | 3 |
+| `RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE` | 4 |
+
+The 5 `result = N` returns in `MapTile_GetReligiousSiteCategory`
+(`src/game/080_building_ui.inc.c:8256`) were substituted with the enum members
+(func-scoped rule). Consumers already used the names by value
+(`040_world_map.inc.c:589-610`), so only the getter returns were raw.
+
+**Proof mechanics (new for enums):** enum-member substitution changes the token
+stream (an enum member is not a cpp macro) but is object-code-identical - the
+compiler folds the enumerator to the same value with no term reordering. The
+new object-diff gate `tools/obj_diff_gate.sh` confirms it: **0 instruction
+changes across 434,283 insns**. The `#define`→enum conversion is object-neutral
+by construction (same values; declarations emit no code), and every enum member
+is compile-time-pinned by `src/core/005_constant_guard.inc.c`
+(`typedef char g[(NAME)==(value)?1:-1]`, extended to enums this batch).
+
+Tooling this batch: `literal_common.parse_prelude_enums()`, an `enum` rule kind
+in `apply_literal_names.py` (object-diff-gated, `func`-scopable), and enum-member
+guards. Rules: `docs/archive/literal_rules/E2_religious_category.json`.
+
 ## 2026-07-14 - Magic-number campaign B6: save-image size + stack table count
 
 Follow-up batch (part of the B3-deferred save-format constants). Mints two
