@@ -2745,23 +2745,23 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
   __int16 SpriteHeight; // ax
   int fatigueBarSprite; // eax
   int v14; // ecx
-  _DWORD *v15; // eax
+  _DWORD *apTextSurface; // eax
   int v16; // ecx
-  DWORD v17; // ebp
-  _DWORD *v18; // eax
+  DWORD apTextSurfaceHandle; // ebp
+  _DWORD *apTextSurface2; // eax
   int v19; // edi
   int v20; // edx
   int v21; // eax
   unsigned __int8 statusLevel; // al
-  int v23; // edx
-  int v24; // eax
+  int statusSpriteChar; // edx
+  int statusSprite; // eax
   DWORD v25; // ebp
-  int v26; // edi
-  int v27; // eax
+  int orderMarkerX; // edi
+  int orderMarkerSprite; // eax
   int v28; // eax
   int v29; // eax
   int v30; // edi
-  int v31; // eax
+  int volleyMarkerSprite; // eax
   char ownerPlayerIndex; // bl
   int v33; // ecx
   _DWORD *portraitSprites; // eax
@@ -2777,7 +2777,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
   int orderMarkerIndex; // [esp+128h] [ebp-14h]
   char *(**unitMetadata)[102]; // [esp+12Ch] [ebp-10h]
   _DWORD *renderDeviceBackup; // [esp+130h] [ebp-Ch]
-  int v47; // [esp+134h] [ebp-8h]
+  int apTextSurface2Handle; // [esp+134h] [ebp-8h]
 
   savedRestoreFlag = restoreFlag;
   unitRecord = 0;
@@ -2835,28 +2835,28 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
       }
       Render_ReleaseSurface(7, 0);
       Diagnostics_TraceWorldMapActionEvent("battle_panel_after_release7", *unitRecord, (int)(uintptr_t)g_RenderDevice, 0, 0);
-      v15 = (_DWORD *)Mem_Alloc(188, v14, v8, v6);
-      if ( v15 )
+      apTextSurface = (_DWORD *)Mem_Alloc(188, v14, v8, v6);
+      if ( apTextSurface )
       {
         v8 = 21;
-        v15 = Render_CreateSurface((int)v15, 119, 21);
+        apTextSurface = Render_CreateSurface((int)apTextSurface, 119, 21);
       }
-      v17 = (DWORD)v15;
-      v18 = (_DWORD *)Mem_Alloc(188, v16, v8, (DWORD)v15);
-      if ( v18 )
-        v18 = Render_CreateSurface((int)v18, 119, 21);
-      v19 = (int)v18;
-      g_RenderDevice = (_UNKNOWN *)v17;
-      Render_FillRect((_DWORD *)g_PrimaryRenderSurface, (_DWORD *)v17, 69, 500, 0x26Au, 0x59u, 0, 0);
+      apTextSurfaceHandle = (DWORD)apTextSurface;
+      apTextSurface2 = (_DWORD *)Mem_Alloc(188, v16, v8, (DWORD)apTextSurface);
+      if ( apTextSurface2 )
+        apTextSurface2 = Render_CreateSurface((int)apTextSurface2, 119, 21);
+      v19 = (int)apTextSurface2;
+      g_RenderDevice = (_UNKNOWN *)apTextSurfaceHandle;
+      Render_FillRect((_DWORD *)g_PrimaryRenderSurface, (_DWORD *)apTextSurfaceHandle, 69, 500, 0x26Au, 0x59u, 0, 0);
       Render_FillRect((_DWORD *)g_PrimaryRenderSurface, (_DWORD *)v19, 69, 500, 0x26Au, 0x59u, 0, 0);
-      v47 = v19;
+      apTextSurface2Handle = v19;
       UI_DrawTextFmt(v19, 0, 118, 0, 2, (int)aD_48);
       /* The x86 iterator path in Render_BlendSurfaceRect is not yet safe on SDL/x86_64. */
       Render_FillRect((_DWORD *)v19, (_DWORD *)g_PrimaryRenderSurface, 0, 0, 0x76u, 0x14u, 0x1F4u, 0x45u);
-      Compat_InvokeCompactSurfaceDestructor((int)(uintptr_t)v17, 2);
-      Compat_InvokeCompactSurfaceDestructor(v47, 2);
+      Compat_InvokeCompactSurfaceDestructor((int)(uintptr_t)apTextSurfaceHandle, 2);
+      Compat_InvokeCompactSurfaceDestructor(apTextSurface2Handle, 2);
       g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-      Diagnostics_TraceWorldMapActionEvent("battle_panel_after_ap_surfaces", *unitRecord, (int)(uintptr_t)v17, v47, (int)(uintptr_t)g_RenderDevice);
+      Diagnostics_TraceWorldMapActionEvent("battle_panel_after_ap_surfaces", *unitRecord, (int)(uintptr_t)apTextSurfaceHandle, apTextSurface2Handle, (int)(uintptr_t)g_RenderDevice);
       Render_ReleaseSurface(15, 0);
       UI_DrawTextFmt(v19, 500, 618, 106, 2, (int)aD_49);
       Render_ReleaseSurface(14, 0);
@@ -2911,7 +2911,7 @@ LABEL_33:
             {
               if ( statusLevel <= 1u )
               {
-                v23 = 5;
+                statusSpriteChar = 5;
               }
               else
               {
@@ -2920,13 +2920,13 @@ LABEL_33:
 LABEL_36:
                   v25 = 0;
                   orderMarkerIndex = 0;
-                  v26 = 618 - (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu);
+                  orderMarkerX = 618 - (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu);
                   while ( UNIT_SLOT_ORDER_STATE(unitRecord) >= orderMarkerIndex )
                   {
-                    v27 = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 13);
-                    Compat_RenderDeviceDrawMenuSprite(v26, 255, v27, 1);
+                    orderMarkerSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 13);
+                    Compat_RenderDeviceDrawMenuSprite(orderMarkerX, 255, orderMarkerSprite, 1);
                     v25 = ++orderMarkerIndex;
-                    v26 -= (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu) + 1;
+                    orderMarkerX -= (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu) + 1;
                   }
                   v30 = 529;
                   if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
@@ -2935,8 +2935,8 @@ LABEL_36:
                     {
                       if ( UNIT_SLOT_REMAINING_VOLLEYS(unitRecord) <= i )
                         break;
-                      v31 = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 11);
-                      Compat_RenderDeviceDrawMenuSprite(v30, 180, v31, 1);
+                      volleyMarkerSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 11);
+                      Compat_RenderDeviceDrawMenuSprite(v30, 180, volleyMarkerSprite, 1);
                       ++i;
                     }
                   }
@@ -2990,15 +2990,15 @@ LABEL_36:
                   g_RenderDevice = savedRenderDevice;
                   return result;
                 }
-                v23 = 6;
+                statusSpriteChar = 6;
               }
             }
             else
             {
-              v23 = 4;
+              statusSpriteChar = 4;
             }
-            v24 = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, v23);
-            Compat_RenderDeviceDrawMenuSprite(488, 243, v24, 1);
+            statusSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, statusSpriteChar);
+            Compat_RenderDeviceDrawMenuSprite(488, 243, statusSprite, 1);
             goto LABEL_36;
           }
           v20 = 7;

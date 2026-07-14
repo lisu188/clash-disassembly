@@ -2646,97 +2646,97 @@ void  Instance_NotifyCreated(_DWORD *theInstance, double a2)
 #if 0
 void  __noreturn CRT_WatcomEHHandleNestedException(int a1, int a2)
 {
-  int *v3; // edi
-  int *v4; // ebp
-  char v5; // al
-  int *v6; // eax
+  int *currentExc; // edi
+  int *nestedExc; // ebp
+  char savedState; // al
+  int *fnexcThis; // eax
   int v7; // edx
   int v8; // ecx
-  _DWORD *v9; // eax
-  int *v10; // eax
-  int *v11; // eax
+  _DWORD *nestedThrowRec; // eax
+  int *fnexcThis2; // eax
+  int *dtorThis; // eax
   int v12; // ecx
-  _EXC_PR_FNEXC *v13[26]; // [esp+0h] [ebp-14Ch] BYREF
+  _EXC_PR_FNEXC *strExcBuf[26]; // [esp+0h] [ebp-14Ch] BYREF
   char v14; // [esp+D8h] [ebp-74h]
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+110h] [ebp-3Ch]
-  tagRECT *v16; // [esp+114h] [ebp-38h]
-  void *v17; // [esp+118h] [ebp-34h]
-  int v18; // [esp+11Ch] [ebp-30h]
-  _EXC_PR_FNEXC **v19; // [esp+124h] [ebp-28h]
+  tagRECT *fsHandlerRtn; // [esp+114h] [ebp-38h]
+  void *scopeTable; // [esp+118h] [ebp-34h]
+  int ehState; // [esp+11Ch] [ebp-30h]
+  _EXC_PR_FNEXC **excCleanup; // [esp+124h] [ebp-28h]
   char v20; // [esp+128h] [ebp-24h]
-  int v21; // [esp+130h] [ebp-1Ch]
+  int pgmThread; // [esp+130h] [ebp-1Ch]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  v16 = &j____wcpp_4_fs_handler_rtn_;
-  v17 = &g_CRTWatcomEHHandleNestedException_ScopeTable;
-  v18 = 0;
-  v21 = **(_DWORD **)(a1 + 8);
-  v3 = *(int **)(v21 + 8);
-  *(_DWORD *)(v21 + 12) = aViolationOfFun;
-  v4 = v3;
-  v3[7] = a1;
+  fsHandlerRtn = &j____wcpp_4_fs_handler_rtn_;
+  scopeTable = &g_CRTWatcomEHHandleNestedException_ScopeTable;
+  ehState = 0;
+  pgmThread = **(_DWORD **)(a1 + 8);
+  currentExc = *(int **)(pgmThread + 8);
+  *(_DWORD *)(pgmThread + 12) = aViolationOfFun;
+  nestedExc = currentExc;
+  currentExc[7] = a1;
   while ( 1 )
   {
-    if ( !v4 )
+    if ( !nestedExc )
     {
-      v3[7] = a1;
-      v5 = *((_BYTE *)v3 + 12);
-      *((_BYTE *)v3 + 12) = 2;
-      *((_BYTE *)v3 + 13) = v5;
+      currentExc[7] = a1;
+      savedState = *((_BYTE *)currentExc + 12);
+      *((_BYTE *)currentExc + 12) = 2;
+      *((_BYTE *)currentExc + 13) = savedState;
       if ( (*(_BYTE *)(a1 + 37) & 2) != 0 )
-        v6 = 0;
+        fnexcThis = 0;
       else
-        v6 = v3;
-      _EXC_PR_FNEXC::_EXC_PR_FNEXC(v6);
-      v18 = 1;
+        fnexcThis = currentExc;
+      _EXC_PR_FNEXC::_EXC_PR_FNEXC(fnexcThis);
+      ehState = 1;
       unexpected();
       v14 = 3;
       _wcpp_4_call_terminate__(v8, v7);
-      v18 = 0;
-      _EXC_PR_FNEXC::~_EXC_PR_FNEXC(v13[0]);
+      ehState = 0;
+      _EXC_PR_FNEXC::~_EXC_PR_FNEXC(strExcBuf[0]);
     }
-    v9 = (_DWORD *)v4[7];
-    if ( v9 && *(_DWORD *)a1 == *v9 && *(_DWORD *)(a1 + 32) == v9[8] )
+    nestedThrowRec = (_DWORD *)nestedExc[7];
+    if ( nestedThrowRec && *(_DWORD *)a1 == *nestedThrowRec && *(_DWORD *)(a1 + 32) == nestedThrowRec[8] )
     {
-      if ( *((_BYTE *)v4 + 12) == 2 )
+      if ( *((_BYTE *)nestedExc + 12) == 2 )
       {
-        *((_BYTE *)v3 + 12) = 7;
+        *((_BYTE *)currentExc + 12) = 7;
         if ( (*(_BYTE *)(a1 + 37) & 2) != 0 )
-          v10 = 0;
+          fnexcThis2 = 0;
         else
-          v10 = v3;
-        _EXC_PR_FNEXC::_EXC_PR_FNEXC(v10);
+          fnexcThis2 = currentExc;
+        _EXC_PR_FNEXC::_EXC_PR_FNEXC(fnexcThis2);
         v20 = 0;
-        v19 = v13;
-        v18 = 4;
+        excCleanup = strExcBuf;
+        ehState = 4;
         ExcString_Ctor();
-        v18 = 5;
+        ehState = 5;
         ExcString_Ctor();
-        v13[25] = (_EXC_PR_FNEXC *)&g_BadException_VTable;
-        v18 = 7;
+        strExcBuf[25] = (_EXC_PR_FNEXC *)&g_BadException_VTable;
+        ehState = 7;
         CRT_ThrowExcStringException();
-        v19 = v13;
+        excCleanup = strExcBuf;
         v20 = 0;
-        v18 = 0;
-        _EXC_PR_FNEXC::~_EXC_PR_FNEXC(v13[0]);
+        ehState = 0;
+        _EXC_PR_FNEXC::~_EXC_PR_FNEXC(strExcBuf[0]);
       }
-      if ( *((_BYTE *)v4 + 12) == 7 )
+      if ( *((_BYTE *)nestedExc + 12) == 7 )
       {
         if ( (*(_BYTE *)(a1 + 37) & 2) != 0 )
-          v11 = 0;
+          dtorThis = 0;
         else
-          v11 = v3;
-        _EXC_PR_DTOR::_EXC_PR_DTOR(v11);
-        v18 = 14;
-        _wcpp_4_call_terminate__(v12, v21);
-        v18 = 0;
-        _EXC_PR_DTOR::~_EXC_PR_DTOR(v13[0]);
+          dtorThis = currentExc;
+        _EXC_PR_DTOR::_EXC_PR_DTOR(dtorThis);
+        ehState = 14;
+        _wcpp_4_call_terminate__(v12, pgmThread);
+        ehState = 0;
+        _EXC_PR_DTOR::~_EXC_PR_DTOR(strExcBuf[0]);
       }
-      if ( v4 != v3 )
+      if ( nestedExc != currentExc )
         _wcpp_4_corrupted_stack__(a2);
     }
-    v4 = (int *)*v4;
-    if ( v3 == v4 )
+    nestedExc = (int *)*nestedExc;
+    if ( currentExc == nestedExc )
       _wcpp_4_corrupted_stack__(a2);
   }
 }
@@ -4809,27 +4809,27 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
   char *spec_ptr; // edi
   char v7; // al
   int v8; // edx
-  _DWORD *v9; // edx
+  _DWORD *nFarPtr; // edx
   int v10; // eoff
   int v11; // eax
-  _DWORD *v12; // edx
+  _DWORD *nDwordPtr; // edx
   int v13; // edi
   int v14; // ecx
   int v15; // ebx
-  _WORD *v16; // edx
+  _WORD *nWordPtr; // edx
   int v17; // edx
   int v18; // eax
   int v19; // ecx
   unsigned __int16 *converted_text; // edi
   __int16 v21; // dx
   unsigned __int8 *buffer_ptr; // ebx
-  int v24; // [esp+0h] [ebp-80h] BYREF
+  int outputStream; // [esp+0h] [ebp-80h] BYREF
   int field_width; // [esp+4h] [ebp-7Ch]
   int char_count; // [esp+10h] [ebp-70h]
   char conversion_char; // [esp+15h] [ebp-6Bh]
   char pad_char; // [esp+16h] [ebp-6Ah]
   __int16 v29; // [esp+1Ch] [ebp-64h]
-  __int16 v30; // [esp+1Eh] [ebp-62h]
+  __int16 flags; // [esp+1Eh] [ebp-62h]
   int prefix_len; // [esp+20h] [ebp-60h]
   int zero_pad_len; // [esp+24h] [ebp-5Ch]
   int text_len; // [esp+28h] [ebp-58h]
@@ -4837,24 +4837,24 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
   int v35; // [esp+30h] [ebp-50h]
   int v36; // [esp+34h] [ebp-4Ch]
   unsigned __int8 conversion_buffer[40]; // [esp+38h] [ebp-48h] BYREF
-  int v38; // [esp+60h] [ebp-20h] BYREF
-  int v39; // [esp+64h] [ebp-1Ch] BYREF
+  int argCursor; // [esp+60h] [ebp-20h] BYREF
+  int convArgCursor; // [esp+64h] [ebp-1Ch] BYREF
   _BYTE *format_ptr; // [esp+68h] [ebp-18h]
   char v41; // [esp+6Ch] [ebp-14h]
 
-  v24 = stream;
+  outputStream = stream;
   v41 = 0;
   format_ptr = format;
-  v30 = 0;
+  flags = 0;
   v29 = 100;
   char_count = 0;
   while ( *format_ptr )
   {
     if ( *format_ptr == 37 )
     {
-      v38 = *argList;
-      spec_ptr = CRT_ParseWidthPrecisionSpec(format_ptr + 1, &v38, (int)&v24);
-      *argList = v38;
+      argCursor = *argList;
+      spec_ptr = CRT_ParseWidthPrecisionSpec(format_ptr + 1, &argCursor, (int)&outputStream);
+      *argList = argCursor;
       v7 = *spec_ptr;
       conversion_char = v7;
       format_ptr = spec_ptr + 1;
@@ -4862,47 +4862,47 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
         return char_count;
       if ( v7 == 110 )
       {
-        if ( (v30 & 0x20) != 0 )
+        if ( (flags & 0x20) != 0 )
         {
-          if ( (v30 & 0x80u) != 0 )
+          if ( (flags & 0x80u) != 0 )
           {
             v8 = *argList + 8;
             *argList = v8;
             v10 = v8 - 8;
-            v9 = *(_DWORD **)(v8 - 8);
+            nFarPtr = *(_DWORD **)(v8 - 8);
             __ES__ = *(_WORD *)(v10 + 4);
             goto LABEL_7;
           }
-          if ( (v30 & 0x40) != 0 )
+          if ( (flags & 0x40) != 0 )
           {
             v11 = *argList + 4;
             *argList = v11;
-            v12 = *(_DWORD **)(v11 - 4);
+            nDwordPtr = *(_DWORD **)(v11 - 4);
             goto LABEL_11;
           }
 LABEL_10:
           v13 = *argList + 4;
           *argList = v13;
-          v12 = *(_DWORD **)(v13 - 4);
+          nDwordPtr = *(_DWORD **)(v13 - 4);
           goto LABEL_11;
         }
-        if ( (v30 & 0x10) != 0 )
+        if ( (flags & 0x10) != 0 )
         {
-          if ( (v30 & 0x80u) == 0 )
+          if ( (flags & 0x80u) == 0 )
           {
-            if ( (v30 & 0x40) != 0 )
+            if ( (flags & 0x40) != 0 )
             {
               v15 = *argList + 4;
               *argList = v15;
-              v16 = *(_WORD **)(v15 - 4);
+              nWordPtr = *(_WORD **)(v15 - 4);
             }
             else
             {
               v17 = *argList + 4;
               *argList = v17;
-              v16 = *(_WORD **)(v17 - 4);
+              nWordPtr = *(_WORD **)(v17 - 4);
             }
-            *v16 = char_count;
+            *nWordPtr = char_count;
           }
           else
           {
@@ -4911,34 +4911,34 @@ LABEL_10:
             *(_DWORD *)MK_FP(*(_WORD *)(v14 - 8 + 4), *(_DWORD *)(v14 - 8)) = char_count;
           }
         }
-        else if ( (v30 & 0x80u) == 0 )
+        else if ( (flags & 0x80u) == 0 )
         {
-          if ( (v30 & 0x40) != 0 )
+          if ( (flags & 0x40) != 0 )
             goto LABEL_10;
           v19 = *argList + 4;
           *argList = v19;
-          v12 = *(_DWORD **)(v19 - 4);
+          nDwordPtr = *(_DWORD **)(v19 - 4);
 LABEL_11:
-          *v12 = char_count;
+          *nDwordPtr = char_count;
         }
         else
         {
           v18 = *argList + 8;
           *argList = v18;
-          v9 = *(_DWORD **)(v18 - 8);
+          nFarPtr = *(_DWORD **)(v18 - 8);
           __ES__ = *(_WORD *)(v18 - 8 + 4);
 LABEL_7:
-          *v9 = char_count;
+          *nFarPtr = char_count;
         }
       }
       else
       {
-        v39 = *argList;
-        converted_text = CRT_ConvertPrintfArgument(conversion_buffer, &v39, (int)&v24);
+        convArgCursor = *argList;
+        converted_text = CRT_ConvertPrintfArgument(conversion_buffer, &convArgCursor, (int)&outputStream);
         __ES__ = v21;
-        *argList = v39;
+        *argList = convArgCursor;
         field_width -= v36 + v35 + v34 + text_len + zero_pad_len + prefix_len;
-        if ( (v30 & 8) == 0 && pad_char == 32 )
+        if ( (flags & 8) == 0 && pad_char == 32 )
         {
           while ( field_width > 0 )
           {
@@ -4960,7 +4960,7 @@ LABEL_7:
         }
         if ( conversion_char == 115 )
         {
-          if ( (v30 & 0x20) != 0 )
+          if ( (flags & 0x20) != 0 )
             goto LABEL_37;
           while ( text_len > 0 )
           {
@@ -4974,12 +4974,12 @@ LABEL_7:
           if ( conversion_char == 83 )
           {
 LABEL_37:
-            CRT_OutputWideStringAsMultiByte(converted_text, __ES__, (unsigned __int8 *)outputFn, (int)&v24);
+            CRT_OutputWideStringAsMultiByte(converted_text, __ES__, (unsigned __int8 *)outputFn, (int)&outputStream);
             goto LABEL_43;
           }
           while ( text_len > 0 )
           {
-            ((void (__cdecl *)(int))outputFn)(v24);
+            ((void (__cdecl *)(int))outputFn)(outputStream);
             converted_text = (unsigned __int16 *)((char *)converted_text + 1);
             --text_len;
           }
@@ -5001,7 +5001,7 @@ LABEL_43:
           outputFn();
           --v36;
         }
-        if ( (v30 & 8) != 0 )
+        if ( (flags & 8) != 0 )
         {
           while ( field_width > 0 )
           {
@@ -5402,7 +5402,7 @@ unsigned __int16 * CRT_OutputWideStringAsMultiByte(
 //----- (0048773C) --------------------------------------------------------
 unsigned __int16 * CRT_ConvertPrintfArgument(unsigned __int8 *outputBuffer, int *argList, int formatCtx)
 {
-  int v4; // ecx
+  int ctx; // ecx
   unsigned __int16 *result_text; // edi
   unsigned __int8 format_char; // al
   bool v7; // zf
@@ -5438,7 +5438,7 @@ unsigned __int16 * CRT_ConvertPrintfArgument(unsigned __int8 *outputBuffer, int 
   int v37; // eax
   int v38; // eax
   int v39; // eax
-  int v40; // eax
+  int formattedLength; // eax
   int v41; // ecx
   int v42; // edx
   int v43; // eax
@@ -5451,17 +5451,17 @@ unsigned __int16 * CRT_ConvertPrintfArgument(unsigned __int8 *outputBuffer, int 
   int converted_length; // eax
   int v51; // ecx
   char format_flags; // bl
-  int v53; // ebx
+  int wideCharArgCursor; // ebx
   int v54; // ecx
-  int v55; // ebp
-  int v56; // eax
+  int mbcsCodePageActive; // ebp
+  int charArgCursor; // eax
   int arg_ptr; // ebp
-  int v59; // [esp+0h] [ebp-20h]
-  __int64 v60; // [esp+4h] [ebp-1Ch]
-  unsigned __int8 v61; // [esp+Ch] [ebp-14h]
-  unsigned __int8 v62; // [esp+Dh] [ebp-13h]
+  int valueLow; // [esp+0h] [ebp-20h]
+  __int64 value64; // [esp+4h] [ebp-1Ch]
+  unsigned __int8 mbLeadByte; // [esp+Ch] [ebp-14h]
+  unsigned __int8 mbTrailByte; // [esp+Dh] [ebp-13h]
 
-  v4 = formatCtx;
+  ctx = formatCtx;
   __ES__ = __DS__;
   *(_DWORD *)(formatCtx + 32) = 0;
   *(_DWORD *)(formatCtx + 36) = 0;
@@ -5508,17 +5508,17 @@ LABEL_13:
       {
         v13 = *argList + 4;
         *argList = v13;
-        HIDWORD(v60) = *(_DWORD *)(v13 - 4);
+        HIDWORD(value64) = *(_DWORD *)(v13 - 4);
         if ( (*(_BYTE *)(formatCtx + 30) & 0x10) == 0 )
           goto LABEL_42;
-        v12 = WORD2(v60);
+        v12 = WORD2(value64);
       }
-      HIDWORD(v60) = v12;
+      HIDWORD(value64) = v12;
       goto LABEL_42;
     }
     v8 = *argList + 4;
     *argList = v8;
-    v59 = *(_DWORD *)(v8 - 4);
+    valueLow = *(_DWORD *)(v8 - 4);
     v9 = *argList + 4;
     *argList = v9;
     v10 = *(_DWORD *)(v9 - 4);
@@ -5536,61 +5536,61 @@ LABEL_13:
     {
       v18 = *argList + 4;
       *argList = v18;
-      HIDWORD(v60) = *(_DWORD *)(v18 - 4);
-      if ( (*(_BYTE *)(v4 + 30) & 0x10) == 0 )
+      HIDWORD(value64) = *(_DWORD *)(v18 - 4);
+      if ( (*(_BYTE *)(ctx + 30) & 0x10) == 0 )
         goto LABEL_28;
-      v17 = *(int *)((char *)&v60 + 2) >> 16;
+      v17 = *(int *)((char *)&value64 + 2) >> 16;
     }
-    HIDWORD(v60) = v17;
+    HIDWORD(value64) = v17;
     goto LABEL_28;
   }
   v14 = *argList + 4;
   *argList = v14;
-  v59 = *(_DWORD *)(v14 - 4);
+  valueLow = *(_DWORD *)(v14 - 4);
   v15 = *argList + 4;
   *argList = v15;
-  LODWORD(v60) = *(_DWORD *)(v15 - 4);
+  LODWORD(value64) = *(_DWORD *)(v15 - 4);
 LABEL_28:
-  if ( (*(_BYTE *)(v4 + 31) & 1) != 0 )
+  if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
   {
-    if ( (v60 & 0x80000000LL) != 0 )
+    if ( (value64 & 0x80000000LL) != 0 )
       goto LABEL_33;
   }
-  else if ( v60 < 0 )
+  else if ( value64 < 0 )
   {
 LABEL_33:
-    v19 = *(_DWORD *)(v4 + 32);
-    *(_DWORD *)(v4 + 32) = v19 + 1;
+    v19 = *(_DWORD *)(ctx + 32);
+    *(_DWORD *)(ctx + 32) = v19 + 1;
     outputBuffer[v19] = 45;
-    if ( (*(_BYTE *)(v4 + 31) & 1) == 0 )
+    if ( (*(_BYTE *)(ctx + 31) & 1) == 0 )
     {
-      HIDWORD(v60) = -HIDWORD(v60);
+      HIDWORD(value64) = -HIDWORD(value64);
       goto LABEL_42;
     }
-    v59 = -v59;
-    if ( v59 )
-      v10 = ~(_DWORD)v60;
+    valueLow = -valueLow;
+    if ( valueLow )
+      v10 = ~(_DWORD)value64;
     else
-      v10 = -(int)v60;
+      v10 = -(int)value64;
 LABEL_15:
-    LODWORD(v60) = v10;
+    LODWORD(value64) = v10;
     goto LABEL_42;
   }
-  v20 = *(_BYTE *)(v4 + 30);
+  v20 = *(_BYTE *)(ctx + 30);
   if ( (v20 & 4) != 0 )
   {
-    v21 = *(_DWORD *)(v4 + 32);
-    *(_DWORD *)(v4 + 32) = v21 + 1;
+    v21 = *(_DWORD *)(ctx + 32);
+    *(_DWORD *)(ctx + 32) = v21 + 1;
     outputBuffer[v21] = 43;
   }
   else if ( (v20 & 2) != 0 )
   {
-    v22 = *(_DWORD *)(v4 + 32);
-    *(_DWORD *)(v4 + 32) = v22 + 1;
+    v22 = *(_DWORD *)(ctx + 32);
+    *(_DWORD *)(ctx + 32) = v22 + 1;
     outputBuffer[v22] = 32;
   }
 LABEL_42:
-  conversion_char = *(_BYTE *)(v4 + 21);
+  conversion_char = *(_BYTE *)(ctx + 21);
   if ( conversion_char >= 0x64u )
   {
     if ( conversion_char <= 0x64u )
@@ -5610,42 +5610,42 @@ LABEL_42:
             if ( conversion_char != 120 )
               goto LABEL_139;
 LABEL_94:
-            if ( (*(_BYTE *)(v4 + 30) & 1) != 0 )
+            if ( (*(_BYTE *)(ctx + 30) & 1) != 0 )
             {
-              if ( (*(_BYTE *)(v4 + 31) & 1) != 0 )
+              if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
               {
-                if ( v59 || (_DWORD)v60 )
+                if ( valueLow || (_DWORD)value64 )
                   goto LABEL_100;
               }
-              else if ( HIDWORD(v60) )
+              else if ( HIDWORD(value64) )
               {
 LABEL_100:
-                v37 = *(_DWORD *)(v4 + 32);
-                *(_DWORD *)(v4 + 32) = v37 + 1;
+                v37 = *(_DWORD *)(ctx + 32);
+                *(_DWORD *)(ctx + 32) = v37 + 1;
                 outputBuffer[v37] = 48;
-                v38 = *(_DWORD *)(v4 + 32);
-                *(_DWORD *)(v4 + 32) = v38 + 1;
-                outputBuffer[v38] = *(_BYTE *)(v4 + 21);
+                v38 = *(_DWORD *)(ctx + 32);
+                *(_DWORD *)(ctx + 32) = v38 + 1;
+                outputBuffer[v38] = *(_BYTE *)(ctx + 21);
               }
             }
 LABEL_101:
-            if ( *(_BYTE *)(v4 + 21) == 111 && (*(_BYTE *)(v4 + 30) & 1) != 0 )
+            if ( *(_BYTE *)(ctx + 21) == 111 && (*(_BYTE *)(ctx + 30) & 1) != 0 )
             {
-              v39 = *(_DWORD *)(v4 + 32);
-              *(_DWORD *)(v4 + 32) = v39 + 1;
+              v39 = *(_DWORD *)(ctx + 32);
+              *(_DWORD *)(ctx + 32) = v39 + 1;
               outputBuffer[v39] = 48;
             }
             goto LABEL_104;
           }
 LABEL_139:
-          *(_DWORD *)(v4 + 4) = 0;
-          *outputBuffer = *(_BYTE *)(v4 + 21);
-          *(_DWORD *)(v4 + 32) = 1;
+          *(_DWORD *)(ctx + 4) = 0;
+          *outputBuffer = *(_BYTE *)(ctx + 21);
+          *(_DWORD *)(ctx + 32) = 1;
           return result_text;
         }
 LABEL_77:
         *outputBuffer = 0;
-        v29 = *(_BYTE *)(v4 + 30);
+        v29 = *(_BYTE *)(ctx + 30);
         if ( v29 >= 0 )
         {
           if ( (v29 & 0x40) != 0 )
@@ -5678,12 +5678,12 @@ LABEL_77:
           }
         }
 LABEL_86:
-        if ( *(_BYTE *)(v4 + 21) == 83 )
+        if ( *(_BYTE *)(ctx + 21) == 83 )
         {
-          if ( (*(_BYTE *)(v4 + 30) & 0x10) == 0 )
+          if ( (*(_BYTE *)(ctx + 30) & 0x10) == 0 )
           {
 LABEL_88:
-            string_length = CRT_WideCharToMultiByteLenBounded(result_text, __ES__, *(_DWORD *)(v4 + 8));
+            string_length = CRT_WideCharToMultiByteLenBounded(result_text, __ES__, *(_DWORD *)(ctx + 8));
 LABEL_91:
             v36 = *(_DWORD *)(v35 + 8);
             *(_DWORD *)(v35 + 40) = string_length;
@@ -5692,11 +5692,11 @@ LABEL_91:
             return result_text;
           }
         }
-        else if ( (*(_BYTE *)(v4 + 30) & 0x20) != 0 )
+        else if ( (*(_BYTE *)(ctx + 30) & 0x20) != 0 )
         {
           goto LABEL_88;
         }
-        string_length = CRT_FarStrLenBounded((int)result_text, __ES__, *(_DWORD *)(v4 + 8));
+        string_length = CRT_FarStrLenBounded((int)result_text, __ES__, *(_DWORD *)(ctx + 8));
         goto LABEL_91;
       }
       v24 = conversion_char == 112;
@@ -5711,48 +5711,48 @@ LABEL_91:
           if ( conversion_char != 105 )
             goto LABEL_139;
 LABEL_104:
-          result_text = (unsigned __int16 *)&outputBuffer[*(_DWORD *)(v4 + 32)];
-          if ( (*(_BYTE *)(v4 + 31) & 1) != 0 )
+          result_text = (unsigned __int16 *)&outputBuffer[*(_DWORD *)(ctx + 32)];
+          if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
           {
-            if ( !*(_DWORD *)(v4 + 8) && !v59 && !(_DWORD)v60 )
+            if ( !*(_DWORD *)(ctx + 8) && !valueLow && !(_DWORD)value64 )
             {
 LABEL_108:
-              outputBuffer[*(_DWORD *)(v4 + 32)] = 0;
-              v40 = 0;
+              outputBuffer[*(_DWORD *)(ctx + 32)] = 0;
+              formattedLength = 0;
 LABEL_116:
-              *(_DWORD *)(v4 + 40) = v40;
-              v42 = v40;
-              v43 = *(_DWORD *)(v4 + 8);
+              *(_DWORD *)(ctx + 40) = formattedLength;
+              v42 = formattedLength;
+              v43 = *(_DWORD *)(ctx + 8);
               if ( v42 < v43 )
-                *(_DWORD *)(v4 + 36) = v43 - v42;
-              if ( *(_DWORD *)(v4 + 8) == -1 )
-                CRT_ApplyZeroPadWidth(v4);
+                *(_DWORD *)(ctx + 36) = v43 - v42;
+              if ( *(_DWORD *)(ctx + 8) == -1 )
+                CRT_ApplyZeroPadWidth(ctx);
               return result_text;
             }
-            _clib_ulltoa_(v4, &outputBuffer[*(_DWORD *)(v4 + 32)]);
+            _clib_ulltoa_(ctx, &outputBuffer[*(_DWORD *)(ctx + 32)]);
             if ( *(_BYTE *)(v41 + 21) == 88 )
               goto LABEL_114;
           }
           else
           {
-            if ( !*(_DWORD *)(v4 + 8) && !HIDWORD(v60) )
+            if ( !*(_DWORD *)(ctx + 8) && !HIDWORD(value64) )
               goto LABEL_108;
-            CRT_SignedLongToDecimalString(v4, &outputBuffer[*(_DWORD *)(v4 + 32)]);
+            CRT_SignedLongToDecimalString(ctx, &outputBuffer[*(_DWORD *)(ctx + 32)]);
             if ( *(_BYTE *)(v41 + 21) == 88 )
 LABEL_114:
               CRT_ToUpperInPlace(outputBuffer, v41);
           }
-          v40 = CRT_FarStrLenBounded((int)result_text, __DS__, -1);
+          formattedLength = CRT_FarStrLenBounded((int)result_text, __DS__, -1);
           goto LABEL_116;
         }
         goto LABEL_76;
       }
 LABEL_74:
-      if ( (*(_BYTE *)(v4 + 30) & 0x10) != 0 )
+      if ( (*(_BYTE *)(ctx + 30) & 0x10) != 0 )
       {
         v25 = *argList + 4;
         *argList = v25;
-        CRT_FormatFixedDecimal((char *)outputBuffer, *(_DWORD *)(v25 - 4), v4);
+        CRT_FormatFixedDecimal((char *)outputBuffer, *(_DWORD *)(v25 - 4), ctx);
         v26 = CRT_FarStrLenBounded((int)outputBuffer, __DS__, '\xFF');
         *(_DWORD *)(v27 + 40) = v26;
         return result_text;
@@ -5771,7 +5771,7 @@ LABEL_76:
         goto LABEL_139;
       arg_ptr = *argList + 4;
       *argList = arg_ptr;
-      converted_length = wctomb_(v4, *(unsigned __int16 *)(arg_ptr - 4));
+      converted_length = wctomb_(ctx, *(unsigned __int16 *)(arg_ptr - 4));
       if ( converted_length == -1 )
       {
         *(_DWORD *)(v51 + 32) = 0;
@@ -5791,18 +5791,18 @@ LABEL_76:
 LABEL_53:
     if ( !v24 )
       goto LABEL_139;
-    if ( !*(_DWORD *)(v4 + 4) )
+    if ( !*(_DWORD *)(ctx + 4) )
     {
-      if ( *(char *)(v4 + 30) >= 0 )
-        *(_DWORD *)(v4 + 4) = 8;
+      if ( *(char *)(ctx + 30) >= 0 )
+        *(_DWORD *)(ctx + 4) = 8;
       else
-        *(_DWORD *)(v4 + 4) = 13;
+        *(_DWORD *)(ctx + 4) = 13;
     }
-    *(_BYTE *)(v4 + 30) &= 0xF9u;
+    *(_BYTE *)(ctx + 30) &= 0xF9u;
     v44 = *argList + 4;
     *argList = v44;
     pointer_value = *(_DWORD *)(v44 - 4);
-    if ( *(char *)(v4 + 30) >= 0 )
+    if ( *(char *)(ctx + 30) >= 0 )
     {
       v47 = (char *)outputBuffer;
       v48 = *(_DWORD *)(v44 - 4);
@@ -5832,21 +5832,21 @@ LABEL_130:
     goto LABEL_94;
   if ( conversion_char != 99 )
     goto LABEL_139;
-  format_flags = *(_BYTE *)(v4 + 30);
-  *(_DWORD *)(v4 + 32) = 1;
+  format_flags = *(_BYTE *)(ctx + 30);
+  *(_DWORD *)(ctx + 32) = 1;
   if ( (format_flags & 0x20) != 0 )
   {
-    v53 = *argList + 4;
-    *argList = v53;
-    if ( wctomb_(v4, *(unsigned __int16 *)(v53 - 4)) != -1 )
+    wideCharArgCursor = *argList + 4;
+    *argList = wideCharArgCursor;
+    if ( wctomb_(ctx, *(unsigned __int16 *)(wideCharArgCursor - 4)) != -1 )
     {
-      v55 = g_CRT_MbcsCodePageActive;
-      *outputBuffer = v61;
-      if ( v55 )
+      mbcsCodePageActive = g_CRT_MbcsCodePageActive;
+      *outputBuffer = mbLeadByte;
+      if ( mbcsCodePageActive )
       {
-        if ( (g_Clips_DbcsLeadByteTable[v61] & 1) != 0 )
+        if ( (g_Clips_DbcsLeadByteTable[mbLeadByte] & 1) != 0 )
         {
-          outputBuffer[1] = v62;
+          outputBuffer[1] = mbTrailByte;
           ++*(_DWORD *)(v54 + 32);
         }
       }
@@ -5854,9 +5854,9 @@ LABEL_130:
   }
   else
   {
-    v56 = *argList + 4;
-    *argList = v56;
-    *outputBuffer = *(_BYTE *)(v56 - 4);
+    charArgCursor = *argList + 4;
+    *argList = charArgCursor;
+    *outputBuffer = *(_BYTE *)(charArgCursor - 4);
   }
   return result_text;
 }

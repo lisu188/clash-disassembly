@@ -2041,13 +2041,13 @@ bool  AviPlayer_UpdateTargetFrameFromClock(int self)
 //----- (00466C60) --------------------------------------------------------
 char  AviPlayer_CatchUpToTargetFrame(int self)
 {
-  int v2; // ecx
+  int frameQueue; // ecx
   HANDLE *v3; // edx
   int frameDataPtr; // eax
   unsigned __int8 flipState; // dl
   _DWORD *codecPtr; // ecx
   int decodedWidth; // ebx
-  int v8; // edx
+  int videoHeight; // edx
   int v9; // ecx
   int v10; // eax
   int imageBytesSw; // esi
@@ -2055,13 +2055,13 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
   int v13; // eax
   int v14; // edx
   int v15; // ecx
-  int v16; // eax
-  int *v17; // ecx
+  int bitmapInfoHeaderSw; // eax
+  int *drawContextSw; // ecx
   int busyGuard; // ebx
   int backSurface; // esi
-  int v22; // eax
+  int lockResult; // eax
   int pitchPixels; // ebx
-  int v24; // ecx
+  int videoHeightBack; // ecx
   int v25; // edx
   int v26; // eax
   int imageBytes; // ebx
@@ -2069,13 +2069,13 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
   int v29; // eax
   int v30; // ecx
   int v31; // edx
-  int v32; // eax
-  int *v33; // edx
-  int v34; // eax
+  int bitmapInfoHeaderBack; // eax
+  int *drawContextBack; // edx
+  int unlockResult; // eax
   int overlaySurface; // esi
-  int v36; // eax
+  int lockResultOvl; // eax
   int pitchPixelsOvl; // ebx
-  int v38; // ecx
+  int videoHeightOvl; // ecx
   int v39; // edx
   int v40; // eax
   int imageBytesOvl; // ebx
@@ -2083,9 +2083,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
   int v43; // eax
   int v44; // ecx
   int v45; // edx
-  int v46; // eax
-  int *v47; // edx
-  int v48; // eax
+  int bitmapInfoHeaderOvl; // eax
+  int *drawContextOvl; // edx
+  int unlockResultOvl; // eax
   int v49; // edx
   HANDLE *v50; // ecx
   int frameData; // eax
@@ -2135,9 +2135,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
   int lockedBitsOvlSaved; // [esp+7EAh] [ebp+4Eh]
   int frameBitsOvl; // [esp+7EEh] [ebp+52h]
   int frameFlagsOvl; // [esp+7F2h] [ebp+56h]
-  int v98; // [esp+7F6h] [ebp+5Ah]
-  int v99; // [esp+7F6h] [ebp+5Ah]
-  int v100; // [esp+7F6h] [ebp+5Ah]
+  int pixelCountSw; // [esp+7F6h] [ebp+5Ah]
+  int pixelCountBack; // [esp+7F6h] [ebp+5Ah]
+  int pixelCountOvl; // [esp+7F6h] [ebp+5Ah]
   int frameFlags; // [esp+7FAh] [ebp+5Eh]
   int frameBitsSw; // [esp+7FEh] [ebp+62h]
   int busyGuardPtr; // [esp+802h] [ebp+66h]
@@ -2177,12 +2177,12 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
     {
       if ( *(_DWORD *)(self + 2034) )
       {
-        v2 = self + 203;
+        frameQueue = self + 203;
         do
         {
           if ( *(int *)(self + 2034) > 0 )
           {
-            AviPlayer_IncrementFramesRenderedCount(v2);
+            AviPlayer_IncrementFramesRenderedCount(frameQueue);
             AviPlayer_PulseEventHandle(v3);
             --*(_DWORD *)(self + 2034);
           }
@@ -2206,9 +2206,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           {
             backSurface = *(_DWORD *)(self + 2017);
             surfaceDesc[0] = 108;
-            v22 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0);
-            if ( !v22
-              || v22 == -2005532222
+            lockResult = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0);
+            if ( !lockResult
+              || lockResult == -2005532222
               && ((*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
                || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0)) )
             {
@@ -2219,23 +2219,23 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
               frameFlags = *(_DWORD *)(self + 2029);
               pitchPixels = surfaceDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
               *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixels;
-              v99 = v24 * pitchPixels;
+              pixelCountBack = videoHeightBack * pitchPixels;
               v26 = AviPlayer_StreamBitmapInfoPtr(v25);
-              imageBytes = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * v99;
+              imageBytes = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * pixelCountBack;
               v29 = AviPlayer_StreamBitmapInfoPtr(v28);
               v53 = v30;
               *(_DWORD *)(v29 + 20) = imageBytes;
-              v32 = AviPlayer_StreamBitmapInfoPtr(v31);
+              bitmapInfoHeaderBack = AviPlayer_StreamBitmapInfoPtr(v31);
               if ( AviPlayer_SendICDrawBegin(
-                     *v33,
+                     *drawContextBack,
                      frameFlags,
-                     v33[1],
+                     drawContextBack[1],
                      frameBits,
                      0,
                      0,
-                     *(_DWORD *)(v33[1] + 4),
-                     *(_DWORD *)(v33[1] + 8),
-                     v32,
+                     *(_DWORD *)(drawContextBack[1] + 4),
+                     *(_DWORD *)(drawContextBack[1] + 8),
+                     bitmapInfoHeaderBack,
                      lockedBitsSaved,
                      0,
                      0,
@@ -2246,9 +2246,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              v34 = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits);
-              if ( v34
-                && (v34 != -2005532222
+              unlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits);
+              if ( unlockResult
+                && (unlockResult != -2005532222
                  || !(*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
                  && (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits)) )
               {
@@ -2308,9 +2308,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           {
             overlaySurface = *(_DWORD *)(self + 1964);
             overlayDesc[0] = 108;
-            v36 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0);
-            if ( !v36
-              || v36 == -2005532222
+            lockResultOvl = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0);
+            if ( !lockResultOvl
+              || lockResultOvl == -2005532222
               && ((*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
                || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0)) )
             {
@@ -2321,23 +2321,23 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
               frameFlagsOvl = *(_DWORD *)(self + 2029);
               pitchPixelsOvl = overlayDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
               *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixelsOvl;
-              v100 = v38 * pitchPixelsOvl;
+              pixelCountOvl = videoHeightOvl * pitchPixelsOvl;
               v40 = AviPlayer_StreamBitmapInfoPtr(v39);
-              imageBytesOvl = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * v100;
+              imageBytesOvl = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * pixelCountOvl;
               v43 = AviPlayer_StreamBitmapInfoPtr(v42);
               v54 = v44;
               *(_DWORD *)(v43 + 20) = imageBytesOvl;
-              v46 = AviPlayer_StreamBitmapInfoPtr(v45);
+              bitmapInfoHeaderOvl = AviPlayer_StreamBitmapInfoPtr(v45);
               if ( AviPlayer_SendICDrawBegin(
-                     *v47,
+                     *drawContextOvl,
                      frameFlagsOvl,
-                     v47[1],
+                     drawContextOvl[1],
                      frameBitsOvl,
                      0,
                      0,
-                     *(_DWORD *)(v47[1] + 4),
-                     *(_DWORD *)(v47[1] + 8),
-                     v46,
+                     *(_DWORD *)(drawContextOvl[1] + 4),
+                     *(_DWORD *)(drawContextOvl[1] + 8),
+                     bitmapInfoHeaderOvl,
                      lockedBitsOvlSaved,
                      0,
                      0,
@@ -2348,9 +2348,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              v48 = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits);
-              if ( v48
-                && (v48 != -2005532222
+              unlockResultOvl = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits);
+              if ( unlockResultOvl
+                && (unlockResultOvl != -2005532222
                  || !(*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
                  && (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits)) )
               {
@@ -2414,23 +2414,23 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
         {
           decodedWidth = *(_DWORD *)(self + 427);
           *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = decodedWidth;
-          v98 = decodedWidth * v8;
+          pixelCountSw = decodedWidth * videoHeight;
           v10 = AviPlayer_StreamBitmapInfoPtr(v9);
-          imageBytesSw = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * v98;
+          imageBytesSw = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * pixelCountSw;
           v13 = AviPlayer_StreamBitmapInfoPtr(v12);
           v52 = v14;
           *(_DWORD *)(v13 + 20) = imageBytesSw;
-          v16 = AviPlayer_StreamBitmapInfoPtr(v15);
+          bitmapInfoHeaderSw = AviPlayer_StreamBitmapInfoPtr(v15);
           if ( AviPlayer_SendICDrawBegin(
-                 *v17,
+                 *drawContextSw,
                  frameFlagsSw,
-                 v17[1],
+                 drawContextSw[1],
                  frameBitsSw,
                  0,
                  0,
-                 *(_DWORD *)(v17[1] + 4),
-                 *(_DWORD *)(v17[1] + 8),
-                 v16,
+                 *(_DWORD *)(drawContextSw[1] + 4),
+                 *(_DWORD *)(drawContextSw[1] + 8),
+                 bitmapInfoHeaderSw,
                  decodeBuffer,
                  0,
                  0,
@@ -3565,9 +3565,9 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   int biCompression; // esi
   int v31; // eax
   int v32; // edx
-  __int64 v33; // rax
+  __int64 frameHeight; // rax
   int v34; // edx
-  __int64 v35; // rax
+  __int64 frameHeight2; // rax
   int stretchRatio; // eax
   int decodedFormatPtr; // ebx
   __int64 frameBufferAlloc; // rax
@@ -3758,11 +3758,11 @@ LABEL_39:
   *(_DWORD *)(v31 + 2099) = 0;
   v32 = *(_DWORD *)((char *)&a18 + 6);
   *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2103) = *(_DWORD *)(*(_DWORD *)(v31 + 151) + 4);
-  v33 = *(int *)(*(_DWORD *)(v32 + 151) + 8);
-  LODWORD(v33) = (HIDWORD(v33) ^ v33) - HIDWORD(v33);
-  HIDWORD(v33) = *(_DWORD *)((char *)&a18 + 6);
-  *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2107) = v33;
-  if ( *(_BYTE *)(HIDWORD(v33) + 2062) )
+  frameHeight = *(int *)(*(_DWORD *)(v32 + 151) + 8);
+  LODWORD(frameHeight) = (HIDWORD(frameHeight) ^ frameHeight) - HIDWORD(frameHeight);
+  HIDWORD(frameHeight) = *(_DWORD *)((char *)&a18 + 6);
+  *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2107) = frameHeight;
+  if ( *(_BYTE *)(HIDWORD(frameHeight) + 2062) )
   {
     if ( !*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2071) && !*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2075) )
     {
@@ -3770,9 +3770,9 @@ LABEL_39:
       *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2071) = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 151)
                                                                     + 4)
                                                         + *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2063);
-      v35 = *(int *)(*(_DWORD *)(v34 + 151) + 8);
-      *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2075) = (HIDWORD(v35) ^ v35)
-                                                        - HIDWORD(v35)
+      frameHeight2 = *(int *)(*(_DWORD *)(v34 + 151) + 8);
+      *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2075) = (HIDWORD(frameHeight2) ^ frameHeight2)
+                                                        - HIDWORD(frameHeight2)
                                                         + *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2067);
     }
     *(_DWORD *)((char *)&a16 + 2) = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2063);
@@ -15437,21 +15437,21 @@ char  File_ApplyResolvedEntryFlag(int a1, int flag_value, DWORD heap_ctx)
 _DWORD * File_OpenNodeByFlags(char flags)
 {
   char *v1; // ecx
-  int v2; // edi
+  int resolvedEntry; // edi
   int v3; // ecx
   _DWORD *result; // eax
   int v5; // ecx
-  int v6; // ebx
-  const char **v7; // eax
+  int excStringField; // ebx
+  const char **parentDir; // eax
   char *v8; // ecx
-  _DWORD *v9; // ebx
+  _DWORD *parentEntry; // ebx
   int v10; // ecx
-  int v11; // edi
+  int dirEntry; // edi
   _DWORD *v12; // ebx
   int v13; // ecx
-  _DWORD *v14; // eax
+  _DWORD *dirStream; // eax
   int v15; // ecx
-  _DWORD *v16; // ebx
+  _DWORD *resultNode; // ebx
   int v17; // [esp+0h] [ebp-40h] BYREF
   int (**v18)(); // [esp+4h] [ebp-3Ch]
   int v19; // [esp+8h] [ebp-38h] BYREF
@@ -15460,23 +15460,23 @@ _DWORD * File_OpenNodeByFlags(char flags)
   int (**v22)(); // [esp+14h] [ebp-2Ch]
   int v23; // [esp+18h] [ebp-28h] BYREF
   int (**v24)(); // [esp+1Ch] [ebp-24h]
-  const char *v25[2]; // [esp+20h] [ebp-20h] BYREF
-  const char *v26[6]; // [esp+28h] [ebp-18h] BYREF
+  const char *parentDirPath[2]; // [esp+20h] [ebp-20h] BYREF
+  const char *fileName[6]; // [esp+28h] [ebp-18h] BYREF
 
   v17 = 0;
   v18 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v17);
   v18 = &g_PathEntry_Vtable;
-  v2 = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&g_PathEntry_Vtable);
+  resolvedEntry = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&g_PathEntry_Vtable);
   Compat_StringHolderScalarDeletingDtor((int)&v17, 1);
-  if ( v2 )
+  if ( resolvedEntry )
   {
     if ( (flags & 8) == 0 )
     {
       result = (_DWORD *)Mem_Alloc(20, v3, flags, (DWORD)&g_PathEntry_Vtable);
       if ( result )
       {
-        result = FileSystem_ArchiveEntryStreamCtor(result, v2, v5);
+        result = FileSystem_ArchiveEntryStreamCtor(result, resolvedEntry, v5);
         *result = g_FileArchiveEntryStream_VTable;
       }
       return result;
@@ -15485,24 +15485,24 @@ _DWORD * File_OpenNodeByFlags(char flags)
   }
   if ( (flags & 8) == 0 )
     return 0;
-  v6 = v3 + 12;
-  if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(v6) )
+  excStringField = v3 + 12;
+  if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(excStringField) )
     return 0;
   v21 = 0;
   v22 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v21);
   v22 = &g_PathEntry_Vtable;
-  v7 = FileSystem_PathTrimToParentDir(v25);
-  v9 = (_DWORD *)File_ResolveCachedPathEntry(v8, v7, v8, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)v25, 1);
+  parentDir = FileSystem_PathTrimToParentDir(parentDirPath);
+  parentEntry = (_DWORD *)File_ResolveCachedPathEntry(v8, parentDir, v8, (DWORD)&g_PathEntry_Vtable);
+  Compat_StringHolderScalarDeletingDtor((int)parentDirPath, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v21, 1);
   v19 = 0;
   v20 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v19);
   v20 = &g_PathEntry_Vtable;
-  FileSystem_PathExtractFileName(v26);
+  FileSystem_PathExtractFileName(fileName);
   Compat_StringHolderScalarDeletingDtor((int)&v19, 1);
-  if ( v9 && (v11 = FileSystem_ArchiveInsertDirectoryEntry(v9, v26)) != 0 )
+  if ( parentEntry && (dirEntry = FileSystem_ArchiveInsertDirectoryEntry(parentEntry, fileName)) != 0 )
   {
     v24 = &g_CompatStringHolder_Vtable;
     v23 = 0;
@@ -15512,19 +15512,19 @@ _DWORD * File_OpenNodeByFlags(char flags)
     ExcString_GetTextPtr((int)&v23);
     ExcString_ReleaseText(v12);
     Compat_StringHolderScalarDeletingDtor((int)&v23, 1);
-    v14 = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&g_CompatStringHolder_Vtable);
-    if ( v14 )
+    dirStream = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&g_CompatStringHolder_Vtable);
+    if ( dirStream )
     {
-      v14 = FileSystem_ArchiveEntryStreamCtor(v14, v11, v15);
-      *v14 = g_FileDirNode_VTable;
+      dirStream = FileSystem_ArchiveEntryStreamCtor(dirStream, dirEntry, v15);
+      *dirStream = g_FileDirNode_VTable;
     }
-    v16 = v14;
-    Compat_StringHolderScalarDeletingDtor((int)v26, 1);
-    return v16;
+    resultNode = dirStream;
+    Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
+    return resultNode;
   }
   else
   {
-    Compat_StringHolderScalarDeletingDtor((int)v26, 1);
+    Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
     return 0;
   }
 }
@@ -19994,8 +19994,8 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int ruleName; // ebp
   _DWORD *binds; // esi
   unsigned int bindIndex; // ebx
-  _DWORD *v9; // edx
-  int v10; // eax
+  _DWORD *bindWalker; // edx
+  int matchEntity; // eax
   int result; // eax
   int v12; // ecx
   int v13; // ecx
@@ -20007,28 +20007,28 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int v19; // ecx
   _DWORD *bindPtr; // ebx
   unsigned int cleanupIndex; // edx
-  unsigned int v22; // eax
-  int v23; // eax
-  int v24; // eax
+  unsigned int lastBindIndex; // eax
+  int cleanupEntity; // eax
+  int finalEntity; // eax
   int factCount; // eax
-  int v26; // edi
-  int v27; // esi
+  int prevMaxInstances; // edi
+  int newFactSum; // esi
   int instanceCount; // eax
-  int v29; // ebp
+  int newInstanceSum; // ebp
   int activationCount; // eax
   int v31; // ecx
   int i; // edx
   int v33; // edx
   int nextActivation; // eax
   int v35; // ecx
-  int v36; // eax
+  int nextRuleName; // eax
   int v37; // ecx
   int v38; // ecx
   int v39; // ecx
   int v40; // ecx
   int v42; // edx
   int v43; // ecx
-  char *v44; // edx
+  char *messageString; // edx
   int v45; // ecx
   int v46; // ecx
   int v47; // ecx
@@ -20039,8 +20039,8 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int v52; // [esp+8h] [ebp-E4h]
   _DWORD fireTraceBuffer[15]; // [esp+Ch] [ebp-E0h] BYREF
   _BYTE statsBuffer[60]; // [esp+48h] [ebp-A4h] BYREF
-  int v55[6]; // [esp+84h] [ebp-68h] BYREF
-  double v56; // [esp+9Ch] [ebp-50h]
+  int returnValue[6]; // [esp+84h] [ebp-68h] BYREF
+  double runtimeSeconds; // [esp+9Ch] [ebp-50h]
   double startTime; // [esp+A4h] [ebp-48h]
   int maxInstances; // [esp+B4h] [ebp-38h]
   int maxFacts; // [esp+B8h] [ebp-34h]
@@ -20104,13 +20104,13 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     *(_BYTE *)binds |= 2u;
     g_Clips_CurrentPartialMatch = (int)binds;
     g_Rules_GlobalRHSBinds = 0;
-    v9 = binds;
+    bindWalker = binds;
     while ( bindIndex < *binds << 17 >> 23 )
     {
-      v10 = *(_DWORD *)v9[2];
-      if ( v10 )
-        (*(void (**)(void))(*(_DWORD *)v10 + 52))();
-      ++v9;
+      matchEntity = *(_DWORD *)bindWalker[2];
+      if ( matchEntity )
+        (*(void (**)(void))(*(_DWORD *)matchEntity + 52))();
+      ++bindWalker;
       ++bindIndex;
     }
     g_Rules_CurrentLogicalJoin = *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 40);
@@ -20120,7 +20120,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     Rules_ExecuteRuleActions(
       **(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8),
       *(__int16 **)(g_Rules_CurrentlyExecutingRule + 36),
-      v55,
+      returnValue,
       *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 24),
       a3,
       0);
@@ -20140,20 +20140,20 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     *(_BYTE *)binds &= ~2u;
     while ( 1 )
     {
-      v22 = (*binds << 17 >> 23) - 1;
-      if ( cleanupIndex >= v22 )
+      lastBindIndex = (*binds << 17 >> 23) - 1;
+      if ( cleanupIndex >= lastBindIndex )
         break;
-      v23 = *(_DWORD *)bindPtr[2];
-      if ( v23 )
-        (*(void (**)(void))(*(_DWORD *)v23 + 48))();
+      cleanupEntity = *(_DWORD *)bindPtr[2];
+      if ( cleanupEntity )
+        (*(void (**)(void))(*(_DWORD *)cleanupEntity + 48))();
       ++bindPtr;
       ++cleanupIndex;
     }
     if ( (*(_BYTE *)binds & 0x20) == 0 )
     {
-      v24 = *(_DWORD *)binds[v22 + 2];
-      if ( v24 )
-        (*(void (__cdecl **)(int))(*(_DWORD *)v24 + 48))(v50);
+      finalEntity = *(_DWORD *)binds[lastBindIndex + 2];
+      if ( finalEntity )
+        (*(void (__cdecl **)(int))(*(_DWORD *)finalEntity + 48))(v50);
     }
     Rules_RemoveActivation(activation, 0, 0);
     Rules_FlushPendingNetworkGarbage();
@@ -20163,15 +20163,15 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
       factCount = Rules_GetInstalledFactCount();
       if ( factCount > maxFacts )
         maxFacts = factCount;
-      v26 = maxInstances;
-      v27 = factCount + factSum;
+      prevMaxInstances = maxInstances;
+      newFactSum = factCount + factSum;
       instanceCount = Rules_GetActiveInstanceCount();
-      factSum = v27;
-      if ( instanceCount > v26 )
+      factSum = newFactSum;
+      if ( instanceCount > prevMaxInstances )
         maxInstances = instanceCount;
-      v29 = instanceCount + instanceSum;
+      newInstanceSum = instanceCount + instanceSum;
       activationCount = Rules_GetActivationCount();
-      instanceSum = v29;
+      instanceSum = newInstanceSum;
       if ( activationCount > v31 )
         maxActivations = activationCount;
       activationSum += activationCount;
@@ -20190,8 +20190,8 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     {
       g_Rules_HaltRulesFlag = 1;
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aBreakingOnRule, nextActivation);
-      v36 = Rules_GetActivationRuleName(v35);
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], v36, (int)g_IO_LogicalNameTable_WDialog[0]);
+      nextRuleName = Rules_GetActivationRuleName(v35);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], nextRuleName, (int)g_IO_LogicalNameTable_WDialog[0]);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDotNewline_RuleRuntime, v37);
     }
   }
@@ -20206,25 +20206,25 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     double sample_count;
 
     runtime_end = Rules_TimeCommand();
-    v56 = runtime_end;
+    runtimeSeconds = runtime_end;
     Rules_PrintLongInteger(v38, fireCount);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRulesFired, v39);
     if ( startTime >= runtime_end )
     {
-      v44 = asc_502E94;
+      messageString = asc_502E94;
     }
     else
     {
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRunTimeIs, v40);
       runtime_elapsed = runtime_end - startTime;
-      v56 = runtime_elapsed;
+      runtimeSeconds = runtime_elapsed;
       Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], runtime_elapsed);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)" seconds.\n", 0);
       rulesPerSecond = (double)fireCount / runtime_elapsed;
       Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], rulesPerSecond);
-      v44 = " rules per second.\n";
+      messageString = " rules per second.\n";
     }
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v44, v40);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)messageString, v40);
     sample_count = (double)(fireCount + 1);
     meanValue = (int)((double)factSum / sample_count + g_Rules_AverageRoundingBias);
     sprintf_(statsBuffer, "%ld mean number of facts (%ld maximum).\n", meanValue, maxFacts);

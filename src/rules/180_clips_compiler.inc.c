@@ -7705,37 +7705,37 @@ LABEL_6:
 //----- (004B5F64) --------------------------------------------------------
 int  CRT_IsDaylightTime(_DWORD *timeFields)
 {
-  _DWORD *v1; // ecx
+  _DWORD *tmFields; // ecx
   int inDaylight; // edi
   int v3; // ecx
   int *firstRule; // esi
   int *secondRule; // ebx
   int ruleMonth; // ebp
-  int v7; // edx
-  int v8; // eax
-  int v9; // eax
-  int v10; // edx
-  int v11; // edx
-  int v12; // eax
-  int v13; // edx
-  int v14; // edx
-  int v15; // eax
-  int v16; // esi
-  int v17; // eax
-  int v18; // ebp
-  int v19; // esi
-  int v20; // edx
-  int v21; // eax
-  int v22; // edx
-  int v23; // edx
-  int v24; // eax
+  int monthEndOffset; // edx
+  int monthStartOffset; // eax
+  int firstRuleMode; // eax
+  int firstRuleMonth; // edx
+  int firstRuleWeek; // edx
+  int firstRuleWeekStartDom; // eax
+  int firstRuleDay; // edx
+  int firstRuleDayLeap; // edx
+  int tmYday; // eax
+  int secondRuleMode; // esi
+  int secondRuleMonth; // eax
+  int secondRuleCandidateDay; // ebp
+  int secondRuleWeek; // esi
+  int secondRuleCandidateDayPrev; // edx
+  int secondRuleWeekStartDom; // eax
+  int secondRuleDay; // edx
+  int secondRuleDayLeap; // edx
+  int currentTmYday; // eax
   int result; // eax
   int v26; // [esp+8h] [ebp-2Ch]
   int v27; // [esp+Ch] [ebp-28h]
   int daysInMonth; // [esp+10h] [ebp-24h]
   signed int startsInDst; // [esp+14h] [ebp-20h]
 
-  v1 = timeFields;
+  tmFields = timeFields;
   inDaylight = 0;
   if ( !*g_CRT_TzDaylightNamePtr )
     goto LABEL_54;
@@ -7753,63 +7753,63 @@ int  CRT_IsDaylightTime(_DWORD *timeFields)
   ruleMonth = *(_DWORD *)(v3 + 16);
   if ( CRT_IsLeapYear(*(_DWORD *)(v3 + 20) + 1900) )
   {
-    v7 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth + 2);
-    v8 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth);
+    monthEndOffset = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth + 2);
+    monthStartOffset = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth);
   }
   else
   {
-    v7 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * ruleMonth + 2);
-    v8 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * ruleMonth);
+    monthEndOffset = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * ruleMonth + 2);
+    monthStartOffset = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * ruleMonth);
   }
-  daysInMonth = (v7 >> 16) - (v8 >> 16);
-  v9 = firstRule[8];
-  if ( v9 )
+  daysInMonth = (monthEndOffset >> 16) - (monthStartOffset >> 16);
+  firstRuleMode = firstRule[8];
+  if ( firstRuleMode )
   {
-    v13 = firstRule[7];
-    if ( v9 == 1 )
+    firstRuleDay = firstRule[7];
+    if ( firstRuleMode == 1 )
     {
-      if ( CRT_IsLeapYear(v1[5] + 1900) && v14 > g_CRT_NonLeapFebMarDayThreshold >> 16 )
-        ++v14;
-      v13 = v14 - 1;
+      if ( CRT_IsLeapYear(tmFields[5] + 1900) && firstRuleDayLeap > g_CRT_NonLeapFebMarDayThreshold >> 16 )
+        ++firstRuleDayLeap;
+      firstRuleDay = firstRuleDayLeap - 1;
     }
-    v15 = v1[7];
-    if ( v13 <= v15 )
+    tmYday = tmFields[7];
+    if ( firstRuleDay <= tmYday )
     {
       inDaylight = 1;
-      if ( v13 == v15 )
+      if ( firstRuleDay == tmYday )
         goto LABEL_27;
     }
   }
   else
   {
-    v10 = firstRule[4];
-    if ( ruleMonth > v10 )
+    firstRuleMonth = firstRule[4];
+    if ( ruleMonth > firstRuleMonth )
     {
       inDaylight = 1;
       goto LABEL_28;
     }
-    if ( ruleMonth == v10 )
+    if ( ruleMonth == firstRuleMonth )
     {
-      v26 = v1[3] - (v1[6] + 7 - firstRule[6]) % 7;
-      v11 = firstRule[3];
-      v27 = v1[3] - 1 - (v1[6] + 6 - firstRule[6]) % 7;
-      if ( v11 == 5 )
+      v26 = tmFields[3] - (tmFields[6] + 7 - firstRule[6]) % 7;
+      firstRuleWeek = firstRule[3];
+      v27 = tmFields[3] - 1 - (tmFields[6] + 6 - firstRule[6]) % 7;
+      if ( firstRuleWeek == 5 )
       {
         if ( daysInMonth - 7 < v26 )
         {
           inDaylight = 1;
           if ( daysInMonth - 7 >= v27 )
 LABEL_27:
-            inDaylight = CRT_CompareTzTransitionDate(v1, firstRule) == 0;
+            inDaylight = CRT_CompareTzTransitionDate(tmFields, firstRule) == 0;
         }
       }
       else
       {
-        v12 = 7 * (v11 - 1) + 1;
-        if ( v12 <= v26 )
+        firstRuleWeekStartDom = 7 * (firstRuleWeek - 1) + 1;
+        if ( firstRuleWeekStartDom <= v26 )
         {
           inDaylight = 1;
-          if ( v12 > v27 )
+          if ( firstRuleWeekStartDom > v27 )
             goto LABEL_27;
         }
       }
@@ -7822,61 +7822,61 @@ LABEL_28:
       inDaylight = startsInDst;
     goto LABEL_54;
   }
-  v16 = secondRule[8];
-  if ( v16 )
+  secondRuleMode = secondRule[8];
+  if ( secondRuleMode )
   {
-    v22 = secondRule[7];
-    if ( v16 == 1 )
+    secondRuleDay = secondRule[7];
+    if ( secondRuleMode == 1 )
     {
-      if ( CRT_IsLeapYear(v1[5] + 1900) && v23 > g_CRT_NonLeapFebMarDayThreshold >> 16 )
-        ++v23;
-      v22 = v23 - 1;
+      if ( CRT_IsLeapYear(tmFields[5] + 1900) && secondRuleDayLeap > g_CRT_NonLeapFebMarDayThreshold >> 16 )
+        ++secondRuleDayLeap;
+      secondRuleDay = secondRuleDayLeap - 1;
     }
-    v24 = v1[7];
-    if ( v22 > v24 )
+    currentTmYday = tmFields[7];
+    if ( secondRuleDay > currentTmYday )
       goto LABEL_52;
     inDaylight = 0;
-    if ( v22 != v24 )
+    if ( secondRuleDay != currentTmYday )
       goto LABEL_52;
     goto LABEL_51;
   }
-  v17 = secondRule[4];
-  if ( ruleMonth > v17 )
+  secondRuleMonth = secondRule[4];
+  if ( ruleMonth > secondRuleMonth )
   {
     inDaylight = 0;
     goto LABEL_52;
   }
-  if ( ruleMonth != v17 )
+  if ( ruleMonth != secondRuleMonth )
     goto LABEL_52;
-  v18 = v1[3] - (v1[6] + 7 - secondRule[6]) % 7;
+  secondRuleCandidateDay = tmFields[3] - (tmFields[6] + 7 - secondRule[6]) % 7;
   inDaylight = 0;
-  v19 = secondRule[3];
-  v20 = v1[3] - 1 - (v1[6] + 6 - secondRule[6]) % 7;
-  if ( v19 != 5 )
+  secondRuleWeek = secondRule[3];
+  secondRuleCandidateDayPrev = tmFields[3] - 1 - (tmFields[6] + 6 - secondRule[6]) % 7;
+  if ( secondRuleWeek != 5 )
   {
-    v21 = 7 * (v19 - 1) + 1;
-    if ( v18 < v21 )
+    secondRuleWeekStartDom = 7 * (secondRuleWeek - 1) + 1;
+    if ( secondRuleCandidateDay < secondRuleWeekStartDom )
       goto LABEL_37;
-    if ( v20 >= v21 )
+    if ( secondRuleCandidateDayPrev >= secondRuleWeekStartDom )
       goto LABEL_52;
 LABEL_51:
-    inDaylight = CRT_CompareTzTransitionDate(v1, secondRule);
+    inDaylight = CRT_CompareTzTransitionDate(tmFields, secondRule);
     goto LABEL_52;
   }
-  if ( v18 <= daysInMonth - 7 )
+  if ( secondRuleCandidateDay <= daysInMonth - 7 )
   {
 LABEL_37:
     inDaylight = 1;
     goto LABEL_52;
   }
-  if ( v20 <= daysInMonth - 7 )
+  if ( secondRuleCandidateDayPrev <= daysInMonth - 7 )
     goto LABEL_51;
 LABEL_52:
   if ( startsInDst )
     inDaylight = startsInDst - inDaylight;
 LABEL_54:
   result = inDaylight;
-  v1[8] = inDaylight;
+  tmFields[8] = inDaylight;
   return result;
 }
 // 4B60F4: conditional instruction was optimized away because %var_30.4==0
@@ -8794,25 +8794,25 @@ signed int __fastcall Rules_BuildFieldRangeConstraintNode(int firstField, int se
 signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secondField)
 {
   int v4; // ecx
-  char v5; // al
-  unsigned int v6; // eax
-  int v7; // eax
-  int v9; // eax
+  char firstFieldMax; // al
+  unsigned int packedBits; // eax
+  int valueBitmapValue; // eax
+  int firstFlags; // eax
   _DWORD *v10; // ecx
-  char v11; // al
+  char firstRangeMax; // al
   int v12; // eax
-  int v13; // eax
-  int v14; // eax
+  int secondFieldValue; // eax
+  int rangeBitmapValue; // eax
   int comparisonSymbol; // edx
   signed int testNode; // eax
   int v17; // ecx
-  signed int v18; // eax
+  signed int firstConstNode; // eax
   int v19; // edx
   int v20; // ecx
-  signed int v21; // eax
+  signed int secondConstNode; // eax
   int v22; // edx
-  unsigned int v23; // [esp+0h] [ebp-20h] BYREF
-  int v24; // [esp+4h] [ebp-1Ch]
+  unsigned int rangeBitmapData; // [esp+0h] [ebp-20h] BYREF
+  int rangeBitmapHigh; // [esp+4h] [ebp-1Ch]
   _DWORD bitmapData[6]; // [esp+8h] [ebp-18h] BYREF
 
   if ( (*(_BYTE *)(firstField + 9) & 0x40) != 0
@@ -8822,8 +8822,8 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
   {
     if ( *(int *)(firstField + 40) <= 0
       || *(_DWORD *)firstField != 15
-      || (v9 = *(_DWORD *)(firstField + 8), (v9 & 0x3F8000) != 0)
-      && ((v9 & 0x3F8000) != 0x8000 || (*(_WORD *)(firstField + 10) & 0x1FC0) != 0)
+      || (firstFlags = *(_DWORD *)(firstField + 8), (firstFlags & 0x3F8000) != 0)
+      && ((firstFlags & 0x3F8000) != 0x8000 || (*(_WORD *)(firstField + 10) & 0x1FC0) != 0)
       || *(int *)(secondField + 40) <= 0
       || *(_DWORD *)secondField != 15
       || (*(_DWORD *)(secondField + 8) & 0x3F8000) != 0 && (*(_WORD *)(secondField + 10) & 0x1FC0) != 0 )
@@ -8833,72 +8833,72 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
       else
         comparisonSymbol = g_ClipsSymbolEq;
       testNode = AST_NewNode(10, comparisonSymbol);
-      v18 = PP_ParsePrimary(v17, testNode, v17);
-      *(_DWORD *)(v19 + 6) = v18;
-      v21 = PP_ParsePrimary(secondField, v19, v20);
-      *(_DWORD *)(*(_DWORD *)(v22 + 6) + 10) = v21;
+      firstConstNode = PP_ParsePrimary(v17, testNode, v17);
+      *(_DWORD *)(v19 + 6) = firstConstNode;
+      secondConstNode = PP_ParsePrimary(secondField, v19, v20);
+      *(_DWORD *)(*(_DWORD *)(v22 + 6) + 10) = secondConstNode;
       return v22;
     }
     else
     {
-      Mem_AllocArray(&v23, 8);
-      LOBYTE(v23) = v23 & 0xFC;
-      v11 = v10[10] - 1;
-      LOWORD(v23) = v23 & 0xFE03;
-      v23 |= 4 * (v11 & 0x7F);
+      Mem_AllocArray(&rangeBitmapData, 8);
+      LOBYTE(rangeBitmapData) = rangeBitmapData & 0xFC;
+      firstRangeMax = v10[10] - 1;
+      LOWORD(rangeBitmapData) = rangeBitmapData & 0xFE03;
+      rangeBitmapData |= 4 * (firstRangeMax & 0x7F);
       v12 = (unsigned __int8)*(_DWORD *)(secondField + 28);
-      HIWORD(v23) &= 0xFE01u;
-      v23 |= v12 << 17;
+      HIWORD(rangeBitmapData) &= 0xFE01u;
+      rangeBitmapData |= v12 << 17;
       LOBYTE(v12) = *(_DWORD *)(secondField + 40) - 1;
-      HIBYTE(v23) &= 1u;
-      v23 |= (unsigned __int8)v12 << 25;
+      HIBYTE(rangeBitmapData) &= 1u;
+      rangeBitmapData |= (unsigned __int8)v12 << 25;
       if ( (v10[2] & 0x3F8000) != 0 )
       {
-        BYTE1(v23) &= ~2u;
-        v23 = ((unsigned __int8)(v10[3] << 18 >> 24) >> 1 << 10) | v23 & 0xFFFE03FF;
+        BYTE1(rangeBitmapData) &= ~2u;
+        rangeBitmapData = ((unsigned __int8)(v10[3] << 18 >> 24) >> 1 << 10) | rangeBitmapData & 0xFFFE03FF;
       }
       else
       {
-        BYTE1(v23) |= 2u;
-        v23 = ((v10[3] & 0x7F) << 10) | v23 & 0xFFFE03FF;
+        BYTE1(rangeBitmapData) |= 2u;
+        rangeBitmapData = ((v10[3] & 0x7F) << 10) | rangeBitmapData & 0xFFFE03FF;
       }
       if ( (*(_DWORD *)(secondField + 8) & 0x3F8000) != 0 )
       {
-        LOBYTE(v24) = v24 & 0xFE;
-        v13 = *(_DWORD *)(secondField + 12) << 18 >> 25;
+        LOBYTE(rangeBitmapHigh) = rangeBitmapHigh & 0xFE;
+        secondFieldValue = *(_DWORD *)(secondField + 12) << 18 >> 25;
       }
       else
       {
-        LOBYTE(v24) = v24 | 1;
-        v13 = *(_DWORD *)(secondField + 12);
+        LOBYTE(rangeBitmapHigh) = rangeBitmapHigh | 1;
+        secondFieldValue = *(_DWORD *)(secondField + 12);
       }
-      v24 |= 2 * (v13 & 0x7F);
+      rangeBitmapHigh |= 2 * (secondFieldValue & 0x7F);
       if ( (v10[2] & 1) != 0 )
-        LOBYTE(v23) = v23 | 2;
+        LOBYTE(rangeBitmapData) = rangeBitmapData | 2;
       else
-        LOBYTE(v23) = v23 | 1;
-      v14 = Rules_AddBitmapValue(&v23, 8);
-      return AST_NewNode(24, v14);
+        LOBYTE(rangeBitmapData) = rangeBitmapData | 1;
+      rangeBitmapValue = Rules_AddBitmapValue(&rangeBitmapData, 8);
+      return AST_NewNode(24, rangeBitmapValue);
     }
   }
   else
   {
     Mem_AllocArray(bitmapData, 4);
     LOBYTE(bitmapData[0]) &= 0xFCu;
-    v5 = *(_DWORD *)(v4 + 40) - 1;
+    firstFieldMax = *(_DWORD *)(v4 + 40) - 1;
     LOWORD(bitmapData[0]) &= 0xFE03u;
-    bitmapData[0] |= 4 * (v5 & 0x7F);
+    bitmapData[0] |= 4 * (firstFieldMax & 0x7F);
     bitmapData[0] = ((unsigned __int8)*(_DWORD *)(secondField + 28) << 9) | bitmapData[0] & 0xFFFE01FF;
-    v6 = bitmapData[0] & 0xFF01FFFF;
+    packedBits = bitmapData[0] & 0xFF01FFFF;
     if ( *(int *)(secondField + 32) >= 0 )
-      v6 |= (((unsigned __int8)*(_DWORD *)(secondField + 40) - 1) & 0x7F) << 17;
-    bitmapData[0] = v6;
+      packedBits |= (((unsigned __int8)*(_DWORD *)(secondField + 40) - 1) & 0x7F) << 17;
+    bitmapData[0] = packedBits;
     if ( (*(_BYTE *)(v4 + 8) & 1) != 0 )
       LOBYTE(bitmapData[0]) |= 2u;
     else
       LOBYTE(bitmapData[0]) |= 1u;
-    v7 = Rules_AddBitmapValue(bitmapData, 4);
-    return AST_NewNode(23, v7);
+    valueBitmapValue = Rules_AddBitmapValue(bitmapData, 4);
+    return AST_NewNode(23, valueBitmapValue);
   }
 }
 // 4B7C33: masking with 0x1 was optimized away because %var_1C.1 <= 0x1
@@ -9416,21 +9416,21 @@ signed int  Rules_PatternChainHasActiveType80Callback(_DWORD *patternList)
 unsigned int * Rules_ParsePatternFieldList(
         int readSource,
         int *theToken,
-        int a3,
-        int a4,
-        unsigned int a5,
+        int theSlot,
+        int multifieldSlot,
+        unsigned int slotNumber,
         int *slotConstraint,
         int startPosition)
 {
   int tokenType; // ebx
-  signed int v10; // eax
+  signed int newField; // eax
   unsigned int *fieldNode; // ebx
-  int v12; // ecx
+  int lastField; // ecx
   int node; // ebx
-  int v15; // eax
-  int v16; // ebp
-  signed int v17; // eax
-  char v18; // dh
+  int constraintNode; // eax
+  int nodeType; // ebp
+  signed int wrapperNode; // eax
+  char nodeFlags; // dh
   int v19; // esi
   int v20; // ecx
   int *v21; // eax
@@ -9438,25 +9438,25 @@ unsigned int * Rules_ParsePatternFieldList(
   int v23; // ecx
   int *v24; // eax
   int errorFlag; // [esp+0h] [ebp-28h] BYREF
-  int v26; // [esp+4h] [ebp-24h]
-  int v27; // [esp+8h] [ebp-20h]
+  int startIndex; // [esp+4h] [ebp-24h]
+  int slotSymbol; // [esp+8h] [ebp-20h]
   unsigned int *fieldList; // [esp+Ch] [ebp-1Ch]
-  int v29; // [esp+10h] [ebp-18h]
-  int v30; // [esp+14h] [ebp-14h]
-  int v31; // [esp+18h] [ebp-10h]
+  int multifieldMode; // [esp+10h] [ebp-18h]
+  int multiFieldCount; // [esp+14h] [ebp-14h]
+  int singleFieldCount; // [esp+18h] [ebp-10h]
 
-  v29 = a4;
-  v27 = a3;
+  multifieldMode = multifieldSlot;
+  slotSymbol = theSlot;
   fieldList = 0;
-  v31 = 0;
+  singleFieldCount = 0;
   errorFlag = 0;
-  v30 = 0;
+  multiFieldCount = 0;
   tokenType = *theToken;
-  v26 = startPosition;
+  startIndex = startPosition;
   if ( tokenType == 101 )
   {
 LABEL_24:
-    if ( !fieldList && !v29 )
+    if ( !fieldList && !multifieldMode )
     {
       Parser_ReportSyntaxError();
       return 0;
@@ -9465,19 +9465,19 @@ LABEL_24:
     if ( !fieldList )
     {
 LABEL_33:
-      if ( v29 )
+      if ( multifieldMode )
       {
-        v17 = AST_AllocNode();
-        *(_DWORD *)v17 = 18;
-        v18 = *(_BYTE *)(v17 + 8);
-        *(_DWORD *)(v17 + 16) = slotConstraint;
-        *(_BYTE *)(v17 + 8) = v18 | 4;
-        *(_DWORD *)(v17 + 68) = fieldList;
-        *(_DWORD *)(v17 + 36) = v27;
-        *(_DWORD *)(v17 + 40) = a5;
-        *(_DWORD *)(v17 + 32) = v26;
-        fieldList = (unsigned int *)v17;
-        Rules_ComputePatternFieldPositions(*(_DWORD **)(v17 + 68));
+        wrapperNode = AST_AllocNode();
+        *(_DWORD *)wrapperNode = 18;
+        nodeFlags = *(_BYTE *)(wrapperNode + 8);
+        *(_DWORD *)(wrapperNode + 16) = slotConstraint;
+        *(_BYTE *)(wrapperNode + 8) = nodeFlags | 4;
+        *(_DWORD *)(wrapperNode + 68) = fieldList;
+        *(_DWORD *)(wrapperNode + 36) = slotSymbol;
+        *(_DWORD *)(wrapperNode + 40) = slotNumber;
+        *(_DWORD *)(wrapperNode + 32) = startIndex;
+        fieldList = (unsigned int *)wrapperNode;
+        Rules_ComputePatternFieldPositions(*(_DWORD **)(wrapperNode + 68));
       }
       return fieldList;
     }
@@ -9485,16 +9485,16 @@ LABEL_33:
     {
       if ( *(_DWORD *)node == 15 )
       {
-        v15 = Rules_CreateLHSParseNode();
+        constraintNode = Rules_CreateLHSParseNode();
 LABEL_30:
-        *(_DWORD *)(node + 16) = v15;
+        *(_DWORD *)(node + 16) = constraintNode;
         AST_Free(*(_DWORD *)(*(_DWORD *)(node + 16) + 18));
         AST_Free(*(_DWORD *)(*(_DWORD *)(node + 16) + 22));
         *(_DWORD *)(*(_DWORD *)(node + 16) + 18) = AST_NewNode(2, g_Clips_NegativeInfinitySymbol);
         *(_DWORD *)(*(_DWORD *)(node + 16) + 22) = AST_NewNode(2, g_ClipsPositiveInfinitySymbol);
-        v16 = *(_DWORD *)node;
+        nodeType = *(_DWORD *)node;
         *(_BYTE *)(node + 8) |= 0x10u;
-        if ( v16 == 18 || v16 == 16 )
+        if ( nodeType == 18 || nodeType == 16 )
         {
           v19 = Rules_CreateLHSParseNode();
           Rules_UpdateCETypeFlag(4u, v19);
@@ -9504,14 +9504,14 @@ LABEL_30:
           if ( g_ClipsPositiveInfinitySymbol != *(_DWORD *)(*(int *)((char *)slotConstraint + 22) + 2) )
           {
             AST_Free(*(_DWORD *)(v20 + 22));
-            v21 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 22) + 2) + 16) - v31);
+            v21 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 22) + 2) + 16) - singleFieldCount);
             v22 = AST_NewNode(1, (int)v21);
             *(_DWORD *)(v23 + 22) = v22;
           }
-          if ( v30 == 1 && g_Clips_NegativeInfinitySymbol != *(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) )
+          if ( multiFieldCount == 1 && g_Clips_NegativeInfinitySymbol != *(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) )
           {
             AST_Free(*(_DWORD *)(v19 + 18));
-            v24 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) + 16) - v31);
+            v24 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) + 16) - singleFieldCount);
             *(_DWORD *)(v19 + 18) = AST_NewNode(1, (int)v24);
           }
         }
@@ -9520,17 +9520,17 @@ LABEL_30:
       if ( !node )
         goto LABEL_33;
     }
-    v15 = Rules_CloneLHSParseNode(slotConstraint);
+    constraintNode = Rules_CloneLHSParseNode(slotConstraint);
     goto LABEL_30;
   }
   while ( 1 )
   {
     if ( *theToken == 17 || *theToken == 18 )
     {
-      v10 = AST_AllocNode();
-      *(_DWORD *)v10 = *theToken;
-      fieldNode = (unsigned int *)v10;
-      *(_BYTE *)(v10 + 8) &= ~1u;
+      newField = AST_AllocNode();
+      *(_DWORD *)newField = *theToken;
+      fieldNode = (unsigned int *)newField;
+      *(_BYTE *)(newField + 8) &= ~1u;
       Parser_NextToken(readSource, (int)theToken);
     }
     else
@@ -9542,23 +9542,23 @@ LABEL_30:
         return 0;
       }
     }
-    if ( *theToken != 101 && v29 == 1 )
+    if ( *theToken != 101 && multifieldMode == 1 )
     {
       IO_OutNewline();
       IO_OutWriteToken(asc_50A02C);
       IO_OutWriteToken((char *)theToken[2]);
     }
     if ( *fieldNode == 17 || *fieldNode == 15 )
-      ++v31;
+      ++singleFieldCount;
     else
-      ++v30;
-    fieldNode[9] = v27;
-    fieldNode[10] = a5;
+      ++multiFieldCount;
+    fieldNode[9] = slotSymbol;
+    fieldNode[10] = slotNumber;
     fieldNode[8] = startPosition++;
-    if ( !v29 )
+    if ( !multifieldMode )
       break;
-    if ( v12 )
-      *(_DWORD *)(v12 + 64) = fieldNode;
+    if ( lastField )
+      *(_DWORD *)(lastField + 64) = fieldNode;
     else
       fieldList = fieldNode;
     if ( *theToken == 101 )
@@ -9574,7 +9574,7 @@ LABEL_30:
   }
   else
   {
-    fieldNode[4] = v29;
+    fieldNode[4] = multifieldMode;
   }
   return fieldNode;
 }
@@ -11269,12 +11269,12 @@ const void * Rules_DeftemplateBsaveWriteCounts(int fileID, int space)
 int  Rules_DeftemplateBsaveWriteData(int fileID)
 {
   int i; // ecx
-  int v3; // eax
-  _DWORD *v4; // eax
+  int deftemplateItemDescriptor; // eax
+  _DWORD *theModuleItem; // eax
   int v5; // ecx
   int j; // ebp
   int k; // ecx
-  _DWORD *v8; // ecx
+  _DWORD *theDeftemplate; // ecx
   int v9; // eax
   int v10; // eax
   int v11; // eax
@@ -11283,7 +11283,7 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
   int m; // ebp
   int n; // edi
   int slot; // ecx
-  int v17; // eax
+  int constraintIndex; // eax
   int v18; // eax
   int v19; // eax
   int v20; // eax
@@ -11292,28 +11292,28 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
   int v23; // ecx
   int result; // eax
   int constraint; // ebx
-  _DWORD v26[3]; // [esp+0h] [ebp-54h] BYREF
-  int v27; // [esp+Ch] [ebp-48h]
+  _DWORD bsaveDeftemplate[3]; // [esp+0h] [ebp-54h] BYREF
+  int firstSlotIndex; // [esp+Ch] [ebp-48h]
   int v28; // [esp+10h] [ebp-44h]
   int v29; // [esp+14h] [ebp-40h]
-  int v30; // [esp+18h] [ebp-3Ch] BYREF
+  int bsaveSlot; // [esp+18h] [ebp-3Ch] BYREF
   int v31; // [esp+1Ch] [ebp-38h]
   int v32; // [esp+20h] [ebp-34h]
-  signed int v33; // [esp+24h] [ebp-30h]
+  signed int slotNameIndex; // [esp+24h] [ebp-30h]
   int v34; // [esp+28h] [ebp-2Ch]
-  _DWORD v35[3]; // [esp+2Ch] [ebp-28h] BYREF
-  int v36[7]; // [esp+38h] [ebp-1Ch] BYREF
+  _DWORD bsaveModuleItem[3]; // [esp+2Ch] [ebp-28h] BYREF
+  int spaceBuffer[7]; // [esp+38h] [ebp-1Ch] BYREF
 
-  v36[0] = 12 * g_DeftemplateModuleItemCount + 20 * g_Deftemplate_SlotCount + 24 * g_DeftemplateBsaveCount;
-  Rules_BsaveWriteBlock(4, fileID, v36);
+  spaceBuffer[0] = 12 * g_DeftemplateModuleItemCount + 20 * g_Deftemplate_SlotCount + 24 * g_DeftemplateBsaveCount;
+  Rules_BsaveWriteBlock(4, fileID, spaceBuffer);
   g_DeftemplateBsaveCount = 0;
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(v5) )
   {
     Module_SetCurrent(i);
-    v3 = Module_FindItemByName((int)aDeftemplate_2);
-    v4 = (_DWORD *)Module_GetItem(0, *(_DWORD *)(v3 + 4));
-    Module_AssignBsaveItemHeaderIndices(v35, v4);
-    Rules_BsaveWriteBlock(12, fileID, v35);
+    deftemplateItemDescriptor = Module_FindItemByName((int)aDeftemplate_2);
+    theModuleItem = (_DWORD *)Module_GetItem(0, *(_DWORD *)(deftemplateItemDescriptor + 4));
+    Module_AssignBsaveItemHeaderIndices(bsaveModuleItem, theModuleItem);
+    Rules_BsaveWriteBlock(12, fileID, bsaveModuleItem);
   }
   g_Deftemplate_SlotCount = 0;
   for ( j = Module_NextEnum(0); j; j = Module_NextEnum(j) )
@@ -11321,24 +11321,24 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
     Module_SetCurrent(j);
     for ( k = Rules_GetNextDeftemplate(0); k; k = Rules_GetNextDeftemplate(v13) )
     {
-      AST_ExtractPatternBindingInfo(v26, k);
-      v9 = v8[6];
+      AST_ExtractPatternBindingInfo(bsaveDeftemplate, k);
+      v9 = theDeftemplate[6];
       LOBYTE(v28) = v28 & 0xFE;
       v28 |= v9 & 1;
-      v10 = v8[6] << 16 >> 19;
+      v10 = theDeftemplate[6] << 16 >> 19;
       LOWORD(v28) = v28 & 1;
       v28 |= 2 * (v10 & 0x7FFF);
-      v11 = v8[8];
+      v11 = theDeftemplate[8];
       if ( v11 )
         v12 = *(_DWORD *)(v11 + 16);
       else
         v12 = -1;
       v29 = v12;
-      if ( v8[5] )
-        v27 = g_Deftemplate_SlotCount;
+      if ( theDeftemplate[5] )
+        firstSlotIndex = g_Deftemplate_SlotCount;
       else
-        v27 = -1;
-      Rules_BsaveWriteBlock(24, fileID, v26);
+        firstSlotIndex = -1;
+      Rules_BsaveWriteBlock(24, fileID, bsaveDeftemplate);
       g_Deftemplate_SlotCount += *(_DWORD *)(v13 + 24) << 16 >> 19;
     }
   }
@@ -11352,11 +11352,11 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
         do
         {
           if ( Rules_DynamicConstraintCheckingEnabled() && (constraint = *(_DWORD *)(slot + 8)) != 0 )
-            v17 = *(unsigned __int16 *)(constraint + 4);
+            constraintIndex = *(unsigned __int16 *)(constraint + 4);
           else
-            v17 = -1;
-          v32 = v17;
-          v30 = *(_DWORD *)(*(_DWORD *)slot + 12) << 16 >> 18;
+            constraintIndex = -1;
+          v32 = constraintIndex;
+          bsaveSlot = *(_DWORD *)(*(_DWORD *)slot + 12) << 16 >> 18;
           v18 = *(_DWORD *)(slot + 4);
           LOBYTE(v31) = v31 & 0xFE;
           v31 |= v18 & 1;
@@ -11369,9 +11369,9 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
           v21 = *(_DWORD *)(slot + 4);
           LOBYTE(v31) = v31 & 0xF7;
           v31 |= v21 & 8;
-          v33 = AST_GetHashedNodeIndex(*(__int16 **)(slot + 12));
+          slotNameIndex = AST_GetHashedNodeIndex(*(__int16 **)(slot + 12));
           v34 = (*(_DWORD *)(v22 + 16) != 0) - 1;
-          Rules_BsaveWriteBlock(20, fileID, &v30);
+          Rules_BsaveWriteBlock(20, fileID, &bsaveSlot);
         }
         while ( *(_DWORD *)(v23 + 16) );
       }
@@ -11660,36 +11660,36 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
   int slotFilePtr; // esi
   int v20; // eax
   int v21; // ecx
-  int v23; // [esp+0h] [ebp-50h] BYREF
-  int v24; // [esp+4h] [ebp-4Ch] BYREF
-  int v25; // [esp+8h] [ebp-48h] BYREF
-  int v26; // [esp+Ch] [ebp-44h] BYREF
-  int v27; // [esp+10h] [ebp-40h] BYREF
-  int v28; // [esp+14h] [ebp-3Ch] BYREF
-  int v29; // [esp+18h] [ebp-38h] BYREF
+  int fileCount; // [esp+0h] [ebp-50h] BYREF
+  int slotArrayCount; // [esp+4h] [ebp-4Ch] BYREF
+  int slotArrayVersion; // [esp+8h] [ebp-48h] BYREF
+  int moduleArrayCount; // [esp+Ch] [ebp-44h] BYREF
+  int moduleArrayVersion; // [esp+10h] [ebp-40h] BYREF
+  int recordArrayCount; // [esp+14h] [ebp-3Ch] BYREF
+  int recordArrayVersion; // [esp+18h] [ebp-38h] BYREF
   int moduleFile; // [esp+1Ch] [ebp-34h]
   int theModule; // [esp+20h] [ebp-30h]
   int moduleCount; // [esp+24h] [ebp-2Ch]
   int recordFile; // [esp+28h] [ebp-28h]
   int theDeftemplate; // [esp+2Ch] [ebp-24h]
-  const char *v35; // [esp+30h] [ebp-20h]
-  const char *v36; // [esp+34h] [ebp-1Ch]
-  int v37; // [esp+38h] [ebp-18h]
-  int v38; // [esp+3Ch] [ebp-14h]
+  const char *fileNameBufferPtr; // [esp+30h] [ebp-20h]
+  const char *fileNamePtr; // [esp+34h] [ebp-1Ch]
+  int headerFilePtr; // [esp+38h] [ebp-18h]
+  int pathNamePtr; // [esp+3Ch] [ebp-14h]
   int slotCount; // [esp+40h] [ebp-10h]
 
-  v36 = fileName;
-  v35 = fileNameBuffer;
-  v37 = headerFP;
-  v38 = pathName;
+  fileNamePtr = fileName;
+  fileNameBufferPtr = fileNameBuffer;
+  headerFilePtr = headerFP;
+  pathNamePtr = pathName;
   slotCount = 0;
-  v24 = 0;
-  v25 = 1;
+  slotArrayCount = 0;
+  slotArrayVersion = 1;
   moduleCount = 0;
-  v26 = 0;
-  v27 = 1;
-  v28 = 0;
-  v29 = 1;
+  moduleArrayCount = 0;
+  moduleArrayVersion = 1;
+  recordArrayCount = 0;
+  recordArrayVersion = 1;
   moduleFile = 0;
   recordFile = 0;
   Output_WriteFormatted(0, 1, headerFP, (int)aIncludeTmpltde, 1);
@@ -11704,12 +11704,12 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
       Module_SetCurrent(theModule);
       v10 = Rules_ConstructCodeFileOpen(
               moduleFile,
-              v36,
-              v38,
-              v35,
-              &v23,
-              v27,
-              v37,
+              fileNamePtr,
+              pathNamePtr,
+              fileNameBufferPtr,
+              &fileCount,
+              moduleArrayVersion,
+              headerFilePtr,
               (char)aStructDeftempl,
               **(const char ***)(g_Clips_DeftemplateCodeGenItem + 20),
               0,
@@ -11721,14 +11721,14 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
         return 0;
       }
       Rules_DeftemplateWriteModuleHeaderToCode(v10, theModule, maxIndices, moduleCount);
-      moduleFile = Rules_ConstructCodeFileClose(moduleFilePtr, &v26, maxIndices, &v27, 0, 0);
+      moduleFile = Rules_ConstructCodeFileClose(moduleFilePtr, &moduleArrayCount, maxIndices, &moduleArrayVersion, 0, 0);
       theDeftemplate = Rules_GetNextDeftemplate(0);
       if ( theDeftemplate )
         break;
 LABEL_9:
       theModule = Module_NextEnum(theModule);
       moduleCount = v21 + 1;
-      ++v26;
+      ++moduleArrayCount;
       if ( !theModule )
         goto LABEL_10;
     }
@@ -11736,12 +11736,12 @@ LABEL_9:
     {
       v12 = Rules_ConstructCodeFileOpen(
               recordFile,
-              v36,
-              v38,
-              v35,
-              &v23,
-              v29,
-              v37,
+              fileNamePtr,
+              pathNamePtr,
+              fileNameBufferPtr,
+              &fileCount,
+              recordArrayVersion,
+              headerFilePtr,
               (char)aStructDeftem_0,
               *(const char **)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
               0,
@@ -11752,11 +11752,11 @@ LABEL_9:
         Rules_DeftemplateCodeGenCloseFiles(moduleFile, 0, maxIndices, slotFile);
         return 0;
       }
-      Rules_DeftemplateWriteRecordToCode(v12, theDeftemplate, maxIndices, v38, moduleCount, slotCount);
+      Rules_DeftemplateWriteRecordToCode(v12, theDeftemplate, maxIndices, pathNamePtr, moduleCount, slotCount);
       v14 = recordFilePtr;
-      ++v28;
+      ++recordArrayCount;
       v15 = theDeftemplate;
-      v16 = Rules_ConstructCodeFileClose(v14, &v28, maxIndices, &v29, 0, 0);
+      v16 = Rules_ConstructCodeFileClose(v14, &recordArrayCount, maxIndices, &recordArrayVersion, 0, 0);
       theSlot = *(_DWORD *)(v15 + 20);
       recordFile = v16;
       if ( theSlot )
@@ -11770,12 +11770,12 @@ LABEL_8:
     {
       v18 = Rules_ConstructCodeFileOpen(
               slotFile,
-              v36,
-              v38,
-              v35,
-              &v23,
-              v25,
-              v37,
+              fileNamePtr,
+              pathNamePtr,
+              fileNameBufferPtr,
+              &fileCount,
+              slotArrayVersion,
+              headerFilePtr,
               (char)aStructTemplate,
               *(const char **)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
               0,
@@ -11783,9 +11783,9 @@ LABEL_8:
       slotFilePtr = v18;
       if ( !v18 )
         break;
-      Rules_DeftemplateWriteSlotToCode(v18, theSlot, maxIndices, v38, slotCount++);
-      ++v24;
-      v20 = Rules_ConstructCodeFileClose(slotFilePtr, &v24, maxIndices, &v25, 0, 0);
+      Rules_DeftemplateWriteSlotToCode(v18, theSlot, maxIndices, pathNamePtr, slotCount++);
+      ++slotArrayCount;
+      v20 = Rules_ConstructCodeFileClose(slotFilePtr, &slotArrayCount, maxIndices, &slotArrayVersion, 0, 0);
       theSlot = *(_DWORD *)(theSlot + 16);
       slotFile = v20;
       if ( !theSlot )
@@ -12269,88 +12269,88 @@ const void * Rules_BsaveJoinNode(int filePtr, int *theJoin)
   int v6; // eax
   int v7; // eax
   int v8; // eax
-  int v9; // ebp
+  int rightSideEntry; // ebp
   int v10; // eax
-  int v11; // eax
+  int lastLevel; // eax
   int v12; // eax
-  int v13; // ecx
+  int nextLevel; // ecx
   int v14; // eax
-  int v15; // esi
+  int rightMatchNode; // esi
   int v16; // eax
-  int v17; // edi
+  int rightDriveNode; // edi
   int v18; // eax
-  int v19; // ebp
-  _DWORD v21[2]; // [esp+0h] [ebp-34h] BYREF
-  int v22; // [esp+8h] [ebp-2Ch]
-  int v23; // [esp+Ch] [ebp-28h]
-  int v24; // [esp+10h] [ebp-24h]
-  int v25; // [esp+14h] [ebp-20h]
-  int v26; // [esp+18h] [ebp-1Ch]
-  int v27; // [esp+1Ch] [ebp-18h]
+  int ruleToActivate; // ebp
+  _DWORD bsaveJoin[2]; // [esp+0h] [ebp-34h] BYREF
+  int rightSideEntryIndex; // [esp+8h] [ebp-2Ch]
+  int nextLevelIndex; // [esp+Ch] [ebp-28h]
+  int lastLevelIndex; // [esp+10h] [ebp-24h]
+  int rightDriveIndex; // [esp+14h] [ebp-20h]
+  int rightMatchIndex; // [esp+18h] [ebp-1Ch]
+  int ruleBsaveIndex; // [esp+1Ch] [ebp-18h]
 
   *(_BYTE *)theJoin &= ~0x20u;
   v3 = (unsigned int)(*theJoin << 16) >> 25;
-  LOWORD(v21[0]) &= 0xC07Fu;
-  v21[0] |= (v3 & 0x7F) << 7;
+  LOWORD(bsaveJoin[0]) &= 0xC07Fu;
+  bsaveJoin[0] |= (v3 & 0x7F) << 7;
   v4 = (unsigned int)(*theJoin << 23) >> 29;
-  LOBYTE(v21[0]) &= 0x8Fu;
-  v21[0] |= 16 * (v4 & 7);
+  LOBYTE(bsaveJoin[0]) &= 0x8Fu;
+  bsaveJoin[0] |= 16 * (v4 & 7);
   v5 = *theJoin;
-  LOBYTE(v21[0]) &= ~1u;
-  v21[0] |= v5 & 1;
+  LOBYTE(bsaveJoin[0]) &= ~1u;
+  bsaveJoin[0] |= v5 & 1;
   v6 = *theJoin;
-  LOBYTE(v21[0]) &= ~2u;
-  v21[0] |= v6 & 2;
+  LOBYTE(bsaveJoin[0]) &= ~2u;
+  bsaveJoin[0] |= v6 & 2;
   v7 = *theJoin;
-  LOBYTE(v21[0]) &= ~4u;
-  v21[0] |= v7 & 4;
+  LOBYTE(bsaveJoin[0]) &= ~4u;
+  bsaveJoin[0] |= v7 & 4;
   v8 = *theJoin;
-  LOBYTE(v21[0]) &= ~8u;
-  v21[0] |= v8 & 8;
+  LOBYTE(bsaveJoin[0]) &= ~8u;
+  bsaveJoin[0] |= v8 & 8;
   if ( (*(_BYTE *)theJoin & 4) != 0 )
   {
-    v9 = theJoin[4];
-    if ( v9 )
-      v10 = *(_DWORD *)(v9 + 4);
+    rightSideEntry = theJoin[4];
+    if ( rightSideEntry )
+      v10 = *(_DWORD *)(rightSideEntry + 4);
     else
       v10 = -1;
-    v22 = v10;
+    rightSideEntryIndex = v10;
   }
   else
   {
-    v22 = -1;
+    rightSideEntryIndex = -1;
   }
-  v11 = theJoin[6];
-  if ( v11 )
-    v12 = *(_DWORD *)(v11 + 4);
+  lastLevel = theJoin[6];
+  if ( lastLevel )
+    v12 = *(_DWORD *)(lastLevel + 4);
   else
     v12 = -1;
-  v24 = v12;
-  v13 = theJoin[5];
-  if ( v13 )
-    v14 = *(_DWORD *)(v13 + 4);
+  lastLevelIndex = v12;
+  nextLevel = theJoin[5];
+  if ( nextLevel )
+    v14 = *(_DWORD *)(nextLevel + 4);
   else
     v14 = -1;
-  v23 = v14;
-  v15 = theJoin[8];
-  if ( v15 )
-    v16 = *(_DWORD *)(v15 + 4);
+  nextLevelIndex = v14;
+  rightMatchNode = theJoin[8];
+  if ( rightMatchNode )
+    v16 = *(_DWORD *)(rightMatchNode + 4);
   else
     v16 = -1;
-  v26 = v16;
-  v17 = theJoin[7];
-  if ( v17 )
-    v18 = *(_DWORD *)(v17 + 4);
+  rightMatchIndex = v16;
+  rightDriveNode = theJoin[7];
+  if ( rightDriveNode )
+    v18 = *(_DWORD *)(rightDriveNode + 4);
   else
     v18 = -1;
-  v25 = v18;
-  v21[1] = AST_GetHashedNodeIndex((__int16 *)theJoin[3]);
-  v19 = theJoin[9];
-  if ( v19 )
-    v27 = *(_DWORD *)(v19 + 12);
+  rightDriveIndex = v18;
+  bsaveJoin[1] = AST_GetHashedNodeIndex((__int16 *)theJoin[3]);
+  ruleToActivate = theJoin[9];
+  if ( ruleToActivate )
+    ruleBsaveIndex = *(_DWORD *)(ruleToActivate + 12);
   else
-    v27 = -1;
-  return Rules_BsaveWriteBlock(32, filePtr, v21);
+    ruleBsaveIndex = -1;
+  return Rules_BsaveWriteBlock(32, filePtr, bsaveJoin);
 }
 
 //----- (004BB4C0) --------------------------------------------------------
@@ -12547,9 +12547,9 @@ int  Rules_JoinBloadFixup(_DWORD *bsaveJoin, int joinIndex)
 //----- (004BB8C0) --------------------------------------------------------
 int  Rules_JoinTestBloadFixup(int *bsaveNode, int nodeIndex)
 {
-  int v2; // esi
-  int v3; // ebx
-  int v4; // edi
+  int joinBase; // esi
+  int nodeOffset; // ebx
+  int packedFlags; // edi
   int v5; // esi
   int v6; // edi
   int v7; // esi
@@ -12557,96 +12557,96 @@ int  Rules_JoinTestBloadFixup(int *bsaveNode, int nodeIndex)
   int v9; // esi
   int v10; // edi
   int v11; // esi
-  unsigned int v12; // edi
+  unsigned int depthBits; // edi
   _WORD *v13; // ebx
-  unsigned int v14; // esi
+  unsigned int rhsTypeBits; // esi
   int exprIndex; // ebp
-  int v16; // esi
-  int v17; // ecx
-  int v18; // ebx
-  int v19; // ebx
-  int v20; // esi
-  int v21; // esi
-  int v22; // ebx
-  int v23; // edi
-  int v24; // ebx
-  int v25; // ebp
-  int v26; // esi
-  int v27; // ecx
-  int v28; // ecx
+  int networkTestExpr; // esi
+  int join20Index; // ecx
+  int join20Ptr; // ebx
+  int join24Index; // ebx
+  int join24Ptr; // esi
+  int join16Index; // esi
+  int join16Ptr; // ebx
+  int join32Index; // edi
+  int join32Ptr; // ebx
+  int join28Index; // ebp
+  int join28Ptr; // esi
+  int bloadJoinIndex; // ecx
+  int bloadJoinPtr; // ecx
   int result; // eax
 
-  v2 = g_ClipsJoinNodeArray;
-  v3 = 40 * nodeIndex;
-  v4 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + v3) &= ~1u;
-  *(_DWORD *)(v2 + v3) |= v4 & 1;
+  joinBase = g_ClipsJoinNodeArray;
+  nodeOffset = 40 * nodeIndex;
+  packedFlags = *bsaveNode;
+  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~1u;
+  *(_DWORD *)(joinBase + nodeOffset) |= packedFlags & 1;
   v5 = g_ClipsJoinNodeArray;
   v6 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + v3) &= ~2u;
-  *(_DWORD *)(v5 + v3) |= v6 & 2;
+  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~2u;
+  *(_DWORD *)(v5 + nodeOffset) |= v6 & 2;
   v7 = g_ClipsJoinNodeArray;
   v8 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + v3) &= ~4u;
-  *(_DWORD *)(v7 + v3) |= v8 & 4;
+  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~4u;
+  *(_DWORD *)(v7 + nodeOffset) |= v8 & 4;
   v9 = g_ClipsJoinNodeArray;
   v10 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + v3) &= ~8u;
-  *(_DWORD *)(v9 + v3) |= v10 & 8;
+  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~8u;
+  *(_DWORD *)(v9 + nodeOffset) |= v10 & 8;
   v11 = g_ClipsJoinNodeArray;
-  v12 = (unsigned int)(*bsaveNode << 18) >> 25;
-  *(_BYTE *)(g_ClipsJoinNodeArray + v3 + 1) &= 1u;
-  *(_DWORD *)(v11 + v3) = ((v12 & 0x7F) << 9) | *(_DWORD *)(v11 + 40 * nodeIndex);
+  depthBits = (unsigned int)(*bsaveNode << 18) >> 25;
+  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset + 1) &= 1u;
+  *(_DWORD *)(v11 + nodeOffset) = ((depthBits & 0x7F) << 9) | *(_DWORD *)(v11 + 40 * nodeIndex);
   v13 = (_WORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex);
-  v14 = (unsigned int)(*bsaveNode << 25) >> 29;
+  rhsTypeBits = (unsigned int)(*bsaveNode << 25) >> 29;
   *v13 &= 0xFE3Fu;
-  *(_DWORD *)v13 |= (v14 & 7) << 6;
+  *(_DWORD *)v13 |= (rhsTypeBits & 7) << 6;
   exprIndex = bsaveNode[1];
   if ( exprIndex == -1 )
-    v16 = 0;
+    networkTestExpr = 0;
   else
-    v16 = 14 * exprIndex + g_ClipsPackedExpressionArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 12) = v16;
-  v17 = bsaveNode[3];
-  if ( v17 == -1 )
-    v18 = 0;
+    networkTestExpr = 14 * exprIndex + g_ClipsPackedExpressionArray;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 12) = networkTestExpr;
+  join20Index = bsaveNode[3];
+  if ( join20Index == -1 )
+    join20Ptr = 0;
   else
-    v18 = 40 * v17 + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 20) = v18;
-  v19 = bsaveNode[4];
-  if ( v19 == -1 )
-    v20 = 0;
+    join20Ptr = 40 * join20Index + g_ClipsJoinNodeArray;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 20) = join20Ptr;
+  join24Index = bsaveNode[4];
+  if ( join24Index == -1 )
+    join24Ptr = 0;
   else
-    v20 = 40 * v19 + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 24) = v20;
+    join24Ptr = 40 * join24Index + g_ClipsJoinNodeArray;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 24) = join24Ptr;
   if ( (*(_BYTE *)bsaveNode & 4) != 0 )
   {
-    v21 = bsaveNode[2];
-    if ( v21 == -1 )
-      v22 = 0;
+    join16Index = bsaveNode[2];
+    if ( join16Index == -1 )
+      join16Ptr = 0;
     else
-      v22 = 40 * v21 + g_ClipsJoinNodeArray;
-    *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 16) = v22;
+      join16Ptr = 40 * join16Index + g_ClipsJoinNodeArray;
+    *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 16) = join16Ptr;
   }
-  v23 = bsaveNode[6];
-  if ( v23 == -1 )
-    v24 = 0;
+  join32Index = bsaveNode[6];
+  if ( join32Index == -1 )
+    join32Ptr = 0;
   else
-    v24 = 40 * v23 + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 32) = v24;
-  v25 = bsaveNode[5];
-  if ( v25 == -1 )
-    v26 = 0;
+    join32Ptr = 40 * join32Index + g_ClipsJoinNodeArray;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 32) = join32Ptr;
+  join28Index = bsaveNode[5];
+  if ( join28Index == -1 )
+    join28Ptr = 0;
   else
-    v26 = 40 * v25 + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 28) = v26;
-  v27 = bsaveNode[7];
-  if ( v27 == -1 )
-    v28 = 0;
+    join28Ptr = 40 * join28Index + g_ClipsJoinNodeArray;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 28) = join28Ptr;
+  bloadJoinIndex = bsaveNode[7];
+  if ( bloadJoinIndex == -1 )
+    bloadJoinPtr = 0;
   else
-    v28 = 52 * v27 + g_ClipsBloadJoinArray;
+    bloadJoinPtr = 52 * bloadJoinIndex + g_ClipsBloadJoinArray;
   result = 5 * nodeIndex;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 36) = v28;
+  *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 36) = bloadJoinPtr;
   *(_BYTE *)(g_ClipsJoinNodeArray + 8 * result) &= ~0x10u;
   *(_BYTE *)(g_ClipsJoinNodeArray + 8 * result) &= ~0x20u;
   *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 4) = 0;

@@ -709,7 +709,7 @@ int  Render_BlitSurfaceRect(
 {
   _DWORD *src_resolved; // esi
   _DWORD *dest_resolved; // edi
-  int v10; // edx
+  int src_backend; // edx
   int *v11; // ecx
   int v12; // ebx
   __int64 v13; // rax
@@ -727,24 +727,24 @@ int  Render_BlitSurfaceRect(
   int v25; // ecx
   int v26; // ecx
   int v27; // ecx
-  int v28; // eax
+  int colorkey_surface; // eax
   int v29; // ecx
   int v30; // ecx
-  _DWORD *v31; // eax
+  _DWORD *src_rect_surface; // eax
   int v32; // ecx
-  _DWORD *v33; // eax
+  _DWORD *dest_rect_surface; // eax
   int v34; // ecx
-  int v35; // eax
-  int v36; // edx
-  int v37; // eax
+  int src_blit_surface; // eax
+  int dest_backend; // edx
+  int dest_target_surface; // eax
   _DWORD scratch_surface[51]; // [esp+0h] [ebp-110h] BYREF
-  int v40; // [esp+CCh] [ebp-44h]
+  int blit_interface; // [esp+CCh] [ebp-44h]
   int span_height; // [esp+D0h] [ebp-40h]
   int v42; // [esp+D4h] [ebp-3Ch]
   int v43; // [esp+D8h] [ebp-38h]
   int pixels_remaining; // [esp+DCh] [ebp-34h]
   int (***src_cursor)(void); // [esp+E0h] [ebp-30h]
-  int v46; // [esp+E4h] [ebp-2Ch]
+  int src_top_u16; // [esp+E4h] [ebp-2Ch]
   int src_right_saved; // [esp+E8h] [ebp-28h]
   void (***dest_cursor)(void); // [esp+ECh] [ebp-24h]
   int rows_remaining; // [esp+F0h] [ebp-20h]
@@ -766,24 +766,24 @@ int  Render_BlitSurfaceRect(
     dest_resolved = &g_MainRenderDevice;
   src_right_saved = src_right;
   span_width = src_right - (unsigned __int16)src_left_saved + 1;
-  v46 = (unsigned __int16)src_top_saved;
-  v10 = src_resolved[46];
+  src_top_u16 = (unsigned __int16)src_top_saved;
+  src_backend = src_resolved[46];
   span_height = src_bottom - (unsigned __int16)src_top_saved + 1;
-  if ( (*(int (**)(void))(v10 + 60))() && (*(int (**)(void))(dest_resolved[46] + 64))() )
+  if ( (*(int (**)(void))(src_backend + 60))() && (*(int (**)(void))(dest_resolved[46] + 64))() )
   {
-    v28 = (*(int (**)(void))(src_resolved[46] + 60))();
-    Surface_SetSrcColorKey(v28, 0, v29);
-    v31 = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(v30 + 1);
-    Surface_SetSrcRect(v31, v46, v32, (unsigned __int16)src_left_saved, src_right_saved + 1);
+    colorkey_surface = (*(int (**)(void))(src_resolved[46] + 60))();
+    Surface_SetSrcColorKey(colorkey_surface, 0, v29);
+    src_rect_surface = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(v30 + 1);
+    Surface_SetSrcRect(src_rect_surface, src_top_u16, v32, (unsigned __int16)src_left_saved, src_right_saved + 1);
     scratch_surface[49] = dest_x;
     scratch_surface[50] = dest_y;
-    v33 = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(dest_y + span_height);
-    Surface_SetDestRect(v33, dest_y, v34, dest_x, span_width + dest_x);
-    v35 = (*(int (**)(void))(src_resolved[46] + 60))();
-    v36 = dest_resolved[46];
-    v40 = *(_DWORD *)(v35 + 172);
-    v37 = (*(int (**)(void))(v36 + 64))();
-    return (*(int (__fastcall **)(int, _DWORD))(v40 + 8))(v37, dest_x);
+    dest_rect_surface = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(dest_y + span_height);
+    Surface_SetDestRect(dest_rect_surface, dest_y, v34, dest_x, span_width + dest_x);
+    src_blit_surface = (*(int (**)(void))(src_resolved[46] + 60))();
+    dest_backend = dest_resolved[46];
+    blit_interface = *(_DWORD *)(src_blit_surface + 172);
+    dest_target_surface = (*(int (**)(void))(dest_backend + 64))();
+    return (*(int (__fastcall **)(int, _DWORD))(blit_interface + 8))(dest_target_surface, dest_x);
   }
   else if ( g_MousePresentAtStartup && (src_resolved == (_DWORD *)&g_MainRenderDevice || dest_resolved == (_DWORD *)&g_MainRenderDevice) )
   {
@@ -1015,7 +1015,7 @@ int  Render_BlitCompressedSpriteRLE(
         int a23,
         int a24,
         int a25,
-        int a26,
+        int fill_color_source,
         int a27,
         int a28,
         int a29,
@@ -1027,33 +1027,33 @@ int  Render_BlitCompressedSpriteRLE(
 {
   int *rgb_offset_table; // esi
   _DWORD *Surface; // eax
-  int v36; // ecx
-  char v37; // bl
-  int v38; // edx
+  int dest_context; // ecx
+  char origin_y; // bl
+  int cursor_x; // edx
   int v39; // eax
   int v40; // ecx
   int v41; // eax
-  unsigned __int8 **v42; // eax
+  unsigned __int8 **fill_ctx; // eax
   unsigned __int8 **v43; // edx
-  unsigned __int8 *v44; // ecx
+  unsigned __int8 *fill_clip_left; // ecx
   int v45; // edi
   int v46; // eax
-  int **v47; // eax
-  int *v48; // ecx
+  int **blend_ctx; // eax
+  int *blend_clip_left; // ecx
   int v49; // edi
   int **v50; // edx
   int v51; // eax
-  int v52; // eax
+  int row_write_pos; // eax
   int v53; // ecx
-  int **v54; // eax
-  int *v55; // ecx
+  int **offset_ctx; // eax
+  int *offset_clip_left; // ecx
   int v56; // ecx
   int v57; // esi
   unsigned __int8 run_byte; // al
   _DWORD *backref_len_ptr; // ecx
   unsigned __int8 transparent_run_length; // dh
   unsigned int skip_remaining; // edi
-  int v62; // esi
+  int skip_write_cursor; // esi
   int v63; // ecx
   unsigned int v64; // eax
   unsigned int v65; // ecx
@@ -1069,7 +1069,7 @@ int  Render_BlitCompressedSpriteRLE(
   unsigned __int8 *backref_data_ptr; // esi
   int copy_run_length; // ecx
   unsigned int copy_chunk_length; // ebx
-  unsigned __int8 *v78; // esi
+  unsigned __int8 *copy_read_ptr; // esi
   unsigned int v79; // ecx
   int v80; // ebx
   int v81; // ecx
@@ -1079,17 +1079,17 @@ int  Render_BlitCompressedSpriteRLE(
   int v85; // ebx
   unsigned int v86; // ecx
   unsigned int blend_run_length; // esi
-  int *v88; // edx
+  int *blend_clip_enabled; // edx
   unsigned int blend_chunk_length; // ebx
-  __int64 v90; // rax
+  __int64 blend_dest_packed; // rax
   int v91; // ebx
-  int *v92; // eax
+  int *blend_clip_left_ptr; // eax
   int v93; // esi
   int v94; // ecx
   unsigned int offset_run_length; // ecx
   int offset_chunk_length; // ebx
   unsigned __int8 *copy_src_ptr; // esi
-  int *v98; // edx
+  int *offset_rgb_table; // edx
   unsigned int v99; // ecx
   int v100; // ecx
   int v101; // ebx
@@ -1105,12 +1105,12 @@ int  Render_BlitCompressedSpriteRLE(
   int v111; // ecx
   int v112; // ecx
   int v113; // ecx
-  unsigned __int8 *v114; // eax
+  unsigned __int8 *fill_clip_left_ptr; // eax
   unsigned __int8 *v115; // edi
   int v116; // ecx
   unsigned int v117; // ecx
   int result; // eax
-  unsigned __int8 *v119; // [esp-4h] [ebp-108h]
+  unsigned __int8 *copy_dest_ptr; // [esp-4h] [ebp-108h]
   int skip_clip_left; // [esp+6Eh] [ebp-96h]
   int skip_clip_top; // [esp+72h] [ebp-92h]
   int skip_clip_right; // [esp+76h] [ebp-8Eh]
@@ -1174,7 +1174,7 @@ int  Render_BlitCompressedSpriteRLE(
   rle_cursor = *(_BYTE **)(sprite + 10);
   sprite_format = *(_WORD *)(sprite + 4);
   offscreen_surface = 0;
-  BYTE2(a26) = g_TextSprite_StyleFlag;
+  BYTE2(fill_color_source) = g_TextSprite_StyleFlag;
   if ( g_MousePresentAtStartup && (_UNKNOWN *)device_addr == &g_MainRenderDevice )
   {
     if ( *(_DWORD *)((char *)&clip_bounds + 2) != -1 )
@@ -1196,17 +1196,17 @@ int  Render_BlitCompressedSpriteRLE(
   }
   if ( offscreen_surface )
   {
-    v36 = offscreen_surface[46];
-    v37 = 0;
-    v38 = 0;
+    dest_context = offscreen_surface[46];
+    origin_y = 0;
+    cursor_x = 0;
   }
   else
   {
-    v37 = draw_y_saved;
-    v36 = *(_DWORD *)(device_addr + 184);
-    v38 = var2;
+    origin_y = draw_y_saved;
+    dest_context = *(_DWORD *)(device_addr + 184);
+    cursor_x = var2;
   }
-  write_cursor = (void *)(*(int (__fastcall **)(int, int))(v36 + 8))(v36, v38);
+  write_cursor = (void *)(*(int (__fastcall **)(int, int))(dest_context + 8))(dest_context, cursor_x);
   skip_clip_left = *(_DWORD *)((char *)&clip_bounds + 2);
   skip_clip_top = *(_DWORD *)((char *)&clip_bounds + 6);
   skip_clip_right = *(_DWORD *)((char *)&clip_bounds + 10);
@@ -1245,18 +1245,18 @@ int  Render_BlitCompressedSpriteRLE(
   offset_clip_ctx = 0;
   if ( sprite_format == 1 )
   {
-    v42 = (unsigned __int8 **)Mem_Alloc(24, *(int *)((char *)&clip_bounds + 2), v37, (DWORD)v130);
-    if ( v42 )
+    fill_ctx = (unsigned __int8 **)Mem_Alloc(24, *(int *)((char *)&clip_bounds + 2), origin_y, (DWORD)v130);
+    if ( fill_ctx )
     {
-      v44 = *(unsigned __int8 **)((char *)&clip_bounds + 2);
-      *v42 = (unsigned __int8 *)&a26 + 2;
-      v42[1] = v44;
-      v42[2] = *(unsigned __int8 **)((char *)&clip_bounds + 6);
+      fill_clip_left = *(unsigned __int8 **)((char *)&clip_bounds + 2);
+      *fill_ctx = (unsigned __int8 *)&fill_color_source + 2;
+      fill_ctx[1] = fill_clip_left;
+      fill_ctx[2] = *(unsigned __int8 **)((char *)&clip_bounds + 6);
       v45 = *(_DWORD *)((char *)&clip_bounds + 2);
-      v42[3] = *(unsigned __int8 **)((char *)&clip_bounds + 10);
+      fill_ctx[3] = *(unsigned __int8 **)((char *)&clip_bounds + 10);
       v40 = *(_DWORD *)((char *)&clip_bounds + 14);
-      v43 = v42;
-      v42[4] = *(unsigned __int8 **)((char *)&clip_bounds + 14);
+      v43 = fill_ctx;
+      fill_ctx[4] = *(unsigned __int8 **)((char *)&clip_bounds + 14);
       if ( v45 == -1
         && *(_DWORD *)((char *)&clip_bounds + 6) == -1
         && *(_DWORD *)((char *)&clip_bounds + 10) == -1
@@ -1274,18 +1274,18 @@ int  Render_BlitCompressedSpriteRLE(
   }
   if ( BYTE2(blend_mode_flags) == 1 )
   {
-    v47 = (int **)Mem_Alloc(24, v40, v37, (DWORD)v130);
-    if ( v47 )
+    blend_ctx = (int **)Mem_Alloc(24, v40, origin_y, (DWORD)v130);
+    if ( blend_ctx )
     {
-      v48 = *(int **)((char *)&clip_bounds + 2);
-      *v47 = rgb_offset_table;
-      v47[1] = v48;
-      v47[2] = *(int **)((char *)&clip_bounds + 6);
+      blend_clip_left = *(int **)((char *)&clip_bounds + 2);
+      *blend_ctx = rgb_offset_table;
+      blend_ctx[1] = blend_clip_left;
+      blend_ctx[2] = *(int **)((char *)&clip_bounds + 6);
       v49 = *(_DWORD *)((char *)&clip_bounds + 2);
-      v47[3] = *(int **)((char *)&clip_bounds + 10);
+      blend_ctx[3] = *(int **)((char *)&clip_bounds + 10);
       v40 = *(_DWORD *)((char *)&clip_bounds + 14);
-      v50 = v47;
-      v47[4] = *(int **)((char *)&clip_bounds + 14);
+      v50 = blend_ctx;
+      blend_ctx[4] = *(int **)((char *)&clip_bounds + 14);
       if ( v49 == -1
         && *(_DWORD *)((char *)&clip_bounds + 6) == -1
         && *(_DWORD *)((char *)&clip_bounds + 10) == -1
@@ -1298,32 +1298,32 @@ int  Render_BlitCompressedSpriteRLE(
         v51 = 1;
       }
       v50[5] = (int *)v51;
-      v47 = v50;
+      blend_ctx = v50;
     }
-    blend_clip_ctx = v47;
+    blend_clip_ctx = blend_ctx;
   }
   if ( BYTE2(blend_mode_flags) != 2 )
     goto LABEL_40;
-  v54 = (int **)Mem_Alloc(24, v40, v37, (DWORD)v130);
-  if ( v54 )
+  offset_ctx = (int **)Mem_Alloc(24, v40, origin_y, (DWORD)v130);
+  if ( offset_ctx )
   {
-    v55 = *(int **)((char *)&clip_bounds + 2);
-    *v54 = rgb_offset_table;
-    v54[1] = v55;
-    v54[2] = *(int **)((char *)&clip_bounds + 6);
-    v54[3] = *(int **)((char *)&clip_bounds + 10);
+    offset_clip_left = *(int **)((char *)&clip_bounds + 2);
+    *offset_ctx = rgb_offset_table;
+    offset_ctx[1] = offset_clip_left;
+    offset_ctx[2] = *(int **)((char *)&clip_bounds + 6);
+    offset_ctx[3] = *(int **)((char *)&clip_bounds + 10);
     v56 = *(_DWORD *)((char *)&clip_bounds + 14);
     v57 = *(_DWORD *)((char *)&clip_bounds + 2);
-    v54[4] = *(int **)((char *)&clip_bounds + 14);
+    offset_ctx[4] = *(int **)((char *)&clip_bounds + 14);
     if ( v57 != -1 || *(_DWORD *)((char *)&clip_bounds + 6) != -1 || *(_DWORD *)((char *)&clip_bounds + 10) != -1 || v56 != -1 )
     {
-      v54[5] = (int *)1;
-      offset_clip_ctx = v54;
+      offset_ctx[5] = (int *)1;
+      offset_clip_ctx = offset_ctx;
       goto LABEL_40;
     }
-    v54[5] = (int *)~*(_DWORD *)((char *)&clip_bounds + 10);
+    offset_ctx[5] = (int *)~*(_DWORD *)((char *)&clip_bounds + 10);
   }
-  offset_clip_ctx = v54;
+  offset_clip_ctx = offset_ctx;
 LABEL_40:
   screen_y = draw_y_saved;
   skip_clip_right_plus1 = skip_clip_right + 1;
@@ -1368,9 +1368,9 @@ LABEL_40:
               v130[0] = g_RenderSurface_BlitCursorVtable;
               *(_UNKNOWN **)((char *)&retaddr + 2) = write_cursor;
               blend_run_length = v86;
-              v88 = blend_clip_ctx[5];
+              blend_clip_enabled = blend_clip_ctx[5];
               blend_clip_overflow = 0;
-              if ( v88 )
+              if ( blend_clip_enabled )
               {
                 if ( screen_y < (int)blend_clip_ctx[2]
                   || screen_y > (int)blend_clip_ctx[4]
@@ -1382,10 +1382,10 @@ LABEL_40:
                   run_pixel_ptr += blend_run_length;
                   goto LABEL_97;
                 }
-                v92 = blend_clip_ctx[1];
-                if ( (int)v92 > screen_x )
+                blend_clip_left_ptr = blend_clip_ctx[1];
+                if ( (int)blend_clip_left_ptr > screen_x )
                 {
-                  v93 = (int)v92 - screen_x;
+                  v93 = (int)blend_clip_left_ptr - screen_x;
                   (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
                   (*(void (**)(void))(v130[0] + 12))();
                   run_pixel_ptr += v93;
@@ -1409,8 +1409,8 @@ LABEL_40:
                   blend_chunk_length = 0x7FFFFFFF;
                 blend_src_ptr = run_pixel_ptr;
                 (*(void (**)(void))(v130[0] + 16))();
-                v90 = ((__int64 (*)(void))*(_DWORD *)(**(_DWORD **)((char *)&retaddr + 2) + 16))();
-                Palette_BlendIndexedPixelRun((char *)v90, (char *)HIDWORD(v90), blend_src_ptr, blend_chunk_length);
+                blend_dest_packed = ((__int64 (*)(void))*(_DWORD *)(**(_DWORD **)((char *)&retaddr + 2) + 16))();
+                Palette_BlendIndexedPixelRun((char *)blend_dest_packed, (char *)HIDWORD(blend_dest_packed), blend_src_ptr, blend_chunk_length);
                 (*(void (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 12))();
                 (*(void (**)(void))(v130[0] + 12))();
                 run_pixel_ptr += blend_chunk_length;
@@ -1468,10 +1468,10 @@ LABEL_40:
               run_start_ptr = run_pixel_ptr;
               copy_src_ptr = run_pixel_ptr;
               dest_write_ptr = (unsigned __int8 *)(*(int (__thiscall **)(int))(*(_DWORD *)offset_write_cursor + 16))(offset_chunk_length);
-              v98 = *offset_clip_ctx;
+              offset_rgb_table = *offset_clip_ctx;
               qmemcpy(dest_write_ptr, copy_src_ptr, v99);
-              if ( offset_chunk_length > 1 || *run_start_ptr != v98[3] )
-                Palette_OffsetIndexedPixelsRGB(dest_write_ptr, offset_chunk_length, *v98, v98[1], v98[2]);
+              if ( offset_chunk_length > 1 || *run_start_ptr != offset_rgb_table[3] )
+                Palette_OffsetIndexedPixelsRGB(dest_write_ptr, offset_chunk_length, *offset_rgb_table, offset_rgb_table[1], offset_rgb_table[2]);
               (*(void (**)(void))(*(_DWORD *)offset_write_cursor + 12))();
               run_pixel_ptr += offset_chunk_length;
               (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, offset_chunk_length);
@@ -1529,9 +1529,9 @@ LABEL_86:
                 if ( copy_chunk_length > (*(int (**)(void))(g_ActiveBlitCursor + 8))() )
                   copy_chunk_length = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
                 (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-                v78 = run_pixel_ptr;
-                v119 = (unsigned __int8 *)(*(int (__thiscall **)(unsigned int))(*(_DWORD *)v172 + 16))(copy_chunk_length);
-                qmemcpy(v119, v78, v79);
+                copy_read_ptr = run_pixel_ptr;
+                copy_dest_ptr = (unsigned __int8 *)(*(int (__thiscall **)(unsigned int))(*(_DWORD *)v172 + 16))(copy_chunk_length);
+                qmemcpy(copy_dest_ptr, copy_read_ptr, v79);
                 (*(void (**)(void))(*(_DWORD *)v172 + 12))();
                 run_pixel_ptr += copy_chunk_length;
                 (*(void (__fastcall **)(int, unsigned int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, copy_chunk_length);
@@ -1573,10 +1573,10 @@ LABEL_97:
             (*(void (__fastcall **)(int, _DWORD))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, run_length);
             goto LABEL_180;
           }
-          v114 = fill_clip_ctx[1];
-          if ( (int)v114 > screen_x )
+          fill_clip_left_ptr = fill_clip_ctx[1];
+          if ( (int)fill_clip_left_ptr > screen_x )
           {
-            v115 = &v114[-screen_x];
+            v115 = &fill_clip_left_ptr[-screen_x];
             (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
             (*(void (**)(void))(g_ActiveBlitCursor + 12))();
             (*(void (__fastcall **)(int, unsigned __int8 *))(g_ActiveBlitCursor + 12))(v116 - (_DWORD)v115, v115);
@@ -1650,22 +1650,22 @@ LABEL_97:
             skip_remaining = 1 - (screen_x - skip_clip_right);
           }
         }
-        v62 = *(_DWORD *)&_10E;
+        skip_write_cursor = *(_DWORD *)&_10E;
         do
         {
           if ( skip_remaining > (*(int (__thiscall **)(unsigned int))(g_ActiveBlitCursor + 8))(skip_remaining) )
             v63 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-          v64 = (*(int (__fastcall **)(int))(*(_DWORD *)v62 + 8))(v63);
+          v64 = (*(int (__fastcall **)(int))(*(_DWORD *)skip_write_cursor + 8))(v63);
           if ( v65 > v64 )
-            v65 = (*(int (**)(void))(*(_DWORD *)v62 + 8))();
+            v65 = (*(int (**)(void))(*(_DWORD *)skip_write_cursor + 8))();
           v66 = (*(int (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 8))(v65);
           if ( v67 > v66 )
             v67 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
           (*(void (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 16))(v67);
           (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-          (*(void (**)(void))(*(_DWORD *)v62 + 16))();
+          (*(void (**)(void))(*(_DWORD *)skip_write_cursor + 16))();
           memset_(v68, (unsigned __int8)g_Render_BackgroundColorIndex);
-          (*(void (__fastcall **)(int, int))(*(_DWORD *)v62 + 12))(v69, v69);
+          (*(void (__fastcall **)(int, int))(*(_DWORD *)skip_write_cursor + 12))(v69, v69);
           (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v70, v70);
           (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v71, v71);
           skip_remaining -= v72;
@@ -1682,8 +1682,8 @@ LABEL_180:
       vars2 += run_length;
       screen_x += run_length;
     }
-    v52 = (*(int (**)(void))(*(_DWORD *)write_cursor + 4))();
-    (*(void (__fastcall **)(int, int))(v53 + 12))(v53, v52 - (unsigned __int16)*sprite_header);
+    row_write_pos = (*(int (**)(void))(*(_DWORD *)write_cursor + 4))();
+    (*(void (__fastcall **)(int, int))(v53 + 12))(v53, row_write_pos - (unsigned __int16)*sprite_header);
     ++row_index;
     ++screen_y;
   }
@@ -4472,17 +4472,17 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   unsigned __int16 *tile_ptr; // edx
   unsigned int now; // eax
   int v8; // edx
-  int v9; // eax
+  int anim_now; // eax
   int v10; // edx
   int v11; // ecx
   _WORD *next_row_tile; // eax
-  int v13; // eax
+  int special_now; // eax
   int special_frame_duration; // edx
   int v15; // ecx
   int overlay_frame; // eax
-  unsigned int v17; // eax
+  unsigned int overlay_now; // eax
   int v18; // edx
-  int v19; // eax
+  int overlay_anim_now; // eax
   int anim_frame_duration; // edx
   int v21; // ecx
   int v22; // edx
@@ -4493,7 +4493,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   int cycle_remap_offset_b; // edx
   int n; // eax
   int cycle_remap_offset_c; // edx
-  int v30; // eax
+  int palette_now; // eax
   int v31; // edx
   int anim_row; // edi
   int anim_col; // ecx
@@ -4521,7 +4521,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   int row_cursor; // esi
   int col_cursor; // ecx
   int col_offset; // ebx
-  _WORD *v58; // edx
+  _WORD *smoke_tile; // edx
   int row_bottom_bound; // edx
   int deco_col; // esi
   int kk; // ecx
@@ -4580,8 +4580,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
             if ( now > *(_DWORD *)((char *)tile_ptr + 6) )
             {
               anim_frame_duration = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * *tile_ptr];
-              v9 = Time_Now(j, anim_frame_duration);
-              *(_DWORD *)((char *)tile_ptr + 6) = v9 + anim_frame_duration;
+              anim_now = Time_Now(j, anim_frame_duration);
+              *(_DWORD *)((char *)tile_ptr + 6) = anim_now + anim_frame_duration;
               *tile_ptr = next_frame;
               WorldMap_RedrawTileIfVisible(ii, i);
               if ( !*(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) && next_frame == 36 )
@@ -4591,8 +4591,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                 {
                   *next_row_tile = 771;
                   special_frame_duration = (unsigned __int8)g_SpecialTileAnimFrameDuration;
-                  v13 = Time_Now(j, special_frame_duration);
-                  *(_DWORD *)((char *)next_row_tile + 6) = v13 + special_frame_duration;
+                  special_now = Time_Now(j, special_frame_duration);
+                  *(_DWORD *)((char *)next_row_tile + 6) = special_now + special_frame_duration;
                   WorldMap_RedrawTileIfVisible(ii, i + 1);
                 }
               }
@@ -4611,8 +4611,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           next_overlay_frame = *(__int16 *)((char *)&g_TerrainAnimationRemapTable + 3 * overlay_frame);
           if ( next_overlay_frame != 0xFFFF )
           {
-            v17 = Time_Now(j, tile_addr);
-            if ( v17 > *(_DWORD *)((char *)tile_ptr + 10) )
+            overlay_now = Time_Now(j, tile_addr);
+            if ( overlay_now > *(_DWORD *)((char *)tile_ptr + 10) )
             {
               if ( next_overlay_frame == 65534 )
               {
@@ -4621,8 +4621,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               else
               {
                 anim_frame_duration = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * tile_ptr[1]];
-                v19 = Time_Now(j, anim_frame_duration);
-                *(_DWORD *)((char *)tile_ptr + 10) = v19 + anim_frame_duration;
+                overlay_anim_now = Time_Now(j, anim_frame_duration);
+                *(_DWORD *)((char *)tile_ptr + 10) = overlay_anim_now + anim_frame_duration;
                 tile_ptr[1] = next_overlay_frame;
               }
               WorldMap_RedrawTileIfVisible(ii, i);
@@ -4644,8 +4644,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       }
       for ( n = 415; n != 423; g_ColorCycleStateArrayBase[n] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + cycle_remap_offset_c) )
         cycle_remap_offset_c = 3 * (unsigned __int16)g_Font_GlyphRemapTable[n++];
-      v30 = Time_Now(v23, (unsigned __int8)g_Render_SpriteAnimDelayBytes[3 * (unsigned __int16)g_ColorCycleDelayLookupIndex]);
-      g_WorldMap_NextPaletteAnimTime = v31 + v30;
+      palette_now = Time_Now(v23, (unsigned __int8)g_Render_SpriteAnimDelayBytes[3 * (unsigned __int16)g_ColorCycleDelayLookupIndex]);
+      g_WorldMap_NextPaletteAnimTime = v31 + palette_now;
       anim_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       v22 = 2 * anim_row;
       anim_row_offset = 14 * anim_row;
@@ -4764,16 +4764,16 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         col_offset = TILE_TERRAIN_ROW_STRIDE * col_cursor;
         while ( col_cursor < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
         {
-          v58 = (_WORD *)(col_offset + gameData + smoke_row_offset);
+          smoke_tile = (_WORD *)(col_offset + gameData + smoke_row_offset);
           if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) )
           {
-            if ( *v58 == 771 && (unsigned int)rand_(col_cursor, v58) < 0x199 )
+            if ( *smoke_tile == 771 && (unsigned int)rand_(col_cursor, smoke_tile) < 0x199 )
             {
               *(_WORD *)(smoke_row_offset + col_offset + gameData) = 772;
               WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);
             }
           }
-          else if ( *v58 == 36 && *(_WORD *)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_(col_cursor, 36) < 0x28 )
+          else if ( *smoke_tile == 36 && *(_WORD *)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_(col_cursor, 36) < 0x28 )
           {
             *(_WORD *)(smoke_row_offset + col_offset + gameData) = 771;
             WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);

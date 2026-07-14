@@ -365,48 +365,48 @@ signed int Defgeneric_BeforeCode()
 // 54E6A4: using guessed type int dword_54E6A4;
 
 //----- (004C8A10) --------------------------------------------------------
-int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, int a3, int headerFP, int maxIndices)
+int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, int imageID, int headerFP, int maxIndices)
 {
   int slotIndex; // eax
   int slotOffset; // edx
-  const char **v7; // eax
+  const char **structNames; // eax
   int v8; // eax
   int v9; // eax
-  int v10; // eax
+  int structNamesForMethod; // eax
   int v11; // ecx
-  int v12; // edx
-  int v13; // eax
-  int v14; // ecx
+  int numMethods; // edx
+  int structNamesForRestriction; // eax
+  int numRestrictions; // ecx
   _DWORD *restrictionPtr; // ebp
   int v16; // edx
   unsigned int typeIndex; // esi
   int typeOffset; // edi
-  unsigned int v19; // edi
-  unsigned int v20; // esi
-  int v21; // ebp
+  unsigned int restrictionLimit; // edi
+  unsigned int methodLimit; // esi
+  int prevModuleIndex; // ebp
   int v23; // [esp+0h] [ebp-D8h]
   int v24; // [esp+4h] [ebp-D4h]
   const char **nameBuffer; // [esp+8h] [ebp-D0h]
-  const char *v26[3]; // [esp+Ch] [ebp-CCh] BYREF
-  const char *v27[3]; // [esp+18h] [ebp-C0h] BYREF
-  const char *v28[3]; // [esp+24h] [ebp-B4h] BYREF
-  const char *v29[3]; // [esp+30h] [ebp-A8h] BYREF
-  const char *v30[3]; // [esp+3Ch] [ebp-9Ch] BYREF
+  const char *moduleNameBuf[3]; // [esp+Ch] [ebp-CCh] BYREF
+  const char *genericNameBuf[3]; // [esp+18h] [ebp-C0h] BYREF
+  const char *methodNameBuf[3]; // [esp+24h] [ebp-B4h] BYREF
+  const char *restrictionNameBuf[3]; // [esp+30h] [ebp-A8h] BYREF
+  const char *typeNameBuf[3]; // [esp+3Ch] [ebp-9Ch] BYREF
   int moduleCount; // [esp+48h] [ebp-90h] BYREF
   int genericCount; // [esp+4Ch] [ebp-8Ch] BYREF
   int methodCount; // [esp+50h] [ebp-88h] BYREF
   int restrictionCount; // [esp+54h] [ebp-84h] BYREF
   DWORD typeCount; // [esp+58h] [ebp-80h] BYREF
-  int v36; // [esp+5Ch] [ebp-7Ch] BYREF
-  int v37; // [esp+60h] [ebp-78h] BYREF
-  int v38; // [esp+64h] [ebp-74h] BYREF
-  int v39; // [esp+68h] [ebp-70h] BYREF
-  int v40; // [esp+6Ch] [ebp-6Ch] BYREF
-  int v41; // [esp+70h] [ebp-68h] BYREF
-  int v42; // [esp+74h] [ebp-64h] BYREF
-  int v43; // [esp+78h] [ebp-60h] BYREF
-  int v44; // [esp+7Ch] [ebp-5Ch] BYREF
-  int v45; // [esp+80h] [ebp-58h] BYREF
+  int moduleReopen; // [esp+5Ch] [ebp-7Ch] BYREF
+  int genericReopen; // [esp+60h] [ebp-78h] BYREF
+  int methodReopen; // [esp+64h] [ebp-74h] BYREF
+  int restrictionReopen; // [esp+68h] [ebp-70h] BYREF
+  int typeReopen; // [esp+6Ch] [ebp-6Ch] BYREF
+  int moduleArrayVersion; // [esp+70h] [ebp-68h] BYREF
+  int genericArrayVersion; // [esp+74h] [ebp-64h] BYREF
+  int methodArrayVersion; // [esp+78h] [ebp-60h] BYREF
+  int restrictionArrayVersion; // [esp+7Ch] [ebp-5Ch] BYREF
+  int typeArrayVersion; // [esp+80h] [ebp-58h] BYREF
   int moduleFile; // [esp+84h] [ebp-54h] BYREF
   int genericFile; // [esp+88h] [ebp-50h]
   int methodFile; // [esp+8Ch] [ebp-4Ch]
@@ -429,7 +429,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
   v59 = fileName;
   v58 = pathName;
   v60 = headerFP;
-  v52 = a3;
+  v52 = imageID;
   slotIndex = 0;
   version = 1;
   moduleIndex = 0;
@@ -438,99 +438,99 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
   {
     ++slotIndex;
     slotOffset += 12;
-    v30[slotIndex + 2] = 0;
-    *(int *)((char *)&v40 + slotIndex * 4) = 1;
-    *(int *)((char *)&v45 + slotIndex * 4) = 0;
+    typeNameBuf[slotIndex + 2] = 0;
+    *(int *)((char *)&typeReopen + slotIndex * 4) = 1;
+    *(int *)((char *)&typeArrayVersion + slotIndex * 4) = 0;
     *(DWORD *)((char *)&typeCount + slotIndex * 4) = 0;
     *(int *)((char *)&v23 + slotOffset) = 0;
   }
   while ( slotIndex != 5 );
-  Output_WriteFormatted(0, slotOffset, v60, (int)aIncludeGenrcfu, (char)v26[0]);
+  Output_WriteFormatted(0, slotOffset, v60, (int)aIncludeGenrcfu, (char)moduleNameBuf[0]);
   Enum = Module_NextEnum(0);
   if ( Enum )
   {
     while ( 1 )
     {
       Module_SetCurrent(Enum);
-      nameBuffer = v26;
-      v7 = *(const char ***)(g_DefgenericCodeGenItem + 20);
-      v24 = v36;
-      v8 = Rules_ConstructCodeFileOpen(moduleFile, v59, v52, v58, &version, v41, v60, (char)aDefgeneric_mod, *v7, v36, v26);
+      nameBuffer = moduleNameBuf;
+      structNames = *(const char ***)(g_DefgenericCodeGenItem + 20);
+      v24 = moduleReopen;
+      v8 = Rules_ConstructCodeFileOpen(moduleFile, v59, v52, v58, &version, moduleArrayVersion, v60, (char)aDefgeneric_mod, *structNames, moduleReopen, moduleNameBuf);
       moduleFile = v8;
       if ( !v8 )
         break;
       Defgeneric_ModuleToCode(v8, Enum, maxIndices);
-      moduleFile = Rules_ConstructCodeFileClose(moduleFile, &moduleCount, maxIndices, &v41, &v36, (int)v26);
+      moduleFile = Rules_ConstructCodeFileClose(moduleFile, &moduleCount, maxIndices, &moduleArrayVersion, &moduleReopen, (int)moduleNameBuf);
       for ( i = Defgeneric_GetNextInModule(0); i; i = Defgeneric_GetNextInModule(i) )
       {
-        nameBuffer = v27;
+        nameBuffer = genericNameBuf;
         v9 = Rules_ConstructCodeFileOpen(
                genericFile,
                v59,
                v52,
                v58,
                &version,
-               v42,
+               genericArrayVersion,
                v60,
                (char)aDefgeneric_5,
                *(const char **)(*(_DWORD *)(g_DefgenericCodeGenItem + 20) + 4),
-               v37,
-               v27);
+               genericReopen,
+               genericNameBuf);
         genericFile = v9;
         if ( !v9 )
           goto LABEL_34;
-        Defgeneric_SingleToCode(v9, v52, i, maxIndices, moduleIndex, v43, methodCount);
+        Defgeneric_SingleToCode(v9, v52, i, maxIndices, moduleIndex, methodArrayVersion, methodCount);
         ++genericCount;
-        genericFile = Rules_ConstructCodeFileClose(genericFile, &genericCount, maxIndices, &v42, &v37, (int)v27);
+        genericFile = Rules_ConstructCodeFileClose(genericFile, &genericCount, maxIndices, &genericArrayVersion, &genericReopen, (int)genericNameBuf);
         if ( *(_DWORD *)(i + 32) )
         {
-          nameBuffer = v28;
-          v10 = *(_DWORD *)(g_DefgenericCodeGenItem + 20);
-          v24 = v38;
-          methodFile = Rules_ConstructCodeFileOpen(methodFile, v59, v52, v58, &version, v43, v60, (char)aDefmethod_2, *(const char **)(v10 + 8), v38, v28);
+          nameBuffer = methodNameBuf;
+          structNamesForMethod = *(_DWORD *)(g_DefgenericCodeGenItem + 20);
+          v24 = methodReopen;
+          methodFile = Rules_ConstructCodeFileOpen(methodFile, v59, v52, v58, &version, methodArrayVersion, v60, (char)aDefmethod_2, *(const char **)(structNamesForMethod + 8), methodReopen, methodNameBuf);
           if ( !methodFile )
             goto LABEL_34;
-          v12 = *(_DWORD *)(i + 32);
+          numMethods = *(_DWORD *)(i + 32);
           methodIndex = 0;
-          if ( v12 )
+          if ( numMethods )
           {
             methodOffset = 0;
             do
             {
               methodPtr = *(_DWORD *)(i + 28) + methodOffset;
               if ( methodIndex )
-                Output_WriteFormatted(v11, methodFile, methodFile, (int)asc_50B1FC, (char)v26[0]);
-              Defgeneric_MethodToCode(methodFile, v52, v44, methodPtr, restrictionCount);
+                Output_WriteFormatted(v11, methodFile, methodFile, (int)asc_50B1FC, (char)moduleNameBuf[0]);
+              Defgeneric_MethodToCode(methodFile, v52, restrictionArrayVersion, methodPtr, restrictionCount);
               if ( *(int *)(methodPtr + 8) > 0 )
               {
-                nameBuffer = v29;
-                v13 = *(_DWORD *)(g_DefgenericCodeGenItem + 20);
-                v24 = v39;
+                nameBuffer = restrictionNameBuf;
+                structNamesForRestriction = *(_DWORD *)(g_DefgenericCodeGenItem + 20);
+                v24 = restrictionReopen;
                 restrictionFile = Rules_ConstructCodeFileOpen(
                         restrictionFile,
                         v59,
                         v52,
                         v58,
                         &version,
-                        v44,
+                        restrictionArrayVersion,
                         v60,
                         (char)aRestriction,
-                        *(const char **)(v13 + 12),
-                        v39,
-                        v29);
+                        *(const char **)(structNamesForRestriction + 12),
+                        restrictionReopen,
+                        restrictionNameBuf);
                 if ( !restrictionFile )
                   goto LABEL_34;
-                v14 = *(_DWORD *)(methodPtr + 8);
+                numRestrictions = *(_DWORD *)(methodPtr + 8);
                 restrictionIndex = 0;
-                if ( v14 )
+                if ( numRestrictions )
                 {
                   restrictionOffset = 0;
                   do
                   {
                     restrictionPtr = (_DWORD *)(restrictionOffset + *(_DWORD *)(methodPtr + 28));
                     if ( restrictionIndex )
-                      Output_WriteFormatted(restrictionIndex, restrictionOffset, restrictionFile, (int)asc_50B1FC, (char)v26[0]);
-                    Defgeneric_RestrictionToCode(restrictionFile, v52, v45, (int)restrictionPtr, (DWORD)restrictionPtr, typeCount);
+                      Output_WriteFormatted(restrictionIndex, restrictionOffset, restrictionFile, (int)asc_50B1FC, (char)moduleNameBuf[0]);
+                    Defgeneric_RestrictionToCode(restrictionFile, v52, typeArrayVersion, (int)restrictionPtr, (DWORD)restrictionPtr, typeCount);
                     if ( restrictionPtr[2] )
                     {
                       typeFile = Rules_ConstructCodeFileOpen(
@@ -539,12 +539,12 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                               v52,
                               v58,
                               &version,
-                              v45,
+                              typeArrayVersion,
                               v60,
                               (char)aVoid_1,
                               *(const char **)(*(_DWORD *)(g_DefgenericCodeGenItem + 20) + 16),
-                              v40,
-                              v30);
+                              typeReopen,
+                              typeNameBuf);
                       if ( !typeFile )
                         goto LABEL_34;
                       typeIndex = 0;
@@ -554,7 +554,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                         do
                         {
                           if ( typeIndex )
-                            Output_WriteFormatted(typeFile, v16, typeFile, (int)asc_50B1FC, (char)v26[0]);
+                            Output_WriteFormatted(typeFile, v16, typeFile, (int)asc_50B1FC, (char)moduleNameBuf[0]);
                           ++typeIndex;
                           Defgeneric_RestrictionTypeToCode(typeFile, maxIndices, *(_DWORD *)(typeOffset + *restrictionPtr));
                           typeOffset += 4;
@@ -562,43 +562,43 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                         while ( typeIndex < restrictionPtr[2] );
                       }
                       typeCount += restrictionPtr[2];
-                      typeFile = Rules_ConstructCodeFileClose(typeFile, (int *)&typeCount, maxIndices, &v45, &v40, (int)v30);
+                      typeFile = Rules_ConstructCodeFileClose(typeFile, (int *)&typeCount, maxIndices, &typeArrayVersion, &typeReopen, (int)typeNameBuf);
                     }
-                    v19 = *(_DWORD *)(methodPtr + 8);
+                    restrictionLimit = *(_DWORD *)(methodPtr + 8);
                     restrictionOffset += 12;
                     ++restrictionIndex;
                   }
-                  while ( restrictionIndex < v19 );
+                  while ( restrictionIndex < restrictionLimit );
                 }
                 restrictionCount += *(_DWORD *)(methodPtr + 8);
-                restrictionFile = Rules_ConstructCodeFileClose(restrictionFile, &restrictionCount, maxIndices, &v44, &v39, (int)v29);
+                restrictionFile = Rules_ConstructCodeFileClose(restrictionFile, &restrictionCount, maxIndices, &restrictionArrayVersion, &restrictionReopen, (int)restrictionNameBuf);
               }
               v11 = methodOffset + 40;
-              v20 = *(_DWORD *)(i + 32);
+              methodLimit = *(_DWORD *)(i + 32);
               methodOffset += 40;
               ++methodIndex;
             }
-            while ( methodIndex < v20 );
+            while ( methodIndex < methodLimit );
           }
           methodCount += *(_DWORD *)(i + 32);
-          methodFile = Rules_ConstructCodeFileClose(methodFile, &methodCount, maxIndices, &v43, &v38, (int)v28);
+          methodFile = Rules_ConstructCodeFileClose(methodFile, &methodCount, maxIndices, &methodArrayVersion, &methodReopen, (int)methodNameBuf);
         }
       }
-      v21 = moduleIndex;
+      prevModuleIndex = moduleIndex;
       Enum = Module_NextEnum(Enum);
-      moduleIndex = v21 + 1;
+      moduleIndex = prevModuleIndex + 1;
       ++moduleCount;
       if ( !Enum )
         goto LABEL_33;
     }
 LABEL_34:
-    Defgeneric_CloseCodeFiles(&moduleFile, &v36, maxIndices, (int)v26);
+    Defgeneric_CloseCodeFiles(&moduleFile, &moduleReopen, maxIndices, (int)moduleNameBuf);
     return 0;
   }
   else
   {
 LABEL_33:
-    Defgeneric_CloseCodeFiles(&moduleFile, &v36, maxIndices, (int)v26);
+    Defgeneric_CloseCodeFiles(&moduleFile, &moduleReopen, maxIndices, (int)moduleNameBuf);
     return 1;
   }
 }
@@ -6129,33 +6129,33 @@ int *__fastcall InstanceQuery_ResolveClassRestriction(int a1, _DWORD *classToken
 {
   int v2; // edx
   int currentModule; // edi
-  int v4; // ecx
+  int restrictionType; // ecx
   int *restrictionListHead; // ebp
-  int v6; // eax
-  int v7; // ecx
-  int v8; // esi
-  int v9; // eax
-  _BYTE *v10; // edx
-  int *v11; // eax
+  int firstField; // eax
+  int lastField; // ecx
+  int fieldOffset; // esi
+  int fieldPtr; // eax
+  _BYTE *className; // edx
+  int *lookedUpClass; // eax
   int v12; // ecx
-  _DWORD *v13; // ecx
-  int *v14; // ecx
-  int *v15; // ebx
+  _DWORD *arrayFreeNode; // ecx
+  int *arrayNode; // ecx
+  int *restrictionNode; // ebx
   _DWORD *v16; // ecx
   int *result; // eax
-  _DWORD *v18; // ecx
-  int *v19; // ecx
-  int v20; // ebx
-  int v21; // eax
+  _DWORD *singleFreeNode; // ecx
+  int *singleNode; // ecx
+  int singleNodeAddr; // ebx
+  int resolvedClass; // eax
   _DWORD *v22; // ecx
-  int *v23; // eax
+  int *namedClass; // eax
   int v24; // ecx
   int lookupClass; // esi
-  _DWORD *v26; // edx
-  int *v27; // ecx
-  int v28; // ebx
+  _DWORD *namedFreeNode; // edx
+  int *namedNode; // ecx
+  int namedNodeAddr; // ebx
   _DWORD *v29; // ecx
-  int v30; // [esp+4h] [ebp-28h]
+  int lastFieldOffset; // [esp+4h] [ebp-28h]
   int arrayClass; // [esp+Ch] [ebp-20h]
   int *lastNode; // [esp+10h] [ebp-1Ch]
   int fieldIndex; // [esp+14h] [ebp-18h]
@@ -6164,58 +6164,58 @@ int *__fastcall InstanceQuery_ResolveClassRestriction(int a1, _DWORD *classToken
   if ( *(_DWORD *)(v2 + 4) == 57 )
   {
     Class_AddBusyReference(classToken[2]);
-    v18 = *(_DWORD **)(g_ClipsMemoryTable + 64);
-    if ( v18 )
+    singleFreeNode = *(_DWORD **)(g_ClipsMemoryTable + 64);
+    if ( singleFreeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-      *(_DWORD *)(g_ClipsMemoryTable + 64) = *v18;
-      v19 = (int *)g_ClipsMemFreeListTemp;
+      *(_DWORD *)(g_ClipsMemoryTable + 64) = *singleFreeNode;
+      singleNode = (int *)g_ClipsMemFreeListTemp;
     }
     else
     {
-      v19 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+      singleNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
     }
-    v20 = (int)v19;
-    v21 = classToken[2];
-    *v19 = v21;
-    if ( Class_IsInScope(v21, currentModule) )
+    singleNodeAddr = (int)singleNode;
+    resolvedClass = classToken[2];
+    *singleNode = resolvedClass;
+    if ( Class_IsInScope(resolvedClass, currentModule) )
       v22[1] = currentModule;
     else
       v22[1] = **(_DWORD **)(*v22 + 8);
-    *(_DWORD *)(v20 + 8) = 0;
-    result = (int *)v20;
-    *(_DWORD *)(v20 + 12) = 0;
+    *(_DWORD *)(singleNodeAddr + 8) = 0;
+    result = (int *)singleNodeAddr;
+    *(_DWORD *)(singleNodeAddr + 12) = 0;
   }
   else
   {
-    v4 = classToken[1];
-    if ( v4 == 2 )
+    restrictionType = classToken[1];
+    if ( restrictionType == 2 )
     {
-      v23 = Class_LookupByQualifiedName(*(_BYTE **)(classToken[2] + 16));
-      lookupClass = (int)v23;
-      if ( v23 )
+      namedClass = Class_LookupByQualifiedName(*(_BYTE **)(classToken[2] + 16));
+      lookupClass = (int)namedClass;
+      if ( namedClass )
       {
-        Class_AddBusyReference((int)v23);
-        v26 = *(_DWORD **)(g_ClipsMemoryTable + 64);
-        if ( v26 )
+        Class_AddBusyReference((int)namedClass);
+        namedFreeNode = *(_DWORD **)(g_ClipsMemoryTable + 64);
+        if ( namedFreeNode )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-          *(_DWORD *)(g_ClipsMemoryTable + 64) = *v26;
-          v27 = (int *)g_ClipsMemFreeListTemp;
+          *(_DWORD *)(g_ClipsMemoryTable + 64) = *namedFreeNode;
+          namedNode = (int *)g_ClipsMemFreeListTemp;
         }
         else
         {
-          v27 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+          namedNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
         }
-        v28 = (int)v27;
-        *v27 = lookupClass;
+        namedNodeAddr = (int)namedNode;
+        *namedNode = lookupClass;
         if ( Class_IsInScope(lookupClass, currentModule) )
           v29[1] = currentModule;
         else
           v29[1] = **(_DWORD **)(*v29 + 8);
-        *(_DWORD *)(v28 + 8) = 0;
-        result = (int *)v28;
-        *(_DWORD *)(v28 + 12) = 0;
+        *(_DWORD *)(namedNodeAddr + 8) = 0;
+        result = (int *)namedNodeAddr;
+        *(_DWORD *)(namedNodeAddr + 12) = 0;
       }
       else
       {
@@ -6225,58 +6225,58 @@ int *__fastcall InstanceQuery_ResolveClassRestriction(int a1, _DWORD *classToken
     }
     else
     {
-      if ( v4 == 4 )
+      if ( restrictionType == 4 )
       {
         restrictionListHead = 0;
         lastNode = 0;
-        v6 = classToken[3] + 1;
-        v7 = classToken[4] + 1;
-        fieldIndex = v6;
-        if ( v7 < v6 )
+        firstField = classToken[3] + 1;
+        lastField = classToken[4] + 1;
+        fieldIndex = firstField;
+        if ( lastField < firstField )
           return restrictionListHead;
-        v8 = 6 * v6 - 6;
-        v30 = 6 * v7 - 6;
+        fieldOffset = 6 * firstField - 6;
+        lastFieldOffset = 6 * lastField - 6;
         while ( 1 )
         {
-          v9 = v8 + classToken[2];
-          if ( *(_WORD *)(v9 + 14) != 2 )
+          fieldPtr = fieldOffset + classToken[2];
+          if ( *(_WORD *)(fieldPtr + 14) != 2 )
             break;
-          v10 = *(_BYTE **)(*(_DWORD *)(v9 + 16) + 16);
-          v11 = Class_LookupByQualifiedName(v10);
-          arrayClass = (int)v11;
-          if ( !v11 )
+          className = *(_BYTE **)(*(_DWORD *)(fieldPtr + 16) + 16);
+          lookedUpClass = Class_LookupByQualifiedName(className);
+          arrayClass = (int)lookedUpClass;
+          if ( !lookedUpClass )
           {
-            Class_ReportLookupError(v12, (int)v10);
+            Class_ReportLookupError(v12, (int)className);
             break;
           }
-          Class_AddBusyReference((int)v11);
-          v13 = *(_DWORD **)(g_ClipsMemoryTable + 64);
-          if ( v13 )
+          Class_AddBusyReference((int)lookedUpClass);
+          arrayFreeNode = *(_DWORD **)(g_ClipsMemoryTable + 64);
+          if ( arrayFreeNode )
           {
             g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-            *(_DWORD *)(g_ClipsMemoryTable + 64) = *v13;
-            v14 = (int *)g_ClipsMemFreeListTemp;
+            *(_DWORD *)(g_ClipsMemoryTable + 64) = *arrayFreeNode;
+            arrayNode = (int *)g_ClipsMemFreeListTemp;
           }
           else
           {
-            v14 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+            arrayNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
           }
-          v15 = v14;
-          *v14 = arrayClass;
+          restrictionNode = arrayNode;
+          *arrayNode = arrayClass;
           if ( Class_IsInScope(arrayClass, currentModule) )
             v16[1] = currentModule;
           else
             v16[1] = **(_DWORD **)(*v16 + 8);
-          v15[2] = 0;
-          v15[3] = 0;
+          restrictionNode[2] = 0;
+          restrictionNode[3] = 0;
           if ( restrictionListHead )
-            lastNode[2] = (int)v15;
+            lastNode[2] = (int)restrictionNode;
           else
-            restrictionListHead = v15;
-          lastNode = v15;
-          v8 += 6;
+            restrictionListHead = restrictionNode;
+          lastNode = restrictionNode;
+          fieldOffset += 6;
           ++fieldIndex;
-          if ( v8 > v30 )
+          if ( fieldOffset > lastFieldOffset )
             return restrictionListHead;
         }
         InstanceQuery_FreeRestrictionClassList(restrictionListHead);
@@ -6762,7 +6762,7 @@ int  ObjectsCompiler_WriteRuntimeInitCall(int fileID, int imageID)
 //----- (004CFFC0) --------------------------------------------------------
 void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *pathName, DWORD fileNameBuffer, int fileID, int maxIndices)
 {
-  int v8; // eax
+  int initIndex; // eax
   int v9; // edx
   int v10; // ebx
   int v11; // edx
@@ -6780,8 +6780,8 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
   const char *v23; // [esp+48h] [ebp-C4h] BYREF
   const char *v24; // [esp+54h] [ebp-B8h] BYREF
   const char *v25[3]; // [esp+60h] [ebp-ACh] BYREF
-  int v26; // [esp+6Ch] [ebp-A0h] BYREF
-  int v27; // [esp+70h] [ebp-9Ch] BYREF
+  int moduleFileCount; // [esp+6Ch] [ebp-A0h] BYREF
+  int classFileCount; // [esp+70h] [ebp-9Ch] BYREF
   int v28; // [esp+74h] [ebp-98h] BYREF
   int v29; // [esp+78h] [ebp-94h] BYREF
   int v30; // [esp+7Ch] [ebp-90h] BYREF
@@ -6813,40 +6813,40 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
   int v56; // [esp+E4h] [ebp-28h] BYREF
   int v57; // [esp+E8h] [ebp-24h] BYREF
   int version; // [esp+ECh] [ebp-20h] BYREF
-  int v59; // [esp+F0h] [ebp-1Ch]
+  int fileIDCopy; // [esp+F0h] [ebp-1Ch]
   _DWORD *j; // [esp+F4h] [ebp-18h]
   int i; // [esp+F8h] [ebp-14h]
   int moduleIndex; // [esp+FCh] [ebp-10h]
 
-  v59 = fileID;
-  v8 = 0;
+  fileIDCopy = fileID;
+  initIndex = 0;
   version = 1;
   moduleIndex = 0;
   v9 = 0;
   do
   {
-    ++v8;
+    ++initIndex;
     v9 += 3;
-    v25[v8 + 2] = 0;
-    *(int *)((char *)&v49 + v8 * 4) = 1;
-    *(int *)((char *)&v33 + v8 * 4) = 0;
-    *(int *)((char *)&v41 + v8 * 4) = 0;
+    v25[initIndex + 2] = 0;
+    *(int *)((char *)&v49 + initIndex * 4) = 1;
+    *(int *)((char *)&v33 + initIndex * 4) = 0;
+    *(int *)((char *)&v41 + initIndex * 4) = 0;
     v17[v9] = 0;
   }
-  while ( v8 != 8 );
-  v10 = v59;
-  Output_WriteFormatted(1, v9 * 4, v59, (int)aIncludeClassco, (char)v18[0]);
+  while ( initIndex != 8 );
+  v10 = fileIDCopy;
+  Output_WriteFormatted(1, v9 * 4, fileIDCopy, (int)aIncludeClassco, (char)v18[0]);
   Output_WriteFormatted(v12, v11, v10, (int)aIncludeClassin, (char)v18[0]);
   if ( ObjectsCompiler_WriteClassPointerArray(fileName, pathName, fileNameBuffer, v10, maxIndices, &version) )
   {
-    if ( ObjectsCompiler_WriteClassHashTable(fileName, pathName, fileNameBuffer, v59, maxIndices, &version) )
+    if ( ObjectsCompiler_WriteClassHashTable(fileName, pathName, fileNameBuffer, fileIDCopy, maxIndices, &version) )
     {
-      ObjectsCompiler_WriteSlotNameHashTable(fileName, pathName, fileNameBuffer, v59, maxIndices, &version);
+      ObjectsCompiler_WriteSlotNameHashTable(fileName, pathName, fileNameBuffer, fileIDCopy, maxIndices, &version);
       if ( v13 )
       {
-        if ( ObjectsCompiler_WriteSlotNameRecords(fileName, pathName, fileNameBuffer, v59, maxIndices, &version) )
+        if ( ObjectsCompiler_WriteSlotNameRecords(fileName, pathName, fileNameBuffer, fileIDCopy, maxIndices, &version) )
         {
-          for ( i = Module_NextEnum(0); i; ++v26 )
+          for ( i = Module_NextEnum(0); i; ++moduleFileCount )
           {
             Module_SetCurrent(i);
             v14 = Rules_ConstructCodeFileOpen(
@@ -6856,7 +6856,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
                     pathName,
                     &version,
                     v50,
-                    v59,
+                    fileIDCopy,
                     (char)aDefclass_modul,
                     **(const char ***)(g_ClipsConstructCompilerData + 20),
                     v42,
@@ -6865,7 +6865,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
             if ( !v14 )
               break;
             ObjectsCompiler_WriteModuleRecord(v14, i, maxIndices);
-            moduleFile = Rules_ConstructCodeFileClose(moduleFile, &v26, maxIndices, &v50, &v42, (int)v18);
+            moduleFile = Rules_ConstructCodeFileClose(moduleFile, &moduleFileCount, maxIndices, &v50, &v42, (int)v18);
             for ( j = (_DWORD *)Class_GetNextRecord(0); j; j = (_DWORD *)Class_GetNextRecord((int)j) )
             {
               v15 = Rules_ConstructCodeFileOpen(
@@ -6875,7 +6875,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
                       pathName,
                       &version,
                       v51,
-                      v59,
+                      fileIDCopy,
                       (char)aDefclass_6,
                       *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 4),
                       v43,
@@ -6884,14 +6884,14 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
               if ( !v15 )
                 goto LABEL_20;
               ObjectsCompiler_WriteClassRecord(v15, fileNameBuffer, (int)j, maxIndices, moduleIndex, v52, v28, v53, v29, v54, v30, v55, v31, v56, v32, v57, v33);
-              ++v27;
-              classFile = Rules_ConstructCodeFileClose(classFile, &v27, maxIndices, &v51, &v43, (int)v19);
-              if ( !ObjectsCompiler_WriteClassLinkPointerArray(&v36, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, (int)j, &v52, &v28, &v44, &v20)
-                || !ObjectsCompiler_WriteSlotDescArray(&v37, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, (int)j, &v53, &v29, &v45, &v21)
-                || !ObjectsCompiler_WriteSlotDescPointerArray(&v38, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, (int)j, &v54, &v30, &v46, &v22)
-                || !ObjectsCompiler_WriteSlotIndexMapArray(&v39, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, j, &v55, &v31, &v47, &v23)
-                || !ObjectsCompiler_WriteHandlerArray(&v40, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, (int)j, &v56, &v32, &v48, &v24)
-                || !ObjectsCompiler_WriteHandlerIndexMapArray(&v41, fileName, fileNameBuffer, pathName, v59, &version, maxIndices, (int)j, &v57, &v33, &v49, v25) )
+              ++classFileCount;
+              classFile = Rules_ConstructCodeFileClose(classFile, &classFileCount, maxIndices, &v51, &v43, (int)v19);
+              if ( !ObjectsCompiler_WriteClassLinkPointerArray(&v36, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, (int)j, &v52, &v28, &v44, &v20)
+                || !ObjectsCompiler_WriteSlotDescArray(&v37, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, (int)j, &v53, &v29, &v45, &v21)
+                || !ObjectsCompiler_WriteSlotDescPointerArray(&v38, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, (int)j, &v54, &v30, &v46, &v22)
+                || !ObjectsCompiler_WriteSlotIndexMapArray(&v39, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, j, &v55, &v31, &v47, &v23)
+                || !ObjectsCompiler_WriteHandlerArray(&v40, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, (int)j, &v56, &v32, &v48, &v24)
+                || !ObjectsCompiler_WriteHandlerIndexMapArray(&v41, fileName, fileNameBuffer, pathName, fileIDCopy, &version, maxIndices, (int)j, &v57, &v33, &v49, v25) )
               {
                 goto LABEL_20;
               }

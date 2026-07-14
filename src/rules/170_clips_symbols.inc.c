@@ -5376,7 +5376,7 @@ int  Rules_ConstructsToCCommand(double a1)
 //----- (004A6800) --------------------------------------------------------
 signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndices, char a4)
 {
-  int v5; // ecx
+  int imageIdLocal; // ecx
   int codeGenItem; // edx
   int v7; // ecx
   int v8; // ecx
@@ -5404,7 +5404,7 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
   int v30; // ecx
   int v31; // edx
   int v32; // ecx
-  char v33; // bl
+  char headerFileHandle; // bl
   int v34; // edx
   int codeItem; // esi
   int i; // edi
@@ -5427,12 +5427,12 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
   char v54; // [esp-8h] [ebp-60h]
   CHAR headerFileName[88]; // [esp+0h] [ebp-58h] BYREF
 
-  v5 = imageId;
+  imageIdLocal = imageId;
   codeGenItem = g_CodeGeneratorItemList;
   for ( g_ClipsCodeMaxIndicesPerArray = maxIndices; codeGenItem; codeGenItem = *(_DWORD *)(codeGenItem + 24) )
   {
     if ( *(_DWORD *)(codeGenItem + 4) )
-      (*(void (__fastcall **)(int))(codeGenItem + 4))(v5);
+      (*(void (__fastcall **)(int))(codeGenItem + 4))(imageIdLocal);
   }
   Rules_RunPeriodicCleanup(0, 0);
   g_Rules_ConstructsToCodeBaseName = (int)fileName;
@@ -5463,14 +5463,14 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
     Compiler_GenerateConstructTables((DWORD)fileName);
     Rules_WriteFunctionDefinitionRecordsToCode(fileName);
     Rules_WriteHashedExpressionsToCode((DWORD)fileName);
-    v33 = g_ClipsCodeHeaderFile;
+    headerFileHandle = g_ClipsCodeHeaderFile;
     Compiler_WriteConstraintTableFile(fileName, v34, g_ConstructsToCImageId, g_ClipsCodeHeaderFile, g_ClipsCodeMaxIndicesPerArray);
     codeItem = g_CodeGeneratorItemList;
     for ( i = 5; codeItem; codeItem = *(_DWORD *)(codeItem + 24) )
     {
       if ( *(_DWORD *)(codeItem + 12) )
       {
-        v33 = g_ClipsCodeHeaderFile;
+        headerFileHandle = g_ClipsCodeHeaderFile;
         codeGenIndex = i++;
         (*(void (__fastcall **)(int, int, int))(codeItem + 12))(g_ConstructsToCImageId, codeGenIndex, g_ClipsCodeMaxIndicesPerArray);
       }
@@ -5481,7 +5481,7 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
       Output_WriteFormatted(v38, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)asc_507DA0, v54);
       fclose_(v39);
     }
-    Rules_WriteConstructsToCDriverFile(fileName, v33, (DWORD)fileName);
+    Rules_WriteConstructsToCDriverFile(fileName, headerFileHandle, (DWORD)fileName);
     fclose_(v40);
     return 1;
   }
@@ -5682,7 +5682,7 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
   int v9; // ecx
   int v10; // edx
   int v11; // ecx
-  int v12; // eax
+  int functionListHead; // eax
   int v13; // edx
   int v14; // ecx
   int fctnPtr; // esi
@@ -5727,9 +5727,9 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
     Output_WriteFormatted(v7, v6, v6, (int)asc_507DA4, v34);
     Output_WriteFormatted(v9, v8, v8, (int)aFunctionListDe, v35);
     Output_WriteFormatted(v11, v10, v10, (int)asc_507DF4, v36);
-    v12 = Rules_GetFunctionDefinitionListHead();
+    functionListHead = Rules_GetFunctionDefinitionListHead();
     entryCount = v13;
-    fctnPtr = v12;
+    fctnPtr = functionListHead;
     while ( fctnPtr )
     {
       if ( i )
@@ -9429,7 +9429,7 @@ int __fastcall Rules_ParseObjectInstanceFunctionCall(int top, int readSource)
   int v30; // ecx
   int v31; // ecx
   signed int v32; // eax
-  _WORD *v33; // edi
+  _WORD *parsedArgNode; // edi
   int **v34; // eax
   int v35; // edx
   int v36; // ecx
@@ -9497,10 +9497,10 @@ int __fastcall Rules_ParseObjectInstanceFunctionCall(int top, int readSource)
       *(_DWORD *)(*(_DWORD *)(v28 + 6) + 10) = v32;
       if ( errorFlag[0] == 1 )
         goto LABEL_8;
-      v33 = *(_WORD **)(*(_DWORD *)(v28 + 6) + 10);
-      if ( !v33 )
+      parsedArgNode = *(_WORD **)(*(_DWORD *)(v28 + 6) + 10);
+      if ( !parsedArgNode )
         goto LABEL_7;
-      if ( *v33 != 2 || strcmp_(v28, aOf_0) )
+      if ( *parsedArgNode != 2 || strcmp_(v28, aOf_0) )
       {
         **(_WORD **)(v28 + 6) = 10;
         v34 = Rules_MakeSymbol(aGensym_1);
