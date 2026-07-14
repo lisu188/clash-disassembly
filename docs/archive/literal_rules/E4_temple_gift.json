@@ -1,0 +1,197 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "TEMPLE_GIFT_SPAWN_UNITS",
+  "pattern": "case (?P<lit>0u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "TEMPLE_GIFT_KILL_STACK",
+  "pattern": "case (?P<lit>1u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 1u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "TEMPLE_GIFT_REST",
+  "pattern": "case (?P<lit>2u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 2u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "TEMPLE_GIFT_BLESS_MORALE",
+  "pattern": "case (?P<lit>3u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 3u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "TEMPLE_GIFT_HEAL_FULL",
+  "pattern": "case (?P<lit>4u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 4u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "TEMPLE_GIFT_HEAL_FULL_RESET",
+  "pattern": "case (?P<lit>5u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 5u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "TEMPLE_GIFT_CYCLE_ORDERS_3",
+  "pattern": "case (?P<lit>6u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 6u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "TEMPLE_GIFT_BLESS_MORALE_MINOR",
+  "pattern": "case (?P<lit>7u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 7u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 8,
+  "name": "TEMPLE_GIFT_CYCLE_ORDERS_2",
+  "pattern": "case (?P<lit>8u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 8u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 9,
+  "name": "TEMPLE_GIFT_GOLD_100",
+  "pattern": "case (?P<lit>9u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 9u runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 10,
+  "name": "TEMPLE_GIFT_GOLD_200",
+  "pattern": "case (?P<lit>0xAu):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0xAu runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 11,
+  "name": "TEMPLE_GIFT_GOLD_50",
+  "pattern": "case (?P<lit>0xBu):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0xBu runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 12,
+  "name": "TEMPLE_GIFT_GOLD_300",
+  "pattern": "case (?P<lit>0xCu):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0xCu runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 13,
+  "name": "TEMPLE_GIFT_CURSE_MORALE",
+  "pattern": "case (?P<lit>0xDu):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0xDu runs the effect this member names.",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 14,
+  "name": "TEMPLE_GIFT_CURSE_MORALE_FATIGUE",
+  "pattern": "case (?P<lit>0xEu):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Temple_ProcessGift",
+  "confidence": "behavior-confirmed",
+  "evidence": "Temple_ProcessGift (080_building_ui.inc.c:8601) switch(giftType) case 0xEu runs the effect this member names.",
+  "area": "buildings"
+ }
+]

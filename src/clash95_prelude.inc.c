@@ -116,6 +116,28 @@ typedef enum ReligiousSiteCategory
   RELIGIOUS_SITE_CATEGORY_CULT_PLACE = 3,
   RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE = 4
 } ReligiousSiteCategory;
+
+/* Temple/shrine gift outcome dispatched by Temple_ProcessGift
+ * (080_building_ui.inc.c:8601). Members named by observable mechanical effect
+ * (the handler each case runs); designer labels are not recovered. */
+typedef enum TempleGiftType
+{
+  TEMPLE_GIFT_SPAWN_UNITS = 0,
+  TEMPLE_GIFT_KILL_STACK = 1,
+  TEMPLE_GIFT_REST = 2,                    /* fatigue -100 */
+  TEMPLE_GIFT_BLESS_MORALE = 3,            /* morale +20 */
+  TEMPLE_GIFT_HEAL_FULL = 4,               /* slot HP := 100 */
+  TEMPLE_GIFT_HEAL_FULL_RESET = 5,         /* HP := 100 + clears next field */
+  TEMPLE_GIFT_CYCLE_ORDERS_3 = 6,
+  TEMPLE_GIFT_BLESS_MORALE_MINOR = 7,      /* morale +2 */
+  TEMPLE_GIFT_CYCLE_ORDERS_2 = 8,
+  TEMPLE_GIFT_GOLD_100 = 9,
+  TEMPLE_GIFT_GOLD_200 = 0xA,
+  TEMPLE_GIFT_GOLD_50 = 0xB,
+  TEMPLE_GIFT_GOLD_300 = 0xC,
+  TEMPLE_GIFT_CURSE_MORALE = 0xD,          /* morale -20 */
+  TEMPLE_GIFT_CURSE_MORALE_FATIGUE = 0xE   /* morale -1, fatigue +50 */
+} TempleGiftType;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per

@@ -8619,22 +8619,22 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
   Debug_Log(tileY, tileX, giftType, (int)aTemple_process);
   switch ( giftType )
   {
-    case 0u:
+    case TEMPLE_GIFT_SPAWN_UNITS:
       Temple_SpawnGiftUnitGroup(tileX, v7, gameTime);
       return;
-    case 1u:
+    case TEMPLE_GIFT_KILL_STACK:
       UI_StartTileBlinkFlash(*unitStack, unitStack[1], v8);
       Unit_Kill((int)unitStack, tileX, giftType, gameTime);
       return;
-    case 2u:
+    case TEMPLE_GIFT_REST:
       UnitStack_AdjustFatigueByPredicate(unitStack, -100, UnitSlot_PredicateAlways, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v9);
       return;
-    case 3u:
+    case TEMPLE_GIFT_BLESS_MORALE:
       UnitStack_AdjustMoraleByPredicate(unitStack, 20, UnitSlot_PredicateAlways, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v10);
       return;
-    case 4u:
+    case TEMPLE_GIFT_HEAL_FULL:
       slotPtr = unitStack;
       slotIndex = v8 ^ v7;
       do
@@ -8648,7 +8648,7 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
       }
       while ( slotIndex < 10 );
       goto LABEL_9;
-    case 5u:
+    case TEMPLE_GIFT_HEAL_FULL_RESET:
       slotPtrB = unitStack;
       slotIndex = v8 ^ v7;
       do
@@ -8666,39 +8666,39 @@ LABEL_9:
       Rules_SyncArmyFactStrength(unitStack, slotIndex, slotUnitType, tileX, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v14);
       return;
-    case 6u:
+    case TEMPLE_GIFT_CYCLE_ORDERS_3:
       do
         UnitStack_CycleAllSlotOrders(unitStack, giftType, gameTime);
       while ( v17 < 3 );
       goto LABEL_15;
-    case 7u:
+    case TEMPLE_GIFT_BLESS_MORALE_MINOR:
       UnitStack_AdjustMoraleByPredicate(unitStack, 2, UnitSlot_PredicateAlways, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), unitStack[1], v18);
       return;
-    case 8u:
+    case TEMPLE_GIFT_CYCLE_ORDERS_2:
       do
         UnitStack_CycleAllSlotOrders(unitStack, giftType, gameTime);
       while ( v19 < 2 );
 LABEL_15:
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), gameData + 200 * *unitStack, v16);
       break;
-    case 9u:
+    case TEMPLE_GIFT_GOLD_100:
       Temple_SpawnGiftGoldCargoStack(100, tileX, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
-    case 0xAu:
+    case TEMPLE_GIFT_GOLD_200:
       Temple_SpawnGiftGoldCargoStack(200, tileX, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
-    case 0xBu:
+    case TEMPLE_GIFT_GOLD_50:
       Temple_SpawnGiftGoldCargoStack(50, tileX, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
-    case 0xCu:
+    case TEMPLE_GIFT_GOLD_300:
       Temple_SpawnGiftGoldCargoStack(300, tileX, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
-    case 0xDu:
+    case TEMPLE_GIFT_CURSE_MORALE:
       UnitStack_AdjustMoraleByPredicate(unitStack, -20, UnitSlot_PredicateAlways, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v20);
       break;
-    case 0xEu:
+    case TEMPLE_GIFT_CURSE_MORALE_FATIGUE:
       UnitStack_AdjustMoraleByPredicate(unitStack, -1, UnitSlot_PredicateAlways, giftType, gameTime);
       UnitStack_AdjustFatigueByPredicate(unitStack, 50, UnitSlot_PredicateAlways, giftType, gameTime);
       UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v21);

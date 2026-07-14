@@ -1,5 +1,18 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E4: TempleGiftType
+
+Extracts the temple/shrine gift-outcome dispatch as `typedef enum
+TempleGiftType` (15 contiguous members `0..0xE`), substituting all 15 case
+labels of the `switch(giftType)` in `Temple_ProcessGift`
+(`src/game/080_building_ui.inc.c:8601`, func-scoped). Members are named by their
+**observable mechanical effect** (the handler each case runs) since designer
+labels are not recovered: `TEMPLE_GIFT_SPAWN_UNITS`, `_KILL_STACK`, `_REST`
+(fatigue -100), `_BLESS_MORALE` (+20), `_HEAL_FULL` (HP:=100),
+`_HEAL_FULL_RESET`, `_CYCLE_ORDERS_3/_2`, `_BLESS_MORALE_MINOR` (+2),
+`_GOLD_100/200/50/300`, `_CURSE_MORALE` (-20), `_CURSE_MORALE_FATIGUE`.
+Object-identical (0 insn changes / 434,283); members guard-pinned.
+
 ## 2026-07-14 - Enum extraction E1: Direction8
 
 Extracts the 8-way facing/movement direction as `typedef enum Direction8`
