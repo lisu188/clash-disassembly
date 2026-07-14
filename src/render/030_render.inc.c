@@ -4565,7 +4565,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       DD_Pump((int)&g_RenderState, ii, i);
       ii = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
       v5 = i + 1;
-      for ( j = 1400 * ii; ; j += 1400 )
+      for ( j = TILE_TERRAIN_ROW_STRIDE * ii; ; j += TILE_TERRAIN_ROW_STRIDE )
       {
         v1 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
         if ( ii >= v1 )
@@ -4653,7 +4653,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       {
         DD_Pump((int)&g_RenderState, ii, v32);
         v33 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-        for ( ii = 1400 * v33; ; ii += 1400 )
+        for ( ii = TILE_TERRAIN_ROW_STRIDE * v33; ; ii += TILE_TERRAIN_ROW_STRIDE )
         {
           v22 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( v33 >= v22 )
@@ -4688,7 +4688,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           while ( v44 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
             v45 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-            v46 = 1400 * v45;
+            v46 = TILE_TERRAIN_ROW_STRIDE * v45;
             while ( v45 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
               v47 = (_WORD *)(v84 + v46 + gameData);
@@ -4697,7 +4697,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                 *(_WORD *)(v46 + gameData + v84 + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_(v45, 0) / 0x7FFFuLL)];
                 WorldMap_RedrawTileIfVisible(v48, v44);
               }
-              v46 += 1400;
+              v46 += TILE_TERRAIN_ROW_STRIDE;
               ++v45;
             }
             ++v44;
@@ -4711,7 +4711,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           while ( v49 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
             v50 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-            v51 = 1400 * v50;
+            v51 = TILE_TERRAIN_ROW_STRIDE * v50;
             while ( v50 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
               v52 = (_WORD *)(v83 + v51 + gameData);
@@ -4724,7 +4724,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                   WorldMap_RedrawTileIfVisible(v54, v49);
                 }
               }
-              v51 += 1400;
+              v51 += TILE_TERRAIN_ROW_STRIDE;
               ++v50;
             }
             ++v49;
@@ -4739,7 +4739,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         while ( v38 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
         {
           v39 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-          v40 = 1400 * v39;
+          v40 = TILE_TERRAIN_ROW_STRIDE * v39;
           while ( v39 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
           {
             v41 = (_WORD *)(v76 + v40 + gameData);
@@ -4748,7 +4748,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               *(_WORD *)(v76 + v40 + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_(v39, v42) / 0x7FFFu];
               WorldMap_RedrawTileIfVisible(v43, v38);
             }
-            v40 += 1400;
+            v40 += TILE_TERRAIN_ROW_STRIDE;
             ++v39;
           }
           ++v38;
@@ -4761,7 +4761,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       while ( v55 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
       {
         v56 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-        v57 = 1400 * v56;
+        v57 = TILE_TERRAIN_ROW_STRIDE * v56;
         while ( v56 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
         {
           v58 = (_WORD *)(v57 + gameData + v77);
@@ -4778,7 +4778,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
             *(_WORD *)(v77 + v57 + gameData) = 771;
             WorldMap_RedrawTileIfVisible(v56, v55);
           }
-          v57 += 1400;
+          v57 += TILE_TERRAIN_ROW_STRIDE;
           ++v56;
         }
         ++v55;
@@ -4792,7 +4792,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         if ( v59 <= v79 )
           break;
         v60 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-        for ( kk = 1400 * v60; ; kk += 1400 )
+        for ( kk = TILE_TERRAIN_ROW_STRIDE * v60; ; kk += TILE_TERRAIN_ROW_STRIDE )
         {
           v62 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( v60 >= v62 )

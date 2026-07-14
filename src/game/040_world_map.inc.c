@@ -561,19 +561,19 @@ LABEL_26:
     v9 = 200 * tileX;
     if ( MapTile_HasOwnOrVisibleEnemyUnitStack(tileX, tileY) )
     {
-      if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + 556374)) <= 1 )
+      if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET)) <= 1 )
       {
-        Unit_Info(100, 100, 0, UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + 556374) + gameData + UNIT_STACK_TABLE_OFFSET + 6, tileX, 0);
+        Unit_Info(100, 100, 0, UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET + 6, tileX, 0);
       }
       else
       {
-        UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + 556374), v5);
+        UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + TILE_MAP_OFFSET), v5);
         UIWidget_RefreshActionButtonState((int)&g_WorldMapJoinUnitsWidgetRecord, v10);
       }
     }
     else if ( MapTile_HasBuilding(tileX, tileY) )
     {
-      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + 556374) - 0x8000);
+      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) - 0x8000);
       v19 = gameData + v18;
       v20 = v18 + gameData + BUILDING_TABLE_OFFSET;
       if ( *(_WORD *)(gameData + v18 + 509690) )
@@ -773,19 +773,19 @@ LABEL_26:
     if ( !hasOwnBuilding )
     {
       if ( g_SelectedUnitIndex != -1
-        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
+        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - 0x8000) + gameData + 509678) != 1
          || !UnitStack_HasPeasantCargo(v30 + gameData + UNIT_STACK_TABLE_OFFSET)) )
       {
         Unit_AttackBuilding(
           g_SelectedUnitIndex,
-          *(unsigned __int16 *)(2 * tileY + gameData + 200 * tileX + 556374) - 0x8000,
+          *(unsigned __int16 *)(2 * tileY + gameData + TILE_ROW_STRIDE * tileX + TILE_MAP_OFFSET) - 0x8000,
           v30,
           200 * tileX,
           a1);
       }
       return;
     }
-    targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000;
+    targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - 0x8000;
     if ( *(_WORD *)(BUILDING_RECORD_SIZE * targetBuildingIndex + gameData + 509690) )
       return;
     if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + 316, targetBuildingIndex) )
@@ -4231,7 +4231,7 @@ signed int  Map_GetTileSurfaceClassOrUnexplored(int tileX, signed int tileY)
   unsigned __int16 *terrainRecord; // eax
   int surfaceClass; // edi
 
-  terrainRecord = (unsigned __int16 *)(gameData + 1400 * tileX + 14 * tileY);
+  terrainRecord = (unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY);
   if ( terrainRecord[2] == 0xFFFF )
     surfaceClass = (unsigned __int8)g_MiniMapTileColorTableTheme0[*terrainRecord];
   else
@@ -5194,7 +5194,7 @@ LABEL_2:
       ++tileX;
       goto LABEL_2;
     }
-    if ( *(unsigned __int16 *)(rowBase + gameData + i + 556374) == stackIndex )
+    if ( *(unsigned __int16 *)(rowBase + gameData + i + TILE_MAP_OFFSET) == stackIndex )
       break;
     ++tileY;
   }

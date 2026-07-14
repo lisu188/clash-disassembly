@@ -879,7 +879,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
                               - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
                                + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
                             + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
-                           + 556374);
+                           + TILE_MAP_OFFSET);
   if ( (unsigned __int16)v3 != 0xFFFF )
   {
     if ( v3 > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v3 + 147180) > 0x28 )
@@ -921,10 +921,10 @@ int Cheat_TeleportSelectedUnitToCursor()
   v2 = result + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
   if ( g_SelectedUnitIndex != -1 )
   {
-    *(_WORD *)(200 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
+    *(_WORD *)(TILE_ROW_STRIDE * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
              + gameData
              + 2 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176)
-             + 556374) = -1;
+             + TILE_MAP_OFFSET) = -1;
     *(_WORD *)(TILE_INDEX(v0, v2)) = g_SelectedUnitIndex;
     *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = v0;
     *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = v2;
@@ -2368,7 +2368,7 @@ signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4
   }
   else
   {
-    Rules_CreateArmyFact((__int16 *)a1, *(unsigned __int16 *)(2 * a1[1] + gameData + 200 * *a1 + 556374), (int)a1, a4, a5);
+    Rules_CreateArmyFact((__int16 *)a1, *(unsigned __int16 *)(2 * a1[1] + gameData + TILE_ROW_STRIDE * *a1 + TILE_MAP_OFFSET), (int)a1, a4, a5);
     return 1;
   }
 }
@@ -3718,10 +3718,10 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
         && v4 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
         && v5 >= 0
         && v5 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-        && *(unsigned __int16 *)(j + gameData + i + 556374) <= 0x1F4u
-        && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + 556374) + 6) <= 0x28 )
+        && *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET) <= 0x1F4u
+        && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET) + 6) <= 0x28 )
       {
-        v7 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + 556374);
+        v7 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET);
         if ( *(_BYTE *)(gameData + v7 + 147178) != *(_BYTE *)(gameData + v12 + 509676)
           && UnitStack_CalcArmyFactStrength(gameData + UNIT_STACK_TABLE_OFFSET + v7) > v14 )
         {
@@ -4691,15 +4691,15 @@ signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_typ
   tile_offset = 2 * a3;
   while ( next_unit_type != -1 )
   {
-    v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374);
+    v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET);
     UnitSlot_InitFromType(slot_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v8 + 6, next_unit_type, a4);
     next_unit_type = va_arg(args, int);
     slot_offset += 31;
   }
   va_end(args);
   return Rules_SyncArmyFactStrength(
-           gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
-           145 * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
+           gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET),
+           145 * *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET),
            gameData + UNIT_STACK_TABLE_OFFSET,
            v7,
            v10,
@@ -4737,23 +4737,23 @@ int  createCastle(
   tile_offset = 2 * a3;
   while ( next_unit_type != -1 )
   {
-    v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374);
+    v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET);
     UnitSlot_InitFromType(v10 + UNIT_STACK_STRIDE * v9 + gameData + UNIT_STACK_TABLE_OFFSET + 6, next_unit_type, a4);
     next_unit_type = va_arg(args, int);
     v10 += 31;
   }
   va_end(args);
   Rules_SyncArmyFactStrength(
-    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374)),
-    145 * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374),
+    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET)),
+    145 * *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET),
     gameData + UNIT_STACK_TABLE_OFFSET,
     tile_offset,
     v15,
     st7_0);
   Diagnostics_TraceBootstrapEvent("createCastle-building-new");
-  Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374), st7_0, a6, 1);
+  Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET), st7_0, a6, 1);
   Diagnostics_TraceBootstrapEvent("createCastle-post-building-new");
-  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374) - 0x8000;
+  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET) - 0x8000;
   *(_WORD *)(BUILDING_RECORD_SIZE * unit_index + gameData + 509690) = 0;
   Diagnostics_TraceBootstrapEvent("createCastle-update-per-turn");
   Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET, 0);

@@ -93,7 +93,7 @@ int force;
         --row;
       if ( MapTile_IsCastleFoundationTile(row, column - 1, buildingType) )
         --column;
-      v46 = *(unsigned __int16 *)(200 * (row + 1) + gameData + 2 * column + 556374);
+      v46 = *(unsigned __int16 *)(TILE_ROW_STRIDE * (row + 1) + gameData + 2 * column + TILE_MAP_OFFSET);
       if ( v46 != 0xFFFF && v46 != stackIndex )
         return 0;
       v47 = *(unsigned __int16 *)(200 * (row + 1) + gameData + 2 * column + 556376);
@@ -217,12 +217,12 @@ int force;
   if ( buildingType == 1 || buildingType == 2 )
   {
     v34 = 200 * (row + 1);
-    *(_WORD *)(v34 + gameData + 2 * column + 556374) = buildingIndex + 0x8000;
+    *(_WORD *)(v34 + gameData + 2 * column + TILE_MAP_OFFSET) = buildingIndex + 0x8000;
     *(_WORD *)(gameData + 200 * row + 2 * column + 556376) = buildingIndex + 0x8000;
     *(_WORD *)(v34 + gameData + 2 * column + 556376) = buildingIndex + 0x8000;
     if ( !force )
     {
-      v51 = *(unsigned __int16 *)(gameData + 1400 * row + 14 * column);
+      v51 = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
       if ( v51 == 707 )
       {
         LOWORD(v51) = 0;
@@ -231,17 +231,17 @@ int force;
       {
         LOWORD(v51) = 4;
       }
-      v52 = 1400 * (row + 1);
+      v52 = TILE_TERRAIN_ROW_STRIDE * (row + 1);
       v53 = 14 * (column + 1);
       *(_WORD *)(v53 + v52 + gameData) = v51;
-      *(_WORD *)(1400 * row + gameData + v53) = v51;
+      *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + v53) = v51;
       *(_WORD *)(gameData + v52 + 14 * column) = v51;
-      *(_WORD *)(14 * column + gameData + 1400 * row) = v51;
+      *(_WORD *)(TILE_TERRAIN_RECORD_STRIDE * column + gameData + TILE_TERRAIN_ROW_STRIDE * row) = v51;
     }
   }
   else if ( !force )
   {
-    v50 = *(unsigned __int16 *)(gameData + 1400 * row + 14 * column);
+    v50 = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
     if ( v50 == 707 )
     {
       LOWORD(v50) = 0;
@@ -250,7 +250,7 @@ int force;
     {
       LOWORD(v50) = 4;
     }
-    *(_WORD *)(1400 * row + gameData + 14 * column) = v50;
+    *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column) = v50;
   }
   Diagnostics_TraceBootstrapEvent("Building_New-after-tile-markers");
   if ( buildingType )
@@ -332,7 +332,7 @@ _DWORD * Building_LogBuiltCastleFacts(unsigned __int8 *buildingPtr)
 {
   int castleIndex; // edx
 
-  castleIndex = *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + 200 * *buildingPtr + 556374) - 0x8000;
+  castleIndex = *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * *buildingPtr + TILE_MAP_OFFSET) - 0x8000;
   return Rules_LogCastleBuiltFactAndScheme(castleIndex, castleIndex);
 }
 // 5202E4: using guessed type int gameData;
@@ -351,7 +351,7 @@ BOOL  MapTile_IsCastleFoundationTile(int row, signed int column, int checkMode)
   if ( checkMode )
   {
     v6 = 2 * column;
-    v7 = 1400 * row + gameData;
+    v7 = TILE_TERRAIN_ROW_STRIDE * row + gameData;
     return *(unsigned __int16 *)(v7 + 7 * v6) >= 0x2C3u && *(unsigned __int16 *)(v7 + 7 * v6) <= 0x2CAu;
   }
   return MapTile_IsCastleFoundationTile(row, column, 2) == 0;
@@ -371,7 +371,7 @@ BOOL  MapTile_IsCastleFoundationAnchorTile(int row, signed int column, int check
     return 0;
   if ( checkMode )
   {
-    tileId = *(unsigned __int16 *)(1400 * row + gameData + 14 * column);
+    tileId = *(unsigned __int16 *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column);
     return tileId == 707 || tileId == 711;
   }
   return !MapTile_IsCastleFoundationTile(row, column, 2);
@@ -489,8 +489,8 @@ LABEL_24:
         {
           for ( i = 2 * v21; i < v16; i += 2 )
           {
-            if ( *(unsigned __int16 *)(v15 + gameData + i + 556374) >= 0x8000u
-              && *(unsigned __int16 *)(v15 + gameData + i + 556374) != 0xFFFF )
+            if ( *(unsigned __int16 *)(v15 + gameData + i + TILE_MAP_OFFSET) >= 0x8000u
+              && *(unsigned __int16 *)(v15 + gameData + i + TILE_MAP_OFFSET) != 0xFFFF )
             {
               isValid = 0;
             }
@@ -522,7 +522,7 @@ LABEL_23:
       surfaceClass = Map_GetTileSurfaceClassOrUnexplored(v26, v8);
       if ( surfaceClass == 185 || surfaceClass == 39 || surfaceClass == 204 || surfaceClass == 202 || surfaceClass == 147 || surfaceClass == 1 )
         isValid = 0;
-      tileOwner = *(unsigned __int16 *)(v23 + gameData + v9 + 556374);
+      tileOwner = *(unsigned __int16 *)(v23 + gameData + v9 + TILE_MAP_OFFSET);
       if ( tileOwner != 0xFFFF && tileOwner != stackIndex )
         isValid = 0;
       if ( Trap_GetTileOwnerMask(row, column, g_CurrentPlayerIndex) || MapTile_GetReligiousSiteCategory(row, column) || MapTile_HasHiddenTreasure(row, column) )
@@ -633,9 +633,9 @@ char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3,
 
   Debug_Log(a2, a3, (DWORD)buildingPtr, (int)aBuilding_build);
   LOBYTE(v5) = *buildingPtr;
-  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + 200 * v5 + 556374) - 0x8000);
+  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * v5 + TILE_MAP_OFFSET) - 0x8000);
   Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - 0x8000);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + 200 * *buildingPtr + gameData + 556374) - 0x8000, v7, a4);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - 0x8000, v7, a4);
   v9 = (char)buildingPtr[4];
   if ( v9 == 2 || v9 == 1 )
     Map_RebuildRoadOverlayAtTile(*buildingPtr, buildingPtr[1] + 2);
@@ -1486,7 +1486,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   WorldMap_DisableFrameRedraw();
   *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = -1;
   v9 = buildingPtr;
-  *(_WORD *)(gameData + 200 * (*buildingPtr + 1) + 2 * buildingPtr[1] + 556374) = -1;
+  *(_WORD *)(gameData + TILE_ROW_STRIDE * (*buildingPtr + 1) + 2 * buildingPtr[1] + TILE_MAP_OFFSET) = -1;
   *(_WORD *)(200 * (*v9 + 1) + gameData + 2 * v9[1] + 556376) = -1;
   *(_WORD *)(200 * *v9 + gameData + 2 * v9[1] + 556376) = -1;
   result = Unit_Create((char)((transferGoldFlag == 0) + 31), v9[2], *v9, 0, v9[1]);
@@ -1576,7 +1576,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       v27[1] = BYTE1(v26);
       v39 = 2 * buildingPtr[1] + gameData + 200 * *buildingPtr;
       v28 = newStackPtr + 158;
-      *(_WORD *)(2 * BYTE1(v26) + 200 * (unsigned __int8)v26 + gameData + 556374) = *(_WORD *)(v39 + 556374);
+      *(_WORD *)(2 * BYTE1(v26) + TILE_ROW_STRIDE * (unsigned __int8)v26 + gameData + TILE_MAP_OFFSET) = *(_WORD *)(v39 + 556374);
       v29 = newStackPtr;
       qmemcpy(v28, v19, 0x194u);
       UnitStack_SetReadyFlags((int)v29);
@@ -1587,12 +1587,12 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       v35 = newStackPtr;
       *newStackPtr = v36;
       v35[1] = v37;
-      *(_WORD *)(2 * v37 + 200 * v36 + gameData + 556374) = *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1]));
+      *(_WORD *)(2 * v37 + TILE_ROW_STRIDE * v36 + gameData + TILE_MAP_OFFSET) = *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1]));
     }
     v30 = savedBuildingIndex + 0x8000;
     *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = savedBuildingIndex + 0x8000;
     v31 = buildingPtr;
-    *(_WORD *)(200 * (*buildingPtr + 1) + gameData + 2 * buildingPtr[1] + 556374) = v30;
+    *(_WORD *)(TILE_ROW_STRIDE * (*buildingPtr + 1) + gameData + 2 * buildingPtr[1] + TILE_MAP_OFFSET) = v30;
     *(_WORD *)(200 * (*v31 + 1) + gameData + 2 * buildingPtr[1] + 556376) = v30;
     v32 = buildingPtr;
     *(_WORD *)(200 * *buildingPtr + gameData + 2 * buildingPtr[1] + 556376) = v30;
@@ -5811,7 +5811,7 @@ BOOL  MapTile_HasNorthRoadConnection(int row, int column)
 {
   int roadTileId; // eax
 
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + 1400 * (row - 1) + 14 * column + 4));
+  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4));
   return roadTileId == 867 || roadTileId == 869 || roadTileId == 871 || roadTileId == 872 || roadTileId == 874 || roadTileId == 875 || roadTileId == 868 || roadTileId == 952;
 }
 // 5202E4: using guessed type int gameData;
@@ -5821,7 +5821,7 @@ BOOL  MapTile_HasSouthRoadConnection(int row, int column)
 {
   int roadTileId; // eax
 
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + 1400 * (row + 1) + 14 * column + 4));
+  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4));
   return roadTileId == 867 || roadTileId == 869 || roadTileId == 870 || roadTileId == 872 || roadTileId == 873 || roadTileId == 875 || roadTileId == 876 || roadTileId == 951;
 }
 // 5202E4: using guessed type int gameData;
@@ -5845,7 +5845,7 @@ BOOL  MapTile_HasWestRoadConnection(int row, int column)
     || (v7 = *neighborBuildingPtr, v7 != row)
     || (v8 = row ^ v7, LOBYTE(v8) = neighborBuildingPtr[1], v8 != column - 2) )
   {
-    roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + 1400 * row + 14 * (column - 1) + 4));
+    roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column - 1) + 4));
     if ( roadTileId != 866 && roadTileId != 868 && roadTileId != 869 && roadTileId != 870 && roadTileId != 871 && roadTileId != 872 && roadTileId != 873 && roadTileId != 949 )
       return 0;
   }
@@ -5858,7 +5858,7 @@ BOOL  MapTile_HasEastRoadConnection(int row, int column)
 {
   int roadTileId; // eax
 
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + 1400 * row + 14 * (column + 1) + 4));
+  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column + 1) + 4));
   return roadTileId == 866 || roadTileId >= 871 && roadTileId <= 876 || roadTileId == 950;
 }
 // 5202E4: using guessed type int gameData;
@@ -5882,7 +5882,7 @@ int  Map_RebuildRoadOverlayAtTile(int row, int column)
   v7 = (2 * MapTile_HasEastRoadConnection(row, v6)) | v5;
   overlaySprite = g_RoadOverlaySpriteByConnectionMask[v7 | MapTile_HasNorthRoadConnection(row, v8)];
   v11 = 14 * v10;
-  result = gameData + 1400 * row;
+  result = gameData + TILE_TERRAIN_ROW_STRIDE * row;
   if ( overlaySprite )
     *(_WORD *)(v11 + result + 4) = overlaySprite;
   else
@@ -5918,7 +5918,7 @@ signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColum
   int approachIndex; // edx
   int colOffset; // edi
 
-  v6 = gameData + 1400 * row;
+  v6 = gameData + TILE_TERRAIN_ROW_STRIDE * row;
   v7 = 14 * column;
   matchedApproachIndex = -1;
   overlayTileId = *(unsigned __int16 *)(v6 + v7 + 2);
@@ -5944,8 +5944,8 @@ signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColum
   if ( matchedApproachIndex != -1 )
   {
     colOffset = 2 * column;
-    if ( *(unsigned __int16 *)(7 * colOffset + 1400 * row + gameData) >= 0x25Bu
-      && *(unsigned __int16 *)(7 * colOffset + 1400 * row + gameData) <= 0x262u )
+    if ( *(unsigned __int16 *)(7 * colOffset + TILE_TERRAIN_ROW_STRIDE * row + gameData) >= 0x25Bu
+      && *(unsigned __int16 *)(7 * colOffset + TILE_TERRAIN_ROW_STRIDE * row + gameData) <= 0x262u )
     {
       return 1;
     }
@@ -5969,15 +5969,15 @@ BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int row, int column)
 
   if ( !row || *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 == row || !column || column == *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     return 0;
-  southOverlay = *(unsigned __int16 *)(gameData + 1400 * (row + 1) + 14 * column + 4);
-  v3 = gameData + 1400 * row;
+  southOverlay = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4);
+  v3 = gameData + TILE_TERRAIN_ROW_STRIDE * row;
   westOverlay = *(unsigned __int16 *)(14 * (column - 1) + v3 + 4);
-  northOverlay = *(unsigned __int16 *)(gameData + 1400 * (row - 1) + 14 * column + 4);
+  northOverlay = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4);
   eastOverlay = *(unsigned __int16 *)(14 * (column + 1) + v3 + 4);
-  if ( northOverlay >= 0x36D && *(unsigned __int16 *)(gameData + 1400 * (row - 1) + 14 * column + 4) <= 0x3B4u )
+  if ( northOverlay >= 0x36D && *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) <= 0x3B4u )
     northOverlay = (int)(northOverlay - 877) % 6;
-  if ( *(unsigned __int16 *)(gameData + 1400 * (row + 1) + 14 * column + 4) >= 0x36Du
-    && *(unsigned __int16 *)(gameData + 1400 * (row + 1) + 14 * column + 4) <= 0x3B4u )
+  if ( *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) >= 0x36Du
+    && *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) <= 0x3B4u )
   {
     southOverlay = (southOverlay - 877) % 6;
   }
@@ -5991,7 +5991,7 @@ BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int row, int column)
   {
     eastOverlay = (eastOverlay - 877) % 6;
   }
-  tilePtr = (unsigned __int16 *)(14 * column + 1400 * row + gameData);
+  tilePtr = (unsigned __int16 *)(TILE_TERRAIN_RECORD_STRIDE * column + TILE_TERRAIN_ROW_STRIDE * row + gameData);
   result = 0;
   if ( tilePtr[1] == 0xFFFF )
   {
@@ -6010,7 +6010,7 @@ signed int  Map_GetBridgeCrossingCostOrZero(int row, int column)
   int rowBase; // ebx
   int colOffset; // edx
 
-  rowBase = gameData + 1400 * row;
+  rowBase = gameData + TILE_TERRAIN_ROW_STRIDE * row;
   colOffset = 2 * column;
   if ( *(unsigned __int16 *)(rowBase + 7 * colOffset) < 0x25Bu || *(unsigned __int16 *)(rowBase + 7 * colOffset) > 0x262u )
     return 0;
@@ -6194,7 +6194,7 @@ LABEL_68:
         v13 = 876;
       }
 LABEL_14:
-      v14 = (unsigned __int16 *)(gameData + 1400 * v29 + 14 * v37);
+      v14 = (unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * v29 + TILE_TERRAIN_RECORD_STRIDE * v37);
       HIWORD(v15) = 0;
       if ( *v14 >= 0x25Bu )
       {
@@ -6206,7 +6206,7 @@ LABEL_14:
       v32 = 0;
       if ( MapTile_HasAlignedBridgeApproachRoadOverlay(v29, v37, v12, v11) )
       {
-        v16 = *(_WORD *)(1400 * v11 + gameData + 14 * v12 + 2);
+        v16 = *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * v11 + gameData + TILE_TERRAIN_RECORD_STRIDE * v12 + 2);
         if ( v16 >= 0x236u )
         {
           if ( v16 <= 0x236u )
@@ -6273,11 +6273,11 @@ LABEL_14:
             v36 = 925;
           }
         }
-        v17 = gameData + 1400 * v11 + 14 * v12;
+        v17 = gameData + TILE_TERRAIN_ROW_STRIDE * v11 + TILE_TERRAIN_RECORD_STRIDE * v12;
         v32 = *(unsigned __int16 *)(v17 + 4);
         v34 = v36;
         *(_WORD *)(v17 + 4) = v36;
-        *(_DWORD *)(1400 * v11 + gameData + 14 * v12 + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
+        *(_DWORD *)(TILE_TERRAIN_ROW_STRIDE * v11 + gameData + TILE_TERRAIN_RECORD_STRIDE * v12 + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
       }
       if ( MapTile_IsBareBridgeCrossingRoadOverlayCandidate(v11, v12) )
       {
@@ -6289,18 +6289,18 @@ LABEL_14:
         {
           v30 = 878;
         }
-        v18 = gameData + 1400 * v11 + 14 * v12;
+        v18 = gameData + TILE_TERRAIN_ROW_STRIDE * v11 + TILE_TERRAIN_RECORD_STRIDE * v12;
         v32 = *(unsigned __int16 *)(v18 + 4);
         v34 = v30;
         *(_WORD *)(v18 + 4) = v30;
-        *(_DWORD *)(14 * v12 + 1400 * v11 + gameData + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
-        v13 = *(_WORD *)(1400 * v29 + gameData + 14 * v37 + 4);
+        *(_DWORD *)(TILE_TERRAIN_RECORD_STRIDE * v12 + TILE_TERRAIN_ROW_STRIDE * v11 + gameData + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
+        v13 = *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * v29 + gameData + TILE_TERRAIN_RECORD_STRIDE * v37 + 4);
       }
       v31 = UnitStack_GetTileMoveCostOrZero((__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1), v11, 145 * a1, v12);
       if ( MapTile_IsCastleFoundationTile(v11, v12, 2) )
         v31 = 0;
       if ( v32 )
-        *(_WORD *)(gameData + 1400 * v11 + 14 * v12 + 4) = v32;
+        *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * v11 + TILE_TERRAIN_RECORD_STRIDE * v12 + 4) = v32;
       result = v31;
       if ( v31 )
       {
@@ -6314,8 +6314,8 @@ LABEL_14:
           }
           else
           {
-            *(_WORD *)(gameData + 1400 * v29 + 14 * v37 + 4) = v13;
-            v22 = *(_WORD *)(1400 * v11 + gameData + 14 * v12 + 4);
+            *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * v29 + TILE_TERRAIN_RECORD_STRIDE * v37 + 4) = v13;
+            v22 = *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * v11 + gameData + TILE_TERRAIN_RECORD_STRIDE * v12 + 4);
             Map_RebuildRoadOverlayAtTile(v11, v12);
             if ( v22 != 0xFFFF )
             {
@@ -6325,7 +6325,7 @@ LABEL_14:
             }
             if ( v34 )
             {
-              *(_WORD *)(gameData + 1400 * v11 + 14 * v12 + 4) = v34;
+              *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * v11 + TILE_TERRAIN_RECORD_STRIDE * v12 + 4) = v34;
             }
             else
             {
@@ -6409,7 +6409,7 @@ signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
 //----- (00424F70) --------------------------------------------------------
 BOOL  Map_TileHasOwner(int a1, int a2)
 {
-  return *(unsigned __int16 *)(gameData + 1400 * a1 + 14 * a2 + 4) != 0xFFFF;
+  return *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * a1 + TILE_TERRAIN_RECORD_STRIDE * a2 + 4) != 0xFFFF;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -6446,7 +6446,7 @@ int Map_AutoUpgradeVillages()
       {
         v4 = v2 + gameData + v7;
         if ( *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) >= (unsigned int)(*(_DWORD *)(v4 + 10) + 30)
-          && *(unsigned __int16 *)(v3 + i + gameData + 556374) == 0xFFFF )
+          && *(unsigned __int16 *)(v3 + i + gameData + TILE_MAP_OFFSET) == 0xFFFF )
         {
           *(_WORD *)(v4 + 4) += 6;
           *(_DWORD *)(v2 + v7 + gameData + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);

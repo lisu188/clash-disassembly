@@ -480,8 +480,8 @@
   },
   "file_count": 27,
   "magic_literals": {
-   "total_eligible": 372,
-   "total_review": 58423,
+   "total_eligible": 115,
+   "total_review": 58422,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
      "value": 140017,
@@ -546,7 +546,7 @@
     "BUILDING_TRANSFER_TARGET_LIST_CAPACITY": {
      "value": 100,
      "eligible": 0,
-     "review": 394
+     "review": 393
     },
     "GAME_TURN_COUNTER_OFFSET": {
      "value": 140022,
@@ -730,32 +730,32 @@
     },
     "TILE_MAP_OFFSET": {
      "value": 556374,
-     "eligible": 86,
+     "eligible": 0,
      "review": 7
     },
     "TILE_ROW_STRIDE": {
      "value": 200,
-     "eligible": 21,
+     "eligible": 0,
      "review": 153
     },
     "TILE_TERRAIN_RECORD_STRIDE": {
      "value": 14,
-     "eligible": 49,
+     "eligible": 0,
      "review": 602
     },
     "TILE_TERRAIN_ROW_STRIDE": {
      "value": 1400,
-     "eligible": 105,
+     "eligible": 6,
      "review": 5
     },
     "TILE_TRAP_OWNER_MASK_OFFSET": {
      "value": 576374,
-     "eligible": 1,
+     "eligible": 0,
      "review": 1
     },
     "TILE_TRAP_OWNER_MASK_ROW_STRIDE": {
      "value": 100,
-     "eligible": 1,
+     "eligible": 0,
      "review": 393
     },
     "TURN_OWNER_PLAYER_INDEX_OFFSET": {

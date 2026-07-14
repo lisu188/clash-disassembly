@@ -1,5 +1,37 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A1-4: tile-layer strides and offsets
+
+Gated workstream-A substitution for the tile/terrain/trap layers, proven
+value-identical (1,135,130 tokens, 0 hunks). 257 sites; 1167 deferred (the
+tier-3 gate correctly rejects 14/100/200 outside the accessor pattern).
+
+| Old | New | Tier | Sites |
+|---|---|---|---|
+| `556374` | `TILE_MAP_OFFSET` | 1 | 86 |
+| `1400` | `TILE_TERRAIN_ROW_STRIDE` | 1 | 99 |
+| `576374` | `TILE_TRAP_OWNER_MASK_OFFSET` | 1 | 1 |
+| `14` | `TILE_TERRAIN_RECORD_STRIDE` | 3 | 49 |
+| `200` | `TILE_ROW_STRIDE` | 3 | 21 |
+| `100` | `TILE_TRAP_OWNER_MASK_ROW_STRIDE` | 3 | 1 |
+
+The tier-3 small strides (14/200/100) were replaced ONLY where the same
+additive expression co-references the family's tier-1 base/stride, i.e. the
+proven accessor shapes: `gameData + 1400*row + 14*col`
+(`TILE_TERRAIN_RECORD`), `gameData + 556374 + 200*row + 2*col` (`TILE_INDEX`),
+`gameData + 576374 + 100*row + col` (`TILE_TRAP_OWNER_MASK`) - matching the
+prelude accessor definitions exactly. Rules:
+`docs/archive/literal_rules/A1-4_tiles.json`.
+
+### Deferred / Ambiguous (A1-4)
+
+- Hex-spelled forms of the same tile strides (`0x64`=100, `0xC8`=200,
+  `0x00E`=14) in tile contexts were deferred to keep the strict token-identity
+  gate clean; they belong to the A2 hex/suffix-drop batch.
+- The overwhelming majority of 14/100/200 occurrences are unrelated (loop
+  bounds, percentages, other strides) and were correctly left raw by the
+  tier-3 family-co-occurrence gate.
+
 ## 2026-07-14 - Magic-number campaign A1-3: player / map-header / turn offsets
 
 Gated workstream-A substitution for the `gameData` header block, proven

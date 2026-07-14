@@ -8257,7 +8257,7 @@ signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY)
 {
   signed int result; // eax
 
-  switch ( *(_WORD *)(gameData + 1400 * tileX + 14 * tileY + 2) )
+  switch ( *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY + 2) )
   {
     case 0x2D8:
     case 0x2DA:
@@ -8297,7 +8297,7 @@ int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY)
   int *result; // eax
 
   (void)a3;
-  tile_column_offset = 1400 * tileX;
+  tile_column_offset = TILE_TERRAIN_ROW_STRIDE * tileX;
   tile_record_offset = tile_column_offset + 14 * tileY;
   Debug_Log(stackIndex, tileX, tileY, (int)aUnit_movetra_2);
   saved_site_word = *(_WORD *)(gameData + tile_record_offset + 2);
@@ -8797,7 +8797,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
     if ( v15 == 1 || v15 == 11 )
     {
       result = 14 * siteY;
-      ++*(_WORD *)(gameData + 1400 * siteX + 14 * siteY + 2);
+      ++*(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * siteX + TILE_TERRAIN_RECORD_STRIDE * siteY + 2);
       Diagnostics_TraceWorldMapActionEvent(
         "temple_unit_getinto_mission_site_increment",
         stack_index,
@@ -8857,7 +8857,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
         Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)unitStack);
       }
       Temple_ProcessGift(*outcomePtr, unitStack, siteY, siteX, a5);
-      v25 = gameData + 1400 * siteX;
+      v25 = gameData + TILE_TERRAIN_ROW_STRIDE * siteX;
       LOWORD(v26) = *(_WORD *)(v25 + 14 * siteY + 2);
       *(_WORD *)(v25 + 14 * siteY + 2) = ++v26;
       return (int)Rules_RetractTempleFact(siteX, v26, v25, (DWORD)unitStack);
@@ -9266,7 +9266,7 @@ void  BattleMapFileName(char *outPath, int tileX, int tileY)
 
   Debug_Log(tileX, tileY, (DWORD)outPath, (int)aBattlemapfilen);
   strcpy(outPath, aMaps);
-  tile = gameData + 1400 * tileX + 14 * tileY;
+  tile = gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY;
   primary = *(_WORD *)tile;
   secondary = *(_WORD *)(tile + 2);
   tertiary = *(_WORD *)(tile + 4);
