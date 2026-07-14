@@ -2868,17 +2868,17 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   }
   background_resource_name = 0;
   tree_resource_name = 0;
-  if ( MAP_THEME_INDEX == 0 )
+  if ( MAP_THEME_INDEX == MAP_THEME_A )
   {
     background_resource_name = "backgr1.s32";
     tree_resource_name = "treemas1.s32";
   }
-  else if ( MAP_THEME_INDEX == 1 )
+  else if ( MAP_THEME_INDEX == MAP_THEME_B )
   {
     background_resource_name = "backgr2.s32";
     tree_resource_name = "treemas2.s32";
   }
-  else if ( MAP_THEME_INDEX == 2 )
+  else if ( MAP_THEME_INDEX == MAP_THEME_C )
   {
     background_resource_name = "backgr3.s32";
     tree_resource_name = "treemas3.s32";

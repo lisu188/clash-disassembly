@@ -1,0 +1,77 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "TAX_BURDEN_TIER_LOW",
+  "pattern": "case (?P<lit>0u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Building_UpdatePopulationGrowth",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(Building_GetTaxBurdenTier()) in Building_UpdatePopulationGrowth (080:7724); tier = count of exceeded tax thresholds (producer 080:7664).",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "TAX_BURDEN_TIER_HIGH",
+  "pattern": "case (?P<lit>2u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Building_UpdatePopulationGrowth",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(Building_GetTaxBurdenTier()) in Building_UpdatePopulationGrowth (080:7724); tier = count of exceeded tax thresholds (producer 080:7664).",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "TAX_BURDEN_TIER_SEVERE",
+  "pattern": "case (?P<lit>3u):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "Building_UpdatePopulationGrowth",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(Building_GetTaxBurdenTier()) in Building_UpdatePopulationGrowth (080:7724); tier = count of exceeded tax thresholds (producer 080:7664).",
+  "area": "buildings"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "MAP_THEME_A",
+  "pattern": "MAP_THEME_INDEX == (?P<lit>0)",
+  "files": [
+   "src/game/040_world_map.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MAP_THEME_INDEX == 0 selects backgr1.s32/treemas1.s32 (040_world_map.inc.c:2871); 3-way theme selector.",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "MAP_THEME_B",
+  "pattern": "MAP_THEME_INDEX == (?P<lit>1)",
+  "files": [
+   "src/game/040_world_map.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MAP_THEME_INDEX == 1 selects backgr2.s32/treemas2.s32 (040_world_map.inc.c:2871); 3-way theme selector.",
+  "area": "map"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "MAP_THEME_C",
+  "pattern": "MAP_THEME_INDEX == (?P<lit>2)",
+  "files": [
+   "src/game/040_world_map.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MAP_THEME_INDEX == 2 selects backgr3.s32/treemas3.s32 (040_world_map.inc.c:2871); 3-way theme selector.",
+  "area": "map"
+ }
+]

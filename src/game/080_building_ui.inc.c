@@ -7723,13 +7723,13 @@ __int16  Building_UpdatePopulationGrowth(int buildingRecord)
   growth_percent = (int)Rng_RandRange(3, 5);
   switch ( (unsigned __int8)Building_GetTaxBurdenTier((int)building) )
   {
-    case 0u:
+    case TAX_BURDEN_TIER_LOW:
       growth_percent += 5;
       break;
-    case 2u:
+    case TAX_BURDEN_TIER_HIGH:
       growth_percent -= 4;
       break;
-    case 3u:
+    case TAX_BURDEN_TIER_SEVERE:
       growth_percent -= (int)Rng_RandRange(10, 15);
       break;
     default:

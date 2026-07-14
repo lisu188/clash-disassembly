@@ -1,5 +1,21 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E6: TaxBurdenTier + MapTheme
+
+- **`TaxBurdenTier`** (0..3) — `Building_GetTaxBurdenTier`
+  (`src/game/080_building_ui.inc.c:7664`) returns a count of exceeded tax
+  thresholds, so the tier rises monotonically with burden. Substituted the 3
+  case labels (`0u/2u/3u`; `1` is the default) of the growth switch in
+  `Building_UpdatePopulationGrowth` (func-scoped). Members
+  `TAX_BURDEN_TIER_LOW/MODERATE/HIGH/SEVERE`; magnitude labels inferred from the
+  monotonic growth effect (+5 / none / -4 / -Rng(10,15)).
+- **`MapTheme`** (0..2) — the `MAP_THEME_INDEX == N` selector
+  (`src/game/040_world_map.inc.c:2871`) choosing `backgrN.s32`/`treemasN.s32`.
+  Members `MAP_THEME_A/B/C`; concrete theme identity per index is unproven, so
+  labels stay generic.
+
+Object-identical (0 insn changes / 434,283); all members guard-pinned.
+
 ## 2026-07-14 - Enum extraction E4: TempleGiftType
 
 Extracts the temple/shrine gift-outcome dispatch as `typedef enum

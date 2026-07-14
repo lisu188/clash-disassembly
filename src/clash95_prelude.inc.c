@@ -138,6 +138,28 @@ typedef enum TempleGiftType
   TEMPLE_GIFT_CURSE_MORALE = 0xD,          /* morale -20 */
   TEMPLE_GIFT_CURSE_MORALE_FATIGUE = 0xE   /* morale -1, fatigue +50 */
 } TempleGiftType;
+
+/* Settlement tax-burden tier (0..3) from Building_GetTaxBurdenTier
+ * (080_building_ui.inc.c:7664) = count of exceeded tax thresholds, so the tier
+ * rises monotonically with tax burden; drives population-growth adjustment.
+ * Magnitude labels inferred from that monotonic effect. */
+typedef enum TaxBurdenTier
+{
+  TAX_BURDEN_TIER_LOW = 0,        /* growth +5 */
+  TAX_BURDEN_TIER_MODERATE = 1,   /* no adjustment */
+  TAX_BURDEN_TIER_HIGH = 2,       /* growth -4 */
+  TAX_BURDEN_TIER_SEVERE = 3      /* growth -Rng(10,15) */
+} TaxBurdenTier;
+
+/* World-map visual theme selector (MAP_THEME_INDEX, 3-way). Selects
+ * backgrN.s32 / treemasN.s32 (040_world_map.inc.c:2871). The concrete theme
+ * identity per index is unproven, so labels stay generic A/B/C. */
+typedef enum MapTheme
+{
+  MAP_THEME_A = 0,
+  MAP_THEME_B = 1,
+  MAP_THEME_C = 2
+} MapTheme;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per
