@@ -710,14 +710,14 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   char *turnLabelText; // eax
   int statusLine1; // edi
   int turnsRemaining; // eax
-  int v5[3]; // [esp+0h] [ebp-6Ch]
+  int statusDetailC_Strings[3]; // [esp+0h] [ebp-6Ch]
   int v6[3]; // [esp+Ch] [ebp-60h] BYREF
-  int v7[3]; // [esp+18h] [ebp-54h] BYREF
-  int v8[3]; // [esp+24h] [ebp-48h]
-  int v9[3]; // [esp+30h] [ebp-3Ch]
-  int v10[2]; // [esp+3Ch] [ebp-30h]
+  int statusLine1_Strings[3]; // [esp+18h] [ebp-54h] BYREF
+  int statusDetailA_Strings[3]; // [esp+24h] [ebp-48h]
+  int statusDetailB_Strings[3]; // [esp+30h] [ebp-3Ch]
+  int statusHeader_Strings[2]; // [esp+3Ch] [ebp-30h]
   char *v11; // [esp+44h] [ebp-28h]
-  int v12[9]; // [esp+48h] [ebp-24h]
+  int statusHeaderFull_Strings[9]; // [esp+48h] [ebp-24h]
 
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
   g_RenderDevice = &g_MainRenderDevice;
@@ -727,53 +727,53 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   {
     if ( Building_CountGarrison(g_CastleProductionBuildingPtr) < 12 || BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) > 1 )
     {
-      v10[0] = (int)UI_Locale_StatusHeader[0];
-      v10[1] = (int)UI_Locale_StatusHeader[1];
+      statusHeader_Strings[0] = (int)UI_Locale_StatusHeader[0];
+      statusHeader_Strings[1] = (int)UI_Locale_StatusHeader[1];
       v11 = UI_Locale_StatusHeader[2];
       if ( BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) == 1 )
         turnLabelText = aDZugBisZum;
       else
         turnLabelText = aDZbgeBisZum;
-      v7[0] = (int)UI_Locale_StatusLine1[0];
-      v7[1] = (int)UI_Locale_StatusLine1[1];
-      v7[2] = (int)UI_Locale_StatusLine1[2];
-      v8[0] = (int)UI_Locale_StatusDetail_A[0];
-      v8[1] = (int)UI_Locale_StatusDetail_A[1];
-      v8[2] = (int)UI_Locale_StatusDetail_A[2];
-      v9[0] = (int)UI_Locale_StatusDetail_B[0];
-      v9[1] = (int)UI_Locale_StatusDetail_B[1];
-      v9[2] = (int)UI_Locale_StatusDetail_B[2];
-      v5[0] = (int)UI_Locale_StatusDetail_C[0];
-      v5[1] = (int)UI_Locale_StatusDetail_C[1];
-      v5[2] = (int)UI_Locale_StatusDetail_C[2];
+      statusLine1_Strings[0] = (int)UI_Locale_StatusLine1[0];
+      statusLine1_Strings[1] = (int)UI_Locale_StatusLine1[1];
+      statusLine1_Strings[2] = (int)UI_Locale_StatusLine1[2];
+      statusDetailA_Strings[0] = (int)UI_Locale_StatusDetail_A[0];
+      statusDetailA_Strings[1] = (int)UI_Locale_StatusDetail_A[1];
+      statusDetailA_Strings[2] = (int)UI_Locale_StatusDetail_A[2];
+      statusDetailB_Strings[0] = (int)UI_Locale_StatusDetail_B[0];
+      statusDetailB_Strings[1] = (int)UI_Locale_StatusDetail_B[1];
+      statusDetailB_Strings[2] = (int)UI_Locale_StatusDetail_B[2];
+      statusDetailC_Strings[0] = (int)UI_Locale_StatusDetail_C[0];
+      statusDetailC_Strings[1] = (int)UI_Locale_StatusDetail_C[1];
+      statusDetailC_Strings[2] = (int)UI_Locale_StatusDetail_C[2];
       v11 = turnLabelText;
-      UI_DrawTextFmt((int)v6, 401, 593, 297, 3, v10[(unsigned __int8)g_LanguageIndex]);
-      statusLine1 = v7[(unsigned __int8)g_LanguageIndex];
+      UI_DrawTextFmt((int)v6, 401, 593, 297, 3, statusHeader_Strings[(unsigned __int8)g_LanguageIndex]);
+      statusLine1 = statusLine1_Strings[(unsigned __int8)g_LanguageIndex];
       UI_DrawTextFmt(statusLine1, 401, 593, 317, 3, statusLine1);
       turnsRemaining = BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr);
       if ( turnsRemaining == 1 )
       {
-        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v9[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, statusDetailB_Strings[(unsigned __int8)g_LanguageIndex]);
       }
       else if ( turnsRemaining < 2 || turnsRemaining > 4 )
       {
-        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v8[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, statusDetailA_Strings[(unsigned __int8)g_LanguageIndex]);
       }
       else
       {
-        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v5[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, statusDetailC_Strings[(unsigned __int8)g_LanguageIndex]);
       }
     }
     else
     {
-      v12[0] = (int)UI_Locale_StatusHeader_Full[0];
-      v12[1] = (int)UI_Locale_StatusHeader_Full[1];
-      v12[2] = (int)UI_Locale_StatusHeader_Full[2];
+      statusHeaderFull_Strings[0] = (int)UI_Locale_StatusHeader_Full[0];
+      statusHeaderFull_Strings[1] = (int)UI_Locale_StatusHeader_Full[1];
+      statusHeaderFull_Strings[2] = (int)UI_Locale_StatusHeader_Full[2];
       v6[0] = (int)UI_Locale_StatusLine1_Full[0];
       v6[1] = (int)UI_Locale_StatusLine1_Full[1];
       v6[2] = (int)UI_Locale_StatusLine1_Full[2];
-      UI_DrawTextFmt((int)v7, 401, 593, 307, 3, v12[(unsigned __int8)g_LanguageIndex]);
-      return UI_DrawTextFmt((int)v7, 401, 593, 327, 3, v6[(unsigned __int8)g_LanguageIndex]);
+      UI_DrawTextFmt((int)statusLine1_Strings, 401, 593, 307, 3, statusHeaderFull_Strings[(unsigned __int8)g_LanguageIndex]);
+      return UI_DrawTextFmt((int)statusLine1_Strings, 401, 593, 327, 3, v6[(unsigned __int8)g_LanguageIndex]);
     }
   }
   return result;
@@ -2061,7 +2061,7 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   int unitRecord; // esi
   int v7; // ecx
   int v8; // ecx
-  int v9; // edx
+  int scanRowBase; // edx
   int targetOccupant; // eax
   int targetUnitIndex; // ebx
   int targetRecordOffset; // esi
@@ -2097,11 +2097,11 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   g_BattleShootingUnitMoveActiveFlag = 1;
   if ( UnitBattle_IsTileWithinRange(v7, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
-    v9 = g_MapData + 40 * g_UnitBattleScanTileRow;
-    targetOccupant = *(__int16 *)(v9 + 2 * g_BattleTargetTileCol + 1534);
+    scanRowBase = g_MapData + 40 * g_UnitBattleScanTileRow;
+    targetOccupant = *(__int16 *)(scanRowBase + 2 * g_BattleTargetTileCol + 1534);
     if ( targetOccupant != -1 )
     {
-      targetUnitIndex = *(__int16 *)(v9 + 2 * g_BattleTargetTileCol + 1534);
+      targetUnitIndex = *(__int16 *)(scanRowBase + 2 * g_BattleTargetTileCol + 1534);
       targetRecordOffset = 31 * targetOccupant;
       while ( 1 )
       {
@@ -2255,10 +2255,10 @@ LABEL_41:
 int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defenderIndex)
 {
   __int16 *attackerRecord; // esi
-  int v5; // eax
+  int attackerUnitType; // eax
   int *result; // eax
   char *v7; // ecx
-  int v8; // eax
+  int altEffectiveness; // eax
   int v9; // ecx
   __int16 *v10; // edx
   int *v11; // ebp
@@ -2269,11 +2269,11 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   int v16; // ecx
   __int16 *v17; // edx
   int *v18; // ebp
-  int v19; // edx
+  int remainingSteps; // edx
   int *v20; // ebx
-  int v21; // edx
+  int stepApCost; // edx
   char savedAttackerHealth; // [esp+0h] [ebp-40h]
-  char v23; // [esp+0h] [ebp-40h]
+  char savedAttackerHealth2; // [esp+0h] [ebp-40h]
   char savedActionPoints; // [esp+4h] [ebp-3Ch]
   int attackerHealthOut; // [esp+8h] [ebp-38h] BYREF
   int defenderHealthOut; // [esp+Ch] [ebp-34h] BYREF
@@ -2289,9 +2289,9 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   savedRow = (unsigned __int16)attackerRecord[2];
   savedCol = (unsigned __int16)attackerRecord[3];
   savedActionPoints = *((_BYTE *)attackerRecord + 8);
-  v5 = *attackerRecord;
+  attackerUnitType = *attackerRecord;
   defenderRecord = (__int16 *)(31 * defenderIndex + g_MapData + 852);
-  if ( v5 == UNIT_TYPE_RAM )
+  if ( attackerUnitType == UNIT_TYPE_RAM )
     return 0;
   result = (int *)UnitBattle_MoveTrackNear(
                     attackerIndex,
@@ -2302,9 +2302,9 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
   if ( result )
   {
     effectiveness = Unit_CalcEffectivenessA(v7, 0);
-    v8 = Unit_CalcEffectivenessC(defenderRecord);
-    if ( v8 > v9 )
-      effectiveness = v8;
+    altEffectiveness = Unit_CalcEffectivenessC(defenderRecord);
+    if ( altEffectiveness > v9 )
+      effectiveness = altEffectiveness;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * attackerIndex + 852)] )
     {
       defenderHealth = *((char *)defenderRecord + 9);
@@ -2323,14 +2323,14 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defende
         }
         if ( UnitBattle_IsUnitWithinRange(attackerIndex, defenderIndex) )
           break;
-        v19 = *movePath - 1;
+        remainingSteps = *movePath - 1;
         v20 = movePath;
-        *movePath = v19;
-        trackStep = v20[v19 + 1];
+        *movePath = remainingSteps;
+        trackStep = v20[remainingSteps + 1];
         attackerRecord[2] = (unsigned __int8)trackStep;
         attackerRecord[3] = BYTE1(trackStep);
-        v21 = HIWORD(trackStep) - v16;
-        if ( v21 > *((unsigned __int8 *)attackerRecord + 8) )
+        stepApCost = HIWORD(trackStep) - v16;
+        if ( stepApCost > *((unsigned __int8 *)attackerRecord + 8) )
         {
           attackerRecord[2] = savedRow;
           attackerRecord[3] = savedCol;
@@ -2339,7 +2339,7 @@ LABEL_41:
           j__nfree_();
           return 0;
         }
-        *((_BYTE *)attackerRecord + 8) -= v21;
+        *((_BYTE *)attackerRecord + 8) -= stepApCost;
       }
       while ( *((unsigned __int8 *)attackerRecord + 8) >= HIWORD(trackStep) + 5 )
       {
@@ -2401,7 +2401,7 @@ LABEL_41:
       }
       else
       {
-        v23 = *((_BYTE *)attackerRecord + 9);
+        savedAttackerHealth2 = *((_BYTE *)attackerRecord + 9);
         defenderHealth = *((char *)defenderRecord + 9);
         while ( *((unsigned __int8 *)attackerRecord + 8) >= 5u )
         {
@@ -2412,7 +2412,7 @@ LABEL_41:
         }
         *((_BYTE *)attackerRecord + 8) = savedActionPoints;
         v12 = defenderRecord;
-        *((_BYTE *)attackerRecord + 9) = v23;
+        *((_BYTE *)attackerRecord + 9) = savedAttackerHealth2;
         v13 = movePath;
         *((_BYTE *)v12 + 9) = defenderHealth;
         if ( v13 )
@@ -4237,14 +4237,14 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
   int j; // eax
   int moveAttemptCount; // eax
   int v27; // ecx
-  int v28; // edx
-  int v29; // eax
-  int v30; // ebx
+  int unitRecordForTrackCheck; // edx
+  int trackUnitIndex; // eax
+  int trackTargetCol; // ebx
   int *trackResult; // eax
   int *trackPath; // esi
-  int v33; // eax
-  int v34; // eax
-  int v35; // eax
+  int unitRecordForForceTrack; // eax
+  int unitRecordForFallback; // eax
+  int unitRecordForPathTrace; // eax
   int maxMove; // edx
   int pathNodeCount; // edx
   int pathTopIndex; // eax
@@ -4255,7 +4255,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
   int unitRecordForWalk; // eax
   int unitRecordOffset; // esi
   int walkTopIndex; // edi
-  int v46; // eax
+  int walkUnitRecord; // eax
   int occupantAtTile; // edx
   int occupantSide; // eax
   int v49; // ecx
@@ -4263,8 +4263,8 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
   bool shouldRetry; // bl
   int v52; // ecx
   int savedOccupants[66]; // [esp+0h] [ebp-164h]
-  int v54; // [esp+108h] [ebp-5Ch] BYREF
-  void **v55; // [esp+10Ch] [ebp-58h]
+  int candidateListCopy; // [esp+108h] [ebp-5Ch] BYREF
+  void **candidateListVtable; // [esp+10Ch] [ebp-58h]
   int v56; // [esp+110h] [ebp-54h]
   int v57; // [esp+114h] [ebp-50h]
   int v58; // [esp+118h] [ebp-4Ch]
@@ -4361,24 +4361,24 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
     v27 = targetRow;
     if ( *(char *)(g_MapData + 20 * targetRow + targetCol + 3134) <= 0 )
     {
-      v29 = unitIndexSaved;
-      v30 = targetCol;
+      trackUnitIndex = unitIndexSaved;
+      trackTargetCol = targetCol;
     }
     else
     {
       if ( *(__int16 *)(g_MapData + 40 * targetRow + 2 * targetCol + 1534) == -1
-        || (v27 = unitIndexSaved, v28 = 31 * unitIndexSaved + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v28 + 852)] & 1) == 0)
-        && (v27 = (*(_BYTE *)(v28 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v28 + 864)) >> 5), v27 <= 0) )
+        || (v27 = unitIndexSaved, unitRecordForTrackCheck = 31 * unitIndexSaved + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(unitRecordForTrackCheck + 852)] & 1) == 0)
+        && (v27 = (*(_BYTE *)(unitRecordForTrackCheck + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(unitRecordForTrackCheck + 864)) >> 5), v27 <= 0) )
       {
         trackResult = UnitBattle_MoveTrackNearWall(unitIndexSaved, targetRow, targetCol, targetCol);
 LABEL_58:
         trackPath = trackResult;
         if ( !trackResult )
         {
-          v33 = g_MapData + 31 * unitIndexSaved;
-          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v33 + 852)] )
+          unitRecordForForceTrack = g_MapData + 31 * unitIndexSaved;
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(unitRecordForForceTrack + 852)] )
           {
-            if ( (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) > 0 )
+            if ( (*(_BYTE *)(unitRecordForForceTrack + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(unitRecordForForceTrack + 864)) >> 5) > 0 )
               trackPath = UnitBattle_MoveTrackForce(unitIndexSaved, targetCol, targetCol);
           }
         }
@@ -4386,9 +4386,9 @@ LABEL_58:
           goto LABEL_63;
         if ( *trackPath )
         {
-          v35 = g_MapData + 31 * unitIndexSaved;
-          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v35 + 852)]
-            && (*(_BYTE *)(v35 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v35 + 864)) >> 5) > 0 )
+          unitRecordForPathTrace = g_MapData + 31 * unitIndexSaved;
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(unitRecordForPathTrace + 852)]
+            && (*(_BYTE *)(unitRecordForPathTrace + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(unitRecordForPathTrace + 864)) >> 5) > 0 )
           {
             savedRow = *(unsigned __int16 *)(unitRecordPtr + 4);
             HIWORD(pathNode) = 0;
@@ -4445,9 +4445,9 @@ LABEL_25:
                   goto LABEL_30;
                 }
 LABEL_63:
-                v34 = g_MapData + 31 * unitIndexCopy;
-                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v34 + 852)]
-                  && (*(_BYTE *)(v34 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v34 + 864)) >> 5) <= 0 )
+                unitRecordForFallback = g_MapData + 31 * unitIndexCopy;
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(unitRecordForFallback + 852)]
+                  && (*(_BYTE *)(unitRecordForFallback + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(unitRecordForFallback + 864)) >> 5) <= 0 )
                 {
                   g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
                   return 1;
@@ -4519,11 +4519,11 @@ LABEL_123:
                       walkTopIndex = *walkPath - 1;
                       *walkPath = walkTopIndex;
                       pathStep = walkPath[walkTopIndex + 1];
-                      v46 = unitRecordOffset + g_MapData;
+                      walkUnitRecord = unitRecordOffset + g_MapData;
                       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(unitRecordOffset + g_MapData + 852)]
-                        && (*(_BYTE *)(v46 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v46 + 864)) >> 5) > 0 )
+                        && (*(_BYTE *)(walkUnitRecord + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(walkUnitRecord + 864)) >> 5) > 0 )
                       {
-                        *(_WORD *)(v46 + 856) = (unsigned __int8)pathStep;
+                        *(_WORD *)(walkUnitRecord + 856) = (unsigned __int8)pathStep;
                         *(_WORD *)(g_MapData + unitRecordOffset + 858) = BYTE1(pathStep);
                         if ( *(__int16 *)(40 * (unsigned __int8)pathStep + g_MapData + 2 * BYTE1(pathStep) + 1534) == -1
                           && UnitBattle_IsTileWithinRange(unitIndexCopy, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
@@ -4543,16 +4543,16 @@ LABEL_123:
                         occupantSide = *(unsigned __int8 *)(31 * occupantAtTile + g_MapData + 854);
                         if ( occupantSide == sideCopy )
                         {
-                          v54 = 0;
+                          candidateListCopy = 0;
                           v56 = sideCopy ^ occupantSide;
                           v57 = 0;
                           v58 = 0;
-                          v55 = &g_WCIsvListBaseVariant124_Vtable;
+                          candidateListVtable = &g_WCIsvListBaseVariant124_Vtable;
                           v59 = 0;
-                          WCIsvListBase_CopyAppendAll(&v54, &g_UnitBattleAiCandidateQueue, (int)walkPath);
-                          v55 = &g_WCIsvListBaseVariant134_Vtable;
-                          shouldRetry = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&v54) && g_BattleAiActionAttemptCount < 20;
-                          WCIsvListBase_DestroyElementsAndDtor(v50, (int)&v54);
+                          WCIsvListBase_CopyAppendAll(&candidateListCopy, &g_UnitBattleAiCandidateQueue, (int)walkPath);
+                          candidateListVtable = &g_WCIsvListBaseVariant134_Vtable;
+                          shouldRetry = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&candidateListCopy) && g_BattleAiActionAttemptCount < 20;
+                          WCIsvListBase_DestroyElementsAndDtor(v50, (int)&candidateListCopy);
                           if ( shouldRetry )
                           {
                             if ( v52 )
@@ -4606,10 +4606,10 @@ LABEL_24:
         remainingMove = *(unsigned __int8 *)(unitRecordPtr + 8);
         goto LABEL_25;
       }
-      v29 = unitIndexSaved;
-      v30 = targetCol;
+      trackUnitIndex = unitIndexSaved;
+      trackTargetCol = targetCol;
     }
-    trackResult = (int *)UnitBattle_MoveTrackNear(v29, v27, v30, targetCol);
+    trackResult = (int *)UnitBattle_MoveTrackNear(trackUnitIndex, v27, trackTargetCol, targetCol);
     goto LABEL_58;
   }
   attemptCount = g_BattleAiActionAttemptCount++;
@@ -5366,18 +5366,18 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
   int v11; // ecx
   int enemyRecord; // esi
   int v14; // ecx
-  int v15; // eax
+  int enemyUnitRecord; // eax
   int *trackList; // eax
   int *track; // ecx
-  int v18; // eax
-  int v19; // eax
-  int v20; // edx
+  int enemyUnitRecord2; // eax
+  int enemyUnitRecord3; // eax
+  int pathMoveCost; // edx
   int rangeValue; // eax
   int *v22; // ecx
-  int v23; // eax
+  int trackIndex; // eax
   int v24; // edx
-  int v25; // edx
-  int v27; // [esp+8h] [ebp-34h]
+  int unitRange; // edx
+  int firstTrackStep; // [esp+8h] [ebp-34h]
   int trackEntry; // [esp+8h] [ebp-34h]
   int enemyRecordOffset; // [esp+10h] [ebp-2Ch]
   int battle_width;
@@ -5465,8 +5465,8 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
     v14 = targetCol;
     if ( *(char *)(targetCol + g_MapData + 20 * targetRow + 3134) <= 0
       || (v14 = g_MapData + 40 * targetRow, *(__int16 *)(v14 + 2 * targetCol + 1534) != -1)
-      && ((v15 = 31 * enemyUnitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
-       || (v14 = (unsigned __int8)(2 * *(_BYTE *)(v15 + 864)) >> 5, (*(_BYTE *)(v15 + 864) & 3) + 1 - v14 > 0)) )
+      && ((enemyUnitRecord = 31 * enemyUnitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(enemyUnitRecord + 852)] & 1) != 0)
+       || (v14 = (unsigned __int8)(2 * *(_BYTE *)(enemyUnitRecord + 864)) >> 5, (*(_BYTE *)(enemyUnitRecord + 864) & 3) + 1 - v14 > 0)) )
     {
       trackList = UnitBattle_MoveTrackNear(enemyUnitIndex, targetRow, targetCol, targetRow);
     }
@@ -5477,10 +5477,10 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
     track = trackList;
     if ( !trackList )
     {
-      v18 = g_MapData + 31 * enemyUnitIndex;
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v18 + 852)] )
+      enemyUnitRecord2 = g_MapData + 31 * enemyUnitIndex;
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(enemyUnitRecord2 + 852)] )
       {
-        if ( (*(_BYTE *)(v18 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v18 + 864)) >> 5) > 0 )
+        if ( (*(_BYTE *)(enemyUnitRecord2 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(enemyUnitRecord2 + 864)) >> 5) > 0 )
           track = UnitBattle_MoveTrackForce(enemyUnitIndex, targetCol, targetRow);
       }
     }
@@ -5494,17 +5494,17 @@ LABEL_17:
         return 0;
       goto LABEL_23;
     }
-    v19 = 31 * enemyUnitIndex + g_MapData;
-    if ( !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v19 + 852)]
-      || (*(_BYTE *)(v19 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v19 + 864)) >> 5) <= 0 )
+    enemyUnitRecord3 = 31 * enemyUnitIndex + g_MapData;
+    if ( !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(enemyUnitRecord3 + 852)]
+      || (*(_BYTE *)(enemyUnitRecord3 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(enemyUnitRecord3 + 864)) >> 5) <= 0 )
     {
       if ( !*track )
         goto LABEL_59;
-      v27 = track[1];
+      firstTrackStep = track[1];
       nfree_((int)(uintptr_t)track);
-      LOWORD(v20) = HIWORD(v27);
+      LOWORD(pathMoveCost) = HIWORD(firstTrackStep);
       rangeValue = *(unsigned __int8 *)(enemyRecord + 8);
-      if ( rangeValue > v20 && rangeValue - v20 > 0 )
+      if ( rangeValue > pathMoveCost && rangeValue - pathMoveCost > 0 )
         return 0;
       goto LABEL_23;
     }
@@ -5537,9 +5537,9 @@ LABEL_23:
   }
   while ( !UnitBattle_IsTileWithinRange(enemyUnitIndex, targetRow, targetCol) )
   {
-    v23 = *track - 1;
-    *track = v23;
-    trackEntry = track[v23 + 1];
+    trackIndex = *track - 1;
+    *track = trackIndex;
+    trackEntry = track[trackIndex + 1];
     if ( HIWORD(trackEntry) > (int)*(unsigned __int8 *)(enemyRecord + 8) )
       goto LABEL_58;
     *(_WORD *)(enemyRecord + 4) = (unsigned __int8)trackEntry;
@@ -5550,8 +5550,8 @@ LABEL_23:
   *(_WORD *)(enemyRecord + 4) = savedTileRow;
   *(_WORD *)(enemyRecord + 6) = savedTileCol;
   nfree_((int)(uintptr_t)track);
-  v25 = *(unsigned __int8 *)(enemyRecord + 8);
-  if ( v25 <= HIWORD(trackEntry) || v25 - HIWORD(trackEntry) <= 0 )
+  unitRange = *(unsigned __int8 *)(enemyRecord + 8);
+  if ( unitRange <= HIWORD(trackEntry) || unitRange - HIWORD(trackEntry) <= 0 )
     goto LABEL_23;
   return 0;
 }
@@ -8440,53 +8440,53 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, cha
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FEF0) --------------------------------------------------------
-int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int a4, DWORD gameContext)
+int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playSound, DWORD gameContext)
 {
-  _DWORD *v5; // eax
+  _DWORD *spriteSetPtr; // eax
   int SpriteWidth; // edx
   int v7; // ecx
-  int v8; // eax
+  int maxExtent; // eax
   _DWORD *Surface; // eax
   int surface; // edi
   int SpriteForChar; // eax
   int v12; // eax
-  DWORD v13; // ebp
+  DWORD deviceMethodsPtr; // ebp
   int v14; // ecx
   int v15; // ecx
   int artifactSoundId; // eax
-  int v18; // eax
+  int iconSprite; // eax
   int v19; // ecx
   _DWORD *spriteSet; // [esp+38h] [ebp-28h] BYREF
   int playSoundFlag; // [esp+3Ch] [ebp-24h]
-  DWORD v22; // [esp+40h] [ebp-20h]
+  DWORD deviceMethods; // [esp+40h] [ebp-20h]
   int messageText; // [esp+44h] [ebp-1Ch]
   int popupHeight; // [esp+48h] [ebp-18h]
   int iconIndex; // [esp+4Ch] [ebp-14h]
 
   messageText = messageTextPtr;
   iconIndex = iconChar;
-  playSoundFlag = a4;
-  v5 = (_DWORD *)Mem_Alloc(4112, a3, a4, gameContext);
-  if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a4);
-  spriteSet = v5;
+  playSoundFlag = playSound;
+  spriteSetPtr = (_DWORD *)Mem_Alloc(4112, a3, playSound, gameContext);
+  if ( spriteSetPtr )
+    spriteSetPtr = DLXSpriteSet_Load(spriteSetPtr, playSound);
+  spriteSet = spriteSetPtr;
   Render_Pump();
   RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
   DLX_GetSpriteWidth((int)spriteSet, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)spriteSet, 0x16u);
-  v8 = v7 + 6;
+  maxExtent = v7 + 6;
   if ( (unsigned __int16)SpriteWidth > v7 + 6 )
-    v8 = SpriteWidth;
-  popupHeight = v8;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, a4, gameContext);
+    maxExtent = SpriteWidth;
+  popupHeight = maxExtent;
+  Surface = (_DWORD *)Mem_Alloc(188, v7, playSound, gameContext);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, popupHeight);
   surface = (int)Surface;
   Render_FillRect(0, Surface, 150, 0, SCREEN_MAX_X, popupHeight + 149, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 22);
-  v22 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(
+  deviceMethods = *((_DWORD *)g_RenderDevice + 46);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethods + 52))(
     150,
     SpriteForChar,
     -1,
@@ -8498,9 +8498,9 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int a4, D
     0);
   DLX_GetSpriteHeight((int)spriteSet, 0x16u);
   v12 = DLX_GetSpriteForChar((int)spriteSet, 23);
-  v22 = *((_DWORD *)g_RenderDevice + 46);
-  v13 = v22;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(
+  deviceMethods = *((_DWORD *)g_RenderDevice + 46);
+  deviceMethodsPtr = deviceMethods;
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethods + 52))(
     156,
     v12,
     -1,
@@ -8512,11 +8512,11 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int a4, D
     0);
   if ( iconIndex != -1 )
   {
-    v18 = DLX_GetSpriteForChar((int)spriteSet, iconIndex);
-    v13 = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v13 + 52))(
+    iconSprite = DLX_GetSpriteForChar((int)spriteSet, iconIndex);
+    deviceMethodsPtr = *((_DWORD *)g_RenderDevice + 46);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethodsPtr + 52))(
       285,
-      v18,
+      iconSprite,
       -1,
       -1,
       -1,
@@ -8525,7 +8525,7 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int a4, D
       0,
       0);
   }
-  Render_ReleaseSurface(17, v13);
+  Render_ReleaseSurface(17, deviceMethodsPtr);
   UI_DrawTextFmt(surface, 70, 569, 210, 6, messageText);
   Render_Present((int)g_RenderState);
   Render_Begin((int)g_RenderState, 0);
@@ -8728,7 +8728,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   int playerData; // eax
   _DWORD *outcomeTable; // esi
   signed int siteCategory; // eax
-  int v11; // ebx
+  int playerDataOffset; // ebx
   int ownCultFlag; // ecx
   int v13; // ecx
   int result; // eax
@@ -8736,18 +8736,18 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   _DWORD *outcomeTablePtr; // edi
   int v17; // ecx
   DWORD *outcomePtr; // esi
-  int v19; // edx
-  int v20; // edx
-  int v21; // ecx
-  int v22; // ebx
-  const char *v23; // eax
+  int activeMission; // edx
+  int playerDataOffset2; // edx
+  int cultActiveFlag; // ecx
+  int isOwnCult; // ebx
+  const char *transitionName; // eax
   int v24; // ecx
   int siteRowBase; // ebx
   int siteOverlayWord; // ecx
-  int v27; // ecx
-  int v28[3]; // [esp+0h] [ebp-3Ch]
-  int v29[3]; // [esp+Ch] [ebp-30h]
-  int v30[3]; // [esp+18h] [ebp-24h]
+  int ownCultFlagValue; // ecx
+  int giftEmptyTexts[3]; // [esp+0h] [ebp-3Ch]
+  int giftRewardTexts[3]; // [esp+Ch] [ebp-30h]
+  int sacrilegeTexts[3]; // [esp+18h] [ebp-24h]
   int siteX; // [esp+24h] [ebp-18h]
   int siteY; // [esp+28h] [ebp-14h]
 
@@ -8773,23 +8773,23 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
     outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultInactive;
   }
   siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
-  v11 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-  ownCultFlag = *(_DWORD *)(gameData + v11 + 140063);
+  playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
+  ownCultFlag = *(_DWORD *)(gameData + playerDataOffset + 140063);
   if ( ownCultFlag && (siteCategory == 3 || siteCategory == 4)
-    || (LOBYTE(v11) = gameData, !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
+    || (LOBYTE(playerDataOffset) = gameData, !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
     && (siteCategory == 1 || siteCategory == 2) )
   {
-    Debug_Log(ownCultFlag, v11, (DWORD)unitStack, (int)aTemple_unitg_0);
-    v30[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
-    v30[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
-    v30[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
+    Debug_Log(ownCultFlag, playerDataOffset, (DWORD)unitStack, (int)aTemple_unitg_0);
+    sacrilegeTexts[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
+    sacrilegeTexts[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
+    sacrilegeTexts[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
     if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + 140051) )
     {
-      LOBYTE(v11) = 1;
-      Temple_ShowOutcomePopup(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)unitStack);
+      LOBYTE(playerDataOffset) = 1;
+      Temple_ShowOutcomePopup(sacrilegeTexts[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)unitStack);
     }
     UI_StartTileBlinkFlash(*unitStack, unitStack[1], v13);
-    return Unit_Kill((int)unitStack, v11, (DWORD)unitStack, gameTime);
+    return Unit_Kill((int)unitStack, playerDataOffset, (DWORD)unitStack, gameTime);
   }
   else
   {
@@ -8808,28 +8808,28 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
     else if ( siteCategory == 2 || siteCategory == 4 )
     {
       Debug_Log(missionIndex, gameData, (DWORD)unitStack, (int)aTemple_unitg_2);
-      v29[0] = (int)g_TempleGiftRewardText[0];
-      v29[1] = (int)g_TempleGiftRewardText[1];
-      v29[2] = (int)g_TempleGiftRewardText[2];
-      v28[0] = (int)g_TempleGiftEmptyText[0];
-      v28[1] = (int)g_TempleGiftEmptyText[1];
-      v28[2] = (int)g_TempleGiftEmptyText[2];
+      giftRewardTexts[0] = (int)g_TempleGiftRewardText[0];
+      giftRewardTexts[1] = (int)g_TempleGiftRewardText[1];
+      giftRewardTexts[2] = (int)g_TempleGiftRewardText[2];
+      giftEmptyTexts[0] = (int)g_TempleGiftEmptyText[0];
+      giftEmptyTexts[1] = (int)g_TempleGiftEmptyText[1];
+      giftEmptyTexts[2] = (int)g_TempleGiftEmptyText[2];
       result = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData;
       if ( *(_DWORD *)(result + 140051) )
       {
-        v27 = *(_DWORD *)(result + 140063);
-        if ( v27 )
-          return Temple_ShowOutcomePopup(v29[(unsigned __int8)g_LanguageIndex], -1, v27, 0, (DWORD)unitStack);
+        ownCultFlagValue = *(_DWORD *)(result + 140063);
+        if ( ownCultFlagValue )
+          return Temple_ShowOutcomePopup(giftRewardTexts[(unsigned __int8)g_LanguageIndex], -1, ownCultFlagValue, 0, (DWORD)unitStack);
         else
-          return Temple_ShowOutcomePopup(v28[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)unitStack);
+          return Temple_ShowOutcomePopup(giftEmptyTexts[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)unitStack);
       }
     }
     else
     {
       outcomeTablePtr = outcomeTable;
       outcomePtr = Temple_Random(outcomeTable, missionIndex, gameData, (DWORD)unitStack);
-      v19 = ACTIVE_MISSION_INDEX;
-      if ( (v19 == 2 || v19 == 6 || v19 == 12 || v19 == 16)
+      activeMission = ACTIVE_MISSION_INDEX;
+      if ( (activeMission == 2 || activeMission == 6 || activeMission == 12 || activeMission == 16)
         && *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
       {
         if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
@@ -8840,20 +8840,20 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
         else
         {
           while ( *outcomePtr && *outcomePtr != 15 )
-            outcomePtr = Temple_Random(outcomeTablePtr, v17, v11, (DWORD)unitStack);
+            outcomePtr = Temple_Random(outcomeTablePtr, v17, playerDataOffset, (DWORD)unitStack);
         }
       }
-      Debug_Log(v17, v11, (DWORD)unitStack, (int)aTemple_unitg_1);
-      v20 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-      v21 = *(_DWORD *)(v20 + gameData + 140051);
-      if ( v21 )
+      Debug_Log(v17, playerDataOffset, (DWORD)unitStack, (int)aTemple_unitg_1);
+      playerDataOffset2 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
+      cultActiveFlag = *(_DWORD *)(playerDataOffset2 + gameData + 140051);
+      if ( cultActiveFlag )
       {
-        v22 = *(_DWORD *)(v20 + gameData + 140063);
-        if ( v22 )
-          v23 = aSw_chs;
+        isOwnCult = *(_DWORD *)(playerDataOffset2 + gameData + 140063);
+        if ( isOwnCult )
+          transitionName = aSw_chs;
         else
-          v23 = aSw_pog;
-        Win_PlayModeChangeFrameTransition(v23, 1, v21, v22, (DWORD)unitStack);
+          transitionName = aSw_pog;
+        Win_PlayModeChangeFrameTransition(transitionName, 1, cultActiveFlag, isOwnCult, (DWORD)unitStack);
         Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)unitStack);
       }
       Temple_ProcessGift(*outcomePtr, unitStack, siteY, siteX, gameTime);
@@ -9121,13 +9121,13 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
 //----- (004410B0) --------------------------------------------------------
 int  UI_DemoTextPresent(int unitStackId, int a2, char a3, DWORD renderContext)
 {
-  _DWORD *v5; // eax
+  _DWORD *dlxSpriteSet; // eax
   int slotOffset; // esi
   int spriteSetOffset; // ecx
   int slotRecordPtr; // eax
-  char v9; // bl
+  char slotVariantDigit; // bl
   int v10; // ecx
-  _DWORD *v11; // eax
+  _DWORD *slotSpriteSet; // eax
   unsigned __int8 *selectedSlot; // ebx
   int v13; // ecx
   void *v14; // ecx
@@ -9140,18 +9140,18 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char a3, DWORD renderContext)
   int v22; // ecx
   signed int hasSpecialPersonage; // eax
   int v24; // edx
-  char v25[100]; // [esp+0h] [ebp-74h] BYREF
-  void *v26; // [esp+64h] [ebp-10h]
+  char unitInfoBuffer[100]; // [esp+0h] [ebp-74h] BYREF
+  void *savedRenderDevice; // [esp+64h] [ebp-10h]
   int v27; // [esp+70h] [ebp-4h]
 
   v27 = a2;
-  v26 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   g_BuildingUIRecordPtr = UNIT_RECORD(unitStackId);
   g_TempleOutcomePopupCloseFlag = 0;
-  v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, renderContext);
-  if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a3);
-  g_DemoTextDLXSpriteSet = (int)v5;
+  dlxSpriteSet = (_DWORD *)Mem_Alloc(4112, a2, a3, renderContext);
+  if ( dlxSpriteSet )
+    dlxSpriteSet = DLXSpriteSet_Load(dlxSpriteSet, a3);
+  g_DemoTextDLXSpriteSet = (int)dlxSpriteSet;
   slotOffset = 0;
   memset_(0, 0);
   do
@@ -9159,12 +9159,12 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char a3, DWORD renderContext)
     slotRecordPtr = slotOffset + g_BuildingUIRecordPtr;
     if ( *(__int16 *)(slotOffset + g_BuildingUIRecordPtr + 18) != -1 )
     {
-      v9 = *(_BYTE *)(slotRecordPtr + 20);
-      UI_BeginUnitInfo(v25, *(_BYTE *)(slotRecordPtr + 18), v9);
-      v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, renderContext);
-      if ( v11 )
-        v11 = DLXSpriteSet_Load(v11, v9);
-      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)v11;
+      slotVariantDigit = *(_BYTE *)(slotRecordPtr + 20);
+      UI_BeginUnitInfo(unitInfoBuffer, *(_BYTE *)(slotRecordPtr + 18), slotVariantDigit);
+      slotSpriteSet = (_DWORD *)Mem_Alloc(4112, v10, slotVariantDigit, renderContext);
+      if ( slotSpriteSet )
+        slotSpriteSet = DLXSpriteSet_Load(slotSpriteSet, slotVariantDigit);
+      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)slotSpriteSet;
     }
     spriteSetOffset += 4;
     slotOffset += 31;
@@ -9216,7 +9216,7 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char a3, DWORD renderContext)
   }
   DLXSpriteSet_ReleaseAndClear(&g_DemoTextDLXSpriteSet);
   freeIndex = 0;
-  g_RenderDevice = v26;
+  g_RenderDevice = savedRenderDevice;
   v16 = 0;
   do
   {

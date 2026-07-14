@@ -1204,7 +1204,7 @@ int * Port_GenerateApproachTrack(int unitStackIndex)
 int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
 {
   int result; // eax
-  int v5; // edx
+  int scanCenterRow; // edx
   int spawnSlotIndex; // edi
   int i; // esi
   int spawnRow; // ebx
@@ -1223,7 +1223,7 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
   int v21; // ecx
   int v22; // ecx
   unsigned int reinforcementDelay; // eax
-  int v24; // ecx
+  int currentTurn; // ecx
   int colByteOffset; // eax
   int tileUnitIndex; // ecx
   int unitStackBase; // ecx
@@ -1234,7 +1234,7 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
   int portRow; // [esp+Ch] [ebp-30h]
   int portColumn; // [esp+10h] [ebp-2Ch]
   int scanColByteOffsetMax; // [esp+18h] [ebp-24h]
-  int v35; // [esp+1Ch] [ebp-20h]
+  int scanRow; // [esp+1Ch] [ebp-20h]
   int scanRowByteOffset; // [esp+20h] [ebp-1Ch]
 
   Debug_Log(a1, a2, a3, (int)aPort_getsupply, v28);
@@ -1246,10 +1246,10 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
   if ( result )
   {
     foundFriendlyUnitNearby = 0;
-    v35 = v5 - 1;
+    scanRow = scanCenterRow - 1;
     scanStartColumn = portColumn - 1;
-    scanRowByteOffset = 200 * (v5 - 1);
-    if ( scanRowByteOffset <= 200 * (v5 + 2) )
+    scanRowByteOffset = 200 * (scanCenterRow - 1);
+    if ( scanRowByteOffset <= 200 * (scanCenterRow + 2) )
     {
       scanColByteOffsetMax = 2 * (portColumn + 2);
       do
@@ -1277,9 +1277,9 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
         }
 LABEL_16:
         scanRowByteOffset += 200;
-        ++v35;
+        ++scanRow;
       }
-      while ( scanRowByteOffset <= 200 * (v5 + 2) );
+      while ( scanRowByteOffset <= 200 * (scanCenterRow + 2) );
     }
     result = foundFriendlyUnitNearby;
     if ( foundFriendlyUnitNearby )
@@ -1319,7 +1319,7 @@ LABEL_16:
       UI_StartWorldMapUnitAttentionFlash(*(unsigned __int16 *)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn)), 200 * reinforcementSpawnRow + gameData, v22);
       PORT_REINFORCEMENT_READY_FLAG = 0;
       reinforcementDelay = Rng_RandRange(8, 10);
-      PORT_NEXT_REINFORCEMENT_TURN = v24 + reinforcementDelay;
+      PORT_NEXT_REINFORCEMENT_TURN = currentTurn + reinforcementDelay;
       Port_UpdateShorelineVariantTiles();
       Audio_PlayArtifactSound(1);
       return j;
@@ -1348,23 +1348,23 @@ LABEL_16:
 void * UI_DrawPortStatusPanel(char a1, DWORD a2)
 {
   int v2; // ecx
-  _DWORD *v3; // eax
+  _DWORD *spriteSet; // eax
   _DWORD *Surface; // eax
-  int v5; // ebp
+  int surfacePtr; // ebp
   __int16 SpriteWidth; // bx
   __int16 SpriteHeight; // ax
-  DWORD v8; // ebp
-  __int16 v9; // ax
+  DWORD panelSurface; // ebp
+  __int16 spriteHeightDraw; // ax
   int SpriteForChar; // eax
   char *portLabelText; // eax
-  __int16 v12; // ax
+  __int16 spriteHeightRedraw; // ax
   void *result; // eax
-  unsigned __int16 v14; // [esp+10h] [ebp-4Ch]
-  unsigned __int16 v15; // [esp+10h] [ebp-4Ch]
-  unsigned __int16 v16; // [esp+14h] [ebp-48h]
-  unsigned __int16 v17; // [esp+18h] [ebp-44h]
-  int v18[3]; // [esp+1Ch] [ebp-40h]
-  int v19[3]; // [esp+28h] [ebp-34h] BYREF
+  unsigned __int16 rectBottom; // [esp+10h] [ebp-4Ch]
+  unsigned __int16 spriteWidthMax; // [esp+10h] [ebp-4Ch]
+  unsigned __int16 leftEdge; // [esp+14h] [ebp-48h]
+  unsigned __int16 topEdge; // [esp+18h] [ebp-44h]
+  int emptyTexts[3]; // [esp+1Ch] [ebp-40h]
+  int arrivedTexts[3]; // [esp+28h] [ebp-34h] BYREF
   _DWORD *portSpriteSet; // [esp+34h] [ebp-28h] BYREF
   void *previousRenderDevice; // [esp+38h] [ebp-24h]
   int panelLeft; // [esp+3Ch] [ebp-20h]
@@ -1373,25 +1373,25 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   previousRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
-  v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
-  if ( v3 )
-    v3 = DLXSpriteSet_Load(v3, "port.s32");
-  portSpriteSet = v3;
+  spriteSet = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
+  if ( spriteSet )
+    spriteSet = DLXSpriteSet_Load(spriteSet, "port.s32");
+  portSpriteSet = spriteSet;
   panelLeft = 100;
   panelTop = 100;
   Surface = (_DWORD *)Mem_Alloc(188, 100, a1, a2);
-  v5 = (int)Surface;
+  surfacePtr = (int)Surface;
   if ( Surface )
   {
     SpriteWidth = DLX_GetSpriteWidth((int)portSpriteSet, 0);
     SpriteHeight = DLX_GetSpriteHeight((int)portSpriteSet, 0);
-    Surface = Render_CreateSurface(v5, SpriteHeight, SpriteWidth);
+    Surface = Render_CreateSurface(surfacePtr, SpriteHeight, SpriteWidth);
   }
-  v8 = (DWORD)Surface;
-  v14 = panelTop + DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
-  v9 = DLX_GetSpriteHeight((int)portSpriteSet, 0);
-  Render_FillRect(0, (_DWORD *)v8, (unsigned __int16)panelTop, (unsigned __int16)panelLeft, panelLeft + v9 - 1, v14, 0, 0);
-  Render_ReleaseSurface(7, v8);
+  panelSurface = (DWORD)Surface;
+  rectBottom = panelTop + DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
+  spriteHeightDraw = DLX_GetSpriteHeight((int)portSpriteSet, 0);
+  Render_FillRect(0, (_DWORD *)panelSurface, (unsigned __int16)panelTop, (unsigned __int16)panelLeft, panelLeft + spriteHeightDraw - 1, rectBottom, 0, 0);
+  Render_ReleaseSurface(7, panelSurface);
   SpriteForChar = DLX_GetSpriteForChar((int)portSpriteSet, PORT_REINFORCEMENT_READY_FLAG);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     panelTop,
@@ -1407,37 +1407,37 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
     portLabelText = aHafen;
   else
     portLabelText = aPort;
-  UI_DrawTextFmt((int)v19, panelLeft + 10, panelLeft + 235, panelTop + 5, 3, (int)portLabelText);
-  v19[0] = (int)g_PortReinforcementArrivedTexts[0];
-  v19[1] = (int)g_PortReinforcementArrivedTexts[1];
-  v19[2] = (int)g_PortReinforcementArrivedTexts[2];
-  v18[0] = (int)g_PortEmptyTexts[0];
-  v18[1] = (int)g_PortEmptyTexts[1];
-  v18[2] = (int)g_PortEmptyTexts[2];
+  UI_DrawTextFmt((int)arrivedTexts, panelLeft + 10, panelLeft + 235, panelTop + 5, 3, (int)portLabelText);
+  arrivedTexts[0] = (int)g_PortReinforcementArrivedTexts[0];
+  arrivedTexts[1] = (int)g_PortReinforcementArrivedTexts[1];
+  arrivedTexts[2] = (int)g_PortReinforcementArrivedTexts[2];
+  emptyTexts[0] = (int)g_PortEmptyTexts[0];
+  emptyTexts[1] = (int)g_PortEmptyTexts[1];
+  emptyTexts[2] = (int)g_PortEmptyTexts[2];
   if ( PORT_REINFORCEMENT_READY_FLAG )
   {
-    UI_DrawTextFmt((int)v19, panelLeft + 122, panelLeft + 200, panelTop + 54, 6, v19[(unsigned __int8)g_LanguageIndex]);
-    Render_ReleaseSurface(15, v8);
-    UI_DrawTextFmt((int)v19, panelLeft + 42, panelLeft + 85, panelTop + 29, 1, (int)aD_36);
+    UI_DrawTextFmt((int)arrivedTexts, panelLeft + 122, panelLeft + 200, panelTop + 54, 6, arrivedTexts[(unsigned __int8)g_LanguageIndex]);
+    Render_ReleaseSurface(15, panelSurface);
+    UI_DrawTextFmt((int)arrivedTexts, panelLeft + 42, panelLeft + 85, panelTop + 29, 1, (int)aD_36);
   }
   else
   {
     UI_DrawTextFmt(
-      v18[(unsigned __int8)g_LanguageIndex],
+      emptyTexts[(unsigned __int8)g_LanguageIndex],
       panelLeft + 40,
       panelLeft + 120,
       panelTop + 40,
       6,
-      v18[(unsigned __int8)g_LanguageIndex]);
+      emptyTexts[(unsigned __int8)g_LanguageIndex]);
   }
   Render_Begin((int)g_RenderState, 0);
-  v17 = panelTop;
-  v16 = panelLeft;
-  v15 = DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
-  v12 = DLX_GetSpriteHeight((int)portSpriteSet, 0);
-  Render_FillRect((_DWORD *)v8, 0, 0, 0, v12 - 1, v15, v16, v17);
-  if ( v8 )
-    (**(void (__cdecl ***)(int, int, int, int, int, int))(v8 + 184))(v18[0], v18[1], v18[2], v19[0], v19[1], v19[2]);
+  topEdge = panelTop;
+  leftEdge = panelLeft;
+  spriteWidthMax = DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
+  spriteHeightRedraw = DLX_GetSpriteHeight((int)portSpriteSet, 0);
+  Render_FillRect((_DWORD *)panelSurface, 0, 0, 0, spriteHeightRedraw - 1, spriteWidthMax, leftEdge, topEdge);
+  if ( panelSurface )
+    (**(void (__cdecl ***)(int, int, int, int, int, int))(panelSurface + 184))(emptyTexts[0], emptyTexts[1], emptyTexts[2], arrivedTexts[0], arrivedTexts[1], arrivedTexts[2]);
   DLXSpriteSet_ReleaseAndClear((int *)&portSpriteSet);
   Render_Present((int)g_RenderState);
   result = previousRenderDevice;
@@ -2882,20 +2882,20 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
 // 545150: using guessed type int dword_545150;
 
 //----- (00446230) --------------------------------------------------------
-int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD a2)
+int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD textScreenNumber)
 {
   int previousResourceHandle; // edi
   int v3; // ecx
   int v4; // ecx
   int v5; // ecx
-  _DWORD *v6; // eax
+  _DWORD *spriteSet; // eax
   int v7; // ecx
   _DWORD *Surface; // eax
   __int16 SpriteWidth; // ax
   int v10; // ecx
   _DWORD *v11; // esi
   _DWORD *backdropSurface; // ebp
-  __int16 v13; // ax
+  __int16 fillHeight; // ax
   int SpriteForChar; // eax
   int v15; // ecx
   int v16; // edx
@@ -2904,23 +2904,23 @@ int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD a2)
   int v19; // ecx
   unsigned int currentTime; // eax
   unsigned int deadlineTime; // edx
-  __int16 v22; // ax
+  __int16 clearHeight; // ax
   _BYTE resourcePathBuffer[100]; // [esp+0h] [ebp-8Ch] BYREF
   _DWORD *textSpriteSet; // [esp+64h] [ebp-28h] BYREF
-  int v26; // [esp+68h] [ebp-24h]
+  int renderDeviceVtbl; // [esp+68h] [ebp-24h]
   void *previousRenderDevice; // [esp+6Ch] [ebp-20h]
   int (*previousRenderHook)(); // [esp+70h] [ebp-1Ch]
 
   previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v3, spriteSetName, a2, (int)aSetrhS08x_23);
+  Debug_Log(v3, spriteSetName, textScreenNumber, (int)aSetrhS08x_23);
   sprintf_(resourcePathBuffer, "demo\\tekst%02d.s32", v4 + 1);
-  v6 = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, a2);
-  if ( v6 )
-    v6 = DLXSpriteSet_Load(v6, spriteSetName);
-  textSpriteSet = v6;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, spriteSetName, a2);
+  spriteSet = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, textScreenNumber);
+  if ( spriteSet )
+    spriteSet = DLXSpriteSet_Load(spriteSet, spriteSetName);
+  textSpriteSet = spriteSet;
+  Surface = (_DWORD *)Mem_Alloc(188, v7, spriteSetName, textScreenNumber);
   if ( Surface )
   {
     SpriteWidth = DLX_GetSpriteWidth((int)textSpriteSet, 0);
@@ -2928,14 +2928,14 @@ int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD a2)
   }
   v11 = Surface;
   backdropSurface = Surface;
-  v13 = DLX_GetSpriteWidth((int)textSpriteSet, 0);
-  Render_FillRect(0, v11, 0, 0, SCREEN_MAX_X, v13 - 1, 0, 0);
+  fillHeight = DLX_GetSpriteWidth((int)textSpriteSet, 0);
+  Render_FillRect(0, v11, 0, 0, SCREEN_MAX_X, fillHeight - 1, 0, 0);
   DLXSpriteSet_DrawText((int)textSpriteSet, 0, (int)&g_RenderEnvPaletteContext, (unsigned __int8 *)g_MapPalettePtr);
   previousRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar((int)textSpriteSet, 0);
-  v26 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v26 + 52))(
+  renderDeviceVtbl = *((_DWORD *)g_RenderDevice + 46);
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(renderDeviceVtbl + 52))(
     0,
     SpriteForChar,
     -1,
@@ -2959,8 +2959,8 @@ int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD a2)
   Debug_Log(v19, (char)g_RenderHook, (DWORD)backdropSurface, (int)aUnsetrh08x_23);
   g_RenderHook = previousRenderHook;
   Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  v22 = DLX_GetSpriteWidth((int)textSpriteSet, 0);
-  Render_FillRect(backdropSurface, 0, 0, 0, SCREEN_MAX_X, v22 - 1, 0, 0);
+  clearHeight = DLX_GetSpriteWidth((int)textSpriteSet, 0);
+  Render_FillRect(backdropSurface, 0, 0, 0, SCREEN_MAX_X, clearHeight - 1, 0, 0);
   return DLXSpriteSet_ReleaseAndClear((int *)&textSpriteSet);
 }
 // 446278: variable 'v3' is possibly undefined
@@ -3228,11 +3228,11 @@ static void YesNoWindow_RebuildButtonWidgets(unsigned char *widgets, int confirm
 }
 
 //----- (004468F0) --------------------------------------------------------
-int  YesNoWindow(int a1, _BYTE *imageData, int a3, char a4, DWORD a5)
+int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext)
 {
   int v6; // ecx
   char v7; // bl
-  _DWORD *v8; // eax
+  _DWORD *spriteSet; // eax
   int i; // esi
   int v10; // edx
   int v11; // ecx
@@ -3257,25 +3257,25 @@ int  YesNoWindow(int a1, _BYTE *imageData, int a3, char a4, DWORD a5)
   int SpriteHeight; // [esp+D4h] [ebp-18h]
   int panelLeft; // [esp+D8h] [ebp-14h]
 
-  promptText = a1;
+  promptText = text;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
-    fprintf(stderr, "[yesno] enter text=%p image=%p\n", (void *)(uintptr_t)a1, (void *)imageData);
-  Debug_Log(a3, a4, a5, (int)aYesnowindowS);
+    fprintf(stderr, "[yesno] enter text=%p image=%p\n", (void *)(uintptr_t)text, (void *)imageData);
+  Debug_Log(a3, a4, allocContext, (int)aYesnowindowS);
   previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, a4, a5, (int)aSetrhS08x_12);
+  Debug_Log((int)Render_DefaultRH, a4, allocContext, (int)aSetrhS08x_12);
   Render_Pump();
   RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
-  Render_ReleaseSurface(17, a5);
+  Render_ReleaseSurface(17, allocContext);
   if ( imageData )
-    Render_LoadResourceSprite_v4(17, imageData, v6, a4, a5);
+    Render_LoadResourceSprite_v4(17, imageData, v6, a4, allocContext);
   v7 = 0;
   scrollSpriteSet = 0;
-  v8 = (_DWORD *)Mem_Alloc(4112, v6, 0, a5);
-  if ( v8 )
-    v8 = DLXSpriteSet_Load(v8, "pergamin.s32");
-  scrollSpriteSet = v8;
+  spriteSet = (_DWORD *)Mem_Alloc(4112, v6, 0, allocContext);
+  if ( spriteSet )
+    spriteSet = DLXSpriteSet_Load(spriteSet, "pergamin.s32");
+  scrollSpriteSet = spriteSet;
   g_YesNoWindowWidgetSpriteSet = scrollSpriteSet;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] sprite_load set=%p data=%x\n", (void *)scrollSpriteSet, scrollSpriteSet ? (unsigned int)scrollSpriteSet[1024] : 0);
@@ -3292,7 +3292,7 @@ int  YesNoWindow(int a1, _BYTE *imageData, int a3, char a4, DWORD a5)
   panelTop = 150;
   SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 4u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 4u);
-  Surface = (_DWORD *)Mem_Alloc(188, v11, v7, a5);
+  Surface = (_DWORD *)Mem_Alloc(188, v11, v7, allocContext);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
   backdropSurface = (DWORD)Surface;
@@ -5923,9 +5923,9 @@ char Scenario_SetupSirArthurRosterVariantB()
 _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
 {
   int v3; // ecx
-  int v4; // eax
-  int v5; // edx
-  char v6; // bl
+  int gameDataBase; // eax
+  int buildingRecordOffset; // edx
+  char buildingFlagsByte; // bl
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
@@ -5947,11 +5947,11 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, v3);
   *(_DWORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510112) = 1000;
-  v4 = gameData;
-  v5 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-  v6 = *(_BYTE *)(v5 + gameData + 510118) & 0xF8;
-  *(_BYTE *)(v5 + gameData + 510118) = v6;
-  *(_BYTE *)(v5 + v4 + 510118) = v6 | 2;
+  gameDataBase = gameData;
+  buildingRecordOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  buildingFlagsByte = *(_BYTE *)(buildingRecordOffset + gameData + 510118) & 0xF8;
+  *(_BYTE *)(buildingRecordOffset + gameData + 510118) = buildingFlagsByte;
+  *(_BYTE *)(buildingRecordOffset + gameDataBase + 510118) = buildingFlagsByte | 2;
   *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 2u;
   *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 1u;
   *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 8u;
@@ -6301,13 +6301,13 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
   int startColumnDoubled; // edi
   int buildingRecordByteOffset; // edx
   int v13; // ecx
-  int v14; // ebx
+  int cavalryColumn; // ebx
   int v15; // ecx
   int v16; // ecx
   int v17; // ecx
   int castleRecordByteOffset; // edx
   int v19; // ecx
-  int v20; // ebx
+  int cavalryColumn2; // ebx
   int v21; // ecx
   int v22; // ecx
   int v23; // ecx
@@ -6317,7 +6317,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
   int v27; // ecx
   int v28; // ecx
   int v29; // ecx
-  int v30; // [esp-4h] [ebp-B4h]
+  int builderColumn; // [esp-4h] [ebp-B4h]
   _BYTE mapPathBuffer[100]; // [esp+0h] [ebp-B0h] BYREF
   int rowMinus1; // [esp+64h] [ebp-4Ch]
   int religionToggle; // [esp+68h] [ebp-48h]
@@ -6375,12 +6375,12 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
         Unit_UpdatePerTurn(
           BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v13);
-        v14 = colPlus2;
+        cavalryColumn = colPlus2;
         Building_LogBuiltCastleFacts(
           (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
-        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v14);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, cavalryColumn);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colPlus2);
         Unit_Create(UNIT_TYPE_ARCHER, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
@@ -6464,10 +6464,10 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
       }
       else
       {
-        v30 = startColumn;
+        builderColumn = startColumn;
         *(_DWORD *)(playerRecordPtr + 140063) = religionToggle;
         LOBYTE(religionToggle) = religionToggle ^ 1;
-        Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRow, 0, v30);
+        Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRow, 0, builderColumn);
         Unit_Create(UNIT_TYPE_PIKEMAN, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
           *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
@@ -6510,12 +6510,12 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
         Unit_UpdatePerTurn(
           BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v19);
-        v20 = colPlus2;
+        cavalryColumn2 = colPlus2;
         Building_LogBuiltCastleFacts(
           (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
-        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v20);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, cavalryColumn2);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colPlus2);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
@@ -6769,7 +6769,7 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
   signed int zoneBottom; // ebp
   int mouseY; // ebx
   int tooltipBaseLeft; // edx
-  int v6; // ecx
+  int clampedRight; // ecx
   int tooltipTextBottom; // ebx
   int cursorHeight; // edi
   DWORD v9; // ebp
@@ -6841,7 +6841,7 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
       if ( tooltipRight > 639 )
       {
         rightOverflow = tooltipRight - 639;
-        v6 = 639;
+        clampedRight = 639;
         LOWORD(tooltipRight) = 639;
         tooltipLeft = tooltipBaseLeft - rightOverflow;
       }
@@ -6851,7 +6851,7 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
         LOWORD(tooltipBottom) = 479;
         tooltipTop -= v11 - 479;
       }
-      Surface = (_DWORD *)Mem_Alloc(188, v6, v11, v9);
+      Surface = (_DWORD *)Mem_Alloc(188, clampedRight, v11, v9);
       if ( Surface )
       {
         LOWORD(v11) = tooltipBottom - tooltipTop + 1;
@@ -7325,7 +7325,7 @@ void  Map_RevealTilesInRadius2ForPlayer(int centerRow, int centerColumn, int pla
 // 44EF47: variable 'v5' is possibly undefined
 
 //----- (0044EFA0) --------------------------------------------------------
-unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisonerRecord, char slotIndex, DWORD a5)
+unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisonerRecord, char slotIndex, DWORD context)
 {
   unsigned int result; // eax
   int v7; // ecx
@@ -7353,17 +7353,17 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
   int localizedEnemyStackTexts[7]; // [esp+30h] [ebp-1Ch] BYREF
 
   localizedEnemyStackTexts[5] = prisonerRecord;
-  Debug_Log(buildingRecord, slotIndex, a5, (int)aPrisoner_tortu);
+  Debug_Log(buildingRecord, slotIndex, context, (int)aPrisoner_tortu);
   result = Rng_RandRange(0, 7);
   switch ( result )
   {
     case 0u:
     case 5u:
-      Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_0);
+      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_0);
       revealTarget = (unsigned __int8 *)Prisoner_FindRichestHiddenEnemyCastle(*(unsigned __int8 *)(v8 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v8 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, a5);
-      Prisoner_Kill(v9, (char)revealTarget, a5);
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
+      Prisoner_Kill(v9, (char)revealTarget, context);
       Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v11 + 2));
       localizedRichestCastleTexts[0] = (int)g_PrisonerTortureRichestCastleRevealTexts[0];
       localizedRichestCastleTexts[1] = (int)g_PrisonerTortureRichestCastleRevealTexts[1];
@@ -7371,14 +7371,14 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
       revealTextTablePtr = &g_PrisonerTortureRichestCastleRevealTexts[3];
       revealFormatArg = (int *)localizedRichestCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealFormatArg, v13 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
     case 1u:
     case 6u:
-      Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_1);
+      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_1);
       revealTarget = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyCastle(*(unsigned __int8 *)(v16 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v16 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, a5);
-      Prisoner_Kill(v9, (char)revealTarget, a5);
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
+      Prisoner_Kill(v9, (char)revealTarget, context);
       Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v17 + 2));
       localizedCastleTexts[0] = (int)g_PrisonerTortureCastleRevealTexts[0];
       localizedCastleTexts[1] = (int)g_PrisonerTortureCastleRevealTexts[1];
@@ -7386,14 +7386,14 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
       revealFormatArg = localizedResistanceTexts;
       revealTextTablePtr = (char **)localizedCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealTextTablePtr, v18 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
     case 2u:
     case 7u:
-      Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_2);
+      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_2);
       revealTarget = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyUnitStack(*(unsigned __int8 *)(v19 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v19 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, a5);
-      Prisoner_Kill(v9, (char)revealTarget, a5);
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
+      Prisoner_Kill(v9, (char)revealTarget, context);
       Map_RevealTilesInRadius2ForPlayer(*(__int16 *)revealTarget, *((__int16 *)revealTarget + 1), *(unsigned __int8 *)(v20 + 2));
       localizedEnemyStackTexts[0] = (int)g_PrisonerTortureEnemyStackRevealTexts[0];
       localizedEnemyStackTexts[1] = (int)g_PrisonerTortureEnemyStackRevealTexts[1];
@@ -7401,19 +7401,19 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
       revealTextTablePtr = &g_PrisonerTortureEnemyStackRevealTexts[3];
       revealFormatArg = &localizedEnemyStackTexts[3];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedEnemyStackTexts[(unsigned __int8)g_LanguageIndex], v21 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
     case 3u:
-      Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_3);
-      Prisoner_Kill(v22, slotIndex, a5);
+      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_3);
+      Prisoner_Kill(v22, slotIndex, context);
       localizedNoConfessionTexts[0] = (int)g_PrisonerTortureNoConfessionDeathTexts[0];
       localizedNoConfessionTexts[1] = (int)g_PrisonerTortureNoConfessionDeathTexts[1];
       localizedNoConfessionTexts[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
       revealTextTablePtr = &g_PrisonerTortureNoConfessionDeathTexts[3];
       revealFormatArg = localizedEnemyStackTexts;
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedNoConfessionTexts[(unsigned __int8)g_LanguageIndex], v23 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
     case 4u:
-      Debug_Log(v7, slotIndex, a5, (int)aPrisoner_tor_4);
+      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_4);
       BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, prisonerSlot)) = BUILDING_PRISONER_ACTION_NONE;
       localizedResistanceTexts[0] = (int)g_PrisonerTortureResistanceTexts[0];
       localizedResistanceTexts[1] = (int)g_PrisonerTortureResistanceTexts[1];
@@ -7421,7 +7421,7 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
       revealTextTablePtr = &g_PrisonerTortureResistanceTexts[3];
       revealFormatArg = localizedRichestCastleTexts;
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedResistanceTexts[(unsigned __int8)g_LanguageIndex], v24 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, a5, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
     default:
       return result;
   }
@@ -7873,7 +7873,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   int nationFlagSpriteP3; // eax
   int barIndex; // edx
   int maxPopulation; // ebp
-  int v24; // ecx
+  int zeroBaseline; // ecx
   int playerIndex; // esi
   int playerRecordOffset; // edi
   int playerRuntimeState; // ebx
@@ -8041,7 +8041,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   }
   barIndex = 0;
   maxPopulation = 0;
-  v24 = 0;
+  zeroBaseline = 0;
   playerIndex = 0;
   playerRecordOffset = 0;
   maxNationScore = 0;
@@ -8050,7 +8050,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   do
   {
     playerRuntimeState = *(_DWORD *)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET);
-    if ( v24 == playerRuntimeState )
+    if ( zeroBaseline == playerRuntimeState )
     {
       populationBars[barIndex] = playerRuntimeState;
       militaryStrengthBars[barIndex] = playerRuntimeState;
@@ -8073,7 +8073,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       if ( maxPopulation < population )
         maxPopulation = population;
       currentPopulation = populationBars[barIndex];
-      if ( v24 > currentPopulation && currentPopulation < minPopulation )
+      if ( zeroBaseline > currentPopulation && currentPopulation < minPopulation )
         minPopulation = populationBars[barIndex];
     }
     playerRecordOffset += 1423;

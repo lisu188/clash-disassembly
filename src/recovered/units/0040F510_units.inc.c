@@ -2994,20 +2994,20 @@ int  UnitStack_CopyFromTemplate(int destStack, int srcStack, int a3)
 //----- (00412DA0) --------------------------------------------------------
 int  BattleUnitEntry_CopyMergingPackedFlags(int result, int srcEntry)
 {
-  char v2; // bl
-  char v3; // cl
-  char v4; // bh
-  char v5; // cl
-  char v6; // bl
-  char v7; // cl
-  char v8; // ch
-  char v9; // bl
-  int v10; // ecx
-  int v11; // ecx
-  int v12; // ecx
+  char dstByte12Base; // bl
+  char srcField12Low; // cl
+  char byte12Merged; // bh
+  char srcField12Mid; // cl
+  char byte12Merged2; // bl
+  char srcField12High; // cl
+  char byte12Final; // ch
+  char dstByte13Base; // bl
+  int srcFlags13; // ecx
+  int srcFlags13b; // ecx
+  int srcFlags13c; // ecx
   int v13; // ecx
-  char v14; // bl
-  char v15; // bh
+  char dstByte17Base; // bl
+  char dstByte22Base; // bh
 
   *(_WORD *)result = *(_WORD *)srcEntry;
   *(_BYTE *)(result + 2) = *(_BYTE *)(srcEntry + 2);
@@ -3018,41 +3018,41 @@ int  BattleUnitEntry_CopyMergingPackedFlags(int result, int srcEntry)
   *(_BYTE *)(result + 9) = *(_BYTE *)(srcEntry + 9);
   *(_BYTE *)(result + 10) = *(_BYTE *)(srcEntry + 10);
   *(_BYTE *)(result + 11) = *(_BYTE *)(srcEntry + 11);
-  v2 = *(_BYTE *)(result + 12) & 0xFC;
-  v3 = *(_BYTE *)(srcEntry + 12) & 3;
-  *(_BYTE *)(result + 12) = v2;
-  v4 = v3 | v2;
-  *(_BYTE *)(result + 12) = v3 | v2;
-  v5 = *(_BYTE *)(srcEntry + 12) & 0xC;
-  *(_BYTE *)(result + 12) = v4 & 0xF3;
-  v6 = v5 | v4 & 0xF3;
-  *(_BYTE *)(result + 12) = v6;
-  v7 = *(_BYTE *)(srcEntry + 12) & 0x70;
-  *(_BYTE *)(result + 12) = v6 & 0x8F;
-  v8 = v7 | v6 & 0x8F;
-  v9 = *(_BYTE *)(result + 13);
-  *(_BYTE *)(result + 12) = v8;
-  v10 = *(_DWORD *)(srcEntry + 13);
-  *(_BYTE *)(result + 13) = v9 & 0xFE;
-  *(_DWORD *)(result + 13) |= v10 & 1;
-  v11 = *(_DWORD *)(srcEntry + 13);
+  dstByte12Base = *(_BYTE *)(result + 12) & 0xFC;
+  srcField12Low = *(_BYTE *)(srcEntry + 12) & 3;
+  *(_BYTE *)(result + 12) = dstByte12Base;
+  byte12Merged = srcField12Low | dstByte12Base;
+  *(_BYTE *)(result + 12) = srcField12Low | dstByte12Base;
+  srcField12Mid = *(_BYTE *)(srcEntry + 12) & 0xC;
+  *(_BYTE *)(result + 12) = byte12Merged & 0xF3;
+  byte12Merged2 = srcField12Mid | byte12Merged & 0xF3;
+  *(_BYTE *)(result + 12) = byte12Merged2;
+  srcField12High = *(_BYTE *)(srcEntry + 12) & 0x70;
+  *(_BYTE *)(result + 12) = byte12Merged2 & 0x8F;
+  byte12Final = srcField12High | byte12Merged2 & 0x8F;
+  dstByte13Base = *(_BYTE *)(result + 13);
+  *(_BYTE *)(result + 12) = byte12Final;
+  srcFlags13 = *(_DWORD *)(srcEntry + 13);
+  *(_BYTE *)(result + 13) = dstByte13Base & 0xFE;
+  *(_DWORD *)(result + 13) |= srcFlags13 & 1;
+  srcFlags13b = *(_DWORD *)(srcEntry + 13);
   *(_BYTE *)(result + 13) &= ~2u;
-  *(_DWORD *)(result + 13) |= v11 & 2;
-  v12 = *(_DWORD *)(srcEntry + 13);
+  *(_DWORD *)(result + 13) |= srcFlags13b & 2;
+  srcFlags13c = *(_DWORD *)(srcEntry + 13);
   *(_BYTE *)(result + 13) &= ~4u;
-  *(_DWORD *)(result + 13) |= v12 & 4;
+  *(_DWORD *)(result + 13) |= srcFlags13c & 4;
   v13 = *(_DWORD *)(srcEntry + 13);
   *(_BYTE *)(result + 13) &= ~8u;
   *(_DWORD *)(result + 13) |= v13 & 8;
   LOBYTE(v13) = *(_BYTE *)(srcEntry + 17) & 7;
-  v14 = *(_BYTE *)(result + 17) & 0xF8;
-  *(_BYTE *)(result + 17) = v14;
-  *(_BYTE *)(result + 17) = v13 | v14;
+  dstByte17Base = *(_BYTE *)(result + 17) & 0xF8;
+  *(_BYTE *)(result + 17) = dstByte17Base;
+  *(_BYTE *)(result + 17) = v13 | dstByte17Base;
   *(_DWORD *)(result + 18) = *(_DWORD *)(srcEntry + 18);
-  v15 = *(_BYTE *)(result + 22) & 0xFE;
+  dstByte22Base = *(_BYTE *)(result + 22) & 0xFE;
   LOBYTE(v13) = *(_BYTE *)(srcEntry + 22) & 1;
-  *(_BYTE *)(result + 22) = v15;
-  *(_BYTE *)(result + 22) = v13 | v15;
+  *(_BYTE *)(result + 22) = dstByte22Base;
+  *(_BYTE *)(result + 22) = v13 | dstByte22Base;
   *(_DWORD *)(result + 23) = *(_DWORD *)(srcEntry + 23);
   *(_DWORD *)(result + 27) = *(_DWORD *)(srcEntry + 27);
   return result;
@@ -3275,79 +3275,79 @@ static const char *UnitType_GetResourceKey(int unit_type)
 //----- (004131B0) --------------------------------------------------------
 char  Unit_BuildGoSpriteFilePath(char *destPath, unsigned __int8 unitType, char variantDigit)
 {
-  char *v3; // esi
-  char *v4; // edi
+  char *srcPrefix; // esi
+  char *writePrefix; // edi
   char v5; // al
   char v6; // al
-  char *v7; // esi
-  char *v8; // edi
+  char *srcKey; // esi
+  char *writeKey; // edi
   char v9; // al
   char v10; // al
-  char *v11; // esi
-  char *v12; // edi
+  char *srcVariant; // esi
+  char *writeVariant; // edi
   char v13; // al
   char v14; // al
-  char *v15; // esi
-  char *v16; // edi
+  char *srcExt; // esi
+  char *writeExt; // edi
   char result; // al
   _BYTE variantSuffix[20]; // [esp+0h] [ebp-14h] BYREF
 
-  v3 = aUnits_go;
-  v4 = destPath;
+  srcPrefix = aUnits_go;
+  writePrefix = destPath;
   variantSuffix[0] = variantDigit + 49;
   variantSuffix[1] = 0;
   do
   {
-    v5 = *v3;
-    *v4 = *v3;
+    v5 = *srcPrefix;
+    *writePrefix = *srcPrefix;
     if ( !v5 )
       break;
-    v6 = v3[1];
-    v3 += 2;
-    v4[1] = v6;
-    v4 += 2;
+    v6 = srcPrefix[1];
+    srcPrefix += 2;
+    writePrefix[1] = v6;
+    writePrefix += 2;
   }
   while ( v6 );
-  v7 = (char *)UnitType_GetResourceKey(unitType);
-  v8 = &destPath[strlen(destPath)];
+  srcKey = (char *)UnitType_GetResourceKey(unitType);
+  writeKey = &destPath[strlen(destPath)];
   do
   {
-    v9 = *v7;
-    *v8 = *v7;
+    v9 = *srcKey;
+    *writeKey = *srcKey;
     if ( !v9 )
       break;
-    v10 = v7[1];
-    v7 += 2;
-    v8[1] = v10;
-    v8 += 2;
+    v10 = srcKey[1];
+    srcKey += 2;
+    writeKey[1] = v10;
+    writeKey += 2;
   }
   while ( v10 );
-  v11 = variantSuffix;
-  v12 = &destPath[strlen(destPath)];
+  srcVariant = variantSuffix;
+  writeVariant = &destPath[strlen(destPath)];
   do
   {
-    v13 = *v11;
-    *v12 = *v11;
+    v13 = *srcVariant;
+    *writeVariant = *srcVariant;
     if ( !v13 )
       break;
-    v14 = v11[1];
-    v11 += 2;
-    v12[1] = v14;
-    v12 += 2;
+    v14 = srcVariant[1];
+    srcVariant += 2;
+    writeVariant[1] = v14;
+    writeVariant += 2;
   }
   while ( v14 );
-  v15 = a_s32;
-  v16 = &destPath[strlen(destPath)];
+  srcExt = a_s32;
+  writeExt = &destPath[strlen(destPath)];
   do
   {
-    result = *v15;
-    *v16 = *v15;
+    result = *srcExt;
+    *writeExt = *srcExt;
     if ( !result )
       break;
-    result = v15[1];
-    v15 += 2;
-    v16[1] = result;
-    v16 += 2;
+    result = srcExt[1];
+    srcExt += 2;
+    writeExt[1] = result;
+    writeExt += 2;
   }
   while ( result );
   return result;
@@ -3960,76 +3960,76 @@ char  Unit_BuildShotAnimSpritePath(char *destPath, unsigned __int8 unitType, cha
 //----- (004137B0) --------------------------------------------------------
 char  Unit_BuildShotAnimPaletteSpritePath(char *destPath, unsigned __int8 unitType)
 {
-  char *v2; // esi
-  char *v3; // edi
-  char v4; // al
-  char v5; // al
-  char *v6; // esi
-  char *v7; // edi
-  char v8; // al
-  char v9; // al
-  char *v10; // esi
-  char *v11; // edi
-  char v12; // al
-  char v13; // al
-  char *v14; // esi
-  char *v15; // edi
+  char *prefixSrc; // esi
+  char *destCursor; // edi
+  char prefixChar; // al
+  char prefixCharNext; // al
+  char *resourceKeySrc; // esi
+  char *resourceKeyCursor; // edi
+  char resourceKeyChar; // al
+  char resourceKeyCharNext; // al
+  char *paletteSuffixSrc; // esi
+  char *paletteSuffixCursor; // edi
+  char paletteSuffixChar; // al
+  char paletteSuffixCharNext; // al
+  char *extSuffixSrc; // esi
+  char *extSuffixCursor; // edi
   char result; // al
 
-  v2 = aUnits_at_0;
-  v3 = destPath;
+  prefixSrc = aUnits_at_0;
+  destCursor = destPath;
   do
   {
-    v4 = *v2;
-    *v3 = *v2;
-    if ( !v4 )
+    prefixChar = *prefixSrc;
+    *destCursor = *prefixSrc;
+    if ( !prefixChar )
       break;
-    v5 = v2[1];
-    v2 += 2;
-    v3[1] = v5;
-    v3 += 2;
+    prefixCharNext = prefixSrc[1];
+    prefixSrc += 2;
+    destCursor[1] = prefixCharNext;
+    destCursor += 2;
   }
-  while ( v5 );
-  v6 = (char *)UnitType_GetResourceKey(unitType);
-  v7 = &destPath[strlen(destPath)];
+  while ( prefixCharNext );
+  resourceKeySrc = (char *)UnitType_GetResourceKey(unitType);
+  resourceKeyCursor = &destPath[strlen(destPath)];
   do
   {
-    v8 = *v6;
-    *v7 = *v6;
-    if ( !v8 )
+    resourceKeyChar = *resourceKeySrc;
+    *resourceKeyCursor = *resourceKeySrc;
+    if ( !resourceKeyChar )
       break;
-    v9 = v6[1];
-    v6 += 2;
-    v7[1] = v9;
-    v7 += 2;
+    resourceKeyCharNext = resourceKeySrc[1];
+    resourceKeySrc += 2;
+    resourceKeyCursor[1] = resourceKeyCharNext;
+    resourceKeyCursor += 2;
   }
-  while ( v9 );
-  v10 = aUnitSpritePaletteSuffix;
-  v11 = &destPath[strlen(destPath)];
+  while ( resourceKeyCharNext );
+  paletteSuffixSrc = aUnitSpritePaletteSuffix;
+  paletteSuffixCursor = &destPath[strlen(destPath)];
   do
   {
-    v12 = *v10;
-    *v11 = *v10;
-    if ( !v12 )
+    paletteSuffixChar = *paletteSuffixSrc;
+    *paletteSuffixCursor = *paletteSuffixSrc;
+    if ( !paletteSuffixChar )
       break;
-    v13 = v10[1];
-    v10 += 2;
-    v11[1] = v13;
-    v11 += 2;
+    paletteSuffixCharNext = paletteSuffixSrc[1];
+    paletteSuffixSrc += 2;
+    paletteSuffixCursor[1] = paletteSuffixCharNext;
+    paletteSuffixCursor += 2;
   }
-  while ( v13 );
-  v14 = a_s32_2;
-  v15 = &destPath[strlen(destPath)];
+  while ( paletteSuffixCharNext );
+  extSuffixSrc = a_s32_2;
+  extSuffixCursor = &destPath[strlen(destPath)];
   do
   {
-    result = *v14;
-    *v15 = *v14;
+    result = *extSuffixSrc;
+    *extSuffixCursor = *extSuffixSrc;
     if ( !result )
       break;
-    result = v14[1];
-    v14 += 2;
-    v15[1] = result;
-    v15 += 2;
+    result = extSuffixSrc[1];
+    extSuffixSrc += 2;
+    extSuffixCursor[1] = result;
+    extSuffixCursor += 2;
   }
   while ( result );
   return result;
@@ -5207,17 +5207,17 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
 {
   int buildingRecordOffset; // edi
   DWORD buildingKind; // ebp
-  __int64 v7; // rdi
-  int v8; // eax
-  int v9; // edx
+  __int64 buildingRowCol; // rdi
+  int nextRowByteOffset; // eax
+  int stackRecordIndex; // edx
   int sourceColumn; // ebx
   int *rawPath; // ecx
-  int *v12; // eax
-  int *v13; // ecx
+  int *reverseBuffer; // eax
+  int *forwardPath; // ecx
   int *reversePath; // edx
   int poppedCount; // ebx
-  int v16; // eax
-  int v17; // ecx
+  int occupantNextRowByteOffset; // eax
+  int result; // ecx
   int forwardRawCount; // eax
   int reverseCount; // ebx
   int candidateStep; // eax
@@ -5230,38 +5230,38 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   buildingIndexWord = buildingIndex;
   buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
   Debug_Log(a3, a4, a5, (int)aUnit_movetra_3);
-  HIDWORD(v7) = *(unsigned __int8 *)(gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET);
+  HIDWORD(buildingRowCol) = *(unsigned __int8 *)(gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET);
   buildingKind = *(char *)(gameData + buildingRecordOffset + 509678);
-  LODWORD(v7) = *(unsigned __int8 *)(gameData + buildingRecordOffset + 509675);
-  *(_WORD *)(TILE_INDEX(HIDWORD(v7), v7)) = -1;
+  LODWORD(buildingRowCol) = *(unsigned __int8 *)(gameData + buildingRecordOffset + 509675);
+  *(_WORD *)(TILE_INDEX(HIDWORD(buildingRowCol), buildingRowCol)) = -1;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
-    v8 = 200 * (HIDWORD(v7) + 1);
-    *(_WORD *)(v8 + gameData + 2 * v7 + TILE_MAP_OFFSET) = -1;
-    *(_WORD *)(gameData + v8 + 2 * v7 + 556376) = -1;
-    *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556376) = -1;
+    nextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
+    *(_WORD *)(nextRowByteOffset + gameData + 2 * buildingRowCol + TILE_MAP_OFFSET) = -1;
+    *(_WORD *)(gameData + nextRowByteOffset + 2 * buildingRowCol + 556376) = -1;
+    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * buildingRowCol + 556376) = -1;
   }
   WorldMap_DisableFrameRedraw();
-  v9 *= 145;
-  sourceColumn = *(__int16 *)(gameData + 5 * v9 + 147176);
-  rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(gameData + 5 * v9 + UNIT_STACK_TABLE_OFFSET), SHIDWORD(v7), sourceColumn, buildingKind, v7);
+  stackRecordIndex *= 145;
+  sourceColumn = *(__int16 *)(gameData + 5 * stackRecordIndex + 147176);
+  rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(gameData + 5 * stackRecordIndex + UNIT_STACK_TABLE_OFFSET), SHIDWORD(buildingRowCol), sourceColumn, buildingKind, buildingRowCol);
   if ( rawPath )
   {
-    v12 = (int *)Mem_Alloc(404, (int)rawPath, sourceColumn, buildingKind);
-    reversePath = v12;
-    if ( v12 )
-      *v12 = 0;
-    for ( ; *v13; reversePath[reverseCount + 1] = stepForward )
+    reverseBuffer = (int *)Mem_Alloc(404, (int)rawPath, sourceColumn, buildingKind);
+    reversePath = reverseBuffer;
+    if ( reverseBuffer )
+      *reverseBuffer = 0;
+    for ( ; *forwardPath; reversePath[reverseCount + 1] = stepForward )
     {
       while ( 1 )
       {
-        forwardRawCount = *v13 - 1;
-        *v13 = forwardRawCount;
+        forwardRawCount = *forwardPath - 1;
+        *forwardPath = forwardRawCount;
         reverseCount = *reversePath;
-        stepForward = v13[forwardRawCount + 1];
+        stepForward = forwardPath[forwardRawCount + 1];
         if ( *reversePath < 100 )
           break;
-        if ( !*v13 )
+        if ( !*forwardPath )
           goto LABEL_8;
       }
       *reversePath = reverseCount + 1;
@@ -5270,16 +5270,16 @@ LABEL_8:
     while ( *reversePath > 1 )
     {
       candidateStep = reversePath[*reversePath - 1];
-      if ( v7 != __PAIR64__((unsigned __int8)candidateStep, BYTE1(candidateStep)) )
+      if ( buildingRowCol != __PAIR64__((unsigned __int8)candidateStep, BYTE1(candidateStep)) )
       {
         if ( buildingKind != 1 && buildingKind != 2 )
           break;
-        if ( SHIDWORD(v7) > (unsigned __int8)candidateStep )
+        if ( SHIDWORD(buildingRowCol) > (unsigned __int8)candidateStep )
           break;
-        if ( (unsigned __int8)candidateStep > HIDWORD(v7) + 1 )
+        if ( (unsigned __int8)candidateStep > HIDWORD(buildingRowCol) + 1 )
           break;
         candidateColumn = BYTE1(candidateStep);
-        if ( (int)v7 > candidateColumn || candidateColumn > (int)v7 + 1 )
+        if ( (int)buildingRowCol > candidateColumn || candidateColumn > (int)buildingRowCol + 1 )
           break;
       }
       --*reversePath;
@@ -5293,25 +5293,25 @@ LABEL_8:
         break;
       *reversePath = poppedCount - 1;
       poppedStep = reversePath[poppedCount];
-      destCount = *v13;
-      if ( *v13 < 100 )
+      destCount = *forwardPath;
+      if ( *forwardPath < 100 )
       {
-        *v13 = destCount + 1;
-        v13[destCount + 1] = poppedStep;
+        *forwardPath = destCount + 1;
+        forwardPath[destCount + 1] = poppedStep;
       }
     }
     j__nfree_();
   }
-  *(_WORD *)(2 * v7 + gameData + TILE_ROW_STRIDE * HIDWORD(v7) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  *(_WORD *)(2 * buildingRowCol + gameData + TILE_ROW_STRIDE * HIDWORD(buildingRowCol) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
-    v16 = 200 * (HIDWORD(v7) + 1);
-    *(_WORD *)(v16 + gameData + 2 * v7 + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + v16 + 2 * v7 + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    occupantNextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
+    *(_WORD *)(occupantNextRowByteOffset + gameData + 2 * buildingRowCol + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + occupantNextRowByteOffset + 2 * buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   }
   Render_LoadResourceSprite_v2();
-  return v17;
+  return result;
 }
 // 415A64: variable 'v9' is possibly undefined
 // 415AAD: variable 'v13' is possibly undefined
@@ -7314,7 +7314,7 @@ static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_c
 }
 
 //----- (00419410) --------------------------------------------------------
-int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int transitionDuration, DWORD allocContext)
+int  UI_DrawWidgetIconWithTransition(unsigned __int16 *iconWidget, int animate, int transitionDuration, DWORD allocContext)
 {
   int result; // eax
   unsigned char *widget; // edi
@@ -7328,7 +7328,7 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
   int v7; // ecx
   _DWORD *Surface; // eax
   int v9; // ecx
-  _DWORD *v10; // eax
+  _DWORD *iconSurface; // eax
   void *renderedSurface; // ebp
   int renderedSurfaceHandle; // edi
   void *prevRenderDevice; // eax
@@ -7356,7 +7356,7 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
   unsigned __int16 transRight; // [esp+4Ch] [ebp-18h]
   unsigned __int16 transBottom; // [esp+50h] [ebp-14h]
 
-  widget = (unsigned char *)a1;
+  widget = (unsigned char *)iconWidget;
   fadeDuration = transitionDuration;
   left = *(_DWORD *)(widget + 0);
   top = *(_DWORD *)(widget + 4);
@@ -7367,10 +7367,10 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
   else
     sprite_set = 0;
   overlay_sprite_index = *(_DWORD *)(widget + 24);
-  if ( (a1[4] & 1) != 0 )
-    result = *((_DWORD *)a1 + 4);
+  if ( (iconWidget[4] & 1) != 0 )
+    result = *((_DWORD *)iconWidget + 4);
   else
-    result = *((_DWORD *)a1 + 5);
+    result = *((_DWORD *)iconWidget + 5);
   spriteIndex = result;
   if ( !animate )
   {
@@ -7390,10 +7390,10 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
     cursorOverlayPresented = g_CursorOverlayPresented;
     if ( animate && g_CursorOverlayPresented )
     {
-      rectRight = a1[2] + DLX_GetSpriteWidth(sprite_set, result) - 1;
+      rectRight = iconWidget[2] + DLX_GetSpriteWidth(sprite_set, result) - 1;
       SpriteHeight = DLX_GetSpriteHeight(sprite_set, spriteIndex);
-      LOWORD(transitionDuration) = a1[2];
-      RenderState_PumpIfRectInViewBounds(g_RenderState, *a1, *a1 + SpriteHeight - 1, transitionDuration, rectRight);
+      LOWORD(transitionDuration) = iconWidget[2];
+      RenderState_PumpIfRectInViewBounds(g_RenderState, *iconWidget, *iconWidget + SpriteHeight - 1, transitionDuration, rectRight);
     }
     if ( animate )
     {
@@ -7404,9 +7404,9 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
       {
         iconSprite = DLX_GetSpriteForChar(sprite_set, spriteIndex);
         result = Compat_RenderDeviceDrawMenuSprite(left, top, iconSprite, 0);
-        if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
+        if ( (iconWidget[4] & 4) != 0 && *((_DWORD *)iconWidget + 6) != -1 )
         {
-          overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
+          overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)iconWidget + 6));
           result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
         }
         if ( cursorOverlayPresented )
@@ -7425,12 +7425,12 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
         Surface = Render_CreateSurface((int)Surface, transSpriteHeight, SpriteWidth);
       }
       savedSurface = (int)Surface;
-      v10 = (_DWORD *)Mem_Alloc(188, v9, transitionDuration, allocContext);
-      if ( v10 )
-        v10 = Render_CreateSurface((int)v10, transSpriteHeight, SpriteWidth);
-      renderedSurface = v10;
-      renderedSurfaceHandle = (int)v10;
-      Render_FillRect(g_RenderDevice, (_DWORD *)savedSurface, a1[2], *a1, transSpriteHeight + *a1 - 1, SpriteWidth + a1[2] - 1, 0, 0);
+      iconSurface = (_DWORD *)Mem_Alloc(188, v9, transitionDuration, allocContext);
+      if ( iconSurface )
+        iconSurface = Render_CreateSurface((int)iconSurface, transSpriteHeight, SpriteWidth);
+      renderedSurface = iconSurface;
+      renderedSurfaceHandle = (int)iconSurface;
+      Render_FillRect(g_RenderDevice, (_DWORD *)savedSurface, iconWidget[2], *iconWidget, transSpriteHeight + *iconWidget - 1, SpriteWidth + iconWidget[2] - 1, 0, 0);
       prevRenderDevice = g_RenderDevice;
       g_RenderDevice = renderedSurface;
       restoreRenderDevice = prevRenderDevice;
@@ -7446,13 +7446,13 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
       while ( Time_Now(v18, v20) < animDeadline )
       {
         nowTime = Time_Now(v21, animStartTime);
-        Render_BlendSurfaceRect(0, savedSurface, 0, renderedSurfaceHandle, 0, transBottom, transRight, *a1, a1[2], 255 * (nowTime - v23) / fadeDuration);
+        Render_BlendSurfaceRect(0, savedSurface, 0, renderedSurfaceHandle, 0, transBottom, transRight, *iconWidget, iconWidget[2], 255 * (nowTime - v23) / fadeDuration);
         if ( g_ActiveDialogAnimationTickHook )
           g_ActiveDialogAnimationTickHook();
       }
-      result = Render_FillRect((_DWORD *)renderedSurfaceHandle, 0, 0, 0, transBottom, transRight, *a1, a1[2]);
+      result = Render_FillRect((_DWORD *)renderedSurfaceHandle, 0, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
       if ( g_RenderDevice != &g_MainRenderDevice )
-        result = Render_FillRect((_DWORD *)renderedSurfaceHandle, g_RenderDevice, 0, 0, transBottom, transRight, *a1, a1[2]);
+        result = Render_FillRect((_DWORD *)renderedSurfaceHandle, g_RenderDevice, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
       if ( savedSurface )
         result = RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)savedSurface, 2);
       if ( renderedSurfaceHandle )
@@ -7463,9 +7463,9 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
       iconSprite = DLX_GetSpriteForChar(sprite_set, spriteIndex);
       result = Compat_RenderDeviceDrawMenuSprite(left, top, iconSprite, 0);
     }
-    if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
+    if ( (iconWidget[4] & 4) != 0 && *((_DWORD *)iconWidget + 6) != -1 )
     {
-      overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
+      overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)iconWidget + 6));
       result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
     }
     if ( animate && cursorOverlayPresented )
@@ -7547,12 +7547,12 @@ int  UI_SetActiveWidgetTable(int result)
 // 526A2C: using guessed type int dword_526A2C;
 
 //----- (004197A0) --------------------------------------------------------
-BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
+BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
 {
   int cursorX; // ebx
   int TextXOffset; // eax
   int v4; // edx
-  int v5; // edx
+  int textBottom; // edx
   int v6; // ecx
   int v7; // ebx
   int v8; // edx
@@ -7567,7 +7567,7 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
   int v17; // ecx
   int v18; // edx
   int v19; // edx
-  int v20; // eax
+  int fadeInNow; // eax
   int v21; // ecx
   int v22; // edx
   int v23; // ecx
@@ -7575,7 +7575,7 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
   int v25; // ecx
   int v26; // edx
   int v27; // ecx
-  int v28; // eax
+  int fadeOutNow; // eax
   int v29; // edx
   int savedTextSlot; // [esp+0h] [ebp-64h]
   int rectRight; // [esp+4h] [ebp-60h]
@@ -7595,17 +7595,17 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
   savedRenderDevice = g_RenderDevice;
   cursorY = g_MouseCursorRawY >> g_CursorCoordShift;
   cursorX = g_MouseCursorRawX >> g_CursorCoordShift;
-  rectRight = (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)(a1 + 4 * (unsigned __int8)g_LanguageIndex + 36))
+  rectRight = (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)(widget + 4 * (unsigned __int8)g_LanguageIndex + 36))
       + (g_MouseCursorRawX >> g_CursorCoordShift);
   TextXOffset = UI_GetTextXOffset(g_ActiveTextSpriteSlot);
-  v5 = TextXOffset + v4;
+  textBottom = TextXOffset + v4;
   rectLeft = cursorX;
   v6 = rectRight;
-  rectBottom = v5;
+  rectBottom = textBottom;
   if ( cursorX + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12) > rectRight )
     rectRight = cursorX + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12);
   v7 = *(_DWORD *)(g_ActiveCursorDescriptorPtr + 16);
-  if ( cursorY + v7 > v5 )
+  if ( cursorY + v7 > textBottom )
     rectBottom = cursorY + v7;
   if ( rectRight > 639 )
   {
@@ -7639,15 +7639,15 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
   textSurfaceHandle = (int)textSurface;
   Render_Present((int)&g_RenderState);
   g_RenderDevice = textSurface;
-  UI_DrawText(0, 0, *(_DWORD *)(a1 + 4 * (unsigned __int8)g_LanguageIndex + 36));
+  UI_DrawText(0, 0, *(_DWORD *)(widget + 4 * (unsigned __int8)g_LanguageIndex + 36));
   fadeInStart = Time_Now(v16, v15);
   v18 = 30;
   rectWidthIn = rectRight - rectLeft;
   rectHeightIn = rectBottom - cursorY;
   while ( Time_Now(v17, v18) < (unsigned int)(fadeInStart + 30) )
   {
-    v20 = Time_Now(fadeInStart, v19);
-    Render_BlendSurfaceRect(0, backgroundSurface, 0, (int)textSurface, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY, 255 * (v20 - v21) / 0x1Eu);
+    fadeInNow = Time_Now(fadeInStart, v19);
+    Render_BlendSurfaceRect(0, backgroundSurface, 0, (int)textSurface, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY, 255 * (fadeInNow - v21) / 0x1Eu);
   }
   Render_FillRect(textSurface, 0, 0, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY);
   Render_FlipRect((int)&g_RenderState, 0);
@@ -7659,8 +7659,8 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD allocContext)
   rectHeightOut = rectBottom - cursorY;
   while ( Time_Now(v25, v26) < fadeOutDeadline )
   {
-    v28 = Time_Now(v27, fadeOutStart);
-    Render_BlendSurfaceRect(0, textSurfaceHandle, 0, backgroundSurface, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY, 255 * (v28 - v29) / 0x1Eu);
+    fadeOutNow = Time_Now(v27, fadeOutStart);
+    Render_BlendSurfaceRect(0, textSurfaceHandle, 0, backgroundSurface, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY, 255 * (fadeOutNow - v29) / 0x1Eu);
   }
   Render_FillRect((_DWORD *)backgroundSurface, 0, 0, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY);
   if ( backgroundSurface )
@@ -8338,16 +8338,16 @@ LABEL_50:
 int  Unit_Info(
         int leftArg,
         int topArg,
-        int a3,
+        int iconSpriteIndex,
         unsigned __int8 *unitRecord,
         DWORD allocContext,
         DWORD a6)
 {
   int v8; // ecx
   int unitType; // eax
-  char v10; // bl
+  char ownerIndex; // bl
   int v11; // ecx
-  _DWORD *v12; // eax
+  _DWORD *unitSpriteSet; // eax
   int v13; // ecx
   _DWORD *Surface; // eax
   int SpriteForChar; // eax
@@ -8355,16 +8355,16 @@ int  Unit_Info(
   int animFrameIndex; // esi
   int v18; // ecx
   int v19; // ecx
-  unsigned int v20; // eax
+  unsigned int currentTick; // eax
   unsigned int v21; // edx
   int v22; // ecx
-  int v23; // eax
+  int animSprite; // eax
   int v25; // ecx
-  char v26[100]; // [esp+0h] [ebp-8Ch] BYREF
+  char infoBuffer[100]; // [esp+0h] [ebp-8Ch] BYREF
   _DWORD *spriteSet; // [esp+64h] [ebp-28h] BYREF
   int screenTop; // [esp+68h] [ebp-24h]
   int renderSpriteObj; // [esp+6Ch] [ebp-20h]
-  _DWORD *v30; // [esp+70h] [ebp-1Ch]
+  _DWORD *surface; // [esp+70h] [ebp-1Ch]
   int screenLeft; // [esp+74h] [ebp-18h]
   int animSpriteLeft; // [esp+78h] [ebp-14h]
   int lastAnimTick; // [esp+7Ch] [ebp-10h]
@@ -8377,26 +8377,26 @@ int  Unit_Info(
     || unitType == UNIT_TYPE_GOLD_CARGO
     || unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
     || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-    return UI_DrawSpecialUnitInfoPane(screenLeft, screenTop, v8, unitRecord, allocContext, a3);
-  v10 = unitRecord[2];
-  UI_BeginUnitInfo(v26, *unitRecord, v10);
-  v12 = (_DWORD *)Mem_Alloc(4112, v11, v10, allocContext);
-  if ( v12 )
-    v12 = DLXSpriteSet_Load(v12, v10);
-  spriteSet = v12;
+    return UI_DrawSpecialUnitInfoPane(screenLeft, screenTop, v8, unitRecord, allocContext, iconSpriteIndex);
+  ownerIndex = unitRecord[2];
+  UI_BeginUnitInfo(infoBuffer, *unitRecord, ownerIndex);
+  unitSpriteSet = (_DWORD *)Mem_Alloc(4112, v11, ownerIndex, allocContext);
+  if ( unitSpriteSet )
+    unitSpriteSet = DLXSpriteSet_Load(unitSpriteSet, ownerIndex);
+  spriteSet = unitSpriteSet;
   if ( a6 )
   {
-    v10 = g_MapPalettePtr;
-    DLXSpriteSet_DrawText((int)v12, 0, a6, (unsigned __int8 *)g_MapPalettePtr);
+    ownerIndex = g_MapPalettePtr;
+    DLXSpriteSet_DrawText((int)unitSpriteSet, 0, a6, (unsigned __int8 *)g_MapPalettePtr);
   }
   Render_Pump();
-  Surface = (_DWORD *)Mem_Alloc(188, v13, v10, a6);
+  Surface = (_DWORD *)Mem_Alloc(188, v13, ownerIndex, a6);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, 201, 116);
-  v30 = Surface;
+  surface = Surface;
   Render_FillRect(0, Surface, (unsigned __int16)screenTop, (unsigned __int16)screenLeft, screenLeft + 200, screenTop + 115, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  UI_DrawUnitInfoPane(screenLeft, screenTop, a6, (__int16 *)unitRecord, a6, a3);
+  UI_DrawUnitInfoPane(screenLeft, screenTop, a6, (__int16 *)unitRecord, a6, iconSpriteIndex);
   SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 0);
   animSpriteTop = screenTop + 5;
   renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
@@ -8419,16 +8419,16 @@ int  Unit_Info(
     DD_Pump((int)g_RenderState, a6);
     if ( !a6 )
     {
-      v20 = Time_Now(v19, lastAnimTick + 10);
-      if ( v21 < v20 )
+      currentTick = Time_Now(v19, lastAnimTick + 10);
+      if ( v21 < currentTick )
       {
         lastAnimTick = Time_Now(v22, v21);
         animFrameIndex = (animFrameIndex + 1) % 8;
-        v23 = DLX_GetSpriteForChar((int)spriteSet, animFrameIndex);
+        animSprite = DLX_GetSpriteForChar((int)spriteSet, animFrameIndex);
         renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj + 52))(
           animSpriteTop,
-          v23,
+          animSprite,
           -1,
           -1,
           -1,
@@ -8439,7 +8439,7 @@ int  Unit_Info(
       }
     }
   }
-  Render_FillRect(v30, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
+  Render_FillRect(surface, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
   Render_Present((int)g_RenderState);
   if ( v25 )
     (**(void (***)(void))(v25 + 184))();
@@ -8459,22 +8459,22 @@ int  Unit_Info(
 
 //----- (0041A960) --------------------------------------------------------
 int  UI_DrawSpecialUnitInfoPane(
-        int a1,
-        int a2,
+        int paneLeft,
+        int paneTop,
         int a3,
         unsigned __int8 *unitRecord,
         DWORD allocContext,
         int iconSpriteIndex)
 {
-  _DWORD *v7; // eax
+  _DWORD *iconSet; // eax
   char ownerIndex; // bl
   int v9; // ecx
-  _DWORD *v10; // eax
+  _DWORD *animSet; // eax
   int v11; // ecx
   _DWORD *Surface; // eax
   int SpriteForChar; // eax
   DWORD renderSpriteObj; // ebp
-  int v15; // eax
+  int typeSprite; // eax
   int renderSpriteObj2; // edi
   char *unitName; // ebx
   int v18; // edx
@@ -8485,10 +8485,10 @@ int  UI_DrawSpecialUnitInfoPane(
   unsigned int v23; // eax
   unsigned int v24; // edx
   int v25; // ecx
-  int v26; // eax
-  int v27; // eax
-  _DWORD *v28; // esi
-  char v30[100]; // [esp+0h] [ebp-90h] BYREF
+  int animSprite; // eax
+  int extraIconSprite; // eax
+  _DWORD *finalSurface; // esi
+  char unitInfoBuf[100]; // [esp+0h] [ebp-90h] BYREF
   _DWORD *iconSpriteSet; // [esp+64h] [ebp-2Ch] BYREF
   _DWORD *animSpriteSet; // [esp+68h] [ebp-28h] BYREF
   _DWORD *surface; // [esp+6Ch] [ebp-24h]
@@ -8497,18 +8497,18 @@ int  UI_DrawSpecialUnitInfoPane(
   int animSpriteTop; // [esp+78h] [ebp-18h]
   int animSpriteLeft; // [esp+7Ch] [ebp-14h]
 
-  screenLeft = a1;
-  screenTop = a2;
-  v7 = (_DWORD *)Mem_Alloc(4112, a3, (char)unitRecord, allocContext);
-  if ( v7 )
-    v7 = DLXSpriteSet_Load(v7, (char)unitRecord);
-  iconSpriteSet = v7;
+  screenLeft = paneLeft;
+  screenTop = paneTop;
+  iconSet = (_DWORD *)Mem_Alloc(4112, a3, (char)unitRecord, allocContext);
+  if ( iconSet )
+    iconSet = DLXSpriteSet_Load(iconSet, (char)unitRecord);
+  iconSpriteSet = iconSet;
   ownerIndex = unitRecord[2];
-  UI_BeginUnitInfo(v30, *unitRecord, ownerIndex);
-  v10 = (_DWORD *)Mem_Alloc(4112, v9, ownerIndex, allocContext);
-  if ( v10 )
-    v10 = DLXSpriteSet_Load(v10, ownerIndex);
-  animSpriteSet = v10;
+  UI_BeginUnitInfo(unitInfoBuf, *unitRecord, ownerIndex);
+  animSet = (_DWORD *)Mem_Alloc(4112, v9, ownerIndex, allocContext);
+  if ( animSet )
+    animSet = DLXSpriteSet_Load(animSet, ownerIndex);
+  animSpriteSet = animSet;
   Render_Pump();
   Surface = (_DWORD *)Mem_Alloc(188, v11, ownerIndex, allocContext);
   if ( Surface )
@@ -8544,11 +8544,11 @@ int  UI_DrawSpecialUnitInfoPane(
     default:
       break;
   }
-  v15 = DLX_GetSpriteForChar((int)iconSpriteSet, iconSpriteIndex);
+  typeSprite = DLX_GetSpriteForChar((int)iconSpriteSet, iconSpriteIndex);
   renderSpriteObj2 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj2 + 52))(
     screenTop + 20,
-    v15,
+    typeSprite,
     -1,
     -1,
     -1,
@@ -8564,11 +8564,11 @@ int  UI_DrawSpecialUnitInfoPane(
   UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, (int)unitName);
   if ( (unitRecord[13] & 8) != 0 )
   {
-    v27 = DLX_GetSpriteForChar((int)iconSpriteSet, 27);
+    extraIconSprite = DLX_GetSpriteForChar((int)iconSpriteSet, 27);
     LOBYTE(unitName) = screenLeft - 105;
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       screenTop + 52,
-      v27,
+      extraIconSprite,
       -1,
       -1,
       -1,
@@ -8589,11 +8589,11 @@ int  UI_DrawSpecialUnitInfoPane(
     {
       lastFrameTime = Time_Now(v25, v24);
       animFrameIndex = (animFrameIndex + 1) % 8;
-      v26 = DLX_GetSpriteForChar((int)animSpriteSet, animFrameIndex);
+      animSprite = DLX_GetSpriteForChar((int)animSpriteSet, animFrameIndex);
       LOBYTE(unitName) = animSpriteLeft;
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         animSpriteTop,
-        v26,
+        animSprite,
         -1,
         -1,
         -1,
@@ -8604,10 +8604,10 @@ int  UI_DrawSpecialUnitInfoPane(
     }
   }
   Render_FillRect(surface, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
-  v28 = surface;
+  finalSurface = surface;
   Render_Present((int)g_RenderState);
-  if ( v28 )
-    (*(void (**)(void))v28[46])();
+  if ( finalSurface )
+    (*(void (**)(void))finalSurface[46])();
   DLXSpriteSet_ReleaseAndClear((int *)&iconSpriteSet);
   return DLXSpriteSet_ReleaseAndClear((int *)&animSpriteSet);
 }
@@ -9051,7 +9051,7 @@ LABEL_52:
 void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWORD a4, double a5)
 {
   unsigned __int8 *buildingRecord; // ebp
-  BOOL v8; // eax
+  BOOL bothHumanControlled; // eax
   int xDelta; // eax
   int buildingY; // edx
   int yDelta; // eax
@@ -9073,13 +9073,13 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
   _DWORD *frameSpriteSet; // eax
   char v40; // bl
   int v41; // ecx
-  DWORD v42; // ebp
+  DWORD savedRefreshIndex; // ebp
   __int16 *attackerSlots; // esi
   signed int autoresolveSquadCount; // eax
   _WORD *v45; // ecx
   int v48; // edx
   int defenderGarrisonCount; // [esp-10h] [ebp-364h]
-  int v52; // [esp-Ch] [ebp-360h]
+  int defenderSpecialFlag; // [esp-Ch] [ebp-360h]
   int defenderBuildingRecord; // [esp-8h] [ebp-35Ch]
   char attackerSpecialEntries[404]; // [esp+0h] [ebp-354h] BYREF
   char garrisonSpecialEntries[404]; // [esp+194h] [ebp-1C0h] BYREF
@@ -9096,8 +9096,8 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
   Render_DrawSprite_v3(attackerStackIndex, BUILDING_RECORD_SIZE * buildingIndex);
   attackerStack = (__int16 *)UNIT_STACK(attackerStackIndex);
   buildingRecord = (unsigned __int8 *)(UNIT_RECORD(buildingIndex));
-  v8 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)attackerStack)) && PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
-  bothPlayersHuman = v8;
+  bothHumanControlled = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)attackerStack)) && PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
+  bothPlayersHuman = bothHumanControlled;
   if ( UnitStack_HasNormalCombatUnits((intptr_t)attackerStack) )
   {
     xDelta = *attackerStack - *buildingRecord;
@@ -9163,11 +9163,11 @@ LABEL_47:
               if ( attackerStack[3] == -1 )
                 Rules_UnlinkArmyFact(attackerStack, a5);
               WorldMap_SyncSelectionForHumanPlayer((DWORD)buildingRecord);
-              v42 = selectionRefreshIndex;
+              savedRefreshIndex = selectionRefreshIndex;
               UnitStackSelection_RefreshForSelectedStack(selectionRefreshIndex);
-              if ( v42 )
-                WorldMap_RenderHook(v42);
-              Render_DrawSprite_v3(attackerStackIndex, v42);
+              if ( savedRefreshIndex )
+                WorldMap_RenderHook(savedRefreshIndex);
+              Render_DrawSprite_v3(attackerStackIndex, savedRefreshIndex);
               return;
             }
             Building_CompactGarrison(buildingRecord, (unsigned __int8 *)attackerStack, a5);
@@ -9185,13 +9185,13 @@ LABEL_47:
             if ( !useManualBattle )
             {
               defenderBuildingRecord = buildingRecordOffset + gameData + BUILDING_TABLE_OFFSET;
-              v52 = buildingHasSpecial;
+              defenderSpecialFlag = buildingHasSpecial;
               defenderGarrisonCount = Building_CountGarrison(defenderBuildingRecord);
               attackerSlots = attackerStack + 3;
               v40 = (char)attackerHasSpecial;
               autoresolveSquadCount = Unit_GetSquadCount((int)attackerStack);
               Diagnostics_TraceWorldMapActionEvent("unit_attack_building_autoresolve", attackerStackIndex, buildingIndex, autoresolveSquadCount, defenderGarrisonCount);
-              CalculateBattleResult(attackerSlots, autoresolveSquadCount, v45, attackerHasSpecial, (DWORD)buildingRecord, defenderGarrisonCount, v52, defenderBuildingRecord, 0);
+              CalculateBattleResult(attackerSlots, autoresolveSquadCount, v45, attackerHasSpecial, (DWORD)buildingRecord, defenderGarrisonCount, defenderSpecialFlag, defenderBuildingRecord, 0);
               Diagnostics_TraceWorldMapActionEvent(
                 "unit_attack_building_autoresolve_done",
                 attackerStackIndex,
@@ -9685,7 +9685,7 @@ signed int  UI_PromptLeadTroopsPersonally(
   _DWORD *promptSpriteSetTmp; // eax
   void *v10; // ecx
   int SpriteForChar; // eax
-  int v12; // eax
+  int thirdOptionSprite; // eax
   int v13; // edx
   int v14; // edx
   int attackerSlotIndex; // esi
@@ -9693,13 +9693,13 @@ signed int  UI_PromptLeadTroopsPersonally(
   char attackerOwner; // bl
   int v18; // ecx
   _DWORD *attackerUnitSpriteSet; // eax
-  int v20; // eax
+  int attackerUnitSprite; // eax
   int defenderSlotIndex; // esi
   unsigned __int8 *defenderSlotPtr; // edi
   char defenderOwner; // bl
   int v24; // ecx
   _DWORD *defenderUnitSpriteSet; // eax
-  int v26; // eax
+  int defenderUnitSprite; // eax
   int baseLeft; // ebx
   int baseTop; // edi
   int buttonColumnX; // ebx
@@ -9712,7 +9712,7 @@ signed int  UI_PromptLeadTroopsPersonally(
   unsigned __int16 v36; // bx
   __int16 SpriteWidth; // ax
   __int16 v38; // cx
-  __int16 v39; // ax
+  __int16 panelHeight; // ax
   int v40; // ecx
   unsigned __int16 v42; // [esp-Ch] [ebp-140h]
   unsigned __int16 v43; // [esp-8h] [ebp-13Ch]
@@ -9762,8 +9762,8 @@ signed int  UI_PromptLeadTroopsPersonally(
   Compat_RenderDeviceDrawMenuSprite(panelLeft, panelTop, SpriteForChar, 1);
   if ( showThirdOption )
   {
-    v12 = DLX_GetSpriteForChar((int)promptSpriteSet, 3);
-    Compat_RenderDeviceDrawMenuSprite(panelLeft + 59, panelTop + 441, v12, 1);
+    thirdOptionSprite = DLX_GetSpriteForChar((int)promptSpriteSet, 3);
+    Compat_RenderDeviceDrawMenuSprite(panelLeft + 59, panelTop + 441, thirdOptionSprite, 1);
   }
   Render_ReleaseSurface(7, a5);
   UI_DrawTextFmt(a6, panelTop + 42, panelTop + 166, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(attackerSlotsBase + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
@@ -9786,8 +9786,8 @@ signed int  UI_PromptLeadTroopsPersonally(
         attackerCellX = 76 * ((attackerSlotIndex - (__CFSHL__(attackerSlotIndex >> 31, 2) + 4 * (attackerSlotIndex >> 31))) >> 2) + attackerGridLeft;
         attackerCellY = 48 * (attackerSlotIndex % 4) + attackerGridTop;
         attackerUnitSpriteHandle = attackerUnitSpriteSet;
-        v20 = DLX_GetSpriteForChar((int)attackerUnitSpriteSet, 0);
-        Compat_RenderDeviceDrawMenuSprite(attackerCellX, attackerCellY, v20, 1);
+        attackerUnitSprite = DLX_GetSpriteForChar((int)attackerUnitSpriteSet, 0);
+        Compat_RenderDeviceDrawMenuSprite(attackerCellX, attackerCellY, attackerUnitSprite, 1);
         if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(attackerSlotsBase + 2) + 140051) )
           UI_DrawTextFmt((int)attackerSlotPtr, attackerCellY, attackerCellY + 32, attackerCellX + 50, 3, (int)aD_3);
         DLXSpriteSet_ReleaseAndClear((int *)&attackerUnitSpriteHandle);
@@ -9816,8 +9816,8 @@ signed int  UI_PromptLeadTroopsPersonally(
         defenderCellX = 76 * ((defenderSlotIndex - (__CFSHL__(defenderSlotIndex >> 31, 2) + 4 * (defenderSlotIndex >> 31))) >> 2) + defenderGridLeft;
         defenderCellY = 48 * (defenderSlotIndex % 4) + defenderGridTop;
         defenderUnitSpriteHandle = defenderUnitSpriteSet;
-        v26 = DLX_GetSpriteForChar((int)defenderUnitSpriteSet, 0);
-        Compat_RenderDeviceDrawMenuSprite(defenderCellX, defenderCellY, v26, 1);
+        defenderUnitSprite = DLX_GetSpriteForChar((int)defenderUnitSpriteSet, 0);
+        Compat_RenderDeviceDrawMenuSprite(defenderCellX, defenderCellY, defenderUnitSprite, 1);
         if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(defenderSlotsBase + 2) + gameData + 140051) )
           UI_DrawTextFmt((int)defenderSlotPtr, defenderCellY, defenderCellY + 32, defenderCellX + 50, 3, (int)aD_4);
         DLXSpriteSet_ReleaseAndClear((int *)&defenderUnitSpriteHandle);
@@ -9889,8 +9889,8 @@ LABEL_34:
   g_RenderHook = savedRenderHook;
   Render_SetResourceHandle((int)&g_MainRenderDevice, savedResourceHandle);
   SpriteWidth = DLX_GetSpriteWidth((int)promptSpriteSet, 0);
-  v39 = DLX_GetSpriteHeight((int)promptSpriteSet, 0);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, panelLeft, panelTop, panelTop + v39, panelLeft + SpriteWidth, panelTop, panelLeft);
+  panelHeight = DLX_GetSpriteHeight((int)promptSpriteSet, 0);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, panelLeft, panelTop, panelTop + panelHeight, panelLeft + SpriteWidth, panelTop, panelLeft);
   Render_Present((int)g_RenderState);
   DLXSpriteSet_ReleaseAndClear((int *)&promptSpriteSet);
   return userChoice;

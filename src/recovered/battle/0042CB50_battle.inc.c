@@ -2750,8 +2750,8 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
   DWORD apTextSurfaceHandle; // ebp
   _DWORD *apTextSurface2; // eax
   int v19; // edi
-  int v20; // edx
-  int v21; // eax
+  int statusIconChar; // edx
+  int statusIconSprite; // eax
   unsigned __int8 statusLevel; // al
   int statusSpriteChar; // edx
   int statusSprite; // eax
@@ -3001,19 +3001,19 @@ LABEL_36:
             Compat_RenderDeviceDrawMenuSprite(488, 243, statusSprite, 1);
             goto LABEL_36;
           }
-          v20 = 7;
+          statusIconChar = 7;
         }
         else
         {
-          v20 = 8;
+          statusIconChar = 8;
         }
       }
       else
       {
-        v20 = 9;
+        statusIconChar = 9;
       }
-      v21 = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, v20);
-      Compat_RenderDeviceDrawMenuSprite(498, 279, v21, 1);
+      statusIconSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, statusIconChar);
+      Compat_RenderDeviceDrawMenuSprite(498, 279, statusIconSprite, 1);
       goto LABEL_33;
     }
   }
@@ -3048,7 +3048,7 @@ LABEL_36:
 //----- (00431940) --------------------------------------------------------
 int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName, DWORD a5)
 {
-  _DWORD *v5; // eax
+  _DWORD *spriteSetAlloc; // eax
   int v6; // ecx
   _DWORD *Surface; // ebp
   __int16 SpriteWidth; // bx
@@ -3069,18 +3069,18 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName
   unsigned int v23; // edx
   int v24; // ecx
   int flagAnimSprite; // eax
-  int v26; // ebx
+  int presentPopupX; // ebx
   __int16 presentSpriteWidth; // ax
   __int16 v28; // cx
   __int16 presentSpriteHeight; // ax
   int v30; // ecx
   _DWORD *surfaceToFree; // ebp
   unsigned __int16 spriteWidthMinus1; // [esp+3Ch] [ebp-44h]
-  unsigned __int16 v34; // [esp+3Ch] [ebp-44h]
+  unsigned __int16 presentRectWidth; // [esp+3Ch] [ebp-44h]
   unsigned __int16 fillRectX; // [esp+40h] [ebp-40h]
-  unsigned __int16 v36; // [esp+40h] [ebp-40h]
+  unsigned __int16 presentFillRectX; // [esp+40h] [ebp-40h]
   unsigned __int16 fillRectY; // [esp+44h] [ebp-3Ch]
-  unsigned __int16 v38; // [esp+44h] [ebp-3Ch]
+  unsigned __int16 presentFillRectY; // [esp+44h] [ebp-3Ch]
   int labelTextByLanguage[3]; // [esp+48h] [ebp-38h]
   _DWORD *spriteSet; // [esp+54h] [ebp-2Ch] BYREF
   int lastFrameTime; // [esp+58h] [ebp-28h]
@@ -3095,10 +3095,10 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName
   savedPopupY = popupY;
   savedSpriteName = spriteName;
   v46 = a3;
-  v5 = (_DWORD *)Mem_Alloc(4112, a3, spriteName, a5);
-  if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, spriteName);
-  spriteSet = v5;
+  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, a3, spriteName, a5);
+  if ( spriteSetAlloc )
+    spriteSetAlloc = DLXSpriteSet_Load(spriteSetAlloc, spriteName);
+  spriteSet = spriteSetAlloc;
   Surface = (_DWORD *)Mem_Alloc(188, v6, spriteName, a5);
   if ( Surface )
   {
@@ -3184,13 +3184,13 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName
         0);
     }
   }
-  v38 = savedPopupY;
-  v26 = (unsigned __int16)savedPopupX;
-  v36 = savedPopupX;
+  presentFillRectY = savedPopupY;
+  presentPopupX = (unsigned __int16)savedPopupX;
+  presentFillRectX = savedPopupX;
   presentSpriteWidth = DLX_GetSpriteWidth(g_ActiveUiSpriteSet, 0xCu);
-  v34 = v28 + presentSpriteWidth - 1;
+  presentRectWidth = v28 + presentSpriteWidth - 1;
   presentSpriteHeight = DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xCu);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, v30, v26, v26 + presentSpriteHeight - 1, v34, v36, v38);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, v30, presentPopupX, presentPopupX + presentSpriteHeight - 1, presentRectWidth, presentFillRectX, presentFillRectY);
   surfaceToFree = savedSurface;
   Render_Present((int)g_RenderState);
   if ( surfaceToFree )
