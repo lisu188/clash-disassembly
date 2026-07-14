@@ -32,7 +32,7 @@ BOOL UI_TrySelectFriendlyStackUnderCursor()
           + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
        + *(_DWORD *)(gameData + 140008);
     stackIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY));
-    if ( stackIndex > 0x7FFF || stackIndex == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + 725 * stackIndex + 147178) != g_CurrentPlayerIndex )
+    if ( stackIndex > 0x7FFF || stackIndex == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178) != g_CurrentPlayerIndex )
     {
       return 0;
     }
@@ -63,8 +63,8 @@ BOOL  MapTile_HasOwnUnitStack(int tileX, int tileY)
   stackIndex = *(_WORD *)(TILE_INDEX(tileX, tileY));
   LOWORD(stackIndexDword) = stackIndex;
   return stackIndex <= 0x1F4u
-      && (unsigned int)*(__int16 *)(gameData + 725 * stackIndexDword + 147180) <= 0x28
-      && *(unsigned __int8 *)(725 * stackIndex + gameData + 147178) == g_CurrentPlayerIndex;
+      && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndexDword + 147180) <= 0x28
+      && *(unsigned __int8 *)(UNIT_STACK_STRIDE * stackIndex + gameData + 147178) == g_CurrentPlayerIndex;
 }
 // 4081A7: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
 // 5202E4: using guessed type int gameData;
@@ -79,9 +79,9 @@ BOOL  MapTile_HasVisibleEnemyUnitStack(int tileX, int tileY)
 
   stackIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY));
   result = 0;
-  if ( (unsigned __int16)stackIndex <= 0x1F4u && (unsigned int)*(__int16 *)(gameData + 725 * stackIndex + 147180) <= 0x28 )
+  if ( (unsigned __int16)stackIndex <= 0x1F4u && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180) <= 0x28 )
   {
-    stackRecord = gameData + 725 * *(unsigned __int16 *)(TILE_INDEX(tileX, tileY));
+    stackRecord = gameData + UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(tileX, tileY));
     if ( *(unsigned __int8 *)(stackRecord + 147178) != g_CurrentPlayerIndex && !*(_BYTE *)(stackRecord + 147894) )
       return 1;
   }
@@ -455,7 +455,7 @@ LABEL_35:
     if ( MapTile_HasOwnUnitStack(tileX, tileY) )
     {
       if ( *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) == g_SelectedUnitIndex
-        && *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
+        && *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) )
       {
         v5 = 1;
         RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&g_CursorDesc_SelectedUnitHover);
@@ -472,7 +472,7 @@ LABEL_35:
     }
     else if ( MapTile_HasVisibleEnemyUnitStack(tileX, tileY) )
     {
-      if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+      if ( UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
         v15 = &g_CursorDesc_Attack;
       else
         v15 = &g_CursorDesc_CannotAttack;
@@ -489,7 +489,7 @@ LABEL_35:
 LABEL_21:
   if ( g_SelectedUnitIndex != -1 && MapTile_GetReligiousSiteCategory(tileX, tileY) )
   {
-    if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+    if ( UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
     {
 LABEL_24:
       v7 = &g_CursorDesc_EnterSite;
@@ -508,7 +508,7 @@ LABEL_80:
       v7 = &g_CursorDesc_GoTo;
       goto LABEL_25;
     }
-    if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+    if ( UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
       goto LABEL_24;
     goto LABEL_80;
   }
@@ -523,10 +523,10 @@ LABEL_80:
     v5 = 200 * tileX;
     if ( !MapTile_HasOwnBuilding(tileX, tileY) )
     {
-      if ( !UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      if ( !UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
         || (v5 += gameData,
             *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
-        && UnitStack_HasPeasantCargo(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+        && UnitStack_HasPeasantCargo(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
       {
         v7 = &g_CursorDesc_DeliverCargo;
       }
@@ -561,9 +561,9 @@ LABEL_26:
     v9 = 200 * tileX;
     if ( MapTile_HasOwnOrVisibleEnemyUnitStack(tileX, tileY) )
     {
-      if ( Unit_GetSquadCount(gameData + 147174 + 725 * *(unsigned __int16 *)(v8 + gameData + v9 + 556374)) <= 1 )
+      if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + 556374)) <= 1 )
       {
-        Unit_Info(100, 100, 0, 725 * *(unsigned __int16 *)(v8 + gameData + v9 + 556374) + gameData + 147174 + 6, tileX, 0);
+        Unit_Info(100, 100, 0, UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + 556374) + gameData + UNIT_STACK_TABLE_OFFSET + 6, tileX, 0);
       }
       else
       {
@@ -635,11 +635,11 @@ LABEL_26:
   if ( Trap_GetTileOwnerMask(tileX, tileY, g_CurrentPlayerIndex) )
     Trap_ShowPitfallDiscoveryDialog(tileX, tileY, v27, tileX);
     if ( g_SelectedUnitIndex != -1
-      && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      && UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
       && MapTile_GetReligiousSiteCategory(tileX, tileY) )
   {
     LOBYTE(v30) = tileY;
-    if ( !QueuedPath_StartsAtTile(gameData + 147174 + 725 * g_SelectedUnitIndex + 316, tileX, tileY) )
+    if ( !QueuedPath_StartsAtTile(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316, tileX, tileY) )
     {
       LOBYTE(v30) = tileY;
       bridge_crossings_enabled = UnitStack_HasBuilder(g_SelectedUnitIndex);
@@ -656,14 +656,14 @@ LABEL_26:
       }
       if ( approachTrack )
       {
-        pathBufferDest = (void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316);
+        pathBufferDest = (void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316);
         qmemcpy(pathBufferDest, approachTrack, 0x194u);
         j__nfree_();
         Diagnostics_TraceWorldMapActionEvent("temple_path_queued", g_SelectedUnitIndex, tileX, tileY, 1);
         WorldMap_RedrawViewport(1);
         Render_Begin((int)&g_RenderState, 0);
       }
-      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
+      if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) != 1 )
         return;
       goto LABEL_138;
     }
@@ -673,36 +673,36 @@ LABEL_26:
   }
   v28 = g_SelectedUnitIndex;
     if ( g_SelectedUnitIndex != -1
-      && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      && UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
       && Port_IsInsideFootprint(tileX, tileY) )
   {
-    if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
+    if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) )
     {
       portTrack = (_DWORD *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
       v27 = gameData - 26;
       if ( *portTrack )
         v36 = portTrack[1];
       else
-        v36 = *(_DWORD *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 320);
-      if ( (unsigned __int16)*(_DWORD *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 320) == (_WORD)v36 )
+        v36 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 320);
+      if ( (unsigned __int16)*(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 320) == (_WORD)v36 )
       {
         v37 = gameData;
-        qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), portTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316), portTrack, 0x194u);
         if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) || !*portTrack )
         {
           if ( *portTrack )
           {
-            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
             UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v37, (DWORD)portTrack, a1);
             WorldMap_RefreshUnitStatusPanel((DWORD)portTrack);
           }
-          if ( !*(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
+          if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) )
           {
             Supply = (__int16 *)Port_CollectReinforcementShipment(145 * g_SelectedUnitIndex, v37, (DWORD)portTrack, a1);
             if ( Supply )
               UI_CenterWorldMapViewportOnRectIfFit(
-                *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-                *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
+                *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+                *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
                 Supply[1],
                 *Supply);
           }
@@ -715,16 +715,16 @@ LABEL_26:
     portApproachTrack = (const void *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
     if ( portApproachTrack )
     {
-      qmemcpy((void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316), portApproachTrack, 0x194u);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316), portApproachTrack, 0x194u);
       j__nfree_();
       WorldMap_RedrawViewport(1);
-      if ( !*(_DWORD *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316) )
+      if ( !*(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316) )
       {
-        v39 = (__int16 *)Port_CollectReinforcementShipment(725 * g_SelectedUnitIndex, v27, (DWORD)portApproachTrack, a1);
+        v39 = (__int16 *)Port_CollectReinforcementShipment(UNIT_STACK_STRIDE * g_SelectedUnitIndex, v27, (DWORD)portApproachTrack, a1);
         if ( v39 )
           UI_CenterWorldMapViewportOnRectIfFit(
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
             v39[1],
             *v39);
       }
@@ -768,13 +768,13 @@ LABEL_26:
     }
     hasOwnBuilding = MapTile_HasOwnBuilding(tileX, tileY);
     v46 = 200 * tileX;
-    v30 = 725 * g_SelectedUnitIndex;
+    v30 = UNIT_STACK_STRIDE * g_SelectedUnitIndex;
     v47 = 2 * tileY;
     if ( !hasOwnBuilding )
     {
       if ( g_SelectedUnitIndex != -1
         && (*(_BYTE *)(467 * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
-         || !UnitStack_HasPeasantCargo(v30 + gameData + 147174)) )
+         || !UnitStack_HasPeasantCargo(v30 + gameData + UNIT_STACK_TABLE_OFFSET)) )
       {
         Unit_AttackBuilding(
           g_SelectedUnitIndex,
@@ -788,7 +788,7 @@ LABEL_26:
     targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000;
     if ( *(_WORD *)(467 * targetBuildingIndex + gameData + 509690) )
       return;
-    if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + 147174 + 316, targetBuildingIndex) )
+    if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + 316, targetBuildingIndex) )
     {
       approachTrack = (const void *)Building_GenerateApproachTrack(
                             g_SelectedUnitIndex,
@@ -798,11 +798,11 @@ LABEL_26:
                             tileX);
       if ( approachTrack )
       {
-        qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), approachTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316), approachTrack, 0x194u);
         j__nfree_();
         WorldMap_RedrawViewport(1);
       }
-      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
+      if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) != 1 )
         return;
 LABEL_138:
       UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v30, (DWORD)approachTrack, a1);
@@ -812,7 +812,7 @@ LABEL_138:
     if ( !UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
       return;
 LABEL_205:
-    Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+    Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
     UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v30, tileX, a1);
     WorldMap_RefreshUnitStatusPanel(tileX);
     return;
@@ -842,13 +842,13 @@ LABEL_205:
       v51 = gameData;
       v52 = g_SelectedUnitIndex;
       if ( *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) == g_SelectedUnitIndex
-        && (v52 = 145 * g_SelectedUnitIndex, *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490)) )
+        && (v52 = 145 * g_SelectedUnitIndex, *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490)) )
       {
         Render_Begin((int)&g_RenderState, 0, v28);
         if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
         {
-          v61 = 725 * g_SelectedUnitIndex;
-          Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          v61 = UNIT_STACK_STRIDE * g_SelectedUnitIndex;
+          Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
           UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, v62, v51, v61, a1);
           WorldMap_RefreshUnitStatusPanel(v61);
         }
@@ -873,11 +873,11 @@ LABEL_205:
           v56 = g_LastSelectedUnitIndex;
           if ( g_LastSelectedUnitIndex != -1 )
             WorldMap_RedrawTileIfVisible(
-              *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147174),
-              *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
+              *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_LastSelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+              *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_LastSelectedUnitIndex + 147176));
           WorldMap_RefreshUnitStatusPanel(v56);
           UnitStackSelection_SyncForCurrentSelection(v57, v56);
-          Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          Audio_PlayUnitActivateSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&g_RenderState, 0, v54);
         }
       }
@@ -921,11 +921,11 @@ LABEL_205:
         *(_DWORD *)(gameData + 140008),
         *(_DWORD *)(gameData + 140012),
         g_SelectedUnitIndex);
-    if ( !*(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490)
-      || (v68 = *(_DWORD *)(725 * g_SelectedUnitIndex + gameData + 147174 + 320), (unsigned __int8)v68 != tileX)
+    if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490)
+      || (v68 = *(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 320), (unsigned __int8)v68 != tileX)
       || (LOBYTE(v30) = tileY, BYTE1(v68) != tileY) )
     {
-      v63 = *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176);
+      v63 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176);
       bridge_crossings_enabled = UnitStack_HasBuilder(g_SelectedUnitIndex);
       if ( bridge_crossings_enabled )
       {
@@ -934,7 +934,7 @@ LABEL_205:
       }
       moveTrack = (const void *)Unit_MoveTrack(
                             g_SelectedUnitIndex,
-                            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+                            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
                             tileX,
                             v63,
                             tileX,
@@ -944,7 +944,7 @@ LABEL_205:
         Pathing_DisableBridgeCrossings(g_SelectedUnitIndex, (char)(uintptr_t)moveTrack, 0);
         Diagnostics_TraceWorldMapActionEvent("bridge_pathing_disable_move", g_SelectedUnitIndex, tileX, tileY, moveTrack != 0);
       }
-      v65 = 725 * g_SelectedUnitIndex;
+      v65 = UNIT_STACK_STRIDE * g_SelectedUnitIndex;
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         Diagnostics_TraceWorldMapActionEvent(
           "move_order_track_result",
@@ -954,7 +954,7 @@ LABEL_205:
           moveTrack ? *(_DWORD *)moveTrack : -1);
       if ( moveTrack )
       {
-        v66 = v65 + gameData + 147174;
+        v66 = v65 + gameData + UNIT_STACK_TABLE_OFFSET;
         qmemcpy((void *)(v66 + 316), moveTrack, 0x194u);
         v28 = v66 - 48;
         j__nfree_();
@@ -963,17 +963,17 @@ LABEL_205:
       {
         *(_DWORD *)(gameData + v65 + 147490) = 0;
       }
-      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) == 1 )
+      if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) == 1 )
       {
         if ( UnitStackSelection_HasSelectedSlots() )
         {
-          *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) = 0;
+          *(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490) = 0;
           WorldMap_RedrawViewport(1);
         }
         else
         {
           if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
-            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
           UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v63, v65, a1);
           WorldMap_RefreshUnitStatusPanel(v65);
           WorldMap_RedrawViewport(1);
@@ -1156,7 +1156,7 @@ void  WorldMap_SelectNextActiveUnitStack(uintptr_t widget, int a2, DWORD statusP
   checked_count = 0;
   do
   {
-    unit_record = 725 * scan_index + gameData;
+    unit_record = UNIT_STACK_STRIDE * scan_index + gameData;
     if ( *(__int16 *)(unit_record + 147180) != -1
       && *(unsigned __int8 *)(unit_record + 147178) == g_CurrentPlayerIndex
       && Unit_AttemptNeighborMove(scan_index) )
@@ -1178,16 +1178,16 @@ void  WorldMap_SelectNextActiveUnitStack(uintptr_t widget, int a2, DWORD statusP
     UnitStackSelection_ClearMask(NULL);
     WorldMap_RefreshActionButtonBarState(NULL);
     Camera_CenterOnUnit(scan_index);
-    Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+    Audio_PlayUnitActivateSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
     WorldMap_RedrawViewport(1);
     WorldMap_RefreshUnitStatusPanel(statusPanelContext);
     UnitStackSelection_SyncForCurrentSelection(NULL, statusPanelContext);
     Diagnostics_TraceWorldMapActionEvent(
       "next_unit_selected",
       g_SelectedUnitIndex,
-      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
-      Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex));
+      *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+      *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
+      Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex));
   }
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -1337,20 +1337,20 @@ int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, doub
             BuildBuilding(3, v7, g_WorldMapBuilderMenuAction, a5);
             break;
           case 3:
-            if ( UnitStack_GetMinCurrentActionPoints(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+            if ( UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
             {
               a3 = g_SelectedUnitIndex;
               if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type0, 0) )
               {
                 MiniMap_DrawTileCell(
-                  (void *)*(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
-                  *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
+                  (void *)*(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
+                  *(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147176));
                 Audio_PlaySoundEffectByName(aStruktur, 64);
               }
             }
             break;
           case 4:
-            if ( !UnitStack_HasPeasantCargo(725 * g_SelectedUnitIndex + gameData + 147174) )
+            if ( !UnitStack_HasPeasantCargo(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
             {
               a3 = g_SelectedUnitIndex;
               if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type1, 0) )
@@ -1812,7 +1812,7 @@ void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1)
   gameDataPtr = (void *)gameData;
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
-    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180) == -1 )
+    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180) == -1 )
     {
       g_SelectedUnitIndex = -1;
       WorldMap_RefreshActionButtonBarState((void *)gameData);
@@ -1836,13 +1836,13 @@ LABEL_4:
     UnitStackSelection_End(a1);
     return;
   }
-  if ( Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) == 1 && g_UnitStackSelectionActiveUnitIndex != -1 )
+  if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) == 1 && g_UnitStackSelectionActiveUnitIndex != -1 )
     goto LABEL_4;
-  if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && g_UnitStackSelectionActiveUnitIndex == -1 )
+  if ( Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) > 1 && g_UnitStackSelectionActiveUnitIndex == -1 )
   {
     UnitStackSelection_BeginForSelectedStack(a2);
   }
-  else if ( g_UnitStackSelectionActiveUnitIndex != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
+  else if ( g_UnitStackSelectionActiveUnitIndex != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) > 1 )
   {
     UnitStackSelection_RefreshForSelectedStack(a2);
   }

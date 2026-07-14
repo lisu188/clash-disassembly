@@ -4311,7 +4311,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     0);
   if ( g_SelectedUnitIndex == -1 )
     return (void *)Tooltip_RestoreBackdrop();
-  if ( UnitStack_HasLowMoraleUnit(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+  if ( UnitStack_HasLowMoraleUnit(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
   {
     Tooltip_SetResourceHandle(13);
     Tooltip_ShowText(3, g_Text_LowMorale[(unsigned __int8)g_LanguageIndex]);
@@ -4322,7 +4322,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     Tooltip_ShowText(
       1,
       aS,
-      UnitType_GetLocalizedName((unit_type)*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180)));
+      UnitType_GetLocalizedName((unit_type)*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180)));
     v18 = g_RenderDevice;
     g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
     Diagnostics_TraceWorldMapActionEvent(
@@ -4338,7 +4338,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       g_UnitStackSelectionActiveUnitIndex,
       g_UnitStackSlotSelectedFlags[0],
       0);
-    v3 = 100 * UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174);
+    v3 = 100 * UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_current_ap",
       g_SelectedUnitIndex,
@@ -4346,7 +4346,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       g_UnitStackSlotSelectedFlags[0],
       v3);
     v4 = gameData;
-    min_base_action_points = UnitStack_GetMinBaseActionPoints(gameData + 147174 + 725 * g_SelectedUnitIndex);
+    min_base_action_points = UnitStack_GetMinBaseActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex);
     if ( min_base_action_points <= 0 )
       v5 = 0;
     else
@@ -5152,8 +5152,8 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
         return Render_RestoreLostSurfaces();
       if ( v19 < 0x8000 )
       {
-        result = 725 * v19;
-        if ( *(_BYTE *)(gameData + 725 * v19 + 147894) )
+        result = UNIT_STACK_STRIDE * v19;
+        if ( *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v19 + 147894) )
           return Render_RestoreLostSurfaces();
       }
     }

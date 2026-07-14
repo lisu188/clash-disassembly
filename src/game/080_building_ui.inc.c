@@ -7011,7 +7011,7 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
   Unit_Create(0xFFFFFFFF, building[2], spawnX, facing, spawnY);
   slotIndexPtr = exitSlots;
   movedCount = 0;
-  newStackRecord = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)) + gameData + 147174);
+  newStackRecord = (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)) + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent(
     "building_units_leave_spawn",
     *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)),
@@ -7212,7 +7212,7 @@ signed int  Building_CanAcceptUnitStack(int stackIndex, int buildingId)
   int v6; // edx
 
   buildingRecord = UNIT_RECORD(buildingId);
-  stackRecord = 725 * stackIndex + gameData + 147174;
+  stackRecord = UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET;
   if ( *(_WORD *)(buildingRecord + 16) )
     return 0;
   buildingType = *(_BYTE *)(buildingRecord + 4);
@@ -8302,12 +8302,12 @@ int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY)
   Debug_Log(stackIndex, tileX, tileY, (int)aUnit_movetra_2);
   saved_site_word = *(_WORD *)(gameData + tile_record_offset + 2);
   *(_WORD *)(gameData + tile_record_offset + 2) = -1;
-  current_y = *(__int16 *)(725 * stackIndex + gameData + 147176);
+  current_y = *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     Diagnostics_TraceWorldMapActionEvent("temple_track_request", stackIndex, tileX, tileY, saved_site_word);
   result = Unit_MoveTrack(
              stackIndex,
-             *(__int16 *)(725 * stackIndex + gameData + 147174),
+             *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET),
              tileX,
              current_y,
              tileX,
@@ -8754,7 +8754,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
   siteX = tile_x;
   siteY = tile_y;
   Debug_Log(tile_x, tile_y, a4, (int)aTemple_unitget);
-  unitStack = (__int16 *)(725 * stack_index + gameData + 147174);
+  unitStack = (__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("temple_unit_getinto_enter", stack_index, tile_x, tile_y, MapTile_GetReligiousSiteCategory(tile_x, tile_y));
   v8 = gameData + 1423 * *((unsigned __int8 *)unitStack + 4);
   if ( *(_DWORD *)(v8 + 140063) )

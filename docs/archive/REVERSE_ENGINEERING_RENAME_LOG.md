@@ -1,5 +1,37 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A1-1: unit-stack table literals
+
+Replaced raw numeric literals with their existing prelude constant names at
+gated call sites (workstream A: names already defined in
+`src/clash95_prelude.inc.c`, previously spelled as raw numbers). Substitution
+is class-gated by expression shape (`tools/literal_common.py`) and proven
+value-identical by the preprocessed-token-identity gate
+(`tools/pp_token_gate.sh`): before/after `gcc -E` token streams matched exactly
+(1,135,130 tokens, 0 hunks).
+
+| Old | New | Kind | Subsystem | Confidence | Evidence | Sources |
+|---|---|---|---|---|---|---|
+| `725` | `UNIT_STACK_STRIDE` | stride | units | repo-confirmed | Backs the prelude `UNIT_STACK(index)` accessor; 500-record stack region `147174..509674 = 500*725` per `docs/SAVE_DAT_FORMAT.md`; 430 sites replaced only in multiplicative / `gameData`-anchored address arithmetic | prelude, SAVE_DAT_FORMAT.md, token-identity gate |
+| `147174` | `UNIT_STACK_TABLE_OFFSET` | offset | units | repo-confirmed | Stack table base `gameData + 147174` per `docs/SAVE_DAT_FORMAT.md`; backs `UNIT_STACK(index)`; 254 sites replaced only in `gameData`-anchored additive expressions | prelude, SAVE_DAT_FORMAT.md, token-identity gate |
+
+684 sites across 7 fragments (game/040,050,060,080,090; render/030;
+rules/100). Provenance and per-file counts:
+`docs/archive/win95_constants_rename_accum.jsonl`; batch rules:
+`docs/archive/literal_rules/A1-1_units.json`.
+
+### Deferred / Ambiguous (A1-1)
+
+- `src/game/050_units.inc.c:1468` `qmemcpy(v15, stackPtr, 0x2D5u)` copies a full
+  725-byte stack record, so `0x2D5` (=725) is semantically `UNIT_STACK_STRIDE`,
+  but its hex+suffix spelling would break token-identity under the strict G1
+  gate. Deferred to a suffix-drop batch (A2) that runs under `--allow`.
+- `increment_rhs` sites where the enclosing function does not independently use
+  the stride/offset (6 sites) and `bare` sites (equality tests, `case`
+  labels, non-anchored `+ 147174` fragments; 29 sites) were left raw:
+  insufficient structural proof that the literal there is the same semantic
+  constant. Recorded as `substitution-rejected` rows in the accumulator.
+
 ## 2026-07-13 - Mission 05 failure-predicate recovery
 
 - `Mission_MarkObjective05CompleteOnAttack` -> `Mission05_MarkFailureOnFriendlyAttack`: the helper sets the mission-local failure byte when player `0` attacks player `1` or `2`; it does not complete the objective.

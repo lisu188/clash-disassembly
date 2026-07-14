@@ -1131,8 +1131,8 @@ int * Port_GenerateApproachTrack(int unitStackIndex)
   *(_WORD *)(14 * portColumn + v6 + gameData) = 0;
   *(_WORD *)(v7 + portRowByteOffset + gameData) = 0;
   *(_WORD *)(v7 + v6 + gameData) = 0;
-  stackColumn = *(__int16 *)(gameData + 725 * unitStackIndex + 147176);
-  trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(gameData + 725 * unitStackIndex + 147174), portRow, stackColumn, portRow, portColumn);
+  stackColumn = *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176);
+  trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), portRow, stackColumn, portRow, portColumn);
   if ( trackList )
   {
     v11 = (int *)Mem_Alloc(404, (int)trackList, stackColumn, portRow);
@@ -1262,8 +1262,8 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
             v26 = *(unsigned __int16 *)(gameData + v36 + v25 + 556374);
             if ( (unsigned __int16)v26 <= 0x1F4u )
             {
-              v27 = 725 * v26;
-              if ( (unsigned int)*(__int16 *)(v27 + gameData + 147174 + 6) <= 0x28
+              v27 = UNIT_STACK_STRIDE * v26;
+              if ( (unsigned int)*(__int16 *)(v27 + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28
                 && *(unsigned __int8 *)(v27 + gameData + 147178) == g_CurrentPlayerIndex )
               {
                 break;
@@ -1305,7 +1305,7 @@ LABEL_16:
       Unit_Create(UNIT_TYPE_PEASANT, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
       remainingUnitCount = PORT_REINFORCEMENT_UNIT_COUNT - 1;
-      for ( j = 725 * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + 147174;
+      for ( j = UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + UNIT_STACK_TABLE_OFFSET;
             remainingUnitCount >= 0;
             v13 = v19 - 31 )
       {
@@ -1512,8 +1512,8 @@ signed int  Treasure_TryDigHere(
 
   Debug_Log(a1, a2, a3, (int)aTreasure_dighe, a1);
   v6 = gameData;
-  stackTileRecord = (__int16 *)(725 * unitStackIndex + gameData + 147174);
-  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(gameData + 725 * unitStackIndex + 147174), *(__int16 *)(gameData + 725 * unitStackIndex + 147176))
+  stackTileRecord = (__int16 *)(UNIT_STACK_STRIDE * unitStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176))
     || !UnitStack_HasBuilder(v9) )
   {
     return 0;
@@ -1595,7 +1595,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
   int v19; // [esp+1Ch] [ebp-20h]
   int v20; // [esp+20h] [ebp-1Ch]
 
-  stackRecord = (__int16 *)(gameData + 147174 + 725 * unitStackIndex);
+  stackRecord = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * unitStackIndex);
   if ( UnitStack_GetMinCurrentActionPoints((intptr_t)stackRecord) < 0 || *((_BYTE *)stackRecord + 720) || !UnitStack_HasNormalCombatUnits((intptr_t)stackRecord) )
     return 0;
   if ( UnitStack_GetMaxOrderTier((intptr_t)stackRecord) < 2 )
@@ -1626,8 +1626,8 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
         {
           if ( neighborStackIndex <= 0x1F4u )
           {
-            v9 = 725 * neighborStackIndex;
-            if ( (unsigned int)*(__int16 *)(gameData + 147174 + v9 + 6) <= 0x28
+            v9 = UNIT_STACK_STRIDE * neighborStackIndex;
+            if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + v9 + 6) <= 0x28
               && *(_BYTE *)(gameData + v9 + 147178) != *((_BYTE *)stackRecord + 4) )
             {
               break;
@@ -1861,22 +1861,22 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
       fprintf(stderr, "[menu-probe] load-save-after-fact-reset\n");
     for ( stack_index = 0; stack_index < 500; ++stack_index )
     {
-      if ( (unsigned int)*(__int16 *)(gameData + 725 * stack_index + 147180) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
       {
         if ( trace_load_save )
           fprintf(
             stderr,
             "[menu-probe] load-save-link-army stack=%d type=%d x=%d y=%d owner=%u\n",
             stack_index,
-            *(unsigned __int16 *)(gameData + 725 * stack_index + 147180),
-            *(__int16 *)(gameData + 725 * stack_index + 147174),
-            *(__int16 *)(gameData + 725 * stack_index + 147176),
-            *(unsigned __int8 *)(gameData + 725 * stack_index + 147178));
-        UnitStack_LinkArmyFact((__int16 *)(gameData + 147174 + 725 * stack_index), 1, a2);
+            *(unsigned __int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
+            *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178));
+        UnitStack_LinkArmyFact((__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index), 1, a2);
       }
       for ( slot_index = 0; slot_index < 10; ++slot_index )
       {
-        *(_DWORD *)(gameData + 725 * stack_index + 31 * slot_index + 147198) = 0;
+        *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 31 * slot_index + 147198) = 0;
       }
     }
     if ( trace_load_save )
@@ -5974,7 +5974,7 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, 0, v10, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
+  *(_BYTE *)(gameData + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
   Unit_Create(UNIT_TYPE_PEGASUS, 2, 10, 0, 7);
   Unit_Create(UNIT_TYPE_WINGER, 0, 10, 0, 8);
   Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 0, 5, 0, 45);
@@ -6153,9 +6153,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 1:
@@ -6164,9 +6164,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 2:
@@ -6175,9 +6175,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 1;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_ARCHER, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 3:
@@ -6186,9 +6186,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 4:
@@ -6197,9 +6197,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_CROSSBOWER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_MUSKETEER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 5:
@@ -6208,9 +6208,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 1;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_HEAVY_SPEARMAN, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_CATAPULT, UNIT_TYPE_CYCLOP, UNIT_TYPE_SKELETON, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 6:
@@ -6219,9 +6219,9 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 7:
@@ -6231,7 +6231,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       createUnit(a3, 0, 0, 0, UNIT_TYPE_RAM, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createCastle(a3, 1, 0, 1, 2, aZamek, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_CYCLOP, -1);
       return Battle_RunTacticalCombat(
-               (__int16 *)(725 * *(unsigned __int16 *)(gameData + 556374) + gameData + 147174),
+               (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374) + gameData + UNIT_STACK_TABLE_OFFSET),
                0,
                0,
                (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + 509674),
@@ -6244,7 +6244,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       createUnit(a3, 0, 0, 1, UNIT_TYPE_CANNON, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createCastle(a3, 1, 0, 0, 2, aZamek_0, UNIT_TYPE_CANNON, UNIT_TYPE_WIZARD, UNIT_TYPE_LIGHT_CAVALRY, -1);
       return Battle_RunTacticalCombat(
-               (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556374)),
+               (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374)),
                0,
                0,
                (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + 509674),
@@ -6256,29 +6256,29 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
       *(_BYTE *)(gameData + 140016) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_GHOST, UNIT_TYPE_WIZARD, UNIT_TYPE_WINGER, -1);
       v8 = gameData;
-      v9 = 725 * *(unsigned __int16 *)(gameData + 556374);
+      v9 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374);
       v10 = *(_BYTE *)(gameData + v9 + 147285) & 0xFC;
       *(_BYTE *)(gameData + v9 + 147285) = v10;
       *(_BYTE *)(v8 + v9 + 147285) = v10 | 1;
       createUnit(a3, 1, 0, 1, UNIT_TYPE_DRAGON, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, -1);
       v11 = gameData;
-      v12 = 725 * *(unsigned __int16 *)(gameData + 556574);
+      v12 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
       v13 = *(_BYTE *)(gameData + v12 + 147223) & 0xFC;
       *(_BYTE *)(gameData + v12 + 147223) = v13;
       *(_BYTE *)(v11 + v12 + 147223) = v13 | 1;
       v14 = gameData;
-      v15 = 725 * *(unsigned __int16 *)(gameData + 556574);
+      v15 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
       v16 = *(_BYTE *)(gameData + v15 + 147316) & 0xFC;
       *(_BYTE *)(gameData + v15 + 147316) = v16;
       *(_BYTE *)(v14 + v15 + 147316) = v16 | 1;
       v17 = gameData;
-      v18 = 725 * *(unsigned __int16 *)(gameData + 556574);
+      v18 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
       v19 = *(_BYTE *)(gameData + v18 + 147378) & 0xFC;
       *(_BYTE *)(gameData + v18 + 147378) = v19;
       *(_BYTE *)(v17 + v18 + 147378) = v19 | 1;
-      unitStackTableBase = gameData + 147174;
+      unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
       attackerStackIndex = *(unsigned __int16 *)(gameData + 556374);
-      defenderStackPtr = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
+      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
       v6 = 144 * (unsigned __int16)attackerStackIndex;
 LABEL_3:
       result = Battle_RunTacticalCombat((__int16 *)(unitStackTableBase + 5 * (attackerStackIndex + v6)), defenderStackPtr, 0, 0, a2, 0);
@@ -7268,14 +7268,14 @@ int  Prisoner_FindAnyHiddenEnemyUnitStack(int enemyPlayerIndex, int viewerPlayer
 
   stackIndex = 0;
 LABEL_2:
-  if ( (unsigned int)*(__int16 *)(725 * stackIndex + gameData + 147174 + 6) <= 0x28 )
+  if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
   {
-    stackRecordOffset = 725 * stackIndex;
-    stackRecordBase = gameData + 725 * stackIndex;
+    stackRecordOffset = UNIT_STACK_STRIDE * stackIndex;
+    stackRecordBase = gameData + UNIT_STACK_STRIDE * stackIndex;
     if ( *(unsigned __int8 *)(stackRecordBase + 147178) == enemyPlayerIndex
       && !Map_IsTileVisibleToPlayer(*(__int16 *)(stackRecordBase + 147174), *(__int16 *)(stackRecordBase + 147176), viewerPlayerIndex) )
     {
-      return gameData + 147174 + stackRecordOffset;
+      return gameData + UNIT_STACK_TABLE_OFFSET + stackRecordOffset;
     }
   }
   while ( ++stackIndex < 500 )

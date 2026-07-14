@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "name",
+    "value": 725,
+    "name": "UNIT_STACK_STRIDE",
+    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored", "increment_rhs", "call_arg"],
+    "confidence": "repo-confirmed",
+    "evidence": "Prelude UNIT_STACK_STRIDE=725 backs the UNIT_STACK(index) accessor (src/clash95_prelude.inc.c); 500-record stack table region 147174..509674 = 500*725 per docs/SAVE_DAT_FORMAT.md; substitution class-gated to multiplicative/gameData-anchored address arithmetic and function-cooccurring loop steps; value identity proven by tools/pp_token_gate.sh token-identity gate.",
+    "area": "units"
+  },
+  {
+    "kind": "name",
+    "value": 147174,
+    "name": "UNIT_STACK_TABLE_OFFSET",
+    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored", "increment_rhs"],
+    "confidence": "repo-confirmed",
+    "evidence": "Prelude UNIT_STACK_TABLE_OFFSET=147174 backs the UNIT_STACK(index) accessor; stack table base at gameData+147174 per docs/SAVE_DAT_FORMAT.md region map (stacks 147174, 500x725); substitution gated to gameData-anchored additive expressions; token-identity gate proves value-identical.",
+    "area": "units"
+  }
+]

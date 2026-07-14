@@ -68,7 +68,7 @@ int force;
 
   Diagnostics_TraceBootstrapEvent("Building_New-enter");
   Debug_Log(buildingType, stackIndex, force, (int)aBuilding_newDD);
-  v9 = 725 * stackIndex;
+  v9 = UNIT_STACK_STRIDE * stackIndex;
   g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + v9 + 147178);
   if ( g_BuildingNewOverrideActive )
   {
@@ -77,10 +77,10 @@ int force;
   }
   else
   {
-    row = *(__int16 *)(gameData + v9 + 147174);
+    row = *(__int16 *)(gameData + v9 + UNIT_STACK_TABLE_OFFSET);
     column = *(__int16 *)(gameData + v9 + 147176);
   }
-  if ( buildingType == 1 && UnitStack_HasPeasantCargo(v9 + gameData + 147174) )
+  if ( buildingType == 1 && UnitStack_HasPeasantCargo(v9 + gameData + UNIT_STACK_TABLE_OFFSET) )
     return 0;
   if ( !force )
   {
@@ -450,23 +450,23 @@ signed int  BuildCursor_IsPlacementValid(int row, int column, int buildingType, 
       break;
   }
   savedPlayerIndex = g_CurrentPlayerIndex;
-  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + 725 * stackIndex + 147178);
-  v6 = row - *(__int16 *)(gameData + 725 * stackIndex + 147174);
+  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178);
+  v6 = row - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_TABLE_OFFSET);
   isValid = 1;
   v7 = v6;
   if ( v6 <= 0 )
     v7 = -v6;
   if ( v7 > footprintRadius )
     goto LABEL_6;
-  if ( column - *(__int16 *)(gameData + 725 * stackIndex + 147176) > 0 )
+  if ( column - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) > 0 )
   {
-    if ( column - *(__int16 *)(gameData + 725 * stackIndex + 147176) <= footprintRadius )
+    if ( column - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) <= footprintRadius )
       goto LABEL_7;
 LABEL_6:
     isValid = 0;
     goto LABEL_7;
   }
-  if ( *(__int16 *)(gameData + 725 * stackIndex + 147176) - column > footprintRadius )
+  if ( *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) - column > footprintRadius )
     goto LABEL_6;
 LABEL_7:
   colEnd = column + footprintRadius;
@@ -1492,7 +1492,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   result = Unit_Create((char)((transferGoldFlag == 0) + 31), v9[2], *v9, 0, v9[1]);
   if ( result )
   {
-    newStackPtr = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) + gameData + 147174);
+    newStackPtr = (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) + gameData + UNIT_STACK_TABLE_OFFSET);
     UnitStack_ClearRemainingActionPoints(newStackPtr, (DWORD)savedregs, a5);
     v11 = v10 + 6;
     v12 = 100;
@@ -1698,10 +1698,10 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   buildingPtr = buildingByteOffset + gameData + 509674;
   if ( *(_WORD *)(buildingByteOffset + gameData + 509690) )
     return Building_Destroy(buildingByteOffset + gameData + 509674, buildingByteOffset, buildingIndex, a5);
-  *(_BYTE *)(buildingByteOffset + gameData + 509676) = *(_BYTE *)(725 * capturingStackIndex + gameData + 147178);
+  *(_BYTE *)(buildingByteOffset + gameData + 509676) = *(_BYTE *)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178);
   v9 = buildingByteOffset + gameData;
   buildingTechLevel = *(_BYTE *)(buildingByteOffset + gameData + 510118) & 7;
-  playerTechLevel = *(_BYTE *)(1423 * *(unsigned __int8 *)(725 * capturingStackIndex + gameData + 147178) + gameData + 140071);
+  playerTechLevel = *(_BYTE *)(1423 * *(unsigned __int8 *)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178) + gameData + 140071);
   if ( buildingTechLevel < playerTechLevel )
   {
     v12 = *(_BYTE *)(v9 + 510118) & 0xF8;
@@ -1711,7 +1711,7 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   Rules_SyncCastleFactOwner(UNIT_RECORD(buildingIndex), buildingPtr, a5);
   v28 = v13;
   turnCounter = *(unsigned __int16 *)(gameData + 140022);
-  Rules_LogBuildingCapturedFact(*(unsigned __int8 *)(gameData + 725 * capturingStackIndex + 147178), buildingIndex, turnCounter);
+  Rules_LogBuildingCapturedFact(*(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * capturingStackIndex + 147178), buildingIndex, turnCounter);
   v15 = 1423 * *(unsigned __int8 *)(v28 + gameData + 509676) + gameData;
   if ( buildingIndex == *(_DWORD *)(v15 + 140067) )
     *(_DWORD *)(v15 + 140067) = -1;
@@ -4551,9 +4551,9 @@ static int Diagnostics_UnitStackIndexFromRecord(int stack_record)
 
   if ( !gameData || !stack_record )
     return -1;
-  stack_table_base = gameData + 147174;
+  stack_table_base = gameData + UNIT_STACK_TABLE_OFFSET;
   stack_table_delta = stack_record - stack_table_base;
-  if ( stack_table_delta < 0 || stack_table_delta % 725 != 0 )
+  if ( stack_table_delta < 0 || stack_table_delta % UNIT_STACK_STRIDE != 0 )
     return -1;
   stack_table_delta /= 725;
   if ( stack_table_delta < 0 || stack_table_delta >= 500 )
@@ -5491,7 +5491,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
       v2 = result;
       v3 = 8 * result;
     }
-    g_SelectedUnitStackRecordPtr = 5 * (v2 + 16 * (v2 + v3)) + gameData + 147174;
+    g_SelectedUnitStackRecordPtr = 5 * (v2 + 16 * (v2 + v3)) + gameData + UNIT_STACK_TABLE_OFFSET;
     memset(selectedSlotList, 0, sizeof(selectedSlotList));
     slotListPtr = selectedSlotList;
     UnitStackSelection_BuildSelectedSlotIndexList((int)g_UnitStackSlotSelectedFlags, 10, selectedSlotList);
@@ -6055,7 +6055,7 @@ signed int  Road_Build(int a1, int a2, char a3, DWORD a4, double a5)
   int v37; // [esp+28h] [ebp-18h]
 
   Debug_Log(a1, a3, a4, (int)aRoad_buildDD);
-  v6 = gameData + 725 * v5;
+  v6 = gameData + UNIT_STACK_STRIDE * v5;
   v29 = *(__int16 *)(v6 + 147174);
   v37 = *(__int16 *)(v6 + 147176);
   v7 = MapTile_HasNorthRoadConnection(v29, v37);
@@ -6296,7 +6296,7 @@ LABEL_14:
         *(_DWORD *)(14 * v12 + 1400 * v11 + gameData + 10) = *(unsigned __int16 *)(gameData + 140022);
         v13 = *(_WORD *)(1400 * v29 + gameData + 14 * v37 + 4);
       }
-      v31 = UnitStack_GetTileMoveCostOrZero((__int16 *)(gameData + 147174 + 725 * a1), v11, 145 * a1, v12);
+      v31 = UnitStack_GetTileMoveCostOrZero((__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1), v11, 145 * a1, v12);
       if ( MapTile_IsCastleFoundationTile(v11, v12, 2) )
         v31 = 0;
       if ( v32 )
@@ -6304,7 +6304,7 @@ LABEL_14:
       result = v31;
       if ( v31 )
       {
-        v20 = UnitStack_GetMinCurrentActionPoints(725 * a1 + gameData + 147174);
+        v20 = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
         if ( v20 >= v21 )
         {
           if ( Map_GetTileSurfaceClassOrUnexplored(v29, v37) == 185
@@ -6336,15 +6336,15 @@ LABEL_14:
             }
             g_SelectedUnitIndex = a1;
             v28 = v12;
-            v25 = 725 * a1;
-            v26 = *(__int16 *)(gameData + 725 * a1 + 147176);
-            result = (signed int)Unit_MoveTrack(a1, *(__int16 *)(gameData + 725 * a1 + 147174), v11, v26, 725 * a1, v28);
+            v25 = UNIT_STACK_STRIDE * a1;
+            v26 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + 147176);
+            result = (signed int)Unit_MoveTrack(a1, *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + UNIT_STACK_TABLE_OFFSET), v11, v26, UNIT_STACK_STRIDE * a1, v28);
             if ( result )
             {
-              qmemcpy((void *)(gameData + 147174 + v25 + 316), (const void *)result, 0x194u);
+              qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + v25 + 316), (const void *)result, 0x194u);
               j__nfree_();
               UnitStack_ExecuteQueuedPath(a1, v27, v26, v25, a5);
-              UnitStack_SpendActionPointsClamped((__int16 *)(v25 + gameData + 147174), 1, v25, a5);
+              UnitStack_SpendActionPointsClamped((__int16 *)(v25 + gameData + UNIT_STACK_TABLE_OFFSET), 1, v25, a5);
               WorldMap_RefreshUnitStatusPanel(v25);
               return 1;
             }
@@ -6380,8 +6380,8 @@ signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
   int v9; // edx
 
   g_SelectedUnitIndex = a1;
-  v5 = 725 * a1;
-  v6 = gameData + 725 * a1;
+  v5 = UNIT_STACK_STRIDE * a1;
+  v6 = gameData + UNIT_STACK_STRIDE * a1;
   v7 = *(__int16 *)(v6 + 147176);
   result = (signed int)Unit_MoveTrack(
                          a1,
@@ -6392,7 +6392,7 @@ signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
                          v7 + Map_NeighborDY[2 * a2]);
   if ( result )
   {
-    qmemcpy((void *)(v5 + gameData + 147174 + 316), (const void *)result, 0x194u);
+    qmemcpy((void *)(v5 + gameData + UNIT_STACK_TABLE_OFFSET + 316), (const void *)result, 0x194u);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(a1, v9, v7, a1, a3);
     WorldMap_RefreshUnitStatusPanel(a1);
@@ -6496,7 +6496,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
   int v13; // ecx
   int v14; // ecx
 
-  v4 = gameData + 725 * g_SelectedUnitIndex;
+  v4 = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
   if ( a1 == *(__int16 *)(v4 + 147174) && a2 - *(__int16 *)(v4 + 147176) == -1 )
   {
     v5 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
@@ -6506,7 +6506,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
   }
   else
   {
-    v9 = gameData + 725 * g_SelectedUnitIndex;
+    v9 = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
     if ( a1 - *(__int16 *)(v9 + 147174) == 1 && a2 == *(__int16 *)(v9 + 147176) )
     {
       v6 = 1;
@@ -6518,7 +6518,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     }
     else
     {
-      v11 = gameData + 725 * g_SelectedUnitIndex;
+      v11 = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
       if ( a1 == *(__int16 *)(v11 + 147174) && a2 - *(__int16 *)(v11 + 147176) == 1 )
       {
         v12 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
@@ -6528,7 +6528,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
       }
       else
       {
-        result = gameData + 725 * g_SelectedUnitIndex;
+        result = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
         if ( a1 - *(__int16 *)(result + 147174) != -1 )
           return result;
         result = *(__int16 *)(result + 147176);
@@ -6544,15 +6544,15 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     }
   }
   if ( (MapTile_HasAlignedBridgeApproachRoadOverlay(
-          *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-          *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
           a2,
           a1)
      || MapTile_IsBareBridgeCrossingRoadOverlayCandidate(a1, a2))
-    && UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174) >= 6
-    || (result = UnitStack_GetTileMoveCostOrZero((__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174), a1, gameData, a2)) != 0
+    && UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) >= 6
+    || (result = UnitStack_GetTileMoveCostOrZero((__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET), a1, gameData, a2)) != 0
     && (result = MapTile_IsCastleFoundationTile(a1, a2, 2)) == 0
-    && (result = UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174), result >= v14)
+    && (result = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET), result >= v14)
     && (result = Map_GetTileSurfaceClassOrUnexplored(a1, a2), result != 185) )
   {
     g_RoadBuildModeHasBuildTarget = 1;
@@ -6625,8 +6625,8 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
   int *v12; // edx
 
   result = Map_GetTileSurfaceClassOrUnexplored(
-             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
+             *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+             *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176));
   if ( result != 185 )
   {
     v4 = 0;
@@ -6649,17 +6649,17 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
           v4 = ((_BYTE)g_RoadBuildModeAnimationFrameIndex + 1) & 7;
           g_RoadBuildModeAnimationFrameIndex = v4;
           WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174) - 1,
-            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
+            *(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) - 1,
+            *(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147176));
           WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
-            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176) - 1);
+            *(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147176) - 1);
           WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174) + 1,
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) + 1,
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176));
           WorldMap_RedrawTileIfVisible(
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
-            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176) + 1);
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) + 1);
         }
         if ( !UIWidgetTable_PollHoverAndActions(g_RoadBuildModeControlWidgets, a1) )
         {
@@ -6673,7 +6673,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
         if ( DD_IsFlipping((int)g_RenderState) )
         {
           LOBYTE(v6) = g_CursorCoordShift;
-          v10 = 725 * g_SelectedUnitIndex + gameData;
+          v10 = UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData;
           v4 = (((g_MouseCursorRawX >> g_CursorCoordShift)
                - 32
                - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
@@ -9740,8 +9740,8 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
       {
         if ( BuildCursor_IsPlacementValid(v1, SHIDWORD(g_BuildPlacementTileXY), g_BuildCursorBuildingType, g_SelectedUnitIndex)
           && v1 != __PAIR64__(
-                     *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
-                     *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174)) )
+                     *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
+                     *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)) )
         {
           LODWORD(result) = (*(int (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 24))(
                               (unsigned __int16)(v2 + 63),
@@ -10841,25 +10841,25 @@ signed int  Trap_New(DWORD a1, int a2, int a3, int a4, double a5)
   result = UnitStack_HasBuilder(a4);
   if ( result )
   {
-    if ( UnitStack_GetMinCurrentActionPoints(725 * a4 + gameData + 147174) < 0 || !Trap_CanPlaceAtTile(a1, a2) )
+    if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * a4 + gameData + UNIT_STACK_TABLE_OFFSET) < 0 || !Trap_CanPlaceAtTile(a1, a2) )
       return 0;
-    v10 = a1 - *(__int16 *)(v9 + gameData + 147174);
+    v10 = a1 - *(__int16 *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( v10 <= 0 )
-      v10 = *(__int16 *)(v9 + gameData + 147174) - a1;
+      v10 = *(__int16 *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET) - a1;
     if ( v10 > 1 )
       return 0;
-    v11 = a2 - *(__int16 *)(gameData + 725 * a4 + 147176);
+    v11 = a2 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * a4 + 147176);
     if ( v11 <= 0 )
-      v11 = *(__int16 *)(gameData + 725 * a4 + 147176) - a2;
+      v11 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * a4 + 147176) - a2;
     if ( v11 <= 1 )
     {
-      v12 = 725 * a4;
+      v12 = UNIT_STACK_STRIDE * a4;
       v13 = gameData + 100 * a1;
-      TILE_TRAP_OWNER_MASK(a1, a2) = 1 << *(_BYTE *)(gameData + 725 * a4 + 147178);
+      TILE_TRAP_OWNER_MASK(a1, a2) = 1 << *(_BYTE *)(gameData + UNIT_STACK_STRIDE * a4 + 147178);
       UnitStack_SpendActionPointsByIndexClamped(a4, 0, v13, a5);
       while ( 1 )
       {
-        v14 = Unit_GetSquadCount(v12 + gameData + 147174);
+        v14 = Unit_GetSquadCount(v12 + gameData + UNIT_STACK_TABLE_OFFSET);
         if ( v16 >= v14 )
           break;
         if ( *v15 == UNIT_TYPE_BUILDER )
@@ -10868,11 +10868,11 @@ signed int  Trap_New(DWORD a1, int a2, int a3, int a4, double a5)
           break;
         }
       }
-      Rules_SyncArmyFactStrength(725 * a4 + gameData + 147174, 725 * a4, gameData, v12, v13, a5);
-      Unit_CompactSquad(725 * a4 + gameData + 147174, v18, v17);
+      Rules_SyncArmyFactStrength(UNIT_STACK_STRIDE * a4 + gameData + UNIT_STACK_TABLE_OFFSET, UNIT_STACK_STRIDE * a4, gameData, v12, v13, a5);
+      Unit_CompactSquad(UNIT_STACK_STRIDE * a4 + gameData + UNIT_STACK_TABLE_OFFSET, v18, v17);
       if ( *(__int16 *)(gameData + v19 + 147180) == -1 )
       {
-        Rules_UnlinkArmyFact(v19 + gameData + 147174, v17);
+        Rules_UnlinkArmyFact(v19 + gameData + UNIT_STACK_TABLE_OFFSET, v17);
         WorldMap_SyncSelectionForHumanPlayer(v13);
       }
       return 1;
@@ -10977,7 +10977,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
   int v27; // [esp+4h] [ebp-24h]
   signed int v28; // [esp+Ch] [ebp-1Ch]
 
-  v5 = (__int16 *)(gameData + 147174 + 725 * a1);
+  v5 = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1);
   if ( UnitStack_GetMaxOrderTier((intptr_t)v5) >= 3 )
   {
     v16 = UnitStack_GetVisionRadius((int)v5);
@@ -11014,7 +11014,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
       v27 += 100;
     }
   }
-  v6 = gameData + 725 * a1;
+  v6 = gameData + UNIT_STACK_STRIDE * a1;
   v7 = gameData + 100 * *(__int16 *)(v6 + 147174) + *(__int16 *)(v6 + 147176);
   if ( !TILE_TRAP_OWNER_MASK(*(__int16 *)(v6 + 147174), *(__int16 *)(v6 + 147176)) )
     return 0;
@@ -11034,11 +11034,11 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
     }
     Win_PlayModeChangeFrameTransition(aWpad_pul, 1, v14, v7, a2);
   }
-  v22 = gameData + 725 * a1;
+  v22 = gameData + UNIT_STACK_STRIDE * a1;
   v23 = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(v22 + 147174);
   TILE_TRAP_OWNER_MASK(*(__int16 *)(v22 + 147174), *(__int16 *)(v22 + 147176)) = 0;
-  Rules_RetractTrapFact(*(__int16 *)(725 * a1 + gameData + 147174), *(__int16 *)(725 * a1 + gameData + 147176));
-  Trap_HurtStack((__int16 *)(v24 + gameData + 147174), v23, a2, a3);
+  Rules_RetractTrapFact(*(__int16 *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * a1 + gameData + 147176));
+  Trap_HurtStack((__int16 *)(v24 + gameData + UNIT_STACK_TABLE_OFFSET), v23, a2, a3);
   return 1;
 }
 // 42B839: variable 'v10' is possibly undefined
