@@ -1,0 +1,197 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "BATTLE_AI_PLAN_HOLD",
+  "pattern": "return (?P<lit>0);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_SelectAiPlanMode",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_SelectAiPlanMode (080:5627) returns this plan mode.",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "BATTLE_AI_PLAN_ADVANCE",
+  "pattern": "return (?P<lit>1);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_SelectAiPlanMode",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_SelectAiPlanMode (080:5627) returns this plan mode.",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "BATTLE_AI_PLAN_RANGED_ENGAGE",
+  "pattern": "return (?P<lit>2);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_SelectAiPlanMode",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_SelectAiPlanMode (080:5627) returns this plan mode.",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "BATTLE_AI_PLAN_DISENGAGE",
+  "pattern": "return (?P<lit>4);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_SelectAiPlanMode",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_SelectAiPlanMode (080:5627) returns this plan mode.",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "BATTLE_AI_PLAN_INITIAL_SWEEP",
+  "pattern": "return (?P<lit>6);",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_SelectAiPlanMode",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_SelectAiPlanMode (080:5627) returns this plan mode.",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "BATTLE_AI_PLAN_HOLD",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ScoreAiActionGridForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_UnitBattleAiCurrentPlanMode) in UnitBattle_ScoreAiActionGridForUnit (080:2987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "BATTLE_AI_PLAN_ADVANCE",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ScoreAiActionGridForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_UnitBattleAiCurrentPlanMode) in UnitBattle_ScoreAiActionGridForUnit (080:2987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "BATTLE_AI_PLAN_RANGED_ENGAGE",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ScoreAiActionGridForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_UnitBattleAiCurrentPlanMode) in UnitBattle_ScoreAiActionGridForUnit (080:2987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "BATTLE_AI_PLAN_DISENGAGE",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ScoreAiActionGridForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_UnitBattleAiCurrentPlanMode) in UnitBattle_ScoreAiActionGridForUnit (080:2987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "BATTLE_AI_PLAN_INITIAL_SWEEP",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ScoreAiActionGridForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_UnitBattleAiCurrentPlanMode) in UnitBattle_ScoreAiActionGridForUnit (080:2987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "BATTLE_AI_CELL_MELEE",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ExecuteAiActionForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_BattleCellStateGrid[...]) in UnitBattle_ExecuteAiActionForUnit (080:4987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "BATTLE_AI_CELL_NOOP",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ExecuteAiActionForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_BattleCellStateGrid[...]) in UnitBattle_ExecuteAiActionForUnit (080:4987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "BATTLE_AI_CELL_FORCE_MOVE",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ExecuteAiActionForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_BattleCellStateGrid[...]) in UnitBattle_ExecuteAiActionForUnit (080:4987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "BATTLE_AI_CELL_KITE",
+  "pattern": "case (?P<lit>7):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ExecuteAiActionForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_BattleCellStateGrid[...]) in UnitBattle_ExecuteAiActionForUnit (080:4987).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 8,
+  "name": "BATTLE_AI_CELL_SHOOT",
+  "pattern": "case (?P<lit>8):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "func": "UnitBattle_ExecuteAiActionForUnit",
+  "confidence": "behavior-confirmed",
+  "evidence": "switch(g_BattleCellStateGrid[...]) in UnitBattle_ExecuteAiActionForUnit (080:4987).",
+  "area": "battle"
+ }
+]

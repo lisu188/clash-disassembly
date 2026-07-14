@@ -1,5 +1,27 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E5: UnitBattleAiPlanMode + BattleAiCellAction
+
+Two battle-AI enums (the last of the gameplay enum-extraction batch).
+
+- **`UnitBattleAiPlanMode`** — per-unit turn plan produced by
+  `UnitBattle_SelectAiPlanMode` (`src/game/080_building_ui.inc.c:5627`) and
+  dispatched by `UnitBattle_ScoreAiActionGridForUnit`:
+  `BATTLE_AI_PLAN_HOLD=0`, `_ADVANCE=1`, `_RANGED_ENGAGE=2`, `_DISENGAGE=4`,
+  `_INITIAL_SWEEP=6` (values 3, 5 are never produced). 11 sites: 6 producer
+  returns + 5 consumer case labels (func-scoped).
+- **`BattleAiCellAction`** — per-cell action code from `g_BattleCellStateGrid`
+  dispatched by `UnitBattle_ExecuteAiActionForUnit`
+  (`src/game/080_building_ui.inc.c:4987`): `BATTLE_AI_CELL_MELEE=1`, `_NOOP=5`,
+  `_FORCE_MOVE=6`, `_KITE=7`, `_SHOOT=8` (other cell values are non-action
+  scores). 5 case labels.
+
+Case/return behavior confirmed from the handler bodies (MoveTrackNear+melee,
+MoveTrackForce, ApproachToSafeDistance, MoveShootingUnit). Object-identical
+(0 insn changes / 434,283); members guard-pinned. The two enums share raw
+value 6 (`INITIAL_SWEEP` vs `FORCE_MOVE`) with no conflict - distinct typedefs,
+func-scoped rules.
+
 ## 2026-07-14 - Enum extraction E3: MultiplayerPlayerSlotType + PlayerAiIntelligence
 
 - **`MultiplayerPlayerSlotType`** (0..5) — the `switch(multiplayer_player_type)`

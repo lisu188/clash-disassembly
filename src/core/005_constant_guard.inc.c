@@ -105,6 +105,16 @@ typedef char clash95_guard_UNIT_TYPE_METADATA_STRIDE[(UNIT_TYPE_METADATA_STRIDE)
 typedef char clash95_guard_VIEWED_PLAYER_INDEX_OFFSET[(VIEWED_PLAYER_INDEX_OFFSET) == (147143) ? 1 : -1];
 typedef char clash95_guard_WORLD_MAP_ACTION_WIDGET_COUNT[(WORLD_MAP_ACTION_WIDGET_COUNT) == (6) ? 1 : -1];
 typedef char clash95_guard_WORLD_MAP_ACTION_WIDGET_RECORD_SIZE[(WORLD_MAP_ACTION_WIDGET_RECORD_SIZE) == (53) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_CELL_FORCE_MOVE[(BATTLE_AI_CELL_FORCE_MOVE) == (6) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_CELL_KITE[(BATTLE_AI_CELL_KITE) == (7) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_CELL_MELEE[(BATTLE_AI_CELL_MELEE) == (1) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_CELL_NOOP[(BATTLE_AI_CELL_NOOP) == (5) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_CELL_SHOOT[(BATTLE_AI_CELL_SHOOT) == (8) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_PLAN_ADVANCE[(BATTLE_AI_PLAN_ADVANCE) == (1) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_PLAN_DISENGAGE[(BATTLE_AI_PLAN_DISENGAGE) == (4) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_PLAN_HOLD[(BATTLE_AI_PLAN_HOLD) == (0) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_PLAN_INITIAL_SWEEP[(BATTLE_AI_PLAN_INITIAL_SWEEP) == (6) ? 1 : -1];
+typedef char clash95_guard_BATTLE_AI_PLAN_RANGED_ENGAGE[(BATTLE_AI_PLAN_RANGED_ENGAGE) == (2) ? 1 : -1];
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_BEHEAD[(BUILDING_PRISONER_ACTION_BEHEAD) == (1) ? 1 : -1];
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_NONE[(BUILDING_PRISONER_ACTION_NONE) == (0) ? 1 : -1];
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_PAY[(BUILDING_PRISONER_ACTION_PAY) == (3) ? 1 : -1];

@@ -184,6 +184,30 @@ typedef enum MultiplayerPlayerSlotType
   MP_PLAYER_SLOT_HUMAN_SECULAR = 4,
   MP_PLAYER_SLOT_CLOSED = 5
 } MultiplayerPlayerSlotType;
+
+/* Battle-AI per-unit turn plan, produced by UnitBattle_SelectAiPlanMode
+ * (080_building_ui.inc.c:5627) into g_UnitBattleAiCurrentPlanMode and dispatched
+ * by UnitBattle_ScoreAiActionGridForUnit. Values 3 and 5 are never produced. */
+typedef enum UnitBattleAiPlanMode
+{
+  BATTLE_AI_PLAN_HOLD = 0,           /* defender, early turn */
+  BATTLE_AI_PLAN_ADVANCE = 1,        /* default melee approach */
+  BATTLE_AI_PLAN_RANGED_ENGAGE = 2,  /* ranged line hit within turn 3 */
+  BATTLE_AI_PLAN_DISENGAGE = 4,      /* no wall objective */
+  BATTLE_AI_PLAN_INITIAL_SWEEP = 6   /* first turn, matching side */
+} UnitBattleAiPlanMode;
+
+/* Battle-AI per-cell action code from g_BattleCellStateGrid, dispatched by
+ * UnitBattle_ExecuteAiActionForUnit (080_building_ui.inc.c:4987). Only these
+ * five action codes are handled; other cell values are non-action (scores). */
+typedef enum BattleAiCellAction
+{
+  BATTLE_AI_CELL_MELEE = 1,          /* MoveTrackNear + melee exchange/attack */
+  BATTLE_AI_CELL_NOOP = 5,           /* no action */
+  BATTLE_AI_CELL_FORCE_MOVE = 6,     /* MoveTrackForce toward target */
+  BATTLE_AI_CELL_KITE = 7,           /* ApproachToSafeDistance */
+  BATTLE_AI_CELL_SHOOT = 8           /* MoveShootingUnit (ranged) */
+} BattleAiCellAction;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per

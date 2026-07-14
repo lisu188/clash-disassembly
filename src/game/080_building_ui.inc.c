@@ -2986,10 +2986,10 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int unitIndex, int side, int a3,
   result = 1;
   switch ( g_UnitBattleAiCurrentPlanMode )
   {
-    case 0:
-    case 4:
+    case BATTLE_AI_PLAN_HOLD:
+    case BATTLE_AI_PLAN_DISENGAGE:
       goto LABEL_29;
-    case 1:
+    case BATTLE_AI_PLAN_ADVANCE:
       unitScoreBase = 801 * unitIndex;
       enemyScanIndex = 0;
       enemyScanOffset = 0;
@@ -3152,8 +3152,8 @@ LABEL_282:
       }
       while ( enemyScanIndex < 22 );
       return result;
-    case 2:
-    case 6:
+    case BATTLE_AI_PLAN_RANGED_ENGAGE:
+    case BATTLE_AI_PLAN_INITIAL_SWEEP:
       if ( side == *(_DWORD *)(g_MapData + 836) )
       {
         if ( g_AttackerStartsOnLeft == 1 )
@@ -4986,7 +4986,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int unitIndex, int side, DWORD gameContex
   v6 = g_UnitBattleScanTileRow;
   switch ( g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + cellStateBase] )
   {
-    case 1:
+    case BATTLE_AI_CELL_MELEE:
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(unitRecordOffset + g_MapData + 852)] )
       {
         v6 = (unitRecord[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)unitRecord + 12)) >> 5);
@@ -5032,10 +5032,10 @@ int  UnitBattle_ExecuteAiActionForUnit(int unitIndex, int side, DWORD gameContex
       actionResult = 1;
       result = 1;
       break;
-    case 5:
+    case BATTLE_AI_CELL_NOOP:
       result = 0;
       break;
-    case 6:
+    case BATTLE_AI_CELL_FORCE_MOVE:
       targetCol = g_BattleTargetTileCol;
       v9 = UnitBattle_MoveTrackForce(unitIndex, g_BattleTargetTileCol, gameContext);
       *(_DWORD *)((char *)unitRecord + 23) = v9;
@@ -5048,10 +5048,10 @@ int  UnitBattle_ExecuteAiActionForUnit(int unitIndex, int side, DWORD gameContex
       }
       result = 0;
       break;
-    case 7:
+    case BATTLE_AI_CELL_KITE:
       result = UnitBattle_ApproachToSafeDistance(unitIndex, g_UnitBattleScanTileRow, unitRecordOffset, gameContext);
       break;
-    case 8:
+    case BATTLE_AI_CELL_SHOOT:
       if ( g_UnitTypeMaxRange_512582[88 * *unitRecord] && (unitRecord[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)unitRecord + 12)) >> 5) > 0 )
       {
 LABEL_4:
@@ -5630,16 +5630,16 @@ signed int  UnitBattle_SelectAiPlanMode(int side, signed int scanDirection)
 
   sideCopy = side;
   if ( g_UnitBattleAiTurnCounter <= 3 && UnitBattle_ScanAiPlanRangeLine(side, scanDirection) )
-    return 2;
+    return BATTLE_AI_PLAN_RANGED_ENGAGE;
   if ( *(int *)(g_MapData + 828) <= 0 )
-    return 4;
+    return BATTLE_AI_PLAN_DISENGAGE;
   if ( g_UnitBattleAiTurnCounter == 1 && sideCopy == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
-    return 6;
+    return BATTLE_AI_PLAN_INITIAL_SWEEP;
   if ( sideCopy == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter < 3 )
-    return 0;
+    return BATTLE_AI_PLAN_HOLD;
   if ( sideCopy == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter >= 3 )
-    return 4;
-  return 1;
+    return BATTLE_AI_PLAN_DISENGAGE;
+  return BATTLE_AI_PLAN_ADVANCE;
 }
 // 43CC79: variable 'v2' is possibly undefined
 // 515A10: using guessed type int dword_515A10;
