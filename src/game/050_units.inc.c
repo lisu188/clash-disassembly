@@ -867,7 +867,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
           Diagnostics_TraceWorldMapActionEvent("unit_move_stop_ap", stackIndex, v23, v24, *pathBuffer);
           goto LABEL_21;
         }
-        v25 = *(unsigned __int16 *)(TILE_INDEX((unsigned __int8)v105, BYTE1(v105))) - 0x8000;
+        v25 = *(unsigned __int16 *)(TILE_INDEX((unsigned __int8)v105, BYTE1(v105))) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
         if ( v25 > 0x64
           || (v26 = UNIT_RECORD(v25), (unsigned int)*(char *)(v26 + 4) >= 4)
           || *(__int16 *)(v26 + 16) == -1 )
@@ -894,7 +894,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         }
         v13 = 200 * (unsigned __int8)v105;
         v31 = 2 * BYTE1(v105);
-        v32 = *(unsigned __int16 *)(gameData + v13 + v31 + TILE_MAP_OFFSET) - 0x8000;
+        v32 = *(unsigned __int16 *)(gameData + v13 + v31 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
         if ( v32 <= 0x64 )
         {
           v99 = BUILDING_RECORD_SIZE * v32;
@@ -1146,8 +1146,8 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
       else
       {
         Audio_StopUnitMoveSound();
-        if ( Building_CanAcceptUnitStack(stackIndex, *(unsigned __int16 *)(v13 + gameData + v31 + TILE_MAP_OFFSET) - 0x8000) )
-          Building_UnitGetInto(stackIndex, *(unsigned __int16 *)(v13 + gameData + v31 + TILE_MAP_OFFSET) - 0x8000, v13, v31, a5);
+        if ( Building_CanAcceptUnitStack(stackIndex, *(unsigned __int16 *)(v13 + gameData + v31 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) )
+          Building_UnitGetInto(stackIndex, *(unsigned __int16 *)(v13 + gameData + v31 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v13, v31, a5);
         else
           *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147490) = 0;
       }
@@ -1710,7 +1710,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
                              + TILE_ROW_STRIDE * (unsigned __int8)*(_DWORD *)(stackPtr + 320)
                              + 2 * (unsigned __int8)BYTE1(*(_DWORD *)(stackPtr + 320))
                              + TILE_MAP_OFFSET)
-       - 0x8000;
+       - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( v9 <= 0x64 )
     {
       slotIndex = BUILDING_RECORD_SIZE * v9;
@@ -5085,7 +5085,7 @@ int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, 
   building_row = *(unsigned __int8 *)building_record;
   building_column = *(unsigned __int8 *)(building_record + 1);
   building_kind = *(signed char *)(building_record + 4);
-  building_tile = (unsigned __int16)(buildingIndex + 0x8000);
+  building_tile = (unsigned __int16)(buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE);
 
   *(_WORD *)(TILE_INDEX(building_row, building_column)) = -1;
   if ( building_kind == 1 || building_kind == 2 )
@@ -5304,13 +5304,13 @@ LABEL_8:
     }
     j__nfree_();
   }
-  *(_WORD *)(2 * v7 + gameData + TILE_ROW_STRIDE * HIDWORD(v7) + TILE_MAP_OFFSET) = buildingIndexWord + 0x8000;
+  *(_WORD *)(2 * v7 + gameData + TILE_ROW_STRIDE * HIDWORD(v7) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
     v16 = 200 * (HIDWORD(v7) + 1);
-    *(_WORD *)(v16 + gameData + 2 * v7 + TILE_MAP_OFFSET) = buildingIndexWord + 0x8000;
-    *(_WORD *)(gameData + v16 + 2 * v7 + 556376) = buildingIndexWord + 0x8000;
-    *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556376) = buildingIndexWord + 0x8000;
+    *(_WORD *)(v16 + gameData + 2 * v7 + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + v16 + 2 * v7 + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   }
   Render_LoadResourceSprite_v2();
   return v17;
@@ -6003,7 +6003,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       v73 = *(unsigned __int16 *)(2 * tileColumn + 200 * tileRow + gameData + 556370);
       if ( (unsigned __int16)v73 >= 0x8000u && *(unsigned __int16 *)(2 * tileColumn + 200 * tileRow + gameData + 556370) != 0xFFFF )
       {
-        v74 = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (v73 - 0x8000));
+        v74 = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (v73 - TILE_OCCUPANT_BUILDING_INDEX_BASE));
         v75 = (char)v74[4];
         if ( (v75 == 2 || v75 == 1) && *v74 == tileRow && v74[1] == tileColumn - 2 && !*((_WORD *)v74 + 8) )
         {
@@ -6222,8 +6222,8 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   v39 = *(unsigned __int16 *)(TILE_INDEX(tileRow, tileColumn));
   if ( (unsigned __int16)v39 >= 0x8000u && *(unsigned __int16 *)(TILE_INDEX(tileRow, tileColumn)) != 0xFFFF )
   {
-    v40 = v39 - 0x8000;
-    v41 = BUILDING_RECORD_SIZE * (v39 - 0x8000);
+    v40 = v39 - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    v41 = BUILDING_RECORD_SIZE * (v39 - TILE_OCCUPANT_BUILDING_INDEX_BASE);
     v102 = v41 + gameData + BUILDING_TABLE_OFFSET;
     v42 = gameData + v41;
     v43 = *(__int16 *)(v102 + 16);

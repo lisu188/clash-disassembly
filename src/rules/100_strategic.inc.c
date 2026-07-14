@@ -884,7 +884,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
   {
     if ( v3 > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v3 + 147180) > 0x28 )
     {
-      Building_Destroy(BUILDING_RECORD_SIZE * (v3 - 0x8000) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
+      Building_Destroy(BUILDING_RECORD_SIZE * (v3 - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
     }
     else
@@ -1580,7 +1580,7 @@ signed int  Rules_QueuePathNearCastle(int a1, int a2, int a3, DWORD a4)
   }
   if ( UnitStack_HasBuilder(a1) )
     Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = (const void *)Building_GenerateNearApproachTrack(v5, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000, v5, a3, a4);
+  v6 = (const void *)Building_GenerateNearApproachTrack(v5, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v5, a3, a4);
   Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
   if ( v9 )
   {
@@ -1660,7 +1660,7 @@ signed int  Rules_QueuePathToCastle(int a1, int a2, int a3, DWORD a4)
     Pathing_EnableBridgeCrossings(v5, a3, a4);
   v6 = (const void *)Building_GenerateApproachTrack(
                        v5,
-                       *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000,
+                       *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
                        v5,
                        a3,
                        a4);
@@ -1730,7 +1730,7 @@ signed int  Move_TryApproachTarget(int a1, DWORD a2, int a3)
   }
   else
   {
-    result = Building_GenerateApproachTrack(a1, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000, a1, a3, a2);
+    result = Building_GenerateApproachTrack(a1, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, a1, a3, a2);
     v5 = (const void *)result;
     if ( result )
     {
@@ -2717,7 +2717,7 @@ _DWORD * Rules_RetractCastleFact(unsigned __int8 *a1, double a2)
     Rules_RetractFactById(*(_DWORD *)(a1 + 463), a2);
   v3 = *v2;
   *(_DWORD *)(v2 + 463) = 0;
-  return Rules_LogCastleDestroyedFact(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - 0x8000);
+  return Rules_LogCastleDestroyedFact(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
 }
 // 4553B0: variable 'v2' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -4549,7 +4549,7 @@ void  AI_EvaluateStrategicTargetAtTile(
                                   + UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(a4, a3))
                                   + 147180) > 0x28 )
     {
-      v13 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - 0x8000;
+      v13 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
       if ( v13 > 0x64
         || (v14 = UNIT_RECORD(v13), (unsigned int)*(char *)(v14 + 4) >= 4)
         || *(__int16 *)(v14 + 16) == -1 )
@@ -4568,7 +4568,7 @@ void  AI_EvaluateStrategicTargetAtTile(
       else
       {
         v12 = 1;
-        v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - 0x8000;
+        v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
       }
     }
     else
@@ -4753,7 +4753,7 @@ int  createCastle(
   Diagnostics_TraceBootstrapEvent("createCastle-building-new");
   Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET), st7_0, a6, 1);
   Diagnostics_TraceBootstrapEvent("createCastle-post-building-new");
-  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET) - 0x8000;
+  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   *(_WORD *)(BUILDING_RECORD_SIZE * unit_index + gameData + 509690) = 0;
   Diagnostics_TraceBootstrapEvent("createCastle-update-per-turn");
   Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET, 0);
@@ -5003,13 +5003,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(1, 16, 11, MapTile_GetReligiousSiteCategory(16, 11));
       return 0;
     case 2:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         2,
         41,
         68,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 564710) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 3:
     case 0xD:
@@ -5018,13 +5018,13 @@ LABEL_6:
       Mission_TraceObjectiveBlocked(ACTIVE_MISSION_INDEX, *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET), 10, 0);
       return 0;
     case 4:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         4,
         56,
         69,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 5:
       v3 = (unsigned __int8)g_LanguageIndex;
@@ -5094,13 +5094,13 @@ LABEL_27:
       }
       return 1;
     case 6:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676) == 0 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 0 )
         return 1;
       Mission_TraceObjectiveBlocked(
         6,
         90,
         41,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 7:
       v11 = !MapTile_HasHiddenTreasure(55, 45) && !MapTile_HasHiddenTreasure(50, 27) && !MapTile_HasHiddenTreasure(35, 63) && !MapTile_HasHiddenTreasure(14, 68);
@@ -5145,7 +5145,7 @@ LABEL_27:
       }
     case 8:
       v19 = 0;
-      while ( *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
+      while ( *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 562420) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
         v19 += 31;
         if ( v19 >= 372 )
@@ -5188,22 +5188,22 @@ LABEL_75:
       Mission_TraceObjectiveBlocked(11, 2, 44, MapTile_GetReligiousSiteCategory(2, 44));
       return 0;
     case 0xC:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         12,
         59,
         14,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 568202) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 0xE:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         14,
         52,
         24,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 0xF:
       v22 = 0;
@@ -5240,13 +5240,13 @@ LABEL_94:
       }
       return 1;
     case 0x10:
-      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676) == 1 )
+      if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) == 1 )
         return 1;
       Mission_TraceObjectiveBlocked(
         16,
         91,
         43,
-        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - 0x8000) + gameData + 509676));
+        *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 0x11:
       v25 = !MapTile_HasHiddenTreasure(50, 34) && !MapTile_HasHiddenTreasure(51, 73) && !MapTile_HasHiddenTreasure(77, 34) && !MapTile_HasHiddenTreasure(24, 49);
@@ -5291,7 +5291,7 @@ LABEL_105:
       v32 = 0;
       for ( i = 0; i != 372; i += 31 )
       {
-        v34 = *(__int16 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 573450) - 0x8000) + gameData + i + 509692);
+        v34 = *(__int16 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 573450) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + i + 509692);
         if ( v34 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v34 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
           ++v32;
       }
@@ -5374,7 +5374,7 @@ int Mission_CheckFailureCondition()
   switch ( ACTIVE_MISSION_INDEX )
   {
     case 3:
-      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 560616) - 0x8000) + gameData + 509676) != 0;
+      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 560616) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) != 0;
     case 4:
     case 0xE:
       return *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) > 0x14u;
@@ -5422,7 +5422,7 @@ LABEL_19:
       }
       return v1 < 12;
     case 0xD:
-      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 561026) - 0x8000) + gameData + 509676) != 1;
+      return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 561026) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) != 1;
     case 0xF:
       return MISSION_FAILURE_FLAG;
     case 0x12:
@@ -5703,7 +5703,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 25, 50, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       Rules_LogMissionSetupInfo();
-      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - 0x8000, 4);
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE, 4);
       Game_InitPlayerViewState();
       break;
     case 5:
@@ -6243,7 +6243,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 18, 36, 3, UNIT_TYPE_PIKEMAN, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 25, 4, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       Rules_LogMissionSetupInfo();
-      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(TILE_INDEX(52, 24)) - 0x8000, 14);
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(TILE_INDEX(52, 24)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, 14);
       Game_InitPlayerViewState();
       break;
     case 15:

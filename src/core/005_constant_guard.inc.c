@@ -65,10 +65,11 @@ typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE[(RELIGIOUS_S
 typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE[(RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE) == (2) ? 1 : -1];
 typedef char clash95_guard_RELIGIOUS_SITE_CATEGORY_SHRINE[(RELIGIOUS_SITE_CATEGORY_SHRINE) == (1) ? 1 : -1];
 typedef char clash95_guard_SCREEN_HEIGHT[(SCREEN_HEIGHT) == (480) ? 1 : -1];
-typedef char clash95_guard_SCREEN_MAX_X[(SCREEN_MAX_X) == (SCREEN_MAX_X) ? 1 : -1];
-typedef char clash95_guard_SCREEN_MAX_Y[(SCREEN_MAX_Y) == (SCREEN_MAX_Y) ? 1 : -1];
+typedef char clash95_guard_SCREEN_MAX_X[(SCREEN_MAX_X) == (0x27F) ? 1 : -1];
+typedef char clash95_guard_SCREEN_MAX_Y[(SCREEN_MAX_Y) == (0x1DF) ? 1 : -1];
 typedef char clash95_guard_SCREEN_WIDTH[(SCREEN_WIDTH) == (640) ? 1 : -1];
 typedef char clash95_guard_TILE_MAP_OFFSET[(TILE_MAP_OFFSET) == (556374) ? 1 : -1];
+typedef char clash95_guard_TILE_OCCUPANT_BUILDING_INDEX_BASE[(TILE_OCCUPANT_BUILDING_INDEX_BASE) == (0x8000) ? 1 : -1];
 typedef char clash95_guard_TILE_ROW_STRIDE[(TILE_ROW_STRIDE) == (200) ? 1 : -1];
 typedef char clash95_guard_TILE_TERRAIN_RECORD_STRIDE[(TILE_TERRAIN_RECORD_STRIDE) == (14) ? 1 : -1];
 typedef char clash95_guard_TILE_TERRAIN_ROW_STRIDE[(TILE_TERRAIN_ROW_STRIDE) == (1400) ? 1 : -1];

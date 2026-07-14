@@ -7040,7 +7040,7 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
   UnitStack_ClearRemainingActionPoints(newStackRecord, (DWORD)building, a3);
   Rules_LinkArmyFact(newStackRecord, v17, v18, a3, (char)v14, (DWORD)building);
   Rules_SyncArmyFactStrength(newStackRecord, 0, v19, (char)v14, (DWORD)building, a3);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - 0x8000, v20, v21);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v20, v21);
   UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])));
   UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])), v22);
   Debug_Log(v23, (char)v14, (DWORD)building, (int)aBuildings_unit);
@@ -7559,7 +7559,7 @@ int  Building_CompactGarrison(unsigned __int8 *building, unsigned __int8 *a2, do
     }
   }
   return Building_OnGarrisonChange(
-           *(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - 0x8000,
+           *(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
            (int)a2,
            a3);
 }

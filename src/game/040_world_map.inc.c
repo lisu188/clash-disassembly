@@ -112,7 +112,7 @@ BOOL  MapTile_HasOwnBuilding(int tileX, int tileY)
   int buildingRecord; // eax
   BOOL result; // eax
 
-  buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - 0x8000;
+  buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   result = 0;
   if ( buildingIndex <= 0x64 )
   {
@@ -139,7 +139,7 @@ BOOL  MapTile_HasEnemyBuilding(int tileX, int tileY)
   int buildingRecord; // eax
   BOOL result; // eax
 
-  buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - 0x8000;
+  buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   result = 0;
   if ( buildingIndex <= 0x64 )
   {
@@ -525,7 +525,7 @@ LABEL_80:
     {
       if ( !UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
         || (v5 += gameData,
-            *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
+            *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v17 + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 509678) == 1)
         && UnitStack_HasPeasantCargo(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
       {
         v7 = &g_CursorDesc_DeliverCargo;
@@ -537,7 +537,7 @@ LABEL_80:
       goto LABEL_25;
     }
     v5 += gameData;
-    if ( !Building_CanAcceptUnitStack(g_SelectedUnitIndex, *(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) )
+    if ( !Building_CanAcceptUnitStack(g_SelectedUnitIndex, *(unsigned __int16 *)(v17 + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) )
     {
       v7 = &g_CursorDesc_CannotEnter;
       goto LABEL_25;
@@ -573,7 +573,7 @@ LABEL_26:
     }
     else if ( MapTile_HasBuilding(tileX, tileY) )
     {
-      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) - 0x8000);
+      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
       v19 = gameData + v18;
       v20 = v18 + gameData + BUILDING_TABLE_OFFSET;
       if ( *(_WORD *)(gameData + v18 + 509690) )
@@ -741,7 +741,7 @@ LABEL_26:
   {
     if ( g_SelectedUnitIndex == -1 && MapTile_HasOwnBuilding(tileX, tileY) )
     {
-      buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - 0x8000;
+      buildingIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
       buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
       constructionState = *(_WORD *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509690);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -773,19 +773,19 @@ LABEL_26:
     if ( !hasOwnBuilding )
     {
       if ( g_SelectedUnitIndex != -1
-        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - 0x8000) + gameData + 509678) != 1
+        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509678) != 1
          || !UnitStack_HasPeasantCargo(v30 + gameData + UNIT_STACK_TABLE_OFFSET)) )
       {
         Unit_AttackBuilding(
           g_SelectedUnitIndex,
-          *(unsigned __int16 *)(2 * tileY + gameData + TILE_ROW_STRIDE * tileX + TILE_MAP_OFFSET) - 0x8000,
+          *(unsigned __int16 *)(2 * tileY + gameData + TILE_ROW_STRIDE * tileX + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
           v30,
           200 * tileX,
           a1);
       }
       return;
     }
-    targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - 0x8000;
+    targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( *(_WORD *)(BUILDING_RECORD_SIZE * targetBuildingIndex + gameData + 509690) )
       return;
     if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET, targetBuildingIndex) )
@@ -4193,7 +4193,7 @@ void * MiniMap_DrawTileCell(void *result, signed int tileColumn)
   {
     tile_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
     if ( tile_index >= 0x8000 && tile_index != 0xFFFF )
-      color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - 0x8000) + 2)];
+      color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 2)];
   }
   if ( !Map_IsTileVisibleToPlayer(row, column, *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET)) )
     color = 1;

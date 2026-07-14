@@ -1633,7 +1633,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
               break;
             }
           }
-          v11 = neighborStackIndex - 0x8000;
+          v11 = neighborStackIndex - TILE_OCCUPANT_BUILDING_INDEX_BASE;
           if ( v11 <= 0x64 )
           {
             v12 = BUILDING_RECORD_SIZE * v11;
@@ -5944,26 +5944,26 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   Unit_Create(UNIT_TYPE_RAM, 0, 5, 0, 5);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
   Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
-  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + BUILDING_TABLE_OFFSET, v3);
-  *(_DWORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510112) = 1000;
+  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, v3);
+  *(_DWORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510112) = 1000;
   v4 = gameData;
-  v5 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000);
+  v5 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
   v6 = *(_BYTE *)(v5 + gameData + 510118) & 0xF8;
   *(_BYTE *)(v5 + gameData + 510118) = v6;
   *(_BYTE *)(v5 + v4 + 510118) = v6 | 2;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 2u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 1u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 8u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 4u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 0x10u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 2u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 1u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 8u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 4u;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 0x10u;
   *(_DWORD *)(gameData + 140063) = 0;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510119) = 33;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510120) = 2;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510125) = 34;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510119) = 33;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510120) = 2;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510125) = 34;
+  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510126) = 4;
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + BUILDING_TABLE_OFFSET));
+    (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
   Unit_Create(UNIT_TYPE_BUILDER, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
   Unit_Create(UNIT_TYPE_ARCHER, 0, 7, 0, 7);
@@ -5997,10 +5997,10 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v17, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
-  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + BUILDING_TABLE_OFFSET, this);
+  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, this);
   result = Building_LogBuiltCastleFacts(
-             (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + BUILDING_TABLE_OFFSET));
+             (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
   g_CurrentPlayerIndex = v19;
   return result;
 }
@@ -6234,7 +6234,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
                (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET),
                0,
                0,
-               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + BUILDING_TABLE_OFFSET),
+               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
                a2,
                0);
     case 8:
@@ -6247,7 +6247,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
                (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET)),
                0,
                0,
-               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - 0x8000) + gameData + BUILDING_TABLE_OFFSET),
+               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
                a2,
                0);
     case 9:
@@ -6369,15 +6369,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
           startRowPlus1,
           v4);
         Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(v42 + gameData + startColumnDoubled + TILE_MAP_OFFSET), v4, aCantbelly, 1);
-        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000) + gameData + 509690) = 0;
-        v12 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000);
+        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+        v12 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
         *(_DWORD *)(v12 + gameData + 510112) += 50;
         Unit_UpdatePerTurn(
-          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000) + gameData + BUILDING_TABLE_OFFSET,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v13);
         v14 = v38;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000)
+          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v14);
@@ -6504,15 +6504,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
           startRowPlus1,
           v4);
         Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(startColumnDoubled + v42 + gameData + TILE_MAP_OFFSET), v4, aCantbelly_0, 1);
-        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000) + gameData + 509690) = 0;
-        v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000);
+        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+        v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
         *(_DWORD *)(v18 + gameData + 510112) += 100;
         Unit_UpdatePerTurn(
-          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000) + gameData + BUILDING_TABLE_OFFSET,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v19);
         v20 = v38;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - 0x8000)
+          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + v42 + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, v20);

@@ -70,6 +70,11 @@
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374
+/* Occupancy layer (base TILE_MAP_OFFSET) stores a castle/building index biased
+ * by +0x8000 so an occupied tile is distinguishable from empty; readers
+ * subtract the base then index the building table by BUILDING_RECORD_SIZE.
+ * Decoded building index is bounds-checked <= 0x64 (BUILDING table count). */
+#define TILE_OCCUPANT_BUILDING_INDEX_BASE 0x8000
 #define TILE_ROW_STRIDE 200
 #define TILE_TRAP_OWNER_MASK_OFFSET 576374
 #define TILE_TRAP_OWNER_MASK_ROW_STRIDE 100

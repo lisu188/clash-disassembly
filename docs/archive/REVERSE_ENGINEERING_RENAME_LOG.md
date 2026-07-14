@@ -1,5 +1,41 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign B3: occupancy building-index encoding
+
+Mints `TILE_OCCUPANT_BUILDING_INDEX_BASE` (`0x8000`) and applies it at 94 sites
+that encode/decode the occupancy layer. The occupancy tile word stores a
+building-table index biased by `+0x8000` so an occupied tile is distinguishable
+from empty; readers subtract the base and index the building table.
+
+| Direction | Form | Sites |
+|---|---|---|
+| decode | `*(uint16*)(TILE_INDEX/TILE_MAP_OFFSET...) - 0x8000` | 83 |
+| encode | `buildingIndex + 0x8000` written to the occupancy layer | 11 |
+
+Confidence **behavior-confirmed**: decoded indices are bounds-checked
+`<= 0x64` (=100, the building-table count; e.g.
+`src/game/050_units.inc.c:1713`, `src/game/090_special_sites_savegame.inc.c:1636`
+- both despite decompiler `stack`-flavored variable names) and scaled by
+`BUILDING_RECORD_SIZE` into the building table
+(`src/game/040_world_map.inc.c:4196`, `src/game/050_units.inc.c:6006`); the
+encode side writes `buildingIndex + 0x8000` straight into `TILE_INDEX(...)` /
+`TILE_MAP_OFFSET` (`src/game/060_buildings.inc.c:216`). Mission-05-relevant:
+enumerating player-owned buildings from the occupancy layer.
+
+The macro is spelled `0x8000`, so every substitution is **token-identical** -
+the strict G1 gate passes with 0 hunks, a direct value-identity proof. Scope
+confined to the gameplay fragments (decode) and building-index-variable encodes;
+unrelated `0x8000` uses (sign tests, `& 0x8000`) are untouched. Rules:
+`docs/archive/literal_rules/B3_occupancy.json`.
+
+### Deferred (B3)
+
+- Save-format count/size constants (`UNIT_STACK_TABLE_COUNT` 500,
+  `BUILDING_TABLE_COUNT` 100, `PLAYER_SLOT_COUNT` 5, `GAMEDATA_SAVE_IMAGE_BYTES`
+  0x8F29E) are documented in `docs/SAVE_DAT_FORMAT.md` but their raw sites are
+  bare loop bounds heavily shared with unrelated code; deferred pending
+  per-loop scoping.
+
 ## 2026-07-14 - Magic-number campaign B5: screen dimensions
 
 Mints the 640x480 display-surface constants (none existed) and applies them at

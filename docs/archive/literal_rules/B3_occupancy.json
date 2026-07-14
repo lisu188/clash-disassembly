@@ -1,0 +1,14 @@
+[
+  {"kind": "regex", "value": 32768, "name": "TILE_OCCUPANT_BUILDING_INDEX_BASE",
+   "pattern": "- (?P<lit>0x8000)(?![0-9A-Fa-f])",
+   "files": ["src/game/040_world_map.inc.c", "src/game/050_units.inc.c", "src/game/060_buildings.inc.c", "src/game/080_building_ui.inc.c", "src/game/090_special_sites_savegame.inc.c", "src/rules/100_strategic.inc.c"],
+   "confidence": "behavior-confirmed",
+   "evidence": "Occupancy layer (TILE_MAP_OFFSET) stores building_index + 0x8000; every `- 0x8000` in the gameplay fragments decodes an occupancy word read from TILE_INDEX/TILE_MAP_OFFSET to a building index, bounds-checked `<= 0x64` (=100 building-table count, e.g. 050_units.inc.c:1713, 090_special_sites_savegame.inc.c:1636) and/or scaled by BUILDING_RECORD_SIZE (050_units.inc.c:6006/6226, 060_buildings.inc.c:5844, 040_world_map.inc.c:4196). Token-identical (macro body 0x8000) so strict G1 proves value-identity; scope confined to the gameplay files where `- 0x8000` is uniformly this decode.",
+   "area": "buildings"},
+  {"kind": "regex", "value": 32768, "name": "TILE_OCCUPANT_BUILDING_INDEX_BASE",
+   "pattern": "[Bb]uildingIndex\\w* \\+ (?P<lit>0x8000)(?![0-9A-Fa-f])",
+   "files": ["src/game/050_units.inc.c", "src/game/060_buildings.inc.c", "src/game/040_world_map.inc.c", "src/game/090_special_sites_savegame.inc.c"],
+   "confidence": "behavior-confirmed",
+   "evidence": "Encode side: a building index is written into the occupancy layer as buildingIndex + 0x8000 (e.g. 060_buildings.inc.c:216 *(_WORD*)(TILE_INDEX(row,column)) = buildingIndex + 0x8000; 050_units.inc.c:5307 written to TILE_MAP_OFFSET). All + 0x8000 sites in these files use a building-index variable. Token-identical.",
+   "area": "buildings"}
+]

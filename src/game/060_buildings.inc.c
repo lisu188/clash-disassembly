@@ -213,13 +213,13 @@ int force;
   Diagnostics_TraceBootstrapEvent("Building_New-before-unit-get-into");
   Building_UnitGetInto(stackIndex, buildingIndexCopy, 7, stackIndex, st7_0);
   Diagnostics_TraceBootstrapEvent("Building_New-after-unit-get-into");
-  *(_WORD *)(TILE_INDEX(row, column)) = buildingIndex + 0x8000;
+  *(_WORD *)(TILE_INDEX(row, column)) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingType == 1 || buildingType == 2 )
   {
     v34 = 200 * (row + 1);
-    *(_WORD *)(v34 + gameData + 2 * column + TILE_MAP_OFFSET) = buildingIndex + 0x8000;
-    *(_WORD *)(gameData + 200 * row + 2 * column + 556376) = buildingIndex + 0x8000;
-    *(_WORD *)(v34 + gameData + 2 * column + 556376) = buildingIndex + 0x8000;
+    *(_WORD *)(v34 + gameData + 2 * column + TILE_MAP_OFFSET) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + 200 * row + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(v34 + gameData + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( !force )
     {
       v51 = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
@@ -332,7 +332,7 @@ _DWORD * Building_LogBuiltCastleFacts(unsigned __int8 *buildingPtr)
 {
   int castleIndex; // edx
 
-  castleIndex = *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * *buildingPtr + TILE_MAP_OFFSET) - 0x8000;
+  castleIndex = *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * *buildingPtr + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   return Rules_LogCastleBuiltFactAndScheme(castleIndex, castleIndex);
 }
 // 5202E4: using guessed type int gameData;
@@ -633,9 +633,9 @@ char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3,
 
   Debug_Log(a2, a3, (DWORD)buildingPtr, (int)aBuilding_build);
   LOBYTE(v5) = *buildingPtr;
-  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * v5 + TILE_MAP_OFFSET) - 0x8000);
-  Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - 0x8000);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - 0x8000, v7, a4);
+  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * v5 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v7, a4);
   v9 = (char)buildingPtr[4];
   if ( v9 == 2 || v9 == 1 )
     Map_RebuildRoadOverlayAtTile(*buildingPtr, buildingPtr[1] + 2);
@@ -738,7 +738,7 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
             BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = -1;
           }
           return Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - 0x8000,
+                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
                    remainingGold,
                    a5);
         }
@@ -830,7 +830,7 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *buildingPtr, dou
   while ( slotIndex < 12 );
   if ( garrisonChanged )
     LOBYTE(v6) = Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - 0x8000,
+                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
                    (int)buildingPtr,
                    a2);
   return v6;
@@ -952,7 +952,7 @@ int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *buildingPtr, doub
   }
   if ( garrisonChanged )
     return Building_OnGarrisonChange(
-             *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - 0x8000,
+             *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
              (int)slotPtr,
              a2);
   return result;
@@ -1589,8 +1589,8 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       v35[1] = v37;
       *(_WORD *)(2 * v37 + TILE_ROW_STRIDE * v36 + gameData + TILE_MAP_OFFSET) = *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1]));
     }
-    v30 = savedBuildingIndex + 0x8000;
-    *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = savedBuildingIndex + 0x8000;
+    v30 = savedBuildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = savedBuildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
     v31 = buildingPtr;
     *(_WORD *)(TILE_ROW_STRIDE * (*buildingPtr + 1) + gameData + 2 * buildingPtr[1] + TILE_MAP_OFFSET) = v30;
     *(_WORD *)(200 * (*v31 + 1) + gameData + 2 * buildingPtr[1] + 556376) = v30;
@@ -4421,7 +4421,7 @@ static void Diagnostics_TraceWorldMapClickEvent(
            && tile_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
   if ( in_bounds && MapTile_HasBuilding(tile_x, tile_y) )
   {
-    building_index = *(unsigned __int16 *)TILE_INDEX(tile_x, tile_y) - 0x8000;
+    building_index = *(unsigned __int16 *)TILE_INDEX(tile_x, tile_y) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( building_index >= 0 && building_index <= 100 )
     {
       int building_record = BUILDING_RECORD(building_index);
@@ -5841,7 +5841,7 @@ BOOL  MapTile_HasWestRoadConnection(int row, int column)
   result = 1;
   if ( neighborBuildingMarker < 0x8000
     || neighborBuildingMarker > 65534
-    || (neighborBuildingPtr = (unsigned __int8 *)(BUILDING_RECORD_SIZE * (neighborBuildingMarker - 0x8000) + gameData + BUILDING_TABLE_OFFSET), v6 = (char)neighborBuildingPtr[4], v6 != 2) && v6 != 1
+    || (neighborBuildingPtr = (unsigned __int8 *)(BUILDING_RECORD_SIZE * (neighborBuildingMarker - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET), v6 = (char)neighborBuildingPtr[4], v6 != 2) && v6 != 1
     || (v7 = *neighborBuildingPtr, v7 != row)
     || (v8 = row ^ v7, LOBYTE(v8) = neighborBuildingPtr[1], v8 != column - 2) )
   {

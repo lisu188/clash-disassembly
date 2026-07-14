@@ -56,6 +56,7 @@
     {"name": "SCREEN_HEIGHT", "value": 480, "spelling": "480", "kind": "dimension", "family": "screen", "tier": 3, "deferred": true, "regex_only": true},
     {"name": "SCREEN_MAX_X", "value": 639, "spelling": "0x27F", "kind": "dimension", "family": "screen", "tier": 3, "deferred": true, "regex_only": true},
     {"name": "SCREEN_MAX_Y", "value": 479, "spelling": "0x1DF", "kind": "dimension", "family": "screen", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "TILE_OCCUPANT_BUILDING_INDEX_BASE", "value": 32768, "spelling": "0x8000", "kind": "encoding", "family": "occupancy", "tier": 3, "deferred": true, "regex_only": true},
     {"name": "BUILDING_PRISONER_SLOT_STRIDE", "value": 6, "spelling": "6", "kind": "stride", "family": "buildings", "tier": 3, "deferred": true},
     {"name": "BUILDING_PRISONER_SLOT_COUNT", "value": 3, "spelling": "3", "kind": "count", "family": "buildings", "tier": 3, "deferred": true},
 
