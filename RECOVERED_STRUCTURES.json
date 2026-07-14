@@ -4,7 +4,7 @@
   "kind": "type_metadata_entry",
   "base_offset": 512568,
   "stride": 88,
-  "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitTypeResourceKeys`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family.",
+  "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitTypeResourceKeys`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family. The reconstruction now materializes the executable-backed +8..+37 runtime core for all 35 records; later fields remain represented by older isolated globals until their full initialized bytes are restored.",
   "fields": [
    {
     "offset": 0,
@@ -194,6 +194,7 @@
    "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering subtract byte `+15` directly from the sprite Y anchor, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
    "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and wall attack.",
    "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record.",
+   "The original PE maps DGROUP VMA `0x004EC000` to file offset `0x000EA200`; applying that mapping to metadata VA `0x00512568` exposes 35 consecutive 88-byte initialized records. Their exact `+8..+37` bytes now populate `g_UnitTypeRuntimeCoreMetadata`, including type 17's `{step=3,tick=3,interval=10,attack_frames=8,defence=1,AP=26,road=3,surfaces={4,6,5,0,7,0,8,0}}` core.",
    "`Building_SetUnitProduction` and `Building_ProcessUnitProductionTurn` index the same 88-byte record at offsets `+71` and `+72`, loading the selected unit's production-time countdown and production-cost deduction from the metadata family that also stores the combat, movement, and audio bytes."
   ]
  },

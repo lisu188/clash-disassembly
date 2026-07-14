@@ -1,0 +1,21 @@
+# Mission 05 first authentic strategic march leg after restoring the executable-
+# backed unit metadata core. Select player-0 stack 4 directly, queue the verified
+# unobstructed 33-node path to tile (47,58), and prove that the first 20-point
+# turn advances to (67,47) while retaining the remaining 29 path nodes.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 320 176 0.18 0.8 direct-select-stack4-at-71-44
+wait_log 20 selected_stack_changed selected=4 a=71 b=44
+
+world_pan_viewport 45 55 80
+click 200 260 0.18 0.8 set-waypoint-47-58
+wait_log 20 tile_input cursor=200,260 tile=47,58
+wait_log 20 move_order_track_result selected=4 a=47 b=58 c=33
+click 200 260 0.05 2.0 confirm-waypoint-47-58
+wait_log 60 unit_move_after_path_state selected=4 a=67 b=47 c=29
+wait_log 20 unit_move_stop_ap selected=4 a=0 b=3 c=29
+
+screenshot mission05-first-march-leg
+nonblank mission05-first-march-leg
+fail_if_log mission05_failure_friendly_attack

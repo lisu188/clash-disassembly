@@ -1,0 +1,164 @@
+# Mission 05 authentic queued-path continuation probe. Establish the same first
+# 20-point leg as mission_05_march_probe, then return to player 0 and reselect
+# stack 4 through the authentic Next Unit widget before clicking its centered
+# tile to resume the retained path. The original Unit_NewTurn checks, but does
+# not set, per-slot ready flags; Mission 05 therefore requires this manual
+# continuation rather than automatic movement at turn start.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 320 176 0.18 0.8 direct-select-stack4-at-71-44
+wait_log 20 selected_stack_changed selected=4 a=71 b=44
+world_pan_viewport 45 55 80
+click 200 260 0.18 0.8 set-waypoint-47-58
+wait_log 20 move_order_track_result selected=4 a=47 b=58 c=33
+click 200 260 0.05 2.0 confirm-waypoint-47-58
+wait_log 60 unit_move_after_path_state selected=4 a=67 b=47 c=29
+
+# The turn banner resets the selected stack. Five Next Unit presses cycle the
+# five movable player-0 stacks in index order and center stack 4. Clicking the
+# centered stack then takes the original own-stack/retained-path branch.
+mark_log_count march_leg_2 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_2 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-1-skip-1
+click 320 240 0.12 0.65 post-end-turn-1-skip-2
+click 320 240 0.12 0.65 post-end-turn-1-skip-3
+click 320 240 0.12 0.65 post-end-turn-1-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+click 496 416 0.18 0.55 next-unit-turn-2-stack0
+click 496 416 0.18 0.55 next-unit-turn-2-stack1
+click 496 416 0.18 0.55 next-unit-turn-2-stack2
+click 496 416 0.18 0.55 next-unit-turn-2-stack3
+click 496 416 0.18 0.8 next-unit-turn-2-stack4
+wait_log_marked 30 stack4_turn_2
+click 320 240 0.18 3.0 resume-retained-path-turn-2
+wait_log_marked 60 march_leg_2
+
+mark_log_count march_leg_3 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_3 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-2-skip-1
+click 320 240 0.12 0.65 post-end-turn-2-skip-2
+click 320 240 0.12 0.65 post-end-turn-2-skip-3
+click 320 240 0.12 0.65 post-end-turn-2-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=3
+click 496 416 0.18 0.55 next-unit-turn-3-stack0
+click 496 416 0.18 0.55 next-unit-turn-3-stack1
+click 496 416 0.18 0.55 next-unit-turn-3-stack2
+click 496 416 0.18 0.55 next-unit-turn-3-stack3
+click 496 416 0.18 0.8 next-unit-turn-3-stack4
+wait_log_marked 30 stack4_turn_3
+click 320 240 0.18 3.0 resume-retained-path-turn-3
+wait_log_marked 60 march_leg_3
+
+mark_log_count march_leg_4 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_4 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-3-skip-1
+click 320 240 0.12 0.65 post-end-turn-3-skip-2
+click 320 240 0.12 0.65 post-end-turn-3-skip-3
+click 320 240 0.12 0.65 post-end-turn-3-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=4
+click 496 416 0.18 0.55 next-unit-turn-4-stack0
+click 496 416 0.18 0.55 next-unit-turn-4-stack1
+click 496 416 0.18 0.55 next-unit-turn-4-stack2
+click 496 416 0.18 0.55 next-unit-turn-4-stack3
+click 496 416 0.18 0.8 next-unit-turn-4-stack4
+wait_log_marked 30 stack4_turn_4
+click 320 240 0.18 3.0 resume-retained-path-turn-4
+wait_log_marked 60 march_leg_4
+
+mark_log_count march_leg_5 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_5 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-4-skip-1
+click 320 240 0.12 0.65 post-end-turn-4-skip-2
+click 320 240 0.12 0.65 post-end-turn-4-skip-3
+click 320 240 0.12 0.65 post-end-turn-4-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=5
+click 496 416 0.18 0.55 next-unit-turn-5-stack0
+click 496 416 0.18 0.55 next-unit-turn-5-stack1
+click 496 416 0.18 0.55 next-unit-turn-5-stack2
+click 496 416 0.18 0.55 next-unit-turn-5-stack3
+click 496 416 0.18 0.8 next-unit-turn-5-stack4
+wait_log_marked 30 stack4_turn_5
+click 320 240 0.18 3.0 resume-retained-path-turn-5
+wait_log_marked 60 march_leg_5
+
+mark_log_count march_leg_6 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_6 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-5-skip-1
+click 320 240 0.12 0.65 post-end-turn-5-skip-2
+click 320 240 0.12 0.65 post-end-turn-5-skip-3
+click 320 240 0.12 0.65 post-end-turn-5-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=6
+click 496 416 0.18 0.55 next-unit-turn-6-stack0
+click 496 416 0.18 0.55 next-unit-turn-6-stack1
+click 496 416 0.18 0.55 next-unit-turn-6-stack2
+click 496 416 0.18 0.55 next-unit-turn-6-stack3
+click 496 416 0.18 0.8 next-unit-turn-6-stack4
+wait_log_marked 30 stack4_turn_6
+click 320 240 0.18 3.0 resume-retained-path-turn-6
+wait_log_marked 60 march_leg_6
+
+mark_log_count march_leg_7 unit_move_after_path_state selected=4
+click 500 2 0.18 1.0 end-human-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-6-skip-1
+click 320 240 0.12 0.65 post-end-turn-6-skip-2
+click 320 240 0.12 0.65 post-end-turn-6-skip-3
+click 320 240 0.12 0.65 post-end-turn-6-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=7
+world_pan_viewport 43 47 80
+click 320 240 0.18 0.8 direct-select-stack4-at-47-50-turn-7
+wait_log 30 selected_stack_changed selected=4 a=47 b=50
+click 320 240 0.18 3.0 resume-retained-path-turn-7
+wait_log_marked 60 march_leg_7
+
+mark_log_count march_leg_8 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_8 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-7-skip-1
+click 320 240 0.12 0.65 post-end-turn-7-skip-2
+click 320 240 0.12 0.65 post-end-turn-7-skip-3
+click 320 240 0.12 0.65 post-end-turn-7-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=8
+click 496 416 0.18 0.55 next-unit-turn-8-stack0
+click 496 416 0.18 0.55 next-unit-turn-8-stack1
+click 496 416 0.18 0.55 next-unit-turn-8-stack2
+click 496 416 0.18 0.55 next-unit-turn-8-stack3
+click 496 416 0.18 0.8 next-unit-turn-8-stack4
+wait_log_marked 30 stack4_turn_8
+click 320 240 0.18 3.0 resume-retained-path-turn-8
+wait_log_marked 60 march_leg_8
+
+mark_log_count march_leg_9 unit_move_after_path_state selected=4
+mark_log_count stack4_turn_9 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-8-skip-1
+click 320 240 0.12 0.65 post-end-turn-8-skip-2
+click 320 240 0.12 0.65 post-end-turn-8-skip-3
+click 320 240 0.12 0.65 post-end-turn-8-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=9
+click 496 416 0.18 0.55 next-unit-turn-9-stack0
+click 496 416 0.18 0.55 next-unit-turn-9-stack1
+click 496 416 0.18 0.55 next-unit-turn-9-stack2
+click 496 416 0.18 0.55 next-unit-turn-9-stack3
+click 496 416 0.18 0.8 next-unit-turn-9-stack4
+wait_log_marked 30 stack4_turn_9
+click 320 240 0.18 3.0 resume-retained-path-turn-9
+wait_log_marked 60 march_leg_9
+wait_log 30 unit_move_after_path_state selected=4 a=47 b=58 c=0
+
+fail_if_log mission05_failure_friendly_attack
+screenshot mission05-multiturn-march-arrival
+nonblank mission05-multiturn-march-arrival

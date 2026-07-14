@@ -1,6 +1,6 @@
 # Current Status
 
-Last consolidated: 2026-07-13.
+Last consolidated: 2026-07-14.
 
 ## Disassembly Control-Flow Recovery: Complete
 
@@ -28,6 +28,10 @@ and voice-mix format-select thunks) is in
 - `clash95_bootstrap` is the current SDL-backed executable target.
 - Startup now initializes the assembly-backed 100 Hz performance-counter
   timebase; UI animation and timeout helpers run in recovered centiseconds.
+- `UnitStack_ExecuteQueuedPath` now compares elapsed animation time against the
+  unit-type interval byte preserved at `0x410DF5..0x410E0F`, rather than an
+  uninitialized decompiler temporary. Repeated-turn queued marches no longer
+  stall in the reached Mission `00` attack route.
 - Default CTest smoke routes cover menu liveness, direct route startup, save DAT
   format checks, and opt-in real-input probes.
 - Campaign route env files are the canonical machine-readable status source.
@@ -106,15 +110,20 @@ direct-load trace stops on player-3 building index `4`; scenario setup also
 creates six player-3 stacks, including one remote stack at `(87,66)`.
 `Mission_CheckFailureCondition` reads the mission failure flag set by
 `Mission05_MarkFailureOnFriendlyAttack` when player `0` attacks players `1` or
-`2`. No authentic sequence through that conquest
-objective has yet been recovered, and full-menu campaign auto-advance across
-the completed route gates also remains unproven.
+`2`. A retained opening probe now selects player-0 stack `4`, pans to the
+Agordeh cluster, completes a 33-node world path from `(71,44)` toward
+`(47,58)` in the opening turn, and enters manual tactical combat against
+player-3 stack `19` at `(44,56)` without raising the friendly-attack failure
+marker. The first tactical deployment is six player-0 squads at battle row
+`14` against ten player-3 squads at rows `0..1`; clearing that battle and the
+remaining owner-3 targets is still unproven. Full-menu campaign auto-advance
+across the completed route gates also remains unproven.
 
 ## Next Target
 
-Trace mission `05` through several authentic turn advances to measure allied
-AI progress against player `3`, then choose the smallest route that removes
-the surviving Agordeh castle/stacks without striking players `1` or `2`.
+Continue the retained mission `05` route from its first manual tactical entry:
+clear stack `19`, then measure and route the surviving Agordeh building/stacks
+without striking players `1` or `2`.
 The next broader startup debt remains `CSS_Init` and its quarantined legacy
 audio/device table.
 

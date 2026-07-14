@@ -16,6 +16,7 @@ set -euo pipefail
 #
 # Optional route extensions:
 #   CLASH95_FIRST_MISSION_MOVE_SECOND_ACTION=1
+#   CLASH95_SECOND_ACTION_WAIT_FOR_MOVE=1
 #   CLASH95_FIRST_MISSION_MOVE_EXPECT_PRESET=...,enemy-attack
 #   CLASH95_FIRST_MISSION_MOVE_END_TURN=1
 #   CLASH95_FIRST_MISSION_MOVE_POST_END_TURN_SKIPS=4
@@ -1155,6 +1156,13 @@ if [ "${CLASH95_FIRST_MISSION_MOVE_SECOND_ACTION:-0}" = "1" ]; then
         "first-mission enemy attack return" \
         "${CLASH95_FIRST_MISSION_MOVE_ENEMY_ATTACK_RETURN_TIMEOUT:-10}"
     fi
+  fi
+  if [ "${CLASH95_SECOND_ACTION_WAIT_FOR_MOVE:-0}" = "1" ]; then
+    wait_for_fixed_log_pattern_since \
+      "${CLASH95_SECOND_ACTION_MOVE_PATTERN:-unit_move_after_path_state selected=10}" \
+      "first-mission second-action move" \
+      "${CLASH95_SECOND_ACTION_MOVE_TIMEOUT:-30}" \
+      "$second_action_attack_start"
   fi
 fi
 

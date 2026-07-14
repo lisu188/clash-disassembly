@@ -3,6 +3,36 @@
 Goal: recover an authentic route that reaches `mission_objective_complete` for mission
 05 (`Mission_CheckObjectiveComplete` case 5). Status: **in progress** (route authoring).
 
+## Current proven route milestone (2026-07-14)
+
+The retained `mission_05_march_probe` proves the first complete authentic
+approach/engagement corridor:
+
+- `next_unit_selected selected=4 a=71 b=44` selects the only opening stack
+  with a full `255` AP budget.
+- `world_pan_viewport 45 55 80` reaches `left=45 top=55`. The harness now
+  alternates cursor probes between x=`312` and x=`328`; this avoids SDL
+  coordinate rounding producing a zero-delta probe during long pans.
+- Clicking `(200,260)` resolves to free world tile `(47,58)` and builds a
+  33-node path. Confirming the order consumes `156` AP and leaves `99` AP.
+- Viewport tracking then places owner-3 stack `19` at `(44,56)` under the same
+  screen coordinate. The attack approach ends at `(45,57)` with `90` AP and
+  opens the recovered manual/autoresolve prompt.
+- Choosing the primary/manual button at `(276,158)` logs
+  `unit_attack_battle_enter selected=4 a=19 b=6 c=10` while
+  `mission05_failure_friendly_attack` remains absent.
+- Tactical deployment places six owner-0 squads at battle row `14` and ten
+  owner-3 squads at rows `0..1`; selected attacker slot `5` starts at `(14,6)`.
+
+Retained evidence:
+`artifacts/campaign-routes/mission-05/20260714T141525Z-12471/summary.txt` and
+`checkpoint-mission05-stack19-tactical-entry.bmp` in the same directory.
+
+The next blocker is no longer world-map access to the Agordeh cluster. It is
+the first open-field tactical clear, followed by routing stacks `16..18`, `20`,
+the owner-3 building, and remote stack `21` without ever attacking owners `1`
+or `2`.
+
 ## Objective (from `src/rules/100_strategic.inc.c` case 5, nonzero-language branch)
 Eliminate **every player-3 (Agordeh) world stack and building**. Two loops:
 - LABEL_35 (`UNIT_RECORD` 0..99): a personage/stack record with `type<4`, alive

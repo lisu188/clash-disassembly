@@ -3546,3 +3546,27 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
   to `RECOVERED_STRUCTURES.json`: the active language branch must remove all
   player-3 buildings/stacks, while attacking players 1 or 2 raises its failure
   flag.
+
+### 2026-07-14 - Mission-05 opening route and tactical deployment evidence
+
+- No recovered C symbol names changed in this batch.
+- The generic route harness now uses a wider alternating cursor probe during
+  `world_pan_viewport`, avoiding SDL rounding to a zero-delta move.
+- `mission_05_march_probe` proves an authentic 33-node opening march by stack
+  `4`, a failure-safe attack on owner-3 stack `19`, and manual tactical entry.
+- Runtime deployment evidence establishes six owner-0 battle squads at row
+  `14` versus ten owner-3 squads at rows `0..1`; retained evidence is at
+  `artifacts/campaign-routes/mission-05/20260714T141525Z-12471/summary.txt`.
+
+### 2026-07-14 - Queued-path animation interval operand recovery
+
+- No recovered symbol names changed in this batch.
+- In `UnitStack_ExecuteQueuedPath`, the original instructions at
+  `0x410DF5..0x410E0F` load the unit-type animation interval into `DL`, call
+  `Time_Now`, mask `EDX` to that byte, and compare elapsed time against it.
+  Recovered C had incorrectly represented the comparison operand as the
+  uninitialized temporary `v76`; it now uses the interval byte directly.
+- The repaired Mission `00` attack regression crosses the formerly stalled
+  queued-path boundary, reaches stack `10` at `(41,45)`, and autoresolves the
+  attack on owner-3 stack `3`. Evidence is retained at
+  `artifacts/first-campaign/mission-00/20260714T144043Z-43697/summary.txt`.

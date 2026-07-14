@@ -9302,3 +9302,103 @@ Additional harness notes:
     the final three defenders, `Unit_CaptureBuilding`, and natural
     `mission_objective_complete`.
   - no unit roster/stat confidence changed in this batch.
+
+## Batch 259 - Mission 05 opening march and tactical entry (2026-07-14)
+
+- Track and frontier:
+  - campaign-route validation, mission `05`; the frontier advanced from
+    off-screen access/pan calibration to live manual tactical control against
+    the first owner-3 blocker stack.
+- Blockers removed:
+  - hardened `world_pan_viewport` cursor sampling by alternating x=`312` and
+    x=`328`, preventing adjacent-coordinate rounding from producing a
+    zero-delta cursor probe during long pans;
+  - added `mission_05_march_probe.env` and `.script`, which select player-0
+    stack `4`, pan to `left=45 top=55`, build and execute the 33-node path to
+    `(47,58)`, attack owner-3 stack `19`, choose manual combat, and retain
+    nonblank world, prompt, and tactical-entry checkpoints;
+  - the probe explicitly rejects `mission05_failure_friendly_attack` before
+    and after tactical entry.
+- Evidence and confidence:
+  - high confidence from exact runtime markers: the world path consumes `156`
+    of `255` AP, the attack approach leaves `90` AP, and
+    `unit_attack_battle_enter selected=4 a=19 b=6 c=10` proves the intended
+    attacker/defender pair;
+  - `[battle_units]` deployment snapshots show six owner-0 squads at row `14`
+    and ten owner-3 squads at rows `0..1`, with selected slot `5` at `(14,6)`.
+- Compile/link/runtime and validation status:
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly bash -n
+    tests/run_campaign_route_script_smoke.sh
+    tests/first_campaign_arc_routes/mission_05_march_probe.script
+    tests/first_campaign_arc_routes/mission_05_march_probe.env` passed;
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly bash
+    tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 05
+    tests/first_campaign_arc_routes/mission_05_march_probe.env` passed in
+    56.4 seconds;
+  - durable evidence is at
+    `artifacts/campaign-routes/mission-05/20260714T141525Z-12471/summary.txt`.
+- Highest authentic runtime milestone reached:
+  - mission `05` now reaches responsive manual tactical control against stack
+    `19` from a direct-boot, authentic world-movement route. This is a partial
+    diagnostic route, not objective completion or campaign completion.
+- Renamed functions/helpers/globals/tables/structs:
+  - none; this batch changed route/harness artifacts only.
+- Rejected and ambiguous candidates deferred:
+  - passive allied-AI completion remains rejected by the earlier multi-turn
+    trace: owner-3 building `4` persists;
+  - the smallest winning tactical sequence for stack `19`, the order for the
+    remaining owner-3 targets, and automatic campaign advancement remain
+    unproven.
+
+## Batch 260 - Queued world-movement animation interval recovery (2026-07-14)
+
+- Track and frontier:
+  - Win95 runtime reconstruction, reached world-unit movement behavior exposed
+    while restoring the Mission `00` attack regression after the Mission `05`
+    route batch.
+- Blockers removed:
+  - `UnitStack_ExecuteQueuedPath` compared elapsed animation time with the
+    uninitialized decompiler temporary `v76`; on the retained second-turn
+    march this could leave the function spinning before the first tile update;
+  - recovered the comparison operand as the low byte of
+    `g_UnitTypeMoveAnimationTickIntervalMs[88 * unitType]`, matching the
+    original `mov dl`, `Time_Now`, `and edx, 0FFh`, and `cmp eax, edx`
+    sequence at `0x410DF5..0x410E0F`;
+  - synchronized the real-input harness with the completed first and second
+    queued marches, and updated the stale attack wrapper to follow the actual
+    split stack `10` from `(31,45)` through `(36,45)` and `(41,45)` before its
+    attack on owner-3 stack `3`.
+- Evidence and confidence:
+  - high confidence from the contiguous assembly sequence and the matching
+    recovered unit-type interval table access;
+  - before the repair the route logged `unit_move_execute_path_first` and then
+    stalled; after it, the same route logs
+    `unit_move_after_path_state selected=10 a=41 b=45 c=4` and
+    `unit_attack_autoresolve_done selected=10 a=3 b=1 c=0`.
+- Compile/link/runtime and validation status:
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly bash -n
+    tests/verify_first_mission_real_input_move_smoke.sh
+    tests/run_first_mission_attack_probe.sh` passed;
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly cmake --build build
+    --target clash95_bootstrap -j2` passed;
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly ctest --test-dir
+    build -R '^clash95_first_mission_attack_probe$' --output-on-failure`
+    passed in `50.23` seconds;
+  - `wsl.exe --cd /mnt/c/Users/andrz/git/clash-disassembly ctest --test-dir
+    build --output-on-failure` completed with zero failures: ten tests passed
+    and eight opt-in tests skipped by their normal guards;
+  - durable route evidence is at
+    `artifacts/first-campaign/mission-00/20260714T144043Z-43697/summary.txt`.
+- Highest authentic runtime milestone reached:
+  - the retained Mission `00` regression now resumes the split stack's queued
+    path across two human turns and completes its authentic world attack and
+    autoresolve without an animation-loop stall.
+- Renamed functions/helpers/globals/tables/structs:
+  - no symbols or structures were renamed; the false `v76` local and its
+    undefined-variable warning were removed from the recovered function.
+- Rejected and ambiguous candidates deferred:
+  - other decompiler undefined-variable notes in
+    `UnitStack_ExecuteQueuedPath` were not changed without a reached failure or
+    an equivalent assembly-backed recovery;
+  - no unit roster/stat confidence changed, and Mission `05` tactical clearing
+    remains the campaign frontier.

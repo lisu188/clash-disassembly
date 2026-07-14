@@ -733,7 +733,6 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
   int moveAnimInterval; // edx
   int v74; // ecx
   int v75; // eax
-  unsigned __int8 v76; // dl
   char walkStep; // al
   int v78; // ecx
   int v79; // ebx
@@ -988,7 +987,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
                   moveAnimInterval = 88 * stackPtr[3];
                   LOBYTE(moveAnimInterval) = g_UnitTypeMoveAnimationTickIntervalMs[moveAnimInterval];
                   v75 = Time_Now(v74, moveAnimInterval);
-                  if ( v75 - now >= (unsigned int)v76 )
+                  if ( v75 - now >= (unsigned int)(unsigned __int8)moveAnimInterval )
                   {
                     walkStep = g_WorldMapUnitWalkStepCounter++;
                     if ( (walkStep & 1) != 0 )
@@ -1231,7 +1230,6 @@ LABEL_21:
 // 410C87: variable 'v58' is possibly undefined
 // 410D7A: variable 'v62' is possibly undefined
 // 410E07: variable 'v74' is possibly undefined
-// 410E0C: variable 'v76' is possibly undefined
 // 410E77: variable 'v78' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512360: using guessed type int dword_512360;

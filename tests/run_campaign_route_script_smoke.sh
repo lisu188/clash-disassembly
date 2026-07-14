@@ -1156,7 +1156,7 @@ execute_route_script() {
   local cursor_baseline
   local cursor_count
   local cursor_deadline
-  local probe_x=319
+  local probe_x=312
   local selected_line
   local selected_value
 
@@ -1510,10 +1510,14 @@ execute_route_script() {
           pan_attempts=$((pan_attempts + 1))
           write_world_script key "key ${scan_code} 12" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
           cursor_baseline="$(game_log_count "[world_cursor]")"
-          if [ "$probe_x" = "319" ]; then
-            probe_x=320
+          # SDL can round adjacent script coordinates back onto the current
+          # cursor, yielding a zero-delta move and therefore no world_cursor
+          # trace. Keep the probe near screen center, but move far enough that
+          # every pan attempt produces a fresh cursor sample.
+          if [ "$probe_x" = "312" ]; then
+            probe_x=328
           else
-            probe_x=319
+            probe_x=312
           fi
           write_world_script move "move ${probe_x} 239" 0.25 "" "" "world-pan-viewport-${line_number}-probe-${pan_attempts}"
           cursor_deadline=$((SECONDS + 5))

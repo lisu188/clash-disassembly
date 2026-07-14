@@ -223,6 +223,25 @@ typedef enum ClipsConflictResolutionStrategy
   CLIPS_STRATEGY_SIMPLICITY = 5,
   CLIPS_STRATEGY_RANDOM = 6
 } ClipsConflictResolutionStrategy;
+
+/* CLIPS 6.0 primitive value-type codes (the `type` tag on a value/field). Value
+ * mapping confirmed by the field-hash switches Rules_ComputeFieldHashValue
+ * (130_clips_language_part2.inc.c:11959) and Rules_HashFactFieldList (:7061):
+ * 0/1 hash a numeric payload at +16, 2/3/8 intern as symbol names, 4 recurses
+ * as a multifield, 5/6/7 hash a raw pointer; corroborated by CLIPS 6.30 source
+ * (docs/archive/CLIPS_SOURCE_CROSSREF.md). */
+typedef enum ClipsType
+{
+  CLIPS_TYPE_FLOAT = 0,
+  CLIPS_TYPE_INTEGER = 1,
+  CLIPS_TYPE_SYMBOL = 2,
+  CLIPS_TYPE_STRING = 3,
+  CLIPS_TYPE_MULTIFIELD = 4,
+  CLIPS_TYPE_EXTERNAL_ADDRESS = 5,
+  CLIPS_TYPE_FACT_ADDRESS = 6,
+  CLIPS_TYPE_INSTANCE_ADDRESS = 7,
+  CLIPS_TYPE_INSTANCE_NAME = 8
+} ClipsType;
 /* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
  * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
  * result; the A/B/C suffix is the three interchangeable visual variants per
@@ -9618,30 +9637,108 @@ static char *UnitType_GetLocalizedName(unit_type unitType)
 }
 
 char *g_UnitTypeResourceKeys = "peon"; // weak
-char g_UnitTypeBattleMoveStepPx[] = { '\x03' }; // weak
-char g_UnitTypeMoveAnimationTickIntervalMs[] = { '\x03' }; // weak
-char g_UnitTypeAnimationFrameIntervalMs[] = { '\n' }; // weak
-char g_UnitTypeHasIdleAnimationFlags[4] = { '\0', '\0', '\0', '\0' }; // weak
-char g_UnitTypeSpriteVerticalOffsetPx[] = { '\0' }; // weak
-char g_UnitTypeAttackAnimationFrameCount[] = { '\b' }; // weak
-char g_UnitTypeShotAnimationFrameCount[] = { '\b' }; // weak
-int g_UnitTypeFlags[] = { 0 }; // weak
-char g_UnitTypeBaseMeleeAttack[] = { '\x01' }; // weak
-char g_UnitTypeBaseDefensePower[] = { '\x01' }; // weak
-char g_UnitTypeBaseActionPoints[] = { '\x18' }; // weak
-char g_UnitTypeBaseShotPower[] = { '\0' }; // weak
-char g_UnitTypeMaxRange[] = { '\0' }; // weak
-char g_UnitTypeMinRange[] = { '\0' }; // weak
-char g_UnitTypeBaseWallAttack[] = { '\x01' }; // weak
-char g_UnitTypeRoadMoveCost[] = { '\x03' }; // weak
-char g_UnitTypePlainClassMoveCostA[] = { '\x04' }; // weak
-_UNKNOWN g_UnitTypeForestMoveCost; // weak
-_UNKNOWN g_UnitTypeDesertMoveCost; // weak
-_UNKNOWN g_UnitTypeSwampMoveCost; // weak
-_UNKNOWN g_UnitTypePlainClassMoveCostB; // weak
-_UNKNOWN g_UnitTypeWaterSurfaceMoveCost; // weak
-_UNKNOWN g_UnitTypeHillsMoveCost; // weak
-_UNKNOWN g_UnitTypeMountainsMoveCost; // weak
+
+/*
+ * The original globals at 0x512570..0x51258D are fields inside one packed
+ * 88-byte record, not independent one-element arrays.  Retaining those
+ * placeholders made every nonzero unit type index into unrelated host data.
+ * The records below restore the executable-backed +8..+37 core band while
+ * keeping the original 88-byte indexing used throughout the recovered C.
+ * The two leading values are original Win32 VAs kept as evidence only; host
+ * code resolves localized names and resource keys through recovered helpers.
+ */
+#pragma pack(push, 1)
+typedef struct UnitTypeRuntimeCoreMetadataRecord
+{
+  _DWORD original_localized_name_table_va;
+  _DWORD original_resource_key_va;
+  unsigned char battle_move_step_px;
+  unsigned char move_animation_tick_interval_ms;
+  unsigned char animation_frame_interval_ms;
+  unsigned char idle_animation_flags[4];
+  unsigned char sprite_vertical_offset_px;
+  unsigned char attack_animation_frame_count;
+  unsigned char shot_animation_frame_count;
+  _DWORD flags;
+  unsigned char base_melee_attack;
+  unsigned char base_defense_power;
+  unsigned char base_action_points;
+  unsigned char base_shot_power;
+  unsigned char attack_range_max;
+  unsigned char attack_range_min;
+  unsigned char base_wall_attack;
+  unsigned char road_move_cost;
+  unsigned char world_surface_move_costs[8];
+  unsigned char unrecovered_tail[50];
+} UnitTypeRuntimeCoreMetadataRecord;
+#pragma pack(pop)
+
+typedef char UnitTypeRuntimeCoreMetadataRecord_size_check[
+  sizeof(UnitTypeRuntimeCoreMetadataRecord) == UNIT_TYPE_METADATA_STRIDE ? 1 : -1];
+
+static const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_COUNT] =
+{
+  [0] = { 0x005123CC, 0x004ED917, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 1, 1, 24, 0, 0, 0, 1, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [1] = { 0x005123F0, 0x004ED92B, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 5, 4, 20, 0, 0, 0, 5, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [2] = { 0x005123FC, 0x004ED93C, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 9, 6, 20, 0, 0, 0, 9, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [3] = { 0x00512438, 0x004ED94F, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 3, 5, 24, 0, 0, 0, 4, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [4] = { 0x0051242C, 0x004ED960, 3, 3, 10, { 0, 0, 0, 0 }, 0, 16, 8, 0x00000000, 5, 5, 22, 0, 0, 0, 7, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [5] = { 0x0051248C, 0x004ED973, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 8, 5, 36, 0, 0, 0, 8, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [6] = { 0x00512498, 0x004ED983, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 14, 8, 32, 0, 0, 0, 14, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [7] = { 0x005124A4, 0x004ED995, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 12, 7, 30, 0, 0, 0, 12, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [8] = { 0x005124B0, 0x004ED9A6, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 10, 4, 32, 6, 3, 0, 10, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [9] = { 0x005123D8, 0x004ED9B6, 3, 3, 10, { 0, 0, 0, 0 }, 0, 10, 8, 0x00000000, 3, 1, 24, 6, 3, 0, 5, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [10] = { 0x00512414, 0x004ED9C7, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 5, 2, 20, 8, 4, 0, 6, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [11] = { 0x00512420, 0x004ED9DB, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 4, 3, 24, 11, 4, 0, 4, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [12] = { 0x00512408, 0x004ED9EF, 2, 4, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 1, 20, 16, 5, 1, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [13] = { 0x00512468, 0x004ED9FB, 2, 4, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 1, 10, 20, 0, 0, 0, 80, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [14] = { 0x00512444, 0x004EDA07, 2, 4, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 1, 16, 20, 6, 2, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [15] = { 0x00512450, 0x004EDA14, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 28, 0x00000000, 8, 4, 24, 11, 3, 0, 8, 3, { 4, 4, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [16] = { 0x005123E4, 0x004EDA25, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 8, 6, 26, 0, 0, 0, 8, 3, { 4, 6, 5, 0, 7, 0, 6, 0 }, { 0 } },
+  [17] = { 0x0051245C, 0x004EDA39, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 1, 1, 26, 0, 0, 0, 1, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [18] = { 0x005124BC, 0x004EDA4B, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 14, 9, 18, 0, 0, 0, 12, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [19] = { 0x005124C8, 0x004EDA5E, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 14, 10, 20, 0, 0, 0, 14, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [20] = { 0x005124D4, 0x004EDA70, 3, 3, 10, { 0, 0, 0, 0 }, 0, 10, 8, 0x00000002, 10, 6, 26, 10, 3, 0, 8, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [21] = { 0x005124E0, 0x004EDA83, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 13, 10, 22, 0, 0, 0, 13, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [22] = { 0x005124EC, 0x004EDA96, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 12, 8, 26, 0, 0, 0, 12, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [23] = { 0x005124F8, 0x004EDAAA, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 13, 10, 22, 0, 0, 0, 13, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [24] = { 0x00512504, 0x004EDABA, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 10, 10, 40, 15, 6, 0, 10, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [25] = { 0x00512510, 0x004EDACD, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000002, 10, 8, 24, 0, 0, 0, 10, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [26] = { 0x0051251C, 0x004EDAE1, 6, 4, 10, { 1, 0, 0, 0 }, 0, 8, 8, 0x00000003, 9, 6, 34, 0, 0, 0, 9, 3, { 3, 3, 3, 3, 3, 3, 3, 3 }, { 0 } },
+  [27] = { 0x00512474, 0x004EDAF6, 8, 4, 10, { 1, 0, 0, 0 }, 18, 8, 8, 0x00000003, 12, 8, 30, 0, 0, 0, 12, 3, { 3, 3, 3, 3, 3, 3, 3, 3 }, { 0 } },
+  [28] = { 0x00512528, 0x004EDB0B, 6, 4, 10, { 1, 0, 0, 0 }, 0, 8, 8, 0x00000003, 14, 10, 24, 10, 4, 0, 14, 3, { 3, 3, 3, 3, 3, 3, 3, 3 }, { 0 } },
+  [29] = { 0x00512534, 0x004EDB21, 2, 1, 1, { 1, 0, 0, 0 }, 0, 16, 16, 0x00000003, 8, 5, 32, 0, 0, 0, 8, 3, { 3, 3, 3, 3, 3, 3, 3, 3 }, { 0 } },
+  [30] = { 0x00512480, 0x004EDB36, 6, 4, 10, { 1, 0, 0, 0 }, 28, 16, 16, 0x00000003, 18, 15, 36, 15, 4, 0, 18, 3, { 3, 3, 3, 3, 3, 3, 3, 3 }, { 0 } },
+  [31] = { 0x00512540, 0x004EDB49, 4, 4, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 0, 30, 0, 0, 0, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [32] = { 0x0051254C, 0x004EDB5A, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 2, 30, 0, 0, 0, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [33] = { 0x00512558, 0x004EDB6E, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 2, 36, 0, 0, 0, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } },
+  [34] = { 0x00512558, 0x004EDB7F, 3, 3, 10, { 0, 0, 0, 0 }, 0, 8, 8, 0x00000000, 0, 2, 36, 0, 0, 0, 0, 3, { 4, 6, 5, 0, 7, 0, 8, 0 }, { 0 } }
+};
+
+#define g_UnitTypeBattleMoveStepPx ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].battle_move_step_px)
+#define g_UnitTypeMoveAnimationTickIntervalMs ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].move_animation_tick_interval_ms)
+#define g_UnitTypeAnimationFrameIntervalMs ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].animation_frame_interval_ms)
+#define g_UnitTypeHasIdleAnimationFlags ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].idle_animation_flags[0])
+#define g_UnitTypeSpriteVerticalOffsetPx ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].sprite_vertical_offset_px)
+#define g_UnitTypeAttackAnimationFrameCount ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].attack_animation_frame_count)
+#define g_UnitTypeShotAnimationFrameCount ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].shot_animation_frame_count)
+#define g_UnitTypeFlags ((const _DWORD *)&g_UnitTypeRuntimeCoreMetadata[0].flags)
+#define g_UnitTypeBaseMeleeAttack ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].base_melee_attack)
+#define g_UnitTypeBaseDefensePower ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].base_defense_power)
+#define g_UnitTypeBaseActionPoints ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].base_action_points)
+#define g_UnitTypeBaseShotPower ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].base_shot_power)
+#define g_UnitTypeMaxRange ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].attack_range_max)
+#define g_UnitTypeMinRange ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].attack_range_min)
+#define g_UnitTypeBaseWallAttack ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].base_wall_attack)
+#define g_UnitTypeRoadMoveCost ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].road_move_cost)
+#define g_UnitTypePlainClassMoveCostA ((const unsigned char *)&g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[0])
+#define g_UnitTypeForestMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[1]
+#define g_UnitTypeDesertMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[2]
+#define g_UnitTypeSwampMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[3]
+#define g_UnitTypePlainClassMoveCostB g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[4]
+#define g_UnitTypeWaterSurfaceMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[5]
+#define g_UnitTypeHillsMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[6]
+#define g_UnitTypeMountainsMoveCost g_UnitTypeRuntimeCoreMetadata[0].world_surface_move_costs[7]
 enum
 {
   TERRAIN_MOVE_PROFILE_PLAIN_A = 0,

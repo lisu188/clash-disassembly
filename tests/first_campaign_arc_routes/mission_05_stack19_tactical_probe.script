@@ -1,0 +1,37 @@
+# Mission 05 stack-19 tactical calibration. Enter the forced manual battle,
+# pan from the attacker-centered row-9 viewport toward the defenders, stage
+# selected type-17 squad 5 at (5,6), then attack AP-zero defender 11 at (1,6).
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 320 176 0.18 0.8 direct-select-stack4-at-71-44
+wait_log 20 selected_stack_changed selected=4 a=71 b=44
+
+world_pan_viewport 45 55 80
+click 200 260 0.18 0.8 set-waypoint-47-58
+wait_log 20 move_order_track_result selected=4 a=47 b=58 c=33
+click 200 260 0.05 2.0 confirm-waypoint-47-58
+wait_log 60 unit_move_after_path_state selected=4
+
+click 200 260 0.18 1.0 attack-owner3-stack19
+wait_log 20 enemy_attack_call selected=4 a=19 b=44 c=56
+wait_log 30 battle_prompt_layout_primary
+fail_if_log mission05_failure_friendly_attack
+
+click 276 158 0.18 2.0 choose-manual-battle-stack19
+wait_log 60 unit_attack_battle_enter selected=4 a=19 b=6 c=10
+wait_log 60 battle_turn_loop_after_input_widgets selected=5 a=0 b=1
+
+battle_key 203 80 1.0 pan-left-to-owner3-line
+mark_log_count squad5_approach battle_move_execute_return selected=5 a=5 b=6
+battle_click 384 400 4 2.0 move-squad5-to-5-6
+wait_log_marked 60 squad5_approach
+
+battle_key 203 80 1.0 recenter-left-for-defender11
+mark_log_count squad5_exchange battle_attack_return selected=5 a=11
+battle_click 128 400 4 4.0 attack-ap-zero-defender11-at-1-6
+wait_log_marked 90 squad5_exchange
+
+fail_if_log mission05_failure_friendly_attack
+screenshot mission05-stack19-first-direct-exchange
+nonblank mission05-stack19-first-direct-exchange

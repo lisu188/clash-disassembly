@@ -1,0 +1,28 @@
+# Mission 05 stack-19 autoresolve calibration. This repeats the retained
+# stack-4 march, then uses the explicit diagnostic override to exercise the
+# authentic CalculateBattleResult branch hidden by /A5's manual-battle flag.
+# This is decision evidence only, never a campaign-completion route.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 496 416 0.18 0.8 next-unit-select-stack4
+wait_log 20 next_unit_selected selected=4 a=71 b=44
+
+world_pan_viewport 45 55 80
+click 200 260 0.18 0.8 set-waypoint-47-58
+wait_log 20 move_order_track_result selected=4 a=47 b=58 c=33
+click 200 260 0.05 2.0 confirm-waypoint-47-58
+wait_log 60 unit_move_after_path_state selected=4
+
+click 200 260 0.18 1.0 attack-owner3-stack19
+wait_log 20 enemy_attack_call selected=4 a=19 b=44 c=56
+wait_log 30 battle_prompt_layout_secondary
+fail_if_log mission05_failure_friendly_attack
+
+click 354 158 0.18 4.0 choose-autoresolve-stack19
+wait_log 90 unit_attack_autoresolve_done selected=4 a=19
+wait_log 90 unit_attack_autoresolve_return selected=4 a=19
+fail_if_log mission05_failure_friendly_attack
+
+screenshot mission05-stack19-autoresolve-return
+nonblank mission05-stack19-autoresolve-return
