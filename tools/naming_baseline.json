@@ -14,7 +14,7 @@
     "loc_": 0
    },
    "globals_distinct_total": 0,
-   "param_aN_occurrences": 18027,
+   "param_aN_occurrences": 18092,
    "local_vN_occurrences": 45530
   },
   "per_file": {
@@ -406,7 +406,7 @@
      "loc_": 0
     },
     "globals_distinct_total": 0,
-    "param_aN_occurrences": 71,
+    "param_aN_occurrences": 76,
     "local_vN_occurrences": 241
    },
    "src/runtime/200_recovered_runtime.inc.c": {
@@ -423,7 +423,7 @@
      "loc_": 0
     },
     "globals_distinct_total": 0,
-    "param_aN_occurrences": 369,
+    "param_aN_occurrences": 429,
     "local_vN_occurrences": 5033
    },
    "bootstrap_main.c": {

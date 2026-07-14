@@ -49,12 +49,19 @@ applies them at the switch that classifies them.
 | `TILE_OVERLAY_CULT_PLACE_{A,B,C}` | `0x2DE/0x2E0/0x2E2` | cult place |
 | `TILE_OVERLAY_EMPTY_CULT_PLACE_{A,B,C}` | `0x2DF/0x2E1/0x2E3` | empty cult place |
 
-Confidence **behavior-confirmed** by direct data flow: the switch in
-`MapTile_GetReligiousSiteCategory` (`src/game/080_building_ui.inc.c:8256`) maps
-each id (read from terrain record +2) to its `RELIGIOUS_SITE_CATEGORY_*` result,
-which fixes both the category and the occupied/empty polarity unambiguously
-(no guessing). The A/B/C suffix marks the three interchangeable visual variants
-per category (the variant axis - map theme vs rotation - is left unproven).
+Confidence **behavior-confirmed**. The switch in
+`MapTile_GetReligiousSiteCategory` (`src/game/080_building_ui.inc.c:8256`)
+proves the **12-code → 4-category partition** and the exact code→category-number
+mapping (read from terrain record +2 → result 1/2/3/4). The occupied-vs-empty
+**polarity** and the shrine-vs-cult labels are established not by the switch
+alone but by the info-window text globals
+(`g_ShrineTexts`/`g_EmptyShrineTexts`/`g_CultPlaceTexts`/`g_EmptyCultPlaceTexts`,
+`src/game/040_world_map.inc.c:589-616`), the religion-flag entry branch
+(`src/rules/100_strategic.inc.c:1910-1911`), and the EMPTY-site mission
+objectives (`src/rules/100_strategic.inc.c:5001,5186`); polarity is thus a
+strongly-corroborated cross-signal, not a switch tautology. The A/B/C suffix
+marks the three interchangeable visual variants per category (the variant axis -
+map theme vs rotation - is left unproven).
 `#define` spelling makes `case 0x2D8:` -> `case TILE_OVERLAY_SHRINE_A:`
 token-identical; strict G1 gate passes with 0 hunks. `RECOVERED_STRUCTURES.json`
 `overlay_tile_id` note updated. Rules:
@@ -116,7 +123,7 @@ Mints the 640x480 display-surface constants (none existed) and applies them at
 | `SCREEN_WIDTH` | `640` | 18 |
 | `SCREEN_HEIGHT` | `480` | 15 |
 | `SCREEN_MAX_X` | `0x27F` (639) | 23 |
-| `SCREEN_MAX_Y` | `0x1DF` (479) | 17 |
+| `SCREEN_MAX_Y` | `0x1DF` (479) | 13 |
 
 Confidence **behavior-confirmed**: `CreateWindowExA(...,640,480,...)`
 (`src/runtime/110_platform_input.inc.c:286`) and
@@ -140,6 +147,20 @@ Rules: `docs/archive/literal_rules/B5_screen.json`.
   over `rules/100_strategic.inc.c` and was left raw.
 - `480` occurring outside a `640, 480` pair (standalone y-coordinates) was not
   swept; only the full-screen-surface adjacency is proven `SCREEN_HEIGHT`.
+
+### Correction (adversarial verification, same day)
+
+The initial bare-value `SCREEN_MAX_Y` rule (`0x1DF`) over-matched: `0x1DF`=479
+also appears as a **battlefield X extent** in `UnitBattle_RedrawVisibleGrid`
+(`src/game/070_battle.inc.c:2656/2684/2706/2712`), where it sits in the x1
+(src-right) `Render_FillRect`/`Compat_RenderSurfaceCopyRect` argument slot
+paired with `0x1CF`=463 as the bottom edge - the wrong axis for a screen-max-Y
+label. Those 4 sites were reverted to raw `0x1DFu` (the value was always
+identical, so this is a naming correction, not a behavior change), and the rule
+was tightened to only rename `0x1DF` when it immediately follows the x1 max
+(`0x27F`/`SCREEN_MAX_X`). `SCREEN_MAX_Y` application count 17 → 13; the other 12
+paired `SCREEN_MAX_X, SCREEN_MAX_Y` full-screen fills and all `SCREEN_MAX_X`/
+`SCREEN_WIDTH`/`SCREEN_HEIGHT` sites were verified correct.
 
 ## 2026-07-14 - Magic-number campaign B1: castle add-on flag bits
 
