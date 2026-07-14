@@ -1855,9 +1855,9 @@ _BYTE * Surface_DrawDashedLine(
   int v6; // ecx
   unsigned __int16 pitch; // di
   _BYTE *result; // eax
-  unsigned __int16 v9; // bx
-  unsigned __int16 v10; // dx
-  unsigned __int16 v11; // dx
+  unsigned __int16 x_cursor; // bx
+  unsigned __int16 dashed_y_cursor; // dx
+  unsigned __int16 y_cursor; // dx
 
   v6 = color_flags;
   pitch = *surface;
@@ -1868,8 +1868,8 @@ _BYTE * Surface_DrawDashedLine(
     {
       while ( 1 )
       {
-        v9 = x_start++;
-        if ( v9 >= x_end )
+        x_cursor = x_start++;
+        if ( x_cursor >= x_end )
           break;
         if ( (x_start & 3) == 3 )
           *result = color_flags;
@@ -1880,9 +1880,9 @@ _BYTE * Surface_DrawDashedLine(
     {
       while ( 1 )
       {
-        v10 = y_start;
+        dashed_y_cursor = y_start;
         LOWORD(y_start) = y_start + 1;
-        if ( v10 >= y_end )
+        if ( dashed_y_cursor >= y_end )
           break;
         if ( (y_start & 3) == 3 )
           *result = color_flags;
@@ -1899,8 +1899,8 @@ _BYTE * Surface_DrawDashedLine(
   {
     while ( 1 )
     {
-      v11 = y_start++;
-      if ( v11 > y_end )
+      y_cursor = y_start++;
+      if ( y_cursor > y_end )
         break;
       *result = color_flags;
       result += pitch;
@@ -1965,16 +1965,16 @@ unsigned __int16 * Surface_FillVerticalSpan(
 {
   unsigned __int16 *surface_ptr; // edi
   int row_index; // esi
-  int v7; // ecx
+  int row_base; // ecx
   int row_addr; // ecx
 
   surface_ptr = result;
   row_index = y_start;
-  v7 = y_start * *result + *((_DWORD *)result + 1);
+  row_base = y_start * *result + *((_DWORD *)result + 1);
   HIWORD(x) = 0;
   while ( 1 )
   {
-    row_addr = x + v7;
+    row_addr = x + row_base;
     if ( row_index > y_end )
       break;
     result = (unsigned __int16 *)memset_(row_addr, color);
@@ -2091,10 +2091,10 @@ int  Surface_ConstructLockedRegionView(int surface, int x, int y, DWORD context)
   int result; // eax
   int v6; // ecx
   __int64 v7; // rax
-  unsigned int v8; // eax
+  unsigned int lock_error; // eax
   int v9; // ecx
-  int v10; // eax
-  int v11; // ecx
+  int pitch; // eax
+  int region_view; // ecx
 
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
@@ -2102,12 +2102,12 @@ int  Surface_ConstructLockedRegionView(int surface, int x, int y, DWORD context)
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 60))();
     *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
-    v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
-    if ( v8 )
-      Render_HandleDirectDrawFatalError(v8, v9);
-    v10 = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(v11 + 8) = y * v10 + x + *(_DWORD *)(*(_DWORD *)(v11 + 4) + 92);
-    return v11;
+    lock_error = Surface_LockWithRestore(v7, SHIDWORD(v7));
+    if ( lock_error )
+      Render_HandleDirectDrawFatalError(lock_error, v9);
+    pitch = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
+    *(_DWORD *)(region_view + 8) = y * pitch + x + *(_DWORD *)(*(_DWORD *)(region_view + 4) + 92);
+    return region_view;
   }
   return result;
 }
@@ -2122,10 +2122,10 @@ int  Surface_ConstructPitchRegionView(int surface, int x, int y, DWORD context)
   int result; // eax
   int v6; // ecx
   __int64 v7; // rax
-  unsigned int v8; // eax
+  unsigned int lock_error; // eax
   int v9; // ecx
-  int v10; // eax
-  int v11; // ecx
+  int pitch; // eax
+  int region_view; // ecx
 
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
@@ -2133,12 +2133,12 @@ int  Surface_ConstructPitchRegionView(int surface, int x, int y, DWORD context)
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 64))();
     *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
-    v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
-    if ( v8 )
-      Render_HandleDirectDrawFatalError(v8, v9);
-    v10 = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(v11 + 8) = y * v10 + x + *(_DWORD *)(*(_DWORD *)(v11 + 4) + 92);
-    return v11;
+    lock_error = Surface_LockWithRestore(v7, SHIDWORD(v7));
+    if ( lock_error )
+      Render_HandleDirectDrawFatalError(lock_error, v9);
+    pitch = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
+    *(_DWORD *)(region_view + 8) = y * pitch + x + *(_DWORD *)(*(_DWORD *)(region_view + 4) + 92);
+    return region_view;
   }
   return result;
 }
@@ -2165,7 +2165,7 @@ int  Surface_DrawPix(int surface, int y)
 // 4043B3: variable 'v5' is possibly undefined
 
 //----- (004043D0) --------------------------------------------------------
-int  Surface_GetPix(int surface, int a2, int y)
+int  Surface_GetPix(int surface, int x, int y)
 {
   int read_view; // eax
   int v4; // edx
@@ -2173,7 +2173,7 @@ int  Surface_GetPix(int surface, int a2, int y)
   int v6; // ecx
   unsigned __int8 pixel_value; // dl
 
-  read_view = (*(int (__cdecl **)(int))(*(_DWORD *)(surface + 184) + 60))(a2);
+  read_view = (*(int (__cdecl **)(int))(*(_DWORD *)(surface + 184) + 60))(x);
   Surface_LockWithRestore(read_view, read_view);
   Surface_GetPixelByte(v5, v4, y);
   Surface_Unlock(v6);
@@ -2195,8 +2195,8 @@ unsigned __int16  Surface_DrawLine(
 {
   unsigned __int16 y_cursor; // di
   unsigned __int16 result; // ax
-  unsigned __int16 v9; // dx
-  unsigned __int16 v10; // dx
+  unsigned __int16 prev_x; // dx
+  unsigned __int16 prev_y; // dx
   __int64 v11; // rax
   int v12; // ecx
   __int64 v13; // rax
@@ -2214,9 +2214,9 @@ unsigned __int16  Surface_DrawLine(
     {
       while ( 1 )
       {
-        v9 = x_cursor;
+        prev_x = x_cursor;
         result = ++x_cursor;
-        if ( v9 >= x_end )
+        if ( prev_x >= x_end )
           break;
         if ( (result & 3) == 3 )
         {
@@ -2226,8 +2226,8 @@ unsigned __int16  Surface_DrawLine(
         {
           while ( 1 )
           {
-            v10 = y_cursor++;
-            if ( v10 >= y_end )
+            prev_y = y_cursor++;
+            if ( prev_y >= y_end )
               break;
             if ( (y_cursor & 3) == 3 )
               (*(void (__fastcall **)(_DWORD, _DWORD))(*(_DWORD *)(surface + 184) + 12))((unsigned __int8)color_flags, x_cursor);
@@ -2679,10 +2679,10 @@ int  Surface_BeginPixelRead(int surface, int x, int y, DWORD context)
   int result; // eax
   int v6; // ecx
   __int64 v7; // rax
-  unsigned int v8; // eax
+  unsigned int lock_status; // eax
   int v9; // ecx
-  int v10; // eax
-  int v11; // ecx
+  int row_stride; // eax
+  int pixel_cursor; // ecx
 
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
@@ -2690,12 +2690,12 @@ int  Surface_BeginPixelRead(int surface, int x, int y, DWORD context)
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 60))();
     *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
-    v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
-    if ( v8 )
-      Render_HandleDirectDrawFatalError(v8, v9);
-    v10 = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(v11 + 8) = y * v10 + x + *(_DWORD *)(*(_DWORD *)(v11 + 4) + 92);
-    return v11;
+    lock_status = Surface_LockWithRestore(v7, SHIDWORD(v7));
+    if ( lock_status )
+      Render_HandleDirectDrawFatalError(lock_status, v9);
+    row_stride = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
+    *(_DWORD *)(pixel_cursor + 8) = y * row_stride + x + *(_DWORD *)(*(_DWORD *)(pixel_cursor + 4) + 92);
+    return pixel_cursor;
   }
   return result;
 }
@@ -2710,10 +2710,10 @@ int  Surface_BeginPixelWrite(int surface, int x, int y, DWORD context)
   int result; // eax
   int v6; // ecx
   __int64 v7; // rax
-  unsigned int v8; // eax
+  unsigned int lock_status; // eax
   int v9; // ecx
-  int v10; // eax
-  int v11; // ecx
+  int row_stride; // eax
+  int pixel_cursor; // ecx
 
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
@@ -2721,12 +2721,12 @@ int  Surface_BeginPixelWrite(int surface, int x, int y, DWORD context)
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 64))();
     *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
-    v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
-    if ( v8 )
-      Render_HandleDirectDrawFatalError(v8, v9);
-    v10 = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(v11 + 8) = y * v10 + x + *(_DWORD *)(*(_DWORD *)(v11 + 4) + 92);
-    return v11;
+    lock_status = Surface_LockWithRestore(v7, SHIDWORD(v7));
+    if ( lock_status )
+      Render_HandleDirectDrawFatalError(lock_status, v9);
+    row_stride = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
+    *(_DWORD *)(pixel_cursor + 8) = y * row_stride + x + *(_DWORD *)(*(_DWORD *)(pixel_cursor + 4) + 92);
+    return pixel_cursor;
   }
   return result;
 }
@@ -2876,9 +2876,9 @@ int  Palette_FadeOutToBlack(int *render_device, signed int step_count)
   int step; // ebx
   unsigned __int8 *source_ptr; // ecx
   _DWORD *write_ptr; // esi
-  int v8; // edx
+  int green_scaled; // edx
   __int64 v9; // rtt
-  int v10; // edx
+  int red_scaled; // edx
   unsigned int source_palette[256]; // [esp+0h] [ebp-428h] BYREF
   int *device; // [esp+400h] [ebp-28h] BYREF
   int packed_entry; // [esp+404h] [ebp-24h]
@@ -2900,12 +2900,12 @@ int  Palette_FadeOutToBlack(int *render_device, signed int step_count)
       write_ptr = write_base;
       do
       {
-        v8 = step * source_ptr[1];
+        green_scaled = step * source_ptr[1];
         blue_value = step * source_ptr[2] / step_count;
-        v9 = v8;
-        v10 = step * *source_ptr;
+        v9 = green_scaled;
+        red_scaled = step * *source_ptr;
         green_value = v9 / step_count;
-        LOBYTE(packed_entry) = v10 / step_count;
+        LOBYTE(packed_entry) = red_scaled / step_count;
         BYTE1(packed_entry) = green_value;
         HIWORD(packed_entry) = blue_value;
         ++write_ptr;
@@ -3546,8 +3546,8 @@ int  Res_ProbeGfxFileExists(CHAR *file_name, int a2, DWORD context, int a4)
 int  DLX_OpenArchive(char *archive_name, int a2)
 {
   char *path_cursor; // edi
-  char v4; // al
-  char v5; // al
+  char cur_char; // al
+  char next_char; // al
   int result; // eax
   int v7; // ecx
   char path[256]; // [esp-100h] [ebp-114h] BYREF
@@ -3558,16 +3558,16 @@ int  DLX_OpenArchive(char *archive_name, int a2)
   path_cursor = &path[strlen(path)];
   do
   {
-    v4 = *archive_name;
+    cur_char = *archive_name;
     *path_cursor = *archive_name;
-    if ( !v4 )
+    if ( !cur_char )
       break;
-    v5 = archive_name[1];
+    next_char = archive_name[1];
     archive_name += 2;
-    path_cursor[1] = v5;
+    path_cursor[1] = next_char;
     path_cursor += 2;
   }
-  while ( v5 );
+  while ( next_char );
   result = FileSystem_ResolveReadPath(path, 0);
   query_handle[0] = result;
   if ( result )
@@ -3744,8 +3744,8 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
   char *v8; // esi
   unsigned int prefix_length; // kr04_4
   char *append_cursor; // edi
-  char v11; // al
-  char v12; // al
+  char cur_char; // al
+  char next_char; // al
   int open_handle; // eax
   int data_offset; // edx
   int file_handle; // esi
@@ -3770,16 +3770,16 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
   append_cursor = &path[prefix_length - 1];
   do
   {
-    v11 = *v8;
+    cur_char = *v8;
     *append_cursor = *v8;
-    if ( !v11 )
+    if ( !cur_char )
       break;
-    v12 = v8[1];
+    next_char = v8[1];
     v8 += 2;
-    append_cursor[1] = v12;
+    append_cursor[1] = next_char;
     append_cursor += 2;
   }
-  while ( v12 );
+  while ( next_char );
   open_handle = IO_FOpen(path, (unsigned __int8 *)aWb, ~prefix_length, (DWORD)sprite_set);
   data_offset = 4096;
   file_handle = open_handle;
@@ -4464,35 +4464,35 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
 //----- (00406FA0) --------------------------------------------------------
 void  WorldMap_TickAmbientMapAnimations(int ii)
 {
-  int v1; // edx
+  int col_right_bound; // edx
   int j; // ecx
   int i; // edi
   int row_offset; // esi
   int next_row_index; // ebp
   unsigned __int16 *tile_ptr; // edx
-  unsigned int v7; // eax
+  unsigned int now; // eax
   int v8; // edx
   int v9; // eax
   int v10; // edx
   int v11; // ecx
   _WORD *next_row_tile; // eax
   int v13; // eax
-  int v14; // edx
+  int special_frame_duration; // edx
   int v15; // ecx
   int overlay_frame; // eax
   unsigned int v17; // eax
   int v18; // edx
   int v19; // eax
-  int v20; // edx
+  int anim_frame_duration; // edx
   int v21; // ecx
   int v22; // edx
   int v23; // ecx
   int k; // eax
-  int v25; // edx
+  int cycle_remap_offset_a; // edx
   int m; // eax
-  int v27; // edx
+  int cycle_remap_offset_b; // edx
   int n; // eax
-  int v29; // edx
+  int cycle_remap_offset_c; // edx
   int v30; // eax
   int v31; // edx
   int anim_row; // edi
@@ -4501,31 +4501,31 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   int v35; // esi
   int v36; // edx
   unsigned __int8 map_theme; // al
-  int v38; // esi
-  int v39; // ecx
-  int v40; // ebx
-  _WORD *v41; // eax
+  int setA_row; // esi
+  int setA_col; // ecx
+  int setA_col_offset; // ebx
+  _WORD *setA_tile; // eax
   int v42; // edx
   int v43; // ecx
-  int v44; // esi
-  int v45; // ecx
-  int v46; // ebx
-  _WORD *v47; // eax
+  int setB_row; // esi
+  int setB_col; // ecx
+  int setB_col_offset; // ebx
+  _WORD *setB_tile; // eax
   int v48; // ecx
-  int v49; // esi
-  int v50; // ecx
-  int v51; // ebx
-  _WORD *v52; // eax
+  int setC_row; // esi
+  int setC_col; // ecx
+  int setC_col_offset; // ebx
+  _WORD *setC_tile; // eax
   __int64 random_value; // rax
   int v54; // ecx
   int row_cursor; // esi
   int col_cursor; // ecx
   int col_offset; // ebx
   _WORD *v58; // edx
-  int v59; // edx
+  int row_bottom_bound; // edx
   int deco_col; // esi
   int kk; // ecx
-  int v62; // edx
+  int deco_col_right_bound; // edx
   unsigned __int16 tile_frame; // di
   unsigned __int8 map_theme_byte; // dl
   __int16 decoration_code; // di
@@ -4539,15 +4539,15 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   int v73; // eax
   int v74; // eax
   int v75; // eax
-  int v76; // [esp+0h] [ebp-7Ch]
+  int setA_row_offset; // [esp+0h] [ebp-7Ch]
   int smoke_row_offset; // [esp+4h] [ebp-78h]
   int next_row_offset; // [esp+8h] [ebp-74h]
   int deco_row; // [esp+Ch] [ebp-70h]
-  int v80; // [esp+10h] [ebp-6Ch]
+  int saved_render_handle; // [esp+10h] [ebp-6Ch]
   int tile_addr; // [esp+20h] [ebp-5Ch]
   int anim_row_offset; // [esp+58h] [ebp-24h]
-  int v83; // [esp+5Ch] [ebp-20h]
-  int v84; // [esp+60h] [ebp-1Ch]
+  int setC_row_offset; // [esp+5Ch] [ebp-20h]
+  int setB_row_offset; // [esp+60h] [ebp-1Ch]
   int jj; // [esp+64h] [ebp-18h]
   unsigned __int16 next_frame; // [esp+68h] [ebp-14h]
   unsigned __int16 next_overlay_frame; // [esp+6Ch] [ebp-10h]
@@ -4558,7 +4558,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   }
   else
   {
-    v80 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+    saved_render_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
     for ( i = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET); i < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7; ++i )
     {
       row_offset = 14 * i;
@@ -4567,8 +4567,8 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       next_row_index = i + 1;
       for ( j = TILE_TERRAIN_ROW_STRIDE * ii; ; j += TILE_TERRAIN_ROW_STRIDE )
       {
-        v1 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
-        if ( ii >= v1 )
+        col_right_bound = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
+        if ( ii >= col_right_bound )
           break;
         tile_ptr = (unsigned __int16 *)(row_offset + j + gameData);
         if ( *tile_ptr != 0xFFFF && *tile_ptr < TERRAIN_ANIMATION_REMAP_COUNT )
@@ -4576,12 +4576,12 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           next_frame = *(__int16 *)((char *)&g_TerrainAnimationRemapTable + 3 * *tile_ptr);
           if ( next_frame != 0xFFFF )
           {
-            v7 = Time_Now(j, (int)tile_ptr);
-            if ( v7 > *(_DWORD *)((char *)tile_ptr + 6) )
+            now = Time_Now(j, (int)tile_ptr);
+            if ( now > *(_DWORD *)((char *)tile_ptr + 6) )
             {
-              v20 = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * *tile_ptr];
-              v9 = Time_Now(j, v20);
-              *(_DWORD *)((char *)tile_ptr + 6) = v9 + v20;
+              anim_frame_duration = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * *tile_ptr];
+              v9 = Time_Now(j, anim_frame_duration);
+              *(_DWORD *)((char *)tile_ptr + 6) = v9 + anim_frame_duration;
               *tile_ptr = next_frame;
               WorldMap_RedrawTileIfVisible(ii, i);
               if ( !*(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) && next_frame == 36 )
@@ -4590,9 +4590,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                 if ( *next_row_tile == 36 )
                 {
                   *next_row_tile = 771;
-                  v14 = (unsigned __int8)g_SpecialTileAnimFrameDuration;
-                  v13 = Time_Now(j, v14);
-                  *(_DWORD *)((char *)next_row_tile + 6) = v13 + v14;
+                  special_frame_duration = (unsigned __int8)g_SpecialTileAnimFrameDuration;
+                  v13 = Time_Now(j, special_frame_duration);
+                  *(_DWORD *)((char *)next_row_tile + 6) = v13 + special_frame_duration;
                   WorldMap_RedrawTileIfVisible(ii, i + 1);
                 }
               }
@@ -4620,9 +4620,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               }
               else
               {
-                v20 = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * tile_ptr[1]];
-                v19 = Time_Now(j, v20);
-                *(_DWORD *)((char *)tile_ptr + 10) = v19 + v20;
+                anim_frame_duration = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * tile_ptr[1]];
+                v19 = Time_Now(j, anim_frame_duration);
+                *(_DWORD *)((char *)tile_ptr + 10) = v19 + anim_frame_duration;
                 tile_ptr[1] = next_overlay_frame;
               }
               WorldMap_RedrawTileIfVisible(ii, i);
@@ -4632,18 +4632,18 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         ++ii;
       }
     }
-    if ( Time_Now(j, v1) > (unsigned int)g_WorldMap_NextPaletteAnimTime )
+    if ( Time_Now(j, col_right_bound) > (unsigned int)g_WorldMap_NextPaletteAnimTime )
     {
       g_ColorCyclePrimaryFrameIndex = *(__int16 *)((char *)&g_SpriteCodeRemapTable + 3 * (unsigned __int16)g_ColorCyclePrimaryFrameIndex);
-      for ( k = 223; k != 235; g_ColorCycleStateArrayBase[k] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + v25) )
-        v25 = 3 * (unsigned __int16)g_Font_GlyphRemapTable[k++];
-      for ( m = 643; m != 675; g_Render_AnimatedFrameTable[m] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + v27) )
+      for ( k = 223; k != 235; g_ColorCycleStateArrayBase[k] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + cycle_remap_offset_a) )
+        cycle_remap_offset_a = 3 * (unsigned __int16)g_Font_GlyphRemapTable[k++];
+      for ( m = 643; m != 675; g_Render_AnimatedFrameTable[m] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + cycle_remap_offset_b) )
       {
-        v27 = 3 * (unsigned __int16)g_Font_GlyphRemapTable[m];
+        cycle_remap_offset_b = 3 * (unsigned __int16)g_Font_GlyphRemapTable[m];
         m += 8;
       }
-      for ( n = 415; n != 423; g_ColorCycleStateArrayBase[n] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + v29) )
-        v29 = 3 * (unsigned __int16)g_Font_GlyphRemapTable[n++];
+      for ( n = 415; n != 423; g_ColorCycleStateArrayBase[n] = *(__int16 *)((char *)&g_SpriteCodeRemapTable + cycle_remap_offset_c) )
+        cycle_remap_offset_c = 3 * (unsigned __int16)g_Font_GlyphRemapTable[n++];
       v30 = Time_Now(v23, (unsigned __int8)g_Render_SpriteAnimDelayBytes[3 * (unsigned __int16)g_ColorCycleDelayLookupIndex]);
       g_WorldMap_NextPaletteAnimTime = v31 + v30;
       anim_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
@@ -4683,76 +4683,76 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       {
         if ( map_theme <= 1u )
         {
-          v44 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
-          v84 = 14 * v44;
-          while ( v44 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+          setB_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+          setB_row_offset = 14 * setB_row;
+          while ( setB_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            v45 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-            v46 = TILE_TERRAIN_ROW_STRIDE * v45;
-            while ( v45 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+            setB_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+            setB_col_offset = TILE_TERRAIN_ROW_STRIDE * setB_col;
+            while ( setB_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
-              v47 = (_WORD *)(v84 + v46 + gameData);
-              if ( *v47 == 7 && (unsigned __int16)v47[1] == 0xFFFF && (unsigned int)rand_(v45, 7) < 0x333 )
+              setB_tile = (_WORD *)(setB_row_offset + setB_col_offset + gameData);
+              if ( *setB_tile == 7 && (unsigned __int16)setB_tile[1] == 0xFFFF && (unsigned int)rand_(setB_col, 7) < 0x333 )
               {
-                *(_WORD *)(v46 + gameData + v84 + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_(v45, 0) / 0x7FFFuLL)];
-                WorldMap_RedrawTileIfVisible(v48, v44);
+                *(_WORD *)(setB_col_offset + gameData + setB_row_offset + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_(setB_col, 0) / 0x7FFFuLL)];
+                WorldMap_RedrawTileIfVisible(v48, setB_row);
               }
-              v46 += TILE_TERRAIN_ROW_STRIDE;
-              ++v45;
+              setB_col_offset += TILE_TERRAIN_ROW_STRIDE;
+              ++setB_col;
             }
-            ++v44;
-            v84 += 14;
+            ++setB_row;
+            setB_row_offset += 14;
           }
         }
         else if ( map_theme == 2 )
         {
-          v49 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
-          v83 = 14 * v49;
-          while ( v49 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+          setC_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+          setC_row_offset = 14 * setC_row;
+          while ( setC_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            v50 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-            v51 = TILE_TERRAIN_ROW_STRIDE * v50;
-            while ( v50 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+            setC_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+            setC_col_offset = TILE_TERRAIN_ROW_STRIDE * setC_col;
+            while ( setC_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
-              v52 = (_WORD *)(v83 + v51 + gameData);
-              if ( *v52 == 7 && (unsigned __int16)v52[1] == 0xFFFF )
+              setC_tile = (_WORD *)(setC_row_offset + setC_col_offset + gameData);
+              if ( *setC_tile == 7 && (unsigned __int16)setC_tile[1] == 0xFFFF )
               {
-                random_value = rand_(v50, 7);
+                random_value = rand_(setC_col, 7);
                 if ( (unsigned int)random_value < 0x333 )
                 {
-                  *(_WORD *)(v51 + gameData + v83 + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_(v50, HIDWORD(random_value)) / 0x7FFF];
-                  WorldMap_RedrawTileIfVisible(v54, v49);
+                  *(_WORD *)(setC_col_offset + gameData + setC_row_offset + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_(setC_col, HIDWORD(random_value)) / 0x7FFF];
+                  WorldMap_RedrawTileIfVisible(v54, setC_row);
                 }
               }
-              v51 += TILE_TERRAIN_ROW_STRIDE;
-              ++v50;
+              setC_col_offset += TILE_TERRAIN_ROW_STRIDE;
+              ++setC_col;
             }
-            ++v49;
-            v83 += 14;
+            ++setC_row;
+            setC_row_offset += 14;
           }
         }
       }
       else
       {
-        v38 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
-        v76 = 14 * v38;
-        while ( v38 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+        setA_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+        setA_row_offset = 14 * setA_row;
+        while ( setA_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
         {
-          v39 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-          v40 = TILE_TERRAIN_ROW_STRIDE * v39;
-          while ( v39 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+          setA_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+          setA_col_offset = TILE_TERRAIN_ROW_STRIDE * setA_col;
+          while ( setA_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
           {
-            v41 = (_WORD *)(v76 + v40 + gameData);
-            if ( *v41 == 7 && (unsigned __int16)v41[1] == 0xFFFF && (unsigned int)rand_(v39, 7) < 0x333 )
+            setA_tile = (_WORD *)(setA_row_offset + setA_col_offset + gameData);
+            if ( *setA_tile == 7 && (unsigned __int16)setA_tile[1] == 0xFFFF && (unsigned int)rand_(setA_col, 7) < 0x333 )
             {
-              *(_WORD *)(v76 + v40 + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_(v39, v42) / 0x7FFFu];
-              WorldMap_RedrawTileIfVisible(v43, v38);
+              *(_WORD *)(setA_row_offset + setA_col_offset + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_(setA_col, v42) / 0x7FFFu];
+              WorldMap_RedrawTileIfVisible(v43, setA_row);
             }
-            v40 += TILE_TERRAIN_ROW_STRIDE;
-            ++v39;
+            setA_col_offset += TILE_TERRAIN_ROW_STRIDE;
+            ++setA_col;
           }
-          ++v38;
-          v76 += 14;
+          ++setA_row;
+          setA_row_offset += 14;
         }
       }
       row_cursor = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
@@ -4788,17 +4788,17 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       deco_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       for ( jj = 14 * deco_row; ; jj += 14 )
       {
-        v59 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7;
-        if ( v59 <= deco_row )
+        row_bottom_bound = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7;
+        if ( row_bottom_bound <= deco_row )
           break;
         deco_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
         for ( kk = TILE_TERRAIN_ROW_STRIDE * deco_col; ; kk += TILE_TERRAIN_ROW_STRIDE )
         {
-          v62 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
-          if ( deco_col >= v62 )
+          deco_col_right_bound = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
+          if ( deco_col >= deco_col_right_bound )
             break;
           tile_frame = *(_WORD *)(jj + kk + gameData);
-          if ( tile_frame >= 0x2Du && tile_frame <= 0x51u && (unsigned int)rand_(kk, v62) < 0xA3 )
+          if ( tile_frame >= 0x2Du && tile_frame <= 0x51u && (unsigned int)rand_(kk, deco_col_right_bound) < 0xA3 )
           {
             map_theme_byte = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
             decoration_code = tile_frame - 46;
@@ -4902,9 +4902,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         }
         ++deco_row;
       }
-      g_WorldMap_NextTileStateAnimTime = Time_Now(deco_row, v59) + 10;
+      g_WorldMap_NextTileStateAnimTime = Time_Now(deco_row, row_bottom_bound) + 10;
     }
-    Render_SetResourceHandle((int)&g_MainRenderDevice, v80);
+    Render_SetResourceHandle((int)&g_MainRenderDevice, saved_render_handle);
   }
 }
 // 407065: variable 'v8' is possibly undefined

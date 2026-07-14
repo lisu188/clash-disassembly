@@ -3,11 +3,11 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (004637B0) --------------------------------------------------------
-int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD a2)
+int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext)
 {
   int instance; // eax
 
-  instance = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, a2);
+  instance = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *instanceOut = instance;
@@ -68,12 +68,12 @@ void  CAviDecompressor_Init(
 // 4697E0: using guessed type int __fastcall sub_4697E0(_DWORD, _DWORD);
 
 //----- (00463EA0) --------------------------------------------------------
-int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD a2, int fileName, int openFlags)
+int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD allocContext, int fileName, int openFlags)
 {
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)&stru_50F6A0, 0, a2);
+  instance = Mem_Alloc(2236, (int)&stru_50F6A0, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -94,14 +94,14 @@ void __fastcall CAviDecompressor_InitSource(int openFlags, int fileName)
 //----- (00464220) --------------------------------------------------------
 void  CAviDecompressor_Done(_DWORD *playerHandle)
 {
-  _DWORD *v1; // ecx
+  _DWORD *handlePtr; // ecx
   int instance; // eax
 
-  v1 = playerHandle;
+  handlePtr = playerHandle;
   instance = *playerHandle;
   if ( instance )
     (**(void (__fastcall ***)(int, int))(instance + 2232))(instance, 2);
-  *v1 = 0;
+  *handlePtr = 0;
 }
 // 464229: variable 'v1' is possibly undefined
 
@@ -141,11 +141,11 @@ int  CAviDecompressor_Initialized(_DWORD *playerHandle)
   _DWORD *instance; // eax
   int result; // eax
   int v3; // ebx
-  _DWORD *v4; // eax
+  _DWORD *blitState; // eax
 
   instance = (_DWORD *)*playerHandle;
   if ( *(_DWORD *)((char *)instance + 7) )
-    LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], v4 = instance + 481, v3) || v4[4];
+    LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], blitState = instance + 481, v3) || blitState[4];
   else
     LOBYTE(result) = 0;
   return (unsigned __int8)result;
@@ -765,11 +765,11 @@ int  CAviDecompressor_GetVideoFormat(int self)
 }
 
 //----- (00464CD0) --------------------------------------------------------
-int  CAviDecompressor_ReleaseVideoCodec(_DWORD *codecHandlePtr, int a2)
+int  CAviDecompressor_ReleaseVideoCodec(_DWORD *codecHandlePtr, int drawEndParam)
 {
   int v2; // ecx
 
-  CAviDecompressor_CloseCodecHandle(codecHandlePtr, (int)codecHandlePtr, a2);
+  CAviDecompressor_CloseCodecHandle(codecHandlePtr, (int)codecHandlePtr, drawEndParam);
   return v2;
 }
 // 464CD8: variable 'v2' is possibly undefined
@@ -1649,7 +1649,7 @@ char  AviPlayer_OpenVideoCodec(
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (004662B0) --------------------------------------------------------
-_DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3)
+_DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int decompressEndParam, int drawEndParam)
 {
   _DWORD *codecPtr; // ebx
 
@@ -1658,13 +1658,13 @@ _DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3)
   {
     if ( *((_BYTE *)result + 1508) )
     {
-      ICSendMessage(*result, 16447, 0, 0, a3);
+      ICSendMessage(*result, 16447, 0, 0, drawEndParam);
       result = (_DWORD *)ICClose(*codecPtr);
       *codecPtr = 0;
     }
     else
     {
-      ICSendMessage(*result, 16398, 0, 0, a2);
+      ICSendMessage(*result, 16398, 0, 0, decompressEndParam);
       result = (_DWORD *)ICClose(*codecPtr);
       *codecPtr = 0;
     }
@@ -2530,10 +2530,10 @@ int  AviPlayer_Flip(int self)
   int v4; // ebx
   int *srcRectPtr; // ebp
   int lockResult; // eax
-  int v7; // ecx
-  int v8; // ebp
-  int v9; // ebp
-  int v10; // eax
+  int rectLeft; // ecx
+  int rectRight; // ebp
+  int destWidth; // ebp
+  int bytesPerPixel; // eax
   int v11; // edx
   int unlockResult; // eax
   _DWORD *busyGuard; // ebx
@@ -2605,9 +2605,9 @@ int  AviPlayer_Flip(int self)
   void *v79; // [esp+4F4h] [ebp-38h]
   int v80; // [esp+4F8h] [ebp-34h]
   int busyGuardAddr; // [esp+500h] [ebp-2Ch]
-  int v82; // [esp+504h] [ebp-28h]
+  int backLockedBits; // [esp+504h] [ebp-28h]
   int v83; // [esp+508h] [ebp-24h]
-  int v84; // [esp+50Ch] [ebp-20h]
+  int overlayLockedBits; // [esp+50Ch] [ebp-20h]
   char flipState; // [esp+510h] [ebp-1Ch]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
@@ -2683,14 +2683,14 @@ LABEL_19:
                || !(*(int (__stdcall **)(int, int *, int *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, srcRectPtr, &surfaceDesc, 33, 0)) )
             {
               v83 = srcRectPtr[3] - srcRectPtr[1];
-              v7 = *srcRectPtr;
-              v8 = srcRectPtr[2];
-              v84 = v53;
+              rectLeft = *srcRectPtr;
+              rectRight = srcRectPtr[2];
+              overlayLockedBits = v53;
               frameFlags = *(_DWORD *)(v4 + 2029);
-              v9 = v8 - v7;
+              destWidth = rectRight - rectLeft;
               frameData = *(_DWORD *)(v4 + 2025);
-              v10 = Mem_BitsToBytesCeil(*(_DWORD *)(v4 + 2123));
-              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v4 + 415), v84, v83, v9, v11 / v10, frameData, frameFlags);
+              bytesPerPixel = Mem_BitsToBytesCeil(*(_DWORD *)(v4 + 2123));
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v4 + 415), overlayLockedBits, v83, destWidth, v11 / bytesPerPixel, frameData, frameFlags);
               unlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, v53);
               if ( unlockResult
                 && (unlockResult != -2005532222
@@ -2740,11 +2740,11 @@ LABEL_19:
             {
               AviPlayer_BitmapHeightAbs(v18);
               bitmapWidth = AviPlayer_BitmapWidth(v18);
-              v82 = v71;
+              backLockedBits = v71;
               drawFlags = *(_DWORD *)(v18 + 2029);
               frameBits = *(_DWORD *)(v18 + 2025);
               v83 = Mem_BitsToBytesCeil(*(_DWORD *)(v18 + 2123));
-              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v18 + 415), v82, v23, bitmapWidth, v22 / v83, frameBits, drawFlags);
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v18 + 415), backLockedBits, v23, bitmapWidth, v22 / v83, frameBits, drawFlags);
               overlayUnlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, v71);
               if ( overlayUnlockResult
                 && (overlayUnlockResult != -2005532222
@@ -3000,7 +3000,7 @@ LABEL_86:
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00467DE0) --------------------------------------------------------
-int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4)
+int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int srcSurface)
 {
   _DWORD **self; // ebx
   int ddObject; // edx
@@ -3018,7 +3018,7 @@ int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4
     result = (*(int (**)(void))(*(_DWORD *)ddObject + 4))();
     if ( result )
     {
-      restoreHr = (*(int (__stdcall **)(int, int, int))(**(_DWORD **)((char *)self + 2151) + 4))(a4, a2, a3);
+      restoreHr = (*(int (__stdcall **)(int, int, int))(**(_DWORD **)((char *)self + 2151) + 4))(srcSurface, a2, a3);
       if ( (*(int (__stdcall **)(int))(*(_DWORD *)restoreHr + 96))(restoreHr) == -2005532222 )
         (*(void (**)(void))(**(_DWORD **)((char *)self + 2151) + 8))();
       v10 = ((__int64 (__thiscall *)(_DWORD, _DWORD, int, _DWORD))*(_DWORD *)(**(_DWORD **)((char *)self + 2151) + 4))(
@@ -3033,7 +3033,7 @@ int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4
       result = (***(int (****)(void))((char *)self + 2151))();
       if ( result )
       {
-        hr = (***(int (__stdcall ****)(int, int, int))((char *)self + 2151))(a4, a2, a3);
+        hr = (***(int (__stdcall ****)(int, int, int))((char *)self + 2151))(srcSurface, a2, a3);
         if ( (*(int (__stdcall **)(int))(*(_DWORD *)hr + 96))(hr) == -2005532222 )
           (*(void (**)(void))(**(_DWORD **)((char *)self + 2151) + 8))();
         v7 = *self[488];
@@ -3407,7 +3407,7 @@ int  AviPlayer_UpdateOverlayColorKey(int result)
 {
   int self; // ebx
   int colorKeyFlags; // esi
-  char v3; // dl
+  char prevFlagsByte; // dl
   int colorKeyHigh; // ecx
   int overlaySurface; // edi
   int backSurface; // ebp
@@ -3416,11 +3416,11 @@ int  AviPlayer_UpdateOverlayColorKey(int result)
   if ( *(_DWORD *)(result + 2171) )
   {
     colorKeyFlags = 8;
-    v3 = *(_BYTE *)(result + 2112);
+    prevFlagsByte = *(_BYTE *)(result + 2112);
     colorKeyHigh = *(_DWORD *)(result + 2046);
     *(_BYTE *)(result + 2115) |= 1u;
     result = *(_DWORD *)(result + 2042);
-    *(_BYTE *)(self + 2112) = v3 | 0x80;
+    *(_BYTE *)(self + 2112) = prevFlagsByte | 0x80;
     if ( result == colorKeyHigh )
       colorKeyFlags = 9;
     overlaySurface = *(_DWORD *)(self + 1964);
@@ -4014,7 +4014,7 @@ int  AviPlayer_AllocDecodedBitmapInfo(int self, int headerBytes)
   int bitCount; // edx
   int compressionSel; // edx
   int compression; // ebp
-  __int64 v6; // rax
+  __int64 allocResult; // rax
   int decodedBmi; // edx
   int result; // eax
   int headerSize; // [esp+0h] [ebp-20h]
@@ -4029,12 +4029,12 @@ int  AviPlayer_AllocDecodedBitmapInfo(int self, int headerBytes)
   compression = compressionSel;
   if ( compressionSel )
     headerBytes = **(_DWORD **)(self + 151);
-  v6 = j_Mem_Alloc(headerBytes);
-  *(_DWORD *)(self + 2058) = v6;
-  headerSize = HIDWORD(v6);
-  if ( SHIDWORD(v6) > **(_DWORD **)(self + 151) )
-    HIDWORD(v6) = **(_DWORD **)(self + 151);
-  qmemcpy(*(void **)(self + 2058), *(const void **)(self + 151), HIDWORD(v6));
+  allocResult = j_Mem_Alloc(headerBytes);
+  *(_DWORD *)(self + 2058) = allocResult;
+  headerSize = HIDWORD(allocResult);
+  if ( SHIDWORD(allocResult) > **(_DWORD **)(self + 151) )
+    HIDWORD(allocResult) = **(_DWORD **)(self + 151);
+  qmemcpy(*(void **)(self + 2058), *(const void **)(self + 151), HIDWORD(allocResult));
   **(_DWORD **)(self + 2058) = headerSize;
   *(_WORD *)(*(_DWORD *)(self + 2058) + 14) = *(_WORD *)(self + 2123);
   *(_DWORD *)(*(_DWORD *)(self + 2058) + 16) = compression;
@@ -5754,7 +5754,7 @@ int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *capabilityOut)
 }
 
 //----- (0046D300) --------------------------------------------------------
-int __cdecl Audio_SetMixerParamValue(int a1, int volume)
+int __cdecl Audio_SetMixerParamValue(int driver, int volume)
 {
   g_CSS_NullDriverMasterVolume = volume;
   return 0;
@@ -6485,15 +6485,15 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
   signed int i; // esi
   int channel; // eax
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-2Ch]
-  tagRECT *v5; // [esp+4h] [ebp-28h]
-  void *v6; // [esp+8h] [ebp-24h]
-  int v7; // [esp+Ch] [ebp-20h]
+  tagRECT *ehHandler; // [esp+4h] [ebp-28h]
+  void *ehScopeTable; // [esp+8h] [ebp-24h]
+  int tryLevel; // [esp+Ch] [ebp-20h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   channelOffset = 0;
-  v5 = &j____wcpp_4_fs_handler_rtn_;
-  v6 = &g_CSSServiceStreamingChannels_EHScopeTable;
-  v7 = 0;
+  ehHandler = &j____wcpp_4_fs_handler_rtn_;
+  ehScopeTable = &g_CSSServiceStreamingChannels_EHScopeTable;
+  tryLevel = 0;
   CSS_StreamService_NoOpHook();
   for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
@@ -6506,9 +6506,9 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
       (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(channelOffset + g_SoundChannelArrayBase + 20)
                                                                                            + 32))(
         ExceptionList,
-        v5,
-        v6,
-        v7);
+        ehHandler,
+        ehScopeTable,
+        tryLevel);
     }
     ++i;
   }
@@ -6549,23 +6549,23 @@ _DWORD *__stdcall CSS_PauseStreamReading()
 {
   _DWORD *result; // eax
   int *lockCounter; // ebx
-  _DWORD v2[3]; // [esp+0h] [ebp-20h] BYREF
-  int v3; // [esp+Ch] [ebp-14h]
+  _DWORD ehFrame[3]; // [esp+0h] [ebp-20h] BYREF
+  int tryLevel; // [esp+Ch] [ebp-14h]
   int *lockCounterPtr; // [esp+14h] [ebp-Ch]
 
-  result = v2;
-  v2[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v2[1] = &j____wcpp_4_fs_handler_rtn_;
-  v2[2] = &g_CSSPauseStreamReading_EHScopeTable;
-  v3 = 0;
+  result = ehFrame;
+  ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
+  ehFrame[2] = &g_CSSPauseStreamReading_EHScopeTable;
+  tryLevel = 0;
   if ( g_CSS_StreamReadingActive )
   {
     lockCounterPtr = &g_StreamServiceLockEntryCount;
     ++g_StreamServiceLockEntryCount;
     EnterCriticalSection(&CriticalSection);
-    v3 = 1;
+    tryLevel = 1;
     SuspendThread(hThread);
-    v3 = 0;
+    tryLevel = 0;
     lockCounter = lockCounterPtr;
     LeaveCriticalSection((LPCRITICAL_SECTION)(lockCounterPtr + 1));
     return (_DWORD *)(*lockCounter)--;
@@ -6636,14 +6636,14 @@ _DWORD *__stdcall CSS_EmptySampleCache()
   signed int i; // ecx
   char channelFlags; // dl
   int *entry; // eax
-  _DWORD v5[6]; // [esp+Ch] [ebp-18h] BYREF
+  _DWORD ehFrame[6]; // [esp+Ch] [ebp-18h] BYREF
 
-  result = v5;
-  v5[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  result = ehFrame;
+  ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
   channelOffset = 0;
-  v5[1] = &j____wcpp_4_fs_handler_rtn_;
-  v5[2] = &g_CSSEmptySampleCache_EHScopeTable;
-  v5[3] = 0;
+  ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
+  ehFrame[2] = &g_CSSEmptySampleCache_EHScopeTable;
+  ehFrame[3] = 0;
   for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
     result = (_DWORD *)(channelOffset + g_SoundChannelArrayBase);
@@ -7037,13 +7037,13 @@ int __stdcall CSS_StopSound(int soundHandle, signed int fadeMs)
 {
   int result; // eax
   unsigned int channelIndex; // ecx
-  _DWORD v4[8]; // [esp+0h] [ebp-20h] BYREF
+  _DWORD ehFrame[8]; // [esp+0h] [ebp-20h] BYREF
 
-  result = (int)v4;
-  v4[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v4[1] = &j____wcpp_4_fs_handler_rtn_;
-  v4[2] = &g_CSSStopSound_EHScopeTable;
-  v4[3] = 0;
+  result = (int)ehFrame;
+  ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
+  ehFrame[2] = &g_CSSStopSound_EHScopeTable;
+  ehFrame[3] = 0;
   if ( soundHandle )
   {
     channelIndex = 0;
@@ -8000,7 +8000,7 @@ int __cdecl CSS_QueryWaveOutDevicePresent(_DWORD *device_present_out)
 }
 
 //----- (00470220) --------------------------------------------------------
-unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char format_flags)
+unsigned int __cdecl CSS_OpenWaveOutDevice(int driver, char format_flags)
 {
   bool format_unsupported; // zf
   unsigned int buffer_bytes; // eax
@@ -10372,18 +10372,18 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   unsigned int aligned_size; // ebx
   _DWORD *block_record; // edx
   int stored_size; // edi
-  int v7; // ecx
+  int next_link; // ecx
   _DWORD *chain_cursor; // eax
   int *pool_header; // eax
   _DWORD *adjacent_block; // ebx
   int freelist_head; // esi
   _DWORD *chained_block; // ecx
-  int v13; // esi
+  int old_freelist_head; // esi
   int chained_size; // edi
   int prev_free; // ebp
   int next_free; // esi
   int adjacent_size; // ebp
-  _DWORD *v18; // ecx
+  _DWORD *following_block; // ecx
   int adjacent_next; // esi
   int *unlink_node; // ecx
   int chain_next; // edx
@@ -10396,10 +10396,10 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   stored_size = block_record[3];
   if ( stored_size >= 0 || -aligned_size != stored_size )
     return 0;
-  v7 = *block_record;
+  next_link = *block_record;
   block_record[3] = aligned_size;
   chain_cursor = block_record;
-  if ( v7 )
+  if ( next_link )
   {
     do
       chain_cursor = (_DWORD *)*chain_cursor;
@@ -10411,9 +10411,9 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   chained_block = (_DWORD *)*block_record;
   if ( freelist_head )
     *(_DWORD *)(freelist_head + 8) = block_record;
-  v13 = pool_header[2];
+  old_freelist_head = pool_header[2];
   block_record[2] = 0;
-  block_record[1] = v13;
+  block_record[1] = old_freelist_head;
   pool_header[2] = (int)block_record;
   if ( chained_block )
   {
@@ -10446,10 +10446,10 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   if ( adjacent_size > 0 )
   {
     block_record[3] += adjacent_size + g_MemPoolBlockHeaderSize;
-    v18 = (_DWORD *)((char *)adjacent_block + adjacent_block[3] + g_MemPoolBlockHeaderSize);
-    if ( v18 )
+    following_block = (_DWORD *)((char *)adjacent_block + adjacent_block[3] + g_MemPoolBlockHeaderSize);
+    if ( following_block )
     {
-      *v18 = block_record;
+      *following_block = block_record;
       if ( adjacent_block[2] )
         *(_DWORD *)(adjacent_block[2] + 4) = adjacent_block[1];
       adjacent_next = adjacent_block[1];
@@ -10735,18 +10735,18 @@ int  Surface_BltFastKeyedClippedTo(_DWORD *src_surface, int dest_x, int dest_sur
   _DWORD src_rect[4]; // [esp+0h] [ebp-28h] BYREF
   int blit_x; // [esp+10h] [ebp-18h] BYREF
   int blit_y; // [esp+14h] [ebp-14h] BYREF
-  int v11; // [esp+18h] [ebp-10h]
+  int target_surface; // [esp+18h] [ebp-10h]
 
   blit_x = dest_x;
   blit_y = dest_y;
-  v11 = dest_surface;
+  target_surface = dest_surface;
   src_rect[0] = src_surface[5];
   src_rect[1] = src_surface[6];
   src_rect[2] = src_surface[7];
   src_rect[3] = src_surface[8];
   Render_ClampBlitRectToBounds(&blit_x, &blit_y, clip_bounds, src_rect);
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, _DWORD *, int))(**(_DWORD **)(v11 + 164) + 28))(
-             *(_DWORD *)(v11 + 164),
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, _DWORD *, int))(**(_DWORD **)(target_surface + 164) + 28))(
+             *(_DWORD *)(target_surface + 164),
              blit_x,
              blit_y,
              src_surface[41],
@@ -12119,7 +12119,7 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, vo
 
 //----- (00475080) --------------------------------------------------------
 signed int  Render_InitDirectDrawFullscreenMode(
-        LPVOID *a1,
+        LPVOID *dd_context,
         _DWORD *hwnd,
         _DWORD *height,
         _DWORD *width,
@@ -12140,7 +12140,7 @@ signed int  Render_InitDirectDrawFullscreenMode(
   int attach_caps; // [esp+A0h] [ebp-14h] BYREF
   LPDIRECTDRAW lpDD; // [esp+A4h] [ebp-10h] BYREF
 
-  raw = (_DWORD *)a1;
+  raw = (_DWORD *)dd_context;
   raw[0] = 0;
   raw[10] = 1;
   raw[4] = 0;
@@ -12269,11 +12269,11 @@ int  Render_SetPaletteEntryColor(int ddraw_ctx, int entry_index, char green, int
 //----- (004754B0) --------------------------------------------------------
 int  IO_StreamWrite(int result, int a2, int a3, int a4)
 {
-  int v4; // esi
+  int backing_stream; // esi
 
-  v4 = *(_DWORD *)(result + 16);
-  if ( v4 )
-    return (*(int (__stdcall **)(int, _DWORD, int, int, int))(*(_DWORD *)v4 + 24))(v4, 0, a2, a4, a3);
+  backing_stream = *(_DWORD *)(result + 16);
+  if ( backing_stream )
+    return (*(int (__stdcall **)(int, _DWORD, int, int, int))(*(_DWORD *)backing_stream + 24))(backing_stream, 0, a2, a4, a3);
   return result;
 }
 
@@ -12575,7 +12575,7 @@ unsigned int  IO_OpenFileDescriptorBinaryMode(const CHAR *file_path, DWORD a2)
 }
 
 //----- (00476301) --------------------------------------------------------
-int Output_WriteFormatted(int a1, int a2, int a3, int a4, ...)
+int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, ...)
 {
   const char *format;
   int arg_count;
@@ -12587,28 +12587,28 @@ int Output_WriteFormatted(int a1, int a2, int a3, int a4, ...)
 
   (void)a1;
   (void)a2;
-  if ( !a3 || !a4 )
+  if ( !output_stream || !format_string )
     return 0;
 
-  format = (const char *)(uintptr_t)(unsigned int)a4;
+  format = (const char *)(uintptr_t)(unsigned int)format_string;
   arg_count = Compat_CountPrintfArgs32(format);
   if ( arg_count <= 0 )
   {
     cursor = 0;
-    return CRT_VfprintfLockedWrite(a3, a4, &cursor);
+    return CRT_VfprintfLockedWrite(output_stream, format_string, &cursor);
   }
 
   args_ptr = Compat_AllocLow32Bytes(4 * arg_count);
   if ( !args_ptr )
     return 0;
 
-  va_start(args, a4);
+  va_start(args, format_string);
   for ( i = 0; i < arg_count; ++i )
     *(_DWORD *)(uintptr_t)(unsigned int)(args_ptr + 4 * i) = va_arg(args, int);
   va_end(args);
 
   cursor = args_ptr;
-  result = CRT_VfprintfLockedWrite(a3, a4, &cursor);
+  result = CRT_VfprintfLockedWrite(output_stream, format_string, &cursor);
   Compat_FreeLow32Bytes(args_ptr);
   return result;
 }
@@ -13092,18 +13092,18 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **file_system, int
 int  FileSystem_ResolveRelativeToCurrentDir(int file_system, int path_holder)
 {
   int fs_saved; // edx
-  int v5; // [esp-10h] [ebp-14h]
+  int path_holder_saved; // [esp-10h] [ebp-14h]
   _DWORD joined_holder[4]; // [esp-Ch] [ebp-10h] BYREF
 
   fs_saved = file_system;
   if ( (g_FileSystem_CwdHolderInitFlag & 1) == 0 )
   {
-    v5 = path_holder;
+    path_holder_saved = path_holder;
     g_FileSystem_CwdHolderInitFlag |= 1u;
     g_FS_ResolvedPathEntryHolder = 0;
     g_CurrentDirPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
     CRT_RegisterFinalizableObject(0, file_system);
-    path_holder = v5;
+    path_holder = path_holder_saved;
   }
   Compat_StringHolderConstructJoined(joined_holder, path_holder, *(const char **)(fs_saved + 12));
   Compat_StringHolderDestructor(&g_FS_ResolvedPathEntryHolder);
@@ -13907,13 +13907,13 @@ int  Compat_FileFinderGetSize(int finder)
 }
 
 //----- (00477FF0) --------------------------------------------------------
-int  Compat_FileFinderCreate(int search_path, char a2, DWORD a3)
+int  Compat_FileFinderCreate(int search_path, char a2, DWORD alloc_context)
 {
   _DWORD *finder; // eax
   int v5; // ecx
   int v6; // ecx
 
-  finder = (_DWORD *)Mem_Alloc(292, search_path, a2, a3);
+  finder = (_DWORD *)Mem_Alloc(292, search_path, a2, alloc_context);
   if ( finder )
     finder = (_DWORD *)Compat_FileFinderOpen(finder, v5);
   if ( (*(int (__cdecl **)(int))(*finder + 12))(search_path) )
@@ -14130,22 +14130,22 @@ char  FileSystem_DiskMountResolveRegisteredRootPath(int mount, int mount_table)
 }
 
 //----- (00478370) --------------------------------------------------------
-const char ** FileSystem_DiskMountCreate(int root_path, char a2, DWORD a3)
+const char ** FileSystem_DiskMountCreate(int root_path, char a2, DWORD alloc_context)
 {
   const char **result; // eax
 
-  result = (const char **)Mem_Alloc(12, root_path, a2, a3);
+  result = (const char **)Mem_Alloc(12, root_path, a2, alloc_context);
   if ( result )
     return FileSystem_DiskMountCtor(result, root_path);
   return result;
 }
 
 //----- (004783B0) --------------------------------------------------------
-int  FileSystem_DiskMountRegisterNestedMount(int mount, int *mount_table, char a3, DWORD a4)
+int  FileSystem_DiskMountRegisterNestedMount(int mount, int *mount_table, char a3, DWORD alloc_context)
 {
   _DWORD *stream_buf; // eax
 
-  stream_buf = IO_StreambufAlloc(mount, a3, a4);
+  stream_buf = IO_StreambufAlloc(mount, a3, alloc_context);
   return FileSystem_AddMountEntry(
            mount_table,
            (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(mount + 4),
@@ -14772,7 +14772,7 @@ int  FileSystem_ArchiveStreamReadByte(int stream, int a2)
 }
 
 //----- (00478D10) --------------------------------------------------------
-signed int  Res_StreamPutBackDecodedByte(int entry_stream, int a2)
+signed int  Res_StreamPutBackDecodedByte(int entry_stream, int putback_byte)
 {
   int source_stream; // eax
   signed int encoded_byte; // eax
@@ -14780,13 +14780,13 @@ signed int  Res_StreamPutBackDecodedByte(int entry_stream, int a2)
   int v6; // ecx
 
   source_stream = *(_DWORD *)(entry_stream + 16);
-  if ( a2 != -1 )
+  if ( putback_byte != -1 )
     --*(_DWORD *)(source_stream + 48);
   if ( *(_DWORD *)(source_stream + 20) )
-    encoded_byte = a2 ^ (*(_DWORD *)(source_stream + 48) + *(_DWORD *)(source_stream + 20));
+    encoded_byte = putback_byte ^ (*(_DWORD *)(source_stream + 48) + *(_DWORD *)(source_stream + 20));
   else
-    encoded_byte = a2;
-  result = CRT_FlushBufferAndPutChar(encoded_byte, a2);
+    encoded_byte = putback_byte;
+  result = CRT_FlushBufferAndPutChar(encoded_byte, putback_byte);
   if ( v6 != -1 )
     --*(_DWORD *)(entry_stream + 8);
   return result;
@@ -14855,11 +14855,11 @@ int  File_DirNodeScalarDtor(_DWORD *node, char flags, DWORD a3)
 // 510BA4: using guessed type int (*off_510BA4[4])();
 
 //----- (00478E00) --------------------------------------------------------
-_DWORD * Res_BuildTaggedRecordHeader(_DWORD *result, int a2, int a3, int a4)
+_DWORD * Res_BuildTaggedRecordHeader(_DWORD *result, int version, int data_offset, int record_count)
 {
-  result[1] = a2;
-  result[3] = a3;
-  result[2] = a4;
+  result[1] = version;
+  result[3] = data_offset;
+  result[2] = record_count;
   qmemcpy(result, aLlrs, sizeof(_DWORD));
   return result;
 }
@@ -15001,40 +15001,40 @@ signed int  File_CacheNodeGetEntrySize(int node)
 }
 
 //----- (00478FC0) --------------------------------------------------------
-int  File_CacheNodeGetChildTag(int a1)
+int  File_CacheNodeGetChildTag(int node)
 {
-  return *(_DWORD *)(*(_DWORD *)(a1 + 12) + 22);
+  return *(_DWORD *)(*(_DWORD *)(node + 12) + 22);
 }
 
 //----- (00478FD0) --------------------------------------------------------
 int * File_SourceConstructFromStream(
-        int *a1,
-        const CHAR *a2,
-        unsigned __int8 *a3,
+        int *source,
+        const CHAR *path,
+        unsigned __int8 *mode,
         int a4,
         int a5,
         int a6)
 {
-  a1[3] = 0;
-  a1[4] = (int)&g_PathEntry_Vtable;
-  a1[8] = 0;
-  a1[5] = a4;
-  a1[9] = 0;
-  a1[7] = a6;
-  *a1 = (int)g_FileSource_VTable;
-  File_SourceReadAndDecodeHeader(a1, a2, (int)a3, a3, a5);
-  return a1;
+  source[3] = 0;
+  source[4] = (int)&g_PathEntry_Vtable;
+  source[8] = 0;
+  source[5] = a4;
+  source[9] = 0;
+  source[7] = a6;
+  *source = (int)g_FileSource_VTable;
+  File_SourceReadAndDecodeHeader(source, path, (int)mode, mode, a5);
+  return source;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
 // 510B34: using guessed type int (*off_510B34[4])();
 
 //----- (00479020) --------------------------------------------------------
 int * File_SourceBuildAndWriteHeader(
-        int *a1,
-        const CHAR *a2,
+        int *source,
+        const CHAR *path,
         int a3,
         int a4,
-        DWORD a5,
+        DWORD heap_ctx,
         int a6)
 {
   const CHAR *v7; // edx
@@ -15044,27 +15044,27 @@ int * File_SourceBuildAndWriteHeader(
   _DWORD *v11; // eax
   _DWORD v13[6]; // [esp+0h] [ebp-18h] BYREF
 
-  a1[2] = 0;
-  a1[3] = 0;
-  a1[4] = (int)&g_PathEntry_Vtable;
-  a1[8] = 0;
-  a1[9] = 0;
-  a1[6] = a4;
-  a1[7] = a6;
-  a1[5] = a3;
-  *a1 = (int)g_FileSource_VTable;
-  CRT_DeleteFile(a2, (int)a2);
-  a1[2] = Res_OpenBufferedStreamForWrite(v7, 0, (unsigned __int8 *)aWB, a5);
+  source[2] = 0;
+  source[3] = 0;
+  source[4] = (int)&g_PathEntry_Vtable;
+  source[8] = 0;
+  source[9] = 0;
+  source[6] = a4;
+  source[7] = a6;
+  source[5] = a3;
+  *source = (int)g_FileSource_VTable;
+  CRT_DeleteFile(path, (int)path);
+  source[2] = Res_OpenBufferedStreamForWrite(v7, 0, (unsigned __int8 *)aWB, heap_ctx);
   Res_BuildTaggedRecordHeader(v13, 1, v8, a4);
-  a1[13] = 0;
-  File_SeekIfPositionChangedMode2(a1, 0, a4);
-  Res_StreamWriteWithXorCipher(a1, v13, v9, 0x10u);
-  v11 = (_DWORD *)Mem_Alloc(44, v10, 16, a5);
+  source[13] = 0;
+  File_SeekIfPositionChangedMode2(source, 0, a4);
+  Res_StreamWriteWithXorCipher(source, v13, v9, 0x10u);
+  v11 = (_DWORD *)Mem_Alloc(44, v10, 16, heap_ctx);
   if ( v11 )
-    a1[1] = FileSystem_ArchiveIndexCreateEmpty(v11, (int)a1, a4);
+    source[1] = FileSystem_ArchiveIndexCreateEmpty(v11, (int)source, a4);
   else
-    a1[1] = 0;
-  return a1;
+    source[1] = 0;
+  return source;
 }
 // 479074: variable 'v7' is possibly undefined
 // 479085: variable 'v8' is possibly undefined
@@ -15074,7 +15074,7 @@ int * File_SourceBuildAndWriteHeader(
 // 510B34: using guessed type int (*off_510B34[4])();
 
 //----- (004790E0) --------------------------------------------------------
-int  File_SourceScalarDtor(_DWORD *a1, char a2)
+int  File_SourceScalarDtor(_DWORD *a1, char flags)
 {
   int v3; // ecx
   int v4; // eax
@@ -15082,7 +15082,7 @@ int  File_SourceScalarDtor(_DWORD *a1, char a2)
   int v7; // ecx
   int v8; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(a1, &g_FileSource_DtorArrayDescriptor);
     j_j__nfree_();
@@ -15099,7 +15099,7 @@ int  File_SourceScalarDtor(_DWORD *a1, char a2)
       j__nfree_();
     }
     v5 = Compat_StringHolderScalarDeletingDtor(v3 + 12, 0);
-    if ( (a2 & 2) != 0 )
+    if ( (flags & 2) != 0 )
     {
       j__nfree_();
       return v8;
@@ -15117,70 +15117,70 @@ int  File_SourceScalarDtor(_DWORD *a1, char a2)
 // 510B34: using guessed type int (*off_510B34[4])();
 
 //----- (00479140) --------------------------------------------------------
-int  Res_OpenBufferedStreamForRead(const CHAR *a1, int a2, unsigned __int8 *a3, DWORD a4)
+int  Res_OpenBufferedStreamForRead(const CHAR *path, int a2, unsigned __int8 *mode, DWORD heap_ctx)
 {
   int stream_ptr;
 
-  stream_ptr = IO_FOpen(a1, a3, a2, a4);
+  stream_ptr = IO_FOpen(path, mode, a2, heap_ctx);
   Compat_StreamSetBuffer(stream_ptr, 0x1800);
   return stream_ptr;
 }
 
 //----- (00479170) --------------------------------------------------------
-int  Res_OpenBufferedStreamForWrite(const CHAR *a1, int a2, unsigned __int8 *a3, DWORD a4)
+int  Res_OpenBufferedStreamForWrite(const CHAR *path, int a2, unsigned __int8 *mode, DWORD heap_ctx)
 {
   int stream_ptr;
 
-  stream_ptr = IO_FOpen(a1, a3, a2, a4);
+  stream_ptr = IO_FOpen(path, mode, a2, heap_ctx);
   Compat_StreamSetBuffer(stream_ptr, 0x1800);
   return stream_ptr;
 }
 
 //----- (004791A0) --------------------------------------------------------
 int  File_SourceReadAndDecodeHeader(
-        int *a1,
-        const CHAR *a2,
+        int *source,
+        const CHAR *path,
         int a3,
-        unsigned __int8 *a4,
+        unsigned __int8 *mode,
         int a5)
 {
   int stream_ptr; // eax
   unsigned __int8 *v9; // esi
   int i; // ecx
-  int v11; // ebx
-  unsigned __int8 v12; // al
+  int raw_byte; // ebx
+  unsigned __int8 decoded_byte; // al
   int v13; // ecx
   int v18; // eax
   _DWORD *v19; // esi
-  _DWORD v21[4]; // [esp+0h] [ebp-28h] BYREF
+  _DWORD header[4]; // [esp+0h] [ebp-28h] BYREF
   _DWORD source_name_holder[2]; // [esp+10h] [ebp-18h] BYREF
-  int v24; // [esp+18h] [ebp-10h]
+  int bytes_read; // [esp+18h] [ebp-10h]
   int *v25; // [esp+1Ch] [ebp-Ch]
   int *v26; // [esp+20h] [ebp-8h]
   int *v27; // [esp+24h] [ebp-4h]
   _DWORD savedregs[4]; // [esp+28h] [ebp+0h] BYREF
 
-  v26 = a1;
-  stream_ptr = Res_OpenBufferedStreamForRead(a2, a3, a4, (DWORD)savedregs);
+  v26 = source;
+  stream_ptr = Res_OpenBufferedStreamForRead(path, a3, mode, (DWORD)savedregs);
   v26[13] = 0;
   v25 = v26;
   v26[2] = stream_ptr;
-  v24 = Compat_StreamRead(stream_ptr, v21, 16);
+  bytes_read = Compat_StreamRead(stream_ptr, header, 16);
   if ( v26[5] )
   {
-    v9 = (unsigned __int8 *)v21;
+    v9 = (unsigned __int8 *)header;
     v27 = v26;
-    a5 = v24;
-    for ( i = v26[12]; a5; *(v9 - 1) = v12 )
+    a5 = bytes_read;
+    for ( i = v26[12]; a5; *(v9 - 1) = decoded_byte )
     {
       --a5;
-      v11 = *v9++;
-      v12 = Res_XorDecodeByte((int)v27, i, v11);
+      raw_byte = *v9++;
+      decoded_byte = Res_XorDecodeByte((int)v27, i, raw_byte);
       i = v13 + 1;
     }
   }
-  v25[12] += v24;
-  Compat_StreamSeek(v26[2], v21[3], 1);
+  v25[12] += bytes_read;
+  Compat_StreamSeek(v26[2], header[3], 1);
   v26[12] = Compat_StreamTell(v26[2]);
   v18 = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
   v19 = (_DWORD *)v18;
@@ -15188,7 +15188,7 @@ int  File_SourceReadAndDecodeHeader(
   source_name_holder[1] = (int)&g_PathEntry_Vtable;
   if ( v18 )
   {
-    v18 = FileSystem_ArchiveEntryReaderCtor(v19, v26, v26[12], 26 * v21[2] + 4, (const void *)source_name_holder);
+    v18 = FileSystem_ArchiveEntryReaderCtor(v19, v26, v26[12], 26 * header[2] + 4, (const void *)source_name_holder);
   }
   else
   {
@@ -15232,14 +15232,14 @@ int  File_CacheTreeAdvanceSuccessor(_DWORD *a1)
 }
 
 //----- (00479330) --------------------------------------------------------
-int * File_CacheNodeFreeTree(int *a1)
+int * File_CacheNodeFreeTree(int *node)
 {
   int *v1; // ecx
 
-  v1 = a1;
-  if ( *a1 )
+  v1 = node;
+  if ( *node )
   {
-    FileSystem_ArchiveEntryReaderScalarDeletingDtor(*a1);
+    FileSystem_ArchiveEntryReaderScalarDeletingDtor(*node);
     j__nfree_();
   }
   if ( v1[1] )
@@ -15290,31 +15290,31 @@ int * File_CacheTreeUnlinkLeftmost(int *result)
 // 4793B1: variable 'v1' is possibly undefined
 
 //----- (004793D0) --------------------------------------------------------
-int  File_CacheInsertWithEviction(int *a1, int a2, char a3, DWORD a4)
+int  File_CacheInsertWithEviction(int *cache, int entry, char a3, DWORD heap_ctx)
 {
   _DWORD *cache_node; // eax
 
   (void)a3;
-  (void)a4;
-  if ( !a2 )
+  (void)heap_ctx;
+  if ( !entry )
     return 0;
-  while ( a1[8] >= a1[7] && a1[9] )
-    File_CacheTreeUnlinkLeftmost(a1);
-  cache_node = (_DWORD *)Mem_Alloc(8, (int)a1, 0, a4);
+  while ( cache[8] >= cache[7] && cache[9] )
+    File_CacheTreeUnlinkLeftmost(cache);
+  cache_node = (_DWORD *)Mem_Alloc(8, (int)cache, 0, heap_ctx);
   if ( cache_node )
   {
-    cache_node[0] = a2;
-    cache_node[1] = a1[9];
+    cache_node[0] = entry;
+    cache_node[1] = cache[9];
   }
-  a1[9] = (int)cache_node;
-  ++a1[8];
+  cache[9] = (int)cache_node;
+  ++cache[8];
   if ( !cache_node )
     return 0;
   return cache_node[0];
 }
 
 //----- (00479420) --------------------------------------------------------
-int  File_ResolveCachedPathEntry(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a4)
+int  File_ResolveCachedPathEntry(_DWORD *fs, _DWORD *path_holder, const char *a3, DWORD heap_ctx)
 {
   const char *path_text;
   _DWORD *cache_node;
@@ -15328,21 +15328,21 @@ int  File_ResolveCachedPathEntry(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a
   _DWORD *resolved_entry;
 
   (void)a3;
-  path_text = Compat_StringHolderGetText(a2);
+  path_text = Compat_StringHolderGetText(path_holder);
   if ( !path_text || !*path_text )
-    return a1[1];
-  a1[11] = 0;
-  a1[10] = a1[9];
-  cache_node = (_DWORD *)(uintptr_t)(unsigned int)a1[10];
+    return fs[1];
+  fs[11] = 0;
+  fs[10] = fs[9];
+  cache_node = (_DWORD *)(uintptr_t)(unsigned int)fs[10];
   while ( cache_node )
   {
     entry = cache_node[0];
     entry_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)entry;
     if ( entry_name && !strcmp_(path_text, entry_name) )
-      return File_CacheTreeAdvanceSuccessor(a1);
-    a1[11] = (int)cache_node;
-    a1[10] = cache_node[1];
-    cache_node = (_DWORD *)(uintptr_t)(unsigned int)a1[10];
+      return File_CacheTreeAdvanceSuccessor(fs);
+    fs[11] = (int)cache_node;
+    fs[10] = cache_node[1];
+    cache_node = (_DWORD *)(uintptr_t)(unsigned int)fs[10];
   }
   ++g_FS_PathEntryCacheMissCount;
   parent_holder[0] = 0;
@@ -15355,19 +15355,19 @@ int  File_ResolveCachedPathEntry(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a
     parent_len = (size_t)(last_slash - path_text);
     Compat_StringHolderRemoveRange((char **)parent_holder, (int)parent_len, (unsigned int)path_len, (int)(path_len - parent_len));
   }
-  parent_entry = File_ResolveCachedPathEntry(a1, parent_holder, 0, a4);
+  parent_entry = File_ResolveCachedPathEntry(fs, parent_holder, 0, heap_ctx);
   Compat_StringHolderDestroyStack(parent_holder, 1);
   if ( !parent_entry )
     return 0;
-  resolved_entry = FileSystem_ArchiveOpenEntryReader(parent_entry, a2);
+  resolved_entry = FileSystem_ArchiveOpenEntryReader(parent_entry, path_holder);
   if ( !resolved_entry )
     return 0;
-  return File_CacheInsertWithEviction((int *)a1, (int)resolved_entry, 0, a4);
+  return File_CacheInsertWithEviction((int *)fs, (int)resolved_entry, 0, heap_ctx);
 }
 // 54DD18: using guessed type int dword_54DD18;
 
 //----- (004794F0) --------------------------------------------------------
-int  File_ResolvePathByParentAndLeaf(_DWORD *a1, const char *a2, DWORD a3)
+int  File_ResolvePathByParentAndLeaf(_DWORD *fs, const char *path, DWORD heap_ctx)
 {
   _DWORD parent_path_holder[2]; // [esp+0h] [ebp-118h] BYREF
   _DWORD leaf_name_holder[2]; // [esp+8h] [ebp-110h] BYREF
@@ -15375,12 +15375,12 @@ int  File_ResolvePathByParentAndLeaf(_DWORD *a1, const char *a2, DWORD a3)
   int result; // ecx
 
   ++g_FS_ResolvePathByParentLeafCount;
-  if ( !a2 || !*a2 )
+  if ( !path || !*path )
     return 0;
-  Compat_StringHolderBuildParentPath(parent_path_holder, a2);
-  parent_entry = File_ResolveCachedPathEntry(a1, parent_path_holder, 0, a3);
+  Compat_StringHolderBuildParentPath(parent_path_holder, path);
+  parent_entry = File_ResolveCachedPathEntry(fs, parent_path_holder, 0, heap_ctx);
   Compat_StringHolderDestroyStack(parent_path_holder, 1);
-  Compat_StringHolderBuildLeafName(leaf_name_holder, a2);
+  Compat_StringHolderBuildLeafName(leaf_name_holder, path);
   if ( parent_entry )
     result = FileSystem_ArchiveHashTableFind(parent_entry, (const char **)leaf_name_holder);
   else
@@ -15424,17 +15424,17 @@ int  File_ResolveAbsolutePathEntry(const char *a1, DWORD a2)
 // 4795BA: variable 'v10' is possibly undefined
 
 //----- (004795D0) --------------------------------------------------------
-char  File_ApplyResolvedEntryFlag(int a1, int a2, DWORD a3)
+char  File_ApplyResolvedEntryFlag(int a1, int flag_value, DWORD heap_ctx)
 {
   _DWORD *v4; // ecx
 
-  *(_DWORD *)(File_ResolveAbsolutePathEntry((const char *)(a1 + 12), a3) + 22) = a2;
+  *(_DWORD *)(File_ResolveAbsolutePathEntry((const char *)(a1 + 12), heap_ctx) + 22) = flag_value;
   return Compat_StringHolderDestructor(v4);
 }
 // 4795E8: variable 'v4' is possibly undefined
 
 //----- (004795F0) --------------------------------------------------------
-_DWORD * File_OpenNodeByFlags(char a1)
+_DWORD * File_OpenNodeByFlags(char flags)
 {
   char *v1; // ecx
   int v2; // edi
@@ -15471,9 +15471,9 @@ _DWORD * File_OpenNodeByFlags(char a1)
   Compat_StringHolderScalarDeletingDtor((int)&v17, 1);
   if ( v2 )
   {
-    if ( (a1 & 8) == 0 )
+    if ( (flags & 8) == 0 )
     {
-      result = (_DWORD *)Mem_Alloc(20, v3, a1, (DWORD)&g_PathEntry_Vtable);
+      result = (_DWORD *)Mem_Alloc(20, v3, flags, (DWORD)&g_PathEntry_Vtable);
       if ( result )
       {
         result = FileSystem_ArchiveEntryStreamCtor(result, v2, v5);
@@ -15483,7 +15483,7 @@ _DWORD * File_OpenNodeByFlags(char a1)
     }
     return 0;
   }
-  if ( (a1 & 8) == 0 )
+  if ( (flags & 8) == 0 )
     return 0;
   v6 = v3 + 12;
   if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(v6) )
@@ -15541,7 +15541,7 @@ _DWORD * File_OpenNodeByFlags(char a1)
 // 510BA4: using guessed type int (*off_510BA4[4])();
 
 //----- (004797F0) --------------------------------------------------------
-signed int  File_OpenEntryForWrite(int a1, int a2)
+signed int  File_OpenEntryForWrite(int a1, int access_mode)
 {
   int v2; // edx
   int v3; // ecx
@@ -15559,8 +15559,8 @@ signed int  File_OpenEntryForWrite(int a1, int a2)
 
   if ( ExcString_GetTextPtr(a1 + 12) && *(_BYTE *)ExcString_GetTextPtr(v2) )
     return -1;
-  if ( !a2 )
-    a2 = *(_DWORD *)(v3 + 24);
+  if ( !access_mode )
+    access_mode = *(_DWORD *)(v3 + 24);
   v13 = 0;
   v14 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v13);
@@ -15576,7 +15576,7 @@ signed int  File_OpenEntryForWrite(int a1, int a2)
   FileSystem_PathExtractFileName(v10);
   Compat_StringHolderScalarDeletingDtor((int)&v11, 1);
   if ( v6 )
-    v7 = FileSystem_ArchiveInsertFileEntry(v6, v10, a2);
+    v7 = FileSystem_ArchiveInsertFileEntry(v6, v10, access_mode);
   else
     v7 = -1;
   v8 = v7;
@@ -15634,72 +15634,72 @@ int  File_PrimePathCacheEntry(int a1, DWORD a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00479980) --------------------------------------------------------
-int  File_SeekStreamEndAndRecordPos(int a1, int a2)
+int  File_SeekStreamEndAndRecordPos(int source, int heap_ctx)
 {
   int result; // eax
 
-  IO_SeekStreamGuarded(*(_DWORD *)(a1 + 8), 0, 2u, a2);
-  result = Compat_StreamTell(*(_DWORD *)(a1 + 8));
-  *(_DWORD *)(a1 + 48) = result;
+  IO_SeekStreamGuarded(*(_DWORD *)(source + 8), 0, 2u, heap_ctx);
+  result = Compat_StreamTell(*(_DWORD *)(source + 8));
+  *(_DWORD *)(source + 48) = result;
   return result;
 }
 
 //----- (004799B0) --------------------------------------------------------
-int * File_SeekIfPositionChangedMode1(int *result, int a2, int a3)
+int * File_SeekIfPositionChangedMode1(int *result, int position, int heap_ctx)
 {
-  if ( a2 != result[12] || result[13] != 1 )
+  if ( position != result[12] || result[13] != 1 )
   {
-    IO_SeekStreamGuarded(result[2], a2, 0, a3);
+    IO_SeekStreamGuarded(result[2], position, 0, heap_ctx);
     result[13] = 1;
-    result[12] = a2;
+    result[12] = position;
   }
   return result;
 }
 
 //----- (004799E0) --------------------------------------------------------
-int * File_SeekIfPositionChangedMode2(int *result, int a2, int a3)
+int * File_SeekIfPositionChangedMode2(int *result, int position, int heap_ctx)
 {
-  if ( a2 != result[12] || result[13] != 2 )
+  if ( position != result[12] || result[13] != 2 )
   {
-    IO_SeekStreamGuarded(result[2], a2, 0, a3);
+    IO_SeekStreamGuarded(result[2], position, 0, heap_ctx);
     result[13] = 2;
-    result[12] = a2;
+    result[12] = position;
   }
   return result;
 }
 
 //----- (00479A10) --------------------------------------------------------
-int  Res_StreamWriteWithXorCipher(int *a1, const void *a2, int a3, unsigned int a4)
+int  Res_StreamWriteWithXorCipher(int *stream, const void *buffer, int a3, unsigned int a4)
 {
-  unsigned int v5; // ecx
+  unsigned int remaining; // ecx
   unsigned __int8 *v6; // eax
   int i; // edx
   int v8; // ecx
   int result; // eax
-  int v10; // [esp+0h] [ebp-18h]
-  unsigned __int8 *v11; // [esp+4h] [ebp-14h]
+  int encoded_byte; // [esp+0h] [ebp-18h]
+  unsigned __int8 *temp_buffer; // [esp+4h] [ebp-14h]
 
-  if ( a1[5] )
+  if ( stream[5] )
   {
-    v11 = (unsigned __int8 *)j_Mem_Alloc(a3);
-    qmemcpy(v11, a2, a4);
-    v5 = a4;
-    v6 = v11;
-    for ( i = a1[12]; v5; *(v6 - 1) = v10 )
+    temp_buffer = (unsigned __int8 *)j_Mem_Alloc(a3);
+    qmemcpy(temp_buffer, buffer, a4);
+    remaining = a4;
+    v6 = temp_buffer;
+    for ( i = stream[12]; remaining; *(v6 - 1) = encoded_byte )
     {
-      --v5;
-      v10 = (i + a1[5]) ^ *v6++;
+      --remaining;
+      encoded_byte = (i + stream[5]) ^ *v6++;
       ++i;
     }
-    fwrite_(v11, 1, a1[2], a4);
+    fwrite_(temp_buffer, 1, stream[2], a4);
     j_j__nfree_();
-    a1[12] += v8;
+    stream[12] += v8;
     return v8;
   }
   else
   {
-    result = fwrite_(a2, 1, a1[2], a4);
-    a1[12] += result;
+    result = fwrite_(buffer, 1, stream[2], a4);
+    stream[12] += result;
   }
   return result;
 }
@@ -15707,31 +15707,31 @@ int  Res_StreamWriteWithXorCipher(int *a1, const void *a2, int a3, unsigned int 
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00479AE0) --------------------------------------------------------
-int * File_ConstructReadOnlySource(int *a1, const CHAR *a2, int a3, int a4, int a5)
+int * File_ConstructReadOnlySource(int *source, const CHAR *path, int a3, int a4, int a5)
 {
   int *result; // eax
 
-  result = File_SourceConstructFromStream(a1, a2, (unsigned __int8 *)aRb_11, a4, a5, a3);
+  result = File_SourceConstructFromStream(source, path, (unsigned __int8 *)aRb_11, a4, a5, a3);
   *result = (int)g_FileReadOnlySource_VTable;
   return result;
 }
 // 510C04: using guessed type int (*off_510C04[4])();
 
 //----- (00479B00) --------------------------------------------------------
-_DWORD * File_OpenMountRootEntry(int a1, char a2, DWORD a3)
+_DWORD * File_OpenMountRootEntry(int fs, char flags, DWORD heap_ctx)
 {
   _DWORD *result; // eax
-  int v5; // esi
+  int root_entry; // esi
 
-  if ( (a2 & 8) != 0 )
+  if ( (flags & 8) != 0 )
     return 0;
-  v5 = File_ResolvePathByParentAndLeaf((_DWORD *)a1, (const char *)(uintptr_t)(unsigned int)g_FileSystemStrippedPathHolderText, a3);
-  if ( !v5 )
+  root_entry = File_ResolvePathByParentAndLeaf((_DWORD *)fs, (const char *)(uintptr_t)(unsigned int)g_FileSystemStrippedPathHolderText, heap_ctx);
+  if ( !root_entry )
     return 0;
-  result = (_DWORD *)Mem_Alloc(20, a1, a2, a3);
+  result = (_DWORD *)Mem_Alloc(20, fs, flags, heap_ctx);
   if ( result )
   {
-    result = FileSystem_ArchiveEntryStreamCtor(result, v5, a1);
+    result = FileSystem_ArchiveEntryStreamCtor(result, root_entry, fs);
     *result = g_FileArchiveEntryStream_VTable;
   }
   return result;
@@ -15739,13 +15739,13 @@ _DWORD * File_OpenMountRootEntry(int a1, char a2, DWORD a3)
 // 510B74: using guessed type int (*off_510B74[10])();
 
 //----- (00479BE0) --------------------------------------------------------
-int * File_AllocateReadOnlySource(const CHAR *a1, int a2, char a3, DWORD a4, int a5)
+int * File_AllocateReadOnlySource(const CHAR *path, int a2, char cipher_key, DWORD heap_ctx, int a5)
 {
   int *result; // eax
 
-  result = (int *)Mem_Alloc(56, a2, a3, a4);
+  result = (int *)Mem_Alloc(56, a2, cipher_key, heap_ctx);
   if ( result )
-    return File_ConstructReadOnlySource(result, a1, a2, a3, a5);
+    return File_ConstructReadOnlySource(result, path, a2, cipher_key, a5);
   return result;
 }
 
@@ -15758,23 +15758,23 @@ _DWORD * File_CacheNodeConstructBase(_DWORD *result)
 // 510B14: using guessed type int (*off_510B14[6])();
 
 //----- (00479C30) --------------------------------------------------------
-int  Res_XorDecodeByte(int a1, int a2, int a3)
+int  Res_XorDecodeByte(int stream, int a2, int encoded_byte)
 {
-  return a3 ^ (a2 + *(_DWORD *)(a1 + 20));
+  return encoded_byte ^ (a2 + *(_DWORD *)(stream + 20));
 }
 
 //----- (00479C40) --------------------------------------------------------
-unsigned __int8 * Compat_QueryXorDecodeBuffer(int a1, unsigned __int8 *a2, int a3)
+unsigned __int8 * Compat_QueryXorDecodeBuffer(int stream, unsigned __int8 *buffer, int length)
 {
   unsigned __int8 *result; // eax
   int i; // edx
-  int v6; // [esp+0h] [ebp-10h]
+  int decoded_byte; // [esp+0h] [ebp-10h]
 
-  result = a2;
-  for ( i = *(_DWORD *)(a1 + 48); a3; *(result - 1) = v6 )
+  result = buffer;
+  for ( i = *(_DWORD *)(stream + 48); length; *(result - 1) = decoded_byte )
   {
-    --a3;
-    v6 = (i + *(_DWORD *)(a1 + 20)) ^ *result++;
+    --length;
+    decoded_byte = (i + *(_DWORD *)(stream + 20)) ^ *result++;
     ++i;
   }
   return result;
@@ -15798,46 +15798,46 @@ _DWORD * Compat_QueryConstructDefault(int a1)
 // 510B34: using guessed type int (*off_510B34[4])();
 
 //----- (00479CB0) --------------------------------------------------------
-int  Compat_QuerySkipBytes(int a1, int a2)
+int  Compat_QuerySkipBytes(int query, int count)
 {
   uintptr_t *vtable;
 
-  if ( !a1 )
+  if ( !query )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
-  return ((int (*)(int, int))(uintptr_t)vtable[9])(a1, a2);
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query;
+  return ((int (*)(int, int))(uintptr_t)vtable[9])(query, count);
 }
 
 //----- (00479CC0) --------------------------------------------------------
-int  Compat_QuerySkipBytesFromBase(int a1, int a2)
+int  Compat_QuerySkipBytesFromBase(int query, int offset)
 {
   uintptr_t *vtable;
 
-  if ( !a1 )
+  if ( !query )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
-  return ((int (*)(int, int))(uintptr_t)vtable[9])(a1, a2 + *(_DWORD *)(a1 + 12));
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query;
+  return ((int (*)(int, int))(uintptr_t)vtable[9])(query, offset + *(_DWORD *)(query + 12));
 }
 
 //----- (00479CD0) --------------------------------------------------------
-int  Compat_QueryGetLength(int a1)
+int  Compat_QueryGetLength(int query)
 {
-  return *(_DWORD *)(a1 + 8);
+  return *(_DWORD *)(query + 8);
 }
 
 //----- (00479CE0) --------------------------------------------------------
-int  Compat_QueryDestruct(int result, char a2)
+int  Compat_QueryDestruct(int result, char flags)
 {
   int v3; // ecx
   int v4; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, &g_CompatQuery_DtorArrayDescriptor);
     j_j__nfree_();
     return v3;
   }
-  else if ( (a2 & 2) != 0 )
+  else if ( (flags & 2) != 0 )
   {
     j__nfree_();
     return v4;
@@ -15849,22 +15849,22 @@ int  Compat_QueryDestruct(int result, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00479D20) --------------------------------------------------------
-int  Compat_QueryCloseAndDestruct(_DWORD *a1, char a2)
+int  Compat_QueryCloseAndDestruct(_DWORD *query, char flags)
 {
   int result; // eax
   int v4; // ecx
   int v5; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_CompatQueryCloseAndDestruct_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(query, &g_CompatQueryCloseAndDestruct_DtorArrayDescriptor);
     j_j__nfree_();
     return v4;
   }
   else
   {
-    result = File_SourceScalarDtor(a1, 1);
-    if ( (a2 & 2) != 0 )
+    result = File_SourceScalarDtor(query, 1);
+    if ( (flags & 2) != 0 )
     {
       j__nfree_();
       return v5;
@@ -15893,59 +15893,59 @@ int Rules_InitFacts()
 // 51A150: using guessed type int dword_51A150;
 
 //----- (00479DE0) --------------------------------------------------------
-signed int __fastcall Rules_PrintFactWithIndex(int a1, int a2)
+signed int __fastcall Rules_PrintFactWithIndex(int logicalName, int fact)
 {
   int v3; // ecx
   int v4; // ecx
-  _BYTE v6[20]; // [esp+0h] [ebp-1Ch] BYREF
+  _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
   int v7; // [esp+14h] [ebp-8h]
 
-  v7 = a1;
-  sprintf_(v6, "f-%-5ld ", *(_DWORD *)(a2 + 24));
-  Output_Write(v3, (int)v6, v3);
-  return Rules_PrintFact(v4, a2);
+  v7 = logicalName;
+  sprintf_(buffer, "f-%-5ld ", *(_DWORD *)(fact + 24));
+  Output_Write(v3, (int)buffer, v3);
+  return Rules_PrintFact(v4, fact);
 }
 // 479E03: variable 'v3' is possibly undefined
 // 479E0C: variable 'v4' is possibly undefined
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (00479E20) --------------------------------------------------------
-signed int __fastcall Rules_PrintFactLabel(int a1, int a2)
+signed int __fastcall Rules_PrintFactLabel(int logicalName, int fact)
 {
   int v2; // ecx
-  _BYTE v4[20]; // [esp+0h] [ebp-1Ch] BYREF
+  _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
   int v5; // [esp+14h] [ebp-8h]
 
-  v5 = a1;
-  sprintf_(v4, "f-%ld", *(_DWORD *)(a2 + 24));
-  return Output_Write(v2, (int)v4, v2);
+  v5 = logicalName;
+  sprintf_(buffer, "f-%ld", *(_DWORD *)(fact + 24));
+  return Output_Write(v2, (int)buffer, v2);
 }
 // 479E41: variable 'v2' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00479E50) --------------------------------------------------------
-signed int  Rules_PrintFactIdentifier(int a1, int a2)
+signed int  Rules_PrintFactIdentifier(int logicalName, int fact)
 {
   int v2; // ecx
   int v4; // ecx
-  char *v5; // edx
+  char *label_text; // edx
   signed int result; // eax
   int v7; // ecx
 
-  v2 = a1;
+  v2 = logicalName;
   if ( g_Print_AddressesToStringsFlag )
-    Output_Write(a1, (int)asc_502524, a1);
-  if ( (void **)a2 == &g_Rules_DummyFactPtr )
+    Output_Write(logicalName, (int)asc_502524, logicalName);
+  if ( (void **)fact == &g_Rules_DummyFactPtr )
   {
-    v5 = aDummyFact;
+    label_text = aDummyFact;
   }
   else
   {
     Output_Write(v2, (int)aFact_2, v2);
-    Rules_PrintLongInteger(v4, *(_DWORD *)(a2 + 24));
-    v5 = asc_502530;
+    Rules_PrintLongInteger(v4, *(_DWORD *)(fact + 24));
+    label_text = asc_502530;
   }
-  result = Output_Write(v2, (int)v5, v2);
+  result = Output_Write(v2, (int)label_text, v2);
   if ( g_Print_AddressesToStringsFlag )
     return Output_Write(v7, (int)asc_502524, v7);
   return result;
@@ -15971,39 +15971,39 @@ int  Rules_IncrementFactRefCount(int result)
 }
 
 //----- (00479EE0) --------------------------------------------------------
-signed int  Rules_PrintFact(int a1, int a2)
+signed int  Rules_PrintFact(int logicalName, int fact)
 {
   int v3; // ecx
   int v4; // ecx
-  int v5; // edi
+  int multifield; // edi
 
-  if ( (*(_BYTE *)(*(_DWORD *)(a2 + 16) + 24) & 1) == 0 )
-    return Rules_PrintTemplateFactSlots(a1, a2, a2);
-  Output_Write(a1, (int)asc_502544, a2);
-  Output_Write(a1, *(_DWORD *)(**(_DWORD **)(v3 + 16) + 16), v3);
-  v5 = *(_DWORD *)(v4 + 56);
-  if ( *(_DWORD *)(v5 + 6) )
+  if ( (*(_BYTE *)(*(_DWORD *)(fact + 16) + 24) & 1) == 0 )
+    return Rules_PrintTemplateFactSlots(logicalName, fact, fact);
+  Output_Write(logicalName, (int)asc_502544, fact);
+  Output_Write(logicalName, *(_DWORD *)(**(_DWORD **)(v3 + 16) + 16), v3);
+  multifield = *(_DWORD *)(v4 + 56);
+  if ( *(_DWORD *)(multifield + 6) )
   {
-    Output_Write(a1, (int)asc_502548, v4);
-    Lexer_OutputFieldRange(a1, v5, *(_DWORD *)(v5 + 6) - 1, 0, 0);
+    Output_Write(logicalName, (int)asc_502548, v4);
+    Lexer_OutputFieldRange(logicalName, multifield, *(_DWORD *)(multifield + 6) - 1, 0, 0);
   }
-  return Output_Write(a1, (int)asc_50254C, v4);
+  return Output_Write(logicalName, (int)asc_50254C, v4);
 }
 // 479EFC: variable 'v3' is possibly undefined
 // 479F0B: variable 'v4' is possibly undefined
 
 //----- (00479F50) --------------------------------------------------------
-int  Rules_NetworkAssertFact(int a1, double a2)
+int  Rules_NetworkAssertFact(int fact, double a2)
 {
-  return Rules_MatchFactAgainstPatternNetwork(a1, *(_DWORD *)(*(_DWORD *)(a1 + 16) + 32), 0, 0, a2, 0);
+  return Rules_MatchFactAgainstPatternNetwork(fact, *(_DWORD *)(*(_DWORD *)(fact + 16) + 32), 0, 0, a2, 0);
 }
 
 //----- (00479F70) --------------------------------------------------------
-signed int  Rules_RetractFact(int a1, double a2)
+signed int  Rules_RetractFact(int fact_ptr, double a2)
 {
   uintptr_t fact; // ecx
 
-  fact = (uintptr_t)(unsigned int)a1;
+  fact = (uintptr_t)(unsigned int)fact_ptr;
   if ( g_Rules_JoinOperationInProgress )
   {
     Rules_PrintErrorID((int)aFactmngr, 1, 1);
@@ -16118,18 +16118,18 @@ _DWORD *Rules_RemoveGarbageFacts()
 // 51A96C: using guessed type int dword_51A96C;
 
 //----- (0047A1A0) --------------------------------------------------------
-_DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
+_DWORD * Rules_AssertFactDriver(_DWORD *fact, double a2)
 {
-  char *v3; // eax
-  int v4; // ecx
-  int v5; // ebx
-  char *v6; // edx
-  signed int *v7; // eax
+  char *slot_ptr; // eax
+  int slot_count; // ecx
+  int slot_index; // ebx
+  char *slot_cursor; // edx
+  signed int *interned_nil; // eax
   int v9; // ecx
-  int v10; // ecx
-  int v11; // eax
-  int v12; // eax
-  int v13; // eax
+  int hash_value; // ecx
+  int prev_fact; // eax
+  int fact_index; // eax
+  int time_tag; // eax
   int v14; // ecx
   int v15; // ecx
   int v16; // ecx
@@ -16137,73 +16137,73 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
 
   if ( g_Rules_JoinOperationInProgress )
   {
-    Rules_ReturnFact(a1);
+    Rules_ReturnFact(fact);
     Rules_PrintErrorID((int)aFactmngr, 2, 1);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeA, v9);
     return 0;
   }
-  v3 = (char *)a1 + 54;
-  v4 = *((_DWORD *)v3 - 2);
-  v5 = 0;
-  if ( v4 > 0 )
+  slot_ptr = (char *)fact + 54;
+  slot_count = *((_DWORD *)slot_ptr - 2);
+  slot_index = 0;
+  if ( slot_count > 0 )
   {
-    v6 = v3;
+    slot_cursor = slot_ptr;
     do
     {
-      if ( *(_WORD *)v6 == 105 )
+      if ( *(_WORD *)slot_cursor == 105 )
       {
-        *(_WORD *)v6 = 2;
-        v7 = Str_Intern(aNil_2, v4);
-        *(_DWORD *)(v6 + 2) = v7;
+        *(_WORD *)slot_cursor = 2;
+        interned_nil = Str_Intern(aNil_2, slot_count);
+        *(_DWORD *)(slot_cursor + 2) = interned_nil;
       }
-      ++v5;
-      v6 += 6;
+      ++slot_index;
+      slot_cursor += 6;
     }
-    while ( v5 < v4 );
+    while ( slot_index < slot_count );
   }
-  v10 = Rules_DeduplicateFactOnAssert((int)a1);
-  if ( v10 < 0 )
+  hash_value = Rules_DeduplicateFactOnAssert((int)fact);
+  if ( hash_value < 0 )
     return 0;
-  if ( Rules_AddLogicalDependencyLink((int)a1, 0) )
+  if ( Rules_AddLogicalDependencyLink((int)fact, 0) )
   {
-    Rules_InsertFactHashEntry((int)a1, v10);
-    a1[9] = 0;
-    a1[5] = 0;
-    v11 = g_Rules_LastFactPointer;
-    a1[8] = g_Rules_LastFactPointer;
-    if ( v11 )
-      *(_DWORD *)(v11 + 36) = a1;
+    Rules_InsertFactHashEntry((int)fact, hash_value);
+    fact[9] = 0;
+    fact[5] = 0;
+    prev_fact = g_Rules_LastFactPointer;
+    fact[8] = g_Rules_LastFactPointer;
+    if ( prev_fact )
+      *(_DWORD *)(prev_fact + 36) = fact;
     else
-      g_Rules_FactListHead = (int)a1;
-    v12 = g_Rules_NextFactIndex;
-    g_Rules_LastFactPointer = (int)a1;
+      g_Rules_FactListHead = (int)fact;
+    fact_index = g_Rules_NextFactIndex;
+    g_Rules_LastFactPointer = (int)fact;
     ++g_Rules_NextFactIndex;
-    a1[6] = v12;
-    v13 = g_Rules_EntityTimeTagCounter++;
-    a1[3] = v13;
-    Rules_InstallFact(a1);
-    if ( (*(_BYTE *)(a1[4] + 24) & 2) != 0 )
+    fact[6] = fact_index;
+    time_tag = g_Rules_EntityTimeTagCounter++;
+    fact[3] = time_tag;
+    Rules_InstallFact(fact);
+    if ( (*(_BYTE *)(fact[4] + 24) & 2) != 0 )
     {
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_5025D4, v14);
-      Rules_PrintFactWithIndex(v15, (int)a1);
+      Rules_PrintFactWithIndex(v15, (int)fact);
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502598, v16);
     }
     g_Rules_FactListChangedFlag = 1;
-    Rules_CheckFactAgainstSlotConstraints((int)a1);
+    Rules_CheckFactAgainstSlotConstraints((int)fact);
     Lexer_ErrorRecover(0);
     g_Rules_JoinOperationInProgress = 1;
-    Rules_MatchFactAgainstPatternNetwork((int)a1, *(_DWORD *)(a1[4] + 32), 0, 0, a2, 0);
+    Rules_MatchFactAgainstPatternNetwork((int)fact, *(_DWORD *)(fact[4] + 32), 0, 0, a2, 0);
     g_Rules_JoinOperationInProgress = 0;
     Rules_FlushPendingDependencyDestructors();
     if ( !g_Rules_CurrentlyExecutingRule )
       Rules_FlushPendingNetworkGarbage();
     if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
       Rules_RunPeriodicCleanup(1, 0);
-    return a1;
+    return fact;
   }
   else
   {
-    Rules_ReturnFact(a1);
+    Rules_ReturnFact(fact);
     return 0;
   }
 }
@@ -16240,39 +16240,39 @@ signed int  Rules_RemoveAllFacts(double a1)
 // 51A15C: using guessed type int dword_51A15C;
 
 //----- (0047A3F0) --------------------------------------------------------
-int  Lexer_EmitSlotBinding(int a1, char *a2, int a3, _DWORD *a4)
+int  Lexer_EmitSlotBinding(int fact, char *slot_name, int a3, _DWORD *result_value)
 {
-  int v5; // edi
+  int deftemplate; // edi
   int result; // eax
   int v7; // eax
-  signed int *v8; // eax
+  signed int *slot_symbol; // eax
   _DWORD *v9; // ecx
   int v10; // edx
   int v11; // eax
   _DWORD v12[4]; // [esp+0h] [ebp-10h] BYREF
 
   v12[3] = a3;
-  v5 = *(_DWORD *)(a1 + 16);
-  if ( (*(_BYTE *)(v5 + 24) & 1) != 0 )
+  deftemplate = *(_DWORD *)(fact + 16);
+  if ( (*(_BYTE *)(deftemplate + 24) & 1) != 0 )
   {
-    if ( !a2 )
+    if ( !slot_name )
     {
-      a4[1] = *(__int16 *)(a1 + 54);
-      a4[2] = *(_DWORD *)(a1 + 56);
-      v7 = a4[2];
-      a4[3] = 0;
-      a4[4] = *(_DWORD *)(v7 + 6) - 1;
+      result_value[1] = *(__int16 *)(fact + 54);
+      result_value[2] = *(_DWORD *)(fact + 56);
+      v7 = result_value[2];
+      result_value[3] = 0;
+      result_value[4] = *(_DWORD *)(v7 + 6) - 1;
       return 1;
     }
     return 0;
   }
-  v8 = Str_Intern(a2, (int)a4);
-  result = (int)Lexer_FindTemplateSlot(v5, (int)v8, v12);
+  slot_symbol = Str_Intern(slot_name, (int)result_value);
+  result = (int)Lexer_FindTemplateSlot(deftemplate, (int)slot_symbol, v12);
   if ( result )
   {
-    v9[1] = *(__int16 *)(a1 + 6 * (v12[0] - 1) + 54);
+    v9[1] = *(__int16 *)(fact + 6 * (v12[0] - 1) + 54);
     v10 = v9[1];
-    v9[2] = *(_DWORD *)(a1 + 6 * (v12[0] - 1) + 56);
+    v9[2] = *(_DWORD *)(fact + 6 * (v12[0] - 1) + 56);
     if ( v10 == 4 )
     {
       v11 = v9[2];
@@ -16286,34 +16286,34 @@ int  Lexer_EmitSlotBinding(int a1, char *a2, int a3, _DWORD *a4)
 // 47A45D: variable 'v9' is possibly undefined
 
 //----- (0047A730) --------------------------------------------------------
-_DWORD * Rules_CreateFact(signed int a1)
+_DWORD * Rules_CreateFact(signed int slot_count)
 {
   signed int v1; // ecx
-  signed int v2; // edx
+  signed int effective_count; // edx
   int v3; // eax
   _DWORD *result; // eax
-  __int16 v5; // dx
+  __int16 eval_depth; // dx
   __int16 v6; // bx
   int v7; // edi
   __int16 v8; // dx
 
-  v1 = a1;
-  if ( a1 <= 0 )
-    v2 = 1;
+  v1 = slot_count;
+  if ( slot_count <= 0 )
+    effective_count = 1;
   else
-    v2 = a1;
-  if ( (unsigned int)(6 * (v2 - 1) + 60) < 0x1F4 && *(_DWORD *)(g_ClipsMemoryTable + 24 * (v2 - 1) + 240) )
+    effective_count = slot_count;
+  if ( (unsigned int)(6 * (effective_count - 1) + 60) < 0x1F4 && *(_DWORD *)(g_ClipsMemoryTable + 24 * (effective_count - 1) + 240) )
   {
-    v3 = g_ClipsMemoryTable + 24 * (v2 - 1);
+    v3 = g_ClipsMemoryTable + 24 * (effective_count - 1);
     g_ClipsMemFreeListTemp = *(_DWORD *)(v3 + 240);
     *(_DWORD *)(v3 + 240) = *(_DWORD *)g_ClipsMemFreeListTemp;
     result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
-    result = Mem_NewArray(6 * (v2 - 1) + 60);
+    result = Mem_NewArray(6 * (effective_count - 1) + 60);
   }
-  v5 = g_ClipsCurrentEvaluationDepth;
+  eval_depth = g_ClipsCurrentEvaluationDepth;
   result[6] = 0;
   result[2] = 0;
   *result = &g_Rules_FactPatternEntityRecord;
@@ -16325,10 +16325,10 @@ _DWORD * Rules_CreateFact(signed int a1)
   *((_WORD *)result + 14) = v6 & 0x8000;
   v7 = result[7];
   result[5] = 0;
-  result[7] = v5 & 0x7FFF | v7;
-  LOBYTE(v5) = *((_BYTE *)result + 29);
+  result[7] = eval_depth & 0x7FFF | v7;
+  LOBYTE(eval_depth) = *((_BYTE *)result + 29);
   *(_DWORD *)((char *)result + 46) = v1;
-  *((_BYTE *)result + 29) = v5 & 0x7F;
+  *((_BYTE *)result + 29) = eval_depth & 0x7F;
   v8 = g_ClipsCurrentEvaluationDepth;
   result[10] = 0;
   *((_WORD *)result + 22) = v8;
@@ -16340,39 +16340,39 @@ _DWORD * Rules_CreateFact(signed int a1)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0047A850) --------------------------------------------------------
-_DWORD * Rules_ReturnFact(_DWORD *a1)
+_DWORD * Rules_ReturnFact(_DWORD *fact)
 {
   _DWORD *v2; // ebx
-  int v3; // ecx
-  _DWORD *v4; // edx
+  int slot_index; // ecx
+  _DWORD *slot_cursor; // edx
   int v5; // eax
-  unsigned int v6; // eax
+  unsigned int bucket_size; // eax
   _DWORD *result; // eax
 
-  v2 = a1 + 10;
-  v3 = 0;
-  if ( *(int *)((char *)a1 + 46) > 0 )
+  v2 = fact + 10;
+  slot_index = 0;
+  if ( *(int *)((char *)fact + 46) > 0 )
   {
-    v4 = a1 + 10;
+    slot_cursor = fact + 10;
     do
     {
-      if ( *((_WORD *)v4 + 7) == 4 )
-        Rules_ReturnMultifieldToPool((_DWORD *)v4[4]);
-      ++v3;
-      v4 = (_DWORD *)((char *)v4 + 6);
+      if ( *((_WORD *)slot_cursor + 7) == 4 )
+        Rules_ReturnMultifieldToPool((_DWORD *)slot_cursor[4]);
+      ++slot_index;
+      slot_cursor = (_DWORD *)((char *)slot_cursor + 6);
     }
-    while ( v3 < *(_DWORD *)((char *)v2 + 6) );
+    while ( slot_index < *(_DWORD *)((char *)v2 + 6) );
   }
-  if ( *(_DWORD *)((char *)a1 + 46) )
-    v5 = *(_DWORD *)((char *)a1 + 46);
+  if ( *(_DWORD *)((char *)fact + 46) )
+    v5 = *(_DWORD *)((char *)fact + 46);
   else
     v5 = 1;
-  v6 = 6 * (v5 - 1) + 60;
-  g_ClipsMemPoolReturnBucketIndex = v6;
-  if ( v6 >= 0x1F4 )
-    return (_DWORD *)Mem_SmallBlockRelease(a1, v6);
-  g_ClipsMemFreeListTemp = (int)a1;
-  *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v6);
+  bucket_size = 6 * (v5 - 1) + 60;
+  g_ClipsMemPoolReturnBucketIndex = bucket_size;
+  if ( bucket_size >= 0x1F4 )
+    return (_DWORD *)Mem_SmallBlockRelease(fact, bucket_size);
+  g_ClipsMemFreeListTemp = (int)fact;
+  *fact = *(_DWORD *)(g_ClipsMemoryTable + 4 * bucket_size);
   result = (_DWORD *)(g_ClipsMemoryTable + 4 * g_ClipsMemPoolReturnBucketIndex);
   *result = g_ClipsMemFreeListTemp;
   return result;
@@ -16384,101 +16384,101 @@ _DWORD * Rules_ReturnFact(_DWORD *a1)
 // 54DBB4: using guessed type int dword_54DBB4;
 
 //----- (0047A900) --------------------------------------------------------
-int  Rules_InstallFact(_DWORD *a1)
+int  Rules_InstallFact(_DWORD *fact)
 {
   int result; // eax
-  int v3; // ebx
-  int v4; // ecx
+  int slot_index; // ebx
+  int slot_cursor; // ecx
   int v5; // ecx
 
   ++g_Rules_InstalledFactCount;
-  result = a1[4];
+  result = fact[4];
   ++*(_DWORD *)(result + 28);
-  v3 = 0;
-  if ( *(int *)((char *)a1 + 46) > 0 )
+  slot_index = 0;
+  if ( *(int *)((char *)fact + 46) > 0 )
   {
-    v4 = (int)(a1 + 10);
+    slot_cursor = (int)(fact + 10);
     do
     {
-      Rules_AtomInstall(*(__int16 *)(v4 + 14), *(_DWORD *)(v4 + 16), v4);
-      ++v3;
-      result = *(_DWORD *)((char *)a1 + 46);
-      v4 = v5 + 6;
+      Rules_AtomInstall(*(__int16 *)(slot_cursor + 14), *(_DWORD *)(slot_cursor + 16), slot_cursor);
+      ++slot_index;
+      result = *(_DWORD *)((char *)fact + 46);
+      slot_cursor = v5 + 6;
     }
-    while ( v3 < result );
+    while ( slot_index < result );
   }
-  ++a1[2];
+  ++fact[2];
   return result;
 }
 // 47A936: variable 'v5' is possibly undefined
 // 51A164: using guessed type int dword_51A164;
 
 //----- (0047A950) --------------------------------------------------------
-int  Rules_DeinstallFact(int a1)
+int  Rules_DeinstallFact(int fact)
 {
-  int v2; // esi
+  int slot_base; // esi
   int result; // eax
-  int v4; // ebx
-  int v5; // ecx
+  int slot_index; // ebx
+  int slot_cursor; // ecx
   int v6; // ecx
 
-  v2 = a1 + 40;
+  slot_base = fact + 40;
   --g_Rules_InstalledFactCount;
-  result = *(_DWORD *)(a1 + 16);
+  result = *(_DWORD *)(fact + 16);
   --*(_DWORD *)(result + 28);
-  v4 = 0;
-  if ( *(int *)(v2 + 6) > 0 )
+  slot_index = 0;
+  if ( *(int *)(slot_base + 6) > 0 )
   {
-    v5 = v2;
+    slot_cursor = slot_base;
     do
     {
-      Rules_AtomDeinstall(*(__int16 *)(v5 + 14), *(__int16 **)(v5 + 16), v5);
-      ++v4;
-      result = *(_DWORD *)(v2 + 6);
-      v5 = v6 + 6;
+      Rules_AtomDeinstall(*(__int16 *)(slot_cursor + 14), *(__int16 **)(slot_cursor + 16), slot_cursor);
+      ++slot_index;
+      result = *(_DWORD *)(slot_base + 6);
+      slot_cursor = v6 + 6;
     }
-    while ( v4 < result );
+    while ( slot_index < result );
   }
-  --*(_DWORD *)(a1 + 8);
+  --*(_DWORD *)(fact + 8);
   return result;
 }
 // 47A989: variable 'v6' is possibly undefined
 // 51A164: using guessed type int dword_51A164;
 
 //----- (0047A9A0) --------------------------------------------------------
-int  Rules_GetNextFact(int a1)
+int  Rules_GetNextFact(int fact)
 {
-  if ( !a1 )
+  if ( !fact )
     return g_Rules_FactListHead;
-  if ( *(char *)(a1 + 29) >= 0 )
-    return *(_DWORD *)(a1 + 36);
+  if ( *(char *)(fact + 29) >= 0 )
+    return *(_DWORD *)(fact + 36);
   return 0;
 }
 // 51A15C: using guessed type int dword_51A15C;
 
 //----- (0047A9C0) --------------------------------------------------------
-int  Rules_GetNextFactInModule(int a1)
+int  Rules_GetNextFactInModule(int fact)
 {
-  int v1; // edx
+  int next_fact; // edx
 
-  if ( a1 )
+  if ( fact )
   {
-    if ( *(char *)(a1 + 29) < 0 )
+    if ( *(char *)(fact + 29) < 0 )
       return 0;
-    v1 = *(_DWORD *)(a1 + 36);
+    next_fact = *(_DWORD *)(fact + 36);
   }
   else
   {
-    v1 = g_Rules_FactListHead;
+    next_fact = g_Rules_FactListHead;
     if ( g_Rules_LastFactModuleCache != g_Module_ChangeGeneration )
     {
       Lexer_MarkImpliedTemplates();
       g_Rules_LastFactModuleCache = g_Module_ChangeGeneration;
     }
   }
-  while ( v1 && (*(_BYTE *)(*(_DWORD *)(v1 + 16) + 24) & 4) == 0 )
-    v1 = *(_DWORD *)(v1 + 36);
-  return v1;
+  while ( next_fact && (*(_BYTE *)(*(_DWORD *)(next_fact + 16) + 24) & 4) == 0 )
+    next_fact = *(_DWORD *)(next_fact + 36);
+  return next_fact;
 }
 // 47A9DD: variable 'v1' is possibly undefined
 // 51A15C: using guessed type int dword_51A15C;
@@ -16486,17 +16486,17 @@ int  Rules_GetNextFactInModule(int a1)
 // 51A9C0: using guessed type int dword_51A9C0;
 
 //----- (0047AA40) --------------------------------------------------------
-int  Rules_GetFactIndex(int a1)
+int  Rules_GetFactIndex(int fact)
 {
-  return *(_DWORD *)(a1 + 24);
+  return *(_DWORD *)(fact + 24);
 }
 
 //----- (0047AA50) --------------------------------------------------------
-_DWORD * Rules_Log(const char *a1, int a2, double a3)
+_DWORD * Rules_Log(const char *string, int a2, double a3)
 {
   _DWORD *result; // eax
 
-  result = Rules_StringToFact(a1, a2, a3);
+  result = Rules_StringToFact(string, a2, a3);
   if ( result )
     return Rules_AssertFactDriver(result, a3);
   return result;
@@ -16536,12 +16536,12 @@ BOOL  Rules_ClearFacts(double a1)
 int Rules_FindFactByIndex()
 {
   int result; // eax
-  int v1; // ecx
+  int target_index; // ecx
 
   result = Rules_GetNextFact(0);
   if ( !result )
     return 0;
-  while ( v1 != *(_DWORD *)(result + 24) )
+  while ( target_index != *(_DWORD *)(result + 24) )
   {
     result = Rules_GetNextFact(result);
     if ( !result )
@@ -16569,7 +16569,7 @@ signed int Rules_RegisterFactCommands()
 }
 
 //----- (0047ACA0) --------------------------------------------------------
-_DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
+_DWORD * Rules_AssertCommand(uintptr_t returnValue, uintptr_t a2, double eval_context)
 {
   uintptr_t out; // eax
   uintptr_t expression; // ebx
@@ -16582,7 +16582,7 @@ _DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
   _DWORD parsed[6]; // [esp+0h] [ebp-38h] BYREF
 
   (void)a2;
-  out = a1;
+  out = returnValue;
   *(_DWORD *)(out + 4) = 2;
   *(_DWORD *)(out + 8) = g_ClipsFalseSymbol;
   expression = (uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsCurrentExpression + 6);
@@ -16608,7 +16608,7 @@ _DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
   slot_value = (char *)fact + 54;
   while ( expression )
   {
-    Parser_ParseForm((__int16 *)expression, parsed, (int)slot_constraint, a3);
+    Parser_ParseForm((__int16 *)expression, parsed, (int)slot_constraint, eval_context);
     if ( slot_constraint && (*(_BYTE *)(slot_constraint + 4) & 1) == 0 && parsed[1] == 4 )
     {
       multifield_reorder_needed = 1;
@@ -16625,7 +16625,7 @@ _DWORD * Rules_AssertCommand(uintptr_t a1, uintptr_t a2, double a3)
   }
   if ( multifield_reorder_needed )
     return Rules_ReturnFact(fact);
-  result = Rules_AssertFactDriver(fact, a3);
+  result = Rules_AssertFactDriver(fact, eval_context);
   if ( result )
   {
     *(_DWORD *)(out + 4) = 6;
@@ -16643,15 +16643,15 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
   __int16 *v3; // ecx
   int i; // esi
   int v5; // ecx
-  int v6; // eax
+  int fact; // eax
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
   int v10; // ecx
   int v11; // [esp-4h] [ebp-3Ch] BYREF
-  int v12; // [esp+0h] [ebp-38h]
-  int v13; // [esp+4h] [ebp-34h]
-  _BYTE v14[24]; // [esp+14h] [ebp-24h] BYREF
+  int arg_type; // [esp+0h] [ebp-38h]
+  int arg_value; // [esp+4h] [ebp-34h]
+  _BYTE buffer[24]; // [esp+14h] [ebp-24h] BYREF
   int v15; // [esp+2Ch] [ebp-Ch]
   int v16; // [esp+30h] [ebp-8h]
 
@@ -16663,34 +16663,34 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
     while ( 1 )
     {
       Parser_ParseForm(v3, &v11, (int)v3, a3);
-      if ( v12 != 1 )
+      if ( arg_type != 1 )
         break;
-      if ( *(int *)(v13 + 16) < 0 )
+      if ( *(int *)(arg_value + 16) < 0 )
       {
         Parser_ReportError(i, (int)aFactAddressFac);
         return;
       }
-      v6 = Rules_FindFactByIndex();
-      if ( !v6 )
+      fact = Rules_FindFactByIndex();
+      if ( !fact )
       {
-        a3 = sprintf_(v14, "f-%ld", v7);
-        Rules_ReportCantFindItem(v9, (int)v14);
+        a3 = sprintf_(buffer, "f-%ld", v7);
+        Rules_ReportCantFindItem(v9, (int)buffer);
         goto LABEL_6;
       }
 LABEL_5:
-      Rules_RetractFact(v6, a3);
+      Rules_RetractFact(fact, a3);
 LABEL_6:
       v3 = *(__int16 **)(v8 + 10);
       ++i;
       if ( !v3 )
         return;
     }
-    if ( v12 == 6 )
+    if ( arg_type == 6 )
     {
-      v6 = v13;
+      fact = arg_value;
       goto LABEL_5;
     }
-    if ( v12 == 2 && !strcmp_(v5, asc_502790) )
+    if ( arg_type == 2 && !strcmp_(v5, asc_502790) )
     {
       Rules_RemoveAllFacts(a3);
       return;
@@ -16712,21 +16712,21 @@ LABEL_6:
 //----- (0047AED0) --------------------------------------------------------
 int  Rules_SetFactDuplicationCommand(int a1, double a2)
 {
-  int v3; // esi
+  int old_flag; // esi
   int v4; // ecx
-  int v5; // eax
+  int new_flag; // eax
   _DWORD v6[10]; // [esp-4h] [ebp-28h] BYREF
 
   v6[8] = a1;
-  v3 = Rules_GetFactDuplicationFlag();
+  old_flag = Rules_GetFactDuplicationFlag();
   if ( Lexer_TokenExpect(1) == -1 )
     return v4;
   Rules_RtnUnknown(1, v6, a2);
-  v5 = 1;
+  new_flag = 1;
   if ( v6[0] == 2 && v6[1] == g_ClipsFalseSymbol )
-    v5 = 0;
-  Rules_SetFactDuplicationEnabled(v5);
-  return v3;
+    new_flag = 0;
+  Rules_SetFactDuplicationEnabled(new_flag);
+  return old_flag;
 }
 // 47AEF6: variable 'v4' is possibly undefined
 // 48AC80: using guessed type int __fastcall unknown_libname_8(int);
@@ -16748,7 +16748,7 @@ int  Rules_FactIndexFunction(double a1)
 {
   int result; // eax
   _DWORD v2[2]; // [esp-4h] [ebp-20h] BYREF
-  int v3; // [esp+4h] [ebp-18h]
+  int fact; // [esp+4h] [ebp-18h]
 
   result = Lexer_TokenExpect(1);
   if ( result != -1 )
@@ -16756,8 +16756,8 @@ int  Rules_FactIndexFunction(double a1)
     Rules_RtnUnknown(1, v2, a1);
     if ( v2[1] == 6 )
     {
-      if ( *(char *)(v3 + 29) >= 0 )
-        return Rules_GetFactIndex(v3);
+      if ( *(char *)(fact + 29) >= 0 )
+        return Rules_GetFactIndex(fact);
       else
         return -1;
     }
@@ -16778,12 +16778,12 @@ signed int  Rules_FactsCommand(double a1)
   int v3; // ebx
   int v4; // ecx
   int v5; // esi
-  int v6; // ebp
+  int arg_offset; // ebp
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
   int v10; // [esp+0h] [ebp-30h] BYREF
-  int v11; // [esp+4h] [ebp-2Ch]
+  int arg_type; // [esp+4h] [ebp-2Ch]
   int v12; // [esp+8h] [ebp-28h]
 
   result = Lexer_TokenExpect(4);
@@ -16795,15 +16795,15 @@ signed int  Rules_FactsCommand(double a1)
   if ( !v2 )
     return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, -1, -1, -1);
   Rules_RtnUnknown(1, &v10, a1);
-  if ( v11 != 2 )
+  if ( arg_type != 2 )
   {
-    if ( v11 != 1 || (v5 = *(_DWORD *)(v12 + 16), v5 < 0) )
+    if ( arg_type != 1 || (v5 = *(_DWORD *)(v12 + 16), v5 < 0) )
     {
       Parser_ReportError(1, (int)aSymbolOrPositi);
       Rules_SetEvaluationErrorFlag(1);
       return Lexer_ErrorRecover(1);
     }
-    v6 = 0;
+    arg_offset = 0;
     goto LABEL_8;
   }
   if ( !Module_FindByName(*(_BYTE **)(v12 + 16)) && strcmp_(v8, asc_502790) )
@@ -16815,12 +16815,12 @@ signed int  Rules_FactsCommand(double a1)
   v5 = result;
   if ( result != -2 )
   {
-    v6 = 1;
+    arg_offset = 1;
 LABEL_8:
-    result = Rules_ParsePositiveIntArg(v6 + 2, v3, v4, a1);
+    result = Rules_ParsePositiveIntArg(arg_offset + 2, v3, v4, a1);
     if ( result != -2 )
     {
-      result = Rules_ParsePositiveIntArg(v6 + 3, v3, result, a1);
+      result = Rules_ParsePositiveIntArg(arg_offset + 3, v3, result, a1);
       if ( result != -2 )
         return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, v7, v5, result);
     }
@@ -16835,54 +16835,54 @@ LABEL_8:
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047B1A0) --------------------------------------------------------
-int  Rules_PrintFactRange(int a1, int a2, int a3, int a4)
+int  Rules_PrintFactRange(int logicalName, int end_index, int start_index, int max_count)
 {
-  int v7; // edi
+  int printed_count; // edi
   int v8; // edx
   int v9; // eax
-  int v10; // eax
-  int v11; // ecx
+  int fact; // eax
+  int fact_cursor; // ecx
   int v12; // ecx
-  int v14; // [esp+0h] [ebp-18h]
-  int v16; // [esp+8h] [ebp-10h]
+  int saved_module; // [esp+0h] [ebp-18h]
+  int scan_all_modules; // [esp+8h] [ebp-10h]
 
-  v7 = 0;
-  v14 = Module_GetCurrent();
-  v16 = 0;
+  printed_count = 0;
+  saved_module = Module_GetCurrent();
+  scan_all_modules = 0;
   if ( v8 )
   {
     Module_SetCurrent(v8);
     v9 = 0;
 LABEL_3:
-    v10 = Rules_GetNextFactInModule(v9);
+    fact = Rules_GetNextFactInModule(v9);
     goto LABEL_4;
   }
-  v16 = 1;
-  v10 = Rules_GetNextFact(0);
+  scan_all_modules = 1;
+  fact = Rules_GetNextFact(0);
 LABEL_4:
-  while ( v10 )
+  while ( fact )
   {
     if ( Rules_GetEvaluationErrorFlag() == 1 )
-      return Module_SetCurrent(v14);
-    if ( a2 < *(_DWORD *)(v11 + 24) && a2 != -1 || !a4 )
+      return Module_SetCurrent(saved_module);
+    if ( end_index < *(_DWORD *)(fact_cursor + 24) && end_index != -1 || !max_count )
       break;
-    if ( a3 <= *(_DWORD *)(v11 + 24) )
+    if ( start_index <= *(_DWORD *)(fact_cursor + 24) )
     {
-      Rules_PrintFactWithIndex(v11, v11);
-      ++v7;
-      Output_Write(a1, (int)asc_5027CC, v12);
-      if ( a4 > 0 )
-        --a4;
+      Rules_PrintFactWithIndex(fact_cursor, fact_cursor);
+      ++printed_count;
+      Output_Write(logicalName, (int)asc_5027CC, v12);
+      if ( max_count > 0 )
+        --max_count;
     }
-    if ( !v16 )
+    if ( !scan_all_modules )
     {
-      v9 = v11;
+      v9 = fact_cursor;
       goto LABEL_3;
     }
-    v10 = Rules_GetNextFact(v11);
+    fact = Rules_GetNextFact(fact_cursor);
   }
-  Rules_PrintTally(a1, v7, (int)aFacts_1, (int)aFact);
-  return Module_SetCurrent(v14);
+  Rules_PrintTally(logicalName, printed_count, (int)aFacts_1, (int)aFact);
+  return Module_SetCurrent(saved_module);
 }
 // 47B1C2: variable 'v8' is possibly undefined
 // 47B1EA: variable 'v11' is possibly undefined
@@ -16890,20 +16890,20 @@ LABEL_4:
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047B270) --------------------------------------------------------
-signed int  Rules_ParsePositiveIntArg(int a1, int a2, int a3, double a4)
+signed int  Rules_ParsePositiveIntArg(int arg_index, int max_args, int a3, double a4)
 {
   signed int result; // eax
   _DWORD v6[9]; // [esp-8h] [ebp-24h] BYREF
 
   v6[7] = a3;
-  if ( a1 > a2 )
+  if ( arg_index > max_args )
     return -1;
-  if ( !Lexer_ParseValueList(a1, v6, 1, a4) )
+  if ( !Lexer_ParseValueList(arg_index, v6, 1, a4) )
     return -2;
   result = *(_DWORD *)(v6[2] + 16);
   if ( result < 0 )
   {
-    Parser_ReportError(a1, (int)aPositiveNumber);
+    Parser_ReportError(arg_index, (int)aPositiveNumber);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return -2;
@@ -16912,15 +16912,15 @@ signed int  Rules_ParsePositiveIntArg(int a1, int a2, int a3, double a4)
 }
 
 //----- (0047B2F0) --------------------------------------------------------
-_DWORD * Rules_AssertStringFunction(int a1, int a2, double a3)
+_DWORD * Rules_AssertStringFunction(int returnValue, int a2, double a3)
 {
   _DWORD *result; // eax
   int v5; // ecx
   _DWORD v6[10]; // [esp-8h] [ebp-28h] BYREF
 
   v6[8] = a2;
-  *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
+  *(_DWORD *)(returnValue + 4) = 2;
+  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
   result = (_DWORD *)Lexer_TokenExpect(1);
   if ( result != (_DWORD *)-1 )
   {
@@ -16930,8 +16930,8 @@ _DWORD * Rules_AssertStringFunction(int a1, int a2, double a3)
       result = Rules_Log(*(const char **)(v6[2] + 16), v5, a3);
       if ( result )
       {
-        *(_DWORD *)(a1 + 4) = 6;
-        *(_DWORD *)(a1 + 8) = result;
+        *(_DWORD *)(returnValue + 4) = 6;
+        *(_DWORD *)(returnValue + 8) = result;
       }
     }
   }
@@ -16943,24 +16943,24 @@ _DWORD * Rules_AssertStringFunction(int a1, int a2, double a3)
 //----- (0047B370) --------------------------------------------------------
 int  Rules_ParseSaveFactsCommand(double a1)
 {
-  int v1; // esi
-  _DWORD *v2; // edi
+  int save_scope; // esi
+  _DWORD *template_list; // edi
   int v3; // ecx
   int result; // eax
   int v5; // ecx
-  const CHAR *v6; // ebp
+  const CHAR *filename; // ebp
   int v7; // ecx
   _DWORD v8[6]; // [esp+0h] [ebp-34h] BYREF
-  int v9; // [esp+18h] [ebp-1Ch]
+  int arg_count; // [esp+18h] [ebp-1Ch]
 
-  v1 = 1;
-  v2 = 0;
+  save_scope = 1;
+  template_list = 0;
   v3 = Lexer_TokenExpect(1);
-  v9 = v3;
+  arg_count = v3;
   if ( v3 == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v3, a1);
-  v6 = (const CHAR *)result;
+  filename = (const CHAR *)result;
   if ( result )
   {
     if ( v5 > 1 )
@@ -16975,12 +16975,12 @@ int  Rules_ParseSaveFactsCommand(double a1)
           Parser_ReportError(2, (int)aSymbolWithValu);
           return 0;
         }
-        v1 = 2;
+        save_scope = 2;
       }
     }
-    if ( v9 > 2 )
-      v2 = *(_DWORD **)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10) + 10);
-    result = Rules_SaveFactsToFile(v6, v1, v2, a1);
+    if ( arg_count > 2 )
+      template_list = *(_DWORD **)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10) + 10);
+    result = Rules_SaveFactsToFile(filename, save_scope, template_list, a1);
     if ( result )
       return 1;
   }
@@ -17013,81 +17013,81 @@ signed int  Rules_ParseLoadFactsCommand(DWORD a1, double a2)
 // 47B4A0: variable 'v4' is possibly undefined
 
 //----- (0047B4C0) --------------------------------------------------------
-signed int  Rules_SaveFactsToFile(const CHAR *a1, int a2, _DWORD *a3, double a4)
+signed int  Rules_SaveFactsToFile(const CHAR *fileName, int saveScope, _DWORD *importList, double frame)
 {
   int v5; // eax
   int v6; // ecx
-  int v7; // esi
+  int file; // esi
   int v8; // ecx
   int v9; // ecx
   int i; // ebx
   int v12; // ecx
-  int v13; // eax
-  _DWORD *v14; // edx
-  int v15; // [esp+0h] [ebp-30h] BYREF
-  int v16; // [esp+4h] [ebp-2Ch] BYREF
-  int v17; // [esp+8h] [ebp-28h]
-  int v18; // [esp+Ch] [ebp-24h]
-  int v19; // [esp+10h] [ebp-20h]
-  int v20; // [esp+14h] [ebp-1Ch]
+  int matchIndex; // eax
+  _DWORD *matchScan; // edx
+  int arrayCount; // [esp+0h] [ebp-30h] BYREF
+  int errorFlag; // [esp+4h] [ebp-2Ch] BYREF
+  int savedPreserveEscapedFlag; // [esp+8h] [ebp-28h]
+  int savedAddressesToStringsFlag; // [esp+Ch] [ebp-24h]
+  int savedInstanceAddressesFlag; // [esp+10h] [ebp-20h]
+  int currentModule; // [esp+14h] [ebp-1Ch]
   int v21; // [esp+18h] [ebp-18h]
-  _DWORD *v22; // [esp+1Ch] [ebp-14h]
+  _DWORD *deftemplateArray; // [esp+1Ch] [ebp-14h]
 
-  v21 = a2;
-  v5 = IO_FOpen(a1, (unsigned __int8 *)aW_0, (int)a1, (DWORD)a3);
-  v7 = v5;
+  v21 = saveScope;
+  v5 = IO_FOpen(fileName, (unsigned __int8 *)aW_0, (int)fileName, (DWORD)importList);
+  file = v5;
   if ( v5 )
   {
     IO_SetFastSaveFile(v5);
-    v17 = g_Print_PreserveEscapedCharactersFlag;
+    savedPreserveEscapedFlag = g_Print_PreserveEscapedCharactersFlag;
     g_Print_PreserveEscapedCharactersFlag = 1;
-    v18 = g_Print_AddressesToStringsFlag;
+    savedAddressesToStringsFlag = g_Print_AddressesToStringsFlag;
     g_Print_AddressesToStringsFlag = 1;
-    v19 = g_Print_InstanceAddressesToNamesFlag;
+    savedInstanceAddressesFlag = g_Print_InstanceAddressesToNamesFlag;
     g_Print_InstanceAddressesToNamesFlag = 1;
-    v22 = Rules_CollectFactsToArray(a3, v21, &v16, &v15, a4);
-    if ( v16 )
+    deftemplateArray = Rules_CollectFactsToArray(importList, v21, &errorFlag, &arrayCount, frame);
+    if ( errorFlag )
     {
-      g_Print_PreserveEscapedCharactersFlag = v17;
-      g_Print_AddressesToStringsFlag = v18;
-      g_Print_InstanceAddressesToNamesFlag = v19;
+      g_Print_PreserveEscapedCharactersFlag = savedPreserveEscapedFlag;
+      g_Print_AddressesToStringsFlag = savedAddressesToStringsFlag;
+      g_Print_InstanceAddressesToNamesFlag = savedInstanceAddressesFlag;
       fclose_(v8);
       IO_SetFastSaveFile(0);
       return 0;
     }
     else
     {
-      v20 = Module_GetCurrent();
+      currentModule = Module_GetCurrent();
       for ( i = Rules_GetNextFactInModule(0); i; i = Rules_GetNextFactInModule(i) )
       {
-        if ( v21 == 1 && v20 != **(_DWORD **)(*(_DWORD *)(i + 16) + 8) )
+        if ( v21 == 1 && currentModule != **(_DWORD **)(*(_DWORD *)(i + 16) + 8) )
           continue;
-        if ( a3 )
+        if ( importList )
         {
-          v13 = 0;
-          if ( v15 <= 0 )
+          matchIndex = 0;
+          if ( arrayCount <= 0 )
             continue;
-          v14 = v22;
-          while ( v14[2] != *(_DWORD *)(i + 16) )
+          matchScan = deftemplateArray;
+          while ( matchScan[2] != *(_DWORD *)(i + 16) )
           {
-            ++v13;
-            v14 += 6;
-            if ( v13 >= v15 )
+            ++matchIndex;
+            matchScan += 6;
+            if ( matchIndex >= arrayCount )
               goto LABEL_6;
           }
         }
-        Rules_PrintFact(v7, i);
-        Output_Write(v7, (int)asc_5027CC, v12);
+        Rules_PrintFact(file, i);
+        Output_Write(file, (int)asc_5027CC, v12);
 LABEL_6:
         ;
       }
-      g_Print_PreserveEscapedCharactersFlag = v17;
-      g_Print_AddressesToStringsFlag = v18;
-      g_Print_InstanceAddressesToNamesFlag = v19;
+      g_Print_PreserveEscapedCharactersFlag = savedPreserveEscapedFlag;
+      g_Print_AddressesToStringsFlag = savedAddressesToStringsFlag;
+      g_Print_InstanceAddressesToNamesFlag = savedInstanceAddressesFlag;
       fclose_(v9);
       IO_SetFastSaveFile(0);
-      if ( a3 )
-        Mem_SmallBlockRelease(v22, 24 * v15);
+      if ( importList )
+        Mem_SmallBlockRelease(deftemplateArray, 24 * arrayCount);
       return 1;
     }
   }
@@ -17109,16 +17109,16 @@ LABEL_6:
 //----- (0047B670) --------------------------------------------------------
 _DWORD * Rules_CollectFactsToArray(
         _DWORD *result,
-        int a2,
-        _DWORD *a3,
-        int *a4,
-        double a5)
+        int saveScope,
+        _DWORD *errorFlagPtr,
+        int *countPtr,
+        double frame)
 {
-  int v5; // edi
+  int listNode; // edi
   _DWORD *v7; // eax
   int v8; // ecx
-  int v9; // ebx
-  _DWORD *v10; // esi
+  int entryCount; // ebx
+  _DWORD *arrayEntry; // esi
   int v11; // eax
   int v12; // edx
   int v13; // edx
@@ -17126,88 +17126,88 @@ _DWORD * Rules_CollectFactsToArray(
   int v15; // edx
   int v16; // edx
   int v17; // [esp+0h] [ebp-28h] BYREF
-  _DWORD *v18; // [esp+4h] [ebp-24h]
+  _DWORD *deftemplateArray; // [esp+4h] [ebp-24h]
   _DWORD *v19; // [esp+8h] [ebp-20h]
   int v20; // [esp+Ch] [ebp-1Ch]
-  int v21; // [esp+10h] [ebp-18h]
-  int v22; // [esp+14h] [ebp-14h]
-  int v23; // [esp+18h] [ebp-10h]
+  int exprIndex; // [esp+10h] [ebp-18h]
+  int deftemplate; // [esp+14h] [ebp-14h]
+  int writtenCount; // [esp+18h] [ebp-10h]
 
-  v5 = (int)result;
-  v20 = a2;
-  v19 = a3;
-  *a3 = 0;
+  listNode = (int)result;
+  v20 = saveScope;
+  v19 = errorFlagPtr;
+  *errorFlagPtr = 0;
   if ( !result )
   {
-    *a4 = 0;
+    *countPtr = 0;
     return result;
   }
-  *a4 = 0;
+  *countPtr = 0;
   do
   {
     result = *(_DWORD **)((char *)result + 10);
-    ++*a4;
+    ++*countPtr;
   }
   while ( result );
-  v7 = Mem_NewArray(24 * *a4);
+  v7 = Mem_NewArray(24 * *countPtr);
   v8 = 0;
-  v18 = v7;
-  v9 = *a4;
-  v23 = 0;
-  if ( v9 <= 0 )
-    return v18;
-  v10 = v7;
-  v21 = 3;
+  deftemplateArray = v7;
+  entryCount = *countPtr;
+  writtenCount = 0;
+  if ( entryCount <= 0 )
+    return deftemplateArray;
+  arrayEntry = v7;
+  exprIndex = 3;
   while ( 1 )
   {
-    Parser_ParseForm((__int16 *)v5, v10, v8, a5);
+    Parser_ParseForm((__int16 *)listNode, arrayEntry, v8, frame);
     if ( g_ClipsEvaluationError )
     {
       *v19 = 1;
-      Mem_SmallBlockRelease(v18, 24 * *a4);
+      Mem_SmallBlockRelease(deftemplateArray, 24 * *countPtr);
       return 0;
     }
-    if ( v10[1] != 2 )
+    if ( arrayEntry[1] != 2 )
     {
-      v13 = v21;
+      v13 = exprIndex;
       *v19 = 1;
       Parser_ReportError(v13, (int)aSymbol_1);
-      Mem_SmallBlockRelease(v18, 24 * *a4);
+      Mem_SmallBlockRelease(deftemplateArray, 24 * *countPtr);
       return 0;
     }
     if ( v20 != 1 )
       break;
-    v22 = Rules_FindDeftemplateByName(*(_BYTE **)(v10[2] + 16), 1);
-    if ( !v22 )
+    deftemplate = Rules_FindDeftemplateByName(*(_BYTE **)(arrayEntry[2] + 16), 1);
+    if ( !deftemplate )
     {
-      v15 = v21;
+      v15 = exprIndex;
       *v19 = v14;
       Parser_ReportError(v15, (int)aLocalDeftempla);
-      Mem_SmallBlockRelease(v18, 24 * *a4);
+      Mem_SmallBlockRelease(deftemplateArray, 24 * *countPtr);
       return 0;
     }
 LABEL_11:
-    v10 += 6;
-    v11 = v22;
-    v12 = v23;
-    *(v10 - 5) = 35;
-    *(v10 - 4) = v11;
-    v23 = v12 + 1;
-    v5 = *(_DWORD *)(v5 + 10);
-    v8 = *a4;
-    ++v21;
+    arrayEntry += 6;
+    v11 = deftemplate;
+    v12 = writtenCount;
+    *(arrayEntry - 5) = 35;
+    *(arrayEntry - 4) = v11;
+    writtenCount = v12 + 1;
+    listNode = *(_DWORD *)(listNode + 10);
+    v8 = *countPtr;
+    ++exprIndex;
     if ( v12 + 1 >= v8 )
-      return v18;
+      return deftemplateArray;
   }
   if ( v20 != 2 )
     goto LABEL_11;
-  v22 = Rules_FindImportExportConstruct(aDeftemplate_4, &v17, *(_BYTE **)(v10[2] + 16), 1, g_ClipsEvaluationError);
-  if ( v22 )
+  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_4, &v17, *(_BYTE **)(arrayEntry[2] + 16), 1, g_ClipsEvaluationError);
+  if ( deftemplate )
     goto LABEL_11;
-  v16 = v21;
+  v16 = exprIndex;
   *v19 = 1;
   Parser_ReportError(v16, (int)aVisibleDeftemp);
-  Mem_SmallBlockRelease(v18, 24 * *a4);
+  Mem_SmallBlockRelease(deftemplateArray, 24 * *countPtr);
   return 0;
 }
 // 47B696: conditional instruction was optimized away because eax.4!=0
@@ -17215,20 +17215,20 @@ LABEL_11:
 // 51A964: using guessed type int dword_51A964;
 
 //----- (0047B890) --------------------------------------------------------
-BOOL  Rules_LoadFactsFromFile(const CHAR *a1, int a2, DWORD a3, double a4)
+BOOL  Rules_LoadFactsFromFile(const CHAR *fileName, int a2, DWORD a3, double a4)
 {
   int v5; // eax
   int v6; // ecx
-  int v7; // ebx
-  __int16 *v8; // eax
+  int file; // ebx
+  __int16 *parsedForm; // eax
   int v9; // ecx
   int v10; // ecx
   int v12; // [esp-18h] [ebp-34h] BYREF
   _DWORD v13[7]; // [esp+0h] [ebp-1Ch] BYREF
 
   v13[5] = a2;
-  v5 = IO_FOpen(a1, (unsigned __int8 *)aR_0, (int)a1, a3);
-  v7 = v5;
+  v5 = IO_FOpen(fileName, (unsigned __int8 *)aR_0, (int)fileName, a3);
+  file = v5;
   if ( !v5 )
   {
     Rules_OpenFileErrorMessage(v6, v6);
@@ -17238,10 +17238,10 @@ BOOL  Rules_LoadFactsFromFile(const CHAR *a1, int a2, DWORD a3, double a4)
   v13[0] = 100;
   do
   {
-    v8 = (__int16 *)Rules_ParseAssertFormFromFile(v7, v13);
-    v9 = (int)v8;
-    if ( v8 )
-      Parser_ParseForm(v8, &v12, (int)v8, a4);
+    parsedForm = (__int16 *)Rules_ParseAssertFormFromFile(file, v13);
+    v9 = (int)parsedForm;
+    if ( parsedForm )
+      Parser_ParseForm(parsedForm, &v12, (int)parsedForm, a4);
     else
       v13[0] = 102;
     AST_Free(v9);
@@ -17258,94 +17258,94 @@ BOOL  Rules_LoadFactsFromFile(const CHAR *a1, int a2, DWORD a3, double a4)
 // 51A964: using guessed type int dword_51A964;
 
 //----- (0047B930) --------------------------------------------------------
-int  Rules_ParseAssertFormFromFile(int a1, _DWORD *a2)
+int  Rules_ParseAssertFormFromFile(int readSource, _DWORD *parseState)
 {
   int **Symbol; // eax
-  signed int v6; // esi
+  signed int assertNode; // esi
   int v7; // ecx
-  int v8[6]; // [esp+0h] [ebp-18h] BYREF
+  int errorFlag[6]; // [esp+0h] [ebp-18h] BYREF
 
-  v8[0] = 0;
-  Parser_NextToken(a1, (int)a2);
-  if ( *a2 != 100 )
+  errorFlag[0] = 0;
+  Parser_NextToken(readSource, (int)parseState);
+  if ( *parseState != 100 )
     return 0;
   Symbol = Rules_MakeSymbol(aAssert);
-  v6 = AST_NewNode(10, (int)Symbol);
-  *(_DWORD *)(v6 + 6) = Rules_ParseAssertRHSPattern(a1, (int)a2, 1, v8, 0, 1, 101);
-  if ( v8[0] == 1 )
+  assertNode = AST_NewNode(10, (int)Symbol);
+  *(_DWORD *)(assertNode + 6) = Rules_ParseAssertRHSPattern(readSource, (int)parseState, 1, errorFlag, 0, 1, 101);
+  if ( errorFlag[0] == 1 )
   {
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionLoadFa, v7);
     Lexer_ErrorRecover(1);
   }
-  else if ( !AST_TreeContainsSpecialTag(v6, 1) )
+  else if ( !AST_TreeContainsSpecialTag(assertNode, 1) )
   {
-    return v6;
+    return assertNode;
   }
-  AST_Free(v6);
+  AST_Free(assertNode);
   return 0;
 }
 // 47B9B8: variable 'v7' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0047B9E0) --------------------------------------------------------
-int  Rules_AssertParsedFact(int a1, int a2, int a3)
+int  Rules_AssertParsedFact(int parseTree, int readSource, int a3)
 {
   int v4; // edx
   _DWORD v6[3]; // [esp+0h] [ebp-1Ch] BYREF
   int v7[4]; // [esp+Ch] [ebp-10h] BYREF
 
   v7[2] = a3;
-  AST_Free(a1);
+  AST_Free(parseTree);
   IO_OutWriteToken(asc_502890);
   Rules_IncrementIndentDepth(8);
-  Rules_ParseAssertCommand(a2, v6, 1, v7, 1, (int)aAssertCommand);
+  Rules_ParseAssertCommand(readSource, v6, 1, v7, 1, (int)aAssertCommand);
   Rules_DecrementIndentDepth(8);
   return v4;
 }
 // 47BA28: variable 'v4' is possibly undefined
 
 //----- (0047BA31) --------------------------------------------------------
-signed int  IO_AdvanceBufferCursor(int a1, int a2)
+signed int  IO_AdvanceBufferCursor(int offset, int bufferState)
 {
-  int v2; // edi
-  int v3; // esi
-  int v4; // edi
+  int remaining; // edi
+  int newPosition; // esi
+  int newRemaining; // edi
   signed int result; // eax
 
-  if ( a1 > *(_DWORD *)(a2 + 4) || a1 < *(_DWORD *)(*(_DWORD *)(a2 + 8) + 8) - *(_DWORD *)a2 )
+  if ( offset > *(_DWORD *)(bufferState + 4) || offset < *(_DWORD *)(*(_DWORD *)(bufferState + 8) + 8) - *(_DWORD *)bufferState )
     return 1;
-  v2 = *(_DWORD *)(a2 + 4);
-  v3 = a1 + *(_DWORD *)a2;
-  *(_BYTE *)(a2 + 12) &= ~0x10u;
-  v4 = v2 - a1;
-  *(_DWORD *)a2 = v3;
+  remaining = *(_DWORD *)(bufferState + 4);
+  newPosition = offset + *(_DWORD *)bufferState;
+  *(_BYTE *)(bufferState + 12) &= ~0x10u;
+  newRemaining = remaining - offset;
+  *(_DWORD *)bufferState = newPosition;
   result = 0;
-  *(_DWORD *)(a2 + 4) = v4;
+  *(_DWORD *)(bufferState + 4) = newRemaining;
   return result;
 }
 
 //----- (0047BA70) --------------------------------------------------------
 int  IO_ResetBufferCursor(int result)
 {
-  int v1; // edx
+  int basePtr; // edx
 
   *(_BYTE *)(result + 12) &= ~0x10u;
-  v1 = *(_DWORD *)(*(_DWORD *)(result + 8) + 8);
+  basePtr = *(_DWORD *)(*(_DWORD *)(result + 8) + 8);
   *(_DWORD *)(result + 4) = 0;
-  *(_DWORD *)result = v1;
+  *(_DWORD *)result = basePtr;
   return result;
 }
 
 //----- (0047BA86) --------------------------------------------------------
-signed int  IO_SeekStreamGuarded(int a1, int a2, unsigned int a3, int a4)
+signed int  IO_SeekStreamGuarded(int stream, int offset, unsigned int whence, int a4)
 {
   int fd_index;
   int seek_result;
 
   (void)a4;
-  fd_index = *(_DWORD *)(a1 + 16);
+  fd_index = *(_DWORD *)(stream + 16);
   g_CRT_FileHandleLockAcquireHook(fd_index);
-  seek_result = Compat_StreamSeek(a1, a2, (int)a3);
+  seek_result = Compat_StreamSeek(stream, offset, (int)whence);
   g_CRT_FileHandleLockReleaseHook(fd_index, seek_result);
   if ( seek_result == -1 )
     return -1;
@@ -17355,9 +17355,9 @@ signed int  IO_SeekStreamGuarded(int a1, int a2, unsigned int a3, int a4)
 // 51A570: using guessed type int (__fastcall *off_51A570)(_DWORD, _DWORD);
 
 //----- (0047BC10) --------------------------------------------------------
-BOOL __stdcall InputBackend_StoreEnumeratedDevice(int a1, int a2)
+BOOL __stdcall InputBackend_StoreEnumeratedDevice(int deviceInstance, int directInput)
 {
-  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)a2 + 12))(a2, a1 + 4, &g_InputBackendTempJoystickDevice, 0) != 0;
+  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)directInput + 12))(directInput, deviceInstance + 4, &g_InputBackendTempJoystickDevice, 0) != 0;
 }
 // 54DD20: using guessed type int g_InputBackendTempJoystickDevice;
 
@@ -17381,30 +17381,30 @@ InputBackendState * InputBackend_ResetState(InputBackendState *result)
 }
 
 //----- (0047BCA0) --------------------------------------------------------
-InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1)
+InputBackendState * InputBackend_ReleaseDevices(InputBackendState *state)
 {
   _DWORD *raw; // esi
-  int v2; // edx
-  int v3; // ecx
-  int v4; // esi
+  int keyboardDevice; // edx
+  int mouseDevice; // ecx
+  int joystickDevice; // esi
 
-  raw = (_DWORD *)a1;
-  v2 = raw[1];
-  if ( v2 )
+  raw = (_DWORD *)state;
+  keyboardDevice = raw[1];
+  if ( keyboardDevice )
   {
-    (*(void (__stdcall **)(int))(*(_DWORD *)v2 + 8))(v2);
+    (*(void (__stdcall **)(int))(*(_DWORD *)keyboardDevice + 8))(keyboardDevice);
     raw[1] = 0;
   }
-  v3 = raw[2];
-  if ( v3 )
+  mouseDevice = raw[2];
+  if ( mouseDevice )
   {
-    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v3 + 8))(v3, raw[2]);
+    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)mouseDevice + 8))(mouseDevice, raw[2]);
     raw[2] = 0;
   }
-  v4 = raw[3];
-  if ( v4 )
+  joystickDevice = raw[3];
+  if ( joystickDevice )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v4 + 8))(raw[3]);
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)joystickDevice + 8))(raw[3]);
     raw[3] = 0;
   }
   if ( raw[0] )
@@ -17412,11 +17412,11 @@ InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1)
     (*(void (__stdcall **)(_DWORD))(*(_DWORD *)raw[0] + 8))(raw[0]);
     raw[0] = 0;
   }
-  return a1;
+  return state;
 }
 
 //----- (0047BD10) --------------------------------------------------------
-signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3)
+signed int  InputBackend_Initialize(InputBackendState *state, int hInstance, int hwnd)
 {
   _DWORD *raw; // esi
   _DWORD v5[2]; // [esp+94h] [ebp-3Ch] BYREF
@@ -17429,13 +17429,13 @@ signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3)
   int v12; // [esp+B8h] [ebp-18h]
   int v13; // [esp+BCh] [ebp-14h]
 
-  raw = (_DWORD *)a1;
-  if ( DirectInputCreateA(a2, 768, raw, 0) )
+  raw = (_DWORD *)state;
+  if ( DirectInputCreateA(hInstance, 768, raw, 0) )
     return 0;
   if ( !(*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendMouseDeviceGuid, raw + 2, 0) )
   {
     (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[2] + 44))(raw[2], g_InputBackendMouseDataFormat);
-    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[2] + 52))(raw[2], a3, 5);
+    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[2] + 52))(raw[2], hwnd, 5);
     if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[2] + 28))(raw[2]) )
       return 0;
     raw[77] = 1;
@@ -17443,7 +17443,7 @@ signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3)
   if ( (*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendKeyboardDeviceGuid, raw + 1, 0) )
     goto LABEL_9;
   (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[1] + 44))(raw[1], g_InputBackendKeyboardDataFormat);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[1] + 52))(raw[1], a3, 6);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[1] + 52))(raw[1], hwnd, 6);
   if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[1] + 28))(raw[1]) )
     return 0;
   raw[78] = 1;
@@ -17467,7 +17467,7 @@ LABEL_9:
     g_InputBackendTempJoystickDevice = 0;
   }
   (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[3] + 44))(raw[3], g_InputBackendJoystickDataFormat);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[3] + 52))(raw[3], a3, 6);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[3] + 52))(raw[3], hwnd, 6);
   v5[0] = 24;
   v8 = -1000;
   v9 = 1000;
@@ -17552,7 +17552,7 @@ static int InputBackend_ScaleHostMouseDeltaToRecoveredUnits(int render_state, in
 }
 
 //----- (0047BFD0) --------------------------------------------------------
-int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
+int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
 {
   int result; // eax
   _DWORD *raw; // ebx
@@ -17573,7 +17573,7 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
   int fallback_mouse_delta_is_host_pixels;
 
   v12 = a3;
-  v11 = a2;
+  v11 = renderState;
   result = 0;
   raw = (_DWORD *)state;
   fallback_mouse_delta_x = 0;
@@ -17643,16 +17643,16 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
 //----- (0047C200) --------------------------------------------------------
 int Rules_FindConstructByName()
 {
-  _DWORD *v0; // ecx
+  _DWORD *current; // ecx
   int v1; // ecx
 
-  v0 = (_DWORD *)g_Rules_ConstructTypeListHead;
+  current = (_DWORD *)g_Rules_ConstructTypeListHead;
   if ( !g_Rules_ConstructTypeListHead )
     return 0;
-  while ( strcmp_(v0, *v0) )
+  while ( strcmp_(current, *current) )
   {
-    v0 = *(_DWORD **)(v1 + 48);
-    if ( !v0 )
+    current = *(_DWORD **)(v1 + 48);
+    if ( !current )
       return 0;
   }
   return v1;
@@ -17662,14 +17662,14 @@ int Rules_FindConstructByName()
 // 51A194: using guessed type int dword_51A194;
 
 //----- (0047C2B0) --------------------------------------------------------
-signed int  Rules_Save(const CHAR *a1, int a2, DWORD a3)
+signed int  Rules_Save(const CHAR *fileName, int a2, DWORD a3)
 {
   signed int result; // eax
   int v4; // ecx
   int i; // edx
   int v6; // edx
 
-  result = IO_FOpen(a1, (unsigned __int8 *)aW_1, a2, a3);
+  result = IO_FOpen(fileName, (unsigned __int8 *)aW_1, a2, a3);
   if ( result )
   {
     IO_SetFastSaveFile(result);
@@ -17738,8 +17738,8 @@ void Rules_ResetCommand()
 //----- (0047C410) --------------------------------------------------------
 void Rules_Reset()
 {
-  int v0; // edx
-  int *v2; // eax
+  int resetNode; // edx
+  int *mainModule; // eax
 
   if ( !g_Rules_ResetInProgressFlag )
   {
@@ -17750,18 +17750,18 @@ void Rules_Reset()
     {
       if ( g_Rules_ResetFunctionListHead )
       {
-        v0 = g_Rules_ResetFunctionListHead;
+        resetNode = g_Rules_ResetFunctionListHead;
         do
         {
           if ( Rules_GetEvaluationErrorFlag() )
             break;
-          ((void (*)(void))(uintptr_t)(unsigned int)*(_DWORD *)(v0 + 4))();
-          v0 = *(_DWORD *)(v0 + 12);
+          ((void (*)(void))(uintptr_t)(unsigned int)*(_DWORD *)(resetNode + 4))();
+          resetNode = *(_DWORD *)(resetNode + 12);
         }
-        while ( v0 );
+        while ( resetNode );
       }
-      v2 = Module_FindByName(aMain);
-      Module_SetCurrent((int)v2);
+      mainModule = Module_FindByName(aMain);
+      Module_SetCurrent((int)mainModule);
       if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
         Rules_RunPeriodicCleanup(1, 0);
       g_Rules_ResetInProgressFlag = 0;
@@ -17782,9 +17782,9 @@ void Rules_Reset()
 // 51A97C: using guessed type int dword_51A97C;
 
 //----- (0047C4E0) --------------------------------------------------------
-signed int  Rules_AddResetFunction(int a1, int a2, int a3)
+signed int  Rules_AddResetFunction(int name, int priority, int callback)
 {
-  g_Rules_ResetFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ResetFunctionListHead, a2);
+  g_Rules_ResetFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_ResetFunctionListHead, priority);
   return 1;
 }
 // 51A198: using guessed type int dword_51A198;
@@ -17851,27 +17851,27 @@ int Rules_ClearReady()
 // 51A1A0: using guessed type int dword_51A1A0;
 
 //----- (0047C610) --------------------------------------------------------
-signed int  Rules_AddClearReadyFunction(int a1, int a2, int a3)
+signed int  Rules_AddClearReadyFunction(int name, int priority, int callback)
 {
-  g_Rules_ClearReadyFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ClearReadyFunctionListHead, a2);
+  g_Rules_ClearReadyFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_ClearReadyFunctionListHead, priority);
   return 1;
 }
 // 51A1A0: using guessed type int dword_51A1A0;
 
 //----- (0047C660) --------------------------------------------------------
-signed int  Rules_AddClearFunction(int a1, int a2, int a3)
+signed int  Rules_AddClearFunction(int name, int priority, int callback)
 {
-  g_Rules_ClearFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ClearFunctionListHead, a2);
+  g_Rules_ClearFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_ClearFunctionListHead, priority);
   return 1;
 }
 // 51A19C: using guessed type int dword_51A19C;
 
 //----- (0047C680) --------------------------------------------------------
-BOOL Rules_RemoveClearFunction(int a1)
+BOOL Rules_RemoveClearFunction(int name)
 {
   _DWORD v3[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  g_Rules_ClearFunctionListHead = Rules_RemoveNamedCallbackReturningHead(a1, g_Rules_ClearFunctionListHead, v3);
+  g_Rules_ClearFunctionListHead = Rules_RemoveNamedCallbackReturningHead(name, g_Rules_ClearFunctionListHead, v3);
   return v3[0] != 0;
 }
 // 51A19C: using guessed type int dword_51A19C;
@@ -17892,45 +17892,45 @@ int  Rules_SetReentryGuardFlag(int result)
 // 51A1A4: using guessed type int dword_51A1A4;
 
 //----- (0047C6D0) --------------------------------------------------------
-_DWORD * Module_BuildNameListMultifield(_DWORD *a1, int (*a2)(void), int (*a3)(void))
+_DWORD * Module_BuildNameListMultifield(_DWORD *multifield, int (*getNextFn)(void), int (*getNameFn)(void))
 {
-  signed int v6; // ecx
+  signed int count; // ecx
   int v7; // eax
   int v8; // ecx
-  _DWORD *v9; // ebx
+  _DWORD *fieldPtr; // ebx
   _DWORD *result; // eax
-  char *v11; // eax
+  char *name; // eax
   int v12; // ecx
   int v13; // ecx
 
-  if ( ((int (__thiscall *)(_DWORD))a2)(0) )
+  if ( ((int (__thiscall *)(_DWORD))getNextFn)(0) )
   {
     do
     {
-      v7 = a2();
-      v6 = v8 + 1;
+      v7 = getNextFn();
+      count = v8 + 1;
     }
     while ( v7 );
   }
-  a1[1] = 4;
-  a1[4] = v6 - 1;
-  a1[3] = 0;
-  v9 = Rules_CreateEphemeralMultifield(v6);
-  a1[2] = v9;
-  result = (_DWORD *)((int (__thiscall *)(int))a2)(1);
+  multifield[1] = 4;
+  multifield[4] = count - 1;
+  multifield[3] = 0;
+  fieldPtr = Rules_CreateEphemeralMultifield(count);
+  multifield[2] = fieldPtr;
+  result = (_DWORD *)((int (__thiscall *)(int))getNextFn)(1);
   if ( result )
   {
     while ( g_ClipsHaltExecution != 1 )
     {
-      *((_WORD *)v9 + 7) = 2;
-      v9 = (_DWORD *)((char *)v9 + 6);
-      v11 = (char *)a3();
-      *(_DWORD *)((char *)v9 + 10) = Str_Intern(v11, v12);
-      result = (_DWORD *)((int (__thiscall *)(int))a2)(v13 + 1);
+      *((_WORD *)fieldPtr + 7) = 2;
+      fieldPtr = (_DWORD *)((char *)fieldPtr + 6);
+      name = (char *)getNameFn();
+      *(_DWORD *)((char *)fieldPtr + 10) = Str_Intern(name, v12);
+      result = (_DWORD *)((int (__thiscall *)(int))getNextFn)(v13 + 1);
       if ( !result )
         return result;
     }
-    return Rules_SetMultifieldErrorValue((int)a1);
+    return Rules_SetMultifieldErrorValue((int)multifield);
   }
   return result;
 }
@@ -17941,27 +17941,27 @@ _DWORD * Module_BuildNameListMultifield(_DWORD *a1, int (*a2)(void), int (*a3)(v
 // 51A968: using guessed type int dword_51A968;
 
 //----- (0047C760) --------------------------------------------------------
-int  Rules_FreeConstructHeaderString(int *a1, int a2)
+int  Rules_FreeConstructHeaderString(int *header, int a2)
 {
   int result; // eax
-  const char *v4; // edx
+  const char *ppForm; // edx
 
-  result = Rules_DecrementSymbolCount(*a1, a2);
-  v4 = (const char *)a1[1];
-  if ( v4 )
+  result = Rules_DecrementSymbolCount(*header, a2);
+  ppForm = (const char *)header[1];
+  if ( ppForm )
   {
-    result = Mem_SmallBlockFree((_DWORD *)a1[1], strlen(v4) + 1);
-    a1[1] = 0;
+    result = Mem_SmallBlockFree((_DWORD *)header[1], strlen(ppForm) + 1);
+    header[1] = 0;
   }
   return result;
 }
 
 //----- (0047C7A0) --------------------------------------------------------
 _DWORD * Rules_RegisterConstructType(
-        int a1,
-        int a2,
-        int a3,
-        int a4,
+        int constructName,
+        int pluralName,
+        int parseFunction,
+        int findFunction,
         int a5,
         int a6,
         int a7,
@@ -17971,24 +17971,24 @@ _DWORD * Rules_RegisterConstructType(
         int a11,
         int a12)
 {
-  _DWORD *v13; // edi
+  _DWORD *block; // edi
   _DWORD *result; // eax
 
-  v13 = *(_DWORD **)(g_ClipsMemoryTable + 208);
-  if ( v13 )
+  block = *(_DWORD **)(g_ClipsMemoryTable + 208);
+  if ( block )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 208);
-    *(_DWORD *)(g_ClipsMemoryTable + 208) = *v13;
+    *(_DWORD *)(g_ClipsMemoryTable + 208) = *block;
     result = (_DWORD *)g_ClipsMemFreeListTemp;
   }
   else
   {
     result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x34);
   }
-  *result = a1;
-  result[1] = a2;
-  result[2] = a4;
-  result[3] = a3;
+  *result = constructName;
+  result[1] = pluralName;
+  result[2] = findFunction;
+  result[3] = parseFunction;
   result[4] = a5;
   result[5] = a6;
   result[6] = a7;
@@ -18007,15 +18007,15 @@ _DWORD * Rules_RegisterConstructType(
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0047C830) --------------------------------------------------------
-signed int  Rules_AddSaveFunction(int a1, int a2, int a3)
+signed int  Rules_AddSaveFunction(int name, int priority, int callback)
 {
-  g_Rules_SaveFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_SaveFunctionListHead, a2);
+  g_Rules_SaveFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_SaveFunctionListHead, priority);
   return 1;
 }
 // 51A188: using guessed type int dword_51A188;
 
 //----- (0047C850) --------------------------------------------------------
-signed int  Rules_Bload(int a1, DWORD a2)
+signed int  Rules_Bload(int fileName, DWORD a2)
 {
   signed int result; // eax
   int i; // edx
@@ -18029,7 +18029,7 @@ signed int  Rules_Bload(int a1, DWORD a2)
   char construct_name[20]; // [esp+0h] [ebp-4Ch] BYREF
   char header[20]; // [esp+14h] [ebp-38h] BYREF
 
-  result = Rules_BloadOpenFile((const CHAR *)(uintptr_t)(unsigned int)a1, a2);
+  result = Rules_BloadOpenFile((const CHAR *)(uintptr_t)(unsigned int)fileName, a2);
   if ( !result )
     return result;
   Rules_BloadReadBlock((uintptr_t)header, strlen((const char *)g_Rules_BloadFileHeaderID) + 1);
@@ -18037,7 +18037,7 @@ signed int  Rules_Bload(int a1, DWORD a2)
   {
     Rules_PrintErrorID((int)aBload_0, 2, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotABinaryCo, 0);
     Rules_BloadCloseFile(0);
     return 0;
@@ -18047,7 +18047,7 @@ signed int  Rules_Bload(int a1, DWORD a2)
   {
     Rules_PrintErrorID((int)aBload_0, 3, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsAnIncompatib, 0);
 LABEL_20:
     Rules_BloadCloseFile(0);
@@ -18102,7 +18102,7 @@ LABEL_29:
     if ( skip_size )
     {
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aSkipping, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], a1, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], fileName, 0);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aConstructsBeca, 0);
       Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
     }
@@ -18193,8 +18193,8 @@ LABEL_32:
 //----- (0047CBF0) --------------------------------------------------------
 signed int  Rules_BloadAndRefresh(
         signed int result,
-        int a2,
-        void (__fastcall *a3)(signed int, signed int))
+        int itemSize,
+        void (__fastcall *updateFunction)(signed int, signed int))
 {
   int previous_allocator_handler;
   signed int chunk_count;
@@ -18212,7 +18212,7 @@ signed int  Rules_BloadAndRefresh(
   chunk_count = result;
   do
   {
-    chunk_bytes = a2 * chunk_count;
+    chunk_bytes = itemSize * chunk_count;
     chunk_base = Mem_HeapAllocWithRetry((_DWORD *)chunk_bytes);
     if ( !chunk_base )
     {
@@ -18235,15 +18235,15 @@ signed int  Rules_BloadAndRefresh(
     entries_this_pass = result - initialized_count;
     if ( entries_this_pass > chunk_count )
       entries_this_pass = chunk_count;
-    Rules_BloadReadBlock(chunk_base, entries_this_pass * a2);
+    Rules_BloadReadBlock(chunk_base, entries_this_pass * itemSize);
     if ( entries_this_pass > 0 )
     {
       entry_ptr = chunk_base;
       for ( entry_index = 0; entry_index < entries_this_pass; ++entry_index )
       {
-        a3(entry_ptr, initialized_count);
+        updateFunction(entry_ptr, initialized_count);
         ++initialized_count;
-        entry_ptr += a2;
+        entry_ptr += itemSize;
       }
     }
   }
@@ -18251,7 +18251,7 @@ signed int  Rules_BloadAndRefresh(
 }
 
 //----- (0047CCF0) --------------------------------------------------------
-int  Rules_ReadNeededFunctions(int *a1, int *a2)
+int  Rules_ReadNeededFunctions(int *functionCountPtr, int *errorFlagPtr)
 {
   int unresolved; // ebx
   int string_bytes; // [esp+0h] [ebp-28h] BYREF
@@ -18263,13 +18263,13 @@ int  Rules_ReadNeededFunctions(int *a1, int *a2)
   int i; // [esp+1Ch] [ebp-Ch]
   char *names; // [esp+4h] [ebp-24h]
 
-  Rules_BloadReadBlock((uintptr_t)a1, 4u);
+  Rules_BloadReadBlock((uintptr_t)functionCountPtr, 4u);
   Rules_BloadReadBlock((uintptr_t)&string_bytes, 4u);
   unresolved = 0;
-  function_count = *a1;
+  function_count = *functionCountPtr;
   if ( !function_count )
   {
-    *a2 = 0;
+    *errorFlagPtr = 0;
     return 0;
   }
   names = (char *)(uintptr_t)(unsigned int)Mem_HeapAllocWithRetry((_DWORD *)string_bytes);
@@ -18303,7 +18303,7 @@ int  Rules_ReadNeededFunctions(int *a1, int *a2)
     Mem_ReleasePoolBlock(table, table_bytes);
     table = 0;
   }
-  *a2 = unresolved;
+  *errorFlagPtr = unresolved;
   return table;
 }
 // 47CDD0: variable 'v13' is possibly undefined
@@ -18311,7 +18311,7 @@ int  Rules_ReadNeededFunctions(int *a1, int *a2)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0047CE60) --------------------------------------------------------
-int __fastcall Rules_FindFunctionByName(int a1, int a2)
+int __fastcall Rules_FindFunctionByName(int functionName, int lastFound)
 {
   int head; // edi
   int current; // ecx
@@ -18321,14 +18321,14 @@ int __fastcall Rules_FindFunctionByName(int a1, int a2)
   head = Rules_GetFunctionDefinitionListHead();
   if ( !head )
     return 0;
-  current = a2 ? *(_DWORD *)(a2 + 27) : head;
+  current = lastFound ? *(_DWORD *)(lastFound + 27) : head;
   while ( current )
   {
     registered_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(*(_DWORD *)current + 16);
-    if ( !strcmp((const char *)(uintptr_t)(unsigned int)a1, registered_name) )
+    if ( !strcmp((const char *)(uintptr_t)(unsigned int)functionName, registered_name) )
       return current;
     next = *(_DWORD *)(current + 27);
-    if ( next == a2 )
+    if ( next == lastFound )
       return 0;
     current = next ? next : head;
   }
@@ -18411,33 +18411,33 @@ int Rules_CallAbortBloadFunctions()
 // 51A1BC: using guessed type int dword_51A1BC;
 
 //----- (0047CFC0) --------------------------------------------------------
-_DWORD * Rules_AddBeforeBloadFunction(int a1, int a2, int a3)
+_DWORD * Rules_AddBeforeBloadFunction(int name, int priority, int callback)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_BeforeBloadFunctionListHead, a2);
+  result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_BeforeBloadFunctionListHead, priority);
   g_Rules_BeforeBloadFunctionListHead = (int)result;
   return result;
 }
 // 51A1B0: using guessed type int dword_51A1B0;
 
 //----- (0047CFE0) --------------------------------------------------------
-_DWORD * Rules_AddAfterBloadFunction(int a1, int a2, int a3)
+_DWORD * Rules_AddAfterBloadFunction(int name, int priority, int callback)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_AfterBloadCallbackListHead, a2);
+  result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_AfterBloadCallbackListHead, priority);
   g_Rules_AfterBloadCallbackListHead = (int)result;
   return result;
 }
 // 51A1B4: using guessed type int dword_51A1B4;
 
 //----- (0047D020) --------------------------------------------------------
-_DWORD * Rules_AddAbortBloadFunction(int a1, int a2, int a3)
+_DWORD * Rules_AddAbortBloadFunction(int name, int priority, int callback)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_AbortBloadCallbackListHead, a2);
+  result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_AbortBloadCallbackListHead, priority);
   g_Rules_AbortBloadCallbackListHead = (int)result;
   return result;
 }
@@ -18543,12 +18543,12 @@ double Rules_TimeCommand()
 // 502B70: using guessed type double dbl_502B70;
 
 //----- (0047D3D0) --------------------------------------------------------
-int  Rules_SystemCommand(double a1)
+int  Rules_SystemCommand(double frame)
 {
-  char *v1; // edi
+  char *commandBuffer; // edi
   int result; // eax
-  int v3; // ebp
-  int v4; // esi
+  int argCount; // ebp
+  int argIndex; // esi
   int v5; // edx
   int v6; // [esp+0h] [ebp-38h] BYREF
   int v7; // [esp+4h] [ebp-34h]
@@ -18556,40 +18556,40 @@ int  Rules_SystemCommand(double a1)
   int v9; // [esp+18h] [ebp-20h] BYREF
   unsigned int v10[7]; // [esp+1Ch] [ebp-1Ch] BYREF
 
-  v1 = 0;
+  commandBuffer = 0;
   v9 = 0;
   v10[0] = 0;
   result = Lexer_TokenExpect(1);
-  v3 = result;
+  argCount = result;
   if ( result != -1 )
   {
-    v4 = 1;
+    argIndex = 1;
     if ( result < 1 )
     {
 LABEL_6:
-      if ( v1 )
+      if ( commandBuffer )
       {
         if ( g_Rules_SystemCommandPreShellHook )
           g_Rules_SystemCommandPreShellHook();
-        system_(v1);
+        system_(commandBuffer);
         if ( g_Rules_SystemCommandPostShellHookA )
           g_Rules_SystemCommandPostShellHookA();
         if ( g_Rules_SystemCommandPostShellHookB )
           g_Rules_SystemCommandPostShellHookB();
-        return Mem_SmallBlockFree(v1, v10[0]);
+        return Mem_SmallBlockFree(commandBuffer, v10[0]);
       }
     }
     else
     {
       while ( 1 )
       {
-        Rules_RtnUnknown(v4, &v6, a1);
+        Rules_RtnUnknown(argIndex, &v6, frame);
         if ( v7 != 3 && v7 != 2 )
           break;
-        ++v4;
-        result = (int)Str_Append(*(const char **)(v8 + 16), v1, v10, &v9);
-        v1 = (char *)result;
-        if ( v4 > v3 )
+        ++argIndex;
+        result = (int)Str_Append(*(const char **)(v8 + 16), commandBuffer, v10, &v9);
+        commandBuffer = (char *)result;
+        if ( argIndex > argCount )
           goto LABEL_6;
       }
       Rules_SetEvaluationErrorFlag(1);
@@ -18622,24 +18622,24 @@ int Rules_ShutdownEngine()
 // 496643: using guessed type int __fastcall sub_496643(_DWORD, _DWORD);
 
 //----- (0047D540) --------------------------------------------------------
-BOOL __fastcall Rules_BloadDeleteFile(int a1, int a2)
+BOOL __fastcall Rules_BloadDeleteFile(int path, int a2)
 {
-  return IO_RemoveFileByPath(a1, a2) == 0;
+  return IO_RemoveFileByPath(path, a2) == 0;
 }
 // 476A78: using guessed type int __fastcall sub_476A78(_DWORD, _DWORD);
 
 //----- (0047D550) --------------------------------------------------------
-BOOL  Rules_RenameFile(const CHAR *a1, const CHAR *a2, int a3)
+BOOL  Rules_RenameFile(const CHAR *oldFileName, const CHAR *newFileName, int a3)
 {
-  return IO_RenameFile(a1, a2, a3) == 0;
+  return IO_RenameFile(oldFileName, newFileName, a3) == 0;
 }
 
 //----- (0047D560) --------------------------------------------------------
-signed int  Rules_BloadOpenFile(const CHAR *a1, DWORD a2)
+signed int  Rules_BloadOpenFile(const CHAR *fileName, DWORD a2)
 {
   int v2; // ecx
 
-  g_ClipsBloadFileHandle = IO_FOpen(a1, (unsigned __int8 *)aRb_1, (int)a1, a2);
+  g_ClipsBloadFileHandle = IO_FOpen(fileName, (unsigned __int8 *)aRb_1, (int)fileName, a2);
   if ( g_ClipsBloadFileHandle )
     return 1;
   Rules_OpenFileErrorMessage(v2, v2);
@@ -18649,18 +18649,18 @@ signed int  Rules_BloadOpenFile(const CHAR *a1, DWORD a2)
 // 54DD30: using guessed type int dword_54DD30;
 
 //----- (0047D5A0) --------------------------------------------------------
-int  Rules_BloadReadBlock(uintptr_t a1, unsigned int a2)
+int  Rules_BloadReadBlock(uintptr_t buffer, unsigned int size)
 {
-  if ( !a2 )
+  if ( !size )
     return 0;
-  return fread_((void *)a1, a2, g_ClipsBloadFileHandle, 1);
+  return fread_((void *)buffer, size, g_ClipsBloadFileHandle, 1);
 }
 // 54DD30: using guessed type int dword_54DD30;
 
 //----- (0047D600) --------------------------------------------------------
-signed int  Rules_BloadSeekFile(int a1, int a2)
+signed int  Rules_BloadSeekFile(int offset, int a2)
 {
-  return IO_SeekStreamGuarded(g_ClipsBloadFileHandle, a1, 1u, a2);
+  return IO_SeekStreamGuarded(g_ClipsBloadFileHandle, offset, 1u, a2);
 }
 // 54DD30: using guessed type int dword_54DD30;
 
@@ -18674,7 +18674,7 @@ int __thiscall Rules_BloadCloseFile(void *this)
 // 54DD30: using guessed type int dword_54DD30;
 
 //----- (0047D660) --------------------------------------------------------
-_DWORD * Rules_InsertActivationSorted(int *a1, _DWORD *activation)
+_DWORD * Rules_InsertActivationSorted(int *agenda, _DWORD *activation)
 {
   uintptr_t list_ref; // ebx
   uintptr_t node; // ecx
@@ -18683,7 +18683,7 @@ _DWORD * Rules_InsertActivationSorted(int *a1, _DWORD *activation)
   uintptr_t next; // eax
 
   Rules_SetAgendaChanged(1);
-  list_ref = (uintptr_t)a1;
+  list_ref = (uintptr_t)agenda;
   node = (uintptr_t)activation;
   current = (uintptr_t)(unsigned int)*(_DWORD *)list_ref;
   predecessor = 0;
@@ -18738,349 +18738,349 @@ _DWORD * Rules_InsertActivationSorted(int *a1, _DWORD *activation)
 // 51A1D8: using guessed type int dword_51A1D8;
 
 //----- (0047D720) --------------------------------------------------------
-_DWORD * Rules_PlaceInDepthList(_DWORD *a1, int a2)
+_DWORD * Rules_PlaceInDepthList(_DWORD *listHead, int newActivation)
 {
-  int v2; // ecx
-  unsigned int v3; // ebx
-  _DWORD *v4; // edx
-  int v5; // esi
+  int salience; // ecx
+  unsigned int timeTag; // ebx
+  _DWORD *insertAfter; // edx
+  int nodeSalience; // esi
 
-  v2 = *(_DWORD *)(a2 + 8);
-  v3 = *(_DWORD *)(a2 + 12);
-  v4 = 0;
-  if ( !a1 )
-    return v4;
+  salience = *(_DWORD *)(newActivation + 8);
+  timeTag = *(_DWORD *)(newActivation + 12);
+  insertAfter = 0;
+  if ( !listHead )
+    return insertAfter;
   while ( 1 )
   {
-    v5 = a1[2];
-    if ( v2 >= v5 )
+    nodeSalience = listHead[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v2 > v5 )
-        return v4;
-      if ( v3 >= a1[3] )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      if ( timeTag >= listHead[3] )
         break;
     }
-    v4 = a1;
-    a1 = (_DWORD *)a1[7];
-    if ( !a1 )
-      return v4;
+    insertAfter = listHead;
+    listHead = (_DWORD *)listHead[7];
+    if ( !listHead )
+      return insertAfter;
   }
-  return v4;
+  return insertAfter;
 }
 
 //----- (0047D760) --------------------------------------------------------
-_DWORD * Rules_PlaceInBreadthList(_DWORD *a1, int a2)
+_DWORD * Rules_PlaceInBreadthList(_DWORD *listHead, int newActivation)
 {
-  int v2; // ecx
-  unsigned int v3; // ebx
-  _DWORD *v4; // edx
-  int v5; // esi
+  int salience; // ecx
+  unsigned int timeTag; // ebx
+  _DWORD *insertAfter; // edx
+  int nodeSalience; // esi
 
-  v2 = *(_DWORD *)(a2 + 8);
-  v3 = *(_DWORD *)(a2 + 12);
-  v4 = 0;
-  if ( !a1 )
-    return v4;
+  salience = *(_DWORD *)(newActivation + 8);
+  timeTag = *(_DWORD *)(newActivation + 12);
+  insertAfter = 0;
+  if ( !listHead )
+    return insertAfter;
   while ( 1 )
   {
-    v5 = a1[2];
-    if ( v2 >= v5 )
+    nodeSalience = listHead[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v2 > v5 )
-        return v4;
-      if ( v3 <= a1[3] )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      if ( timeTag <= listHead[3] )
         break;
     }
-    v4 = a1;
-    a1 = (_DWORD *)a1[7];
-    if ( !a1 )
-      return v4;
+    insertAfter = listHead;
+    listHead = (_DWORD *)listHead[7];
+    if ( !listHead )
+      return insertAfter;
   }
-  return v4;
+  return insertAfter;
 }
 
 //----- (0047D7A0) --------------------------------------------------------
-_DWORD * Rules_PlaceInLexList(_DWORD *a1, int a2)
+_DWORD * Rules_PlaceInLexList(_DWORD *listHead, int newActivation)
 {
-  _DWORD *v2; // ecx
-  unsigned int v4; // ebp
-  int v5; // edi
-  _DWORD *v6; // ebx
-  int v7; // eax
-  signed int v9; // eax
+  _DWORD *current; // ecx
+  unsigned int timeTag; // ebp
+  int salience; // edi
+  _DWORD *insertAfter; // ebx
+  int nodeSalience; // eax
+  signed int comparison; // eax
 
-  v2 = a1;
-  if ( !*(_DWORD *)(a2 + 16) )
-    *(_DWORD *)(a2 + 16) = Rules_BuildLexBasisOrder(*(int **)(a2 + 4));
-  v4 = *(_DWORD *)(a2 + 12);
-  v5 = *(_DWORD *)(a2 + 8);
-  v6 = 0;
-  if ( !v2 )
-    return v6;
+  current = listHead;
+  if ( !*(_DWORD *)(newActivation + 16) )
+    *(_DWORD *)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(newActivation + 4));
+  timeTag = *(_DWORD *)(newActivation + 12);
+  salience = *(_DWORD *)(newActivation + 8);
+  insertAfter = 0;
+  if ( !current )
+    return insertAfter;
   while ( 1 )
   {
-    v7 = v2[2];
-    if ( v5 >= v7 )
+    nodeSalience = current[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v5 > v7 )
-        return v6;
-      v9 = Rules_CompareActivationBasis((int)v2, (_DWORD **)a2);
-      if ( v9 )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      comparison = Rules_CompareActivationBasis((int)current, (_DWORD **)newActivation);
+      if ( comparison )
       {
-        if ( v9 == 1 )
-          return v6;
-        if ( v4 <= v2[3] )
+        if ( comparison == 1 )
+          return insertAfter;
+        if ( timeTag <= current[3] )
           break;
       }
     }
-    v6 = v2;
-    v2 = (_DWORD *)v2[7];
-    if ( !v2 )
-      return v6;
+    insertAfter = current;
+    current = (_DWORD *)current[7];
+    if ( !current )
+      return insertAfter;
   }
-  return v6;
+  return insertAfter;
 }
 // 47D7B9: variable 'v2' is possibly undefined
 
 //----- (0047D810) --------------------------------------------------------
-_DWORD * Rules_PlaceInMeaList(_DWORD *a1, int a2)
+_DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
 {
-  _DWORD *v2; // ecx
-  _DWORD *v4; // esi
+  _DWORD *current; // ecx
+  _DWORD *insertAfter; // esi
   int v5; // eax
   int v7; // edi
   int v8; // edx
   int v9; // eax
   int v10; // ebp
-  signed int v11; // eax
-  unsigned int v12; // [esp+0h] [ebp-1Ch]
-  int v13; // [esp+4h] [ebp-18h]
+  signed int comparison; // eax
+  unsigned int timeTag; // [esp+0h] [ebp-1Ch]
+  int salience; // [esp+4h] [ebp-18h]
 
-  v2 = a1;
-  if ( !*(_DWORD *)(a2 + 16) )
-    *(_DWORD *)(a2 + 16) = Rules_BuildLexBasisOrder(*(int **)(a2 + 4));
-  v12 = *(_DWORD *)(a2 + 12);
-  v4 = 0;
-  v13 = *(_DWORD *)(a2 + 8);
-  if ( !v2 )
-    return v4;
+  current = listHead;
+  if ( !*(_DWORD *)(newActivation + 16) )
+    *(_DWORD *)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(newActivation + 4));
+  timeTag = *(_DWORD *)(newActivation + 12);
+  insertAfter = 0;
+  salience = *(_DWORD *)(newActivation + 8);
+  if ( !current )
+    return insertAfter;
   while ( 1 )
   {
-    v5 = v2[2];
-    if ( v5 > v13 )
+    v5 = current[2];
+    if ( v5 > salience )
       goto LABEL_5;
-    if ( v5 < v13 )
-      return v4;
-    v7 = *(_DWORD *)(*(_DWORD *)(a2 + 4) + 8);
+    if ( v5 < salience )
+      return insertAfter;
+    v7 = *(_DWORD *)(*(_DWORD *)(newActivation + 4) + 8);
     v8 = -1;
     v9 = -1;
     if ( *(_DWORD *)v7 )
       v8 = *(_DWORD *)(*(_DWORD *)v7 + 12);
-    v10 = **(_DWORD **)(v2[1] + 8);
+    v10 = **(_DWORD **)(current[1] + 8);
     if ( v10 )
       v9 = *(_DWORD *)(v10 + 12);
     if ( v9 < v8 )
     {
       if ( v8 > 0 )
-        return v4;
+        return insertAfter;
       goto LABEL_5;
     }
     if ( v9 > v8 )
     {
       if ( v9 <= 0 )
-        return v4;
+        return insertAfter;
       goto LABEL_5;
     }
-    v11 = Rules_CompareActivationBasis((int)v2, (_DWORD **)a2);
-    if ( v11 )
+    comparison = Rules_CompareActivationBasis((int)current, (_DWORD **)newActivation);
+    if ( comparison )
     {
-      if ( v11 == 1 )
-        return v4;
-      if ( v12 <= v2[3] )
-        return v4;
+      if ( comparison == 1 )
+        return insertAfter;
+      if ( timeTag <= current[3] )
+        return insertAfter;
     }
 LABEL_5:
-    v4 = v2;
-    v2 = (_DWORD *)v2[7];
-    if ( !v2 )
-      return v4;
+    insertAfter = current;
+    current = (_DWORD *)current[7];
+    if ( !current )
+      return insertAfter;
   }
 }
 // 47D833: variable 'v2' is possibly undefined
 
 //----- (0047D8D0) --------------------------------------------------------
-_DWORD * Rules_PlaceInComplexityList(_DWORD *a1, _DWORD *a2)
+_DWORD * Rules_PlaceInComplexityList(_DWORD *listHead, _DWORD *newActivation)
 {
-  unsigned int v2; // edi
-  int v3; // ebx
-  int v4; // esi
-  _DWORD *v5; // edx
-  int v6; // ecx
-  int v8; // ecx
+  unsigned int timeTag; // edi
+  int salience; // ebx
+  int complexity; // esi
+  _DWORD *insertAfter; // edx
+  int nodeSalience; // ecx
+  int nodeComplexity; // ecx
 
-  v2 = a2[3];
-  v3 = a2[2];
-  v4 = *(_DWORD *)(*a2 + 28) & 0x7FF;
-  v5 = 0;
-  if ( !a1 )
-    return v5;
+  timeTag = newActivation[3];
+  salience = newActivation[2];
+  complexity = *(_DWORD *)(*newActivation + 28) & 0x7FF;
+  insertAfter = 0;
+  if ( !listHead )
+    return insertAfter;
   while ( 1 )
   {
-    v6 = a1[2];
-    if ( v3 >= v6 )
+    nodeSalience = listHead[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v3 > v6 )
-        return v5;
-      v8 = *(_DWORD *)(*a1 + 28) & 0x7FF;
-      if ( v4 >= v8 )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      nodeComplexity = *(_DWORD *)(*listHead + 28) & 0x7FF;
+      if ( complexity >= nodeComplexity )
       {
-        if ( v4 > v8 )
-          return v5;
-        if ( v2 <= a1[3] )
+        if ( complexity > nodeComplexity )
+          return insertAfter;
+        if ( timeTag <= listHead[3] )
           break;
       }
     }
-    v5 = a1;
-    a1 = (_DWORD *)a1[7];
-    if ( !a1 )
-      return v5;
+    insertAfter = listHead;
+    listHead = (_DWORD *)listHead[7];
+    if ( !listHead )
+      return insertAfter;
   }
-  return v5;
+  return insertAfter;
 }
 
 //----- (0047D930) --------------------------------------------------------
-_DWORD * Rules_PlaceInSimplicityList(_DWORD *a1, _DWORD *a2)
+_DWORD * Rules_PlaceInSimplicityList(_DWORD *listHead, _DWORD *newActivation)
 {
-  unsigned int v2; // edi
-  int v3; // ebx
-  int v4; // esi
-  _DWORD *v5; // edx
-  int v6; // ecx
-  int v8; // ecx
+  unsigned int timeTag; // edi
+  int salience; // ebx
+  int complexity; // esi
+  _DWORD *insertAfter; // edx
+  int nodeSalience; // ecx
+  int nodeComplexity; // ecx
 
-  v2 = a2[3];
-  v3 = a2[2];
-  v4 = *(_DWORD *)(*a2 + 28) & 0x7FF;
-  v5 = 0;
-  if ( !a1 )
-    return v5;
+  timeTag = newActivation[3];
+  salience = newActivation[2];
+  complexity = *(_DWORD *)(*newActivation + 28) & 0x7FF;
+  insertAfter = 0;
+  if ( !listHead )
+    return insertAfter;
   while ( 1 )
   {
-    v6 = a1[2];
-    if ( v3 >= v6 )
+    nodeSalience = listHead[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v3 > v6 )
-        return v5;
-      v8 = *(_DWORD *)(*a1 + 28) & 0x7FF;
-      if ( v4 <= v8 )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      nodeComplexity = *(_DWORD *)(*listHead + 28) & 0x7FF;
+      if ( complexity <= nodeComplexity )
       {
-        if ( v4 < v8 )
-          return v5;
-        if ( v2 <= a1[3] )
+        if ( complexity < nodeComplexity )
+          return insertAfter;
+        if ( timeTag <= listHead[3] )
           break;
       }
     }
-    v5 = a1;
-    a1 = (_DWORD *)a1[7];
-    if ( !a1 )
-      return v5;
+    insertAfter = listHead;
+    listHead = (_DWORD *)listHead[7];
+    if ( !listHead )
+      return insertAfter;
   }
-  return v5;
+  return insertAfter;
 }
 
 //----- (0047D990) --------------------------------------------------------
-_DWORD * Rules_PlaceInRandomList(_DWORD *a1, _DWORD *a2)
+_DWORD * Rules_PlaceInRandomList(_DWORD *listHead, _DWORD *newActivation)
 {
-  unsigned int v2; // esi
-  int v3; // ecx
-  int v4; // ebx
-  _DWORD *v5; // edx
-  int v6; // edi
-  int v8; // edi
+  unsigned int timeTag; // esi
+  int salience; // ecx
+  int randomValue; // ebx
+  _DWORD *insertAfter; // edx
+  int nodeSalience; // edi
+  int nodeRandom; // edi
 
-  v2 = a2[3];
-  v3 = a2[2];
-  v4 = a2[5];
-  v5 = 0;
-  if ( !a1 )
-    return v5;
+  timeTag = newActivation[3];
+  salience = newActivation[2];
+  randomValue = newActivation[5];
+  insertAfter = 0;
+  if ( !listHead )
+    return insertAfter;
   while ( 1 )
   {
-    v6 = a1[2];
-    if ( v3 >= v6 )
+    nodeSalience = listHead[2];
+    if ( salience >= nodeSalience )
     {
-      if ( v3 > v6 )
-        return v5;
-      v8 = a1[5];
-      if ( v4 <= v8 )
+      if ( salience > nodeSalience )
+        return insertAfter;
+      nodeRandom = listHead[5];
+      if ( randomValue <= nodeRandom )
       {
-        if ( v4 < v8 )
-          return v5;
-        if ( v2 <= a1[3] )
+        if ( randomValue < nodeRandom )
+          return insertAfter;
+        if ( timeTag <= listHead[3] )
           break;
       }
     }
-    v5 = a1;
-    a1 = (_DWORD *)a1[7];
-    if ( !a1 )
-      return v5;
+    insertAfter = listHead;
+    listHead = (_DWORD *)listHead[7];
+    if ( !listHead )
+      return insertAfter;
   }
-  return v5;
+  return insertAfter;
 }
 
 //----- (0047D9E0) --------------------------------------------------------
-_DWORD * Rules_BuildLexBasisOrder(int *a1)
+_DWORD * Rules_BuildLexBasisOrder(int *pattern)
 {
   _DWORD *v1; // ecx
-  int v2; // ebp
-  int v3; // ebx
-  _DWORD *v4; // eax
+  int count; // ebp
+  int index; // ebx
+  _DWORD *entry; // eax
   int v5; // edx
   int v6; // ecx
-  _DWORD *v8; // [esp+0h] [ebp-20h]
-  int v9; // [esp+4h] [ebp-1Ch]
+  _DWORD *orderArray; // [esp+0h] [ebp-20h]
+  int swapped; // [esp+4h] [ebp-1Ch]
 
-  v8 = Rules_MultifieldCopyWithMarkers(a1, 0, 0);
-  v2 = (*v1 << 17 >> 23) - 1;
+  orderArray = Rules_MultifieldCopyWithMarkers(pattern, 0, 0);
+  count = (*v1 << 17 >> 23) - 1;
   do
   {
-    v3 = 0;
-    v9 = 0;
-    if ( v2 > 0 )
+    index = 0;
+    swapped = 0;
+    if ( count > 0 )
     {
-      v4 = v8;
+      entry = orderArray;
       do
       {
-        v5 = v4[2];
+        v5 = entry[2];
         if ( *(_DWORD *)v5 )
         {
-          v6 = v4[3];
+          v6 = entry[3];
           if ( *(_DWORD *)v6 )
           {
             if ( *(_DWORD *)(*(_DWORD *)v5 + 12) < *(_DWORD *)(*(_DWORD *)v6 + 12) )
             {
-              v4[3] = v5;
-              v4[2] = v6;
-              v9 = 1;
+              entry[3] = v5;
+              entry[2] = v6;
+              swapped = 1;
             }
           }
         }
-        ++v3;
-        ++v4;
+        ++index;
+        ++entry;
       }
-      while ( v3 < v2 );
+      while ( index < count );
     }
-    --v2;
+    --count;
   }
-  while ( v9 == 1 );
-  return v8;
+  while ( swapped == 1 );
+  return orderArray;
 }
 // 47D9F4: variable 'v1' is possibly undefined
 
 //----- (0047DA60) --------------------------------------------------------
-signed int  Rules_CompareActivationBasis(int a1, _DWORD **a2)
+signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
 {
-  int v3; // eax
+  int index; // eax
   int v4; // ecx
   _DWORD *v5; // edx
   int *v6; // esi
@@ -19092,30 +19092,30 @@ signed int  Rules_CompareActivationBasis(int a1, _DWORD **a2)
   unsigned int v12; // eax
   _DWORD *v15; // eax
   int v16; // edx
-  int v17; // [esp+0h] [ebp-24h]
-  int v18; // [esp+4h] [ebp-20h]
-  int v19; // [esp+8h] [ebp-1Ch]
+  int count1; // [esp+0h] [ebp-24h]
+  int count2; // [esp+4h] [ebp-20h]
+  int minCount; // [esp+8h] [ebp-1Ch]
 
-  if ( !*(_DWORD *)(a1 + 16) )
+  if ( !*(_DWORD *)(activation + 16) )
   {
-    v15 = Rules_BuildLexBasisOrder(*(int **)(a1 + 4));
+    v15 = Rules_BuildLexBasisOrder(*(int **)(activation + 4));
     *(_DWORD *)(v16 + 16) = v15;
   }
-  v18 = *a2[4] << 17 >> 23;
-  v17 = **(_DWORD **)(a1 + 16) << 17 >> 23;
-  if ( v17 <= v18 )
-    v19 = **(_DWORD **)(a1 + 16) << 17 >> 23;
+  count2 = *candidate[4] << 17 >> 23;
+  count1 = **(_DWORD **)(activation + 16) << 17 >> 23;
+  if ( count1 <= count2 )
+    minCount = **(_DWORD **)(activation + 16) << 17 >> 23;
   else
-    v19 = *a2[4] << 17 >> 23;
-  v3 = 0;
-  if ( v19 > 0 )
+    minCount = *candidate[4] << 17 >> 23;
+  index = 0;
+  if ( minCount > 0 )
   {
-    v4 = *(_DWORD *)(a1 + 16);
-    v5 = a2[4];
+    v4 = *(_DWORD *)(activation + 16);
+    v5 = candidate[4];
     do
     {
       v6 = *(int **)(v4 + 8);
-      if ( *v6 && (v7 = (int *)a2[4][v3 + 2], (v8 = *v7) != 0) )
+      if ( *v6 && (v7 = (int *)candidate[4][index + 2], (v8 = *v7) != 0) )
       {
         v9 = *v6;
         v10 = *v7;
@@ -19128,21 +19128,21 @@ signed int  Rules_CompareActivationBasis(int a1, _DWORD **a2)
       {
         if ( *(_DWORD *)v5[2] )
           return 1;
-        if ( **(_DWORD **)(*(_DWORD *)(a1 + 16) + 4 * v3 + 8) )
+        if ( **(_DWORD **)(*(_DWORD *)(activation + 16) + 4 * index + 8) )
           return 0;
       }
       v4 += 4;
-      ++v3;
+      ++index;
       ++v5;
     }
-    while ( v3 < v19 );
+    while ( index < minCount );
   }
-  if ( v18 < v17 )
+  if ( count2 < count1 )
     return 0;
-  if ( v18 > v17 )
+  if ( count2 > count1 )
     return 1;
-  v11 = *(_DWORD *)(*(_DWORD *)a1 + 28) & 0x7FF;
-  v12 = (*a2)[7] & 0x7FF;
+  v11 = *(_DWORD *)(*(_DWORD *)activation + 28) & 0x7FF;
+  v12 = (*candidate)[7] & 0x7FF;
   if ( v12 < v11 )
   {
     return 0;
@@ -19157,15 +19157,15 @@ signed int  Rules_CompareActivationBasis(int a1, _DWORD **a2)
 // 47DB58: variable 'v16' is possibly undefined
 
 //----- (0047DBB0) --------------------------------------------------------
-int  Rules_SetStrategy(int a1)
+int  Rules_SetStrategy(int strategy)
 {
-  int v1; // edx
+  int oldStrategy; // edx
 
-  v1 = g_Rules_ConflictResolutionStrategy;
-  g_Rules_ConflictResolutionStrategy = a1;
-  if ( v1 != a1 )
+  oldStrategy = g_Rules_ConflictResolutionStrategy;
+  g_Rules_ConflictResolutionStrategy = strategy;
+  if ( oldStrategy != strategy )
     Rules_ReorderAgenda(0);
-  return v1;
+  return oldStrategy;
 }
 // 47DBC0: variable 'v1' is possibly undefined
 // 51A1D8: using guessed type int dword_51A1D8;
@@ -19173,24 +19173,24 @@ int  Rules_SetStrategy(int a1)
 //----- (0047DBE0) --------------------------------------------------------
 signed int *Rules_GetStrategyCommand()
 {
-  char *v0; // eax
+  char *strategyName; // eax
   int v1; // ecx
 
   Lexer_TokenExpect(0);
-  v0 = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
-  return Str_Intern(v0, v1);
+  strategyName = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
+  return Str_Intern(strategyName, v1);
 }
 // 47DBFA: variable 'v1' is possibly undefined
 // 51A1D8: using guessed type int dword_51A1D8;
 
 //----- (0047DC10) --------------------------------------------------------
-signed int * Rules_SetStrategyCommand(int a1, double a2)
+signed int * Rules_SetStrategyCommand(int a1, double frame)
 {
-  int v3; // esi
-  int v4; // eax
+  int oldStrategy; // esi
+  int newStrategy; // eax
   int v5; // ecx
   int v6; // eax
-  char *v7; // eax
+  char *strategyName; // eax
   int v8; // ecx
   int v10; // ecx
   int v11; // ecx
@@ -19199,53 +19199,53 @@ signed int * Rules_SetStrategyCommand(int a1, double a2)
   int v14; // ecx
   char *v15; // eax
   int v16; // ecx
-  _DWORD v17[10]; // [esp-8h] [ebp-28h] BYREF
+  _DWORD argValue[10]; // [esp-8h] [ebp-28h] BYREF
 
-  v17[8] = a1;
-  v3 = g_Rules_ConflictResolutionStrategy;
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v17, 2, a2) )
+  argValue[8] = a1;
+  oldStrategy = g_Rules_ConflictResolutionStrategy;
+  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, argValue, 2, frame) )
   {
     v6 = g_Rules_ConflictResolutionStrategy;
     goto LABEL_5;
   }
-  v4 = strcmp_(*(_DWORD *)(v17[2] + 16), aDepth);
-  if ( !v4 )
+  newStrategy = strcmp_(*(_DWORD *)(argValue[2] + 16), aDepth);
+  if ( !newStrategy )
   {
 LABEL_4:
-    Rules_SetStrategy(v4);
-    v6 = v3;
+    Rules_SetStrategy(newStrategy);
+    v6 = oldStrategy;
 LABEL_5:
-    v7 = Rules_GetStrategyName(v6);
-    return Str_Intern(v7, v8);
+    strategyName = Rules_GetStrategyName(v6);
+    return Str_Intern(strategyName, v8);
   }
   if ( !strcmp_(v5, aBreadth) )
   {
-    v4 = 1;
+    newStrategy = 1;
     goto LABEL_4;
   }
   if ( !strcmp_(v10, aLex) )
   {
-    v4 = 2;
+    newStrategy = 2;
     goto LABEL_4;
   }
   if ( !strcmp_(v11, aMea) )
   {
-    v4 = 3;
+    newStrategy = 3;
     goto LABEL_4;
   }
   if ( !strcmp_(v12, aComplexity) )
   {
-    v4 = 4;
+    newStrategy = 4;
     goto LABEL_4;
   }
   if ( !strcmp_(v13, aSimplicity) )
   {
-    v4 = 5;
+    newStrategy = 5;
     goto LABEL_4;
   }
   if ( !strcmp_(v14, aRandom_0) )
   {
-    v4 = 6;
+    newStrategy = 6;
     goto LABEL_4;
   }
   Parser_ReportError(1, (int)aSymbolWithVa_0);
@@ -19264,11 +19264,11 @@ LABEL_5:
 // 51A1D8: using guessed type int dword_51A1D8;
 
 //----- (0047DD60) --------------------------------------------------------
-char * Rules_GetStrategyName(int a1)
+char * Rules_GetStrategyName(int strategy)
 {
   char *result; // eax
 
-  switch ( a1 )
+  switch ( strategy )
   {
     case 0:
       result = aDepth;
@@ -19312,7 +19312,7 @@ signed int Rules_RegisterAgendaCommands()
 // 51A1DC: using guessed type int dword_51A1DC;
 
 //----- (0047DE80) --------------------------------------------------------
-_DWORD * Rules_AddActivation(int a1, int a2, double a3)
+_DWORD * Rules_AddActivation(int rule, int binds, double a3)
 {
   uintptr_t join; // ebx
   uintptr_t partial_match; // edx
@@ -19323,8 +19323,8 @@ _DWORD * Rules_AddActivation(int a1, int a2, double a3)
   int sequence; // eax
   int bucket; // eax
 
-  join = (uintptr_t)(unsigned int)a1;
-  partial_match = (uintptr_t)(unsigned int)a2;
+  join = (uintptr_t)(unsigned int)rule;
+  partial_match = (uintptr_t)(unsigned int)binds;
   if ( (*(_BYTE *)(join + 29) & 0x40) != 0 )
   {
     agenda = (uintptr_t)(unsigned int)*(_DWORD *)(join + 8);
@@ -19373,51 +19373,51 @@ _DWORD * Rules_AddActivation(int a1, int a2, double a3)
 //----- (0047DF90) --------------------------------------------------------
 int  Rules_ClearActivationsForRule(int result)
 {
-  _DWORD *v1; // ecx
+  _DWORD *activation; // ecx
   int v2; // edi
-  _DWORD *v3; // esi
+  _DWORD *nextActivation; // esi
 
-  v1 = *(_DWORD **)(*(_DWORD *)(result + 8) + 12);
+  activation = *(_DWORD **)(*(_DWORD *)(result + 8) + 12);
   v2 = result;
-  if ( v1 )
+  if ( activation )
   {
     do
     {
       while ( 1 )
       {
         result = v2;
-        v3 = (_DWORD *)v1[7];
+        nextActivation = (_DWORD *)activation[7];
         if ( v2 )
           break;
 LABEL_5:
-        v1 = v3;
-        if ( !v3 )
+        activation = nextActivation;
+        if ( !nextActivation )
           return result;
       }
       do
       {
-        if ( result == *v1 )
+        if ( result == *activation )
         {
-          result = Rules_RemoveActivation(v1, 1, 1);
+          result = Rules_RemoveActivation(activation, 1, 1);
           goto LABEL_5;
         }
         result = *(_DWORD *)(result + 48);
       }
       while ( result );
-      v1 = (_DWORD *)v1[7];
+      activation = (_DWORD *)activation[7];
     }
-    while ( v3 );
+    while ( nextActivation );
   }
   return result;
 }
 
 //----- (0047DFE0) --------------------------------------------------------
-int  Rules_GetNextActivation(int a1)
+int  Rules_GetNextActivation(int activation)
 {
   int result; // eax
 
-  if ( a1 )
-    return *(_DWORD *)(a1 + 28);
+  if ( activation )
+    return *(_DWORD *)(activation + 28);
   result = Module_GetItem(0, g_DefruleConstructClass);
   if ( result )
     return *(_DWORD *)(result + 12);
@@ -19426,33 +19426,33 @@ int  Rules_GetNextActivation(int a1)
 // 54E64C: using guessed type int dword_54E64C;
 
 //----- (0047E000) --------------------------------------------------------
-int  Rules_GetActivationRuleName(int a1)
+int  Rules_GetActivationRuleName(int activation)
 {
-  return *(_DWORD *)(**(_DWORD **)a1 + 16);
+  return *(_DWORD *)(**(_DWORD **)activation + 16);
 }
 
 //----- (0047E0D0) --------------------------------------------------------
-signed int  Rules_DetachActivation(_DWORD *a1)
+signed int  Rules_DetachActivation(_DWORD *activation)
 {
   _DWORD *v1; // ecx
   int v2; // eax
-  _DWORD *v3; // edx
-  int v4; // ebx
-  int v5; // esi
+  _DWORD *agendaHead; // edx
+  int prevActivation; // ebx
+  int nextActivation; // esi
 
-  v1 = a1;
-  if ( !a1 )
+  v1 = activation;
+  if ( !activation )
     Rules_ReportSystemError(0, 1);
   v2 = *(_DWORD *)(*v1 + 8);
-  v3 = *(_DWORD **)(v2 + 12);
-  if ( v1 == v3 )
-    *(_DWORD *)(v2 + 12) = v3[7];
-  v4 = v1[6];
-  if ( v4 )
-    *(_DWORD *)(v4 + 28) = v1[7];
-  v5 = v1[7];
-  if ( v5 )
-    *(_DWORD *)(v5 + 24) = v1[6];
+  agendaHead = *(_DWORD **)(v2 + 12);
+  if ( v1 == agendaHead )
+    *(_DWORD *)(v2 + 12) = agendaHead[7];
+  prevActivation = v1[6];
+  if ( prevActivation )
+    *(_DWORD *)(prevActivation + 28) = v1[7];
+  nextActivation = v1[7];
+  if ( nextActivation )
+    *(_DWORD *)(nextActivation + 24) = v1[6];
   v1[6] = 0;
   v1[7] = 0;
   g_Rules_AgendaChangedFlag = 1;
@@ -19462,21 +19462,21 @@ signed int  Rules_DetachActivation(_DWORD *a1)
 // 51A1E8: using guessed type int dword_51A1E8;
 
 //----- (0047E140) --------------------------------------------------------
-signed int __fastcall Rules_PrintActivation(int a1, int a2)
+signed int __fastcall Rules_PrintActivation(int logicalName, int activation)
 {
   int v3; // ecx
   int v4; // ecx
   int v5; // ecx
   int v6; // ecx
-  _BYTE v8[20]; // [esp+0h] [ebp-1Ch] BYREF
+  _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
   int v9; // [esp+14h] [ebp-8h]
 
-  v9 = a1;
-  sprintf_(v8, "%-6d ", *(_DWORD *)(a2 + 8));
-  Output_Write(v3, (int)v8, v3);
-  Output_Write(v4, *(_DWORD *)(**(_DWORD **)a2 + 16), v4);
+  v9 = logicalName;
+  sprintf_(buffer, "%-6d ", *(_DWORD *)(activation + 8));
+  Output_Write(v3, (int)buffer, v3);
+  Output_Write(v4, *(_DWORD *)(**(_DWORD **)activation + 16), v4);
   Output_Write(v5, (int)asc_502D44, v5);
-  return Rules_PrintArgumentValueList(v6, *(_DWORD **)(a2 + 4));
+  return Rules_PrintArgumentValueList(v6, *(_DWORD **)(activation + 4));
 }
 // 47E163: variable 'v3' is possibly undefined
 // 47E171: variable 'v4' is possibly undefined
@@ -19485,11 +19485,11 @@ signed int __fastcall Rules_PrintActivation(int a1, int a2)
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (0047E1A0) --------------------------------------------------------
-int  Rules_ActivationsCommand(int a1, int a2)
+int  Rules_ActivationsCommand(int logicalName, int module)
 {
   return Rules_ListConstructsAcrossModules(
-           a1,
-           a2,
+           logicalName,
+           module,
            (int)aActivations,
            (int)aActivation_1,
            (int (__cdecl *)(int))Rules_GetNextActivation,
@@ -19499,29 +19499,29 @@ int  Rules_ActivationsCommand(int a1, int a2)
 }
 
 //----- (0047E1D0) --------------------------------------------------------
-int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
+int  Rules_RemoveActivation(_DWORD *theActivation, int updateAgenda, int updateLinks)
 {
   _DWORD *v4; // ecx
   int v5; // edx
-  int v6; // esi
+  int prevActivation; // esi
   int v7; // eax
   int v8; // ecx
   int v9; // ecx
-  _DWORD *v10; // edx
+  _DWORD *binds; // edx
   int result; // eax
-  int v12; // edx
+  int nextActivation; // edx
 
-  v4 = a1;
-  v5 = *(_DWORD *)(*a1 + 8);
-  if ( a2 == 1 )
+  v4 = theActivation;
+  v5 = *(_DWORD *)(*theActivation + 8);
+  if ( updateAgenda == 1 )
   {
-    v6 = a1[6];
-    if ( v6 )
+    prevActivation = theActivation[6];
+    if ( prevActivation )
     {
-      v12 = a1[7];
-      *(_DWORD *)(v6 + 28) = v12;
-      if ( v12 )
-        *(_DWORD *)(v12 + 24) = a1[6];
+      nextActivation = theActivation[7];
+      *(_DWORD *)(prevActivation + 28) = nextActivation;
+      if ( nextActivation )
+        *(_DWORD *)(nextActivation + 24) = theActivation[6];
     }
     else
     {
@@ -19538,11 +19538,11 @@ int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
     }
     g_Rules_AgendaChangedFlag = 1;
   }
-  if ( a3 == 1 )
+  if ( updateLinks == 1 )
   {
-    v10 = (_DWORD *)v4[1];
-    if ( v10 )
-      *(_DWORD *)(v4[1] + 4 * (*v10 << 17 >> 23) + 8) = 0;
+    binds = (_DWORD *)v4[1];
+    if ( binds )
+      *(_DWORD *)(v4[1] + 4 * (*binds << 17 >> 23) + 8) = 0;
   }
   --g_Rules_ActivationCount;
   if ( v4[4] )
@@ -19573,7 +19573,7 @@ void Rules_ResetActivationSequence()
 _DWORD *Rules_ClearActivationsForModule()
 {
   _DWORD *result; // eax
-  _DWORD *v1; // ecx
+  _DWORD *nextActivation; // ecx
 
   result = *(_DWORD **)(Rules_GetDefruleModuleItem(0) + 12);
   if ( result )
@@ -19581,9 +19581,9 @@ _DWORD *Rules_ClearActivationsForModule()
     do
     {
       Rules_RemoveActivation(result, 1, 1);
-      result = v1;
+      result = nextActivation;
     }
-    while ( v1 );
+    while ( nextActivation );
   }
   return result;
 }
@@ -19600,39 +19600,39 @@ int  Rules_SetAgendaChanged(int result)
 //----- (0047E320) --------------------------------------------------------
 int  Rules_ReorderAgenda(int result)
 {
-  int v1; // esi
-  int v2; // edi
+  int module; // esi
+  int enumeratingAllModules; // edi
   int Enum; // eax
   int v4; // ecx
-  int *v5; // ebx
-  int v6; // ecx
+  int *agendaListHead; // ebx
+  int nextActivation; // ecx
 
-  v1 = result;
-  v2 = 0;
-  if ( result || (Enum = Module_NextEnum(0), v2 = 1, (v1 = Enum) != 0) )
+  module = result;
+  enumeratingAllModules = 0;
+  if ( result || (Enum = Module_NextEnum(0), enumeratingAllModules = 1, (module = Enum) != 0) )
   {
     do
     {
-      v4 = Rules_GetDefruleModuleItem(v1);
+      v4 = Rules_GetDefruleModuleItem(module);
       Enum = *(_DWORD *)(v4 + 12);
       *(_DWORD *)(v4 + 12) = 0;
       if ( Enum )
       {
-        v5 = (int *)(v4 + 12);
+        agendaListHead = (int *)(v4 + 12);
         do
         {
           *(_DWORD *)(Enum + 24) = 0;
-          v6 = *(_DWORD *)(Enum + 28);
+          nextActivation = *(_DWORD *)(Enum + 28);
           *(_DWORD *)(Enum + 28) = 0;
-          Rules_InsertActivationSorted(v5, (_DWORD *)(uintptr_t)(unsigned int)Enum);
-          Enum = v6;
+          Rules_InsertActivationSorted(agendaListHead, (_DWORD *)(uintptr_t)(unsigned int)Enum);
+          Enum = nextActivation;
         }
-        while ( v6 );
+        while ( nextActivation );
       }
-      if ( !v2 )
+      if ( !enumeratingAllModules )
         break;
-      Enum = Module_NextEnum(v1);
-      v1 = Enum;
+      Enum = Module_NextEnum(module);
+      module = Enum;
     }
     while ( Enum );
   }
@@ -19651,16 +19651,16 @@ _BYTE * Rules_RefreshCommand(int a1, double a2)
 {
   _BYTE *result; // eax
   int v3; // ecx
-  int v4; // eax
+  int defrule; // eax
   int v5; // edx
   int v6; // ecx
 
   result = (_BYTE *)Rules_GetConstructNameArg((int)aRuleName, a1, a2);
   if ( result )
   {
-    v4 = Rules_FindDefruleByName(result, v3);
-    if ( v4 )
-      return (_BYTE *)Rules_RefreshRule(v4, a2);
+    defrule = Rules_FindDefruleByName(result, v3);
+    if ( defrule )
+      return (_BYTE *)Rules_RefreshRule(defrule, a2);
     else
       return (_BYTE *)Rules_ReportCantFindItem(v6, v5);
   }
@@ -19671,12 +19671,12 @@ _BYTE * Rules_RefreshCommand(int a1, double a2)
 // 47E3D6: variable 'v5' is possibly undefined
 
 //----- (0047E3F0) --------------------------------------------------------
-signed int  Rules_RefreshRule(int a1, double a2)
+signed int  Rules_RefreshRule(int defrule, double a2)
 {
   int i; // ebx
   int j; // ecx
 
-  for ( i = a1; i; i = *(_DWORD *)(i + 48) )
+  for ( i = defrule; i; i = *(_DWORD *)(i + 48) )
   {
     for ( j = *(_DWORD *)(*(_DWORD *)(i + 44) + 8); j; j = *(_DWORD *)(j + 4) )
     {
@@ -19774,31 +19774,31 @@ int * Rules_RefreshAgendaCommand(double a1)
 int  Rules_RefreshAgenda(double a1)
 {
   int Enum; // ecx
-  int v2; // ebx
+  int enumeratingAllModules; // ebx
   int v3; // edx
-  int v4; // esi
+  int savedSalienceMode; // esi
   int *i; // edx
   int v6; // ecx
   int v7; // ecx
 
   Module_BeginEnum();
-  v2 = 0;
+  enumeratingAllModules = 0;
   if ( !v3 )
   {
-    v2 = 1;
+    enumeratingAllModules = 1;
     Enum = Module_NextEnum(0);
   }
-  v4 = g_Rules_SalienceEvaluationMode;
+  savedSalienceMode = g_Rules_SalienceEvaluationMode;
   for ( g_Rules_SalienceEvaluationMode = 1; Enum; Enum = Module_NextEnum(v7) )
   {
     Module_SetCurrent(Enum);
     for ( i = (int *)Rules_GetNextActivation(0); i; i = (int *)Rules_GetNextActivation((int)i) )
       i[2] = Rules_EvaluateSalience(*i, a1);
     Rules_ReorderAgenda(v6);
-    if ( !v2 )
+    if ( !enumeratingAllModules )
       break;
   }
-  g_Rules_SalienceEvaluationMode = v4;
+  g_Rules_SalienceEvaluationMode = savedSalienceMode;
   return Module_EndEnum();
 }
 // 47E5D1: variable 'v3' is possibly undefined
@@ -19809,32 +19809,32 @@ int  Rules_RefreshAgenda(double a1)
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E650) --------------------------------------------------------
-signed int * Rules_SetSalienceEvaluationCommand(int a1, double a2)
+signed int * Rules_SetSalienceEvaluationCommand(int context, double a2)
 {
-  char *v3; // esi
+  char *currentModeName; // esi
   int v4; // ecx
   char *v5; // eax
   int v7; // ecx
   int v8; // ecx
   _DWORD v9[11]; // [esp-8h] [ebp-2Ch] BYREF
 
-  v9[9] = a1;
-  v3 = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
+  v9[9] = context;
+  currentModeName = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v9, 2, a2) )
   {
-    v5 = v3;
+    v5 = currentModeName;
     return Str_Intern(v5, v4);
   }
   if ( !strcmp_(*(_DWORD *)(v9[2] + 16), aWhenDefined) )
   {
     g_Rules_SalienceEvaluationMode = 0;
-    v5 = v3;
+    v5 = currentModeName;
     return Str_Intern(v5, v4);
   }
   if ( !strcmp_(v4, aWhenActivated) )
   {
     g_Rules_SalienceEvaluationMode = 1;
-    return Str_Intern(v3, v7);
+    return Str_Intern(currentModeName, v7);
   }
   else
   {
@@ -19842,7 +19842,7 @@ signed int * Rules_SetSalienceEvaluationCommand(int a1, double a2)
       g_Rules_SalienceEvaluationMode = 2;
     else
       Parser_ReportError(1, (int)aSymbolWithVa_1);
-    return Str_Intern(v3, v8);
+    return Str_Intern(currentModeName, v8);
   }
 }
 // 47E6B4: variable 'v4' is possibly undefined
@@ -19854,24 +19854,24 @@ signed int * Rules_SetSalienceEvaluationCommand(int a1, double a2)
 //----- (0047E740) --------------------------------------------------------
 signed int *Rules_GetSalienceEvaluationCommand()
 {
-  char *v0; // eax
+  char *modeName; // eax
   int v1; // ecx
 
   Lexer_TokenExpect(0);
-  v0 = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
-  return Str_Intern(v0, v1);
+  modeName = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
+  return Str_Intern(modeName, v1);
 }
 // 47E75A: variable 'v1' is possibly undefined
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E770) --------------------------------------------------------
-char * Rules_SalienceEvaluationModeName(unsigned int a1)
+char * Rules_SalienceEvaluationModeName(unsigned int mode)
 {
-  if ( !a1 )
+  if ( !mode )
     return aWhenDefined;
-  if ( a1 <= 1 )
+  if ( mode <= 1 )
     return aWhenActivated;
-  if ( a1 == 2 )
+  if ( mode == 2 )
     return aEveryCycle;
   return aUnknown_1;
 }
@@ -19884,18 +19884,18 @@ int Rules_GetSalienceEvaluation()
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E7B0) --------------------------------------------------------
-int __fastcall Rules_SetSalienceEvaluationMode(int a1)
+int __fastcall Rules_SetSalienceEvaluationMode(int mode)
 {
   int result; // eax
 
   result = g_Rules_SalienceEvaluationMode;
-  g_Rules_SalienceEvaluationMode = a1;
+  g_Rules_SalienceEvaluationMode = mode;
   return result;
 }
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E7C0) --------------------------------------------------------
-signed int  Rules_EvaluateSalience(int a1, double a2)
+signed int  Rules_EvaluateSalience(int defrule, double a2)
 {
   signed int result; // eax
   int v4; // ecx
@@ -19903,26 +19903,26 @@ signed int  Rules_EvaluateSalience(int a1, double a2)
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
-  int v9; // [esp+0h] [ebp-20h]
-  int v10; // [esp+4h] [ebp-1Ch]
+  int tokenType; // [esp+0h] [ebp-20h]
+  int valueNode; // [esp+4h] [ebp-1Ch]
 
-  if ( !g_Rules_SalienceEvaluationMode || !*(_DWORD *)(a1 + 32) )
-    return *(_DWORD *)(a1 + 20);
+  if ( !g_Rules_SalienceEvaluationMode || !*(_DWORD *)(defrule + 32) )
+    return *(_DWORD *)(defrule + 20);
   Lexer_ErrorRecover(0);
   if ( Parser_ParseForm(*(__int16 **)(v4 + 32), v5, v4, a2) )
   {
     Rules_SalienceInformationError();
     return *(_DWORD *)(v7 + 20);
   }
-  else if ( v9 == 1 )
+  else if ( tokenType == 1 )
   {
-    result = *(_DWORD *)(v10 + 16);
+    result = *(_DWORD *)(valueNode + 16);
     if ( result > 10000 || result < -10000 )
     {
       Rules_SalienceRangeError();
       Lexer_ErrorRecover(1);
       Rules_SalienceInformationError();
-      return *(_DWORD *)(a1 + 20);
+      return *(_DWORD *)(defrule + 20);
     }
     else
     {
@@ -19952,7 +19952,7 @@ int * Rules_AgendaCommand(int a1, double a2)
 {
   int *result; // eax
   int v3; // ecx
-  int v4; // eax
+  int currentModule; // eax
   _DWORD v5[4]; // [esp+0h] [ebp-10h] BYREF
 
   v5[2] = a1;
@@ -19967,8 +19967,8 @@ int * Rules_AgendaCommand(int a1, double a2)
     }
     else
     {
-      v4 = Module_GetCurrent();
-      return (int *)Rules_ActivationsCommand((int)g_IO_LogicalName_WDisplay, v4);
+      currentModule = Module_GetCurrent();
+      return (int *)Rules_ActivationsCommand((int)g_IO_LogicalName_WDisplay, currentModule);
     }
   }
   return result;
@@ -19977,23 +19977,23 @@ int * Rules_AgendaCommand(int a1, double a2)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047E8E4) --------------------------------------------------------
-int __fastcall IO_PrintfToStdout(int a1, int a2, int a3, char a4)
+int __fastcall IO_PrintfToStdout(int format, int a2, int a3, char firstArg)
 {
-  int v5[3]; // [esp+0h] [ebp-Ch] BYREF
+  int args[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  v5[0] = (int)&a4;
-  return CRT_VfprintfLockedWrite((int)&g_CRT_StdoutStream, a1, v5);
+  args[0] = (int)&firstArg;
+  return CRT_VfprintfLockedWrite((int)&g_CRT_StdoutStream, format, args);
 }
 
 //----- (0047E910) --------------------------------------------------------
-int  Rules_RunAgendaLoop(int a1, int a2, double a3)
+int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
 {
   int v3; // ecx
-  int *v4; // edi
+  int *activation; // edi
   int v5; // edx
-  int v6; // ebp
-  _DWORD *v7; // esi
-  unsigned int v8; // ebx
+  int ruleName; // ebp
+  _DWORD *binds; // esi
+  unsigned int bindIndex; // ebx
   _DWORD *v9; // edx
   int v10; // eax
   int result; // eax
@@ -20005,21 +20005,21 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
   int v17; // ecx
   int v18; // ecx
   int v19; // ecx
-  _DWORD *v20; // ebx
-  unsigned int v21; // edx
+  _DWORD *bindPtr; // ebx
+  unsigned int cleanupIndex; // edx
   unsigned int v22; // eax
   int v23; // eax
   int v24; // eax
-  int v25; // eax
+  int factCount; // eax
   int v26; // edi
   int v27; // esi
-  int v28; // eax
+  int instanceCount; // eax
   int v29; // ebp
-  int v30; // eax
+  int activationCount; // eax
   int v31; // ecx
   int i; // edx
   int v33; // edx
-  int v34; // eax
+  int nextActivation; // eax
   int v35; // ecx
   int v36; // eax
   int v37; // ecx
@@ -20032,86 +20032,86 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
   int v45; // ecx
   int v46; // ecx
   int v47; // ecx
-  double v48; // [esp+0h] [ebp-ECh]
+  double rulesPerSecond; // [esp+0h] [ebp-ECh]
   int v49; // [esp+4h] [ebp-E8h]
   int v50; // [esp+8h] [ebp-E4h]
   int v51; // [esp+8h] [ebp-E4h]
   int v52; // [esp+8h] [ebp-E4h]
-  _DWORD v53[15]; // [esp+Ch] [ebp-E0h] BYREF
-  _BYTE v54[60]; // [esp+48h] [ebp-A4h] BYREF
+  _DWORD fireTraceBuffer[15]; // [esp+Ch] [ebp-E0h] BYREF
+  _BYTE statsBuffer[60]; // [esp+48h] [ebp-A4h] BYREF
   int v55[6]; // [esp+84h] [ebp-68h] BYREF
   double v56; // [esp+9Ch] [ebp-50h]
-  double v57; // [esp+A4h] [ebp-48h]
-  int v59; // [esp+B4h] [ebp-38h]
-  int v60; // [esp+B8h] [ebp-34h]
-  int v61; // [esp+BCh] [ebp-30h]
-  int v62; // [esp+C0h] [ebp-2Ch]
-  int v63; // [esp+C4h] [ebp-28h]
-  int v64; // [esp+C8h] [ebp-24h]
-  int v65; // [esp+CCh] [ebp-20h]
-  int v66; // [esp+D0h] [ebp-1Ch]
-  int v67; // [esp+D4h] [ebp-18h]
+  double startTime; // [esp+A4h] [ebp-48h]
+  int maxInstances; // [esp+B4h] [ebp-38h]
+  int maxFacts; // [esp+B8h] [ebp-34h]
+  int activationSum; // [esp+BCh] [ebp-30h]
+  int instanceSum; // [esp+C0h] [ebp-2Ch]
+  int factSum; // [esp+C4h] [ebp-28h]
+  int maxActivations; // [esp+C8h] [ebp-24h]
+  int fireCount; // [esp+CCh] [ebp-20h]
+  int remainingFires; // [esp+D0h] [ebp-1Ch]
+  int meanValue; // [esp+D4h] [ebp-18h]
 
-  v66 = a1;
-  v65 = 0;
-  v64 = 0;
-  v61 = 0;
-  v60 = 0;
-  v63 = 0;
-  v59 = 0;
-  v62 = 0;
-  v57 = 0.0;
+  remainingFires = runLimit;
+  fireCount = 0;
+  maxActivations = 0;
+  activationSum = 0;
+  maxFacts = 0;
+  factSum = 0;
+  maxInstances = 0;
+  instanceSum = 0;
+  startTime = 0.0;
   if ( g_Rules_AgendaLoopRunningFlag )
     return 0;
   g_Rules_AgendaLoopRunningFlag = 1;
   if ( g_Rules_WatchStatisticsFlag )
   {
-    v60 = Rules_GetInstalledFactCount();
-    v63 = v60;
-    v59 = Rules_GetActiveInstanceCount();
-    v62 = v59;
-    v64 = Rules_GetActivationCount();
-    v61 = v64;
-    v57 = Rules_TimeCommand();
+    maxFacts = Rules_GetInstalledFactCount();
+    factSum = maxFacts;
+    maxInstances = Rules_GetActiveInstanceCount();
+    instanceSum = maxInstances;
+    maxActivations = Rules_GetActivationCount();
+    activationSum = maxActivations;
+    startTime = Rules_TimeCommand();
   }
   if ( !g_ClipsCurrentEvaluationDepth )
     Rules_SetEvaluationErrorFlag(0);
   v50 = a2;
   g_Rules_HaltRulesFlag = 0;
-  v4 = (int *)Rules_NextActivationToFire();
-  while ( v4 )
+  activation = (int *)Rules_NextActivationToFire();
+  while ( activation )
   {
-    if ( !v66 || g_ClipsHaltExecution || g_Rules_HaltRulesFlag )
+    if ( !remainingFires || g_ClipsHaltExecution || g_Rules_HaltRulesFlag )
       break;
-    Rules_DetachActivation(v4);
-    v6 = Rules_GetActivationRuleName((int)v4);
-    v7 = (_DWORD *)v4[1];
-    g_Rules_CurrentlyExecutingRule = *v4;
-    ++v65;
+    Rules_DetachActivation(activation);
+    ruleName = Rules_GetActivationRuleName((int)activation);
+    binds = (_DWORD *)activation[1];
+    g_Rules_CurrentlyExecutingRule = *activation;
+    ++fireCount;
     if ( v5 > 0 )
-      v66 = v5 - 1;
+      remainingFires = v5 - 1;
     if ( (*(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
-      a3 = sprintf_(v53, "FIRE %4ld ", v65);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)v53, v12);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v6, v13);
+      a3 = sprintf_(fireTraceBuffer, "FIRE %4ld ", fireCount);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)fireTraceBuffer, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], ruleName, v13);
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E90, v14);
-      Rules_PrintArgumentValueList((int)g_IO_LogicalNameTable_WTrace[0], v7);
+      Rules_PrintArgumentValueList((int)g_IO_LogicalNameTable_WTrace[0], binds);
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E94, v15);
     }
-    v7[(*v7 << 17 >> 23) + 2] = 0;
-    v8 = 0;
-    *(_BYTE *)v7 |= 2u;
-    g_Clips_CurrentPartialMatch = (int)v7;
+    binds[(*binds << 17 >> 23) + 2] = 0;
+    bindIndex = 0;
+    *(_BYTE *)binds |= 2u;
+    g_Clips_CurrentPartialMatch = (int)binds;
     g_Rules_GlobalRHSBinds = 0;
-    v9 = v7;
-    while ( v8 < *v7 << 17 >> 23 )
+    v9 = binds;
+    while ( bindIndex < *binds << 17 >> 23 )
     {
       v10 = *(_DWORD *)v9[2];
       if ( v10 )
         (*(void (**)(void))(*(_DWORD *)v10 + 52))();
       ++v9;
-      ++v8;
+      ++bindIndex;
     }
     g_Rules_CurrentLogicalJoin = *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 40);
     ++g_ClipsCurrentEvaluationDepth;
@@ -20132,49 +20132,49 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     {
       Rules_PrintErrorID((int)aPrccode, 4, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHalte, v17);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], v6, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], ruleName, v18);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_RuleRuntime, v19);
     }
-    v20 = v7;
-    v21 = 0;
-    *(_BYTE *)v7 &= ~2u;
+    bindPtr = binds;
+    cleanupIndex = 0;
+    *(_BYTE *)binds &= ~2u;
     while ( 1 )
     {
-      v22 = (*v7 << 17 >> 23) - 1;
-      if ( v21 >= v22 )
+      v22 = (*binds << 17 >> 23) - 1;
+      if ( cleanupIndex >= v22 )
         break;
-      v23 = *(_DWORD *)v20[2];
+      v23 = *(_DWORD *)bindPtr[2];
       if ( v23 )
         (*(void (**)(void))(*(_DWORD *)v23 + 48))();
-      ++v20;
-      ++v21;
+      ++bindPtr;
+      ++cleanupIndex;
     }
-    if ( (*(_BYTE *)v7 & 0x20) == 0 )
+    if ( (*(_BYTE *)binds & 0x20) == 0 )
     {
-      v24 = *(_DWORD *)v7[v22 + 2];
+      v24 = *(_DWORD *)binds[v22 + 2];
       if ( v24 )
         (*(void (__cdecl **)(int))(*(_DWORD *)v24 + 48))(v50);
     }
-    Rules_RemoveActivation(v4, 0, 0);
+    Rules_RemoveActivation(activation, 0, 0);
     Rules_FlushPendingNetworkGarbage();
     Rules_RunPeriodicCleanup(0, 1);
     if ( g_Rules_WatchStatisticsFlag )
     {
-      v25 = Rules_GetInstalledFactCount();
-      if ( v25 > v60 )
-        v60 = v25;
-      v26 = v59;
-      v27 = v25 + v63;
-      v28 = Rules_GetActiveInstanceCount();
-      v63 = v27;
-      if ( v28 > v26 )
-        v59 = v28;
-      v29 = v28 + v62;
-      v30 = Rules_GetActivationCount();
-      v62 = v29;
-      if ( v30 > v31 )
-        v64 = v30;
-      v61 += v30;
+      factCount = Rules_GetInstalledFactCount();
+      if ( factCount > maxFacts )
+        maxFacts = factCount;
+      v26 = maxInstances;
+      v27 = factCount + factSum;
+      instanceCount = Rules_GetActiveInstanceCount();
+      factSum = v27;
+      if ( instanceCount > v26 )
+        maxInstances = instanceCount;
+      v29 = instanceCount + instanceSum;
+      activationCount = Rules_GetActivationCount();
+      instanceSum = v29;
+      if ( activationCount > v31 )
+        maxActivations = activationCount;
+      activationSum += activationCount;
     }
     if ( Rules_GetSalienceEvaluation() == 2 )
       Rules_RefreshAgenda(a3);
@@ -20183,19 +20183,19 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     if ( g_ClipsHaltExecutionFlag == 1 )
       Rules_RemoveModuleFocus(**(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8));
     g_ClipsHaltExecutionFlag = 0;
-    v34 = Rules_NextActivationToFire();
-    v3 = v34;
-    v4 = (int *)v34;
-    if ( v34 && (*(_BYTE *)(*(_DWORD *)v34 + 29) & 8) != 0 )
+    nextActivation = Rules_NextActivationToFire();
+    v3 = nextActivation;
+    activation = (int *)nextActivation;
+    if ( nextActivation && (*(_BYTE *)(*(_DWORD *)nextActivation + 29) & 8) != 0 )
     {
       g_Rules_HaltRulesFlag = 1;
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aBreakingOnRule, v34);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aBreakingOnRule, nextActivation);
       v36 = Rules_GetActivationRuleName(v35);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], v36, (int)g_IO_LogicalNameTable_WDialog[0]);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDotNewline_RuleRuntime, v37);
     }
   }
-  if ( v66 == v65 )
+  if ( remainingFires == fireCount )
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRuleFiringLimi, v3);
   g_Rules_CurrentlyExecutingRule = 0;
   g_Rules_HaltRulesFlag = 0;
@@ -20207,38 +20207,38 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
 
     runtime_end = Rules_TimeCommand();
     v56 = runtime_end;
-    Rules_PrintLongInteger(v38, v65);
+    Rules_PrintLongInteger(v38, fireCount);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRulesFired, v39);
-    if ( v57 >= runtime_end )
+    if ( startTime >= runtime_end )
     {
       v44 = asc_502E94;
     }
     else
     {
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRunTimeIs, v40);
-      runtime_elapsed = runtime_end - v57;
+      runtime_elapsed = runtime_end - startTime;
       v56 = runtime_elapsed;
       Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], runtime_elapsed);
       Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)" seconds.\n", 0);
-      v48 = (double)v65 / runtime_elapsed;
-      Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], v48);
+      rulesPerSecond = (double)fireCount / runtime_elapsed;
+      Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], rulesPerSecond);
       v44 = " rules per second.\n";
     }
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v44, v40);
-    sample_count = (double)(v65 + 1);
-    v67 = (int)((double)v63 / sample_count + g_Rules_AverageRoundingBias);
-    sprintf_(v54, "%ld mean number of facts (%ld maximum).\n", v67, v60);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v45);
-    v67 = (int)((double)v62 / sample_count + g_Rules_AverageRoundingBias);
-    sprintf_(v54, "%ld mean number of instances (%ld maximum).\n", v67, v59);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v46);
-    v67 = (int)((double)v61 / sample_count + g_Rules_AverageRoundingBias);
-    sprintf_(v54, "%ld mean number of activations (%ld maximum).\n", v67, v64);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v47);
+    sample_count = (double)(fireCount + 1);
+    meanValue = (int)((double)factSum / sample_count + g_Rules_AverageRoundingBias);
+    sprintf_(statsBuffer, "%ld mean number of facts (%ld maximum).\n", meanValue, maxFacts);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)statsBuffer, v45);
+    meanValue = (int)((double)instanceSum / sample_count + g_Rules_AverageRoundingBias);
+    sprintf_(statsBuffer, "%ld mean number of instances (%ld maximum).\n", meanValue, maxInstances);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)statsBuffer, v46);
+    meanValue = (int)((double)activationSum / sample_count + g_Rules_AverageRoundingBias);
+    sprintf_(statsBuffer, "%ld mean number of activations (%ld maximum).\n", meanValue, maxActivations);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)statsBuffer, v47);
   }
   if ( g_Rules_FocusStackTop && Module_GetCurrent() != *(_DWORD *)g_Rules_FocusStackTop )
     Module_SetCurrent(*(_DWORD *)g_Rules_FocusStackTop);
-  result = v65;
+  result = fireCount;
   g_Rules_AgendaLoopRunningFlag = 0;
   return result;
 }
@@ -20294,83 +20294,83 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
 //----- (0047F000) --------------------------------------------------------
 int Rules_NextActivationToFire()
 {
-  int v0; // edx
-  int *v2; // eax
+  int activation; // edx
+  int *mainModule; // eax
 
   if ( !g_Rules_FocusStackTop )
   {
-    v2 = Module_FindByName(aMain_0);
-    Rules_PushFocus((int)v2);
+    mainModule = Module_FindByName(aMain_0);
+    Rules_PushFocus((int)mainModule);
   }
-  v0 = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
-  while ( !v0 )
+  activation = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
+  while ( !activation )
   {
     if ( !g_Rules_FocusStackTop )
       break;
     Rules_PopFocus();
     if ( g_Rules_FocusStackTop )
-      v0 = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
+      activation = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
   }
-  return v0;
+  return activation;
 }
 // 47F039: variable 'v0' is possibly undefined
 // 51A200: using guessed type int dword_51A200;
 
 //----- (0047F060) --------------------------------------------------------
-int  Rules_RemoveModuleFocus(int a1)
+int  Rules_RemoveModuleFocus(int module)
 {
-  int v2; // ebx
-  int v3; // ebp
-  _DWORD *v4; // eax
-  int v5; // ecx
-  int v6; // edx
+  int found; // ebx
+  int removedTop; // ebp
+  _DWORD *focusEntry; // eax
+  int prevEntry; // ecx
+  int nextEntry; // edx
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
   int result; // eax
 
-  v2 = 0;
-  v3 = 0;
+  found = 0;
+  removedTop = 0;
   if ( !g_Rules_FocusStackTop )
     return 0;
-  v4 = (_DWORD *)g_Rules_FocusStackTop;
-  v5 = 0;
+  focusEntry = (_DWORD *)g_Rules_FocusStackTop;
+  prevEntry = 0;
   do
   {
-    if ( v2 )
+    if ( found )
       break;
-    if ( a1 == *v4 )
+    if ( module == *focusEntry )
     {
-      v6 = v4[2];
-      g_ClipsMemFreeListTemp = (int)v4;
-      *v4 = *(_DWORD *)(g_ClipsMemoryTable + 48);
-      v2 = 1;
+      nextEntry = focusEntry[2];
+      g_ClipsMemFreeListTemp = (int)focusEntry;
+      *focusEntry = *(_DWORD *)(g_ClipsMemoryTable + 48);
+      found = 1;
       *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
-      v4 = (_DWORD *)v6;
-      if ( v5 )
+      focusEntry = (_DWORD *)nextEntry;
+      if ( prevEntry )
       {
-        *(_DWORD *)(v5 + 8) = v6;
+        *(_DWORD *)(prevEntry + 8) = nextEntry;
       }
       else
       {
-        v3 = 1;
-        g_Rules_FocusStackTop = v6;
+        removedTop = 1;
+        g_Rules_FocusStackTop = nextEntry;
       }
     }
     else
     {
-      v5 = (int)v4;
-      v4 = (_DWORD *)v4[2];
+      prevEntry = (int)focusEntry;
+      focusEntry = (_DWORD *)focusEntry[2];
     }
   }
-  while ( v4 );
-  if ( !v2 )
+  while ( focusEntry );
+  if ( !found )
     return *(_DWORD *)g_Rules_FocusStackTop;
   if ( g_Rules_WatchFocusFlag )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aFocus, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)a1 + 16), v7);
-    if ( g_Rules_FocusStackTop && v3 )
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aFocus, prevEntry);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)module + 16), v7);
+    if ( g_Rules_FocusStackTop && removedTop )
     {
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aTo_0, v8);
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(**(_DWORD **)g_Rules_FocusStackTop + 16), v9);
@@ -20379,10 +20379,10 @@ int  Rules_RemoveModuleFocus(int a1)
   }
   if ( g_Rules_FocusStackTop )
   {
-    if ( v3 )
+    if ( removedTop )
       Module_SetCurrent(*(_DWORD *)g_Rules_FocusStackTop);
   }
-  result = a1;
+  result = module;
   g_Rules_FocusStackChangedFlag = 1;
   return result;
 }
@@ -20492,10 +20492,10 @@ int  Rules_RunCommand(int a1, double a2)
   int result; // eax
   int v3; // ecx
   int v4; // [esp-8h] [ebp-24h] BYREF
-  int v5; // [esp+0h] [ebp-1Ch]
-  int v6; // [esp+14h] [ebp-8h]
+  int argValue; // [esp+0h] [ebp-1Ch]
+  int savedContext; // [esp+14h] [ebp-8h]
 
-  v6 = a1;
+  savedContext = a1;
   result = Lexer_TokenExpect(1);
   if ( result != v3 )
   {
@@ -20503,7 +20503,7 @@ int  Rules_RunCommand(int a1, double a2)
     {
       result = Lexer_ParseValueList(1, &v4, 1, a2);
       if ( result )
-        return Rules_RunAgendaLoop(*(_DWORD *)(v5 + 16), *(_DWORD *)(v5 + 16), a2);
+        return Rules_RunAgendaLoop(*(_DWORD *)(argValue + 16), *(_DWORD *)(argValue + 16), a2);
     }
     else
     {
@@ -20535,57 +20535,57 @@ int  Rules_SetBreakFlag(int result)
 }
 
 //----- (0047F440) --------------------------------------------------------
-signed int  Rules_ClearBreakFlag(int a1)
+signed int  Rules_ClearBreakFlag(int disjunct)
 {
-  int v1; // edx
-  char v2; // bl
+  int cleared; // edx
+  char flags; // bl
 
-  v1 = 0;
-  if ( !a1 )
-    return v1;
+  cleared = 0;
+  if ( !disjunct )
+    return cleared;
   do
   {
     while ( 1 )
     {
-      v2 = *(_BYTE *)(a1 + 29);
-      if ( (v2 & 8) != 0 )
+      flags = *(_BYTE *)(disjunct + 29);
+      if ( (flags & 8) != 0 )
         break;
-      a1 = *(_DWORD *)(a1 + 48);
-      if ( !a1 )
-        return v1;
+      disjunct = *(_DWORD *)(disjunct + 48);
+      if ( !disjunct )
+        return cleared;
     }
-    v1 = 1;
-    *(_BYTE *)(a1 + 29) = v2 & 0xF7;
-    a1 = *(_DWORD *)(a1 + 48);
+    cleared = 1;
+    *(_BYTE *)(disjunct + 29) = flags & 0xF7;
+    disjunct = *(_DWORD *)(disjunct + 48);
   }
-  while ( a1 );
+  while ( disjunct );
   return 1;
 }
 
 //----- (0047F480) --------------------------------------------------------
 void Rules_RemoveAllBreakFlags()
 {
-  int v0; // ecx
-  int v1; // edx
+  int module; // ecx
+  int defrule; // edx
 
-  v0 = 0;
+  module = 0;
   while ( 1 )
   {
-    v0 = Module_NextEnum(v0);
-    if ( !v0 )
+    module = Module_NextEnum(module);
+    if ( !module )
       return;
-    v1 = 0;
-    while ( (v1 = Rules_GetNextDefrule(v1)) != 0 )
-      Rules_ClearBreakFlag(v1);
+    defrule = 0;
+    while ( (defrule = Rules_GetNextDefrule(defrule)) != 0 )
+      Rules_ClearBreakFlag(defrule);
   }
 }
 
 //----- (0047F4B0) --------------------------------------------------------
-int  Rules_ListRuleBreakpoints(int a1, int a2)
+int  Rules_ListRuleBreakpoints(int logicalName, int module)
 {
   return Rules_ListConstructsAcrossModules(
-           a1,
-           a2,
+           logicalName,
+           module,
            0,
            0,
            (int (__cdecl *)(int))Rules_GetNextDefrule,
@@ -20595,9 +20595,9 @@ int  Rules_ListRuleBreakpoints(int a1, int a2)
 }
 
 //----- (0047F4D0) --------------------------------------------------------
-int  Rules_RuleHasBreakFlag(int a1)
+int  Rules_RuleHasBreakFlag(int defrule)
 {
-  return *(_DWORD *)(a1 + 28) << 20 >> 31;
+  return *(_DWORD *)(defrule + 28) << 20 >> 31;
 }
 
 //----- (0047F4E0) --------------------------------------------------------
@@ -20605,7 +20605,7 @@ int  Rules_SetBreakCommand(int a1, double a2)
 {
   int result; // eax
   int v3; // ecx
-  int v4; // eax
+  int defrule; // eax
   int v5; // edx
   int v6; // ecx
   _DWORD v7[9]; // [esp-8h] [ebp-24h] BYREF
@@ -20617,9 +20617,9 @@ int  Rules_SetBreakCommand(int a1, double a2)
     result = Lexer_ParseValueList(1, v7, 2, a2);
     if ( result )
     {
-      v4 = Rules_FindDefruleByName(*(_BYTE **)(v7[2] + 16), v3);
-      if ( v4 )
-        return Rules_SetBreakFlag(v4);
+      defrule = Rules_FindDefruleByName(*(_BYTE **)(v7[2] + 16), v3);
+      if ( defrule )
+        return Rules_SetBreakFlag(defrule);
       else
         return Rules_ReportCantFindItem(v6, v5);
     }
@@ -20633,8 +20633,8 @@ int  Rules_SetBreakCommand(int a1, double a2)
 //----- (0047F550) --------------------------------------------------------
 void  Rules_RemoveBreakCommand(int a1, double a2, int a3)
 {
-  int v3; // eax
-  int v4; // eax
+  int tokenType; // eax
+  int defrule; // eax
   int v5; // ecx
   int v6; // ecx
   int v7; // ecx
@@ -20646,17 +20646,17 @@ void  Rules_RemoveBreakCommand(int a1, double a2, int a3)
 
   v12 = a1;
   v11 = a3;
-  v3 = Lexer_TokenExpect(1);
-  if ( v3 != -1 )
+  tokenType = Lexer_TokenExpect(1);
+  if ( tokenType != -1 )
   {
-    if ( v3 )
+    if ( tokenType )
     {
       if ( Lexer_ParseValueList(1, &v9, 2, a2) )
       {
-        v4 = Rules_FindDefruleByName(*(_BYTE **)(v10 + 16), *(_DWORD *)(v10 + 16));
-        if ( v4 )
+        defrule = Rules_FindDefruleByName(*(_BYTE **)(v10 + 16), *(_DWORD *)(v10 + 16));
+        if ( defrule )
         {
-          if ( !Rules_ClearBreakFlag(v4) )
+          if ( !Rules_ClearBreakFlag(defrule) )
           {
             Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRule, v6);
             Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v7);
@@ -20686,7 +20686,7 @@ int * Rules_ShowBreaksCommand(int a1, double a2)
 {
   int *result; // eax
   int v3; // ecx
-  int v4; // eax
+  int currentModule; // eax
   _DWORD v5[4]; // [esp+0h] [ebp-10h] BYREF
 
   v5[2] = a1;
@@ -20701,8 +20701,8 @@ int * Rules_ShowBreaksCommand(int a1, double a2)
     }
     else
     {
-      v4 = Module_GetCurrent();
-      return (int *)Rules_ListRuleBreakpoints((int)g_IO_LogicalName_WDisplay, v4);
+      currentModule = Module_GetCurrent();
+      return (int *)Rules_ListRuleBreakpoints((int)g_IO_LogicalName_WDisplay, currentModule);
     }
   }
   return result;
@@ -20725,25 +20725,25 @@ int Rules_ListFocusStackCommand()
 //----- (0047F6A0) --------------------------------------------------------
 signed int  Rules_PrintFocusStack(signed int result)
 {
-  int v1; // ebx
-  int *v2; // ecx
+  int logicalName_copy; // ebx
+  int *focusEntry; // ecx
   int Name; // eax
   int v4; // ecx
   int v5; // ecx
   int v6; // ecx
 
-  v1 = result;
-  v2 = (int *)g_Rules_FocusStackTop;
+  logicalName_copy = result;
+  focusEntry = (int *)g_Rules_FocusStackTop;
   if ( g_Rules_FocusStackTop )
   {
     do
     {
-      Name = Module_GetName(*v2);
-      Output_Write(v1, Name, v4);
-      result = Output_Write(v1, (int)asc_502E94, v5);
-      v2 = *(int **)(v6 + 8);
+      Name = Module_GetName(*focusEntry);
+      Output_Write(logicalName_copy, Name, v4);
+      result = Output_Write(logicalName_copy, (int)asc_502E94, v5);
+      focusEntry = *(int **)(v6 + 8);
     }
-    while ( v2 );
+    while ( focusEntry );
   }
   return result;
 }
@@ -20756,65 +20756,65 @@ signed int  Rules_PrintFocusStack(signed int result)
 int Rules_GetFocusStackFunction()
 {
   int result; // eax
-  _DWORD *v1; // ecx
+  _DWORD *returnValue; // ecx
 
   result = Lexer_TokenExpect(0);
   if ( result != -1 )
-    return Rules_BuildFocusStackList(v1);
+    return Rules_BuildFocusStackList(returnValue);
   return result;
 }
 // 47F70E: variable 'v1' is possibly undefined
 
 //----- (0047F720) --------------------------------------------------------
-signed int  Rules_BuildFocusStackList(_DWORD *a1)
+signed int  Rules_BuildFocusStackList(_DWORD *returnValue)
 {
-  int v2; // edx
-  signed int v3; // eax
-  _DWORD *v4; // eax
+  int focusEntry; // edx
+  signed int count; // eax
+  _DWORD *multifield; // eax
   int v5; // ecx
-  _DWORD *v6; // ebx
-  int v7; // edx
+  _DWORD *multifield_ptr; // ebx
+  int focusEntry_walk; // edx
   signed int result; // eax
-  _DWORD *v9; // ecx
+  _DWORD *element; // ecx
   int v10; // ecx
 
-  v2 = g_Rules_FocusStackTop;
-  v3 = 0;
+  focusEntry = g_Rules_FocusStackTop;
+  count = 0;
   if ( g_Rules_FocusStackTop )
   {
     do
     {
-      v2 = *(_DWORD *)(v2 + 8);
-      ++v3;
+      focusEntry = *(_DWORD *)(focusEntry + 8);
+      ++count;
     }
-    while ( v2 );
-    a1[1] = 4;
-    a1[3] = 0;
-    a1[4] = v3 - 1;
-    v4 = Rules_CreateEphemeralMultifield(v3);
-    *(_DWORD *)(v5 + 8) = v4;
-    v6 = v4;
-    v7 = g_Rules_FocusStackTop;
+    while ( focusEntry );
+    returnValue[1] = 4;
+    returnValue[3] = 0;
+    returnValue[4] = count - 1;
+    multifield = Rules_CreateEphemeralMultifield(count);
+    *(_DWORD *)(v5 + 8) = multifield;
+    multifield_ptr = multifield;
+    focusEntry_walk = g_Rules_FocusStackTop;
     result = 1;
     if ( g_Rules_FocusStackTop )
     {
-      v9 = v6;
+      element = multifield_ptr;
       do
       {
-        *((_WORD *)v9 + 7) = 2;
-        v9[4] = **(_DWORD **)v7;
-        v9 = (_DWORD *)((char *)v9 + 6);
-        v7 = *(_DWORD *)(v7 + 8);
+        *((_WORD *)element + 7) = 2;
+        element[4] = **(_DWORD **)focusEntry_walk;
+        element = (_DWORD *)((char *)element + 6);
+        focusEntry_walk = *(_DWORD *)(focusEntry_walk + 8);
         ++result;
       }
-      while ( v7 );
+      while ( focusEntry_walk );
     }
   }
   else
   {
-    a1[1] = 4;
-    a1[4] = -1;
-    a1[3] = 0;
+    returnValue[1] = 4;
+    returnValue[4] = -1;
+    returnValue[3] = 0;
     result = (signed int)Rules_CreateEphemeralMultifield(0);
     *(_DWORD *)(v10 + 8) = result;
   }
@@ -20827,12 +20827,12 @@ signed int  Rules_BuildFocusStackList(_DWORD *a1)
 //----- (0047F7C0) --------------------------------------------------------
 int Rules_PopFocusFunction()
 {
-  int v0; // eax
+  int focusModule; // eax
 
   Lexer_TokenExpect(0);
-  v0 = Rules_PopFocus();
-  if ( v0 )
-    return *(_DWORD *)v0;
+  focusModule = Rules_PopFocus();
+  if ( focusModule )
+    return *(_DWORD *)focusModule;
   else
     return g_ClipsFalseSymbol;
 }
@@ -20841,12 +20841,12 @@ int Rules_PopFocusFunction()
 //----- (0047F7F0) --------------------------------------------------------
 int Rules_GetFocusFunction()
 {
-  int v0; // eax
+  int focusModule; // eax
 
   Lexer_TokenExpect(0);
-  v0 = Rules_GetCurrentFocus();
-  if ( v0 )
-    return *(_DWORD *)v0;
+  focusModule = Rules_GetCurrentFocus();
+  if ( focusModule )
+    return *(_DWORD *)focusModule;
   else
     return g_ClipsFalseSymbol;
 }
@@ -20866,9 +20866,9 @@ int Rules_GetCurrentFocus()
 signed int  Rules_FocusCommand(int a1, double a2)
 {
   int v2; // eax
-  int v3; // esi
+  int argCount; // esi
   signed int result; // eax
-  int *v5; // eax
+  int *module; // eax
   int v6; // edx
   int v7; // ecx
   _DWORD v8[10]; // [esp-8h] [ebp-28h] BYREF
@@ -20877,23 +20877,23 @@ signed int  Rules_FocusCommand(int a1, double a2)
   v2 = Lexer_TokenExpect(1);
   if ( v2 == -1 )
     return 0;
-  v3 = v2;
+  argCount = v2;
   if ( v2 <= 0 )
     return 1;
   while ( 1 )
   {
-    result = Lexer_ParseValueList(v3, v8, 2, a2);
+    result = Lexer_ParseValueList(argCount, v8, 2, a2);
     if ( !result )
       break;
-    v5 = Module_FindByName(*(_BYTE **)(v8[2] + 16));
-    if ( !v5 )
+    module = Module_FindByName(*(_BYTE **)(v8[2] + 16));
+    if ( !module )
     {
       Rules_ReportCantFindItem(v7, v6);
       return 0;
     }
-    --v3;
-    Rules_PushFocus((int)v5);
-    if ( v3 <= 0 )
+    --argCount;
+    Rules_PushFocus((int)module);
+    if ( argCount <= 0 )
       return 1;
   }
   return result;
@@ -20944,23 +20944,23 @@ signed int Rules_RegisterInstanceFunctions()
 // 47F9C8: variable 'v2' is possibly undefined
 
 //----- (0047FB90) --------------------------------------------------------
-signed int  Rules_RetractFactById(int a1, double a2)
+signed int  Rules_RetractFactById(int instance, double a2)
 {
-  int v2; // ecx
-  int v3; // edx
+  int allDeleted; // ecx
+  int currentInstance; // edx
 
-  v2 = 1;
-  if ( a1 )
-    return Instance_DeleteInstance(a1, a2);
-  v3 = g_Clips_InstanceListHead;
-  while ( v3 )
+  allDeleted = 1;
+  if ( instance )
+    return Instance_DeleteInstance(instance, a2);
+  currentInstance = g_Clips_InstanceListHead;
+  while ( currentInstance )
   {
-    if ( !Instance_DeleteInstance(v3, a2) )
-      v2 = 0;
+    if ( !Instance_DeleteInstance(currentInstance, a2) )
+      allDeleted = 0;
   }
   if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
     Rules_RunPeriodicCleanup(1, 0);
-  return v2;
+  return allDeleted;
 }
 // 47FBAA: variable 'v3' is possibly undefined
 // 47FBDF: variable 'v2' is possibly undefined
@@ -20970,19 +20970,19 @@ signed int  Rules_RetractFactById(int a1, double a2)
 // 51AD0C: using guessed type int dword_51AD0C;
 
 //----- (0047FBF0) --------------------------------------------------------
-BOOL  Rules_UnmakeInstance(int a1, double a2)
+BOOL  Rules_UnmakeInstance(int instance, double a2)
 {
-  BOOL v3; // edi
-  int v4; // ebp
+  BOOL allDeleted; // edi
+  int savedPurgeFlag; // ebp
   int i; // esi
 
-  v3 = 1;
-  v4 = g_Instance_PurgeInProgress;
+  allDeleted = 1;
+  savedPurgeFlag = g_Instance_PurgeInProgress;
   g_Instance_PurgeInProgress = 1;
-  if ( a1 )
+  if ( instance )
   {
-    MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, a1, 0, 0, a2);
-    v3 = (*(_BYTE *)(a1 + 24) & 2) != 0;
+    MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, instance, 0, 0, a2);
+    allDeleted = (*(_BYTE *)(instance + 24) & 2) != 0;
   }
   else
   {
@@ -20991,7 +20991,7 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
     {
       MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, i, 0, 0, a2);
       if ( (*(_BYTE *)(i + 24) & 2) == 0 )
-        v3 = 0;
+        allDeleted = 0;
       for ( i = *(_DWORD *)(i + 68); i; i = *(_DWORD *)(i + 68) )
       {
         if ( (*(_DWORD *)(i + 24) & 2) == 0 )
@@ -20999,12 +20999,12 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
       }
     }
   }
-  g_Instance_PurgeInProgress = v4;
+  g_Instance_PurgeInProgress = savedPurgeFlag;
   Instance_PurgeDeletedInstances();
   if ( g_ClipsCurrentEvaluationDepth || g_ClipsCommandEvalInProgress || g_ClipsCurrentExpression )
-    return v3;
+    return allDeleted;
   Rules_RunPeriodicCleanup(1, 0);
-  return v3;
+  return allDeleted;
 }
 // 51A280: using guessed type int dword_51A280;
 // 51A960: using guessed type int dword_51A960;
@@ -21014,10 +21014,10 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
 // 51AD38: using guessed type int dword_51AD38;
 
 //----- (0047FCB0) --------------------------------------------------------
-void  Rules_InstancesCommand(double a1)
+void  Rules_InstancesCommand(double context)
 {
-  int v1; // ebp
-  _BYTE *v2; // esi
+  int includeInherited; // ebp
+  _BYTE *className; // esi
   int v3; // ecx
   int v4; // ecx
   int v5; // edx
@@ -21027,15 +21027,15 @@ void  Rules_InstancesCommand(double a1)
   int v9; // edx
   _DWORD v10[2]; // [esp+0h] [ebp-34h] BYREF
   int v11; // [esp+8h] [ebp-2Ch]
-  int v12; // [esp+18h] [ebp-1Ch]
+  int argCount; // [esp+18h] [ebp-1Ch]
 
   Module_GetCurrent();
-  v1 = 0;
-  v2 = 0;
-  v12 = Rules_RtnArgCount();
-  if ( v12 <= 0 )
+  includeInherited = 0;
+  className = 0;
+  argCount = Rules_RtnArgCount();
+  if ( argCount <= 0 )
     goto LABEL_16;
-  if ( !Lexer_ParseValueList(1, v10, 2, a1) )
+  if ( !Lexer_ParseValueList(1, v10, 2, context) )
     return;
   if ( !Module_FindByName(*(_BYTE **)(v11 + 16)) && strcmp_(v3, asc_5033CC) )
   {
@@ -21043,27 +21043,27 @@ void  Rules_InstancesCommand(double a1)
     Parser_ReportError(v5, (int)aDefmoduleName);
     return;
   }
-  if ( v12 <= 1 )
+  if ( argCount <= 1 )
     goto LABEL_16;
-  if ( !Lexer_ParseValueList(2, v10, 2, a1) )
+  if ( !Lexer_ParseValueList(2, v10, 2, context) )
     return;
-  v2 = *(_BYTE **)(v11 + 16);
-  if ( !Class_LookupByModule(v4, v2) )
+  className = *(_BYTE **)(v11 + 16);
+  if ( !Class_LookupByModule(v4, className) )
   {
     if ( strcmp_(v6, asc_5033CC) )
     {
-      Class_ReportLookupError(v7, (int)v2);
+      Class_ReportLookupError(v7, (int)className);
       return;
     }
-    v2 = 0;
+    className = 0;
   }
-  if ( v12 <= 2 )
+  if ( argCount <= 2 )
   {
 LABEL_16:
-    Rules_PrintInstancesByModule((int)g_IO_LogicalName_WDisplay, v1, (int)v2);
+    Rules_PrintInstancesByModule((int)g_IO_LogicalName_WDisplay, includeInherited, (int)className);
     return;
   }
-  if ( Lexer_ParseValueList(3, v10, 2, a1) )
+  if ( Lexer_ParseValueList(3, v10, 2, context) )
   {
     if ( strcmp_(v8, aInherit) )
     {
@@ -21071,7 +21071,7 @@ LABEL_16:
       Parser_ReportError(v9, (int)aKeywordInherit);
       return;
     }
-    v1 = 1;
+    includeInherited = 1;
     goto LABEL_16;
   }
 }
@@ -21089,17 +21089,17 @@ LABEL_16:
 signed int __thiscall Rules_PPInstanceCommand(void *this)
 {
   signed int result; // eax
-  int v2; // edx
+  int instance; // edx
   int v3; // ecx
 
   result = MessageHandler_CheckCurrentMessage((int)this, 1);
   if ( result )
   {
     result = MessageHandler_GetNthArgument(0);
-    v2 = *(_DWORD *)(result + 8);
-    if ( (*(_BYTE *)(v2 + 24) & 2) == 0 )
+    instance = *(_DWORD *)(result + 8);
+    if ( (*(_BYTE *)(instance + 24) & 2) == 0 )
     {
-      Rules_PrintInstanceSlots((int)g_IO_LogicalName_WDisplay, v2, (int)asc_5033FC);
+      Rules_PrintInstanceSlots((int)g_IO_LogicalName_WDisplay, instance, (int)asc_5033FC);
       return Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5033FC, v3);
     }
   }
@@ -21109,43 +21109,43 @@ signed int __thiscall Rules_PPInstanceCommand(void *this)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047FE80) --------------------------------------------------------
-void  Rules_PrintInstancesByModule(int a1, int a2, int a3)
+void  Rules_PrintInstancesByModule(int logicalName, int a2, int className)
 {
-  signed int v4; // esi
-  int v5; // edx
+  signed int traversalID; // esi
+  int targetModule; // edx
   int i; // esi
   int Name; // eax
   int v8; // ecx
   int v9; // ecx
   signed int v10; // [esp+0h] [ebp-18h]
-  int v12; // [esp+8h] [ebp-10h]
+  int instanceCount; // [esp+8h] [ebp-10h]
 
-  v4 = Class_NewTraversalID();
-  v10 = v4;
-  v12 = 0;
-  if ( v4 != -1 )
+  traversalID = Class_NewTraversalID();
+  v10 = traversalID;
+  instanceCount = 0;
+  if ( traversalID != -1 )
   {
     Module_BeginEnum();
-    if ( v5 )
+    if ( targetModule )
     {
-      Module_SetCurrent(v5);
-      v12 = Rules_ListInstancesForClassOrModule(v4, a1, a3, v9);
+      Module_SetCurrent(targetModule);
+      instanceCount = Rules_ListInstancesForClassOrModule(traversalID, logicalName, className, v9);
     }
     else
     {
       for ( i = Module_NextEnum(0); i; i = Module_NextEnum(i) )
       {
         Name = Module_GetName(i);
-        Output_Write(a1, Name, v8);
-        Output_Write(a1, (int)asc_503400, a2);
+        Output_Write(logicalName, Name, v8);
+        Output_Write(logicalName, (int)asc_503400, a2);
         Module_SetCurrent(i);
-        v12 += Rules_ListInstancesForClassOrModule(v10, a1, a3, 1);
+        instanceCount += Rules_ListInstancesForClassOrModule(v10, logicalName, className, 1);
       }
     }
     Module_EndEnum();
     Class_ReleaseTraversalID();
     if ( !g_ClipsHaltExecution )
-      Rules_PrintTally(a1, v12, (int)aInstances, (int)aInstance_1);
+      Rules_PrintTally(logicalName, instanceCount, (int)aInstances, (int)aInstance_1);
   }
 }
 // 47FEB1: variable 'v5' is possibly undefined
@@ -21154,11 +21154,11 @@ void  Rules_PrintInstancesByModule(int a1, int a2, int a3)
 // 51A968: using guessed type int dword_51A968;
 
 //----- (0047FF70) --------------------------------------------------------
-_DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
+_DWORD * Rules_AssertFact(const char *factString, int a2, double a3)
 {
   _DWORD *result; // eax
   int **Symbol; // eax
-  signed int v5; // ebx
+  signed int astNode; // ebx
   int parse_buffer_ptr; // ecx
   _DWORD *parse_buffer; // esi
   int token_buffer_ptr; // ecx
@@ -21170,10 +21170,10 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   trace_load_save = 0;
   trace_rules_assert = getenv("CLASH95_TRACE_RULES_ASSERT_FACT") != 0;
   if ( trace_load_save )
-    fprintf(stderr, "[menu-probe] rules-assert-enter %s\n", a1);
+    fprintf(stderr, "[menu-probe] rules-assert-enter %s\n", factString);
   if ( trace_rules_assert )
   {
-    fprintf(stderr, "[rules] assert-enter fact=\"%s\" caller=%p\n", a1 ? a1 : "<null>", __builtin_return_address(0));
+    fprintf(stderr, "[rules] assert-enter fact=\"%s\" caller=%p\n", factString ? factString : "<null>", __builtin_return_address(0));
     fflush(stderr);
   }
   parse_buffer_ptr = Compat_AllocLow32Bytes(28);
@@ -21190,7 +21190,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
   parse_buffer[1] = 2;
   parse_buffer[2] = g_ClipsFalseSymbol;
-  result = (_DWORD *)IO_OpenStringSource((int)aMkins, a1, 0);
+  result = (_DWORD *)IO_OpenStringSource((int)aMkins, factString, 0);
   if ( result )
   {
     if ( trace_load_save )
@@ -21205,7 +21205,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
         "[rules] assert-token1 token=%d symbol=%08x fact=\"%s\"\n",
         token_buffer[0],
         token_buffer[1],
-        a1 ? a1 : "<null>");
+        factString ? factString : "<null>");
       fflush(stderr);
     }
     if ( token_buffer[0] == 100 )
@@ -21219,10 +21219,10 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
       Symbol = Rules_MakeSymbol(aMakeInstance);
       if ( trace_load_save )
         fprintf(stderr, "[menu-probe] rules-assert-after-make-symbol symbol=%p\n", Symbol);
-      v5 = AST_NewNode(10, (int)Symbol);
+      astNode = AST_NewNode(10, (int)Symbol);
       if ( trace_load_save )
-        fprintf(stderr, "[menu-probe] rules-assert-after-ast-new-node node=%d\n", v5);
-      if ( Rules_ParseMakeInstanceNode(v5, (int)aMkins) )
+        fprintf(stderr, "[menu-probe] rules-assert-after-ast-new-node node=%d\n", astNode);
+      if ( Rules_ParseMakeInstanceNode(astNode, (int)aMkins) )
       {
         if ( trace_load_save )
           fprintf(stderr, "[menu-probe] rules-assert-after-instance-head\n");
@@ -21236,11 +21236,11 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
             "[rules] assert-token2 token=%d symbol=%08x fact=\"%s\"\n",
             token_buffer[0],
             token_buffer[1],
-            a1 ? a1 : "<null>");
+            factString ? factString : "<null>");
           fflush(stderr);
         }
         if ( token_buffer[0] == 102 )
-          Parser_ParseForm((__int16 *)v5, parse_buffer, (int)aMkins, a3);
+          Parser_ParseForm((__int16 *)astNode, parse_buffer, (int)aMkins, a3);
         else
           Parser_ReportSyntaxError();
         if ( trace_load_save )
@@ -21256,10 +21256,10 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
             parse_buffer[3],
             parse_buffer[4],
             parse_buffer[5],
-            a1 ? a1 : "<null>");
+            factString ? factString : "<null>");
           fflush(stderr);
         }
-        AST_Free(v5);
+        AST_Free(astNode);
       }
     }
     else
@@ -21279,7 +21279,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
         parse_buffer[1],
         parse_buffer[2],
         g_ClipsFalseSymbol,
-        a1 ? a1 : "<null>");
+        factString ? factString : "<null>");
       fflush(stderr);
     }
     if ( parse_buffer[1] == 2 && parse_buffer[2] == g_ClipsFalseSymbol )
@@ -21301,38 +21301,38 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004800F0) --------------------------------------------------------
-int  Rules_GetInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4)
+int  Rules_GetInstanceSlotValue(int instance, _BYTE *slotName, int a3, _DWORD *returnValue)
 {
-  int *v4; // eax
+  int *slot; // eax
   int result; // eax
 
   (void)a3;
-  if ( (*(_BYTE *)(a1 + 24) & 2) != 0 || (v4 = Rules_FindInstanceSlot(a1, a2)) == 0 )
+  if ( (*(_BYTE *)(instance + 24) & 2) != 0 || (slot = Rules_FindInstanceSlot(instance, slotName)) == 0 )
   {
     Lexer_ErrorRecover(1);
-    a4[1] = 2;
+    returnValue[1] = 2;
     result = g_ClipsFalseSymbol;
-    a4[2] = g_ClipsFalseSymbol;
+    returnValue[2] = g_ClipsFalseSymbol;
   }
   else
   {
-    a4[1] = (unsigned int)(v4[1] << 24) >> 26;
-    a4[2] = v4[2];
-    if ( (v4[1] & 0xFC) == 0x10 )
+    returnValue[1] = (unsigned int)(slot[1] << 24) >> 26;
+    returnValue[2] = slot[2];
+    if ( (slot[1] & 0xFC) == 0x10 )
     {
-      a4[3] = 0;
-      a4[4] = *(_DWORD *)(v4[2] + 6) - 1;
+      returnValue[3] = 0;
+      returnValue[4] = *(_DWORD *)(slot[2] + 6) - 1;
     }
-    return Rules_PropagateReturnValueDepth((uintptr_t)a4);
+    return Rules_PropagateReturnValueDepth((uintptr_t)returnValue);
   }
   return result;
 }
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (00480160) --------------------------------------------------------
-signed int  Rules_PutInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4, double a5)
+signed int  Rules_PutInstanceSlotValue(int instance, _BYTE *slotName, int a3, _DWORD *value, double a5)
 {
-  int *v6; // eax
+  int *slot; // eax
   signed int result; // eax
 
   (void)a3;
@@ -21342,21 +21342,21 @@ signed int  Rules_PutInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4, do
       stderr,
       "[world_action] fact_external_put_enter selected=%d a=%d b=%d c=%d key=%s arg1=%d arg2=%d cursor=%d,%d flipping=%d lost=%d\n",
       g_SelectedUnitIndex,
-      a1,
-      (int)(intptr_t)a2,
-      (int)(intptr_t)a4,
-      a2 ? (const char *)a2 : "(null)",
-      a4 ? a4[1] : -1,
-      a4 ? a4[2] : -1,
+      instance,
+      (int)(intptr_t)slotName,
+      (int)(intptr_t)value,
+      slotName ? (const char *)slotName : "(null)",
+      value ? value[1] : -1,
+      value ? value[2] : -1,
       g_MouseCursorRawX >> g_CursorCoordShift,
       g_MouseCursorRawY >> g_CursorCoordShift,
       DD_IsFlipping((int)&g_RenderState),
       DD_IsLost((int)&g_RenderState));
     fflush(stderr);
   }
-  if ( (*(_BYTE *)(a1 + 24) & 2) == 0 && a4 && (v6 = Rules_FindInstanceSlot(a1, a2)) != 0 )
+  if ( (*(_BYTE *)(instance + 24) & 2) == 0 && value && (slot = Rules_FindInstanceSlot(instance, slotName)) != 0 )
   {
-    result = Instance_PutSlotValue((_DWORD *)a1, v6, a4, a5);
+    result = Instance_PutSlotValue((_DWORD *)instance, slot, value, a5);
     if ( result )
     {
       if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
@@ -21376,12 +21376,12 @@ signed int  Rules_PutInstanceSlotValue(int a1, _BYTE *a2, int a3, _DWORD *a4, do
 // 51A97C: using guessed type int dword_51A97C;
 
 //----- (004801D0) --------------------------------------------------------
-int  Rules_GetInstanceClassName(int a1)
+int  Rules_GetInstanceClassName(int instance)
 {
-  if ( (*(_BYTE *)(a1 + 24) & 2) != 0 )
+  if ( (*(_BYTE *)(instance + 24) & 2) != 0 )
     return 0;
   else
-    return *(_DWORD *)(*(_DWORD *)(a1 + 28) + 16);
+    return *(_DWORD *)(*(_DWORD *)(instance + 28) + 16);
 }
 
 //----- (004801F0) --------------------------------------------------------
@@ -21392,39 +21392,39 @@ int Rules_GetActiveInstanceCount()
 // 51AD10: using guessed type int dword_51AD10;
 
 //----- (00480200) --------------------------------------------------------
-int  Rules_GetNextInstance(int a1)
+int  Rules_GetNextInstance(int instance)
 {
-  if ( !a1 )
+  if ( !instance )
     return g_Clips_InstanceListHead;
-  if ( (*(_BYTE *)(a1 + 24) & 2) != 0 )
+  if ( (*(_BYTE *)(instance + 24) & 2) != 0 )
     return 0;
-  return *(_DWORD *)(a1 + 68);
+  return *(_DWORD *)(instance + 68);
 }
 // 51AD0C: using guessed type int dword_51AD0C;
 
 //----- (00480220) --------------------------------------------------------
-int  Rules_GetNextInstanceInScope(int a1)
+int  Rules_GetNextInstanceInScope(int instance)
 {
-  int v1; // ecx
+  int candidateInstance; // ecx
   int v3; // ecx
 
-  if ( !a1 )
+  if ( !instance )
   {
-    v1 = g_Clips_InstanceListHead;
+    candidateInstance = g_Clips_InstanceListHead;
     if ( g_Clips_InstanceListHead )
       goto LABEL_7;
     return 0;
   }
-  if ( (*(_BYTE *)(a1 + 24) & 2) != 0 )
+  if ( (*(_BYTE *)(instance + 24) & 2) != 0 )
     return 0;
-  v1 = *(_DWORD *)(a1 + 68);
-  if ( !v1 )
+  candidateInstance = *(_DWORD *)(instance + 68);
+  if ( !candidateInstance )
     return 0;
 LABEL_7:
-  while ( !Class_IsInScope(*(_DWORD *)(v1 + 44), 0) )
+  while ( !Class_IsInScope(*(_DWORD *)(candidateInstance + 44), 0) )
   {
-    v1 = *(_DWORD *)(v3 + 68);
-    if ( !v1 )
+    candidateInstance = *(_DWORD *)(v3 + 68);
+    if ( !candidateInstance )
       return 0;
   }
   return v3;
@@ -21433,20 +21433,20 @@ LABEL_7:
 // 51AD0C: using guessed type int dword_51AD0C;
 
 //----- (00480270) --------------------------------------------------------
-int  Rules_GetNextInstanceInClass(int a1, int a2)
+int  Rules_GetNextInstanceInClass(int classPtr, int instance)
 {
-  if ( !a2 )
-    return *(_DWORD *)(a1 + 80);
-  if ( (*(_BYTE *)(a2 + 24) & 2) != 0 )
+  if ( !instance )
+    return *(_DWORD *)(classPtr + 80);
+  if ( (*(_BYTE *)(instance + 24) & 2) != 0 )
     return 0;
-  return *(_DWORD *)(a2 + 52);
+  return *(_DWORD *)(instance + 52);
 }
 
 //----- (004802F0) --------------------------------------------------------
 int  Rules_ClassCommand(int a1, int a2, double a3)
 {
-  int v3; // esi
-  _DWORD *v4; // eax
+  int argName; // esi
+  _DWORD *instance; // eax
   int result; // eax
   int v6; // ecx
   int v7; // ecx
@@ -21455,36 +21455,36 @@ int  Rules_ClassCommand(int a1, int a2, double a3)
   int v10; // ecx
   int v11; // ecx
   int v12; // [esp-4h] [ebp-24h] BYREF
-  int v13; // [esp+0h] [ebp-20h]
-  int v14; // [esp+4h] [ebp-1Ch]
+  int valueType; // [esp+0h] [ebp-20h]
+  int valueField; // [esp+4h] [ebp-1Ch]
   int v15; // [esp+1Ch] [ebp-4h]
 
   v15 = a2;
-  v3 = *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16);
+  argName = *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16);
   *(_DWORD *)(a1 + 4) = 2;
   *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
   Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v12, a1, a3);
-  if ( v13 == 7 )
+  if ( valueType == 7 )
   {
-    v4 = (_DWORD *)v14;
-    if ( (*(_BYTE *)(v14 + 24) & 2) != 0 )
+    instance = (_DWORD *)valueField;
+    if ( (*(_BYTE *)(valueField + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       return Lexer_ErrorRecover(1);
     }
 LABEL_5:
-    result = Rules_GetConstructNameSymbol(v4[11]);
+    result = Rules_GetConstructNameSymbol(instance[11]);
     *(_DWORD *)(v6 + 8) = result;
     return result;
   }
-  if ( v13 == 8 )
+  if ( valueType == 8 )
   {
-    v4 = Instance_FindByName(v14);
-    if ( !v4 )
-      return Instance_ReportNoSuchInstanceError(v8, v3);
+    instance = Instance_FindByName(valueField);
+    if ( !instance )
+      return Instance_ReportNoSuchInstanceError(v8, argName);
     goto LABEL_5;
   }
-  switch ( v13 )
+  switch ( valueType )
   {
     case 0:
     case 1:
@@ -21493,13 +21493,13 @@ LABEL_5:
     case 4:
     case 5:
     case 6:
-      result = Rules_GetConstructNameSymbol(g_ClipsPrimitiveTypeClassMap[v13]);
+      result = Rules_GetConstructNameSymbol(g_ClipsPrimitiveTypeClassMap[valueType]);
       *(_DWORD *)(v7 + 8) = result;
       break;
     default:
       Rules_PrintErrorID((int)aInscom, 1, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedTypeI, v9);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], v3, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], argName, v10);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__32, v11);
       result = Lexer_ErrorRecover(1);
       break;
@@ -21521,13 +21521,13 @@ LABEL_5:
 signed int  Rules_DeleteInstanceCommand(int a1, double a2)
 {
   signed int result; // eax
-  int v3; // eax
+  int argument; // eax
 
   result = MessageHandler_CheckCurrentMessage(a1, 1);
   if ( result )
   {
-    v3 = MessageHandler_GetNthArgument(0);
-    return Instance_DeleteInstance(*(_DWORD *)(v3 + 8), a2);
+    argument = MessageHandler_GetNthArgument(0);
+    return Instance_DeleteInstance(*(_DWORD *)(argument + 8), a2);
   }
   return result;
 }
@@ -21535,62 +21535,62 @@ signed int  Rules_DeleteInstanceCommand(int a1, double a2)
 //----- (00480430) --------------------------------------------------------
 signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
 {
-  int v3; // esi
-  int v4; // ebx
-  int v5; // edi
-  _DWORD *v6; // ecx
+  int argumentIndex; // esi
+  int argExpr; // ebx
+  int returnCode; // edi
+  _DWORD *instance; // ecx
   int v8; // [esp-4h] [ebp-2Ch] BYREF
-  int v9; // [esp+0h] [ebp-28h]
-  int v10; // [esp+4h] [ebp-24h]
+  int resultType; // [esp+0h] [ebp-28h]
+  int resultValue; // [esp+4h] [ebp-24h]
   int v11; // [esp+20h] [ebp-8h]
 
   v11 = a1;
-  v3 = 1;
-  v4 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  v5 = 1;
-  if ( v4 )
+  argumentIndex = 1;
+  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  returnCode = 1;
+  if ( argExpr )
   {
     while ( 1 )
     {
-      Parser_ParseForm((__int16 *)v4, &v8, a1, a2);
-      if ( v9 == 8 || v9 == 2 )
+      Parser_ParseForm((__int16 *)argExpr, &v8, a1, a2);
+      if ( resultType == 8 || resultType == 2 )
       {
-        v6 = Instance_FindByName(v10);
-        if ( !v6 && strcmp_(0, asc_5033CC) )
+        instance = Instance_FindByName(resultValue);
+        if ( !instance && strcmp_(0, asc_5033CC) )
         {
-          Instance_ReportNoSuchInstanceError((int)v6, (int)aUnmakeInstance);
+          Instance_ReportNoSuchInstanceError((int)instance, (int)aUnmakeInstance);
           return 0;
         }
       }
       else
       {
-        if ( v9 != 7 )
+        if ( resultType != 7 )
         {
-          Parser_ReportError(v3, (int)aInstanceAddr_4);
+          Parser_ReportError(argumentIndex, (int)aInstanceAddr_4);
           Lexer_ErrorRecover(1);
           return 0;
         }
-        v6 = (_DWORD *)v10;
-        if ( (*(_BYTE *)(v10 + 24) & 2) != 0 )
+        instance = (_DWORD *)resultValue;
+        if ( (*(_BYTE *)(resultValue + 24) & 2) != 0 )
         {
           Instance_ReportInvalidInstanceAddressError();
           Lexer_ErrorRecover(1);
           return 0;
         }
       }
-      if ( !Rules_UnmakeInstance((int)v6, a2) )
-        v5 = 0;
+      if ( !Rules_UnmakeInstance((int)instance, a2) )
+        returnCode = 0;
       if ( a1 )
       {
-        v4 = *(_DWORD *)(v4 + 10);
-        ++v3;
-        if ( v4 )
+        argExpr = *(_DWORD *)(argExpr + 10);
+        ++argumentIndex;
+        if ( argExpr )
           continue;
       }
-      return v5;
+      return returnCode;
     }
   }
-  return v5;
+  return returnCode;
 }
 // 480450: variable 'a1' is possibly undefined
 // 480478: variable 'v6' is possibly undefined
@@ -21598,20 +21598,20 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00480520) --------------------------------------------------------
-signed int  Rules_SymbolToInstanceName(_DWORD *a1, double a2)
+signed int  Rules_SymbolToInstanceName(_DWORD *returnValue, double a2)
 {
   signed int result; // eax
 
-  result = Lexer_ParseValueList(1, a1, 2, a2);
+  result = Lexer_ParseValueList(1, returnValue, 2, a2);
   if ( result )
   {
-    a1[1] = 8;
+    returnValue[1] = 8;
   }
   else
   {
-    a1[1] = 2;
+    returnValue[1] = 2;
     result = g_ClipsFalseSymbol;
-    a1[2] = g_ClipsFalseSymbol;
+    returnValue[2] = g_ClipsFalseSymbol;
   }
   return result;
 }
@@ -21620,30 +21620,30 @@ signed int  Rules_SymbolToInstanceName(_DWORD *a1, double a2)
 //----- (00480560) --------------------------------------------------------
 int  Rules_InstanceNameToSymbol(int a1, double a2)
 {
-  _DWORD v4[9]; // [esp-8h] [ebp-24h] BYREF
+  _DWORD result[9]; // [esp-8h] [ebp-24h] BYREF
 
-  v4[7] = a1;
-  if ( Lexer_ParseValueList(1, v4, 8, a2) )
-    return v4[2];
+  result[7] = a1;
+  if ( Lexer_ParseValueList(1, result, 8, a2) )
+    return result[2];
   else
     return g_ClipsFalseSymbol;
 }
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004805A0) --------------------------------------------------------
-_DWORD * Rules_InstanceAddressCommand(int a1, double a2)
+_DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
 {
   _DWORD *result; // eax
   int v4; // ecx
-  int *v5; // edi
-  int v6; // ebp
+  int *theModule; // edi
+  int searchImports; // ebp
   int v7; // eax
   int v8; // ecx
   _DWORD v9[2]; // [esp+0h] [ebp-30h] BYREF
-  int v10; // [esp+8h] [ebp-28h]
+  int resultValue; // [esp+8h] [ebp-28h]
 
-  *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
+  *(_DWORD *)(returnValue + 4) = 2;
+  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
   if ( Rules_RtnArgCount() <= 1 )
   {
     result = (_DWORD *)Lexer_ParseValueList(1, v9, 112, a2);
@@ -21651,25 +21651,25 @@ _DWORD * Rules_InstanceAddressCommand(int a1, double a2)
     {
       if ( v9[1] == 7 )
       {
-        if ( (*(_BYTE *)(v10 + 24) & 2) != 0 )
+        if ( (*(_BYTE *)(resultValue + 24) & 2) != 0 )
         {
           Instance_ReportInvalidInstanceAddressError();
           return (_DWORD *)Lexer_ErrorRecover(1);
         }
         else
         {
-          *(_DWORD *)(a1 + 4) = 7;
-          result = (_DWORD *)v10;
-          *(_DWORD *)(a1 + 8) = v10;
+          *(_DWORD *)(returnValue + 4) = 7;
+          result = (_DWORD *)resultValue;
+          *(_DWORD *)(returnValue + 8) = resultValue;
         }
       }
       else
       {
-        result = Instance_FindByName(v10);
+        result = Instance_FindByName(resultValue);
         if ( !result )
           return (_DWORD *)Instance_ReportNoSuchInstanceError(v8, (int)aInstanceAddres);
-        *(_DWORD *)(a1 + 4) = 7;
-        *(_DWORD *)(a1 + 8) = result;
+        *(_DWORD *)(returnValue + 4) = 7;
+        *(_DWORD *)(returnValue + 8) = result;
       }
     }
   }
@@ -21678,30 +21678,30 @@ _DWORD * Rules_InstanceAddressCommand(int a1, double a2)
     result = (_DWORD *)Lexer_ParseValueList(1, v9, 2, a2);
     if ( result )
     {
-      v5 = Module_FindByName(*(_BYTE **)(v10 + 16));
-      if ( !v5 && strcmp_(v4, asc_5033CC) )
+      theModule = Module_FindByName(*(_BYTE **)(resultValue + 16));
+      if ( !theModule && strcmp_(v4, asc_5033CC) )
       {
         Parser_ReportError(1, (int)aModuleName);
         return (_DWORD *)Lexer_ErrorRecover(1);
       }
-      if ( v5 )
+      if ( theModule )
       {
-        v6 = 0;
+        searchImports = 0;
       }
       else
       {
-        v6 = 1;
-        v5 = (int *)Module_GetCurrent();
+        searchImports = 1;
+        theModule = (int *)Module_GetCurrent();
       }
       result = (_DWORD *)Lexer_ParseValueList(2, v9, 8, a2);
       if ( result )
       {
         v7 = Module_GetCurrent();
-        result = Instance_LookupInHashBucket(v10, (int)v5, (_DWORD *)v6, v7);
+        result = Instance_LookupInHashBucket(resultValue, (int)theModule, (_DWORD *)searchImports, v7);
         if ( result )
         {
-          *(_DWORD *)(a1 + 4) = 7;
-          *(_DWORD *)(a1 + 8) = result;
+          *(_DWORD *)(returnValue + 4) = 7;
+          *(_DWORD *)(returnValue + 8) = result;
           return result;
         }
         return (_DWORD *)Instance_ReportNoSuchInstanceError(v8, (int)aInstanceAddres);
@@ -21716,25 +21716,25 @@ _DWORD * Rules_InstanceAddressCommand(int a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (00480750) --------------------------------------------------------
-int  Rules_InstanceNameCommand(int a1, int a2, double a3)
+int  Rules_InstanceNameCommand(int returnValue, int a2, double a3)
 {
   int result; // eax
-  _DWORD *v5; // edx
+  _DWORD *instance; // edx
   int v6; // ecx
   _DWORD v7[2]; // [esp-4h] [ebp-28h] BYREF
-  int v8; // [esp+4h] [ebp-20h]
+  int resultValue; // [esp+4h] [ebp-20h]
   int v9; // [esp+1Ch] [ebp-8h]
 
   v9 = a2;
-  *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
+  *(_DWORD *)(returnValue + 4) = 2;
+  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
   result = Lexer_ParseValueList(1, v7, 112, a3);
   if ( result )
   {
     if ( v7[1] == 7 )
     {
-      v5 = (_DWORD *)v8;
-      if ( (*(_BYTE *)(v8 + 24) & 2) != 0 )
+      instance = (_DWORD *)resultValue;
+      if ( (*(_BYTE *)(resultValue + 24) & 2) != 0 )
       {
         Instance_ReportInvalidInstanceAddressError();
         return Lexer_ErrorRecover(1);
@@ -21742,13 +21742,13 @@ int  Rules_InstanceNameCommand(int a1, int a2, double a3)
     }
     else
     {
-      v5 = Instance_FindByName(v8);
-      if ( !v5 )
+      instance = Instance_FindByName(resultValue);
+      if ( !instance )
         return Instance_ReportNoSuchInstanceError(v6, (int)aInstanceName);
     }
-    *(_DWORD *)(a1 + 4) = 8;
-    result = v5[7];
-    *(_DWORD *)(a1 + 8) = result;
+    *(_DWORD *)(returnValue + 4) = 8;
+    result = instance[7];
+    *(_DWORD *)(returnValue + 8) = result;
   }
   return result;
 }
@@ -21758,31 +21758,31 @@ int  Rules_InstanceNameCommand(int a1, int a2, double a3)
 //----- (004807F0) --------------------------------------------------------
 BOOL  Rules_InstanceAddressPCommand(int a1, double a2)
 {
-  _DWORD v3[7]; // [esp-4h] [ebp-1Ch] BYREF
+  _DWORD theResult[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), v3, a1, a2);
-  return v3[1] == 7;
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
+  return theResult[1] == 7;
 }
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00480820) --------------------------------------------------------
 BOOL  Rules_InstanceNamePCommand(int a1, double a2)
 {
-  _DWORD v3[7]; // [esp-4h] [ebp-1Ch] BYREF
+  _DWORD theResult[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), v3, a1, a2);
-  return v3[1] == 8;
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
+  return theResult[1] == 8;
 }
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00480850) --------------------------------------------------------
 BOOL  Rules_InstancePCommand(int a1, double a2)
 {
-  int v3; // [esp-4h] [ebp-1Ch] BYREF
-  int v4; // [esp+0h] [ebp-18h]
+  int theResult; // [esp-4h] [ebp-1Ch] BYREF
+  int resultType; // [esp+0h] [ebp-18h]
 
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v3, a1, a2);
-  return v4 == 8 || v4 == 7;
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &theResult, a1, a2);
+  return resultType == 8 || resultType == 7;
 }
 // 51A960: using guessed type int dword_51A960;
 
@@ -21790,19 +21790,19 @@ BOOL  Rules_InstancePCommand(int a1, double a2)
 int  Rules_InstanceExistPCommand(int a1, double a2)
 {
   int result; // eax
-  int v3; // [esp-4h] [ebp-1Ch] BYREF
-  int v4; // [esp+0h] [ebp-18h]
-  int v5; // [esp+4h] [ebp-14h]
+  int theResult; // [esp-4h] [ebp-1Ch] BYREF
+  int resultType; // [esp+0h] [ebp-18h]
+  int resultValue; // [esp+4h] [ebp-14h]
 
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v3, a1, a2);
-  if ( v4 == 7 )
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &theResult, a1, a2);
+  if ( resultType == 7 )
   {
-    LOBYTE(result) = (*(_BYTE *)(v5 + 24) & 2) == 0;
+    LOBYTE(result) = (*(_BYTE *)(resultValue + 24) & 2) == 0;
     return (unsigned __int8)result;
   }
-  if ( v4 == 8 || v4 == 2 )
+  if ( resultType == 8 || resultType == 2 )
   {
-    LOBYTE(result) = Instance_FindByName(v5) != 0;
+    LOBYTE(result) = Instance_FindByName(resultValue) != 0;
     return (unsigned __int8)result;
   }
   Parser_ReportError(1, (int)aInstanceNameIn);
@@ -21812,49 +21812,49 @@ int  Rules_InstanceExistPCommand(int a1, double a2)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00480910) --------------------------------------------------------
-int  Rules_ListInstancesForClassOrModule(signed int a1, int a2, int a3, int a4)
+int  Rules_ListInstancesForClassOrModule(signed int a1, int logicalName, int className, int showModulePrefix)
 {
-  int v5; // edi
+  int instanceCount; // edi
   int i; // esi
-  int v8; // esi
+  int instance; // esi
   int v9; // ecx
   _BYTE *v10; // edx
   int v11; // ecx
-  int *v12; // eax
+  int *theClass; // eax
   int v13; // ecx
 
-  v5 = 0;
-  if ( a3 )
+  instanceCount = 0;
+  if ( className )
   {
     Module_GetCurrent();
-    v12 = Class_LookupByModule(v11, v10);
-    if ( v12 )
-      return Rules_ListInstancesOfClassRecursive(a1, a2, v13, (int)v12, a4);
-    if ( !a4 )
+    theClass = Class_LookupByModule(v11, v10);
+    if ( theClass )
+      return Rules_ListInstancesOfClassRecursive(a1, logicalName, v13, (int)theClass, showModulePrefix);
+    if ( !showModulePrefix )
     {
-      Class_ReportLookupError(v13, a3);
+      Class_ReportLookupError(v13, className);
       return 0;
     }
-    return v5;
+    return instanceCount;
   }
-  if ( a4 )
+  if ( showModulePrefix )
   {
     for ( i = Class_GetNextRecord(0); i; i = Class_GetNextRecord(i) )
-      v5 += Rules_ListInstancesOfClassRecursive(a1, a2, 0, i, a4);
-    return v5;
+      instanceCount += Rules_ListInstancesOfClassRecursive(a1, logicalName, 0, i, showModulePrefix);
+    return instanceCount;
   }
-  v8 = Rules_GetNextInstanceInScope(0);
-  if ( !v8 )
-    return v5;
+  instance = Rules_GetNextInstanceInScope(0);
+  if ( !instance )
+    return instanceCount;
   v9 = 1;
   do
   {
-    Instance_PrintNameOfClass(a2, v8, v9);
-    ++v5;
-    v8 = Rules_GetNextInstanceInScope(v8);
+    Instance_PrintNameOfClass(logicalName, instance, v9);
+    ++instanceCount;
+    instance = Rules_GetNextInstanceInScope(instance);
   }
-  while ( v8 );
-  return v5;
+  while ( instance );
+  return instanceCount;
 }
 // 480983: variable 'v9' is possibly undefined
 // 4809A8: variable 'v11' is possibly undefined
@@ -21862,91 +21862,91 @@ int  Rules_ListInstancesForClassOrModule(signed int a1, int a2, int a3, int a4)
 // 4809BF: variable 'v13' is possibly undefined
 
 //----- (004809F0) --------------------------------------------------------
-int  Rules_ListInstancesOfClassRecursive(signed int a1, int a2, int a3, int a4, int a5)
+int  Rules_ListInstancesOfClassRecursive(signed int traversalID, int logicalName, int inheritFlag, int theClass, int showModulePrefix)
 {
-  int v6; // ebx
-  int v7; // eax
-  int v8; // edi
-  int v9; // ecx
+  int markByte; // ebx
+  int markMask; // eax
+  int count; // edi
+  int instance; // ecx
   int v10; // ecx
-  int v11; // ebp
+  int subclassOffset; // ebp
   unsigned int i; // [esp+Ch] [ebp-10h]
 
-  v6 = ((a1 - (__CFSHL__(a1 >> 31, 3) + 8 * (a1 >> 31))) >> 3) + a4;
-  v7 = 1 << (a1 % 8);
-  v8 = 0;
-  if ( ((unsigned __int8)v7 & *(_BYTE *)(v6 + 108)) != 0 )
+  markByte = ((traversalID - (__CFSHL__(traversalID >> 31, 3) + 8 * (traversalID >> 31))) >> 3) + theClass;
+  markMask = 1 << (traversalID % 8);
+  count = 0;
+  if ( ((unsigned __int8)markMask & *(_BYTE *)(markByte + 108)) != 0 )
     return 0;
-  *(_BYTE *)(v6 + 108) |= v7;
-  v9 = *(_DWORD *)(a4 + 80);
-  if ( v9 )
+  *(_BYTE *)(markByte + 108) |= markMask;
+  instance = *(_DWORD *)(theClass + 80);
+  if ( instance )
   {
     while ( !g_ClipsHaltExecution )
     {
-      if ( a5 )
-        Output_Write(a2, (int)asc_5034F8, v9);
-      Instance_PrintNameOfClass(a2, v9, 1);
-      v9 = *(_DWORD *)(v10 + 52);
-      ++v8;
-      if ( !v9 )
+      if ( showModulePrefix )
+        Output_Write(logicalName, (int)asc_5034F8, instance);
+      Instance_PrintNameOfClass(logicalName, instance, 1);
+      instance = *(_DWORD *)(v10 + 52);
+      ++count;
+      if ( !instance )
         goto LABEL_7;
     }
   }
   else
   {
 LABEL_7:
-    if ( a3 )
+    if ( inheritFlag )
     {
-      v11 = 0;
-      for ( i = 0; *(unsigned __int16 *)(a4 + 40) > i && !g_ClipsHaltExecution; ++i )
+      subclassOffset = 0;
+      for ( i = 0; *(unsigned __int16 *)(theClass + 40) > i && !g_ClipsHaltExecution; ++i )
       {
-        v8 += Rules_ListInstancesOfClassRecursive(a1, a2, a3, *(_DWORD *)(*(_DWORD *)(a4 + 42) + v11), a5);
-        v11 += 4;
+        count += Rules_ListInstancesOfClassRecursive(traversalID, logicalName, inheritFlag, *(_DWORD *)(*(_DWORD *)(theClass + 42) + subclassOffset), showModulePrefix);
+        subclassOffset += 4;
       }
     }
   }
-  return v8;
+  return count;
 }
 // 480A76: variable 'v9' is possibly undefined
 // 480A7B: variable 'v10' is possibly undefined
 // 51A968: using guessed type int dword_51A968;
 
 //----- (00480AF0) --------------------------------------------------------
-signed int  Rules_PrintInstanceSlots(int a1, int a2, int a3)
+signed int  Rules_PrintInstanceSlots(int logicalName, int instance, int separatorString)
 {
   signed int result; // eax
-  unsigned int v5; // edi
-  int v6; // ebp
+  unsigned int slotIndex; // edi
+  int slotOffset; // ebp
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
   int v10; // ecx
   int v11; // ecx
 
-  result = Instance_PrintNameOfClass(a1, a2, 0);
-  v5 = 0;
-  v6 = 0;
-  while ( v5 < *(_DWORD *)(*(_DWORD *)(a2 + 44) + 72) )
+  result = Instance_PrintNameOfClass(logicalName, instance, 0);
+  slotIndex = 0;
+  slotOffset = 0;
+  while ( slotIndex < *(_DWORD *)(*(_DWORD *)(instance + 44) + 72) )
   {
-    Output_Write(a1, a3, a2);
-    Output_Write(a1, (int)asc_5034FC, *(_DWORD *)(*(_DWORD *)(v7 + 72) + v6));
-    Output_Write(a1, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)v8 + 8) + 12) + 16), v8);
+    Output_Write(logicalName, separatorString, instance);
+    Output_Write(logicalName, (int)asc_5034FC, *(_DWORD *)(*(_DWORD *)(v7 + 72) + slotOffset));
+    Output_Write(logicalName, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)v8 + 8) + 12) + 16), v8);
     if ( (*(_DWORD *)(v9 + 4) & 0xFC) == 0x10 )
     {
       if ( *(_DWORD *)(*(_DWORD *)(v9 + 8) + 6) )
       {
-        Output_Write(a1, (int)asc_503458, v9);
-        Lexer_OutputFieldRange(a1, *(_DWORD *)(v11 + 8), *(_DWORD *)(*(_DWORD *)(v11 + 8) + 6) - 1, 0, 0);
+        Output_Write(logicalName, (int)asc_503458, v9);
+        Lexer_OutputFieldRange(logicalName, *(_DWORD *)(v11 + 8), *(_DWORD *)(*(_DWORD *)(v11 + 8) + 6) - 1, 0, 0);
       }
     }
     else
     {
-      Output_Write(a1, (int)asc_503458, v9);
-      Rules_PrintAtomValue(a1, *(_DWORD *)(v10 + 4) << 24 >> 26, *(int **)(v10 + 8));
+      Output_Write(logicalName, (int)asc_503458, v9);
+      Rules_PrintAtomValue(logicalName, *(_DWORD *)(v10 + 4) << 24 >> 26, *(int **)(v10 + 8));
     }
-    result = Output_Write(a1, (int)asc_503500, v9);
-    v6 += 4;
-    ++v5;
+    result = Output_Write(logicalName, (int)asc_503500, v9);
+    slotOffset += 4;
+    ++slotIndex;
   }
   return result;
 }
@@ -21957,29 +21957,29 @@ signed int  Rules_PrintInstanceSlots(int a1, int a2, int a3)
 // 480BA8: variable 'v11' is possibly undefined
 
 //----- (00480BC0) --------------------------------------------------------
-int *__fastcall Rules_FindInstanceSlot(int a1, _BYTE *a2)
+int *__fastcall Rules_FindInstanceSlot(int instance, _BYTE *slotName)
 {
   int *result; // eax
 
-  result = Rules_FindSymbolEntry(a2);
+  result = Rules_FindSymbolEntry(slotName);
   if ( result )
-    return (int *)Instance_GetSlotValueBySymbol(a1, (int)(uintptr_t)result);
+    return (int *)Instance_GetSlotValueBySymbol(instance, (int)(uintptr_t)result);
   return result;
 }
 
 //----- (00480BE0) --------------------------------------------------------
-signed int  Rules_RegisterHostFunctionNoRestrictions(char *a1, int a2, int a3, int a4)
+signed int  Rules_RegisterHostFunctionNoRestrictions(char *functionName, int returnType, int functionPointer, int actualName)
 {
-  return Rules_RegisterHostFunction(a1, a2, a3, a4, 0);
+  return Rules_RegisterHostFunction(functionName, returnType, functionPointer, actualName, 0);
 }
 
 //----- (00480BF0) --------------------------------------------------------
 signed int  Rules_RegisterHostFunction(
-        char *a1,
-        int a2,
-        int a3,
-        int a4,
-        int a5)
+        char *functionName,
+        int returnType,
+        int functionPointer,
+        int actualName,
+        int restrictions)
 {
   int host_function_ptr; // ebx
   _DWORD *free_node; // eax
@@ -21987,23 +21987,23 @@ signed int  Rules_RegisterHostFunction(
   int symbol_ptr; // eax
   int argument_spec_len; // eax
 
-  if ( a2 != 97
-    && a2 != 98
-    && a2 != 99
-    && a2 != 100
-    && a2 != 102
-    && a2 != 105
-    && a2 != 106
-    && a2 != 107
-    && a2 != 108
-    && a2 != 109
-    && a2 != 110
-    && a2 != 111
-    && a2 != 115
-    && a2 != 117
-    && a2 != 118
-    && a2 != 120
-    && a2 != 119 )
+  if ( returnType != 97
+    && returnType != 98
+    && returnType != 99
+    && returnType != 100
+    && returnType != 102
+    && returnType != 105
+    && returnType != 106
+    && returnType != 107
+    && returnType != 108
+    && returnType != 109
+    && returnType != 110
+    && returnType != 111
+    && returnType != 115
+    && returnType != 117
+    && returnType != 118
+    && returnType != 120
+    && returnType != 119 )
   {
     return 0;
   }
@@ -22018,24 +22018,24 @@ signed int  Rules_RegisterHostFunction(
   {
     host_function_ptr = Mem_HeapAllocWithRetry((_DWORD *)0x1F);
   }
-  symbol = Str_Intern(a1, host_function_ptr);
+  symbol = Str_Intern(functionName, host_function_ptr);
   *(_DWORD *)(host_function_ptr + 0) = symbol;
-  *(_BYTE *)(host_function_ptr + 8) = a2;
-  *(_DWORD *)(host_function_ptr + 9) = a4;
+  *(_BYTE *)(host_function_ptr + 8) = returnType;
+  *(_DWORD *)(host_function_ptr + 9) = actualName;
   *(_DWORD *)(host_function_ptr + 27) = g_Rules_HostFunctionListHead;
-  *(_DWORD *)(host_function_ptr + 4) = a3;
-  if ( a5
-    && ((argument_spec_len = strlen((const char *)a5), argument_spec_len < 2)
-     || (IsTable[(unsigned __int8)(*(_BYTE *)a5 + 1)] & 0x20) == 0 && *(_BYTE *)a5 != 42
-     || (IsTable[(unsigned __int8)(*(_BYTE *)(a5 + 1) + 1)] & 0x20) == 0 && *(_BYTE *)(a5 + 1) != 42) )
+  *(_DWORD *)(host_function_ptr + 4) = functionPointer;
+  if ( restrictions
+    && ((argument_spec_len = strlen((const char *)restrictions), argument_spec_len < 2)
+     || (IsTable[(unsigned __int8)(*(_BYTE *)restrictions + 1)] & 0x20) == 0 && *(_BYTE *)restrictions != 42
+     || (IsTable[(unsigned __int8)(*(_BYTE *)(restrictions + 1) + 1)] & 0x20) == 0 && *(_BYTE *)(restrictions + 1) != 42) )
   {
-    a5 = 0;
+    restrictions = 0;
   }
   *(_DWORD *)(host_function_ptr + 13) = 0;
   *(_WORD *)(host_function_ptr + 21) = 1;
   *(_WORD *)(host_function_ptr + 23) = 1;
   symbol_ptr = *(_DWORD *)(host_function_ptr + 0);
-  *(_DWORD *)(host_function_ptr + 17) = a5;
+  *(_DWORD *)(host_function_ptr + 17) = restrictions;
   ++*(_DWORD *)(symbol_ptr + 4);
   g_Rules_HostFunctionListHead = host_function_ptr;
   Rules_InsertFunctionHashEntry(host_function_ptr);
@@ -22046,13 +22046,13 @@ signed int  Rules_RegisterHostFunction(
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00480D60) --------------------------------------------------------
-signed int  Rules_AddFunctionParser(_BYTE *a1)
+signed int  Rules_AddFunctionParser(_BYTE *functionName)
 {
   int **Symbol; // eax
   int *v2; // edx
   int v3; // ecx
 
-  Symbol = Rules_MakeSymbol(a1);
+  Symbol = Rules_MakeSymbol(functionName);
   if ( Symbol )
   {
     *(int **)((char *)Symbol + 17) = 0;
@@ -22071,16 +22071,16 @@ signed int  Rules_AddFunctionParser(_BYTE *a1)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00480DD0) --------------------------------------------------------
-signed int  Rules_SetFunctionSeqOverloadFlags(_BYTE *a1, int a2)
+signed int  Rules_SetFunctionSeqOverloadFlags(_BYTE *functionName, int sequenceFlag)
 {
   int **Symbol; // eax
-  int v3; // edx
+  int overloadFlag; // edx
 
-  Symbol = Rules_MakeSymbol(a1);
+  Symbol = Rules_MakeSymbol(functionName);
   if ( Symbol )
   {
-    *(_WORD *)((char *)Symbol + 23) = v3 != 0;
-    *(_WORD *)((char *)Symbol + 21) = a2 != 0;
+    *(_WORD *)((char *)Symbol + 23) = overloadFlag != 0;
+    *(_WORD *)((char *)Symbol + 21) = sequenceFlag != 0;
     return 1;
   }
   else
@@ -22093,11 +22093,11 @@ signed int  Rules_SetFunctionSeqOverloadFlags(_BYTE *a1, int a2)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00480E80) --------------------------------------------------------
-char * Rules_GetArgTypeName(char a1)
+char * Rules_GetArgTypeName(char restriction)
 {
   char *result; // eax
 
-  switch ( a1 )
+  switch ( restriction )
   {
     case 'a':
       result = aExternalAddres;
@@ -22166,23 +22166,23 @@ char * Rules_GetArgTypeName(char a1)
 }
 
 //----- (00480F10) --------------------------------------------------------
-signed int  Rules_GetArgRestrictionType(int a1, int a2)
+signed int  Rules_GetArgRestrictionType(int theFunction, int position)
 {
   signed int result; // eax
   unsigned int v4; // kr04_4
 
-  if ( !a1 )
+  if ( !theFunction )
     return 117;
-  if ( !*(_DWORD *)(a1 + 17) )
+  if ( !*(_DWORD *)(theFunction + 17) )
     return 117;
-  v4 = strlen(*(const char **)(a1 + 17)) + 1;
+  v4 = strlen(*(const char **)(theFunction + 17)) + 1;
   if ( (int)(v4 - 1) < 3 )
     return 117;
-  result = *(unsigned __int8 *)(*(_DWORD *)(a1 + 17) + 2);
+  result = *(unsigned __int8 *)(*(_DWORD *)(theFunction + 17) + 2);
   if ( result == 42 )
     result = 117;
-  if ( (int)(v4 - 1) >= a2 + 3 )
-    return *(unsigned __int8 *)(a2 + *(_DWORD *)(a1 + 17) + 2);
+  if ( (int)(v4 - 1) >= position + 3 )
+    return *(unsigned __int8 *)(position + *(_DWORD *)(theFunction + 17) + 2);
   return result;
 }
 
@@ -22194,15 +22194,15 @@ int Rules_GetFunctionDefinitionListHead()
 // 51A264: using guessed type int dword_51A264;
 
 //----- (00481010) --------------------------------------------------------
-int ** Rules_MakeSymbol(_BYTE *a1)
+int ** Rules_MakeSymbol(_BYTE *functionName)
 {
   int hash_bucket; // edx
   int interned_name; // ecx
   int bucket_entry; // eax
   int symbol; // edx
 
-  hash_bucket = Rules_HashSymbolName(a1, 0x33u);
-  interned_name = (int)Rules_FindSymbolEntry((int)a1);
+  hash_bucket = Rules_HashSymbolName(functionName, 0x33u);
+  interned_name = (int)Rules_FindSymbolEntry((int)functionName);
   bucket_entry = *(_DWORD *)(g_ClipsFunctionNameHashTable + 4 * hash_bucket);
   while ( bucket_entry )
   {
@@ -22228,7 +22228,7 @@ int Rules_InitFunctionNameHashTable()
 // 54DD40: using guessed type int dword_54DD40;
 
 //----- (00481090) --------------------------------------------------------
-int * Rules_InsertFunctionHashEntry(int a1)
+int * Rules_InsertFunctionHashEntry(int functionDef)
 {
   _DWORD *free_node; // ebx
   int *bucket_head_ptr; // eax
@@ -22250,8 +22250,8 @@ int * Rules_InsertFunctionHashEntry(int a1)
   {
     host_function_ptr = Mem_HeapAllocWithRetry((_DWORD *)8);
   }
-  *(_DWORD *)(host_function_ptr + 0) = a1;
-  symbol_record = *(_DWORD *)(uintptr_t)(unsigned int)a1;
+  *(_DWORD *)(host_function_ptr + 0) = functionDef;
+  symbol_record = *(_DWORD *)(uintptr_t)(unsigned int)functionDef;
   symbol_name = *(_DWORD *)((uintptr_t)(unsigned int)symbol_record + 16);
   bucket_head_ptr = (int *)(g_ClipsFunctionNameHashTable
                           + 4 * Rules_HashSymbolName((_BYTE *)(uintptr_t)(unsigned int)symbol_name, 0x33u));
@@ -22265,31 +22265,31 @@ int * Rules_InsertFunctionHashEntry(int a1)
 // 54DD40: using guessed type int dword_54DD40;
 
 //----- (00481100) --------------------------------------------------------
-int  Rules_RtnLexeme(int a1, int a2, double a3)
+int  Rules_RtnLexeme(int argumentPosition, int a2, double a3)
 {
-  int v5; // eax
+  int argExpr; // eax
   int i; // edx
   int v8; // [esp-4h] [ebp-20h] BYREF
-  int v9; // [esp+0h] [ebp-1Ch]
-  int v10; // [esp+4h] [ebp-18h]
+  int resultType; // [esp+0h] [ebp-1Ch]
+  int resultValue; // [esp+4h] [ebp-18h]
 
-  v5 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  for ( i = 1; v5; ++i )
+  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  for ( i = 1; argExpr; ++i )
   {
-    if ( i >= a1 )
+    if ( i >= argumentPosition )
       break;
-    v5 = *(_DWORD *)(v5 + 10);
+    argExpr = *(_DWORD *)(argExpr + 10);
   }
-  if ( v5 )
+  if ( argExpr )
   {
-    Parser_ParseForm((__int16 *)v5, &v8, a2, a3);
-    if ( v9 == 2 || v9 == 8 || v9 == 3 )
+    Parser_ParseForm((__int16 *)argExpr, &v8, a2, a3);
+    if ( resultType == 2 || resultType == 8 || resultType == 3 )
     {
-      return *(_DWORD *)(v10 + 16);
+      return *(_DWORD *)(resultValue + 16);
     }
     else
     {
-      Rules_ExpectedTypeError((int)aRtnlexeme, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
+      Rules_ExpectedTypeError((int)aRtnlexeme, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       return 0;
@@ -22297,7 +22297,7 @@ int  Rules_RtnLexeme(int a1, int a2, double a3)
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -22306,52 +22306,52 @@ int  Rules_RtnLexeme(int a1, int a2, double a3)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004811C0) --------------------------------------------------------
-double  Rules_RtnDouble(int a1, int a2, double a3)
+double  Rules_RtnDouble(int argumentPosition, int a2, double a3)
 {
-  int v4; // eax
+  int argExpr; // eax
   int i; // edx
   int v7; // eax
   int v8; // [esp+0h] [ebp-30h] BYREF
-  int v9; // [esp+4h] [ebp-2Ch]
-  int v10; // [esp+8h] [ebp-28h]
-  double v11; // [esp+18h] [ebp-18h]
+  int resultType; // [esp+4h] [ebp-2Ch]
+  int resultValue; // [esp+8h] [ebp-28h]
+  double returnValue; // [esp+18h] [ebp-18h]
 
-  v4 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  for ( i = 1; v4; ++i )
+  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  for ( i = 1; argExpr; ++i )
   {
-    if ( i >= a1 )
+    if ( i >= argumentPosition )
       break;
-    v4 = *(_DWORD *)(v4 + 10);
+    argExpr = *(_DWORD *)(argExpr + 10);
   }
-  if ( !v4 )
+  if ( !argExpr )
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
-    v11 = 1.0;
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    returnValue = 1.0;
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
-    return v11;
+    return returnValue;
   }
-  Parser_ParseForm((__int16 *)v4, &v8, a2, a3);
-  if ( !v9 )
+  Parser_ParseForm((__int16 *)argExpr, &v8, a2, a3);
+  if ( !resultType )
   {
-    v7 = *(_DWORD *)(v10 + 20);
-    LODWORD(v11) = *(_DWORD *)(v10 + 16);
-    HIDWORD(v11) = v7;
-    return v11;
+    v7 = *(_DWORD *)(resultValue + 20);
+    LODWORD(returnValue) = *(_DWORD *)(resultValue + 16);
+    HIDWORD(returnValue) = v7;
+    return returnValue;
   }
-  if ( v9 == 1 )
-    return (double)*(int *)(v10 + 16);
-  Rules_ExpectedTypeError((int)aRtndouble, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
-  HIDWORD(v11) = 1072693248;
+  if ( resultType == 1 )
+    return (double)*(int *)(resultValue + 16);
+  Rules_ExpectedTypeError((int)aRtndouble, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+  HIDWORD(returnValue) = 1072693248;
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
-  LODWORD(v11) = 0;
-  return v11;
+  LODWORD(returnValue) = 0;
+  return returnValue;
 }
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004812C0) --------------------------------------------------------
-signed int  Rules_RtnLong(int a1, int a2, double a3)
+signed int  Rules_RtnLong(int argumentPosition, int a2, double a3)
 {
   uintptr_t expression; // eax
   uintptr_t current; // eax
@@ -22364,7 +22364,7 @@ signed int  Rules_RtnLong(int a1, int a2, double a3)
   current = expression ? (uintptr_t)(unsigned int)*(_DWORD *)(expression + 6) : 0;
   for ( i = 1; current; ++i )
   {
-    if ( i >= a1 )
+    if ( i >= argumentPosition )
       break;
     current = (uintptr_t)(unsigned int)*(_DWORD *)(current + 10);
   }
@@ -22372,7 +22372,7 @@ signed int  Rules_RtnLong(int a1, int a2, double a3)
   {
     function_node = expression ? (uintptr_t)(unsigned int)*(_DWORD *)(expression + 2) : 0;
     function_symbol = function_node ? (uintptr_t)(unsigned int)*(_DWORD *)function_node : 0;
-    Rules_NonexistentArgError(function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, a1);
+    Rules_NonexistentArgError(function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 1;
@@ -22384,7 +22384,7 @@ signed int  Rules_RtnLong(int a1, int a2, double a3)
     return Parser_NumberValueAsInt(parsed[2]);
   function_node = expression ? (uintptr_t)(unsigned int)*(_DWORD *)(expression + 2) : 0;
   function_symbol = function_node ? (uintptr_t)(unsigned int)*(_DWORD *)function_node : 0;
-  Rules_ExpectedTypeError((int)aRtnlong, function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, a1);
+  Rules_ExpectedTypeError((int)aRtnlong, function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, argumentPosition);
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
   return 1;
@@ -22392,27 +22392,27 @@ signed int  Rules_RtnLong(int a1, int a2, double a3)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004813B0) --------------------------------------------------------
-int  Rules_RtnUnknown(int a1, _DWORD *a2, double a3)
+int  Rules_RtnUnknown(int argumentPosition, _DWORD *returnValue, double a3)
 {
-  int v5; // eax
+  int argExpr; // eax
   int i; // edx
-  int v8; // ecx
+  int resultType; // ecx
 
-  v5 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  for ( i = 1; v5; ++i )
+  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  for ( i = 1; argExpr; ++i )
   {
-    if ( i >= a1 )
+    if ( i >= argumentPosition )
       break;
-    v5 = *(_DWORD *)(v5 + 10);
+    argExpr = *(_DWORD *)(argExpr + 10);
   }
-  if ( v5 )
+  if ( argExpr )
   {
-    Parser_ParseForm((__int16 *)v5, a2, (int)a2, a3);
-    return v8;
+    Parser_ParseForm((__int16 *)argExpr, returnValue, (int)returnValue, a3);
+    return resultType;
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), a1);
+    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -22424,40 +22424,40 @@ int  Rules_RtnUnknown(int a1, _DWORD *a2, double a3)
 //----- (00481420) --------------------------------------------------------
 int Rules_RtnArgCount()
 {
-  int v0; // eax
+  int argExpr; // eax
   int i; // edx
 
-  v0 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  for ( i = 0; v0; ++i )
-    v0 = *(_DWORD *)(v0 + 10);
+  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  for ( i = 0; argExpr; ++i )
+    argExpr = *(_DWORD *)(argExpr + 10);
   return i;
 }
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00481450) --------------------------------------------------------
-int Lexer_TokenExpect(int a1)
+int Lexer_TokenExpect(int expectedNumber)
 {
   int result; // eax
-  int v2; // edx
-  int v3; // ecx
+  int countRelation; // edx
+  int functionName; // ecx
 
   result = Rules_RtnArgCount();
-  if ( !v2 )
+  if ( !countRelation )
   {
-    if ( result == a1 )
+    if ( result == expectedNumber )
       return result;
 LABEL_9:
-    Rules_ExpectedCountError(v3, a1);
+    Rules_ExpectedCountError(functionName, expectedNumber);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return -1;
   }
-  if ( v2 == 1 )
+  if ( countRelation == 1 )
   {
-    if ( result < a1 )
+    if ( result < expectedNumber )
       goto LABEL_9;
   }
-  else if ( v2 != 2 || result > a1 )
+  else if ( countRelation != 2 || result > expectedNumber )
   {
     goto LABEL_9;
   }
@@ -22467,10 +22467,10 @@ LABEL_9:
 // 481478: variable 'v3' is possibly undefined
 
 //----- (004814A0) --------------------------------------------------------
-int  Rules_ArgRangeCheck(int a1, int a2)
+int  Rules_ArgRangeCheck(int functionName, int maxArgs)
 {
   int result; // eax
-  int v4; // edx
+  int minArgs; // edx
   int v5; // ecx
   int v6; // ecx
   int v7; // ecx
@@ -22480,15 +22480,15 @@ int  Rules_ArgRangeCheck(int a1, int a2)
   int v11; // ecx
 
   result = Rules_RtnArgCount();
-  if ( result < v4 || result > a2 )
+  if ( result < minArgs || result > maxArgs )
   {
     Rules_PrintErrorID((int)aArgacces, 1, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v6);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAtLeas, v7);
     Rules_PrintLongInteger(v8, v8);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAndNoMoreThan, v9);
-    Rules_PrintLongInteger(v10, a2);
+    Rules_PrintLongInteger(v10, maxArgs);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArguments_, v11);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);

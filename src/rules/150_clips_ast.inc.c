@@ -5,11 +5,11 @@
 //----- (004943E0) --------------------------------------------------------
 signed int  AST_NewNode(__int16 type, int value)
 {
-  __int16 v2; // cx
+  __int16 nodeType; // cx
   _DWORD *freeListHead; // ebx
   signed int result; // eax
 
-  v2 = type;
+  nodeType = type;
   freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 56);
   if ( freeListHead )
   {
@@ -23,7 +23,7 @@ signed int  AST_NewNode(__int16 type, int value)
   }
   *(_DWORD *)(result + 10) = 0;
   *(_DWORD *)(result + 6) = 0;
-  *(_WORD *)result = v2;
+  *(_WORD *)result = nodeType;
   *(_DWORD *)(result + 2) = value;
   return result;
 }

@@ -38,9 +38,9 @@ signed int  Rules_OddpFunction(int returnValue, double a2)
   signed int result; // eax
   int item; // [esp-8h] [ebp-24h] BYREF
   int itemValue; // [esp+0h] [ebp-1Ch]
-  int v5; // [esp+14h] [ebp-8h]
+  int returnValueCopy; // [esp+14h] [ebp-8h]
 
-  v5 = returnValue;
+  returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, &item, 1, a2);
@@ -55,9 +55,9 @@ signed int  Rules_EvenpFunction(int returnValue, double a2)
   signed int result; // eax
   int item; // [esp-8h] [ebp-24h] BYREF
   int itemValue; // [esp+0h] [ebp-1Ch]
-  int v5; // [esp+14h] [ebp-8h]
+  int returnValueCopy; // [esp+14h] [ebp-8h]
 
-  v5 = returnValue;
+  returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, &item, 1, a2);
@@ -143,17 +143,17 @@ int * Rules_MultiplicationFunction(int returnValue, double a2)
   signed int ltotal; // ebp
   int useFloatTotal; // edi
   int theExpression; // esi
-  int v5; // eax
+  int parseOk; // eax
   double newFtotal; // st6
-  int v7; // ebx
+  int resultTarget; // ebx
   int *result; // eax
-  double v9; // [esp-8h] [ebp-4Ch]
+  double floatResultValue; // [esp-8h] [ebp-4Ch]
   _DWORD theArgument[2]; // [esp+0h] [ebp-44h] BYREF
   int argValuePtr; // [esp+8h] [ebp-3Ch]
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int i; // [esp+24h] [ebp-20h]
-  signed int v15; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 1;
@@ -163,7 +163,7 @@ int * Rules_MultiplicationFunction(int returnValue, double a2)
   for ( i = 1; theExpression; ++i )
   {
     a2 = Rules_CoerceFormToNumericArg((__int16 *)theExpression, useFloatTotal, theArgument, a2, i);
-    if ( v5 )
+    if ( parseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -178,7 +178,7 @@ int * Rules_MultiplicationFunction(int returnValue, double a2)
         ltotal *= *(_DWORD *)(argValuePtr + 16);
         continue;
       }
-      v15 = ltotal;
+      savedLtotal = ltotal;
       newFtotal = (double)ltotal * *(double *)(argValuePtr + 16);
       useFloatTotal = 1;
     }
@@ -186,18 +186,18 @@ int * Rules_MultiplicationFunction(int returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    v9 = ftotal;
-    v7 = returnValueCopy;
+    floatResultValue = ftotal;
+    resultTarget = returnValueCopy;
     *(_DWORD *)(returnValueCopy + 4) = 0;
-    result = (int *)Rules_AddDoubleValue(v9);
+    result = (int *)Rules_AddDoubleValue(floatResultValue);
   }
   else
   {
     *(_DWORD *)(returnValueCopy + 4) = 1;
-    v7 = returnValueCopy;
+    resultTarget = returnValueCopy;
     result = Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(v7 + 8) = result;
+  *(_DWORD *)(resultTarget + 8) = result;
   return result;
 }
 // 4A04ED: variable 'v5' is possibly undefined
@@ -209,19 +209,19 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
   signed int ltotal; // ebp
   int useFloatTotal; // edi
   int theExpression; // esi
-  int v5; // eax
-  int v6; // eax
-  int v7; // eax
-  int v8; // ebx
+  int parseOk; // eax
+  int firstParseOk; // eax
+  int floatHighBits; // eax
+  int resultTarget; // ebx
   int *result; // eax
-  double v10; // [esp-8h] [ebp-4Ch]
+  double floatResultValue; // [esp-8h] [ebp-4Ch]
   int theArgument; // [esp+0h] [ebp-44h] BYREF
   int argType; // [esp+4h] [ebp-40h]
   int argValuePtr; // [esp+8h] [ebp-3Ch]
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int v17; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 0;
@@ -232,7 +232,7 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
   if ( theExpression )
   {
     a2 = Rules_CoerceFormToNumericArg((__int16 *)theExpression, 0, &theArgument, a2, 1);
-    if ( v6 )
+    if ( firstParseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -243,16 +243,16 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
     else
     {
       useFloatTotal = 1;
-      v7 = *(_DWORD *)(argValuePtr + 20);
+      floatHighBits = *(_DWORD *)(argValuePtr + 20);
       LODWORD(ftotal) = *(_DWORD *)(argValuePtr + 16);
-      HIDWORD(ftotal) = v7;
+      HIDWORD(ftotal) = floatHighBits;
     }
     ++argIndex;
   }
   while ( theExpression )
   {
     a2 = Rules_CoerceFormToNumericArg((__int16 *)theExpression, useFloatTotal, &theArgument, a2, argIndex);
-    if ( v5 )
+    if ( parseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -269,7 +269,7 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
       }
       else
       {
-        v17 = ltotal;
+        savedLtotal = ltotal;
         useFloatTotal = 1;
         ftotal = (double)ltotal - *(double *)(argValuePtr + 16);
       }
@@ -278,18 +278,18 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    v10 = ftotal;
-    v8 = returnValueCopy;
+    floatResultValue = ftotal;
+    resultTarget = returnValueCopy;
     *(_DWORD *)(returnValueCopy + 4) = 0;
-    result = (int *)Rules_AddDoubleValue(v10);
+    result = (int *)Rules_AddDoubleValue(floatResultValue);
   }
   else
   {
     *(_DWORD *)(returnValueCopy + 4) = 1;
-    v8 = returnValueCopy;
+    resultTarget = returnValueCopy;
     result = Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(v8 + 8) = result;
+  *(_DWORD *)(resultTarget + 8) = result;
   return result;
 }
 // 4A05E0: variable 'v5' is possibly undefined
@@ -302,21 +302,21 @@ int * Rules_DivisionFunction(int returnValue, double a2)
   signed int ltotal; // esi
   int useFloatTotal; // ebp
   int theExpression; // edi
-  int v5; // ebx
+  int resultTarget; // ebx
   int *result; // eax
-  int v7; // eax
-  int v8; // eax
-  int v9; // eax
+  int firstParseOk; // eax
+  int floatHighBits; // eax
+  int parseOk; // eax
   BOOL isDivideByZero; // eax
-  int v11; // ebx
-  double v12; // [esp-8h] [ebp-4Ch]
+  int divZeroResultTarget; // ebx
+  double floatResultValue; // [esp-8h] [ebp-4Ch]
   int theArgument; // [esp+0h] [ebp-44h] BYREF
   int argType; // [esp+4h] [ebp-40h]
   int argValuePtr; // [esp+8h] [ebp-3Ch]
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int v19; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 1;
@@ -327,7 +327,7 @@ int * Rules_DivisionFunction(int returnValue, double a2)
   if ( theExpression )
   {
     a2 = Rules_CoerceFormToNumericArg((__int16 *)theExpression, g_Rules_AutoFloatDividendEnabled, &theArgument, a2, 1);
-    if ( v7 )
+    if ( firstParseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -338,16 +338,16 @@ int * Rules_DivisionFunction(int returnValue, double a2)
     else
     {
       useFloatTotal = 1;
-      v8 = *(_DWORD *)(argValuePtr + 20);
+      floatHighBits = *(_DWORD *)(argValuePtr + 20);
       LODWORD(ftotal) = *(_DWORD *)(argValuePtr + 16);
-      HIDWORD(ftotal) = v8;
+      HIDWORD(ftotal) = floatHighBits;
     }
     ++argIndex;
   }
   while ( theExpression )
   {
     a2 = Rules_CoerceFormToNumericArg((__int16 *)theExpression, useFloatTotal, &theArgument, a2, argIndex);
-    if ( v9 )
+    if ( parseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -360,10 +360,10 @@ int * Rules_DivisionFunction(int returnValue, double a2)
       Rules_ReportDivideByZeroError();
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      v11 = returnValueCopy;
+      divZeroResultTarget = returnValueCopy;
       *(_DWORD *)(returnValueCopy + 4) = 0;
       result = (int *)Rules_AddDoubleValue(1.0);
-      *(_DWORD *)(v11 + 8) = result;
+      *(_DWORD *)(divZeroResultTarget + 8) = result;
       return result;
     }
     if ( useFloatTotal )
@@ -379,7 +379,7 @@ int * Rules_DivisionFunction(int returnValue, double a2)
       }
       else
       {
-        v19 = ltotal;
+        savedLtotal = ltotal;
         useFloatTotal = 1;
         ftotal = (double)ltotal / *(double *)(argValuePtr + 16);
       }
@@ -388,18 +388,18 @@ int * Rules_DivisionFunction(int returnValue, double a2)
   }
   if ( useFloatTotal )
   {
-    v12 = ftotal;
-    v5 = returnValueCopy;
+    floatResultValue = ftotal;
+    resultTarget = returnValueCopy;
     *(_DWORD *)(returnValueCopy + 4) = 0;
-    result = (int *)Rules_AddDoubleValue(v12);
+    result = (int *)Rules_AddDoubleValue(floatResultValue);
   }
   else
   {
     *(_DWORD *)(returnValueCopy + 4) = 1;
-    v5 = returnValueCopy;
+    resultTarget = returnValueCopy;
     result = Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(v5 + 8) = result;
+  *(_DWORD *)(resultTarget + 8) = result;
   return result;
 }
 // 4A0762: variable 'v7' is possibly undefined
@@ -412,11 +412,11 @@ double  Rules_DivFunction(double result)
 {
   int theExpression; // esi
   int argIndex; // edi
-  int v3; // eax
-  double v4; // st6
-  int v5; // eax
-  double v6; // st6
-  double v7; // st6
+  int firstParseOk; // eax
+  double firstFloatValue; // st6
+  int parseOk; // eax
+  double divisorFloatCheck; // st6
+  double divisorFloat; // st6
   int theArgument; // [esp+0h] [ebp-3Ch] BYREF
   int argType; // [esp+4h] [ebp-38h]
   int argValuePtr; // [esp+8h] [ebp-34h]
@@ -430,7 +430,7 @@ double  Rules_DivFunction(double result)
   if ( theExpression )
   {
     result = Rules_CoerceFormToNumericArg((__int16 *)theExpression, 0, &theArgument, result, 1);
-    if ( v3 )
+    if ( firstParseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -440,16 +440,16 @@ double  Rules_DivFunction(double result)
     }
     else
     {
-      v4 = *(double *)(argValuePtr + 16);
+      firstFloatValue = *(double *)(argValuePtr + 16);
       _CHP(theArgument, argType);
-      total = (int)v4;
+      total = (int)firstFloatValue;
     }
     argIndex = 2;
   }
   while ( theExpression )
   {
     result = Rules_CoerceFormToNumericArg((__int16 *)theExpression, 0, &theArgument, result, argIndex);
-    if ( v5 )
+    if ( parseOk )
       theExpression = *(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
@@ -461,9 +461,9 @@ double  Rules_DivFunction(double result)
     {
       if ( argType )
         goto LABEL_16;
-      v6 = *(double *)(argValuePtr + 16);
+      divisorFloatCheck = *(double *)(argValuePtr + 16);
       _CHP(theArgument, 0);
-      theNumber = (int)v6;
+      theNumber = (int)divisorFloatCheck;
     }
     if ( !theNumber )
     {
@@ -479,10 +479,10 @@ LABEL_16:
     }
     else
     {
-      v7 = *(double *)(argValuePtr + 16);
+      divisorFloat = *(double *)(argValuePtr + 16);
       _CHP(theArgument, argType);
-      v11 = (int)v7;
-      total /= (int)v7;
+      v11 = (int)divisorFloat;
+      total /= (int)divisorFloat;
     }
     ++argIndex;
   }
@@ -495,18 +495,18 @@ LABEL_16:
 //----- (004A0A10) --------------------------------------------------------
 int  Rules_SetAutoFloatDividendCommand(int returnValue, double a2)
 {
-  int v3; // ecx
+  int result; // ecx
   int theValue; // [esp-4h] [ebp-24h] BYREF
   __int64 typeValuePair; // [esp+0h] [ebp-20h]
-  int v7; // [esp+18h] [ebp-8h]
+  int returnValueCopy; // [esp+18h] [ebp-8h]
 
-  v7 = returnValue;
+  returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) != -1 )
   {
     Rules_RtnUnknown(1, &theValue, a2);
     g_Rules_AutoFloatDividendEnabled = typeValuePair != __PAIR64__(g_ClipsFalseSymbol, 2);
   }
-  return v3;
+  return result;
 }
 // 4A0A32: variable 'v3' is possibly undefined
 // 51ACD4: using guessed type int dword_51ACD4;
@@ -954,29 +954,29 @@ signed int * Rules_ImplodeFunction(double a1)
   char *writePtr; // edx
   __int16 curFieldType; // bx
   _BYTE *floatString; // eax
-  _BYTE *v17; // edx
+  _BYTE *floatWritePtr; // edx
   char *spacePtr; // eax
-  int v20; // edx
+  int fieldPosSnapshot; // edx
   _BYTE *integerString; // eax
-  _BYTE *v22; // edx
+  _BYTE *intWritePtr; // edx
   int strOffset; // eax
   char *srcString; // ecx
   char *closingQuotePtr; // ebp
   char ch; // bl
-  char *v28; // edx
+  char *charWritePtr; // edx
   __int16 lexemeType; // bx
   char *wordString; // eax
   int writeIndex; // ecx
-  char *v32; // edx
-  int v34; // eax
+  char *wordWritePtr; // edx
+  int wordCloseIndex; // eax
   char *instanceNameString; // eax
   int instWriteIndex; // ecx
-  char *v37; // edx
-  int v39; // eax
+  char *instanceWritePtr; // edx
+  int instCloseIndex; // eax
   char *symbolString; // eax
   int internedSymbol; // ecx
   int value; // [esp+0h] [ebp-3Ch] BYREF
-  int v44; // [esp+8h] [ebp-34h]
+  int multifieldBase; // [esp+8h] [ebp-34h]
   int beginIndex; // [esp+Ch] [ebp-30h]
   int endIndex; // [esp+10h] [ebp-2Ch]
   char *afterBracketPtr; // [esp+18h] [ebp-24h]
@@ -987,8 +987,8 @@ signed int * Rules_ImplodeFunction(double a1)
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &value, 4, a1) )
     return Str_Intern(g_Rules_ImplodeEmptyResult, v1);
   fieldIndex = beginIndex + 1;
-  theMultifield = v44;
-  fieldPtr = v44 + 6 * (beginIndex + 1) - 6;
+  theMultifield = multifieldBase;
+  fieldPtr = multifieldBase + 6 * (beginIndex + 1) - 6;
   while ( fieldIndex <= endIndex + 1 )
   {
     fieldType = *(_WORD *)(fieldPtr + 14);
@@ -1067,7 +1067,7 @@ LABEL_9:
         {
           do
           {
-            *v22++ = *integerString;
+            *intWritePtr++ = *integerString;
             ++bufOffset;
           }
           while ( *++integerString );
@@ -1089,10 +1089,10 @@ LABEL_9:
             *closingQuotePtr = 92;
           }
           ch = *srcString;
-          v28 = &retStr[strOffset];
+          charWritePtr = &retStr[strOffset];
           ++srcString;
           ++strOffset;
-          *v28 = ch;
+          *charWritePtr = ch;
         }
         bufOffset = strOffset + 1;
         *closingQuotePtr = 34;
@@ -1108,17 +1108,17 @@ LABEL_9:
           writeIndex = bufOffset + 1;
           if ( *wordString )
           {
-            v32 = afterBracketPtr;
+            wordWritePtr = afterBracketPtr;
             do
             {
-              *v32++ = *wordString;
+              *wordWritePtr++ = *wordString;
               ++writeIndex;
             }
             while ( *++wordString );
           }
-          v34 = writeIndex;
+          wordCloseIndex = writeIndex;
           bufOffset = writeIndex + 1;
-          retStr[v34] = 93;
+          retStr[wordCloseIndex] = 93;
         }
         else if ( lexemeType == 7 )
         {
@@ -1127,17 +1127,17 @@ LABEL_9:
           instWriteIndex = bufOffset + 1;
           if ( *instanceNameString )
           {
-            v37 = afterBracketPtr;
+            instanceWritePtr = afterBracketPtr;
             do
             {
-              *v37++ = *instanceNameString;
+              *instanceWritePtr++ = *instanceNameString;
               ++instWriteIndex;
             }
             while ( *++instanceNameString );
           }
-          v39 = instWriteIndex;
+          instCloseIndex = instWriteIndex;
           bufOffset = instWriteIndex + 1;
-          retStr[v39] = 93;
+          retStr[instCloseIndex] = 93;
         }
         else
         {
@@ -1161,18 +1161,18 @@ LABEL_9:
       {
         do
         {
-          *v17++ = *floatString;
+          *floatWritePtr++ = *floatString;
           ++bufOffset;
         }
         while ( *++floatString );
       }
     }
     spacePtr = &retStr[bufOffset];
-    v20 = fieldPos;
+    fieldPosSnapshot = fieldPos;
     ++bufOffset;
     *spacePtr = 32;
     fieldCursor = curField + 6;
-    fieldPos = v20 + 1;
+    fieldPos = fieldPosSnapshot + 1;
   }
   *(writePtr - 1) = 0;
   Str_Intern(retStr, bufOffset);
@@ -1193,7 +1193,7 @@ _DWORD * Rules_SubseqFunction(_DWORD *subValue, double a2)
   int start; // edi
   int end; // eax
   int length; // edx
-  int v7; // edx
+  int offsetBase; // edx
   _DWORD *result; // eax
   _DWORD value[2]; // [esp+0h] [ebp-34h] BYREF
   int valuePtr; // [esp+8h] [ebp-2Ch]
@@ -1222,11 +1222,11 @@ _DWORD * Rules_SubseqFunction(_DWORD *subValue, double a2)
   if ( start < 1 )
     start = 1;
   subValue[1] = 4;
-  v7 = offset;
+  offsetBase = offset;
   subValue[2] = theList;
-  result = (_DWORD *)(v7 + end - 2);
+  result = (_DWORD *)(offsetBase + end - 2);
   subValue[4] = result;
-  subValue[3] = v7 + start - 2;
+  subValue[3] = offsetBase + start - 2;
   return result;
 }
 
@@ -1335,7 +1335,7 @@ _DWORD * Rules_RestFunction(_DWORD *returnValue, int a2, double a3)
 //----- (004A1A90) --------------------------------------------------------
 signed int * Rules_NthFunction(int returnValue, int a2, double a3)
 {
-  int v5; // ecx
+  int beginCopy; // ecx
   int n; // edx
   int theMultifield; // ebx
   signed int *result; // eax
@@ -1350,7 +1350,7 @@ signed int * Rules_NthFunction(int returnValue, int a2, double a3)
   if ( Lexer_TokenExpect(2) != -1
     && Lexer_ParseValueList(1, value1, 1, a3)
     && Lexer_ParseValueList(2, &value2, 4, a3)
-    && (v5 = begin, n = *(_DWORD *)(value1[2] + 16), n <= end - begin + 1)
+    && (beginCopy = begin, n = *(_DWORD *)(value1[2] + 16), n <= end - begin + 1)
     && n >= 1 )
   {
     theMultifield = multifieldPtr;
@@ -1361,7 +1361,7 @@ signed int * Rules_NthFunction(int returnValue, int a2, double a3)
   else
   {
     *(_DWORD *)(returnValue + 4) = 2;
-    result = Str_Intern(aNil_1, v5);
+    result = Str_Intern(aNil_1, beginCopy);
     *(_DWORD *)(returnValue + 8) = result;
   }
   return result;
@@ -1374,15 +1374,15 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
   signed int result; // eax
   int fieldIndex; // ecx
   int fieldOffset; // esi
-  int v5; // ecx
+  int curFieldIndex; // ecx
   _DWORD item2[6]; // [esp-18h] [ebp-40h] BYREF
   int item1; // [esp+0h] [ebp-28h] BYREF
   int item1Value; // [esp+8h] [ebp-20h]
   int item1Begin; // [esp+Ch] [ebp-1Ch]
   int item1End; // [esp+10h] [ebp-18h]
-  int v11; // [esp+20h] [ebp-8h]
+  int returnValueCopy; // [esp+20h] [ebp-8h]
 
-  v11 = returnValue;
+  returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(2) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, &item1, 4, a2);
@@ -1399,7 +1399,7 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
         if ( !result )
           return result;
         fieldOffset += 6;
-        fieldIndex = v5 + 1;
+        fieldIndex = curFieldIndex + 1;
       }
       return 1;
     }
@@ -1695,7 +1695,7 @@ int  Rules_EvalPrognMultifieldBuiltin(_DWORD *returnValue, double a2)
   int fieldIndex; // ebx
   int fieldOffset; // edi
   __int16 *theExp; // ecx
-  int v9; // ecx
+  int exprNode; // ecx
   int result; // eax
   int argval; // [esp+0h] [ebp-34h] BYREF
   int argvalValue; // [esp+8h] [ebp-2Ch]
@@ -1752,7 +1752,7 @@ LABEL_17:
         Parser_ParseForm(theExp, returnValue, (int)theExp, a2);
         if ( g_ClipsHaltExecution || g_ClipsBreakFlag || g_ClipsHaltExecutionFlag )
           break;
-        theExp = *(__int16 **)(v9 + 10);
+        theExp = *(__int16 **)(exprNode + 10);
         if ( !theExp )
           goto LABEL_17;
       }
@@ -1844,18 +1844,18 @@ signed int  Rules_MultifieldReplaceRange(
   __int16 fieldType; // di
   int dstFieldPtr; // ebx
   int fieldIndex; // ecx
-  int v24; // ebx
-  int v25; // ecx
-  int v26; // edx
-  int v27; // ebp
-  int v28; // ebx
+  int fieldByteOffset; // ebx
+  int tailSrcByteOffset; // ecx
+  int tailDstByteOffset; // edx
+  int srcFieldsBase; // ebp
+  int dstFieldsBase; // ebx
   int dstWritePtr; // [esp+0h] [ebp-34h]
   int srcReadPtr; // [esp+4h] [ebp-30h]
   int dstLength; // [esp+Ch] [ebp-28h]
-  int v32; // [esp+14h] [ebp-20h]
+  int absBeginByteOffset; // [esp+14h] [ebp-20h]
   int absEnd; // [esp+18h] [ebp-1Ch]
-  int v35; // [esp+1Ch] [ebp-18h]
-  int v37; // [esp+24h] [ebp-10h]
+  int nextDstIndex; // [esp+1Ch] [ebp-18h]
+  int dstFieldByteOffset; // [esp+24h] [ebp-10h]
 
   if ( src )
     srcLength = src[4] - src[3] + 1;
@@ -1883,13 +1883,13 @@ signed int  Rules_MultifieldReplaceRange(
     dst[2] = Rules_CreateEphemeralMultifield(combinedLength - replaceCount);
     dst[4] = dstLength - 1;
     srcIndex = *(_DWORD *)(v14 + 12);
-    v32 = 6 * absBegin;
+    absBeginByteOffset = 6 * absBegin;
     dstIndex = 0;
     srcByteOffset = 6 * srcIndex;
     while ( 1 )
     {
-      v35 = dstIndex + 1;
-      if ( srcByteOffset >= v32 )
+      nextDstIndex = dstIndex + 1;
+      if ( srcByteOffset >= absBeginByteOffset )
         break;
       srcMultifield = src[2];
       dstMultifield = dst[2];
@@ -1899,25 +1899,25 @@ signed int  Rules_MultifieldReplaceRange(
       dstByteOffset += 6;
       ++srcIndex;
       *(_DWORD *)(dstByteOffset + dstMultifield + 10) = *(_DWORD *)(srcByteOffset + srcMultifield + 10);
-      dstIndex = v35;
+      dstIndex = nextDstIndex;
     }
     if ( field[1] == 4 )
     {
       fieldIndex = field[3];
       if ( fieldIndex <= field[4] )
       {
-        v24 = 6 * fieldIndex;
-        v37 = 6 * dstIndex;
+        fieldByteOffset = 6 * fieldIndex;
+        dstFieldByteOffset = 6 * dstIndex;
         do
         {
-          dstWritePtr = dst[2] + 14 + v37;
-          srcReadPtr = v24 + field[2] + 14;
+          dstWritePtr = dst[2] + 14 + dstFieldByteOffset;
+          srcReadPtr = fieldByteOffset + field[2] + 14;
           *(_WORD *)dstWritePtr = *(_WORD *)srcReadPtr;
           *(_DWORD *)(dstWritePtr + 2) = *(_DWORD *)(srcReadPtr + 2);
-          v37 += 6;
+          dstFieldByteOffset += 6;
           ++fieldIndex;
           ++dstIndex;
-          v24 += 6;
+          fieldByteOffset += 6;
         }
         while ( fieldIndex <= field[4] );
       }
@@ -1933,19 +1933,19 @@ signed int  Rules_MultifieldReplaceRange(
       ++srcIndex;
     if ( dstIndex < dstLength )
     {
-      v25 = 6 * (srcIndex + 1);
-      v26 = 6 * dstIndex;
+      tailSrcByteOffset = 6 * (srcIndex + 1);
+      tailDstByteOffset = 6 * dstIndex;
       do
       {
-        v27 = src[2];
-        v28 = dst[2];
-        *(_WORD *)(v26 + v28 + 14) = *(_WORD *)(v25 + v27 + 14);
-        v26 += 6;
+        srcFieldsBase = src[2];
+        dstFieldsBase = dst[2];
+        *(_WORD *)(tailDstByteOffset + dstFieldsBase + 14) = *(_WORD *)(tailSrcByteOffset + srcFieldsBase + 14);
+        tailDstByteOffset += 6;
         ++dstIndex;
-        *(_DWORD *)(v26 + v28 + 10) = *(_DWORD *)(v25 + v27 + 16);
-        v25 += 6;
+        *(_DWORD *)(tailDstByteOffset + dstFieldsBase + 10) = *(_DWORD *)(tailSrcByteOffset + srcFieldsBase + 16);
+        tailSrcByteOffset += 6;
       }
-      while ( v26 < 6 * dstLength );
+      while ( tailDstByteOffset < 6 * dstLength );
     }
     return 1;
   }
@@ -1956,38 +1956,38 @@ signed int  Rules_MultifieldReplaceRange(
 signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theField, int theIndex, int functionName)
 {
   int srcLength; // eax
-  int v8; // edx
+  int srcLengthCopy; // edx
   int maxInsertPos; // eax
-  int v12; // eax
+  int dstMultifield; // eax
   signed int dstLength; // edx
   int v14; // edx
   int insertOffset; // ebp
   int srcIndex; // edx
   int dstIndex; // eax
-  int v18; // ecx
+  int srcByteOffset; // ecx
   int dstFieldPtr; // ebp
-  int v20; // ecx
-  int v21; // ecx
-  int v22; // ebp
+  int insertFieldPtr; // ecx
+  int tailSrcByteOffset; // ecx
+  int tailDstFieldPtr; // ebp
   int fieldIndex; // ecx
-  int v24; // ebp
-  int v25; // [esp+4h] [ebp-2Ch]
+  int fieldCopyDstPtr; // ebp
+  int srcReadPtr; // [esp+4h] [ebp-2Ch]
   int v26; // [esp+4h] [ebp-2Ch]
-  int v27; // [esp+4h] [ebp-2Ch]
+  int fieldReadPtr; // [esp+4h] [ebp-2Ch]
   int insertPos; // [esp+8h] [ebp-28h]
   int insertSlot; // [esp+8h] [ebp-28h]
-  int v30; // [esp+Ch] [ebp-24h]
-  int v32; // [esp+14h] [ebp-1Ch]
-  int v33; // [esp+18h] [ebp-18h]
-  int v34; // [esp+1Ch] [ebp-14h]
-  int v35; // [esp+20h] [ebp-10h]
+  int insertByteOffsetEnd; // [esp+Ch] [ebp-24h]
+  int fieldByteOffset; // [esp+14h] [ebp-1Ch]
+  int fieldCopyDstByteOffset; // [esp+18h] [ebp-18h]
+  int tailDstByteOffset; // [esp+1Ch] [ebp-14h]
+  int headDstByteOffset; // [esp+20h] [ebp-10h]
 
   insertPos = theIndex;
   if ( src )
     srcLength = src[4] - src[3] + 1;
   else
     srcLength = 0;
-  v8 = srcLength;
+  srcLengthCopy = srcLength;
   maxInsertPos = srcLength + 1;
   if ( theIndex < 1 )
   {
@@ -2003,9 +2003,9 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
     if ( src )
     {
       if ( theField[1] == 4 )
-        dstLength = theField[4] - theField[3] + 1 + v8;
+        dstLength = theField[4] - theField[3] + 1 + srcLengthCopy;
       else
-        dstLength = v8 + 1;
+        dstLength = srcLengthCopy + 1;
       dst[2] = Rules_CreateEphemeralMultifield(dstLength);
       insertOffset = insertPos - 1;
       dst[4] = v14 - 1;
@@ -2014,38 +2014,38 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
       dstIndex = 0;
       if ( srcIndex < insertOffset )
       {
-        v35 = 0;
-        v18 = 6 * srcIndex;
-        v30 = 6 * insertOffset;
+        headDstByteOffset = 0;
+        srcByteOffset = 6 * srcIndex;
+        insertByteOffsetEnd = 6 * insertOffset;
         do
         {
-          dstFieldPtr = dst[2] + 14 + v35;
-          v25 = v18 + src[2] + 14;
-          *(_WORD *)dstFieldPtr = *(_WORD *)v25;
+          dstFieldPtr = dst[2] + 14 + headDstByteOffset;
+          srcReadPtr = srcByteOffset + src[2] + 14;
+          *(_WORD *)dstFieldPtr = *(_WORD *)srcReadPtr;
           ++dstIndex;
           ++srcIndex;
-          *(_DWORD *)(dstFieldPtr + 2) = *(_DWORD *)(v25 + 2);
-          v18 += 6;
-          v35 += 6;
+          *(_DWORD *)(dstFieldPtr + 2) = *(_DWORD *)(srcReadPtr + 2);
+          srcByteOffset += 6;
+          headDstByteOffset += 6;
         }
-        while ( v18 < v30 );
+        while ( srcByteOffset < insertByteOffsetEnd );
       }
       if ( theField[1] == 4 )
       {
         fieldIndex = theField[3];
         if ( fieldIndex <= theField[4] )
         {
-          v32 = 6 * fieldIndex;
-          v33 = 6 * dstIndex;
+          fieldByteOffset = 6 * fieldIndex;
+          fieldCopyDstByteOffset = 6 * dstIndex;
           do
           {
-            v27 = theField[2] + 14 + v32;
-            v24 = dst[2] + 14 + v33;
-            *(_WORD *)v24 = *(_WORD *)v27;
-            *(_DWORD *)(v24 + 2) = *(_DWORD *)(v27 + 2);
-            v32 += 6;
+            fieldReadPtr = theField[2] + 14 + fieldByteOffset;
+            fieldCopyDstPtr = dst[2] + 14 + fieldCopyDstByteOffset;
+            *(_WORD *)fieldCopyDstPtr = *(_WORD *)fieldReadPtr;
+            *(_DWORD *)(fieldCopyDstPtr + 2) = *(_DWORD *)(fieldReadPtr + 2);
+            fieldByteOffset += 6;
             ++fieldIndex;
-            v33 += 6;
+            fieldCopyDstByteOffset += 6;
             ++dstIndex;
           }
           while ( fieldIndex <= theField[4] );
@@ -2053,23 +2053,23 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
       }
       else
       {
-        v20 = dst[2] + 14 + 6 * insertSlot;
-        *(_WORD *)v20 = *((_WORD *)theField + 2);
+        insertFieldPtr = dst[2] + 14 + 6 * insertSlot;
+        *(_WORD *)insertFieldPtr = *((_WORD *)theField + 2);
         ++dstIndex;
-        *(_DWORD *)(v20 + 2) = theField[2];
+        *(_DWORD *)(insertFieldPtr + 2) = theField[2];
       }
-      v21 = 6 * srcIndex;
-      v34 = 6 * dstIndex;
+      tailSrcByteOffset = 6 * srcIndex;
+      tailDstByteOffset = 6 * dstIndex;
       while ( srcIndex <= src[4] )
       {
-        v22 = dst[2] + 14 + v34;
-        v26 = v21 + src[2] + 14;
-        *(_WORD *)v22 = *(_WORD *)v26;
+        tailDstFieldPtr = dst[2] + 14 + tailDstByteOffset;
+        v26 = tailSrcByteOffset + src[2] + 14;
+        *(_WORD *)tailDstFieldPtr = *(_WORD *)v26;
         ++dstIndex;
-        *(_DWORD *)(v22 + 2) = *(_DWORD *)(v26 + 2);
+        *(_DWORD *)(tailDstFieldPtr + 2) = *(_DWORD *)(v26 + 2);
         ++srcIndex;
-        v21 += 6;
-        v34 += 6;
+        tailSrcByteOffset += 6;
+        tailDstByteOffset += 6;
       }
     }
     else if ( theField[1] == 4 )
@@ -2081,9 +2081,9 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
     {
       dst[2] = Rules_CreateEphemeralMultifield(0);
       dst[4] = 0;
-      v12 = dst[2];
-      *(_WORD *)(v12 + 14) = *((_WORD *)theField + 2);
-      *(_DWORD *)(v12 + 16) = theField[2];
+      dstMultifield = dst[2];
+      *(_WORD *)(dstMultifield + 14) = *((_WORD *)theField + 2);
+      *(_DWORD *)(dstMultifield + 16) = theField[2];
     }
     return 1;
   }
@@ -2148,15 +2148,15 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
   int dstIndex; // eax
   int dstByteOffset; // ebx
   int srcByteOffset; // ecx
-  int v14; // edx
+  int resultFlag; // edx
   _DWORD *emptyMultifield; // eax
-  int v17; // ecx
-  int v18; // edx
+  int tailSrcByteOffset; // ecx
+  int tailDstByteOffset; // edx
   int dstFieldPtr; // ebp
   int srcMultifield; // ebx
   int fieldValue; // ebx
-  int v22; // [esp+0h] [ebp-24h]
-  int v23; // [esp+4h] [ebp-20h]
+  int headDstFieldPtr; // [esp+0h] [ebp-24h]
+  int headSrcFieldPtr; // [esp+4h] [ebp-20h]
   int absEnd; // [esp+10h] [ebp-14h]
 
   if ( src )
@@ -2174,9 +2174,9 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
   {
     emptyMultifield = Rules_CreateEphemeralMultifield(0);
     dst[4] = -1;
-    v14 = 1;
+    resultFlag = 1;
     dst[2] = emptyMultifield;
-    return v14;
+    return resultFlag;
   }
   absBegin = rangeBegin + src[3] - 1;
   absEnd = rangeEnd + src[3] - 1;
@@ -2191,13 +2191,13 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
     srcByteOffset = 6 * srcIndex;
     do
     {
-      v22 = dstByteOffset + dst[2] + 14;
-      v23 = srcByteOffset + src[2] + 14;
+      headDstFieldPtr = dstByteOffset + dst[2] + 14;
+      headSrcFieldPtr = srcByteOffset + src[2] + 14;
       ++dstIndex;
-      *(_WORD *)v22 = *(_WORD *)v23;
+      *(_WORD *)headDstFieldPtr = *(_WORD *)headSrcFieldPtr;
       ++srcIndex;
       srcByteOffset += 6;
-      *(_DWORD *)(v22 + 2) = *(_DWORD *)(v23 + 2);
+      *(_DWORD *)(headDstFieldPtr + 2) = *(_DWORD *)(headSrcFieldPtr + 2);
       dstByteOffset += 6;
     }
     while ( srcByteOffset < 6 * absBegin );
@@ -2206,18 +2206,18 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
     ++srcIndex;
   if ( dstIndex <= dst[4] )
   {
-    v17 = 6 * (srcIndex + 1);
-    v18 = 6 * dstIndex;
+    tailSrcByteOffset = 6 * (srcIndex + 1);
+    tailDstByteOffset = 6 * dstIndex;
     do
     {
-      dstFieldPtr = dst[2] + 14 + v18;
+      dstFieldPtr = dst[2] + 14 + tailDstByteOffset;
       srcMultifield = src[2];
-      *(_WORD *)dstFieldPtr = *(_WORD *)(v17 + srcMultifield + 14);
-      fieldValue = *(_DWORD *)(v17 + srcMultifield + 16);
-      v17 += 6;
+      *(_WORD *)dstFieldPtr = *(_WORD *)(tailSrcByteOffset + srcMultifield + 14);
+      fieldValue = *(_DWORD *)(tailSrcByteOffset + srcMultifield + 16);
+      tailSrcByteOffset += 6;
       *(_DWORD *)(dstFieldPtr + 2) = fieldValue;
       ++dstIndex;
-      v18 += 6;
+      tailDstByteOffset += 6;
     }
     while ( dstIndex <= dst[4] );
   }
@@ -2517,7 +2517,7 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
   signed int result; // eax
   int v4; // ecx
   int v5; // ecx
-  double v6; // st7
+  double maxCharsFloat; // st7
   int arg3; // [esp-4h] [ebp-5Ch] BYREF
   int arg3Type; // [esp+0h] [ebp-58h]
   int arg3Value; // [esp+4h] [ebp-54h]
@@ -2548,9 +2548,9 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
         }
         else
         {
-          v6 = *(double *)(arg3Value + 16);
+          maxCharsFloat = *(double *)(arg3Value + 16);
           _CHP(arg3, arg3Type);
-          maxChars = (int)v6;
+          maxChars = (int)maxCharsFloat;
         }
         result = strncmp_(v5, *(_DWORD *)(arg2Value + 16));
       }
@@ -2578,7 +2578,7 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
 //----- (004A3120) --------------------------------------------------------
 signed int * Rules_SubStringBuiltin(double a1)
 {
-  int v1; // ecx
+  int sourceLength; // ecx
   int start; // ebp
   int end; // esi
   _DWORD *tempPtr; // eax
@@ -2587,7 +2587,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   char *sourcePtr; // edx
   char ch; // bl
   int v9; // edx
-  int v10; // ecx
+  int internedString; // ecx
   int theArgument; // [esp+0h] [ebp-38h] BYREF
   int argType; // [esp+4h] [ebp-34h]
   int argValue; // [esp+8h] [ebp-30h]
@@ -2595,7 +2595,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   int startRaw; // [esp+1Ch] [ebp-1Ch]
 
   if ( Lexer_TokenExpect(3) == -1 || !Lexer_ParseValueList(1, &theArgument, 1, a1) )
-    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( argType == 1 )
   {
     startRaw = *(_DWORD *)(argValue + 16);
@@ -2608,7 +2608,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   }
   start = startRaw - 1;
   if ( !Lexer_ParseValueList(2, &theArgument, 1, a1) )
-    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( argType == 1 )
   {
     endRaw = *(_DWORD *)(argValue + 16);
@@ -2621,17 +2621,17 @@ signed int * Rules_SubStringBuiltin(double a1)
   }
   end = endRaw - 1;
   if ( !Lexer_ParseValueList(3, &theArgument, 111, a1) )
-    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( start < 0 )
     start = 0;
-  v1 = strlen(*(const char **)(argValue + 16));
-  if ( end > v1 )
+  sourceLength = strlen(*(const char **)(argValue + 16));
+  if ( end > sourceLength )
   {
-    v1 = strlen(*(const char **)(argValue + 16));
-    end = v1;
+    sourceLength = strlen(*(const char **)(argValue + 16));
+    end = sourceLength;
   }
   if ( start > end )
-    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   tempPtr = Mem_SmallBlockAlloc(end - start + 2);
   charIndex = start;
   returnString = (char *)tempPtr;
@@ -2647,7 +2647,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   *(_BYTE *)tempPtr = 0;
   Str_Intern(returnString, charIndex);
   Mem_SmallBlockFree(returnString, v9 - start + 2);
-  return (signed int *)v10;
+  return (signed int *)internedString;
 }
 // 4A323C: variable 'v9' is possibly undefined
 // 4A324A: variable 'v10' is possibly undefined
@@ -2663,7 +2663,7 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
   _BYTE *strg2Ptr; // edx
   int matchLength; // ecx
   char ch; // bh
-  const char *v10; // edi
+  const char *searchString; // edi
   int v11; // edx
   int v12; // edx
   int theArgument1; // [esp+0h] [ebp-4Ch] BYREF
@@ -2724,9 +2724,9 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
         }
         else
         {
-          v10 = *(const char **)(arg2Value + 16);
+          searchString = *(const char **)(arg2Value + 16);
           *(_DWORD *)(v17 + 4) = 1;
-          result = Rules_AddIntegerValue(strlen(v10) + 1);
+          result = Rules_AddIntegerValue(strlen(searchString) + 1);
           *(_DWORD *)(v11 + 8) = result;
         }
       }
@@ -3630,7 +3630,7 @@ LABEL_10:
 //----- (004A4AE0) --------------------------------------------------------
 int * Rules_MathMod(int returnValue, double a2)
 {
-  signed int v3; // eax
+  signed int parseStatus; // eax
   int *result; // eax
   signed int intRemainder; // eax
   int item2; // [esp+8h] [ebp-78h] BYREF
@@ -3647,18 +3647,18 @@ int * Rules_MathMod(int returnValue, double a2)
 
   if ( Lexer_TokenExpect(2) == -1 )
   {
-    v3 = 0;
+    parseStatus = 0;
 LABEL_20:
     *(_DWORD *)(returnValue + 4) = 1;
-    result = Rules_AddIntegerValue(v3);
+    result = Rules_AddIntegerValue(parseStatus);
     *(_DWORD *)(returnValue + 8) = result;
     return result;
   }
-  v3 = Lexer_ParseValueList(1, &item1, 110, a2);
-  if ( !v3 )
+  parseStatus = Lexer_ParseValueList(1, &item1, 110, a2);
+  if ( !parseStatus )
     goto LABEL_20;
-  v3 = Lexer_ParseValueList(2, &item2, 110, a2);
-  if ( !v3 )
+  parseStatus = Lexer_ParseValueList(2, &item2, 110, a2);
+  if ( !parseStatus )
     goto LABEL_20;
   if ( item2Type == 1 && !*(_DWORD *)(item2Value + 16) || item2Type != 1 && *(double *)(item2Value + 16) == 0.0 )
   {
@@ -5084,7 +5084,7 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
   int wordLength; // ecx
   int scanIndex; // edx
   char ch; // bl
-  int v11; // esi
+  int resultList; // esi
   char v13; // bh
   char *wordSrc; // esi
   char *newTopic; // ebx
@@ -5226,9 +5226,9 @@ LABEL_14:
         lineBuffer[wordLength + 255] = ch;
       }
     }
-    v11 = listHead;
+    resultList = listHead;
     *(_DWORD *)(listHead + 80) = topicList;
-    return v11;
+    return resultList;
   }
 }
 // 4A6373: variable 'v4' is possibly undefined
@@ -5408,7 +5408,7 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
   int v34; // edx
   int codeItem; // esi
   int i; // edi
-  int v37; // edx
+  int codeGenIndex; // edx
   int v38; // ecx
   int v39; // ecx
   int v40; // ecx
@@ -5471,8 +5471,8 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
       if ( *(_DWORD *)(codeItem + 12) )
       {
         v33 = g_ClipsCodeHeaderFile;
-        v37 = i++;
-        (*(void (__fastcall **)(int, int, int))(codeItem + 12))(g_ConstructsToCImageId, v37, g_ClipsCodeMaxIndicesPerArray);
+        codeGenIndex = i++;
+        (*(void (__fastcall **)(int, int, int))(codeItem + 12))(g_ConstructsToCImageId, codeGenIndex, g_ClipsCodeMaxIndicesPerArray);
       }
     }
     Rules_RestoreAtomicValueBuckets();
@@ -6215,7 +6215,7 @@ __int16 * Rules_WriteExpressionNodeToCode(__int16 *result, int a2)
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
-  int v18; // edx
+  int primitiveEntity; // edx
   int v19; // edx
   char v20; // [esp+0h] [ebp-18h]
   char v21; // [esp+0h] [ebp-18h]
@@ -6291,13 +6291,13 @@ LABEL_36:
             if ( nodeType != 8 )
             {
 LABEL_20:
-              v18 = g_Clips_PrimitiveEntityTable[*exprNode];
-              if ( v18 )
+              primitiveEntity = g_Clips_PrimitiveEntityTable[*exprNode];
+              if ( primitiveEntity )
               {
-                if ( (*(_BYTE *)(v18 + 1) & 0x40) != 0 )
+                if ( (*(_BYTE *)(primitiveEntity + 1) & 0x40) != 0 )
                   Compiler_WriteBitMapReference(g_ClipsCodeDataFile, *(_DWORD *)(exprNode + 1), v7);
                 else
-                  Output_WriteFormatted(g_ClipsCodeDataFile, v18, g_ClipsCodeDataFile, (int)aNull_1, v22);
+                  Output_WriteFormatted(g_ClipsCodeDataFile, primitiveEntity, g_ClipsCodeDataFile, (int)aNull_1, v22);
               }
               else
               {
@@ -6580,7 +6580,7 @@ int  Rules_ConstructCodeFileOpen(
         int reopenOldFile,
         const char **codeFile)
 {
-  const char **v13; // ecx
+  const char **codeFileInfo; // ecx
   const char *curFileName; // edi
   int curFileID; // edx
   int curVersion; // eax
@@ -6593,10 +6593,10 @@ int  Rules_ConstructCodeFileOpen(
   int v23; // edx
   int v24; // [esp-8h] [ebp-68h]
   char arrayNameBuffer[80]; // [esp+0h] [ebp-60h] BYREF
-  int v26; // [esp+50h] [ebp-10h]
+  int savedImageID; // [esp+50h] [ebp-10h]
 
-  v26 = imageID;
-  v13 = codeFile;
+  savedImageID = imageID;
+  codeFileInfo = codeFile;
   if ( reopenOldFile )
   {
     if ( !codeFile )
@@ -6604,9 +6604,9 @@ int  Rules_ConstructCodeFileOpen(
       Rules_ReportSystemError(0, 5);
       IO_RunRouterExitCallbacks();
     }
-    curFileName = *v13;
-    curFileID = (int)v13[1];
-    curVersion = (int)v13[2];
+    curFileName = *codeFileInfo;
+    curFileID = (int)codeFileInfo[1];
+    curVersion = (int)codeFileInfo[2];
   }
   else
   {
@@ -6622,7 +6622,7 @@ int  Rules_ConstructCodeFileOpen(
   }
   if ( theFile )
   {
-    Output_WriteFormatted((int)v13, curFileID, theFile, (int)asc_508250, arrayNameBuffer[0]);
+    Output_WriteFormatted((int)codeFileInfo, curFileID, theFile, (int)asc_508250, arrayNameBuffer[0]);
     return theFile;
   }
   else
@@ -6637,7 +6637,7 @@ int  Rules_ConstructCodeFileOpen(
       }
       else
       {
-        v24 = v26;
+        v24 = savedImageID;
         ++*fileCount;
         sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, v24, arrayVersion);
         Output_WriteFormatted(v19, v18, v19, (int)aSS_0, structureName);
@@ -6769,12 +6769,12 @@ int  IO_RenameFile(const CHAR *oldFileName, const CHAR *newFileName, int a3)
 //----- (004A7DC0) --------------------------------------------------------
 signed int  Rules_PrintArgumentValueList(int logicalName, _DWORD *theSegment)
 {
-  int v2; // ecx
+  int logicalNameCopy; // ecx
   __int16 fieldIndex; // bx
   signed int result; // eax
   int fieldValue; // edi
 
-  v2 = logicalName;
+  logicalNameCopy = logicalName;
   fieldIndex = 0;
   while ( 1 )
   {
@@ -6785,7 +6785,7 @@ signed int  Rules_PrintArgumentValueList(int logicalName, _DWORD *theSegment)
     if ( fieldValue )
       (*(void (**)(void))(*(_DWORD *)fieldValue + 4))();
     if ( ++fieldIndex < *theSegment << 17 >> 23 )
-      Output_Write(v2, (int)asc_5083B0, v2);
+      Output_Write(logicalNameCopy, (int)asc_5083B0, logicalNameCopy);
   }
   return result;
 }
@@ -6801,7 +6801,7 @@ _DWORD * Rules_MultifieldCopyWithMarkers(int *srcSegment, int a2, int a3)
   int v8; // edx
   _DWORD *newSegment; // ebx
   __int16 i; // ax
-  int v11; // ecx
+  int fieldIndex; // ecx
   _DWORD *fieldPtr; // esi
 
   totalFields = a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23);
@@ -6830,11 +6830,11 @@ _DWORD * Rules_MultifieldCopyWithMarkers(int *srcSegment, int a2, int a3)
   *(_DWORD *)newSegmentPtr |= v8 & 0x7FC0;
   for ( i = 0; ; ++i )
   {
-    v11 = i;
-    fieldPtr = &newSegment[v11];
+    fieldIndex = i;
+    fieldPtr = &newSegment[fieldIndex];
     if ( i >= *newSegment << 17 >> 23 )
       break;
-    fieldPtr[2] = srcSegment[v11 + 2];
+    fieldPtr[2] = srcSegment[fieldIndex + 2];
   }
   if ( a2 )
   {
@@ -6855,7 +6855,7 @@ _WORD * Rules_MergeMultifieldValues(_DWORD *firstSegment, _DWORD *secondSegment,
   signed int newSegmentPtr; // eax
   char v8; // bl
   char v9; // bh
-  int v10; // ecx
+  int combinedLength; // ecx
   _WORD *newSegment; // edx
   __int16 i; // ax
   int srcOffset; // ebx
@@ -6884,10 +6884,10 @@ _WORD * Rules_MergeMultifieldValues(_DWORD *firstSegment, _DWORD *secondSegment,
   v9 = *(_BYTE *)newSegmentPtr;
   *(_DWORD *)(newSegmentPtr + 4) = 0;
   *(_BYTE *)newSegmentPtr = v9 & 0xCF;
-  v10 = (((unsigned __int16)(2 * *(_WORD *)firstSegment) >> 7) + ((unsigned __int16)(2 * *(_WORD *)secondSegment) >> 7)) & 0x1FF;
+  combinedLength = (((unsigned __int16)(2 * *(_WORD *)firstSegment) >> 7) + ((unsigned __int16)(2 * *(_WORD *)secondSegment) >> 7)) & 0x1FF;
   *(_WORD *)newSegmentPtr &= 0x803Fu;
   newSegment = (_WORD *)newSegmentPtr;
-  *(_DWORD *)newSegmentPtr |= v10 << 6;
+  *(_DWORD *)newSegmentPtr |= combinedLength << 6;
   for ( i = 0; i < *firstSegment << 17 >> 23; ++i )
   {
     srcOffset = 4 * i;
@@ -6939,7 +6939,7 @@ int  Rules_ResetDataObjectValue(int theDataObject)
 signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression, signed int *theList)
 {
   _DWORD *freeNode; // edx
-  signed int v6; // eax
+  signed int listNode; // eax
   char v7; // cl
   signed int newNode; // edx
   _DWORD *freeEntry; // ecx
@@ -6954,17 +6954,17 @@ signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression,
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
     *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeNode;
-    v6 = g_ClipsMemFreeListTemp;
+    listNode = g_ClipsMemFreeListTemp;
   }
   else
   {
-    v6 = Mem_HeapAllocWithRetry((_DWORD *)0xC);
+    listNode = Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
-  *(_WORD *)v6 &= 0x8000u;
-  v7 = *(_BYTE *)v6;
-  *(_DWORD *)(v6 + 4) = 0;
-  *(_BYTE *)v6 = v7 | 0x40;
-  newNode = v6;
+  *(_WORD *)listNode &= 0x8000u;
+  v7 = *(_BYTE *)listNode;
+  *(_DWORD *)(listNode + 4) = 0;
+  *(_BYTE *)listNode = v7 | 0x40;
+  newNode = listNode;
   freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 48);
   if ( freeEntry )
   {
@@ -7012,7 +7012,7 @@ signed int  Rules_MultifieldAppendValue(_DWORD *theSegment, int newValue, int a3
   __int16 newLength; // dx
   signed int newSegment; // ebp
   __int16 i; // ax
-  int v12; // ecx
+  int fieldIndex; // ecx
   int fieldPtr; // ebx
   __int16 writeIndex; // ax
   int v15; // edx
@@ -7043,11 +7043,11 @@ signed int  Rules_MultifieldAppendValue(_DWORD *theSegment, int newValue, int a3
   *(_DWORD *)newSegmentPtr |= (newLength & 0x1FF) << 6;
   for ( i = 0; ; ++i )
   {
-    v12 = i;
-    fieldPtr = v12 * 4 + newSegment;
+    fieldIndex = i;
+    fieldPtr = fieldIndex * 4 + newSegment;
     if ( i >= *theSegment << 17 >> 23 )
       break;
-    *(_DWORD *)(fieldPtr + 8) = theSegment[v12 + 2];
+    *(_DWORD *)(fieldPtr + 8) = theSegment[fieldIndex + 2];
   }
   *(_DWORD *)(fieldPtr + 8) = newValue;
   writeIndex = i + 1;
@@ -7171,7 +7171,7 @@ signed int Rules_PrintJoinNetworkSharingReport()
 // 4A85AC: variable 'v0' is possibly undefined
 
 //----- (004A85C0) --------------------------------------------------------
-signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int a2)
+signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int linePrefix)
 {
   uintptr_t node; // ecx
   int rule_name; // esi
@@ -7187,7 +7187,7 @@ signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int a2)
     {
       *(_BYTE *)node |= 0x20u;
       rule_name = Rules_GetConstructNameString(*(_DWORD *)(node + 36));
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], linePrefix, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], rule_name, 0);
       result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5083B4, 0);
       node = (uintptr_t)(unsigned int)*(_DWORD *)(node + 28);
@@ -7195,7 +7195,7 @@ signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int a2)
     else
     {
       *(_BYTE *)node |= 0x20u;
-      result = Rules_PrintJoinNetworkNodeRuleOwners(*(_DWORD *)(node + 20), a2);
+      result = Rules_PrintJoinNetworkNodeRuleOwners(*(_DWORD *)(node + 20), linePrefix);
       node = (uintptr_t)(unsigned int)*(_DWORD *)(node + 28);
     }
   }
@@ -7242,9 +7242,9 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
   int result; // eax
   int i; // edi
   _DWORD *theDefrule; // ecx
-  int v8; // eax
+  int currentRuleId; // eax
   int joinPtr; // eax
-  int v10; // edx
+  int currentJoinId; // edx
   int nextJoin; // edx
 
   *moduleCount = 0;
@@ -7259,9 +7259,9 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
     theDefrule = (_DWORD *)Rules_GetNextDefrule(0);
     while ( theDefrule )
     {
-      v8 = *ruleCount;
+      currentRuleId = *ruleCount;
       theDefrule[3] = *ruleCount;
-      *ruleCount = v8 + 1;
+      *ruleCount = currentRuleId + 1;
       joinPtr = theDefrule[11];
       if ( joinPtr )
       {
@@ -7270,9 +7270,9 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
           if ( (*(_BYTE *)joinPtr & 0x20) == 0 )
           {
             *(_BYTE *)joinPtr |= 0x20u;
-            v10 = *joinCount;
+            currentJoinId = *joinCount;
             *(_DWORD *)(joinPtr + 4) = *joinCount;
-            *joinCount = v10 + 1;
+            *joinCount = currentJoinId + 1;
           }
           if ( (*(_BYTE *)joinPtr & 4) != 0 )
             nextJoin = *(_DWORD *)(joinPtr + 16);
@@ -7840,17 +7840,17 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   int v16; // ecx
   int v17; // edi
   int theConstruct; // ebp
-  char *v19; // edi
+  char *moduleNameDst; // edi
   char *Name; // esi
   char v21; // al
   char v22; // al
-  char *v23; // esi
-  char *v24; // edi
+  char *separatorSrc; // esi
+  char *separatorDst; // edi
   char v25; // al
   char v26; // al
-  char *v27; // esi
+  char *constructNameSrc; // esi
   unsigned int nameLength; // kr08_4
-  char *v29; // edi
+  char *constructNameDst; // edi
   char v30; // al
   char v31; // al
   signed int *qualifiedSymbol; // eax
@@ -7862,9 +7862,9 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   int allModules; // [esp+204h] [ebp-20h]
   int moduleCursor; // [esp+208h] [ebp-1Ch]
   int v41; // [esp+20Ch] [ebp-18h]
-  int v42; // [esp+210h] [ebp-14h]
+  int savedConstructClass; // [esp+210h] [ebp-14h]
 
-  v42 = constructClass;
+  savedConstructClass = constructClass;
   constructCount = 0;
   Module_BeginEnum();
   allModules = 0;
@@ -7876,7 +7876,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   for ( i = Enum; i; i = Module_NextEnum(v7) )
   {
     Module_SetCurrent(i);
-    while ( (*(int (**)(void))(v42 + 28))() )
+    while ( (*(int (**)(void))(savedConstructClass + 28))() )
       ++constructCount;
     if ( !allModules )
       break;
@@ -7895,8 +7895,8 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
     v13 = v11 + v12 - 6;
     while ( 1 )
     {
-      v14 = v42;
-      v41 = (*(int (__fastcall **)(int, int))(v42 + 28))(v11, v13);
+      v14 = savedConstructClass;
+      v41 = (*(int (__fastcall **)(int, int))(savedConstructClass + 28))(v11, v13);
       if ( !v41 )
         break;
       v15 = ((__int64 (*)(void))*(_DWORD *)(v14 + 16))();
@@ -7905,47 +7905,47 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
       *(_WORD *)(HIDWORD(v15) + 14) = 2;
       if ( v17 )
       {
-        v19 = qualifiedName;
+        moduleNameDst = qualifiedName;
         Name = (char *)Module_GetName(moduleCursor);
         do
         {
           v21 = *Name;
-          *v19 = *Name;
+          *moduleNameDst = *Name;
           if ( !v21 )
             break;
           v22 = Name[1];
           Name += 2;
-          v19[1] = v22;
-          v19 += 2;
+          moduleNameDst[1] = v22;
+          moduleNameDst += 2;
         }
         while ( v22 );
-        v23 = asc_5084B0;
-        v24 = &qualifiedName[strlen(qualifiedName)];
+        separatorSrc = asc_5084B0;
+        separatorDst = &qualifiedName[strlen(qualifiedName)];
         do
         {
-          v25 = *v23;
-          *v24 = *v23;
+          v25 = *separatorSrc;
+          *separatorDst = *separatorSrc;
           if ( !v25 )
             break;
-          v26 = v23[1];
-          v23 += 2;
-          v24[1] = v26;
-          v24 += 2;
+          v26 = separatorSrc[1];
+          separatorSrc += 2;
+          separatorDst[1] = v26;
+          separatorDst += 2;
         }
         while ( v26 );
-        v27 = *(char **)(theConstruct + 16);
+        constructNameSrc = *(char **)(theConstruct + 16);
         nameLength = strlen(qualifiedName) + 1;
-        v29 = &qualifiedName[nameLength - 1];
+        constructNameDst = &qualifiedName[nameLength - 1];
         do
         {
-          v30 = *v27;
-          *v29 = *v27;
+          v30 = *constructNameSrc;
+          *constructNameDst = *constructNameSrc;
           if ( !v30 )
             break;
-          v31 = v27[1];
-          v27 += 2;
-          v29[1] = v31;
-          v29 += 2;
+          v31 = constructNameSrc[1];
+          constructNameSrc += 2;
+          constructNameDst[1] = v31;
+          constructNameDst += 2;
         }
         while ( v31 );
         qualifiedSymbol = Str_Intern(qualifiedName, ~nameLength);
@@ -8556,7 +8556,7 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   _DWORD *oldInstance; // ebp
   int v12; // eax
   int bucketHead; // ebx
-  int v14; // ecx
+  int classRecord; // ecx
   int v15; // eax
   _DWORD *theInstance; // ecx
   _DWORD *result; // eax
@@ -8576,7 +8576,7 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   int v31; // eax
   int prevInstance; // [esp+0h] [ebp-20h] BYREF
   int hashBucket; // [esp+4h] [ebp-1Ch]
-  int v34; // [esp+8h] [ebp-18h]
+  int deleteMessageSymbol; // [esp+8h] [ebp-18h]
   int v35; // [esp+Ch] [ebp-14h]
 
   nameSymbol = (signed int *)instanceName;
@@ -8631,7 +8631,7 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   {
     if ( g_Instance_UseMessageDispatchForInit )
     {
-      v34 = g_ClipsDeleteMessageSymbol;
+      deleteMessageSymbol = g_ClipsDeleteMessageSymbol;
       MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, (int)existingInstance, 0, 0, a4);
     }
     else
@@ -8679,11 +8679,11 @@ LABEL_14:
           *(_DWORD *)(bucketHead + 56) = g_ClipsInstanceUnderConstruction;
         *(_DWORD *)(4 * hashBucket + g_Instance_HashTableBase) = g_ClipsInstanceUnderConstruction;
       }
-      v14 = *(_DWORD *)(g_ClipsInstanceUnderConstruction + 44);
-      if ( *(_DWORD *)(v14 + 80) )
-        *(_DWORD *)(*(_DWORD *)(v14 + 84) + 52) = g_ClipsInstanceUnderConstruction;
+      classRecord = *(_DWORD *)(g_ClipsInstanceUnderConstruction + 44);
+      if ( *(_DWORD *)(classRecord + 80) )
+        *(_DWORD *)(*(_DWORD *)(classRecord + 84) + 52) = g_ClipsInstanceUnderConstruction;
       else
-        *(_DWORD *)(v14 + 80) = g_ClipsInstanceUnderConstruction;
+        *(_DWORD *)(classRecord + 80) = g_ClipsInstanceUnderConstruction;
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 48) = *(_DWORD *)(*(_DWORD *)(g_ClipsInstanceUnderConstruction + 44) + 84);
       v15 = g_ClipsInstanceUnderConstruction;
       *(_DWORD *)(*(_DWORD *)(g_ClipsInstanceUnderConstruction + 44) + 84) = g_ClipsInstanceUnderConstruction;
@@ -8928,7 +8928,7 @@ signed int Instance_AllocateInstanceRecord()
 {
   _DWORD *freeNode; // edx
   signed int result; // eax
-  char v2; // dl
+  char flagsByte; // dl
   int evalDepth; // edx
 
   Rules_EnsureObjectPatternVTable();
@@ -8949,9 +8949,9 @@ signed int Instance_AllocateInstanceRecord()
   *(_DWORD *)(result + 12) = 0;
   *(_DWORD *)(result + 16) = 0;
   *(_DWORD *)(result + 20) = 0;
-  v2 = *(_BYTE *)(result + 24);
+  flagsByte = *(_BYTE *)(result + 24);
   *(_DWORD *)(result + 40) = 0;
-  *(_BYTE *)(result + 24) = v2 & 0xF8;
+  *(_BYTE *)(result + 24) = flagsByte & 0xF8;
   evalDepth = g_ClipsCurrentEvaluationDepth;
   *(_DWORD *)(result + 28) = 0;
   *(_DWORD *)(result + 36) = 0;
@@ -9109,11 +9109,11 @@ int  Instance_AllocateSlotValueTable(int initMessage)
 //----- (004AA4A0) --------------------------------------------------------
 BOOL  Instance_InitializeSlots(int theInstance, int overrideExprs, double a3)
 {
-  int v4; // ecx
-  char v5; // bl
+  int busyCount; // ecx
+  char clearedFlags; // bl
   __int16 v6; // cx
   int savedSlotInit; // edi
-  char v8; // cl
+  char restoredFlags; // cl
   int v10; // ecx
   int v11; // ecx
   int v12; // ecx
@@ -9125,11 +9125,11 @@ BOOL  Instance_InitializeSlots(int theInstance, int overrideExprs, double a3)
 
   if ( (*(_BYTE *)(theInstance + 24) & 1) != 0 )
   {
-    v4 = *(_DWORD *)(theInstance + 40) + 1;
-    v5 = *(_BYTE *)(theInstance + 24) & 0xFE;
-    *(_DWORD *)(theInstance + 40) = v4;
-    *(_BYTE *)(theInstance + 24) = v5;
-    if ( Instance_ApplySlotOverrideList((_DWORD *)theInstance, overrideExprs, v4, a3) )
+    busyCount = *(_DWORD *)(theInstance + 40) + 1;
+    clearedFlags = *(_BYTE *)(theInstance + 24) & 0xFE;
+    *(_DWORD *)(theInstance + 40) = busyCount;
+    *(_BYTE *)(theInstance + 24) = clearedFlags;
+    if ( Instance_ApplySlotOverrideList((_DWORD *)theInstance, overrideExprs, busyCount, a3) )
     {
       *(_BYTE *)(theInstance + 24) |= 4u;
       savedSlotInit = g_Instance_SlotInitInProgress;
@@ -9139,9 +9139,9 @@ BOOL  Instance_InitializeSlots(int theInstance, int overrideExprs, double a3)
       else
         Instance_InitSlots(theInstance, v6, a3);
       g_Instance_SlotInitInProgress = savedSlotInit;
-      v8 = *(_BYTE *)(theInstance + 24) | 1;
+      restoredFlags = *(_BYTE *)(theInstance + 24) | 1;
       --*(_DWORD *)(theInstance + 40);
-      *(_BYTE *)(theInstance + 24) = v8;
+      *(_BYTE *)(theInstance + 24) = restoredFlags;
       if ( g_ClipsEvaluationError )
       {
         Rules_PrintErrorID((int)aInsmngr, 8, 0);
@@ -9152,7 +9152,7 @@ BOOL  Instance_InitializeSlots(int theInstance, int overrideExprs, double a3)
       }
       else
       {
-        return (v8 & 4) == 0;
+        return (restoredFlags & 4) == 0;
       }
     }
     else
@@ -9611,7 +9611,7 @@ int  Rules_ParseObjectFunctionArgList(int readSource, _DWORD *errorFlag, int a3)
 {
   int top; // edi
   int tail; // ebp
-  signed int v7; // eax
+  signed int argExpr; // eax
   signed int valueListNode; // eax
   int v9; // ecx
   int v10; // ecx
@@ -9625,14 +9625,14 @@ int  Rules_ParseObjectFunctionArgList(int readSource, _DWORD *errorFlag, int a3)
     while ( 1 )
     {
       *errorFlag = 0;
-      v7 = Parser_ParseArgument(readSource, errorFlag, a3);
-      slotNameExpr = v7;
+      argExpr = Parser_ParseArgument(readSource, errorFlag, a3);
+      slotNameExpr = argExpr;
       if ( *errorFlag == 1 )
       {
         AST_Free(top);
         return 0;
       }
-      if ( !v7 )
+      if ( !argExpr )
       {
         Parser_ReportSyntaxError();
         *errorFlag = 1;
@@ -10157,7 +10157,7 @@ int  Instance_ParseSlotOverrideArgs(int overrideExprs, _DWORD *overrideCount, _D
   _DWORD *overrideCursor; // ecx
   _DWORD *v9; // ecx
   _DWORD *v10; // ecx
-  _DWORD *v11; // eax
+  _DWORD *nextOverride; // eax
   _DWORD *overrideArray; // [esp+8h] [ebp-18h]
   int slotNameSymbol; // [esp+Ch] [ebp-14h]
 
@@ -10187,12 +10187,12 @@ int  Instance_ParseSlotOverrideArgs(int overrideExprs, _DWORD *overrideCount, _D
         *v10 = slotNameSymbol;
         exprCursor = *(_DWORD *)(*(_DWORD *)(exprCursor + 10) + 10);
         if ( exprCursor )
-          v11 = &overrideArray[6 * overrideIndex + 6];
+          nextOverride = &overrideArray[6 * overrideIndex + 6];
         else
-          v11 = 0;
+          nextOverride = 0;
         overrideCursor = v10 + 6;
         ++overrideIndex;
-        *(overrideCursor - 1) = v11;
+        *(overrideCursor - 1) = nextOverride;
         if ( !exprCursor )
           return (int)overrideArray;
       }
@@ -10234,8 +10234,8 @@ _DWORD * Rules_ModifyInstanceCore(int returnValue, int msgpass, double a3)
   int sendResult; // [esp+0h] [ebp-40h] BYREF
   int sendResultType; // [esp+4h] [ebp-3Ch]
   _DWORD *sendResultValue; // [esp+8h] [ebp-38h]
-  int v16; // [esp+Ch] [ebp-34h]
-  int v17; // [esp+10h] [ebp-30h]
+  int multifieldBegin; // [esp+Ch] [ebp-34h]
+  int multifieldEnd; // [esp+10h] [ebp-30h]
   __int16 tmpExprType; // [esp+18h] [ebp-28h] BYREF
   int tmpExprValue; // [esp+1Ah] [ebp-26h]
   int tmpExprArgList; // [esp+1Eh] [ebp-22h]
@@ -10303,8 +10303,8 @@ LABEL_12:
     {
       sendResultType = 4;
       sendResultValue = Rules_CreateEphemeralMultifield(1);
-      v16 = 0;
-      v17 = 0;
+      multifieldBegin = 0;
+      multifieldEnd = 0;
       *((_WORD *)sendResultValue + 7) = *(_WORD *)(slotOverride + 4);
       sendResultValue[4] = *(_DWORD *)(slotOverride + 8);
       putValue = &sendResult;
@@ -10349,19 +10349,19 @@ _DWORD * Rules_DuplicateInstanceCore(int *returnValue, int msgpass, double a3)
   _DWORD *srcSlotValue; // eax
   unsigned int slotIndex; // edx
   int slotTableOffset; // eax
-  int v19; // ecx
-  char v20; // bh
+  int slotValue; // ecx
+  char instanceFlags; // bh
   int v21; // edx
   int sendResult; // [esp+0h] [ebp-54h] BYREF
   int sendResultType; // [esp+4h] [ebp-50h]
   _DWORD *sendResultValue; // [esp+8h] [ebp-4Ch]
-  int v25; // [esp+Ch] [ebp-48h]
-  int v26; // [esp+10h] [ebp-44h]
-  __int16 v27; // [esp+18h] [ebp-3Ch] BYREF
-  int v28; // [esp+1Ah] [ebp-3Ah]
-  int v29; // [esp+1Eh] [ebp-36h]
-  int v30; // [esp+22h] [ebp-32h]
-  int v31; // [esp+28h] [ebp-2Ch]
+  int multifieldBegin; // [esp+Ch] [ebp-48h]
+  int multifieldEnd; // [esp+10h] [ebp-44h]
+  __int16 exprType; // [esp+18h] [ebp-3Ch] BYREF
+  int exprValue; // [esp+1Ah] [ebp-3Ah]
+  int exprArgList; // [esp+1Eh] [ebp-36h]
+  int exprNext; // [esp+22h] [ebp-32h]
+  int msgpassFlag; // [esp+28h] [ebp-2Ch]
   int savedFlag; // [esp+2Ch] [ebp-28h]
   int initExpr; // [esp+30h] [ebp-24h]
   int *v34; // [esp+34h] [ebp-20h]
@@ -10369,7 +10369,7 @@ _DWORD * Rules_DuplicateInstanceCore(int *returnValue, int msgpass, double a3)
   int *theSlot; // [esp+3Ch] [ebp-18h]
 
   v34 = returnValue;
-  v31 = msgpass;
+  msgpassFlag = msgpass;
   returnValue[1] = 2;
   v34[2] = g_ClipsFalseSymbol;
   if ( !g_InstanceDirectMessageGuardActive )
@@ -10394,7 +10394,7 @@ _DWORD * Rules_DuplicateInstanceCore(int *returnValue, int msgpass, double a3)
     return (_DWORD *)Lexer_ErrorRecover(1);
   }
   savedFlag = g_Instance_UseMessageDispatchForInit;
-  g_Instance_UseMessageDispatchForInit = v31;
+  g_Instance_UseMessageDispatchForInit = msgpassFlag;
   result = Instance_BuildInstance(newNameSymbol, *(_DWORD *)(srcInstance + 44), 1, a3);
   dupInstance = (int)result;
   g_Instance_UseMessageDispatchForInit = savedFlag;
@@ -10415,16 +10415,16 @@ LABEL_8:
           Instance_DeleteInstance(dupInstance, a3);
           return (_DWORD *)Lexer_ErrorRecover(1);
         }
-        if ( !v31 )
+        if ( !msgpassFlag )
           break;
-        v27 = *(_WORD *)(slotOverride + 4);
-        if ( v27 == 4 )
-          v28 = slotOverride;
+        exprType = *(_WORD *)(slotOverride + 4);
+        if ( exprType == 4 )
+          exprValue = slotOverride;
         else
-          v28 = *(_DWORD *)(slotOverride + 8);
-        v29 = 0;
-        v30 = 0;
-        MessageHandler_SendToInstanceAddress(*(_DWORD *)(*theSlot + 12), dupInstance, (int)&v27, &sendResult, a3);
+          exprValue = *(_DWORD *)(slotOverride + 8);
+        exprArgList = 0;
+        exprNext = 0;
+        MessageHandler_SendToInstanceAddress(*(_DWORD *)(*theSlot + 12), dupInstance, (int)&exprType, &sendResult, a3);
         if ( g_ClipsEvaluationError )
           goto LABEL_8;
         if ( sendResultType == 2 )
@@ -10446,8 +10446,8 @@ LABEL_20:
       {
         sendResultType = 4;
         sendResultValue = Rules_CreateEphemeralMultifield(1);
-        v25 = 0;
-        v26 = 0;
+        multifieldBegin = 0;
+        multifieldEnd = 0;
         *((_WORD *)sendResultValue + 7) = *(_WORD *)(slotOverride + 4);
         sendResultValue[4] = *(_DWORD *)(slotOverride + 8);
         putValue = &sendResult;
@@ -10466,16 +10466,16 @@ LABEL_21:
     {
       if ( localSlotIndex >= *(_DWORD *)(*(_DWORD *)(dupInstance + 44) + 68) )
       {
-        if ( v31 )
+        if ( msgpassFlag )
         {
           slotIndex = 0;
           slotTableOffset = 0;
           while ( slotIndex < *(_DWORD *)(*(_DWORD *)(dupInstance + 44) + 72) )
           {
-            v19 = *(_DWORD *)(*(_DWORD *)(dupInstance + 72) + slotTableOffset);
+            slotValue = *(_DWORD *)(*(_DWORD *)(dupInstance + 72) + slotTableOffset);
             slotTableOffset += 4;
             ++slotIndex;
-            *(_BYTE *)(v19 + 4) |= 2u;
+            *(_BYTE *)(slotValue + 4) |= 2u;
           }
           *(_BYTE *)(dupInstance + 24) |= 4u;
           savedFlag = g_Instance_SlotInitInProgress;
@@ -10483,9 +10483,9 @@ LABEL_21:
           MessageHandler_SendToInstanceAddress(g_MessageHandler_InitSymbol, dupInstance, 0, v34, a3);
           g_Instance_SlotInitInProgress = savedFlag;
         }
-        v20 = *(_BYTE *)(dupInstance + 24);
+        instanceFlags = *(_BYTE *)(dupInstance + 24);
         --*(_DWORD *)(dupInstance + 40);
-        if ( (v20 & 2) != 0 )
+        if ( (instanceFlags & 2) != 0 )
         {
           v34[1] = 2;
           v34[2] = g_ClipsFalseSymbol;
@@ -10505,15 +10505,15 @@ LABEL_24:
         localSlotOffset += 12;
         ++localSlotIndex;
       }
-      else if ( v31 )
+      else if ( msgpassFlag )
       {
         sendResultType = *(_DWORD *)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 4) << 24 >> 26;
         srcSlotValue = *(_DWORD **)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 8);
         sendResultValue = srcSlotValue;
         if ( sendResultType == 4 )
         {
-          v25 = 0;
-          v26 = *(_DWORD *)((char *)srcSlotValue + 6) - 1;
+          multifieldBegin = 0;
+          multifieldEnd = *(_DWORD *)((char *)srcSlotValue + 6) - 1;
         }
         initExpr = AST_BuildExpressionFromValue(&sendResult);
         MessageHandler_SendToInstanceAddress(*(_DWORD *)(*(_DWORD *)(localSlotOffset + *(_DWORD *)(dupInstance + 76)) + 12), dupInstance, initExpr, &sendResult, a3);
@@ -10533,8 +10533,8 @@ LABEL_24:
         sendResultValue = *(_DWORD **)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 8);
         if ( (*(_DWORD *)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 4) & 0xFC) == 0x10 )
         {
-          v25 = 0;
-          v26 = *(_DWORD *)(*(_DWORD *)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 8) + 6) - 1;
+          multifieldBegin = 0;
+          multifieldEnd = *(_DWORD *)(*(_DWORD *)(localSlotOffset + *(_DWORD *)(srcInstance + 76) + 8) + 6) - 1;
         }
         if ( !Instance_PutSlotValue((_DWORD *)dupInstance, (int *)(localSlotOffset + *(_DWORD *)(dupInstance + 76)), &sendResult, a3) )
           goto LABEL_8;
@@ -10780,7 +10780,7 @@ signed int  Rules_BsaveInstancesCommand(double a1)
 }
 
 //----- (004AC3E0) --------------------------------------------------------
-_DWORD * Rules_SaveInstancesBinaryFile(const CHAR *fileName, int saveCode, DWORD a3, int classExpressionList, double a5)
+_DWORD * Rules_SaveInstancesBinaryFile(const CHAR *fileName, int saveCode, DWORD inheritFlag, int classExpressionList, double a5)
 {
   _DWORD *result; // eax
   _DWORD *classList; // edi
@@ -10797,14 +10797,14 @@ _DWORD * Rules_SaveInstancesBinaryFile(const CHAR *fileName, int saveCode, DWORD
 
   v16 = fileName;
   v17 = saveCode;
-  result = Rules_BuildClassListForSave((int)aBsaveInstances, classExpressionList, a3, saveCode, a5);
+  result = Rules_BuildClassListForSave((int)aBsaveInstances, classExpressionList, inheritFlag, saveCode, a5);
   classList = result;
   if ( result || !classExpressionList )
   {
     g_ClipsBsaveInstanceDataSpace = 0;
     Rules_ClearAtomInUseMarks();
-    instancesSaved = Rules_ForEachInstanceForSave(v17, a3, (int)classList, v8, Compiler_MarkAndEmit);
-    v10 = IO_FOpen(v16, (unsigned __int8 *)aWb_5, v9, a3);
+    instancesSaved = Rules_ForEachInstanceForSave(v17, inheritFlag, (int)classList, v8, Compiler_MarkAndEmit);
+    v10 = IO_FOpen(v16, (unsigned __int8 *)aWb_5, v9, inheritFlag);
     fp = v10;
     if ( v10 )
     {
@@ -10813,7 +10813,7 @@ _DWORD * Rules_SaveInstancesBinaryFile(const CHAR *fileName, int saveCode, DWORD
       fwrite_(&g_ClipsBsaveInstanceDataSpace, v13, fp, 1);
       fwrite_(&instancesSaved, 4, fp, 1);
       Rules_SetAtomicValueIndices(0);
-      Rules_ForEachInstanceForSave(v17, a3, (int)classList, 0, (void (__fastcall *)(int, int))Compiler_WriteInstanceRecord);
+      Rules_ForEachInstanceForSave(v17, inheritFlag, (int)classList, 0, (void (__fastcall *)(int, int))Compiler_WriteInstanceRecord);
       Rules_RestoreAtomicValueBuckets();
       fclose_(v14);
       Rules_FreeClassList(classList);
@@ -10897,18 +10897,18 @@ _DWORD * Rules_BuildClassListForSave(int functionName, int classExprs, int inher
   int theDefclass; // ebx
   _DWORD *listCursor; // ecx
   _DWORD *i; // edx
-  int v17; // eax
-  int *v18; // ecx
+  int existingClass; // eax
+  int *freeNode; // ecx
   _DWORD *newNode; // eax
   int v20; // ecx
-  int v21; // eax
+  int nextFree; // eax
   _DWORD argValue[2]; // [esp+0h] [ebp-38h] BYREF
   int argSymbol; // [esp+8h] [ebp-30h]
   int v24; // [esp+18h] [ebp-20h]
   int currentModule; // [esp+1Ch] [ebp-1Ch]
   int v26; // [esp+20h] [ebp-18h]
   int argIndex; // [esp+24h] [ebp-14h]
-  int v28; // [esp+28h] [ebp-10h]
+  int memoryTable; // [esp+28h] [ebp-10h]
 
   v24 = functionName;
   v26 = saveCode;
@@ -10926,19 +10926,19 @@ _DWORD * Rules_BuildClassListForSave(int functionName, int classExprs, int inher
     listCursor = classListHead;
     for ( i = classListHead; listCursor; listCursor = (_DWORD *)listCursor[5] )
     {
-      v17 = listCursor[2];
-      if ( theDefclass == v17 || inheritFlag && (Class_HasSuperclass(v17, theDefclass) || Class_HasSuperclass(theDefclass, *(_DWORD *)(v20 + 8))) )
+      existingClass = listCursor[2];
+      if ( theDefclass == existingClass || inheritFlag && (Class_HasSuperclass(existingClass, theDefclass) || Class_HasSuperclass(theDefclass, *(_DWORD *)(v20 + 8))) )
         goto LABEL_3;
       i = listCursor;
     }
-    v18 = *(int **)(g_ClipsMemoryTable + 96);
-    v28 = g_ClipsMemoryTable;
-    if ( v18 )
+    freeNode = *(int **)(g_ClipsMemoryTable + 96);
+    memoryTable = g_ClipsMemoryTable;
+    if ( freeNode )
     {
-      g_ClipsMemFreeListTemp = (int)v18;
-      v21 = *v18;
-      v8 = v28;
-      *(_DWORD *)(v28 + 96) = v21;
+      g_ClipsMemFreeListTemp = (int)freeNode;
+      nextFree = *freeNode;
+      v8 = memoryTable;
+      *(_DWORD *)(memoryTable + 96) = nextFree;
       newNode = (_DWORD *)g_ClipsMemFreeListTemp;
     }
     else

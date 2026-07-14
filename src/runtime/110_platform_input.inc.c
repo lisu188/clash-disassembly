@@ -1397,7 +1397,7 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
   int srcHeight; // ebx
   int dstHeight; // ecx
   int absHeight; // eax
-  int v17; // eax
+  int dstStride; // eax
   int srcRedMask; // [esp+0h] [ebp-28h] BYREF
   int srcGreenMask; // [esp+4h] [ebp-24h]
   int srcBlueMask; // [esp+8h] [ebp-20h]
@@ -1492,9 +1492,9 @@ LABEL_12:
   *((_DWORD *)desc + 2) = srcStride;
   if ( !dstPitch )
   {
-    v17 = *(_DWORD *)desc * ((dstBitCount + 7) >> 3) + 3;
-    LOBYTE(v17) = v17 & 0xFC;
-    dstPitch = v17;
+    dstStride = *(_DWORD *)desc * ((dstBitCount + 7) >> 3) + 3;
+    LOBYTE(dstStride) = dstStride & 0xFC;
+    dstPitch = dstStride;
   }
   *((_DWORD *)desc + 3) = dstPitch;
   srcHeight = *(_DWORD *)(srcBmiHeader + 8);

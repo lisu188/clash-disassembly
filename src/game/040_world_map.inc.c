@@ -108,7 +108,7 @@ BOOL  MapTile_HasOwnOrVisibleEnemyUnitStack(int tileX, int tileY)
 BOOL  MapTile_HasOwnBuilding(int tileX, int tileY)
 {
   unsigned int buildingIndex; // eax
-  int v3; // edx
+  int buildingTableRecord; // edx
   int buildingRecord; // eax
   BOOL result; // eax
 
@@ -116,8 +116,8 @@ BOOL  MapTile_HasOwnBuilding(int tileX, int tileY)
   result = 0;
   if ( buildingIndex <= 0x64 )
   {
-    v3 = UNIT_RECORD(buildingIndex);
-    if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
+    buildingTableRecord = UNIT_RECORD(buildingIndex);
+    if ( (unsigned int)*(char *)(buildingTableRecord + 4) < 4 && *(__int16 *)(buildingTableRecord + 16) != -1 )
     {
       buildingRecord = gameData + BUILDING_RECORD_SIZE * buildingIndex;
       if ( *(unsigned __int8 *)(buildingRecord + 509676) == g_CurrentPlayerIndex && *(__int16 *)(buildingRecord + 509690) != -1 )
@@ -135,7 +135,7 @@ BOOL  MapTile_HasOwnBuilding(int tileX, int tileY)
 BOOL  MapTile_HasEnemyBuilding(int tileX, int tileY)
 {
   unsigned int buildingIndex; // eax
-  int v3; // edx
+  int buildingTableRecord; // edx
   int buildingRecord; // eax
   BOOL result; // eax
 
@@ -143,8 +143,8 @@ BOOL  MapTile_HasEnemyBuilding(int tileX, int tileY)
   result = 0;
   if ( buildingIndex <= 0x64 )
   {
-    v3 = UNIT_RECORD(buildingIndex);
-    if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
+    buildingTableRecord = UNIT_RECORD(buildingIndex);
+    if ( (unsigned int)*(char *)(buildingTableRecord + 4) < 4 && *(__int16 *)(buildingTableRecord + 16) != -1 )
     {
       buildingRecord = gameData + BUILDING_RECORD_SIZE * buildingIndex;
       if ( *(unsigned __int8 *)(buildingRecord + 509676) != g_CurrentPlayerIndex && *(__int16 *)(buildingRecord + 509690) != -1 )
@@ -200,8 +200,8 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   int v5; // ebx
   int v6; // ecx
   void *v7; // edx
-  int v8; // edi
-  int v9; // esi
+  int tileYByteOffset; // edi
+  int tileXByteOffset; // esi
   int v10; // ecx
   unsigned int terrainClass; // ecx
   char *terrainNamePl; // eax
@@ -209,10 +209,10 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   char *terrainNameDe; // ecx
   void *v15; // edx
   void *v16; // ecx
-  int v17; // esi
-  int v18; // ecx
-  int v19; // edx
-  DWORD v20; // eax
+  int buildingTileYOffset; // esi
+  int buildingRecordByteOffset; // ecx
+  int buildingRecord; // edx
+  DWORD buildingTableRecord; // eax
   int v21; // ecx
   int v22; // ecx
   int v23; // ecx
@@ -238,8 +238,8 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   int buildingRecordOffset; // ebx
   __int16 constructionState; // si
   int hasOwnBuilding; // edi
-  int v46; // esi
-  int v47; // ecx
+  int buildingTileXOffset; // esi
+  int ownBuildingTileYOffset; // ecx
   int targetBuildingIndex; // edx
   int v49; // ecx
   int v50; // ecx
@@ -248,14 +248,14 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   int tileStackPtr; // eax
   char v54; // di
   void *v55; // ecx
-  DWORD v56; // ebp
+  DWORD prevSelectedIndex; // ebp
   void *v57; // ecx
   int v58; // ecx
   void *v59; // ecx
   void *v60; // ecx
   DWORD v61; // ebp
   int v62; // edx
-  int v63; // ebx
+  int unitTileY; // ebx
   const void *moveTrack; // eax
   DWORD v65; // ebp
   DWORD v66; // edx
@@ -264,12 +264,12 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   char *tooltipTextPl; // [esp+0h] [ebp-70h]
   char *tooltipTextEn; // [esp+4h] [ebp-6Ch]
   char *tooltipTextDe; // [esp+8h] [ebp-68h]
-  int v72[3]; // [esp+Ch] [ebp-64h]
-  int v73[3]; // [esp+18h] [ebp-58h]
-  int v74[3]; // [esp+24h] [ebp-4Ch]
-  int v75[3]; // [esp+30h] [ebp-40h]
-  int v76[3]; // [esp+3Ch] [ebp-34h]
-  int v77[3]; // [esp+48h] [ebp-28h]
+  int shrineTextPtrs[3]; // [esp+Ch] [ebp-64h]
+  int cultPlaceTextPtrs[3]; // [esp+18h] [ebp-58h]
+  int emptyShrineTextPtrs[3]; // [esp+24h] [ebp-4Ch]
+  int emptyCultPlaceTextPtrs[3]; // [esp+30h] [ebp-40h]
+  int hiddenTreasureTextPtrs[3]; // [esp+3Ch] [ebp-34h]
+  int castleFoundationTextPtrs[3]; // [esp+48h] [ebp-28h]
   int tileY; // [esp+54h] [ebp-1Ch]
   int bridge_crossings_enabled;
 
@@ -519,13 +519,13 @@ LABEL_80:
       v7 = &g_CursorDesc_GoTo;
       goto LABEL_25;
     }
-    v17 = 2 * tileY;
+    buildingTileYOffset = 2 * tileY;
     v5 = 200 * tileX;
     if ( !MapTile_HasOwnBuilding(tileX, tileY) )
     {
       if ( !UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex)
         || (v5 += gameData,
-            *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v17 + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 509678) == 1)
+            *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(buildingTileYOffset + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 509678) == 1)
         && UnitStack_HasPeasantCargo(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
       {
         v7 = &g_CursorDesc_DeliverCargo;
@@ -537,7 +537,7 @@ LABEL_80:
       goto LABEL_25;
     }
     v5 += gameData;
-    if ( !Building_CanAcceptUnitStack(g_SelectedUnitIndex, *(unsigned __int16 *)(v17 + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) )
+    if ( !Building_CanAcceptUnitStack(g_SelectedUnitIndex, *(unsigned __int16 *)(buildingTileYOffset + v5 + 556374) - TILE_OCCUPANT_BUILDING_INDEX_BASE) )
     {
       v7 = &g_CursorDesc_CannotEnter;
       goto LABEL_25;
@@ -557,76 +557,76 @@ LABEL_26:
     UI_DrawPortStatusPanel(v5, tileX);
   if ( DD_IsLost((int)&g_RenderState) )
   {
-    v8 = 2 * tileY;
-    v9 = 200 * tileX;
+    tileYByteOffset = 2 * tileY;
+    tileXByteOffset = 200 * tileX;
     if ( MapTile_HasOwnOrVisibleEnemyUnitStack(tileX, tileY) )
     {
-      if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET)) <= 1 )
+      if ( Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tileYByteOffset + gameData + tileXByteOffset + TILE_MAP_OFFSET)) <= 1 )
       {
-        Unit_Info(100, 100, 0, UNIT_STACK_STRIDE * *(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET + 6, tileX, 0);
+        Unit_Info(100, 100, 0, UNIT_STACK_STRIDE * *(unsigned __int16 *)(tileYByteOffset + gameData + tileXByteOffset + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET + 6, tileX, 0);
       }
       else
       {
-        UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + TILE_MAP_OFFSET), v5);
+        UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(tileYByteOffset + tileXByteOffset + gameData + TILE_MAP_OFFSET), v5);
         UIWidget_RefreshActionButtonState((int)&g_WorldMapJoinUnitsWidgetRecord, v10);
       }
     }
     else if ( MapTile_HasBuilding(tileX, tileY) )
     {
-      v18 = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v8 + gameData + v9 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-      v19 = gameData + v18;
-      v20 = v18 + gameData + BUILDING_TABLE_OFFSET;
-      if ( *(_WORD *)(gameData + v18 + 509690) )
+      buildingRecordByteOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(tileYByteOffset + gameData + tileXByteOffset + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+      buildingRecord = gameData + buildingRecordByteOffset;
+      buildingTableRecord = buildingRecordByteOffset + gameData + BUILDING_TABLE_OFFSET;
+      if ( *(_WORD *)(gameData + buildingRecordByteOffset + 509690) )
       {
-        if ( *(unsigned __int8 *)(v19 + 509676) == g_CurrentPlayerIndex && *(__int16 *)(v19 + 509690) != -1 )
-          Building_ShowConstructionProgressDialog(v20, g_CurrentPlayerIndex, tileX, a1);
+        if ( *(unsigned __int8 *)(buildingRecord + 509676) == g_CurrentPlayerIndex && *(__int16 *)(buildingRecord + 509690) != -1 )
+          Building_ShowConstructionProgressDialog(buildingTableRecord, g_CurrentPlayerIndex, tileX, a1);
       }
       else
       {
-        Building_ShowHoverInfoPopup(v20, 0, v8);
+        Building_ShowHoverInfoPopup(buildingTableRecord, 0, tileYByteOffset);
       }
     }
     else if ( MapTile_GetReligiousSiteCategory(tileX, tileY) == RELIGIOUS_SITE_CATEGORY_SHRINE )
     {
-      v72[0] = (int)g_ShrineTexts[0];
-      v72[1] = (int)g_ShrineTexts[1];
-      v72[2] = (int)g_ShrineTexts[2];
-      UI_ShowSimpleTextInfoWindow(v72[(unsigned __int8)g_LanguageIndex], v21, v5, tileX);
+      shrineTextPtrs[0] = (int)g_ShrineTexts[0];
+      shrineTextPtrs[1] = (int)g_ShrineTexts[1];
+      shrineTextPtrs[2] = (int)g_ShrineTexts[2];
+      UI_ShowSimpleTextInfoWindow(shrineTextPtrs[(unsigned __int8)g_LanguageIndex], v21, v5, tileX);
     }
     else if ( MapTile_GetReligiousSiteCategory(tileX, tileY) == RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE )
     {
-      v74[0] = (int)g_EmptyShrineTexts[0];
-      v74[1] = (int)g_EmptyShrineTexts[1];
-      v74[2] = (int)g_EmptyShrineTexts[2];
-      UI_ShowSimpleTextInfoWindow(v74[(unsigned __int8)g_LanguageIndex], v22, v5, tileX);
+      emptyShrineTextPtrs[0] = (int)g_EmptyShrineTexts[0];
+      emptyShrineTextPtrs[1] = (int)g_EmptyShrineTexts[1];
+      emptyShrineTextPtrs[2] = (int)g_EmptyShrineTexts[2];
+      UI_ShowSimpleTextInfoWindow(emptyShrineTextPtrs[(unsigned __int8)g_LanguageIndex], v22, v5, tileX);
     }
     else if ( MapTile_GetReligiousSiteCategory(tileX, tileY) == RELIGIOUS_SITE_CATEGORY_CULT_PLACE )
     {
-      v73[0] = (int)g_CultPlaceTexts[0];
-      v73[1] = (int)g_CultPlaceTexts[1];
-      v73[2] = (int)g_CultPlaceTexts[2];
-      UI_ShowSimpleTextInfoWindow(v73[(unsigned __int8)g_LanguageIndex], v23, v5, tileX);
+      cultPlaceTextPtrs[0] = (int)g_CultPlaceTexts[0];
+      cultPlaceTextPtrs[1] = (int)g_CultPlaceTexts[1];
+      cultPlaceTextPtrs[2] = (int)g_CultPlaceTexts[2];
+      UI_ShowSimpleTextInfoWindow(cultPlaceTextPtrs[(unsigned __int8)g_LanguageIndex], v23, v5, tileX);
     }
     else if ( MapTile_GetReligiousSiteCategory(tileX, tileY) == RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE )
     {
-      v75[0] = (int)g_EmptyCultPlaceTexts[0];
-      v75[1] = (int)g_EmptyCultPlaceTexts[1];
-      v75[2] = (int)g_EmptyCultPlaceTexts[2];
-      UI_ShowSimpleTextInfoWindow(v75[(unsigned __int8)g_LanguageIndex], v24, v5, tileX);
+      emptyCultPlaceTextPtrs[0] = (int)g_EmptyCultPlaceTexts[0];
+      emptyCultPlaceTextPtrs[1] = (int)g_EmptyCultPlaceTexts[1];
+      emptyCultPlaceTextPtrs[2] = (int)g_EmptyCultPlaceTexts[2];
+      UI_ShowSimpleTextInfoWindow(emptyCultPlaceTextPtrs[(unsigned __int8)g_LanguageIndex], v24, v5, tileX);
     }
     else if ( MapTile_IsCastleFoundationTile(tileX, tileY, 2) )
     {
-      v77[0] = (int)g_CastleFoundationTexts[0];
-      v77[1] = (int)g_CastleFoundationTexts[1];
-      v77[2] = (int)g_CastleFoundationTexts[2];
-      UI_ShowSimpleTextInfoWindow(v77[(unsigned __int8)g_LanguageIndex], v25, 2, tileX);
+      castleFoundationTextPtrs[0] = (int)g_CastleFoundationTexts[0];
+      castleFoundationTextPtrs[1] = (int)g_CastleFoundationTexts[1];
+      castleFoundationTextPtrs[2] = (int)g_CastleFoundationTexts[2];
+      UI_ShowSimpleTextInfoWindow(castleFoundationTextPtrs[(unsigned __int8)g_LanguageIndex], v25, 2, tileX);
     }
     else if ( MapTile_HasHiddenTreasure(tileX, tileY) )
     {
-      v76[0] = (int)g_HiddenTreasureTexts[0];
-      v76[1] = (int)g_HiddenTreasureTexts[1];
-      v76[2] = (int)g_HiddenTreasureTexts[2];
-      UI_ShowSimpleTextInfoWindow(v76[(unsigned __int8)g_LanguageIndex], v26, 2, tileX);
+      hiddenTreasureTextPtrs[0] = (int)g_HiddenTreasureTexts[0];
+      hiddenTreasureTextPtrs[1] = (int)g_HiddenTreasureTexts[1];
+      hiddenTreasureTextPtrs[2] = (int)g_HiddenTreasureTexts[2];
+      UI_ShowSimpleTextInfoWindow(hiddenTreasureTextPtrs[(unsigned __int8)g_LanguageIndex], v26, 2, tileX);
     }
   }
   if ( !DD_IsFlipping((int)&g_RenderState) )
@@ -767,13 +767,13 @@ LABEL_26:
       return;
     }
     hasOwnBuilding = MapTile_HasOwnBuilding(tileX, tileY);
-    v46 = 200 * tileX;
+    buildingTileXOffset = 200 * tileX;
     v30 = UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-    v47 = 2 * tileY;
+    ownBuildingTileYOffset = 2 * tileY;
     if ( !hasOwnBuilding )
     {
       if ( g_SelectedUnitIndex != -1
-        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509678) != 1
+        && (*(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(ownBuildingTileYOffset + gameData + buildingTileXOffset + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509678) != 1
          || !UnitStack_HasPeasantCargo(v30 + gameData + UNIT_STACK_TABLE_OFFSET)) )
       {
         Unit_AttackBuilding(
@@ -785,7 +785,7 @@ LABEL_26:
       }
       return;
     }
-    targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    targetBuildingIndex = *(unsigned __int16 *)(ownBuildingTileYOffset + gameData + buildingTileXOffset + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( *(_WORD *)(BUILDING_RECORD_SIZE * targetBuildingIndex + gameData + 509690) )
       return;
     if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET, targetBuildingIndex) )
@@ -793,7 +793,7 @@ LABEL_26:
       approachTrack = (const void *)Building_GenerateApproachTrack(
                             g_SelectedUnitIndex,
                             targetBuildingIndex,
-                            v47,
+                            ownBuildingTileYOffset,
                             v30,
                             tileX);
       if ( approachTrack )
@@ -870,13 +870,13 @@ LABEL_205:
           UnitStackSelection_ClearMask((void *)v52);
           WorldMap_RefreshActionButtonBarState(v55);
           WorldMap_RedrawViewport(1);
-          v56 = g_LastSelectedUnitIndex;
+          prevSelectedIndex = g_LastSelectedUnitIndex;
           if ( g_LastSelectedUnitIndex != -1 )
             WorldMap_RedrawTileIfVisible(
               *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_LastSelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
               *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_LastSelectedUnitIndex + 147176));
-          WorldMap_RefreshUnitStatusPanel(v56);
-          UnitStackSelection_SyncForCurrentSelection(v57, v56);
+          WorldMap_RefreshUnitStatusPanel(prevSelectedIndex);
+          UnitStackSelection_SyncForCurrentSelection(v57, prevSelectedIndex);
           Audio_PlayUnitActivateSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&g_RenderState, 0, v54);
         }
@@ -925,7 +925,7 @@ LABEL_205:
       || (v68 = *(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 320), (unsigned __int8)v68 != tileX)
       || (LOBYTE(v30) = tileY, BYTE1(v68) != tileY) )
     {
-      v63 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176);
+      unitTileY = *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176);
       bridge_crossings_enabled = UnitStack_HasBuilder(g_SelectedUnitIndex);
       if ( bridge_crossings_enabled )
       {
@@ -936,7 +936,7 @@ LABEL_205:
                             g_SelectedUnitIndex,
                             *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
                             tileX,
-                            v63,
+                            unitTileY,
                             tileX,
                             tileY);
       if ( bridge_crossings_enabled )
@@ -974,7 +974,7 @@ LABEL_205:
         {
           if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
             Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180));
-          UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v63, v65, a1);
+          UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, unitTileY, v65, a1);
           WorldMap_RefreshUnitStatusPanel(v65);
           WorldMap_RedrawViewport(1);
         }
@@ -2271,7 +2271,7 @@ void WorldMap_EnableFrameRedraw()
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AED0) --------------------------------------------------------
-_DWORD * WorldMap_LoadResources(char a1, DWORD a2)
+_DWORD * WorldMap_LoadResources(char a1, DWORD loadContext)
 {
   _DWORD *frameSpriteSet; // eax
   _DWORD *marksSpriteSet; // eax
@@ -2324,7 +2324,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   if ( mapPalette )
     mapPalette = Palette_LoadFromQueryHandle(mapPalette, (intptr_t)"map.pal");
   g_MapPalettePtr = mapPalette;
-  Palette_LoadOrBuildBlendLookupTable(aMainmap, mapPalette, 0, a2);
+  Palette_LoadOrBuildBlendLookupTable(aMainmap, mapPalette, 0, loadContext);
   RenderState_LoadDefaultCursorSprite((int)g_RenderState);
   return WorldMapTopMenu_LoadSpriteSet();
 }
@@ -2340,12 +2340,12 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040B020) --------------------------------------------------------
-int  WorldMap_UnloadResources(DWORD a1)
+int  WorldMap_UnloadResources(DWORD allocContext)
 {
   int v2; // ecx
 
   TextSprite_ReleaseAllResourceSlots();
-  UnitSpriteCache_FreeAllEntries(v2, a1);
+  UnitSpriteCache_FreeAllEntries(v2, allocContext);
   BuildingSpriteCache_Clear();
   CSS_EmptySampleCache();
   DLXSpriteSet_ReleaseAndClear(&g_ActiveUiSpriteSet);
@@ -2834,9 +2834,9 @@ LABEL_24:
 // 545140: using guessed type int dword_545140;
 
 //----- (0040B640) --------------------------------------------------------
-unsigned int  WorldMap_Initialize(char a1, DWORD a2)
+unsigned int  WorldMap_Initialize(char a1, DWORD loadContext)
 {
-  WorldMap_LoadResources(a1, a2);
+  WorldMap_LoadResources(a1, loadContext);
   Map_InitTerrainMoveTableOffsets();
   UnitSpriteCache_ClearAllEntries();
   BuildingSpriteCache_Reset();
@@ -2844,7 +2844,7 @@ unsigned int  WorldMap_Initialize(char a1, DWORD a2)
 }
 
 //----- (0040B660) --------------------------------------------------------
-int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
+int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, ...)
 {
   int player_index;
   _DWORD *background_sprite_set;
@@ -2859,7 +2859,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   (void)a2;
 
   g_MissionDefeatVideoPlayedGuard = 0;
-  Debug_Log(0, 0, a3, (int)aPlaygame);
+  Debug_Log(0, 0, allocContext, (int)aPlaygame);
   Noop_PlayGameSessionBoundaryHook(0);
   for ( player_index = 0; player_index < 5; ++player_index )
   {
@@ -2887,11 +2887,11 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   {
     if ( g_WorldMapBackgroundSpriteSet )
       DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-    background_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, a3);
+    background_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, allocContext);
     if ( background_sprite_set )
       background_sprite_set = DLXSpriteSet_Load(background_sprite_set, background_resource_name);
     g_WorldMapBackgroundSpriteSet = (int)background_sprite_set;
-    tree_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, a3);
+    tree_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, allocContext);
     if ( tree_sprite_set )
       tree_sprite_set = DLXSpriteSet_Load(tree_sprite_set, tree_resource_name);
     g_TreeSpriteSet = (int)tree_sprite_set;
@@ -2904,11 +2904,11 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140039);
   *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140043);
   Locale_DrawInteger();
-  Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, a3);
+  Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, allocContext);
   Render_DrawSprite();
   WorldMap_RedrawViewport(1);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
-  WorldMap_LoadActionButtonSprites(0, 0, a3);
+  WorldMap_LoadActionButtonSprites(0, 0, allocContext);
   g_CursorDesc_Default[5] = 0;
   g_CursorDesc_Default[6] = 0;
   g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
@@ -2923,15 +2923,15 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       render_state[5] >> render_state[277],
       g_CursorDesc_Default[6]);
   }
-  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, a3);
+  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, allocContext);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
   Render_Present((int)g_RenderState);
   WorldMap_RedrawViewport(1);
-  Debug_Log(0, 20, a3, (int)aStart);
-  LogAllUnits(0, 20, a3);
-  LogAllBuildings(0, 20, a3);
+  Debug_Log(0, 20, allocContext, (int)aStart);
+  LogAllUnits(0, 20, allocContext);
+  LogAllBuildings(0, 20, allocContext);
   if ( ACTIVE_MISSION_INDEX != -1 && GAME_TURN_COUNTER == 1 && !getenv("CLASH95_SKIP_MISSION_STATUS_PANEL") )
-    UI_ShowMissionStatusPanel(0, a3);
+    UI_ShowMissionStatusPanel(0, allocContext);
   g_WorldMapGameLostExitFlag = 0;
   g_TurnEndedByCompletionFlag = 0;
   g_AdvanceToNextPlayerFlag = 0;
@@ -2940,23 +2940,23 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   previous_render_hook = (int (*)(int, char, DWORD))g_RenderHook;
   g_RenderHook = (int (*)())WorldMap_RenderHook;
-  Debug_Log(previous_resource_handle, 0, a3, (int)aSetrhS08x, "RedrawMainMap", WorldMap_RenderHook);
+  Debug_Log(previous_resource_handle, 0, allocContext, (int)aSetrhS08x, "RedrawMainMap", WorldMap_RenderHook);
   while ( 1 )
   {
     Diagnostics_TraceWorldMapActionEvent("playgame_loop_top", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, 0, 0, a3);
+    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, 0, 0, allocContext);
     Diagnostics_TraceWorldMapActionEvent("playgame_after_player_info", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex));
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     {
       Diagnostics_TraceWorldMapActionEvent("playgame_before_human_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-      WorldMap_RunHumanTurnLoop(previous_resource_handle, previous_render_hook, a3, a5);
+      WorldMap_RunHumanTurnLoop(previous_resource_handle, previous_render_hook, allocContext, st0_runtime);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_human_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, g_WorldMapTurnLoopExitFlag);
     }
     else if ( GAME_TURN_COUNTER )
     {
       Diagnostics_TraceWorldMapActionEvent("playgame_before_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
       RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
-      Debug_Log(0, 0, a3, (int)aComputerplay);
+      Debug_Log(0, 0, allocContext, (int)aComputerplay);
       Rules_ExecuteAITurn();
       RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, g_WorldMapTurnLoopExitFlag);
@@ -2964,32 +2964,32 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
     if ( g_WorldMapTurnLoopExitFlag )
       break;
     Diagnostics_TraceWorldMapActionEvent("advance_turn_call", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-    Game_AdvanceToNextPlayerTurn(0, 0, a3, a5);
+    Game_AdvanceToNextPlayerTurn(0, 0, allocContext, st0_runtime);
     Diagnostics_TraceWorldMapActionEvent("advance_turn_return", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
     Diagnostics_TraceWorldMapUnitSnapshot("after_turn_advance");
   }
   Render_Pump();
-  Debug_Log(0, 0, a3, (int)aUnsetrh08x_1, g_RenderHook);
+  Debug_Log(0, 0, allocContext, (int)aUnsetrh08x_1, g_RenderHook);
   g_RenderHook = (int (*)())previous_render_hook;
   Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
-  Debug_Log(0, 0, a3, (int)aKoniecGryPoDTu, GAME_TURN_COUNTER);
-  LogAllUnits(0, 20, a3);
-  LogAllBuildings(0, 20, a3);
+  Debug_Log(0, 0, allocContext, (int)aKoniecGryPoDTu, GAME_TURN_COUNTER);
+  LogAllUnits(0, 20, allocContext);
+  LogAllBuildings(0, 20, allocContext);
   Audio_StopMainMusic();
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   MiniMap_DestroySurface(0);
   WorldMap_UnloadActionButtonSprites(0, 0);
-  WorldMap_UnloadResources(a3);
+  WorldMap_UnloadResources(allocContext);
   Tooltip_ReleaseBackdropSurface();
   Rules_ShowBanner_StrategicClash();
   Mem_PurgeFreeListsForSpace(-1, 0, 0);
-  Debug_Log(0, 0, a3, (int)aPlaygameEnd);
+  Debug_Log(0, 0, allocContext, (int)aPlaygameEnd);
   Noop_PlayGameSessionBoundaryHook(0);
   if ( g_PendingLoadGameSlotIndex != -1 )
   {
-    WorldMap_Initialize(0, a3);
-    SaveSlot_LoadGame(g_PendingLoadGameSlotIndex, a3, a5);
-    PlayGame(0, 0, a3, a4, a5);
+    WorldMap_Initialize(0, allocContext);
+    SaveSlot_LoadGame(g_PendingLoadGameSlotIndex, allocContext, st0_runtime);
+    PlayGame(0, 0, allocContext, a4, st0_runtime);
     return 0;
   }
   active_mission_index = ACTIVE_MISSION_INDEX;
@@ -3018,7 +3018,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
     active_mission_index,
     active_mission_index + 1,
     g_CurrentPlayerIndex);
-  Scenario_LoadMissionByIndexAndPlay((char *)(uintptr_t)(unsigned int)(active_mission_index + 1), -1, a3, a5);
+  Scenario_LoadMissionByIndexAndPlay((char *)(uintptr_t)(unsigned int)(active_mission_index + 1), -1, allocContext, st0_runtime);
   return 0;
 }
 // 4476A0: using guessed type int __thiscall nullsub_3(_DWORD);
@@ -3412,11 +3412,11 @@ int  UI_GetTextXOffset(int slotIndex)
 }
 
 //----- (0040C1F0) --------------------------------------------------------
-void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, char a4, DWORD a5)
+void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, char a4, DWORD allocContext)
 {
   TextSpriteResourceSlotRecord *slot;
   int v6; // edx
-  int v7; // ecx
+  int existingSpriteSet; // ecx
   _BYTE *v8; // eax
   unsigned __int8 *checksum; // ebx
   unsigned __int16 checksumSum; // cx
@@ -3424,34 +3424,34 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
   int v12; // edx
   int v13; // ecx
   int v14; // ecx
-  int v15; // eax
-  _DWORD *v16; // eax
-  _DWORD *v17; // ecx
-  char *v18; // edi
-  char *v19; // esi
-  char v20; // al
-  char v21; // al
+  int cacheFileExists; // eax
+  _DWORD *spriteSet; // eax
+  _DWORD *loadedSpriteSet; // ecx
+  char *destCursor; // edi
+  char *srcCursor; // esi
+  char firstChar; // al
+  char secondChar; // al
   int v22; // ecx
   int v23; // ecx
   int v24; // edx
-  _DWORD *v25; // eax
+  _DWORD *cachedSpriteSet; // eax
   unsigned __int8 v26[1024]; // [esp+0h] [ebp-4E0h] BYREF
   CHAR cacheFilename[100]; // [esp+400h] [ebp-E0h] BYREF
   char sourceStemCopy[100]; // [esp+464h] [ebp-7Ch] BYREF
-  _BYTE *v29; // [esp+4C8h] [ebp-18h]
+  _BYTE *fontBytes; // [esp+4C8h] [ebp-18h]
 
-  v29 = fontData;
+  fontBytes = fontData;
   slot = TextSprite_GetResourceSlot(slotIndex);
-  Debug_Log(a3, a4, a5, (int)a_conformfont2p);
+  Debug_Log(a3, a4, allocContext, (int)a_conformfont2p);
   if ( !slot )
     return;
-  v7 = slot->cached_sprite_set;
-  if ( v7 )
+  existingSpriteSet = slot->cached_sprite_set;
+  if ( existingSpriteSet )
   {
-    nfree_(v7);
+    nfree_(existingSpriteSet);
     slot->cached_sprite_set = 0;
   }
-  v8 = v29;
+  v8 = fontBytes;
   LOBYTE(checksum) = 0;
   checksumSum = 0;
   for ( i = 0; i < 768; ++i )
@@ -3461,42 +3461,42 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
     checksumSum += BYTE1(checksum);
   }
   sprintf_(cacheFilename, "cache\\%02x%02x%04x.s32", slotIndex, (unsigned __int8)checksum, checksumSum);
-  Res_ProbeGfxFileExists(cacheFilename, v13, a5, v12);
-  if ( v15 )
+  Res_ProbeGfxFileExists(cacheFilename, v13, allocContext, v12);
+  if ( cacheFileExists )
   {
-    v25 = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, a5);
-    if ( v25 )
-      v25 = DLXSpriteSet_Load(v25, (char)checksum);
-    slot->cached_sprite_set = (int)(uintptr_t)v25;
+    cachedSpriteSet = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, allocContext);
+    if ( cachedSpriteSet )
+      cachedSpriteSet = DLXSpriteSet_Load(cachedSpriteSet, (char)checksum);
+    slot->cached_sprite_set = (int)(uintptr_t)cachedSpriteSet;
   }
   else
   {
-    v16 = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, a5);
-    v17 = v16;
-    if ( v16 )
-      v17 = DLXSpriteSet_Load(v16, (char)checksum);
-    v18 = sourceStemCopy;
-    v19 = (char *)slot->source_stem;
-    slot->cached_sprite_set = (int)(uintptr_t)v17;
+    spriteSet = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, allocContext);
+    loadedSpriteSet = spriteSet;
+    if ( spriteSet )
+      loadedSpriteSet = DLXSpriteSet_Load(spriteSet, (char)checksum);
+    destCursor = sourceStemCopy;
+    srcCursor = (char *)slot->source_stem;
+    slot->cached_sprite_set = (int)(uintptr_t)loadedSpriteSet;
     do
     {
-      v20 = *v19;
-      *v18 = *v19;
-      if ( !v20 )
+      firstChar = *srcCursor;
+      *destCursor = *srcCursor;
+      if ( !firstChar )
         break;
-      v21 = v19[1];
-      v19 += 2;
-      v18[1] = v21;
-      v18 += 2;
+      secondChar = srcCursor[1];
+      srcCursor += 2;
+      destCursor[1] = secondChar;
+      destCursor += 2;
     }
-    while ( v21 );
+    while ( secondChar );
     checksum = v26;
     cacheFilename[strlen(sourceStemCopy) + 97] = 'p';
-    Palette_LoadFromQueryHandle((int)v29, 12 * slotIndex);
+    Palette_LoadFromQueryHandle((int)fontBytes, 12 * slotIndex);
     DLXSpriteSet_DrawText(slot->cached_sprite_set, -1, v22, v26);
     DLXSpriteSet_Save((int *)(uintptr_t)(unsigned int)slot->cached_sprite_set, (int)cacheFilename, (char)v26);
   }
-  Debug_Log(v23, (char)checksum, a5, (int)a_end);
+  Debug_Log(v23, (char)checksum, allocContext, (int)a_end);
 }
 // 40C21A: variable 'v6' is possibly undefined
 // 40C364: variable 'v24' is possibly undefined
@@ -3959,7 +3959,7 @@ int  MiniMap_BuildTileColorTables(unsigned int themeIndex, int a2)
 // 523F50: using guessed type int dword_523F50;
 
 //----- (0040D330) --------------------------------------------------------
-int  MiniMap_CreateSurface(DWORD a1)
+int  MiniMap_CreateSurface(DWORD allocContext)
 {
   _DWORD *Surface; // eax
   int minimap_frame_sprite; // eax
@@ -3971,7 +3971,7 @@ int  MiniMap_CreateSurface(DWORD a1)
   g_MiniMapRectHeight_52334A = *(_WORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) * (unsigned __int8)g_MiniMapPixelsPerTile_523F54 + 14;
   g_MiniMapRectTop_523346 = 16;
   g_MiniMapRectLeft_523344 = 608 - g_MiniMapRectWidth_523348;
-  Surface = (_DWORD *)Mem_Alloc(188, 16, g_MiniMapRectWidth_523348, a1);
+  Surface = (_DWORD *)Mem_Alloc(188, 16, g_MiniMapRectWidth_523348, allocContext);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, g_MiniMapRectWidth_523348, g_MiniMapRectHeight_52334A);
   g_MiniMapSurface_52334C = (int)Surface;
@@ -4415,51 +4415,51 @@ int MiniMap_Hide()
 //----- (0040DED0) --------------------------------------------------------
 signed int  UI_MenuHitTestEntry(_WORD *menu)
 {
-  int v1; // edi
-  _WORD *v2; // esi
+  int centerOffset; // edi
+  _WORD *measureEntryPtr; // esi
   int i; // ebx
-  _WORD *v4; // esi
+  _WORD *hitEntryPtr; // esi
   int hitIndex; // ebx
-  int v6; // edi
+  int rowOffset; // edi
   int SpriteHeight; // ebp
-  int v9; // edx
-  int v10; // ebp
-  int v11; // ebp
-  int v12; // [esp+4h] [ebp-2Ch]
-  unsigned __int16 v14; // [esp+10h] [ebp-20h]
-  unsigned __int16 v15; // [esp+14h] [ebp-1Ch]
+  int textWidth; // edx
+  int centerGap; // ebp
+  int rowTop; // ebp
+  int rightX; // [esp+4h] [ebp-2Ch]
+  unsigned __int16 topBaseY; // [esp+10h] [ebp-20h]
+  unsigned __int16 leftX; // [esp+14h] [ebp-1Ch]
 
-  LOWORD(v1) = -1;
-  v2 = menu;
+  LOWORD(centerOffset) = -1;
+  measureEntryPtr = menu;
   for ( i = 0; i < (unsigned __int16)menu[4]; ++i )
   {
     SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-    LOWORD(v9) = Render_LoadResourceSprite_v3(*(_BYTE **)&v2[2 * (unsigned __int8)g_LanguageIndex + 5]);
-    v10 = SpriteHeight - v9;
-    if ( (unsigned __int16)(v10 / 2) < (unsigned __int16)v1 )
-      v1 = v10 / 2;
-    v2 += 20;
+    LOWORD(textWidth) = Render_LoadResourceSprite_v3(*(_BYTE **)&measureEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
+    centerGap = SpriteHeight - textWidth;
+    if ( (unsigned __int16)(centerGap / 2) < (unsigned __int16)centerOffset )
+      centerOffset = centerGap / 2;
+    measureEntryPtr += 20;
   }
-  v4 = menu;
-  v15 = v1 + *menu;
+  hitEntryPtr = menu;
+  leftX = centerOffset + *menu;
   hitIndex = 0;
-  v6 = 0;
-  v14 = menu[1] + 25;
+  rowOffset = 0;
+  topBaseY = menu[1] + 25;
   while ( 1 )
   {
     if ( hitIndex >= (unsigned __int16)menu[4] )
       return -1;
-    v11 = v6 + v14;
-    v12 = (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)&v4[2 * (unsigned __int8)g_LanguageIndex + 5]) + v15;
-    if ( g_MouseCursorRawX >> g_CursorCoordShift >= v15
-      && g_MouseCursorRawY >> g_CursorCoordShift >= v11
-      && g_MouseCursorRawX >> g_CursorCoordShift <= v12
-      && g_MouseCursorRawY >> g_CursorCoordShift <= v11 + 22 )
+    rowTop = rowOffset + topBaseY;
+    rightX = (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)&hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]) + leftX;
+    if ( g_MouseCursorRawX >> g_CursorCoordShift >= leftX
+      && g_MouseCursorRawY >> g_CursorCoordShift >= rowTop
+      && g_MouseCursorRawX >> g_CursorCoordShift <= rightX
+      && g_MouseCursorRawY >> g_CursorCoordShift <= rowTop + 22 )
     {
       break;
     }
-    v4 += 20;
-    v6 += 22;
+    hitEntryPtr += 20;
+    rowOffset += 22;
     ++hitIndex;
   }
   return hitIndex;
@@ -4477,26 +4477,26 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   int v2; // eax
   int v3; // eax
   int v4; // eax
-  int v5; // ebx
+  int panelSpriteWidth; // ebx
   int v6; // eax
   int v7; // ecx
   _DWORD *Surface; // eax
-  __int16 v9; // dx
+  __int16 menuTop; // dx
   int SpriteForChar; // eax
   DWORD v11; // ebp
   int v12; // edi
   int v13; // ecx
-  int v14; // esi
-  _WORD *v15; // edi
+  int measureIndex; // esi
+  _WORD *measureEntryPtr; // edi
   int v16; // ecx
-  int v17; // esi
-  _WORD *v18; // edi
+  int drawIndex; // esi
+  _WORD *drawEntryPtr; // edi
   unsigned __int16 *v19; // edx
   __int16 SpriteHeight; // ax
   int v21; // esi
   int v22; // ebx
-  int v23; // edx
-  int v24; // ecx
+  int mouseY; // edx
+  int mouseX; // ecx
   int i; // eax
   int v26; // edi
   int v27; // esi
@@ -4506,22 +4506,22 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   int v31; // esi
   _WORD *v32; // ebx
   __int16 v33; // ax
-  _WORD *v34; // eax
-  int v36; // edx
+  _WORD *resultEntryPtr; // eax
+  int measureTextWidth; // edx
   int v37; // ecx
-  int v38; // ecx
-  char v39; // cl
+  int measureGap; // ecx
+  char colorIndex; // cl
   DWORD prevHoveredIndex; // ebp
   signed int hitIndex; // esi
   int *v42; // edx
   char v43; // al
   int v44; // edi
-  __int16 v45; // ax
-  int v46; // ecx
-  char v47; // al
-  unsigned __int16 v48; // di
-  int v49; // ebp
-  __int16 v50; // ax
+  __int16 prevTextWidth; // ax
+  int entryEnabled; // ecx
+  char highlightColorIndex; // al
+  unsigned __int16 hitTextX; // di
+  int hitEntryY; // ebp
+  __int16 hitTextWidth; // ax
   _WORD *v51; // eax
   _WORD *v52; // eax
   unsigned __int16 v53; // [esp+3Ch] [ebp-78h]
@@ -4535,60 +4535,60 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   unsigned __int16 v61; // [esp+44h] [ebp-70h]
   unsigned __int16 v62; // [esp+44h] [ebp-70h]
   int v63; // [esp+48h] [ebp-6Ch]
-  int v64; // [esp+4Ch] [ebp-68h] BYREF
-  int v65; // [esp+50h] [ebp-64h] BYREF
-  int v66; // [esp+54h] [ebp-60h] BYREF
-  int v67; // [esp+58h] [ebp-5Ch] BYREF
-  _WORD *v68; // [esp+5Ch] [ebp-58h]
-  int v69; // [esp+60h] [ebp-54h] BYREF
+  int colorActive; // [esp+4Ch] [ebp-68h] BYREF
+  int colorInactive; // [esp+50h] [ebp-64h] BYREF
+  int colorPrevActive; // [esp+54h] [ebp-60h] BYREF
+  int colorPrevInactive; // [esp+58h] [ebp-5Ch] BYREF
+  _WORD *prevEntryPtr; // [esp+5Ch] [ebp-58h]
+  int colorHighlight; // [esp+60h] [ebp-54h] BYREF
   int hoveredIndex; // [esp+64h] [ebp-50h]
-  _WORD *v71; // [esp+68h] [ebp-4Ch]
-  _WORD *v72; // [esp+6Ch] [ebp-48h]
+  _WORD *menuPtr; // [esp+68h] [ebp-4Ch]
+  _WORD *hitEntryPtr; // [esp+6Ch] [ebp-48h]
   _DWORD *menuSurface; // [esp+70h] [ebp-44h]
-  int v74; // [esp+74h] [ebp-40h]
-  int v75; // [esp+78h] [ebp-3Ch]
-  _WORD *v76; // [esp+7Ch] [ebp-38h]
-  char *v77; // [esp+80h] [ebp-34h]
-  int v78; // [esp+84h] [ebp-30h]
-  int v79; // [esp+88h] [ebp-2Ch]
-  char *v80; // [esp+8Ch] [ebp-28h]
-  int v81; // [esp+90h] [ebp-24h]
-  int v82; // [esp+94h] [ebp-20h]
-  int v83; // [esp+98h] [ebp-1Ch]
+  int exitFlag; // [esp+74h] [ebp-40h]
+  int centerOffset; // [esp+78h] [ebp-3Ch]
+  _WORD *menuLeft; // [esp+7Ch] [ebp-38h]
+  char *textX; // [esp+80h] [ebp-34h]
+  int textBaseY; // [esp+84h] [ebp-30h]
+  int textY; // [esp+88h] [ebp-2Ch]
+  char *hoverTextX; // [esp+8Ch] [ebp-28h]
+  int entryY; // [esp+90h] [ebp-24h]
+  int surfaceWidth; // [esp+94h] [ebp-20h]
+  int surfaceHeight; // [esp+98h] [ebp-1Ch]
   const WorldMapTopMenuHitRecord *top_menu_record;
 
-  v71 = menu;
+  menuPtr = menu;
   LOWORD(menu) = *menu;
-  v76 = menu;
-  HIWORD(v2) = HIWORD(v71);
+  menuLeft = menu;
+  HIWORD(v2) = HIWORD(menuPtr);
   v63 = 0;
-  LOWORD(v2) = v71[1];
-  v78 = v2;
+  LOWORD(v2) = menuPtr[1];
+  textBaseY = v2;
   LOWORD(v3) = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-  v82 = v3 + 1;
+  surfaceWidth = v3 + 1;
   LOWORD(v4) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u);
-  v5 = v4;
+  panelSpriteWidth = v4;
   LOWORD(v6) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
-  v83 = v5 + v6 + 1;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, v5, a2);
+  surfaceHeight = panelSpriteWidth + v6 + 1;
+  Surface = (_DWORD *)Mem_Alloc(188, v7, panelSpriteWidth, a2);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, v82, v83);
-  v9 = v71[1];
+    Surface = Render_CreateSurface((int)Surface, surfaceWidth, surfaceHeight);
+  menuTop = menuPtr[1];
   menuSurface = Surface;
   Render_FillRect(
     (_DWORD *)g_WorldMapTargetSurface,
     Surface,
-    (unsigned __int16)v71[1],
-    (unsigned __int16)*v71,
-    v82 + *v71 - 1,
-    v83 + v9 - 1,
+    (unsigned __int16)menuPtr[1],
+    (unsigned __int16)*menuPtr,
+    surfaceWidth + *menuPtr - 1,
+    surfaceHeight + menuTop - 1,
     0,
     0);
   g_RenderDevice = (_UNKNOWN *)g_WorldMapTargetSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_MapPanelSpriteSet, 3);
   v11 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v11 + 52))(
-    (unsigned __int16)v78,
+    (unsigned __int16)textBaseY,
     SpriteForChar,
     -1,
     -1,
@@ -4598,49 +4598,49 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     0,
     0);
   v12 = *((_DWORD *)g_RenderDevice + 46);
-  v78 += 25;
-  v57 = (unsigned __int16)(v78 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u));
-  LOWORD(v13) = (_WORD)v76 + DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-  v14 = 0;
-  (*(void (__fastcall **)(int, _DWORD, int, _DWORD))(v12 + 28))(v13, (unsigned __int16)v76, v57, 0);
-  v15 = v71;
+  textBaseY += 25;
+  v57 = (unsigned __int16)(textBaseY + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u));
+  LOWORD(v13) = (_WORD)menuLeft + DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
+  measureIndex = 0;
+  (*(void (__fastcall **)(int, _DWORD, int, _DWORD))(v12 + 28))(v13, (unsigned __int16)menuLeft, v57, 0);
+  measureEntryPtr = menuPtr;
   Render_ReleaseSurface(19, v11);
-  v75 = v16;
-  while ( v14 < (unsigned __int16)v71[4] )
+  centerOffset = v16;
+  while ( measureIndex < (unsigned __int16)menuPtr[4] )
   {
     DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-    LOWORD(v36) = Render_LoadResourceSprite_v3(*(_BYTE **)&v15[2 * (unsigned __int8)g_LanguageIndex + 5]);
-    v38 = v37 - v36;
-    if ( (unsigned __int16)(v38 / 2) < (unsigned __int16)v75 )
-      v75 = v38 / 2;
-    v15 += 20;
-    ++v14;
+    LOWORD(measureTextWidth) = Render_LoadResourceSprite_v3(*(_BYTE **)&measureEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
+    measureGap = v37 - measureTextWidth;
+    if ( (unsigned __int16)(measureGap / 2) < (unsigned __int16)centerOffset )
+      centerOffset = measureGap / 2;
+    measureEntryPtr += 20;
+    ++measureIndex;
   }
-  v17 = 0;
-  v77 = (char *)v76 + v75;
-  v18 = v71;
-  v79 = v78;
-  while ( v17 < (unsigned __int16)v71[4] )
+  drawIndex = 0;
+  textX = (char *)menuLeft + centerOffset;
+  drawEntryPtr = menuPtr;
+  textY = textBaseY;
+  while ( drawIndex < (unsigned __int16)menuPtr[4] )
   {
-    if ( *(_DWORD *)(v18 + 13) )
+    if ( *(_DWORD *)(drawEntryPtr + 13) )
     {
-      v64 = 0xFFFFFF;
-      v39 = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&v64);
+      colorActive = 0xFFFFFF;
+      colorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorActive);
     }
     else
     {
-      v65 = 10395294;
-      v39 = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&v65);
+      colorInactive = 10395294;
+      colorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorInactive);
     }
-    TextSprite_SetStyleFlag(v39);
+    TextSprite_SetStyleFlag(colorIndex);
     TextSprite_DrawStringWithOrientation(
-      (unsigned __int16)v77,
-      (unsigned __int16)v79,
+      (unsigned __int16)textX,
+      (unsigned __int16)textY,
       0,
-      *(unsigned __int8 **)&v18[2 * (unsigned __int8)g_LanguageIndex + 5]);
-    v18 += 20;
-    ++v17;
-    v79 += 22;
+      *(unsigned __int8 **)&drawEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
+    drawEntryPtr += 20;
+    ++drawIndex;
+    textY += 22;
   }
   DLX_GetSpriteForChar(g_MapPanelSpriteSet, 4);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -4651,104 +4651,104 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     1,
     0,
     0);
-  v19 = v71;
+  v19 = menuPtr;
   Render_Pump();
   v61 = v19[1];
   v58 = *v19;
-  v22 = (int)v71;
+  v22 = (int)menuPtr;
   LOWORD(v22) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + *(_WORD *)(v22 + 2);
   v53 = v22 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
   SpriteHeight = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-  v21 = v75;
+  v21 = centerOffset;
   Render_BlitSurfaceRect(
     (_DWORD *)g_WorldMapTargetSurface,
     0,
-    (unsigned __int16)v71[1],
-    (unsigned __int16)*v71,
-    *v71 + SpriteHeight,
+    (unsigned __int16)menuPtr[1],
+    (unsigned __int16)*menuPtr,
+    *menuPtr + SpriteHeight,
     v53,
     v58,
     v61);
   LOBYTE(v22) = -1;
   Render_Present((int)g_RenderState);
-  v74 = 0;
+  exitFlag = 0;
   hoveredIndex = -1;
-  v80 = (char *)v76 + v21;
-  while ( DD_IsFlipping((int)g_RenderState) && !v74 )
+  hoverTextX = (char *)menuLeft + v21;
+  while ( DD_IsFlipping((int)g_RenderState) && !exitFlag )
   {
     DD_Pump((int)g_RenderState, v22);
-    v23 = g_MouseCursorRawY >> g_CursorCoordShift;
-    v24 = g_MouseCursorRawX >> g_CursorCoordShift;
+    mouseY = g_MouseCursorRawY >> g_CursorCoordShift;
+    mouseX = g_MouseCursorRawX >> g_CursorCoordShift;
     for ( i = 0; i < WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT; ++i )
     {
       top_menu_record = &g_WorldMapTopMenuHitRecords[i];
-      if ( v71 != top_menu_record->menu )
+      if ( menuPtr != top_menu_record->menu )
       {
-        if ( v24 >= (unsigned __int16)top_menu_record->left
-          && v23 >= (unsigned __int16)top_menu_record->top
-          && v24 <= (unsigned __int16)top_menu_record->right
-          && v23 <= (unsigned __int16)top_menu_record->bottom )
+        if ( mouseX >= (unsigned __int16)top_menu_record->left
+          && mouseY >= (unsigned __int16)top_menu_record->top
+          && mouseX <= (unsigned __int16)top_menu_record->right
+          && mouseY <= (unsigned __int16)top_menu_record->bottom )
         {
-          v74 = 1;
+          exitFlag = 1;
         }
       }
     }
-    if ( *((_DWORD *)v71 + 1) )
+    if ( *((_DWORD *)menuPtr + 1) )
     {
-      submenuHitIndex = UI_MenuHitTestEntry(*((_WORD **)v71 + 1));
-      if ( submenuHitIndex != -1 && v71 != *(_WORD **)(*((_DWORD *)v71 + 1) + 40 * submenuHitIndex + 30) )
+      submenuHitIndex = UI_MenuHitTestEntry(*((_WORD **)menuPtr + 1));
+      if ( submenuHitIndex != -1 && menuPtr != *(_WORD **)(*((_DWORD *)menuPtr + 1) + 40 * submenuHitIndex + 30) )
         break;
     }
     prevHoveredIndex = hoveredIndex;
-    hitIndex = UI_MenuHitTestEntry(v71);
+    hitIndex = UI_MenuHitTestEntry(menuPtr);
     if ( hitIndex != prevHoveredIndex )
     {
       Render_Pump();
       if ( prevHoveredIndex != -1 )
       {
-        if ( *(_DWORD *)&v71[20 * prevHoveredIndex + 13] )
+        if ( *(_DWORD *)&menuPtr[20 * prevHoveredIndex + 13] )
         {
-          v42 = &v66;
-          v66 = 0xFFFFFF;
+          v42 = &colorPrevActive;
+          colorPrevActive = 0xFFFFFF;
         }
         else
         {
-          v42 = &v67;
-          v67 = 10395294;
+          v42 = &colorPrevInactive;
+          colorPrevInactive = 10395294;
         }
         v43 = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)v42);
         v44 = hoveredIndex;
         TextSprite_SetStyleFlag(v43);
-        v68 = &v71[20 * v44];
-        LOWORD(v44) = (_WORD)v80;
-        v22 = *(_DWORD *)&v68[2 * (unsigned __int8)g_LanguageIndex + 5];
-        v81 = 22 * hoveredIndex + v78;
-        prevHoveredIndex = (unsigned __int16)v81;
-        TextSprite_DrawStringWithOrientation((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
-        v55 = v81 + 22;
-        v45 = Render_LoadResourceSprite_v3(*(_BYTE **)&v68[2 * (unsigned __int8)g_LanguageIndex + 5]);
+        prevEntryPtr = &menuPtr[20 * v44];
+        LOWORD(v44) = (_WORD)hoverTextX;
+        v22 = *(_DWORD *)&prevEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5];
+        entryY = 22 * hoveredIndex + textBaseY;
+        prevHoveredIndex = (unsigned __int16)entryY;
+        TextSprite_DrawStringWithOrientation((unsigned __int16)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)v22);
+        v55 = entryY + 22;
+        prevTextWidth = Render_LoadResourceSprite_v3(*(_BYTE **)&prevEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
         LOBYTE(v22) = v44;
-        Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, prevHoveredIndex, (unsigned __int16)v44, v44 + v45, v55, v44, prevHoveredIndex);
+        Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, prevHoveredIndex, (unsigned __int16)v44, v44 + prevTextWidth, v55, v44, prevHoveredIndex);
       }
       if ( hitIndex == -1 )
         goto LABEL_52;
-      v46 = *(_DWORD *)&v71[20 * hitIndex + 13];
-      v72 = &v71[20 * hitIndex];
-      if ( !v46 )
+      entryEnabled = *(_DWORD *)&menuPtr[20 * hitIndex + 13];
+      hitEntryPtr = &menuPtr[20 * hitIndex];
+      if ( !entryEnabled )
         goto LABEL_52;
-      v69 = 3342130;
-      v47 = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&v69);
-      TextSprite_SetStyleFlag(v47);
-      v22 = *(_DWORD *)&v72[2 * (unsigned __int8)g_LanguageIndex + 5];
-      v48 = (unsigned __int16)v80;
-      v81 = 22 * hitIndex + v78;
-      v49 = (unsigned __int16)v81;
-      TextSprite_DrawStringWithOrientation((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
-      v56 = v81 + 22;
-      v50 = Render_LoadResourceSprite_v3(*(_BYTE **)&v72[2 * (unsigned __int8)g_LanguageIndex + 5]);
-      LOBYTE(v22) = v48;
-      Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, v49, v48, v48 + v50, v56, v48, v49);
-      v51 = &v72[2 * (unsigned __int8)g_LanguageIndex];
+      colorHighlight = 3342130;
+      highlightColorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorHighlight);
+      TextSprite_SetStyleFlag(highlightColorIndex);
+      v22 = *(_DWORD *)&hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5];
+      hitTextX = (unsigned __int16)hoverTextX;
+      entryY = 22 * hitIndex + textBaseY;
+      hitEntryY = (unsigned __int16)entryY;
+      TextSprite_DrawStringWithOrientation((unsigned __int16)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)v22);
+      v56 = entryY + 22;
+      hitTextWidth = Render_LoadResourceSprite_v3(*(_BYTE **)&hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
+      LOBYTE(v22) = hitTextX;
+      Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, hitEntryY, hitTextX, hitTextX + hitTextWidth, v56, hitTextX, hitEntryY);
+      v51 = &hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex];
       prevHoveredIndex = *(_DWORD *)(v51 + 19);
       if ( prevHoveredIndex )
         Tooltip_ShowText(3, *(char **)(v51 + 19), v63);
@@ -4759,7 +4759,7 @@ LABEL_52:
       Render_Present((int)g_RenderState);
       if ( hitIndex != -1 )
       {
-        v52 = &v71[20 * hitIndex];
+        v52 = &menuPtr[20 * hitIndex];
         v22 = *(_DWORD *)(v52 + 15);
         if ( v22 )
         {
@@ -4776,42 +4776,42 @@ LABEL_52:
   Render_Pump();
   if ( g_WorldMapTargetSurface != g_PrimaryRenderSurface )
   {
-    v62 = v71[1];
-    v59 = *v71;
-    v29 = v71;
+    v62 = menuPtr[1];
+    v59 = *menuPtr;
+    v29 = menuPtr;
     LOWORD(v29) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + v29[1];
     v54 = (_WORD)v29 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
     v30 = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
     Render_FillRect(
       (_DWORD *)g_PrimaryRenderSurface,
       0,
-      (unsigned __int16)v71[1],
-      (unsigned __int16)*v71,
-      *v71 + v30,
+      (unsigned __int16)menuPtr[1],
+      (unsigned __int16)*menuPtr,
+      *menuPtr + v30,
       v54,
       v59,
       v62);
   }
-  Render_BlitSurfaceRect(menuSurface, 0, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
+  Render_BlitSurfaceRect(menuSurface, 0, 0, 0, surfaceWidth - 1, surfaceHeight - 1, *menuPtr, menuPtr[1]);
   Render_Present((int)g_RenderState);
   if ( g_WorldMapTargetSurface != g_PrimaryRenderSurface )
   {
     v31 = *((_DWORD *)g_RenderDevice + 46);
-    v32 = v71;
+    v32 = menuPtr;
     LOWORD(v32) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + v32[1];
     v60 = (unsigned __int16)((_WORD)v32 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u));
     v33 = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
     (*(void (__fastcall **)(_DWORD, _DWORD, int, _DWORD))(v31 + 28))(
-      (unsigned __int16)(*v71 + v33),
-      (unsigned __int16)*v71,
+      (unsigned __int16)(*menuPtr + v33),
+      (unsigned __int16)*menuPtr,
       v60,
       0);
   }
-  Render_BlitSurfaceRect(menuSurface, (_DWORD *)g_WorldMapTargetSurface, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
+  Render_BlitSurfaceRect(menuSurface, (_DWORD *)g_WorldMapTargetSurface, 0, 0, surfaceWidth - 1, surfaceHeight - 1, *menuPtr, menuPtr[1]);
   if ( menuSurface )
     (*(void (**)(void))menuSurface[46])();
-  if ( hoveredIndex != -1 && (v34 = &v71[20 * hoveredIndex], *(_DWORD *)(v34 + 13)) )
-    return *(_DWORD *)(v34 + 17);
+  if ( hoveredIndex != -1 && (resultEntryPtr = &menuPtr[20 * hoveredIndex], *(_DWORD *)(resultEntryPtr + 13)) )
+    return *(_DWORD *)(resultEntryPtr + 17);
   else
     return v63;
 }
@@ -5047,15 +5047,15 @@ void  Map_RevealAllTilesForPlayer(int playerIndex)
 signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playerIndex)
 {
   int revealByteAddr; // eax
-  int v6; // ecx
-  int v7; // ecx
-  signed int v8; // ecx
-  signed int v9; // ecx
-  int v10; // ecx
-  int v11; // ecx
-  signed int v12; // ecx
-  int v13; // edi
-  signed int v14; // ecx
+  int leftTileX; // ecx
+  int rightTileX; // ecx
+  signed int upTileY; // ecx
+  signed int downTileY; // ecx
+  int diagLeftTileX; // ecx
+  int diagRightTileX; // ecx
+  signed int diagDownTileY; // ecx
+  int diagRightTileX2; // edi
+  signed int diagDownTileY2; // ecx
 
   if ( tileX < 0
     || tileY < 0
@@ -5069,24 +5069,24 @@ signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playe
   *(_BYTE *)(revealByteAddr + PLAYER_REVEALED_TILES_OFFSET) |= 1 << (tileY & 7);
   MiniMap_DrawTileCell((void *)tileX, tileY);
   if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(v6, tileY, playerIndex);
+    Map_RevealTileWithPropagation(leftTileX, tileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) )
-    Map_RevealTileWithPropagation(v7, tileY, playerIndex);
+    Map_RevealTileWithPropagation(rightTileX, tileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, v8, playerIndex);
+    Map_RevealTileWithPropagation(tileX, upTileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX, v9, playerIndex);
+    Map_RevealTileWithPropagation(tileX, downTileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(v10, tileY - 1, playerIndex);
+    Map_RevealTileWithPropagation(diagLeftTileX, tileY - 1, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY - 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY - 1, playerIndex) )
-    Map_RevealTileWithPropagation(v11, tileY - 1, playerIndex);
+    Map_RevealTileWithPropagation(diagRightTileX, tileY - 1, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY + 2, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY + 1, playerIndex) )
-    Map_RevealTileWithPropagation(tileX - 1, v12, playerIndex);
+    Map_RevealTileWithPropagation(tileX - 1, diagDownTileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY + 2, playerIndex) )
   {
-    v13 = tileX + 1;
-    if ( !Map_IsTileVisibleToPlayer(v13, tileY + 1, playerIndex) )
-      Map_RevealTileWithPropagation(v13, v14, playerIndex);
+    diagRightTileX2 = tileX + 1;
+    if ( !Map_IsTileVisibleToPlayer(diagRightTileX2, tileY + 1, playerIndex) )
+      Map_RevealTileWithPropagation(diagRightTileX2, diagDownTileY2, playerIndex);
   }
   return 1;
 }
@@ -5118,8 +5118,8 @@ BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
 signed int  Map_ClassifyFogOfWarOverlayForPlayer(int tileX, signed int tileY, int playerIndex)
 {
   signed int tileYBelow; // ebp
-  bool v7; // al
-  char v8; // cl
+  bool belowRightVisible; // al
+  char neighborAccum; // cl
   char neighborMask; // si
   char neighborMaskFull; // cl
 
@@ -5133,8 +5133,8 @@ signed int  Map_ClassifyFogOfWarOverlayForPlayer(int tileX, signed int tileY, in
   tileYBelow = tileY + 1;
   Map_IsTileVisibleToPlayer(tileX - 1, tileYBelow, playerIndex);
   Map_IsTileVisibleToPlayer(tileX, tileYBelow, playerIndex);
-  v7 = Map_IsTileVisibleToPlayer(tileX + 1, tileYBelow, playerIndex);
-  neighborMask = v7 | v8 & 0xFE;
+  belowRightVisible = Map_IsTileVisibleToPlayer(tileX + 1, tileYBelow, playerIndex);
+  neighborMask = belowRightVisible | neighborAccum & 0xFE;
   if ( !neighborMask )
     return 0;
   TextSprite_SetStyleFlag(1);
@@ -5207,9 +5207,9 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
 {
   char moraleValue; // dl
   char stanceBits; // bh
-  char v5; // cl
-  char v6; // dl
-  char v7; // ch
+  char auxFlagsByte; // cl
+  char stateBitsByte; // dl
+  char flagsByte; // ch
 
   *(_WORD *)(result + 4) = 0;
   *(_WORD *)(result + 6) = 0;
@@ -5231,13 +5231,13 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   UNIT_SLOT_FATIGUE(result) = 0;
   stanceBits = UNIT_SLOT_STANCE_BITS(result);
   UNIT_SLOT_AUX_STATE(result) = 0;
-  v5 = *(_BYTE *)(result + 17);
+  auxFlagsByte = *(_BYTE *)(result + 17);
   UNIT_SLOT_STANCE_BITS(result) = stanceBits & 0x80;
-  v6 = *(_BYTE *)(result + 22);
-  *(_BYTE *)(result + 17) = v5 & 0xF8;
-  v7 = *(_BYTE *)(result + 13);
-  UNIT_SLOT_STATE_BITS(result) = v6 & 0xFE;
-  UNIT_SLOT_FLAGS(result) = v7 & 0xF0;
+  stateBitsByte = *(_BYTE *)(result + 22);
+  *(_BYTE *)(result + 17) = auxFlagsByte & 0xF8;
+  flagsByte = *(_BYTE *)(result + 13);
+  UNIT_SLOT_STATE_BITS(result) = stateBitsByte & 0xFE;
+  UNIT_SLOT_FLAGS(result) = flagsByte & 0xF0;
   return result;
 }
 // 51257A: using guessed type int g_UnitTypeFlags[];

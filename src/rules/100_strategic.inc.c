@@ -559,7 +559,7 @@ signed int UI_CheckEndTurnHotkey(int player_index)
 // 5202E4: using guessed type int gameData;
 
 //----- (004511D0) --------------------------------------------------------
-void  Options_ApplyInGameSliders(int a1, DWORD a2)
+void  Options_ApplyInGameSliders(int a1, DWORD resource_handle)
 {
   *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
                                                     - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
@@ -568,7 +568,7 @@ void  Options_ApplyInGameSliders(int a1, DWORD a2)
   *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
                                                    - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
                                                     + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
-  Options_ApplyRecordSettings(gameData + 147147, a1, a2);
+  Options_ApplyRecordSettings(gameData + 147147, a1, resource_handle);
 }
 // 51938C: using guessed type int dword_51938C;
 // 5193D4: using guessed type int dword_5193D4;
@@ -588,7 +588,7 @@ int  Options_HandleCloseButtonInGame(int widget)
 // 54453C: using guessed type int dword_54453C;
 
 //----- (00451250) --------------------------------------------------------
-unsigned __int16 * Options_InitInGameSlidersAndWidgets(int widget, int a2, DWORD a3)
+unsigned __int16 * Options_InitInGameSlidersAndWidgets(int widget, int a2, DWORD resource_handle)
 {
   int widget_base; // ecx
 
@@ -616,7 +616,7 @@ unsigned __int16 * Options_InitInGameSlidersAndWidgets(int widget, int a2, DWORD
   g_OptionsInGameMusicVolumeRaw = 128;
   g_OptionsInGameScrollSpeedRaw = 128;
   g_OptionsInGameSoundVolumeRaw = 128;
-  return Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, a2, a3);
+  return Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, a2, resource_handle);
 }
 // 451259: variable 'v4' is possibly undefined
 // 519380: using guessed type unsigned __int16 word_519380[6];
@@ -943,14 +943,14 @@ signed int Cheat_FillSelectedSquadWithPegasi()
 {
   int i; // esi
   signed int result; // eax
-  signed int v2; // ecx
+  signed int slot_index; // ecx
 
   if ( g_SelectedUnitIndex != -1 )
   {
     for ( i = 0; ; i += 31 )
     {
       result = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-      if ( v2 >= result )
+      if ( slot_index >= result )
         break;
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
@@ -2332,7 +2332,7 @@ int  Rules_BuildTrapNearTile(DWORD target_x, int target_y, DWORD stack_index, do
 // 5202E4: using guessed type int gameData;
 
 //----- (00454E70) --------------------------------------------------------
-int  UnitStack_CalcArmyFactStrength(int a1)
+int  UnitStack_CalcArmyFactStrength(int stack_record)
 {
   int total_strength;
   signed int i;
@@ -2341,8 +2341,8 @@ int  UnitStack_CalcArmyFactStrength(int a1)
   int shot_strength;
 
   total_strength = 0;
-  unit_slot = (char *)(uintptr_t)(unsigned int)(a1 + 6);
-  for ( i = 0; i < Unit_GetSquadCount(a1); ++i )
+  unit_slot = (char *)(uintptr_t)(unsigned int)(stack_record + 6);
+  for ( i = 0; i < Unit_GetSquadCount(stack_record); ++i )
   {
     melee_strength = Unit_CalcEffectivenessA(unit_slot, 0);
     shot_strength = Unit_CalcEffectivenessC((__int16 *)unit_slot);
@@ -3408,7 +3408,7 @@ void Map_RebuildCastleSiteAnchorCache()
 // 544574: using guessed type int g_CastleSiteAnchorColumns[];
 
 //----- (00456070) --------------------------------------------------------
-int  Building_CalcGarrisonFactStrength(int a1)
+int  Building_CalcGarrisonFactStrength(int building_index)
 {
   int buildingOffset; // ebx
   int totalStrength; // edi
@@ -3417,7 +3417,7 @@ int  Building_CalcGarrisonFactStrength(int a1)
   int meleeStrength; // eax
   int damageStrength; // eax
 
-  buildingOffset = BUILDING_RECORD_SIZE * a1;
+  buildingOffset = BUILDING_RECORD_SIZE * building_index;
   totalStrength = 0;
   for ( slotOffset = 0; slotOffset != 372; slotOffset += 31 )
   {
@@ -3437,7 +3437,7 @@ int  Building_CalcGarrisonFactStrength(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00456130) --------------------------------------------------------
-int  Building_OnGarrisonChange(int building_index, int a2, double a3)
+int  Building_OnGarrisonChange(int building_index, int instance_record, double a3)
 {
   int building_offset; // esi
   int result; // eax
@@ -3446,7 +3446,7 @@ int  Building_OnGarrisonChange(int building_index, int a2, double a3)
   int *strength_value_ptr; // [esp+4h] [ebp-20h]
   int v11; // [esp+1Ch] [ebp-8h]
 
-  v11 = a2;
+  v11 = instance_record;
   building_offset = BUILDING_RECORD_SIZE * building_index;
   result = BUILDING_RECORD_SIZE * building_index + gameData;
   if ( *(_DWORD *)(result + 510137) )
@@ -3458,7 +3458,7 @@ int  Building_OnGarrisonChange(int building_index, int a2, double a3)
     if ( previous_strength != result )
     {
       strength_value_ptr = Rules_AddIntegerValue(result);
-      return Rules_PutInstanceSlotValue(*(_DWORD *)(building_offset + gameData + 510137), aMoc_2, a2, moc_value, a3);
+      return Rules_PutInstanceSlotValue(*(_DWORD *)(building_offset + gameData + 510137), aMoc_2, instance_record, moc_value, a3);
     }
   }
   return result;
@@ -3696,7 +3696,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
   int scan_x_end; // [esp+4h] [ebp-38h]
   int scan_y_start; // [esp+8h] [ebp-34h]
   int i; // [esp+Ch] [ebp-30h]
-  int v12; // [esp+10h] [ebp-2Ch]
+  int building_record_offset; // [esp+10h] [ebp-2Ch]
   int scan_y_end; // [esp+1Ch] [ebp-20h]
   int max_strength; // [esp+20h] [ebp-1Ch]
 
@@ -3704,7 +3704,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
   max_strength = 0;
   building_x = *(unsigned __int8 *)(gameData + building_offset + BUILDING_TABLE_OFFSET);
   building_y = *(unsigned __int8 *)(gameData + building_offset + 509675);
-  v12 = building_offset;
+  building_record_offset = building_offset;
   scan_x = building_x - 1;
   scan_y_end = building_y + 2;
   scan_x_end = building_x + 2;
@@ -3722,7 +3722,7 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
         && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET) + 6) <= 0x28 )
       {
         stack_offset = UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET);
-        if ( *(_BYTE *)(gameData + stack_offset + 147178) != *(_BYTE *)(gameData + v12 + 509676)
+        if ( *(_BYTE *)(gameData + stack_offset + 147178) != *(_BYTE *)(gameData + building_record_offset + 509676)
           && UnitStack_CalcArmyFactStrength(gameData + UNIT_STACK_TABLE_OFFSET + stack_offset) > max_strength )
         {
           max_strength = UnitStack_CalcArmyFactStrength(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET);
@@ -4249,7 +4249,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
   __int64 v9; // rax
   __int64 v10; // rax
   int v11; // ebx
-  int v12; // ebp
+  int dx; // ebp
   const void *approach_track; // eax
   int v14; // edx
   __int64 v15; // rax
@@ -4314,18 +4314,18 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
             (int)((HIDWORD(v35) ^ v35) - HIDWORD(v35)) > 1) )
       {
         v11 = UNIT_STACK_STRIDE * army;
-        v12 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
-        if ( (int)abs32(v12) > 1
+        dx = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
+        if ( (int)abs32(dx) > 1
           || (v11 = *(__int16 *)(v11 + gameData + 147176),
               v36 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - v11,
               (int)((HIDWORD(v36) ^ v36) - HIDWORD(v36)) > 1) )
         {
-          approach_track = (const void *)Building_GenerateNearApproachTrack(army, building, v6, v11, v12);
+          approach_track = (const void *)Building_GenerateNearApproachTrack(army, building, v6, v11, dx);
           if ( !approach_track )
             return 0;
           qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * army + UNIT_STACK_PATH_OFFSET), approach_track, UNIT_STACK_PATH_BYTES);
           j__nfree_();
-          UnitStack_ExecuteQueuedPath(army, v14, -111 * army, v12, a5);
+          UnitStack_ExecuteQueuedPath(army, v14, -111 * army, dx, a5);
         }
       }
     }
@@ -4495,11 +4495,11 @@ double  AI_CalcStrategicPriorityScore(int target_type, DWORD tile_x, int origin_
   _BYTE line_buffer[80]; // [esp+0h] [ebp-70h] BYREF
   int entry_type; // [esp+50h] [ebp-20h] BYREF
   float entry_weight; // [esp+54h] [ebp-1Ch] BYREF
-  int v13; // [esp+58h] [ebp-18h]
+  int origin_x_saved; // [esp+58h] [ebp-18h]
   float weight; // [esp+5Ch] [ebp-14h]
   signed int distance; // [esp+60h] [ebp-10h]
 
-  v13 = origin_x;
+  origin_x_saved = origin_x;
   weight = -1.0;
   file = IO_FOpen(aStrategprior, (unsigned __int8 *)aR, origin_x, tile_x);
   if ( file )
@@ -4512,7 +4512,7 @@ double  AI_CalcStrategicPriorityScore(int target_type, DWORD tile_x, int origin_
     }
   }
   fclose_(file);
-  distance = Math_CeilSqrt((v13 - tile_x) * (v13 - tile_x) + (origin_y - tile_y) * (origin_y - tile_y));
+  distance = Math_CeilSqrt((origin_x_saved - tile_x) * (origin_x_saved - tile_x) + (origin_y - tile_y) * (origin_y - tile_y));
   return weight / (double)distance;
 }
 // 459267: variable 'v7' is possibly undefined
@@ -4604,8 +4604,8 @@ int  AI_FindBestStrategicTargetNearTile(int type_filter, int owner_filter, int o
 {
   int tile_y; // esi
   int tile_x; // edi
-  int v9; // ebx
-  int v10; // ecx
+  int scan_y; // ebx
+  int scan_x; // ecx
   int best_type; // [esp+0h] [ebp-48h] BYREF
   int best_target; // [esp+4h] [ebp-44h] BYREF
   int best_score_bits; // [esp+8h] [ebp-40h] BYREF
@@ -4618,43 +4618,43 @@ int  AI_FindBestStrategicTargetNearTile(int type_filter, int owner_filter, int o
   int v20; // [esp+24h] [ebp-24h]
   int v21; // [esp+28h] [ebp-20h]
   int v22; // [esp+2Ch] [ebp-1Ch]
-  int v23; // [esp+30h] [ebp-18h]
-  int v24; // [esp+34h] [ebp-14h]
-  int v25; // [esp+38h] [ebp-10h]
+  int owner_filter_saved; // [esp+30h] [ebp-18h]
+  int center_x; // [esp+34h] [ebp-14h]
+  int center_y; // [esp+38h] [ebp-10h]
 
-  v23 = owner_filter;
-  v25 = origin_y;
-  v24 = origin_x;
+  owner_filter_saved = owner_filter;
+  center_y = origin_y;
+  center_x = origin_x;
   best_type = -1;
   best_target = -1;
   best_score_bits = -1082130432;
   ring_radius = 1;
   if ( search_radius >= 1 )
   {
-    y_max = v25 + 1;
+    y_max = center_y + 1;
     x_min = origin_x - 1;
-    y_min = v25 - 1;
+    y_min = center_y - 1;
     x_max = origin_x + 1;
     do
     {
-      tile_y = v25 - ring_radius;
-      tile_x = ring_radius + v24;
+      tile_y = center_y - ring_radius;
+      tile_x = ring_radius + center_x;
       for ( i = y_max; tile_y < i; ++tile_y )
-        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+        AI_EvaluateStrategicTargetAtTile(type_filter, owner_filter_saved, tile_x, tile_y, center_y, center_x, &best_type, &best_target, (float *)&best_score_bits);
       v21 = x_min;
       while ( tile_x > v21 )
-        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x--, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+        AI_EvaluateStrategicTargetAtTile(type_filter, owner_filter_saved, tile_x--, tile_y, center_y, center_x, &best_type, &best_target, (float *)&best_score_bits);
       v20 = y_min;
       while ( tile_y > v20 )
       {
-        v9 = tile_y--;
-        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x, v9, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+        scan_y = tile_y--;
+        AI_EvaluateStrategicTargetAtTile(type_filter, owner_filter_saved, tile_x, scan_y, center_y, center_x, &best_type, &best_target, (float *)&best_score_bits);
       }
       v22 = x_max;
       while ( tile_x < v22 )
       {
-        v10 = tile_x++;
-        AI_EvaluateStrategicTargetAtTile(type_filter, v23, v10, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+        scan_x = tile_x++;
+        AI_EvaluateStrategicTargetAtTile(type_filter, owner_filter_saved, scan_x, tile_y, center_y, center_x, &best_type, &best_target, (float *)&best_score_bits);
       }
       ++y_max;
       --x_min;

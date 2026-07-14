@@ -365,7 +365,7 @@ int  AST_FreeNodeChildren(int result)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004968F0) --------------------------------------------------------
-__int16 * AST_ReleaseNodeChildSlots(int constraints, int a2)
+__int16 * AST_ReleaseNodeChildSlots(int constraints, int hashBucket)
 {
   int v3; // edx
   int v4; // edx
@@ -396,7 +396,7 @@ __int16 * AST_ReleaseNodeChildSlots(int constraints, int a2)
         return result;
       constraints = *(_DWORD *)(v8 + 26);
     }
-    AST_RemoveHashedNodeChain(*(__int16 **)(constraints + 6), a2);
+    AST_RemoveHashedNodeChain(*(__int16 **)(constraints + 6), hashBucket);
     AST_RemoveHashedNodeChain(*(__int16 **)(v9 + 14), v10);
     AST_RemoveHashedNodeChain(*(__int16 **)(v11 + 10), v12);
     AST_RemoveHashedNodeChain(*(__int16 **)(v13 + 18), v14);
@@ -728,7 +728,7 @@ LABEL_5:
 // 54E694: using guessed type int dword_54E694;
 
 //----- (00496FE0) --------------------------------------------------------
-int  AST_CollapseNodeChildSlots(int constraints, int a2)
+int  AST_CollapseNodeChildSlots(int constraints, int hashBucket)
 {
   int v3; // edx
   int v4; // edx
@@ -753,7 +753,7 @@ int  AST_CollapseNodeChildSlots(int constraints, int a2)
 
   while ( 1 )
   {
-    AST_AddHashedNodeChain(*(__int16 **)(constraints + 6), constraints, a2);
+    AST_AddHashedNodeChain(*(__int16 **)(constraints + 6), constraints, hashBucket);
     AST_Free(*(_DWORD *)(v3 + 6));
     v5 = *(__int16 **)(v4 + 14);
     *(_DWORD *)(v4 + 6) = v6;
@@ -772,8 +772,8 @@ int  AST_CollapseNodeChildSlots(int constraints, int a2)
     AST_AddHashedNodeChain(v17, v16, v18);
     result = AST_Free(*(_DWORD *)(v19 + 22));
     *(_DWORD *)(v21 + 22) = v22;
-    a2 = *(_DWORD *)(v21 + 26);
-    if ( !a2 )
+    hashBucket = *(_DWORD *)(v21 + 26);
+    if ( !hashBucket )
       break;
     constraints = *(_DWORD *)(v21 + 26);
   }
@@ -796,16 +796,16 @@ int  AST_CollapseNodeChildSlots(int constraints, int a2)
 // 49704A: variable 'v21' is possibly undefined
 
 //----- (00497060) --------------------------------------------------------
-int  Rules_SetDynamicConstraintCheckingCommand(int a1, double context)
+int  Rules_SetDynamicConstraintCheckingCommand(int returnValue, double context)
 {
   int argCheck; // eax
   int v4; // ecx
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
   __int64 argValue; // [esp+0h] [ebp-24h]
-  int v9; // [esp+1Ch] [ebp-8h]
+  int savedReturnValue; // [esp+1Ch] [ebp-8h]
 
-  v9 = a1;
+  savedReturnValue = returnValue;
   argCheck = Lexer_TokenExpect(1);
   v5 = v4;
   if ( argCheck == -1 )
@@ -830,16 +830,16 @@ int Rules_GetDynamicConstraintCheckingCommand()
 // 51AAB4: using guessed type int dword_51AAB4;
 
 //----- (00497100) --------------------------------------------------------
-int  Rules_SetStaticConstraintCheckingCommand(int a1, double context)
+int  Rules_SetStaticConstraintCheckingCommand(int returnValue, double context)
 {
   int argCheck; // eax
   int v4; // ecx
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
   __int64 argValue; // [esp+0h] [ebp-24h]
-  int v9; // [esp+1Ch] [ebp-8h]
+  int savedReturnValue; // [esp+1Ch] [ebp-8h]
 
-  v9 = a1;
+  savedReturnValue = returnValue;
   argCheck = Lexer_TokenExpect(1);
   v5 = v4;
   if ( argCheck == -1 )
@@ -864,13 +864,13 @@ int Rules_GetStaticConstraintCheckingCommand()
 // 51AAB0: using guessed type int dword_51AAB0;
 
 //----- (004971A0) --------------------------------------------------------
-int __fastcall Rules_SetDynamicConstraintChecking(int a1, int a2)
+int __fastcall Rules_SetDynamicConstraintChecking(int newValue, int a2)
 {
   int previous_state;
 
   (void)a2;
   previous_state = g_CLIPS_DynamicConstraintCheckingFlag;
-  g_CLIPS_DynamicConstraintCheckingFlag = a1;
+  g_CLIPS_DynamicConstraintCheckingFlag = newValue;
   return previous_state;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
@@ -1170,7 +1170,7 @@ int __thiscall Defgeneric_ModuleCommand(void *this)
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497840) --------------------------------------------------------
-signed int  Defgeneric_UndefmethodCommand(int a1, double context)
+signed int  Defgeneric_UndefmethodCommand(int returnValue, double context)
 {
   signed int result; // eax
   int theGeneric; // ecx
@@ -1182,9 +1182,9 @@ signed int  Defgeneric_UndefmethodCommand(int a1, double context)
   int argData; // [esp-4h] [ebp-24h] BYREF
   int argType; // [esp+0h] [ebp-20h]
   int argValue; // [esp+4h] [ebp-1Ch]
-  int v12; // [esp+18h] [ebp-8h]
+  int savedReturnValue; // [esp+18h] [ebp-8h]
 
-  v12 = a1;
+  savedReturnValue = returnValue;
   result = Lexer_ParseValueList(1, &argData, 2, context);
   if ( result )
   {
@@ -1231,14 +1231,14 @@ LABEL_7:
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497970) --------------------------------------------------------
-BOOL  Defgeneric_RemoveConstruct(int a1)
+BOOL  Defgeneric_RemoveConstruct(int theConstruct)
 {
   int v1; // ecx
   BOOL result; // eax
   int v3; // edx
   int v4; // ecx
 
-  if ( a1 )
+  if ( theConstruct )
   {
     result = Defgeneric_IsDeletable();
     if ( result )
@@ -1399,7 +1399,7 @@ int __thiscall Defgeneric_PpdefgenericCommand(void *this)
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497BD0) --------------------------------------------------------
-int  Defgeneric_PpdefmethodCommand(int a1, double context)
+int  Defgeneric_PpdefmethodCommand(int returnValue, double context)
 {
   int result; // eax
   _BYTE *genericName; // esi
@@ -1407,9 +1407,9 @@ int  Defgeneric_PpdefmethodCommand(int a1, double context)
   int methodPtr; // edx
   _DWORD argData[2]; // [esp-8h] [ebp-28h] BYREF
   int argValue; // [esp+0h] [ebp-20h]
-  int v8; // [esp+18h] [ebp-8h]
+  int savedReturnValue; // [esp+18h] [ebp-8h]
 
-  v8 = a1;
+  savedReturnValue = returnValue;
   result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
@@ -1437,13 +1437,13 @@ int  Defgeneric_PpdefmethodCommand(int a1, double context)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (00497C80) --------------------------------------------------------
-int  Defgeneric_ListDefmethodsCommand(int a1, double context)
+int  Defgeneric_ListDefmethodsCommand(int returnValue, double context)
 {
   int v2; // ecx
   int result; // eax
   _DWORD argData[9]; // [esp-8h] [ebp-24h] BYREF
 
-  argData[7] = a1;
+  argData[7] = returnValue;
   if ( !Rules_RtnArgCount() )
     return Defgeneric_ListMethodsAndTally((int)g_IO_LogicalName_WDisplay, 0, v2);
   result = Lexer_ParseValueList(1, argData, 2, context);
@@ -1527,7 +1527,7 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
   int v9; // ecx
   int currentGeneric; // ebx
   _DWORD *theMultifield; // edi
-  int v12; // esi
+  int methodOffset; // esi
   int v13; // ebp
   int v14; // ecx
   int v15; // ecx
@@ -1566,7 +1566,7 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
     {
       if ( *(_DWORD *)(currentGeneric + 32) )
       {
-        v12 = 0;
+        methodOffset = 0;
         do
         {
           v13 = 6 * (v9 - 1);
@@ -1574,8 +1574,8 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
           *(_WORD *)((char *)theMultifield + v13 + 14) = 2;
           *(_DWORD *)((char *)theMultifield + v13 + 16) = Rules_GetConstructNameSymbol(currentGeneric);
           *((_WORD *)theMultifield + 3 * v18 + 7) = 1;
-          v12 += 40;
-          *(_DWORD *)((char *)theMultifield + 6 * v14 + 16) = Rules_AddIntegerValue(*(_DWORD *)(v12 + *(_DWORD *)(currentGeneric + 28) - 40));
+          methodOffset += 40;
+          *(_DWORD *)((char *)theMultifield + 6 * v14 + 16) = Rules_AddIntegerValue(*(_DWORD *)(methodOffset + *(_DWORD *)(currentGeneric + 28) - 40));
           v9 = v15 + 1;
         }
         while ( v16 < *(_DWORD *)(currentGeneric + 32) );
@@ -1649,7 +1649,7 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   int v29; // edx
   char *v30; // [esp+4h] [ebp-28h]
   int v31; // [esp+8h] [ebp-24h]
-  int v32; // [esp+Ch] [ebp-20h]
+  int restrictionOffset; // [esp+Ch] [ebp-20h]
   signed int restrictionIndex; // [esp+10h] [ebp-1Ch]
   signed int *theMethod; // [esp+14h] [ebp-18h]
   _DWORD *multifieldPtr; // [esp+18h] [ebp-14h]
@@ -1690,10 +1690,10 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   if ( theMethod[2] > 0 )
   {
     v30 = (char *)v12 + 18;
-    v32 = 0;
+    restrictionOffset = 0;
     do
     {
-      restriction = (_DWORD *)(v32 + theMethod[7]);
+      restriction = (_DWORD *)(restrictionOffset + theMethod[7]);
       *((_WORD *)v30 + 7) = 1;
       v17 = Rules_AddIntegerValue(v15);
       *(_DWORD *)(v19 + 16) = v17;
@@ -1727,7 +1727,7 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
         }
         while ( v23 < (unsigned int)result );
       }
-      v32 += 12;
+      restrictionOffset += 12;
       ++restrictionIndex;
     }
     while ( restrictionIndex < theMethod[2] );
@@ -1833,7 +1833,7 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
   int methodCount; // edx
   unsigned int copyIndex; // ebx
   char *newMethodArray; // eax
-  int v6; // edx
+  int sourceIndex; // edx
   char *destPtr; // ebp
   signed int result; // eax
   int v9; // edx
@@ -1876,11 +1876,11 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
         do
         {
           if ( copyIndex == methodIndex )
-            ++v6;
-          qmemcpy(destPtr, (const void *)(40 * v6 + *(_DWORD *)(theGeneric + 28)), 0x28u);
+            ++sourceIndex;
+          qmemcpy(destPtr, (const void *)(40 * sourceIndex + *(_DWORD *)(theGeneric + 28)), 0x28u);
           ++copyIndex;
           destPtr += 40;
-          ++v6;
+          ++sourceIndex;
         }
         while ( copyIndex < *(_DWORD *)(theGeneric + 32) );
       }
@@ -2384,7 +2384,7 @@ signed int Deffunction_ClearAll()
 {
   int clearSuccess; // ebx
   int i; // ecx
-  int v3; // eax
+  int nameString; // eax
   int v4; // ecx
   int v5; // ecx
   int theDeffunction; // esi
@@ -2407,8 +2407,8 @@ signed int Deffunction_ClearAll()
   {
     if ( *(_DWORD *)(i + 24) )
     {
-      v3 = Rules_GetConstructNameString(i);
-      Deffunction_ReportCantDelete(v3, v4);
+      nameString = Rules_GetConstructNameString(i);
+      Deffunction_ReportCantDelete(nameString, v4);
       clearSuccess = 0;
     }
     else
@@ -2801,7 +2801,7 @@ LABEL_4:
 signed int  Mem_CopyDataObjectRecord(_DWORD *src, _DWORD *dst)
 {
   int fieldCount; // eax
-  int v3; // ebx
+  int valueType; // ebx
   _DWORD *newMultifield; // eax
   int v6; // edx
   int copyLength; // ebx
@@ -2811,9 +2811,9 @@ signed int  Mem_CopyDataObjectRecord(_DWORD *src, _DWORD *dst)
   dst[2] = src[9];
   dst[3] = src[10];
   fieldCount = src[11];
-  v3 = dst[1];
+  valueType = dst[1];
   dst[4] = fieldCount;
-  if ( v3 == 4 )
+  if ( valueType == 4 )
   {
     newMultifield = Rules_CreateEphemeralMultifield(fieldCount + 1);
     copyLength = *(_DWORD *)(v6 + 16) + 1;
@@ -3039,7 +3039,7 @@ int Rules_RegisterDefclassConstruct()
 // 54E6BC: using guessed type int dword_54E6BC;
 
 //----- (00499E00) --------------------------------------------------------
-int  Class_CreateSystemClass(char *a1, int a2, int a3)
+int  Class_CreateSystemClass(char *className, int superclass, int a3)
 {
   signed int *class_symbol; // eax
   char class_flags; // dl
@@ -3052,7 +3052,7 @@ int  Class_CreateSystemClass(char *a1, int a2, int a3)
   _BYTE *class_bitmap; // [esp+4h] [ebp-18h]
 
   (void)a3;
-  class_symbol = Str_Intern(a1, a2);
+  class_symbol = Str_Intern(className, superclass);
   class_record = Class_AllocateRecord((int)class_symbol);
   class_flags = *(_BYTE *)(class_record + 20) | 4;
   *(_BYTE *)(class_record + 20) = class_flags;
@@ -3064,18 +3064,18 @@ int  Class_CreateSystemClass(char *a1, int a2, int a3)
   bucket_index = Class_HashClassName(symbol);
   *(_DWORD *)(class_record + 30) = bucket_index;
   Class_InsertLinkEntry((unsigned __int16 *)(class_record + 46), class_record, -1);
-  if ( a2 )
+  if ( superclass )
   {
-    Class_InsertLinkEntry((unsigned __int16 *)(class_record + 34), a2, -1);
-    Class_InsertLinkEntry((unsigned __int16 *)(a2 + 40), class_record, -1);
+    Class_InsertLinkEntry((unsigned __int16 *)(class_record + 34), superclass, -1);
+    Class_InsertLinkEntry((unsigned __int16 *)(superclass + 40), class_record, -1);
     inherited_index = 1;
-    inherited_class = a2;
+    inherited_class = superclass;
     while ( 1 )
     {
       Class_InsertLinkEntry((unsigned __int16 *)(class_record + 46), inherited_class, -1);
-      if ( inherited_index >= *(unsigned __int16 *)(a2 + 46) )
+      if ( inherited_index >= *(unsigned __int16 *)(superclass + 46) )
         break;
-      inherited_class = *(_DWORD *)(*(_DWORD *)(a2 + 48) + 4 * inherited_index);
+      inherited_class = *(_DWORD *)(*(_DWORD *)(superclass + 48) + 4 * inherited_index);
       ++inherited_index;
     }
   }
@@ -3387,29 +3387,29 @@ signed int  Parser_ReplaceProcVars(
   signed int v18; // eax
   _DWORD *v19; // edx
   _DWORD *varNode; // ebx
-  int v21; // eax
+  int varFuncResult; // eax
   int bindExpr; // eax
   signed int v23; // edx
   _DWORD *v24; // eax
   signed int paramIndex; // [esp+0h] [ebp-28h] BYREF
   signed int bindIndex; // [esp+4h] [ebp-24h] BYREF
   int bitmapData; // [esp+8h] [ebp-20h] BYREF
-  int v28; // [esp+Ch] [ebp-1Ch]
-  int v29; // [esp+10h] [ebp-18h]
+  int savedParamList; // [esp+Ch] [ebp-1Ch]
+  int savedWildcard; // [esp+10h] [ebp-18h]
   _DWORD *savedVarNode; // [esp+14h] [ebp-14h]
-  int v31; // [esp+18h] [ebp-10h]
+  int savedBodyType; // [esp+18h] [ebp-10h]
 
-  v31 = bodyType;
+  savedBodyType = bodyType;
   actionExpr = actions;
-  v28 = parameterList;
-  v29 = wildcardSymbol;
+  savedParamList = parameterList;
+  savedWildcard = wildcardSymbol;
   if ( !actions )
     return 0;
   while ( 1 )
   {
     if ( *(_WORD *)actionExpr == 15 )
     {
-      paramIndex = Parser_FindProcParamIndex(*(_DWORD *)(actionExpr + 2), v28, v29);
+      paramIndex = Parser_FindProcParamIndex(*(_DWORD *)(actionExpr + 2), savedParamList, savedWildcard);
       v9 = Rules_FindNamedContextDepth(v8);
       bindIndex = v9;
       if ( paramIndex || v9 )
@@ -3420,10 +3420,10 @@ signed int  Parser_ReplaceProcVars(
           {
             varNode = (_DWORD *)AST_NewNode(*(_WORD *)actionExpr, *(_DWORD *)(actionExpr + 2));
             savedVarNode = varNode;
-            v21 = altVarFunc();
-            if ( v21 )
+            varFuncResult = altVarFunc();
+            if ( varFuncResult )
             {
-              if ( v21 == -1 )
+              if ( varFuncResult == -1 )
               {
                 g_ClipsMemFreeListTemp = (int)varNode;
                 *varNode = *(_DWORD *)(g_ClipsMemoryTable + 56);
@@ -3450,7 +3450,7 @@ signed int  Parser_ReplaceProcVars(
           HIWORD(bitmapData) = BYTE2(bitmapData) & 1;
           bitmapData |= (paramIndex & 0x7FFF) << 17;
           BYTE2(bitmapData) &= ~1u;
-          bitmapData |= (v16 == v29) << 16;
+          bitmapData |= (v16 == savedWildcard) << 16;
           *(_DWORD *)(actionExpr + 2) = Rules_AddBitmapValue(&bitmapData, 4);
           v18 = AST_NewNode(2, v17);
           v19 = savedVarNode;
@@ -3459,7 +3459,7 @@ signed int  Parser_ReplaceProcVars(
         }
         else
         {
-          *(_WORD *)actionExpr = (v10 == v29) + 65;
+          *(_WORD *)actionExpr = (v10 == savedWildcard) + 65;
           *(_DWORD *)(actionExpr + 2) = Rules_AddBitmapValue(&paramIndex, 4);
         }
       }
@@ -3469,7 +3469,7 @@ signed int  Parser_ReplaceProcVars(
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedVaria, v11);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v12 + 16), v12);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReferencedIn, v13);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], v31, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], savedBodyType, v14);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ExpressionError, v15);
         return 1;
       }
@@ -3488,7 +3488,7 @@ LABEL_6:
     if ( !actionExpr )
       return 0;
   }
-  if ( !Parser_ReplaceProcVars(v31, wildcardSymbol, v29, v28, (int (__fastcall *)(_DWORD, _DWORD))altVarFunc, specData) )
+  if ( !Parser_ReplaceProcVars(savedBodyType, wildcardSymbol, savedWildcard, savedParamList, (int (__fastcall *)(_DWORD, _DWORD))altVarFunc, specData) )
   {
     if ( Rules_MakeSymbol(aBind_1) == *(int ***)(actionExpr + 2) && **(_WORD **)(actionExpr + 6) == 2 )
     {
@@ -3639,11 +3639,11 @@ int ProcParam_PopFrame()
 //----- (0049A8F0) --------------------------------------------------------
 int ProcParam_BuildArgumentExpressionChain()
 {
-  int v1; // ecx
+  int srcParamOffset; // ecx
   int paramIndex; // edx
   int chainOffset; // eax
   int valueSlot; // ebx
-  int v5; // ebx
+  int nextIndex; // ebx
   int nextLink; // ebx
 
   if ( !g_ClipsProcParamArray || g_Clips_ProcParamArgChain )
@@ -3655,18 +3655,18 @@ int ProcParam_BuildArgumentExpressionChain()
     chainOffset = 0;
     do
     {
-      *(_WORD *)(g_Clips_ProcParamArgChain + chainOffset) = *(_WORD *)(g_ClipsProcParamArray + v1 + 4);
-      valueSlot = v1 + g_ClipsProcParamArray;
-      if ( *(_DWORD *)(v1 + g_ClipsProcParamArray + 4) != 4 )
+      *(_WORD *)(g_Clips_ProcParamArgChain + chainOffset) = *(_WORD *)(g_ClipsProcParamArray + srcParamOffset + 4);
+      valueSlot = srcParamOffset + g_ClipsProcParamArray;
+      if ( *(_DWORD *)(srcParamOffset + g_ClipsProcParamArray + 4) != 4 )
         valueSlot = *(_DWORD *)(valueSlot + 8);
       *(_DWORD *)(g_Clips_ProcParamArgChain + chainOffset + 2) = valueSlot;
       *(_DWORD *)(g_Clips_ProcParamArgChain + chainOffset + 6) = 0;
-      v5 = paramIndex + 1;
+      nextIndex = paramIndex + 1;
       if ( paramIndex + 1 == g_ClipsProcParamCount )
-        nextLink = g_ClipsProcParamCount ^ v5;
+        nextLink = g_ClipsProcParamCount ^ nextIndex;
       else
-        nextLink = g_Clips_ProcParamArgChain + 14 * v5;
-      v1 += 24;
+        nextLink = g_Clips_ProcParamArgChain + 14 * nextIndex;
+      srcParamOffset += 24;
       *(_DWORD *)(g_Clips_ProcParamArgChain + chainOffset + 10) = nextLink;
       ++paramIndex;
       chainOffset += 14;
@@ -3690,13 +3690,13 @@ int  Rules_ExecuteRuleActions(
         void (*crtproc)(void))
 {
   _DWORD *localVarArray; // eax
-  int v10; // eax
-  int v11; // ebx
+  int slotOffset; // eax
+  int arrayByteSize; // ebx
   _DWORD *varSlot; // ecx
   int saved_module; // ecx
-  int v14; // eax
+  int currentModule; // eax
   int v16; // ecx
-  int v17; // ecx
+  int wildcardValue; // ecx
   int varOffset; // edx
   int result; // eax
   int savedLocalVarArray; // [esp+0h] [ebp-14h]
@@ -3709,15 +3709,15 @@ int  Rules_ExecuteRuleActions(
   g_ClipsProcFrameDataObjectArray = (int)localVarArray;
   if ( localVarCount > 0 )
   {
-    v10 = 0;
-    v11 = 24 * localVarCount;
+    slotOffset = 0;
+    arrayByteSize = 24 * localVarCount;
     do
     {
-      varSlot = (_DWORD *)(g_ClipsProcFrameDataObjectArray + v10);
-      v10 += 24;
+      varSlot = (_DWORD *)(g_ClipsProcFrameDataObjectArray + slotOffset);
+      slotOffset += 24;
       *varSlot = g_ClipsFalseSymbol;
     }
-    while ( v10 < v11 );
+    while ( slotOffset < arrayByteSize );
   }
   saved_module = Module_GetCurrent();
   if ( saved_module != theModule )
@@ -3727,8 +3727,8 @@ int  Rules_ExecuteRuleActions(
     returnValue[1] = 2;
     returnValue[2] = g_ClipsFalseSymbol;
   }
-  v14 = Module_GetCurrent();
-  if ( saved_module != v14 )
+  currentModule = Module_GetCurrent();
+  if ( saved_module != currentModule )
     Module_SetCurrent(saved_module);
   if ( crtproc && g_ClipsHaltExecution )
   {
@@ -3736,7 +3736,7 @@ int  Rules_ExecuteRuleActions(
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHal_0, v16);
     crtproc();
   }
-  v17 = g_ClipsProcParamWildcardValue;
+  wildcardValue = g_ClipsProcParamWildcardValue;
   if ( g_ClipsProcParamWildcardValue && returnValue[2] == *(_DWORD *)(g_ClipsProcParamWildcardValue + 8) )
   {
     Rules_DeinstallMultifield(*(__int16 **)(g_ClipsProcParamWildcardValue + 8));
@@ -3754,7 +3754,7 @@ int  Rules_ExecuteRuleActions(
       do
       {
         if ( g_ClipsTrueSymbol == *(_DWORD *)(varOffset + g_ClipsProcFrameDataObjectArray) )
-          Rules_ValueDeinstall(varOffset + g_ClipsProcFrameDataObjectArray, v17);
+          Rules_ValueDeinstall(varOffset + g_ClipsProcFrameDataObjectArray, wildcardValue);
         varOffset += 24;
       }
       while ( varOffset < 24 * localVarCount );
@@ -3811,11 +3811,11 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
   _DWORD *freeListHead; // ebx
   signed int newWildcardRec; // eax
   signed int size; // esi
-  int v6; // ebx
-  int v7; // eax
+  int startIndex; // ebx
+  int paramByteOffset; // eax
   _DWORD *theMultifield; // eax
   int destFieldIndex; // esi
-  int v10; // eax
+  int srcRecord; // eax
   int paramRecord; // ebx
   int v12; // ecx
   int v13; // eax
@@ -3823,7 +3823,7 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
   __int16 *result; // eax
   int wildcardRec; // eax
   _DWORD *emptyMultifield; // eax
-  int v18; // edx
+  int fieldByteOffset; // edx
   int paramIndex; // [esp+0h] [ebp-18h]
   int paramOffset; // [esp+4h] [ebp-14h]
 
@@ -3871,18 +3871,18 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
   }
   else
   {
-    v6 = theIndex - 1;
+    startIndex = theIndex - 1;
     if ( theIndex - 1 < g_ClipsProcParamCount )
     {
-      v7 = 24 * v6;
+      paramByteOffset = 24 * startIndex;
       do
       {
-        if ( *(_DWORD *)(v7 + g_ClipsProcParamArray + 4) == 4 )
-          size += *(_DWORD *)(v7 + g_ClipsProcParamArray + 16) - *(_DWORD *)(v7 + g_ClipsProcParamArray + 12);
-        v7 += 24;
-        ++v6;
+        if ( *(_DWORD *)(paramByteOffset + g_ClipsProcParamArray + 4) == 4 )
+          size += *(_DWORD *)(paramByteOffset + g_ClipsProcParamArray + 16) - *(_DWORD *)(paramByteOffset + g_ClipsProcParamArray + 12);
+        paramByteOffset += 24;
+        ++startIndex;
       }
-      while ( v7 < 24 * g_ClipsProcParamCount );
+      while ( paramByteOffset < 24 * g_ClipsProcParamCount );
     }
     *(_DWORD *)(g_ClipsProcParamWildcardValue + 16) = size - 1;
     returnValue[4] = size - 1;
@@ -3896,11 +3896,11 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
       paramOffset = 24 * (theIndex - 1);
       do
       {
-        v10 = paramOffset + g_ClipsProcParamArray;
+        srcRecord = paramOffset + g_ClipsProcParamArray;
         if ( *(_DWORD *)(paramOffset + g_ClipsProcParamArray + 4) == 4 )
         {
           paramRecord = paramOffset + g_ClipsProcParamArray;
-          v12 = *(_DWORD *)(v10 + 12) + 1;
+          v12 = *(_DWORD *)(srcRecord + 12) + 1;
           v13 = 6 * destFieldIndex - 6;
           v14 = 6 * v12 - 6;
           while ( v12 <= *(_DWORD *)(paramRecord + 16) + 1 )
@@ -3915,10 +3915,10 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
         }
         else
         {
-          v18 = 6 * (destFieldIndex - 1);
-          *(_WORD *)(returnValue[2] + v18 + 14) = *(_WORD *)(v10 + 4);
+          fieldByteOffset = 6 * (destFieldIndex - 1);
+          *(_WORD *)(returnValue[2] + fieldByteOffset + 14) = *(_WORD *)(srcRecord + 4);
           ++destFieldIndex;
-          *(_DWORD *)(returnValue[2] + v18 + 16) = *(_DWORD *)(g_ClipsProcParamArray + paramOffset + 8);
+          *(_DWORD *)(returnValue[2] + fieldByteOffset + 16) = *(_DWORD *)(g_ClipsProcParamArray + paramOffset + 8);
         }
         paramOffset += 24;
         ++paramIndex;
@@ -4572,51 +4572,51 @@ int  Rules_BatchGetChar(int logicalName)
 int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
 {
   unsigned int returnOnEofFlag; // esi
-  signed int v4; // ecx
-  int v5; // edi
+  signed int closeStatus; // ecx
+  int remainingChars; // edi
   int ch; // eax
   unsigned int v7; // ecx
-  unsigned __int8 *v9; // eax
+  unsigned __int8 *charPtr; // eax
   char *appended; // eax
   int v11; // ecx
   int rv; // [esp+0h] [ebp-18h]
 
   returnOnEofFlag = returnOnEOF;
-  v4 = 1;
+  closeStatus = 1;
   do
   {
     if ( g_ClipsBatchSourceIsStringFlag )
     {
-      ch = Lexer_PeekChar(g_CurrentStringInputSource, v4);
+      ch = Lexer_PeekChar(g_CurrentStringInputSource, closeStatus);
     }
     else
     {
-      v5 = *(_DWORD *)(g_CurrentStringInputSource + 4);
-      if ( v5 > 0 && (returnOnEOF = **(unsigned __int8 **)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
+      remainingChars = *(_DWORD *)(g_CurrentStringInputSource + 4);
+      if ( remainingChars > 0 && (returnOnEOF = **(unsigned __int8 **)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
       {
-        *(_DWORD *)(g_CurrentStringInputSource + 4) = v5 - 1;
+        *(_DWORD *)(g_CurrentStringInputSource + 4) = remainingChars - 1;
         returnOnEOF = g_CurrentStringInputSource;
-        v9 = (unsigned __int8 *)(*(_DWORD *)g_CurrentStringInputSource)++;
-        ch = *v9;
+        charPtr = (unsigned __int8 *)(*(_DWORD *)g_CurrentStringInputSource)++;
+        ch = *charPtr;
       }
       else
       {
-        ch = fgetc_(v4, returnOnEOF);
+        ch = fgetc_(closeStatus, returnOnEOF);
       }
     }
     rv = ch;
     if ( ch == -1 )
     {
       if ( g_BatchEchoBufferLength > 0 )
-        Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, v4);
-      v4 = Rules_CloseBatch();
+        Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
+      closeStatus = Rules_CloseBatch();
     }
   }
-  while ( rv == -1 && v4 == 1 );
+  while ( rv == -1 && closeStatus == 1 );
   if ( rv == -1 )
   {
     if ( g_BatchEchoBufferLength > 0 )
-      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, v4);
+      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
     IO_DeleteRouter((int)aBatch);
     Rules_CloseBatch();
     if ( returnOnEofFlag == 1 )
@@ -4891,10 +4891,10 @@ signed int  Rules_BatchStar(const CHAR *fileName, DWORD a2, double context)
   int v6; // edx
   int v7; // ecx
   int ch; // eax
-  int v9; // ecx
+  int nextCharPtr; // ecx
   int v10; // ecx
   int v11; // ecx
-  unsigned __int8 *v13; // eax
+  unsigned __int8 *charPtr; // eax
   int lineLength; // [esp+0h] [ebp-1Ch] BYREF
   unsigned int bufferSize[6]; // [esp+4h] [ebp-18h] BYREF
 
@@ -4914,11 +4914,11 @@ signed int  Rules_BatchStar(const CHAR *fileName, DWORD a2, double context)
       }
       else
       {
-        v13 = (unsigned __int8 *)*theFile;
-        v9 = *theFile + 1;
+        charPtr = (unsigned __int8 *)*theFile;
+        nextCharPtr = *theFile + 1;
         --theFile[1];
-        *theFile = v9;
-        ch = *v13;
+        *theFile = nextCharPtr;
+        ch = *charPtr;
       }
       if ( ch == -1 )
         break;
@@ -4938,7 +4938,7 @@ signed int  Rules_BatchStar(const CHAR *fileName, DWORD a2, double context)
         lineLength = 0;
       }
     }
-    fclose_(v9);
+    fclose_(nextCharPtr);
     return 1;
   }
   else
@@ -5093,7 +5093,7 @@ int  Rules_LoadConstructsFromLogicalName(int readSource, int a2)
   int v4; // edx
   _DWORD *v5; // ecx
   int v6; // ecx
-  char *v7; // eax
+  char *ppBuffer; // eax
   _DWORD *v8; // ecx
   signed int errorCorrection; // ebx
   int v11; // ecx
@@ -5116,8 +5116,8 @@ int  Rules_LoadConstructsFromLogicalName(int readSource, int a2)
       if ( Rules_ParseConstruct() == 1 )
       {
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_2, v6);
-        v7 = (char *)Rules_GetPPBuffer();
-        Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], v7);
+        ppBuffer = (char *)Rules_GetPPBuffer();
+        Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], ppBuffer);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505E94, (int)noErrorsFlag);
         noErrorsFlag[0] = 0;
         Parser_NextToken(readSource, (int)&theToken);
@@ -5580,8 +5580,8 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
   int nextCount; // edi
   _DWORD argData[2]; // [esp+0h] [ebp-30h] BYREF
   int argValue; // [esp+8h] [ebp-28h]
-  int v11; // [esp+Ch] [ebp-24h]
-  int v12; // [esp+10h] [ebp-20h]
+  int resultBegin; // [esp+Ch] [ebp-24h]
+  int resultEnd; // [esp+10h] [ebp-20h]
 
   freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 32);
   if ( freeListHead )
@@ -5631,8 +5631,8 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
       {
         returnValue[1] = argData[1];
         returnValue[2] = argValue;
-        returnValue[3] = v11;
-        returnValue[4] = v12;
+        returnValue[3] = resultBegin;
+        returnValue[4] = resultEnd;
       }
       else
       {
@@ -6523,11 +6523,11 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   int **Symbol; // eax
   _DWORD *freeListHead; // edx
   signed int newExpr; // ecx
-  int v6; // eax
+  int nodeValue; // eax
   __int16 *exprNode; // edi
   _DWORD *argList; // eax
   __int16 exprType; // dx
-  int v10; // eax
+  int deffunctionArgCount; // eax
   int v11; // ecx
   int theFunction; // ebx
   int argCount; // eax
@@ -6548,9 +6548,9 @@ int  Rules_HostExpansionCall(int returnValue, double context)
     newExpr = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   *(_WORD *)newExpr = **(_WORD **)(g_ClipsCurrentExpression + 6);
-  v6 = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2);
+  nodeValue = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2);
   *(_DWORD *)(newExpr + 10) = 0;
-  *(_DWORD *)(newExpr + 2) = v6;
+  *(_DWORD *)(newExpr + 2) = nodeValue;
   exprNode = (__int16 *)newExpr;
   argList = (_DWORD *)v15[0];
   exprType = *(_WORD *)newExpr;
@@ -6568,8 +6568,8 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   }
   else if ( exprType == 12 )
   {
-    v10 = AST_CountListNodes((int)argList);
-    if ( !Deffunction_CheckArgumentCount(*(_DWORD *)(v11 + 2), v10) )
+    deffunctionArgCount = AST_CountListNodes((int)argList);
+    if ( !Deffunction_CheckArgumentCount(*(_DWORD *)(v11 + 2), deffunctionArgCount) )
     {
       *(_DWORD *)(returnValue + 4) = 2;
       *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
@@ -6720,11 +6720,11 @@ int Rules_HostSetEvaluationError()
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049E080) --------------------------------------------------------
-int  Rules_HostSetSequenceOperatorRecognition(int a1, double context)
+int  Rules_HostSetSequenceOperatorRecognition(int returnValue, double context)
 {
   _DWORD argData[9]; // [esp-8h] [ebp-24h] BYREF
 
-  argData[7] = a1;
+  argData[7] = returnValue;
   if ( Lexer_ParseValueList(1, argData, 2, context) )
     return Parser_SetSequenceOperatorRecognition(argData[2] != g_ClipsFalseSymbol);
   else
@@ -6734,7 +6734,7 @@ int  Rules_HostSetSequenceOperatorRecognition(int a1, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049E0D0) --------------------------------------------------------
-signed int * Rules_HostGetFunctionRestrictions(int a1, double context)
+signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
 {
   int v3; // ecx
   int **Symbol; // eax
@@ -6743,7 +6743,7 @@ signed int * Rules_HostGetFunctionRestrictions(int a1, double context)
   int argValue; // [esp+0h] [ebp-1Ch]
   int v9; // [esp+14h] [ebp-8h]
 
-  v9 = a1;
+  v9 = returnValue;
   if ( !Lexer_ParseValueList(1, &argData, 2, context) )
   {
     restrictionString = (char *)&g_Rules_HostFunctionErrorFallbackString;
@@ -6780,14 +6780,14 @@ signed int Rules_RegisterIOHostFunctions()
 }
 
 //----- (0049E250) --------------------------------------------------------
-int  Rules_HostPrintout(int a1, double context)
+int  Rules_HostPrintout(int returnValue, double context)
 {
   int result; // eax
   int v3; // ecx
   int argCount; // edi
-  int v5; // esi
+  int lastArgIndex; // esi
   int argIndex; // ebx
-  int v7; // ecx
+  int argString; // ecx
   char *outputString; // edx
   int v9; // eax
   int logical_name; // ecx
@@ -6796,10 +6796,10 @@ int  Rules_HostPrintout(int a1, double context)
   int argValue; // [esp+4h] [ebp-24h]
   int v13; // [esp+20h] [ebp-8h]
 
-  v13 = a1;
+  v13 = returnValue;
   result = Lexer_TokenExpect(1);
   argCount = result;
-  v5 = result;
+  lastArgIndex = result;
   if ( result != -1 )
   {
     logical_name = Rules_GetLogicalNameArg(1, (int)aStdout_0, v3, context);
@@ -6827,43 +6827,43 @@ int  Rules_HostPrintout(int a1, double context)
           if ( argType == 3 )
             goto LABEL_17;
 LABEL_26:
-          result = Rules_PrintDataObject(v7, (int)&argData);
-          if ( ++argIndex > v5 )
+          result = Rules_PrintDataObject(argString, (int)&argData);
+          if ( ++argIndex > lastArgIndex )
             return result;
         }
         else
         {
-          if ( strcmp_(v7, aCrlf) )
+          if ( strcmp_(argString, aCrlf) )
           {
-            if ( !strcmp_(v7, aTab) )
+            if ( !strcmp_(argString, aTab) )
             {
               outputString = asc_5069C0;
               goto LABEL_11;
             }
-            if ( !strcmp_(v7, aVtab) )
+            if ( !strcmp_(argString, aVtab) )
             {
               outputString = asc_5069CC;
               goto LABEL_11;
             }
-            if ( !strcmp_(v7, aFf) )
+            if ( !strcmp_(argString, aFf) )
             {
               outputString = (char *)&g_Rules_PrintoutFormFeedChar;
               goto LABEL_11;
             }
-            if ( strcmp_(v7, &g_Rules_PrintoutCrlfAliasName) )
+            if ( strcmp_(argString, &g_Rules_PrintoutCrlfAliasName) )
             {
 LABEL_17:
-              v9 = v7;
+              v9 = argString;
               outputString = *(char **)(argValue + 16);
               goto LABEL_12;
             }
           }
           outputString = asc_5069B8;
 LABEL_11:
-          v9 = v7;
+          v9 = argString;
 LABEL_12:
-          result = Output_Write(logical_name, (int)outputString, v7);
-          if ( ++argIndex > v5 )
+          result = Output_Write(logical_name, (int)outputString, argString);
+          if ( ++argIndex > lastArgIndex )
             return result;
         }
       }
@@ -6877,7 +6877,7 @@ LABEL_12:
 // 51A968: using guessed type int dword_51A968;
 
 //----- (0049E3E0) --------------------------------------------------------
-signed int * Rules_HostRead(int a1, double context)
+signed int * Rules_HostRead(int returnValue, double context)
 {
   int argCount; // eax
   int v4; // ecx
@@ -6894,7 +6894,7 @@ signed int * Rules_HostRead(int a1, double context)
   char *tokenString; // [esp+8h] [ebp-14h]
   int v16; // [esp+14h] [ebp-8h]
 
-  v16 = a1;
+  v16 = returnValue;
   argCount = Lexer_TokenExpect(1);
   logicalName = 0;
   if ( argCount == -1 )
@@ -7172,7 +7172,7 @@ signed int * Rules_HostFormat(double context)
   int logicalName; // ecx
   int v7; // ecx
   signed int formatString; // ebp
-  char v9; // ah
+  char formatChar; // ah
   int segmentStart; // ecx
   int segmentLength; // edi
   _BYTE *i; // eax
@@ -7181,7 +7181,7 @@ signed int * Rules_HostFormat(double context)
   char v15; // cl
   unsigned __int8 conversionChar; // ch
   int v17; // edx
-  int v18; // eax
+  int specLength; // eax
   const char *convertedString; // eax
   signed int *v20; // eax
   int v21; // edx
@@ -7218,10 +7218,10 @@ signed int * Rules_HostFormat(double context)
       {
         while ( 1 )
         {
-          v9 = *(_BYTE *)(formatString + formatIndex);
-          if ( !v9 )
+          formatChar = *(_BYTE *)(formatString + formatIndex);
+          if ( !formatChar )
             break;
-          if ( v9 == 37 )
+          if ( formatChar == 37 )
           {
             percentPos = formatIndex++;
             LOBYTE(v14) = Rules_FormatParseFlag(formatString, &formatIndex, &longFlag, flagBuffer);
@@ -7239,11 +7239,11 @@ signed int * Rules_HostFormat(double context)
               specBuffer[formatIndex - percentPos] = 0;
               if ( !v17 && (v15 == 100 || v15 == 111 || v15 == 117 || v15 == 120) )
               {
-                v18 = formatIndex - percentPos;
-                flagBuffer[v18 + 511] = 108;
-                specBuffer[v18] = conversionChar;
+                specLength = formatIndex - percentPos;
+                flagBuffer[specLength + 511] = 108;
+                specBuffer[specLength] = conversionChar;
                 longFlag = 1;
-                specBuffer[v18 + 1] = 0;
+                specBuffer[specLength + 1] = 0;
               }
               convertedString = (const char *)Rules_FormatConvertArg(specBuffer, argIndex, longFlag, conversionChar, context);
               if ( !convertedString )
@@ -7462,7 +7462,7 @@ signed int  Rules_FormatConvertArg(
   signed int result; // eax
   _DWORD *charBuffer; // eax
   char *v9; // ecx
-  signed int v10; // esi
+  signed int internedValue; // esi
   int v11; // edx
   _DWORD *v12; // ecx
   int v13; // ecx
@@ -7513,9 +7513,9 @@ LABEL_11:
       sprintf_(v17, formatSpec, intValue);
     }
 LABEL_6:
-    v10 = Str_Intern(v9, (int)v9)[4];
+    internedValue = Str_Intern(v9, (int)v9)[4];
     Mem_SmallBlockFree(v12, v11);
-    return v10;
+    return internedValue;
   }
   if ( conversionChar < 0x64 )
   {
@@ -7720,7 +7720,7 @@ signed int Rules_RegisterPredicateHostFunctions()
 }
 
 //----- (0049F640) --------------------------------------------------------
-int  Rules_HostEq(int a1, double a2)
+int  Rules_HostEq(int returnValue, double context)
 {
   int result; // eax
   int argument_count; // esi
@@ -7729,7 +7729,7 @@ int  Rules_HostEq(int a1, double a2)
   _DWORD first[6]; // [esp-4h] [ebp-44h] BYREF
   _DWORD current[6]; // [esp+14h] [ebp-2Ch] BYREF
 
-  (void)a1;
+  (void)returnValue;
   result = Rules_RtnArgCount();
   argument_count = result;
   if ( result )
@@ -7738,13 +7738,13 @@ int  Rules_HostEq(int a1, double a2)
     expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
     if ( !expression )
       return 1;
-    Parser_ParseForm((__int16 *)expression, first, (int)expression, a2);
+    Parser_ParseForm((__int16 *)expression, first, (int)expression, context);
     expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
     if ( argument_count < 2 )
       return 1;
     while ( expression )
     {
-      Parser_ParseForm((__int16 *)expression, current, (int)expression, a2);
+      Parser_ParseForm((__int16 *)expression, current, (int)expression, context);
       if ( current[1] != first[1] )
         return 0;
       if ( current[1] == 4 )
@@ -7769,7 +7769,7 @@ int  Rules_HostEq(int a1, double a2)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (0049F6E0) --------------------------------------------------------
-int  Rules_HostNeq(double a1)
+int  Rules_HostNeq(double context)
 {
   int result; // eax
   int argument_index; // ebx
@@ -7784,13 +7784,13 @@ int  Rules_HostNeq(double a1)
     expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
     if ( !expression )
       return 1;
-    Parser_ParseForm((__int16 *)expression, first, (int)expression, a1);
+    Parser_ParseForm((__int16 *)expression, first, (int)expression, context);
     expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
     if ( result < 2 )
       return 1;
     while ( expression )
     {
-      Parser_ParseForm((__int16 *)expression, current, (int)expression, a1);
+      Parser_ParseForm((__int16 *)expression, current, (int)expression, context);
       if ( current[1] == first[1] )
       {
         if ( current[1] == 4 )
@@ -7961,12 +7961,12 @@ int  Rules_NotFunction(int a1, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049FA50) --------------------------------------------------------
-int  Rules_AndFunction(int a1, double context)
+int  Rules_AndFunction(int returnValue, double context)
 {
   uintptr_t expression; // ecx
   _DWORD parsed[6]; // [esp-4h] [ebp-20h] BYREF
 
-  (void)a1;
+  (void)returnValue;
   expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   if ( !expression )
     return 1;
@@ -7984,12 +7984,12 @@ int  Rules_AndFunction(int a1, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049FAB0) --------------------------------------------------------
-int  Rules_OrFunction(int a1, double context)
+int  Rules_OrFunction(int returnValue, double context)
 {
   uintptr_t expression; // ecx
   _DWORD parsed[6]; // [esp-4h] [ebp-20h] BYREF
 
-  (void)a1;
+  (void)returnValue;
   expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
   while ( expression )
   {
@@ -8008,10 +8008,10 @@ int  Rules_OrFunction(int a1, double context)
 double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
 {
   int firstExpr; // esi
-  int v4; // eax
+  int firstArgValid; // eax
   int currentExpr; // esi
   int i; // edi
-  int v7; // eax
+  int argValid; // eax
   int previousData; // [esp+0h] [ebp-44h] BYREF
   int previousType; // [esp+4h] [ebp-40h]
   int previousValue; // [esp+8h] [ebp-3Ch]
@@ -8027,13 +8027,13 @@ double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
   if ( firstExpr )
   {
     result = Rules_CoerceFormToNumericArg((__int16 *)firstExpr, 0, &previousData, result, 1);
-    if ( v4 )
+    if ( firstArgValid )
     {
       currentExpr = *(_DWORD *)(firstExpr + 10);
       for ( i = 2; currentExpr; ++i )
       {
         result = Rules_CoerceFormToNumericArg((__int16 *)currentExpr, 0, &currentData, result, i);
-        if ( !v7 )
+        if ( !argValid )
           break;
         if ( previousType == 1 )
         {
