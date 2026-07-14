@@ -187,7 +187,7 @@ int force;
   {
     *(_BYTE *)(buildingPtr + 421) = 1;
     v49 = *(_WORD *)(buildingPtr + 430) & 0xF000;
-    *(_BYTE *)(buildingPtr + 416) |= 2u;
+    *(_BYTE *)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
     *(_WORD *)(buildingPtr + 430) = v49;
   }
   v30 = buildingPtr;
@@ -700,7 +700,7 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
   int v9; // eax
 
   buildingPtr = (unsigned __int8 *)result;
-  if ( (*(_BYTE *)(result + 416) & 2) != 0 )
+  if ( (*(_BYTE *)(result + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
     result = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(result);
     if ( result != -1 )
@@ -1255,7 +1255,7 @@ signed int  Building_BuildSchool(char *a1, char a2, DWORD a3)
   if ( goldCost > availableGold )
     return 0;
   buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | 8;
+  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SCHOOL;
   *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
   *(_BYTE *)(buildingPtr + 416) = addonFlags;
   result = 1;
@@ -1288,7 +1288,7 @@ signed int  Building_BuildWorkshop(char a1, DWORD a2)
   if ( goldCost > availableGold )
     return 0;
   buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | 4;
+  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_WORKSHOP;
   *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
   *(_BYTE *)(buildingPtr + 416) = addonFlags;
   result = 1;
@@ -1313,7 +1313,7 @@ signed int  Building_BuildBarracks(int a1, char a2, DWORD a3)
   if ( availableGold < 0xC8 )
     return 0;
   *(_DWORD *)(buildingPtr + 438) = availableGold - 200;
-  *(_BYTE *)(buildingPtr + 416) |= 2u;
+  *(_BYTE *)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
   result = 1;
   *(_BYTE *)(buildingPtr + 420) |= 1u;
   return result;
@@ -1342,7 +1342,7 @@ signed int  Building_BuildHospital(char a1, DWORD a2)
   if ( goldCost > availableGold )
     return 0;
   buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | 1;
+  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_HOSPITAL;
   *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
   *(_BYTE *)(buildingPtr + 416) = addonFlags;
   result = 1;
@@ -1375,7 +1375,7 @@ signed int  Building_BuildSmiths(char a1, DWORD a2)
   if ( goldCost > availableGold )
     return 0;
   buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | 0x10;
+  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SMITHS;
   *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
   *(_BYTE *)(buildingPtr + 416) = addonFlags;
   result = 1;
@@ -2316,12 +2316,12 @@ int Castle_RebuildMissingAddonFlags()
   int v0; // edx
   int result; // eax
 
-  g_CastleAddonSchoolMissingFlags[0] = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) == 0;
-  g_CastleAddonHospitalMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) == 0;
-  g_CastleAddonBarracksMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) == 0;
-  g_CastleAddonWorkshopMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 4) == 0;
+  g_CastleAddonSchoolMissingFlags[0] = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) == 0;
+  g_CastleAddonHospitalMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) == 0;
+  g_CastleAddonBarracksMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) == 0;
+  g_CastleAddonWorkshopMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_WORKSHOP) == 0;
   v0 = 0;
-  g_CastleAddonSmithsMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) == 0;
+  g_CastleAddonSmithsMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) == 0;
   for ( result = 0; result != 50; result += 10 )
   {
     if ( g_CastleAddonSchoolMissingFlags[result] )
@@ -2549,7 +2549,7 @@ int  Castle_BuildSchoolWithAnimation(char a1, DWORD a2)
 
   Building_BuildSchool((char *)g_SelectedBuildingRecord, a1, a2);
   result = g_SelectedBuildingRecord;
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) != 0 )
+  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
   {
     recordCopy = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
     recordBase = g_SelectedBuildingRecord;
@@ -2559,7 +2559,7 @@ int  Castle_BuildSchoolWithAnimation(char a1, DWORD a2)
     *(_WORD *)v6 = *(_WORD *)v7;
     v6[2] = *(_BYTE *)(v7 + 2);
     recordCopyPtr = (int)recordCopy;
-    recordCopy[416] &= ~8u;
+    recordCopy[416] &= ~BUILDING_ADDON_FLAG_SCHOOL;
     Audio_PlaySoundEffectByName(aBudowaSzkola, 64);
     Castle_PlayAddonConstructionReveal(251, recordCopyPtr);
     Castle_UpdateGateToggles();
@@ -2583,7 +2583,7 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD a2)
 
   Building_BuildWorkshop(a1, a2);
   result = g_SelectedBuildingRecord;
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 4) != 0 )
+  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
   {
     recordCopy = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
     recordBase = g_SelectedBuildingRecord;
@@ -2593,7 +2593,7 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD a2)
     *(_WORD *)v6 = *(_WORD *)v7;
     v6[2] = *(_BYTE *)(v7 + 2);
     recordCopyPtr = (int)recordCopy;
-    recordCopy[416] &= ~4u;
+    recordCopy[416] &= ~BUILDING_ADDON_FLAG_WORKSHOP;
     Audio_PlaySoundEffectByName(aBudowaWarszt_0, 64);
     Castle_PlayAddonConstructionReveal(252, recordCopyPtr);
     Castle_UpdateGateToggles();
@@ -2617,7 +2617,7 @@ int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD a3)
 
   Building_BuildBarracks(a1, a2, a3);
   result = g_SelectedBuildingRecord;
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
+  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
     recordCopy = (_BYTE *)Mem_Alloc(467, 116, a2, a3);
     recordBase = g_SelectedBuildingRecord;
@@ -2627,7 +2627,7 @@ int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD a3)
     *(_WORD *)v7 = *(_WORD *)v8;
     v7[2] = *(_BYTE *)(v8 + 2);
     recordCopyPtr = (int)recordCopy;
-    recordCopy[416] &= ~2u;
+    recordCopy[416] &= ~BUILDING_ADDON_FLAG_BARRACKS;
     Audio_PlaySoundEffectByName(aBudowaBaraki, 64);
     Castle_PlayAddonConstructionReveal(254, recordCopyPtr);
     Castle_UpdateGateToggles();
@@ -2652,7 +2652,7 @@ int  Castle_BuildHospitalWithAnimation(char a1, DWORD a2)
 
   Building_BuildHospital(a1, a2);
   result = g_SelectedBuildingRecord;
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) != 0 )
+  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
   {
     recordCopy = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
     recordBase = g_SelectedBuildingRecord;
@@ -2661,7 +2661,7 @@ int  Castle_BuildHospitalWithAnimation(char a1, DWORD a2)
     v6 = &recordCopy[4 * v5];
     *(_WORD *)v6 = *(_WORD *)v7;
     v6[2] = *(_BYTE *)(v7 + 2);
-    recordCopy[416] &= ~1u;
+    recordCopy[416] &= ~BUILDING_ADDON_FLAG_HOSPITAL;
     recordCopyPtr = (int)recordCopy;
     if ( PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2)) )
       soundName = aBudowaChrzesci;
@@ -2691,7 +2691,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD a2)
 
   Building_BuildSmiths(a1, a2);
   result = g_SelectedBuildingRecord;
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) != 0 )
+  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
   {
     recordCopy = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
     recordBase = g_SelectedBuildingRecord;
@@ -2701,7 +2701,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD a2)
     *(_WORD *)v6 = *(_WORD *)v7;
     v6[2] = *(_BYTE *)(v7 + 2);
     recordCopyPtr = (int)recordCopy;
-    recordCopy[416] &= ~0x10u;
+    recordCopy[416] &= ~BUILDING_ADDON_FLAG_SMITHS;
     Audio_PlaySoundEffectByName(aBudowaKuznia, 64);
     Castle_PlayAddonConstructionReveal(253, recordCopyPtr);
     Castle_UpdateGateToggles();
@@ -3234,7 +3234,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 3:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) != 0 )
+      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
       {
         result = g_CastleAmbientLayer3_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -3243,10 +3243,10 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 4:
       if ( g_CurrentPlayerIndex != 1 && g_CurrentPlayerIndex != 4
-        || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 28 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & 8) != 0) )
+        || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 28 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0) )
       {
         if ( g_CurrentPlayerIndex != 3
-          || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 30 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & 2) != 0) )
+          || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 30 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0) )
         {
           result = g_CastleAmbientLayer4_SpriteIds[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
@@ -3270,7 +3270,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 7:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) != 0 )
+      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
       {
         result = g_CastleAmbientLayer7_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -3279,7 +3279,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 8:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) != 0 )
+      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
       {
         result = g_CastleAmbientLayer8_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -3288,7 +3288,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 9:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
+      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
       {
         result = g_CastleAmbientLayer9_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -3297,7 +3297,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       break;
     case 10:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
+      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
       {
         result = g_CastleAmbientLayer10_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -4863,7 +4863,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         castle_panel_callback = BuildingGarrisonDialog_Run;
         if ( v23 != 99 )
         {
-          if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
+          if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
             v44 = 3;
           else
             v44 = 8;

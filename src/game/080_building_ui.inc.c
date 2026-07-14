@@ -28,7 +28,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext
 
   UIWidget_PlayPressedReleaseAnimation(widget);
   result = g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 2) != 0 )
+  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
     Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
     Render_Pump();
@@ -87,7 +87,7 @@ void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int widget, DWORD gameCo
 
   UIWidget_PlayPressedReleaseAnimation(widget);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 1) != 0 )
+  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
   {
     slotIndex = 0;
     selectedSlotIndex = 0;
@@ -121,7 +121,7 @@ void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int widget, DWORD game
 
   UIWidget_PlayPressedReleaseAnimation(widget);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 8) != 0 )
+  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
   {
     slotIndex = 0;
     selectedSlotIndex = 0;
@@ -7585,7 +7585,7 @@ BOOL  Building_IsUnitLicenceEligible(char *building, unit_type unitType)
      : g_UnitTypeProductionRequiredTechLevelOtherModes[v5];
   if ( (unsigned __int8)(building[444] & 7) < (unsigned __int8)requiredTechLevel )
     return 0;
-  if ( (building[416] & 0x10) == 0 )
+  if ( (building[416] & BUILDING_ADDON_FLAG_SMITHS) == 0 )
   {
     for ( i = 0; ; ++i )
     {
@@ -7596,7 +7596,7 @@ BOOL  Building_IsUnitLicenceEligible(char *building, unit_type unitType)
     if ( g_ProductionLicenceSmithsRequiredUnitTypes[i] == unitType )
       return 0;
   }
-  if ( (building[416] & 4) != 0 )
+  if ( (building[416] & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
     return 1;
   for ( j = 0; ; ++j )
   {
@@ -7735,9 +7735,9 @@ __int16  Building_UpdatePopulationGrowth(int buildingRecord)
     default:
       break;
   }
-  if ( (*(_BYTE *)(building + 416) & 1) != 0 )
+  if ( (*(_BYTE *)(building + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
     growth_percent += 3;
-  if ( (*(_BYTE *)(building + 416) & 8) != 0 )
+  if ( (*(_BYTE *)(building + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
     ++growth_percent;
   if ( (*(_BYTE *)(building + 444) & 7u) > 1 )
     growth_percent += (*(_BYTE *)(building + 444) & 7) - 1;
@@ -7856,7 +7856,7 @@ int  Building_GetTotalValue(int building)
      + 200 * (*(_DWORD *)(building + 416) << 30 >> 31)
      + 230 * (*(_DWORD *)(building + 416) << 27 >> 31)
      + 400 * (*(_DWORD *)(building + 416) << 28 >> 31)
-     + 200 * (*(_DWORD *)(building + 416) & 1)
+     + 200 * (*(_DWORD *)(building + 416) & BUILDING_ADDON_FLAG_HOSPITAL)
      + population
      + goldReserve;
   licencePtr = building;

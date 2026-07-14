@@ -39,6 +39,8 @@ def main():
     entries, families = lc.load_manifest()
     by_value = {}
     for e in entries:
+        if e.get("regex_only"):
+            continue  # bit flags etc. are bound to a field, not value-counted
         by_value.setdefault(e["value"], []).append(e)
 
     # derived-candidate windows: (table offset, record size) per family

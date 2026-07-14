@@ -98,6 +98,11 @@ def audit_literals():
     entries, families = lc.load_manifest()
     by_value = {}
     for e in entries:
+        # regex_only constants (e.g. bit flags) are meaningful only bound to a
+        # specific field, not as bare values; a value census over them would
+        # count every unrelated 1/2/4/8 occurrence, so skip them here.
+        if e.get("regex_only"):
+            continue
         by_value.setdefault(e["value"], []).append(e)
     per_value = {}
     total_eligible = total_review = 0

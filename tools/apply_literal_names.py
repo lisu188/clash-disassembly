@@ -73,7 +73,9 @@ def validate_rules(rules, entries_by_name, prelude):
         if entry is None:
             errors.append("%s: not in constants_manifest.json" % name)
             continue
-        if entry.get("deferred"):
+        # `deferred` disables value-based auto-substitution (kind:name). Regex
+        # rules are surgical and explicit, so they may target deferred entries.
+        if entry.get("deferred") and kind != "regex":
             errors.append("%s: manifest marks this constant deferred" % name)
         if r.get("value") != entry["value"]:
             errors.append("%s: rule value %r != manifest value %r"
@@ -227,12 +229,18 @@ def resolve(rules, entries_by_name, families, batch):
                 if lc.parse_num(raw) != entry["value"]:
                     continue
                 line = _b.bisect_right(starts, s)
-                file_entries.append({
+                site = {
                     "file": rel, "line": line, "start": s, "end": e,
                     "value": entry["value"], "raw": raw, "class": "regex",
                     "name": rule["name"], "fn": None,
                     "expr": re.sub(r"\s+", " ", m.group(0))[:160],
-                })
+                }
+                if raw != entry["spelling"]:
+                    # respelling (e.g. decimal bit -> hex macro body); declare
+                    # the exact token change for the pp_token_diff --allow gate.
+                    site["respell"] = True
+                    site["pp_allow"] = [[raw], [entry["spelling"]]]
+                file_entries.append(site)
 
         # de-duplicate/conflict-check by offset
         seen = {}

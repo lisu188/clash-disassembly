@@ -2662,27 +2662,27 @@ int  Rules_AssertCastleFact(unsigned __int8 *a1, int a2)
 
   v21 = a1[1];
   v20 = *a1;
-  if ( (a1[416] & 2) != 0 )
+  if ( (a1[416] & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
     v4 = aTak;
   else
     v4 = aNie;
   v19 = v4;
-  if ( (a1[416] & 0x10) != 0 )
+  if ( (a1[416] & BUILDING_ADDON_FLAG_SMITHS) != 0 )
     v5 = aTak_0;
   else
     v5 = aNie_0;
   v18 = v5;
-  if ( (a1[416] & 4) != 0 )
+  if ( (a1[416] & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
     v6 = aTak_1;
   else
     v6 = aNie_1;
   v17 = v6;
-  if ( (a1[416] & 8) != 0 )
+  if ( (a1[416] & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
     v7 = aTak_2;
   else
     v7 = aNie_2;
   v16 = v7;
-  if ( (a1[416] & 1) != 0 )
+  if ( (a1[416] & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
     v8 = aTak_3;
   else
     v8 = aNie_3;
@@ -3585,7 +3585,7 @@ BOOL  UnitStack_FindPathToNearestHospitalCastle(DWORD a1)
 LABEL_2:
   v4 = UNIT_RECORD(v3);
   v5 = *(char *)(v4 + 4);
-  if ( v5 < 4 && *(__int16 *)(v4 + 16) != -1 && (*(_DWORD *)(v11 + 416) & 1) == 1 )
+  if ( v5 < 4 && *(__int16 *)(v4 + 16) != -1 && (*(_DWORD *)(v11 + 416) & BUILDING_ADDON_FLAG_HOSPITAL) == 1 )
   {
     v6 = (_DWORD *)Building_GenerateApproachTrack(a1, v3, v5, v3, a1);
     v7 = v6;

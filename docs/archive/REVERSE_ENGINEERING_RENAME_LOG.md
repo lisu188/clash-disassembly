@@ -1,5 +1,55 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign B1: castle add-on flag bits
+
+First workstream-B batch (minting NEW named constants for previously unnamed
+magic numbers, not just substituting existing names). Introduces the castle
+add-on bitfield constants and applies them at the 44 sites that operate on the
+add-on byte (`building record + 416`), scoped by regex so the ubiquitous small
+bit literals are only touched there.
+
+New constants (`src/clash95_prelude.inc.c`):
+
+| Constant | Value | Add-on | Sites |
+|---|---|---|---|
+| `BUILDING_ADDON_FLAG_HOSPITAL` | `0x01` | szpital | 10 |
+| `BUILDING_ADDON_FLAG_BARRACKS` | `0x02` | koszary | 12 |
+| `BUILDING_ADDON_FLAG_WORKSHOP` | `0x04` | warsztat | 6 |
+| `BUILDING_ADDON_FLAG_SCHOOL` | `0x08` | szkola | 9 |
+| `BUILDING_ADDON_FLAG_SMITHS` | `0x10` | kuznia | 7 |
+| `BUILDING_ADDON_FLAGS_OFFSET` | `416` | (byte offset) | - |
+
+Confidence: **behavior-confirmed** by three independent signals, all agreeing
+on the same bit->add-on mapping:
+1. Read/assert path - `Rules_AssertCastleFact`
+   (`src/rules/100_strategic.inc.c:2665-2691`) tests each bit of `a1[416]` and
+   emits it into the CLIPS castle fact as `(szpital %s)(szkola %s)(warsztat
+   %s)(kuznia %s)(koszary %s)`.
+2. UI read globals - `g_CastleAddonHospitalMissingFlag` etc.
+   (`src/game/060_buildings.inc.c:2319-2324`) each read the matching bit.
+3. Write/set path - the `Rules_HostBuy{Hospital,Barracks,Workshop,School,Forge}`
+   handlers set `*(_BYTE*)(building+416) |= bit`
+   (`src/game/060_buildings.inc.c:1258-1380`); host-function names
+   (`aKupSzpital`->`Rules_HostBuyHospital`, ...) confirm the Polish labels.
+
+Corroborated by `RECOVERED_STRUCTURES.json` `BuildingRecord.castle_addon_flags`
+(note updated to reference the new constant names).
+
+Proof of value-identity: the generated `src/core/005_constant_guard.inc.c`
+pins each constant to its bit at compile time (build passes), and
+`tools/pp_token_diff.py --allow` confirms the only call-site token changes are
+the 38 declared bit->name respellings (6 bare `0x10` sites are token-identical),
+with zero other divergence. Rules:
+`docs/archive/literal_rules/B1_castle_addons.json`.
+
+### Deferred / Ambiguous (B1)
+
+- The high bits of the `+416` byte (mask `0xE0`, and the `<< 30 >> ...`
+  sub-field extractions) are a separate packed field, left untouched.
+- `BUILDING_ADDON_FLAGS_OFFSET` (416) was defined but its raw call-site
+  occurrences were not swept in this batch (offset-substitution is a possible
+  follow-up); the flag bits were the semantic target.
+
 ## 2026-07-14 - Magic-number campaign A2: hex/suffix respellings
 
 Substitutes literals whose lexeme differs from the macro body (so the

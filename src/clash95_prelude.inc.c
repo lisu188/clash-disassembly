@@ -56,6 +56,17 @@
 #define BUILDING_GARRISON_SERVICE_STATE_COUNT 12
 #define BUILDING_GARRISON_TRAINING_TURNS_MASK 0x07
 #define BUILDING_GARRISON_REPAIR_TURNS_MASK 0x38
+/* Castle add-on bitfield at building record +416. Bit->add-on mapping proven
+ * by Rules_AssertCastleFact (100_strategic.inc.c: bit -> szpital/koszary/
+ * warsztat/szkola/kuznia), the g_CastleAddon*MissingFlag reads, and the
+ * Rules_HostBuy* set paths (060_buildings.inc.c). See RECOVERED_STRUCTURES.json
+ * BuildingRecord.castle_addon_flags. */
+#define BUILDING_ADDON_FLAGS_OFFSET 416
+#define BUILDING_ADDON_FLAG_HOSPITAL 0x01
+#define BUILDING_ADDON_FLAG_BARRACKS 0x02
+#define BUILDING_ADDON_FLAG_WORKSHOP 0x04
+#define BUILDING_ADDON_FLAG_SCHOOL 0x08
+#define BUILDING_ADDON_FLAG_SMITHS 0x10
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374

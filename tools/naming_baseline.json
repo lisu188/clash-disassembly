@@ -481,7 +481,7 @@
   "file_count": 27,
   "magic_literals": {
    "total_eligible": 46,
-   "total_review": 58422,
+   "total_review": 58380,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
      "value": 140017,
@@ -616,7 +616,7 @@
     "PLAYER_DISPLAY_NAME_OFFSET": {
      "value": 4,
      "eligible": 0,
-     "review": 4068
+     "review": 4063
     },
     "PLAYER_IS_HUMAN_OFFSET": {
      "value": 27,
@@ -716,17 +716,17 @@
     "RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE": {
      "value": 4,
      "eligible": 0,
-     "review": 4068
+     "review": 4063
     },
     "RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE": {
      "value": 2,
      "eligible": 0,
-     "review": 5157
+     "review": 5146
     },
     "RELIGIOUS_SITE_CATEGORY_SHRINE": {
      "value": 1,
      "eligible": 0,
-     "review": 12373
+     "review": 12376
     },
     "TILE_MAP_OFFSET": {
      "value": 556374,
@@ -766,17 +766,17 @@
     "UNIT_SLOT_FLAG_LOW_MORALE": {
      "value": 4,
      "eligible": 0,
-     "review": 4068
+     "review": 4063
     },
     "UNIT_SLOT_FLAG_PLAGUE": {
      "value": 8,
      "eligible": 0,
-     "review": 2610
+     "review": 2602
     },
     "UNIT_SLOT_FLAG_SPENT_TURN": {
      "value": 2,
      "eligible": 0,
-     "review": 5157
+     "review": 5146
     },
     "UNIT_STACK_PATH_BYTES": {
      "value": 404,

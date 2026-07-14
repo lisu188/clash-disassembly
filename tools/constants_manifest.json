@@ -46,6 +46,12 @@
     {"name": "BUILDING_GARRISON_SERVICE_STATE_COUNT", "value": 12, "spelling": "12", "kind": "count", "family": "buildings", "tier": 3, "deferred": true},
     {"name": "BUILDING_GARRISON_TRAINING_TURNS_MASK", "value": 7, "spelling": "0x07", "kind": "mask", "family": "buildings", "tier": 3, "deferred": true},
     {"name": "BUILDING_GARRISON_REPAIR_TURNS_MASK", "value": 56, "spelling": "0x38", "kind": "mask", "family": "buildings", "tier": 3, "deferred": true},
+    {"name": "BUILDING_ADDON_FLAGS_OFFSET", "value": 416, "spelling": "416", "kind": "offset", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "BUILDING_ADDON_FLAG_HOSPITAL", "value": 1, "spelling": "0x01", "kind": "flag", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "BUILDING_ADDON_FLAG_BARRACKS", "value": 2, "spelling": "0x02", "kind": "flag", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "BUILDING_ADDON_FLAG_WORKSHOP", "value": 4, "spelling": "0x04", "kind": "flag", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "BUILDING_ADDON_FLAG_SCHOOL", "value": 8, "spelling": "0x08", "kind": "flag", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "BUILDING_ADDON_FLAG_SMITHS", "value": 16, "spelling": "0x10", "kind": "flag", "family": "building_addon", "tier": 3, "deferred": true, "regex_only": true},
     {"name": "BUILDING_PRISONER_SLOT_STRIDE", "value": 6, "spelling": "6", "kind": "stride", "family": "buildings", "tier": 3, "deferred": true},
     {"name": "BUILDING_PRISONER_SLOT_COUNT", "value": 3, "spelling": "3", "kind": "count", "family": "buildings", "tier": 3, "deferred": true},
 
