@@ -115,6 +115,39 @@ If a field or helper is clearly real but not fully understood, use names like:
 
 Do **not** promote a guess just because it "looks likely."
 
+### 3.5 Constant and enum families (magic-number campaign)
+
+Numeric literals are named with `SCREAMING_SNAKE_CASE` `#define`s at the top of
+`src/clash95_prelude.inc.c`, subsystem-prefixed like the function/global
+families: `UNIT_STACK_`, `BUILDING_`, `BUILDING_ADDON_FLAG_`, `PLAYER_`,
+`MAP_`, `PORT_`, `TILE_`, `TILE_OVERLAY_`, `TILE_OCCUPANT_`, `SCREEN_`, etc.
+Offsets/strides get an accessor macro (`UNIT_STACK(i)`, `BUILDING_RECORD(i)`).
+
+Rules for introducing a named constant:
+
+- **Two independent signals** for `behavior-confirmed` (e.g. a switch that maps
+  a code to a named result, plus a write path or a corroborating artifact);
+  one signal → conservative name or defer (§3.4). Record deferred/ambiguous
+  candidates.
+- **Exact-literal spelling**: the `#define` body matches the dominant call-site
+  lexeme (hex stays hex) so substitution is preprocessor-token-identical and
+  provably value-preserving.
+- **No blanket sweeps**: every replacement site is context-gated. Small,
+  collision-prone literals (bit flags, tiny offsets) are bound to a specific
+  field or expression shape via `regex`/tier-3 co-occurrence rules, never
+  replaced by bare value.
+
+Tooling under `tools/`: `tools/literal_common.py` (lexer/classifier),
+`tools/constants_manifest.json` (value→name gating), `tools/literal_inventory.py`
+(evidence census), `tools/apply_literal_names.py` (gated substitution + `--plan`),
+`tools/gen_constant_guard.py` (compile-time `NAME==value` pins in
+`src/core/005_constant_guard.inc.c`), and `tools/pp_token_gate.sh` /
+`tools/pp_token_diff.py` (the preprocessed-token-identity gate that stands in for
+the binary-diff check this repo lacks; `--allow` verifies declared respellings).
+Provenance ledger: `docs/archive/win95_constants_rename_accum.jsonl`; per-batch
+rules under `docs/archive/literal_rules/`; narrative in
+`docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
+
 ---
 
 ## 4. Current repo seam: where different kinds of work belong
