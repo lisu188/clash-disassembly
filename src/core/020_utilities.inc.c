@@ -3,16 +3,16 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (004015A0) --------------------------------------------------------
-int  Str_ConstructHolderViaBaseCtor(_DWORD *a1)
+int  Str_ConstructHolderViaBaseCtor(_DWORD *holder)
 {
-  int v2; // ecx
+  int holderBase; // ecx
   int result; // eax
 
-  *a1 = 0;
-  a1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(a1);
-  result = v2;
-  *(_DWORD *)(v2 + 4) = &g_PathEntry_Vtable;
+  *holder = 0;
+  holder[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(holder);
+  result = holderBase;
+  *(_DWORD *)(holderBase + 4) = &g_PathEntry_Vtable;
   return result;
 }
 // 4015B7: variable 'v2' is possibly undefined
@@ -48,71 +48,71 @@ int __thiscall PathEntryArray_ConstructCapacity256(void *this)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401640) --------------------------------------------------------
-int * PathEntryArray_CopyConstruct(int *a1, _DWORD *a2, int a3)
+int * PathEntryArray_CopyConstruct(int *dest, _DWORD *source, int a3)
 {
-  int v4; // eax
-  int v6; // edi
-  int v7; // eax
-  int v8; // ecx
-  int v9; // ecx
-  _DWORD *v10; // ebx
-  _DWORD *v11; // esi
+  int capacity; // eax
+  int index; // edi
+  int storage; // eax
+  int count; // ecx
+  int byteOffset; // ecx
+  _DWORD *srcEntry; // ebx
+  _DWORD *destEntry; // esi
   int v12; // ecx
 
-  a1[4] = (int)g_PathEntryArray_Vtable;
-  a1[1] = a2[1];
-  a1[2] = a2[2];
-  v4 = a2[3];
-  a1[3] = v4;
-  if ( !v4 )
+  dest[4] = (int)g_PathEntryArray_Vtable;
+  dest[1] = source[1];
+  dest[2] = source[2];
+  capacity = source[3];
+  dest[3] = capacity;
+  if ( !capacity )
   {
-    *a1 = 0;
-    return a1;
+    *dest = 0;
+    return dest;
   }
   (void)a3;
-  v6 = 0;
-  v7 = Compat_WcppCtorArrayStorage1s(
-         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
-         a1[3],
+  index = 0;
+  storage = Compat_WcppCtorArrayStorage1s(
+         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * dest[3] + 4),
+         dest[3],
          &g_PathEntryArray_ElementDtorDescriptor);
-  v8 = a1[2];
-  *a1 = v7;
-  if ( v8 <= 0 )
-    return a1;
-  v9 = 0;
+  count = dest[2];
+  *dest = storage;
+  if ( count <= 0 )
+    return dest;
+  byteOffset = 0;
   do
   {
-    v10 = (_DWORD *)(v9 + *a2);
-    v11 = (_DWORD *)(v9 + *a1);
-    *v11 = *v10;
-    Compat_StringHolderDestructor(v11 + 1);
-    v11[3] = v10[3];
-    ++v6;
-    v9 += 16;
+    srcEntry = (_DWORD *)(byteOffset + *source);
+    destEntry = (_DWORD *)(byteOffset + *dest);
+    *destEntry = *srcEntry;
+    Compat_StringHolderDestructor(destEntry + 1);
+    destEntry[3] = srcEntry[3];
+    ++index;
+    byteOffset += 16;
   }
-  while ( v6 < a1[2] );
-  return a1;
+  while ( index < dest[2] );
+  return dest;
 }
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 // 50ECA4: using guessed type int (*off_50ECA4[2])();
 
 //----- (004016E0) --------------------------------------------------------
-int  PathEntryArray_Destruct(_DWORD *a1, char a2)
+int  PathEntryArray_Destruct(_DWORD *array, char dtorFlags)
 {
   int v2; // ecx
   char v3; // dl
   int v5; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_PathEntryArray_DtorDescriptor);
+    _wcpp_4_dtor_array_store__(array, &g_PathEntryArray_DtorDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    a1[4] = g_PathEntryArray_Vtable;
-    PathEntryArray_DestructElements(a1);
+    array[4] = g_PathEntryArray_Vtable;
+    PathEntryArray_DestructElements(array);
     if ( (v3 & 2) != 0 )
       j__nfree_();
     return v2;
@@ -127,40 +127,40 @@ int  PathEntryArray_Destruct(_DWORD *a1, char a2)
 //----- (00401720) --------------------------------------------------------
 _DWORD * PathEntryArray_DestructElements(_DWORD *result)
 {
-  _DWORD *v1; // ecx
-  int v2; // edi
-  int v3; // esi
-  int v4; // ebx
-  int v5; // ebp
+  _DWORD *array; // ecx
+  int index; // edi
+  int byteOffset; // esi
+  int entryAddr; // ebx
+  int vtable; // ebp
   _DWORD *v6; // ecx
-  int v7; // [esp+4h] [ebp-14h] BYREF
-  int (**v8)(); // [esp+8h] [ebp-10h]
-  int v9; // [esp+Ch] [ebp-Ch]
+  int tempEntry; // [esp+4h] [ebp-14h] BYREF
+  int (**tempEntryVtable)(); // [esp+8h] [ebp-10h]
+  int tempEntryData; // [esp+Ch] [ebp-Ch]
 
-  v1 = result;
+  array = result;
   if ( *result )
   {
-    v2 = 0;
+    index = 0;
     if ( (int)result[2] > 0 )
     {
-      v3 = 0;
+      byteOffset = 0;
       do
       {
-        v4 = v3 + *v1;
-        v5 = v1[4];
-        v7 = 0;
-        v8 = &g_CompatStringHolder_Vtable;
-        Compat_StringHolderDestructor(&v7);
-        v8 = &g_PathEntry_Vtable;
-        v9 = *(_DWORD *)(v4 + 12);
-        (*(void (**)(void))(v5 + 4))();
-        ++v2;
-        Compat_StringHolderScalarDeletingDtor((int)&v7, 0);
-        v3 += 16;
+        entryAddr = byteOffset + *array;
+        vtable = array[4];
+        tempEntry = 0;
+        tempEntryVtable = &g_CompatStringHolder_Vtable;
+        Compat_StringHolderDestructor(&tempEntry);
+        tempEntryVtable = &g_PathEntry_Vtable;
+        tempEntryData = *(_DWORD *)(entryAddr + 12);
+        (*(void (**)(void))(vtable + 4))();
+        ++index;
+        Compat_StringHolderScalarDeletingDtor((int)&tempEntry, 0);
+        byteOffset += 16;
       }
-      while ( v2 < v1[2] );
+      while ( index < array[2] );
     }
-    _wcpp_4_dtor_array_store__(v1, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__(array, &g_PathEntryArray_ElementDtorDescriptor);
     result = (_DWORD *)j_j__nfree_();
     *v6 = 0;
     v6[2] = 0;
@@ -175,52 +175,52 @@ _DWORD * PathEntryArray_DestructElements(_DWORD *result)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004017D0) --------------------------------------------------------
-int  PathEntryArray_GrowByDelta(int *a1, int a2)
+int  PathEntryArray_GrowByDelta(int *array, int delta)
 {
-  bool v4; // zf
-  int v6; // eax
-  int v7; // ecx
-  _DWORD *v8; // ebx
-  _DWORD *v9; // esi
-  _DWORD *v10; // edi
+  bool becameEmpty; // zf
+  int allocated; // eax
+  int index; // ecx
+  _DWORD *destHolder; // ebx
+  _DWORD *srcEntry; // esi
+  _DWORD *destEntry; // edi
   int result; // eax
-  int v14; // [esp+0h] [ebp-Ch]
+  int newStorage; // [esp+0h] [ebp-Ch]
 
-  v4 = a2 + a1[3] == 0;
-  a1[3] = a2 + a1[3];
-  if ( v4 )
+  becameEmpty = delta + array[3] == 0;
+  array[3] = delta + array[3];
+  if ( becameEmpty )
   {
-    _wcpp_4_dtor_array_store__(*a1, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__(*array, &g_PathEntryArray_ElementDtorDescriptor);
     result = j_j__nfree_();
-    *a1 = 0;
+    *array = 0;
   }
   else
   {
-    v6 = Compat_WcppCtorArrayStorage1s(
-           (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
-           a1[3],
+    allocated = Compat_WcppCtorArrayStorage1s(
+           (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * array[3] + 4),
+           array[3],
            &g_PathEntryArray_ElementDtorDescriptor);
-    v14 = v6;
-    v7 = 0;
-    if ( a1[2] > 0 )
+    newStorage = allocated;
+    index = 0;
+    if ( array[2] > 0 )
     {
-      v8 = (_DWORD *)(v6 + 4);
+      destHolder = (_DWORD *)(allocated + 4);
       do
       {
-        v9 = (_DWORD *)(16 * v7 + *a1);
-        v10 = (_DWORD *)(v14 + 16 * v7);
-        *v10 = *v9;
-        Compat_StringHolderCopyText(v8, Compat_StringHolderGetText(v9 + 1));
-        v10[3] = v9[3];
-        ++v7;
-        v8 += 4;
+        srcEntry = (_DWORD *)(16 * index + *array);
+        destEntry = (_DWORD *)(newStorage + 16 * index);
+        *destEntry = *srcEntry;
+        Compat_StringHolderCopyText(destHolder, Compat_StringHolderGetText(srcEntry + 1));
+        destEntry[3] = srcEntry[3];
+        ++index;
+        destHolder += 4;
       }
-      while ( v7 < a1[2] );
+      while ( index < array[2] );
     }
-    _wcpp_4_dtor_array_store__(*a1, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__(*array, &g_PathEntryArray_ElementDtorDescriptor);
     j_j__nfree_();
-    result = v14;
-    *a1 = v14;
+    result = newStorage;
+    *array = newStorage;
   }
   return result;
 }
@@ -228,51 +228,51 @@ int  PathEntryArray_GrowByDelta(int *a1, int a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00401890) --------------------------------------------------------
-_DWORD * PathEntryArray_RemoveAt(_DWORD *result, int a2, int a3)
+_DWORD * PathEntryArray_RemoveAt(_DWORD *result, int index, int destroyElement)
 {
-  _DWORD *v3; // ebp
-  int v6; // edi
-  _DWORD *v7; // ebx
-  _DWORD *v8; // esi
-  int v10; // esi
-  int *v11; // ebx
-  int v12; // [esp+0h] [ebp-20h]
-  int v13; // [esp+4h] [ebp-1Ch] BYREF
-  int (**v14)(); // [esp+8h] [ebp-18h]
-  int v15; // [esp+Ch] [ebp-14h]
+  _DWORD *array; // ebp
+  int destOffset; // edi
+  _DWORD *srcEntry; // ebx
+  _DWORD *destEntry; // esi
+  int vtable; // esi
+  int *removedEntry; // ebx
+  int removedValue; // [esp+0h] [ebp-20h]
+  int tempEntry; // [esp+4h] [ebp-1Ch] BYREF
+  int (**tempEntryVtable)(); // [esp+8h] [ebp-18h]
+  int tempEntryData; // [esp+Ch] [ebp-14h]
 
-  v3 = result;
-  if ( a3 )
+  array = result;
+  if ( destroyElement )
   {
-    v10 = result[4];
-    v11 = (int *)(*result + 16 * a2);
-    v12 = *v11;
-    v13 = 0;
-    v14 = &g_CompatStringHolder_Vtable;
-    Compat_StringHolderCopyText((_DWORD *)&v13, Compat_StringHolderGetText((_DWORD *)(v11 + 1)));
-    v14 = &g_PathEntry_Vtable;
-    v15 = v11[3];
-    (*(void (__cdecl **)(int))(v10 + 4))(v12);
-    result = (_DWORD *)Compat_StringHolderScalarDeletingDtor((int)&v13, 0);
+    vtable = result[4];
+    removedEntry = (int *)(*result + 16 * index);
+    removedValue = *removedEntry;
+    tempEntry = 0;
+    tempEntryVtable = &g_CompatStringHolder_Vtable;
+    Compat_StringHolderCopyText((_DWORD *)&tempEntry, Compat_StringHolderGetText((_DWORD *)(removedEntry + 1)));
+    tempEntryVtable = &g_PathEntry_Vtable;
+    tempEntryData = removedEntry[3];
+    (*(void (__cdecl **)(int))(vtable + 4))(removedValue);
+    result = (_DWORD *)Compat_StringHolderScalarDeletingDtor((int)&tempEntry, 0);
   }
-  a2 += 1;
-  if ( a2 < v3[2] )
+  index += 1;
+  if ( index < array[2] )
   {
-    v6 = 16 * a2 - 16;
+    destOffset = 16 * index - 16;
     do
     {
-      v7 = (_DWORD *)(*v3 + 16 * a2);
-      v8 = (_DWORD *)(v6 + *v3);
-      *v8 = *v7;
-      Compat_StringHolderCopyText(v8 + 1, Compat_StringHolderGetText(v7 + 1));
-      result = (_DWORD *)v7[3];
-      v8[3] = result;
-      ++a2;
-      v6 += 16;
+      srcEntry = (_DWORD *)(*array + 16 * index);
+      destEntry = (_DWORD *)(destOffset + *array);
+      *destEntry = *srcEntry;
+      Compat_StringHolderCopyText(destEntry + 1, Compat_StringHolderGetText(srcEntry + 1));
+      result = (_DWORD *)srcEntry[3];
+      destEntry[3] = result;
+      ++index;
+      destOffset += 16;
     }
-    while ( a2 < v3[2] );
+    while ( index < array[2] );
   }
-  --v3[2];
+  --array[2];
   return result;
 }
 // 40189F: variable 'v4' is possibly undefined
@@ -281,46 +281,46 @@ _DWORD * PathEntryArray_RemoveAt(_DWORD *result, int a2, int a3)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00401940) --------------------------------------------------------
-_DWORD * Mem_ZeroFieldOffset316(int a1)
+_DWORD * Mem_ZeroFieldOffset316(int objectBase)
 {
-  _DWORD *v1; // eax
+  _DWORD *fieldPtr; // eax
 
-  v1 = (_DWORD *)(a1 + 316);
-  *v1 = 0;
-  return v1 - 79;
+  fieldPtr = (_DWORD *)(objectBase + 316);
+  *fieldPtr = 0;
+  return fieldPtr - 79;
 }
 
 //----- (00401970) --------------------------------------------------------
-int  PathEntry_CopyConstruct(_DWORD *a1, _DWORD *a2)
+int  PathEntry_CopyConstruct(_DWORD *dest, _DWORD *source)
 {
-  *a1 = *a2;
-  a1[1] = 0;
-  a1[2] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderCopyText(a1 + 1, Compat_StringHolderGetText(a2 + 1));
-  a1[2] = &g_PathEntry_Vtable;
-  a1[3] = a2[3];
-  return (int)a1;
+  *dest = *source;
+  dest[1] = 0;
+  dest[2] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderCopyText(dest + 1, Compat_StringHolderGetText(source + 1));
+  dest[2] = &g_PathEntry_Vtable;
+  dest[3] = source[3];
+  return (int)dest;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004019C0) --------------------------------------------------------
-int  PathEntry_Destruct(int a1, char a2)
+int  PathEntry_Destruct(int entry, char dtorFlags)
 {
   int result; // eax
   int v4; // ecx
   int v5; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_PathEntry_DtorDescriptor);
+    _wcpp_4_dtor_array_store__(entry, &g_PathEntry_DtorDescriptor);
     j_j__nfree_();
     return v4;
   }
   else
   {
-    result = Compat_StringHolderScalarDeletingDtor(a1, 1);
-    if ( (a2 & 2) != 0 )
+    result = Compat_StringHolderScalarDeletingDtor(entry, 1);
+    if ( (dtorFlags & 2) != 0 )
     {
       j__nfree_();
       return v5;
@@ -333,20 +333,20 @@ int  PathEntry_Destruct(int a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00401A00) --------------------------------------------------------
-int  PathEntry_ConstructDefault(_DWORD *a1)
+int  PathEntry_ConstructDefault(_DWORD *entry)
 {
-  _DWORD *v1; // eax
-  int v2; // ecx
+  _DWORD *holder; // eax
+  int holderBase; // ecx
   int result; // eax
 
-  *a1 = 0;
-  a1[1] = 0;
-  v1 = a1 + 1;
-  v1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(v1);
-  result = v2 - 4;
-  *(_DWORD *)(v2 + 4) = &g_PathEntry_Vtable;
-  *(_DWORD *)(v2 - 4 + 12) = 0;
+  *entry = 0;
+  entry[1] = 0;
+  holder = entry + 1;
+  holder[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(holder);
+  result = holderBase - 4;
+  *(_DWORD *)(holderBase + 4) = &g_PathEntry_Vtable;
+  *(_DWORD *)(holderBase - 4 + 12) = 0;
   return result;
 }
 // 401A24: variable 'v2' is possibly undefined

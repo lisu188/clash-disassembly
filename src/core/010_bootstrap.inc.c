@@ -18,11 +18,11 @@ int App_Shutdown()
 // 461560: using guessed type int nullsub_4(void);
 
 //----- (004011A0) --------------------------------------------------------
-int  Game_Init(int a1, char a2, DWORD a3)
+int  Game_Init(int a1, char a2, DWORD allocContext)
 {
   int result; // eax
 
-  result = Mem_Alloc(586398, a1, a2, a3);
+  result = Mem_Alloc(586398, a1, a2, allocContext);
   if ( result )
   {
     result = _wcpp_4_ctor_array__(result + 147174, 500) - 147174;
@@ -42,43 +42,43 @@ int  Game_Init(int a1, char a2, DWORD a3)
 //----- (004011F0) --------------------------------------------------------
 char __thiscall DetectGameCDPath(void *this)
 {
-  char v1; // bl
+  char driveLetter; // bl
   UINT DriveTypeA; // eax
-  char *v3; // esi
-  char *v4; // edi
-  char v5; // al
-  char v6; // al
+  char *suffixSrc; // esi
+  char *pathEnd; // edi
+  char curChar; // al
+  char nextChar; // al
   char *v8; // [esp-4h] [ebp-38h]
-  char v9[52]; // [esp+0h] [ebp-34h] BYREF
+  char pathBuffer[52]; // [esp+0h] [ebp-34h] BYREF
 
-  *(_DWORD *)&v9[44] = this;
-  v1 = 67;
-  qmemcpy(v9, &g_CDPathTemplate, 0x1Eu);
+  *(_DWORD *)&pathBuffer[44] = this;
+  driveLetter = 67;
+  qmemcpy(pathBuffer, &g_CDPathTemplate, 0x1Eu);
   while ( 1 )
   {
-    v9[0] = v1;
-    DriveTypeA = GetDriveTypeA(v9);
+    pathBuffer[0] = driveLetter;
+    DriveTypeA = GetDriveTypeA(pathBuffer);
     if ( DriveTypeA == 5 )
       break;
-    if ( (unsigned __int8)++v1 > 0x5Au )
+    if ( (unsigned __int8)++driveLetter > 0x5Au )
       return DriveTypeA;
   }
-  v3 = aClash;
-  v8 = v9;
-  v4 = &v9[strlen(v9)];
+  suffixSrc = aClash;
+  v8 = pathBuffer;
+  pathEnd = &pathBuffer[strlen(pathBuffer)];
   do
   {
-    v5 = *v3;
-    *v4 = *v3;
-    if ( !v5 )
+    curChar = *suffixSrc;
+    *pathEnd = *suffixSrc;
+    if ( !curChar )
       break;
-    v6 = v3[1];
-    v3 += 2;
-    v4[1] = v6;
-    v4 += 2;
+    nextChar = suffixSrc[1];
+    suffixSrc += 2;
+    pathEnd[1] = nextChar;
+    pathEnd += 2;
   }
-  while ( v6 );
-  LOBYTE(DriveTypeA) = FileSystem_SetInstallRootPath(v9);
+  while ( nextChar );
+  LOBYTE(DriveTypeA) = FileSystem_SetInstallRootPath(pathBuffer);
   return DriveTypeA;
 }
 

@@ -3,86 +3,86 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (00481550) --------------------------------------------------------
-signed int Lexer_ParseValueList(int a1, _DWORD *a2, int a3, double a4)
+signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int expectedType, double a4)
 {
   int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
-  int v10; // edx
-  char *v11; // ebx
-  int v13; // eax
+  int lexemeType; // ecx
+  int instanceType; // ecx
+  int instanceRefType; // edx
+  char *expectedTypeName; // ebx
+  int integerNode; // eax
   int v14; // edx
-  int v15; // eax
-  double v16; // st7
+  int floatNode; // eax
+  double floatValue; // st7
   int v17; // [esp+8h] [ebp-10h]
   int v18; // [esp+Ch] [ebp-Ch]
 
-  Rules_RtnUnknown(a1, a2, a4);
+  Rules_RtnUnknown(argumentPosition, returnValue, a4);
   if ( g_ClipsEvaluationError )
     return 0;
-  if ( a3 == *(_DWORD *)(v7 + 4) || a3 == 110 && a2[1] < 2u )
+  if ( expectedType == *(_DWORD *)(v7 + 4) || expectedType == 110 && returnValue[1] < 2u )
     return 1;
-  if ( a3 == 111 )
+  if ( expectedType == 111 )
   {
-    v8 = a2[1];
-    if ( v8 == 2 || v8 == 3 )
+    lexemeType = returnValue[1];
+    if ( lexemeType == 2 || lexemeType == 3 )
       return 1;
   }
-  if ( (a3 == 111 || a3 == 2) && a2[1] == 8 )
+  if ( (expectedType == 111 || expectedType == 2) && returnValue[1] == 8 )
     return 1;
-  if ( a3 == 8 )
+  if ( expectedType == 8 )
   {
-    v9 = a2[1];
-    if ( v9 == 8 || v9 == 2 )
+    instanceType = returnValue[1];
+    if ( instanceType == 8 || instanceType == 2 )
       return 1;
   }
-  if ( a3 == 112 )
+  if ( expectedType == 112 )
   {
-    v10 = a2[1];
-    if ( v10 == 7 || v10 == 8 || v10 == 2 )
+    instanceRefType = returnValue[1];
+    if ( instanceRefType == 7 || instanceRefType == 8 || instanceRefType == 2 )
       return 1;
   }
-  if ( a2[1] == 1 && !a3 )
+  if ( returnValue[1] == 1 && !expectedType )
   {
-    v13 = a2[2];
-    a2[1] = 0;
-    a2[2] = Rules_AddDoubleValue((double)*(int *)(v13 + 16));
+    integerNode = returnValue[2];
+    returnValue[1] = 0;
+    returnValue[2] = Rules_AddDoubleValue((double)*(int *)(integerNode + 16));
     return v14;
   }
   else
   {
-    if ( a2[1] || a3 != 1 )
+    if ( returnValue[1] || expectedType != 1 )
     {
-      if ( a3 )
+      if ( expectedType )
       {
-        switch ( a3 )
+        switch ( expectedType )
         {
           case 1:
-            v11 = aInteger_1;
+            expectedTypeName = aInteger_1;
             break;
           case 2:
-            v11 = aSymbol_2;
+            expectedTypeName = aSymbol_2;
             break;
           case 3:
-            v11 = aString_1;
+            expectedTypeName = aString_1;
             break;
           case 4:
-            v11 = aMultifield_0;
+            expectedTypeName = aMultifield_0;
             break;
           case 110:
-            v11 = aIntegerOrFlo_0;
+            expectedTypeName = aIntegerOrFlo_0;
             break;
           case 111:
-            v11 = aSymbolOrStri_0;
+            expectedTypeName = aSymbolOrStri_0;
             break;
           case 8:
-            v11 = aInstanceName_1;
+            expectedTypeName = aInstanceName_1;
             break;
           case 7:
-            v11 = aInstanceAddr_6;
+            expectedTypeName = aInstanceAddr_6;
             break;
           case 112:
-            v11 = aInstanceAddr_5;
+            expectedTypeName = aInstanceAddr_5;
             break;
           default:
             goto LABEL_24;
@@ -90,19 +90,19 @@ signed int Lexer_ParseValueList(int a1, _DWORD *a2, int a3, double a4)
       }
       else
       {
-        v11 = aFloat_1;
+        expectedTypeName = aFloat_1;
       }
-      Parser_ReportError(a1, (int)v11);
+      Parser_ReportError(argumentPosition, (int)expectedTypeName);
 LABEL_24:
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       return 0;
     }
-    v15 = a2[2];
-    a2[1] = 1;
-    v16 = *(double *)(v15 + 16);
+    floatNode = returnValue[2];
+    returnValue[1] = 1;
+    floatValue = *(double *)(floatNode + 16);
     _CHP(v17, v18);
-    a2[2] = Rules_AddIntegerValue((int)v16);
+    returnValue[2] = Rules_AddIntegerValue((int)floatValue);
     return 1;
   }
 }
