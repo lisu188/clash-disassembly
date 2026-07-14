@@ -61,15 +61,15 @@ Highlights of the tail cleared this campaign:
 
 ## Parameters / locals: named where determinable
 
-Occurrence counts (from `naming_audit.py`):
+Occurrence counts (deduped; old-path compat symlinks excluded):
 
-| identifier | campaign start | after round 5 |
+| identifier | campaign start | after round 8 |
 |---|---|---|
-| positional params `aN` | ~37,600 | **13,628** |
-| generated locals `vN` | ~85,000 | **26,240** |
+| positional params `aN` | ~37,600 | **8,017** |
+| generated locals `vN` | ~85,000 | **25,113** |
 
-**16,750 identifier renames across 3,768 functions** are recorded in the local
-ledger (2,977 inferred, 407 behaviour-confirmed, 384 conservative-mechanical).
+**17,243 identifier renames across 3,885 functions** are recorded in the local
+ledger (inferred / behaviour-confirmed / conservative-mechanical).
 
 Rounds (each = propose + adversarial-verify workflow → collision-guarded apply →
 build/test gate → commit):
@@ -83,6 +83,14 @@ build/test gate → commit):
 6. **Round 5** — one dedicated high-effort agent per each of the 72 largest remaining
    functions — ~1,000 (incl. the 196-variable AI battle scorer
    `UnitBattle_ScoreAiActionGridForUnit`).
+7. **Rounds 6-8 (game-first)** — after the CLIPS engine was deprioritised as an
+   external library, dedicated per-function passes drove **Clash's own game code** down
+   to the 20-a/v tier: round 6 (11 fns, 40-80 av), round 7 (35 fns, 40-80 av), round 8
+   (71 fns, 20-39 av). These landed on the post-refactor `src/recovered/**` layout via
+   an isolated git worktree (the shared checkout was too unstable during a concurrent
+   source-reorganisation). Names derived from the unit-record layout, sprite/sound
+   resource-path builders, AI move-track dispatch, turn-advancement context handles,
+   and building-record offsets.
 
 CLIPS code uses upstream CLIPS 6.0 parameter names where matched (`theInstance`,
 `theDefclass`, `readSource`, `theToken`, `ppForm`, bsave/bload record fields). Game
@@ -91,16 +99,22 @@ code uses the recovered record layout as evidence (unit record `+852`=type, `+85
 
 ## What remains, and why it is the floor
 
-After five rounds the residual `aN`/`vN` are **not** un-attempted — every function was
-covered and agents were instructed to *omit any identifier they could not justify*:
+After eight rounds the residual `aN`/`vN` are **not** un-attempted — every function was
+covered (game code up to four times) and agents were instructed to *omit any identifier
+they could not justify*. Accurate deduped audit (old-path compat symlinks excluded):
+**a-params 8,017, v-locals 25,113**; opaque functions/globals **0**.
 
-- **~7,700 of the 13,628 `aN`** are parameter names in **forward-declaration
-  prototypes** in `clash95_prelude.inc.c`. These are cosmetic (C ignores declaration
-  parameter names); the authoritative names live on the definitions. *(A deterministic
-  propagation of definition names onto prototypes is available in tooling.)*
+- **~5,800 of the 8,017 `aN`** are parameter names in **forward-declaration prototypes**
+  in the prelude. Cosmetic (C ignores declaration parameter names); ~5,500 were already
+  propagated from their definitions, and the rest are prototypes whose definitions are
+  themselves still positional.
 - **955 distinct locals are Hex-Rays `'possibly undefined'`** decompiler artifacts.
-- The rest are register-spill intermediates and single-use temporaries spread thin
-  across ~1,650 functions (a handful each), where no role is determinable from usage.
+- The rest are **register-reuse polysemantic** vars (one register holds different values
+  at different points — no single accurate name), FPU-stack passthrough artifacts
+  (named `st7_0`), and single-use temporaries where no role is determinable. The game-code
+  passes converged here: 56 game functions still hold ≥20 `vN`, but rounds 5-8 examined
+  each of them and *deliberately left* exactly these vars, documenting why in the ledger
+  evidence. Naming them further would be guessing, which the campaign forbids.
 
 Structures: `RECOVERED_STRUCTURES.json` — **0 unnamed / offset-only fields**.
 
@@ -126,3 +140,12 @@ defects were **reversed name pairs**, all corrected:
 
 No misleading or over-specific names survived; un-named leftover `vN` were not counted
 (partial coverage is expected). The correcting commit is `b7ce44c`.
+
+A second fresh-context verifier pass sampled **39 functions** from the game-first
+rounds 6-8 (units/buildings/battle/building-ui/world/savegame) and found **zero
+defects** — every renamed identifier held up against struct offsets (`+856`=row/
+`+858`=col and the 200/2, 1400/14, 40×row+2×col, 160×row+8×col strides) and callee
+argument positions. The reviewers explicitly distinguished the game's own unusual
+axis convention (row→screenX, col→screenY) and a pre-existing caller/callee arg-order
+quirk in the original binary from genuine naming errors, confirming neither is a
+campaign defect.
