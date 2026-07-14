@@ -14380,7 +14380,7 @@ signed int  Parser_ValidateFunctionCallArgs(int a1, int a2, int a3)
   v7 = AST_CountListNodes(*(_DWORD *)(a1 + 6));
   if ( (IsTable[(unsigned __int8)(*v6 + 1)] & 0x20) != 0 )
   {
-    v8 = unknown_libname_2(v7);
+    v8 = atoi_(v7);
   }
   else
   {
@@ -14399,7 +14399,7 @@ signed int  Parser_ValidateFunctionCallArgs(int a1, int a2, int a3)
     }
     return 0;
   }
-  v10 = unknown_libname_2(v7);
+  v10 = atoi_(v7);
 LABEL_9:
   if ( v8 == v10 )
   {
@@ -14696,7 +14696,7 @@ LABEL_11:
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004BDC00) --------------------------------------------------------
-int unknown_libname_13(int value)
+int Parser_SetSequenceOperatorRecognition(int value)
 {
   int previous_value; // eax
 

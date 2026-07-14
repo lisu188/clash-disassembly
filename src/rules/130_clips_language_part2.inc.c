@@ -280,11 +280,11 @@ signed int  Rules_CheckFunctionArgCount(int a1, _BYTE *a2, int a3)
   if ( !a2 )
     return 1;
   if ( (IsTable[(unsigned __int8)(*a2 + 1)] & 0x20) != 0 )
-    v5 = unknown_libname_2(a1);
+    v5 = atoi_(a1);
   else
     v5 = -1;
   if ( (IsTable[(unsigned __int8)(a2[1] + 1)] & 0x20) != 0 )
-    v6 = unknown_libname_2(v3);
+    v6 = atoi_(v3);
   else
     v6 = 10000;
   if ( v5 == v6 )
@@ -7238,7 +7238,7 @@ int Rules_GetFactDuplicationFlag()
 // 51A928: using guessed type int dword_51A928;
 
 //----- (0048AC80) --------------------------------------------------------
-int __fastcall unknown_libname_8(int a1)
+int __fastcall Rules_SetFactDuplicationEnabled(int a1)
 {
   int result; // eax
 

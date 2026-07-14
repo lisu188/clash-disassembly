@@ -5854,7 +5854,7 @@ int  WCIsvListBase_dtorRoot(int result, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0043CF90) --------------------------------------------------------
-int __cdecl WCIsvListBase_dtorFreeOnly()
+int __cdecl WCIsvListBase_vtblFree()
 {
   return j__nfree_();
 }
@@ -6012,7 +6012,7 @@ static WCCompatLink *WCCompat_LinkFromHandle(int link_handle)
 }
 
 //----- (0043D100) --------------------------------------------------------
-_DWORD *unknown_libname_3(WCIsvListBase *this)
+_DWORD *WCIsvListBase_vtblDtor(WCIsvListBase *this)
 {
   WCCompatListBase *list;
 
@@ -6025,7 +6025,7 @@ _DWORD *unknown_libname_3(WCIsvListBase *this)
 //----- (0043D100) --------------------------------------------------------
 _DWORD * WCIsvListBase_dtorVariant104(WCIsvListBase *this)
 {
-  return unknown_libname_3(this);
+  return WCIsvListBase_vtblDtor(this);
 }
 
 int __fastcall WCIsvListBase_base_next(int list_handle, int cursor_handle)

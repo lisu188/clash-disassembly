@@ -12573,7 +12573,7 @@ int  Method_ParseWildcardRestrictionString(_DWORD *a1, char *a2, int a3, _DWORD 
     else
     {
       v65 = *v57;
-      v58 = unknown_libname_2(a3);
+      v58 = atoi_(a3);
     }
     if ( v57[1] == 42 )
     {
@@ -12582,7 +12582,7 @@ int  Method_ParseWildcardRestrictionString(_DWORD *a1, char *a2, int a3, _DWORD 
     else
     {
       v65 = v57[1];
-      v59 = unknown_libname_2(v14);
+      v59 = atoi_(v14);
     }
     if ( v57[2] )
     {
@@ -13219,7 +13219,7 @@ signed int  Class_GeneratePublicSlotHandlers(signed int result)
     Mem_SmallBlockAlloc(v2);
     v13 = Rules_GetLoadInProgress();
     Rules_SetLoadInProgress(0);
-    unknown_libname_5(v4, v3);
+    Mem_SetAllocFlag(v4, v3);
     if ( (v16[1] & 8) != 0 )
     {
       sprintf_(v5, "%s get-%s () ?self:%s)", v14, v15, v15);
@@ -13245,7 +13245,7 @@ signed int  Class_GeneratePublicSlotHandlers(signed int result)
       }
     }
     Rules_SetLoadInProgress(v13);
-    unknown_libname_5(v10, v2);
+    Mem_SetAllocFlag(v10, v2);
     return Mem_SmallBlockFree(v12, v11);
   }
   return result;
@@ -17535,11 +17535,11 @@ LABEL_10:
     v9 = Rules_GetReentryGuardFlag();
     Rules_SetReentryGuardFlag(1);
     Rules_StaticConstraintCheckingEnabled();
-    unknown_libname_10(v11, v10);
+    Rules_SetDynamicConstraintChecking(v11, v10);
     v12 = Parser_ParseSlotDefaultOrRestriction((unsigned int)(*a1 << 30) >> 31, a1[4], v19, a3);
     if ( v12 )
       v12 = Instance_ValidateSlotValueConstraints(v19, (int)a1, 0);
-    unknown_libname_10(v13, v12);
+    Rules_SetDynamicConstraintChecking(v13, v12);
     Rules_SetReentryGuardFlag(v9);
     if ( v14 )
     {

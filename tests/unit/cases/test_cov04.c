@@ -378,7 +378,7 @@ TEST(cov04_wcisv, pop_until_match_or_empty_immediately_empty) {
 
 /* ---- WCIsvListBase_dtorFreeOnly ----------------------------------------- */
 TEST(cov04_wcisv, dtor_free_only) {
-  TOUCH(WCIsvListBase_dtorFreeOnly());
+  TOUCH(WCIsvListBase_vtblFree());
 }
 
 /* ---- WCIsvListBase_ValuesEqual ------------------------------------------ */

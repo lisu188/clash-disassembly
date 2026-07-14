@@ -1177,7 +1177,7 @@ signed int Rules_CompileStrategicRulesFile()
   v3[3] = v1;
   Rules_InitializeEngine(v0, v1);
   Rules_SetStrategy(0);
-  unknown_libname_7(1);
+  Rules_SetSalienceEvaluationMode(1);
   return Rules_Bload((int)aStrategClash_d, (DWORD)v3);
 }
 // 451E51: variable 'v0' is possibly undefined

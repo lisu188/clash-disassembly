@@ -811,7 +811,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int a1, double a2)
   if ( v3 == -1 )
     return v4;
   Rules_RtnUnknown(1, &v7, a2);
-  g_ClipsEventStateFlag = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_CLIPS_DynamicConstraintCheckingFlag = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49707E: variable 'v4' is possibly undefined
@@ -864,13 +864,13 @@ int Rules_GetStaticConstraintCheckingCommand()
 // 51AAB0: using guessed type int dword_51AAB0;
 
 //----- (004971A0) --------------------------------------------------------
-int __fastcall unknown_libname_10(int a1, int a2)
+int __fastcall Rules_SetDynamicConstraintChecking(int a1, int a2)
 {
   int previous_state;
 
   (void)a2;
-  previous_state = g_ClipsEventStateFlag;
-  g_ClipsEventStateFlag = a1;
+  previous_state = g_CLIPS_DynamicConstraintCheckingFlag;
+  g_CLIPS_DynamicConstraintCheckingFlag = a1;
   return previous_state;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
@@ -878,7 +878,7 @@ int __fastcall unknown_libname_10(int a1, int a2)
 //----- (004971B0) --------------------------------------------------------
 int Rules_DynamicConstraintCheckingEnabled()
 {
-  return g_ClipsEventStateFlag;
+  return g_CLIPS_DynamicConstraintCheckingFlag;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
 
@@ -6203,7 +6203,7 @@ int  Rules_HostConserveMem(int a1, double a2)
     if ( result )
     {
       if ( !strcmp_(*(_DWORD *)(v5[2] + 16), aOn_0) || !strcmp_(v4, aOff_0) )
-        return unknown_libname_5(v4, v3);
+        return Mem_SetAllocFlag(v4, v3);
       else
         return Parser_ReportError(1, (int)aSymbolWithVa_2);
     }
@@ -6726,7 +6726,7 @@ int  Rules_HostSetSequenceOperatorRecognition(int a1, double a2)
 
   v4[7] = a1;
   if ( Lexer_ParseValueList(1, v4, 2, a2) )
-    return unknown_libname_13(v4[2] != g_ClipsFalseSymbol);
+    return Parser_SetSequenceOperatorRecognition(v4[2] != g_ClipsFalseSymbol);
   else
     return g_SequenceOperatorRecognition;
 }

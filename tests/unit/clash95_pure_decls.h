@@ -151,7 +151,7 @@ extern void * CastleProduction_ReloadLicenceSlotSprites(char a1);
 extern int CastleProduction_SetExitSignal(int a1);
 extern int BuildingTransferTargetList_SetDrawOrigin(int result, int a2);
 extern signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int a2);
-extern int __cdecl WCIsvListBase_dtorFreeOnly();
+extern int __cdecl WCIsvListBase_vtblFree();
 extern BOOL WCIsvListBase_ValuesEqual(_DWORD *a1, _DWORD *a2);
 extern static WCCompatListBase *WCCompat_ListFromBase(WCIsvListBase *this);
 extern static WCCompatListBase *WCCompat_ListFromHandle(int list_handle);

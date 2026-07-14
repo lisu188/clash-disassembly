@@ -9855,7 +9855,7 @@ signed int Mem_FatalOutOfMemory()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00472700) --------------------------------------------------------
-int unknown_libname_4(int a1)
+int Mem_SetOutOfMemoryHandler(int a1)
 {
   int previous_handler;
 
@@ -16725,7 +16725,7 @@ int  Rules_SetFactDuplicationCommand(int a1, double a2)
   v5 = 1;
   if ( v6[0] == 2 && v6[1] == g_ClipsFalseSymbol )
     v5 = 0;
-  unknown_libname_8(v5);
+  Rules_SetFactDuplicationEnabled(v5);
   return v3;
 }
 // 47AEF6: variable 'v4' is possibly undefined
@@ -18208,7 +18208,7 @@ signed int  Rules_BloadAndRefresh(
   if ( !result )
     return result;
 
-  previous_allocator_handler = unknown_libname_4((int)CSyncObject_Unlock);
+  previous_allocator_handler = Mem_SetOutOfMemoryHandler((int)CSyncObject_Unlock);
   chunk_count = result;
   do
   {
@@ -18222,13 +18222,13 @@ signed int  Rules_BloadAndRefresh(
       }
       else if ( ((int (__cdecl *)(int))(intptr_t)previous_allocator_handler)(chunk_bytes) == 1 )
       {
-        return unknown_libname_4(previous_allocator_handler);
+        return Mem_SetOutOfMemoryHandler(previous_allocator_handler);
       }
     }
   }
   while ( !chunk_base );
 
-  unknown_libname_4(previous_allocator_handler);
+  Mem_SetOutOfMemoryHandler(previous_allocator_handler);
   initialized_count = 0;
   while ( initialized_count < result )
   {
@@ -19884,7 +19884,7 @@ int Rules_GetSalienceEvaluation()
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E7B0) --------------------------------------------------------
-int __fastcall unknown_libname_7(int a1)
+int __fastcall Rules_SetSalienceEvaluationMode(int a1)
 {
   int result; // eax
 

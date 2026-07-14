@@ -285,7 +285,7 @@ int Noop_FatalQueryStreamDestruct(void);
 int Noop_FatalQueryStreamPutBackByte(void);
 int Noop_RulesRecordScalarDeletingDtor(void);
 _DWORD * WCIsvListBase_dtorVariant104(WCIsvListBase *this);
-_DWORD *unknown_libname_3(WCIsvListBase *this);
+_DWORD *WCIsvListBase_vtblDtor(WCIsvListBase *this);
 int __fastcall Noop_CrtExitHandlerPair(_DWORD, _DWORD);
 int Noop_CrtLockEnterLeaveResetStub(void);
 int Noop_CrtIoInitHook(void);
@@ -501,9 +501,9 @@ _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
 int ismbdprint_(void *logical_name);
-int unknown_libname_13(int value);
-int __fastcall unknown_libname_7(int a1);
-int __fastcall unknown_libname_8(int a1);
+int Parser_SetSequenceOperatorRecognition(int value);
+int __fastcall Rules_SetSalienceEvaluationMode(int a1);
+int __fastcall Rules_SetFactDuplicationEnabled(int a1);
 int __fastcall mblen_(int a1, int a2);
 int __fastcall mblen__0(int a1, int a2);
 double g_Rules_AverageRoundingBias = 0.5;
@@ -1241,7 +1241,7 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2);
 signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1);
 _DWORD * WCIsvListBase_ctorRoot(_DWORD *result);
 int  WCIsvListBase_dtorRoot(int result, char a2);
-int __cdecl WCIsvListBase_dtorFreeOnly();
+int __cdecl WCIsvListBase_vtblFree();
 BOOL  WCIsvListBase_ValuesEqual(_DWORD *a1, _DWORD *a2);
 _DWORD * WCIsvListBase_ctorVariant124(_DWORD *result);
 int  WCIsvListBase_dtorVariant124(WCIsvListBase *a1, char a2);
@@ -2034,7 +2034,7 @@ void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3);
 int __fastcall Mem_InitReserveBlock(int a1, int a2);
 signed int  Mem_HeapAllocWithRetry(_DWORD *a1);
 signed int Mem_FatalOutOfMemory();
-int unknown_libname_4(int a1);
+int Mem_SetOutOfMemoryHandler(int a1);
 signed int  Mem_ReleasePoolBlock(int a1, int a2);
 _DWORD * Mem_Realloc(char *a1, unsigned int a2, unsigned int a3);
 int Mem_GetTotalAllocatedBytes();
@@ -9027,7 +9027,7 @@ int (*g_DLXSpriteSet_Vtable)() = &DLXSpriteSet_Destroy; // weak
 _UNKNOWN g_DLXSpriteSet_DtorArrayTag; // weak
 int (*g_WCIsvListBaseRoot_Vtable)() = &WCIsvListBase_dtorRoot; // weak
 _DWORD (*g_WCIsvListBaseDtor_Vtable)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
-int (*g_WCIsvListBaseFreeOnly_Vtable[2])() = { &unknown_libname_3, &WCIsvListBase_dtorFreeOnly }; // weak
+int (*g_WCIsvListBaseFreeOnly_Vtable[2])() = { &WCIsvListBase_vtblDtor, &WCIsvListBase_vtblFree }; // weak
 int (__thiscall *g_WCIsvListBaseDestroyElements_Vtable)(WCIsvListBase *this) = &WCIsvListBase_DestroyElementsAndDtor; // weak
 void *g_WCIsvListBaseVariant124_Vtable = &WCIsvListBase_dtorVariant124; // weak
 void *g_WCIsvListBaseVariant134_Vtable = &WCIsvListBase_dtorVariant134; // weak
@@ -12133,7 +12133,7 @@ int g_Rules_BloadBitmapCount = 0; // weak
 int g_BinaryItemListHead = 0; // weak
 int g_ClipsConstructQueueHead = 0; // weak
 int g_CLIPS_StaticConstraintCheckingFlag = 1; // weak
-int g_ClipsEventStateFlag = 0; // weak
+int g_CLIPS_DynamicConstraintCheckingFlag = 0; // weak
 _UNKNOWN g_EvalDescriptor_Defgeneric; // weak
 int g_Rules_WatchDeffunctions = 0; // weak
 _UNKNOWN g_EvalDescriptor_Deffunction; // weak

@@ -572,7 +572,7 @@ void *memmove_(void *destination, const void *source, size_t byte_count)
   return memmove(destination, source, byte_count);
 }
 
-int unknown_libname_2(const char *text)
+int atoi_(const char *text)
 {
   const unsigned char *cursor;
   unsigned char sign_char;
