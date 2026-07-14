@@ -75,6 +75,31 @@ def find_functions(text):
     return funcs
 
 
+def code_identifiers(segment_text):
+    """Set of identifier tokens appearing in the CODE (non string/comment) parts."""
+    idents = set()
+    for is_code, s in split_code_and_literals(segment_text):
+        if is_code:
+            idents.update(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", s))
+    return idents
+
+
+def drop_collisions(body, mapping):
+    """Remove old->new pairs whose NEW name already exists as a distinct identifier
+    in the function body (would create a duplicate declaration / shadow). Also drop
+    pairs where two olds map to the same new. Returns (clean_mapping, dropped)."""
+    existing = code_identifiers(body)
+    clean, dropped, targets = {}, [], set()
+    for old, new in mapping.items():
+        if new in existing and new != old:
+            dropped.append((old, new, "target-exists")); continue
+        if new in targets:
+            dropped.append((old, new, "dup-target")); continue
+        targets.add(new)
+        clean[old] = new
+    return clean, dropped
+
+
 def scoped_sub(segment_text, mapping):
     pat = re.compile(r"\b(" + "|".join(re.escape(x) for x in mapping) + r")\b")
     segs = split_code_and_literals(segment_text)
@@ -121,6 +146,11 @@ def main():
         edits.sort(key=lambda x: x[0], reverse=True)
         for s, en, m, fn, e in edits:
             body = text[s:en]
+            m, dropped = drop_collisions(body, m)
+            for old, new, why in dropped:
+                rejected.append([f, fn, f"collision {old}->{new} ({why})"])
+            if not m:
+                continue
             newbody = scoped_sub(body, m)
             if newbody != body:
                 text = text[:s] + newbody + text[en:]
