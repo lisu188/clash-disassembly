@@ -1,0 +1,146 @@
+[
+ {
+  "kind": "regex",
+  "value": 728,
+  "name": "TILE_OVERLAY_SHRINE_A",
+  "pattern": "case (?P<lit>0x2D8):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 730,
+  "name": "TILE_OVERLAY_SHRINE_B",
+  "pattern": "case (?P<lit>0x2DA):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 732,
+  "name": "TILE_OVERLAY_SHRINE_C",
+  "pattern": "case (?P<lit>0x2DC):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 729,
+  "name": "TILE_OVERLAY_EMPTY_SHRINE_A",
+  "pattern": "case (?P<lit>0x2D9):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 731,
+  "name": "TILE_OVERLAY_EMPTY_SHRINE_B",
+  "pattern": "case (?P<lit>0x2DB):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 733,
+  "name": "TILE_OVERLAY_EMPTY_SHRINE_C",
+  "pattern": "case (?P<lit>0x2DD):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 734,
+  "name": "TILE_OVERLAY_CULT_PLACE_A",
+  "pattern": "case (?P<lit>0x2DE):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 736,
+  "name": "TILE_OVERLAY_CULT_PLACE_B",
+  "pattern": "case (?P<lit>0x2E0):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 738,
+  "name": "TILE_OVERLAY_CULT_PLACE_C",
+  "pattern": "case (?P<lit>0x2E2):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 735,
+  "name": "TILE_OVERLAY_EMPTY_CULT_PLACE_A",
+  "pattern": "case (?P<lit>0x2DF):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 737,
+  "name": "TILE_OVERLAY_EMPTY_CULT_PLACE_B",
+  "pattern": "case (?P<lit>0x2E1):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ },
+ {
+  "kind": "regex",
+  "value": 739,
+  "name": "TILE_OVERLAY_EMPTY_CULT_PLACE_C",
+  "pattern": "case (?P<lit>0x2E3):",
+  "files": [
+   "src/game/080_building_ui.inc.c"
+  ],
+  "confidence": "behavior-confirmed",
+  "evidence": "MapTile_GetReligiousSiteCategory (080_building_ui.inc.c:8256) switches this tile overlay id (terrain record +2) to RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE. Direct data-flow proof of meaning and polarity.",
+  "area": "map"
+ }
+]

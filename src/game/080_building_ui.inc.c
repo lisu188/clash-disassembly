@@ -8259,24 +8259,24 @@ signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY)
 
   switch ( *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY + 2) )
   {
-    case 0x2D8:
-    case 0x2DA:
-    case 0x2DC:
+    case TILE_OVERLAY_SHRINE_A:
+    case TILE_OVERLAY_SHRINE_B:
+    case TILE_OVERLAY_SHRINE_C:
       result = 1;
       break;
-    case 0x2D9:
-    case 0x2DB:
-    case 0x2DD:
+    case TILE_OVERLAY_EMPTY_SHRINE_A:
+    case TILE_OVERLAY_EMPTY_SHRINE_B:
+    case TILE_OVERLAY_EMPTY_SHRINE_C:
       result = 2;
       break;
-    case 0x2DE:
-    case 0x2E0:
-    case 0x2E2:
+    case TILE_OVERLAY_CULT_PLACE_A:
+    case TILE_OVERLAY_CULT_PLACE_B:
+    case TILE_OVERLAY_CULT_PLACE_C:
       result = 3;
       break;
-    case 0x2DF:
-    case 0x2E1:
-    case 0x2E3:
+    case TILE_OVERLAY_EMPTY_CULT_PLACE_A:
+    case TILE_OVERLAY_EMPTY_CULT_PLACE_B:
+    case TILE_OVERLAY_EMPTY_CULT_PLACE_C:
       result = 4;
       break;
     default:

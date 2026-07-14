@@ -519,7 +519,7 @@
     "offset": 2,
     "name": "overlay_tile_id",
     "type": "uint16",
-    "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites."
+    "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites. Religious-site ids 0x2D8-0x2E3 named TILE_OVERLAY_{SHRINE,EMPTY_SHRINE,CULT_PLACE,EMPTY_CULT_PLACE}_{A,B,C} (src/clash95_prelude.inc.c) per MapTile_GetReligiousSiteCategory."
    },
    {
     "offset": 4,

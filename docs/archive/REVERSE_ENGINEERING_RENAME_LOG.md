@@ -1,5 +1,38 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign B2: religious-site overlay tile ids
+
+Mints 12 `TILE_OVERLAY_*` constants for the religious-site overlay tile ids and
+applies them at the switch that classifies them.
+
+| Constants | Values | Category |
+|---|---|---|
+| `TILE_OVERLAY_SHRINE_{A,B,C}` | `0x2D8/0x2DA/0x2DC` | shrine |
+| `TILE_OVERLAY_EMPTY_SHRINE_{A,B,C}` | `0x2D9/0x2DB/0x2DD` | empty shrine |
+| `TILE_OVERLAY_CULT_PLACE_{A,B,C}` | `0x2DE/0x2E0/0x2E2` | cult place |
+| `TILE_OVERLAY_EMPTY_CULT_PLACE_{A,B,C}` | `0x2DF/0x2E1/0x2E3` | empty cult place |
+
+Confidence **behavior-confirmed** by direct data flow: the switch in
+`MapTile_GetReligiousSiteCategory` (`src/game/080_building_ui.inc.c:8256`) maps
+each id (read from terrain record +2) to its `RELIGIOUS_SITE_CATEGORY_*` result,
+which fixes both the category and the occupied/empty polarity unambiguously
+(no guessing). The A/B/C suffix marks the three interchangeable visual variants
+per category (the variant axis - map theme vs rotation - is left unproven).
+`#define` spelling makes `case 0x2D8:` -> `case TILE_OVERLAY_SHRINE_A:`
+token-identical; strict G1 gate passes with 0 hunks. `RECOVERED_STRUCTURES.json`
+`overlay_tile_id` note updated. Rules:
+`docs/archive/literal_rules/B2_religious_overlay.json`.
+
+### Deferred / Ambiguous (B2)
+
+- Port shoreline variant tiles `0x2CE-0x2D7` (718-727) in
+  `Port_UpdateShorelineVariantTiles` (`src/game/090_special_sites_savegame.inc.c:976`)
+  form swap-pairs (718<->720, 719<->721, 722<->726, 724<->727) with **no**
+  independent signal for which member is the active vs inactive variant. Naming
+  them now would require guessing polarity, so they are deferred until a
+  port-state correlation or map-data dump resolves it (would otherwise get
+  neutral `_VARIANT1/_VARIANT2` names).
+
 ## 2026-07-14 - Magic-number campaign B3: occupancy building-index encoding
 
 Mints `TILE_OCCUPANT_BUILDING_INDEX_BASE` (`0x8000`) and applies it at 94 sites

@@ -481,7 +481,7 @@
   "file_count": 27,
   "magic_literals": {
    "total_eligible": 46,
-   "total_review": 58390,
+   "total_review": 58414,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
      "value": 140017,
@@ -726,7 +726,7 @@
     "RELIGIOUS_SITE_CATEGORY_SHRINE": {
      "value": 1,
      "eligible": 0,
-     "review": 12386
+     "review": 12410
     },
     "TILE_MAP_OFFSET": {
      "value": 556374,

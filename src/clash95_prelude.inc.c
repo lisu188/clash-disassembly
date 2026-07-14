@@ -101,6 +101,22 @@
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE 2
 #define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
+/* Religious-site overlay tile ids (terrain record +2). MapTile_GetReligiousSite
+ * Category (080_building_ui.inc.c:8256) maps each to its RELIGIOUS_SITE_CATEGORY
+ * result; the A/B/C suffix is the three interchangeable visual variants per
+ * category (variant axis unproven). */
+#define TILE_OVERLAY_SHRINE_A 0x2D8
+#define TILE_OVERLAY_SHRINE_B 0x2DA
+#define TILE_OVERLAY_SHRINE_C 0x2DC
+#define TILE_OVERLAY_EMPTY_SHRINE_A 0x2D9
+#define TILE_OVERLAY_EMPTY_SHRINE_B 0x2DB
+#define TILE_OVERLAY_EMPTY_SHRINE_C 0x2DD
+#define TILE_OVERLAY_CULT_PLACE_A 0x2DE
+#define TILE_OVERLAY_CULT_PLACE_B 0x2E0
+#define TILE_OVERLAY_CULT_PLACE_C 0x2E2
+#define TILE_OVERLAY_EMPTY_CULT_PLACE_A 0x2DF
+#define TILE_OVERLAY_EMPTY_CULT_PLACE_B 0x2E1
+#define TILE_OVERLAY_EMPTY_CULT_PLACE_C 0x2E3
 /* Fixed 640x480 display surface. SCREEN_WIDTH/HEIGHT from CreateWindowExA
  * (110_platform_input.inc.c:286) and g_Device_DefaultWindowRect {0,0,640,480};
  * SCREEN_MAX_X/Y are the inclusive right/bottom edges (width-1/height-1) passed
