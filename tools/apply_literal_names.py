@@ -61,13 +61,25 @@ def norm_spelling(raw):
     return raw.rstrip("uUlL").lower()
 
 
-def validate_rules(rules, entries_by_name, prelude):
+def validate_rules(rules, entries_by_name, prelude, enums):
     errors = []
     for r in rules:
         name = r.get("name", "")
         kind = r.get("kind", "name")
-        if kind not in ("name", "regex"):
+        if kind not in ("name", "regex", "enum"):
             errors.append("%s: unknown rule kind %r" % (name, kind))
+            continue
+        if kind == "enum":
+            # enum-member substitution is object-diff-gated, not manifest/macro
+            # backed. Validate the member exists in a prelude enum with the
+            # rule's value; require a capture group like the regex path.
+            if name not in enums:
+                errors.append("%s: not a member of any prelude enum" % name)
+            elif enums[name] != r.get("value"):
+                errors.append("%s: rule value %r != enum value %r"
+                              % (name, r.get("value"), enums[name]))
+            if "(?P<lit>" not in r.get("pattern", ""):
+                errors.append("%s: enum rule needs a (?P<lit>...) group" % name)
             continue
         entry = entries_by_name.get(name)
         if entry is None:
@@ -114,11 +126,13 @@ def rule_files(rule):
     return [f for f in files if any(fnmatch.fnmatch(f, g) for g in globs)]
 
 
-def resolve(rules, entries_by_name, families, batch):
+def resolve(rules, entries_by_name, families, batch, enums=None):
+    enums = enums or {}
     plan_entries = []
     rejected = []
     name_rules = [r for r in rules if r.get("kind", "name") == "name"]
     regex_rules = [r for r in rules if r.get("kind") == "regex"]
+    enum_rules = [r for r in rules if r.get("kind") == "enum"]
     values = {r["value"] for r in name_rules}
 
     all_files = sorted({f for r in rules for f in rule_files(r)})
@@ -210,36 +224,43 @@ def resolve(rules, entries_by_name, families, batch):
                 site["reason"] = "increment-without-function-cooccurrence"
                 rejected.append(site)
 
-        # ---- regex rules: surgical, pattern-scoped ------------------------
-        for rule in regex_rules:
+        # ---- regex + enum rules: surgical, pattern-scoped -----------------
+        # regex rules are #define-backed (token-identity or --allow respell);
+        # enum rules are enum-member-backed and gated by the object-diff gate
+        # (tools/obj_diff_gate.sh), so they never carry pp_allow.
+        toks2 = lc.tokenize(text)
+        code_num_starts = {t.start for t in toks2 if t.kind == "num"}
+        starts = lc.line_starts(text)
+        import bisect as _b
+        for rule in regex_rules + enum_rules:
             if rel not in rule_files(rule):
                 continue
-            entry = entries_by_name[rule["name"]]
+            is_enum = rule.get("kind") == "enum"
+            value = rule["value"] if is_enum else entries_by_name[rule["name"]]["value"]
+            spelling = None if is_enum else entries_by_name[rule["name"]]["spelling"]
             pat = re.compile(rule["pattern"])
-            # only match inside code segments, never strings/comments/preproc
-            toks2 = lc.tokenize(text)
-            code_num_starts = {t.start for t in toks2 if t.kind == "num"}
-            starts = lc.line_starts(text)
-            import bisect as _b
             for m in pat.finditer(text):
                 s, e = m.start("lit"), m.end("lit")
                 if s not in code_num_starts:
                     continue
                 raw = m.group("lit")
-                if lc.parse_num(raw) != entry["value"]:
+                if lc.parse_num(raw) != value:
                     continue
                 line = _b.bisect_right(starts, s)
                 site = {
                     "file": rel, "line": line, "start": s, "end": e,
-                    "value": entry["value"], "raw": raw, "class": "regex",
+                    "value": value, "raw": raw,
+                    "class": "enum" if is_enum else "regex",
                     "name": rule["name"], "fn": None,
                     "expr": re.sub(r"\s+", " ", m.group(0))[:160],
                 }
-                if raw != entry["spelling"]:
+                if is_enum:
+                    site["gate"] = "obj_diff"
+                elif raw != spelling:
                     # respelling (e.g. decimal bit -> hex macro body); declare
                     # the exact token change for the pp_token_diff --allow gate.
                     site["respell"] = True
-                    site["pp_allow"] = [[raw], [entry["spelling"]]]
+                    site["pp_allow"] = [[raw], [spelling]]
                 file_entries.append(site)
 
         # de-duplicate/conflict-check by offset
@@ -310,7 +331,7 @@ def append_accum(plan, accum_path):
         rows.append({
             "old": spelling.get(name, str(r["value"])),
             "new": name,
-            "kind": "substitution",
+            "kind": "enum-substitution" if r.get("kind") == "enum" else "substitution",
             "value": r["value"],
             "confidence": r.get("confidence", ""),
             "evidence": r.get("evidence", ""),
@@ -351,13 +372,14 @@ def main():
     entries, families = lc.load_manifest()
     entries_by_name = {e["name"]: e for e in entries}
     prelude = lc.parse_prelude_macros()
+    enums = lc.parse_prelude_enums()
 
-    errors = validate_rules(rules, entries_by_name, prelude)
+    errors = validate_rules(rules, entries_by_name, prelude, enums)
     if errors:
         print(json.dumps({"errors": errors}, indent=1))
         return 1
 
-    plan = resolve(rules, entries_by_name, families, batch)
+    plan = resolve(rules, entries_by_name, families, batch, enums)
 
     if expect:
         with open(expect) as f:

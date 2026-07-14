@@ -660,6 +660,56 @@ def parse_prelude_macros(path=None):
     return macros
 
 
+ENUM_HEAD_RE = re.compile(r"\benum\b(?:\s+[A-Za-z_]\w*)?\s*\{")
+
+
+def parse_prelude_enums(path=None):
+    """Parse `enum {...}` / `typedef enum X {...} X;` blocks in the prelude.
+    Returns name -> value for every enumerator (explicit `= value` or the
+    implicit previous+1, starting at 0). Only decimal/hex integer initializers
+    are resolved; a member with an unparseable initializer stops that block."""
+    path = path or os.path.join(REPO, PRELUDE_REL)
+    with open(path, errors="replace") as f:
+        raw = f.read()
+    # strip block comments so `/* ... */` inside an enum body is ignored
+    text = re.sub(r"/\*.*?\*/", " ", raw, flags=re.DOTALL)
+    members = {}
+    for hm in ENUM_HEAD_RE.finditer(text):
+        # find the matching close brace of this enum body
+        depth = 0
+        j = text.index("{", hm.start())
+        k = j
+        while k < len(text):
+            if text[k] == "{":
+                depth += 1
+            elif text[k] == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            k += 1
+        body = text[j + 1:k]
+        # drop // comments per line, then split on commas
+        body = re.sub(r"//[^\n]*", " ", body)
+        nxt = 0
+        for part in body.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            mm = re.match(r"([A-Za-z_]\w*)\s*(?:=\s*(.+))?$", part)
+            if not mm:
+                break
+            name = mm.group(1)
+            if mm.group(2) is not None:
+                vm = re.fullmatch(r"(0[xX][0-9A-Fa-f]+|[0-9]+)[uUlL]*",
+                                  mm.group(2).strip())
+                if not vm:
+                    break  # non-literal initializer; stop this block
+                nxt = parse_num(vm.group(1))
+            members[name] = nxt
+            nxt += 1
+    return members
+
+
 def numeric_macro_value(macro):
     """Numeric value of a single-token object-like macro body, else None."""
     if macro["params"] is not None:

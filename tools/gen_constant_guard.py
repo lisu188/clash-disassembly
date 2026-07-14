@@ -44,6 +44,14 @@ def main():
             "typedef char clash95_guard_%s[(%s) == (%s) ? 1 : -1];"
             % (name, name, spelled)
         )
+    # pin every prelude enum member to its value too, so an accidental edit to
+    # an enum block (reorder, missing initializer) fails the build.
+    enums = lc.parse_prelude_enums()
+    for name in sorted(enums):
+        lines.append(
+            "typedef char clash95_guard_%s[(%s) == (%d) ? 1 : -1];"
+            % (name, name, enums[name])
+        )
     out = os.path.join(lc.REPO, OUT_REL)
     with open(out, "w", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
