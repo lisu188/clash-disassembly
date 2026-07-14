@@ -1,5 +1,28 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction E1: Direction8
+
+Extracts the 8-way facing/movement direction as `typedef enum Direction8`
+(clockwise wheel, `DIRECTION8_WEST=0` … `DIRECTION8_NORTHWEST=7`) plus
+`DIRECTION8_COUNT 8`. Fully specified by the decoder `Facing_DirectionFromDelta8`
+(`src/game/050_units.inc.c:290`), which maps the `(deltaRow, deltaColumn)` sign
+pattern (row=Y down, column=X right) to each value.
+
+Substituted 16 sites (func-scoped): the 8 decoder `return N` values, and the 8
+`case N` labels of the `switch(facing)` in `UnitBattle_RedrawUnitFootprint`
+(`src/game/070_battle.inc.c:3274`). Object-identical: `tools/obj_diff_gate.sh`
+reports 0 instruction changes across 434,283 insns; every member is guard-pinned.
+
+### Deferred (E1)
+
+- The `switch(direction)` in `src/rules/100_strategic.inc.c:2204/2235` uses
+  Direction8 case labels but its `UnitStack_MoveOneTileInDirection(v10, N, ...)`
+  move-argument literals (e.g. case 1 → arg 0, case 3 → arg 4) appear to use a
+  different/ remapped direction encoding; deferred until that arg space is
+  confirmed, to avoid mislabeling a non-Direction8 value.
+- Facing rotation masks (`(UNIT_STACK_FACING(...) ± 1) & 7`) keep the raw `& 7`
+  (that is `DIRECTION8_COUNT - 1` as a wrap mask, not a direction value).
+
 ## 2026-07-14 - Enum extraction E2: ReligiousSiteCategory
 
 First enum-extraction batch (categorical/state recovery, distinct from the

@@ -3295,31 +3295,31 @@ __int16  UnitBattle_RedrawUnitFootprint(int unitIndex)
         facing = *((unsigned __int8 *)slot + 3);
         switch ( facing )
         {
-          case 0:
-          case 4:
+          case DIRECTION8_WEST:
+          case DIRECTION8_EAST:
             UnitBattle_RedrawTile(tile_x - 1, tile_y);
             result = UnitBattle_RedrawTile(tile_x + 1, tile_y);
             break;
-          case 1:
+          case DIRECTION8_SOUTHWEST:
             UnitBattle_RedrawTile(tile_x + 1, tile_y);
             result = UnitBattle_RedrawTile(tile_x, tile_y - 1);
             break;
-          case 2:
-          case 6:
+          case DIRECTION8_SOUTH:
+          case DIRECTION8_NORTH:
             UnitBattle_RedrawTile(tile_x, tile_y - 1);
             result = UnitBattle_RedrawTile(tile_x, tile_y + 1);
             break;
-          case 3:
+          case DIRECTION8_SOUTHEAST:
             UnitBattle_RedrawTile(tile_x + 1, tile_y);
             UnitBattle_RedrawTile(tile_x, tile_y + 1);
             result = UnitBattle_RedrawTile(tile_x, tile_y - 1);
             break;
-          case 5:
+          case DIRECTION8_NORTHEAST:
             UnitBattle_RedrawTile(tile_x - 1, tile_y);
             UnitBattle_RedrawTile(tile_x, tile_y + 1);
             result = UnitBattle_RedrawTile(tile_x, tile_y - 1);
             break;
-          case 7:
+          case DIRECTION8_NORTHWEST:
             UnitBattle_RedrawTile(tile_x - 1, tile_y);
             result = UnitBattle_RedrawTile(tile_x, tile_y - 1);
             break;

@@ -28,6 +28,7 @@ typedef char clash95_guard_BUILDING_SPRITE_CACHE_RECORD_COUNT[(BUILDING_SPRITE_C
 typedef char clash95_guard_BUILDING_SPRITE_CACHE_RECORD_STRIDE[(BUILDING_SPRITE_CACHE_RECORD_STRIDE) == (13) ? 1 : -1];
 typedef char clash95_guard_BUILDING_TABLE_OFFSET[(BUILDING_TABLE_OFFSET) == (509674) ? 1 : -1];
 typedef char clash95_guard_BUILDING_TRANSFER_TARGET_LIST_CAPACITY[(BUILDING_TRANSFER_TARGET_LIST_CAPACITY) == (100) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_COUNT[(DIRECTION8_COUNT) == (8) ? 1 : -1];
 typedef char clash95_guard_GAMEDATA_SAVE_IMAGE_BYTES[(GAMEDATA_SAVE_IMAGE_BYTES) == (0x8F29E) ? 1 : -1];
 typedef char clash95_guard_GAME_TURN_COUNTER_OFFSET[(GAME_TURN_COUNTER_OFFSET) == (140022) ? 1 : -1];
 typedef char clash95_guard_MAP_HEIGHT_TILES_OFFSET[(MAP_HEIGHT_TILES_OFFSET) == (140004) ? 1 : -1];
@@ -109,6 +110,14 @@ typedef char clash95_guard_BUILDING_PRISONER_ACTION_NONE[(BUILDING_PRISONER_ACTI
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_PAY[(BUILDING_PRISONER_ACTION_PAY) == (3) ? 1 : -1];
 typedef char clash95_guard_BUILDING_PRISONER_ACTION_TORTURE[(BUILDING_PRISONER_ACTION_TORTURE) == (2) ? 1 : -1];
 typedef char clash95_guard_CASTLE_SITE_ANCHOR_CACHE_COUNT[(CASTLE_SITE_ANCHOR_CACHE_COUNT) == (100) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_EAST[(DIRECTION8_EAST) == (4) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_NORTH[(DIRECTION8_NORTH) == (6) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_NORTHEAST[(DIRECTION8_NORTHEAST) == (5) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_NORTHWEST[(DIRECTION8_NORTHWEST) == (7) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_SOUTH[(DIRECTION8_SOUTH) == (2) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_SOUTHEAST[(DIRECTION8_SOUTHEAST) == (3) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_SOUTHWEST[(DIRECTION8_SOUTHWEST) == (1) ? 1 : -1];
+typedef char clash95_guard_DIRECTION8_WEST[(DIRECTION8_WEST) == (0) ? 1 : -1];
 typedef char clash95_guard_MAIN_MENU_REQUEST_CAMPAIGN[(MAIN_MENU_REQUEST_CAMPAIGN) == (1) ? 1 : -1];
 typedef char clash95_guard_MAIN_MENU_REQUEST_CREDITS[(MAIN_MENU_REQUEST_CREDITS) == (2) ? 1 : -1];
 typedef char clash95_guard_MAIN_MENU_REQUEST_EXIT[(MAIN_MENU_REQUEST_EXIT) == (0) ? 1 : -1];

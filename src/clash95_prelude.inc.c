@@ -190,6 +190,21 @@ extern int g_BootstrapSkipIntroAviPlayback;
 #define UNIT_STACK_TILE_COLUMN(stackPtr) (*(__int16 *)((stackPtr) + 2))
 #define UNIT_STACK_OWNER_INDEX(stackPtr) (*(_BYTE *)((stackPtr) + 4))
 #define UNIT_STACK_FACING(stackPtr) (*(_BYTE *)((stackPtr) + 5))
+/* 8-way facing/movement direction (row=Y down, column=X right). Fully specified
+ * by Facing_DirectionFromDelta8 (050_units.inc.c:290): clockwise wheel from
+ * West=0. Stored at unit-stack +5 (UNIT_STACK_FACING) and battle-unit +3. */
+typedef enum Direction8
+{
+  DIRECTION8_WEST = 0,
+  DIRECTION8_SOUTHWEST = 1,
+  DIRECTION8_SOUTH = 2,
+  DIRECTION8_SOUTHEAST = 3,
+  DIRECTION8_EAST = 4,
+  DIRECTION8_NORTHEAST = 5,
+  DIRECTION8_NORTH = 6,
+  DIRECTION8_NORTHWEST = 7
+} Direction8;
+#define DIRECTION8_COUNT 8
 #define UNIT_STACK_PATH_BUFFER(stackPtr) ((stackPtr) + UNIT_STACK_PATH_OFFSET)
 #define UNIT_SLOT_TYPE(slotPtr) (*(__int16 *)(slotPtr))
 #define UNIT_SLOT_OWNER(slotPtr) (*(_BYTE *)((slotPtr) + 2))

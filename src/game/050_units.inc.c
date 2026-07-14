@@ -295,37 +295,37 @@ signed int  Facing_DirectionFromDelta8(int deltaRow, int deltaColumn)
     {
       if ( deltaColumn < 0 )
       {
-        return 7;
+        return DIRECTION8_NORTHWEST;
       }
       else if ( deltaColumn )
       {
-        return 5;
+        return DIRECTION8_NORTHEAST;
       }
       else
       {
-        return 6;
+        return DIRECTION8_NORTH;
       }
     }
     else if ( deltaColumn < 0 )
     {
-      return 0;
+      return DIRECTION8_WEST;
     }
     else
     {
-      return 4;
+      return DIRECTION8_EAST;
     }
   }
   else if ( deltaColumn < 0 )
   {
-    return 1;
+    return DIRECTION8_SOUTHWEST;
   }
   else if ( deltaColumn )
   {
-    return 3;
+    return DIRECTION8_SOUTHEAST;
   }
   else
   {
-    return 2;
+    return DIRECTION8_SOUTH;
   }
 }
 

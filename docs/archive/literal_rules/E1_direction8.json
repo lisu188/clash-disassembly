@@ -1,0 +1,210 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "DIRECTION8_WEST",
+  "pattern": "return (?P<lit>0);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "DIRECTION8_SOUTHWEST",
+  "pattern": "return (?P<lit>1);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "DIRECTION8_SOUTH",
+  "pattern": "return (?P<lit>2);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "DIRECTION8_SOUTHEAST",
+  "pattern": "return (?P<lit>3);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "DIRECTION8_EAST",
+  "pattern": "return (?P<lit>4);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "DIRECTION8_NORTHEAST",
+  "pattern": "return (?P<lit>5);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "DIRECTION8_NORTH",
+  "pattern": "return (?P<lit>6);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "DIRECTION8_NORTHWEST",
+  "pattern": "return (?P<lit>7);",
+  "files": [
+   "src/game/050_units.inc.c"
+  ],
+  "func": "Facing_DirectionFromDelta8",
+  "confidence": "behavior-confirmed",
+  "evidence": "Facing_DirectionFromDelta8 (050_units.inc.c:290) returns this 8-way direction for the (deltaRow,deltaColumn) sign pattern; W=0..NW=7 clockwise.",
+  "area": "units"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "DIRECTION8_WEST",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "DIRECTION8_SOUTHWEST",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "DIRECTION8_SOUTH",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "DIRECTION8_SOUTHEAST",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "DIRECTION8_EAST",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "DIRECTION8_NORTHEAST",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "DIRECTION8_NORTH",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "DIRECTION8_NORTHWEST",
+  "pattern": "case (?P<lit>7):",
+  "files": [
+   "src/game/070_battle.inc.c"
+  ],
+  "func": "UnitBattle_RedrawUnitFootprint",
+  "confidence": "behavior-confirmed",
+  "evidence": "UnitBattle_RedrawUnitFootprint (070_battle.inc.c:3274) switch(facing) redraws direction-specific neighbor tiles; facing is the 8-way Direction8 (battle unit +3).",
+  "area": "battle"
+ }
+]
