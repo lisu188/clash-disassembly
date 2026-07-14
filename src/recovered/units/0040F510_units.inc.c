@@ -4037,86 +4037,86 @@ char  Unit_BuildShotAnimPaletteSpritePath(char *destPath, unsigned __int8 unitTy
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413860) --------------------------------------------------------
-void  Unit_BuildBigInfoGraphicPath(char *destPath, unsigned __int8 unitType, int a3)
+void  Unit_BuildBigInfoGraphicPath(char *destPath, unsigned __int8 unitType, int extraLanguageDirName)
 {
-  char *v3; // esi
-  char *v4; // edi
-  char v5; // al
-  char v6; // al
-  char *v7; // esi
-  char *v8; // edi
-  char v9; // al
-  char v10; // al
-  char *v11; // esi
-  char *v12; // edi
-  char v13; // al
-  char v14; // al
-  char *v15; // esi
-  char *v16; // edi
-  char v17; // al
-  char v18; // al
+  char *prefixSrc; // esi
+  char *destCursor; // edi
+  char prefixChar; // al
+  char prefixCharNext; // al
+  char *langDirSrc; // esi
+  char *langDirCursor; // edi
+  char langDirChar; // al
+  char langDirCharNext; // al
+  char *resourceKeySrc; // esi
+  char *resourceKeyCursor; // edi
+  char resourceKeyChar; // al
+  char resourceKeyCharNext; // al
+  char *suffixSrc; // esi
+  char *suffixCursor; // edi
+  char suffixChar; // al
+  char suffixCharNext; // al
   int languageDirNames[7]; // [esp+0h] [ebp-1Ch]
 
-  languageDirNames[5] = a3;
+  languageDirNames[5] = extraLanguageDirName;
   languageDirNames[0] = (int)g_LanguageDirectoryNames[0];
   languageDirNames[1] = (int)g_LanguageDirectoryNames[1];
   languageDirNames[2] = (int)g_LanguageDirectoryNames[2];
-  v3 = aBiginfo_;
-  v4 = destPath;
+  prefixSrc = aBiginfo_;
+  destCursor = destPath;
   do
   {
-    v5 = *v3;
-    *v4 = *v3;
-    if ( !v5 )
+    prefixChar = *prefixSrc;
+    *destCursor = *prefixSrc;
+    if ( !prefixChar )
       break;
-    v6 = v3[1];
-    v3 += 2;
-    v4[1] = v6;
-    v4 += 2;
+    prefixCharNext = prefixSrc[1];
+    prefixSrc += 2;
+    destCursor[1] = prefixCharNext;
+    destCursor += 2;
   }
-  while ( v6 );
-  v7 = (char *)languageDirNames[(unsigned __int8)g_LanguageIndex];
-  v8 = &destPath[strlen(destPath)];
+  while ( prefixCharNext );
+  langDirSrc = (char *)languageDirNames[(unsigned __int8)g_LanguageIndex];
+  langDirCursor = &destPath[strlen(destPath)];
   do
   {
-    v9 = *v7;
-    *v8 = *v7;
-    if ( !v9 )
+    langDirChar = *langDirSrc;
+    *langDirCursor = *langDirSrc;
+    if ( !langDirChar )
       break;
-    v10 = v7[1];
-    v7 += 2;
-    v8[1] = v10;
-    v8 += 2;
+    langDirCharNext = langDirSrc[1];
+    langDirSrc += 2;
+    langDirCursor[1] = langDirCharNext;
+    langDirCursor += 2;
   }
-  while ( v10 );
-  v11 = (char *)UnitType_GetResourceKey(unitType);
-  v12 = &destPath[strlen(destPath)];
+  while ( langDirCharNext );
+  resourceKeySrc = (char *)UnitType_GetResourceKey(unitType);
+  resourceKeyCursor = &destPath[strlen(destPath)];
   do
   {
-    v13 = *v11;
-    *v12 = *v11;
-    if ( !v13 )
+    resourceKeyChar = *resourceKeySrc;
+    *resourceKeyCursor = *resourceKeySrc;
+    if ( !resourceKeyChar )
       break;
-    v14 = v11[1];
-    v11 += 2;
-    v12[1] = v14;
-    v12 += 2;
+    resourceKeyCharNext = resourceKeySrc[1];
+    resourceKeySrc += 2;
+    resourceKeyCursor[1] = resourceKeyCharNext;
+    resourceKeyCursor += 2;
   }
-  while ( v14 );
-  v15 = a_gfx_1;
-  v16 = &destPath[strlen(destPath)];
+  while ( resourceKeyCharNext );
+  suffixSrc = a_gfx_1;
+  suffixCursor = &destPath[strlen(destPath)];
   do
   {
-    v17 = *v15;
-    *v16 = *v15;
-    if ( !v17 )
+    suffixChar = *suffixSrc;
+    *suffixCursor = *suffixSrc;
+    if ( !suffixChar )
       break;
-    v18 = v15[1];
-    v15 += 2;
-    v16[1] = v18;
-    v16 += 2;
+    suffixCharNext = suffixSrc[1];
+    suffixSrc += 2;
+    suffixCursor[1] = suffixCharNext;
+    suffixCursor += 2;
   }
-  while ( v18 );
+  while ( suffixCharNext );
   // 413915: falls through to the shared register-restore epilogue at 413918
   // (pop edi/esi/ecx/ebx; retn) shared with sub_413920; in C this is the return.
   return;
@@ -7331,21 +7331,21 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
   _DWORD *v10; // eax
   void *renderedSurface; // ebp
   int renderedSurfaceHandle; // edi
-  void *v13; // eax
+  void *prevRenderDevice; // eax
   int SpriteForChar; // eax
   int v15; // edx
   int v16; // ecx
-  int v17; // eax
+  int startTime; // eax
   int v18; // ecx
   unsigned int animDeadline; // ebp
   int v20; // edx
   int v21; // ecx
-  int v22; // eax
+  int nowTime; // eax
   int v23; // edx
-  int v24; // eax
-  int v25; // eax
+  int overlaySprite; // eax
+  int iconSprite; // eax
   unsigned __int16 rectRight; // [esp+18h] [ebp-4Ch]
-  void *v27; // [esp+1Ch] [ebp-48h]
+  void *restoreRenderDevice; // [esp+1Ch] [ebp-48h]
   unsigned int fadeDuration; // [esp+20h] [ebp-44h]
   __int16 SpriteWidth; // [esp+24h] [ebp-40h]
   int spriteIndex; // [esp+28h] [ebp-3Ch]
@@ -7376,12 +7376,12 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
   {
     if ( !sprite_set || spriteIndex == -1 )
       return result;
-    v25 = DLX_GetSpriteForChar(sprite_set, spriteIndex);
-    result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
+    iconSprite = DLX_GetSpriteForChar(sprite_set, spriteIndex);
+    result = Compat_RenderDeviceDrawMenuSprite(left, top, iconSprite, 0);
     if ( (flags & 4) != 0 && overlay_sprite_index != -1 )
     {
-      v24 = DLX_GetSpriteForChar(sprite_set, overlay_sprite_index);
-      result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
+      overlaySprite = DLX_GetSpriteForChar(sprite_set, overlay_sprite_index);
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
     }
     return result;
   }
@@ -7402,12 +7402,12 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
       menu_surface = RenderSurface_ResolvePrimaryCompanion((_DWORD *)g_RenderDevice);
       if ( menu_surface && RenderSurface_IsLinearSoftware(menu_surface) )
       {
-        v25 = DLX_GetSpriteForChar(sprite_set, spriteIndex);
-        result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
+        iconSprite = DLX_GetSpriteForChar(sprite_set, spriteIndex);
+        result = Compat_RenderDeviceDrawMenuSprite(left, top, iconSprite, 0);
         if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
         {
-          v24 = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
-          result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
+          overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
+          result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
         }
         if ( cursorOverlayPresented )
           return Render_Present((int)g_RenderState);
@@ -7431,22 +7431,22 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
       renderedSurface = v10;
       renderedSurfaceHandle = (int)v10;
       Render_FillRect(g_RenderDevice, (_DWORD *)savedSurface, a1[2], *a1, transSpriteHeight + *a1 - 1, SpriteWidth + a1[2] - 1, 0, 0);
-      v13 = g_RenderDevice;
+      prevRenderDevice = g_RenderDevice;
       g_RenderDevice = renderedSurface;
-      v27 = v13;
+      restoreRenderDevice = prevRenderDevice;
       SpriteForChar = DLX_GetSpriteForChar(sprite_set, spriteIndex);
       Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 0);
-      g_RenderDevice = v27;
-      v17 = Time_Now(v16, v15);
-      animDeadline = v17 + fadeDuration;
-      animStartTime = v17;
+      g_RenderDevice = restoreRenderDevice;
+      startTime = Time_Now(v16, v15);
+      animDeadline = startTime + fadeDuration;
+      animStartTime = startTime;
       v20 = fadeDuration;
       transBottom = transSpriteHeight - 1;
       transRight = SpriteWidth - 1;
       while ( Time_Now(v18, v20) < animDeadline )
       {
-        v22 = Time_Now(v21, animStartTime);
-        Render_BlendSurfaceRect(0, savedSurface, 0, renderedSurfaceHandle, 0, transBottom, transRight, *a1, a1[2], 255 * (v22 - v23) / fadeDuration);
+        nowTime = Time_Now(v21, animStartTime);
+        Render_BlendSurfaceRect(0, savedSurface, 0, renderedSurfaceHandle, 0, transBottom, transRight, *a1, a1[2], 255 * (nowTime - v23) / fadeDuration);
         if ( g_ActiveDialogAnimationTickHook )
           g_ActiveDialogAnimationTickHook();
       }
@@ -7460,13 +7460,13 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int animate, int tran
     }
     else
     {
-      v25 = DLX_GetSpriteForChar(sprite_set, spriteIndex);
-      result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
+      iconSprite = DLX_GetSpriteForChar(sprite_set, spriteIndex);
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, iconSprite, 0);
     }
     if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
     {
-      v24 = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
-      result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
+      overlaySprite = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
     }
     if ( animate && cursorOverlayPresented )
       return Render_Present((int)g_RenderState);

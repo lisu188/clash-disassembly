@@ -1423,9 +1423,9 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   int buildingByteOffset; // edx
   unsigned __int16 populationField; // ax
   signed int result; // eax
-  unsigned __int8 *v9; // ecx
+  unsigned __int8 *buildingPtrCopy; // ecx
   int v10; // ecx
-  unsigned int v11; // ebx
+  unsigned int squadWritePtr; // ebx
   int v12; // ecx
   int squadCount; // eax
   __int16 *squadTemplatePtr; // esi
@@ -1437,19 +1437,19 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   int pathNode; // edx
   int currentPopulation; // eax
   int newPopulation; // eax
-  unsigned __int8 *v23; // edx
+  unsigned __int8 *buildingPtrBase; // edx
   int buildingType; // ebx
   int newPathLen; // eax
   int pathStartTile; // edx
-  __int16 *v27; // ecx
+  __int16 *newStackHdr; // ecx
   __int16 *pathDest; // edi
-  __int16 *v29; // eax
+  __int16 *newStackReady; // eax
   __int16 tileOccupantValue; // dx
-  unsigned __int8 *v31; // ebx
-  unsigned __int8 *v32; // ebx
+  unsigned __int8 *buildingPtrTile; // ebx
+  unsigned __int8 *buildingPtrFlags; // ebx
   int v33; // ecx
   __int16 *v34; // edx
-  __int16 *v35; // edx
+  __int16 *newStackSpawn; // edx
   int spawnRow; // [esp+0h] [ebp-2Ch] BYREF
   int spawnColumn; // [esp+4h] [ebp-28h] BYREF
   __int16 *newStackPtr; // [esp+8h] [ebp-24h]
@@ -1485,44 +1485,44 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
     return 0;
   WorldMap_DisableFrameRedraw();
   *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = -1;
-  v9 = buildingPtr;
+  buildingPtrCopy = buildingPtr;
   *(_WORD *)(gameData + TILE_ROW_STRIDE * (*buildingPtr + 1) + 2 * buildingPtr[1] + TILE_MAP_OFFSET) = -1;
-  *(_WORD *)(200 * (*v9 + 1) + gameData + 2 * v9[1] + 556376) = -1;
-  *(_WORD *)(200 * *v9 + gameData + 2 * v9[1] + 556376) = -1;
-  result = Unit_Create((char)((transferGoldFlag == 0) + 31), v9[2], *v9, 0, v9[1]);
+  *(_WORD *)(200 * (*buildingPtrCopy + 1) + gameData + 2 * buildingPtrCopy[1] + 556376) = -1;
+  *(_WORD *)(200 * *buildingPtrCopy + gameData + 2 * buildingPtrCopy[1] + 556376) = -1;
+  result = Unit_Create((char)((transferGoldFlag == 0) + 31), buildingPtrCopy[2], *buildingPtrCopy, 0, buildingPtrCopy[1]);
   if ( result )
   {
     newStackPtr = (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) + gameData + UNIT_STACK_TABLE_OFFSET);
     UnitStack_ClearRemainingActionPoints(newStackPtr, (DWORD)savedregs, a5);
-    v11 = v10 + 6;
+    squadWritePtr = v10 + 6;
     v12 = 100;
     squadCount = amount / 100;
     for ( i = 1; squadCount >= i; ++i )
     {
       squadTemplatePtr = newStackPtr + 3;
-      qmemcpy((void *)v11, newStackPtr + 3, 0x1Cu);
+      qmemcpy((void *)squadWritePtr, newStackPtr + 3, 0x1Cu);
       squadTemplatePtr += 14;
       v12 = 0;
-      *(_WORD *)(v11 + 28) = *squadTemplatePtr;
-      *(_BYTE *)(v11 + 30) = *((_BYTE *)squadTemplatePtr + 2);
-      v11 += 31;
+      *(_WORD *)(squadWritePtr + 28) = *squadTemplatePtr;
+      *(_BYTE *)(squadWritePtr + 30) = *((_BYTE *)squadTemplatePtr + 2);
+      squadWritePtr += 31;
     }
     if ( i <= 10 )
     {
       v15 = amount;
       partialSquadTemplatePtr = newStackPtr + 3;
       v17 = amount;
-      qmemcpy((void *)v11, newStackPtr + 3, 0x1Cu);
+      qmemcpy((void *)squadWritePtr, newStackPtr + 3, 0x1Cu);
       partialSquadTemplatePtr += 14;
-      *(_WORD *)(v11 + 28) = *partialSquadTemplatePtr;
-      *(_BYTE *)(v11 + 30) = *((_BYTE *)partialSquadTemplatePtr + 2);
+      *(_WORD *)(squadWritePtr + 28) = *partialSquadTemplatePtr;
+      *(_BYTE *)(squadWritePtr + 30) = *((_BYTE *)partialSquadTemplatePtr + 2);
       v12 = 100;
       LODWORD(v18) = v15;
       HIDWORD(v18) = v17 >> 31;
       LOBYTE(v15) = (int)(100 * (v18 % 100)) / 100;
-      *(_BYTE *)(v11 + 9) = v15;
+      *(_BYTE *)(squadWritePtr + 9) = v15;
       if ( !(_BYTE)v15 )
-        *(_WORD *)v11 = -1;
+        *(_WORD *)squadWritePtr = -1;
     }
     if ( transferGoldFlag )
     {
@@ -1534,20 +1534,20 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       LOWORD(currentPopulation) = *((_WORD *)buildingPtr + 215);
       BYTE1(currentPopulation) &= 0xFu;
       newPopulation = currentPopulation - amount;
-      v23 = buildingPtr;
-      LOWORD(v11) = *((_WORD *)buildingPtr + 215);
-      v11 &= 0xFFFFF000;
+      buildingPtrBase = buildingPtr;
+      LOWORD(squadWritePtr) = *((_WORD *)buildingPtr + 215);
+      squadWritePtr &= 0xFFFFF000;
       BYTE1(newPopulation) &= 0xFu;
-      *((_WORD *)buildingPtr + 215) = v11;
-      v12 = newPopulation | v11;
-      *((_WORD *)v23 + 215) = newPopulation | v11;
+      *((_WORD *)buildingPtr + 215) = squadWritePtr;
+      v12 = newPopulation | squadWritePtr;
+      *((_WORD *)buildingPtrBase + 215) = newPopulation | squadWritePtr;
     }
     if ( targetUnitRecord
       && (pathTrack = (int *)Building_GenerateApproachTrack(
                          *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])),
                          savedTargetStack,
                          (int)buildingPtr,
-                         v11,
+                         squadWritePtr,
                          (DWORD)savedregs)) != 0 )
     {
       while ( 1 )
@@ -1571,35 +1571,35 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       newPathLen = *pathTrack - 1;
       *pathTrack = newPathLen;
       pathStartTile = pathTrack[newPathLen + 1];
-      v27 = newStackPtr;
+      newStackHdr = newStackPtr;
       *newStackPtr = (unsigned __int8)pathStartTile;
-      v27[1] = BYTE1(pathStartTile);
+      newStackHdr[1] = BYTE1(pathStartTile);
       buildingTileByteOffset = 2 * buildingPtr[1] + gameData + 200 * *buildingPtr;
       pathDest = newStackPtr + 158;
       *(_WORD *)(2 * BYTE1(pathStartTile) + TILE_ROW_STRIDE * (unsigned __int8)pathStartTile + gameData + TILE_MAP_OFFSET) = *(_WORD *)(buildingTileByteOffset + 556374);
-      v29 = newStackPtr;
+      newStackReady = newStackPtr;
       qmemcpy(pathDest, pathTrack, UNIT_STACK_PATH_BYTES);
-      UnitStack_SetReadyFlags((int)v29);
+      UnitStack_SetReadyFlags((int)newStackReady);
     }
     else
     {
       Building_FindFreeAdjacentSpawnTile(buildingPtr, &spawnRow, v12, &spawnColumn);
-      v35 = newStackPtr;
+      newStackSpawn = newStackPtr;
       *newStackPtr = spawnRow;
-      v35[1] = spawnColumn;
+      newStackSpawn[1] = spawnColumn;
       *(_WORD *)(2 * spawnColumn + TILE_ROW_STRIDE * spawnRow + gameData + TILE_MAP_OFFSET) = *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1]));
     }
     tileOccupantValue = savedBuildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
     *(_WORD *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) = savedBuildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    v31 = buildingPtr;
+    buildingPtrTile = buildingPtr;
     *(_WORD *)(TILE_ROW_STRIDE * (*buildingPtr + 1) + gameData + 2 * buildingPtr[1] + TILE_MAP_OFFSET) = tileOccupantValue;
-    *(_WORD *)(200 * (*v31 + 1) + gameData + 2 * buildingPtr[1] + 556376) = tileOccupantValue;
-    v32 = buildingPtr;
+    *(_WORD *)(200 * (*buildingPtrTile + 1) + gameData + 2 * buildingPtr[1] + 556376) = tileOccupantValue;
+    buildingPtrFlags = buildingPtr;
     *(_WORD *)(200 * *buildingPtr + gameData + 2 * buildingPtr[1] + 556376) = tileOccupantValue;
     Render_LoadResourceSprite_v2();
-    if ( (v32[435] & 7) != 0 && !transferGoldFlag )
+    if ( (buildingPtrFlags[435] & 7) != 0 && !transferGoldFlag )
       UnitStack_SetPlagueFlag((int)newStackPtr);
-    Rules_LinkArmyFact(newStackPtr, (int)newStackPtr, v33, a5, (char)v32, (DWORD)savedregs);
+    Rules_LinkArmyFact(newStackPtr, (int)newStackPtr, v33, a5, (char)buildingPtrFlags, (DWORD)savedregs);
     if ( !*(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)v34 + 4) + 140051) )
       Rules_LogBuildingTransferFact(*(unsigned __int16 *)(TILE_INDEX(*v34, newStackPtr[1])), savedBuildingIndex, savedTargetStack);
     return 1;
