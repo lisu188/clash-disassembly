@@ -1296,7 +1296,7 @@ int  WorldMap_ComputeBuildMenuActionFromCursor(int widget, int a2)
 static void WorldMap_EnsureActionButtonWidgetTable(void);
 
 //----- (0040A0E0) --------------------------------------------------------
-int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, double a5)
+int  WorldMap_HandleBuilderActionMenu(int widget, int delayTicks, int a3, DWORD a4, double st7_0)
 {
   int v6; // ecx
   int v7; // ecx
@@ -1310,7 +1310,7 @@ int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, doub
   }
   else
   {
-    UIWidget_PlayPressedReleaseAnimationWithDelay(widget, a2);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
     if ( UnitStack_HasBuilder(g_SelectedUnitIndex) )
     {
       UIWidgetTable_InitDrawStates(g_UI_YesNoDims);
@@ -1328,19 +1328,19 @@ int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, doub
         switch ( g_WorldMapBuilderMenuAction )
         {
           case 0:
-            Builder_StartRoadBuildMode(0x40u, a5);
+            Builder_StartRoadBuildMode(0x40u, st7_0);
             break;
           case 1:
-            Treasure_TryDigHere(g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, 0x40u, (char)g_RenderState, 0, a5);
+            Treasure_TryDigHere(g_SelectedUnitIndex, g_WorldMapBuilderMenuAction, 0x40u, (char)g_RenderState, 0, st7_0);
             break;
           case 2:
-            BuildBuilding(3, v7, g_WorldMapBuilderMenuAction, a5);
+            BuildBuilding(3, v7, g_WorldMapBuilderMenuAction, st7_0);
             break;
           case 3:
             if ( UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
             {
               a3 = g_SelectedUnitIndex;
-              if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type0, 0) )
+              if ( Building_New(0, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type0, 0) )
               {
                 MiniMap_DrawTileCell(
                   (void *)*(__int16 *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET),
@@ -1353,13 +1353,13 @@ int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, doub
             if ( !UnitStack_HasPeasantCargo(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
             {
               a3 = g_SelectedUnitIndex;
-              if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type1, 0) )
+              if ( Building_New(1, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type1, 0) )
                 Audio_PlaySoundEffectByName(aStruktur_0, 64);
             }
             break;
           case 5:
             a3 = g_SelectedUnitIndex;
-            if ( Building_New(2, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type2, 0) )
+            if ( Building_New(2, g_SelectedUnitIndex, st7_0, (char *)&g_Building_FootprintTemplate_Type2, 0) )
               Audio_PlaySoundEffectByName(aStruktur_1, 64);
             break;
           default:
@@ -1855,7 +1855,7 @@ LABEL_4:
 void * WorldMap_DrawTurnBannerReveal(int animate)
 {
   int SpriteForChar; // eax
-  int v3; // eax
+  int aiSpriteForChar; // eax
   void *renderDevice; // edi
   DWORD renderSurfaceHandle; // ebp
   int v6; // edx
@@ -1865,24 +1865,24 @@ void * WorldMap_DrawTurnBannerReveal(int animate)
   int startTime; // edi
   unsigned __int16 SpriteWidth; // ax
   int v12; // ecx
-  __int16 v13; // ax
+  __int16 bannerSpriteWidth; // ax
   __int16 v14; // cx
   __int16 SpriteHeight; // ax
-  __int16 v16; // ax
+  __int16 bannerSpriteHeight; // ax
   void *result; // eax
-  unsigned __int16 v18; // [esp+2Ch] [ebp-28h]
-  unsigned __int16 v19; // [esp+2Ch] [ebp-28h]
-  unsigned __int16 v20; // [esp+34h] [ebp-20h]
+  unsigned __int16 revealRightEdge; // [esp+2Ch] [ebp-28h]
+  unsigned __int16 bannerSpriteRight; // [esp+2Ch] [ebp-28h]
+  unsigned __int16 revealLeftEdge; // [esp+34h] [ebp-20h]
   void *savedRenderDevice; // [esp+38h] [ebp-1Ch]
 
   savedRenderDevice = g_RenderDevice;
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_WorldMapTurnBannerSpriteSet, g_CurrentPlayerIndex);
   Compat_RenderDeviceDrawMenuSprite(416, 400, SpriteForChar, 0);
-  v3 = DLX_GetSpriteForChar(g_WorldMapTurnBannerSpriteSet, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex) + 5);
+  aiSpriteForChar = DLX_GetSpriteForChar(g_WorldMapTurnBannerSpriteSet, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex) + 5);
   renderDevice = g_RenderDevice;
   renderSurfaceHandle = *((_DWORD *)g_RenderDevice + 46);
-  Compat_RenderDeviceDrawMenuSprite(568, 404, v3, 1);
+  Compat_RenderDeviceDrawMenuSprite(568, 404, aiSpriteForChar, 1);
   Render_ReleaseSurface(7, renderSurfaceHandle);
   UI_DrawTextFmt((int)renderDevice, 416, 608, 436, 3, PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
   if ( *(_DWORD *)(gameData + 147155) )
@@ -1899,16 +1899,16 @@ void * WorldMap_DrawTurnBannerReveal(int animate)
       SpriteWidth = DLX_GetSpriteWidth(g_WorldMapTurnBannerSpriteSet, 0);
       if ( elapsed >= SpriteWidth )
         break;
-      v13 = DLX_GetSpriteWidth(g_WorldMapTurnBannerSpriteSet, 0);
-      v20 = v13 + 400 - elapsed;
-      v18 = elapsed + 400;
+      bannerSpriteWidth = DLX_GetSpriteWidth(g_WorldMapTurnBannerSpriteSet, 0);
+      revealLeftEdge = bannerSpriteWidth + 400 - elapsed;
+      revealRightEdge = elapsed + 400;
       SpriteHeight = DLX_GetSpriteHeight(g_WorldMapTurnBannerSpriteSet, 0);
-      Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 400, 416, SpriteHeight + 416, v18, 0x1A0u, v20);
+      Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 400, 416, SpriteHeight + 416, revealRightEdge, 0x1A0u, revealLeftEdge);
     }
   }
-  v19 = DLX_GetSpriteWidth(g_WorldMapTurnBannerSpriteSet, 0) + 399;
-  v16 = DLX_GetSpriteHeight(g_WorldMapTurnBannerSpriteSet, 0);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 400, 416, v16 + 416, v19, 0x1A0u, 0x190u);
+  bannerSpriteRight = DLX_GetSpriteWidth(g_WorldMapTurnBannerSpriteSet, 0) + 399;
+  bannerSpriteHeight = DLX_GetSpriteHeight(g_WorldMapTurnBannerSpriteSet, 0);
+  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 400, 416, bannerSpriteHeight + 416, bannerSpriteRight, 0x1A0u, 0x190u);
   result = savedRenderDevice;
   g_RenderDevice = savedRenderDevice;
   return result;
@@ -2024,7 +2024,7 @@ int UI_LoadTurnBannerGfx(char a1, DWORD a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040AA60) --------------------------------------------------------
-int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
+int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD loadContext, double gameTime)
 {
   int previous_player_index;
   int current_player_is_human;
@@ -2038,7 +2038,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   (void)a2;
 
   Diagnostics_TraceWorldMapActionEvent("turn_advance_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-  Debug_Log(0, 0, a3, (int)aNextPlayer);
+  Debug_Log(0, 0, loadContext, (int)aNextPlayer);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   PLAYER_CAMERA_LEFT(g_CurrentPlayerIndex) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(g_CurrentPlayerIndex) = MAP_VIEW_TOP;
@@ -2047,7 +2047,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     g_CurrentPlayerIndex = (g_CurrentPlayerIndex + 1) % 5;
   while ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) );
   TURN_OWNER_PLAYER_INDEX = g_CurrentPlayerIndex;
-  Debug_Log(0, 0, a3, (int)aPlayerD, g_CurrentPlayerIndex);
+  Debug_Log(0, 0, loadContext, (int)aPlayerD, g_CurrentPlayerIndex);
   current_player_is_human = PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_after_player_select",
@@ -2060,17 +2060,17 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   if ( previous_player_index > g_CurrentPlayerIndex )
   {
     ++GAME_TURN_COUNTER;
-    Debug_Log(0, 0, a3, (int)aNextTurnD, GAME_TURN_COUNTER);
+    Debug_Log(0, 0, loadContext, (int)aNextTurnD, GAME_TURN_COUNTER);
     Map_AutoUpgradeVillages();
-    Port_NewTurn(a3);
+    Port_NewTurn(loadContext);
     clips_memory = Mem_GetTotalAllocatedBytes();
-    Debug_Log(0, 0, a3, (int)aClipsMemoryD, clips_memory);
+    Debug_Log(0, 0, loadContext, (int)aClipsMemoryD, clips_memory);
     used_memory = Debug_GetUsedMemoryCount();
-    Debug_Log(0, 0, a3, (int)aUsedmemD_3, used_memory);
+    Debug_Log(0, 0, loadContext, (int)aUsedmemD_3, used_memory);
     unit_cache_entries = UnitSpriteCache_CountActiveEntries();
-    Debug_Log(0, 0, a3, (int)aUnitsCacheEntr, unit_cache_entries);
+    Debug_Log(0, 0, loadContext, (int)aUnitsCacheEntr, unit_cache_entries);
     building_cache_entries = BuildingSpriteCache_CountEntries();
-    Debug_Log(0, 0, a3, (int)aBuildingsCache, building_cache_entries);
+    Debug_Log(0, 0, loadContext, (int)aBuildingsCache, building_cache_entries);
   }
   MAP_VIEW_LEFT = PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX);
   MAP_VIEW_TOP = PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX);
@@ -2083,10 +2083,10 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     GAME_TURN_COUNTER);
   if ( current_player_is_human )
   {
-    UI_LoadTurnBannerGfx((char)g_CurrentPlayerIndex, a3);
+    UI_LoadTurnBannerGfx((char)g_CurrentPlayerIndex, loadContext);
     g_SelectedUnitIndex = -1;
     Locale_DrawInteger();
-    WorldMap_RenderHook(a3);
+    WorldMap_RenderHook(loadContext);
     Diagnostics_TraceWorldMapActionEvent(
       "turn_advance_after_human_banner",
       g_SelectedUnitIndex,
@@ -2121,7 +2121,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   if ( !current_player_is_human )
   {
     if ( active_mission_index == -1 || active_mission_index == 19 || active_mission_index == 9 )
-      AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, 0, 0xFFFFFFFF, a4);
+      AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, 0, 0xFFFFFFFF, gameTime);
   }
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_before_unit_new_turn",
@@ -2130,14 +2130,14 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     current_player_is_human,
     GAME_TURN_COUNTER);
   Debug_Log(0, 0, 0xFFFFFFFF, (int)aAutoMovesBegin);
-  Unit_NewTurn(0, (char)active_mission_index, 0xFFFFFFFF, a4);
+  Unit_NewTurn(0, (char)active_mission_index, 0xFFFFFFFF, gameTime);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_after_unit_new_turn",
     g_SelectedUnitIndex,
     active_mission_index,
     current_player_is_human,
     GAME_TURN_COUNTER);
-  Building_NewTurn(0, (unsigned __int8 *)(uintptr_t)(unsigned int)active_mission_index, 0xFFFFFFFF, a4);
+  Building_NewTurn(0, (unsigned __int8 *)(uintptr_t)(unsigned int)active_mission_index, 0xFFFFFFFF, gameTime);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_after_building_new_turn",
     g_SelectedUnitIndex,
@@ -2151,7 +2151,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     active_mission_index,
     current_player_is_human,
     GAME_TURN_COUNTER);
-  Queen_NewTurn(0, active_mission_index, current_player_is_human != 0, a4);
+  Queen_NewTurn(0, active_mission_index, current_player_is_human != 0, gameTime);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_after_queen",
     g_SelectedUnitIndex,
@@ -3417,7 +3417,7 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
   TextSpriteResourceSlotRecord *slot;
   int v6; // edx
   int existingSpriteSet; // ecx
-  _BYTE *v8; // eax
+  _BYTE *fontCursor; // eax
   unsigned __int8 *checksum; // ebx
   unsigned __int16 checksumSum; // cx
   int i; // edx
@@ -3451,13 +3451,13 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
     nfree_(existingSpriteSet);
     slot->cached_sprite_set = 0;
   }
-  v8 = fontBytes;
+  fontCursor = fontBytes;
   LOBYTE(checksum) = 0;
   checksumSum = 0;
   for ( i = 0; i < 768; ++i )
   {
-    BYTE1(checksum) = *v8;
-    LOBYTE(checksum) = *v8++ ^ (unsigned __int8)checksum;
+    BYTE1(checksum) = *fontCursor;
+    LOBYTE(checksum) = *fontCursor++ ^ (unsigned __int8)checksum;
     checksumSum += BYTE1(checksum);
   }
   sprintf_(cacheFilename, "cache\\%02x%02x%04x.s32", slotIndex, (unsigned __int8)checksum, checksumSum);

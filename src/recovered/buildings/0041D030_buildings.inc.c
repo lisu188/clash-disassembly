@@ -610,14 +610,14 @@ char  Building_AssignUniqueGeneratedName(int buildingPtr)
 // 513A84: using guessed type char *off_513A84[50];
 
 //----- (0041E1E0) --------------------------------------------------------
-char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3, double a4)
+char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3, double gameTime)
 {
   int tileRow; // edx
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
   int buildingType; // eax
-  int v10; // eax
+  int centerRow; // eax
   int tileColumn; // edx
   int revealRow; // edi
   int i; // esi
@@ -635,22 +635,22 @@ char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3,
   LOBYTE(tileRow) = *buildingPtr;
   Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
   Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v7, a4);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v7, gameTime);
   buildingType = (char)buildingPtr[4];
   if ( buildingType == 2 || buildingType == 1 )
     Map_RebuildRoadOverlayAtTile(*buildingPtr, buildingPtr[1] + 2);
-  v10 = (char)buildingPtr[4];
+  centerRow = (char)buildingPtr[4];
   if ( !buildingPtr[4] )
   {
     tileColumn = buildingPtr[1];
-    LOBYTE(v10) = *buildingPtr;
+    LOBYTE(centerRow) = *buildingPtr;
     revealColEnd = tileColumn + 15;
-    revealRow = v10 - 15;
+    revealRow = centerRow - 15;
     revealColStart = tileColumn - 15;
-    v8 = v10 + 15;
-    revealRowEnd = v10 + 15;
+    v8 = centerRow + 15;
+    revealRowEnd = centerRow + 15;
     revealRowDelta = -15;
-    if ( v10 - 15 < v10 + 15 )
+    if ( centerRow - 15 < centerRow + 15 )
     {
       buildingColumn = buildingPtr[1];
       do
@@ -764,8 +764,8 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *buildingPtr, dou
   unsigned __int8 *garrisonBytePtr; // edx
   int v6; // eax
   unsigned __int8 serviceState; // ah
-  char v8; // al
-  unsigned __int8 v9; // ah
+  char repairTurnsRemaining; // al
+  unsigned __int8 serviceStateRepairCleared; // ah
   unsigned __int8 *firstSlotPtr; // [esp+0h] [ebp-20h]
 
   slotPtr = buildingPtr;
@@ -781,11 +781,11 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *buildingPtr, dou
       serviceState = BUILDING_GARRISON_SERVICE_STATE(garrisonBytePtr, 0);
       if ( (serviceState & BUILDING_GARRISON_REPAIR_TURNS_MASK) != 0 )
       {
-        v8 = (((unsigned __int8)(4 * serviceState) >> 5) - 1) & 7;
-        v9 = serviceState & 0xC7;
-        BUILDING_GARRISON_SERVICE_STATE(garrisonBytePtr, 0) = v9;
-        LOBYTE(v6) = 8 * v8;
-        BYTE1(v6) = v6 | v9;
+        repairTurnsRemaining = (((unsigned __int8)(4 * serviceState) >> 5) - 1) & 7;
+        serviceStateRepairCleared = serviceState & 0xC7;
+        BUILDING_GARRISON_SERVICE_STATE(garrisonBytePtr, 0) = serviceStateRepairCleared;
+        LOBYTE(v6) = 8 * repairTurnsRemaining;
+        BYTE1(v6) = v6 | serviceStateRepairCleared;
         BUILDING_GARRISON_SERVICE_STATE(garrisonBytePtr, 0) = BYTE1(v6);
         if ( (v6 & 0x3800) == 0 )
         {
@@ -1101,7 +1101,7 @@ unsigned __int8 * Building_NewTurn(
         double a4)
 {
   int i; // edi
-  int v6; // ecx
+  int currentPlayerIndex; // ecx
   int v7; // ecx
   __int16 constructionDelta; // dx
   int j; // eax
@@ -1112,10 +1112,10 @@ unsigned __int8 * Building_NewTurn(
   Debug_Log(a1, (char)buildingPtr, a3, (int)aBuilding_newtu);
   for ( i = 0; i != 46700; i += 467 )
   {
-    v6 = *(char *)(gameData + i + 509678);
-    if ( v6 != -1 )
+    currentPlayerIndex = *(char *)(gameData + i + 509678);
+    if ( currentPlayerIndex != -1 )
     {
-      v6 = g_CurrentPlayerIndex;
+      currentPlayerIndex = g_CurrentPlayerIndex;
       if ( *(unsigned __int8 *)(gameData + i + 509676) == g_CurrentPlayerIndex )
       {
         buildingPtr = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + i);
@@ -1157,7 +1157,7 @@ unsigned __int8 * Building_NewTurn(
             buildingType = (char)buildingPtr[4];
             if ( buildingType == 2 || buildingType == 1 )
             {
-              Building_ProcessUnitProductionTurn((int)buildingPtr, v6, (char)buildingPtr, a3, a4);
+              Building_ProcessUnitProductionTurn((int)buildingPtr, currentPlayerIndex, (char)buildingPtr, a3, a4);
               Building_AutoFillOrUseGarrison(buildingPtr, a4);
               Unit_NewTurnRegen(buildingPtr);
               Building_RecoverGarrisonFatigueAndMorale(buildingPtr, a4);
@@ -1171,7 +1171,7 @@ unsigned __int8 * Building_NewTurn(
       }
     }
   }
-  LogAllBuildings(v6, (char)buildingPtr, a3);
+  LogAllBuildings(currentPlayerIndex, (char)buildingPtr, a3);
   return Player_UpdateTechnologyLevelFromSettlements(g_CurrentPlayerIndex, v7, a3);
 }
 // 41EB6A: variable 'v6' is possibly undefined
@@ -1424,15 +1424,15 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   unsigned __int16 populationField; // ax
   signed int result; // eax
   unsigned __int8 *buildingPtrCopy; // ecx
-  int v10; // ecx
+  int newStackBase; // ecx
   unsigned int squadWritePtr; // ebx
   int v12; // ecx
   int squadCount; // eax
   __int16 *squadTemplatePtr; // esi
-  int v15; // eax
+  int partialSquadFill; // eax
   __int16 *partialSquadTemplatePtr; // esi
   int v17; // edx
-  __int64 v18; // rtt
+  __int64 amount64; // rtt
   int *pathTrack; // esi
   int pathNode; // edx
   int currentPopulation; // eax
@@ -1448,7 +1448,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   unsigned __int8 *buildingPtrTile; // ebx
   unsigned __int8 *buildingPtrFlags; // ebx
   int v33; // ecx
-  __int16 *v34; // edx
+  __int16 *newStackForFact; // edx
   __int16 *newStackSpawn; // edx
   int spawnRow; // [esp+0h] [ebp-2Ch] BYREF
   int spawnColumn; // [esp+4h] [ebp-28h] BYREF
@@ -1494,7 +1494,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
   {
     newStackPtr = (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) + gameData + UNIT_STACK_TABLE_OFFSET);
     UnitStack_ClearRemainingActionPoints(newStackPtr, (DWORD)savedregs, a5);
-    squadWritePtr = v10 + 6;
+    squadWritePtr = newStackBase + 6;
     v12 = 100;
     squadCount = amount / 100;
     for ( i = 1; squadCount >= i; ++i )
@@ -1509,7 +1509,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
     }
     if ( i <= 10 )
     {
-      v15 = amount;
+      partialSquadFill = amount;
       partialSquadTemplatePtr = newStackPtr + 3;
       v17 = amount;
       qmemcpy((void *)squadWritePtr, newStackPtr + 3, 0x1Cu);
@@ -1517,11 +1517,11 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       *(_WORD *)(squadWritePtr + 28) = *partialSquadTemplatePtr;
       *(_BYTE *)(squadWritePtr + 30) = *((_BYTE *)partialSquadTemplatePtr + 2);
       v12 = 100;
-      LODWORD(v18) = v15;
-      HIDWORD(v18) = v17 >> 31;
-      LOBYTE(v15) = (int)(100 * (v18 % 100)) / 100;
-      *(_BYTE *)(squadWritePtr + 9) = v15;
-      if ( !(_BYTE)v15 )
+      LODWORD(amount64) = partialSquadFill;
+      HIDWORD(amount64) = v17 >> 31;
+      LOBYTE(partialSquadFill) = (int)(100 * (amount64 % 100)) / 100;
+      *(_BYTE *)(squadWritePtr + 9) = partialSquadFill;
+      if ( !(_BYTE)partialSquadFill )
         *(_WORD *)squadWritePtr = -1;
     }
     if ( transferGoldFlag )
@@ -1600,8 +1600,8 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
     if ( (buildingPtrFlags[435] & 7) != 0 && !transferGoldFlag )
       UnitStack_SetPlagueFlag((int)newStackPtr);
     Rules_LinkArmyFact(newStackPtr, (int)newStackPtr, v33, a5, (char)buildingPtrFlags, (DWORD)savedregs);
-    if ( !*(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)v34 + 4) + 140051) )
-      Rules_LogBuildingTransferFact(*(unsigned __int16 *)(TILE_INDEX(*v34, newStackPtr[1])), savedBuildingIndex, savedTargetStack);
+    if ( !*(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)newStackForFact + 4) + 140051) )
+      Rules_LogBuildingTransferFact(*(unsigned __int16 *)(TILE_INDEX(*newStackForFact, newStackPtr[1])), savedBuildingIndex, savedTargetStack);
     return 1;
   }
   return result;
@@ -1675,7 +1675,7 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   DWORD buildingBase; // eax
   unsigned __int8 buildingTechLevel; // bl
   unsigned __int8 playerTechLevel; // bh
-  char v12; // dh
+  char preservedNonTechBits; // dh
   int v13; // edx
   int turnCounter; // ebx
   int ownerPlayerDataOffset; // eax
@@ -1685,10 +1685,10 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   int personageType; // edx
   int v20; // ecx
   int k; // edi
-  int v22; // edx
+  int garrisonSlotIndex; // edx
   int v23; // ecx
-  DWORD v24; // ebx
-  DWORD v25; // ecx
+  DWORD buildingRecordOffset; // ebx
+  DWORD buildingRecordOffset2; // ecx
   int m; // edi
   int savedBuildingOffset; // [esp+4h] [ebp-24h]
 
@@ -1704,9 +1704,9 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   playerTechLevel = *(_BYTE *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178) + gameData + 140071);
   if ( buildingTechLevel < playerTechLevel )
   {
-    v12 = *(_BYTE *)(buildingBase + 510118) & 0xF8;
-    *(_BYTE *)(buildingBase + 510118) = v12;
-    *(_BYTE *)(buildingBase + 510118) = playerTechLevel & 7 | v12;
+    preservedNonTechBits = *(_BYTE *)(buildingBase + 510118) & 0xF8;
+    *(_BYTE *)(buildingBase + 510118) = preservedNonTechBits;
+    *(_BYTE *)(buildingBase + 510118) = playerTechLevel & 7 | preservedNonTechBits;
   }
   Rules_SyncCastleFactOwner(UNIT_RECORD(buildingIndex), buildingPtr, a5);
   savedBuildingOffset = v13;
@@ -1731,14 +1731,14 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   for ( k = 0; k < 12; ++k )
   {
     Building_ClearGarrisonTrainingTimer(buildingRecordPtr, k);
-    v22 = k;
-    Building_ClearGarrisonRepairTimer(buildingRecordPtr, v22);
+    garrisonSlotIndex = k;
+    Building_ClearGarrisonRepairTimer(buildingRecordPtr, garrisonSlotIndex);
   }
-  v24 = BUILDING_RECORD_SIZE * buildingIndex;
-  v25 = BUILDING_RECORD_SIZE * buildingIndex;
-  for ( m = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + BUILDING_TABLE_OFFSET); m <= *(unsigned __int8 *)(v24 + gameData + BUILDING_TABLE_OFFSET) + 1; ++m )
+  buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
+  buildingRecordOffset2 = BUILDING_RECORD_SIZE * buildingIndex;
+  for ( m = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + BUILDING_TABLE_OFFSET); m <= *(unsigned __int8 *)(buildingRecordOffset + gameData + BUILDING_TABLE_OFFSET) + 1; ++m )
   {
-    for ( j = *(unsigned __int8 *)(v24 + gameData + 509675); j <= *(unsigned __int8 *)(v25 + gameData + 509675) + 1; ++j )
+    for ( j = *(unsigned __int8 *)(buildingRecordOffset + gameData + 509675); j <= *(unsigned __int8 *)(buildingRecordOffset2 + gameData + 509675) + 1; ++j )
       MiniMap_DrawTileCell((void *)m, j);
   }
   return (_DWORD *)MiniMap_RedrawTileRect(m, j, j + 1, m + 1);
@@ -1892,7 +1892,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *buildingPtr, char spriteSetI
   __int16 SpriteWidth; // bx
   __int16 SpriteHeight; // ax
   int v9; // ecx
-  __int16 v10; // ax
+  __int16 popupSpriteHeight; // ax
   int SpriteForChar; // eax
   int languageIndex; // ecx
   int addonSpriteId; // eax
@@ -1942,8 +1942,8 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *buildingPtr, char spriteSetI
   }
   surface = Surface;
   popupRight = panelX + DLX_GetSpriteWidth((int)spriteSet, 0) - 1;
-  v10 = DLX_GetSpriteHeight((int)spriteSet, 0);
-  Render_FillRect(0, surface, (unsigned __int16)panelX, (unsigned __int16)panelY, panelY + v10 - 1, popupRight, 0, 0);
+  popupSpriteHeight = DLX_GetSpriteHeight((int)spriteSet, 0);
+  Render_FillRect(0, surface, (unsigned __int16)panelX, (unsigned __int16)panelY, panelY + popupSpriteHeight - 1, popupRight, 0, 0);
   Render_ReleaseSurface(7, (DWORD)buildingPtr);
   if ( buildingPtr[4] )
   {
@@ -2072,7 +2072,7 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
   __int16 SpriteWidth; // bx
   __int16 SpriteHeight; // ax
   int v10; // ecx
-  __int16 v11; // ax
+  __int16 fillSpriteHeight; // ax
   int SpriteForChar; // eax
   int textY; // ebx
   int v14; // edx
@@ -2086,8 +2086,8 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
   int okBtnYMin; // ebx
   signed int okBtnXMax; // ebp
   int okBtnYMax; // esi
-  int v25; // ecx
-  __int16 v26; // ax
+  int cursorCoordShift; // ecx
+  __int16 teardownSpriteHeight; // ax
   unsigned __int16 spriteRightX; // [esp+10h] [ebp-C4h]
   unsigned __int16 spriteWidthMinus1; // [esp+10h] [ebp-C4h]
   unsigned __int16 spriteTopY; // [esp+14h] [ebp-C0h]
@@ -2129,8 +2129,8 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
   }
   surface = Surface;
   spriteRightX = centeredX + DLX_GetSpriteWidth((int)spriteSet, 0) - 1;
-  v11 = DLX_GetSpriteHeight((int)spriteSet, 0);
-  Render_FillRect(0, surface, (unsigned __int16)centeredX, (unsigned __int16)centeredY, centeredY + v11 - 1, spriteRightX, 0, 0);
+  fillSpriteHeight = DLX_GetSpriteHeight((int)spriteSet, 0);
+  Render_FillRect(0, surface, (unsigned __int16)centeredX, (unsigned __int16)centeredY, centeredY + fillSpriteHeight - 1, spriteRightX, 0, 0);
   Render_ReleaseSurface(17, a3);
   SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 0);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -2204,13 +2204,13 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
     {
       break;
     }
-    LOBYTE(v25) = g_CursorCoordShift;
+    LOBYTE(cursorCoordShift) = g_CursorCoordShift;
     if ( g_MouseCursorRawX >> g_CursorCoordShift >= stopBtnXMin
       && g_MouseCursorRawY >> g_CursorCoordShift >= stopBtnYMin
       && g_MouseCursorRawX >> g_CursorCoordShift <= stopBtnXMax
       && g_MouseCursorRawY >> g_CursorCoordShift <= stopBtnYMax )
     {
-      Building_Stop(buildingPtr, v25, okBtnYMin, okBtnXMax, a4);
+      Building_Stop(buildingPtr, cursorCoordShift, okBtnYMin, okBtnXMax, a4);
       break;
     }
   }
@@ -2219,8 +2219,8 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
   spriteLeftX = centeredX;
   spriteTopY = centeredY;
   spriteWidthMinus1 = DLX_GetSpriteWidth((int)spriteSet, 0) - 1;
-  v26 = DLX_GetSpriteHeight((int)spriteSet, 0);
-  Render_FillRect(surface, 0, 0, 0, v26 - 1, spriteWidthMinus1, spriteTopY, spriteLeftX);
+  teardownSpriteHeight = DLX_GetSpriteHeight((int)spriteSet, 0);
+  Render_FillRect(surface, 0, 0, 0, teardownSpriteHeight - 1, spriteWidthMinus1, spriteTopY, spriteLeftX);
   if ( surface )
     (*(void (**)(void))surface[46])();
   DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
@@ -2433,16 +2433,16 @@ int  Castle_PlayAddonConstructionReveal(int addonTileMarker, int buildingRecord)
 {
   int minX; // edi
   int scanY; // esi
-  int v4; // ecx
+  int rowCursor; // ecx
   int i; // ebx
-  int v6; // ecx
+  int pixelCursor; // ecx
   int revealLeftX; // edi
   int v8; // edx
   int v9; // ecx
   int v10; // ecx
   int v11; // edx
   int v12; // edx
-  int v14; // eax
+  int currentTime; // eax
   int v15; // ecx
   int savedBuildingRecord; // [esp+4h] [ebp-30h]
   int startTime; // [esp+Ch] [ebp-28h]
@@ -2460,10 +2460,10 @@ int  Castle_PlayAddonConstructionReveal(int addonTileMarker, int buildingRecord)
   maxY = 0;
   do
   {
-    v4 = (*(int (**)(void))(*(_DWORD *)(g_CastleScreenSurface + 184) + 4))();
+    rowCursor = (*(int (**)(void))(*(_DWORD *)(g_CastleScreenSurface + 184) + 4))();
     for ( i = 0; i < 640; ++i )
     {
-      if ( *(unsigned __int8 *)(*(int (**)(void))(*(_DWORD *)v4 + 16))() == addonTileMarker )
+      if ( *(unsigned __int8 *)(*(int (**)(void))(*(_DWORD *)rowCursor + 16))() == addonTileMarker )
       {
         if ( i < minX )
           minX = i;
@@ -2474,10 +2474,10 @@ int  Castle_PlayAddonConstructionReveal(int addonTileMarker, int buildingRecord)
         if ( scanY > maxY )
           maxY = scanY;
       }
-      (*(void (__fastcall **)(int, int))(*(_DWORD *)v6 + 12))(v6, 1);
+      (*(void (__fastcall **)(int, int))(*(_DWORD *)pixelCursor + 12))(pixelCursor, 1);
     }
     ++scanY;
-    (**(void (__fastcall ***)(int, int))v4)(v4, 2);
+    (**(void (__fastcall ***)(int, int))rowCursor)(rowCursor, 2);
   }
   while ( scanY < 480 );
   revealLeftX = minX - 50;
@@ -2492,7 +2492,7 @@ int  Castle_PlayAddonConstructionReveal(int addonTileMarker, int buildingRecord)
   g_SelectedBuildingRecord = buildingRecord;
   while ( Time_Now(v10, v11) < (unsigned int)(startTime + 200) )
   {
-    v14 = Time_Now(startTime, v12);
+    currentTime = Time_Now(startTime, v12);
     Render_BlendSurfaceRect(
       0,
       g_PrimaryRenderSurface,
@@ -2503,7 +2503,7 @@ int  Castle_PlayAddonConstructionReveal(int addonTileMarker, int buildingRecord)
       maxY,
       revealLeftX,
       minY,
-      255 * (v14 - v15) / 0xC8u);
+      255 * (currentTime - v15) / 0xC8u);
     Castle_UpdateAmbientAnimationLayers();
   }
   g_SelectedBuildingRecord = savedBuildingRecord;
@@ -5216,7 +5216,7 @@ signed int  UnitStack_HasOnlyFlyingUnits(int stackPtr)
 // 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (00422BE0) --------------------------------------------------------
-int  Unit_AddToGroup(unsigned int a1, int a2, int a3, DWORD a4, double a5)
+int  Unit_AddToGroup(unsigned int sourceUnit, int targetUnit, int a3, DWORD a4, double gameTime)
 {
   int source_stack;
   int target_stack;
@@ -5226,11 +5226,11 @@ int  Unit_AddToGroup(unsigned int a1, int a2, int a3, DWORD a4, double a5)
   int column_delta;
   int result; // eax
 
-  Debug_Log(a1, a3, a4, (int)aUnit_addtogrou);
-  Render_DrawSprite_v3(a1, a4);
-  Render_DrawSprite_v3(a2, a4);
-  source_stack = UNIT_STACK(a1);
-  target_stack = UNIT_STACK(a2);
+  Debug_Log(sourceUnit, a3, a4, (int)aUnit_addtogrou);
+  Render_DrawSprite_v3(sourceUnit, a4);
+  Render_DrawSprite_v3(targetUnit, a4);
+  source_stack = UNIT_STACK(sourceUnit);
+  target_stack = UNIT_STACK(targetUnit);
   source_count = Unit_GetSquadCount(source_stack);
   target_count = Unit_GetSquadCount(target_stack);
   if ( source_count + target_count <= UNIT_STACK_SLOT_COUNT )
@@ -5248,28 +5248,28 @@ int  Unit_AddToGroup(unsigned int a1, int a2, int a3, DWORD a4, double a5)
       if ( column_delta <= 1 )
         goto LABEL_11;
     }
-    result = (int)Unit_MoveTrackNearTile(a1, UNIT_STACK_TILE_ROW(target_stack), source_stack, UNIT_STACK_TILE_COLUMN(target_stack), (DWORD)target_stack);
+    result = (int)Unit_MoveTrackNearTile(sourceUnit, UNIT_STACK_TILE_ROW(target_stack), source_stack, UNIT_STACK_TILE_COLUMN(target_stack), (DWORD)target_stack);
     if ( !result )
       return result;
     qmemcpy((void *)UNIT_STACK_PATH_BUFFER(source_stack), (const void *)result, UNIT_STACK_PATH_BYTES);
-    UnitStack_ExecuteQueuedPath(a1, 1, UNIT_STACK_TILE_COLUMN(target_stack), (DWORD)target_stack, a5);
+    UnitStack_ExecuteQueuedPath(sourceUnit, 1, UNIT_STACK_TILE_COLUMN(target_stack), (DWORD)target_stack, gameTime);
     if ( !*(_DWORD *)UNIT_STACK_PATH_BUFFER(source_stack) )
     {
 LABEL_11:
       if ( UnitStack_GetMinCurrentActionPoints(source_stack) >= 4 )
       {
-        UnitStack_SpendActionPointsClamped((__int16 *)source_stack, 4, (DWORD)target_stack, a5);
+        UnitStack_SpendActionPointsClamped((__int16 *)source_stack, 4, (DWORD)target_stack, gameTime);
         source_count = Unit_GetSquadCount(source_stack);
         target_count = Unit_GetSquadCount(target_stack);
         qmemcpy(
           (void *)UNIT_STACK_SLOT(target_stack, target_count),
           (const void *)UNIT_STACK_SLOT(source_stack, 0),
           UNIT_STACK_SLOT_STRIDE * source_count);
-        UnitStack_KillByIndex(a1, a3, (DWORD)target_stack, a5);
+        UnitStack_KillByIndex(sourceUnit, a3, (DWORD)target_stack, gameTime);
         *(_BYTE *)(target_stack + 720) = 0;
-        g_SelectedUnitIndex = a2;
-        Rules_LinkArmyFact((__int16 *)target_stack, 0, 0, a5, a3, (DWORD)target_stack);
-        Rules_SyncArmyFactStrength((__int16 *)target_stack, 0, 0, a3, (DWORD)target_stack, a5);
+        g_SelectedUnitIndex = targetUnit;
+        Rules_LinkArmyFact((__int16 *)target_stack, 0, 0, gameTime, a3, (DWORD)target_stack);
+        Rules_SyncArmyFactStrength((__int16 *)target_stack, 0, 0, a3, (DWORD)target_stack, gameTime);
         return 1;
       }
     }
@@ -6032,20 +6032,20 @@ signed int  Road_Build(int unitIndex, int direction, char a3, DWORD a4, double a
   int targetColumn; // ebp
   __int16 roadOverlayTileId; // di
   unsigned __int16 *originTilePtr; // edx
-  int v15; // eax
+  int originBaseTileId; // eax
   unsigned __int16 neighborBaseTileId; // ax
-  int v17; // eax
-  int v18; // eax
+  int targetTileRecordBase; // eax
+  int crossingTileRecordBase; // eax
   signed int result; // eax
   signed int minActionPoints; // eax
   signed int v21; // edx
   unsigned __int16 neighborPrevOverlay; // di
   int v23; // ecx
-  int v24; // ebx
+  int targetOverlayRecordBase; // ebx
   DWORD unitStackByteOffset; // ebp
-  int v26; // ebx
+  int unitCurrentColumn; // ebx
   int v27; // edx
-  int v28; // [esp-4h] [ebp-44h]
+  int moveTargetColumn; // [esp-4h] [ebp-44h]
   int originRow; // [esp+8h] [ebp-38h]
   int bridgeCrossOverlayId; // [esp+Ch] [ebp-34h]
   signed int moveCost; // [esp+10h] [ebp-30h]
@@ -6195,11 +6195,11 @@ LABEL_68:
       }
 LABEL_14:
       originTilePtr = (unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * originRow + TILE_TERRAIN_RECORD_STRIDE * originColumn);
-      HIWORD(v15) = 0;
+      HIWORD(originBaseTileId) = 0;
       if ( *originTilePtr >= 0x25Bu )
       {
-        LOWORD(v15) = *originTilePtr;
-        if ( v15 <= 642 )
+        LOWORD(originBaseTileId) = *originTilePtr;
+        if ( originBaseTileId <= 642 )
           roadOverlayTileId = originTilePtr[2];
       }
       appliedTargetOverlay = 0;
@@ -6273,10 +6273,10 @@ LABEL_14:
             bridgeApproachOverlayId = 925;
           }
         }
-        v17 = gameData + TILE_TERRAIN_ROW_STRIDE * targetRow + TILE_TERRAIN_RECORD_STRIDE * targetColumn;
-        savedTargetOverlay = *(unsigned __int16 *)(v17 + 4);
+        targetTileRecordBase = gameData + TILE_TERRAIN_ROW_STRIDE * targetRow + TILE_TERRAIN_RECORD_STRIDE * targetColumn;
+        savedTargetOverlay = *(unsigned __int16 *)(targetTileRecordBase + 4);
         appliedTargetOverlay = bridgeApproachOverlayId;
-        *(_WORD *)(v17 + 4) = bridgeApproachOverlayId;
+        *(_WORD *)(targetTileRecordBase + 4) = bridgeApproachOverlayId;
         *(_DWORD *)(TILE_TERRAIN_ROW_STRIDE * targetRow + gameData + TILE_TERRAIN_RECORD_STRIDE * targetColumn + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
       }
       if ( MapTile_IsBareBridgeCrossingRoadOverlayCandidate(targetRow, targetColumn) )
@@ -6289,10 +6289,10 @@ LABEL_14:
         {
           bridgeCrossOverlayId = 878;
         }
-        v18 = gameData + TILE_TERRAIN_ROW_STRIDE * targetRow + TILE_TERRAIN_RECORD_STRIDE * targetColumn;
-        savedTargetOverlay = *(unsigned __int16 *)(v18 + 4);
+        crossingTileRecordBase = gameData + TILE_TERRAIN_ROW_STRIDE * targetRow + TILE_TERRAIN_RECORD_STRIDE * targetColumn;
+        savedTargetOverlay = *(unsigned __int16 *)(crossingTileRecordBase + 4);
         appliedTargetOverlay = bridgeCrossOverlayId;
-        *(_WORD *)(v18 + 4) = bridgeCrossOverlayId;
+        *(_WORD *)(crossingTileRecordBase + 4) = bridgeCrossOverlayId;
         *(_DWORD *)(TILE_TERRAIN_RECORD_STRIDE * targetColumn + TILE_TERRAIN_ROW_STRIDE * targetRow + gameData + 10) = *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
         roadOverlayTileId = *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * originRow + gameData + TILE_TERRAIN_RECORD_STRIDE * originColumn + 4);
       }
@@ -6319,9 +6319,9 @@ LABEL_14:
             Map_RebuildRoadOverlayAtTile(targetRow, targetColumn);
             if ( neighborPrevOverlay != 0xFFFF )
             {
-              v24 = v23 + gameData + 14 * targetColumn;
-              if ( *(unsigned __int16 *)(v24 + 4) == 0xFFFF )
-                *(_WORD *)(v24 + 4) = neighborPrevOverlay;
+              targetOverlayRecordBase = v23 + gameData + 14 * targetColumn;
+              if ( *(unsigned __int16 *)(targetOverlayRecordBase + 4) == 0xFFFF )
+                *(_WORD *)(targetOverlayRecordBase + 4) = neighborPrevOverlay;
             }
             if ( appliedTargetOverlay )
             {
@@ -6335,15 +6335,15 @@ LABEL_14:
               MapTile_HasEastRoadConnection(targetRow, targetColumn);
             }
             g_SelectedUnitIndex = unitIndex;
-            v28 = targetColumn;
+            moveTargetColumn = targetColumn;
             unitStackByteOffset = UNIT_STACK_STRIDE * unitIndex;
-            v26 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitIndex + 147176);
-            result = (signed int)Unit_MoveTrack(unitIndex, *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitIndex + UNIT_STACK_TABLE_OFFSET), targetRow, v26, UNIT_STACK_STRIDE * unitIndex, v28);
+            unitCurrentColumn = *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitIndex + 147176);
+            result = (signed int)Unit_MoveTrack(unitIndex, *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitIndex + UNIT_STACK_TABLE_OFFSET), targetRow, unitCurrentColumn, UNIT_STACK_STRIDE * unitIndex, moveTargetColumn);
             if ( result )
             {
               qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + unitStackByteOffset + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
               j__nfree_();
-              UnitStack_ExecuteQueuedPath(unitIndex, v27, v26, unitStackByteOffset, a5);
+              UnitStack_ExecuteQueuedPath(unitIndex, v27, unitCurrentColumn, unitStackByteOffset, a5);
               UnitStack_SpendActionPointsClamped((__int16 *)(unitStackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET), 1, unitStackByteOffset, a5);
               WorldMap_RefreshUnitStatusPanel(unitStackByteOffset);
               return 1;
@@ -6485,46 +6485,46 @@ void RoadBuildMode_RequestExit()
 int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn)
 {
   int unitStackRecordBase; // eax
-  int v5; // eax
+  int northMarkerScreenY; // eax
   int directionIndex; // ebp
   int v7; // ecx
   int result; // eax
-  int v9; // eax
-  int v10; // edx
-  int v11; // eax
-  int v12; // eax
-  int v13; // ecx
+  int selectedUnitRecord; // eax
+  int eastMarkerScreenX; // edx
+  int unitStackEntry; // eax
+  int southMarkerScreenY; // eax
+  int westMarkerScreenY; // ecx
   int v14; // ecx
 
   unitStackRecordBase = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
   if ( tileRow == *(__int16 *)(unitStackRecordBase + 147174) && tileColumn - *(__int16 *)(unitStackRecordBase + 147176) == -1 )
   {
-    v5 = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
+    northMarkerScreenY = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
     g_RoadBuildModeNorthMarkerX = ((tileRow - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6) + 57;
     directionIndex = 0;
-    g_RoadBuildModeNorthMarkerY = v5 + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
+    g_RoadBuildModeNorthMarkerY = northMarkerScreenY + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
   }
   else
   {
-    v9 = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-    if ( tileRow - *(__int16 *)(v9 + 147174) == 1 && tileColumn == *(__int16 *)(v9 + 147176) )
+    selectedUnitRecord = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
+    if ( tileRow - *(__int16 *)(selectedUnitRecord + 147174) == 1 && tileColumn == *(__int16 *)(selectedUnitRecord + 147176) )
     {
       directionIndex = 1;
-      v10 = ((tileRow - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
+      eastMarkerScreenX = ((tileRow - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
           + 42
           - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
       g_RoadBuildModeEastMarkerY = ((tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6) + 41;
-      g_RoadBuildModeEastMarkerX = v10;
+      g_RoadBuildModeEastMarkerX = eastMarkerScreenX;
     }
     else
     {
-      v11 = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-      if ( tileRow == *(__int16 *)(v11 + 147174) && tileColumn - *(__int16 *)(v11 + 147176) == 1 )
+      unitStackEntry = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
+      if ( tileRow == *(__int16 *)(unitStackEntry + 147174) && tileColumn - *(__int16 *)(unitStackEntry + 147176) == 1 )
       {
-        v12 = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
+        southMarkerScreenY = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
         g_RoadBuildModeSouthMarkerX = ((tileRow - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6) + 57;
         directionIndex = 2;
-        g_RoadBuildModeSouthMarkerY = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + v12 + 26;
+        g_RoadBuildModeSouthMarkerY = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + southMarkerScreenY + 26;
       }
       else
       {
@@ -6535,11 +6535,11 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn)
         if ( tileColumn != result )
           return result;
         directionIndex = 3;
-        v13 = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
+        westMarkerScreenY = (tileColumn - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
         g_RoadBuildModeWestMarkerX = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
                      + ((tileRow - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
                      + 75;
-        g_RoadBuildModeWestMarkerY = v13 + 41;
+        g_RoadBuildModeWestMarkerY = westMarkerScreenY + 41;
       }
     }
   }
@@ -6615,13 +6615,13 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
 {
   signed int result; // eax
   int v4; // ebx
-  int (__fastcall *v5)(_DWORD, _DWORD); // ecx
+  int (__fastcall *overlayDrawHook)(_DWORD, _DWORD); // ecx
   int v6; // ecx
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
   int unitStackRecordBase; // esi
-  int v11; // eax
+  int tileDeltaY; // eax
   int *selectedDirectionMarker; // edx
 
   result = Map_GetTileSurfaceClassOrUnexplored(
@@ -6632,7 +6632,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
     v4 = 0;
     g_ActiveCursorDescriptor = (int)&g_CursorDesc_ActionBusy;
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
-    g_WorldMapTileOverlayDrawHook = v5;
+    g_WorldMapTileOverlayDrawHook = overlayDrawHook;
     g_RoadBuildModeExitRequested = 0;
     g_RoadBuildModeControlWidgetState = 2;
     WorldMap_RedrawViewport(1);
@@ -6680,20 +6680,20 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
                 + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
              + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)
              - *(__int16 *)(unitStackRecordBase + 147174);
-          v11 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)
+          tileDeltaY = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)
               + (((g_MouseCursorRawY >> g_CursorCoordShift)
                 - 16
                 - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
                  + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
               - *(__int16 *)(unitStackRecordBase + 147176);
           selectedDirectionMarker = 0;
-          if ( v4 || v11 != -1 )
+          if ( v4 || tileDeltaY != -1 )
           {
-            if ( v4 != 1 || v11 )
+            if ( v4 != 1 || tileDeltaY )
             {
-              if ( v4 || v11 != 1 )
+              if ( v4 || tileDeltaY != 1 )
               {
-                if ( v4 == -1 && !v11 )
+                if ( v4 == -1 && !tileDeltaY )
                   selectedDirectionMarker = &g_RoadBuildModeWestMarkerX;
               }
               else
@@ -7789,13 +7789,13 @@ int  UnitBattle_CalcMeleeExchange(int attacker_index, int defender_index, int *d
   char *attacker_unit; // ebx
   char *defender_unit; // esi
   int v9; // edx
-  int v10; // eax
+  int defender_effectiveness; // eax
   int v11; // ecx
-  int v12; // eax
-  int v13; // ecx
+  int attacker_effectiveness; // eax
+  int defender_damage; // ecx
   int attacker_power; // ebx
   int damage_ratio; // edx
-  int v16; // edx
+  int scaled_damage; // edx
   int result; // eax
   int attacker_damage; // edx
   int defender_remaining; // esi
@@ -7808,15 +7808,15 @@ int  UnitBattle_CalcMeleeExchange(int attacker_index, int defender_index, int *d
   *attacker_health = attacker_unit[9];
   *defender_health = defender_unit[9];
   UnitBattle_GetTargetCrowdingScale((int)defender_unit);
-  v10 = Unit_CalcEffectivenessB(defender_unit, v9);
-  if ( (v10 * v11 - (__CFSHL__((v10 * v11) >> 31, 8) + ((v10 * v11) >> 31 << 8))) >> 8 )
+  defender_effectiveness = Unit_CalcEffectivenessB(defender_unit, v9);
+  if ( (defender_effectiveness * v11 - (__CFSHL__((defender_effectiveness * v11) >> 31, 8) + ((defender_effectiveness * v11) >> 31 << 8))) >> 8 )
   {
     UnitBattle_GetTargetCrowdingScale((int)attacker_unit);
     Unit_CalcEffectivenessA(attacker_unit, 0);
   }
   attacker_crowd_scale = UnitBattle_GetTargetCrowdingScale((int)attacker_unit);
-  v12 = Unit_CalcEffectivenessB(attacker_unit, 0);
-  attacker_power = (v12 * attacker_crowd_scale - (__CFSHL__((v12 * attacker_crowd_scale) >> 31, 8) + ((v12 * attacker_crowd_scale) >> 31 << 8))) >> 8;
+  attacker_effectiveness = Unit_CalcEffectivenessB(attacker_unit, 0);
+  attacker_power = (attacker_effectiveness * attacker_crowd_scale - (__CFSHL__((attacker_effectiveness * attacker_crowd_scale) >> 31, 8) + ((attacker_effectiveness * attacker_crowd_scale) >> 31 << 8))) >> 8;
   if ( attacker_power )
   {
     defender_crowd_scale = UnitBattle_GetTargetCrowdingScale((int)defender_unit);
@@ -7835,29 +7835,29 @@ int  UnitBattle_CalcMeleeExchange(int attacker_index, int defender_index, int *d
       if ( damage_ratio >= 640 )
       {
         if ( damage_ratio >= 768 )
-          v16 = 15 * damage_ratio;
+          scaled_damage = 15 * damage_ratio;
         else
-          v16 = 12 * damage_ratio;
+          scaled_damage = 12 * damage_ratio;
       }
       else
       {
-        v16 = 10 * damage_ratio;
+        scaled_damage = 10 * damage_ratio;
       }
     }
     else
     {
-      v16 = 7 * damage_ratio;
+      scaled_damage = 7 * damage_ratio;
     }
   }
   else
   {
-    v16 = 5 * damage_ratio;
+    scaled_damage = 5 * damage_ratio;
   }
-  result = (v16 - (__CFSHL__(v16 >> 31, 8) + (v16 >> 31 << 8))) >> 8;
+  result = (scaled_damage - (__CFSHL__(scaled_damage >> 31, 8) + (scaled_damage >> 31 << 8))) >> 8;
   attacker_damage = result;
   if ( result > 100 )
     attacker_damage = 100;
-  defender_remaining = *defender_health - v13;
+  defender_remaining = *defender_health - defender_damage;
   *defender_health = defender_remaining;
   if ( defender_remaining <= 0 )
     *defender_health = 0;
@@ -8449,16 +8449,16 @@ LABEL_22:
 //----- (00427FA0) --------------------------------------------------------
 int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
 {
-  int v5; // edx
+  int unit_index_copy; // edx
   int unit_record_offset; // esi
   __int16 *unit_ptr; // ebp
   int v8; // ecx
-  int v9; // eax
+  int death_start_tick; // eax
   int direction; // ecx
-  int v11; // edx
+  int corpse_tile_row; // edx
   int corpse_tile_offset; // eax
   unsigned int frame_deadline; // edx
-  unsigned int v14; // eax
+  unsigned int current_tick; // eax
   int v15; // ecx
   int fade_direction; // ecx
   int fade_unit_row; // ebx
@@ -8467,25 +8467,25 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
   int result; // eax
   int unit_row; // ebx
   int unit_col; // esi
-  int v23; // edx
+  int corpse_row_base; // edx
   int fade_record_offset; // [esp+0h] [ebp-24h]
   int corpse_record_offset; // [esp+4h] [ebp-20h]
   int last_tick; // [esp+8h] [ebp-1Ch]
 
   Debug_Log(a2, a3, a4, (int)aDeathanimD);
-  v5 = unit_index;
-  unit_record_offset = 31 * v5;
-  unit_ptr = (__int16 *)(g_MapData + 852 + 31 * v5);
+  unit_index_copy = unit_index;
+  unit_record_offset = 31 * unit_index_copy;
+  unit_ptr = (__int16 *)(g_MapData + 852 + 31 * unit_index_copy);
   Audio_PlayUnitDeathSound(*unit_ptr);
   if ( (g_UnitTypeFlags[22 * *unit_ptr] & 1) != 0 )
   {
     *(_BYTE *)(40 * (unsigned __int16)unit_ptr[2] + g_MapData + 2 * (unsigned __int16)unit_ptr[3] + 2334) = 48;
     UnitBattle_InitUnitFadeAnimation(unit_index, 255, -4, 255);
-    v9 = Time_Now(v8, 0);
-    LOWORD(v11) = unit_ptr[2];
-    last_tick = v9;
+    death_start_tick = Time_Now(v8, 0);
+    LOWORD(corpse_tile_row) = unit_ptr[2];
+    last_tick = death_start_tick;
     corpse_record_offset = unit_record_offset;
-    *(_BYTE *)(g_MapData + 40 * v11 + 2 * (unsigned __int16)unit_ptr[3] + 2335) = -1;
+    *(_BYTE *)(g_MapData + 40 * corpse_tile_row + 2 * (unsigned __int16)unit_ptr[3] + 2335) = -1;
     while ( 1 )
     {
       corpse_tile_offset = 40 * (unsigned __int16)unit_ptr[2] + g_MapData + 2 * (unsigned __int16)unit_ptr[3];
@@ -8494,8 +8494,8 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
       frame_deadline = last_tick + 10;
       while ( 1 )
       {
-        v14 = Time_Now(direction, frame_deadline);
-        if ( v14 >= frame_deadline )
+        current_tick = Time_Now(direction, frame_deadline);
+        if ( current_tick >= frame_deadline )
           break;
         UnitBattle_UpdateIdleAnimatedUnits();
       }
@@ -8521,8 +8521,8 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
         UnitBattle_RedrawTile(unit_row - 1, unit_col);
       if ( direction == 7 )
         UnitBattle_RedrawTile(unit_row - 1, unit_col - 1);
-      v23 = 40 * (unsigned __int16)unit_ptr[2] + g_MapData;
-      ++*(_BYTE *)(v23 + 2 * (unsigned __int16)unit_ptr[3] + 2334);
+      corpse_row_base = 40 * (unsigned __int16)unit_ptr[2] + g_MapData;
+      ++*(_BYTE *)(corpse_row_base + 2 * (unsigned __int16)unit_ptr[3] + 2334);
     }
     *(_BYTE *)(corpse_tile_offset + 2334) = -1;
   }
@@ -9486,17 +9486,17 @@ int  UnitBattle_AttackWall(int unitSlot, DWORD wallRow, int a3, int wallCol)
 {
   int result; // eax
   int unitRecord; // esi
-  int v8; // eax
-  int v9; // eax
+  int rowDist; // eax
+  int colDist; // eax
   unsigned __int16 unitCol; // dx
   unsigned __int16 unitRow; // ax
   int v12; // ebx
   int v13; // eax
   int v14; // ecx
-  int v15; // eax
+  int wallTilePtr; // eax
   int v16; // ecx
-  int v17; // ecx
-  int v18; // eax
+  int moveTrackPtr; // ecx
+  int rowDistAfterMove; // eax
   DWORD wallTileBase; // [esp+4h] [ebp-1Ch]
   int gateSpriteBefore; // [esp+8h] [ebp-18h]
   int wall_hp_before;
@@ -9513,15 +9513,15 @@ int  UnitBattle_AttackWall(int unitSlot, DWORD wallRow, int a3, int wallCol)
   g_SelectedUnitIndex = unitSlot;
   unitRecord = g_MapData + 852 + 31 * unitSlot;
   UnitBattle_RefreshSelectedUnitUI();
-  v8 = *(unsigned __int16 *)(unitRecord + 4) - wallRow;
-  if ( v8 <= 0 )
-    v8 = wallRow - *(unsigned __int16 *)(unitRecord + 4);
-  if ( v8 > 1 )
+  rowDist = *(unsigned __int16 *)(unitRecord + 4) - wallRow;
+  if ( rowDist <= 0 )
+    rowDist = wallRow - *(unsigned __int16 *)(unitRecord + 4);
+  if ( rowDist > 1 )
     goto LABEL_18;
-  v9 = *(unsigned __int16 *)(unitRecord + 6) - wallCol;
-  if ( v9 <= 0 )
-    v9 = wallCol - *(unsigned __int16 *)(unitRecord + 6);
-  if ( v9 )
+  colDist = *(unsigned __int16 *)(unitRecord + 6) - wallCol;
+  if ( colDist <= 0 )
+    colDist = wallCol - *(unsigned __int16 *)(unitRecord + 6);
+  if ( colDist )
   {
 LABEL_18:
     result = (int)UnitBattle_MoveTrackNearWall(unitSlot, wallRow, wallCol, wallRow);
@@ -9529,17 +9529,17 @@ LABEL_18:
       return result;
     *(_DWORD *)(unitRecord + 23) = result;
     UnitBattle_Move(unitSlot, 0, 0, 0);
-    v17 = *(_DWORD *)(unitRecord + 23);
-    if ( v17 )
+    moveTrackPtr = *(_DWORD *)(unitRecord + 23);
+    if ( moveTrackPtr )
     {
-      nfree_(v17);
+      nfree_(moveTrackPtr);
       *(_DWORD *)(unitRecord + 23) = 0;
       return 0;
     }
-    v18 = *(unsigned __int16 *)(unitRecord + 4) - wallRow;
-    if ( v18 <= 0 )
-      v18 = wallRow - *(unsigned __int16 *)(unitRecord + 4);
-    if ( v18 > 1 )
+    rowDistAfterMove = *(unsigned __int16 *)(unitRecord + 4) - wallRow;
+    if ( rowDistAfterMove <= 0 )
+      rowDistAfterMove = wallRow - *(unsigned __int16 *)(unitRecord + 4);
+    if ( rowDistAfterMove > 1 )
       return 0;
     if ( *(unsigned __int16 *)(unitRecord + 6) - wallCol > 0 )
       return 0;
@@ -9571,13 +9571,13 @@ LABEL_18:
   wall_damage = wall_factor * effective_wall_attack / 256;
   *(_BYTE *)(wallTileBase + 3134) -= wall_damage;
   wall_hp_after = *(unsigned __int8 *)(wallTileBase + 3134);
-  v15 = wallTileBase;
-  if ( *(char *)(v15 + 3134) <= 0 )
+  wallTilePtr = wallTileBase;
+  if ( *(char *)(wallTilePtr + 3134) <= 0 )
   {
-    *(_BYTE *)(v15 + 3134) = 0;
+    *(_BYTE *)(wallTilePtr + 3134) = 0;
     if ( wallCol == *(_DWORD *)(g_MapData + 828) )
       *(_DWORD *)(g_MapData + 832) = 0;
-    wall_hp_after = *(unsigned __int8 *)(v15 + 3134);
+    wall_hp_after = *(unsigned __int8 *)(wallTilePtr + 3134);
   }
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
@@ -10342,7 +10342,7 @@ int  BuildingEconomyDialog_CommitTransfers(
 // 532360: using guessed type __int16 g_BuildingTransferTargetIds[];
 
 //----- (0042AB80) --------------------------------------------------------
-int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char a2)
+int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char startTaxRate)
 {
   int v4; // edx
   int v5; // ecx
@@ -10353,7 +10353,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char a2)
   int v10; // ecx
   int v11; // eax
   int v12; // ecx
-  int v13; // eax
+  int timeNow; // eax
   int v14; // edx
   int v15; // ecx
   unsigned int taxDecrement; // eax
@@ -10365,7 +10365,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)g_RenderState, startTaxRate);
   Time_Now(v5, v4);
   buildingRecord = g_BuildingEconomyDialogBuilding;
   taxByte = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436);
@@ -10380,8 +10380,8 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char a2)
   {
     DD_Pump((int)g_RenderState, currentTaxRate);
     v11 = Time_Now(v10, v9);
-    v13 = Time_Now(v12, v11);
-    taxDecrement = (v14 - v15) * (v13 - v15) / 0x15Eu;
+    timeNow = Time_Now(v12, v11);
+    taxDecrement = (v14 - v15) * (timeNow - v15) / 0x15Eu;
     newTaxRate = currentTaxRate - taxDecrement;
     if ( (int)(currentTaxRate - taxDecrement) < 0 )
       newTaxRate = 0;
@@ -10417,9 +10417,9 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int widget, char a2)
   int currentTaxRate; // ebx
   int v10; // edx
   int v11; // ecx
-  int v12; // eax
+  int timeNow; // eax
   int v13; // ecx
-  int v14; // eax
+  int currentTime; // eax
   int v15; // edx
   int v16; // ecx
   int taxRateAnim; // edx
@@ -10439,9 +10439,9 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int widget, char a2)
   do
   {
     DD_Pump((int)g_RenderState, currentTaxRate);
-    v12 = Time_Now(v11, v10);
-    v14 = Time_Now(v13, v12);
-    taxRateAnim = currentTaxRate + (v15 - v16) * (v14 - v16) / 0x15Eu;
+    timeNow = Time_Now(v11, v10);
+    currentTime = Time_Now(v13, timeNow);
+    taxRateAnim = currentTaxRate + (v15 - v16) * (currentTime - v16) / 0x15Eu;
     if ( taxRateAnim > 40 )
       LOBYTE(taxRateAnim) = 40;
     buildingRecord2 = g_BuildingEconomyDialogBuilding;
@@ -10475,7 +10475,7 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int widget, char a2)
   int v8; // ecx
   int v9; // eax
   int v10; // ecx
-  int v11; // eax
+  int currentTime; // eax
   int v12; // edx
   int v13; // ecx
   int v14; // ecx
@@ -10490,8 +10490,8 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int widget, char a2)
   {
     DD_Pump((int)g_RenderState, peasantAmount);
     v9 = Time_Now(v8, v7);
-    v11 = Time_Now(v10, v9);
-    g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    currentTime = Time_Now(v10, v9);
+    g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount - (v12 - v13) * (currentTime - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingPeasantTransfer < 0 )
       g_BuildingEconomyDialogPendingPeasantTransfer = 0;
     UI_DrawConfirmTop((DWORD)g_RenderState, 0);
@@ -10521,7 +10521,7 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int widget, char a2)
   int v8; // ecx
   int v9; // eax
   int v10; // ecx
-  int v11; // eax
+  int timeNow; // eax
   int v12; // edx
   int v13; // ecx
   unsigned __int16 maxPeasants; // ax
@@ -10537,8 +10537,8 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int widget, char a2)
   {
     DD_Pump((int)g_RenderState, peasantAmount);
     v9 = Time_Now(v8, v7);
-    v11 = Time_Now(v10, v9);
-    g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    timeNow = Time_Now(v10, v9);
+    g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount + (v12 - v13) * (timeNow - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingPeasantTransfer > 1000 )
       g_BuildingEconomyDialogPendingPeasantTransfer = 1000;
     maxPeasants = *(_WORD *)(g_BuildingEconomyDialogBuilding + 430);
@@ -10617,9 +10617,9 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int widget, char a2)
   int goldAmount; // ebx
   int v7; // edx
   int v8; // ecx
-  int v9; // eax
+  int timeSample; // eax
   int v10; // ecx
-  int v11; // eax
+  int timeSample2; // eax
   int v12; // edx
   int v13; // ecx
   DWORD maxGold; // ebp
@@ -10634,9 +10634,9 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int widget, char a2)
   do
   {
     DD_Pump((int)g_RenderState, goldAmount);
-    v9 = Time_Now(v8, v7);
-    v11 = Time_Now(v10, v9);
-    g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((goldAmount + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    timeSample = Time_Now(v8, v7);
+    timeSample2 = Time_Now(v10, timeSample);
+    g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((goldAmount + (v12 - v13) * (timeSample2 - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingGoldTransfer > 1000 )
       g_BuildingEconomyDialogPendingGoldTransfer = 1000;
     maxGold = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
@@ -10952,7 +10952,7 @@ int  Trap_GetTileOwnerMask(int tileX, int tileY, int playerIndex)
 // 5202E4: using guessed type int gameData;
 
 //----- (0042B770) --------------------------------------------------------
-signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double a3)
+signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
 {
   __int16 *stackRecord; // ebx
   int stackBase; // eax
@@ -10960,9 +10960,9 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double a3)
   int ownerIndex; // ecx
   int v9; // edx
   int v10; // ecx
-  int v11; // edx
+  int endTime; // edx
   int v12; // ecx
-  unsigned int v13; // eax
+  unsigned int currentTime; // eax
   int v14; // ecx
   unsigned int v15; // edx
   int visionRadius; // eax
@@ -10971,8 +10971,8 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double a3)
   int stackCol; // edi
   int v20; // eax
   char owner; // cl
-  int v22; // eax
-  int v23; // ebx
+  int stackAddr; // eax
+  int trapMaskRowBase; // ebx
   int v24; // ecx
   int scanRowTileBase; // [esp+4h] [ebp-24h]
   signed int radius; // [esp+Ch] [ebp-1Ch]
@@ -11024,21 +11024,21 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double a3)
     TILE_TRAP_OWNER_MASK(*(__int16 *)(stackBase + 147174), *(__int16 *)(stackBase + 147176)) |= 1 << ownerIndex;
     WorldMap_RedrawViewport(1);
     WorldMap_RedrawViewport(1);
-    v11 = Time_Now(v10, v9) + 200;
+    endTime = Time_Now(v10, v9) + 200;
     while ( 1 )
     {
-      v13 = Time_Now(v12, v11);
-      if ( v13 >= v15 )
+      currentTime = Time_Now(v12, endTime);
+      if ( currentTime >= v15 )
         break;
       WorldMap_RedrawFrame(tileDataPtr);
     }
     Win_PlayModeChangeFrameTransition(aWpad_pul, 1, v14, tileDataPtr, a2);
   }
-  v22 = gameData + UNIT_STACK_STRIDE * stackIndex;
-  v23 = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(v22 + 147174);
-  TILE_TRAP_OWNER_MASK(*(__int16 *)(v22 + 147174), *(__int16 *)(v22 + 147176)) = 0;
+  stackAddr = gameData + UNIT_STACK_STRIDE * stackIndex;
+  trapMaskRowBase = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(stackAddr + 147174);
+  TILE_TRAP_OWNER_MASK(*(__int16 *)(stackAddr + 147174), *(__int16 *)(stackAddr + 147176)) = 0;
   Rules_RetractTrapFact(*(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176));
-  Trap_HurtStack((__int16 *)(v24 + gameData + UNIT_STACK_TABLE_OFFSET), v23, a2, a3);
+  Trap_HurtStack((__int16 *)(v24 + gameData + UNIT_STACK_TABLE_OFFSET), trapMaskRowBase, a2, gameTime);
   return 1;
 }
 // 42B839: variable 'v10' is possibly undefined
@@ -11365,24 +11365,24 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
-  _DWORD *v10; // eax
+  _DWORD *spriteSet; // eax
   int i; // esi
-  __lock *v12; // ecx
+  __lock *blackFadeStepArg; // ecx
   int SpriteForChar; // eax
   unsigned __int8 *v14; // edx
   __lock *v15; // ecx
   int v16; // ecx
   __int16 SpriteHeight; // ax
   int flashLevel; // esi
-  __lock *v19; // ecx
+  __lock *flashLevelArg; // ecx
   int j; // esi
-  __lock *v21; // ecx
+  __lock *mapFadeStepArg; // ecx
   unsigned __int16 lightningWidth; // [esp+Ch] [ebp-838h]
-  unsigned __int8 v23[1024]; // [esp+1Ch] [ebp-828h] BYREF
-  unsigned __int8 v24[1024]; // [esp+41Ch] [ebp-428h] BYREF
+  unsigned __int8 blackPalette[1024]; // [esp+1Ch] [ebp-828h] BYREF
+  unsigned __int8 whitePalette[1024]; // [esp+41Ch] [ebp-428h] BYREF
   int messageStrings[3]; // [esp+81Ch] [ebp-28h]
   _DWORD *lightningSpriteSet; // [esp+828h] [ebp-1Ch] BYREF
-  void *v27; // [esp+82Ch] [ebp-18h]
+  void *savedRenderDevice; // [esp+82Ch] [ebp-18h]
 
   Debug_Log(a2, a3, playerIndex, (int)aGodanger);
   messageStrings[0] = (int)g_GodAngerMessageStrings[0];
@@ -11392,25 +11392,25 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
   {
     UnitBattle_ShowPlayerMessageBanner(messageStrings[(unsigned __int8)g_LanguageIndex], playerIndex, 0, playerIndex);
     Render_Pump();
-    v27 = g_RenderDevice;
-    memset(v23, 0, sizeof(v23));
-    Palette_LoadFromQueryHandle((intptr_t)v24, (intptr_t)"white.pal");
+    savedRenderDevice = g_RenderDevice;
+    memset(blackPalette, 0, sizeof(blackPalette));
+    Palette_LoadFromQueryHandle((intptr_t)whitePalette, (intptr_t)"white.pal");
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_white_palette", (int)playerIndex, 0, 0, 0);
-    v10 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
-    if ( v10 )
-      v10 = DLXSpriteSet_Load(v10, "lightn.s32");
-    lightningSpriteSet = v10;
+    spriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+    if ( spriteSet )
+      spriteSet = DLXSpriteSet_Load(spriteSet, "lightn.s32");
+    lightningSpriteSet = spriteSet;
     for ( i = 0; i < 300; ++i )
     {
-      v12 = (__lock *)i;
-      Palette_CrossfadeStep((int *)&g_MainRenderDevice, v23, v12, 450);
+      blackFadeStepArg = (__lock *)i;
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, blackPalette, blackFadeStepArg, 450);
     }
     g_RenderDevice = &g_MainRenderDevice;
     SpriteForChar = DLX_GetSpriteForChar((int)lightningSpriteSet, 0);
     Compat_RenderDeviceDrawMenuSprite(16, 100, SpriteForChar, 1);
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_lightning_draw", (int)playerIndex, (int)(uintptr_t)lightningSpriteSet, SpriteForChar, 0);
     Audio_PlayArtifactSound(0);
-    Palette_CrossfadeStep((int *)&g_MainRenderDevice, v24, 150, 200);
+    Palette_CrossfadeStep((int *)&g_MainRenderDevice, whitePalette, 150, 200);
     Timer_BusyWaitWithCallback(10, 0, 0);
     lightningWidth = DLX_GetSpriteWidth((int)lightningSpriteSet, 0) + 16;
     SpriteHeight = DLX_GetSpriteHeight((int)lightningSpriteSet, 0);
@@ -11418,20 +11418,20 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
     Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 50, SpriteHeight + 200, lightningWidth, 0x32u, 0x10u);
     do
     {
-      v19 = (__lock *)flashLevel;
+      flashLevelArg = (__lock *)flashLevel;
       flashLevel -= 60;
-      Palette_CrossfadeStep((int *)&g_MainRenderDevice, v24, v19, 200);
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, whitePalette, flashLevelArg, 200);
     }
     while ( flashLevel > 0 );
-    Palette_CrossfadeStep((int *)&g_MainRenderDevice, v23, (__lock *)0x96, 200);
+    Palette_CrossfadeStep((int *)&g_MainRenderDevice, blackPalette, (__lock *)0x96, 200);
     for ( j = 0; j < 150; ++j )
     {
-      v21 = (__lock *)j;
-      Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, v21, 150);
+      mapFadeStepArg = (__lock *)j;
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, mapFadeStepArg, 150);
     }
     Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_MapPalettePtr);
     DLXSpriteSet_ReleaseAndClear((int *)&lightningSpriteSet);
-    g_RenderDevice = v27;
+    g_RenderDevice = savedRenderDevice;
     Render_Present((int)g_RenderState);
     UnitBattle_RedrawVisibleGrid();
   }
@@ -11567,16 +11567,16 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
 _BOOL2 UnitBattle_HandleManualRotateAndMoveInput()
 {
   int IsKeyPressed; // eax
-  int v2; // ecx
-  int v3; // eax
+  int mapDataCw; // ecx
+  int unitOffsetCw; // eax
   char facingCW; // dl
-  int v5; // ecx
-  int v6; // eax
+  int mapDataCcw; // ecx
+  int unitOffsetCcw; // eax
   char facingCCW; // bl
   int unitRecord; // ecx
   int facing; // eax
   DWORD deltaY; // ebp
-  int v11; // ecx
+  int pathNode; // ecx
   int *movePath; // ebx
   unsigned __int16 requiredAp; // bx
   int v14; // ecx
@@ -11601,11 +11601,11 @@ LABEL_5:
   {
     if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
     {
-      v2 = g_MapData;
-      v3 = 31 * g_SelectedUnitIndex;
+      mapDataCw = g_MapData;
+      unitOffsetCw = 31 * g_SelectedUnitIndex;
       facingCW = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) + 1;
-      *(_BYTE *)(g_MapData + v3 + 855) = facingCW;
-      *(_BYTE *)(v2 + v3 + 855) = facingCW & 7;
+      *(_BYTE *)(g_MapData + unitOffsetCw + 855) = facingCW;
+      *(_BYTE *)(mapDataCw + unitOffsetCw + 855) = facingCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(205) )
       {
@@ -11615,11 +11615,11 @@ LABEL_5:
     }
     if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
     {
-      v5 = g_MapData;
-      v6 = 31 * g_SelectedUnitIndex;
+      mapDataCcw = g_MapData;
+      unitOffsetCcw = 31 * g_SelectedUnitIndex;
       facingCCW = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) - 1;
-      *(_BYTE *)(g_MapData + v6 + 855) = facingCCW;
-      *(_BYTE *)(v5 + v6 + 855) = facingCCW & 7;
+      *(_BYTE *)(g_MapData + unitOffsetCcw + 855) = facingCCW;
+      *(_BYTE *)(mapDataCcw + unitOffsetCcw + 855) = facingCCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(203) )
       {
@@ -11645,8 +11645,8 @@ LABEL_5:
         *(_DWORD *)(g_MapData + 31 * g_SelectedUnitIndex + 875) = movePath;
         if ( movePath )
         {
-          requiredAp = HIWORD(*(_DWORD *)(*(_DWORD *)(v11 + 23) + 4));
-          if ( *(unsigned __int8 *)(v11 + 8) < (int)requiredAp )
+          requiredAp = HIWORD(*(_DWORD *)(*(_DWORD *)(pathNode + 23) + 4));
+          if ( *(unsigned __int8 *)(pathNode + 8) < (int)requiredAp )
           {
             LOWORD(IsKeyPressed) = j__nfree_();
             *(_DWORD *)(v15 + 23) = 0;

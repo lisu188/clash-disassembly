@@ -1607,9 +1607,9 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
   int slotCursor; // edx
   int slotType; // ecx
   char actionPoints; // al
-  unsigned int v9; // edx
-  int v10; // ecx
-  int v11; // ecx
+  unsigned int buildingIndex; // edx
+  int buildingRecord; // ecx
+  int nextStackOffset; // ecx
   int i; // [esp+0h] [ebp-20h]
   unsigned int stackIndex; // [esp+4h] [ebp-1Ch]
 
@@ -1704,17 +1704,17 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       *(__int16 *)stackPtr,
       *(__int16 *)(stackPtr + 2),
       slotIndex);
-    v9 = *(unsigned __int16 *)(gameData
+    buildingIndex = *(unsigned __int16 *)(gameData
                              + TILE_ROW_STRIDE * (unsigned __int8)*(_DWORD *)(stackPtr + 320)
                              + 2 * (unsigned __int8)BYTE1(*(_DWORD *)(stackPtr + 320))
                              + TILE_MAP_OFFSET)
        - TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    if ( v9 <= 0x64 )
+    if ( buildingIndex <= 0x64 )
     {
-      slotIndex = BUILDING_RECORD_SIZE * v9;
-      v10 = UNIT_RECORD(v9);
-      if ( (unsigned int)*(char *)(v10 + 4) < 4
-        && *(__int16 *)(v10 + 16) != -1
+      slotIndex = BUILDING_RECORD_SIZE * buildingIndex;
+      buildingRecord = UNIT_RECORD(buildingIndex);
+      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4
+        && *(__int16 *)(buildingRecord + 16) != -1
         && *(_BYTE *)(slotIndex + gameData + 509676) != *(_BYTE *)(stackPtr + 4) )
       {
         break;
@@ -1739,18 +1739,18 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
     else
       UnitStack_ClearReadyFlags(stackPtr);
 LABEL_16:
-    v11 = i + 725;
+    nextStackOffset = i + 725;
     slotIndex = stackIndex + 1;
     stackIndex = slotIndex;
     if ( slotIndex >= 500 )
     {
       Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, (unsigned __int8)a2);
-      return LogAllUnits(v11, slotIndex, 0xFFFFFFFF);
+      return LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);
     }
   }
   UnitStack_ClearReadyFlags(stackPtr);
   Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done_enemy_contact", (int)stackIndex, *(__int16 *)stackPtr, *(__int16 *)(stackPtr + 2), slotIndex);
-  return LogAllUnits(v11, slotIndex, 0xFFFFFFFF);
+  return LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);
 }
 // 4119FD: simplified comparisons for 'edx.4': <0 || >=65 became >=65u
 // 411A18: simplified comparisons for 'edx.4': <0 || >=4 became >=4u
@@ -2438,7 +2438,7 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
-  int v18; // [esp-4h] [ebp-24h]
+  int neighborColumnArg; // [esp-4h] [ebp-24h]
   int targetStackPtr; // [esp+0h] [ebp-20h]
   int neighborOrdinal; // [esp+4h] [ebp-1Ch]
 
@@ -2460,9 +2460,9 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
         LOBYTE(sourceSlots) = -1;
         if ( !Trap_GetTileOwnerMask(neighborRow, neighborColumn, -1) )
         {
-          v18 = Map_NeighborDY[neighborIndex] + originColumn;
+          neighborColumnArg = Map_NeighborDY[neighborIndex] + originColumn;
           LOBYTE(sourceSlots) = Rng_RandRange(0, 7);
-          createSucceeded = Unit_Create(*(__int16 *)sourceSlotsPtr, sourceSlotsPtr[2], v13, (char)sourceSlots, v18);
+          createSucceeded = Unit_Create(*(__int16 *)sourceSlotsPtr, sourceSlotsPtr[2], v13, (char)sourceSlots, neighborColumnArg);
           if ( createSucceeded )
             break;
         }
@@ -3277,16 +3277,16 @@ char  Unit_BuildGoSpriteFilePath(char *destPath, unsigned __int8 unitType, char 
 {
   char *srcPrefix; // esi
   char *writePrefix; // edi
-  char v5; // al
-  char v6; // al
+  char prefixChar; // al
+  char prefixChar2; // al
   char *srcKey; // esi
   char *writeKey; // edi
-  char v9; // al
-  char v10; // al
+  char keyChar; // al
+  char keyChar2; // al
   char *srcVariant; // esi
   char *writeVariant; // edi
-  char v13; // al
-  char v14; // al
+  char variantChar; // al
+  char variantChar2; // al
   char *srcExt; // esi
   char *writeExt; // edi
   char result; // al
@@ -3298,44 +3298,44 @@ char  Unit_BuildGoSpriteFilePath(char *destPath, unsigned __int8 unitType, char 
   variantSuffix[1] = 0;
   do
   {
-    v5 = *srcPrefix;
+    prefixChar = *srcPrefix;
     *writePrefix = *srcPrefix;
-    if ( !v5 )
+    if ( !prefixChar )
       break;
-    v6 = srcPrefix[1];
+    prefixChar2 = srcPrefix[1];
     srcPrefix += 2;
-    writePrefix[1] = v6;
+    writePrefix[1] = prefixChar2;
     writePrefix += 2;
   }
-  while ( v6 );
+  while ( prefixChar2 );
   srcKey = (char *)UnitType_GetResourceKey(unitType);
   writeKey = &destPath[strlen(destPath)];
   do
   {
-    v9 = *srcKey;
+    keyChar = *srcKey;
     *writeKey = *srcKey;
-    if ( !v9 )
+    if ( !keyChar )
       break;
-    v10 = srcKey[1];
+    keyChar2 = srcKey[1];
     srcKey += 2;
-    writeKey[1] = v10;
+    writeKey[1] = keyChar2;
     writeKey += 2;
   }
-  while ( v10 );
+  while ( keyChar2 );
   srcVariant = variantSuffix;
   writeVariant = &destPath[strlen(destPath)];
   do
   {
-    v13 = *srcVariant;
+    variantChar = *srcVariant;
     *writeVariant = *srcVariant;
-    if ( !v13 )
+    if ( !variantChar )
       break;
-    v14 = srcVariant[1];
+    variantChar2 = srcVariant[1];
     srcVariant += 2;
-    writeVariant[1] = v14;
+    writeVariant[1] = variantChar2;
     writeVariant += 2;
   }
-  while ( v14 );
+  while ( variantChar2 );
   srcExt = a_s32;
   writeExt = &destPath[strlen(destPath)];
   do
@@ -3359,20 +3359,20 @@ char  UI_BeginUnitInfo(char *destPath, unsigned __int8 unitType, char variantDig
 {
   char *srcPrefix; // esi
   char *writePrefix; // edi
-  char v5; // al
-  char v6; // al
+  char prefixChar; // al
+  char prefixChar2; // al
   char *srcKey; // esi
   char *writeKey; // edi
-  char v9; // al
-  char v10; // al
+  char keyChar; // al
+  char keyChar2; // al
   char *srcVariant; // esi
   char *writeVariant; // edi
-  char v13; // al
-  char v14; // al
+  char variantChar; // al
+  char variantChar2; // al
   char *srcInfix; // esi
   char *writeInfix; // edi
-  char v17; // al
-  char v18; // al
+  char infixChar; // al
+  char infixChar2; // al
   char *srcExt; // esi
   char *writeExt; // edi
   char result; // al
@@ -3384,58 +3384,58 @@ char  UI_BeginUnitInfo(char *destPath, unsigned __int8 unitType, char variantDig
   variantSuffix[1] = 0;
   do
   {
-    v5 = *srcPrefix;
+    prefixChar = *srcPrefix;
     *writePrefix = *srcPrefix;
-    if ( !v5 )
+    if ( !prefixChar )
       break;
-    v6 = srcPrefix[1];
+    prefixChar2 = srcPrefix[1];
     srcPrefix += 2;
-    writePrefix[1] = v6;
+    writePrefix[1] = prefixChar2;
     writePrefix += 2;
   }
-  while ( v6 );
+  while ( prefixChar2 );
   srcKey = (char *)UnitType_GetResourceKey(unitType);
   writeKey = &destPath[strlen(destPath)];
   do
   {
-    v9 = *srcKey;
+    keyChar = *srcKey;
     *writeKey = *srcKey;
-    if ( !v9 )
+    if ( !keyChar )
       break;
-    v10 = srcKey[1];
+    keyChar2 = srcKey[1];
     srcKey += 2;
-    writeKey[1] = v10;
+    writeKey[1] = keyChar2;
     writeKey += 2;
   }
-  while ( v10 );
+  while ( keyChar2 );
   srcVariant = variantSuffix;
   writeVariant = &destPath[strlen(destPath)];
   do
   {
-    v13 = *srcVariant;
+    variantChar = *srcVariant;
     *writeVariant = *srcVariant;
-    if ( !v13 )
+    if ( !variantChar )
       break;
-    v14 = srcVariant[1];
+    variantChar2 = srcVariant[1];
     srcVariant += 2;
-    writeVariant[1] = v14;
+    writeVariant[1] = variantChar2;
     writeVariant += 2;
   }
-  while ( v14 );
+  while ( variantChar2 );
   srcInfix = a_i;
   writeInfix = &destPath[strlen(destPath)];
   do
   {
-    v17 = *srcInfix;
+    infixChar = *srcInfix;
     *writeInfix = *srcInfix;
-    if ( !v17 )
+    if ( !infixChar )
       break;
-    v18 = srcInfix[1];
+    infixChar2 = srcInfix[1];
     srcInfix += 2;
-    writeInfix[1] = v18;
+    writeInfix[1] = infixChar2;
     writeInfix += 2;
   }
-  while ( v18 );
+  while ( infixChar2 );
   srcExt = a_s32_0;
   writeExt = &destPath[strlen(destPath)];
   do
@@ -3661,20 +3661,20 @@ char  Unit_BuildSelectedUnitPanelIconPalettePath(char *destPath, unsigned __int8
 {
   char *dirPrefixSrc; // esi
   char *destWrite; // edi
-  char v6; // al
-  char v7; // al
+  char dirPrefixCh; // al
+  char dirPrefixNextCh; // al
   char *resourceKeySrc; // esi
   char *appendCursor1; // edi
-  char v10; // al
-  char v11; // al
+  char resKeyCh; // al
+  char resKeyNextCh; // al
   char *prefixSrc; // esi
   char *appendCursor2; // edi
-  char v14; // al
-  char v15; // al
+  char prefixCh; // al
+  char prefixNextCh; // al
   char *iSuffixSrc; // esi
   char *appendCursor3; // edi
-  char v18; // al
-  char v19; // al
+  char iSuffixCh; // al
+  char iSuffixNextCh; // al
   char *palExtSrc; // esi
   char *appendCursor4; // edi
   char result; // al
@@ -3687,58 +3687,58 @@ char  Unit_BuildSelectedUnitPanelIconPalettePath(char *destPath, unsigned __int8
   strcpy(prefixBuffer, "c");
   do
   {
-    v6 = *dirPrefixSrc;
+    dirPrefixCh = *dirPrefixSrc;
     *destWrite = *dirPrefixSrc;
-    if ( !v6 )
+    if ( !dirPrefixCh )
       break;
-    v7 = dirPrefixSrc[1];
+    dirPrefixNextCh = dirPrefixSrc[1];
     dirPrefixSrc += 2;
-    destWrite[1] = v7;
+    destWrite[1] = dirPrefixNextCh;
     destWrite += 2;
   }
-  while ( v7 );
+  while ( dirPrefixNextCh );
   resourceKeySrc = (char *)UnitType_GetResourceKey(unitType);
   appendCursor1 = &destPath[strlen(destPath)];
   do
   {
-    v10 = *resourceKeySrc;
+    resKeyCh = *resourceKeySrc;
     *appendCursor1 = *resourceKeySrc;
-    if ( !v10 )
+    if ( !resKeyCh )
       break;
-    v11 = resourceKeySrc[1];
+    resKeyNextCh = resourceKeySrc[1];
     resourceKeySrc += 2;
-    appendCursor1[1] = v11;
+    appendCursor1[1] = resKeyNextCh;
     appendCursor1 += 2;
   }
-  while ( v11 );
+  while ( resKeyNextCh );
   prefixSrc = prefixBuffer;
   appendCursor2 = &destPath[strlen(destPath)];
   do
   {
-    v14 = *prefixSrc;
+    prefixCh = *prefixSrc;
     *appendCursor2 = *prefixSrc;
-    if ( !v14 )
+    if ( !prefixCh )
       break;
-    v15 = prefixSrc[1];
+    prefixNextCh = prefixSrc[1];
     prefixSrc += 2;
-    appendCursor2[1] = v15;
+    appendCursor2[1] = prefixNextCh;
     appendCursor2 += 2;
   }
-  while ( v15 );
+  while ( prefixNextCh );
   iSuffixSrc = a_i_2;
   appendCursor3 = &destPath[strlen(destPath)];
   do
   {
-    v18 = *iSuffixSrc;
+    iSuffixCh = *iSuffixSrc;
     *appendCursor3 = *iSuffixSrc;
-    if ( !v18 )
+    if ( !iSuffixCh )
       break;
-    v19 = iSuffixSrc[1];
+    iSuffixNextCh = iSuffixSrc[1];
     iSuffixSrc += 2;
-    appendCursor3[1] = v19;
+    appendCursor3[1] = iSuffixNextCh;
     appendCursor3 += 2;
   }
-  while ( v19 );
+  while ( iSuffixNextCh );
   palExtSrc = a_pal;
   appendCursor4 = &destPath[strlen(destPath)];
   do
@@ -4495,7 +4495,7 @@ int * Path_InsertBridgeCornerWaypoints(int stackRecord, char a2, int *pathBuffer
 //----- (004147A0) --------------------------------------------------------
 int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceColumn, DWORD availableActionPoints, int targetColumn)
 {
-  int v6; // ecx
+  int targetRowValue; // ecx
   int targetRowIndex; // edx
   int mapWidth; // ecx
   int mapHeight; // esi
@@ -4568,7 +4568,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   int stepRowDelta; // [esp+C0h] [ebp-44h]
   int stepColumnDelta; // [esp+C4h] [ebp-40h]
   int traceColIndex; // [esp+C8h] [ebp-3Ch]
-  int v80; // [esp+CCh] [ebp-38h]
+  int savedRowByteOffset; // [esp+CCh] [ebp-38h]
   int colByteOffsetSaved; // [esp+D0h] [ebp-34h]
   int distRowByteOffset; // [esp+D4h] [ebp-30h]
   int costGridRowBase; // [esp+D8h] [ebp-2Ch]
@@ -4586,10 +4586,10 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   sourceColumn_l = sourceColumn;
   targetRow_l = targetRow;
   Debug_Log(targetRow, sourceColumn, availableActionPoints, (int)aUnit_movetrack);
-  v6 = targetRow;
-  if ( v6 < 0 )
+  targetRowValue = targetRow;
+  if ( targetRowValue < 0 )
     return 0;
-  targetRowIndex = v6;
+  targetRowIndex = targetRowValue;
   mapWidth = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
   if ( targetRowIndex >= mapWidth )
     return 0;
@@ -4693,7 +4693,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
           column = colWindowMin;
           if ( colWindowMin <= colWindowMax )
           {
-            v80 = currentRowByteOffset;
+            savedRowByteOffset = currentRowByteOffset;
             distRowByteOffset = currentRowByteOffset;
             colByteOffset = 2 * colWindowMin;
             do
@@ -4715,7 +4715,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
                         stepCost = (23 * (unsigned __int16)stepCost
                              - (__CFSHL__((23 * (unsigned __int16)stepCost) >> 31, 4)
                               + 16 * ((23 * (unsigned __int16)stepCost) >> 31))) >> 4;
-                      currentCellDistPtr = (unsigned __int16 *)(colByteOffsetSaved + v80 + distanceGrid);
+                      currentCellDistPtr = (unsigned __int16 *)(colByteOffsetSaved + savedRowByteOffset + distanceGrid);
                       currentCellDistance = *currentCellDistPtr;
                       candidateDistance = (unsigned __int16)stepCost + currentCellDistance;
                       neighborDistPtr = (_WORD *)(distanceGrid + 200 * neighborRow + 2 * neighborColumn);
@@ -8341,7 +8341,7 @@ int  Unit_Info(
         int iconSpriteIndex,
         unsigned __int8 *unitRecord,
         DWORD allocContext,
-        DWORD a6)
+        DWORD drawContext)
 {
   int v8; // ecx
   int unitType; // eax
@@ -8384,19 +8384,19 @@ int  Unit_Info(
   if ( unitSpriteSet )
     unitSpriteSet = DLXSpriteSet_Load(unitSpriteSet, ownerIndex);
   spriteSet = unitSpriteSet;
-  if ( a6 )
+  if ( drawContext )
   {
     ownerIndex = g_MapPalettePtr;
-    DLXSpriteSet_DrawText((int)unitSpriteSet, 0, a6, (unsigned __int8 *)g_MapPalettePtr);
+    DLXSpriteSet_DrawText((int)unitSpriteSet, 0, drawContext, (unsigned __int8 *)g_MapPalettePtr);
   }
   Render_Pump();
-  Surface = (_DWORD *)Mem_Alloc(188, v13, ownerIndex, a6);
+  Surface = (_DWORD *)Mem_Alloc(188, v13, ownerIndex, drawContext);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, 201, 116);
   surface = Surface;
   Render_FillRect(0, Surface, (unsigned __int16)screenTop, (unsigned __int16)screenLeft, screenLeft + 200, screenTop + 115, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  UI_DrawUnitInfoPane(screenLeft, screenTop, a6, (__int16 *)unitRecord, a6, iconSpriteIndex);
+  UI_DrawUnitInfoPane(screenLeft, screenTop, drawContext, (__int16 *)unitRecord, drawContext, iconSpriteIndex);
   SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 0);
   animSpriteTop = screenTop + 5;
   renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
@@ -8416,8 +8416,8 @@ int  Unit_Info(
   lastAnimTick = Time_Now(v18, (int)&g_MainRenderDevice);
   while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
   {
-    DD_Pump((int)g_RenderState, a6);
-    if ( !a6 )
+    DD_Pump((int)g_RenderState, drawContext);
+    if ( !drawContext )
     {
       currentTick = Time_Now(v19, lastAnimTick + 10);
       if ( v21 < currentTick )
@@ -8482,7 +8482,7 @@ int  UI_DrawSpecialUnitInfoPane(
   int lastFrameTime; // edi
   int animFrameIndex; // esi
   int v22; // ecx
-  unsigned int v23; // eax
+  unsigned int currentTime; // eax
   unsigned int v24; // edx
   int v25; // ecx
   int animSprite; // eax
@@ -8584,8 +8584,8 @@ int  UI_DrawSpecialUnitInfoPane(
   while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
   {
     DD_Pump((int)g_RenderState, (char)unitName);
-    v23 = Time_Now(v22, lastFrameTime + 10);
-    if ( v24 < v23 )
+    currentTime = Time_Now(v22, lastFrameTime + 10);
+    if ( v24 < currentTime )
     {
       lastFrameTime = Time_Now(v25, v24);
       animFrameIndex = (animFrameIndex + 1) % 8;

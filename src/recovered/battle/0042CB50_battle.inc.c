@@ -597,8 +597,8 @@ int  UnitBattle_ShowPlayerMessageBanner(int messageText, int playerIndex, int do
   int SpriteForChar; // eax
   int labelText; // edi
   int v13; // edx
-  int v14; // ebx
-  int v15; // esi
+  int msgTextBottom; // ebx
+  int msgTextTop; // esi
   int v16; // ecx
   int v17; // ecx
   int v18; // ecx
@@ -651,10 +651,10 @@ int  UnitBattle_ShowPlayerMessageBanner(int messageText, int playerIndex, int do
   labelText = playerLabelStrings[(unsigned __int8)g_LanguageIndex];
   UI_DrawTextFmt(labelText, windowTop, windowBottom, windowLeft + 40, 3, labelText);
   Render_ReleaseSurface(8, bannerSurface);
-  v14 = windowBottom;
-  v15 = windowTop;
+  msgTextBottom = windowBottom;
+  msgTextTop = windowTop;
   UI_DrawTextFmt(labelText, windowTop, windowBottom, windowLeft + 55, 3, PLAYER_DATA(savedPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
-  UI_DrawTextFmt(savedMessageText, v15, v14, windowLeft + 100, 3, savedMessageText);
+  UI_DrawTextFmt(savedMessageText, msgTextTop, msgTextBottom, windowLeft + 100, 3, savedMessageText);
   Render_Present((int)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent("battle_banner_after_present", messageText, playerIndex, spriteSetSlot[1], bannerSurface);
   RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
@@ -1067,7 +1067,7 @@ __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3)
 // 545150: using guessed type int dword_545150;
 
 //----- (0042E3C0) --------------------------------------------------------
-signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
+signed int  UnitBattle_RunTurnLoop(int a1, DWORD phaseFlag)
 {
   int slotIndex; // edx
   int unitRecord; // eax
@@ -1076,7 +1076,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   int v6; // ecx
   int bannerTexts[9]; // [esp+0h] [ebp-24h] BYREF
 
-  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, (int)a2);
+  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, (int)phaseFlag);
   g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_restore_selected", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceBattleUnitSnapshot("turn_loop_after_restore_selected");
@@ -1113,8 +1113,8 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   bannerTexts[1] = (int)g_BattleYourTurnBannerTexts[1];
   bannerTexts[2] = (int)g_BattleYourTurnBannerTexts[2];
   v4 = 1;
-  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, bannerTexts[(unsigned __int8)g_LanguageIndex], (int)a2);
-  UnitBattle_ShowPlayerMessageBanner(bannerTexts[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
+  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, bannerTexts[(unsigned __int8)g_LanguageIndex], (int)phaseFlag);
+  UnitBattle_ShowPlayerMessageBanner(bannerTexts[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, phaseFlag);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_BattleLoopExitCode, 0);
   loopExitCode = g_BattleLoopExitCode;
   g_UnitBattleActionLoopExitRequested = 0;
@@ -1995,8 +1995,8 @@ int  UnitBattle_DrawUnitSprite(int unitIndex, int screenX, int screenY, int yOff
   int v17; // ecx
   int neighborIndex; // edi
   int neighborRecord; // ecx
-  int v20; // eax
-  int v21; // eax
+  int pulseTime; // eax
+  int markPulseSin; // eax
   int v22; // edx
   int markSpriteBase; // eax
   int markSprite; // eax
@@ -2085,9 +2085,9 @@ LABEL_13:
         neighborRecord = 31 * result + g_MapData;
         if ( *(_BYTE *)(neighborRecord + 854) != *(_BYTE *)(g_MapData + recordOffset + 854) && result != g_ActiveUnitMoveTileIndex )
         {
-          v20 = Time_Now(neighborRecord, 10 * adjacentEnemies);
-          v21 = Math_SinDegreesQ16(adjacentEnemies * v20);
-          markPulse = v22 + 120 + ((v22 * v21) >> 16);
+          pulseTime = Time_Now(neighborRecord, 10 * adjacentEnemies);
+          markPulseSin = Math_SinDegreesQ16(adjacentEnemies * pulseTime);
+          markPulse = v22 + 120 + ((v22 * markPulseSin) >> 16);
           if ( *(unsigned __int8 *)(recordOffset + g_MapData + 854) == *(_DWORD *)(g_MapData + 836) )
             markSpriteBase = 17;
           else
@@ -3046,7 +3046,7 @@ LABEL_36:
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00431940) --------------------------------------------------------
-int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName, DWORD a5)
+int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int tileCol, int spriteName, DWORD localTileRow)
 {
   _DWORD *spriteSetAlloc; // eax
   int v6; // ecx
@@ -3088,18 +3088,18 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int a3, int spriteName
   int savedPopupY; // [esp+60h] [ebp-20h]
   int flagDrawX; // [esp+64h] [ebp-1Ch]
   _DWORD *savedSurface; // [esp+68h] [ebp-18h]
-  int v46; // [esp+6Ch] [ebp-14h]
+  int savedTileCol; // [esp+6Ch] [ebp-14h]
   int savedPopupX; // [esp+70h] [ebp-10h]
 
   savedPopupX = popupX;
   savedPopupY = popupY;
   savedSpriteName = spriteName;
-  v46 = a3;
-  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, a3, spriteName, a5);
+  savedTileCol = tileCol;
+  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, tileCol, spriteName, localTileRow);
   if ( spriteSetAlloc )
     spriteSetAlloc = DLXSpriteSet_Load(spriteSetAlloc, spriteName);
   spriteSet = spriteSetAlloc;
-  Surface = (_DWORD *)Mem_Alloc(188, v6, spriteName, a5);
+  Surface = (_DWORD *)Mem_Alloc(188, v6, spriteName, localTileRow);
   if ( Surface )
   {
     SpriteWidth = DLX_GetSpriteWidth(g_ActiveUiSpriteSet, 0xCu);
