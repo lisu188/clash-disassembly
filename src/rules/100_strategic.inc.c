@@ -1413,7 +1413,7 @@ signed int Rules_RegisterStrategicActionHostFunctions()
   Rules_RegisterHostFunction(aJest_droga_d_4, 98, (int)aJest_droga_d_3, (int)&Rules_HostRoadExistsToTemple, (int)a33i);
   Rules_RegisterHostFunction(aOddzial_w_za_1, 98, (int)aOddzial_w_za_0, (int)&Rules_HostTroopInArmyRange, (int)a33i);
   Rules_RegisterHostFunction(aBudowla_w_za_0, 98, (int)aBudowla_w_zasi, (int)&Rules_HostBuildingInArmyRange, (int)a33i);
-  Rules_RegisterHostFunction(aOdleglosc_od_0, 105, (int)aOdleglosc_od_o, (int)&Rules_HostDistanceToObject, (int)a33i);
+  Rules_RegisterHostFunction(aOdleglosc_od_0, 105, (int)aOdleglosc_od_o, (int)&Rules_HostDistanceFromObject, (int)a33i);
   Rules_RegisterHostFunction(aSwiatynia_w__0, 98, (int)aSwiatynia_w_za, (int)&Rules_HostTempleInArmyRange, (int)a33i);
   Rules_RegisterHostFunction(aSwiatynia_ok, 98, (int)aSwiatynia_ok00, (int)&Rules_HostTempleOk, (int)a33i);
   Rules_RegisterHostFunction(aMaszeruj, 105, (int)aMaszeruj00, (int)&Rules_HostMarch, (int)a33i);

@@ -4863,7 +4863,7 @@ _UNKNOWN Rules_HostRoadExistsToCastle; // weak
 _UNKNOWN Rules_HostRoadExistsToTemple; // weak
 _UNKNOWN Rules_HostTroopInArmyRange; // weak
 _UNKNOWN Rules_HostBuildingInArmyRange; // weak
-_UNKNOWN Rules_HostDistanceToObject; // weak
+_UNKNOWN Rules_HostDistanceFromObject; // weak
 _UNKNOWN Rules_HostTempleInArmyRange; // weak
 _UNKNOWN Rules_HostTempleOk; // weak
 _UNKNOWN Rules_HostMarch; // weak
