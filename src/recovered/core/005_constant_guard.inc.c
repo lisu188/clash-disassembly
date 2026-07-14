@@ -127,6 +127,15 @@ typedef char clash95_guard_CLIPS_STRATEGY_LEX[(CLIPS_STRATEGY_LEX) == (2) ? 1 : 
 typedef char clash95_guard_CLIPS_STRATEGY_MEA[(CLIPS_STRATEGY_MEA) == (3) ? 1 : -1];
 typedef char clash95_guard_CLIPS_STRATEGY_RANDOM[(CLIPS_STRATEGY_RANDOM) == (6) ? 1 : -1];
 typedef char clash95_guard_CLIPS_STRATEGY_SIMPLICITY[(CLIPS_STRATEGY_SIMPLICITY) == (5) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_EXTERNAL_ADDRESS[(CLIPS_TYPE_EXTERNAL_ADDRESS) == (5) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_FACT_ADDRESS[(CLIPS_TYPE_FACT_ADDRESS) == (6) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_FLOAT[(CLIPS_TYPE_FLOAT) == (0) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_INSTANCE_ADDRESS[(CLIPS_TYPE_INSTANCE_ADDRESS) == (7) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_INSTANCE_NAME[(CLIPS_TYPE_INSTANCE_NAME) == (8) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_INTEGER[(CLIPS_TYPE_INTEGER) == (1) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_MULTIFIELD[(CLIPS_TYPE_MULTIFIELD) == (4) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_STRING[(CLIPS_TYPE_STRING) == (3) ? 1 : -1];
+typedef char clash95_guard_CLIPS_TYPE_SYMBOL[(CLIPS_TYPE_SYMBOL) == (2) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_EAST[(DIRECTION8_EAST) == (4) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_NORTH[(DIRECTION8_NORTH) == (6) ? 1 : -1];
 typedef char clash95_guard_DIRECTION8_NORTHEAST[(DIRECTION8_NORTHEAST) == (5) ? 1 : -1];

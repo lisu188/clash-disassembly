@@ -7079,29 +7079,29 @@ int  Rules_HashFactFieldList(int theSegment)
     {
       switch ( *(_WORD *)fieldPtr )
       {
-        case 0:
+        case CLIPS_TYPE_FLOAT:
           value = *(_DWORD *)(fieldPtr + 2);
           fieldHash = multiplier * *(_DWORD *)((uintptr_t)(unsigned int)value + 16);
           goto LABEL_5;
-        case 1:
+        case CLIPS_TYPE_INTEGER:
           value = *(_DWORD *)(fieldPtr + 2);
           fieldHash = multiplier * *(_DWORD *)((uintptr_t)(unsigned int)value + 16);
           goto LABEL_5;
-        case 2:
-        case 3:
-        case 8:
+        case CLIPS_TYPE_SYMBOL:
+        case CLIPS_TYPE_STRING:
+        case CLIPS_TYPE_INSTANCE_NAME:
           value = *(_DWORD *)(fieldPtr + 2);
           fieldHash = multiplier
              * Rules_HashSymbolName(
                  (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)value + 16),
                  0x3F5u);
           goto LABEL_5;
-        case 4:
+        case CLIPS_TYPE_MULTIFIELD:
           fieldHash = Rules_HashFactFieldList(*(_DWORD *)(fieldPtr + 2));
           goto LABEL_5;
-        case 5:
-        case 6:
-        case 7:
+        case CLIPS_TYPE_EXTERNAL_ADDRESS:
+        case CLIPS_TYPE_FACT_ADDRESS:
+        case CLIPS_TYPE_INSTANCE_ADDRESS:
           fieldHash = multiplier * *(_DWORD *)(fieldPtr + 2);
 LABEL_5:
           hashValue += fieldHash;
@@ -11963,20 +11963,20 @@ int  Rules_ComputeFieldHashValue(int theType, int value, int position)
   result = value;
   switch ( theType )
   {
-    case 0:
+    case CLIPS_TYPE_FLOAT:
       result = *(_DWORD *)(value + 16);
       goto LABEL_3;
-    case 1:
+    case CLIPS_TYPE_INTEGER:
       result = *(_DWORD *)(value + 16);
       goto LABEL_3;
-    case 2:
-    case 3:
-    case 8:
+    case CLIPS_TYPE_SYMBOL:
+    case CLIPS_TYPE_STRING:
+    case CLIPS_TYPE_INSTANCE_NAME:
       result = *(_DWORD *)(value + 12) << 16 >> 18;
       goto LABEL_3;
-    case 5:
-    case 6:
-    case 7:
+    case CLIPS_TYPE_EXTERNAL_ADDRESS:
+    case CLIPS_TYPE_FACT_ADDRESS:
+    case CLIPS_TYPE_INSTANCE_ADDRESS:
 LABEL_3:
       if ( position >= 0 )
         result *= position + 29;

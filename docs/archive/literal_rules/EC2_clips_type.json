@@ -1,0 +1,236 @@
+[
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "CLIPS_TYPE_FLOAT",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 0 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "CLIPS_TYPE_INTEGER",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 1 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "CLIPS_TYPE_SYMBOL",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 2 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "CLIPS_TYPE_STRING",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 3 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "CLIPS_TYPE_MULTIFIELD",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 4 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "CLIPS_TYPE_EXTERNAL_ADDRESS",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 5 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "CLIPS_TYPE_FACT_ADDRESS",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 6 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "CLIPS_TYPE_INSTANCE_ADDRESS",
+  "pattern": "case (?P<lit>7):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 7 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 8,
+  "name": "CLIPS_TYPE_INSTANCE_NAME",
+  "pattern": "case (?P<lit>8):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_ComputeFieldHashValue",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 8 in the field-hash switch (Rules_ComputeFieldHashValue).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 0,
+  "name": "CLIPS_TYPE_FLOAT",
+  "pattern": "case (?P<lit>0):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 0 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 1,
+  "name": "CLIPS_TYPE_INTEGER",
+  "pattern": "case (?P<lit>1):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 1 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 2,
+  "name": "CLIPS_TYPE_SYMBOL",
+  "pattern": "case (?P<lit>2):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 2 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 3,
+  "name": "CLIPS_TYPE_STRING",
+  "pattern": "case (?P<lit>3):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 3 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 4,
+  "name": "CLIPS_TYPE_MULTIFIELD",
+  "pattern": "case (?P<lit>4):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 4 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 5,
+  "name": "CLIPS_TYPE_EXTERNAL_ADDRESS",
+  "pattern": "case (?P<lit>5):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 5 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 6,
+  "name": "CLIPS_TYPE_FACT_ADDRESS",
+  "pattern": "case (?P<lit>6):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 6 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 7,
+  "name": "CLIPS_TYPE_INSTANCE_ADDRESS",
+  "pattern": "case (?P<lit>7):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 7 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ },
+ {
+  "kind": "enum",
+  "value": 8,
+  "name": "CLIPS_TYPE_INSTANCE_NAME",
+  "pattern": "case (?P<lit>8):",
+  "files": [
+   "src/recovered/rules/clips/00481720_language_part2.inc.c"
+  ],
+  "func": "Rules_HashFactFieldList",
+  "confidence": "behavior-confirmed",
+  "evidence": "CLIPS primitive type 8 in the field-hash switch (Rules_HashFactFieldList).",
+  "area": "clips"
+ }
+]
