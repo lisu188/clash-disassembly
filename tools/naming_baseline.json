@@ -480,7 +480,7 @@
   },
   "file_count": 27,
   "magic_literals": {
-   "total_eligible": 809,
+   "total_eligible": 372,
    "total_review": 58423,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
@@ -550,37 +550,37 @@
     },
     "GAME_TURN_COUNTER_OFFSET": {
      "value": 140022,
-     "eligible": 11,
+     "eligible": 0,
      "review": 1
     },
     "MAP_HEIGHT_TILES_OFFSET": {
      "value": 140004,
-     "eligible": 45,
+     "eligible": 0,
      "review": 1
     },
     "MAP_THEME_INDEX_OFFSET": {
      "value": 140016,
-     "eligible": 28,
+     "eligible": 1,
      "review": 1
     },
     "MAP_VIEW_LEFT_OFFSET": {
      "value": 140008,
-     "eligible": 82,
+     "eligible": 0,
      "review": 1
     },
     "MAP_VIEW_TOP_OFFSET": {
      "value": 140012,
-     "eligible": 86,
+     "eligible": 0,
      "review": 1
     },
     "MAP_WIDTH_TILES_OFFSET": {
      "value": 140000,
-     "eligible": 45,
+     "eligible": 0,
      "review": 5
     },
     "MISSION_FAILURE_FLAG_OFFSET": {
      "value": 140021,
-     "eligible": 5,
+     "eligible": 0,
      "review": 1
     },
     "PLAYER_AI_INTELLIGENCE_OFFSET": {
@@ -610,7 +610,7 @@
     },
     "PLAYER_DATA_STRIDE": {
      "value": 1423,
-     "eligible": 116,
+     "eligible": 6,
      "review": 2
     },
     "PLAYER_DISPLAY_NAME_OFFSET": {
@@ -665,7 +665,7 @@
     },
     "PLAYER_RUNTIME_STATE_OFFSET": {
      "value": 140024,
-     "eligible": 20,
+     "eligible": 0,
      "review": 4
     },
     "PLAYER_TECH_LEVEL_OFFSET": {
@@ -820,7 +820,7 @@
     },
     "VIEWED_PLAYER_INDEX_OFFSET": {
      "value": 147143,
-     "eligible": 6,
+     "eligible": 0,
      "review": 1
     }
    }

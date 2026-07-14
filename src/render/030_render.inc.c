@@ -4559,15 +4559,15 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   else
   {
     v80 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
-    for ( i = *(_DWORD *)(gameData + 140012); i < *(_DWORD *)(gameData + 140012) + 7; ++i )
+    for ( i = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET); i < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7; ++i )
     {
       v4 = 14 * i;
       DD_Pump((int)&g_RenderState, ii, i);
-      ii = *(_DWORD *)(gameData + 140008);
+      ii = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
       v5 = i + 1;
       for ( j = 1400 * ii; ; j += 1400 )
       {
-        v1 = *(_DWORD *)(gameData + 140008) + 9;
+        v1 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
         if ( ii >= v1 )
           break;
         v6 = (unsigned __int16 *)(v4 + j + gameData);
@@ -4584,7 +4584,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               *(_DWORD *)((char *)v6 + 6) = v9 + v20;
               *v6 = v86;
               WorldMap_RedrawTileIfVisible(ii, i);
-              if ( !*(_BYTE *)(gameData + 140016) && v86 == 36 )
+              if ( !*(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) && v86 == 36 )
               {
                 v12 = (_WORD *)(14 * v5 + j + gameData);
                 if ( *v12 == 36 )
@@ -4646,16 +4646,16 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         v29 = 3 * (unsigned __int16)g_Font_GlyphRemapTable[n++];
       v30 = Time_Now(v23, (unsigned __int8)g_Render_SpriteAnimDelayBytes[3 * (unsigned __int16)g_ColorCycleDelayLookupIndex]);
       g_WorldMap_NextPaletteAnimTime = v31 + v30;
-      v32 = *(_DWORD *)(gameData + 140012);
+      v32 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       v22 = 2 * v32;
       v82 = 14 * v32;
-      while ( v32 < *(_DWORD *)(gameData + 140012) + 7 )
+      while ( v32 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
       {
         DD_Pump((int)&g_RenderState, ii, v32);
-        v33 = *(_DWORD *)(gameData + 140008);
+        v33 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
         for ( ii = 1400 * v33; ; ii += 1400 )
         {
-          v22 = *(_DWORD *)(gameData + 140008) + 9;
+          v22 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( v33 >= v22 )
             break;
           HIWORD(v35) = 0;
@@ -4678,18 +4678,18 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
     }
     if ( Time_Now(v23, v22) > (unsigned int)g_WorldMap_NextTileStateAnimTime )
     {
-      v37 = *(_BYTE *)(gameData + 140016);
+      v37 = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
       if ( v37 )
       {
         if ( v37 <= 1u )
         {
-          v44 = *(_DWORD *)(gameData + 140012);
+          v44 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
           v84 = 14 * v44;
-          while ( v44 < *(_DWORD *)(gameData + 140012) + 7 )
+          while ( v44 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            v45 = *(_DWORD *)(gameData + 140008);
+            v45 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
             v46 = 1400 * v45;
-            while ( v45 < *(_DWORD *)(gameData + 140008) + 9 )
+            while ( v45 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
               v47 = (_WORD *)(v84 + v46 + gameData);
               if ( *v47 == 7 && (unsigned __int16)v47[1] == 0xFFFF && (unsigned int)rand_(v45, 7) < 0x333 )
@@ -4706,13 +4706,13 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         }
         else if ( v37 == 2 )
         {
-          v49 = *(_DWORD *)(gameData + 140012);
+          v49 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
           v83 = 14 * v49;
-          while ( v49 < *(_DWORD *)(gameData + 140012) + 7 )
+          while ( v49 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            v50 = *(_DWORD *)(gameData + 140008);
+            v50 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
             v51 = 1400 * v50;
-            while ( v50 < *(_DWORD *)(gameData + 140008) + 9 )
+            while ( v50 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
               v52 = (_WORD *)(v83 + v51 + gameData);
               if ( *v52 == 7 && (unsigned __int16)v52[1] == 0xFFFF )
@@ -4734,13 +4734,13 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       }
       else
       {
-        v38 = *(_DWORD *)(gameData + 140012);
+        v38 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
         v76 = 14 * v38;
-        while ( v38 < *(_DWORD *)(gameData + 140012) + 7 )
+        while ( v38 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
         {
-          v39 = *(_DWORD *)(gameData + 140008);
+          v39 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
           v40 = 1400 * v39;
-          while ( v39 < *(_DWORD *)(gameData + 140008) + 9 )
+          while ( v39 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
           {
             v41 = (_WORD *)(v76 + v40 + gameData);
             if ( *v41 == 7 && (unsigned __int16)v41[1] == 0xFFFF && (unsigned int)rand_(v39, 7) < 0x333 )
@@ -4755,17 +4755,17 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           v76 += 14;
         }
       }
-      v55 = *(_DWORD *)(gameData + 140012);
+      v55 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       v77 = 14 * v55;
       v78 = 14 * v55 + 14;
-      while ( v55 < *(_DWORD *)(gameData + 140012) + 7 )
+      while ( v55 < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
       {
-        v56 = *(_DWORD *)(gameData + 140008);
+        v56 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
         v57 = 1400 * v56;
-        while ( v56 < *(_DWORD *)(gameData + 140008) + 9 )
+        while ( v56 < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
         {
           v58 = (_WORD *)(v57 + gameData + v77);
-          if ( *(_BYTE *)(gameData + 140016) )
+          if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) )
           {
             if ( *v58 == 771 && (unsigned int)rand_(v56, v58) < 0x199 )
             {
@@ -4785,22 +4785,22 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         v77 += 14;
         v78 += 14;
       }
-      v79 = *(_DWORD *)(gameData + 140012);
+      v79 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       for ( jj = 14 * v79; ; jj += 14 )
       {
-        v59 = *(_DWORD *)(gameData + 140012) + 7;
+        v59 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7;
         if ( v59 <= v79 )
           break;
-        v60 = *(_DWORD *)(gameData + 140008);
+        v60 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
         for ( kk = 1400 * v60; ; kk += 1400 )
         {
-          v62 = *(_DWORD *)(gameData + 140008) + 9;
+          v62 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( v60 >= v62 )
             break;
           v63 = *(_WORD *)(jj + kk + gameData);
           if ( v63 >= 0x2Du && v63 <= 0x51u && (unsigned int)rand_(kk, v62) < 0xA3 )
           {
-            v64 = *(_BYTE *)(gameData + 140016);
+            v64 = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
             v65 = v63 - 46;
             if ( v64 )
             {
@@ -5012,24 +5012,24 @@ int Render_RestoreLostSurfaces()
     else
     {
 LABEL_7:
-      *(_DWORD *)(gameData + 140008) += ((g_MouseCursorRawX >> g_CursorCoordShift)
+      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) += ((g_MouseCursorRawX >> g_CursorCoordShift)
                                        - v1
                                        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - v1) >> 31, 3)
                                         + 8 * (((g_MouseCursorRawX >> g_CursorCoordShift) - v1) >> 31))) >> 3;
-      *(_DWORD *)(gameData + 140012) += ((g_MouseCursorRawY >> g_CursorCoordShift)
+      *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) += ((g_MouseCursorRawY >> g_CursorCoordShift)
                                        - v2
                                        - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - v2) >> 31, 3)
                                         + 8 * (((g_MouseCursorRawY >> g_CursorCoordShift) - v2) >> 31))) >> 3;
-      if ( *(int *)(gameData + 140008) < 0 )
-        *(_DWORD *)(gameData + 140008) = 0;
-      v5 = *(_DWORD *)(gameData + 140000);
-      if ( *(_DWORD *)(gameData + 140008) + 9 > v5 )
-        *(_DWORD *)(gameData + 140008) = v5 - 9;
-      if ( *(int *)(gameData + 140012) < 0 )
-        *(_DWORD *)(gameData + 140012) = 0;
-      v6 = *(_DWORD *)(gameData + 140004);
-      if ( *(_DWORD *)(gameData + 140012) + 7 > v6 )
-        *(_DWORD *)(gameData + 140012) = v6 - 7;
+      if ( *(int *)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
+      v5 = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
+      if ( *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 > v5 )
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = v5 - 9;
+      if ( *(int *)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
+      v6 = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+      if ( *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 > v6 )
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = v6 - 7;
       WorldMap_RedrawViewport(1);
       v1 = g_MouseCursorRawX >> g_CursorCoordShift;
       v2 = g_MouseCursorRawY >> g_CursorCoordShift;
@@ -5069,10 +5069,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
   {
     if ( Input_IsKeyPressed(203) )
     {
-      v7 = *(_DWORD *)(gameData + 140008);
+      v7 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
       if ( v7 > 0 )
       {
-        *(_DWORD *)(gameData + 140008) = v7 - 1;
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = v7 - 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v6, v5);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = 1;
@@ -5080,10 +5080,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(205) )
     {
-      a1 = *(_DWORD *)(gameData + 140008);
-      if ( *(_DWORD *)(gameData + 140000) - 9 > a1 )
+      a1 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+      if ( *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 9 > a1 )
       {
-        *(_DWORD *)(gameData + 140008) = a1 + 1;
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v8, a1 + 1);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = v9;
@@ -5091,10 +5091,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(200) )
     {
-      v12 = *(_DWORD *)(gameData + 140012);
+      v12 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       if ( v12 > 0 )
       {
-        *(_DWORD *)(gameData + 140012) = v12 - 1;
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = v12 - 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v11, v10);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = 1;
@@ -5102,10 +5102,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(208) )
     {
-      a1 = *(_DWORD *)(gameData + 140012);
-      if ( *(_DWORD *)(gameData + 140004) - 7 > a1 )
+      a1 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      if ( *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7 > a1 )
       {
-        *(_DWORD *)(gameData + 140012) = a1 + 1;
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v13, a1 + 1);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = v14;
@@ -5137,7 +5137,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
           - 32
           - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
            + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-        + *(_DWORD *)(gameData + 140008);
+        + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
     result = DD_IsLost((int)g_RenderState);
     if ( result )
     {
@@ -5145,7 +5145,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
             - 16
             - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
              + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-          + *(_DWORD *)(gameData + 140012);
+          + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
       result = TILE_INDEX(v17, v18);
       v19 = *(unsigned __int16 *)result;
       if ( (unsigned __int16)v19 == 0xFFFF )

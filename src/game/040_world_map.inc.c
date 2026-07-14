@@ -17,8 +17,8 @@ BOOL UI_TrySelectFriendlyStackUnderCursor()
          - 16
          - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
           + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-       + *(_DWORD *)(gameData + 140012);
-    if ( tileY == *(_DWORD *)(gameData + 140012) + 6
+       + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+    if ( tileY == *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 6
       && ((g_MouseCursorRawX >> g_CursorCoordShift)
         - 32
         - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
@@ -30,7 +30,7 @@ BOOL UI_TrySelectFriendlyStackUnderCursor()
          - 32
          - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
           + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-       + *(_DWORD *)(gameData + 140008);
+       + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
     stackIndex = *(unsigned __int16 *)(TILE_INDEX(tileX, tileY));
     if ( stackIndex > 0x7FFF || stackIndex == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178) != g_CurrentPlayerIndex )
     {
@@ -283,41 +283,41 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
        - 32
        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
         + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-     + *(_DWORD *)(gameData + 140008);
+     + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
   tileY = (((g_MouseCursorRawY >> g_CursorCoordShift)
         - 16
         - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
          + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-      + *(_DWORD *)(gameData + 140012);
+      + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
   if ( tileX < 0
-    || tileX >= *(_DWORD *)(gameData + 140000)
+    || tileX >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
     || tileY < 0
-    || tileY >= *(_DWORD *)(gameData + 140004)
-    || *(_DWORD *)(gameData + 140012) + 6 == tileY && tileX - *(_DWORD *)(gameData + 140008) >= 6 )
+    || tileY >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+    || *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 6 == tileY && tileX - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) >= 6 )
   {
     if ( DD_IsLost((int)&g_RenderState) || DD_IsFlipping((int)&g_RenderState) )
       Diagnostics_TraceWorldMapClickEvent(
         "reject_out_of_bounds",
         tileX,
         tileY,
-        *(_DWORD *)(gameData + 140008),
-        *(_DWORD *)(gameData + 140012),
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
         g_SelectedUnitIndex);
     return;
   }
   Diagnostics_TraceWorldMapCursorSample(
     tileX,
     tileY,
-    *(_DWORD *)(gameData + 140008),
-    *(_DWORD *)(gameData + 140012),
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
     g_SelectedUnitIndex);
   if ( DD_IsLost((int)&g_RenderState) || DD_IsFlipping((int)&g_RenderState) )
     Diagnostics_TraceWorldMapClickEvent(
       "tile_input",
       tileX,
       tileY,
-      *(_DWORD *)(gameData + 140008),
-      *(_DWORD *)(gameData + 140012),
+      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+      *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
       g_SelectedUnitIndex);
   if ( DD_IsFlipping((int)&g_RenderState) || DD_IsLost((int)&g_RenderState) )
     goto LABEL_12;
@@ -442,8 +442,8 @@ LABEL_12:
         "reject_fog",
         tileX,
         tileY,
-        *(_DWORD *)(gameData + 140008),
-        *(_DWORD *)(gameData + 140012),
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
         g_SelectedUnitIndex);
 LABEL_35:
     RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&g_CursorDesc_Default);
@@ -824,8 +824,8 @@ LABEL_205:
         "own_stack",
         tileX,
         tileY,
-        *(_DWORD *)(gameData + 140008),
-        *(_DWORD *)(gameData + 140012),
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
         g_SelectedUnitIndex);
     if ( g_WorldMapJoinUnitsModeActive && *(unsigned __int16 *)(TILE_INDEX(tileX, tileY)) != g_SelectedUnitIndex )
     {
@@ -891,8 +891,8 @@ LABEL_205:
         "enemy_stack",
         tileX,
         tileY,
-        *(_DWORD *)(gameData + 140008),
-        *(_DWORD *)(gameData + 140012),
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
         g_SelectedUnitIndex);
     Render_Begin((int)&g_RenderState, 0, v28);
     Diagnostics_TraceWorldMapActionEvent(
@@ -918,8 +918,8 @@ LABEL_205:
         "empty_tile_with_selection",
         tileX,
         tileY,
-        *(_DWORD *)(gameData + 140008),
-        *(_DWORD *)(gameData + 140012),
+        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
         g_SelectedUnitIndex);
     if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147490)
       || (v68 = *(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 320), (unsigned __int8)v68 != tileX)
@@ -2246,7 +2246,7 @@ int  WorldMap_RedrawFrameForAIWhenEnabled(int a1)
 
   if ( !g_WorldMapFrameRedrawDisabled )
   {
-    result = 1423 * g_CurrentPlayerIndex;
+    result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       return WorldMap_RedrawFrame(a1);
   }
@@ -2901,8 +2901,8 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   UI_SetActiveWidgetTable(8);
-  *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
-  *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
+  *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140039);
+  *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140043);
   Locale_DrawInteger();
   Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, a3);
   Render_DrawSprite();
@@ -3679,7 +3679,7 @@ int Font_InitGlyphFallbackTablesForLanguage()
       (unsigned __int16)base);
   }
 
-  language = *(unsigned __int8 *)(gameData + 140016);
+  language = *(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET);
   switch ( language )
   {
     case 0:
@@ -3965,10 +3965,10 @@ int  MiniMap_CreateSurface(DWORD a1)
   int minimap_frame_sprite; // eax
 
   g_MiniMapPixelsPerTile_523F54 = 2;
-  if ( *(_DWORD *)(gameData + 140004) * *(_DWORD *)(gameData + 140000) <= 2500 )
+  if ( *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) * *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) <= 2500 )
     g_MiniMapPixelsPerTile_523F54 = 4;
-  g_MiniMapRectWidth_523348 = (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + 140000) + 14;
-  g_MiniMapRectHeight_52334A = *(_WORD *)(gameData + 140004) * (unsigned __int8)g_MiniMapPixelsPerTile_523F54 + 14;
+  g_MiniMapRectWidth_523348 = (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_WIDTH_TILES_OFFSET) + 14;
+  g_MiniMapRectHeight_52334A = *(_WORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) * (unsigned __int8)g_MiniMapPixelsPerTile_523F54 + 14;
   g_MiniMapRectTop_523346 = 16;
   g_MiniMapRectLeft_523344 = 608 - g_MiniMapRectWidth_523348;
   Surface = (_DWORD *)Mem_Alloc(188, 16, g_MiniMapRectWidth_523348, a1);
@@ -4037,10 +4037,10 @@ int  MiniMap_BlitDirtyRectAndDrawViewportBox(
       surface = RenderSurface_ResolvePrimaryCompanion((_DWORD *)g_RenderDevice);
       if ( !surface )
         return result;
-      right = (unsigned __int16)(g_MiniMapRectLeft_523344 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + 140008) + 9));
-      top = (unsigned __int16)(g_MiniMapRectTop_523346 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + 140012));
-      left = (unsigned __int16)(g_MiniMapRectLeft_523344 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + 140008));
-      bottom = (unsigned __int16)(g_MiniMapRectTop_523346 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + 140012) + 7));
+      right = (unsigned __int16)(g_MiniMapRectLeft_523344 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9));
+      top = (unsigned __int16)(g_MiniMapRectTop_523346 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_VIEW_TOP_OFFSET));
+      left = (unsigned __int16)(g_MiniMapRectLeft_523344 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_VIEW_LEFT_OFFSET));
+      bottom = (unsigned __int16)(g_MiniMapRectTop_523346 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7));
       Surface_DrawRectOutline((unsigned __int16 *)surface, left, right, top, bottom, 0x4Cu);
       return result;
     }
@@ -4079,13 +4079,13 @@ int  MiniMap_RedrawTileRect(int x0, signed int y0, int y1, int x1)
     clampedX0 = 0;
   if ( y0 < 0 )
     clampedY0 = 0;
-  mapWidth = *(_DWORD *)(gameData + 140000);
+  mapWidth = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
   if ( x1 >= mapWidth )
     x1 = mapWidth - 1;
-  mapHeight = *(_DWORD *)(gameData + 140004);
+  mapHeight = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
   if ( y1 >= mapHeight )
     clampedY1 = mapHeight - 1;
-  result = 1423 * VIEWED_PLAYER_INDEX;
+  result = PLAYER_DATA_STRIDE * VIEWED_PLAYER_INDEX;
   if ( PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX) )
   {
     for ( i = (char *)clampedX0; (int)i <= x1; ++i )
@@ -4132,9 +4132,9 @@ void MiniMap_RedrawAllTiles()
 
   tileX = 0;
   g_RenderDevice = (_UNKNOWN *)g_MiniMapSurface_52334C;
-  while ( (int)tileX < *(_DWORD *)(gameData + 140000) )
+  while ( (int)tileX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
   {
-    for ( i = 0; i < *(_DWORD *)(gameData + 140004); ++i )
+    for ( i = 0; i < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); ++i )
       MiniMap_DrawTileCell(tileX, i);
     ++tileX;
   }
@@ -4287,7 +4287,7 @@ int MiniMap_UpdateViewportFromCursor()
         cursor_y,
         PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX));
     }
-    result = 1423 * VIEWED_PLAYER_INDEX;
+    result = PLAYER_DATA_STRIDE * VIEWED_PLAYER_INDEX;
     if ( PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX) )
     {
       tileX = (cursor_x - (unsigned __int16)g_MiniMapRectLeft_523344 - 7) / (unsigned __int8)g_MiniMapPixelsPerTile_523F54;
@@ -4299,29 +4299,29 @@ int MiniMap_UpdateViewportFromCursor()
           g_SelectedUnitIndex,
           tileX,
           result,
-          *(_DWORD *)(gameData + 140012));
+          *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET));
       }
       if ( tileX >= 0
         && result >= 0
-        && (tileX != *(_DWORD *)(gameData + 140008) || result != *(_DWORD *)(gameData + 140012))
-        && result <= *(_DWORD *)(gameData + 140004) )
+        && (tileX != *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) || result != *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
+        && result <= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
-        maxViewLeft = *(_DWORD *)(gameData + 140000) - 9;
+        maxViewLeft = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 9;
         if ( tileX <= maxViewLeft )
-          *(_DWORD *)(gameData + 140008) = tileX;
+          *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = tileX;
         else
-          *(_DWORD *)(gameData + 140008) = maxViewLeft;
-        *(_DWORD *)(gameData + 140012) = result;
-        maxViewTop = *(_DWORD *)(gameData + 140004) - 7;
-        if ( maxViewTop < *(_DWORD *)(gameData + 140012) )
-          *(_DWORD *)(gameData + 140012) = maxViewTop;
+          *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = maxViewLeft;
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = result;
+        maxViewTop = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7;
+        if ( maxViewTop < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) )
+          *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = maxViewTop;
         if ( trace_minimap )
         {
           Diagnostics_TraceWorldMapActionEvent(
             "minimap_update",
             g_SelectedUnitIndex,
-            *(_DWORD *)(gameData + 140008),
-            *(_DWORD *)(gameData + 140012),
+            *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
+            *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
             is_flipping);
         }
         return WorldMap_RedrawViewport(1);
@@ -5027,7 +5027,7 @@ void  Map_RevealAllTilesForPlayer(int playerIndex)
   char maskedByte; // dl
 
   rowOffset = 0;
-  playerBase = 1423 * playerIndex;
+  playerBase = PLAYER_DATA_STRIDE * playerIndex;
   do
   {
     for ( i = 0; i < 100; ++i )
@@ -5059,8 +5059,8 @@ signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playe
 
   if ( tileX < 0
     || tileY < 0
-    || tileX >= *(_DWORD *)(gameData + 140000)
-    || tileY >= *(_DWORD *)(gameData + 140004)
+    || tileX >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+    || tileY >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
     || Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
   {
     return 0;
@@ -5105,8 +5105,8 @@ BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
 {
   return tileX >= 0
       && tileY >= 0
-      && tileX < *(_DWORD *)(gameData + 140000)
-      && tileY < *(_DWORD *)(gameData + 140004)
+      && tileX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+      && tileY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
       && ((1 << (tileY & 7)) & *(unsigned __int8 *)(PLAYER_DATA(playerIndex)
                                                + PLAYER_REVEALED_TILE_ROW_BYTES * tileX
                                                + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3)
@@ -5183,12 +5183,12 @@ signed int  UnitStack_IsIndexOnMap(int stackIndex)
   rowBase = 0;
   tileX = 0;
 LABEL_2:
-  if ( tileX >= *(_DWORD *)(gameData + 140000) )
+  if ( tileX >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
     return 0;
   tileY = 0;
   for ( i = 0; ; i += 2 )
   {
-    if ( tileY >= *(_DWORD *)(gameData + 140004) )
+    if ( tileY >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     {
       rowBase += 200;
       ++tileX;

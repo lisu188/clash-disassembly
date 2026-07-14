@@ -874,12 +874,12 @@ LABEL_2:
   while ( 1 )
   {
     result = gameData;
-    if ( rowIndex >= *(_DWORD *)(gameData + 140000) )
+    if ( rowIndex >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
       return result;
     columnIndex = 0;
     for ( tileStride = 0; ; tileStride += 14 )
     {
-      if ( columnIndex >= *(_DWORD *)(gameData + 140004) )
+      if ( columnIndex >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         rowOffset += 1400;
         ++rowIndex;
@@ -957,7 +957,7 @@ int  Port_NewTurn(DWORD logContext)
     if ( !PORT_REINFORCEMENT_READY_FLAG )
     {
       reinforcementArrivalTurn = PORT_NEXT_REINFORCEMENT_TURN;
-      if ( *(unsigned __int16 *)(gameData + 140022) >= reinforcementArrivalTurn )
+      if ( *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) >= reinforcementArrivalTurn )
       {
       PORT_SHORE_VARIANT_FLAG = 1;
       PORT_REINFORCEMENT_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
@@ -1463,9 +1463,9 @@ int Rules_RebuildTreasureFacts()
   for ( i = 0; ; ++i )
   {
     result = gameData;
-    if ( i >= *(_DWORD *)(gameData + 140000) )
+    if ( i >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
       break;
-    for ( j = 0; j < *(_DWORD *)(gameData + 140004); j = v4 + 1 )
+    for ( j = 0; j < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
     {
       if ( MapTile_HasHiddenTreasure(i, j) )
         Rules_LogTreasureFact(i, v4);
@@ -1536,14 +1536,14 @@ signed int  Treasure_TryDigHere(
   }
   else
   {
-    if ( *(_DWORD *)(1423 * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
       v17 = &g_TreasureDigOutcomeTable_TempleActive;
     else
       v17 = &g_TreasureDigOutcomeTable_TempleInactive;
     v18 = Temple_Random((int)v17, v11, v6, (DWORD)stackTileRecord, a4);
     Debug_Log(v18, v6, (DWORD)stackTileRecord, (int)aTreasure_dig_0, v18);
   }
-  if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
+  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
   {
     Win_PlayModeChangeFrameTransition((int)aKop_bud, 1, (int)v12, v6, (DWORD)stackTileRecord, (char)a5);
     Temple_ShowOutcomePopup(v13[(unsigned __int8)g_LanguageIndex + 3], v13[2], (int)v13, *v13 != 15, (DWORD)stackTileRecord);
@@ -1600,7 +1600,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
     return 0;
   if ( UnitStack_GetMaxOrderTier((intptr_t)stackRecord) < 2 )
   {
-    if ( *(_DWORD *)(1423 * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
     {
       lowRankMessageTable[0] = (int)g_UnitHideFailedLowRankText[0];
       lowRankMessageTable[1] = (int)g_UnitHideFailedLowRankText[1];
@@ -1659,7 +1659,7 @@ LABEL_16:
   while ( v20 < 8 );
   if ( spotBlocked )
   {
-    if ( !*(_DWORD *)(1423 * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
       return 0;
     noSpotMessageTable[0] = (int)g_UnitHideFailedNoSpotText[0];
     noSpotMessageTable[1] = (int)g_UnitHideFailedNoSpotText[1];
@@ -1671,7 +1671,7 @@ LABEL_16:
   else
   {
     UnitStack_ClearRemainingActionPoints(stackRecord, 0, a4);
-    v15 = 1423 * *((unsigned __int8 *)stackRecord + 4);
+    v15 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4);
     *((_BYTE *)stackRecord + 720) = 1;
     if ( *(_DWORD *)(gameData + v15 + 140051) )
       Win_PlayModeChangeFrameTransition(aUkrycie, 1, v14, neighborStackIndex, 0);
@@ -1881,9 +1881,9 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
     }
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-army-loop\n");
-    for ( building_index = 0; building_index < *(_DWORD *)(gameData + 140000); ++building_index )
+    for ( building_index = 0; building_index < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET); ++building_index )
     {
-      for ( slot_index = 0; slot_index < *(_DWORD *)(gameData + 140004); ++slot_index )
+      for ( slot_index = 0; slot_index < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); ++slot_index )
       {
         *(_DWORD *)(14 * slot_index + 1400 * building_index + gameData + 6) = 0;
         *(_DWORD *)(14 * slot_index + 1400 * building_index + gameData + 10) = 0;
@@ -5733,7 +5733,7 @@ int  Map_LoadFromFile(uintptr_t a1)
   *(_BYTE *)(v43 + 2) = *((_BYTE *)&g_OptionsConfigRecordBase + 26);
   ACTIVE_MISSION_INDEX = -1;
   result = gameData;
-  *(_BYTE *)(gameData + 140021) = 0;
+  *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
   return result;
 }
 // 44B059: variable 'm' is possibly undefined
@@ -5763,7 +5763,7 @@ char Scenario_SetupSirArthurRosterVariantA()
 
   for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
-  *(_DWORD *)(gameData + 140024) = 1;
+  *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
   *(_DWORD *)(gameData + 141447) = 1;
   *(_DWORD *)(gameData + 142870) = 1;
   *(_DWORD *)(gameData + 140051) = 0;
@@ -5853,7 +5853,7 @@ char Scenario_SetupSirArthurRosterVariantB()
 
   for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
-  *(_DWORD *)(gameData + 140024) = 1;
+  *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
   *(_DWORD *)(gameData + 142870) = 1;
   *(_DWORD *)(gameData + 140051) = 1;
   *(_DWORD *)(gameData + 142897) = 0;
@@ -6150,7 +6150,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 0:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 0;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6161,7 +6161,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 1:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 2;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6172,7 +6172,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 2:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 1;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_ARCHER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6183,7 +6183,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 3:
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
-      *(_BYTE *)(gameData + 140016) = 0;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6194,7 +6194,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 4:
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
-      *(_BYTE *)(gameData + 140016) = 2;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_CROSSBOWER, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_MUSKETEER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6205,7 +6205,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 5:
       *(_WORD *)gameData = 21;
       *(_WORD *)(gameData + 1400) = 21;
-      *(_BYTE *)(gameData + 140016) = 1;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_HEAVY_SPEARMAN, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_CATAPULT, UNIT_TYPE_CYCLOP, UNIT_TYPE_SKELETON, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6216,7 +6216,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 6:
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
-      *(_BYTE *)(gameData + 140016) = 0;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
       createUnit(a3, 1, 0, 1, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -6227,7 +6227,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 7:
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
-      *(_BYTE *)(gameData + 140016) = 2;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_RAM, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createCastle(a3, 1, 0, 1, 2, aZamek, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_CYCLOP, -1);
       return Battle_RunTacticalCombat(
@@ -6240,7 +6240,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 8:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 1;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(a3, 0, 0, 1, UNIT_TYPE_CANNON, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createCastle(a3, 1, 0, 0, 2, aZamek_0, UNIT_TYPE_CANNON, UNIT_TYPE_WIZARD, UNIT_TYPE_LIGHT_CAVALRY, -1);
       return Battle_RunTacticalCombat(
@@ -6253,7 +6253,7 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3)
     case 9:
       *(_WORD *)gameData = 28;
       *(_WORD *)(gameData + 1400) = 28;
-      *(_BYTE *)(gameData + 140016) = 2;
+      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_GHOST, UNIT_TYPE_WIZARD, UNIT_TYPE_WINGER, -1);
       v8 = gameData;
       v9 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556374);
@@ -6345,7 +6345,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
   do
   {
     v8 = playerRecordOffset + gameData;
-    if ( *(_DWORD *)(playerRecordOffset + gameData + 140024) )
+    if ( *(_DWORD *)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
     {
       startRow = g_MultiplayerStartRows[startPosTableIndex / 4];
       startColumn = g_MultiplayerStartColumns[startPosTableIndex / 4];
@@ -6668,7 +6668,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
       }
     }
     ++playerIndex;
-    playerRecordOffset += 1423;
+    playerRecordOffset += PLAYER_DATA_STRIDE;
     startPosTableIndex += 8;
   }
   while ( playerIndex < 5 );
@@ -6949,9 +6949,9 @@ signed int  Prisoner_QueueCapturedUnit(
   char capturedOwner; // [esp+4h] [ebp-8h]
 
   capturedOwner = a2;
-  playerRecordOffset = 1423 * playerIndex;
+  playerRecordOffset = PLAYER_DATA_STRIDE * playerIndex;
   Debug_Log(a2, playerRecordOffset, a5, (int)aPrisoner_addto);
-  prisonerQueueBase = gameData + 140024 + playerRecordOffset;
+  prisonerQueueBase = gameData + PLAYER_RUNTIME_STATE_OFFSET + playerRecordOffset;
   v9 = prisonerQueueBase;
   result = 0;
   while ( *(char *)(v9 + 1357) != -1 )
@@ -7158,7 +7158,7 @@ int  Prisoner_Behead(int a1, int a2, char a3, DWORD a4)
   Debug_Log(a1, a3, a4, (int)aPrisoner_behea);
   Prisoner_Kill(v4, a3, a4);
   result = gameData;
-  if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v5 + 2) + gameData + 140051) )
+  if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v5 + 2) + gameData + 140051) )
   {
     Win_PlayModeChangeFrameTransition(aZciecie, 1, v5, a3, a4);
     beheadTextTable[0] = (int)g_PrisonerBeheadingTexts[0];
@@ -7491,7 +7491,7 @@ unsigned int  Prisoner_Pay(int a1, int prisonerSlot, DWORD a3, double a4)
   int v12[8]; // [esp+0h] [ebp-20h] BYREF
 
   Debug_Log(a1, prisonerSlot, a3, (int)aPrisoner_pay0x);
-  if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(buildingRecord + 2) + 140051) )
+  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2) + 140051) )
   {
     result = BUILDING_PRISONER_RANSOM(BUILDING_PRISONER_SLOT(buildingRecord, prisonerSlot));
     playerGold = *(_DWORD *)(buildingRecord + 438);
@@ -7502,7 +7502,7 @@ unsigned int  Prisoner_Pay(int a1, int prisonerSlot, DWORD a3, double a4)
   }
   Building_CreateSpecialPersonageGarrisonUnit(buildingRecord, BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(buildingRecord, prisonerSlot)), buildingRecord, prisonerSlot, a4);
   Prisoner_Kill(v8, prisonerSlot, a3);
-  result = 1423 * *(unsigned __int8 *)(v9 + 2);
+  result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v9 + 2);
   if ( *(_DWORD *)(gameData + result + 140051) )
   {
     v12[0] = (int)g_PrisonerBriberyDefectionTexts[0];
@@ -7537,7 +7537,7 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
   DWORD buildingNamePtr; // [esp+74h] [ebp-1Ch]
 
   v5 = ACTIVE_MISSION_INDEX;
-  if ( v5 != 4 && v5 != 6 || (v6 = 1423 * *(unsigned __int8 *)(buildingRecord + 2), *(_DWORD *)(gameData + v6 + 140051)) )
+  if ( v5 != 4 && v5 != 6 || (v6 = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2), *(_DWORD *)(gameData + v6 + 140051)) )
   {
     Debug_Log(a2, a3, buildingRecord, (int)aPrisoner_newtu);
     buildingNamePtr = buildingRecord + 5;
@@ -7550,13 +7550,13 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
       if ( v6 != -1 )
       {
         ++prisonerCursor[447];
-        if ( !*(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(buildingRecord + 2) + 140051) && prisonerCursor[447] == 9 )
+        if ( !*(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2) + 140051) && prisonerCursor[447] == 9 )
           prisonerCursor[448] = BUILDING_PRISONER_ACTION_PAY;
         BuildingPrisoner_RecalculateRansomValue(prisonerSlotPtr);
         if ( prisonerCursor[447] == 10 )
         {
           prisonerCursor[445] = -1;
-          v6 = 1423 * *(unsigned __int8 *)(buildingRecord + 2);
+          v6 = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2);
           if ( *(_DWORD *)(gameData + v6 + 140051) )
           {
             exhaustionTextTable[0] = (int)g_PrisonerDeathByExhaustionTexts[0];
@@ -7962,7 +7962,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   (*(void (__thiscall **)(void *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
-  if ( *(_DWORD *)(gameData + 140024) )
+  if ( *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
   {
     SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 140063) == 0) + 13);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -8049,7 +8049,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   minPopulation = 0;
   do
   {
-    v27 = *(_DWORD *)(playerRecordOffset + gameData + 140024);
+    v27 = *(_DWORD *)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET);
     if ( v24 == v27 )
     {
       populationBars[v22] = v27;
@@ -8122,7 +8122,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   barValueIndex = 0;
   do
   {
-    if ( *(_DWORD *)(v66 + gameData + 140024) )
+    if ( *(_DWORD *)(v66 + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
     {
       if ( maxNationScore )
         v42 = maxNationScore;

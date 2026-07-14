@@ -262,11 +262,11 @@ LABEL_18:
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
           }
-          v16 = 1423 * g_CurrentPlayerIndex;
+          v16 = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
           if ( v15 )
           {
             *(_BYTE *)(v16 + gameData + 141443) = 5;
-            result = 1423 * g_CurrentPlayerIndex;
+            result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
             PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(g_CurrentPlayerIndex) = GAME_TURN_COUNTER + Rng_RandRange(5, 8);
           }
           else
@@ -343,7 +343,7 @@ LABEL_10:
       goto LABEL_10;
   }
   result = gameData;
-  *(_DWORD *)(1423 * a1 + gameData + 140024) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * a1 + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   return result;
 }
 // 450D50: conditional instruction was optimized away because edx.4<64u
@@ -407,7 +407,7 @@ LABEL_10:
       v9 = 0;
       for ( i = 0; i < 5; ++i )
       {
-        if ( *(_DWORD *)(gameData + 1423 * i + 140024) )
+        if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * i + PLAYER_RUNTIME_STATE_OFFSET) )
         {
           v11 = Player_CalcMilitaryStrength(i);
           if ( v11 > v9 )
@@ -421,7 +421,7 @@ LABEL_10:
         v14 = 0;
         for ( result = 0; result < 5; ++result )
         {
-          v15 = gameData + 1423 * result;
+          v15 = gameData + PLAYER_DATA_STRIDE * result;
           if ( *(_DWORD *)(v15 + 140051) && *(_DWORD *)(v15 + 140024) )
             v14 = 1;
         }
@@ -431,7 +431,7 @@ LABEL_10:
           v19[1] = (int)g_AllyEliminatedNoticeTexts[1];
           v19[2] = (int)g_AllyEliminatedNoticeTexts[2];
           v16 = (const char *)v19[(unsigned __int8)g_LanguageIndex];
-          sprintf_(v18, v16, 1423 * v13 + gameData + 140024 + 4);
+          sprintf_(v18, v16, PLAYER_DATA_STRIDE * v13 + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
           return UI_ShowInfoWindow((const char *)v18, 0, v17, a3, (int)v16, (int)&g_AllyEliminatedNoticeTexts[3]);
         }
       }
@@ -493,14 +493,14 @@ LABEL_9:
     if ( v6 >= 0 )
       goto LABEL_9;
   }
-  *(_DWORD *)(1423 * a1 + gameData + 140024) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * a1 + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   Render_Pump();
   Audio_StopMainMusic();
   Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
   v10 = 0;
   while ( 1 )
   {
-    v11 = gameData + 1423 * v10;
+    v11 = gameData + PLAYER_DATA_STRIDE * v10;
     if ( *(_DWORD *)(v11 + 140024) )
     {
       if ( *(_DWORD *)(v11 + 140051) )
@@ -509,7 +509,7 @@ LABEL_9:
     if ( ++v10 >= 5 )
       return 1;
   }
-  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), v11, gameData, a2);
+  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), v11, gameData, a2);
   return 0;
 }
 // 451044: conditional instruction was optimized away because edx.4<1F4u
@@ -530,10 +530,10 @@ signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int a1)
   int v5; // ecx
 
   v2 = 0;
-  v3 = 1423 * a1;
-  while ( !*(_DWORD *)(gameData + v2 + 140024) || v2 == v3 )
+  v3 = PLAYER_DATA_STRIDE * a1;
+  while ( !*(_DWORD *)(gameData + v2 + PLAYER_RUNTIME_STATE_OFFSET) || v2 == v3 )
   {
-    v2 += 1423;
+    v2 += PLAYER_DATA_STRIDE;
     if ( v2 >= 7115 )
     {
       Render_Pump();
@@ -871,14 +871,14 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
             - 32
             - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
              + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-          + *(_DWORD *)(gameData + 140008));
+          + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET));
   v3 = *(unsigned __int16 *)(result
                            + 2
                            * ((((g_MouseCursorRawY >> g_CursorCoordShift)
                               - 16
                               - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
                                + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-                            + *(_DWORD *)(gameData + 140012))
+                            + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
                            + 556374);
   if ( (unsigned __int16)v3 != 0xFFFF )
   {
@@ -913,12 +913,12 @@ int Cheat_TeleportSelectedUnitToCursor()
        - 32
        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
         + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-     + *(_DWORD *)(gameData + 140008);
+     + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
   result = ((g_MouseCursorRawY >> g_CursorCoordShift)
           - 16
           - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
            + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6;
-  v2 = result + *(_DWORD *)(gameData + 140012);
+  v2 = result + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
   if ( g_SelectedUnitIndex != -1 )
   {
     *(_WORD *)(200 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
@@ -1249,7 +1249,7 @@ signed int Rules_ExecuteAITurn()
 
   Diagnostics_TraceWorldMapActionEvent("ai_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
   Map_RebuildCastleSiteAnchorCache();
-  v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
+  v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET));
   g_AITurnLogFactHandle_Turn = (int)Rules_Log(v21, 0, v1);
   v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
   g_AITurnPlayerIntelligenceFactHandle = (int)Rules_Log(v21, 0, v3);
@@ -2725,7 +2725,7 @@ _DWORD * Rules_RetractCastleFact(unsigned __int8 *a1, double a2)
 //----- (00455410) --------------------------------------------------------
 int Game_GetTurnNumber()
 {
-  return *(unsigned __int16 *)(gameData + 140022);
+  return *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -3317,7 +3317,7 @@ int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
   v4 = (char *)nmalloc_(a3, a2);
   v5 = v4;
   v6 = 0;
-  v7 = 1423 * a1;
+  v7 = PLAYER_DATA_STRIDE * a1;
   do
   {
     v8 = v7 + gameData;
@@ -3389,9 +3389,9 @@ void Map_RebuildCastleSiteAnchorCache()
     g_CastleSiteAnchorRows[row] = -1;
     g_CastleSiteAnchorColumns[row] = -1;
   }
-  for ( row = 0; row < *(_DWORD *)(gameData + 140000); ++row )
+  for ( row = 0; row < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET); ++row )
   {
-    for ( column = 0; column < *(_DWORD *)(gameData + 140004); ++column )
+    for ( column = 0; column < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); ++column )
     {
       if ( MapTile_IsCastleFoundationAnchorTile(row, column, 2) )
       {
@@ -3715,9 +3715,9 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
     for ( j = 2 * v10; v5 <= v13; j += 2 )
     {
       if ( v4 >= 0
-        && v4 < *(_DWORD *)(gameData + 140000)
+        && v4 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
         && v5 >= 0
-        && v5 < *(_DWORD *)(gameData + 140004)
+        && v5 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
         && *(unsigned __int16 *)(j + gameData + i + 556374) <= 0x1F4u
         && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + 556374) + 6) <= 0x28 )
       {
@@ -3821,9 +3821,9 @@ BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4)
         a3 = v15 + *v16;
         a2 = v10 + v16[1];
         if ( a3 >= 0
-          && a3 < *(_DWORD *)(gameData + 140000)
+          && a3 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
           && a2 >= 0
-          && a2 < *(_DWORD *)(gameData + 140004)
+          && a2 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
           && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)v16 + 4), 0, v10 + v16[1], v15 + *v16) )
         {
           v14 = 1;
@@ -3895,9 +3895,9 @@ BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a
         a3 = v18 + *v19;
         a4 = v12 + v19[1];
         if ( a3 >= 0
-          && a3 < *(_DWORD *)(gameData + 140000)
+          && a3 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
           && a4 >= 0
-          && a4 < *(_DWORD *)(gameData + 140004)
+          && a4 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
           && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)v19 + 4), 0, v12 + v19[1], v18 + *v19) )
         {
           v17 = 1;
@@ -4542,7 +4542,7 @@ void  AI_EvaluateStrategicTargetAtTile(
   float v18; // [esp+8h] [ebp-18h]
 
   v11 = -1;
-  if ( a4 >= 0 && a4 < *(_DWORD *)(gameData + 140000) && a3 >= 0 && a3 < *(_DWORD *)(gameData + 140004) )
+  if ( a4 >= 0 && a4 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && a3 >= 0 && a3 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
   {
     if ( *(unsigned __int16 *)(TILE_INDEX(a4, a3)) > 0x1F4u
       || (unsigned int)*(__int16 *)(gameData
@@ -5013,9 +5013,9 @@ LABEL_6:
       return 0;
     case 3:
     case 0xD:
-      if ( *(unsigned __int16 *)(gameData + 140022) > 0xAu )
+      if ( *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) > 0xAu )
         return 1;
-      Mission_TraceObjectiveBlocked(ACTIVE_MISSION_INDEX, *(unsigned __int16 *)(gameData + 140022), 10, 0);
+      Mission_TraceObjectiveBlocked(ACTIVE_MISSION_INDEX, *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET), 10, 0);
       return 0;
     case 4:
       if ( *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - 0x8000) + gameData + 509676) == 0 )
@@ -5155,13 +5155,13 @@ LABEL_27:
       return 0;
     case 9:
       v20 = 1423;
-      while ( !*(_DWORD *)(gameData + v20 + 140024) )
+      while ( !*(_DWORD *)(gameData + v20 + PLAYER_RUNTIME_STATE_OFFSET) )
       {
-        v20 += 1423;
+        v20 += PLAYER_DATA_STRIDE;
         if ( v20 >= 7115 )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(9, v20 / 1423, *(_DWORD *)(gameData + v20 + 140024), 0);
+      Mission_TraceObjectiveBlocked(9, v20 / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + v20 + PLAYER_RUNTIME_STATE_OFFSET), 0);
       return 0;
     case 0xA:
       v21 = 0;
@@ -5300,19 +5300,19 @@ LABEL_105:
       Mission_TraceObjectiveBlocked(18, 85, 38, v32);
       return 0;
     case 0x13:
-      if ( *(_DWORD *)(gameData + 140024) )
+      if ( *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
       {
-        Mission_TraceObjectiveBlocked(19, 0, *(_DWORD *)(gameData + 140024), 0);
+        Mission_TraceObjectiveBlocked(19, 0, *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET), 0);
         return 0;
       }
       v35 = 2846;
-      while ( !*(_DWORD *)(gameData + v35 + 140024) )
+      while ( !*(_DWORD *)(gameData + v35 + PLAYER_RUNTIME_STATE_OFFSET) )
       {
-        v35 += 1423;
+        v35 += PLAYER_DATA_STRIDE;
         if ( v35 >= 7115 )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(19, v35 / 1423, *(_DWORD *)(gameData + v35 + 140024), 0);
+      Mission_TraceObjectiveBlocked(19, v35 / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + v35 + PLAYER_RUNTIME_STATE_OFFSET), 0);
       return 0;
     default:
       return 0;
@@ -5377,7 +5377,7 @@ int Mission_CheckFailureCondition()
       return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 560616) - 0x8000) + gameData + 509676) != 0;
     case 4:
     case 0xE:
-      return *(unsigned __int16 *)(gameData + 140022) > 0x14u;
+      return *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) > 0x14u;
     case 5:
       result = (unsigned __int8)g_LanguageIndex;
       if ( g_LanguageIndex )
@@ -5709,7 +5709,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
     case 5:
       Map_LoadFromFile((uintptr_t)"k_mapa6j.map");
       ACTIVE_MISSION_INDEX = 5;
-      *(_BYTE *)(gameData + 140021) = 0;
+      *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
       for ( player_index = 0; player_index < 5; ++player_index )
         Game_ResetPlayerRuntimeStateByIndex(player_index);
       PLAYER_IS_ACTIVE(0) = 1;
@@ -6249,7 +6249,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
     case 15:
       Map_LoadFromFile((uintptr_t)"p_mapa6l.map");
       ACTIVE_MISSION_INDEX = 15;
-      *(_BYTE *)(gameData + 140021) = 0;
+      *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
       for ( player_index = 0; player_index < 5; ++player_index )
         Game_ResetPlayerRuntimeStateByIndex(player_index);
       PLAYER_IS_ACTIVE(1) = 1;
@@ -6306,7 +6306,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
     case 16:
       Map_LoadFromFile((uintptr_t)"p_mapa7j.map");
       ACTIVE_MISSION_INDEX = 16;
-      *(_BYTE *)(gameData + 140021) = 0;
+      *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
       for ( player_index = 0; player_index < 5; ++player_index )
         Game_ResetPlayerRuntimeStateByIndex(player_index);
       PLAYER_IS_ACTIVE(1) = 1;
@@ -6352,7 +6352,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
     case 17:
       Map_LoadFromFile((uintptr_t)"p_mapa8j.map");
       ACTIVE_MISSION_INDEX = 17;
-      *(_BYTE *)(gameData + 140021) = 0;
+      *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
       Rules_RetractTreasureFact(50, 34, a2);
       Rules_RetractTreasureFact(51, 73, a2);
       Rules_RetractTreasureFact(77, 34, a2);

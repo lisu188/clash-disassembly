@@ -390,7 +390,7 @@ int  UnitBattle_SelectNextControllableUnit(int widget, int a2, char a3)
   result = *(__int16 *)(selectedUnitRecord + 852);
   if ( result != -1 )
   {
-    if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(selectedUnitRecord + 854) + 140051) )
+    if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(selectedUnitRecord + 854) + 140051) )
       return Audio_PlayUnitActivateSound(result);
   }
   return result;
@@ -1486,7 +1486,7 @@ DWORD  Battle_RunTacticalCombat(
   Debug_Log(v7, (char)a4, logCtx, (int)aSetrhS08x_8);
   savedMusicHandle = Audio_PauseMusicAndPlayLoopedSound(aBattle_1, 1);
   DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-  backgroundVariant = *(_BYTE *)(gameData + 140016);
+  backgroundVariant = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
   battle_background_resource = 0;
   if ( !backgroundVariant )
     battle_background_resource = aBattleBat_bkg1;
@@ -1556,10 +1556,10 @@ DWORD  Battle_RunTacticalCombat(
     defenderPlayerIndex = buildingRecord[2];
   *(_DWORD *)(g_MapData + 840) = defenderPlayerIndex;
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_players", *(_DWORD *)(g_MapData + 836), *(_DWORD *)(g_MapData + 840), 0, 0);
-  *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 836) + gameData + 140077) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 840) + 140077) = 0;
-  *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 836) + gameData + 140073) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 840) + 140073) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 836) + gameData + 140077) = 0;
+  *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 840) + 140077) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 836) + gameData + 140073) = 0;
+  *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 840) + 140073) = 0;
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_player_counters", *(_DWORD *)(g_MapData + 836), *(_DWORD *)(g_MapData + 840), 0, 0);
   if ( *((_BYTE *)attackerGroup + 720) )
   {
@@ -1866,8 +1866,8 @@ DWORD  Battle_RunTacticalCombat(
   HandleBattleResults((int)attackerGroup, (int)defenderGroup, v61, buildingRecord, battleOutcome);
   if ( v63 )
     Battle_SaveWallSegmentsToBuildingRecord((int)v63);
-  if ( battleOutcome == 2 && *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 840) + gameData + 140051)
-    || battleOutcome == 1 && *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 836) + 140051) )
+  if ( battleOutcome == 2 && *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 840) + gameData + 140051)
+    || battleOutcome == 1 && *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(_DWORD *)(g_MapData + 836) + 140051) )
   {
     outcomeTextStrings[0] = (int)g_BattleForcedRetreatOutcomeTexts[0];
     outcomeTextStrings[1] = (int)g_BattleForcedRetreatOutcomeTexts[1];
@@ -2532,7 +2532,7 @@ LABEL_30:
     }
     if ( tileUnitIndex == g_SelectedUnitIndex && g_ActiveUnitMoveTileIndex == -1 )
     {
-      v33 = DLX_GetSpriteForChar(g_MarksSpriteSet, *(unsigned __int8 *)(gameData + 140016) == 1);
+      v33 = DLX_GetSpriteForChar(g_MarksSpriteSet, *(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET) == 1);
       Compat_RenderDeviceDrawMenuSprite(screenX, screenY, v33, 1);
     }
   }
@@ -2861,7 +2861,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
       UI_DrawTextFmt(v19, 500, 618, 106, 2, (int)aD_49);
       Render_ReleaseSurface(14, 0);
       Diagnostics_TraceWorldMapActionEvent("battle_panel_after_quantity", *unitRecord, *((unsigned __int8 *)unitRecord + 8), g_BattlePanelUnitFatiguePercent, 0);
-      if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitRecord + 2) + 140051) )
+      if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
         if ( *((_BYTE *)unitMetadata + 22) )
         {
@@ -2874,7 +2874,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
         v19 = DLX_GetSpriteForChar(g_BattleUnitPanelIconSpriteSet, (unsigned __int8)g_UnitBattlePanelQuantityIconCharBase[0] + 8);
         Compat_RenderDeviceDrawMenuSprite(498, 143, v19, 1);
       }
-      if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitRecord + 2) + 140051) )
+      if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
         Unit_CalcIndexB(unitRecord);
         UI_DrawTextFmt(v19, 500, 618, 219, 2, (int)aD_51);
@@ -2884,7 +2884,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
         v19 = DLX_GetSpriteForChar(g_BattleUnitPanelIconSpriteSet, (unsigned __int8)g_UnitBattlePanelAttackIconChar + 8);
         Compat_RenderDeviceDrawMenuSprite(497, 211, v19, 1);
       }
-      if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitRecord + 2) + 140051) )
+      if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
         if ( *((_BYTE *)unitMetadata + 25) )
         {
@@ -2929,7 +2929,7 @@ LABEL_36:
                     v26 -= (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu) + 1;
                   }
                   v30 = 529;
-                  if ( *(_DWORD *)(1423 * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
+                  if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
                   {
                     for ( i = 0; *((_BYTE *)unitMetadata + 25); v30 += 12 )
                     {
@@ -2945,7 +2945,7 @@ LABEL_36:
                     v30 = DLX_GetSpriteForChar(g_BattleUnitPanelIconSpriteSet, (unsigned __int8)g_UnitBattlePanelVolleyIconChar + 8);
                     Compat_RenderDeviceDrawMenuSprite(497, 245, v30, 1);
                   }
-                  if ( *(_DWORD *)(1423 * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
+                  if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
                   {
                     UI_DrawTextFmt(v30, 500, 618, 287, 2, (int)aD_53);
                   }
@@ -2954,7 +2954,7 @@ LABEL_36:
                     v30 = DLX_GetSpriteForChar(g_BattleUnitPanelIconSpriteSet, (unsigned __int8)g_UnitBattlePanelMoraleIconChar + 8);
                     Compat_RenderDeviceDrawMenuSprite(497, 279, v30, 1);
                   }
-                  if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitRecord + 2) + 140051) )
+                  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
                   {
                     UI_DrawTextFmt(v30, 500, 618, 321, 2, (int)aD_54);
                   }

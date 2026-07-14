@@ -1,5 +1,36 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A1-3: player / map-header / turn offsets
+
+Gated workstream-A substitution for the `gameData` header block, proven
+value-identical (1,135,130 tokens, 0 hunks). 437 sites, 26 deferred.
+
+| Old | New | Subsystem | Sites |
+|---|---|---|---|
+| `1423` | `PLAYER_DATA_STRIDE` | player | 110 |
+| `140024` | `PLAYER_RUNTIME_STATE_OFFSET` | player | 20 |
+| `140000` | `MAP_WIDTH_TILES_OFFSET` | map_header | 45 |
+| `140004` | `MAP_HEIGHT_TILES_OFFSET` | map_header | 45 |
+| `140008` | `MAP_VIEW_LEFT_OFFSET` | map_header | 82 |
+| `140012` | `MAP_VIEW_TOP_OFFSET` | map_header | 86 |
+| `140016` | `MAP_THEME_INDEX_OFFSET` | map_header | 27 |
+| `140021` | `MISSION_FAILURE_FLAG_OFFSET` | map_header | 5 |
+| `140022` | `GAME_TURN_COUNTER_OFFSET` | map_header | 11 |
+| `147143` | `VIEWED_PLAYER_INDEX_OFFSET` | turn | 6 |
+
+All `repo-confirmed` from the prelude accessor block and the
+`docs/SAVE_DAT_FORMAT.md` region map (players 140024, 1423x5; world header
+140000). Rules: `docs/archive/literal_rules/A1-3_player_header.json`.
+
+### Deferred / Ambiguous (A1-3)
+
+- `src/game/090_special_sites_savegame.inc.c:5665` writes `140016` as hex
+  `0x222F0`; deferred to the A2 hex/suffix-drop batch to keep the strict
+  token-identity gate clean.
+- `147139` (`TURN_OWNER_PLAYER_INDEX_OFFSET`) has no `gameData`-anchored
+  additive site; only the `TURN_OWNER_PLAYER_INDEX` macro is used. Nothing to
+  replace.
+
 ## 2026-07-14 - Magic-number campaign A1-2: building table literals
 
 Same gated workstream-A substitution as A1-1, proven value-identical by the

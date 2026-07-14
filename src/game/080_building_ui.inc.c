@@ -1209,7 +1209,7 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD a2, int a3)
   int v25; // ecx
 
   g_CastleProductionBuildingPtr = buildingPtr;
-  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(buildingPtr + 2) + 140063);
+  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + 140063);
   g_CastleProductionSelectedAvailableUnitIndex = 0;
   g_CastleProductionSelectedUnitSpriteSet = 0;
   memset(g_CastleProduction_LicenceSlotSpriteHandles, 0, sizeof(g_CastleProduction_LicenceSlotSpriteHandles));
@@ -6579,7 +6579,7 @@ int  Building_ShowGateDoorDialog_v1(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_3;
@@ -6673,7 +6673,7 @@ int  Building_ShowGateDoorDialog_v2(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_6;
@@ -6767,7 +6767,7 @@ int  Building_ShowGateDoorDialog_v3(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_9;
@@ -6861,7 +6861,7 @@ int  Building_ShowGateDoorDialog_v4(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrD_12;
@@ -6939,9 +6939,9 @@ BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *building)
     neighborX = *neighborOffsets + *building;
     neighborY = neighborOffsets[1] + building[1];
     if ( neighborX >= 0
-      && neighborX < *(_DWORD *)(gameData + 140000)
+      && neighborX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
       && neighborY >= 0
-      && neighborY < *(_DWORD *)(gameData + 140004)
+      && neighborY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
       && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
       && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
@@ -6991,9 +6991,9 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
     neighborX = *neighborOffset + *building;
     neighborY = neighborOffset[1] + building[1];
     if ( neighborX >= 0
-      && neighborX < *(_DWORD *)(gameData + 140000)
+      && neighborX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
       && neighborY >= 0
-      && neighborY < *(_DWORD *)(gameData + 140004)
+      && neighborY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
       && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
       && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
@@ -7262,7 +7262,7 @@ BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD ga
   result = Building_IsUnitLicenceEligible((char *)building, unitType);
   if ( result )
   {
-    nationData = gameData + 1423 * *(unsigned __int8 *)(building + 2);
+    nationData = gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(building + 2);
     licenceCost = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * unitType];
     if ( !*(_DWORD *)(nationData + 140051) && *(int *)(nationData + 140055) >= 2 )
       licenceCost = (int)(75 * licenceCost) / 100;
@@ -7324,7 +7324,7 @@ int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContex
   slotIndex = (unsigned __int8)licenceSlot;
   Debug_Log(building, licenceSlot, gameContext, (int)aBuildingSetUnitProduction);
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = slotIndex;
-  result = 1423 * buildingPtr[2];
+  result = PLAYER_DATA_STRIDE * buildingPtr[2];
   BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[slotIndex + 402]];
   if ( !*(_DWORD *)(result + gameData + 140051)
     && *(int *)(result + gameData + 140055) >= 1
@@ -7359,7 +7359,7 @@ _BYTE * Building_TrainUnit(int building, char a2, DWORD gameContext)
   if ( result != (_BYTE *)3 )
   {
     result = (_BYTE *)(v4 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
-    if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v4 + 2) + gameData + 140051) )
+    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v4 + 2) + gameData + 140051) )
       trainingTurns = (*(_BYTE *)(v4 + 4) == 2) + 1;
     else
       trainingTurns = (*(_BYTE *)(v4 + 4) == 2) + 4;
@@ -7779,7 +7779,7 @@ int  Building_CollectGoldIncome(int building)
   int result; // eax
   int currentGold; // esi
 
-  if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(building + 2) + 140051) )
+  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(building + 2) + 140051) )
     incomeDivisor = 400;
   else
     incomeDivisor = 200;
@@ -8124,7 +8124,7 @@ int  BuildingSpriteCache_LoadEntry(
     }
     spriteAssetIndex = 9 * a4 + v17;
   }
-  v19 = *(_BYTE *)(gameData + 140016);
+  v19 = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
   if ( v19 == 0 )
   {
     v22 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
@@ -8239,9 +8239,9 @@ int Rules_RebuildTempleFacts()
   for ( i = 0; ; ++i )
   {
     result = gameData;
-    if ( i >= *(_DWORD *)(gameData + 140000) )
+    if ( i >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
       break;
-    for ( j = 0; j < *(_DWORD *)(gameData + 140004); j = v4 + 1 )
+    for ( j = 0; j < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
     {
       if ( MapTile_GetReligiousSiteCategory(i, j) )
         Rules_LogTempleFact(i, v4);
@@ -8756,7 +8756,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
   Debug_Log(tile_x, tile_y, a4, (int)aTemple_unitget);
   unitStack = (__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("temple_unit_getinto_enter", stack_index, tile_x, tile_y, MapTile_GetReligiousSiteCategory(tile_x, tile_y));
-  v8 = gameData + 1423 * *((unsigned __int8 *)unitStack + 4);
+  v8 = gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
   if ( *(_DWORD *)(v8 + 140063) )
   {
     if ( *(_DWORD *)(v8 + 140051) )
@@ -8773,17 +8773,17 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
     outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultInactive;
   }
   siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
-  v11 = 1423 * *((unsigned __int8 *)unitStack + 4);
+  v11 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
   v12 = *(_DWORD *)(gameData + v11 + 140063);
   if ( v12 && (siteCategory == 3 || siteCategory == 4)
-    || (LOBYTE(v11) = gameData, !*(_DWORD *)(1423 * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
+    || (LOBYTE(v11) = gameData, !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
     && (siteCategory == 1 || siteCategory == 2) )
   {
     Debug_Log(v12, v11, (DWORD)unitStack, (int)aTemple_unitg_0);
     v30[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
     v30[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
     v30[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
-    if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitStack + 4) + 140051) )
+    if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + 140051) )
     {
       LOBYTE(v11) = 1;
       Temple_ShowOutcomePopup(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)unitStack);
@@ -8814,7 +8814,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
       v28[0] = (int)g_TempleGiftEmptyText[0];
       v28[1] = (int)g_TempleGiftEmptyText[1];
       v28[2] = (int)g_TempleGiftEmptyText[2];
-      result = 1423 * *((unsigned __int8 *)unitStack + 4) + gameData;
+      result = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData;
       if ( *(_DWORD *)(result + 140051) )
       {
         v27 = *(_DWORD *)(result + 140063);
@@ -8830,7 +8830,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
       outcomePtr = Temple_Random(outcomeTable, v15, gameData, (DWORD)unitStack);
       v19 = ACTIVE_MISSION_INDEX;
       if ( (v19 == 2 || v19 == 6 || v19 == 12 || v19 == 16)
-        && *(_DWORD *)(1423 * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
+        && *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
       {
         if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
           || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
@@ -8844,7 +8844,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
         }
       }
       Debug_Log(v17, v11, (DWORD)unitStack, (int)aTemple_unitg_1);
-      v20 = 1423 * *((unsigned __int8 *)unitStack + 4);
+      v20 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
       v21 = *(_DWORD *)(v20 + gameData + 140051);
       if ( v21 )
       {
@@ -9673,7 +9673,7 @@ int  Audio_StartMainMusicIfStopped(int a1, DWORD gameContext)
   if ( !g_Audio_MusicActiveFlag )
   {
     g_Audio_MusicActiveFlag = 1;
-    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), a1, 1, gameContext);
+    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), a1, 1, gameContext);
   }
   return result;
 }

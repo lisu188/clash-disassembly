@@ -138,10 +138,10 @@ __int16 * UnitStack_RemoveFromTile(__int16 *stack, double a2)
 
   stackPtr = (int)stack;
   row = UNIT_STACK_TILE_ROW(stackPtr);
-  if ( row >= 0 && row <= *(_DWORD *)(gameData + 140000) - 1 )
+  if ( row >= 0 && row <= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 )
   {
     column = UNIT_STACK_TILE_COLUMN(stackPtr);
-    if ( column >= 0 && column <= *(_DWORD *)(gameData + 140004) - 1 )
+    if ( column >= 0 && column <= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     {
       Rules_RetractArmyFact((_DWORD *)stackPtr, column, stackPtr, a2);
       *(_WORD *)(TILE_INDEX(row, column)) = -1;
@@ -337,18 +337,18 @@ int  Camera_CenterOnUnit(int stackIndex)
   int mapHeightTiles; // esi
 
   stackByteOffset = UNIT_STACK_STRIDE * stackIndex;
-  *(_DWORD *)(gameData + 140008) = *(__int16 *)(gameData + stackByteOffset + UNIT_STACK_TABLE_OFFSET) - 4;
-  *(_DWORD *)(gameData + 140012) = *(__int16 *)(gameData + stackByteOffset + 147176) - 3;
-  if ( *(int *)(gameData + 140008) < 0 )
-    *(_DWORD *)(gameData + 140008) = 0;
-  if ( *(int *)(gameData + 140012) < 0 )
-    *(_DWORD *)(gameData + 140012) = 0;
-  mapWidthTiles = *(_DWORD *)(gameData + 140000);
-  if ( *(_DWORD *)(gameData + 140008) + 9 > mapWidthTiles )
-    *(_DWORD *)(gameData + 140008) = mapWidthTiles - 9;
-  mapHeightTiles = *(_DWORD *)(gameData + 140004);
-  if ( *(_DWORD *)(gameData + 140012) + 7 > mapHeightTiles )
-    *(_DWORD *)(gameData + 140012) = mapHeightTiles - 7;
+  *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = *(__int16 *)(gameData + stackByteOffset + UNIT_STACK_TABLE_OFFSET) - 4;
+  *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = *(__int16 *)(gameData + stackByteOffset + 147176) - 3;
+  if ( *(int *)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
+  if ( *(int *)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
+  mapWidthTiles = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
+  if ( *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 > mapWidthTiles )
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = mapWidthTiles - 9;
+  mapHeightTiles = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+  if ( *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 > mapHeightTiles )
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = mapHeightTiles - 7;
   return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -442,26 +442,26 @@ signed int WorldMap_HandleViewportScrollKeys()
 
   if ( Input_IsKeyPressed(203) )
   {
-    viewportXLeft = *(_DWORD *)(gameData + 140008);
+    viewportXLeft = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
     if ( viewportXLeft > 0 )
     {
-      *(_DWORD *)(gameData + 140008) = viewportXLeft - 1;
+      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = viewportXLeft - 1;
 LABEL_4:
       WorldMap_RedrawViewport(1);
       g_WorldMapViewportScrolledFlag = 1;
       return 1;
     }
   }
-  if ( Input_IsKeyPressed(205) && (viewportXRight = *(_DWORD *)(gameData + 140008), *(_DWORD *)(gameData + 140000) - 9 > viewportXRight) )
+  if ( Input_IsKeyPressed(205) && (viewportXRight = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET), *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 9 > viewportXRight) )
   {
-    *(_DWORD *)(gameData + 140008) = viewportXRight + 1;
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = viewportXRight + 1;
     WorldMap_RedrawViewport(1);
     g_WorldMapViewportScrolledFlag = 1;
     return 1;
   }
-  else if ( Input_IsKeyPressed(200) && (viewportYUp = *(_DWORD *)(gameData + 140012), viewportYUp > 0) )
+  else if ( Input_IsKeyPressed(200) && (viewportYUp = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET), viewportYUp > 0) )
   {
-    *(_DWORD *)(gameData + 140012) = viewportYUp - 1;
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = viewportYUp - 1;
     WorldMap_RedrawViewport(1);
     g_WorldMapViewportScrolledFlag = v5;
     return v5;
@@ -470,10 +470,10 @@ LABEL_4:
   {
     if ( Input_IsKeyPressed(208) )
     {
-      viewportYDown = *(_DWORD *)(gameData + 140012);
-      if ( *(_DWORD *)(gameData + 140004) - 7 > viewportYDown )
+      viewportYDown = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      if ( *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7 > viewportYDown )
       {
-        *(_DWORD *)(gameData + 140012) = viewportYDown + 1;
+        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = viewportYDown + 1;
         goto LABEL_4;
       }
     }
@@ -798,7 +798,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
     v96 = 0;
     v89 = pathBuffer[1];
     v94 = *stackPtr;
-    v10 = *(_DWORD *)(gameData + 140008);
+    v10 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
     v93 = stackPtr[1];
     followInViewport = 1;
     if ( v94 >= v10 )
@@ -806,12 +806,12 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
       v9 = v94;
       if ( v10 + 9 > v94 )
       {
-        v9 = *(_DWORD *)(gameData + 140012);
+        v9 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
         if ( v93 >= v9
           && v9 + 7 > v93
-          && (unsigned __int8)v89 >= *(int *)(gameData + 140008)
+          && (unsigned __int8)v89 >= *(int *)(gameData + MAP_VIEW_LEFT_OFFSET)
           && (unsigned __int8)v89 < v10 + 9
-          && BYTE1(v89) >= *(int *)(gameData + 140012) )
+          && BYTE1(v89) >= *(int *)(gameData + MAP_VIEW_TOP_OFFSET) )
         {
           followInViewport = BYTE1(v89) >= v9 + 7;
         }
@@ -882,10 +882,10 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         prevCumulativeCost = HIWORD(v105);
         if ( followInViewport )
         {
-          v29 = *(_DWORD *)(gameData + 140008);
+          v29 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
           if ( (unsigned __int8)v105 < v29
             || (unsigned __int8)v105 >= v29 + 9
-            || (v30 = *(_DWORD *)(gameData + 140012), BYTE1(v105) < v30)
+            || (v30 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET), BYTE1(v105) < v30)
             || BYTE1(v105) >= v30 + 7 )
           {
             if ( Map_ClassifyFogOfWarOverlayForPlayer((unsigned __int8)v105, BYTE1(v105), VIEWED_PLAYER_INDEX) )
@@ -922,7 +922,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         }
         if ( !v36 )
         {
-          if ( *(_DWORD *)(1423 * *((unsigned __int8 *)stackPtr + 4) + gameData + 140051) || !Map_GetBridgeCrossingCostOrZero(v35, v34) )
+          if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackPtr + 4) + gameData + 140051) || !Map_GetBridgeCrossingCostOrZero(v35, v34) )
           {
             *((_DWORD *)stackPtr + 79) = 0;
           }
@@ -1501,7 +1501,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
     slotPtr = (__int16 *)((char *)slotPtr + 31);
   }
   while ( slotIndex < 10 );
-  if ( anyDisbanded && *(_DWORD *)(gameData + 1423 * (unsigned __int8)stackPtr[4] + 140051) )
+  if ( anyDisbanded && *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * (unsigned __int8)stackPtr[4] + 140051) )
   {
     stackRow = *(__int16 *)stackPtr;
     UI_CenterWorldMapViewportOnRectIfFit(stackRow, *((__int16 *)stackPtr + 1), *((__int16 *)stackPtr + 1) - 5, stackRow);
@@ -1636,7 +1636,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       *(__int16 *)stackPtr,
       *(__int16 *)(stackPtr + 2),
       *(_DWORD *)(stackPtr + 316));
-    if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(stackPtr + 4) + 140051) )
+    if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(stackPtr + 4) + 140051) )
     {
       UnitStack_AdjustFatigueByPredicate((__int16 *)stackPtr, 10, UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
       UnitStack_AdjustMoraleByPredicate((__int16 *)stackPtr, -1, UnitSlot_HasSevereFatigue, 0xFFFFFFFF, a4);
@@ -2457,7 +2457,7 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
     if ( v7 + originRow >= 0 )
     {
       v7 = gameData;
-      if ( v9 < *(_DWORD *)(gameData + 140000) && v8 >= 0 && v8 < *(_DWORD *)(gameData + 140004) )
+      if ( v9 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && v8 >= 0 && v8 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         LOBYTE(sourceSlots) = -1;
         if ( !Trap_GetTileOwnerMask(v9, v8, -1) )
@@ -4592,12 +4592,12 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   if ( v6 < 0 )
     return 0;
   v7 = v6;
-  v8 = *(_DWORD *)(gameData + 140000);
+  v8 = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
   if ( v7 >= v8 )
     return 0;
   if ( targetColumn < 0 )
     return 0;
-  v9 = *(_DWORD *)(gameData + 140004);
+  v9 = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
   if ( targetColumn >= v9 || v7 >= v8 || targetColumn >= v9 )
     return 0;
   result = (int *)UnitStack_GetMoveCostToTile(stackIndex_l, v7, targetColumn);
@@ -4637,13 +4637,13 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
     v18 = 0;
     v83 = 0;
     v84 = 0;
-    while ( v18 < *(_DWORD *)(gameData + 140000) )
+    while ( v18 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
     {
       v19 = 0;
       v69 = v84;
       v20 = 0;
       v70 = v83;
-      while ( v19 < *(_DWORD *)(gameData + 140004) )
+      while ( v19 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         *(_WORD *)(v20 + v69 + distanceGrid) = -2;
         v21 = UnitStack_GetTileMoveCostFromMergedProfileOrZero(stackRecord, (intptr_t)mergedProfile, v19++, v18);
@@ -4753,12 +4753,12 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
           break;
         if ( --v60 < 0 )
           v60 = v64;
-        v49 = *(_DWORD *)(gameData + 140000);
+        v49 = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
         if ( ++v61 >= v49 )
           v61 = v49 - 1;
         if ( --v62 < 0 )
           v62 = 0;
-        v30 = *(_DWORD *)(gameData + 140004);
+        v30 = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
         if ( ++v63 >= v30 )
           v63 = v30 - 1;
         v22 = v65 - 1;
@@ -4805,9 +4805,9 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
             v38 = v90 + v30;
             v39 = v91 + v37;
             if ( v39 >= 0
-              && v39 < *(_DWORD *)(gameData + 140000)
+              && v39 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
               && v38 >= 0
-              && v38 < *(_DWORD *)(gameData + 140004)
+              && v38 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
               && (unsigned __int16)v88 > *(_WORD *)(distanceGrid + 200 * v39 + 2 * v38) )
             {
               LOWORD(v40) = *(unsigned __int8 *)(v79 + tileCostGrid + (v91 << 8));
@@ -4992,7 +4992,7 @@ _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targe
 
   (void)a3;
   Debug_Log(stackIndex, targetColumn, a5, (int)aUnit_movetra_1);
-  if ( targetRow < 0 || targetRow >= *(_DWORD *)(gameData + 140000) || targetColumn < 0 || targetColumn >= *(_DWORD *)(gameData + 140004) )
+  if ( targetRow < 0 || targetRow >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) || targetColumn < 0 || targetColumn >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     return 0;
 
   stack_record = UNIT_STACK(stackIndex);
@@ -5912,7 +5912,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
     Compat_RenderDeviceFillSolidRect(v98, v97, v96, v95, 1u);
     goto LABEL_2;
   }
-  if ( *(_BYTE *)(gameData + 140016) == 2 )
+  if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) == 2 )
   {
     v61 = *tilePtr;
     if ( v61 != 0xFFFF )
@@ -6083,7 +6083,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       }
     }
   }
-  if ( tileColumn < *(_DWORD *)(gameData + 140004) - 1 && tileRow < *(_DWORD *)(gameData + 140000) && g_ActiveUnitMoveTileIndex != -1 )
+  if ( tileColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 && tileRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && g_ActiveUnitMoveTileIndex != -1 )
   {
     v17 = *(__int16 *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556376);
     if ( v17 == g_ActiveUnitMoveTileIndex )
@@ -6111,7 +6111,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       }
     }
   }
-  if ( tileColumn < *(_DWORD *)(gameData + 140004) - 1 )
+  if ( tileColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
   {
     v21 = *(_WORD *)(200 * tileRow + gameData + 2 * tileColumn + 556376);
     v112 = v21;
@@ -6127,7 +6127,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       }
     }
   }
-  if ( tileColumn < *(_DWORD *)(gameData + 140004) - 1 && tileRow > 0 && g_ActiveUnitMoveTileIndex != -1 )
+  if ( tileColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 && tileRow > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v24 = *(__int16 *)(200 * (tileRow - 1) + gameData + 2 * tileColumn + 556376);
     if ( v24 == g_ActiveUnitMoveTileIndex )
@@ -6139,7 +6139,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       }
     }
   }
-  if ( tileColumn > 0 && tileRow < *(_DWORD *)(gameData + 140000) - 1 && g_ActiveUnitMoveTileIndex != -1 )
+  if ( tileColumn > 0 && tileRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v25 = *(__int16 *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556372);
     if ( v25 == g_ActiveUnitMoveTileIndex )
@@ -6151,7 +6151,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       }
     }
   }
-  if ( tileRow < *(_DWORD *)(gameData + 140000) - 1 )
+  if ( tileRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 )
   {
     v27 = *(_WORD *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556374);
     v114 = v27;
@@ -6175,7 +6175,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       if ( v30 != 0xFFFF && g_UnitMoveAnimOffsetY > 0 && v30 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v30, screenX, screenY, g_UnitMoveAnimOffsetY - 64, tilePtr);
     }
-    if ( tileColumn < *(_DWORD *)(gameData + 140004) - 1 )
+    if ( tileColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     {
       v31 = *(unsigned __int16 *)(200 * tileRow + gameData + 2 * tileColumn + 556376);
       if ( v31 != 0xFFFF && g_UnitMoveAnimOffsetY < 0 && v31 == g_ActiveUnitMoveTileIndex )
@@ -6187,7 +6187,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       if ( v32 != 0xFFFF && g_UnitMoveAnimOffsetX > 0 && v32 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v32, screenX, screenY, g_UnitMoveAnimOffsetY, tilePtr);
     }
-    if ( tileRow < *(_DWORD *)(gameData + 140000) - 1 )
+    if ( tileRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 )
     {
       v33 = *(unsigned __int16 *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556374);
       if ( v33 != 0xFFFF && g_UnitMoveAnimOffsetX < 0 && v33 == g_ActiveUnitMoveTileIndex )
@@ -6199,19 +6199,19 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       if ( v34 != 0xFFFF && g_UnitMoveAnimOffsetY > 0 && g_UnitMoveAnimOffsetX > 0 && v34 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v34, screenX, screenY, g_UnitMoveAnimOffsetY - 64, tilePtr);
     }
-    if ( tileRow > 0 && tileColumn < *(_DWORD *)(gameData + 140004) )
+    if ( tileRow > 0 && tileColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     {
       v35 = *(unsigned __int16 *)(200 * (tileRow - 1) + gameData + 2 * tileColumn + 556376);
       if ( v35 != 0xFFFF && g_UnitMoveAnimOffsetY < 0 && g_UnitMoveAnimOffsetX > 0 && v35 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v35, screenX, screenY, g_UnitMoveAnimOffsetY + 64, tilePtr);
     }
-    if ( tileColumn > 0 && tileRow < *(_DWORD *)(gameData + 140000) )
+    if ( tileColumn > 0 && tileRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
     {
       v36 = *(unsigned __int16 *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556372);
       if ( v36 != 0xFFFF && g_UnitMoveAnimOffsetY > 0 && g_UnitMoveAnimOffsetX < 0 && v36 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v36, screenX, screenY, g_UnitMoveAnimOffsetY - 64, tilePtr);
     }
-    v37 = *(_DWORD *)(gameData + 140000);
+    v37 = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
     if ( tileColumn < v37 && tileRow < v37 )
     {
       v38 = *(unsigned __int16 *)(200 * (tileRow + 1) + gameData + 2 * tileColumn + 556376);
@@ -6246,20 +6246,20 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
       else
         v79 = 5;
       v108 = (unsigned __int8)g_BuildingFlagYOffsets[2 * *(unsigned __int8 *)(v102 + 3) + 2 * v79]
-           + ((*(unsigned __int8 *)(v102 + 1) - *(_DWORD *)(gameData + 140012)) << 6)
+           + ((*(unsigned __int8 *)(v102 + 1) - *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6)
            + 16;
       if ( *(_BYTE *)(v102 + 4) )
         building_flag_variant = 0;
       else
         building_flag_variant = 80;
       building_flag_x = building_flag_x_offsets[*(unsigned __int8 *)(v102 + 3) + (building_flag_variant ? 5 : 0)]
-                      + ((*(unsigned __int8 *)v102 - *(_DWORD *)(gameData + 140008)) << 6)
+                      + ((*(unsigned __int8 *)v102 - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
                       + 32;
       v81 = DLX_GetSpriteForChar(g_FlagSpriteSet, 16 * *(unsigned __int8 *)(v102 + 2) + building_flag_variant + g_MapFlagAnimationFrame);
       Compat_RenderDeviceDrawMenuSprite(building_flag_x, v108, v81, 1);
     }
   }
-  if ( !drewOverlaySprite && *(_BYTE *)(gameData + 140016) != 2 )
+  if ( !drewOverlaySprite && *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) != 2 )
   {
     v82 = tilePtr[1];
     if ( v82 != 0xFFFF && tilePtr[1] >= 0xD3u && tilePtr[1] <= 0xD7u )
@@ -6344,7 +6344,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
 LABEL_133:
   if ( stackIndex == g_SelectedUnitIndex && g_ActiveUnitMoveTileIndex == -1 && PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
-    v52 = DLX_GetSpriteForChar(g_MarksSpriteSet, *(unsigned __int8 *)(gameData + 140016) == 1);
+    v52 = DLX_GetSpriteForChar(g_MarksSpriteSet, *(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET) == 1);
     Compat_RenderDeviceDrawMenuSprite(screenX, screenY, v52, 1);
   }
   if ( tileRow == g_BlinkFlashTileX && tileColumn == g_BlinkFlashTileY )
@@ -6372,7 +6372,7 @@ LABEL_133:
     g_WorldMapTileOverlayDrawHook(v56, tileColumn);
   if ( *(_DWORD *)(gameData + 147155) )
   {
-    if ( *(_BYTE *)(gameData + 140016) == 1 )
+    if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) == 1 )
       v57 = -9;
     else
       v57 = 76;
@@ -6382,9 +6382,9 @@ LABEL_133:
 LABEL_2:
   if ( *(_DWORD *)(gameData + 147151) )
   {
-    if ( tileColumn > *(_DWORD *)(gameData + 140012) )
+    if ( tileColumn > *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) )
       Compat_RenderDeviceFillSolidRect(screenX, screenY, (unsigned __int16)(screenX + 63), screenY, 1u);
-    if ( tileRow > *(_DWORD *)(gameData + 140008) )
+    if ( tileRow > *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) )
       Compat_RenderDeviceFillSolidRect(screenX, screenY, screenX, (unsigned __int16)(screenY + 63), 1u);
   }
   return MiniMap_BlitDirtyRectAndDrawViewportBox(screenX, screenY, screenY + 63, screenX + 63);
@@ -6450,8 +6450,8 @@ int  WorldMap_RedrawViewport(int presentCursorOverlay)
                  screenX,
                  screenY,
                  (unsigned __int16 *)(gameData
-                                    + 1400 * (colIndex + *(_DWORD *)(gameData + 140008))
-                                    + 14 * (rowIndex + *(_DWORD *)(gameData + 140012))));
+                                    + 1400 * (colIndex + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
+                                    + 14 * (rowIndex + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))));
       ++colIndex;
       screenX += 64;
     }
@@ -6469,9 +6469,9 @@ int  WorldMap_RedrawViewport(int presentCursorOverlay)
       result = WorldMap_DrawMapTile(
                  v9,
                  ((_WORD)rowIndex << 6) + 16,
-                 (unsigned __int16 *)(14 * (rowIndex + *(_DWORD *)(gameData + 140012))
+                 (unsigned __int16 *)(14 * (rowIndex + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
                                     + gameData
-                                    + 1400 * (colIndex + *(_DWORD *)(gameData + 140008))));
+                                    + 1400 * (colIndex + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))));
       ++colIndex;
       v9 += 64;
     }
@@ -6567,17 +6567,17 @@ int  WorldMap_RedrawTileIfVisible(int result, int tileColumn)
   unsigned __int16 screenY; // di
   int cursorPresented; // ebp
 
-  if ( result < *(_DWORD *)(gameData + 140008) + 9
-    && tileColumn < *(_DWORD *)(gameData + 140012) + 7
-    && result >= *(_DWORD *)(gameData + 140008) )
+  if ( result < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9
+    && tileColumn < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7
+    && result >= *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) )
   {
-    v2 = *(_DWORD *)(gameData + 140012);
+    v2 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
     if ( tileColumn >= v2
-      && (tileColumn != v2 + 6 || result - *(_DWORD *)(gameData + 140008) < 6)
-      && (tileColumn != *(_DWORD *)(gameData + 140012) + 6 || !g_UnitStackSelectionModeActive) )
+      && (tileColumn != v2 + 6 || result - *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) < 6)
+      && (tileColumn != *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 6 || !g_UnitStackSelectionModeActive) )
     {
-      screenX = (((_WORD)result - *(_WORD *)(gameData + 140008)) << 6) + 32;
-      screenY = (((_WORD)tileColumn - *(_WORD *)(gameData + 140012)) << 6) + 16;
+      screenX = (((_WORD)result - *(_WORD *)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6) + 32;
+      screenY = (((_WORD)tileColumn - *(_WORD *)(gameData + MAP_VIEW_TOP_OFFSET)) << 6) + 16;
       g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
       WorldMap_DrawMapTile(screenX, screenY, (unsigned __int16 *)(14 * tileColumn + gameData + 1400 * result));
       cursorPresented = g_CursorOverlayPresented;
@@ -6604,18 +6604,18 @@ int  UI_CenterWorldMapViewportOnRectIfFit(int result, int rectColMin, int rectCo
 
   if ( rectRowMax - result <= 9 && rectColMax - rectColMin <= 7 )
   {
-    *(_DWORD *)(gameData + 140008) = (rectRowMax + result) / 2 - 3;
-    *(_DWORD *)(gameData + 140012) = (rectColMax + rectColMin) / 2 - 3;
-    mapWidthTiles = *(_DWORD *)(gameData + 140000);
-    if ( *(_DWORD *)(gameData + 140008) + 9 >= mapWidthTiles )
-      *(_DWORD *)(gameData + 140008) = mapWidthTiles - 10;
-    mapHeightTiles = *(_DWORD *)(gameData + 140004);
-    if ( *(_DWORD *)(gameData + 140012) + 7 >= mapHeightTiles )
-      *(_DWORD *)(gameData + 140012) = mapHeightTiles - 8;
-    if ( *(int *)(gameData + 140008) < 0 )
-      *(_DWORD *)(gameData + 140008) = 0;
-    if ( *(int *)(gameData + 140012) < 0 )
-      *(_DWORD *)(gameData + 140012) = 0;
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = (rectRowMax + result) / 2 - 3;
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = (rectColMax + rectColMin) / 2 - 3;
+    mapWidthTiles = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
+    if ( *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 >= mapWidthTiles )
+      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = mapWidthTiles - 10;
+    mapHeightTiles = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+    if ( *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 >= mapHeightTiles )
+      *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = mapHeightTiles - 8;
+    if ( *(int *)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
+      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
+    if ( *(int *)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
+      *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
     return WorldMap_RedrawViewport(1);
   }
   return result;
@@ -6628,18 +6628,18 @@ int  UI_CenterWorldMapViewportOnTile(int tileRow, int tileColumn)
   int mapWidthTiles; // ecx
   int mapHeightTiles; // ebx
 
-  *(_DWORD *)(gameData + 140008) = tileRow - 3;
-  *(_DWORD *)(gameData + 140012) = tileColumn - 3;
-  mapWidthTiles = *(_DWORD *)(gameData + 140000);
-  if ( *(_DWORD *)(gameData + 140008) + 9 >= mapWidthTiles )
-    *(_DWORD *)(gameData + 140008) = mapWidthTiles - 10;
-  mapHeightTiles = *(_DWORD *)(gameData + 140004);
-  if ( *(_DWORD *)(gameData + 140012) + 7 >= mapHeightTiles )
-    *(_DWORD *)(gameData + 140012) = mapHeightTiles - 8;
-  if ( *(int *)(gameData + 140008) < 0 )
-    *(_DWORD *)(gameData + 140008) = 0;
-  if ( *(int *)(gameData + 140012) < 0 )
-    *(_DWORD *)(gameData + 140012) = 0;
+  *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = tileRow - 3;
+  *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = tileColumn - 3;
+  mapWidthTiles = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
+  if ( *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 >= mapWidthTiles )
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = mapWidthTiles - 10;
+  mapHeightTiles = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+  if ( *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 >= mapHeightTiles )
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = mapHeightTiles - 8;
+  if ( *(int *)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
+    *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
+  if ( *(int *)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
+    *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
   return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -8715,10 +8715,10 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
   Render_DrawSprite_v3(attackerStackIndex, a4);
   Render_DrawSprite_v3(defenderStackIndex, a4);
   attackerStack = (__int16 *)UNIT_STACK(attackerStackIndex);
-  v9 = 1423 * *((unsigned __int8 *)attackerStack + 4);
+  v9 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4);
   defenderStack = (__int16 *)(UNIT_STACK_STRIDE * defenderStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("unit_attack_enter", attackerStackIndex, defenderStackIndex, *defenderStack, defenderStack[1]);
-  v10 = *(_DWORD *)(gameData + v9 + 140051) && *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)defenderStack + 4) + 140051);
+  v10 = *(_DWORD *)(gameData + v9 + 140051) && *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 140051);
   bothPlayersHuman = (unsigned __int8 *)v10;
   capturedCargoFlag = 0;
   if ( UnitStack_HasNormalCombatUnits((intptr_t)attackerStack) )
@@ -8786,8 +8786,8 @@ LABEL_22:
             v20 = defenderSpecialEntries;
             v21 = Unit_GetSquadCount((int)defenderStack);
             UnitSlots_ExtractSpecialEntries((char *)defenderStack + 6, v21, (char *)defenderSpecialEntries);
-            v23 = *(_DWORD *)(1423 * *((unsigned __int8 *)attackerStack + 4) + gameData + 140051)
-               || *(_DWORD *)(1423 * *((unsigned __int8 *)defenderStack + 4) + gameData + 140051);
+            v23 = *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 140051)
+               || *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + gameData + 140051);
             if ( v23 && Unit_GetSquadCount((int)attackerStack) && Unit_GetSquadCount((int)defenderStack) )
             {
               v24 = defenderStack;
@@ -8832,7 +8832,7 @@ LABEL_48:
                   {
                     v51 = Unit_CreateNearbyUnitGroup(*defenderStack, defenderStack[1], (unsigned __int8 *)attackerSpecialEntries, a5);
                     if ( (UnitStack_HasPeasantCargo(v51) || UnitStack_HasGoldCargo(v51))
-                      && *(unsigned __int8 *)(v51 + 4) == *(_DWORD *)(gameData + 147143) )
+                      && *(unsigned __int8 *)(v51 + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
@@ -8844,8 +8844,8 @@ LABEL_48:
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
                 else if ( battleWinner == 2 )
                 {
@@ -8854,7 +8854,7 @@ LABEL_48:
                   {
                     v47 = Unit_CreateNearbyUnitGroup(*attackerStack, attackerStack[1], defenderSpecialEntries, a5);
                     if ( (UnitStack_HasPeasantCargo(v47) || UnitStack_HasGoldCargo(v47))
-                      && *(unsigned __int8 *)(v47 + 4) == *(_DWORD *)(gameData + 147143) )
+                      && *(unsigned __int8 *)(v47 + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
@@ -8867,8 +8867,8 @@ LABEL_48:
                   UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
                   UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
                   UnitStack_SubtractActionPointsFloorZero(attackerStack, 10, (DWORD)attackerStack, a5);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
                 goto LABEL_52;
               }
@@ -8882,7 +8882,7 @@ LABEL_49:
                   if ( (unsigned int)attackerStack[3] <= 0x28 )
                   {
                     if ( (UnitStack_HasPeasantCargo((int)attackerStack) || UnitStack_HasGoldCargo((int)attackerStack))
-                      && *((unsigned __int8 *)defenderStack + 4) == *(_DWORD *)(gameData + 147143) )
+                      && *((unsigned __int8 *)defenderStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
@@ -8893,8 +8893,8 @@ LABEL_49:
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
                   UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
               }
               else
@@ -8902,7 +8902,7 @@ LABEL_49:
                 if ( (unsigned int)defenderStack[3] <= 0x28 )
                 {
                   if ( (UnitStack_HasPeasantCargo((int)defenderStack) || UnitStack_HasGoldCargo((int)defenderStack))
-                    && *((unsigned __int8 *)attackerStack + 4) == *(_DWORD *)(gameData + 147143) )
+                    && *((unsigned __int8 *)attackerStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                   {
                     capturedCargoFlag = 1;
                   }
@@ -8913,8 +8913,8 @@ LABEL_49:
                 UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
                 UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
                 UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
               }
 LABEL_52:
               if ( attackerStack[3] == -1 )
@@ -8980,7 +8980,7 @@ LABEL_52:
                     (DWORD)attackerStack,
                     defenderHasSpecial);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_battle_return", attackerStackIndex, defenderStackIndex, battleWinner, 0);
-            v37 = *(_BYTE *)(gameData + 140016);
+            v37 = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
             if ( g_WorldMapBackgroundSpriteSet )
               DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
             if ( v37 == 0 )
@@ -9159,8 +9159,8 @@ LABEL_28:
               UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
               UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
               Unit_CaptureBuilding(attackerStackIndex, buildingIndex, 0, useManualBattle, a5);
-              ++*(_WORD *)(1423 * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
-              --*(_WORD *)(1423 * buildingRecord[2] + gameData + 141441);
+              ++*(_WORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
+              --*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
 LABEL_47:
               if ( attackerStack[3] == -1 )
                 Rules_UnlinkArmyFact(attackerStack, a5);
@@ -9208,8 +9208,8 @@ LABEL_42:
                 if ( battleWinner == 1 )
                 {
                   UnitStack_AdjustMoraleByPredicate(attackerStack, -5, UnitSlot_PredicateAlways, (DWORD)buildingRecord, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * buildingRecord[2] + 141441);
+                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * buildingRecord[2] + 141441);
                   Building_AdjustAllGarrisonMoraleByDelta((int)buildingRecord, 4);
                   Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
                   Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
@@ -9224,8 +9224,8 @@ LABEL_42:
                 {
                   UnitSlots_AppendEntriesForBuildingAttack((char *)buildingRecord + 18, garrisonSpecialEntries);
                   UnitStack_KillByIndex(attackerStackIndex, v40, (DWORD)buildingRecord, a5);
-                  --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
-                  ++*(_WORD *)(1423 * buildingRecord[2] + gameData + 141441);
+                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v48 + 4) + 141441);
+                  ++*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
                   Building_AdjustAllGarrisonMoraleByDelta((int)buildingRecord, 4);
                   Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
                   Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
@@ -9244,8 +9244,8 @@ LABEL_42:
                 UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
                 UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
                 Unit_CaptureBuilding(attackerStackIndex, buildingIndex, 0, 0, a5);
-                ++*(_WORD *)(1423 * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
-                --*(_WORD *)(1423 * buildingRecord[2] + gameData + 141441);
+                ++*(_WORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
+                --*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
               }
               goto LABEL_47;
             }
@@ -9270,7 +9270,7 @@ LABEL_42:
               buildingIndex,
               battleWinner,
               Building_CountGarrison((int)buildingRecord));
-            v37 = *(_BYTE *)(gameData + 140016);
+            v37 = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
             if ( v37 == 0 )
             {
               if ( g_WorldMapBackgroundSpriteSet )
@@ -9768,8 +9768,8 @@ signed int  UI_PromptLeadTroopsPersonally(
     Compat_RenderDeviceDrawMenuSprite(panelLeft + 59, panelTop + 441, v12, 1);
   }
   Render_ReleaseSurface(7, a5);
-  UI_DrawTextFmt(a6, panelTop + 42, panelTop + 166, panelLeft + 85, 3, 1423 * *(unsigned __int8 *)(v64 + 2) + gameData + 140024 + 4);
-  UI_DrawTextFmt(a6, panelTop + 395, panelTop + 518, panelLeft + 85, 3, 1423 * *(unsigned __int8 *)(v63 + 2) + gameData + 140024 + 4);
+  UI_DrawTextFmt(a6, panelTop + 42, panelTop + 166, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v64 + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
+  UI_DrawTextFmt(a6, panelTop + 395, panelTop + 518, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v63 + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
   attackerSlotIndex = 0;
   if ( v61 > 0 )
   {
@@ -9790,7 +9790,7 @@ signed int  UI_PromptLeadTroopsPersonally(
         v49 = v19;
         v20 = DLX_GetSpriteForChar((int)v19, 0);
         Compat_RenderDeviceDrawMenuSprite(v65, v67, v20, 1);
-        if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(v64 + 2) + 140051) )
+        if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v64 + 2) + 140051) )
           UI_DrawTextFmt((int)v16, v67, v67 + 32, v65 + 50, 3, (int)aD_3);
         DLXSpriteSet_ReleaseAndClear((int *)&v49);
       }
@@ -9820,7 +9820,7 @@ signed int  UI_PromptLeadTroopsPersonally(
         v50 = v25;
         v26 = DLX_GetSpriteForChar((int)v25, 0);
         Compat_RenderDeviceDrawMenuSprite(v66, v68, v26, 1);
-        if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v63 + 2) + gameData + 140051) )
+        if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v63 + 2) + gameData + 140051) )
           UI_DrawTextFmt((int)v22, v68, v68 + 32, v66 + 50, 3, (int)aD_4);
         DLXSpriteSet_ReleaseAndClear((int *)&v50);
       }
