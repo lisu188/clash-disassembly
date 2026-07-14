@@ -1465,7 +1465,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
   int v16[3]; // [esp+2D8h] [ebp-28h]
   int v17[7]; // [esp+2E4h] [ebp-1Ch] BYREF
 
-  qmemcpy(v15, stackPtr, 0x2D5u);
+  qmemcpy(v15, stackPtr, UNIT_STACK_STRIDE);
   v17[0] = 0;
   anyDisbanded = 0;
   slotPtr = (__int16 *)&v15[6];
@@ -8744,7 +8744,7 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
         defenderStackIndex,
         v14[0],
         v14[0] > 0 ? HIWORD(v14[v14[0]]) : 0);
-      qmemcpy(attackerStack + 158, v14, 0x194u);
+      qmemcpy(attackerStack + 158, v14, UNIT_STACK_PATH_BYTES);
       UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)attackerStack + 60, (DWORD)attackerStack, a5);
       Diagnostics_TraceWorldMapActionEvent("unit_attack_after_track", attackerStackIndex, defenderStackIndex, *attackerStack, attackerStack[1]);
       Diagnostics_TraceWorldMapActionEvent(
@@ -9117,7 +9117,7 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
     v13 = (const void *)Building_GenerateApproachTrack(attackerStackIndex, buildingIndex, 0, 0, 0);
     if ( v13 )
     {
-      qmemcpy(attackerStack + 158, v13, 0x194u);
+      qmemcpy(attackerStack + 158, v13, UNIT_STACK_PATH_BYTES);
       UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)attackerStack + 60, (DWORD)buildingRecord, a5);
       if ( !*((_DWORD *)attackerStack + 79) )
       {

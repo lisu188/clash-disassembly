@@ -657,7 +657,7 @@ LABEL_26:
       if ( approachTrack )
       {
         pathBufferDest = (void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET);
-        qmemcpy(pathBufferDest, approachTrack, 0x194u);
+        qmemcpy(pathBufferDest, approachTrack, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         Diagnostics_TraceWorldMapActionEvent("temple_path_queued", g_SelectedUnitIndex, tileX, tileY, 1);
         WorldMap_RedrawViewport(1);
@@ -687,7 +687,7 @@ LABEL_26:
       if ( (unsigned __int16)*(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 320) == (_WORD)v36 )
       {
         v37 = gameData;
-        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), portTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), portTrack, UNIT_STACK_PATH_BYTES);
         if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) || !*portTrack )
         {
           if ( *portTrack )
@@ -715,7 +715,7 @@ LABEL_26:
     portApproachTrack = (const void *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
     if ( portApproachTrack )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET), portApproachTrack, 0x194u);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET), portApproachTrack, UNIT_STACK_PATH_BYTES);
       j__nfree_();
       WorldMap_RedrawViewport(1);
       if ( !*(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) )
@@ -798,7 +798,7 @@ LABEL_26:
                             tileX);
       if ( approachTrack )
       {
-        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), approachTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), approachTrack, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         WorldMap_RedrawViewport(1);
       }
@@ -955,7 +955,7 @@ LABEL_205:
       if ( moveTrack )
       {
         v66 = v65 + gameData + UNIT_STACK_TABLE_OFFSET;
-        qmemcpy((void *)(v66 + 316), moveTrack, 0x194u);
+        qmemcpy((void *)(v66 + 316), moveTrack, UNIT_STACK_PATH_BYTES);
         v28 = v66 - 48;
         j__nfree_();
       }

@@ -1497,7 +1497,7 @@ signed int  Rules_QueuePathToTile(int a1, int a2, int a3, DWORD a4)
     return 0;
   if ( *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + 147490) )
     *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) = 0;
-  qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v6, 0x194u);
+  qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
   j__nfree_();
   return 1;
 }
@@ -1542,7 +1542,7 @@ signed int  Rules_QueuePathNearTile(int a1, int a2, int a3, DWORD a4)
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v10 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v10 + 147490) = 0;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10 + UNIT_STACK_PATH_OFFSET), v8, 0x194u);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10 + UNIT_STACK_PATH_OFFSET), v8, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1586,7 +1586,7 @@ signed int  Rules_QueuePathNearCastle(int a1, int a2, int a3, DWORD a4)
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1624,7 +1624,7 @@ signed int  Rules_QueuePathToPort(int a1, int a2, int a3, DWORD a4)
     return 0;
   if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v8 + UNIT_STACK_PATH_OFFSET) )
     *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-  qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, 0x194u);
+  qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
   j__nfree_();
   return 1;
 }
@@ -1669,7 +1669,7 @@ signed int  Rules_QueuePathToCastle(int a1, int a2, int a3, DWORD a4)
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1699,7 +1699,7 @@ signed int  Move_IsAtTargetOrCanStay(int a1, int a2, int a3)
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v4 + UNIT_STACK_PATH_OFFSET) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v4 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1745,7 +1745,7 @@ signed int  Move_TryApproachTarget(int a1, DWORD a2, int a3)
       {
         if ( *(_DWORD *)(v8 + gameData + 147490) )
           *(_DWORD *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
-        qmemcpy((void *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v5, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v5, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         return 1;
       }
@@ -1798,7 +1798,7 @@ signed int  Rules_QueuePathIntoArmyRange(int a1, int a2, int a3, DWORD a4)
       {
         if ( *(_DWORD *)(v12 + gameData + 147490) )
           *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v14 + 147490) = 0;
-        qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v14 + UNIT_STACK_PATH_OFFSET), v9, 0x194u);
+        qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v14 + UNIT_STACK_PATH_OFFSET), v9, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         return 1;
       }
@@ -1886,7 +1886,7 @@ BOOL  Rules_IsTempleWithinArmyRange(int a1, int a2, int a3)
     Track = Temple_GenerateApproachTrack(a1, a2, a2, a3);
     if ( Track )
     {
-      qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), Track, 0x194u);
+      qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
@@ -1985,7 +1985,7 @@ signed int  Rules_MarchToTemple(unsigned int a1, int a2, int a3, double a4)
     Track = Temple_GenerateApproachTrack(a1, a2, a2, a3);
     if ( Track )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), Track, 0x194u);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
@@ -2043,7 +2043,7 @@ signed int  Rules_MarchNearTile(DWORD a1, int a2, int a3, double a4)
     v7 = Unit_MoveTrackNearTile(a1, v5, v5, a3, a1);
     if ( v7 )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v7, 0x194u);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v7, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
@@ -2116,7 +2116,7 @@ signed int  Rules_HostUnitMoveAndHide(unsigned int a1, unsigned int a2, DWORD a3
   {
     if ( *(_DWORD *)(v5 + gameData + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a3 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(a3, v8, v7, a3, a4);
     if ( __PAIR64__(*(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + 147176)) == v9 )
@@ -2307,7 +2307,7 @@ int  Rules_BuildTrapNearTile(DWORD a1, int a2, DWORD a3, double a4)
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a3 + UNIT_STACK_PATH_OFFSET) )
       *(_DWORD *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(a3, v9, v8, a3, a4);
     v10 = (int)(*(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET) - a1);
@@ -3594,7 +3594,7 @@ LABEL_2:
       v13 = v6[1];
       if ( v2 == -1 )
       {
-        qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
         v8 = HIWORD(v13);
       }
       else
@@ -3602,7 +3602,7 @@ LABEL_2:
         if ( HIWORD(v13) >= v12 )
           goto LABEL_9;
         j__nfree_();
-        qmemcpy((void *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v7, 0x194u);
+        qmemcpy((void *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v7, UNIT_STACK_PATH_BYTES);
         v8 = HIWORD(v13);
       }
       v2 = v3;
@@ -3656,7 +3656,7 @@ const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int a1, int a2, do
     result = (const void *)Building_GenerateApproachTrack(a1, a2, a2, a1, v5);
     if ( !result )
       return result;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), result, 0x194u);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
   }
   UnitStack_ExecuteQueuedPath(a1, 1, a1, v5, a3);
@@ -3674,7 +3674,7 @@ int  UnitStack_QueuePathNearBuilding(int a1, int a2, char a3, DWORD a4)
   result = Building_GenerateNearApproachTrack(a1, a2, a1, a3, a4);
   if ( result )
   {
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -4075,7 +4075,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
                     v7);
     if ( !result )
       return result;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v35 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v35 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(v35, 1, -43 * v35, v7, a5);
   }
@@ -4092,7 +4092,7 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
                     v10);
     if ( !result )
       return result;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v36 + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v36 + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(v36, 1, -111 * v36, v10, a5);
   }
@@ -4323,7 +4323,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
           v13 = (const void *)Building_GenerateNearApproachTrack(v47, v46, v6, v11, v12);
           if ( !v13 )
             return 0;
-          qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v47 + UNIT_STACK_PATH_OFFSET), v13, 0x194u);
+          qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v47 + UNIT_STACK_PATH_OFFSET), v13, UNIT_STACK_PATH_BYTES);
           j__nfree_();
           UnitStack_ExecuteQueuedPath(v47, v14, -111 * v47, v12, a5);
         }

@@ -1578,7 +1578,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       v28 = newStackPtr + 158;
       *(_WORD *)(2 * BYTE1(v26) + TILE_ROW_STRIDE * (unsigned __int8)v26 + gameData + TILE_MAP_OFFSET) = *(_WORD *)(v39 + 556374);
       v29 = newStackPtr;
-      qmemcpy(v28, v19, 0x194u);
+      qmemcpy(v28, v19, UNIT_STACK_PATH_BYTES);
       UnitStack_SetReadyFlags((int)v29);
     }
     else
@@ -6341,7 +6341,7 @@ LABEL_14:
             result = (signed int)Unit_MoveTrack(a1, *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + UNIT_STACK_TABLE_OFFSET), v11, v26, UNIT_STACK_STRIDE * a1, v28);
             if ( result )
             {
-              qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + v25 + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+              qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + v25 + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
               j__nfree_();
               UnitStack_ExecuteQueuedPath(a1, v27, v26, v25, a5);
               UnitStack_SpendActionPointsClamped((__int16 *)(v25 + gameData + UNIT_STACK_TABLE_OFFSET), 1, v25, a5);
@@ -6392,7 +6392,7 @@ signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
                          v7 + Map_NeighborDY[2 * a2]);
   if ( result )
   {
-    qmemcpy((void *)(v5 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, 0x194u);
+    qmemcpy((void *)(v5 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(a1, v9, v7, a1, a3);
     WorldMap_RefreshUnitStatusPanel(a1);

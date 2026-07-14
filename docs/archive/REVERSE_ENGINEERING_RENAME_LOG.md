@@ -1,5 +1,45 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A2: hex/suffix respellings
+
+Substitutes literals whose lexeme differs from the macro body (so the
+preprocessed token stream changes and the strict G1 gate cannot apply). Each
+site's exact token change is declared as a `pp_allow` hunk and verified by
+`tools/pp_token_diff.py --allow`: the strict gate fails (as expected), the
+`--allow` gate passes consuming exactly 32 declared hunks with zero other
+divergence - proving these are value-identical respellings, not behavior
+changes.
+
+| Old (lexeme) | New | Value | Kind | Sites |
+|---|---|---|---|---|
+| `0x194u` | `UNIT_STACK_PATH_BYTES` | 404 | copy size | 30 |
+| `0x2D5u` | `UNIT_STACK_STRIDE` | 725 | copy size | 1 |
+| `0x222F0` | `MAP_THEME_INDEX_OFFSET` | 140016 | offset | 1 |
+
+The 30 `0x194u` sites are `qmemcpy(UNIT_STACK(i)+316, path, 0x194u)` stack
+path-buffer copies (404 = `UNIT_STACK_PATH_BYTES`). The `0x2D5u` site copies a
+full 725-byte stack record. `0x222F0` is the save/load read of the map-theme
+byte at `gameData + 140016`. Rules: `docs/archive/literal_rules/A2_respell.json`.
+
+### Deferred / Ambiguous (A2)
+
+- Hex forms of the tile strides (`0x64`/`0xC8`/`0x00E`) turned out to be bare
+  loop bounds / percentages (e.g. `while (v25 < 100)`), not tile accessors, so
+  the class + tier-3 gate correctly left them raw. No tile-stride respellings
+  were needed.
+
+### Deferred: accessor-macro upgrades
+
+Upgrading fully-named address expressions to the typed accessor macros
+(`gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * i` ->
+`UNIT_STACK(i)`, and similarly `BUILDING_RECORD`/`PLAYER_DATA`/`TILE_INDEX`)
+is deferred deliberately. Those rewrites change the token stream structurally
+(no `pp_allow`-style proof of identity is possible term-by-term), they are
+stylistic rather than semantic recovery, and per AGENTS.md the campaign
+prefers small behavior-preserving repairs and preserving byte-offset macros
+until a typed overlay is clearly safer. The named offset/stride form already
+makes every site self-documenting. Left as an optional future pass.
+
 ## 2026-07-14 - Magic-number campaign A1-5: unit-stack path offset
 
 Gated workstream-A substitution, proven value-identical (1,135,130 tokens,

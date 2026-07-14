@@ -480,7 +480,7 @@
   },
   "file_count": 27,
   "magic_literals": {
-   "total_eligible": 78,
+   "total_eligible": 46,
    "total_review": 58422,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
@@ -560,7 +560,7 @@
     },
     "MAP_THEME_INDEX_OFFSET": {
      "value": 140016,
-     "eligible": 1,
+     "eligible": 0,
      "review": 1
     },
     "MAP_VIEW_LEFT_OFFSET": {
@@ -780,7 +780,7 @@
     },
     "UNIT_STACK_PATH_BYTES": {
      "value": 404,
-     "eligible": 31,
+     "eligible": 1,
      "review": 15
     },
     "UNIT_STACK_PATH_OFFSET": {
@@ -805,7 +805,7 @@
     },
     "UNIT_STACK_STRIDE": {
      "value": 725,
-     "eligible": 7,
+     "eligible": 6,
      "review": 4
     },
     "UNIT_STACK_TABLE_OFFSET": {

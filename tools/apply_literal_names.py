@@ -156,16 +156,8 @@ def resolve(rules, entries_by_name, families, batch):
                 "name": rule["name"], "fn": fn_lookup(tok.start),
                 "expr": (info.get("span") or "")[:160],
             }
-            if norm_spelling(tok.text) != norm_spelling(entry["spelling"]):
-                site["reason"] = "spelling-mismatch (%s vs %s)" % (
-                    tok.text, entry["spelling"])
-                rejected.append(site)
-                continue
-            if tok.text.rstrip("uUlL") != tok.text and \
-                    not rule.get("allow_suffix_drop"):
-                site["reason"] = "suffixed-literal (needs allow_suffix_drop)"
-                rejected.append(site)
-                continue
+            # value already matches; gate on class + tier before spelling so
+            # the respell decision only applies to structurally-proven sites.
             if cls not in rule.get("classes", ()):
                 site["reason"] = "class-not-requested"
                 rejected.append(site)
@@ -174,8 +166,23 @@ def resolve(rules, entries_by_name, families, batch):
                 site["reason"] = "tier-gating (cooccur/anchor unmet)"
                 rejected.append(site)
                 continue
-            if tok.text.rstrip("uUlL") != tok.text:
-                site["suffix_drop"] = True
+            # Token identity: the site lexeme vs the macro-body lexeme. If they
+            # differ (suffix like 0x194u, or decimal-vs-hex like 404 vs 0x194),
+            # the preprocessed token stream changes; that is only allowed under
+            # a respelling flag, and the change is declared as a pp_allow hunk
+            # so tools/pp_token_diff.py --allow can verify exactly it.
+            token_changes = tok.text != entry["spelling"]
+            suffixed = tok.text.rstrip("uUlL") != tok.text
+            if token_changes:
+                permitted = rule.get("allow_respelling") or \
+                    (suffixed and rule.get("allow_suffix_drop"))
+                if not permitted:
+                    site["reason"] = (
+                        "suffixed-literal (needs allow_suffix_drop)" if suffixed
+                        else "spelling-differs (needs allow_respelling)")
+                    rejected.append(site)
+                    continue
+                site["respell"] = True
                 site["pp_allow"] = [[tok.text], [entry["spelling"]]]
             if cls == "increment_rhs":
                 increments.append((site, entry, fam_names, fn_range))

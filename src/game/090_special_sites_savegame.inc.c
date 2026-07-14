@@ -5662,7 +5662,7 @@ int  Map_LoadFromFile(uintptr_t a1)
     v24 += 200;
   }
   while ( v25 < 100 );
-  Compat_QueryRead(readQueryHandle, (void *)(uintptr_t)(unsigned int)(gameData + 0x222F0), 1);
+  Compat_QueryRead(readQueryHandle, (void *)(uintptr_t)(unsigned int)(gameData + MAP_THEME_INDEX_OFFSET), 1);
   Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &readQueryHandle);
   Compat_FreeLow32Bytes(v3);
   v30 = 0;
