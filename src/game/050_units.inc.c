@@ -1365,7 +1365,7 @@ signed int  LogAllUnits(int a1, char a2, DWORD a3)
     ++stackIndex;
     stackPtr += 725;
   }
-  while ( stackIndex < 500 );
+  while ( stackIndex < UNIT_STACK_TABLE_COUNT );
   return result;
 }
 // 411489: variable 'v4' is possibly undefined
@@ -1929,7 +1929,7 @@ void Map_UpdateIdleAnimatedUnits()
     ++stackIndex;
     stackPtr += 725;
   }
-  while ( stackIndex < 500 );
+  while ( stackIndex < UNIT_STACK_TABLE_COUNT );
   UI_UpdateWorldMapUnitAttentionFlash();
   UI_UpdateUnitBlinkFlash(0, 0);
 }

@@ -28,6 +28,7 @@ typedef char clash95_guard_BUILDING_SPRITE_CACHE_RECORD_COUNT[(BUILDING_SPRITE_C
 typedef char clash95_guard_BUILDING_SPRITE_CACHE_RECORD_STRIDE[(BUILDING_SPRITE_CACHE_RECORD_STRIDE) == (13) ? 1 : -1];
 typedef char clash95_guard_BUILDING_TABLE_OFFSET[(BUILDING_TABLE_OFFSET) == (509674) ? 1 : -1];
 typedef char clash95_guard_BUILDING_TRANSFER_TARGET_LIST_CAPACITY[(BUILDING_TRANSFER_TARGET_LIST_CAPACITY) == (100) ? 1 : -1];
+typedef char clash95_guard_GAMEDATA_SAVE_IMAGE_BYTES[(GAMEDATA_SAVE_IMAGE_BYTES) == (0x8F29E) ? 1 : -1];
 typedef char clash95_guard_GAME_TURN_COUNTER_OFFSET[(GAME_TURN_COUNTER_OFFSET) == (140022) ? 1 : -1];
 typedef char clash95_guard_MAP_HEIGHT_TILES_OFFSET[(MAP_HEIGHT_TILES_OFFSET) == (140004) ? 1 : -1];
 typedef char clash95_guard_MAP_THEME_INDEX_OFFSET[(MAP_THEME_INDEX_OFFSET) == (140016) ? 1 : -1];
@@ -100,6 +101,7 @@ typedef char clash95_guard_UNIT_STACK_SLOT_BASE_OFFSET[(UNIT_STACK_SLOT_BASE_OFF
 typedef char clash95_guard_UNIT_STACK_SLOT_COUNT[(UNIT_STACK_SLOT_COUNT) == (10) ? 1 : -1];
 typedef char clash95_guard_UNIT_STACK_SLOT_STRIDE[(UNIT_STACK_SLOT_STRIDE) == (31) ? 1 : -1];
 typedef char clash95_guard_UNIT_STACK_STRIDE[(UNIT_STACK_STRIDE) == (725) ? 1 : -1];
+typedef char clash95_guard_UNIT_STACK_TABLE_COUNT[(UNIT_STACK_TABLE_COUNT) == (500) ? 1 : -1];
 typedef char clash95_guard_UNIT_STACK_TABLE_OFFSET[(UNIT_STACK_TABLE_OFFSET) == (147174) ? 1 : -1];
 typedef char clash95_guard_UNIT_TYPE_COUNT[(UNIT_TYPE_COUNT) == (35) ? 1 : -1];
 typedef char clash95_guard_UNIT_TYPE_METADATA_STRIDE[(UNIT_TYPE_METADATA_STRIDE) == (88) ? 1 : -1];

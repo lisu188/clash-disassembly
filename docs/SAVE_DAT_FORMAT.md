@@ -9,9 +9,9 @@ The recovered save writer and loader in `clash95.c` show the complete outer file
 shape:
 
 - `saveGame` formats `save\\%d.dat`, writes a 16-byte slot label, then writes
-  `586398` bytes from `gameData`.
+  `586398` bytes from `gameData` (`GAMEDATA_SAVE_IMAGE_BYTES`).
 - `SaveSlot_LoadGame` opens `save\\%d.dat`, skips 16 bytes, then reads
-  `0x8F29E` bytes back into `gameData`.
+  `0x8F29E` bytes (`GAMEDATA_SAVE_IMAGE_BYTES`) back into `gameData`.
 - `SaveSlot_LoadLabelOrPlaceholder` reads only the first 16 bytes for load-menu
   labels.
 - `SaveSlot_FormatFactsFilePath` formats `save\\%d.fac`; the save/load path
@@ -49,7 +49,7 @@ encoding beyond that remains ambiguous.
 | `140024` | `0x22308` | `7115` | Five player runtime records, 1423 bytes each. | High |
 | `147139` | `0x23ED3` | `8` | Turn owner and viewed-player indices. | High |
 | `147147` | `0x23EDB` | `27` | Gap before unit stacks; not fully named. | Low |
-| `147174` | `0x23EF6` | `362500` | 500 unit stack records, 725 bytes each. | High |
+| `147174` | `0x23EF6` | `362500` | `UNIT_STACK_TABLE_COUNT` (500) unit stack records, `UNIT_STACK_STRIDE` (725) bytes each. | High |
 | `509674` | `0x7C6FA` | `46700` | 100 building records, 467 bytes each. | High |
 | `556374` | `0x87D66` | `20000` | Unit/building occupancy index layer, 100 rows x 200 bytes. | High |
 | `576374` | `0x8CB86` | `10000` | Trap owner-mask layer, 100x100 bytes. | High |

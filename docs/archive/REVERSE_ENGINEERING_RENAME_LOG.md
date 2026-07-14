@@ -1,5 +1,42 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign B6: save-image size + stack table count
+
+Follow-up batch (part of the B3-deferred save-format constants). Mints two
+documented constants and applies them at 10 tightly-scoped sites.
+
+| Constant | Value | Sites |
+|---|---|---|
+| `GAMEDATA_SAVE_IMAGE_BYTES` | `0x8F29E` (586398) | 4 |
+| `UNIT_STACK_TABLE_COUNT` | `500` | 5 |
+| `UNIT_STACK_TABLE_OFFSET` | `147174` (bootstrap ctor) | 1 |
+
+Confidence **behavior-confirmed**: the save-image size is the gameData
+allocation size (`src/core/010_bootstrap.inc.c:25`), the save write
+(`saveGame`, `src/game/090_special_sites_savegame.inc.c:1819`), the load read
+(`SaveSlot_LoadGame`, :1854), and the pre-load `memset` (:5575) - all identical
+and matching `docs/SAVE_DAT_FORMAT.md` (`0x8F29E`). The stack count is the
+bootstrap stack-array ctor length (`010_bootstrap.inc.c:28`
+`_wcpp_4_ctor_array__(result + 147174, 500)`, now reading
+`(result + UNIT_STACK_TABLE_OFFSET, UNIT_STACK_TABLE_COUNT)`) plus stack-table
+loop bounds proven by `stackPtr += UNIT_STACK_STRIDE` / `UNIT_STACK(stack_index)`
+(`050_units.inc.c:1368/1932`, `060_buildings.inc.c:4559/4578`); 500 x 725 =
+`147174..509674` per SAVE_DAT_FORMAT.md.
+
+`500` is heavily overloaded (RNG ranges, coordinates, score deltas), so it was
+regex-scoped to variable-named stack loops + the ctor only. `pp_token_diff
+--allow` confirms the 3 declared respellings (`586398`->`0x8F29E`,
+`0x8F29Eu`->`0x8F29E`); the rest are token-identical. `SAVE_DAT_FORMAT.md`
+rows annotated with the names. Rules:
+`docs/archive/literal_rules/B6_savegame_counts.json`.
+
+### Deferred (B6)
+
+- `BUILDING_TABLE_COUNT` (100) and `PLAYER_SLOT_COUNT` (5) remain deferred:
+  both values collide with too many unrelated uses (100 = a named tile stride
+  and a list capacity; 5 = pervasive) for a safe regex scope without
+  per-loop review.
+
 ## 2026-07-14 - Magic-number campaign B2: religious-site overlay tile ids
 
 Mints 12 `TILE_OVERLAY_*` constants for the religious-site overlay tile ids and

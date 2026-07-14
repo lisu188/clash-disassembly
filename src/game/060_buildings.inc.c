@@ -4556,7 +4556,7 @@ static int Diagnostics_UnitStackIndexFromRecord(int stack_record)
   if ( stack_table_delta < 0 || stack_table_delta % UNIT_STACK_STRIDE != 0 )
     return -1;
   stack_table_delta /= 725;
-  if ( stack_table_delta < 0 || stack_table_delta >= 500 )
+  if ( stack_table_delta < 0 || stack_table_delta >= UNIT_STACK_TABLE_COUNT )
     return -1;
   return stack_table_delta;
 }
@@ -4575,7 +4575,7 @@ static void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage)
 
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() )
     return;
-  for ( stack_index = 0; stack_index < 500; ++stack_index )
+  for ( stack_index = 0; stack_index < UNIT_STACK_TABLE_COUNT; ++stack_index )
   {
     int stack_record = UNIT_STACK(stack_index);
     int first_unit_type = *(__int16 *)UNIT_STACK_SLOT(stack_record, 0);

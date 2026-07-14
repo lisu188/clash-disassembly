@@ -83,6 +83,8 @@
     {"name": "VIEWED_PLAYER_INDEX_OFFSET", "value": 147143, "spelling": "147143", "kind": "offset", "family": "turn", "tier": 1, "anchors": ["gameData"], "forbid_anchors": [], "cooccur_values": []},
 
     {"name": "UNIT_STACK_TABLE_OFFSET", "value": 147174, "spelling": "147174", "kind": "offset", "family": "unit_stack", "tier": 1, "anchors": ["gameData"], "forbid_anchors": [], "cooccur_values": []},
+    {"name": "UNIT_STACK_TABLE_COUNT", "value": 500, "spelling": "500", "kind": "count", "family": "unit_stack", "tier": 3, "deferred": true, "regex_only": true},
+    {"name": "GAMEDATA_SAVE_IMAGE_BYTES", "value": 586398, "spelling": "0x8F29E", "kind": "size", "family": "savegame", "tier": 3, "deferred": true, "regex_only": true},
     {"name": "UNIT_STACK_STRIDE", "value": 725, "spelling": "725", "kind": "stride", "family": "unit_stack", "tier": 1, "anchors": ["gameData"], "forbid_anchors": [], "cooccur_values": []},
     {"name": "UNIT_STACK_PATH_BYTES", "value": 404, "spelling": "0x194", "kind": "size", "family": "unit_stack", "tier": 1, "anchors": ["gameData"], "forbid_anchors": [], "cooccur_values": []},
     {"name": "UNIT_STACK_PATH_OFFSET", "value": 316, "spelling": "316", "kind": "offset", "family": "unit_stack", "tier": 3, "anchors": ["gameData"], "forbid_anchors": [], "cooccur_values": [725, 147174]},

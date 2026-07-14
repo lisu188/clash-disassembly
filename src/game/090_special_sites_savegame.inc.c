@@ -1816,7 +1816,7 @@ signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3)
   PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX) = MAP_VIEW_TOP;
   fileHandle = IO_FOpen(filePathBuffer, (unsigned __int8 *)aWb_4, v5, headerBuffer);
   fwrite_((const void *)headerBuffer, 16, fileHandle, 1);
-  fwrite_((const void *)gameData, 586398, fileHandle, 1);
+  fwrite_((const void *)gameData, GAMEDATA_SAVE_IMAGE_BYTES, fileHandle, 1);
   fclose_(v7);
   SaveSlot_FormatFactsFilePath(slotIndex, filePathBuffer);
   return Rules_SaveFactsToFile(filePathBuffer, 2, 0, a3);
@@ -1851,7 +1851,7 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-file-opened handle=%d\n", file_handle);
     IO_SeekStreamGuarded(file_handle, 16, 1u, slotIndex);
-    fread_((void *)(uintptr_t)(unsigned int)gameData, 0x8F29E, file_handle, 1);
+    fread_((void *)(uintptr_t)(unsigned int)gameData, GAMEDATA_SAVE_IMAGE_BYTES, file_handle, 1);
     fclose_(file_handle);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-read\n");
@@ -5572,7 +5572,7 @@ int  Map_LoadFromFile(uintptr_t a1)
   int v50; // [esp+74h] [ebp-1Ch]
 
   mapFileName = a1;
-  memset((void *)(uintptr_t)(unsigned int)gameData, 0, 0x8F29Eu);
+  memset((void *)(uintptr_t)(unsigned int)gameData, 0, GAMEDATA_SAVE_IMAGE_BYTES);
   v3 = (int)nmalloc_(0x13880, 1);
   tileScratchBuffer = (__int16 *)(uintptr_t)(unsigned int)v3;
   if ( !tileScratchBuffer )

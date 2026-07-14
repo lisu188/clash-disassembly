@@ -17,6 +17,10 @@
 
 #define PLAYER_DATA_STRIDE 1423
 #define PLAYER_RUNTIME_STATE_OFFSET 140024
+/* Size of the gameData state image: allocated, memset, and written/read
+ * verbatim by saveGame/SaveSlot_LoadGame (docs/SAVE_DAT_FORMAT.md: 0x8F29E =
+ * 586398 bytes; the .dat file adds a 16-byte label). */
+#define GAMEDATA_SAVE_IMAGE_BYTES 0x8F29E
 #define PLAYER_DISPLAY_NAME_OFFSET 4
 #define PLAYER_CAMERA_LEFT_OFFSET 15
 #define PLAYER_CAMERA_TOP_OFFSET 19
@@ -82,6 +86,10 @@
 #define VIEWED_PLAYER_INDEX_OFFSET 147143
 #define UNIT_STACK_TABLE_OFFSET 147174
 #define UNIT_STACK_STRIDE 725
+/* 500 stack records live at UNIT_STACK_TABLE_OFFSET (region 147174..509674 =
+ * 500*725, docs/SAVE_DAT_FORMAT.md); the stack array is constructed with this
+ * count in the bootstrap allocator. */
+#define UNIT_STACK_TABLE_COUNT 500
 #define UNIT_STACK_SLOT_BASE_OFFSET 6
 #define UNIT_STACK_SLOT_STRIDE 31
 #define UNIT_STACK_SLOT_COUNT 10
