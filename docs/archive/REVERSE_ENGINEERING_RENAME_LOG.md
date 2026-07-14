@@ -1,5 +1,32 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Magic-number campaign A1-5: unit-stack path offset
+
+Gated workstream-A substitution, proven value-identical (1,135,130 tokens,
+0 hunks). 37 sites.
+
+| Old | New | Tier | Sites |
+|---|---|---|---|
+| `316` | `UNIT_STACK_PATH_OFFSET` | 3 | 37 |
+
+`316` was replaced only where the additive group co-references the unit-stack
+family names placed by A1-1 (`gameData + UNIT_STACK_TABLE_OFFSET +
+UNIT_STACK_STRIDE * i + 316`), i.e. the `UNIT_STACK(i) + 316` path-buffer
+address form backed by the prelude `UNIT_STACK_PATH_BUFFER` accessor. This
+demonstrates the family-co-occurrence gate resolving against names introduced
+by earlier batches, not just raw sibling literals. Rules:
+`docs/archive/literal_rules/A1-5_ports_stragglers.json`.
+
+### Deferred / Ambiguous (A1-5)
+
+- Port state offsets `586374..586394` have **no** raw call sites; they are
+  accessed exclusively through the prelude `PORT_ROW`/`PORT_COLUMN`/... macros.
+  Nothing to replace.
+- `UNIT_STACK_PATH_BYTES` (`0x194`/404) sites are all either suffixed
+  (`0x194u`, ~30 `qmemcpy` sizes) or decimal-spelled (`404`), neither of which
+  is token-identical to the hex-spelled macro body. All deferred to the A2
+  hex/suffix-drop batch (gated by `pp_token_diff --allow`).
+
 ## 2026-07-14 - Magic-number campaign A1-4: tile-layer strides and offsets
 
 Gated workstream-A substitution for the tile/terrain/trap layers, proven

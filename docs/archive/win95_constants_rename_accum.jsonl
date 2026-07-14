@@ -56,3 +56,14 @@
 {"old": "TILE_TRAP_OWNER_MASK_ROW_STRIDE", "new": null, "kind": "substitution-rejected", "batch": "A1-4", "reason": "spelling-mismatch (0x64u vs 100)", "count": 9}
 {"old": "TILE_TRAP_OWNER_MASK_ROW_STRIDE", "new": null, "kind": "substitution-rejected", "batch": "A1-4", "reason": "suffixed-literal (needs allow_suffix_drop)", "count": 1}
 {"old": "TILE_TRAP_OWNER_MASK_ROW_STRIDE", "new": null, "kind": "substitution-rejected", "batch": "A1-4", "reason": "tier-gating (cooccur/anchor unmet)", "count": 48}
+{"old": "316", "new": "UNIT_STACK_PATH_OFFSET", "kind": "substitution", "value": 316, "confidence": "repo-confirmed", "evidence": "Prelude UNIT_STACK_PATH_OFFSET=316 backs UNIT_STACK_PATH_BUFFER(stackPtr)=stackPtr+316; tier-3 gating replaces 316 ONLY where the additive group co-references the unit-stack family (UNIT_STACK_STRIDE/UNIT_STACK_TABLE_OFFSET), i.e. UNIT_STACK(i)+316 path-buffer address form.", "area": "unit_stack", "batch": "A1-5", "sites": 37, "classes": {"additive_anchored": 37}, "files": {"src/game/040_world_map.inc.c": 7, "src/game/060_buildings.inc.c": 2, "src/rules/100_strategic.inc.c": 28}}
+{"old": "PORT_COLUMN_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "PORT_NEXT_REINFORCEMENT_TURN_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "PORT_REINFORCEMENT_READY_FLAG_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "PORT_REINFORCEMENT_UNIT_COUNT_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "PORT_ROW_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "PORT_SHORE_VARIANT_FLAG_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "UNIT_STACK_PATH_BYTES", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 1}
+{"old": "UNIT_STACK_PATH_BYTES", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "spelling-mismatch (404 vs 0x194)", "count": 15}
+{"old": "UNIT_STACK_PATH_BYTES", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "suffixed-literal (needs allow_suffix_drop)", "count": 30}
+{"old": "UNIT_STACK_PATH_OFFSET", "new": null, "kind": "substitution-rejected", "batch": "A1-5", "reason": "class-not-requested", "count": 21}

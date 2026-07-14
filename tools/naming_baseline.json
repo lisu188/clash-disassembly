@@ -480,7 +480,7 @@
   },
   "file_count": 27,
   "magic_literals": {
-   "total_eligible": 115,
+   "total_eligible": 78,
    "total_review": 58422,
    "per_value": {
     "ACTIVE_MISSION_INDEX_OFFSET": {
@@ -785,7 +785,7 @@
     },
     "UNIT_STACK_PATH_OFFSET": {
      "value": 316,
-     "eligible": 37,
+     "eligible": 0,
      "review": 21
     },
     "UNIT_STACK_SLOT_BASE_OFFSET": {

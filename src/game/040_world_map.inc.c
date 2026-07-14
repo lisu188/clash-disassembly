@@ -639,7 +639,7 @@ LABEL_26:
       && MapTile_GetReligiousSiteCategory(tileX, tileY) )
   {
     LOBYTE(v30) = tileY;
-    if ( !QueuedPath_StartsAtTile(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316, tileX, tileY) )
+    if ( !QueuedPath_StartsAtTile(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET, tileX, tileY) )
     {
       LOBYTE(v30) = tileY;
       bridge_crossings_enabled = UnitStack_HasBuilder(g_SelectedUnitIndex);
@@ -656,7 +656,7 @@ LABEL_26:
       }
       if ( approachTrack )
       {
-        pathBufferDest = (void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316);
+        pathBufferDest = (void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET);
         qmemcpy(pathBufferDest, approachTrack, 0x194u);
         j__nfree_();
         Diagnostics_TraceWorldMapActionEvent("temple_path_queued", g_SelectedUnitIndex, tileX, tileY, 1);
@@ -687,7 +687,7 @@ LABEL_26:
       if ( (unsigned __int16)*(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 320) == (_WORD)v36 )
       {
         v37 = gameData;
-        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316), portTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), portTrack, 0x194u);
         if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) || !*portTrack )
         {
           if ( *portTrack )
@@ -715,10 +715,10 @@ LABEL_26:
     portApproachTrack = (const void *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
     if ( portApproachTrack )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 316), portApproachTrack, 0x194u);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_PATH_OFFSET), portApproachTrack, 0x194u);
       j__nfree_();
       WorldMap_RedrawViewport(1);
-      if ( !*(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316) )
+      if ( !*(_DWORD *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) )
       {
         v39 = (__int16 *)Port_CollectReinforcementShipment(UNIT_STACK_STRIDE * g_SelectedUnitIndex, v27, (DWORD)portApproachTrack, a1);
         if ( v39 )
@@ -788,7 +788,7 @@ LABEL_26:
     targetBuildingIndex = *(unsigned __int16 *)(v47 + gameData + v46 + TILE_MAP_OFFSET) - 0x8000;
     if ( *(_WORD *)(BUILDING_RECORD_SIZE * targetBuildingIndex + gameData + 509690) )
       return;
-    if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + 316, targetBuildingIndex) )
+    if ( !QueuedPath_StartsInBuildingFootprint(v30 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET, targetBuildingIndex) )
     {
       approachTrack = (const void *)Building_GenerateApproachTrack(
                             g_SelectedUnitIndex,
@@ -798,7 +798,7 @@ LABEL_26:
                             tileX);
       if ( approachTrack )
       {
-        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + 316), approachTrack, 0x194u);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), approachTrack, 0x194u);
         j__nfree_();
         WorldMap_RedrawViewport(1);
       }
