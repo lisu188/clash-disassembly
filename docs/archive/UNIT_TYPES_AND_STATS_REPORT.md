@@ -10,6 +10,7 @@
 - **2026-06-15 maintenance note:** the soak-harness and route-frame-sampling batch did not promote new unit, category, stat, or relationship semantics. It only adds opt-in endurance evidence capture around already recovered executable/menu/world-map/castle-economy/first-mission-attack/campaign-route behavior.
 - **2026-06-15 maintenance note:** mission-04 wall-attack diagnostics exercised the already recovered wall-attack stat path but did not promote new unit, category, stat, or relationship semantics. The observed light-infantry gate hit is route evidence, not a roster/stat reinterpretation.
 - **2026-06-15 maintenance note:** the route-regression and artifact-retention batch did not promote new unit, category, stat, or relationship semantics. The first-mission playability and castle/economy probes exercise already recovered stack, slot, building, and UI paths.
+- **2026-07-14 metadata-core recovery:** the reconstruction's one-element `byte_512570+` placeholders were not valid stand-ins for the original strided globals. Direct PE initialized-data extraction restored record offsets `+8..+37` for all 35 unit types. The exact rows are recorded in `UNIT_TYPES_AND_STATS.json`; no values from the unrecovered `+38..+87` tail were inferred.
 
 ## 2. Recovered Unit Roster
 
@@ -495,3 +496,30 @@ occupant index instead of assigning a new unit identity. The next-frontier
 mission-05 audit recovered language-dependent player-elimination and friendly-
 attack failure predicates, not unit semantics. Roster/stat confidence and all
 ambiguous unit candidates remain unchanged.
+
+# 2026-07-14 executable-backed unit metadata core
+
+High-confidence structural and numeric recovery was promoted for the existing
+`UnitTypeMetadataRecord` family. The original globals beginning at VA
+`0x00512570` are field aliases into records whose base is `0x00512568` and whose
+stride is 88 bytes; they are not independent one-element arrays. The original
+PE maps DGROUP VMA `0x004EC000` to file offset `0x000EA200`, placing the record
+table at file offset `0x00110768`. Direct bytes from all 35 records now back the
+runtime animation, flags, combat/AP/range, road-cost, and eight surface-cost
+fields at offsets `+8..+37`.
+
+The Mission 05 blocker made the false reconstruction observable. Player-0
+stack 4 contains type 17, whose exact recovered core is movement step `3`,
+movement tick `3`, animation interval `10`, attack/shot frames `8/8`, flags
+`0`, melee `1`, defence `1`, base AP `26`, shot/ranges `0/0/0`, wall attack
+`1`, road cost `3`, and surface costs `{4,6,5,0,7,0,8,0}`. The mixed stack's
+live AP floor is therefore `20`, not the earlier host-memory artifact `255`.
+That correction removes the invalid tactical animation frame count that had
+eventually requested sprite character `50` and crashed the first direct
+exchange.
+
+The exact 35-row numeric table is in `UNIT_TYPES_AND_STATS.json` under
+`unit_type_runtime_core_table`. The record tail `+38..+87` remains explicitly
+unrecovered in the new C representation even though separately recovered late
+field semantics remain documented above. This batch does not claim that the
+whole 88-byte initialized record has been materialized yet.

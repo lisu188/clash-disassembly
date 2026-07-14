@@ -32,6 +32,10 @@ and voice-mix format-select thunks) is in
   unit-type interval byte preserved at `0x410DF5..0x410E0F`, rather than an
   uninitialized decompiler temporary. Repeated-turn queued marches no longer
   stall in the reached Mission `00` attack route.
+- The executable-backed core of all 35 `UnitTypeMetadataRecord` entries now
+  restores offsets `+8..+37` at the original 88-byte stride. This replaces the
+  false one-element animation/combat/AP globals that made nonzero unit types
+  read unrelated host memory; the later `+38..+87` tail remains unrecovered.
 - Default CTest smoke routes cover menu liveness, direct route startup, save DAT
   format checks, and opt-in real-input probes.
 - Campaign route env files are the canonical machine-readable status source.
@@ -110,20 +114,26 @@ direct-load trace stops on player-3 building index `4`; scenario setup also
 creates six player-3 stacks, including one remote stack at `(87,66)`.
 `Mission_CheckFailureCondition` reads the mission failure flag set by
 `Mission05_MarkFailureOnFriendlyAttack` when player `0` attacks players `1` or
-`2`. A retained opening probe now selects player-0 stack `4`, pans to the
-Agordeh cluster, completes a 33-node world path from `(71,44)` toward
-`(47,58)` in the opening turn, and enters manual tactical combat against
-player-3 stack `19` at `(44,56)` without raising the friendly-attack failure
-marker. The first tactical deployment is six player-0 squads at battle row
-`14` against ten player-3 squads at rows `0..1`; clearing that battle and the
-remaining owner-3 targets is still unproven. Full-menu campaign auto-advance
-across the completed route gates also remains unproven.
+`2`. With authentic metadata, player-0 stack `4` has a 20-point mixed-stack AP
+floor rather than the former host-memory artifact `255`. The retained route
+now advances its 33-node, 156-point path from `(71,44)` to `(47,58)` across
+nine player-0 turns, manually reselecting and resuming the queued path exactly
+where the original new-turn readiness logic requires it. The passing replay
+records the final zero-length path, no friendly-attack failure marker, and a
+fresh nonblank checkpoint at
+`artifacts/campaign-routes/mission-05/20260714T155159Z-98803/summary.txt`.
+The earlier one-turn tactical entry depended on the invalid 255-AP state and
+is quarantined; tactical entry and the first exchange must now be revalidated
+from the corrected arrival. Clearing that battle and the remaining owner-3
+targets is still unproven. Full-menu campaign auto-advance across the completed
+route gates also remains unproven.
 
 ## Next Target
 
-Continue the retained mission `05` route from its first manual tactical entry:
-clear stack `19`, then measure and route the surviving Agordeh building/stacks
-without striking players `1` or `2`.
+Continue the retained mission `05` route from stack `4`'s authentic arrival at
+`(47,58)`: attack stack `19`, revalidate stable manual tactical entry and the
+first exchange with the restored frame counts, then clear and measure the
+surviving Agordeh building/stacks without striking players `1` or `2`.
 The next broader startup debt remains `CSS_Init` and its quarantined legacy
 audio/device table.
 

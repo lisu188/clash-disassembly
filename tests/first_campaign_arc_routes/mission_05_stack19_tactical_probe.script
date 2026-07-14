@@ -1,19 +1,12 @@
-# Mission 05 stack-19 tactical calibration. Enter the forced manual battle,
-# pan from the attacker-centered row-9 viewport toward the defenders, stage
-# selected type-17 squad 5 at (5,6), then attack AP-zero defender 11 at (1,6).
-wait_log 60 mission_load_done selected=-1 a=5
-wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+# Mission 05 stack-19 tactical revalidation after executable-backed unit
+# metadata recovery. Reuse the passing nine-turn strategic arrival, attack the
+# visible owner-3 stack at (44,56), then prove the first direct exchange returns
+# with type 17's authentic eight-frame attack animation.
+include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
 
-click 320 176 0.18 0.8 direct-select-stack4-at-71-44
-wait_log 20 selected_stack_changed selected=4 a=71 b=44
-
-world_pan_viewport 45 55 80
-click 200 260 0.18 0.8 set-waypoint-47-58
-wait_log 20 move_order_track_result selected=4 a=47 b=58 c=33
-click 200 260 0.05 2.0 confirm-waypoint-47-58
-wait_log 60 unit_move_after_path_state selected=4
-
-click 200 260 0.18 1.0 attack-owner3-stack19
+# Arrival tracking leaves the viewport at left=43/top=54, so (128,144) maps to
+# owner-3 stack 19 at (44,56). Stack 4 retains 11 AP for the approach.
+click 128 144 0.18 1.0 attack-owner3-stack19-after-authentic-arrival
 wait_log 20 enemy_attack_call selected=4 a=19 b=44 c=56
 wait_log 30 battle_prompt_layout_primary
 fail_if_log mission05_failure_friendly_attack

@@ -5,33 +5,47 @@ Goal: recover an authentic route that reaches `mission_objective_complete` for m
 
 ## Current proven route milestone (2026-07-14)
 
-The retained `mission_05_march_probe` proves the first complete authentic
-approach/engagement corridor:
+The earlier one-turn tactical entry was diagnostic evidence built on a false
+unit-metadata reconstruction. The original `byte_512570+` globals are fields
+inside a 35-record table with an 88-byte stride; the one-element placeholders
+made stack 4 appear to have `255` AP and eventually supplied an invalid attack
+frame count. A direct first exchange then crashed after requesting sprite
+character `50`. That route is retained as rejected pre-repair calibration, not
+as an authentic Mission 05 milestone.
 
-- `next_unit_selected selected=4 a=71 b=44` selects the only opening stack
-  with a full `255` AP budget.
-- `world_pan_viewport 45 55 80` reaches `left=45 top=55`. The harness now
-  alternates cursor probes between x=`312` and x=`328`; this avoids SDL
-  coordinate rounding producing a zero-delta probe during long pans.
-- Clicking `(200,260)` resolves to free world tile `(47,58)` and builds a
-  33-node path. Confirming the order consumes `156` AP and leaves `99` AP.
-- Viewport tracking then places owner-3 stack `19` at `(44,56)` under the same
-  screen coordinate. The attack approach ends at `(45,57)` with `90` AP and
-  opens the recovered manual/autoresolve prompt.
-- Choosing the primary/manual button at `(276,158)` logs
-  `unit_attack_battle_enter selected=4 a=19 b=6 c=10` while
-  `mission05_failure_friendly_attack` remains absent.
-- Tactical deployment places six owner-0 squads at battle row `14` and ten
-  owner-3 squads at rows `0..1`; selected attacker slot `5` starts at `(14,6)`.
+The executable-backed `+8..+37` metadata core now gives stack 4 a mixed-stack
+AP floor of `20`. The passing `mission_05_march_probe` proves the corrected
+first leg:
 
-Retained evidence:
-`artifacts/campaign-routes/mission-05/20260714T141525Z-12471/summary.txt` and
-`checkpoint-mission05-stack19-tactical-entry.bmp` in the same directory.
+- direct stack selection logs
+  `selected_stack_changed selected=4 a=71 b=44`;
+- the same click at `(200,260)` builds the 33-node, 156-point path to `(47,58)`;
+- the first turn stops normally at `(67,47)` with `0` AP and 29 queued nodes:
+  `unit_move_stop_ap selected=4 a=0 b=3 c=29` and
+  `unit_move_after_path_state selected=4 a=67 b=47 c=29`;
+- a fresh nonblank frame and failure-safe marker are retained at
+  `artifacts/campaign-routes/mission-05/20260714T153032Z-79880/summary.txt`.
 
-The next blocker is no longer world-map access to the Agordeh cluster. It is
-the first open-field tactical clear, followed by routing stacks `16..18`, `20`,
-the owner-3 building, and remote stack `21` without ever attacking owners `1`
-or `2`.
+The multi-turn probe establishes the authentic continuation rule from
+`Unit_NewTurn` and the original assembly: new-turn processing only auto-runs a
+queued path when a slot's ready bit is already set; it does not set that bit.
+Mission 05 therefore requires real player input to reselect stack 4 and click
+its centered tile each turn. Turns 2..6 resume through Next Unit. At turn 7 the
+stack reaches `(47,50)`, where Next Unit's stricter one-step neighbor heuristic
+rejects it, so the route pans to it and selects it directly. Turn 8 reaches
+`(47,57)` with one four-point step left; turn 9 supplies the final AP refresh.
+The complete replay passes with 145 routed inputs, nine objective-blocked
+checks, no friendly-attack failure marker, and
+`unit_move_after_path_state selected=4 a=47 b=58 c=0`. Its final checkpoint is
+nonblank (`288723` nonblack pixels, `169` colors). Durable evidence is at
+`artifacts/campaign-routes/mission-05/20260714T155159Z-98803/summary.txt`.
+
+The current blocker is revalidating tactical entry and the first exchange only
+after the corrected multi-turn arrival. The pre-repair tactical/autoresolve
+scripts remain quarantined calibration files until their strategic prefix is
+replaced. After stack 19, the authentic route must still clear stacks
+`16..18`, `20`, owner-3 building 4, and remote stack `21` without attacking
+owners `1` or `2`.
 
 ## Objective (from `src/rules/100_strategic.inc.c` case 5, nonzero-language branch)
 Eliminate **every player-3 (Agordeh) world stack and building**. Two loops:
@@ -46,12 +60,12 @@ attack players 1 or 2.
 Player 0 (attacker) — clustered NE:
 | stack idx | tile (row,col) | type | ap |
 |--:|--:|--:|--:|
-| 0 | 70,47 | 2 | 0 |
-| 1 | 71,47 | 5 | 0 |
-| 2 | 72,47 | 9 | 0 |
-| 3 | 73,47 | 5 | 0 |
-| 4 | 71,44 | 17 | 255 (mobile) |
-| 5 | 72,44 | 1 | 0 |
+| 0 | 70,47 | 2 | 20 |
+| 1 | 71,47 | 5 | 20 |
+| 2 | 72,47 | 9 | 24 |
+| 3 | 73,47 | 5 | 26 |
+| 4 | 71,44 | 17 | 20 (mixed-stack floor) |
+| 5 | 72,44 | 1 | 20 |
 
 Player 3 (target) — cluster SW + one remote:
 | stack idx | tile (row,col) | type | note |
@@ -86,7 +100,13 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
   parsed by `WorldMap_/Battle_RunInputScriptStep`): `wait N` / `move R C` / `down R C`
   / `up R C` / `click R C [reads]` / `key scan [reads]` / `pulse dx dy b1 b2 reads`.
 
-## Calibration results (run 20260713T110709Z, `mission_05_opening_probe`)
+## Historical calibration results (superseded AP/table state)
+
+The sections below preserve the July 13 route-discovery chronology. Any `255`
+AP or one-turn tactical statement in them predates the executable-backed
+metadata core above and must not be used as current acceptance evidence.
+
+### Run 20260713T110709Z (`mission_05_opening_probe`)
 - `click 496 416` (next-unit) selects **stack idx4 @ (71,44)** — the mobile stack
   (`next_unit_selected selected=4 a=71 b=44 c=6`). Good starting unit.
 - Screen→tile at the default post-load view (`left=67 top=41`, isometric):

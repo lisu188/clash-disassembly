@@ -1,7 +1,8 @@
-# Mission 05 stack-19 autoresolve calibration. This repeats the retained
-# stack-4 march, then uses the explicit diagnostic override to exercise the
-# authentic CalculateBattleResult branch hidden by /A5's manual-battle flag.
-# This is decision evidence only, never a campaign-completion route.
+# Quarantined pre-metadata-repair Mission 05 stack-19 autoresolve calibration.
+# Its one-turn strategic prefix depended on the rejected 255-AP host-memory
+# artifact. The forced autoresolve branch remains decision evidence only and
+# must not be used as a campaign-completion or current route claim until the
+# prefix is rebased onto the authentic turn-9 arrival.
 wait_log 60 mission_load_done selected=-1 a=5
 wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
 
