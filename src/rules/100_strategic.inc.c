@@ -3,24 +3,24 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (004506B0) --------------------------------------------------------
-int  Queen_FindEligibleBirthHostBuilding(int a1)
+int  Queen_FindEligibleBirthHostBuilding(int player_index)
 {
-  int v2; // eax
-  int v3; // ebx
-  int v4; // ecx
+  int building_index; // eax
+  int building_record; // ebx
+  int building_type; // ecx
 
-  v2 = 0;
+  building_index = 0;
 LABEL_2:
-  v3 = UNIT_RECORD(v2);
-  if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
+  building_record = UNIT_RECORD(building_index);
+  if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
   {
-    v4 = *(char *)(gameData + BUILDING_RECORD_SIZE * v2 + 509678);
-    if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v2 + 509676) == a1 )
-      return UNIT_RECORD(v2);
+    building_type = *(char *)(gameData + BUILDING_RECORD_SIZE * building_index + 509678);
+    if ( (building_type == 2 || building_type == 1) && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
+      return UNIT_RECORD(building_index);
   }
-  while ( ++v2 < 100 )
+  while ( ++building_index < 100 )
   {
-    if ( v2 >= 0 )
+    if ( building_index >= 0 )
       goto LABEL_2;
   }
   return 0;
@@ -46,52 +46,52 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
 {
   int result; // eax
   int v6; // ecx
-  char *v7; // edi
-  char *v8; // esi
-  char v9; // al
-  char v10; // al
-  unsigned int v11; // kr04_4
+  char *dest; // edi
+  char *src; // esi
+  char ch; // al
+  char next_ch; // al
+  unsigned int message_len; // kr04_4
   __int16 v12; // ax
   int v13; // ecx
   __int16 v14; // bx
-  int v15; // eax
-  int v16; // edx
+  int proposal_accepted; // eax
+  int player_offset; // edx
   int v17; // ecx
   __int16 v18; // ax
   int v19; // ecx
   __int16 v20; // dx
-  int v21; // eax
+  int host_building; // eax
   int v22; // ecx
   int v23; // ecx
   int v24; // edx
   int v25; // ecx
-  signed int v26; // eax
-  int v27; // eax
+  signed int theft_castle_index; // eax
+  int theft_castle_offset; // eax
   int v28; // edx
   int v29; // ecx
-  signed int v30; // eax
-  int v31; // edx
-  int v32; // eax
-  char v33; // bh
+  signed int poison_castle_index; // eax
+  int poison_castle_offset; // edx
+  int poison_castle_record; // eax
+  char plague_state_byte; // bh
   int v34; // edx
   int v35; // ecx
-  signed int v36; // eax
+  signed int arson_castle_index; // eax
   int v37; // edx
-  unsigned int v38; // eax
-  int v39; // eax
+  unsigned int whim_index; // eax
+  int available_funds; // eax
   int v40; // ecx
   int v41; // ecx
-  int v42; // eax
-  int v43; // eax
-  int v44; // [esp-4h] [ebp-1Ch]
-  int v45[3]; // [esp+0h] [ebp-18h]
-  int v46[3]; // [esp+Ch] [ebp-Ch]
+  int player_record_accepted; // eax
+  int player_record_declined; // eax
+  int castle_name_ptr; // [esp-4h] [ebp-1Ch]
+  int son_birth_texts[3]; // [esp+0h] [ebp-18h]
+  int daughter_birth_texts[3]; // [esp+Ch] [ebp-Ch]
   _DWORD savedregs[6]; // [esp+18h] [ebp+0h] BYREF
 
   result = gameData;
   if ( ACTIVE_MISSION_INDEX != 6 )
   {
-    Debug_Log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
+    Debug_Log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, son_birth_texts[0]);
     result = PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex);
     if ( result != -1 )
     {
@@ -99,126 +99,126 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
       {
         if ( result == QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING )
         {
-          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
+          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, son_birth_texts[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);
-          v21 = Queen_FindEligibleBirthHostBuilding(g_CurrentPlayerIndex);
-          if ( v21 )
+          host_building = Queen_FindEligibleBirthHostBuilding(g_CurrentPlayerIndex);
+          if ( host_building )
           {
-            Building_CreateSpecialPersonageGarrisonUnit(v21, a2, v21, a2, a4);
+            Building_CreateSpecialPersonageGarrisonUnit(host_building, a2, host_building, a2, a4);
             PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = 5;
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
             {
-              v45[0] = (int)g_QueenSonBirthTexts[0];
-              v45[1] = (int)g_QueenSonBirthTexts[1];
-              v45[2] = (int)g_QueenSonBirthTexts[2];
-              v44 = v21 + 5;
-              v46[0] = (int)g_QueenDaughterBirthTexts[0];
-              v46[1] = (int)g_QueenDaughterBirthTexts[1];
-              v46[2] = (int)g_QueenDaughterBirthTexts[2];
+              son_birth_texts[0] = (int)g_QueenSonBirthTexts[0];
+              son_birth_texts[1] = (int)g_QueenSonBirthTexts[1];
+              son_birth_texts[2] = (int)g_QueenSonBirthTexts[2];
+              castle_name_ptr = host_building + 5;
+              daughter_birth_texts[0] = (int)g_QueenDaughterBirthTexts[0];
+              daughter_birth_texts[1] = (int)g_QueenDaughterBirthTexts[1];
+              daughter_birth_texts[2] = (int)g_QueenDaughterBirthTexts[2];
               if ( a2 == 33 )
-                sprintf_(&g_QueenBirthMessageBuffer, (const char *)v45[(unsigned __int8)g_LanguageIndex], v44);
+                sprintf_(&g_QueenBirthMessageBuffer, (const char *)son_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
               else
-                sprintf_(&g_QueenBirthMessageBuffer, (const char *)v46[(unsigned __int8)g_LanguageIndex], v44);
+                sprintf_(&g_QueenBirthMessageBuffer, (const char *)daughter_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
               UI_ShowInfoWindow((const char *)&g_QueenBirthMessageBuffer, 0, v23, (DWORD)savedregs, (int)savedregs, (int)&g_QueenDaughterBirthTexts[3]);
             }
           }
         }
         else if ( result == 1 )
         {
-          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
+          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, son_birth_texts[0]);
           PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:
               Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_0, 0);
-              v7 = g_QueenDepartureEventMessageBuffer;
-              v8 = g_QueenDepartureTexts[(unsigned __int8)g_LanguageIndex];
+              dest = g_QueenDepartureEventMessageBuffer;
+              src = g_QueenDepartureTexts[(unsigned __int8)g_LanguageIndex];
               do
               {
-                v9 = *v8;
-                *v7 = *v8;
-                if ( !v9 )
+                ch = *src;
+                *dest = *src;
+                if ( !ch )
                   break;
-                v10 = v8[1];
-                v8 += 2;
-                v7[1] = v10;
-                v7 += 2;
+                next_ch = src[1];
+                src += 2;
+                dest[1] = next_ch;
+                dest += 2;
               }
-              while ( v10 );
+              while ( next_ch );
               break;
             case 1u:
               Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_1, 1);
-              v26 = Unit_FindById(g_CurrentPlayerIndex);
-              if ( v26 != -1 )
+              theft_castle_index = Unit_FindById(g_CurrentPlayerIndex);
+              if ( theft_castle_index != -1 )
               {
-                v27 = BUILDING_RECORD_SIZE * v26;
-                *(_DWORD *)(gameData + v27 + 510112) = 0;
+                theft_castle_offset = BUILDING_RECORD_SIZE * theft_castle_index;
+                *(_DWORD *)(gameData + theft_castle_offset + 510112) = 0;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleTreasuryTheftTexts[(unsigned __int8)g_LanguageIndex],
-                  gameData + BUILDING_TABLE_OFFSET + v27 + 5);
+                  gameData + BUILDING_TABLE_OFFSET + theft_castle_offset + 5);
               }
               break;
             case 2u:
               Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_2, 2);
-              v30 = Unit_FindById(g_CurrentPlayerIndex);
-              if ( v30 != -1 )
+              poison_castle_index = Unit_FindById(g_CurrentPlayerIndex);
+              if ( poison_castle_index != -1 )
               {
-                v31 = BUILDING_RECORD_SIZE * v30;
-                v32 = gameData + BUILDING_RECORD_SIZE * v30;
-                v33 = *(_BYTE *)(v32 + 510109) & 0xF8;
-                *(_BYTE *)(v32 + 510109) = v33;
-                *(_BYTE *)(v32 + 510109) = v33 | 5;
+                poison_castle_offset = BUILDING_RECORD_SIZE * poison_castle_index;
+                poison_castle_record = gameData + BUILDING_RECORD_SIZE * poison_castle_index;
+                plague_state_byte = *(_BYTE *)(poison_castle_record + 510109) & 0xF8;
+                *(_BYTE *)(poison_castle_record + 510109) = plague_state_byte;
+                *(_BYTE *)(poison_castle_record + 510109) = plague_state_byte | 5;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleWellPoisoningTexts[(unsigned __int8)g_LanguageIndex],
-                  v31 + gameData + BUILDING_TABLE_OFFSET + 5);
+                  poison_castle_offset + gameData + BUILDING_TABLE_OFFSET + 5);
               }
               break;
             case 3u:
               Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_3, 3);
-              v36 = Unit_FindById(g_CurrentPlayerIndex);
-              if ( v36 != -1 )
+              arson_castle_index = Unit_FindById(g_CurrentPlayerIndex);
+              if ( arson_castle_index != -1 )
               {
-                Building_Destroy(UNIT_RECORD(v36), a2, (DWORD)savedregs, a4);
+                Building_Destroy(UNIT_RECORD(arson_castle_index), a2, (DWORD)savedregs, a4);
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleArsonTexts[(unsigned __int8)g_LanguageIndex],
-                  UNIT_RECORD(v36) + 5);
+                  UNIT_RECORD(arson_castle_index) + 5);
               }
               break;
             default:
               break;
           }
-          v11 = strlen(g_QueenDepartureEventMessageBuffer) + 1;
-          if ( v11 != 1 )
-            Queen_ShowMessageDialog((int)g_QueenDepartureEventMessageBuffer, v11 - 1, a2, (DWORD)savedregs);
+          message_len = strlen(g_QueenDepartureEventMessageBuffer) + 1;
+          if ( message_len != 1 )
+            Queen_ShowMessageDialog((int)g_QueenDepartureEventMessageBuffer, message_len - 1, a2, (DWORD)savedregs);
         }
         result = PLAYER_DATA(g_CurrentPlayerIndex);
         if ( GAME_TURN_COUNTER >= *(_WORD *)(result + 141445) )
         {
           if ( *(_DWORD *)(result + 140051) )
           {
-            v38 = Rng_RandRange(0, 24);
-            Debug_Log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
-            v39 = Player_CalcAvailableStrongholdFunds(g_CurrentPlayerIndex);
+            whim_index = Rng_RandRange(0, 24);
+            Debug_Log(whim_index, a2, (DWORD)savedregs, (int)aQueen_newturnZ, whim_index);
+            available_funds = Player_CalcAvailableStrongholdFunds(g_CurrentPlayerIndex);
             if ( Queen_ShowWhimDecisionDialog(
-                   g_QueenWhimRecords[v38].texts[(unsigned __int8)g_LanguageIndex],
-                   g_QueenWhimRecords[v38].required_stronghold_funds,
-                   7 * v38,
-                   v39,
+                   g_QueenWhimRecords[whim_index].texts[(unsigned __int8)g_LanguageIndex],
+                   g_QueenWhimRecords[whim_index].required_stronghold_funds,
+                   7 * whim_index,
+                   available_funds,
                    (DWORD)savedregs) )
             {
-              Player_SpendStrongholdFundsEvenly(g_CurrentPlayerIndex, g_QueenWhimRecords[v38].required_stronghold_funds);
-              v42 = PLAYER_DATA(g_CurrentPlayerIndex);
-              if ( *(char *)(v42 + 141443) < 9 )
-                ++*(_BYTE *)(v42 + 141443);
+              Player_SpendStrongholdFundsEvenly(g_CurrentPlayerIndex, g_QueenWhimRecords[whim_index].required_stronghold_funds);
+              player_record_accepted = PLAYER_DATA(g_CurrentPlayerIndex);
+              if ( *(char *)(player_record_accepted + 141443) < 9 )
+                ++*(_BYTE *)(player_record_accepted + 141443);
             }
             else
             {
-              v43 = PLAYER_DATA(g_CurrentPlayerIndex);
-              if ( *(char *)(v43 + 141443) > 1 )
-                --*(_BYTE *)(v43 + 141443);
+              player_record_declined = PLAYER_DATA(g_CurrentPlayerIndex);
+              if ( *(char *)(player_record_declined + 141443) > 1 )
+                --*(_BYTE *)(player_record_declined + 141443);
             }
             goto LABEL_18;
           }
@@ -238,7 +238,7 @@ LABEL_18:
         if ( result >= 1000 )
         {
           PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) = Rng_RandRange(0, 8);
-          v15 = 1;
+          proposal_accepted = 1;
           if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
           {
             Diagnostics_TraceWorldMapActionEvent(
@@ -254,25 +254,25 @@ LABEL_18:
               result,
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
-            v15 = Queen_ShowMarriageProposalDialog(0, a2, (DWORD)savedregs);
+            proposal_accepted = Queen_ShowMarriageProposalDialog(0, a2, (DWORD)savedregs);
             Diagnostics_TraceWorldMapActionEvent(
               "queen_proposal_dialog_return",
               g_SelectedUnitIndex,
-              v15,
+              proposal_accepted,
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
           }
-          v16 = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
-          if ( v15 )
+          player_offset = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
+          if ( proposal_accepted )
           {
-            *(_BYTE *)(v16 + gameData + 141443) = 5;
+            *(_BYTE *)(player_offset + gameData + 141443) = 5;
             result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
             PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(g_CurrentPlayerIndex) = GAME_TURN_COUNTER + Rng_RandRange(5, 8);
           }
           else
           {
             result = gameData;
-            *(_BYTE *)(v16 + gameData + 141443) = -1;
+            *(_BYTE *)(player_offset + gameData + 141443) = -1;
           }
         }
       }
@@ -309,41 +309,41 @@ LABEL_18:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00450CE0) --------------------------------------------------------
-int  Player_Surrender(int a1, int a2, DWORD a3, double a4)
+int  Player_Surrender(int player_index, int a2, DWORD a3, double a4)
 {
-  int v5; // edx
-  int v6; // eax
-  int v7; // edx
+  int building_index; // edx
+  int building_record; // eax
+  int stack_index; // edx
   int result; // eax
 
-  Debug_Log(a2, a1, a3, (int)aPlayer_surrend);
+  Debug_Log(a2, player_index, a3, (int)aPlayer_surrend);
 LABEL_2:
-  v6 = UNIT_RECORD(v5);
-  if ( (unsigned int)*(char *)(v6 + 4) < 4
-    && *(__int16 *)(v6 + 16) != -1
-    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v5 + 509676) == a1 )
+  building_record = UNIT_RECORD(building_index);
+  if ( (unsigned int)*(char *)(building_record + 4) < 4
+    && *(__int16 *)(building_record + 16) != -1
+    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
   {
-    Building_Destroy(UNIT_RECORD(v5), a1, a3, a4);
+    Building_Destroy(UNIT_RECORD(building_index), player_index, a3, a4);
   }
-  while ( ++v5 < 100 )
+  while ( ++building_index < 100 )
   {
-    if ( v5 >= 0 )
+    if ( building_index >= 0 )
       goto LABEL_2;
   }
-  v7 = 0;
+  stack_index = 0;
 LABEL_10:
-  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v7 + 147180) <= 0x28
-    && *(unsigned __int8 *)(UNIT_STACK_STRIDE * v7 + gameData + 147178) == a1 )
+  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28
+    && *(unsigned __int8 *)(UNIT_STACK_STRIDE * stack_index + gameData + 147178) == player_index )
   {
-    UnitStack_KillByIndex(v7, a1, a3, a4);
+    UnitStack_KillByIndex(stack_index, player_index, a3, a4);
   }
-  while ( ++v7 < 500 )
+  while ( ++stack_index < 500 )
   {
-    if ( v7 >= 0 )
+    if ( stack_index >= 0 )
       goto LABEL_10;
   }
   result = gameData;
-  *(_DWORD *)(PLAYER_DATA_STRIDE * a1 + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   return result;
 }
 // 450D50: conditional instruction was optimized away because edx.4<64u
@@ -356,83 +356,83 @@ LABEL_10:
 
 //----- (00450DF0) --------------------------------------------------------
 int  AI_ComputeNationStrengthPercent(
-        signed int a1,
+        signed int player_index,
         int a2,
         DWORD a3,
         double a4)
 {
-  signed int v4; // ecx
+  signed int nation; // ecx
   int result; // eax
-  int v6; // edx
-  int v7; // edx
-  int v8; // edx
-  int v9; // ebx
+  int building_record; // edx
+  int building_offset; // edx
+  int stack_index; // edx
+  int max_strength; // ebx
   signed int i; // edx
-  int v11; // eax
+  int strength; // eax
   int v12; // ecx
   int v13; // ecx
-  int v14; // edx
-  int v15; // ebx
-  const char *v16; // edi
+  int human_ally_alive; // edx
+  int player_record; // ebx
+  const char *notice_format; // edi
   int v17; // ecx
-  _BYTE v18[200]; // [esp+0h] [ebp-E4h] BYREF
-  int v19[7]; // [esp+C8h] [ebp-1Ch]
+  _BYTE message_buffer[200]; // [esp+0h] [ebp-E4h] BYREF
+  int notice_texts[7]; // [esp+C8h] [ebp-1Ch]
 
-  v19[5] = a2;
-  v4 = a1;
+  notice_texts[5] = a2;
+  nation = player_index;
   result = 0;
 LABEL_2:
-  v6 = UNIT_RECORD(result);
-  if ( (unsigned int)*(char *)(v6 + 4) >= 4
-    || *(__int16 *)(v6 + 16) == -1
-    || (v7 = gameData + BUILDING_RECORD_SIZE * result, !*(_BYTE *)(v7 + 509678))
-    || *(unsigned __int8 *)(v7 + 509676) != v4 )
+  building_record = UNIT_RECORD(result);
+  if ( (unsigned int)*(char *)(building_record + 4) >= 4
+    || *(__int16 *)(building_record + 16) == -1
+    || (building_offset = gameData + BUILDING_RECORD_SIZE * result, !*(_BYTE *)(building_offset + 509678))
+    || *(unsigned __int8 *)(building_offset + 509676) != nation )
   {
     while ( ++result < 100 )
     {
       if ( result >= 0 )
         goto LABEL_2;
     }
-    v8 = 0;
+    stack_index = 0;
 LABEL_10:
-    if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + 6) > 0x28
-      || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * v8 + 147178) != v4
-      || (result = UnitStack_HasBuilder(v8)) == 0 )
+    if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) > 0x28
+      || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) != nation
+      || (result = UnitStack_HasBuilder(stack_index)) == 0 )
     {
-      while ( ++v8 < 500 )
+      while ( ++stack_index < 500 )
       {
-        if ( v8 >= 0 )
+        if ( stack_index >= 0 )
           goto LABEL_10;
       }
-      v9 = 0;
+      max_strength = 0;
       for ( i = 0; i < 5; ++i )
       {
         if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * i + PLAYER_RUNTIME_STATE_OFFSET) )
         {
-          v11 = Player_CalcMilitaryStrength(i);
-          if ( v11 > v9 )
-            v9 = v11;
+          strength = Player_CalcMilitaryStrength(i);
+          if ( strength > max_strength )
+            max_strength = strength;
         }
       }
-      result = 100 * Player_CalcMilitaryStrength(v4) / v9;
+      result = 100 * Player_CalcMilitaryStrength(nation) / max_strength;
       if ( result < 10 )
       {
         Player_Surrender(v12, v12, a3, a4);
-        v14 = 0;
+        human_ally_alive = 0;
         for ( result = 0; result < 5; ++result )
         {
-          v15 = gameData + PLAYER_DATA_STRIDE * result;
-          if ( *(_DWORD *)(v15 + 140051) && *(_DWORD *)(v15 + 140024) )
-            v14 = 1;
+          player_record = gameData + PLAYER_DATA_STRIDE * result;
+          if ( *(_DWORD *)(player_record + 140051) && *(_DWORD *)(player_record + 140024) )
+            human_ally_alive = 1;
         }
-        if ( v14 )
+        if ( human_ally_alive )
         {
-          v19[0] = (int)g_AllyEliminatedNoticeTexts[0];
-          v19[1] = (int)g_AllyEliminatedNoticeTexts[1];
-          v19[2] = (int)g_AllyEliminatedNoticeTexts[2];
-          v16 = (const char *)v19[(unsigned __int8)g_LanguageIndex];
-          sprintf_(v18, v16, PLAYER_DATA_STRIDE * v13 + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
-          return UI_ShowInfoWindow((const char *)v18, 0, v17, a3, (int)v16, (int)&g_AllyEliminatedNoticeTexts[3]);
+          notice_texts[0] = (int)g_AllyEliminatedNoticeTexts[0];
+          notice_texts[1] = (int)g_AllyEliminatedNoticeTexts[1];
+          notice_texts[2] = (int)g_AllyEliminatedNoticeTexts[2];
+          notice_format = (const char *)notice_texts[(unsigned __int8)g_LanguageIndex];
+          sprintf_(message_buffer, notice_format, PLAYER_DATA_STRIDE * v13 + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
+          return UI_ShowInfoWindow((const char *)message_buffer, 0, v17, a3, (int)notice_format, (int)&g_AllyEliminatedNoticeTexts[3]);
         }
       }
     }
@@ -455,61 +455,61 @@ LABEL_10:
 // 5202E4: using guessed type int gameData;
 
 //----- (00450FD0) --------------------------------------------------------
-int  Player_CheckForDefeatAndHandleElimination(int a1, DWORD a2)
+int  Player_CheckForDefeatAndHandleElimination(int player_index, DWORD a2)
 {
-  int v3; // edx
-  int v4; // eax
-  int v6; // edx
-  int v7; // eax
-  int v10; // eax
-  int v11; // edx
+  int stack_index; // edx
+  int owner_index; // eax
+  int building_index; // edx
+  int building_record; // eax
+  int survivor_index; // eax
+  int survivor_record; // edx
 
-  v3 = 0;
+  stack_index = 0;
 LABEL_2:
-  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v3 + 147180) <= 0x28 )
+  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
   {
-    v4 = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * v3 + 147178);
-    if ( v4 == a1 )
-      return a1 ^ v4;
+    owner_index = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178);
+    if ( owner_index == player_index )
+      return player_index ^ owner_index;
   }
-  while ( ++v3 < 500 )
+  while ( ++stack_index < 500 )
   {
-    if ( v3 >= 0 )
+    if ( stack_index >= 0 )
       goto LABEL_2;
   }
-  v6 = 0;
+  building_index = 0;
 LABEL_9:
-  v7 = UNIT_RECORD(v6);
-  if ( (unsigned int)*(char *)(v7 + 4) < 4
-    && *(__int16 *)(v7 + 16) != -1
-    && (*(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v6 + 509678) || Building_CountGarrison(UNIT_RECORD(v6))) )
+  building_record = UNIT_RECORD(building_index);
+  if ( (unsigned int)*(char *)(building_record + 4) < 4
+    && *(__int16 *)(building_record + 16) != -1
+    && (*(_BYTE *)(gameData + BUILDING_RECORD_SIZE * building_index + 509678) || Building_CountGarrison(UNIT_RECORD(building_index))) )
   {
-    v4 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v6 + 509676);
-    if ( v4 == a1 )
-      return a1 ^ v4;
+    owner_index = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676);
+    if ( owner_index == player_index )
+      return player_index ^ owner_index;
   }
-  while ( ++v6 < 100 )
+  while ( ++building_index < 100 )
   {
-    if ( v6 >= 0 )
+    if ( building_index >= 0 )
       goto LABEL_9;
   }
-  *(_DWORD *)(PLAYER_DATA_STRIDE * a1 + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
+  *(_DWORD *)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   Render_Pump();
   Audio_StopMainMusic();
   Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
-  v10 = 0;
+  survivor_index = 0;
   while ( 1 )
   {
-    v11 = gameData + PLAYER_DATA_STRIDE * v10;
-    if ( *(_DWORD *)(v11 + 140024) )
+    survivor_record = gameData + PLAYER_DATA_STRIDE * survivor_index;
+    if ( *(_DWORD *)(survivor_record + 140024) )
     {
-      if ( *(_DWORD *)(v11 + 140051) )
+      if ( *(_DWORD *)(survivor_record + 140051) )
         break;
     }
-    if ( ++v10 >= 5 )
+    if ( ++survivor_index >= 5 )
       return 1;
   }
-  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), v11, gameData, a2);
+  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), survivor_record, gameData, a2);
   return 0;
 }
 // 451044: conditional instruction was optimized away because edx.4<1F4u
@@ -522,19 +522,19 @@ LABEL_9:
 // 5202E4: using guessed type int gameData;
 
 //----- (00451150) --------------------------------------------------------
-signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int a1)
+signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int player_index)
 {
-  int v2; // eax
-  int v3; // ecx
+  int player_offset; // eax
+  int own_player_offset; // ecx
   signed int v4; // edx
   int v5; // ecx
 
-  v2 = 0;
-  v3 = PLAYER_DATA_STRIDE * a1;
-  while ( !*(_DWORD *)(gameData + v2 + PLAYER_RUNTIME_STATE_OFFSET) || v2 == v3 )
+  player_offset = 0;
+  own_player_offset = PLAYER_DATA_STRIDE * player_index;
+  while ( !*(_DWORD *)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET) || player_offset == own_player_offset )
   {
-    v2 += PLAYER_DATA_STRIDE;
-    if ( v2 >= 7115 )
+    player_offset += PLAYER_DATA_STRIDE;
+    if ( player_offset >= 7115 )
     {
       Render_Pump();
       Audio_StopMainMusic();
@@ -548,9 +548,9 @@ signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int a1)
   return 0;
 }
 
-signed int UI_CheckEndTurnHotkey(int a1)
+signed int UI_CheckEndTurnHotkey(int player_index)
 {
-  return Player_CheckSoleSurvivorAndShowVictoryBanner(a1);
+  return Player_CheckSoleSurvivorAndShowVictoryBanner(player_index);
 }
 // 45119B: variable 'v4' is possibly undefined
 // 4511BB: variable 'v5' is possibly undefined
@@ -575,12 +575,12 @@ void  Options_ApplyInGameSliders(int a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00451230) --------------------------------------------------------
-int  Options_HandleCloseButtonInGame(int a1)
+int  Options_HandleCloseButtonInGame(int widget)
 {
   int result; // eax
   int v3; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimation(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(widget);
   g_InGameOptionsDialogExitSignal = v3;
   return result;
 }
@@ -588,30 +588,30 @@ int  Options_HandleCloseButtonInGame(int a1)
 // 54453C: using guessed type int dword_54453C;
 
 //----- (00451250) --------------------------------------------------------
-unsigned __int16 * Options_InitInGameSlidersAndWidgets(int a1, int a2, DWORD a3)
+unsigned __int16 * Options_InitInGameSlidersAndWidgets(int widget, int a2, DWORD a3)
 {
-  int v4; // ecx
+  int widget_base; // ecx
 
-  UIWidget_PlayPressedReleaseAnimation(a1);
-  if ( (*(_BYTE *)(v4 - 98) & 2) == 0 )
+  UIWidget_PlayPressedReleaseAnimation(widget);
+  if ( (*(_BYTE *)(widget_base - 98) & 2) == 0 )
   {
-    *(_DWORD *)(v4 - 98) = 2;
-    UIWidget_RefreshActionButtonState(v4 - 106, v4);
+    *(_DWORD *)(widget_base - 98) = 2;
+    UIWidget_RefreshActionButtonState(widget_base - 106, widget_base);
   }
-  if ( (*(_BYTE *)(v4 - 151) & 2) == 0 )
+  if ( (*(_BYTE *)(widget_base - 151) & 2) == 0 )
   {
-    *(_DWORD *)(v4 - 151) = 2;
-    UIWidget_RefreshActionButtonState(v4 - 159, v4);
+    *(_DWORD *)(widget_base - 151) = 2;
+    UIWidget_RefreshActionButtonState(widget_base - 159, widget_base);
   }
-  if ( (*(_BYTE *)(v4 - 204) & 2) == 0 )
+  if ( (*(_BYTE *)(widget_base - 204) & 2) == 0 )
   {
-    *(_DWORD *)(v4 - 204) = 2;
-    UIWidget_RefreshActionButtonState(v4 - 212, v4);
+    *(_DWORD *)(widget_base - 204) = 2;
+    UIWidget_RefreshActionButtonState(widget_base - 212, widget_base);
   }
-  if ( (*(_BYTE *)(v4 - 257) & 1) == 0 )
+  if ( (*(_BYTE *)(widget_base - 257) & 1) == 0 )
   {
-    *(_DWORD *)(v4 - 257) = 1;
-    UIWidget_RefreshActionButtonState(v4 - 265, v4);
+    *(_DWORD *)(widget_base - 257) = 1;
+    UIWidget_RefreshActionButtonState(widget_base - 265, widget_base);
   }
   g_OptionsInGameMusicVolumeRaw = 128;
   g_OptionsInGameScrollSpeedRaw = 128;
@@ -625,14 +625,14 @@ unsigned __int16 * Options_InitInGameSlidersAndWidgets(int a1, int a2, DWORD a3)
 // 5193D4: using guessed type int dword_5193D4;
 
 //----- (00451310) --------------------------------------------------------
-BOOL  Options_ToggleCheckboxInGame(int a1)
+BOOL  Options_ToggleCheckboxInGame(int widget)
 {
-  char v2; // dl
+  char checkbox_state; // dl
 
-  v2 = *(_BYTE *)(a1 + 8) ^ 1;
-  *(_BYTE *)(a1 + 8) = v2;
-  *(_BYTE *)(a1 + 8) = v2 ^ 2;
-  Audio_PlayButtonSound(*(char **)(a1 + 49));
+  checkbox_state = *(_BYTE *)(widget + 8) ^ 1;
+  *(_BYTE *)(widget + 8) = checkbox_state;
+  *(_BYTE *)(widget + 8) = checkbox_state ^ 2;
+  Audio_PlayButtonSound(*(char **)(widget + 49));
   return Render_Begin((int)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -640,52 +640,52 @@ BOOL  Options_ToggleCheckboxInGame(int a1)
 //----- (00451340) --------------------------------------------------------
 int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
 {
-  _DWORD *v4; // eax
-  int v5; // ebp
-  int v6; // eax
+  _DWORD *sprite_set; // eax
+  int prev_resource_handle; // ebp
+  int field_offset; // eax
   int v7; // ecx
-  char *v8; // edi
-  char *v9; // esi
-  int v10; // ebx
-  int v11; // eax
+  char *copy_dest; // edi
+  char *copy_src; // esi
+  int button_text; // ebx
+  int music_volume_raw; // eax
   int SpriteForChar; // eax
   int v13; // ecx
   int v14; // ecx
   int v15; // ecx
   _BYTE v17[29]; // [esp+1h] [ebp-1B1h]
-  int ( *v18)(int, char, DWORD); // [esp+1Eh] [ebp-194h]
-  char v19[8]; // [esp+22h] [ebp-190h] BYREF
+  int ( *render_hook_fn)(int, char, DWORD); // [esp+1Eh] [ebp-194h]
+  char widget_table[8]; // [esp+22h] [ebp-190h] BYREF
   int v20; // [esp+2Ah] [ebp-188h]
-  _DWORD v21[11]; // [esp+32h] [ebp-180h]
+  _DWORD widget_text_ptrs[11]; // [esp+32h] [ebp-180h]
   int v22; // [esp+5Fh] [ebp-153h]
   int v23; // [esp+94h] [ebp-11Eh]
   int v24; // [esp+C9h] [ebp-E9h]
-  int (*v25)(); // [esp+196h] [ebp-1Ch]
+  int (*prev_render_hook)(); // [esp+196h] [ebp-1Ch]
 
-  v4 = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
-  if ( v4 )
-    v4 = DLXSpriteSet_Load(v4, a2);
-  g_InGameOptionsSpriteSet = (int)v4;
-  v5 = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
-  v18 = Render_DefaultRH;
+  sprite_set = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
+  if ( sprite_set )
+    sprite_set = DLXSpriteSet_Load(sprite_set, a2);
+  g_InGameOptionsSpriteSet = (int)sprite_set;
+  prev_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  render_hook_fn = Render_DefaultRH;
   *(_DWORD *)&v17[25] = aStdrh_19;
-  v25 = g_RenderHook;
+  prev_render_hook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(92, a2, v5, (int)aSetrhS08x_24);
-  v6 = 0;
-  qmemcpy(v19, &g_InGameSettingsButtonWidgetsTemplate, 4 * v7);
-  v9 = (char *)&g_InGameSettingsButtonWidgetsTemplate + 4 * v7;
-  v8 = &v19[4 * v7];
-  *(_WORD *)v8 = *(_WORD *)v9;
-  v8[2] = v9[2];
+  Debug_Log(92, a2, prev_resource_handle, (int)aSetrhS08x_24);
+  field_offset = 0;
+  qmemcpy(widget_table, &g_InGameSettingsButtonWidgetsTemplate, 4 * v7);
+  copy_src = (char *)&g_InGameSettingsButtonWidgetsTemplate + 4 * v7;
+  copy_dest = &widget_table[4 * v7];
+  *(_WORD *)copy_dest = *(_WORD *)copy_src;
+  copy_dest[2] = copy_src[2];
   do
   {
-    *(_DWORD *)((char *)v21 + v6) += (unsigned __int8)g_LanguageIndex;
-    v10 = *(_DWORD *)((char *)&v21[1] + v6);
-    v6 += 53;
-    *(_DWORD *)&v17[v6] = (unsigned __int8)g_LanguageIndex + v10;
+    *(_DWORD *)((char *)widget_text_ptrs + field_offset) += (unsigned __int8)g_LanguageIndex;
+    button_text = *(_DWORD *)((char *)&widget_text_ptrs[1] + field_offset);
+    field_offset += 53;
+    *(_DWORD *)&v17[field_offset] = (unsigned __int8)g_LanguageIndex + button_text;
   }
-  while ( v6 != 212 );
+  while ( field_offset != 212 );
   if ( *(_DWORD *)(gameData + 147159) )
     v20 = 2;
   if ( *(_DWORD *)(gameData + 147147) )
@@ -694,8 +694,8 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     v23 = 2;
   if ( *(_DWORD *)(gameData + 147167) )
     v24 = 2;
-  v11 = (*(char *)(gameData + 147173) << 8) + 0x4000;
-  g_OptionsInGameMusicVolumeRaw = (v11 - (__CFSHL__(v11 >> 31, 7) + (v11 >> 31 << 7))) >> 7;
+  music_volume_raw = (*(char *)(gameData + 147173) << 8) + 0x4000;
+  g_OptionsInGameMusicVolumeRaw = (music_volume_raw - (__CFSHL__(music_volume_raw >> 31, 7) + (music_volume_raw >> 31 << 7))) >> 7;
   g_OptionsInGameScrollSpeedRaw = ((*(unsigned __int8 *)(gameData + 147171) << 8)
                 - (__CFSHL__(*(unsigned __int8 *)(gameData + 147171) << 8 >> 31, 4)
                  + 16 * (*(unsigned __int8 *)(gameData + 147171) << 8 >> 31))) >> 4;
@@ -714,13 +714,13 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     1,
     0,
     0);
-  UIWidgetTable_InitDrawStates(v19);
-  Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, 132, v5);
+  UIWidgetTable_InitDrawStates(widget_table);
+  Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, 132, prev_resource_handle);
   g_InGameOptionsDialogExitSignal = v13;
   do
   {
     DD_Pump((int)g_RenderState, 132);
-    UIWidgetTable_PollHoverAndActions(v19, v5);
+    UIWidgetTable_PollHoverAndActions(widget_table, prev_resource_handle);
     Options_AnimateAllSliderThumbs(g_InGameSliderThumbPositions);
   }
   while ( v14 == g_InGameOptionsDialogExitSignal );
@@ -738,12 +738,12 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
                                                    - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
                                                     + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
-  Options_ApplyRecordSettings(gameData + 147147, v14, v5);
+  Options_ApplyRecordSettings(gameData + 147147, v14, prev_resource_handle);
   Options_DestroySliderThumbList(g_InGameSliderThumbPositions);
-  v18 = (int ( *)(int, char, DWORD))g_RenderHook;
-  Debug_Log(v15, (char)g_RenderHook, v5, (int)aUnsetrh08x_24);
-  g_RenderHook = v25;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, v5);
+  render_hook_fn = (int ( *)(int, char, DWORD))g_RenderHook;
+  Debug_Log(v15, (char)g_RenderHook, prev_resource_handle, (int)aUnsetrh08x_24);
+  g_RenderHook = prev_render_hook;
+  Render_SetResourceHandle((int)&g_MainRenderDevice, prev_resource_handle);
   WorldMap_RedrawViewport(1);
   return DLXSpriteSet_ReleaseAndClear(&g_InGameOptionsSpriteSet);
 }
@@ -775,15 +775,15 @@ int Cheat_RevealMapForCurrentPlayer()
 void Cheat_FillSelectedSquadWithCannons()
 {
   int i; // esi
-  signed int v2; // eax
-  signed int v3; // ecx
+  signed int squad_count; // eax
+  signed int slot_index; // ecx
 
   if ( g_SelectedUnitIndex != -1 )
   {
     for ( i = 0; ; i += 31 )
     {
-      v2 = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-      if ( v3 >= v2 )
+      squad_count = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+      if ( slot_index >= squad_count )
         break;
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
@@ -801,18 +801,18 @@ void Cheat_FillSelectedSquadWithCannons()
 signed int Cheat_ClearSelectedSquadDamageFlags()
 {
   signed int result; // eax
-  int v1; // edx
-  signed int v2; // ecx
+  int slot_offset; // edx
+  signed int slot_index; // ecx
 
   if ( g_SelectedUnitIndex != -1 )
   {
     while ( 1 )
     {
       result = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-      if ( v2 >= result )
+      if ( slot_index >= result )
         break;
-      *(_BYTE *)(v1 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147192) |= 3u;
-      *(_BYTE *)(v1 + 31 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(v1
+      *(_BYTE *)(slot_offset + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147192) |= 3u;
+      *(_BYTE *)(slot_offset + 31 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(slot_offset
                                                                               + UNIT_STACK_STRIDE * g_SelectedUnitIndex
                                                                               + gameData
                                                                               + 147192) & 0xF3;
@@ -835,18 +835,18 @@ void Cheat_ForceWinCurrentMission()
 //----- (004517C0) --------------------------------------------------------
 void Cheat_HealSelectedSquadAndClearDamage()
 {
-  signed int v0; // eax
-  int v1; // ecx
-  signed int v2; // edx
+  signed int squad_count; // eax
+  int slot_offset; // ecx
+  signed int slot_index; // edx
 
   if ( g_SelectedUnitIndex != -1 )
   {
     while ( 1 )
     {
-      v0 = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-      if ( v2 >= v0 )
+      squad_count = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+      if ( slot_index >= squad_count )
         break;
-      *(_BYTE *)(v1 + 31 + gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147158) = 100;
+      *(_BYTE *)(slot_offset + 31 + gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147158) = 100;
     }
   }
   // 4517CA: falls through to the shared epilogue loc_4517A0 (pop edx/ecx/ebx; retn)
@@ -863,7 +863,7 @@ void Cheat_HealSelectedSquadAndClearDamage()
 int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
 {
   int result; // eax
-  unsigned int v3; // edx
+  unsigned int tile_occupant_id; // edx
 
   result = gameData
          + 200
@@ -872,7 +872,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
             - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
              + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
           + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET));
-  v3 = *(unsigned __int16 *)(result
+  tile_occupant_id = *(unsigned __int16 *)(result
                            + 2
                            * ((((g_MouseCursorRawY >> g_CursorCoordShift)
                               - 16
@@ -880,16 +880,16 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
                                + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
                             + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
                            + TILE_MAP_OFFSET);
-  if ( (unsigned __int16)v3 != 0xFFFF )
+  if ( (unsigned __int16)tile_occupant_id != 0xFFFF )
   {
-    if ( v3 > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v3 + 147180) > 0x28 )
+    if ( tile_occupant_id > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * tile_occupant_id + 147180) > 0x28 )
     {
-      Building_Destroy(BUILDING_RECORD_SIZE * (v3 - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
+      Building_Destroy(BUILDING_RECORD_SIZE * (tile_occupant_id - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
     }
     else
     {
-      UnitStack_KillByIndex(v3, gameData, a1, a2);
+      UnitStack_KillByIndex(tile_occupant_id, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
     }
   }
@@ -905,11 +905,11 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
 //----- (00451910) --------------------------------------------------------
 int Cheat_TeleportSelectedUnitToCursor()
 {
-  int v0; // esi
+  int tile_x; // esi
   int result; // eax
-  int v2; // edi
+  int tile_y; // edi
 
-  v0 = (((g_MouseCursorRawX >> g_CursorCoordShift)
+  tile_x = (((g_MouseCursorRawX >> g_CursorCoordShift)
        - 32
        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
         + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
@@ -918,16 +918,16 @@ int Cheat_TeleportSelectedUnitToCursor()
           - 16
           - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
            + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6;
-  v2 = result + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+  tile_y = result + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
   if ( g_SelectedUnitIndex != -1 )
   {
     *(_WORD *)(TILE_ROW_STRIDE * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
              + gameData
              + 2 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176)
              + TILE_MAP_OFFSET) = -1;
-    *(_WORD *)(TILE_INDEX(v0, v2)) = g_SelectedUnitIndex;
-    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = v0;
-    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = v2;
+    *(_WORD *)(TILE_INDEX(tile_x, tile_y)) = g_SelectedUnitIndex;
+    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = tile_x;
+    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = tile_y;
     return WorldMap_RedrawViewport(1);
   }
   return result;
@@ -967,33 +967,33 @@ signed int Cheat_FillSelectedSquadWithPegasi()
 //----- (00451AE0) --------------------------------------------------------
 int  Cheat_ShowDeveloperTeamImage(DWORD a1)
 {
-  void *v1; // ebx
+  void *palette_ctor_descriptor; // ebx
   int v2; // ecx
-  int v3; // eax
+  int palette_mem; // eax
   int v4; // ecx
-  unsigned __int8 *v5; // edi
+  unsigned __int8 *palette; // edi
   _DWORD *Surface; // eax
-  _DWORD *v7; // esi
-  _DWORD *v9; // [esp+0h] [ebp-1Ch]
+  _DWORD *team_surface; // esi
+  _DWORD *saved_surface; // [esp+0h] [ebp-1Ch]
 
-  LOBYTE(v1) = 0;
+  LOBYTE(palette_ctor_descriptor) = 0;
   Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-  v3 = Mem_Alloc(1024, v2, 0, a1);
-  if ( v3 )
+  palette_mem = Mem_Alloc(1024, v2, 0, a1);
+  if ( palette_mem )
   {
-    v1 = &g_Runtime_PaletteArrayCtorDescriptor;
-    v3 = _wcpp_4_ctor_array__(v4, 256);
+    palette_ctor_descriptor = &g_Runtime_PaletteArrayCtorDescriptor;
+    palette_mem = _wcpp_4_ctor_array__(v4, 256);
   }
-  v5 = (unsigned __int8 *)v3;
-  Surface = (_DWORD *)Mem_Alloc(188, v4, (char)v1, a1);
+  palette = (unsigned __int8 *)palette_mem;
+  Surface = (_DWORD *)Mem_Alloc(188, v4, (char)palette_ctor_descriptor, a1);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
-  v7 = Surface;
-  v9 = Surface;
+  team_surface = Surface;
+  saved_surface = Surface;
   (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
-  (*(void (**)(void))(v7[46] + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v5, 20);
+  (*(void (**)(void))(team_surface[46] + 36))();
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, palette, 20);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) )
     DD_Pump((int)g_RenderState, 20);
@@ -1001,8 +1001,8 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
-  if ( v9 )
-    (*(void (**)(void))v9[46])();
+  if ( saved_surface )
+    (*(void (**)(void))saved_surface[46])();
   return j__nfree_();
 }
 // 451B1C: variable 'v2' is possibly undefined
@@ -1021,34 +1021,34 @@ void __noreturn Cheat_QuitWithJokeMessage()
 //----- (00451C60) --------------------------------------------------------
 void Cheat_SetFactionColorAndCastleFlags()
 {
-  int v0; // eax
-  int v1; // edx
-  int v2; // edx
-  char v3; // bl
+  int building_index; // eax
+  int building_record; // edx
+  int building_offset; // edx
+  char color_flags; // bl
 
   *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) = 3;
-  v0 = 0;
+  building_index = 0;
   while ( 1 )
   {
-    v1 = UNIT_RECORD(v0);
-    if ( (unsigned int)*(char *)(v1 + 4) < 4 && *(__int16 *)(v1 + 16) != -1 )
+    building_record = UNIT_RECORD(building_index);
+    if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
     {
-      v2 = gameData + BUILDING_RECORD_SIZE * v0;
-      if ( *(unsigned __int8 *)(v2 + 509676) == g_CurrentPlayerIndex )
+      building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
+      if ( *(unsigned __int8 *)(building_offset + 509676) == g_CurrentPlayerIndex )
       {
-        v3 = *(_BYTE *)(v2 + 510118) & 0xF8;
-        *(_BYTE *)(v2 + 510118) = v3;
-        *(_BYTE *)(v2 + 510118) = v3 | 3;
+        color_flags = *(_BYTE *)(building_offset + 510118) & 0xF8;
+        *(_BYTE *)(building_offset + 510118) = color_flags;
+        *(_BYTE *)(building_offset + 510118) = color_flags | 3;
       }
     }
     do
     {
-      if ( ++v0 >= 100 )
+      if ( ++building_index >= 100 )
         // 451CE5: loop exit jumps to the shared epilogue loc_451C1C
         // (pop edx/ecx/ebx; retn) shared with sub_451AE0; in C this is the return.
         return;
     }
-    while ( v0 < 0 );
+    while ( building_index < 0 );
   }
 }
 // 451CE5: control flows out of bounds to 451C1C
@@ -1060,70 +1060,70 @@ void Cheat_SetFactionColorAndCastleFlags()
 //----- (00451D00) --------------------------------------------------------
 int  UI_ReadCheatString(char a1)
 {
-  int v1; // esi
+  int trigger_key; // esi
   int result; // eax
   _BYTE *i; // esi
-  signed int v4; // eax
-  unsigned int v5; // ebx
-  int v6; // ecx
-  _BYTE *v7; // esi
-  int v9; // ecx
+  signed int key_code; // eax
+  unsigned int popped_key; // ebx
+  int pressed_key; // ecx
+  _BYTE *decode_cursor; // esi
+  int table_offset; // ecx
   int v10; // ecx
-  int v11; // ebx
-  _BYTE v12[124]; // [esp+0h] [ebp-7Ch] BYREF
+  int next_cheat_string; // ebx
+  _BYTE cheat_buffer[124]; // [esp+0h] [ebp-7Ch] BYREF
 
   if ( g_LanguageIndex == 2 )
-    v1 = 25;
+    trigger_key = 25;
   else
-    v1 = 46;
-  result = Input_IsKeyPressed(v1);
+    trigger_key = 46;
+  result = Input_IsKeyPressed(trigger_key);
   if ( result )
   {
-    while ( Input_IsKeyPressed(v1) )
+    while ( Input_IsKeyPressed(trigger_key) )
       DD_Pump((int)g_RenderState, a1);
-    for ( i = v12; ; *(i - 1) = Input_KeyToChar(v5) )
+    for ( i = cheat_buffer; ; *(i - 1) = Input_KeyToChar(popped_key) )
     {
       while ( 1 )
       {
-        v4 = Input_PopKey();
-        v5 = v4;
-        if ( v4 != -1 )
+        key_code = Input_PopKey();
+        popped_key = key_code;
+        if ( key_code != -1 )
           break;
         DD_Pump((int)g_RenderState, -1);
       }
-      v6 = v4;
+      pressed_key = key_code;
       while ( 1 )
       {
-        result = Input_IsKeyPressed(v6);
+        result = Input_IsKeyPressed(pressed_key);
         if ( !result )
           break;
-        DD_Pump((int)g_RenderState, v5);
+        DD_Pump((int)g_RenderState, popped_key);
       }
-      if ( v5 == 28 )
+      if ( popped_key == 28 )
         break;
       ++i;
     }
     *i = 0;
-    BYTE1(result) = v12[0];
-    v7 = v12;
-    if ( v12[0] )
+    BYTE1(result) = cheat_buffer[0];
+    decode_cursor = cheat_buffer;
+    if ( cheat_buffer[0] )
     {
       do
-        *v7 ^= 0x32u;
-      while ( *++v7 );
+        *decode_cursor ^= 0x32u;
+      while ( *++decode_cursor );
     }
-    v9 = 0;
+    table_offset = 0;
     if ( g_CheatTable )
     {
       do
       {
-        result = strcmp_(v9, v12);
+        result = strcmp_(table_offset, cheat_buffer);
         if ( !result )
           result = (*(int (**)())((char *)&g_CheatCodeHandlerTable + v10))();
-        v11 = *(int *)((char *)&g_CheatCodeStringTable + v10);
-        v9 = v10 + 8;
+        next_cheat_string = *(int *)((char *)&g_CheatCodeStringTable + v10);
+        table_offset = v10 + 8;
       }
-      while ( v11 );
+      while ( next_cheat_string );
     }
   }
   return result;
@@ -1233,62 +1233,62 @@ int Rules_LogMissionSetupInfo()
 //----- (00451F70) --------------------------------------------------------
 signed int Rules_ExecuteAITurn()
 {
-  double v1; // st7
-  double v3; // st7
-  int v7; // edx
-  int v8; // eax
-  int v9; // ecx
-  int v10; // ecx
-  double v11; // st7
-  int v13; // edx
-  int v14; // eax
-  int v15; // ebx
-  int v16; // ecx
-  double v17; // st7
-  char v21[224]; // [esp+0h] [ebp-E0h] BYREF
+  double formatted_turn; // st7
+  double formatted_player; // st7
+  int castle_count; // edx
+  int building_index; // eax
+  int building_record; // ecx
+  int building_offset; // ecx
+  double formatted_castles; // st7
+  int fortress_count; // edx
+  int fortress_scan_index; // eax
+  int fortress_record; // ebx
+  int fortress_offset; // ecx
+  double formatted_fortresses; // st7
+  char fact_text[224]; // [esp+0h] [ebp-E0h] BYREF
 
   Diagnostics_TraceWorldMapActionEvent("ai_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
   Map_RebuildCastleSiteAnchorCache();
-  v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET));
-  g_AITurnLogFactHandle_Turn = (int)Rules_Log(v21, 0, v1);
-  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
-  g_AITurnPlayerIntelligenceFactHandle = (int)Rules_Log(v21, 0, v3);
-  memset(v21, 0, 0xC8);
-  v7 = 0;
-  v8 = 0;
+  formatted_turn = sprintf_(fact_text, "(tura %d)", *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET));
+  g_AITurnLogFactHandle_Turn = (int)Rules_Log(fact_text, 0, formatted_turn);
+  formatted_player = sprintf_(fact_text, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
+  g_AITurnPlayerIntelligenceFactHandle = (int)Rules_Log(fact_text, 0, formatted_player);
+  memset(fact_text, 0, 0xC8);
+  castle_count = 0;
+  building_index = 0;
 LABEL_2:
-  v9 = UNIT_RECORD(v8);
-  if ( (unsigned int)*(char *)(v9 + 4) < 4 && *(__int16 *)(v9 + 16) != -1 )
+  building_record = UNIT_RECORD(building_index);
+  if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
   {
-    v10 = gameData + BUILDING_RECORD_SIZE * v8;
-    if ( *(unsigned __int8 *)(v10 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v10 + 509678) == 2 )
-      ++v7;
+    building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
+    if ( *(unsigned __int8 *)(building_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(building_offset + 509678) == 2 )
+      ++castle_count;
   }
-  while ( ++v8 < 100 )
+  while ( ++building_index < 100 )
   {
-    if ( v8 >= 0 )
+    if ( building_index >= 0 )
       goto LABEL_2;
   }
-  v11 = sprintf_(v21, "(ilosc-zamkow %d %d)", g_CurrentPlayerIndex, v7);
-  g_AITurnCastleCountFactHandle = (int)Rules_Log(v21, 0, v11);
-  v13 = 0;
-  v14 = 0;
+  formatted_castles = sprintf_(fact_text, "(ilosc-zamkow %d %d)", g_CurrentPlayerIndex, castle_count);
+  g_AITurnCastleCountFactHandle = (int)Rules_Log(fact_text, 0, formatted_castles);
+  fortress_count = 0;
+  fortress_scan_index = 0;
 LABEL_11:
-  v15 = UNIT_RECORD(v14);
-  if ( (unsigned int)*(char *)(v15 + 4) < 4 && *(__int16 *)(v15 + 16) != -1 )
+  fortress_record = UNIT_RECORD(fortress_scan_index);
+  if ( (unsigned int)*(char *)(fortress_record + 4) < 4 && *(__int16 *)(fortress_record + 16) != -1 )
   {
-    v16 = gameData + BUILDING_RECORD_SIZE * v14;
-    if ( *(unsigned __int8 *)(v16 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v16 + 509678) == 1 )
-      ++v13;
+    fortress_offset = gameData + BUILDING_RECORD_SIZE * fortress_scan_index;
+    if ( *(unsigned __int8 *)(fortress_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(fortress_offset + 509678) == 1 )
+      ++fortress_count;
   }
-  while ( ++v14 < 100 )
+  while ( ++fortress_scan_index < 100 )
   {
-    if ( v14 >= 0 )
+    if ( fortress_scan_index >= 0 )
       goto LABEL_11;
   }
-  v17 = sprintf_(v21, "(ilosc-twierdz %d %d)", g_CurrentPlayerIndex, v13);
-  g_AiTurnFortressCountFactHandle = (int)Rules_Log(v21, 0, v17);
-  Diagnostics_TraceWorldMapActionEvent("ai_turn_before_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, v7, v13);
+  formatted_fortresses = sprintf_(fact_text, "(ilosc-twierdz %d %d)", g_CurrentPlayerIndex, fortress_count);
+  g_AiTurnFortressCountFactHandle = (int)Rules_Log(fact_text, 0, formatted_fortresses);
+  Diagnostics_TraceWorldMapActionEvent("ai_turn_before_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, castle_count, fortress_count);
   Rules_RunAgendaLoop(-1, 0, 0.0);
   Diagnostics_TraceWorldMapActionEvent("ai_turn_after_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_AITurnLogFactHandle_Turn, g_AiTurnFortressCountFactHandle);
   Rules_RetractFact(g_AITurnLogFactHandle_Turn, 0.0);
@@ -1319,9 +1319,9 @@ LABEL_11:
 // 544558: using guessed type int dword_544558;
 
 //----- (004521D0) --------------------------------------------------------
-unsigned int  Rules_CreateArmyFact(a1, a2, a3, a4, a5)
-__int16 *a1;
-int a2;
+unsigned int  Rules_CreateArmyFact(stack_record, army_id, a3, a4, a5)
+__int16 *stack_record;
+int army_id;
 int a3;
 char a4;
 DWORD a5;
@@ -1329,33 +1329,33 @@ DWORD a5;
   unsigned int result; // eax
   _DWORD *fact; // eax
   int trace_load_save; // eax
-  char v15[1000]; // [esp+0h] [ebp-3ECh] BYREF
+  char fact_text[1000]; // [esp+0h] [ebp-3ECh] BYREF
 
   trace_load_save = 0;
-  result = a1[3];
+  result = stack_record[3];
   if ( result <= 0x28 )
   {
     ++g_RulesArmyFactCreatedCount;
     sprintf_(
-      v15,
+      fact_text,
       "( ODDZIAL%d of oddzial (id %d)(gracz %d)(PA %d)(moc %d)(x %d)(y %d))",
-      a2,
-      a2,
-      *((unsigned __int8 *)a1 + 4),
+      army_id,
+      army_id,
+      *((unsigned __int8 *)stack_record + 4),
       100,
       100,
-      *a1,
-      a1[1]);
+      *stack_record,
+      stack_record[1]);
     if ( trace_load_save )
-      fprintf(stderr, "[menu-probe] rules-create-army-fact %s\n", v15);
+      fprintf(stderr, "[menu-probe] rules-create-army-fact %s\n", fact_text);
     Debug_Log(0, a4, a5, (int)aMkinstArmyS);
-    fact = Rules_AssertFact(v15, 0, 0.0);
+    fact = Rules_AssertFact(fact_text, 0, 0.0);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] rules-create-army-after-assert fact=%p\n", fact);
-    *(_DWORD *)((char *)a1 + 721) = fact;
+    *(_DWORD *)((char *)stack_record + 721) = fact;
     if ( !fact )
       return 0;
-    return Rules_LinkArmyFact(a1, a2, a3, 0.0, a4, a5);
+    return Rules_LinkArmyFact(stack_record, army_id, a3, 0.0, a4, a5);
   }
   return result;
 }
@@ -1372,7 +1372,7 @@ DWORD a5;
 _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
 {
   __int16 *stack;
-  char v8[1000]; // [esp+0h] [ebp-3F0h] BYREF
+  char fact_text[1000]; // [esp+0h] [ebp-3F0h] BYREF
   int v9; // [esp+3E8h] [ebp-8h]
   int v10; // [esp+3ECh] [ebp-4h]
 
@@ -1382,8 +1382,8 @@ _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
   if ( *(_DWORD *)((char *)result + 721) )
   {
     Rules_RetractFactById(*(_DWORD *)((char *)result + 721), a4);
-    sprintf_(v8, "(usunieto armie %d )", *(unsigned __int16 *)(TILE_INDEX(*stack, stack[1])));
-    result = Rules_Log(v8, 0, a4);
+    sprintf_(fact_text, "(usunieto armie %d )", *(unsigned __int16 *)(TILE_INDEX(*stack, stack[1])));
+    result = Rules_Log(fact_text, 0, a4);
     *(_DWORD *)((char *)stack + 721) = 0;
   }
   else
@@ -1462,42 +1462,42 @@ int Rules_HostArmyHasNormalCombatUnits(int a1, double a2)
 }
 
 //----- (004530D0) --------------------------------------------------------
-signed int  Rules_UnitStackHasNormalCombatUnits(int a1)
+signed int  Rules_UnitStackHasNormalCombatUnits(int stack_index)
 {
-  return UnitStack_HasNormalCombatUnits(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
+  return UnitStack_HasNormalCombatUnits(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00453110) --------------------------------------------------------
-signed int  Rules_QueuePathToTile(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathToTile(int stack_index, int target_x, int target_y, DWORD a4)
 {
   int v5; // ecx
-  int *v6; // ebx
+  int *track; // ebx
   int v7; // ecx
   int v8; // edx
-  int v10; // [esp+0h] [ebp-10h]
+  int queued_target_xy; // [esp+0h] [ebp-10h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v10 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    if ( !abs32(a2 - (unsigned __int8)v10) && !abs32(a3 - BYTE1(v10)) )
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    if ( !abs32(target_x - (unsigned __int8)queued_target_xy) && !abs32(target_y - BYTE1(queued_target_xy)) )
       return 1;
   }
-  if ( UnitStack_HasBuilder(a1) )
-    Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = Unit_MoveTrack(
-         a1,
-         *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + UNIT_STACK_TABLE_OFFSET),
+  if ( UnitStack_HasBuilder(stack_index) )
+    Pathing_EnableBridgeCrossings(v5, target_y, a4);
+  track = Unit_MoveTrack(
+         stack_index,
+         *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
          v5,
-         *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + 147176),
+         *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
          a4,
-         a3);
-  Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
+         target_y);
+  Pathing_DisableBridgeCrossings(v7, (char)track, a4);
   if ( !v8 )
     return 0;
-  if ( *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + 147490) )
-    *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) = 0;
-  qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
+  if ( *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + 147490) )
+    *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+  qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
   j__nfree_();
   return 1;
 }
@@ -1507,42 +1507,42 @@ signed int  Rules_QueuePathToTile(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (004532A0) --------------------------------------------------------
-signed int  Rules_QueuePathNearTile(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathNearTile(int stack_index, int target_x, int target_y, DWORD a4)
 {
   int v5; // ecx
   int v6; // edx
   int v7; // ecx
-  _DWORD *v8; // ebx
+  _DWORD *track; // ebx
   int v9; // ecx
   int v10; // ecx
   int v11; // edx
-  int v13; // [esp+0h] [ebp-14h]
+  int queued_target_xy; // [esp+0h] [ebp-14h]
 
-  Debug_Log(a1, a3, a4, (int)aJest_droga_w_3);
+  Debug_Log(stack_index, target_y, a4, (int)aJest_droga_w_3);
   if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v6 + UNIT_STACK_PATH_OFFSET) )
   {
-    v13 = *(_DWORD *)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + 320);
-    if ( (int)abs32(a2 - (unsigned __int8)v13) < 2 )
+    queued_target_xy = *(_DWORD *)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + 320);
+    if ( (int)abs32(target_x - (unsigned __int8)queued_target_xy) < 2 )
     {
-      a4 = BYTE1(v13);
-      if ( (int)abs32(a3 - BYTE1(v13)) > 2 )
+      a4 = BYTE1(queued_target_xy);
+      if ( (int)abs32(target_y - BYTE1(queued_target_xy)) > 2 )
       {
-        if ( a2 != (unsigned __int8)v13 )
+        if ( target_x != (unsigned __int8)queued_target_xy )
           return 1;
-        if ( a3 != BYTE1(v13) )
+        if ( target_y != BYTE1(queued_target_xy) )
           return 1;
       }
     }
   }
   if ( UnitStack_HasBuilder(v5) )
-    Pathing_EnableBridgeCrossings(v7, a3, a4);
-  v8 = Unit_MoveTrackNearTile(v7, a2, v7, a3, a4);
-  Pathing_DisableBridgeCrossings(v9, (char)v8, a4);
+    Pathing_EnableBridgeCrossings(v7, target_y, a4);
+  track = Unit_MoveTrackNearTile(v7, target_x, v7, target_y, a4);
+  Pathing_DisableBridgeCrossings(v9, (char)track, a4);
   if ( v11 )
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v10 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v10 + 147490) = 0;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10 + UNIT_STACK_PATH_OFFSET), v8, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10 + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1557,36 +1557,36 @@ signed int  Rules_QueuePathNearTile(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453440) --------------------------------------------------------
-signed int  Rules_QueuePathNearCastle(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathNearCastle(int stack_index, int castle_x, int castle_y, DWORD a4)
 {
   int v5; // ecx
-  const void *v6; // ebx
+  const void *track; // ebx
   int v7; // ecx
   int v8; // ecx
   int v9; // edx
-  int v11; // [esp+0h] [ebp-14h]
+  int queued_target_xy; // [esp+0h] [ebp-14h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v11 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    a4 = (unsigned __int8)v11;
-    if ( (int)abs32(a2 - (unsigned __int8)v11) < 3 && (int)abs32(a3 - BYTE1(v11)) < 3 )
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    a4 = (unsigned __int8)queued_target_xy;
+    if ( (int)abs32(castle_x - (unsigned __int8)queued_target_xy) < 3 && (int)abs32(castle_y - BYTE1(queued_target_xy)) < 3 )
     {
-      if ( a2 != (unsigned __int8)v11 )
+      if ( castle_x != (unsigned __int8)queued_target_xy )
         return 1;
-      if ( a3 != BYTE1(v11) )
+      if ( castle_y != BYTE1(queued_target_xy) )
         return 1;
     }
   }
-  if ( UnitStack_HasBuilder(a1) )
-    Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = (const void *)Building_GenerateNearApproachTrack(v5, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v5, a3, a4);
-  Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
+  if ( UnitStack_HasBuilder(stack_index) )
+    Pathing_EnableBridgeCrossings(v5, castle_y, a4);
+  track = (const void *)Building_GenerateNearApproachTrack(v5, *(unsigned __int16 *)(TILE_INDEX(castle_x, castle_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v5, castle_y, a4);
+  Pathing_DisableBridgeCrossings(v7, (char)track, a4);
   if ( v9 )
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1599,32 +1599,32 @@ signed int  Rules_QueuePathNearCastle(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453600) --------------------------------------------------------
-signed int  Rules_QueuePathToPort(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathToPort(int army_index, int target_x, int queued_dest, DWORD a4)
 {
-  int v4; // esi
+  int target_y; // esi
   int v5; // ecx
-  int *v6; // ebx
+  int *move_track; // ebx
   int v7; // ecx
   int v8; // ecx
   int v9; // edx
 
-  v4 = a3;
-  LOBYTE(a3) = gameData;
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  target_y = queued_dest;
+  LOBYTE(queued_dest) = gameData;
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * army_index + 147490) )
   {
-    a3 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    if ( !abs32(a2 - (unsigned __int8)a3) && !abs32(v4 - BYTE1(a3)) )
+    queued_dest = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * army_index + 320);
+    if ( !abs32(target_x - (unsigned __int8)queued_dest) && !abs32(target_y - BYTE1(queued_dest)) )
       return 1;
   }
-  if ( UnitStack_HasBuilder(a1) )
-    Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = Port_GenerateApproachTrack(v5);
-  Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
+  if ( UnitStack_HasBuilder(army_index) )
+    Pathing_EnableBridgeCrossings(v5, queued_dest, a4);
+  move_track = Port_GenerateApproachTrack(v5);
+  Pathing_DisableBridgeCrossings(v7, (char)move_track, a4);
   if ( !v9 )
     return 0;
   if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v8 + UNIT_STACK_PATH_OFFSET) )
     *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-  qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
+  qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), move_track, UNIT_STACK_PATH_BYTES);
   j__nfree_();
   return 1;
 }
@@ -1635,41 +1635,41 @@ signed int  Rules_QueuePathToPort(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453770) --------------------------------------------------------
-signed int  Rules_QueuePathToCastle(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y, DWORD a4)
 {
   int v5; // ecx
-  const void *v6; // ebx
+  const void *track; // ebx
   int v7; // ecx
   int v8; // ecx
   int v9; // edx
-  int v11; // [esp+0h] [ebp-14h]
+  int queued_target_xy; // [esp+0h] [ebp-14h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v11 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    a4 = (unsigned __int8)v11;
-    if ( (int)abs32(a2 - (unsigned __int8)v11) < 2 && (int)abs32(a3 - BYTE1(v11)) < 2 )
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    a4 = (unsigned __int8)queued_target_xy;
+    if ( (int)abs32(castle_x - (unsigned __int8)queued_target_xy) < 2 && (int)abs32(castle_y - BYTE1(queued_target_xy)) < 2 )
     {
-      if ( a2 != (unsigned __int8)v11 )
+      if ( castle_x != (unsigned __int8)queued_target_xy )
         return 1;
-      if ( a3 != BYTE1(v11) )
+      if ( castle_y != BYTE1(queued_target_xy) )
         return 1;
     }
   }
-  if ( UnitStack_HasBuilder(a1) )
-    Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = (const void *)Building_GenerateApproachTrack(
+  if ( UnitStack_HasBuilder(stack_index) )
+    Pathing_EnableBridgeCrossings(v5, castle_y, a4);
+  track = (const void *)Building_GenerateApproachTrack(
                        v5,
-                       *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
+                       *(unsigned __int16 *)(TILE_INDEX(castle_x, castle_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
                        v5,
-                       a3,
+                       castle_y,
                        a4);
-  Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
+  Pathing_DisableBridgeCrossings(v7, (char)track, a4);
   if ( v9 )
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
       *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -1682,19 +1682,19 @@ signed int  Rules_QueuePathToCastle(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453930) --------------------------------------------------------
-signed int  Move_IsAtTargetOrCanStay(int a1, int a2, int a3)
+signed int  Move_IsAtTargetOrCanStay(int stack_index, int target_x, int target_y)
 {
   signed int result; // eax
   int v4; // ecx
-  int v5; // [esp+0h] [ebp-10h]
+  int queued_target_xy; // [esp+0h] [ebp-10h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v5 = *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + 320);
-    if ( !abs32(a2 - (unsigned __int8)v5) && !abs32(a3 - BYTE1(v5)) )
+    queued_target_xy = *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 320);
+    if ( !abs32(target_x - (unsigned __int8)queued_target_xy) && !abs32(target_y - BYTE1(queued_target_xy)) )
       return 1;
   }
-  result = (signed int)Temple_GenerateApproachTrack(a1, a2, a1, a3);
+  result = (signed int)Temple_GenerateApproachTrack(stack_index, target_x, stack_index, target_y);
   if ( result )
   {
     if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v4 + UNIT_STACK_PATH_OFFSET) )
@@ -1709,43 +1709,43 @@ signed int  Move_IsAtTargetOrCanStay(int a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453A90) --------------------------------------------------------
-signed int  Move_TryApproachTarget(int a1, DWORD a2, int a3)
+signed int  Move_TryApproachTarget(int stack_index, DWORD target_x, int target_y)
 {
   signed int result; // eax
   int v4; // ecx
-  const void *v5; // ebp
-  signed int v6; // eax
-  signed int v7; // edx
-  int v8; // ebx
-  unsigned __int16 v9; // di
+  const void *track; // ebp
+  signed int min_action_points; // eax
+  signed int queued_move_cost; // edx
+  int stack_offset; // ebx
+  unsigned __int16 required_move_cost; // di
   int v10; // ecx
-  int v11; // [esp+4h] [ebp-14h]
+  int queued_target_xy; // [esp+4h] [ebp-14h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490)
-    && (v11 = *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + 320), (int)abs32(a2 - (unsigned __int8)v11) <= 2)
-    && (int)abs32(a3 - BYTE1(v11)) <= 2 )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490)
+    && (queued_target_xy = *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 320), (int)abs32(target_x - (unsigned __int8)queued_target_xy) <= 2)
+    && (int)abs32(target_y - BYTE1(queued_target_xy)) <= 2 )
   {
-    v6 = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
-    return v6 >= v7;
+    min_action_points = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
+    return min_action_points >= queued_move_cost;
   }
   else
   {
-    result = Building_GenerateApproachTrack(a1, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, a1, a3, a2);
-    v5 = (const void *)result;
+    result = Building_GenerateApproachTrack(stack_index, *(unsigned __int16 *)(TILE_INDEX(target_x, target_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, stack_index, target_y, target_x);
+    track = (const void *)result;
     if ( result )
     {
-      v8 = UNIT_STACK_STRIDE * v4;
-      v9 = HIWORD(*(_DWORD *)(result + 4));
-      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET) < v9 )
+      stack_offset = UNIT_STACK_STRIDE * v4;
+      required_move_cost = HIWORD(*(_DWORD *)(result + 4));
+      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET) < required_move_cost )
       {
         j__nfree_();
         return 0;
       }
       else
       {
-        if ( *(_DWORD *)(v8 + gameData + 147490) )
+        if ( *(_DWORD *)(stack_offset + gameData + 147490) )
           *(_DWORD *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
-        qmemcpy((void *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v5, UNIT_STACK_PATH_BYTES);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         return 1;
       }
@@ -1759,46 +1759,46 @@ signed int  Move_TryApproachTarget(int a1, DWORD a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453C90) --------------------------------------------------------
-signed int  Rules_QueuePathIntoArmyRange(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_QueuePathIntoArmyRange(int stack_index, int target_x, int target_y, DWORD a4)
 {
   int v5; // ecx
   int v6; // edx
   signed int result; // eax
   int v8; // ecx
-  const void *v9; // ebp
-  signed int v10; // eax
-  signed int v11; // edx
-  int v12; // ebx
-  unsigned __int16 v13; // di
+  const void *track; // ebp
+  signed int min_action_points; // eax
+  signed int queued_move_cost; // edx
+  int stack_offset; // ebx
+  unsigned __int16 required_move_cost; // di
   int v14; // ecx
-  int v15; // [esp+4h] [ebp-14h]
+  int queued_target_xy; // [esp+4h] [ebp-14h]
 
-  Debug_Log(a1, a3, a4, (int)aOddzial_w_za_2);
+  Debug_Log(stack_index, target_y, a4, (int)aOddzial_w_za_2);
   if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v6 + 147490)
-    && (a4 = UNIT_STACK_STRIDE * v5, v15 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v5 + 320), (int)abs32(a2 - (unsigned __int8)v15) <= 1)
-    && (int)abs32(a3 - BYTE1(v15)) <= 1 )
+    && (a4 = UNIT_STACK_STRIDE * v5, queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v5 + 320), (int)abs32(target_x - (unsigned __int8)queued_target_xy) <= 1)
+    && (int)abs32(target_y - BYTE1(queued_target_xy)) <= 1 )
   {
-    v10 = UnitStack_GetMinCurrentActionPoints(a4 + gameData + UNIT_STACK_TABLE_OFFSET);
-    return v10 >= v11;
+    min_action_points = UnitStack_GetMinCurrentActionPoints(a4 + gameData + UNIT_STACK_TABLE_OFFSET);
+    return min_action_points >= queued_move_cost;
   }
   else
   {
-    result = (signed int)Unit_MoveTrackNearTile(v5, a2, v5, a3, a4);
-    v9 = (const void *)result;
+    result = (signed int)Unit_MoveTrackNearTile(v5, target_x, v5, target_y, a4);
+    track = (const void *)result;
     if ( result )
     {
-      v12 = UNIT_STACK_STRIDE * v8;
-      v13 = HIWORD(*(_DWORD *)(result + 4));
-      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET) < v13 )
+      stack_offset = UNIT_STACK_STRIDE * v8;
+      required_move_cost = HIWORD(*(_DWORD *)(result + 4));
+      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET) < required_move_cost )
       {
         j__nfree_();
         return 0;
       }
       else
       {
-        if ( *(_DWORD *)(v12 + gameData + 147490) )
+        if ( *(_DWORD *)(stack_offset + gameData + 147490) )
           *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v14 + 147490) = 0;
-        qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v14 + UNIT_STACK_PATH_OFFSET), v9, UNIT_STACK_PATH_BYTES);
+        qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v14 + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         return 1;
       }
@@ -1814,50 +1814,50 @@ signed int  Rules_QueuePathIntoArmyRange(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453E60) --------------------------------------------------------
-signed int  Rules_GetPathDistanceToObject(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_GetPathDistanceToObject(int stack_index, int target_x, int target_y, DWORD a4)
 {
   int v5; // ecx
   int v6; // edx
   int v7; // ecx
   int v8; // ecx
   int *Track; // eax
-  int v11; // edx
-  int v12; // [esp+0h] [ebp-14h]
+  int path_distance; // edx
+  int queued_target_xy; // [esp+0h] [ebp-14h]
 
-  Debug_Log(a2, a3, a4, (int)aOdleglosc_od_1);
+  Debug_Log(target_x, target_y, a4, (int)aOdleglosc_od_1);
   if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v6 + 147490) )
   {
     a4 = gameData;
-    v12 = *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + 320);
-    if ( (int)abs32(v5 - (unsigned __int8)v12) <= 1 && (int)abs32(a3 - BYTE1(v12)) <= 1 )
-      return *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + 147490);
+    queued_target_xy = *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 320);
+    if ( (int)abs32(v5 - (unsigned __int8)queued_target_xy) <= 1 && (int)abs32(target_y - BYTE1(queued_target_xy)) <= 1 )
+      return *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + 147490);
   }
-  if ( MapTile_GetReligiousSiteCategory(v5, a3) )
+  if ( MapTile_GetReligiousSiteCategory(v5, target_y) )
   {
-    Track = Temple_GenerateApproachTrack(a1, v7, v7, a3);
+    Track = Temple_GenerateApproachTrack(stack_index, v7, v7, target_y);
   }
-  else if ( MapTile_HasHiddenTreasure(v7, a3) )
+  else if ( MapTile_HasHiddenTreasure(v7, target_y) )
   {
     Track = Unit_MoveTrack(
-              a1,
-              *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + UNIT_STACK_TABLE_OFFSET),
+              stack_index,
+              *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
               v8,
-              *(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + 147176),
+              *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
               a4,
-              a3);
+              target_y);
   }
-  else if ( v8 == PORT_ROW && a3 == PORT_COLUMN )
+  else if ( v8 == PORT_ROW && target_y == PORT_COLUMN )
   {
-    Track = Port_GenerateApproachTrack(a1);
+    Track = Port_GenerateApproachTrack(stack_index);
   }
   else
   {
-    Track = Unit_MoveTrackNearTile(a1, v8, v8, a3, a4);
+    Track = Unit_MoveTrackNearTile(stack_index, v8, v8, target_y, a4);
   }
   if ( !Track )
     return 1000;
   j__nfree_();
-  return v11;
+  return path_distance;
 }
 // 453E97: variable 'v6' is possibly undefined
 // 453EAB: variable 'v5' is possibly undefined
@@ -1867,34 +1867,34 @@ signed int  Rules_GetPathDistanceToObject(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453FE0) --------------------------------------------------------
-BOOL  Rules_IsTempleWithinArmyRange(int a1, int a2, int a3)
+BOOL  Rules_IsTempleWithinArmyRange(int stack_index, int temple_x, int temple_y)
 {
   int *Track; // edx
   BOOL result; // eax
-  signed int v6; // eax
-  signed int v7; // edx
-  int v8; // [esp+4h] [ebp-10h]
+  signed int min_action_points; // eax
+  signed int required_move_cost; // edx
+  int queued_target_xy; // [esp+4h] [ebp-10h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v8 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    if ( (int)abs32(a2 - (unsigned __int8)v8) > 1 || (int)abs32(a3 - BYTE1(v8)) > 1 )
-      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) = 0;
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    if ( (int)abs32(temple_x - (unsigned __int8)queued_target_xy) > 1 || (int)abs32(temple_y - BYTE1(queued_target_xy)) > 1 )
+      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
   }
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    Track = Temple_GenerateApproachTrack(a1, a2, a2, a3);
+    Track = Temple_GenerateApproachTrack(stack_index, temple_x, temple_x, temple_y);
     if ( Track )
     {
-      qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
+      qmemcpy((void *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
   result = 0;
-  if ( *(_DWORD *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) )
+  if ( *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) )
   {
-    v6 = UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1);
-    if ( v6 >= v7 )
+    min_action_points = UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index);
+    if ( min_action_points >= required_move_cost )
       return 1;
   }
   return result;
@@ -1903,52 +1903,52 @@ BOOL  Rules_IsTempleWithinArmyRange(int a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004541B0) --------------------------------------------------------
-BOOL  Player_CanEnterReligiousSiteTile(int a1, int a2, int a3)
+BOOL  Player_CanEnterReligiousSiteTile(int player_index, int tile_x, int tile_y)
 {
   int v4; // ecx
 
-  return MapTile_GetReligiousSiteCategory(a2, a3) == RELIGIOUS_SITE_CATEGORY_SHRINE && PLAYER_RELIGION_FLAG(a1)
-      || MapTile_GetReligiousSiteCategory(v4, a3) == RELIGIOUS_SITE_CATEGORY_CULT_PLACE && !PLAYER_RELIGION_FLAG(a1);
+  return MapTile_GetReligiousSiteCategory(tile_x, tile_y) == RELIGIOUS_SITE_CATEGORY_SHRINE && PLAYER_RELIGION_FLAG(player_index)
+      || MapTile_GetReligiousSiteCategory(v4, tile_y) == RELIGIOUS_SITE_CATEGORY_CULT_PLACE && !PLAYER_RELIGION_FLAG(player_index);
 }
 // 4541E6: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00454210) --------------------------------------------------------
 signed int  Move_CommitIfWithinCost(
-        unsigned int a1,
+        unsigned int stack_index,
         int a2,
         DWORD a3,
         double a4)
 {
-  int v6; // ebx
-  int v7; // eax
-  int v8; // esi
-  int v9; // edi
+  int stack_offset; // ebx
+  int stack_record; // eax
+  int prev_x; // esi
+  int prev_y; // edi
   unsigned int v10; // ecx
   int v11; // ecx
   int v12; // eax
   int v13; // edx
   int v14; // ecx
-  _DWORD v15[9]; // [esp-4h] [ebp-24h] BYREF
+  _DWORD pa_value[9]; // [esp-4h] [ebp-24h] BYREF
 
-  v15[8] = a2;
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  pa_value[8] = a2;
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
     return 0;
-  v6 = UNIT_STACK_STRIDE * a1;
-  v7 = gameData + UNIT_STACK_STRIDE * a1;
-  v8 = *(__int16 *)(v7 + 147174);
-  v9 = *(__int16 *)(v7 + 147176);
-  UnitStack_ExecuteQueuedPath(a1, 1, -43 * a1, a3, a4);
-  if ( v10 > 0x1F4 || (unsigned int)*(__int16 *)(v6 + gameData + 147180) > 0x28 )
+  stack_offset = UNIT_STACK_STRIDE * stack_index;
+  stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
+  prev_x = *(__int16 *)(stack_record + 147174);
+  prev_y = *(__int16 *)(stack_record + 147176);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, -43 * stack_index, a3, a4);
+  if ( v10 > 0x1F4 || (unsigned int)*(__int16 *)(stack_offset + gameData + 147180) > 0x28 )
     return 1;
   if ( Rules_IsQueuedPathTargetBridgeCrossing(v10) )
     Rules_BuildRoadOrStepTowardQueuedPath(v11, a3, a4);
   v12 = gameData + UNIT_STACK_STRIDE * v11;
-  if ( v8 == *(__int16 *)(v12 + 147174) && v9 == *(__int16 *)(v12 + 147176) )
+  if ( prev_x == *(__int16 *)(v12 + 147174) && prev_y == *(__int16 *)(v12 + 147176) )
   {
-    v15[1] = 1;
-    v15[2] = Rules_AddIntegerValue(0);
-    Rules_PutInstanceSlotValue(*(_DWORD *)(v13 + gameData + 147895), aPa, v14, v15, a4);
+    pa_value[1] = 1;
+    pa_value[2] = Rules_AddIntegerValue(0);
+    Rules_PutInstanceSlotValue(*(_DWORD *)(v13 + gameData + 147895), aPa, v14, pa_value, a4);
   }
   return 1;
 }
@@ -1961,51 +1961,51 @@ signed int  Move_CommitIfWithinCost(
 // 5202E4: using guessed type int gameData;
 
 //----- (00454330) --------------------------------------------------------
-signed int  Rules_MarchToTemple(unsigned int a1, int a2, int a3, double a4)
+signed int  Rules_MarchToTemple(unsigned int stack_index, int temple_x, int temple_y, double a4)
 {
   int *Track; // edx
-  int v7; // eax
-  int v8; // edi
-  int v9; // ebx
+  int stack_record; // eax
+  int prev_x; // edi
+  int prev_y; // ebx
   int v10; // ecx
-  int v11; // ebp
-  int v12; // eax
+  int stack_offset; // ebp
+  int stack_record_after; // eax
   int v13; // ecx
-  _DWORD v14[6]; // [esp+0h] [ebp-28h] BYREF
-  int v15; // [esp+18h] [ebp-10h]
+  _DWORD pa_value[6]; // [esp+0h] [ebp-28h] BYREF
+  int queued_target_xy; // [esp+18h] [ebp-10h]
 
-  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v15 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    if ( (int)abs32(a2 - (unsigned __int8)v15) > 1 || (int)abs32(a3 - BYTE1(v15)) > 1 )
-      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) = 0;
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    if ( (int)abs32(temple_x - (unsigned __int8)queued_target_xy) > 1 || (int)abs32(temple_y - BYTE1(queued_target_xy)) > 1 )
+      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
   }
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    Track = Temple_GenerateApproachTrack(a1, a2, a2, a3);
+    Track = Temple_GenerateApproachTrack(stack_index, temple_x, temple_x, temple_y);
     if ( Track )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), Track, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
     return 0;
-  v7 = gameData + UNIT_STACK_STRIDE * a1;
-  v8 = *(__int16 *)(v7 + 147174);
-  v9 = *(__int16 *)(v7 + 147176);
-  UnitStack_ExecuteQueuedPath(a1, 1, v9, a1, a4);
-  if ( a1 <= 0x1F4 && (unsigned int)*(__int16 *)(v10 + gameData + 147180) <= 0x28 )
+  stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
+  prev_x = *(__int16 *)(stack_record + 147174);
+  prev_y = *(__int16 *)(stack_record + 147176);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, prev_y, stack_index, a4);
+  if ( stack_index <= 0x1F4 && (unsigned int)*(__int16 *)(v10 + gameData + 147180) <= 0x28 )
   {
-    v11 = UNIT_STACK_STRIDE * a1;
-    v12 = gameData + v11;
-    if ( *(__int16 *)(gameData + v11 + 147180) == -1 )
+    stack_offset = UNIT_STACK_STRIDE * stack_index;
+    stack_record_after = gameData + stack_offset;
+    if ( *(__int16 *)(gameData + stack_offset + 147180) == -1 )
       return 0;
-    if ( v8 == *(__int16 *)(v12 + 147174) && v9 == *(__int16 *)(v12 + 147176) )
+    if ( prev_x == *(__int16 *)(stack_record_after + 147174) && prev_y == *(__int16 *)(stack_record_after + 147176) )
     {
-      v14[1] = 1;
-      v14[2] = Rules_AddIntegerValue(0);
-      Rules_PutInstanceSlotValue(*(_DWORD *)(gameData + v11 + 147895), aPa_0, v13, v14, a4);
+      pa_value[1] = 1;
+      pa_value[2] = Rules_AddIntegerValue(0);
+      Rules_PutInstanceSlotValue(*(_DWORD *)(gameData + stack_offset + 147895), aPa_0, v13, pa_value, a4);
     }
   }
   return 1;
@@ -2017,50 +2017,50 @@ signed int  Rules_MarchToTemple(unsigned int a1, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454590) --------------------------------------------------------
-signed int  Rules_MarchNearTile(DWORD a1, int a2, int a3, double a4)
+signed int  Rules_MarchNearTile(DWORD stack_index, int target_x, int target_y, double a4)
 {
   int v5; // ecx
   int v6; // edx
-  _DWORD *v7; // edx
-  DWORD v9; // eax
-  int v10; // edi
-  int v11; // ebx
+  _DWORD *track; // edx
+  DWORD stack_record; // eax
+  int prev_x; // edi
+  int prev_y; // ebx
   int v12; // ecx
-  DWORD v13; // ebp
+  DWORD stack_offset; // ebp
   int v14; // ecx
-  _DWORD v15[6]; // [esp+4h] [ebp-28h] BYREF
-  int v16; // [esp+1Ch] [ebp-10h]
+  _DWORD pa_value[6]; // [esp+4h] [ebp-28h] BYREF
+  int queued_target_xy; // [esp+1Ch] [ebp-10h]
 
-  Debug_Log(a2, a3, a1, (int)aMaszeruj_bli_1);
+  Debug_Log(target_x, target_y, stack_index, (int)aMaszeruj_bli_1);
   if ( *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v6 + 147490) )
   {
-    v16 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320);
-    if ( (int)abs32(v5 - (unsigned __int8)v16) > 1 || (int)abs32(a3 - BYTE1(v16)) > 1 )
-      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) = 0;
+    queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
+    if ( (int)abs32(v5 - (unsigned __int8)queued_target_xy) > 1 || (int)abs32(target_y - BYTE1(queued_target_xy)) > 1 )
+      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
   }
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
-    v7 = Unit_MoveTrackNearTile(a1, v5, v5, a3, a1);
-    if ( v7 )
+    track = Unit_MoveTrackNearTile(stack_index, v5, v5, target_y, stack_index);
+    if ( track )
     {
-      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), v7, UNIT_STACK_PATH_BYTES);
+      qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
       j__nfree_();
     }
   }
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
     return 0;
-  v9 = gameData + UNIT_STACK_STRIDE * a1;
-  v10 = *(__int16 *)(v9 + 147174);
-  v11 = *(__int16 *)(v9 + 147176);
-  UnitStack_ExecuteQueuedPath(a1, 1, v11, a1, a4);
-  if ( a1 <= 0x1F4 && (unsigned int)*(__int16 *)(v12 + gameData + 147180) <= 0x28 )
+  stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
+  prev_x = *(__int16 *)(stack_record + 147174);
+  prev_y = *(__int16 *)(stack_record + 147176);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, prev_y, stack_index, a4);
+  if ( stack_index <= 0x1F4 && (unsigned int)*(__int16 *)(v12 + gameData + 147180) <= 0x28 )
   {
-    v13 = UNIT_STACK_STRIDE * a1;
-    if ( v10 == *(__int16 *)(gameData + v13 + UNIT_STACK_TABLE_OFFSET) && v11 == *(__int16 *)(gameData + v13 + 147176) )
+    stack_offset = UNIT_STACK_STRIDE * stack_index;
+    if ( prev_x == *(__int16 *)(gameData + stack_offset + UNIT_STACK_TABLE_OFFSET) && prev_y == *(__int16 *)(gameData + stack_offset + 147176) )
     {
-      v15[1] = 1;
-      v15[2] = Rules_AddIntegerValue(0);
-      Rules_PutInstanceSlotValue(*(_DWORD *)(gameData + v13 + 147895), aPa_1, v14, v15, a4);
+      pa_value[1] = 1;
+      pa_value[2] = Rules_AddIntegerValue(0);
+      Rules_PutInstanceSlotValue(*(_DWORD *)(gameData + stack_offset + 147895), aPa_1, v14, pa_value, a4);
     }
   }
   return 1;
@@ -2074,54 +2074,54 @@ signed int  Rules_MarchNearTile(DWORD a1, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (004547F0) --------------------------------------------------------
-signed int  Rules_HostUnitAttack(int a1, int a2, char a3, DWORD a4, double a5)
+signed int  Rules_HostUnitAttack(int army_index, int target_army_index, char a3, DWORD a4, double a5)
 {
-  Unit_Attack(a1, a2, a3, a4, a5);
+  Unit_Attack(army_index, target_army_index, a3, a4, a5);
   return 1;
 }
 
 //----- (00454800) --------------------------------------------------------
-signed int  Rules_HostUnitCaptureDefeatedStack(int a1, int a2, double a3)
+signed int  Rules_HostUnitCaptureDefeatedStack(int capturing_stack_index, int defeated_stack_index, double a3)
 {
   UnitStack_CaptureDefeatedStack(
-    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1),
-    gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a2,
-    gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a2,
-    a1,
+    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * capturing_stack_index),
+    gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * defeated_stack_index,
+    gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * defeated_stack_index,
+    capturing_stack_index,
     a3);
   return 1;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00454860) --------------------------------------------------------
-signed int  Rules_HostUnitMoveAndHide(unsigned int a1, unsigned int a2, DWORD a3, double a4)
+signed int  Rules_HostUnitMoveAndHide(unsigned int target_x, unsigned int target_y, DWORD stack_index, double a4)
 {
-  DWORD v5; // esi
+  DWORD stack_offset; // esi
   signed int result; // eax
-  char v7; // bl
+  char move_succeeded; // bl
   int v8; // edx
-  unsigned __int64 v9; // [esp+4h] [ebp-18h]
+  unsigned __int64 target_xy_pair; // [esp+4h] [ebp-18h]
 
-  v9 = __PAIR64__(a1, a2);
-  v5 = UNIT_STACK_STRIDE * a3;
+  target_xy_pair = __PAIR64__(target_x, target_y);
+  stack_offset = UNIT_STACK_STRIDE * stack_index;
   result = (signed int)Unit_MoveTrack(
-                         a3,
-                         *(__int16 *)(gameData + UNIT_STACK_STRIDE * a3 + UNIT_STACK_TABLE_OFFSET),
-                         a1,
-                         *(__int16 *)(gameData + UNIT_STACK_STRIDE * a3 + 147176),
-                         a3,
-                         a2);
-  v7 = result;
+                         stack_index,
+                         *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
+                         target_x,
+                         *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
+                         stack_index,
+                         target_y);
+  move_succeeded = result;
   if ( result )
   {
-    if ( *(_DWORD *)(v5 + gameData + 147490) )
-      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * a3 + 147490) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
+    if ( *(_DWORD *)(stack_offset + gameData + 147490) )
+      *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+    qmemcpy((void *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
-    UnitStack_ExecuteQueuedPath(a3, v8, v7, a3, a4);
-    if ( __PAIR64__(*(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + 147176)) == v9 )
+    UnitStack_ExecuteQueuedPath(stack_index, v8, move_succeeded, stack_index, a4);
+    if ( __PAIR64__(*(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + 147176)) == target_xy_pair )
     {
-      UnitStack_TryHide(a3, v9, a3, a4);
+      UnitStack_TryHide(stack_index, target_xy_pair, stack_index, a4);
       return 1;
     }
     else
@@ -2135,38 +2135,38 @@ signed int  Rules_HostUnitMoveAndHide(unsigned int a1, unsigned int a2, DWORD a3
 // 5202E4: using guessed type int gameData;
 
 //----- (00454990) --------------------------------------------------------
-signed int  Rules_HostUnitAttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
+signed int  Rules_HostUnitAttackBuilding(int army_index, int building_index, char a3, DWORD a4, double a5)
 {
-  Unit_AttackBuilding(a1, a2, a3, a4, a5);
+  Unit_AttackBuilding(army_index, building_index, a3, a4, a5);
   return 1;
 }
 
 //----- (004549A0) --------------------------------------------------------
-BOOL  UnitStack_HasNormalCombatUnitsByIndex(int a1)
+BOOL  UnitStack_HasNormalCombatUnitsByIndex(int stack_index)
 {
-  return UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1) != 0;
+  return UnitStack_HasNormalCombatUnits(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index) != 0;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004549E0) --------------------------------------------------------
-signed int  UnitStack_GetSquadCountByIndex(int a1)
+signed int  UnitStack_GetSquadCountByIndex(int stack_index)
 {
-  return Unit_GetSquadCount(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
+  return Unit_GetSquadCount(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00454A20) --------------------------------------------------------
-signed int  Rules_IsQueuedPathTargetBridgeCrossing(int a1)
+signed int  Rules_IsQueuedPathTargetBridgeCrossing(int stack_index)
 {
   signed int result; // eax
-  int v2; // ebx
+  int stack_table_base; // ebx
 
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490) )
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
     return 0;
-  v2 = gameData + UNIT_STACK_TABLE_OFFSET;
+  stack_table_base = gameData + UNIT_STACK_TABLE_OFFSET;
   result = Map_GetBridgeCrossingCostOrZero(
-             (unsigned __int8)*(_DWORD *)(v2 + UNIT_STACK_STRIDE * a1 + 4 * (*(_DWORD *)(v2 + UNIT_STACK_STRIDE * a1 + 316) - 1) + 320),
-             (unsigned __int8)BYTE1(*(_DWORD *)(v2 + UNIT_STACK_STRIDE * a1 + 4 * (*(_DWORD *)(v2 + UNIT_STACK_STRIDE * a1 + 316) - 1) + 320)));
+             (unsigned __int8)*(_DWORD *)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 4 * (*(_DWORD *)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 316) - 1) + 320),
+             (unsigned __int8)BYTE1(*(_DWORD *)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 4 * (*(_DWORD *)(stack_table_base + UNIT_STACK_STRIDE * stack_index + 316) - 1) + 320)));
   if ( result )
     return 1;
   return result;
@@ -2174,109 +2174,109 @@ signed int  Rules_IsQueuedPathTargetBridgeCrossing(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454AE0) --------------------------------------------------------
-signed int  Rules_BuildRoadOrStepTowardQueuedPath(int a1, DWORD a2, double a3)
+signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, double a3)
 {
-  int v3; // esi
-  int v4; // eax
-  int v5; // ebx
-  int v6; // eax
-  int v8; // ebx
-  signed int v9; // edi
+  int stack_offset; // esi
+  int stack_record; // eax
+  int path_length; // ebx
+  int path_base; // eax
+  int next_waypoint_xy; // ebx
+  signed int direction; // edi
   int v10; // ecx
   int v11; // eax
-  int v12; // edx
-  signed int v13; // eax
-  int v14; // edx
+  int step_direction; // edx
+  signed int move_result; // eax
+  int fallback_direction; // edx
 
-  v3 = UNIT_STACK_STRIDE * a1;
-  v4 = UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET;
-  v5 = *(_DWORD *)(v4 + 316);
-  v6 = v4 + 316;
-  if ( !v5 )
+  stack_offset = UNIT_STACK_STRIDE * stack_index;
+  stack_record = UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET;
+  path_length = *(_DWORD *)(stack_record + 316);
+  path_base = stack_record + 316;
+  if ( !path_length )
     return 1;
-  v8 = *(_DWORD *)(v6 + 4 * (v5 - 1) + 4);
-  v9 = Facing_DirectionFromDelta8(
-         (unsigned __int8)v8 - *(__int16 *)(gameData + v3 + UNIT_STACK_TABLE_OFFSET),
-         BYTE1(v8) - *(__int16 *)(gameData + v3 + 147176));
-  if ( Map_TileHasOwner(*(__int16 *)(v3 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(v3 + gameData + 147176))
+  next_waypoint_xy = *(_DWORD *)(path_base + 4 * (path_length - 1) + 4);
+  direction = Facing_DirectionFromDelta8(
+         (unsigned __int8)next_waypoint_xy - *(__int16 *)(gameData + stack_offset + UNIT_STACK_TABLE_OFFSET),
+         BYTE1(next_waypoint_xy) - *(__int16 *)(gameData + stack_offset + 147176));
+  if ( Map_TileHasOwner(*(__int16 *)(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(stack_offset + gameData + 147176))
     && !Rules_IsQueuedPathTargetBridgeCrossing(v10) )
   {
-    switch ( v9 )
+    switch ( direction )
     {
       case 1:
-        v13 = UnitStack_MoveOneTileInDirection(v10, 0, a3);
+        move_result = UnitStack_MoveOneTileInDirection(v10, 0, a3);
         goto LABEL_10;
       case 3:
-        v13 = UnitStack_MoveOneTileInDirection(v10, 4, a3);
+        move_result = UnitStack_MoveOneTileInDirection(v10, 4, a3);
 LABEL_10:
-        if ( v13 )
+        if ( move_result )
           goto LABEL_13;
-        v14 = 2;
+        fallback_direction = 2;
         break;
       case 5:
         if ( UnitStack_MoveOneTileInDirection(v10, 4, a3) )
           goto LABEL_13;
-        v14 = 6;
+        fallback_direction = 6;
         break;
       case 7:
         if ( UnitStack_MoveOneTileInDirection(v10, 0, a3) )
           goto LABEL_13;
-        v14 = 6;
+        fallback_direction = 6;
         break;
       default:
-        v14 = v9;
+        fallback_direction = direction;
         break;
     }
 LABEL_12:
-    UnitStack_MoveOneTileInDirection(v10, v14, a3);
+    UnitStack_MoveOneTileInDirection(v10, fallback_direction, a3);
   }
   else
   {
-    switch ( v9 )
+    switch ( direction )
     {
       case 1:
-        if ( !Road_Build(v10, 0, v9, a2, a3) )
+        if ( !Road_Build(v10, 0, direction, a2, a3) )
         {
           v11 = v10;
-          v12 = 0;
+          step_direction = 0;
           goto LABEL_8;
         }
         break;
       case 3:
-        if ( !Road_Build(v10, 4, v9, a2, a3) )
+        if ( !Road_Build(v10, 4, direction, a2, a3) )
         {
-          v12 = 4;
+          step_direction = 4;
           v11 = v10;
 LABEL_8:
-          if ( !UnitStack_MoveOneTileInDirection(v11, v12, a3) )
+          if ( !UnitStack_MoveOneTileInDirection(v11, step_direction, a3) )
           {
-            v13 = Road_Build(v10, 2, v9, a2, a3);
+            move_result = Road_Build(v10, 2, direction, a2, a3);
             goto LABEL_10;
           }
         }
         break;
       case 5:
-        if ( !Road_Build(v10, 4, v9, a2, a3)
+        if ( !Road_Build(v10, 4, direction, a2, a3)
           && !UnitStack_MoveOneTileInDirection(v10, 4, a3)
-          && !Road_Build(v10, 6, v9, a2, a3) )
+          && !Road_Build(v10, 6, direction, a2, a3) )
         {
-          v14 = 6;
+          fallback_direction = 6;
           goto LABEL_12;
         }
         break;
       case 7:
-        if ( !Road_Build(v10, 0, v9, a2, a3)
+        if ( !Road_Build(v10, 0, direction, a2, a3)
           && !UnitStack_MoveOneTileInDirection(v10, 0, a3)
-          && !Road_Build(v10, 6, v9, a2, a3) )
+          && !Road_Build(v10, 6, direction, a2, a3) )
         {
-          v14 = 6;
+          fallback_direction = 6;
           goto LABEL_12;
         }
         break;
       default:
-        if ( !Road_Build(v10, v9, v9, a2, a3) )
+        if ( !Road_Build(v10, direction, direction, a2, a3) )
         {
-          v14 = v9;
+          fallback_direction = direction;
           goto LABEL_12;
         }
         break;
@@ -2290,37 +2290,37 @@ LABEL_13:
 // 5202E4: using guessed type int gameData;
 
 //----- (00454D20) --------------------------------------------------------
-int  Rules_BuildTrapNearTile(DWORD a1, int a2, DWORD a3, double a4)
+int  Rules_BuildTrapNearTile(DWORD target_x, int target_y, DWORD stack_index, double a4)
 {
   int v5; // edx
   int v6; // ecx
   int result; // eax
-  char v8; // bl
+  char move_succeeded; // bl
   int v9; // edx
-  __int64 v10; // rax
-  __int64 v11; // rax
+  __int64 dx; // rax
+  __int64 dy; // rax
 
-  Debug_Log(a1, a3, a3, (int)aBuduj_pulapke2);
-  result = (int)Unit_MoveTrackNearTile(a3, v6, v6, v5, a3);
-  v8 = result;
+  Debug_Log(target_x, stack_index, stack_index, (int)aBuduj_pulapke2);
+  result = (int)Unit_MoveTrackNearTile(stack_index, v6, v6, v5, stack_index);
+  move_succeeded = result;
   if ( result )
   {
-    if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a3 + UNIT_STACK_PATH_OFFSET) )
-      *(_DWORD *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
+    if ( *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET) )
+      *(_DWORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
+    qmemcpy((void *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
-    UnitStack_ExecuteQueuedPath(a3, v9, v8, a3, a4);
-    v10 = (int)(*(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + UNIT_STACK_TABLE_OFFSET) - a1);
-    if ( (int)((HIDWORD(v10) ^ v10) - HIDWORD(v10)) >= 2 )
+    UnitStack_ExecuteQueuedPath(stack_index, v9, move_succeeded, stack_index, a4);
+    dx = (int)(*(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET) - target_x);
+    if ( (int)((HIDWORD(dx) ^ dx) - HIDWORD(dx)) >= 2 )
       return 0;
-    v11 = *(__int16 *)(UNIT_STACK_STRIDE * a3 + gameData + 147176) - a2;
-    if ( (int)((HIDWORD(v11) ^ v11) - HIDWORD(v11)) >= 2 )
+    dy = *(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + 147176) - target_y;
+    if ( (int)((HIDWORD(dy) ^ dy) - HIDWORD(dy)) >= 2 )
     {
       return 0;
     }
     else
     {
-      Trap_New(a1, a2, a1, a3, a4);
+      Trap_New(target_x, target_y, target_x, stack_index, a4);
       return 1;
     }
   }
@@ -2355,20 +2355,20 @@ int  UnitStack_CalcArmyFactStrength(int a1)
   return total_strength;
 }
 //----- (00454ED0) --------------------------------------------------------
-signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4, DWORD a5)
+signed int  Rules_EnsureArmyFactForStack(__int16 *army_stack, int army_id, double a3, char a4, DWORD a5)
 {
-  if ( (unsigned int)a1[3] > 0x28 && *(_DWORD *)((char *)a1 + 721) )
+  if ( (unsigned int)army_stack[3] > 0x28 && *(_DWORD *)((char *)army_stack + 721) )
   {
-    Rules_RetractArmyFact(a1, a2, (int)a1, a3);
+    Rules_RetractArmyFact(army_stack, army_id, (int)army_stack, a3);
     return 1;
   }
-  else if ( *(_DWORD *)((char *)a1 + 721) )
+  else if ( *(_DWORD *)((char *)army_stack + 721) )
   {
     return 0;
   }
   else
   {
-    Rules_CreateArmyFact((__int16 *)a1, *(unsigned __int16 *)(2 * a1[1] + gameData + TILE_ROW_STRIDE * *a1 + TILE_MAP_OFFSET), (int)a1, a4, a5);
+    Rules_CreateArmyFact((__int16 *)army_stack, *(unsigned __int16 *)(2 * army_stack[1] + gameData + TILE_ROW_STRIDE * *army_stack + TILE_MAP_OFFSET), (int)army_stack, a4, a5);
     return 1;
   }
 }
@@ -2377,8 +2377,8 @@ signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4
 
 //----- (00454F50) --------------------------------------------------------
 signed int  Rules_LinkArmyFact(
-        __int16 *a1,
-        int a2,
+        __int16 *stack,
+        int army_id,
         int a3,
         double a4,
         char a5,
@@ -2393,8 +2393,8 @@ signed int  Rules_LinkArmyFact(
   _DWORD y_value[6]; // [esp+30h] [ebp-1Ch] BYREF
 
   (void)a3;
-  stack_record = (int)(uintptr_t)a1;
-  result = Rules_EnsureArmyFactForStack(a1, a2, a4, a5, a6);
+  stack_record = (int)(uintptr_t)stack;
+  result = Rules_EnsureArmyFactForStack(stack, army_id, a4, a5, a6);
   if ( !result )
   {
     result = *(__int16 *)((uintptr_t)(unsigned int)stack_record + 6);
@@ -2412,7 +2412,7 @@ signed int  Rules_LinkArmyFact(
       }
       x_value[1] = 1;
       Rules_GetInstanceSlotValue(fact, (_BYTE *)aXxyy, stack_record, x_value);
-      result = *a1;
+      result = *stack;
       if ( *(_DWORD *)((uintptr_t)(unsigned int)x_value[2] + 16) != result )
       {
         x_value[2] = (int)(uintptr_t)Rules_AddIntegerValue(result);
@@ -2420,7 +2420,7 @@ signed int  Rules_LinkArmyFact(
       }
       y_value[1] = 1;
       Rules_GetInstanceSlotValue(fact, (_BYTE *)((char *)aXxyy + 4), stack_record, y_value);
-      result = a1[1];
+      result = stack[1];
       if ( *(_DWORD *)((uintptr_t)(unsigned int)y_value[2] + 16) != result )
       {
         y_value[2] = (int)(uintptr_t)Rules_AddIntegerValue(result);
@@ -2435,8 +2435,8 @@ signed int  Rules_LinkArmyFact(
 
 //----- (00455070) --------------------------------------------------------
 signed int  Rules_SyncArmyFactStrength(
-        __int16 *a1,
-        int a2,
+        __int16 *army_stack,
+        int army_id,
         int a3,
         char a4,
         DWORD a5,
@@ -2450,8 +2450,8 @@ signed int  Rules_SyncArmyFactStrength(
   _DWORD moc_value[6];
 
   (void)a3;
-  stack_record = (int)(uintptr_t)a1;
-  result = Rules_EnsureArmyFactForStack(a1, a2, a6, a4, a5);
+  stack_record = (int)(uintptr_t)army_stack;
+  result = Rules_EnsureArmyFactForStack(army_stack, army_id, a6, a4, a5);
   if ( !result )
   {
     result = *(__int16 *)((uintptr_t)(unsigned int)stack_record + 6);
@@ -2474,7 +2474,7 @@ signed int  Rules_SyncArmyFactStrength(
 }
 //----- (004550F0) --------------------------------------------------------
 signed int  Rules_SyncArmyFactOwner(
-        __int16 *a1,
+        __int16 *stack_record,
         char a2,
         DWORD a3,
         double a4)
@@ -2483,17 +2483,17 @@ signed int  Rules_SyncArmyFactOwner(
   int v5; // edx
   int v6; // edx
   int v7; // ecx
-  _DWORD v8[7]; // [esp+0h] [ebp-1Ch] BYREF
+  _DWORD owner_value[7]; // [esp+0h] [ebp-1Ch] BYREF
 
-  result = Rules_EnsureArmyFactForStack(a1, (int)a1, a4, a2, a3);
+  result = Rules_EnsureArmyFactForStack(stack_record, (int)stack_record, a4, a2, a3);
   if ( !result )
   {
     result = *(__int16 *)(v5 + 6);
     if ( result != -1 )
     {
-      v8[1] = 1;
-      v8[2] = Rules_AddIntegerValue(*(unsigned __int8 *)(v5 + 4));
-      return Rules_PutInstanceSlotValue(*(_DWORD *)(v6 + 721), aGracz, v7, v8, a4);
+      owner_value[1] = 1;
+      owner_value[2] = Rules_AddIntegerValue(*(unsigned __int8 *)(v5 + 4));
+      return Rules_PutInstanceSlotValue(*(_DWORD *)(v6 + 721), aGracz, v7, owner_value, a4);
     }
   }
   return result;
@@ -2503,25 +2503,25 @@ signed int  Rules_SyncArmyFactOwner(
 // 455135: variable 'v7' is possibly undefined
 
 //----- (00455150) --------------------------------------------------------
-signed int  Rules_SyncCastleFactOwner(int a1, int a2, double a3)
+signed int  Rules_SyncCastleFactOwner(int castle_record, int a2, double a3)
 {
   int v5 = 0; // ecx
   int castle_fact; // eax
   int castle_owner; // eax
   int building_table_delta; // edx
   int building_index; // edx
-  _DWORD v7[9]; // [esp-4h] [ebp-24h] BYREF
+  _DWORD owner_value[9]; // [esp-4h] [ebp-24h] BYREF
 
   (void)a2;
-  v7[7] = a2;
-  v7[1] = 1;
-  castle_owner = *(unsigned __int8 *)(a1 + 2);
-  v7[2] = (int)(uintptr_t)Rules_AddIntegerValue(castle_owner);
-  castle_fact = *(_DWORD *)(a1 + 463);
+  owner_value[7] = a2;
+  owner_value[1] = 1;
+  castle_owner = *(unsigned __int8 *)(castle_record + 2);
+  owner_value[2] = (int)(uintptr_t)Rules_AddIntegerValue(castle_owner);
+  castle_fact = *(_DWORD *)(castle_record + 463);
   if ( !castle_fact )
   {
     building_index = -1;
-    building_table_delta = a1 - (gameData + BUILDING_TABLE_OFFSET);
+    building_table_delta = castle_record - (gameData + BUILDING_TABLE_OFFSET);
     if ( building_table_delta >= 0 && building_table_delta % BUILDING_RECORD_SIZE == 0 )
     {
       building_index = building_table_delta / BUILDING_RECORD_SIZE;
@@ -2531,19 +2531,19 @@ signed int  Rules_SyncCastleFactOwner(int a1, int a2, double a3)
     Diagnostics_TraceWorldMapActionEvent(
       "rules_sync_castle_fact_missing",
       g_SelectedUnitIndex,
-      a1,
+      castle_record,
       building_index,
       castle_owner);
     if ( building_index >= 0 )
     {
-      Rules_AssertCastleFact((unsigned __int8 *)a1, building_index);
-      castle_fact = *(_DWORD *)(a1 + 463);
+      Rules_AssertCastleFact((unsigned __int8 *)castle_record, building_index);
+      castle_fact = *(_DWORD *)(castle_record + 463);
     }
   }
   Diagnostics_TraceWorldMapActionEvent(
     "rules_sync_castle_fact_owner",
     g_SelectedUnitIndex,
-    a1,
+    castle_record,
     castle_fact,
     castle_owner);
   if ( !castle_fact )
@@ -2551,90 +2551,90 @@ signed int  Rules_SyncCastleFactOwner(int a1, int a2, double a3)
     Lexer_ErrorRecover(1);
     return 0;
   }
-  return Rules_PutInstanceSlotValue(castle_fact, aGracz_0, v5, v7, a3);
+  return Rules_PutInstanceSlotValue(castle_fact, aGracz_0, v5, owner_value, a3);
 }
 
 //----- (004551A0) --------------------------------------------------------
-_DWORD * Rules_LogTrapFact(int a1, int a2)
+_DWORD * Rules_LogTrapFact(int tile_x, int tile_y)
 {
-  double v3; // st7
+  double formatted; // st7
   int v4; // ecx
-  char v6[200]; // [esp+0h] [ebp-C8h] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-C8h] BYREF
 
-  v3 = sprintf_(v6, "(pulapka %d %d)", a1, a2);
-  return Rules_Log(v6, v4, v3);
+  formatted = sprintf_(fact_text, "(pulapka %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, v4, formatted);
 }
 // 4551BC: variable 'v4' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004551D0) --------------------------------------------------------
-_DWORD * Rules_RetractTrapFact(int a1, int a2)
+_DWORD * Rules_RetractTrapFact(int tile_x, int tile_y)
 {
-  double v3; // st7
+  double formatted; // st7
   int v4; // ecx
-  char v6[200]; // [esp+0h] [ebp-C8h] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-C8h] BYREF
 
-  v3 = sprintf_(v6, "(kasuj pulapke %d %d)", a1, a2);
-  return Rules_Log(v6, v4, v3);
+  formatted = sprintf_(fact_text, "(kasuj pulapke %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, v4, formatted);
 }
 // 4551EC: variable 'v4' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455200) --------------------------------------------------------
-_DWORD * Rules_LogTempleFact(int a1, int a2)
+_DWORD * Rules_LogTempleFact(int tile_x, int tile_y)
 {
-  double v3; // st7
+  double formatted; // st7
   int v4; // ecx
-  char v6[200]; // [esp+0h] [ebp-C8h] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-C8h] BYREF
 
-  v3 = sprintf_(v6, "(swiatynia %d %d)", a1, a2);
-  return Rules_Log(v6, v4, v3);
+  formatted = sprintf_(fact_text, "(swiatynia %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, v4, formatted);
 }
 // 45521C: variable 'v4' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455230) --------------------------------------------------------
-_DWORD * Rules_LogTreasureFact(int a1, int a2)
+_DWORD * Rules_LogTreasureFact(int tile_x, int tile_y)
 {
-  double v3; // st7
+  double formatted; // st7
   int v4; // ecx
-  char v6[200]; // [esp+0h] [ebp-C8h] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-C8h] BYREF
 
-  v3 = sprintf_(v6, "(skarb %d %d)", a1, a2);
-  return Rules_Log(v6, v4, v3);
+  formatted = sprintf_(fact_text, "(skarb %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, v4, formatted);
 }
 // 45524C: variable 'v4' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455260) --------------------------------------------------------
-_DWORD * Rules_RetractTreasureFact(a1, a2)
-int a1;
-int a2;
+_DWORD * Rules_RetractTreasureFact(tile_x, tile_y)
+int tile_x;
+int tile_y;
 {
-  double v3; // st7
+  double formatted; // st7
   int v4; // ecx
-  char v6[200]; // [esp+0h] [ebp-C8h] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-C8h] BYREF
 
-  v3 = sprintf_(v6, "(kasuj skarb %d %d)", a1, a2);
-  return Rules_Log(v6, v4, v3);
+  formatted = sprintf_(fact_text, "(kasuj skarb %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, v4, formatted);
 }
 // 45527C: variable 'v4' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455290) --------------------------------------------------------
-_DWORD * Rules_RetractTempleFact(int a1, int a2, char a3, DWORD a4)
+_DWORD * Rules_RetractTempleFact(int tile_x, int tile_y, char a3, DWORD a4)
 {
   int v5; // edx
   int v6; // ecx
-  double v7; // st7
+  double formatted; // st7
   int v8; // ecx
-  char v10[200]; // [esp+0h] [ebp-CCh] BYREF
+  char fact_text[200]; // [esp+0h] [ebp-CCh] BYREF
   int v11; // [esp+C8h] [ebp-4h]
 
-  v11 = a2;
-  Debug_Log(a1, a3, a4, (int)aKasuj_swiatyni);
-  v7 = sprintf_(v10, "(kasuj swiatynie %d %d)", v6, v5);
-  return Rules_Log(v10, v8, v7);
+  v11 = tile_y;
+  Debug_Log(tile_x, a3, a4, (int)aKasuj_swiatyni);
+  formatted = sprintf_(fact_text, "(kasuj swiatynie %d %d)", v6, v5);
+  return Rules_Log(fact_text, v8, formatted);
 }
 // 4552B4: variable 'v6' is possibly undefined
 // 4552B4: variable 'v5' is possibly undefined
@@ -2642,82 +2642,82 @@ _DWORD * Rules_RetractTempleFact(int a1, int a2, char a3, DWORD a4)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004552D0) --------------------------------------------------------
-int  Rules_AssertCastleFact(unsigned __int8 *a1, int a2)
+int  Rules_AssertCastleFact(unsigned __int8 *castle_record, int building_index)
 {
-  char *v4; // eax
-  char *v5; // eax
-  char *v6; // eax
-  char *v7; // eax
-  const char *v8; // eax
-  double v9; // st7
+  char *barracks_text; // eax
+  char *smithy_text; // eax
+  char *workshop_text; // eax
+  char *school_text; // eax
+  const char *hospital_text; // eax
+  double formatted; // st7
   int v10 = 0; // ecx
-  _DWORD *v11; // eax
-  const char *v16; // [esp-18h] [ebp-400h]
-  const char *v17; // [esp-14h] [ebp-3FCh]
-  const char *v18; // [esp-10h] [ebp-3F8h]
-  const char *v19; // [esp-Ch] [ebp-3F4h]
-  int v20; // [esp-8h] [ebp-3F0h]
-  int v21; // [esp-4h] [ebp-3ECh]
-  char v22[1000]; // [esp+0h] [ebp-3E8h] BYREF
+  _DWORD *fact; // eax
+  const char *school_arg; // [esp-18h] [ebp-400h]
+  const char *workshop_arg; // [esp-14h] [ebp-3FCh]
+  const char *smithy_arg; // [esp-10h] [ebp-3F8h]
+  const char *barracks_arg; // [esp-Ch] [ebp-3F4h]
+  int castle_x; // [esp-8h] [ebp-3F0h]
+  int castle_y; // [esp-4h] [ebp-3ECh]
+  char fact_text[1000]; // [esp+0h] [ebp-3E8h] BYREF
 
-  v21 = a1[1];
-  v20 = *a1;
-  if ( (a1[416] & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
-    v4 = aTak;
+  castle_y = castle_record[1];
+  castle_x = *castle_record;
+  if ( (castle_record[416] & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+    barracks_text = aTak;
   else
-    v4 = aNie;
-  v19 = v4;
-  if ( (a1[416] & BUILDING_ADDON_FLAG_SMITHS) != 0 )
-    v5 = aTak_0;
+    barracks_text = aNie;
+  barracks_arg = barracks_text;
+  if ( (castle_record[416] & BUILDING_ADDON_FLAG_SMITHS) != 0 )
+    smithy_text = aTak_0;
   else
-    v5 = aNie_0;
-  v18 = v5;
-  if ( (a1[416] & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
-    v6 = aTak_1;
+    smithy_text = aNie_0;
+  smithy_arg = smithy_text;
+  if ( (castle_record[416] & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
+    workshop_text = aTak_1;
   else
-    v6 = aNie_1;
-  v17 = v6;
-  if ( (a1[416] & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
-    v7 = aTak_2;
+    workshop_text = aNie_1;
+  workshop_arg = workshop_text;
+  if ( (castle_record[416] & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
+    school_text = aTak_2;
   else
-    v7 = aNie_2;
-  v16 = v7;
-  if ( (a1[416] & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
-    v8 = aTak_3;
+    school_text = aNie_2;
+  school_arg = school_text;
+  if ( (castle_record[416] & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
+    hospital_text = aTak_3;
   else
-    v8 = aNie_3;
-  v9 = sprintf_(
-         v22,
+    hospital_text = aNie_3;
+  formatted = sprintf_(
+         fact_text,
          "( ZAMEK%d of zamek (id %d)(gracz %d)(szpital %s)(szkola %s)(warsztat %s)(kuznia %s)(koszary %s)(x %d)(y %d)(moc 0))",
-         a2,
-         a2,
-         a1[2],
-         v8,
-         v16,
-         v17,
-         v18,
-         v19,
-         v20,
-         v21);
-  v11 = Rules_AssertFact(v22, v10, v9);
-  *(_DWORD *)(a1 + 463) = (int)(uintptr_t)v11;
-  return Building_OnGarrisonChange(a2, (int)(uintptr_t)a1, 0.0);
+         building_index,
+         building_index,
+         castle_record[2],
+         hospital_text,
+         school_arg,
+         workshop_arg,
+         smithy_arg,
+         barracks_arg,
+         castle_x,
+         castle_y);
+  fact = Rules_AssertFact(fact_text, v10, formatted);
+  *(_DWORD *)(castle_record + 463) = (int)(uintptr_t)fact;
+  return Building_OnGarrisonChange(building_index, (int)(uintptr_t)castle_record, 0.0);
 }
 // 455361: variable 'v10' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004553A0) --------------------------------------------------------
-_DWORD * Rules_RetractCastleFact(unsigned __int8 *a1, double a2)
+_DWORD * Rules_RetractCastleFact(unsigned __int8 *castle_record, double a2)
 {
-  unsigned __int8 *v2; // edx
-  int v3; // ecx
+  unsigned __int8 *castle_ptr; // edx
+  int castle_x; // ecx
 
-  v2 = a1;
-  if ( *(_DWORD *)(a1 + 463) )
-    Rules_RetractFactById(*(_DWORD *)(a1 + 463), a2);
-  v3 = *v2;
-  *(_DWORD *)(v2 + 463) = 0;
-  return Rules_LogCastleDestroyedFact(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  castle_ptr = castle_record;
+  if ( *(_DWORD *)(castle_record + 463) )
+    Rules_RetractFactById(*(_DWORD *)(castle_record + 463), a2);
+  castle_x = *castle_ptr;
+  *(_DWORD *)(castle_ptr + 463) = 0;
+  return Rules_LogCastleDestroyedFact(castle_ptr[2], *(unsigned __int16 *)(TILE_INDEX(castle_x, castle_ptr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
 }
 // 4553B0: variable 'v2' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -2730,30 +2730,30 @@ int Game_GetTurnNumber()
 // 5202E4: using guessed type int gameData;
 
 //----- (00455430) --------------------------------------------------------
-_DWORD * Rules_OnCastleUpdate(int a1, char a2, DWORD a3, double a4)
+_DWORD * Rules_OnCastleUpdate(int building_index, char a2, DWORD a3, double a4)
 {
-  return Building_Destroy(UNIT_RECORD(a1), a2, a3, a4);
+  return Building_Destroy(UNIT_RECORD(building_index), a2, a3, a4);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455450) --------------------------------------------------------
-BOOL  Building_TryStartUpgradeByIndex(int a1)
+BOOL  Building_TryStartUpgradeByIndex(int building_index)
 {
-  return Building_TryStartUpgrade((unsigned __int8 *)(UNIT_RECORD(a1)));
+  return Building_TryStartUpgrade((unsigned __int8 *)(UNIT_RECORD(building_index)));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455470) --------------------------------------------------------
-int  Building_GetTaxRateByIndex(int a1)
+int  Building_GetTaxRateByIndex(int building_index)
 {
-  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510110) & 0x3F;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * building_index + 510110) & 0x3F;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455490) --------------------------------------------------------
-signed int  Building_BuildSchoolByIndex(int a1, char a2, DWORD a3)
+signed int  Building_BuildSchoolByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_BuildSchool((char *)(UNIT_RECORD(a1)), a2, a3);
+  return Building_BuildSchool((char *)(UNIT_RECORD(building_index)), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2765,30 +2765,30 @@ signed int  Building_BuildSmithsByIndex(char a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004554D0) --------------------------------------------------------
-int  Building_GetWallStrengthByIndex(int a1)
+int  Building_GetWallStrengthByIndex(int building_index)
 {
-  return *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a1 + 510095);
+  return *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 510095);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004554F0) --------------------------------------------------------
-int  Building_GetMoneyByIndex(int a1)
+int  Building_GetMoneyByIndex(int building_index)
 {
-  return *(_DWORD *)(gameData + BUILDING_RECORD_SIZE * a1 + 510112);
+  return *(_DWORD *)(gameData + BUILDING_RECORD_SIZE * building_index + 510112);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455510) --------------------------------------------------------
-int  Building_GetCastleStrengthByIndex(int a1)
+int  Building_GetCastleStrengthByIndex(int building_index)
 {
-  return Building_GetTotalValue(UNIT_RECORD(a1));
+  return Building_GetTotalValue(UNIT_RECORD(building_index));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455530) --------------------------------------------------------
-signed int  Building_BuildBarracksByIndex(int a1, char a2, DWORD a3)
+signed int  Building_BuildBarracksByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_BuildBarracks(a1, a2, a3);
+  return Building_BuildBarracks(building_index, a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2800,16 +2800,16 @@ signed int  Building_BuildHospitalByIndex(char a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455580) --------------------------------------------------------
-int  Building_GetTechLevelByIndex(int a1)
+int  Building_GetTechLevelByIndex(int building_index)
 {
-  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510118) & 7;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * building_index + 510118) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004555A0) --------------------------------------------------------
-int  Building_GetTypeByIndex(int a1)
+int  Building_GetTypeByIndex(int building_index)
 {
-  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 509678);
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * building_index + 509678);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -2821,97 +2821,97 @@ signed int  Building_BuildWorkshopByIndex(char a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004555E0) --------------------------------------------------------
-int  Building_GetSatisfactionByIndex(int a1)
+int  Building_GetSatisfactionByIndex(int building_index)
 {
-  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 510108);
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * building_index + 510108);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455600) --------------------------------------------------------
-int  Building_GetPeasantCountByIndex(int a1)
+int  Building_GetPeasantCountByIndex(int building_index)
 {
   int result; // eax
 
-  LOWORD(result) = *(_WORD *)(gameData + BUILDING_RECORD_SIZE * a1 + 510104);
+  LOWORD(result) = *(_WORD *)(gameData + BUILDING_RECORD_SIZE * building_index + 510104);
   BYTE1(result) &= 0xFu;
   return (unsigned __int16)result;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455620) --------------------------------------------------------
-BOOL  Building_HasProductionByIndex(int a1)
+BOOL  Building_HasProductionByIndex(int building_index)
 {
-  return *(char *)(gameData + BUILDING_RECORD_SIZE * a1 + 510088) != -1;
+  return *(char *)(gameData + BUILDING_RECORD_SIZE * building_index + 510088) != -1;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455650) --------------------------------------------------------
-BOOL  Building_CanStartUpgradeByIndex(int a1)
+BOOL  Building_CanStartUpgradeByIndex(int building_index)
 {
-  return Building_CanStartUpgrade((unsigned __int8 *)(UNIT_RECORD(a1)));
+  return Building_CanStartUpgrade((unsigned __int8 *)(UNIT_RECORD(building_index)));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455670) --------------------------------------------------------
-int  Building_GetGarrisonCountByIndex(int a1)
+int  Building_GetGarrisonCountByIndex(int building_index)
 {
-  return Building_CountGarrison(UNIT_RECORD(a1));
+  return Building_CountGarrison(UNIT_RECORD(building_index));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455690) --------------------------------------------------------
-BOOL  Building_IsGarrisonFullByIndex(int a1)
+BOOL  Building_IsGarrisonFullByIndex(int building_index)
 {
-  return Building_CountGarrison(UNIT_RECORD(a1)) == 12;
+  return Building_CountGarrison(UNIT_RECORD(building_index)) == 12;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556C0) --------------------------------------------------------
-__int16  Building_RepairUnitByIndex(int a1, int a2, DWORD a3)
+__int16  Building_RepairUnitByIndex(int building_index, int slot_index, DWORD a3)
 {
-  return Building_RepairUnit(UNIT_RECORD(a1), a2, a3);
+  return Building_RepairUnit(UNIT_RECORD(building_index), slot_index, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556E0) --------------------------------------------------------
-_BYTE * Building_TrainUnitByIndex(int a1, char a2, DWORD a3)
+_BYTE * Building_TrainUnitByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_TrainUnit(UNIT_RECORD(a1), a2, a3);
+  return Building_TrainUnit(UNIT_RECORD(building_index), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455700) --------------------------------------------------------
-int  Building_SetUnitProductionByIndex(int a1, char a2, DWORD a3)
+int  Building_SetUnitProductionByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_SetUnitProduction(UNIT_RECORD(a1), a2, a3);
+  return Building_SetUnitProduction(UNIT_RECORD(building_index), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
-int  Building_RemoveUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
+int  Building_RemoveUnitLicenceByIndex(int building_index, unit_type licence_type, DWORD a3)
 {
-  return Building_RemoveUnitLicence(UNIT_RECORD(a1), a2, a3);
+  return Building_RemoveUnitLicence(UNIT_RECORD(building_index), licence_type, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455740) --------------------------------------------------------
-void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
+void  Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delta)
 {
-  double v3; // st7
-  double v4; // st7
+  double new_rate; // st7
+  double applied_rate; // st7
   int v5; // edx
-  char v6; // ah
-  float v7; // [esp+0h] [ebp-10h]
+  char tax_byte_upper; // ah
+  float new_rate_float; // [esp+0h] [ebp-10h]
 
-  v3 = (double)(*(_BYTE *)(BUILDING_RECORD_SIZE * a1 + gameData + 510110) & 0x3F) + a3;
-  v7 = v3;
-  if ( v3 <= g_Building_MaxTaxRate )
+  new_rate = (double)(*(_BYTE *)(BUILDING_RECORD_SIZE * building_index + gameData + 510110) & 0x3F) + tax_delta;
+  new_rate_float = new_rate;
+  if ( new_rate <= g_Building_MaxTaxRate )
   {
-    v4 = v7;
-    _CHP(ebx0, LODWORD(v7));
-    v6 = *(_BYTE *)(v5 + 510110) & 0xC0;
-    *(_BYTE *)(v5 + 510110) = v6;
-    *(_BYTE *)(v5 + 510110) = (int)v4 & 0x3F | v6;
+    applied_rate = new_rate_float;
+    _CHP(ebx0, LODWORD(new_rate_float));
+    tax_byte_upper = *(_BYTE *)(v5 + 510110) & 0xC0;
+    *(_BYTE *)(v5 + 510110) = tax_byte_upper;
+    *(_BYTE *)(v5 + 510110) = (int)applied_rate & 0x3F | tax_byte_upper;
   }
 }
 // 455791: variable 'v5' is possibly undefined
@@ -2919,41 +2919,41 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004557C0) --------------------------------------------------------
-signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2)
+signed int  Building_HasUnitLicenceByIndex(int building_index, unit_type licence_type)
 {
-  return Building_HasUnitLicence(UNIT_RECORD(a1), a2);
+  return Building_HasUnitLicence(UNIT_RECORD(building_index), licence_type);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004557E0) --------------------------------------------------------
-BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
+BOOL  Building_BuyUnitLicenceByIndex(int building_index, unit_type licence_type, DWORD a3)
 {
-  return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + BUILDING_TABLE_OFFSET, a3);
+  return Building_BuyUnitLicence(UNIT_RECORD(building_index), licence_type, gameData + BUILDING_TABLE_OFFSET, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455800) --------------------------------------------------------
-BOOL  Building_CanBuyUnitLicenceByIndex(int a1, unit_type a2)
+BOOL  Building_CanBuyUnitLicenceByIndex(int building_index, unit_type licence_type)
 {
-  return Building_IsUnitLicenceEligible((char *)(UNIT_RECORD(a1)), a2);
+  return Building_IsUnitLicenceEligible((char *)(UNIT_RECORD(building_index)), licence_type);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455830) --------------------------------------------------------
-BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4)
+BOOL  Rules_BuildCastle(int building_type, DWORD a2, double a3, char *castle_name)
 {
-  return Building_New(a1, a2, a3, a4, 0);
+  return Building_New(building_type, a2, a3, castle_name, 0);
 }
 
 //----- (00455850) --------------------------------------------------------
-signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2)
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int building_index, unit_type licence_type)
 {
   signed int result; // eax
-  int v4; // ebx
+  int building_offset; // ebx
 
   result = 0;
-  v4 = BUILDING_RECORD_SIZE * a1;
-  while ( *(char *)(v4 + gameData + result + 510076) != a2 )
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  while ( *(char *)(building_offset + gameData + result + 510076) != licence_type )
   {
     if ( ++result >= 12 )
       return 0;
@@ -2963,18 +2963,18 @@ signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455890) --------------------------------------------------------
-signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
+signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int building_index)
 {
   signed int result; // eax
-  int v3; // ecx
-  int v4; // edx
+  int building_offset; // ecx
+  int licence_unit_type; // edx
 
   result = 0;
-  v3 = BUILDING_RECORD_SIZE * a1;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
   while ( 1 )
   {
-    v4 = *(char *)(v3 + gameData + result + 510076);
-    if ( v4 != -1 && v4 != UNIT_TYPE_PEASANT && v4 != UNIT_TYPE_BUILDER )
+    licence_unit_type = *(char *)(building_offset + gameData + result + 510076);
+    if ( licence_unit_type != -1 && licence_unit_type != UNIT_TYPE_PEASANT && licence_unit_type != UNIT_TYPE_BUILDER )
       break;
     if ( ++result >= 12 )
       return 0;
@@ -2984,75 +2984,75 @@ signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (004558D0) --------------------------------------------------------
-signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3)
+signed int  Building_UnitsLeaveReadyGarrisonSlots(int building_index, int a2, double a3)
 {
   int i; // eax
-  int v5; // eax
-  int v6; // ecx
-  int v7; // edx
-  int v8; // ebx
-  int v9; // esi
+  int slot_index; // eax
+  int slot_offset; // ecx
+  int ready_count; // edx
+  int building_record; // ebx
+  int garrison_slot; // esi
   int v11; // ecx
-  int v13[10]; // [esp+4h] [ebp-44h] BYREF
+  int leave_slot_indices[10]; // [esp+4h] [ebp-44h] BYREF
   int v14; // [esp+2Ch] [ebp-1Ch]
-  int v15; // [esp+30h] [ebp-18h]
+  int building_offset; // [esp+30h] [ebp-18h]
   int v16; // [esp+40h] [ebp-8h]
 
   v16 = a2;
-  v14 = a1;
-  for ( i = 0; i != 10; v13[i - 1] = -1 )
+  v14 = building_index;
+  for ( i = 0; i != 10; leave_slot_indices[i - 1] = -1 )
     ++i;
-  v5 = 0;
-  v15 = BUILDING_RECORD_SIZE * v14;
-  v6 = 0;
-  v7 = 0;
+  slot_index = 0;
+  building_offset = BUILDING_RECORD_SIZE * v14;
+  slot_offset = 0;
+  ready_count = 0;
   do
   {
-    v8 = v15 + gameData;
-    v9 = v15 + gameData + v6;
-    if ( *(__int16 *)(v9 + 509692) != -1
-      && *(_BYTE *)(v9 + 509701) == 100
-      && !((unsigned __int8)(4 * *(_BYTE *)(v8 + v5 + 510064)) >> 5)
-      && (*(_BYTE *)(v8 + v5 + 510064) & 7) == 0 )
+    building_record = building_offset + gameData;
+    garrison_slot = building_offset + gameData + slot_offset;
+    if ( *(__int16 *)(garrison_slot + 509692) != -1
+      && *(_BYTE *)(garrison_slot + 509701) == 100
+      && !((unsigned __int8)(4 * *(_BYTE *)(building_record + slot_index + 510064)) >> 5)
+      && (*(_BYTE *)(building_record + slot_index + 510064) & 7) == 0 )
     {
-      v13[v7++] = v5;
+      leave_slot_indices[ready_count++] = slot_index;
     }
-    ++v5;
-    v6 += 31;
+    ++slot_index;
+    slot_offset += 31;
   }
-  while ( v5 < 10 && v7 < 5 );
-  if ( v13[0] == -1 )
+  while ( slot_index < 10 && ready_count < 5 );
+  if ( leave_slot_indices[0] == -1 )
     return 0;
   if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(UNIT_RECORD(v14))) )
-    return Building_UnitsLeave((unsigned __int8 *)(v11 + gameData + BUILDING_TABLE_OFFSET), v13, a3);
+    return Building_UnitsLeave((unsigned __int8 *)(v11 + gameData + BUILDING_TABLE_OFFSET), leave_slot_indices, a3);
   return -1;
 }
 // 4559BC: variable 'v11' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (004559D0) --------------------------------------------------------
-signed int  Building_HasTrainableIdleGarrisonUnit(int a1)
+signed int  Building_HasTrainableIdleGarrisonUnit(int building_index)
 {
-  int v2; // edx
-  int v3; // eax
-  int v4; // edi
-  int v5; // esi
+  int slot_offset; // edx
+  int slot_index; // eax
+  int building_offset; // edi
+  int garrison_slot; // esi
 
-  v2 = 0;
-  v3 = 0;
-  v4 = BUILDING_RECORD_SIZE * a1;
+  slot_offset = 0;
+  slot_index = 0;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
   while ( 1 )
   {
-    v5 = v4 + gameData + v2;
-    if ( *(__int16 *)(v5 + 509692) != -1
-      && (*(_BYTE *)(v5 + 509704) & 3u) < 2
-      && (*(_BYTE *)(v4 + gameData + v3 + 510064) & 7) == 0 )
+    garrison_slot = building_offset + gameData + slot_offset;
+    if ( *(__int16 *)(garrison_slot + 509692) != -1
+      && (*(_BYTE *)(garrison_slot + 509704) & 3u) < 2
+      && (*(_BYTE *)(building_offset + gameData + slot_index + 510064) & 7) == 0 )
     {
       break;
     }
-    ++v3;
-    v2 += 31;
-    if ( v3 >= 12 )
+    ++slot_index;
+    slot_offset += 31;
+    if ( slot_index >= 12 )
       return 0;
   }
   return 1;
@@ -3060,28 +3060,28 @@ signed int  Building_HasTrainableIdleGarrisonUnit(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455A50) --------------------------------------------------------
-signed int  Building_HasRepairableIdleGarrisonUnit(int a1)
+signed int  Building_HasRepairableIdleGarrisonUnit(int building_index)
 {
-  int v2; // edx
-  int v3; // eax
-  int v4; // edi
-  int v5; // ebx
+  int slot_offset; // edx
+  int slot_index; // eax
+  int building_offset; // edi
+  int garrison_slot; // ebx
 
-  v2 = 0;
-  v3 = 0;
-  v4 = BUILDING_RECORD_SIZE * a1;
+  slot_offset = 0;
+  slot_index = 0;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
   while ( 1 )
   {
-    v5 = v4 + gameData + v2;
-    if ( *(__int16 *)(v5 + 509692) != -1
-      && *(char *)(v5 + 509701) < 50
-      && !((unsigned __int8)(4 * *(_BYTE *)(v4 + gameData + v3 + 510064)) >> 5) )
+    garrison_slot = building_offset + gameData + slot_offset;
+    if ( *(__int16 *)(garrison_slot + 509692) != -1
+      && *(char *)(garrison_slot + 509701) < 50
+      && !((unsigned __int8)(4 * *(_BYTE *)(building_offset + gameData + slot_index + 510064)) >> 5) )
     {
       break;
     }
-    ++v3;
-    v2 += 31;
-    if ( v3 >= 12 )
+    ++slot_index;
+    slot_offset += 31;
+    if ( slot_index >= 12 )
       return 0;
   }
   return 1;
@@ -3089,245 +3089,245 @@ signed int  Building_HasRepairableIdleGarrisonUnit(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455AD0) --------------------------------------------------------
-int  Building_StartTrainingIdleGarrisonUnits(int a1)
+int  Building_StartTrainingIdleGarrisonUnits(int building_index)
 {
-  int v1; // ecx
-  int v2; // ebx
-  DWORD v3; // ebp
-  DWORD v4; // edi
+  int slot_index; // ecx
+  int slot_offset; // ebx
+  DWORD building_offset; // ebp
+  DWORD building_record; // edi
   int result; // eax
 
-  v1 = 0;
-  v2 = 0;
-  v3 = BUILDING_RECORD_SIZE * a1;
+  slot_index = 0;
+  slot_offset = 0;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
   do
   {
-    v4 = gameData + v3;
-    result = v2 + gameData + v3;
+    building_record = gameData + building_offset;
+    result = slot_offset + gameData + building_offset;
     if ( *(__int16 *)(result + 509692) != -1 )
     {
       result = *(_BYTE *)(result + 509704) & 3;
       if ( result < 2 )
       {
-        result = v1 + v4;
-        if ( (*(_BYTE *)(v1 + v4 + 510064) & 7) == 0 )
+        result = slot_index + building_record;
+        if ( (*(_BYTE *)(slot_index + building_record + 510064) & 7) == 0 )
         {
           result = (unsigned __int8)(4 * *(_BYTE *)(result + 510064)) >> 5;
           if ( !result )
-            result = (int)Building_TrainUnit(v3 + gameData + BUILDING_TABLE_OFFSET, v2, v3);
+            result = (int)Building_TrainUnit(building_offset + gameData + BUILDING_TABLE_OFFSET, slot_offset, building_offset);
         }
       }
     }
-    ++v1;
-    v2 += 31;
+    ++slot_index;
+    slot_offset += 31;
   }
-  while ( v1 < 12 );
+  while ( slot_index < 12 );
   return result;
 }
 // 455B40: variable 'v1' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00455B50) --------------------------------------------------------
-__int16  Building_StartRepairIdleGarrisonUnits(int a1)
+__int16  Building_StartRepairIdleGarrisonUnits(int building_index)
 {
-  int v1; // ecx
-  int v2; // ebx
-  int v3; // edi
+  int slot_index; // ecx
+  int slot_offset; // ebx
+  int building_offset; // edi
   __int16 result; // ax
-  int v5; // edx
-  DWORD v6; // ebp
-  int v7; // esi
+  int garrison_slot; // edx
+  DWORD slot_unit_type; // ebp
+  int slot_state_ptr; // esi
 
-  v1 = 0;
-  v2 = 0;
-  v3 = BUILDING_RECORD_SIZE * a1;
+  slot_index = 0;
+  slot_offset = 0;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
   do
   {
     result = gameData;
-    v5 = v2 + v3 + gameData;
-    v6 = *(__int16 *)(v5 + 509692);
-    if ( v6 != -1 && *(char *)(v5 + 509701) <= 90 )
+    garrison_slot = slot_offset + building_offset + gameData;
+    slot_unit_type = *(__int16 *)(garrison_slot + 509692);
+    if ( slot_unit_type != -1 && *(char *)(garrison_slot + 509701) <= 90 )
     {
-      v7 = v1 + v3 + gameData;
-      if ( (*(_BYTE *)(v7 + 510064) & 7) == 0 && !((unsigned __int8)(4 * *(_BYTE *)(v7 + 510064)) >> 5) )
-        result = Building_RepairUnit(v3 + gameData + BUILDING_TABLE_OFFSET, v1, v6);
+      slot_state_ptr = slot_index + building_offset + gameData;
+      if ( (*(_BYTE *)(slot_state_ptr + 510064) & 7) == 0 && !((unsigned __int8)(4 * *(_BYTE *)(slot_state_ptr + 510064)) >> 5) )
+        result = Building_RepairUnit(building_offset + gameData + BUILDING_TABLE_OFFSET, slot_index, slot_unit_type);
     }
-    ++v1;
-    v2 += 31;
+    ++slot_index;
+    slot_offset += 31;
   }
-  while ( v1 < 12 );
+  while ( slot_index < 12 );
   return result;
 }
 // 455BB8: variable 'v1' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00455BD0) --------------------------------------------------------
-signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a4)
+signed int  Building_UnitsLeaveByUnitType(int building_index, unit_type leave_type, int a3, double a4)
 {
   int i; // eax
-  int v7; // edx
-  int v8; // eax
-  int v10; // edi
-  int v12[14]; // [esp+4h] [ebp-38h] BYREF
+  int slot_index; // edx
+  int slot_offset; // eax
+  int building_offset; // edi
+  int leave_slot_indices[14]; // [esp+4h] [ebp-38h] BYREF
 
-  v12[12] = a3;
-  for ( i = 0; i != 10; v12[i - 1] = -1 )
+  leave_slot_indices[12] = a3;
+  for ( i = 0; i != 10; leave_slot_indices[i - 1] = -1 )
     ++i;
-  v7 = 0;
-  v8 = 0;
-  while ( *(__int16 *)(BUILDING_RECORD_SIZE * a1 + gameData + v8 + 509692) != a2 )
+  slot_index = 0;
+  slot_offset = 0;
+  while ( *(__int16 *)(BUILDING_RECORD_SIZE * building_index + gameData + slot_offset + 509692) != leave_type )
   {
-    v8 += 31;
-    ++v7;
-    if ( v8 >= 310 )
+    slot_offset += 31;
+    ++slot_index;
+    if ( slot_offset >= 310 )
     {
-      if ( v12[0] == -1 )
+      if ( leave_slot_indices[0] == -1 )
         return 0;
       goto LABEL_10;
     }
   }
-  v12[0] = v7;
-  if ( v7 == -1 )
+  leave_slot_indices[0] = slot_index;
+  if ( slot_index == -1 )
     return 0;
 LABEL_10:
-  v10 = BUILDING_RECORD_SIZE * a1;
-  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(v10 + gameData + BUILDING_TABLE_OFFSET)) )
-    return Building_UnitsLeave((unsigned __int8 *)(v10 + gameData + BUILDING_TABLE_OFFSET), v12, a4);
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(building_offset + gameData + BUILDING_TABLE_OFFSET)) )
+    return Building_UnitsLeave((unsigned __int8 *)(building_offset + gameData + BUILDING_TABLE_OFFSET), leave_slot_indices, a4);
   else
     return -1;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455C90) --------------------------------------------------------
-_DWORD * Rules_LogCastleSiteFact(int a1, int a2)
+_DWORD * Rules_LogCastleSiteFact(int tile_x, int tile_y)
 {
-  char v6[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v6, "(zamek_place %d %d)", a1, a2);
-  return Rules_Log(v6, 0, 0.0);
+  sprintf_(fact_text, "(zamek_place %d %d)", tile_x, tile_y);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455CC0) --------------------------------------------------------
 _DWORD * Rules_LogBuildingTransferFact(int a1, int a2, int a3)
 {
-  char v7[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v7, "(budowanie transfer 0 0 %d %d %d)", a1, a2, a3);
-  return Rules_Log(v7, 0, 0.0);
+  sprintf_(fact_text, "(budowanie transfer 0 0 %d %d %d)", a1, a2, a3);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455CF0) --------------------------------------------------------
 _DWORD * Rules_LogNewCastleFact(int a1, int a2)
 {
-  char v6[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v6, "(powstal-nowy-zamek %d %d)", a1, a2);
-  return Rules_Log(v6, 0, 0.0);
+  sprintf_(fact_text, "(powstal-nowy-zamek %d %d)", a1, a2);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455D20) --------------------------------------------------------
-_DWORD * Rules_LogCastleDestroyedFact(int a1, int a2)
+_DWORD * Rules_LogCastleDestroyedFact(int owner_index, int castle_id)
 {
-  char v6[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v6, "(zginal-zamek %d %d)", a1, a2);
-  return Rules_Log(v6, 0, 0.0);
+  sprintf_(fact_text, "(zginal-zamek %d %d)", owner_index, castle_id);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455D50) --------------------------------------------------------
-_DWORD * Rules_LogCastleSchemeFact(int a1, int a2)
+_DWORD * Rules_LogCastleSchemeFact(int a1, int castle_id)
 {
   unsigned int scheme_index; // eax
-  char v9[52]; // [esp+0h] [ebp-3Ch] BYREF
+  char fact_buffer[52]; // [esp+0h] [ebp-3Ch] BYREF
 
   scheme_index = Rng_RandRange(1, 3);
-  sprintf_(v9, "(schemat %d %d %d)", a1, a2, scheme_index);
-  return Rules_Log(v9, 0, 0.0);
+  sprintf_(fact_buffer, "(schemat %d %d %d)", a1, castle_id, scheme_index);
+  return Rules_Log(fact_buffer, 0, 0.0);
 }
 
 //----- (00455D90) --------------------------------------------------------
 _DWORD * Rules_LogBuildingCapturedFact(int a1, int a2, int a3)
 {
-  char v7[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v7, "(zdobyty %d %d %d)", a1, a2, a3);
-  return Rules_Log(v7, 0, 0.0);
+  sprintf_(fact_text, "(zdobyty %d %d %d)", a1, a2, a3);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455DC0) --------------------------------------------------------
-_DWORD * Rules_LogCastleUnderConstructionFact(int a1)
+_DWORD * Rules_LogCastleUnderConstructionFact(int castle_id)
 {
-  char v5[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v5, "(zamek w budowie %d)", a1);
-  return Rules_Log(v5, 0, 0.0);
+  sprintf_(fact_text, "(zamek w budowie %d)", castle_id);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455DF0) --------------------------------------------------------
-_DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2)
+_DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int castle_id)
 {
-  char v7[52]; // [esp+0h] [ebp-38h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-38h] BYREF
 
-  sprintf_(v7, "(zbudowano zamek %d)", a2);
-  Rules_Log(v7, 0, 0.0);
-  return Rules_LogCastleSchemeFact(a1, a2);
+  sprintf_(fact_text, "(zbudowano zamek %d)", castle_id);
+  Rules_Log(fact_text, 0, 0.0);
+  return Rules_LogCastleSchemeFact(a1, castle_id);
 }
 
 //----- (00455E20) --------------------------------------------------------
-_DWORD * Rules_LogAssignedCastleFact(int a1, int a2)
+_DWORD * Rules_LogAssignedCastleFact(int castle_id, int a2)
 {
-  char v6[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_buffer[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v6, "(wyznaczony zamek %d %d)", a1, a2);
-  return Rules_Log(v6, 0, 0.0);
+  sprintf_(fact_buffer, "(wyznaczony zamek %d %d)", castle_id, a2);
+  return Rules_Log(fact_buffer, 0, 0.0);
 }
 
 //----- (00455E50) --------------------------------------------------------
 _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2)
 {
-  char v6[52]; // [esp+0h] [ebp-34h] BYREF
+  char fact_text[52]; // [esp+0h] [ebp-34h] BYREF
 
-  sprintf_(v6, "(wyznaczony gracz %d %d)", a1, a2);
-  return Rules_Log(v6, 0, 0.0);
+  sprintf_(fact_text, "(wyznaczony gracz %d %d)", a1, a2);
+  return Rules_Log(fact_text, 0, 0.0);
 }
 
 //----- (00455E80) --------------------------------------------------------
-BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2)
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int building_index, unit_type licence_type)
 {
-  int v2; // ecx
-  int v3; // eax
+  int building_record; // ecx
+  int licence_slot_index; // eax
 
-  v2 = BUILDING_RECORD_SIZE * a1 + gameData;
-  v3 = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(v2 + 509674);
-  return v3 != -1 && *(char *)(v2 + v3 + 510076) == a2;
+  building_record = BUILDING_RECORD_SIZE * building_index + gameData;
+  licence_slot_index = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building_record + 509674);
+  return licence_slot_index != -1 && *(char *)(building_record + licence_slot_index + 510076) == licence_type;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455EC0) --------------------------------------------------------
-int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
+int  Player_GetInternedNameByIndex(int player_index, int a2, int a3)
 {
-  char *v4; // edx
-  char *v5; // esi
-  int v6; // eax
-  int v7; // ebx
-  int v8; // ecx
+  char *name_cursor; // edx
+  char *name_buffer; // esi
+  int char_index; // eax
+  int player_offset; // ebx
+  int name_char; // ecx
   int v9; // ecx
   int v10; // edx
 
-  v4 = (char *)nmalloc_(a3, a2);
-  v5 = v4;
-  v6 = 0;
-  v7 = PLAYER_DATA_STRIDE * a1;
+  name_cursor = (char *)nmalloc_(a3, a2);
+  name_buffer = name_cursor;
+  char_index = 0;
+  player_offset = PLAYER_DATA_STRIDE * player_index;
   do
   {
-    v8 = v7 + gameData;
-    ++v4;
-    LOBYTE(v8) = *(_BYTE *)(v7 + gameData + v6++ + 140028);
-    *(v4 - 1) = v8;
+    name_char = player_offset + gameData;
+    ++name_cursor;
+    LOBYTE(name_char) = *(_BYTE *)(player_offset + gameData + char_index++ + 140028);
+    *(name_cursor - 1) = name_char;
   }
-  while ( v6 <= 11 );
-  v5[11] = 0;
-  Str_Intern(v5, v8);
+  while ( char_index <= 11 );
+  name_buffer[11] = 0;
+  Str_Intern(name_buffer, name_char);
   nfree_(v9);
   return v10;
 }
@@ -3338,17 +3338,17 @@ int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455F20) --------------------------------------------------------
-signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2)
+signed int  Building_HasGarrisonUnitTypeByIndex(int building_index, unit_type sought_type)
 {
-  int v2; // ebx
-  int v3; // eax
+  int building_offset; // ebx
+  int slot_offset; // eax
 
-  v2 = BUILDING_RECORD_SIZE * a1;
-  v3 = 0;
-  while ( *(__int16 *)(v2 + gameData + v3 + 509692) != a2 )
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  slot_offset = 0;
+  while ( *(__int16 *)(building_offset + gameData + slot_offset + 509692) != sought_type )
   {
-    v3 += 31;
-    if ( v3 >= 310 )
+    slot_offset += 31;
+    if ( slot_offset >= 310 )
       return 0;
   }
   return 1;
@@ -3356,21 +3356,21 @@ signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455F60) --------------------------------------------------------
-signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4)
+signed int  Map_IsCastleSiteDistanceMinimal(int candidate_row, int candidate_column, int site_column, int site_row)
 {
   int slot; // edx
   float candidate_distance; // [esp+0h] [ebp-Ch]
   signed int minimum_distance; // [esp+4h] [ebp-8h]
 
-  minimum_distance = Math_CeilSqrt((a1 - a4) * (a1 - a4) + (a2 - a3) * (a2 - a3));
+  minimum_distance = Math_CeilSqrt((candidate_row - site_row) * (candidate_row - site_row) + (candidate_column - site_column) * (candidate_column - site_column));
   if ( g_CastleSiteAnchorRows[1] == -1 )
     return 1;
   for ( slot = 1; slot < CASTLE_SITE_ANCHOR_CACHE_COUNT && g_CastleSiteAnchorRows[slot] != -1; ++slot )
   {
     candidate_distance = (float)minimum_distance;
     if ( (double)Math_CeilSqrt(
-                   (g_CastleSiteAnchorColumns[slot] - a3) * (g_CastleSiteAnchorColumns[slot] - a3)
-                 + (g_CastleSiteAnchorRows[slot] - a4) * (g_CastleSiteAnchorRows[slot] - a4)) < candidate_distance )
+                   (g_CastleSiteAnchorColumns[slot] - site_column) * (g_CastleSiteAnchorColumns[slot] - site_column)
+                 + (g_CastleSiteAnchorRows[slot] - site_row) * (g_CastleSiteAnchorRows[slot] - site_row)) < candidate_distance )
       return 0;
   }
   return 1;
@@ -3437,28 +3437,28 @@ int  Building_CalcGarrisonFactStrength(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00456130) --------------------------------------------------------
-int  Building_OnGarrisonChange(int a1, int a2, double a3)
+int  Building_OnGarrisonChange(int building_index, int a2, double a3)
 {
-  int v4; // esi
+  int building_offset; // esi
   int result; // eax
-  int v6; // ebx
-  _DWORD v9[2]; // [esp-4h] [ebp-28h] BYREF
-  int *v10; // [esp+4h] [ebp-20h]
+  int previous_strength; // ebx
+  _DWORD moc_value[2]; // [esp-4h] [ebp-28h] BYREF
+  int *strength_value_ptr; // [esp+4h] [ebp-20h]
   int v11; // [esp+1Ch] [ebp-8h]
 
   v11 = a2;
-  v4 = BUILDING_RECORD_SIZE * a1;
-  result = BUILDING_RECORD_SIZE * a1 + gameData;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  result = BUILDING_RECORD_SIZE * building_index + gameData;
   if ( *(_DWORD *)(result + 510137) )
   {
-    v9[1] = 1;
-    Rules_GetInstanceSlotValue(*(_DWORD *)(result + 510137), aMoc_1, a1, v9);
-    v6 = v10[4];
-    result = Building_CalcGarrisonFactStrength(a1);
-    if ( v6 != result )
+    moc_value[1] = 1;
+    Rules_GetInstanceSlotValue(*(_DWORD *)(result + 510137), aMoc_1, building_index, moc_value);
+    previous_strength = strength_value_ptr[4];
+    result = Building_CalcGarrisonFactStrength(building_index);
+    if ( previous_strength != result )
     {
-      v10 = Rules_AddIntegerValue(result);
-      return Rules_PutInstanceSlotValue(*(_DWORD *)(v4 + gameData + 510137), aMoc_2, a2, v9, a3);
+      strength_value_ptr = Rules_AddIntegerValue(result);
+      return Rules_PutInstanceSlotValue(*(_DWORD *)(building_offset + gameData + 510137), aMoc_2, a2, moc_value, a3);
     }
   }
   return result;
@@ -3542,82 +3542,82 @@ signed int Rules_RegisterArmyHostFunctions()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (004577F0) --------------------------------------------------------
-signed int  UnitStack_HasUnitsNeedingHealing(int a1)
+signed int  UnitStack_HasUnitsNeedingHealing(int stack_index)
 {
-  int v1; // esi
-  __int16 *v2; // eax
+  int needs_healing; // esi
+  __int16 *unit_slot; // eax
   int i; // edx
-  int v4; // ecx
+  int slot_unit_type; // ecx
 
-  v1 = 0;
-  v2 = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 6);
+  needs_healing = 0;
+  unit_slot = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6);
   for ( i = 0; i < 10; ++i )
   {
-    v4 = *v2;
-    if ( v4 == -1 )
+    slot_unit_type = *unit_slot;
+    if ( slot_unit_type == -1 )
       break;
-    if ( *((char *)v2 + 9) <= 50 && (unsigned __int8)g_UnitTypeRole[88 * v4] >= 3u )
-      v1 = 1;
-    v2 = (__int16 *)((char *)v2 + 31);
+    if ( *((char *)unit_slot + 9) <= 50 && (unsigned __int8)g_UnitTypeRole[88 * slot_unit_type] >= 3u )
+      needs_healing = 1;
+    unit_slot = (__int16 *)((char *)unit_slot + 31);
   }
-  return v1;
+  return needs_healing;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00457860) --------------------------------------------------------
-BOOL  UnitStack_FindPathToNearestHospitalCastle(DWORD a1)
+BOOL  UnitStack_FindPathToNearestHospitalCastle(DWORD stack_index)
 {
-  int v2; // edi
-  int v3; // ebx
-  int v4; // eax
-  unsigned int v5; // ecx
-  _DWORD *v6; // eax
-  const void *v7; // esi
-  int v8; // eax
+  int best_building_index; // edi
+  int building_index; // ebx
+  int building_record; // eax
+  unsigned int building_status; // ecx
+  _DWORD *track; // eax
+  const void *track_ptr; // esi
+  int track_cost; // eax
   int v9; // ecx
-  int v11; // [esp+0h] [ebp-28h]
-  int v12; // [esp+8h] [ebp-20h]
-  int v13; // [esp+Ch] [ebp-1Ch]
+  int building_cursor; // [esp+0h] [ebp-28h]
+  int best_cost; // [esp+8h] [ebp-20h]
+  int track_info; // [esp+Ch] [ebp-1Ch]
 
-  v2 = -1;
-  v3 = 0;
-  v11 = gameData + BUILDING_TABLE_OFFSET;
+  best_building_index = -1;
+  building_index = 0;
+  building_cursor = gameData + BUILDING_TABLE_OFFSET;
 LABEL_2:
-  v4 = UNIT_RECORD(v3);
-  v5 = *(char *)(v4 + 4);
-  if ( v5 < 4 && *(__int16 *)(v4 + 16) != -1 && (*(_DWORD *)(v11 + 416) & BUILDING_ADDON_FLAG_HOSPITAL) == 1 )
+  building_record = UNIT_RECORD(building_index);
+  building_status = *(char *)(building_record + 4);
+  if ( building_status < 4 && *(__int16 *)(building_record + 16) != -1 && (*(_DWORD *)(building_cursor + 416) & BUILDING_ADDON_FLAG_HOSPITAL) == 1 )
   {
-    v6 = (_DWORD *)Building_GenerateApproachTrack(a1, v3, v5, v3, a1);
-    v7 = v6;
-    if ( v6 )
+    track = (_DWORD *)Building_GenerateApproachTrack(stack_index, building_index, building_status, building_index, stack_index);
+    track_ptr = track;
+    if ( track )
     {
-      v13 = v6[1];
-      if ( v2 == -1 )
+      track_info = track[1];
+      if ( best_building_index == -1 )
       {
-        qmemcpy((void *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v6, UNIT_STACK_PATH_BYTES);
-        v8 = HIWORD(v13);
+        qmemcpy((void *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
+        track_cost = HIWORD(track_info);
       }
       else
       {
-        if ( HIWORD(v13) >= v12 )
+        if ( HIWORD(track_info) >= best_cost )
           goto LABEL_9;
         j__nfree_();
-        qmemcpy((void *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), v7, UNIT_STACK_PATH_BYTES);
-        v8 = HIWORD(v13);
+        qmemcpy((void *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track_ptr, UNIT_STACK_PATH_BYTES);
+        track_cost = HIWORD(track_info);
       }
-      v2 = v3;
-      v12 = v8;
+      best_building_index = building_index;
+      best_cost = track_cost;
 LABEL_9:
       j__nfree_();
     }
   }
   while ( 1 )
   {
-    ++v3;
-    v11 += 467;
-    if ( v3 >= 100 )
-      return v2 != -1;
-    if ( v3 >= 0 )
+    ++building_index;
+    building_cursor += 467;
+    if ( building_index >= 100 )
+      return best_building_index != -1;
+    if ( building_index >= 0 )
       goto LABEL_2;
   }
 }
@@ -3628,50 +3628,50 @@ LABEL_9:
 // 5202E4: using guessed type int gameData;
 
 //----- (004579B0) --------------------------------------------------------
-BOOL  UnitStack_ExecuteHealingPathAndCheckArrival(unsigned int a1, char a2, DWORD a3, double a4)
+BOOL  UnitStack_ExecuteHealingPathAndCheckArrival(unsigned int stack_index, char a2, DWORD a3, double a4)
 {
   int v4; // ecx
 
-  UnitStack_ExecuteQueuedPath(a1, 1, a2, a3, a4);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, a2, a3, a4);
   return *(__int16 *)(gameData + UNIT_STACK_STRIDE * v4 + 147180) == -1;
 }
 // 4579DE: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00457A10) --------------------------------------------------------
-const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int a1, int a2, double a3)
+const void * UnitStack_MoveToBuildingAndCheckArrival(unsigned int stack_index, int building_index, double a3)
 {
-  unsigned int v4; // edi
-  DWORD v5; // ebp
+  unsigned int building_x; // edi
+  DWORD building_y; // ebp
   const void *result; // eax
-  int v7; // [esp+8h] [ebp-18h]
+  int queued_target_xy; // [esp+8h] [ebp-18h]
 
-  v4 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a2 + BUILDING_TABLE_OFFSET);
-  v5 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * a2 + 509675);
-  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * a1 + 147490)
-    || (v7 = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 320), (int)abs32(v4 - (unsigned __int8)v7) >= 3)
-    || (int)abs32(v5 - BYTE1(v7)) >= 3
-    || __PAIR64__(v5, v4) == __PAIR64__(BYTE1(v7), (unsigned __int8)v7) )
+  building_x = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_TABLE_OFFSET);
+  building_y = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509675);
+  if ( !*(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 147490)
+    || (queued_target_xy = *(_DWORD *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320), (int)abs32(building_x - (unsigned __int8)queued_target_xy) >= 3)
+    || (int)abs32(building_y - BYTE1(queued_target_xy)) >= 3
+    || __PAIR64__(building_y, building_x) == __PAIR64__(BYTE1(queued_target_xy), (unsigned __int8)queued_target_xy) )
   {
-    result = (const void *)Building_GenerateApproachTrack(a1, a2, a2, a1, v5);
+    result = (const void *)Building_GenerateApproachTrack(stack_index, building_index, building_index, stack_index, building_y);
     if ( !result )
       return result;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + UNIT_STACK_PATH_OFFSET), result, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
   }
-  UnitStack_ExecuteQueuedPath(a1, 1, a1, v5, a3);
-  return (const void *)(*(__int16 *)(gameData + UNIT_STACK_STRIDE * a1 + 147180) == -1);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, stack_index, building_y, a3);
+  return (const void *)(*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) == -1);
 }
 // 457A65: conditional instruction was optimized away because %var_20.4==0
 // 5202E4: using guessed type int gameData;
 
 //----- (00457BA0) --------------------------------------------------------
-int  UnitStack_QueuePathNearBuilding(int a1, int a2, char a3, DWORD a4)
+int  UnitStack_QueuePathNearBuilding(int stack_index, int building_index, char a3, DWORD a4)
 {
   int result; // eax
   int v5; // ecx
 
-  result = Building_GenerateNearApproachTrack(a1, a2, a1, a3, a4);
+  result = Building_GenerateNearApproachTrack(stack_index, building_index, stack_index, a3, a4);
   if ( result )
   {
     qmemcpy((void *)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
@@ -3684,55 +3684,55 @@ int  UnitStack_QueuePathNearBuilding(int a1, int a2, char a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00457C00) --------------------------------------------------------
-int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
+int  Building_GetMaxEnemyStrengthUnderWalls(int building_index)
 {
-  int v1; // eax
-  int v2; // edx
-  int v3; // ecx
-  int v4; // edi
-  int v5; // edx
+  int building_offset; // eax
+  int building_x; // edx
+  int building_y; // ecx
+  int scan_x; // edi
+  int scan_y; // edx
   int j; // ecx
-  int v7; // ebx
-  int v9; // [esp+4h] [ebp-38h]
-  int v10; // [esp+8h] [ebp-34h]
+  int stack_offset; // ebx
+  int scan_x_end; // [esp+4h] [ebp-38h]
+  int scan_y_start; // [esp+8h] [ebp-34h]
   int i; // [esp+Ch] [ebp-30h]
   int v12; // [esp+10h] [ebp-2Ch]
-  int v13; // [esp+1Ch] [ebp-20h]
-  int v14; // [esp+20h] [ebp-1Ch]
+  int scan_y_end; // [esp+1Ch] [ebp-20h]
+  int max_strength; // [esp+20h] [ebp-1Ch]
 
-  v1 = BUILDING_RECORD_SIZE * a1;
-  v14 = 0;
-  v2 = *(unsigned __int8 *)(gameData + v1 + BUILDING_TABLE_OFFSET);
-  v3 = *(unsigned __int8 *)(gameData + v1 + 509675);
-  v12 = v1;
-  v4 = v2 - 1;
-  v13 = v3 + 2;
-  v9 = v2 + 2;
-  v10 = v3 - 1;
-  for ( i = 200 * (v2 - 1); v4 <= v9; i += 200 )
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  max_strength = 0;
+  building_x = *(unsigned __int8 *)(gameData + building_offset + BUILDING_TABLE_OFFSET);
+  building_y = *(unsigned __int8 *)(gameData + building_offset + 509675);
+  v12 = building_offset;
+  scan_x = building_x - 1;
+  scan_y_end = building_y + 2;
+  scan_x_end = building_x + 2;
+  scan_y_start = building_y - 1;
+  for ( i = 200 * (building_x - 1); scan_x <= scan_x_end; i += 200 )
   {
-    v5 = v10;
-    for ( j = 2 * v10; v5 <= v13; j += 2 )
+    scan_y = scan_y_start;
+    for ( j = 2 * scan_y_start; scan_y <= scan_y_end; j += 2 )
     {
-      if ( v4 >= 0
-        && v4 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
-        && v5 >= 0
-        && v5 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+      if ( scan_x >= 0
+        && scan_x < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+        && scan_y >= 0
+        && scan_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
         && *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET) <= 0x1F4u
         && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET) + 6) <= 0x28 )
       {
-        v7 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET);
-        if ( *(_BYTE *)(gameData + v7 + 147178) != *(_BYTE *)(gameData + v12 + 509676)
-          && UnitStack_CalcArmyFactStrength(gameData + UNIT_STACK_TABLE_OFFSET + v7) > v14 )
+        stack_offset = UNIT_STACK_STRIDE * *(unsigned __int16 *)(j + gameData + i + TILE_MAP_OFFSET);
+        if ( *(_BYTE *)(gameData + stack_offset + 147178) != *(_BYTE *)(gameData + v12 + 509676)
+          && UnitStack_CalcArmyFactStrength(gameData + UNIT_STACK_TABLE_OFFSET + stack_offset) > max_strength )
         {
-          v14 = UnitStack_CalcArmyFactStrength(v7 + gameData + UNIT_STACK_TABLE_OFFSET);
+          max_strength = UnitStack_CalcArmyFactStrength(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET);
         }
       }
-      ++v5;
+      ++scan_y;
     }
-    ++v4;
+    ++scan_x;
   }
-  return v14;
+  return max_strength;
 }
 // 457CF5: simplified comparisons for 'ebx.4': <0 || >=29 became >=29u
 // 457D5E: variable 'v5' is possibly undefined
@@ -3740,196 +3740,196 @@ int  Building_GetMaxEnemyStrengthUnderWalls(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00457DA0) --------------------------------------------------------
-int  Building_GetPlagueState(int a1)
+int  Building_GetPlagueState(int building_index)
 {
-  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * a1 + 510109) & 7;
+  return *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * building_index + 510109) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00457DC0) --------------------------------------------------------
-signed int  UnitStack_HasPlagueByIndex(int a1)
+signed int  UnitStack_HasPlagueByIndex(int stack_index)
 {
-  return UnitStack_HasPlague(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
+  return UnitStack_HasPlague(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00457E00) --------------------------------------------------------
-BOOL  Unit_ExecuteQueuedPathAndCheckFinished(unsigned int a1, char a2, DWORD a3, double a4)
+BOOL  Unit_ExecuteQueuedPathAndCheckFinished(unsigned int stack_index, char a2, DWORD a3, double a4)
 {
   int v4; // ecx
 
-  UnitStack_ExecuteQueuedPath(a1, 1, a2, a3, a4);
+  UnitStack_ExecuteQueuedPath(stack_index, 1, a2, a3, a4);
   return *(_DWORD *)(gameData + UNIT_STACK_STRIDE * v4 + 147490) == 0;
 }
 // 457E2E: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00457E50) --------------------------------------------------------
-int  Script_UnitAddToGroup(unsigned int a1, int a2, DWORD a3, double a4)
+int  Script_UnitAddToGroup(unsigned int unit_index, int group_index, DWORD a3, double a4)
 {
-  return Unit_AddToGroup(a1, a2, 0, a3, a4);
+  return Unit_AddToGroup(unit_index, group_index, 0, a3, a4);
 }
 
 //----- (00457E60) --------------------------------------------------------
-BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4)
+BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int army_index, int dest_tile_y, int dest_tile_x, double a4)
 {
-  int v4; // ecx
-  __int16 *v5; // eax
-  int v6; // esi
+  int weak_count; // ecx
+  __int16 *unit_slot; // eax
+  int selected_count; // esi
   int i; // edx
   int j; // eax
-  int v10; // esi
-  _DWORD v12[10]; // [esp+4h] [ebp-50h] BYREF
+  int offset_y; // esi
+  _DWORD selected_slot_list[10]; // [esp+4h] [ebp-50h] BYREF
   int v13; // [esp+2Ch] [ebp-28h]
-  int v14; // [esp+30h] [ebp-24h]
-  int v15; // [esp+34h] [ebp-20h]
-  __int16 *v16; // [esp+38h] [ebp-1Ch]
+  int found_exit_tile; // [esp+30h] [ebp-24h]
+  int offset_x; // [esp+34h] [ebp-20h]
+  __int16 *stack_record; // [esp+38h] [ebp-1Ch]
 
-  v13 = a1;
-  v4 = 0;
-  v16 = (__int16 *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
-  v5 = v16 + 3;
-  v6 = 0;
+  v13 = army_index;
+  weak_count = 0;
+  stack_record = (__int16 *)(UNIT_STACK_STRIDE * army_index + gameData + UNIT_STACK_TABLE_OFFSET);
+  unit_slot = stack_record + 3;
+  selected_count = 0;
   for ( i = 0; i < 10; ++i )
   {
-    if ( *v5 == -1 )
+    if ( *unit_slot == -1 )
       break;
-    if ( *((char *)v5 + 9) <= 10 )
+    if ( *((char *)unit_slot + 9) <= 10 )
     {
-      ++v4;
-      ++v6;
-      v12[v4 - 1] = i;
+      ++weak_count;
+      ++selected_count;
+      selected_slot_list[weak_count - 1] = i;
     }
-    v5 = (__int16 *)((char *)v5 + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + 31);
   }
-  if ( !v6 || v6 == Unit_GetSquadCount((int)v16) )
+  if ( !selected_count || selected_count == Unit_GetSquadCount((int)stack_record) )
     return 0;
-  for ( j = v6; j < 10; v12[j - 1] = -1 )
+  for ( j = selected_count; j < 10; selected_slot_list[j - 1] = -1 )
   {
     ++j;
-    ++v6;
+    ++selected_count;
   }
-  v14 = 0;
-  v15 = -1;
+  found_exit_tile = 0;
+  offset_x = -1;
   do
   {
-    v10 = -1;
+    offset_y = -1;
     do
     {
-      if ( v15 || v10 )
+      if ( offset_x || offset_y )
       {
-        a3 = v15 + *v16;
-        a2 = v10 + v16[1];
-        if ( a3 >= 0
-          && a3 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
-          && a2 >= 0
-          && a2 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-          && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)v16 + 4), 0, v10 + v16[1], v15 + *v16) )
+        dest_tile_x = offset_x + *stack_record;
+        dest_tile_y = offset_y + stack_record[1];
+        if ( dest_tile_x >= 0
+          && dest_tile_x < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+          && dest_tile_y >= 0
+          && dest_tile_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+          && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)stack_record + 4), 0, offset_y + stack_record[1], offset_x + *stack_record) )
         {
-          v14 = 1;
+          found_exit_tile = 1;
         }
       }
-      ++v10;
+      ++offset_y;
     }
-    while ( v10 <= 1 && !v14 );
-    ++v15;
+    while ( offset_y <= 1 && !found_exit_tile );
+    ++offset_x;
   }
-  while ( v15 <= 1 && !v14 );
-  return v14 && Unit_MoveSelectionFromGroupToTile(v13, v12, a2, a3, a4, 0);
+  while ( offset_x <= 1 && !found_exit_tile );
+  return found_exit_tile && Unit_MoveSelectionFromGroupToTile(v13, selected_slot_list, dest_tile_y, dest_tile_x, a4, 0);
 }
 // 457F19: conditional instruction was optimized away because %var_24.4==0
 // 5202E4: using guessed type int gameData;
 
 //----- (00457FE0) --------------------------------------------------------
-BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a4, double a5)
+BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int army_index, unit_type type, int dest_tile_x, int dest_tile_y, double a5)
 {
-  int v5; // esi
-  __int16 *v6; // edx
-  int v7; // ecx
+  int selected_count; // esi
+  __int16 *unit_slot; // edx
+  int match_count; // ecx
   int i; // eax
-  int v9; // ebx
+  int slot_type; // ebx
   int j; // eax
-  int v12; // esi
-  _DWORD v14[10]; // [esp+4h] [ebp-50h] BYREF
+  int offset_y; // esi
+  _DWORD selected_slot_list[10]; // [esp+4h] [ebp-50h] BYREF
   int v15; // [esp+2Ch] [ebp-28h]
   int v16; // [esp+30h] [ebp-24h]
-  int v17; // [esp+34h] [ebp-20h]
-  int v18; // [esp+38h] [ebp-1Ch]
-  __int16 *v19; // [esp+3Ch] [ebp-18h]
+  int found_exit_tile; // [esp+34h] [ebp-20h]
+  int offset_x; // [esp+38h] [ebp-1Ch]
+  __int16 *stack_record; // [esp+3Ch] [ebp-18h]
 
-  v15 = a1;
-  v16 = a2;
-  v5 = 0;
-  v19 = (__int16 *)(UNIT_STACK_STRIDE * a1 + gameData + UNIT_STACK_TABLE_OFFSET);
-  v6 = v19 + 3;
-  v7 = 0;
+  v15 = army_index;
+  v16 = type;
+  selected_count = 0;
+  stack_record = (__int16 *)(UNIT_STACK_STRIDE * army_index + gameData + UNIT_STACK_TABLE_OFFSET);
+  unit_slot = stack_record + 3;
+  match_count = 0;
   for ( i = 0; i < 10; ++i )
   {
-    v9 = *v6;
-    if ( v9 == -1 )
+    slot_type = *unit_slot;
+    if ( slot_type == -1 )
       break;
-    if ( v9 == v16 )
+    if ( slot_type == v16 )
     {
-      ++v7;
-      ++v5;
-      v14[v7 - 1] = i;
+      ++match_count;
+      ++selected_count;
+      selected_slot_list[match_count - 1] = i;
     }
-    v6 = (__int16 *)((char *)v6 + 31);
+    unit_slot = (__int16 *)((char *)unit_slot + 31);
   }
-  if ( !v5 || v5 == Unit_GetSquadCount((int)v19) )
+  if ( !selected_count || selected_count == Unit_GetSquadCount((int)stack_record) )
     return 0;
-  for ( j = v5; j < 10; v14[j - 1] = -1 )
+  for ( j = selected_count; j < 10; selected_slot_list[j - 1] = -1 )
   {
     ++j;
-    ++v5;
+    ++selected_count;
   }
-  v17 = 0;
-  v18 = -1;
+  found_exit_tile = 0;
+  offset_x = -1;
   do
   {
-    v12 = -1;
+    offset_y = -1;
     do
     {
-      if ( v18 || v12 )
+      if ( offset_x || offset_y )
       {
-        a3 = v18 + *v19;
-        a4 = v12 + v19[1];
-        if ( a3 >= 0
-          && a3 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
-          && a4 >= 0
-          && a4 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-          && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)v19 + 4), 0, v12 + v19[1], v18 + *v19) )
+        dest_tile_x = offset_x + *stack_record;
+        dest_tile_y = offset_y + stack_record[1];
+        if ( dest_tile_x >= 0
+          && dest_tile_x < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+          && dest_tile_y >= 0
+          && dest_tile_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+          && Map_GetUnitTileMoveCostOrZero(*((unsigned __int8 *)stack_record + 4), 0, offset_y + stack_record[1], offset_x + *stack_record) )
         {
-          v17 = 1;
+          found_exit_tile = 1;
         }
       }
-      ++v12;
+      ++offset_y;
     }
-    while ( v12 <= 1 && !v17 );
-    ++v18;
+    while ( offset_y <= 1 && !found_exit_tile );
+    ++offset_x;
   }
-  while ( v18 <= 1 && !v17 );
-  return v17 && Unit_MoveSelectionFromGroupToTile(v15, v14, a4, a3, a5, 0);
+  while ( offset_x <= 1 && !found_exit_tile );
+  return found_exit_tile && Unit_MoveSelectionFromGroupToTile(v15, selected_slot_list, dest_tile_y, dest_tile_x, a5, 0);
 }
 // 458094: conditional instruction was optimized away because %var_20.4==0
 // 5202E4: using guessed type int gameData;
 
 //----- (00458160) --------------------------------------------------------
-signed int  UnitStack_HasUnitType(int a1, unit_type a2)
+signed int  UnitStack_HasUnitType(int stack_index, unit_type sought_type)
 {
-  int v3; // edx
+  int slot_index; // edx
   __int16 *i; // eax
-  int v5; // ecx
+  int slot_unit_type; // ecx
 
-  v3 = 0;
-  for ( i = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 6); ; i = (__int16 *)((char *)i + 31) )
+  slot_index = 0;
+  for ( i = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + 31) )
   {
-    v5 = *i;
-    if ( v5 == -1 )
+    slot_unit_type = *i;
+    if ( slot_unit_type == -1 )
       return 0;
-    if ( v5 == a2 )
+    if ( slot_unit_type == sought_type )
       break;
-    if ( ++v3 >= 10 )
+    if ( ++slot_index >= 10 )
       return 0;
   }
   return 1;
@@ -3937,21 +3937,21 @@ signed int  UnitStack_HasUnitType(int a1, unit_type a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004581C0) --------------------------------------------------------
-signed int  UnitStack_HasOnlyUnitType(int a1, unit_type a2)
+signed int  UnitStack_HasOnlyUnitType(int stack_index, unit_type sought_type)
 {
-  int v3; // edx
+  int slot_index; // edx
   __int16 *i; // eax
-  int v5; // ecx
+  int slot_unit_type; // ecx
 
-  v3 = 0;
-  for ( i = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 6); ; i = (__int16 *)((char *)i + 31) )
+  slot_index = 0;
+  for ( i = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6); ; i = (__int16 *)((char *)i + 31) )
   {
-    v5 = *i;
-    if ( v5 == -1 )
+    slot_unit_type = *i;
+    if ( slot_unit_type == -1 )
       return 1;
-    if ( v5 != a2 )
+    if ( slot_unit_type != sought_type )
       break;
-    if ( ++v3 >= 10 )
+    if ( ++slot_index >= 10 )
       return 1;
   }
   return 0;
@@ -3970,269 +3970,269 @@ int Rules_HostArmyHasOnlyUnitType(int a1, double a2)
 }
 
 //----- (00458220) --------------------------------------------------------
-signed int  UnitStack_GetHealthPercentAggregate(int a1, int a2)
+signed int  UnitStack_GetHealthPercentAggregate(int stack_index, int aggregate_mode)
 {
-  int v3; // eax
-  int v4; // ecx
-  int v5; // edx
-  __int16 *v6; // eax
-  int v7; // ebx
+  int slot_base; // eax
+  int unit_count; // ecx
+  int aggregate_health; // edx
+  __int16 *unit_slot; // eax
+  int slot_health; // ebx
 
-  v3 = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a1 + 6;
-  v4 = 1;
-  v5 = *(char *)(v3 + 9);
-  v6 = (__int16 *)(v3 + 31);
-  while ( *v6 != -1 )
+  slot_base = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 6;
+  unit_count = 1;
+  aggregate_health = *(char *)(slot_base + 9);
+  unit_slot = (__int16 *)(slot_base + 31);
+  while ( *unit_slot != -1 )
   {
-    if ( a2 < 0 )
+    if ( aggregate_mode < 0 )
     {
-      v7 = *((char *)v6 + 9);
-      if ( v5 >= v7 )
+      slot_health = *((char *)unit_slot + 9);
+      if ( aggregate_health >= slot_health )
         goto LABEL_11;
     }
     else
     {
-      if ( a2 <= 0 )
+      if ( aggregate_mode <= 0 )
       {
-        v5 += *((char *)v6 + 9);
+        aggregate_health += *((char *)unit_slot + 9);
         goto LABEL_6;
       }
-      v7 = *((char *)v6 + 9);
-      if ( v5 <= v7 )
+      slot_health = *((char *)unit_slot + 9);
+      if ( aggregate_health <= slot_health )
 LABEL_11:
-        v5 = v7;
+        aggregate_health = slot_health;
     }
 LABEL_6:
-    ++v4;
-    v6 = (__int16 *)((char *)v6 + 31);
-    if ( v4 >= 10 )
+    ++unit_count;
+    unit_slot = (__int16 *)((char *)unit_slot + 31);
+    if ( unit_count >= 10 )
       break;
   }
-  if ( !a2 )
-    v5 /= v4;
-  return v5;
+  if ( !aggregate_mode )
+    aggregate_health /= unit_count;
+  return aggregate_health;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004582B0) --------------------------------------------------------
 int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5)
 {
-  int v5; // edx
+  int stack_index_reg; // edx
   int v6; // ecx
-  int v7; // ebp
-  __int64 v8; // rax
+  int dx; // ebp
+  __int64 dy; // rax
   int result; // eax
-  int v10; // ebp
-  int v11; // ebx
-  __int64 v12; // rax
-  __int64 v13; // rax
-  __int64 v14; // rax
-  int v15; // ebp
-  int v16; // edx
-  _BYTE *v17; // ebx
-  __int16 *v18; // edx
-  __int16 *v19; // edx
-  int v20; // ebp
-  _BYTE *v21; // ebx
-  int v22; // ebx
-  _BYTE *v23; // ebp
-  int v24; // ebx
-  _WORD *v25; // edx
-  signed int v26; // ebp
-  _WORD *v27; // edx
-  _BYTE *v28; // ebx
-  int v29; // ebp
-  _BYTE *v30; // ebx
-  _BYTE *v31; // edx
-  _BYTE v32[620]; // [esp+0h] [ebp-2CCh] BYREF
-  _BYTE v33[28]; // [esp+26Ch] [ebp-60h] BYREF
-  _BYTE v34[3]; // [esp+288h] [ebp-44h] BYREF
-  int v35; // [esp+28Ch] [ebp-40h]
-  int v36; // [esp+290h] [ebp-3Ch]
-  signed int v37; // [esp+294h] [ebp-38h]
-  int v38; // [esp+298h] [ebp-34h]
-  int v39; // [esp+29Ch] [ebp-30h]
-  int v40; // [esp+2A0h] [ebp-2Ch]
-  int v41; // [esp+2A4h] [ebp-28h]
-  int v42; // [esp+2A8h] [ebp-24h]
-  int v43; // [esp+2ACh] [ebp-20h]
-  int v44; // [esp+2B0h] [ebp-1Ch]
-  int v45; // [esp+2B4h] [ebp-18h]
+  int dx_second; // ebp
+  int first_stack_offset; // ebx
+  __int64 dx_recheck; // rax
+  __int64 dy_second; // rax
+  __int64 dy_recheck; // rax
+  int copy_count_first; // ebp
+  int first_stack_record; // edx
+  _BYTE *copy_dest; // ebx
+  __int16 *first_src_slot; // edx
+  __int16 *second_src_slot; // edx
+  int copy_count_second; // ebp
+  _BYTE *copy_dest_second; // ebx
+  int healthy_scan_offset; // ebx
+  _BYTE *writeback_src; // ebp
+  int writeback_index; // ebx
+  _WORD *first_dest_slot; // edx
+  signed int writeback_index_second; // ebp
+  _WORD *second_dest_slot; // edx
+  _BYTE *writeback_src_second; // ebx
+  int compare_index; // ebp
+  _BYTE *slot_a_ptr; // ebx
+  _BYTE *slot_b_ptr; // edx
+  _BYTE merged_units[620]; // [esp+0h] [ebp-2CCh] BYREF
+  _BYTE swap_buf[28]; // [esp+26Ch] [ebp-60h] BYREF
+  _BYTE swap_tail[3]; // [esp+288h] [ebp-44h] BYREF
+  int stack_index; // [esp+28Ch] [ebp-40h]
+  int other_stack_index; // [esp+290h] [ebp-3Ch]
+  signed int units_kept_second; // [esp+294h] [ebp-38h]
+  int sort_pass_limit; // [esp+298h] [ebp-34h]
+  int sort_pass_offset; // [esp+29Ch] [ebp-30h]
+  int units_kept_first; // [esp+2A0h] [ebp-2Ch]
+  int sort_pass; // [esp+2A4h] [ebp-28h]
+  int compare_base_index; // [esp+2A8h] [ebp-24h]
+  int sort_done; // [esp+2ACh] [ebp-20h]
+  int total_units; // [esp+2B0h] [ebp-1Ch]
+  int compare_base_offset; // [esp+2B4h] [ebp-18h]
 
-  v35 = a1;
-  v36 = a2;
+  stack_index = a1;
+  other_stack_index = a2;
   Debug_Log(a1, a3, a4, (int)aPrzegrupujar_0);
-  v7 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * v5 + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v36 + UNIT_STACK_TABLE_OFFSET);
-  if ( (int)abs32(v7) > 1
-    || (v8 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * v5 + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * v36 + gameData + 147176),
-        (int)((HIDWORD(v8) ^ v8) - HIDWORD(v8)) > 1) )
+  dx = *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index_reg + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  if ( (int)abs32(dx) > 1
+    || (dy = *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index_reg + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176),
+        (int)((HIDWORD(dy) ^ dy) - HIDWORD(dy)) > 1) )
   {
     result = (int)Unit_MoveTrackNearTile(
-                    v35,
-                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * v36 + UNIT_STACK_TABLE_OFFSET),
+                    stack_index,
+                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET),
                     v6,
-                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * v36 + 147176),
-                    v7);
+                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * other_stack_index + 147176),
+                    dx);
     if ( !result )
       return result;
-    qmemcpy((void *)(UNIT_STACK_STRIDE * v35 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
-    UnitStack_ExecuteQueuedPath(v35, 1, -43 * v35, v7, a5);
+    UnitStack_ExecuteQueuedPath(stack_index, 1, -43 * stack_index, dx, a5);
   }
-  v10 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * v35 + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v36 + UNIT_STACK_TABLE_OFFSET);
-  if ( (int)abs32(v10) > 1
-    || (v13 = *(__int16 *)(UNIT_STACK_STRIDE * v35 + gameData + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * v36 + gameData + 147176),
-        (int)((HIDWORD(v13) ^ v13) - HIDWORD(v13)) > 1) )
+  dx_second = *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  if ( (int)abs32(dx_second) > 1
+    || (dy_second = *(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176),
+        (int)((HIDWORD(dy_second) ^ dy_second) - HIDWORD(dy_second)) > 1) )
   {
     result = (int)Unit_MoveTrackNearTile(
-                    v36,
-                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * v35 + UNIT_STACK_TABLE_OFFSET),
+                    other_stack_index,
+                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
                     v6,
-                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * v35 + 147176),
-                    v10);
+                    *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
+                    dx_second);
     if ( !result )
       return result;
-    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v36 + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
+    qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_PATH_OFFSET), (const void *)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
-    UnitStack_ExecuteQueuedPath(v36, 1, -111 * v36, v10, a5);
+    UnitStack_ExecuteQueuedPath(other_stack_index, 1, -111 * other_stack_index, dx_second, a5);
   }
-  v11 = UNIT_STACK_STRIDE * v35;
-  v12 = *(__int16 *)(gameData + UNIT_STACK_STRIDE * v35 + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v36 + UNIT_STACK_TABLE_OFFSET);
-  if ( (int)((HIDWORD(v12) ^ v12) - HIDWORD(v12)) > 1 )
+  first_stack_offset = UNIT_STACK_STRIDE * stack_index;
+  dx_recheck = *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * other_stack_index + UNIT_STACK_TABLE_OFFSET);
+  if ( (int)((HIDWORD(dx_recheck) ^ dx_recheck) - HIDWORD(dx_recheck)) > 1 )
     return 0;
-  v14 = *(__int16 *)(gameData + v11 + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * v36 + gameData + 147176);
-  if ( (int)((HIDWORD(v14) ^ v14) - HIDWORD(v14)) > 1 )
+  dy_recheck = *(__int16 *)(gameData + first_stack_offset + 147176) - *(__int16 *)(UNIT_STACK_STRIDE * other_stack_index + gameData + 147176);
+  if ( (int)((HIDWORD(dy_recheck) ^ dy_recheck) - HIDWORD(dy_recheck)) > 1 )
     return 0;
-  v15 = 0;
-  v44 = 0;
-  v16 = gameData + UNIT_STACK_TABLE_OFFSET + v11;
-  v17 = v32;
-  v18 = (__int16 *)(v16 + 6);
+  copy_count_first = 0;
+  total_units = 0;
+  first_stack_record = gameData + UNIT_STACK_TABLE_OFFSET + first_stack_offset;
+  copy_dest = merged_units;
+  first_src_slot = (__int16 *)(first_stack_record + 6);
   do
   {
-    if ( *v18 == -1 )
+    if ( *first_src_slot == -1 )
       break;
-    qmemcpy(v17, v18, 0x1Cu);
-    qmemcpy(v17 + 28, v18 + 14, 3u);
-    ++v15;
-    v18 = (__int16 *)((char *)v18 + 31);
-    v17 += 31;
-    ++v44;
+    qmemcpy(copy_dest, first_src_slot, 0x1Cu);
+    qmemcpy(copy_dest + 28, first_src_slot + 14, 3u);
+    ++copy_count_first;
+    first_src_slot = (__int16 *)((char *)first_src_slot + 31);
+    copy_dest += 31;
+    ++total_units;
   }
-  while ( v15 < 10 );
-  v19 = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v36 + 6);
-  v20 = 0;
-  v21 = &v32[31 * v44];
+  while ( copy_count_first < 10 );
+  second_src_slot = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * other_stack_index + 6);
+  copy_count_second = 0;
+  copy_dest_second = &merged_units[31 * total_units];
   do
   {
-    if ( *v19 == -1 )
+    if ( *second_src_slot == -1 )
       break;
-    qmemcpy(v21, v19, 0x1Cu);
-    qmemcpy(v21 + 28, v19 + 14, 3u);
-    ++v20;
-    v19 = (__int16 *)((char *)v19 + 31);
-    v21 += 31;
-    ++v44;
+    qmemcpy(copy_dest_second, second_src_slot, 0x1Cu);
+    qmemcpy(copy_dest_second + 28, second_src_slot + 14, 3u);
+    ++copy_count_second;
+    second_src_slot = (__int16 *)((char *)second_src_slot + 31);
+    copy_dest_second += 31;
+    ++total_units;
   }
-  while ( v20 < 10 );
-  v43 = 0;
-  if ( v44 > 1 )
+  while ( copy_count_second < 10 );
+  sort_done = 0;
+  if ( total_units > 1 )
   {
-    v41 = 0;
-    v39 = 31;
-    v38 = v44 - 1;
+    sort_pass = 0;
+    sort_pass_offset = 31;
+    sort_pass_limit = total_units - 1;
     do
     {
-      if ( v43 )
+      if ( sort_done )
         break;
-      v43 = 1;
-      v29 = 1;
-      if ( v44 > 1 )
+      sort_done = 1;
+      compare_index = 1;
+      if ( total_units > 1 )
       {
-        v42 = v41;
-        v45 = v39;
+        compare_base_index = sort_pass;
+        compare_base_offset = sort_pass_offset;
         do
         {
-          if ( v32[31 * v42 + 9] > v32[v45 + 9] )
+          if ( merged_units[31 * compare_base_index + 9] > merged_units[compare_base_offset + 9] )
           {
-            v43 = 0;
-            v30 = &v32[31 * v42];
-            qmemcpy(v33, v30, sizeof(v33));
-            qmemcpy(v34, v30 + 28, sizeof(v34));
-            v31 = &v32[v45];
-            qmemcpy(v30, &v32[v45], 0x1Cu);
-            qmemcpy(v30 + 28, v31 + 28, 3u);
-            qmemcpy(v31, v33, 0x1Cu);
-            qmemcpy(v31 + 28, v34, 3u);
+            sort_done = 0;
+            slot_a_ptr = &merged_units[31 * compare_base_index];
+            qmemcpy(swap_buf, slot_a_ptr, sizeof(swap_buf));
+            qmemcpy(swap_tail, slot_a_ptr + 28, sizeof(swap_tail));
+            slot_b_ptr = &merged_units[compare_base_offset];
+            qmemcpy(slot_a_ptr, &merged_units[compare_base_offset], 0x1Cu);
+            qmemcpy(slot_a_ptr + 28, slot_b_ptr + 28, 3u);
+            qmemcpy(slot_b_ptr, swap_buf, 0x1Cu);
+            qmemcpy(slot_b_ptr + 28, swap_tail, 3u);
           }
-          ++v29;
+          ++compare_index;
         }
-        while ( v29 < v44 );
+        while ( compare_index < total_units );
       }
-      v39 += 31;
-      ++v41;
+      sort_pass_offset += 31;
+      ++sort_pass;
     }
-    while ( v41 < v38 );
+    while ( sort_pass < sort_pass_limit );
   }
-  v40 = 0;
-  if ( v44 > 0 )
+  units_kept_first = 0;
+  if ( total_units > 0 )
   {
-    v22 = 0;
+    healthy_scan_offset = 0;
     do
     {
-      if ( (char)v32[v22 + 9] >= 8 )
-        ++v40;
-      v22 += 31;
+      if ( (char)merged_units[healthy_scan_offset + 9] >= 8 )
+        ++units_kept_first;
+      healthy_scan_offset += 31;
     }
-    while ( v22 < 31 * v44 );
+    while ( healthy_scan_offset < 31 * total_units );
   }
-  if ( v40 > 10 )
-    v40 = 10;
-  if ( v44 - 10 > v40 )
-    v40 = v44 - 10;
-  v23 = v32;
-  v24 = 0;
-  v25 = (_WORD *)(UNIT_STACK_STRIDE * v35 + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  if ( units_kept_first > 10 )
+    units_kept_first = 10;
+  if ( total_units - 10 > units_kept_first )
+    units_kept_first = total_units - 10;
+  writeback_src = merged_units;
+  writeback_index = 0;
+  first_dest_slot = (_WORD *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
   do
   {
-    if ( v24 >= v40 )
+    if ( writeback_index >= units_kept_first )
     {
-      *v25 = -1;
+      *first_dest_slot = -1;
     }
     else
     {
-      qmemcpy(v25, v23, 0x1Cu);
-      qmemcpy(v25 + 14, v23 + 28, 3u);
+      qmemcpy(first_dest_slot, writeback_src, 0x1Cu);
+      qmemcpy(first_dest_slot + 14, writeback_src + 28, 3u);
     }
-    v23 += 31;
-    ++v24;
-    v25 = (_WORD *)((char *)v25 + 31);
+    writeback_src += 31;
+    ++writeback_index;
+    first_dest_slot = (_WORD *)((char *)first_dest_slot + 31);
   }
-  while ( v24 < 10 );
-  v37 = v44 - v40;
-  v26 = 0;
-  v27 = (_WORD *)(UNIT_STACK_STRIDE * v36 + gameData + UNIT_STACK_TABLE_OFFSET + 6);
-  v28 = &v32[31 * v40];
+  while ( writeback_index < 10 );
+  units_kept_second = total_units - units_kept_first;
+  writeback_index_second = 0;
+  second_dest_slot = (_WORD *)(UNIT_STACK_STRIDE * other_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  writeback_src_second = &merged_units[31 * units_kept_first];
   do
   {
-    if ( v26 >= v37 )
+    if ( writeback_index_second >= units_kept_second )
     {
-      *v27 = -1;
+      *second_dest_slot = -1;
     }
     else
     {
-      qmemcpy(v27, v28, 0x1Cu);
-      qmemcpy(v27 + 14, v28 + 28, 3u);
+      qmemcpy(second_dest_slot, writeback_src_second, 0x1Cu);
+      qmemcpy(second_dest_slot + 14, writeback_src_second + 28, 3u);
     }
-    v28 += 31;
-    ++v26;
-    v27 = (_WORD *)((char *)v27 + 31);
+    writeback_src_second += 31;
+    ++writeback_index_second;
+    second_dest_slot = (_WORD *)((char *)second_dest_slot + 31);
   }
-  while ( v26 < 10 );
-  if ( !v40 )
-    UnitStack_KillByIndex(v35, (char)v28, v26, a5);
-  if ( v40 == v44 )
-    UnitStack_KillByIndex(v36, (char)v28, v26, a5);
+  while ( writeback_index_second < 10 );
+  if ( !units_kept_first )
+    UnitStack_KillByIndex(stack_index, (char)writeback_src_second, writeback_index_second, a5);
+  if ( units_kept_first == total_units )
+    UnitStack_KillByIndex(other_stack_index, (char)writeback_src_second, writeback_index_second, a5);
   return 1;
 }
 // 4582F8: variable 'v5' is possibly undefined
@@ -4240,9 +4240,9 @@ int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, 
 // 5202E4: using guessed type int gameData;
 
 //----- (004589C0) --------------------------------------------------------
-signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a3, DWORD a4, double a5)
+signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int building_index, char a3, DWORD a4, double a5)
 {
-  int v5; // edi
+  int building_offset; // edi
   int v6; // ecx
   __int64 v7; // rax
   __int64 v8; // rax
@@ -4250,237 +4250,237 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
   __int64 v10; // rax
   int v11; // ebx
   int v12; // ebp
-  const void *v13; // eax
+  const void *approach_track; // eax
   int v14; // edx
   __int64 v15; // rax
   __int64 v16; // rax
   __int64 v17; // rax
   __int64 v18; // rax
   __int64 v19; // rax
-  int v20; // ebp
-  _BYTE *v21; // ebx
-  __int16 *v22; // edx
-  int v23; // ebp
-  __int16 *v24; // edx
-  _BYTE *v25; // ebx
-  int v26; // edx
-  _BYTE *v27; // ebp
-  int v28; // ebx
-  _WORD *v29; // edx
-  int v30; // ebx
-  _WORD *v31; // edx
-  _BYTE *v32; // ebp
+  int first_copy_count; // ebp
+  _BYTE *merge_cursor; // ebx
+  __int16 *first_source_slot; // edx
+  int garrison_copy_count; // ebp
+  __int16 *garrison_source_slot; // edx
+  _BYTE *garrison_merge_cursor; // ebx
+  int healthy_scan_offset; // edx
+  _BYTE *writeback_cursor; // ebp
+  int first_write_index; // ebx
+  _WORD *first_dest_slot; // edx
+  int garrison_write_index; // ebx
+  _WORD *garrison_dest_slot; // edx
+  _BYTE *garrison_writeback_cursor; // ebp
   __int64 v34; // rax
   __int64 v35; // rax
   __int64 v36; // rax
   __int64 v37; // rax
   __int64 v38; // rax
   __int64 v39; // rax
-  int v40; // ebp
-  _BYTE *v41; // edx
-  _BYTE *v42; // ebx
-  _BYTE v43[684]; // [esp+0h] [ebp-30Ch] BYREF
-  _BYTE v44[28]; // [esp+2ACh] [ebp-60h] BYREF
-  _BYTE v45[3]; // [esp+2C8h] [ebp-44h] BYREF
-  int v46; // [esp+2CCh] [ebp-40h]
-  int v47; // [esp+2D0h] [ebp-3Ch]
-  int v48; // [esp+2D4h] [ebp-38h]
-  int v49; // [esp+2D8h] [ebp-34h]
-  int v50; // [esp+2DCh] [ebp-30h]
-  int v51; // [esp+2E0h] [ebp-2Ch]
-  int v52; // [esp+2E4h] [ebp-28h]
-  int v53; // [esp+2E8h] [ebp-24h]
-  int v54; // [esp+2ECh] [ebp-20h]
-  int v55; // [esp+2F0h] [ebp-1Ch]
-  int v56; // [esp+2F4h] [ebp-18h]
+  int inner_index; // ebp
+  _BYTE *swap_a; // edx
+  _BYTE *swap_b; // ebx
+  _BYTE merged_units[684]; // [esp+0h] [ebp-30Ch] BYREF
+  _BYTE swap_buffer[28]; // [esp+2ACh] [ebp-60h] BYREF
+  _BYTE swap_tail[3]; // [esp+2C8h] [ebp-44h] BYREF
+  int building; // [esp+2CCh] [ebp-40h]
+  int army; // [esp+2D0h] [ebp-3Ch]
+  int remainder_count; // [esp+2D4h] [ebp-38h]
+  int sort_limit; // [esp+2D8h] [ebp-34h]
+  int sorted_flag; // [esp+2DCh] [ebp-30h]
+  int outer_offset; // [esp+2E0h] [ebp-2Ch]
+  int keep_count; // [esp+2E4h] [ebp-28h]
+  int outer_index; // [esp+2E8h] [ebp-24h]
+  int compare_index; // [esp+2ECh] [ebp-20h]
+  int total_units; // [esp+2F0h] [ebp-1Ch]
+  int compare_offset; // [esp+2F4h] [ebp-18h]
 
-  v47 = a1;
-  v46 = a2;
-  v5 = BUILDING_RECORD_SIZE * a2;
-  Debug_Log(a1, a3, a4, (int)aPrzegrupujza_0);
-  v7 = *(unsigned __int8 *)(gameData + v5 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v6 + UNIT_STACK_TABLE_OFFSET);
+  army = army_index;
+  building = building_index;
+  building_offset = BUILDING_RECORD_SIZE * building_index;
+  Debug_Log(army_index, a3, a4, (int)aPrzegrupujza_0);
+  v7 = *(unsigned __int8 *)(gameData + building_offset + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v6 + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v7) ^ v7) - HIDWORD(v7)) > 1
-    || (v8 = *(unsigned __int8 *)(v5 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v6 + gameData + 147176),
+    || (v8 = *(unsigned __int8 *)(building_offset + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v6 + gameData + 147176),
         (int)((HIDWORD(v8) ^ v8) - HIDWORD(v8)) > 1) )
   {
-    v9 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
+    v9 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v9) ^ v9) - HIDWORD(v9)) > 1
-      || (v34 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+      || (v34 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176),
           (int)((HIDWORD(v34) ^ v34) - HIDWORD(v34)) > 1) )
     {
-      v10 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+      v10 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v10) ^ v10) - HIDWORD(v10)) > 1
-        || (v35 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+        || (v35 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176),
             (int)((HIDWORD(v35) ^ v35) - HIDWORD(v35)) > 1) )
       {
-        v11 = UNIT_STACK_STRIDE * v47;
-        v12 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+        v11 = UNIT_STACK_STRIDE * army;
+        v12 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
         if ( (int)abs32(v12) > 1
           || (v11 = *(__int16 *)(v11 + gameData + 147176),
-              v36 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - v11,
+              v36 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - v11,
               (int)((HIDWORD(v36) ^ v36) - HIDWORD(v36)) > 1) )
         {
-          v13 = (const void *)Building_GenerateNearApproachTrack(v47, v46, v6, v11, v12);
-          if ( !v13 )
+          approach_track = (const void *)Building_GenerateNearApproachTrack(army, building, v6, v11, v12);
+          if ( !approach_track )
             return 0;
-          qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v47 + UNIT_STACK_PATH_OFFSET), v13, UNIT_STACK_PATH_BYTES);
+          qmemcpy((void *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * army + UNIT_STACK_PATH_OFFSET), approach_track, UNIT_STACK_PATH_BYTES);
           j__nfree_();
-          UnitStack_ExecuteQueuedPath(v47, v14, -111 * v47, v12, a5);
+          UnitStack_ExecuteQueuedPath(army, v14, -111 * army, v12, a5);
         }
       }
     }
   }
-  v15 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+  v15 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
   if ( (int)((HIDWORD(v15) ^ v15) - HIDWORD(v15)) > 1
-    || (v37 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+    || (v37 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176),
         (int)((HIDWORD(v37) ^ v37) - HIDWORD(v37)) > 1) )
   {
-    v16 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET);
+    v16 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( (int)((HIDWORD(v16) ^ v16) - HIDWORD(v16)) > 1
-      || (v38 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+      || (v38 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176),
           (int)((HIDWORD(v38) ^ v38) - HIDWORD(v38)) > 1) )
     {
-      v17 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+      v17 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) + 1 - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
       if ( (int)((HIDWORD(v17) ^ v17) - HIDWORD(v17)) > 1
-        || (v39 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176),
+        || (v39 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176),
             (int)((HIDWORD(v39) ^ v39) - HIDWORD(v39)) > 1) )
       {
-        v18 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v46 + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * v47 + UNIT_STACK_TABLE_OFFSET);
+        v18 = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building + BUILDING_TABLE_OFFSET) - *(__int16 *)(gameData + UNIT_STACK_STRIDE * army + UNIT_STACK_TABLE_OFFSET);
         if ( (int)((HIDWORD(v18) ^ v18) - HIDWORD(v18)) > 1 )
           return 0;
-        v19 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v46 + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * v47 + gameData + 147176);
+        v19 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building + gameData + 509675) + 1 - *(__int16 *)(UNIT_STACK_STRIDE * army + gameData + 147176);
         if ( (int)((HIDWORD(v19) ^ v19) - HIDWORD(v19)) > 1 )
           return 0;
       }
     }
   }
-  v55 = 0;
-  v20 = 0;
-  v21 = v43;
-  v22 = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v47 + 6);
+  total_units = 0;
+  first_copy_count = 0;
+  merge_cursor = merged_units;
+  first_source_slot = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * army + 6);
   do
   {
-    if ( *v22 == -1 )
+    if ( *first_source_slot == -1 )
       break;
-    qmemcpy(v21, v22, 0x1Cu);
-    qmemcpy(v21 + 28, v22 + 14, 3u);
-    ++v20;
-    v22 = (__int16 *)((char *)v22 + 31);
-    v21 += 31;
-    ++v55;
+    qmemcpy(merge_cursor, first_source_slot, 0x1Cu);
+    qmemcpy(merge_cursor + 28, first_source_slot + 14, 3u);
+    ++first_copy_count;
+    first_source_slot = (__int16 *)((char *)first_source_slot + 31);
+    merge_cursor += 31;
+    ++total_units;
   }
-  while ( v20 < 10 );
-  v23 = 0;
-  v24 = (__int16 *)(UNIT_RECORD(v46) + 18);
-  v25 = &v43[31 * v55];
+  while ( first_copy_count < 10 );
+  garrison_copy_count = 0;
+  garrison_source_slot = (__int16 *)(UNIT_RECORD(building) + 18);
+  garrison_merge_cursor = &merged_units[31 * total_units];
   do
   {
-    if ( *v24 == -1 )
+    if ( *garrison_source_slot == -1 )
       break;
-    qmemcpy(v25, v24, 0x1Cu);
-    qmemcpy(v25 + 28, v24 + 14, 3u);
-    ++v23;
-    v24 = (__int16 *)((char *)v24 + 31);
-    v25 += 31;
-    ++v55;
+    qmemcpy(garrison_merge_cursor, garrison_source_slot, 0x1Cu);
+    qmemcpy(garrison_merge_cursor + 28, garrison_source_slot + 14, 3u);
+    ++garrison_copy_count;
+    garrison_source_slot = (__int16 *)((char *)garrison_source_slot + 31);
+    garrison_merge_cursor += 31;
+    ++total_units;
   }
-  while ( v23 < 12 );
-  v50 = 0;
-  if ( v55 > 1 )
+  while ( garrison_copy_count < 12 );
+  sorted_flag = 0;
+  if ( total_units > 1 )
   {
-    v53 = 0;
-    v51 = 31;
-    v49 = v55 - 1;
+    outer_index = 0;
+    outer_offset = 31;
+    sort_limit = total_units - 1;
     do
     {
-      if ( v50 )
+      if ( sorted_flag )
         break;
-      v40 = 1;
-      v50 = 1;
-      if ( v55 > 1 )
+      inner_index = 1;
+      sorted_flag = 1;
+      if ( total_units > 1 )
       {
-        v54 = v53;
-        v56 = v51;
+        compare_index = outer_index;
+        compare_offset = outer_offset;
         do
         {
-          if ( v43[31 * v54 + 9] > v43[v56 + 9] )
+          if ( merged_units[31 * compare_index + 9] > merged_units[compare_offset + 9] )
           {
-            v50 = 0;
-            v41 = &v43[31 * v54];
-            qmemcpy(v44, v41, sizeof(v44));
-            qmemcpy(v45, v41 + 28, sizeof(v45));
-            v42 = &v43[v56];
-            qmemcpy(v41, &v43[v56], 0x1Cu);
-            qmemcpy(v41 + 28, v42 + 28, 3u);
-            qmemcpy(v42, v44, 0x1Cu);
-            qmemcpy(v42 + 28, v45, 3u);
+            sorted_flag = 0;
+            swap_a = &merged_units[31 * compare_index];
+            qmemcpy(swap_buffer, swap_a, sizeof(swap_buffer));
+            qmemcpy(swap_tail, swap_a + 28, sizeof(swap_tail));
+            swap_b = &merged_units[compare_offset];
+            qmemcpy(swap_a, &merged_units[compare_offset], 0x1Cu);
+            qmemcpy(swap_a + 28, swap_b + 28, 3u);
+            qmemcpy(swap_b, swap_buffer, 0x1Cu);
+            qmemcpy(swap_b + 28, swap_tail, 3u);
           }
-          ++v40;
+          ++inner_index;
         }
-        while ( v40 < v55 );
+        while ( inner_index < total_units );
       }
-      v51 += 31;
-      ++v53;
+      outer_offset += 31;
+      ++outer_index;
     }
-    while ( v53 < v49 );
+    while ( outer_index < sort_limit );
   }
-  v26 = 0;
-  v52 = 0;
-  if ( v55 > 0 )
+  healthy_scan_offset = 0;
+  keep_count = 0;
+  if ( total_units > 0 )
   {
     do
     {
-      if ( (char)v43[v26 + 9] >= 8 )
-        ++v52;
-      v26 += 31;
+      if ( (char)merged_units[healthy_scan_offset + 9] >= 8 )
+        ++keep_count;
+      healthy_scan_offset += 31;
     }
-    while ( v26 < 31 * v55 );
+    while ( healthy_scan_offset < 31 * total_units );
   }
-  if ( v52 > 10 )
-    v52 = 10;
-  if ( v55 - 12 > v52 )
-    v52 = v55 - 12;
-  v27 = v43;
-  v28 = 0;
-  v29 = (_WORD *)(UNIT_STACK_STRIDE * v47 + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  if ( keep_count > 10 )
+    keep_count = 10;
+  if ( total_units - 12 > keep_count )
+    keep_count = total_units - 12;
+  writeback_cursor = merged_units;
+  first_write_index = 0;
+  first_dest_slot = (_WORD *)(UNIT_STACK_STRIDE * army + gameData + UNIT_STACK_TABLE_OFFSET + 6);
   do
   {
-    if ( v28 >= v52 )
+    if ( first_write_index >= keep_count )
     {
-      *v29 = -1;
+      *first_dest_slot = -1;
     }
     else
     {
-      qmemcpy(v29, v27, 0x1Cu);
-      qmemcpy(v29 + 14, v27 + 28, 3u);
+      qmemcpy(first_dest_slot, writeback_cursor, 0x1Cu);
+      qmemcpy(first_dest_slot + 14, writeback_cursor + 28, 3u);
     }
-    v27 += 31;
-    ++v28;
-    v29 = (_WORD *)((char *)v29 + 31);
+    writeback_cursor += 31;
+    ++first_write_index;
+    first_dest_slot = (_WORD *)((char *)first_dest_slot + 31);
   }
-  while ( v28 < 10 );
-  v30 = 0;
-  v48 = v55 - v52;
-  v31 = (_WORD *)(UNIT_RECORD(v46) + 18);
-  v32 = &v43[31 * v52];
+  while ( first_write_index < 10 );
+  garrison_write_index = 0;
+  remainder_count = total_units - keep_count;
+  garrison_dest_slot = (_WORD *)(UNIT_RECORD(building) + 18);
+  garrison_writeback_cursor = &merged_units[31 * keep_count];
   do
   {
-    if ( v30 >= v48 )
+    if ( garrison_write_index >= remainder_count )
     {
-      *v31 = -1;
+      *garrison_dest_slot = -1;
     }
     else
     {
-      qmemcpy(v31, v32, 0x1Cu);
-      qmemcpy(v31 + 14, v32 + 28, 3u);
+      qmemcpy(garrison_dest_slot, garrison_writeback_cursor, 0x1Cu);
+      qmemcpy(garrison_dest_slot + 14, garrison_writeback_cursor + 28, 3u);
     }
-    v32 += 31;
-    ++v30;
-    v31 = (_WORD *)((char *)v31 + 31);
+    garrison_writeback_cursor += 31;
+    ++garrison_write_index;
+    garrison_dest_slot = (_WORD *)((char *)garrison_dest_slot + 31);
   }
-  while ( v30 < 12 );
-  if ( !v52 )
-    UnitStack_KillByIndex(v47, v30, (DWORD)v32, a5);
+  while ( garrison_write_index < 12 );
+  if ( !keep_count )
+    UnitStack_KillByIndex(army, garrison_write_index, (DWORD)garrison_writeback_cursor, a5);
   return 1;
 }
 // 458A0D: variable 'v6' is possibly undefined
@@ -4488,32 +4488,32 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
 // 5202E4: using guessed type int gameData;
 
 //----- (00459230) --------------------------------------------------------
-double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5)
+double  AI_CalcStrategicPriorityScore(int target_type, DWORD tile_x, int origin_x, int tile_y, int origin_y)
 {
-  int v7; // ecx
+  int file; // ecx
   int v8; // ecx
-  _BYTE v10[80]; // [esp+0h] [ebp-70h] BYREF
-  int v11; // [esp+50h] [ebp-20h] BYREF
-  float v12; // [esp+54h] [ebp-1Ch] BYREF
+  _BYTE line_buffer[80]; // [esp+0h] [ebp-70h] BYREF
+  int entry_type; // [esp+50h] [ebp-20h] BYREF
+  float entry_weight; // [esp+54h] [ebp-1Ch] BYREF
   int v13; // [esp+58h] [ebp-18h]
-  float v14; // [esp+5Ch] [ebp-14h]
-  signed int v15; // [esp+60h] [ebp-10h]
+  float weight; // [esp+5Ch] [ebp-14h]
+  signed int distance; // [esp+60h] [ebp-10h]
 
-  v13 = a3;
-  v14 = -1.0;
-  v7 = IO_FOpen(aStrategprior, (unsigned __int8 *)aR, a3, a2);
-  if ( v7 )
+  v13 = origin_x;
+  weight = -1.0;
+  file = IO_FOpen(aStrategprior, (unsigned __int8 *)aR, origin_x, tile_x);
+  if ( file )
   {
-    while ( fgets_(v10, 80, v7) )
+    while ( fgets_(line_buffer, 80, file) )
     {
-      sscanf_(v10, "%d %f", &v11, &v12);
-      if ( a1 == v11 )
-        v14 = v12;
+      sscanf_(line_buffer, "%d %f", &entry_type, &entry_weight);
+      if ( target_type == entry_type )
+        weight = entry_weight;
     }
   }
-  fclose_(v7);
-  v15 = Math_CeilSqrt((v13 - a2) * (v13 - a2) + (a5 - a4) * (a5 - a4));
-  return v14 / (double)v15;
+  fclose_(file);
+  distance = Math_CeilSqrt((v13 - tile_x) * (v13 - tile_x) + (origin_y - tile_y) * (origin_y - tile_y));
+  return weight / (double)distance;
 }
 // 459267: variable 'v7' is possibly undefined
 // 4592B5: variable 'v8' is possibly undefined
@@ -4523,72 +4523,72 @@ double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5)
 
 //----- (004592E0) --------------------------------------------------------
 void  AI_EvaluateStrategicTargetAtTile(
-        int a1,
-        int a2,
-        int a3,
-        int a4,
-        int a5,
-        int a6,
-        int *a7,
-        int *a8,
-        float *a9)
+        int filter_type,
+        int filter_owner,
+        int tile_y,
+        int tile_x,
+        int origin_x,
+        int origin_y,
+        int *best_type_out,
+        int *best_target_out,
+        float *best_score_out)
 {
-  int v11; // ebp
-  int v12; // edi
-  unsigned int v13; // eax
-  int v14; // edx
-  double v15; // st7
+  int target_id; // ebp
+  int target_type; // edi
+  unsigned int building_id; // eax
+  int building_record; // edx
+  double score; // st7
   int v16; // [esp+0h] [ebp-20h]
-  float v18; // [esp+8h] [ebp-18h]
+  float score_float; // [esp+8h] [ebp-18h]
 
-  v11 = -1;
-  if ( a4 >= 0 && a4 < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && a3 >= 0 && a3 < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+  target_id = -1;
+  if ( tile_x >= 0 && tile_x < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && tile_y >= 0 && tile_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
   {
-    if ( *(unsigned __int16 *)(TILE_INDEX(a4, a3)) > 0x1F4u
+    if ( *(unsigned __int16 *)(TILE_INDEX(tile_x, tile_y)) > 0x1F4u
       || (unsigned int)*(__int16 *)(gameData
-                                  + UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(a4, a3))
+                                  + UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(tile_x, tile_y))
                                   + 147180) > 0x28 )
     {
-      v13 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
-      if ( v13 > 0x64
-        || (v14 = UNIT_RECORD(v13), (unsigned int)*(char *)(v14 + 4) >= 4)
-        || *(__int16 *)(v14 + 16) == -1 )
+      building_id = *(unsigned __int16 *)(TILE_INDEX(tile_x, tile_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+      if ( building_id > 0x64
+        || (building_record = UNIT_RECORD(building_id), (unsigned int)*(char *)(building_record + 4) >= 4)
+        || *(__int16 *)(building_record + 16) == -1 )
       {
-        if ( MapTile_HasHiddenTreasure(a4, a3) )
+        if ( MapTile_HasHiddenTreasure(tile_x, tile_y) )
         {
-          v12 = 3;
+          target_type = 3;
         }
         else
         {
-          if ( !MapTile_GetReligiousSiteCategory(a4, a3) )
+          if ( !MapTile_GetReligiousSiteCategory(tile_x, tile_y) )
             return;
-          v12 = 4;
+          target_type = 4;
         }
       }
       else
       {
-        v12 = 1;
-        v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+        target_type = 1;
+        target_id = *(unsigned __int16 *)(TILE_INDEX(tile_x, tile_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
       }
     }
     else
     {
-      v12 = 2;
-      v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3));
+      target_type = 2;
+      target_id = *(unsigned __int16 *)(TILE_INDEX(tile_x, tile_y));
     }
-    if ( (a1 == -1 || v12 == a1)
-      && (a2 == -1
-       || (v12 != 1 || *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * v11 + 509676) == a2)
-       && (v12 != 2 || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * v11 + 147178) == a2)) )
+    if ( (filter_type == -1 || target_type == filter_type)
+      && (filter_owner == -1
+       || (target_type != 1 || *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * target_id + 509676) == filter_owner)
+       && (target_type != 2 || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * target_id + 147178) == filter_owner)) )
     {
-      AI_CalcStrategicPriorityScore(v12, a4, a5, a3, a6);
-      v15 = (double)(int)_CHP(v16, a1);
-      if ( v15 > *a9 )
+      AI_CalcStrategicPriorityScore(target_type, tile_x, origin_x, tile_y, origin_y);
+      score = (double)(int)_CHP(v16, filter_type);
+      if ( score > *best_score_out )
       {
-        *a7 = v12;
-        *a8 = v11;
-        v18 = v15;
-        *a9 = v18;
+        *best_type_out = target_type;
+        *best_target_out = target_id;
+        score_float = score;
+        *best_score_out = score_float;
       }
     }
   }
@@ -4600,20 +4600,20 @@ void  AI_EvaluateStrategicTargetAtTile(
 // 5202E4: using guessed type int gameData;
 
 //----- (00459570) --------------------------------------------------------
-int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5)
+int  AI_FindBestStrategicTargetNearTile(int type_filter, int owner_filter, int origin_x, int origin_y, signed int search_radius)
 {
-  int v7; // esi
-  int v8; // edi
+  int tile_y; // esi
+  int tile_x; // edi
   int v9; // ebx
   int v10; // ecx
-  int v11; // [esp+0h] [ebp-48h] BYREF
-  int v12; // [esp+4h] [ebp-44h] BYREF
-  int v13; // [esp+8h] [ebp-40h] BYREF
-  int v14; // [esp+Ch] [ebp-3Ch]
-  int v15; // [esp+10h] [ebp-38h]
-  int v16; // [esp+14h] [ebp-34h]
-  int v17; // [esp+18h] [ebp-30h]
-  signed int v18; // [esp+1Ch] [ebp-2Ch]
+  int best_type; // [esp+0h] [ebp-48h] BYREF
+  int best_target; // [esp+4h] [ebp-44h] BYREF
+  int best_score_bits; // [esp+8h] [ebp-40h] BYREF
+  int y_min; // [esp+Ch] [ebp-3Ch]
+  int x_max; // [esp+10h] [ebp-38h]
+  int x_min; // [esp+14h] [ebp-34h]
+  int y_max; // [esp+18h] [ebp-30h]
+  signed int ring_radius; // [esp+1Ch] [ebp-2Ch]
   int i; // [esp+20h] [ebp-28h]
   int v20; // [esp+24h] [ebp-24h]
   int v21; // [esp+28h] [ebp-20h]
@@ -4622,87 +4622,87 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
   int v24; // [esp+34h] [ebp-14h]
   int v25; // [esp+38h] [ebp-10h]
 
-  v23 = a2;
-  v25 = a4;
-  v24 = a3;
-  v11 = -1;
-  v12 = -1;
-  v13 = -1082130432;
-  v18 = 1;
-  if ( a5 >= 1 )
+  v23 = owner_filter;
+  v25 = origin_y;
+  v24 = origin_x;
+  best_type = -1;
+  best_target = -1;
+  best_score_bits = -1082130432;
+  ring_radius = 1;
+  if ( search_radius >= 1 )
   {
-    v17 = v25 + 1;
-    v16 = a3 - 1;
-    v14 = v25 - 1;
-    v15 = a3 + 1;
+    y_max = v25 + 1;
+    x_min = origin_x - 1;
+    y_min = v25 - 1;
+    x_max = origin_x + 1;
     do
     {
-      v7 = v25 - v18;
-      v8 = v18 + v24;
-      for ( i = v17; v7 < i; ++v7 )
-        AI_EvaluateStrategicTargetAtTile(a1, v23, v8, v7, v25, v24, &v11, &v12, (float *)&v13);
-      v21 = v16;
-      while ( v8 > v21 )
-        AI_EvaluateStrategicTargetAtTile(a1, v23, v8--, v7, v25, v24, &v11, &v12, (float *)&v13);
-      v20 = v14;
-      while ( v7 > v20 )
+      tile_y = v25 - ring_radius;
+      tile_x = ring_radius + v24;
+      for ( i = y_max; tile_y < i; ++tile_y )
+        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+      v21 = x_min;
+      while ( tile_x > v21 )
+        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x--, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
+      v20 = y_min;
+      while ( tile_y > v20 )
       {
-        v9 = v7--;
-        AI_EvaluateStrategicTargetAtTile(a1, v23, v8, v9, v25, v24, &v11, &v12, (float *)&v13);
+        v9 = tile_y--;
+        AI_EvaluateStrategicTargetAtTile(type_filter, v23, tile_x, v9, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
       }
-      v22 = v15;
-      while ( v8 < v22 )
+      v22 = x_max;
+      while ( tile_x < v22 )
       {
-        v10 = v8++;
-        AI_EvaluateStrategicTargetAtTile(a1, v23, v10, v7, v25, v24, &v11, &v12, (float *)&v13);
+        v10 = tile_x++;
+        AI_EvaluateStrategicTargetAtTile(type_filter, v23, v10, tile_y, v25, v24, &best_type, &best_target, (float *)&best_score_bits);
       }
-      ++v17;
-      --v16;
-      --v14;
-      ++v15;
-      ++v18;
+      ++y_max;
+      --x_min;
+      --y_min;
+      ++x_max;
+      ++ring_radius;
     }
-    while ( v18 <= a5 );
+    while ( ring_radius <= search_radius );
   }
-  if ( v11 == -1 )
+  if ( best_type == -1 )
     return -1;
-  if ( v11 == 3 || v11 == 4 )
-    return 100 * v11;
-  return v12 + 100 * v11;
+  if ( best_type == 3 || best_type == 4 )
+    return 100 * best_type;
+  return best_target + 100 * best_type;
 }
 
 //----- (00459760) --------------------------------------------------------
-signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...)
+signed int  createUnit(double a1, int tile_x, int tile_y, int player_index, unit_type first_unit_type, unit_type second_unit_type, ...)
 {
   va_list args;
-  char v7; // bl
-  int v8; // ecx
+  char owner; // bl
+  int stack_id; // ecx
   unit_type next_unit_type; // eax
-  DWORD v10; // ebp
+  DWORD tile_x_offset; // ebp
   int slot_offset; // ecx
   int tile_offset; // [esp+0h] [ebp-1Ch]
 
-  va_start(args, a6);
-  Unit_Create(a5, a4, a2, 0, a1, a3);
-  v7 = a4;
+  va_start(args, second_unit_type);
+  Unit_Create(first_unit_type, player_index, tile_x, 0, a1, tile_y);
+  owner = player_index;
   slot_offset = 31;
-  next_unit_type = a6;
-  v10 = 200 * a2;
-  tile_offset = 2 * a3;
+  next_unit_type = second_unit_type;
+  tile_x_offset = 200 * tile_x;
+  tile_offset = 2 * tile_y;
   while ( next_unit_type != -1 )
   {
-    v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET);
-    UnitSlot_InitFromType(slot_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v8 + 6, next_unit_type, a4);
+    stack_id = *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET);
+    UnitSlot_InitFromType(slot_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_id + 6, next_unit_type, player_index);
     next_unit_type = va_arg(args, int);
     slot_offset += 31;
   }
   va_end(args);
   return Rules_SyncArmyFactStrength(
-           gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET),
-           145 * *(unsigned __int16 *)(tile_offset + gameData + v10 + TILE_MAP_OFFSET),
+           gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET),
+           145 * *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET),
            gameData + UNIT_STACK_TABLE_OFFSET,
-           v7,
-           v10,
+           owner,
+           tile_x_offset,
            a1);
 }
 // 5202E4: using guessed type int gameData;
@@ -4710,50 +4710,50 @@ signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_typ
 //----- (00459860) --------------------------------------------------------
 int  createCastle(
         double st7_0,
-        int a2,
-        int a3,
-        int a4,
-        int a5,
-        char *a6,
-        unit_type a7,
-        unit_type a8,
+        int tile_x,
+        int tile_y,
+        int player_index,
+        int building_type,
+        char *castle_name,
+        unit_type first_unit_type,
+        unit_type second_unit_type,
         ...)
 {
   va_list args;
-  int v9; // eax
-  int v10; // ecx
+  int stack_id; // eax
+  int slot_offset; // ecx
   unit_type next_unit_type; // eax
   int unit_index; // eax
   int tile_offset; // [esp+0h] [ebp-20h]
-  DWORD v15; // [esp+4h] [ebp-1Ch]
+  DWORD tile_x_offset; // [esp+4h] [ebp-1Ch]
 
-  va_start(args, a8);
+  va_start(args, second_unit_type);
   Diagnostics_TraceBootstrapEvent("createCastle-unit-create");
-  Unit_Create(a7, a4, a2, 0, a3);
+  Unit_Create(first_unit_type, player_index, tile_x, 0, tile_y);
   Diagnostics_TraceBootstrapEvent("createCastle-fill-slots");
-  v15 = 200 * a2;
-  next_unit_type = a8;
-  v10 = 31;
-  tile_offset = 2 * a3;
+  tile_x_offset = 200 * tile_x;
+  next_unit_type = second_unit_type;
+  slot_offset = 31;
+  tile_offset = 2 * tile_y;
   while ( next_unit_type != -1 )
   {
-    v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET);
-    UnitSlot_InitFromType(v10 + UNIT_STACK_STRIDE * v9 + gameData + UNIT_STACK_TABLE_OFFSET + 6, next_unit_type, a4);
+    stack_id = *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET);
+    UnitSlot_InitFromType(slot_offset + UNIT_STACK_STRIDE * stack_id + gameData + UNIT_STACK_TABLE_OFFSET + 6, next_unit_type, player_index);
     next_unit_type = va_arg(args, int);
-    v10 += 31;
+    slot_offset += 31;
   }
   va_end(args);
   Rules_SyncArmyFactStrength(
-    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET)),
-    145 * *(unsigned __int16 *)(tile_offset + gameData + v15 + TILE_MAP_OFFSET),
+    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET)),
+    145 * *(unsigned __int16 *)(tile_offset + gameData + tile_x_offset + TILE_MAP_OFFSET),
     gameData + UNIT_STACK_TABLE_OFFSET,
     tile_offset,
-    v15,
+    tile_x_offset,
     st7_0);
   Diagnostics_TraceBootstrapEvent("createCastle-building-new");
-  Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET), st7_0, a6, 1);
+  Building_New(building_type, *(unsigned __int16 *)(tile_offset + tile_x_offset + gameData + TILE_MAP_OFFSET), st7_0, castle_name, 1);
   Diagnostics_TraceBootstrapEvent("createCastle-post-building-new");
-  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  unit_index = *(unsigned __int16 *)(tile_offset + tile_x_offset + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   *(_WORD *)(BUILDING_RECORD_SIZE * unit_index + gameData + 509690) = 0;
   Diagnostics_TraceBootstrapEvent("createCastle-update-per-turn");
   Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * unit_index + gameData + BUILDING_TABLE_OFFSET, 0);
@@ -4766,18 +4766,18 @@ int  createCastle(
 // 5202E4: using guessed type int gameData;
 
 //----- (00459ED0) --------------------------------------------------------
-int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4)
+int  WorldMap_DrawMission01ShrineMarker(int result, int tile_y, int screen_y, int screen_x)
 {
-  int v6; // eax
+  int now; // eax
   int SpriteForChar; // eax
-  int v11; // [esp-14h] [ebp-18h]
+  int pulse_brightness; // [esp-14h] [ebp-18h]
 
-  if ( result == 16 && a2 == 11 )
+  if ( result == 16 && tile_y == 11 )
   {
-    v6 = Time_Now(a3, 11);
-    v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
+    now = Time_Now(screen_y, 11);
+    pulse_brightness = ((50 * Math_SinDegreesQ16(2 * now - 90)) >> 16) + 50;
     SpriteForChar = DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 730);
-    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, v11, 0, 0, 0, 1u);
+    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, screen_x, screen_y, screen_y, screen_x + 63, screen_y + 63, pulse_brightness, 0, 0, 0, 1u);
   }
   return result;
 }
@@ -4803,14 +4803,14 @@ int  Mission05_MarkFailureOnFriendlyAttack(int result, int target_owner_index)
 // 5202E4: using guessed type int gameData;
 
 //----- (0045C000) --------------------------------------------------------
-int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
+int  WorldMap_DrawMission07TreasureMarker(int result, int tile_y)
 {
-  int v2; // esi
+  int tile_x; // esi
 
-  v2 = result;
-  if ( result == 55 && a2 == 45 && (result = MapTile_HasHiddenTreasure(55, 45)) != 0
-    || v2 == 50 && a2 == 27 && (result = MapTile_HasHiddenTreasure(50, 27)) != 0
-    || v2 == 35 && a2 == 63 && (result = MapTile_HasHiddenTreasure(35, 63)) != 0 )
+  tile_x = result;
+  if ( result == 55 && tile_y == 45 && (result = MapTile_HasHiddenTreasure(55, 45)) != 0
+    || tile_x == 50 && tile_y == 27 && (result = MapTile_HasHiddenTreasure(50, 27)) != 0
+    || tile_x == 35 && tile_y == 63 && (result = MapTile_HasHiddenTreasure(35, 63)) != 0 )
   {
     DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 962);
     return (*(int (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -4822,7 +4822,7 @@ int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
              0,
              0);
   }
-  else if ( v2 == 14 && a2 == 68 )
+  else if ( tile_x == 14 && tile_y == 68 )
   {
     result = MapTile_HasHiddenTreasure(14, 68);
     if ( result )
@@ -4844,27 +4844,27 @@ int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045D430) --------------------------------------------------------
-int  WorldMap_DrawMission11ShrineMarker(int result, int a2, int a3, int a4)
+int  WorldMap_DrawMission11ShrineMarker(int result, int tile_y, int screen_y, int screen_x)
 {
-  int v6; // eax
+  int now; // eax
   int SpriteForChar; // eax
-  int v11; // [esp-Ch] [ebp-10h]
+  int pulse_brightness; // [esp-Ch] [ebp-10h]
 
-  if ( result == 2 && a2 == 44 )
+  if ( result == 2 && tile_y == 44 )
   {
-    v6 = Time_Now(a3, 44);
-    v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
+    now = Time_Now(screen_y, 44);
+    pulse_brightness = ((50 * Math_SinDegreesQ16(2 * now - 90)) >> 16) + 50;
     SpriteForChar = DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 738);
-    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, 0, 0, v11, 0, 1u);
+    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, screen_x, screen_y, screen_y, screen_x + 63, screen_y + 63, 0, 0, pulse_brightness, 0, 1u);
   }
   return result;
 }
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045E630) --------------------------------------------------------
-int  Mission_MarkObjective15CompleteOnAttack(int result, int a2)
+int  Mission_MarkObjective15CompleteOnAttack(int result, int target_owner_index)
 {
-  if ( result == 1 && (a2 == 2 || a2 == 3) )
+  if ( result == 1 && (target_owner_index == 2 || target_owner_index == 3) )
   {
     result = gameData;
     MISSION_FAILURE_FLAG = 1;
@@ -4874,15 +4874,15 @@ int  Mission_MarkObjective15CompleteOnAttack(int result, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0045F190) --------------------------------------------------------
-int  WorldMap_DrawMission17TreasureMarker(int result, int a2)
+int  WorldMap_DrawMission17TreasureMarker(int result, int tile_y)
 {
-  int v2; // esi
+  int tile_x; // esi
 
-  v2 = result;
-  if ( result == 50 && a2 == 34 && (result = MapTile_HasHiddenTreasure(50, 34)) != 0
-    || v2 == 51 && a2 == 73 && (result = MapTile_HasHiddenTreasure(51, 73)) != 0
-    || v2 == 77 && a2 == 34 && (result = MapTile_HasHiddenTreasure(77, 34)) != 0
-    || v2 == 24 && a2 == 49 && (result = MapTile_HasHiddenTreasure(24, 49)) != 0 )
+  tile_x = result;
+  if ( result == 50 && tile_y == 34 && (result = MapTile_HasHiddenTreasure(50, 34)) != 0
+    || tile_x == 51 && tile_y == 73 && (result = MapTile_HasHiddenTreasure(51, 73)) != 0
+    || tile_x == 77 && tile_y == 34 && (result = MapTile_HasHiddenTreasure(77, 34)) != 0
+    || tile_x == 24 && tile_y == 49 && (result = MapTile_HasHiddenTreasure(24, 49)) != 0 )
   {
     DLX_GetSpriteForChar(g_WorldMapBackgroundSpriteSet, 962);
     return (*(int (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -4928,40 +4928,40 @@ BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2)
 {
   static int mission0_last_blocker_index = -1;
   static int mission0_last_blocker_turn = -1;
-  int v2; // edx
-  int v3; // eax
-  int v4; // ecx
-  int v5; // edx
-  int v6; // edx
-  int v7; // eax
-  int v8; // eax
-  int v9; // edx
-  int v10; // edx
-  BOOL v11; // eax
-  BOOL v12; // edi
-  int v13; // ecx
-  int v14; // esi
-  int v15; // eax
+  int mission0_stack_index; // edx
+  int building_scan_index; // eax
+  int building_record; // ecx
+  int building_owner; // edx
+  int stack_scan_index; // edx
+  int stack_owner; // eax
+  int enemy_building_index; // eax
+  int enemy_building_record; // edx
+  int enemy_stack_index; // edx
+  BOOL all_treasures_taken; // eax
+  BOOL objective_met; // edi
+  int kill_stack_index; // ecx
+  int kill_stack_offset; // esi
+  int kill_stack_record; // eax
   int v16; // ecx
   int v17; // edx
   int v18; // ecx
-  int v19; // eax
-  int v20; // eax
-  int v21; // edx
-  int v22; // eax
-  int v23; // ecx
-  int v24; // edx
-  BOOL v25; // eax
-  int v26; // ecx
-  int v27; // esi
-  int v28; // eax
+  int garrison_slot_offset; // eax
+  int player_offset; // eax
+  int owner2_stack_index; // edx
+  int owner4_building_index; // eax
+  int owner4_building_record; // ecx
+  int owner4_stack_index; // edx
+  BOOL treasures_taken_m17; // eax
+  int kill_stack_index_m17; // ecx
+  int kill_stack_offset_m17; // esi
+  int kill_stack_record_m17; // eax
   int v29; // ecx
   int v30; // edx
   int v31; // ecx
-  int v32; // ecx
+  int personage_count; // ecx
   int i; // eax
-  int v34; // edx
-  int v35; // eax
+  int garrison_unit_type; // edx
+  int ally_offset; // eax
   BOOL result; // eax
 
   if ( g_CheatForceWinMissionFlag )
@@ -4973,27 +4973,27 @@ BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2)
   switch ( ACTIVE_MISSION_INDEX )
   {
     case 0:
-      v2 = 0;
+      mission0_stack_index = 0;
 LABEL_6:
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v2 + 147180) <= 0x28
-        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v2 + 147178) == 1 )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147180) <= 0x28
+        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147178) == 1 )
       {
-        if ( mission0_last_blocker_index != v2 || mission0_last_blocker_turn != GAME_TURN_COUNTER )
+        if ( mission0_last_blocker_index != mission0_stack_index || mission0_last_blocker_turn != GAME_TURN_COUNTER )
         {
-          mission0_last_blocker_index = v2;
+          mission0_last_blocker_index = mission0_stack_index;
           mission0_last_blocker_turn = GAME_TURN_COUNTER;
           Diagnostics_TraceWorldMapActionEvent(
             "mission_objective_blocked",
-            v2,
-            *(__int16 *)(gameData + UNIT_STACK_STRIDE * v2 + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(gameData + UNIT_STACK_STRIDE * v2 + 147176),
-            Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v2));
+            mission0_stack_index,
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(gameData + UNIT_STACK_STRIDE * mission0_stack_index + 147176),
+            Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * mission0_stack_index));
         }
         return 0;
       }
-      while ( ++v2 < 500 )
+      while ( ++mission0_stack_index < 500 )
       {
-        if ( v2 >= 0 )
+        if ( mission0_stack_index >= 0 )
           goto LABEL_6;
       }
       return 1;
@@ -5027,69 +5027,69 @@ LABEL_6:
         *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 567712) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 5:
-      v3 = (unsigned __int8)g_LanguageIndex;
+      building_scan_index = (unsigned __int8)g_LanguageIndex;
       if ( g_LanguageIndex )
       {
-        v8 = 0;
+        enemy_building_index = 0;
 LABEL_35:
-        v9 = UNIT_RECORD(v8);
-        if ( (unsigned int)*(char *)(v9 + 4) >= 4
-          || *(__int16 *)(v9 + 16) == -1
-          || *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v8 + 509676) != 3 )
+        enemy_building_record = UNIT_RECORD(enemy_building_index);
+        if ( (unsigned int)*(char *)(enemy_building_record + 4) >= 4
+          || *(__int16 *)(enemy_building_record + 16) == -1
+          || *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + 509676) != 3 )
         {
-          while ( ++v8 < 100 )
+          while ( ++enemy_building_index < 100 )
           {
-            if ( v8 >= 0 )
+            if ( enemy_building_index >= 0 )
               goto LABEL_35;
           }
-          v10 = 0;
+          enemy_stack_index = 0;
 LABEL_42:
-          if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v10 + 147180) > 0x28
-            || *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v10 + 147178) != 3 )
+          if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147180) > 0x28
+            || *(_BYTE *)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147178) != 3 )
           {
-            while ( ++v10 < 500 )
+            while ( ++enemy_stack_index < 500 )
             {
-              if ( v10 >= 0 )
+              if ( enemy_stack_index >= 0 )
                 goto LABEL_42;
             }
             return 1;
           }
-          Mission_TraceObjectiveBlocked(5, v10, *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v10 + 147178), Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10));
+          Mission_TraceObjectiveBlocked(5, enemy_stack_index, *(_BYTE *)(gameData + UNIT_STACK_STRIDE * enemy_stack_index + 147178), Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * enemy_stack_index));
           return 0;
         }
-        Mission_TraceObjectiveBlocked(5, v8, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v8 + 509676), *(__int16 *)(v9 + 16));
+        Mission_TraceObjectiveBlocked(5, enemy_building_index, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * enemy_building_index + 509676), *(__int16 *)(enemy_building_record + 16));
         return 0;
       }
 LABEL_18:
-      v4 = UNIT_RECORD(v3);
-      if ( (unsigned int)*(char *)(v4 + 4) < 4 && *(__int16 *)(v4 + 16) != -1 )
+      building_record = UNIT_RECORD(building_scan_index);
+      if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
       {
-        v5 = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * v3 + gameData + 509676);
-        if ( v5 == 1 || v5 == 2 )
+        building_owner = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * building_scan_index + gameData + 509676);
+        if ( building_owner == 1 || building_owner == 2 )
         {
-          Mission_TraceObjectiveBlocked(5, v3, v5, *(__int16 *)(v4 + 16));
+          Mission_TraceObjectiveBlocked(5, building_scan_index, building_owner, *(__int16 *)(building_record + 16));
           return 0;
         }
       }
-      while ( ++v3 < 100 )
+      while ( ++building_scan_index < 100 )
       {
-        if ( v3 >= 0 )
+        if ( building_scan_index >= 0 )
           goto LABEL_18;
       }
-      v6 = 0;
+      stack_scan_index = 0;
 LABEL_27:
-      if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * v6 + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * stack_scan_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
       {
-        v7 = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * v6 + 147178);
-        if ( v7 == 1 || v7 == 2 )
+        stack_owner = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_scan_index + 147178);
+        if ( stack_owner == 1 || stack_owner == 2 )
         {
-          Mission_TraceObjectiveBlocked(5, v6, v7, Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v6));
+          Mission_TraceObjectiveBlocked(5, stack_scan_index, stack_owner, Unit_GetSquadCount(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_scan_index));
           return 0;
         }
       }
-      while ( ++v6 < 500 )
+      while ( ++stack_scan_index < 500 )
       {
-        if ( v6 >= 0 )
+        if ( stack_scan_index >= 0 )
           goto LABEL_27;
       }
       return 1;
@@ -5103,9 +5103,9 @@ LABEL_27:
         *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574456) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 7:
-      v11 = !MapTile_HasHiddenTreasure(55, 45) && !MapTile_HasHiddenTreasure(50, 27) && !MapTile_HasHiddenTreasure(35, 63) && !MapTile_HasHiddenTreasure(14, 68);
-      v12 = v11;
-      if ( !v11 )
+      all_treasures_taken = !MapTile_HasHiddenTreasure(55, 45) && !MapTile_HasHiddenTreasure(50, 27) && !MapTile_HasHiddenTreasure(35, 63) && !MapTile_HasHiddenTreasure(14, 68);
+      objective_met = all_treasures_taken;
+      if ( !all_treasures_taken )
       {
         Mission_TraceObjectiveBlocked(
           7,
@@ -5115,70 +5115,70 @@ LABEL_27:
             | (MapTile_HasHiddenTreasure(50, 27) ? 2 : 0)
             | (MapTile_HasHiddenTreasure(35, 63) ? 4 : 0)
             | (MapTile_HasHiddenTreasure(14, 68) ? 8 : 0));
-        return v12;
+        return objective_met;
       }
-      v13 = 0;
+      kill_stack_index = 0;
       while ( 1 )
       {
-        if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v13 + 147180) <= 0x28 )
+        if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * kill_stack_index + 147180) <= 0x28 )
         {
-          v14 = UNIT_STACK_STRIDE * v13;
-          v15 = gameData + UNIT_STACK_STRIDE * v13;
-          if ( *(_BYTE *)(v15 + 147178) )
+          kill_stack_offset = UNIT_STACK_STRIDE * kill_stack_index;
+          kill_stack_record = gameData + UNIT_STACK_STRIDE * kill_stack_index;
+          if ( *(_BYTE *)(kill_stack_record + 147178) )
           {
-            if ( Map_IsTileVisibleToPlayer(*(__int16 *)(v15 + 147174), *(__int16 *)(v15 + 147176), 0) )
+            if ( Map_IsTileVisibleToPlayer(*(__int16 *)(kill_stack_record + 147174), *(__int16 *)(kill_stack_record + 147176), 0) )
             {
-              Camera_CenterOnUnit(v13);
+              Camera_CenterOnUnit(kill_stack_index);
               Audio_PlayArtifactSound(0);
-              UI_StartTileBlinkFlash(*(__int16 *)(v14 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(v14 + gameData + 147176), v16);
-              Unit_Kill(v14 + gameData + UNIT_STACK_TABLE_OFFSET, 0, a1, a2);
+              UI_StartTileBlinkFlash(*(__int16 *)(kill_stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(kill_stack_offset + gameData + 147176), v16);
+              Unit_Kill(kill_stack_offset + gameData + UNIT_STACK_TABLE_OFFSET, 0, a1, a2);
               Timer_BusyWaitWithCallback(100, v17, v18);
             }
           }
         }
         do
         {
-          if ( ++v13 >= 500 )
-            return v12;
+          if ( ++kill_stack_index >= 500 )
+            return objective_met;
         }
-        while ( v13 < 0 );
+        while ( kill_stack_index < 0 );
       }
     case 8:
-      v19 = 0;
-      while ( *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 562420) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
+      garrison_slot_offset = 0;
+      while ( *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 562420) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + garrison_slot_offset + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
-        v19 += 31;
-        if ( v19 >= 372 )
+        garrison_slot_offset += 31;
+        if ( garrison_slot_offset >= 372 )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(8, 30, 23, v19 / 31);
+      Mission_TraceObjectiveBlocked(8, 30, 23, garrison_slot_offset / 31);
       return 0;
     case 9:
-      v20 = 1423;
-      while ( !*(_DWORD *)(gameData + v20 + PLAYER_RUNTIME_STATE_OFFSET) )
+      player_offset = 1423;
+      while ( !*(_DWORD *)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET) )
       {
-        v20 += PLAYER_DATA_STRIDE;
-        if ( v20 >= 7115 )
+        player_offset += PLAYER_DATA_STRIDE;
+        if ( player_offset >= 7115 )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(9, v20 / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + v20 + PLAYER_RUNTIME_STATE_OFFSET), 0);
+      Mission_TraceObjectiveBlocked(9, player_offset / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET), 0);
       return 0;
     case 0xA:
-      v21 = 0;
+      owner2_stack_index = 0;
 LABEL_75:
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v21 + 147180) <= 0x28
-        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v21 + 147178) == 2 )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147180) <= 0x28
+        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147178) == 2 )
       {
         Mission_TraceObjectiveBlocked(
           10,
-          v21,
-          *(__int16 *)(gameData + UNIT_STACK_STRIDE * v21 + UNIT_STACK_TABLE_OFFSET),
-          *(__int16 *)(gameData + UNIT_STACK_STRIDE * v21 + 147176));
+          owner2_stack_index,
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + UNIT_STACK_TABLE_OFFSET),
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * owner2_stack_index + 147176));
         return 0;
       }
-      while ( ++v21 < 500 )
+      while ( ++owner2_stack_index < 500 )
       {
-        if ( v21 >= 0 )
+        if ( owner2_stack_index >= 0 )
           goto LABEL_75;
       }
       return 1;
@@ -5206,36 +5206,36 @@ LABEL_75:
         *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 566822) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 0xF:
-      v22 = 0;
+      owner4_building_index = 0;
 LABEL_86:
-      v23 = UNIT_RECORD(v22);
-      if ( (unsigned int)*(char *)(v23 + 4) < 4
-        && *(__int16 *)(v23 + 16) != -1
-        && *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v22 + 509676) == 4 )
+      owner4_building_record = UNIT_RECORD(owner4_building_index);
+      if ( (unsigned int)*(char *)(owner4_building_record + 4) < 4
+        && *(__int16 *)(owner4_building_record + 16) != -1
+        && *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + 509676) == 4 )
       {
-        Mission_TraceObjectiveBlocked(15, v22, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * v22 + 509676), *(__int16 *)(v23 + 16));
+        Mission_TraceObjectiveBlocked(15, owner4_building_index, *(_BYTE *)(gameData + BUILDING_RECORD_SIZE * owner4_building_index + 509676), *(__int16 *)(owner4_building_record + 16));
         return 0;
       }
-      while ( ++v22 < 100 )
+      while ( ++owner4_building_index < 100 )
       {
-        if ( v22 >= 0 )
+        if ( owner4_building_index >= 0 )
           goto LABEL_86;
       }
-      v24 = 0;
+      owner4_stack_index = 0;
 LABEL_94:
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v24 + 147180) <= 0x28
-        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v24 + 147178) == 4 )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147180) <= 0x28
+        && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147178) == 4 )
       {
         Mission_TraceObjectiveBlocked(
           15,
-          v24,
-          *(__int16 *)(gameData + UNIT_STACK_STRIDE * v24 + UNIT_STACK_TABLE_OFFSET),
-          *(__int16 *)(gameData + UNIT_STACK_STRIDE * v24 + 147176));
+          owner4_stack_index,
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + UNIT_STACK_TABLE_OFFSET),
+          *(__int16 *)(gameData + UNIT_STACK_STRIDE * owner4_stack_index + 147176));
         return 0;
       }
-      while ( ++v24 < 500 )
+      while ( ++owner4_stack_index < 500 )
       {
-        if ( v24 >= 0 )
+        if ( owner4_stack_index >= 0 )
           goto LABEL_94;
       }
       return 1;
@@ -5249,9 +5249,9 @@ LABEL_94:
         *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 574660) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676));
       return 0;
     case 0x11:
-      v25 = !MapTile_HasHiddenTreasure(50, 34) && !MapTile_HasHiddenTreasure(51, 73) && !MapTile_HasHiddenTreasure(77, 34) && !MapTile_HasHiddenTreasure(24, 49);
-      v12 = v25;
-      if ( !v25 )
+      treasures_taken_m17 = !MapTile_HasHiddenTreasure(50, 34) && !MapTile_HasHiddenTreasure(51, 73) && !MapTile_HasHiddenTreasure(77, 34) && !MapTile_HasHiddenTreasure(24, 49);
+      objective_met = treasures_taken_m17;
+      if ( !treasures_taken_m17 )
       {
         Mission_TraceObjectiveBlocked(
           17,
@@ -5261,43 +5261,43 @@ LABEL_94:
             | (MapTile_HasHiddenTreasure(51, 73) ? 2 : 0)
             | (MapTile_HasHiddenTreasure(77, 34) ? 4 : 0)
             | (MapTile_HasHiddenTreasure(24, 49) ? 8 : 0));
-        return v12;
+        return objective_met;
       }
-      v26 = 0;
+      kill_stack_index_m17 = 0;
 LABEL_105:
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v26 + 147180) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * kill_stack_index_m17 + 147180) <= 0x28 )
       {
-        v27 = UNIT_STACK_STRIDE * v26;
-        v28 = gameData + UNIT_STACK_STRIDE * v26;
-        if ( *(_BYTE *)(v28 + 147178) != 1 )
+        kill_stack_offset_m17 = UNIT_STACK_STRIDE * kill_stack_index_m17;
+        kill_stack_record_m17 = gameData + UNIT_STACK_STRIDE * kill_stack_index_m17;
+        if ( *(_BYTE *)(kill_stack_record_m17 + 147178) != 1 )
         {
-          if ( Map_IsTileVisibleToPlayer(*(__int16 *)(v28 + 147174), *(__int16 *)(v28 + 147176), 1) )
+          if ( Map_IsTileVisibleToPlayer(*(__int16 *)(kill_stack_record_m17 + 147174), *(__int16 *)(kill_stack_record_m17 + 147176), 1) )
           {
-            Camera_CenterOnUnit(v26);
+            Camera_CenterOnUnit(kill_stack_index_m17);
             Audio_PlayArtifactSound(0);
-            UI_StartTileBlinkFlash(*(__int16 *)(v27 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(v27 + gameData + 147176), v29);
-            Unit_Kill(v27 + gameData + UNIT_STACK_TABLE_OFFSET, 1, a1, a2);
+            UI_StartTileBlinkFlash(*(__int16 *)(kill_stack_offset_m17 + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(kill_stack_offset_m17 + gameData + 147176), v29);
+            Unit_Kill(kill_stack_offset_m17 + gameData + UNIT_STACK_TABLE_OFFSET, 1, a1, a2);
             Timer_BusyWaitWithCallback(100, v30, v31);
           }
         }
       }
-      while ( ++v26 < 500 )
+      while ( ++kill_stack_index_m17 < 500 )
       {
-        if ( v26 >= 0 )
+        if ( kill_stack_index_m17 >= 0 )
           goto LABEL_105;
       }
-      return v12;
+      return objective_met;
     case 0x12:
-      v32 = 0;
+      personage_count = 0;
       for ( i = 0; i != 372; i += 31 )
       {
-        v34 = *(__int16 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 573450) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + i + 509692);
-        if ( v34 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v34 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-          ++v32;
+        garrison_unit_type = *(__int16 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 573450) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + i + 509692);
+        if ( garrison_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+          ++personage_count;
       }
-      if ( v32 >= 6 )
+      if ( personage_count >= 6 )
         return 1;
-      Mission_TraceObjectiveBlocked(18, 85, 38, v32);
+      Mission_TraceObjectiveBlocked(18, 85, 38, personage_count);
       return 0;
     case 0x13:
       if ( *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
@@ -5305,14 +5305,14 @@ LABEL_105:
         Mission_TraceObjectiveBlocked(19, 0, *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET), 0);
         return 0;
       }
-      v35 = 2846;
-      while ( !*(_DWORD *)(gameData + v35 + PLAYER_RUNTIME_STATE_OFFSET) )
+      ally_offset = 2846;
+      while ( !*(_DWORD *)(gameData + ally_offset + PLAYER_RUNTIME_STATE_OFFSET) )
       {
-        v35 += PLAYER_DATA_STRIDE;
-        if ( v35 >= 7115 )
+        ally_offset += PLAYER_DATA_STRIDE;
+        if ( ally_offset >= 7115 )
           return 1;
       }
-      Mission_TraceObjectiveBlocked(19, v35 / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + v35 + PLAYER_RUNTIME_STATE_OFFSET), 0);
+      Mission_TraceObjectiveBlocked(19, ally_offset / PLAYER_DATA_STRIDE, *(_DWORD *)(gameData + ally_offset + PLAYER_RUNTIME_STATE_OFFSET), 0);
       return 0;
     default:
       return 0;
@@ -5354,22 +5354,22 @@ LABEL_105:
 int Mission_CheckFailureCondition()
 {
   int result; // eax
-  int v1; // ebx
-  int v2; // edx
+  int personage_count; // ebx
+  int stack_index; // edx
   int i; // esi
-  int v4; // eax
-  int v5; // eax
-  int v6; // ecx
+  int slot_unit_type; // eax
+  int building_index; // eax
+  int building_record; // ecx
   int j; // ecx
-  int v8; // edx
-  int v9; // ebx
-  int v10; // edx
+  int garrison_unit_type; // edx
+  int personage_count_p1; // ebx
+  int stack_index_p1; // edx
   int k; // esi
-  int v12; // eax
-  int v13; // eax
-  int v14; // ecx
+  int slot_unit_type_p1; // eax
+  int building_index_p1; // eax
+  int building_record_p1; // ecx
   int m; // ecx
-  int v16; // edx
+  int garrison_unit_type_p1; // edx
 
   switch ( ACTIVE_MISSION_INDEX )
   {
@@ -5384,90 +5384,90 @@ int Mission_CheckFailureCondition()
         return MISSION_FAILURE_FLAG;
       return result;
     case 8:
-      v1 = 0;
-      v2 = 0;
+      personage_count = 0;
+      stack_index = 0;
 LABEL_7:
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v2 + 147180) <= 0x28 && !*(_BYTE *)(gameData + UNIT_STACK_STRIDE * v2 + 147178) )
+      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 && !*(_BYTE *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) )
       {
         for ( i = 0; i < 10; ++i )
         {
-          v4 = *(__int16 *)(UNIT_STACK_STRIDE * v2 + gameData + 31 * i + 147180);
-          if ( v4 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v4 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-            ++v1;
+          slot_unit_type = *(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + 31 * i + 147180);
+          if ( slot_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slot_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+            ++personage_count;
         }
       }
-      while ( ++v2 < 500 )
+      while ( ++stack_index < 500 )
       {
-        if ( v2 >= 0 )
+        if ( stack_index >= 0 )
           goto LABEL_7;
       }
-      v5 = 0;
+      building_index = 0;
 LABEL_19:
-      v6 = UNIT_RECORD(v5);
-      if ( (unsigned int)*(char *)(v6 + 4) < 4
-        && *(__int16 *)(v6 + 16) != -1
-        && !*(_BYTE *)(BUILDING_RECORD_SIZE * v5 + gameData + 509676) )
+      building_record = UNIT_RECORD(building_index);
+      if ( (unsigned int)*(char *)(building_record + 4) < 4
+        && *(__int16 *)(building_record + 16) != -1
+        && !*(_BYTE *)(BUILDING_RECORD_SIZE * building_index + gameData + 509676) )
       {
         for ( j = 0; j < 12; ++j )
         {
-          v8 = *(__int16 *)(31 * j + gameData + BUILDING_RECORD_SIZE * v5 + 509692);
-          if ( v8 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v8 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-            ++v1;
+          garrison_unit_type = *(__int16 *)(31 * j + gameData + BUILDING_RECORD_SIZE * building_index + 509692);
+          if ( garrison_unit_type == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+            ++personage_count;
         }
       }
-      while ( ++v5 < 100 )
+      while ( ++building_index < 100 )
       {
-        if ( v5 >= 0 )
+        if ( building_index >= 0 )
           goto LABEL_19;
       }
-      return v1 < 12;
+      return personage_count < 12;
     case 0xD:
       return *(unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 561026) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509676) != 1;
     case 0xF:
       return MISSION_FAILURE_FLAG;
     case 0x12:
-      v9 = 0;
-      v10 = 0;
+      personage_count_p1 = 0;
+      stack_index_p1 = 0;
       break;
     default:
       return 0;
   }
 LABEL_34:
-  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * v10 + 147180) <= 0x28
-    && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * v10 + 147178) == 1 )
+  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + 147180) <= 0x28
+    && *(_BYTE *)(gameData + UNIT_STACK_STRIDE * stack_index_p1 + 147178) == 1 )
   {
     for ( k = 0; k < 10; ++k )
     {
-      v12 = *(__int16 *)(UNIT_STACK_STRIDE * v10 + gameData + 31 * k + 147180);
-      if ( v12 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v12 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-        ++v9;
+      slot_unit_type_p1 = *(__int16 *)(UNIT_STACK_STRIDE * stack_index_p1 + gameData + 31 * k + 147180);
+      if ( slot_unit_type_p1 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slot_unit_type_p1 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+        ++personage_count_p1;
     }
   }
-  while ( ++v10 < 500 )
+  while ( ++stack_index_p1 < 500 )
   {
-    if ( v10 >= 0 )
+    if ( stack_index_p1 >= 0 )
       goto LABEL_34;
   }
-  v13 = 0;
+  building_index_p1 = 0;
 LABEL_46:
-  v14 = UNIT_RECORD(v13);
-  if ( (unsigned int)*(char *)(v14 + 4) < 4
-    && *(__int16 *)(v14 + 16) != -1
-    && *(_BYTE *)(BUILDING_RECORD_SIZE * v13 + gameData + 509676) == 1 )
+  building_record_p1 = UNIT_RECORD(building_index_p1);
+  if ( (unsigned int)*(char *)(building_record_p1 + 4) < 4
+    && *(__int16 *)(building_record_p1 + 16) != -1
+    && *(_BYTE *)(BUILDING_RECORD_SIZE * building_index_p1 + gameData + 509676) == 1 )
   {
     for ( m = 0; m < 12; ++m )
     {
-      v16 = *(__int16 *)(31 * m + gameData + BUILDING_RECORD_SIZE * v13 + 509692);
-      if ( v16 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v16 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-        ++v9;
+      garrison_unit_type_p1 = *(__int16 *)(31 * m + gameData + BUILDING_RECORD_SIZE * building_index_p1 + 509692);
+      if ( garrison_unit_type_p1 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || garrison_unit_type_p1 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+        ++personage_count_p1;
     }
   }
-  while ( ++v13 < 100 )
+  while ( ++building_index_p1 < 100 )
   {
-    if ( v13 >= 0 )
+    if ( building_index_p1 >= 0 )
       goto LABEL_46;
   }
-  return v9 < 6;
+  return personage_count_p1 < 6;
 }
 // 45C811: conditional instruction was optimized away because edx.4<1F4u
 // 45C8A0: conditional instruction was optimized away because eax.4<64u
@@ -6582,16 +6582,16 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
 }
 
 //----- (00460370) --------------------------------------------------------
-int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
+int  Scenario_LoadMissionByIndexAndPlay(char *mission_index_arg, int a2, DWORD a3, double a4)
 {
   int mission_index; // eax
   unsigned __int8 saved_campaign_state[27]; // [esp-1Bh] [ebp-1Bh] BYREF
 
-  mission_index = (int)(size_t)a1;
+  mission_index = (int)(size_t)mission_index_arg;
   qmemcpy(saved_campaign_state, (const void *)(gameData + 147147), 0x1Bu);
   if ( mission_index && mission_index != 10 )
     Video_PlayAviWithModeGuard(0, aZwy01_0);
-  Mission_PlayInfoSlideshow(mission_index, a1);
+  Mission_PlayInfoSlideshow(mission_index, mission_index_arg);
   WorldMap_Initialize((char)mission_index, a3);
   Scenario_LoadMissionByIndex(mission_index, a4);
   if ( mission_index && mission_index != 10 )
@@ -6695,78 +6695,78 @@ static void Compat_MenuProbeTraceRenderInput(
 }
 
 //----- (00460410) --------------------------------------------------------
-_DWORD * RenderState_ConstructDefault(int a1, int a2)
+_DWORD * RenderState_ConstructDefault(int render_state, int a2)
 {
-  int v2; // eax
-  _DWORD *v3; // eax
+  int palette_base; // eax
+  _DWORD *palette_array; // eax
 
   (void)a2;
-  v2 = a1 + 80;
-  *(_DWORD *)(v2 - 64) = 0;
-  *(_DWORD *)(v2 - 60) = 0;
-  *(_DWORD *)(v2 - 56) = 639;
-  *(_DWORD *)(v2 - 52) = 479;
-  *(_DWORD *)(v2 - 48) = 64;
-  *(_DWORD *)(v2 - 16) = 0;
-  v3 = (_DWORD *)(uintptr_t)(unsigned int)_wcpp_4_ctor_array__(v2, 256);
-  v3[256] = 50;
-  v3[257] = 6;
-  v3[258] = 2;
-  v3[259] = 5;
-  v3[260] = g_RenderState_Vtable;
-  return v3 - 20;
+  palette_base = render_state + 80;
+  *(_DWORD *)(palette_base - 64) = 0;
+  *(_DWORD *)(palette_base - 60) = 0;
+  *(_DWORD *)(palette_base - 56) = 639;
+  *(_DWORD *)(palette_base - 52) = 479;
+  *(_DWORD *)(palette_base - 48) = 64;
+  *(_DWORD *)(palette_base - 16) = 0;
+  palette_array = (_DWORD *)(uintptr_t)(unsigned int)_wcpp_4_ctor_array__(palette_base, 256);
+  palette_array[256] = 50;
+  palette_array[257] = 6;
+  palette_array[258] = 2;
+  palette_array[259] = 5;
+  palette_array[260] = g_RenderState_Vtable;
+  return palette_array - 20;
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 50F1E4: using guessed type int (*off_50F1E4[6])();
 
 //----- (00460490) --------------------------------------------------------
-int  RenderState_InitCursorResources(int a1, int a2, char a3, DWORD a4)
+int  RenderState_InitCursorResources(int render_state, int a2, char a3, DWORD a4)
 {
   _DWORD *sprite_set;
   _DWORD *surface;
 
   g_CursorOverlayPresented = 0;
-  *(_DWORD *)(a1 + 44) = 0;
+  *(_DWORD *)(render_state + 44) = 0;
   sprite_set = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
   if ( sprite_set )
     sprite_set = DLXSpriteSet_Load(sprite_set, "mouse.s32");
-  *(_DWORD *)(a1 + 64) = sprite_set;
+  *(_DWORD *)(render_state + 64) = sprite_set;
   surface = (_DWORD *)Mem_Alloc(188, 0, a3, a4);
   if ( surface )
   {
     a3 = 64;
     surface = Render_CreateSurface((int)surface, 64, 64);
   }
-  *(_DWORD *)(a1 + 8) = surface;
+  *(_DWORD *)(render_state + 8) = surface;
   surface = (_DWORD *)Mem_Alloc(188, 0, a3, a4);
   if ( surface )
     surface = Render_CreateSurface((int)surface, 64, 64);
-  *(_DWORD *)(a1 + 12) = surface;
-  RenderState_SelectCursorDescriptor(a1, (int)(uintptr_t)g_RenderVideoInitCursorDescriptor);
-  Compat_RenderStateInvokeMethod(a1, 20);
-  *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 20);
-  *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 24);
-  RenderState_RecalculateCursorBoundsForRect((_DWORD *)a1, 0, 640, 0, 480);
-  return LoadPalCOL(a1 + 80, (intptr_t)aMap_pal_1, a4);
+  *(_DWORD *)(render_state + 12) = surface;
+  RenderState_SelectCursorDescriptor(render_state, (int)(uintptr_t)g_RenderVideoInitCursorDescriptor);
+  Compat_RenderStateInvokeMethod(render_state, 20);
+  *(_DWORD *)(render_state + 48) = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(*(_DWORD *)(render_state + 60) + 20);
+  *(_DWORD *)(render_state + 52) = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(*(_DWORD *)(render_state + 60) + 24);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)render_state, 0, 640, 0, 480);
+  return LoadPalCOL(render_state + 80, (intptr_t)aMap_pal_1, a4);
 }
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460580) --------------------------------------------------------
-int  RenderState_ReleaseCursorResources(int a1)
+int  RenderState_ReleaseCursorResources(int render_state)
 {
   int surface_handle;
   int vtable;
   int (*release_proc)(int, int);
 
-  DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
-  surface_handle = *(_DWORD *)(a1 + 8);
+  DLXSpriteSet_ReleaseAndClear((int *)(render_state + 64));
+  surface_handle = *(_DWORD *)(render_state + 8);
   if ( surface_handle )
   {
     vtable = *(_DWORD *)(surface_handle + 184);
     release_proc = (int (*)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(vtable);
     release_proc(surface_handle, 2);
   }
-  surface_handle = *(_DWORD *)(a1 + 12);
+  surface_handle = *(_DWORD *)(render_state + 12);
   if ( !surface_handle )
     return 0;
   vtable = *(_DWORD *)(surface_handle + 184);
@@ -6776,7 +6776,7 @@ int  RenderState_ReleaseCursorResources(int a1)
 }
 
 //----- (004605D0) --------------------------------------------------------
-unsigned int  DD_Pump(int a1, int a2, ...)
+unsigned int  DD_Pump(int render_state, int a2, ...)
 {
   _DWORD *primary_surface;
   _DWORD *back_surface;
@@ -6791,72 +6791,72 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   int v9; // edx
   int v10; // ecx
   int v11; // edx
-  int v12; // edi
-  int v13; // ebp
-  int v14; // ebx
-  unsigned int v15; // eax
-  _DWORD *v17; // eax
-  int v18; // ecx
-  int v19; // ebp
+  int descriptor_addr; // edi
+  int frame_interval; // ebp
+  int cursor_frame_advanced; // ebx
+  unsigned int now; // eax
+  _DWORD *descriptor_frames; // eax
+  int cursor_screen_y; // ecx
+  int resource_handle; // ebp
   int v20; // eax
   int SpriteForChar; // eax
-  void *v22; // [esp+1Ch] [ebp-18h]
+  void *saved_render_device; // [esp+1Ch] [ebp-18h]
 
   message_pump_result = Platform_PumpMessagesAndBlitFrame(a2);
   result = Time_Now(v5, v4);
   Compat_MenuProbeTraceRenderInput(
     "dd-pump",
-    a1,
+    render_state,
     message_pump_result,
     result,
     g_RenderStateNextRefreshTick,
-    *(_DWORD *)(a1 + 1112));
+    *(_DWORD *)(render_state + 1112));
   if ( result >= g_RenderStateNextRefreshTick || message_pump_result )
   {
-    g_RenderStateNextRefreshTick = *(_DWORD *)(a1 + 1112) + Time_Now(v8, v7);
-    Compat_RenderStateInvokeMethod(a1, 20);
-    if ( g_DDPageFlipWasInProgressFlag && !DD_IsFlipping(a1) )
+    g_RenderStateNextRefreshTick = *(_DWORD *)(render_state + 1112) + Time_Now(v8, v7);
+    Compat_RenderStateInvokeMethod(render_state, 20);
+    if ( g_DDPageFlipWasInProgressFlag && !DD_IsFlipping(render_state) )
     {
-      *(_DWORD *)(a1 + 68) = Time_Now(v10, v9);
-      *(_DWORD *)(a1 + 72) = *(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108);
-      *(_DWORD *)(a1 + 76) = *(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108);
+      *(_DWORD *)(render_state + 68) = Time_Now(v10, v9);
+      *(_DWORD *)(render_state + 72) = *(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108);
+      *(_DWORD *)(render_state + 76) = *(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108);
     }
-    g_DDPageFlipWasInProgressFlag = DD_IsFlipping(a1);
-    Compat_RenderStateInvokeMethod(a1, 4);
-    cursor_descriptor = Compat_RenderStateCursorDescriptor(a1);
-    v12 = (int)cursor_descriptor;
-    v13 = *(_DWORD *)(v12 + 8);
-    v14 = 0;
-    if ( v13 )
+    g_DDPageFlipWasInProgressFlag = DD_IsFlipping(render_state);
+    Compat_RenderStateInvokeMethod(render_state, 4);
+    cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
+    descriptor_addr = (int)cursor_descriptor;
+    frame_interval = *(_DWORD *)(descriptor_addr + 8);
+    cursor_frame_advanced = 0;
+    if ( frame_interval )
     {
-      cursor_update_deadline = *(_DWORD *)(v12 + 28) + v13;
-      v15 = Time_Now(cursor_update_deadline, v11);
-      if ( (unsigned int)cursor_update_deadline < v15 )
+      cursor_update_deadline = *(_DWORD *)(descriptor_addr + 28) + frame_interval;
+      now = Time_Now(cursor_update_deadline, v11);
+      if ( (unsigned int)cursor_update_deadline < now )
       {
-        *(_DWORD *)((char *)cursor_descriptor + 28) = Time_Now(v15, v11);
+        *(_DWORD *)((char *)cursor_descriptor + 28) = Time_Now(now, v11);
         ++*(_DWORD *)((char *)cursor_descriptor + 32);
-        v17 = cursor_descriptor;
-        if ( v17[1] - *v17 < v17[8] )
-          v17[8] = 0;
-        v14 = 1;
+        descriptor_frames = cursor_descriptor;
+        if ( descriptor_frames[1] - *descriptor_frames < descriptor_frames[8] )
+          descriptor_frames[8] = 0;
+        cursor_frame_advanced = 1;
       }
     }
-    *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 20);
-    v18 = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 24);
-    *(_DWORD *)(a1 + 52) = v18;
+    *(_DWORD *)(render_state + 48) = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 20);
+    cursor_screen_y = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)((char *)cursor_descriptor + 24);
+    *(_DWORD *)(render_state + 52) = cursor_screen_y;
     result = g_CursorOverlayPresented;
     if ( g_CursorOverlayPresented )
     {
       if ( message_pump_result
-        || v14
-        || (result = *(_DWORD *)(a1 + 48), result != *(_DWORD *)a1)
-        || v18 != *(_DWORD *)(a1 + 4) )
+        || cursor_frame_advanced
+        || (result = *(_DWORD *)(render_state + 48), result != *(_DWORD *)render_state)
+        || cursor_screen_y != *(_DWORD *)(render_state + 4) )
       {
-        v22 = g_RenderDevice;
-        v19 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
-        primary_surface = Compat_RenderStateSurface(a1, 8);
-        back_surface = Compat_RenderStateSurface(a1, 12);
-        if ( *(_DWORD *)a1 == *(_DWORD *)(a1 + 48) && *(_DWORD *)(a1 + 52) == *(_DWORD *)(a1 + 4) )
+        saved_render_device = g_RenderDevice;
+        resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+        primary_surface = Compat_RenderStateSurface(render_state, 8);
+        back_surface = Compat_RenderStateSurface(render_state, 12);
+        if ( *(_DWORD *)render_state == *(_DWORD *)(render_state + 48) && *(_DWORD *)(render_state + 52) == *(_DWORD *)(render_state + 4) )
         {
           g_RenderDevice = (_UNKNOWN *)back_surface;
           Render_FillRect(
@@ -6869,7 +6869,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
             0,
             0);
           SpriteForChar = DLX_GetSpriteForChar(
-                            *(_DWORD *)(a1 + 64),
+                            *(_DWORD *)(render_state + 64),
                             *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
           (void)SpriteForChar;
           Render_FillRect(
@@ -6879,8 +6879,8 @@ unsigned int  DD_Pump(int a1, int a2, ...)
             0,
             *(unsigned __int16 *)((char *)cursor_descriptor + 12) - 1,
             *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
-            *(_WORD *)a1,
-            *(_WORD *)(a1 + 4));
+            *(_WORD *)render_state,
+            *(_WORD *)(render_state + 4));
         }
         else
         {
@@ -6892,26 +6892,26 @@ unsigned int  DD_Pump(int a1, int a2, ...)
             0,
             *(unsigned __int16 *)((char *)cursor_descriptor + 12) - 1,
             *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
-            *(_WORD *)a1,
-            *(_WORD *)(a1 + 4));
+            *(_WORD *)render_state,
+            *(_WORD *)(render_state + 4));
           Render_FillRect(
             0,
             primary_surface,
-            *(unsigned __int16 *)(a1 + 52),
-            *(unsigned __int16 *)(a1 + 48),
-            *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(a1 + 48) - 1,
-            *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(a1 + 52) - 1,
+            *(unsigned __int16 *)(render_state + 52),
+            *(unsigned __int16 *)(render_state + 48),
+            *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(render_state + 48) - 1,
+            *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(render_state + 52) - 1,
             0,
             0);
           v20 = DLX_GetSpriteForChar(
-                  *(_DWORD *)(a1 + 64),
+                  *(_DWORD *)(render_state + 64),
                   *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
           (void)v20;
-          *(_DWORD *)a1 = *(_DWORD *)(a1 + 48);
-          *(_DWORD *)(a1 + 4) = *(_DWORD *)(a1 + 52);
+          *(_DWORD *)render_state = *(_DWORD *)(render_state + 48);
+          *(_DWORD *)(render_state + 4) = *(_DWORD *)(render_state + 52);
         }
-        g_RenderDevice = v22;
-        return Render_SetResourceHandle((int)&g_MainRenderDevice, v19);
+        g_RenderDevice = saved_render_device;
+        return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
       }
     }
   }
@@ -6931,85 +6931,85 @@ unsigned int  DD_Pump(int a1, int a2, ...)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004608D0) --------------------------------------------------------
-void  RenderState_SetMouseSpeed(int a1, int a2, DWORD a3)
+void  RenderState_SetMouseSpeed(int render_state, int mouse_speed, DWORD a3)
 {
-  Debug_Log(a1, a2, a3, (int)aMouse_speedD);
-  *(_DWORD *)(a1 + 32) = a2;
+  Debug_Log(render_state, mouse_speed, a3, (int)aMouse_speedD);
+  *(_DWORD *)(render_state + 32) = mouse_speed;
 }
 
 //----- (004608F0) --------------------------------------------------------
-BOOL  DD_IsFlipping(int a1)
+BOOL  DD_IsFlipping(int render_state)
 {
-  return (*(_BYTE *)(a1 + 44) & 1) != 0;
+  return (*(_BYTE *)(render_state + 44) & 1) != 0;
 }
 
 //----- (00460900) --------------------------------------------------------
-BOOL  DD_IsLost(int a1)
+BOOL  DD_IsLost(int render_state)
 {
-  return (*(_BYTE *)(a1 + 44) & 2) != 0;
+  return (*(_BYTE *)(render_state + 44) & 2) != 0;
 }
 
 //----- (00460910) --------------------------------------------------------
-BOOL  Input_PollEventsUntil(int a1, char a2)
+BOOL  Input_PollEventsUntil(int render_state, char a2)
 {
   int previous_poll_state;
 
-  previous_poll_state = *(_DWORD *)(a1 + 56);
-  *(_DWORD *)(a1 + 56) = 0;
+  previous_poll_state = *(_DWORD *)(render_state + 56);
+  *(_DWORD *)(render_state + 56) = 0;
   Platform_PumpMessagesAndBlitFrame(a2);
-  *(_DWORD *)(a1 + 56) = previous_poll_state;
-  InputBackend_PollState(&g_InputBackendState, a1, previous_poll_state);
+  *(_DWORD *)(render_state + 56) = previous_poll_state;
+  InputBackend_PollState(&g_InputBackendState, render_state, previous_poll_state);
   return g_InputMousePrimaryButtonState < 0 || g_InputMouseSecondaryButtonState < 0;
 }
 // 5451C0: using guessed type char byte_5451C0;
 // 5451C8: using guessed type char byte_5451C8;
 
 //----- (00460950) --------------------------------------------------------
-BOOL  RenderState_IsCursorFlipStillActive(int a1)
+BOOL  RenderState_IsCursorFlipStillActive(int render_state)
 {
-  int v4; // eax
-  int v6; // eax
-  int v7; // eax
+  int now; // eax
+  int delta_x; // eax
+  int delta_y; // eax
 
-  if ( !DD_IsFlipping(a1) )
+  if ( !DD_IsFlipping(render_state) )
     return 0;
-  v4 = Time_Now(0, 0);
-  if ( (unsigned int)(v4 - *(_DWORD *)(a1 + 68)) >= *(_DWORD *)(a1 + 1104) )
+  now = Time_Now(0, 0);
+  if ( (unsigned int)(now - *(_DWORD *)(render_state + 68)) >= *(_DWORD *)(render_state + 1104) )
     return 0;
-  v6 = *(_DWORD *)(a1 + 72) - (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108));
-  if ( v6 <= 0 )
-    v6 = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(a1 + 72);
-  if ( v6 >= *(_DWORD *)(a1 + 1116) )
+  delta_x = *(_DWORD *)(render_state + 72) - (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108));
+  if ( delta_x <= 0 )
+    delta_x = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(render_state + 72);
+  if ( delta_x >= *(_DWORD *)(render_state + 1116) )
     return 0;
-  v7 = *(_DWORD *)(a1 + 76) - (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108));
-  if ( v7 <= 0 )
-    v7 = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(a1 + 76);
-  return v7 < *(_DWORD *)(a1 + 1116);
+  delta_y = *(_DWORD *)(render_state + 76) - (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108));
+  if ( delta_y <= 0 )
+    delta_y = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(render_state + 76);
+  return delta_y < *(_DWORD *)(render_state + 1116);
 }
 
 //----- (004609D0) --------------------------------------------------------
-BOOL  Render_Begin(int a1, void (*a2)(void), ...)
+BOOL  Render_Begin(int render_state, void (*idle_callback)(void), ...)
 {
   BOOL result; // eax
 
   result = 0;
   while ( 1 )
   {
-    if ( !DD_IsFlipping(a1) )
+    if ( !DD_IsFlipping(render_state) )
     {
-      result = DD_IsLost(a1);
+      result = DD_IsLost(render_state);
       if ( !result )
         break;
     }
-    DD_Pump(a1, (char)a2);
-    if ( a2 )
-      a2();
+    DD_Pump(render_state, (char)idle_callback);
+    if ( idle_callback )
+      idle_callback();
   }
   return result;
 }
 
 //----- (00460A10) --------------------------------------------------------
-BOOL  Render_FlipRect(int a1, char a2)
+BOOL  Render_FlipRect(int render_state, char a2)
 {
   int previous_poll_state;
   BOOL result; // eax
@@ -7017,65 +7017,65 @@ BOOL  Render_FlipRect(int a1, char a2)
   result = 0;
   while ( 1 )
   {
-    if ( !DD_IsFlipping(a1) )
+    if ( !DD_IsFlipping(render_state) )
     {
-      result = DD_IsLost(a1);
+      result = DD_IsLost(render_state);
       if ( !result )
         break;
     }
-    previous_poll_state = *(_DWORD *)(a1 + 56);
-    *(_DWORD *)(a1 + 56) = 0;
+    previous_poll_state = *(_DWORD *)(render_state + 56);
+    *(_DWORD *)(render_state + 56) = 0;
     Platform_PumpMessagesAndBlitFrame(a2);
-    *(_DWORD *)(a1 + 56) = previous_poll_state;
-    Compat_RenderStateInvokeMethod(a1, 20);
+    *(_DWORD *)(render_state + 56) = previous_poll_state;
+    Compat_RenderStateInvokeMethod(render_state, 20);
   }
   return result;
 }
 
 //----- (00460A50) --------------------------------------------------------
-int  RenderState_PollInputAndClampCursor(int a1, int a2)
+int  RenderState_PollInputAndClampCursor(int render_state, int a2)
 {
-  _DWORD *v2; // edx
-  int v3; // eax
-  int v4; // edi
-  int v5; // ecx
-  int v6; // ebx
-  int v7; // esi
+  _DWORD *state; // edx
+  int scaled_delta_y; // eax
+  int prev_cursor_y; // edi
+  int min_x; // ecx
+  int min_y; // ebx
+  int max_x; // esi
   int result; // eax
-  int v9; // edi
+  int max_y; // edi
 
-  v2 = (_DWORD *)(uintptr_t)(unsigned int)a1;
-  InputBackend_PollState(&g_InputBackendState, a1, a2);
+  state = (_DWORD *)(uintptr_t)(unsigned int)render_state;
+  InputBackend_PollState(&g_InputBackendState, render_state, a2);
   Compat_MenuProbeTraceRenderInput(
     "live-input",
-    a1,
+    render_state,
     g_InputBackendState.mouse_delta_x,
     g_InputBackendState.mouse_delta_y,
     g_InputBackendState.mouse_button_primary,
     g_InputBackendState.mouse_button_secondary);
-  v2[9] += v2[8] * g_InputBackendState.mouse_delta_x;
-  v3 = v2[8] * g_InputBackendState.mouse_delta_y;
-  v4 = v2[10];
-  v2[11] = 0;
-  v2[10] = v3 + v4;
+  state[9] += state[8] * g_InputBackendState.mouse_delta_x;
+  scaled_delta_y = state[8] * g_InputBackendState.mouse_delta_y;
+  prev_cursor_y = state[10];
+  state[11] = 0;
+  state[10] = scaled_delta_y + prev_cursor_y;
   if ( g_InputMousePrimaryButtonState < 0 )
-    ++v2[11];
+    ++state[11];
   if ( g_InputMouseSecondaryButtonState < 0 )
-    v2[11] += 2;
-  v5 = v2[4];
-  if ( v2[9] < v5 )
-    v2[9] = v5;
-  v6 = v2[5];
-  if ( v2[10] < v6 )
-    v2[10] = v6;
-  v7 = v2[6];
-  if ( v2[9] > v7 )
-    v2[9] = v7;
-  result = v2[10];
-  v9 = v2[7];
-  if ( result > v9 )
-    v2[10] = v9;
-  Compat_SyncRenderCursorGlobals(v2);
+    state[11] += 2;
+  min_x = state[4];
+  if ( state[9] < min_x )
+    state[9] = min_x;
+  min_y = state[5];
+  if ( state[10] < min_y )
+    state[10] = min_y;
+  max_x = state[6];
+  if ( state[9] > max_x )
+    state[9] = max_x;
+  result = state[10];
+  max_y = state[7];
+  if ( result > max_y )
+    state[10] = max_y;
+  Compat_SyncRenderCursorGlobals(state);
   return result;
 }
 // 460A66: variable 'v2' is possibly undefined
@@ -7085,56 +7085,56 @@ int  RenderState_PollInputAndClampCursor(int a1, int a2)
 // 5451C8: using guessed type char byte_5451C8;
 
 //----- (00460AF0) --------------------------------------------------------
-unsigned int  RenderState_WarpCursorAndPump(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3)
+unsigned int  RenderState_WarpCursorAndPump(_DWORD *render_state, unsigned __int16 cursor_x, unsigned __int16 cursor_y)
 {
-  a1[9] = a2 << a1[277];
-  a1[10] = a3 << a1[277];
-  Compat_SyncRenderCursorGlobals(a1);
-  return DD_Pump((int)a1, a3);
+  render_state[9] = cursor_x << render_state[277];
+  render_state[10] = cursor_y << render_state[277];
+  Compat_SyncRenderCursorGlobals(render_state);
+  return DD_Pump((int)render_state, cursor_y);
 }
 
 //----- (00460B20) --------------------------------------------------------
 _DWORD * RenderState_RecalculateCursorBoundsForRect(
         _DWORD *result,
-        __int16 a2,
-        __int16 a3,
-        __int16 a4,
-        __int16 a5)
+        __int16 rect_left,
+        __int16 rect_right,
+        __int16 rect_top,
+        __int16 rect_bottom)
 {
-  _WORD *v6; // edx
-  unsigned __int16 v7; // si
-  unsigned __int16 v8; // bx
-  unsigned __int16 v9; // di
+  _WORD *descriptor_words; // edx
+  unsigned __int16 min_x; // si
+  unsigned __int16 min_y; // bx
+  unsigned __int16 max_x; // di
   __int16 v10; // cx
 
-  v6 = (_WORD *)result[15];
-  v7 = v6[10] + 1 + a2;
-  v8 = v6[12] + 1 + a4;
-  v9 = a3 - (v6[6] - v6[10] + 1);
-  v10 = v6[8];
-  LOWORD(v6) = v6[12];
-  result[4] = v7 << result[277];
-  result[5] = v8 << result[277];
-  result[6] = v9 << result[277];
-  result[7] = (unsigned __int16)(a5 - (v10 - (_WORD)v6 + 1)) << result[277];
+  descriptor_words = (_WORD *)result[15];
+  min_x = descriptor_words[10] + 1 + rect_left;
+  min_y = descriptor_words[12] + 1 + rect_top;
+  max_x = rect_right - (descriptor_words[6] - descriptor_words[10] + 1);
+  v10 = descriptor_words[8];
+  LOWORD(descriptor_words) = descriptor_words[12];
+  result[4] = min_x << result[277];
+  result[5] = min_y << result[277];
+  result[6] = max_x << result[277];
+  result[7] = (unsigned __int16)(rect_bottom - (v10 - (_WORD)descriptor_words + 1)) << result[277];
   return result;
 }
 
 //----- (00460BB0) --------------------------------------------------------
 _DWORD * RenderState_PumpIfRectInViewBounds(
         _DWORD *result,
-        unsigned __int16 a2,
-        unsigned __int16 a3,
-        unsigned __int16 a4,
-        unsigned __int16 a5)
+        unsigned __int16 rect_left,
+        unsigned __int16 rect_right,
+        unsigned __int16 rect_top,
+        unsigned __int16 rect_bottom)
 {
-  int v6; // ebx
+  int cursor_descriptor; // ebx
 
-  v6 = result[15];
-  if ( *(_DWORD *)(v6 + 12) + result[12] >= a2
-    && a3 >= (int)result[12]
-    && result[13] + *(_DWORD *)(v6 + 16) >= a4
-    && a5 >= (int)result[13] )
+  cursor_descriptor = result[15];
+  if ( *(_DWORD *)(cursor_descriptor + 12) + result[12] >= rect_left
+    && rect_right >= (int)result[12]
+    && result[13] + *(_DWORD *)(cursor_descriptor + 16) >= rect_top
+    && rect_bottom >= (int)result[13] )
   {
     return (_DWORD *)Render_Pump();
   }
@@ -7142,26 +7142,26 @@ _DWORD * RenderState_PumpIfRectInViewBounds(
 }
 
 //----- (00460C70) --------------------------------------------------------
-_DWORD * RenderState_LoadDefaultCursorSprite(int a1)
+_DWORD * RenderState_LoadDefaultCursorSprite(int render_state)
 {
   _DWORD *result; // eax
-  if ( *(_DWORD *)(a1 + 64) )
-    DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
+  if ( *(_DWORD *)(render_state + 64) )
+    DLXSpriteSet_ReleaseAndClear((int *)(render_state + 64));
   result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, "mouse.s32");
-    *(_DWORD *)(a1 + 64) = result;
+    *(_DWORD *)(render_state + 64) = result;
   }
   else
   {
-    *(_DWORD *)(a1 + 64) = 0;
+    *(_DWORD *)(render_state + 64) = 0;
   }
   return result;
 }
 
 //----- (00460CB0) --------------------------------------------------------
-_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD a4)
+_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int render_state, int label_text, int a3, DWORD a4)
 {
   unsigned __int8 *source_bytes; // eax
   unsigned __int8 checksum_xor; // bl
@@ -7173,9 +7173,9 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD
   CHAR cache_path[104]; // [esp+0h] [ebp-78h] BYREF
   CHAR query_path[104]; // [esp+68h] [ebp-10h] BYREF
 
-  if ( *(_DWORD *)(a1 + 64) )
-    DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
-  source_bytes = (unsigned __int8 *)a2;
+  if ( *(_DWORD *)(render_state + 64) )
+    DLXSpriteSet_ReleaseAndClear((int *)(render_state + 64));
+  source_bytes = (unsigned __int8 *)label_text;
   checksum_xor = 0;
   checksum_sum = 0;
   for ( i = 0; i < 768; ++i )
@@ -7197,13 +7197,13 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD
       result = (_DWORD *)Mem_Alloc(4112, 0, 0, a4);
       if ( result )
         result = DLXSpriteSet_Load(result, cache_path);
-      *(_DWORD *)(a1 + 64) = result;
+      *(_DWORD *)(render_state + 64) = result;
       return result;
     }
   }
-  RenderState_LoadDefaultCursorSprite(a1);
-  DLXSpriteSet_DrawText(*(_DWORD *)(a1 + 64), -1, a2, (unsigned __int8 *)(a1 + 80));
-  result = *(_DWORD **)(a1 + 64);
+  RenderState_LoadDefaultCursorSprite(render_state);
+  DLXSpriteSet_DrawText(*(_DWORD *)(render_state + 64), -1, label_text, (unsigned __int8 *)(render_state + 80));
+  result = *(_DWORD **)(render_state + 64);
   return result;
 }
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
@@ -7283,7 +7283,7 @@ static int Compat_RenderClearPresentedRect(int render_state)
   return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
 }
 
-__int16  RenderState_SelectCursorDescriptor(int a1, int a2)
+__int16  RenderState_SelectCursorDescriptor(int render_state, int new_descriptor)
 {
   int descriptor;
   int result;
@@ -7295,25 +7295,25 @@ __int16  RenderState_SelectCursorDescriptor(int a1, int a2)
   unsigned __int16 sprite_width;
   unsigned char was_presenting;
 
-  result = a1;
-  active_descriptor = a2;
+  result = render_state;
+  active_descriptor = new_descriptor;
   if ( !active_descriptor )
-    active_descriptor = *(_DWORD *)(a1 + 60);
+    active_descriptor = *(_DWORD *)(render_state + 60);
   if ( active_descriptor )
     g_ActiveCursorDescriptorPtr = active_descriptor;
-  if ( a2 == *(_DWORD *)(a1 + 60) )
+  if ( new_descriptor == *(_DWORD *)(render_state + 60) )
     return result;
   was_presenting = (unsigned char)g_CursorOverlayPresented;
   if ( was_presenting )
-    Compat_RenderClearPresentedRect(a1);
-  *(_DWORD *)(a1 + 60) = a2;
-  descriptor = *(_DWORD *)(a1 + 60);
+    Compat_RenderClearPresentedRect(render_state);
+  *(_DWORD *)(render_state + 60) = new_descriptor;
+  descriptor = *(_DWORD *)(render_state + 60);
   max_height = 0;
   max_width = 0;
   for ( sprite_index = *(unsigned __int16 *)descriptor; sprite_index <= (unsigned int)*(int *)(descriptor + 4); ++sprite_index )
   {
-    sprite_height = DLX_GetSpriteHeight(*(_DWORD *)(a1 + 64), (int)sprite_index);
-    sprite_width = DLX_GetSpriteWidth(*(_DWORD *)(a1 + 64), (int)sprite_index);
+    sprite_height = DLX_GetSpriteHeight(*(_DWORD *)(render_state + 64), (int)sprite_index);
+    sprite_width = DLX_GetSpriteWidth(*(_DWORD *)(render_state + 64), (int)sprite_index);
     if ( sprite_height > max_height )
       max_height = sprite_height;
     if ( sprite_width > max_width )
@@ -7323,53 +7323,53 @@ __int16  RenderState_SelectCursorDescriptor(int a1, int a2)
   *(_DWORD *)(descriptor + 16) = max_width;
   *(_DWORD *)(descriptor + 32) = 0;
   *(_DWORD *)(descriptor + 28) = 0;
-  RenderState_RecalculateCursorBoundsForRect((_DWORD *)a1, 0, 640, 0, 480);
-  Compat_RenderStateInvokeMethod(a1, 20);
-  Compat_RenderStateInvokeMethod(a1, 4);
-  *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(descriptor + 20);
-  *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(descriptor + 24);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)render_state, 0, 640, 0, 480);
+  Compat_RenderStateInvokeMethod(render_state, 20);
+  Compat_RenderStateInvokeMethod(render_state, 4);
+  *(_DWORD *)(render_state + 48) = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(descriptor + 20);
+  *(_DWORD *)(render_state + 52) = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(descriptor + 24);
   if ( was_presenting )
-    result = Render_Present(a1);
+    result = Render_Present(render_state);
   return result;
 }
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460EA0) --------------------------------------------------------
-int  Render_Present(int a1)
+int  Render_Present(int render_state)
 {
   _DWORD *cursor_descriptor;
   _DWORD *present_surface;
   int result; // eax
-  int v3; // edi
+  int resource_handle; // edi
   int SpriteForChar; // eax
-  void *v5; // [esp+1Ch] [ebp-Ch]
+  void *saved_render_device; // [esp+1Ch] [ebp-Ch]
 
-  present_surface = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 8);
-  cursor_descriptor = Compat_RenderStateCursorDescriptor(a1);
+  present_surface = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(render_state + 8);
+  cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
   result = g_CursorOverlayPresented;
   if ( !g_CursorOverlayPresented )
   {
-    v3 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+    resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
     g_CursorOverlayPresented = 1;
-    v5 = g_RenderDevice;
+    saved_render_device = g_RenderDevice;
     Render_FillRect(
       0,
       present_surface,
-      *(unsigned __int16 *)(a1 + 52),
-      *(unsigned __int16 *)(a1 + 48),
-      *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(a1 + 48) - 1,
-      *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(a1 + 52) - 1,
+      *(unsigned __int16 *)(render_state + 52),
+      *(unsigned __int16 *)(render_state + 48),
+      *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(render_state + 48) - 1,
+      *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(render_state + 52) - 1,
       0,
       0);
     g_RenderDevice = &g_MainRenderDevice;
     SpriteForChar = DLX_GetSpriteForChar(
-                      *(_DWORD *)(a1 + 64),
+                      *(_DWORD *)(render_state + 64),
                       *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
     (void)SpriteForChar;
-    *(_DWORD *)a1 = *(_DWORD *)(a1 + 48);
-    *(_DWORD *)(a1 + 4) = *(_DWORD *)(a1 + 52);
-    g_RenderDevice = v5;
-    result = Render_SetResourceHandle((int)&g_MainRenderDevice, v3);
+    *(_DWORD *)render_state = *(_DWORD *)(render_state + 48);
+    *(_DWORD *)(render_state + 4) = *(_DWORD *)(render_state + 52);
+    g_RenderDevice = saved_render_device;
+    result = Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
     Compat_PresentPrimaryIndexedSurfaceToPlatform();
     return result;
   }
@@ -7386,13 +7386,13 @@ int Render_Pump()
   _DWORD *present_surface;
   int result; // eax
   int render_state;
-  int v1; // esi
+  int resource_handle; // esi
 
   result = g_CursorOverlayPresented;
   if ( g_CursorOverlayPresented )
   {
     g_CursorOverlayPresented = 0;
-    v1 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+    resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
     render_state = (int)g_RenderState;
     present_surface = Compat_RenderStateSurface(render_state, 8);
     cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
@@ -7405,7 +7405,7 @@ int Render_Pump()
       *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
       *(_WORD *)render_state,
       *(_WORD *)(render_state + 4));
-    return Render_SetResourceHandle((int)&g_MainRenderDevice, v1);
+    return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
   }
   return result;
 }
@@ -7419,32 +7419,32 @@ void Input_Flush()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004610B0) --------------------------------------------------------
-int  RenderState_DrawCursorSpriteToPrimarySurface(int a1)
+int  RenderState_DrawCursorSpriteToPrimarySurface(int render_state)
 {
-  void *v2; // esi
+  void *saved_render_device; // esi
   int SpriteForChar; // eax
   int result; // eax
 
-  v2 = g_RenderDevice;
+  saved_render_device = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, &g_CursorSpritePalette);
-  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), g_CursorDesc_Busy[0] + 1);
+  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(render_state + 64), g_CursorDesc_Busy[0] + 1);
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
-  g_RenderDevice = v2;
+  g_RenderDevice = saved_render_device;
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 519808: using guessed type int dword_519808;
 
 //----- (00461140) --------------------------------------------------------
-_DWORD * Device_GetParamA(int a1, int a2)
+_DWORD * Device_GetParamA(int render_state, int a2)
 {
   _DWORD *result; // eax
   CompatRenderStateTail *tail;
 
-  result = RenderState_ConstructDefault(a1, a2);
+  result = RenderState_ConstructDefault(render_state, a2);
   result[280] = g_Device_Vtable;
-  tail = Compat_RenderStateTailFields(a1);
+  tail = Compat_RenderStateTailFields(render_state);
   tail->field_464_active = 0;
   tail->field_468_active = 0;
   tail->field_46C_ticks = 0;
@@ -7456,13 +7456,13 @@ _DWORD * Device_GetParamA(int a1, int a2)
 // 50F204: using guessed type int (*off_50F204[6])();
 
 //----- (00461170) --------------------------------------------------------
-int  Device_DoOp(int a1, int a2, DWORD a3)
+int  Device_DoOp(int render_state, int a2, DWORD a3)
 {
   CompatRenderStateTail *tail;
   int record_handle;
 
   (void)a2;
-  tail = Compat_RenderStateTailFields(a1);
+  tail = Compat_RenderStateTailFields(render_state);
   tail->field_464_active = 1;
   tail->field_46C_ticks = Time_Now(0, 0);
   record_handle = IO_FOpen(aDefault_rec, (unsigned __int8 *)aWb_7, 0, a3);
@@ -7471,7 +7471,7 @@ int  Device_DoOp(int a1, int a2, DWORD a3)
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (004611A0) --------------------------------------------------------
-__int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
+__int16  Device_GetParamB(int render_state, DWORD a2, int a3, int a4)
 {
   CompatRenderStateTail *tail;
   unsigned int current_x;
@@ -7482,19 +7482,19 @@ __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
 
   (void)a3;
   (void)a4;
-  tail = Compat_RenderStateTailFields(a1);
+  tail = Compat_RenderStateTailFields(render_state);
   if ( tail->field_464_active )
   {
-    current_flags = *(_DWORD *)(a1 + 44);
-    current_x = *(unsigned int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108);
-    current_y = *(unsigned int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108);
+    current_flags = *(_DWORD *)(render_state + 44);
+    current_x = *(unsigned int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108);
+    current_y = *(unsigned int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108);
     if ( (unsigned __int8)g_DeviceRecordLastFlipLostState != current_flags
       || current_x != (unsigned __int16)g_DeviceRecordLastX
       || current_y != (unsigned __int16)g_DeviceRecordLastY )
     {
-      g_DeviceRecordLastX = *(_WORD *)(a1 + 36);
-      g_DeviceRecordLastY = *(_WORD *)(a1 + 40);
-      g_DeviceRecordLastFlipLostState = (unsigned char)(2 * (DD_IsFlipping(a1) + DD_IsLost(a1)));
+      g_DeviceRecordLastX = *(_WORD *)(render_state + 36);
+      g_DeviceRecordLastY = *(_WORD *)(render_state + 40);
+      g_DeviceRecordLastFlipLostState = (unsigned char)(2 * (DD_IsFlipping(render_state) + DD_IsLost(render_state)));
       elapsed_ticks = Time_Now(0, 0) - tail->field_46C_ticks;
       record_handle = IO_FOpen(aDefault_rec, (unsigned __int8 *)aAb, 1, a2);
       fwrite_(&g_DeviceRecordLastX, 2, record_handle, 1);
@@ -7512,11 +7512,11 @@ __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
 // 544CBE: using guessed type char byte_544CBE;
 
 //----- (004612A0) --------------------------------------------------------
-int  Device_SetParamA(int a1, DWORD a2)
+int  Device_SetParamA(int render_state, DWORD a2)
 {
   CompatRenderStateTail *tail;
 
-  tail = Compat_RenderStateTailFields(a1);
+  tail = Compat_RenderStateTailFields(render_state);
   tail->field_468_active = 1;
   tail->field_470_ticks = Time_Now(0, 0);
   tail->field_474_handle = IO_FOpen(aDefault_rec, (unsigned __int8 *)aRb_9, 0, a2);
@@ -7524,61 +7524,61 @@ int  Device_SetParamA(int a1, DWORD a2)
 }
 
 //----- (004612E0) --------------------------------------------------------
-int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
+int  Device_UpdateRect(_DWORD *render_state, int a2, int a3)
 {
   CompatRenderStateTail *tail;
-  int v4; // eax
+  int now; // eax
   char v5; // bl
-  int v6; // ecx
-  unsigned int v7; // edx
-  int v8; // ecx
-  int v9; // edx
-  int v10; // eax
+  int segment_start_ticks; // ecx
+  unsigned int elapsed_ticks; // edx
+  int replay_handle; // ecx
+  int trigger_count; // edx
+  int trigger_index; // eax
   int result; // eax
-  int v12; // edi
-  unsigned int v13; // ecx
+  int message_id; // edi
+  unsigned int tween_fraction; // ecx
 
-  tail = Compat_RenderStateTailFields((int)a1);
+  tail = Compat_RenderStateTailFields((int)render_state);
   Compat_MenuProbeTraceRenderInput(
     "device-update",
-    (int)a1,
+    (int)render_state,
     a2,
     a3,
     tail->field_470_ticks,
     tail->field_474_handle);
   if ( !tail->field_468_active )
-    return RenderState_PollInputAndClampCursor((int)a1, a3);
-  v4 = Time_Now(a3, a2);
+    return RenderState_PollInputAndClampCursor((int)render_state, a3);
+  now = Time_Now(a3, a2);
   v5 = g_DeviceRectTweenTimeBase;
-  v6 = tail->field_470_ticks;
-  v7 = v4 - v6 - g_DeviceRectTweenTimeBase;
-  if ( v7 < g_DeviceReplaySegmentTargetTick - g_DeviceReplaySegmentBaseTick )
+  segment_start_ticks = tail->field_470_ticks;
+  elapsed_ticks = now - segment_start_ticks - g_DeviceRectTweenTimeBase;
+  if ( elapsed_ticks < g_DeviceReplaySegmentTargetTick - g_DeviceReplaySegmentBaseTick )
   {
-    v13 = ((Time_Now(v6, v7) - tail->field_470_ticks - g_DeviceRectTweenTimeBase) << 8)
+    tween_fraction = ((Time_Now(segment_start_ticks, elapsed_ticks) - tail->field_470_ticks - g_DeviceRectTweenTimeBase) << 8)
         / (unsigned int)(g_DeviceReplaySegmentTargetTick - g_DeviceReplaySegmentBaseTick);
-    a1[9] = (unsigned __int16)g_DeviceRectLastWidth
-          + ((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)
-                 - (__CFSHL__((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31, 8)
-                  + ((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31 << 8))) >> 8);
+    render_state[9] = (unsigned __int16)g_DeviceRectLastWidth
+          + ((int)(tween_fraction * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)
+                 - (__CFSHL__((int)(tween_fraction * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31, 8)
+                  + ((int)(tween_fraction * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31 << 8))) >> 8);
     result = (unsigned __int16)g_RenderCursor_TweenPrevY
-           + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13
-                  - (__CFSHL__((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13) >> 31, 8)
-                   + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13) >> 31 << 8))) >> 8);
-    a1[10] = result;
-    Compat_SyncRenderCursorGlobals(a1);
+           + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * tween_fraction
+                  - (__CFSHL__((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * tween_fraction) >> 31, 8)
+                   + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * tween_fraction) >> 31 << 8))) >> 8);
+    render_state[10] = result;
+    Compat_SyncRenderCursorGlobals(render_state);
   }
   else
   {
-    g_DeviceRectTweenTimeBase = Time_Now(v6, v7) - tail->field_470_ticks;
+    g_DeviceRectTweenTimeBase = Time_Now(segment_start_ticks, elapsed_ticks) - tail->field_470_ticks;
     g_DeviceReplaySegmentBaseTick = g_DeviceReplaySegmentTargetTick;
     g_DeviceRectLastWidth = g_DeviceRectTargetWidth;
     g_RenderCursor_TweenPrevY = g_DeviceRectTargetHeight;
-    a1[9] = (unsigned __int16)g_DeviceRectTargetWidth;
-    a1[10] = (unsigned __int16)g_DeviceRectTargetHeight;
-    Compat_SyncRenderCursorGlobals(a1);
-    v8 = tail->field_474_handle;
-    a1[11] = (unsigned __int8)g_DemoPlaybackCursorButtonState;
-    if ( (*(_BYTE *)(v8 + 12) & 0x10) == 0 )
+    render_state[9] = (unsigned __int16)g_DeviceRectTargetWidth;
+    render_state[10] = (unsigned __int16)g_DeviceRectTargetHeight;
+    Compat_SyncRenderCursorGlobals(render_state);
+    replay_handle = tail->field_474_handle;
+    render_state[11] = (unsigned __int8)g_DemoPlaybackCursorButtonState;
+    if ( (*(_BYTE *)(replay_handle + 12) & 0x10) == 0 )
     {
       fread_();
       fread_();
@@ -7586,15 +7586,15 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
       v5 = 1;
       fread_();
     }
-    v9 = 0;
-    v10 = 0;
+    trigger_count = 0;
+    trigger_index = 0;
     if ( g_DemoScript_TriggerTickTable[0] != -1 )
     {
-      while ( g_DemoScriptCurrentTick != g_DemoScript_TriggerTickTable[v10] )
+      while ( g_DemoScriptCurrentTick != g_DemoScript_TriggerTickTable[trigger_index] )
       {
-        v12 = g_DemoScript_MessageIdTable[v10++];
-        ++v9;
-        if ( v12 == -1 )
+        message_id = g_DemoScript_MessageIdTable[trigger_index++];
+        ++trigger_count;
+        if ( message_id == -1 )
           goto LABEL_8;
       }
       Demo_ShowNumberedTextScreen(v5, g_DemoScriptCurrentTick);

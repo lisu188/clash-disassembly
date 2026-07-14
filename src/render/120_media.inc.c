@@ -3,259 +3,259 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (004637B0) --------------------------------------------------------
-int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2)
+int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD a2)
 {
-  int v3; // eax
+  int instance; // eax
 
-  v3 = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, a2);
-  if ( v3 )
-    v3 = CAviDecompressor_InitCommon(v3);
-  *a1 = v3;
-  return a1;
+  instance = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, a2);
+  if ( instance )
+    instance = CAviDecompressor_InitCommon(instance);
+  *instanceOut = instance;
+  return instanceOut;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 // 50FDE4: using guessed type int (*off_50FDE4)();
 
 //----- (00463B10) --------------------------------------------------------
-int  CAviDecompressor_dtor(_DWORD *a1)
+int  CAviDecompressor_dtor(_DWORD *selfPtr)
 {
   int v1; // ecx
 
-  CAviDecompressor_Done(a1);
+  CAviDecompressor_Done(selfPtr);
   return v1;
 }
 // 463B18: variable 'v1' is possibly undefined
 
 //----- (00463B20) --------------------------------------------------------
 int * CAviDecompressor_ConstructAndInitCallbacks(
-        int *a1,
-        int (__stdcall ***a2)(_DWORD, void *, _DWORD *),
-        int a3,
-        int a4)
+        int *selfOut,
+        int (__stdcall ***ddSurface)(_DWORD, void *, _DWORD *),
+        int fileName,
+        int openFlags)
 {
-  int v7; // eax
+  int instance; // eax
 
-  *a1 = 0;
-  v7 = Mem_Alloc(2236, (int)&stru_50F60C, 0, (DWORD)a2);
-  if ( v7 )
-    v7 = CAviDecompressor_InitCommon(v7);
-  *a1 = v7;
-  if ( v7 )
-    CAviDecompressor_Init(a1, a2, a3, a4);
-  return a1;
+  *selfOut = 0;
+  instance = Mem_Alloc(2236, (int)&stru_50F60C, 0, (DWORD)ddSurface);
+  if ( instance )
+    instance = CAviDecompressor_InitCommon(instance);
+  *selfOut = instance;
+  if ( instance )
+    CAviDecompressor_Init(selfOut, ddSurface, fileName, openFlags);
+  return selfOut;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 // 50FDE4: using guessed type int (*off_50FDE4)();
 
 //----- (00463E90) --------------------------------------------------------
 void  CAviDecompressor_Init(
-        int *a1,
-        int (__stdcall ***a2)(_DWORD, void *, _DWORD *),
-        int a3,
-        int a4)
+        int *selfPtr,
+        int (__stdcall ***ddSurface)(_DWORD, void *, _DWORD *),
+        int fileName,
+        int openFlags)
 {
-  int v4; // esi
-  _DWORD v7[4]; // [esp+20h] [ebp-10h] BYREF
+  int instance; // esi
+  _DWORD surface2Out[4]; // [esp+20h] [ebp-10h] BYREF
 
-  v4 = *a1;
-  v7[0] = 0;
-  if ( !(**a2)(a2, &g_AviQueryInterfaceIid, v7) )
+  instance = *selfPtr;
+  surface2Out[0] = 0;
+  if ( !(**ddSurface)(ddSurface, &g_AviQueryInterfaceIid, surface2Out) )
   {
-    *(_DWORD *)(v4 + 1952) = a2;
-    CAviDecompressor_ApplyDecoderFormatParams(a4, a3);
+    *(_DWORD *)(instance + 1952) = ddSurface;
+    CAviDecompressor_ApplyDecoderFormatParams(openFlags, fileName);
   }
 }
 // 4697E0: using guessed type int __fastcall sub_4697E0(_DWORD, _DWORD);
 
 //----- (00463EA0) --------------------------------------------------------
-int * CAviDecompressor_ConstructAndInitSource(int *a1, DWORD a2, int a3, int a4)
+int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD a2, int fileName, int openFlags)
 {
-  int v6; // eax
+  int instance; // eax
 
-  *a1 = 0;
-  v6 = Mem_Alloc(2236, (int)&stru_50F6A0, 0, a2);
-  if ( v6 )
-    v6 = CAviDecompressor_InitCommon(v6);
-  *a1 = v6;
-  if ( v6 )
-    CAviDecompressor_InitSource(a4, a3);
-  return a1;
+  *selfOut = 0;
+  instance = Mem_Alloc(2236, (int)&stru_50F6A0, 0, a2);
+  if ( instance )
+    instance = CAviDecompressor_InitCommon(instance);
+  *selfOut = instance;
+  if ( instance )
+    CAviDecompressor_InitSource(openFlags, fileName);
+  return selfOut;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 // 50FDE4: using guessed type int (*off_50FDE4)();
 
 //----- (00464210) --------------------------------------------------------
-void __fastcall CAviDecompressor_InitSource(int a1, int a2)
+void __fastcall CAviDecompressor_InitSource(int openFlags, int fileName)
 {
-  CAviDecompressor_ApplyDecoderFormatParams(a1, a2);
+  CAviDecompressor_ApplyDecoderFormatParams(openFlags, fileName);
 }
 // 4697E0: using guessed type int __fastcall sub_4697E0(_DWORD, _DWORD);
 
 //----- (00464220) --------------------------------------------------------
-void  CAviDecompressor_Done(_DWORD *a1)
+void  CAviDecompressor_Done(_DWORD *playerHandle)
 {
   _DWORD *v1; // ecx
-  int v2; // eax
+  int instance; // eax
 
-  v1 = a1;
-  v2 = *a1;
-  if ( v2 )
-    (**(void (__fastcall ***)(int, int))(v2 + 2232))(v2, 2);
+  v1 = playerHandle;
+  instance = *playerHandle;
+  if ( instance )
+    (**(void (__fastcall ***)(int, int))(instance + 2232))(instance, 2);
   *v1 = 0;
 }
 // 464229: variable 'v1' is possibly undefined
 
 //----- (00464250) --------------------------------------------------------
-int  CAviDecompressor_Frames(int a1)
+int  CAviDecompressor_Frames(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 43);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 43);
 }
 
 //----- (00464260) --------------------------------------------------------
-int  CAviDecompressor_Fps(int a1)
+int  CAviDecompressor_Fps(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 35) / *(_DWORD *)(*(_DWORD *)a1 + 31);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 35) / *(_DWORD *)(*(_DWORD *)playerHandle + 31);
 }
 
 //----- (00464270) --------------------------------------------------------
-void  CAviDecompressor_Start(int *a1)
+void  CAviDecompressor_Start(int *playerHandle)
 {
-  CAviDecompressor_BeginPlayback(*a1);
+  CAviDecompressor_BeginPlayback(*playerHandle);
 }
 
 //----- (00464280) --------------------------------------------------------
-void  CAviDecompressor_Stop(int *a1)
+void  CAviDecompressor_Stop(int *playerHandle)
 {
-  CAviDecompressor_RequestRenderStop(*a1);
+  CAviDecompressor_RequestRenderStop(*playerHandle);
 }
 
 //----- (00464290) --------------------------------------------------------
-BOOL  CAviDecompressor_IsPlaying(int a1)
+BOOL  CAviDecompressor_IsPlaying(int playerHandle)
 {
-  return *(_BYTE *)(*(_DWORD *)a1 + 2191) != 0;
+  return *(_BYTE *)(*(_DWORD *)playerHandle + 2191) != 0;
 }
 
 //----- (004642B0) --------------------------------------------------------
-int  CAviDecompressor_Initialized(_DWORD *a1)
+int  CAviDecompressor_Initialized(_DWORD *playerHandle)
 {
-  _DWORD *v1; // eax
+  _DWORD *instance; // eax
   int result; // eax
   int v3; // ebx
   _DWORD *v4; // eax
 
-  v1 = (_DWORD *)*a1;
-  if ( *(_DWORD *)((char *)v1 + 7) )
-    LOBYTE(result) = *(_DWORD *)((char *)v1 + 415) || (v3 = v1[486], v4 = v1 + 481, v3) || v4[4];
+  instance = (_DWORD *)*playerHandle;
+  if ( *(_DWORD *)((char *)instance + 7) )
+    LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], v4 = instance + 481, v3) || v4[4];
   else
     LOBYTE(result) = 0;
   return (unsigned __int8)result;
 }
 
 //----- (004642F0) --------------------------------------------------------
-void  CAviDecompressor_WaitForNextFrame(int *a1)
+void  CAviDecompressor_WaitForNextFrame(int *playerHandle)
 {
-  int v1; // eax
+  int instance; // eax
 
-  v1 = *a1;
-  if ( *(_BYTE *)(v1 + 2191) )
-    WaitForSingleObject(*(HANDLE *)(v1 + 2196), 0x1F4u);
+  instance = *playerHandle;
+  if ( *(_BYTE *)(instance + 2191) )
+    WaitForSingleObject(*(HANDLE *)(instance + 2196), 0x1F4u);
 }
 
 //----- (00464320) --------------------------------------------------------
-int  CAviDecompressor_Palette(int a1)
+int  CAviDecompressor_Palette(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 1948);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 1948);
 }
 
 //----- (00464330) --------------------------------------------------------
-int  CAviDecompressor_Header(int a1)
+int  CAviDecompressor_Header(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 151);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 151);
 }
 
 //----- (00464340) --------------------------------------------------------
-int  CAviDecompressor_PixelSize(int *a1)
+int  CAviDecompressor_PixelSize(int *playerHandle)
 {
-  return (*(unsigned __int16 *)(CAviDecompressor_GetVideoFormat(*a1) + 14) + 7) >> 3;
+  return (*(unsigned __int16 *)(CAviDecompressor_GetVideoFormat(*playerHandle) + 14) + 7) >> 3;
 }
 
 //----- (00464360) --------------------------------------------------------
-int  CAviDecompressor_BPP(int a1)
+int  CAviDecompressor_BPP(int playerHandle)
 {
-  return *(unsigned __int16 *)(*(_DWORD *)(*(_DWORD *)a1 + 151) + 14);
+  return *(unsigned __int16 *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 14);
 }
 
 //----- (00464380) --------------------------------------------------------
-int  CAviDecompressor_Width(int a1)
+int  CAviDecompressor_Width(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)(*(_DWORD *)a1 + 151) + 4);
+  return *(_DWORD *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 4);
 }
 
 //----- (00464390) --------------------------------------------------------
-int  CAviDecompressor_Height(int a1)
+int  CAviDecompressor_Height(int playerHandle)
 {
-  __int64 v1; // rax
+  __int64 biHeight; // rax
 
-  v1 = *(int *)(*(_DWORD *)(*(_DWORD *)a1 + 151) + 8);
-  return (HIDWORD(v1) ^ v1) - HIDWORD(v1);
+  biHeight = *(int *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 8);
+  return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
 }
 
 //----- (004643B0) --------------------------------------------------------
-int  CAviDecompressor_DecodedFrame(int a1)
+int  CAviDecompressor_DecodedFrame(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 2021);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 2021);
 }
 
 //----- (004643C0) --------------------------------------------------------
-int  CAviDecompressor_SetBackground(int *a1, _DWORD *a2, int a3)
+int  CAviDecompressor_SetBackground(int *playerHandle, _DWORD *bgRect, int ddObject)
 {
   int result; // eax
 
-  result = *a1;
-  *(_DWORD *)(result + 2155) = *a2;
-  *(_DWORD *)(result + 2159) = a2[1];
-  *(_DWORD *)(result + 2163) = a2[2];
-  *(_DWORD *)(result + 2167) = a2[3];
-  *(_DWORD *)(result + 2151) = a3;
+  result = *playerHandle;
+  *(_DWORD *)(result + 2155) = *bgRect;
+  *(_DWORD *)(result + 2159) = bgRect[1];
+  *(_DWORD *)(result + 2163) = bgRect[2];
+  *(_DWORD *)(result + 2167) = bgRect[3];
+  *(_DWORD *)(result + 2151) = ddObject;
   return result;
 }
 
 //----- (004643E0) --------------------------------------------------------
-void  CAviDecompressor_InitClipRect(_DWORD *a1, _DWORD *a2)
+void  CAviDecompressor_InitClipRect(_DWORD *playerHandle, _DWORD *clipRect)
 {
-  _DWORD *v2; // edi
+  _DWORD *clipDest; // edi
 
-  v2 = (_DWORD *)(*a1 + 1969);
-  *v2++ = *a2;
-  *v2++ = a2[1];
-  *v2 = a2[2];
-  v2[1] = a2[3];
+  clipDest = (_DWORD *)(*playerHandle + 1969);
+  *clipDest++ = *clipRect;
+  *clipDest++ = clipRect[1];
+  *clipDest = clipRect[2];
+  clipDest[1] = clipRect[3];
 }
 
 //----- (00464400) --------------------------------------------------------
-void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
+void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
 {
   int v4; // eax
   int v5; // ecx
   int v6; // ebx
-  int v7; // esi
+  int destWidthScaled; // esi
   int v8; // ecx
-  int v9; // eax
+  int stretchRatio; // eax
   int v10; // ecx
-  int v11; // eax
-  int v12; // edi
-  int v13; // eax
-  __int64 v14; // rax
-  int v15; // ebp
-  int v16; // eax
-  RECT v17; // [esp+170h] [ebp-30h] BYREF
+  int showFlags; // eax
+  int overlayFlags; // edi
+  int updateResult; // eax
+  __int64 biHeight; // rax
+  int overlaySurface; // ebp
+  int hideResult; // eax
+  RECT frameRect; // [esp+170h] [ebp-30h] BYREF
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+180h] [ebp-20h]
   tagRECT *v19; // [esp+184h] [ebp-1Ch]
   void *v20; // [esp+188h] [ebp-18h]
   int v21; // [esp+18Ch] [ebp-14h]
   int v22; // [esp+19Ch] [ebp-4h]
 
-  v4 = *a1;
+  v4 = *playerHandle;
   v22 = a3;
   v5 = v4;
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
@@ -264,36 +264,36 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
   v21 = 0;
   if ( !*(_BYTE *)(v4 + 2062) )
   {
-    v17 = *(RECT *)g_AviFrameRectInitScratch;
-    v17.left = a2;
-    v17.top = a4;
-    v17.right = *(_DWORD *)(*(_DWORD *)(v4 + 151) + 4) + a2;
-    v14 = *(int *)(*(_DWORD *)(v4 + 151) + 8);
-    v17.bottom = (HIDWORD(v14) ^ v14) - HIDWORD(v14) + a4;
-    AviPlayer_RenderFrame(v5, &v17);
+    frameRect = *(RECT *)g_AviFrameRectInitScratch;
+    frameRect.left = x;
+    frameRect.top = y;
+    frameRect.right = *(_DWORD *)(*(_DWORD *)(v4 + 151) + 4) + x;
+    biHeight = *(int *)(*(_DWORD *)(v4 + 151) + 8);
+    frameRect.bottom = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight) + y;
+    AviPlayer_RenderFrame(v5, &frameRect);
   }
   v6 = v5;
   if ( *(_BYTE *)(v5 + 1968) && *(_DWORD *)(v5 + 1964) )
   {
-    v7 = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(v5 + 2063));
-    v9 = v7 / AviPlayer_SpanDelta(v8, (_DWORD *)(v8 + 2079));
-    if ( v9 < *(_DWORD *)(v10 + 2143) || v9 > *(_DWORD *)(v10 + 2147) )
+    destWidthScaled = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(v5 + 2063));
+    stretchRatio = destWidthScaled / AviPlayer_SpanDelta(v8, (_DWORD *)(v8 + 2079));
+    if ( stretchRatio < *(_DWORD *)(v10 + 2143) || stretchRatio > *(_DWORD *)(v10 + 2147) )
     {
       if ( *(_BYTE *)(v6 + 1968) )
       {
-        v15 = *(_DWORD *)(v6 + 1964);
-        if ( v15 )
+        overlaySurface = *(_DWORD *)(v6 + 1964);
+        if ( overlaySurface )
         {
-          v16 = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)v15 + 132))(
-                  v15,
+          hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
+                  overlaySurface,
                   v6 + 2095,
                   *(_DWORD *)(v6 + 1956),
                   v6 + 2063,
                   512,
                   0);
-          if ( v16 )
+          if ( hideResult )
           {
-            if ( v16 != -2005532222
+            if ( hideResult != -2005532222
               || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 96))(*(_DWORD *)(v6 + 1964)) != -2005532222
                || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 108))(*(_DWORD *)(v6 + 1964)))
               && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 96))(*(_DWORD *)(v6 + 1956)) != -2005532222
@@ -316,19 +316,19 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
     }
     else
     {
-      v11 = 0x4000;
+      showFlags = 0x4000;
       if ( *(_DWORD *)(v10 + 2171) )
-        v11 = 20480;
-      v12 = v11;
-      v13 = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v6 + 1964) + 132))(
+        showFlags = 20480;
+      overlayFlags = showFlags;
+      updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v6 + 1964) + 132))(
               *(_DWORD *)(v6 + 1964),
               v6 + 2095,
               *(_DWORD *)(v6 + 1956),
               v6 + 2063,
-              v11,
+              showFlags,
               0);
-      if ( v13
-        && (v13 != -2005532222
+      if ( updateResult
+        && (updateResult != -2005532222
          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 96))(*(_DWORD *)(v6 + 1964)) != -2005532222
           || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 108))(*(_DWORD *)(v6 + 1964)))
          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 96))(*(_DWORD *)(v6 + 1956)) != -2005532222
@@ -338,7 +338,7 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
               v6 + 2095,
               *(_DWORD *)(v6 + 1956),
               v6 + 2063,
-              v12,
+              overlayFlags,
               0)) )
       {
         ExcString_Ctor();
@@ -357,43 +357,43 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
 // 4685F9: variable 'v10' is possibly undefined
 
 //----- (00464410) --------------------------------------------------------
-void  CAviDecompressor_UpdateRect(int *a1, const RECT *a2)
+void  CAviDecompressor_UpdateRect(int *playerHandle, const RECT *destRect)
 {
-  CAviDecompressor_PresentFrameForRect(*a1, a2);
+  CAviDecompressor_PresentFrameForRect(*playerHandle, destRect);
 }
 
 //----- (00464420) --------------------------------------------------------
-void  CAviDecompressor_Blit(int *a1)
+void  CAviDecompressor_Blit(int *playerHandle)
 {
-  int v1; // eax
+  int instance; // eax
 
-  v1 = *a1;
-  if ( *(_BYTE *)(v1 + 2191) )
-    CAviDecompressor_PresentFrameIfStale(v1, 0);
+  instance = *playerHandle;
+  if ( *(_BYTE *)(instance + 2191) )
+    CAviDecompressor_PresentFrameIfStale(instance, 0);
 }
 
 //----- (00464440) --------------------------------------------------------
-void  CAviDecompressor_BlitTo(int *a1, LONG a2, int a3, LONG a4)
+void  CAviDecompressor_BlitTo(int *playerHandle, LONG x, int a3, LONG y)
 {
-  int v4; // ecx
-  int v5; // eax
+  int instance; // ecx
+  int videoFormat; // eax
   int v6; // edx
   int v7; // ecx
   int v8; // ecx
-  RECT v9; // [esp+0h] [ebp-14h] BYREF
+  RECT destRect; // [esp+0h] [ebp-14h] BYREF
   int v10; // [esp+10h] [ebp-4h]
 
   v10 = a3;
-  v4 = *a1;
-  if ( *(_BYTE *)(*a1 + 2191) )
+  instance = *playerHandle;
+  if ( *(_BYTE *)(*playerHandle + 2191) )
   {
-    v9 = *(RECT *)g_AviDecompressorBlitRectTemplate;
-    v9.left = a2;
-    v9.top = a4;
-    v5 = CAviDecompressor_GetVideoFormat(v4);
-    v9.right = *(_DWORD *)(v5 + 4) + v6;
-    v9.bottom = abs32(*(_DWORD *)(CAviDecompressor_GetVideoFormat(v7) + 8)) + a4;
-    CAviDecompressor_PresentFrameIfStale(v8, &v9);
+    destRect = *(RECT *)g_AviDecompressorBlitRectTemplate;
+    destRect.left = x;
+    destRect.top = y;
+    videoFormat = CAviDecompressor_GetVideoFormat(instance);
+    destRect.right = *(_DWORD *)(videoFormat + 4) + v6;
+    destRect.bottom = abs32(*(_DWORD *)(CAviDecompressor_GetVideoFormat(v7) + 8)) + y;
+    CAviDecompressor_PresentFrameIfStale(v8, &destRect);
   }
 }
 // 464479: variable 'v6' is possibly undefined
@@ -401,116 +401,116 @@ void  CAviDecompressor_BlitTo(int *a1, LONG a2, int a3, LONG a4)
 // 464496: variable 'v8' is possibly undefined
 
 //----- (004644B0) --------------------------------------------------------
-void  CAviDecompressor_StretchTo(int *a1, const RECT *a2)
+void  CAviDecompressor_StretchTo(int *playerHandle, const RECT *destRect)
 {
-  int v2; // eax
+  int instance; // eax
 
-  v2 = *a1;
-  if ( *(_BYTE *)(v2 + 2191) )
-    CAviDecompressor_PresentFrameIfStale(v2, a2);
+  instance = *playerHandle;
+  if ( *(_BYTE *)(instance + 2191) )
+    CAviDecompressor_PresentFrameIfStale(instance, destRect);
 }
 
 //----- (004644C0) --------------------------------------------------------
-void  CAviDecompressor_GetRect(_DWORD *a1, _DWORD *a2)
+void  CAviDecompressor_GetRect(_DWORD *playerHandle, _DWORD *rectOut)
 {
-  _DWORD *v2; // esi
+  _DWORD *srcRect; // esi
 
-  v2 = (_DWORD *)(*a1 + 2063);
-  *a2 = *v2++;
-  a2[1] = *v2++;
-  a2[2] = *v2;
-  a2[3] = v2[1];
+  srcRect = (_DWORD *)(*playerHandle + 2063);
+  *rectOut = *srcRect++;
+  rectOut[1] = *srcRect++;
+  rectOut[2] = *srcRect;
+  rectOut[3] = srcRect[1];
 }
 
 //----- (004644E0) --------------------------------------------------------
-void  CAviDecompressor_InitColorKeys(int *a1, int a2, int a3)
+void  CAviDecompressor_InitColorKeys(int *playerHandle, int colorKeyLow, int colorKeyHigh)
 {
-  int v3; // eax
+  int instance; // eax
 
-  v3 = *a1;
-  *(_DWORD *)(v3 + 2171) = 8;
-  *(_DWORD *)(v3 + 2042) = a2;
-  *(_DWORD *)(v3 + 2046) = a3;
+  instance = *playerHandle;
+  *(_DWORD *)(instance + 2171) = 8;
+  *(_DWORD *)(instance + 2042) = colorKeyLow;
+  *(_DWORD *)(instance + 2046) = colorKeyHigh;
 }
 
 //----- (00464500) --------------------------------------------------------
-void  CAviDecompressor_InitPos(int *a1, int a2, int a3)
+void  CAviDecompressor_InitPos(int *playerHandle, int x, int y)
 {
-  int v3; // eax
+  int instance; // eax
 
-  v3 = *a1;
-  *(_DWORD *)(v3 + 2071) = 0;
-  *(_DWORD *)(v3 + 2075) = 0;
-  *(_BYTE *)(v3 + 2062) = 1;
-  *(_DWORD *)(v3 + 2063) = a2;
-  *(_DWORD *)(v3 + 2067) = a3;
+  instance = *playerHandle;
+  *(_DWORD *)(instance + 2071) = 0;
+  *(_DWORD *)(instance + 2075) = 0;
+  *(_BYTE *)(instance + 2062) = 1;
+  *(_DWORD *)(instance + 2063) = x;
+  *(_DWORD *)(instance + 2067) = y;
 }
 
 //----- (00464530) --------------------------------------------------------
-void  CAviDecompressor_InitRect(int *a1, _DWORD *a2)
+void  CAviDecompressor_InitRect(int *playerHandle, _DWORD *rect)
 {
-  int v2; // eax
+  int instance; // eax
 
-  v2 = *a1;
-  *(_DWORD *)(v2 + 2063) = *a2;
-  *(_DWORD *)(v2 + 2067) = a2[1];
-  *(_DWORD *)(v2 + 2071) = a2[2];
-  *(_DWORD *)(v2 + 2075) = a2[3];
-  *(_BYTE *)(v2 + 2062) = 1;
+  instance = *playerHandle;
+  *(_DWORD *)(instance + 2063) = *rect;
+  *(_DWORD *)(instance + 2067) = rect[1];
+  *(_DWORD *)(instance + 2071) = rect[2];
+  *(_DWORD *)(instance + 2075) = rect[3];
+  *(_BYTE *)(instance + 2062) = 1;
 }
 
 //----- (00464550) --------------------------------------------------------
-void  CAviDecompressor_InitOverlays(int a1, char a2)
+void  CAviDecompressor_InitOverlays(int playerHandle, char enabled)
 {
-  *(_BYTE *)(*(_DWORD *)a1 + 2050) = a2 != 0;
+  *(_BYTE *)(*(_DWORD *)playerHandle + 2050) = enabled != 0;
 }
 
 //----- (00464570) --------------------------------------------------------
-unsigned int  CAviDecompressor_TimeMs(int a1)
+unsigned int  CAviDecompressor_TimeMs(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 43)
-       * ((unsigned int)(1000 * *(_DWORD *)(*(_DWORD *)a1 + 31))
-        / *(_DWORD *)(*(_DWORD *)a1 + 35));
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 43)
+       * ((unsigned int)(1000 * *(_DWORD *)(*(_DWORD *)playerHandle + 31))
+        / *(_DWORD *)(*(_DWORD *)playerHandle + 35));
 }
 
 //----- (004645C0) --------------------------------------------------------
-int  CAviDecompressor_SumSleepTime(int a1)
+int  CAviDecompressor_SumSleepTime(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)a1 + 2038);
+  return *(_DWORD *)(*(_DWORD *)playerHandle + 2038);
 }
 
 //----- (004645D0) --------------------------------------------------------
-void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a5)(void), int a6)
+void __stdcall PlayAvi(char *fileName, IDirectDrawSurface *ddSurface, int x, int y, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   char *v9; // [esp+4h] [ebp-24h]
   IDirectDrawSurface *v10; // [esp+8h] [ebp-20h]
   int v11; // [esp+Ch] [ebp-1Ch]
-  int v12[5]; // [esp+14h] [ebp-14h] BYREF
+  int aviHandle[5]; // [esp+14h] [ebp-14h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v9 = (char *)&j____wcpp_4_fs_handler_rtn_;
   v10 = &stru_50F734;
-  CAviDecompressor_ConstructEmpty(v12, 0);
+  CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v11 = 1;
-  CAviDecompressor_InitPos(v12, a3, a4);
-  CAviDecompressor_Init(v12, a2, (int)a1, a6);
-  if ( CAviDecompressor_Initialized(v12) )
+  CAviDecompressor_InitPos(aviHandle, x, y);
+  CAviDecompressor_Init(aviHandle, ddSurface, (int)fileName, openFlags);
+  if ( CAviDecompressor_Initialized(aviHandle) )
   {
-    CAviDecompressor_Start(v12);
-    while ( CAviDecompressor_IsPlaying((int)v12)
-         && (!a5
-          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface *, int))a5)(
+    CAviDecompressor_Start(aviHandle);
+    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+         && (!continueCallback
+          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface *, int))continueCallback)(
                ExceptionList,
                v9,
                v10,
                v11)) )
     {
-      CAviDecompressor_Blit(v12);
-      CAviDecompressor_WaitForNextFrame(v12);
+      CAviDecompressor_Blit(aviHandle);
+      CAviDecompressor_WaitForNextFrame(aviHandle);
     }
   }
-  CAviDecompressor_dtor(v12);
+  CAviDecompressor_dtor(aviHandle);
 }
 // 464699: variable 'ExceptionList' is possibly undefined
 // 464699: variable 'v9' is possibly undefined
@@ -518,37 +518,37 @@ void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a
 // 464699: variable 'v11' is possibly undefined
 
 //----- (004646B0) --------------------------------------------------------
-void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int (*a4)(void), int a5)
+void __stdcall PlayAviStretch(char *fileName, IDirectDrawSurface *ddSurface, tagRECT *destRect, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   tagRECT *v8; // [esp+4h] [ebp-24h]
   IDirectDrawSurface *v9; // [esp+8h] [ebp-20h]
   int v10; // [esp+Ch] [ebp-1Ch]
-  int v11[5]; // [esp+14h] [ebp-14h] BYREF
+  int aviHandle[5]; // [esp+14h] [ebp-14h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v8 = &j____wcpp_4_fs_handler_rtn_;
   v9 = &stru_50F740;
-  CAviDecompressor_ConstructEmpty(v11, 0);
+  CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v10 = 1;
-  CAviDecompressor_InitRect(v11, a3);
-  CAviDecompressor_Init(v11, a2, (int)a1, a5);
-  if ( CAviDecompressor_Initialized(v11) )
+  CAviDecompressor_InitRect(aviHandle, destRect);
+  CAviDecompressor_Init(aviHandle, ddSurface, (int)fileName, openFlags);
+  if ( CAviDecompressor_Initialized(aviHandle) )
   {
-    CAviDecompressor_Start(v11);
-    while ( CAviDecompressor_IsPlaying((int)v11)
-         && (!a4
-          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface *, int))a4)(
+    CAviDecompressor_Start(aviHandle);
+    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+         && (!continueCallback
+          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface *, int))continueCallback)(
                ExceptionList,
                v8,
                v9,
                v10)) )
     {
-      CAviDecompressor_Blit(v11);
-      CAviDecompressor_WaitForNextFrame(v11);
+      CAviDecompressor_Blit(aviHandle);
+      CAviDecompressor_WaitForNextFrame(aviHandle);
     }
   }
-  CAviDecompressor_dtor(v11);
+  CAviDecompressor_dtor(aviHandle);
 }
 // 464774: variable 'ExceptionList' is possibly undefined
 // 464774: variable 'v8' is possibly undefined
@@ -556,37 +556,37 @@ void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int
 // 464774: variable 'v10' is possibly undefined
 
 //----- (00464780) --------------------------------------------------------
-void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4, int (*a5)(void), int a6)
+void __stdcall PlayAviSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, int x, int y, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   char *v9; // [esp+4h] [ebp-24h]
   IDirectDrawSurface2 *v10; // [esp+8h] [ebp-20h]
   int v11; // [esp+Ch] [ebp-1Ch]
-  int v12[5]; // [esp+14h] [ebp-14h] BYREF
+  int aviHandle[5]; // [esp+14h] [ebp-14h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v9 = (char *)&j____wcpp_4_fs_handler_rtn_;
   v10 = &stru_50F74C;
-  CAviDecompressor_ConstructEmpty(v12, 0);
+  CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v11 = 1;
-  CAviDecompressor_InitPos(v12, a3, a4);
-  CAviDecompressor_InitSource(a6, (int)a1);
-  if ( CAviDecompressor_Initialized(v12) )
+  CAviDecompressor_InitPos(aviHandle, x, y);
+  CAviDecompressor_InitSource(openFlags, (int)fileName);
+  if ( CAviDecompressor_Initialized(aviHandle) )
   {
-    CAviDecompressor_Start(v12);
-    while ( CAviDecompressor_IsPlaying((int)v12)
-         && (!a5
-          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface2 *, int))a5)(
+    CAviDecompressor_Start(aviHandle);
+    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+         && (!continueCallback
+          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface2 *, int))continueCallback)(
                ExceptionList,
                v9,
                v10,
                v11)) )
     {
-      CAviDecompressor_Blit(v12);
-      CAviDecompressor_WaitForNextFrame(v12);
+      CAviDecompressor_Blit(aviHandle);
+      CAviDecompressor_WaitForNextFrame(aviHandle);
     }
   }
-  CAviDecompressor_dtor(v12);
+  CAviDecompressor_dtor(aviHandle);
 }
 // 464849: variable 'ExceptionList' is possibly undefined
 // 464849: variable 'v9' is possibly undefined
@@ -594,37 +594,37 @@ void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4
 // 464849: variable 'v11' is possibly undefined
 
 //----- (00464860) --------------------------------------------------------
-void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT *a3, int (*a4)(void), int a5)
+void __stdcall PlayAviStretchSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, tagRECT *destRect, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   tagRECT *v8; // [esp+4h] [ebp-24h]
   IDirectDrawSurface2 *v9; // [esp+8h] [ebp-20h]
   int v10; // [esp+Ch] [ebp-1Ch]
-  int v11[5]; // [esp+14h] [ebp-14h] BYREF
+  int aviHandle[5]; // [esp+14h] [ebp-14h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v8 = &j____wcpp_4_fs_handler_rtn_;
   v9 = &stru_50F758;
-  CAviDecompressor_ConstructEmpty(v11, 0);
+  CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v10 = 1;
-  CAviDecompressor_InitRect(v11, a3);
-  CAviDecompressor_InitSource(a5, (int)a1);
-  if ( CAviDecompressor_Initialized(v11) )
+  CAviDecompressor_InitRect(aviHandle, destRect);
+  CAviDecompressor_InitSource(openFlags, (int)fileName);
+  if ( CAviDecompressor_Initialized(aviHandle) )
   {
-    CAviDecompressor_Start(v11);
-    while ( CAviDecompressor_IsPlaying((int)v11)
-         && (!a4
-          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface2 *, int))a4)(
+    CAviDecompressor_Start(aviHandle);
+    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+         && (!continueCallback
+          || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface2 *, int))continueCallback)(
                ExceptionList,
                v8,
                v9,
                v10)) )
     {
-      CAviDecompressor_Blit(v11);
-      CAviDecompressor_WaitForNextFrame(v11);
+      CAviDecompressor_Blit(aviHandle);
+      CAviDecompressor_WaitForNextFrame(aviHandle);
     }
   }
-  CAviDecompressor_dtor(v11);
+  CAviDecompressor_dtor(aviHandle);
 }
 // 464924: variable 'ExceptionList' is possibly undefined
 // 464924: variable 'v8' is possibly undefined
@@ -632,32 +632,32 @@ void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT
 // 464924: variable 'v10' is possibly undefined
 
 //----- (00464930) --------------------------------------------------------
-int  CAviDecompressor_InitThreadGuard(int a1)
+int  CAviDecompressor_InitThreadGuard(int guard)
 {
-  *(_DWORD *)a1 = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 4));
-  return a1;
+  *(_DWORD *)guard = 0;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(guard + 4));
+  return guard;
 }
 
 //----- (00464950) --------------------------------------------------------
-int  CAviDecompressor_DoneThreadGuard(int a1)
+int  CAviDecompressor_DoneThreadGuard(int guard)
 {
-  DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 4));
-  return a1;
+  DeleteCriticalSection((LPCRITICAL_SECTION)(guard + 4));
+  return guard;
 }
 
 //----- (00464970) --------------------------------------------------------
-HANDLE * CAviDecompressor_ConstructEventHandle(HANDLE *a1, bool a2, bool a3)
+HANDLE * CAviDecompressor_ConstructEventHandle(HANDLE *eventOut, bool manualReset, bool initialState)
 {
-  *a1 = CreateEventA(0, a2, a3, 0);
-  return a1;
+  *eventOut = CreateEventA(0, manualReset, initialState, 0);
+  return eventOut;
 }
 
 //----- (00464990) --------------------------------------------------------
-HANDLE * CAviDecompressor_DestroyEventHandle(HANDLE *a1)
+HANDLE * CAviDecompressor_DestroyEventHandle(HANDLE *eventHandlePtr)
 {
-  CloseHandle(*a1);
-  return a1;
+  CloseHandle(*eventHandlePtr);
+  return eventHandlePtr;
 }
 
 //----- (004649B0) --------------------------------------------------------
@@ -681,76 +681,76 @@ int CAviDecompressor_FreeMemberB()
 // 4649CA: variable 'v2' is possibly undefined
 
 //----- (004649D0) --------------------------------------------------------
-int  CAviDecompressor_ConstructSourceInterface(int a1)
+int  CAviDecompressor_ConstructSourceInterface(int self)
 {
-  int v1; // ebx
-  int v2; // edx
-  HANDLE *v3; // ebx
+  int fieldPtr; // ebx
+  int basePtr; // edx
+  HANDLE *eventPtr; // ebx
 
-  *(_BYTE *)a1 = 0;
-  *(_BYTE *)(a1 + 1) = 1;
-  *(_DWORD *)(a1 + 3) = 0;
-  *(_DWORD *)(a1 + 7) = 0;
-  *(_DWORD *)(a1 + 151) = 0;
-  *(_DWORD *)(a1 + 163) = 0;
-  v1 = a1 + 171;
-  *(_DWORD *)(a1 + 167) = CreateEventA(0, 0, 0, 0);
-  v1 += 4;
-  *(_DWORD *)(v1 - 4) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)v1 = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(v1 + 4));
-  *(_DWORD *)(v1 + 28) = 0;
-  *(_DWORD *)(v1 + 32) = 0;
-  *(_DWORD *)(v1 + 36) = 0;
-  v2 = v1 - 175;
-  *(_DWORD *)(v1 - 175 + 215) = 0;
-  *(_DWORD *)(v1 - 175 + 363) = 0;
-  *(_DWORD *)(v1 - 175 + 375) = 0;
-  v3 = (HANDLE *)(v1 - 175 + 387);
-  *(_DWORD *)(v2 + 379) = 0;
-  *v3 = CreateEventA(0, 0, 0, 0);
-  v3[1] = 0;
-  v3[2] = 0;
-  v3[3] = 0;
-  v3 += 4;
-  *v3++ = CreateEventA(0, 0, 0, 0);
-  *v3 = CreateEventA(0, 0, 0, 0);
-  v3[1] = &g_CAviSourceInterface_Vtable;
-  return (int)v3 - 407;
+  *(_BYTE *)self = 0;
+  *(_BYTE *)(self + 1) = 1;
+  *(_DWORD *)(self + 3) = 0;
+  *(_DWORD *)(self + 7) = 0;
+  *(_DWORD *)(self + 151) = 0;
+  *(_DWORD *)(self + 163) = 0;
+  fieldPtr = self + 171;
+  *(_DWORD *)(self + 167) = CreateEventA(0, 0, 0, 0);
+  fieldPtr += 4;
+  *(_DWORD *)(fieldPtr - 4) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)fieldPtr = 0;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(fieldPtr + 4));
+  *(_DWORD *)(fieldPtr + 28) = 0;
+  *(_DWORD *)(fieldPtr + 32) = 0;
+  *(_DWORD *)(fieldPtr + 36) = 0;
+  basePtr = fieldPtr - 175;
+  *(_DWORD *)(fieldPtr - 175 + 215) = 0;
+  *(_DWORD *)(fieldPtr - 175 + 363) = 0;
+  *(_DWORD *)(fieldPtr - 175 + 375) = 0;
+  eventPtr = (HANDLE *)(fieldPtr - 175 + 387);
+  *(_DWORD *)(basePtr + 379) = 0;
+  *eventPtr = CreateEventA(0, 0, 0, 0);
+  eventPtr[1] = 0;
+  eventPtr[2] = 0;
+  eventPtr[3] = 0;
+  eventPtr += 4;
+  *eventPtr++ = CreateEventA(0, 0, 0, 0);
+  *eventPtr = CreateEventA(0, 0, 0, 0);
+  eventPtr[1] = &g_CAviSourceInterface_Vtable;
+  return (int)eventPtr - 407;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 
 //----- (00464B50) --------------------------------------------------------
-char * CAviDecompressor_DestroySourceInterface(int a1, char a2)
+char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags)
 {
-  HANDLE *v3; // esi
-  char *v4; // ecx
+  HANDLE *eventPtr; // esi
+  char *basePtr; // ecx
   int v6; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_CAviSourceInterface_DtorArrayTag);
+    _wcpp_4_dtor_array_store__(self, &g_CAviSourceInterface_DtorArrayTag);
     j_j__nfree_();
     return (char *)v6;
   }
   else
   {
-    *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
-    v3 = (HANDLE *)(a1 + 407);
-    AviPlayer_CloseStreams(a1);
-    CloseHandle(*v3);
-    CloseHandle(*(v3 - 1));
+    *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
+    eventPtr = (HANDLE *)(self + 407);
+    AviPlayer_CloseStreams(self);
+    CloseHandle(*eventPtr);
+    CloseHandle(*(eventPtr - 1));
     j_j__nfree_();
-    CloseHandle(*(v3 - 5));
-    v3 -= 51;
+    CloseHandle(*(eventPtr - 5));
+    eventPtr -= 51;
     j_j__nfree_();
-    DeleteCriticalSection((LPCRITICAL_SECTION)v3 - 1);
-    CloseHandle(*(v3 - 8));
-    CloseHandle(*(v3 - 9));
-    v4 = (char *)v3 - 203;
-    if ( (a2 & 2) != 0 )
+    DeleteCriticalSection((LPCRITICAL_SECTION)eventPtr - 1);
+    CloseHandle(*(eventPtr - 8));
+    CloseHandle(*(eventPtr - 9));
+    basePtr = (char *)eventPtr - 203;
+    if ( (dtorFlags & 2) != 0 )
       j__nfree_();
-    return v4;
+    return basePtr;
   }
 }
 // 464C7C: variable 'v4' is possibly undefined
@@ -759,78 +759,78 @@ char * CAviDecompressor_DestroySourceInterface(int a1, char a2)
 // 50FDD4: using guessed type int (*off_50FDD4)();
 
 //----- (00464CC0) --------------------------------------------------------
-int  CAviDecompressor_GetVideoFormat(int a1)
+int  CAviDecompressor_GetVideoFormat(int self)
 {
-  return *(_DWORD *)(a1 + 151);
+  return *(_DWORD *)(self + 151);
 }
 
 //----- (00464CD0) --------------------------------------------------------
-int  CAviDecompressor_ReleaseVideoCodec(_DWORD *a1, int a2)
+int  CAviDecompressor_ReleaseVideoCodec(_DWORD *codecHandlePtr, int a2)
 {
   int v2; // ecx
 
-  CAviDecompressor_CloseCodecHandle(a1, (int)a1, a2);
+  CAviDecompressor_CloseCodecHandle(codecHandlePtr, (int)codecHandlePtr, a2);
   return v2;
 }
 // 464CD8: variable 'v2' is possibly undefined
 
 //----- (00464CE0) --------------------------------------------------------
-int  CAviDecompressor_InitCommon(int a1)
+int  CAviDecompressor_InitCommon(int self)
 {
-  memset((void *)(uintptr_t)(unsigned int)a1, 0, 2236);
-  *(_BYTE *)a1 = 0;
-  *(_BYTE *)(a1 + 1) = 1;
-  *(_DWORD *)(a1 + 167) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(a1 + 171) = CreateEventA(0, 0, 0, 0);
-  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
-  *(_DWORD *)(a1 + 387) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(a1 + 403) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(a1 + 407) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
-  *(_DWORD *)(a1 + 2196) = CreateEventA(0, 1, 1, 0);
-  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
-  *(_DWORD *)(a1 + 2228) = CreateEventA(0, 1, 1, 0);
-  *(_DWORD *)(a1 + 2232) = &g_CAviDecompressor_Vtable;
-  SetRect((LPRECT)(a1 + 1969), -100000, -100000, 100000, 100000);
-  return a1;
+  memset((void *)(uintptr_t)(unsigned int)self, 0, 2236);
+  *(_BYTE *)self = 0;
+  *(_BYTE *)(self + 1) = 1;
+  *(_DWORD *)(self + 167) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(self + 171) = CreateEventA(0, 0, 0, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 179));
+  *(_DWORD *)(self + 387) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(self + 403) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(self + 407) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 1989));
+  *(_DWORD *)(self + 2196) = CreateEventA(0, 1, 1, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 2204));
+  *(_DWORD *)(self + 2228) = CreateEventA(0, 1, 1, 0);
+  *(_DWORD *)(self + 2232) = &g_CAviDecompressor_Vtable;
+  SetRect((LPRECT)(self + 1969), -100000, -100000, 100000, 100000);
+  return self;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 // 50FDE4: using guessed type int (*off_50FDE4)();
 
 //----- (00464FD0) --------------------------------------------------------
-int  CAviDecompressor_Destroy(int a1, char a2)
+int  CAviDecompressor_Destroy(int self, char dtorFlags)
 {
   int v11; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_CAviDecompressor_DtorArrayTag);
+    _wcpp_4_dtor_array_store__(self, &g_CAviDecompressor_DtorArrayTag);
     j_j__nfree_();
     return v11;
   }
   else
   {
-    *(_DWORD *)(a1 + 2232) = &g_CAviDecompressor_Vtable;
-    AviPlayer_ShutdownDecodeState(a1);
-    CloseHandle(*(HANDLE *)(a1 + 2228));
-    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
-    CloseHandle(*(HANDLE *)(a1 + 2196));
-    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
-    CAviDecompressor_CloseCodecHandle((_DWORD *)(a1 + 415), a1 + 415, 16);
-    *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
-    AviPlayer_CloseStreams(a1);
-    CloseHandle(*(HANDLE *)(a1 + 407));
-    CloseHandle(*(HANDLE *)(a1 + 403));
+    *(_DWORD *)(self + 2232) = &g_CAviDecompressor_Vtable;
+    AviPlayer_ShutdownDecodeState(self);
+    CloseHandle(*(HANDLE *)(self + 2228));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 2204));
+    CloseHandle(*(HANDLE *)(self + 2196));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 1989));
+    CAviDecompressor_CloseCodecHandle((_DWORD *)(self + 415), self + 415, 16);
+    *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
+    AviPlayer_CloseStreams(self);
+    CloseHandle(*(HANDLE *)(self + 407));
+    CloseHandle(*(HANDLE *)(self + 403));
     j_j__nfree_();
-    CloseHandle(*(HANDLE *)(a1 + 387));
+    CloseHandle(*(HANDLE *)(self + 387));
     j_j__nfree_();
-    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
-    CloseHandle(*(HANDLE *)(a1 + 171));
-    CloseHandle(*(HANDLE *)(a1 + 167));
-    if ( (a2 & 2) != 0 )
+    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 179));
+    CloseHandle(*(HANDLE *)(self + 171));
+    CloseHandle(*(HANDLE *)(self + 167));
+    if ( (dtorFlags & 2) != 0 )
       j__nfree_();
-    return a1;
+    return self;
   }
 }
 // 4651BB: variable 'v11' is possibly undefined
@@ -841,120 +841,120 @@ int  CAviDecompressor_Destroy(int a1, char a2)
 //----- (004651D0) --------------------------------------------------------
 DWORD __stdcall StartAddress(char *lpThreadParameter)
 {
-  _DWORD *v1; // ebx
-  int v3; // eax
+  _DWORD *guardPtr; // ebx
+  int blockAlign; // eax
   int v4; // edx
   int v5; // ecx
   signed int Frame; // esi
   int v7; // ecx
   int v8; // edx
-  int v9; // edi
-  int v10; // eax
+  int queuedSamples; // edi
+  int readBlockAlign; // eax
   int v11; // edx
-  int v12; // eax
-  signed int *v13; // edi
-  int v14; // esi
-  int v15; // eax
+  int sampleWriteIndex; // eax
+  signed int *sampleQueueEntry; // edi
+  int queuedSampleCount; // esi
+  int checkBlockAlign; // eax
   int v16; // edx
-  signed int v17; // eax
-  signed int v18; // edi
-  int v19; // esi
-  int v20; // eax
+  signed int nextOffset; // eax
+  signed int sampleOffset; // edi
+  int chunkFrameIndex; // esi
+  int frameFlagsValue; // eax
   char *v21; // eax
-  int v22; // edx
-  int *v23; // edi
+  int chunkWriteIndex; // edx
+  int *chunkQueueEntry; // edi
   int Sample; // eax
-  int v25; // [esp-14h] [ebp-70h]
-  int v26; // [esp-10h] [ebp-6Ch]
-  int v27; // [esp-Ch] [ebp-68h]
-  int v28; // [esp+14h] [ebp-48h]
-  signed int v29; // [esp+18h] [ebp-44h]
-  int v30; // [esp+1Ch] [ebp-40h]
-  signed int v31; // [esp+24h] [ebp-38h]
-  signed int v32; // [esp+28h] [ebp-34h] BYREF
-  int v33; // [esp+2Ch] [ebp-30h] BYREF
-  HANDLE *v34; // [esp+30h] [ebp-2Ch]
-  HANDLE *v35; // [esp+34h] [ebp-28h]
-  HANDLE *v36; // [esp+38h] [ebp-24h]
-  char *v37; // [esp+3Ch] [ebp-20h]
-  char *v38; // [esp+40h] [ebp-1Ch]
-  char *v39; // [esp+44h] [ebp-18h]
-  HANDLE *v40; // [esp+48h] [ebp-14h]
-  char *v41; // [esp+4Ch] [ebp-10h]
-  _DWORD *v42; // [esp+50h] [ebp-Ch]
-  char v43; // [esp+54h] [ebp-8h]
-  char v44; // [esp+58h] [ebp-4h]
+  int samplesToRead; // [esp-14h] [ebp-70h]
+  int startSample; // [esp-10h] [ebp-6Ch]
+  int destBuffer; // [esp-Ch] [ebp-68h]
+  int entryFlags; // [esp+14h] [ebp-48h]
+  signed int entryOffset; // [esp+18h] [ebp-44h]
+  int entryBytes; // [esp+1Ch] [ebp-40h]
+  signed int chunkBytes; // [esp+24h] [ebp-38h]
+  signed int bytesRead; // [esp+28h] [ebp-34h] BYREF
+  int audioBytesRead; // [esp+2Ch] [ebp-30h] BYREF
+  HANDLE *videoQueueSpaceEvent; // [esp+30h] [ebp-2Ch]
+  HANDLE *audioQueueSpaceEvent; // [esp+34h] [ebp-28h]
+  HANDLE *decodeStopEvent; // [esp+38h] [ebp-24h]
+  char *threadRefCount; // [esp+3Ch] [ebp-20h]
+  char *selfPtr; // [esp+40h] [ebp-1Ch]
+  char *audioStreamInfo; // [esp+44h] [ebp-18h]
+  HANDLE *decodeIdleEvent; // [esp+48h] [ebp-14h]
+  char *audioChunkQueue; // [esp+4Ch] [ebp-10h]
+  _DWORD *audioSampleQueue; // [esp+50h] [ebp-Ch]
+  char frameDecoded; // [esp+54h] [ebp-8h]
+  char noQueueSpace; // [esp+58h] [ebp-4h]
 
-  v37 = lpThreadParameter + 175;
+  threadRefCount = lpThreadParameter + 175;
   ++*(_DWORD *)(lpThreadParameter + 175);
   EnterCriticalSection((LPCRITICAL_SECTION)(lpThreadParameter + 179));
   if ( !lpThreadParameter[1] )
   {
-    v40 = (HANDLE *)(lpThreadParameter + 407);
-    v36 = (HANDLE *)(lpThreadParameter + 403);
-    v35 = (HANDLE *)(lpThreadParameter + 171);
-    v41 = lpThreadParameter + 203;
-    v34 = (HANDLE *)(lpThreadParameter + 387);
-    v42 = lpThreadParameter + 391;
-    v39 = lpThreadParameter + 219;
+    decodeIdleEvent = (HANDLE *)(lpThreadParameter + 407);
+    decodeStopEvent = (HANDLE *)(lpThreadParameter + 403);
+    audioQueueSpaceEvent = (HANDLE *)(lpThreadParameter + 171);
+    audioChunkQueue = lpThreadParameter + 203;
+    videoQueueSpaceEvent = (HANDLE *)(lpThreadParameter + 387);
+    audioSampleQueue = lpThreadParameter + 391;
+    audioStreamInfo = lpThreadParameter + 219;
     do
     {
-      if ( *((_DWORD *)v41 + 2) < *(_DWORD *)(lpThreadParameter + 43) )
+      if ( *((_DWORD *)audioChunkQueue + 2) < *(_DWORD *)(lpThreadParameter + 43) )
       {
-        v43 = 0;
-        v44 = 0;
+        frameDecoded = 0;
+        noQueueSpace = 0;
         if ( *(_DWORD *)(lpThreadParameter + 215) )
         {
-          AviPlayer_AudioSampleQueueCount((int)v42);
+          AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
           AviPlayer_AudioBytesQueued((int)lpThreadParameter);
-          v3 = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
-          if ( v4 / v3 * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)v39 + 9) <= *((_DWORD *)v41 + 2) )
+          blockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
+          if ( v4 / blockAlign * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9) <= *((_DWORD *)audioChunkQueue + 2) )
           {
             Frame = AviPlayer_DecodeNextFrame((int)lpThreadParameter);
             if ( Frame == -1 )
             {
-              v44 = 1;
+              noQueueSpace = 1;
             }
             else
             {
-              v43 = 1;
-              v27 = *((_DWORD *)v39 + 10);
-              v26 = Frame + *(_DWORD *)(lpThreadParameter + 375);
+              frameDecoded = 1;
+              destBuffer = *((_DWORD *)audioStreamInfo + 10);
+              startSample = Frame + *(_DWORD *)(lpThreadParameter + 375);
               AviPlayer_AudioSampleQueueBase((int)lpThreadParameter);
               LOWORD(v7) = *(_WORD *)(AviPlayer_AudioFormatPtr((int)lpThreadParameter) + 12);
-              v25 = v8 / v7;
-              v9 = AviPlayer_AudioSampleQueueCount((int)v42);
+              samplesToRead = v8 / v7;
+              queuedSamples = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
               AviPlayer_AudioBytesQueued((int)lpThreadParameter);
-              v10 = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
+              readBlockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
               AVIStreamRead(
-                v10,
-                v11 % v10,
+                readBlockAlign,
+                v11 % readBlockAlign,
                 *(_DWORD *)(lpThreadParameter + 215),
-                v9 * (v11 / v10),
-                v25,
-                v26,
-                v27,
-                &v32,
+                queuedSamples * (v11 / readBlockAlign),
+                samplesToRead,
+                startSample,
+                destBuffer,
+                &bytesRead,
                 0);
-              v31 = v32;
-              v12 = v42[2];
-              v13 = (signed int *)(8 * v12 + *v42);
-              v42[2] = v12 + 1;
-              *v13 = Frame;
-              v13[1] = v31;
+              chunkBytes = bytesRead;
+              sampleWriteIndex = audioSampleQueue[2];
+              sampleQueueEntry = (signed int *)(8 * sampleWriteIndex + *audioSampleQueue);
+              audioSampleQueue[2] = sampleWriteIndex + 1;
+              *sampleQueueEntry = Frame;
+              sampleQueueEntry[1] = chunkBytes;
             }
           }
         }
         if ( *(_DWORD *)(lpThreadParameter + 215)
-          && (v14 = AviPlayer_AudioSampleQueueCount((int)v42),
+          && (queuedSampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue),
               AviPlayer_AudioBytesQueued((int)lpThreadParameter),
-              v15 = AviPlayer_AudioBlockAlign((int)lpThreadParameter),
-              *((_DWORD *)v41 + 2) > v16 / v15 * v14 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)v39 + 9)) )
+              checkBlockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter),
+              *((_DWORD *)audioChunkQueue + 2) > v16 / checkBlockAlign * queuedSampleCount / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9)) )
         {
-          if ( v44 )
+          if ( noQueueSpace )
           {
-            PulseEvent(*v40);
-            WaitForSingleObject(*v34, 0x1F4u);
+            PulseEvent(*decodeIdleEvent);
+            WaitForSingleObject(*videoQueueSpaceEvent, 0x1F4u);
             continue;
           }
           if ( lpThreadParameter[2] )
@@ -962,44 +962,44 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         }
         else
         {
-          v17 = CAviDecompressor_GetNextAudioSampleOffset((int)lpThreadParameter);
-          if ( v17 != -1 )
+          nextOffset = CAviDecompressor_GetNextAudioSampleOffset((int)lpThreadParameter);
+          if ( nextOffset != -1 )
           {
-            v18 = v17;
-            v19 = *((_DWORD *)v41 + 2);
+            sampleOffset = nextOffset;
+            chunkFrameIndex = *((_DWORD *)audioChunkQueue + 2);
             AVIStreamRead(
               *(_DWORD *)(lpThreadParameter + 7),
               *(_DWORD *)(lpThreadParameter + 163),
               *(_DWORD *)(lpThreadParameter + 7),
-              v19,
+              chunkFrameIndex,
               1,
-              *(_DWORD *)(lpThreadParameter + 163) + v17,
+              *(_DWORD *)(lpThreadParameter + 163) + nextOffset,
               *(_DWORD *)(lpThreadParameter + 155),
-              &v33,
+              &audioBytesRead,
               0);
-            v38 = lpThreadParameter;
-            if ( v33 )
+            selfPtr = lpThreadParameter;
+            if ( audioBytesRead )
             {
-              Sample = AVIStreamFindSample(*(_DWORD *)(lpThreadParameter + 7), v19, 20);
-              if ( Sample == v19 )
-                v20 = v19 ^ Sample;
+              Sample = AVIStreamFindSample(*(_DWORD *)(lpThreadParameter + 7), chunkFrameIndex, 20);
+              if ( Sample == chunkFrameIndex )
+                frameFlagsValue = chunkFrameIndex ^ Sample;
               else
-                v20 = 0x8000000;
+                frameFlagsValue = 0x8000000;
             }
             else
             {
-              v20 = 0x10000000;
+              frameFlagsValue = 0x10000000;
             }
-            v28 = v20;
-            v30 = v33;
-            v21 = v38;
-            v22 = *(_DWORD *)(v38 + 211);
-            v29 = v18;
-            v23 = (int *)(12 * v22 + *(_DWORD *)(v38 + 203));
-            *(_DWORD *)(v38 + 211) = v22 + 1;
-            *v23++ = v28;
-            *v23 = v29;
-            v23[1] = v30;
+            entryFlags = frameFlagsValue;
+            entryBytes = audioBytesRead;
+            v21 = selfPtr;
+            chunkWriteIndex = *(_DWORD *)(selfPtr + 211);
+            entryOffset = sampleOffset;
+            chunkQueueEntry = (int *)(12 * chunkWriteIndex + *(_DWORD *)(selfPtr + 203));
+            *(_DWORD *)(selfPtr + 211) = chunkWriteIndex + 1;
+            *chunkQueueEntry++ = entryFlags;
+            *chunkQueueEntry = entryOffset;
+            chunkQueueEntry[1] = entryBytes;
             PulseEvent(*(HANDLE *)(v21 + 167));
             if ( !lpThreadParameter[2] )
               continue;
@@ -1007,29 +1007,29 @@ LABEL_28:
             Sleep(0);
             continue;
           }
-          PulseEvent(*v40);
-          if ( v43 )
+          PulseEvent(*decodeIdleEvent);
+          if ( frameDecoded )
           {
             if ( lpThreadParameter[2] )
               goto LABEL_28;
           }
           else
           {
-            WaitForSingleObject(*v35, 0x1F4u);
+            WaitForSingleObject(*audioQueueSpaceEvent, 0x1F4u);
           }
         }
       }
       else
       {
-        PulseEvent(*v40);
-        WaitForSingleObject(*v36, 0x1F4u);
+        PulseEvent(*decodeIdleEvent);
+        WaitForSingleObject(*decodeStopEvent, 0x1F4u);
       }
     }
     while ( !lpThreadParameter[1] );
   }
-  v1 = v37;
-  LeaveCriticalSection((LPCRITICAL_SECTION)(v37 + 4));
-  --*v1;
+  guardPtr = threadRefCount;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(threadRefCount + 4));
+  --*guardPtr;
   return 0;
 }
 // 465300: variable 'v4' is possibly undefined
@@ -1042,79 +1042,79 @@ LABEL_28:
 // 4E9804: using guessed type int __fastcall AVIStreamRead(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00465560) --------------------------------------------------------
-BOOL  CAviDecompressor_RequestDecodeThreadStop(int a1)
+BOOL  CAviDecompressor_RequestDecodeThreadStop(int self)
 {
-  *(_BYTE *)(a1 + 1) = 1;
-  CSS_StopSound(*(_DWORD *)(a1 + 359), 0);
-  PulseEvent(*(HANDLE *)(a1 + 403));
-  PulseEvent(*(HANDLE *)(a1 + 171));
-  return PulseEvent(*(HANDLE *)(a1 + 387));
+  *(_BYTE *)(self + 1) = 1;
+  CSS_StopSound(*(_DWORD *)(self + 359), 0);
+  PulseEvent(*(HANDLE *)(self + 403));
+  PulseEvent(*(HANDLE *)(self + 171));
+  return PulseEvent(*(HANDLE *)(self + 387));
 }
 
 //----- (004655B0) --------------------------------------------------------
-signed int  CAviDecompressor_GetNextAudioSampleOffset(int a1)
+signed int  CAviDecompressor_GetNextAudioSampleOffset(int self)
 {
-  int v1; // ecx
-  int v2; // edx
-  int v3; // esi
+  int writeEnd; // ecx
+  int readStart; // edx
+  int bufferSize; // esi
 
-  if ( *(_DWORD *)(a1 + 211) == *(_DWORD *)(a1 + 207) )
-    v1 = 0;
+  if ( *(_DWORD *)(self + 211) == *(_DWORD *)(self + 207) )
+    writeEnd = 0;
   else
-    v1 = *(_DWORD *)(12 * (*(_DWORD *)(a1 + 211) - 1) + *(_DWORD *)(a1 + 203) + 4)
-       + *(_DWORD *)(12 * (*(_DWORD *)(a1 + 211) - 1) + *(_DWORD *)(a1 + 203) + 8);
-  v2 = *(_DWORD *)(a1 + 211) - *(_DWORD *)(a1 + 207);
-  if ( v2 )
-    v2 = *(_DWORD *)(*(_DWORD *)(a1 + 203) + 12 * *(_DWORD *)(a1 + 207) + 4);
-  if ( v2 <= v1 )
+    writeEnd = *(_DWORD *)(12 * (*(_DWORD *)(self + 211) - 1) + *(_DWORD *)(self + 203) + 4)
+       + *(_DWORD *)(12 * (*(_DWORD *)(self + 211) - 1) + *(_DWORD *)(self + 203) + 8);
+  readStart = *(_DWORD *)(self + 211) - *(_DWORD *)(self + 207);
+  if ( readStart )
+    readStart = *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207) + 4);
+  if ( readStart <= writeEnd )
   {
-    v3 = *(_DWORD *)(a1 + 155);
-    if ( *(_DWORD *)(a1 + 159) - v1 >= v3 )
-      return v1;
-    if ( v2 > v3 )
+    bufferSize = *(_DWORD *)(self + 155);
+    if ( *(_DWORD *)(self + 159) - writeEnd >= bufferSize )
+      return writeEnd;
+    if ( readStart > bufferSize )
       return 0;
     return -1;
   }
-  if ( v2 - v1 <= *(_DWORD *)(a1 + 155) )
+  if ( readStart - writeEnd <= *(_DWORD *)(self + 155) )
     return -1;
-  return v1;
+  return writeEnd;
 }
 
 //----- (00465670) --------------------------------------------------------
-signed int  AviPlayer_DecodeNextFrame(int a1)
+signed int  AviPlayer_DecodeNextFrame(int self)
 {
-  int v1; // edx
-  int v2; // ecx
-  int v3; // esi
-  int v4; // eax
+  int writeEnd; // edx
+  int readStart; // ecx
+  int bufferSize; // esi
+  int suggestedBufferSize; // eax
 
-  v1 = *(_DWORD *)(a1 + 399) - *(_DWORD *)(a1 + 395);
-  if ( v1 )
-    v1 = *(_DWORD *)(*(_DWORD *)(a1 + 391) + 8 * (*(_DWORD *)(a1 + 399) - 1) + 4)
-       + *(_DWORD *)(*(_DWORD *)(a1 + 391) + 8 * (*(_DWORD *)(a1 + 399) - 1));
-  v2 = *(_DWORD *)(a1 + 399) - *(_DWORD *)(a1 + 395);
-  if ( v2 )
-    v2 = *(_DWORD *)(*(_DWORD *)(a1 + 391) + 8 * *(_DWORD *)(a1 + 395));
-  if ( v2 <= v1 )
+  writeEnd = *(_DWORD *)(self + 399) - *(_DWORD *)(self + 395);
+  if ( writeEnd )
+    writeEnd = *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * (*(_DWORD *)(self + 399) - 1) + 4)
+       + *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * (*(_DWORD *)(self + 399) - 1));
+  readStart = *(_DWORD *)(self + 399) - *(_DWORD *)(self + 395);
+  if ( readStart )
+    readStart = *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * *(_DWORD *)(self + 395));
+  if ( readStart <= writeEnd )
   {
-    v3 = *(_DWORD *)(a1 + 371);
-    v4 = *(_DWORD *)(a1 + 259);
-    if ( v3 - v1 >= v4 )
-      return v1;
-    if ( v2 > v4 )
+    bufferSize = *(_DWORD *)(self + 371);
+    suggestedBufferSize = *(_DWORD *)(self + 259);
+    if ( bufferSize - writeEnd >= suggestedBufferSize )
+      return writeEnd;
+    if ( readStart > suggestedBufferSize )
       return 0;
     return -1;
   }
-  if ( v2 - v1 <= *(_DWORD *)(a1 + 259) )
+  if ( readStart - writeEnd <= *(_DWORD *)(self + 259) )
     return -1;
-  return v1;
+  return writeEnd;
 }
 
 //----- (00465710) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
 HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
-        int a1,
-        int a2,
+        int self,
+        int fileName,
         int a3,
         int a4,
         int a5,
@@ -1143,94 +1143,94 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
 {
   HANDLE result; // eax
   int v30; // ecx
-  int v31; // eax
+  int videoFormatHdr; // eax
   char v32; // dl
-  unsigned int v33; // eax
-  unsigned int v34; // eax
+  unsigned int frameBufferBytes; // eax
+  unsigned int alignedBytes; // eax
   int v35; // ecx
-  unsigned int v36; // ebx
-  signed int v37; // eax
-  __int64 v38; // rax
-  int v39; // ebx
-  int v40; // eax
-  _DWORD v41[10]; // [esp+82h] [ebp-2Ah] BYREF
+  unsigned int dwScale; // ebx
+  signed int memoryCap; // eax
+  __int64 frameFlagsAlloc; // rax
+  int fps; // ebx
+  int totalVideoBytes; // eax
+  _DWORD fileInfo[10]; // [esp+82h] [ebp-2Ah] BYREF
 
   *(_DWORD *)((char *)&ThreadId_2 + 2) = a3;
   *(_DWORD *)(&Buffer_30a + 2) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a23 + 2) = &j____wcpp_4_fs_handler_rtn_;
   *(_DWORD *)((char *)&a23 + 6) = &g_AviOpenFileDecodeThread_EHFrame;
   *(_DWORD *)((char *)&a24 + 2) = 0;
-  if ( !*(_BYTE *)a1 )
+  if ( !*(_BYTE *)self )
   {
     AVIFileInit();
-    *(_BYTE *)a1 = 1;
+    *(_BYTE *)self = 1;
   }
-  result = (HANDLE)AVIFileOpenA(a1 + 3, a2, 0, 0);
+  result = (HANDLE)AVIFileOpenA(self + 3, fileName, 0, 0);
   if ( result )
   {
-    *(_DWORD *)(a1 + 3) = 0;
+    *(_DWORD *)(self + 3) = 0;
   }
   else
   {
-    AVIFileInfoA(*(_DWORD *)(a1 + 3), v41, 108);
-    if ( AVIFileGetStream(*(_DWORD *)(a1 + 3), a1 + 7, 1935960438, 0) )
+    AVIFileInfoA(*(_DWORD *)(self + 3), fileInfo, 108);
+    if ( AVIFileGetStream(*(_DWORD *)(self + 3), self + 7, 1935960438, 0) )
     {
-      result = (HANDLE)AVIFileRelease(*(_DWORD *)(a1 + 3));
-      *(_DWORD *)(a1 + 3) = 0;
-      *(_DWORD *)(a1 + 7) = 0;
+      result = (HANDLE)AVIFileRelease(*(_DWORD *)(self + 3));
+      *(_DWORD *)(self + 3) = 0;
+      *(_DWORD *)(self + 7) = 0;
     }
     else
     {
-      AVIStreamReadFormat(*(_DWORD *)(a1 + 7), 0, 0, (char *)&a25 + 2);
-      *(_DWORD *)(a1 + 151) = j_Mem_Alloc(v30);
-      AVIStreamReadFormat(*(_DWORD *)(a1 + 7), 0, *(_DWORD *)(a1 + 151), (char *)&a25 + 2);
-      v31 = *(_DWORD *)(a1 + 151);
-      v32 = *(_BYTE *)(v31 + 13);
+      AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, 0, (char *)&a25 + 2);
+      *(_DWORD *)(self + 151) = j_Mem_Alloc(v30);
+      AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, *(_DWORD *)(self + 151), (char *)&a25 + 2);
+      videoFormatHdr = *(_DWORD *)(self + 151);
+      v32 = *(_BYTE *)(videoFormatHdr + 13);
       if ( v32 < 0 )
       {
-        *(_BYTE *)(v31 + 13) = v32 ^ 0x80;
-        *(_DWORD *)(*(_DWORD *)(a1 + 151) + 16) ^= 0x3ADE68B1u;
+        *(_BYTE *)(videoFormatHdr + 13) = v32 ^ 0x80;
+        *(_DWORD *)(*(_DWORD *)(self + 151) + 16) ^= 0x3ADE68B1u;
       }
-      AVIStreamInfoA(*(_DWORD *)(a1 + 7), a1 + 11, 140);
-      AVIStreamBeginStreaming(*(_DWORD *)(a1 + 7), 0, *(_DWORD *)(a1 + 43) - 1, 1000);
-      if ( *(_DWORD *)(a1 + 51) )
-        v33 = *(_DWORD *)(a1 + 51);
+      AVIStreamInfoA(*(_DWORD *)(self + 7), self + 11, 140);
+      AVIStreamBeginStreaming(*(_DWORD *)(self + 7), 0, *(_DWORD *)(self + 43) - 1, 1000);
+      if ( *(_DWORD *)(self + 51) )
+        frameBufferBytes = *(_DWORD *)(self + 51);
       else
-        v33 = abs32(*(_DWORD *)(*(_DWORD *)(a1 + 151) + 8))
-            * (*(_DWORD *)(*(_DWORD *)(a1 + 151) + 4) / 20 + *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4) + 1)
-            * ((*(unsigned __int16 *)(*(_DWORD *)(a1 + 151) + 14) + 7) >> 3);
-      *(_DWORD *)(a1 + 155) = v33;
-      v34 = v33 + 3;
-      LOBYTE(v34) = v34 & 0xFC;
+        frameBufferBytes = abs32(*(_DWORD *)(*(_DWORD *)(self + 151) + 8))
+            * (*(_DWORD *)(*(_DWORD *)(self + 151) + 4) / 20 + *(_DWORD *)(*(_DWORD *)(self + 151) + 4) + 1)
+            * ((*(unsigned __int16 *)(*(_DWORD *)(self + 151) + 14) + 7) >> 3);
+      *(_DWORD *)(self + 155) = frameBufferBytes;
+      alignedBytes = frameBufferBytes + 3;
+      LOBYTE(alignedBytes) = alignedBytes & 0xFC;
       v35 = 1000;
-      *(_DWORD *)(a1 + 155) = v34 + 16;
-      v36 = *(_DWORD *)(a1 + 31);
-      *(_DWORD *)(a1 + 159) = (*(_DWORD *)((char *)&ThreadId_2 + 2) - 500)
-                            * ((int)(20000 * (v41[0] / 0x3E8u))
-                             / (int)(v41[0] / 0x3E8u + 20000));
-      v37 = (*(_DWORD *)(a1 + 155) * (*(_DWORD *)(a1 + 35) / v36)) >> 1;
-      if ( v37 > *(_DWORD *)(a1 + 159) )
+      *(_DWORD *)(self + 155) = alignedBytes + 16;
+      dwScale = *(_DWORD *)(self + 31);
+      *(_DWORD *)(self + 159) = (*(_DWORD *)((char *)&ThreadId_2 + 2) - 500)
+                            * ((int)(20000 * (fileInfo[0] / 0x3E8u))
+                             / (int)(fileInfo[0] / 0x3E8u + 20000));
+      memoryCap = (*(_DWORD *)(self + 155) * (*(_DWORD *)(self + 35) / dwScale)) >> 1;
+      if ( memoryCap > *(_DWORD *)(self + 159) )
         goto LABEL_11;
-      v39 = *(_DWORD *)(a1 + 35) / *(_DWORD *)(a1 + 31);
-      v40 = *(_DWORD *)(a1 + 43) * *(_DWORD *)(a1 + 155);
-      if ( *(_DWORD *)(a1 + 43) / v39 * v41[0] < (unsigned int)v40 )
-        v40 = *(_DWORD *)(a1 + 43) / v39 * v41[0];
-      if ( v40 < *(_DWORD *)(a1 + 159) )
-        *(_DWORD *)(a1 + 159) = v40;
+      fps = *(_DWORD *)(self + 35) / *(_DWORD *)(self + 31);
+      totalVideoBytes = *(_DWORD *)(self + 43) * *(_DWORD *)(self + 155);
+      if ( *(_DWORD *)(self + 43) / fps * fileInfo[0] < (unsigned int)totalVideoBytes )
+        totalVideoBytes = *(_DWORD *)(self + 43) / fps * fileInfo[0];
+      if ( totalVideoBytes < *(_DWORD *)(self + 159) )
+        *(_DWORD *)(self + 159) = totalVideoBytes;
       GlobalMemoryStatus((LPMEMORYSTATUS)((char *)&a15 + 2));
-      v35 = *(_DWORD *)(a1 + 159);
-      v37 = *(_DWORD *)((char *)&Buffer_6 + 2) >> 4;
+      v35 = *(_DWORD *)(self + 159);
+      memoryCap = *(_DWORD *)((char *)&Buffer_6 + 2) >> 4;
       if ( *(_DWORD *)((char *)&Buffer_6 + 2) >> 4 < v35 )
 LABEL_11:
-        *(_DWORD *)(a1 + 159) = v37;
-      *(_DWORD *)(a1 + 163) = j_Mem_Alloc(v35);
-      v38 = j_Mem_Alloc(*(_DWORD *)(a1 + 43) + 1);
-      *(_QWORD *)(HIDWORD(v38) + 4) = 0LL;
-      *(_DWORD *)HIDWORD(v38) = v38;
-      *(_BYTE *)(a1 + 2) = 0;
-      AviPlayer_OpenAndPrepare((unsigned int *)a1);
-      *(_BYTE *)(a1 + 1) = 0;
-      return CreateThread(0, 0, (LPTHREAD_START_ROUTINE)StartAddress, (LPVOID)a1, 0, (LPDWORD)((char *)&a26 + 2));
+        *(_DWORD *)(self + 159) = memoryCap;
+      *(_DWORD *)(self + 163) = j_Mem_Alloc(v35);
+      frameFlagsAlloc = j_Mem_Alloc(*(_DWORD *)(self + 43) + 1);
+      *(_QWORD *)(HIDWORD(frameFlagsAlloc) + 4) = 0LL;
+      *(_DWORD *)HIDWORD(frameFlagsAlloc) = frameFlagsAlloc;
+      *(_BYTE *)(self + 2) = 0;
+      AviPlayer_OpenAndPrepare((unsigned int *)self);
+      *(_BYTE *)(self + 1) = 0;
+      return CreateThread(0, 0, (LPTHREAD_START_ROUTINE)StartAddress, (LPVOID)self, 0, (LPDWORD)((char *)&a26 + 2));
     }
   }
   return result;
@@ -1249,116 +1249,116 @@ LABEL_11:
 // 4E97F2: using guessed type int AVIFileInit(void);
 
 //----- (00465A10) --------------------------------------------------------
-char  AviPlayer_OpenAndPrepare(unsigned int *a1)
+char  AviPlayer_OpenAndPrepare(unsigned int *self)
 {
   int v2; // ecx
-  __int64 v3; // rax
-  unsigned int *v4; // ebx
-  __int64 v5; // rax
-  double v6; // st7
+  __int64 formatAlloc; // rax
+  unsigned int *audioStreamInfo; // ebx
+  __int64 queueAlloc; // rax
+  double resampleRatio; // st7
   int v7; // edx
   int v8; // ecx
-  int v9; // edx
-  int v10; // eax
-  __int64 v11; // rax
-  _DWORD *v12; // ebx
-  __int64 v13; // rax
+  int audioBufferBytes; // edx
+  int suggestedBytes; // eax
+  __int64 chunkBufAlloc; // rax
+  _DWORD *audioSampleQueue; // ebx
+  __int64 frameIndexAlloc; // rax
   int v14; // ecx
-  int v15; // esi
-  int v16; // eax
+  int queuedSamples; // esi
+  int blockAlign; // eax
   int v17; // edx
   int v18; // ecx
   signed int Frame; // esi
   int v20; // ecx
   int v21; // ecx
   int v22; // edx
-  int v23; // edi
-  int v24; // eax
+  int sampleCount; // edi
+  int readBlockAlign; // eax
   int v25; // edx
-  int v26; // eax
-  signed int *v27; // edi
-  int v28; // eax
+  int sampleWriteIndex; // eax
+  signed int *sampleQueueEntry; // edi
+  int soundHandle; // eax
   int v29; // edx
-  int v30; // [esp-14h] [ebp-4Ch]
-  int v31; // [esp-10h] [ebp-48h]
-  int v32; // [esp-Ch] [ebp-44h]
-  double v33; // [esp+8h] [ebp-30h]
-  signed int v34; // [esp+1Ch] [ebp-1Ch]
-  __int64 v35; // [esp+20h] [ebp-18h]
-  signed int v36; // [esp+28h] [ebp-10h] BYREF
+  int samplesToRead; // [esp-14h] [ebp-4Ch]
+  int startSample; // [esp-10h] [ebp-48h]
+  int destBuffer; // [esp-Ch] [ebp-44h]
+  double lengthScaled; // [esp+8h] [ebp-30h]
+  signed int chunkBytes; // [esp+1Ch] [ebp-1Ch]
+  __int64 rateScale64; // [esp+20h] [ebp-18h]
+  signed int bytesRead; // [esp+28h] [ebp-10h] BYREF
   int v37; // [esp+2Ch] [ebp-Ch] BYREF
   int v38; // [esp+30h] [ebp-8h]
-  unsigned int *v39; // [esp+34h] [ebp-4h]
+  unsigned int *player; // [esp+34h] [ebp-4h]
 
-  v39 = a1;
-  if ( AVIFileGetStream(*(unsigned int *)((char *)a1 + 3), (char *)a1 + 215, 1935963489, 0) )
+  player = self;
+  if ( AVIFileGetStream(*(unsigned int *)((char *)self + 3), (char *)self + 215, 1935963489, 0) )
   {
-    *(unsigned int *)((char *)v39 + 215) = 0;
+    *(unsigned int *)((char *)player + 215) = 0;
     return 0;
   }
   else
   {
-    AVIStreamReadFormat(*(unsigned int *)((char *)v39 + 215), 0, 0, &v37);
-    v3 = j_Mem_Alloc(v2);
-    *(_DWORD *)(HIDWORD(v3) + 363) = v3;
-    v4 = v39;
-    AVIStreamReadFormat(*(_DWORD *)(HIDWORD(v3) + 215), 0, *(_DWORD *)(HIDWORD(v3) + 363), &v37);
-    v4 = (unsigned int *)((char *)v4 + 219);
-    AVIStreamInfoA(*(unsigned int *)((char *)v39 + 215), v4, 140);
-    v5 = j_Mem_Alloc(*(unsigned int *)((char *)v39 + 251));
-    *(_QWORD *)(HIDWORD(v5) + 391) = (unsigned int)v5;
-    *(_DWORD *)(HIDWORD(v5) + 399) = 0;
-    v35 = *(unsigned int *)(HIDWORD(v5) + 31);
-    v33 = (double)v4[6] * (double)v35;
-    LODWORD(v35) = *(_DWORD *)(HIDWORD(v5) + 35);
-    v6 = v33 / ((double)v4[5] * (double)v35);
-    _CHP(v4[5], 0);
-    *(_DWORD *)(v7 + 367) = (int)v6;
-    v8 = (int)v39;
-    v9 = *(unsigned int *)((char *)v39 + 367)
-       * *(unsigned __int16 *)(*(unsigned int *)((char *)v39 + 363) + 12)
-       * (3 * *(_DWORD *)(v7 + 159) / (int)(2 * *(unsigned int *)((char *)v39 + 155)) + v4[9]);
-    *(unsigned int *)((char *)v39 + 371) = v9;
-    v10 = 4 * v4[10];
-    if ( v10 > v9 )
-      *(_DWORD *)(v8 + 371) = v10;
-    v11 = j_Mem_Alloc(v8);
-    *(_DWORD *)(HIDWORD(v11) + 156) = v11;
-    v12 = (unsigned int *)((char *)v39 + 391);
-    v13 = j_Mem_Alloc(v39);
+    AVIStreamReadFormat(*(unsigned int *)((char *)player + 215), 0, 0, &v37);
+    formatAlloc = j_Mem_Alloc(v2);
+    *(_DWORD *)(HIDWORD(formatAlloc) + 363) = formatAlloc;
+    audioStreamInfo = player;
+    AVIStreamReadFormat(*(_DWORD *)(HIDWORD(formatAlloc) + 215), 0, *(_DWORD *)(HIDWORD(formatAlloc) + 363), &v37);
+    audioStreamInfo = (unsigned int *)((char *)audioStreamInfo + 219);
+    AVIStreamInfoA(*(unsigned int *)((char *)player + 215), audioStreamInfo, 140);
+    queueAlloc = j_Mem_Alloc(*(unsigned int *)((char *)player + 251));
+    *(_QWORD *)(HIDWORD(queueAlloc) + 391) = (unsigned int)queueAlloc;
+    *(_DWORD *)(HIDWORD(queueAlloc) + 399) = 0;
+    rateScale64 = *(unsigned int *)(HIDWORD(queueAlloc) + 31);
+    lengthScaled = (double)audioStreamInfo[6] * (double)rateScale64;
+    LODWORD(rateScale64) = *(_DWORD *)(HIDWORD(queueAlloc) + 35);
+    resampleRatio = lengthScaled / ((double)audioStreamInfo[5] * (double)rateScale64);
+    _CHP(audioStreamInfo[5], 0);
+    *(_DWORD *)(v7 + 367) = (int)resampleRatio;
+    v8 = (int)player;
+    audioBufferBytes = *(unsigned int *)((char *)player + 367)
+       * *(unsigned __int16 *)(*(unsigned int *)((char *)player + 363) + 12)
+       * (3 * *(_DWORD *)(v7 + 159) / (int)(2 * *(unsigned int *)((char *)player + 155)) + audioStreamInfo[9]);
+    *(unsigned int *)((char *)player + 371) = audioBufferBytes;
+    suggestedBytes = 4 * audioStreamInfo[10];
+    if ( suggestedBytes > audioBufferBytes )
+      *(_DWORD *)(v8 + 371) = suggestedBytes;
+    chunkBufAlloc = j_Mem_Alloc(v8);
+    *(_DWORD *)(HIDWORD(chunkBufAlloc) + 156) = chunkBufAlloc;
+    audioSampleQueue = (unsigned int *)((char *)player + 391);
+    frameIndexAlloc = j_Mem_Alloc(player);
     *(_DWORD *)(v14 + 383) = 0;
-    v38 = HIDWORD(v13);
-    *(_DWORD *)(v14 + 379) = v13;
+    v38 = HIDWORD(frameIndexAlloc);
+    *(_DWORD *)(v14 + 379) = frameIndexAlloc;
     while ( 1 )
     {
-      v15 = AviPlayer_AudioSampleQueueCount((int)v12);
-      AviPlayer_AudioBytesQueued((int)v39);
-      v16 = AviPlayer_AudioBlockAlign((int)v39);
-      if ( v17 / v16 * v15 / *(int *)((char *)v39 + 367) >= *(_DWORD *)(v38 + 36) )
+      queuedSamples = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
+      AviPlayer_AudioBytesQueued((int)player);
+      blockAlign = AviPlayer_AudioBlockAlign((int)player);
+      if ( v17 / blockAlign * queuedSamples / *(int *)((char *)player + 367) >= *(_DWORD *)(v38 + 36) )
         break;
-      Frame = AviPlayer_DecodeNextFrame((int)v39);
+      Frame = AviPlayer_DecodeNextFrame((int)player);
       if ( Frame == -1 )
         break;
-      v32 = *(_DWORD *)(v38 + 40);
-      v31 = Frame + *(_DWORD *)(v18 + 375);
+      destBuffer = *(_DWORD *)(v38 + 40);
+      startSample = Frame + *(_DWORD *)(v18 + 375);
       AviPlayer_AudioSampleQueueBase(v18);
       LOWORD(v21) = *(_WORD *)(AviPlayer_AudioFormatPtr(v20) + 12);
-      v30 = v22 / v21;
-      v23 = AviPlayer_AudioSampleQueueCount((int)v12);
-      AviPlayer_AudioBytesQueued((int)v39);
-      v24 = AviPlayer_AudioBlockAlign((int)v39);
-      AVIStreamRead(v24, v25 % v24, *(unsigned int *)((char *)v39 + 215), v23 * (v25 / v24), v30, v31, v32, &v36, 0);
-      v34 = v36;
-      v26 = v12[2];
-      v12[2] = v26 + 1;
-      v27 = (signed int *)(*v12 + 8 * v26);
-      *v27 = Frame;
-      v27[1] = v34;
+      samplesToRead = v22 / v21;
+      sampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
+      AviPlayer_AudioBytesQueued((int)player);
+      readBlockAlign = AviPlayer_AudioBlockAlign((int)player);
+      AVIStreamRead(readBlockAlign, v25 % readBlockAlign, *(unsigned int *)((char *)player + 215), sampleCount * (v25 / readBlockAlign), samplesToRead, startSample, destBuffer, &bytesRead, 0);
+      chunkBytes = bytesRead;
+      sampleWriteIndex = audioSampleQueue[2];
+      audioSampleQueue[2] = sampleWriteIndex + 1;
+      sampleQueueEntry = (signed int *)(*audioSampleQueue + 8 * sampleWriteIndex);
+      *sampleQueueEntry = Frame;
+      sampleQueueEntry[1] = chunkBytes;
     }
-    v28 = CSS_StartStreamVoice((int)v39, 64, 0, 0);
-    v29 = (int)v39;
-    *(unsigned int *)((char *)v39 + 359) = v28;
-    if ( v28 )
+    soundHandle = CSS_StartStreamVoice((int)player, 64, 0, 0);
+    v29 = (int)player;
+    *(unsigned int *)((char *)player + 359) = soundHandle;
+    if ( soundHandle )
     {
       return 1;
     }
@@ -1385,78 +1385,78 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
 // 4E9804: using guessed type int __fastcall AVIStreamRead(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00465D30) --------------------------------------------------------
-int  AviPlayer_FlushVideoFrameQueue(int a1)
+int  AviPlayer_FlushVideoFrameQueue(int self)
 {
-  int v2; // ebx
+  int queueBase; // ebx
   HANDLE *i; // esi
-  int v4; // edx
+  int readIndex; // edx
   int result; // eax
 
-  v2 = a1 + 391;
-  for ( i = (HANDLE *)(a1 + 387); ; PulseEvent(*i) )
+  queueBase = self + 391;
+  for ( i = (HANDLE *)(self + 387); ; PulseEvent(*i) )
   {
-    v4 = *(_DWORD *)(v2 + 4);
-    if ( *(_DWORD *)(v2 + 8) == v4 )
+    readIndex = *(_DWORD *)(queueBase + 4);
+    if ( *(_DWORD *)(queueBase + 8) == readIndex )
       break;
-    *(_DWORD *)(v2 + 4) = v4 + 1;
+    *(_DWORD *)(queueBase + 4) = readIndex + 1;
   }
   j_j__nfree_();
-  *(_DWORD *)(a1 + 379) = 0;
+  *(_DWORD *)(self + 379) = 0;
   j_j__nfree_();
-  *(_DWORD *)(a1 + 375) = 0;
+  *(_DWORD *)(self + 375) = 0;
   j_j__nfree_();
-  result = *(_DWORD *)(a1 + 215);
-  *(_DWORD *)(a1 + 363) = 0;
+  result = *(_DWORD *)(self + 215);
+  *(_DWORD *)(self + 363) = 0;
   if ( result )
   {
     result = AVIStreamRelease(result);
-    *(_DWORD *)(a1 + 215) = 0;
+    *(_DWORD *)(self + 215) = 0;
   }
   return result;
 }
 // 4E97C2: using guessed type int __stdcall AVIStreamRelease(_DWORD);
 
 //----- (00465DD0) --------------------------------------------------------
-int  AviPlayer_CloseStreams(int a1)
+int  AviPlayer_CloseStreams(int self)
 {
-  int v2; // ebp
+  int readIndex; // ebp
   int result; // eax
-  int v4; // ecx
+  int videoStream; // ecx
 
-  CAviDecompressor_RequestDecodeThreadStop(a1);
-  ++*(_DWORD *)(a1 + 175);
-  EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
-  LeaveCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
-  --*(_DWORD *)(a1 + 175);
+  CAviDecompressor_RequestDecodeThreadStop(self);
+  ++*(_DWORD *)(self + 175);
+  EnterCriticalSection((LPCRITICAL_SECTION)(self + 179));
+  LeaveCriticalSection((LPCRITICAL_SECTION)(self + 179));
+  --*(_DWORD *)(self + 175);
   while ( 1 )
   {
-    v2 = *(_DWORD *)(a1 + 207);
-    if ( *(_DWORD *)(a1 + 211) == v2 )
+    readIndex = *(_DWORD *)(self + 207);
+    if ( *(_DWORD *)(self + 211) == readIndex )
       break;
-    *(_DWORD *)(a1 + 207) = v2 + 1;
-    PulseEvent(*(HANDLE *)(a1 + 171));
+    *(_DWORD *)(self + 207) = readIndex + 1;
+    PulseEvent(*(HANDLE *)(self + 171));
   }
-  AviPlayer_FlushVideoFrameQueue(a1);
+  AviPlayer_FlushVideoFrameQueue(self);
   j_j__nfree_();
-  *(_DWORD *)(a1 + 163) = 0;
+  *(_DWORD *)(self + 163) = 0;
   result = j_j__nfree_();
-  v4 = *(_DWORD *)(a1 + 7);
-  *(_DWORD *)(a1 + 151) = 0;
-  if ( v4 )
+  videoStream = *(_DWORD *)(self + 7);
+  *(_DWORD *)(self + 151) = 0;
+  if ( videoStream )
   {
-    AVIStreamEndStreaming(v4);
-    result = AVIStreamRelease(*(_DWORD *)(a1 + 7));
-    *(_DWORD *)(a1 + 7) = 0;
+    AVIStreamEndStreaming(videoStream);
+    result = AVIStreamRelease(*(_DWORD *)(self + 7));
+    *(_DWORD *)(self + 7) = 0;
   }
-  if ( *(_DWORD *)(a1 + 3) )
+  if ( *(_DWORD *)(self + 3) )
   {
-    result = AVIFileRelease(*(_DWORD *)(a1 + 3));
-    *(_DWORD *)(a1 + 3) = 0;
+    result = AVIFileRelease(*(_DWORD *)(self + 3));
+    *(_DWORD *)(self + 3) = 0;
   }
-  if ( *(_BYTE *)a1 )
+  if ( *(_BYTE *)self )
   {
     result = AVIFileExit();
-    *(_BYTE *)a1 = 0;
+    *(_BYTE *)self = 0;
   }
   return result;
 }
@@ -1466,65 +1466,65 @@ int  AviPlayer_CloseStreams(int a1)
 // 4E97C8: using guessed type int __stdcall AVIFileRelease(_DWORD);
 
 //----- (00465EC0) --------------------------------------------------------
-int  AviPlayer_GetBufferedAudioSample(int a1, int a2, _DWORD *a3, _DWORD *a4)
+int  AviPlayer_GetBufferedAudioSample(int self, int targetFrame, _DWORD *frameFlagsOut, _DWORD *frameIndexOut)
 {
-  int v7; // ebx
-  int v8; // edx
-  int v9; // eax
+  int readIndex; // ebx
+  int clampedIndex; // edx
+  int scanIndex; // eax
   int i; // edx
 
-  v7 = *(_DWORD *)(a1 + 207);
-  if ( *(_DWORD *)(a1 + 211) != v7 )
+  readIndex = *(_DWORD *)(self + 207);
+  if ( *(_DWORD *)(self + 211) != readIndex )
   {
-    if ( v7 < a2 )
+    if ( readIndex < targetFrame )
     {
-      v8 = *(_DWORD *)(a1 + 211) - 1;
-      if ( v8 >= a2 )
-        v8 = a2;
-      v9 = v8;
-      for ( i = 12 * v8; v9 > *(_DWORD *)(a1 + 207) && *(_DWORD *)(i + *(_DWORD *)(a1 + 203)); i -= 12 )
-        --v9;
-      if ( v9 > *(_DWORD *)(a1 + 207) )
-        *(_DWORD *)(a1 + 207) = v9;
+      clampedIndex = *(_DWORD *)(self + 211) - 1;
+      if ( clampedIndex >= targetFrame )
+        clampedIndex = targetFrame;
+      scanIndex = clampedIndex;
+      for ( i = 12 * clampedIndex; scanIndex > *(_DWORD *)(self + 207) && *(_DWORD *)(i + *(_DWORD *)(self + 203)); i -= 12 )
+        --scanIndex;
+      if ( scanIndex > *(_DWORD *)(self + 207) )
+        *(_DWORD *)(self + 207) = scanIndex;
     }
-    *a4 = *(_DWORD *)(a1 + 207);
+    *frameIndexOut = *(_DWORD *)(self + 207);
     goto LABEL_12;
   }
-  *a4 = *(_DWORD *)(a1 + 211);
-  if ( !WaitForSingleObject(*(HANDLE *)(a1 + 167), 0x3E8u) )
+  *frameIndexOut = *(_DWORD *)(self + 211);
+  if ( !WaitForSingleObject(*(HANDLE *)(self + 167), 0x3E8u) )
   {
 LABEL_12:
-    *a3 = *(_DWORD *)(*(_DWORD *)(a1 + 203) + 12 * *(_DWORD *)(a1 + 207));
-    return *(_DWORD *)(a1 + 163) + *(_DWORD *)(*(_DWORD *)(a1 + 203) + 12 * *(_DWORD *)(a1 + 207) + 4);
+    *frameFlagsOut = *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207));
+    return *(_DWORD *)(self + 163) + *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207) + 4);
   }
   return 0;
 }
 
 //----- (00465FB0) --------------------------------------------------------
-unsigned int  AviPlayer_PopBufferedVideoFrame(int a1, void *a2)
+unsigned int  AviPlayer_PopBufferedVideoFrame(int self, void *destBuffer)
 {
-  int v5; // edx
-  _DWORD *v6; // eax
-  unsigned int v7; // ebp
+  int queueBase; // edx
+  _DWORD *entry; // eax
+  unsigned int frameBytes; // ebp
 
-  if ( *(_DWORD *)(a1 + 399) == *(_DWORD *)(a1 + 395) )
+  if ( *(_DWORD *)(self + 399) == *(_DWORD *)(self + 395) )
     return 0;
-  v5 = a1 + 391;
-  v6 = (_DWORD *)(*(_DWORD *)(a1 + 391) + 8 * *(_DWORD *)(a1 + 395));
-  v7 = v6[1];
-  qmemcpy(a2, (const void *)(*v6 + *(_DWORD *)(a1 + 375)), v7);
-  ++*(_DWORD *)(v5 + 4);
-  PulseEvent(*(HANDLE *)(a1 + 387));
-  return v7;
+  queueBase = self + 391;
+  entry = (_DWORD *)(*(_DWORD *)(self + 391) + 8 * *(_DWORD *)(self + 395));
+  frameBytes = entry[1];
+  qmemcpy(destBuffer, (const void *)(*entry + *(_DWORD *)(self + 375)), frameBytes);
+  ++*(_DWORD *)(queueBase + 4);
+  PulseEvent(*(HANDLE *)(self + 387));
+  return frameBytes;
 }
 
 //----- (004660D0) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
 char  AviPlayer_OpenVideoCodec(
-        int a1,
-        int a2,
-        int *a3,
-        int a4,
+        int codecState,
+        int fccHandler,
+        int *outputFormat,
+        int inputFormat,
         int a5,
         int a6,
         int a7,
@@ -1543,72 +1543,72 @@ char  AviPlayer_OpenVideoCodec(
         __int64 a20,
         int a21)
 {
-  int v21; // edx
-  int v22; // eax
-  int v24; // eax
-  int v25; // eax
-  int v26; // ebx
-  int v27; // esi
-  unsigned int v28; // eax
-  int v29; // ecx
+  int outFormatDest; // edx
+  int hic; // eax
+  int hicFallback; // eax
+  int inputBmi; // eax
+  int srcWidth; // ebx
+  int outFormatPtr; // esi
+  unsigned int srcHeight; // eax
+  int hicHandle; // ecx
   int v30; // edx
   int v31; // [esp+0h] [ebp-120h]
   int v32; // [esp+0h] [ebp-120h]
 
-  *(_DWORD *)((char *)&a20 + 2) = a1;
-  *(_DWORD *)((char *)&a19 + 6) = a2;
+  *(_DWORD *)((char *)&a20 + 2) = codecState;
+  *(_DWORD *)((char *)&a19 + 6) = fccHandler;
   *(_DWORD *)((char *)&a17 + 6) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a18 + 2) = &j____wcpp_4_fs_handler_rtn_;
   *(_DWORD *)((char *)&a18 + 6) = &g_AviOpenVideoCodec_EHFrame;
   *(_DWORD *)((char *)&a19 + 2) = 0;
-  *(_DWORD *)(a1 + 4) = a4;
-  if ( a3 && (*(unsigned __int16 *)(a4 + 14) > 8u || a3[2] >= 0) )
+  *(_DWORD *)(codecState + 4) = inputFormat;
+  if ( outputFormat && (*(unsigned __int16 *)(inputFormat + 14) > 8u || outputFormat[2] >= 0) )
   {
-    v21 = *(_DWORD *)((char *)&a20 + 2) + 8;
-    qmemcpy((void *)(*(_DWORD *)((char *)&a20 + 2) + 8), a3, *a3);
-    v22 = ICLocate(1667524982, *(_DWORD *)((char *)&a19 + 6), *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4), v21, 2);
-    **(_DWORD **)((char *)&a20 + 2) = v22;
+    outFormatDest = *(_DWORD *)((char *)&a20 + 2) + 8;
+    qmemcpy((void *)(*(_DWORD *)((char *)&a20 + 2) + 8), outputFormat, *outputFormat);
+    hic = ICLocate(1667524982, *(_DWORD *)((char *)&a19 + 6), *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4), outFormatDest, 2);
+    **(_DWORD **)((char *)&a20 + 2) = hic;
   }
   BYTE6(a20) = **(_DWORD **)((char *)&a20 + 2) != 0;
   if ( !**(_DWORD **)((char *)&a20 + 2) )
   {
-    v24 = ICGetDisplayFormat(
+    hicFallback = ICGetDisplayFormat(
             0,
             *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4),
             *(_DWORD *)((char *)&a20 + 2) + 8,
             0,
             0,
             0);
-    **(_DWORD **)((char *)&a20 + 2) = v24;
+    **(_DWORD **)((char *)&a20 + 2) = hicFallback;
   }
   if ( **(_DWORD **)((char *)&a20 + 2) )
   {
-    v25 = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
-    v26 = *(_DWORD *)(v25 + 4);
-    v27 = *(_DWORD *)((char *)&a20 + 2) + 8;
-    v28 = abs32(*(_DWORD *)(v25 + 8));
-    v29 = **(_DWORD **)((char *)&a20 + 2);
+    inputBmi = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
+    srcWidth = *(_DWORD *)(inputBmi + 4);
+    outFormatPtr = *(_DWORD *)((char *)&a20 + 2) + 8;
+    srcHeight = abs32(*(_DWORD *)(inputBmi + 8));
+    hicHandle = **(_DWORD **)((char *)&a20 + 2);
     v30 = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
     *(_DWORD *)((char *)&a12 + 2) = 0;
     *(_DWORD *)((char *)&a12 + 6) = v30;
     *(_DWORD *)((char *)&a12 + 10) = 0;
     *(_DWORD *)((char *)&a15 + 6) = 0;
-    *(_DWORD *)((char *)&a17 + 2) = v28;
-    *(_DWORD *)((char *)&a15 + 2) = v28;
+    *(_DWORD *)((char *)&a17 + 2) = srcHeight;
+    *(_DWORD *)((char *)&a15 + 2) = srcHeight;
     *(_DWORD *)((char *)&a16 + 2) = 0;
-    *(_DWORD *)((char *)&a16 + 6) = v26;
+    *(_DWORD *)((char *)&a16 + 6) = srcWidth;
     *(_DWORD *)((char *)&a12 + 14) = *(_DWORD *)((char *)&a20 + 2) + 8;
     *(_DWORD *)((char *)&a13 + 2) = 0;
     *(_DWORD *)((char *)&a13 + 6) = 0;
     *(_DWORD *)((char *)&a14 + 2) = 0;
-    *(_DWORD *)((char *)&a14 + 6) = v26;
-    if ( ICSendMessage(v29, 16444, (char *)&a12 + 2, 52, v31) )
+    *(_DWORD *)((char *)&a14 + 6) = srcWidth;
+    if ( ICSendMessage(hicHandle, 16444, (char *)&a12 + 2, 52, v31) )
     {
       if ( ICSendMessage(
              **(_DWORD **)((char *)&a20 + 2),
              16396,
              *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4),
-             v27,
+             outFormatPtr,
              v32) )
       {
         ExcString_Ctor();
@@ -1651,22 +1651,22 @@ char  AviPlayer_OpenVideoCodec(
 //----- (004662B0) --------------------------------------------------------
 _DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3)
 {
-  _DWORD *v3; // ebx
+  _DWORD *codecPtr; // ebx
 
-  v3 = result;
+  codecPtr = result;
   if ( *result )
   {
     if ( *((_BYTE *)result + 1508) )
     {
       ICSendMessage(*result, 16447, 0, 0, a3);
-      result = (_DWORD *)ICClose(*v3);
-      *v3 = 0;
+      result = (_DWORD *)ICClose(*codecPtr);
+      *codecPtr = 0;
     }
     else
     {
       ICSendMessage(*result, 16398, 0, 0, a2);
-      result = (_DWORD *)ICClose(*v3);
-      *v3 = 0;
+      result = (_DWORD *)ICClose(*codecPtr);
+      *codecPtr = 0;
     }
   }
   return result;
@@ -1675,38 +1675,38 @@ _DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3)
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00466310) --------------------------------------------------------
-void  CAviDecompressor_RenderLoop(int a1)
+void  CAviDecompressor_RenderLoop(int self)
 {
-  DWORD v2; // esi
-  double v3; // st7
+  DWORD sleepMs; // esi
+  double nextFrameTimeMs; // st7
   int v4; // edx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-44h]
   tagRECT *v6; // [esp+4h] [ebp-40h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v6 = &j____wcpp_4_fs_handler_rtn_;
-  while ( *(_BYTE *)(a1 + 2191) )
+  while ( *(_BYTE *)(self + 2191) )
   {
-    if ( AviPlayer_UpdateTargetFrameFromClock(a1) && (*(_DWORD *)(a1 + 211) < *(_DWORD *)(a1 + 43) || AviPlayer_QueueBacklogCount(a1 + 203)) )
+    if ( AviPlayer_UpdateTargetFrameFromClock(self) && (*(_DWORD *)(self + 211) < *(_DWORD *)(self + 43) || AviPlayer_QueueBacklogCount(self + 203)) )
     {
-      v2 = 0;
-      if ( AviPlayer_CatchUpToTargetFrame(a1) )
+      sleepMs = 0;
+      if ( AviPlayer_CatchUpToTargetFrame(self) )
       {
         timeGetTime();
-        v3 = (double)*(unsigned int *)(a1 + 31)
-           * ((double)(*(_DWORD *)(a1 + 2021) + 1)
+        nextFrameTimeMs = (double)*(unsigned int *)(self + 31)
+           * ((double)(*(_DWORD *)(self + 2021) + 1)
             * g_CAviDecompressor_MillisecondsPerSecond)
-           / (double)*(unsigned int *)(a1 + 35);
+           / (double)*(unsigned int *)(self + 35);
         _CHP(ExceptionList, v6);
-        if ( (int)v3 - v4 + 1 > 0 )
-          v2 = (int)v3 - v4 + 1;
+        if ( (int)nextFrameTimeMs - v4 + 1 > 0 )
+          sleepMs = (int)nextFrameTimeMs - v4 + 1;
       }
-      Sleep(v2);
-      *(_DWORD *)(a1 + 2038) += v2;
+      Sleep(sleepMs);
+      *(_DWORD *)(self + 2038) += sleepMs;
     }
     else
     {
-      CAviDecompressor_RequestRenderStop(a1);
+      CAviDecompressor_RequestRenderStop(self);
     }
   }
 }
@@ -1731,87 +1731,87 @@ DWORD __stdcall CAviDecompressor_RenderThreadProc(char *lpThreadParameter)
 }
 
 //----- (004664E0) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int a1)
+struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int self)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  AviException_RebuildClipperOnSurfaceLoss(a1, (int)&j____wcpp_4_fs_handler_rtn_, (int)&g_AviBeginPlayback_EHFrame, 0);
-  *(_DWORD *)(a1 + 2183) = 0;
-  *(_DWORD *)(a1 + 2034) = 0;
-  *(_DWORD *)(a1 + 2038) = 0;
-  AviPlayer_CatchUpToTargetFrame(a1);
-  *(_BYTE *)(a1 + 2) = 1;
-  *(_DWORD *)(a1 + 2187) = timeGetTime();
-  CSS_ResumeStream(*(_DWORD *)(a1 + 359));
-  *(_BYTE *)(a1 + 2191) = 1;
-  ResumeThread(*(HANDLE *)(a1 + 2192));
+  AviException_RebuildClipperOnSurfaceLoss(self, (int)&j____wcpp_4_fs_handler_rtn_, (int)&g_AviBeginPlayback_EHFrame, 0);
+  *(_DWORD *)(self + 2183) = 0;
+  *(_DWORD *)(self + 2034) = 0;
+  *(_DWORD *)(self + 2038) = 0;
+  AviPlayer_CatchUpToTargetFrame(self);
+  *(_BYTE *)(self + 2) = 1;
+  *(_DWORD *)(self + 2187) = timeGetTime();
+  CSS_ResumeStream(*(_DWORD *)(self + 359));
+  *(_BYTE *)(self + 2191) = 1;
+  ResumeThread(*(HANDLE *)(self + 2192));
   return ExceptionList;
 }
 
 //----- (00466580) --------------------------------------------------------
-BOOL  CAviDecompressor_RequestRenderStop(int a1)
+BOOL  CAviDecompressor_RequestRenderStop(int self)
 {
-  *(_BYTE *)(a1 + 2191) = 0;
-  return SetEvent(*(HANDLE *)(a1 + 2196));
+  *(_BYTE *)(self + 2191) = 0;
+  return SetEvent(*(HANDLE *)(self + 2196));
 }
 
 //----- (004665A0) --------------------------------------------------------
-_DWORD * AviPlayer_ShutdownDecodeState(int a1)
+_DWORD * AviPlayer_ShutdownDecodeState(int self)
 {
   int v2; // esi
-  int v3; // ecx
-  int v4; // eax
-  int v5; // eax
-  int v6; // edx
-  int v7; // eax
-  int v8; // ecx
+  int overlaySurface; // ecx
+  int hideResult; // eax
+  int sourceSurface; // eax
+  int overlayIface; // edx
+  int overlaySurface1; // eax
+  int backSurface; // ecx
   int *v10; // eax
   int *v11; // [esp-4h] [ebp-100h]
   int *v12; // [esp-4h] [ebp-100h]
 
-  if ( *(_BYTE *)(a1 + 2191) )
+  if ( *(_BYTE *)(self + 2191) )
   {
-    CAviDecompressor_RequestRenderStop(a1);
-    WaitForSingleObject(*(HANDLE *)(a1 + 2228), 0x7D0u);
-    ++*(_DWORD *)(a1 + 2200);
-    EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
-    LeaveCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
-    --*(_DWORD *)(a1 + 2200);
+    CAviDecompressor_RequestRenderStop(self);
+    WaitForSingleObject(*(HANDLE *)(self + 2228), 0x7D0u);
+    ++*(_DWORD *)(self + 2200);
+    EnterCriticalSection((LPCRITICAL_SECTION)(self + 2204));
+    LeaveCriticalSection((LPCRITICAL_SECTION)(self + 2204));
+    --*(_DWORD *)(self + 2200);
   }
   else
   {
-    ResumeThread(*(HANDLE *)(a1 + 2192));
+    ResumeThread(*(HANDLE *)(self + 2192));
   }
-  CAviDecompressor_RequestDecodeThreadStop(a1);
-  AviPlayer_CloseStreams(a1);
-  v2 = a1;
-  if ( *(_BYTE *)(a1 + 1968) )
+  CAviDecompressor_RequestDecodeThreadStop(self);
+  AviPlayer_CloseStreams(self);
+  v2 = self;
+  if ( *(_BYTE *)(self + 1968) )
   {
-    v3 = *(_DWORD *)(a1 + 1964);
-    if ( v3 )
+    overlaySurface = *(_DWORD *)(self + 1964);
+    if ( overlaySurface )
     {
-      v4 = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)v3 + 132))(
-             v3,
-             a1 + 2095,
-             *(_DWORD *)(a1 + 1956),
-             a1 + 2063,
+      hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
+             overlaySurface,
+             self + 2095,
+             *(_DWORD *)(self + 1956),
+             self + 2063,
              512,
              0);
-      if ( v4 )
+      if ( hideResult )
       {
-        if ( v4 != -2005532222
-          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 96))(*(_DWORD *)(a1 + 1964)) != -2005532222
-           || (v11 = *(int **)(a1 + 1964), v2 = *v11, !(*(int (__stdcall **)(int *))(*v11 + 108))(v11)))
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 96))(*(_DWORD *)(a1 + 1956)) != -2005532222
-           || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 108))(*(_DWORD *)(a1 + 1956)))
-          && (v10 = *(int **)(a1 + 1964),
+        if ( hideResult != -2005532222
+          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) != -2005532222
+           || (v11 = *(int **)(self + 1964), v2 = *v11, !(*(int (__stdcall **)(int *))(*v11 + 108))(v11)))
+          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) != -2005532222
+           || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956)))
+          && (v10 = *(int **)(self + 1964),
               v2 = *v10,
               (*(int (__stdcall **)(int *, int, _DWORD, int, int, _DWORD))(*v10 + 132))(
                 v10,
-                a1 + 2095,
-                *(_DWORD *)(a1 + 1956),
-                a1 + 2063,
+                self + 2095,
+                *(_DWORD *)(self + 1956),
+                self + 2063,
                 512,
                 0)) )
         {
@@ -1824,63 +1824,63 @@ _DWORD * AviPlayer_ShutdownDecodeState(int a1)
     }
   }
   j_j__nfree_();
-  *(_DWORD *)(a1 + 2179) = 0;
+  *(_DWORD *)(self + 2179) = 0;
   j_j__nfree_();
-  v5 = *(_DWORD *)(a1 + 1952);
-  *(_DWORD *)(a1 + 2058) = 0;
-  if ( v5 && *(_DWORD *)(a1 + 1956) )
+  sourceSurface = *(_DWORD *)(self + 1952);
+  *(_DWORD *)(self + 2058) = 0;
+  if ( sourceSurface && *(_DWORD *)(self + 1956) )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 8))(*(_DWORD *)(a1 + 1956));
-    *(_DWORD *)(a1 + 1956) = 0;
-    *(_DWORD *)(a1 + 1952) = 0;
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 8))(*(_DWORD *)(self + 1956));
+    *(_DWORD *)(self + 1956) = 0;
+    *(_DWORD *)(self + 1952) = 0;
   }
   else
   {
-    *(_DWORD *)(a1 + 1956) = 0;
-    *(_DWORD *)(a1 + 1952) = 0;
+    *(_DWORD *)(self + 1956) = 0;
+    *(_DWORD *)(self + 1952) = 0;
   }
-  v6 = *(_DWORD *)(a1 + 1964);
-  if ( v6 )
+  overlayIface = *(_DWORD *)(self + 1964);
+  if ( overlayIface )
   {
-    v2 = *(_DWORD *)v6;
-    (*(void (__stdcall **)(int))(*(_DWORD *)v6 + 8))(v6);
-    v7 = *(_DWORD *)(a1 + 1960);
-    *(_DWORD *)(a1 + 1964) = 0;
-    if ( v7 )
-      (*(void (__stdcall **)(int))(*(_DWORD *)v7 + 8))(v7);
-    *(_DWORD *)(a1 + 1960) = 0;
+    v2 = *(_DWORD *)overlayIface;
+    (*(void (__stdcall **)(int))(*(_DWORD *)overlayIface + 8))(overlayIface);
+    overlaySurface1 = *(_DWORD *)(self + 1960);
+    *(_DWORD *)(self + 1964) = 0;
+    if ( overlaySurface1 )
+      (*(void (__stdcall **)(int))(*(_DWORD *)overlaySurface1 + 8))(overlaySurface1);
+    *(_DWORD *)(self + 1960) = 0;
   }
   else
   {
-    *(_DWORD *)(a1 + 1960) = 0;
+    *(_DWORD *)(self + 1960) = 0;
   }
-  v8 = *(_DWORD *)(a1 + 2017);
-  if ( v8 && *(_DWORD *)(a1 + 2013) )
+  backSurface = *(_DWORD *)(self + 2017);
+  if ( backSurface && *(_DWORD *)(self + 2013) )
   {
-    (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)v8 + 152))(v8, 0);
-    (*(void (__stdcall **)(int))(*(_DWORD *)v8 + 8))(v8);
-    v12 = (int *)(uintptr_t)*(unsigned int *)(a1 + 2013);
+    (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)backSurface + 152))(backSurface, 0);
+    (*(void (__stdcall **)(int))(*(_DWORD *)backSurface + 8))(backSurface);
+    v12 = (int *)(uintptr_t)*(unsigned int *)(self + 2013);
     v2 = *v12;
     (*(void (__stdcall **)(int *))(*v12 + 8))(v12);
-    *(_DWORD *)(a1 + 2013) = 0;
-    *(_DWORD *)(a1 + 2017) = 0;
+    *(_DWORD *)(self + 2013) = 0;
+    *(_DWORD *)(self + 2017) = 0;
   }
   else
   {
-    *(_DWORD *)(a1 + 2013) = 0;
-    *(_DWORD *)(a1 + 2017) = 0;
+    *(_DWORD *)(self + 2013) = 0;
+    *(_DWORD *)(self + 2017) = 0;
   }
-  return CAviDecompressor_CloseCodecHandle((_DWORD *)(a1 + 415), v8, v2);
+  return CAviDecompressor_CloseCodecHandle((_DWORD *)(self + 415), backSurface, v2);
 }
 // 466720: variable 'v8' is possibly undefined
 
 //----- (00466870) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
 int  AviPlayer_BlitFrameToSurface(
-        _DWORD *a1,
-        int a2,
-        int a3,
-        int *a4,
+        _DWORD *self,
+        int surface,
+        int frameBits,
+        int *destRect,
         int a5,
         int a6,
         int a7,
@@ -1909,45 +1909,45 @@ int  AviPlayer_BlitFrameToSurface(
         int a30,
         __int64 a31)
 {
-  _DWORD *v33; // eax
-  int v34; // eax
-  int v35; // eax
+  _DWORD *blitState; // eax
+  int lockResult; // eax
+  int signedPitch; // eax
   int result; // eax
   int v37; // ecx
   int v38; // ecx
-  int v39; // eax
-  const BITMAPINFO *v40; // eax
-  _DWORD v41[4]; // [esp+82h] [ebp-332h] BYREF
-  int v42; // [esp+92h] [ebp-322h]
-  char *v43; // [esp+A6h] [ebp-30Eh]
+  int dcResult; // eax
+  const BITMAPINFO *bitmapInfo; // eax
+  _DWORD surfaceDesc[4]; // [esp+82h] [ebp-332h] BYREF
+  int surfacePitch; // [esp+92h] [ebp-322h]
+  char *surfaceBits; // [esp+A6h] [ebp-30Eh]
   int (**v44)(); // [esp+152h] [ebp-262h]
   int (**v45)(); // [esp+1BAh] [ebp-1FAh]
   int v46; // [esp+222h] [ebp-192h]
   int v47; // [esp+28Ah] [ebp-12Ah]
 
-  *(_DWORD *)((char *)&a31 + 6) = a3;
-  v33 = a1 + 481;
-  if ( v33[5] || v33[4] )
+  *(_DWORD *)((char *)&a31 + 6) = frameBits;
+  blitState = self + 481;
+  if ( blitState[5] || blitState[4] )
   {
-    v41[0] = 108;
-    v34 = (*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)a2 + 100))(a2, a4, v41, 1, 0);
-    if ( !v34
-      || v34 == -2005532222
-      && ((*(int (__stdcall **)(int))(*(_DWORD *)a2 + 108))(a2)
-       || !(*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)a2 + 100))(a2, a4, v41, 1, 0)) )
+    surfaceDesc[0] = 108;
+    lockResult = (*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)surface + 100))(surface, destRect, surfaceDesc, 1, 0);
+    if ( !lockResult
+      || lockResult == -2005532222
+      && ((*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)
+       || !(*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)surface + 100))(surface, destRect, surfaceDesc, 1, 0)) )
     {
-      if ( (int)a1[484] < 0 )
-        v35 = -v42;
+      if ( (int)self[484] < 0 )
+        signedPitch = -surfacePitch;
       else
-        v35 = v42;
-      a1[484] = v35;
-      CAviDecompressor_BlitRows(a1 + 481, v43, *(char **)((char *)&a31 + 6));
-      result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)a2 + 128))(a2, v43);
+        signedPitch = surfacePitch;
+      self[484] = signedPitch;
+      CAviDecompressor_BlitRows(self + 481, surfaceBits, *(char **)((char *)&a31 + 6));
+      result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 128))(surface, surfaceBits);
       if ( result )
       {
         if ( result != -2005532222
-          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)a2 + 108))(a2)) == 0
-          && (result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)a2 + 128))(a2, v43)) != 0 )
+          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)) == 0
+          && (result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 128))(surface, surfaceBits)) != 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -1966,36 +1966,36 @@ int  AviPlayer_BlitFrameToSurface(
   }
   else
   {
-    v39 = (*(int (__stdcall **)(int, char *))(*(_DWORD *)a2 + 68))(a2, (char *)&a31 + 2);
-    if ( !v39
-      || v39 == -2005532222
-      && ((*(int (__stdcall **)(int))(*(_DWORD *)a2 + 108))(a2)
-       || !(*(int (__stdcall **)(int, char *))(*(_DWORD *)a2 + 68))(a2, (char *)&a31 + 2)) )
+    dcResult = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&a31 + 2);
+    if ( !dcResult
+      || dcResult == -2005532222
+      && ((*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)
+       || !(*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&a31 + 2)) )
     {
-      if ( *(_DWORD *)((char *)a1 + 415) )
-        v40 = (const BITMAPINFO *)((char *)a1 + 423);
+      if ( *(_DWORD *)((char *)self + 415) )
+        bitmapInfo = (const BITMAPINFO *)((char *)self + 423);
       else
-        v40 = *(const BITMAPINFO **)((char *)a1 + 151);
+        bitmapInfo = *(const BITMAPINFO **)((char *)self + 151);
       StretchDIBits(
         *(HDC *)((char *)&a31 + 2),
-        *a4,
-        a4[1],
-        a4[2] - *a4,
-        a4[3] - a4[1],
+        *destRect,
+        destRect[1],
+        destRect[2] - *destRect,
+        destRect[3] - destRect[1],
         0,
         0,
-        *(_DWORD *)(*(_DWORD *)((char *)a1 + 151) + 4),
-        abs32(*(_DWORD *)(*(_DWORD *)((char *)a1 + 151) + 8)),
+        *(_DWORD *)(*(_DWORD *)((char *)self + 151) + 4),
+        abs32(*(_DWORD *)(*(_DWORD *)((char *)self + 151) + 8)),
         *(const void **)((char *)&a31 + 6),
-        v40,
+        bitmapInfo,
         0,
         0xCC0020u);
-      result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)a2 + 104))(a2, *(_DWORD *)((char *)&a31 + 2));
+      result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&a31 + 2));
       if ( result )
       {
         if ( result != -2005532222
-          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)a2 + 108))(a2)) == 0
-          && (result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)a2 + 104))(a2, *(_DWORD *)((char *)&a31 + 2))) != 0 )
+          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)) == 0
+          && (result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&a31 + 2))) != 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -2020,51 +2020,51 @@ int  AviPlayer_BlitFrameToSurface(
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00466BE0) --------------------------------------------------------
-bool  AviPlayer_UpdateTargetFrameFromClock(int a1)
+bool  AviPlayer_UpdateTargetFrameFromClock(int self)
 {
   DWORD Time; // eax
-  double v3; // st7
-  double v4; // st7
+  double elapsedScaled; // st7
+  double targetFrame; // st7
   __int64 v6; // [esp+8h] [ebp-18h]
 
   Time = timeGetTime();
-  v6 = *(unsigned int *)(a1 + 35);
-  v3 = ((double)Time - (double)*(int *)(a1 + 2187)) * (double)v6;
-  LODWORD(v6) = *(_DWORD *)(a1 + 31);
-  v4 = v3 / ((double)v6 * g_AviPlayer_MillisecondsPerSecond);
+  v6 = *(unsigned int *)(self + 35);
+  elapsedScaled = ((double)Time - (double)*(int *)(self + 2187)) * (double)v6;
+  LODWORD(v6) = *(_DWORD *)(self + 31);
+  targetFrame = elapsedScaled / ((double)v6 * g_AviPlayer_MillisecondsPerSecond);
   _CHP(Time, 0);
-  *(_DWORD *)(a1 + 2183) = (int)v4;
-  return *(_DWORD *)(a1 + 43) > *(_DWORD *)(a1 + 2183);
+  *(_DWORD *)(self + 2183) = (int)targetFrame;
+  return *(_DWORD *)(self + 43) > *(_DWORD *)(self + 2183);
 }
 // 501370: using guessed type float flt_501370;
 
 //----- (00466C60) --------------------------------------------------------
-char  AviPlayer_CatchUpToTargetFrame(int a1)
+char  AviPlayer_CatchUpToTargetFrame(int self)
 {
   int v2; // ecx
   HANDLE *v3; // edx
-  int v4; // eax
-  unsigned __int8 v5; // dl
-  _DWORD *v6; // ecx
-  int v7; // ebx
+  int frameDataPtr; // eax
+  unsigned __int8 flipState; // dl
+  _DWORD *codecPtr; // ecx
+  int decodedWidth; // ebx
   int v8; // edx
   int v9; // ecx
   int v10; // eax
-  int v11; // esi
+  int imageBytesSw; // esi
   int v12; // ecx
   int v13; // eax
   int v14; // edx
   int v15; // ecx
   int v16; // eax
   int *v17; // ecx
-  int v18; // ebx
-  int v21; // esi
+  int busyGuard; // ebx
+  int backSurface; // esi
   int v22; // eax
-  int v23; // ebx
+  int pitchPixels; // ebx
   int v24; // ecx
   int v25; // edx
   int v26; // eax
-  int v27; // ebx
+  int imageBytes; // ebx
   int v28; // edx
   int v29; // eax
   int v30; // ecx
@@ -2072,13 +2072,13 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
   int v32; // eax
   int *v33; // edx
   int v34; // eax
-  int v35; // esi
+  int overlaySurface; // esi
   int v36; // eax
-  int v37; // ebx
+  int pitchPixelsOvl; // ebx
   int v38; // ecx
   int v39; // edx
   int v40; // eax
-  int v41; // ebx
+  int imageBytesOvl; // ebx
   int v42; // edx
   int v43; // eax
   int v44; // ecx
@@ -2088,7 +2088,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
   int v48; // eax
   int v49; // edx
   HANDLE *v50; // ecx
-  int v51; // eax
+  int frameData; // eax
   int v52; // [esp-4h] [ebp-7A0h]
   int v53; // [esp-4h] [ebp-7A0h]
   int v54; // [esp-4h] [ebp-7A0h]
@@ -2119,138 +2119,138 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
   int v79; // [esp+60h] [ebp-73Ch]
   int v80; // [esp+64h] [ebp-738h]
   __int64 v81; // [esp+68h] [ebp-734h]
-  _DWORD v82[9]; // [esp+82h] [ebp-71Ah] BYREF
-  int v83; // [esp+A6h] [ebp-6F6h]
-  _DWORD v84[9]; // [esp+EEh] [ebp-6AEh] BYREF
-  int v85; // [esp+112h] [ebp-68Ah]
+  _DWORD overlayDesc[9]; // [esp+82h] [ebp-71Ah] BYREF
+  int overlayLockedBits; // [esp+A6h] [ebp-6F6h]
+  _DWORD surfaceDesc[9]; // [esp+EEh] [ebp-6AEh] BYREF
+  int lockedBits; // [esp+112h] [ebp-68Ah]
   int (**v86)(); // [esp+1BEh] [ebp-5DEh]
   int (**v87)(); // [esp+226h] [ebp-576h]
   int (**v88)(); // [esp+28Eh] [ebp-50Eh]
   int (**v89)(); // [esp+3C6h] [ebp-3D6h]
   int (**v90)(); // [esp+42Eh] [ebp-36Eh]
-  int v91; // [esp+7D2h] [ebp+36h]
-  int v92; // [esp+7DAh] [ebp+3Eh]
-  int v93; // [esp+7DEh] [ebp+42h]
-  int v94; // [esp+7E2h] [ebp+46h]
-  int v95; // [esp+7EAh] [ebp+4Eh]
-  int v96; // [esp+7EEh] [ebp+52h]
-  int v97; // [esp+7F2h] [ebp+56h]
+  int videoWidth; // [esp+7D2h] [ebp+36h]
+  int lockedBitsSaved; // [esp+7DAh] [ebp+3Eh]
+  int frameBits; // [esp+7DEh] [ebp+42h]
+  int videoWidthOvl; // [esp+7E2h] [ebp+46h]
+  int lockedBitsOvlSaved; // [esp+7EAh] [ebp+4Eh]
+  int frameBitsOvl; // [esp+7EEh] [ebp+52h]
+  int frameFlagsOvl; // [esp+7F2h] [ebp+56h]
   int v98; // [esp+7F6h] [ebp+5Ah]
   int v99; // [esp+7F6h] [ebp+5Ah]
   int v100; // [esp+7F6h] [ebp+5Ah]
-  int v101; // [esp+7FAh] [ebp+5Eh]
-  int v102; // [esp+7FEh] [ebp+62h]
-  int v103; // [esp+802h] [ebp+66h]
-  int v104; // [esp+806h] [ebp+6Ah]
-  int v105; // [esp+80Eh] [ebp+72h]
-  int v106; // [esp+81Ah] [ebp+7Eh]
+  int frameFlags; // [esp+7FAh] [ebp+5Eh]
+  int frameBitsSw; // [esp+7FEh] [ebp+62h]
+  int busyGuardPtr; // [esp+802h] [ebp+66h]
+  int decodeBuffer; // [esp+806h] [ebp+6Ah]
+  int frameQueuePtr; // [esp+80Eh] [ebp+72h]
+  int frameFlagsSw; // [esp+81Ah] [ebp+7Eh]
 
-  if ( *(_DWORD *)(a1 + 2183) != *(_DWORD *)(a1 + 2021) )
+  if ( *(_DWORD *)(self + 2183) != *(_DWORD *)(self + 2021) )
   {
-    v105 = a1 + 203;
-    if ( *(char *)(a1 + 2033) <= 0 )
+    frameQueuePtr = self + 203;
+    if ( *(char *)(self + 2033) <= 0 )
     {
-      v103 = a1 + 1985;
-      ++*(_DWORD *)(a1 + 1985);
-      EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
-      if ( *(_DWORD *)(a1 + 2034) )
+      busyGuardPtr = self + 1985;
+      ++*(_DWORD *)(self + 1985);
+      EnterCriticalSection((LPCRITICAL_SECTION)(self + 1989));
+      if ( *(_DWORD *)(self + 2034) )
       {
-        v49 = v105;
+        v49 = frameQueuePtr;
         do
         {
-          if ( *(int *)(a1 + 2034) > 0 )
+          if ( *(int *)(self + 2034) > 0 )
           {
             AviPlayer_IncrementFramesRenderedCount(v49);
             AviPlayer_PulseEventHandle(v50);
-            --*(_DWORD *)(a1 + 2034);
+            --*(_DWORD *)(self + 2034);
           }
         }
-        while ( *(_DWORD *)(a1 + 2034) );
+        while ( *(_DWORD *)(self + 2034) );
       }
-      v51 = AviPlayer_GetBufferedAudioSample(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
-      *(_DWORD *)(a1 + 2025) = v51;
-      if ( v51 )
-        ++*(_DWORD *)(a1 + 2034);
-      v18 = v103;
+      frameData = AviPlayer_GetBufferedAudioSample(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
+      *(_DWORD *)(self + 2025) = frameData;
+      if ( frameData )
+        ++*(_DWORD *)(self + 2034);
+      busyGuard = busyGuardPtr;
     }
     else
     {
-      if ( *(_DWORD *)(a1 + 2034) )
+      if ( *(_DWORD *)(self + 2034) )
       {
-        v2 = a1 + 203;
+        v2 = self + 203;
         do
         {
-          if ( *(int *)(a1 + 2034) > 0 )
+          if ( *(int *)(self + 2034) > 0 )
           {
             AviPlayer_IncrementFramesRenderedCount(v2);
             AviPlayer_PulseEventHandle(v3);
-            --*(_DWORD *)(a1 + 2034);
+            --*(_DWORD *)(self + 2034);
           }
         }
-        while ( *(_DWORD *)(a1 + 2034) );
+        while ( *(_DWORD *)(self + 2034) );
       }
-      v4 = AviPlayer_GetBufferedAudioSample(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
-      *(_DWORD *)(a1 + 2025) = v4;
-      if ( !v4 )
+      frameDataPtr = AviPlayer_GetBufferedAudioSample(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
+      *(_DWORD *)(self + 2025) = frameDataPtr;
+      if ( !frameDataPtr )
         return 0;
-      ++*(_DWORD *)(a1 + 2034);
-      ++*(_DWORD *)(a1 + 1985);
-      EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
-      v5 = *(_BYTE *)(a1 + 2033);
-      v6 = (_DWORD *)(a1 + 415);
-      if ( v5 >= 2u )
+      ++*(_DWORD *)(self + 2034);
+      ++*(_DWORD *)(self + 1985);
+      EnterCriticalSection((LPCRITICAL_SECTION)(self + 1989));
+      flipState = *(_BYTE *)(self + 2033);
+      codecPtr = (_DWORD *)(self + 415);
+      if ( flipState >= 2u )
       {
-        if ( v5 <= 2u )
+        if ( flipState <= 2u )
         {
-          if ( *v6 )
+          if ( *codecPtr )
           {
-            v21 = *(_DWORD *)(a1 + 2017);
-            v84[0] = 108;
-            v22 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v21 + 100))(v21, 0, v84, 33, 0);
+            backSurface = *(_DWORD *)(self + 2017);
+            surfaceDesc[0] = 108;
+            v22 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0);
             if ( !v22
               || v22 == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)v21 + 108))(v21)
-               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v21 + 100))(v21, 0, v84, 33, 0)) )
+              && ((*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
+               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0)) )
             {
-              CAviDecompressor_GetVideoFormat(a1);
-              v91 = *(_DWORD *)(CAviDecompressor_GetVideoFormat(a1) + 4);
-              v92 = v85;
-              v93 = *(_DWORD *)(a1 + 2025);
-              v101 = *(_DWORD *)(a1 + 2029);
-              v23 = v84[4] / ((*(_DWORD *)(a1 + 2123) + 7) >> 3);
-              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v23;
-              v99 = v24 * v23;
+              CAviDecompressor_GetVideoFormat(self);
+              videoWidth = *(_DWORD *)(CAviDecompressor_GetVideoFormat(self) + 4);
+              lockedBitsSaved = lockedBits;
+              frameBits = *(_DWORD *)(self + 2025);
+              frameFlags = *(_DWORD *)(self + 2029);
+              pitchPixels = surfaceDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
+              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixels;
+              v99 = v24 * pitchPixels;
               v26 = AviPlayer_StreamBitmapInfoPtr(v25);
-              v27 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * v99;
+              imageBytes = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * v99;
               v29 = AviPlayer_StreamBitmapInfoPtr(v28);
               v53 = v30;
-              *(_DWORD *)(v29 + 20) = v27;
+              *(_DWORD *)(v29 + 20) = imageBytes;
               v32 = AviPlayer_StreamBitmapInfoPtr(v31);
               if ( AviPlayer_SendICDrawBegin(
                      *v33,
-                     v101,
+                     frameFlags,
                      v33[1],
-                     v93,
+                     frameBits,
                      0,
                      0,
                      *(_DWORD *)(v33[1] + 4),
                      *(_DWORD *)(v33[1] + 8),
                      v32,
-                     v92,
+                     lockedBitsSaved,
                      0,
                      0,
-                     v91,
+                     videoWidth,
                      v53) < 0 )
               {
                 ExcString_Ctor();
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              v34 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v21 + 128))(v21, v85);
+              v34 = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits);
               if ( v34
                 && (v34 != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)v21 + 108))(v21)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)v21 + 128))(v21, v85)) )
+                 || !(*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
+                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits)) )
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
@@ -2269,10 +2269,10 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
           else
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)a1,
-              *(_DWORD *)(a1 + 2017),
-              *(_DWORD *)(a1 + 2025),
-              (int *)(a1 + 2095),
+              (_DWORD *)self,
+              *(_DWORD *)(self + 2017),
+              *(_DWORD *)(self + 2025),
+              (int *)(self + 2095),
               v55,
               v56,
               v57,
@@ -2302,57 +2302,57 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
               v81);
           }
         }
-        else if ( v5 == 3 )
+        else if ( flipState == 3 )
         {
-          if ( *v6 )
+          if ( *codecPtr )
           {
-            v35 = *(_DWORD *)(a1 + 1964);
-            v82[0] = 108;
-            v36 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v35 + 100))(v35, 0, v82, 33, 0);
+            overlaySurface = *(_DWORD *)(self + 1964);
+            overlayDesc[0] = 108;
+            v36 = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0);
             if ( !v36
               || v36 == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)v35 + 108))(v35)
-               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v35 + 100))(v35, 0, v82, 33, 0)) )
+              && ((*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
+               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0)) )
             {
-              CAviDecompressor_GetVideoFormat(a1);
-              v94 = *(_DWORD *)(CAviDecompressor_GetVideoFormat(a1) + 4);
-              v95 = v83;
-              v96 = *(_DWORD *)(a1 + 2025);
-              v97 = *(_DWORD *)(a1 + 2029);
-              v37 = v82[4] / ((*(_DWORD *)(a1 + 2123) + 7) >> 3);
-              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v37;
-              v100 = v38 * v37;
+              CAviDecompressor_GetVideoFormat(self);
+              videoWidthOvl = *(_DWORD *)(CAviDecompressor_GetVideoFormat(self) + 4);
+              lockedBitsOvlSaved = overlayLockedBits;
+              frameBitsOvl = *(_DWORD *)(self + 2025);
+              frameFlagsOvl = *(_DWORD *)(self + 2029);
+              pitchPixelsOvl = overlayDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
+              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixelsOvl;
+              v100 = v38 * pitchPixelsOvl;
               v40 = AviPlayer_StreamBitmapInfoPtr(v39);
-              v41 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * v100;
+              imageBytesOvl = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * v100;
               v43 = AviPlayer_StreamBitmapInfoPtr(v42);
               v54 = v44;
-              *(_DWORD *)(v43 + 20) = v41;
+              *(_DWORD *)(v43 + 20) = imageBytesOvl;
               v46 = AviPlayer_StreamBitmapInfoPtr(v45);
               if ( AviPlayer_SendICDrawBegin(
                      *v47,
-                     v97,
+                     frameFlagsOvl,
                      v47[1],
-                     v96,
+                     frameBitsOvl,
                      0,
                      0,
                      *(_DWORD *)(v47[1] + 4),
                      *(_DWORD *)(v47[1] + 8),
                      v46,
-                     v95,
+                     lockedBitsOvlSaved,
                      0,
                      0,
-                     v94,
+                     videoWidthOvl,
                      v54) < 0 )
               {
                 ExcString_Ctor();
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              v48 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v35 + 128))(v35, v83);
+              v48 = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits);
               if ( v48
                 && (v48 != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)v35 + 108))(v35)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)v35 + 128))(v35, v83)) )
+                 || !(*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
+                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits)) )
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
@@ -2371,10 +2371,10 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
           else
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)a1,
-              *(_DWORD *)(a1 + 1964),
-              *(_DWORD *)(a1 + 2025),
-              (int *)(a1 + 2095),
+              (_DWORD *)self,
+              *(_DWORD *)(self + 1964),
+              *(_DWORD *)(self + 2025),
+              (int *)(self + 2095),
               v55,
               v56,
               v57,
@@ -2405,36 +2405,36 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
           }
         }
       }
-      else if ( v5 == 1 )
+      else if ( flipState == 1 )
       {
-        v104 = *(_DWORD *)(a1 + 2179);
-        v102 = *(_DWORD *)(a1 + 2025);
-        v106 = *(_DWORD *)(a1 + 2029);
-        if ( *(_BYTE *)(a1 + 1923) )
+        decodeBuffer = *(_DWORD *)(self + 2179);
+        frameBitsSw = *(_DWORD *)(self + 2025);
+        frameFlagsSw = *(_DWORD *)(self + 2029);
+        if ( *(_BYTE *)(self + 1923) )
         {
-          v7 = *(_DWORD *)(a1 + 427);
-          *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v7;
-          v98 = v7 * v8;
+          decodedWidth = *(_DWORD *)(self + 427);
+          *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = decodedWidth;
+          v98 = decodedWidth * v8;
           v10 = AviPlayer_StreamBitmapInfoPtr(v9);
-          v11 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * v98;
+          imageBytesSw = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * v98;
           v13 = AviPlayer_StreamBitmapInfoPtr(v12);
           v52 = v14;
-          *(_DWORD *)(v13 + 20) = v11;
+          *(_DWORD *)(v13 + 20) = imageBytesSw;
           v16 = AviPlayer_StreamBitmapInfoPtr(v15);
           if ( AviPlayer_SendICDrawBegin(
                  *v17,
-                 v106,
+                 frameFlagsSw,
                  v17[1],
-                 v102,
+                 frameBitsSw,
                  0,
                  0,
                  *(_DWORD *)(v17[1] + 4),
                  *(_DWORD *)(v17[1] + 8),
                  v16,
-                 v104,
+                 decodeBuffer,
                  0,
                  0,
-                 v7,
+                 decodedWidth,
                  v52) < 0 )
           {
             ExcString_Ctor();
@@ -2443,12 +2443,12 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
           }
         }
         else if ( ICDecompress(
-                    *(_DWORD *)(a1 + 415),
-                    *(_DWORD *)(a1 + 2029),
-                    *(_DWORD *)(a1 + 419),
-                    v102,
-                    a1 + 423,
-                    v104) < 0 )
+                    *(_DWORD *)(self + 415),
+                    *(_DWORD *)(self + 2029),
+                    *(_DWORD *)(self + 419),
+                    frameBitsSw,
+                    self + 423,
+                    decodeBuffer) < 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -2456,17 +2456,17 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
           CRT_ThrowExcStringException();
         }
       }
-      if ( *(int *)(a1 + 2034) > 0 )
+      if ( *(int *)(self + 2034) > 0 )
       {
-        ++*(_DWORD *)(a1 + 207);
-        PulseEvent(*(HANDLE *)(a1 + 171));
-        --*(_DWORD *)(a1 + 2034);
+        ++*(_DWORD *)(self + 207);
+        PulseEvent(*(HANDLE *)(self + 171));
+        --*(_DWORD *)(self + 2034);
       }
-      v18 = a1 + 1985;
+      busyGuard = self + 1985;
     }
-    LeaveCriticalSection((LPCRITICAL_SECTION)(v18 + 4));
-    --*(_DWORD *)v18;
-    SetEvent(*(HANDLE *)(a1 + 2196));
+    LeaveCriticalSection((LPCRITICAL_SECTION)(busyGuard + 4));
+    --*(_DWORD *)busyGuard;
+    SetEvent(*(HANDLE *)(self + 2196));
   }
   return 1;
 }
@@ -2523,51 +2523,51 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (004674A0) --------------------------------------------------------
-int  AviPlayer_Flip(int a1)
+int  AviPlayer_Flip(int self)
 {
   int v2; // edx
-  int v3; // edi
+  int overlaySurface; // edi
   int v4; // ebx
-  int *v5; // ebp
-  int v6; // eax
+  int *srcRectPtr; // ebp
+  int lockResult; // eax
   int v7; // ecx
   int v8; // ebp
   int v9; // ebp
   int v10; // eax
   int v11; // edx
-  int v12; // eax
-  _DWORD *v13; // ebx
+  int unlockResult; // eax
+  _DWORD *busyGuard; // ebx
   int result; // eax
-  int v15; // ebx
-  int v16; // eax
+  int srcWidth; // ebx
+  int stretchRatio; // eax
   int v17; // edx
   int v18; // ebx
-  int v19; // edi
-  int v20; // eax
-  int v21; // ebp
+  int backSurface; // edi
+  int overlayLockResult; // eax
+  int bitmapWidth; // ebp
   int v22; // edx
   int v23; // ecx
-  int v24; // eax
+  int overlayUnlockResult; // eax
   int v25; // ecx
   int v26; // ecx
   int v27; // ecx
-  int v28; // ecx
-  int v29; // ecx
-  int v30; // ecx
-  int v31; // eax
+  int framePtr; // ecx
+  int decodedFrameBuffer; // ecx
+  int srcSpan; // ecx
+  int stretchRate; // eax
   int v32; // edx
-  int v33; // eax
-  int v34; // eax
-  int v35; // eax
-  int v36; // eax
+  int overlayCapsAlt; // eax
+  int requiredCapsAlt; // eax
+  int overlayIface; // eax
+  int flipResult; // eax
   int v37; // ecx
-  int v38; // eax
-  int v39; // eax
-  int v40; // [esp+10h] [ebp-51Ch]
-  int v41; // [esp+10h] [ebp-51Ch]
-  int v42; // [esp+14h] [ebp-518h]
-  int v43; // [esp+14h] [ebp-518h]
-  int v44; // [esp+18h] [ebp-514h] BYREF
+  int overlayCaps; // eax
+  int requiredCaps; // eax
+  int frameData; // [esp+10h] [ebp-51Ch]
+  int frameBits; // [esp+10h] [ebp-51Ch]
+  int frameFlags; // [esp+14h] [ebp-518h]
+  int drawFlags; // [esp+14h] [ebp-518h]
+  int surfaceDesc; // [esp+18h] [ebp-514h] BYREF
   int v45; // [esp+1Ch] [ebp-510h]
   int v46; // [esp+20h] [ebp-50Ch]
   int v47; // [esp+24h] [ebp-508h]
@@ -2593,7 +2593,7 @@ int  AviPlayer_Flip(int a1)
   int v67; // [esp+74h] [ebp-4B8h]
   int v68; // [esp+78h] [ebp-4B4h]
   int v69; // [esp+7Ch] [ebp-4B0h]
-  __int64 v70[2]; // [esp+80h] [ebp-4ACh] BYREF
+  __int64 lockDesc[2]; // [esp+80h] [ebp-4ACh] BYREF
   int v71; // [esp+A8h] [ebp-484h]
   int (**v72)(); // [esp+154h] [ebp-3D8h]
   int v73; // [esp+1BCh] [ebp-370h]
@@ -2604,98 +2604,98 @@ int  AviPlayer_Flip(int a1)
   tagRECT *v78; // [esp+4F0h] [ebp-3Ch]
   void *v79; // [esp+4F4h] [ebp-38h]
   int v80; // [esp+4F8h] [ebp-34h]
-  int v81; // [esp+500h] [ebp-2Ch]
+  int busyGuardAddr; // [esp+500h] [ebp-2Ch]
   int v82; // [esp+504h] [ebp-28h]
   int v83; // [esp+508h] [ebp-24h]
   int v84; // [esp+50Ch] [ebp-20h]
-  char v85; // [esp+510h] [ebp-1Ch]
+  char flipState; // [esp+510h] [ebp-1Ch]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v78 = &j____wcpp_4_fs_handler_rtn_;
   v79 = &g_AviPlayerFlip_EHFrame;
   v80 = 0;
-  v85 = *(_BYTE *)(a1 + 2033);
-  v81 = a1 + 1985;
-  ++*(_DWORD *)(a1 + 1985);
-  EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
+  flipState = *(_BYTE *)(self + 2033);
+  busyGuardAddr = self + 1985;
+  ++*(_DWORD *)(self + 1985);
+  EnterCriticalSection((LPCRITICAL_SECTION)(self + 1989));
   v80 = 1;
-  if ( (unsigned __int8)v85 > 3u )
+  if ( (unsigned __int8)flipState > 3u )
   {
 LABEL_19:
     v80 = 0;
-    v13 = (_DWORD *)v81;
-    LeaveCriticalSection((LPCRITICAL_SECTION)(v81 + 4));
-    result = (*v13)--;
-    if ( (unsigned __int8)v85 >= 2u )
+    busyGuard = (_DWORD *)busyGuardAddr;
+    LeaveCriticalSection((LPCRITICAL_SECTION)(busyGuardAddr + 4));
+    result = (*busyGuard)--;
+    if ( (unsigned __int8)flipState >= 2u )
     {
-      if ( (unsigned __int8)v85 > 2u )
+      if ( (unsigned __int8)flipState > 2u )
       {
-        if ( v85 != 3 )
+        if ( flipState != 3 )
           return result;
       }
       else
       {
-        if ( !*(_BYTE *)(a1 + 1968)
-          || !*(_DWORD *)(a1 + 1964)
-          || (v15 = *(_DWORD *)(a1 + 2087) - *(_DWORD *)(a1 + 2079),
-              v16 = 1000 * (*(_DWORD *)(a1 + 2071) - *(_DWORD *)(a1 + 2063)) / v15,
-              v17 = 1000 * (*(_DWORD *)(a1 + 2071) - *(_DWORD *)(a1 + 2063)) % v15,
-              v16 < *(_DWORD *)(a1 + 2143))
-          || v16 > *(_DWORD *)(a1 + 2147) )
+        if ( !*(_BYTE *)(self + 1968)
+          || !*(_DWORD *)(self + 1964)
+          || (srcWidth = *(_DWORD *)(self + 2087) - *(_DWORD *)(self + 2079),
+              stretchRatio = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) / srcWidth,
+              v17 = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) % srcWidth,
+              stretchRatio < *(_DWORD *)(self + 2143))
+          || stretchRatio > *(_DWORD *)(self + 2147) )
         {
-          if ( !*(_DWORD *)(a1 + 1964) )
-            return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
-          v38 = *(_DWORD *)(a1 + 2171);
-          LOBYTE(v38) = v38 | 2;
-          v39 = *(_DWORD *)(a1 + 2175) | v38;
-          v17 = v39 & *(_DWORD *)(a1 + 2119);
-          if ( v17 != v39 )
-            return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
+          if ( !*(_DWORD *)(self + 1964) )
+            return AviPlayer_BltFrameToPrimarySurface(self, *(_DWORD *)(self + 2017));
+          overlayCaps = *(_DWORD *)(self + 2171);
+          LOBYTE(overlayCaps) = overlayCaps | 2;
+          requiredCaps = *(_DWORD *)(self + 2175) | overlayCaps;
+          v17 = requiredCaps & *(_DWORD *)(self + 2119);
+          if ( v17 != requiredCaps )
+            return AviPlayer_BltFrameToPrimarySurface(self, *(_DWORD *)(self + 2017));
         }
-        result = AviPlayer_BltFastOverlayFromBackBuffer(a1, v17);
+        result = AviPlayer_BltFastOverlayFromBackBuffer(self, v17);
       }
-      if ( !*(_BYTE *)(a1 + 1968) || !*(_DWORD *)(a1 + 1964) )
-        return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 1964));
+      if ( !*(_BYTE *)(self + 1968) || !*(_DWORD *)(self + 1964) )
+        return AviPlayer_BltFrameToPrimarySurface(self, *(_DWORD *)(self + 1964));
     }
   }
   else
   {
-    switch ( v85 )
+    switch ( flipState )
     {
       case 0:
-        if ( !*(_DWORD *)(a1 + 2025) )
+        if ( !*(_DWORD *)(self + 2025) )
           goto LABEL_86;
-        if ( *(_DWORD *)(a1 + 415) )
+        if ( *(_DWORD *)(self + 415) )
         {
-          v2 = a1;
-          if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
-            && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
-            && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
+          v2 = self;
+          if ( (!*(_BYTE *)(self + 2052) || AviPlayer_TestActiveModeFlag(self))
+            && (*(_BYTE *)(self + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(self))
+            && (AviPlayer_HasValidRateParams(self) && AviPlayer_IsPlaybackRateInRange(self) || *(_DWORD *)(self + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(self)) )
           {
-            v3 = *(_DWORD *)(v2 + 1964);
+            overlaySurface = *(_DWORD *)(v2 + 1964);
             v4 = v2;
-            v5 = (int *)(v2 + 2095);
-            v44 = 108;
-            v6 = (*(int (__stdcall **)(int, int, int *, int, _DWORD))(*(_DWORD *)v3 + 100))(v3, v2 + 2095, &v44, 33, 0);
-            if ( !v6
-              || v6 == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)v3 + 108))(v3)
-               || !(*(int (__stdcall **)(int, int *, int *, int, _DWORD))(*(_DWORD *)v3 + 100))(v3, v5, &v44, 33, 0)) )
+            srcRectPtr = (int *)(v2 + 2095);
+            surfaceDesc = 108;
+            lockResult = (*(int (__stdcall **)(int, int, int *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, v2 + 2095, &surfaceDesc, 33, 0);
+            if ( !lockResult
+              || lockResult == -2005532222
+              && ((*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
+               || !(*(int (__stdcall **)(int, int *, int *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, srcRectPtr, &surfaceDesc, 33, 0)) )
             {
-              v83 = v5[3] - v5[1];
-              v7 = *v5;
-              v8 = v5[2];
+              v83 = srcRectPtr[3] - srcRectPtr[1];
+              v7 = *srcRectPtr;
+              v8 = srcRectPtr[2];
               v84 = v53;
-              v42 = *(_DWORD *)(v4 + 2029);
+              frameFlags = *(_DWORD *)(v4 + 2029);
               v9 = v8 - v7;
-              v40 = *(_DWORD *)(v4 + 2025);
+              frameData = *(_DWORD *)(v4 + 2025);
               v10 = Mem_BitsToBytesCeil(*(_DWORD *)(v4 + 2123));
-              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v4 + 415), v84, v83, v9, v11 / v10, v40, v42);
-              v12 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v3 + 128))(v3, v53);
-              if ( v12
-                && (v12 != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)v3 + 108))(v3)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)v3 + 128))(v3, v53)) )
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v4 + 415), v84, v83, v9, v11 / v10, frameData, frameFlags);
+              unlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, v53);
+              if ( unlockResult
+                && (unlockResult != -2005532222
+                 || !(*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
+                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, v53)) )
               {
                 ExcString_Ctor();
                 v80 = 8;
@@ -2715,41 +2715,41 @@ LABEL_19:
               CRT_ThrowExcStringException();
             }
             v80 = 0;
-            v85 = 3;
+            flipState = 3;
           }
           else
           {
             v18 = v2;
-            v19 = *(_DWORD *)(v2 + 2017);
-            HIDWORD(v70[0]) = 108;
-            v20 = (*(int (__stdcall **)(int, _DWORD, char *, int, _DWORD))(*(_DWORD *)v19 + 100))(
-                    v19,
+            backSurface = *(_DWORD *)(v2 + 2017);
+            HIDWORD(lockDesc[0]) = 108;
+            overlayLockResult = (*(int (__stdcall **)(int, _DWORD, char *, int, _DWORD))(*(_DWORD *)backSurface + 100))(
+                    backSurface,
                     0,
-                    (char *)v70 + 4,
+                    (char *)lockDesc + 4,
                     33,
                     0);
-            if ( !v20
-              || v20 == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)v19 + 108))(v19)
-               || !(*(int (__stdcall **)(int, _DWORD, char *, int, _DWORD))(*(_DWORD *)v19 + 100))(
-                     v19,
+            if ( !overlayLockResult
+              || overlayLockResult == -2005532222
+              && ((*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
+               || !(*(int (__stdcall **)(int, _DWORD, char *, int, _DWORD))(*(_DWORD *)backSurface + 100))(
+                     backSurface,
                      0,
-                     (char *)v70 + 4,
+                     (char *)lockDesc + 4,
                      33,
                      0)) )
             {
               AviPlayer_BitmapHeightAbs(v18);
-              v21 = AviPlayer_BitmapWidth(v18);
+              bitmapWidth = AviPlayer_BitmapWidth(v18);
               v82 = v71;
-              v43 = *(_DWORD *)(v18 + 2029);
-              v41 = *(_DWORD *)(v18 + 2025);
+              drawFlags = *(_DWORD *)(v18 + 2029);
+              frameBits = *(_DWORD *)(v18 + 2025);
               v83 = Mem_BitsToBytesCeil(*(_DWORD *)(v18 + 2123));
-              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v18 + 415), v82, v23, v21, v22 / v83, v41, v43);
-              v24 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v19 + 128))(v19, v71);
-              if ( v24
-                && (v24 != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)v19 + 108))(v19)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)v19 + 128))(v19, v71)) )
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v18 + 415), v82, v23, bitmapWidth, v22 / v83, frameBits, drawFlags);
+              overlayUnlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, v71);
+              if ( overlayUnlockResult
+                && (overlayUnlockResult != -2005532222
+                 || !(*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
+                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, v71)) )
               {
                 ExcString_Ctor();
                 v80 = 4;
@@ -2769,22 +2769,22 @@ LABEL_19:
               CRT_ThrowExcStringException();
             }
             v80 = 0;
-            v85 = 2;
+            flipState = 2;
           }
         }
         else
         {
-          v28 = *(_DWORD *)(a1 + 2025);
-          if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
-            && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
-            && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
+          framePtr = *(_DWORD *)(self + 2025);
+          if ( (!*(_BYTE *)(self + 2052) || AviPlayer_TestActiveModeFlag(self))
+            && (*(_BYTE *)(self + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(self))
+            && (AviPlayer_HasValidRateParams(self) && AviPlayer_IsPlaybackRateInRange(self) || *(_DWORD *)(self + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(self)) )
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)a1,
-              *(_DWORD *)(a1 + 1964),
-              v28,
-              (int *)(a1 + 2095),
-              v44,
+              (_DWORD *)self,
+              *(_DWORD *)(self + 1964),
+              framePtr,
+              (int *)(self + 2095),
+              surfaceDesc,
               v45,
               v46,
               v47,
@@ -2810,17 +2810,17 @@ LABEL_19:
               v67,
               v68,
               v69,
-              v70[0]);
-            v85 = 3;
+              lockDesc[0]);
+            flipState = 3;
           }
           else
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)a1,
-              *(_DWORD *)(a1 + 2017),
-              v28,
-              (int *)(a1 + 2095),
-              v44,
+              (_DWORD *)self,
+              *(_DWORD *)(self + 2017),
+              framePtr,
+              (int *)(self + 2095),
+              surfaceDesc,
               v45,
               v46,
               v47,
@@ -2846,29 +2846,29 @@ LABEL_19:
               v67,
               v68,
               v69,
-              v70[0]);
-            v85 = 2;
+              lockDesc[0]);
+            flipState = 2;
           }
         }
-        if ( *(int *)(a1 + 2034) > 0 )
+        if ( *(int *)(self + 2034) > 0 )
         {
-          ++*(_DWORD *)(a1 + 207);
-          PulseEvent(*(HANDLE *)(a1 + 171));
-          --*(_DWORD *)(a1 + 2034);
+          ++*(_DWORD *)(self + 207);
+          PulseEvent(*(HANDLE *)(self + 171));
+          --*(_DWORD *)(self + 2034);
         }
         goto LABEL_19;
       case 1:
-        v29 = *(_DWORD *)(a1 + 2179);
-        if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
-          && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
-          && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
+        decodedFrameBuffer = *(_DWORD *)(self + 2179);
+        if ( (!*(_BYTE *)(self + 2052) || AviPlayer_TestActiveModeFlag(self))
+          && (*(_BYTE *)(self + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(self))
+          && (AviPlayer_HasValidRateParams(self) && AviPlayer_IsPlaybackRateInRange(self) || *(_DWORD *)(self + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(self)) )
         {
           AviPlayer_BlitFrameToSurface(
-            (_DWORD *)a1,
-            *(_DWORD *)(a1 + 1964),
-            v29,
-            (int *)(a1 + 2095),
-            v44,
+            (_DWORD *)self,
+            *(_DWORD *)(self + 1964),
+            decodedFrameBuffer,
+            (int *)(self + 2095),
+            surfaceDesc,
             v45,
             v46,
             v47,
@@ -2894,17 +2894,17 @@ LABEL_19:
             v67,
             v68,
             v69,
-            v70[0]);
-          v85 = 3;
+            lockDesc[0]);
+          flipState = 3;
         }
         else
         {
           AviPlayer_BlitFrameToSurface(
-            (_DWORD *)a1,
-            *(_DWORD *)(a1 + 2017),
-            v29,
-            (int *)(a1 + 2095),
-            v44,
+            (_DWORD *)self,
+            *(_DWORD *)(self + 2017),
+            decodedFrameBuffer,
+            (int *)(self + 2095),
+            surfaceDesc,
             v45,
             v46,
             v47,
@@ -2930,48 +2930,48 @@ LABEL_19:
             v67,
             v68,
             v69,
-            v70[0]);
-          v85 = 2;
+            lockDesc[0]);
+          flipState = 2;
         }
         goto LABEL_19;
       case 2:
-        if ( *(_BYTE *)(a1 + 1968)
-          && *(_DWORD *)(a1 + 1964)
-          && (v30 = *(_DWORD *)(a1 + 2087) - *(_DWORD *)(a1 + 2079),
-              v31 = 1000 * (*(_DWORD *)(a1 + 2071) - *(_DWORD *)(a1 + 2063)) / v30,
-              v32 = 1000 * (*(_DWORD *)(a1 + 2071) - *(_DWORD *)(a1 + 2063)) % v30,
-              v31 >= *(_DWORD *)(a1 + 2143))
-          && v31 <= *(_DWORD *)(a1 + 2147)
-          || *(_DWORD *)(a1 + 1964)
-          && (v33 = *(_DWORD *)(a1 + 2171),
-              LOBYTE(v33) = v33 | 2,
-              v34 = *(_DWORD *)(a1 + 2175) | v33,
-              v32 = v34 & *(_DWORD *)(a1 + 2119),
-              v32 == v34) )
+        if ( *(_BYTE *)(self + 1968)
+          && *(_DWORD *)(self + 1964)
+          && (srcSpan = *(_DWORD *)(self + 2087) - *(_DWORD *)(self + 2079),
+              stretchRate = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) / srcSpan,
+              v32 = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) % srcSpan,
+              stretchRate >= *(_DWORD *)(self + 2143))
+          && stretchRate <= *(_DWORD *)(self + 2147)
+          || *(_DWORD *)(self + 1964)
+          && (overlayCapsAlt = *(_DWORD *)(self + 2171),
+              LOBYTE(overlayCapsAlt) = overlayCapsAlt | 2,
+              requiredCapsAlt = *(_DWORD *)(self + 2175) | overlayCapsAlt,
+              v32 = requiredCapsAlt & *(_DWORD *)(self + 2119),
+              v32 == requiredCapsAlt) )
         {
-          AviPlayer_BltFastOverlayFromBackBuffer(a1, v32);
-          v85 = 3;
+          AviPlayer_BltFastOverlayFromBackBuffer(self, v32);
+          flipState = 3;
           goto LABEL_19;
         }
-        AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
-        LeaveCriticalSection((LPCRITICAL_SECTION)(v81 + 4));
-        return (*(_DWORD *)v81)--;
+        AviPlayer_BltFrameToPrimarySurface(self, *(_DWORD *)(self + 2017));
+        LeaveCriticalSection((LPCRITICAL_SECTION)(busyGuardAddr + 4));
+        return (*(_DWORD *)busyGuardAddr)--;
       case 3:
-        if ( !*(_BYTE *)(a1 + 1968) || (v35 = *(_DWORD *)(a1 + 1964)) == 0 )
+        if ( !*(_BYTE *)(self + 1968) || (overlayIface = *(_DWORD *)(self + 1964)) == 0 )
         {
-          AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 1964));
+          AviPlayer_BltFrameToPrimarySurface(self, *(_DWORD *)(self + 1964));
 LABEL_86:
-          LeaveCriticalSection((LPCRITICAL_SECTION)(v81 + 4));
-          return (*(_DWORD *)v81)--;
+          LeaveCriticalSection((LPCRITICAL_SECTION)(busyGuardAddr + 4));
+          return (*(_DWORD *)busyGuardAddr)--;
         }
-        if ( !*(_BYTE *)(a1 + 2051) )
+        if ( !*(_BYTE *)(self + 2051) )
           goto LABEL_86;
-        v36 = (*(int (__stdcall **)(int, _DWORD, _DWORD))(*(_DWORD *)v35 + 44))(v35, 0, 0);
-        if ( !v36
-          || v36 == -2005532222
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 108))(*(_DWORD *)(a1 + 1964))
-           || !(*(int (__stdcall **)(_DWORD, _DWORD, _DWORD))(**(_DWORD **)(a1 + 1964) + 44))(
-                 *(_DWORD *)(a1 + 1964),
+        flipResult = (*(int (__stdcall **)(int, _DWORD, _DWORD))(*(_DWORD *)overlayIface + 44))(overlayIface, 0, 0);
+        if ( !flipResult
+          || flipResult == -2005532222
+          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964))
+           || !(*(int (__stdcall **)(_DWORD, _DWORD, _DWORD))(**(_DWORD **)(self + 1964) + 44))(
+                 *(_DWORD *)(self + 1964),
                  0,
                  0)) )
         {
@@ -3002,43 +3002,43 @@ LABEL_86:
 //----- (00467DE0) --------------------------------------------------------
 int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4)
 {
-  _DWORD **v4; // ebx
-  int v5; // edx
-  int v6; // eax
+  _DWORD **self; // ebx
+  int ddObject; // edx
+  int hr; // eax
   int v7; // esi
   __int64 v8; // rax
-  int v9; // eax
+  int restoreHr; // eax
   __int64 v10; // rax
   int v11; // ecx
 
-  v4 = (_DWORD **)result;
-  v5 = *(_DWORD *)(result + 2151);
-  if ( v5 )
+  self = (_DWORD **)result;
+  ddObject = *(_DWORD *)(result + 2151);
+  if ( ddObject )
   {
-    result = (*(int (**)(void))(*(_DWORD *)v5 + 4))();
+    result = (*(int (**)(void))(*(_DWORD *)ddObject + 4))();
     if ( result )
     {
-      v9 = (*(int (__stdcall **)(int, int, int))(**(_DWORD **)((char *)v4 + 2151) + 4))(a4, a2, a3);
-      if ( (*(int (__stdcall **)(int))(*(_DWORD *)v9 + 96))(v9) == -2005532222 )
-        (*(void (**)(void))(**(_DWORD **)((char *)v4 + 2151) + 8))();
-      v10 = ((__int64 (__thiscall *)(_DWORD, _DWORD, int, _DWORD))*(_DWORD *)(**(_DWORD **)((char *)v4 + 2151) + 4))(
-              *v4[489],
+      restoreHr = (*(int (__stdcall **)(int, int, int))(**(_DWORD **)((char *)self + 2151) + 4))(a4, a2, a3);
+      if ( (*(int (__stdcall **)(int))(*(_DWORD *)restoreHr + 96))(restoreHr) == -2005532222 )
+        (*(void (**)(void))(**(_DWORD **)((char *)self + 2151) + 8))();
+      v10 = ((__int64 (__thiscall *)(_DWORD, _DWORD, int, _DWORD))*(_DWORD *)(**(_DWORD **)((char *)self + 2151) + 4))(
+              *self[489],
               0,
               0x1000000,
               0);
-      return (*(int (__stdcall **)(_DWORD, int, _DWORD))(v11 + 20))(HIDWORD(v10), (int)v4 + 2155, v10);
+      return (*(int (__stdcall **)(_DWORD, int, _DWORD))(v11 + 20))(HIDWORD(v10), (int)self + 2155, v10);
     }
-    else if ( v4[488] )
+    else if ( self[488] )
     {
-      result = (***(int (****)(void))((char *)v4 + 2151))();
+      result = (***(int (****)(void))((char *)self + 2151))();
       if ( result )
       {
-        v6 = (***(int (__stdcall ****)(int, int, int))((char *)v4 + 2151))(a4, a2, a3);
-        if ( (*(int (__stdcall **)(int))(*(_DWORD *)v6 + 96))(v6) == -2005532222 )
-          (*(void (**)(void))(**(_DWORD **)((char *)v4 + 2151) + 8))();
-        v7 = *v4[488];
-        v8 = ((__int64 (__cdecl *)(_DWORD, int, _DWORD))***(_DWORD ***)((char *)v4 + 2151))(0, 0x1000000, 0);
-        return (*(int (__stdcall **)(_DWORD, int, _DWORD))(v7 + 20))(HIDWORD(v8), (int)v4 + 2155, v8);
+        hr = (***(int (__stdcall ****)(int, int, int))((char *)self + 2151))(a4, a2, a3);
+        if ( (*(int (__stdcall **)(int))(*(_DWORD *)hr + 96))(hr) == -2005532222 )
+          (*(void (**)(void))(**(_DWORD **)((char *)self + 2151) + 8))();
+        v7 = *self[488];
+        v8 = ((__int64 (__cdecl *)(_DWORD, int, _DWORD))***(_DWORD ***)((char *)self + 2151))(0, 0x1000000, 0);
+        return (*(int (__stdcall **)(_DWORD, int, _DWORD))(v7 + 20))(HIDWORD(v8), (int)self + 2155, v8);
       }
     }
   }
@@ -3048,31 +3048,31 @@ int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4
 // 467EAD: variable 'v11' is possibly undefined
 
 //----- (00467EC0) --------------------------------------------------------
-int  AviPlayer_BltFastOverlayFromBackBuffer(int a1, int a2)
+int  AviPlayer_BltFastOverlayFromBackBuffer(int self, int a2)
 {
   int result; // eax
 
-  result = (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD))(**(_DWORD **)(a1 + 1964) + 28))(
-             *(_DWORD *)(a1 + 1964),
+  result = (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD))(**(_DWORD **)(self + 1964) + 28))(
+             *(_DWORD *)(self + 1964),
              0,
              0,
-             *(_DWORD *)(a1 + 2017),
+             *(_DWORD *)(self + 2017),
              0,
              0);
   if ( result )
   {
     if ( result == -2005532222 )
     {
-      if ( (*(int (__stdcall **)(_DWORD, int))(**(_DWORD **)(a1 + 1964) + 96))(*(_DWORD *)(a1 + 1964), a2) == -2005532222 )
-        (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 108))(*(_DWORD *)(a1 + 1964));
-      if ( (*(int (__cdecl **)(_DWORD))(**(_DWORD **)(a1 + 2017) + 96))(*(_DWORD *)(a1 + 2017)) == -2005532222 )
-        (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 2017) + 108))(*(_DWORD *)(a1 + 2017));
+      if ( (*(int (__stdcall **)(_DWORD, int))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964), a2) == -2005532222 )
+        (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964));
+      if ( (*(int (__cdecl **)(_DWORD))(**(_DWORD **)(self + 2017) + 96))(*(_DWORD *)(self + 2017)) == -2005532222 )
+        (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(self + 2017) + 108))(*(_DWORD *)(self + 2017));
     }
-    return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, int))(**(_DWORD **)(a1 + 1964) + 28))(
-             *(_DWORD *)(a1 + 1964),
+    return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, int))(**(_DWORD **)(self + 1964) + 28))(
+             *(_DWORD *)(self + 1964),
              0,
              0,
-             *(_DWORD *)(a1 + 2017),
+             *(_DWORD *)(self + 2017),
              0,
              16);
   }
@@ -3080,62 +3080,62 @@ int  AviPlayer_BltFastOverlayFromBackBuffer(int a1, int a2)
 }
 
 //----- (00467F50) --------------------------------------------------------
-int  AviPlayer_BltFrameToPrimarySurface(int a1, int a2)
+int  AviPlayer_BltFrameToPrimarySurface(int self, int srcSurface)
 {
   int result; // eax
   int v5; // edx
   int v6; // ecx
 
-  if ( *(_DWORD *)(a1 + 2175)
-    || (result = (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, int, int, _DWORD))(**(_DWORD **)(a1 + 1956) + 28))(
-                   *(_DWORD *)(a1 + 1956),
-                   *(_DWORD *)(a1 + 2063),
-                   *(_DWORD *)(a1 + 2067),
-                   a2,
-                   a1 + 2079,
-                   *(_DWORD *)(a1 + 2115))) != 0 )
+  if ( *(_DWORD *)(self + 2175)
+    || (result = (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1956) + 28))(
+                   *(_DWORD *)(self + 1956),
+                   *(_DWORD *)(self + 2063),
+                   *(_DWORD *)(self + 2067),
+                   srcSurface,
+                   self + 2079,
+                   *(_DWORD *)(self + 2115))) != 0 )
   {
-    if ( (*(int (__stdcall **)(_DWORD, int, int, int, _DWORD, _DWORD))(**(_DWORD **)(a1 + 1956) + 20))(
-           *(_DWORD *)(a1 + 1956),
-           a1 + 2063,
-           a2,
-           a1 + 2079,
-           *(_DWORD *)(a1 + 2111),
+    if ( (*(int (__stdcall **)(_DWORD, int, int, int, _DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 20))(
+           *(_DWORD *)(self + 1956),
+           self + 2063,
+           srcSurface,
+           self + 2079,
+           *(_DWORD *)(self + 2111),
            0) != -2005532222 )
-      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(a1 + 1956) + 20))(
-               *(_DWORD *)(a1 + 1956),
-               a1 + 2063,
-               a2,
-               a1 + 2079,
-               *(_DWORD *)(a1 + 2111) | 0x1000000,
+      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(self + 1956) + 20))(
+               *(_DWORD *)(self + 1956),
+               self + 2063,
+               srcSurface,
+               self + 2079,
+               *(_DWORD *)(self + 2111) | 0x1000000,
                0);
-    if ( (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 96))(*(_DWORD *)(a1 + 1956)) == -2005532222 )
+    if ( (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) == -2005532222 )
     {
-      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 108))(*(_DWORD *)(a1 + 1956));
+      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956));
       if ( result )
         return result;
-      if ( *(_DWORD *)(a1 + 1948) )
-        (*(void (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(a1 + 1956) + 124))(
-          *(_DWORD *)(a1 + 1956),
-          *(_DWORD *)(a1 + 1948));
-      AviException_RebuildClipperOnSurfaceLoss(a1, v5, v6, a2);
+      if ( *(_DWORD *)(self + 1948) )
+        (*(void (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 124))(
+          *(_DWORD *)(self + 1956),
+          *(_DWORD *)(self + 1948));
+      AviException_RebuildClipperOnSurfaceLoss(self, v5, v6, srcSurface);
     }
-    if ( (*(int (__stdcall **)(int))(*(_DWORD *)a2 + 96))(a2) != -2005532222 )
-      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(a1 + 1956) + 20))(
-               *(_DWORD *)(a1 + 1956),
-               a1 + 2063,
-               a2,
-               a1 + 2079,
-               *(_DWORD *)(a1 + 2111) | 0x1000000,
+    if ( (*(int (__stdcall **)(int))(*(_DWORD *)srcSurface + 96))(srcSurface) != -2005532222 )
+      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(self + 1956) + 20))(
+               *(_DWORD *)(self + 1956),
+               self + 2063,
+               srcSurface,
+               self + 2079,
+               *(_DWORD *)(self + 2111) | 0x1000000,
                0);
-    result = (*(int (__stdcall **)(int))(*(_DWORD *)a2 + 108))(a2);
+    result = (*(int (__stdcall **)(int))(*(_DWORD *)srcSurface + 108))(srcSurface);
     if ( !result )
-      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(a1 + 1956) + 20))(
-               *(_DWORD *)(a1 + 1956),
-               a1 + 2063,
-               a2,
-               a1 + 2079,
-               *(_DWORD *)(a1 + 2111) | 0x1000000,
+      return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(self + 1956) + 20))(
+               *(_DWORD *)(self + 1956),
+               self + 2063,
+               srcSurface,
+               self + 2079,
+               *(_DWORD *)(self + 2111) | 0x1000000,
                0);
   }
   return result;
@@ -3144,102 +3144,102 @@ int  AviPlayer_BltFrameToPrimarySurface(int a1, int a2)
 // 468020: variable 'v6' is possibly undefined
 
 //----- (00468060) --------------------------------------------------------
-signed int  AviPlayer_RenderFrame(int a1, const RECT *a2)
+signed int  AviPlayer_RenderFrame(int self, const RECT *destRect)
 {
-  int v4; // esi
+  int destHeight; // esi
   signed int result; // eax
-  int v6; // [esp+0h] [ebp-20h]
-  int v7; // [esp+4h] [ebp-1Ch]
-  int v8; // [esp+8h] [ebp-18h]
+  int destWidth; // [esp+0h] [ebp-20h]
+  int srcWidth; // [esp+4h] [ebp-1Ch]
+  int srcHeight; // [esp+8h] [ebp-18h]
 
-  *(_DWORD *)(a1 + 2063) = a2->left;
-  *(_DWORD *)(a1 + 2067) = a2->top;
-  *(_DWORD *)(a1 + 2071) = a2->right;
-  *(_DWORD *)(a1 + 2075) = a2->bottom;
-  *(_DWORD *)(a1 + 2079) = *(_DWORD *)(a1 + 2095);
-  *(_DWORD *)(a1 + 2083) = *(_DWORD *)(a1 + 2099);
-  *(_DWORD *)(a1 + 2087) = *(_DWORD *)(a1 + 2103);
-  *(_DWORD *)(a1 + 2091) = *(_DWORD *)(a1 + 2107);
-  v7 = *(_DWORD *)(a1 + 2087) - *(_DWORD *)(a1 + 2079);
-  v4 = a2->bottom - a2->top;
-  v8 = *(_DWORD *)(a1 + 2091) - *(_DWORD *)(a1 + 2083);
-  v6 = a2->right - a2->left;
-  IntersectRect((LPRECT)(a1 + 2063), a2, (const RECT *)(a1 + 1969));
-  result = IsRectEmpty((const RECT *)(a1 + 2063));
+  *(_DWORD *)(self + 2063) = destRect->left;
+  *(_DWORD *)(self + 2067) = destRect->top;
+  *(_DWORD *)(self + 2071) = destRect->right;
+  *(_DWORD *)(self + 2075) = destRect->bottom;
+  *(_DWORD *)(self + 2079) = *(_DWORD *)(self + 2095);
+  *(_DWORD *)(self + 2083) = *(_DWORD *)(self + 2099);
+  *(_DWORD *)(self + 2087) = *(_DWORD *)(self + 2103);
+  *(_DWORD *)(self + 2091) = *(_DWORD *)(self + 2107);
+  srcWidth = *(_DWORD *)(self + 2087) - *(_DWORD *)(self + 2079);
+  destHeight = destRect->bottom - destRect->top;
+  srcHeight = *(_DWORD *)(self + 2091) - *(_DWORD *)(self + 2083);
+  destWidth = destRect->right - destRect->left;
+  IntersectRect((LPRECT)(self + 2063), destRect, (const RECT *)(self + 1969));
+  result = IsRectEmpty((const RECT *)(self + 2063));
   if ( !result )
   {
-    if ( !EqualRect((const RECT *)(a1 + 2063), a2) )
+    if ( !EqualRect((const RECT *)(self + 2063), destRect) )
     {
-      *(_DWORD *)(a1 + 2079) += v7 * (*(_DWORD *)(a1 + 2063) - a2->left) / v6;
-      *(_DWORD *)(a1 + 2087) += v7 * (*(_DWORD *)(a1 + 2071) - a2->right) / v6;
-      *(_DWORD *)(a1 + 2083) += v8 * (*(_DWORD *)(a1 + 2067) - a2->top) / v4;
-      *(_DWORD *)(a1 + 2091) += v8 * (*(_DWORD *)(a1 + 2075) - a2->bottom) / v4;
+      *(_DWORD *)(self + 2079) += srcWidth * (*(_DWORD *)(self + 2063) - destRect->left) / destWidth;
+      *(_DWORD *)(self + 2087) += srcWidth * (*(_DWORD *)(self + 2071) - destRect->right) / destWidth;
+      *(_DWORD *)(self + 2083) += srcHeight * (*(_DWORD *)(self + 2067) - destRect->top) / destHeight;
+      *(_DWORD *)(self + 2091) += srcHeight * (*(_DWORD *)(self + 2075) - destRect->bottom) / destHeight;
     }
-    if ( v7 == v6 && v4 == v8 )
+    if ( srcWidth == destWidth && destHeight == srcHeight )
     {
-      result = v6 ^ v7;
-      *(_DWORD *)(a1 + 2175) = v6 ^ v7;
+      result = destWidth ^ srcWidth;
+      *(_DWORD *)(self + 2175) = destWidth ^ srcWidth;
     }
     else
     {
       result = 4;
-      *(_DWORD *)(a1 + 2175) = 4;
+      *(_DWORD *)(self + 2175) = 4;
     }
   }
   return result;
 }
 
 //----- (004681C0) --------------------------------------------------------
-int  CAviDecompressor_PresentFrameIfStale(int a1, const RECT *a2)
+int  CAviDecompressor_PresentFrameIfStale(int self, const RECT *destRect)
 {
   int result; // eax
-  int v5; // edi
+  int destWidthScaled; // edi
   int v6; // ecx
-  int v7; // eax
-  int v8; // eax
-  int v9; // ebp
-  int v10; // eax
-  int v11; // ecx
-  int v12; // eax
+  int stretchRatio; // eax
+  int showFlags; // eax
+  int overlayFlags; // ebp
+  int updateResult; // eax
+  int overlaySurface; // ecx
+  int hideResult; // eax
 
-  if ( !*(_BYTE *)(a1 + 2053) || (result = *(_DWORD *)(a1 + 2054), result < *(_DWORD *)(a1 + 2021)) )
+  if ( !*(_BYTE *)(self + 2053) || (result = *(_DWORD *)(self + 2054), result < *(_DWORD *)(self + 2021)) )
   {
-    result = WaitForSingleObject(*(HANDLE *)(a1 + 2196), 0);
+    result = WaitForSingleObject(*(HANDLE *)(self + 2196), 0);
     if ( !result )
     {
-      if ( !*(_BYTE *)(a1 + 2062) )
-        AviPlayer_RenderFrame(a1, a2);
-      AviPlayer_Flip(a1);
-      if ( !*(_BYTE *)(a1 + 1968) || !*(_DWORD *)(a1 + 1964) )
+      if ( !*(_BYTE *)(self + 2062) )
+        AviPlayer_RenderFrame(self, destRect);
+      AviPlayer_Flip(self);
+      if ( !*(_BYTE *)(self + 1968) || !*(_DWORD *)(self + 1964) )
         goto LABEL_22;
-      v5 = 1000 * AviPlayer_SpanDelta(a1, (_DWORD *)(a1 + 2063));
-      v7 = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(a1 + 2079));
-      if ( v7 < *(_DWORD *)(a1 + 2143) || v7 > *(_DWORD *)(a1 + 2147) )
+      destWidthScaled = 1000 * AviPlayer_SpanDelta(self, (_DWORD *)(self + 2063));
+      stretchRatio = destWidthScaled / AviPlayer_SpanDelta(v6, (_DWORD *)(self + 2079));
+      if ( stretchRatio < *(_DWORD *)(self + 2143) || stretchRatio > *(_DWORD *)(self + 2147) )
       {
-        if ( !*(_BYTE *)(a1 + 1968) )
+        if ( !*(_BYTE *)(self + 1968) )
           goto LABEL_22;
-        v11 = *(_DWORD *)(a1 + 1964);
-        if ( !v11 )
+        overlaySurface = *(_DWORD *)(self + 1964);
+        if ( !overlaySurface )
           goto LABEL_22;
-        v12 = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)v11 + 132))(
-                v11,
-                a1 + 2095,
-                *(_DWORD *)(a1 + 1956),
-                a1 + 2063,
+        hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
+                overlaySurface,
+                self + 2095,
+                *(_DWORD *)(self + 1956),
+                self + 2063,
                 512,
                 0);
-        if ( !v12 )
+        if ( !hideResult )
           goto LABEL_22;
-        if ( v12 == -2005532222
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 96))(*(_DWORD *)(a1 + 1964)) == -2005532222
-           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 108))(*(_DWORD *)(a1 + 1964))
-           || (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 96))(*(_DWORD *)(a1 + 1956)) == -2005532222
-           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 108))(*(_DWORD *)(a1 + 1956))
-           || !(*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(a1 + 1964) + 132))(
-                 *(_DWORD *)(a1 + 1964),
-                 a1 + 2095,
-                 *(_DWORD *)(a1 + 1956),
-                 a1 + 2063,
+        if ( hideResult == -2005532222
+          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) == -2005532222
+           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964))
+           || (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) == -2005532222
+           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))
+           || !(*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                 *(_DWORD *)(self + 1964),
+                 self + 2095,
+                 *(_DWORD *)(self + 1956),
+                 self + 2063,
                  512,
                  0)) )
         {
@@ -3250,29 +3250,29 @@ int  CAviDecompressor_PresentFrameIfStale(int a1, const RECT *a2)
       }
       else
       {
-        v8 = 0x4000;
-        if ( *(_DWORD *)(a1 + 2171) )
-          v8 = 20480;
-        v9 = v8;
-        v10 = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(a1 + 1964) + 132))(
-                *(_DWORD *)(a1 + 1964),
-                a1 + 2095,
-                *(_DWORD *)(a1 + 1956),
-                a1 + 2063,
-                v8,
+        showFlags = 0x4000;
+        if ( *(_DWORD *)(self + 2171) )
+          showFlags = 20480;
+        overlayFlags = showFlags;
+        updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                *(_DWORD *)(self + 1964),
+                self + 2095,
+                *(_DWORD *)(self + 1956),
+                self + 2063,
+                showFlags,
                 0);
-        if ( !v10
-          || v10 == -2005532222
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 96))(*(_DWORD *)(a1 + 1964)) == -2005532222
-           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1964) + 108))(*(_DWORD *)(a1 + 1964))
-           || (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 96))(*(_DWORD *)(a1 + 1956)) == -2005532222
-           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 108))(*(_DWORD *)(a1 + 1956))
-           || !(*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(a1 + 1964) + 132))(
-                 *(_DWORD *)(a1 + 1964),
-                 a1 + 2095,
-                 *(_DWORD *)(a1 + 1956),
-                 a1 + 2063,
-                 v9,
+        if ( !updateResult
+          || updateResult == -2005532222
+          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) == -2005532222
+           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964))
+           || (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) == -2005532222
+           && (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))
+           || !(*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                 *(_DWORD *)(self + 1964),
+                 self + 2095,
+                 *(_DWORD *)(self + 1956),
+                 self + 2063,
+                 overlayFlags,
                  0)) )
         {
           goto LABEL_22;
@@ -3282,9 +3282,9 @@ int  CAviDecompressor_PresentFrameIfStale(int a1, const RECT *a2)
       }
       CRT_ThrowExcStringException();
 LABEL_22:
-      ResetEvent(*(HANDLE *)(a1 + 2196));
-      result = *(_DWORD *)(a1 + 2021);
-      *(_DWORD *)(a1 + 2054) = result;
+      ResetEvent(*(HANDLE *)(self + 2196));
+      result = *(_DWORD *)(self + 2021);
+      *(_DWORD *)(self + 2054) = result;
     }
   }
   return result;
@@ -3293,16 +3293,16 @@ LABEL_22:
 // 4682CF: variable 'v6' is possibly undefined
 
 //----- (00468890) --------------------------------------------------------
-int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
+int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *destRect)
 {
   int v2; // ecx
   int result; // eax
-  int v4; // ebx
-  int v5; // esi
+  int self; // ebx
+  int destWidthScaled; // esi
   int v6; // ecx
   int v7; // ecx
-  int v8; // eax
-  int v9; // edi
+  int showFlags; // eax
+  int overlayFlags; // edi
   int v10; // ecx
   _DWORD v11[3]; // [esp+198h] [ebp-24h] BYREF
   int v12; // [esp+1A4h] [ebp-18h]
@@ -3314,37 +3314,37 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
   v11[2] = &g_AviPresentFrameForRect_EHFrame;
   v12 = 0;
   if ( !*(_BYTE *)(v2 + 2062) )
-    result = AviPlayer_RenderFrame(v2, a2);
-  v4 = v2;
+    result = AviPlayer_RenderFrame(v2, destRect);
+  self = v2;
   if ( *(_BYTE *)(v2 + 1968) && *(_DWORD *)(v2 + 1964) )
   {
-    v5 = 1000 * AviPlayer_SpanDelta(v2, (_DWORD *)(v2 + 2063));
-    result = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(v6 + 2079));
+    destWidthScaled = 1000 * AviPlayer_SpanDelta(v2, (_DWORD *)(v2 + 2063));
+    result = destWidthScaled / AviPlayer_SpanDelta(v6, (_DWORD *)(v6 + 2079));
     if ( result < *(_DWORD *)(v7 + 2143) || result > *(_DWORD *)(v7 + 2147) )
     {
-      if ( *(_BYTE *)(v4 + 1968) )
+      if ( *(_BYTE *)(self + 1968) )
       {
-        if ( *(_DWORD *)(v4 + 1964) )
+        if ( *(_DWORD *)(self + 1964) )
         {
-          result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v4 + 1964) + 132))(
-                     *(_DWORD *)(v4 + 1964),
-                     v4 + 2095,
-                     *(_DWORD *)(v4 + 1956),
-                     v4 + 2063,
+          result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                     *(_DWORD *)(self + 1964),
+                     self + 2095,
+                     *(_DWORD *)(self + 1956),
+                     self + 2063,
                      512,
                      0);
           if ( result )
           {
             if ( result != -2005532222
-              || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1964) + 96))(*(_DWORD *)(v4 + 1964)) != -2005532222
-               || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1964) + 108))(*(_DWORD *)(v4 + 1964))) == 0)
-              && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1956) + 96))(*(_DWORD *)(v4 + 1956)) != -2005532222
-               || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1956) + 108))(*(_DWORD *)(v4 + 1956))) == 0)
-              && (result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v4 + 1964) + 132))(
-                             *(_DWORD *)(v4 + 1964),
-                             v4 + 2095,
-                             *(_DWORD *)(v4 + 1956),
-                             v4 + 2063,
+              || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) != -2005532222
+               || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964))) == 0)
+              && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) != -2005532222
+               || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))) == 0)
+              && (result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                             *(_DWORD *)(self + 1964),
+                             self + 2095,
+                             *(_DWORD *)(self + 1956),
+                             self + 2063,
                              512,
                              0)) != 0 )
             {
@@ -3358,30 +3358,30 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
     }
     else
     {
-      v8 = 0x4000;
+      showFlags = 0x4000;
       if ( *(_DWORD *)(v7 + 2171) )
-        v8 = 20480;
-      v9 = v8;
-      result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v4 + 1964) + 132))(
-                 *(_DWORD *)(v4 + 1964),
-                 v4 + 2095,
-                 *(_DWORD *)(v4 + 1956),
-                 v4 + 2063,
-                 v8,
+        showFlags = 20480;
+      overlayFlags = showFlags;
+      result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                 *(_DWORD *)(self + 1964),
+                 self + 2095,
+                 *(_DWORD *)(self + 1956),
+                 self + 2063,
+                 showFlags,
                  0);
       if ( result )
       {
         if ( result != -2005532222
-          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1964) + 96))(*(_DWORD *)(v4 + 1964)) != -2005532222
-           || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1964) + 108))(*(_DWORD *)(v4 + 1964))) == 0)
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1956) + 96))(*(_DWORD *)(v4 + 1956)) != -2005532222
-           || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v4 + 1956) + 108))(*(_DWORD *)(v4 + 1956))) == 0)
-          && (result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v4 + 1964) + 132))(
-                         *(_DWORD *)(v4 + 1964),
-                         v4 + 2095,
-                         *(_DWORD *)(v4 + 1956),
-                         v4 + 2063,
-                         v9,
+          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) != -2005532222
+           || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 108))(*(_DWORD *)(self + 1964))) == 0)
+          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) != -2005532222
+           || (result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))) == 0)
+          && (result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(self + 1964) + 132))(
+                         *(_DWORD *)(self + 1964),
+                         self + 2095,
+                         *(_DWORD *)(self + 1956),
+                         self + 2063,
+                         overlayFlags,
                          0)) != 0 )
         {
           ExcString_Ctor();
@@ -3405,30 +3405,30 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
 //----- (00468BB0) --------------------------------------------------------
 int  AviPlayer_UpdateOverlayColorKey(int result)
 {
-  int v1; // ebx
-  int v2; // esi
+  int self; // ebx
+  int colorKeyFlags; // esi
   char v3; // dl
-  int v4; // ecx
-  int v5; // edi
-  int v6; // ebp
+  int colorKeyHigh; // ecx
+  int overlaySurface; // edi
+  int backSurface; // ebp
 
-  v1 = result;
+  self = result;
   if ( *(_DWORD *)(result + 2171) )
   {
-    v2 = 8;
+    colorKeyFlags = 8;
     v3 = *(_BYTE *)(result + 2112);
-    v4 = *(_DWORD *)(result + 2046);
+    colorKeyHigh = *(_DWORD *)(result + 2046);
     *(_BYTE *)(result + 2115) |= 1u;
     result = *(_DWORD *)(result + 2042);
-    *(_BYTE *)(v1 + 2112) = v3 | 0x80;
-    if ( result == v4 )
-      v2 = 9;
-    v5 = *(_DWORD *)(v1 + 1964);
-    if ( v5 )
-      result = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)v5 + 116))(v5, v2, v1 + 2042);
-    v6 = *(_DWORD *)(v1 + 2017);
-    if ( v6 )
-      return (*(int (__stdcall **)(int, int, int))(*(_DWORD *)v6 + 116))(v6, v2, v1 + 2042);
+    *(_BYTE *)(self + 2112) = v3 | 0x80;
+    if ( result == colorKeyHigh )
+      colorKeyFlags = 9;
+    overlaySurface = *(_DWORD *)(self + 1964);
+    if ( overlaySurface )
+      result = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)overlaySurface + 116))(overlaySurface, colorKeyFlags, self + 2042);
+    backSurface = *(_DWORD *)(self + 2017);
+    if ( backSurface )
+      return (*(int (__stdcall **)(int, int, int))(*(_DWORD *)backSurface + 116))(backSurface, colorKeyFlags, self + 2042);
   }
   return result;
 }
@@ -3436,21 +3436,21 @@ int  AviPlayer_UpdateOverlayColorKey(int result)
 //----- (00468C40) --------------------------------------------------------
 char  AviPlayer_ComputeFlipState(int a1)
 {
-  int v1; // ecx
-  int v2; // edx
+  int self; // ecx
+  int decodedFrameBuffer; // edx
   int v3; // esi
   int v4; // edx
-  int v5; // edi
+  int destWidthScaled; // edi
   int v6; // ecx
-  int v7; // eax
+  int requiredCaps; // eax
   int v8; // ebx
   int v9; // edx
-  int v10; // eax
+  int overlayCaps; // eax
 
-  v1 = a1;
-  v2 = *(_DWORD *)(a1 + 2179);
+  self = a1;
+  decodedFrameBuffer = *(_DWORD *)(a1 + 2179);
   *(_BYTE *)(a1 + 2033) = 0;
-  if ( v2 )
+  if ( decodedFrameBuffer )
   {
     *(_BYTE *)(a1 + 2033) = 1;
     return a1;
@@ -3460,7 +3460,7 @@ char  AviPlayer_ComputeFlipState(int a1)
   if ( *(_BYTE *)(a1 + 2052) )
   {
     v8 = a1;
-    if ( !AviPlayer_IsIcmDecoderIdle(a1) || !AviPlayer_TestModeFlagBit3(v1) )
+    if ( !AviPlayer_IsIcmDecoderIdle(a1) || !AviPlayer_TestModeFlagBit3(self) )
     {
       LOBYTE(a1) = AviPlayer_IsIcmDecoderIdle(v8);
       if ( (_BYTE)a1 )
@@ -3468,7 +3468,7 @@ char  AviPlayer_ComputeFlipState(int a1)
       LOBYTE(a1) = AviPlayer_TestModeFlagBit2(v8);
       if ( !(_BYTE)a1 )
       {
-        *(_BYTE *)(v1 + 2033) = 2;
+        *(_BYTE *)(self + 2033) = 2;
         return a1;
       }
     }
@@ -3481,44 +3481,44 @@ char  AviPlayer_ComputeFlipState(int a1)
     LOBYTE(a1) = AviPlayer_IsUncompressedFormat(v9);
     if ( !(_BYTE)a1 )
     {
-      *(_BYTE *)(v1 + 2033) = 2;
+      *(_BYTE *)(self + 2033) = 2;
       return a1;
     }
   }
   LOBYTE(a1) = *(_BYTE *)(v3 + 1968);
   if ( !(_BYTE)a1
     || !*(_DWORD *)(v3 + 1964)
-    || (v5 = 1000 * AviPlayer_SpanDelta(v1, (_DWORD *)(v3 + 2063)),
-        a1 = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(v3 + 2079)),
+    || (destWidthScaled = 1000 * AviPlayer_SpanDelta(self, (_DWORD *)(v3 + 2063)),
+        a1 = destWidthScaled / AviPlayer_SpanDelta(v6, (_DWORD *)(v3 + 2079)),
         a1 < *(_DWORD *)(v3 + 2143))
     || a1 > *(_DWORD *)(v3 + 2147) )
   {
     if ( *(_DWORD *)(v3 + 1964) )
     {
-      v10 = *(_DWORD *)(v3 + 2171);
-      LOBYTE(v10) = v10 | 2;
-      a1 = *(_DWORD *)(v3 + 2175) | v10;
+      overlayCaps = *(_DWORD *)(v3 + 2171);
+      LOBYTE(overlayCaps) = overlayCaps | 2;
+      a1 = *(_DWORD *)(v3 + 2175) | overlayCaps;
       if ( (a1 & *(_DWORD *)(v3 + 2119)) != a1 )
       {
-        *(_BYTE *)(v1 + 2033) = 2;
+        *(_BYTE *)(self + 2033) = 2;
         return a1;
       }
       goto LABEL_8;
     }
 LABEL_16:
-    *(_BYTE *)(v1 + 2033) = 2;
+    *(_BYTE *)(self + 2033) = 2;
     return a1;
   }
 LABEL_8:
-  if ( !*(_BYTE *)(v1 + 1968) || !*(_DWORD *)(v1 + 1964) )
+  if ( !*(_BYTE *)(self + 1968) || !*(_DWORD *)(self + 1964) )
   {
-    if ( *(_DWORD *)(v1 + 1964) )
+    if ( *(_DWORD *)(self + 1964) )
     {
-      v7 = *(_DWORD *)(v1 + 2171);
-      LOBYTE(v7) = v7 | 2;
-      a1 = *(_DWORD *)(v1 + 2175) | v7;
-      if ( (a1 & *(_DWORD *)(v1 + 2119)) == a1 )
-        *(_BYTE *)(v1 + 2033) = 3;
+      requiredCaps = *(_DWORD *)(self + 2171);
+      LOBYTE(requiredCaps) = requiredCaps | 2;
+      a1 = *(_DWORD *)(self + 2175) | requiredCaps;
+      if ( (a1 & *(_DWORD *)(self + 2119)) == a1 )
+        *(_BYTE *)(self + 2033) = 3;
     }
   }
   return a1;
@@ -3531,7 +3531,7 @@ LABEL_8:
 //----- (00468E10) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
 char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
-        int a1,
+        int self,
         int a2,
         int a3,
         int a4,
@@ -3554,23 +3554,23 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   int v19; // ecx
   int v20; // ecx
   int v21; // ecx
-  int v22; // eax
+  int capsFlags; // eax
   int v23; // edx
   int v24; // edx
   int v25; // eax
   int v26; // eax
   int v27; // eax
   int v28; // eax
-  int v29; // ebx
-  int v30; // esi
+  int videoFormat; // ebx
+  int biCompression; // esi
   int v31; // eax
   int v32; // edx
   __int64 v33; // rax
   int v34; // edx
   __int64 v35; // rax
-  int v36; // eax
-  int v39; // ebx
-  __int64 v40; // rax
+  int stretchRatio; // eax
+  int decodedFormatPtr; // ebx
+  __int64 frameBufferAlloc; // rax
   int v41; // ecx
   int v42; // eax
   int v43; // ecx
@@ -3591,7 +3591,7 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   __int64 v58; // [esp+5Ch] [ebp-2B0h]
   __int64 v59; // [esp+64h] [ebp-2A8h]
   int v60; // [esp+6Ch] [ebp-2A0h]
-  int v61; // [esp+82h] [ebp-28Ah] BYREF
+  int driverCaps; // [esp+82h] [ebp-28Ah] BYREF
   char v62; // [esp+86h] [ebp-286h]
   char v63; // [esp+87h] [ebp-285h]
   char v64; // [esp+88h] [ebp-284h]
@@ -3600,31 +3600,31 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   char v67; // [esp+9Eh] [ebp-26Eh]
   char v68; // [esp+9Fh] [ebp-26Dh]
   char v69; // [esp+A0h] [ebp-26Ch]
-  int v70; // [esp+10Ah] [ebp-202h]
-  int v71; // [esp+10Eh] [ebp-1FEh]
-  int v72[79]; // [esp+1BEh] [ebp-14Eh] BYREF
-  _DWORD v73[4]; // [esp+2FAh] [ebp-12h] BYREF
+  int minStretchRate; // [esp+10Ah] [ebp-202h]
+  int maxStretchRate; // [esp+10Eh] [ebp-1FEh]
+  int helCaps[79]; // [esp+1BEh] [ebp-14Eh] BYREF
+  _DWORD surfaceDesc[4]; // [esp+2FAh] [ebp-12h] BYREF
 
-  *(_DWORD *)((char *)&a18 + 6) = a1;
+  *(_DWORD *)((char *)&a18 + 6) = self;
   *(_DWORD *)((char *)&a17 + 2) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a17 + 6) = &j____wcpp_4_fs_handler_rtn_;
   *(_DWORD *)((char *)&a17 + 10) = &g_AviApplyOpenOptions_EHFrame;
   *(_DWORD *)((char *)&a17 + 14) = 0;
   memset_(a2, 0);
   memset_(v18, 0);
-  v61 = 316;
-  v72[0] = 316;
-  (*(void (__stdcall **)(int, int *, int *))(*(_DWORD *)v19 + 44))(v19, &v61, v72);
+  driverCaps = 316;
+  helCaps[0] = 316;
+  (*(void (__stdcall **)(int, int *, int *))(*(_DWORD *)v19 + 44))(v19, &driverCaps, helCaps);
   memset_(v20, 0);
-  v73[0] = 108;
+  surfaceDesc[0] = 108;
   (*(void (__stdcall **)(_DWORD, _DWORD *))(**(_DWORD **)(*(_DWORD *)((char *)&a18 + 6) + 1956) + 88))(
     *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 1956),
-    v73);
+    surfaceDesc);
   if ( (a15 & 0x800000000000000LL) != 0 )
-    v22 = 1;
+    capsFlags = 1;
   else
-    v22 = 256;
-  *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2119) = v22;
+    capsFlags = 256;
+  *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2119) = capsFlags;
   if ( (a15 & 0x200000000000000LL) != 0 )
     *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2121) |= 1u;
   v23 = *(_DWORD *)((char *)&a18 + 6);
@@ -3652,8 +3652,8 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   {
     *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2120) |= 0x40u;
     v24 = *(_DWORD *)((char *)&a18 + 6);
-    *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2143) = v70;
-    *(_DWORD *)(v24 + 2147) = v71;
+    *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2143) = minStretchRate;
+    *(_DWORD *)(v24 + 2147) = maxStretchRate;
   }
   if ( (v64 & 0x40) != 0 )
   {
@@ -3684,7 +3684,7 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
                                                                       + 100))(
             *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 1956),
             0,
-            v73,
+            surfaceDesc,
             1,
             0) )
     {
@@ -3705,10 +3705,10 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   }
   AviPlayer_AllocDecodedBitmapInfo(*(int *)((char *)&a18 + 6), v21);
   v28 = *(_DWORD *)((char *)&a18 + 6);
-  v29 = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 151);
+  videoFormat = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 151);
   *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2052) = 0;
-  v30 = *(_DWORD *)(v29 + 16);
-  if ( !v30 || v30 == 3 )
+  biCompression = *(_DWORD *)(videoFormat + 16);
+  if ( !biCompression || biCompression == 3 )
   {
     CAviDecompressor_SetupBlitFormat(
       (int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924),
@@ -3723,7 +3723,7 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
            v28 + 415,
            *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 15),
            *(int **)(v28 + 2058),
-           v29,
+           videoFormat,
            v44,
            v45,
            v46,
@@ -3746,10 +3746,10 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
     }
     if ( !*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 415) )
       return 0;
-    v39 = *(_DWORD *)((char *)&a18 + 6) + 423;
-    v40 = j_Mem_Alloc(0);
-    *(_DWORD *)(HIDWORD(v40) + 2179) = v40;
-    CAviDecompressor_SetupBlitFormat((int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924), *(_DWORD *)(HIDWORD(v40) + 2058), v41, v39, 0);
+    decodedFormatPtr = *(_DWORD *)((char *)&a18 + 6) + 423;
+    frameBufferAlloc = j_Mem_Alloc(0);
+    *(_DWORD *)(HIDWORD(frameBufferAlloc) + 2179) = frameBufferAlloc;
+    CAviDecompressor_SetupBlitFormat((int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924), *(_DWORD *)(HIDWORD(frameBufferAlloc) + 2058), v41, decodedFormatPtr, 0);
   }
   *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2052) = 1;
 LABEL_39:
@@ -3780,11 +3780,11 @@ LABEL_39:
     *(_DWORD *)((char *)&a16 + 10) = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2071);
     *(_DWORD *)((char *)&a16 + 14) = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2075);
     AviPlayer_RenderFrame(*(int *)((char *)&a18 + 6), (const RECT *)((char *)&a16 + 2));
-    v36 = 1000
+    stretchRatio = 1000
         * (*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2071) - *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2063))
         / (*(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2087) - *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2079));
-    if ( v36 < *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2143)
-      || v36 > *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2147) )
+    if ( stretchRatio < *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2143)
+      || stretchRatio > *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2147) )
     {
       *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2120) &= 0x1Fu;
     }
@@ -3881,54 +3881,54 @@ LABEL_39:
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469310) --------------------------------------------------------
-int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
+int  AviPlayer_CreateSystemMemoryBackSurface(int self, int a2)
 {
-  __int64 v3; // rax
+  __int64 biHeight; // rax
   int v4; // ecx
   int result; // eax
   int v6; // ecx
   int v7; // ecx
-  _DWORD v8[183]; // [esp+0h] [ebp-2F4h] BYREF
+  _DWORD surfaceDesc[183]; // [esp+0h] [ebp-2F4h] BYREF
   int v9; // [esp+2DCh] [ebp-18h]
 
-  v8[180] = NtCurrentTeb()->NtTib.ExceptionList;
-  v8[181] = &j____wcpp_4_fs_handler_rtn_;
-  v8[182] = &g_AviPlayerCreateBackSurface_EHScopeTable;
+  surfaceDesc[180] = NtCurrentTeb()->NtTib.ExceptionList;
+  surfaceDesc[181] = &j____wcpp_4_fs_handler_rtn_;
+  surfaceDesc[182] = &g_AviPlayerCreateBackSurface_EHScopeTable;
   v9 = 0;
   memset_(a2, 0);
-  v8[0] = 108;
-  v8[3] = *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
-  v3 = *(int *)(*(_DWORD *)(a1 + 151) + 8);
-  v8[2] = (HIDWORD(v3) ^ v3) - HIDWORD(v3);
-  v8[1] = 7;
-  v8[26] = 2112;
-  if ( (*(int (__stdcall **)(int, _DWORD *, int, _DWORD))(*(_DWORD *)v4 + 24))(v4, v8, a1 + 2013, 0) )
+  surfaceDesc[0] = 108;
+  surfaceDesc[3] = *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
+  biHeight = *(int *)(*(_DWORD *)(self + 151) + 8);
+  surfaceDesc[2] = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
+  surfaceDesc[1] = 7;
+  surfaceDesc[26] = 2112;
+  if ( (*(int (__stdcall **)(int, _DWORD *, int, _DWORD))(*(_DWORD *)v4 + 24))(v4, surfaceDesc, self + 2013, 0) )
   {
     ExcString_Ctor();
     v9 = 1;
     ExcString_Ctor();
-    v8[52] = v6;
+    surfaceDesc[52] = v6;
     v9 = 0;
     return CRT_ThrowExcStringException();
   }
-  else if ( (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 2013))(*(_DWORD *)(a1 + 2013), &g_AviQueryInterfaceIid, a1 + 2017) )
+  else if ( (***(int (__stdcall ****)(_DWORD, void *, int))(self + 2013))(*(_DWORD *)(self + 2013), &g_AviQueryInterfaceIid, self + 2017) )
   {
     ExcString_Ctor();
     v9 = 3;
     ExcString_Ctor();
     v9 = 0;
-    v8[104] = g_AviException_VTable;
+    surfaceDesc[104] = g_AviException_VTable;
     return CRT_ThrowExcStringException();
   }
   else
   {
-    result = (*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(a1 + 2017) + 148))(*(_DWORD *)(a1 + 2017), 0);
+    result = (*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 2017) + 148))(*(_DWORD *)(self + 2017), 0);
     if ( result )
     {
       ExcString_Ctor();
       v9 = v7;
       ExcString_Ctor();
-      v8[78] = g_AviException_VTable;
+      surfaceDesc[78] = g_AviException_VTable;
       v9 = 0;
       return CRT_ThrowExcStringException();
     }
@@ -3942,65 +3942,65 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469500) --------------------------------------------------------
-int  AviPlayer_CreateOverlaySurface(int a1, int a2, int a3)
+int  AviPlayer_CreateOverlaySurface(int self, int a2, int a3)
 {
-  __int64 v4; // rax
+  __int64 biHeight; // rax
   int v5; // ecx
   int result; // eax
-  _DWORD v7[31]; // [esp+0h] [ebp-7Ch] BYREF
+  _DWORD surfaceDesc[31]; // [esp+0h] [ebp-7Ch] BYREF
 
-  v7[29] = a3;
+  surfaceDesc[29] = a3;
   memset_(a2, 0);
-  v7[0] = 108;
-  v7[3] = *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
-  v4 = *(int *)(*(_DWORD *)(a1 + 151) + 8);
-  v7[2] = (HIDWORD(v4) ^ v4) - HIDWORD(v4);
-  v7[1] = 7;
-  v7[26] = 16448;
-  result = (*(int (__stdcall **)(int, _DWORD *, int, _DWORD))(*(_DWORD *)v5 + 24))(v5, v7, a1 + 1960, 0);
+  surfaceDesc[0] = 108;
+  surfaceDesc[3] = *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
+  biHeight = *(int *)(*(_DWORD *)(self + 151) + 8);
+  surfaceDesc[2] = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
+  surfaceDesc[1] = 7;
+  surfaceDesc[26] = 16448;
+  result = (*(int (__stdcall **)(int, _DWORD *, int, _DWORD))(*(_DWORD *)v5 + 24))(v5, surfaceDesc, self + 1960, 0);
   if ( !result )
-    return (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &g_AviQueryInterfaceIid, a1 + 1964);
+    return (***(int (__stdcall ****)(_DWORD, void *, int))(self + 1960))(*(_DWORD *)(self + 1960), &g_AviQueryInterfaceIid, self + 1964);
   return result;
 }
 // 46955F: variable 'v5' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469590) --------------------------------------------------------
-int  AviPlayer_CreateOverlaySurfaceAndEnable(int a1, int a2)
+int  AviPlayer_CreateOverlaySurfaceAndEnable(int self, int a2)
 {
-  __int64 v3; // rax
+  __int64 biHeight; // rax
   int v4; // ecx
-  __int64 v5; // rax
+  __int64 biHeightRetry; // rax
   int v6; // ecx
   int result; // eax
-  int v8; // [esp+0h] [ebp-80h] BYREF
-  int v9; // [esp+4h] [ebp-7Ch]
-  int v10; // [esp+8h] [ebp-78h]
-  int v11; // [esp+Ch] [ebp-74h]
-  int v12; // [esp+14h] [ebp-6Ch]
-  int v13; // [esp+68h] [ebp-18h]
+  int descSize; // [esp+0h] [ebp-80h] BYREF
+  int descFlags; // [esp+4h] [ebp-7Ch]
+  int surfaceHeight; // [esp+8h] [ebp-78h]
+  int surfaceWidth; // [esp+Ch] [ebp-74h]
+  int backBufferCount; // [esp+14h] [ebp-6Ch]
+  int surfaceCaps; // [esp+68h] [ebp-18h]
 
   memset_(a2, 0);
-  v8 = 108;
-  v11 = *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
-  v3 = *(int *)(*(_DWORD *)(a1 + 151) + 8);
-  v10 = (HIDWORD(v3) ^ v3) - HIDWORD(v3);
-  v12 = 1;
-  v9 = 39;
-  v13 = 16536;
+  descSize = 108;
+  surfaceWidth = *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
+  biHeight = *(int *)(*(_DWORD *)(self + 151) + 8);
+  surfaceHeight = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
+  backBufferCount = 1;
+  descFlags = 39;
+  surfaceCaps = 16536;
   memset_(v4, 0);
-  v8 = 108;
-  v11 = *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
-  v5 = *(int *)(*(_DWORD *)(a1 + 151) + 8);
-  v10 = (HIDWORD(v5) ^ v5) - HIDWORD(v5);
-  v13 = 16512;
-  v9 = 7;
-  result = (*(int (__stdcall **)(int, int *, int, _DWORD))(*(_DWORD *)v6 + 24))(v6, &v8, a1 + 1960, 0);
+  descSize = 108;
+  surfaceWidth = *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
+  biHeightRetry = *(int *)(*(_DWORD *)(self + 151) + 8);
+  surfaceHeight = (HIDWORD(biHeightRetry) ^ biHeightRetry) - HIDWORD(biHeightRetry);
+  surfaceCaps = 16512;
+  descFlags = 7;
+  result = (*(int (__stdcall **)(int, int *, int, _DWORD))(*(_DWORD *)v6 + 24))(v6, &descSize, self + 1960, 0);
   if ( !result )
   {
-    result = (***(int (__stdcall ****)(_DWORD, void *, int))(a1 + 1960))(*(_DWORD *)(a1 + 1960), &g_AviQueryInterfaceIid, a1 + 1964);
-    *(_BYTE *)(a1 + 1968) = 1;
-    *(_BYTE *)(a1 + 2051) = 0;
+    result = (***(int (__stdcall ****)(_DWORD, void *, int))(self + 1960))(*(_DWORD *)(self + 1960), &g_AviQueryInterfaceIid, self + 1964);
+    *(_BYTE *)(self + 1968) = 1;
+    *(_BYTE *)(self + 2051) = 0;
   }
   return result;
 }
@@ -4009,53 +4009,53 @@ int  AviPlayer_CreateOverlaySurfaceAndEnable(int a1, int a2)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469680) --------------------------------------------------------
-int  AviPlayer_AllocDecodedBitmapInfo(int a1, int a2)
+int  AviPlayer_AllocDecodedBitmapInfo(int self, int headerBytes)
 {
-  int v3; // edx
-  int v4; // edx
-  int v5; // ebp
+  int bitCount; // edx
+  int compressionSel; // edx
+  int compression; // ebp
   __int64 v6; // rax
-  int v7; // edx
+  int decodedBmi; // edx
   int result; // eax
-  int v9; // [esp+0h] [ebp-20h]
-  int v10; // [esp+4h] [ebp-1Ch]
+  int headerSize; // [esp+0h] [ebp-20h]
+  int bytesPerPixel; // [esp+4h] [ebp-1Ch]
 
-  v3 = *(_DWORD *)(a1 + 2123);
-  v10 = (v3 + 7) >> 3;
-  if ( v3 == 24 || v3 == 8 )
-    v4 = 0;
+  bitCount = *(_DWORD *)(self + 2123);
+  bytesPerPixel = (bitCount + 7) >> 3;
+  if ( bitCount == 24 || bitCount == 8 )
+    compressionSel = 0;
   else
-    v4 = 3;
-  v5 = v4;
-  if ( v4 )
-    a2 = **(_DWORD **)(a1 + 151);
-  v6 = j_Mem_Alloc(a2);
-  *(_DWORD *)(a1 + 2058) = v6;
-  v9 = HIDWORD(v6);
-  if ( SHIDWORD(v6) > **(_DWORD **)(a1 + 151) )
-    HIDWORD(v6) = **(_DWORD **)(a1 + 151);
-  qmemcpy(*(void **)(a1 + 2058), *(const void **)(a1 + 151), HIDWORD(v6));
-  **(_DWORD **)(a1 + 2058) = v9;
-  *(_WORD *)(*(_DWORD *)(a1 + 2058) + 14) = *(_WORD *)(a1 + 2123);
-  *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 16) = v5;
-  *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 20) = *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 4)
-                                           * abs32(*(_DWORD *)(*(_DWORD *)(a1 + 2058) + 8))
-                                           * v10;
-  *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 32) = 0;
-  v7 = *(_DWORD *)(a1 + 2058);
-  result = *(_DWORD *)(v7 + 8);
+    compressionSel = 3;
+  compression = compressionSel;
+  if ( compressionSel )
+    headerBytes = **(_DWORD **)(self + 151);
+  v6 = j_Mem_Alloc(headerBytes);
+  *(_DWORD *)(self + 2058) = v6;
+  headerSize = HIDWORD(v6);
+  if ( SHIDWORD(v6) > **(_DWORD **)(self + 151) )
+    HIDWORD(v6) = **(_DWORD **)(self + 151);
+  qmemcpy(*(void **)(self + 2058), *(const void **)(self + 151), HIDWORD(v6));
+  **(_DWORD **)(self + 2058) = headerSize;
+  *(_WORD *)(*(_DWORD *)(self + 2058) + 14) = *(_WORD *)(self + 2123);
+  *(_DWORD *)(*(_DWORD *)(self + 2058) + 16) = compression;
+  *(_DWORD *)(*(_DWORD *)(self + 2058) + 20) = *(_DWORD *)(*(_DWORD *)(self + 2058) + 4)
+                                           * abs32(*(_DWORD *)(*(_DWORD *)(self + 2058) + 8))
+                                           * bytesPerPixel;
+  *(_DWORD *)(*(_DWORD *)(self + 2058) + 32) = 0;
+  decodedBmi = *(_DWORD *)(self + 2058);
+  result = *(_DWORD *)(decodedBmi + 8);
   if ( result > 0 )
   {
     result = -result;
-    *(_DWORD *)(v7 + 8) = result;
+    *(_DWORD *)(decodedBmi + 8) = result;
   }
-  if ( v5 == 3 )
+  if ( compression == 3 )
   {
-    *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 40) = *(_DWORD *)(a1 + 2127);
-    *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 44) = *(_DWORD *)(a1 + 2131);
-    *(_DWORD *)(*(_DWORD *)(a1 + 2058) + 48) = *(_DWORD *)(a1 + 2135);
-    result = *(_DWORD *)(a1 + 2058);
-    *(_DWORD *)(result + 52) = *(_DWORD *)(a1 + 2139);
+    *(_DWORD *)(*(_DWORD *)(self + 2058) + 40) = *(_DWORD *)(self + 2127);
+    *(_DWORD *)(*(_DWORD *)(self + 2058) + 44) = *(_DWORD *)(self + 2131);
+    *(_DWORD *)(*(_DWORD *)(self + 2058) + 48) = *(_DWORD *)(self + 2135);
+    result = *(_DWORD *)(self + 2058);
+    *(_DWORD *)(result + 52) = *(_DWORD *)(self + 2139);
   }
   return result;
 }
@@ -4065,13 +4065,13 @@ int  AviPlayer_AllocDecodedBitmapInfo(int a1, int a2)
 // Deferred to compat/decomp_runtime_stubs.c until the late AVI init loop is reconstructed.
 
 //----- (00469C90) --------------------------------------------------------
-_DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
+_DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
 {
   _DWORD *result; // eax
   int i; // eax
   int v5; // ecx
   _BYTE v6[2]; // [esp+0h] [ebp-5BEh]
-  char v7[1024]; // [esp+2h] [ebp-5BCh] BYREF
+  char paletteEntries[1024]; // [esp+2h] [ebp-5BCh] BYREF
   int (**v8)(); // [esp+466h] [ebp-158h]
   int (**v9)(); // [esp+4CEh] [ebp-F0h]
   _DWORD v10[3]; // [esp+59Ah] [ebp-24h] BYREF
@@ -4082,16 +4082,16 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
   v10[1] = &j____wcpp_4_fs_handler_rtn_;
   v10[2] = &g_AviPlayerCreatePalette_EHScopeTable;
   v11 = 0;
-  if ( (*(_BYTE *)(a1 + 2120) & 2) != 0 )
+  if ( (*(_BYTE *)(self + 2120) & 2) != 0 )
   {
     for ( i = 0; i != 1024; v6[i + 1] = 0 )
     {
-      v7[i] = *(_BYTE *)(**(_DWORD **)(a1 + 151) + *(_DWORD *)(a1 + 151) + i + 2);
-      v7[i + 1] = *(_BYTE *)(**(_DWORD **)(a1 + 151) + *(_DWORD *)(a1 + 151) + i + 1);
+      paletteEntries[i] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i + 2);
+      paletteEntries[i + 1] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i + 1);
       i += 4;
-      v6[i] = *(_BYTE *)(**(_DWORD **)(a1 + 151) + *(_DWORD *)(a1 + 151) + i - 4);
+      v6[i] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i - 4);
     }
-    if ( (*(int (__stdcall **)(int, int, char *, int, _DWORD))(*(_DWORD *)a2 + 20))(a2, 4, v7, a1 + 1948, 0) )
+    if ( (*(int (__stdcall **)(int, int, char *, int, _DWORD))(*(_DWORD *)ddInterface + 20))(ddInterface, 4, paletteEntries, self + 1948, 0) )
     {
       ExcString_Ctor();
       v11 = v5;
@@ -4102,16 +4102,16 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
     }
     else
     {
-      result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(a1 + 1956) + 124))(
-                           *(_DWORD *)(a1 + 1956),
-                           *(_DWORD *)(a1 + 1948));
+      result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 124))(
+                           *(_DWORD *)(self + 1956),
+                           *(_DWORD *)(self + 1948));
       if ( result )
       {
         if ( result != (_DWORD *)-2005532222
-          || (result = (_DWORD *)(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 108))(*(_DWORD *)(a1 + 1956))) == 0
-          && (result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(a1 + 1956) + 124))(
-                                   *(_DWORD *)(a1 + 1956),
-                                   *(_DWORD *)(a1 + 1948))) != 0 )
+          || (result = (_DWORD *)(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))) == 0
+          && (result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 124))(
+                                   *(_DWORD *)(self + 1956),
+                                   *(_DWORD *)(self + 1948))) != 0 )
         {
           ExcString_Ctor();
           v11 = 3;
@@ -4130,14 +4130,14 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
 
 //----- (00469E60) --------------------------------------------------------
 int __stdcall AviPlayer_SendICDrawBegin(
-        int a1,
-        int a2,
+        int hic,
+        int dwFlags,
         int a3,
         int a4,
-        int a5,
-        int a6,
-        int a7,
-        int a8,
+        int xSrc,
+        int ySrc,
+        int dxSrc,
+        int dySrc,
         int a9,
         int a10,
         int a11,
@@ -4145,22 +4145,22 @@ int __stdcall AviPlayer_SendICDrawBegin(
         int a13,
         int a14)
 {
-  _DWORD v15[13]; // [esp+0h] [ebp-34h] BYREF
+  _DWORD drawBeginParams[13]; // [esp+0h] [ebp-34h] BYREF
 
-  v15[0] = a2;
-  v15[1] = a3;
-  v15[2] = a4;
-  v15[9] = a5;
-  v15[10] = a6;
-  v15[11] = a7;
-  v15[12] = a8;
-  v15[3] = a9;
-  v15[4] = a10;
-  v15[5] = a11;
-  v15[6] = a12;
-  v15[7] = a13;
-  v15[8] = a14;
-  return ICSendMessage(a1, 16446, (DWORD)v15, 52, 0);
+  drawBeginParams[0] = dwFlags;
+  drawBeginParams[1] = a3;
+  drawBeginParams[2] = a4;
+  drawBeginParams[9] = xSrc;
+  drawBeginParams[10] = ySrc;
+  drawBeginParams[11] = dxSrc;
+  drawBeginParams[12] = dySrc;
+  drawBeginParams[3] = a9;
+  drawBeginParams[4] = a10;
+  drawBeginParams[5] = a11;
+  drawBeginParams[6] = a12;
+  drawBeginParams[7] = a13;
+  drawBeginParams[8] = a14;
+  return ICSendMessage(hic, 16446, (DWORD)drawBeginParams, 52, 0);
 }
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
@@ -4198,21 +4198,21 @@ int AviException_CtorForDrawFailure()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (0046A010) --------------------------------------------------------
-int  AviException_ScalarDeletingDtor(int a1, char a2)
+int  AviException_ScalarDeletingDtor(int self, char dtorFlags)
 {
   int v3; // ecx
   int v5; // ecx
 
-  v3 = a1;
-  if ( (a2 & 4) != 0 )
+  v3 = self;
+  if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_AviException_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(self, &g_AviException_DtorArrayDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    if ( (a2 & 2) != 0 )
+    if ( (dtorFlags & 2) != 0 )
       j__nfree_();
     return v3;
   }
@@ -4233,32 +4233,32 @@ int AviException_GetMessage()
 // 4842DE: using guessed type _DWORD ExcString_AsCharPtr();
 
 //----- (0046A100) --------------------------------------------------------
-BOOL  AviPlayer_PulseEventHandle(HANDLE *a1)
+BOOL  AviPlayer_PulseEventHandle(HANDLE *eventHandlePtr)
 {
-  return PulseEvent(*a1);
+  return PulseEvent(*eventHandlePtr);
 }
 
 //----- (0046A110) --------------------------------------------------------
-int  AviPlayer_LeaveBusySectionAndRelease(int a1)
+int  AviPlayer_LeaveBusySectionAndRelease(int guardPtr)
 {
-  _DWORD *v2; // ebx
+  _DWORD *counter; // ebx
 
-  v2 = *(_DWORD **)a1;
-  LeaveCriticalSection((LPCRITICAL_SECTION)(*(_DWORD *)a1 + 4));
-  --*v2;
-  return a1;
+  counter = *(_DWORD **)guardPtr;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(*(_DWORD *)guardPtr + 4));
+  --*counter;
+  return guardPtr;
 }
 
 //----- (0046A130) --------------------------------------------------------
-int  Mem_BitsToBytesCeil(int a1)
+int  Mem_BitsToBytesCeil(int bitCount)
 {
-  return (a1 + 7) >> 3;
+  return (bitCount + 7) >> 3;
 }
 
 //----- (0046A140) --------------------------------------------------------
-int  AviPlayer_QueueBacklogCount(int a1)
+int  AviPlayer_QueueBacklogCount(int queue)
 {
-  return *(_DWORD *)(a1 + 8) - *(_DWORD *)(a1 + 4);
+  return *(_DWORD *)(queue + 8) - *(_DWORD *)(queue + 4);
 }
 
 //----- (0046A150) --------------------------------------------------------
@@ -4269,86 +4269,86 @@ int  AviPlayer_IncrementFramesRenderedCount(int result)
 }
 
 //----- (0046A160) --------------------------------------------------------
-int  AviPlayer_AudioBytesQueued(int a1)
+int  AviPlayer_AudioBytesQueued(int self)
 {
-  return *(_DWORD *)(a1 + 259);
+  return *(_DWORD *)(self + 259);
 }
 
 //----- (0046A170) --------------------------------------------------------
-int  AviPlayer_AudioSampleQueueCount(int a1)
+int  AviPlayer_AudioSampleQueueCount(int queue)
 {
-  return *(_DWORD *)(a1 + 8);
+  return *(_DWORD *)(queue + 8);
 }
 
 //----- (0046A180) --------------------------------------------------------
-int  AviPlayer_AudioSampleQueueBase(int a1)
+int  AviPlayer_AudioSampleQueueBase(int self)
 {
-  return a1 + 219;
+  return self + 219;
 }
 
 //----- (0046A190) --------------------------------------------------------
-int  AviPlayer_AudioFormatPtr(int a1)
+int  AviPlayer_AudioFormatPtr(int self)
 {
-  return *(_DWORD *)(a1 + 363);
+  return *(_DWORD *)(self + 363);
 }
 
 //----- (0046A1A0) --------------------------------------------------------
-int  AviPlayer_BitmapWidth(int a1)
+int  AviPlayer_BitmapWidth(int self)
 {
-  return *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
+  return *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
 }
 
 //----- (0046A1B0) --------------------------------------------------------
-int  AviPlayer_BitmapHeightAbs(int a1)
+int  AviPlayer_BitmapHeightAbs(int self)
 {
-  __int64 v1; // rax
+  __int64 biHeight; // rax
 
-  v1 = *(int *)(*(_DWORD *)(a1 + 151) + 8);
-  return (HIDWORD(v1) ^ v1) - HIDWORD(v1);
+  biHeight = *(int *)(*(_DWORD *)(self + 151) + 8);
+  return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
 }
 
 //----- (0046A1D0) --------------------------------------------------------
-int  AviPlayer_AudioBlockAlign(int a1)
+int  AviPlayer_AudioBlockAlign(int self)
 {
-  return *(unsigned __int16 *)(*(_DWORD *)(a1 + 363) + 12);
+  return *(unsigned __int16 *)(*(_DWORD *)(self + 363) + 12);
 }
 
 //----- (0046A1E0) --------------------------------------------------------
-int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *a1, int a2, int a3, int a4, int a5, int a6, int a7)
+int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *codecPtr, int lockedBits, int destHeight, int destWidth, int pitchPixels, int frameData, int frameFlags)
 {
-  int v8; // edx
-  int v9; // esi
+  int inputFormat; // edx
+  int biHeight; // esi
   int result; // eax
   int v11; // [esp+0h] [ebp-124h]
-  _DWORD v12[16]; // [esp+CCh] [ebp-58h] BYREF
+  _DWORD drawParams[16]; // [esp+CCh] [ebp-58h] BYREF
   int v13; // [esp+10Ch] [ebp-18h]
-  int v14; // [esp+110h] [ebp-14h]
-  int v15; // [esp+114h] [ebp-10h]
+  int hic; // [esp+110h] [ebp-14h]
+  int biWidth; // [esp+114h] [ebp-10h]
 
-  v12[13] = NtCurrentTeb()->NtTib.ExceptionList;
-  v12[14] = &j____wcpp_4_fs_handler_rtn_;
+  drawParams[13] = NtCurrentTeb()->NtTib.ExceptionList;
+  drawParams[14] = &j____wcpp_4_fs_handler_rtn_;
   v13 = 0;
-  v12[15] = &g_AviStreamRectDrawBegin_EHFrame;
-  a1[3] = a5;
-  a1[7] = a5 * a3 * ((*((unsigned __int16 *)a1 + 11) + 7) >> 3);
-  v8 = a1[1];
-  v14 = *a1;
-  v15 = *(_DWORD *)(v8 + 4);
-  v9 = *(_DWORD *)(v8 + 8);
-  v12[0] = a7;
-  v12[1] = v8;
-  v12[12] = v9;
-  v12[3] = a1 + 2;
-  v12[4] = a2;
-  v12[8] = a3;
-  v12[2] = a6;
-  v12[5] = 0;
-  v12[6] = 0;
-  v12[9] = 0;
-  v12[10] = 0;
-  v12[7] = a4;
-  v12[11] = v15;
-  result = ICSendMessage(v14, 16446, v12, 52, v11);
+  drawParams[15] = &g_AviStreamRectDrawBegin_EHFrame;
+  codecPtr[3] = pitchPixels;
+  codecPtr[7] = pitchPixels * destHeight * ((*((unsigned __int16 *)codecPtr + 11) + 7) >> 3);
+  inputFormat = codecPtr[1];
+  hic = *codecPtr;
+  biWidth = *(_DWORD *)(inputFormat + 4);
+  biHeight = *(_DWORD *)(inputFormat + 8);
+  drawParams[0] = frameFlags;
+  drawParams[1] = inputFormat;
+  drawParams[12] = biHeight;
+  drawParams[3] = codecPtr + 2;
+  drawParams[4] = lockedBits;
+  drawParams[8] = destHeight;
+  drawParams[2] = frameData;
+  drawParams[5] = 0;
+  drawParams[6] = 0;
+  drawParams[9] = 0;
+  drawParams[10] = 0;
+  drawParams[7] = destWidth;
+  drawParams[11] = biWidth;
+  result = ICSendMessage(hic, 16446, drawParams, 52, v11);
   if ( result < 0 )
   {
     ExcString_Ctor();
@@ -4363,90 +4363,90 @@ int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *a1, int a2, int a3, int a
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (0046A350) --------------------------------------------------------
-int  AviPlayer_StreamBitmapInfoPtr(int a1)
+int  AviPlayer_StreamBitmapInfoPtr(int codecState)
 {
-  return a1 + 8;
+  return codecState + 8;
 }
 
 //----- (0046A360) --------------------------------------------------------
-int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *a2)
+int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *rect)
 {
-  return a2[2] - *a2;
+  return rect[2] - *rect;
 }
 
 //----- (0046A370) --------------------------------------------------------
-bool  AviPlayer_IsUncompressedFormat(int a1)
+bool  AviPlayer_IsUncompressedFormat(int self)
 {
-  return *(_BYTE *)(a1 + 1923) != 0;
+  return *(_BYTE *)(self + 1923) != 0;
 }
 
 //----- (0046A380) --------------------------------------------------------
-bool  AviPlayer_IsIcmDecoderIdle(int a1)
+bool  AviPlayer_IsIcmDecoderIdle(int self)
 {
-  int v1; // edx
-  int v2; // eax
+  int pendingCount; // edx
+  int blitState; // eax
   bool result; // al
 
   result = 0;
-  if ( *(_BYTE *)(a1 + 2052) )
+  if ( *(_BYTE *)(self + 2052) )
   {
-    v1 = *(_DWORD *)(a1 + 1944);
-    v2 = a1 + 1924;
-    if ( !v1 && !*(_DWORD *)(v2 + 16) )
+    pendingCount = *(_DWORD *)(self + 1944);
+    blitState = self + 1924;
+    if ( !pendingCount && !*(_DWORD *)(blitState + 16) )
       return 1;
   }
   return result;
 }
 
 //----- (0046A3B0) --------------------------------------------------------
-bool  AviPlayer_TestModeFlagBit2(int a1)
+bool  AviPlayer_TestModeFlagBit2(int self)
 {
-  return (*(_BYTE *)(a1 + 2120) & 4) != 0;
+  return (*(_BYTE *)(self + 2120) & 4) != 0;
 }
 
 //----- (0046A3C0) --------------------------------------------------------
-bool  AviPlayer_TestModeFlagBit3(int a1)
+bool  AviPlayer_TestModeFlagBit3(int self)
 {
-  return (*(_BYTE *)(a1 + 2120) & 8) != 0;
+  return (*(_BYTE *)(self + 2120) & 8) != 0;
 }
 
 //----- (0046A3D0) --------------------------------------------------------
-bool  AviPlayer_TestActiveModeFlag(int a1)
+bool  AviPlayer_TestActiveModeFlag(int self)
 {
-  return *(_BYTE *)(a1 + 2052) && !*(_DWORD *)(a1 + 1944) && !*(_DWORD *)(a1 + 1940) && (*(_BYTE *)(a1 + 2120) & 8) != 0
-      || (!*(_BYTE *)(a1 + 2052) || *(_DWORD *)(a1 + 1944) || *(_DWORD *)(a1 + 1940))
-      && (*(_BYTE *)(a1 + 2120) & 4) != 0;
+  return *(_BYTE *)(self + 2052) && !*(_DWORD *)(self + 1944) && !*(_DWORD *)(self + 1940) && (*(_BYTE *)(self + 2120) & 8) != 0
+      || (!*(_BYTE *)(self + 2052) || *(_DWORD *)(self + 1944) || *(_DWORD *)(self + 1940))
+      && (*(_BYTE *)(self + 2120) & 4) != 0;
 }
 
 //----- (0046A430) --------------------------------------------------------
-bool  AviPlayer_TestModeFlagBit2AndSubframe(int a1)
+bool  AviPlayer_TestModeFlagBit2AndSubframe(int self)
 {
-  return (*(_BYTE *)(a1 + 2120) & 4) != 0 && *(_BYTE *)(a1 + 1923);
+  return (*(_BYTE *)(self + 2120) & 4) != 0 && *(_BYTE *)(self + 1923);
 }
 
 //----- (0046A450) --------------------------------------------------------
-bool  AviPlayer_SupportsRequiredPlaybackCaps(int a1)
+bool  AviPlayer_SupportsRequiredPlaybackCaps(int self)
 {
-  int v1; // edx
+  int requiredCaps; // edx
 
-  v1 = *(_DWORD *)(a1 + 2171);
-  LOBYTE(v1) = v1 | 2;
-  return ((*(_DWORD *)(a1 + 2175) | v1) & *(_DWORD *)(a1 + 2119)) == (*(_DWORD *)(a1 + 2175) | v1);
+  requiredCaps = *(_DWORD *)(self + 2171);
+  LOBYTE(requiredCaps) = requiredCaps | 2;
+  return ((*(_DWORD *)(self + 2175) | requiredCaps) & *(_DWORD *)(self + 2119)) == (*(_DWORD *)(self + 2175) | requiredCaps);
 }
 
 //----- (0046A480) --------------------------------------------------------
-bool  AviPlayer_HasValidRateParams(int a1)
+bool  AviPlayer_HasValidRateParams(int self)
 {
-  return *(_BYTE *)(a1 + 1968) && *(_DWORD *)(a1 + 1964);
+  return *(_BYTE *)(self + 1968) && *(_DWORD *)(self + 1964);
 }
 
 //----- (0046A4A0) --------------------------------------------------------
-bool  AviPlayer_IsPlaybackRateInRange(int a1)
+bool  AviPlayer_IsPlaybackRateInRange(int self)
 {
-  int v2; // eax
+  int stretchRatio; // eax
 
-  v2 = 1000 * (*(_DWORD *)(a1 + 2071) - *(_DWORD *)(a1 + 2063)) / (*(_DWORD *)(a1 + 2087) - *(_DWORD *)(a1 + 2079));
-  return v2 >= *(_DWORD *)(a1 + 2143) && v2 <= *(_DWORD *)(a1 + 2147);
+  stretchRatio = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) / (*(_DWORD *)(self + 2087) - *(_DWORD *)(self + 2079));
+  return stretchRatio >= *(_DWORD *)(self + 2143) && stretchRatio <= *(_DWORD *)(self + 2147);
 }
 
 //----- (0046A510) --------------------------------------------------------
@@ -4522,14 +4522,14 @@ unsigned int  Audio_MapDSoundHResultToErrorCode(unsigned int result)
 // 46A595: simplified comparisons for 'eax.4': <88780047u || !=88780064 became !=88780064
 
 //----- (0046A5F0) --------------------------------------------------------
-int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int a1)
+int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int scaledUpdateRate)
 {
-  unsigned int v1; // eax
+  unsigned int chunkSamples; // eax
 
-  v1 = 100 * g_AudioSampleRateHz / a1 + 1;
-  LOBYTE(v1) = v1 & 0xFE;
-  g_Audio_MixChunkSampleCount = v1;
-  g_CSS_MixChunkSamplesRemaining = v1;
+  chunkSamples = 100 * g_AudioSampleRateHz / scaledUpdateRate + 1;
+  LOBYTE(chunkSamples) = chunkSamples & 0xFE;
+  g_Audio_MixChunkSampleCount = chunkSamples;
+  g_CSS_MixChunkSamplesRemaining = chunkSamples;
   return 0;
 }
 // 54D390: using guessed type int dword_54D390;
@@ -4537,12 +4537,12 @@ int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int a1)
 // 54D39C: using guessed type int dword_54D39C;
 
 //----- (0046A610) --------------------------------------------------------
-signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
+signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *accelFlagOut)
 {
   signed int result; // eax
   int v2; // ecx
-  int v3; // [esp+4h] [ebp-68h] BYREF
-  char v4; // [esp+8h] [ebp-64h]
+  int dsCaps; // [esp+4h] [ebp-68h] BYREF
+  char dsCapsFlags; // [esp+8h] [ebp-64h]
 
   if ( g_CSS_DSoundAccelDetectEnabled )
   {
@@ -4551,22 +4551,22 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
       g_DSoundCoopWindowHandle = g_AudioWindowHandle;
       if ( DirectSoundCreate(0, &g_DirectSoundDevice, 0) )
       {
-        *a1 = 0;
+        *accelFlagOut = 0;
         return 0;
       }
       else
       {
-        memset_(&v3, 0);
-        v3 = 96;
-        if ( (*(int (__stdcall **)(int, int))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, v2) || (v4 & 0x20) != 0 )
+        memset_(&dsCaps, 0);
+        dsCaps = 96;
+        if ( (*(int (__stdcall **)(int, int))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, v2) || (dsCapsFlags & 0x20) != 0 )
         {
-          *a1 = 0;
+          *accelFlagOut = 0;
           (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
         else
         {
-          *a1 = 1;
+          *accelFlagOut = 1;
           (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
@@ -4575,13 +4575,13 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
     else
     {
       result = 1;
-      *a1 = 0;
+      *accelFlagOut = 0;
     }
   }
   else
   {
     result = 0;
-    *a1 = 0;
+    *accelFlagOut = 0;
   }
   return result;
 }
@@ -4597,17 +4597,17 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
 int __thiscall Audio_ComputeBytesPerFrame(void *this)
 {
   int result; // eax
-  int v2; // [esp+4h] [ebp-6Ch] BYREF
-  char v3; // [esp+8h] [ebp-68h]
+  int dsCaps; // [esp+4h] [ebp-6Ch] BYREF
+  char dsCapsFlags; // [esp+8h] [ebp-68h]
   void *v4; // [esp+68h] [ebp-8h]
 
   v4 = this;
   memset_(this, 0);
-  v2 = 96;
-  (*(void (__stdcall **)(int, int *))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, &v2);
-  if ( (v3 & 8) == 0 )
+  dsCaps = 96;
+  (*(void (__stdcall **)(int, int *))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, &dsCaps);
+  if ( (dsCapsFlags & 8) == 0 )
     LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags & 0xF7;
-  if ( (v3 & 2) == 0 )
+  if ( (dsCapsFlags & 2) == 0 )
     LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags & 0xFD;
   result = ((g_MixerFormatFlags & 8) != 0) + 1;
   g_CSS_SampleFrameBytes = result;
@@ -4623,149 +4623,149 @@ int __thiscall Audio_ComputeBytesPerFrame(void *this)
 //----- (0046A750) --------------------------------------------------------
 signed int Audio_InitDSoundDevice()
 {
-  unsigned int v1; // eax
+  unsigned int hr; // eax
   void *v2; // ecx
   int v3; // ecx
-  unsigned int v4; // eax
-  int v5; // esi
+  unsigned int rawStreamBytes; // eax
+  int alignedStreamBytes; // esi
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
   __int16 v10; // cx
   int v11; // ecx
-  _DWORD v12[5]; // [esp+24h] [ebp-54h] BYREF
-  int v13; // [esp+38h] [ebp-40h] BYREF
-  int v14; // [esp+3Ch] [ebp-3Ch]
-  int v15; // [esp+40h] [ebp-38h]
-  __int16 *v16; // [esp+48h] [ebp-30h]
-  __int16 v17; // [esp+4Ch] [ebp-2Ch] BYREF
-  __int16 v18; // [esp+4Eh] [ebp-2Ah]
-  int v19; // [esp+50h] [ebp-28h]
-  int v20; // [esp+54h] [ebp-24h]
-  __int16 v21; // [esp+58h] [ebp-20h]
-  __int16 v22; // [esp+5Ah] [ebp-1Eh]
-  __int16 v23; // [esp+5Ch] [ebp-1Ch]
+  _DWORD bufferCaps[5]; // [esp+24h] [ebp-54h] BYREF
+  int bufferDescSize; // [esp+38h] [ebp-40h] BYREF
+  int bufferDescFlags; // [esp+3Ch] [ebp-3Ch]
+  int bufferBytes; // [esp+40h] [ebp-38h]
+  __int16 *formatPtr; // [esp+48h] [ebp-30h]
+  __int16 wFormatTag; // [esp+4Ch] [ebp-2Ch] BYREF
+  __int16 nChannels; // [esp+4Eh] [ebp-2Ah]
+  int samplesPerSec; // [esp+50h] [ebp-28h]
+  int avgBytesPerSec; // [esp+54h] [ebp-24h]
+  __int16 blockAlign; // [esp+58h] [ebp-20h]
+  __int16 bitsPerSample; // [esp+5Ah] [ebp-1Eh]
+  __int16 cbSize; // [esp+5Ch] [ebp-1Ch]
 
   if ( !g_AudioWindowHandle )
     return 1;
   g_DSoundCoopWindowHandle = g_AudioWindowHandle;
   g_CSS_DSoundWritePrimaryMode = 0;
-  v1 = DirectSoundCreate(0, &g_DirectSoundDevice, 0);
-  if ( v1 )
-    return Audio_ReturnDSoundError(v1);
+  hr = DirectSoundCreate(0, &g_DirectSoundDevice, 0);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
   Audio_ComputeBytesPerFrame(v2);
   if ( g_CSS_DSoundAccelDetectEnabled != 2
     || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 4) )
   {
     if ( !g_CSS_DSoundWritePrimaryMode )
     {
-      v1 = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 3);
-      if ( v1 )
-        return Audio_ReturnDSoundError(v1);
-      memset_(&v13, 0);
-      v15 = 0;
-      v16 = 0;
-      v13 = 20;
-      v14 = 1;
-      v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+      hr = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 3);
+      if ( hr )
+        return Audio_ReturnDSoundError(hr);
+      memset_(&bufferDescSize, 0);
+      bufferBytes = 0;
+      formatPtr = 0;
+      bufferDescSize = 20;
+      bufferDescFlags = 1;
+      hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
              g_DirectSoundDevice,
              v7,
              &g_DSoundPrimaryBuffer,
              0);
-      if ( v1 )
-        return Audio_ReturnDSoundError(v1);
+      if ( hr )
+        return Audio_ReturnDSoundError(hr);
       memset_(v8, 0);
-      v17 = 1;
-      v18 = ((g_MixerFormatFlags & 2) != 0) + 1;
-      v19 = g_AudioSampleRateHz;
-      v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
-      v21 = g_CSS_SampleFrameBytes;
+      wFormatTag = 1;
+      nChannels = ((g_MixerFormatFlags & 2) != 0) + 1;
+      samplesPerSec = g_AudioSampleRateHz;
+      avgBytesPerSec = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+      blockAlign = g_CSS_SampleFrameBytes;
       if ( (g_MixerFormatFlags & 8) != 0 )
-        v22 = 16;
+        bitsPerSample = 16;
       else
-        v22 = 8;
-      v23 = 0;
-      (*(void (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &v17);
+        bitsPerSample = 8;
+      cbSize = 0;
+      (*(void (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
     }
   }
   else
   {
     g_CSS_DSoundWritePrimaryMode = 1;
   }
-  v4 = g_CSS_SampleFrameBytes * 3 * g_AudioSampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz;
-  v5 = v4 + 15;
+  rawStreamBytes = g_CSS_SampleFrameBytes * 3 * g_AudioSampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz;
+  alignedStreamBytes = rawStreamBytes + 15;
   g_DSoundStreamWriteOffset = 0;
-  LOWORD(v5) = (v4 + 15) & 0xFFF0;
+  LOWORD(alignedStreamBytes) = (rawStreamBytes + 15) & 0xFFF0;
   if ( !g_CSS_DSoundWritePrimaryMode )
   {
-    g_DSoundStreamBufferBytes = v5;
+    g_DSoundStreamBufferBytes = alignedStreamBytes;
     g_DSoundRefillThresholdBytes = 16;
     memset_(v3, 0);
-    v17 = 1;
-    v18 = ((g_MixerFormatFlags & 2) != 0) + 1;
-    v19 = g_AudioSampleRateHz;
-    v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
-    v21 = g_CSS_SampleFrameBytes;
+    wFormatTag = 1;
+    nChannels = ((g_MixerFormatFlags & 2) != 0) + 1;
+    samplesPerSec = g_AudioSampleRateHz;
+    avgBytesPerSec = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+    blockAlign = g_CSS_SampleFrameBytes;
     if ( (g_MixerFormatFlags & 8) != 0 )
-      v22 = 16;
+      bitsPerSample = 16;
     else
-      v22 = 8;
-    v23 = 0;
+      bitsPerSample = 8;
+    cbSize = 0;
     memset_(20, 0);
-    v13 = v6;
-    v15 = g_DSoundStreamBufferBytes;
-    v16 = &v17;
-    v14 = 0x10000;
-    v1 = (*(int (__stdcall **)(int, int *, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+    bufferDescSize = v6;
+    bufferBytes = g_DSoundStreamBufferBytes;
+    formatPtr = &wFormatTag;
+    bufferDescFlags = 0x10000;
+    hr = (*(int (__stdcall **)(int, int *, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
            g_DirectSoundDevice,
-           &v13,
+           &bufferDescSize,
            &g_DSoundPrimaryBuffer,
            0);
-    if ( !v1 )
+    if ( !hr )
     {
-      v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
-      if ( !v1 )
+      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+      if ( !hr )
         return 0;
     }
-    return Audio_ReturnDSoundError(v1);
+    return Audio_ReturnDSoundError(hr);
   }
-  memset_(&v13, 0);
-  v13 = 20;
-  v15 = 0;
-  v16 = 0;
-  v14 = 1;
-  v1 = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+  memset_(&bufferDescSize, 0);
+  bufferDescSize = 20;
+  bufferBytes = 0;
+  formatPtr = 0;
+  bufferDescFlags = 1;
+  hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
          g_DirectSoundDevice,
          v9,
          &g_DSoundPrimaryBuffer,
          0);
-  if ( v1 )
-    return Audio_ReturnDSoundError(v1);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
   memset_(1, 0);
-  v17 = v10;
-  v18 = v10 + ((g_MixerFormatFlags & 2) != 0);
-  v19 = g_AudioSampleRateHz;
-  v20 = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
-  v21 = g_CSS_SampleFrameBytes;
-  v22 = (g_MixerFormatFlags & 8) != 0 ? 16 : 8;
-  v23 = 0;
-  v1 = (*(int (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &v17);
-  if ( v1 )
-    return Audio_ReturnDSoundError(v1);
+  wFormatTag = v10;
+  nChannels = v10 + ((g_MixerFormatFlags & 2) != 0);
+  samplesPerSec = g_AudioSampleRateHz;
+  avgBytesPerSec = g_AudioSampleRateHz * g_CSS_SampleFrameBytes;
+  blockAlign = g_CSS_SampleFrameBytes;
+  bitsPerSample = (g_MixerFormatFlags & 8) != 0 ? 16 : 8;
+  cbSize = 0;
+  hr = (*(int (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
   memset_(v11, 0);
-  v12[0] = 20;
-  v1 = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)g_DSoundPrimaryBuffer + 12))(g_DSoundPrimaryBuffer, v12);
-  if ( v1 )
-    return Audio_ReturnDSoundError(v1);
-  g_DSoundStreamBufferBytes = v12[2];
-  v1 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
-  if ( v1 )
-    return Audio_ReturnDSoundError(v1);
-  if ( v5 + 16 >= (unsigned int)g_DSoundStreamBufferBytes )
+  bufferCaps[0] = 20;
+  hr = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)g_DSoundPrimaryBuffer + 12))(g_DSoundPrimaryBuffer, bufferCaps);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
+  g_DSoundStreamBufferBytes = bufferCaps[2];
+  hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
+  if ( alignedStreamBytes + 16 >= (unsigned int)g_DSoundStreamBufferBytes )
     g_DSoundRefillThresholdBytes = 16;
   else
-    g_DSoundRefillThresholdBytes = g_DSoundStreamBufferBytes - v5;
+    g_DSoundRefillThresholdBytes = g_DSoundStreamBufferBytes - alignedStreamBytes;
   return 0;
 }
 // 46A794: variable 'v2' is possibly undefined
@@ -4795,11 +4795,11 @@ signed int Audio_InitDSoundDevice()
 //----- (0046AB70) --------------------------------------------------------
 unsigned int Audio_ReleaseDSoundDevice()
 {
-  unsigned int v0; // eax
+  unsigned int hr; // eax
 
-  v0 = (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 72))(g_DSoundPrimaryBuffer);
-  if ( v0 )
-    return Audio_ReturnDSoundError(v0);
+  hr = (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 72))(g_DSoundPrimaryBuffer);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
   (*(void (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 8))(g_DSoundPrimaryBuffer);
   (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
   return 0;
@@ -4808,29 +4808,29 @@ unsigned int Audio_ReleaseDSoundDevice()
 // 54D370: using guessed type int dword_54D370;
 
 //----- (0046ABC0) --------------------------------------------------------
-signed int __cdecl Audio_InitSoundSystem(int a1, char a2)
+signed int __cdecl Audio_InitSoundSystem(int sampleRateHz, char formatFlags)
 {
-  signed int v2; // ebx
+  signed int errCode; // ebx
   signed int result; // eax
 
   if ( g_CSS_MixUpdateRateHz < 30 )
     g_CSS_MixUpdateRateHz = 30;
-  g_AudioSampleRateHz = a1;
+  g_AudioSampleRateHz = sampleRateHz;
   InitializeCriticalSection(&stru_54D350);
   EnterCriticalSection(&stru_54D350);
-  g_MixerFormatFlags = ((a2 & 1) == 0) + 1;
-  if ( (a2 & 4) != 0 )
+  g_MixerFormatFlags = ((formatFlags & 1) == 0) + 1;
+  if ( (formatFlags & 4) != 0 )
     LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags | 4;
   else
     LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags | 8;
   g_CSS_SampleFrameBytes = ((g_MixerFormatFlags & 8) != 0) + 1;
   if ( (g_MixerFormatFlags & 2) != 0 )
     g_CSS_SampleFrameBytes = 2 * (((g_MixerFormatFlags & 8) != 0) + 1);
-  v2 = Audio_InitDSoundDevice();
-  if ( v2 || (CSS_InitMixBuffers(g_AudioSampleRateHz, ((g_MixerFormatFlags & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * g_CSS_MixUpdateRateHz)) != 0) )
+  errCode = Audio_InitDSoundDevice();
+  if ( errCode || (CSS_InitMixBuffers(g_AudioSampleRateHz, ((g_MixerFormatFlags & 2) != 0) + 1), (errCode = Audio_ComputeMixChunkSampleCount(100 * g_CSS_MixUpdateRateHz)) != 0) )
   {
     LeaveCriticalSection(&stru_54D350);
-    return v2;
+    return errCode;
   }
   else
   {
@@ -4868,22 +4868,22 @@ LABEL_11:
 //----- (0046AD10) --------------------------------------------------------
 unsigned int Audio_ShutdownSoundSystem()
 {
-  unsigned int v0; // ebx
+  unsigned int errCode; // ebx
 
   EnterCriticalSection(&stru_54D350);
   CSS_FreeMixBuffers();
-  v0 = Audio_ReleaseDSoundDevice();
+  errCode = Audio_ReleaseDSoundDevice();
   LeaveCriticalSection(&stru_54D350);
-  if ( v0 )
-    return v0;
+  if ( errCode )
+    return errCode;
   DeleteCriticalSection(&stru_54D350);
   return 0;
 }
 
 //----- (0046AD60) --------------------------------------------------------
-int __cdecl Audio_GetSoundFormatFlags(_DWORD *a1)
+int __cdecl Audio_GetSoundFormatFlags(_DWORD *flagsOut)
 {
-  *a1 = g_MixerFormatFlags;
+  *flagsOut = g_MixerFormatFlags;
   return 0;
 }
 // 54D384: using guessed type int dword_54D384;
@@ -4891,15 +4891,15 @@ int __cdecl Audio_GetSoundFormatFlags(_DWORD *a1)
 //----- (0046AD70) --------------------------------------------------------
 unsigned int Audio_RefreshPlayCursor()
 {
-  unsigned int v0; // eax
-  int v2; // [esp+Ch] [ebp-8h] BYREF
-  _BYTE v3[4]; // [esp+10h] [ebp-4h] BYREF
+  unsigned int hr; // eax
+  int playCursor; // [esp+Ch] [ebp-8h] BYREF
+  _BYTE writeCursor[4]; // [esp+10h] [ebp-4h] BYREF
 
   EnterCriticalSection(&stru_54D350);
-  v0 = (*(int (__stdcall **)(int, int *, _BYTE *))(*(_DWORD *)g_DSoundPrimaryBuffer + 16))(g_DSoundPrimaryBuffer, &v2, v3);
-  if ( v0 )
-    return Audio_ReturnDSoundError(v0);
-  g_CSS_DSoundPlayCursor = v2;
+  hr = (*(int (__stdcall **)(int, int *, _BYTE *))(*(_DWORD *)g_DSoundPrimaryBuffer + 16))(g_DSoundPrimaryBuffer, &playCursor, writeCursor);
+  if ( hr )
+    return Audio_ReturnDSoundError(hr);
+  g_CSS_DSoundPlayCursor = playCursor;
   LeaveCriticalSection(&stru_54D350);
   return 0;
 }
@@ -4907,39 +4907,39 @@ unsigned int Audio_RefreshPlayCursor()
 // 54D374: using guessed type int dword_54D374;
 
 //----- (0046ADC0) --------------------------------------------------------
-unsigned int __cdecl Audio_FillDSoundBuffer(_DWORD *a1)
+unsigned int __cdecl Audio_FillDSoundBuffer(_DWORD *mixCompleteOut)
 {
-  unsigned int v1; // ebp
-  unsigned int v2; // edi
+  unsigned int mixBufSamples; // ebp
+  unsigned int bytesFree; // edi
   DWORD TickCount; // eax
-  unsigned int v4; // edi
-  unsigned int v5; // edi
-  unsigned int v6; // esi
-  int v7; // eax
-  unsigned int v8; // ebx
-  unsigned int v10; // ecx
-  int v11; // [esp+20h] [ebp-20h] BYREF
-  int v12; // [esp+24h] [ebp-1Ch] BYREF
-  unsigned int v13; // [esp+28h] [ebp-18h] BYREF
-  _DWORD v14[5]; // [esp+2Ch] [ebp-14h] BYREF
+  unsigned int fillBytes; // edi
+  unsigned int samplesToFill; // edi
+  unsigned int chunkSamples; // esi
+  int lockResult; // eax
+  unsigned int hr; // ebx
+  unsigned int newWriteOffset; // ecx
+  int lockPtr1; // [esp+20h] [ebp-20h] BYREF
+  int lockPtr2; // [esp+24h] [ebp-1Ch] BYREF
+  unsigned int lockBytes1; // [esp+28h] [ebp-18h] BYREF
+  _DWORD lockBytes2[5]; // [esp+2Ch] [ebp-14h] BYREF
 
   EnterCriticalSection(&stru_54D350);
-  v1 = (unsigned int)g_CssMixBufferSizeBytes >> 2;
+  mixBufSamples = (unsigned int)g_CssMixBufferSizeBytes >> 2;
   if ( (g_MixerFormatFlags & 2) != 0 )
-    v1 = (unsigned int)g_CssMixBufferSizeBytes >> 3;
+    mixBufSamples = (unsigned int)g_CssMixBufferSizeBytes >> 3;
   if ( g_DSoundStreamWriteOffset > (unsigned int)g_CSS_DSoundPlayCursor )
-    v2 = g_CSS_DSoundPlayCursor + g_DSoundStreamBufferBytes - g_DSoundStreamWriteOffset;
+    bytesFree = g_CSS_DSoundPlayCursor + g_DSoundStreamBufferBytes - g_DSoundStreamWriteOffset;
   else
-    v2 = g_CSS_DSoundPlayCursor - g_DSoundStreamWriteOffset;
-  if ( v2 > g_DSoundRefillThresholdBytes )
+    bytesFree = g_CSS_DSoundPlayCursor - g_DSoundStreamWriteOffset;
+  if ( bytesFree > g_DSoundRefillThresholdBytes )
   {
     TickCount = 0;
-    v4 = v2 - g_DSoundRefillThresholdBytes;
+    fillBytes = bytesFree - g_DSoundRefillThresholdBytes;
 LABEL_7:
     g_DSoundStallTickTimestamp = TickCount;
     goto LABEL_8;
   }
-  v4 = 0;
+  fillBytes = 0;
   if ( GetForegroundWindow() == (HWND)g_DSoundCoopWindowHandle )
   {
     if ( g_CSS_AudioHadForegroundFocus )
@@ -4966,75 +4966,75 @@ LABEL_7:
     g_CSS_AudioHadForegroundFocus = 0;
   }
 LABEL_8:
-  v5 = v4 / g_CSS_SampleFrameBytes;
-  while ( v5 )
+  samplesToFill = fillBytes / g_CSS_SampleFrameBytes;
+  while ( samplesToFill )
   {
     if ( !g_CSS_MixChunkSamplesRemaining )
       break;
-    if ( v5 <= g_CSS_MixChunkSamplesRemaining )
-      v6 = v5;
+    if ( samplesToFill <= g_CSS_MixChunkSamplesRemaining )
+      chunkSamples = samplesToFill;
     else
-      v6 = g_CSS_MixChunkSamplesRemaining;
-    if ( v6 > v1 )
-      v6 = v1;
-    v5 -= v6;
-    g_CSS_MixChunkSamplesRemaining -= v6;
-    CSS_TickChannelLevels(v1, v6);
+      chunkSamples = g_CSS_MixChunkSamplesRemaining;
+    if ( chunkSamples > mixBufSamples )
+      chunkSamples = mixBufSamples;
+    samplesToFill -= chunkSamples;
+    g_CSS_MixChunkSamplesRemaining -= chunkSamples;
+    CSS_TickChannelLevels(mixBufSamples, chunkSamples);
     while ( 1 )
     {
-      v7 = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 44))(
+      lockResult = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 44))(
              g_DSoundPrimaryBuffer,
              g_DSoundStreamWriteOffset,
-             v6 * g_CSS_SampleFrameBytes,
-             &v11,
-             &v13,
-             &v12,
-             v14,
+             chunkSamples * g_CSS_SampleFrameBytes,
+             &lockPtr1,
+             &lockBytes1,
+             &lockPtr2,
+             lockBytes2,
              0);
-      v8 = v7;
-      if ( !v7 )
+      hr = lockResult;
+      if ( !lockResult )
         break;
-      if ( v7 != -2005401450 )
+      if ( lockResult != -2005401450 )
         goto LABEL_19;
       if ( (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer) )
       {
         LeaveCriticalSection(&stru_54D350);
-        *a1 = 0;
+        *mixCompleteOut = 0;
         return 0;
       }
-      v8 = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
-      if ( v8 )
+      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+      if ( hr )
         goto LABEL_19;
     }
-    if ( v13 )
-      g_Audio_MixToOutputConvertFn(v13 / g_CSS_SampleFrameBytes, v11, 0, g_CSS_MixAccumBufferPtr);
-    if ( v14[0] )
-      g_Audio_MixToOutputConvertFn(v14[0] / (unsigned int)g_CSS_SampleFrameBytes, v12, 0, g_CSS_MixAccumBufferPtr + 4 * (v13 >> 1));
-    v10 = v14[0] + v13 + g_DSoundStreamWriteOffset;
-    g_DSoundStreamWriteOffset = v10;
-    if ( v10 >= g_DSoundStreamBufferBytes )
-      g_DSoundStreamWriteOffset = v10 - g_DSoundStreamBufferBytes;
-    v8 = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 76))(
+    if ( lockBytes1 )
+      g_Audio_MixToOutputConvertFn(lockBytes1 / g_CSS_SampleFrameBytes, lockPtr1, 0, g_CSS_MixAccumBufferPtr);
+    if ( lockBytes2[0] )
+      g_Audio_MixToOutputConvertFn(lockBytes2[0] / (unsigned int)g_CSS_SampleFrameBytes, lockPtr2, 0, g_CSS_MixAccumBufferPtr + 4 * (lockBytes1 >> 1));
+    newWriteOffset = lockBytes2[0] + lockBytes1 + g_DSoundStreamWriteOffset;
+    g_DSoundStreamWriteOffset = newWriteOffset;
+    if ( newWriteOffset >= g_DSoundStreamBufferBytes )
+      g_DSoundStreamWriteOffset = newWriteOffset - g_DSoundStreamBufferBytes;
+    hr = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 76))(
            g_DSoundPrimaryBuffer,
-           v11,
-           v13,
-           v12,
-           v14[0]);
-    if ( v8 )
+           lockPtr1,
+           lockBytes1,
+           lockPtr2,
+           lockBytes2[0]);
+    if ( hr )
     {
 LABEL_19:
       LeaveCriticalSection(&stru_54D350);
-      return Audio_ReturnDSoundError(v8);
+      return Audio_ReturnDSoundError(hr);
     }
   }
   if ( g_CSS_MixChunkSamplesRemaining )
   {
-    *a1 = 0;
+    *mixCompleteOut = 0;
   }
   else
   {
     g_CSS_MixChunkSamplesRemaining = g_Audio_MixChunkSampleCount;
-    *a1 = 1;
+    *mixCompleteOut = 1;
   }
   LeaveCriticalSection(&stru_54D350);
   return 0;
@@ -5055,351 +5055,351 @@ LABEL_19:
 // 54DB98: using guessed type int dword_54DB98;
 
 //----- (0046B110) --------------------------------------------------------
-int __cdecl Audio_ClipMixBufferToPCM16(int a1, int a2, int a3, signed int *a4)
+int __cdecl Audio_ClipMixBufferToPCM16(int sampleCount, int destBase, int destOffset, signed int *mixBuffer)
 {
-  _WORD *v4; // edi
+  _WORD *dest; // edi
   int i; // ecx
-  int v7; // eax
+  int sample; // eax
 
-  v4 = (_WORD *)(a3 + a2);
-  for ( i = a1; i; --i )
+  dest = (_WORD *)(destOffset + destBase);
+  for ( i = sampleCount; i; --i )
   {
     while ( 1 )
     {
       while ( 1 )
       {
-        v7 = *a4++;
-        if ( v7 <= 0x7FFF )
+        sample = *mixBuffer++;
+        if ( sample <= 0x7FFF )
           break;
-        *v4++ = 0x7FFF;
+        *dest++ = 0x7FFF;
         if ( !--i )
-          return (int)v4 - a2;
+          return (int)dest - destBase;
       }
-      if ( v7 < -32768 )
+      if ( sample < -32768 )
         break;
-      *v4++ = v7;
+      *dest++ = sample;
       if ( !--i )
-        return (int)v4 - a2;
+        return (int)dest - destBase;
     }
-    *v4++ = 0x8000;
+    *dest++ = 0x8000;
   }
-  return (int)v4 - a2;
+  return (int)dest - destBase;
 }
 
 //----- (0046B169) --------------------------------------------------------
-_BYTE *__cdecl Audio_ClipMixBufferToPCM8(int a1, int a2, int a3, int *a4)
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8(int sampleCount, int destBase, int destOffset, int *mixBuffer)
 {
-  _BYTE *v4; // edi
+  _BYTE *dest; // edi
   int i; // ecx
-  int v7; // eax
-  int v8; // eax
+  int sample; // eax
+  int biased; // eax
 
-  v4 = (_BYTE *)(a3 + a2);
-  for ( i = a1; i; --i )
+  dest = (_BYTE *)(destOffset + destBase);
+  for ( i = sampleCount; i; --i )
   {
     while ( 1 )
     {
       while ( 1 )
       {
-        v7 = *a4++;
-        v8 = v7 + 0x8000;
-        if ( v8 <= 0x10000 )
+        sample = *mixBuffer++;
+        biased = sample + 0x8000;
+        if ( biased <= 0x10000 )
           break;
-        *v4++ = -1;
+        *dest++ = -1;
         if ( !--i )
-          return &v4[-a2];
+          return &dest[-destBase];
       }
-      if ( v8 < 0 )
+      if ( biased < 0 )
         break;
-      *v4++ = BYTE1(v8);
+      *dest++ = BYTE1(biased);
       if ( !--i )
-        return &v4[-a2];
+        return &dest[-destBase];
     }
-    *v4++ = 0;
+    *dest++ = 0;
   }
-  return &v4[-a2];
+  return &dest[-destBase];
 }
 
 //----- (0046B1BA) --------------------------------------------------------
-int __cdecl Audio_ClipMixBufferToPCM16Stereo(int a1, int a2, int a3, signed int *a4)
+int __cdecl Audio_ClipMixBufferToPCM16Stereo(int sampleCount, int destBase, int destOffset, signed int *mixBuffer)
 {
-  return Audio_MixInterleaved16(2 * a1, a2, a3, a4);
+  return Audio_MixInterleaved16(2 * sampleCount, destBase, destOffset, mixBuffer);
 }
 
 //----- (0046B1D7) --------------------------------------------------------
-_BYTE *__cdecl Audio_ClipMixBufferToPCM8Stereo(int a1, int a2, int a3, int *a4)
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8Stereo(int sampleCount, int destBase, int destOffset, int *mixBuffer)
 {
-  return Audio_ClipMixBufferToPCM8(2 * a1, a2, a3, a4);
+  return Audio_ClipMixBufferToPCM8(2 * sampleCount, destBase, destOffset, mixBuffer);
 }
 
 //----- (0046B200) --------------------------------------------------------
-int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2)
+int  Audio_ReadWavHeaderFromStream(int fileName, _DWORD *formatOut)
 {
   int result; // eax
-  int v4; // eax
-  void (__fastcall **v5)(_DWORD, int); // ecx
-  char v6; // al
-  char v7[8]; // [esp+0h] [ebp-40h] BYREF
-  char v8[4]; // [esp+8h] [ebp-38h] BYREF
-  char v9[4]; // [esp+Ch] [ebp-34h] BYREF
-  int v10; // [esp+10h] [ebp-30h]
-  unsigned __int16 v11; // [esp+14h] [ebp-2Ch]
-  unsigned __int16 v12; // [esp+16h] [ebp-2Ah]
-  int v13; // [esp+18h] [ebp-28h]
-  unsigned __int16 v14; // [esp+20h] [ebp-20h]
-  char v15[4]; // [esp+24h] [ebp-1Ch] BYREF
-  int v16; // [esp+28h] [ebp-18h]
+  int streamPos; // eax
+  void (__fastcall **seekFunc)(_DWORD, int); // ecx
+  char formatCode; // al
+  char riffTag[8]; // [esp+0h] [ebp-40h] BYREF
+  char waveTag[4]; // [esp+8h] [ebp-38h] BYREF
+  char fmtTag[4]; // [esp+Ch] [ebp-34h] BYREF
+  int fmtChunkSize; // [esp+10h] [ebp-30h]
+  unsigned __int16 wFormatTag; // [esp+14h] [ebp-2Ch]
+  unsigned __int16 nChannels; // [esp+16h] [ebp-2Ah]
+  int sampleRate; // [esp+18h] [ebp-28h]
+  unsigned __int16 blockAlign; // [esp+20h] [ebp-20h]
+  char dataTag[4]; // [esp+24h] [ebp-1Ch] BYREF
+  int stream; // [esp+28h] [ebp-18h]
 
-  result = (*(int (__fastcall **)(int, int))(*(_DWORD *)g_MediaFileStreamProvider + 12))(a1, a1);
-  v16 = result;
+  result = (*(int (__fastcall **)(int, int))(*(_DWORD *)g_MediaFileStreamProvider + 12))(fileName, fileName);
+  stream = result;
   if ( !result )
     return result;
   (*(void (**)(void))(*(_DWORD *)result + 20))();
-  if ( (*(int (**)(void))(*(_DWORD *)v16 + 16))() == -1
-    || memcmp(v7, aRiff, 4)
-    || memcmp(v8, aWave, 4)
-    || memcmp(v9, aFmt, 4)
-    || (v4 = (*(int (**)(void))(*(_DWORD *)v16 + 4))(),
-        (*v5)(v5, v10 + v4 - 16),
-        (*(void (**)(void))(*(_DWORD *)v16 + 20))(),
-        memcmp(v15, aData, 4)) )
+  if ( (*(int (**)(void))(*(_DWORD *)stream + 16))() == -1
+    || memcmp(riffTag, aRiff, 4)
+    || memcmp(waveTag, aWave, 4)
+    || memcmp(fmtTag, aFmt, 4)
+    || (streamPos = (*(int (**)(void))(*(_DWORD *)stream + 4))(),
+        (*seekFunc)(seekFunc, fmtChunkSize + streamPos - 16),
+        (*(void (**)(void))(*(_DWORD *)stream + 20))(),
+        memcmp(dataTag, aData, 4)) )
   {
 LABEL_3:
     (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
     return 0;
   }
-  (*(void (**)(void))(*(_DWORD *)v16 + 20))();
-  a2[2] = v13;
-  if ( v11 != 1 )
+  (*(void (**)(void))(*(_DWORD *)stream + 20))();
+  formatOut[2] = sampleRate;
+  if ( wFormatTag != 1 )
   {
-    if ( v11 == 32787 )
+    if ( wFormatTag == 32787 )
     {
-      *a2 = (char)((v12 != 1) + 5);
-      return v16;
+      *formatOut = (char)((nChannels != 1) + 5);
+      return stream;
     }
     goto LABEL_3;
   }
-  if ( v12 == 1 )
-    v6 = 1;
+  if ( nChannels == 1 )
+    formatCode = 1;
   else
-    v6 = 3;
-  *a2 = v6;
-  if ( v14 / (int)v12 == 2 )
-    ++*a2;
-  v13 = a2[2];
-  return v16;
+    formatCode = 3;
+  *formatOut = formatCode;
+  if ( blockAlign / (int)nChannels == 2 )
+    ++*formatOut;
+  sampleRate = formatOut[2];
+  return stream;
 }
 // 46B2D5: variable 'v5' is possibly undefined
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046B610) --------------------------------------------------------
-void  Audio_MixResampledVoice(int *a1)
+void  Audio_MixResampledVoice(int *mixArgs)
 {
-  unsigned int *v2; // ebx
-  unsigned int v3; // edx
-  unsigned __int64 v4; // rtt
-  unsigned int v5; // eax
-  int v6; // esi
-  unsigned int v7; // edx
-  unsigned int v8; // eax
-  unsigned int v9; // eax
-  unsigned __int64 v10; // rax
-  int v11; // eax
-  unsigned __int64 v12; // rt2
-  int v13; // esi
-  int v14; // ebp
-  int v15; // edx
-  int v16; // edi
-  int v17; // edx
-  int v18; // esi
-  int v19; // edi
-  int v20; // eax
-  __int64 v21; // rax
-  int v22; // eax
-  __int64 v23; // rax
-  int *v24; // [esp-2Ch] [ebp-2Ch]
+  unsigned int *channel; // ebx
+  unsigned int playbackRate; // edx
+  unsigned __int64 rateFixed; // rtt
+  unsigned int queuedState; // eax
+  int queueSlot; // esi
+  unsigned int sampleStep; // edx
+  unsigned int formatCode; // eax
+  unsigned int endPos; // eax
+  unsigned __int64 distanceFixed; // rax
+  int spanSamples; // eax
+  unsigned __int64 stepRemainder; // rt2
+  int savedPosPlusStep; // esi
+  int savedFrac; // ebp
+  int stepValue; // edx
+  int savedAccum; // edi
+  int signedStep; // edx
+  int posFixed; // esi
+  int accumPtrSaved; // edi
+  int loopReturnPos; // eax
+  __int64 reflected64; // rax
+  int reversePos; // eax
+  __int64 reflectedPos; // rax
+  int *savedArgs; // [esp-2Ch] [ebp-2Ch]
 
-  g_Audio_MixVoice_SamplesRemaining = a1[5];
-  g_Audio_MixVoice_ChannelIndexArg = a1[2];
+  g_Audio_MixVoice_SamplesRemaining = mixArgs[5];
+  g_Audio_MixVoice_ChannelIndexArg = mixArgs[2];
   g_Audio_MixVoice_AccumBufferPtr = g_CSS_MixAccumBufferPtr;
-  g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))a1[3];
-  v2 = (unsigned int *)(108 * a1[2] + g_CssMixChannels);
-  g_Audio_CurrentVoiceRecordPtr = (int)v2;
-  g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))v2[26];
-  g_Audio_MixVoice_LoopDirection = v2[16];
-  g_Audio_MixVoice_PositionInt = v2[12];
-  g_Audio_MixVoice_PositionFrac = v2[13];
-  g_Audio_MixVoice_SampleHistory0 = v2[10];
-  g_Audio_MixVoice_SampleHistory1 = v2[11];
-  if ( v2[1] && v2[24] == 3 )
+  g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))mixArgs[3];
+  channel = (unsigned int *)(108 * mixArgs[2] + g_CssMixChannels);
+  g_Audio_CurrentVoiceRecordPtr = (int)channel;
+  g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))channel[26];
+  g_Audio_MixVoice_LoopDirection = channel[16];
+  g_Audio_MixVoice_PositionInt = channel[12];
+  g_Audio_MixVoice_PositionFrac = channel[13];
+  g_Audio_MixVoice_SampleHistory0 = channel[10];
+  g_Audio_MixVoice_SampleHistory1 = channel[11];
+  if ( channel[1] && channel[24] == 3 )
   {
-    g_Audio_MixVoice_Pan = v2[19];
-    v3 = v2[15];
-    LODWORD(v4) = v3 << 16;
-    HIDWORD(v4) = HIWORD(v3);
-    g_Audio_MixVoice_ResampleStep = v4 / (unsigned int)g_CSS_MixSampleRate;
-    g_Audio_MixVoice_MaxSourceAdvance = (((unsigned int)g_Audio_MixVoice_ResampleStep * (unsigned __int64)(unsigned int)a1[5]) >> 16) + 2;
+    g_Audio_MixVoice_Pan = channel[19];
+    playbackRate = channel[15];
+    LODWORD(rateFixed) = playbackRate << 16;
+    HIDWORD(rateFixed) = HIWORD(playbackRate);
+    g_Audio_MixVoice_ResampleStep = rateFixed / (unsigned int)g_CSS_MixSampleRate;
+    g_Audio_MixVoice_MaxSourceAdvance = (((unsigned int)g_Audio_MixVoice_ResampleStep * (unsigned __int64)(unsigned int)mixArgs[5]) >> 16) + 2;
 LABEL_4:
-    v5 = v2[24];
-    if ( v5 > 2 )
+    queuedState = channel[24];
+    if ( queuedState > 2 )
     {
-      if ( v5 == 3 )
+      if ( queuedState == 3 )
       {
         g_Audio_MixVoice_LoopBoundsSwitchPending = 0;
       }
       else
       {
-        if ( v2[25] == 2 )
+        if ( channel[25] == 2 )
         {
-          g_Audio_MixVoice_LoopBoundLow = v2[7];
-          g_Audio_MixVoice_LoopBoundHigh = v2[8];
-          g_Audio_MixVoice_LoopMode = v2[9];
+          g_Audio_MixVoice_LoopBoundLow = channel[7];
+          g_Audio_MixVoice_LoopBoundHigh = channel[8];
+          g_Audio_MixVoice_LoopMode = channel[9];
 LABEL_11:
-          g_Audio_MixVoice_LoopFinalFlag = v2[18]
-                      && (v2[3] == 5 || v2[3] == 4)
-                      && ((v6 = 40 * v2[17] + g_CSS_QueuedSoundSlotTable, *(_DWORD *)(v6 + 12) == 4) || *(_DWORD *)(v6 + 12) == 5);
-          v7 = *v2;
-          v8 = v2[1];
-          switch ( v8 )
+          g_Audio_MixVoice_LoopFinalFlag = channel[18]
+                      && (channel[3] == 5 || channel[3] == 4)
+                      && ((queueSlot = 40 * channel[17] + g_CSS_QueuedSoundSlotTable, *(_DWORD *)(queueSlot + 12) == 4) || *(_DWORD *)(queueSlot + 12) == 5);
+          sampleStep = *channel;
+          formatCode = channel[1];
+          switch ( formatCode )
           {
             case 3u:
             case 2u:
               goto LABEL_22;
             case 4u:
-              v7 >>= 2;
+              sampleStep >>= 2;
               break;
             case 6u:
 LABEL_22:
-              v7 >>= 1;
+              sampleStep >>= 1;
               break;
           }
-          g_Audio_VoiceMixSampleStep = v7;
+          g_Audio_VoiceMixSampleStep = sampleStep;
           while ( 1 )
           {
             if ( !g_Audio_MixVoice_SamplesRemaining )
               goto LABEL_80;
-            if ( v2[17] == 5 )
+            if ( channel[17] == 5 )
             {
-              v9 = v2[14];
-              if ( v9 >= g_Audio_MixVoice_PositionInt )
+              endPos = channel[14];
+              if ( endPos >= g_Audio_MixVoice_PositionInt )
               {
-                if ( v9 == g_Audio_MixVoice_PositionInt )
+                if ( endPos == g_Audio_MixVoice_PositionInt )
                   goto LABEL_78;
                 goto LABEL_37;
               }
             }
             if ( !g_Audio_MixVoice_LoopMode )
             {
-              v9 = v2[2];
+              endPos = channel[2];
               goto LABEL_37;
             }
             if ( g_Audio_MixVoice_LoopMode == 1 )
               break;
             if ( g_Audio_MixVoice_LoopDirection != -1 )
             {
-              v9 = g_Audio_MixVoice_LoopBoundHigh;
+              endPos = g_Audio_MixVoice_LoopBoundHigh;
 LABEL_37:
-              g_Audio_MixVoice_NextChunkEndScratch = v9 + g_Audio_VoiceMixSampleStep;
-              v10 = ((unsigned __int64)(v9 - g_Audio_MixVoice_PositionInt) << 16) - (unsigned int)g_Audio_MixVoice_PositionFrac;
+              g_Audio_MixVoice_NextChunkEndScratch = endPos + g_Audio_VoiceMixSampleStep;
+              distanceFixed = ((unsigned __int64)(endPos - g_Audio_MixVoice_PositionInt) << 16) - (unsigned int)g_Audio_MixVoice_PositionFrac;
               goto LABEL_38;
             }
-            v10 = (unsigned int)g_Audio_MixVoice_PositionFrac + ((unsigned __int64)(unsigned int)(g_Audio_MixVoice_PositionInt - g_Audio_MixVoice_LoopBoundLow) << 16);
+            distanceFixed = (unsigned int)g_Audio_MixVoice_PositionFrac + ((unsigned __int64)(unsigned int)(g_Audio_MixVoice_PositionInt - g_Audio_MixVoice_LoopBoundLow) << 16);
 LABEL_38:
-            if ( HIWORD(g_Audio_MixVoice_MaxSourceAdvance) < HIDWORD(v10) || g_Audio_MixVoice_MaxSourceAdvance << 16 < (unsigned int)v10 )
+            if ( HIWORD(g_Audio_MixVoice_MaxSourceAdvance) < HIDWORD(distanceFixed) || g_Audio_MixVoice_MaxSourceAdvance << 16 < (unsigned int)distanceFixed )
             {
-              v11 = g_Audio_MixVoice_SamplesRemaining;
+              spanSamples = g_Audio_MixVoice_SamplesRemaining;
             }
             else
             {
-              v12 = v10 % (unsigned int)g_Audio_MixVoice_ResampleStep;
-              v11 = v10 / (unsigned int)g_Audio_MixVoice_ResampleStep;
-              if ( (_DWORD)v12 )
-                ++v11;
-              if ( v11 > (unsigned int)g_Audio_MixVoice_SamplesRemaining )
-                v11 = g_Audio_MixVoice_SamplesRemaining;
+              stepRemainder = distanceFixed % (unsigned int)g_Audio_MixVoice_ResampleStep;
+              spanSamples = distanceFixed / (unsigned int)g_Audio_MixVoice_ResampleStep;
+              if ( (_DWORD)stepRemainder )
+                ++spanSamples;
+              if ( spanSamples > (unsigned int)g_Audio_MixVoice_SamplesRemaining )
+                spanSamples = g_Audio_MixVoice_SamplesRemaining;
             }
-            g_Audio_MixVoice_SamplesRemaining -= v11;
-            if ( a1[4] )
+            g_Audio_MixVoice_SamplesRemaining -= spanSamples;
+            if ( mixArgs[4] )
             {
-              v24 = a1;
-              v13 = g_Audio_MixVoice_PositionInt + g_Audio_VoiceMixSampleStep;
-              v14 = g_Audio_MixVoice_PositionFrac;
-              v15 = g_Audio_MixVoice_ResampleStep;
-              v16 = g_Audio_MixVoice_AccumBufferPtr;
+              savedArgs = mixArgs;
+              savedPosPlusStep = g_Audio_MixVoice_PositionInt + g_Audio_VoiceMixSampleStep;
+              savedFrac = g_Audio_MixVoice_PositionFrac;
+              stepValue = g_Audio_MixVoice_ResampleStep;
+              savedAccum = g_Audio_MixVoice_AccumBufferPtr;
               if ( g_Audio_MixVoice_LoopDirection == -1 )
-                v15 = -g_Audio_MixVoice_ResampleStep;
-              g_Audio_MixVoice_MixFunc(v11, v15);
-              g_Audio_MixVoice_PositionFrac = v14;
-              g_Audio_MixVoice_PositionInt = v13 - g_Audio_VoiceMixSampleStep;
-              g_Audio_MixVoice_AccumBufferPtr = v16;
-              a1 = v24;
+                stepValue = -g_Audio_MixVoice_ResampleStep;
+              g_Audio_MixVoice_MixFunc(spanSamples, stepValue);
+              g_Audio_MixVoice_PositionFrac = savedFrac;
+              g_Audio_MixVoice_PositionInt = savedPosPlusStep - g_Audio_VoiceMixSampleStep;
+              g_Audio_MixVoice_AccumBufferPtr = savedAccum;
+              mixArgs = savedArgs;
             }
             else
             {
-              v17 = g_Audio_MixVoice_ResampleStep;
+              signedStep = g_Audio_MixVoice_ResampleStep;
               if ( g_Audio_MixVoice_LoopDirection == -1 )
-                v17 = -g_Audio_MixVoice_ResampleStep;
-              v18 = g_Audio_MixVoice_PositionInt << 16;
-              LOWORD(v18) = g_Audio_MixVoice_PositionFrac;
-              LOWORD(g_Audio_MixVoice_PositionFrac) = v17 * v11 + g_Audio_MixVoice_PositionFrac;
-              g_Audio_MixVoice_PositionInt = (__int64)(v17 * (__int64)v11 + __PAIR64__(g_Audio_MixVoice_PositionInt >> 16, v18)) >> 16;
-              if ( !a1[2] )
+                signedStep = -g_Audio_MixVoice_ResampleStep;
+              posFixed = g_Audio_MixVoice_PositionInt << 16;
+              LOWORD(posFixed) = g_Audio_MixVoice_PositionFrac;
+              LOWORD(g_Audio_MixVoice_PositionFrac) = signedStep * spanSamples + g_Audio_MixVoice_PositionFrac;
+              g_Audio_MixVoice_PositionInt = (__int64)(signedStep * (__int64)spanSamples + __PAIR64__(g_Audio_MixVoice_PositionInt >> 16, posFixed)) >> 16;
+              if ( !mixArgs[2] )
               {
-                v19 = g_Audio_MixVoice_AccumBufferPtr;
-                Audio_ZeroMixAccumulatorBuffer(v11, (void *)g_Audio_MixVoice_AccumBufferPtr);
-                g_Audio_MixVoice_AccumBufferPtr = v19;
+                accumPtrSaved = g_Audio_MixVoice_AccumBufferPtr;
+                Audio_ZeroMixAccumulatorBuffer(spanSamples, (void *)g_Audio_MixVoice_AccumBufferPtr);
+                g_Audio_MixVoice_AccumBufferPtr = accumPtrSaved;
               }
             }
             if ( !g_Audio_MixVoice_LoopMode )
             {
-              if ( g_Audio_MixVoice_PositionInt < v2[2] )
+              if ( g_Audio_MixVoice_PositionInt < channel[2] )
                 goto LABEL_80;
               if ( g_Audio_MixVoice_LoopFinalFlag != 1 )
               {
-                v2[24] = 1;
+                channel[24] = 1;
                 goto LABEL_78;
               }
 LABEL_74:
-              CSS_ChannelLoadQueuedSound(a1[2]);
-              if ( v2[3] == 5 )
+              CSS_ChannelLoadQueuedSound(mixArgs[2]);
+              if ( channel[3] == 5 )
               {
-                g_Audio_MixVoice_PositionInt = v2[4];
+                g_Audio_MixVoice_PositionInt = channel[4];
                 g_Audio_MixVoice_PositionFrac = 0;
                 goto LABEL_4;
               }
-              v2[24] = 1;
+              channel[24] = 1;
               goto LABEL_78;
             }
             if ( g_Audio_MixVoice_LoopDirection == -1 )
             {
-              v22 = g_Audio_MixVoice_PositionInt;
+              reversePos = g_Audio_MixVoice_PositionInt;
               if ( g_Audio_MixVoice_PositionInt >= g_Audio_MixVoice_LoopBoundLow )
                 goto LABEL_80;
               if ( g_Audio_MixVoice_LoopCallback )
-                v22 = g_Audio_MixVoice_LoopCallback(a1[2]);
+                reversePos = g_Audio_MixVoice_LoopCallback(mixArgs[2]);
               g_Audio_MixVoice_LoopDirection = 1;
-              HIDWORD(v23) = v22;
-              LODWORD(v23) = v22 << 16;
-              SHIDWORD(v23) >>= 16;
-              LOWORD(v23) = g_Audio_MixVoice_PositionFrac;
+              HIDWORD(reflectedPos) = reversePos;
+              LODWORD(reflectedPos) = reversePos << 16;
+              SHIDWORD(reflectedPos) >>= 16;
+              LOWORD(reflectedPos) = g_Audio_MixVoice_PositionFrac;
               LOWORD(g_Audio_MixVoice_PositionFrac) = -(__int16)g_Audio_MixVoice_PositionFrac;
-              g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundLow), g_Audio_MixVoice_LoopBoundLow << 16) - v23) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundLow << 17) - v23) >> 16);
+              g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundLow), g_Audio_MixVoice_LoopBoundLow << 16) - reflectedPos) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundLow << 17) - reflectedPos) >> 16);
               goto LABEL_72;
             }
-            v20 = g_Audio_MixVoice_PositionInt;
+            loopReturnPos = g_Audio_MixVoice_PositionInt;
             if ( g_Audio_MixVoice_PositionInt >= (unsigned int)g_Audio_MixVoice_LoopBoundHigh )
             {
               if ( g_Audio_MixVoice_LoopCallback )
-                v20 = g_Audio_MixVoice_LoopCallback(a1[2]);
+                loopReturnPos = g_Audio_MixVoice_LoopCallback(mixArgs[2]);
               if ( g_Audio_MixVoice_LoopFinalFlag == 1 )
                 goto LABEL_74;
               if ( g_Audio_MixVoice_LoopBoundsSwitchPending == 1 )
               {
-                v2[25] = 2;
+                channel[25] = 2;
                 g_Audio_MixVoice_LoopBoundsSwitchPending = 0;
-                g_Audio_MixVoice_LoopBoundLow = v2[7];
-                g_Audio_MixVoice_LoopBoundHigh = v2[8];
-                g_Audio_MixVoice_LoopMode = v2[9];
+                g_Audio_MixVoice_LoopBoundLow = channel[7];
+                g_Audio_MixVoice_LoopBoundHigh = channel[8];
+                g_Audio_MixVoice_LoopMode = channel[9];
               }
               else
               {
@@ -5410,43 +5410,43 @@ LABEL_74:
                 else
                 {
                   g_Audio_MixVoice_LoopDirection = -1;
-                  HIDWORD(v21) = v20;
-                  LODWORD(v21) = v20 << 16;
-                  SHIDWORD(v21) >>= 16;
-                  LOWORD(v21) = g_Audio_MixVoice_PositionFrac;
+                  HIDWORD(reflected64) = loopReturnPos;
+                  LODWORD(reflected64) = loopReturnPos << 16;
+                  SHIDWORD(reflected64) >>= 16;
+                  LOWORD(reflected64) = g_Audio_MixVoice_PositionFrac;
                   LOWORD(g_Audio_MixVoice_PositionFrac) = -(__int16)g_Audio_MixVoice_PositionFrac;
-                  g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundHigh), g_Audio_MixVoice_LoopBoundHigh << 16) - v21) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundHigh << 17) - v21) >> 16);
+                  g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundHigh), g_Audio_MixVoice_LoopBoundHigh << 16) - reflected64) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundHigh << 17) - reflected64) >> 16);
                 }
 LABEL_72:
                 if ( !g_Audio_MixVoice_SamplesRemaining )
                   goto LABEL_80;
               }
             }
-            else if ( v2[17] != 5 )
+            else if ( channel[17] != 5 )
             {
               goto LABEL_80;
             }
           }
-          v9 = g_Audio_MixVoice_LoopBoundHigh;
+          endPos = g_Audio_MixVoice_LoopBoundHigh;
           goto LABEL_37;
         }
         g_Audio_MixVoice_LoopBoundsSwitchPending = 1;
       }
-      g_Audio_MixVoice_LoopBoundLow = v2[4];
-      g_Audio_MixVoice_LoopBoundHigh = v2[5];
-      g_Audio_MixVoice_LoopMode = v2[6];
+      g_Audio_MixVoice_LoopBoundLow = channel[4];
+      g_Audio_MixVoice_LoopBoundHigh = channel[5];
+      g_Audio_MixVoice_LoopMode = channel[6];
       goto LABEL_11;
     }
   }
 LABEL_78:
-  if ( !a1[2] )
+  if ( !mixArgs[2] )
     Audio_ZeroMixAccumulatorBuffer(g_Audio_MixVoice_SamplesRemaining, (void *)g_Audio_MixVoice_AccumBufferPtr);
 LABEL_80:
-  v2[12] = g_Audio_MixVoice_PositionInt;
-  v2[13] = g_Audio_MixVoice_PositionFrac;
-  v2[16] = g_Audio_MixVoice_LoopDirection;
-  v2[10] = g_Audio_MixVoice_SampleHistory0;
-  v2[11] = g_Audio_MixVoice_SampleHistory1;
+  channel[12] = g_Audio_MixVoice_PositionInt;
+  channel[13] = g_Audio_MixVoice_PositionFrac;
+  channel[16] = g_Audio_MixVoice_LoopDirection;
+  channel[10] = g_Audio_MixVoice_SampleHistory0;
+  channel[11] = g_Audio_MixVoice_SampleHistory1;
 }
 // 46B6CF: simplified comparisons for 'eax.4': ==0 || ==1 became <2u
 // 46B6CF: simplified comparisons for 'eax.4': <2u || ==2 became <3u
@@ -5476,19 +5476,19 @@ LABEL_80:
 // 54DB9C: using guessed type int dword_54DB9C;
 
 //----- (0046BCE4) --------------------------------------------------------
-int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4)
+int  Audio_MixMonoVoiceIntoBuffer(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  int (__thiscall *v4)(signed int); // eax
+  int (__thiscall *mixInnerFunc)(signed int); // eax
   int result; // eax
 
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixMonoVoiceDispatchBase;
-  if ( a2 )
+  if ( sampleCount )
   {
-    if ( !a3 )
-      memset(a4, 0, 4 * a2);
-    v4 = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (a2 & 3) + 16);
-    g_Audio_MixVoice_StepIntArg = a1 >> 16;
-    return v4(a1 << 16);
+    if ( !accumFlag )
+      memset(accumBuffer, 0, 4 * sampleCount);
+    mixInnerFunc = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
+    return mixInnerFunc(stepFixed << 16);
   }
   return result;
 }
@@ -5500,28 +5500,28 @@ int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4)
 //----- (0046BDC2) --------------------------------------------------------
 unsigned int  Audio_MixPannedVoiceIntoBuffer(
         unsigned int result,
-        signed int a2,
-        unsigned int a3,
-        __int16 a4,
-        void *a5)
+        signed int stepFixed,
+        unsigned int sampleCount,
+        __int16 volumeAndFlag,
+        void *accumBuffer)
 {
-  int (__thiscall *v5)(unsigned int); // eax
-  __int16 v6; // cx
+  int (__thiscall *mixInnerFunc)(unsigned int); // eax
+  __int16 packedCount; // cx
 
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixPannedVoiceDispatchBase;
-  if ( a3 )
+  if ( sampleCount )
   {
-    if ( !(_BYTE)a4 )
+    if ( !(_BYTE)volumeAndFlag )
     {
       HIWORD(result) = 0;
-      memset(a5, 0, 8 * a3);
+      memset(accumBuffer, 0, 8 * sampleCount);
     }
     if ( (_BYTE)g_Audio_MixVoice_Pan == 0x80 )
     {
       g_Audio_MixVoice_LeftVolumeStep = -1;
       g_Audio_MixVoice_RightVolumeStep = 1;
-      g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
-      g_Audio_MixVoice_RightVolume = HIBYTE(a4);
+      g_Audio_MixVoice_LeftVolume = HIBYTE(volumeAndFlag);
+      g_Audio_MixVoice_RightVolume = HIBYTE(volumeAndFlag);
     }
     else
     {
@@ -5529,23 +5529,23 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
       g_Audio_MixVoice_RightVolumeStep = 0;
       if ( (g_Audio_MixVoice_Pan & 0x80u) == 0 )
       {
-        g_Audio_MixVoice_RightVolume = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(a4);
+        g_Audio_MixVoice_RightVolume = HIBYTE(volumeAndFlag);
+        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(volumeAndFlag);
         g_Audio_MixVoice_LeftVolume = result >> 6;
       }
       else
       {
-        g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(a4);
+        g_Audio_MixVoice_LeftVolume = HIBYTE(volumeAndFlag);
+        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(volumeAndFlag);
         g_Audio_MixVoice_RightVolume = result >> 6;
       }
     }
-    g_Audio_MixVoice_PanStepFracArg = a2 << 16;
-    v5 = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (a3 & 3) + 16);
-    LOBYTE(v6) = (a3 >> 2) + 1;
-    g_Audio_MixVoice_StepIntArg = a2 >> 16;
-    HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
-    return v5(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (v6 & 0xFF00));
+    g_Audio_MixVoice_PanStepFracArg = stepFixed << 16;
+    mixInnerFunc = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    LOBYTE(packedCount) = (sampleCount >> 2) + 1;
+    g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
+    HIBYTE(packedCount) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
+    return mixInnerFunc(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (packedCount & 0xFF00));
   }
   return result;
 }
@@ -5566,45 +5566,45 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
 // into one of these shared chunks, which selects an unrolled mix variant by
 // destination alignment and calls it. Audio_MixMonoVoiceIntoBuffer and
 // Audio_MixPannedVoiceIntoBuffer inline these same two chunks directly.
-static int Audio_MixVoiceSpanDispatch_46BB40(signed int a1, int a2, char a3, void *a4)
+static int Audio_MixVoiceSpanDispatch_46BB40(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  int (__thiscall *v4)(signed int); // eax
+  int (__thiscall *mixInnerFunc)(signed int); // eax
   int result; // eax
 
-  if ( a2 )
+  if ( sampleCount )
   {
-    if ( !a3 )
-      memset(a4, 0, 4 * a2);
-    v4 = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (a2 & 3) + 16);
-    g_Audio_MixVoice_StepIntArg = a1 >> 16;
-    return v4(a1 << 16);
+    if ( !accumFlag )
+      memset(accumBuffer, 0, 4 * sampleCount);
+    mixInnerFunc = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
+    return mixInnerFunc(stepFixed << 16);
   }
   return result;
 }
 
 static unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
         unsigned int result,
-        signed int a2,
-        unsigned int a3,
-        __int16 a4,
-        void *a5)
+        signed int stepFixed,
+        unsigned int sampleCount,
+        __int16 volumeAndFlag,
+        void *accumBuffer)
 {
-  int (__thiscall *v5)(unsigned int); // eax
-  __int16 v6; // cx
+  int (__thiscall *mixInnerFunc)(unsigned int); // eax
+  __int16 packedCount; // cx
 
-  if ( a3 )
+  if ( sampleCount )
   {
-    if ( !(_BYTE)a4 )
+    if ( !(_BYTE)volumeAndFlag )
     {
       HIWORD(result) = 0;
-      memset(a5, 0, 8 * a3);
+      memset(accumBuffer, 0, 8 * sampleCount);
     }
     if ( (_BYTE)g_Audio_MixVoice_Pan == 0x80 )
     {
       g_Audio_MixVoice_LeftVolumeStep = -1;
       g_Audio_MixVoice_RightVolumeStep = 1;
-      g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
-      g_Audio_MixVoice_RightVolume = HIBYTE(a4);
+      g_Audio_MixVoice_LeftVolume = HIBYTE(volumeAndFlag);
+      g_Audio_MixVoice_RightVolume = HIBYTE(volumeAndFlag);
     }
     else
     {
@@ -5612,181 +5612,181 @@ static unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
       g_Audio_MixVoice_RightVolumeStep = 0;
       if ( (g_Audio_MixVoice_Pan & 0x80u) == 0 )
       {
-        g_Audio_MixVoice_RightVolume = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(a4);
+        g_Audio_MixVoice_RightVolume = HIBYTE(volumeAndFlag);
+        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(volumeAndFlag);
         g_Audio_MixVoice_LeftVolume = result >> 6;
       }
       else
       {
-        g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(a4);
+        g_Audio_MixVoice_LeftVolume = HIBYTE(volumeAndFlag);
+        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(volumeAndFlag);
         g_Audio_MixVoice_RightVolume = result >> 6;
       }
     }
-    g_Audio_MixVoice_PanStepFracArg = a2 << 16;
-    v5 = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (a3 & 3) + 16);
-    LOBYTE(v6) = (a3 >> 2) + 1;
-    g_Audio_MixVoice_StepIntArg = a2 >> 16;
-    HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
-    return v5(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (v6 & 0xFF00));
+    g_Audio_MixVoice_PanStepFracArg = stepFixed << 16;
+    mixInnerFunc = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    LOBYTE(packedCount) = (sampleCount >> 2) + 1;
+    g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
+    HIBYTE(packedCount) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
+    return mixInnerFunc(((unsigned int)g_CssMixBufferAlignedBase >> 2) + (packedCount & 0xFF00));
   }
   return result;
 }
 
 //----- (0046BE88) --------------------------------------------------------
-int Audio_SelectMixFormat1Mono(signed int a1, int a2, char a3, void *a4)
+int Audio_SelectMixFormat1Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1MonoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
+  return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46BDD1: using guessed type void *off_46BDD1;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046BF5E) --------------------------------------------------------
-unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
+unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1StereoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46BE97: using guessed type void *off_46BE97;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C030) --------------------------------------------------------
-int Audio_SelectMixFormat2Mono(signed int a1, int a2, char a3, void *a4)
+int Audio_SelectMixFormat2Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2MonoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
+  return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46BF6D: using guessed type void *off_46BF6D;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C1A2) --------------------------------------------------------
-unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
+unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2StereoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C03F: using guessed type void *off_46C03F;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C2FC) --------------------------------------------------------
-int Audio_SelectMixFormat3Mono(signed int a1, int a2, char a3, void *a4)
+int Audio_SelectMixFormat3Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3MonoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
+  return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C1B1: using guessed type void *off_46C1B1;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C472) --------------------------------------------------------
-unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
+unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3StereoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C30B: using guessed type void *off_46C30B;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C6B4) --------------------------------------------------------
-int Audio_SelectMixFormat4Mono(signed int a1, int a2, char a3, void *a4)
+int Audio_SelectMixFormat4Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4MonoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
+  return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C481: using guessed type void *off_46C481;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C996) --------------------------------------------------------
-unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
+unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4StereoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C6C3: using guessed type void *off_46C6C3;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046CE10) --------------------------------------------------------
-int Audio_SelectMixFormat5Mono(signed int a1, int a2, char a3, void *a4)
+int Audio_SelectMixFormat5Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5MonoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
+  return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C9A5: using guessed type void *off_46C9A5;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046D2A6) --------------------------------------------------------
-unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
+unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5StereoDispatchBase;
-  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46CE1F: using guessed type void *off_46CE1F;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046D2B5) --------------------------------------------------------
-int __cdecl Audio_ClearGlobalMixBuffer(int a1)
+int __cdecl Audio_ClearGlobalMixBuffer(int sampleCount)
 {
-  Audio_ZeroMixAccumulatorBuffer(a1, (void *)g_CSS_MixAccumBufferPtr);
+  Audio_ZeroMixAccumulatorBuffer(sampleCount, (void *)g_CSS_MixAccumBufferPtr);
   return 0;
 }
 
 //----- (0046D2D1) --------------------------------------------------------
-int  Audio_ZeroMixAccumulatorBuffer(int a1, void *a2)
+int  Audio_ZeroMixAccumulatorBuffer(int sampleCount, void *accumBuffer)
 {
   int result; // eax
 
-  if ( a1 )
+  if ( sampleCount )
   {
     result = 0;
     if ( g_CSS_MixChannelCount_54DBA4 == 2 )
-      a1 *= 2;
-    memset(a2, 0, 4 * a1);
+      sampleCount *= 2;
+    memset(accumBuffer, 0, 4 * sampleCount);
   }
   return result;
 }
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (0046D2F0) --------------------------------------------------------
-int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *a1)
+int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *capabilityOut)
 {
-  *a1 = 1;
+  *capabilityOut = 1;
   return 0;
 }
 
 //----- (0046D300) --------------------------------------------------------
-int __cdecl Audio_SetMixerParamValue(int a1, int a2)
+int __cdecl Audio_SetMixerParamValue(int a1, int volume)
 {
-  g_CSS_NullDriverMasterVolume = a2;
+  g_CSS_NullDriverMasterVolume = volume;
   return 0;
 }
 // 519BD0: using guessed type int dword_519BD0;
 
 //----- (0046D320) --------------------------------------------------------
-int __cdecl CSS_NullDriver_GetZero(_DWORD *a1)
+int __cdecl CSS_NullDriver_GetZero(_DWORD *valueOut)
 {
-  *a1 = 0;
+  *valueOut = 0;
   return 0;
 }
 
 //----- (0046D330) --------------------------------------------------------
-int __cdecl CSS_NullDriver_GetMasterVolume(_DWORD *a1)
+int __cdecl CSS_NullDriver_GetMasterVolume(_DWORD *volumeOut)
 {
-  *a1 = g_CSS_NullDriverMasterVolume;
+  *volumeOut = g_CSS_NullDriverMasterVolume;
   return 0;
 }
 // 519BD0: using guessed type int dword_519BD0;
 
 //----- (0046D350) --------------------------------------------------------
-int __cdecl CSS_Mem_TryAllocRaw(int a1, _DWORD *a2)
+int __cdecl CSS_Mem_TryAllocRaw(int byteCount, _DWORD *ptrOut)
 {
   int v2; // ecx
   __int64 v3; // rax
 
-  LODWORD(v3) = a1;
-  *a2 = 0;
-  if ( a1 )
+  LODWORD(v3) = byteCount;
+  *ptrOut = 0;
+  if ( byteCount )
   {
-    v3 = nmalloc_(v2, a2);
+    v3 = nmalloc_(v2, ptrOut);
     *(_DWORD *)HIDWORD(v3) = v3;
   }
   return v3;
@@ -5795,19 +5795,19 @@ int __cdecl CSS_Mem_TryAllocRaw(int a1, _DWORD *a2)
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (0046D370) --------------------------------------------------------
-int __cdecl CSS_Mem_TryAlloc(int a1, _DWORD *a2)
+int __cdecl CSS_Mem_TryAlloc(int byteCount, _DWORD *ptrOut)
 {
-  return CSS_Mem_TryAllocRaw(a1, a2);
+  return CSS_Mem_TryAllocRaw(byteCount, ptrOut);
 }
 
 //----- (0046D390) --------------------------------------------------------
-int __cdecl CSS_Mem_FreeIfSet(int a1)
+int __cdecl CSS_Mem_FreeIfSet(int ptr)
 {
   int v1; // ecx
   int result; // eax
 
-  result = a1;
-  if ( a1 )
+  result = ptr;
+  if ( ptr )
     return nfree_(v1);
   return result;
 }
@@ -5815,57 +5815,57 @@ int __cdecl CSS_Mem_FreeIfSet(int a1)
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 
 //----- (0046D3A0) --------------------------------------------------------
-_DWORD * CSS_FileStream_Create(_DWORD *a1, int a2, int a3, int a4)
+_DWORD * CSS_FileStream_Create(_DWORD *stream, int source, int bufferSizeHint, int dataBytes)
 {
-  int v5; // edx
-  int v6; // edx
-  int v7; // edx
+  int hintBytes; // edx
+  int blockCount; // edx
+  int totalBytes; // edx
 
-  a1[1] = a2;
-  a1[7] = 0;
-  a1[8] = 0;
-  a1[9] = 0;
-  a1[10] = 0;
-  a1[14] = a3;
-  *a1 = g_CSSFileStream_VTable;
-  a1[2] = (*(int (**)(void))(*(_DWORD *)a2 + 4))();
-  a1[3] = a1[2];
-  a1[4] = a4 + a1[3];
-  a1[5] = a1[3];
-  a1[6] = 0x7FFFFFFF;
-  a1[11] = 0;
-  v5 = a1[14];
-  a1[13] = 0x4000;
-  v6 = v5 / a1[13];
-  if ( v6 < 2 )
-    v6 = 2;
-  v7 = a1[13] * (v6 + 1);
-  a1[14] = v7;
-  a1[12] = 0;
-  CSS_Mem_TryAlloc(v7, a1 + 15);
-  a1[8] = a1[14];
-  a1[10] = a1[14];
-  return a1;
+  stream[1] = source;
+  stream[7] = 0;
+  stream[8] = 0;
+  stream[9] = 0;
+  stream[10] = 0;
+  stream[14] = bufferSizeHint;
+  *stream = g_CSSFileStream_VTable;
+  stream[2] = (*(int (**)(void))(*(_DWORD *)source + 4))();
+  stream[3] = stream[2];
+  stream[4] = dataBytes + stream[3];
+  stream[5] = stream[3];
+  stream[6] = 0x7FFFFFFF;
+  stream[11] = 0;
+  hintBytes = stream[14];
+  stream[13] = 0x4000;
+  blockCount = hintBytes / stream[13];
+  if ( blockCount < 2 )
+    blockCount = 2;
+  totalBytes = stream[13] * (blockCount + 1);
+  stream[14] = totalBytes;
+  stream[12] = 0;
+  CSS_Mem_TryAlloc(totalBytes, stream + 15);
+  stream[8] = stream[14];
+  stream[10] = stream[14];
+  return stream;
 }
 // 5105B4: using guessed type int (*off_5105B4[12])();
 
 //----- (0046D460) --------------------------------------------------------
-_DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5)
+_DWORD * CSS_FileStream_Destroy(_DWORD *stream, char dtorFlags, int a3, int a4, int a5)
 {
-  if ( (a2 & 4) != 0 )
+  if ( (dtorFlags & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(a3, &g_CSSFileStream_DtorArrayDescriptor);
     j_j__nfree_();
-    return a1;
+    return stream;
   }
   else
   {
-    *a1 = g_CSSFileStream_VTable;
-    CSS_Mem_FreeIfSet(a1[15]);
+    *stream = g_CSSFileStream_VTable;
+    CSS_Mem_FreeIfSet(stream[15]);
     (*(void (__cdecl **)(int, int, int))(*(_DWORD *)g_MediaFileStreamProvider + 20))(a3, a5, a4);
-    if ( (a2 & 2) != 0 )
+    if ( (dtorFlags & 2) != 0 )
       j__nfree_();
-    return a1;
+    return stream;
   }
 }
 // 46D460: could not find valid save-restore pair for edi
@@ -5875,97 +5875,97 @@ _DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5)
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046D530) --------------------------------------------------------
-int  CSS_FileStream_FillSequential(int a1)
+int  CSS_FileStream_FillSequential(int stream)
 {
   int result; // eax
   int v2; // ecx
 
-  result = (*(int (__thiscall **)(int))(**(_DWORD **)(a1 + 4) + 20))(a1);
+  result = (*(int (__thiscall **)(int))(**(_DWORD **)(stream + 4) + 20))(stream);
   *(_DWORD *)(v2 + 8) += result;
   return result;
 }
 // 46D53C: variable 'v2' is possibly undefined
 
 //----- (0046D550) --------------------------------------------------------
-int  CSS_FileStream_FillWithLoopWrap(int a1, int a2, int a3, int a4)
+int  CSS_FileStream_FillWithLoopWrap(int stream, int loopStart, int fillBytes, int loopEnd)
 {
-  int v7; // ecx
-  int v8; // eax
+  int readBytes; // ecx
+  int bytesRead; // eax
   int v9; // ecx
 
-  if ( a3 < a4 - *(_DWORD *)(a1 + 8) )
-    return CSS_FileStream_FillSequential(a1);
-  v7 = (*(int (**)(void))(**(_DWORD **)(a1 + 4) + 20))();
-  (***(void (__fastcall ****)(int, int))(a1 + 4))(v7, a2);
-  v8 = (*(int (**)(void))(**(_DWORD **)(a1 + 4) + 20))();
-  *(_DWORD *)(a1 + 8) = v8 + a2;
-  return v9 + v8;
+  if ( fillBytes < loopEnd - *(_DWORD *)(stream + 8) )
+    return CSS_FileStream_FillSequential(stream);
+  readBytes = (*(int (**)(void))(**(_DWORD **)(stream + 4) + 20))();
+  (***(void (__fastcall ****)(int, int))(stream + 4))(readBytes, loopStart);
+  bytesRead = (*(int (**)(void))(**(_DWORD **)(stream + 4) + 20))();
+  *(_DWORD *)(stream + 8) = bytesRead + loopStart;
+  return v9 + bytesRead;
 }
 // 46D5B2: variable 'v9' is possibly undefined
 
 //----- (0046D5C0) --------------------------------------------------------
-int  CSS_FileStream_FillOneBlock(_DWORD *a1, int a2)
+int  CSS_FileStream_FillOneBlock(_DWORD *stream, int blockBytes)
 {
-  int v3; // esi
+  int dataEnd; // esi
 
-  if ( !a2 )
+  if ( !blockBytes )
     return 0;
-  v3 = a1[4];
-  if ( a1[6] > v3 )
-    return CSS_FileStream_FillSequential((int)a1);
-  if ( a1[2] <= a1[6] )
-    return CSS_FileStream_FillWithLoopWrap((int)a1, a1[5], a2, a1[6]);
-  return CSS_FileStream_FillWithLoopWrap((int)a1, a1[3], a2, a1[4]);
+  dataEnd = stream[4];
+  if ( stream[6] > dataEnd )
+    return CSS_FileStream_FillSequential((int)stream);
+  if ( stream[2] <= stream[6] )
+    return CSS_FileStream_FillWithLoopWrap((int)stream, stream[5], blockBytes, stream[6]);
+  return CSS_FileStream_FillWithLoopWrap((int)stream, stream[3], blockBytes, stream[4]);
 }
 
 //----- (0046D620) --------------------------------------------------------
-int  CSS_FileStream_RefillBuffer(_DWORD *a1)
+int  CSS_FileStream_RefillBuffer(_DWORD *stream)
 {
   _DWORD *v1; // ecx
-  int v2; // eax
-  int v3; // ebp
-  int v4; // eax
-  int v5; // edi
-  _DWORD *v6; // esi
-  int v8; // eax
-  int v9; // [esp+4h] [ebp-1Ch]
+  int bufferedBytes; // eax
+  int totalRead; // ebp
+  int blocksToRead; // eax
+  int blockIndex; // edi
+  _DWORD *writePosPtr; // esi
+  int bytesRead; // eax
+  int maxBlocks; // [esp+4h] [ebp-1Ch]
 
-  v1 = a1;
-  v2 = a1[9] - a1[7];
-  v3 = 0;
-  if ( v1[14] - v2 < v1[13] )
-    v4 = 0;
+  v1 = stream;
+  bufferedBytes = stream[9] - stream[7];
+  totalRead = 0;
+  if ( v1[14] - bufferedBytes < v1[13] )
+    blocksToRead = 0;
   else
-    v4 = (3 * v2 <= v1[14]) + 1;
-  v9 = v4;
-  v5 = 0;
-  if ( v4 > 0 )
+    blocksToRead = (3 * bufferedBytes <= v1[14]) + 1;
+  maxBlocks = blocksToRead;
+  blockIndex = 0;
+  if ( blocksToRead > 0 )
   {
-    v6 = v1 + 9;
+    writePosPtr = v1 + 9;
     do
     {
       if ( v1[11] )
         break;
-      v8 = CSS_FileStream_FillOneBlock(v1, v1[13]);
-      *v6 += v8;
-      if ( v8 != v1[13] )
+      bytesRead = CSS_FileStream_FillOneBlock(v1, v1[13]);
+      *writePosPtr += bytesRead;
+      if ( bytesRead != v1[13] )
         v1[11] = 1;
-      ++v5;
-      v3 += v8;
+      ++blockIndex;
+      totalRead += bytesRead;
     }
-    while ( v5 < v9 );
+    while ( blockIndex < maxBlocks );
   }
-  return v3;
+  return totalRead;
 }
 // 46D66B: variable 'v1' is possibly undefined
 
 //----- (0046D6C0) --------------------------------------------------------
-int  CSS_FileStream_PreloadFully(int a1)
+int  CSS_FileStream_PreloadFully(int stream)
 {
   int v1; // edx
   int result; // eax
 
-  v1 = a1;
+  v1 = stream;
   do
     result = (*(int (**)(void))(*(_DWORD *)v1 + 32))();
   while ( result );
@@ -5974,108 +5974,108 @@ int  CSS_FileStream_PreloadFully(int a1)
 // 46D6C4: variable 'v1' is possibly undefined
 
 //----- (0046D6E0) --------------------------------------------------------
-int  CSS_FileStream_Read(_DWORD *a1, char *a2, int a3)
+int  CSS_FileStream_Read(_DWORD *stream, char *dest, int byteCount)
 {
-  signed int v3; // ebx
-  int v6; // [esp+8h] [ebp-1Ch]
-  int v8; // [esp+10h] [ebp-14h]
+  signed int contiguousBytes; // ebx
+  int totalCopied; // [esp+8h] [ebp-1Ch]
+  int bytesWanted; // [esp+10h] [ebp-14h]
 
-  v8 = a3;
-  v6 = 0;
-  if ( a1[9] - a1[7] < a3 )
-    v8 = a1[9] - a1[7];
-  while ( v8 )
+  bytesWanted = byteCount;
+  totalCopied = 0;
+  if ( stream[9] - stream[7] < byteCount )
+    bytesWanted = stream[9] - stream[7];
+  while ( bytesWanted )
   {
-    v3 = a1[8] - a1[7] % a1[8];
-    if ( v3 >= v8 )
-      v3 = v8;
-    qmemcpy(a2, (const void *)(a1[7] % a1[8] + a1[15]), v3);
-    a1[7] += v3;
-    a2 += v3;
-    v6 += v3;
-    v8 -= v3;
+    contiguousBytes = stream[8] - stream[7] % stream[8];
+    if ( contiguousBytes >= bytesWanted )
+      contiguousBytes = bytesWanted;
+    qmemcpy(dest, (const void *)(stream[7] % stream[8] + stream[15]), contiguousBytes);
+    stream[7] += contiguousBytes;
+    dest += contiguousBytes;
+    totalCopied += contiguousBytes;
+    bytesWanted -= contiguousBytes;
   }
-  if ( v6 < a3 )
-    ++a1[12];
-  return v6;
+  if ( totalCopied < byteCount )
+    ++stream[12];
+  return totalCopied;
 }
 
 //----- (0046D7C0) --------------------------------------------------------
-BOOL  CSS_FileStream_IsFinished(_DWORD *a1)
+BOOL  CSS_FileStream_IsFinished(_DWORD *stream)
 {
-  return a1[11] && a1[9] == a1[7];
+  return stream[11] && stream[9] == stream[7];
 }
 
 //----- (0046D7F0) --------------------------------------------------------
-int  CSS_FileStream_QueryDone(int a1)
+int  CSS_FileStream_QueryDone(int stream)
 {
-  return (*(int (**)(void))(*(_DWORD *)a1 + 4))();
+  return (*(int (**)(void))(*(_DWORD *)stream + 4))();
 }
 
 //----- (0046D800) --------------------------------------------------------
-signed int  CSS_FileStream_SetLoopRange(_DWORD *a1, int a2, int a3)
+signed int  CSS_FileStream_SetLoopRange(_DWORD *stream, int loopStart, int loopEnd)
 {
-  a1[5] = a2 + a1[3];
-  if ( a3 < 0 )
-    a3 = a1[4];
-  a1[6] = a3;
+  stream[5] = loopStart + stream[3];
+  if ( loopEnd < 0 )
+    loopEnd = stream[4];
+  stream[6] = loopEnd;
   return 1;
 }
 
 //----- (0046D830) --------------------------------------------------------
-_DWORD * CSS_FileStream_GetLoopRange(_DWORD *result, _DWORD *a2, _DWORD *a3)
+_DWORD * CSS_FileStream_GetLoopRange(_DWORD *result, _DWORD *loopStartOut, _DWORD *loopEndOut)
 {
   if ( result[6] == 0x7FFFFFFF )
   {
-    *a2 = 0;
-    *a3 = 0;
+    *loopStartOut = 0;
+    *loopEndOut = 0;
   }
   else
   {
-    *a2 = result[5] - result[3];
-    *a3 = result[6] - result[3];
+    *loopStartOut = result[5] - result[3];
+    *loopEndOut = result[6] - result[3];
   }
   return result;
 }
 
 //----- (0046D870) --------------------------------------------------------
-signed int  CSS_FileStream_ClearLoop(_DWORD *a1)
+signed int  CSS_FileStream_ClearLoop(_DWORD *stream)
 {
-  a1[5] = a1[3];
-  a1[6] = 0x7FFFFFFF;
+  stream[5] = stream[3];
+  stream[6] = 0x7FFFFFFF;
   return 1;
 }
 
 //----- (0046D890) --------------------------------------------------------
-int  CSS_FileStream_GetSourceBytesFetched(int a1)
+int  CSS_FileStream_GetSourceBytesFetched(int stream)
 {
-  return *(_DWORD *)(a1 + 8) - *(_DWORD *)(a1 + 12);
+  return *(_DWORD *)(stream + 8) - *(_DWORD *)(stream + 12);
 }
 
 //----- (0046D8A0) --------------------------------------------------------
-signed int  CSS_FileStream_DispatchIfInRange(int a1, int a2, int a3)
+signed int  CSS_FileStream_DispatchIfInRange(int stream, int offset, int callbackArg)
 {
-  int v3; // ecx
-  int v4; // edx
+  int basePos; // ecx
+  int absPos; // edx
 
-  v3 = *(_DWORD *)(a1 + 12);
-  v4 = v3 + a2;
-  if ( v4 < v3 || v4 >= *(_DWORD *)(a1 + 16) )
+  basePos = *(_DWORD *)(stream + 12);
+  absPos = basePos + offset;
+  if ( absPos < basePos || absPos >= *(_DWORD *)(stream + 16) )
     return 0;
-  (***(void (__cdecl ****)(int))(a1 + 4))(a3);
+  (***(void (__cdecl ****)(int))(stream + 4))(callbackArg);
   return 1;
 }
 
 //----- (0046D8D0) --------------------------------------------------------
-_DWORD * CSS_FileStream_New(int a1, int a2)
+_DWORD * CSS_FileStream_New(int source, int bufferBytes)
 {
-  _DWORD *v4; // eax
+  _DWORD *stream; // eax
   int v5; // edx
   int v6; // ecx
 
-  v4 = (_DWORD *)Mem_Alloc(64, a2, (char)&j____wcpp_4_fs_handler_rtn_, 0);
-  if ( v4 )
-    return CSS_FileStream_Create(v4, a1, v6, v5);
+  stream = (_DWORD *)Mem_Alloc(64, bufferBytes, (char)&j____wcpp_4_fs_handler_rtn_, 0);
+  if ( stream )
+    return CSS_FileStream_Create(stream, source, v6, v5);
   else
     return 0;
 }
@@ -6128,38 +6128,38 @@ int CSS_StreamService_NoOpHook()
 }
 
 //----- (0046DA00) --------------------------------------------------------
-unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
+unsigned int  CSS_CloseChannel(unsigned int channelIndex, signed int fadeMs)
 {
   unsigned int result; // eax
-  int *v4; // ebx
+  int *channel; // ebx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-30h]
-  int v6; // [esp+14h] [ebp-1Ch]
+  int streamObj; // [esp+14h] [ebp-1Ch]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  result = 52 * a1;
-  v4 = (int *)(result + g_SoundChannelArrayBase);
+  result = 52 * channelIndex;
+  channel = (int *)(result + g_SoundChannelArrayBase);
   if ( *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
   {
-    v4[10] = 0;
-    if ( (v4[9] & 0xC) != 0 )
+    channel[10] = 0;
+    if ( (channel[9] & 0xC) != 0 )
     {
-      CSS_ChannelStop(a1);
+      CSS_ChannelStop(channelIndex);
       ++g_StreamServiceLockEntryCount;
       EnterCriticalSection(&CriticalSection);
       ++g_CSS_MixerLockNestingCount;
       EnterCriticalSection(&stru_54D3FC);
-      v4[9] = 0;
-      v4[11] = 0;
-      CSS_Mem_FreeIfSet(*v4);
-      *v4 = 0;
-      v6 = v4[5];
-      if ( v6 )
-        (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(*(_DWORD *)v6 + 44))(
+      channel[9] = 0;
+      channel[11] = 0;
+      CSS_Mem_FreeIfSet(*channel);
+      *channel = 0;
+      streamObj = channel[5];
+      if ( streamObj )
+        (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(*(_DWORD *)streamObj + 44))(
           ExceptionList,
           &j____wcpp_4_fs_handler_rtn_,
           &g_CSSCloseChannel_EHScopeTable,
           1);
-      v4[5] = 0;
+      channel[5] = 0;
       --g_CSS_ActiveVoiceCount;
       LeaveCriticalSection(&CriticalSection);
       --g_StreamServiceLockEntryCount;
@@ -6168,12 +6168,12 @@ unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
     }
     else
     {
-      if ( a2 )
-        result = CSS_ChannelBeginVolumeFade(a1, 0, a2);
+      if ( fadeMs )
+        result = CSS_ChannelBeginVolumeFade(channelIndex, 0, fadeMs);
       else
-        result = CSS_ChannelMarkIdle(a1);
-      *v4 = 0;
-      v4[9] = 0;
+        result = CSS_ChannelMarkIdle(channelIndex);
+      *channel = 0;
+      channel[9] = 0;
     }
   }
   return result;
@@ -6184,29 +6184,29 @@ unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046DB80) --------------------------------------------------------
-int  CSS_Channel_FillSilence(int a1, int a2)
+int  CSS_Channel_FillSilence(int channel, int byteCount)
 {
   int result; // eax
-  int v4; // edx
+  int bytesRead; // edx
   int v5; // ecx
   int v6; // edx
   int v7; // ecx
-  int v8; // esi
+  int silenceBytes; // esi
   int v9; // ecx
 
-  if ( !a2 )
+  if ( !byteCount )
     return 1;
-  v4 = (***(int (__fastcall ****)(int, int))(a1 + 20))(a1, *(_DWORD *)(a1 + 12) + *(_DWORD *)a1);
-  *(_DWORD *)(v5 + 12) += v4;
-  if ( v4 >= a2 )
+  bytesRead = (***(int (__fastcall ****)(int, int))(channel + 20))(channel, *(_DWORD *)(channel + 12) + *(_DWORD *)channel);
+  *(_DWORD *)(v5 + 12) += bytesRead;
+  if ( bytesRead >= byteCount )
     return 1;
   result = (*(int (**)(void))(**(_DWORD **)(v5 + 20) + 4))();
   if ( result )
   {
-    v8 = a2 - v6;
+    silenceBytes = byteCount - v6;
     memset_(v7, *(_DWORD *)(v7 + 24));
-    *(_DWORD *)(v9 + 12) += v8;
-    *(_DWORD *)(v9 + 28) += v8;
+    *(_DWORD *)(v9 + 12) += silenceBytes;
+    *(_DWORD *)(v9 + 28) += silenceBytes;
     return 1;
   }
   return result;
@@ -6218,66 +6218,66 @@ int  CSS_Channel_FillSilence(int a1, int a2)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (0046DCA0) --------------------------------------------------------
-void  CSS_Channel_ServiceStream(unsigned int a1)
+void  CSS_Channel_ServiceStream(unsigned int channelIndex)
 {
-  int v2; // ebx
-  int v3; // esi
-  int v4; // edx
-  int v5; // eax
-  int v6; // edx
-  int v7; // eax
-  int v8; // esi
-  int v9; // edi
+  int channel; // ebx
+  int playPos; // esi
+  int writePos; // edx
+  int bufferBytes; // eax
+  int fillBytes; // edx
+  int fillTarget; // eax
+  int leadBytes; // esi
+  int savedBufferBytes; // edi
   int v10; // ecx
-  int v11; // edi
-  int v12; // [esp+0h] [ebp-14h] BYREF
-  int v13; // [esp+4h] [ebp-10h]
+  int remainingBytes; // edi
+  int playPosOut; // [esp+0h] [ebp-14h] BYREF
+  int savedPlayPos; // [esp+4h] [ebp-10h]
 
-  v2 = g_SoundChannelArrayBase + 52 * a1;
-  if ( (!*(_DWORD *)(g_CSS_ActiveSoundDriver + 28) || *(_DWORD *)(v2 + 28) >= *(_DWORD *)(v2 + 8))
-    && (*(int (**)(void))(**(_DWORD **)(v2 + 20) + 8))() )
+  channel = g_SoundChannelArrayBase + 52 * channelIndex;
+  if ( (!*(_DWORD *)(g_CSS_ActiveSoundDriver + 28) || *(_DWORD *)(channel + 28) >= *(_DWORD *)(channel + 8))
+    && (*(int (**)(void))(**(_DWORD **)(channel + 20) + 8))() )
   {
-    *(_DWORD *)(v2 + 48) = 1;
+    *(_DWORD *)(channel + 48) = 1;
     return;
   }
-  if ( *(_DWORD *)v2 && *(_DWORD *)(g_CSS_ActiveSoundDriver + 28) )
+  if ( *(_DWORD *)channel && *(_DWORD *)(g_CSS_ActiveSoundDriver + 28) )
   {
-    CSS_ChannelGetPlayPosition(a1, &v12);
-    if ( v12 )
-      v3 = v12;
+    CSS_ChannelGetPlayPosition(channelIndex, &playPosOut);
+    if ( playPosOut )
+      playPos = playPosOut;
     else
-      v3 = *(_DWORD *)(v2 + 8);
-    v4 = *(_DWORD *)(v2 + 12);
-    v5 = *(_DWORD *)(v2 + 8);
-    if ( v3 <= v4 )
+      playPos = *(_DWORD *)(channel + 8);
+    writePos = *(_DWORD *)(channel + 12);
+    bufferBytes = *(_DWORD *)(channel + 8);
+    if ( playPos <= writePos )
     {
-      v13 = v3;
-      v8 = v5 - v4;
-      v9 = v5;
-      if ( v5 - v4 > v5 )
-        v8 = v5;
-      if ( !CSS_Channel_FillSilence(v2, v8) )
+      savedPlayPos = playPos;
+      leadBytes = bufferBytes - writePos;
+      savedBufferBytes = bufferBytes;
+      if ( bufferBytes - writePos > bufferBytes )
+        leadBytes = bufferBytes;
+      if ( !CSS_Channel_FillSilence(channel, leadBytes) )
         goto LABEL_15;
       *(_DWORD *)(v10 + 12) = 0;
-      v11 = v9 - v8;
-      if ( !v11 )
+      remainingBytes = savedBufferBytes - leadBytes;
+      if ( !remainingBytes )
         goto LABEL_15;
-      if ( v13 - *(_DWORD *)(v10 + 16) <= v11 )
-        v6 = v13 - *(_DWORD *)(v10 + 16);
+      if ( savedPlayPos - *(_DWORD *)(v10 + 16) <= remainingBytes )
+        fillBytes = savedPlayPos - *(_DWORD *)(v10 + 16);
       else
-        v6 = v11;
-      v7 = v10;
+        fillBytes = remainingBytes;
+      fillTarget = v10;
     }
     else
     {
-      if ( v3 - v4 - *(_DWORD *)(v2 + 16) <= v5 )
-        v5 = v3 - v4 - *(_DWORD *)(v2 + 16);
-      v6 = v5;
-      v7 = v2;
+      if ( playPos - writePos - *(_DWORD *)(channel + 16) <= bufferBytes )
+        bufferBytes = playPos - writePos - *(_DWORD *)(channel + 16);
+      fillBytes = bufferBytes;
+      fillTarget = channel;
     }
-    CSS_Channel_FillSilence(v7, v6);
+    CSS_Channel_FillSilence(fillTarget, fillBytes);
 LABEL_15:
-    CSS_ChannelSetPositionOffset(a1, *(_DWORD *)(v2 + 12));
+    CSS_ChannelSetPositionOffset(channelIndex, *(_DWORD *)(channel + 12));
   }
 }
 // 46DD6D: variable 'v10' is possibly undefined
@@ -6285,47 +6285,47 @@ LABEL_15:
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046DEF0) --------------------------------------------------------
-int  CSS_Channel_StoreFormatParams(int a1, int a2)
+int  CSS_Channel_StoreFormatParams(int channel, int formatCode)
 {
   int result; // eax
 
-  *(_DWORD *)(a1 + 16) = CSS_GetFormatSampleSize(a2);
-  result = CSS_GetFormatSilenceValue(a2);
-  *(_DWORD *)(a1 + 24) = result;
+  *(_DWORD *)(channel + 16) = CSS_GetFormatSampleSize(formatCode);
+  result = CSS_GetFormatSilenceValue(formatCode);
+  *(_DWORD *)(channel + 24) = result;
   return result;
 }
 
 //----- (0046DF20) --------------------------------------------------------
-void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int a5, int a6)
+void  CSS_Channel_StartFileStream(unsigned int channelIndex, int *formatInfo, int panning, int volume, int a5, int channelFlags)
 {
-  _DWORD *v9; // ebx
-  int v10; // eax
-  int v11; // eax
-  int v12; // [esp+0h] [ebp-14h] BYREF
-  int v13; // [esp+4h] [ebp-10h]
+  _DWORD *channel; // ebx
+  int chunkBytes; // eax
+  int voiceId; // eax
+  int streamBuffer; // [esp+0h] [ebp-14h] BYREF
+  int savedPanning; // [esp+4h] [ebp-10h]
 
-  v13 = a3;
-  v12 = 0;
-  v9 = (_DWORD *)(52 * a1 + g_SoundChannelArrayBase);
-  CSS_Channel_StoreFormatParams((int)v9, *a2);
-  v10 = 3 * a2[2] / g_CSS_StreamServiceRateHz;
-  LOBYTE(v10) = v10 & 0xFC;
-  v9[1] = v10;
-  v9[2] = v9[1] * v9[4];
-  CSS_Mem_TryAlloc(v9[2], &v12);
-  v9[3] = 0;
-  v9[7] = 0;
-  CSS_ChannelInitPlayback(a1, v12, v9[2], *a2, a2[2]);
-  CSS_ChannelMarkIdle(a1);
-  CSS_ChannelSetVolumeImmediate(a1, a4);
-  CSS_ChannelSetPanning(a1, v13);
-  v9[12] = 0;
-  v9[11] = 0;
-  v9[9] = a6;
-  v11 = g_CSS_VoiceSequenceCounter++;
-  v9[10] = v11;
-  *v9 = v12;
-  CSS_Channel_ServiceStream(a1);
+  savedPanning = panning;
+  streamBuffer = 0;
+  channel = (_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase);
+  CSS_Channel_StoreFormatParams((int)channel, *formatInfo);
+  chunkBytes = 3 * formatInfo[2] / g_CSS_StreamServiceRateHz;
+  LOBYTE(chunkBytes) = chunkBytes & 0xFC;
+  channel[1] = chunkBytes;
+  channel[2] = channel[1] * channel[4];
+  CSS_Mem_TryAlloc(channel[2], &streamBuffer);
+  channel[3] = 0;
+  channel[7] = 0;
+  CSS_ChannelInitPlayback(channelIndex, streamBuffer, channel[2], *formatInfo, formatInfo[2]);
+  CSS_ChannelMarkIdle(channelIndex);
+  CSS_ChannelSetVolumeImmediate(channelIndex, volume);
+  CSS_ChannelSetPanning(channelIndex, savedPanning);
+  channel[12] = 0;
+  channel[11] = 0;
+  channel[9] = channelFlags;
+  voiceId = g_CSS_VoiceSequenceCounter++;
+  channel[10] = voiceId;
+  *channel = streamBuffer;
+  CSS_Channel_ServiceStream(channelIndex);
   ++g_CSS_ActiveVoiceCount;
 }
 // 519CB0: using guessed type int dword_519CB0;
@@ -6334,39 +6334,39 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E100) --------------------------------------------------------
-int  CSS_SampleCache_FreeEntry(int *a1)
+int  CSS_SampleCache_FreeEntry(int *entry)
 {
-  g_CSS_SampleCacheBytesUsed -= a1[2];
-  CSS_Mem_FreeIfSet(*a1);
-  CSS_Mem_FreeIfSet(a1[4]);
-  return CSS_Mem_FreeIfSet((int)a1);
+  g_CSS_SampleCacheBytesUsed -= entry[2];
+  CSS_Mem_FreeIfSet(*entry);
+  CSS_Mem_FreeIfSet(entry[4]);
+  return CSS_Mem_FreeIfSet((int)entry);
 }
 // 54D3BC: using guessed type int dword_54D3BC;
 
 //----- (0046E140) --------------------------------------------------------
-signed int  CSS_SampleCache_EvictEntry(int **a1)
+signed int  CSS_SampleCache_EvictEntry(int **entryLink)
 {
-  signed int v2; // ebx
-  int v3; // esi
-  int *v4; // eax
+  signed int channelIndex; // ebx
+  int channelOffset; // esi
+  int *entry; // eax
 
-  v2 = 0;
+  channelIndex = 0;
   if ( g_CssVoicePoolSize <= 0 )
   {
 LABEL_7:
-    v4 = *a1;
-    *a1 = (int *)(*a1)[5];
-    CSS_SampleCache_FreeEntry(v4);
+    entry = *entryLink;
+    *entryLink = (int *)(*entryLink)[5];
+    CSS_SampleCache_FreeEntry(entry);
     return 1;
   }
   else
   {
-    v3 = 0;
-    while ( !*(_DWORD *)(v3 + g_SoundChannelArrayBase + 40) || *(_DWORD *)(v3 + g_SoundChannelArrayBase) != **a1 || !CSS_ChannelIsPlaying(v2) )
+    channelOffset = 0;
+    while ( !*(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) || *(_DWORD *)(channelOffset + g_SoundChannelArrayBase) != **entryLink || !CSS_ChannelIsPlaying(channelIndex) )
     {
-      ++v2;
-      v3 += 52;
-      if ( v2 >= g_CssVoicePoolSize )
+      ++channelIndex;
+      channelOffset += 52;
+      if ( channelIndex >= g_CssVoicePoolSize )
         goto LABEL_7;
     }
     return 0;
@@ -6376,28 +6376,28 @@ LABEL_7:
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E1B0) --------------------------------------------------------
-int  CSS_SampleCache_MakeRoom(int a1)
+int  CSS_SampleCache_MakeRoom(int byteCount)
 {
-  int **v1; // edx
-  int v2; // ecx
+  int **link; // edx
+  int bytesNeeded; // ecx
   int result; // eax
-  int v4; // edx
+  int node; // edx
 
-  v1 = (int **)&g_SampleCacheListHead;
-  v2 = a1;
-  while ( v2 + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget && CSS_SampleCache_EvictEntry(v1) )
+  link = (int **)&g_SampleCacheListHead;
+  bytesNeeded = byteCount;
+  while ( bytesNeeded + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget && CSS_SampleCache_EvictEntry(link) )
     ;
-  result = v2 + g_CSS_SampleCacheBytesUsed;
-  if ( v2 + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget )
+  result = bytesNeeded + g_CSS_SampleCacheBytesUsed;
+  if ( bytesNeeded + g_CSS_SampleCacheBytesUsed > g_CSS_SampleCacheByteBudget )
   {
-    v4 = g_SampleCacheListHead;
+    node = g_SampleCacheListHead;
     while ( 1 )
     {
-      result = v2 + g_CSS_SampleCacheBytesUsed;
-      if ( v2 + g_CSS_SampleCacheBytesUsed <= g_CSS_SampleCacheByteBudget || !*(_DWORD *)(v4 + 20) )
+      result = bytesNeeded + g_CSS_SampleCacheBytesUsed;
+      if ( bytesNeeded + g_CSS_SampleCacheBytesUsed <= g_CSS_SampleCacheByteBudget || !*(_DWORD *)(node + 20) )
         break;
-      if ( !CSS_SampleCache_EvictEntry((int **)(v4 + 20)) )
-        v4 = *(_DWORD *)(v4 + 20);
+      if ( !CSS_SampleCache_EvictEntry((int **)(node + 20)) )
+        node = *(_DWORD *)(node + 20);
     }
   }
   return result;
@@ -6410,22 +6410,22 @@ int  CSS_SampleCache_MakeRoom(int a1)
 // 54D3C0: using guessed type int dword_54D3C0;
 
 //----- (0046E220) --------------------------------------------------------
-int  CSS_SampleCache_AppendEntry(int result, int a2)
+int  CSS_SampleCache_AppendEntry(int result, int entry)
 {
   for ( ; *(_DWORD *)(result + 20); result = *(_DWORD *)(result + 20) )
     ;
-  *(_DWORD *)(result + 20) = a2;
+  *(_DWORD *)(result + 20) = entry;
   return result;
 }
 
 //----- (0046E240) --------------------------------------------------------
-int  CSS_SampleCache_TouchEntry(int *a1)
+int  CSS_SampleCache_TouchEntry(int *listHead)
 {
   int v2; // ecx
   int result; // eax
 
-  CSS_SampleCache_AppendEntry(*a1, *a1);
-  *a1 = *(_DWORD *)(v2 + 20);
+  CSS_SampleCache_AppendEntry(*listHead, *listHead);
+  *listHead = *(_DWORD *)(v2 + 20);
   result = v2;
   *(_DWORD *)(v2 + 20) = 0;
   return result;
@@ -6433,18 +6433,18 @@ int  CSS_SampleCache_TouchEntry(int *a1)
 // 46E250: variable 'v2' is possibly undefined
 
 //----- (0046E270) --------------------------------------------------------
-int  CSS_SampleCache_FindAndTouch(int a1)
+int  CSS_SampleCache_FindAndTouch(int fileName)
 {
   int v3; // ecx
   int v4; // ecx
 
   if ( !g_SampleCacheListHead )
     return 0;
-  if ( stricmp_(g_SampleCacheListHead, a1) )
+  if ( stricmp_(g_SampleCacheListHead, fileName) )
   {
     while ( *(_DWORD *)(v3 + 20) )
     {
-      if ( !stricmp_(v3, a1) )
+      if ( !stricmp_(v3, fileName) )
         return CSS_SampleCache_TouchEntry((int *)(v4 + 20));
       v3 = *(_DWORD *)(v4 + 20);
     }
@@ -6460,15 +6460,15 @@ int  CSS_SampleCache_FindAndTouch(int a1)
 //----- (0046E2D0) --------------------------------------------------------
 struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
 {
-  int v0; // ebx
+  int channelOffset; // ebx
   signed int i; // ecx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  v0 = 0;
-  for ( i = 0; i < g_CssVoicePoolSize; v0 += 52 )
+  channelOffset = 0;
+  for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
-    if ( *(_DWORD *)(v0 + g_SoundChannelArrayBase + 48) )
+    if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 48) )
       CSS_CloseChannel(i, 0);
     ++i;
   }
@@ -6481,29 +6481,29 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
 //----- (0046E350) --------------------------------------------------------
 struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
 {
-  int v0; // ebx
+  int channelOffset; // ebx
   signed int i; // esi
-  int v2; // eax
+  int channel; // eax
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-2Ch]
   tagRECT *v5; // [esp+4h] [ebp-28h]
   void *v6; // [esp+8h] [ebp-24h]
   int v7; // [esp+Ch] [ebp-20h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  v0 = 0;
+  channelOffset = 0;
   v5 = &j____wcpp_4_fs_handler_rtn_;
   v6 = &g_CSSServiceStreamingChannels_EHScopeTable;
   v7 = 0;
   CSS_StreamService_NoOpHook();
-  for ( i = 0; i < g_CssVoicePoolSize; v0 += 52 )
+  for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
-    v2 = v0 + g_SoundChannelArrayBase;
-    if ( *(_DWORD *)(v0 + g_SoundChannelArrayBase + 44)
-      && *(_DWORD *)(v2 + 40)
-      && (*(_BYTE *)(v2 + 36) & 0xC) != 0
+    channel = channelOffset + g_SoundChannelArrayBase;
+    if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 44)
+      && *(_DWORD *)(channel + 40)
+      && (*(_BYTE *)(channel + 36) & 0xC) != 0
       && CSS_ChannelIsPlaying(i) )
     {
-      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v0 + g_SoundChannelArrayBase + 20)
+      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(channelOffset + g_SoundChannelArrayBase + 20)
                                                                                            + 32))(
         ExceptionList,
         v5,
@@ -6522,7 +6522,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E400) --------------------------------------------------------
-int __stdcall CSS_StreamReadingThreadProc(int a1)
+int __stdcall CSS_StreamReadingThreadProc(int threadParam)
 {
   ++g_CSS_StreamReadThreadLockRefCount;
   EnterCriticalSection(&stru_54D424);
@@ -6548,10 +6548,10 @@ int __stdcall CSS_StreamReadingThreadProc(int a1)
 _DWORD *__stdcall CSS_PauseStreamReading()
 {
   _DWORD *result; // eax
-  int *v1; // ebx
+  int *lockCounter; // ebx
   _DWORD v2[3]; // [esp+0h] [ebp-20h] BYREF
   int v3; // [esp+Ch] [ebp-14h]
-  int *v4; // [esp+14h] [ebp-Ch]
+  int *lockCounterPtr; // [esp+14h] [ebp-Ch]
 
   result = v2;
   v2[0] = NtCurrentTeb()->NtTib.ExceptionList;
@@ -6560,15 +6560,15 @@ _DWORD *__stdcall CSS_PauseStreamReading()
   v3 = 0;
   if ( g_CSS_StreamReadingActive )
   {
-    v4 = &g_StreamServiceLockEntryCount;
+    lockCounterPtr = &g_StreamServiceLockEntryCount;
     ++g_StreamServiceLockEntryCount;
     EnterCriticalSection(&CriticalSection);
     v3 = 1;
     SuspendThread(hThread);
     v3 = 0;
-    v1 = v4;
-    LeaveCriticalSection((LPCRITICAL_SECTION)(v4 + 1));
-    return (_DWORD *)(*v1)--;
+    lockCounter = lockCounterPtr;
+    LeaveCriticalSection((LPCRITICAL_SECTION)(lockCounterPtr + 1));
+    return (_DWORD *)(*lockCounter)--;
   }
   return result;
 }
@@ -6582,11 +6582,11 @@ DWORD __stdcall CSS_ResumeStreamReading()
 }
 
 //----- (0046E5D0) --------------------------------------------------------
-int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
+int __stdcall CSS_StreamBufferServiceThreadProc(int threadParam)
 {
-  signed int v1; // ebx
-  int v2; // esi
-  int v3; // eax
+  signed int channelIndex; // ebx
+  int channelOffset; // esi
+  int channel; // eax
 
   ++g_CSS_StreamServiceThreadLockRefCount;
   EnterCriticalSection(&stru_54D444);
@@ -6594,24 +6594,24 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
   {
     ++g_CSS_MixerLockNestingCount;
     EnterCriticalSection(&stru_54D3FC);
-    v1 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
-      v2 = 0;
+      channelOffset = 0;
       do
       {
-        v3 = v2 + g_SoundChannelArrayBase;
-        if ( *(_DWORD *)(v2 + g_SoundChannelArrayBase + 44)
-          && *(_DWORD *)(v3 + 40)
-          && (*(_BYTE *)(v3 + 36) & 0xC) != 0
-          && CSS_ChannelIsPlaying(v1) )
+        channel = channelOffset + g_SoundChannelArrayBase;
+        if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 44)
+          && *(_DWORD *)(channel + 40)
+          && (*(_BYTE *)(channel + 36) & 0xC) != 0
+          && CSS_ChannelIsPlaying(channelIndex) )
         {
-          CSS_Channel_ServiceStream(v1);
+          CSS_Channel_ServiceStream(channelIndex);
         }
-        ++v1;
-        v2 += 52;
+        ++channelIndex;
+        channelOffset += 52;
       }
-      while ( v1 < g_CssVoicePoolSize );
+      while ( channelIndex < g_CssVoicePoolSize );
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)(&g_CSS_MixerLockNestingCount + 1));
     --g_CSS_MixerLockNestingCount;
@@ -6632,31 +6632,31 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
 _DWORD *__stdcall CSS_EmptySampleCache()
 {
   _DWORD *result; // eax
-  int v1; // ebx
+  int channelOffset; // ebx
   signed int i; // ecx
-  char v3; // dl
-  int *v4; // eax
+  char channelFlags; // dl
+  int *entry; // eax
   _DWORD v5[6]; // [esp+Ch] [ebp-18h] BYREF
 
   result = v5;
   v5[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v1 = 0;
+  channelOffset = 0;
   v5[1] = &j____wcpp_4_fs_handler_rtn_;
   v5[2] = &g_CSSEmptySampleCache_EHScopeTable;
   v5[3] = 0;
-  for ( i = 0; i < g_CssVoicePoolSize; v1 += 52 )
+  for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
-    result = (_DWORD *)(v1 + g_SoundChannelArrayBase);
-    v3 = *(_BYTE *)(v1 + g_SoundChannelArrayBase + 36);
-    if ( (v3 & 1) != 0 || (v3 & 2) != 0 )
+    result = (_DWORD *)(channelOffset + g_SoundChannelArrayBase);
+    channelFlags = *(_BYTE *)(channelOffset + g_SoundChannelArrayBase + 36);
+    if ( (channelFlags & 1) != 0 || (channelFlags & 2) != 0 )
       result = (_DWORD *)CSS_CloseChannel(i, 0);
     ++i;
   }
   while ( g_SampleCacheListHead )
   {
-    v4 = (int *)g_SampleCacheListHead;
+    entry = (int *)g_SampleCacheListHead;
     g_SampleCacheListHead = *(_DWORD *)(g_SampleCacheListHead + 20);
-    result = (_DWORD *)CSS_SampleCache_FreeEntry(v4);
+    result = (_DWORD *)CSS_SampleCache_FreeEntry(entry);
   }
   return result;
 }
@@ -6666,60 +6666,60 @@ _DWORD *__stdcall CSS_EmptySampleCache()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E910) --------------------------------------------------------
-void  CSS_Channel_StartMemSound(unsigned int a1, int a2, int a3, int *a4, int a5, signed int a6)
+void  CSS_Channel_StartMemSound(unsigned int channelIndex, int voiceId, int volume, int *sampleEntry, int panning, signed int fadeMs)
 {
-  int v8; // edx
+  int channelBase; // edx
   int v9; // ecx
 
-  CSS_Channel_StoreFormatParams(52 * a1 + g_SoundChannelArrayBase, a4[1]);
-  v8 = g_SoundChannelArrayBase;
+  CSS_Channel_StoreFormatParams(52 * channelIndex + g_SoundChannelArrayBase, sampleEntry[1]);
+  channelBase = g_SoundChannelArrayBase;
   *(_DWORD *)(v9 + g_SoundChannelArrayBase + 36) = 1;
-  *(_DWORD *)(v9 + v8 + 48) = 0;
-  *(_DWORD *)(v9 + v8 + 40) = a2;
-  *(_DWORD *)(v8 + v9) = *a4;
-  CSS_ChannelQueueSound(a1, *a4, a4[2], a4[3], a4[1]);
-  CSS_ChannelSetVolumeImmediate(a1, 0);
-  CSS_ChannelBeginVolumeFade(a1, a3, a6);
-  CSS_ChannelSetPanning(a1, a5);
+  *(_DWORD *)(v9 + channelBase + 48) = 0;
+  *(_DWORD *)(v9 + channelBase + 40) = voiceId;
+  *(_DWORD *)(channelBase + v9) = *sampleEntry;
+  CSS_ChannelQueueSound(channelIndex, *sampleEntry, sampleEntry[2], sampleEntry[3], sampleEntry[1]);
+  CSS_ChannelSetVolumeImmediate(channelIndex, 0);
+  CSS_ChannelBeginVolumeFade(channelIndex, volume, fadeMs);
+  CSS_ChannelSetPanning(channelIndex, panning);
 }
 // 46E937: variable 'v9' is possibly undefined
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E9A0) --------------------------------------------------------
-int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
+int  CSS_Channel_SelectAndPlay(int *sampleEntry, int volume, signed int fadeMs, int panning)
 {
-  unsigned int v5; // edi
-  int v6; // eax
-  int v7; // ebx
-  int v8; // ecx
-  int v9; // esi
-  int v10; // esi
+  unsigned int bestChannel; // edi
+  int scanIndex; // eax
+  int bestScore; // ebx
+  int channelOffset; // ecx
+  int channelState; // esi
+  int voiceId; // esi
 
-  v5 = -1;
-  v6 = 0;
-  v7 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
+  bestChannel = -1;
+  scanIndex = 0;
+  bestScore = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
   if ( g_CssVoicePoolSize > 0 )
   {
-    v8 = 0;
+    channelOffset = 0;
     do
     {
-      v9 = *(_DWORD *)(v8 + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + g_SoundChannelArrayBase + 40) < v7 )
+      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        v7 = g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + g_SoundChannelArrayBase + 40);
-        v5 = v6;
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestChannel = scanIndex;
       }
-      ++v6;
-      v8 += 52;
+      ++scanIndex;
+      channelOffset += 52;
     }
-    while ( v6 < g_CssVoicePoolSize );
+    while ( scanIndex < g_CssVoicePoolSize );
   }
-  if ( v5 == -1 )
+  if ( bestChannel == -1 )
     return 0;
-  CSS_CloseChannel(v5, 0);
-  v10 = g_CSS_VoiceSequenceCounter++;
-  CSS_Channel_StartMemSound(v5, v10, a2, a1, a4, a3);
-  return v10;
+  CSS_CloseChannel(bestChannel, 0);
+  voiceId = g_CSS_VoiceSequenceCounter++;
+  CSS_Channel_StartMemSound(bestChannel, voiceId, volume, sampleEntry, panning, fadeMs);
+  return voiceId;
 }
 // 519C8C: using guessed type int dword_519C8C[];
 // 519C90: using guessed type int dword_519C90;
@@ -6728,91 +6728,91 @@ int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046EA90) --------------------------------------------------------
-_DWORD * CSS_CreateSampleCacheEntry(int a1, int a2, _DWORD *a3)
+_DWORD * CSS_CreateSampleCacheEntry(int stream, int fileName, _DWORD *formatInfo)
 {
-  _BYTE *v4; // edi
-  char v5; // al
-  char v6; // al
-  _DWORD *v7; // edi
-  _DWORD *v10; // [esp+4h] [ebp-14h] BYREF
+  _BYTE *nameDest; // edi
+  char ch; // al
+  char ch2; // al
+  _DWORD *fieldPtr; // edi
+  _DWORD *entry; // [esp+4h] [ebp-14h] BYREF
 
   CSS_StreamService_NoOpHook();
-  CSS_SampleCache_MakeRoom(a3[1]);
-  CSS_Mem_TryAlloc(24, &v10);
-  CSS_Mem_TryAlloc(strlen((const char *)a2) + 1, v10 + 4);
-  v4 = (_BYTE *)v10[4];
+  CSS_SampleCache_MakeRoom(formatInfo[1]);
+  CSS_Mem_TryAlloc(24, &entry);
+  CSS_Mem_TryAlloc(strlen((const char *)fileName) + 1, entry + 4);
+  nameDest = (_BYTE *)entry[4];
   do
   {
-    v5 = *(_BYTE *)a2;
-    *v4 = *(_BYTE *)a2;
-    if ( !v5 )
+    ch = *(_BYTE *)fileName;
+    *nameDest = *(_BYTE *)fileName;
+    if ( !ch )
       break;
-    v6 = *(_BYTE *)(a2 + 1);
-    a2 += 2;
-    v4[1] = v6;
-    v4 += 2;
+    ch2 = *(_BYTE *)(fileName + 1);
+    fileName += 2;
+    nameDest[1] = ch2;
+    nameDest += 2;
   }
-  while ( v6 );
-  CSS_Mem_TryAlloc(a3[1], v10);
-  (*(void (**)(void))(*(_DWORD *)a1 + 20))();
+  while ( ch2 );
+  CSS_Mem_TryAlloc(formatInfo[1], entry);
+  (*(void (**)(void))(*(_DWORD *)stream + 20))();
   (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
-  v10[5] = 0;
-  v7 = v10 + 1;
-  v10[1] = *a3;
-  *++v7 = a3[1];
-  v7[1] = a3[2];
+  entry[5] = 0;
+  fieldPtr = entry + 1;
+  entry[1] = *formatInfo;
+  *++fieldPtr = formatInfo[1];
+  fieldPtr[1] = formatInfo[2];
   if ( g_SampleCacheListHead )
-    CSS_SampleCache_AppendEntry(g_SampleCacheListHead, (int)v10);
+    CSS_SampleCache_AppendEntry(g_SampleCacheListHead, (int)entry);
   else
-    g_SampleCacheListHead = (int)v10;
-  g_CSS_SampleCacheBytesUsed += a3[1];
-  return v10;
+    g_SampleCacheListHead = (int)entry;
+  g_CSS_SampleCacheBytesUsed += formatInfo[1];
+  return entry;
 }
 // 54D3B8: using guessed type int dword_54D3B8;
 // 54D3BC: using guessed type int dword_54D3BC;
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046EB80) --------------------------------------------------------
-int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5)
+int  CSS_StartSampleVoice(int stream, int *formatInfo, int panning, int volume, int fadeMs)
 {
-  unsigned int v6; // edi
-  int v7; // eax
-  int v8; // ebx
-  int v9; // ecx
-  int v10; // esi
-  int v11; // esi
-  int v12; // ebx
-  int v13; // eax
+  unsigned int bestChannel; // edi
+  int scanIndex; // eax
+  int bestScore; // ebx
+  int channelOffset; // ecx
+  int channelState; // esi
+  int channelByteOffset; // esi
+  int bufferBytes; // ebx
+  int sampleSize; // eax
 
-  v6 = -1;
-  v7 = 0;
-  v8 = g_CSS_SampleVoiceStealBias + g_CSS_VoiceSequenceCounter;
+  bestChannel = -1;
+  scanIndex = 0;
+  bestScore = g_CSS_SampleVoiceStealBias + g_CSS_VoiceSequenceCounter;
   if ( g_CssVoicePoolSize > 0 )
   {
-    v9 = 0;
+    channelOffset = 0;
     do
     {
-      v10 = *(_DWORD *)(v9 + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + g_SoundChannelArrayBase + 40) < v8 )
+      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        v8 = g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + g_SoundChannelArrayBase + 40);
-        v6 = v7;
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestChannel = scanIndex;
       }
-      ++v7;
-      v9 += 52;
+      ++scanIndex;
+      channelOffset += 52;
     }
-    while ( v7 < g_CssVoicePoolSize );
+    while ( scanIndex < g_CssVoicePoolSize );
   }
-  if ( v6 != -1 )
-    CSS_CloseChannel(v6, 0);
-  v11 = 52 * v6;
-  v12 = g_CSS_StreamBufferMs * a2[2] / 1000;
-  v13 = CSS_GetFormatSampleSize(*a2);
-  *(_DWORD *)(g_SoundChannelArrayBase + v11 + 20) = CSS_FileStream_New(a1, v13 * v12);
-  CSS_Channel_StartFileStream(v6, a2, a3, a4, a5, 4);
-  *(_DWORD *)(v11 + g_SoundChannelArrayBase + 44) = 1;
-  CSS_ChannelMarkPlaying(v6);
-  return *(_DWORD *)(g_SoundChannelArrayBase + 52 * v6 + 40);
+  if ( bestChannel != -1 )
+    CSS_CloseChannel(bestChannel, 0);
+  channelByteOffset = 52 * bestChannel;
+  bufferBytes = g_CSS_StreamBufferMs * formatInfo[2] / 1000;
+  sampleSize = CSS_GetFormatSampleSize(*formatInfo);
+  *(_DWORD *)(g_SoundChannelArrayBase + channelByteOffset + 20) = CSS_FileStream_New(stream, sampleSize * bufferBytes);
+  CSS_Channel_StartFileStream(bestChannel, formatInfo, panning, volume, fadeMs, 4);
+  *(_DWORD *)(channelByteOffset + g_SoundChannelArrayBase + 44) = 1;
+  CSS_ChannelMarkPlaying(bestChannel);
+  return *(_DWORD *)(g_SoundChannelArrayBase + 52 * bestChannel + 40);
 }
 // 46EB80: could not find valid save-restore pair for ebx
 // 519C8C: using guessed type int dword_519C8C[];
@@ -6823,29 +6823,29 @@ int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046ECB0) --------------------------------------------------------
-int __stdcall CSS_ResumeStream(int a1)
+int __stdcall CSS_ResumeStream(int soundHandle)
 {
   int result; // eax
-  unsigned int v2; // edx
+  unsigned int channelIndex; // edx
 
-  result = a1;
-  if ( a1 )
+  result = soundHandle;
+  if ( soundHandle )
   {
-    v2 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
-        ++v2;
+        ++channelIndex;
         if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
-      if ( v2 != -1 )
+      if ( channelIndex != -1 )
       {
         *(_DWORD *)(result + g_SoundChannelArrayBase + 44) = 1;
-        return CSS_ChannelMarkPlaying(v2);
+        return CSS_ChannelMarkPlaying(channelIndex);
       }
     }
   }
@@ -6855,60 +6855,60 @@ int __stdcall CSS_ResumeStream(int a1)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046ED10) --------------------------------------------------------
-int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
+int  CSS_StartStreamVoice(int aviPlayer, int volume, int a3, DWORD panning)
 {
   int v7; // ecx
-  char v8; // al
-  unsigned int v9; // edi
-  int v10; // eax
-  int v11; // ebx
-  int v12; // ecx
-  int v13; // esi
-  int v14[3]; // [esp+14h] [ebp-24h] BYREF
-  _DWORD *v15; // [esp+20h] [ebp-18h]
-  int v16; // [esp+24h] [ebp-14h]
-  int v17; // [esp+28h] [ebp-10h]
+  char formatCode; // al
+  unsigned int bestChannel; // edi
+  int scanIndex; // eax
+  int bestScore; // ebx
+  int channelOffset; // ecx
+  int channelState; // esi
+  int formatInfo[3]; // [esp+14h] [ebp-24h] BYREF
+  _DWORD *streamAdapter; // [esp+20h] [ebp-18h]
+  int savedPanArg; // [esp+24h] [ebp-14h]
+  int savedVolume; // [esp+28h] [ebp-10h]
 
-  v17 = a2;
-  v16 = a3;
+  savedVolume = volume;
+  savedPanArg = a3;
   if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
-  if ( *(_WORD *)(*(_DWORD *)(a1 + 363) + 2) == 1 )
-    v8 = 1;
+  if ( *(_WORD *)(*(_DWORD *)(aviPlayer + 363) + 2) == 1 )
+    formatCode = 1;
   else
-    v8 = 3;
-  v14[0] = v8;
-  if ( *(_WORD *)(*(_DWORD *)(a1 + 363) + 14) == 16 )
-    ++v14[0];
-  v14[1] = *(_DWORD *)(a1 + 251);
-  v14[2] = *(_DWORD *)(*(_DWORD *)(a1 + 363) + 4);
-  v15 = IO_StreamAdapterAlloc(v7, 0, a4);
-  if ( !v15 )
+    formatCode = 3;
+  formatInfo[0] = formatCode;
+  if ( *(_WORD *)(*(_DWORD *)(aviPlayer + 363) + 14) == 16 )
+    ++formatInfo[0];
+  formatInfo[1] = *(_DWORD *)(aviPlayer + 251);
+  formatInfo[2] = *(_DWORD *)(*(_DWORD *)(aviPlayer + 363) + 4);
+  streamAdapter = IO_StreamAdapterAlloc(v7, 0, panning);
+  if ( !streamAdapter )
     return 0;
-  v9 = -1;
-  v10 = 0;
-  v11 = g_CSS_StreamVoiceStealBias + g_CSS_VoiceSequenceCounter;
+  bestChannel = -1;
+  scanIndex = 0;
+  bestScore = g_CSS_StreamVoiceStealBias + g_CSS_VoiceSequenceCounter;
   if ( g_CssVoicePoolSize > 0 )
   {
-    v12 = 0;
+    channelOffset = 0;
     do
     {
-      v13 = *(_DWORD *)(v12 + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40) < v11 )
+      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        v11 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40);
-        v9 = v10;
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestChannel = scanIndex;
       }
-      ++v10;
-      v12 += 52;
+      ++scanIndex;
+      channelOffset += 52;
     }
-    while ( v10 < g_CssVoicePoolSize );
+    while ( scanIndex < g_CssVoicePoolSize );
   }
-  if ( v9 != -1 )
-    CSS_CloseChannel(v9, 0);
-  *(_DWORD *)(g_SoundChannelArrayBase + 52 * v9 + 20) = v15;
-  CSS_Channel_StartFileStream(v9, v14, a4, v17, v16, 8);
-  return *(_DWORD *)(52 * v9 + g_SoundChannelArrayBase + 40);
+  if ( bestChannel != -1 )
+    CSS_CloseChannel(bestChannel, 0);
+  *(_DWORD *)(g_SoundChannelArrayBase + 52 * bestChannel + 20) = streamAdapter;
+  CSS_Channel_StartFileStream(bestChannel, formatInfo, panning, savedVolume, savedPanArg, 8);
+  return *(_DWORD *)(52 * bestChannel + g_SoundChannelArrayBase + 40);
 }
 // 46EDCD: variable 'v7' is possibly undefined
 // 519C8C: using guessed type int dword_519C8C[];
@@ -6919,24 +6919,24 @@ int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046EE90) --------------------------------------------------------
-void __stdcall CSS_LoadSample(int a1)
+void __stdcall CSS_LoadSample(int fileName)
 {
   int v1; // ecx
   int v2; // ecx
-  int v3; // esi
-  _DWORD v4[4]; // [esp+0h] [ebp-10h] BYREF
+  int stream; // esi
+  _DWORD formatInfo[4]; // [esp+0h] [ebp-10h] BYREF
 
   if ( g_CSS_ActiveSoundDriver )
   {
     if ( g_SoundChannelArrayBase )
     {
-      if ( !CSS_SampleCache_FindAndTouch(a1) )
+      if ( !CSS_SampleCache_FindAndTouch(fileName) )
       {
-        v3 = Audio_ReadWavHeaderFromStream(v1, v4);
-        if ( v3 )
+        stream = Audio_ReadWavHeaderFromStream(v1, formatInfo);
+        if ( stream )
         {
-          if ( v4[1] < g_CSS_SampleCacheByteBudget )
-            CSS_CreateSampleCacheEntry(v3, v2, v4);
+          if ( formatInfo[1] < g_CSS_SampleCacheByteBudget )
+            CSS_CreateSampleCacheEntry(stream, v2, formatInfo);
         }
       }
     }
@@ -6949,53 +6949,53 @@ void __stdcall CSS_LoadSample(int a1)
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046EEF0) --------------------------------------------------------
-int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, int a6, signed int a7)
+int __stdcall CSS_PlayMemSound(int sampleData, int formatCode, signed int dataBytes, int sampleRate, int volume, int panning, signed int fadeMs)
 {
-  unsigned int v9; // edi
-  int v10; // ebx
-  int v11; // eax
-  int v12; // ecx
-  int v13; // esi
-  int v14; // ebx
-  int v15; // eax
+  unsigned int bestChannel; // edi
+  int bestScore; // ebx
+  int scanIndex; // eax
+  int channelOffset; // ecx
+  int channelState; // esi
+  int voiceId; // ebx
+  int channelBase; // eax
   int v16; // ecx
 
   if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
-  v9 = -1;
-  v10 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
-  v11 = 0;
+  bestChannel = -1;
+  bestScore = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
+  scanIndex = 0;
   if ( g_CssVoicePoolSize > 0 )
   {
-    v12 = 0;
+    channelOffset = 0;
     do
     {
-      v13 = *(_DWORD *)(v12 + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40) < v10 )
+      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        v10 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + g_SoundChannelArrayBase + 40);
-        v9 = v11;
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestChannel = scanIndex;
       }
-      ++v11;
-      v12 += 52;
+      ++scanIndex;
+      channelOffset += 52;
     }
-    while ( v11 < g_CssVoicePoolSize );
+    while ( scanIndex < g_CssVoicePoolSize );
   }
-  if ( v9 == -1 )
+  if ( bestChannel == -1 )
     return 0;
-  CSS_CloseChannel(v9, 0);
-  v14 = g_CSS_VoiceSequenceCounter++;
-  CSS_Channel_StoreFormatParams(52 * v9 + g_SoundChannelArrayBase, a2);
-  v15 = g_SoundChannelArrayBase;
+  CSS_CloseChannel(bestChannel, 0);
+  voiceId = g_CSS_VoiceSequenceCounter++;
+  CSS_Channel_StoreFormatParams(52 * bestChannel + g_SoundChannelArrayBase, formatCode);
+  channelBase = g_SoundChannelArrayBase;
   *(_DWORD *)(v16 + g_SoundChannelArrayBase + 36) = 1;
-  *(_DWORD *)(v16 + v15 + 48) = 0;
-  *(_DWORD *)(v16 + v15 + 40) = v14;
-  *(_DWORD *)(v16 + v15) = a1;
-  CSS_ChannelQueueSound(v9, a1, a3, a4, a2);
-  CSS_ChannelSetVolumeImmediate(v9, 0);
-  CSS_ChannelBeginVolumeFade(v9, a5, a7);
-  CSS_ChannelSetPanning(v9, a6);
-  return v14;
+  *(_DWORD *)(v16 + channelBase + 48) = 0;
+  *(_DWORD *)(v16 + channelBase + 40) = voiceId;
+  *(_DWORD *)(v16 + channelBase) = sampleData;
+  CSS_ChannelQueueSound(bestChannel, sampleData, dataBytes, sampleRate, formatCode);
+  CSS_ChannelSetVolumeImmediate(bestChannel, 0);
+  CSS_ChannelBeginVolumeFade(bestChannel, volume, fadeMs);
+  CSS_ChannelSetPanning(bestChannel, panning);
+  return voiceId;
 }
 // 46EFDA: variable 'v16' is possibly undefined
 // 519C8C: using guessed type int dword_519C8C[];
@@ -7006,37 +7006,37 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046F040) --------------------------------------------------------
-int __stdcall CSS_PlaySound(int a1, int a2, int a3, signed int a4)
+int __stdcall CSS_PlaySound(int fileName, int volume, int panning, signed int fadeMs)
 {
-  int *v6; // eax
-  int v7; // esi
-  int *v8; // esi
-  int v9[7]; // [esp+14h] [ebp-1Ch] BYREF
+  int *cachedEntry; // eax
+  int stream; // esi
+  int *newEntry; // esi
+  int formatInfo[7]; // [esp+14h] [ebp-1Ch] BYREF
 
   if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
-  v6 = (int *)CSS_SampleCache_FindAndTouch(a1);
-  if ( v6 )
-    return CSS_Channel_SelectAndPlay(v6, a2, a4, a3);
-  v7 = Audio_ReadWavHeaderFromStream(a1, v9);
-  if ( !v7 )
+  cachedEntry = (int *)CSS_SampleCache_FindAndTouch(fileName);
+  if ( cachedEntry )
+    return CSS_Channel_SelectAndPlay(cachedEntry, volume, fadeMs, panning);
+  stream = Audio_ReadWavHeaderFromStream(fileName, formatInfo);
+  if ( !stream )
     return 0;
-  if ( v9[1] >= g_CSS_SampleCacheByteBudget )
-    return CSS_StartSampleVoice(v7, v9, a3, a2, a4);
+  if ( formatInfo[1] >= g_CSS_SampleCacheByteBudget )
+    return CSS_StartSampleVoice(stream, formatInfo, panning, volume, fadeMs);
   CSS_PauseStreamReading();
-  v8 = CSS_CreateSampleCacheEntry(v7, a1, v9);
+  newEntry = CSS_CreateSampleCacheEntry(stream, fileName, formatInfo);
   CSS_ResumeStreamReading();
-  return CSS_Channel_SelectAndPlay(v8, a2, a4, a3);
+  return CSS_Channel_SelectAndPlay(newEntry, volume, fadeMs, panning);
 }
 // 54D3C0: using guessed type int dword_54D3C0;
 // 54D3D0: using guessed type int dword_54D3D0;
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046F140) --------------------------------------------------------
-int __stdcall CSS_StopSound(int a1, signed int a2)
+int __stdcall CSS_StopSound(int soundHandle, signed int fadeMs)
 {
   int result; // eax
-  unsigned int v3; // ecx
+  unsigned int channelIndex; // ecx
   _DWORD v4[8]; // [esp+0h] [ebp-20h] BYREF
 
   result = (int)v4;
@@ -7044,21 +7044,21 @@ int __stdcall CSS_StopSound(int a1, signed int a2)
   v4[1] = &j____wcpp_4_fs_handler_rtn_;
   v4[2] = &g_CSSStopSound_EHScopeTable;
   v4[3] = 0;
-  if ( a1 )
+  if ( soundHandle )
   {
-    v3 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
+      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
       {
         result += 52;
-        ++v3;
+        ++channelIndex;
         if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
-      if ( v3 != -1 )
-        return CSS_CloseChannel(v3, a2);
+      if ( channelIndex != -1 )
+        return CSS_CloseChannel(channelIndex, fadeMs);
     }
   }
   return result;
@@ -7067,98 +7067,98 @@ int __stdcall CSS_StopSound(int a1, signed int a2)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F1E0) --------------------------------------------------------
-int __stdcall CSS_GetSoundPos(int a1)
+int __stdcall CSS_GetSoundPos(int soundHandle)
 {
-  unsigned int v1; // edx
-  int v2; // eax
-  unsigned int v3; // ebx
-  int v4; // ecx
-  unsigned int v6[3]; // [esp+0h] [ebp-Ch] BYREF
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
+  unsigned int foundChannel; // ebx
+  int channelState; // ecx
+  unsigned int playPosOut[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  if ( a1 && (v1 = 0, g_CssVoicePoolSize > 0) )
+  if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
-    v2 = 0;
-    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
+    channelOffset = 0;
+    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
     {
-      v2 += 52;
-      ++v1;
-      if ( v2 >= 52 * g_CssVoicePoolSize )
+      channelOffset += 52;
+      ++channelIndex;
+      if ( channelOffset >= 52 * g_CssVoicePoolSize )
         goto LABEL_10;
     }
   }
   else
   {
 LABEL_10:
-    v1 = -1;
+    channelIndex = -1;
   }
-  v3 = v1;
-  if ( v1 == -1 )
+  foundChannel = channelIndex;
+  if ( channelIndex == -1 )
     return 0;
-  v4 = *(_DWORD *)(52 * v1 + g_SoundChannelArrayBase + 36);
-  if ( v4 == 4 || v4 == 8 )
-    v6[0] = (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * v1 + 20) + 24))();
+  channelState = *(_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase + 36);
+  if ( channelState == 4 || channelState == 8 )
+    playPosOut[0] = (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 24))();
   else
-    CSS_ChannelGetPlayPosition(v1, v6);
-  return v6[0] / *(_DWORD *)(g_SoundChannelArrayBase + 52 * v3 + 16);
+    CSS_ChannelGetPlayPosition(channelIndex, playPosOut);
+  return playPosOut[0] / *(_DWORD *)(g_SoundChannelArrayBase + 52 * foundChannel + 16);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F280) --------------------------------------------------------
-void __stdcall CSS_SetSoundPos(int a1, int a2)
+void __stdcall CSS_SetSoundPos(int soundHandle, int samplePos)
 {
-  unsigned int v2; // edx
-  int v3; // eax
-  unsigned int v4; // ebx
-  int v5; // esi
-  int v6; // ecx
-  _DWORD *v7; // esi
-  unsigned int v8; // [esp-4h] [ebp-30h]
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
+  unsigned int foundChannel; // ebx
+  int channelBase; // esi
+  int channelState; // ecx
+  _DWORD *channel; // esi
+  unsigned int savedPlayPos; // [esp-4h] [ebp-30h]
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-2Ch]
-  unsigned int v10[6]; // [esp+14h] [ebp-18h] BYREF
+  unsigned int playPosOut[6]; // [esp+14h] [ebp-18h] BYREF
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  if ( a1 && (v2 = 0, g_CssVoicePoolSize > 0) )
+  if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
-    v3 = 0;
-    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
+    channelOffset = 0;
+    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
     {
-      v3 += 52;
-      ++v2;
-      if ( v3 >= 52 * g_CssVoicePoolSize )
+      channelOffset += 52;
+      ++channelIndex;
+      if ( channelOffset >= 52 * g_CssVoicePoolSize )
         goto LABEL_12;
     }
   }
   else
   {
 LABEL_12:
-    v2 = -1;
+    channelIndex = -1;
   }
-  v4 = v2;
-  if ( v2 != -1 )
+  foundChannel = channelIndex;
+  if ( channelIndex != -1 )
   {
-    v5 = g_SoundChannelArrayBase + 52 * v2;
-    v6 = *(_DWORD *)(v5 + 36);
-    if ( v6 == 4 || v6 == 8 )
+    channelBase = g_SoundChannelArrayBase + 52 * channelIndex;
+    channelState = *(_DWORD *)(channelBase + 36);
+    if ( channelState == 4 || channelState == 8 )
     {
       ++g_StreamServiceLockEntryCount;
       EnterCriticalSection(&CriticalSection);
       ++g_CSS_MixerLockNestingCount;
       EnterCriticalSection(&stru_54D3FC);
-      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v5 + 20) + 28))(
+      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(channelBase + 20) + 28))(
         ExceptionList,
         &j____wcpp_4_fs_handler_rtn_,
         &g_CSSSetSoundPos_EHScopeTable,
         1);
-      v7 = (_DWORD *)(52 * v4 + g_SoundChannelArrayBase);
-      if ( *v7 )
+      channel = (_DWORD *)(52 * foundChannel + g_SoundChannelArrayBase);
+      if ( *channel )
       {
-        CSS_ChannelGetPlayPosition(v4, v10);
-        v8 = v10[0];
-        v7[3] = v10[0];
-        CSS_ChannelSetPositionOffset(v4, v8);
+        CSS_ChannelGetPlayPosition(foundChannel, playPosOut);
+        savedPlayPos = playPosOut[0];
+        channel[3] = playPosOut[0];
+        CSS_ChannelSetPositionOffset(foundChannel, savedPlayPos);
       }
-      CSS_Channel_ServiceStream(v4);
+      CSS_Channel_ServiceStream(foundChannel);
       LeaveCriticalSection(&CriticalSection);
       --g_StreamServiceLockEntryCount;
       LeaveCriticalSection(&stru_54D3FC);
@@ -7166,7 +7166,7 @@ LABEL_12:
     }
     else
     {
-      CSS_ChannelSetPlayPosition(v2, *(_DWORD *)(v5 + 16) * a2);
+      CSS_ChannelSetPlayPosition(channelIndex, *(_DWORD *)(channelBase + 16) * samplePos);
     }
   }
 }
@@ -7176,29 +7176,29 @@ LABEL_12:
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046F420) --------------------------------------------------------
-int __stdcall CSS_PauseSound(int a1, signed int a2)
+int __stdcall CSS_PauseSound(int soundHandle, signed int fadeMs)
 {
   int result; // eax
-  unsigned int v3; // ebx
+  unsigned int channelIndex; // ebx
 
-  result = a1;
-  if ( a1 )
+  result = soundHandle;
+  if ( soundHandle )
   {
-    v3 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
-        ++v3;
+        ++channelIndex;
         if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
-      if ( v3 != -1 )
+      if ( channelIndex != -1 )
       {
-        CSS_ChannelGetVolume(v3, (_DWORD *)(result + g_SoundChannelArrayBase + 32));
-        return CSS_ChannelBeginVolumeFade(v3, 0, a2);
+        CSS_ChannelGetVolume(channelIndex, (_DWORD *)(result + g_SoundChannelArrayBase + 32));
+        return CSS_ChannelBeginVolumeFade(channelIndex, 0, fadeMs);
       }
     }
   }
@@ -7208,27 +7208,27 @@ int __stdcall CSS_PauseSound(int a1, signed int a2)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F490) --------------------------------------------------------
-int __stdcall CSS_ResumeSound(int a1, signed int a2)
+int __stdcall CSS_ResumeSound(int soundHandle, signed int fadeMs)
 {
   int result; // eax
-  unsigned int v3; // edx
+  unsigned int channelIndex; // edx
 
-  result = a1;
-  if ( a1 )
+  result = soundHandle;
+  if ( soundHandle )
   {
-    v3 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
-        ++v3;
+        ++channelIndex;
         if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
-      if ( v3 != -1 )
-        return CSS_ChannelBeginVolumeFade(v3, *(_DWORD *)(result + g_SoundChannelArrayBase + 32), a2);
+      if ( channelIndex != -1 )
+        return CSS_ChannelBeginVolumeFade(channelIndex, *(_DWORD *)(result + g_SoundChannelArrayBase + 32), fadeMs);
     }
   }
   return result;
@@ -7237,42 +7237,42 @@ int __stdcall CSS_ResumeSound(int a1, signed int a2)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F4F0) --------------------------------------------------------
-void __stdcall CSS_SetSoundLoop(int a1, int a2, int a3)
+void __stdcall CSS_SetSoundLoop(int soundHandle, int loopStart, int loopEnd)
 {
-  unsigned int v3; // edx
-  int v4; // eax
-  int v5; // ebx
-  int v6; // ebp
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
+  int channelBase; // ebx
+  int channelState; // ebp
 
-  if ( a1 )
+  if ( soundHandle )
   {
-    v3 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
-      v4 = 0;
+      channelOffset = 0;
       while ( 1 )
       {
-        v5 = v4 + g_SoundChannelArrayBase;
-        if ( a1 == *(_DWORD *)(v4 + g_SoundChannelArrayBase + 40) )
+        channelBase = channelOffset + g_SoundChannelArrayBase;
+        if ( soundHandle == *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) )
           break;
-        v4 += 52;
-        ++v3;
-        if ( v4 >= 52 * g_CssVoicePoolSize )
+        channelOffset += 52;
+        ++channelIndex;
+        if ( channelOffset >= 52 * g_CssVoicePoolSize )
           return;
       }
-      if ( v3 != -1 )
+      if ( channelIndex != -1 )
       {
-        v6 = *(_DWORD *)(v5 + 36);
-        if ( v6 == 4 || v6 == 8 )
+        channelState = *(_DWORD *)(channelBase + 36);
+        if ( channelState == 4 || channelState == 8 )
         {
-          (*(void (__fastcall **)(_DWORD, int))(**(_DWORD **)(v5 + 20) + 12))(
-            *(_DWORD *)(v5 + 20),
-            *(_DWORD *)(v5 + 16) * a2);
+          (*(void (__fastcall **)(_DWORD, int))(**(_DWORD **)(channelBase + 20) + 12))(
+            *(_DWORD *)(channelBase + 20),
+            *(_DWORD *)(channelBase + 16) * loopStart);
         }
         else
         {
-          CSS_SetMixChannelLoopPoints(v3, a2, a3);
-          *(_DWORD *)(v5 + 36) = 2;
+          CSS_SetMixChannelLoopPoints(channelIndex, loopStart, loopEnd);
+          *(_DWORD *)(channelBase + 36) = 2;
         }
       }
     }
@@ -7282,51 +7282,51 @@ void __stdcall CSS_SetSoundLoop(int a1, int a2, int a3)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F580) --------------------------------------------------------
-int __stdcall CSS_GetSoundLoop(int a1, _DWORD *a2, _DWORD *a3)
+int __stdcall CSS_GetSoundLoop(int soundHandle, _DWORD *loopStartOut, _DWORD *loopEndOut)
 {
   int result; // eax
-  unsigned int v4; // ecx
-  int v5; // edx
-  int v6; // ebx
-  int v7; // esi
+  unsigned int channelIndex; // ecx
+  int channelBase; // edx
+  int channelState; // ebx
+  int channelRec; // esi
 
-  result = a1;
-  if ( !a1 )
+  result = soundHandle;
+  if ( !soundHandle )
     goto LABEL_10;
-  v4 = 0;
+  channelIndex = 0;
   if ( g_CssVoicePoolSize <= 0 )
     goto LABEL_10;
   result = 0;
   while ( 1 )
   {
-    v5 = result + g_SoundChannelArrayBase;
-    if ( a1 == *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+    channelBase = result + g_SoundChannelArrayBase;
+    if ( soundHandle == *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       break;
     result += 52;
-    ++v4;
+    ++channelIndex;
     if ( result >= 52 * g_CssVoicePoolSize )
       goto LABEL_10;
   }
-  if ( v4 == -1 )
+  if ( channelIndex == -1 )
   {
 LABEL_10:
-    *a2 = 0;
-    *a3 = 0;
+    *loopStartOut = 0;
+    *loopEndOut = 0;
   }
   else
   {
-    v6 = *(_DWORD *)(v5 + 36);
-    v7 = result + g_SoundChannelArrayBase;
-    if ( v6 == 4 || v6 == 8 )
+    channelState = *(_DWORD *)(channelBase + 36);
+    channelRec = result + g_SoundChannelArrayBase;
+    if ( channelState == 4 || channelState == 8 )
     {
-      (*(void (**)(void))(**(_DWORD **)(v5 + 20) + 16))();
-      *a2 /= *(_DWORD *)(v7 + 16);
-      result = *a3 / *(_DWORD *)(v7 + 16);
-      *a3 = result;
+      (*(void (**)(void))(**(_DWORD **)(channelBase + 20) + 16))();
+      *loopStartOut /= *(_DWORD *)(channelRec + 16);
+      result = *loopEndOut / *(_DWORD *)(channelRec + 16);
+      *loopEndOut = result;
     }
     else
     {
-      return CSS_ChannelGetLoopRange(v4, a2, a3);
+      return CSS_ChannelGetLoopRange(channelIndex, loopStartOut, loopEndOut);
     }
   }
   return result;
@@ -7335,21 +7335,21 @@ LABEL_10:
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F620) --------------------------------------------------------
-int __stdcall CSS_UnLoopSound(int a1)
+int __stdcall CSS_UnLoopSound(int soundHandle)
 {
   int result; // eax
-  unsigned int v2; // edx
-  int v3; // ebx
-  int v4; // esi
+  unsigned int channelIndex; // edx
+  int channelByteOffset; // ebx
+  int channelState; // esi
 
-  result = a1;
-  if ( a1 && (v2 = 0, g_CssVoicePoolSize > 0) )
+  result = soundHandle;
+  if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
     result = 0;
-    while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
+    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
     {
       result += 52;
-      ++v2;
+      ++channelIndex;
       if ( result >= 52 * g_CssVoicePoolSize )
         goto LABEL_11;
     }
@@ -7357,21 +7357,21 @@ int __stdcall CSS_UnLoopSound(int a1)
   else
   {
 LABEL_11:
-    v2 = -1;
+    channelIndex = -1;
   }
-  if ( v2 != -1 )
+  if ( channelIndex != -1 )
   {
-    v3 = 52 * v2;
-    v4 = *(_DWORD *)(52 * v2 + g_SoundChannelArrayBase + 36);
-    if ( v4 == 4 || v4 == 8 )
+    channelByteOffset = 52 * channelIndex;
+    channelState = *(_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase + 36);
+    if ( channelState == 4 || channelState == 8 )
     {
-      return (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * v2 + 20) + 20))();
+      return (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 20))();
     }
     else
     {
-      CSS_ClearMixChannelLoopPoints(v2);
+      CSS_ClearMixChannelLoopPoints(channelIndex);
       result = g_SoundChannelArrayBase;
-      *(_DWORD *)(v3 + g_SoundChannelArrayBase + 36) = 1;
+      *(_DWORD *)(channelByteOffset + g_SoundChannelArrayBase + 36) = 1;
     }
   }
   return result;
@@ -7380,26 +7380,26 @@ LABEL_11:
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F6B0) --------------------------------------------------------
-void __stdcall CSS_SetSoundRate(int a1, unsigned __int32 a2)
+void __stdcall CSS_SetSoundRate(int soundHandle, unsigned __int32 sampleRate)
 {
-  unsigned int v2; // edx
-  int v3; // eax
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
 
-  if ( a1 )
+  if ( soundHandle )
   {
-    v2 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
-      v3 = 0;
-      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
+      channelOffset = 0;
+      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
       {
-        v3 += 52;
-        ++v2;
-        if ( v3 >= 52 * g_CssVoicePoolSize )
+        channelOffset += 52;
+        ++channelIndex;
+        if ( channelOffset >= 52 * g_CssVoicePoolSize )
           return;
       }
-      if ( v2 != -1 )
-        CSS_ChannelSetRate(v2, a2);
+      if ( channelIndex != -1 )
+        CSS_ChannelSetRate(channelIndex, sampleRate);
     }
   }
 }
@@ -7407,57 +7407,57 @@ void __stdcall CSS_SetSoundRate(int a1, unsigned __int32 a2)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F710) --------------------------------------------------------
-int __stdcall CSS_GetSoundRate(int a1)
+int __stdcall CSS_GetSoundRate(int soundHandle)
 {
-  unsigned int v1; // edx
-  int v2; // eax
-  _DWORD v4[3]; // [esp+0h] [ebp-Ch] BYREF
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
+  _DWORD rateOut[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  if ( !a1 )
+  if ( !soundHandle )
     return 0;
-  v1 = 0;
+  channelIndex = 0;
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
-  v2 = 0;
-  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
+  channelOffset = 0;
+  while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
   {
-    v2 += 52;
-    ++v1;
-    if ( v2 >= 52 * g_CssVoicePoolSize )
+    channelOffset += 52;
+    ++channelIndex;
+    if ( channelOffset >= 52 * g_CssVoicePoolSize )
       return 0;
   }
-  if ( v1 == -1 )
+  if ( channelIndex == -1 )
     return 0;
-  CSS_ChannelGetRate(v1, v4);
-  return v4[0];
+  CSS_ChannelGetRate(channelIndex, rateOut);
+  return rateOut[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F770) --------------------------------------------------------
-int __stdcall CSS_SetSoundVolume(int a1, int a2, signed int a3)
+int __stdcall CSS_SetSoundVolume(int soundHandle, int volume, signed int fadeMs)
 {
   int result; // eax
-  unsigned int v4; // edx
+  unsigned int channelIndex; // edx
 
-  result = a1;
-  if ( a1 )
+  result = soundHandle;
+  if ( soundHandle )
   {
-    v4 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( a1 != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
-        ++v4;
+        ++channelIndex;
         if ( result >= 52 * g_CssVoicePoolSize )
           return result;
       }
-      if ( v4 != -1 )
+      if ( channelIndex != -1 )
       {
-        *(_DWORD *)(result + g_SoundChannelArrayBase + 32) = a2;
-        return CSS_ChannelBeginVolumeFade(v4, a2, a3);
+        *(_DWORD *)(result + g_SoundChannelArrayBase + 32) = volume;
+        return CSS_ChannelBeginVolumeFade(channelIndex, volume, fadeMs);
       }
     }
   }
@@ -7467,54 +7467,54 @@ int __stdcall CSS_SetSoundVolume(int a1, int a2, signed int a3)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F7D0) --------------------------------------------------------
-int __stdcall CSS_GetSoundVolume(int a1)
+int __stdcall CSS_GetSoundVolume(int soundHandle)
 {
-  unsigned int v1; // edx
-  int v2; // eax
-  _DWORD v4[3]; // [esp+0h] [ebp-Ch] BYREF
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
+  _DWORD volumeOut[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  if ( !a1 )
+  if ( !soundHandle )
     return 0;
-  v1 = 0;
+  channelIndex = 0;
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
-  v2 = 0;
-  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
+  channelOffset = 0;
+  while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
   {
-    v2 += 52;
-    ++v1;
-    if ( v2 >= 52 * g_CssVoicePoolSize )
+    channelOffset += 52;
+    ++channelIndex;
+    if ( channelOffset >= 52 * g_CssVoicePoolSize )
       return 0;
   }
-  if ( v1 == -1 )
+  if ( channelIndex == -1 )
     return 0;
-  CSS_ChannelGetVolume(v1, v4);
-  return v4[0];
+  CSS_ChannelGetVolume(channelIndex, volumeOut);
+  return volumeOut[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F830) --------------------------------------------------------
-void __stdcall CSS_SetSoundPanning(int a1, int a2)
+void __stdcall CSS_SetSoundPanning(int soundHandle, int panning)
 {
-  unsigned int v2; // edx
-  int v3; // eax
+  unsigned int channelIndex; // edx
+  int channelOffset; // eax
 
-  if ( a1 )
+  if ( soundHandle )
   {
-    v2 = 0;
+    channelIndex = 0;
     if ( g_CssVoicePoolSize > 0 )
     {
-      v3 = 0;
-      while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v3 + 40) )
+      channelOffset = 0;
+      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
       {
-        v3 += 52;
-        ++v2;
-        if ( v3 >= 52 * g_CssVoicePoolSize )
+        channelOffset += 52;
+        ++channelIndex;
+        if ( channelOffset >= 52 * g_CssVoicePoolSize )
           return;
       }
-      if ( v2 != -1 )
-        CSS_ChannelSetPanning(v2, a2);
+      if ( channelIndex != -1 )
+        CSS_ChannelSetPanning(channelIndex, panning);
     }
   }
 }
@@ -7522,88 +7522,88 @@ void __stdcall CSS_SetSoundPanning(int a1, int a2)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F890) --------------------------------------------------------
-int __stdcall CSS_GetSoundPanning(int a1)
+int __stdcall CSS_GetSoundPanning(int sound_handle)
 {
-  unsigned int v1; // edx
-  int v2; // eax
-  _DWORD v4[3]; // [esp+0h] [ebp-Ch] BYREF
+  unsigned int channel_index; // edx
+  int channel_offset; // eax
+  _DWORD panning_out[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  if ( !a1 )
+  if ( !sound_handle )
     return 0;
-  v1 = 0;
+  channel_index = 0;
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
-  v2 = 0;
-  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
+  channel_offset = 0;
+  while ( sound_handle != *(_DWORD *)(g_SoundChannelArrayBase + channel_offset + 40) )
   {
-    v2 += 52;
-    ++v1;
-    if ( v2 >= 52 * g_CssVoicePoolSize )
+    channel_offset += 52;
+    ++channel_index;
+    if ( channel_offset >= 52 * g_CssVoicePoolSize )
       return 0;
   }
-  if ( v1 == -1 )
+  if ( channel_index == -1 )
     return 0;
-  CSS_ChannelGetPanning(v1, v4);
-  return v4[0];
+  CSS_ChannelGetPanning(channel_index, panning_out);
+  return panning_out[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F8F0) --------------------------------------------------------
-BOOL __stdcall CSS_IsPlaying(int a1)
+BOOL __stdcall CSS_IsPlaying(int sound_handle)
 {
-  unsigned int v1; // edx
-  int v2; // eax
+  unsigned int channel_index; // edx
+  int channel_offset; // eax
 
-  if ( !a1 )
+  if ( !sound_handle )
     return 0;
-  v1 = 0;
+  channel_index = 0;
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
-  v2 = 0;
-  while ( a1 != *(_DWORD *)(g_SoundChannelArrayBase + v2 + 40) )
+  channel_offset = 0;
+  while ( sound_handle != *(_DWORD *)(g_SoundChannelArrayBase + channel_offset + 40) )
   {
-    v2 += 52;
-    ++v1;
-    if ( v2 >= 52 * g_CssVoicePoolSize )
+    channel_offset += 52;
+    ++channel_index;
+    if ( channel_offset >= 52 * g_CssVoicePoolSize )
       return 0;
   }
-  return v1 != -1 && CSS_ChannelIsPlaying(v1);
+  return channel_index != -1 && CSS_ChannelIsPlaying(channel_index);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F950) --------------------------------------------------------
-signed int  CSS_InitVoicePool(int a1, int a2, int a3)
+signed int  CSS_InitVoicePool(int voice_count, int stream_buffer_ms, int sample_cache_kb)
 {
-  int v6; // ebx
-  int v7; // eax
-  int v8; // edx
-  _BYTE v10[20]; // [esp+14h] [ebp-14h] BYREF
+  int pool_bytes; // ebx
+  int channel_offset; // eax
+  int array_base; // edx
+  _BYTE thread_args[20]; // [esp+14h] [ebp-14h] BYREF
 
-  g_CssVoicePoolSize = a1;
-  v6 = 52 * a1;
-  CSS_Mem_TryAlloc(52 * a1, &g_SoundChannelArrayBase);
-  if ( a1 > 0 )
+  g_CssVoicePoolSize = voice_count;
+  pool_bytes = 52 * voice_count;
+  CSS_Mem_TryAlloc(52 * voice_count, &g_SoundChannelArrayBase);
+  if ( voice_count > 0 )
   {
-    v7 = 0;
+    channel_offset = 0;
     do
     {
-      v8 = g_SoundChannelArrayBase;
-      *(_DWORD *)(g_SoundChannelArrayBase + v7) = 0;
-      v7 += 52;
-      *(_DWORD *)(v8 + v7 - 12) = 0;
-      *(_DWORD *)(v8 + v7 - 16) = 0;
-      *(_DWORD *)(v8 + v7 - 4) = 0;
+      array_base = g_SoundChannelArrayBase;
+      *(_DWORD *)(g_SoundChannelArrayBase + channel_offset) = 0;
+      channel_offset += 52;
+      *(_DWORD *)(array_base + channel_offset - 12) = 0;
+      *(_DWORD *)(array_base + channel_offset - 16) = 0;
+      *(_DWORD *)(array_base + channel_offset - 4) = 0;
     }
-    while ( v7 < v6 );
+    while ( channel_offset < pool_bytes );
   }
-  g_CSS_StreamBufferMs = a2;
-  g_CSS_SampleCacheByteBudget = a3 << 10;
+  g_CSS_StreamBufferMs = stream_buffer_ms;
+  g_CSS_SampleCacheByteBudget = sample_cache_kb << 10;
   g_CSS_StreamReadingActive = 1;
   g_CSS_StreamThreadRunning = 1;
-  hThread = (HANDLE)beginthreadex_(0, v10);
-  g_CSS_StreamThreadHandle = beginthreadex_(0, v10);
+  hThread = (HANDLE)beginthreadex_(0, thread_args);
+  g_CSS_StreamThreadHandle = beginthreadex_(0, thread_args);
   SetThreadPriority((HANDLE)g_CSS_StreamThreadHandle, 2);
   return 1;
 }
@@ -7624,28 +7624,28 @@ _DWORD *CSS_ShutdownVoicePool()
   int v2; // ecx
   signed int i; // ecx
   int v4; // ecx
-  _DWORD v5[3]; // [esp+0h] [ebp-30h] BYREF
-  int v6; // [esp+Ch] [ebp-24h]
-  int *v7; // [esp+14h] [ebp-1Ch]
-  int *v8; // [esp+18h] [ebp-18h]
+  _DWORD eh_frame[3]; // [esp+0h] [ebp-30h] BYREF
+  int try_level; // [esp+Ch] [ebp-24h]
+  int *read_lock_refcount; // [esp+14h] [ebp-1Ch]
+  int *service_lock_refcount; // [esp+18h] [ebp-18h]
 
-  result = v5;
-  v5[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v5[1] = &j____wcpp_4_fs_handler_rtn_;
-  v5[2] = &g_CSSShutdownVoicePool_EHScopeTable;
-  v6 = 0;
+  result = eh_frame;
+  eh_frame[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  eh_frame[1] = &j____wcpp_4_fs_handler_rtn_;
+  eh_frame[2] = &g_CSSShutdownVoicePool_EHScopeTable;
+  try_level = 0;
   if ( g_SoundChannelArrayBase )
   {
     g_CSS_StreamReadingActive = 0;
     g_CSS_StreamThreadRunning = 0;
-    v7 = &g_CSS_StreamReadThreadLockRefCount;
+    read_lock_refcount = &g_CSS_StreamReadThreadLockRefCount;
     ++g_CSS_StreamReadThreadLockRefCount;
     EnterCriticalSection(&stru_54D424);
-    v6 = 1;
-    v8 = &g_CSS_StreamServiceThreadLockRefCount;
+    try_level = 1;
+    service_lock_refcount = &g_CSS_StreamServiceThreadLockRefCount;
     ++g_CSS_StreamServiceThreadLockRefCount;
     EnterCriticalSection(&stru_54D444);
-    v6 = 2;
+    try_level = 2;
     CRT_WatcomEHUnwindToExceptionList(v2, v1);
     for ( i = 0; i < g_CssVoicePoolSize; i = v4 + 1 )
       CSS_CloseChannel(i, 0);
@@ -7728,7 +7728,7 @@ int CSS_PollAudioDeviceChange()
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046FC80) --------------------------------------------------------
-int __stdcall CSS_DeviceSearchThreadProc(int a1)
+int __stdcall CSS_DeviceSearchThreadProc(int thread_param)
 {
   ++g_CSS_DeviceSearchThreadRefCount;
   EnterCriticalSection(&stru_54D49C);
@@ -7746,23 +7746,23 @@ int __stdcall CSS_DeviceSearchThreadProc(int a1)
 // 54D4B4: using guessed type int dword_54D4B4;
 
 //----- (0046FE10) --------------------------------------------------------
-int __stdcall CSS_SetDirectSoundHWnd(int a1)
+int __stdcall CSS_SetDirectSoundHWnd(int hwnd)
 {
   int result; // eax
 
-  result = a1;
-  g_AudioWindowHandle = a1;
+  result = hwnd;
+  g_AudioWindowHandle = hwnd;
   return result;
 }
 // 54D470: using guessed type int dword_54D470;
 
 //----- (0046FE20) --------------------------------------------------------
-int __stdcall CSS_SetDeviceSearch(int a1)
+int __stdcall CSS_SetDeviceSearch(int search_index)
 {
   int result; // eax
 
-  result = a1;
-  g_CSS_DeviceSearchIndex = a1;
+  result = search_index;
+  g_CSS_DeviceSearchIndex = search_index;
   return result;
 }
 // 54D48C: using guessed type int dword_54D48C;
@@ -7797,9 +7797,9 @@ signed int CSS_ResetDeviceConfigDefaults()
 // 54D490: using guessed type int dword_54D490;
 
 //----- (0046FEA0) --------------------------------------------------------
-int __stdcall CSS_SetMasterVolume(int a1)
+int __stdcall CSS_SetMasterVolume(int volume)
 {
-  return CSS_SetMixMasterVolume(a1);
+  return CSS_SetMixMasterVolume(volume);
 }
 
 //----- (0046FEB0) --------------------------------------------------------
@@ -7850,53 +7850,53 @@ void __stdcall CSS_Close()
 // 54D4B4: using guessed type int dword_54D4B4;
 
 //----- (0046FF80) --------------------------------------------------------
-int __stdcall CSS_SetFileSystem(int a1)
+int __stdcall CSS_SetFileSystem(int file_stream_provider)
 {
   int result; // eax
 
-  result = a1;
-  g_MediaFileStreamProvider = a1;
+  result = file_stream_provider;
+  g_MediaFileStreamProvider = file_stream_provider;
   return result;
 }
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046FF90) --------------------------------------------------------
-signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
+signed int __stdcall CSS_Init(int voice_count, int volume_scale, int stream_buffer_ms, int sample_cache_kb)
 {
-  int v4; // ebx
-  int v5; // esi
-  int v6; // eax
-  void *v9; // eax
-  int v10; // [esp+14h] [ebp-18h] BYREF
-  _BYTE v11[20]; // [esp+18h] [ebp-14h] BYREF
+  int driver_index; // ebx
+  int driver_table_offset; // esi
+  int driver_ptr; // eax
+  void *thread_handle; // eax
+  int device_available; // [esp+14h] [ebp-18h] BYREF
+  _BYTE thread_args[20]; // [esp+18h] [ebp-14h] BYREF
 
   CSS_ResetDeviceConfigDefaults();
   if ( g_CSS_DeviceHandleCache_DriverIndex == -1 )
   {
-    v4 = g_CSS_DeviceSearchIndex;
+    driver_index = g_CSS_DeviceSearchIndex;
     if ( g_CSS_DeviceSearchIndex < 3 )
     {
-      v5 = 4 * g_CSS_DeviceSearchIndex;
+      driver_table_offset = 4 * g_CSS_DeviceSearchIndex;
       do
       {
         if ( g_CSS_DeviceHandleCache_DriverIndex != -1 )
           break;
-        if ( !(*(int (__cdecl ***)(int *))((char *)&g_CSS_DriverDescriptorTable + v5))[12](&v10) && v10 == 1 )
-          g_CSS_DeviceHandleCache_DriverIndex = v4;
-        ++v4;
-        v5 += 4;
+        if ( !(*(int (__cdecl ***)(int *))((char *)&g_CSS_DriverDescriptorTable + driver_table_offset))[12](&device_available) && device_available == 1 )
+          g_CSS_DeviceHandleCache_DriverIndex = driver_index;
+        ++driver_index;
+        driver_table_offset += 4;
       }
-      while ( v4 < 3 );
+      while ( driver_index < 3 );
     }
   }
   else
   {
-    (*((void (__cdecl **)(int *))*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex) + 12))(&v10);
+    (*((void (__cdecl **)(int *))*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex) + 12))(&device_available);
   }
-  v6 = (int)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
-  g_CSS_ActiveSoundDriver = v6;
+  driver_ptr = (int)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
+  g_CSS_ActiveSoundDriver = driver_ptr;
   if ( g_CSS_DeviceHandleCache_Param1 != -1 )
-    *(_DWORD *)(v6 + 8) = g_CSS_DeviceHandleCache_Param1;
+    *(_DWORD *)(driver_ptr + 8) = g_CSS_DeviceHandleCache_Param1;
   if ( g_CSS_DeviceHandleCache_Param2 != -1 )
     *(_DWORD *)(g_CSS_ActiveSoundDriver + 12) = g_CSS_DeviceHandleCache_Param2;
   if ( g_CSS_DeviceHandleCacheParam3 != -1 )
@@ -7911,14 +7911,14 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   }
   else
   {
-    g_CSS_VoiceCount = a1;
+    g_CSS_VoiceCount = voice_count;
     g_CSS_AudioDeviceActive = 1;
-    CSS_InitMixChannels(a1);
-    CSS_BuildVolumeScaleTable(a2);
+    CSS_InitMixChannels(voice_count);
+    CSS_BuildVolumeScaleTable(volume_scale);
     g_CSS_DevicePollThreadRunning = 1;
-    v9 = (void *)beginthreadex_(0, v11);
-    SetThreadPriority(v9, 2);
-    CSS_InitVoicePool(a1, a3, a4);
+    thread_handle = (void *)beginthreadex_(0, thread_args);
+    SetThreadPriority(thread_handle, 2);
+    CSS_InitVoicePool(voice_count, stream_buffer_ms, sample_cache_kb);
     return 1;
   }
 }
@@ -7993,35 +7993,35 @@ unsigned int  CSS_TranslateWaveOutError(unsigned int result)
 }
 
 //----- (004701E0) --------------------------------------------------------
-int __cdecl CSS_QueryWaveOutDevicePresent(_DWORD *a1)
+int __cdecl CSS_QueryWaveOutDevicePresent(_DWORD *device_present_out)
 {
-  *a1 = waveOutGetNumDevs() != 0;
+  *device_present_out = waveOutGetNumDevs() != 0;
   return 0;
 }
 
 //----- (00470220) --------------------------------------------------------
-unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char a2)
+unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char format_flags)
 {
-  bool v2; // zf
-  unsigned int v3; // eax
-  MMRESULT v4; // eax
-  unsigned int v5; // esi
-  int v6; // ebx
-  HGLOBAL v7; // eax
+  bool format_unsupported; // zf
+  unsigned int buffer_bytes; // eax
+  MMRESULT mm_result; // eax
+  unsigned int buffer_count; // esi
+  int buffer_index; // ebx
+  HGLOBAL buffer_mem_handle; // eax
   unsigned int result; // eax
-  LPVOID v9; // eax
-  unsigned int v10; // esi
-  int v11; // ebx
-  HGLOBAL v12; // eax
-  struct wavehdr_tag *v13; // eax
-  SIZE_T v14; // edx
-  unsigned int v15; // edi
+  LPVOID buffer_ptr; // eax
+  unsigned int header_count; // esi
+  int header_index; // ebx
+  HGLOBAL header_mem_handle; // eax
+  struct wavehdr_tag *wave_header; // eax
+  SIZE_T buffer_length; // edx
+  unsigned int mix_channel_count; // edi
   struct tagWAVEOUTCAPSA pwoc; // [esp+0h] [ebp-58h] BYREF
   WAVEFORMATEX pwfx; // [esp+34h] [ebp-24h] BYREF
 
   g_CSS_SampleRateHz = 44100;
-  g_WaveOutFormatFlags = ((a2 & 1) == 0) + 1;
-  if ( (a2 & 4) != 0 )
+  g_WaveOutFormatFlags = ((format_flags & 1) == 0) + 1;
+  if ( (format_flags & 4) != 0 )
     LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags | 4;
   else
     LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags | 8;
@@ -8038,9 +8038,9 @@ unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char a2)
         g_CSS_SampleRateHz = 22050;
       if ( SLOBYTE(pwoc.dwFormats) >= 0 )
         g_CSS_SampleRateHz = 11025;
-      v2 = (pwoc.dwFormats & 8) == 0;
+      format_unsupported = (pwoc.dwFormats & 8) == 0;
 LABEL_17:
-      if ( v2 )
+      if ( format_unsupported )
         LOBYTE(g_WaveOutFormatFlags) = g_WaveOutFormatFlags & 0xF7;
       goto LABEL_19;
     }
@@ -8059,7 +8059,7 @@ LABEL_17:
         g_CSS_SampleRateHz = 22050;
       if ( (pwoc.dwFormats & 0x40) == 0 )
         g_CSS_SampleRateHz = 11025;
-      v2 = (pwoc.dwFormats & 4) == 0;
+      format_unsupported = (pwoc.dwFormats & 4) == 0;
       goto LABEL_17;
     }
     if ( (pwoc.dwFormats & 0x100) == 0 )
@@ -8074,10 +8074,10 @@ LABEL_19:
   g_CSS_MixChannelCount = 8;
   g_CSS_WaveOutFillByteOffset = 0;
   g_WaveOutBufferRingIndex = 0;
-  v3 = g_CSS_WaveBlockAlign * (3 * g_CSS_SampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz) / 8 + 15;
-  LOBYTE(v3) = v3 & 0xF0;
+  buffer_bytes = g_CSS_WaveBlockAlign * (3 * g_CSS_SampleRateHz / (unsigned int)g_CSS_MixUpdateRateHz) / 8 + 15;
+  LOBYTE(buffer_bytes) = buffer_bytes & 0xF0;
   pwfx.wFormatTag = 1;
-  dwBytes = v3;
+  dwBytes = buffer_bytes;
   pwfx.nChannels = ((g_WaveOutFormatFlags & 2) != 0) + 1;
   pwfx.nSamplesPerSec = g_CSS_SampleRateHz;
   pwfx.nAvgBytesPerSec = g_CSS_SampleRateHz * g_CSS_WaveBlockAlign;
@@ -8087,56 +8087,56 @@ LABEL_19:
   else
     pwfx.wBitsPerSample = 8;
   pwfx.cbSize = 0;
-  v4 = waveOutOpen(&hwo, 0xFFFFFFFF, &pwfx, 0, 0, 0);
-  if ( v4 )
-    return CSS_TranslateWaveOutError(v4);
-  v5 = 0;
+  mm_result = waveOutOpen(&hwo, 0xFFFFFFFF, &pwfx, 0, 0, 0);
+  if ( mm_result )
+    return CSS_TranslateWaveOutError(mm_result);
+  buffer_count = 0;
   if ( g_CSS_MixChannelCount )
   {
-    v6 = 0;
+    buffer_index = 0;
     while ( 1 )
     {
-      v7 = GlobalAlloc(0x2002u, dwBytes);
-      g_CSS_WaveBufferMemHandles[v6] = (int)v7;
-      if ( !v7 )
+      buffer_mem_handle = GlobalAlloc(0x2002u, dwBytes);
+      g_CSS_WaveBufferMemHandles[buffer_index] = (int)buffer_mem_handle;
+      if ( !buffer_mem_handle )
         return 2;
-      v9 = GlobalLock(v7);
-      g_CSS_WaveBufferDataPtrs[v6] = (int)v9;
-      if ( !v9 )
+      buffer_ptr = GlobalLock(buffer_mem_handle);
+      g_CSS_WaveBufferDataPtrs[buffer_index] = (int)buffer_ptr;
+      if ( !buffer_ptr )
         return 43;
-      ++v5;
-      ++v6;
-      if ( v5 >= g_CSS_MixChannelCount )
+      ++buffer_count;
+      ++buffer_index;
+      if ( buffer_count >= g_CSS_MixChannelCount )
         goto LABEL_50;
     }
   }
   else
   {
 LABEL_50:
-    v10 = 0;
+    header_count = 0;
     if ( g_CSS_MixChannelCount )
     {
-      v11 = 0;
+      header_index = 0;
       while ( 1 )
       {
-        v12 = GlobalAlloc(0x2002u, 0x20u);
-        g_CSS_WaveHeaderMemHandles[v11] = (int)v12;
-        if ( !v12 )
+        header_mem_handle = GlobalAlloc(0x2002u, 0x20u);
+        g_CSS_WaveHeaderMemHandles[header_index] = (int)header_mem_handle;
+        if ( !header_mem_handle )
           return 2;
-        v13 = (struct wavehdr_tag *)GlobalLock(v12);
-        *(LPWAVEHDR *)((char *)&pwh + v11 * 4) = v13;
-        if ( !v13 )
+        wave_header = (struct wavehdr_tag *)GlobalLock(header_mem_handle);
+        *(LPWAVEHDR *)((char *)&pwh + header_index * 4) = wave_header;
+        if ( !wave_header )
           return 43;
-        v13->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[v11];
-        v14 = dwBytes;
-        v13->dwFlags = 1;
-        ++v11;
-        v13->dwLoops = 0;
-        ++v10;
-        v13->dwBufferLength = v14;
-        v15 = g_CSS_MixChannelCount;
-        g_CSS_WaveBufferStateArray[v11] = 0;
-        if ( v10 >= v15 )
+        wave_header->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[header_index];
+        buffer_length = dwBytes;
+        wave_header->dwFlags = 1;
+        ++header_index;
+        wave_header->dwLoops = 0;
+        ++header_count;
+        wave_header->dwBufferLength = buffer_length;
+        mix_channel_count = g_CSS_MixChannelCount;
+        g_CSS_WaveBufferStateArray[header_index] = 0;
+        if ( header_count >= mix_channel_count )
           goto LABEL_57;
       }
     }
@@ -8187,70 +8187,70 @@ LABEL_60:
 //----- (00470620) --------------------------------------------------------
 signed int CSS_CloseWaveOutDevice()
 {
-  MMRESULT v0; // eax
-  int v1; // ebx
-  unsigned int v2; // eax
-  int v3; // edx
-  unsigned int v4; // esi
-  int v5; // ebx
-  unsigned int v6; // esi
-  int v7; // ebx
-  int v8; // esi
+  MMRESULT mm_result; // eax
+  int all_buffers_done; // ebx
+  unsigned int check_count; // eax
+  int header_offset; // edx
+  unsigned int unprepare_count; // esi
+  int unprepare_index; // ebx
+  unsigned int free_count; // esi
+  int buffer_index; // ebx
+  int header_free_count; // esi
   int i; // ebx
 
   CSS_FreeMixBuffers();
-  v0 = waveOutReset(hwo);
-  if ( v0 )
-    return CSS_TranslateWaveOutError(v0);
+  mm_result = waveOutReset(hwo);
+  if ( mm_result )
+    return CSS_TranslateWaveOutError(mm_result);
   while ( 1 )
   {
-    v1 = 1;
-    v2 = 0;
+    all_buffers_done = 1;
+    check_count = 0;
     if ( g_CSS_MixChannelCount )
     {
-      v3 = 0;
+      header_offset = 0;
       do
       {
-        if ( ((*(LPWAVEHDR *)((char *)&pwh + v3))->dwFlags & 1) == 0 )
-          v1 = 0;
-        ++v2;
-        v3 += 4;
+        if ( ((*(LPWAVEHDR *)((char *)&pwh + header_offset))->dwFlags & 1) == 0 )
+          all_buffers_done = 0;
+        ++check_count;
+        header_offset += 4;
       }
-      while ( v2 < g_CSS_MixChannelCount );
+      while ( check_count < g_CSS_MixChannelCount );
     }
-    if ( v1 )
+    if ( all_buffers_done )
       break;
     Sleep(0x14u);
   }
-  v4 = 0;
+  unprepare_count = 0;
   if ( g_CSS_MixChannelCount )
   {
-    v5 = 0;
+    unprepare_index = 0;
     do
     {
-      if ( g_CSS_WaveHeaderPreparedFlags[v5] )
+      if ( g_CSS_WaveHeaderPreparedFlags[unprepare_index] )
       {
-        v0 = waveOutUnprepareHeader(hwo, *(LPWAVEHDR *)((char *)&pwh + v5 * 4), 0x20u);
-        if ( v0 )
-          return CSS_TranslateWaveOutError(v0);
+        mm_result = waveOutUnprepareHeader(hwo, *(LPWAVEHDR *)((char *)&pwh + unprepare_index * 4), 0x20u);
+        if ( mm_result )
+          return CSS_TranslateWaveOutError(mm_result);
       }
-      ++v4;
-      ++v5;
+      ++unprepare_count;
+      ++unprepare_index;
     }
-    while ( v4 < g_CSS_MixChannelCount );
+    while ( unprepare_count < g_CSS_MixChannelCount );
   }
-  v0 = waveOutClose(hwo);
-  if ( v0 )
-    return CSS_TranslateWaveOutError(v0);
-  v6 = 0;
+  mm_result = waveOutClose(hwo);
+  if ( mm_result )
+    return CSS_TranslateWaveOutError(mm_result);
+  free_count = 0;
   if ( g_CSS_MixChannelCount )
   {
-    v7 = 0;
-    while ( (GlobalUnlock((HGLOBAL)g_CSS_WaveBufferMemHandles[v7]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveBufferMemHandles[v7]) )
+    buffer_index = 0;
+    while ( (GlobalUnlock((HGLOBAL)g_CSS_WaveBufferMemHandles[buffer_index]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveBufferMemHandles[buffer_index]) )
     {
-      ++v6;
-      ++v7;
-      if ( v6 >= g_CSS_MixChannelCount )
+      ++free_count;
+      ++buffer_index;
+      if ( free_count >= g_CSS_MixChannelCount )
         goto LABEL_20;
     }
     return 3;
@@ -8258,12 +8258,12 @@ signed int CSS_CloseWaveOutDevice()
   else
   {
 LABEL_20:
-    v8 = 0;
+    header_free_count = 0;
     if ( g_CSS_MixChannelCount )
     {
       for ( i = 0; (GlobalUnlock((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]); ++i )
       {
-        if ( ++v8 >= (unsigned int)g_CSS_MixChannelCount )
+        if ( ++header_free_count >= (unsigned int)g_CSS_MixChannelCount )
           return 0;
       }
       return 3;
@@ -8280,22 +8280,22 @@ LABEL_20:
 // 54D760: using guessed type int dword_54D760;
 
 //----- (004707B0) --------------------------------------------------------
-int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *a1)
+int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *format_flags_out)
 {
-  *a1 = g_WaveOutFormatFlags;
+  *format_flags_out = g_WaveOutFormatFlags;
   return 0;
 }
 // 54D75C: using guessed type int dword_54D75C;
 
 //----- (004707C0) --------------------------------------------------------
-int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int a1)
+int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int refill_rate)
 {
-  unsigned int v1; // eax
+  unsigned int chunk_samples; // eax
 
-  v1 = 100 * g_CSS_SampleRateHz / a1 + 1;
-  LOBYTE(v1) = v1 & 0xFE;
-  g_CSS_WaveOutChunkSampleCount = v1;
-  g_CSS_WaveOutRefillRemaining = v1;
+  chunk_samples = 100 * g_CSS_SampleRateHz / refill_rate + 1;
+  LOBYTE(chunk_samples) = chunk_samples & 0xFE;
+  g_CSS_WaveOutChunkSampleCount = chunk_samples;
+  g_CSS_WaveOutRefillRemaining = chunk_samples;
   return 0;
 }
 // 54D748: using guessed type int dword_54D748;
@@ -8303,38 +8303,38 @@ int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int a1)
 // 54D768: using guessed type int dword_54D768;
 
 //----- (004707F0) --------------------------------------------------------
-unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1)
+unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *chunk_completed_out)
 {
-  unsigned int v1; // esi
-  LPWAVEHDR v2; // eax
-  SIZE_T v3; // ebx
-  MMRESULT v5; // eax
-  HWAVEOUT v6; // [esp-Ch] [ebp-1Ch]
-  struct wavehdr_tag *v7; // [esp-8h] [ebp-18h]
+  unsigned int samples_per_buffer; // esi
+  LPWAVEHDR wave_header; // eax
+  SIZE_T samples_to_mix; // ebx
+  MMRESULT mm_result; // eax
+  HWAVEOUT wave_out_handle; // [esp-Ch] [ebp-1Ch]
+  struct wavehdr_tag *header_to_write; // [esp-8h] [ebp-18h]
 
-  v1 = (unsigned int)g_CssMixBufferSizeBytes >> 2;
+  samples_per_buffer = (unsigned int)g_CssMixBufferSizeBytes >> 2;
   if ( (g_WaveOutFormatFlags & 2) != 0 )
-    v1 = (unsigned int)g_CssMixBufferSizeBytes >> 3;
+    samples_per_buffer = (unsigned int)g_CssMixBufferSizeBytes >> 3;
   while ( 1 )
   {
-    v2 = pwh[g_WaveOutBufferRingIndex];
-    if ( (v2->dwFlags & 1) == 0 )
+    wave_header = pwh[g_WaveOutBufferRingIndex];
+    if ( (wave_header->dwFlags & 1) == 0 )
       break;
     if ( g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] )
     {
-      v5 = waveOutUnprepareHeader(hwo, v2, 0x20u);
-      if ( v5 )
-        return CSS_TranslateWaveOutError(v5);
+      mm_result = waveOutUnprepareHeader(hwo, wave_header, 0x20u);
+      if ( mm_result )
+        return CSS_TranslateWaveOutError(mm_result);
       g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] = 0;
     }
-    v3 = (dwBytes - g_CSS_WaveOutFillByteOffset) / g_CSS_WaveBlockAlign;
-    if ( v3 > g_CSS_WaveOutRefillRemaining )
-      v3 = g_CSS_WaveOutRefillRemaining;
-    if ( v3 > v1 )
-      v3 = v1;
-    g_CSS_WaveOutRefillRemaining -= v3;
-    CSS_TickChannelLevels(g_CSS_WaveBlockAlign, v3);
-    g_CSS_WaveOutFillByteOffset = g_AudioMixToOutputFunc(v3, g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex], g_CSS_WaveOutFillByteOffset, g_CSS_MixAccumBufferPtr);
+    samples_to_mix = (dwBytes - g_CSS_WaveOutFillByteOffset) / g_CSS_WaveBlockAlign;
+    if ( samples_to_mix > g_CSS_WaveOutRefillRemaining )
+      samples_to_mix = g_CSS_WaveOutRefillRemaining;
+    if ( samples_to_mix > samples_per_buffer )
+      samples_to_mix = samples_per_buffer;
+    g_CSS_WaveOutRefillRemaining -= samples_to_mix;
+    CSS_TickChannelLevels(g_CSS_WaveBlockAlign, samples_to_mix);
+    g_CSS_WaveOutFillByteOffset = g_AudioMixToOutputFunc(samples_to_mix, g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex], g_CSS_WaveOutFillByteOffset, g_CSS_MixAccumBufferPtr);
     if ( g_CSS_WaveOutFillByteOffset >= dwBytes )
     {
       pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
@@ -8342,15 +8342,15 @@ unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1)
       pwh[g_WaveOutBufferRingIndex]->dwBufferLength = dwBytes;
       pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
       pwh[g_WaveOutBufferRingIndex]->dwLoops = 0;
-      v5 = waveOutPrepareHeader(hwo, pwh[g_WaveOutBufferRingIndex], 0x20u);
-      if ( v5 )
-        return CSS_TranslateWaveOutError(v5);
-      v7 = pwh[g_WaveOutBufferRingIndex];
-      v6 = hwo;
+      mm_result = waveOutPrepareHeader(hwo, pwh[g_WaveOutBufferRingIndex], 0x20u);
+      if ( mm_result )
+        return CSS_TranslateWaveOutError(mm_result);
+      header_to_write = pwh[g_WaveOutBufferRingIndex];
+      wave_out_handle = hwo;
       g_CSS_WaveHeaderPreparedFlags[g_WaveOutBufferRingIndex] = 1;
-      v5 = waveOutWrite(v6, v7, 0x20u);
-      if ( v5 )
-        return CSS_TranslateWaveOutError(v5);
+      mm_result = waveOutWrite(wave_out_handle, header_to_write, 0x20u);
+      if ( mm_result )
+        return CSS_TranslateWaveOutError(mm_result);
       g_CSS_WaveOutFillByteOffset = 0;
       if ( ++g_WaveOutBufferRingIndex >= (unsigned int)g_CSS_MixChannelCount )
         g_WaveOutBufferRingIndex = 0;
@@ -8358,11 +8358,11 @@ unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1)
     if ( !g_CSS_WaveOutRefillRemaining )
     {
       g_CSS_WaveOutRefillRemaining = g_CSS_WaveOutChunkSampleCount;
-      *a1 = 1;
+      *chunk_completed_out = 1;
       return 0;
     }
   }
-  *a1 = 0;
+  *chunk_completed_out = 0;
   return 0;
 }
 // 54D4C0: using guessed type int dword_54D4C0[32];
@@ -8394,23 +8394,23 @@ void __thiscall __noreturn CSS_FatalErrorExit(void *this)
 // 4850C6: using guessed type int __fastcall fputs_(_DWORD, _DWORD);
 
 //----- (00470A30) --------------------------------------------------------
-int __cdecl CSS_GetFormatTableValue(int a1)
+int __cdecl CSS_GetFormatTableValue(int format_index)
 {
-  return g_CSS_FormatShiftTable[a1];
+  return g_CSS_FormatShiftTable[format_index];
 }
 // 519E90: using guessed type int dword_519E90[];
 
 //----- (00470A40) --------------------------------------------------------
-int __cdecl CSS_GetFormatSampleSize(int a1)
+int __cdecl CSS_GetFormatSampleSize(int format_index)
 {
-  return g_CSS_FormatSampleSizeTable[a1];
+  return g_CSS_FormatSampleSizeTable[format_index];
 }
 // 519EAC: using guessed type int dword_519EAC[7];
 
 //----- (00470A50) --------------------------------------------------------
-int __cdecl CSS_GetFormatSilenceValue(int a1)
+int __cdecl CSS_GetFormatSilenceValue(int format_index)
 {
-  return g_CSS_FormatSilenceValueTable[a1];
+  return g_CSS_FormatSilenceValueTable[format_index];
 }
 // 519EC8: using guessed type int dword_519EC8[8];
 
@@ -8418,12 +8418,12 @@ int __cdecl CSS_GetFormatSilenceValue(int a1)
 int  CSS_BuildMixLookupTables(int a1, int a2)
 {
   int i; // eax
-  double v3; // st7
+  double scaled_value; // st7
   int v4; // eax
   int v5; // edx
   int v6; // ecx
   int result; // eax
-  int v8; // edx
+  int negated_entry; // edx
   int v9; // [esp-8h] [ebp-14h]
   int v10; // [esp-4h] [ebp-10h]
 
@@ -8431,13 +8431,13 @@ int  CSS_BuildMixLookupTables(int a1, int a2)
   v9 = a2;
   for ( i = 0; i < 0x8000; i = v4 + 1 )
   {
-    v3 = (double)i / g_CSS_MixLookupIndexScale + g_CSS_MixLookupIndexBias;
+    scaled_value = (double)i / g_CSS_MixLookupIndexScale + g_CSS_MixLookupIndexBias;
     _CHP(v9, v10);
-    if ( v4 - (int)v3 > v6 )
+    if ( v4 - (int)scaled_value > v6 )
       *(int *)((char *)&g_CSS_MixLookupTableWriteBase + v5) = v4;
   }
-  for ( result = 0; result != 128; g_CSS_MixLookupComplementTable[result] = v8 - 1 )
-    v8 = -g_CSS_MixLookupTable[result++];
+  for ( result = 0; result != 128; g_CSS_MixLookupComplementTable[result] = negated_entry - 1 )
+    negated_entry = -g_CSS_MixLookupTable[result++];
   return result * 4;
 }
 // 470A60: could not find valid save-restore pair for ebx
@@ -8453,37 +8453,37 @@ int  CSS_BuildMixLookupTables(int a1, int a2)
 // 54D968: using guessed type int dword_54D968[];
 
 //----- (00470AF0) --------------------------------------------------------
-int __cdecl CSS_InitMixBuffers(int a1, int a2)
+int __cdecl CSS_InitMixBuffers(int sample_rate, int channel_count)
 {
-  int v2; // eax
-  int v3; // ebx
+  int buffer_bytes; // eax
+  int total_alloc_bytes; // ebx
   int v4; // ecx
-  int v5; // eax
+  int aligned_base; // eax
   int v6; // ecx
 
-  g_CSS_MixSampleRate = a1;
-  g_CSS_MixChannelCount_54DBA4 = a2;
+  g_CSS_MixSampleRate = sample_rate;
+  g_CSS_MixChannelCount_54DBA4 = channel_count;
   g_CssMixChannelCount = 0;
   g_CssMixChannelsReadyFlag = 0;
   g_CssMixChannels = 0;
   g_CSS_MixIdleChannelFlag = 0;
   g_CSS_MixSuspendedFlag = 0;
   g_CSS_MixMasterVolume = 64;
-  g_CSS_MixBufferSampleCount = 5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz;
-  if ( a2 == 2 )
-    g_CSS_MixBufferSampleCount = 2 * (5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz);
-  v2 = 4 * g_CSS_MixBufferSampleCount + 15;
-  LOBYTE(v2) = v2 & 0xF0;
-  g_CssMixBufferSizeBytes = v2;
-  v3 = v2 + 34832;
-  CSS_Mem_TryAlloc(v2 + 34832, &g_CSS_MixBufferAllocBase);
+  g_CSS_MixBufferSampleCount = 5 * sample_rate / (unsigned int)g_CSS_MixUpdateRateHz;
+  if ( channel_count == 2 )
+    g_CSS_MixBufferSampleCount = 2 * (5 * sample_rate / (unsigned int)g_CSS_MixUpdateRateHz);
+  buffer_bytes = 4 * g_CSS_MixBufferSampleCount + 15;
+  LOBYTE(buffer_bytes) = buffer_bytes & 0xF0;
+  g_CssMixBufferSizeBytes = buffer_bytes;
+  total_alloc_bytes = buffer_bytes + 34832;
+  CSS_Mem_TryAlloc(buffer_bytes + 34832, &g_CSS_MixBufferAllocBase);
   memset_(v4, 0);
-  v5 = g_CSS_MixBufferAllocBase + 1023;
-  LOWORD(v5) = (g_CSS_MixBufferAllocBase + 1023) & 0xFC00;
-  g_CssMixBufferAlignedBase = v5;
-  g_CSS_MixAccumBufferPtr = v5 + 33792;
+  aligned_base = g_CSS_MixBufferAllocBase + 1023;
+  LOWORD(aligned_base) = (g_CSS_MixBufferAllocBase + 1023) & 0xFC00;
+  g_CssMixBufferAlignedBase = aligned_base;
+  g_CSS_MixAccumBufferPtr = aligned_base + 33792;
   CSS_Mem_TryAlloc(160, &g_CSS_QueuedSoundSlotTable);
-  return CSS_BuildMixLookupTables(v6, v3);
+  return CSS_BuildMixLookupTables(v6, total_alloc_bytes);
 }
 // 470B8C: variable 'v4' is possibly undefined
 // 470BC1: variable 'v6' is possibly undefined
@@ -8513,26 +8513,26 @@ int CSS_FreeMixBuffers()
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00470BF0) --------------------------------------------------------
-int __cdecl CSS_GetMixSampleRate(_DWORD *a1)
+int __cdecl CSS_GetMixSampleRate(_DWORD *sample_rate_out)
 {
   int result; // eax
 
   result = g_CSS_MixSampleRate;
-  *a1 = g_CSS_MixSampleRate;
+  *sample_rate_out = g_CSS_MixSampleRate;
   return result;
 }
 // 54DB9C: using guessed type int dword_54DB9C;
 
 //----- (00470C00) --------------------------------------------------------
-int __cdecl CSS_InitMixChannels(int a1)
+int __cdecl CSS_InitMixChannels(int channel_count)
 {
   int result; // eax
 
   g_CssMixChannelsReadyFlag = 0;
-  g_CssMixChannelCount = a1;
+  g_CssMixChannelCount = channel_count;
   g_CSS_MixIdleChannelFlag = 0;
   g_CSS_MixSuspendedFlag = 0;
-  CSS_Mem_TryAlloc(108 * a1, &g_CssMixChannels);
+  CSS_Mem_TryAlloc(108 * channel_count, &g_CssMixChannels);
   result = CSS_ResetAllMixChannels();
   g_CssMixChannelsReadyFlag = 1;
   return result;
@@ -8573,82 +8573,82 @@ int CSS_ResetAllMixChannels()
 // 54DB80: using guessed type int dword_54DB80;
 
 //----- (00470CD0) --------------------------------------------------------
-int __cdecl CSS_SetMixIdleChannelFlag(int a1)
+int __cdecl CSS_SetMixIdleChannelFlag(int idle_flag)
 {
   int result; // eax
 
-  result = a1;
-  g_CSS_MixIdleChannelFlag = a1;
+  result = idle_flag;
+  g_CSS_MixIdleChannelFlag = idle_flag;
   return result;
 }
 // 54DB6C: using guessed type int dword_54DB6C;
 
 //----- (00470CE0) --------------------------------------------------------
-int __cdecl CSS_SetMixSuspended(int a1)
+int __cdecl CSS_SetMixSuspended(int suspended_flag)
 {
   int result; // eax
 
-  result = a1;
-  g_CSS_MixSuspendedFlag = a1;
+  result = suspended_flag;
+  g_CSS_MixSuspendedFlag = suspended_flag;
   return result;
 }
 // 54DB74: using guessed type int dword_54DB74;
 
 //----- (00470CF0) --------------------------------------------------------
-int __cdecl CSS_SetMixMasterVolume(int a1)
+int __cdecl CSS_SetMixMasterVolume(int master_volume)
 {
   int result; // eax
 
-  result = a1;
-  g_CSS_MixMasterVolume = a1;
+  result = master_volume;
+  g_CSS_MixMasterVolume = master_volume;
   return result;
 }
 // 54DB88: using guessed type int dword_54DB88;
 
 //----- (00470D00) --------------------------------------------------------
-int __cdecl CSS_GetMixMasterVolume(_DWORD *a1)
+int __cdecl CSS_GetMixMasterVolume(_DWORD *master_volume_out)
 {
   int result; // eax
 
   result = g_CSS_MixMasterVolume;
-  *a1 = g_CSS_MixMasterVolume;
+  *master_volume_out = g_CSS_MixMasterVolume;
   return result;
 }
 // 54DB88: using guessed type int dword_54DB88;
 
 //----- (00470D10) --------------------------------------------------------
-int __cdecl CSS_BuildVolumeScaleTable(int a1)
+int __cdecl CSS_BuildVolumeScaleTable(int volume_scale)
 {
-  int v1; // esi
-  int v2; // ecx
-  int v3; // ebx
-  int v4; // eax
+  int table_write_ptr; // esi
+  int sample_index; // ecx
+  int weighted_sum; // ebx
+  int scaled_value; // eax
   int result; // eax
-  int v6; // [esp+0h] [ebp-18h]
-  int v7; // [esp+4h] [ebp-14h]
+  int row_step; // [esp+0h] [ebp-18h]
+  int row_index; // [esp+4h] [ebp-14h]
 
-  v1 = g_CssMixBufferAlignedBase;
+  table_write_ptr = g_CssMixBufferAlignedBase;
   if ( g_CssMixBufferAlignedBase )
   {
-    g_CSS_CurrentVolumeScaleLevel = a1;
-    v7 = 0;
-    v6 = 0;
+    g_CSS_CurrentVolumeScaleLevel = volume_scale;
+    row_index = 0;
+    row_step = 0;
     do
     {
-      v2 = -128;
-      v3 = -512 * v7;
+      sample_index = -128;
+      weighted_sum = -512 * row_index;
       do
       {
-        v4 = v3 * a1 / (32 * g_CssMixChannelCount);
-        v1 += 4;
-        ++v2;
-        v3 += v6;
-        *(_DWORD *)(v1 - 4) = v4;
+        scaled_value = weighted_sum * volume_scale / (32 * g_CssMixChannelCount);
+        table_write_ptr += 4;
+        ++sample_index;
+        weighted_sum += row_step;
+        *(_DWORD *)(table_write_ptr - 4) = scaled_value;
       }
-      while ( v2 < 128 );
-      result = v7 + 1;
-      v6 += 4;
-      v7 = result;
+      while ( sample_index < 128 );
+      result = row_index + 1;
+      row_step += 4;
+      row_index = result;
     }
     while ( result < 33 );
   }
@@ -8659,66 +8659,66 @@ int __cdecl CSS_BuildVolumeScaleTable(int a1)
 // 54DB8C: using guessed type int dword_54DB8C;
 
 //----- (00470DC0) --------------------------------------------------------
-int __cdecl CSS_ResetMixChannelRecord(int a1)
+int __cdecl CSS_ResetMixChannelRecord(int channel_index)
 {
-  int v1; // edx
+  int channel_offset; // edx
   int result; // eax
 
-  v1 = 108 * a1;
+  channel_offset = 108 * channel_index;
   result = g_CssMixChannels;
-  *(_DWORD *)(v1 + g_CssMixChannels + 96) = 0;
-  *(_DWORD *)(v1 + result + 68) = 0;
-  *(_DWORD *)(v1 + result + 72) = 0;
-  *(_DWORD *)(v1 + result + 4) = 0;
-  *(_DWORD *)(v1 + result + 60) = 0;
-  *(_DWORD *)(v1 + result + 64) = 1;
-  *(_DWORD *)(v1 + result + 76) = 0;
-  *(_DWORD *)(v1 + result + 92) = 0;
-  *(_DWORD *)(v1 + result + 104) = 0;
-  *(_DWORD *)(v1 + result + 48) = 0;
-  *(_DWORD *)(v1 + result + 12) = 0;
-  *(_DWORD *)(v1 + result + 16) = 0;
-  *(_DWORD *)(v1 + result + 20) = 0;
-  *(_DWORD *)(v1 + result + 24) = 0;
-  *(_DWORD *)(v1 + result + 8) = 0;
+  *(_DWORD *)(channel_offset + g_CssMixChannels + 96) = 0;
+  *(_DWORD *)(channel_offset + result + 68) = 0;
+  *(_DWORD *)(channel_offset + result + 72) = 0;
+  *(_DWORD *)(channel_offset + result + 4) = 0;
+  *(_DWORD *)(channel_offset + result + 60) = 0;
+  *(_DWORD *)(channel_offset + result + 64) = 1;
+  *(_DWORD *)(channel_offset + result + 76) = 0;
+  *(_DWORD *)(channel_offset + result + 92) = 0;
+  *(_DWORD *)(channel_offset + result + 104) = 0;
+  *(_DWORD *)(channel_offset + result + 48) = 0;
+  *(_DWORD *)(channel_offset + result + 12) = 0;
+  *(_DWORD *)(channel_offset + result + 16) = 0;
+  *(_DWORD *)(channel_offset + result + 20) = 0;
+  *(_DWORD *)(channel_offset + result + 24) = 0;
+  *(_DWORD *)(channel_offset + result + 8) = 0;
   return result;
 }
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470E60) --------------------------------------------------------
-void __cdecl CSS_StartMixChannelPlayback(unsigned int a1, int a2)
+void __cdecl CSS_StartMixChannelPlayback(unsigned int channel_index, int playback_rate)
 {
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 2;
-    CSS_ChannelSetRate(a1, a2);
-    CSS_ChannelSetPlayPosition(a1, 0);
+    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 2;
+    CSS_ChannelSetRate(channel_index, playback_rate);
+    CSS_ChannelSetPlayPosition(channel_index, 0);
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470EC0) --------------------------------------------------------
-void __cdecl CSS_SetMixChannelLoopPoints(unsigned int a1, int a2, int a3)
+void __cdecl CSS_SetMixChannelLoopPoints(unsigned int channel_index, int loop_start, int loop_end)
 {
-  int v3; // ecx
-  unsigned int v4; // eax
-  int v5; // edx
+  int resolved_end; // ecx
+  unsigned int channel_offset; // eax
+  int channels_base; // edx
   unsigned int v6; // eax
   int v7; // edx
 
-  v3 = a3;
-  if ( a1 < g_CssMixChannelCount )
+  resolved_end = loop_end;
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v4 = 108 * a1;
-    v5 = g_CssMixChannels;
-    *(_DWORD *)(g_CssMixChannels + v4 + 12) = 1;
-    *(_DWORD *)(v5 + v4 + 16) = a2;
-    if ( a3 == -1 )
-      v3 = *(_DWORD *)(v5 + v4 + 8);
-    v6 = 108 * a1;
+    channel_offset = 108 * channel_index;
+    channels_base = g_CssMixChannels;
+    *(_DWORD *)(g_CssMixChannels + channel_offset + 12) = 1;
+    *(_DWORD *)(channels_base + channel_offset + 16) = loop_start;
+    if ( loop_end == -1 )
+      resolved_end = *(_DWORD *)(channels_base + channel_offset + 8);
+    v6 = 108 * channel_index;
     v7 = g_CssMixChannels;
-    *(_DWORD *)(g_CssMixChannels + v6 + 20) = v3;
+    *(_DWORD *)(g_CssMixChannels + v6 + 20) = resolved_end;
     *(_DWORD *)(v7 + v6 + 24) = 1;
   }
 }
@@ -8726,19 +8726,19 @@ void __cdecl CSS_SetMixChannelLoopPoints(unsigned int a1, int a2, int a3)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470F40) --------------------------------------------------------
-unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int a1)
+unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int channel_index)
 {
   unsigned int result; // eax
-  int v2; // edx
+  int channels_base; // edx
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = 108 * a1;
-    v2 = g_CssMixChannels;
+    result = 108 * channel_index;
+    channels_base = g_CssMixChannels;
     *(_DWORD *)(g_CssMixChannels + result + 12) = 0;
-    *(_DWORD *)(v2 + result + 16) = 0;
-    *(_DWORD *)(v2 + result + 20) = 0;
-    *(_DWORD *)(v2 + result + 24) = 0;
+    *(_DWORD *)(channels_base + result + 16) = 0;
+    *(_DWORD *)(channels_base + result + 20) = 0;
+    *(_DWORD *)(channels_base + result + 24) = 0;
   }
   return result;
 }
@@ -8746,15 +8746,15 @@ unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470F90) --------------------------------------------------------
-int __cdecl CSS_ChannelGetLoopRange(unsigned int a1, _DWORD *a2, _DWORD *a3)
+int __cdecl CSS_ChannelGetLoopRange(unsigned int channel_index, _DWORD *loop_start_out, _DWORD *loop_end_out)
 {
   int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    *a2 = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 16);
-    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 20);
-    *a3 = result;
+    *loop_start_out = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 16);
+    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 20);
+    *loop_end_out = result;
   }
   return result;
 }
@@ -8762,14 +8762,14 @@ int __cdecl CSS_ChannelGetLoopRange(unsigned int a1, _DWORD *a2, _DWORD *a3)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471030) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int a1)
+unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int channel_index)
 {
   unsigned int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = 108 * a1;
-    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 0;
+    result = 108 * channel_index;
+    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 0;
   }
   return result;
 }
@@ -8777,14 +8777,14 @@ unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471070) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int a1)
+unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int channel_index)
 {
   unsigned int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = 108 * a1;
-    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 96) = 3;
+    result = 108 * channel_index;
+    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 3;
   }
   return result;
 }
@@ -8792,36 +8792,36 @@ unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004710B0) --------------------------------------------------------
-BOOL __cdecl CSS_ChannelIsPlaying(unsigned int a1)
+BOOL __cdecl CSS_ChannelIsPlaying(unsigned int channel_index)
 {
-  unsigned int v1; // eax
+  unsigned int channel_base; // eax
 
-  if ( a1 >= g_CssMixChannelCount )
+  if ( channel_index >= g_CssMixChannelCount )
     return 0;
-  v1 = g_CssMixChannels + 108 * a1;
-  return *(_DWORD *)(v1 + 96) == 3 || *(_DWORD *)(v1 + 96) == 2;
+  channel_base = g_CssMixChannels + 108 * channel_index;
+  return *(_DWORD *)(channel_base + 96) == 3 || *(_DWORD *)(channel_base + 96) == 2;
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471100) --------------------------------------------------------
-int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3)
+int __cdecl CSS_ChannelBeginVolumeFade(unsigned int channel_index, int target_volume, signed int fade_duration)
 {
-  signed int v3; // ebx
-  _DWORD *v4; // ecx
+  signed int duration; // ebx
+  _DWORD *channel; // ecx
   int result; // eax
 
-  v3 = a3;
-  if ( a1 < g_CssMixChannelCount )
+  duration = fade_duration;
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v4 = (_DWORD *)(108 * a1 + g_CssMixChannels);
-    if ( !a3 )
-      v3 = 1;
-    v4[21] = 1000 * (1000 * a2 - v4[20]) / (g_CSS_MixUpdateRateHz * v3);
-    result = 1000 * a2;
-    v4[22] = 1000 * a2;
-    if ( (int)v4[21] > 0 && !v4[20] && !v4[24] )
-      v4[24] = 3;
+    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    if ( !fade_duration )
+      duration = 1;
+    channel[21] = 1000 * (1000 * target_volume - channel[20]) / (g_CSS_MixUpdateRateHz * duration);
+    result = 1000 * target_volume;
+    channel[22] = 1000 * target_volume;
+    if ( (int)channel[21] > 0 && !channel[20] && !channel[24] )
+      channel[24] = 3;
   }
   return result;
 }
@@ -8832,46 +8832,46 @@ int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3)
 //----- (004711F0) --------------------------------------------------------
 _DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
 {
-  int v1; // ebx
-  int v2; // ecx
-  int v3; // edx
+  int channel_counter; // ebx
+  int channel_offset; // ecx
+  int new_volume; // edx
 
-  v1 = 0;
+  channel_counter = 0;
   if ( g_CssMixChannelCount > 0 )
   {
-    v2 = 0;
+    channel_offset = 0;
     do
     {
-      result = (_DWORD *)(v2 + g_CssMixChannels);
-      v3 = *(_DWORD *)(v2 + g_CssMixChannels + 80);
-      if ( *(int *)(v2 + g_CssMixChannels + 84) <= 0 )
+      result = (_DWORD *)(channel_offset + g_CssMixChannels);
+      new_volume = *(_DWORD *)(channel_offset + g_CssMixChannels + 80);
+      if ( *(int *)(channel_offset + g_CssMixChannels + 84) <= 0 )
       {
         if ( (int)result[21] < 0 )
         {
-          v3 += result[21];
-          if ( v3 <= result[22] )
+          new_volume += result[21];
+          if ( new_volume <= result[22] )
           {
             result[21] = 0;
-            v3 = result[22];
-            if ( !v3 && result[24] == 3 )
+            new_volume = result[22];
+            if ( !new_volume && result[24] == 3 )
               result[24] = 0;
           }
         }
       }
       else
       {
-        v3 += result[21];
-        if ( v3 >= result[22] )
+        new_volume += result[21];
+        if ( new_volume >= result[22] )
         {
           result[21] = 0;
-          v3 = result[22];
+          new_volume = result[22];
         }
       }
-      result[20] = v3;
-      ++v1;
-      v2 += 108;
+      result[20] = new_volume;
+      ++channel_counter;
+      channel_offset += 108;
     }
-    while ( v1 < g_CssMixChannelCount );
+    while ( channel_counter < g_CssMixChannelCount );
   }
   return result;
 }
@@ -8879,14 +8879,14 @@ _DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471260) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelSetRate(unsigned int a1, int a2)
+unsigned int __cdecl CSS_ChannelSetRate(unsigned int channel_index, int rate)
 {
   unsigned int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = g_CssMixChannels + 108 * a1;
-    *(_DWORD *)(result + 60) = a2;
+    result = g_CssMixChannels + 108 * channel_index;
+    *(_DWORD *)(result + 60) = rate;
   }
   return result;
 }
@@ -8894,17 +8894,17 @@ unsigned int __cdecl CSS_ChannelSetRate(unsigned int a1, int a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004712A0) --------------------------------------------------------
-void __cdecl CSS_ChannelGetRate(unsigned int a1, _DWORD *a2)
+void __cdecl CSS_ChannelGetRate(unsigned int channel_index, _DWORD *rate_out)
 {
-  unsigned int v2; // eax
+  unsigned int channel_base; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v2 = g_CssMixChannels + 108 * a1;
-    if ( *(_DWORD *)(v2 + 96) > 1u )
-      *a2 = *(_DWORD *)(v2 + 60);
+    channel_base = g_CssMixChannels + 108 * channel_index;
+    if ( *(_DWORD *)(channel_base + 96) > 1u )
+      *rate_out = *(_DWORD *)(channel_base + 60);
     else
-      *a2 = 0;
+      *rate_out = 0;
   }
 }
 // 4712D7: simplified comparisons for '[ds.2:(eax.4+#0x60.4)].4': !=0 && !=1 became >=2u
@@ -8912,15 +8912,15 @@ void __cdecl CSS_ChannelGetRate(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004712F0) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int a1, int a2)
+unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int channel_index, int volume)
 {
   unsigned int result; // eax
 
-  result = a1;
-  if ( a1 < g_CssMixChannelCount )
+  result = channel_index;
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = 108 * a1;
-    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 80) = 1000 * a2;
+    result = 108 * channel_index;
+    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 80) = 1000 * volume;
   }
   return result;
 }
@@ -8928,14 +8928,14 @@ unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int a1, int a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471350) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelGetVolume(unsigned int a1, _DWORD *a2)
+unsigned int __cdecl CSS_ChannelGetVolume(unsigned int channel_index, _DWORD *volume_out)
 {
   unsigned int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 80) / 0x3E8u;
-    *a2 = result;
+    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 80) / 0x3E8u;
+    *volume_out = result;
   }
   return result;
 }
@@ -8943,21 +8943,21 @@ unsigned int __cdecl CSS_ChannelGetVolume(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004713A0) --------------------------------------------------------
-void __cdecl CSS_ChannelAssignQueueSlot(unsigned int a1, int a2)
+void __cdecl CSS_ChannelAssignQueueSlot(unsigned int channel_index, int queue_slot_index)
 {
-  _DWORD *v2; // edx
-  int v3; // eax
+  _DWORD *channel; // edx
+  int queue_slot; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v2 = (_DWORD *)(108 * a1 + g_CssMixChannels);
-    v3 = g_CSS_QueuedSoundSlotTable + 40 * (a2 - 1);
-    v2[17] = a2;
-    v2[18] = 1;
-    if ( *(_DWORD *)(v3 + 12) == 5 && v2[24] == 1 )
+    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    queue_slot = g_CSS_QueuedSoundSlotTable + 40 * (queue_slot_index - 1);
+    channel[17] = queue_slot_index;
+    channel[18] = 1;
+    if ( *(_DWORD *)(queue_slot + 12) == 5 && channel[24] == 1 )
     {
-      v2[24] = 3;
-      CSS_ChannelSetPlayPosition(a1, *(_DWORD *)(v3 + 16));
+      channel[24] = 3;
+      CSS_ChannelSetPlayPosition(channel_index, *(_DWORD *)(queue_slot + 16));
     }
   }
 }
@@ -8966,178 +8966,178 @@ void __cdecl CSS_ChannelAssignQueueSlot(unsigned int a1, int a2)
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471430) --------------------------------------------------------
-void __cdecl CSS_ChannelQueueSound(unsigned int a1, int a2, signed int a3, int a4, int a5)
+void __cdecl CSS_ChannelQueueSound(unsigned int channel_index, int sample_data, signed int sample_bytes, int playback_rate, int format_index)
 {
-  unsigned int v5; // ebx
+  unsigned int queue_slot_index; // ebx
 
-  v5 = CSS_QueueSoundDescriptor(a2, a3, a5);
-  CSS_ResetMixChannelRecord(a1);
-  CSS_ChannelAssignQueueSlot(a1, v5);
-  CSS_StartMixChannelPlayback(a1, a4);
+  queue_slot_index = CSS_QueueSoundDescriptor(sample_data, sample_bytes, format_index);
+  CSS_ResetMixChannelRecord(channel_index);
+  CSS_ChannelAssignQueueSlot(channel_index, queue_slot_index);
+  CSS_StartMixChannelPlayback(channel_index, playback_rate);
 }
 
 //----- (00471480) --------------------------------------------------------
-unsigned int __cdecl CSS_QueueSoundDescriptor(int a1, signed int a2, int a3)
+unsigned int __cdecl CSS_QueueSoundDescriptor(int sample_data, signed int sample_bytes, int format_index)
 {
-  unsigned int v3; // edx
-  unsigned int v4; // esi
-  _DWORD *v5; // ebx
-  char v6; // al
+  unsigned int ring_index; // edx
+  unsigned int slot_number; // esi
+  _DWORD *slot; // ebx
+  char format_shift; // al
 
-  v3 = g_CSS_SoundDescriptorRingIndex + 1;
-  g_CSS_SoundDescriptorRingIndex = v3;
-  v4 = v3;
-  if ( v3 >= 4 )
+  ring_index = g_CSS_SoundDescriptorRingIndex + 1;
+  g_CSS_SoundDescriptorRingIndex = ring_index;
+  slot_number = ring_index;
+  if ( ring_index >= 4 )
     g_CSS_SoundDescriptorRingIndex = 0;
-  v5 = (_DWORD *)(40 * (v3 - 1) + g_CSS_QueuedSoundSlotTable);
-  *v5 = a1;
-  v6 = CSS_GetFormatTableValue(a3);
-  v5[3] = 0;
-  v5[4] = 0;
-  v5[5] = 0;
-  v5[6] = 0;
-  v5[7] = 0;
-  v5[8] = 0;
-  v5[9] = 0;
-  v5[1] = a3;
-  v5[2] = a2 >> v6;
-  return v4;
+  slot = (_DWORD *)(40 * (ring_index - 1) + g_CSS_QueuedSoundSlotTable);
+  *slot = sample_data;
+  format_shift = CSS_GetFormatTableValue(format_index);
+  slot[3] = 0;
+  slot[4] = 0;
+  slot[5] = 0;
+  slot[6] = 0;
+  slot[7] = 0;
+  slot[8] = 0;
+  slot[9] = 0;
+  slot[1] = format_index;
+  slot[2] = sample_bytes >> format_shift;
+  return slot_number;
 }
 // 519E38: using guessed type int dword_519E38;
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471560) --------------------------------------------------------
-_DWORD *__cdecl CSS_ChannelLoadQueuedSound(int a1)
+_DWORD *__cdecl CSS_ChannelLoadQueuedSound(int channel_index)
 {
   _DWORD *result; // eax
-  _DWORD *v2; // edx
+  _DWORD *queue_slot; // edx
 
-  result = (_DWORD *)(g_CssMixChannels + 108 * a1);
-  v2 = (_DWORD *)(g_CSS_QueuedSoundSlotTable + 40 * (result[17] - 1));
-  *result = *v2;
-  result[2] = v2[2];
-  result[3] = v2[3];
-  result[4] = v2[4];
-  result[5] = v2[5];
-  result[6] = v2[6];
-  result[7] = v2[7];
-  result[8] = v2[8];
-  result[9] = v2[9];
+  result = (_DWORD *)(g_CssMixChannels + 108 * channel_index);
+  queue_slot = (_DWORD *)(g_CSS_QueuedSoundSlotTable + 40 * (result[17] - 1));
+  *result = *queue_slot;
+  result[2] = queue_slot[2];
+  result[3] = queue_slot[3];
+  result[4] = queue_slot[4];
+  result[5] = queue_slot[5];
+  result[6] = queue_slot[6];
+  result[7] = queue_slot[7];
+  result[8] = queue_slot[8];
+  result[9] = queue_slot[9];
   result[10] = 0;
   result[11] = 0;
   result[18] = 0;
-  result[1] = v2[1];
+  result[1] = queue_slot[1];
   return result;
 }
 // 54DB90: using guessed type int dword_54DB90;
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471610) --------------------------------------------------------
-void __cdecl CSS_ChannelSetPlayPosition(unsigned int a1, unsigned int a2)
+void __cdecl CSS_ChannelSetPlayPosition(unsigned int channel_index, unsigned int a2)
 {
-  int *v2; // ebx
-  unsigned int v3; // esi
-  unsigned int v4; // eax
-  unsigned int v5; // eax
+  int *channel; // ebx
+  unsigned int sample_position; // esi
+  unsigned int loop_mode; // eax
+  unsigned int queued_loop_mode; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v2 = (int *)(g_CssMixChannels + 108 * a1);
-    v3 = a2 >> CSS_GetFormatTableValue(v2[1]);
-    if ( !v2[18] || (CSS_ChannelLoadQueuedSound(a1), v2[3] == 2) || v2[3] == 3 || v2[24] != 4 )
+    channel = (int *)(g_CssMixChannels + 108 * channel_index);
+    sample_position = a2 >> CSS_GetFormatTableValue(channel[1]);
+    if ( !channel[18] || (CSS_ChannelLoadQueuedSound(channel_index), channel[3] == 2) || channel[3] == 3 || channel[24] != 4 )
     {
-      if ( v2[17] && v2[15] )
+      if ( channel[17] && channel[15] )
       {
-        switch ( v2[24] )
+        switch ( channel[24] )
         {
           case 1:
           case 2:
           case 3:
-            v2[25] = 1;
-            v4 = v2[6];
-            if ( v4 )
+            channel[25] = 1;
+            loop_mode = channel[6];
+            if ( loop_mode )
             {
-              if ( v4 > 1 )
+              if ( loop_mode > 1 )
               {
-                if ( v4 == 2 )
+                if ( loop_mode == 2 )
                 {
-                  if ( v3 < v2[5] )
+                  if ( sample_position < channel[5] )
                   {
-                    v2[12] = v3;
-                    v2[16] = 1;
+                    channel[12] = sample_position;
+                    channel[16] = 1;
                   }
                   else
                   {
-                    v2[12] = v2[5];
-                    v2[16] = -1;
+                    channel[12] = channel[5];
+                    channel[16] = -1;
                   }
-                  v2[13] = 0;
-                  v2[24] = 3;
+                  channel[13] = 0;
+                  channel[24] = 3;
                 }
               }
               else
               {
-                if ( v3 >= v2[5] )
-                  v2[12] = v2[4];
+                if ( sample_position >= channel[5] )
+                  channel[12] = channel[4];
                 else
-                  v2[12] = v3;
-                v2[13] = 0;
-                v2[16] = 1;
-                v2[24] = 3;
+                  channel[12] = sample_position;
+                channel[13] = 0;
+                channel[16] = 1;
+                channel[24] = 3;
               }
             }
             else
             {
-              if ( v3 >= v2[2] )
+              if ( sample_position >= channel[2] )
                 goto LABEL_10;
-              v2[12] = v3;
-              v2[13] = 0;
-              v2[16] = 1;
-              v2[24] = 3;
+              channel[12] = sample_position;
+              channel[13] = 0;
+              channel[16] = 1;
+              channel[24] = 3;
             }
             break;
           case 4:
-            v2[25] = 2;
-            v5 = v2[9];
-            if ( v5 )
+            channel[25] = 2;
+            queued_loop_mode = channel[9];
+            if ( queued_loop_mode )
             {
-              if ( v5 > 1 )
+              if ( queued_loop_mode > 1 )
               {
-                if ( v5 == 2 )
+                if ( queued_loop_mode == 2 )
                 {
-                  if ( v3 < v2[8] )
+                  if ( sample_position < channel[8] )
                   {
-                    v2[12] = v3;
-                    v2[16] = 1;
+                    channel[12] = sample_position;
+                    channel[16] = 1;
                   }
                   else
                   {
-                    v2[12] = v2[8];
-                    v2[16] = -1;
+                    channel[12] = channel[8];
+                    channel[16] = -1;
                   }
-                  v2[13] = 0;
-                  v2[24] = 3;
+                  channel[13] = 0;
+                  channel[24] = 3;
                 }
               }
               else
               {
-                if ( v3 >= v2[8] )
-                  v2[12] = v2[7];
+                if ( sample_position >= channel[8] )
+                  channel[12] = channel[7];
                 else
-                  v2[12] = v3;
-                v2[13] = 0;
-                v2[16] = 1;
-                v2[24] = 3;
+                  channel[12] = sample_position;
+                channel[13] = 0;
+                channel[16] = 1;
+                channel[24] = 3;
               }
             }
             else
             {
-              if ( v3 >= v2[2] )
+              if ( sample_position >= channel[2] )
                 goto LABEL_10;
-              v2[12] = v3;
-              v2[13] = 0;
-              v2[16] = 1;
-              v2[24] = 3;
+              channel[12] = sample_position;
+              channel[13] = 0;
+              channel[16] = 1;
+              channel[24] = 3;
             }
             break;
           default:
@@ -9148,7 +9148,7 @@ void __cdecl CSS_ChannelSetPlayPosition(unsigned int a1, unsigned int a2)
     else
     {
 LABEL_10:
-      v2[24] = 1;
+      channel[24] = 1;
     }
   }
 }
@@ -9156,16 +9156,16 @@ LABEL_10:
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471800) --------------------------------------------------------
-int __cdecl CSS_ChannelGetPlayPosition(unsigned int a1, _DWORD *a2)
+int __cdecl CSS_ChannelGetPlayPosition(unsigned int channel_index, _DWORD *position_out)
 {
-  unsigned int v2; // ebx
+  unsigned int channel_base; // ebx
   int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v2 = 108 * a1 + g_CssMixChannels;
-    result = *(_DWORD *)(v2 + 48) << CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
-    *a2 = result;
+    channel_base = 108 * channel_index + g_CssMixChannels;
+    result = *(_DWORD *)(channel_base + 48) << CSS_GetFormatTableValue(*(_DWORD *)(channel_base + 4));
+    *position_out = result;
   }
   return result;
 }
@@ -9173,32 +9173,32 @@ int __cdecl CSS_ChannelGetPlayPosition(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471890) --------------------------------------------------------
-void __cdecl CSS_ChannelSetPanning(unsigned int a1, int a2)
+void __cdecl CSS_ChannelSetPanning(unsigned int channel_index, int panning)
 {
-  int v2; // ecx
-  unsigned int v3; // eax
+  int adjusted_panning; // ecx
+  unsigned int channel_base; // eax
 
-  v2 = a2;
-  if ( a1 < g_CssMixChannelCount )
+  adjusted_panning = panning;
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v3 = 108 * a1 + g_CssMixChannels;
-    if ( *(_DWORD *)(v3 + 4) != 1 && *(_DWORD *)(v3 + 4) != 2 && *(_DWORD *)(v3 + 4) != 5 && a2 == 128 )
-      v2 = 0;
-    *(_DWORD *)(g_CssMixChannels + 108 * a1 + 76) = v2;
+    channel_base = 108 * channel_index + g_CssMixChannels;
+    if ( *(_DWORD *)(channel_base + 4) != 1 && *(_DWORD *)(channel_base + 4) != 2 && *(_DWORD *)(channel_base + 4) != 5 && panning == 128 )
+      adjusted_panning = 0;
+    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 76) = adjusted_panning;
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471910) --------------------------------------------------------
-int __cdecl CSS_ChannelGetPanning(unsigned int a1, _DWORD *a2)
+int __cdecl CSS_ChannelGetPanning(unsigned int channel_index, _DWORD *panning_out)
 {
   int result; // eax
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(g_CssMixChannels + 108 * a1 + 76);
-    *a2 = result;
+    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 76);
+    *panning_out = result;
   }
   return result;
 }
@@ -9206,32 +9206,32 @@ int __cdecl CSS_ChannelGetPanning(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471990) --------------------------------------------------------
-void  CSS_TickChannelLevels(int a1, int a2)
+void  CSS_TickChannelLevels(int a1, int sample_count)
 {
-  unsigned int v2; // ebx
-  int v3; // esi
+  unsigned int channel_index; // ebx
+  int channel_offset; // esi
 
   if ( !g_CSS_MixSuspendedFlag && g_CssMixChannelCount && g_CssMixChannelsReadyFlag )
   {
-    v2 = 0;
+    channel_index = 0;
     if ( g_CssMixChannelCount )
     {
-      v3 = 0;
+      channel_offset = 0;
       do
       {
-        if ( !*(_DWORD *)(v3 + g_CssMixChannels + 92) && !g_CSS_MixIdleChannelFlag )
+        if ( !*(_DWORD *)(channel_offset + g_CssMixChannels + 92) && !g_CSS_MixIdleChannelFlag )
           a1 = 1000;
-        v3 += 108;
+        channel_offset += 108;
         Audio_MixResampledVoice((int *)a1);
         a1 = g_CssMixChannelCount;
-        ++v2;
+        ++channel_index;
       }
-      while ( v2 < g_CssMixChannelCount );
+      while ( channel_index < g_CssMixChannelCount );
     }
   }
   else
   {
-    Audio_ClearGlobalMixBuffer(a2);
+    Audio_ClearGlobalMixBuffer(sample_count);
   }
 }
 // 54DB6C: using guessed type int dword_54DB6C;
@@ -9243,42 +9243,42 @@ void  CSS_TickChannelLevels(int a1, int a2)
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (00471A30) --------------------------------------------------------
-unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int a1, int a2, unsigned int a3, int a4, unsigned int a5)
+unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int channel_index, int sample_data, unsigned int sample_bytes, int format_index, unsigned int playback_rate)
 {
   unsigned int result; // eax
-  _DWORD *v6; // ebx
+  _DWORD *channel; // ebx
 
-  result = a1;
-  if ( a1 < g_CssMixChannelCount )
+  result = channel_index;
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v6 = (_DWORD *)(108 * a1 + g_CssMixChannels);
-    *v6 = a2;
-    v6[3] = 1;
-    v6[13] = 0;
-    v6[12] = v6[13];
-    v6[8] = 0;
-    v6[7] = v6[8];
-    v6[9] = 0;
-    v6[4] = 0;
-    v6[6] = 1;
-    v6[5] = a3 >> CSS_GetFormatTableValue(a4);
-    v6[2] = a3 >> CSS_GetFormatTableValue(a4);
-    result = a5;
-    v6[15] = a5;
-    v6[16] = 1;
-    v6[17] = 5;
-    v6[18] = 0;
-    v6[19] = 0;
-    v6[20] = 64000;
-    v6[21] = 0;
-    v6[22] = 0;
-    v6[23] = 0;
-    v6[25] = 1;
-    v6[14] = 0;
-    v6[1] = a4;
-    v6[10] = 0;
-    v6[11] = 0;
-    v6[24] = 3;
+    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    *channel = sample_data;
+    channel[3] = 1;
+    channel[13] = 0;
+    channel[12] = channel[13];
+    channel[8] = 0;
+    channel[7] = channel[8];
+    channel[9] = 0;
+    channel[4] = 0;
+    channel[6] = 1;
+    channel[5] = sample_bytes >> CSS_GetFormatTableValue(format_index);
+    channel[2] = sample_bytes >> CSS_GetFormatTableValue(format_index);
+    result = playback_rate;
+    channel[15] = playback_rate;
+    channel[16] = 1;
+    channel[17] = 5;
+    channel[18] = 0;
+    channel[19] = 0;
+    channel[20] = 64000;
+    channel[21] = 0;
+    channel[22] = 0;
+    channel[23] = 0;
+    channel[25] = 1;
+    channel[14] = 0;
+    channel[1] = format_index;
+    channel[10] = 0;
+    channel[11] = 0;
+    channel[24] = 3;
   }
   return result;
 }
@@ -9286,58 +9286,58 @@ unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int a1, int a2, unsigned i
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471B40) --------------------------------------------------------
-void __cdecl CSS_ChannelStop(unsigned int a1)
+void __cdecl CSS_ChannelStop(unsigned int channel_index)
 {
-  CSS_ChannelMarkIdle(a1);
+  CSS_ChannelMarkIdle(channel_index);
 }
 
 //----- (00471BA0) --------------------------------------------------------
-void __cdecl CSS_ChannelSetPositionOffset(unsigned int a1, unsigned int a2)
+void __cdecl CSS_ChannelSetPositionOffset(unsigned int channel_index, unsigned int a2)
 {
-  unsigned int v2; // ebx
+  unsigned int channel_base; // ebx
 
-  if ( a1 < g_CssMixChannelCount )
+  if ( channel_index < g_CssMixChannelCount )
   {
-    v2 = 108 * a1 + g_CssMixChannels;
-    *(_DWORD *)(v2 + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
+    channel_base = 108 * channel_index + g_CssMixChannels;
+    *(_DWORD *)(channel_base + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(channel_base + 4));
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471BF0) --------------------------------------------------------
-char  Compat_StringHolderDestructor(_DWORD *a1)
+char  Compat_StringHolderDestructor(_DWORD *holder)
 {
-  Compat_StringHolderFreeText(a1);
+  Compat_StringHolderFreeText(holder);
   return 0;
 }
 
 //----- (00471C40) --------------------------------------------------------
-int Compat_StringHolderFreeText(_DWORD *a1)
+int Compat_StringHolderFreeText(_DWORD *holder)
 {
-  if ( a1 )
+  if ( holder )
   {
-    if ( *a1 )
-      j__nfree_(*a1);
-    *a1 = 0;
+    if ( *holder )
+      j__nfree_(*holder);
+    *holder = 0;
   }
   return 0;
 }
 
 //----- (00471C60) --------------------------------------------------------
-int  Compat_StringHolderScalarDeletingDtor(int a1, char a2)
+int  Compat_StringHolderScalarDeletingDtor(int holder, char flags)
 {
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_CompatStringHolder_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(holder, &g_CompatStringHolder_DtorArrayDescriptor);
     j_j__nfree_();
-    return a1;
+    return holder;
   }
-  *(_DWORD *)(a1 + 4) = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderFreeText((_DWORD *)a1);
-  if ( (a2 & 2) != 0 )
-    j__nfree_(a1);
-  return a1;
+  *(_DWORD *)(holder + 4) = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderFreeText((_DWORD *)holder);
+  if ( (flags & 2) != 0 )
+    j__nfree_(holder);
+  return holder;
 }
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -9548,94 +9548,94 @@ static int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
 }
 
 //----- (00471CA0) --------------------------------------------------------
-_DWORD * Compat_StringHolderConstructJoined(_DWORD *a1, _DWORD *a2, const char *a3)
+_DWORD * Compat_StringHolderConstructJoined(_DWORD *holder, _DWORD *prefix_holder, const char *suffix)
 {
-  a1[0] = 0;
-  a1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderAssignJoined(a1, Compat_StringHolderGetText(a2), a3);
-  a1[1] = &g_PathEntry_Vtable;
-  return a1;
+  holder[0] = 0;
+  holder[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderAssignJoined(holder, Compat_StringHolderGetText(prefix_holder), suffix);
+  holder[1] = &g_PathEntry_Vtable;
+  return holder;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00471D10) --------------------------------------------------------
-const char ** Compat_StringHolderAppendText(const char **a1, const char *a2)
+const char ** Compat_StringHolderAppendText(const char **holder_ref, const char *appended_text)
 {
   _DWORD *holder;
 
-  holder = (_DWORD *)(uintptr_t)a1;
-  if ( a2 && *a2 )
-    Compat_StringHolderAssignJoined(holder, Compat_StringHolderGetText(holder), a2);
-  return a1;
+  holder = (_DWORD *)(uintptr_t)holder_ref;
+  if ( appended_text && *appended_text )
+    Compat_StringHolderAssignJoined(holder, Compat_StringHolderGetText(holder), appended_text);
+  return holder_ref;
 }
 
 //----- (00471DE0) --------------------------------------------------------
-const char ** Compat_StringHolderPrependText(const char **a1, const char *a2)
+const char ** Compat_StringHolderPrependText(const char **holder_ref, const char *prepended_text)
 {
   _DWORD *holder;
 
-  holder = (_DWORD *)(uintptr_t)a1;
-  if ( a2 && *a2 )
-    Compat_StringHolderAssignJoined(holder, a2, Compat_StringHolderGetText(holder));
-  return a1;
+  holder = (_DWORD *)(uintptr_t)holder_ref;
+  if ( prepended_text && *prepended_text )
+    Compat_StringHolderAssignJoined(holder, prepended_text, Compat_StringHolderGetText(holder));
+  return holder_ref;
 }
 
 //----- (00471EE0) --------------------------------------------------------
-int  Compat_StringHolderFindSubstringOffset(_DWORD *a1, int a2, int a3)
+int  Compat_StringHolderFindSubstringOffset(_DWORD *holder, int a2, int needle)
 {
-  int v4; // eax
+  int match_ptr; // eax
   _DWORD *v5; // ecx
 
-  if ( a2 && *a1 && (v4 = ((int (__cdecl *)(int))strstr_)(a3)) != 0 )
-    return v4 - *v5;
+  if ( a2 && *holder && (match_ptr = ((int (__cdecl *)(int))strstr_)(needle)) != 0 )
+    return match_ptr - *v5;
   else
     return -1;
 }
 // 471EFD: variable 'v5' is possibly undefined
 
 //----- (00471F10) --------------------------------------------------------
-const char ** Compat_StringHolderUppercaseInPlace(const char **a1, unsigned int a2)
+const char ** Compat_StringHolderUppercaseInPlace(const char **holder_ref, unsigned int a2)
 {
-  const char *v3; // eax
+  const char *text; // eax
 
-  v3 = Compat_StringHolderGetText((_DWORD *)a1);
-  if ( v3 && *v3 )
+  text = Compat_StringHolderGetText((_DWORD *)holder_ref);
+  if ( text && *text )
   {
-    Compat_StringHolderAssignJoined((_DWORD *)a1, v3, 0);
-    Compat_StruprAsciiInPlace((char *)Compat_StringHolderGetText((_DWORD *)a1));
+    Compat_StringHolderAssignJoined((_DWORD *)holder_ref, text, 0);
+    Compat_StruprAsciiInPlace((char *)Compat_StringHolderGetText((_DWORD *)holder_ref));
   }
-  return a1;
+  return holder_ref;
 }
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 // 47BBE3: using guessed type int __fastcall strupr_(_DWORD, _DWORD);
 
 //----- (00472120) --------------------------------------------------------
-int  Compat_StringHolderFindCharFrom(const char **a1, char a2, signed int a3)
+int  Compat_StringHolderFindCharFrom(const char **holder_ref, char search_char, signed int start_index)
 {
   const char *text;
   const char *match;
   unsigned int text_len;
 
-  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a1);
-  if ( !text || !*text || a3 < 0 )
+  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)holder_ref);
+  if ( !text || !*text || start_index < 0 )
     return -1;
   text_len = (unsigned int)strlen(text);
-  if ( (unsigned int)a3 >= text_len )
+  if ( (unsigned int)start_index >= text_len )
     return -1;
-  match = strchr(text + a3, a2);
+  match = strchr(text + start_index, search_char);
   if ( !match )
     return -1;
   return (int)(match - text);
 }
 
 //----- (00472190) --------------------------------------------------------
-int  Compat_StringHolderFindLastBackslash(_BYTE **a1)
+int  Compat_StringHolderFindLastBackslash(_BYTE **holder_ref)
 {
   const char *text;
   char *last_slash;
 
-  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a1);
+  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)holder_ref);
   if ( !text || !*text )
     return -1;
   last_slash = Compat_StrrchrChar(text, '\\');
@@ -9645,7 +9645,7 @@ int  Compat_StringHolderFindLastBackslash(_BYTE **a1)
 }
 
 //----- (004721C0) --------------------------------------------------------
-int  Compat_StringHolderFindLastBackslashBefore(char **a1, signed int a2)
+int  Compat_StringHolderFindLastBackslashBefore(char **holder_ref, signed int end_index)
 {
   _DWORD *holder;
   char *text;
@@ -9653,62 +9653,62 @@ int  Compat_StringHolderFindLastBackslashBefore(char **a1, signed int a2)
   char saved_char;
   char *last_slash;
 
-  holder = (_DWORD *)(uintptr_t)a1;
+  holder = (_DWORD *)(uintptr_t)holder_ref;
   text = (char *)Compat_StringHolderGetText(holder);
-  if ( !text || !*text || a2 < 0 )
+  if ( !text || !*text || end_index < 0 )
     return -1;
   text_len = (unsigned int)strlen(text);
-  if ( (unsigned int)a2 >= text_len )
+  if ( (unsigned int)end_index >= text_len )
     return -1;
-  saved_char = text[a2 + 1];
-  text[a2 + 1] = 0;
+  saved_char = text[end_index + 1];
+  text[end_index + 1] = 0;
   last_slash = Compat_StrrchrChar(text, '\\');
-  text[a2 + 1] = saved_char;
+  text[end_index + 1] = saved_char;
   if ( !last_slash )
     return -1;
   return (int)(last_slash - text);
 }
 
 //----- (00472230) --------------------------------------------------------
-char ** Compat_StringHolderRemoveRange(char **a1, int a2, unsigned int a3, int a4)
+char ** Compat_StringHolderRemoveRange(char **holder_ref, int start_index, unsigned int a3, int remove_count)
 {
   _DWORD *holder;
   const char *text;
   unsigned int text_len;
   char *copy;
 
-  holder = (_DWORD *)(uintptr_t)a1;
+  holder = (_DWORD *)(uintptr_t)holder_ref;
   text = Compat_StringHolderGetText(holder);
-  if ( !text || !*text || a2 < 0 )
-    return a1;
+  if ( !text || !*text || start_index < 0 )
+    return holder_ref;
   text_len = (unsigned int)strlen(text);
   a3 = text_len;
-  if ( text_len != (unsigned int)a4 )
+  if ( text_len != (unsigned int)remove_count )
   {
     copy = (char *)(uintptr_t)(unsigned int)j_Mem_Alloc(a3 + 1);
     if ( !copy )
-      return a1;
-    Compat_CopyPrefixN(copy, text, a2);
-    copy[a2] = 0;
-    if ( (unsigned int)(a2 + a4) < text_len )
-      Compat_CopyPrefixN(copy + a2, text + a2 + a4, text_len - (unsigned int)(a2 + a4) + 1);
+      return holder_ref;
+    Compat_CopyPrefixN(copy, text, start_index);
+    copy[start_index] = 0;
+    if ( (unsigned int)(start_index + remove_count) < text_len )
+      Compat_CopyPrefixN(copy + start_index, text + start_index + remove_count, text_len - (unsigned int)(start_index + remove_count) + 1);
     Compat_StringHolderFreeText(holder);
     *holder = (int)(uintptr_t)copy;
     j_j__nfree_();
-    return a1;
+    return holder_ref;
   }
   Compat_StringHolderDestructor((const char **)holder);
-  return a1;
+  return holder_ref;
 }
 // 47228D: variable 'v9' is possibly undefined
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 // 48521A: using guessed type int __fastcall strncpy_(_DWORD, _DWORD);
 
 //----- (00472320) --------------------------------------------------------
-const char ** Compat_StringHolderInsertTextChecked(const char **result, signed int a2, const char *a3)
+const char ** Compat_StringHolderInsertTextChecked(const char **result, signed int insert_index, const char *inserted_text)
 {
-  if ( a2 >= 0 && a3 && *a3 )
-    Compat_StringHolderInsertText((_DWORD *)result, a2, a3);
+  if ( insert_index >= 0 && inserted_text && *inserted_text )
+    Compat_StringHolderInsertText((_DWORD *)result, insert_index, inserted_text);
   return result;
 }
 
@@ -9722,7 +9722,7 @@ _DWORD * Compat_StringHolderInitBase(_DWORD *result)
 // 50EC84: using guessed type int (*off_50EC84)();
 
 //----- (00472558) --------------------------------------------------------
-void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3)
+void  __noreturn CRT_ExitProcessWithFinalizers(int exit_code, int a2, int a3)
 {
   (void)a2;
   (void)a3;
@@ -9733,7 +9733,7 @@ void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3)
    * termination we only need a reliable exit, so quarantine the finalizer walk
    * until its object-registration contract is reconstructed safely.
    */
-  ExitProcess((UINT)a1);
+  ExitProcess((UINT)exit_code);
 }
 // 472575: variable 'v5' is possibly undefined
 // 47257C: variable 'v4' is possibly undefined
@@ -9745,14 +9745,14 @@ void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3)
 {
   int v3; // edx
   int v4; // ecx
-  UINT v5; // ebx
+  UINT exit_code; // ebx
   int v6; // ecx
 
   g_CRT_ExitFinalizerCallbackA(a3, a1);
   g_CRT_ExitFinalizerCallbackB(a2);
   if ( g_CRT_ExitProcessFinalizerHook )
     g_CRT_ExitProcessFinalizerHook();
-  v5 = v3;
+  exit_code = v3;
   if ( g_CrtThreadDataMgmtDisabledFlag )
   {
     if ( g_CRT_ProcessExitThreadHook )
@@ -9764,7 +9764,7 @@ void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3)
     _FiniRtns(v6, 15);
     g_CRT_TlsIndexDestroyHook();
   }
-  ExitProcess(v5);
+  ExitProcess(exit_code);
 }
 // 485601: variable 'v3' is possibly undefined
 // 48561C: variable 'v4' is possibly undefined
@@ -9802,14 +9802,14 @@ int __fastcall Mem_InitReserveBlock(int a1, int a2)
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472620) --------------------------------------------------------
-signed int  Mem_HeapAllocWithRetry(_DWORD *a1)
+signed int  Mem_HeapAllocWithRetry(_DWORD *requested_bytes)
 {
   int request_size;
   int grow_size;
   signed int result; // eax
   signed int (__fastcall *allocator_callback)(int);
 
-  request_size = (int)(uintptr_t)a1;
+  request_size = (int)(uintptr_t)requested_bytes;
   result = Mem_PoolAllocBlock((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size);
   if ( result )
     goto LABEL_5;
@@ -9865,13 +9865,13 @@ int Mem_SetOutOfMemoryHandler(int a1)
 }
 
 //----- (00472710) --------------------------------------------------------
-signed int  Mem_ReleasePoolBlock(int a1, int a2)
+signed int  Mem_ReleasePoolBlock(int block, int block_size)
 {
   int v2; // ecx
   signed int result; // eax
   int v4; // ecx
 
-  if ( Mem_PoolFreeCoalesce(a1, a2) )
+  if ( Mem_PoolFreeCoalesce(block, block_size) )
   {
     result = 0;
     g_Mem_TotalAllocatedBytes -= v2;
@@ -9892,53 +9892,53 @@ signed int  Mem_ReleasePoolBlock(int a1, int a2)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00472770) --------------------------------------------------------
-_DWORD * Mem_Realloc(char *a1, unsigned int a2, unsigned int a3)
+_DWORD * Mem_Realloc(char *old_block, unsigned int old_size, unsigned int new_size)
 {
-  _DWORD *v5; // eax
-  int v6; // edx
-  int v7; // edi
+  _DWORD *alloc_result; // eax
+  int copy_size; // edx
+  int copy_limit; // edi
   unsigned int v8; // eax
-  _DWORD *v9; // edx
-  char *v10; // ecx
+  _DWORD *dest_cursor; // edx
+  char *src_cursor; // ecx
   char v11; // bl
-  _BYTE *v12; // edx
-  _DWORD *v14; // [esp+0h] [ebp-10h]
+  _BYTE *zero_cursor; // edx
+  _DWORD *new_block; // [esp+0h] [ebp-10h]
 
-  if ( a3 )
-    v5 = Mem_SmallBlockAlloc(a3);
+  if ( new_size )
+    alloc_result = Mem_SmallBlockAlloc(new_size);
   else
-    v5 = 0;
-  v14 = v5;
-  if ( a1 )
+    alloc_result = 0;
+  new_block = alloc_result;
+  if ( old_block )
   {
-    if ( a2 >= a3 )
-      v6 = a3;
+    if ( old_size >= new_size )
+      copy_size = new_size;
     else
-      v6 = a2;
-    v7 = v6;
+      copy_size = old_size;
+    copy_limit = copy_size;
     v8 = 0;
-    if ( v6 > 0 )
+    if ( copy_size > 0 )
     {
-      v9 = v14;
-      v10 = a1;
+      dest_cursor = new_block;
+      src_cursor = old_block;
       do
       {
-        v9 = (_DWORD *)((char *)v9 + 1);
-        v11 = *v10++;
+        dest_cursor = (_DWORD *)((char *)dest_cursor + 1);
+        v11 = *src_cursor++;
         ++v8;
-        *((_BYTE *)v9 - 1) = v11;
+        *((_BYTE *)dest_cursor - 1) = v11;
       }
-      while ( (int)v8 < v7 );
+      while ( (int)v8 < copy_limit );
     }
-    v12 = (char *)v14 + v8;
-    while ( v8 < a3 )
+    zero_cursor = (char *)new_block + v8;
+    while ( v8 < new_size )
     {
       ++v8;
-      *v12++ = 0;
+      *zero_cursor++ = 0;
     }
-    Mem_SmallBlockFree(a1, a2);
+    Mem_SmallBlockFree(old_block, old_size);
   }
-  return v14;
+  return new_block;
 }
 
 //----- (00472800) --------------------------------------------------------
@@ -9956,78 +9956,78 @@ int Mem_GetTotalAllocationCount()
 // 519F00: using guessed type int dword_519F00;
 
 //----- (00472860) --------------------------------------------------------
-int  Mem_PurgeFreeListsForSpace(int a1, int a2, int a3)
+int  Mem_PurgeFreeListsForSpace(int bytes_needed, int verbose_flag, int request_size)
 {
-  int v4; // esi
-  unsigned int v5; // ecx
-  int v6; // edi
-  int v7; // eax
-  int v8; // ebx
+  int freed_bytes; // esi
+  unsigned int size_class; // ecx
+  int table_offset; // edi
+  int free_node; // eax
+  int next_node; // ebx
 
-  v4 = 0;
-  if ( a2 == 1 )
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDeallocatingMe, a3);
-  v5 = 499;
-  v6 = 1996;
+  freed_bytes = 0;
+  if ( verbose_flag == 1 )
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDeallocatingMe, request_size);
+  size_class = 499;
+  table_offset = 1996;
   do
   {
-    v7 = *(_DWORD *)(v6 + g_ClipsMemoryTable);
-    if ( v7 )
+    free_node = *(_DWORD *)(table_offset + g_ClipsMemoryTable);
+    if ( free_node )
     {
       do
       {
-        v8 = *(_DWORD *)(uintptr_t)(unsigned int)v7;
-        Mem_ReleasePoolBlock((int)v7, v5);
-        v4 += v5;
-        v7 = v8;
+        next_node = *(_DWORD *)(uintptr_t)(unsigned int)free_node;
+        Mem_ReleasePoolBlock((int)free_node, size_class);
+        freed_bytes += size_class;
+        free_node = next_node;
       }
-      while ( v8 );
+      while ( next_node );
     }
-    *(_DWORD *)(v6 + g_ClipsMemoryTable) = 0;
-    if ( v4 > a1 && a1 > 0 )
+    *(_DWORD *)(table_offset + g_ClipsMemoryTable) = 0;
+    if ( freed_bytes > bytes_needed && bytes_needed > 0 )
       break;
-    --v5;
-    v6 -= 4;
+    --size_class;
+    table_offset -= 4;
   }
-  while ( v5 >= 4 );
-  if ( a2 == 1 )
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMemoryDealloca, v5);
-  return v4;
+  while ( size_class >= 4 );
+  if ( verbose_flag == 1 )
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMemoryDealloca, size_class);
+  return freed_bytes;
 }
 // 47288E: variable 'v5' is possibly undefined
 // 51A61C: using guessed type char *off_51A61C[3];
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (004728F0) --------------------------------------------------------
-_BYTE * Mem_SmallBlockAllocZeroed(unsigned int a1)
+_BYTE * Mem_SmallBlockAllocZeroed(unsigned int size)
 {
-  signed int v1; // ecx
+  signed int clamped_size; // ecx
   int free_list_slot; // eax
   int free_node; // edx
   int block; // esi
   signed int i; // eax
-  _BYTE *v7; // edx
+  _BYTE *zero_cursor; // edx
   int allocation_size; // ecx
   int allocated_block; // esi
   int j; // eax
 
-  v1 = a1;
-  if ( a1 >= 4 )
+  clamped_size = size;
+  if ( size >= 4 )
   {
-    if ( (int)a1 >= 500 )
-      return (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)a1);
+    if ( (int)size >= 500 )
+      return (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)size);
   }
   else
   {
-    v1 = 4;
+    clamped_size = 4;
   }
-  free_list_slot = 4 * v1 + g_ClipsMemoryTable;
+  free_list_slot = 4 * clamped_size + g_ClipsMemoryTable;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
     block = free_node;
     *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
-    for ( i = 0; i < v1; ++free_node )
+    for ( i = 0; i < clamped_size; ++free_node )
     {
       ++i;
       *(_BYTE *)free_node = 0;
@@ -10036,13 +10036,13 @@ _BYTE * Mem_SmallBlockAllocZeroed(unsigned int a1)
   }
   else
   {
-    allocation_size = v1;
-    v7 = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)allocation_size);
-    allocated_block = (int)v7;
-    for ( j = 0; j < allocation_size; ++v7 )
+    allocation_size = clamped_size;
+    zero_cursor = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)allocation_size);
+    allocated_block = (int)zero_cursor;
+    for ( j = 0; j < allocation_size; ++zero_cursor )
     {
       ++j;
-      *v7 = 0;
+      *zero_cursor = 0;
     }
     return (_BYTE *)allocated_block;
   }
@@ -10050,105 +10050,105 @@ _BYTE * Mem_SmallBlockAllocZeroed(unsigned int a1)
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472980) --------------------------------------------------------
-_DWORD * Mem_SmallBlockAlloc(unsigned int a1)
+_DWORD * Mem_SmallBlockAlloc(unsigned int size)
 {
   int free_list_slot; // ecx
   int free_node; // edx
 
-  if ( a1 >= 4 )
+  if ( size >= 4 )
   {
-    if ( (int)a1 >= 500 )
-      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
+    if ( (int)size >= 500 )
+      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
   }
   else
   {
-    a1 = 4;
+    size = 4;
   }
-  free_list_slot = g_ClipsMemoryTable + 4 * a1;
+  free_list_slot = g_ClipsMemoryTable + 4 * size;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
     *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
     return (_DWORD *)free_node;
   }
-  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
+  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (004729C0) --------------------------------------------------------
-_DWORD * Mem_NewArray(unsigned int a1)
+_DWORD * Mem_NewArray(unsigned int size)
 {
   int free_list_slot; // ecx
   int free_node; // edx
 
-  if ( a1 >= 4 )
+  if ( size >= 4 )
   {
-    if ( (int)a1 >= 500 )
-      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
+    if ( (int)size >= 500 )
+      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
   }
   else
   {
-    a1 = 4;
+    size = 4;
   }
-  free_list_slot = g_ClipsMemoryTable + 4 * a1;
+  free_list_slot = g_ClipsMemoryTable + 4 * size;
   free_node = *(_DWORD *)free_list_slot;
   if ( free_node )
   {
     *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
     return (_DWORD *)free_node;
   }
-  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
+  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472A00) --------------------------------------------------------
-signed int  Mem_SmallBlockFree(_DWORD *a1, int a2)
+signed int  Mem_SmallBlockFree(_DWORD *block, int size)
 {
-  int v3; // ecx
+  int clamped_size; // ecx
 
-  v3 = a2;
-  if ( !a2 )
+  clamped_size = size;
+  if ( !size )
   {
     Rules_ReportSystemError(0, 1);
     IO_RunRouterExitCallbacks();
   }
-  if ( (unsigned int)v3 < 4 )
+  if ( (unsigned int)clamped_size < 4 )
   {
-    v3 = 4;
+    clamped_size = 4;
 LABEL_5:
-    *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v3);
-    *(_DWORD *)(g_ClipsMemoryTable + 4 * v3) = a1;
+    *block = *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size);
+    *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size) = block;
     return 1;
   }
-  if ( v3 < 500 )
+  if ( clamped_size < 500 )
     goto LABEL_5;
-  return Mem_ReleasePoolBlock((int)a1, v3);
+  return Mem_ReleasePoolBlock((int)block, clamped_size);
 }
 // 472A0D: variable 'v3' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472A60) --------------------------------------------------------
-signed int  Mem_SmallBlockRelease(_DWORD *a1, int a2)
+signed int  Mem_SmallBlockRelease(_DWORD *block, int size)
 {
-  int v3; // ecx
+  int clamped_size; // ecx
 
-  v3 = a2;
-  if ( !a2 )
+  clamped_size = size;
+  if ( !size )
   {
     Rules_ReportSystemError(0, 1);
     IO_RunRouterExitCallbacks();
   }
-  if ( (unsigned int)v3 < 4 )
+  if ( (unsigned int)clamped_size < 4 )
   {
-    v3 = 4;
+    clamped_size = 4;
 LABEL_5:
-    *a1 = *(_DWORD *)(g_ClipsMemoryTable + 4 * v3);
-    *(_DWORD *)(g_ClipsMemoryTable + 4 * v3) = a1;
+    *block = *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size);
+    *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size) = block;
     return 1;
   }
-  if ( v3 < 500 )
+  if ( clamped_size < 500 )
     goto LABEL_5;
-  return Mem_ReleasePoolBlock((int)a1, v3);
+  return Mem_ReleasePoolBlock((int)block, clamped_size);
 }
 // 472A6D: variable 'v3' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -10161,7 +10161,7 @@ int Mem_GetAllocFlag()
 // 519F04: using guessed type int dword_519F04;
 
 //----- (00472B50) --------------------------------------------------------
-signed int  Mem_InitPool(unsigned int a1, char a2)
+signed int  Mem_InitPool(unsigned int requested_bytes, char a2)
 {
   unsigned int request_size;
   int block_header_bytes;
@@ -10169,13 +10169,13 @@ signed int  Mem_InitPool(unsigned int a1, char a2)
   int first_block;
   int tail_header;
 
-  request_size = a1;
+  request_size = requested_bytes;
   g_MemPoolBlockHeaderSize = 16;
   g_HeapChunkHeaderSize = 16;
-  if ( a1 < 0x3E800 )
-    a1 = 256000;
+  if ( requested_bytes < 0x3E800 )
+    requested_bytes = 256000;
   block_header_bytes = 2 * g_MemPoolBlockHeaderSize;
-  available_size = 8 * ((g_HeapChunkHeaderSize + block_header_bytes + a1 - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
+  available_size = 8 * ((g_HeapChunkHeaderSize + block_header_bytes + requested_bytes - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
   if ( request_size < 0x3E800 && (unsigned int)available_size <= request_size + g_MemPoolBlockHeaderSize )
     available_size = 8 * ((g_HeapChunkHeaderSize + request_size + block_header_bytes - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
   g_MemPoolListHead = nmalloc_(available_size, 0);
@@ -10212,25 +10212,25 @@ signed int  Mem_InitPool(unsigned int a1, char a2)
 // 54DBC0: using guessed type int dword_54DBC0;
 
 //----- (00472CB0) --------------------------------------------------------
-int  Mem_GrowPoolChain(int a1, unsigned int a2)
+int  Mem_GrowPoolChain(int pool, unsigned int requested_bytes)
 {
   int available_size;
   int new_pool;
   int first_block;
   int tail_header;
 
-  if ( a2 < 0x3E800 )
-    a2 = 256000;
-  available_size = 8 * ((a2 + 2 * g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize - 1) >> 3) + 8 - g_HeapChunkHeaderSize - 2 * g_MemPoolBlockHeaderSize;
+  if ( requested_bytes < 0x3E800 )
+    requested_bytes = 256000;
+  available_size = 8 * ((requested_bytes + 2 * g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize - 1) >> 3) + 8 - g_HeapChunkHeaderSize - 2 * g_MemPoolBlockHeaderSize;
   new_pool = nmalloc_(available_size, 0);
   if ( new_pool )
   {
     *(_DWORD *)new_pool = 0;
-    *(_DWORD *)(new_pool + 4) = a1;
+    *(_DWORD *)(new_pool + 4) = pool;
     first_block = new_pool + g_HeapChunkHeaderSize;
     *(_DWORD *)(new_pool + 12) = available_size;
     *(_DWORD *)(new_pool + 8) = first_block;
-    *(_DWORD *)a1 = new_pool;
+    *(_DWORD *)pool = new_pool;
     tail_header = new_pool + g_HeapChunkHeaderSize + g_MemPoolBlockHeaderSize + available_size;
     *(_DWORD *)(tail_header + 4) = 0;
     *(_DWORD *)(tail_header + 8) = 0;
@@ -10249,7 +10249,7 @@ int  Mem_GrowPoolChain(int a1, unsigned int a2)
 // 54DBC0: using guessed type int dword_54DBC0;
 
 //----- (00472D70) --------------------------------------------------------
-signed int  Mem_PoolAllocBlock(unsigned int a1, _DWORD *a2)
+signed int  Mem_PoolAllocBlock(unsigned int size, _DWORD *error_context)
 {
   _DWORD *pool;
   _DWORD *block;
@@ -10259,12 +10259,12 @@ signed int  Mem_PoolAllocBlock(unsigned int a1, _DWORD *a2)
 
   if ( !g_Mem_PoolInitializedFlag )
   {
-    result = Mem_InitPool(a1, a1);
+    result = Mem_InitPool(size, size);
     if ( !result )
       return result;
     IO_AddRouter((int)aBmexit, -2000, 0, 0, 0, 0, (int)Mem_HeapExitHandler);
   }
-  requested_size = 8 * ((a1 - 1) >> 3) + 8;
+  requested_size = 8 * ((size - 1) >> 3) + 8;
   if ( g_MemPoolListHead )
   {
     pool = (_DWORD *)(uintptr_t)g_MemPoolListHead;
@@ -10291,7 +10291,7 @@ signed int  Mem_PoolAllocBlock(unsigned int a1, _DWORD *a2)
         break;
     }
 LABEL_10:
-    callback_arg = (int)(uintptr_t)a2;
+    callback_arg = (int)(uintptr_t)error_context;
     Rules_ReportSystemError(callback_arg, 2);
     IO_RunRouterExitCallbacks();
     return 0;
@@ -10303,7 +10303,7 @@ LABEL_10:
 // 54DBC0: using guessed type int dword_54DBC0;
 
 //----- (00472E40) --------------------------------------------------------
-int  Mem_PoolSplitBlock(int result, _DWORD *a2, int a3)
+int  Mem_PoolSplitBlock(int result, _DWORD *block, int alloc_size)
 {
   int pool;
   int block_size;
@@ -10315,39 +10315,39 @@ int  Mem_PoolSplitBlock(int result, _DWORD *a2, int a3)
   int next_of_split;
 
   pool = result;
-  block_size = a2[3];
-  if ( a3 == block_size )
+  block_size = block[3];
+  if ( alloc_size == block_size )
   {
-    previous_free = a2[2];
-    a2[3] = -a3;
+    previous_free = block[2];
+    block[3] = -alloc_size;
     if ( previous_free )
     {
-      *(_DWORD *)(previous_free + 4) = a2[1];
+      *(_DWORD *)(previous_free + 4) = block[1];
     }
     else
     {
-      next_free = a2[1];
+      next_free = block[1];
       if ( next_free )
         *(_DWORD *)(pool + 8) = next_free;
       else
         *(_DWORD *)(pool + 8) = 0;
     }
-    next_free = a2[1];
+    next_free = block[1];
     if ( next_free )
     {
-      *(_DWORD *)(next_free + 8) = a2[2];
+      *(_DWORD *)(next_free + 8) = block[2];
     }
-    a2[2] = 0;
-    a2[1] = 0;
+    block[2] = 0;
+    block[1] = 0;
   }
   else
   {
-    tail_header = (_DWORD *)((char *)a2 + g_MemPoolBlockHeaderSize + block_size);
-    split_block = (_DWORD *)((char *)a2 + g_MemPoolBlockHeaderSize + a3);
-    split_block[3] = block_size - (a3 + g_MemPoolBlockHeaderSize);
-    *split_block = a2;
-    split_block[1] = a2[1];
-    split_block[2] = a2[2];
+    tail_header = (_DWORD *)((char *)block + g_MemPoolBlockHeaderSize + block_size);
+    split_block = (_DWORD *)((char *)block + g_MemPoolBlockHeaderSize + alloc_size);
+    split_block[3] = block_size - (alloc_size + g_MemPoolBlockHeaderSize);
+    *split_block = block;
+    split_block[1] = block[1];
+    split_block[2] = block[2];
     *tail_header = split_block;
     prev_of_split = split_block[2];
     if ( prev_of_split )
@@ -10357,130 +10357,130 @@ int  Mem_PoolSplitBlock(int result, _DWORD *a2, int a3)
     next_of_split = split_block[1];
     if ( next_of_split )
       *(_DWORD *)(next_of_split + 8) = (int)(uintptr_t)split_block;
-    a2[2] = 0;
-    a2[1] = 0;
-    a2[3] = -a3;
-    result = -a3;
+    block[2] = 0;
+    block[1] = 0;
+    block[3] = -alloc_size;
+    result = -alloc_size;
   }
   return result;
 }
 // 54DBC0: using guessed type int dword_54DBC0;
 
 //----- (00472F00) --------------------------------------------------------
-signed int  Mem_PoolFreeCoalesce(int a1, int a2)
+signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
 {
-  unsigned int v3; // ebx
-  _DWORD *v4; // edx
-  int v5; // edi
+  unsigned int aligned_size; // ebx
+  _DWORD *block_record; // edx
+  int stored_size; // edi
   int v7; // ecx
-  _DWORD *v8; // eax
-  int *v9; // eax
-  _DWORD *v10; // ebx
-  int v11; // esi
-  _DWORD *v12; // ecx
+  _DWORD *chain_cursor; // eax
+  int *pool_header; // eax
+  _DWORD *adjacent_block; // ebx
+  int freelist_head; // esi
+  _DWORD *chained_block; // ecx
   int v13; // esi
-  int v14; // edi
-  int v15; // ebp
-  int v16; // esi
-  int v17; // ebp
+  int chained_size; // edi
+  int prev_free; // ebp
+  int next_free; // esi
+  int adjacent_size; // ebp
   _DWORD *v18; // ecx
-  int v19; // esi
-  int *v20; // ecx
-  int v21; // edx
-  int v22; // ecx
+  int adjacent_next; // esi
+  int *unlink_node; // ecx
+  int chain_next; // edx
+  int pool_next; // ecx
 
-  v3 = 8 * ((unsigned int)(a2 - 1) >> 3) + 8;
-  v4 = (_DWORD *)(a1 - g_MemPoolBlockHeaderSize);
-  if ( a1 == g_MemPoolBlockHeaderSize )
+  aligned_size = 8 * ((unsigned int)(block_size - 1) >> 3) + 8;
+  block_record = (_DWORD *)(block_ptr - g_MemPoolBlockHeaderSize);
+  if ( block_ptr == g_MemPoolBlockHeaderSize )
     return 0;
-  v5 = v4[3];
-  if ( v5 >= 0 || -v3 != v5 )
+  stored_size = block_record[3];
+  if ( stored_size >= 0 || -aligned_size != stored_size )
     return 0;
-  v7 = *v4;
-  v4[3] = v3;
-  v8 = v4;
+  v7 = *block_record;
+  block_record[3] = aligned_size;
+  chain_cursor = block_record;
   if ( v7 )
   {
     do
-      v8 = (_DWORD *)*v8;
-    while ( *v8 );
+      chain_cursor = (_DWORD *)*chain_cursor;
+    while ( *chain_cursor );
   }
-  v9 = (_DWORD *)((char *)v8 - g_HeapChunkHeaderSize);
-  v10 = (_DWORD *)(a1 + v3);
-  v11 = v9[2];
-  v12 = (_DWORD *)*v4;
-  if ( v11 )
-    *(_DWORD *)(v11 + 8) = v4;
-  v13 = v9[2];
-  v4[2] = 0;
-  v4[1] = v13;
-  v9[2] = (int)v4;
-  if ( v12 )
+  pool_header = (_DWORD *)((char *)chain_cursor - g_HeapChunkHeaderSize);
+  adjacent_block = (_DWORD *)(block_ptr + aligned_size);
+  freelist_head = pool_header[2];
+  chained_block = (_DWORD *)*block_record;
+  if ( freelist_head )
+    *(_DWORD *)(freelist_head + 8) = block_record;
+  v13 = pool_header[2];
+  block_record[2] = 0;
+  block_record[1] = v13;
+  pool_header[2] = (int)block_record;
+  if ( chained_block )
   {
-    v14 = v12[3];
-    if ( v14 > 0 )
+    chained_size = chained_block[3];
+    if ( chained_size > 0 )
     {
-      v12[3] = v4[3] + g_MemPoolBlockHeaderSize + v14;
-      if ( !v10 )
+      chained_block[3] = block_record[3] + g_MemPoolBlockHeaderSize + chained_size;
+      if ( !adjacent_block )
         return 0;
-      *v10 = v12;
-      v15 = v12[2];
-      if ( v15 )
-        *(_DWORD *)(v15 + 4) = v12[1];
-      if ( v12[1] )
-        *(_DWORD *)(v12[1] + 8) = v12[2];
-      v16 = v4[1];
-      v12[1] = v16;
-      if ( v16 )
-        *(_DWORD *)(v16 + 8) = v12;
-      v12[2] = 0;
-      v9[2] = (int)v12;
-      v4[2] = 0;
-      v4[1] = 0;
-      v4 = v12;
+      *adjacent_block = chained_block;
+      prev_free = chained_block[2];
+      if ( prev_free )
+        *(_DWORD *)(prev_free + 4) = chained_block[1];
+      if ( chained_block[1] )
+        *(_DWORD *)(chained_block[1] + 8) = chained_block[2];
+      next_free = block_record[1];
+      chained_block[1] = next_free;
+      if ( next_free )
+        *(_DWORD *)(next_free + 8) = chained_block;
+      chained_block[2] = 0;
+      pool_header[2] = (int)chained_block;
+      block_record[2] = 0;
+      block_record[1] = 0;
+      block_record = chained_block;
     }
   }
-  if ( !v10 || !v4 )
+  if ( !adjacent_block || !block_record )
     return 0;
-  v17 = v10[3];
-  if ( v17 > 0 )
+  adjacent_size = adjacent_block[3];
+  if ( adjacent_size > 0 )
   {
-    v4[3] += v17 + g_MemPoolBlockHeaderSize;
-    v18 = (_DWORD *)((char *)v10 + v10[3] + g_MemPoolBlockHeaderSize);
+    block_record[3] += adjacent_size + g_MemPoolBlockHeaderSize;
+    v18 = (_DWORD *)((char *)adjacent_block + adjacent_block[3] + g_MemPoolBlockHeaderSize);
     if ( v18 )
     {
-      *v18 = v4;
-      if ( v10[2] )
-        *(_DWORD *)(v10[2] + 4) = v10[1];
-      v19 = v10[1];
-      if ( v19 )
-        *(_DWORD *)(v19 + 8) = v10[2];
+      *v18 = block_record;
+      if ( adjacent_block[2] )
+        *(_DWORD *)(adjacent_block[2] + 4) = adjacent_block[1];
+      adjacent_next = adjacent_block[1];
+      if ( adjacent_next )
+        *(_DWORD *)(adjacent_next + 8) = adjacent_block[2];
       goto LABEL_27;
     }
     return 0;
   }
 LABEL_27:
-  if ( *v4 || v4[3] != v9[3] )
+  if ( *block_record || block_record[3] != pool_header[3] )
     return 1;
-  if ( v9[1] )
+  if ( pool_header[1] )
   {
-    v20 = (int *)v9[1];
-    v21 = *v9;
-    *v20 = *v9;
-    if ( v21 )
+    unlink_node = (int *)pool_header[1];
+    chain_next = *pool_header;
+    *unlink_node = *pool_header;
+    if ( chain_next )
     {
-      v20 = (int *)v21;
-      *(_DWORD *)(v21 + 4) = v9[1];
+      unlink_node = (int *)chain_next;
+      *(_DWORD *)(chain_next + 4) = pool_header[1];
     }
-    nfree_(v20);
+    nfree_(unlink_node);
     return 1;
   }
-  v22 = *v9;
-  if ( !*v9 )
+  pool_next = *pool_header;
+  if ( !*pool_header )
     return 1;
-  *(_DWORD *)(v22 + 4) = 0;
-  g_MemPoolListHead = *v9;
-  nfree_(v22);
+  *(_DWORD *)(pool_next + 4) = 0;
+  g_MemPoolListHead = *pool_header;
+  nfree_(pool_next);
   return 1;
 }
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
@@ -10551,113 +10551,113 @@ _DWORD * Surface_Construct(_DWORD *result)
 // 5108E0: using guessed type int (*off_5108E0[3])();
 
 //----- (004732A0) --------------------------------------------------------
-_DWORD * Surface_ConstructWithSurface(_DWORD *a1, _DWORD *a2, int a3, int a4)
+_DWORD * Surface_ConstructWithSurface(_DWORD *surface, _DWORD *ddraw_obj, int height, int width)
 {
-  a1[43] = g_Surface_BlitFunctionTable;
-  if ( !Surface_CreateDDSurface(a1, a2, a3, a4) )
+  surface[43] = g_Surface_BlitFunctionTable;
+  if ( !Surface_CreateDDSurface(surface, ddraw_obj, height, width) )
     return 0;
-  return a1;
+  return surface;
 }
 // 5108E0: using guessed type int (*off_5108E0[3])();
 
 //----- (004732E0) --------------------------------------------------------
 int  Surface_Destruct(int result)
 {
-  int v1; // ebx
-  int v2; // edx
+  int surface; // ebx
+  int dd_surface; // edx
 
-  v1 = result;
-  v2 = *(_DWORD *)(result + 164);
+  surface = result;
+  dd_surface = *(_DWORD *)(result + 164);
   *(_DWORD *)(result + 172) = g_Surface_BlitFunctionTable;
-  if ( v2 )
+  if ( dd_surface )
   {
-    (*(void (__stdcall **)(int))(*(_DWORD *)v2 + 8))(v2);
-    *(_DWORD *)(v1 + 164) = 0;
-    return v1;
+    (*(void (__stdcall **)(int))(*(_DWORD *)dd_surface + 8))(dd_surface);
+    *(_DWORD *)(surface + 164) = 0;
+    return surface;
   }
   return result;
 }
 // 5108E0: using guessed type int (*off_5108E0[3])();
 
 //----- (00473320) --------------------------------------------------------
-signed int  Surface_CreateDDSurface(_DWORD *a1, _DWORD *a2, int a3, int a4)
+signed int  Surface_CreateDDSurface(_DWORD *surface, _DWORD *ddraw_obj, int height, int width)
 {
   HRESULT hr;
   int direct_draw_handle;
 
-  if ( !a1 )
+  if ( !surface )
     return 0;
-  memset(a1 + 14, 0, 108);
-  a1[14] = 108;
-  a1[15] = 7;
-  a1[40] = 64;
-  a1[16] = a3;
-  a1[17] = a4;
-  if ( !a2 )
+  memset(surface + 14, 0, 108);
+  surface[14] = 108;
+  surface[15] = 7;
+  surface[40] = 64;
+  surface[16] = height;
+  surface[17] = width;
+  if ( !ddraw_obj )
     return 0;
-  direct_draw_handle = *a2;
+  direct_draw_handle = *ddraw_obj;
   if ( !direct_draw_handle )
     return 0;
   hr = Compat_DirectDraw_CreateSurface(
          (LPDIRECTDRAW)(uintptr_t)(unsigned int)direct_draw_handle,
-         (int *)(a1 + 14),
-         a1 + 41);
+         (int *)(surface + 14),
+         surface + 41);
   if ( hr )
   {
-    Render_HandleDirectDrawFatalError(hr, a2[9]);
+    Render_HandleDirectDrawFatalError(hr, ddraw_obj[9]);
     return 0;
   }
-  a1[4] = -1;
-  a1[10] = 0;
-  a1[9] = 0;
-  a1[6] = 0;
-  a1[5] = 0;
-  a1[3] = 0;
-  a1[13] = 0;
-  a1[2] = 0;
-  a1[42] = a2;
-  a1[1] = a3;
-  *a1 = a4;
-  a1[12] = a1[1];
-  a1[11] = *a1;
-  a1[8] = a1[1];
-  a1[7] = *a1;
+  surface[4] = -1;
+  surface[10] = 0;
+  surface[9] = 0;
+  surface[6] = 0;
+  surface[5] = 0;
+  surface[3] = 0;
+  surface[13] = 0;
+  surface[2] = 0;
+  surface[42] = ddraw_obj;
+  surface[1] = height;
+  *surface = width;
+  surface[12] = surface[1];
+  surface[11] = *surface;
+  surface[8] = surface[1];
+  surface[7] = *surface;
   return 1;
 }
 
 //----- (004733F0) --------------------------------------------------------
-int  Surface_CreateFromBitmapFile(_DWORD *a1, int *a2, const CHAR *a3)
+int  Surface_CreateFromBitmapFile(_DWORD *surface, int *ddraw_obj, const CHAR *bitmap_path)
 {
   int result; // eax
   int v6; // ecx
-  int v7; // eax
+  int surface_height; // eax
 
-  if ( !a3 )
+  if ( !bitmap_path )
     return 0;
-  result = Surface_DDCopyBitmapToNewSurface(*a2, a3, a1 + 1, (int)a1);
-  a1[41] = result;
+  result = Surface_DDCopyBitmapToNewSurface(*ddraw_obj, bitmap_path, surface + 1, (int)surface);
+  surface[41] = result;
   if ( result )
   {
-    a1[3] = 0;
-    a1[13] = 0;
-    a1[4] = -1;
-    a1[10] = 0;
-    a1[9] = 0;
-    a1[6] = 0;
-    a1[5] = 0;
-    v7 = a1[1];
-    a1[2] = a3;
-    a1[12] = v7;
-    a1[11] = *a1;
-    a1[8] = a1[1];
-    a1[7] = *a1;
-    a1[42] = a2;
+    surface[3] = 0;
+    surface[13] = 0;
+    surface[4] = -1;
+    surface[10] = 0;
+    surface[9] = 0;
+    surface[6] = 0;
+    surface[5] = 0;
+    surface_height = surface[1];
+    surface[2] = bitmap_path;
+    surface[12] = surface_height;
+    surface[11] = *surface;
+    surface[8] = surface[1];
+    surface[7] = *surface;
+    surface[42] = ddraw_obj;
     memset_(v6, 0);
-    a1[14] = 108;
-    a1[15] = 7;
-    a1[40] = 64;
-    a1[17] = *a1;
-    a1[16] = a1[1];
+    surface[14] = 108;
+    surface[15] = 7;
+    surface[40] = 64;
+    surface[17] = *surface;
+    surface[16] = surface[1];
     return 1;
   }
   return result;
@@ -10666,21 +10666,21 @@ int  Surface_CreateFromBitmapFile(_DWORD *a1, int *a2, const CHAR *a3)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (004734B0) --------------------------------------------------------
-int  Surface_BltOntoSurface(int a1, int a2)
+int  Surface_BltOntoSurface(int surface, int dest_surface)
 {
   int result; // eax
   int v4; // edx
 
-  result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(a2 + 164) + 20))(
-             *(_DWORD *)(a2 + 164),
-             a1 + 36,
-             *(_DWORD *)(a1 + 164),
-             a1 + 20,
+  result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
+             *(_DWORD *)(dest_surface + 164),
+             surface + 36,
+             *(_DWORD *)(surface + 164),
+             surface + 20,
              0x1000000,
              0);
   if ( result == -2005532222 )
   {
-    Surface_Restore(a1);
+    Surface_Restore(surface);
     return v4;
   }
   return result;
@@ -10688,73 +10688,73 @@ int  Surface_BltOntoSurface(int a1, int a2)
 // 4734EB: variable 'v4' is possibly undefined
 
 //----- (004734F0) --------------------------------------------------------
-int  Surface_BltFastOpaqueTo(int a1, int a2, int a3, int a4)
+int  Surface_BltFastOpaqueTo(int src_surface, int dest_x, int dest_surface, int dest_y)
 {
   int result; // eax
 
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(a3 + 164) + 28))(
-             *(_DWORD *)(a3 + 164),
-             a2,
-             a4,
-             *(_DWORD *)(a1 + 164),
-             a1 + 20,
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(dest_surface + 164) + 28))(
+             *(_DWORD *)(dest_surface + 164),
+             dest_x,
+             dest_y,
+             *(_DWORD *)(src_surface + 164),
+             src_surface + 20,
              16);
   if ( result == -2005532222 )
   {
-    Surface_Restore(a1);
+    Surface_Restore(src_surface);
     return -2005532222;
   }
   return result;
 }
 
 //----- (00473530) --------------------------------------------------------
-int  Surface_BltFastKeyedTo(int a1, int a2, int a3, int a4)
+int  Surface_BltFastKeyedTo(int src_surface, int dest_x, int dest_surface, int dest_y)
 {
   int result; // eax
 
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(a3 + 164) + 28))(
-             *(_DWORD *)(a3 + 164),
-             a2,
-             a4,
-             *(_DWORD *)(a1 + 164),
-             a1 + 20,
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(dest_surface + 164) + 28))(
+             *(_DWORD *)(dest_surface + 164),
+             dest_x,
+             dest_y,
+             *(_DWORD *)(src_surface + 164),
+             src_surface + 20,
              17);
   if ( result == -2005532222 )
   {
-    Surface_Restore(a1);
+    Surface_Restore(src_surface);
     return -2005532222;
   }
   return result;
 }
 
 //----- (00473570) --------------------------------------------------------
-int  Surface_BltFastKeyedClippedTo(_DWORD *a1, int a2, int a3, int a4, _DWORD *a5)
+int  Surface_BltFastKeyedClippedTo(_DWORD *src_surface, int dest_x, int dest_surface, int dest_y, _DWORD *clip_bounds)
 {
   int result; // eax
   int v7; // edx
-  _DWORD v8[4]; // [esp+0h] [ebp-28h] BYREF
-  int v9; // [esp+10h] [ebp-18h] BYREF
-  int v10; // [esp+14h] [ebp-14h] BYREF
+  _DWORD src_rect[4]; // [esp+0h] [ebp-28h] BYREF
+  int blit_x; // [esp+10h] [ebp-18h] BYREF
+  int blit_y; // [esp+14h] [ebp-14h] BYREF
   int v11; // [esp+18h] [ebp-10h]
 
-  v9 = a2;
-  v10 = a4;
-  v11 = a3;
-  v8[0] = a1[5];
-  v8[1] = a1[6];
-  v8[2] = a1[7];
-  v8[3] = a1[8];
-  Render_ClampBlitRectToBounds(&v9, &v10, a5, v8);
+  blit_x = dest_x;
+  blit_y = dest_y;
+  v11 = dest_surface;
+  src_rect[0] = src_surface[5];
+  src_rect[1] = src_surface[6];
+  src_rect[2] = src_surface[7];
+  src_rect[3] = src_surface[8];
+  Render_ClampBlitRectToBounds(&blit_x, &blit_y, clip_bounds, src_rect);
   result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, _DWORD *, int))(**(_DWORD **)(v11 + 164) + 28))(
              *(_DWORD *)(v11 + 164),
-             v9,
-             v10,
-             a1[41],
-             v8,
+             blit_x,
+             blit_y,
+             src_surface[41],
+             src_rect,
              17);
   if ( result == -2005532222 )
   {
-    Surface_Restore((int)a1);
+    Surface_Restore((int)src_surface);
     return v7;
   }
   return result;
@@ -10763,63 +10763,63 @@ int  Surface_BltFastKeyedClippedTo(_DWORD *a1, int a2, int a3, int a4, _DWORD *a
 // 4735E3: variable 'v7' is possibly undefined
 
 //----- (004735F0) --------------------------------------------------------
-int  Surface_BltToWindowClient(int a1, int a2)
+int  Surface_BltToWindowClient(int surface, int dest_surface)
 {
   int result; // eax
-  struct tagRECT v5[2]; // [esp+0h] [ebp-24h] BYREF
+  struct tagRECT client_rect[2]; // [esp+0h] [ebp-24h] BYREF
 
-  GetClientRect(*(HWND *)(*(_DWORD *)(a1 + 168) + 36), v5);
-  ClientToScreen(*(HWND *)(*(_DWORD *)(a1 + 168) + 36), (LPPOINT)v5);
-  ClientToScreen(*(HWND *)(*(_DWORD *)(a1 + 168) + 36), (LPPOINT)&v5[0].right);
-  result = (*(int (__stdcall **)(_DWORD, struct tagRECT *, _DWORD, _DWORD, int, _DWORD))(**(_DWORD **)(a2 + 164) + 20))(
-             *(_DWORD *)(a2 + 164),
-             v5,
-             *(_DWORD *)(a1 + 164),
+  GetClientRect(*(HWND *)(*(_DWORD *)(surface + 168) + 36), client_rect);
+  ClientToScreen(*(HWND *)(*(_DWORD *)(surface + 168) + 36), (LPPOINT)client_rect);
+  ClientToScreen(*(HWND *)(*(_DWORD *)(surface + 168) + 36), (LPPOINT)&client_rect[0].right);
+  result = (*(int (__stdcall **)(_DWORD, struct tagRECT *, _DWORD, _DWORD, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
+             *(_DWORD *)(dest_surface + 164),
+             client_rect,
+             *(_DWORD *)(surface + 164),
              0,
              0x1000000,
              0);
   if ( result == -2005532222 )
   {
-    Surface_Restore(a1);
+    Surface_Restore(surface);
     return -2005532222;
   }
   return result;
 }
 
 //----- (00473690) --------------------------------------------------------
-int  Surface_BltScaledKeyedOnto(_DWORD *a1, int a2, int a3, float a4, int a5)
+int  Surface_BltScaledKeyedOnto(_DWORD *src_surface, int dest_top, int a3, float scale, int dest_surface)
 {
-  int v6; // ecx
-  double v7; // st6
+  int height; // ecx
+  double scaled_bottom; // st6
   int *v8; // eax
-  int v9; // ebx
+  int width; // ebx
   int v10; // edx
-  double v11; // st7
+  double scaled_right; // st7
   int v12; // eax
   int result; // eax
   int v14; // edx
   int v15; // [esp+4h] [ebp-Ch]
 
-  v6 = a1[1];
-  a1[10] = a2;
-  v7 = (double)(v6 + a2) * a4;
-  _CHP(v6 + a2, a3);
-  v8[12] = (int)v7;
-  v9 = *v8;
+  height = src_surface[1];
+  src_surface[10] = dest_top;
+  scaled_bottom = (double)(height + dest_top) * scale;
+  _CHP(height + dest_top, a3);
+  v8[12] = (int)scaled_bottom;
+  width = *v8;
   v8[9] = v10;
-  v11 = a4 * (double)(v9 + v10);
-  _CHP(v9 + v10, v15);
-  *(_DWORD *)(v12 + 44) = (int)v11;
-  result = (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD *, int, _DWORD))(**(_DWORD **)(a5 + 164) + 20))(
-             *(_DWORD *)(a5 + 164),
-             a1 + 9,
-             a1[41],
-             a1 + 5,
+  scaled_right = scale * (double)(width + v10);
+  _CHP(width + v10, v15);
+  *(_DWORD *)(v12 + 44) = (int)scaled_right;
+  result = (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD *, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
+             *(_DWORD *)(dest_surface + 164),
+             src_surface + 9,
+             src_surface[41],
+             src_surface + 5,
              16809984,
              0);
   if ( result == -2005532222 )
   {
-    Surface_Restore((int)a1);
+    Surface_Restore((int)src_surface);
     return v14;
   }
   return result;
@@ -10831,94 +10831,94 @@ int  Surface_BltScaledKeyedOnto(_DWORD *a1, int a2, int a3, float a4, int a5)
 // 47370C: variable 'v14' is possibly undefined
 
 //----- (00473730) --------------------------------------------------------
-int  Surface_BltMirrorLeftRight(int a1)
+int  Surface_BltMirrorLeftRight(int surface)
 {
-  _DWORD v2[25]; // [esp+0h] [ebp-64h] BYREF
+  _DWORD blt_fx[25]; // [esp+0h] [ebp-64h] BYREF
 
-  v2[0] = 100;
-  v2[1] = 2;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(a1 + 164) + 20))(
-           *(_DWORD *)(a1 + 164),
+  blt_fx[0] = 100;
+  blt_fx[1] = 2;
+  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
+           *(_DWORD *)(surface + 164),
            0,
            0,
            0,
            16779264,
-           v2);
+           blt_fx);
 }
 
 //----- (00473770) --------------------------------------------------------
-int  Surface_BltMirrorUpDown(int a1)
+int  Surface_BltMirrorUpDown(int surface)
 {
-  _DWORD v2[25]; // [esp+0h] [ebp-64h] BYREF
+  _DWORD blt_fx[25]; // [esp+0h] [ebp-64h] BYREF
 
-  v2[0] = 100;
-  v2[1] = 4;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(a1 + 164) + 20))(
-           *(_DWORD *)(a1 + 164),
+  blt_fx[0] = 100;
+  blt_fx[1] = 4;
+  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
+           *(_DWORD *)(surface + 164),
            0,
            0,
            0,
            16779264,
-           v2);
+           blt_fx);
 }
 
 //----- (004737B0) --------------------------------------------------------
-_DWORD * Surface_SetDestRect(_DWORD *result, int a2, int a3, int a4, int a5)
+_DWORD * Surface_SetDestRect(_DWORD *result, int top, int bottom, int left, int right)
 {
-  result[10] = a2;
-  result[9] = a4;
-  result[12] = a3;
-  result[11] = a5;
+  result[10] = top;
+  result[9] = left;
+  result[12] = bottom;
+  result[11] = right;
   return result;
 }
 
 //----- (004737D0) --------------------------------------------------------
-_DWORD * Surface_SetSrcRect(_DWORD *result, int a2, int a3, int a4, int a5)
+_DWORD * Surface_SetSrcRect(_DWORD *result, int top, int bottom, int left, int right)
 {
-  result[6] = a2;
-  result[5] = a4;
-  result[8] = a3;
-  result[7] = a5;
+  result[6] = top;
+  result[5] = left;
+  result[8] = bottom;
+  result[7] = right;
   return result;
 }
 
 //----- (004737F0) --------------------------------------------------------
-int  Surface_SetSrcColorKey(int a1, int a2, int a3)
+int  Surface_SetSrcColorKey(int surface, int color_key, int a3)
 {
-  _DWORD v4[3]; // [esp+0h] [ebp-Ch] BYREF
+  _DWORD color_key_struct[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  v4[2] = a3;
-  *(_DWORD *)(a1 + 16) = a2;
-  v4[0] = a2;
-  v4[1] = a2;
-  return (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(a1 + 164) + 116))(*(_DWORD *)(a1 + 164), 8, v4);
+  color_key_struct[2] = a3;
+  *(_DWORD *)(surface + 16) = color_key;
+  color_key_struct[0] = color_key;
+  color_key_struct[1] = color_key;
+  return (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 116))(*(_DWORD *)(surface + 164), 8, color_key_struct);
 }
 
 //----- (00473820) --------------------------------------------------------
-int  Surface_Restore(int a1)
+int  Surface_Restore(int surface)
 {
-  return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 164) + 108))(*(_DWORD *)(a1 + 164));
+  return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(surface + 164) + 108))(*(_DWORD *)(surface + 164));
 }
 
 //----- (00473840) --------------------------------------------------------
-int  Surface_LockWithRestore(int a1, int a2)
+int  Surface_LockWithRestore(int surface, int a2)
 {
-  int v3; // edi
-  int v4; // eax
+  int surface_desc; // edi
+  int dd_surface; // eax
   int result; // eax
 
-  v3 = a1 + 56;
+  surface_desc = surface + 56;
   memset_(a2, 0);
-  v4 = *(_DWORD *)(a1 + 164);
-  *(_DWORD *)(a1 + 56) = 108;
-  result = (*(int (__stdcall **)(int, _DWORD, int, int, _DWORD))(*(_DWORD *)v4 + 100))(v4, 0, v3, 1, 0);
+  dd_surface = *(_DWORD *)(surface + 164);
+  *(_DWORD *)(surface + 56) = 108;
+  result = (*(int (__stdcall **)(int, _DWORD, int, int, _DWORD))(*(_DWORD *)dd_surface + 100))(dd_surface, 0, surface_desc, 1, 0);
   if ( result == -2005532222 )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 164) + 108))(*(_DWORD *)(a1 + 164));
-    (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _DWORD))(**(_DWORD **)(a1 + 164) + 100))(
-      *(_DWORD *)(a1 + 164),
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(surface + 164) + 108))(*(_DWORD *)(surface + 164));
+    (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _DWORD))(**(_DWORD **)(surface + 164) + 100))(
+      *(_DWORD *)(surface + 164),
       0,
-      v3,
+      surface_desc,
       1,
       0);
     return -2005532222;
@@ -10928,141 +10928,141 @@ int  Surface_LockWithRestore(int a1, int a2)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (004738B0) --------------------------------------------------------
-int  Surface_Unlock(int a1)
+int  Surface_Unlock(int surface)
 {
-  return (*(int (__stdcall **)(_DWORD, int))(**(_DWORD **)(a1 + 164) + 128))(*(_DWORD *)(a1 + 164), a1 + 56);
+  return (*(int (__stdcall **)(_DWORD, int))(**(_DWORD **)(surface + 164) + 128))(*(_DWORD *)(surface + 164), surface + 56);
 }
 
 //----- (004739C0) --------------------------------------------------------
-int  Surface_SetPixelByte(int result, int a2, char a3, int a4)
+int  Surface_SetPixelByte(int result, int x, char color, int y)
 {
-  *(_BYTE *)(*(_DWORD *)(result + 72) * a4 + a2 + *(_DWORD *)(result + 92)) = a3;
+  *(_BYTE *)(*(_DWORD *)(result + 72) * y + x + *(_DWORD *)(result + 92)) = color;
   return result;
 }
 
 //----- (004739D0) --------------------------------------------------------
-int  Surface_GetPixelByte(int a1, int a2, int a3)
+int  Surface_GetPixelByte(int surface, int x, int y)
 {
-  return *(unsigned __int8 *)(*(_DWORD *)(a1 + 92) + *(_DWORD *)(a1 + 72) * a3 + a2);
+  return *(unsigned __int8 *)(*(_DWORD *)(surface + 92) + *(_DWORD *)(surface + 72) * y + x);
 }
 
 //----- (004739F0) --------------------------------------------------------
-int * Mem_SwapDwordPair(int *result, int *a2)
+int * Mem_SwapDwordPair(int *result, int *other)
 {
-  int v2; // ebx
+  int temp; // ebx
 
-  v2 = *result;
-  *result = *a2;
-  *a2 = v2;
+  temp = *result;
+  *result = *other;
+  *other = temp;
   return result;
 }
 
 //----- (00473A00) --------------------------------------------------------
-int  Surface_DrawRectBorderByte(int a1, int a2, int a3, int a4, int a5, char a6)
+int  Surface_DrawRectBorderByte(int surface, int left, int right, int top, int bottom, char color)
 {
   int i; // ebp
   int j; // ebp
 
-  for ( i = a2; i < a3; ++i )
+  for ( i = left; i < right; ++i )
   {
-    Surface_SetPixelByte(a1, i, a6, a4);
-    Surface_SetPixelByte(a1, i, a6, a5);
+    Surface_SetPixelByte(surface, i, color, top);
+    Surface_SetPixelByte(surface, i, color, bottom);
   }
-  for ( j = a4; j < a5; ++j )
+  for ( j = top; j < bottom; ++j )
   {
-    Surface_SetPixelByte(a1, a2, a6, j);
-    Surface_SetPixelByte(a1, a3, a6, j);
+    Surface_SetPixelByte(surface, left, color, j);
+    Surface_SetPixelByte(surface, right, color, j);
   }
-  Surface_SetPixelByte(a1, a2, a6, a4);
-  return Surface_SetPixelByte(a1, a3, a6, a5);
+  Surface_SetPixelByte(surface, left, color, top);
+  return Surface_SetPixelByte(surface, right, color, bottom);
 }
 
 //----- (00473AB0) --------------------------------------------------------
-int  Surface_FillRectColor(int a1, int a2, int a3, int a4, int a5, int a6)
+int  Surface_FillRectColor(int surface, int left, int right, int top, int bottom, int fill_color)
 {
-  _DWORD v7[25]; // [esp+0h] [ebp-7Ch] BYREF
-  _DWORD v8[6]; // [esp+64h] [ebp-18h] BYREF
+  _DWORD blt_fx[25]; // [esp+0h] [ebp-7Ch] BYREF
+  _DWORD dest_rect[6]; // [esp+64h] [ebp-18h] BYREF
 
-  v8[0] = a2;
-  v8[3] = a5;
-  v7[0] = 100;
-  v7[20] = a6;
-  v8[1] = a4;
-  v8[2] = a3;
-  return (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(a1 + 164) + 20))(
-           *(_DWORD *)(a1 + 164),
-           v8,
+  dest_rect[0] = left;
+  dest_rect[3] = bottom;
+  blt_fx[0] = 100;
+  blt_fx[20] = fill_color;
+  dest_rect[1] = top;
+  dest_rect[2] = right;
+  return (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
+           *(_DWORD *)(surface + 164),
+           dest_rect,
            0,
            0,
            16778240,
-           v7);
+           blt_fx);
 }
 
 //----- (00473B10) --------------------------------------------------------
-int  Render_DrawLine(int a1, int a2, int a3, int a4, int a5, char a6)
+int  Render_DrawLine(int surface, int x0, int x1, int y0, int y1, char color)
 {
-  char v6; // bp
-  signed int v8; // esi
-  signed int v9; // eax
+  char color_byte; // bp
+  signed int delta_x; // esi
+  signed int delta_y; // eax
   int result; // eax
-  int v11; // esi
-  int v12; // esi
+  int cur_x; // esi
+  int cur_y; // esi
   int v13; // [esp+0h] [ebp-3Ch]
-  double v14; // [esp+0h] [ebp-3Ch]
+  double x_step; // [esp+0h] [ebp-3Ch]
   int v15; // [esp+4h] [ebp-38h]
-  double v16; // [esp+8h] [ebp-34h]
+  double y_step; // [esp+8h] [ebp-34h]
   double j; // [esp+10h] [ebp-2Ch]
   double i; // [esp+18h] [ebp-24h]
-  int v19; // [esp+20h] [ebp-1Ch] BYREF
-  int v20; // [esp+24h] [ebp-18h] BYREF
-  int v21; // [esp+28h] [ebp-14h] BYREF
-  int v22; // [esp+2Ch] [ebp-10h]
+  int x_start; // [esp+20h] [ebp-1Ch] BYREF
+  int y_start; // [esp+24h] [ebp-18h] BYREF
+  int x_end; // [esp+28h] [ebp-14h] BYREF
+  int last_plot; // [esp+2Ch] [ebp-10h]
 
-  v6 = a6;
-  v19 = a2;
-  v20 = a4;
-  v21 = a3;
-  v8 = abs32(a3 - a2);
-  v9 = abs32(a5 - a4);
-  if ( !v8 )
-    return Render_DrawVerticalRun(a1, v20, v19, a5, a6);
-  if ( !v9 )
-    return Render_DrawHorizontalRun(a1, v19, v20, v21, a6);
-  if ( v8 <= v9 )
+  color_byte = color;
+  x_start = x0;
+  y_start = y0;
+  x_end = x1;
+  delta_x = abs32(x1 - x0);
+  delta_y = abs32(y1 - y0);
+  if ( !delta_x )
+    return Render_DrawVerticalRun(surface, y_start, x_start, y1, color);
+  if ( !delta_y )
+    return Render_DrawHorizontalRun(surface, x_start, y_start, x_end, color);
+  if ( delta_x <= delta_y )
   {
-    if ( v20 > a5 )
+    if ( y_start > y1 )
     {
-      Mem_SwapDwordPair(&v19, &v21);
-      Mem_SwapDwordPair(&v20, &a5);
+      Mem_SwapDwordPair(&x_start, &x_end);
+      Mem_SwapDwordPair(&y_start, &y1);
     }
-    result = a5 - v20;
-    v14 = (double)(v21 - v19) / (double)(a5 - v20);
-    v22 = v19;
-    v12 = v20;
-    for ( i = (double)v19; v12 <= a5; i = i + v14 )
+    result = y1 - y_start;
+    x_step = (double)(x_end - x_start) / (double)(y1 - y_start);
+    last_plot = x_start;
+    cur_y = y_start;
+    for ( i = (double)x_start; cur_y <= y1; i = i + x_step )
     {
-      _CHP(LODWORD(v14), HIDWORD(v14));
-      v22 = (int)i;
-      result = Surface_SetPixelByte(a1, (int)i, v6, v12++);
+      _CHP(LODWORD(x_step), HIDWORD(x_step));
+      last_plot = (int)i;
+      result = Surface_SetPixelByte(surface, (int)i, color_byte, cur_y++);
     }
   }
   else
   {
-    if ( v19 > v21 )
+    if ( x_start > x_end )
     {
-      Mem_SwapDwordPair(&v19, &v21);
-      Mem_SwapDwordPair(&v20, &a5);
+      Mem_SwapDwordPair(&x_start, &x_end);
+      Mem_SwapDwordPair(&y_start, &y1);
     }
-    result = v21 - v19;
-    v16 = (double)(a5 - v20) / (double)(v21 - v19);
-    v22 = v20;
-    v11 = v19;
-    for ( j = (double)v20; v11 <= v21; j = j + v16 )
+    result = x_end - x_start;
+    y_step = (double)(y1 - y_start) / (double)(x_end - x_start);
+    last_plot = y_start;
+    cur_x = x_start;
+    for ( j = (double)y_start; cur_x <= x_end; j = j + y_step )
     {
       _CHP(v13, v15);
-      v22 = (int)j;
-      Surface_SetPixelByte(a1, v11++, v6, (int)j);
-      result = v21;
+      last_plot = (int)j;
+      Surface_SetPixelByte(surface, cur_x++, color_byte, (int)j);
+      result = x_end;
     }
   }
   return result;
@@ -11072,114 +11072,114 @@ int  Render_DrawLine(int a1, int a2, int a3, int a4, int a5, char a6)
 // 473C9E: variable 'v14' is possibly undefined
 
 //----- (00473CE0) --------------------------------------------------------
-int  Render_DrawVerticalRun(int a1, int a2, int a3, int a4, char a5)
+int  Render_DrawVerticalRun(int surface, int y_start, int x, int y_end, char color)
 {
-  int v6; // ebp
+  int pixels_base; // ebp
   int result; // eax
-  int v8; // edx
+  int row_offset; // edx
 
-  v6 = *(_DWORD *)(a1 + 92);
-  for ( result = a2; result < a4; *(_BYTE *)(v8 + v6) = a5 )
+  pixels_base = *(_DWORD *)(surface + 92);
+  for ( result = y_start; result < y_end; *(_BYTE *)(row_offset + pixels_base) = color )
   {
-    v8 = a3 + result * *(_DWORD *)(a1 + 72);
+    row_offset = x + result * *(_DWORD *)(surface + 72);
     ++result;
   }
   return result;
 }
 
 //----- (00473D20) --------------------------------------------------------
-int  Render_DrawHorizontalRun(int result, int a2, int a3, int a4, char a5)
+int  Render_DrawHorizontalRun(int result, int x_start, int y, int x_end, char color)
 {
-  int v5; // edi
+  int surface; // edi
   int i; // esi
 
-  v5 = result;
-  for ( i = a2; i < a4; ++i )
-    result = Surface_SetPixelByte(v5, i, a5, a3);
+  surface = result;
+  for ( i = x_start; i < x_end; ++i )
+    result = Surface_SetPixelByte(surface, i, color, y);
   return result;
 }
 // 473D20: could not find valid save-restore pair for ebx
 
 //----- (00473E30) --------------------------------------------------------
-int  Render_FillSurfaceSolidColor(int a1, int a2, int a3)
+int  Render_FillSurfaceSolidColor(int surface, int fill_color, int a3)
 {
-  _DWORD v4[26]; // [esp+0h] [ebp-68h] BYREF
+  _DWORD blt_fx[26]; // [esp+0h] [ebp-68h] BYREF
 
-  v4[25] = a3;
-  v4[20] = a2;
-  v4[0] = 100;
+  blt_fx[25] = a3;
+  blt_fx[20] = fill_color;
+  blt_fx[0] = 100;
   return Compat_DirectDrawSurface_Blt(
-           (LPDIRECTDRAWSURFACE)*(int *)(a1 + 164),
+           (LPDIRECTDRAWSURFACE)*(int *)(surface + 164),
            0,
            0,
            0,
            16778240,
-           v4);
+           blt_fx);
 }
 
 //----- (00473E60) --------------------------------------------------------
-int  Render_ClampBlitRectToBounds(_DWORD *a1, _DWORD *a2, _DWORD *a3, _DWORD *a4)
+int  Render_ClampBlitRectToBounds(_DWORD *x_ptr, _DWORD *y_ptr, _DWORD *bounds_rect, _DWORD *src_rect)
 {
-  int v4; // edi
-  int v5; // esi
-  int v6; // esi
-  int v7; // ebp
+  int bounds_right; // edi
+  int right_edge; // esi
+  int bounds_top; // esi
+  int bounds_bottom; // ebp
   int result; // eax
 
-  v4 = a3[2];
-  v5 = *a1 + a4[2] - *a4;
-  if ( v5 > v4 )
-    a4[2] -= v5 - v4;
-  if ( *a1 < *a3 )
+  bounds_right = bounds_rect[2];
+  right_edge = *x_ptr + src_rect[2] - *src_rect;
+  if ( right_edge > bounds_right )
+    src_rect[2] -= right_edge - bounds_right;
+  if ( *x_ptr < *bounds_rect )
   {
-    *a4 += *a3 - *a1;
-    *a1 = *a3;
+    *src_rect += *bounds_rect - *x_ptr;
+    *x_ptr = *bounds_rect;
   }
-  v6 = a3[1];
-  if ( *a2 < v6 )
+  bounds_top = bounds_rect[1];
+  if ( *y_ptr < bounds_top )
   {
-    a4[1] += v6 - *a2;
-    *a2 = a3[1];
+    src_rect[1] += bounds_top - *y_ptr;
+    *y_ptr = bounds_rect[1];
   }
-  v7 = a3[3];
-  result = *a2 + a4[3] - a4[1];
-  if ( result > v7 )
+  bounds_bottom = bounds_rect[3];
+  result = *y_ptr + src_rect[3] - src_rect[1];
+  if ( result > bounds_bottom )
   {
-    result -= v7;
-    a4[3] -= result;
+    result -= bounds_bottom;
+    src_rect[3] -= result;
   }
   return result;
 }
 
 //----- (00473EE0) --------------------------------------------------------
-int __fastcall Compat_FileSystemQueryRelease(int a1, int *a2)
+int __fastcall Compat_FileSystemQueryRelease(int a1, int *handle_ptr)
 {
   int object_handle;
   int result;
   uintptr_t *vtable;
 
   (void)a1;
-  if ( !a2 )
+  if ( !handle_ptr )
     return 0;
-  object_handle = *a2;
+  object_handle = *handle_ptr;
   if ( !object_handle )
   {
-    *a2 = 0;
+    *handle_ptr = 0;
     return 0;
   }
   vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)object_handle;
   result = ((int (*)(int, int))(uintptr_t)vtable[3])(object_handle, 2);
-  *a2 = 0;
+  *handle_ptr = 0;
   return result;
 }
 
 //----- (00473F10) --------------------------------------------------------
-int  FileSystem_OpenViaOpenSlotAndNotify(int a1)
+int  FileSystem_OpenViaOpenSlotAndNotify(int entry)
 {
   int result; // eax
   int v3; // ecx
 
-  result = (*(int (__thiscall **)(int))(*(_DWORD *)a1 + 12))(a1);
+  result = (*(int (__thiscall **)(int))(*(_DWORD *)entry + 12))(entry);
   if ( result )
   {
     (*(void (__cdecl **)(int))(*(_DWORD *)v3 + 20))(result);
@@ -11285,11 +11285,11 @@ static int Compat_FileSystemOnMounted(int mounted_file_system, int *root_file_sy
 }
 
 //----- (00473F70) --------------------------------------------------------
-int  Compat_FileSystemOpenIfReady(int a1, int a2)
+int  Compat_FileSystemOpenIfReady(int file_system, int mode_flags)
 {
   _DWORD *opened_query; // ecx
 
-  opened_query = Compat_FileSystemQueryOpen(a1, a2);
+  opened_query = Compat_FileSystemQueryOpen(file_system, mode_flags);
   if ( opened_query && Compat_FileSystemQueryResultIsReady(opened_query) == 1 )
     return (int)opened_query;
   if ( opened_query )
@@ -11299,658 +11299,658 @@ int  Compat_FileSystemOpenIfReady(int a1, int a2)
 // 473F9E: variable 'v3' is possibly undefined
 
 //----- (004741F0) --------------------------------------------------------
-void  __noreturn Render_HandleDirectDrawFatalError(unsigned int a1, int a2)
+void  __noreturn Render_HandleDirectDrawFatalError(unsigned int error_code, int a2)
 {
-  const char *v2; // eax
-  char v3[256]; // [esp+0h] [ebp-104h] BYREF
-  int v4; // [esp+100h] [ebp-4h]
+  const char *error_name; // eax
+  char message_buffer[256]; // [esp+0h] [ebp-104h] BYREF
+  int saved_context; // [esp+100h] [ebp-4h]
 
-  v4 = a2;
-  if ( a1 >= 0x8876019A )
+  saved_context = a2;
+  if ( error_code >= 0x8876019A )
   {
-    if ( a1 <= 0x8876019A )
+    if ( error_code <= 0x8876019A )
     {
-      v2 = aDderr_surfacea;
+      error_name = aDderr_surfacea;
       goto LABEL_10;
     }
-    if ( a1 >= 0x8876023B )
+    if ( error_code >= 0x8876023B )
     {
-      if ( a1 <= 0x8876023B )
+      if ( error_code <= 0x8876023B )
       {
-        v2 = aDderr_hwndalre;
+        error_name = aDderr_hwndalre;
         goto LABEL_10;
       }
-      if ( a1 < 0x88760248 )
+      if ( error_code < 0x88760248 )
       {
-        if ( a1 >= 0x88760241 )
+        if ( error_code >= 0x88760241 )
         {
-          if ( a1 <= 0x88760241 )
+          if ( error_code <= 0x88760241 )
           {
-            v2 = aDderr_overlayn;
+            error_name = aDderr_overlayn;
           }
-          else if ( a1 >= 0x88760244 )
+          else if ( error_code >= 0x88760244 )
           {
-            if ( a1 <= 0x88760244 )
+            if ( error_code <= 0x88760244 )
             {
-              v2 = aDderr_notaover;
+              error_name = aDderr_notaover;
             }
-            else if ( a1 < 0x88760246 )
+            else if ( error_code < 0x88760246 )
             {
-              v2 = aDderr_exclusiv;
+              error_name = aDderr_exclusiv;
             }
-            else if ( a1 <= 0x88760246 )
+            else if ( error_code <= 0x88760246 )
             {
-              v2 = aDderr_notflipp;
+              error_name = aDderr_notflipp;
             }
             else
             {
-              v2 = aDderr_cantdupl;
+              error_name = aDderr_cantdupl;
             }
           }
-          else if ( a1 <= 0x88760242 )
+          else if ( error_code <= 0x88760242 )
           {
-            v2 = aDderr_nooverla;
+            error_name = aDderr_nooverla;
           }
           else
           {
-            v2 = aDderr_invalidp;
+            error_name = aDderr_invalidp;
           }
         }
-        else if ( a1 >= 0x8876023E )
+        else if ( error_code >= 0x8876023E )
         {
-          if ( a1 <= 0x8876023E )
+          if ( error_code <= 0x8876023E )
           {
-            v2 = aDderr_bltfastc;
+            error_name = aDderr_bltfastc;
           }
-          else if ( a1 <= 0x8876023F )
+          else if ( error_code <= 0x8876023F )
           {
-            v2 = aDderr_noblthw;
+            error_name = aDderr_noblthw;
           }
           else
           {
-            v2 = aDderr_noddrops;
+            error_name = aDderr_noddrops;
           }
         }
-        else if ( a1 <= 0x8876023C )
+        else if ( error_code <= 0x8876023C )
         {
-          v2 = aDderr_nopalett;
+          error_name = aDderr_nopalett;
         }
         else
         {
-          v2 = aDderr_nopale_0;
+          error_name = aDderr_nopale_0;
         }
         goto LABEL_10;
       }
-      if ( a1 <= 0x88760248 )
+      if ( error_code <= 0x88760248 )
       {
-        v2 = aDderr_notlocke;
+        error_name = aDderr_notlocke;
         goto LABEL_10;
       }
-      if ( a1 < 0x8876024E )
+      if ( error_code < 0x8876024E )
       {
-        if ( a1 >= 0x8876024B )
+        if ( error_code >= 0x8876024B )
         {
-          if ( a1 <= 0x8876024B )
+          if ( error_code <= 0x8876024B )
           {
-            sprintf_(v3, aDderr_wrongmod);
+            sprintf_(message_buffer, aDderr_wrongmod);
           }
-          else if ( a1 <= 0x8876024C )
+          else if ( error_code <= 0x8876024C )
           {
-            sprintf_(v3, aDderr_implicit);
+            sprintf_(message_buffer, aDderr_implicit);
           }
           else
           {
-            sprintf_(v3, aDderr_notpalet);
+            sprintf_(message_buffer, aDderr_notpalet);
           }
         }
         else
         {
-          if ( a1 <= 0x88760249 )
+          if ( error_code <= 0x88760249 )
           {
-            v2 = aDderr_cantcrea;
+            error_name = aDderr_cantcrea;
             goto LABEL_10;
           }
-          sprintf_(v3, aDderr_nodc);
+          sprintf_(message_buffer, aDderr_nodc);
         }
 LABEL_11:
-        sprintf_(&g_DirectDrawErrorMessageBuffer, "DirectDraw Error %s", v3);
+        sprintf_(&g_DirectDrawErrorMessageBuffer, "DirectDraw Error %s", message_buffer);
         App_RequestQuit((int)aDirectdrawEr_0);
       }
-      if ( a1 <= 0x8876024E )
+      if ( error_code <= 0x8876024E )
       {
-        sprintf_(v3, aDderr_unsupp_0);
+        sprintf_(message_buffer, aDderr_unsupp_0);
         goto LABEL_11;
       }
-      if ( a1 >= 0x8876026C )
+      if ( error_code >= 0x8876026C )
       {
-        if ( a1 <= 0x8876026C )
+        if ( error_code <= 0x8876026C )
         {
-          sprintf_(v3, aDderr_dcalread);
+          sprintf_(message_buffer, aDderr_dcalread);
           goto LABEL_11;
         }
-        if ( a1 >= 0x88760294 )
+        if ( error_code >= 0x88760294 )
         {
-          if ( a1 <= 0x88760294 )
+          if ( error_code <= 0x88760294 )
           {
-            sprintf_(v3, aDderr_cantpa_0);
+            sprintf_(message_buffer, aDderr_cantpa_0);
             goto LABEL_11;
           }
-          if ( a1 == -2005531992 )
+          if ( error_code == -2005531992 )
           {
-            sprintf_(v3, aDderr_notpagel);
+            sprintf_(message_buffer, aDderr_notpagel);
             goto LABEL_11;
           }
         }
-        else if ( a1 == -2005532032 )
+        else if ( error_code == -2005532032 )
         {
-          sprintf_(v3, aDderr_cantpage);
+          sprintf_(message_buffer, aDderr_cantpage);
           goto LABEL_11;
         }
       }
       else
       {
-        if ( a1 <= 0x8876024F )
+        if ( error_code <= 0x8876024F )
         {
-          sprintf_(v3, aDderr_nomipmap);
+          sprintf_(message_buffer, aDderr_nomipmap);
           goto LABEL_11;
         }
-        if ( a1 == -2005532080 )
+        if ( error_code == -2005532080 )
         {
-          sprintf_(v3, aDderr_invalids);
+          sprintf_(message_buffer, aDderr_invalids);
           goto LABEL_11;
         }
       }
     }
-    else if ( a1 >= 0x88760219 )
+    else if ( error_code >= 0x88760219 )
     {
-      if ( a1 <= 0x88760219 )
+      if ( error_code <= 0x88760219 )
       {
-        v2 = aDderr_vertical;
+        error_name = aDderr_vertical;
         goto LABEL_10;
       }
-      if ( a1 >= 0x88760234 )
+      if ( error_code >= 0x88760234 )
       {
-        if ( a1 <= 0x88760234 )
+        if ( error_code <= 0x88760234 )
         {
-          v2 = aDderr_primarys;
+          error_name = aDderr_primarys;
         }
-        else if ( a1 >= 0x88760237 )
+        else if ( error_code >= 0x88760237 )
         {
-          if ( a1 <= 0x88760237 )
+          if ( error_code <= 0x88760237 )
           {
-            v2 = aDderr_clipperi;
+            error_name = aDderr_clipperi;
           }
-          else if ( a1 < 0x88760239 )
+          else if ( error_code < 0x88760239 )
           {
-            v2 = aDderr_noclippe;
+            error_name = aDderr_noclippe;
           }
-          else if ( a1 <= 0x88760239 )
+          else if ( error_code <= 0x88760239 )
           {
-            v2 = aDderr_nohwnd;
+            error_name = aDderr_nohwnd;
           }
           else
           {
-            v2 = aDderr_hwndsubc;
+            error_name = aDderr_hwndsubc;
           }
         }
-        else if ( a1 <= 0x88760235 )
+        else if ( error_code <= 0x88760235 )
         {
-          v2 = aDderr_noemulat;
+          error_name = aDderr_noemulat;
         }
         else
         {
-          v2 = aDderr_regionto;
+          error_name = aDderr_regionto;
         }
         goto LABEL_10;
       }
-      if ( a1 >= 0x88760231 )
+      if ( error_code >= 0x88760231 )
       {
-        if ( a1 <= 0x88760231 )
+        if ( error_code <= 0x88760231 )
         {
-          v2 = aDderr_invalidd;
+          error_name = aDderr_invalidd;
         }
-        else if ( a1 <= 0x88760232 )
+        else if ( error_code <= 0x88760232 )
         {
-          v2 = aDderr_directdr;
+          error_name = aDderr_directdr;
         }
         else
         {
-          v2 = aDderr_nodirect;
+          error_name = aDderr_nodirect;
         }
         goto LABEL_10;
       }
-      if ( a1 >= 0x8876021C )
+      if ( error_code >= 0x8876021C )
       {
-        if ( a1 <= 0x8876021C )
+        if ( error_code <= 0x8876021C )
         {
-          v2 = aDderr_wasstill;
+          error_name = aDderr_wasstill;
           goto LABEL_10;
         }
-        if ( a1 == -2005532112 )
+        if ( error_code == -2005532112 )
         {
-          v2 = aDderr_xalign;
+          error_name = aDderr_xalign;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x887601CC )
+    else if ( error_code >= 0x887601CC )
     {
-      if ( a1 <= 0x887601CC )
+      if ( error_code <= 0x887601CC )
       {
-        v2 = aDderr_surfacen;
+        error_name = aDderr_surfacen;
         goto LABEL_10;
       }
-      if ( a1 >= 0x887601EA )
+      if ( error_code >= 0x887601EA )
       {
-        if ( a1 <= 0x887601EA )
+        if ( error_code <= 0x887601EA )
         {
-          v2 = aDderr_toobigwi;
+          error_name = aDderr_toobigwi;
           goto LABEL_10;
         }
-        if ( a1 >= 0x887601FE )
+        if ( error_code >= 0x887601FE )
         {
-          if ( a1 <= 0x887601FE )
+          if ( error_code <= 0x887601FE )
           {
-            v2 = aDderr_unsupp_1;
+            error_name = aDderr_unsupp_1;
             goto LABEL_10;
           }
-          if ( a1 == -2005532152 )
+          if ( error_code == -2005532152 )
           {
-            v2 = aDderr_unsupp_2;
+            error_name = aDderr_unsupp_2;
             goto LABEL_10;
           }
         }
       }
-      else if ( a1 >= 0x887601D6 )
+      else if ( error_code >= 0x887601D6 )
       {
-        if ( a1 <= 0x887601D6 )
+        if ( error_code <= 0x887601D6 )
         {
-          v2 = aDderr_toobighe;
+          error_name = aDderr_toobighe;
           goto LABEL_10;
         }
-        if ( a1 == -2005532192 )
+        if ( error_code == -2005532192 )
         {
-          v2 = aDderr_toobigsi;
-          goto LABEL_10;
-        }
-      }
-    }
-    else if ( a1 >= 0x887601B3 )
-    {
-      if ( a1 <= 0x887601B3 )
-      {
-        v2 = aDderr_cantlock;
-        goto LABEL_10;
-      }
-      if ( a1 >= 0x887601B8 )
-      {
-        if ( a1 <= 0x887601B8 )
-        {
-          v2 = aDderr_surfacei;
-          goto LABEL_10;
-        }
-        if ( a1 == -2005532222 )
-        {
-          v2 = aDderr_surfacel;
+          error_name = aDderr_toobigsi;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x887601A4 )
+    else if ( error_code >= 0x887601B3 )
     {
-      if ( a1 <= 0x887601A4 )
+      if ( error_code <= 0x887601B3 )
       {
-        v2 = aDderr_surfac_0;
+        error_name = aDderr_cantlock;
         goto LABEL_10;
       }
-      if ( a1 == -2005532242 )
+      if ( error_code >= 0x887601B8 )
       {
-        v2 = aDderr_surfaceb;
+        if ( error_code <= 0x887601B8 )
+        {
+          error_name = aDderr_surfacei;
+          goto LABEL_10;
+        }
+        if ( error_code == -2005532222 )
+        {
+          error_name = aDderr_surfacel;
+          goto LABEL_10;
+        }
+      }
+    }
+    else if ( error_code >= 0x887601A4 )
+    {
+      if ( error_code <= 0x887601A4 )
+      {
+        error_name = aDderr_surfac_0;
+        goto LABEL_10;
+      }
+      if ( error_code == -2005532242 )
+      {
+        error_name = aDderr_surfaceb;
         goto LABEL_10;
       }
     }
   }
-  else if ( a1 >= 0x887600D7 )
+  else if ( error_code >= 0x887600D7 )
   {
-    if ( a1 <= 0x887600D7 )
+    if ( error_code <= 0x887600D7 )
     {
-      v2 = aDderr_nocolork;
+      error_name = aDderr_nocolork;
       goto LABEL_10;
     }
-    if ( a1 >= 0x8876013C )
+    if ( error_code >= 0x8876013C )
     {
-      if ( a1 <= 0x8876013C )
+      if ( error_code <= 0x8876013C )
       {
-        v2 = aDderr_not4bitc;
+        error_name = aDderr_not4bitc;
         goto LABEL_10;
       }
-      if ( a1 >= 0x8876015E )
+      if ( error_code >= 0x8876015E )
       {
-        if ( a1 <= 0x8876015E )
+        if ( error_code <= 0x8876015E )
         {
-          v2 = aDderr_nozoverl;
+          error_name = aDderr_nozoverl;
           goto LABEL_10;
         }
-        if ( a1 >= 0x8876017E )
+        if ( error_code >= 0x8876017E )
         {
-          if ( a1 <= 0x8876017E )
+          if ( error_code <= 0x8876017E )
           {
-            v2 = aDderr_overlayc;
+            error_name = aDderr_overlayc;
             goto LABEL_10;
           }
-          if ( a1 >= 0x88760183 )
+          if ( error_code >= 0x88760183 )
           {
-            if ( a1 <= 0x88760183 )
+            if ( error_code <= 0x88760183 )
             {
-              v2 = aDderr_paletteb;
+              error_name = aDderr_paletteb;
               goto LABEL_10;
             }
-            if ( a1 == -2005532272 )
+            if ( error_code == -2005532272 )
             {
-              v2 = aDderr_colorkey;
+              error_name = aDderr_colorkey;
               goto LABEL_10;
             }
           }
-          else if ( a1 == -2005532288 )
+          else if ( error_code == -2005532288 )
           {
-            v2 = aDderr_overla_0;
+            error_name = aDderr_overla_0;
             goto LABEL_10;
           }
         }
-        else if ( a1 >= 0x88760168 )
+        else if ( error_code >= 0x88760168 )
         {
-          if ( a1 <= 0x88760168 )
+          if ( error_code <= 0x88760168 )
           {
-            v2 = aDderr_outofcap;
+            error_name = aDderr_outofcap;
             goto LABEL_10;
           }
-          if ( a1 == -2005532292 )
+          if ( error_code == -2005532292 )
           {
-            v2 = aDderr_outofvid;
+            error_name = aDderr_outofvid;
             goto LABEL_10;
           }
         }
       }
-      else if ( a1 >= 0x8876014A )
+      else if ( error_code >= 0x8876014A )
       {
-        if ( a1 <= 0x8876014A )
+        if ( error_code <= 0x8876014A )
         {
-          v2 = aDderr_notextur;
+          error_name = aDderr_notextur;
           goto LABEL_10;
         }
-        if ( a1 >= 0x8876014F )
+        if ( error_code >= 0x8876014F )
         {
-          if ( a1 <= 0x8876014F )
+          if ( error_code <= 0x8876014F )
           {
-            v2 = aDderr_novsynch;
+            error_name = aDderr_novsynch;
             goto LABEL_10;
           }
-          if ( a1 == -2005532332 )
+          if ( error_code == -2005532332 )
           {
-            v2 = aDderr_nozbuffe;
+            error_name = aDderr_nozbuffe;
             goto LABEL_10;
           }
         }
       }
       else
       {
-        if ( a1 <= 0x8876013D )
+        if ( error_code <= 0x8876013D )
         {
-          v2 = aDderr_not4bi_0;
+          error_name = aDderr_not4bi_0;
           goto LABEL_10;
         }
-        if ( a1 == -2005532352 )
+        if ( error_code == -2005532352 )
         {
-          v2 = aDderr_not8bitc;
+          error_name = aDderr_not8bitc;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x887600FA )
+    else if ( error_code >= 0x887600FA )
     {
-      if ( a1 <= 0x887600FA )
+      if ( error_code <= 0x887600FA )
       {
-        v2 = aDderr_nomirror;
+        error_name = aDderr_nomirror;
         goto LABEL_10;
       }
-      if ( a1 >= 0x88760118 )
+      if ( error_code >= 0x88760118 )
       {
-        if ( a1 <= 0x88760118 )
+        if ( error_code <= 0x88760118 )
         {
-          v2 = aDderr_noraster;
+          error_name = aDderr_noraster;
           goto LABEL_10;
         }
-        if ( a1 >= 0x88760122 )
+        if ( error_code >= 0x88760122 )
         {
-          if ( a1 <= 0x88760122 )
+          if ( error_code <= 0x88760122 )
           {
-            v2 = aDderr_norotati;
+            error_name = aDderr_norotati;
             goto LABEL_10;
           }
-          if ( a1 == -2005532362 )
+          if ( error_code == -2005532362 )
           {
-            v2 = aDderr_nostretc;
+            error_name = aDderr_nostretc;
             goto LABEL_10;
           }
         }
       }
-      else if ( a1 >= 0x887600FF )
+      else if ( error_code >= 0x887600FF )
       {
-        if ( a1 <= 0x887600FF )
+        if ( error_code <= 0x887600FF )
         {
-          v2 = aDderr_notfound;
+          error_name = aDderr_notfound;
           goto LABEL_10;
         }
-        if ( a1 == -2005532412 )
+        if ( error_code == -2005532412 )
         {
-          v2 = aDderr_noover_0;
-          goto LABEL_10;
-        }
-      }
-    }
-    else if ( a1 >= 0x887600E1 )
-    {
-      if ( a1 <= 0x887600E1 )
-      {
-        v2 = aDderr_noexclus;
-        goto LABEL_10;
-      }
-      if ( a1 >= 0x887600E6 )
-      {
-        if ( a1 <= 0x887600E6 )
-        {
-          v2 = aDderr_nofliphw;
-          goto LABEL_10;
-        }
-        if ( a1 == -2005532432 )
-        {
-          v2 = aDderr_nogdi;
+          error_name = aDderr_noover_0;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x887600DC )
+    else if ( error_code >= 0x887600E1 )
     {
-      if ( a1 <= 0x887600DC )
+      if ( error_code <= 0x887600E1 )
       {
-        v2 = aDderr_nocolo_0;
+        error_name = aDderr_noexclus;
         goto LABEL_10;
       }
-      if ( a1 == -2005532450 )
+      if ( error_code >= 0x887600E6 )
       {
-        v2 = aDderr_nodire_0;
+        if ( error_code <= 0x887600E6 )
+        {
+          error_name = aDderr_nofliphw;
+          goto LABEL_10;
+        }
+        if ( error_code == -2005532432 )
+        {
+          error_name = aDderr_nogdi;
+          goto LABEL_10;
+        }
+      }
+    }
+    else if ( error_code >= 0x887600DC )
+    {
+      if ( error_code <= 0x887600DC )
+      {
+        error_name = aDderr_nocolo_0;
+        goto LABEL_10;
+      }
+      if ( error_code == -2005532450 )
+      {
+        error_name = aDderr_nodire_0;
         goto LABEL_10;
       }
     }
   }
-  else if ( a1 >= 0x8876005F )
+  else if ( error_code >= 0x8876005F )
   {
-    if ( a1 <= 0x8876005F )
+    if ( error_code <= 0x8876005F )
     {
-      v2 = aDderr_incompat;
+      error_name = aDderr_incompat;
       goto LABEL_10;
     }
-    if ( a1 >= 0x88760096 )
+    if ( error_code >= 0x88760096 )
     {
-      if ( a1 <= 0x88760096 )
+      if ( error_code <= 0x88760096 )
       {
-        v2 = aDderr_invalidr;
+        error_name = aDderr_invalidr;
         goto LABEL_10;
       }
-      if ( a1 >= 0x887600B4 )
+      if ( error_code >= 0x887600B4 )
       {
-        if ( a1 <= 0x887600B4 )
+        if ( error_code <= 0x887600B4 )
         {
-          v2 = aDderr_noalphah;
+          error_name = aDderr_noalphah;
           goto LABEL_10;
         }
-        if ( a1 >= 0x887600D2 )
+        if ( error_code >= 0x887600D2 )
         {
-          if ( a1 <= 0x887600D2 )
+          if ( error_code <= 0x887600D2 )
           {
-            v2 = aDderr_nocolorc;
+            error_name = aDderr_nocolorc;
             goto LABEL_10;
           }
-          if ( a1 == -2005532460 )
+          if ( error_code == -2005532460 )
           {
-            v2 = aDderr_nocooper;
+            error_name = aDderr_nocooper;
             goto LABEL_10;
           }
         }
-        else if ( a1 == -2005532467 )
+        else if ( error_code == -2005532467 )
         {
-          v2 = aDderr_noclipli;
+          error_name = aDderr_noclipli;
           goto LABEL_10;
         }
       }
-      else if ( a1 >= 0x887600A0 )
+      else if ( error_code >= 0x887600A0 )
       {
-        if ( a1 <= 0x887600A0 )
+        if ( error_code <= 0x887600A0 )
         {
-          v2 = aDderr_lockedsu;
+          error_name = aDderr_lockedsu;
           goto LABEL_10;
         }
-        if ( a1 == -2005532502 )
+        if ( error_code == -2005532502 )
         {
-          v2 = aDderr_no3d;
-          goto LABEL_10;
-        }
-      }
-    }
-    else if ( a1 >= 0x88760078 )
-    {
-      if ( a1 <= 0x88760078 )
-      {
-        v2 = aDderr_invalidm;
-        goto LABEL_10;
-      }
-      if ( a1 >= 0x88760082 )
-      {
-        if ( a1 <= 0x88760082 )
-        {
-          v2 = aDderr_invalido;
-          goto LABEL_10;
-        }
-        if ( a1 == -2005532527 )
-        {
-          v2 = aDderr_invali_1;
+          error_name = aDderr_no3d;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x88760064 )
+    else if ( error_code >= 0x88760078 )
     {
-      if ( a1 <= 0x88760064 )
+      if ( error_code <= 0x88760078 )
       {
-        v2 = aDderr_invalidc;
+        error_name = aDderr_invalidm;
         goto LABEL_10;
       }
-      if ( a1 == -2005532562 )
+      if ( error_code >= 0x88760082 )
       {
-        v2 = aDderr_invali_0;
+        if ( error_code <= 0x88760082 )
+        {
+          error_name = aDderr_invalido;
+          goto LABEL_10;
+        }
+        if ( error_code == -2005532527 )
+        {
+          error_name = aDderr_invali_1;
+          goto LABEL_10;
+        }
+      }
+    }
+    else if ( error_code >= 0x88760064 )
+    {
+      if ( error_code <= 0x88760064 )
+      {
+        error_name = aDderr_invalidc;
+        goto LABEL_10;
+      }
+      if ( error_code == -2005532562 )
+      {
+        error_name = aDderr_invali_0;
         goto LABEL_10;
       }
     }
   }
-  else if ( a1 >= 0x88760005 )
+  else if ( error_code >= 0x88760005 )
   {
-    if ( a1 <= 0x88760005 )
+    if ( error_code <= 0x88760005 )
     {
-      v2 = aDderr_alreadyi;
+      error_name = aDderr_alreadyi;
       goto LABEL_10;
     }
-    if ( a1 >= 0x88760028 )
+    if ( error_code >= 0x88760028 )
     {
-      if ( a1 <= 0x88760028 )
+      if ( error_code <= 0x88760028 )
       {
-        v2 = aDderr_currentl;
+        error_name = aDderr_currentl;
         goto LABEL_10;
       }
-      if ( a1 >= 0x88760037 )
+      if ( error_code >= 0x88760037 )
       {
-        if ( a1 <= 0x88760037 )
+        if ( error_code <= 0x88760037 )
         {
-          v2 = aDderr_exceptio;
+          error_name = aDderr_exceptio;
           goto LABEL_10;
         }
-        if ( a1 == -2005532582 )
+        if ( error_code == -2005532582 )
         {
-          v2 = aDderr_heightal;
+          error_name = aDderr_heightal;
           goto LABEL_10;
         }
       }
     }
-    else if ( a1 >= 0x8876000A )
+    else if ( error_code >= 0x8876000A )
     {
-      if ( a1 <= 0x8876000A )
+      if ( error_code <= 0x8876000A )
       {
-        v2 = aDderr_cannotat;
+        error_name = aDderr_cannotat;
         goto LABEL_10;
       }
-      if ( a1 == -2005532652 )
+      if ( error_code == -2005532652 )
       {
-        v2 = aDderr_cannotde;
+        error_name = aDderr_cannotde;
         goto LABEL_10;
       }
     }
   }
-  else if ( a1 >= 0x800401F0 )
+  else if ( error_code >= 0x800401F0 )
   {
-    if ( a1 <= 0x800401F0 )
+    if ( error_code <= 0x800401F0 )
     {
-      v2 = aDderr_notiniti;
+      error_name = aDderr_notiniti;
       goto LABEL_10;
     }
-    if ( a1 >= 0x8007000E )
+    if ( error_code >= 0x8007000E )
     {
-      if ( a1 <= 0x8007000E )
+      if ( error_code <= 0x8007000E )
       {
-        v2 = aDderr_outofmem;
+        error_name = aDderr_outofmem;
         goto LABEL_10;
       }
-      if ( a1 == -2147024809 )
+      if ( error_code == -2147024809 )
       {
-        v2 = aDderr_invali_2;
+        error_name = aDderr_invali_2;
         goto LABEL_10;
       }
     }
   }
-  else if ( a1 >= 0x80004001 )
+  else if ( error_code >= 0x80004001 )
   {
-    if ( a1 <= 0x80004001 )
+    if ( error_code <= 0x80004001 )
     {
-      v2 = aDderr_unsuppor;
+      error_name = aDderr_unsuppor;
       goto LABEL_10;
     }
-    if ( a1 == -2147467259 )
+    if ( error_code == -2147467259 )
     {
-      v2 = aDderr_generic;
+      error_name = aDderr_generic;
 LABEL_10:
-      sprintf_(v3, v2);
+      sprintf_(message_buffer, error_name);
       goto LABEL_11;
     }
   }
-  sprintf_(v3, aUnknownError);
+  sprintf_(message_buffer, aUnknownError);
   goto LABEL_11;
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
@@ -11968,143 +11968,143 @@ _DWORD * Render_ZeroDirectDrawObjectFields(_DWORD *result)
 }
 
 //----- (00474DE0) --------------------------------------------------------
-_DWORD * Render_DestroyDirectDrawObject(_DWORD *a1)
+_DWORD * Render_DestroyDirectDrawObject(_DWORD *dd_object)
 {
-  int v2; // eax
-  int v3; // eax
+  int back_surface; // eax
+  int primary_surface; // eax
   int v4; // ecx
-  int v5; // esi
+  int clipper; // esi
   int v6; // edi
 
-  if ( *a1 )
-    Compat_InvokeNativeComMethod0(*a1, 76);
-  v2 = a1[2];
-  if ( v2 )
+  if ( *dd_object )
+    Compat_InvokeNativeComMethod0(*dd_object, 76);
+  back_surface = dd_object[2];
+  if ( back_surface )
   {
-    Surface_Destruct(v2);
+    Surface_Destruct(back_surface);
     j__nfree_();
   }
-  v3 = a1[1];
-  if ( v3 )
+  primary_surface = dd_object[1];
+  if ( primary_surface )
   {
-    Surface_Destruct(v3);
+    Surface_Destruct(primary_surface);
     j__nfree_();
   }
-  v4 = a1[3];
+  v4 = dd_object[3];
   if ( v4 )
   {
     Compat_InvokeNativeComMethod0(v4, 8);
-    a1[3] = 0;
+    dd_object[3] = 0;
   }
-  v5 = a1[5];
-  if ( v5 )
+  clipper = dd_object[5];
+  if ( clipper )
   {
-    Compat_InvokeNativeComMethod0(v5, 8);
-    a1[5] = 0;
+    Compat_InvokeNativeComMethod0(clipper, 8);
+    dd_object[5] = 0;
   }
-  v6 = a1[4];
+  v6 = dd_object[4];
   if ( v6 )
   {
     Compat_InvokeNativeComMethod0(v6, 8);
-    a1[4] = 0;
+    dd_object[4] = 0;
   }
-  if ( *a1 )
+  if ( *dd_object )
   {
-    Compat_InvokeNativeComMethod0(*a1, 8);
-    *a1 = 0;
+    Compat_InvokeNativeComMethod0(*dd_object, 8);
+    *dd_object = 0;
   }
-  return a1;
+  return dd_object;
 }
 
 //----- (00474E80) --------------------------------------------------------
-signed int  Render_InitDirectDrawWindowedMode(LPVOID *a1, void *a2, void *a3, DWORD a4, int a5)
+signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, void *height, DWORD width, int create_back_surface)
 {
   HDC DC; // ebx
-  HRESULT v9; // eax
+  HRESULT dd_create_hr; // eax
   int v10; // ecx
-  unsigned int v11; // eax
+  unsigned int query_hr; // eax
   int v12; // ecx
-  unsigned int v13; // eax
+  unsigned int coop_hr; // eax
   int v14; // ecx
-  _DWORD *v15; // eax
-  unsigned int v16; // eax
+  _DWORD *primary_surface_obj; // eax
+  unsigned int create_primary_hr; // eax
   int v17; // ecx
-  _DWORD *v18; // eax
-  unsigned int v19; // eax
+  _DWORD *back_surface_obj; // eax
+  unsigned int create_back_hr; // eax
   int v20; // ecx
-  unsigned int v21; // eax
+  unsigned int create_clipper_hr; // eax
   int v22; // ecx
-  unsigned int v23; // eax
+  unsigned int clipper_hwnd_hr; // eax
   int v24; // ecx
-  unsigned int v25; // eax
+  unsigned int set_clipper_hr; // eax
   int v26; // ecx
-  int v28; // [esp+2Ch] [ebp-84h] BYREF
-  int v29; // [esp+30h] [ebp-80h]
-  int v30; // [esp+34h] [ebp-7Ch]
-  DWORD v31; // [esp+38h] [ebp-78h]
-  int v32; // [esp+94h] [ebp-1Ch]
+  int surface_desc; // [esp+2Ch] [ebp-84h] BYREF
+  int surface_flags; // [esp+30h] [ebp-80h]
+  int desc_height; // [esp+34h] [ebp-7Ch]
+  DWORD desc_width; // [esp+38h] [ebp-78h]
+  int surface_caps; // [esp+94h] [ebp-1Ch]
   LPDIRECTDRAW lpDD; // [esp+98h] [ebp-18h] BYREF
   int DeviceCaps; // [esp+9Ch] [ebp-14h]
-  int v35; // [esp+A0h] [ebp-10h]
+  int saved_height; // [esp+A0h] [ebp-10h]
 
-  v35 = (int)a3;
-  *a1 = 0;
-  a1[10] = 0;
-  a1[4] = 0;
-  a1[6] = (LPVOID)a4;
-  a1[7] = a3;
-  a1[9] = a2;
+  saved_height = (int)height;
+  *dd_context = 0;
+  dd_context[10] = 0;
+  dd_context[4] = 0;
+  dd_context[6] = (LPVOID)width;
+  dd_context[7] = height;
+  dd_context[9] = hwnd;
   DC = GetDC(0);
   DeviceCaps = GetDeviceCaps(DC, 14);
-  a1[8] = (LPVOID)(GetDeviceCaps(DC, 12) * DeviceCaps);
+  dd_context[8] = (LPVOID)(GetDeviceCaps(DC, 12) * DeviceCaps);
   ReleaseDC(0, DC);
-  v9 = DirectDrawCreate(0, &lpDD, 0);
-  if ( v9 )
-    Render_HandleDirectDrawFatalError(v9, v10);
-  v11 = lpDD->lpVtbl->QueryInterface(lpDD, &stru_51CA08, a1);
-  if ( v11 )
-    Render_HandleDirectDrawFatalError(v11, v12);
+  dd_create_hr = DirectDrawCreate(0, &lpDD, 0);
+  if ( dd_create_hr )
+    Render_HandleDirectDrawFatalError(dd_create_hr, v10);
+  query_hr = lpDD->lpVtbl->QueryInterface(lpDD, &stru_51CA08, dd_context);
+  if ( query_hr )
+    Render_HandleDirectDrawFatalError(query_hr, v12);
   if ( lpDD )
   {
     lpDD->lpVtbl->Release(lpDD);
     lpDD = 0;
   }
-  v13 = (*(int (__stdcall **)(LPVOID, void *, int))(*(_DWORD *)*a1 + 80))(*a1, a2, 8);
-  if ( v13 )
-    Render_HandleDirectDrawFatalError(v13, v14);
-  v28 = 108;
-  v29 = 1;
-  v32 = 512;
-  v15 = (_DWORD *)Mem_Alloc(176, v14, 108, a4);
-  if ( v15 )
-    v15 = Surface_Construct(v15);
-  a1[1] = v15;
-  v16 = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*a1 + 24))(*a1, &v28, (int)a1[1] + 164, 0);
-  if ( v16 )
-    Render_HandleDirectDrawFatalError(v16, v17);
-  if ( a5 )
+  coop_hr = (*(int (__stdcall **)(LPVOID, void *, int))(*(_DWORD *)*dd_context + 80))(*dd_context, hwnd, 8);
+  if ( coop_hr )
+    Render_HandleDirectDrawFatalError(coop_hr, v14);
+  surface_desc = 108;
+  surface_flags = 1;
+  surface_caps = 512;
+  primary_surface_obj = (_DWORD *)Mem_Alloc(176, v14, 108, width);
+  if ( primary_surface_obj )
+    primary_surface_obj = Surface_Construct(primary_surface_obj);
+  dd_context[1] = primary_surface_obj;
+  create_primary_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)dd_context[1] + 164, 0);
+  if ( create_primary_hr )
+    Render_HandleDirectDrawFatalError(create_primary_hr, v17);
+  if ( create_back_surface )
   {
-    v18 = (_DWORD *)Mem_Alloc(176, v17, (char)&v28, a4);
-    if ( v18 )
-      v18 = Surface_Construct(v18);
-    a1[2] = v18;
-    v29 = 7;
-    v32 = 64;
-    v31 = a4;
-    v30 = v35;
-    v19 = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*a1 + 24))(*a1, &v28, (int)a1[2] + 164, 0);
-    if ( v19 )
-      Render_HandleDirectDrawFatalError(v19, v20);
+    back_surface_obj = (_DWORD *)Mem_Alloc(176, v17, (char)&surface_desc, width);
+    if ( back_surface_obj )
+      back_surface_obj = Surface_Construct(back_surface_obj);
+    dd_context[2] = back_surface_obj;
+    surface_flags = 7;
+    surface_caps = 64;
+    desc_width = width;
+    desc_height = saved_height;
+    create_back_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)dd_context[2] + 164, 0);
+    if ( create_back_hr )
+      Render_HandleDirectDrawFatalError(create_back_hr, v20);
   }
-  v21 = (*(int (__stdcall **)(LPVOID, _DWORD, LPVOID *, _DWORD))(*(_DWORD *)*a1 + 16))(*a1, 0, a1 + 5, 0);
-  if ( v21 )
-    Render_HandleDirectDrawFatalError(v21, v22);
-  v23 = (*(int (__stdcall **)(LPVOID, _DWORD, void *))(*(_DWORD *)a1[5] + 32))(a1[5], 0, a2);
-  if ( v23 )
-    Render_HandleDirectDrawFatalError(v23, v24);
-  v25 = (*(int (__stdcall **)(_DWORD, LPVOID))(**((_DWORD **)a1[1] + 41) + 112))(*((_DWORD *)a1[1] + 41), a1[5]);
-  if ( v25 )
-    Render_HandleDirectDrawFatalError(v25, v26);
+  create_clipper_hr = (*(int (__stdcall **)(LPVOID, _DWORD, LPVOID *, _DWORD))(*(_DWORD *)*dd_context + 16))(*dd_context, 0, dd_context + 5, 0);
+  if ( create_clipper_hr )
+    Render_HandleDirectDrawFatalError(create_clipper_hr, v22);
+  clipper_hwnd_hr = (*(int (__stdcall **)(LPVOID, _DWORD, void *))(*(_DWORD *)dd_context[5] + 32))(dd_context[5], 0, hwnd);
+  if ( clipper_hwnd_hr )
+    Render_HandleDirectDrawFatalError(clipper_hwnd_hr, v24);
+  set_clipper_hr = (*(int (__stdcall **)(_DWORD, LPVOID))(**((_DWORD **)dd_context[1] + 41) + 112))(*((_DWORD *)dd_context[1] + 41), dd_context[5]);
+  if ( set_clipper_hr )
+    Render_HandleDirectDrawFatalError(set_clipper_hr, v26);
   return 1;
 }
 // 474F18: variable 'v12' is possibly undefined
@@ -12120,36 +12120,36 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *a1, void *a2, void *a3, DW
 //----- (00475080) --------------------------------------------------------
 signed int  Render_InitDirectDrawFullscreenMode(
         LPVOID *a1,
-        _DWORD *a2,
-        _DWORD *a3,
-        _DWORD *a4,
-        _DWORD *a5,
-        int a6,
-        DWORD a7)
+        _DWORD *hwnd,
+        _DWORD *height,
+        _DWORD *width,
+        _DWORD *bpp,
+        int mode_flag,
+        DWORD use_flip_chain)
 {
   _DWORD *raw;
   HRESULT hr;
-  _DWORD *v15; // ebx
-  _DWORD *v18; // eax
-  int v19; // ebx
-  _DWORD *v23; // eax
-  int v26; // [esp+34h] [ebp-80h] BYREF
-  int v27; // [esp+38h] [ebp-7Ch]
-  BOOL v28; // [esp+48h] [ebp-6Ch]
-  int v29; // [esp+9Ch] [ebp-18h]
-  int v30; // [esp+A0h] [ebp-14h] BYREF
+  _DWORD *display_dim; // ebx
+  _DWORD *primary_surface; // eax
+  int ddraw_handle; // ebx
+  _DWORD *back_surface; // eax
+  int surface_desc_size; // [esp+34h] [ebp-80h] BYREF
+  int desc_flags; // [esp+38h] [ebp-7Ch]
+  BOOL has_backbuffer; // [esp+48h] [ebp-6Ch]
+  int surface_caps; // [esp+9Ch] [ebp-18h]
+  int attach_caps; // [esp+A0h] [ebp-14h] BYREF
   LPDIRECTDRAW lpDD; // [esp+A4h] [ebp-10h] BYREF
 
   raw = (_DWORD *)a1;
   raw[0] = 0;
   raw[10] = 1;
   raw[4] = 0;
-  raw[6] = (int)(uintptr_t)a4;
-  raw[7] = (int)(uintptr_t)a3;
+  raw[6] = (int)(uintptr_t)width;
+  raw[7] = (int)(uintptr_t)height;
   raw[2] = 0;
-  raw[8] = (int)(uintptr_t)a5;
+  raw[8] = (int)(uintptr_t)bpp;
   raw[1] = raw[2];
-  raw[9] = (int)(uintptr_t)a2;
+  raw[9] = (int)(uintptr_t)hwnd;
   hr = DirectDrawCreate(0, &lpDD, 0);
   if ( hr )
     Render_HandleDirectDrawFatalError(hr, 0);
@@ -12161,15 +12161,15 @@ signed int  Render_InitDirectDrawFullscreenMode(
     Compat_DirectDraw_Release(lpDD);
     lpDD = 0;
   }
-  hr = Compat_DirectDraw_SetCooperativeLevel((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], (HWND)(uintptr_t)a2, 83);
+  hr = Compat_DirectDraw_SetCooperativeLevel((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], (HWND)(uintptr_t)hwnd, 83);
   if ( hr )
     Render_HandleDirectDrawFatalError(hr, 0);
-  if ( a6 )
+  if ( mode_flag )
   {
-    v15 = (_DWORD *)(uintptr_t)(unsigned int)raw[6];
+    display_dim = (_DWORD *)(uintptr_t)(unsigned int)raw[6];
     hr = Compat_DirectDraw_SetDisplayMode(
            (LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0],
-           (int)(uintptr_t)v15,
+           (int)(uintptr_t)display_dim,
            raw[7],
            raw[8],
            0,
@@ -12177,44 +12177,44 @@ signed int  Render_InitDirectDrawFullscreenMode(
   }
   else
   {
-    v15 = (_DWORD *)(uintptr_t)(unsigned int)raw[7];
+    display_dim = (_DWORD *)(uintptr_t)(unsigned int)raw[7];
     hr = Compat_DirectDraw_SetDisplayMode(
            (LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0],
            raw[6],
-           (int)(uintptr_t)v15,
+           (int)(uintptr_t)display_dim,
            raw[8],
            0,
            0);
   }
   if ( hr )
     Render_HandleDirectDrawFatalError(hr, 0);
-  v18 = (_DWORD *)Mem_Alloc(176, 0, (char)v15, a7);
-  if ( v18 )
-    v18 = Surface_Construct(v18);
-  raw[1] = (int)(uintptr_t)v18;
-  v27 = 1;
-  v29 = 512;
-  v26 = 108;
-  if ( a7 )
+  primary_surface = (_DWORD *)Mem_Alloc(176, 0, (char)display_dim, use_flip_chain);
+  if ( primary_surface )
+    primary_surface = Surface_Construct(primary_surface);
+  raw[1] = (int)(uintptr_t)primary_surface;
+  desc_flags = 1;
+  surface_caps = 512;
+  surface_desc_size = 108;
+  if ( use_flip_chain )
   {
-    v27 = 33;
-    v29 = 536;
+    desc_flags = 33;
+    surface_caps = 536;
   }
-  v28 = a7 != 0;
-  v19 = raw[0];
-  hr = Compat_DirectDraw_CreateSurface((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], &v26, (_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41);
+  has_backbuffer = use_flip_chain != 0;
+  ddraw_handle = raw[0];
+  hr = Compat_DirectDraw_CreateSurface((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], &surface_desc_size, (_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41);
   if ( hr )
     Render_HandleDirectDrawFatalError(hr, 0);
-  if ( a7 )
+  if ( use_flip_chain )
   {
-    v23 = (_DWORD *)Mem_Alloc(176, 0, v19, a7);
-    if ( v23 )
-      v23 = Surface_Construct(v23);
-    raw[2] = (int)(uintptr_t)v23;
-    v30 = 4;
+    back_surface = (_DWORD *)Mem_Alloc(176, 0, ddraw_handle, use_flip_chain);
+    if ( back_surface )
+      back_surface = Surface_Construct(back_surface);
+    raw[2] = (int)(uintptr_t)back_surface;
+    attach_caps = 4;
     hr = Compat_DirectDrawSurface_GetAttachedSurface(
            (LPDIRECTDRAWSURFACE)*((_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41),
-           &v30,
+           &attach_caps,
            (_DWORD *)(uintptr_t)(unsigned int)raw[2] + 41);
     if ( hr )
       Render_HandleDirectDrawFatalError(hr, 0);
@@ -12224,46 +12224,46 @@ signed int  Render_InitDirectDrawFullscreenMode(
 // 51CA08: using guessed type IID stru_51CA08;
 
 //----- (004753E0) --------------------------------------------------------
-int  Render_RestoreLostSurfaceIfNeeded(int a1)
+int  Render_RestoreLostSurfaceIfNeeded(int ddraw_ctx)
 {
   int result; // eax
-  int v3; // edx
+  int dd_surface; // edx
 
-  result = *(_DWORD *)(a1 + 4);
+  result = *(_DWORD *)(ddraw_ctx + 4);
   if ( !result )
     return 0;
-  v3 = *(_DWORD *)(result + 164);
-  if ( v3 )
+  dd_surface = *(_DWORD *)(result + 164);
+  if ( dd_surface )
   {
-    result = Compat_DirectDrawSurface_IsLost((LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)v3);
+    result = Compat_DirectDrawSurface_IsLost((LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)dd_surface);
     if ( result )
-      return Compat_DirectDrawSurface_Restore((LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)v3);
+      return Compat_DirectDrawSurface_Restore((LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)dd_surface);
   }
   return result;
 }
 
 //----- (00475420) --------------------------------------------------------
-int  Render_SetPaletteEntryColor(int a1, int a2, char a3, int a4, char a5)
+int  Render_SetPaletteEntryColor(int ddraw_ctx, int entry_index, char green, int red, char blue)
 {
-  _BYTE v9[4]; // [esp+14h] [ebp-10h] BYREF
-  int v10; // [esp+18h] [ebp-Ch]
+  _BYTE palette_entry[4]; // [esp+14h] [ebp-10h] BYREF
+  int red_value; // [esp+18h] [ebp-Ch]
 
-  v10 = a4;
-  (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(a1 + 16) + 16))(
-    *(_DWORD *)(a1 + 16),
+  red_value = red;
+  (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(ddraw_ctx + 16) + 16))(
+    *(_DWORD *)(ddraw_ctx + 16),
     0,
-    a2,
+    entry_index,
     1,
-    v9);
-  v9[0] = v10;
-  v9[1] = a3;
-  v9[2] = a5;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(a1 + 16) + 24))(
-           *(_DWORD *)(a1 + 16),
+    palette_entry);
+  palette_entry[0] = red_value;
+  palette_entry[1] = green;
+  palette_entry[2] = blue;
+  return (*(int (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(ddraw_ctx + 16) + 24))(
+           *(_DWORD *)(ddraw_ctx + 16),
            0,
-           a2,
+           entry_index,
            1,
-           v9);
+           palette_entry);
 }
 
 //----- (004754B0) --------------------------------------------------------
@@ -12278,29 +12278,29 @@ int  IO_StreamWrite(int result, int a2, int a3, int a4)
 }
 
 //----- (00475A83) --------------------------------------------------------
-int  IO_ParseOpenModeFlags(unsigned __int8 *a1, _DWORD *a2)
+int  IO_ParseOpenModeFlags(unsigned __int8 *mode_string, _DWORD *commit_mode_out)
 {
-  unsigned __int8 *v2; // ebx
-  int v3; // ecx
-  int v4; // ebp
-  int v5; // esi
-  int v6; // edi
-  unsigned __int8 v7; // al
-  unsigned __int8 v9; // al
+  unsigned __int8 *mode_cursor; // ebx
+  int parse_ok; // ecx
+  int plus_seen; // ebp
+  int text_mode_seen; // esi
+  int commit_seen; // edi
+  unsigned __int8 first_char; // al
+  unsigned __int8 mode_char; // al
   int Value; // [esp+0h] [ebp-18h]
 
-  v2 = a1;
-  v3 = 1;
-  v4 = 0;
-  v5 = 0;
-  v6 = 0;
+  mode_cursor = mode_string;
+  parse_ok = 1;
+  plus_seen = 0;
+  text_mode_seen = 0;
+  commit_seen = 0;
   Value = 0;
-  if ( a2 )
-    *a2 = g_CRT_DefaultCommitMode == 1;
-  v7 = *a1;
-  if ( *v2 < 0x72u )
+  if ( commit_mode_out )
+    *commit_mode_out = g_CRT_DefaultCommitMode == 1;
+  first_char = *mode_string;
+  if ( *mode_cursor < 0x72u )
   {
-    if ( v7 == 97 )
+    if ( first_char == 97 )
     {
       LOBYTE(Value) = -126;
       goto LABEL_15;
@@ -12309,9 +12309,9 @@ LABEL_14:
     _set_errno_(0);
     return 0;
   }
-  if ( *v2 > 0x72u )
+  if ( *mode_cursor > 0x72u )
   {
-    if ( v7 == 119 )
+    if ( first_char == 119 )
     {
       LOBYTE(Value) = 2;
       goto LABEL_15;
@@ -12322,60 +12322,60 @@ LABEL_14:
 LABEL_15:
   while ( 1 )
   {
-    v9 = *++v2;
-    if ( !*v2 || !v3 )
+    mode_char = *++mode_cursor;
+    if ( !*mode_cursor || !parse_ok )
       break;
-    if ( v9 < 0x63u )
+    if ( mode_char < 0x63u )
     {
-      if ( v9 >= 0x2Bu )
+      if ( mode_char >= 0x2Bu )
       {
-        if ( v9 <= 0x2Bu )
+        if ( mode_char <= 0x2Bu )
         {
-          if ( v4 )
+          if ( plus_seen )
             goto LABEL_28;
-          v4 = 1;
+          plus_seen = 1;
           LOBYTE(Value) = Value | 3;
         }
-        else if ( v9 == 98 )
+        else if ( mode_char == 98 )
         {
-          if ( v5 )
+          if ( text_mode_seen )
             goto LABEL_28;
-          v5 = 1;
+          text_mode_seen = 1;
           LOBYTE(Value) = Value | 0x40;
         }
       }
     }
-    else if ( v9 <= 0x63u )
+    else if ( mode_char <= 0x63u )
     {
-      if ( v6 )
+      if ( commit_seen )
         goto LABEL_28;
-      v6 = 1;
-      *(_BYTE *)a2 |= 1u;
+      commit_seen = 1;
+      *(_BYTE *)commit_mode_out |= 1u;
     }
-    else if ( v9 >= 0x6Eu )
+    else if ( mode_char >= 0x6Eu )
     {
-      if ( v9 <= 0x6Eu )
+      if ( mode_char <= 0x6Eu )
       {
-        if ( v6 )
+        if ( commit_seen )
         {
 LABEL_28:
-          v3 = 0;
+          parse_ok = 0;
         }
         else
         {
-          v6 = 1;
-          *(_BYTE *)a2 &= ~1u;
+          commit_seen = 1;
+          *(_BYTE *)commit_mode_out &= ~1u;
         }
       }
-      else if ( v9 == 116 )
+      else if ( mode_char == 116 )
       {
-        if ( v5 )
+        if ( text_mode_seen )
           goto LABEL_28;
-        v5 = 1;
+        text_mode_seen = 1;
       }
     }
   }
-  if ( !v5 && g_CRT_DefaultFileTranslationMode == 512 )
+  if ( !text_mode_seen && g_CRT_DefaultFileTranslationMode == 512 )
     LOBYTE(Value) = Value | 0x40;
   return Value;
 }
@@ -12384,13 +12384,13 @@ LABEL_28:
 
 //----- (00475B9E) --------------------------------------------------------
 int  IO_OpenStreamWithMode(
-        const CHAR *a1,
+        const CHAR *file_path,
         int a2,
-        int a3,
+        int stream_flags,
         DWORD a4,
         int a5,
         int a6,
-        int a7)
+        int stream)
 {
   unsigned int open_flags;
   int fd_index;
@@ -12398,56 +12398,56 @@ int  IO_OpenStreamWithMode(
 
   (void)a5;
   (void)a6;
-  *(_BYTE *)(a7 + 12) &= 0xFCu;
-  *(_BYTE *)(a7 + 12) |= (unsigned __int8)a3;
-  if ( (a3 & 0x80u) != 0 )
+  *(_BYTE *)(stream + 12) &= 0xFCu;
+  *(_BYTE *)(stream + 12) |= (unsigned __int8)stream_flags;
+  if ( (stream_flags & 0x80u) != 0 )
     mode_char = 'a';
-  else if ( (a3 & 2) != 0 )
+  else if ( (stream_flags & 2) != 0 )
     mode_char = 'w';
   else
     mode_char = 'r';
   if ( mode_char == 'r' )
   {
     open_flags = 0;
-    if ( (a3 & 2) != 0 )
+    if ( (stream_flags & 2) != 0 )
       open_flags = 2;
-    if ( (a3 & 0x40) != 0 )
+    if ( (stream_flags & 0x40) != 0 )
       open_flags |= 0x200u;
     else
       open_flags |= 0x100u;
-    fd_index = Compat_OpenFileDescriptor(a1, mode_char, a3);
+    fd_index = Compat_OpenFileDescriptor(file_path, mode_char, stream_flags);
   }
   else
   {
-    open_flags = ((a3 & 1) != 0) + 33;
-    if ( (a3 & 0x80u) == 0 )
+    open_flags = ((stream_flags & 1) != 0) + 33;
+    if ( (stream_flags & 0x80u) == 0 )
       open_flags |= 0x40u;
     else
       open_flags |= 0x10u;
-    if ( (a3 & 0x40) != 0 )
+    if ( (stream_flags & 0x40) != 0 )
       open_flags |= 0x200u;
     else
       open_flags |= 0x100u;
-    fd_index = Compat_OpenFileDescriptor(a1, mode_char, a3);
+    fd_index = Compat_OpenFileDescriptor(file_path, mode_char, stream_flags);
   }
   if ( fd_index == -1 )
   {
-    Compat_FreeFileStream(a7);
+    Compat_FreeFileStream(stream);
     return 0;
   }
-  Compat_InitFileStream(a7, fd_index, mode_char, a3);
-  if ( (a3 & 0x80u) != 0 )
-    Compat_StreamSeek(a7, 0, 2);
+  Compat_InitFileStream(stream, fd_index, mode_char, stream_flags);
+  if ( (stream_flags & 0x80u) != 0 )
+    Compat_StreamSeek(stream, 0, 2);
   _chktty_();
-  return a7;
+  return stream;
 }
 // 4852ED: using guessed type int __fastcall tolower_(_DWORD, _DWORD);
 // 4884E3: using guessed type int _chktty_(void);
 
 //----- (00475C84) --------------------------------------------------------
 int  IO_OpenStream(
-        const CHAR *a1,
-        unsigned __int8 *a2,
+        const CHAR *file_path,
+        unsigned __int8 *mode_string,
         int a3,
         int a4,
         DWORD a5)
@@ -12455,65 +12455,65 @@ int  IO_OpenStream(
   int result; // eax
   int open_flags; // ebx
   int stream_ptr; // eax
-  int v11[4]; // [esp+0h] [ebp-10h] BYREF
+  int mode_info[4]; // [esp+0h] [ebp-10h] BYREF
 
-  v11[3] = a3;
-  result = IO_ParseOpenModeFlags(a2, v11);
+  mode_info[3] = a3;
+  result = IO_ParseOpenModeFlags(mode_string, mode_info);
   open_flags = result;
   if ( result )
   {
     stream_ptr = Compat_AllocFileStream();
     if ( stream_ptr )
-      return IO_OpenStreamWithMode(a1, v11[0], open_flags, a5, a4, 0, stream_ptr);
+      return IO_OpenStreamWithMode(file_path, mode_info[0], open_flags, a5, a4, 0, stream_ptr);
     return 0;
   }
   return result;
 }
 
 //----- (00475CC8) --------------------------------------------------------
-int  IO_FOpen(const CHAR *a1, unsigned __int8 *a2, int a3, DWORD a4)
+int  IO_FOpen(const CHAR *file_path, unsigned __int8 *mode_string, int a3, DWORD a4)
 {
-  return IO_OpenStream(a1, a2, a3, 0, a4);
+  return IO_OpenStream(file_path, mode_string, a3, 0, a4);
 }
 
 //----- (00475CD2) --------------------------------------------------------
-int  IO_CloseStream(int a1, int a2)
+int  IO_CloseStream(int stream, int error_code)
 {
   int v3; // ecx
   _DWORD *i; // eax
-  int v5; // edx
+  int stream_handle; // edx
   int *j; // edx
-  int *v8; // eax
-  int v9; // edx
+  int *list_node; // eax
+  int old_head; // edx
 
   g_CRT_StaticLock1AcquireHook();
   for ( i = (_DWORD *)g_CRT_OpenStreamListHead; i; i = (_DWORD *)*i )
   {
-    v5 = i[1];
-    if ( a1 == v5 )
+    stream_handle = i[1];
+    if ( stream == stream_handle )
     {
-      if ( (*(_BYTE *)(v5 + 12) & 3) != 0 )
+      if ( (*(_BYTE *)(stream_handle + 12) & 3) != 0 )
         _doclose_(v3, 1);
 LABEL_6:
       g_CRT_StaticLock1ReleaseHook();
-      return a1;
+      return stream;
     }
   }
   for ( j = &g_IO_OpenStreamListHead; ; j = (int *)*j )
   {
-    v8 = (int *)*j;
+    list_node = (int *)*j;
     if ( !*j )
       break;
-    if ( a1 == v8[1] )
+    if ( stream == list_node[1] )
     {
-      *j = *v8;
-      v9 = g_CRT_OpenStreamListHead;
-      g_CRT_OpenStreamListHead = (int)v8;
-      *v8 = v9;
+      *j = *list_node;
+      old_head = g_CRT_OpenStreamListHead;
+      g_CRT_OpenStreamListHead = (int)list_node;
+      *list_node = old_head;
       goto LABEL_6;
     }
   }
-  _set_errno_(a2);
+  _set_errno_(error_code);
   g_CRT_StaticLock1ReleaseHook();
   return 0;
 }
@@ -12526,52 +12526,52 @@ LABEL_6:
 // 54DD8C: using guessed type int dword_54DD8C;
 
 //----- (004761EF) --------------------------------------------------------
-char * Str_FormatUnsignedRadixDigits(unsigned int a1, char *a2, unsigned int a3)
+char * Str_FormatUnsignedRadixDigits(unsigned int value, char *buffer, unsigned int radix)
 {
-  char *v3; // esi
-  char *v4; // ecx
-  char v5; // al
-  char v7; // [esp+1h] [ebp-37h] BYREF
-  unsigned int v8; // [esp+24h] [ebp-14h]
+  char *out_cursor; // esi
+  char *digit_cursor; // ecx
+  char digit_char; // al
+  char digit_stack; // [esp+1h] [ebp-37h] BYREF
+  unsigned int quotient; // [esp+24h] [ebp-14h]
 
-  v3 = a2;
-  v4 = &v7;
+  out_cursor = buffer;
+  digit_cursor = &digit_stack;
   do
   {
-    v8 = a1 / a3;
-    *v4 = g_Str_RadixDigitCharacters[a1 % a3];
-    a1 = v8;
-    ++v4;
+    quotient = value / radix;
+    *digit_cursor = g_Str_RadixDigitCharacters[value % radix];
+    value = quotient;
+    ++digit_cursor;
   }
-  while ( v8 );
+  while ( quotient );
   do
   {
-    v5 = *--v4;
-    *v3++ = *v4;
+    digit_char = *--digit_cursor;
+    *out_cursor++ = *digit_cursor;
   }
-  while ( v5 );
-  return a2;
+  while ( digit_char );
+  return buffer;
 }
 
 //----- (00476238) --------------------------------------------------------
-int  Str_FormatSignedRadixDigits(signed int a1, char *a2, unsigned int a3)
+int  Str_FormatSignedRadixDigits(signed int value, char *buffer, unsigned int radix)
 {
   int v3; // ecx
 
-  if ( a3 == 10 && a1 < 0 )
+  if ( radix == 10 && value < 0 )
   {
-    a1 = -a1;
-    *a2++ = 45;
+    value = -value;
+    *buffer++ = 45;
   }
-  Str_FormatUnsignedRadixDigits(a1, a2, a3);
+  Str_FormatUnsignedRadixDigits(value, buffer, radix);
   return v3;
 }
 // 47624F: variable 'v3' is possibly undefined
 
 //----- (004762AE) --------------------------------------------------------
-unsigned int  IO_OpenFileDescriptorBinaryMode(const CHAR *a1, DWORD a2)
+unsigned int  IO_OpenFileDescriptorBinaryMode(const CHAR *file_path, DWORD a2)
 {
-  return CRT_OpenFile(a2, a1, 98);
+  return CRT_OpenFile(a2, file_path, 98);
 }
 
 //----- (00476301) --------------------------------------------------------
@@ -12664,7 +12664,7 @@ int  FileSystem_WalkEntryListInvokingCleanup(int result)
 // 476ADF: variable 'v4' is possibly undefined
 
 //----- (00476AF0) --------------------------------------------------------
-int  FileSystem_ConstructMountTable(int a1, int a2, const CHAR *a3, DWORD a4)
+int  FileSystem_ConstructMountTable(int mount_table, int file_system, const CHAR *log_file_path, DWORD alloc_context)
 {
   int entry_path_holder; // [esp+4h] [ebp-1Ch] BYREF
   int (**entry_path_vtable)(); // [esp+8h] [ebp-18h]
@@ -12673,41 +12673,41 @@ int  FileSystem_ConstructMountTable(int a1, int a2, const CHAR *a3, DWORD a4)
   int entry_index;
   int child_path;
 
-  *(_DWORD *)(a1 + 4) = 0;
-  *(_DWORD *)(a1 + 8) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)(a1 + 12) = 0;
-  *(_DWORD *)(a1 + 16) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)(a1 + 24) = 1;
-  *(_DWORD *)(a1 + 28) = 0;
-  *(_DWORD *)(a1 + 32) = 0;
-  *(_DWORD *)(a1 + 36) = (int)g_PathEntryArray_Vtable;
-  *(_DWORD *)(a1 + 20) = 0;
-  *(_DWORD *)a1 = (int)g_FileSystemMountTable_VTable;
+  *(_DWORD *)(mount_table + 4) = 0;
+  *(_DWORD *)(mount_table + 8) = (int)&g_PathEntry_Vtable;
+  *(_DWORD *)(mount_table + 12) = 0;
+  *(_DWORD *)(mount_table + 16) = (int)&g_PathEntry_Vtable;
+  *(_DWORD *)(mount_table + 24) = 1;
+  *(_DWORD *)(mount_table + 28) = 0;
+  *(_DWORD *)(mount_table + 32) = 0;
+  *(_DWORD *)(mount_table + 36) = (int)g_PathEntryArray_Vtable;
+  *(_DWORD *)(mount_table + 20) = 0;
+  *(_DWORD *)mount_table = (int)g_FileSystemMountTable_VTable;
   open_mode_handle = 0;
-  if ( a3 )
-    open_mode_handle = IO_FOpen(a3, (unsigned __int8 *)aWt, a1, a4);
+  if ( log_file_path )
+    open_mode_handle = IO_FOpen(log_file_path, (unsigned __int8 *)aWt, mount_table, alloc_context);
   entry_path_holder = 0;
   entry_path_vtable = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&entry_path_holder);
   entry_path_vtable = &g_PathEntry_Vtable;
-  if ( *(_DWORD *)(a1 + 28) == *(_DWORD *)(a1 + 32) )
-    PathEntryArray_GrowByDelta((_DWORD *)(a1 + 20), *(_DWORD *)(a1 + 24));
-  entry_index = *(_DWORD *)(a1 + 28);
-  *(_DWORD *)(a1 + 28) = entry_index + 1;
-  entry_record = (_DWORD *)(16 * entry_index + *(_DWORD *)(a1 + 20));
-  *entry_record = a2;
+  if ( *(_DWORD *)(mount_table + 28) == *(_DWORD *)(mount_table + 32) )
+    PathEntryArray_GrowByDelta((_DWORD *)(mount_table + 20), *(_DWORD *)(mount_table + 24));
+  entry_index = *(_DWORD *)(mount_table + 28);
+  *(_DWORD *)(mount_table + 28) = entry_index + 1;
+  entry_record = (_DWORD *)(16 * entry_index + *(_DWORD *)(mount_table + 20));
+  *entry_record = file_system;
   Compat_StringHolderCopyText(entry_record + 1, Compat_StringHolderGetText((_DWORD *)&entry_path_holder));
   entry_record[3] = open_mode_handle;
-  FileSystem_DiskMountResolveRegisteredRootPath(a2, a1);
-  child_path = (int)(intptr_t)FileSystem_DiskMountGetCurrentDirectory((void *)(intptr_t)a2);
+  FileSystem_DiskMountResolveRegisteredRootPath(file_system, mount_table);
+  child_path = (int)(intptr_t)FileSystem_DiskMountGetCurrentDirectory((void *)(intptr_t)file_system);
   if ( child_path )
-    FileSystem_SetCurrentDirectoryFromPath((const char **)(intptr_t)a1, child_path);
+    FileSystem_SetCurrentDirectoryFromPath((const char **)(intptr_t)mount_table, child_path);
   Compat_StringHolderDestroyStack((_DWORD *)&entry_path_holder, 0);
-  return a1;
+  return mount_table;
 }
 
 //----- (00476C30) --------------------------------------------------------
-int  FileSystem_DestructMountTable(_DWORD *a1, char a2)
+int  FileSystem_DestructMountTable(_DWORD *mount_table, char flags)
 {
   _DWORD *v3; // ecx
   int v4; // ecx
@@ -12716,21 +12716,21 @@ int  FileSystem_DestructMountTable(_DWORD *a1, char a2)
   int v8; // ecx
   int v9; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_FileSystemMountTable_DtorArrayTag);
+    _wcpp_4_dtor_array_store__(mount_table, &g_FileSystemMountTable_DtorArrayTag);
     j_j__nfree_();
     return v8;
   }
   else
   {
-    *a1 = g_FileSystemMountTable_VTable;
-    FileSystem_RemoveMountsFromIndex((int)a1, 0);
+    *mount_table = g_FileSystemMountTable_VTable;
+    FileSystem_RemoveMountsFromIndex((int)mount_table, 0);
     v3[4] = g_PathEntryArray_Vtable;
     PathEntryArray_DestructElements(v3);
     v5 = Compat_StringHolderScalarDeletingDtor(v4 - 8, 0);
     v6 = Compat_StringHolderScalarDeletingDtor(v5 - 8, 0);
-    if ( (a2 & 2) != 0 )
+    if ( (flags & 2) != 0 )
     {
       j__nfree_();
       return v9;
@@ -12750,40 +12750,40 @@ int  FileSystem_DestructMountTable(_DWORD *a1, char a2)
 // 510964: using guessed type int (*off_510964[13])();
 
 //----- (00476CA0) --------------------------------------------------------
-_DWORD * FileSystem_RemoveMountsFromIndex(int a1, int a2)
+_DWORD * FileSystem_RemoveMountsFromIndex(int mount_table, int start_index)
 {
-  int v2; // ecx
+  int entry_index; // ecx
   _DWORD *result; // eax
   _DWORD *v4; // edi
   _DWORD *v5; // ebp
-  int v6; // esi
-  int v7; // eax
+  int entry_offset; // esi
+  int mount_obj; // eax
   int v8; // ecx
   _DWORD *v9; // [esp+0h] [ebp-1Ch]
 
-  v2 = *(_DWORD *)(a1 + 28) - 1;
-  result = (_DWORD *)(a1 + 20);
-  if ( v2 >= a2 )
+  entry_index = *(_DWORD *)(mount_table + 28) - 1;
+  result = (_DWORD *)(mount_table + 20);
+  if ( entry_index >= start_index )
   {
     v4 = result;
     v5 = result;
     v9 = result;
-    v6 = 16 * v2;
+    entry_offset = 16 * entry_index;
     do
     {
-      v7 = *(_DWORD *)(v6 + *v9);
-      if ( v7 )
-        (*(void (**)(void))(*(_DWORD *)v7 + 8))();
-      if ( *(_DWORD *)(v6 + *v5 + 12) )
+      mount_obj = *(_DWORD *)(entry_offset + *v9);
+      if ( mount_obj )
+        (*(void (**)(void))(*(_DWORD *)mount_obj + 8))();
+      if ( *(_DWORD *)(entry_offset + *v5 + 12) )
       {
-        fclose_(v2);
-        *(_DWORD *)(v6 + *v5 + 12) = 0;
+        fclose_(entry_index);
+        *(_DWORD *)(entry_offset + *v5 + 12) = 0;
       }
-      result = PathEntryArray_RemoveAt(v4, v2, 1);
-      v2 = v8 - 1;
-      v6 -= 16;
+      result = PathEntryArray_RemoveAt(v4, entry_index, 1);
+      entry_index = v8 - 1;
+      entry_offset -= 16;
     }
-    while ( v2 >= a2 );
+    while ( entry_index >= start_index );
   }
   return result;
 }
@@ -12792,7 +12792,7 @@ _DWORD * FileSystem_RemoveMountsFromIndex(int a1, int a2)
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00476D20) --------------------------------------------------------
-char  FileSystem_NormalizePath(int a1, const char **a2)
+char  FileSystem_NormalizePath(int mount_table, const char **path_holder)
 {
   const char *path_text;
   signed int colon_index;
@@ -12802,65 +12802,65 @@ char  FileSystem_NormalizePath(int a1, const char **a2)
   int parent_index;
   _DWORD v18[2];
 
-  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)path_holder);
   if ( !path_text || !*path_text )
     return 0;
-  if ( Compat_StringHolderFindCharFrom(a2, 58, 0) == -1 )
+  if ( Compat_StringHolderFindCharFrom(path_holder, 58, 0) == -1 )
   {
     if ( *path_text == 92 )
     {
-      Compat_StringHolderPrependText(a2, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4));
+      Compat_StringHolderPrependText(path_holder, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount_table + 4));
     }
     else
     {
       v18[0] = 0;
       v18[1] = (int)&g_PathEntry_Vtable;
-      Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 12));
-      Compat_StringHolderPrependText(a2, Compat_StringHolderGetText(v18));
+      Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(mount_table + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount_table + 12));
+      Compat_StringHolderPrependText(path_holder, Compat_StringHolderGetText(v18));
       Compat_StringHolderDestroyStack(v18, 1);
     }
   }
-  colon_index = Compat_StringHolderFindCharFrom(a2, 58, 0) + 1;
-  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  colon_index = Compat_StringHolderFindCharFrom(path_holder, 58, 0) + 1;
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)path_holder);
   if ( !path_text || path_text[colon_index] != 92 )
-    Compat_StringHolderInsertTextChecked(a2, colon_index, asc_5024B0);
+    Compat_StringHolderInsertTextChecked(path_holder, colon_index, asc_5024B0);
   search_index = 0;
   while ( 1 )
   {
-    dot_index = Compat_StringHolderFindCharFrom(a2, 46, search_index);
+    dot_index = Compat_StringHolderFindCharFrom(path_holder, 46, search_index);
     if ( dot_index == -1 )
       break;
     dot_next_index = dot_index + 1;
-    path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+    path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)path_holder);
     if ( !path_text )
       break;
     if ( path_text[dot_next_index] == 46 )
     {
-      if ( path_text[dot_index - 1] != 92 || (parent_index = Compat_StringHolderFindLastBackslashBefore((char **)a2, dot_index - 2), parent_index == -1) )
+      if ( path_text[dot_index - 1] != 92 || (parent_index = Compat_StringHolderFindLastBackslashBefore((char **)path_holder, dot_index - 2), parent_index == -1) )
       {
-        Compat_StringHolderCopyText((_DWORD *)a2, "");
+        Compat_StringHolderCopyText((_DWORD *)path_holder, "");
         return 0;
       }
-      Compat_StringHolderRemoveRange((char **)a2, parent_index, (unsigned int)(uintptr_t)a2, dot_index - parent_index + 2);
+      Compat_StringHolderRemoveRange((char **)path_holder, parent_index, (unsigned int)(uintptr_t)path_holder, dot_index - parent_index + 2);
     }
     else if ( path_text[dot_index - 1] == 92 )
     {
-      Compat_StringHolderRemoveRange((char **)a2, dot_index - 1, (unsigned int)(uintptr_t)a2, 2);
+      Compat_StringHolderRemoveRange((char **)path_holder, dot_index - 1, (unsigned int)(uintptr_t)path_holder, 2);
     }
     else
     {
       search_index = dot_next_index;
     }
   }
-  colon_index = Compat_StringHolderFindCharFrom(a2, 58, 0) + 1;
-  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  colon_index = Compat_StringHolderFindCharFrom(path_holder, 58, 0) + 1;
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)path_holder);
   if ( !path_text || path_text[colon_index] != 92 )
-    Compat_StringHolderInsertTextChecked(a2, colon_index, asc_5024B4);
-  return (char)(unsigned __int8)(uintptr_t)Compat_StringHolderUppercaseInPlace(a2, (unsigned int)(uintptr_t)a2);
+    Compat_StringHolderInsertTextChecked(path_holder, colon_index, asc_5024B4);
+  return (char)(unsigned __int8)(uintptr_t)Compat_StringHolderUppercaseInPlace(path_holder, (unsigned int)(uintptr_t)path_holder);
 }
 
 //----- (00476ED0) --------------------------------------------------------
-const char ** FileSystem_StripMountPrefix(int a1, int a2, unsigned int a3, const char **a4)
+const char ** FileSystem_StripMountPrefix(int mount_table, int entry_index, unsigned int a3, const char **path_holder)
 {
   const char *entry_path;
   const char *holder_text;
@@ -12868,7 +12868,7 @@ const char ** FileSystem_StripMountPrefix(int a1, int a2, unsigned int a3, const
   int entry_path_len;
   const char **result; // eax
 
-  entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * a2 + *(_DWORD *)(a1 + 20) + 4));
+  entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * entry_index + *(_DWORD *)(mount_table + 20) + 4));
   if ( entry_path )
   {
     a3 = (unsigned int)strlen(entry_path);
@@ -12878,26 +12878,26 @@ const char ** FileSystem_StripMountPrefix(int a1, int a2, unsigned int a3, const
   {
     entry_path_len = 0;
   }
-  result = Compat_StringHolderRemoveRange((char **)a4, 0, a3, entry_path_len);
-  holder_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a4);
+  result = Compat_StringHolderRemoveRange((char **)path_holder, 0, a3, entry_path_len);
+  holder_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)path_holder);
   if ( holder_text )
   {
     holder_len = (unsigned int)strlen(holder_text) + 1;
     if ( holder_len != 1 && *(const unsigned char *)holder_text == 92 )
-      return Compat_StringHolderRemoveRange((char **)a4, 0, holder_len - 1, 1);
+      return Compat_StringHolderRemoveRange((char **)path_holder, 0, holder_len - 1, 1);
   }
-  return a4;
+  return path_holder;
 }
 
 //----- (00476F40) --------------------------------------------------------
-int  FileSystem_CallEntryOpSlot12(int a1)
+int  FileSystem_CallEntryOpSlot12(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)a1 + 48))();
+  return (*(int (**)(void))(**(_DWORD **)entry + 48))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
 //----- (00476F60) --------------------------------------------------------
-signed int  FileSystem_FindMatchingMountIndex(int a1, const char **a2, int a3)
+signed int  FileSystem_FindMatchingMountIndex(int mount_table, const char **path_holder, int start_index)
 {
   const char *entry_path;
   unsigned int entry_path_len;
@@ -12906,30 +12906,30 @@ signed int  FileSystem_FindMatchingMountIndex(int a1, const char **a2, int a3)
   int current_offset;
   int limit_offset;
 
-  current_index = a3;
-  if ( a3 >= *(_DWORD *)(a1 + 28) )
+  current_index = start_index;
+  if ( start_index >= *(_DWORD *)(mount_table + 28) )
     return -1;
-  current_offset = 16 * a3;
-  limit_offset = 16 * *(_DWORD *)(a1 + 28);
+  current_offset = 16 * start_index;
+  limit_offset = 16 * *(_DWORD *)(mount_table + 28);
   do
   {
-    entry_path = Compat_StringHolderGetText((_DWORD *)(current_offset + *(_DWORD *)(a1 + 20) + 4));
+    entry_path = Compat_StringHolderGetText((_DWORD *)(current_offset + *(_DWORD *)(mount_table + 20) + 4));
     if ( entry_path )
       entry_path_len = strlen(entry_path);
     else
       entry_path_len = 0;
     if ( !entry_path_len )
       return current_index;
-    if ( *a2 )
-      requested_path_len = strlen(*a2);
+    if ( *path_holder )
+      requested_path_len = strlen(*path_holder);
     else
       requested_path_len = 0;
     if ( entry_path_len < requested_path_len )
     {
-      if ( !memcmp(*a2, entry_path, entry_path_len) && (*a2)[entry_path_len] == 92 )
+      if ( !memcmp(*path_holder, entry_path, entry_path_len) && (*path_holder)[entry_path_len] == 92 )
         return current_index;
     }
-    else if ( entry_path_len == requested_path_len && !memcmp(*a2, entry_path, requested_path_len) )
+    else if ( entry_path_len == requested_path_len && !memcmp(*path_holder, entry_path, requested_path_len) )
     {
       return current_index;
     }
@@ -12941,42 +12941,42 @@ signed int  FileSystem_FindMatchingMountIndex(int a1, const char **a2, int a3)
 }
 
 //----- (004770B0) --------------------------------------------------------
-int  FileSystem_ResolveAndInvokeForPath(int a1, int a2, int (*a3)(void))
+int  FileSystem_ResolveAndInvokeForPath(int mount_table, int default_result, int (*callback)(void))
 {
   int matched_index; // eax
   int callback_result; // eax
   int next_index; // eax
-  const char *v11; // [esp+0h] [ebp-18h] BYREF
-  int (**v12)(); // [esp+4h] [ebp-14h]
-  int v13; // [esp+8h] [ebp-10h]
+  const char *normalized_path; // [esp+0h] [ebp-18h] BYREF
+  int (**normalized_vtable)(); // [esp+4h] [ebp-14h]
+  int entries_ptr; // [esp+8h] [ebp-10h]
 
-  v11 = 0;
-  v12 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v11);
-  v12 = &g_PathEntry_Vtable;
-  FileSystem_NormalizePath(a1, &v11);
-  if ( v11 && *v11 )
+  normalized_path = 0;
+  normalized_vtable = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(&normalized_path);
+  normalized_vtable = &g_PathEntry_Vtable;
+  FileSystem_NormalizePath(mount_table, &normalized_path);
+  if ( normalized_path && *normalized_path )
   {
-    v13 = a1 + 20;
+    entries_ptr = mount_table + 20;
     next_index = 0;
     while ( 1 )
     {
-      matched_index = FileSystem_FindMatchingMountIndex(a1, &v11, next_index);
+      matched_index = FileSystem_FindMatchingMountIndex(mount_table, &normalized_path, next_index);
       if ( matched_index == -1 )
         break;
       Compat_StringHolderDestructor(&g_FileSystemStrippedPathHolderText);
-      FileSystem_StripMountPrefix(a1, matched_index, matched_index, (const char **)&g_FileSystemStrippedPathHolderText);
-      callback_result = a3();
-      if ( callback_result != a2 )
+      FileSystem_StripMountPrefix(mount_table, matched_index, matched_index, (const char **)&g_FileSystemStrippedPathHolderText);
+      callback_result = callback();
+      if ( callback_result != default_result )
       {
-        Compat_StringHolderDestroyStack((_DWORD *)&v11, 1);
+        Compat_StringHolderDestroyStack((_DWORD *)&normalized_path, 1);
         return callback_result;
       }
       next_index = matched_index + 1;
     }
   }
-  Compat_StringHolderDestroyStack((_DWORD *)&v11, 1);
-  return a2;
+  Compat_StringHolderDestroyStack((_DWORD *)&normalized_path, 1);
+  return default_result;
 }
 // 54DD00: using guessed type int dword_54DD00;
 
@@ -13019,26 +13019,26 @@ static int Compat_FileSystemQuery(int filesystem, const char *requested_path, in
 }
 
 //----- (00477170) --------------------------------------------------------
-int  FileSystem_TryOpenEntryCallback(int a1)
+int  FileSystem_TryOpenEntryCallback(int entry)
 {
-  int v3; // ebx
+  int opened_query; // ebx
 
-  v3 = Compat_FileSystemOpenIfReady(*(_DWORD *)a1, g_FileSystemMountOpenMode);
-  if ( !*(_DWORD *)(a1 + 12) )
-    return v3;
-  if ( v3 )
+  opened_query = Compat_FileSystemOpenIfReady(*(_DWORD *)entry, g_FileSystemMountOpenMode);
+  if ( !*(_DWORD *)(entry + 12) )
+    return opened_query;
+  if ( opened_query )
   {
-    Output_WriteFormatted(a1 + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(a1 + 12), (int)aS_15, g_FileSystemStrippedPathHolderText);
-    return v3;
+    Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(entry + 12), (int)aS_15, g_FileSystemStrippedPathHolderText);
+    return opened_query;
   }
-  Output_WriteFormatted(a1 + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(a1 + 12), (int)aS_2, g_FileSystemStrippedPathHolderText);
-  return v3;
+  Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(entry + 12), (int)aS_2, g_FileSystemStrippedPathHolderText);
+  return opened_query;
 }
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (004771D0) --------------------------------------------------------
-signed int  FileSystem_SetCurrentDirectoryFromPath(const char **a1, int a2)
+signed int  FileSystem_SetCurrentDirectoryFromPath(const char **file_system, int dir_path)
 {
   _DWORD *fs_words;
   unsigned int path_len_with_nul;
@@ -13046,39 +13046,39 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **a1, int a2)
   const char *root_text;
   unsigned int root_text_len;
   unsigned int normalized_text_len;
-  const char *v10; // [esp+0h] [ebp-20h] BYREF
-  int (**v11)(); // [esp+4h] [ebp-1Ch]
+  const char *normalized_path; // [esp+0h] [ebp-20h] BYREF
+  int (**normalized_vtable)(); // [esp+4h] [ebp-1Ch]
 
-  fs_words = (_DWORD *)(uintptr_t)a1;
-  if ( !(*((int (__thiscall **)(int))*a1 + 12))(a2) )
+  fs_words = (_DWORD *)(uintptr_t)file_system;
+  if ( !(*((int (__thiscall **)(int))*file_system + 12))(dir_path) )
     return 0;
-  v10 = 0;
-  v11 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderInitText((_DWORD *)&v10, (const char *)(uintptr_t)(unsigned int)a2);
-  v11 = &g_PathEntry_Vtable;
-  FileSystem_NormalizePath((int)a1, &v10);
-  if ( v10 && *v10 )
+  normalized_path = 0;
+  normalized_vtable = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderInitText((_DWORD *)&normalized_path, (const char *)(uintptr_t)(unsigned int)dir_path);
+  normalized_vtable = &g_PathEntry_Vtable;
+  FileSystem_NormalizePath((int)file_system, &normalized_path);
+  if ( normalized_path && *normalized_path )
   {
-    path_len_with_nul = (unsigned int)strlen(v10) + 1;
-    if ( path_len_with_nul >= 2 && v10[path_len_with_nul - 2] != 92 )
-      Compat_StringHolderInsertTextChecked(&v10, path_len_with_nul - 1, asc_5024C0);
-    colon_index = Compat_StringHolderFindCharFrom(&v10, 58, 0);
-    Compat_StringHolderCopyText(fs_words + 1, v10);
+    path_len_with_nul = (unsigned int)strlen(normalized_path) + 1;
+    if ( path_len_with_nul >= 2 && normalized_path[path_len_with_nul - 2] != 92 )
+      Compat_StringHolderInsertTextChecked(&normalized_path, path_len_with_nul - 1, asc_5024C0);
+    colon_index = Compat_StringHolderFindCharFrom(&normalized_path, 58, 0);
+    Compat_StringHolderCopyText(fs_words + 1, normalized_path);
     root_text = Compat_StringHolderGetText(fs_words + 1);
     if ( root_text )
       root_text_len = (unsigned int)strlen(root_text);
     else
       root_text_len = 0;
     Compat_StringHolderRemoveRange((char **)(fs_words + 1), colon_index + 1, root_text_len, (int)(root_text_len - (unsigned int)(colon_index + 1)));
-    normalized_text_len = (unsigned int)strlen(v10);
-    Compat_StringHolderRemoveRange(&v10, 0, normalized_text_len, colon_index + 1);
-    Compat_StringHolderCopyText(fs_words + 3, v10);
-    Compat_StringHolderScalarDeletingDtor((int)&v10, 1);
+    normalized_text_len = (unsigned int)strlen(normalized_path);
+    Compat_StringHolderRemoveRange(&normalized_path, 0, normalized_text_len, colon_index + 1);
+    Compat_StringHolderCopyText(fs_words + 3, normalized_path);
+    Compat_StringHolderScalarDeletingDtor((int)&normalized_path, 1);
     return 1;
   }
   else
   {
-    Compat_StringHolderScalarDeletingDtor((int)&v10, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&normalized_path, 1);
     return 0;
   }
 }
@@ -13089,25 +13089,25 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **a1, int a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00477300) --------------------------------------------------------
-int  FileSystem_ResolveRelativeToCurrentDir(int a1, int a2)
+int  FileSystem_ResolveRelativeToCurrentDir(int file_system, int path_holder)
 {
-  int v3; // edx
+  int fs_saved; // edx
   int v5; // [esp-10h] [ebp-14h]
-  _DWORD v6[4]; // [esp-Ch] [ebp-10h] BYREF
+  _DWORD joined_holder[4]; // [esp-Ch] [ebp-10h] BYREF
 
-  v3 = a1;
+  fs_saved = file_system;
   if ( (g_FileSystem_CwdHolderInitFlag & 1) == 0 )
   {
-    v5 = a2;
+    v5 = path_holder;
     g_FileSystem_CwdHolderInitFlag |= 1u;
     g_FS_ResolvedPathEntryHolder = 0;
     g_CurrentDirPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
-    CRT_RegisterFinalizableObject(0, a1);
-    a2 = v5;
+    CRT_RegisterFinalizableObject(0, file_system);
+    path_holder = v5;
   }
-  Compat_StringHolderConstructJoined(v6, a2, *(const char **)(v3 + 12));
+  Compat_StringHolderConstructJoined(joined_holder, path_holder, *(const char **)(fs_saved + 12));
   Compat_StringHolderDestructor(&g_FS_ResolvedPathEntryHolder);
-  Compat_StringHolderScalarDeletingDtor((int)v6, 1);
+  Compat_StringHolderScalarDeletingDtor((int)joined_holder, 1);
   return g_FS_ResolvedPathEntryHolder;
 }
 // 477312: variable 'v3' is possibly undefined
@@ -13118,48 +13118,48 @@ int  FileSystem_ResolveRelativeToCurrentDir(int a1, int a2)
 // 54DCF8: using guessed type char byte_54DCF8;
 
 //----- (00477370) --------------------------------------------------------
-int  FileSystem_AddMountEntry(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4)
+int  FileSystem_AddMountEntry(int *mount_table, const CHAR *mount_path, const CHAR *log_file_path, DWORD mount)
 {
   int archive_mode; // eax
-  const char *v6; // eax
-  unsigned int v8; // ecx
-  _DWORD *v10; // ecx
-  int v11; // edx
-  _DWORD *v12; // ecx
-  _DWORD *v13; // ebx
-  const char *v18; // [esp+10h] [ebp-18h] BYREF
-  int (**v19)(); // [esp+14h] [ebp-14h]
-  const CHAR *v20; // [esp+18h] [ebp-10h]
+  const char *path_text; // eax
+  unsigned int path_len; // ecx
+  _DWORD *entry_array; // ecx
+  int entry_index; // edx
+  _DWORD *entry_record; // ecx
+  _DWORD *entry_path_holder; // ebx
+  const char *normalized_path; // [esp+10h] [ebp-18h] BYREF
+  int (**vtable_ptr)(); // [esp+14h] [ebp-14h]
+  const CHAR *log_path_saved; // [esp+18h] [ebp-10h]
 
   archive_mode = 0;
-  v20 = a3;
-  v18 = 0;
-  v19 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderInitText((_DWORD *)&v18, a2);
-  FileSystem_NormalizePath((int)a1, &v18);
-  v6 = Compat_StringHolderGetText((_DWORD *)&v18);
-  if ( v6 && *v6 )
+  log_path_saved = log_file_path;
+  normalized_path = 0;
+  vtable_ptr = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderInitText((_DWORD *)&normalized_path, mount_path);
+  FileSystem_NormalizePath((int)mount_table, &normalized_path);
+  path_text = Compat_StringHolderGetText((_DWORD *)&normalized_path);
+  if ( path_text && *path_text )
   {
-    v8 = strlen(v6);
-    if ( v8 && v6[v8 - 1] == 92 )
+    path_len = strlen(path_text);
+    if ( path_len && path_text[path_len - 1] == 92 )
     {
-      Compat_StringHolderRemoveRange((char **)&v18, (int)(v8 - 1), (unsigned int)(uintptr_t)&v18, 1);
+      Compat_StringHolderRemoveRange((char **)&normalized_path, (int)(path_len - 1), (unsigned int)(uintptr_t)&normalized_path, 1);
     }
-    if ( v20 )
-      archive_mode = IO_FOpen(v20, (unsigned __int8 *)aWt_0, 0, a4);
-    v10 = a1 + 5;
-    if ( a1[7] == a1[8] )
-      PathEntryArray_GrowByDelta(a1 + 5, a1[6]);
-    v11 = v10[2];
-    v10[2] = v11 + 1;
-    v12 = (_DWORD *)(16 * v11 + *v10);
-    *v12 = a4;
-    v13 = v12 + 1;
-    Compat_StringHolderCopyText(v13, Compat_StringHolderGetText((_DWORD *)&v18));
-    v12[3] = archive_mode;
-    Compat_FileSystemOnMounted((int)a4, a1);
+    if ( log_path_saved )
+      archive_mode = IO_FOpen(log_path_saved, (unsigned __int8 *)aWt_0, 0, mount);
+    entry_array = mount_table + 5;
+    if ( mount_table[7] == mount_table[8] )
+      PathEntryArray_GrowByDelta(mount_table + 5, mount_table[6]);
+    entry_index = entry_array[2];
+    entry_array[2] = entry_index + 1;
+    entry_record = (_DWORD *)(16 * entry_index + *entry_array);
+    *entry_record = mount;
+    entry_path_holder = entry_record + 1;
+    Compat_StringHolderCopyText(entry_path_holder, Compat_StringHolderGetText((_DWORD *)&normalized_path));
+    entry_record[3] = archive_mode;
+    Compat_FileSystemOnMounted((int)mount, mount_table);
   }
-  return Compat_StringHolderDestroyStack((_DWORD *)&v18, 1);
+  return Compat_StringHolderDestroyStack((_DWORD *)&normalized_path, 1);
 }
 // 477460: variable 'v9' is possibly undefined
 // 477478: variable 'v10' is possibly undefined
@@ -13168,37 +13168,37 @@ int  FileSystem_AddMountEntry(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004774D0) --------------------------------------------------------
-_DWORD * FileSystem_CreateEntryHandleWrapper(DWORD *a1, int a2, int a3)
+_DWORD * FileSystem_CreateEntryHandleWrapper(DWORD *file_system, int a2, int a3)
 {
   _DWORD *result; // eax
-  DWORD v6; // ebp
+  DWORD vtable; // ebp
   int v7; // ecx
   int v8; // edx
   int v9; // ecx
-  _DWORD *v10; // esi
-  _DWORD *v11; // [esp+0h] [ebp-10h]
+  _DWORD *wrapper; // esi
+  _DWORD *opened_entry; // [esp+0h] [ebp-10h]
 
-  result = (_DWORD *)(*(int (__fastcall **)(int, int))(*a1 + 12))(a2, a3);
-  v11 = result;
+  result = (_DWORD *)(*(int (__fastcall **)(int, int))(*file_system + 12))(a2, a3);
+  opened_entry = result;
   if ( result )
   {
-    v6 = *a1;
-    if ( (*(int (**)(void))(*a1 + 16))() )
+    vtable = *file_system;
+    if ( (*(int (**)(void))(*file_system + 16))() )
     {
-      result = (_DWORD *)Mem_Alloc(16, v7, 10, v6);
-      v10 = result;
+      result = (_DWORD *)Mem_Alloc(16, v7, 10, vtable);
+      wrapper = result;
       if ( result )
       {
         *result = v9;
-        result[2] = v11;
+        result[2] = opened_entry;
         result[3] = v8;
         result[1] = j_Mem_Alloc(v9);
-        return v10;
+        return wrapper;
       }
     }
     else
     {
-      (*(void (**)(void))(*a1 + 20))();
+      (*(void (**)(void))(*file_system + 20))();
       return 0;
     }
   }
@@ -13210,32 +13210,32 @@ _DWORD * FileSystem_CreateEntryHandleWrapper(DWORD *a1, int a2, int a3)
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00477550) --------------------------------------------------------
-int  FileSystem_AdvanceEntryEnumerator(int a1)
+int  FileSystem_AdvanceEntryEnumerator(int enumerator)
 {
-  int v1; // esi
+  int advance_result; // esi
   int v2; // ecx
 
-  v1 = (*(int (__fastcall **)(int, _DWORD))(**(_DWORD **)(a1 + 8) + 20))(a1, *(_DWORD *)(a1 + 4));
+  advance_result = (*(int (__fastcall **)(int, _DWORD))(**(_DWORD **)(enumerator + 8) + 20))(enumerator, *(_DWORD *)(enumerator + 4));
   (*(void (__fastcall **)(int, _DWORD))(**(_DWORD **)(v2 + 12) + 24))(v2, *(_DWORD *)(v2 + 4));
-  return v1;
+  return advance_result;
 }
 // 477566: variable 'v2' is possibly undefined
 
 //----- (00477580) --------------------------------------------------------
-int  Compat_FileSystemReleaseFileRecord(int a1, int *a2)
+int  Compat_FileSystemReleaseFileRecord(int file_system, int *record_ptr)
 {
   int v3; // ecx
   int result; // eax
 
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)a1 + 20))(a1, *a2 + 8);
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)v3 + 20))(v3, *a2 + 12);
-  result = *a2;
-  if ( *a2 )
+  (*(void (__fastcall **)(int, int))(*(_DWORD *)file_system + 20))(file_system, *record_ptr + 8);
+  (*(void (__fastcall **)(int, int))(*(_DWORD *)v3 + 20))(v3, *record_ptr + 12);
+  result = *record_ptr;
+  if ( *record_ptr )
   {
     Compat_FileSystemFreeFileRecordName();
     result = j__nfree_();
   }
-  *a2 = 0;
+  *record_ptr = 0;
   return result;
 }
 // 477591: variable 'v3' is possibly undefined
@@ -13251,38 +13251,38 @@ int Compat_FileSystemFreeFileRecordName()
 // 4775DB: variable 'v1' is possibly undefined
 
 //----- (004775E0) --------------------------------------------------------
-signed int  Compat_FileSystemVisitFile(DWORD *a1, int a2, int a3)
+signed int  Compat_FileSystemVisitFile(DWORD *file_system, int a2, int a3)
 {
   int v5; // ecx
-  _DWORD *v7; // [esp+0h] [ebp-8h] BYREF
+  _DWORD *wrapper; // [esp+0h] [ebp-8h] BYREF
 
-  v7 = FileSystem_CreateEntryHandleWrapper(a1, a2, a3);
-  if ( !v7 )
+  wrapper = FileSystem_CreateEntryHandleWrapper(file_system, a2, a3);
+  if ( !wrapper )
     return -1;
-  while ( FileSystem_AdvanceEntryEnumerator((int)v7) )
+  while ( FileSystem_AdvanceEntryEnumerator((int)wrapper) )
     ;
-  Compat_FileSystemReleaseFileRecord((int)a1, (int *)&v7);
+  Compat_FileSystemReleaseFileRecord((int)file_system, (int *)&wrapper);
   return v5;
 }
 // 47760B: variable 'v5' is possibly undefined
 
 //----- (00477620) --------------------------------------------------------
-_DWORD * Compat_FileSystemReleaseMountedPaths(int a1)
+_DWORD * Compat_FileSystemReleaseMountedPaths(int mount_table)
 {
-  int v1; // ecx
+  int entry_index; // ecx
   _DWORD *result; // eax
-  _DWORD *v3; // esi
-  int v4; // edx
+  _DWORD *entries_ptr; // esi
+  int entry_offset; // edx
 
-  v1 = *(_DWORD *)(a1 + 28) - 1;
-  result = (_DWORD *)(a1 + 20);
-  if ( v1 >= 0 )
+  entry_index = *(_DWORD *)(mount_table + 28) - 1;
+  result = (_DWORD *)(mount_table + 20);
+  if ( entry_index >= 0 )
   {
-    v3 = result;
-    v4 = 16 * v1;
+    entries_ptr = result;
+    entry_offset = 16 * entry_index;
     do
-      result = (_DWORD *)(*(int (__fastcall **)(int, int))(**(_DWORD **)(v4 + *v3) + 40))(v1 - 1, v4 - 16);
-    while ( v4 >= 0 );
+      result = (_DWORD *)(*(int (__fastcall **)(int, int))(**(_DWORD **)(entry_offset + *entries_ptr) + 40))(entry_index - 1, entry_offset - 16);
+    while ( entry_offset >= 0 );
   }
   return result;
 }
@@ -13290,30 +13290,30 @@ _DWORD * Compat_FileSystemReleaseMountedPaths(int a1)
 // 477640: variable 'v1' is possibly undefined
 
 //----- (00477660) --------------------------------------------------------
-int  Compat_FileSystemProcessDirectChildren(int (__thiscall ***a1)(_DWORD), int a2)
+int  Compat_FileSystemProcessDirectChildren(int (__thiscall ***file_system)(_DWORD), int a2)
 {
   int v3; // ecx
   int v4; // ecx
   int v5; // ecx
   int v6; // ecx
-  int v8; // [esp+0h] [ebp-18h] BYREF
+  int entry_list; // [esp+0h] [ebp-18h] BYREF
   int v9; // [esp+4h] [ebp-14h]
   int v10; // [esp+8h] [ebp-10h]
   int v11; // [esp+10h] [ebp-8h]
 
   v11 = a2;
-  v8 = (**a1)(0);
-  v9 = (int)a1;
+  entry_list = (**file_system)(0);
+  v9 = (int)file_system;
   v10 = v3;
-  FileSystem_WalkEntryListInvokingCleanup((int)&v8);
-  for ( ; v8; v4 = v5 + 1 )
+  FileSystem_WalkEntryListInvokingCleanup((int)&entry_list);
+  for ( ; entry_list; v4 = v5 + 1 )
   {
-    if ( !(*(int (**)(void))(*(_DWORD *)v8 + 12))() )
+    if ( !(*(int (**)(void))(*(_DWORD *)entry_list + 12))() )
       break;
-    (*(void (**)(void))(*(_DWORD *)v8 + 16))();
-    FileSystem_WalkEntryListInvokingCleanup((int)&v8);
+    (*(void (**)(void))(*(_DWORD *)entry_list + 16))();
+    FileSystem_WalkEntryListInvokingCleanup((int)&entry_list);
   }
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)v9 + 4))(v4, v8);
+  (*(void (__fastcall **)(int, int))(*(_DWORD *)v9 + 4))(v4, entry_list);
   return v6;
 }
 // 477677: variable 'v3' is possibly undefined
@@ -13322,38 +13322,38 @@ int  Compat_FileSystemProcessDirectChildren(int (__thiscall ***a1)(_DWORD), int 
 // 4776BC: variable 'v6' is possibly undefined
 
 //----- (004776D0) --------------------------------------------------------
-int  Compat_FileSystemFindMountedPathById(int a1, int a2)
+int  Compat_FileSystemFindMountedPathById(int mount_table, int mount_id)
 {
-  int v3; // edx
+  int entry_index; // edx
   _DWORD *v4; // eax
-  _DWORD *v5; // esi
-  int v6; // eax
-  _DWORD *v7; // ecx
+  _DWORD *entries_ptr; // esi
+  int entry_offset; // eax
+  _DWORD *entry_record; // ecx
 
-  v3 = *(_DWORD *)(a1 + 28) - 1;
-  v4 = (_DWORD *)(a1 + 20);
-  if ( v3 < 0 )
+  entry_index = *(_DWORD *)(mount_table + 28) - 1;
+  v4 = (_DWORD *)(mount_table + 20);
+  if ( entry_index < 0 )
     return 0;
-  v5 = v4;
-  v6 = 16 * v3;
+  entries_ptr = v4;
+  entry_offset = 16 * entry_index;
   while ( 1 )
   {
-    v7 = (_DWORD *)(v6 + *v5);
-    if ( a2 == *v7 )
+    entry_record = (_DWORD *)(entry_offset + *entries_ptr);
+    if ( mount_id == *entry_record )
       break;
-    v6 -= 16;
-    --v3;
-    if ( v6 < 0 )
+    entry_offset -= 16;
+    --entry_index;
+    if ( entry_offset < 0 )
       return 0;
   }
-  return v7[1];
+  return entry_record[1];
 }
 
 //----- (00477710) --------------------------------------------------------
-signed int  Compat_FileSystemWalkDirectoryTree(int (***a1)(void), int a2, int a3)
+signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a2, int a3)
 {
   const char *v4; // ecx
-  int v5; // edi
+  int visit_result; // edi
   const char *v6; // ecx
   int v7; // ecx
   int v8; // ecx
@@ -13361,21 +13361,21 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***a1)(void), int a2, int a3
   int v10; // ecx
   int v11; // ecx
   int v12; // ecx
-  int v14; // ebx
+  int file_visit_failed; // ebx
   int v15; // ecx
-  int v16; // [esp+0h] [ebp-48h] BYREF
+  int enumerator; // [esp+0h] [ebp-48h] BYREF
   int (***v17)(void); // [esp+4h] [ebp-44h]
   int v18; // [esp+8h] [ebp-40h]
-  _DWORD v19[2]; // [esp+Ch] [ebp-3Ch] BYREF
+  _DWORD recurse_path_holder[2]; // [esp+Ch] [ebp-3Ch] BYREF
   const char *v20; // [esp+14h] [ebp-34h] BYREF
   int (**v21)(); // [esp+18h] [ebp-30h]
   const char *v22; // [esp+1Ch] [ebp-2Ch] BYREF
   int (**v23)(); // [esp+20h] [ebp-28h]
-  const char *v24; // [esp+24h] [ebp-24h] BYREF
+  const char *entry_name_holder; // [esp+24h] [ebp-24h] BYREF
   int (**v25)(); // [esp+28h] [ebp-20h]
-  _DWORD v26[2]; // [esp+2Ch] [ebp-1Ch] BYREF
-  _DWORD v27[2]; // [esp+34h] [ebp-14h] BYREF
-  _DWORD v28[2]; // [esp+3Ch] [ebp-Ch] BYREF
+  _DWORD file_path_holder[2]; // [esp+2Ch] [ebp-1Ch] BYREF
+  _DWORD subdir_path_holder[2]; // [esp+34h] [ebp-14h] BYREF
+  _DWORD joined_path_holder[2]; // [esp+3Ch] [ebp-Ch] BYREF
   int v29; // [esp+44h] [ebp-4h]
 
   v29 = a2;
@@ -13389,59 +13389,59 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***a1)(void), int a2, int a3
   Compat_StringHolderDestructor(&v22);
   v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v22, asc_5024C7);
-  v16 = (**a1)();
+  enumerator = (**file_system)();
   v18 = v29;
-  v17 = a1;
-  FileSystem_WalkEntryListInvokingCleanup((int)&v16);
-  v5 = 0;
-  if ( v16 )
+  v17 = file_system;
+  FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+  visit_result = 0;
+  if ( enumerator )
   {
-    while ( (*(int (**)(void))(*(_DWORD *)v16 + 12))() )
+    while ( (*(int (**)(void))(*(_DWORD *)enumerator + 12))() )
     {
-      (**(void (__thiscall ***)(_DWORD))v16)(0);
-      v24 = v6;
+      (**(void (__thiscall ***)(_DWORD))enumerator)(0);
+      entry_name_holder = v6;
       v25 = &g_CompatStringHolder_Vtable;
-      Compat_StringHolderDestructor(&v24);
+      Compat_StringHolderDestructor(&entry_name_holder);
       v25 = &g_PathEntry_Vtable;
-      Compat_StringHolderConstructJoined(v28, v7, v24);
+      Compat_StringHolderConstructJoined(joined_path_holder, v7, entry_name_holder);
       if ( strcmp_(v8, a__34) && strcmp_(v9, a___1) )
       {
-        if ( ((*(int (**)(void))(*(_DWORD *)v16 + 4))() & 0x10) != 0 )
+        if ( ((*(int (**)(void))(*(_DWORD *)enumerator + 4))() & 0x10) != 0 )
         {
-          Compat_StringHolderConstructJoined(v27, v10, v24);
-          v5 += Compat_FileSystemProcessDirectChildren((int (__thiscall ***)(_DWORD))a1, v11);
-          Compat_StringHolderScalarDeletingDtor((int)v27, 1);
-          (*a1)[6]();
-          Compat_StringHolderConstructJoined(v19, v29, v24);
-          Compat_FileSystemWalkDirectoryTree((int)a1, v12, a3);
-          Compat_StringHolderScalarDeletingDtor((int)v19, 1);
+          Compat_StringHolderConstructJoined(subdir_path_holder, v10, entry_name_holder);
+          visit_result += Compat_FileSystemProcessDirectChildren((int (__thiscall ***)(_DWORD))file_system, v11);
+          Compat_StringHolderScalarDeletingDtor((int)subdir_path_holder, 1);
+          (*file_system)[6]();
+          Compat_StringHolderConstructJoined(recurse_path_holder, v29, entry_name_holder);
+          Compat_FileSystemWalkDirectoryTree((int)file_system, v12, a3);
+          Compat_StringHolderScalarDeletingDtor((int)recurse_path_holder, 1);
         }
         else
         {
-          v14 = *Compat_StringHolderConstructJoined(v26, a3, v24);
-          LOBYTE(v14) = Compat_FileSystemVisitFile((DWORD *)a1, v15, v14) == -1;
-          Compat_StringHolderScalarDeletingDtor((int)v26, 1);
-          if ( (_BYTE)v14 )
+          file_visit_failed = *Compat_StringHolderConstructJoined(file_path_holder, a3, entry_name_holder);
+          LOBYTE(file_visit_failed) = Compat_FileSystemVisitFile((DWORD *)file_system, v15, file_visit_failed) == -1;
+          Compat_StringHolderScalarDeletingDtor((int)file_path_holder, 1);
+          if ( (_BYTE)file_visit_failed )
           {
-            Compat_StringHolderScalarDeletingDtor((int)v28, 1);
-            v5 = -1;
-            Compat_StringHolderScalarDeletingDtor((int)&v24, 1);
+            Compat_StringHolderScalarDeletingDtor((int)joined_path_holder, 1);
+            visit_result = -1;
+            Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
             break;
           }
         }
       }
-      Compat_StringHolderScalarDeletingDtor((int)v28, 1);
-      Compat_StringHolderScalarDeletingDtor((int)&v24, 1);
-      (*(void (**)(void))(*(_DWORD *)v16 + 16))();
-      FileSystem_WalkEntryListInvokingCleanup((int)&v16);
-      if ( !v16 )
+      Compat_StringHolderScalarDeletingDtor((int)joined_path_holder, 1);
+      Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
+      (*(void (**)(void))(*(_DWORD *)enumerator + 16))();
+      FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+      if ( !enumerator )
         break;
     }
   }
   (*v17)[1]();
   Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
-  return v5;
+  return visit_result;
 }
 // 47774A: variable 'v4' is possibly undefined
 // 4777B9: variable 'v6' is possibly undefined
@@ -13467,71 +13467,71 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
   int *v8; // ecx
   int *v9; // eax
   int v10; // ecx
-  bool v11; // bl
-  int v12; // ebx
+  bool recurse_failed; // bl
+  int callback_result; // ebx
   int v14; // esi
-  int v15; // [esp+0h] [ebp-40h] BYREF
+  int enumerator; // [esp+0h] [ebp-40h] BYREF
   int v16; // [esp+4h] [ebp-3Ch]
   int v17; // [esp+8h] [ebp-38h]
-  _DWORD v18[2]; // [esp+Ch] [ebp-34h] BYREF
-  _DWORD v19[2]; // [esp+14h] [ebp-2Ch] BYREF
-  const char *v20; // [esp+1Ch] [ebp-24h] BYREF
+  _DWORD file_path_holder[2]; // [esp+Ch] [ebp-34h] BYREF
+  _DWORD subdir_path_holder[2]; // [esp+14h] [ebp-2Ch] BYREF
+  const char *entry_name_holder; // [esp+1Ch] [ebp-24h] BYREF
   int (**v21)(); // [esp+20h] [ebp-20h]
-  const char *v22; // [esp+24h] [ebp-1Ch] BYREF
+  const char *pattern_holder; // [esp+24h] [ebp-1Ch] BYREF
   int (**v23)(); // [esp+28h] [ebp-18h]
 
-  v22 = 0;
+  pattern_holder = 0;
   v23 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v22);
+  Compat_StringHolderDestructor(&pattern_holder);
   v23 = &g_PathEntry_Vtable;
-  Compat_StringHolderAppendText(&v22, asc_5024CE);
-  v15 = (**v3)(v3, v22);
+  Compat_StringHolderAppendText(&pattern_holder, asc_5024CE);
+  enumerator = (**v3)(v3, pattern_holder);
   v16 = v4;
   v17 = 0;
-  FileSystem_WalkEntryListInvokingCleanup((int)&v15);
-  if ( v15 )
+  FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+  if ( enumerator )
   {
-    while ( (*(int (**)(void))(*(_DWORD *)v15 + 12))() )
+    while ( (*(int (**)(void))(*(_DWORD *)enumerator + 12))() )
     {
-      (**(void (***)(void))v15)();
-      v20 = 0;
+      (**(void (***)(void))enumerator)();
+      entry_name_holder = 0;
       v21 = &g_CompatStringHolder_Vtable;
-      Compat_StringHolderDestructor(&v20);
+      Compat_StringHolderDestructor(&entry_name_holder);
       v21 = &g_PathEntry_Vtable;
       if ( strcmp_(v6, a__35) && strcmp_(v7, a___2) )
       {
-        if ( ((*(int (**)(void))(*(_DWORD *)v15 + 4))() & 0x10) != 0 )
+        if ( ((*(int (**)(void))(*(_DWORD *)enumerator + 4))() & 0x10) != 0 )
         {
-          v9 = Compat_StringHolderConstructJoined(v19, (int)v8, v20);
-          v11 = Compat_FileSystemWalkDirectoryEntries(v10, *v9) == -1;
-          Compat_StringHolderScalarDeletingDtor((int)v19, 1);
-          if ( v11 )
+          v9 = Compat_StringHolderConstructJoined(subdir_path_holder, (int)v8, entry_name_holder);
+          recurse_failed = Compat_FileSystemWalkDirectoryEntries(v10, *v9) == -1;
+          Compat_StringHolderScalarDeletingDtor((int)subdir_path_holder, 1);
+          if ( recurse_failed )
           {
-            Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
+            Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
             (*(void (**)(void))(*(_DWORD *)v16 + 4))();
-            Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
+            Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
             return -1;
           }
         }
         else
         {
           v14 = *v8;
-          Compat_StringHolderConstructJoined(v18, (int)v8, v20);
+          Compat_StringHolderConstructJoined(file_path_holder, (int)v8, entry_name_holder);
           (*(void (**)(void))(v14 + 32))();
-          Compat_StringHolderScalarDeletingDtor((int)v18, 1);
+          Compat_StringHolderScalarDeletingDtor((int)file_path_holder, 1);
         }
       }
-      Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
-      (*(void (**)(void))(*(_DWORD *)v15 + 16))();
-      FileSystem_WalkEntryListInvokingCleanup((int)&v15);
-      if ( !v15 )
+      Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
+      (*(void (**)(void))(*(_DWORD *)enumerator + 16))();
+      FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+      if ( !enumerator )
         break;
     }
   }
-  v12 = (*(int (__fastcall **)(int, int))(*(_DWORD *)v5 + 28))(v5, a2);
+  callback_result = (*(int (__fastcall **)(int, int))(*(_DWORD *)v5 + 28))(v5, a2);
   (*(void (**)(void))(*(_DWORD *)v16 + 4))();
-  Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
-  return v12;
+  Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
+  return callback_result;
 }
 // 477991: variable 'v3' is possibly undefined
 // 47799C: variable 'v4' is possibly undefined
@@ -13545,170 +13545,170 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00477B20) --------------------------------------------------------
-int __fastcall Compat_FileSystemCloseQuery(int a1, int a2)
+int __fastcall Compat_FileSystemCloseQuery(int a1, int query)
 {
   int result; // eax
 
-  result = a2;
-  if ( a2 )
-    return (*(int (__cdecl **)(int))(*(_DWORD *)a2 + 20))(a1);
+  result = query;
+  if ( query )
+    return (*(int (__cdecl **)(int))(*(_DWORD *)query + 20))(a1);
   return result;
 }
 
 //----- (00477B40) --------------------------------------------------------
-int  Compat_FileSystemInvokeInnerHandleMethod(int a1, int a2)
+int  Compat_FileSystemInvokeInnerHandleMethod(int wrapper, int method_arg)
 {
   int v2; // ecx
 
-  (*(void (__cdecl **)(int))(**(_DWORD **)(a1 + 4) + 4))(a2);
+  (*(void (__cdecl **)(int))(**(_DWORD **)(wrapper + 4) + 4))(method_arg);
   return v2;
 }
 // 477B4E: variable 'v2' is possibly undefined
 
 //----- (00477B60) --------------------------------------------------------
-int  Compat_FileSystemMountInvokeSlot16(int a1)
+int  Compat_FileSystemMountInvokeSlot16(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)a1 + 16))();
+  return (*(int (**)(void))(**(_DWORD **)entry + 16))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00477B80) --------------------------------------------------------
-int  Compat_FileSystemMountInvokeSlot32(int a1)
+int  Compat_FileSystemMountInvokeSlot32(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)a1 + 32))();
+  return (*(int (**)(void))(**(_DWORD **)entry + 32))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
 //----- (00477BA0) --------------------------------------------------------
-int  Compat_FileSystemMountInvokeSlot24(int a1)
+int  Compat_FileSystemMountInvokeSlot24(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)a1 + 24))();
+  return (*(int (**)(void))(**(_DWORD **)entry + 24))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00477BC0) --------------------------------------------------------
-int  Compat_FileSystemMountInvokeSlot28(int a1)
+int  Compat_FileSystemMountInvokeSlot28(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)a1 + 28))();
+  return (*(int (**)(void))(**(_DWORD **)entry + 28))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
 //----- (00477BE0) --------------------------------------------------------
-int  Compat_FileSystemMountInvokeSlot0(int (****a1)(void))
+int  Compat_FileSystemMountInvokeSlot0(int (****mount_entry)(void))
 {
-  return (***a1)();
+  return (***mount_entry)();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
 //----- (00477C00) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeSlot0(int a1)
+int  Compat_FileSystemForEachMountInvokeSlot0(int mount_table)
 {
-  return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))Compat_FileSystemMountInvokeSlot0);
+  return FileSystem_ResolveAndInvokeForPath(mount_table, 0, (int (*)(void))Compat_FileSystemMountInvokeSlot0);
 }
 
 //----- (00477C20) --------------------------------------------------------
-int  Compat_FileSystemForEachMountPrintSearchResult(int a1, int a2)
+int  Compat_FileSystemForEachMountPrintSearchResult(int mount_table, int open_mode)
 {
-  g_FileSystemMountOpenMode = a2;
-  return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))FileSystem_TryOpenEntryCallback);
+  g_FileSystemMountOpenMode = open_mode;
+  return FileSystem_ResolveAndInvokeForPath(mount_table, 0, (int (*)(void))FileSystem_TryOpenEntryCallback);
 }
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00477C40) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeSlot16(int a1, int a2)
+int  Compat_FileSystemForEachMountInvokeSlot16(int mount_table, int open_mode)
 {
-  g_FileSystemMountOpenMode = a2;
-  return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))Compat_FileSystemMountInvokeSlot16);
+  g_FileSystemMountOpenMode = open_mode;
+  return FileSystem_ResolveAndInvokeForPath(mount_table, 0, (int (*)(void))Compat_FileSystemMountInvokeSlot16);
 }
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00477C60) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeSlot32(int a1)
+int  Compat_FileSystemForEachMountInvokeSlot32(int mount_table)
 {
-  return FileSystem_ResolveAndInvokeForPath(a1, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot32);
+  return FileSystem_ResolveAndInvokeForPath(mount_table, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot32);
 }
 
 //----- (00477C80) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeSlot24(int a1, int a2)
+int  Compat_FileSystemForEachMountInvokeSlot24(int mount_table, int open_mode)
 {
-  g_FileSystemMountOpenMode = a2;
-  return FileSystem_ResolveAndInvokeForPath(a1, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot24);
+  g_FileSystemMountOpenMode = open_mode;
+  return FileSystem_ResolveAndInvokeForPath(mount_table, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot24);
 }
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00477CA0) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeSlot28(int a1)
+int  Compat_FileSystemForEachMountInvokeSlot28(int mount_table)
 {
-  return FileSystem_ResolveAndInvokeForPath(a1, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot28);
+  return FileSystem_ResolveAndInvokeForPath(mount_table, -1, (int (*)(void))Compat_FileSystemMountInvokeSlot28);
 }
 
 //----- (00477CC0) --------------------------------------------------------
-int  Compat_FileSystemForEachMountInvokeCallback(int a1)
+int  Compat_FileSystemForEachMountInvokeCallback(int mount_table)
 {
-  return FileSystem_ResolveAndInvokeForPath(a1, 0, (int (*)(void))FileSystem_CallEntryOpSlot12);
+  return FileSystem_ResolveAndInvokeForPath(mount_table, 0, (int (*)(void))FileSystem_CallEntryOpSlot12);
 }
 
 //----- (00477CE0) --------------------------------------------------------
-_DWORD * Compat_FileStreamOpen(_DWORD *a1, const CHAR *a2, int a3, char a4, DWORD a5)
+_DWORD * Compat_FileStreamOpen(_DWORD *stream, const CHAR *file_path, int a3, char mode_flags, DWORD a5)
 {
-  char *v7; // edx
+  char *mode_string; // edx
 
-  *a1 = g_CompatFileStream_VTable;
-  if ( (a4 & 0x10) != 0 )
+  *stream = g_CompatFileStream_VTable;
+  if ( (mode_flags & 0x10) != 0 )
   {
-    if ( (a4 & 2) != 0 )
-      v7 = aAb_0;
+    if ( (mode_flags & 2) != 0 )
+      mode_string = aAb_0;
     else
-      v7 = aA_3;
+      mode_string = aA_3;
   }
-  else if ( (a4 & 8) != 0 )
+  else if ( (mode_flags & 8) != 0 )
   {
-    if ( (a4 & 2) != 0 )
-      v7 = aWb_8;
+    if ( (mode_flags & 2) != 0 )
+      mode_string = aWb_8;
     else
-      v7 = aW_7;
+      mode_string = aW_7;
   }
-  else if ( (a4 & 2) != 0 )
+  else if ( (mode_flags & 2) != 0 )
   {
-    v7 = aRb_10;
+    mode_string = aRb_10;
   }
   else
   {
-    v7 = aR_7;
+    mode_string = aR_7;
   }
-  a1[1] = IO_FOpen(a2, (unsigned __int8 *)v7, a3, a5);
-  if ( (a4 & 0x20) != 0 )
-    Compat_StreamSetBuffer((int)a1[1], 0x1800);
-  return a1;
+  stream[1] = IO_FOpen(file_path, (unsigned __int8 *)mode_string, a3, a5);
+  if ( (mode_flags & 0x20) != 0 )
+    Compat_StreamSetBuffer((int)stream[1], 0x1800);
+  return stream;
 }
 // 5109C4: using guessed type int (*off_5109C4[9])();
 
 //----- (00477D60) --------------------------------------------------------
-_DWORD * Compat_FileStreamRelease(_DWORD *result, char a2)
+_DWORD * Compat_FileStreamRelease(_DWORD *result, char flags)
 {
-  int v3; // ebx
+  int stream_handle; // ebx
   int v4; // ecx
   int v5; // ecx
   int v7; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, &g_CompatFileStream_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v4;
   }
-  v3 = result[1];
+  stream_handle = result[1];
   *result = g_CompatFileStream_VTable;
-  if ( v3 )
+  if ( stream_handle )
   {
-    fclose_(v3);
-    if ( (a2 & 2) == 0 )
+    fclose_(stream_handle);
+    if ( (flags & 2) == 0 )
       return (_DWORD *)v5;
     goto LABEL_8;
   }
-  if ( (a2 & 2) != 0 )
+  if ( (flags & 2) != 0 )
   {
 LABEL_8:
     j__nfree_();
@@ -13724,19 +13724,19 @@ LABEL_8:
 // 5109C4: using guessed type int (*off_5109C4[9])();
 
 //----- (00477DC0) --------------------------------------------------------
-int Compat_FileStreamRead(int a1, void *a2, int a3)
+int Compat_FileStreamRead(int stream, void *buffer, int a3)
 {
-  return fread_(a2, 1, *(_DWORD *)(a1 + 4), a3);
+  return fread_(buffer, 1, *(_DWORD *)(stream + 4), a3);
 }
 
 //----- (00477DE0) --------------------------------------------------------
-int  Compat_FileStreamReadChar(int a1, unsigned int a2)
+int  Compat_FileStreamReadChar(int stream, unsigned int a2)
 {
   int stream_ptr;
   unsigned __int8 next_byte;
 
   (void)a2;
-  stream_ptr = *(_DWORD *)(a1 + 4);
+  stream_ptr = *(_DWORD *)(stream + 4);
   if ( *(_DWORD *)(stream_ptr + 4) > 0 )
   {
     next_byte = *(unsigned __int8 *)*(_DWORD *)stream_ptr;
@@ -13753,71 +13753,71 @@ int  Compat_FileStreamReadChar(int a1, unsigned int a2)
 }
 
 //----- (00477E30) --------------------------------------------------------
-signed int  Compat_FileStreamUngetChar(int a1, signed int a2)
+signed int  Compat_FileStreamUngetChar(int stream, signed int pushed_char)
 {
-  return CRT_FlushBufferAndPutChar(a2, a1);
+  return CRT_FlushBufferAndPutChar(pushed_char, stream);
 }
 
 //----- (00477E40) --------------------------------------------------------
-int  Compat_FileStreamWrite(int a1, const void *a2, int a3)
+int  Compat_FileStreamWrite(int stream, const void *buffer, int a3)
 {
-  return fwrite_(a2, 1, *(_DWORD *)(a1 + 4), a3);
+  return fwrite_(buffer, 1, *(_DWORD *)(stream + 4), a3);
 }
 
 //----- (00477E60) --------------------------------------------------------
-signed int  Compat_FileStreamSeekFromStart(int a1, int a2, int a3)
+signed int  Compat_FileStreamSeekFromStart(int stream, int offset, int a3)
 {
-  return IO_SeekStreamGuarded(*(_DWORD *)(a1 + 4), a2, 0, a3);
+  return IO_SeekStreamGuarded(*(_DWORD *)(stream + 4), offset, 0, a3);
 }
 
 //----- (00477E70) --------------------------------------------------------
-signed int  Compat_FileStreamSeekFromEnd(int a1, int a2, int a3)
+signed int  Compat_FileStreamSeekFromEnd(int stream, int offset, int a3)
 {
-  return IO_SeekStreamGuarded(*(_DWORD *)(a1 + 4), a2, 2u, a3);
+  return IO_SeekStreamGuarded(*(_DWORD *)(stream + 4), offset, 2u, a3);
 }
 
 //----- (00477E80) --------------------------------------------------------
-int __fastcall Compat_FileStreamTell(int a1, int a2)
+int __fastcall Compat_FileStreamTell(int stream, int a2)
 {
-  return Compat_StreamTell(*(_DWORD *)(a1 + 4));
+  return Compat_StreamTell(*(_DWORD *)(stream + 4));
 }
 
 //----- (00477E90) --------------------------------------------------------
-signed int  Compat_FileStreamIsReady(int a1)
+signed int  Compat_FileStreamIsReady(int stream)
 {
-  int v1; // edx
+  int stream_handle; // edx
 
-  v1 = *(_DWORD *)(a1 + 4);
-  if ( !v1 )
+  stream_handle = *(_DWORD *)(stream + 4);
+  if ( !stream_handle )
     return -2;
-  if ( (*(_BYTE *)(v1 + 12) & 0x10) != 0 )
+  if ( (*(_BYTE *)(stream_handle + 12) & 0x10) != 0 )
     return -1;
   return 1;
 }
 
 //----- (00477EC0) --------------------------------------------------------
-int  Compat_FileFinderOpen(_DWORD *a1, int a2)
+int  Compat_FileFinderOpen(_DWORD *finder, int search_path)
 {
   int v2; // ecx
-  signed int v3; // eax
+  signed int find_handle; // eax
   int v4; // ecx
   int v5; // ecx
-  const char *v7; // [esp+0h] [ebp-18h] BYREF
-  int (**v8)(); // [esp+4h] [ebp-14h]
-  int v9; // [esp+10h] [ebp-8h]
+  const char *pattern_holder; // [esp+0h] [ebp-18h] BYREF
+  int (**vtable_ptr)(); // [esp+4h] [ebp-14h]
+  int search_path_saved; // [esp+10h] [ebp-8h]
 
-  v9 = a2;
-  a1[71] = -1;
-  *a1 = g_CompatFileFinder_VTable;
-  v7 = 0;
-  v8 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v7);
-  v8 = &g_PathEntry_Vtable;
-  Compat_StringHolderAppendText(&v7, a__31);
-  v3 = CRT_FindFirstFile(v7, (_DWORD *)(v2 + 4), v2);
-  *(_DWORD *)(v4 + 284) = v3;
-  *(_DWORD *)(v4 + 288) = v3;
-  Compat_StringHolderScalarDeletingDtor((int)&v7, 1);
+  search_path_saved = search_path;
+  finder[71] = -1;
+  *finder = g_CompatFileFinder_VTable;
+  pattern_holder = 0;
+  vtable_ptr = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(&pattern_holder);
+  vtable_ptr = &g_PathEntry_Vtable;
+  Compat_StringHolderAppendText(&pattern_holder, a__31);
+  find_handle = CRT_FindFirstFile(pattern_holder, (_DWORD *)(v2 + 4), v2);
+  *(_DWORD *)(v4 + 284) = find_handle;
+  *(_DWORD *)(v4 + 288) = find_handle;
+  Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
   return v5;
 }
 // 477F06: variable 'v2' is possibly undefined
@@ -13828,30 +13828,30 @@ int  Compat_FileFinderOpen(_DWORD *a1, int a2)
 // 5109F4: using guessed type int (*off_5109F4[6])();
 
 //----- (00477F30) --------------------------------------------------------
-_DWORD * Compat_FileFinderRelease(_DWORD *result, char a2)
+_DWORD * Compat_FileFinderRelease(_DWORD *result, char flags)
 {
-  int v3; // ebx
+  int find_handle; // ebx
   int v4; // ecx
   int v5; // ecx
   char v6; // dl
   int v7; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, &g_CompatFileFinder_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v4;
   }
-  v3 = result[71];
+  find_handle = result[71];
   *result = g_CompatFileFinder_VTable;
-  if ( v3 == -1 )
+  if ( find_handle == -1 )
   {
     findclose_(result);
     if ( (v6 & 2) == 0 )
       return (_DWORD *)v5;
     goto LABEL_8;
   }
-  if ( (a2 & 2) != 0 )
+  if ( (flags & 2) != 0 )
   {
 LABEL_8:
     j__nfree_();
@@ -13876,12 +13876,12 @@ int  Compat_FileFinderHasEntry(int result)
 }
 
 //----- (00477FA0) --------------------------------------------------------
-int  Compat_FileFinderAdvance(int a1)
+int  Compat_FileFinderAdvance(int finder)
 {
   int result; // eax
   int v2; // ecx
 
-  result = findnext_(a1, a1 + 4);
+  result = findnext_(finder, finder + 4);
   *(_DWORD *)(v2 + 288) = result;
   return result;
 }
@@ -13889,34 +13889,34 @@ int  Compat_FileFinderAdvance(int a1)
 // 489F5D: using guessed type int __fastcall findnext_(_DWORD, _DWORD);
 
 //----- (00477FC0) --------------------------------------------------------
-int  Compat_FileFinderGetName(int a1)
+int  Compat_FileFinderGetName(int finder)
 {
-  return a1 + 24;
+  return finder + 24;
 }
 
 //----- (00477FD0) --------------------------------------------------------
-int  Compat_FileFinderGetAttributes(int a1)
+int  Compat_FileFinderGetAttributes(int finder)
 {
-  return *(_DWORD *)(a1 + 4);
+  return *(_DWORD *)(finder + 4);
 }
 
 //----- (00477FE0) --------------------------------------------------------
-int  Compat_FileFinderGetSize(int a1)
+int  Compat_FileFinderGetSize(int finder)
 {
-  return *(_DWORD *)(a1 + 20);
+  return *(_DWORD *)(finder + 20);
 }
 
 //----- (00477FF0) --------------------------------------------------------
-int  Compat_FileFinderCreate(int a1, char a2, DWORD a3)
+int  Compat_FileFinderCreate(int search_path, char a2, DWORD a3)
 {
-  _DWORD *v4; // eax
+  _DWORD *finder; // eax
   int v5; // ecx
   int v6; // ecx
 
-  v4 = (_DWORD *)Mem_Alloc(292, a1, a2, a3);
-  if ( v4 )
-    v4 = (_DWORD *)Compat_FileFinderOpen(v4, v5);
-  if ( (*(int (__cdecl **)(int))(*v4 + 12))(a1) )
+  finder = (_DWORD *)Mem_Alloc(292, search_path, a2, a3);
+  if ( finder )
+    finder = (_DWORD *)Compat_FileFinderOpen(finder, v5);
+  if ( (*(int (__cdecl **)(int))(*finder + 12))(search_path) )
     return v6;
   (*(void (__fastcall **)(int, int))(*(_DWORD *)v6 + 20))(v6, 2);
   return 0;
@@ -13925,45 +13925,45 @@ int  Compat_FileFinderCreate(int a1, char a2, DWORD a3)
 // 47800C: variable 'v6' is possibly undefined
 
 //----- (00478030) --------------------------------------------------------
-const char ** FileSystem_DiskMountCtor(const char **a1, int a2)
+const char ** FileSystem_DiskMountCtor(const char **mount, int root_path)
 {
   const char *path_text;
   unsigned int path_len;
 
-  *(_DWORD *)(a1 + 4) = 0;
-  *(_DWORD *)(a1 + 8) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)a1 = (int)g_FileSystemDiskMount_VTable;
-  if ( !a2 )
-    return a1;
-  Compat_StringHolderDestructor((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
-  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
+  *(_DWORD *)(mount + 4) = 0;
+  *(_DWORD *)(mount + 8) = (int)&g_PathEntry_Vtable;
+  *(_DWORD *)mount = (int)g_FileSystemDiskMount_VTable;
+  if ( !root_path )
+    return mount;
+  Compat_StringHolderDestructor((const char **)(uintptr_t)((unsigned int)(uintptr_t)mount + 4));
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)((unsigned int)(uintptr_t)mount + 4));
   path_len = path_text ? (unsigned int)strlen(path_text) : 0;
   if ( !path_len || path_text[path_len - 1] == 92 )
-    return a1;
-  Compat_StringHolderAppendText((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4), asc_5024EA);
-  return a1;
+    return mount;
+  Compat_StringHolderAppendText((const char **)(uintptr_t)((unsigned int)(uintptr_t)mount + 4), asc_5024EA);
+  return mount;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
 // 510A14: using guessed type int (*off_510A14[4])();
 
 //----- (004780A0) --------------------------------------------------------
-int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *a1, char a2)
+int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *mount, char flags)
 {
   int v3; // eax
   int v5; // ecx
   int v6; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_FileSystemDiskMount_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(mount, &g_FileSystemDiskMount_DtorArrayDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    *a1 = g_FileSystemDiskMount_VTable;
-    v3 = Compat_StringHolderScalarDeletingDtor((int)(a1 + 1), 0);
-    if ( (a2 & 2) != 0 )
+    *mount = g_FileSystemDiskMount_VTable;
+    v3 = Compat_StringHolderScalarDeletingDtor((int)(mount + 1), 0);
+    if ( (flags & 2) != 0 )
     {
       j__nfree_();
       return v6;
@@ -13980,35 +13980,35 @@ int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *a1, char a2)
 // 510A14: using guessed type int (*off_510A14[4])();
 
 //----- (004780F0) --------------------------------------------------------
-int  FileSystem_DiskMountOpenFileQuery(int a1, char a2, DWORD a3)
+int  FileSystem_DiskMountOpenFileQuery(int mount, char mode_flags, DWORD alloc_context)
 {
   _DWORD *result; // ecx
   _DWORD joined_path[2]; // [esp+0h] [ebp-8h] BYREF
 
   joined_path[0] = 0;
   joined_path[1] = &g_CompatStringHolder_Vtable;
-  result = (_DWORD *)Mem_Alloc(8, a1, a2, a3);
+  result = (_DWORD *)Mem_Alloc(8, mount, mode_flags, alloc_context);
   if ( result )
   {
-    Compat_StringHolderConstructJoined(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), 0);
-    result = Compat_FileStreamOpen(result, (const CHAR *)(uintptr_t)(unsigned int)joined_path[0], 0, a2, a3);
+    Compat_StringHolderConstructJoined(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(mount + 4), 0);
+    result = Compat_FileStreamOpen(result, (const CHAR *)(uintptr_t)(unsigned int)joined_path[0], 0, mode_flags, alloc_context);
   }
   Compat_StringHolderDestroyStack(joined_path, 1);
   return (int)result;
 }
 
 //----- (00478140) --------------------------------------------------------
-int __fastcall FileSystem_DiskMountDeleteFile(int a1, const char *a2)
+int __fastcall FileSystem_DiskMountDeleteFile(int mount, const char *file_name)
 {
   int v3; // ecx
   char v4; // dl
   int v5; // ecx
-  _DWORD v7[4]; // [esp-Ch] [ebp-10h] BYREF
+  _DWORD joined_path[4]; // [esp-Ch] [ebp-10h] BYREF
 
-  v7[2] = a1;
-  Compat_StringHolderConstructJoined(v7, a1, a2);
+  joined_path[2] = mount;
+  Compat_StringHolderConstructJoined(joined_path, mount, file_name);
   IO_RemoveFileByPath(v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
   return v5;
 }
 // 478158: variable 'v3' is possibly undefined
@@ -14017,34 +14017,34 @@ int __fastcall FileSystem_DiskMountDeleteFile(int a1, const char *a2)
 // 476A78: using guessed type int __fastcall sub_476A78(_DWORD, _DWORD);
 
 //----- (00478170) --------------------------------------------------------
-int __fastcall FileSystem_DiskMountCreateDirectory(int a1, const char *a2)
+int __fastcall FileSystem_DiskMountCreateDirectory(int mount, const char *dir_name)
 {
   const CHAR **v3; // eax
   char v4; // dl
   int v5; // ecx
-  _DWORD v7[3]; // [esp-Ch] [ebp-Ch] BYREF
+  _DWORD joined_path[3]; // [esp-Ch] [ebp-Ch] BYREF
 
-  v7[2] = a1;
-  v3 = (const CHAR **)Compat_StringHolderConstructJoined(v7, a1, a2);
+  joined_path[2] = mount;
+  v3 = (const CHAR **)Compat_StringHolderConstructJoined(joined_path, mount, dir_name);
   CRT_MakeDirectory(*v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
   return v5;
 }
 // 478190: variable 'v4' is possibly undefined
 // 478195: variable 'v5' is possibly undefined
 
 //----- (004781A0) --------------------------------------------------------
-int __fastcall FileSystem_DiskMountRemoveDirectory(int a1, const char *a2)
+int __fastcall FileSystem_DiskMountRemoveDirectory(int mount, const char *dir_name)
 {
   const CHAR **v3; // eax
   char v4; // dl
   int v5; // ecx
-  _DWORD v7[4]; // [esp-Ch] [ebp-10h] BYREF
+  _DWORD joined_path[4]; // [esp-Ch] [ebp-10h] BYREF
 
-  v7[2] = a1;
-  v3 = (const CHAR **)Compat_StringHolderConstructJoined(v7, a1, a2);
+  joined_path[2] = mount;
+  v3 = (const CHAR **)Compat_StringHolderConstructJoined(joined_path, mount, dir_name);
   CRT_RemoveDirectory(*v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
   return v5;
 }
 // 4781C1: variable 'v4' is possibly undefined
@@ -14053,29 +14053,29 @@ int __fastcall FileSystem_DiskMountRemoveDirectory(int a1, const char *a2)
 //----- (004781E0) --------------------------------------------------------
 char *__thiscall FileSystem_DiskMountGetCurrentDirectory(void *this)
 {
-  char *v2; // esi
-  char *v3; // edi
-  char v4; // al
-  char v5; // al
+  char *suffix_cursor; // esi
+  char *buffer_end; // edi
+  char first_char; // al
+  char second_char; // al
 
   (void)this;
   getcwd_(g_FileSystem_CurrentDirectoryBuffer, 100);
   if ( g_FileSystem_CwdBufferSentinel[strlen(g_FileSystem_CurrentDirectoryBuffer)] == 92 )
     return g_FileSystem_CurrentDirectoryBuffer;
-  v2 = asc_5024EC;
-  v3 = &g_FileSystem_CurrentDirectoryBuffer[strlen(g_FileSystem_CurrentDirectoryBuffer)];
+  suffix_cursor = asc_5024EC;
+  buffer_end = &g_FileSystem_CurrentDirectoryBuffer[strlen(g_FileSystem_CurrentDirectoryBuffer)];
   do
   {
-    v4 = *v2;
-    *v3 = *v2;
-    if ( !v4 )
+    first_char = *suffix_cursor;
+    *buffer_end = *suffix_cursor;
+    if ( !first_char )
       break;
-    v5 = v2[1];
-    v2 += 2;
-    v3[1] = v5;
-    v3 += 2;
+    second_char = suffix_cursor[1];
+    suffix_cursor += 2;
+    buffer_end[1] = second_char;
+    buffer_end += 2;
   }
-  while ( v5 );
+  while ( second_char );
   return g_FileSystem_CurrentDirectoryBuffer;
 }
 // 489FF2: using guessed type int __fastcall getcwd_(_DWORD, _DWORD);
@@ -14086,28 +14086,28 @@ int __thiscall FileSystem_DiskMountDirectoryExists(void *this)
   int v1; // ecx
   int v2; // ecx
   int v3; // ecx
-  int v5; // [esp-118h] [ebp-130h] BYREF
-  const char *v6; // [esp+0h] [ebp-18h] BYREF
-  int (**v7)(); // [esp+4h] [ebp-14h]
-  void *v8; // [esp+10h] [ebp-8h]
+  int find_data; // [esp-118h] [ebp-130h] BYREF
+  const char *search_pattern; // [esp+0h] [ebp-18h] BYREF
+  int (**vtable_ptr)(); // [esp+4h] [ebp-14h]
+  void *this_saved; // [esp+10h] [ebp-8h]
 
-  v8 = this;
-  v6 = 0;
-  v7 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v6);
-  v7 = &g_PathEntry_Vtable;
-  if ( v6 && *v6 && v6[strlen(v6) - 1] != 92 )
-    Compat_StringHolderAppendText(&v6, asc_5024EE);
-  Compat_StringHolderAppendText(&v6, a__36);
-  if ( CRT_FindFirstFile(v6, &v5, v1) == -1 )
+  this_saved = this;
+  search_pattern = 0;
+  vtable_ptr = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(&search_pattern);
+  vtable_ptr = &g_PathEntry_Vtable;
+  if ( search_pattern && *search_pattern && search_pattern[strlen(search_pattern) - 1] != 92 )
+    Compat_StringHolderAppendText(&search_pattern, asc_5024EE);
+  Compat_StringHolderAppendText(&search_pattern, a__36);
+  if ( CRT_FindFirstFile(search_pattern, &find_data, v1) == -1 )
   {
-    Compat_StringHolderScalarDeletingDtor((int)&v6, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&search_pattern, 1);
     return 0;
   }
   else
   {
     findclose_(v2);
-    Compat_StringHolderScalarDeletingDtor((int)&v6, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&search_pattern, 1);
     return v3;
   }
 }
@@ -14119,57 +14119,57 @@ int __thiscall FileSystem_DiskMountDirectoryExists(void *this)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478340) --------------------------------------------------------
-char  FileSystem_DiskMountResolveRegisteredRootPath(int a1, int a2)
+char  FileSystem_DiskMountResolveRegisteredRootPath(int mount, int mount_table)
 {
   const char *resolved_path; // eax
 
-  resolved_path = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4);
+  resolved_path = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount + 4);
   if ( !resolved_path || !*resolved_path )
-    Compat_StringHolderCopyText((_DWORD *)(a1 + 4), (const char *)(uintptr_t)(unsigned int)Compat_FileSystemFindMountedPathById(a2, a1));
-  return a2;
+    Compat_StringHolderCopyText((_DWORD *)(mount + 4), (const char *)(uintptr_t)(unsigned int)Compat_FileSystemFindMountedPathById(mount_table, mount));
+  return mount_table;
 }
 
 //----- (00478370) --------------------------------------------------------
-const char ** FileSystem_DiskMountCreate(int a1, char a2, DWORD a3)
+const char ** FileSystem_DiskMountCreate(int root_path, char a2, DWORD a3)
 {
   const char **result; // eax
 
-  result = (const char **)Mem_Alloc(12, a1, a2, a3);
+  result = (const char **)Mem_Alloc(12, root_path, a2, a3);
   if ( result )
-    return FileSystem_DiskMountCtor(result, a1);
+    return FileSystem_DiskMountCtor(result, root_path);
   return result;
 }
 
 //----- (004783B0) --------------------------------------------------------
-int  FileSystem_DiskMountRegisterNestedMount(int a1, int *a2, char a3, DWORD a4)
+int  FileSystem_DiskMountRegisterNestedMount(int mount, int *mount_table, char a3, DWORD a4)
 {
-  _DWORD *v5; // eax
+  _DWORD *stream_buf; // eax
 
-  v5 = IO_StreambufAlloc(a1, a3, a4);
+  stream_buf = IO_StreambufAlloc(mount, a3, a4);
   return FileSystem_AddMountEntry(
-           a2,
-           (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4),
+           mount_table,
+           (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(mount + 4),
            0,
-           (DWORD)v5);
+           (DWORD)stream_buf);
 }
 
 //----- (004783D0) --------------------------------------------------------
-int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *a1, char a2)
+int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *mount, char flags)
 {
   int result; // eax
   int v4; // ecx
   int v5; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_FileSystemDiskMountVariant_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(mount, &g_FileSystemDiskMountVariant_DtorArrayDescriptor);
     j_j__nfree_();
     return v4;
   }
   else
   {
-    result = FileSystem_DiskMountScalarDeletingDtor(a1, 1);
-    if ( (a2 & 2) != 0 )
+    result = FileSystem_DiskMountScalarDeletingDtor(mount, 1);
+    if ( (flags & 2) != 0 )
     {
       j__nfree_();
       return v5;
@@ -14182,60 +14182,60 @@ int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00478410) --------------------------------------------------------
-int  FileSystem_ArchiveGenerateBlankRecord(int a1)
+int  FileSystem_ArchiveGenerateBlankRecord(int record)
 {
   int v1; // edx
 
-  FileSystem_ArchiveFillBlankRecordBytes(a1);
+  FileSystem_ArchiveFillBlankRecordBytes(record);
   return v1;
 }
 // 478418: variable 'v1' is possibly undefined
 
 //----- (00478420) --------------------------------------------------------
-int  FileSystem_ArchiveFillBlankRecordBytes(int a1)
+int  FileSystem_ArchiveFillBlankRecordBytes(int record)
 {
   __int64 v2; // rax
-  int v3; // ecx
+  int record_end; // ecx
 
-  HIDWORD(v2) = a1;
-  v3 = a1 + 26;
+  HIDWORD(v2) = record;
+  record_end = record + 26;
   do
   {
-    v2 = rand_(v3, HIDWORD(v2) + 1);
+    v2 = rand_(record_end, HIDWORD(v2) + 1);
     *(_BYTE *)(HIDWORD(v2) - 1) = v2;
   }
-  while ( HIDWORD(v2) != v3 );
-  *(_DWORD *)(a1 + 14) = 0;
+  while ( HIDWORD(v2) != record_end );
+  *(_DWORD *)(record + 14) = 0;
   return v2;
 }
 // 478431: variable 'v3' is possibly undefined
 // 47619A: using guessed type __int64 __fastcall rand_(_DWORD, _DWORD);
 
 //----- (00478450) --------------------------------------------------------
-const char ** FileSystem_PathTrimToParentDir(const char **a1)
+const char ** FileSystem_PathTrimToParentDir(const char **path_holder)
 {
-  const char *v2; // eax
+  const char *text; // eax
   int v3; // edx
-  unsigned int v4; // ecx
+  unsigned int text_len; // ecx
 
-  *a1 = 0;
-  a1[1] = (const char *)&g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(a1);
-  a1[1] = (const char *)&g_PathEntry_Vtable;
-  if ( Compat_StringHolderFindLastBackslash((_BYTE **)a1) == -1 )
+  *path_holder = 0;
+  path_holder[1] = (const char *)&g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(path_holder);
+  path_holder[1] = (const char *)&g_PathEntry_Vtable;
+  if ( Compat_StringHolderFindLastBackslash((_BYTE **)path_holder) == -1 )
   {
-    Compat_StringHolderDestructor(a1);
-    return a1;
+    Compat_StringHolderDestructor(path_holder);
+    return path_holder;
   }
   else
   {
-    v2 = (const char *)ExcString_GetTextPtr((int)a1);
-    if ( v2 )
-      v4 = strlen(v2);
+    text = (const char *)ExcString_GetTextPtr((int)path_holder);
+    if ( text )
+      text_len = strlen(text);
     else
-      v4 = 0;
-    Compat_StringHolderRemoveRange(a1, v3, v4, v4 - v3);
-    return a1;
+      text_len = 0;
+    Compat_StringHolderRemoveRange(path_holder, v3, text_len, text_len - v3);
+    return path_holder;
   }
 }
 // 4784A9: variable 'v3' is possibly undefined
@@ -14243,154 +14243,154 @@ const char ** FileSystem_PathTrimToParentDir(const char **a1)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004784E0) --------------------------------------------------------
-_DWORD * FileSystem_PathExtractFileName(_DWORD *a1)
+_DWORD * FileSystem_PathExtractFileName(_DWORD *path_holder)
 {
-  int v2; // eax
+  int slash_index; // eax
   unsigned int v3; // ecx
 
-  *a1 = 0;
-  a1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(a1);
-  a1[1] = &g_PathEntry_Vtable;
-  v2 = Compat_StringHolderFindLastBackslash((_BYTE **)a1);
-  if ( v2 != -1 )
-    Compat_StringHolderRemoveRange((const char **)a1, 0, v3, v2 + 1);
-  return a1;
+  *path_holder = 0;
+  path_holder[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(path_holder);
+  path_holder[1] = &g_PathEntry_Vtable;
+  slash_index = Compat_StringHolderFindLastBackslash((_BYTE **)path_holder);
+  if ( slash_index != -1 )
+    Compat_StringHolderRemoveRange((const char **)path_holder, 0, v3, slash_index + 1);
+  return path_holder;
 }
 // 478524: variable 'v3' is possibly undefined
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478540) --------------------------------------------------------
-int * FileSystem_ArchiveRecordCacheCtor(int *a1, int a2, int a3, int a4)
+int * FileSystem_ArchiveRecordCacheCtor(int *cache, int stream, int base_offset, int record_count)
 {
-  int v5; // edx
-  int v6; // eax
-  int v7; // ecx
+  int total_records; // edx
+  int window_size; // eax
+  int capacity; // ecx
   int *result; // eax
 
-  a1[3] = 0;
-  *a1 = a4;
-  a1[5] = a2;
-  v5 = *a1;
-  a1[6] = a3;
-  if ( v5 >= 200 )
-    v6 = 200;
+  cache[3] = 0;
+  *cache = record_count;
+  cache[5] = stream;
+  total_records = *cache;
+  cache[6] = base_offset;
+  if ( total_records >= 200 )
+    window_size = 200;
   else
-    v6 = v5;
-  a1[2] = v6;
-  a1[4] = Compat_WcppCtorArrayStorage1m(
-            (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
-            a1[2],
+    window_size = total_records;
+  cache[2] = window_size;
+  cache[4] = Compat_WcppCtorArrayStorage1m(
+            (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * cache[2]),
+            cache[2],
             &g_FileSystemArchiveRecordCache_CtorArrayDescriptor);
-  v7 = a1[2];
-  a1[1] = v7;
-  result = a1;
-  a1[1] = -v7;
+  capacity = cache[2];
+  cache[1] = capacity;
+  result = cache;
+  cache[1] = -capacity;
   return result;
 }
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00478590) --------------------------------------------------------
-_DWORD * FileSystem_ArchiveRecordCacheCopyCtor(int *a1, int *a2)
+_DWORD * FileSystem_ArchiveRecordCacheCopyCtor(int *cache, int *source_cache)
 {
-  int v4; // eax
-  int v5; // eax
-  int v6; // edx
-  int v7; // eax
-  int v8; // eax
+  int record_count; // eax
+  int base_offset; // eax
+  int total_records; // edx
+  int window_size; // eax
+  int records_buffer; // eax
   _DWORD *v9; // ecx
-  int v10; // ebx
+  int capacity; // ebx
   _DWORD *result; // eax
 
-  v4 = *a2;
-  a1[3] = 0;
-  *a1 = v4;
-  a1[5] = a2[5];
-  v5 = a2[6];
-  v6 = *a1;
-  a1[6] = v5;
-  if ( v6 >= 200 )
-    v7 = 200;
+  record_count = *source_cache;
+  cache[3] = 0;
+  *cache = record_count;
+  cache[5] = source_cache[5];
+  base_offset = source_cache[6];
+  total_records = *cache;
+  cache[6] = base_offset;
+  if ( total_records >= 200 )
+    window_size = 200;
   else
-    v7 = v6;
-  a1[2] = v7;
-  v8 = Compat_WcppCtorArrayStorage1m(
-         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
-         a1[2],
+    window_size = total_records;
+  cache[2] = window_size;
+  records_buffer = Compat_WcppCtorArrayStorage1m(
+         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * cache[2]),
+         cache[2],
          &g_FileSystemArchiveRecordCache_CtorArrayDescriptor);
-  a1[4] = v8;
-  v10 = a1[2];
-  a1[1] = v10;
-  result = (_DWORD *)a1;
-  a1[1] = -v10;
+  cache[4] = records_buffer;
+  capacity = cache[2];
+  cache[1] = capacity;
+  result = (_DWORD *)cache;
+  cache[1] = -capacity;
   return result;
 }
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (004785F0) --------------------------------------------------------
-int  FileSystem_ArchiveRecordCacheDestruct(_DWORD *a1)
+int  FileSystem_ArchiveRecordCacheDestruct(_DWORD *cache)
 {
-  FileSystem_ArchiveRecordCacheFlushWindow(a1);
-  j_j__nfree_(a1[4]);
-  return (int)a1;
+  FileSystem_ArchiveRecordCacheFlushWindow(cache);
+  j_j__nfree_(cache[4]);
+  return (int)cache;
 }
 
 //----- (00478610) --------------------------------------------------------
-int  FileSystem_ArchiveRecordCacheGetRecord(_DWORD *a1, int a2)
+int  FileSystem_ArchiveRecordCacheGetRecord(_DWORD *cache, int record_index)
 {
-  int v3; // ebp
+  int window_start; // ebp
 
   ++g_FS_ArchiveRecordCacheAccessCount;
-  v3 = a1[1];
-  if ( a2 >= v3 && a2 < a1[2] + v3 )
-    return a1[4] + 26 * (a2 - a1[1]);
-  FileSystem_ArchiveRecordCacheLoadWindow(a1, a2);
+  window_start = cache[1];
+  if ( record_index >= window_start && record_index < cache[2] + window_start )
+    return cache[4] + 26 * (record_index - cache[1]);
+  FileSystem_ArchiveRecordCacheLoadWindow(cache, record_index);
   ++g_FS_ArchiveRecordCacheMissCount;
-  return a1[4] + 26 * (a2 - a1[1]);
+  return cache[4] + 26 * (record_index - cache[1]);
 }
 // 54DD0C: using guessed type int dword_54DD0C;
 // 54DD10: using guessed type int dword_54DD10;
 
 //----- (00478670) --------------------------------------------------------
-int  FileSystem_ArchiveRecordCacheLoadWindow(_DWORD *a1, int a2)
+int  FileSystem_ArchiveRecordCacheLoadWindow(_DWORD *cache, int record_index)
 {
-  int v3; // edx
-  int *v4; // esi
-  unsigned __int8 *v5; // edi
+  int window_start; // edx
+  int *stream; // esi
+  unsigned __int8 *records_buffer; // edi
   int result; // eax
 
-  FileSystem_ArchiveRecordCacheFlushWindow(a1);
-  v3 = a2 - a1[2] + 1;
-  a1[1] = v3;
-  if ( v3 < 0 )
-    a1[1] = 0;
-  v4 = (int *)a1[5];
-  v5 = (unsigned __int8 *)a1[4];
-  File_SeekIfPositionChangedMode1(v4, a1[6] + 26 * a1[1], (int)v5);
-  result = Compat_StreamRead(v4[2], v5, 26 * a1[2]);
-  if ( v4[5] )
+  FileSystem_ArchiveRecordCacheFlushWindow(cache);
+  window_start = record_index - cache[2] + 1;
+  cache[1] = window_start;
+  if ( window_start < 0 )
+    cache[1] = 0;
+  stream = (int *)cache[5];
+  records_buffer = (unsigned __int8 *)cache[4];
+  File_SeekIfPositionChangedMode1(stream, cache[6] + 26 * cache[1], (int)records_buffer);
+  result = Compat_StreamRead(stream[2], records_buffer, 26 * cache[2]);
+  if ( stream[5] )
   {
-    Compat_QueryXorDecodeBuffer((int)v4, v5, result);
+    Compat_QueryXorDecodeBuffer((int)stream, records_buffer, result);
   }
-  v4[12] += result;
+  stream[12] += result;
   return result;
 }
 
 //----- (004786E0) --------------------------------------------------------
 _DWORD * FileSystem_ArchiveRecordCacheFlushWindow(_DWORD *result)
 {
-  unsigned int v1; // ebx
-  int *v2; // esi
-  const void *v3; // edi
+  unsigned int window_bytes; // ebx
+  int *stream; // esi
+  const void *records_buffer; // edi
 
   if ( result[3] )
   {
-    v1 = 26 * result[2];
-    v2 = (int *)result[5];
-    v3 = (const void *)result[4];
-    File_SeekIfPositionChangedMode2(v2, result[6] + 26 * result[1], (int)v3);
-    Res_StreamWriteWithXorCipher(v2, v3, v1, v1);
+    window_bytes = 26 * result[2];
+    stream = (int *)result[5];
+    records_buffer = (const void *)result[4];
+    File_SeekIfPositionChangedMode2(stream, result[6] + 26 * result[1], (int)records_buffer);
+    Res_StreamWriteWithXorCipher(stream, records_buffer, window_bytes, window_bytes);
     result[3] = 0;
   }
   return result;
@@ -14399,19 +14399,19 @@ _DWORD * FileSystem_ArchiveRecordCacheFlushWindow(_DWORD *result)
 // 478710: variable 'v5' is possibly undefined
 
 //----- (00478720) --------------------------------------------------------
-int  FileSystem_ArchiveEntryCopyConstruct(_DWORD *a1, int a2)
+int  FileSystem_ArchiveEntryCopyConstruct(_DWORD *entry, int source_reader)
 {
   _DWORD *v3; // ecx
   int v4; // ecx
 
-  *a1 = 0;
-  a1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(a1);
+  *entry = 0;
+  entry[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(entry);
   v3[1] = &g_PathEntry_Vtable;
-  v3[2] = *(_DWORD *)(a2 + 8);
+  v3[2] = *(_DWORD *)(source_reader + 8);
   v3[3] = 0;
-  FileSystem_ArchiveRecordCacheCopyCtor(v3 + 4, (int *)(a2 + 16));
-  FileSystem_ArchiveEntryReaderFlushHeader(a2);
+  FileSystem_ArchiveRecordCacheCopyCtor(v3 + 4, (int *)(source_reader + 16));
+  FileSystem_ArchiveEntryReaderFlushHeader(source_reader);
   return v4;
 }
 // 47873A: variable 'v3' is possibly undefined
@@ -14420,41 +14420,41 @@ int  FileSystem_ArchiveEntryCopyConstruct(_DWORD *a1, int a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478770) --------------------------------------------------------
-int  FileSystem_ArchiveEntryReaderCtor(_DWORD *a1, int *a2, int a3, int a4, const void *a5)
+int  FileSystem_ArchiveEntryReaderCtor(_DWORD *reader, int *stream, int base_offset, int data_size, const void *entry_name)
 {
-  int *v9; // eax
-  int v10; // esi
-  int v11; // eax
+  int *cache_ptr; // eax
+  int reader_base; // esi
+  int bytes_read; // eax
   int result; // eax
-  const char *v14; // edx
-  unsigned __int8 *v15; // [esp+0h] [ebp-10h]
+  const char *name_text; // edx
+  unsigned __int8 *header_buf; // [esp+0h] [ebp-10h]
 
-  *a1 = 0;
-  a1[1] = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderFreeText(a1);
-  v14 = Compat_StringArgGetText(a5);
-  if ( v14 && *v14 )
+  *reader = 0;
+  reader[1] = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderFreeText(reader);
+  name_text = Compat_StringArgGetText(entry_name);
+  if ( name_text && *name_text )
   {
-    *a1 = (int)(uintptr_t)j_Mem_Alloc((unsigned int)strlen(v14) + 1);
-    Compat_CopyPrefixN((char *)(uintptr_t)*a1, v14, (unsigned int)strlen(v14) + 1);
+    *reader = (int)(uintptr_t)j_Mem_Alloc((unsigned int)strlen(name_text) + 1);
+    Compat_CopyPrefixN((char *)(uintptr_t)*reader, name_text, (unsigned int)strlen(name_text) + 1);
   }
-  a1[1] = &g_PathEntry_Vtable;
-  a1[3] = 0;
-  v9 = FileSystem_ArchiveRecordCacheCtor(a1 + 4, (int)a2, a3 + 4, (a4 - 4) / 0x1Au);
-  v10 = (int)(v9 - 4);
-  v15 = (unsigned __int8 *)(v9 - 2);
-  File_SeekIfPositionChangedMode1(a2, a3, 0);
-  v11 = Compat_StreamRead((int)a2, v15, 4);
-  if ( a2[5] )
+  reader[1] = &g_PathEntry_Vtable;
+  reader[3] = 0;
+  cache_ptr = FileSystem_ArchiveRecordCacheCtor(reader + 4, (int)stream, base_offset + 4, (data_size - 4) / 0x1Au);
+  reader_base = (int)(cache_ptr - 4);
+  header_buf = (unsigned __int8 *)(cache_ptr - 2);
+  File_SeekIfPositionChangedMode1(stream, base_offset, 0);
+  bytes_read = Compat_StreamRead((int)stream, header_buf, 4);
+  if ( stream[5] )
   {
-    Compat_QueryXorDecodeBuffer((int)a2, v15, v11);
-    result = v10;
-    a2[12] += v11;
+    Compat_QueryXorDecodeBuffer((int)stream, header_buf, bytes_read);
+    result = reader_base;
+    stream[12] += bytes_read;
   }
   else
   {
-    a2[12] += v11;
-    result = v10;
+    stream[12] += bytes_read;
+    result = reader_base;
   }
   return result;
 }
@@ -14462,59 +14462,59 @@ int  FileSystem_ArchiveEntryReaderCtor(_DWORD *a1, int *a2, int a3, int a4, cons
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478830) --------------------------------------------------------
-int  FileSystem_ArchiveIndexCreateEmpty(_DWORD *a1, int a2, int a3)
+int  FileSystem_ArchiveIndexCreateEmpty(_DWORD *index, int stream, int record_count)
 {
-  int *v3; // edi
-  int v4; // eax
+  int *cache_ptr; // edi
+  int end_offset; // eax
 
-  *a1 = 0;
-  a1[1] = &g_PathEntry_Vtable;
-  a1[2] = 0;
-  a1[3] = 0;
-  v3 = a1 + 4;
-  v4 = File_SeekStreamEndAndRecordPos(a2, (int)(a1 + 4));
-  FileSystem_ArchiveRecordCacheCtor(v3, a2, v4 + 4, a3);
-  FileSystem_ArchiveWritePaddingRecords((int)v3, a3, (int)v3);
-  return (int)v3;
+  *index = 0;
+  index[1] = &g_PathEntry_Vtable;
+  index[2] = 0;
+  index[3] = 0;
+  cache_ptr = index + 4;
+  end_offset = File_SeekStreamEndAndRecordPos(stream, (int)(index + 4));
+  FileSystem_ArchiveRecordCacheCtor(cache_ptr, stream, end_offset + 4, record_count);
+  FileSystem_ArchiveWritePaddingRecords((int)cache_ptr, record_count, (int)cache_ptr);
+  return (int)cache_ptr;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478880) --------------------------------------------------------
-int  FileSystem_ArchiveEntryReaderScalarDeletingDtor(int a1)
+int  FileSystem_ArchiveEntryReaderScalarDeletingDtor(int reader)
 {
-  FileSystem_ArchiveEntryReaderFlushHeader(a1);
-  return Compat_StringHolderScalarDeletingDtor(FileSystem_ArchiveRecordCacheDestruct((_DWORD *)(a1 + 16)) - 16, 0);
+  FileSystem_ArchiveEntryReaderFlushHeader(reader);
+  return Compat_StringHolderScalarDeletingDtor(FileSystem_ArchiveRecordCacheDestruct((_DWORD *)(reader + 16)) - 16, 0);
 }
 
 //----- (004788A0) --------------------------------------------------------
-int  FileSystem_ArchiveEntryReaderFlushHeader(int a1)
+int  FileSystem_ArchiveEntryReaderFlushHeader(int reader)
 {
   int result; // eax
-  int *v3; // esi
-  const void *v4; // edi
+  int *stream; // esi
+  const void *header_ptr; // edi
 
-  FileSystem_ArchiveRecordCacheFlushWindow((_DWORD *)(a1 + 16));
-  result = *(_DWORD *)(a1 + 12);
+  FileSystem_ArchiveRecordCacheFlushWindow((_DWORD *)(reader + 16));
+  result = *(_DWORD *)(reader + 12);
   if ( result )
   {
-    v3 = *(int **)(a1 + 36);
-    v4 = (const void *)(a1 + 8);
-    File_SeekIfPositionChangedMode2(v3, *(_DWORD *)(a1 + 40) - 4, (int)v4);
-    result = Res_StreamWriteWithXorCipher(v3, v4, 4, 4u);
-    *(_DWORD *)(a1 + 12) = 0;
+    stream = *(int **)(reader + 36);
+    header_ptr = (const void *)(reader + 8);
+    File_SeekIfPositionChangedMode2(stream, *(_DWORD *)(reader + 40) - 4, (int)header_ptr);
+    result = Res_StreamWriteWithXorCipher(stream, header_ptr, 4, 4u);
+    *(_DWORD *)(reader + 12) = 0;
   }
   return result;
 }
 
 //----- (004788F0) --------------------------------------------------------
-unsigned int  FileSystem_ArchiveNameHash(int a1, const char **a2)
+unsigned int  FileSystem_ArchiveNameHash(int archive, const char **name_holder)
 {
   const char *text;
   unsigned int hash_value;
   unsigned int text_len;
   unsigned int index;
 
-  text = Compat_StringArgGetText((const void *)a2);
+  text = Compat_StringArgGetText((const void *)name_holder);
   if ( !text || !*text )
     return 0;
   hash_value = (unsigned __int8)*text;
@@ -14525,22 +14525,22 @@ unsigned int  FileSystem_ArchiveNameHash(int a1, const char **a2)
     hash_value *= (unsigned __int8)text[index];
     ++index;
   }
-  return hash_value % *(_DWORD *)(a1 + 16);
+  return hash_value % *(_DWORD *)(archive + 16);
 }
 
 //----- (00478950) --------------------------------------------------------
-int  FileSystem_ArchiveHashTableFind(int a1, const char **a2)
+int  FileSystem_ArchiveHashTableFind(int archive, const char **name_holder)
 {
   const char *text;
   unsigned int slot_index; // ecx
   _DWORD *table; // edi
   int entry; // esi
 
-  text = Compat_StringArgGetText((const void *)a2);
+  text = Compat_StringArgGetText((const void *)name_holder);
   if ( !text || !*text )
     return 0;
-  slot_index = FileSystem_ArchiveNameHash(a1, a2);
-  table = (_DWORD *)(a1 + 16);
+  slot_index = FileSystem_ArchiveNameHash(archive, name_holder);
+  table = (_DWORD *)(archive + 16);
   while ( 1 )
   {
     entry = FileSystem_ArchiveRecordCacheGetRecord(table, slot_index);
@@ -14557,13 +14557,13 @@ int  FileSystem_ArchiveHashTableFind(int a1, const char **a2)
 // 48A1ED: using guessed type int __fastcall strncmp_(_DWORD, _DWORD);
 
 //----- (004789C0) --------------------------------------------------------
-unsigned int  FileSystem_ArchiveHashTableFindFreeSlot(int a1, const char **a2)
+unsigned int  FileSystem_ArchiveHashTableFindFreeSlot(int archive, const char **name_holder)
 {
   unsigned int slot_index; // ecx
   _DWORD *table; // ebx
 
-  slot_index = FileSystem_ArchiveNameHash(a1, a2);
-  table = (_DWORD *)(a1 + 16);
+  slot_index = FileSystem_ArchiveNameHash(archive, name_holder);
+  table = (_DWORD *)(archive + 16);
   while ( *(_DWORD *)(FileSystem_ArchiveRecordCacheGetRecord(table, slot_index) + 14) )
   {
     if ( slot_index )
@@ -14575,18 +14575,18 @@ unsigned int  FileSystem_ArchiveHashTableFindFreeSlot(int a1, const char **a2)
 }
 
 //----- (004789F0) --------------------------------------------------------
-_DWORD * FileSystem_ArchiveOpenEntryReader(int a1, const void *a2)
+_DWORD * FileSystem_ArchiveOpenEntryReader(int archive, const void *path_arg)
 {
   const char *path_text;
   const char *leaf_text;
   int entry; // ecx
   _DWORD *result; // eax
-  _DWORD v8[2]; // [esp+0h] [ebp-8h] BYREF
+  _DWORD leaf_holder[2]; // [esp+0h] [ebp-8h] BYREF
   _DWORD savedregs[4]; // [esp+8h] [ebp+0h] BYREF
 
-  v8[0] = 0;
-  v8[1] = (int)&g_PathEntry_Vtable;
-  path_text = Compat_StringArgGetText(a2);
+  leaf_holder[0] = 0;
+  leaf_holder[1] = (int)&g_PathEntry_Vtable;
+  path_text = Compat_StringArgGetText(path_arg);
   if ( path_text && *path_text )
   {
     leaf_text = Compat_StrrchrChar(path_text, '\\');
@@ -14594,68 +14594,68 @@ _DWORD * FileSystem_ArchiveOpenEntryReader(int a1, const void *a2)
       ++leaf_text;
     else
       leaf_text = path_text;
-    Compat_StringHolderCopyText(v8, leaf_text);
+    Compat_StringHolderCopyText(leaf_holder, leaf_text);
   }
-  entry = FileSystem_ArchiveHashTableFind(a1, (const char **)v8);
-  Compat_StringHolderDestroyStack(v8, 1);
+  entry = FileSystem_ArchiveHashTableFind(archive, (const char **)leaf_holder);
+  Compat_StringHolderDestroyStack(leaf_holder, 1);
   if ( !entry || (*(_DWORD *)(entry + 14) & 2) == 0 )
     return 0;
-  result = (_DWORD *)Mem_Alloc(44, entry, a2, (DWORD)savedregs);
+  result = (_DWORD *)Mem_Alloc(44, entry, path_arg, (DWORD)savedregs);
   if ( result )
     return (_DWORD *)FileSystem_ArchiveEntryReaderCtor(
                        result,
-                       (int *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 36),
+                       (int *)(uintptr_t)(unsigned int)*(_DWORD *)(archive + 36),
                        *(_DWORD *)(entry + 18),
                        *(_DWORD *)(entry + 22),
-                       a2);
+                       path_arg);
   return result;
 }
 
 //----- (00478A60) --------------------------------------------------------
-signed int  FileSystem_ArchiveHashTableInsert(_DWORD *a1, const char **a2, int a3, int a4)
+signed int  FileSystem_ArchiveHashTableInsert(_DWORD *archive, const char **name_holder, int data_size, int entry_flags)
 {
   unsigned int slot_index; // ebp
   int entry; // eax
-  int v9; // edx
+  int entry_count; // edx
 
-  if ( a1[2] == a1[4] - 1 || !*a2 || !**a2 )
+  if ( archive[2] == archive[4] - 1 || !*name_holder || !**name_holder )
     return -1;
-  slot_index = FileSystem_ArchiveHashTableFindFreeSlot((int)a1, a2);
-  entry = FileSystem_ArchiveRecordCacheGetRecord(a1 + 4, slot_index);
+  slot_index = FileSystem_ArchiveHashTableFindFreeSlot((int)archive, name_holder);
+  entry = FileSystem_ArchiveRecordCacheGetRecord(archive + 4, slot_index);
   *(_BYTE *)(entry + 13) = 0;
-  Compat_CopyPrefixN((char *)(uintptr_t)entry, *a2, 13);
-  *(_DWORD *)(entry + 14) = a4;
-  *(_DWORD *)(entry + 18) = File_SeekStreamEndAndRecordPos(a1[9], (int)a2);
-  *(_DWORD *)(entry + 22) = a3;
-  a1[7] = 1;
-  v9 = a1[2];
-  a1[3] = 1;
-  a1[2] = v9 + 1;
+  Compat_CopyPrefixN((char *)(uintptr_t)entry, *name_holder, 13);
+  *(_DWORD *)(entry + 14) = entry_flags;
+  *(_DWORD *)(entry + 18) = File_SeekStreamEndAndRecordPos(archive[9], (int)name_holder);
+  *(_DWORD *)(entry + 22) = data_size;
+  archive[7] = 1;
+  entry_count = archive[2];
+  archive[3] = 1;
+  archive[2] = entry_count + 1;
   return slot_index;
 }
 
 //----- (00478B10) --------------------------------------------------------
-int  FileSystem_ArchiveWritePaddingRecords(int a1, int a2, int a3)
+int  FileSystem_ArchiveWritePaddingRecords(int archive, int record_count, int a3)
 {
   int result; // eax
   int v6; // ecx
   const void *v7; // edx
   int v8; // ecx
-  _BYTE v9[28]; // [esp-1Ch] [ebp-30h] BYREF
-  _DWORD v10[5]; // [esp+0h] [ebp-14h] BYREF
+  _BYTE blank_record[28]; // [esp-1Ch] [ebp-30h] BYREF
+  _DWORD header_words[5]; // [esp+0h] [ebp-14h] BYREF
 
-  v10[3] = a3;
-  v10[0] = 0;
-  Res_StreamWriteWithXorCipher(*(int **)(a1 + 36), v10, a3, 4u);
-  result = FileSystem_ArchiveGenerateBlankRecord((int)v9);
-  if ( a2 > 0 )
+  header_words[3] = a3;
+  header_words[0] = 0;
+  Res_StreamWriteWithXorCipher(*(int **)(archive + 36), header_words, a3, 4u);
+  result = FileSystem_ArchiveGenerateBlankRecord((int)blank_record);
+  if ( record_count > 0 )
   {
     do
     {
-      FileSystem_ArchiveFillBlankRecordBytes((int)v9);
-      result = Res_StreamWriteWithXorCipher(*(int **)(a1 + 36), v7, v6 + 1, 0x1Au);
+      FileSystem_ArchiveFillBlankRecordBytes((int)blank_record);
+      result = Res_StreamWriteWithXorCipher(*(int **)(archive + 36), v7, v6 + 1, 0x1Au);
     }
-    while ( v8 < a2 );
+    while ( v8 < record_count );
   }
   return result;
 }
@@ -14664,15 +14664,15 @@ int  FileSystem_ArchiveWritePaddingRecords(int a1, int a2, int a3)
 // 478B58: variable 'v8' is possibly undefined
 
 //----- (00478B70) --------------------------------------------------------
-signed int  FileSystem_ArchiveInsertFileEntry(_DWORD *a1, const char **a2, int a3)
+signed int  FileSystem_ArchiveInsertFileEntry(_DWORD *archive, const char **name_holder, int record_count)
 {
   signed int result; // eax
   int v5; // ecx
 
-  result = FileSystem_ArchiveHashTableInsert(a1, a2, 26 * a3, 2);
+  result = FileSystem_ArchiveHashTableInsert(archive, name_holder, 26 * record_count, 2);
   if ( result != -1 )
   {
-    FileSystem_ArchiveWritePaddingRecords((int)a1, a3, v5);
+    FileSystem_ArchiveWritePaddingRecords((int)archive, record_count, v5);
     return 0;
   }
   return result;
@@ -14680,64 +14680,64 @@ signed int  FileSystem_ArchiveInsertFileEntry(_DWORD *a1, const char **a2, int a
 // 478B91: variable 'v5' is possibly undefined
 
 //----- (00478BA0) --------------------------------------------------------
-int  FileSystem_ArchiveInsertDirectoryEntry(_DWORD *a1, const char **a2)
+int  FileSystem_ArchiveInsertDirectoryEntry(_DWORD *archive, const char **name_holder)
 {
-  signed int v3; // eax
+  signed int slot_index; // eax
 
-  v3 = FileSystem_ArchiveHashTableInsert(a1, a2, 0, 1);
-  if ( v3 == -1 )
+  slot_index = FileSystem_ArchiveHashTableInsert(archive, name_holder, 0, 1);
+  if ( slot_index == -1 )
     return 0;
   else
-    return FileSystem_ArchiveRecordCacheGetRecord(a1 + 4, v3);
+    return FileSystem_ArchiveRecordCacheGetRecord(archive + 4, slot_index);
 }
 
 //----- (00478BD0) --------------------------------------------------------
-_DWORD * FileSystem_ArchiveEntryStreamCtor(_DWORD *result, int a2, int a3)
+_DWORD * FileSystem_ArchiveEntryStreamCtor(_DWORD *result, int entry_record, int stream)
 {
-  int v3; // ecx
-  int v4; // edx
+  int data_offset; // ecx
+  int data_size; // edx
 
-  v3 = *(_DWORD *)(a2 + 18);
+  data_offset = *(_DWORD *)(entry_record + 18);
   result[2] = 0;
-  result[1] = v3;
-  v4 = *(_DWORD *)(a2 + 22);
+  result[1] = data_offset;
+  data_size = *(_DWORD *)(entry_record + 22);
   *result = g_FileSystemArchiveEntryStream_VTable;
-  result[3] = v4;
-  result[4] = a3;
+  result[3] = data_size;
+  result[4] = stream;
   return result;
 }
 // 510BD4: using guessed type int (*off_510BD4[10])();
 
 //----- (00478BF0) --------------------------------------------------------
-signed int  FileSystem_ArchiveStreamHasRemainingData(int a1)
+signed int  FileSystem_ArchiveStreamHasRemainingData(int stream)
 {
-  if ( *(_DWORD *)(a1 + 8) == *(_DWORD *)(a1 + 12) )
+  if ( *(_DWORD *)(stream + 8) == *(_DWORD *)(stream + 12) )
     return -1;
   else
     return 1;
 }
 
 //----- (00478C20) --------------------------------------------------------
-int  FileSystem_ArchiveStreamReadBytes(_DWORD *a1, unsigned __int8 *a2, int a3)
+int  FileSystem_ArchiveStreamReadBytes(_DWORD *stream, unsigned __int8 *buffer, int a3)
 {
-  int *v4; // edi
-  int v5; // ebx
+  int *source_stream; // edi
+  int bytes_read; // ebx
   int remaining_bytes;
   int result; // eax
 
-  if ( a1[3] == a1[2] )
+  if ( stream[3] == stream[2] )
     return 0;
-  remaining_bytes = a1[3] - a1[2];
+  remaining_bytes = stream[3] - stream[2];
   if ( a3 > remaining_bytes )
     a3 = remaining_bytes;
-  v4 = (int *)a1[4];
-  File_SeekIfPositionChangedMode1(v4, a1[2] + a1[1], (int)v4);
-  v5 = Compat_StreamRead(v4[2], a2, a3);
-  if ( v4[5] )
-    Compat_QueryXorDecodeBuffer((int)v4, a2, v5);
-  v4[12] += v5;
-  result = v5;
-  a1[2] += v5;
+  source_stream = (int *)stream[4];
+  File_SeekIfPositionChangedMode1(source_stream, stream[2] + stream[1], (int)source_stream);
+  bytes_read = Compat_StreamRead(source_stream[2], buffer, a3);
+  if ( source_stream[5] )
+    Compat_QueryXorDecodeBuffer((int)source_stream, buffer, bytes_read);
+  source_stream[12] += bytes_read;
+  result = bytes_read;
+  stream[2] += bytes_read;
   return result;
 }
 
@@ -14748,103 +14748,103 @@ int FileSystem_ArchiveStreamNoOpFlush()
 }
 
 //----- (00478CB0) --------------------------------------------------------
-int  FileSystem_ArchiveStreamReadByte(int a1, int a2)
+int  FileSystem_ArchiveStreamReadByte(int stream, int a2)
 {
   int result; // eax
-  int *v3; // ecx
-  int v6; // edi
+  int *source_stream; // ecx
+  int xor_key; // edi
   unsigned __int8 next_byte;
 
-  if ( *(_DWORD *)(a1 + 12) == *(_DWORD *)(a1 + 8) )
+  if ( *(_DWORD *)(stream + 12) == *(_DWORD *)(stream + 8) )
     return -1;
-  v3 = *(int **)(a1 + 16);
-  File_SeekIfPositionChangedMode1(v3, *(_DWORD *)(a1 + 8) + *(_DWORD *)(a1 + 4), a2);
-  ++*(_DWORD *)(a1 + 8);
-  if ( Compat_StreamRead(v3[2], &next_byte, 1) == 1 )
+  source_stream = *(int **)(stream + 16);
+  File_SeekIfPositionChangedMode1(source_stream, *(_DWORD *)(stream + 8) + *(_DWORD *)(stream + 4), a2);
+  ++*(_DWORD *)(stream + 8);
+  if ( Compat_StreamRead(source_stream[2], &next_byte, 1) == 1 )
     result = next_byte;
   else
     result = -1;
-  v6 = v3[5];
-  if ( v6 )
-    result ^= v6 + v3[12];
-  ++v3[12];
+  xor_key = source_stream[5];
+  if ( xor_key )
+    result ^= xor_key + source_stream[12];
+  ++source_stream[12];
   return result;
 }
 
 //----- (00478D10) --------------------------------------------------------
-signed int  Res_StreamPutBackDecodedByte(int a1, int a2)
+signed int  Res_StreamPutBackDecodedByte(int entry_stream, int a2)
 {
-  int v3; // eax
-  signed int v4; // eax
+  int source_stream; // eax
+  signed int encoded_byte; // eax
   signed int result; // eax
   int v6; // ecx
 
-  v3 = *(_DWORD *)(a1 + 16);
+  source_stream = *(_DWORD *)(entry_stream + 16);
   if ( a2 != -1 )
-    --*(_DWORD *)(v3 + 48);
-  if ( *(_DWORD *)(v3 + 20) )
-    v4 = a2 ^ (*(_DWORD *)(v3 + 48) + *(_DWORD *)(v3 + 20));
+    --*(_DWORD *)(source_stream + 48);
+  if ( *(_DWORD *)(source_stream + 20) )
+    encoded_byte = a2 ^ (*(_DWORD *)(source_stream + 48) + *(_DWORD *)(source_stream + 20));
   else
-    v4 = a2;
-  result = CRT_FlushBufferAndPutChar(v4, a2);
+    encoded_byte = a2;
+  result = CRT_FlushBufferAndPutChar(encoded_byte, a2);
   if ( v6 != -1 )
-    --*(_DWORD *)(a1 + 8);
+    --*(_DWORD *)(entry_stream + 8);
   return result;
 }
 // 478D3E: variable 'v6' is possibly undefined
 
 //----- (00478D70) --------------------------------------------------------
-int  Res_StreamWriteBytes(int a1, const void *a2, unsigned int a3)
+int  Res_StreamWriteBytes(int stream, const void *buffer, unsigned int a3)
 {
   int result; // eax
   int v4; // ecx
-  int v5; // ebx
+  int new_length; // ebx
 
-  result = Res_StreamWriteWithXorCipher(*(int **)(a1 + 16), a2, a1, a3);
-  v5 = result + *(_DWORD *)(v4 + 12);
+  result = Res_StreamWriteWithXorCipher(*(int **)(stream + 16), buffer, stream, a3);
+  new_length = result + *(_DWORD *)(v4 + 12);
   *(_DWORD *)(v4 + 8) += result;
-  *(_DWORD *)(v4 + 12) = v5;
+  *(_DWORD *)(v4 + 12) = new_length;
   return result;
 }
 // 478D7E: variable 'v4' is possibly undefined
 
 //----- (00478D90) --------------------------------------------------------
-int  Res_StreamSeekClamped(int result, int a2)
+int  Res_StreamSeekClamped(int result, int position)
 {
-  int v2; // ecx
+  int stream_length; // ecx
 
-  if ( a2 < 0 )
+  if ( position < 0 )
   {
     *(_DWORD *)(result + 8) = 0;
   }
   else
   {
-    v2 = *(_DWORD *)(result + 12);
-    if ( a2 <= v2 )
-      *(_DWORD *)(result + 8) = a2;
+    stream_length = *(_DWORD *)(result + 12);
+    if ( position <= stream_length )
+      *(_DWORD *)(result + 8) = position;
     else
-      *(_DWORD *)(result + 8) = v2;
+      *(_DWORD *)(result + 8) = stream_length;
   }
   return result;
 }
 
 //----- (00478DB0) --------------------------------------------------------
-int  File_DirNodeScalarDtor(_DWORD *a1, char a2, DWORD a3)
+int  File_DirNodeScalarDtor(_DWORD *node, char flags, DWORD a3)
 {
   int v4; // ecx
   int v6; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_FileDirNode_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(node, &g_FileDirNode_DtorArrayDescriptor);
     j_j__nfree_();
     return v6;
   }
   else
   {
-    *a1 = g_FileDirNode_VTable;
-    File_ApplyResolvedEntryFlag(a1[4], a1[3], a3);
-    if ( (a2 & 2) != 0 )
+    *node = g_FileDirNode_VTable;
+    File_ApplyResolvedEntryFlag(node[4], node[3], a3);
+    if ( (flags & 2) != 0 )
       j__nfree_();
     return v4;
   }
@@ -14865,7 +14865,7 @@ _DWORD * Res_BuildTaggedRecordHeader(_DWORD *result, int a2, int a3, int a4)
 }
 
 //----- (00478E30) --------------------------------------------------------
-int  File_SourceEntryConstructor(_DWORD *a1, int a2, int a3, DWORD a4)
+int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD a4)
 {
   int v4; // ecx
   int v5; // eax
@@ -14874,23 +14874,23 @@ int  File_SourceEntryConstructor(_DWORD *a1, int a2, int a3, DWORD a4)
   _DWORD *v9; // eax
   _DWORD *v10; // ecx
   int v11; // ecx
-  int v12; // [esp+0h] [ebp-14h] BYREF
-  int (**v13)(); // [esp+4h] [ebp-10h]
+  int path_holder; // [esp+0h] [ebp-14h] BYREF
+  int (**vtable_ptr)(); // [esp+4h] [ebp-10h]
   int v14; // [esp+10h] [ebp-4h]
 
   v14 = a3;
-  a1[2] = 0;
-  a1[3] = 0;
-  a1[4] = -1;
-  *a1 = g_FileCacheNode_VTable;
-  a1[1] = a2;
-  v12 = 0;
-  v13 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v12);
-  v13 = &g_PathEntry_Vtable;
-  v5 = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &v12, (const char *)v4, a4);
+  node[2] = 0;
+  node[3] = 0;
+  node[4] = -1;
+  *node = g_FileCacheNode_VTable;
+  node[1] = a2;
+  path_holder = 0;
+  vtable_ptr = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderDestructor(&path_holder);
+  vtable_ptr = &g_PathEntry_Vtable;
+  v5 = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &path_holder, (const char *)v4, a4);
   *(_DWORD *)(v6 + 8) = v5;
-  Compat_StringHolderScalarDeletingDtor((int)&v12, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&path_holder, 1);
   if ( !*(_DWORD *)(v7 + 8) )
     return v7;
   v9 = (_DWORD *)Mem_Alloc(44, v7, 0, a4);
@@ -14910,31 +14910,31 @@ int  File_SourceEntryConstructor(_DWORD *a1, int a2, int a3, DWORD a4)
 // 510B14: using guessed type int (*off_510B14[6])();
 
 //----- (00478ED0) --------------------------------------------------------
-_DWORD * File_CacheNodeScalarDtor(_DWORD *a1, char a2)
+_DWORD * File_CacheNodeScalarDtor(_DWORD *node, char flags)
 {
-  int v4; // eax
+  int entry_reader; // eax
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
 
-  if ( (a2 & 4) != 0 )
+  if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &g_FileCacheNode_DtorArrayDescriptor);
+    _wcpp_4_dtor_array_store__(node, &g_FileCacheNode_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v6;
   }
-  *a1 = g_FileCacheNode_VTable;
-  v4 = a1[2];
-  if ( v4 )
+  *node = g_FileCacheNode_VTable;
+  entry_reader = node[2];
+  if ( entry_reader )
   {
-    FileSystem_ArchiveEntryReaderScalarDeletingDtor(v4);
+    FileSystem_ArchiveEntryReaderScalarDeletingDtor(entry_reader);
     j__nfree_();
-    if ( (a2 & 2) == 0 )
+    if ( (flags & 2) == 0 )
       return (_DWORD *)v7;
   }
-  else if ( (a2 & 2) == 0 )
+  else if ( (flags & 2) == 0 )
   {
-    return a1;
+    return node;
   }
   j__nfree_();
   return (_DWORD *)v8;
@@ -14948,35 +14948,35 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *a1, char a2)
 //----- (00478F30) --------------------------------------------------------
 int  File_CacheNodeCheckChildHeight(int result)
 {
-  int v1; // edx
+  int child_node; // edx
 
-  v1 = *(_DWORD *)(result + 8);
-  if ( !v1 || *(_DWORD *)(v1 + 16) <= *(_DWORD *)(result + 16) )
+  child_node = *(_DWORD *)(result + 8);
+  if ( !child_node || *(_DWORD *)(child_node + 16) <= *(_DWORD *)(result + 16) )
     return 0;
   return result;
 }
 
 //----- (00478F50) --------------------------------------------------------
-_DWORD * File_CacheNodeRebalance(_DWORD *a1)
+_DWORD * File_CacheNodeRebalance(_DWORD *cache_node)
 {
   _DWORD *v1; // ecx
-  int v2; // eax
-  int v3; // edx
+  int entry_reader; // eax
+  int total_records; // edx
   _DWORD *result; // eax
-  int v5; // eax
+  int record; // eax
 
-  v1 = a1;
-  ++a1[4];
+  v1 = cache_node;
+  ++cache_node[4];
   while ( 1 )
   {
-    v2 = v1[2];
-    v3 = *(_DWORD *)(v2 + 16);
-    result = (_DWORD *)(v2 + 16);
-    if ( v3 <= v1[4] )
+    entry_reader = v1[2];
+    total_records = *(_DWORD *)(entry_reader + 16);
+    result = (_DWORD *)(entry_reader + 16);
+    if ( total_records <= v1[4] )
       break;
-    v5 = FileSystem_ArchiveRecordCacheGetRecord(result, v1[4]);
-    v1[3] = v5;
-    result = *(_DWORD **)(v5 + 14);
+    record = FileSystem_ArchiveRecordCacheGetRecord(result, v1[4]);
+    v1[3] = record;
+    result = *(_DWORD **)(record + 14);
     if ( result )
       break;
     ++v1[4];
@@ -14986,15 +14986,15 @@ _DWORD * File_CacheNodeRebalance(_DWORD *a1)
 // 478F58: variable 'v1' is possibly undefined
 
 //----- (00478F90) --------------------------------------------------------
-int  File_CacheNodeGetTag(int a1)
+int  File_CacheNodeGetTag(int node)
 {
-  return *(_DWORD *)(a1 + 12);
+  return *(_DWORD *)(node + 12);
 }
 
 //----- (00478FA0) --------------------------------------------------------
-signed int  File_CacheNodeGetEntrySize(int a1)
+signed int  File_CacheNodeGetEntrySize(int node)
 {
-  if ( (*(_DWORD *)(*(_DWORD *)(a1 + 12) + 14) & 2) != 0 )
+  if ( (*(_DWORD *)(*(_DWORD *)(node + 12) + 14) & 2) != 0 )
     return 16;
   else
     return FileSystem_ArchiveStreamNoOpFlush();
