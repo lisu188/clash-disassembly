@@ -4481,7 +4481,7 @@ int __thiscall CRT_ShutdownThreadAndFileHandleHooks(void *this)
   g_CRT_LockSlotResetHook(v7, v6);
   g_CRT_LockSlotResetHook(v9, v8);
   g_CRT_LockSlotResetHook(v11, v10);
-  return loc_48672B();
+  return CRT_FreeTlsIndex();
 }
 // 48687B: variable 'v1' is possibly undefined
 // 486886: variable 'v2' is possibly undefined

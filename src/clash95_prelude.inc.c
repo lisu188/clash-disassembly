@@ -2677,7 +2677,7 @@ BOOL CRT_AllocateTlsIndex();
 int  CRT_CreateAndAttachThreadData(int a1, int a2);
 char * CRT_DetachThreadDataAndMaybeCloseHandle(char *result);
 char *CRT_DestroyTlsIndexAndThreadData();
-_DWORD loc_48672B(); // weak
+_DWORD CRT_FreeTlsIndex(); // weak
 void CRT_InitializeThreadAndFileHandleHooks();
 int __thiscall CRT_ShutdownThreadAndFileHandleHooks(void *this);
 int  Surface_DDCopyBitmapToNewSurface(int a1, const CHAR *a2, _DWORD *a3, int a4);
@@ -4800,123 +4800,123 @@ UINT __stdcall lread(HFILE hFile, LPVOID lpBuffer, UINT uBytes);
 //-------------------------------------------------------------------------
 // Data declarations
 
-_UNKNOWN loc_452753; // weak
-_UNKNOWN loc_45279F; // weak
+_UNKNOWN Rules_HostTemple; // weak
+_UNKNOWN Rules_HostDigTreasure; // weak
 int Rules_HostCollectPortSupply(void);
 int Rules_HostPortHasSupplyReady(void);
 int Rules_HostArmyHasOnlyUnitType(int a1, double a2);
-_UNKNOWN loc_452833; // weak
-_UNKNOWN loc_45286F; // weak
-_UNKNOWN loc_4528AB; // weak
-_UNKNOWN loc_452907; // weak
-_UNKNOWN loc_452963; // weak
-_UNKNOWN loc_4529BF; // weak
-_UNKNOWN loc_452A1B; // weak
-_UNKNOWN loc_452A77; // weak
-_UNKNOWN loc_452AD3; // weak
-_UNKNOWN loc_452B2F; // weak
-_UNKNOWN loc_452B8B; // weak
-_UNKNOWN loc_452BE7; // weak
-_UNKNOWN loc_452C43; // weak
-_UNKNOWN loc_452C9F; // weak
-_UNKNOWN loc_452CFB; // weak
-_UNKNOWN loc_452D57; // weak
-_UNKNOWN loc_452DB3; // weak
-_UNKNOWN loc_452DFF; // weak
-_UNKNOWN loc_452E4B; // weak
-_UNKNOWN loc_452EA7; // weak
-_UNKNOWN loc_452EE3; // weak
-_UNKNOWN loc_452F1F; // weak
-_UNKNOWN loc_452F6B; // weak
-_UNKNOWN loc_452FA7; // weak
-_UNKNOWN loc_452FE3; // weak
-_UNKNOWN loc_45303F; // weak
-_UNKNOWN loc_456706; // weak
-_UNKNOWN loc_456736; // weak
-_UNKNOWN loc_456766; // weak
-_UNKNOWN loc_456796; // weak
-_UNKNOWN loc_4567C6; // weak
-_UNKNOWN loc_456806; // weak
-_UNKNOWN loc_456842; // weak
-_UNKNOWN loc_45687E; // weak
-_UNKNOWN loc_4568BA; // weak
-_UNKNOWN loc_4568F6; // weak
-_UNKNOWN loc_45692C; // weak
-_UNKNOWN loc_45696E; // weak
-_UNKNOWN loc_4569A4; // weak
-_UNKNOWN loc_4569DA; // weak
-_UNKNOWN loc_456A10; // weak
-_UNKNOWN loc_456A46; // weak
-_UNKNOWN loc_456A7C; // weak
-_UNKNOWN loc_456AA8; // weak
-_UNKNOWN loc_456B0D; // weak
-_UNKNOWN loc_456B4F; // weak
-_UNKNOWN loc_456B85; // weak
-_UNKNOWN loc_456BBB; // weak
-_UNKNOWN loc_456BF1; // weak
-_UNKNOWN loc_456C27; // weak
-_UNKNOWN loc_456C5D; // weak
-_UNKNOWN loc_456C93; // weak
-_UNKNOWN loc_456CC9; // weak
-_UNKNOWN loc_456CFF; // weak
-_UNKNOWN loc_456D35; // weak
-_UNKNOWN loc_456D8F; // weak
-_UNKNOWN loc_456DD1; // weak
-_UNKNOWN loc_456E13; // weak
-_UNKNOWN loc_456E49; // weak
-_UNKNOWN loc_456E7F; // weak
-_UNKNOWN loc_456EB5; // weak
-_UNKNOWN loc_456EF7; // weak
-_UNKNOWN loc_456F51; // weak
-_UNKNOWN loc_456F87; // weak
-_UNKNOWN loc_456FBD; // weak
-_UNKNOWN loc_456FFF; // weak
-_UNKNOWN loc_457035; // weak
-_UNKNOWN loc_457077; // weak
-_UNKNOWN loc_4570AD; // weak
-_UNKNOWN loc_457351; // weak
-_UNKNOWN loc_457393; // weak
-_UNKNOWN loc_4573D5; // weak
-_UNKNOWN loc_457417; // weak
-_UNKNOWN loc_457459; // weak
-_UNKNOWN loc_45749B; // weak
-_UNKNOWN loc_4574DD; // weak
-_UNKNOWN loc_45751F; // weak
-_UNKNOWN loc_457555; // weak
-_UNKNOWN loc_45758B; // weak
-_UNKNOWN loc_4575CD; // weak
-_UNKNOWN loc_457603; // weak
-_UNKNOWN loc_457639; // weak
-_UNKNOWN loc_45766F; // weak
-_UNKNOWN loc_4576A5; // weak
-_UNKNOWN loc_4576DB; // weak
-_UNKNOWN loc_457711; // weak
-_UNKNOWN loc_457753; // weak
-_UNKNOWN loc_457789; // weak
-_UNKNOWN loc_46BC9D; // weak
-_UNKNOWN loc_46BD07; // weak
-_UNKNOWN loc_46BDE5; // weak
-_UNKNOWN loc_46BEAB; // weak
-_UNKNOWN loc_46BF81; // weak
-_UNKNOWN loc_46C053; // weak
-_UNKNOWN loc_46C1C5; // weak
-_UNKNOWN loc_46C31F; // weak
-_UNKNOWN loc_46C495; // weak
-_UNKNOWN loc_46C6D7; // weak
-_UNKNOWN loc_46C9B9; // weak
-_UNKNOWN loc_46CE33; // weak
-void *g_Audio_MixMonoVoiceDispatchBase = &loc_46BC9D; // weak
-void *g_Audio_MixPannedVoiceDispatchBase = &loc_46BD07; // weak
-void *g_Audio_SelectMixFormat1MonoDispatchBase = &loc_46BDE5; // weak
-void *g_Audio_SelectMixFormat1StereoDispatchBase = &loc_46BEAB; // weak
-void *g_Audio_SelectMixFormat2MonoDispatchBase = &loc_46BF81; // weak
-void *g_Audio_SelectMixFormat2StereoDispatchBase = &loc_46C053; // weak
-void *g_Audio_SelectMixFormat3MonoDispatchBase = &loc_46C1C5; // weak
-void *g_Audio_SelectMixFormat3StereoDispatchBase = &loc_46C31F; // weak
-void *g_Audio_SelectMixFormat4MonoDispatchBase = &loc_46C495; // weak
-void *g_Audio_SelectMixFormat4StereoDispatchBase = &loc_46C6D7; // weak
-void *g_Audio_SelectMixFormat5MonoDispatchBase = &loc_46C9B9; // weak
-void *g_Audio_SelectMixFormat5StereoDispatchBase = &loc_46CE33; // weak
+// (labels 0x452833 / 0x45286F are the decompiled handlers
+// Rules_HostArmyHasBuilder / Rules_HostArmyHasNormalCombatUnits above)
+_UNKNOWN Rules_HostRoadExists; // weak
+_UNKNOWN Rules_HostRoadExistsNearby; // weak
+_UNKNOWN Rules_HostRoadExistsNearCastle; // weak
+_UNKNOWN Rules_HostRoadExistsToPort; // weak
+_UNKNOWN Rules_HostRoadExistsToCastle; // weak
+_UNKNOWN Rules_HostRoadExistsToTemple; // weak
+_UNKNOWN Rules_HostTroopInArmyRange; // weak
+_UNKNOWN Rules_HostBuildingInArmyRange; // weak
+_UNKNOWN Rules_HostDistanceToObject; // weak
+_UNKNOWN Rules_HostTempleInArmyRange; // weak
+_UNKNOWN Rules_HostTempleOk; // weak
+_UNKNOWN Rules_HostMarch; // weak
+_UNKNOWN Rules_HostMarchToTemple; // weak
+_UNKNOWN Rules_HostMarchNear; // weak
+_UNKNOWN Rules_HostAttackTroop; // weak
+_UNKNOWN Rules_HostCaptureTroop; // weak
+_UNKNOWN Rules_HostHideTroop; // weak
+_UNKNOWN Rules_HostArmyExists; // weak
+_UNKNOWN Rules_HostUnitCountInTroop; // weak
+_UNKNOWN Rules_HostAttackBuilding; // weak
+_UNKNOWN Rules_HostFordExists; // weak
+_UNKNOWN Rules_HostBuildRoad; // weak
+_UNKNOWN Rules_HostBuildTrap; // weak
+_UNKNOWN Rules_HostUnitCanMove; // weak
+_UNKNOWN Rules_HostHealing; // weak
+_UNKNOWN Rules_HostTraining; // weak
+_UNKNOWN Rules_HostBurnBuildings; // weak
+_UNKNOWN Rules_HostUpgradeWall; // weak
+_UNKNOWN Rules_HostChangeTax; // weak
+_UNKNOWN Rules_HostRemoveLicence; // weak
+_UNKNOWN Rules_HostStartHealing; // weak
+_UNKNOWN Rules_HostStartTraining; // weak
+_UNKNOWN Rules_HostStartProduction; // weak
+_UNKNOWN Rules_HostTax; // weak
+_UNKNOWN Rules_HostIsLicence; // weak
+_UNKNOWN Rules_HostBuySchool; // weak
+_UNKNOWN Rules_HostBuyForge; // weak
+_UNKNOWN Rules_HostMoney; // weak
+_UNKNOWN Rules_HostWallStrength; // weak
+_UNKNOWN Rules_HostCastleStrength; // weak
+_UNKNOWN Rules_HostTurnNumber; // weak
+_UNKNOWN Rules_HostBuildCastle; // weak
+_UNKNOWN Rules_HostBuyLicence; // weak
+_UNKNOWN Rules_HostBuyBarracks; // weak
+_UNKNOWN Rules_HostBuyHospital; // weak
+_UNKNOWN Rules_HostTechLevel; // weak
+_UNKNOWN Rules_HostBuildingType; // weak
+_UNKNOWN Rules_HostPlayerStrength; // weak
+_UNKNOWN Rules_HostBuyWorkshop; // weak
+_UNKNOWN Rules_HostHappiness; // weak
+_UNKNOWN Rules_HostIsProduction; // weak
+_UNKNOWN Rules_HostPeasantCount; // weak
+_UNKNOWN Rules_HostIsMinimal; // weak
+_UNKNOWN Rules_HostCanBuyLicence; // weak
+_UNKNOWN Rules_HostLicenceIndex; // weak
+_UNKNOWN Rules_HostLicenceInd; // weak
+_UNKNOWN Rules_HostCanUpgradeWall; // weak
+_UNKNOWN Rules_HostTroopCount; // weak
+_UNKNOWN Rules_HostIsProductionAny; // weak
+_UNKNOWN Rules_HostLeadOutPeasants; // weak
+_UNKNOWN Rules_HostUnitsToSchool; // weak
+_UNKNOWN Rules_HostMaxTroopCount; // weak
+_UNKNOWN Rules_HostUnitInCastleExists; // weak
+_UNKNOWN Rules_HostUnitsToHospital; // weak
+_UNKNOWN Rules_HostLeadOutTroop; // weak
+_UNKNOWN Rules_HostLeadOutTroops; // weak
+_UNKNOWN Rules_HostCastleName; // weak
+_UNKNOWN Rules_HostEnterCastle; // weak
+_UNKNOWN Rules_HostJoinTroop; // weak
+_UNKNOWN Rules_HostRegroupTroops; // weak
+_UNKNOWN Rules_HostRegroupCastle; // weak
+_UNKNOWN Rules_HostArmyHeadcount; // weak
+_UNKNOWN Rules_HostArmyHasUnitsOfType; // weak
+// (label 0x4574DD is the decompiled handler Rules_HostArmyHasOnlyUnitType above)
+_UNKNOWN Rules_HostCastleFreeSlotCount; // weak
+_UNKNOWN Rules_HostEnemyPowerAtWalls; // weak
+_UNKNOWN Rules_HostFindRoadNearCastle; // weak
+_UNKNOWN Rules_HostHasUnitsToHeal; // weak
+_UNKNOWN Rules_HostFindCastleForHealing; // weak
+_UNKNOWN Rules_HostGoToHealing; // weak
+_UNKNOWN Rules_HostPlagueInCastleExists; // weak
+_UNKNOWN Rules_HostPlagueInTroopExists; // weak
+_UNKNOWN Rules_HostDetachWeakUnits; // weak
+_UNKNOWN Rules_HostDetachUnitsOfType; // weak
+_UNKNOWN Rules_HostMarchAlongRoad; // weak
+_UNKNOWN Rules_HostFindBest; // weak
+_UNKNOWN Audio_MixMonoVoiceDispatch; // weak
+_UNKNOWN Audio_MixPannedVoiceDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat1MonoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat1StereoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat2MonoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat2StereoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat3MonoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat3StereoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat4MonoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat4StereoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat5MonoDispatch; // weak
+_UNKNOWN Audio_SelectMixFormat5StereoDispatch; // weak
+void *g_Audio_MixMonoVoiceDispatchBase = &Audio_MixMonoVoiceDispatch; // weak
+void *g_Audio_MixPannedVoiceDispatchBase = &Audio_MixPannedVoiceDispatch; // weak
+void *g_Audio_SelectMixFormat1MonoDispatchBase = &Audio_SelectMixFormat1MonoDispatch; // weak
+void *g_Audio_SelectMixFormat1StereoDispatchBase = &Audio_SelectMixFormat1StereoDispatch; // weak
+void *g_Audio_SelectMixFormat2MonoDispatchBase = &Audio_SelectMixFormat2MonoDispatch; // weak
+void *g_Audio_SelectMixFormat2StereoDispatchBase = &Audio_SelectMixFormat2StereoDispatch; // weak
+void *g_Audio_SelectMixFormat3MonoDispatchBase = &Audio_SelectMixFormat3MonoDispatch; // weak
+void *g_Audio_SelectMixFormat3StereoDispatchBase = &Audio_SelectMixFormat3StereoDispatch; // weak
+void *g_Audio_SelectMixFormat4MonoDispatchBase = &Audio_SelectMixFormat4MonoDispatch; // weak
+void *g_Audio_SelectMixFormat4StereoDispatchBase = &Audio_SelectMixFormat4StereoDispatch; // weak
+void *g_Audio_SelectMixFormat5MonoDispatchBase = &Audio_SelectMixFormat5MonoDispatch; // weak
+void *g_Audio_SelectMixFormat5StereoDispatchBase = &Audio_SelectMixFormat5StereoDispatch; // weak
 tagRECT j____wcpp_4_fs_handler_rtn_ = { 50130921, 1413568256, 1397575491, -1144944303 }; // idb
 _UNKNOWN strstr_; // weak
 // extern _UNKNOWN _wcpp_4_alloc_exc__; weak

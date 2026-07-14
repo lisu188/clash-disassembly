@@ -73,8 +73,8 @@ typedef struct BootstrapProbeInputBackendState
 
 extern BootstrapProbeInputBackendState g_InputBackendState;
 
-int dword_51D014;
-int dword_543CA0;
+int g_App_CommandModeRFlag;
+int g_CSS_InitializedFlag;
 int (*g_RenderHook)(int a1, char a2, DWORD a3);
 int g_BootstrapSkipIntroAviPlayback;
 
@@ -407,7 +407,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
    * The retained full path now reaches the DirectSound-era device table, but
    * that table is not recovered safely enough for x86-64 execution yet.
    */
-  dword_543CA0 = 1;
+  g_CSS_InitializedFlag = 1;
   createLogFiles(0, 0, 0);
   Rules_CompileStrategicRulesFile();
   Mem_PurgeFreeListsForSpace(-1, 0, 0);
@@ -419,7 +419,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   initRandomSeed(command_mode, 0);
 
   if ( command_mode == 'r' )
-    dword_51D014 = 1;
+    g_App_CommandModeRFlag = 1;
 }
 
 static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR lpCommandLine, char *command_mode_out)
@@ -448,14 +448,14 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
   ResourceArchives_MountStartupArchives(0);
   Game_Init(0, command_mode, 0);
   if ( command_mode == 'r' )
-    dword_51D014 = 1;
+    g_App_CommandModeRFlag = 1;
   return 1;
 }
 
 static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
 {
   Bootstrap_TraceMenuProbe("video-init-probe-start");
-  dword_543CA0 = 1;
+  g_CSS_InitializedFlag = 1;
   Bootstrap_TraceMenuProbe("video-init-Render_LoadResourceBackbuffer");
   Render_LoadResourceBackbuffer();
   Bootstrap_TraceMenuProbe("video-init-device-get-param-a");
