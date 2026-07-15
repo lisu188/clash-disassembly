@@ -47,7 +47,7 @@ replaced. After stack 19, the authentic route must still clear stacks
 `16..18`, `20`, owner-3 building 4, and remote stack `21` without attacking
 owners `1` or `2`.
 
-## Objective (from `src/recovered/split/strategic/004589C0_004602F0_strategic_004.c` case 5, nonzero-language branch)
+## Objective (from `src/strategic/004589C0_004602F0_strategic_004.c` case 5, nonzero-language branch)
 Eliminate **every player-3 (Agordeh) world stack and building**. Two loops:
 - LABEL_35 (`UNIT_RECORD` 0..99): a personage/stack record with `type<4`, alive
   (`+16 != -1`), owner==3 blocks.

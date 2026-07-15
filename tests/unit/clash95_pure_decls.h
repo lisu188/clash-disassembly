@@ -5,6 +5,6 @@
 /* CLASH95_TESTING must be defined by the coverage object-library target so
  * only explicitly frozen helpers marked CLASH95_TEST_VISIBLE lose static
  * linkage in test builds. */
-#include "../../src/recovered/split/recovered_internal.h"
+#include "../../src/recovered_internal.h"
 
 #endif

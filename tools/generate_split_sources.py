@@ -3,7 +3,7 @@
 
 The recovered implementation is currently represented by one ordered include
 manifest (clash95.c).  This tool keeps that file as the migration oracle while
-materialising real C translation units under src/recovered/split/.
+materialising real C translation units under src/.
 
 Function boundaries come from the original-address marker comments rather than
 from a C parser.  That is deliberate: the recovered source still contains K&R
@@ -27,7 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ORACLE_MANIFEST = ROOT / "clash95.c"
-SPLIT_ROOT = ROOT / "src" / "recovered" / "split"
+SPLIT_ROOT = ROOT / "src"
 MANIFEST_PATH = ROOT / "data" / "recovered_sources.json"
 PATH_MAP_PATH = ROOT / "docs" / "SOURCE_PATH_MAP.csv"
 PURE_SET_PATH = ROOT / "tests" / "unit" / "pure_set.json"
@@ -601,12 +601,22 @@ def fragment_static_variable_decls(sources: list[Path]) -> list[str]:
 
 def safe_reset_split_root() -> None:
     resolved = SPLIT_ROOT.resolve()
-    expected_parent = (ROOT / "src" / "recovered").resolve()
-    if resolved.parent != expected_parent or resolved.name != "split":
-        raise SystemExit(f"refusing to reset unexpected split path: {resolved}")
-    if resolved.exists():
-        shutil.rmtree(resolved)
-    resolved.mkdir(parents=True)
+    expected = (ROOT / "src").resolve()
+    if resolved != expected:
+        raise SystemExit(f"refusing to reset unexpected source path: {resolved}")
+    generated_paths = (
+        "battle", "buildings", "clips", "core", "media", "persistence",
+        "render", "runtime", "state", "strategic", "units", "world",
+        "recovered_abi.h", "recovered_foundation.h", "recovered_functions.h",
+        "recovered_internal.h", "recovered_layout.h", "sources.cmake",
+    )
+    for name in generated_paths:
+        path = resolved / name
+        if path.is_dir():
+            shutil.rmtree(path)
+        elif path.exists():
+            path.unlink()
+    resolved.mkdir(parents=True, exist_ok=True)
 
 
 def group_chunks(chunks: list[MarkerChunk], max_lines: int) -> list[list[MarkerChunk]]:
@@ -696,9 +706,9 @@ def write_generated_header(
 #ifndef CLASH95_RECOVERED_ABI_H
 #define CLASH95_RECOVERED_ABI_H
 
-#include "../../platform/platform_sdl.h"
-#include "../../compatibility/defs.h"
-#include "../../instrumentation/runtime_mission_trace.h"
+#include "platform/platform_sdl.h"
+#include "compatibility/defs.h"
+#include "instrumentation/runtime_mission_trace.h"
 #include <math.h>
 #include <stdarg.h>
 #include <stdint.h>

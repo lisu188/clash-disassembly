@@ -17,7 +17,7 @@ from split_source_index import Definition, body_sha256, scan_definitions
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "data" / "recovered_sources.json"
-SPLIT_ROOT = ROOT / "src" / "recovered" / "split"
+SPLIT_ROOT = ROOT / "src"
 MARKER_RE = re.compile(r"(?m)^//----- \(([0-9A-Fa-f]{8})\) [-]+\r?$")
 ORIGIN_RE = re.compile(
     r"Generated from ([^;\r\n]+); original address order retained\."
@@ -193,7 +193,13 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     )
     state_owner = repo_path(manifest.get("state_owner"), "state_owner", audit)
 
-    generated = sorted(SPLIT_ROOT.rglob("*.c")) if SPLIT_ROOT.is_dir() else []
+    generated = sorted(
+    {
+        ROOT / value["source"]
+        for value in records
+        if isinstance(value, dict) and isinstance(value.get("source"), str)
+    }
+)
     audit.require(bool(generated), "canonical split contains no C sources")
     audit.require(
         manifest.get("source_file_count") == len(generated),

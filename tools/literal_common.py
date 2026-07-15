@@ -43,7 +43,7 @@ from global_inventory import (  # noqa: E402
 )
 from split_source_index import body_sha256, scan_definitions  # noqa: E402
 
-PRELUDE_REL = "src/recovered/split/recovered_foundation.h"
+PRELUDE_REL = "src/recovered_foundation.h"
 MANIFEST_REL = "tools/constants_manifest.json"
 SOURCE_MANIFEST_REL = "data/recovered_sources.json"
 

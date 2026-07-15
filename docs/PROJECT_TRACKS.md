@@ -10,7 +10,7 @@ Primary artifacts:
 - `clash95.asm`
 - `clash95.map`
 - `data/recovered_sources.json`
-- `src/recovered/split/`
+- `src/`
 - `src/bootstrap/bootstrap_main.c`
 - `src/platform/platform_sdl.h`
 - `src/platform/platform_sdl_runtime.c`

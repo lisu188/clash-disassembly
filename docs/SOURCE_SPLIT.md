@@ -5,7 +5,7 @@
 The source split reached final repository cutover on 2026-07-15. The recovered
 implementation used by `clash95_recovered` and `clash95_bootstrap` is canonical
 only as **138 independently compiled GNU C17 translation units** under
-`src/recovered/split/`:
+`src/`:
 
 - 136 address-ordered function-family files;
 - one prelude/helper translation unit;
@@ -27,10 +27,10 @@ dependency family. Their names encode the first and last original addresses,
 for example:
 
 ```text
-src/recovered/split/battle/0042CB50_0042E8B0_battle_001.c
+src/battle/0042CB50_0042E8B0_battle_001.c
 ```
 
-`src/recovered/split/sources.cmake` assigns the files to 12 subsystem object
+`src/sources.cmake` assigns the files to 12 subsystem object
 libraries:
 
 - core, render, world, units, buildings, and battle;
@@ -40,11 +40,11 @@ Global storage has one definition in the recovered-state translation unit.
 Ambiguous adjacency-dependent declarations remain together there rather than
 being resized or scattered without map or assembly evidence.
 
-The private `src/recovered/split/recovered_internal.h` umbrella is composed from
-independently compilable `src/recovered/split/recovered_abi.h`,
-`src/recovered/split/recovered_foundation.h`,
-`src/recovered/split/recovered_functions.h`, and
-`src/recovered/split/recovered_layout.h`. Domain-specific narrowing
+The private `src/recovered_internal.h` umbrella is composed from
+independently compilable `src/recovered_abi.h`,
+`src/recovered_foundation.h`,
+`src/recovered_functions.h`, and
+`src/recovered_layout.h`. Domain-specific narrowing
 remains later cleanup; no stable external library API is introduced.
 Cross-family helpers have hidden visibility. Seventeen helpers remain
 production-only `static` functions, and 30 frozen pure helpers use

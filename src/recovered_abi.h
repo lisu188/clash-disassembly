@@ -2,9 +2,9 @@
 #ifndef CLASH95_RECOVERED_ABI_H
 #define CLASH95_RECOVERED_ABI_H
 
-#include "../../platform/platform_sdl.h"
-#include "../../compatibility/defs.h"
-#include "../../instrumentation/runtime_mission_trace.h"
+#include "platform/platform_sdl.h"
+#include "compatibility/defs.h"
+#include "instrumentation/runtime_mission_trace.h"
 #include <math.h>
 #include <stdarg.h>
 #include <stdint.h>

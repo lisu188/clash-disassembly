@@ -5,7 +5,7 @@ This document defines the source-organization rules for the recovered Win95 impl
 ## Invariants
 
 - `data/recovered_sources.json` is the exhaustive recovered-function manifest.
-- The 138 C files under `src/recovered/split/` are canonical, independently
+- The 138 C files under `src/` are canonical, independently
   compiled GNU C17 translation units.
 - Function order within each family follows original binary address order, even
   when semantic subsystem boundaries differ.
@@ -16,14 +16,14 @@ This document defines the source-organization rules for the recovered Win95 impl
 
 Function-family files encode the first and last original address, subsystem,
 and family sequence, for example
-`src/recovered/split/world/00408030_0040A0A0_world_001.c`.
+`src/world/00408030_0040A0A0_world_001.c`.
 
 Address comments and historical provenance remain in each file. The removed
 unified/fragments/symlink paths are preserved in `docs/SOURCE_PATH_MAP.csv`.
 
 ## Boundaries
 
-- `src/recovered/split/`: behavior attributable to the original executable,
+- `src/`: behavior attributable to the original executable,
   private recovered headers, and the CMake source list.
 - `src/platform/`: SDL, X11, POSIX, timing, input, window, rendering, and host filesystem adapters.
 - `src/compatibility/`: decompiler support and quarantined runtime or Win32-shaped scaffolding.

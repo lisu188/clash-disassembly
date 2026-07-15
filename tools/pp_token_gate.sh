@@ -110,7 +110,7 @@ preprocess() {
   local sources=()
   local flags=(
     -Isrc/platform -Isrc/compatibility -Isrc/instrumentation
-    -Isrc/recovered/split -E -P
+    -Isrc -E -P
   )
 
   mapfile -t sources < <(split_sources "$tree")

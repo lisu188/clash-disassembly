@@ -5,7 +5,7 @@ Last consolidated: 2026-07-15.
 ## Disassembly Control-Flow Recovery: Complete
 
 All 17 `JUMPOUT(...)` "control flows out of bounds" decompiler scars in
-the manifest-backed sources under `src/recovered/split/` are recovered into
+the manifest-backed sources under `src/` are recovered into
 authentic structured C backed by `clash95.asm`. The canonical recovered C has
 zero `JUMPOUT` code markers and no remaining out-of-bounds control-flow
 artifacts. The full per-address table (register-restore epilogues and voice-mix
@@ -126,7 +126,7 @@ Empirically, boot requires the data at three levels (verified by running
    `FileSystem_ResolveReadPath("gfx\backgr1.s32")` gates boot: if it is not
    found, `ResourceArchives_MountStartupArchives` calls `App_RequestQuit` with
    "Clash CD not found!"
-   (`src/recovered/split/persistence/00441DC0_00443B60_persistence_001.c`).
+   (`src/persistence/00441DC0_00443B60_persistence_001.c`).
 An empty `/mnt/c/clash` directory passes level 1 but still fails at level 3, so
 a real install (not just the directory) is required.
 

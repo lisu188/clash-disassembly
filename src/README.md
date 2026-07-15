@@ -1,14 +1,14 @@
 # Source organization
 
 Production targets compile the canonical recovered implementation from 138 GNU
-C17 translation units under `src/recovered/split/`.
+C17 translation units under `src/`.
 `data/recovered_sources.json` is the authoritative function/source manifest.
 Tests link independently compiled coverage objects and do not include recovered
 implementation files directly.
 
 ## Canonical areas
 
-- `src/recovered/split/` contains behavior attributable to the original
+- `src/` contains behavior attributable to the original
   executable, its private headers, and the exhaustive source list.
 - `src/platform/` contains the separately compiled SDL/X11 host implementation.
 - `src/compatibility/` contains decompiler support and quarantined runtime scaffolding.

@@ -49,7 +49,7 @@ def main() -> int:
     require_equal("save decoder", GAME_DATA_SIZE, EXPECTED_PAYLOAD)
     require_equal(
         "split foundation",
-        source_define(ROOT / "src" / "recovered" / "split" / "recovered_foundation.h"),
+        source_define(ROOT / "src" / "recovered_foundation.h"),
         EXPECTED_PAYLOAD,
     )
     print(

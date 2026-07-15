@@ -7,7 +7,7 @@ It is intentionally practical. The goal is not to restate everything already kno
 ## Current Rule Summary
 
 - `clash95.asm` is authoritative behavioral evidence and must not be edited.
-- Changes under `src/recovered/split/` should be small, reached, and backed by
+- Changes under `src/` should be small, reached, and backed by
   assembly or live route evidence.
 - Platform portability belongs behind `src/platform/platform_sdl.h` and
   `src/platform/platform_sdl_runtime.c`.
@@ -26,7 +26,7 @@ When two sources disagree, prefer them in this order:
    - If a name exists here, preserve it somewhere even if a better semantic alias is introduced.
 
 2. **`clash95.asm` and the manifest-backed GNU C17 sources**
-   - `src/recovered/split/` is canonical for recovered C; use
+   - `src/` is canonical for recovered C; use
      `data/recovered_sources.json` to resolve function identity and provenance.
    - Together with the assembly, these are canonical for control flow,
      constants, strings, offsets, table walks, and calling patterns.
@@ -121,7 +121,7 @@ Do **not** promote a guess just because it "looks likely."
 ### 3.5 Constant and enum families (magic-number campaign)
 
 Numeric literals are named with `SCREAMING_SNAKE_CASE` `#define`s in the private
-`src/recovered/split/recovered_foundation.h`, subsystem-prefixed like the
+`src/recovered_foundation.h`, subsystem-prefixed like the
 function/global families: `UNIT_STACK_`, `BUILDING_`, `BUILDING_ADDON_FLAG_`, `PLAYER_`,
 `MAP_`, `PORT_`, `TILE_`, `TILE_OVERLAY_`, `TILE_OCCUPANT_`, `SCREEN_`, etc.
 Offsets/strides get an accessor macro (`UNIT_STACK(i)`, `BUILDING_RECORD(i)`).
@@ -144,7 +144,7 @@ Tooling under `tools/`: `tools/literal_common.py` (lexer/classifier),
 `tools/constants_manifest.json` (value→name gating), `tools/literal_inventory.py`
 (evidence census), `tools/apply_literal_names.py` (gated substitution + `--plan`),
 the compile-time `NAME==value` pins in
-`src/recovered/split/recovered_layout.h`, and `tools/pp_token_gate.sh` /
+`src/recovered_layout.h`, and `tools/pp_token_gate.sh` /
 `tools/pp_token_diff.py` (the preprocessed-token-identity gate;
 `--allow` verifies declared respellings). `tools/obj_diff_gate.sh` provides the
 canonical split-object snapshot gate.
@@ -161,7 +161,7 @@ The current build surface already separates three kinds of work:
 ### 4.1 Recovered gameplay / original logic
 
 Put semantic recovery here:
-- the owning manifest source under `src/recovered/split/<subsystem>/`
+- the owning manifest source under `src/<subsystem>/`
 
 Typical changes:
 - renames,
@@ -510,7 +510,7 @@ historical anchors in the manifest and archive):
   external-function argument marker, `"\n*** CLIPS SYSTEM ERROR ***\n"`, and
   the `"   PeriodicCleanup(CLIPS_TRUE,CLIPS_FALSE);\n"` GC banner. Their
   canonical storage is in
-  `src/recovered/split/state/00000000_0054FFFF_recovered_state.c`; historical
+  `src/state/00000000_0054FFFF_recovered_state.c`; historical
   unified line anchors remain in the archived evidence.
 
 Practical consequence for future recovery: when a Queue F function's role is
@@ -663,7 +663,7 @@ These are good starter tasks because each unlocks multiple nearby symbols.
 - `clash95.map`
 - `clash95.asm`
 - `data/recovered_sources.json`
-- `src/recovered/split/`
+- `src/`
 - `RECOVERED_STRUCTURES.json`
 - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
 - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`

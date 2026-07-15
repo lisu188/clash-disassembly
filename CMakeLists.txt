@@ -14,12 +14,11 @@ set(CLASH95_PRIVATE_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/src/platform
   ${CMAKE_CURRENT_SOURCE_DIR}/src/compatibility
   ${CMAKE_CURRENT_SOURCE_DIR}/src/instrumentation
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/recovered/split
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/recovered/split/sources.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/sources.cmake)
 
 # The recovered implementation is compiled as subsystem object libraries. The
 # checked-in split source list is the single source of truth for this graph.
@@ -458,7 +457,7 @@ if(CLASH95_COVERAGE)
   # system include because they intentionally retain GNU ABI types and
   # quarantined zero-length legacy arrays.
   target_include_directories(clash95_unit_tests SYSTEM PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/recovered/split)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src)
   set_source_files_properties(${CLASH95_UNIT_CASE_SOURCES} PROPERTIES
     COMPILE_OPTIONS
       "-include;${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/case_prelude.h")

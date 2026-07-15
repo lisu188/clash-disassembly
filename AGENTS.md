@@ -23,7 +23,7 @@ language for each track.
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The recovered implementation is canonical only under
-  `src/recovered/split/`: 4,070 functions in 138 independently compiled GNU C17
+  `src/`: 4,070 functions in 138 independently compiled GNU C17
   translation units. The unified source, recovered include-C fragments, and
   compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
@@ -70,7 +70,7 @@ than a copy kept in sync by hand.
 ## 6. Evidence Order
 
 1. `clash95.map` for public symbol spelling and segment-relative addresses.
-2. `clash95.asm`, the manifest-backed sources under `src/recovered/split/`, and
+2. `clash95.asm`, the manifest-backed sources under `src/`, and
    live route evidence for behavior.
 3. Struct layouts, lookup tables, arrays, enums, switch dispatch, and shared-state
    access patterns.
