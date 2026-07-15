@@ -29,24 +29,22 @@ jobs:
           root = Path.cwd()
           audit = root / "tools" / "audit_split_sources.py"
           text = audit.read_text(encoding="utf-8")
-          old = '''    generated = sorted(
-              {
-                  ROOT / value["source"]
-                  for value in records
-                  if isinstance(value, dict) and isinstance(value.get("source"), str)
-              }
-          )'''
-          new = '''    generated = sorted(
+          start = text.index("    generated = sorted(")
+          end = text.index("    audit.require(bool(generated)", start)
+          replacement = '''    generated = sorted(
               {
                   ROOT / value["source"]
                   for value in records
                   if isinstance(value, dict) and isinstance(value.get("source"), str)
               }
               | ({state_owner} if state_owner is not None else set())
-          )'''
-          if old not in text:
-              raise SystemExit("generated source inventory block not found")
-          audit.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+          )
+'''
+          audit.write_text(
+              text[:start] + replacement + text[end:],
+              encoding="utf-8",
+              newline="\n",
+          )
 
           for relative in (
               "src/recovered/runtime/00461520_platform_input.inc.c",
@@ -54,8 +52,7 @@ jobs:
           ):
               (root / relative).unlink(missing_ok=True)
 
-          workflow = root / ".github" / "workflows" / "diagnose-relocation.yml"
-          workflow.unlink()
+          (root / ".github" / "workflows" / "diagnose-relocation.yml").unlink()
           PY
 
           python3 tools/audit_split_sources.py
