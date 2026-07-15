@@ -43,8 +43,9 @@ evidence-backed static-helper decisions, and an independently compiled unit
 harness. Recovered non-ASCII byte literals use terminated two-digit hexadecimal
 escapes so GCC and Clang preserve the same encoded bytes. Clang reports recovered
 pointer/integer conversion debt as warnings, while implicit declarations,
-implicit integers, and invalid return types remain hard errors. See
-`docs/SOURCE_SPLIT.md` for the cutover evidence and remaining warning and
-retail-route validation debt.
+implicit integers, and invalid return types remain hard errors. Handwritten
+platform and compatibility functions retain explicit prototypes under strict
+warning-as-error builds. See `docs/SOURCE_SPLIT.md` for the cutover evidence and
+remaining warning and retail-route validation debt.
 
 See `docs/SOURCE_LAYOUT.md` for path, regeneration, and validation rules.
