@@ -194,12 +194,13 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     state_owner = repo_path(manifest.get("state_owner"), "state_owner", audit)
 
     generated = sorted(
-    {
-        ROOT / value["source"]
-        for value in records
-        if isinstance(value, dict) and isinstance(value.get("source"), str)
-    }
-)
+        {
+            ROOT / value["source"]
+            for value in records
+            if isinstance(value, dict) and isinstance(value.get("source"), str)
+        }
+        | ({state_owner} if state_owner is not None else set())
+    )
     audit.require(bool(generated), "canonical split contains no C sources")
     audit.require(
         manifest.get("source_file_count") == len(generated),
