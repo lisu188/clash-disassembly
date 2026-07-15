@@ -552,7 +552,7 @@ int  FileSystem_ArchiveFillBlankRecordBytes(int record)
   record_end = record + 26;
   do
   {
-    v2 = rand_(record_end, HIDWORD(v2) + 1);
+    v2 = rand_();
     *(_BYTE *)(HIDWORD(v2) - 1) = v2;
   }
   while ( HIDWORD(v2) != record_end );
