@@ -1,0 +1,147 @@
+name: Relocate recovered sources
+
+on:
+  push:
+    branches:
+      - refactor/recovered-sources-directly-under-src
+
+permissions:
+  contents: write
+
+jobs:
+  relocate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move recovered sources directly under src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          import shutil
+
+          root = Path.cwd()
+          src = root / "src"
+          old_root = src / "recovered" / "split"
+          if not old_root.is_dir():
+              raise SystemExit(f"missing source directory: {old_root}")
+
+          for child in sorted(old_root.iterdir(), key=lambda path: path.name):
+              destination = src / child.name
+              if destination.exists():
+                  raise SystemExit(f"refusing to overwrite existing path: {destination}")
+              shutil.move(str(child), str(destination))
+
+          old_root.rmdir()
+          recovered_parent = src / "recovered"
+          if recovered_parent.exists() and not any(recovered_parent.iterdir()):
+              recovered_parent.rmdir()
+
+          replacements = (
+              (b"src/recovered/split", b"src"),
+              (b"src\\recovered\\split", b"src"),
+              (b'"src" / "recovered" / "split"', b'"src"'),
+              (b"'src' / 'recovered' / 'split'", b"'src'"),
+          )
+          for path in root.rglob("*"):
+              if not path.is_file() or ".git" in path.parts:
+                  continue
+              data = path.read_bytes()
+              if b"\0" in data:
+                  continue
+              updated = data
+              for before, after in replacements:
+                  updated = updated.replace(before, after)
+              if updated != data:
+                  path.write_bytes(updated)
+
+          for relative in ("src/recovered_abi.h", "tools/generate_split_sources.py"):
+              path = root / relative
+              text = path.read_text(encoding="utf-8")
+              text = text.replace('../../platform/platform_sdl.h', 'platform/platform_sdl.h')
+              text = text.replace('../../compatibility/defs.h', 'compatibility/defs.h')
+              text = text.replace('../../instrumentation/runtime_mission_trace.h', 'instrumentation/runtime_mission_trace.h')
+              path.write_text(text, encoding="utf-8", newline="\n")
+
+          audit_path = root / "tools" / "audit_split_sources.py"
+          audit_text = audit_path.read_text(encoding="utf-8")
+          old_generated = '    generated = sorted(SPLIT_ROOT.rglob("*.c")) if SPLIT_ROOT.is_dir() else []'
+          new_generated = '''    generated = sorted(
+              {
+                  ROOT / value["source"]
+                  for value in records
+                  if isinstance(value, dict) and isinstance(value.get("source"), str)
+              }
+          )'''
+          if old_generated not in audit_text:
+              raise SystemExit("audit generated-source expression not found")
+          audit_text = audit_text.replace(old_generated, new_generated, 1)
+          audit_path.write_text(audit_text, encoding="utf-8", newline="\n")
+
+          generator_path = root / "tools" / "generate_split_sources.py"
+          generator_text = generator_path.read_text(encoding="utf-8")
+          safe_reset = '''def safe_reset_split_root() -> None:
+              resolved = SPLIT_ROOT.resolve()
+              expected = (ROOT / "src").resolve()
+              if resolved != expected:
+                  raise SystemExit(f"refusing to reset unexpected source path: {resolved}")
+              generated_paths = (
+                  "battle", "buildings", "clips", "core", "media", "persistence",
+                  "render", "runtime", "state", "strategic", "units", "world",
+                  "recovered_abi.h", "recovered_foundation.h", "recovered_functions.h",
+                  "recovered_internal.h", "recovered_layout.h", "sources.cmake",
+              )
+              for name in generated_paths:
+                  path = resolved / name
+                  if path.is_dir():
+                      shutil.rmtree(path)
+                  elif path.exists():
+                      path.unlink()
+              resolved.mkdir(parents=True, exist_ok=True)
+
+
+          def group_chunks'''
+          generator_text, count = re.subn(
+              r"def safe_reset_split_root\(\) -> None:\n.*?\n\ndef group_chunks",
+              safe_reset,
+              generator_text,
+              count=1,
+              flags=re.DOTALL,
+          )
+          if count != 1:
+              raise SystemExit("generator safe-reset function not found")
+          generator_path.write_text(generator_text, encoding="utf-8", newline="\n")
+
+          cmake_path = root / "CMakeLists.txt"
+          cmake_text = cmake_path.read_text(encoding="utf-8")
+          duplicate = "  ${CMAKE_CURRENT_SOURCE_DIR}/src\n  ${CMAKE_CURRENT_SOURCE_DIR}/src\n"
+          cmake_text = cmake_text.replace(duplicate, "  ${CMAKE_CURRENT_SOURCE_DIR}/src\n")
+          cmake_path.write_text(cmake_text, encoding="utf-8", newline="\n")
+          PY
+
+          python3 -m json.tool data/recovered_sources.json >/dev/null
+          python3 -m json.tool data/recovered_warning_baseline.json >/dev/null
+          python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
+          python3 -m json.tool tests/unit/pure_set.json >/dev/null
+          python3 tools/audit_split_sources.py
+          python3 tools/migrate_pure_coverage_metadata.py --check
+          python3 tools/check_save_format_contract.py
+
+          if git grep -n -E 'src/recovered/split|"src" / "recovered" / "split"' -- ':!docs/archive/**'; then
+            echo "stale recovered source paths remain"
+            exit 1
+          fi
+
+          rm .github/workflows/relocate-recovered-sources.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m "Move recovered sources directly under src"
+          git push origin HEAD:${GITHUB_REF_NAME}
