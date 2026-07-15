@@ -1,0 +1,33 @@
+name: Final repository audit diagnostics
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture checks
+        shell: bash
+        run: |
+          set +e
+          python3 tools/audit_split_sources.py > split-audit.log 2>&1
+          echo $? > split-audit.status
+          python3 tools/migrate_pure_coverage_metadata.py --check > pure-metadata.log 2>&1
+          echo $? > pure-metadata.status
+          python3 tools/check_save_format_contract.py > save-contract.log 2>&1
+          echo $? > save-contract.status
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-repository-audit-diagnostics
+          path: |
+            split-audit.log
+            split-audit.status
+            pure-metadata.log
+            pure-metadata.status
+            save-contract.log
+            save-contract.status
