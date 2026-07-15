@@ -1,1 +1,0 @@
-../recovered/rules/clips/004A0080_symbols.inc.c

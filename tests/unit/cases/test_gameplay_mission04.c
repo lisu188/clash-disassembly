@@ -21,8 +21,10 @@ static void cov_m04_setup(int mission, int castle_idx, int owner) {
   gameData = (int)(intptr_t)cov_m04_gamedata;
   g_CheatForceWinMissionFlag = 0; /* force-win cheat flag off */
   ACTIVE_MISSION_INDEX = mission;
-  *(unsigned short *)(gameData + 567712) = (unsigned short)(0x8000 + castle_idx);
-  *(unsigned char *)(467 * castle_idx + gameData + 509676) = (unsigned char)owner;
+  *(unsigned short *)(intptr_t)(gameData + 567712) =
+      (unsigned short)(0x8000 + castle_idx);
+  *(unsigned char *)(intptr_t)(467 * castle_idx + gameData + 509676) =
+      (unsigned char)owner;
 }
 
 TEST(mission04, objective_complete_when_castle_owner_zero) {
@@ -60,7 +62,7 @@ TEST(mission04, objective_complete_respects_castle_index_stride) {
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   /* poisoning idx 0's owner byte must not affect idx 5's verdict */
   cov_m04_setup(4, 5, 0);
-  *(unsigned char *)(gameData + 509676) = 3; /* idx 0 owner nonzero */
+  *(unsigned char *)(intptr_t)(gameData + 509676) = 3;
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   gameData = saved_gd;
   g_CheatForceWinMissionFlag = saved_cheat;

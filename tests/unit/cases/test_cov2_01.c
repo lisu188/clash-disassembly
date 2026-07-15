@@ -488,7 +488,10 @@ TEST(cov2_01_printppformbyname, found_with_ppform) {
   module_node[7] = 0; /* next -> end of module list */
 
   g_DefmoduleListHead = (int)(intptr_t)module_node;
-  CHECK_EQ(Module_PrintPPFormByName((_BYTE *)"Cov2_01Module", (signed int)"cov2_01_out"), 1);
+  CHECK_EQ(Module_PrintPPFormByName(
+               (_BYTE *)"Cov2_01Module",
+               (signed int)(intptr_t)"cov2_01_out"),
+           1);
 
   g_DefmoduleListHead = saved;
 }

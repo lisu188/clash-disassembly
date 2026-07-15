@@ -18,12 +18,14 @@ static void cov_obj_reset(int mission) {
 }
 
 static void cov_obj_set_tile_word(int row, int col, unsigned short w) {
-  *(unsigned short *)(gameData + 1400 * row + 14 * col) = w;
+  *(unsigned short *)(intptr_t)(gameData + 1400 * row + 14 * col) = w;
 }
 
 static void cov_obj_set_capture(int castle_ref_off, int idx, int owner) {
-  *(unsigned short *)(gameData + castle_ref_off) = (unsigned short)(0x8000 + idx);
-  *(unsigned char *)(467 * idx + gameData + 509676) = (unsigned char)owner;
+  *(unsigned short *)(intptr_t)(gameData + castle_ref_off) =
+      (unsigned short)(0x8000 + idx);
+  *(unsigned char *)(intptr_t)(467 * idx + gameData + 509676) =
+      (unsigned char)owner;
 }
 
 /* Mission 01 (shrine): complete iff the tile at (16,11) is an EMPTY_SHRINE
@@ -32,7 +34,8 @@ static void cov_obj_set_capture(int castle_ref_off, int idx, int owner) {
 TEST(objectives, mission01_shrine_complete) {
   int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(1);
-  *(unsigned short *)(gameData + 1400 * 16 + 14 * 11 + 2) = 0x2D9; /* empty shrine */
+  *(unsigned short *)(intptr_t)(gameData + 1400 * 16 + 14 * 11 + 2) =
+      0x2D9;
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
@@ -40,7 +43,7 @@ TEST(objectives, mission01_shrine_complete) {
 TEST(objectives, mission01_shrine_blocked) {
   int gd = gameData, ch = g_CheatForceWinMissionFlag;
   cov_obj_reset(1);
-  *(unsigned short *)(gameData + 1400 * 16 + 14 * 11 + 2) = 0; /* not a shrine */
+  *(unsigned short *)(intptr_t)(gameData + 1400 * 16 + 14 * 11 + 2) = 0;
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
   gameData = gd; g_CheatForceWinMissionFlag = ch;
 }
@@ -131,14 +134,14 @@ static void cov_m05_reset(int language_index) {
 }
 
 static void cov_m05_set_building(int index, int owner, int live) {
-  unsigned char *building = BUILDING_RECORD(index);
+  unsigned char *building = (unsigned char *)(intptr_t)BUILDING_RECORD(index);
   memset(building, 0, BUILDING_RECORD_SIZE);
   building[2] = (unsigned char)owner;
   *(short *)(building + 16) = live ? 0 : -1;
 }
 
 static void cov_m05_set_stack(int index, int owner, int live) {
-  unsigned char *stack = UNIT_STACK(index);
+  unsigned char *stack = (unsigned char *)(intptr_t)UNIT_STACK(index);
   int slot_index;
 
   memset(stack, 0, UNIT_STACK_STRIDE);

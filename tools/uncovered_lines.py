@@ -1,75 +1,81 @@
 #!/usr/bin/env python3
-"""Emit per-function uncovered source line numbers from the coverage gcov.
+"""Report uncovered lines by manifest-backed recovered function identity.
 
 Usage: uncovered_lines.py <build_dir> [--json OUT] [--min N]
-Lists each pure-set function with uncovered executable lines, giving the exact
-clash95.c line numbers still marked '#####' so a targeting wave knows precisely
-what to hit. --min filters to functions with >= N uncovered lines.
 """
+
+from __future__ import annotations
+
+import argparse
 import json
-import os
-import subprocess
-import sys
+from pathlib import Path
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PURE = os.path.join(ROOT, "tests/unit/pure_set.json")
-
-
-def gcov_lines(build_dir):
-    objdir = os.path.join(build_dir, "CMakeFiles/clash95_unit_tests.dir/tests/unit")
-    subprocess.run(["gcov", "test_all.c.gcno"], cwd=objdir,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    path = os.path.join(objdir, "clash95.c.gcov")
-    if not os.path.exists(path):
-        for f in os.listdir(objdir):
-            if f.endswith("clash95.c.gcov"):
-                path = os.path.join(objdir, f)
-                break
-    execline = {}
-    with open(path, errors="replace") as f:
-        for line in f:
-            parts = line.split(":", 2)
-            if len(parts) < 3:
-                continue
-            cnt = parts[0].strip()
-            try:
-                ln = int(parts[1].strip())
-            except ValueError:
-                continue
-            if ln == 0 or cnt == "-":
-                continue
-            execline[ln] = cnt not in ("#####", "=====")
-    return execline
+from coverage_source_manifest import (
+    CoverageMetadataError,
+    collect_split_gcov,
+    load_pure_set,
+    split_ranges,
+)
 
 
-def main():
-    build_dir = sys.argv[1]
-    jsonout = None
-    minn = 1
-    for i, a in enumerate(sys.argv):
-        if a == "--json":
-            jsonout = sys.argv[i + 1]
-        if a == "--min":
-            minn = int(sys.argv[i + 1])
-    execline = gcov_lines(build_dir)
-    pure = json.load(open(PURE))["functions"]
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("build_dir", type=Path)
+    parser.add_argument("--json", dest="jsonout", type=Path)
+    parser.add_argument("--min", dest="minimum", type=int, default=1)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    build_dir = args.build_dir.resolve()
+    _, functions = load_pure_set(require_manifest=True)
+    ranges = split_ranges(functions)
+    coverage = collect_split_gcov(
+        build_dir, {function["source"] for function in functions}
+    )
     rows = []
-    for fn in pure:
-        unc = [ln for ln in range(fn["start_line"], fn["end_line"])
-               if execline.get(ln) is False]
-        if len(unc) >= minn:
-            rows.append({"name": fn["name"], "start_line": fn["start_line"],
-                         "end_line": fn["end_line"], "uncovered_lines": unc,
-                         "uncovered": len(unc)})
-    rows.sort(key=lambda r: -r["uncovered"])
-    if jsonout:
-        json.dump(rows, open(jsonout, "w"), indent=1)
-    print(f"{len(rows)} functions with >= {minn} uncovered lines; "
-          f"total {sum(r['uncovered'] for r in rows)} uncovered")
-    for r in rows[:30]:
-        print(f"  {r['uncovered']:3d}  {r['name']}  lines {r['uncovered_lines'][:8]}"
-              f"{'...' if len(r['uncovered_lines'])>8 else ''}")
+    for function in functions:
+        source, low, high = ranges[function["name"]]
+        uncovered = [
+            line
+            for line in range(low, high)
+            if coverage[source].get(line) is False
+        ]
+        if len(uncovered) >= args.minimum:
+            rows.append(
+                {
+                    "name": function["name"],
+                    "source": source,
+                    "start_line": low,
+                    "end_line": high,
+                    "uncovered_lines": uncovered,
+                    "uncovered": len(uncovered),
+                }
+            )
+    mode = "split"
+
+    rows.sort(key=lambda row: -row["uncovered"])
+    if args.jsonout:
+        with args.jsonout.open("w", encoding="utf-8", newline="\n") as stream:
+            json.dump({"mode": mode, "functions": rows}, stream, indent=1)
+            stream.write("\n")
+    print(
+        f"coverage mode: {mode}; {len(rows)} functions with >= {args.minimum} "
+        f"uncovered lines; total {sum(row['uncovered'] for row in rows)} uncovered"
+    )
+    for row in rows[:30]:
+        preview = row["uncovered_lines"][:8]
+        suffix = "..." if len(row["uncovered_lines"]) > 8 else ""
+        print(
+            f"  {row['uncovered']:3d}  {row['name']}  "
+            f"{row['source']}:{preview}{suffix}"
+        )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        raise SystemExit(main())
+    except CoverageMetadataError as error:
+        raise SystemExit(str(error)) from error

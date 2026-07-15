@@ -293,7 +293,7 @@ TEST(cov11_symbolerr, report_symbol_type_error_not_found) {
 
 TEST(cov11_hash, double_value_both_signs) {
   CHECK_EQ(Rules_HashDoubleValue(7, 0, 3), 1);
-  CHECK(Rules_HashDoubleValue(0x80000000u, 0, 0x80000005u) >= 0 || 1);
+  TOUCH(Rules_HashDoubleValue(0x80000000u, 0, 0x80000005u));
 }
 
 TEST(cov11_hash, integer_value_both_signs) {

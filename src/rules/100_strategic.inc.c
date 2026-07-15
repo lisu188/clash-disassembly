@@ -1,1 +1,0 @@
-../recovered/rules/strategic/004506B0_strategic.inc.c

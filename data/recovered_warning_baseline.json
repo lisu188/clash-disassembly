@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "source_prefixes": [
+    "src/recovered/"
+  ],
+  "profiles": {
+    "gcc": {
+      "status": "seeded",
+      "total": 146721,
+      "warnings": {
+        "-Waddress-of-packed-member": 2,
+        "-Wcast-function-type": 128,
+        "-Wchar-subscripts": 1,
+        "-Wdiscarded-qualifiers": 10,
+        "-Wincompatible-pointer-types": 579,
+        "-Wint-conversion": 1310,
+        "-Wint-in-bool-context": 31,
+        "-Wint-to-pointer-cast": 19075,
+        "-Wmaybe-uninitialized": 4182,
+        "-Wmisleading-indentation": 1,
+        "-Wmissing-prototypes": 1,
+        "-Wparentheses": 209,
+        "-Wpointer-sign": 682,
+        "-Wpointer-to-int-cast": 8967,
+        "-Wsign-compare": 853,
+        "-Wstrict-prototypes": 108093,
+        "-Wtype-limits": 5,
+        "-Wuninitialized": 1398,
+        "-Wunused-but-set-variable": 447,
+        "-Wunused-parameter": 214,
+        "-Wunused-value": 9,
+        "-Wunused-variable": 340,
+        "gcc/unknown": 184
+      }
+    },
+    "clang": {
+      "status": "unseeded",
+      "total": 0,
+      "warnings": {}
+    }
+  }
+}

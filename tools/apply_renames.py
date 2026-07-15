@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Apply validated identifier renames (globals, nullsubs, etc.) to the sources.
+"""Apply validated identifier renames (globals, nullsubs, etc.) to split sources.
 
-General-purpose sibling of apply_sub_renames.py: works for any old identifier
-(not just sub_XXXXXX). Token-aware (skips strings/comments), validates new names
-are unique valid C identifiers absent from the code, auto-suffixes collisions
-with a short disambiguator.
+Works for non-function identifiers. Token-aware replacement skips strings and
+comments, validates new names are unique valid C identifiers absent from the
+code, and auto-suffixes collisions with a short disambiguator. Canonical
+implementation files come from ``data/recovered_sources.json``; approved
+writes refresh their manifest body hashes.
 
 Usage: apply_renames.py mapping.json [mapping2.json ...]
 mapping entry: {"old","new","confidence","evidence","area"}
@@ -15,14 +16,42 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from apply_sub_renames import split_code_and_literals  # noqa: E402
-from apply_sub_renames import CODE_FILES as BASE_CODE_FILES  # noqa: E402
+import literal_common as lc  # noqa: E402
 import glob as _glob  # noqa: E402
 
-# Also rewrite the unit-test sources, which call recovered symbols by name.
-CODE_FILES = list(BASE_CODE_FILES) + sorted(
-    _glob.glob("tests/unit/**/*.c", recursive=True)
-    + _glob.glob("tests/unit/*.h")
+PRIVATE_HEADERS = (
+    "src/recovered/split/recovered_abi.h",
+    "src/recovered/split/recovered_foundation.h",
+    "src/recovered/split/recovered_functions.h",
+    "src/recovered/split/recovered_internal.h",
+    "src/recovered/split/recovered_layout.h",
+)
+SUPPORT_FILES = (
+    "src/bootstrap/bootstrap_main.c",
+    "src/platform/platform_sdl_runtime.c",
+    "src/platform/platform_sdl.h",
+    "src/instrumentation/runtime_mission_trace.c",
+    "src/instrumentation/runtime_mission_trace.h",
+    "src/compatibility/decomp_runtime_stubs.c",
+    "src/compatibility/defs.h",
+)
+
+
+def existing_files(paths):
+    return [path for path in paths
+            if os.path.isfile(os.path.join(lc.REPO, path))]
+
+
+# Tests and private declarations call/reference recovered symbols by name.
+test_files = [
+    os.path.relpath(path, lc.REPO).replace(os.sep, "/")
+    for path in (
+        _glob.glob(os.path.join(lc.REPO, "tests", "unit", "**", "*.c"), recursive=True)
+        + _glob.glob(os.path.join(lc.REPO, "tests", "unit", "*.h"))
+    )
+]
+CODE_FILES = existing_files(
+    lc.apply_files() + list(PRIVATE_HEADERS) + list(SUPPORT_FILES) + sorted(test_files)
 )
 
 IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -36,20 +65,28 @@ def main():
     for path in sys.argv[1:]:
         entries.extend(json.load(open(path)))
 
+    manifest = lc.load_source_manifest()
+    manifest_function_names = {record["name"] for record in manifest["functions"]}
     texts = {}
     for cf in CODE_FILES:
         try:
-            texts[cf] = open(cf, "r", errors="replace").read()
+            texts[cf] = open(os.path.join(lc.REPO, cf), "r", errors="replace").read()
         except FileNotFoundError:
             pass
-    all_code = "\n".join(texts.values())
-    existing = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", all_code))
+    existing = set()
+    for text in texts.values():
+        for is_code, segment in lc.split_code_and_literals(text):
+            if is_code:
+                existing.update(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", segment))
 
     accepted, rejected, used_new = [], [], set()
     for e in entries:
         old, new = e.get("old", ""), e.get("new", "")
         if not IDENT_RE.match(old or ""):
             rejected.append((old, new, "bad old"))
+            continue
+        if old in manifest_function_names:
+            rejected.append((old, new, "function identity requires manifest migration"))
             continue
         if not IDENT_RE.match(new or "") or MACHINE_RE.match(new):
             rejected.append((old, new, "bad/again-machine new"))
@@ -77,21 +114,27 @@ def main():
 
     mapping = {e["old"]: e["new"] for e in accepted}
     pat = re.compile(r"\b(" + "|".join(re.escape(k) for k in mapping) + r")\b")
+    canonical_sources = set(lc.apply_files())
+    touched_sources = set()
     for cf, text in texts.items():
-        segs = split_code_and_literals(text)
+        segs = lc.split_code_and_literals(text)
         rebuilt = "".join(
             pat.sub(lambda m: mapping[m.group(1)], seg) if is_code else seg
             for is_code, seg in segs
         )
         if rebuilt != text:
-            open(cf, "w").write(rebuilt)
+            open(os.path.join(lc.REPO, cf), "w").write(rebuilt)
+            if cf in canonical_sources:
+                touched_sources.add(cf)
 
+    refreshed = lc.refresh_source_manifest_body_hashes(touched_sources)
     accum = os.environ.get("RENAME_ACCUM", "/tmp/applied_global_renames.jsonl")
     with open(accum, "a") as f:
         for e in accepted:
             f.write(json.dumps(e) + "\n")
     print(json.dumps(
         {"applied": len(accepted),
+         "manifest_body_hashes_refreshed": refreshed,
          "collisions": [e["old"] for e in accepted if "collision_from" in e],
          "rejected": rejected}, indent=1))
 

@@ -1,6 +1,8 @@
 # Mission state trace
 
-`runtime_mission_trace.c` provides a read-only, opt-in sampler for campaign route investigations. It does not modify objective state, ownership, units, buildings, turn progression, input, or rendering.
+`src/instrumentation/runtime_mission_trace.c` provides a read-only, opt-in sampler
+for campaign route investigations. It does not modify objective state, ownership,
+units, buildings, turn progression, input, or rendering.
 
 The mission `05` route enables the sampler to expose the state that currently blocks natural completion: the active strategic turn plus every live building and world stack owned by player `3`.
 

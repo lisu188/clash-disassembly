@@ -1,14 +1,15 @@
 # Current Status
 
-Last consolidated: 2026-07-14.
+Last consolidated: 2026-07-15.
 
 ## Disassembly Control-Flow Recovery: Complete
 
 All 17 `JUMPOUT(...)` "control flows out of bounds" decompiler scars in
-`clash95.c` are recovered into authentic structured C backed by `clash95.asm`
-(`grep -c JUMPOUT clash95.c` is `0`), so the recovered C has no out-of-bounds
-control-flow artifacts. The full per-address table (register-restore epilogues
-and voice-mix format-select thunks) is in
+the manifest-backed sources under `src/recovered/split/` are recovered into
+authentic structured C backed by `clash95.asm`. The canonical recovered C has
+zero `JUMPOUT` code markers and no remaining out-of-bounds control-flow
+artifacts. The full per-address table (register-restore epilogues and voice-mix
+format-select thunks) is in
 `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
 
 ## Validated State
@@ -26,6 +27,28 @@ and voice-mix format-select thunks) is in
   into the engine - is decoded from the binary's own registration table in
   `docs/AI_SCRIPTING_API.md`.
 - `clash95_bootstrap` is the current SDL-backed executable target.
+- The recovered implementation behind `clash95_recovered` and
+  `clash95_bootstrap` now compiles as 138 GNU C17 translation units: 136
+  address-ordered function-family files plus prelude/helper and quarantined
+  state files. `data/recovered_sources.json` accounts for 4070 functions, and
+  the split audit accounts for 3920 original address-marker chunks across 12
+  subsystem object libraries. The split-only cutover removed the unified GNU89
+  source, oracle targets, recovered include-C fragments, and compatibility
+  symlinks; their old-to-new identities remain in `docs/SOURCE_PATH_MAP.csv`
+  (see `docs/SOURCE_SPLIT.md`).
+- The unit harness now compiles every case independently against instrumented
+  split objects, with runner and compatibility stubs in dedicated files. Its
+  manifest-backed, per-worker shard measurement currently covers 5963/6636
+  executable lines (89.86%) across all 718 frozen pure functions, with zero
+  functions uncovered (see `docs/UNIT_TESTING.md`).
+- Before cutover, the final GCC split/oracle object gate resolved all 4070
+  manifest functions and the complete default-visible symbol surface. It
+  reported 4051 normalized-identical functions and 19 exact-hash reviewed
+  cross-TU code-generation exceptions, with no missing, unexpected, or
+  symbol-only entries. The recovered warning ratchet remains seeded at 146721
+  GCC diagnostics in 23 categories; this is explicit cleanup debt, not a
+  zero-warning result. Support code is compiled separately with warnings as
+  errors. Reviewed Clang warning results remain pending.
 - Startup now initializes the assembly-backed 100 Hz performance-counter
   timebase; UI animation and timeout helpers run in recovered centiseconds.
 - `UnitStack_ExecuteQueuedPath` now compares elapsed animation time against the
@@ -70,7 +93,7 @@ completion through route gates.
 ## Environment Requirement (runtime work)
 
 Any runtime, boot, menu, or gameplay-route work requires the installed retail
-Clash game data. The SDL platform layer (`platform_sdl_runtime.c`
+Clash game data. The SDL platform layer (`src/platform/platform_sdl_runtime.c`
 `GetDriveTypeA`) resolves the game's CD/install root to `/mnt/<drive>/clash`
 (or `/mnt/<drive>/CLASH`); `DetectGameCDPath` scans drive letters `C..Z` for a
 directory there. With no such directory, boot aborts immediately with the
@@ -101,7 +124,9 @@ Empirically, boot requires the data at three levels (verified by running
    `gfx\*.res`, `sfx\*.res`, ... via `FileSystem_MountArchiveAtIndex`);
 3. specific resources must resolve from those archives -- the title path
    `FileSystem_ResolveReadPath("gfx\backgr1.s32")` gates boot: if it is not
-   found, `App_RequestQuit` shows "Clash CD not found!" (clash95.c:60756).
+   found, `ResourceArchives_MountStartupArchives` calls `App_RequestQuit` with
+   "Clash CD not found!"
+   (`src/recovered/split/persistence/00441DC0_00443B60_persistence_001.c`).
 An empty `/mnt/c/clash` directory passes level 1 but still fails at level 3, so
 a real install (not just the directory) is required.
 

@@ -1,8 +1,5 @@
-/* Minimal dependency-free unit-test framework for the clash95 coverage TU.
- *
- * Test cases are compiled into a single translation unit (test_all.c) that
- * also #includes clash95.c, so both static and external recovered functions
- * are directly callable. Each TEST(...) auto-registers via a constructor. */
+/* Minimal dependency-free unit-test framework. Each case is an independent
+ * translation unit and TEST(...) registers it through a constructor. */
 #ifndef CLASH_TEST_H
 #define CLASH_TEST_H
 
@@ -11,6 +8,7 @@
 #include <string.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <errno.h>
 
 typedef void (*clash_test_fn)(void);
 

@@ -214,14 +214,10 @@ TEST(cov01_unitslot, init_from_type) {
   buf[13] = (char)0xFF;
   TOUCH(UnitSlot_InitFromType((int)(intptr_t)buf, 0, 3));
 
-  /* g_UnitTypeFlags is the 1-entry weak stand-in for the real per-unit-type
-   * flag table and is always zero, so the "(flags & 2) != 0 -> morale = 6"
-   * branch is otherwise unreachable. Flip the bit just for this call, then
-   * restore it immediately so no other test observes the change. */
+  /* Executable-backed metadata entries 18..30 carry flag bit 2. Use the first
+   * such type to cover the morale=6 branch without mutating recovered data. */
   memset(buf, 0, sizeof buf);
-  g_UnitTypeFlags[0] |= 2;
-  TOUCH(UnitSlot_InitFromType((int)(intptr_t)buf, 0, 0));
-  g_UnitTypeFlags[0] &= ~2;
+  TOUCH(UnitSlot_InitFromType((int)(intptr_t)buf, 18, 0));
 }
 
 TEST(cov01_unitstack, kill_by_index) {

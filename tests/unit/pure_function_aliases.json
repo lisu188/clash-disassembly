@@ -1,0 +1,6 @@
+{
+ "schema_version": 1,
+ "aliases": {
+  "WCIsvListBase_dtorFreeOnly": "WCIsvListBase_vtblFree"
+ }
+}

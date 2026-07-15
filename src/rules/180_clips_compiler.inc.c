@@ -1,1 +1,0 @@
-../recovered/rules/clips/004ACB00_compiler.inc.c

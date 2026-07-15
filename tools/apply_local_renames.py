@@ -7,24 +7,26 @@ ONLY within the byte range of the named function, token-aware (skips strings and
 comments so trailing `// reg@n` anchors stay stable).
 
 Input JSON: a list of
-  {"file": "src/game/070_battle.inc.c",
+  {"file": "src/recovered/split/battle/0042CB50_0042E8B0_battle_001.c",
    "func": "UnitBattle_HandleRetreatAction",
    "renames": {"a1": "unitStack", "v5": "targetTileRow", ...},
    "confidence": "...", "evidence": "..."}
-Only whole-word generated identifiers (a\\d+, v\\d+) are accepted as `old`, and
-each `new` must be a valid C identifier that is not already a generated name.
+The function identity is resolved through ``data/recovered_sources.json``;
+``file`` is retained as review metadata and may be a canonical or historical
+path. Only whole-word generated identifiers (a\\d+, v\\d+) are accepted as
+`old`, and each `new` must be a valid C identifier that is not already a
+generated name. Approved writes refresh the manifest's canonical body hashes.
 
 Usage: apply_local_renames.py mapping.json [mapping2.json ...]
 Prints a JSON report. Appends provenance to $LOCAL_RENAME_ACCUM.
 """
-import glob
 import json
 import os
 import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from apply_sub_renames import split_code_and_literals  # noqa: E402
+import literal_common as lc  # noqa: E402
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 GEN_LOCAL = re.compile(r"^(a|v)\d+$")
@@ -78,7 +80,7 @@ def find_functions(text):
 def code_identifiers(segment_text):
     """Set of identifier tokens appearing in the CODE (non string/comment) parts."""
     idents = set()
-    for is_code, s in split_code_and_literals(segment_text):
+    for is_code, s in lc.split_code_and_literals(segment_text):
         if is_code:
             idents.update(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", s))
     return idents
@@ -102,7 +104,7 @@ def drop_collisions(body, mapping):
 
 def scoped_sub(segment_text, mapping):
     pat = re.compile(r"\b(" + "|".join(re.escape(x) for x in mapping) + r")\b")
-    segs = split_code_and_literals(segment_text)
+    segs = lc.split_code_and_literals(segment_text)
     return "".join(
         pat.sub(lambda m: mapping[m.group(1)], s) if is_code else s
         for is_code, s in segs
@@ -113,19 +115,39 @@ def main():
     entries = []
     for p in sys.argv[1:]:
         entries.extend(json.load(open(p)))
+    manifest = lc.load_source_manifest()
+    manifest_by_name = {
+        record["name"]: record for record in manifest["functions"]
+    }
     by_file = {}
     for e in entries:
-        by_file.setdefault(e["file"], []).append(e)
+        record = manifest_by_name.get(e.get("func"))
+        if record is None:
+            by_file.setdefault(None, []).append(e)
+            continue
+        resolved = dict(e)
+        resolved["requested_file"] = e.get("file")
+        resolved["file"] = record["source"]
+        by_file.setdefault(record["source"], []).append(resolved)
 
     applied = 0
     rejected = []
     accepted_prov = []
+    touched = set()
     for f, ents in by_file.items():
-        if not os.path.exists(f):
+        if f is None:
+            for e in ents:
+                rejected.append(
+                    [e.get("file"), e.get("func"),
+                     "func absent from source manifest"]
+                )
+            continue
+        path = os.path.join(lc.REPO, f)
+        if not os.path.exists(path):
             for e in ents:
                 rejected.append([e.get("file"), e.get("func"), "file missing"])
             continue
-        text = open(f, errors="replace").read()
+        text = open(path, errors="replace").read()
         funcs = find_functions(text)
         # apply from last function to first so byte ranges stay valid
         edits = []
@@ -155,16 +177,21 @@ def main():
             if newbody != body:
                 text = text[:s] + newbody + text[en:]
                 applied += 1
+                touched.add(f.replace(os.sep, "/"))
                 accepted_prov.append({"file": f, "func": fn, "renames": m,
+                                      "requested_file": e.get("requested_file"),
                                       "confidence": e.get("confidence", "inferred"),
                                       "evidence": e.get("evidence", "")})
-        open(f, "w").write(text)
+        open(path, "w").write(text)
 
+    refreshed = lc.refresh_source_manifest_body_hashes(touched)
     accum = os.environ.get("LOCAL_RENAME_ACCUM", "/tmp/applied_local_renames.jsonl")
     with open(accum, "a") as fh:
         for e in accepted_prov:
             fh.write(json.dumps(e) + "\n")
-    print(json.dumps({"functions_edited": applied, "rejected_count": len(rejected),
+    print(json.dumps({"functions_edited": applied,
+                      "manifest_body_hashes_refreshed": refreshed,
+                      "rejected_count": len(rejected),
                       "rejected_sample": rejected[:10]}, indent=1))
 
 

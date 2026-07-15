@@ -1,5 +1,26 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-14 - Enum extraction EC2: ClipsType (merged onto the src/recovered refactor)
+
+Extracts the CLIPS 6.0 primitive value-type codes as `typedef enum ClipsType`
+(`CLIPS_TYPE_FLOAT=0` … `CLIPS_TYPE_INSTANCE_NAME=8`) - the most load-bearing
+CLIPS enum. behavior-confirmed by the two field-hash switches
+`Rules_ComputeFieldHashValue` and `Rules_HashFactFieldList` (now at
+`src/recovered/rules/clips/00481720_language_part2.inc.c`): 0/1 numeric payload
+at +16, 2/3/8 symbol-name, 4 multifield recurse, 5/6/7 pointer; corroborated by
+CLIPS 6.30 (`docs/archive/CLIPS_SOURCE_CROSSREF.md`). 17 case labels substituted
+(func-scoped); the 9 members are guard-pinned in
+`src/recovered/core/005_constant_guard.inc.c`.
+
+**Merge note:** the enum *definition* was already present in the refactored
+prelude (captured from the shared checkout during PR #72), but the case-label
+substitutions were not; this batch applies them, completing EC2 on the new
+`src/recovered/**` layout. Proven object-identical by
+`tools/obj_diff_gate.sh` (0 instruction changes / 434,422). Local build
+validation required temporarily materializing the `platform_sdl.h`/`defs.h`
+compatibility symlinks, which are checked out as text stubs on this Windows
+checkout (`core.symlinks=false`); those were reverted before commit.
+
 ## 2026-07-14 - Enum extraction EC1: ClipsConflictResolutionStrategy
 
 First CLIPS-engine enum (the gameplay enums are done; this begins the

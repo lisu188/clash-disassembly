@@ -27,9 +27,10 @@ Each registration is
   `s` string). E.g. `33i` = exactly 3 integer args; `22iif` = 2 args (int,
   float); `55iiiiis` = 5 args (4 int + string).
 - **addr** - for functions whose bodies are not yet recovered as C, the source
-  address (these appear in `clash95.c` as `_UNKNOWN loc_XXXXXX` externs and in
-  `clash95.asm` as labels inside their owning routine); for recovered ones, the
-  C symbol.
+  address (these appear in the canonical split declarations as `_UNKNOWN
+  loc_XXXXXX` externs and in `clash95.asm` as labels inside their owning
+  routine); for recovered ones, the C symbol. Resolve the owning split file
+  through `data/recovered_sources.json`.
 
 Function bodies at bare `loc_XXXXXX` addresses are packed handlers that the
 decompiler did not split into standalone functions; they are documented here by

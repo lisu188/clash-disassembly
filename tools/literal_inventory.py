@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Inventory magic-number literals against tools/constants_manifest.json.
 
-For each manifest constant: count call sites of its value across the
-prelude-visible sources (clash95.c single TU: src/**/*.inc.c), classified by
-expression shape (see tools/literal_common.py), with eligibility per the
-manifest tier gating. Also reports derived-candidate literals (base < v <=
-base + stride for offset/stride pairs) and frequent unmapped values.
+For each manifest constant: count call sites of its value across the canonical
+independently compiled sources listed by ``data/recovered_sources.json``,
+classified by expression shape (see tools/literal_common.py), with eligibility
+per the manifest tier gating. Also reports derived-candidate literals
+(base < v <= base + stride for offset/stride pairs) and frequent unmapped
+values.
 
 Usage:
   python3 tools/literal_inventory.py                > literal_inventory.json

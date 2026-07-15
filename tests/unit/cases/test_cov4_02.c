@@ -293,7 +293,10 @@ TEST(cov4_02_module, print_pp_form_found_no_pp_form) {
   moduleNode[7] = 0;                        /* offset28-ish "next" terminator field used elsewhere */
   g_DefmoduleListHead = (int)(intptr_t)moduleNode;
 
-  CHECK_EQ(Module_PrintPPFormByName((_BYTE *)modname, (signed int)"cov4_02_stream"), 1);
+  CHECK_EQ(Module_PrintPPFormByName(
+               (_BYTE *)modname,
+               (signed int)(intptr_t)"cov4_02_stream"),
+           1);
 
   g_DefmoduleListHead = saved9AC;
 }
@@ -342,6 +345,7 @@ TEST(cov4_02_testparsedflag, yet_another_fresh_call_site) {
   memset(pad2, 0, sizeof pad2);
   memset(pad3, 0, sizeof pad3);
   pad4 = 0;
+  (void)pad4;
   TOUCH(Rules_TestConstraintAttributeParsedFlag(
       (int)(intptr_t)"cov4-02-unmatched-attr", (_DWORD *)pad3));
 }

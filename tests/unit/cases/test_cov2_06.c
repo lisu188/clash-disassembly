@@ -33,7 +33,7 @@ TEST(cov2_06_diag, trace_world_map_unit_snapshot_full) {
 
   {
     int stack_record = UNIT_STACK(10);
-    *(short *)UNIT_STACK_SLOT(stack_record, 3) = -1; /* force inner break */
+    *(short *)(intptr_t)UNIT_STACK_SLOT(stack_record, 3) = -1;
   }
 
   Diagnostics_TraceWorldMapUnitSnapshot("cov2_06_stage");

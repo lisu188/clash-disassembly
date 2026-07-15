@@ -447,8 +447,8 @@ TEST(cov4_04_depth, place_in_depth_list_null_a1) {
 
 /* ---- CRT_FindFirstFile -- target 106274 (the success-path return of the
  * real Win32 handle). Needs FindFirstFileA to actually match something.
- * Earlier passes (test_cov12.c, test_cov2_05.c) already tried "/tmp/*" and
- * "/*" for this same line without apparently landing it (still listed
+ * Earlier passes (test_cov12.c, test_cov2_05.c) already tried wildcard paths
+ * rooted at /tmp and / for this same line without apparently landing it
  * uncovered), which suggests the compat path-translation layer needs a
  * pattern under its own translated root rather than any real POSIX path --
  * tried here with a few different candidates, including the repo's own

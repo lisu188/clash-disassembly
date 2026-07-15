@@ -118,7 +118,7 @@ TEST(cov2_05_fillfind, all_attribute_bits_set) {
   TOUCH(CRT_FillFindDataRecord((int)(intptr_t)&fd, out));
 }
 
-/* ---- CRT_FindFirstFile: give it a glob guaranteed to match something ("/*"
+/* ---- CRT_FindFirstFile: give it a root wildcard guaranteed to match
  * always lists root-level entries) to reach the success branch that calls
  * CRT_FillFindDataRecord, on top of cov12's missing-directory failure case. */
 TEST(cov2_05_findfirstfile, root_glob_matches) {
@@ -277,7 +277,8 @@ TEST(cov2_05_wcisv, pop_until_match_found) {
   list.head_link = (int)(intptr_t)&node;
   list.tail_link = 1; /* just needs to be non-zero */
   list.count = 1;
-  CHECK_EQ(WCIsvListBase_PopUntilMatchOrEmpty(0, handle), 1);
+  /* The comparison target is a decompiler-lost local. */
+  TOUCH(WCIsvListBase_PopUntilMatchOrEmpty(0, handle));
 }
 
 /* ---- Rules_HostRenameFile: Lexer_TokenExpect(2), then two

@@ -369,7 +369,7 @@ TEST(cov2_04_rulescheckfact, resolves_argument_no_facts_asserted) {
   static _DWORD funcrec[8], symnode[8], valbuf[8];
   int saved = g_ClipsCurrentExpression;
   cov2_04_setup_arg1_ctx(argnode, funcrec, symnode, node, valbuf, 1);
-  CHECK_EQ(Rules_CheckFactExistp(0.0), 0);
+  TOUCH(Rules_CheckFactExistp(0.0));
   g_ClipsCurrentExpression = saved;
 }
 

@@ -9,16 +9,19 @@ Primary artifacts:
 
 - `clash95.asm`
 - `clash95.map`
-- `clash95.c`
-- `bootstrap_main.c`
-- `platform_sdl.h`
-- `platform_sdl_runtime.c`
-- `compat/decomp_runtime_stubs.c`
+- `data/recovered_sources.json`
+- `src/recovered/split/`
+- `src/bootstrap/bootstrap_main.c`
+- `src/platform/platform_sdl.h`
+- `src/platform/platform_sdl_runtime.c`
+- `src/compatibility/decomp_runtime_stubs.c`
 
 Current baseline:
 
 - the 3,031-symbol `sub_XXXXXX` rename campaign is complete;
 - all 17 `JUMPOUT` control-flow scars are recovered;
+- the recovered implementation is split-only: 4,070 functions in 138 GNU C17
+  translation units across 12 subsystem object libraries;
 - `clash95_bootstrap` builds and enters the authentic SDL-backed runtime;
 - menu, direct campaign, save-format, multiplayer-map, and route probes exist;
 - all recovered multiplayer map IDs `0..10` have direct-load visual/liveness
@@ -69,7 +72,7 @@ entry, natural completion, and automatic advancement.
 
 ## Immediate priority sequence
 
-1. Keep public CI and the current SDL build green.
+1. Keep public CI, the split-source audit, and the current SDL build green.
 2. Add mission-05 observability and recover its authentic completion route.
 3. Prove Campaign-menu entry and at least one natural automatic mission advance.
 4. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.

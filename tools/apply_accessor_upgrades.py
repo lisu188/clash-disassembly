@@ -22,7 +22,7 @@ would become provable only under term-order-preserving macros or an -O1+ build
 where the constant fold makes the object code converge.
 
 This tool is retained for that future scenario. Replacement is confined to code
-segments via apply_sub_renames.split_code_and_literals; only simple-identifier
+segments via literal_common.split_code_and_literals; only simple-identifier
 indices are matched.
 
 Usage:

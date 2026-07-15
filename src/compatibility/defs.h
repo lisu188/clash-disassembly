@@ -113,6 +113,37 @@ typedef int errno_t;
 extern _WORD __ES__;
 extern _WORD __DS__;
 
+/* Watcom runtime helpers provided by decomp_runtime_stubs.c. */
+int __fastcall _wcpp_4_ctor_array__(_DWORD base, _DWORD count);
+int __fastcall _wcpp_4_dtor_array_store__(_DWORD base, _DWORD descriptor);
+int __cdecl _wcpp_4_copy_array__(int base);
+int __thiscall fclose_(_DWORD handle);
+__int64 __fastcall nmalloc_(_DWORD count, _DWORD size);
+int __fastcall memset_(_DWORD destination, _DWORD value);
+int __fastcall strcmp_(_DWORD left, _DWORD right);
+void *memmove_(void *destination, const void *source, size_t byte_count);
+int __fastcall strupr_(_DWORD text, _DWORD unused);
+_DWORD CRT_ProbeStackFrame(_DWORD size);
+int atoi_(const char *text);
+int __cdecl abs32(int value);
+int __fastcall CRT_PutcToStream(_DWORD value, _DWORD stream);
+int __fastcall CRT_SignedLongToDecimalString(_DWORD value, _DWORD buffer);
+int CRT_FinalizeAnsiApiStringResult();
+int CRT_FinalizeWideApiStringResult();
+void __lock_p(__lock *lock);
+void __lock_v(__lock *lock);
+int CRT_DispatchRegisteredFpeHandler(void);
+void __fastcall __writefsdword(_DWORD offset, _DWORD value);
+intptr_t __fastcall CRT_RegisterSignalHandler(
+  int signal_number,
+  intptr_t handler_value);
+int __cdecl sprintf_(char *buffer, const char *format, ...);
+char *strlwr_(char *text);
+int __thiscall toupper_(_DWORD character);
+int time_(void);
+/* Some recovered callers retain register-shaped extra arguments. */
+int rand_();
+
 #define BYTEn(x, n) (*((_BYTE *)&(x) + (n)))
 #define WORDn(x, n) (*((_WORD *)&(x) + (n)))
 #define DWORDn(x, n) (*((_DWORD *)&(x) + (n)))

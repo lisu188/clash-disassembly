@@ -1896,8 +1896,14 @@ DWORD __stdcall timeGetTime(void);
 static WNDCLASSA g_platform_window_class;
 static int g_platform_has_window_class;
 static HWND g_platform_foreground_window;
-static struct SDL_Surface g_platform_default_surface = { 640, 480 };
-static struct SDL_Surface g_platform_default_icon = { 32, 32 };
+static struct SDL_Surface g_platform_default_surface = {
+  .width = 640,
+  .height = 480
+};
+static struct SDL_Surface g_platform_default_icon = {
+  .width = 32,
+  .height = 32
+};
 static struct SDL_Cursor g_platform_default_cursor = { 0 };
 static int g_platform_stock_brush;
 static int g_platform_module_handle_token;
@@ -2004,8 +2010,8 @@ static Uint32 *PlatformConvertDibToArgb32(const void *bits, const BITMAPINFO *bi
   if ( !bits || !bitmap_info )
     return 0;
   header = &bitmap_info->bmiHeader;
-  width = header->biWidth ? abs(header->biWidth) : fallback_width;
-  height = header->biHeight ? abs(header->biHeight) : fallback_height;
+  width = header->biWidth ? (int)labs(header->biWidth) : fallback_width;
+  height = header->biHeight ? (int)labs(header->biHeight) : fallback_height;
   if ( width <= 0 || height <= 0 )
     return 0;
   bit_count = header->biBitCount ? header->biBitCount : 32;
@@ -2557,7 +2563,11 @@ LRESULT __stdcall DispatchMessageA(const MSG *lpMsg)
     window_proc = g_platform_window_class.lpfnWndProc;
     if ( window_proc )
     {
-      if ( (void *)window_proc == (void *)Platform_MainWindowProc )
+      LRESULT (*recovered_window_proc)(void *, HWND, UINT, WPARAM, LPARAM);
+
+      recovered_window_proc = Platform_MainWindowProc;
+      if ( sizeof(window_proc) == sizeof(recovered_window_proc)
+        && memcmp(&window_proc, &recovered_window_proc, sizeof(window_proc)) == 0 )
         return Platform_MainWindowProc(0, lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
       return window_proc(lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
     }
@@ -2911,8 +2921,8 @@ int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int De
   window = PlatformGetWindowFromHdc(hdc);
   if ( !window || !window->host_window || !lpBits || !lpbmi )
     return SrcHeight ? SrcHeight : DestHeight;
-  surface_width = lpbmi->bmiHeader.biWidth ? abs(lpbmi->bmiHeader.biWidth) : SrcWidth;
-  surface_height = lpbmi->bmiHeader.biHeight ? abs(lpbmi->bmiHeader.biHeight) : abs(SrcHeight);
+  surface_width = lpbmi->bmiHeader.biWidth ? (int)labs(lpbmi->bmiHeader.biWidth) : SrcWidth;
+  surface_height = lpbmi->bmiHeader.biHeight ? (int)labs(lpbmi->bmiHeader.biHeight) : abs(SrcHeight);
   argb_pixels = PlatformConvertDibToArgb32(lpBits, lpbmi, surface_width, surface_height, &argb_pitch);
   if ( !argb_pixels )
     return 0;

@@ -392,19 +392,22 @@ TEST(cov21_messagehandler, enum_next_a2_advances) {
  * "specific class" branch, backed by a real buffer. ---- */
 
 TEST(cov21_messagehandler, print_handler_list_tally_a2_zero) {
-  TOUCH(MessageHandler_PrintHandlerListTally((int)"werror", 0, 0, 0));
+  TOUCH(MessageHandler_PrintHandlerListTally((int)(intptr_t)"werror", 0, 0,
+                                              0));
 }
 
 TEST(cov21_messagehandler, print_handler_list_tally_a2_a4_nonzero) {
   static _DWORD a2[32];
   memset(a2, 0, sizeof a2);
-  TOUCH(MessageHandler_PrintHandlerListTally((int)"werror", (int)(intptr_t)a2, 0, 1));
+  TOUCH(MessageHandler_PrintHandlerListTally(
+      (int)(intptr_t)"werror", (int)(intptr_t)a2, 0, 1));
 }
 
 TEST(cov21_messagehandler, print_handler_list_tally_a2_nonzero_a4_zero) {
   static _DWORD a2[32];
   memset(a2, 0, sizeof a2);
-  TOUCH(MessageHandler_PrintHandlerListTally((int)"werror", (int)(intptr_t)a2, 0, 0));
+  TOUCH(MessageHandler_PrintHandlerListTally(
+      (int)(intptr_t)"werror", (int)(intptr_t)a2, 0, 0));
 }
 
 /* ---- MessageHandler_PreviewSendForSymbol: a2 is a real `_BYTE *`, so an
@@ -416,7 +419,9 @@ TEST(cov21_messagehandler, preview_send_for_symbol_not_found) {
   static _BYTE name[16];
   memset(name, 0, sizeof name);
   memcpy(name, "foo", 4);
-  CHECK_EQ((intptr_t)MessageHandler_PreviewSendForSymbol((int)"werror", name), 0);
+  CHECK_EQ((intptr_t)MessageHandler_PreviewSendForSymbol(
+               (int)(intptr_t)"werror", name),
+           0);
 }
 
 /* ---- MessageHandler_RegisterSystemHandlers: plain registration

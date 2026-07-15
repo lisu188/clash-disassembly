@@ -24,7 +24,7 @@ TEST(cov04_garrison, write_action_widget_record) {
   static unsigned char record[128];
   memset(record, 0, sizeof record);
   BuildingGarrisonDialog_WriteActionWidgetRecord(
-      record, 10, 20, 1, 2, 3, (void *)Runtime_DescriptorNoop, "pl", "en",
+      record, 10, 20, 1, 2, 3, NULL, "pl", "en",
       "de", "snd");
   CHECK_EQ(*(_DWORD *)(record + 0), 10);
   CHECK_EQ(*(_DWORD *)(record + 4), 20);
@@ -204,14 +204,10 @@ TEST(cov04_tooltip, set_resource_handle) {
   CHECK_EQ(Tooltip_SetResourceHandle(0), 0);
 }
 
-/* ---- UnitStack_HasOnlyFlyingUnits --------------------------------------
- * g_UnitTypeFlags is declared `int g_UnitTypeFlags[] = { 0 };` (an array of
- * exactly one real element) -- only index 0 (unit type 0) is ever safe to
- * write; every stack slot below uses type 0 so all indexing stays in-bounds. */
+/* ---- UnitStack_HasOnlyFlyingUnits ----------------------------------- */
 TEST(cov04_unitstack, has_only_flying_units_all_branches) {
   static unsigned char stack[512];
   int i;
-  int saved_flag = g_UnitTypeFlags[0];
 
   /* immediate terminator -> returns 1 without looking at g_UnitTypeFlags */
   memset(stack, 0, sizeof stack);
@@ -221,18 +217,14 @@ TEST(cov04_unitstack, has_only_flying_units_all_branches) {
   /* type 0 present, flag bit0 clear -> break out of loop -> return 0 */
   memset(stack, 0, sizeof stack);
   *(__int16 *)(stack + 6) = 0;
-  g_UnitTypeFlags[0] = 0;
   CHECK_EQ(UnitStack_HasOnlyFlyingUnits((int)(intptr_t)stack), 0);
 
-  /* type 0 present in all 10 slots, flag bit0 set -> loop runs to the cap
-   * (v2 >= 10) -> return 1 */
+  /* Executable-backed type 26 has flag bit0 set. Ten such slots reach the
+   * cap and return 1. */
   memset(stack, 0, sizeof stack);
   for (i = 0; i < 10; ++i)
-    *(__int16 *)(stack + 6 + 31 * i) = 0;
-  g_UnitTypeFlags[0] = 1;
+    *(__int16 *)(stack + 6 + 31 * i) = 26;
   CHECK_EQ(UnitStack_HasOnlyFlyingUnits((int)(intptr_t)stack), 1);
-
-  g_UnitTypeFlags[0] = saved_flag;
 }
 
 /* ---- RoadBuildMode_RequestExitAfterWidgetPress / _RequestExit --------- */

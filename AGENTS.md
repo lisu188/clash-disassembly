@@ -22,6 +22,10 @@ language for each track.
   state in `docs/STATUS.md`).
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
+- The recovered implementation is canonical only under
+  `src/recovered/split/`: 4,070 functions in 138 independently compiled GNU C17
+  translation units. The unified source, recovered include-C fragments, and
+  compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
   reached behavioral recovery, structure recovery, compatibility cleanup, and
   campaign validation.
@@ -66,7 +70,8 @@ than a copy kept in sync by hand.
 ## 6. Evidence Order
 
 1. `clash95.map` for public symbol spelling and segment-relative addresses.
-2. `clash95.asm`, `clash95.c`, and live route evidence for behavior.
+2. `clash95.asm`, the manifest-backed sources under `src/recovered/split/`, and
+   live route evidence for behavior.
 3. Struct layouts, lookup tables, arrays, enums, switch dispatch, and shared-state
    access patterns.
 4. Call graph neighborhoods, strings, resource keys, and local installed game
@@ -97,10 +102,11 @@ than a copy kept in sync by hand.
 
 - SDL remains the final platform, window, render, timing, input, and audio layer.
 - Keep original gameplay behavior separate from platform glue.
-- Contain Win32-era assumptions behind `platform_sdl.h` and
-  `platform_sdl_runtime.c`.
-- Put inert compile-only scaffolding in `compat/decomp_runtime_stubs.c` and replace
-  it only when reached behavior is understood.
+- Contain Win32-era assumptions behind `src/platform/platform_sdl.h` and
+  `src/platform/platform_sdl_runtime.c`.
+- Put inert compile-only scaffolding in
+  `src/compatibility/decomp_runtime_stubs.c` and replace it only when reached
+  behavior is understood.
 - A live process or dummy window is not sufficient proof; inspect actual
   presented frames for visual milestones.
 

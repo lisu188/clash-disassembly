@@ -38,6 +38,16 @@ jobs:
           set -euo pipefail
           python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
           python3 -m json.tool UNIT_TYPES_AND_STATS.json >/dev/null
+          python3 -m json.tool data/recovered_sources.json >/dev/null
+          python3 -m json.tool data/recovered_warning_baseline.json >/dev/null
+          python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
+          python3 -m json.tool tests/unit/pure_set.json >/dev/null
+
+      - name: Audit split sources and frozen metadata
+        run: |
+          python3 tools/audit_split_sources.py
+          python3 tools/migrate_pure_coverage_metadata.py --check
+          python3 tools/check_save_format_contract.py
 
       - name: Check Markdown links
         id: markdown-links
@@ -58,7 +68,64 @@ jobs:
         run: git diff --check
 
   linux-build:
-    name: Linux compile and link
+    name: Linux ${{ matrix.compiler }} compile and link
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: GCC 13
+            cc: gcc-13
+            package: gcc-13
+            compiler_id: gcc
+            warning_mode: check
+          - compiler: Clang 18
+            cc: clang-18
+            package: clang-18
+            compiler_id: clang
+            warning_mode: report
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev ${{ matrix.package }}
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build split targets with asset-free tests
+        id: build
+        shell: bash
+        run: |
+          if ! cmake --build build --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >compiler.log 2>&1; then
+            tail -n 200 compiler.log
+            exit 1
+          fi
+
+      - name: Check recovered warning ratchet
+        shell: bash
+        run: python3 tools/check_recovered_warnings.py compiler.log --compiler ${{ matrix.compiler_id }} --mode ${{ matrix.warning_mode }}
+
+      - name: Run asset-free CTest gates
+        run: ctest --test-dir build -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' --output-on-failure
+
+      - name: Upload compiler diagnostics
+        if: always() && steps.build.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovered-${{ matrix.cc }}-diagnostics
+          path: compiler.log
+          if-no-files-found: warn
+
+  unit-coverage:
+    name: Split unit coverage
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -71,11 +138,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev
 
-      - name: Configure
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+      - name: Configure coverage build
+        run: cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
 
-      - name: Build clash95_bootstrap and mission trace tests
-        run: cmake --build build --target clash95_bootstrap runtime_mission_trace_tests -j2
+      - name: Build independently compiled unit harness
+        run: cmake --build build/coverage --target clash95_unit_tests -j2
 
-      - name: Run mission trace unit test
-        run: ctest --test-dir build -R '^runtime_mission_trace_tests$' --output-on-failure
+      - name: Run split unit suite
+        run: ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure
+
+      - name: Enforce frozen coverage floor
+        run: python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10

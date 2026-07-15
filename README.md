@@ -3,7 +3,10 @@
 Evidence-driven recovery of the original Win95 Clash binary.
 
 - `clash95.asm` is the protected Win95 behavioral source of truth.
-- `clash95.c` is the recovered Win95 implementation under SDL build, runtime, and campaign-route validation.
+- `src/recovered/split/` is the canonical recovered GNU C17 implementation
+  under SDL build, runtime, and campaign-route validation.
+- `data/recovered_sources.json` maps all 4,070 recovered functions to 138
+  independently compiled translation units.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
 
@@ -22,15 +25,22 @@ Metadata and documentation checks:
 ```sh
 python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
 python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
+python3 tools/audit_split_sources.py
 python3 tests/check_markdown_links.py
 git diff --check
 ```
 
 ## Source organization
 
-`clash95.c` remains the sole recovered translation unit. Canonical recovered fragments live under `src/recovered/`; separately compiled SDL, compatibility, instrumentation, and bootstrap code live in their own `src/` areas. Legacy source paths are retained as symlinks for recovery tooling and historical evidence.
+The recovered implementation is compiled as 12 subsystem object libraries from
+the C files under `src/recovered/split/`. SDL, compatibility, instrumentation,
+and bootstrap code remain in their own `src/` areas. The former unified source,
+recovered include-C fragments, and compatibility symlinks were removed at the
+split-only cutover; [docs/SOURCE_PATH_MAP.csv](docs/SOURCE_PATH_MAP.csv)
+preserves their old-to-new identities.
 
-See `src/README.md` for the fragment map and `docs/SOURCE_LAYOUT.md` for source-boundary and validation rules.
+See `src/README.md` for the subsystem map and `docs/SOURCE_LAYOUT.md` for
+source-boundary and validation rules.
 
 ## Documentation
 

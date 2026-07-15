@@ -33,6 +33,7 @@ static void cov5_02_prime_int(int val) {
   for (i = 0; i < 65536; i++) {
     buf[i] = val;
   }
+  (void)buf[0];
 }
 
 /* =========================================================================
@@ -323,6 +324,7 @@ static void cov5_02_wcmih_prime(int val) {
   for (i = 0; i < 65536; i++) {
     buf[i] = val;
   }
+  (void)buf[0];
 }
 
 TEST(cov5_02_wcmih, v12_nonzero_v15_zero) {

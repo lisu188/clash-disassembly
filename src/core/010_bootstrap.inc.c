@@ -1,1 +1,0 @@
-../recovered/core/00401020_bootstrap.inc.c

@@ -2,7 +2,7 @@ category,conversation_item,legacy_or_map_name,canonical_or_preferred_name,curren
 repo_doc,Guide file,,docs/REVERSE_ENGINEERING.md,present,docs/REVERSE_ENGINEERING.md,preserve,high,Added in this integration wave to capture evidence order naming rules and conservative recovery policy.
 repo_doc,Maintainer audit,,docs/archive/CONVERSATION_FINDINGS_GAP_AUDIT.md,present,docs/archive/CONVERSATION_FINDINGS_GAP_AUDIT.md,preserve,high,Added in this integration wave to keep future Codex passes from redoing already-landed rename work.
 repo_doc,Machine-readable crosswalk,,data/conversation_findings_crosswalk.csv,present,data/conversation_findings_crosswalk.csv,preserve,high,Added in this integration wave as a grep-friendly ownership and status map for conversation findings.
-build_surface,Static library target,,clash95_recovered,present,CMakeLists.txt,preserve,high,Build surface already compiles clash95.c plus SDL and compat seam.
+build_surface,Static library target,,clash95_recovered,present,CMakeLists.txt,preserve,high,Build surface compiles 138 manifest-backed GNU C17 recovered translation units plus the SDL and compatibility seams.
 agent_scope,Narrow mission charter,,AGENTS.md,present,AGENTS.md,leave mostly unchanged,high,Still focused on unit types and stats.
 rename,Platform window proc,Win_WndProc,Platform_MainWindowProc,present,docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
 rename,Platform window bootstrap,Win_CreateMainWindow,Platform_CreateMainWindow,present,docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Reproducible naming audit for clash-disassembly.
 
-Counts remaining opaque / generated identifiers in the recovered Win95 source
-(clash95.c aggregator + src/**/*.inc.c fragments, plus bootstrap_main.c /
-platform_sdl_runtime.c / runtime_mission_trace.c) so the semantic-naming
-campaign's definition-of-done can be verified mechanically.
+Counts remaining opaque/generated identifiers in the canonical recovered
+GNU C17 translation units from ``data/recovered_sources.json``, plus current
+bootstrap/platform/instrumentation support sources, so the
+semantic-naming campaign's definition-of-done can be verified mechanically.
 
 Kinds counted (distinct where noted):
   func_sub      : sub_<hex> used as a function name  (definitions / declarations)
@@ -21,9 +21,14 @@ Usage:
   python tools/naming_audit.py --literals    # add magic-literal counts
                                              # (tools/constants_manifest.json)
 """
-import re, os, sys, json, glob
+import json
+import os
+import re
+import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(REPO, "tools"))
+from global_inventory import recovered_source_files  # noqa: E402
 
 GLOBAL_PREFIXES = ["dword_", "word_", "byte_", "qword_", "off_", "unk_", "dbl_", "flt_", "loc_"]
 
@@ -92,7 +97,7 @@ def summarize(res):
 
 def audit_literals():
     """Magic-literal progress counts (tools/constants_manifest.json values,
-    prelude-visible sources only -- see tools/literal_common.py)."""
+    canonical manifest sources only -- see tools/literal_common.py)."""
     sys.path.insert(0, os.path.join(REPO, "tools"))
     import literal_common as lc
     entries, families = lc.load_manifest()
@@ -128,10 +133,13 @@ def audit_literals():
 
 def main():
     out = {}
-    # WIN95 track: aggregator fragments + standalone runtime/platform C
-    win_files = (glob.glob(os.path.join(REPO, "src", "**", "*.inc.c"), recursive=True)
-                 + [os.path.join(REPO, f) for f in
-                    ("bootstrap_main.c", "platform_sdl_runtime.c", "runtime_mission_trace.c")])
+    support = (
+        "src/bootstrap/bootstrap_main.c",
+        "src/platform/platform_sdl_runtime.c",
+        "src/instrumentation/runtime_mission_trace.c",
+    )
+    win_files = [os.path.join(REPO, rel) for rel in recovered_source_files()]
+    win_files.extend(os.path.join(REPO, rel) for rel in support)
     win_files = [f for f in win_files if os.path.exists(f)]
     win = blank(); per_win = {}
     for f in win_files:

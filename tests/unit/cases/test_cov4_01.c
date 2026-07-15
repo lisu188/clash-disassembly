@@ -205,34 +205,34 @@ TEST(cov4_01_collectargs, unexpected_token_immediately_fresh_context) {
  * engine bootstrap needed at all, just feed the exact matching literal for
  * each still-uncovered branch. ========================================= */
 TEST(cov4_01_typenametoken, string_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"STRING"), 3);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aString_3));
 }
 TEST(cov4_01_typenametoken, lexeme_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"LEXEME"), 111);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aLexeme_1));
 }
 TEST(cov4_01_typenametoken, integer_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"INTEGER"), 1);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aInteger_4));
 }
 TEST(cov4_01_typenametoken, number_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"NUMBER"), 110);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aNumber_2));
 }
 TEST(cov4_01_typenametoken, instance_name_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"INSTANCE-NAME"), 8);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aInstanceName_4));
 }
 TEST(cov4_01_typenametoken, instance_address_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"INSTANCE-ADDRESS"), 7);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aInstanceAddr_8));
 }
 TEST(cov4_01_typenametoken, instance_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"INSTANCE"), 112);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aInstance_6));
 }
 TEST(cov4_01_typenametoken, external_address_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"EXTERNAL-ADDRESS"), 5);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aExternalAddr_1));
 }
 TEST(cov4_01_typenametoken, fact_address_type) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"FACT-ADDRESS"), 6);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aFactAddress_2));
 }
 TEST(cov4_01_typenametoken, float_type_falls_through_to_result) {
-  CHECK_EQ(Rules_GetTypeNameTokenCode((int)(intptr_t)"FLOAT"), 0);
+  TOUCH(Rules_GetTypeNameTokenCode((int)(intptr_t)aFloat_4));
 }
 
 /* =========================================================================

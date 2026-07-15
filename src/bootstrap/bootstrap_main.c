@@ -1,4 +1,4 @@
-#include "platform_sdl.h"
+#include "../platform/platform_sdl.h"
 
 #include <execinfo.h>
 #include <signal.h>
@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#define CLASH95_BOOTSTRAP_UNUSED __attribute__((unused))
 
 /*
  * Asm-backed bootstrap for the missing early startup slice:
@@ -77,6 +79,13 @@ int g_App_CommandModeRFlag;
 int g_CSS_InitializedFlag;
 int (*g_RenderHook)(int a1, char a2, DWORD a3);
 int g_BootstrapSkipIntroAviPlayback;
+
+DWORD Timer_InitPerfCounterFrequency(void);
+int Scenario_LoadMissionByIndexAndPlay(
+  char *mission_index_arg,
+  int mode,
+  DWORD alloc_context,
+  double runtime_value);
 
 char __thiscall DetectGameCDPath(void *this);
 int __thiscall ResourceArchives_MountStartupArchives(int this);
@@ -353,7 +362,7 @@ static int Bootstrap_ParseIntroMissionIndex(const char *command_line)
   return mission_base + mission_digit;
 }
 
-static int Bootstrap_RunRecoveredStartupPrelude(HINSTANCE hInstance, LPSTR lpCommandLine, char *command_mode_out)
+static CLASH95_BOOTSTRAP_UNUSED int Bootstrap_RunRecoveredStartupPrelude(HINSTANCE hInstance, LPSTR lpCommandLine, char *command_mode_out)
 {
   char command_mode;
 
@@ -452,7 +461,7 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
   return 1;
 }
 
-static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
+static CLASH95_BOOTSTRAP_UNUSED void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
 {
   Bootstrap_TraceMenuProbe("video-init-probe-start");
   g_CSS_InitializedFlag = 1;
@@ -471,7 +480,7 @@ static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
   Bootstrap_TraceMenuProbe("video-init-probe-end");
 }
 
-static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
+static CLASH95_BOOTSTRAP_UNUSED void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
 {
   unsigned char *menu_widgets;
   const size_t menu_widgets_size = 371;
@@ -1402,7 +1411,7 @@ static int Bootstrap_RunMessageLoop(void)
   return (int)message.wParam;
 }
 
-static int Bootstrap_RunPlatformWindowLoop(void)
+static CLASH95_BOOTSTRAP_UNUSED int Bootstrap_RunPlatformWindowLoop(void)
 {
   g_AppCommandLine = (int)(intptr_t)g_boot_command_line;
   if ( !Platform_CreateMainWindow(GetModuleHandleA(0), g_boot_command_line[0]) )

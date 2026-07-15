@@ -7,10 +7,10 @@ It is intentionally practical. The goal is not to restate everything already kno
 ## Current Rule Summary
 
 - `clash95.asm` is authoritative behavioral evidence and must not be edited.
-- `clash95.c` changes should be small, reached, and backed by assembly or live
-  route evidence.
-- Platform portability belongs behind `platform_sdl.h` and
-  `platform_sdl_runtime.c`.
+- Changes under `src/recovered/split/` should be small, reached, and backed by
+  assembly or live route evidence.
+- Platform portability belongs behind `src/platform/platform_sdl.h` and
+  `src/platform/platform_sdl_runtime.c`.
 - Historical progress and rename evidence live in `docs/archive/`.
 - If a change would remove evidence, keep the file and document the deferred
   cleanup instead.
@@ -25,8 +25,11 @@ When two sources disagree, prefer them in this order:
    - Canonical for public symbol spellings and segment-relative addresses.
    - If a name exists here, preserve it somewhere even if a better semantic alias is introduced.
 
-2. **`clash95.asm` and `clash95.c`**
-   - Canonical for control flow, constants, strings, offsets, table walks, and calling patterns.
+2. **`clash95.asm` and the manifest-backed GNU C17 sources**
+   - `src/recovered/split/` is canonical for recovered C; use
+     `data/recovered_sources.json` to resolve function identity and provenance.
+   - Together with the assembly, these are canonical for control flow,
+     constants, strings, offsets, table walks, and calling patterns.
    - Use these to prove behavior, not the decompiler's guessed variable names.
 
 3. **Repo recovery artifacts**
@@ -36,9 +39,9 @@ When two sources disagree, prefer them in this order:
    - `docs/archive/COMPILATION_PROGRESS.md`
 
 4. **Portability / compatibility seam**
-   - `platform_sdl.h`
-   - `platform_sdl_runtime.c`
-   - `compat/decomp_runtime_stubs.c`
+   - `src/platform/platform_sdl.h`
+   - `src/platform/platform_sdl_runtime.c`
+   - `src/compatibility/decomp_runtime_stubs.c`
    - `CMakeLists.txt`
 
 Rule of thumb:
@@ -117,9 +120,9 @@ Do **not** promote a guess just because it "looks likely."
 
 ### 3.5 Constant and enum families (magic-number campaign)
 
-Numeric literals are named with `SCREAMING_SNAKE_CASE` `#define`s at the top of
-`src/clash95_prelude.inc.c`, subsystem-prefixed like the function/global
-families: `UNIT_STACK_`, `BUILDING_`, `BUILDING_ADDON_FLAG_`, `PLAYER_`,
+Numeric literals are named with `SCREAMING_SNAKE_CASE` `#define`s in the private
+`src/recovered/split/recovered_foundation.h`, subsystem-prefixed like the
+function/global families: `UNIT_STACK_`, `BUILDING_`, `BUILDING_ADDON_FLAG_`, `PLAYER_`,
 `MAP_`, `PORT_`, `TILE_`, `TILE_OVERLAY_`, `TILE_OCCUPANT_`, `SCREEN_`, etc.
 Offsets/strides get an accessor macro (`UNIT_STACK(i)`, `BUILDING_RECORD(i)`).
 
@@ -140,10 +143,11 @@ Rules for introducing a named constant:
 Tooling under `tools/`: `tools/literal_common.py` (lexer/classifier),
 `tools/constants_manifest.json` (value→name gating), `tools/literal_inventory.py`
 (evidence census), `tools/apply_literal_names.py` (gated substitution + `--plan`),
-`tools/gen_constant_guard.py` (compile-time `NAME==value` pins in
-`src/core/005_constant_guard.inc.c`), and `tools/pp_token_gate.sh` /
-`tools/pp_token_diff.py` (the preprocessed-token-identity gate that stands in for
-the binary-diff check this repo lacks; `--allow` verifies declared respellings).
+the compile-time `NAME==value` pins in
+`src/recovered/split/recovered_layout.h`, and `tools/pp_token_gate.sh` /
+`tools/pp_token_diff.py` (the preprocessed-token-identity gate;
+`--allow` verifies declared respellings). `tools/obj_diff_gate.sh` provides the
+canonical split-object snapshot gate.
 Provenance ledger: `docs/archive/win95_constants_rename_accum.jsonl`; per-batch
 rules under `docs/archive/literal_rules/`; narrative in
 `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
@@ -157,7 +161,7 @@ The current build surface already separates three kinds of work:
 ### 4.1 Recovered gameplay / original logic
 
 Put semantic recovery here:
-- `clash95.c`
+- the owning manifest source under `src/recovered/split/<subsystem>/`
 
 Typical changes:
 - renames,
@@ -168,8 +172,8 @@ Typical changes:
 ### 4.2 Platform / portability shim
 
 Put non-original compatibility glue here:
-- `platform_sdl.h`
-- `platform_sdl_runtime.c`
+- `src/platform/platform_sdl.h`
+- `src/platform/platform_sdl_runtime.c`
 
 Typical changes:
 - Win32-to-SDL handle/type compatibility,
@@ -177,13 +181,13 @@ Typical changes:
 - fake or translated runtime services.
 
 Current repo examples worth preserving:
-- `platform_sdl.h` already maps old handle types like `HWND` to `SDL_Window *` and `HDC` to `SDL_Surface *`.
-- `platform_sdl_runtime.c` already provides a Win32-like queue surface with `PeekMessageA`, `PostQuitMessage`, and queue timestamps sourced from `timeGetTime()`.
+- `src/platform/platform_sdl.h` already maps old handle types like `HWND` to `SDL_Window *` and `HDC` to `SDL_Surface *`.
+- `src/platform/platform_sdl_runtime.c` already provides a Win32-like queue surface with `PeekMessageA`, `PostQuitMessage`, and queue timestamps sourced from `timeGetTime()`.
 
 ### 4.3 Inert stubs and compile unblockers
 
 Put placeholder-only scaffolding here:
-- `compat/decomp_runtime_stubs.c`
+- `src/compatibility/decomp_runtime_stubs.c`
 
 Typical changes:
 - dummy unresolved weak symbols,
@@ -485,22 +489,29 @@ this `clash95` (Win95) engine is **CLIPS 6.0** (the `"V6.00"` stamp below), and
 the public **6.30** core source is used only as a stand-in where 6.0 source is not
 distributed.
 
-Concrete in-repo evidence (all verifiable by grep against `clash95.c`):
+Concrete in-repo evidence (verifiable in the canonical split sources; the
+parenthetical unified-era paths and line numbers are retained only as
+historical anchors in the manifest and archive):
 
-- **Version stamp `"V6.00"`** (`off_51A1C4`, `clash95.c:11924`) is used as the
+- **Version stamp `"V6.00"`** (now
+  `g_Rules_BsaveVersionID`/`g_Bload_VersionString` in the recovered state owner;
+  historically `off_51A1C4`, unified line 11924) is used as the
   bload/bsave version magic: written into the binary constructs image and
-  `strcmp`-verified on load (`clash95.c:95445-95446`, `118409`). A second
-  bsave subsystem stamps the same string via `off_51AD24` (`clash95.c:12182`,
-  used at `137555`, `137897-137898`). This is exactly CLIPS 6.0's
+  `strcmp`-verified on load (historical unified lines 95445-95446 and 118409).
+  A second bsave subsystem stamps the same string via historical `off_51AD24`
+  (unified line 12182, used at 137555 and 137897-137898). This is exactly CLIPS 6.0's
   `VERSION_STRING "6.00"` binary-image version check.
 - **Standard CLIPS routers** `wwarning`, `werror`, `wtrace`, `wdialog`,
-  `wclips`, `wdisplay` (`off_51A610..51A620`, `clash95.c:12039-12043`) - the
+  `wclips`, `wdisplay` (now `g_IO_LogicalName*` in the state owner; historically
+  `off_51A610..51A620`, unified lines 12039-12043) - the
   CLIPS logical-name constants `WWARNING/WERROR/WTRACE/WDIALOG/WCLIPS/WDISPLAY`.
-- **Product strings**: `"CLIPS> "` prompt (`clash95.c:6456`), `"clips.hlp"`
-  (`7258`), `#include "clips.h"` code-generation header (`7309`),
-  `"***CLIPSFNXARGS***"` external-function arg marker (`7761`),
-  `"\n*** CLIPS SYSTEM ERROR ***\n"` (`6335`), and the
-  `"   PeriodicCleanup(CLIPS_TRUE,CLIPS_FALSE);\n"` GC banner (`7363`).
+- **Product strings**: `"CLIPS> "` prompt, `"clips.hlp"`, the
+  `#include "clips.h"` code-generation header, the `"***CLIPSFNXARGS***"`
+  external-function argument marker, `"\n*** CLIPS SYSTEM ERROR ***\n"`, and
+  the `"   PeriodicCleanup(CLIPS_TRUE,CLIPS_FALSE);\n"` GC banner. Their
+  canonical storage is in
+  `src/recovered/split/state/00000000_0054FFFF_recovered_state.c`; historical
+  unified line anchors remain in the archived evidence.
 
 Practical consequence for future recovery: when a Queue F function's role is
 unclear, match its shape and strings against the CLIPS 6.0 source (public;
@@ -651,14 +662,15 @@ These are good starter tasks because each unlocks multiple nearby symbols.
 
 - `clash95.map`
 - `clash95.asm`
-- `clash95.c`
+- `data/recovered_sources.json`
+- `src/recovered/split/`
 - `RECOVERED_STRUCTURES.json`
 - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
 - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
 - `docs/archive/COMPILATION_PROGRESS.md`
-- `platform_sdl.h`
-- `platform_sdl_runtime.c`
-- `compat/decomp_runtime_stubs.c`
+- `src/platform/platform_sdl.h`
+- `src/platform/platform_sdl_runtime.c`
+- `src/compatibility/decomp_runtime_stubs.c`
 - `CMakeLists.txt`
 
 If you only keep one mental model while disassembling, keep this one:

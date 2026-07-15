@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "normalization": "tools/compare_split_oracle.py",
+  "exceptions": [
+    {
+      "name": "Battle_RunTacticalCombat",
+      "reason": "The unified TU constant-folds a comparison between two distinct function addresses; the split TU emits the equivalent runtime comparison.",
+      "oracle_sha256": "0d3eeebeb208d011c837097abdc07f2147140a09d9acd5e9ddcf7ba3a4fd62f1",
+      "split_sha256": "66289d3c530e8626420b32ee1b28fb47b4becd9cb21fa01a8b2105c55ca69465"
+    },
+    {
+      "name": "Building_GetInto",
+      "reason": "The unified TU constant-folds a comparison between two distinct function addresses; the split TU emits the equivalent runtime comparison.",
+      "oracle_sha256": "ab47545bf7744c88ed7e7714fe16f454ecc4f0482fb3b13329bc88f996cd2291",
+      "split_sha256": "6e8963a7156d7c94624fabf26b172d7d7ef1c15b07d8c9ca11f54fcb32e40ad7"
+    },
+    {
+      "name": "CRT_DetachThreadDataAndMaybeCloseHandle",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "df3d7dd12c5946196eb3b850a257050e141ea97a90dcc14f369bda0fa5d5f9a5",
+      "split_sha256": "a51dbfe93559c44ad15dfabda50dea31408952315b0efa32517747be4d53f99a"
+    },
+    {
+      "name": "CRT_FpuExceptionFrameHandler",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "12b4defdf0023c05ab8950c1a82e4826d96e30eb0daaad73e8e29e532b6ade51",
+      "split_sha256": "7b04c4c80189c3be316415e01c98e8b410542777c5c7eafae5b34d826bdeed3d"
+    },
+    {
+      "name": "CRT_GetOrCreateThreadDataPreserveLastError",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "edb5b51de343c6ad446e59e265b2e928ab1478b4d35fa9dd0cfdcea909dc2b40",
+      "split_sha256": "fb59aa386299199480a0831b86f64d0f957def4f0c9aa305fb19ba9f7eb17859"
+    },
+    {
+      "name": "CRT_HasActiveWindow",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "ceb5021794f2713c5f004b1e3f48267cfb8157a38bb9719c2a2d214ba0a9193a",
+      "split_sha256": "635971cef54a701cbe10b6e94bba6e6b4e664aea347559ab1697fb3cf5d3bb37"
+    },
+    {
+      "name": "CRT_InitializeProcessStartupInfo",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "4d041f36f7fd06a83c118003b8b14a426c4aaf1ba9c022fcb0aa1a1153e6d646",
+      "split_sha256": "b6ba4403bd7422ccb65b7191f64732b6371df0f7efce273de243b335b39577d2"
+    },
+    {
+      "name": "CRT_SpawnveLaunchProcess",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "b726202a9edbe79ea4bf08ad0150a88f4fea63df07cf901790ff1d8b86446779",
+      "split_sha256": "98958b96f3d81c54bd42f4b3a9ef5a3c7244e553ada877df3172c36d6b87da9f"
+    },
+    {
+      "name": "CRT_WatcomEHUnwindThreadToState",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "e3f0375e9a8d38b018b10e799e89efe098f63f14eb711399c4038c131d20cc55",
+      "split_sha256": "8004e2e6da8eb6ec25e6952640e09ae2e9988eeb93b46000e1f1e917c5343d82"
+    },
+    {
+      "name": "CSS_CloseWaveOutDevice",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "c6483ab0cdb67b388961a42178d6b8a46080807a1bc72fc440fb0c4b572b9404",
+      "split_sha256": "ab4d17055be1830d1bd4ab8c354f3e9fb94d0860bf7f2440da850108549a8f47"
+    },
+    {
+      "name": "CSS_Init",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "f265007a05c3d8f49526e8c4bdc8c09e2ec4957a0293295f0c1c95b8e2def239",
+      "split_sha256": "20837988553574aa2b50009701a417b30d1793b92c381358d5b699fd96e4d5fd"
+    },
+    {
+      "name": "CSS_InitVoicePool",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "6639fcf2af2d66fbf722a025fed1996807ada2c6fa71e15ac077011d6f42e516",
+      "split_sha256": "1c6895c79eb8f0a9fb3aa6ce9020fc5c61f7c118cba3886f067c3b5502c786a9"
+    },
+    {
+      "name": "Castle_OpenManagementScreen",
+      "reason": "The unified TU constant-folds a comparison between two distinct function addresses; the split TU emits the equivalent runtime comparison.",
+      "oracle_sha256": "51376f6fe81e58e62e23c525de69d1b28fb6933db30c580c14e6ded7e0e3ba18",
+      "split_sha256": "b398e53c4302d63b7d993404c90167d6d65d650f35d8ab6fed2e92c1417f9e34"
+    },
+    {
+      "name": "IO_FileIOGetcCallback",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "f4e15b5fa3c4e34df8f0c108f06aa0f909ab267651f8017d092b026b7a25c451",
+      "split_sha256": "b317a267264946f74b99a9967963719992347423d8a514b3e3d4cde38f5cd618"
+    },
+    {
+      "name": "IO_ScanfReadIntegerField",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "40ac2234e57ab6af676eeb70fc18cb2f2e7787e104da0ef31cc5a8644b0f3116",
+      "split_sha256": "53b4880d96b7b1257b249accb31f3ed28da4ef61e4bdf0bc32a12aabdb5c81ad"
+    },
+    {
+      "name": "Surface_BuildPaletteFromBitmap",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "44b7fbd5e3df64b56fdf1fd651328e85dc4bc0b527857ab34673bbf016e0412d",
+      "split_sha256": "292b2a8cde6e75a9908b015b82afb5536d7efc7d8336e67ab4c90e0c10ba5f93"
+    },
+    {
+      "name": "TextSprite_FindWordWrapBreak",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "eafb83ba55be6f7e1b43e5ca4fc00350f1078d708662a817164b614b3582423d",
+      "split_sha256": "c3478fce74027a53277404ca2f6cf9d8bd0871bd4ddc1d506b3541020d2ac066"
+    },
+    {
+      "name": "TextSprite_MeasureStringExtent",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "e569313010d49f2150a0c86ea3886fde48d1909649f5793df45769da81dcc3ab",
+      "split_sha256": "bcfb57b5d4c53676cd40c717a451434ad30d4c1f1cbe11d57cfac4b11b444b8e"
+    },
+    {
+      "name": "Win_EndModeChange",
+      "reason": "GNU C17 requires a cross-TU declaration where the GNU89 oracle used definition order or an implicit/comment-only declaration; this changes host-width extension or register allocation without changing body tokens.",
+      "oracle_sha256": "08fae94c8650167981889ad22a471e145e7f70ab6d800ae064f257c5b9a60e21",
+      "split_sha256": "fa70bf46d435ac5426647eba9fda6f4e70a9935785fd550a0694ad396dd95238"
+    }
+  ]
+}

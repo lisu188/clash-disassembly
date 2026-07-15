@@ -61,6 +61,8 @@ typedef struct SDL_Cursor SDL_Cursor;
 typedef void VOID;
 typedef char CHAR;
 typedef wchar_t WCHAR;
+typedef WCHAR *LPWSTR;
+typedef char *LPCH;
 typedef signed char SCHAR;
 typedef unsigned char UCHAR;
 typedef short SHORT;
@@ -508,6 +510,40 @@ BOOL __stdcall WaitMessage(void);
 DWORD __stdcall timeGetTime(void);
 DWORD __stdcall GetTickCount(void);
 DWORD __stdcall GetVersion(void);
+BOOL __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);
+BOOL __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);
+void __stdcall GlobalMemoryStatus(LPMEMORYSTATUS lpBuffer);
+void __stdcall InitializeCriticalSection(LPCRITICAL_SECTION criticalSection);
+void __stdcall DeleteCriticalSection(LPCRITICAL_SECTION criticalSection);
+HANDLE __stdcall CreateEventA(
+  LPSECURITY_ATTRIBUTES eventAttributes,
+  BOOL manualReset,
+  BOOL initialState,
+  LPCSTR name);
+BOOL __stdcall CloseHandle(HANDLE object);
+BOOL __stdcall PulseEvent(HANDLE eventHandle);
+
+/* Legacy Video-for-Windows import surface retained by recovered media code. */
+int AVIFileInit(void);
+int __stdcall AVIFileOpenA(DWORD file, DWORD name, DWORD mode, DWORD handler);
+int __stdcall AVIFileInfoA(DWORD file, DWORD info, DWORD size);
+int __stdcall AVIFileGetStream(DWORD file, DWORD stream, DWORD type, DWORD index);
+int __stdcall AVIFileRelease(int file);
+int __stdcall AVIStreamBeginStreaming(DWORD stream, DWORD start, DWORD end, DWORD rate);
+int __stdcall AVIStreamInfoA(DWORD stream, DWORD info, DWORD size);
+int __stdcall AVIStreamReadFormat(DWORD stream, DWORD position, DWORD format, DWORD size);
+int __stdcall AVIStreamFindSample(DWORD stream, DWORD position, DWORD flags);
+int __fastcall AVIStreamRead(
+  DWORD blockAlign,
+  DWORD byteOffset,
+  DWORD stream,
+  DWORD byteCount,
+  DWORD sampleCount,
+  DWORD startSample,
+  DWORD destination,
+  DWORD bytesRead,
+  DWORD samplesRead);
+int __stdcall AVIStreamRelease(int stream);
 HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName);
 HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter);
 UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName);

@@ -11,13 +11,13 @@ rules.json is a list of rule objects:
    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored",
                "increment_rhs"],
    "confidence": "map-confirmed", "evidence": "...", "area": "units",
-   "files": ["src/game/*.inc.c"],          # optional glob filter
+   "files": ["src/recovered/split/units/*.c"], # optional glob filter
    "allow_suffix_drop": false}              # optional; suffixed sites (0x194u)
   {"kind": "regex", "value": 32768, "name": "TILE_OCCUPANT_BUILDING_INDEX_BASE",
    "pattern": "- (?P<lit>0x8000)\\b", ...}  # surgical scope for workstream B
 
 Guarantees enforced before any write:
-- the target name exists in src/clash95_prelude.inc.c as an object macro whose
+- the target name exists in recovered_foundation.h as an object macro whose
   body is a single numeric token equal to the rule value AND to the
   tools/constants_manifest.json entry (triple cross-check);
 - a site is replaced only when its raw spelling matches the manifest spelling
@@ -325,7 +325,8 @@ def apply_plan(plan):
         with open(path, "w") as f:
             f.write(text)
         touched.append(rel)
-    return touched
+    refreshed = lc.refresh_source_manifest_body_hashes(touched)
+    return touched, refreshed
 
 
 def append_accum(plan, accum_path):
@@ -414,10 +415,11 @@ def main():
     }, indent=1))
 
     if do_apply:
-        touched = apply_plan(plan)
+        touched, refreshed = apply_plan(plan)
         accum = os.environ.get("LITERAL_RENAME_ACCUM", DEFAULT_ACCUM)
         n = append_accum(plan, accum)
         print(json.dumps({"touched_files": touched, "accum_rows": n,
+                          "manifest_body_hashes_refreshed": refreshed,
                           "accum": os.path.relpath(accum, lc.REPO)}, indent=1))
     return 0
 

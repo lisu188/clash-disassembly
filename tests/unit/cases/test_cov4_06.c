@@ -221,7 +221,7 @@ TEST(cov4_06_parseclassnamearg, symbol_tag_success) {
 /* ---- Class_PrintModuleList: test_cov2_05.c's cov2_05_printmodulelist
  * already reaches everything up to (and including) the first
  * MessageHandler_EnumNext(a1,0) call by giving *(a1+4) a non-null "head"
- * pointer but leaving *(a1+88)/*(a1+96) zero (no handler records), so the
+ * pointer but leaving the offset-88 and offset-96 fields zero, so the
  * for-loop body itself was never entered. Rig *(a1+88) to point at one real
  * handler-record slot (36 bytes, PP-form pointer at +32) so
  * MessageHandler_EnumNext(a1,0) returns 1 (a1+88 non-null), driving the

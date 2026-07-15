@@ -18,8 +18,9 @@ python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
 
 ## Policy
 
-- Treat `clash95.asm`, `clash95.c`, `clash95.map`, and the original binary as
-  higher authority than external terminology.
+- Treat `clash95.asm`, `clash95.map`, the manifest-backed sources under
+  `src/recovered/split/`, and the original binary as higher authority than
+  external terminology.
 - Promote a field or structure name only when multiple callsites or direct data
   flow support it.
 - Preserve byte-offset macros until a typed structure is safer than the raw

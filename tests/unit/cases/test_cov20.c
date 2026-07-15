@@ -12,7 +12,7 @@ TEST(cov20_crt, tz_year_starts_return1_v3_gt_v4) {
   a2[8] = 0;          /* *(a2+32) == 0 */
   a1[4] = 10;         /* v3 */
   a2[4] = 5;          /* v4 at byte offset 16 -> index 4 */
-  CHECK_EQ(CRT_TzYearStartsInDaylightTime(a1, (int)a2, 2020), 1);
+  CHECK_EQ(CRT_TzYearStartsInDaylightTime(a1, (int)(intptr_t)a2, 2020), 1);
 }
 
 TEST(cov20_crt, tz_year_starts_return0_v3_lt_v4) {
@@ -24,7 +24,7 @@ TEST(cov20_crt, tz_year_starts_return0_v3_lt_v4) {
   a2[8] = 0;
   a1[4] = 1;
   a2[4] = 100;
-  CHECK_EQ(CRT_TzYearStartsInDaylightTime(a1, (int)a2, 2020), 0);
+  CHECK_EQ(CRT_TzYearStartsInDaylightTime(a1, (int)(intptr_t)a2, 2020), 0);
 }
 
 TEST(cov20_crt, tz_year_starts_label6_a1_flag_set) {
@@ -40,7 +40,7 @@ TEST(cov20_crt, tz_year_starts_label6_a1_flag_set) {
   a1[8] = 1;
   a1[7] = 5;
   a2[8] = 0;
-  TOUCH(CRT_TzYearStartsInDaylightTime(a1, (int)a2, 2020));
+  TOUCH(CRT_TzYearStartsInDaylightTime(a1, (int)(intptr_t)a2, 2020));
 }
 
 TEST(cov20_crt, compare_tz_transition_v2_lt_v3) {
@@ -145,7 +145,8 @@ TEST(cov20_rules, bsave_pack_shared_record_header_v3_nonzero) {
   sub[1] = 0x1234;          /* *(v3+4) */
   a2[2] = (int)(intptr_t)sub;  /* v3 = *(a2+8) nonzero */
   a2[3] = 0x7;               /* bits for the OR sequence */
-  TOUCH(Rules_BsavePackSharedRecordHeader((int)result, (int)a2));
+  TOUCH(Rules_BsavePackSharedRecordHeader((int)(intptr_t)result,
+                                          (int)(intptr_t)a2));
 }
 
 TEST(cov20_rules, bsave_pack_shared_record_header_v3_zero) {
@@ -154,7 +155,8 @@ TEST(cov20_rules, bsave_pack_shared_record_header_v3_zero) {
   memset(a2, 0, sizeof a2);
   a2[2] = 0;                /* v3 == 0 branch: v4 = -1 */
   a2[3] = 0;
-  TOUCH(Rules_BsavePackSharedRecordHeader((int)result, (int)a2));
+  TOUCH(Rules_BsavePackSharedRecordHeader((int)(intptr_t)result,
+                                          (int)(intptr_t)a2));
 }
 
 /* ---- Parser_CollectFunctionArguments / Parser_ParseArgument: drives the
@@ -168,7 +170,7 @@ TEST(cov20_parser, collect_function_arguments) {
   /* nonzero channel distinct from the default-zero stream globals so
    * Lexer_PeekChar takes its safe "no router" branch instead of the
    * buffered-stream branch that would deref a NULL global. */
-  TOUCH(Parser_CollectFunctionArguments((int)a1buf, 424242, 0));
+  TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 424242, 0));
 }
 
 /* ---- Rules_MatchesCommand: forces Rules_RtnArgCount() (which normally
@@ -180,7 +182,7 @@ TEST(cov20_rules, matches_command) {
   static _DWORD fake_expr[32];
   int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
-  g_ClipsCurrentExpression = (int)fake_expr;
+  g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
   TOUCH(Rules_MatchesCommand(424242, 0.0));
   g_ClipsCurrentExpression = saved;
 }
@@ -192,7 +194,7 @@ TEST(cov20_rules, matches_command) {
 TEST(cov20_rules, parse_defrule_rhs) {
   _DWORD a1buf[64];
   memset(a1buf, 0, sizeof a1buf);
-  TOUCH(Rules_ParseDefruleRHS((int)a1buf));
+  TOUCH(Rules_ParseDefruleRHS((int)(intptr_t)a1buf));
 }
 
 /* ---- Rules_PrepareDefrulesForCodeGen: forwards to
@@ -258,13 +260,13 @@ TEST(cov20_rules, set_lhs_parse_node_default_flags_a2_false) {
 TEST(cov20_rules, set_lhs_parse_node_extended_flags_a2_true) {
   _DWORD buf[8];
   memset(buf, 0, sizeof buf);
-  TOUCH(Rules_SetLHSParseNodeExtendedFlags((int)buf, 1));
+  TOUCH(Rules_SetLHSParseNodeExtendedFlags((int)(intptr_t)buf, 1));
 }
 
 TEST(cov20_rules, set_lhs_parse_node_extended_flags_a2_false) {
   _DWORD buf[8];
   memset(buf, 0xFF, sizeof buf);
-  TOUCH(Rules_SetLHSParseNodeExtendedFlags((int)buf, 0));
+  TOUCH(Rules_SetLHSParseNodeExtendedFlags((int)(intptr_t)buf, 0));
 }
 
 /* ---- Rules_ApplyPatternKeywordFlags: takes no arguments and switches on an
@@ -286,7 +288,7 @@ TEST(cov20_rules, apply_pattern_keyword_flags) {
 TEST(cov20_module, save_all_pp_forms_to_file_empty_list) {
   int saved = g_DefmoduleListHead;
   g_DefmoduleListHead = 0;
-  TOUCH(Module_SaveAllPPFormsToFile((signed int)"werror"));
+  TOUCH(Module_SaveAllPPFormsToFile((signed int)(intptr_t)"werror"));
   g_DefmoduleListHead = saved;
 }
 
@@ -297,15 +299,15 @@ TEST(cov20_module, save_all_pp_forms_to_file_one_node) {
   memset(module_node, 0, sizeof module_node);
   module_node[1] = (int)(intptr_t)pp_form; /* Module_GetPPForm -> offset 4 */
   module_node[7] = 0;                      /* next == 0: one iteration */
-  g_DefmoduleListHead = (int)module_node;
-  TOUCH(Module_SaveAllPPFormsToFile((signed int)"werror"));
+  g_DefmoduleListHead = (int)(intptr_t)module_node;
+  TOUCH(Module_SaveAllPPFormsToFile((signed int)(intptr_t)"werror"));
   g_DefmoduleListHead = saved;
 }
 
 TEST(cov20_module, print_all_names_with_tally_empty_list) {
   int saved = g_DefmoduleListHead;
   g_DefmoduleListHead = 0;
-  TOUCH(Module_PrintAllNamesWithTally((int)"werror"));
+  TOUCH(Module_PrintAllNamesWithTally((int)(intptr_t)"werror"));
   g_DefmoduleListHead = saved;
 }
 
@@ -319,8 +321,8 @@ TEST(cov20_module, print_all_names_with_tally_one_node) {
   sym_entry[4] = (int)(intptr_t)name;      /* Module_GetName reads +16 off *a1 */
   module_node[0] = (int)(intptr_t)sym_entry;
   module_node[7] = 0;
-  g_DefmoduleListHead = (int)module_node;
-  TOUCH(Module_PrintAllNamesWithTally((int)"werror"));
+  g_DefmoduleListHead = (int)(intptr_t)module_node;
+  TOUCH(Module_PrintAllNamesWithTally((int)(intptr_t)"werror"));
   g_DefmoduleListHead = saved;
 }
 
@@ -329,7 +331,9 @@ TEST(cov20_module, print_all_names_with_tally_one_node) {
  * "not found" branch. ---- */
 
 TEST(cov20_module, print_pp_form_by_name_not_found) {
-  CHECK_EQ(Module_PrintPPFormByName((_BYTE *)"NoSuchModule", (signed int)"werror"), 0);
+  CHECK_EQ(Module_PrintPPFormByName((_BYTE *)"NoSuchModule",
+                                    (signed int)(intptr_t)"werror"),
+           0);
 }
 
 /* ---- Rules_FindTemplateForFactAddress: pure pointer-chasing over
@@ -344,7 +348,7 @@ TEST(cov20_rules, find_template_for_fact_address_mismatch_then_zero) {
   memset(node, 0, sizeof node);
   node[1] = 999;  /* offset 4: does not match a1 */
   node[17] = 0;   /* offset 68: next == 0 -> LABEL_4, v2 stays 0 */
-  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)node), 0);
+  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)(intptr_t)node), 0);
 }
 
 TEST(cov20_rules, find_template_for_fact_address_v3_wrong_tag) {
@@ -354,7 +358,7 @@ TEST(cov20_rules, find_template_for_fact_address_v3_wrong_tag) {
   node[1] = 1;              /* matches a1 immediately */
   v3buf[0] = 5;              /* *v3 != 17 */
   node[16] = (int)(intptr_t)v3buf; /* offset 64 */
-  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)node), 0);
+  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)(intptr_t)node), 0);
 }
 
 TEST(cov20_rules, find_template_for_fact_address_full_chain) {
@@ -378,7 +382,7 @@ TEST(cov20_rules, find_template_for_fact_address_full_chain) {
   nodeC[1] = 999;                         /* mismatch on first loop check */
   nodeC[17] = (int)(intptr_t)nodeD;       /* offset 68 -> next node */
 
-  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)nodeC), 777);
+  CHECK_EQ(Rules_FindTemplateForFactAddress(1, (int)(intptr_t)nodeC), 777);
 }
 
 TEST(cov20_rules, parse_modify) {

@@ -10,8 +10,6 @@
  * build still round-trips addresses through 32-bit ints/intptr_t all over
  * clash95.c; only static/global storage is guaranteed to live in the low
  * (sub-4GB) address range those truncating casts require. */
-static char cov07_fake_gamedata[2200000];
-
 static void cov07_init_rules_env(void) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();

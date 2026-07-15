@@ -1,1 +1,0 @@
-../recovered/world/00408030_world_map.inc.c

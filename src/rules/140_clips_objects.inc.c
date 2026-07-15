@@ -1,1 +1,0 @@
-../recovered/rules/clips/00491580_objects.inc.c

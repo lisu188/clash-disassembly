@@ -2,11 +2,10 @@
 """Shared numeric-literal lexing/classification for the magic-number campaign.
 
 Single source of truth used by literal_inventory.py, apply_literal_names.py,
-naming_audit.py --literals, and the substitution verifiers. Reuses the
-battle-tested split_code_and_literals() from apply_sub_renames.py so string
-literals, char literals, and comments are never scanned, and skips
-preprocessor lines so the clash95_prelude.inc.c constant block can never be
-rewritten into itself.
+naming_audit.py --literals, and the substitution verifiers. String literals,
+char literals, and comments are never scanned, and preprocessor lines are
+skipped so the recovered foundation constant block can never be rewritten
+into itself.
 
 Classification model (see docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md,
 magic-number campaign sections): each numeric token is located inside its
@@ -29,7 +28,6 @@ paren depth). Classes:
 Self-test: python3 tools/literal_common.py --selftest
 """
 import bisect
-import glob
 import json
 import os
 import re
@@ -38,20 +36,119 @@ import sys
 TOOLS_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(TOOLS_DIR)
 sys.path.insert(0, TOOLS_DIR)
-from apply_sub_renames import split_code_and_literals  # noqa: E402
-from global_inventory import find_defs  # noqa: E402
+from global_inventory import (  # noqa: E402
+    find_defs,
+    load_source_manifest,
+    recovered_source_files,
+)
+from split_source_index import body_sha256, scan_definitions  # noqa: E402
 
-PRELUDE_REL = "src/clash95_prelude.inc.c"
+PRELUDE_REL = "src/recovered/split/recovered_foundation.h"
 MANIFEST_REL = "tools/constants_manifest.json"
+SOURCE_MANIFEST_REL = "data/recovered_sources.json"
 
 CALL_ARG_WHITELIST = {"qmemcpy", "memcpy", "memset", "memmove"}
 
-# Files where the prelude constant block is in scope (clash95.c is one TU).
 def apply_files():
-    return ["clash95.c"] + sorted(
-        os.path.relpath(p, REPO).replace(os.sep, "/")
-        for p in glob.glob(os.path.join(REPO, "src", "**", "*.inc.c"), recursive=True)
-    )
+    """Canonical independently compiled recovered implementation files."""
+    return recovered_source_files()
+
+
+def split_code_and_literals(text):
+    """Yield ``(is_code, segment)`` pairs without parsing C semantics."""
+    out = []
+    index = 0
+    length = len(text)
+    start = 0
+    while index < length:
+        char = text[index]
+        following = text[index + 1] if index + 1 < length else ""
+        if char in ('"', "'"):
+            out.append((True, text[start:index]))
+            quote = char
+            cursor = index + 1
+            while cursor < length:
+                if text[cursor] == "\\":
+                    cursor += 2
+                    continue
+                if text[cursor] == quote:
+                    cursor += 1
+                    break
+                cursor += 1
+            out.append((False, text[index:cursor]))
+            index = cursor
+            start = index
+        elif char == "/" and following == "/":
+            out.append((True, text[start:index]))
+            cursor = text.find("\n", index)
+            cursor = length if cursor == -1 else cursor
+            out.append((False, text[index:cursor]))
+            index = cursor
+            start = index
+        elif char == "/" and following == "*":
+            out.append((True, text[start:index]))
+            cursor = text.find("*/", index + 2)
+            cursor = length if cursor == -1 else cursor + 2
+            out.append((False, text[index:cursor]))
+            index = cursor
+            start = index
+        else:
+            index += 1
+    out.append((True, text[start:]))
+    return out
+
+
+def refresh_source_manifest_body_hashes(relative_files):
+    """Refresh canonical body hashes after an approved source rewrite.
+
+    Legacy/oracle hashes remain immutable evidence. Every manifest function in
+    a touched file must still be found exactly once before the manifest is
+    rewritten.
+    """
+    touched = set(relative_files)
+    if not touched:
+        return 0
+    document = load_source_manifest()
+    records = document["functions"]
+    by_source = {}
+    for record in records:
+        by_source.setdefault(record["source"], []).append(record)
+    unknown = sorted(touched - set(by_source))
+    # The state owner contains no indexed recovered function bodies.
+    unknown = [path for path in unknown if path != document.get("state_owner")]
+    if unknown:
+        raise ValueError("touched files are absent from source manifest: %s"
+                         % ", ".join(unknown))
+
+    updated = 0
+    for relative in sorted(touched & set(by_source)):
+        path = os.path.join(REPO, relative)
+        with open(path, errors="replace") as stream:
+            text = stream.read()
+        source_records = by_source[relative]
+        wanted = {record["name"] for record in source_records}
+        definitions = scan_definitions(text, wanted)
+        indexed = {definition.name: definition for definition in definitions}
+        if set(indexed) != wanted or len(definitions) != len(wanted):
+            missing = sorted(wanted - set(indexed))
+            extra = sorted(set(indexed) - wanted)
+            raise ValueError(
+                "%s no longer matches manifest identities (missing=%r extra=%r)"
+                % (relative, missing, extra)
+            )
+        for record in source_records:
+            digest = body_sha256(text, indexed[record["name"]])
+            if record.get("body_sha256") != digest:
+                record["body_sha256"] = digest
+                updated += 1
+
+    manifest_path = os.path.join(REPO, SOURCE_MANIFEST_REL)
+    temporary = manifest_path + ".tmp"
+    with open(temporary, "w", newline="\n", encoding="utf-8") as stream:
+        json.dump(document, stream, indent=2)
+        stream.write("\n")
+    os.replace(temporary, manifest_path)
+    return updated
 
 
 NUM_TOKEN_RE = re.compile(

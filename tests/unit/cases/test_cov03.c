@@ -292,19 +292,17 @@ TEST(cov03_unit, new_turn_regen) {
 
 /* ---- UnitSlot_NeedsMoraleRecovery ---- */
 TEST(cov03_unit, needs_morale_recovery) {
-  extern signed int g_UnitTypeFlags[];
   __int16 slot[8];
   memset(slot, 0, sizeof(slot));
 
-  /* unit type 0: force the flags-bit-2 branch on by poking the type table
-   * entry this slot indexes (22 * type). */
-  g_UnitTypeFlags[0] |= 2;
+  /* Executable-backed unit type 18 has flags bit 2 set. */
+  slot[0] = 18;
   *((char *)slot + 11) = 3;
   CHECK(UnitSlot_NeedsMoraleRecovery(slot));
   *((char *)slot + 11) = 9;
   CHECK(!UnitSlot_NeedsMoraleRecovery(slot));
 
-  g_UnitTypeFlags[0] &= ~2;
+  slot[0] = 0;
   *((char *)slot + 11) = 5;
   CHECK(UnitSlot_NeedsMoraleRecovery(slot));
   *((char *)slot + 11) = 15;

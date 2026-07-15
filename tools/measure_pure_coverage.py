@@ -1,129 +1,132 @@
 #!/usr/bin/env python3
-"""Measure line coverage of the pure testable set from gcov output.
+"""Measure coverage of the frozen pure-function set.
 
-Runs gcov on the coverage TU (test_all.c), parses the produced clash95.c.gcov,
-and reports covered/total executable lines restricted to the frozen pure
-function set (tests/unit/pure_set.json).
+Split coverage is keyed by function/file identity from
+``data/recovered_sources.json``.
 
 Usage:
   measure_pure_coverage.py <build_dir> [--worst N] [--json OUT]
 """
+
+from __future__ import annotations
+
+import argparse
 import json
-import os
-import re
-import subprocess
-import sys
+from pathlib import Path
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PURE = os.path.join(ROOT, "tests/unit/pure_set.json")
+from coverage_source_manifest import (
+    CoverageMetadataError,
+    collect_split_gcov,
+    load_pure_set,
+    split_ranges,
+)
 
 
-def run_gcov(build_dir):
-    objdir = os.path.join(build_dir, "CMakeFiles/clash95_unit_tests.dir/tests/unit")
-    gcda = os.path.join(objdir, "test_all.c.gcda")
-    if not os.path.exists(gcda):
-        sys.exit(f"no gcda at {gcda}; run the unit-test binary first")
-    # Run gcov inside the objdir so .gcov files (including for the #included
-    # clash95.c) are emitted there.
-    subprocess.run(
-        ["gcov", "test_all.c.gcno"],
-        cwd=objdir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("build_dir", type=Path)
+    parser.add_argument("--worst", type=int, default=0)
+    parser.add_argument("--json", dest="jsonout", type=Path)
+    parser.add_argument(
+        "--minimum",
+        type=float,
+        help="fail when line coverage is below this percentage",
     )
-    cand = os.path.join(objdir, "clash95.c.gcov")
-    if not os.path.exists(cand):
-        for f in os.listdir(objdir):
-            if f.endswith("clash95.c.gcov"):
-                cand = os.path.join(objdir, f)
-                break
-    if not os.path.exists(cand):
-        sys.exit("gcov did not produce clash95.c.gcov")
-    return cand
+    parser.add_argument(
+        "--require-functions",
+        type=int,
+        help="fail unless the frozen denominator contains exactly this many functions",
+    )
+    parser.add_argument(
+        "--require-zero-uncovered",
+        action="store_true",
+        help="fail when any function has zero covered executable lines",
+    )
+    return parser.parse_args()
 
 
-def parse_gcov(path):
-    """Return {lineno: covered_bool} for executable lines only."""
-    execline = {}
-    with open(path, errors="replace") as f:
-        for line in f:
-            parts = line.split(":", 2)
-            if len(parts) < 3:
-                continue
-            cnt = parts[0].strip()
-            try:
-                ln = int(parts[1].strip())
-            except ValueError:
-                continue
-            if ln == 0:
-                continue
-            if cnt in ("-",):
-                continue  # non-executable
-            if cnt in ("#####", "====="):
-                execline[ln] = False
-            else:
-                execline[ln] = True  # a numeric count => executed
-    return execline
-
-
-def main():
-    build_dir = sys.argv[1]
-    worst = 0
-    jsonout = None
-    args = sys.argv[2:]
-    for i, a in enumerate(args):
-        if a == "--worst":
-            worst = int(args[i + 1])
-        if a == "--json":
-            jsonout = args[i + 1]
-
-    gcov = run_gcov(build_dir)
-    execline = parse_gcov(gcov)
-    pure = json.load(open(PURE))["functions"]
-
-    total = covered = 0
+def main() -> int:
+    args = parse_args()
+    build_dir = args.build_dir.resolve()
+    pure_document, functions = load_pure_set(require_manifest=True)
+    ranges = split_ranges(functions)
+    source_coverage = collect_split_gcov(
+        build_dir, {function["source"] for function in functions}
+    )
     per_fn = []
-    for fn in pure:
-        lo, hi = fn["start_line"], fn["end_line"]
-        ex = [ln for ln in range(lo, hi) if ln in execline]
-        cov = [ln for ln in ex if execline[ln]]
-        per_fn.append((fn["name"], len(cov), len(ex)))
-        total += len(ex)
-        covered += len(cov)
+    total = covered = 0
+    for function in functions:
+        source, low, high = ranges[function["name"]]
+        executable = source_coverage[source]
+        lines = [line for line in range(low, high) if line in executable]
+        covered_lines = [line for line in lines if executable[line]]
+        per_fn.append((function["name"], len(covered_lines), len(lines)))
+        total += len(lines)
+        covered += len(covered_lines)
+    mode = "split"
 
-    pct = (100.0 * covered / total) if total else 0.0
-    fns_full = sum(1 for _, c, e in per_fn if e and c == e)
-    fns_zero = sum(1 for _, c, e in per_fn if e and c == 0)
-    fns_partial = sum(1 for _, c, e in per_fn if e and 0 < c < e)
-    print(f"pure functions:        {len(pure)}")
+    percentage = (100.0 * covered / total) if total else 0.0
+    fully_covered = sum(1 for _, count, size in per_fn if size and count == size)
+    zero_covered = sum(1 for _, count, size in per_fn if size and count == 0)
+    partially_covered = sum(
+        1 for _, count, size in per_fn if size and 0 < count < size
+    )
+    print(f"coverage mode:         {mode}")
+    print(f"pure functions:        {len(functions)}")
     print(f"executable lines:      {total}")
     print(f"covered lines:         {covered}")
-    print(f"LINE COVERAGE:         {pct:.2f}%")
-    print(f"functions fully cov:   {fns_full}")
-    print(f"functions partial:     {fns_partial}")
-    print(f"functions zero cov:    {fns_zero}")
+    print(f"LINE COVERAGE:         {percentage:.2f}%")
+    print(f"functions fully cov:   {fully_covered}")
+    print(f"functions partial:     {partially_covered}")
+    print(f"functions zero cov:    {zero_covered}")
 
-    if worst:
-        print(f"\n--- {worst} least-covered functions (name: covered/exec) ---")
+    if args.worst:
+        print(f"\n--- {args.worst} least-covered functions (name: covered/exec) ---")
         ranked = sorted(
-            (p for p in per_fn if p[2] > 0),
-            key=lambda p: (p[1] / p[2], -p[2]),
+            (item for item in per_fn if item[2] > 0),
+            key=lambda item: (item[1] / item[2], -item[2]),
         )
-        for name, c, e in ranked[:worst]:
-            print(f"  {name}: {c}/{e}")
+        for name, count, size in ranked[: args.worst]:
+            print(f"  {name}: {count}/{size}")
 
-    if jsonout:
-        json.dump(
-            {
-                "pct": pct,
-                "covered": covered,
-                "total": total,
-                "functions": [
-                    {"name": n, "covered": c, "exec": e} for n, c, e in per_fn
-                ],
-            },
-            open(jsonout, "w"),
-            indent=1,
+    if args.jsonout:
+        with args.jsonout.open("w", encoding="utf-8", newline="\n") as stream:
+            json.dump(
+                {
+                    "mode": mode,
+                    "identity_source": pure_document.get("identity_source"),
+                    "pct": percentage,
+                    "covered": covered,
+                    "total": total,
+                    "functions": [
+                        {"name": name, "covered": count, "exec": size}
+                        for name, count, size in per_fn
+                    ],
+                },
+                stream,
+                indent=1,
+            )
+            stream.write("\n")
+    failures = []
+    if args.minimum is not None and percentage + 1e-12 < args.minimum:
+        failures.append(
+            f"coverage {percentage:.2f}% is below required {args.minimum:.2f}%"
         )
+    if args.require_functions is not None and len(functions) != args.require_functions:
+        failures.append(
+            f"function denominator {len(functions)} is not required {args.require_functions}"
+        )
+    if args.require_zero_uncovered and zero_covered:
+        failures.append(f"{zero_covered} frozen functions have zero coverage")
+    if failures:
+        for failure in failures:
+            print(f"coverage gate: FAIL: {failure}")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        raise SystemExit(main())
+    except CoverageMetadataError as error:
+        raise SystemExit(str(error)) from error

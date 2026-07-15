@@ -41,6 +41,7 @@ static void cov5_01_stack_prime(int val) {
   for (i = 0; i < 65536; i++) {
     buf[i] = val;
   }
+  (void)buf[0];
 }
 
 /* ---- Shared argument-node helpers (Rules_RtnArgCount / Rules_RtnUnknown /

@@ -1,5 +1,5 @@
-#include "../defs.h"
-#include "../platform_sdl.h"
+#include "defs.h"
+#include "../platform/platform_sdl.h"
 
 #include <ctype.h>
 #include <dirent.h>
@@ -73,6 +73,11 @@ extern int g_FileSystemMountTable[11];
 extern int g_ActiveTextSpriteSlot;
 extern _UNKNOWN *g_RenderDevice;
 extern char IsTable[256];
+
+void Compat_CopyPrefixN(
+  char *dest,
+  const char *src,
+  unsigned int count);
 
 static const signed char k_DosErrnoMap[20] = {
   0, 9, 1, 1, 11, 6, 4, 5, 5, 5, 2, 3, -1, -1, 7, 9, 6, 8, 1, -1
@@ -2664,8 +2669,8 @@ int Render_SetResourceHandle(int a1, int a2)
 {
   int previous_handle;
 
-  previous_handle = *(_DWORD *)(a1 + 0xCC);
-  *(_DWORD *)(a1 + 0xCC) = a2;
+  previous_handle = *(_DWORD *)(uintptr_t)(uint32_t)(a1 + 0xCC);
+  *(_DWORD *)(uintptr_t)(uint32_t)(a1 + 0xCC) = a2;
   return previous_handle;
 }
 
@@ -2701,19 +2706,26 @@ static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palett
     return 0;
 
   Compat_QuerySkipBytes(query_handle, 8);
-  query_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
+  query_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(
+    _DWORD *)(uintptr_t)(uint32_t)query_handle;
   if ( !query_vtable || !query_vtable[5] )
   {
-    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+    Compat_FileSystemQueryRelease(
+      (int)(uintptr_t)&g_FileSystemMountTable,
+      &query_handle);
     return 0;
   }
   if ( ((int (*)(int, void *, int))(uintptr_t)query_vtable[5])(query_handle, palette_bytes, sizeof(palette_bytes))
     != (int)sizeof(palette_bytes) )
   {
-    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+    Compat_FileSystemQueryRelease(
+      (int)(uintptr_t)&g_FileSystemMountTable,
+      &query_handle);
     return 0;
   }
-  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  Compat_FileSystemQueryRelease(
+    (int)(uintptr_t)&g_FileSystemMountTable,
+    &query_handle);
   palette_offset = 0;
   for ( palette_index = 0; palette_index < 256; ++palette_index )
   {
@@ -2804,8 +2816,10 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
-      Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &cache_query_handle);
-      sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
+      Compat_FileSystemQueryRelease(
+        (int)(uintptr_t)&g_FileSystemMountTable,
+        &cache_query_handle);
+      sprite_set = (_DWORD *)(uintptr_t)(uint32_t)Mem_Alloc(0x1010, 0, 0, a5);
       if ( sprite_set )
         sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
       slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
@@ -2815,7 +2829,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   }
 
   source_stem = slot->source_stem;
-  sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
+  sprite_set = (_DWORD *)(uintptr_t)(uint32_t)Mem_Alloc(0x1010, 0, 0, a5);
   if ( sprite_set )
     sprite_set = DLXSpriteSet_Load(sprite_set, source_stem);
   slot->cached_sprite_set = (int)(uintptr_t)sprite_set;

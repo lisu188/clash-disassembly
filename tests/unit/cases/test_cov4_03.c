@@ -185,7 +185,7 @@ TEST(cov4_03_crt, tz_year_starts_in_daylight_goto_label6) {
   static _DWORD a2buf[16];
   memset(a1buf, 0, sizeof a1buf);
   memset(a2buf, 0, sizeof a2buf);
-  a1buf[8] = 1; /* nonzero -> direct goto LABEL_6, bypassing a1[4]/*(a2+32) */
+  a1buf[8] = 1; /* nonzero: direct LABEL_6, bypassing the offset-32 reads */
   TOUCH(CRT_TzYearStartsInDaylightTime(a1buf, (int)(intptr_t)a2buf, 0));
 }
 

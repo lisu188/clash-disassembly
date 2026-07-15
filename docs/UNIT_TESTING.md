@@ -1,121 +1,121 @@
-# Unit Testing & Coverage
+# Unit Testing and Coverage
 
-This project has an opt-in unit-test and line-coverage harness for the recovered
-pure functions in `clash95.c`. It is separate from the route-smoke integration
-tests (which drive the real SDL executable) and is disabled by default so
-ordinary builds and `ctest` runs are unaffected.
+The opt-in unit-test harness exercises recovered pure functions from the GNU
+C17 split build. It is separate from the SDL route-smoke tests and remains
+disabled in ordinary builds unless `CLASH95_COVERAGE=ON` is selected.
 
-## What is covered
+## Coverage denominator
 
-Coverage is measured over a **frozen "pure testable" set** of functions in
-`clash95.c` — those whose bodies reference no global/`gameData` state, call no
-impure/IO/render/alloc/platform helper, and perform no indirect/vtable dispatch.
-This set is generated deterministically by `tools/pure_function_set.py` and
-frozen in `tests/unit/pure_set.json` (the coverage denominator). The other
-~2,750 functions are bound to `gameData`, DirectDraw/DirectSound, the CLIPS
-engine, save files, or CD assets, and are exercised by the route-smoke
-integration tests instead — covering them in isolated unit tests is not the goal
-here.
+Coverage is measured over the frozen set of 718 pure testable functions in
+`tests/unit/pure_set.json`. The set excludes functions whose bodies depend on
+game state, I/O, rendering, allocation, platform services, or indirect/vtable
+dispatch. Those paths belong to the executable route tests rather than the
+isolated unit harness.
 
-## How it works
+The recovered implementation is no longer included into a test aggregator.
+Coverage identities are resolved through `data/recovered_sources.json`, so a
+frozen function follows its manifest entry into its canonical source file.
+This preserves the 718-function denominator after the source split without
+depending on removed unified-source line ranges.
 
-Because ~300 of the recovered functions are `static` (internal linkage), the
-tests cannot link against them from a separate translation unit. Instead,
-`tests/unit/test_all.c` is a single aggregator TU that `#include`s `clash95.c`
-directly, making every recovered function — static or external — callable by
-name **without modifying the recovered source**. Each case file under
-`tests/unit/cases/` is `#include`d into that TU (not compiled separately) and
-contributes `TEST(...)` cases.
+## Build and test layout
 
-### Fault isolation
+With coverage enabled, CMake creates
+`clash95_recovered_coverage_objects` from all 138 recovered split translation
+units. Recovered code and the test/support code are compiled separately as GNU
+C17:
 
-Decompiled code is hostile to unit testing: a test may segfault on a bad
-pointer, call `exit()`/`abort()` (e.g. `App_RequestQuit`), or spin forever in a
-`GetMessageA`-style modal loop. So the runner executes **each test in its own
-forked child process** with:
+- every test source under `tests/unit/cases/` is an independent translation unit;
+- `tests/unit/case_prelude.h` provides the common case declarations;
+- `tests/unit/test_runner.c` owns registration, sharding, and process
+  isolation;
+- `tests/unit/test_compat_stubs.c` owns the test-only compatibility symbols;
+- platform, instrumentation, and compatibility support are linked as their own
+  sources.
 
-- signal handlers (`SIGSEGV`/`SIGBUS`/`SIGFPE`/`SIGABRT`) that recover via
-  `siglongjmp`,
-- an `alarm(8)` watchdog for infinite loops,
-- an explicit `__gcov_dump()` before the child exits, so libgcov merges each
-  child's counters into the shared `.gcda` regardless of how the test ended.
+Test and support code must pass `-Wall -Wextra -Wpedantic -Werror`. The
+recovered coverage objects use the recovered-code warning profile and make
+implicit declarations, implicit `int`, and missing returns fatal.
+Thirty frozen pure helpers that are local in production are declared and
+exported only under `CLASH95_TESTING`; the remaining production-local helpers
+stay inaccessible to the harness.
 
-A crashing, exiting, or hanging test therefore never truncates the run or loses
-the coverage accumulated by other tests.
+There is no aggregate recovered implementation source, no direct inclusion of
+implementation `.c` files, and no case-file inclusion chain in the current
+harness.
 
-### Link stubs
+## Fault isolation and coverage shards
 
-The coverage target does not link `bootstrap_main.c` or Win32/CRT import
-libraries. `tests/unit/test_all.c` provides benign stubs for the handful of symbols the
-game build resolves elsewhere (`_no_support_loaded`, `g_RenderHook`,
-`GetTimeZoneInformation`, thread/CRT helpers, `CreateThread`, `LoadLibraryA`,
-etc.) so that gc-sections-kept recovered code links and those functions become
-testable.
+Decompiler output can dereference an invalid reconstructed pointer, call a
+hard-exit path, or enter a message-style loop. The runner therefore distributes
+the registered cases across 16 worker processes and runs every case in a
+further fork-isolated child. Each child has a one-second alarm and handlers for
+the expected fatal signals. An explicit test assertion failure is reported as
+`FAIL`; an arbitrary exit, signal, or timeout is reported as `CRASH`. Crash
+classification keeps hostile coverage probes from terminating the suite, but
+does not turn a failed assertion into a pass.
+
+`tests/unit/run_split_coverage.sh` gives each worker a private gcov prefix under
+`/tmp`, then copies only the recovered-object profiles to
+`<build>/coverage-shards/worker-0..15`. The manifest-backed coverage reader runs
+gcov over those profiles and unions line execution across workers. Keeping the
+profiles separate avoids unreliable `gcov-tool` merges while retaining the
+only metric needed here: whether each frozen executable line ran.
 
 ## Building and running
 
+From Linux or WSL:
+
 ```sh
-cmake -S . -B build-cov -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
-cmake --build build-cov --target clash95_unit_tests -j4
-./build-cov/bin/clash95_unit_tests          # runs all tests (fork-isolated)
-python3 tools/measure_pure_coverage.py build-cov --worst 40
+cmake -S . -B build/coverage -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
+cmake --build build/coverage --target clash95_unit_tests -j"$(nproc)"
+ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure
+python3 tools/measure_pure_coverage.py build/coverage \
+  --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 40
 ```
 
-`tools/measure_pure_coverage.py` runs `gcov` on the coverage TU and reports line
-coverage restricted to the pure-set line ranges, plus the least-covered
-functions. The unit tests are also registered as the `clash95_unit_tests` CTest
-test (label `unit`) when `CLASH95_COVERAGE=ON`.
-
-## Tooling
-
-- `tools/pure_function_set.py` — regenerate the pure testable set (denominator).
-- `tools/gen_pure_decls.py` — extern prototypes for the pure set (reference).
-- `tools/wire_cov_cases.py` — regenerate the `#include` block of case files in
-  `tests/unit/test_all.c` (run after adding a new case file).
-- `tools/measure_pure_coverage.py` — measure coverage over the pure set.
+The CTest entry invokes `tests/unit/run_split_coverage.sh`, which prepares the
+worker profiles consumed by `tools/measure_pure_coverage.py`. Running the test
+executable directly remains useful for case diagnostics, but does not create
+the persisted shard layout expected by the measurement command.
 
 ## Adding tests
 
-1. Add a new test file under `tests/unit/cases/` (see `tests/unit/cases/test_smoke.c`) containing `TEST(suite, name)`
-   blocks. No `#include`s, no `main`; use a unique `suite` prefix.
-2. Run `python3 tools/wire_cov_cases.py`, rebuild, run, and re-measure.
+1. Add a test source under `tests/unit/cases/` containing `TEST(suite, name)`
+   blocks.
+   Do not add `main` or include another `.c` file.
+2. Reconfigure or rebuild. The CMake `CONFIGURE_DEPENDS` glob discovers the new
+   case and compiles it independently.
+3. Run the CTest entry and re-measure coverage.
 
-Back every pointer argument with a **`static`** buffer: this is a 64-bit
-`-no-pie` build of code that models pointers as 32-bit `int`/`_DWORD`, so a
-stack address truncates to garbage when the recovered code round-trips it
-through `(int)`. For rules-engine functions, call `Mem_InitReserveBlock(0, 0)`
-and `Rules_InitAtomTables()` first to initialize the global arenas.
+Back pointer arguments with static storage where the recovered ABI stores a
+pointer in a 32-bit integer field. A stack address can truncate when it passes
+through that representation on the 64-bit host. For rules-engine functions,
+initialize the required recovered arenas and atom tables before calling into
+them. Do not initialize a decompiler-lost local merely to make a test reach a
+branch; recover it from binary evidence or treat the branch as an unresolved
+artifact.
 
-## Current coverage
+## Current result
 
-Line coverage of the 718-function pure testable set (6636 executable lines),
-measured by `tools/measure_pure_coverage.py`:
+The latest split-profile measurement covers **5963 of 6636 executable lines
+(89.86%)** across all **718 frozen functions**. No frozen function is
+zero-covered.
 
-- **Cumulative: ≥90% (5983/6636 = 90.16% observed over 8 runs, and rising with
-  more)** via `tests/unit/run_coverage.sh` (accumulates gcov counters across
-  runs).
-- Single-run deterministic floor: ~89.7%.
+The remaining gap is concentrated in decompiler artifacts such as values that
+the original binary held in registers but the recovered C leaves undefined,
+and in reconstructed 32-bit pointer layouts on the 64-bit host. Tests may use
+`TOUCH(...)` to exercise an evidence-backed call without asserting a value that
+depends on such a lost local. Coverage is not justification for guessing an
+initializer or changing recovered behavior.
 
-The gap between the single-run and cumulative figures, and the ~10% that stays
-uncovered, are both consequences of the source being **decompiler output**:
+## Related tools and data
 
-- A subset of recovered functions read values the original binary held in CPU
-  registers that the recompiled C leaves **uninitialized** — the decompiler
-  flags these itself with `// variable 'vN' is possibly undefined` trailer
-  comments. Reaching the code past such a read requires a fixture that lands a
-  specific value in an uninitialized stack slot, which depends on the exact
-  stack layout of a given run. Those lines are therefore covered on some runs
-  and not others; accumulating runs (`tests/unit/run_coverage.sh`) captures the full
-  reachable set, which is why cumulative > single-run.
-- The remaining uncovered lines are **genuinely unreachable in the recompiled
-  build**: the same undefined-register reads that always crash (e.g.
-  `Lexer_ParseValueList` dereferences an undefined `v7`; `Rules_GetTypeNameToken\
-Code` reads ten undefined locals the decompiler split from one register), plus
-  a handful of real 32-bit-vs-64-bit pointer-stride/truncation bugs the
-  decompiler baked in. These were confirmed unreachable by gdb across many
-  independent analyses; no test input can execute them. They form a hard
-  decompiler-artifact ceiling at ~90% of *all* executable lines. Coverage of the
-  *reachable* subset (excluding these provably-dead lines) is well above 90%.
-
-Regenerate with `tests/unit/run_coverage.sh` (add `WORST=40` to list the least-
-covered functions).
+- `tests/unit/pure_set.json`: frozen 718-function denominator.
+- `tools/pure_function_set.py`: pure-set analysis and metadata validation.
+- `tools/coverage_source_manifest.py`: manifest-backed source and gcov mapping.
+- `tools/measure_pure_coverage.py`: frozen-set coverage report.
+- `data/recovered_sources.json`: authoritative canonical and historical
+  function identity.
+- `docs/SOURCE_SPLIT.md`: source-layout, build, cutover evidence, and remaining
+  validation debt.
