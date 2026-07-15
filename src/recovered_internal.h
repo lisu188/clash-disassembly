@@ -2,8 +2,8 @@
 #ifndef CLASH95_RECOVERED_INTERNAL_H
 #define CLASH95_RECOVERED_INTERNAL_H
 
-/* Shared recovered declaration umbrella. Domain translation units include this
- * until their private declarations can be narrowed without changing recovered ABI. */
+/* Shared declarations for recovered translation units rooted directly under src.
+ * Keep this umbrella until domain-private declarations can be narrowed safely. */
 #include "recovered_functions.h"
 #include "recovered_layout.h"
 
