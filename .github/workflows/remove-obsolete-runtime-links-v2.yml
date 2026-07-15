@@ -1,0 +1,38 @@
+name: Force-remove obsolete runtime links
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Commit link cleanup
+        shell: bash
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git rm -f --ignore-unmatch -- \
+            src/recovered/runtime/00461520_platform_input.inc.c \
+            src/recovered/runtime/004D0560_legacy_runtime.inc.c
+          rm -f \
+            .github/workflows/remove-obsolete-runtime-links.yml \
+            .github/workflows/remove-obsolete-runtime-links-v2.yml \
+            .github/workflows/relocation-audit-diagnostics.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m "Remove obsolete recovered runtime links"
+          git push origin HEAD:${TARGET_BRANCH}
