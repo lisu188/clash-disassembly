@@ -1,9 +1,6 @@
 name: Relocate recovered sources
 
 on:
-  push:
-    branches:
-      - refactor/recovered-sources-directly-under-src
   pull_request:
     branches:
       - main
@@ -19,12 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Move recovered sources directly under src
         shell: bash
         env:
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
           python3 <<'PY'
@@ -38,16 +35,28 @@ jobs:
           if not old_root.is_dir():
               raise SystemExit(f"missing source directory: {old_root}")
 
-          for child in sorted(old_root.iterdir(), key=lambda path: path.name):
-              destination = src / child.name
+          def merge_move(source: Path, destination: Path) -> None:
+              if source.is_dir():
+                  destination.mkdir(parents=True, exist_ok=True)
+                  for child in sorted(source.iterdir(), key=lambda path: path.name):
+                      merge_move(child, destination / child.name)
+                  source.rmdir()
+                  return
               if destination.exists():
                   raise SystemExit(f"refusing to overwrite existing path: {destination}")
-              shutil.move(str(child), str(destination))
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.move(str(source), str(destination))
+
+          for child in sorted(old_root.iterdir(), key=lambda path: path.name):
+              merge_move(child, src / child.name)
 
           old_root.rmdir()
           recovered_parent = src / "recovered"
           if recovered_parent.exists() and not any(recovered_parent.iterdir()):
               recovered_parent.rmdir()
+
+          (root / ".github" / "workflows" / "relocate-recovered-sources.yml").unlink()
+          (root / ".relocate-trigger").unlink(missing_ok=True)
 
           replacements = (
               (b"src/recovered/split", b"src"),
@@ -144,8 +153,6 @@ jobs:
             exit 1
           fi
 
-          rm .github/workflows/relocate-recovered-sources.yml
-          rm -f .relocate-trigger
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
