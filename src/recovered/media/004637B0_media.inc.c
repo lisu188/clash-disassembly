@@ -235,9 +235,9 @@ void  CAviDecompressor_InitClipRect(_DWORD *playerHandle, _DWORD *clipRect)
 //----- (00464400) --------------------------------------------------------
 void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
 {
-  int v4; // eax
+  int instance; // eax
   int v5; // ecx
-  int v6; // ebx
+  int playerInstance; // ebx
   int destWidthScaled; // esi
   int v8; // ecx
   int stretchRatio; // eax
@@ -255,54 +255,54 @@ void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
   int v21; // [esp+18Ch] [ebp-14h]
   int v22; // [esp+19Ch] [ebp-4h]
 
-  v4 = *playerHandle;
+  instance = *playerHandle;
   v22 = a3;
-  v5 = v4;
+  v5 = instance;
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v19 = &j____wcpp_4_fs_handler_rtn_;
   v20 = &g_AviUpdatePos_EHFrame;
   v21 = 0;
-  if ( !*(_BYTE *)(v4 + 2062) )
+  if ( !*(_BYTE *)(instance + 2062) )
   {
     frameRect = *(RECT *)g_AviFrameRectInitScratch;
     frameRect.left = x;
     frameRect.top = y;
-    frameRect.right = *(_DWORD *)(*(_DWORD *)(v4 + 151) + 4) + x;
-    biHeight = *(int *)(*(_DWORD *)(v4 + 151) + 8);
+    frameRect.right = *(_DWORD *)(*(_DWORD *)(instance + 151) + 4) + x;
+    biHeight = *(int *)(*(_DWORD *)(instance + 151) + 8);
     frameRect.bottom = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight) + y;
     AviPlayer_RenderFrame(v5, &frameRect);
   }
-  v6 = v5;
+  playerInstance = v5;
   if ( *(_BYTE *)(v5 + 1968) && *(_DWORD *)(v5 + 1964) )
   {
     destWidthScaled = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(v5 + 2063));
     stretchRatio = destWidthScaled / AviPlayer_SpanDelta(v8, (_DWORD *)(v8 + 2079));
     if ( stretchRatio < *(_DWORD *)(v10 + 2143) || stretchRatio > *(_DWORD *)(v10 + 2147) )
     {
-      if ( *(_BYTE *)(v6 + 1968) )
+      if ( *(_BYTE *)(playerInstance + 1968) )
       {
-        overlaySurface = *(_DWORD *)(v6 + 1964);
+        overlaySurface = *(_DWORD *)(playerInstance + 1964);
         if ( overlaySurface )
         {
           hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
                   overlaySurface,
-                  v6 + 2095,
-                  *(_DWORD *)(v6 + 1956),
-                  v6 + 2063,
+                  playerInstance + 2095,
+                  *(_DWORD *)(playerInstance + 1956),
+                  playerInstance + 2063,
                   512,
                   0);
           if ( hideResult )
           {
             if ( hideResult != -2005532222
-              || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 96))(*(_DWORD *)(v6 + 1964)) != -2005532222
-               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 108))(*(_DWORD *)(v6 + 1964)))
-              && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 96))(*(_DWORD *)(v6 + 1956)) != -2005532222
-               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 108))(*(_DWORD *)(v6 + 1956)))
-              && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v6 + 1964) + 132))(
-                   *(_DWORD *)(v6 + 1964),
-                   v6 + 2095,
-                   *(_DWORD *)(v6 + 1956),
-                   v6 + 2063,
+              || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 96))(*(_DWORD *)(playerInstance + 1964)) != -2005532222
+               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 108))(*(_DWORD *)(playerInstance + 1964)))
+              && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 96))(*(_DWORD *)(playerInstance + 1956)) != -2005532222
+               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 108))(*(_DWORD *)(playerInstance + 1956)))
+              && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
+                   *(_DWORD *)(playerInstance + 1964),
+                   playerInstance + 2095,
+                   *(_DWORD *)(playerInstance + 1956),
+                   playerInstance + 2063,
                    512,
                    0) )
             {
@@ -320,24 +320,24 @@ void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
       if ( *(_DWORD *)(v10 + 2171) )
         showFlags = 20480;
       overlayFlags = showFlags;
-      updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v6 + 1964) + 132))(
-              *(_DWORD *)(v6 + 1964),
-              v6 + 2095,
-              *(_DWORD *)(v6 + 1956),
-              v6 + 2063,
+      updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
+              *(_DWORD *)(playerInstance + 1964),
+              playerInstance + 2095,
+              *(_DWORD *)(playerInstance + 1956),
+              playerInstance + 2063,
               showFlags,
               0);
       if ( updateResult
         && (updateResult != -2005532222
-         || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 96))(*(_DWORD *)(v6 + 1964)) != -2005532222
-          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1964) + 108))(*(_DWORD *)(v6 + 1964)))
-         && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 96))(*(_DWORD *)(v6 + 1956)) != -2005532222
-          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v6 + 1956) + 108))(*(_DWORD *)(v6 + 1956)))
-         && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(v6 + 1964) + 132))(
-              *(_DWORD *)(v6 + 1964),
-              v6 + 2095,
-              *(_DWORD *)(v6 + 1956),
-              v6 + 2063,
+         || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 96))(*(_DWORD *)(playerInstance + 1964)) != -2005532222
+          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 108))(*(_DWORD *)(playerInstance + 1964)))
+         && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 96))(*(_DWORD *)(playerInstance + 1956)) != -2005532222
+          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 108))(*(_DWORD *)(playerInstance + 1956)))
+         && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
+              *(_DWORD *)(playerInstance + 1964),
+              playerInstance + 2095,
+              *(_DWORD *)(playerInstance + 1956),
+              playerInstance + 2063,
               overlayFlags,
               0)) )
       {
@@ -1142,12 +1142,12 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
         __int64 ThreadId_2)
 {
   HANDLE result; // eax
-  int v30; // ecx
+  int formatSize; // ecx
   int videoFormatHdr; // eax
-  char v32; // dl
+  char formatFlagByte; // dl
   unsigned int frameBufferBytes; // eax
   unsigned int alignedBytes; // eax
-  int v35; // ecx
+  int allocSize; // ecx
   unsigned int dwScale; // ebx
   signed int memoryCap; // eax
   __int64 frameFlagsAlloc; // rax
@@ -1182,13 +1182,13 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
     else
     {
       AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, 0, (char *)&a25 + 2);
-      *(_DWORD *)(self + 151) = j_Mem_Alloc(v30);
+      *(_DWORD *)(self + 151) = j_Mem_Alloc(formatSize);
       AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, *(_DWORD *)(self + 151), (char *)&a25 + 2);
       videoFormatHdr = *(_DWORD *)(self + 151);
-      v32 = *(_BYTE *)(videoFormatHdr + 13);
-      if ( v32 < 0 )
+      formatFlagByte = *(_BYTE *)(videoFormatHdr + 13);
+      if ( formatFlagByte < 0 )
       {
-        *(_BYTE *)(videoFormatHdr + 13) = v32 ^ 0x80;
+        *(_BYTE *)(videoFormatHdr + 13) = formatFlagByte ^ 0x80;
         *(_DWORD *)(*(_DWORD *)(self + 151) + 16) ^= 0x3ADE68B1u;
       }
       AVIStreamInfoA(*(_DWORD *)(self + 7), self + 11, 140);
@@ -1202,7 +1202,7 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
       *(_DWORD *)(self + 155) = frameBufferBytes;
       alignedBytes = frameBufferBytes + 3;
       LOBYTE(alignedBytes) = alignedBytes & 0xFC;
-      v35 = 1000;
+      allocSize = 1000;
       *(_DWORD *)(self + 155) = alignedBytes + 16;
       dwScale = *(_DWORD *)(self + 31);
       *(_DWORD *)(self + 159) = (*(_DWORD *)((char *)&ThreadId_2 + 2) - 500)
@@ -1218,12 +1218,12 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
       if ( totalVideoBytes < *(_DWORD *)(self + 159) )
         *(_DWORD *)(self + 159) = totalVideoBytes;
       GlobalMemoryStatus((LPMEMORYSTATUS)((char *)&a15 + 2));
-      v35 = *(_DWORD *)(self + 159);
+      allocSize = *(_DWORD *)(self + 159);
       memoryCap = *(_DWORD *)((char *)&Buffer_6 + 2) >> 4;
-      if ( *(_DWORD *)((char *)&Buffer_6 + 2) >> 4 < v35 )
+      if ( *(_DWORD *)((char *)&Buffer_6 + 2) >> 4 < allocSize )
 LABEL_11:
         *(_DWORD *)(self + 159) = memoryCap;
-      *(_DWORD *)(self + 163) = j_Mem_Alloc(v35);
+      *(_DWORD *)(self + 163) = j_Mem_Alloc(allocSize);
       frameFlagsAlloc = j_Mem_Alloc(*(_DWORD *)(self + 43) + 1);
       *(_QWORD *)(HIDWORD(frameFlagsAlloc) + 4) = 0LL;
       *(_DWORD *)HIDWORD(frameFlagsAlloc) = frameFlagsAlloc;
@@ -1257,7 +1257,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
   __int64 queueAlloc; // rax
   double resampleRatio; // st7
   int v7; // edx
-  int v8; // ecx
+  int playerInt; // ecx
   int audioBufferBytes; // edx
   int suggestedBytes; // eax
   __int64 chunkBufAlloc; // rax
@@ -1266,19 +1266,19 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
   int v14; // ecx
   int queuedSamples; // esi
   int blockAlign; // eax
-  int v17; // edx
+  int audioBytesQueued; // edx
   int v18; // ecx
   signed int Frame; // esi
   int v20; // ecx
-  int v21; // ecx
-  int v22; // edx
+  int audioBlockAlign; // ecx
+  int bytesForSampleCalc; // edx
   int sampleCount; // edi
   int readBlockAlign; // eax
-  int v25; // edx
+  int bytesForStreamRead; // edx
   int sampleWriteIndex; // eax
   signed int *sampleQueueEntry; // edi
   int soundHandle; // eax
-  int v29; // edx
+  int playerForFlush; // edx
   int samplesToRead; // [esp-14h] [ebp-4Ch]
   int startSample; // [esp-10h] [ebp-48h]
   int destBuffer; // [esp-Ch] [ebp-44h]
@@ -1286,7 +1286,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
   signed int chunkBytes; // [esp+1Ch] [ebp-1Ch]
   __int64 rateScale64; // [esp+20h] [ebp-18h]
   signed int bytesRead; // [esp+28h] [ebp-10h] BYREF
-  int v37; // [esp+2Ch] [ebp-Ch] BYREF
+  int formatSize; // [esp+2Ch] [ebp-Ch] BYREF
   int v38; // [esp+30h] [ebp-8h]
   unsigned int *player; // [esp+34h] [ebp-4h]
 
@@ -1298,11 +1298,11 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
   }
   else
   {
-    AVIStreamReadFormat(*(unsigned int *)((char *)player + 215), 0, 0, &v37);
+    AVIStreamReadFormat(*(unsigned int *)((char *)player + 215), 0, 0, &formatSize);
     formatAlloc = j_Mem_Alloc(v2);
     *(_DWORD *)(HIDWORD(formatAlloc) + 363) = formatAlloc;
     audioStreamInfo = player;
-    AVIStreamReadFormat(*(_DWORD *)(HIDWORD(formatAlloc) + 215), 0, *(_DWORD *)(HIDWORD(formatAlloc) + 363), &v37);
+    AVIStreamReadFormat(*(_DWORD *)(HIDWORD(formatAlloc) + 215), 0, *(_DWORD *)(HIDWORD(formatAlloc) + 363), &formatSize);
     audioStreamInfo = (unsigned int *)((char *)audioStreamInfo + 219);
     AVIStreamInfoA(*(unsigned int *)((char *)player + 215), audioStreamInfo, 140);
     queueAlloc = j_Mem_Alloc(*(unsigned int *)((char *)player + 251));
@@ -1314,15 +1314,15 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
     resampleRatio = lengthScaled / ((double)audioStreamInfo[5] * (double)rateScale64);
     _CHP(audioStreamInfo[5], 0);
     *(_DWORD *)(v7 + 367) = (int)resampleRatio;
-    v8 = (int)player;
+    playerInt = (int)player;
     audioBufferBytes = *(unsigned int *)((char *)player + 367)
        * *(unsigned __int16 *)(*(unsigned int *)((char *)player + 363) + 12)
        * (3 * *(_DWORD *)(v7 + 159) / (int)(2 * *(unsigned int *)((char *)player + 155)) + audioStreamInfo[9]);
     *(unsigned int *)((char *)player + 371) = audioBufferBytes;
     suggestedBytes = 4 * audioStreamInfo[10];
     if ( suggestedBytes > audioBufferBytes )
-      *(_DWORD *)(v8 + 371) = suggestedBytes;
-    chunkBufAlloc = j_Mem_Alloc(v8);
+      *(_DWORD *)(playerInt + 371) = suggestedBytes;
+    chunkBufAlloc = j_Mem_Alloc(playerInt);
     *(_DWORD *)(HIDWORD(chunkBufAlloc) + 156) = chunkBufAlloc;
     audioSampleQueue = (unsigned int *)((char *)player + 391);
     frameIndexAlloc = j_Mem_Alloc(player);
@@ -1334,7 +1334,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
       queuedSamples = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
       AviPlayer_AudioBytesQueued((int)player);
       blockAlign = AviPlayer_AudioBlockAlign((int)player);
-      if ( v17 / blockAlign * queuedSamples / *(int *)((char *)player + 367) >= *(_DWORD *)(v38 + 36) )
+      if ( audioBytesQueued / blockAlign * queuedSamples / *(int *)((char *)player + 367) >= *(_DWORD *)(v38 + 36) )
         break;
       Frame = AviPlayer_DecodeNextFrame((int)player);
       if ( Frame == -1 )
@@ -1342,12 +1342,12 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
       destBuffer = *(_DWORD *)(v38 + 40);
       startSample = Frame + *(_DWORD *)(v18 + 375);
       AviPlayer_AudioSampleQueueBase(v18);
-      LOWORD(v21) = *(_WORD *)(AviPlayer_AudioFormatPtr(v20) + 12);
-      samplesToRead = v22 / v21;
+      LOWORD(audioBlockAlign) = *(_WORD *)(AviPlayer_AudioFormatPtr(v20) + 12);
+      samplesToRead = bytesForSampleCalc / audioBlockAlign;
       sampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
       AviPlayer_AudioBytesQueued((int)player);
       readBlockAlign = AviPlayer_AudioBlockAlign((int)player);
-      AVIStreamRead(readBlockAlign, v25 % readBlockAlign, *(unsigned int *)((char *)player + 215), sampleCount * (v25 / readBlockAlign), samplesToRead, startSample, destBuffer, &bytesRead, 0);
+      AVIStreamRead(readBlockAlign, bytesForStreamRead % readBlockAlign, *(unsigned int *)((char *)player + 215), sampleCount * (bytesForStreamRead / readBlockAlign), samplesToRead, startSample, destBuffer, &bytesRead, 0);
       chunkBytes = bytesRead;
       sampleWriteIndex = audioSampleQueue[2];
       audioSampleQueue[2] = sampleWriteIndex + 1;
@@ -1356,7 +1356,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
       sampleQueueEntry[1] = chunkBytes;
     }
     soundHandle = CSS_StartStreamVoice((int)player, 64, 0, 0);
-    v29 = (int)player;
+    playerForFlush = (int)player;
     *(unsigned int *)((char *)player + 359) = soundHandle;
     if ( soundHandle )
     {
@@ -1364,7 +1364,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
     }
     else
     {
-      AviPlayer_FlushVideoFrameQueue(v29);
+      AviPlayer_FlushVideoFrameQueue(playerForFlush);
       return 0;
     }
   }
@@ -1551,7 +1551,7 @@ char  AviPlayer_OpenVideoCodec(
   int outFormatPtr; // esi
   unsigned int srcHeight; // eax
   int hicHandle; // ecx
-  int v30; // edx
+  int inputFormatPtr; // edx
   int v31; // [esp+0h] [ebp-120h]
   int v32; // [esp+0h] [ebp-120h]
 
@@ -1588,9 +1588,9 @@ char  AviPlayer_OpenVideoCodec(
     outFormatPtr = *(_DWORD *)((char *)&a20 + 2) + 8;
     srcHeight = abs32(*(_DWORD *)(inputBmi + 8));
     hicHandle = **(_DWORD **)((char *)&a20 + 2);
-    v30 = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
+    inputFormatPtr = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
     *(_DWORD *)((char *)&a12 + 2) = 0;
-    *(_DWORD *)((char *)&a12 + 6) = v30;
+    *(_DWORD *)((char *)&a12 + 6) = inputFormatPtr;
     *(_DWORD *)((char *)&a12 + 10) = 0;
     *(_DWORD *)((char *)&a15 + 6) = 0;
     *(_DWORD *)((char *)&a17 + 2) = srcHeight;
@@ -1767,8 +1767,8 @@ _DWORD * AviPlayer_ShutdownDecodeState(int self)
   int overlaySurface1; // eax
   int backSurface; // ecx
   int *v10; // eax
-  int *v11; // [esp-4h] [ebp-100h]
-  int *v12; // [esp-4h] [ebp-100h]
+  int *overlaySurfaceIface; // [esp-4h] [ebp-100h]
+  int *backSurfaceIface; // [esp-4h] [ebp-100h]
 
   if ( *(_BYTE *)(self + 2191) )
   {
@@ -1802,7 +1802,7 @@ _DWORD * AviPlayer_ShutdownDecodeState(int self)
       {
         if ( hideResult != -2005532222
           || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) != -2005532222
-           || (v11 = *(int **)(self + 1964), v2 = *v11, !(*(int (__stdcall **)(int *))(*v11 + 108))(v11)))
+           || (overlaySurfaceIface = *(int **)(self + 1964), v2 = *overlaySurfaceIface, !(*(int (__stdcall **)(int *))(*overlaySurfaceIface + 108))(overlaySurfaceIface)))
           && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) != -2005532222
            || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956)))
           && (v10 = *(int **)(self + 1964),
@@ -1859,9 +1859,9 @@ _DWORD * AviPlayer_ShutdownDecodeState(int self)
   {
     (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)backSurface + 152))(backSurface, 0);
     (*(void (__stdcall **)(int))(*(_DWORD *)backSurface + 8))(backSurface);
-    v12 = (int *)(uintptr_t)*(unsigned int *)(self + 2013);
-    v2 = *v12;
-    (*(void (__stdcall **)(int *))(*v12 + 8))(v12);
+    backSurfaceIface = (int *)(uintptr_t)*(unsigned int *)(self + 2013);
+    v2 = *backSurfaceIface;
+    (*(void (__stdcall **)(int *))(*backSurfaceIface + 8))(backSurfaceIface);
     *(_DWORD *)(self + 2013) = 0;
     *(_DWORD *)(self + 2017) = 0;
   }
@@ -1907,7 +1907,7 @@ int  AviPlayer_BlitFrameToSurface(
         int a28,
         int a29,
         int a30,
-        __int64 a31)
+        __int64 blitScratch)
 {
   _DWORD *blitState; // eax
   int lockResult; // eax
@@ -1925,7 +1925,7 @@ int  AviPlayer_BlitFrameToSurface(
   int v46; // [esp+222h] [ebp-192h]
   int v47; // [esp+28Ah] [ebp-12Ah]
 
-  *(_DWORD *)((char *)&a31 + 6) = frameBits;
+  *(_DWORD *)((char *)&blitScratch + 6) = frameBits;
   blitState = self + 481;
   if ( blitState[5] || blitState[4] )
   {
@@ -1941,7 +1941,7 @@ int  AviPlayer_BlitFrameToSurface(
       else
         signedPitch = surfacePitch;
       self[484] = signedPitch;
-      CAviDecompressor_BlitRows(self + 481, surfaceBits, *(char **)((char *)&a31 + 6));
+      CAviDecompressor_BlitRows(self + 481, surfaceBits, *(char **)((char *)&blitScratch + 6));
       result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 128))(surface, surfaceBits);
       if ( result )
       {
@@ -1966,18 +1966,18 @@ int  AviPlayer_BlitFrameToSurface(
   }
   else
   {
-    dcResult = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&a31 + 2);
+    dcResult = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&blitScratch + 2);
     if ( !dcResult
       || dcResult == -2005532222
       && ((*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)
-       || !(*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&a31 + 2)) )
+       || !(*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&blitScratch + 2)) )
     {
       if ( *(_DWORD *)((char *)self + 415) )
         bitmapInfo = (const BITMAPINFO *)((char *)self + 423);
       else
         bitmapInfo = *(const BITMAPINFO **)((char *)self + 151);
       StretchDIBits(
-        *(HDC *)((char *)&a31 + 2),
+        *(HDC *)((char *)&blitScratch + 2),
         *destRect,
         destRect[1],
         destRect[2] - *destRect,
@@ -1986,16 +1986,16 @@ int  AviPlayer_BlitFrameToSurface(
         0,
         *(_DWORD *)(*(_DWORD *)((char *)self + 151) + 4),
         abs32(*(_DWORD *)(*(_DWORD *)((char *)self + 151) + 8)),
-        *(const void **)((char *)&a31 + 6),
+        *(const void **)((char *)&blitScratch + 6),
         bitmapInfo,
         0,
         0xCC0020u);
-      result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&a31 + 2));
+      result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2));
       if ( result )
       {
         if ( result != -2005532222
           || (result = (*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)) == 0
-          && (result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&a31 + 2))) != 0 )
+          && (result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2))) != 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -3293,7 +3293,7 @@ LABEL_22:
 // 4682CF: variable 'v6' is possibly undefined
 
 //----- (00468890) --------------------------------------------------------
-int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *destRect)
+int  CAviDecompressor_PresentFrameForRect(int player, const RECT *destRect)
 {
   int v2; // ecx
   int result; // eax
@@ -3304,15 +3304,15 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *destRect)
   int showFlags; // eax
   int overlayFlags; // edi
   int v10; // ecx
-  _DWORD v11[3]; // [esp+198h] [ebp-24h] BYREF
-  int v12; // [esp+1A4h] [ebp-18h]
+  _DWORD sehFrame[3]; // [esp+198h] [ebp-24h] BYREF
+  int ehState; // [esp+1A4h] [ebp-18h]
 
-  v2 = a1;
-  result = (int)v11;
-  v11[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v11[1] = &j____wcpp_4_fs_handler_rtn_;
-  v11[2] = &g_AviPresentFrameForRect_EHFrame;
-  v12 = 0;
+  v2 = player;
+  result = (int)sehFrame;
+  sehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  sehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
+  sehFrame[2] = &g_AviPresentFrameForRect_EHFrame;
+  ehState = 0;
   if ( !*(_BYTE *)(v2 + 2062) )
     result = AviPlayer_RenderFrame(v2, destRect);
   self = v2;
@@ -3385,9 +3385,9 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *destRect)
                          0)) != 0 )
         {
           ExcString_Ctor();
-          v12 = v10;
+          ehState = v10;
           ExcString_Ctor();
-          v12 = 0;
+          ehState = 0;
           return CRT_ThrowExcStringException();
         }
       }
@@ -3434,7 +3434,7 @@ int  AviPlayer_UpdateOverlayColorKey(int result)
 }
 
 //----- (00468C40) --------------------------------------------------------
-char  AviPlayer_ComputeFlipState(int a1)
+char  AviPlayer_ComputeFlipState(int player)
 {
   int self; // ecx
   int decodedFrameBuffer; // edx
@@ -3447,67 +3447,67 @@ char  AviPlayer_ComputeFlipState(int a1)
   int v9; // edx
   int overlayCaps; // eax
 
-  self = a1;
-  decodedFrameBuffer = *(_DWORD *)(a1 + 2179);
-  *(_BYTE *)(a1 + 2033) = 0;
+  self = player;
+  decodedFrameBuffer = *(_DWORD *)(player + 2179);
+  *(_BYTE *)(player + 2033) = 0;
   if ( decodedFrameBuffer )
   {
-    *(_BYTE *)(a1 + 2033) = 1;
-    return a1;
+    *(_BYTE *)(player + 2033) = 1;
+    return player;
   }
-  v3 = a1;
-  v4 = a1;
-  if ( *(_BYTE *)(a1 + 2052) )
+  v3 = player;
+  v4 = player;
+  if ( *(_BYTE *)(player + 2052) )
   {
-    v8 = a1;
-    if ( !AviPlayer_IsIcmDecoderIdle(a1) || !AviPlayer_TestModeFlagBit3(self) )
+    v8 = player;
+    if ( !AviPlayer_IsIcmDecoderIdle(player) || !AviPlayer_TestModeFlagBit3(self) )
     {
-      LOBYTE(a1) = AviPlayer_IsIcmDecoderIdle(v8);
-      if ( (_BYTE)a1 )
+      LOBYTE(player) = AviPlayer_IsIcmDecoderIdle(v8);
+      if ( (_BYTE)player )
         goto LABEL_16;
-      LOBYTE(a1) = AviPlayer_TestModeFlagBit2(v8);
-      if ( !(_BYTE)a1 )
+      LOBYTE(player) = AviPlayer_TestModeFlagBit2(v8);
+      if ( !(_BYTE)player )
       {
         *(_BYTE *)(self + 2033) = 2;
-        return a1;
+        return player;
       }
     }
   }
   if ( !*(_BYTE *)(v4 + 2052) )
   {
-    LOBYTE(a1) = AviPlayer_TestModeFlagBit2(v4);
-    if ( !(_BYTE)a1 )
+    LOBYTE(player) = AviPlayer_TestModeFlagBit2(v4);
+    if ( !(_BYTE)player )
       goto LABEL_16;
-    LOBYTE(a1) = AviPlayer_IsUncompressedFormat(v9);
-    if ( !(_BYTE)a1 )
+    LOBYTE(player) = AviPlayer_IsUncompressedFormat(v9);
+    if ( !(_BYTE)player )
     {
       *(_BYTE *)(self + 2033) = 2;
-      return a1;
+      return player;
     }
   }
-  LOBYTE(a1) = *(_BYTE *)(v3 + 1968);
-  if ( !(_BYTE)a1
+  LOBYTE(player) = *(_BYTE *)(v3 + 1968);
+  if ( !(_BYTE)player
     || !*(_DWORD *)(v3 + 1964)
     || (destWidthScaled = 1000 * AviPlayer_SpanDelta(self, (_DWORD *)(v3 + 2063)),
-        a1 = destWidthScaled / AviPlayer_SpanDelta(v6, (_DWORD *)(v3 + 2079)),
-        a1 < *(_DWORD *)(v3 + 2143))
-    || a1 > *(_DWORD *)(v3 + 2147) )
+        player = destWidthScaled / AviPlayer_SpanDelta(v6, (_DWORD *)(v3 + 2079)),
+        player < *(_DWORD *)(v3 + 2143))
+    || player > *(_DWORD *)(v3 + 2147) )
   {
     if ( *(_DWORD *)(v3 + 1964) )
     {
       overlayCaps = *(_DWORD *)(v3 + 2171);
       LOBYTE(overlayCaps) = overlayCaps | 2;
-      a1 = *(_DWORD *)(v3 + 2175) | overlayCaps;
-      if ( (a1 & *(_DWORD *)(v3 + 2119)) != a1 )
+      player = *(_DWORD *)(v3 + 2175) | overlayCaps;
+      if ( (player & *(_DWORD *)(v3 + 2119)) != player )
       {
         *(_BYTE *)(self + 2033) = 2;
-        return a1;
+        return player;
       }
       goto LABEL_8;
     }
 LABEL_16:
     *(_BYTE *)(self + 2033) = 2;
-    return a1;
+    return player;
   }
 LABEL_8:
   if ( !*(_BYTE *)(self + 1968) || !*(_DWORD *)(self + 1964) )
@@ -3516,12 +3516,12 @@ LABEL_8:
     {
       requiredCaps = *(_DWORD *)(self + 2171);
       LOBYTE(requiredCaps) = requiredCaps | 2;
-      a1 = *(_DWORD *)(self + 2175) | requiredCaps;
-      if ( (a1 & *(_DWORD *)(self + 2119)) == a1 )
+      player = *(_DWORD *)(self + 2175) | requiredCaps;
+      if ( (player & *(_DWORD *)(self + 2119)) == player )
         *(_BYTE *)(self + 2033) = 3;
     }
   }
-  return a1;
+  return player;
 }
 // 468C6E: variable 'v4' is possibly undefined
 // 468CA0: variable 'v1' is possibly undefined
@@ -4074,14 +4074,14 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
   char paletteEntries[1024]; // [esp+2h] [ebp-5BCh] BYREF
   int (**v8)(); // [esp+466h] [ebp-158h]
   int (**v9)(); // [esp+4CEh] [ebp-F0h]
-  _DWORD v10[3]; // [esp+59Ah] [ebp-24h] BYREF
-  int v11; // [esp+5A6h] [ebp-18h]
+  _DWORD ehFrame[3]; // [esp+59Ah] [ebp-24h] BYREF
+  int ehState; // [esp+5A6h] [ebp-18h]
 
-  result = v10;
-  v10[0] = NtCurrentTeb()->NtTib.ExceptionList;
-  v10[1] = &j____wcpp_4_fs_handler_rtn_;
-  v10[2] = &g_AviPlayerCreatePalette_EHScopeTable;
-  v11 = 0;
+  result = ehFrame;
+  ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
+  ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
+  ehFrame[2] = &g_AviPlayerCreatePalette_EHScopeTable;
+  ehState = 0;
   if ( (*(_BYTE *)(self + 2120) & 2) != 0 )
   {
     for ( i = 0; i != 1024; v6[i + 1] = 0 )
@@ -4094,10 +4094,10 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
     if ( (*(int (__stdcall **)(int, int, char *, int, _DWORD))(*(_DWORD *)ddInterface + 20))(ddInterface, 4, paletteEntries, self + 1948, 0) )
     {
       ExcString_Ctor();
-      v11 = v5;
+      ehState = v5;
       ExcString_Ctor();
       v9 = g_AviException_VTable;
-      v11 = 0;
+      ehState = 0;
       return (_DWORD *)CRT_ThrowExcStringException();
     }
     else
@@ -4114,10 +4114,10 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
                                    *(_DWORD *)(self + 1948))) != 0 )
         {
           ExcString_Ctor();
-          v11 = 3;
+          ehState = 3;
           ExcString_Ctor();
           v8 = g_AviException_VTable;
-          v11 = 0;
+          ehState = 0;
           return (_DWORD *)CRT_ThrowExcStringException();
         }
       }
@@ -13350,7 +13350,7 @@ int  Compat_FileSystemFindMountedPathById(int mount_table, int mount_id)
 }
 
 //----- (00477710) --------------------------------------------------------
-signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a2, int a3)
+signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int dir_path, int base_path)
 {
   const char *v4; // ecx
   int visit_result; // edi
@@ -13364,7 +13364,7 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
   int file_visit_failed; // ebx
   int v15; // ecx
   int enumerator; // [esp+0h] [ebp-48h] BYREF
-  int (***v17)(void); // [esp+4h] [ebp-44h]
+  int (***file_system_saved)(void); // [esp+4h] [ebp-44h]
   int v18; // [esp+8h] [ebp-40h]
   _DWORD recurse_path_holder[2]; // [esp+Ch] [ebp-3Ch] BYREF
   const char *v20; // [esp+14h] [ebp-34h] BYREF
@@ -13376,9 +13376,9 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
   _DWORD file_path_holder[2]; // [esp+2Ch] [ebp-1Ch] BYREF
   _DWORD subdir_path_holder[2]; // [esp+34h] [ebp-14h] BYREF
   _DWORD joined_path_holder[2]; // [esp+3Ch] [ebp-Ch] BYREF
-  int v29; // [esp+44h] [ebp-4h]
+  int dir_path_copy; // [esp+44h] [ebp-4h]
 
-  v29 = a2;
+  dir_path_copy = dir_path;
   v20 = 0;
   v21 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v20);
@@ -13390,8 +13390,8 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
   v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v22, asc_5024C7);
   enumerator = (**file_system)();
-  v18 = v29;
-  v17 = file_system;
+  v18 = dir_path_copy;
+  file_system_saved = file_system;
   FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
   visit_result = 0;
   if ( enumerator )
@@ -13412,13 +13412,13 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
           visit_result += Compat_FileSystemProcessDirectChildren((int (__thiscall ***)(_DWORD))file_system, v11);
           Compat_StringHolderScalarDeletingDtor((int)subdir_path_holder, 1);
           (*file_system)[6]();
-          Compat_StringHolderConstructJoined(recurse_path_holder, v29, entry_name_holder);
-          Compat_FileSystemWalkDirectoryTree((int)file_system, v12, a3);
+          Compat_StringHolderConstructJoined(recurse_path_holder, dir_path_copy, entry_name_holder);
+          Compat_FileSystemWalkDirectoryTree((int)file_system, v12, base_path);
           Compat_StringHolderScalarDeletingDtor((int)recurse_path_holder, 1);
         }
         else
         {
-          file_visit_failed = *Compat_StringHolderConstructJoined(file_path_holder, a3, entry_name_holder);
+          file_visit_failed = *Compat_StringHolderConstructJoined(file_path_holder, base_path, entry_name_holder);
           LOBYTE(file_visit_failed) = Compat_FileSystemVisitFile((DWORD *)file_system, v15, file_visit_failed) == -1;
           Compat_StringHolderScalarDeletingDtor((int)file_path_holder, 1);
           if ( (_BYTE)file_visit_failed )
@@ -13438,7 +13438,7 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
         break;
     }
   }
-  (*v17)[1]();
+  (*file_system_saved)[1]();
   Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
   return visit_result;
@@ -13457,7 +13457,7 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int a
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00477950) --------------------------------------------------------
-signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
+signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem, int a2)
 {
   int (__fastcall ***v3)(_DWORD, const char *); // ecx
   int v4; // ecx
@@ -13471,7 +13471,7 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
   int callback_result; // ebx
   int v14; // esi
   int enumerator; // [esp+0h] [ebp-40h] BYREF
-  int v16; // [esp+4h] [ebp-3Ch]
+  int queryHandle; // [esp+4h] [ebp-3Ch]
   int v17; // [esp+8h] [ebp-38h]
   _DWORD file_path_holder[2]; // [esp+Ch] [ebp-34h] BYREF
   _DWORD subdir_path_holder[2]; // [esp+14h] [ebp-2Ch] BYREF
@@ -13486,7 +13486,7 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
   v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&pattern_holder, asc_5024CE);
   enumerator = (**v3)(v3, pattern_holder);
-  v16 = v4;
+  queryHandle = v4;
   v17 = 0;
   FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
   if ( enumerator )
@@ -13508,7 +13508,7 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
           if ( recurse_failed )
           {
             Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
-            (*(void (**)(void))(*(_DWORD *)v16 + 4))();
+            (*(void (**)(void))(*(_DWORD *)queryHandle + 4))();
             Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
             return -1;
           }
@@ -13529,7 +13529,7 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
     }
   }
   callback_result = (*(int (__fastcall **)(int, int))(*(_DWORD *)v5 + 28))(v5, a2);
-  (*(void (**)(void))(*(_DWORD *)v16 + 4))();
+  (*(void (**)(void))(*(_DWORD *)queryHandle + 4))();
   Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
   return callback_result;
 }
@@ -14865,13 +14865,13 @@ _DWORD * Res_BuildTaggedRecordHeader(_DWORD *result, int version, int data_offse
 }
 
 //----- (00478E30) --------------------------------------------------------
-int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD a4)
+int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD allocContext)
 {
   int v4; // ecx
-  int v5; // eax
+  int resolved_entry; // eax
   int v6; // ecx
   int v7; // ecx
-  _DWORD *v9; // eax
+  _DWORD *archive_entry; // eax
   _DWORD *v10; // ecx
   int v11; // ecx
   int path_holder; // [esp+0h] [ebp-14h] BYREF
@@ -14888,15 +14888,15 @@ int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD a4)
   vtable_ptr = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&path_holder);
   vtable_ptr = &g_PathEntry_Vtable;
-  v5 = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &path_holder, (const char *)v4, a4);
-  *(_DWORD *)(v6 + 8) = v5;
+  resolved_entry = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &path_holder, (const char *)v4, allocContext);
+  *(_DWORD *)(v6 + 8) = resolved_entry;
   Compat_StringHolderScalarDeletingDtor((int)&path_holder, 1);
   if ( !*(_DWORD *)(v7 + 8) )
     return v7;
-  v9 = (_DWORD *)Mem_Alloc(44, v7, 0, a4);
-  if ( v9 )
-    v9 = (_DWORD *)FileSystem_ArchiveEntryCopyConstruct(v9, v10[2]);
-  v10[2] = v9;
+  archive_entry = (_DWORD *)Mem_Alloc(44, v7, 0, allocContext);
+  if ( archive_entry )
+    archive_entry = (_DWORD *)FileSystem_ArchiveEntryCopyConstruct(archive_entry, v10[2]);
+  v10[2] = archive_entry;
   File_CacheNodeRebalance(v10);
   return v11;
 }
@@ -15032,17 +15032,17 @@ int * File_SourceConstructFromStream(
 int * File_SourceBuildAndWriteHeader(
         int *source,
         const CHAR *path,
-        int a3,
+        int useCipher,
         int a4,
         DWORD heap_ctx,
         int a6)
 {
-  const CHAR *v7; // edx
+  const CHAR *writePath; // edx
   int v8; // ecx
   int v9; // ecx
   int v10; // ecx
-  _DWORD *v11; // eax
-  _DWORD v13[6]; // [esp+0h] [ebp-18h] BYREF
+  _DWORD *archiveIndex; // eax
+  _DWORD header[6]; // [esp+0h] [ebp-18h] BYREF
 
   source[2] = 0;
   source[3] = 0;
@@ -15051,17 +15051,17 @@ int * File_SourceBuildAndWriteHeader(
   source[9] = 0;
   source[6] = a4;
   source[7] = a6;
-  source[5] = a3;
+  source[5] = useCipher;
   *source = (int)g_FileSource_VTable;
   CRT_DeleteFile(path, (int)path);
-  source[2] = Res_OpenBufferedStreamForWrite(v7, 0, (unsigned __int8 *)aWB, heap_ctx);
-  Res_BuildTaggedRecordHeader(v13, 1, v8, a4);
+  source[2] = Res_OpenBufferedStreamForWrite(writePath, 0, (unsigned __int8 *)aWB, heap_ctx);
+  Res_BuildTaggedRecordHeader(header, 1, v8, a4);
   source[13] = 0;
   File_SeekIfPositionChangedMode2(source, 0, a4);
-  Res_StreamWriteWithXorCipher(source, v13, v9, 0x10u);
-  v11 = (_DWORD *)Mem_Alloc(44, v10, 16, heap_ctx);
-  if ( v11 )
-    source[1] = FileSystem_ArchiveIndexCreateEmpty(v11, (int)source, a4);
+  Res_StreamWriteWithXorCipher(source, header, v9, 0x10u);
+  archiveIndex = (_DWORD *)Mem_Alloc(44, v10, 16, heap_ctx);
+  if ( archiveIndex )
+    source[1] = FileSystem_ArchiveIndexCreateEmpty(archiveIndex, (int)source, a4);
   else
     source[1] = 0;
   return source;
@@ -15145,57 +15145,57 @@ int  File_SourceReadAndDecodeHeader(
         int a5)
 {
   int stream_ptr; // eax
-  unsigned __int8 *v9; // esi
+  unsigned __int8 *headerBytePtr; // esi
   int i; // ecx
   int raw_byte; // ebx
   unsigned __int8 decoded_byte; // al
   int v13; // ecx
-  int v18; // eax
-  _DWORD *v19; // esi
+  int readerResult; // eax
+  _DWORD *reader; // esi
   _DWORD header[4]; // [esp+0h] [ebp-28h] BYREF
   _DWORD source_name_holder[2]; // [esp+10h] [ebp-18h] BYREF
   int bytes_read; // [esp+18h] [ebp-10h]
   int *v25; // [esp+1Ch] [ebp-Ch]
-  int *v26; // [esp+20h] [ebp-8h]
-  int *v27; // [esp+24h] [ebp-4h]
+  int *sourceObj; // [esp+20h] [ebp-8h]
+  int *decodeSource; // [esp+24h] [ebp-4h]
   _DWORD savedregs[4]; // [esp+28h] [ebp+0h] BYREF
 
-  v26 = source;
+  sourceObj = source;
   stream_ptr = Res_OpenBufferedStreamForRead(path, a3, mode, (DWORD)savedregs);
-  v26[13] = 0;
-  v25 = v26;
-  v26[2] = stream_ptr;
+  sourceObj[13] = 0;
+  v25 = sourceObj;
+  sourceObj[2] = stream_ptr;
   bytes_read = Compat_StreamRead(stream_ptr, header, 16);
-  if ( v26[5] )
+  if ( sourceObj[5] )
   {
-    v9 = (unsigned __int8 *)header;
-    v27 = v26;
+    headerBytePtr = (unsigned __int8 *)header;
+    decodeSource = sourceObj;
     a5 = bytes_read;
-    for ( i = v26[12]; a5; *(v9 - 1) = decoded_byte )
+    for ( i = sourceObj[12]; a5; *(headerBytePtr - 1) = decoded_byte )
     {
       --a5;
-      raw_byte = *v9++;
-      decoded_byte = Res_XorDecodeByte((int)v27, i, raw_byte);
+      raw_byte = *headerBytePtr++;
+      decoded_byte = Res_XorDecodeByte((int)decodeSource, i, raw_byte);
       i = v13 + 1;
     }
   }
   v25[12] += bytes_read;
-  Compat_StreamSeek(v26[2], header[3], 1);
-  v26[12] = Compat_StreamTell(v26[2]);
-  v18 = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
-  v19 = (_DWORD *)v18;
+  Compat_StreamSeek(sourceObj[2], header[3], 1);
+  sourceObj[12] = Compat_StreamTell(sourceObj[2]);
+  readerResult = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
+  reader = (_DWORD *)readerResult;
   source_name_holder[0] = 0;
   source_name_holder[1] = (int)&g_PathEntry_Vtable;
-  if ( v18 )
+  if ( readerResult )
   {
-    v18 = FileSystem_ArchiveEntryReaderCtor(v19, v26, v26[12], 26 * header[2] + 4, (const void *)source_name_holder);
+    readerResult = FileSystem_ArchiveEntryReaderCtor(reader, sourceObj, sourceObj[12], 26 * header[2] + 4, (const void *)source_name_holder);
   }
   else
   {
-    v18 = 0;
+    readerResult = 0;
   }
-  v26[1] = v18;
-  return v18;
+  sourceObj[1] = readerResult;
+  return readerResult;
 }
 // 479202: variable 'v13' is possibly undefined
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -15391,30 +15391,30 @@ int  File_ResolvePathByParentAndLeaf(_DWORD *fs, const char *path, DWORD heap_ct
 // 54DD14: using guessed type int dword_54DD14;
 
 //----- (00479560) --------------------------------------------------------
-int  File_ResolveAbsolutePathEntry(const char *a1, DWORD a2)
+int  File_ResolveAbsolutePathEntry(const char *path, DWORD heap_ctx)
 {
-  const char **v3; // eax
+  const char **parent_dir_holder; // eax
   char *v4; // ecx
-  int v5; // ecx
+  int parent_entry; // ecx
   int result; // eax
-  const char **v7; // eax
+  const char **leaf_name_holder; // eax
   int v8; // ecx
-  int v9; // ebx
+  int found_entry; // ebx
   int v10; // ecx
-  _DWORD v11[2]; // [esp-8h] [ebp-18h] BYREF
-  const char *v12[4]; // [esp+0h] [ebp-10h] BYREF
+  _DWORD leaf_name[2]; // [esp-8h] [ebp-18h] BYREF
+  const char *parent_dir_path[4]; // [esp+0h] [ebp-10h] BYREF
 
-  v12[2] = a1;
-  v3 = FileSystem_PathTrimToParentDir(v12);
-  File_ResolveCachedPathEntry(v4, v3, v4, a2);
-  Compat_StringHolderScalarDeletingDtor((int)v12, 1);
-  if ( !v5 )
+  parent_dir_path[2] = path;
+  parent_dir_holder = FileSystem_PathTrimToParentDir(parent_dir_path);
+  File_ResolveCachedPathEntry(v4, parent_dir_holder, v4, heap_ctx);
+  Compat_StringHolderScalarDeletingDtor((int)parent_dir_path, 1);
+  if ( !parent_entry )
     return 0;
-  v7 = (const char **)FileSystem_PathExtractFileName(v11);
-  v9 = FileSystem_ArchiveHashTableFind(v8, v7);
-  Compat_StringHolderScalarDeletingDtor((int)v11, 1);
+  leaf_name_holder = (const char **)FileSystem_PathExtractFileName(leaf_name);
+  found_entry = FileSystem_ArchiveHashTableFind(v8, leaf_name_holder);
+  Compat_StringHolderScalarDeletingDtor((int)leaf_name, 1);
   *(_DWORD *)(v10 + 28) = 1;
-  result = v9;
+  result = found_entry;
   *(_DWORD *)(v10 + 12) = 1;
   return result;
 }
@@ -15438,7 +15438,7 @@ _DWORD * File_OpenNodeByFlags(char flags)
 {
   char *v1; // ecx
   int resolvedEntry; // edi
-  int v3; // ecx
+  int self; // ecx
   _DWORD *result; // eax
   int v5; // ecx
   int excStringField; // ebx
@@ -15452,28 +15452,28 @@ _DWORD * File_OpenNodeByFlags(char flags)
   _DWORD *dirStream; // eax
   int v15; // ecx
   _DWORD *resultNode; // ebx
-  int v17; // [esp+0h] [ebp-40h] BYREF
+  int resolveHolder; // [esp+0h] [ebp-40h] BYREF
   int (**v18)(); // [esp+4h] [ebp-3Ch]
-  int v19; // [esp+8h] [ebp-38h] BYREF
+  int fileNameHolder; // [esp+8h] [ebp-38h] BYREF
   int (**v20)(); // [esp+Ch] [ebp-34h]
-  int v21; // [esp+10h] [ebp-30h] BYREF
+  int parentDirHolder; // [esp+10h] [ebp-30h] BYREF
   int (**v22)(); // [esp+14h] [ebp-2Ch]
-  int v23; // [esp+18h] [ebp-28h] BYREF
+  int dirInsertHolder; // [esp+18h] [ebp-28h] BYREF
   int (**v24)(); // [esp+1Ch] [ebp-24h]
   const char *parentDirPath[2]; // [esp+20h] [ebp-20h] BYREF
   const char *fileName[6]; // [esp+28h] [ebp-18h] BYREF
 
-  v17 = 0;
+  resolveHolder = 0;
   v18 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v17);
+  Compat_StringHolderDestructor(&resolveHolder);
   v18 = &g_PathEntry_Vtable;
   resolvedEntry = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)&v17, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&resolveHolder, 1);
   if ( resolvedEntry )
   {
     if ( (flags & 8) == 0 )
     {
-      result = (_DWORD *)Mem_Alloc(20, v3, flags, (DWORD)&g_PathEntry_Vtable);
+      result = (_DWORD *)Mem_Alloc(20, self, flags, (DWORD)&g_PathEntry_Vtable);
       if ( result )
       {
         result = FileSystem_ArchiveEntryStreamCtor(result, resolvedEntry, v5);
@@ -15485,33 +15485,33 @@ _DWORD * File_OpenNodeByFlags(char flags)
   }
   if ( (flags & 8) == 0 )
     return 0;
-  excStringField = v3 + 12;
-  if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(excStringField) )
+  excStringField = self + 12;
+  if ( ExcString_GetTextPtr(self + 12) && *(_BYTE *)ExcString_GetTextPtr(excStringField) )
     return 0;
-  v21 = 0;
+  parentDirHolder = 0;
   v22 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v21);
+  Compat_StringHolderDestructor(&parentDirHolder);
   v22 = &g_PathEntry_Vtable;
   parentDir = FileSystem_PathTrimToParentDir(parentDirPath);
   parentEntry = (_DWORD *)File_ResolveCachedPathEntry(v8, parentDir, v8, (DWORD)&g_PathEntry_Vtable);
   Compat_StringHolderScalarDeletingDtor((int)parentDirPath, 1);
-  Compat_StringHolderScalarDeletingDtor((int)&v21, 1);
-  v19 = 0;
+  Compat_StringHolderScalarDeletingDtor((int)&parentDirHolder, 1);
+  fileNameHolder = 0;
   v20 = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderDestructor(&v19);
+  Compat_StringHolderDestructor(&fileNameHolder);
   v20 = &g_PathEntry_Vtable;
   FileSystem_PathExtractFileName(fileName);
-  Compat_StringHolderScalarDeletingDtor((int)&v19, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&fileNameHolder, 1);
   if ( parentEntry && (dirEntry = FileSystem_ArchiveInsertDirectoryEntry(parentEntry, fileName)) != 0 )
   {
     v24 = &g_CompatStringHolder_Vtable;
-    v23 = 0;
+    dirInsertHolder = 0;
     v12 = (_DWORD *)(v10 + 12);
-    Compat_StringHolderDestructor(&v23);
+    Compat_StringHolderDestructor(&dirInsertHolder);
     v24 = &g_PathEntry_Vtable;
-    ExcString_GetTextPtr((int)&v23);
+    ExcString_GetTextPtr((int)&dirInsertHolder);
     ExcString_ReleaseText(v12);
-    Compat_StringHolderScalarDeletingDtor((int)&v23, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&dirInsertHolder, 1);
     dirStream = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&g_CompatStringHolder_Vtable);
     if ( dirStream )
     {
@@ -15545,17 +15545,17 @@ signed int  File_OpenEntryForWrite(int a1, int access_mode)
 {
   int v2; // edx
   int v3; // ecx
-  const char **v4; // eax
+  const char **parentDirPath; // eax
   char *v5; // ecx
-  _DWORD *v6; // ecx
-  signed int v7; // eax
-  signed int v8; // ebx
-  const char *v10[2]; // [esp+0h] [ebp-2Ch] BYREF
+  _DWORD *parentEntry; // ecx
+  signed int insertResult; // eax
+  signed int result; // ebx
+  const char *fileName[2]; // [esp+0h] [ebp-2Ch] BYREF
   int v11; // [esp+8h] [ebp-24h] BYREF
   int (**v12)(); // [esp+Ch] [ebp-20h]
   int v13; // [esp+10h] [ebp-1Ch] BYREF
   int (**v14)(); // [esp+14h] [ebp-18h]
-  const char *v15[5]; // [esp+18h] [ebp-14h] BYREF
+  const char *parentPath[5]; // [esp+18h] [ebp-14h] BYREF
 
   if ( ExcString_GetTextPtr(a1 + 12) && *(_BYTE *)ExcString_GetTextPtr(v2) )
     return -1;
@@ -15565,23 +15565,23 @@ signed int  File_OpenEntryForWrite(int a1, int access_mode)
   v14 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v13);
   v14 = &g_PathEntry_Vtable;
-  v4 = FileSystem_PathTrimToParentDir(v15);
-  File_ResolveCachedPathEntry(v5, v4, v5, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)v15, 1);
+  parentDirPath = FileSystem_PathTrimToParentDir(parentPath);
+  File_ResolveCachedPathEntry(v5, parentDirPath, v5, (DWORD)&g_PathEntry_Vtable);
+  Compat_StringHolderScalarDeletingDtor((int)parentPath, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v13, 1);
   v11 = 0;
   v12 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v11);
   v12 = &g_PathEntry_Vtable;
-  FileSystem_PathExtractFileName(v10);
+  FileSystem_PathExtractFileName(fileName);
   Compat_StringHolderScalarDeletingDtor((int)&v11, 1);
-  if ( v6 )
-    v7 = FileSystem_ArchiveInsertFileEntry(v6, v10, access_mode);
+  if ( parentEntry )
+    insertResult = FileSystem_ArchiveInsertFileEntry(parentEntry, fileName, access_mode);
   else
-    v7 = -1;
-  v8 = v7;
-  Compat_StringHolderScalarDeletingDtor((int)v10, 1);
-  return v8;
+    insertResult = -1;
+  result = insertResult;
+  Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
+  return result;
 }
 // 479810: variable 'v3' is possibly undefined
 // 479848: variable 'v5' is possibly undefined
@@ -16244,14 +16244,14 @@ int  Lexer_EmitSlotBinding(int fact, char *slot_name, int a3, _DWORD *result_val
 {
   int deftemplate; // edi
   int result; // eax
-  int v7; // eax
+  int multifieldValue; // eax
   signed int *slot_symbol; // eax
-  _DWORD *v9; // ecx
-  int v10; // edx
-  int v11; // eax
-  _DWORD v12[4]; // [esp+0h] [ebp-10h] BYREF
+  _DWORD *slotDataObject; // ecx
+  int slotType; // edx
+  int slotMultifield; // eax
+  _DWORD slotPosition[4]; // [esp+0h] [ebp-10h] BYREF
 
-  v12[3] = a3;
+  slotPosition[3] = a3;
   deftemplate = *(_DWORD *)(fact + 16);
   if ( (*(_BYTE *)(deftemplate + 24) & 1) != 0 )
   {
@@ -16259,27 +16259,27 @@ int  Lexer_EmitSlotBinding(int fact, char *slot_name, int a3, _DWORD *result_val
     {
       result_value[1] = *(__int16 *)(fact + 54);
       result_value[2] = *(_DWORD *)(fact + 56);
-      v7 = result_value[2];
+      multifieldValue = result_value[2];
       result_value[3] = 0;
-      result_value[4] = *(_DWORD *)(v7 + 6) - 1;
+      result_value[4] = *(_DWORD *)(multifieldValue + 6) - 1;
       return 1;
     }
     return 0;
   }
   slot_symbol = Str_Intern(slot_name, (int)result_value);
-  result = (int)Lexer_FindTemplateSlot(deftemplate, (int)slot_symbol, v12);
+  result = (int)Lexer_FindTemplateSlot(deftemplate, (int)slot_symbol, slotPosition);
   if ( result )
   {
-    v9[1] = *(__int16 *)(fact + 6 * (v12[0] - 1) + 54);
-    v10 = v9[1];
-    v9[2] = *(_DWORD *)(fact + 6 * (v12[0] - 1) + 56);
-    if ( v10 == 4 )
+    slotDataObject[1] = *(__int16 *)(fact + 6 * (slotPosition[0] - 1) + 54);
+    slotType = slotDataObject[1];
+    slotDataObject[2] = *(_DWORD *)(fact + 6 * (slotPosition[0] - 1) + 56);
+    if ( slotType == 4 )
     {
-      v11 = v9[2];
-      v9[3] = 0;
-      v9[4] = *(_DWORD *)(v11 + 6) - 1;
+      slotMultifield = slotDataObject[2];
+      slotDataObject[3] = 0;
+      slotDataObject[4] = *(_DWORD *)(slotMultifield + 6) - 1;
     }
-    return v9[1] != 105;
+    return slotDataObject[1] != 105;
   }
   return result;
 }
@@ -16640,15 +16640,15 @@ _DWORD * Rules_AssertCommand(uintptr_t returnValue, uintptr_t a2, double eval_co
 //----- (0047ADD0) --------------------------------------------------------
 void  Rules_RetractCommand(int a1, int a2, double a3)
 {
-  __int16 *v3; // ecx
+  __int16 *argExpr; // ecx
   int i; // esi
-  int v5; // ecx
+  int valueString; // ecx
   int fact; // eax
-  int v7; // edx
-  int v8; // ecx
+  int factIndex; // edx
+  int curArg; // ecx
   int v9; // ecx
   int v10; // ecx
-  int v11; // [esp-4h] [ebp-3Ch] BYREF
+  int resultObj; // [esp-4h] [ebp-3Ch] BYREF
   int arg_type; // [esp+0h] [ebp-38h]
   int arg_value; // [esp+4h] [ebp-34h]
   _BYTE buffer[24]; // [esp+14h] [ebp-24h] BYREF
@@ -16657,12 +16657,12 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
 
   v16 = a2;
   v15 = a1;
-  v3 = *(__int16 **)(g_ClipsCurrentExpression + 6);
-  for ( i = 1; v3; ++i )
+  argExpr = *(__int16 **)(g_ClipsCurrentExpression + 6);
+  for ( i = 1; argExpr; ++i )
   {
     while ( 1 )
     {
-      Parser_ParseForm(v3, &v11, (int)v3, a3);
+      Parser_ParseForm(argExpr, &resultObj, (int)argExpr, a3);
       if ( arg_type != 1 )
         break;
       if ( *(int *)(arg_value + 16) < 0 )
@@ -16673,16 +16673,16 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
       fact = Rules_FindFactByIndex();
       if ( !fact )
       {
-        a3 = sprintf_(buffer, "f-%ld", v7);
+        a3 = sprintf_(buffer, "f-%ld", factIndex);
         Rules_ReportCantFindItem(v9, (int)buffer);
         goto LABEL_6;
       }
 LABEL_5:
       Rules_RetractFact(fact, a3);
 LABEL_6:
-      v3 = *(__int16 **)(v8 + 10);
+      argExpr = *(__int16 **)(curArg + 10);
       ++i;
-      if ( !v3 )
+      if ( !argExpr )
         return;
     }
     if ( arg_type == 6 )
@@ -16690,14 +16690,14 @@ LABEL_6:
       fact = arg_value;
       goto LABEL_5;
     }
-    if ( arg_type == 2 && !strcmp_(v5, asc_502790) )
+    if ( arg_type == 2 && !strcmp_(valueString, asc_502790) )
     {
       Rules_RemoveAllFacts(a3);
       return;
     }
     Parser_ReportError(i, (int)aFactAddressFac);
     Lexer_ErrorRecover(1);
-    v3 = *(__int16 **)(v10 + 10);
+    argExpr = *(__int16 **)(v10 + 10);
   }
 }
 // 47AE16: variable 'v8' is possibly undefined
@@ -16771,33 +16771,33 @@ int  Rules_FactIndexFunction(double a1)
 }
 
 //----- (0047B000) --------------------------------------------------------
-signed int  Rules_FactsCommand(double a1)
+signed int  Rules_FactsCommand(double frame)
 {
   signed int result; // eax
   signed int v2; // esi
-  int v3; // ebx
+  int argumentCount; // ebx
   int v4; // ecx
-  int v5; // esi
+  int start; // esi
   int arg_offset; // ebp
-  int v7; // ecx
-  int v8; // ecx
+  int end; // ecx
+  int moduleName; // ecx
   int v9; // ecx
-  int v10; // [esp+0h] [ebp-30h] BYREF
+  int theValue; // [esp+0h] [ebp-30h] BYREF
   int arg_type; // [esp+4h] [ebp-2Ch]
-  int v12; // [esp+8h] [ebp-28h]
+  int argValue; // [esp+8h] [ebp-28h]
 
   result = Lexer_TokenExpect(4);
   v2 = result;
-  v3 = result;
+  argumentCount = result;
   if ( result == -1 )
     return result;
   Module_GetCurrent();
   if ( !v2 )
     return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, -1, -1, -1);
-  Rules_RtnUnknown(1, &v10, a1);
+  Rules_RtnUnknown(1, &theValue, frame);
   if ( arg_type != 2 )
   {
-    if ( arg_type != 1 || (v5 = *(_DWORD *)(v12 + 16), v5 < 0) )
+    if ( arg_type != 1 || (start = *(_DWORD *)(argValue + 16), start < 0) )
     {
       Parser_ReportError(1, (int)aSymbolOrPositi);
       Rules_SetEvaluationErrorFlag(1);
@@ -16806,23 +16806,23 @@ signed int  Rules_FactsCommand(double a1)
     arg_offset = 0;
     goto LABEL_8;
   }
-  if ( !Module_FindByName(*(_BYTE **)(v12 + 16)) && strcmp_(v8, asc_502790) )
+  if ( !Module_FindByName(*(_BYTE **)(argValue + 16)) && strcmp_(moduleName, asc_502790) )
   {
     Lexer_ErrorRecover(1);
-    return Rules_ReportCantFindItem(v9, *(_DWORD *)(v12 + 16));
+    return Rules_ReportCantFindItem(v9, *(_DWORD *)(argValue + 16));
   }
-  result = Rules_ParsePositiveIntArg(2, v3, v8, a1);
-  v5 = result;
+  result = Rules_ParsePositiveIntArg(2, argumentCount, moduleName, frame);
+  start = result;
   if ( result != -2 )
   {
     arg_offset = 1;
 LABEL_8:
-    result = Rules_ParsePositiveIntArg(arg_offset + 2, v3, v4, a1);
+    result = Rules_ParsePositiveIntArg(arg_offset + 2, argumentCount, v4, frame);
     if ( result != -2 )
     {
-      result = Rules_ParsePositiveIntArg(arg_offset + 3, v3, result, a1);
+      result = Rules_ParsePositiveIntArg(arg_offset + 3, argumentCount, result, frame);
       if ( result != -2 )
-        return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, v7, v5, result);
+        return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, end, start, result);
     }
   }
   return result;
@@ -17125,7 +17125,7 @@ _DWORD * Rules_CollectFactsToArray(
   int v14; // ecx
   int v15; // edx
   int v16; // edx
-  int v17; // [esp+0h] [ebp-28h] BYREF
+  int tmpCnt; // [esp+0h] [ebp-28h] BYREF
   _DWORD *deftemplateArray; // [esp+4h] [ebp-24h]
   _DWORD *v19; // [esp+8h] [ebp-20h]
   int v20; // [esp+Ch] [ebp-1Ch]
@@ -17201,7 +17201,7 @@ LABEL_11:
   }
   if ( v20 != 2 )
     goto LABEL_11;
-  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_4, &v17, *(_BYTE **)(arrayEntry[2] + 16), 1, g_ClipsEvaluationError);
+  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_4, &tmpCnt, *(_BYTE **)(arrayEntry[2] + 16), 1, g_ClipsEvaluationError);
   if ( deftemplate )
     goto LABEL_11;
   v16 = exprIndex;
@@ -17419,15 +17419,15 @@ InputBackendState * InputBackend_ReleaseDevices(InputBackendState *state)
 signed int  InputBackend_Initialize(InputBackendState *state, int hInstance, int hwnd)
 {
   _DWORD *raw; // esi
-  _DWORD v5[2]; // [esp+94h] [ebp-3Ch] BYREF
-  int v6; // [esp+9Ch] [ebp-34h]
-  int v7; // [esp+A0h] [ebp-30h]
-  int v8; // [esp+A4h] [ebp-2Ch]
-  int v9; // [esp+A8h] [ebp-28h]
-  _DWORD v10[2]; // [esp+ACh] [ebp-24h] BYREF
-  int v11; // [esp+B4h] [ebp-1Ch]
-  int v12; // [esp+B8h] [ebp-18h]
-  int v13; // [esp+BCh] [ebp-14h]
+  _DWORD rangeProp[2]; // [esp+94h] [ebp-3Ch] BYREF
+  int rangeObj; // [esp+9Ch] [ebp-34h]
+  int rangeHow; // [esp+A0h] [ebp-30h]
+  int rangeMin; // [esp+A4h] [ebp-2Ch]
+  int rangeMax; // [esp+A8h] [ebp-28h]
+  _DWORD deadzoneProp[2]; // [esp+ACh] [ebp-24h] BYREF
+  int deadzoneObj; // [esp+B4h] [ebp-1Ch]
+  int deadzoneHow; // [esp+B8h] [ebp-18h]
+  int deadzoneValue; // [esp+BCh] [ebp-14h]
 
   raw = (_DWORD *)state;
   if ( DirectInputCreateA(hInstance, 768, raw, 0) )
@@ -17468,26 +17468,26 @@ LABEL_9:
   }
   (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[3] + 44))(raw[3], g_InputBackendJoystickDataFormat);
   (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[3] + 52))(raw[3], hwnd, 6);
-  v5[0] = 24;
-  v8 = -1000;
-  v9 = 1000;
-  v5[1] = 16;
-  v6 = 0;
-  v7 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
+  rangeProp[0] = 24;
+  rangeMin = -1000;
+  rangeMax = 1000;
+  rangeProp[1] = 16;
+  rangeObj = 0;
+  rangeHow = 1;
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, rangeProp) )
     return 0;
-  v6 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
+  rangeObj = 4;
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, rangeProp) )
     return 0;
-  v13 = 1000;
-  v10[0] = 20;
-  v10[1] = 16;
-  v11 = 0;
-  v12 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10) )
+  deadzoneValue = 1000;
+  deadzoneProp[0] = 20;
+  deadzoneProp[1] = 16;
+  deadzoneObj = 0;
+  deadzoneHow = 1;
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, deadzoneProp) )
     return 0;
-  v11 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10)
+  deadzoneObj = 4;
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, deadzoneProp)
     || (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[3] + 28))(raw[3]) )
   {
     return 0;
@@ -17556,14 +17556,14 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
 {
   int result; // eax
   _DWORD *raw; // ebx
-  _DWORD v4[12]; // [esp+24h] [ebp-6Ch] BYREF
-  unsigned __int8 v5; // [esp+54h] [ebp-3Ch]
-  unsigned __int8 v6; // [esp+55h] [ebp-3Bh]
-  _DWORD v7[3]; // [esp+74h] [ebp-1Ch] BYREF
-  unsigned __int8 v8; // [esp+80h] [ebp-10h]
-  unsigned __int8 v9; // [esp+81h] [ebp-Fh]
-  unsigned __int8 v10; // [esp+82h] [ebp-Eh]
-  int v11; // [esp+84h] [ebp-Ch]
+  _DWORD joystickState[12]; // [esp+24h] [ebp-6Ch] BYREF
+  unsigned __int8 joystickButtonPrimary; // [esp+54h] [ebp-3Ch]
+  unsigned __int8 joystickButtonSecondary; // [esp+55h] [ebp-3Bh]
+  _DWORD mouseState[3]; // [esp+74h] [ebp-1Ch] BYREF
+  unsigned __int8 mouseButtonPrimary; // [esp+80h] [ebp-10h]
+  unsigned __int8 mouseButtonSecondary; // [esp+81h] [ebp-Fh]
+  unsigned __int8 mouseButtonMiddle; // [esp+82h] [ebp-Eh]
+  int renderStateLocal; // [esp+84h] [ebp-Ch]
   int v12; // [esp+88h] [ebp-8h]
   int fallback_mouse_delta_x;
   int fallback_mouse_delta_y;
@@ -17573,7 +17573,7 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
   int fallback_mouse_delta_is_host_pixels;
 
   v12 = a3;
-  v11 = renderState;
+  renderStateLocal = renderState;
   result = 0;
   raw = (_DWORD *)state;
   fallback_mouse_delta_x = 0;
@@ -17594,19 +17594,19 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
       &fallback_mouse_delta_is_host_pixels);
     if ( fallback_mouse_delta_is_host_pixels )
     {
-      fallback_mouse_delta_x = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(v11, fallback_mouse_delta_x);
-      fallback_mouse_delta_y = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(v11, fallback_mouse_delta_y);
+      fallback_mouse_delta_x = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(renderStateLocal, fallback_mouse_delta_x);
+      fallback_mouse_delta_y = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(renderStateLocal, fallback_mouse_delta_y);
     }
   }
   if ( raw[77] && raw[2] )
   {
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[2] + 36))(raw[2], 16, v7) == -2147024866 )
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[2] + 36))(raw[2], 16, mouseState) == -2147024866 )
       (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 28))(raw[2]);
-    state->mouse_delta_x = v7[0];
-    state->mouse_delta_y = v7[1];
-    state->mouse_button_primary = v8;
-    state->mouse_button_secondary = v9;
-    state->mouse_button_middle = v10;
+    state->mouse_delta_x = mouseState[0];
+    state->mouse_delta_y = mouseState[1];
+    state->mouse_button_primary = mouseButtonPrimary;
+    state->mouse_button_secondary = mouseButtonSecondary;
+    state->mouse_button_middle = mouseButtonMiddle;
   }
   else
   {
@@ -17629,13 +17629,13 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
   if ( raw[79] && raw[3] )
   {
     (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 100))(raw[3]);
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[3] + 36))(raw[3], 80, v4) == -2147024866 )
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[3] + 36))(raw[3], 80, joystickState) == -2147024866 )
       (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 28))(raw[3]);
-    state->joystick_axis_x = v4[0];
-    state->joystick_axis_y = v4[1];
-    state->joystick_button_primary = v5;
-    result = v6;
-    state->joystick_button_secondary = v6;
+    state->joystick_axis_x = joystickState[0];
+    state->joystick_axis_y = joystickState[1];
+    state->joystick_button_primary = joystickButtonPrimary;
+    result = joystickButtonSecondary;
+    state->joystick_button_secondary = joystickButtonSecondary;
   }
   return result;
 }
@@ -18847,11 +18847,11 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
 {
   _DWORD *current; // ecx
   _DWORD *insertAfter; // esi
-  int v5; // eax
-  int v7; // edi
-  int v8; // edx
-  int v9; // eax
-  int v10; // ebp
+  int nodeSalience; // eax
+  int newBasisList; // edi
+  int newFirstTag; // edx
+  int nodeFirstTag; // eax
+  int nodeFirstMatch; // ebp
   signed int comparison; // eax
   unsigned int timeTag; // [esp+0h] [ebp-1Ch]
   int salience; // [esp+4h] [ebp-18h]
@@ -18866,28 +18866,28 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
     return insertAfter;
   while ( 1 )
   {
-    v5 = current[2];
-    if ( v5 > salience )
+    nodeSalience = current[2];
+    if ( nodeSalience > salience )
       goto LABEL_5;
-    if ( v5 < salience )
+    if ( nodeSalience < salience )
       return insertAfter;
-    v7 = *(_DWORD *)(*(_DWORD *)(newActivation + 4) + 8);
-    v8 = -1;
-    v9 = -1;
-    if ( *(_DWORD *)v7 )
-      v8 = *(_DWORD *)(*(_DWORD *)v7 + 12);
-    v10 = **(_DWORD **)(current[1] + 8);
-    if ( v10 )
-      v9 = *(_DWORD *)(v10 + 12);
-    if ( v9 < v8 )
+    newBasisList = *(_DWORD *)(*(_DWORD *)(newActivation + 4) + 8);
+    newFirstTag = -1;
+    nodeFirstTag = -1;
+    if ( *(_DWORD *)newBasisList )
+      newFirstTag = *(_DWORD *)(*(_DWORD *)newBasisList + 12);
+    nodeFirstMatch = **(_DWORD **)(current[1] + 8);
+    if ( nodeFirstMatch )
+      nodeFirstTag = *(_DWORD *)(nodeFirstMatch + 12);
+    if ( nodeFirstTag < newFirstTag )
     {
-      if ( v8 > 0 )
+      if ( newFirstTag > 0 )
         return insertAfter;
       goto LABEL_5;
     }
-    if ( v9 > v8 )
+    if ( nodeFirstTag > newFirstTag )
     {
-      if ( v9 <= 0 )
+      if ( nodeFirstTag <= 0 )
         return insertAfter;
       goto LABEL_5;
     }
@@ -19081,16 +19081,16 @@ _DWORD * Rules_BuildLexBasisOrder(int *pattern)
 signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
 {
   int index; // eax
-  int v4; // ecx
-  _DWORD *v5; // edx
-  int *v6; // esi
-  int *v7; // ebx
-  int v8; // edi
-  int v9; // esi
-  int v10; // ebx
-  unsigned int v11; // edx
-  unsigned int v12; // eax
-  _DWORD *v15; // eax
+  int actBasisEntry; // ecx
+  _DWORD *candBasisEntry; // edx
+  int *actMatchSlot; // esi
+  int *candMatchSlot; // ebx
+  int candMatch; // edi
+  int actMatch; // esi
+  int candMatch2; // ebx
+  unsigned int actSalience; // edx
+  unsigned int candSalience; // eax
+  _DWORD *lexBasisOrder; // eax
   int v16; // edx
   int count1; // [esp+0h] [ebp-24h]
   int count2; // [esp+4h] [ebp-20h]
@@ -19098,8 +19098,8 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
 
   if ( !*(_DWORD *)(activation + 16) )
   {
-    v15 = Rules_BuildLexBasisOrder(*(int **)(activation + 4));
-    *(_DWORD *)(v16 + 16) = v15;
+    lexBasisOrder = Rules_BuildLexBasisOrder(*(int **)(activation + 4));
+    *(_DWORD *)(v16 + 16) = lexBasisOrder;
   }
   count2 = *candidate[4] << 17 >> 23;
   count1 = **(_DWORD **)(activation + 16) << 17 >> 23;
@@ -19110,30 +19110,30 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
   index = 0;
   if ( minCount > 0 )
   {
-    v4 = *(_DWORD *)(activation + 16);
-    v5 = candidate[4];
+    actBasisEntry = *(_DWORD *)(activation + 16);
+    candBasisEntry = candidate[4];
     do
     {
-      v6 = *(int **)(v4 + 8);
-      if ( *v6 && (v7 = (int *)candidate[4][index + 2], (v8 = *v7) != 0) )
+      actMatchSlot = *(int **)(actBasisEntry + 8);
+      if ( *actMatchSlot && (candMatchSlot = (int *)candidate[4][index + 2], (candMatch = *candMatchSlot) != 0) )
       {
-        v9 = *v6;
-        v10 = *v7;
-        if ( *(_DWORD *)(v8 + 12) < *(_DWORD *)(v9 + 12) )
+        actMatch = *actMatchSlot;
+        candMatch2 = *candMatchSlot;
+        if ( *(_DWORD *)(candMatch + 12) < *(_DWORD *)(actMatch + 12) )
           return 0;
-        if ( *(_DWORD *)(v10 + 12) > *(_DWORD *)(v9 + 12) )
+        if ( *(_DWORD *)(candMatch2 + 12) > *(_DWORD *)(actMatch + 12) )
           return 1;
       }
       else
       {
-        if ( *(_DWORD *)v5[2] )
+        if ( *(_DWORD *)candBasisEntry[2] )
           return 1;
         if ( **(_DWORD **)(*(_DWORD *)(activation + 16) + 4 * index + 8) )
           return 0;
       }
-      v4 += 4;
+      actBasisEntry += 4;
       ++index;
-      ++v5;
+      ++candBasisEntry;
     }
     while ( index < minCount );
   }
@@ -19141,15 +19141,15 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
     return 0;
   if ( count2 > count1 )
     return 1;
-  v11 = *(_DWORD *)(*(_DWORD *)activation + 28) & 0x7FF;
-  v12 = (*candidate)[7] & 0x7FF;
-  if ( v12 < v11 )
+  actSalience = *(_DWORD *)(*(_DWORD *)activation + 28) & 0x7FF;
+  candSalience = (*candidate)[7] & 0x7FF;
+  if ( candSalience < actSalience )
   {
     return 0;
   }
   else
   {
-    if ( v12 > v11 )
+    if ( candSalience > actSalience )
       return 1;
     return 2;
   }
@@ -19188,8 +19188,8 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
 {
   int oldStrategy; // esi
   int newStrategy; // eax
-  int v5; // ecx
-  int v6; // eax
+  int argString; // ecx
+  int reportedStrategy; // eax
   char *strategyName; // eax
   int v8; // ecx
   int v10; // ecx
@@ -19197,7 +19197,7 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
   int v12; // ecx
   int v13; // ecx
   int v14; // ecx
-  char *v15; // eax
+  char *currentStrategyName; // eax
   int v16; // ecx
   _DWORD argValue[10]; // [esp-8h] [ebp-28h] BYREF
 
@@ -19205,7 +19205,7 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
   oldStrategy = g_Rules_ConflictResolutionStrategy;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, argValue, 2, frame) )
   {
-    v6 = g_Rules_ConflictResolutionStrategy;
+    reportedStrategy = g_Rules_ConflictResolutionStrategy;
     goto LABEL_5;
   }
   newStrategy = strcmp_(*(_DWORD *)(argValue[2] + 16), aDepth);
@@ -19213,12 +19213,12 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
   {
 LABEL_4:
     Rules_SetStrategy(newStrategy);
-    v6 = oldStrategy;
+    reportedStrategy = oldStrategy;
 LABEL_5:
-    strategyName = Rules_GetStrategyName(v6);
+    strategyName = Rules_GetStrategyName(reportedStrategy);
     return Str_Intern(strategyName, v8);
   }
-  if ( !strcmp_(v5, aBreadth) )
+  if ( !strcmp_(argString, aBreadth) )
   {
     newStrategy = 1;
     goto LABEL_4;
@@ -19249,8 +19249,8 @@ LABEL_5:
     goto LABEL_4;
   }
   Parser_ReportError(1, (int)aSymbolWithVa_0);
-  v15 = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
-  return Str_Intern(v15, v16);
+  currentStrategyName = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
+  return Str_Intern(currentStrategyName, v16);
 }
 // 47DC70: variable 'v8' is possibly undefined
 // 47DC8B: variable 'v5' is possibly undefined
@@ -19501,18 +19501,18 @@ int  Rules_ActivationsCommand(int logicalName, int module)
 //----- (0047E1D0) --------------------------------------------------------
 int  Rules_RemoveActivation(_DWORD *theActivation, int updateAgenda, int updateLinks)
 {
-  _DWORD *v4; // ecx
-  int v5; // edx
+  _DWORD *activation; // ecx
+  int ruleModule; // edx
   int prevActivation; // esi
-  int v7; // eax
+  int newAgendaHead; // eax
   int v8; // ecx
   int v9; // ecx
   _DWORD *binds; // edx
   int result; // eax
   int nextActivation; // edx
 
-  v4 = theActivation;
-  v5 = *(_DWORD *)(*theActivation + 8);
+  activation = theActivation;
+  ruleModule = *(_DWORD *)(*theActivation + 8);
   if ( updateAgenda == 1 )
   {
     prevActivation = theActivation[6];
@@ -19525,14 +19525,14 @@ int  Rules_RemoveActivation(_DWORD *theActivation, int updateAgenda, int updateL
     }
     else
     {
-      v7 = *(_DWORD *)(*(_DWORD *)(v5 + 12) + 28);
-      *(_DWORD *)(v5 + 12) = v7;
-      if ( v7 )
-        *(_DWORD *)(v7 + 24) = 0;
+      newAgendaHead = *(_DWORD *)(*(_DWORD *)(ruleModule + 12) + 28);
+      *(_DWORD *)(ruleModule + 12) = newAgendaHead;
+      if ( newAgendaHead )
+        *(_DWORD *)(newAgendaHead + 24) = 0;
     }
-    if ( (*(_BYTE *)(*v4 + 29) & 0x10) != 0 )
+    if ( (*(_BYTE *)(*activation + 29) & 0x10) != 0 )
     {
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aActivation, (int)v4);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aActivation, (int)activation);
       Rules_PrintActivation(v8, v8);
       Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502D24, v9);
     }
@@ -19540,15 +19540,15 @@ int  Rules_RemoveActivation(_DWORD *theActivation, int updateAgenda, int updateL
   }
   if ( updateLinks == 1 )
   {
-    binds = (_DWORD *)v4[1];
+    binds = (_DWORD *)activation[1];
     if ( binds )
-      *(_DWORD *)(v4[1] + 4 * (*binds << 17 >> 23) + 8) = 0;
+      *(_DWORD *)(activation[1] + 4 * (*binds << 17 >> 23) + 8) = 0;
   }
   --g_Rules_ActivationCount;
-  if ( v4[4] )
-    Rules_FreePartialMatch(v4[4]);
-  g_ClipsMemFreeListTemp = (int)v4;
-  *v4 = *(_DWORD *)(g_ClipsMemoryTable + 128);
+  if ( activation[4] )
+    Rules_FreePartialMatch(activation[4]);
+  g_ClipsMemFreeListTemp = (int)activation;
+  *activation = *(_DWORD *)(g_ClipsMemoryTable + 128);
   result = g_ClipsMemoryTable;
   *(_DWORD *)(g_ClipsMemoryTable + 128) = g_ClipsMemFreeListTemp;
   return result;
@@ -20018,7 +20018,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int activationCount; // eax
   int v31; // ecx
   int i; // edx
-  int v33; // edx
+  int callbackNode; // edx
   int nextActivation; // eax
   int v35; // ecx
   int nextRuleName; // eax
@@ -20178,7 +20178,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     }
     if ( Rules_GetSalienceEvaluation() == 2 )
       Rules_RefreshAgenda(a3);
-    for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(v33 + 12) )
+    for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(callbackNode + 12) )
       (*(void (**)(void))(i + 4))();
     if ( g_ClipsHaltExecutionFlag == 1 )
       Rules_RemoveModuleFocus(**(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8));
@@ -21018,14 +21018,14 @@ void  Rules_InstancesCommand(double context)
 {
   int includeInherited; // ebp
   _BYTE *className; // esi
-  int v3; // ecx
+  int moduleName; // ecx
   int v4; // ecx
   int v5; // edx
   int v6; // ecx
   int v7; // ecx
-  int v8; // ecx
+  int keywordArg; // ecx
   int v9; // edx
-  _DWORD v10[2]; // [esp+0h] [ebp-34h] BYREF
+  _DWORD temp[2]; // [esp+0h] [ebp-34h] BYREF
   int v11; // [esp+8h] [ebp-2Ch]
   int argCount; // [esp+18h] [ebp-1Ch]
 
@@ -21035,9 +21035,9 @@ void  Rules_InstancesCommand(double context)
   argCount = Rules_RtnArgCount();
   if ( argCount <= 0 )
     goto LABEL_16;
-  if ( !Lexer_ParseValueList(1, v10, 2, context) )
+  if ( !Lexer_ParseValueList(1, temp, 2, context) )
     return;
-  if ( !Module_FindByName(*(_BYTE **)(v11 + 16)) && strcmp_(v3, asc_5033CC) )
+  if ( !Module_FindByName(*(_BYTE **)(v11 + 16)) && strcmp_(moduleName, asc_5033CC) )
   {
     Lexer_ErrorRecover(1);
     Parser_ReportError(v5, (int)aDefmoduleName);
@@ -21045,7 +21045,7 @@ void  Rules_InstancesCommand(double context)
   }
   if ( argCount <= 1 )
     goto LABEL_16;
-  if ( !Lexer_ParseValueList(2, v10, 2, context) )
+  if ( !Lexer_ParseValueList(2, temp, 2, context) )
     return;
   className = *(_BYTE **)(v11 + 16);
   if ( !Class_LookupByModule(v4, className) )
@@ -21063,9 +21063,9 @@ LABEL_16:
     Rules_PrintInstancesByModule((int)g_IO_LogicalName_WDisplay, includeInherited, (int)className);
     return;
   }
-  if ( Lexer_ParseValueList(3, v10, 2, context) )
+  if ( Lexer_ParseValueList(3, temp, 2, context) )
   {
-    if ( strcmp_(v8, aInherit) )
+    if ( strcmp_(keywordArg, aInherit) )
     {
       Lexer_ErrorRecover(1);
       Parser_ReportError(v9, (int)aKeywordInherit);
@@ -21443,7 +21443,7 @@ int  Rules_GetNextInstanceInClass(int classPtr, int instance)
 }
 
 //----- (004802F0) --------------------------------------------------------
-int  Rules_ClassCommand(int a1, int a2, double a3)
+int  Rules_ClassCommand(int returnValue, int a2, double a3)
 {
   int argName; // esi
   _DWORD *instance; // eax
@@ -21454,16 +21454,16 @@ int  Rules_ClassCommand(int a1, int a2, double a3)
   int v9; // ecx
   int v10; // ecx
   int v11; // ecx
-  int v12; // [esp-4h] [ebp-24h] BYREF
+  int temp; // [esp-4h] [ebp-24h] BYREF
   int valueType; // [esp+0h] [ebp-20h]
   int valueField; // [esp+4h] [ebp-1Ch]
   int v15; // [esp+1Ch] [ebp-4h]
 
   v15 = a2;
   argName = *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16);
-  *(_DWORD *)(a1 + 4) = 2;
-  *(_DWORD *)(a1 + 8) = g_ClipsFalseSymbol;
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &v12, a1, a3);
+  *(_DWORD *)(returnValue + 4) = 2;
+  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
+  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &temp, returnValue, a3);
   if ( valueType == 7 )
   {
     instance = (_DWORD *)valueField;

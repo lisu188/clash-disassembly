@@ -434,7 +434,7 @@ void  Video_Avi_playIn(const char *aviName, int a2, int fadeOutFirst, int a4, in
   int v11; // ecx
   int v12; // ecx
   int v13; // ecx
-  int (*v14)(); // ebp
+  int (*renderHook)(); // ebp
   int v15; // ecx
   int v16; // ecx
   int v17; // ecx
@@ -509,11 +509,11 @@ void  Video_Avi_playIn(const char *aviName, int a2, int fadeOutFirst, int a4, in
   }
   g_VideoModeSwitchStartTick = 0;
   Render_SetResourceHandle((int)&g_MainRenderDevice, prevHandle);
-  v14 = g_RenderHook;
+  renderHook = g_RenderHook;
   Debug_Log(v15, a4, (DWORD)g_RenderHook, (int)aUnsetrh08x_19);
   g_RenderHook = savedRenderHook;
   Render_SetResourceHandle((int)&g_MainRenderDevice, stdHandle);
-  Debug_Log(v16, a4, (DWORD)v14, (int)aAvi_playOut);
+  Debug_Log(v16, a4, (DWORD)renderHook, (int)aAvi_playOut);
 }
 // 461E7C: variable 'v9' is possibly undefined
 // 461F13: variable 'v12' is possibly undefined
@@ -528,17 +528,17 @@ void  Video_Avi_playIn(const char *aviName, int a2, int fadeOutFirst, int a4, in
 // 5452E4: using guessed type int dword_5452E4;
 
 //----- (004620F0) --------------------------------------------------------
-signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int a2, int a3, char a4, DWORD a5, ...)
+signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int restorePalette, int a3, char a4, DWORD a5, ...)
 {
   signed int result; // eax
   int stdHandle; // edi
   int v8; // ecx
-  void *v9; // ebx
+  void *paletteArrayCtorDescriptor; // ebx
   int v10; // ecx
   int v11; // ecx
   int v12; // eax
   int v13; // ecx
-  _DWORD *v14; // eax
+  _DWORD *loadedSpriteSet; // eax
   int v15; // ecx
   _DWORD *Surface; // eax
   _DWORD *animSurface; // esi
@@ -556,7 +556,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int a2, int a
   int restorePaletteFlag; // [esp+94h] [ebp-10h]
   int SpriteHeight; // [esp+98h] [ebp-Ch]
 
-  restorePaletteFlag = a2;
+  restorePaletteFlag = restorePalette;
   if ( g_SdlTransitionAnimSkipRequested && !getenv("CLASH95_ENABLE_SDL_TRANSITION_ANIMS") )
   {
     /*
@@ -592,7 +592,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int a2, int a
         Diagnostics_TraceWorldMapActionEvent("transition_after_set_rh_prev", g_SelectedUnitIndex, prevHandle, 0, 0);
         Render_Pump();
         Diagnostics_TraceWorldMapActionEvent("transition_after_render_pump", g_SelectedUnitIndex, 0, 0, 0);
-        LOBYTE(v9) = 0;
+        LOBYTE(paletteArrayCtorDescriptor) = 0;
         Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_backbuffer_fill", g_SelectedUnitIndex, 0, 0, 0);
         Video_EnterGreyscaleTransition((int *)&g_MainRenderDevice, v10, 0, a5);
@@ -600,16 +600,16 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int a2, int a
         v12 = Mem_Alloc(1024, 0, 0, a5);
         if ( v12 )
         {
-          v9 = &g_Runtime_PaletteArrayCtorDescriptor;
+          paletteArrayCtorDescriptor = &g_Runtime_PaletteArrayCtorDescriptor;
           v12 = _wcpp_4_ctor_array__(v12, 256);
         }
         paletteArray = v12;
         Diagnostics_TraceWorldMapActionEvent("transition_after_palette_alloc", g_SelectedUnitIndex, paletteArray, 0, 0);
         g_RenderDevice = &g_MainRenderDevice;
-        v14 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)&g_MainRenderDevice);
-        if ( v14 )
-          v14 = DLXSpriteSet_Load(v14, "anim_fr.s32");
-        animSpriteSet = v14;
+        loadedSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)&g_MainRenderDevice);
+        if ( loadedSpriteSet )
+          loadedSpriteSet = DLXSpriteSet_Load(loadedSpriteSet, "anim_fr.s32");
+        animSpriteSet = loadedSpriteSet;
         Diagnostics_TraceWorldMapActionEvent("transition_after_anim_load", g_SelectedUnitIndex, (int)(uintptr_t)animSpriteSet, 0, 0);
         if ( !animSpriteSet )
         {
@@ -623,7 +623,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int a2, int a
           Diagnostics_TraceWorldMapActionEvent("transition_anim_missing_unwound", g_SelectedUnitIndex, 0, 0, 0);
           return 0;
         }
-        SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)v14, 0);
+        SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)loadedSpriteSet, 0);
         SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)animSpriteSet, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_anim_dims", g_SelectedUnitIndex, SpriteHeight, SpriteWidth, 0);
         Surface = (_DWORD *)Mem_Alloc(188, 0, 0, (DWORD)&g_MainRenderDevice);
@@ -729,7 +729,7 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   unsigned __int8 slideAPrefixChar; // al
   int slideBNumber; // eax
   unsigned __int8 slideBPrefixChar; // al
-  _DWORD *v16; // edi
+  _DWORD *slideBSurface; // edi
   int slideCNumber; // eax
   unsigned __int8 slideCPrefixChar; // al
   int v19; // edx
@@ -748,10 +748,10 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   int v33; // ecx
   int v34; // ecx
   int intro_start_time;
-  int v35; // [esp-4h] [ebp-44Ch]
-  int v36; // [esp-4h] [ebp-44Ch]
-  int v37; // [esp-4h] [ebp-44Ch]
-  int v38; // [esp-4h] [ebp-44Ch]
+  int wavNumberArg; // [esp-4h] [ebp-44Ch]
+  int slideANumberArg; // [esp-4h] [ebp-44Ch]
+  int slideBNumberArg; // [esp-4h] [ebp-44Ch]
+  int slideCNumberArg; // [esp-4h] [ebp-44Ch]
   unsigned __int8 paletteBuffer[1024]; // [esp+0h] [ebp-448h] BYREF
   char filenameBuffer[52]; // [esp+400h] [ebp-48h] BYREF
   int (*savedRenderHook)(); // [esp+434h] [ebp-14h]
@@ -776,12 +776,12 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
       wavFileNumber = missionNumber - 9;
     else
       wavFileNumber = missionNumber + (unsigned __int8)g_LanguageIndex;
-    v35 = wavFileNumber;
+    wavNumberArg = wavFileNumber;
     if ( missionNumber > 9 )
       wavPrefixChar = 80;
     else
       wavPrefixChar = 67;
-    sprintf_(filenameBuffer, "sfx\\misinfo\\%c_%02d.WAV", wavPrefixChar, v35);
+    sprintf_(filenameBuffer, "sfx\\misinfo\\%c_%02d.WAV", wavPrefixChar, wavNumberArg);
     loadFileSusp(filenameBuffer, aDataLector_w_0);
   }
   Surface = (_DWORD *)Mem_Alloc(188, v3, (char)a2, (DWORD)savedregs);
@@ -803,12 +803,12 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
     slideANumber = missionNumber - 9;
   else
     slideANumber = missionNumber + 1;
-  v36 = slideANumber;
+  slideANumberArg = slideANumber;
   if ( missionNumber > 9 )
     slideAPrefixChar = 80;
   else
     slideAPrefixChar = 67;
-  sprintf_(filenameBuffer, "misinfo\\%c_%02d_A.PCX", slideAPrefixChar, v36);
+  sprintf_(filenameBuffer, "misinfo\\%c_%02d_A.PCX", slideAPrefixChar, slideANumberArg);
   RenderSurface_InvokeSlot48LoadPCX(
     (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
     filenameBuffer,
@@ -818,24 +818,24 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
     slideBNumber = missionNumber - 9;
   else
     slideBNumber = missionNumber + 1;
-  v37 = slideBNumber;
+  slideBNumberArg = slideBNumber;
   if ( missionNumber > 9 )
     slideBPrefixChar = 80;
   else
     slideBPrefixChar = 67;
-  v16 = surfaceB;
-  sprintf_(filenameBuffer, "misinfo\\%c_%02d_B.PCX", slideBPrefixChar, v37);
-  RenderSurface_InvokeSlot48LoadPCX(v16, filenameBuffer, 0, (uintptr_t)paletteBuffer);
+  slideBSurface = surfaceB;
+  sprintf_(filenameBuffer, "misinfo\\%c_%02d_B.PCX", slideBPrefixChar, slideBNumberArg);
+  RenderSurface_InvokeSlot48LoadPCX(slideBSurface, filenameBuffer, 0, (uintptr_t)paletteBuffer);
   if ( missionNumber > 9 )
     slideCNumber = missionNumber - 9;
   else
     slideCNumber = missionNumber + 1;
-  v38 = slideCNumber;
+  slideCNumberArg = slideCNumber;
   if ( missionNumber > 9 )
     slideCPrefixChar = 80;
   else
     slideCPrefixChar = 67;
-  sprintf_(filenameBuffer, "misinfo\\%c_%02d_C.PCX", slideCPrefixChar, v38);
+  sprintf_(filenameBuffer, "misinfo\\%c_%02d_C.PCX", slideCPrefixChar, slideCNumberArg);
   RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)surfaceC, filenameBuffer, 0, (uintptr_t)paletteBuffer);
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   intro_start_time = Time_Now(v20, v19);
@@ -1391,8 +1391,8 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
   unsigned int srcBitCount; // edi
   int srcCompression; // ecx
   int v10; // ecx
-  int v11; // ecx
-  int v12; // eax
+  int srcBitDepth; // ecx
+  int srcBlueMaskTmp; // eax
   int srcStride; // eax
   int srcHeight; // ebx
   int dstHeight; // ecx
@@ -1452,32 +1452,32 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
   {
     srcRedMask = *(_DWORD *)(srcBmiHeader + 40);
     srcGreenMask = *(_DWORD *)(srcBmiHeader + 44);
-    v12 = *(_DWORD *)(srcBmiHeader + 48);
+    srcBlueMaskTmp = *(_DWORD *)(srcBmiHeader + 48);
   }
   else
   {
-    v11 = *(unsigned __int16 *)(srcBmiHeader + 14);
-    if ( (unsigned __int16)v11 == 16 )
+    srcBitDepth = *(unsigned __int16 *)(srcBmiHeader + 14);
+    if ( (unsigned __int16)srcBitDepth == 16 )
     {
       srcRedMask = 63488;
-      v12 = 31;
+      srcBlueMaskTmp = 31;
       srcGreenMask = 2016;
     }
     else
     {
-      if ( v11 == 24 )
+      if ( srcBitDepth == 24 )
       {
         srcRedMask = 16711680;
         srcGreenMask = 65280;
         srcBlueMask = 255;
         goto LABEL_12;
       }
-      v12 = 1 << v11;
-      srcRedMask = 1 << v11;
-      srcGreenMask = 1 << v11;
+      srcBlueMaskTmp = 1 << srcBitDepth;
+      srcRedMask = 1 << srcBitDepth;
+      srcGreenMask = 1 << srcBitDepth;
     }
   }
-  srcBlueMask = v12;
+  srcBlueMask = srcBlueMaskTmp;
 LABEL_12:
   *(_DWORD *)desc = *(_DWORD *)(srcBmiHeader + 4);
   if ( srcPitch )
