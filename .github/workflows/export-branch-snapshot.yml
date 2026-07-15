@@ -1,0 +1,21 @@
+name: Export branch snapshot
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Create source archive
+        shell: bash
+        run: tar --exclude=.git -czf clash-disassembly-branch.tar.gz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clash-disassembly-branch-snapshot
+          path: clash-disassembly-branch.tar.gz
