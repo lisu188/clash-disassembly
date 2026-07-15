@@ -2182,8 +2182,8 @@ signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, dou
   int path_base; // eax
   int next_waypoint_xy; // ebx
   signed int direction; // edi
-  int v10; // ecx
-  int v11; // eax
+  int cur_stack_index; // ecx
+  int move_stack_index; // eax
   int step_direction; // edx
   signed int move_result; // eax
   int fallback_direction; // edx
@@ -2199,27 +2199,27 @@ signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, dou
          (unsigned __int8)next_waypoint_xy - *(__int16 *)(gameData + stack_offset + UNIT_STACK_TABLE_OFFSET),
          BYTE1(next_waypoint_xy) - *(__int16 *)(gameData + stack_offset + 147176));
   if ( Map_TileHasOwner(*(__int16 *)(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(stack_offset + gameData + 147176))
-    && !Rules_IsQueuedPathTargetBridgeCrossing(v10) )
+    && !Rules_IsQueuedPathTargetBridgeCrossing(cur_stack_index) )
   {
     switch ( direction )
     {
       case 1:
-        move_result = UnitStack_MoveOneTileInDirection(v10, 0, a3);
+        move_result = UnitStack_MoveOneTileInDirection(cur_stack_index, 0, a3);
         goto LABEL_10;
       case 3:
-        move_result = UnitStack_MoveOneTileInDirection(v10, 4, a3);
+        move_result = UnitStack_MoveOneTileInDirection(cur_stack_index, 4, a3);
 LABEL_10:
         if ( move_result )
           goto LABEL_13;
         fallback_direction = 2;
         break;
       case 5:
-        if ( UnitStack_MoveOneTileInDirection(v10, 4, a3) )
+        if ( UnitStack_MoveOneTileInDirection(cur_stack_index, 4, a3) )
           goto LABEL_13;
         fallback_direction = 6;
         break;
       case 7:
-        if ( UnitStack_MoveOneTileInDirection(v10, 0, a3) )
+        if ( UnitStack_MoveOneTileInDirection(cur_stack_index, 0, a3) )
           goto LABEL_13;
         fallback_direction = 6;
         break;
@@ -2228,53 +2228,53 @@ LABEL_10:
         break;
     }
 LABEL_12:
-    UnitStack_MoveOneTileInDirection(v10, fallback_direction, a3);
+    UnitStack_MoveOneTileInDirection(cur_stack_index, fallback_direction, a3);
   }
   else
   {
     switch ( direction )
     {
       case 1:
-        if ( !Road_Build(v10, 0, direction, a2, a3) )
+        if ( !Road_Build(cur_stack_index, 0, direction, a2, a3) )
         {
-          v11 = v10;
+          move_stack_index = cur_stack_index;
           step_direction = 0;
           goto LABEL_8;
         }
         break;
       case 3:
-        if ( !Road_Build(v10, 4, direction, a2, a3) )
+        if ( !Road_Build(cur_stack_index, 4, direction, a2, a3) )
         {
           step_direction = 4;
-          v11 = v10;
+          move_stack_index = cur_stack_index;
 LABEL_8:
-          if ( !UnitStack_MoveOneTileInDirection(v11, step_direction, a3) )
+          if ( !UnitStack_MoveOneTileInDirection(move_stack_index, step_direction, a3) )
           {
-            move_result = Road_Build(v10, 2, direction, a2, a3);
+            move_result = Road_Build(cur_stack_index, 2, direction, a2, a3);
             goto LABEL_10;
           }
         }
         break;
       case 5:
-        if ( !Road_Build(v10, 4, direction, a2, a3)
-          && !UnitStack_MoveOneTileInDirection(v10, 4, a3)
-          && !Road_Build(v10, 6, direction, a2, a3) )
+        if ( !Road_Build(cur_stack_index, 4, direction, a2, a3)
+          && !UnitStack_MoveOneTileInDirection(cur_stack_index, 4, a3)
+          && !Road_Build(cur_stack_index, 6, direction, a2, a3) )
         {
           fallback_direction = 6;
           goto LABEL_12;
         }
         break;
       case 7:
-        if ( !Road_Build(v10, 0, direction, a2, a3)
-          && !UnitStack_MoveOneTileInDirection(v10, 0, a3)
-          && !Road_Build(v10, 6, direction, a2, a3) )
+        if ( !Road_Build(cur_stack_index, 0, direction, a2, a3)
+          && !UnitStack_MoveOneTileInDirection(cur_stack_index, 0, a3)
+          && !Road_Build(cur_stack_index, 6, direction, a2, a3) )
         {
           fallback_direction = 6;
           goto LABEL_12;
         }
         break;
       default:
-        if ( !Road_Build(v10, direction, direction, a2, a3) )
+        if ( !Road_Build(cur_stack_index, direction, direction, a2, a3) )
         {
           fallback_direction = direction;
           goto LABEL_12;
@@ -2283,7 +2283,7 @@ LABEL_8:
     }
   }
 LABEL_13:
-  *(_DWORD *)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
+  *(_DWORD *)(UNIT_STACK_STRIDE * cur_stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
   return 0;
 }
 // 454B74: variable 'v10' is possibly undefined

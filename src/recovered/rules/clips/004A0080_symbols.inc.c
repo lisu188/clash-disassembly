@@ -4517,29 +4517,29 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
   char *mainTopicSrc; // esi
   _BYTE *topicNameDst; // edi
   int topicList; // ebp
-  char v9; // al
-  char v10; // al
+  char srcChar; // al
+  char srcCharNext; // al
   _DWORD *argTopicList; // eax
-  int v12; // edx
+  int topicNode; // edx
   int v13; // ecx
-  int v14; // eax
+  int locatedFp; // eax
   int lineCount; // ecx
   int fp; // esi
   int v17; // ecx
   char *messageText; // edx
   char *routerName; // eax
   signed int result; // eax
-  int v21; // ecx
+  int nodeSize; // ecx
   _DWORD *nodeToFree; // eax
   char *defaultPathSrc; // esi
   _BYTE *helpPathDst; // edi
-  char v25; // al
-  char v26; // al
+  char pathChar; // al
+  char pathCharNext; // al
   int v27; // ecx
   int v28; // ecx
   int v29; // ecx
   int v30; // ecx
-  unsigned int v31; // ecx
+  unsigned int charIndex; // ecx
   char inputChar; // al
   char commandChar; // dl
   int v34; // ecx
@@ -4557,16 +4557,16 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
       g_ClipsHelpFilePath = (int)helpPathDst;
       do
       {
-        v25 = *defaultPathSrc;
+        pathChar = *defaultPathSrc;
         *helpPathDst = *defaultPathSrc;
-        if ( !v25 )
+        if ( !pathChar )
           break;
-        v26 = defaultPathSrc[1];
+        pathCharNext = defaultPathSrc[1];
         defaultPathSrc += 2;
-        helpPathDst[1] = v26;
+        helpPathDst[1] = pathCharNext;
         helpPathDst += 2;
       }
-      while ( v26 );
+      while ( pathCharNext );
     }
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aLoadingHelpFil, a1);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], g_ClipsHelpFilePath, v3);
@@ -4588,31 +4588,31 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
   topicList = (int)topicNameDst;
   do
   {
-    v9 = *mainTopicSrc;
+    srcChar = *mainTopicSrc;
     *topicNameDst = *mainTopicSrc;
-    if ( !v9 )
+    if ( !srcChar )
       break;
-    v10 = mainTopicSrc[1];
+    srcCharNext = mainTopicSrc[1];
     mainTopicSrc += 2;
-    topicNameDst[1] = v10;
+    topicNameDst[1] = srcCharNext;
     topicNameDst += 2;
   }
-  while ( v10 );
+  while ( srcCharNext );
   argTopicList = Rules_HelpBuildTopicListFromArgs(a3);
-  *(_DWORD *)(v12 + 80) = 0;
-  *(_DWORD *)(v12 + 84) = argTopicList;
+  *(_DWORD *)(topicNode + 80) = 0;
+  *(_DWORD *)(topicNode + 84) = argTopicList;
   Output_Write((int)aWhelp, (int)asc_50797C, v13);
   while ( 1 )
   {
-    v14 = Rules_HelpLocateTopicEntry((const CHAR *)g_ClipsHelpFilePath, topicList, &status, menu);
-    fp = v14;
+    locatedFp = Rules_HelpLocateTopicEntry((const CHAR *)g_ClipsHelpFilePath, topicList, &status, menu);
+    fp = locatedFp;
     if ( status == (_DWORD *)-10 )
       break;
     if ( status == (_DWORD *)-30 )
       goto LABEL_12;
     if ( status == (_DWORD *)-25 )
     {
-      if ( !v14 )
+      if ( !locatedFp )
       {
         Output_Write((int)aWhelp, (int)aRootEntryMainN, lineCount);
         Output_Write((int)aWhelp, g_ClipsHelpFilePath, v34);
@@ -4634,7 +4634,7 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
         Output_Write((int)aWhelp, (int)aPressAReturnTo, v30);
         g_Lexer_PendingLineCharIndex = 0;
 LABEL_29:
-        inputChar = Lexer_PeekChar((int)aWhelp, v31);
+        inputChar = Lexer_PeekChar((int)aWhelp, charIndex);
         commandChar = inputChar;
         switch ( inputChar )
         {
@@ -4644,7 +4644,7 @@ LABEL_29:
             commandChar = 65;
             goto LABEL_32;
           case 8:
-            v31 = g_Lexer_PendingLineCharIndex;
+            charIndex = g_Lexer_PendingLineCharIndex;
             if ( g_Lexer_PendingLineCharIndex )
               --g_Lexer_PendingLineCharIndex;
             break;
@@ -4653,7 +4653,7 @@ LABEL_32:
             ++g_Lexer_PendingLineCharIndex;
             break;
         }
-        Lexer_PeekChar((int)aWhelp, v31);
+        Lexer_PeekChar((int)aWhelp, charIndex);
 LABEL_34:
         if ( commandChar == 10 || commandChar == 65 )
         {
@@ -4693,12 +4693,12 @@ LABEL_12:
   result = IO_DeactivateRouter((int)aWhelp);
   if ( topicList )
   {
-    v21 = 88;
+    nodeSize = 88;
     do
     {
       nodeToFree = (_DWORD *)topicList;
       topicList = *(_DWORD *)(topicList + 84);
-      result = Mem_SmallBlockFree(nodeToFree, v21);
+      result = Mem_SmallBlockFree(nodeToFree, nodeSize);
     }
     while ( topicList );
   }
@@ -5079,23 +5079,23 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
 {
   int v4; // ecx
   int charIndex; // edx
-  unsigned int v6; // ecx
+  unsigned int peekOffset; // ecx
   char inputChar; // al
   int wordLength; // ecx
   int scanIndex; // edx
   char ch; // bl
   int resultList; // esi
-  char v13; // bh
+  char scanChar; // bh
   char *wordSrc; // esi
   char *newTopic; // ebx
   char *topicDst; // edi
-  char v17; // al
-  char v18; // al
+  char newNodeByte; // al
+  char newNodeNextByte; // al
   int tailNode; // esi
-  char *v20; // esi
-  char *v21; // edi
-  char v22; // al
-  char v23; // al
+  char *copySrc; // esi
+  char *copyDst; // edi
+  char nodeByte; // al
+  char nodeNextByte; // al
   char v24; // [esp-1h] [ebp-16Dh]
   _BYTE lineBuffer[256]; // [esp+0h] [ebp-16Ch]
   char wordBuffer[80]; // [esp+100h] [ebp-6Ch] BYREF
@@ -5106,10 +5106,10 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
   Output_Write((int)aWhelp, (int)aTopic_, v4);
   charIndex = 0;
   g_Lexer_PendingLineCharIndex = 0;
-  v6 = -2;
+  peekOffset = -2;
   while ( 1 )
   {
-    inputChar = Lexer_PeekChar((int)aWhelp, v6);
+    inputChar = Lexer_PeekChar((int)aWhelp, peekOffset);
     lineBuffer[charIndex] = inputChar;
     if ( inputChar == 10 || charIndex >= 254 || g_ClipsHaltExecution )
       break;
@@ -5120,7 +5120,7 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
     }
     if ( inputChar == 8 && charIndex )
     {
-      g_Lexer_PendingLineCharIndex += v6;
+      g_Lexer_PendingLineCharIndex += peekOffset;
       charIndex = charIndex - 2 + 1;
       ++g_Lexer_PendingLineCharIndex;
     }
@@ -5158,8 +5158,8 @@ LABEL_14:
         {
           while ( 1 )
           {
-            v13 = lineBuffer[scanIndex];
-            if ( v13 == 32 || !v13 )
+            scanChar = lineBuffer[scanIndex];
+            if ( scanChar == 32 || !scanChar )
               break;
             ++scanIndex;
           }
@@ -5167,21 +5167,21 @@ LABEL_14:
           wordLength = 0;
           if ( topicList )
           {
-            v20 = wordBuffer;
-            v21 = (char *)topicList;
+            copySrc = wordBuffer;
+            copyDst = (char *)topicList;
             v24 = HIBYTE(topicList);
             do
             {
-              v22 = *v20;
-              *v21 = *v20;
-              if ( !v22 )
+              nodeByte = *copySrc;
+              *copyDst = *copySrc;
+              if ( !nodeByte )
                 break;
-              v23 = v20[1];
-              v20 += 2;
-              v21[1] = v23;
-              v21 += 2;
+              nodeNextByte = copySrc[1];
+              copySrc += 2;
+              copyDst[1] = nodeNextByte;
+              copyDst += 2;
             }
-            while ( v23 );
+            while ( nodeNextByte );
             topicList = *(_DWORD *)(topicList + 84);
           }
           else
@@ -5193,16 +5193,16 @@ LABEL_14:
             v24 = HIBYTE(newTopic);
             do
             {
-              v17 = *wordSrc;
+              newNodeByte = *wordSrc;
               *topicDst = *wordSrc;
-              if ( !v17 )
+              if ( !newNodeByte )
                 break;
-              v18 = wordSrc[1];
+              newNodeNextByte = wordSrc[1];
               wordSrc += 2;
-              topicDst[1] = v18;
+              topicDst[1] = newNodeNextByte;
               topicDst += 2;
             }
-            while ( v18 );
+            while ( newNodeNextByte );
             *((_DWORD *)newTopic + 21) = wordLength;
             tailNode = listHead;
             *((_DWORD *)newTopic + 20) = wordLength;
@@ -7835,33 +7835,33 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   int v11; // ecx
   int v12; // edx
   int v13; // edx
-  int v14; // esi
-  __int64 v15; // rax
+  int constructClassRec; // esi
+  __int64 constructPtr; // rax
   int v16; // ecx
-  int v17; // edi
+  int useModulePrefix; // edi
   int theConstruct; // ebp
   char *moduleNameDst; // edi
   char *Name; // esi
-  char v21; // al
-  char v22; // al
+  char moduleNameChar; // al
+  char moduleNameChar2; // al
   char *separatorSrc; // esi
   char *separatorDst; // edi
-  char v25; // al
-  char v26; // al
+  char separatorChar; // al
+  char separatorChar2; // al
   char *constructNameSrc; // esi
   unsigned int nameLength; // kr08_4
   char *constructNameDst; // edi
-  char v30; // al
-  char v31; // al
+  char constructNameChar; // al
+  char constructNameChar2; // al
   signed int *qualifiedSymbol; // eax
   int v33; // edx
   signed int *nameSymbol; // eax
   int v35; // edx
   char qualifiedName[512]; // [esp+0h] [ebp-224h] BYREF
-  _DWORD *v38; // [esp+200h] [ebp-24h]
+  _DWORD *savedMultifield; // [esp+200h] [ebp-24h]
   int allModules; // [esp+204h] [ebp-20h]
   int moduleCursor; // [esp+208h] [ebp-1Ch]
-  int v41; // [esp+20Ch] [ebp-18h]
+  int nextConstruct; // [esp+20Ch] [ebp-18h]
   int savedConstructClass; // [esp+210h] [ebp-14h]
 
   savedConstructClass = constructClass;
@@ -7887,67 +7887,67 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   returnValue[3] = 0;
   theMultifield = Rules_CreateEphemeralMultifield(constructCount);
   fieldPosition = 1;
-  v38 = theMultifield;
+  savedMultifield = theMultifield;
   for ( returnValue[2] = theMultifield; moduleCursor; moduleCursor = Module_NextEnum(moduleCursor) )
   {
     Module_SetCurrent(moduleCursor);
-    v41 = 0;
+    nextConstruct = 0;
     v13 = v11 + v12 - 6;
     while ( 1 )
     {
-      v14 = savedConstructClass;
-      v41 = (*(int (__fastcall **)(int, int))(savedConstructClass + 28))(v11, v13);
-      if ( !v41 )
+      constructClassRec = savedConstructClass;
+      nextConstruct = (*(int (__fastcall **)(int, int))(savedConstructClass + 28))(v11, v13);
+      if ( !nextConstruct )
         break;
-      v15 = ((__int64 (*)(void))*(_DWORD *)(v14 + 16))();
-      v17 = allModules;
-      theConstruct = v15;
-      *(_WORD *)(HIDWORD(v15) + 14) = 2;
-      if ( v17 )
+      constructPtr = ((__int64 (*)(void))*(_DWORD *)(constructClassRec + 16))();
+      useModulePrefix = allModules;
+      theConstruct = constructPtr;
+      *(_WORD *)(HIDWORD(constructPtr) + 14) = 2;
+      if ( useModulePrefix )
       {
         moduleNameDst = qualifiedName;
         Name = (char *)Module_GetName(moduleCursor);
         do
         {
-          v21 = *Name;
+          moduleNameChar = *Name;
           *moduleNameDst = *Name;
-          if ( !v21 )
+          if ( !moduleNameChar )
             break;
-          v22 = Name[1];
+          moduleNameChar2 = Name[1];
           Name += 2;
-          moduleNameDst[1] = v22;
+          moduleNameDst[1] = moduleNameChar2;
           moduleNameDst += 2;
         }
-        while ( v22 );
+        while ( moduleNameChar2 );
         separatorSrc = asc_5084B0;
         separatorDst = &qualifiedName[strlen(qualifiedName)];
         do
         {
-          v25 = *separatorSrc;
+          separatorChar = *separatorSrc;
           *separatorDst = *separatorSrc;
-          if ( !v25 )
+          if ( !separatorChar )
             break;
-          v26 = separatorSrc[1];
+          separatorChar2 = separatorSrc[1];
           separatorSrc += 2;
-          separatorDst[1] = v26;
+          separatorDst[1] = separatorChar2;
           separatorDst += 2;
         }
-        while ( v26 );
+        while ( separatorChar2 );
         constructNameSrc = *(char **)(theConstruct + 16);
         nameLength = strlen(qualifiedName) + 1;
         constructNameDst = &qualifiedName[nameLength - 1];
         do
         {
-          v30 = *constructNameSrc;
+          constructNameChar = *constructNameSrc;
           *constructNameDst = *constructNameSrc;
-          if ( !v30 )
+          if ( !constructNameChar )
             break;
-          v31 = constructNameSrc[1];
+          constructNameChar2 = constructNameSrc[1];
           constructNameSrc += 2;
-          constructNameDst[1] = v31;
+          constructNameDst[1] = constructNameChar2;
           constructNameDst += 2;
         }
-        while ( v31 );
+        while ( constructNameChar2 );
         qualifiedSymbol = Str_Intern(qualifiedName, ~nameLength);
         *(_DWORD *)(v33 + 16) = qualifiedSymbol;
         v13 = v33 + 6;
@@ -7955,7 +7955,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
       }
       else
       {
-        nameSymbol = Str_Intern(*(char **)(v15 + 16), v16);
+        nameSymbol = Str_Intern(*(char **)(constructPtr + 16), v16);
         *(_DWORD *)(v35 + 16) = nameSymbol;
         v13 = v35 + 6;
         ++fieldPosition;
@@ -8557,13 +8557,13 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   int v12; // eax
   int bucketHead; // ebx
   int classRecord; // ecx
-  int v15; // eax
+  int newInstance; // eax
   _DWORD *theInstance; // ecx
   _DWORD *result; // eax
   int v18; // ecx
   int v19; // ecx
   int v20; // ecx
-  int v21; // eax
+  int classNameString; // eax
   int v22; // ecx
   int v23; // ecx
   int v24; // ecx
@@ -8572,15 +8572,15 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   int v27; // ecx
   int v28; // ecx
   int v29; // ecx
-  int v30; // ecx
+  int nextHashInstance; // ecx
   int v31; // eax
   int prevInstance; // [esp+0h] [ebp-20h] BYREF
   int hashBucket; // [esp+4h] [ebp-1Ch]
   int deleteMessageSymbol; // [esp+8h] [ebp-18h]
-  int v35; // [esp+Ch] [ebp-14h]
+  int savedInitMessage; // [esp+Ch] [ebp-14h]
 
   nameSymbol = (signed int *)instanceName;
-  v35 = initMessage;
+  savedInitMessage = initMessage;
   if ( g_Rules_JoinOperationInProgress && (*(_BYTE *)(theDefclass + 20) & 8) != 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 10, 0);
@@ -8593,8 +8593,8 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   {
     Rules_PrintErrorID((int)aInsmngr, 3, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotCreate_1, v20);
-    v21 = Rules_GetConstructNameString(theDefclass);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], v21, (int)g_IO_LogicalNameTable_WError[0]);
+    classNameString = Rules_GetConstructNameString(theDefclass);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], classNameString, (int)g_IO_LogicalNameTable_WError[0]);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, v22);
     Lexer_ErrorRecover(1);
     return 0;
@@ -8658,15 +8658,15 @@ LABEL_14:
     {
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 28) = nameSymbol;
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 44) = theDefclass;
-      Instance_AllocateSlotValueTable(v35);
+      Instance_AllocateSlotValueTable(savedInitMessage);
       v12 = hashBucket;
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 36) = hashBucket;
       if ( prevInstance )
       {
         *(_DWORD *)(g_ClipsInstanceUnderConstruction + 60) = *(_DWORD *)(prevInstance + 60);
-        v30 = *(_DWORD *)(prevInstance + 60);
-        if ( v30 )
-          *(_DWORD *)(v30 + 56) = g_ClipsInstanceUnderConstruction;
+        nextHashInstance = *(_DWORD *)(prevInstance + 60);
+        if ( nextHashInstance )
+          *(_DWORD *)(nextHashInstance + 56) = g_ClipsInstanceUnderConstruction;
         v31 = g_ClipsInstanceUnderConstruction;
         *(_DWORD *)(prevInstance + 60) = g_ClipsInstanceUnderConstruction;
         *(_DWORD *)(v31 + 56) = prevInstance;
@@ -8685,12 +8685,12 @@ LABEL_14:
       else
         *(_DWORD *)(classRecord + 80) = g_ClipsInstanceUnderConstruction;
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 48) = *(_DWORD *)(*(_DWORD *)(g_ClipsInstanceUnderConstruction + 44) + 84);
-      v15 = g_ClipsInstanceUnderConstruction;
+      newInstance = g_ClipsInstanceUnderConstruction;
       *(_DWORD *)(*(_DWORD *)(g_ClipsInstanceUnderConstruction + 44) + 84) = g_ClipsInstanceUnderConstruction;
       if ( g_Clips_InstanceListHead )
-        *(_DWORD *)(g_Instance_GlobalListTail + 68) = v15;
+        *(_DWORD *)(g_Instance_GlobalListTail + 68) = newInstance;
       else
-        g_Clips_InstanceListHead = v15;
+        g_Clips_InstanceListHead = newInstance;
       *(_DWORD *)(g_ClipsInstanceUnderConstruction + 64) = g_Instance_GlobalListTail;
       g_Instance_InstancesChangedFlag = 1;
       g_Instance_GlobalListTail = g_ClipsInstanceUnderConstruction;

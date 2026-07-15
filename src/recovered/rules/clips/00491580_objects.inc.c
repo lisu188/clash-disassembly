@@ -2011,7 +2011,7 @@ char * Parser_NextToken(int readSource, int theToken)
   char charType; // dl
   signed int firstChar; // eax
   unsigned int v7; // ecx
-  int v8; // eax
+  int lexerSource; // eax
   signed int count; // edx
   signed int *tokenSymbol; // eax
   int printForm; // eax
@@ -2023,8 +2023,8 @@ char * Parser_NextToken(int readSource, int theToken)
   signed int sfNameLength; // ecx
   int sfVarSymbol; // edi
   const char *sfVarName; // edi
-  int v20; // edx
-  int v21; // edx
+  int sfNameSymbol; // edx
+  int sfFinalSymbol; // edx
   unsigned int sfBufferLength; // kr0C_4
   int v23; // ecx
   signed int *tildeSymbol; // eax
@@ -2034,8 +2034,8 @@ char * Parser_NextToken(int readSource, int theToken)
   signed int mfNameLength; // ecx
   int mfVarSymbol; // edi
   const char *mfVarName; // edi
-  int v31; // edx
-  int v32; // edx
+  int mfNameSymbol; // edx
+  int mfFinalSymbol; // edx
   unsigned int mfBufferLength; // kr18_4
   int v34; // ecx
   signed int *lparenSymbol; // eax
@@ -2091,10 +2091,10 @@ char * Parser_NextToken(int readSource, int theToken)
     firstChar = i;
     *(_DWORD *)theToken = 2;
     Lexer_SkipChar(firstChar, readSource, v4);
-    v8 = readSource;
+    lexerSource = readSource;
     count = 0;
 LABEL_12:
-    tokenSymbol = (signed int *)(uintptr_t)(unsigned int)(uintptr_t)Lexer_ReadToken(v8, count, &scannedType, v7);
+    tokenSymbol = (signed int *)(uintptr_t)(unsigned int)(uintptr_t)Lexer_ReadToken(lexerSource, count, &scannedType, v7);
     *(_DWORD *)(theToken + 4) = (int)(uintptr_t)tokenSymbol;
 LABEL_13:
     printForm = tokenSymbol[4];
@@ -2127,7 +2127,7 @@ LABEL_14:
                      g_TokenLen + 80);
         count = 1;
         g_TokenBuf = (int)appended;
-        v8 = readSource;
+        lexerSource = readSource;
         goto LABEL_12;
       }
       if ( i >= 124 )
@@ -2162,16 +2162,16 @@ LABEL_14:
           sfVarName = *(const char **)(sfVarSymbol + 16);
           if ( *sfVarName != 42
             || (sfNameLength = strlen(sfVarName), sfNameLength <= 1)
-            || (v20 = *(_DWORD *)(theToken + 4),
-                sfNameLength = strlen(*(const char **)(v20 + 16)),
-                *(_BYTE *)(sfNameLength + *(_DWORD *)(v20 + 16) - 1) != 42) )
+            || (sfNameSymbol = *(_DWORD *)(theToken + 4),
+                sfNameLength = strlen(*(const char **)(sfNameSymbol + 16)),
+                *(_BYTE *)(sfNameLength + *(_DWORD *)(sfNameSymbol + 16) - 1) != 42) )
           {
             printForm = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, *(const char **)(*(_DWORD *)(theToken + 4) + 16), sfNameLength);
             goto LABEL_14;
           }
-          v21 = *(_DWORD *)(theToken + 4);
+          sfFinalSymbol = *(_DWORD *)(theToken + 4);
           *(_DWORD *)theToken = 13;
-          *(_DWORD *)(theToken + 8) = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, *(const char **)(v21 + 16), sfNameLength);
+          *(_DWORD *)(theToken + 8) = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, *(const char **)(sfFinalSymbol + 16), sfNameLength);
           sfBufferLength = strlen((const char *)g_TokenBuf) + 1;
           *(_BYTE *)(sfBufferLength - 1 + g_TokenBuf - 1) = 0;
           *(_DWORD *)(theToken + 4) = Str_Intern((char *)(g_TokenBuf + 1), sfBufferLength - 1);
@@ -2271,7 +2271,7 @@ LABEL_30:
                         g_TokenLen + 80);
     Lexer_SkipChar(i, readSource, v42);
     count = 1;
-    v8 = readSource;
+    lexerSource = readSource;
     goto LABEL_12;
   }
   i = Lexer_PeekChar(readSource, v25);
@@ -2284,16 +2284,16 @@ LABEL_30:
     mfVarName = *(const char **)(mfVarSymbol + 16);
     if ( *mfVarName != 42
       || (mfNameLength = strlen(mfVarName), mfNameLength <= 1)
-      || (v31 = *(_DWORD *)(theToken + 4),
-          mfNameLength = strlen(*(const char **)(v31 + 16)),
-          *(_BYTE *)(mfNameLength + *(_DWORD *)(v31 + 16) - 1) != 42) )
+      || (mfNameSymbol = *(_DWORD *)(theToken + 4),
+          mfNameLength = strlen(*(const char **)(mfNameSymbol + 16)),
+          *(_BYTE *)(mfNameLength + *(_DWORD *)(mfNameSymbol + 16) - 1) != 42) )
     {
       printForm = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, *(const char **)(*(_DWORD *)(theToken + 4) + 16), mfNameLength);
       goto LABEL_14;
     }
-    v32 = *(_DWORD *)(theToken + 4);
+    mfFinalSymbol = *(_DWORD *)(theToken + 4);
     *(_DWORD *)theToken = 14;
-    *(_DWORD *)(theToken + 8) = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, *(const char **)(v32 + 16), mfNameLength);
+    *(_DWORD *)(theToken + 8) = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, *(const char **)(mfFinalSymbol + 16), mfNameLength);
     mfBufferLength = strlen((const char *)g_TokenBuf) + 1;
     *(_BYTE *)(mfBufferLength - 1 + g_TokenBuf - 1) = 0;
     *(_DWORD *)(theToken + 4) = Str_Intern((char *)(g_TokenBuf + 1), mfBufferLength - 1);
@@ -2457,7 +2457,7 @@ int  Lexer_ScanNumberToken(int logicalName, _DWORD *theToken, unsigned int a3)
   char charType; // bl
   unsigned int bufferSize; // eax
   int v6; // ecx
-  char *v7; // edx
+  char *tokenBufPtr; // edx
   int count; // edi
   int phase; // esi
   char *appended; // eax
@@ -2491,7 +2491,7 @@ int  Lexer_ScanNumberToken(int logicalName, _DWORD *theToken, unsigned int a3)
   int nextCount; // [esp+1Ch] [ebp-28h]
   int inchar; // [esp+20h] [ebp-24h]
   unsigned __int8 v40; // [esp+24h] [ebp-20h]
-  unsigned __int8 v41; // [esp+28h] [ebp-1Ch]
+  unsigned __int8 charLookupIndex; // [esp+28h] [ebp-1Ch]
   unsigned __int8 v42; // [esp+2Ch] [ebp-18h]
 
   readSource = logicalName;
@@ -2506,18 +2506,18 @@ int  Lexer_ScanNumberToken(int logicalName, _DWORD *theToken, unsigned int a3)
   {
     digitFound = 1;
     count = v35;
-    v7 = (char *)g_TokenBuf;
+    tokenBufPtr = (char *)g_TokenBuf;
     goto LABEL_5;
   }
   v6 = inchar;
   if ( inchar == 43 || inchar == 45 )
   {
-    v7 = (char *)g_TokenBuf;
+    tokenBufPtr = (char *)g_TokenBuf;
     bufferSize = g_TokenLen + 80;
     count = 1;
 LABEL_5:
     phase = 0;
-    appended = Str_AppendCharEscaping(inchar, v7, (unsigned int *)&g_TokenLen, &g_TokenCap, bufferSize);
+    appended = Str_AppendCharEscaping(inchar, tokenBufPtr, (unsigned int *)&g_TokenLen, &g_TokenCap, bufferSize);
     goto LABEL_6;
   }
   if ( inchar == 46 )
@@ -2557,7 +2557,7 @@ LABEL_6:
     inchar = Lexer_PeekChar(readSource, v11);
     v40 = inchar + 1;
     v42 = inchar + 1;
-    v41 = inchar + 1;
+    charLookupIndex = inchar + 1;
     switch ( phase )
     {
       case 0:
@@ -2641,7 +2641,7 @@ LABEL_9:
         digitBuffer = Str_AppendCharEscaping(inchar, (char *)g_TokenBuf, (unsigned int *)&g_TokenLen, &g_TokenCap, g_TokenLen + 80);
         continue;
       case 2:
-        if ( (IsTable[v41] & 0x20) == 0 && inchar != 43 && inchar != 45 )
+        if ( (IsTable[charLookupIndex] & 0x20) == 0 && inchar != 43 && inchar != 45 )
         {
           if ( inchar != 60
             && inchar != 34
@@ -2715,7 +2715,7 @@ LABEL_18:
         goto LABEL_6;
     }
     nextCount = count + 1;
-    if ( (IsTable[v41] & 0x20) == 0 )
+    if ( (IsTable[charLookupIndex] & 0x20) == 0 )
       break;
     count = nextCount;
     digitBuffer = Str_AppendCharEscaping(inchar, (char *)g_TokenBuf, (unsigned int *)&g_TokenLen, &g_TokenCap, g_TokenLen + 80);
@@ -2730,7 +2730,7 @@ LABEL_18:
     || inchar == 126
     || inchar == 32
     || inchar == 59
-    || (IsTable[v41] & 8) == 0 )
+    || (IsTable[charLookupIndex] & 8) == 0 )
   {
     lastChar = *(_BYTE *)(g_TokenBuf + count - 1);
     if ( lastChar == 43 || lastChar == 45 )

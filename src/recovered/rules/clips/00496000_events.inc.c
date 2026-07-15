@@ -732,19 +732,19 @@ int  AST_CollapseNodeChildSlots(int constraints, int hashBucket)
 {
   int v3; // edx
   int v4; // edx
-  __int16 *v5; // eax
+  __int16 *childNode1; // eax
   int v6; // ecx
   int v7; // edx
   int v8; // edx
-  __int16 *v9; // eax
+  __int16 *childNode2; // eax
   int v10; // ecx
   int v11; // edx
   int v12; // edx
-  __int16 *v13; // eax
+  __int16 *childNode3; // eax
   int v14; // ecx
   int v15; // edx
   int v16; // edx
-  __int16 *v17; // eax
+  __int16 *childNode4; // eax
   int v18; // ecx
   int v19; // edx
   int result; // eax
@@ -755,21 +755,21 @@ int  AST_CollapseNodeChildSlots(int constraints, int hashBucket)
   {
     AST_AddHashedNodeChain(*(__int16 **)(constraints + 6), constraints, hashBucket);
     AST_Free(*(_DWORD *)(v3 + 6));
-    v5 = *(__int16 **)(v4 + 14);
+    childNode1 = *(__int16 **)(v4 + 14);
     *(_DWORD *)(v4 + 6) = v6;
-    AST_AddHashedNodeChain(v5, v4, v6);
+    AST_AddHashedNodeChain(childNode1, v4, v6);
     AST_Free(*(_DWORD *)(v7 + 14));
-    v9 = *(__int16 **)(v8 + 10);
+    childNode2 = *(__int16 **)(v8 + 10);
     *(_DWORD *)(v8 + 14) = v10;
-    AST_AddHashedNodeChain(v9, v8, v10);
+    AST_AddHashedNodeChain(childNode2, v8, v10);
     AST_Free(*(_DWORD *)(v11 + 10));
-    v13 = *(__int16 **)(v12 + 18);
+    childNode3 = *(__int16 **)(v12 + 18);
     *(_DWORD *)(v12 + 10) = v14;
-    AST_AddHashedNodeChain(v13, v12, v14);
+    AST_AddHashedNodeChain(childNode3, v12, v14);
     AST_Free(*(_DWORD *)(v15 + 18));
-    v17 = *(__int16 **)(v16 + 22);
+    childNode4 = *(__int16 **)(v16 + 22);
     *(_DWORD *)(v16 + 18) = v18;
-    AST_AddHashedNodeChain(v17, v16, v18);
+    AST_AddHashedNodeChain(childNode4, v16, v18);
     result = AST_Free(*(_DWORD *)(v19 + 22));
     *(_DWORD *)(v21 + 22) = v22;
     hashBucket = *(_DWORD *)(v21 + 26);
@@ -1625,29 +1625,29 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   int v5; // ecx
   int methodAddr; // edx
   signed int fieldCount; // ecx
-  signed int v8; // eax
-  int v9; // edx
+  signed int restrictionScanIndex; // eax
+  int restrictionScanPtr; // edx
   _DWORD *theMultifield; // eax
   int v11; // ecx
-  _DWORD *v12; // ebx
+  _DWORD *multifield; // ebx
   int *result; // eax
   int v14; // edx
-  signed int v15; // edx
+  signed int fieldIndex; // edx
   _DWORD *restriction; // edi
-  int *v17; // eax
+  int *fieldIndexValue; // eax
   int v18; // edx
   int v19; // ecx
-  int v20; // eax
+  int querySymbol; // eax
   int v21; // ecx
   int v22; // edx
-  unsigned int v23; // esi
-  int v24; // ecx
-  char *v25; // ebx
-  char *v26; // ebp
-  char *v27; // eax
+  unsigned int typeIndex; // esi
+  int typeOffset; // ecx
+  char *typeCellPtr; // ebx
+  char *typeValueCell; // ebp
+  char *className; // eax
   int v28; // ecx
   int v29; // edx
-  char *v30; // [esp+4h] [ebp-28h]
+  char *restrictionCellPtr; // [esp+4h] [ebp-28h]
   int v31; // [esp+8h] [ebp-24h]
   int restrictionOffset; // [esp+Ch] [ebp-20h]
   signed int restrictionIndex; // [esp+10h] [ebp-1Ch]
@@ -1658,74 +1658,74 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   methodAddr = 40 * methodPosition + *(_DWORD *)(v5 + 28);
   fieldCount = 3;
   theMethod = (signed int *)methodAddr;
-  v8 = 0;
+  restrictionScanIndex = 0;
   if ( *(int *)(methodAddr + 8) > 0 )
   {
-    v9 = *(_DWORD *)(methodAddr + 28);
+    restrictionScanPtr = *(_DWORD *)(methodAddr + 28);
     do
     {
-      fieldCount += *(_DWORD *)(v9 + 8) + 3;
-      ++v8;
-      v9 += 12;
+      fieldCount += *(_DWORD *)(restrictionScanPtr + 8) + 3;
+      ++restrictionScanIndex;
+      restrictionScanPtr += 12;
     }
-    while ( v8 < theMethod[2] );
+    while ( restrictionScanIndex < theMethod[2] );
   }
   theMultifield = Rules_CreateEphemeralMultifield(fieldCount);
   returnValue[1] = 4;
   returnValue[3] = 0;
   returnValue[2] = theMultifield;
-  v12 = theMultifield;
+  multifield = theMultifield;
   returnValue[4] = v11 - 1;
   multifieldPtr = theMultifield;
   *((_WORD *)theMultifield + 7) = 1;
   theMultifield[4] = Rules_AddIntegerValue(theMethod[3]);
-  *((_WORD *)v12 + 10) = 1;
-  *(_DWORD *)((char *)v12 + 22) = Rules_AddIntegerValue(theMethod[4]);
-  *((_WORD *)v12 + 13) = 1;
-  v12[7] = Rules_AddIntegerValue(theMethod[2]);
+  *((_WORD *)multifield + 10) = 1;
+  *(_DWORD *)((char *)multifield + 22) = Rules_AddIntegerValue(theMethod[4]);
+  *((_WORD *)multifield + 13) = 1;
+  multifield[7] = Rules_AddIntegerValue(theMethod[2]);
   restrictionIndex = 0;
   result = theMethod;
   v31 = 4;
-  v15 = *(_DWORD *)(v14 + 8) + 4;
+  fieldIndex = *(_DWORD *)(v14 + 8) + 4;
   if ( theMethod[2] > 0 )
   {
-    v30 = (char *)v12 + 18;
+    restrictionCellPtr = (char *)multifield + 18;
     restrictionOffset = 0;
     do
     {
       restriction = (_DWORD *)(restrictionOffset + theMethod[7]);
-      *((_WORD *)v30 + 7) = 1;
-      v17 = Rules_AddIntegerValue(v15);
-      *(_DWORD *)(v19 + 16) = v17;
+      *((_WORD *)restrictionCellPtr + 7) = 1;
+      fieldIndexValue = Rules_AddIntegerValue(fieldIndex);
+      *(_DWORD *)(v19 + 16) = fieldIndexValue;
       *((_WORD *)multifieldPtr + 3 * v18 + 4) = 2;
-      v30 += 6;
+      restrictionCellPtr += 6;
       ++v31;
       if ( restriction[1] )
-        v20 = g_ClipsTrueSymbol;
+        querySymbol = g_ClipsTrueSymbol;
       else
-        v20 = g_ClipsFalseSymbol;
-      *(_DWORD *)((char *)multifieldPtr + 6 * v18 + 10) = v20;
+        querySymbol = g_ClipsFalseSymbol;
+      *(_DWORD *)((char *)multifieldPtr + 6 * v18 + 10) = querySymbol;
       *((_WORD *)multifieldPtr + 3 * v18 + 7) = 1;
       result = Rules_AddIntegerValue(restriction[2]);
       *(_DWORD *)(v21 + 16) = result;
-      v15 = v22 + 1;
-      v23 = 0;
+      fieldIndex = v22 + 1;
+      typeIndex = 0;
       if ( restriction[2] )
       {
-        v24 = 0;
-        v25 = (char *)multifieldPtr + 6 * v15 - 6;
+        typeOffset = 0;
+        typeCellPtr = (char *)multifieldPtr + 6 * fieldIndex - 6;
         do
         {
-          *((_WORD *)v25 + 7) = 2;
-          v25 += 6;
-          ++v23;
-          v26 = (char *)multifieldPtr + 6 * v15 - 6;
-          v27 = (char *)Rules_GetConstructNameString(*(_DWORD *)(v24 + *restriction));
-          *((_DWORD *)v26 + 4) = Str_Intern(v27, v28);
-          v15 = v29 + 1;
+          *((_WORD *)typeCellPtr + 7) = 2;
+          typeCellPtr += 6;
+          ++typeIndex;
+          typeValueCell = (char *)multifieldPtr + 6 * fieldIndex - 6;
+          className = (char *)Rules_GetConstructNameString(*(_DWORD *)(typeOffset + *restriction));
+          *((_DWORD *)typeValueCell + 4) = Str_Intern(className, v28);
+          fieldIndex = v29 + 1;
           result = (int *)restriction[2];
         }
-        while ( v23 < (unsigned int)result );
+        while ( typeIndex < (unsigned int)result );
       }
       restrictionOffset += 12;
       ++restrictionIndex;
@@ -5262,12 +5262,12 @@ int  Rules_GetConstructNameAndComment(
   signed int *constructNameSymbol; // ecx
   int v20; // ecx
   int v21; // ecx
-  char *v22; // edx
+  char *definingVerb; // edx
   int v23; // ecx
   int v24; // ecx
   int v25; // ecx
   int v26; // ecx
-  char *v27; // edx
+  char *trailingText; // edx
   int v28; // ecx
   int v29; // edx
   int v31; // ecx
@@ -5359,24 +5359,24 @@ LABEL_23:
   if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
   {
     if ( redefining )
-      v22 = aRedefining;
+      definingVerb = aRedefining;
     else
-      v22 = aDefining;
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v22, v21);
+      definingVerb = aDefining;
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)definingVerb, v21);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)constructName, v23);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_505F78, v24);
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(v25 + 16), v25);
     if ( fullMessageCR )
-      v27 = asc_505E94;
+      trailingText = asc_505E94;
     else
-      v27 = asc_505F44;
+      trailingText = asc_505F44;
     goto LABEL_15;
   }
   if ( Rules_GetLoadInProgress() )
   {
-    v27 = constructSymbol;
+    trailingText = constructSymbol;
 LABEL_15:
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v27, v26);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)trailingText, v26);
   }
   Parser_NextToken(readSource, inputToken);
   if ( *(_DWORD *)inputToken == 3 && getComment )

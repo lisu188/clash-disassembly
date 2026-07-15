@@ -2781,12 +2781,12 @@ int  CRT_WatcomEHFrameHandler(
   int v25; // eax
   int v26; // ecx
   int v27; // ebx
-  int v28; // eax
+  int allocatedExc; // eax
   int v29; // ecx
   _EXC_PR_FREE *v30; // [esp-92h] [ebp-12Eh]
   _EXC_PR *v31; // [esp-82h] [ebp-11Eh]
   PVOID TargetFrame; // [esp+82h] [ebp-1Ah] BYREF
-  int v33; // [esp+8Eh] [ebp-Eh]
+  int excObject; // [esp+8Eh] [ebp-Eh]
   int var2; // [esp+9Ah] [ebp-2h]
   int vars6; // [esp+A2h] [ebp+6h]
   char varsA; // [esp+A6h] [ebp+Ah]
@@ -2867,29 +2867,29 @@ LABEL_19:
   *(_DWORD *)((char *)&a20 + 2) = 1;
   if ( (varsB & 2) != 0 )
   {
-    *(_BYTE *)(v33 + 13) = *(_BYTE *)(v33 + 12);
+    *(_BYTE *)(excObject + 13) = *(_BYTE *)(excObject + 12);
     if ( (varsB & 4) != 0 )
     {
-      v27 = v33;
-      *(_DWORD *)(v33 + 24) = var2;
+      v27 = excObject;
+      *(_DWORD *)(excObject + 24) = var2;
       *(_DWORD *)(v27 + 32) = TargetFrame;
     }
   }
   else
   {
-    v28 = ((int (*)(void))_wcpp_4_alloc_exc__)();
-    v33 = v28;
-    *(_DWORD *)(v28 + 24) = var2;
-    *(_DWORD *)(v28 + 32) = TargetFrame;
+    allocatedExc = ((int (*)(void))_wcpp_4_alloc_exc__)();
+    excObject = allocatedExc;
+    *(_DWORD *)(allocatedExc + 24) = var2;
+    *(_DWORD *)(allocatedExc + 32) = TargetFrame;
   }
   if ( varsA != 2 )
   {
-    *(_BYTE *)(v33 + 12) = 0;
+    *(_BYTE *)(excObject + 12) = 0;
     RtlUnwind(TargetFrame, *(PVOID *)((char *)&ExceptionRecord_10 + 2), (PEXCEPTION_RECORD)((char *)&a4 + 10), 0);
     goto LABEL_19;
   }
   if ( (varsB & 2) != 0 )
-    *(_BYTE *)(v33 + 12) = *(_BYTE *)(v33 + 13);
+    *(_BYTE *)(excObject + 12) = *(_BYTE *)(excObject + 13);
 LABEL_20:
   if ( (unsigned __int8)varsA < 2u )
   {
@@ -3024,50 +3024,50 @@ int  CRT_WatcomEHInvokeStateDestructor(int a1, unsigned __int8 a2, int a3)
 }
 
 //----- (00484F53) --------------------------------------------------------
-unsigned int  CRT_WatcomEHUnwindToState(unsigned int targetState, int a2, int a3)
+unsigned int  CRT_WatcomEHUnwindToState(unsigned int targetState, int unwindBlock, int regRecord)
 {
   int v5; // ecx
   int v6; // ecx
   int v7; // ecx
-  int v8; // edx
-  unsigned __int8 v9; // cl
-  int v10; // ebx
-  int v11; // eax
+  int objectPtr; // edx
+  unsigned __int8 dtorFlag; // cl
+  int destructorBlock; // ebx
+  int destructorRecord; // eax
   unsigned int result; // eax
-  int v13; // esi
+  int stateEntry; // esi
   int v14; // ecx
-  int v15; // esi
-  _BYTE v17[4]; // [esp+4h] [ebp-24h] BYREF
-  unsigned int v18; // [esp+8h] [ebp-20h]
-  unsigned int v19; // [esp+Ch] [ebp-1Ch]
-  char v20; // [esp+11h] [ebp-17h]
-  int v21; // [esp+14h] [ebp-14h]
+  int cleanupInfo; // esi
+  _BYTE traverseCursor[4]; // [esp+4h] [ebp-24h] BYREF
+  unsigned int currentState; // [esp+8h] [ebp-20h]
+  unsigned int traverseTargetState; // [esp+Ch] [ebp-1Ch]
+  char traverseFlags; // [esp+11h] [ebp-17h]
+  int entry; // [esp+14h] [ebp-14h]
 
-  *(_DWORD *)(a2 + 4) = a3;
-  *(_DWORD *)(a2 + 8) = *(_DWORD *)(a3 + 8);
+  *(_DWORD *)(unwindBlock + 4) = regRecord;
+  *(_DWORD *)(unwindBlock + 8) = *(_DWORD *)(regRecord + 8);
   _wcpp_4_stab_trav_init__();
-  v19 = targetState;
-  v20 |= 1u;
-  v21 = CRT_WatcomEHTraverseUnwindState((int)v17, v5);
+  traverseTargetState = targetState;
+  traverseFlags |= 1u;
+  entry = CRT_WatcomEHTraverseUnwindState((int)traverseCursor, v5);
   while ( 1 )
   {
-    result = v18;
-    if ( v18 == targetState )
+    result = currentState;
+    if ( currentState == targetState )
       break;
-    if ( v18 < targetState )
+    if ( currentState < targetState )
       _wcpp_4_corrupted_stack__(v6);
     _wcpp_4_stab_trav_next__();
-    v13 = v21;
-    v21 = CRT_WatcomEHTraverseUnwindState((int)v17, v14);
-    *(_DWORD *)(a3 + 12) = v18;
-    if ( *(_DWORD *)v13 )
+    stateEntry = entry;
+    entry = CRT_WatcomEHTraverseUnwindState((int)traverseCursor, v14);
+    *(_DWORD *)(regRecord + 12) = currentState;
+    if ( *(_DWORD *)stateEntry )
     {
-      (*(void (**)(void))v13)();
+      (*(void (**)(void))stateEntry)();
     }
     else
     {
-      v15 = *(_DWORD *)(v13 + 4);
-      switch ( *(_BYTE *)v15 )
+      cleanupInfo = *(_DWORD *)(stateEntry + 4);
+      switch ( *(_BYTE *)cleanupInfo )
       {
         case 0:
           goto LABEL_3;
@@ -3077,41 +3077,41 @@ unsigned int  CRT_WatcomEHUnwindToState(unsigned int targetState, int a2, int a3
           _wcpp_4_corrupted_stack__(v7);
           continue;
         case 6:
-          v9 = 17;
+          dtorFlag = 17;
           goto LABEL_7;
         case 7:
-          v9 = 16;
+          dtorFlag = 16;
 LABEL_7:
-          v10 = a2;
-          v11 = v15;
+          destructorBlock = unwindBlock;
+          destructorRecord = cleanupInfo;
           goto LABEL_8;
         case 8:
-          v9 = 16;
-          v10 = a2;
-          v11 = v15;
+          dtorFlag = 16;
+          destructorBlock = unwindBlock;
+          destructorRecord = cleanupInfo;
 LABEL_8:
-          CRT_WatcomEHInvokeStateDestructor(v11, v9, v10);
+          CRT_WatcomEHInvokeStateDestructor(destructorRecord, dtorFlag, destructorBlock);
           continue;
         case 9:
-          v8 = *(_DWORD *)(a3 + *(_DWORD *)(v15 + 4) + 8);
+          objectPtr = *(_DWORD *)(regRecord + *(_DWORD *)(cleanupInfo + 4) + 8);
           goto LABEL_4;
         case 0xA:
         case 0xB:
         case 0xC:
         case 0xD:
-          (*(void (**)(void))(v15 + 8))();
+          (*(void (**)(void))(cleanupInfo + 8))();
           continue;
         default:
           _wcpp_4_corrupted_stack__(v7);
 LABEL_3:
-          v8 = *(_DWORD *)(v15 + 8);
+          objectPtr = *(_DWORD *)(cleanupInfo + 8);
 LABEL_4:
-          _wcpp_4_dtor_array__(v7, v8);
+          _wcpp_4_dtor_array__(v7, objectPtr);
           break;
       }
     }
   }
-  *(_DWORD *)(a3 + 12) = v18;
+  *(_DWORD *)(regRecord + 12) = currentState;
   return result;
 }
 // 484F81: variable 'v5' is possibly undefined
@@ -4807,10 +4807,10 @@ int  CRT_RegisterFinalizer(int a1, __lock *lock, int a3)
 int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), int *argList)
 {
   char *spec_ptr; // edi
-  char v7; // al
+  char specChar; // al
   int v8; // edx
   _DWORD *nFarPtr; // edx
-  int v10; // eoff
+  int farPtrArgSlot; // eoff
   int v11; // eax
   _DWORD *nDwordPtr; // edx
   int v13; // edi
@@ -4821,7 +4821,7 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
   int v18; // eax
   int v19; // ecx
   unsigned __int16 *converted_text; // edi
-  __int16 v21; // dx
+  __int16 wideStrSegment; // dx
   unsigned __int8 *buffer_ptr; // ebx
   int outputStream; // [esp+0h] [ebp-80h] BYREF
   int field_width; // [esp+4h] [ebp-7Ch]
@@ -4855,12 +4855,12 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
       argCursor = *argList;
       spec_ptr = CRT_ParseWidthPrecisionSpec(format_ptr + 1, &argCursor, (int)&outputStream);
       *argList = argCursor;
-      v7 = *spec_ptr;
-      conversion_char = v7;
+      specChar = *spec_ptr;
+      conversion_char = specChar;
       format_ptr = spec_ptr + 1;
-      if ( !v7 )
+      if ( !specChar )
         return char_count;
-      if ( v7 == 110 )
+      if ( specChar == 110 )
       {
         if ( (flags & 0x20) != 0 )
         {
@@ -4868,9 +4868,9 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
           {
             v8 = *argList + 8;
             *argList = v8;
-            v10 = v8 - 8;
+            farPtrArgSlot = v8 - 8;
             nFarPtr = *(_DWORD **)(v8 - 8);
-            __ES__ = *(_WORD *)(v10 + 4);
+            __ES__ = *(_WORD *)(farPtrArgSlot + 4);
             goto LABEL_7;
           }
           if ( (flags & 0x40) != 0 )
@@ -4935,7 +4935,7 @@ LABEL_7:
       {
         convArgCursor = *argList;
         converted_text = CRT_ConvertPrintfArgument(conversion_buffer, &convArgCursor, (int)&outputStream);
-        __ES__ = v21;
+        __ES__ = wideStrSegment;
         *argList = convArgCursor;
         field_width -= v36 + v35 + v34 + text_len + zero_pad_len + prefix_len;
         if ( (flags & 8) == 0 && pad_char == 32 )
@@ -10593,11 +10593,11 @@ signed int  Rules_EvaluateJoinExpression(
 {
   __int16 *exprPtr; // esi
   int testResult; // edi
-  int v8; // eax
+  int savedPatternEntity; // eax
   char joinFlags; // dl
   int exprFunction; // eax
   int entityRecord; // edi
-  int v12; // eax
+  int exprSymbol; // eax
   __int16 v13; // ax
   __int16 v15; // ax
   uintptr_t evaluator; // eax
@@ -10629,10 +10629,10 @@ signed int  Rules_EvaluateJoinExpression(
   g_Clips_CurrentPartialMatch = (int)lbinds;
   oldRHSBinds = g_Rules_GlobalRHSBinds;
   g_Rules_GlobalRHSBinds = rbinds;
-  v8 = g_CurrentPatternEntityPtr;
+  savedPatternEntity = g_CurrentPatternEntityPtr;
   g_CurrentPatternEntityPtr = (int)theJoin;
   joinFlags = *theJoin;
-  oldJoin = v8;
+  oldJoin = savedPatternEntity;
   if ( (joinFlags & 8) != 0 )
   {
     v15 = ((unsigned __int16)(2 * *lbinds) >> 7) - 1;
@@ -10667,8 +10667,8 @@ signed int  Rules_EvaluateJoinExpression(
     }
     else
     {
-      v12 = *(_DWORD *)(exprPtr + 1);
-      if ( v12 == g_ClipsSymbolOr )
+      exprSymbol = *(_DWORD *)(exprPtr + 1);
+      if ( exprSymbol == g_ClipsSymbolOr )
       {
         testResult = 0;
         if ( Rules_EvaluateJoinExpression(exprPtr, lbinds, joinNode, rhsBindsCopy, a5) == 1 )
@@ -10696,7 +10696,7 @@ signed int  Rules_EvaluateJoinExpression(
           goto LABEL_14;
         }
       }
-      else if ( v12 == g_Clips_SymbolAnd )
+      else if ( exprSymbol == g_Clips_SymbolAnd )
       {
         testResult = 1;
         if ( Rules_EvaluateJoinExpression(exprPtr, lbinds, joinNode, rhsBindsCopy, a5) )
@@ -12755,7 +12755,7 @@ int  Rules_RouteCommand(int result, int printResult, int a3, double a4)
   char *ppBuffer; // eax
   int v11; // ecx
   __int16 *theExpression; // eax
-  _DWORD *v13; // ecx
+  _DWORD *freedExprNode; // ecx
   int v14; // ecx
   int v15; // ecx
   int v16; // ecx
@@ -12843,8 +12843,8 @@ int  Rules_RouteCommand(int result, int printResult, int a3, double a4)
   IO_CloseStringRouter((int)aCommand_2);
   theExpression = (__int16 *)AST_NewNode(tokenType, (int)tokenValue);
   Parser_ParseForm(theExpression, theResult, (int)theExpression, a4);
-  g_ClipsMemFreeListTemp = (int)v13;
-  *v13 = *(_DWORD *)(g_ClipsMemoryTable + 56);
+  g_ClipsMemFreeListTemp = (int)freedExprNode;
+  *freedExprNode = *(_DWORD *)(g_ClipsMemoryTable + 56);
   *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
   if ( printResult )
   {
@@ -13253,7 +13253,7 @@ LABEL_11:
 int  Rules_ParseDefaultAttribute(
         int readSource,
         int multifield,
-        int a3,
+        int constantsOnly,
         int dynamic,
         double a5,
         _DWORD *noneSpecified,
@@ -13285,14 +13285,14 @@ int  Rules_ParseDefaultAttribute(
   int v32; // ecx
   _DWORD theValue[6]; // [esp+0h] [ebp-40h] BYREF
   _DWORD theToken[3]; // [esp+18h] [ebp-28h] BYREF
-  int v35; // [esp+24h] [ebp-1Ch]
-  int v36; // [esp+28h] [ebp-18h]
-  int v37; // [esp+2Ch] [ebp-14h]
+  int constantsOnlyFlag; // [esp+24h] [ebp-1Ch]
+  int dynamicFlag; // [esp+28h] [ebp-18h]
+  int multifieldFlag; // [esp+2Ch] [ebp-14h]
   _WORD *newItem; // [esp+30h] [ebp-10h]
 
-  v37 = multifield;
-  v36 = dynamic;
-  v35 = a3;
+  multifieldFlag = multifield;
+  dynamicFlag = dynamic;
+  constantsOnlyFlag = constantsOnly;
   defaultList = 0;
   *noneSpecified = 0;
   *deriveSpecified = 0;
@@ -13304,7 +13304,7 @@ int  Rules_ParseDefaultAttribute(
 LABEL_28:
     IO_OutNewline();
     IO_OutNewline();
-    v23 = v37;
+    v23 = multifieldFlag;
     IO_OutWriteToken(asc_504A98);
     if ( v23 )
       goto LABEL_37;
@@ -13322,7 +13322,7 @@ LABEL_28:
       if ( !*error )
       {
 LABEL_37:
-        if ( v36 || !v35 || !defaultList )
+        if ( dynamicFlag || !constantsOnlyFlag || !defaultList )
           return defaultList;
         oldDefaultList = defaultList;
         defaultList = 0;
@@ -13331,7 +13331,7 @@ LABEL_37:
           Lexer_ErrorRecover(0);
           if ( Parser_ParseForm(v29, v28, (int)v29, a5) )
             *error = 1;
-          if ( theValue[1] == 4 && !v37 && !*error )
+          if ( theValue[1] == 4 && !multifieldFlag && !*error )
           {
             Rules_PrintErrorID((int)aDefault_0, 1, 1);
             Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheDefaultValu, v30);
@@ -13394,7 +13394,7 @@ LABEL_47:
   {
     defaultKind = -1;
   }
-  if ( v36 || *newItem == 16 || defaultKind == -1 || defaultList )
+  if ( dynamicFlag || *newItem == 16 || defaultKind == -1 || defaultList )
   {
     Parser_ReportSyntaxError();
     exprToFree = newItem;

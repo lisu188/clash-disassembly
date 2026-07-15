@@ -370,8 +370,8 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
   int slotIndex; // eax
   int slotOffset; // edx
   const char **structNames; // eax
-  int v8; // eax
-  int v9; // eax
+  int openedModuleFile; // eax
+  int openedGenericFile; // eax
   int structNamesForMethod; // eax
   int v11; // ecx
   int numMethods; // edx
@@ -413,23 +413,23 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
   int restrictionFile; // [esp+90h] [ebp-48h]
   int typeFile; // [esp+94h] [ebp-44h]
   int version; // [esp+98h] [ebp-40h] BYREF
-  int v52; // [esp+9Ch] [ebp-3Ch]
+  int imageIDLocal; // [esp+9Ch] [ebp-3Ch]
   int Enum; // [esp+A0h] [ebp-38h]
   int moduleIndex; // [esp+A4h] [ebp-34h]
   int i; // [esp+A8h] [ebp-30h]
   int methodOffset; // [esp+ACh] [ebp-2Ch]
   unsigned int methodIndex; // [esp+B0h] [ebp-28h]
-  const char *v58; // [esp+B4h] [ebp-24h]
-  const char *v59; // [esp+B8h] [ebp-20h]
-  int v60; // [esp+BCh] [ebp-1Ch]
+  const char *pathNameLocal; // [esp+B4h] [ebp-24h]
+  const char *fileNameLocal; // [esp+B8h] [ebp-20h]
+  int headerFPLocal; // [esp+BCh] [ebp-1Ch]
   int methodPtr; // [esp+C0h] [ebp-18h]
   int restrictionOffset; // [esp+C4h] [ebp-14h]
   unsigned int restrictionIndex; // [esp+C8h] [ebp-10h]
 
-  v59 = fileName;
-  v58 = pathName;
-  v60 = headerFP;
-  v52 = imageID;
+  fileNameLocal = fileName;
+  pathNameLocal = pathName;
+  headerFPLocal = headerFP;
+  imageIDLocal = imageID;
   slotIndex = 0;
   version = 1;
   moduleIndex = 0;
@@ -445,7 +445,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
     *(int *)((char *)&v23 + slotOffset) = 0;
   }
   while ( slotIndex != 5 );
-  Output_WriteFormatted(0, slotOffset, v60, (int)aIncludeGenrcfu, (char)moduleNameBuf[0]);
+  Output_WriteFormatted(0, slotOffset, headerFPLocal, (int)aIncludeGenrcfu, (char)moduleNameBuf[0]);
   Enum = Module_NextEnum(0);
   if ( Enum )
   {
@@ -455,31 +455,31 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
       nameBuffer = moduleNameBuf;
       structNames = *(const char ***)(g_DefgenericCodeGenItem + 20);
       v24 = moduleReopen;
-      v8 = Rules_ConstructCodeFileOpen(moduleFile, v59, v52, v58, &version, moduleArrayVersion, v60, (char)aDefgeneric_mod, *structNames, moduleReopen, moduleNameBuf);
-      moduleFile = v8;
-      if ( !v8 )
+      openedModuleFile = Rules_ConstructCodeFileOpen(moduleFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, moduleArrayVersion, headerFPLocal, (char)aDefgeneric_mod, *structNames, moduleReopen, moduleNameBuf);
+      moduleFile = openedModuleFile;
+      if ( !openedModuleFile )
         break;
-      Defgeneric_ModuleToCode(v8, Enum, maxIndices);
+      Defgeneric_ModuleToCode(openedModuleFile, Enum, maxIndices);
       moduleFile = Rules_ConstructCodeFileClose(moduleFile, &moduleCount, maxIndices, &moduleArrayVersion, &moduleReopen, (int)moduleNameBuf);
       for ( i = Defgeneric_GetNextInModule(0); i; i = Defgeneric_GetNextInModule(i) )
       {
         nameBuffer = genericNameBuf;
-        v9 = Rules_ConstructCodeFileOpen(
+        openedGenericFile = Rules_ConstructCodeFileOpen(
                genericFile,
-               v59,
-               v52,
-               v58,
+               fileNameLocal,
+               imageIDLocal,
+               pathNameLocal,
                &version,
                genericArrayVersion,
-               v60,
+               headerFPLocal,
                (char)aDefgeneric_5,
                *(const char **)(*(_DWORD *)(g_DefgenericCodeGenItem + 20) + 4),
                genericReopen,
                genericNameBuf);
-        genericFile = v9;
-        if ( !v9 )
+        genericFile = openedGenericFile;
+        if ( !openedGenericFile )
           goto LABEL_34;
-        Defgeneric_SingleToCode(v9, v52, i, maxIndices, moduleIndex, methodArrayVersion, methodCount);
+        Defgeneric_SingleToCode(openedGenericFile, imageIDLocal, i, maxIndices, moduleIndex, methodArrayVersion, methodCount);
         ++genericCount;
         genericFile = Rules_ConstructCodeFileClose(genericFile, &genericCount, maxIndices, &genericArrayVersion, &genericReopen, (int)genericNameBuf);
         if ( *(_DWORD *)(i + 32) )
@@ -487,7 +487,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
           nameBuffer = methodNameBuf;
           structNamesForMethod = *(_DWORD *)(g_DefgenericCodeGenItem + 20);
           v24 = methodReopen;
-          methodFile = Rules_ConstructCodeFileOpen(methodFile, v59, v52, v58, &version, methodArrayVersion, v60, (char)aDefmethod_2, *(const char **)(structNamesForMethod + 8), methodReopen, methodNameBuf);
+          methodFile = Rules_ConstructCodeFileOpen(methodFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, methodArrayVersion, headerFPLocal, (char)aDefmethod_2, *(const char **)(structNamesForMethod + 8), methodReopen, methodNameBuf);
           if ( !methodFile )
             goto LABEL_34;
           numMethods = *(_DWORD *)(i + 32);
@@ -500,7 +500,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
               methodPtr = *(_DWORD *)(i + 28) + methodOffset;
               if ( methodIndex )
                 Output_WriteFormatted(v11, methodFile, methodFile, (int)asc_50B1FC, (char)moduleNameBuf[0]);
-              Defgeneric_MethodToCode(methodFile, v52, restrictionArrayVersion, methodPtr, restrictionCount);
+              Defgeneric_MethodToCode(methodFile, imageIDLocal, restrictionArrayVersion, methodPtr, restrictionCount);
               if ( *(int *)(methodPtr + 8) > 0 )
               {
                 nameBuffer = restrictionNameBuf;
@@ -508,12 +508,12 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                 v24 = restrictionReopen;
                 restrictionFile = Rules_ConstructCodeFileOpen(
                         restrictionFile,
-                        v59,
-                        v52,
-                        v58,
+                        fileNameLocal,
+                        imageIDLocal,
+                        pathNameLocal,
                         &version,
                         restrictionArrayVersion,
-                        v60,
+                        headerFPLocal,
                         (char)aRestriction,
                         *(const char **)(structNamesForRestriction + 12),
                         restrictionReopen,
@@ -530,17 +530,17 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                     restrictionPtr = (_DWORD *)(restrictionOffset + *(_DWORD *)(methodPtr + 28));
                     if ( restrictionIndex )
                       Output_WriteFormatted(restrictionIndex, restrictionOffset, restrictionFile, (int)asc_50B1FC, (char)moduleNameBuf[0]);
-                    Defgeneric_RestrictionToCode(restrictionFile, v52, typeArrayVersion, (int)restrictionPtr, (DWORD)restrictionPtr, typeCount);
+                    Defgeneric_RestrictionToCode(restrictionFile, imageIDLocal, typeArrayVersion, (int)restrictionPtr, (DWORD)restrictionPtr, typeCount);
                     if ( restrictionPtr[2] )
                     {
                       typeFile = Rules_ConstructCodeFileOpen(
                               typeFile,
-                              v59,
-                              v52,
-                              v58,
+                              fileNameLocal,
+                              imageIDLocal,
+                              pathNameLocal,
                               &version,
                               typeArrayVersion,
-                              v60,
+                              headerFPLocal,
                               (char)aVoid_1,
                               *(const char **)(*(_DWORD *)(g_DefgenericCodeGenItem + 20) + 16),
                               typeReopen,
@@ -829,10 +829,10 @@ signed int  Defgeneric_ParseDefgeneric(int readSource)
 signed int  Defgeneric_ParseDefmethod(int readSource)
 {
   int v1; // edx
-  int v3; // ecx
-  int v4; // eax
+  int genericNameToken; // ecx
+  int addedGeneric; // eax
   _DWORD *gfunc; // edi
-  signed int *v6; // edx
+  signed int *paramsPtr; // edx
   int v7; // edx
   int v8; // ecx
   int i; // esi
@@ -840,23 +840,23 @@ signed int  Defgeneric_ParseDefmethod(int readSource)
   int existingMethod; // esi
   int v12; // ecx
   char *errorMessage; // edx
-  int *v14; // ecx
-  int v15; // edx
+  int *conflictMethod; // ecx
+  int conflictIndex; // edx
   int v16; // ecx
-  __int16 *v17; // edx
+  __int16 *actions; // edx
   char *ppForm; // eax
   int v19; // ecx
   int isNew; // esi
-  int *v21; // ecx
+  int *definedMethodPtr; // ecx
   int v22; // ecx
-  char *v23; // edx
+  char *definitionMsg; // edx
   int v24; // ecx
   int v25; // ecx
   signed int methodArrayIndex; // eax
   int v27; // ecx
   int insertPosition; // [esp+0h] [ebp-24h] BYREF
   int isNewGeneric; // [esp+4h] [ebp-20h] BYREF
-  unsigned int v30; // [esp+8h] [ebp-1Ch] BYREF
+  unsigned int localVarCount; // [esp+8h] [ebp-1Ch] BYREF
   int restrictions; // [esp+Ch] [ebp-18h]
   int wildcard; // [esp+10h] [ebp-14h] BYREF
   unsigned int methodIndex; // [esp+14h] [ebp-10h] BYREF
@@ -877,12 +877,12 @@ signed int  Defgeneric_ParseDefmethod(int readSource)
   }
   if ( !Method_ParseIndexModifier(readSource2, &methodIndex) || !Defgeneric_ParseDeclaration() )
     return 1;
-  v4 = Defgeneric_AddConstruct(v3, &isNewGeneric);
-  gfunc = (_DWORD *)v4;
+  addedGeneric = Defgeneric_AddConstruct(genericNameToken, &isNewGeneric);
+  gfunc = (_DWORD *)addedGeneric;
   if ( isNewGeneric )
-    Defgeneric_CreateDefaultPPForm(v4);
+    Defgeneric_CreateDefaultPPForm(addedGeneric);
   Rules_IncrementIndentDepth(1);
-  parameterCount = Method_ParseParameterList(readSource2, v6, &wildcard);
+  parameterCount = Method_ParseParameterList(readSource2, paramsPtr, &wildcard);
   Rules_DecrementIndentDepth(1);
   if ( v7 == -1 )
   {
@@ -912,9 +912,9 @@ LABEL_9:
       errorMessage = aCannotReplaceT;
 LABEL_17:
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)errorMessage, v12);
-      v15 = *v14;
+      conflictIndex = *conflictMethod;
 LABEL_18:
-      Rules_PrintLongInteger((int)v14, v15);
+      Rules_PrintLongInteger((int)conflictMethod, conflictIndex);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__12, v16);
 LABEL_19:
       Method_FreeRestrictionChain(restrictions);
@@ -940,7 +940,7 @@ LABEL_19:
     {
       Rules_PrintErrorID((int)aGenrcpsr, 17, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotReplaceT, v27);
-      v15 = methodIndex;
+      conflictIndex = methodIndex;
       goto LABEL_18;
     }
   }
@@ -949,7 +949,7 @@ LABEL_19:
     isNewMethod = 1;
   }
   g_ClipsParseReturnContext = 1;
-  if ( !Parser_ParseProcActions((int)aMethod, readSource2, restrictions, wildcard, 0, 0, (int *)&v30, 0) )
+  if ( !Parser_ParseProcActions((int)aMethod, readSource2, restrictions, wildcard, 0, 0, (int *)&localVarCount, 0) )
     goto LABEL_19;
   IO_OutNewline();
   IO_OutNewline();
@@ -959,18 +959,18 @@ LABEL_19:
     ppForm = 0;
   else
     ppForm = Rules_CopyPPBuffer();
-  Defgeneric_AddMethod(gfunc, existingMethod, methodIndex, insertPosition, restrictions, parameterCount, v30, wildcard, v17, (unsigned int)ppForm, 0);
+  Defgeneric_AddMethod(gfunc, existingMethod, methodIndex, insertPosition, restrictions, parameterCount, localVarCount, wildcard, actions, (unsigned int)ppForm, 0);
   Method_FreeRestrictionChain(restrictions);
   if ( Rules_GetLoadInProgress() && Rules_GetWatchCompilations() )
   {
     Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMethod_0, v19);
     isNew = isNewMethod;
-    Rules_PrintLongInteger((int)v21, *v21);
+    Rules_PrintLongInteger((int)definedMethodPtr, *definedMethodPtr);
     if ( isNew )
-      v23 = aDefined_;
+      definitionMsg = aDefined_;
     else
-      v23 = aRedefined_;
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v23, v22);
+      definitionMsg = aRedefined_;
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)definitionMsg, v22);
   }
   return 0;
 }
@@ -1011,31 +1011,31 @@ unsigned int * Defgeneric_AddMethod(
   signed int existingIndex; // eax
   int foundIndex; // ebp
   int restrictionMinIndex; // eax
-  _DWORD *v14; // eax
+  _DWORD *restrictionArray; // eax
   int v15; // edx
   int restrictionOffset; // ebp
   int restrictionPtr; // ebx
-  _DWORD *v18; // edx
+  _DWORD *sourceRestriction; // edx
   int typeCount; // eax
   _DWORD *typeArray; // edi
-  int v21; // ecx
+  int copyTypeCount; // ecx
   const void **v22; // edx
-  int v23; // ecx
+  int typeOffset; // ecx
   int v24; // ecx
-  unsigned int v25; // edx
-  int v27; // ebp
-  int v28; // edx
-  int v29; // ebx
-  int v30; // ebp
-  int v31; // ebx
-  int v32; // edx
+  unsigned int typeIndex; // edx
+  int forwardIndex; // ebp
+  int forwardDest; // edx
+  int forwardSrc; // ebx
+  int backwardIndex; // ebp
+  int backwardDest; // ebx
+  int backwardSrc; // edx
   int v33; // edx
   int v34; // edx
-  int v36; // [esp+4h] [ebp-24h]
+  int insertIndex; // [esp+4h] [ebp-24h]
   unsigned int *methodSlot; // [esp+14h] [ebp-14h]
 
   methodSlot = (unsigned int *)existingMethod;
-  v36 = position;
+  insertIndex = position;
   g_Defgeneric_SavedBusyCount = gfunc[5];
   if ( existingMethod )
   {
@@ -1049,40 +1049,40 @@ unsigned int * Defgeneric_AddMethod(
     Defgeneric_DeleteMethodInfo((int)gfunc, 40 * existingIndex + gfunc[7]);
     if ( foundIndex >= position )
     {
-      v30 = foundIndex - 1;
-      if ( v30 >= position )
+      backwardIndex = foundIndex - 1;
+      if ( backwardIndex >= position )
       {
-        v31 = 40 * v30 + 40;
-        v32 = 40 * v30;
+        backwardDest = 40 * backwardIndex + 40;
+        backwardSrc = 40 * backwardIndex;
         do
         {
-          --v30;
-          qmemcpy((void *)(gfunc[7] + v31), (const void *)(gfunc[7] + v32), 0x28u);
-          v32 -= 40;
-          v31 -= 40;
+          --backwardIndex;
+          qmemcpy((void *)(gfunc[7] + backwardDest), (const void *)(gfunc[7] + backwardSrc), 0x28u);
+          backwardSrc -= 40;
+          backwardDest -= 40;
         }
-        while ( v32 >= 40 * v36 );
+        while ( backwardSrc >= 40 * insertIndex );
       }
     }
     else
     {
-      v27 = foundIndex + 1;
-      v36 = position - 1;
-      if ( v27 <= position - 1 )
+      forwardIndex = foundIndex + 1;
+      insertIndex = position - 1;
+      if ( forwardIndex <= position - 1 )
       {
-        v28 = 40 * v27 - 40;
-        v29 = 40 * v27;
+        forwardDest = 40 * forwardIndex - 40;
+        forwardSrc = 40 * forwardIndex;
         do
         {
-          ++v27;
-          qmemcpy((void *)(v28 + gfunc[7]), (const void *)(gfunc[7] + v29), 0x28u);
-          v28 += 40;
-          v29 += 40;
+          ++forwardIndex;
+          qmemcpy((void *)(forwardDest + gfunc[7]), (const void *)(gfunc[7] + forwardSrc), 0x28u);
+          forwardDest += 40;
+          forwardSrc += 40;
         }
-        while ( v28 <= 40 * v36 - 40 );
+        while ( forwardDest <= 40 * insertIndex - 40 );
       }
     }
-    methodSlot = (unsigned int *)(40 * v36 + gfunc[7]);
+    methodSlot = (unsigned int *)(40 * insertIndex + gfunc[7]);
     *methodSlot = methodIndex;
   }
   else
@@ -1093,7 +1093,7 @@ unsigned int * Defgeneric_AddMethod(
   methodSlot[8] = (unsigned int)actions;
   AST_InstallNodeChain(actions);
   methodSlot[9] = ppForm;
-  if ( v36 != -1 )
+  if ( insertIndex != -1 )
   {
     methodSlot[5] = minRestrictions;
     methodSlot[2] = restrictionCount;
@@ -1110,8 +1110,8 @@ unsigned int * Defgeneric_AddMethod(
     methodSlot[3] = restrictionMinIndex;
     if ( restrictionCount )
     {
-      v14 = Mem_SmallBlockAlloc(12 * restrictionCount);
-      *(_DWORD *)(v15 + 28) = v14;
+      restrictionArray = Mem_SmallBlockAlloc(12 * restrictionCount);
+      *(_DWORD *)(v15 + 28) = restrictionArray;
     }
     else
     {
@@ -1124,16 +1124,16 @@ unsigned int * Defgeneric_AddMethod(
       {
         restrictionPtr = restrictionOffset + methodSlot[7];
         *(_DWORD *)(restrictionPtr + 4) = AST_PackNodeChain(*(_DWORD **)(*(_DWORD *)(restrictions + 6) + 4));
-        typeCount = v18[2];
+        typeCount = sourceRestriction[2];
         *(_DWORD *)(restrictionPtr + 8) = typeCount;
         if ( copyRestrictions )
         {
-          if ( *v18 )
+          if ( *sourceRestriction )
           {
             typeArray = Mem_SmallBlockAlloc(4 * typeCount);
-            v21 = *(_DWORD *)(restrictionPtr + 8);
+            copyTypeCount = *(_DWORD *)(restrictionPtr + 8);
             *(_DWORD *)restrictionPtr = typeArray;
-            qmemcpy(typeArray, *v22, 4 * v21);
+            qmemcpy(typeArray, *v22, 4 * copyTypeCount);
           }
           else
           {
@@ -1142,20 +1142,20 @@ unsigned int * Defgeneric_AddMethod(
         }
         else
         {
-          *(_DWORD *)restrictionPtr = *v18;
-          v18[2] = 0;
-          *v18 = 0;
+          *(_DWORD *)restrictionPtr = *sourceRestriction;
+          sourceRestriction[2] = 0;
+          *sourceRestriction = 0;
         }
         AST_InstallNodeChain(*(__int16 **)(restrictionPtr + 4));
         if ( *(_DWORD *)(restrictionPtr + 8) )
         {
-          v23 = 0;
+          typeOffset = 0;
           do
           {
-            Class_AddBusyReference(*(_DWORD *)(v23 + *(_DWORD *)restrictionPtr));
-            v23 = v24 + 4;
+            Class_AddBusyReference(*(_DWORD *)(typeOffset + *(_DWORD *)restrictionPtr));
+            typeOffset = v24 + 4;
           }
-          while ( v25 < *(_DWORD *)(restrictionPtr + 8) );
+          while ( typeIndex < *(_DWORD *)(restrictionPtr + 8) );
         }
         restrictionOffset += 12;
         restrictions = *(_DWORD *)(restrictions + 10);
@@ -1617,18 +1617,18 @@ int  Method_ParseParameterRestriction(int readSource)
   int typeList; // edi
   int tokenType; // ecx
   int v4; // edx
-  _DWORD *v5; // ebp
-  _DWORD *v6; // ecx
+  _DWORD *freeNode; // ebp
+  _DWORD *restriction; // ecx
   int v7; // ecx
   int v9; // ecx
   signed int newClass; // eax
   int classNode; // esi
   int typeNode; // ebx
-  int v13; // ecx
-  int v14; // eax
-  int v15; // edx
+  int classIter; // ecx
+  int existingClass; // eax
+  int candidateClass; // edx
   int v16; // ecx
-  int v17; // eax
+  int prevType; // eax
   int v18; // ecx
   int v19; // ecx
   int v20; // ecx
@@ -1648,19 +1648,19 @@ LABEL_8:
     IO_OutWriteToken(asc_50B584);
     if ( typeList || query )
     {
-      v5 = *(_DWORD **)(g_ClipsMemoryTable + 48);
-      if ( v5 )
+      freeNode = *(_DWORD **)(g_ClipsMemoryTable + 48);
+      if ( freeNode )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-        *(_DWORD *)(g_ClipsMemoryTable + 48) = *v5;
-        v6 = (_DWORD *)g_ClipsMemFreeListTemp;
+        *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeNode;
+        restriction = (_DWORD *)g_ClipsMemFreeListTemp;
       }
       else
       {
-        v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+        restriction = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
-      v6[1] = query;
-      Method_PackRestrictionTypes(v6, typeList);
+      restriction[1] = query;
+      Method_PackRestrictionTypes(restriction, typeList);
       return v7;
     }
     else
@@ -1731,28 +1731,28 @@ LABEL_7:
   typeNode = typeList;
   while ( 1 )
   {
-    v13 = classNode;
+    classIter = classNode;
     if ( classNode )
       break;
 LABEL_23:
-    v17 = typeNode;
+    prevType = typeNode;
     typeNode = *(_DWORD *)(typeNode + 10);
     if ( !typeNode )
     {
-      *(_DWORD *)(v17 + 10) = classNode;
+      *(_DWORD *)(prevType + 10) = classNode;
       goto LABEL_7;
     }
   }
   while ( 1 )
   {
-    v14 = *(_DWORD *)(typeNode + 2);
-    v15 = *(_DWORD *)(v13 + 2);
-    if ( v14 == v15 )
+    existingClass = *(_DWORD *)(typeNode + 2);
+    candidateClass = *(_DWORD *)(classIter + 2);
+    if ( existingClass == candidateClass )
       break;
-    if ( Method_CheckRedundantClassPair(v14, v15) )
+    if ( Method_CheckRedundantClassPair(existingClass, candidateClass) )
       goto LABEL_26;
-    v13 = *(_DWORD *)(v16 + 10);
-    if ( !v13 )
+    classIter = *(_DWORD *)(v16 + 10);
+    if ( !classIter )
       goto LABEL_23;
   }
   Rules_PrintErrorID((int)aGenrcpsr, 11, 0);
@@ -2172,28 +2172,28 @@ int  Method_DispatchGenericCall(
   int v13; // eax
   int v14; // ecx
   int v15; // edx
-  int v16; // eax
+  int genericNameStr; // eax
   int v17; // ecx
   int v18; // ecx
   int v19; // ecx
   int v20; // ecx
   int v21; // ecx
-  int v22; // eax
+  int genericNameStrForError; // eax
   int v23; // ecx
   int v24; // ecx
-  __int16 v25; // [esp+0h] [ebp-34h] BYREF
+  __int16 callExpr; // [esp+0h] [ebp-34h] BYREF
   int v26; // [esp+2h] [ebp-32h]
-  int v27; // [esp+6h] [ebp-2Eh]
+  int argExprChain; // [esp+6h] [ebp-2Eh]
   int v28; // [esp+Ah] [ebp-2Ah]
   int savedReentryFlag; // [esp+10h] [ebp-24h]
-  int v30; // [esp+14h] [ebp-20h]
+  int prevMethodArg; // [esp+14h] [ebp-20h]
   int oldGeneric; // [esp+18h] [ebp-1Ch]
-  _DWORD *v32; // [esp+1Ch] [ebp-18h]
+  _DWORD *argExpressions; // [esp+1Ch] [ebp-18h]
   int oldMethod; // [esp+20h] [ebp-14h]
   int oldReentryFlag; // [esp+24h] [ebp-10h]
 
-  v30 = prevMethod;
-  v32 = params;
+  prevMethodArg = prevMethod;
+  argExpressions = params;
   returnValue[1] = 2;
   result = g_ClipsFalseSymbol;
   returnValue[2] = g_ClipsFalseSymbol;
@@ -2209,8 +2209,8 @@ int  Method_DispatchGenericCall(
     oldMethod = g_ClipsCurrentMethod;
     ++*(_DWORD *)(gfunc + 20);
     genericName = Rules_GetConstructNameString(gfunc);
-    argCount = AST_CountListNodes((int)v32);
-    ProcParam_PushEvaluatedArgumentFrame(v32, argCount, v11, genericName, a5, (int (*)(void))Method_PrintCallErrorBanner);
+    argCount = AST_CountListNodes((int)argExpressions);
+    ProcParam_PushEvaluatedArgumentFrame(argExpressions, argCount, v11, genericName, a5, (int (*)(void))Method_PrintCallErrorBanner);
     if ( g_ClipsEvaluationError )
     {
       v13 = oldGeneric;
@@ -2236,8 +2236,8 @@ int  Method_DispatchGenericCall(
           Lexer_ErrorRecover(1);
           g_ClipsCurrentMethod = v14;
           Output_Write((int)g_IO_LogicalNameTable_WError[0], v15, v14);
-          v16 = Rules_GetConstructNameString(gfunc);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], v16, v17);
+          genericNameStr = Rules_GetConstructNameString(gfunc);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], genericNameStr, v17);
           Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMethod_2, v18);
           Rules_PrintLongInteger(v19, *theMethod);
           Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotApplicabl, v20);
@@ -2245,7 +2245,7 @@ int  Method_DispatchGenericCall(
       }
       else
       {
-        g_ClipsCurrentMethod = Method_FindApplicableMethod(gfunc, v30, a5);
+        g_ClipsCurrentMethod = Method_FindApplicableMethod(gfunc, prevMethodArg, a5);
       }
       if ( g_ClipsCurrentMethod )
       {
@@ -2255,11 +2255,11 @@ int  Method_DispatchGenericCall(
           Method_PrintMethodCallTrace((int)asc_50B73C);
         if ( (*(_BYTE *)(g_ClipsCurrentMethod + 24) & 1) != 0 )
         {
-          v25 = 10;
+          callExpr = 10;
           v26 = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentMethod + 32) + 2);
           v28 = 0;
-          v27 = ProcParam_BuildArgumentExpressionChain();
-          Parser_ParseForm(&v25, returnValue, 0, a5);
+          argExprChain = ProcParam_BuildArgumentExpressionChain();
+          Parser_ParseForm(&callExpr, returnValue, 0, a5);
         }
         else
         {
@@ -2281,8 +2281,8 @@ int  Method_DispatchGenericCall(
       {
         Rules_PrintErrorID((int)aGenrcexe, 1, 0);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoApplicable_0, v21);
-        v22 = Rules_GetConstructNameString(gfunc);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], v22, v23);
+        genericNameStrForError = Rules_GetConstructNameString(gfunc);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], genericNameStrForError, v23);
         Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__24, v24);
         Lexer_ErrorRecover(1);
       }
@@ -2845,20 +2845,20 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
 {
   int codeFP; // esi
   int v6; // ecx
-  int v7; // eax
+  int openedModuleFile; // eax
   int v8; // ecx
   int v9; // edi
   int theDeffunction; // edi
-  int v11; // eax
+  int openedDeffunctionFile; // eax
   int v12; // ecx
   int v13; // esi
-  int v14; // ebx
+  int prevModuleCount; // ebx
   int fileCount; // [esp+0h] [ebp-3Ch] BYREF
-  int v17; // [esp+4h] [ebp-38h] BYREF
-  int v18; // [esp+8h] [ebp-34h] BYREF
-  int v19; // [esp+Ch] [ebp-30h] BYREF
-  int v20; // [esp+10h] [ebp-2Ch] BYREF
-  int v21; // [esp+14h] [ebp-28h]
+  int moduleArrayCount; // [esp+4h] [ebp-38h] BYREF
+  int moduleArrayVersion; // [esp+8h] [ebp-34h] BYREF
+  int deffunctionArrayCount; // [esp+Ch] [ebp-30h] BYREF
+  int deffunctionArrayVersion; // [esp+10h] [ebp-2Ch] BYREF
+  int moduleFile; // [esp+14h] [ebp-28h]
   int Enum; // [esp+18h] [ebp-24h]
   const char *v23; // [esp+1Ch] [ebp-20h]
   const char *v24; // [esp+20h] [ebp-1Ch]
@@ -2871,11 +2871,11 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
   v25 = headerFP;
   v27 = fileID;
   moduleCount = 0;
-  v17 = 0;
-  v18 = 1;
-  v19 = 0;
-  v20 = 1;
-  v21 = 0;
+  moduleArrayCount = 0;
+  moduleArrayVersion = 1;
+  deffunctionArrayCount = 0;
+  deffunctionArrayVersion = 1;
+  moduleFile = 0;
   Output_WriteFormatted(0, 1, headerFP, (int)aIncludeDffnxfu, 1);
   codeFP = 0;
   Enum = Module_NextEnum(0);
@@ -2884,68 +2884,68 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
     while ( 1 )
     {
       Module_SetCurrent(Enum);
-      v7 = Rules_ConstructCodeFileOpen(
-             v21,
+      openedModuleFile = Rules_ConstructCodeFileOpen(
+             moduleFile,
              v23,
              v27,
              v24,
              &fileCount,
-             v18,
+             moduleArrayVersion,
              v25,
              (char)aDeffunction_mo,
              **(const char ***)(g_DeffunctionCodeGeneratorItem + 20),
              0,
              0);
-      v9 = v7;
-      if ( !v7 )
+      v9 = openedModuleFile;
+      if ( !openedModuleFile )
       {
         Deffunction_CloseCodeFiles(0, codeFP, v8, maxIndices);
         return 0;
       }
-      Deffunction_WriteConstructHeader(v7, Enum, maxIndices);
-      v21 = Rules_ConstructCodeFileClose(v9, &v17, maxIndices, &v18, 0, 0);
+      Deffunction_WriteConstructHeader(openedModuleFile, Enum, maxIndices);
+      moduleFile = Rules_ConstructCodeFileClose(v9, &moduleArrayCount, maxIndices, &moduleArrayVersion, 0, 0);
       theDeffunction = Deffunction_EnumNext(0);
       if ( theDeffunction )
         break;
 LABEL_6:
-      v14 = moduleCount;
+      prevModuleCount = moduleCount;
       Enum = Module_NextEnum(Enum);
-      moduleCount = v14 + 1;
-      ++v17;
+      moduleCount = prevModuleCount + 1;
+      ++moduleArrayCount;
       if ( !Enum )
         goto LABEL_7;
     }
     while ( 1 )
     {
-      v11 = Rules_ConstructCodeFileOpen(
+      openedDeffunctionFile = Rules_ConstructCodeFileOpen(
               codeFP,
               v23,
               v27,
               v24,
               &fileCount,
-              v20,
+              deffunctionArrayVersion,
               v25,
               (char)aDeffunction_8,
               *(const char **)(*(_DWORD *)(g_DeffunctionCodeGeneratorItem + 20) + 4),
               0,
               0);
-      v13 = v11;
-      if ( !v11 )
+      v13 = openedDeffunctionFile;
+      if ( !openedDeffunctionFile )
         break;
-      Deffunction_WriteConstructBody(v11, theDeffunction, maxIndices, moduleCount);
-      ++v19;
-      codeFP = Rules_ConstructCodeFileClose(v13, &v19, maxIndices, &v20, 0, 0);
+      Deffunction_WriteConstructBody(openedDeffunctionFile, theDeffunction, maxIndices, moduleCount);
+      ++deffunctionArrayCount;
+      codeFP = Rules_ConstructCodeFileClose(v13, &deffunctionArrayCount, maxIndices, &deffunctionArrayVersion, 0, 0);
       theDeffunction = Deffunction_EnumNext(theDeffunction);
       if ( !theDeffunction )
         goto LABEL_6;
     }
-    Deffunction_CloseCodeFiles(v21, 0, v12, maxIndices);
+    Deffunction_CloseCodeFiles(moduleFile, 0, v12, maxIndices);
     return 0;
   }
   else
   {
 LABEL_7:
-    Deffunction_CloseCodeFiles(v21, codeFP, v6, maxIndices);
+    Deffunction_CloseCodeFiles(moduleFile, codeFP, v6, maxIndices);
     return 1;
   }
 }
@@ -3207,48 +3207,48 @@ signed int Deffunction_ValidateNewName()
 //----- (004CBC70) --------------------------------------------------------
 int  Deffunction_AddDeffunction(int name, __int16 *actions, int maxParams, int minParams, int numLocalVars, int headerFlag)
 {
-  int v8; // eax
+  int existingDeffunction; // eax
   int v9; // edx
   int deffunction; // esi
-  _DWORD *v11; // ebx
-  _DWORD *v12; // ecx
+  _DWORD *freeListItem; // ebx
+  _DWORD *newDeffunction; // ecx
   int v13; // edx
-  __int16 v14; // ax
+  __int16 watchValue; // ax
   int v16; // ecx
-  __int16 *v17; // eax
+  __int16 *oldCode; // eax
   int v18; // ecx
-  int v19; // eax
+  int oldPackedCode; // eax
   int v20; // edx
   signed int v21; // ecx
   int v22; // ecx
-  char *v23; // eax
+  char *ppForm; // eax
   int watchFlag; // [esp+4h] [ebp-14h]
 
-  v8 = Deffunction_FindByName(*(_BYTE **)(name + 16), maxParams);
+  existingDeffunction = Deffunction_FindByName(*(_BYTE **)(name + 16), maxParams);
   watchFlag = v9;
-  deffunction = v8;
-  if ( v8 )
+  deffunction = existingDeffunction;
+  if ( existingDeffunction )
   {
-    watchFlag = Deffunction_GetWatchFlagField(v8);
+    watchFlag = Deffunction_GetWatchFlagField(existingDeffunction);
     *(_DWORD *)(v16 + 38) = maxParams;
     *(_DWORD *)(v16 + 42) = numLocalVars;
-    v17 = *(__int16 **)(v16 + 30);
+    oldCode = *(__int16 **)(v16 + 30);
     *(_DWORD *)(v16 + 34) = minParams;
-    AST_DeinstallNodeChain(v17);
-    v19 = *(_DWORD *)(v18 + 30);
+    AST_DeinstallNodeChain(oldCode);
+    oldPackedCode = *(_DWORD *)(v18 + 30);
     *(_DWORD *)(v18 + 20) = v20;
-    AST_FreePackedNodeChain(v19);
+    AST_FreePackedNodeChain(oldPackedCode);
     *(_DWORD *)(v21 + 30) = 0;
     Rules_ReplaceConstructPPForm(v21, 0);
     Rules_UnlinkListNode(v22);
   }
   else
   {
-    v11 = *(_DWORD **)(g_ClipsMemoryTable + 184);
-    if ( v11 )
+    freeListItem = *(_DWORD **)(g_ClipsMemoryTable + 184);
+    if ( freeListItem )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 184);
-      *(_DWORD *)(g_ClipsMemoryTable + 184) = *v11;
+      *(_DWORD *)(g_ClipsMemoryTable + 184) = *freeListItem;
     }
     else
     {
@@ -3256,13 +3256,13 @@ int  Deffunction_AddDeffunction(int name, __int16 *actions, int maxParams, int m
     }
     Rules_InitConstructModuleRecord((int)aDeffunction_4, name);
     ++*(_DWORD *)(name + 4);
-    *(_DWORD *)((char *)v12 + 30) = 0;
-    v12[5] = 0;
-    v12[6] = 0;
-    *(_DWORD *)((char *)v12 + 34) = minParams;
-    *(_DWORD *)((char *)v12 + 38) = maxParams;
-    deffunction = (int)v12;
-    *(_DWORD *)((char *)v12 + 42) = numLocalVars;
+    *(_DWORD *)((char *)newDeffunction + 30) = 0;
+    newDeffunction[5] = 0;
+    newDeffunction[6] = 0;
+    *(_DWORD *)((char *)newDeffunction + 34) = minParams;
+    *(_DWORD *)((char *)newDeffunction + 38) = maxParams;
+    deffunction = (int)newDeffunction;
+    *(_DWORD *)((char *)newDeffunction + 42) = numLocalVars;
   }
   Rules_AppendConstructToModuleList(deffunction);
   if ( actions )
@@ -3272,14 +3272,14 @@ int  Deffunction_AddDeffunction(int name, __int16 *actions, int maxParams, int m
     *(_DWORD *)(deffunction + 30) = actions;
   }
   if ( watchFlag )
-    v14 = 1;
+    watchValue = 1;
   else
-    v14 = g_Rules_WatchDeffunctions;
-  Deffunction_SetWatchFlagField(v14, deffunction);
+    watchValue = g_Rules_WatchDeffunctions;
+  Deffunction_SetWatchFlagField(watchValue, deffunction);
   if ( Mem_GetAllocFlag() || headerFlag )
     return deffunction;
-  v23 = Rules_CopyPPBuffer();
-  Rules_ReplaceConstructPPForm(deffunction, (int)v23);
+  ppForm = Rules_CopyPPBuffer();
+  Rules_ReplaceConstructPPForm(deffunction, (int)ppForm);
   return deffunction;
 }
 // 4CBC8B: variable 'v9' is possibly undefined
@@ -3867,11 +3867,11 @@ LABEL_16:
 //----- (004CC860) --------------------------------------------------------
 char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
 {
-  int *v5; // eax
+  int *foundDefglobal; // eax
   int *existingDefglobal; // ebx
   int isNew; // ebp
-  _DWORD *v8; // ebx
-  signed int v9; // eax
+  _DWORD *freeList; // ebx
+  signed int allocatedStruct; // eax
   _DWORD *defglobal; // ecx
   int v11; // ecx
   int valueType; // eax
@@ -3881,38 +3881,38 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
   int v16; // ecx
   _BYTE *v17; // edx
   _DWORD *v18; // ecx
-  char v19; // al
+  char watchValue; // al
   char *result; // eax
   int v21; // ecx
-  int v22; // eax
-  int v23; // eax
+  int moduleItem; // eax
+  int whichModule; // eax
   int v24; // ecx
   int watchFlag; // [esp+0h] [ebp-14h]
 
-  v5 = Defglobal_FindNextChanged();
-  existingDefglobal = v5;
+  foundDefglobal = Defglobal_FindNextChanged();
+  existingDefglobal = foundDefglobal;
   isNew = 0;
   watchFlag = 0;
-  if ( v5 )
+  if ( foundDefglobal )
   {
-    Rules_FreeConstructHeaderString(v5, (int)v5);
+    Rules_FreeConstructHeaderString(foundDefglobal, (int)foundDefglobal);
     watchFlag = existingDefglobal[5] & 1;
   }
   else
   {
-    v8 = *(_DWORD **)(g_ClipsMemoryTable + 224);
+    freeList = *(_DWORD **)(g_ClipsMemoryTable + 224);
     isNew = 1;
-    if ( v8 )
+    if ( freeList )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 224);
-      *(_DWORD *)(g_ClipsMemoryTable + 224) = *v8;
-      v9 = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(g_ClipsMemoryTable + 224) = *freeList;
+      allocatedStruct = g_ClipsMemFreeListTemp;
     }
     else
     {
-      v9 = Mem_HeapAllocWithRetry((_DWORD *)0x38);
+      allocatedStruct = Mem_HeapAllocWithRetry((_DWORD *)0x38);
     }
-    defglobal = (_DWORD *)v9;
+    defglobal = (_DWORD *)allocatedStruct;
   }
   if ( !isNew )
   {
@@ -3933,11 +3933,11 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
   AST_Free((int)valueExpr);
   g_Defglobal_ChangedFlag = 1;
   if ( watchFlag )
-    v19 = 1;
+    watchValue = 1;
   else
-    v19 = g_Rules_WatchGlobals;
+    watchValue = g_Rules_WatchGlobals;
   *v17 &= ~1u;
-  *(_DWORD *)v17 |= v19 & 1;
+  *(_DWORD *)v17 |= watchValue & 1;
   *v18 = globalName;
   ++*(_DWORD *)(globalName + 4);
   IO_OutWriteToken(asc_50BC64);
@@ -3957,9 +3957,9 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
   {
 LABEL_21:
     *(_DWORD *)(v21 + 24) = 0;
-    v22 = Module_FindItemByName((int)aDefglobal_2);
-    v23 = Module_GetItem(0, *(_DWORD *)(v22 + 4));
-    *(_DWORD *)(v24 + 8) = v23;
+    moduleItem = Module_FindItemByName((int)aDefglobal_2);
+    whichModule = Module_GetItem(0, *(_DWORD *)(moduleItem + 4));
+    *(_DWORD *)(v24 + 8) = whichModule;
     return (char *)Rules_AppendConstructToModuleList(v24);
   }
   return result;
@@ -4055,19 +4055,19 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
 {
   int codeFP; // esi
   int v6; // ecx
-  int v7; // eax
+  int openedModuleFile; // eax
   int v8; // ecx
   int v9; // edi
   int theDefglobal; // edi
-  int v11; // eax
+  int openedDefglobalFile; // eax
   int v12; // ecx
   int v13; // esi
-  int v15; // [esp+0h] [ebp-3Ch] BYREF
-  int v16; // [esp+4h] [ebp-38h] BYREF
-  int v17; // [esp+8h] [ebp-34h] BYREF
-  int v18; // [esp+Ch] [ebp-30h] BYREF
-  int v19; // [esp+10h] [ebp-2Ch] BYREF
-  int v20; // [esp+14h] [ebp-28h]
+  int fileCount; // [esp+0h] [ebp-3Ch] BYREF
+  int moduleArrayCount; // [esp+4h] [ebp-38h] BYREF
+  int moduleArrayVersion; // [esp+8h] [ebp-34h] BYREF
+  int defglobalArrayCount; // [esp+Ch] [ebp-30h] BYREF
+  int defglobalArrayVersion; // [esp+10h] [ebp-2Ch] BYREF
+  int moduleFile; // [esp+14h] [ebp-28h]
   int Enum; // [esp+18h] [ebp-24h]
   const char *v22; // [esp+1Ch] [ebp-20h]
   const char *v23; // [esp+20h] [ebp-1Ch]
@@ -4080,11 +4080,11 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
   v24 = headerFP;
   v26 = fileID;
   moduleCount = 0;
-  v16 = 0;
-  v17 = 1;
-  v18 = 0;
-  v19 = 1;
-  v20 = 0;
+  moduleArrayCount = 0;
+  moduleArrayVersion = 1;
+  defglobalArrayCount = 0;
+  defglobalArrayVersion = 1;
+  moduleFile = 0;
   Output_WriteFormatted(0, 1, headerFP, (int)aIncludeGloblde, 1);
   codeFP = 0;
   Enum = Module_NextEnum(0);
@@ -4093,67 +4093,67 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
     while ( 1 )
     {
       Module_SetCurrent(Enum);
-      v7 = Rules_ConstructCodeFileOpen(
-             v20,
+      openedModuleFile = Rules_ConstructCodeFileOpen(
+             moduleFile,
              v22,
              v26,
              v23,
-             &v15,
-             v17,
+             &fileCount,
+             moduleArrayVersion,
              v24,
              (char)aStructDefgloba,
              **(const char ***)(g_ClipsDefglobalCodeGenItem + 20),
              0,
              0);
-      v9 = v7;
-      if ( !v7 )
+      v9 = openedModuleFile;
+      if ( !openedModuleFile )
       {
         Defglobal_CloseConstructCodeFiles(0, codeFP, v8, maxIndices);
         return 0;
       }
-      Defglobal_WriteModuleHeaderToCode(v7, Enum, maxIndices, moduleCount);
-      v20 = Rules_ConstructCodeFileClose(v9, &v16, maxIndices, &v17, 0, 0);
+      Defglobal_WriteModuleHeaderToCode(openedModuleFile, Enum, maxIndices, moduleCount);
+      moduleFile = Rules_ConstructCodeFileClose(v9, &moduleArrayCount, maxIndices, &moduleArrayVersion, 0, 0);
       theDefglobal = Defglobal_EnumNext(0);
       if ( theDefglobal )
         break;
 LABEL_6:
       ++moduleCount;
-      ++v16;
+      ++moduleArrayCount;
       Enum = Module_NextEnum(Enum);
       if ( !Enum )
         goto LABEL_7;
     }
     while ( 1 )
     {
-      v11 = Rules_ConstructCodeFileOpen(
+      openedDefglobalFile = Rules_ConstructCodeFileOpen(
               codeFP,
               v22,
               v26,
               v23,
-              &v15,
-              v19,
+              &fileCount,
+              defglobalArrayVersion,
               v24,
               (char)aStructDefglo_0,
               *(const char **)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4),
               0,
               0);
-      v13 = v11;
-      if ( !v11 )
+      v13 = openedDefglobalFile;
+      if ( !openedDefglobalFile )
         break;
-      Defglobal_WriteDefglobalEntryToCode(v11, theDefglobal, maxIndices, v26, moduleCount);
-      ++v18;
-      codeFP = Rules_ConstructCodeFileClose(v13, &v18, maxIndices, &v19, 0, 0);
+      Defglobal_WriteDefglobalEntryToCode(openedDefglobalFile, theDefglobal, maxIndices, v26, moduleCount);
+      ++defglobalArrayCount;
+      codeFP = Rules_ConstructCodeFileClose(v13, &defglobalArrayCount, maxIndices, &defglobalArrayVersion, 0, 0);
       theDefglobal = Defglobal_EnumNext(theDefglobal);
       if ( !theDefglobal )
         goto LABEL_6;
     }
-    Defglobal_CloseConstructCodeFiles(v20, 0, v12, maxIndices);
+    Defglobal_CloseConstructCodeFiles(moduleFile, 0, v12, maxIndices);
     return 0;
   }
   else
   {
 LABEL_7:
-    Defglobal_CloseConstructCodeFiles(v20, codeFP, v6, maxIndices);
+    Defglobal_CloseConstructCodeFiles(moduleFile, codeFP, v6, maxIndices);
     return 1;
   }
 }
