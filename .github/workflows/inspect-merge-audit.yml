@@ -1,0 +1,31 @@
+name: Inspect current merge audit
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ec7708ae1c8c38dfb90d68d12152e2ca12c42e41
+      - name: Capture merge audit
+        shell: bash
+        run: |
+          set +e
+          git ls-tree -r HEAD -- src/recovered > merge-tree.log
+          find src/recovered -maxdepth 3 -printf '%y %p -> %l\n' > merge-worktree.log 2>&1 || true
+          python3 tools/audit_split_sources.py > merge-audit.log 2>&1
+          echo $? > merge-audit.status
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: current-merge-audit
+          path: |
+            merge-tree.log
+            merge-worktree.log
+            merge-audit.log
+            merge-audit.status
