@@ -1,0 +1,42 @@
+name: Remove runtime links from index
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Remove indexed links
+        shell: bash
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          paths=(
+            src/recovered/runtime/00461520_platform_input.inc.c
+            src/recovered/runtime/004D0560_legacy_runtime.inc.c
+          )
+          git ls-files -s -- "${paths[@]}"
+          git update-index --force-remove -- "${paths[@]}"
+          rm -f -- "${paths[@]}"
+          rm -f \
+            .github/workflows/audit-diagnostics-v2.yml \
+            .github/workflows/remove-obsolete-runtime-links-v3.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git diff --cached --name-status
+          git commit -m "Remove obsolete recovered runtime links from index"
+          git push origin HEAD:${TARGET_BRANCH}
