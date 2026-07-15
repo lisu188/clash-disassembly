@@ -1,0 +1,85 @@
+name: Normalize recovered rand calls
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Remove ignored decompiler-shaped rand arguments
+        shell: bash
+        env:
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import json
+          import sys
+
+          root = Path.cwd()
+          relative = "src/render/00405DB0_00407D20_render_004.c"
+          path = root / relative
+          text = path.read_text(encoding="utf-8")
+          calls = (
+              "rand_(setB_col, 7)",
+              "rand_(setB_col, 0)",
+              "rand_(setC_col, 7)",
+              "rand_(setC_col, HIDWORD(random_value))",
+              "rand_(setA_col, 7)",
+              "rand_(setA_col, v42)",
+              "rand_(col_cursor, smoke_tile)",
+              "rand_(col_cursor, 36)",
+              "rand_(kk, deco_col_right_bound)",
+          )
+          for call in calls:
+              if call not in text:
+                  raise SystemExit(f"missing expected recovered call: {call}")
+              text = text.replace(call, "rand_()")
+          path.write_text(text, encoding="utf-8", newline="\n")
+
+          sys.path.insert(0, str(root / "tools"))
+          from split_source_index import body_sha256, scan_definitions
+
+          manifest_path = root / "data" / "recovered_sources.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          records = manifest["functions"]
+          known_names = {record["name"] for record in records}
+          definitions = {
+              definition.name: definition
+              for definition in scan_definitions(text, known_names)
+          }
+          for record in records:
+              if record.get("source") != relative:
+                  continue
+              definition = definitions.get(record["name"])
+              if definition is None:
+                  raise SystemExit(f"missing definition for {record['name']}")
+              record["body_sha256"] = body_sha256(text, definition)
+          manifest_path.write_text(
+              json.dumps(manifest, indent=2) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          (root / ".github" / "workflows" / "normalize-rand-calls.yml").unlink()
+          PY
+
+          python3 tools/audit_split_sources.py
+          python3 tools/migrate_pure_coverage_metadata.py --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m "Normalize recovered rand calls"
+          git push origin HEAD:${TARGET_BRANCH}
