@@ -1,0 +1,41 @@
+name: Runtime tree diagnostics
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Capture trees
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo 'HEAD:'
+            git rev-parse HEAD
+            echo 'HEAD tree:'
+            git ls-tree -r HEAD -- src/recovered/runtime
+            echo 'PR head tree:'
+            git ls-tree -r "${{ github.event.pull_request.head.sha }}" -- src/recovered/runtime
+            echo 'Base tree:'
+            git ls-tree -r "${{ github.event.pull_request.base.sha }}" -- src/recovered/runtime
+            echo 'Index:'
+            git ls-files -s -- src/recovered/runtime
+            echo 'Worktree:'
+            find src/recovered/runtime -maxdepth 2 -printf '%y %p -> %l\n' 2>&1 || true
+            echo 'Three-dot diff:'
+            git diff --name-status "${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" -- src/recovered/runtime
+            echo 'Two-dot diff:'
+            git diff --name-status "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" -- src/recovered/runtime
+          } > runtime-tree.log
+          cat runtime-tree.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-tree-diagnostics
+          path: runtime-tree.log
