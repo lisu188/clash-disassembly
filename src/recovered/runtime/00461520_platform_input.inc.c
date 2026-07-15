@@ -1,0 +1,1 @@
+/* Obsolete compatibility path retained as an empty marker after source relocation. */
