@@ -45,4 +45,4 @@ while implicit declarations, implicit integers, and invalid return types remain
 hard errors. See `docs/SOURCE_SPLIT.md` for the cutover evidence and remaining
 warning and retail-route validation debt.
 
-See `docs/SOURCE_LAYOUT.md` for change and validation rules.
+See `docs/SOURCE_LAYOUT.md` for path, regeneration, and validation rules.
