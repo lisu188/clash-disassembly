@@ -269,11 +269,11 @@ int  CRT_InitializeProcessStartupInfo(int threadDataMgmtDisabled, int a2, int a3
     g_CRT_WinMinorVersion = BYTE1(g_WindowsVersionDword);
     g_CRT_WinVersion = BYTE1(g_WindowsVersionDword) | ((unsigned __int8)g_WindowsVersionDword << 8);
     GetModuleFileNameA(0, Filename, 0x104u);
-    g_CRT_ExecutablePathA = CRT_FinalizeAnsiApiStringResult(v6, &v12);
+    g_CRT_ExecutablePathA = CRT_FinalizeAnsiApiStringResult();
     _lib_GetModuleFileNameW_();
     g_CRT_ExecutablePathW = CRT_FinalizeWideApiStringResult();
     GetCommandLineA();
-    cmdLineA = (CHAR *)CRT_FinalizeAnsiApiStringResult(v8, v7);
+    cmdLineA = (CHAR *)CRT_FinalizeAnsiApiStringResult();
     if ( *cmdLineA != 34 )
     {
       while ( (IsTable[(unsigned __int8)(*cmdLineA + 1)] & 2) == 0 && *cmdLineA )
@@ -323,7 +323,7 @@ LABEL_22:
     if ( threadDataMgmtDisabled )
     {
       GetModuleFileNameA(moduleHandle, moduleFilename, 0x104u);
-      g_CRT_ModulePathA = CRT_FinalizeAnsiApiStringResult(v11, v13);
+      g_CRT_ModulePathA = CRT_FinalizeAnsiApiStringResult();
       _lib_GetModuleFileNameW_();
       g_CRT_ModulePathW = CRT_FinalizeWideApiStringResult();
     }
