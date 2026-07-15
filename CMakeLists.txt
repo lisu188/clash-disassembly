@@ -100,7 +100,11 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
     )
   endif()
   if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${target} PRIVATE -Wno-error=int-conversion)
+    target_compile_options(${target} PRIVATE
+      -Wno-error=int-conversion
+      -Wno-error=incompatible-pointer-types
+      -Wno-error=incompatible-function-pointer-types
+    )
   endif()
 endforeach()
 
