@@ -40,7 +40,9 @@ definition order.
 
 The canonical split has private headers, one-definition global ownership,
 evidence-backed static-helper decisions, and an independently compiled unit
-harness. See `docs/SOURCE_SPLIT.md` for the cutover evidence and remaining
-warning, Clang, and retail-route validation debt.
+harness. Clang reports recovered pointer/integer conversion debt as warnings,
+while implicit declarations, implicit integers, and invalid return types remain
+hard errors. See `docs/SOURCE_SPLIT.md` for the cutover evidence and remaining
+warning and retail-route validation debt.
 
 See `docs/SOURCE_LAYOUT.md` for change and validation rules.
