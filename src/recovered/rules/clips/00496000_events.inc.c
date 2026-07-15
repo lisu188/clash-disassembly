@@ -480,7 +480,7 @@ _DWORD * AST_DecrementNodeRefCount(_DWORD *result)
 //----- (00496A00) --------------------------------------------------------
 unsigned int  AST_HashNodeChildren(_DWORD *theConstraint)
 {
-  __int16 *restrictionList; // edi
+  __int16 *classList; // edi
   int count; // ecx
   unsigned int i; // esi
   int fieldHash; // eax
@@ -498,7 +498,7 @@ unsigned int  AST_HashNodeChildren(_DWORD *theConstraint)
   int v17; // eax
   int v18; // ecx
 
-  restrictionList = *(__int16 **)((char *)theConstraint + 6);
+  classList = *(__int16 **)((char *)theConstraint + 6);
   count = 0;
   for ( i = 9 * (*theConstraint << 18 >> 31)
           + 37 * (*theConstraint << 19 >> 31)
@@ -515,11 +515,11 @@ unsigned int  AST_HashNodeChildren(_DWORD *theConstraint)
           + 19 * (*theConstraint << 28 >> 31)
           + 23 * (*theConstraint << 29 >> 31)
           + 5 * (*theConstraint << 30 >> 31)
-          + 17 * (*theConstraint & 1); restrictionList; i += fieldHash )
+          + 17 * (*theConstraint & 1); classList; i += fieldHash )
   {
-    fieldHash = Rules_ComputeFieldHashValue(*restrictionList, *(_DWORD *)(restrictionList + 1), count);
+    fieldHash = Rules_ComputeFieldHashValue(*classList, *(_DWORD *)(classList + 1), count);
     count = v6 + 1;
-    restrictionList = *(__int16 **)(restrictionList + 5);
+    classList = *(__int16 **)(classList + 5);
   }
   for ( j = *(__int16 **)((char *)theConstraint + 10); j; i += v8 )
   {

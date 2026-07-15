@@ -1168,7 +1168,7 @@ int  IO_StreamAdapterReadBytes(int adapter, int destBuffer, signed int bytesRequ
     {
       if ( !*(_DWORD *)(player + 383) )
       {
-        frameBytesLeft = AviPlayer_PopBufferedVideoFrame(player, *(void **)(player + 379));
+        frameBytesLeft = AviPlayer_PopBufferedAudioData(player, *(void **)(player + 379));
         *(_DWORD *)(player + 383) = frameBytesLeft;
         if ( !frameBytesLeft )
           break;

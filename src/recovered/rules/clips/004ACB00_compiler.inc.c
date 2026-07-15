@@ -550,7 +550,7 @@ void ** Rules_BloadBuildSlotValue(_DWORD *returnValue, _DWORD *bsaveValues, int 
 // 4AD4FE: variable 'v12' is possibly undefined
 
 //----- (004AD570) --------------------------------------------------------
-void ** Rules_BloadLookupAtomByIndex(_DWORD *bsaveValue, int module)
+void ** Rules_BloadLookupAtomByIndex(_DWORD *bsaveValue, int routineName)
 {
   void **result; // eax
 
@@ -574,7 +574,7 @@ void ** Rules_BloadLookupAtomByIndex(_DWORD *bsaveValue, int module)
       result = &g_Rules_DummyFactPtr;
       break;
     default:
-      Rules_ReportSystemError(module, 1);
+      Rules_ReportSystemError(routineName, 1);
       IO_RunRouterExitCallbacks();
       result = 0;
       break;

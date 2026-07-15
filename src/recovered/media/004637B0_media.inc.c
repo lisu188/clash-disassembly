@@ -880,7 +880,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
   char *selfPtr; // [esp+40h] [ebp-1Ch]
   char *audioStreamInfo; // [esp+44h] [ebp-18h]
   HANDLE *decodeIdleEvent; // [esp+48h] [ebp-14h]
-  char *audioChunkQueue; // [esp+4Ch] [ebp-10h]
+  char *videoChunkQueue; // [esp+4Ch] [ebp-10h]
   _DWORD *audioSampleQueue; // [esp+50h] [ebp-Ch]
   char frameDecoded; // [esp+54h] [ebp-8h]
   char noQueueSpace; // [esp+58h] [ebp-4h]
@@ -893,13 +893,13 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
     decodeIdleEvent = (HANDLE *)(lpThreadParameter + 407);
     decodeStopEvent = (HANDLE *)(lpThreadParameter + 403);
     audioQueueSpaceEvent = (HANDLE *)(lpThreadParameter + 171);
-    audioChunkQueue = lpThreadParameter + 203;
+    videoChunkQueue = lpThreadParameter + 203;
     videoQueueSpaceEvent = (HANDLE *)(lpThreadParameter + 387);
     audioSampleQueue = lpThreadParameter + 391;
     audioStreamInfo = lpThreadParameter + 219;
     do
     {
-      if ( *((_DWORD *)audioChunkQueue + 2) < *(_DWORD *)(lpThreadParameter + 43) )
+      if ( *((_DWORD *)videoChunkQueue + 2) < *(_DWORD *)(lpThreadParameter + 43) )
       {
         frameDecoded = 0;
         noQueueSpace = 0;
@@ -908,7 +908,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
           AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
           AviPlayer_AudioBytesQueued((int)lpThreadParameter);
           blockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
-          if ( v4 / blockAlign * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9) <= *((_DWORD *)audioChunkQueue + 2) )
+          if ( v4 / blockAlign * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9) <= *((_DWORD *)videoChunkQueue + 2) )
           {
             Frame = AviPlayer_DecodeNextFrame((int)lpThreadParameter);
             if ( Frame == -1 )
@@ -949,7 +949,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
           && (queuedSampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue),
               AviPlayer_AudioBytesQueued((int)lpThreadParameter),
               checkBlockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter),
-              *((_DWORD *)audioChunkQueue + 2) > v16 / checkBlockAlign * queuedSampleCount / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9)) )
+              *((_DWORD *)videoChunkQueue + 2) > v16 / checkBlockAlign * queuedSampleCount / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9)) )
         {
           if ( noQueueSpace )
           {
@@ -962,11 +962,11 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         }
         else
         {
-          nextOffset = CAviDecompressor_GetNextAudioSampleOffset((int)lpThreadParameter);
+          nextOffset = CAviDecompressor_GetNextVideoFrameBufferOffset((int)lpThreadParameter);
           if ( nextOffset != -1 )
           {
             sampleOffset = nextOffset;
-            chunkFrameIndex = *((_DWORD *)audioChunkQueue + 2);
+            chunkFrameIndex = *((_DWORD *)videoChunkQueue + 2);
             AVIStreamRead(
               *(_DWORD *)(lpThreadParameter + 7),
               *(_DWORD *)(lpThreadParameter + 163),
@@ -1052,7 +1052,7 @@ BOOL  CAviDecompressor_RequestDecodeThreadStop(int self)
 }
 
 //----- (004655B0) --------------------------------------------------------
-signed int  CAviDecompressor_GetNextAudioSampleOffset(int self)
+signed int  CAviDecompressor_GetNextVideoFrameBufferOffset(int self)
 {
   int writeEnd; // ecx
   int readStart; // edx
@@ -1466,7 +1466,7 @@ int  AviPlayer_CloseStreams(int self)
 // 4E97C8: using guessed type int __stdcall AVIFileRelease(_DWORD);
 
 //----- (00465EC0) --------------------------------------------------------
-int  AviPlayer_GetBufferedAudioSample(int self, int targetFrame, _DWORD *frameFlagsOut, _DWORD *frameIndexOut)
+int  AviPlayer_GetBufferedVideoFrame(int self, int targetFrame, _DWORD *frameFlagsOut, _DWORD *frameIndexOut)
 {
   int readIndex; // ebx
   int clampedIndex; // edx
@@ -1501,7 +1501,7 @@ LABEL_12:
 }
 
 //----- (00465FB0) --------------------------------------------------------
-unsigned int  AviPlayer_PopBufferedVideoFrame(int self, void *destBuffer)
+unsigned int  AviPlayer_PopBufferedAudioData(int self, void *destBuffer)
 {
   int queueBase; // edx
   _DWORD *entry; // eax
@@ -2167,7 +2167,7 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
         }
         while ( *(_DWORD *)(self + 2034) );
       }
-      frameData = AviPlayer_GetBufferedAudioSample(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
+      frameData = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
       *(_DWORD *)(self + 2025) = frameData;
       if ( frameData )
         ++*(_DWORD *)(self + 2034);
@@ -2189,7 +2189,7 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
         }
         while ( *(_DWORD *)(self + 2034) );
       }
-      frameDataPtr = AviPlayer_GetBufferedAudioSample(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
+      frameDataPtr = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
       *(_DWORD *)(self + 2025) = frameDataPtr;
       if ( !frameDataPtr )
         return 0;

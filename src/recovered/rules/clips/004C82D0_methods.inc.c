@@ -1002,7 +1002,7 @@ unsigned int * Defgeneric_AddMethod(
         int position,
         int restrictions,
         int restrictionCount,
-        unsigned int minRestrictions,
+        unsigned int localVarCount,
         int hasWildcard,
         __int16 *actions,
         unsigned int ppForm,
@@ -1095,7 +1095,7 @@ unsigned int * Defgeneric_AddMethod(
   methodSlot[9] = ppForm;
   if ( insertIndex != -1 )
   {
-    methodSlot[5] = minRestrictions;
+    methodSlot[5] = localVarCount;
     methodSlot[2] = restrictionCount;
     if ( hasWildcard )
     {

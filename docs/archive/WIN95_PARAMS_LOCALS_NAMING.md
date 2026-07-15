@@ -63,12 +63,12 @@ Highlights of the tail cleared this campaign:
 
 Occurrence counts (deduped; old-path compat symlinks excluded):
 
-| identifier | campaign start | after round 8 |
+| identifier | campaign start | final |
 |---|---|---|
-| positional params `aN` | ~37,600 | **8,017** |
-| generated locals `vN` | ~85,000 | **25,113** |
+| positional params `aN` | ~37,600 | **7,609** |
+| generated locals `vN` | ~85,000 | **21,977** |
 
-**17,243 identifier renames across 3,885 functions** are recorded in the local
+**17,857 identifier renames across 4,012 functions** are recorded in the local
 ledger (inferred / behaviour-confirmed / conservative-mechanical).
 
 Rounds (each = propose + adversarial-verify workflow → collision-guarded apply →
@@ -91,6 +91,13 @@ build/test gate → commit):
    source-reorganisation). Names derived from the unit-record layout, sprite/sound
    resource-path builders, AI move-track dispatch, turn-advancement context handles,
    and building-record offsets.
+8. **CLIPS + media/runtime tiers** — once game code hit its floor, the same 40-79 and
+   20-79 a/v bar was applied to the remaining subsystems for consistency: CLIPS engine +
+   strategic AI (51 fns, upstream CLIPS 6.0 `ParseDefault`/token/constraint/defgeneric
+   conventions + Watcom C++ EH), then media/runtime/platform (76 fns: AVI player,
+   ICM codec, DirectDraw COM surfaces, SEH frames, filesystem walk, CLIPS bload records).
+   The CLIPS *20-39* residual is left as documented uncertainty — a deliberate scoping
+   of the external library per the game-first priority.
 
 CLIPS code uses upstream CLIPS 6.0 parameter names where matched (`theInstance`,
 `theDefclass`, `readSource`, `theToken`, `ppForm`, bsave/bload record fields). Game
@@ -149,3 +156,24 @@ argument positions. The reviewers explicitly distinguished the game's own unusua
 axis convention (row→screenX, col→screenY) and a pre-existing caller/callee arg-order
 quirk in the original binary from genuine naming errors, confirming neither is a
 campaign defect.
+
+A third pass sampled **53 functions** from the CLIPS + media/runtime tiers and found
+**9 defects**, of which **8 were corrected** and 1 disproved:
+- 3 CLIPS param/local misnamings — `minRestrictions`→`localVarCount` in
+  `Defgeneric_AddMethod` (offset +20 is the method's local-var count, not a restriction
+  bound), `module`→`routineName` in `Rules_BloadLookupAtomByIndex` (a `SystemError`
+  routine-name string, not a defmodule), and `restrictionList`→`classList` in
+  `AST_HashNodeChildren` (offset +6 is the class list, matching its sibling).
+- A systematic **audio↔video swap** in three *static* AVI-player functions (not
+  `clash95.map` symbols): `GetBufferedAudioSample`→`GetBufferedVideoFrame`,
+  `GetNextAudioSampleOffset`→`GetNextVideoFrameBufferOffset`,
+  `PopBufferedVideoFrame`→`PopBufferedAudioData`, plus the local `audioChunkQueue`→
+  `videoChunkQueue`. Confirmed by the stream FCC codes: the video ring `self+203/207/211`
+  is fed by `AVIFileGetStream(…, 'vids'=0x73646976)` and the audio ring by `'auds'`.
+  `AviPlayer_DecodeNextFrame` was **kept** — it is a `clash95.map`-authoritative public
+  symbol (evidence priority #1) and its name is vague, not audio/video-misleading.
+- The one **disproved** finding was a claimed swap of `videoQueueSpaceEvent`/
+  `audioQueueSpaceEvent` in `StartAddress`: the reader waits on `videoQueueSpaceEvent`
+  (self+387) in the video-write path, so the verifier's "self+387 is the audio event"
+  reading would make the original code wait on the wrong event — the existing labels are
+  left as-is (documented uncertainty rather than an unsafe rename).
