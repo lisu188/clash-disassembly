@@ -8061,9 +8061,9 @@ char *g_Text_LowMorale[3] =
 
 char *g_Text_QuitConfirm[3] =
 {
-  "Czy chcesz zako\xA4czy\x8D rozgrywk\x91?",
+  "Czy chcesz zako\xA4""czy\x8D rozgrywk\x91?",
   "Do you want to quit the game?",
-  "M\x94chtest Du das Spiel verlassen?"
+  "M\x94""chtest Du das Spiel verlassen?"
 };
 
 int g_UnitSearchCursor = -1;
@@ -8192,7 +8192,7 @@ char *g_Text_SurrenderConfirm[3] =
 {
   "Czy chcesz si\x91 podda\x8D?",
   "Do you want to surrender?",
-  "M\x94chtest Du Dich ergeben?"
+  "M\x94""chtest Du Dich ergeben?"
 };
 
 int g_UI_YesNoDims[3] = { 416, 400, 1 };
@@ -8268,7 +8268,7 @@ int g_UnitBattleAnimFrameCount = 8;
 
 char *g_Text_UnitDisbandedLowMoraleMessages[3] =
 {
-  "Jedna z twoich jednostek uleg\x92a rozwi\x86zaniu, Panie. Nie chcieli Ci dalej s\x92u\xA7y\x8D, gdy\xA7 wiele przegranych bitew i og\xA2lne wyczerpanie drastycznie wp\x92yn\x91\x92o na ich morale.",
+  "Jedna z twoich jednostek uleg\x92""a rozwi\x86zaniu, Panie. Nie chcieli Ci dalej s\x92u\xA7y\x8D, gdy\xA7 wiele przegranych bitew i og\xA2lne wyczerpanie drastycznie wp\x92yn\x91\x92o na ich morale.",
   "One of your troops fell apart. They did not want to serve you anymore, their morale was very low after many lost battles and many dead.",
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
 };
@@ -8964,9 +8964,9 @@ int battleLogEnabled = 1;
 
 char *g_LeadTroopsPersonallyPromptTexts[3] =
 {
-  "Czy chcesz osobi\x9Ecie poprowadzi\x8D wojska?",
+  "Czy chcesz osobi\x9E""cie poprowadzi\x8D wojska?",
   "Do you want to lead the troops on your own?",
-  "M\x94chtest Du allein Deine Truppen anf\x81hren?"
+  "M\x94""chtest Du allein Deine Truppen anf\x81hren?"
 };
 
 int g_BuildingSpawnTileSearchOffsetsX[] = { 1 };
@@ -9080,7 +9080,7 @@ char *UI_Locale_BuildingNames_E[3] = { "wie\xA7y", "a keep", "um Deine Turm zu b
 
 char *UI_Locale_BuildingNames_F[9] =
 {
-  "Pozosta\x92a jeszcze %d tura.",
+  "Pozosta\x92""a jeszcze %d tura.",
   "%d turn remaining.",
   "Sie ben\x94tigen %d Z\x81ge.",
   "Pozosta\x92y jeszcze %d tury.",
@@ -9125,7 +9125,7 @@ char *g_CastleBuildingIconTooltipNames[27] =
   "Warsztat",
   "Workshop",
   "Werkstatt",
-  "Szko\x92a",
+  "Szko\x92""a",
   "School",
   "Schule",
   "Ku\xA6nia",
@@ -9155,7 +9155,7 @@ char *UI_Locale_BuildingNames_I[26] =
   "Warsztat",
   "Workshop",
   "Werkstatt",
-  "Szko\x92a",
+  "Szko\x92""a",
   "School",
   "Schule",
   "Ku\xA6nia",
@@ -9180,7 +9180,7 @@ char *UI_Locale_BuildingNames_J[21] =
   "Warsztat",
   "Workshop",
   "Werkstatt",
-  "Szko\x92a",
+  "Szko\x92""a",
   "School",
   "Schule",
   "Ku\xA6nia",
@@ -9199,7 +9199,7 @@ char *UI_Locale_BuildingNames_K[15] =
   "Warsztat",
   "Workshop",
   "Werkstatt",
-  "Szko\x92a",
+  "Szko\x92""a",
   "School",
   "Schule",
   "Ku\xA6nia",
@@ -9215,7 +9215,7 @@ char *UI_Locale_BuildingNames_K[15] =
 
 char *UI_Locale_BuildingNames_L[12] =
 {
-  "Szko\x92a",
+  "Szko\x92""a",
   "School",
   "Schule",
   "Ku\xA6nia",
@@ -9479,7 +9479,7 @@ char *g_GodAngerMessageStrings[9] =
   "Zorn Gottes!",
   "Odwr\xA2t",
   "Retreat",
-  "R\x81ckzug",
+  "R\x81""ckzug",
   "Zbyt malo PA aby sie okopac",
   "Not enough AP to prepare to defence",
   "Nicht genug AP zur Verteidigung"
@@ -9489,7 +9489,7 @@ char *g_UnitBattleRetreatMessageStrings[6] =
 {
   "Odwr\xA2t",
   "Retreat",
-  "R\x81ckzug",
+  "R\x81""ckzug",
   "Zbyt malo PA aby sie okopac",
   "Not enough AP to prepare to defence",
   "Nicht genug AP zur Verteidigung"
@@ -9534,13 +9534,13 @@ char *g_UnitActionTooltipTexts[24] =
   "Punkty akcji",
   "Action points",
   "Aktionspunkte",
-  "Si\x92a ataku",
+  "Si\x92""a ataku",
   "Attack power",
   "Angriffsst\x84rke",
-  "Si\x92a ra\xA7enia",
+  "Si\x92""a ra\xA7""enia",
   "Shot power",
-  "Schu\xE1\x6B\x72aft",
-  "Si\x92a obrony",
+  "Schu\xE1\x6B\x72""aft",
+  "Si\x92""a obrony",
   "Defence power",
   "Verteidigungskraft",
   "Status",
@@ -9549,9 +9549,9 @@ char *g_UnitActionTooltipTexts[24] =
   "Morale",
   "Morale",
   "Moral",
-  "Zm\x91czenie",
+  "Zm\x91""czenie",
   "Tiredness",
-  "M\x81digkeit"
+  "M\x81""digkeit"
 };
 
 int g_UnitActionTooltipLastShownAction = -1;
@@ -9561,16 +9561,16 @@ char *g_BattleYourTurnBannerTexts[6] =
   "Tw\xA2j ruch",
   "Your turn",
   "Dein Zug",
-  "Niewielkie szanse na zwyci\x91stwo zmusi\x92y Ci\x91 do wycofania rycerzy. Twe jednostki w szybkim tempie opu\x9Eci\x92y pole bitwy, jednak wr\xA2g zdo\x92a\x92 jeszcze zada\x8D im powa\xA7ne straty.",
+  "Niewielkie szanse na zwyci\x91stwo zmusi\x92y Ci\x91 do wycofania rycerzy. Twe jednostki w szybkim tempie opu\x9E""ci\x92y pole bitwy, jednak wr\xA2g zdo\x92""a\x92 jeszcze zada\x8D im powa\xA7ne straty.",
   "You had to withdraw your troops from this battle for your chances were small. Your units managed to flee from the battlefield, some were wounded.",
-  "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
+  "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81""ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
 };
 
 char *g_BattleForcedRetreatOutcomeTexts[3] =
 {
-  "Niewielkie szanse na zwyci\x91stwo zmusi\x92y Ci\x91 do wycofania rycerzy. Twe jednostki w szybkim tempie opu\x9Eci\x92y pole bitwy, jednak wr\xA2g zdo\x92a\x92 jeszcze zada\x8D im powa\xA7ne straty.",
+  "Niewielkie szanse na zwyci\x91stwo zmusi\x92y Ci\x91 do wycofania rycerzy. Twe jednostki w szybkim tempie opu\x9E""ci\x92y pole bitwy, jednak wr\xA2g zdo\x92""a\x92 jeszcze zada\x8D im powa\xA7ne straty.",
   "You had to withdraw your troops from this battle for your chances were small. Your units managed to flee from the battlefield, some were wounded.",
-  "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
+  "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81""ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
 };
 
 int g_UnitBattleAnimatingUnitIndex = -1;
@@ -9593,7 +9593,7 @@ _DWORD g_CastleUnitProductionWidgetTable[3] = { 311, 24, 1 };
 
 __int16 g_CastleUnitProductionTooltipZone[4] = { 32, 23, 337, 125 };
 
-char *UI_Locale_StatusHeader[2] = { "Do uko\xA4czenia", "%d turns until" };
+char *UI_Locale_StatusHeader[2] = { "Do uko\xA4""czenia", "%d turns until" };
 
 char *UI_Locale_StatusLine1[5] =
 {
@@ -9606,7 +9606,7 @@ char *UI_Locale_StatusLine1[5] =
 
 char *UI_Locale_StatusDetail_A[2] = { "pozosta\x92o %d tur", "production" };
 
-char *UI_Locale_StatusDetail_B[2] = { "pozosta\x92a %d tura", "production" };
+char *UI_Locale_StatusDetail_B[2] = { "pozosta\x92""a %d tura", "production" };
 
 char *UI_Locale_StatusDetail_C[2] = { "pozosta\x92y %d tury", "production" };
 
@@ -9757,30 +9757,30 @@ _UNKNOWN g_TempleGiftOutcomeTable_ForeignCultInactive;
 
 char *g_TempleSacrilegeUnitKilledTexts[9] =
 {
-  "G\x92upcze! Jak \x9Emia\x92e\x9E zak\x92\xA2ca\x8D spok\xA2j boskich istot. \x98wi\x91tkradcy zostali unicestwieni.",
+  "G\x92upcze! Jak \x9Emia\x92""e\x9E zak\x92\xA2""ca\x8D spok\xA2j boskich istot. \x98wi\x91tkradcy zostali unicestwieni.",
   "Yoy fool! How dare you disturb the peace of Gods. Perpetrators of sacrilige have been annihilated!",
   "Du Unseliger! Wie kannst Du es wagen, den Frieden der G\x94tter zu st\x94ren! Die, die dieses Sakrileg begingen, wurden vernichtet!",
-  "Jeste\x9E grzesznikiem, a na takich B\xA2g nie spogl\x86da \x92askawym okiem. Odejd\xA6 i nigdy tu nie wracaj!",
+  "Jeste\x9E grzesznikiem, a na takich B\xA2g nie spogl\x86""da \x92""askawym okiem. Odejd\xA6 i nigdy tu nie wracaj!",
   "You're a sinner. God has no mercy on you. Leave and never come back here again!",
   "Du bist ein S\x81nder. Gott hat keine Gnade mit Dir. Gehe jetzt und la\xE1\x20\x44ich nie wieder hier sehen",
-  "Twoje ofiary nie przynios\x92y po\xA7\x86danego skutku. Bogowie zignorowali twe mod\x92y.",
+  "Twoje ofiary nie przynios\x92y po\xA7\x86""danego skutku. Bogowie zignorowali twe mod\x92y.",
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 };
 
 char *g_TempleGiftRewardText[6] =
 {
-  "Jeste\x9E grzesznikiem, a na takich B\xA2g nie spogl\x86da \x92askawym okiem. Odejd\xA6 i nigdy tu nie wracaj!",
+  "Jeste\x9E grzesznikiem, a na takich B\xA2g nie spogl\x86""da \x92""askawym okiem. Odejd\xA6 i nigdy tu nie wracaj!",
   "You're a sinner. God has no mercy on you. Leave and never come back here again!",
   "Du bist ein S\x81nder. Gott hat keine Gnade mit Dir. Gehe jetzt und la\xE1\x20\x44ich nie wieder hier sehen",
-  "Twoje ofiary nie przynios\x92y po\xA7\x86danego skutku. Bogowie zignorowali twe mod\x92y.",
+  "Twoje ofiary nie przynios\x92y po\xA7\x86""danego skutku. Bogowie zignorowali twe mod\x92y.",
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 };
 
 char *g_TempleGiftEmptyText[3] =
 {
-  "Twoje ofiary nie przynios\x92y po\xA7\x86danego skutku. Bogowie zignorowali twe mod\x92y.",
+  "Twoje ofiary nie przynios\x92y po\xA7\x86""danego skutku. Bogowie zignorowali twe mod\x92y.",
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 };
@@ -10321,46 +10321,46 @@ _UNKNOWN g_SaveSlotDialogWidgetTemplateBlob;
 
 char *g_PlagueOutbreakNoticeFmtText[12] =
 {
-  "Na %s wybuch\x92a zaraza. Z chat ch\x92opskich wydobywa si\x91 od\xA2r gnij\x86cego mi\x91sa, trupy nieszcz\x91\x9Enik\xA2w walaj\x86 si\x91 po ca\x92ym dziedzi\xA4cu. W kr\xA2tkim czasie epidemia dotkliwie zredukuje ilo\x9E\x8D wie\x9Eniak\xA2w w tym zamku.",
+  "Na %s wybuch\x92""a zaraza. Z chat ch\x92opskich wydobywa si\x91 od\xA2r gnij\x86""cego mi\x91sa, trupy nieszcz\x91\x9Enik\xA2w walaj\x86 si\x91 po ca\x92ym dziedzi\xA4""cu. W kr\xA2tkim czasie epidemia dotkliwie zredukuje ilo\x9E\x8D wie\x9Eniak\xA2w w tym zamku.",
   "A terrible plague broke out at the castle %s. The pungent stench of rotten meat reeks out of peasants\x92 houses. Dead bodies are scattered everywhere. Soon the plague will outnumber the population of the inhabitants in the castle.",
-  "Auf %s ist eine Seuche ausgebrochen. Aus den Bauernh\x84usern dringt der Gestank von verwesendem Fleisch. Die Leichen der Ungl\x81cklichen t\x81rmen sich auf jedem Hof. In kurzer Zeit wird die Epidemie die Zahl der Dorfleute in der Burg stark dezimiert haben.",
-  "Dzi\x91ki Twojej dzia\x92alno\x9Eci osi\x86gn\x86\x92e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9Eci rozbudowy armii.",
+  "Auf %s ist eine Seuche ausgebrochen. Aus den Bauernh\x84usern dringt der Gestank von verwesendem Fleisch. Die Leichen der Ungl\x81""cklichen t\x81rmen sich auf jedem Hof. In kurzer Zeit wird die Epidemie die Zahl der Dorfleute in der Burg stark dezimiert haben.",
+  "Dzi\x91ki Twojej dzia\x92""alno\x9E""ci osi\x86gn\x86\x92""e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9E""ci rozbudowy armii.",
   "Thanks to your wise rule you have achieved a higher technological level. Now you can expand your army in new ways.",
-  "Dank Deines klugen Vorgehens hast Du ein h\x94heres technologisches Niveau erreicht. Es er\x94ffnen sich Dir neue M\x94glichkeiten zum Ausbau Deiner Armee.",
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
+  "Dank Deines klugen Vorgehens hast Du ein h\x94heres technologisches Niveau erreicht. Es er\x94""ffnen sich Dir neue M\x94glichkeiten zum Ausbau Deiner Armee.",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
   "Master, your builders have finally accomplished the construction of the castle. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Burg endlich beendet. Wie willst Du sie nennen?",
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 };
 
 char *g_TechLevelUpNoticeText[9] =
 {
-  "Dzi\x91ki Twojej dzia\x92alno\x9Eci osi\x86gn\x86\x92e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9Eci rozbudowy armii.",
+  "Dzi\x91ki Twojej dzia\x92""alno\x9E""ci osi\x86gn\x86\x92""e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9E""ci rozbudowy armii.",
   "Thanks to your wise rule you have achieved a higher technological level. Now you can expand your army in new ways.",
-  "Dank Deines klugen Vorgehens hast Du ein h\x94heres technologisches Niveau erreicht. Es er\x94ffnen sich Dir neue M\x94glichkeiten zum Ausbau Deiner Armee.",
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
+  "Dank Deines klugen Vorgehens hast Du ein h\x94heres technologisches Niveau erreicht. Es er\x94""ffnen sich Dir neue M\x94glichkeiten zum Ausbau Deiner Armee.",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
   "Master, your builders have finally accomplished the construction of the castle. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Burg endlich beendet. Wie willst Du sie nennen?",
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 };
 
 char *g_BuildingCompleteNoticeText[6] =
 {
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
   "Master, your builders have finally accomplished the construction of the castle. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Burg endlich beendet. Wie willst Du sie nennen?",
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 };
 
 char *g_BuildingCompleteNoticeTextAlt[3] =
 {
-  "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
+  "Panie, Twoi poddani nareszcie uko\xA4""czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 };
@@ -10371,9 +10371,9 @@ _UNKNOWN g_YesNoDialogButtonWidgetsTemplate;
 
 char *g_QueenMarriageProposalTexts[3] =
 {
-  "Z zamorskiego kraju przyby\x92 pose\x92 z portretem pi\x91knej ksi\x91\xA7niczki. Jej ojciec, kr\xA2l Wolfgang, widz\x86c  pot\x91g\x91 Twego kr\xA2lestwa got\xA2w jest odda\x8D Ci j\x86 za \xA7on\x91. Czy pragniesz j\x86 po\x9Elubi\x8D?",
+  "Z zamorskiego kraju przyby\x92 pose\x92 z portretem pi\x91knej ksi\x91\xA7niczki. Jej ojciec, kr\xA2l Wolfgang, widz\x86""c  pot\x91g\x91 Twego kr\xA2lestwa got\xA2w jest odda\x8D Ci j\x86 za \xA7on\x91. Czy pragniesz j\x86 po\x9Elubi\x8D?",
   "An envoy arrived from a distant country with a picture of a beautiful princess. Her father, king Wolfgang, seeing your power wishes to offer you his daughter's hand. Do you want to marry her?",
-  "Ein Gesandter aus einem fernen Land bringt Dir das Bild einer sch\x94nen Prinzessin. Ihr Vater, K\x94nig Wolfgang, bietet Dir ihre Hand an. M\x94chtest Du sie zur Frau nehmen?"
+  "Ein Gesandter aus einem fernen Land bringt Dir das Bild einer sch\x94nen Prinzessin. Ihr Vater, K\x94nig Wolfgang, bietet Dir ihre Hand an. M\x94""chtest Du sie zur Frau nehmen?"
 };
 
 _UNKNOWN g_QueenMarriageProposalButtonWidgetsTemplate;
@@ -10391,25 +10391,25 @@ char *g_MissionStatusTextsByLanguage[63] =
   "Die Burg des Feindes mu\xE1\x20\x65ingenommen werden",
   "Utrzyma\x8D twierdz\x91 przez X tur",
   "Remain in possession of the fortress for X rounds",
-  "Halte die Festung \x81ber 10 Runden",
+  "Halte die Festung \x81""ber 10 Runden",
   "Uwolni\x8D uprowadzonych dworzan w ci\x86gu XX tur",
   "Rescue the captured courtiers within XX rounds",
-  "Innerhalb von 20 Runden mu\xE1\x74\x20Du deine Untertanen befreien",
+  "Innerhalb von 20 Runden mu\xE1\x74\x20""Du deine Untertanen befreien",
   "Zniszczy\x8D poplecznik\xA2w Agordeh\xA2w",
   "Destroy the Agordehs",
-  "Du mu\xE1\x74\x20die Agordeher ausrotten",
+  "Du mu\xE1\x74\x20""die Agordeher ausrotten",
   "Odbi\x8D kr\xA2low\x86",
   "Rescue the queen",
   "Befreie die K\x94nigin",
   "Odnale\xA6\x8D 4 diamenty Dahar'khu",
   "Find the 4 diamonds of Dahar'kh",
   "Finde die 4 Diamanten von Dahar'kh",
-  "Doprowadzi\x8D wszystkich dow\xA2dc\xA2w do zamku Gordmouth",
+  "Doprowadzi\x8D wszystkich dow\xA2""dc\xA2w do zamku Gordmouth",
   "Take all the commanders to the Gordmouth castle",
-  "Du mu\xE1\x74\x20alle Gener\x84le in die Burg von Gordmouth f\x81hren",
+  "Du mu\xE1\x74\x20""alle Gener\x84le in die Burg von Gordmouth f\x81hren",
   "Zabij wszystkich!",
   "Kill them all!",
-  "Du mu\xE1\x74\x20alle vernichten!",
+  "Du mu\xE1\x74\x20""alle vernichten!",
   "Zniszczy\x8D \x92otr\xA2w z Gaal'aad",
   "Destroy the Gaal'aad's scoundrels",
   "Eliminiere Gaalaads H\x84scher",
@@ -10418,28 +10418,28 @@ char *g_MissionStatusTextsByLanguage[63] =
   "Besuche das Orakel \"Dritte Inkarnation von Sigga\"",
   "Zdoby\x8D zamek przeciwnika",
   "Seize the enemy's castle",
-  "Du mu\xE1\x74\x20die feindliche Festung einnehmen",
+  "Du mu\xE1\x74\x20""die feindliche Festung einnehmen",
   "Utrzyma\x8D zamek przez X tur",
   "Remain in possession of the fortress for X rounds",
-  "Verteidige die Burg \x81ber 10 Runden",
-  "Odbi\x8D je\xA4c\xA2w z zamku wroga w ci\x86gu XX tur",
+  "Verteidige die Burg \x81""ber 10 Runden",
+  "Odbi\x8D je\xA4""c\xA2w z zamku wroga w ci\x86gu XX tur",
   "Rescue the prisoners from enemy's castle within XX rounds",
   "Innerhalb von 20 Runden mussen Gefangene befreit werden",
-  "Zniszczy\x8D znienawidzonych Agordeh\xA2w utrzymuj\x86c pok\xA2j z pozosta\x92ymi kr\xA2lestwami.",
+  "Zniszczy\x8D znienawidzonych Agordeh\xA2w utrzymuj\x86""c pok\xA2j z pozosta\x92ymi kr\xA2lestwami.",
   "Destroy the hateful Agordehs, keeping peace with the other kingdoms",
-  "Du mu\xE1\x74\x20die Agordeher besiegen w\x84hrend Du mit anderen K\x94nigreichen Frieden schlie\xE1\x74",
-  "Zdoby\x8D najbardziej zaawansowany technologicznie zamek w\x92adcy Kalev",
+  "Du mu\xE1\x74\x20""die Agordeher besiegen w\x84hrend Du mit anderen K\x94nigreichen Frieden schlie\xE1\x74",
+  "Zdoby\x8D najbardziej zaawansowany technologicznie zamek w\x92""adcy Kalev",
   "Seize the most technologically advanced of the Kalev sovereign's castles",
   "Die Burg von Kalev - wo sich die Wissenschaftler befinden - mu\xE1\x20\x65ingenommen werden",
   "Odnale\xA6\x8D 4 diamenty Xye",
   "Find the 4 diamonds of Xye",
   "Finde die 4 Diamanten von Xye",
-  "Doprowadzi\x8D 6 dow\xA2dc\xA2w z manuskryptami do zamku Cantbelly",
+  "Doprowadzi\x8D 6 dow\xA2""dc\xA2w z manuskryptami do zamku Cantbelly",
   "Take the 6 commanders with manuscripts to the Cantbelly castle",
   "F\x81hre 6 Gener\x84le mit allen Manuskripten in die Cantbelly Burg",
   "Zabij wszystkich!",
   "Kill them all!",
-  "Du mu\xE1\x74\x20alle vernichten!",
+  "Du mu\xE1\x74\x20""alle vernichten!",
   "Misja %d\n\n%s",
   "Misssion %d\n\n%s",
   "Misssion %d\n\n%s"
@@ -10555,24 +10555,24 @@ _UNKNOWN g_RulerNameHistorySeed;
 
 char *g_PrisonerCastleIntakeTexts[21] =
 {
-  "Panie, nasze wojska po wygranej bitwie z armi\x86 znienawidzonego wroga wzi\x91\x92y w niewol\x91 jego dow\xA2dc\x91 i doprowadzi\x92y do zamku %s.",
+  "Panie, nasze wojska po wygranej bitwie z armi\x86 znienawidzonego wroga wzi\x91\x92y w niewol\x91 jego dow\xA2""dc\x91 i doprowadzi\x92y do zamku %s.",
   "Master, our troops, having defeated the enemy, captured the enemy's officer and brought him to the castle %s",
   "Herr, nachdem Deine Truppen den Feind besiegt haben, haben sie den Anf\x81hrer ihrer Truppen gefangengenommen und in die Burg %s gebracht.",
   "W zamku %s scieto wieznia.",
   "A captured enemy soldier was beheaded in the castle %s.",
   "Ein gefangengenommener feindlicher Soldat wurde in der Burg %s enthauptet.",
-  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92adcy.",
+  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92""a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92""adcy.",
   "Your persecutors did not waste time. The victim was chosen at the castle of %s. They made him betray the secrets of the whereabouts of the richest castle just before he died in pain.",
   "Deine Vollstrecker haben keine Zeit verloren. Das Opfer wurde auf Burg %s ausgew\x84hlt und gab die Lage der reichsten Burg preis, bevor er unter furchtbaren Qualen starb.",
-  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7enie jednego z zamk\xA2w jego kr\xA2la.",
+  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7""e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7""enie jednego z zamk\xA2w jego kr\xA2la.",
   "At %s cries of the tormented man could be heard all night long. At the break of dawn your persecutors brought you the news that he had revealed all the secrets about the whereabouts of his King's castles.",
-  "Die Schreie des Ungl\x81cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
-  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
+  "Die Schreie des Ungl\x81""cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
+  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7""eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
-  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81""ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10583,18 +10583,18 @@ char *g_PrisonerBeheadingTexts[18] =
   "W zamku %s scieto wieznia.",
   "A captured enemy soldier was beheaded in the castle %s.",
   "Ein gefangengenommener feindlicher Soldat wurde in der Burg %s enthauptet.",
-  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92adcy.",
+  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92""a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92""adcy.",
   "Your persecutors did not waste time. The victim was chosen at the castle of %s. They made him betray the secrets of the whereabouts of the richest castle just before he died in pain.",
   "Deine Vollstrecker haben keine Zeit verloren. Das Opfer wurde auf Burg %s ausgew\x84hlt und gab die Lage der reichsten Burg preis, bevor er unter furchtbaren Qualen starb.",
-  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7enie jednego z zamk\xA2w jego kr\xA2la.",
+  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7""e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7""enie jednego z zamk\xA2w jego kr\xA2la.",
   "At %s cries of the tormented man could be heard all night long. At the break of dawn your persecutors brought you the news that he had revealed all the secrets about the whereabouts of his King's castles.",
-  "Die Schreie des Ungl\x81cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
-  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
+  "Die Schreie des Ungl\x81""cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
+  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7""eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
-  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81""ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10602,18 +10602,18 @@ char *g_PrisonerBeheadingTexts[18] =
 
 char *g_PrisonerTortureRichestCastleRevealTexts[15] =
 {
-  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92adcy.",
+  "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92""a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92""adcy.",
   "Your persecutors did not waste time. The victim was chosen at the castle of %s. They made him betray the secrets of the whereabouts of the richest castle just before he died in pain.",
   "Deine Vollstrecker haben keine Zeit verloren. Das Opfer wurde auf Burg %s ausgew\x84hlt und gab die Lage der reichsten Burg preis, bevor er unter furchtbaren Qualen starb.",
-  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7enie jednego z zamk\xA2w jego kr\xA2la.",
+  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7""e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7""enie jednego z zamk\xA2w jego kr\xA2la.",
   "At %s cries of the tormented man could be heard all night long. At the break of dawn your persecutors brought you the news that he had revealed all the secrets about the whereabouts of his King's castles.",
-  "Die Schreie des Ungl\x81cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
-  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
+  "Die Schreie des Ungl\x81""cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
+  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7""eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
-  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81""ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10621,15 +10621,15 @@ char *g_PrisonerTortureRichestCastleRevealTexts[15] =
 
 char *g_PrisonerTortureCastleRevealTexts[12] =
 {
-  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7enie jednego z zamk\xA2w jego kr\xA2la.",
+  "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7""e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7""enie jednego z zamk\xA2w jego kr\xA2la.",
   "At %s cries of the tormented man could be heard all night long. At the break of dawn your persecutors brought you the news that he had revealed all the secrets about the whereabouts of his King's castles.",
-  "Die Schreie des Ungl\x81cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
-  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
+  "Die Schreie des Ungl\x81""cklichen waren die ganze Nacht hindurch auf Burg %s zu h\x94ren. Bei Tagesanbruch brachten Deine Vollstrecker Dir die Nachricht, da\xE1\x20\x65r die Lage der Burg seines K\x94nigs preisgegeben hatte.",
+  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7""eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
-  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81""ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10637,12 +10637,12 @@ char *g_PrisonerTortureCastleRevealTexts[12] =
 
 char *g_PrisonerTortureEnemyStackRevealTexts[9] =
 {
-  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
+  "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7""eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
-  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Die Vollstrecker waren sehr zufrieden mit dem Ergebnis ihrer Arbeit. Sie hatten ihrem Opfer auf Burg %s alle Informationen \x81""ber die feindlichen Einheiten entrei\xE1\x65\x6E k\x94nnen.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10650,9 +10650,9 @@ char *g_PrisonerTortureEnemyStackRevealTexts[9] =
 
 char *g_PrisonerTortureNoConfessionDeathTexts[6] =
 {
-  "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
+  "Kaci ca\x92\x86 noc zn\x91""cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
-  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
+  "Auf Burg %s haben Deine Vollstrecker ihr Opfer die ganze Nacht lang gefoltert, konnten ihm aber nur Schreie und irres Gel\x84""chter entlocken. Es nahm sein Geheimnis mit ins Grab.",
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
@@ -10669,7 +10669,7 @@ _UNKNOWN g_SpecialPersonageLeaveMaskTemplate;
 
 char *g_PrisonerBriberyDefectionTexts[6] =
 {
-  "Osadzony w zamku %s wi\x91zie\xA4 skuszony zaoferowanym przez Ciebie z\x92otem zdradzi\x92 swego w\x92adc\x91 i stan\x86\x92 po Twojej stronie.",
+  "Osadzony w zamku %s wi\x91zie\xA4 skuszony zaoferowanym przez Ciebie z\x92otem zdradzi\x92 swego w\x92""adc\x91 i stan\x86\x92 po Twojej stronie.",
   "Kept in a castle %s he was talked into joining your army, lured with gold. He betrayed his own troops.",
   "Der Gefangene auf Burg %s wurde mit Gold bestochen, in Deine Armee einzutreten, und verriet seine eigenen Truppen.",
   "W zamku %s zmar\x92 z wyczerpania jeden z wiezni\xA2w.",
@@ -10715,31 +10715,31 @@ char *g_QueenRelationshipStateTexts[30] =
   "Nie ma kr\xA2lowej.",
   "No queen.",
   "Keine K\x94nigin",
-  "Twa ma\x92\xA7onka jest w\x9Eciek\x92a i nie ma ochoty widywa\x8D si\x91 z Tob\x86. Dusza kobiety nie pozwala jej d\x92u\xA7ej znosi\x8D takiego zachowania. Ma niecne plany wobec Twej osoby.",
+  "Twa ma\x92\xA7onka jest w\x9E""ciek\x92""a i nie ma ochoty widywa\x8D si\x91 z Tob\x86. Dusza kobiety nie pozwala jej d\x92u\xA7""ej znosi\x8D takiego zachowania. Ma niecne plany wobec Twej osoby.",
   "Your wife is furious and she does not want to see you. Her feminine soul can't bear your strange behaviour any longer. She schemes against you.",
   "Deine Frau ist w\x81tend und weigert sich, Dich zu sehen. Ihre weibliche Seele kann Dein eigenartiges Benehmen nicht l\x84nger ertragen. Sie intrigiert gegen Dich.",
-  "Kr\xA2lowa jest z\x92a i wielce znudzona Tw\x86 postaw\x86, ma ochot\x91 wr\xA2ci\x8D za morze do swego ojca.",
+  "Kr\xA2lowa jest z\x92""a i wielce znudzona Tw\x86 postaw\x86, ma ochot\x91 wr\xA2""ci\x8D za morze do swego ojca.",
   "The Queen is angry and bored with your actions. She considers going back to her parents.",
-  "Die K\x94nigin ist ver\x84rgert und hat Dein Benehmen satt. Sie spielt mit dem Gedanken, in ihr Elternhaus zur\x81ckzukehren.",
-  "Kr\xA2lowa jest zaniepokojona Twym zachowaniem, s\x86dzi \xA7e to ma\x92\xA7e\xA4stwo nie ma przysz\x92o\x9Eci.",
+  "Die K\x94nigin ist ver\x84rgert und hat Dein Benehmen satt. Sie spielt mit dem Gedanken, in ihr Elternhaus zur\x81""ckzukehren.",
+  "Kr\xA2lowa jest zaniepokojona Twym zachowaniem, s\x86""dzi \xA7""e to ma\x92\xA7""e\xA4stwo nie ma przysz\x92o\x9E""ci.",
   "The Queen is concerned about the future of your marriage. Your behaviour puzzles her.",
-  "Die K\x94nigin ist besorgt \x81ber die Zukunft eurer Ehe. Dein seltsames Benehmen verwirrt sie.",
-  "Ma\x92\xA7onka pozostaje Ci wierna jednak dowody Twej mi\x92o\x9Eci s\x86 niewystarczaj\x86ce.",
+  "Die K\x94nigin ist besorgt \x81""ber die Zukunft eurer Ehe. Dein seltsames Benehmen verwirrt sie.",
+  "Ma\x92\xA7onka pozostaje Ci wierna jednak dowody Twej mi\x92o\x9E""ci s\x86 niewystarczaj\x86""ce.",
   "Your wife remains faithful but proofs of your love do not satisfy her.",
-  "Deine Frau bleibt Dir treu, doch Deine Liebesbeweise k\x94nnen sie nicht \x81berzeugen.",
+  "Deine Frau bleibt Dir treu, doch Deine Liebesbeweise k\x94nnen sie nicht \x81""berzeugen.",
   "Kr\xA2lowa czuje si\x91 dobrze i wiernie Ci s\x92u\xA7y jednak nie jest pewna swych uczu\x8D do Ciebie.",
   "The Queen is well and is willing to serve you, but she is not certain of her feelings towards you.",
-  "Die K\x94nigin ist ausgeglichen und bereit, Dir zu dienen, doch ist sie sich unsicher \x81ber ihre Gef\x81hle f\x81r Dich.",
-  "Twa \xA7ona wdzi\x91czna jest ojcu, \xA7e wybra\x92 jej takiego m\x91\xA7a. Staraj si\x91 pog\x92\x91bi\x8D jej uczucie do Ciebie.",
+  "Die K\x94nigin ist ausgeglichen und bereit, Dir zu dienen, doch ist sie sich unsicher \x81""ber ihre Gef\x81hle f\x81r Dich.",
+  "Twa \xA7ona wdzi\x91""czna jest ojcu, \xA7""e wybra\x92 jej takiego m\x91\xA7""a. Staraj si\x91 pog\x92\x91""bi\x8D jej uczucie do Ciebie.",
   "Your wife is grateful to her father for choosing you as her husband. Try to deeper her love for you.",
   "Deine Frau ist ihrem Vater dankbar daf\x81r, da\xE1\x20\x65r Dich zu ihrem Ehemann gew\x84hlt hat. Versuche, ihr Herz zu gewinnen.",
-  "Od s\x92u\xA7ek dowiedzia\x92e\x9E si\x91, \xA7e kr\xA2lowa bardzo ciep\x92o wyra\xA7a si\x91 na temat Twojej osoby.",
+  "Od s\x92u\xA7""ek dowiedzia\x92""e\x9E si\x91, \xA7""e kr\xA2lowa bardzo ciep\x92o wyra\xA7""a si\x91 na temat Twojej osoby.",
   "You heard from her maids that the queen speaks with reverence about you.",
   "Die Dienerinnen Deiner Frau berichten Dir, da\xE1\x20\x64ie K\x94nigin mit Bewunderung von Dir spricht.",
-  "Przy wieczornych ucztach zdo\x92a\x92e\x9E zauwa\xA7y\x8D, \xA7e kr\xA2lowa wykazuje coraz wi\x91ksze zainteresowanie Tob\x86 nie tylko jako m\x91\xA7em ale i m\x91\xA7czyzn\x86. Oby tak dalej.",
+  "Przy wieczornych ucztach zdo\x92""a\x92""e\x9E zauwa\xA7y\x8D, \xA7""e kr\xA2lowa wykazuje coraz wi\x91ksze zainteresowanie Tob\x86 nie tylko jako m\x91\xA7""em ale i m\x91\xA7""czyzn\x86. Oby tak dalej.",
   "You have noticed that the Queen started expressing her strong interest in you as a man, not only her chosen husband. Right on.",
   "Du bemerkst, da\xE1\x20\x64ie K\x94nigin Interesse an Dir als Mann zeigt - nicht nur als ihrem ausgew\x84hlten Ehegatten. Weiter so.",
-  "Kr\xA2lowa jest wniebowzi\x91ta. Pragnie codzie\xA4 dzieli\x8D z Tob\x86 \x92o\xA7e i da\x8D Ci potomka.",
+  "Kr\xA2lowa jest wniebowzi\x91ta. Pragnie codzie\xA4 dzieli\x8D z Tob\x86 \x92o\xA7""e i da\x8D Ci potomka.",
   "The Queen is in heaven. She wants to give you a baby.",
   "Die K\x94nigin ist im siebten Himmel. Sie will ein Kind von Dir."
 };
