@@ -1,1 +1,0 @@
-../recovered/runtime/00461520_platform_input.inc.c
