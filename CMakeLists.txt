@@ -99,6 +99,9 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
       -fno-pie
     )
   endif()
+  if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${target} PRIVATE -Wno-error=int-conversion)
+  endif()
 endforeach()
 
 foreach(target IN LISTS CLASH95_SUPPORT_OBJECT_TARGETS)
