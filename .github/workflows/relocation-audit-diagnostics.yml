@@ -1,0 +1,27 @@
+name: Final relocation audit diagnostics
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture audit output
+        shell: bash
+        run: |
+          set +e
+          python3 tools/audit_split_sources.py > relocation-audit.log 2>&1
+          status=$?
+          cat relocation-audit.log
+          echo "$status" > relocation-audit.status
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-relocation-audit-diagnostics
+          path: |
+            relocation-audit.log
+            relocation-audit.status
