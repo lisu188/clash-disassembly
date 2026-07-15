@@ -22571,7 +22571,7 @@
       "original_line": 4465,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "aede02e0b2a643cef9e15d7eeb1286e32b0a52440e5364473b1e9ab258d50a1c",
+      "body_sha256": "d8b5957e34162f64d48b439f743fc2301e2c1dc0d6a12a24f7f75b698f2c203b",
       "original_address_range": {
         "start": "0x00406FA0",
         "end_exclusive": "0x00407B20"

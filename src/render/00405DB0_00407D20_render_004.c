@@ -959,9 +959,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
             while ( setB_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
               setB_tile = (_WORD *)(setB_row_offset + setB_col_offset + gameData);
-              if ( *setB_tile == 7 && (unsigned __int16)setB_tile[1] == 0xFFFF && (unsigned int)rand_(setB_col, 7) < 0x333 )
+              if ( *setB_tile == 7 && (unsigned __int16)setB_tile[1] == 0xFFFF && (unsigned int)rand_() < 0x333 )
               {
-                *(_WORD *)(setB_col_offset + gameData + setB_row_offset + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_(setB_col, 0) / 0x7FFFuLL)];
+                *(_WORD *)(setB_col_offset + gameData + setB_row_offset + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_() / 0x7FFFuLL)];
                 WorldMap_RedrawTileIfVisible(v48, setB_row);
               }
               setB_col_offset += TILE_TERRAIN_ROW_STRIDE;
@@ -984,10 +984,10 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               setC_tile = (_WORD *)(setC_row_offset + setC_col_offset + gameData);
               if ( *setC_tile == 7 && (unsigned __int16)setC_tile[1] == 0xFFFF )
               {
-                random_value = rand_(setC_col, 7);
+                random_value = rand_();
                 if ( (unsigned int)random_value < 0x333 )
                 {
-                  *(_WORD *)(setC_col_offset + gameData + setC_row_offset + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_(setC_col, HIDWORD(random_value)) / 0x7FFF];
+                  *(_WORD *)(setC_col_offset + gameData + setC_row_offset + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_() / 0x7FFF];
                   WorldMap_RedrawTileIfVisible(v54, setC_row);
                 }
               }
@@ -1010,9 +1010,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           while ( setA_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
           {
             setA_tile = (_WORD *)(setA_row_offset + setA_col_offset + gameData);
-            if ( *setA_tile == 7 && (unsigned __int16)setA_tile[1] == 0xFFFF && (unsigned int)rand_(setA_col, 7) < 0x333 )
+            if ( *setA_tile == 7 && (unsigned __int16)setA_tile[1] == 0xFFFF && (unsigned int)rand_() < 0x333 )
             {
-              *(_WORD *)(setA_row_offset + setA_col_offset + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_(setA_col, v42) / 0x7FFFu];
+              *(_WORD *)(setA_row_offset + setA_col_offset + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_() / 0x7FFFu];
               WorldMap_RedrawTileIfVisible(v43, setA_row);
             }
             setA_col_offset += TILE_TERRAIN_ROW_STRIDE;
@@ -1034,13 +1034,13 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           smoke_tile = (_WORD *)(col_offset + gameData + smoke_row_offset);
           if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) )
           {
-            if ( *smoke_tile == 771 && (unsigned int)rand_(col_cursor, smoke_tile) < 0x199 )
+            if ( *smoke_tile == 771 && (unsigned int)rand_() < 0x199 )
             {
               *(_WORD *)(smoke_row_offset + col_offset + gameData) = 772;
               WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);
             }
           }
-          else if ( *smoke_tile == 36 && *(_WORD *)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_(col_cursor, 36) < 0x28 )
+          else if ( *smoke_tile == 36 && *(_WORD *)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_() < 0x28 )
           {
             *(_WORD *)(smoke_row_offset + col_offset + gameData) = 771;
             WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);
@@ -1065,7 +1065,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           if ( deco_col >= deco_col_right_bound )
             break;
           tile_frame = *(_WORD *)(jj + kk + gameData);
-          if ( tile_frame >= 0x2Du && tile_frame <= 0x51u && (unsigned int)rand_(kk, deco_col_right_bound) < 0xA3 )
+          if ( tile_frame >= 0x2Du && tile_frame <= 0x51u && (unsigned int)rand_() < 0xA3 )
           {
             map_theme_byte = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
             decoration_code = tile_frame - 46;
