@@ -22622,7 +22622,7 @@
       "original_line": 5047,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "100246c7bc25f31b7a3324b46fcabecb7848c465f89453b47f85c8d9c7193c5f",
+      "body_sha256": "38a28f0d040dba9e0938b08fc2d53eb7ebc0fe5860116e10d676551d365b9848",
       "original_address_range": {
         "start": "0x00407D20",
         "end_exclusive": "0x00408030"

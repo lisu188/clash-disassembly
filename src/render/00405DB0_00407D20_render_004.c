@@ -1343,6 +1343,13 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
   int tile_y; // ecx
   unsigned int unit_id; // edx
 
+  /* 0x407D26..0x407D3B: edx = (16 - scroll-speed byte [gameData+23EE3h])
+     + last scroll timestamp [dword_5202A0], computed BEFORE Time_Now and
+     preserved across the call (Watcom regcall); Hex-Rays lost the aliasing
+     and left next_scroll_time unwritten ("407D4A: variable ... possibly
+     undefined"), so the whole arrow-key scroll block was gated on stack
+     residue. */
+  next_scroll_time = 16 - *(unsigned __int8 *)(uintptr_t)(gameData + 147171) + g_WorldMapKeyScrollRepeatTime;
   time_now = Time_Now(g_WorldMapKeyScrollRepeatTime, 16 - *(unsigned __int8 *)(uintptr_t)(gameData + 147171) + g_WorldMapKeyScrollRepeatTime);
   if ( time_now > next_scroll_time && !g_WorldMap_KeyboardInputDisabled && !Input_IsKeyPressed(56) )
   {
@@ -1365,7 +1372,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
         *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v8, a1 + 1);
         WorldMap_RedrawViewport(1);
-        g_WorldMapViewportScrolledFlag = v9;
+        g_WorldMapViewportScrolledFlag = 1;  /* 0x407DF7: mov ecx,1; mov ds:dword_5202F0,ecx */
       }
     }
     if ( Input_IsKeyPressed(200) )
@@ -1387,7 +1394,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
         *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v13, a1 + 1);
         WorldMap_RedrawViewport(1);
-        g_WorldMapViewportScrolledFlag = v14;
+        g_WorldMapViewportScrolledFlag = 1;  /* 0x407E8A: mov ecx,1; mov ds:dword_5202F0,ecx */
       }
     }
     if ( Input_IsKeyPressed(50) )

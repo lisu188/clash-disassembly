@@ -1508,7 +1508,12 @@ execute_route_script() {
             scan_code=200
           fi
           pan_attempts=$((pan_attempts + 1))
-          write_world_script key "key ${scan_code} 12" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
+          # The runtime consumes key-pulse reads on every input-fallback poll
+          # (~10 polls per presented frame measured 2026-07-16), so a pulse
+          # must budget several frames of reads for the arrow key to still be
+          # held when WorldMap_HandleScrollKeysAndIdle polls it after its
+          # 16-centisecond repeat gate.
+          write_world_script key "key ${scan_code} ${CLASH95_PAN_KEY_PULSE_READS:-48}" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
           cursor_baseline="$(game_log_count "[world_cursor]")"
           # SDL can round adjacent script coordinates back onto the current
           # cursor, yielding a zero-delta move and therefore no world_cursor
