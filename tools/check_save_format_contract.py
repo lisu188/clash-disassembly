@@ -48,8 +48,8 @@ def main() -> int:
     require_equal("constants manifest", int(records[0]["value"]), EXPECTED_PAYLOAD)
     require_equal("save decoder", GAME_DATA_SIZE, EXPECTED_PAYLOAD)
     require_equal(
-        "split foundation",
-        source_define(ROOT / "src" / "recovered_foundation.h"),
+        "split types header",
+        source_define(ROOT / "src" / "recovered_types.h"),
         EXPECTED_PAYLOAD,
     )
     print(

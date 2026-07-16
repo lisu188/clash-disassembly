@@ -21,6 +21,7 @@ import glob as _glob  # noqa: E402
 
 PRIVATE_HEADERS = (
     "src/recovered_abi.h",
+    "src/recovered_types.h",
     "src/recovered_foundation.h",
     "src/recovered_functions.h",
     "src/recovered_internal.h",

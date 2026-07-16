@@ -32,6 +32,7 @@ DEFAULT_BASELINE = ROOT / "data" / "recovered_warning_baseline.json"
 DEFAULT_SOURCE_PREFIXES = (
     "src/compatibility/defs.h",
     "src/recovered_abi.h",
+    "src/recovered_types.h",
     "src/recovered_foundation.h",
     "src/recovered_functions.h",
     "src/recovered_internal.h",
