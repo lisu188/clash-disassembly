@@ -25,9 +25,10 @@ unified/fragments/symlink paths are preserved in `docs/SOURCE_PATH_MAP.csv`.
 ## Boundaries
 
 - `src/<recovered-subsystem>/`: behavior attributable to the original
-  executable, plus that subsystem's generated interface headers
-  (`<S>_api.h` public surface, `<S>_internal.h` home-only, `<S>_state.h`
-  single-consumer globals).
+  executable, plus that subsystem's generated interface headers — api header
+  (public surface), internal header (home-only), state header
+  (single-consumer globals); e.g. `src/battle/battle_api.h`,
+  `src/battle/battle_internal.h`, `src/battle/battle_state.h`.
 - `src/recovered_abi.h`, `src/recovered_types.h`, `src/recovered_layout.h`,
   `src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
   `src/recovered_all.h` (tests-only aggregate), and `src/sources.cmake`:

@@ -40,10 +40,12 @@ Global storage has one definition in the recovered-state translation unit.
 Ambiguous adjacency-dependent declarations remain together there rather than
 being resized or scattered without map or assembly evidence.
 
-The former `recovered_internal.h` migration umbrella is gone: every TU now
+The former recovered-internal migration umbrella is gone: every TU now
 includes a generated, marker-delimited block of narrowed headers — its own
-subsystem's `<S>_internal.h` (which pulls `<S>_api.h`, the measured public
-surface) and `<S>_state.h` (state-owned globals whose only consumer is `S`),
+subsystem's internal header (which pulls the api header, the measured public
+surface — e.g. `src/battle/battle_internal.h` pulling
+`src/battle/battle_api.h`) and its state header (state-owned globals whose
+only consumer is that subsystem, e.g. `src/battle/battle_state.h`),
 `src/state/state_shared.h` where a multi-subsystem global is referenced, the
 api headers of exactly the peers it calls, `src/recovered_legacy_imports.h` where
 a legacy CRT/Win32 import is referenced, and `src/recovered_types.h` +
