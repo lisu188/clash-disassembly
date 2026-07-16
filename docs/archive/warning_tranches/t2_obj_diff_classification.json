@@ -1,0 +1,406 @@
+{
+ "typed_names_with_diffs": 52,
+ "benign_only": [
+  "AVIFileExit",
+  "AVIStreamEndStreaming",
+  "CRT_ThrowExcStringException",
+  "DirectSoundCreate",
+  "ExitProcess",
+  "GetCurrentProcessId",
+  "GetCurrentThreadId",
+  "GetFileAttributesA",
+  "GetLastError",
+  "ICClose",
+  "IO_OutNewline",
+  "Render_CreateSprite",
+  "Render_DrawSprite",
+  "Render_LoadResourceSprite_v2",
+  "ResetEvent",
+  "SetEvent",
+  "SetThreadPriority",
+  "TlsAlloc",
+  "TlsGetValue",
+  "_FiniRtns",
+  "_NTAtMaxFiles_",
+  "_chktty_",
+  "_flush_",
+  "_ioalloc_",
+  "_set_errno_dos_",
+  "_set_errno_nt_",
+  "_wcpp_4_corrupted_stack__",
+  "_wcpp_4_dtor_array__",
+  "_wcpp_4_pgm_thread__",
+  "_wcpp_4_stab_trav_init__",
+  "_wcpp_4_stab_trav_move__",
+  "_wcpp_4_stab_trav_next__",
+  "fflush_",
+  "j_rand_",
+  "towupper_"
+ ],
+ "marshalling_changed": {
+  "DirectInputCreateA": [
+   {
+    "removed": [],
+    "added": [
+     "mov    %rax,%rdx"
+    ]
+   },
+   {
+    "removed": [
+     "mov    %eax,%edi",
+     "mov    $0x0,%eax"
+    ],
+    "added": []
+   }
+  ],
+  "ICDecompress": [
+   {
+    "removed": [
+     "mov    -0x210(%rbp),%edi",
+     "mov    -0x20c(%rbp),%ecx",
+     "mov    %edi,%r9d"
+    ],
+    "added": []
+   },
+   {
+    "removed": [
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    -0x210(%rbp),%edx",
+     "mov    -0x20c(%rbp),%eax",
+     "mov    %edx,%r9d",
+     "mov    %ecx,%r8d",
+     "mov    %eax,%ecx",
+     "mov    %r10d,%edx"
+    ]
+   }
+  ],
+  "_NTGetFakeHandle_": [
+   {
+    "removed": [
+     "mov    %rcx,%rsi"
+    ],
+    "added": [
+     "mov    %ecx,%esi"
+    ]
+   }
+  ],
+  "_SetIOMode_": [
+   {
+    "removed": [
+     "mov    %rcx,%rsi"
+    ],
+    "added": [
+     "mov    %ecx,%esi"
+    ]
+   }
+  ],
+  "_clib_ulltoa_": [
+   {
+    "removed": [
+     "add    %rax,%rdx"
+    ],
+    "added": [
+     "add    %rdx,%rax",
+     "mov    %eax,%edx"
+    ]
+   },
+   {
+    "removed": [
+     "mov    %rdx,%rsi"
+    ],
+    "added": [
+     "mov    %edx,%esi"
+    ]
+   }
+  ],
+  "_wcpp_4_fatal_runtime_error__": [
+   {
+    "removed": [
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %eax,%edi"
+    ]
+   }
+  ],
+  "beginthreadex_": [
+   {
+    "removed": [
+     "mov    %rax,%rsi"
+    ],
+    "added": [
+     "mov    %eax,%esi"
+    ]
+   },
+   {
+    "removed": [
+     "mov    %rax,%rsi"
+    ],
+    "added": [
+     "mov    %eax,%esi"
+    ]
+   }
+  ],
+  "fgetc_": [
+   {
+    "removed": [],
+    "added": [
+     "mov    %eax,%edx"
+    ]
+   },
+   {
+    "removed": [],
+    "added": [
+     "mov    -0x2c(%rbp),%eax"
+    ]
+   }
+  ],
+  "findclose_": [
+   {
+    "removed": [
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %eax,%edi"
+    ]
+   }
+  ],
+  "findnext_": [
+   {
+    "removed": [
+     "lea    0x4(%rax),%edx"
+    ],
+    "added": [
+     "add    $0x4,%eax",
+     "mov    %eax,%edx"
+    ]
+   }
+  ],
+  "fputs_": [
+   {
+    "removed": [
+     "mov    $0x0,%esi",
+     "R_X86_64_32\tg_CRT_StdoutStream",
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %edx,%esi",
+     "mov    %eax,%edi"
+    ]
+   },
+   {
+    "removed": [
+     "mov    $0x0,%esi",
+     "R_X86_64_32\tg_CRT_StderrOutputStream",
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %edx,%esi",
+     "mov    %eax,%edi"
+    ]
+   }
+  ],
+  "ftell_": [
+   {
+    "removed": [
+     "mov    -0x2c(%rbp),%edx",
+     "mov    -0x30(%rbp),%eax"
+    ],
+    "added": [
+     "mov    -0x30(%rbp),%edx",
+     "mov    -0x2c(%rbp),%eax"
+    ]
+   }
+  ],
+  "getcwd_": [
+   {
+    "removed": [],
+    "added": [
+     "mov    $0x0,%eax",
+     "R_X86_64_32\tg_FileSystem_CurrentDirectoryBuffer"
+    ]
+   },
+   {
+    "removed": [
+     "mov    $0x0,%edi",
+     "R_X86_64_32\tg_FileSystem_CurrentDirectoryBuffer",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %eax,%edi"
+    ]
+   }
+  ],
+  "isatty_": [
+   {
+    "removed": [
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %eax,%edi"
+    ]
+   }
+  ],
+  "stricmp_": [
+   {
+    "removed": [
+     "mov    $0x0,%esi",
+     "R_X86_64_32\taCon_0",
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %edx,%esi",
+     "mov    %eax,%edi"
+    ]
+   },
+   {
+    "removed": [
+     "mov    0x0(%rip),%eax        # <CSS_SampleCache_FindAndTouch>"
+    ],
+    "added": [
+     "mov    -0x14(%rbp),%eax",
+     "mov    0x0(%rip),%edx        # <CSS_SampleCache_FindAndTouch>"
+    ]
+   }
+  ],
+  "strncpy_": [
+   {
+    "removed": [
+     "mov    -0x24(%rbp),%edx",
+     "mov    -0x38(%rbp),%rax",
+     "mov    %edx,%esi",
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    -0x24(%rbp),%eax",
+     "mov    -0x38(%rbp),%rdx",
+     "mov    %eax,%esi",
+     "mov    %edx,%edi"
+    ]
+   },
+   {
+    "removed": [
+     "mov    -0x30(%rbp),%rdx"
+    ],
+    "added": [
+     "mov    -0x30(%rbp),%rax",
+     "mov    %eax,%edx"
+    ]
+   }
+  ],
+  "tolower_": [
+   {
+    "removed": [
+     "mov    -0x58(%rbp),%rdx"
+    ],
+    "added": [
+     "mov    -0x58(%rbp),%rax",
+     "mov    %eax,%edx"
+    ]
+   },
+   {
+    "removed": [
+     "mov    %rdx,%rsi",
+     "mov    %rax,%rdi",
+     "mov    $0x0,%eax"
+    ],
+    "added": [
+     "mov    %edx,%esi",
+     "mov    %eax,%edi"
+    ]
+   }
+  ]
+ },
+ "unexplained": [
+  {
+   "removed": [],
+   "added": [
+    "mov    $0x0,%eax",
+    "R_X86_64_32\tg_CRT_StdoutStream",
+    "mov    %eax,%edx"
+   ],
+   "near": null
+  },
+  {
+   "removed": [
+    "mov    0x0(%rip),%edx        # <Lexer_PeekChar>"
+   ],
+   "added": [
+    "mov    0x0(%rip),%eax        # <Lexer_PeekChar>"
+   ],
+   "near": null
+  },
+  {
+   "removed": [],
+   "added": [
+    "mov    $0x0,%eax",
+    "R_X86_64_32\taCon_0",
+    "mov    %eax,%edx"
+   ],
+   "near": null
+  },
+  {
+   "removed": [
+    "mov    -0x10(%rbp),%edx",
+    "mov    -0x18(%rbp),%rcx"
+   ],
+   "added": [
+    "mov    -0x10(%rbp),%eax",
+    "mov    %eax,%edx",
+    "mov    -0x18(%rbp),%rax",
+    "mov    %eax,%ecx"
+   ],
+   "near": null
+  },
+  {
+   "removed": [
+    "mov    -0x10(%rbp),%edx",
+    "mov    -0x18(%rbp),%rcx"
+   ],
+   "added": [
+    "mov    -0x10(%rbp),%eax",
+    "mov    %eax,%edx",
+    "mov    -0x18(%rbp),%rax",
+    "mov    %eax,%ecx"
+   ],
+   "near": null
+  },
+  {
+   "removed": [
+    "mov    0x0(%rip),%rdx        # <Rules_BsaveWriteEndTag>"
+   ],
+   "added": [
+    "mov    0x0(%rip),%rax        # <Rules_BsaveWriteEndTag>"
+   ],
+   "near": null
+  },
+  {
+   "removed": [],
+   "added": [
+    "mov    $0x0,%eax",
+    "R_X86_64_32\taSys",
+    "mov    %eax,%edx"
+   ],
+   "near": null
+  },
+  {
+   "removed": [
+    "lea    0x1a7(%rax),%r8d"
+   ],
+   "added": [
+    "lea    0x1a7(%rax),%ecx"
+   ],
+   "near": null
+  }
+ ],
+ "unexplained_count": 19
+}

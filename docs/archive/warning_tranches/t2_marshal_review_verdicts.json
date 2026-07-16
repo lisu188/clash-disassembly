@@ -1,0 +1,26 @@
+{
+ "method": "18 marshalling-changed names each reviewed by an independent agent reading the stub body and real call sites; default-revert on uncertainty; plus one agent tracing all unexplained diff hunks",
+ "accepts": [
+  "DirectInputCreateA",
+  "ICDecompress",
+  "_NTGetFakeHandle_",
+  "_SetIOMode_",
+  "_clib_ulltoa_",
+  "_wcpp_4_fatal_runtime_error__",
+  "beginthreadex_",
+  "fgetc_",
+  "findclose_",
+  "findnext_",
+  "fputs_",
+  "ftell_",
+  "getcwd_",
+  "isatty_",
+  "stricmp_",
+  "strncpy_",
+  "tolower_"
+ ],
+ "reverts": {
+  "wctomb_": "first param is a written-through destination buffer pointer; a _DWORD parameter would truncate the host pointer the stub dereferences"
+ },
+ "unexplained_hunks": "all attributable to classifier nearest-call window artifacts; zero unrelated codegen changes"
+}

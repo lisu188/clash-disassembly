@@ -1,0 +1,492 @@
+[
+ {
+  "name": "AVIFileExit",
+  "old": "int AVIFileExit();",
+  "new": "int AVIFileExit(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "AVIStreamEndStreaming",
+  "old": "int __stdcall AVIStreamEndStreaming();",
+  "new": "int __stdcall AVIStreamEndStreaming(int a1);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "CRT_ThrowExcStringException",
+  "old": "int CRT_ThrowExcStringException();",
+  "new": "int CRT_ThrowExcStringException(void);",
+  "callsites": 31,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "DirectInputCreateA",
+  "old": "int __stdcall DirectInputCreateA();",
+  "new": "HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter);",
+  "callsites": 1,
+  "evidence": "src/platform/platform_sdl_runtime.c"
+ },
+ {
+  "name": "DirectSoundCreate",
+  "old": "int __stdcall DirectSoundCreate();",
+  "new": "int __stdcall DirectSoundCreate(void *lpGuid, void *lplpDS, void *punkOuter);",
+  "callsites": 2,
+  "evidence": "src/platform/platform_sdl_runtime.c"
+ },
+ {
+  "name": "ExitProcess",
+  "old": "void __stdcall ExitProcess();",
+  "new": "void __noreturn ExitProcess(UINT uExitCode);",
+  "callsites": 4,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "FindClose",
+  "old": "BOOL __stdcall FindClose();",
+  "new": "BOOL __stdcall FindClose(HANDLE hFindFile);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "GetCurrentProcessId",
+  "old": "DWORD __stdcall GetCurrentProcessId();",
+  "new": "DWORD __stdcall GetCurrentProcessId(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "GetCurrentThreadId",
+  "old": "DWORD __stdcall GetCurrentThreadId();",
+  "new": "DWORD __stdcall GetCurrentThreadId(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "GetFileAttributesA",
+  "old": "DWORD __stdcall GetFileAttributesA();",
+  "new": "DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "GetLastError",
+  "old": "DWORD __stdcall GetLastError();",
+  "new": "DWORD __stdcall GetLastError(void);",
+  "callsites": 4,
+  "evidence": "src/platform/platform_sdl_runtime.c"
+ },
+ {
+  "name": "ICClose",
+  "old": "int __cdecl ICClose();",
+  "new": "int __cdecl ICClose(int a1);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "ICDecompress",
+  "old": "int __cdecl ICDecompress();",
+  "new": "int __cdecl ICDecompress(int a1, int a2, int a3, int a4, int a5, int a6);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "IO_OutNewline",
+  "old": "int IO_OutNewline();",
+  "new": "int IO_OutNewline(void);",
+  "callsites": 120,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "Noop_CrtSingleThreadLockStub",
+  "old": "_DWORD Noop_CrtSingleThreadLockStub(); // weak",
+  "new": "_DWORD Noop_CrtSingleThreadLockStub(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "Render_CreateSprite",
+  "old": "int Render_CreateSprite();",
+  "new": "int Render_CreateSprite(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "Render_DrawSprite",
+  "old": "int Render_DrawSprite();",
+  "new": "int Render_DrawSprite(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "Render_LoadResourceSprite_v2",
+  "old": "void Render_LoadResourceSprite_v2();",
+  "new": "void Render_LoadResourceSprite_v2(void);",
+  "callsites": 5,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "ResetEvent",
+  "old": "BOOL __stdcall ResetEvent();",
+  "new": "BOOL __stdcall ResetEvent(HANDLE hEvent);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "SetEvent",
+  "old": "BOOL __stdcall SetEvent();",
+  "new": "BOOL __stdcall SetEvent(HANDLE hEvent);",
+  "callsites": 4,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "SetThreadPriority",
+  "old": "BOOL __stdcall SetThreadPriority();",
+  "new": "BOOL __stdcall SetThreadPriority(HANDLE hThread, int nPriority);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "TlsAlloc",
+  "old": "DWORD __stdcall TlsAlloc();",
+  "new": "DWORD __stdcall TlsAlloc(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "TlsGetValue",
+  "old": "LPVOID __stdcall TlsGetValue();",
+  "new": "LPVOID __stdcall TlsGetValue(DWORD dwTlsIndex);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_FiniRtns",
+  "old": "int __fastcall _FiniRtns();",
+  "new": "int __fastcall _FiniRtns(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_NTAtMaxFiles_",
+  "old": "int _NTAtMaxFiles_();",
+  "new": "int _NTAtMaxFiles_(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_NTGetFakeHandle_",
+  "old": "int __cdecl _NTGetFakeHandle_();",
+  "new": "int __cdecl _NTGetFakeHandle_(_DWORD a1, _DWORD a2, _DWORD a3);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_SetIOMode_",
+  "old": "int __cdecl _SetIOMode_();",
+  "new": "int __cdecl _SetIOMode_(_DWORD a1, _DWORD a2, _DWORD a3);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_allocfp_",
+  "old": "int _allocfp_();",
+  "new": "int _allocfp_(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_chktty_",
+  "old": "int _chktty_();",
+  "new": "int _chktty_(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_clib_ulltoa_",
+  "old": "int __fastcall _clib_ulltoa_();",
+  "new": "int __fastcall _clib_ulltoa_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_flush_",
+  "old": "int __fastcall _flush_();",
+  "new": "int __fastcall _flush_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_freefp_",
+  "old": "int _freefp_();",
+  "new": "int _freefp_(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_ioalloc_",
+  "old": "int _ioalloc_();",
+  "new": "int _ioalloc_(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_set_errno_dos_",
+  "old": "int __cdecl _set_errno_dos_();",
+  "new": "int __cdecl _set_errno_dos_(unsigned int code);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_set_errno_nt_",
+  "old": "int __cdecl _set_errno_nt_();",
+  "new": "int __cdecl _set_errno_nt_(_DWORD ignored);",
+  "callsites": 10,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_corrupted_stack__",
+  "old": "int __thiscall _wcpp_4_corrupted_stack__();",
+  "new": "int __thiscall _wcpp_4_corrupted_stack__(_DWORD a1);",
+  "callsites": 11,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_ctor_array_storage_1m__",
+  "old": "int __cdecl _wcpp_4_ctor_array_storage_1m__();",
+  "new": "int __cdecl _wcpp_4_ctor_array_storage_1m__(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_ctor_array_storage_1s__",
+  "old": "int _wcpp_4_ctor_array_storage_1s__();",
+  "new": "int __cdecl _wcpp_4_ctor_array_storage_1s__(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_dtor_array__",
+  "old": "int __fastcall _wcpp_4_dtor_array__();",
+  "new": "int __fastcall _wcpp_4_dtor_array__(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_fatal_runtime_error__",
+  "old": "int __fastcall _wcpp_4_fatal_runtime_error__();",
+  "new": "int __fastcall _wcpp_4_fatal_runtime_error__(_DWORD a1, _DWORD a2);",
+  "callsites": 5,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_pgm_thread__",
+  "old": "__int64 __thiscall _wcpp_4_pgm_thread__();",
+  "new": "__int64 __thiscall _wcpp_4_pgm_thread__(_DWORD a1);",
+  "callsites": 3,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_stab_trav_init__",
+  "old": "int _wcpp_4_stab_trav_init__();",
+  "new": "int _wcpp_4_stab_trav_init__(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_stab_trav_move__",
+  "old": "int __fastcall _wcpp_4_stab_trav_move__();",
+  "new": "int __fastcall _wcpp_4_stab_trav_move__(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "_wcpp_4_stab_trav_next__",
+  "old": "int _wcpp_4_stab_trav_next__();",
+  "new": "int _wcpp_4_stab_trav_next__(void);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "beginthreadex_",
+  "old": "_DWORD __stdcall beginthreadex_();",
+  "new": "HANDLE __stdcall beginthreadex_(_DWORD a1, _DWORD a2);",
+  "callsites": 3,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "close_",
+  "old": "int __cdecl close_();",
+  "new": "int __cdecl close_(_DWORD a1, _DWORD a2);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "fflush_",
+  "old": "int __thiscall fflush_();",
+  "new": "int __thiscall fflush_(_DWORD a1);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "fgetc_",
+  "old": "__int64 __fastcall fgetc_();",
+  "new": "__int64 __fastcall fgetc_(_DWORD a1, _DWORD a2);",
+  "callsites": 5,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "findclose_",
+  "old": "int __thiscall findclose_();",
+  "new": "int __thiscall findclose_(_DWORD a1);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "findnext_",
+  "old": "int __fastcall findnext_();",
+  "new": "int __fastcall findnext_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "fputs_",
+  "old": "int __fastcall fputs_();",
+  "new": "int __fastcall fputs_(_DWORD a1, _DWORD a2);",
+  "callsites": 3,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "ftell_",
+  "old": "__int64 __fastcall ftell_();",
+  "new": "__int64 __fastcall ftell_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "getcwd_",
+  "old": "int __fastcall getcwd_();",
+  "new": "int __fastcall getcwd_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "isatty_",
+  "old": "int __fastcall isatty_();",
+  "new": "int __fastcall isatty_(_DWORD a1, _DWORD a2);",
+  "callsites": 1,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "j___NTAddFileHandle_",
+  "old": "_DWORD j___NTAddFileHandle_(); // weak",
+  "new": "int j___NTAddFileHandle_(void);",
+  "callsites": 0,
+  "evidence": "src/bootstrap/bootstrap_main.c"
+ },
+ {
+  "name": "j_rand_",
+  "old": "int j_rand_();",
+  "new": "int j_rand_(void);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "lseek_",
+  "old": "int __fastcall lseek_();",
+  "new": "int __fastcall lseek_(_DWORD a1, _DWORD a2);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "setvbuf_",
+  "old": "int __fastcall setvbuf_();",
+  "new": "int __fastcall setvbuf_(_DWORD a1, _DWORD a2);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "stricmp_",
+  "old": "int __fastcall stricmp_();",
+  "new": "int __fastcall stricmp_(_DWORD a1, _DWORD a2);",
+  "callsites": 3,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "strncpy_",
+  "old": "int __fastcall strncpy_();",
+  "new": "int __fastcall strncpy_(_DWORD a1, _DWORD a2);",
+  "callsites": 10,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "strrchr_",
+  "old": "int __cdecl strrchr_();",
+  "new": "int __cdecl strrchr_(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "strtod_",
+  "old": "double __fastcall strtod_();",
+  "new": "double strtod_(const char *text, char **endptr);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "tell_",
+  "old": "int tell_();",
+  "new": "int tell_(void);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "tolower_",
+  "old": "int __fastcall tolower_();",
+  "new": "int __fastcall tolower_(_DWORD a1, _DWORD a2);",
+  "callsites": 3,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "towupper_",
+  "old": "int __thiscall towupper_();",
+  "new": "int __thiscall towupper_(_DWORD a1);",
+  "callsites": 2,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "vsprintf_",
+  "old": "int __fastcall vsprintf_();",
+  "new": "int __cdecl vsprintf_(char *buffer, const char *format, ...);",
+  "callsites": 0,
+  "evidence": "src/compatibility/decomp_runtime_stubs.c"
+ },
+ {
+  "name": "plib_malloc__1",
+  "excluded": "call sites pass zero args; stub takes size_t - typing would be a hard error; kept K&R"
+ },
+ {
+  "name": "CRT_WatcomEHFrameHandler",
+  "excluded": "call-site arity varies vs stub signature; K&R decl is load-bearing"
+ },
+ {
+  "name": "fread_",
+  "excluded": "call-site arity varies vs stub signature; K&R decl is load-bearing"
+ },
+ {
+  "name": "j__nfree_",
+  "excluded": "call-site arity varies vs stub signature; K&R decl is load-bearing"
+ },
+ {
+  "name": "j_j__nfree_",
+  "excluded": "call-site arity varies vs stub signature; K&R decl is load-bearing"
+ },
+ {
+  "name": "strncmp_",
+  "excluded": "call-site arity varies vs stub signature; K&R decl is load-bearing"
+ },
+ {
+  "name": "wctomb_",
+  "excluded": "adversarial review: first param is a written-through destination buffer pointer; a _DWORD param would truncate the host pointer the stub dereferences"
+ }
+]

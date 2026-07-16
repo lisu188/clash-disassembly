@@ -287,12 +287,12 @@
   },
   "AVIFileExit": {
    "class": "legacy-import",
-   "decl": "int AVIFileExit();",
+   "decl": "int AVIFileExit(void);",
    "home": "legacy"
   },
   "AVIStreamEndStreaming": {
    "class": "legacy-import",
-   "decl": "int __stdcall AVIStreamEndStreaming();",
+   "decl": "int __stdcall AVIStreamEndStreaming(int a1);",
    "home": "legacy"
   },
   "App_RequestQuit": {
@@ -2707,7 +2707,7 @@
   },
   "CRT_ThrowExcStringException": {
    "class": "legacy-import",
-   "decl": "int CRT_ThrowExcStringException();",
+   "decl": "int CRT_ThrowExcStringException(void);",
    "home": "legacy"
   },
   "CRT_ToUpperInPlace": {
@@ -7002,12 +7002,12 @@
   },
   "DirectInputCreateA": {
    "class": "legacy-import",
-   "decl": "int __stdcall DirectInputCreateA();",
+   "decl": "HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter);",
    "home": "legacy"
   },
   "DirectSoundCreate": {
    "class": "legacy-import",
-   "decl": "int __stdcall DirectSoundCreate();",
+   "decl": "int __stdcall DirectSoundCreate(void *lpGuid, void *lplpDS, void *punkOuter);",
    "home": "legacy"
   },
   "Dribble_AppendChar": {
@@ -7117,7 +7117,7 @@
   },
   "ExitProcess": {
    "class": "legacy-import",
-   "decl": "void __stdcall ExitProcess();",
+   "decl": "void __noreturn ExitProcess(UINT uExitCode);",
    "home": "legacy"
   },
   "ExitThread": {
@@ -7602,7 +7602,7 @@
   },
   "FindClose": {
    "class": "legacy-import",
-   "decl": "BOOL __stdcall FindClose();",
+   "decl": "BOOL __stdcall FindClose(HANDLE hFindFile);",
    "home": "legacy"
   },
   "FindFirstFileA": {
@@ -7692,7 +7692,7 @@
   },
   "GetCurrentProcessId": {
    "class": "legacy-import",
-   "decl": "DWORD __stdcall GetCurrentProcessId();",
+   "decl": "DWORD __stdcall GetCurrentProcessId(void);",
    "home": "legacy"
   },
   "GetCurrentThread": {
@@ -7702,7 +7702,7 @@
   },
   "GetCurrentThreadId": {
    "class": "legacy-import",
-   "decl": "DWORD __stdcall GetCurrentThreadId();",
+   "decl": "DWORD __stdcall GetCurrentThreadId(void);",
    "home": "legacy"
   },
   "GetEnvironmentStrings": {
@@ -7717,12 +7717,12 @@
   },
   "GetFileAttributesA": {
    "class": "legacy-import",
-   "decl": "DWORD __stdcall GetFileAttributesA();",
+   "decl": "DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName);",
    "home": "legacy"
   },
   "GetLastError": {
    "class": "legacy-import",
-   "decl": "DWORD __stdcall GetLastError();",
+   "decl": "DWORD __stdcall GetLastError(void);",
    "home": "legacy"
   },
   "GetModuleFileNameA": {
@@ -7857,12 +7857,12 @@
   },
   "ICClose": {
    "class": "legacy-import",
-   "decl": "int __cdecl ICClose();",
+   "decl": "int __cdecl ICClose(int a1);",
    "home": "legacy"
   },
   "ICDecompress": {
    "class": "legacy-import",
-   "decl": "int __cdecl ICDecompress();",
+   "decl": "int __cdecl ICDecompress(int a1, int a2, int a3, int a4, int a5, int a6);",
    "home": "legacy"
   },
   "ICGetDisplayFormat": {
@@ -8037,7 +8037,7 @@
   },
   "IO_OutNewline": {
    "class": "legacy-import",
-   "decl": "int IO_OutNewline();",
+   "decl": "int IO_OutNewline(void);",
    "home": "legacy"
   },
   "IO_OutWriteToken": {
@@ -10372,7 +10372,7 @@
   },
   "Noop_CrtSingleThreadLockStub": {
    "class": "legacy-import",
-   "decl": "_DWORD Noop_CrtSingleThreadLockStub(); // weak",
+   "decl": "_DWORD Noop_CrtSingleThreadLockStub(void);",
    "home": "legacy"
   },
   "Noop_DebugHotkeyF1Handler": {
@@ -11697,7 +11697,7 @@
   },
   "Render_CreateSprite": {
    "class": "legacy-import",
-   "decl": "int Render_CreateSprite();",
+   "decl": "int Render_CreateSprite(void);",
    "home": "legacy"
   },
   "Render_CreateSurface": {
@@ -11732,7 +11732,7 @@
   },
   "Render_DrawSprite": {
    "class": "legacy-import",
-   "decl": "int Render_DrawSprite();",
+   "decl": "int Render_DrawSprite(void);",
    "home": "legacy"
   },
   "Render_DrawSprite_v3": {
@@ -11802,7 +11802,7 @@
   },
   "Render_LoadResourceSprite_v2": {
    "class": "legacy-import",
-   "decl": "void Render_LoadResourceSprite_v2();",
+   "decl": "void Render_LoadResourceSprite_v2(void);",
    "home": "legacy"
   },
   "Render_LoadResourceSprite_v3": {
@@ -11922,7 +11922,7 @@
   },
   "ResetEvent": {
    "class": "legacy-import",
-   "decl": "BOOL __stdcall ResetEvent();",
+   "decl": "BOOL __stdcall ResetEvent(HANDLE hEvent);",
    "home": "legacy"
   },
   "ResourceArchives_MountStartupArchives": {
@@ -18342,7 +18342,7 @@
   },
   "SetEvent": {
    "class": "legacy-import",
-   "decl": "BOOL __stdcall SetEvent();",
+   "decl": "BOOL __stdcall SetEvent(HANDLE hEvent);",
    "home": "legacy"
   },
   "SetLastError": {
@@ -18352,7 +18352,7 @@
   },
   "SetThreadPriority": {
    "class": "legacy-import",
-   "decl": "BOOL __stdcall SetThreadPriority();",
+   "decl": "BOOL __stdcall SetThreadPriority(HANDLE hThread, int nPriority);",
    "home": "legacy"
   },
   "SetUnhandledExceptionFilter": {
@@ -18952,7 +18952,7 @@
   },
   "TlsAlloc": {
    "class": "legacy-import",
-   "decl": "DWORD __stdcall TlsAlloc();",
+   "decl": "DWORD __stdcall TlsAlloc(void);",
    "home": "legacy"
   },
   "TlsFree": {
@@ -18962,7 +18962,7 @@
   },
   "TlsGetValue": {
    "class": "legacy-import",
-   "decl": "LPVOID __stdcall TlsGetValue();",
+   "decl": "LPVOID __stdcall TlsGetValue(DWORD dwTlsIndex);",
    "home": "legacy"
   },
   "TlsSetValue": {
@@ -21027,7 +21027,7 @@
   },
   "_FiniRtns": {
    "class": "legacy-import",
-   "decl": "int __fastcall _FiniRtns();",
+   "decl": "int __fastcall _FiniRtns(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_GetThreadData_": {
@@ -21057,7 +21057,7 @@
   },
   "_NTAtMaxFiles_": {
    "class": "legacy-import",
-   "decl": "int _NTAtMaxFiles_();",
+   "decl": "int _NTAtMaxFiles_(void);",
    "home": "legacy"
   },
   "_NTConsoleOutput_": {
@@ -21072,7 +21072,7 @@
   },
   "_NTGetFakeHandle_": {
    "class": "legacy-import",
-   "decl": "int __cdecl _NTGetFakeHandle_();",
+   "decl": "int __cdecl _NTGetFakeHandle_(_DWORD a1, _DWORD a2, _DWORD a3);",
    "home": "legacy"
   },
   "_NTInitFileHandles_": {
@@ -21097,12 +21097,12 @@
   },
   "_SetIOMode_": {
    "class": "legacy-import",
-   "decl": "int __cdecl _SetIOMode_();",
+   "decl": "int __cdecl _SetIOMode_(_DWORD a1, _DWORD a2, _DWORD a3);",
    "home": "legacy"
   },
   "_allocfp_": {
    "class": "legacy-import",
-   "decl": "int _allocfp_();",
+   "decl": "int _allocfp_(void);",
    "home": "legacy"
   },
   "_brktime_": {
@@ -21117,12 +21117,12 @@
   },
   "_chktty_": {
    "class": "legacy-import",
-   "decl": "int _chktty_();",
+   "decl": "int _chktty_(void);",
    "home": "legacy"
   },
   "_clib_ulltoa_": {
    "class": "legacy-import",
-   "decl": "int __fastcall _clib_ulltoa_();",
+   "decl": "int __fastcall _clib_ulltoa_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_cnvs2d_": {
@@ -21142,12 +21142,12 @@
   },
   "_flush_": {
    "class": "legacy-import",
-   "decl": "int __fastcall _flush_();",
+   "decl": "int __fastcall _flush_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_freefp_": {
    "class": "legacy-import",
-   "decl": "int _freefp_();",
+   "decl": "int _freefp_(void);",
    "home": "legacy"
   },
   "_init_stack_limits_": {
@@ -21157,7 +21157,7 @@
   },
   "_ioalloc_": {
    "class": "legacy-import",
-   "decl": "int _ioalloc_();",
+   "decl": "int _ioalloc_(void);",
    "home": "legacy"
   },
   "_lib_GetModuleFileNameW_": {
@@ -21182,12 +21182,12 @@
   },
   "_set_errno_dos_": {
    "class": "legacy-import",
-   "decl": "int __cdecl _set_errno_dos_();",
+   "decl": "int __cdecl _set_errno_dos_(unsigned int code);",
    "home": "legacy"
   },
   "_set_errno_nt_": {
    "class": "legacy-import",
-   "decl": "int __cdecl _set_errno_nt_();",
+   "decl": "int __cdecl _set_errno_nt_(_DWORD ignored);",
    "home": "legacy"
   },
   "_wcpp_4_call_terminate__": {
@@ -21197,22 +21197,22 @@
   },
   "_wcpp_4_corrupted_stack__": {
    "class": "legacy-import",
-   "decl": "int __thiscall _wcpp_4_corrupted_stack__();",
+   "decl": "int __thiscall _wcpp_4_corrupted_stack__(_DWORD a1);",
    "home": "legacy"
   },
   "_wcpp_4_ctor_array_storage_1m__": {
    "class": "legacy-import",
-   "decl": "int __cdecl _wcpp_4_ctor_array_storage_1m__();",
+   "decl": "int __cdecl _wcpp_4_ctor_array_storage_1m__(void);",
    "home": "legacy"
   },
   "_wcpp_4_ctor_array_storage_1s__": {
    "class": "legacy-import",
-   "decl": "int _wcpp_4_ctor_array_storage_1s__();",
+   "decl": "int __cdecl _wcpp_4_ctor_array_storage_1s__(void);",
    "home": "legacy"
   },
   "_wcpp_4_dtor_array__": {
    "class": "legacy-import",
-   "decl": "int __fastcall _wcpp_4_dtor_array__();",
+   "decl": "int __fastcall _wcpp_4_dtor_array__(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_wcpp_4_exc_setup__": {
@@ -21222,27 +21222,27 @@
   },
   "_wcpp_4_fatal_runtime_error__": {
    "class": "legacy-import",
-   "decl": "int __fastcall _wcpp_4_fatal_runtime_error__();",
+   "decl": "int __fastcall _wcpp_4_fatal_runtime_error__(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_wcpp_4_pgm_thread__": {
    "class": "legacy-import",
-   "decl": "__int64 __thiscall _wcpp_4_pgm_thread__();",
+   "decl": "__int64 __thiscall _wcpp_4_pgm_thread__(_DWORD a1);",
    "home": "legacy"
   },
   "_wcpp_4_stab_trav_init__": {
    "class": "legacy-import",
-   "decl": "int _wcpp_4_stab_trav_init__();",
+   "decl": "int _wcpp_4_stab_trav_init__(void);",
    "home": "legacy"
   },
   "_wcpp_4_stab_trav_move__": {
    "class": "legacy-import",
-   "decl": "int __fastcall _wcpp_4_stab_trav_move__();",
+   "decl": "int __fastcall _wcpp_4_stab_trav_move__(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "_wcpp_4_stab_trav_next__": {
    "class": "legacy-import",
-   "decl": "int _wcpp_4_stab_trav_next__();",
+   "decl": "int _wcpp_4_stab_trav_next__(void);",
    "home": "legacy"
   },
   "bad_exception_dtor": {
@@ -21252,7 +21252,7 @@
   },
   "beginthreadex_": {
    "class": "legacy-import",
-   "decl": "_DWORD __stdcall beginthreadex_();",
+   "decl": "HANDLE __stdcall beginthreadex_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "calloc_": {
@@ -21262,7 +21262,7 @@
   },
   "close_": {
    "class": "legacy-import",
-   "decl": "int __cdecl close_();",
+   "decl": "int __cdecl close_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "createCastle": {
@@ -21287,12 +21287,12 @@
   },
   "fflush_": {
    "class": "legacy-import",
-   "decl": "int __thiscall fflush_();",
+   "decl": "int __thiscall fflush_(_DWORD a1);",
    "home": "legacy"
   },
   "fgetc_": {
    "class": "legacy-import",
-   "decl": "__int64 __fastcall fgetc_();",
+   "decl": "__int64 __fastcall fgetc_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "fgets_": {
@@ -21302,27 +21302,27 @@
   },
   "findclose_": {
    "class": "legacy-import",
-   "decl": "int __thiscall findclose_();",
+   "decl": "int __thiscall findclose_(_DWORD a1);",
    "home": "legacy"
   },
   "findnext_": {
    "class": "legacy-import",
-   "decl": "int __fastcall findnext_();",
+   "decl": "int __fastcall findnext_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "fputs_": {
    "class": "legacy-import",
-   "decl": "int __fastcall fputs_();",
+   "decl": "int __fastcall fputs_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "fread_": {
    "class": "legacy-import",
-   "decl": "int __cdecl fread_();",
+   "decl": "int __fastcall fread_();",
    "home": "legacy"
   },
   "ftell_": {
    "class": "legacy-import",
-   "decl": "__int64 __fastcall ftell_();",
+   "decl": "__int64 __fastcall ftell_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "ftime_": {
@@ -21337,7 +21337,7 @@
   },
   "getcwd_": {
    "class": "legacy-import",
-   "decl": "int __fastcall getcwd_();",
+   "decl": "int __fastcall getcwd_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "getenv_": {
@@ -21352,7 +21352,7 @@
   },
   "isatty_": {
    "class": "legacy-import",
-   "decl": "int __fastcall isatty_();",
+   "decl": "int __fastcall isatty_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "ismbclegal_": {
@@ -21377,7 +21377,7 @@
   },
   "j___NTAddFileHandle_": {
    "class": "legacy-import",
-   "decl": "_DWORD j___NTAddFileHandle_(); // weak",
+   "decl": "int j___NTAddFileHandle_(void);",
    "home": "legacy"
   },
   "j___NTAddFileHandle__0": {
@@ -21392,17 +21392,17 @@
   },
   "j__nfree_": {
    "class": "legacy-import",
-   "decl": "int __cdecl j__nfree_();",
+   "decl": "int __fastcall j__nfree_();",
    "home": "legacy"
   },
   "j_j__nfree_": {
    "class": "legacy-import",
-   "decl": "int __cdecl j_j__nfree_();",
+   "decl": "int __fastcall j_j__nfree_();",
    "home": "legacy"
   },
   "j_rand_": {
    "class": "legacy-import",
-   "decl": "int j_rand_();",
+   "decl": "int j_rand_(void);",
    "home": "legacy"
   },
   "j_srand_": {
@@ -21437,7 +21437,7 @@
   },
   "lseek_": {
    "class": "legacy-import",
-   "decl": "int __fastcall lseek_();",
+   "decl": "int __fastcall lseek_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "mbclen_": {
@@ -21482,7 +21482,7 @@
   },
   "setvbuf_": {
    "class": "legacy-import",
-   "decl": "int __fastcall setvbuf_();",
+   "decl": "int __fastcall setvbuf_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "sscanf_": {
@@ -21497,7 +21497,7 @@
   },
   "stricmp_": {
    "class": "legacy-import",
-   "decl": "int __fastcall stricmp_();",
+   "decl": "int __fastcall stricmp_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "strncmp_": {
@@ -21507,17 +21507,17 @@
   },
   "strncpy_": {
    "class": "legacy-import",
-   "decl": "int __fastcall strncpy_();",
+   "decl": "int __fastcall strncpy_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "strrchr_": {
    "class": "legacy-import",
-   "decl": "int __cdecl strrchr_();",
+   "decl": "int __cdecl strrchr_(void);",
    "home": "legacy"
   },
   "strtod_": {
    "class": "legacy-import",
-   "decl": "double __fastcall strtod_();",
+   "decl": "double strtod_(const char *text, char **endptr);",
    "home": "legacy"
   },
   "sub_47C181": {
@@ -21572,17 +21572,17 @@
   },
   "tell_": {
    "class": "legacy-import",
-   "decl": "int tell_();",
+   "decl": "int tell_(void);",
    "home": "legacy"
   },
   "tolower_": {
    "class": "legacy-import",
-   "decl": "int __fastcall tolower_();",
+   "decl": "int __fastcall tolower_(_DWORD a1, _DWORD a2);",
    "home": "legacy"
   },
   "towupper_": {
    "class": "legacy-import",
-   "decl": "int __thiscall towupper_();",
+   "decl": "int __thiscall towupper_(_DWORD a1);",
    "home": "legacy"
   },
   "unknown_libname_10": {
@@ -21617,7 +21617,7 @@
   },
   "vsprintf_": {
    "class": "legacy-import",
-   "decl": "int __fastcall vsprintf_();",
+   "decl": "int __cdecl vsprintf_(char *buffer, const char *format, ...);",
    "home": "legacy"
   },
   "waveOutClose": {
