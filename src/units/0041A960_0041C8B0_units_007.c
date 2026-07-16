@@ -1,5 +1,19 @@
 /* Generated from src/recovered/units/0040F510_units.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "units_internal.h"
+#include "units_state.h"
+#include "../state/state_shared.h"
+#include "../render/render_api.h"
+#include "../world/world_api.h"
+#include "../buildings/buildings_api.h"
+#include "../battle/battle_api.h"
+#include "../persistence/persistence_api.h"
+#include "../strategic/strategic_api.h"
+#include "../media/media_api.h"
+#include "../runtime/runtime_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_LOCAL int Diagnostics_ForceAutoresolveEnabled (void);
 

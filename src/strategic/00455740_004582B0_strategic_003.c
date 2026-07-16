@@ -1,5 +1,15 @@
 /* Generated from src/recovered/rules/strategic/004506B0_strategic.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "strategic_internal.h"
+#include "strategic_state.h"
+#include "../state/state_shared.h"
+#include "../units/units_api.h"
+#include "../buildings/buildings_api.h"
+#include "../clips/clips_api.h"
+#include "../media/media_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00455740) --------------------------------------------------------
 void  Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delta)

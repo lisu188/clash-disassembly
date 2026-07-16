@@ -1,5 +1,20 @@
 /* Generated from src/recovered/world_and_persistence/00441DC0_special_sites_savegame.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "persistence_internal.h"
+#include "persistence_state.h"
+#include "../state/state_shared.h"
+#include "../render/render_api.h"
+#include "../world/world_api.h"
+#include "../units/units_api.h"
+#include "../buildings/buildings_api.h"
+#include "../strategic/strategic_api.h"
+#include "../media/media_api.h"
+#include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
+#include "../recovered_legacy_imports.h"
+#include "../recovered_test_seams.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_TEST_VISIBLE void QueenMarriageProposal_WriteButtonWidgetRecord (unsigned char *record, int left, int top, int sprite_index_base, int sprite_index_selected_base, int action_callback, _DWORD **sprite_set_holder, const char *sound_name);
 CLASH95_TEST_VISIBLE void QueenMarriageProposal_RebuildButtonWidgets (unsigned char *widgets, _DWORD **sprite_set_holder, int confirm_left, int top, int cancel_left);
