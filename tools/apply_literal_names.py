@@ -17,7 +17,7 @@ rules.json is a list of rule objects:
    "pattern": "- (?P<lit>0x8000)\\b", ...}  # surgical scope for workstream B
 
 Guarantees enforced before any write:
-- the target name exists in recovered_foundation.h as an object macro whose
+- the target name exists in recovered_types.h as an object macro whose
   body is a single numeric token equal to the rule value AND to the
   tools/constants_manifest.json entry (triple cross-check);
 - a site is replaced only when its raw spelling matches the manifest spelling

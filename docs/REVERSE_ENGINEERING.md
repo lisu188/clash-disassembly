@@ -123,7 +123,7 @@ Do **not** promote a guess just because it "looks likely."
 ### 3.5 Constant and enum families (magic-number campaign)
 
 Numeric literals are named with `SCREAMING_SNAKE_CASE` `#define`s in the private
-`src/recovered_foundation.h`, subsystem-prefixed like the
+`src/recovered_types.h`, subsystem-prefixed like the
 function/global families: `UNIT_STACK_`, `BUILDING_`, `BUILDING_ADDON_FLAG_`, `PLAYER_`,
 `MAP_`, `PORT_`, `TILE_`, `TILE_OVERLAY_`, `TILE_OCCUPANT_`, `SCREEN_`, etc.
 Offsets/strides get an accessor macro (`UNIT_STACK(i)`, `BUILDING_RECORD(i)`).

@@ -22,10 +22,12 @@ import glob as _glob  # noqa: E402
 PRIVATE_HEADERS = (
     "src/recovered_abi.h",
     "src/recovered_types.h",
-    "src/recovered_foundation.h",
-    "src/recovered_functions.h",
-    "src/recovered_internal.h",
     "src/recovered_layout.h",
+    # The umbrella (foundation/functions/internal) was replaced by generated
+    # per-subsystem headers at the P3 narrowing. Renames must also touch the
+    # declaration database they are generated from; regenerate afterwards:
+    #   python3 tools/gen_subsystem_headers.py --write
+    "data/recovered_decls.json",
 )
 SUPPORT_FILES = (
     "src/bootstrap/bootstrap_main.c",

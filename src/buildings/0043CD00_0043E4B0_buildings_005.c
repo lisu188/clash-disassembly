@@ -355,12 +355,12 @@ int  WCIsvListBase_dtorVariant134(WCIsvListBase *a1, char dtorFlags)
 // 43D0FA: variable 'v5' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
-/* Type declaration moved to recovered_internal.h. */
+/* Type declaration moved to recovered_types.h. */
 
 
 
 
-/* Type declaration moved to recovered_internal.h. */
+/* Type declaration moved to recovered_types.h. */
 
 
 

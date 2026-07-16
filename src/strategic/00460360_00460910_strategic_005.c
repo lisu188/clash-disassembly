@@ -1170,7 +1170,7 @@ CLASH95_INTERNAL void Compat_SyncRenderCursorGlobals(const _DWORD *render_state)
   g_CursorCoordShift = (unsigned char)render_state[277];
 }
 
-/* Type declaration moved to recovered_internal.h. */
+/* Type declaration moved to recovered_types.h. */
 
 
 

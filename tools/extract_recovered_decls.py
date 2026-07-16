@@ -225,6 +225,12 @@ def build():
 
 
 def main() -> int:
+    if not FOUNDATION.exists():
+        print("historical tool: the declaration umbrellas were deleted at the "
+              "P3 header narrowing; data/recovered_decls.json is now the "
+              "canonical declaration home (edit it and regenerate via "
+              "tools/gen_subsystem_headers.py --write).")
+        return 0
     functions, globals_, problems = build()
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     manifest_names = {r["name"] for r in manifest["functions"]}

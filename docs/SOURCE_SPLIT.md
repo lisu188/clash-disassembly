@@ -40,16 +40,22 @@ Global storage has one definition in the recovered-state translation unit.
 Ambiguous adjacency-dependent declarations remain together there rather than
 being resized or scattered without map or assembly evidence.
 
-The private `src/recovered_internal.h` umbrella is composed from
-independently compilable `src/recovered_abi.h`,
-`src/recovered_foundation.h`,
-`src/recovered_functions.h`, and
-`src/recovered_layout.h`. Domain-specific narrowing
-remains later cleanup; no stable external library API is introduced.
-Cross-family helpers have hidden visibility. Seventeen helpers remain
-production-only `static` functions, and 30 frozen pure helpers use
-`CLASH95_TEST_VISIBLE`, which is `static` in production and external only when
-`CLASH95_TESTING` is enabled.
+The former `recovered_internal.h` migration umbrella is gone: every TU now
+includes a generated, marker-delimited block of narrowed headers — its own
+subsystem's `<S>_internal.h` (which pulls `<S>_api.h`, the measured public
+surface) and `<S>_state.h` (state-owned globals whose only consumer is `S`),
+`src/state/state_shared.h` where a multi-subsystem global is referenced, the
+api headers of exactly the peers it calls, `src/recovered_legacy_imports.h` where
+a legacy CRT/Win32 import is referenced, and `src/recovered_types.h` +
+`src/recovered_layout.h` via the block. All of this is generated from
+`data/recovered_decls.json` (the verbatim declaration database) and a
+preprocessed usage scan by `tools/gen_subsystem_headers.py`; the measured
+surface lives in `data/subsystem_api.json`. `src/recovered_all.h` aggregates
+everything for `tests/unit` only. No stable external library API is
+introduced. Cross-family helpers have hidden visibility. Seventeen helpers
+remain production-only `static` functions, and 30 frozen pure helpers use
+`CLASH95_TEST_VISIBLE` (declared in `src/recovered_test_seams.h`), which is
+`static` in production and external only when `CLASH95_TESTING` is enabled.
 
 ## Authoritative metadata
 
@@ -114,8 +120,11 @@ instrumentation, compatibility, bootstrap, and test support use the stricter
 `-Wall -Wextra -Wpedantic -Werror` profile.
 
 `data/recovered_warning_baseline.json` records the recovered-code diagnostic
-ratchet, including diagnostics attributed to the five private recovered
-headers directly under `src/` and the shared compatibility ABI definitions.
+ratchet, including diagnostics attributed to the private recovered headers
+(`src/recovered_abi.h`, `src/recovered_types.h`, `src/recovered_layout.h`,
+`src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
+`src/recovered_all.h`, and the generated per-subsystem headers under
+`src/<subsystem>/`) and the shared compatibility ABI definitions.
 The reviewed baselines are **146,171 GCC diagnostics in 25 categories** and
 **147,027 Clang 18 diagnostics in 35 categories**; later cleanup may reduce a
 category but may not increase it or add another one. This is substantial

@@ -112,6 +112,12 @@ def main() -> int:
     args = ap.parse_args()
     excluded = set(args.exclude)
 
+    if not FOUNDATION.exists():
+        print("historical tool (T1 executed pre-P3.6): the foundation header "
+              "was deleted at the P3 narrowing; future prototype tranches "
+              "edit data/recovered_decls.json and regenerate instead.")
+        return 0
+
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     by_name = {}
     for rec in manifest["functions"]:

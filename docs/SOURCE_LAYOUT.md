@@ -24,10 +24,17 @@ unified/fragments/symlink paths are preserved in `docs/SOURCE_PATH_MAP.csv`.
 
 ## Boundaries
 
-- `src/<recovered-subsystem>/`: behavior attributable to the original executable.
-- `src/recovered_abi.h`, the other private recovered headers beside it, and
-  `src/sources.cmake`: private recovered declarations and the exhaustive CMake
-  source list.
+- `src/<recovered-subsystem>/`: behavior attributable to the original
+  executable, plus that subsystem's generated interface headers
+  (`<S>_api.h` public surface, `<S>_internal.h` home-only, `<S>_state.h`
+  single-consumer globals).
+- `src/recovered_abi.h`, `src/recovered_types.h`, `src/recovered_layout.h`,
+  `src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
+  `src/recovered_all.h` (tests-only aggregate), and `src/sources.cmake`:
+  private recovered declarations and the exhaustive CMake source list. The
+  generated headers are regenerated from `data/recovered_decls.json` +
+  `data/subsystem_api.json` by `tools/gen_subsystem_headers.py`; edit the
+  declaration database, never the generated files.
 - `src/platform/`: SDL, X11, POSIX, timing, input, window, rendering, and host filesystem adapters.
 - `src/compatibility/`: decompiler support and quarantined runtime or Win32-shaped scaffolding.
 - `src/instrumentation/`: route tracing, scripted probes, diagnostics, and state observation.
