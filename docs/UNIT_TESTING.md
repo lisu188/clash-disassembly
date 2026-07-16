@@ -111,7 +111,11 @@ initializer or changing recovered behavior.
 
 ## Related tools and data
 
-- `tests/unit/pure_set.json`: frozen 718-function denominator.
+- `tests/unit/pure_set.json`: frozen 718-function denominator. Its
+  `original_source`/`original_line` fields intentionally keep pre-cutover
+  (unified-era) paths — they are the frozen identity keys that
+  `tools/migrate_pure_coverage_metadata.py --check` resolves through the
+  manifest; do not "fix" them to canonical paths.
 - `tools/pure_function_set.py`: pure-set analysis and metadata validation.
 - `tools/coverage_source_manifest.py`: manifest-backed source and gcov mapping.
 - `tools/measure_pure_coverage.py`: frozen-set coverage report.
