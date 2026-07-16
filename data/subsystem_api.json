@@ -61,17 +61,13 @@
   "runtime->state": 6,
   "runtime->strategic": 7,
   "runtime->units": 2,
-  "state->battle": 2,
-  "state->buildings": 47,
+  "state->buildings": 7,
   "state->clips": 19,
   "state->core": 2,
   "state->media": 74,
-  "state->persistence": 8,
   "state->render": 62,
   "state->runtime": 10,
-  "state->strategic": 8,
-  "state->units": 13,
-  "state->world": 1,
+  "state->strategic": 6,
   "strategic->buildings": 44,
   "strategic->clips": 4,
   "strategic->media": 18,
@@ -355,7 +351,6 @@
     "UnitBattle_HandlePrepareDefenceAction",
     "UnitBattle_RequestActionLoopExit",
     "UnitBattle_ShowPlayerMessageBanner",
-    "HandleBattleResults",
     "UnitBattle_TemporarilyClearGateBlocker",
     "UnitBattle_RestoreGateBlocker",
     "Battle_RunTacticalCombat",
@@ -378,7 +373,7 @@
     "BuildingGarrisonDialog_AnimateSelectedUnit",
     "BuildingGarrisonDialog_HitTestSlotGrid"
    ],
-   "internal_function_count": 19,
+   "internal_function_count": 20,
    "state_globals": 84
   },
   "buildings": {
@@ -389,9 +384,7 @@
     "MapTile_IsCastleFoundationTile",
     "MapTile_IsCastleFoundationAnchorTile",
     "Rules_RebuildCastleSiteFacts",
-    "Building_Stop",
     "Unit_UpdatePerTurn",
-    "Player_UpdateTechnologyLevelFromSettlements",
     "Building_DebugDump",
     "LogAllBuildings",
     "Building_NewTurn",
@@ -401,7 +394,6 @@
     "Building_BuildBarracks",
     "Building_BuildHospital",
     "Building_BuildSmiths",
-    "Building_Transfer",
     "Building_CanStartUpgrade",
     "Building_TryStartUpgrade",
     "Unit_CaptureBuilding",
@@ -453,7 +445,6 @@
     "UnitBattle_MoveTrack",
     "UnitBattle_MoveTrackNear",
     "UnitBattle_MoveTrackNearWall",
-    "UnitBattle_MoveTrackForce",
     "UnitBattle_Move",
     "UnitBattle_CenterViewOnUnit",
     "UnitBattle_CountAdjacentEnemies",
@@ -498,7 +489,6 @@
     "Building_BuyUnitLicence",
     "Building_RemoveUnitLicence",
     "Building_SetUnitProduction",
-    "Building_StopUnitProduction",
     "Building_TrainUnit",
     "Building_ClearGarrisonTrainingTimer",
     "Building_RepairUnit",
@@ -545,7 +535,7 @@
     "Audio_PlayUnitActivateSound",
     "Audio_PlayUnitMoveOrderSound"
    ],
-   "internal_function_count": 193,
+   "internal_function_count": 198,
    "state_globals": 492
   },
   "clips": {
@@ -1185,7 +1175,7 @@
     "Rules_ArgRangeCheck",
     "Mem_SetAllocFlag"
    ],
-   "internal_function_count": 490,
+   "internal_function_count": 493,
    "state_globals": 661
   },
   "persistence": {
@@ -1239,15 +1229,12 @@
     "Prisoner_QueueCapturedUnit",
     "Prisoner_SetInCastles",
     "Prisoner_Kill",
-    "Prisoner_Behead",
-    "Prisoner_Torture",
     "Building_CreateSpecialPersonageGarrisonUnit",
-    "Prisoner_Pay",
     "Prisoner_NewTurn",
     "Building_CountPrisoners",
     "Building_ShowPrisonerManagementPanel"
    ],
-   "internal_function_count": 74,
+   "internal_function_count": 77,
    "state_globals": 277
   },
   "render": {
@@ -1609,7 +1596,6 @@
     "Render_DrawSprite_v3",
     "LogAllUnits",
     "Unit_CompactSquad",
-    "Unit_CheckLowMorale",
     "Unit_NewTurn",
     "UnitStack_HasBuilder",
     "Map_RedrawUnitNeighborhoodByIndex",
@@ -1696,10 +1682,9 @@
     "UIWidget_ShowReleasedState",
     "Unit_Info",
     "Unit_Attack",
-    "Unit_AttackBuilding",
-    "CalculateBattleResult"
+    "Unit_AttackBuilding"
    ],
-   "internal_function_count": 62,
+   "internal_function_count": 64,
    "state_globals": 128
   },
   "world": {

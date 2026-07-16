@@ -51,12 +51,18 @@ DATA_CLASSES = set("bBdDrRgGsS")  # bss, data, rodata, small-data variants
 COMMON_CLASSES = set("cC")
 
 # Toolchain/CRT/instrumentation artifacts excluded from the recovered surface.
+# Names carrying a glibc version suffix (stderr@GLIBC_2.2.5 copy relocations)
+# and linker-script/crt symbols (_DYNAMIC, __abi_tag, frame markers) are
+# binutils/glibc-version dependent - pinning them makes the baseline break on
+# toolchain image bumps with zero repo change.
 ARTIFACT_RE = re.compile(
     r"^(_GLOBAL_|__gcov|__llvm|_IO_|__libc|__x86|_dl_|__dso_handle$|__TMC|"
     r"__bss_start$|_edata$|_end$|_init$|_fini$|_start$|__data_start$|"
     r"data_start$|__init_array|__fini_array|__frame_dummy|frame_dummy$|"
     r"register_tm_clones$|deregister_tm_clones$|__do_global|completed\.|"
-    r"__stack_chk|_ITM_|__gmon|__odr_asan|\.L)"
+    r"__stack_chk|_ITM_|__gmon|__odr_asan|\.L|"
+    r"_DYNAMIC$|__abi_tag$|__GNU_EH_FRAME_HDR$|__FRAME_END__$)"
+    r"|@"
 )
 
 
@@ -175,12 +181,19 @@ def load_baseline(path: Path, allow_missing: bool) -> dict:
 
 
 def diff_profiles(base: dict, cur: dict) -> list[str]:
+    """Multiset-aware profile diff. Duplicate local symbols are real in this
+    binary (e.g. several TUs each define a local NtCurrentTeb), so plain set
+    comparison would silently pass multiplicity drift."""
+    from collections import Counter
+
     problems = []
-    b_text, c_text = set(base.get("text", [])), set(cur["text"])
+    b_text, c_text = Counter(base.get("text", [])), Counter(cur["text"])
     for sym in sorted(c_text - b_text):
-        problems.append(f"NEW text symbol: {sym}")
+        problems.append(
+            f"NEW text symbol: {sym} (x{(c_text - b_text)[sym]})")
     for sym in sorted(b_text - c_text):
-        problems.append(f"MISSING text symbol: {sym}")
+        problems.append(
+            f"MISSING text symbol: {sym} (x{(b_text - c_text)[sym]})")
     b_data = base.get("data_ordered", {})
     c_data = cur["data_ordered"]
     for cls in sorted(set(b_data) | set(c_data)):
@@ -188,15 +201,15 @@ def diff_profiles(base: dict, cur: dict) -> list[str]:
         c_seq = c_data.get(cls, [])
         if b_seq == c_seq:
             continue
-        b_set, c_set = set(b_seq), set(c_seq)
-        for sym in sorted(c_set - b_set):
+        b_cnt, c_cnt = Counter(b_seq), Counter(c_seq)
+        for sym in sorted(c_cnt - b_cnt):
             problems.append(f"NEW/changed data symbol [{cls}]: {sym}")
-        for sym in sorted(b_set - c_set):
+        for sym in sorted(b_cnt - c_cnt):
             problems.append(f"MISSING/changed data symbol [{cls}]: {sym}")
-        if b_set == c_set:
+        if b_cnt == c_cnt:
             problems.append(
                 f"data ORDER changed in class [{cls}] "
-                f"({len(b_seq)} symbols, same set, different sequence)"
+                f"({len(b_seq)} symbols, same multiset, different sequence)"
             )
     return problems
 

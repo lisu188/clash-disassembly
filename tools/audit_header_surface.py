@@ -57,10 +57,23 @@ def include_policy_errors() -> list[str]:
         (REPO / "data" / "recovered_sources.json").read_text(encoding="utf-8"))
     sources = sorted({r["source"] for r in manifest["functions"]}
                      | {manifest["state_owner"]})
-    inc_re = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.M)
-    for rel in sources:
+    # Support files keep hand-maintained includes, but the hard bans (deleted
+    # umbrella must not return; tests-only aggregate stays out of production)
+    # apply to every production .c under src/.
+    support = sorted(
+        str(p.relative_to(REPO)).replace("\\", "/")
+        for p in (REPO / "src").rglob("*.c")
+        if str(p.relative_to(REPO)).replace("\\", "/") not in sources)
+    # both quoted and angle-bracket forms resolve via -I flags; lint both
+    inc_re = re.compile(r'^\s*#\s*include\s+["<]([^">]+)[">]', re.M)
+    generated_basenames = re.compile(
+        r"(recovered_|_api\.h$|_internal\.h$|_state\.h$|"
+        r"^state_shared\.h$|^state_local\.h$)")
+    for rel in sources + support:
         text = (REPO / rel).read_text(encoding="latin-1")
-        sub = rel.split("/")[1]
+        parts = rel.split("/")
+        sub = parts[1] if len(parts) > 2 else ""
+        is_recovered_tu = rel in sources
         m = re.search(re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END),
                       text, flags=re.DOTALL)
         block_span = m.span() if m else (0, 0)
@@ -72,8 +85,9 @@ def include_policy_errors() -> list[str]:
                 errors.append(f"{rel}: deleted umbrella include returned: {inc}")
             if base == "recovered_all.h":
                 errors.append(f"{rel}: tests-only aggregate included in production")
-            if not inside and ("recovered_" in inc or "_api.h" in inc
-                               or "_internal.h" in inc or "_state.h" in inc):
+            if not is_recovered_tu:
+                continue  # support files: hard bans only
+            if not inside and generated_basenames.search(base):
                 errors.append(f"{rel}: recovered include outside generated block: {inc}")
             fm = re.match(r"(?:\.\./)?([a-z]+)/\1_(internal|state)\.h$", inc)
             if fm and fm.group(1) != sub:

@@ -72,8 +72,30 @@ def strip_code(text: str) -> str:
 
 
 def load():
+    """Load + validate the decl DB against the manifest. The DB is the
+    hand-editable canonical declaration home; nothing else checks its derived
+    invariants, so a bad edit must fail HERE (this runs in CI via
+    audit_header_surface) rather than silently dropping declarations."""
     decls = json.loads(DECLS.read_text(encoding="utf-8"))
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    subsystem_of = {r["name"]: r["subsystem"] for r in manifest["functions"]}
+    problems = []
+    for name, rec in decls["functions"].items():
+        if rec["class"] in ("manifest", "test-seam"):
+            want = subsystem_of.get(name)
+            if want is None:
+                problems.append(f"{name}: class {rec['class']} but not in manifest")
+            elif rec["home"] != want:
+                problems.append(
+                    f"{name}: home {rec['home']!r} != manifest subsystem {want!r}")
+            elif want not in SUBSYSTEMS:
+                problems.append(f"{name}: unknown subsystem {want!r}")
+        if name not in rec["decl"]:
+            problems.append(f"{name}: key does not appear in its decl text")
+    if problems:
+        for p in problems[:10]:
+            print("DECL-DB INVALID:", p)
+        raise SystemExit(f"decl DB failed validation ({len(problems)} problems)")
     return decls, manifest
 
 
@@ -118,13 +140,17 @@ def scan_usage(manifest):
             proc = subprocess.run(
                 ["gcc", "-std=gnu17", "-E", "-P",
                  "-I", str(REPO / "src"), "-I", str(REPO), str(tmp)],
-                capture_output=True, text=True)
+                capture_output=True, text=True, encoding="latin-1")
             if proc.returncode != 0:
                 raise SystemExit(
                     f"scan preprocess failed for {rel}:\n{proc.stderr[:500]}")
             out = proc.stdout.split(marker, 1)
             payload = out[1] if len(out) == 2 else proc.stdout
-            tu_tokens[rel] = set(IDENT.findall(payload))
+            # gcc -E strips comments but NOT string/char literals: a symbol
+            # named inside a diagnostic string must not count as usage (it
+            # would fabricate coupling edges and trip the surface ratchet on
+            # innocent logging changes).
+            tu_tokens[rel] = set(IDENT.findall(strip_code(payload)))
     return tu_tokens
 
 
@@ -154,7 +180,7 @@ def expanded_names(fn_db, gl_db):
         proc = subprocess.run(
             ["gcc", "-std=gnu17", "-E", "-C",
              "-I", str(REPO / "src"), "-I", str(REPO), str(tmp)],
-            capture_output=True, text=True)
+            capture_output=True, text=True, encoding="latin-1")
         if proc.returncode != 0:
             raise SystemExit(f"decl preprocess failed:\n{proc.stderr[:500]}")
     chunks = proc.stdout.split(f"/*{marker}*/")[1:]

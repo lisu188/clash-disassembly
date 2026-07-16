@@ -79,7 +79,11 @@ def main():
         except FileNotFoundError:
             pass
     existing = set()
-    for text in texts.values():
+    for cf, text in texts.items():
+        if cf.endswith(".json"):
+            # JSON members (the decl DB) are all string literals; scan raw.
+            existing.update(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", text))
+            continue
         for is_code, segment in lc.split_code_and_literals(text):
             if is_code:
                 existing.update(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", segment))
@@ -124,14 +128,24 @@ def main():
     pat = re.compile(r"\b(" + "|".join(re.escape(k) for k in mapping) + r")\b")
     canonical_sources = set(lc.apply_files())
     touched_sources = set()
+    decl_db_changed = False
     for cf, text in texts.items():
-        segs = lc.split_code_and_literals(text)
-        rebuilt = "".join(
-            pat.sub(lambda m: mapping[m.group(1)], seg) if is_code else seg
-            for is_code, seg in segs
-        )
+        if cf.endswith(".json"):
+            # The decl DB's semantic content lives inside JSON strings, which
+            # split_code_and_literals would skip entirely - substitute on the
+            # raw text so declarations follow the rename. Regenerate headers
+            # afterwards: python3 tools/gen_subsystem_headers.py --write
+            rebuilt = pat.sub(lambda m: mapping[m.group(1)], text)
+        else:
+            segs = lc.split_code_and_literals(text)
+            rebuilt = "".join(
+                pat.sub(lambda m: mapping[m.group(1)], seg) if is_code else seg
+                for is_code, seg in segs
+            )
         if rebuilt != text:
             open(os.path.join(lc.REPO, cf), "w").write(rebuilt)
+            if cf.endswith(".json"):
+                decl_db_changed = True
             if cf in canonical_sources:
                 touched_sources.add(cf)
 
@@ -142,6 +156,7 @@ def main():
             f.write(json.dumps(e) + "\n")
     print(json.dumps(
         {"applied": len(accepted),
+         "decl_db_changed_regenerate_headers": decl_db_changed,
          "manifest_body_hashes_refreshed": refreshed,
          "collisions": [e["old"] for e in accepted if "collision_from" in e],
          "rejected": rejected}, indent=1))

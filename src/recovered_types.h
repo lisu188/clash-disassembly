@@ -528,10 +528,6 @@ enum
   MAIN_MENU_REQUEST_OPTIONS = 4,
   MAIN_MENU_REQUEST_LOAD_GAME = 5
 };
-struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int self);
-struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels(void);
-struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels(void);
- // weak
 #define WORLD_MAP_ACTION_WIDGET_RECORD_SIZE 53
 #define WORLD_MAP_ACTION_WIDGET_COUNT 6
  // weak

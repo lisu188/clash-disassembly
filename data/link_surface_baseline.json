@@ -2,12 +2,11 @@
  "profiles": {
   "clang": {
    "counts": {
-    "data": 5142,
+    "data": 5137,
     "text": 3817
    },
    "data_ordered": {
     "b": [
-     "stderr@GLIBC_2.2.5 B 8",
      "UnitBattle_EnsureActionButtonWidgetTable.initialized b 4",
      "WorldMap_RunInputScriptStep.initialized b 4",
      "WorldMap_RunInputScriptStep.trace_checked b 4",
@@ -1095,7 +1094,6 @@
      "g_BootstrapSkipIntroAviPlayback B 4"
     ],
     "d": [
-     "_DYNAMIC d 0",
      "UnitType_GetResourceKey.resource_keys d 280",
      "Mission_CheckObjectiveComplete.mission0_last_blocker_index d 4",
      "Mission_CheckObjectiveComplete.mission0_last_blocker_turn d 4",
@@ -5076,7 +5074,6 @@
      "g_compat_signal_os_codes d 52"
     ],
     "r": [
-     "__abi_tag r 32",
      "WorldMap_EnsureActionButtonWidgetTable.action_sound r 5",
      "WorldMap_EnsureActionButtonWidgetTable.label_map_mode_pl r 10",
      "WorldMap_EnsureActionButtonWidgetTable.label_map_mode_en r 9",
@@ -5150,9 +5147,7 @@
      "g_UnitTypeRuntimeCoreMetadata R 3080",
      "g_UnitTypeWorldMoveCosts R 315",
      "ExcString_AsCharPtr.kCompatEmptyString r 1",
-     "k_DosErrnoMap r 20",
-     "__GNU_EH_FRAME_HDR r 0",
-     "__FRAME_END__ r 0"
+     "k_DosErrnoMap r 20"
     ]
    },
    "text": [
@@ -8977,12 +8972,11 @@
   },
   "gcc": {
    "counts": {
-    "data": 5141,
+    "data": 5136,
     "text": 3817
    },
    "data_ordered": {
     "b": [
-     "stderr@GLIBC_2.2.5 B 8",
      "g_BattleInputScriptInitialized B 4",
      "g_BattleInputScriptTraceChecked B 4",
      "g_BattleInputScriptTraceEnabled B 4",
@@ -10070,7 +10064,6 @@
      "g_boot_command_line b 1024"
     ],
     "d": [
-     "_DYNAMIC d 0",
      "resource_keys.0 d 280",
      "last_mission_index.6 d 4",
      "last_turn_counter.5 d 4",
@@ -14050,7 +14043,6 @@
      "g_compat_signal_handlers d 104"
     ],
     "r": [
-     "__abi_tag r 32",
      "label_map_mode_pl.40 r 10",
      "label_map_mode_en.39 r 9",
      "label_map_mode_de.38 r 12",
@@ -14124,9 +14116,7 @@
      "g_UnitTypeRuntimeCoreMetadata R 3080",
      "g_UnitTypeWorldMoveCosts R 315",
      "k_DosErrnoMap r 20",
-     "kCompatEmptyString.0 r 1",
-     "__GNU_EH_FRAME_HDR r 0",
-     "__FRAME_END__ r 0"
+     "kCompatEmptyString.0 r 1"
     ]
    },
    "text": [

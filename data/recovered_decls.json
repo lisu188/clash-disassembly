@@ -1910,6 +1910,11 @@
    "decl": "int  CAviDecompressor_BPP(int playerHandle);",
    "home": "media"
   },
+  "CAviDecompressor_BeginPlayback": {
+   "class": "manifest",
+   "decl": "struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int self);",
+   "home": "media"
+  },
   "CAviDecompressor_Blit": {
    "class": "manifest",
    "decl": "void  CAviDecompressor_Blit(int *playerHandle);",
@@ -3290,6 +3295,11 @@
    "decl": "int  CSS_SampleCache_TouchEntry(int *listHead);",
    "home": "media"
   },
+  "CSS_ServiceStreamingChannels": {
+   "class": "manifest",
+   "decl": "struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels(void); // weak",
+   "home": "media"
+  },
   "CSS_SetDefaults": {
    "class": "manifest",
    "decl": "void __stdcall CSS_SetDefaults(void);",
@@ -3403,6 +3413,11 @@
   "CSS_StreamService_NoOpHook": {
    "class": "manifest",
    "decl": "int CSS_StreamService_NoOpHook(void);",
+   "home": "media"
+  },
+  "CSS_SweepFinishedChannels": {
+   "class": "manifest",
+   "decl": "struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels(void);",
    "home": "media"
   },
   "CSS_TickChannelLevels": {
