@@ -21460,11 +21460,6 @@
    "decl": "int __fastcall setvbuf_();",
    "home": "legacy"
   },
-  "sizeof": {
-   "class": "legacy-import",
-   "decl": "typedef char UnitTypeRuntimeCoreMetadataRecord_size_check[\n  sizeof(UnitTypeRuntimeCoreMetadataRecord) == UNIT_TYPE_METADATA_STRIDE ? 1 : -1];",
-   "home": "legacy"
-  },
   "sscanf_": {
    "class": "legacy-import",
    "decl": "int __cdecl sscanf_(const char *buffer, const char *format, ...);",
@@ -22199,10 +22194,6 @@
   },
   "UI_Locale_StatusLine1_Full": {
    "decl": "extern char *UI_Locale_StatusLine1_Full[3];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "UnitTypeRuntimeCoreMetadataRecord": {
-   "decl": "typedef struct UnitTypeRuntimeCoreMetadataRecord\n{\n  _DWORD original_localized_name_table_va;\n  _DWORD original_resource_key_va;\n  unsigned char battle_move_step_px;\n  unsigned char move_animation_tick_interval_ms;\n  unsigned char animation_frame_interval_ms;\n  unsigned char idle_animation_flags[4];\n  unsigned char sprite_vertical_offset_px;\n  unsigned char attack_animation_frame_count;\n  unsigned char shot_animation_frame_count;\n  _DWORD flags;\n  unsigned char base_melee_attack;\n  unsigned char base_defense_power;\n  unsigned char base_action_points;\n  unsigned char base_shot_power;\n  unsigned char attack_range_max;\n  unsigned char attack_range_min;\n  unsigned char base_wall_attack;\n  unsigned char road_move_cost;\n  unsigned char world_surface_move_costs[8];\n  unsigned char unrecovered_tail[50];\n} UnitTypeRuntimeCoreMetadataRecord;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "WindowName": {

@@ -154,6 +154,15 @@ def build():
 
     for path in (FOUNDATION, FUNCTIONS_H):
         for decl, in_testing in items(path):
+            # invariant since P3.1: the declaration umbrellas hold ONLY extern
+            # objects and function prototypes -- type definitions and pragmas
+            # belong in recovered_types.h
+            head = decl.lstrip()
+            if re.match(r"(typedef|struct|union|enum)\b", head) or "#pragma" in decl:
+                problems.append(
+                    f"type/pragma item in {path.name} (move to "
+                    f"recovered_types.h): {head[:80]!r}")
+                continue
             try:
                 kind, name = classify(decl)
             except ValueError as exc:

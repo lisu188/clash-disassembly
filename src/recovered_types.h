@@ -695,4 +695,42 @@ typedef struct CompatRenderStateTail
   int field_474_handle;
 } CompatRenderStateTail;
 
+/*
+ * The original globals at 0x512570..0x51258D are fields inside one packed
+ * 88-byte record, not independent one-element arrays.  Retaining those
+ * placeholders made every nonzero unit type index into unrelated host data.
+ * The records below restore the executable-backed +8..+37 core band while
+ * keeping the original 88-byte indexing used throughout the recovered C.
+ * The two leading values are original Win32 VAs kept as evidence only; host
+ * code resolves localized names and resource keys through recovered helpers.
+ */
+#pragma pack(push, 1)
+typedef struct UnitTypeRuntimeCoreMetadataRecord
+{
+  _DWORD original_localized_name_table_va;
+  _DWORD original_resource_key_va;
+  unsigned char battle_move_step_px;
+  unsigned char move_animation_tick_interval_ms;
+  unsigned char animation_frame_interval_ms;
+  unsigned char idle_animation_flags[4];
+  unsigned char sprite_vertical_offset_px;
+  unsigned char attack_animation_frame_count;
+  unsigned char shot_animation_frame_count;
+  _DWORD flags;
+  unsigned char base_melee_attack;
+  unsigned char base_defense_power;
+  unsigned char base_action_points;
+  unsigned char base_shot_power;
+  unsigned char attack_range_max;
+  unsigned char attack_range_min;
+  unsigned char base_wall_attack;
+  unsigned char road_move_cost;
+  unsigned char world_surface_move_costs[8];
+  unsigned char unrecovered_tail[50];
+} UnitTypeRuntimeCoreMetadataRecord;
+#pragma pack(pop)
+
+typedef char UnitTypeRuntimeCoreMetadataRecord_size_check[
+  sizeof(UnitTypeRuntimeCoreMetadataRecord) == UNIT_TYPE_METADATA_STRIDE ? 1 : -1];
+
 #endif /* CLASH95_RECOVERED_TYPES_H */
