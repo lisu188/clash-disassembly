@@ -37,8 +37,9 @@ def main() -> int:
 
 /* CLASH95_TESTING must be defined by the coverage object-library target so
  * only explicitly frozen helpers marked CLASH95_TEST_VISIBLE lose static
- * linkage in test builds. */
-#include "../../src/recovered_internal.h"
+ * linkage in test builds. recovered_all.h is the tests-only aggregate of the
+ * narrowed per-subsystem headers (forbidden in production src). */
+#include "../../src/recovered_all.h"
 
 #endif
 """
