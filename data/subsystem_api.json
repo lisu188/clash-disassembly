@@ -8,7 +8,7 @@
   "battle->runtime": 2,
   "battle->state": 1,
   "battle->strategic": 10,
-  "battle->units": 20,
+  "battle->units": 23,
   "battle->world": 6,
   "buildings->battle": 24,
   "buildings->media": 12,
@@ -17,7 +17,7 @@
   "buildings->runtime": 5,
   "buildings->state": 5,
   "buildings->strategic": 26,
-  "buildings->units": 73,
+  "buildings->units": 77,
   "buildings->world": 27,
   "clips->media": 95,
   "clips->runtime": 77,
@@ -71,7 +71,7 @@
   "strategic->persistence": 21,
   "strategic->render": 15,
   "strategic->runtime": 9,
-  "strategic->units": 32,
+  "strategic->units": 34,
   "strategic->world": 6,
   "units->battle": 1,
   "units->buildings": 29,
@@ -271,6 +271,7 @@
   "g_RenderDevice",
   "g_RenderHook",
   "g_RenderState",
+  "g_Render_AnimatedFrameTable",
   "g_Render_BackgroundColorIndex",
   "g_Rgb15ToPaletteLut",
   "g_Rules_ActiveInstanceCount",
@@ -317,9 +318,11 @@
   "g_UnitStackSelectionActiveUnitIndex",
   "g_UnitStackSelectionModeActive",
   "g_UnitStackSlotSelectedFlags",
+  "g_UnitTypeCorpseSpriteBaseIndex",
   "g_UnitTypeMetadataRecords",
   "g_UnitTypeResourceKeys",
   "g_UnitTypeRole",
+  "g_UnitTypeRuntimeCoreMetadata",
   "g_WallKindDefenseFactor",
   "g_WhirlSpriteSet",
   "g_WindowsVersionDword",
@@ -331,10 +334,9 @@
   "g_WorldMap_KeyboardInputDisabled",
   "gameData",
   "hThread",
-  "hWnd",
-  "j____wcpp_4_fs_handler_rtn_"
+  "hWnd"
  ],
- "state_local_global_count": 83,
+ "state_local_global_count": 77,
  "subsystems": {
   "battle": {
    "api_functions": [
@@ -893,7 +895,7 @@
     "ObjectsCompiler_WriteSlotNamePointerRef"
    ],
    "internal_function_count": 1341,
-   "state_globals": 2319
+   "state_globals": 2316
   },
   "core": {
    "api_functions": [
@@ -1083,7 +1085,7 @@
     "Mem_SetAllocFlag"
    ],
    "internal_function_count": 559,
-   "state_globals": 661
+   "state_globals": 662
   },
   "persistence": {
    "api_functions": [
@@ -1142,7 +1144,7 @@
     "Building_ShowPrisonerManagementPanel"
    ],
    "internal_function_count": 77,
-   "state_globals": 276
+   "state_globals": 277
   },
   "render": {
    "api_functions": [
@@ -1255,7 +1257,7 @@
     "WorldMap_HandleScrollKeysAndIdle"
    ],
    "internal_function_count": 25,
-   "state_globals": 86
+   "state_globals": 85
   },
   "runtime": {
    "api_functions": [
@@ -1453,7 +1455,7 @@
     "RenderState_DrawCursorSpriteToPrimarySurface"
    ],
    "internal_function_count": 136,
-   "state_globals": 386
+   "state_globals": 385
   },
   "units": {
    "api_functions": [
@@ -1475,6 +1477,13 @@
     "UnitStack_SpendActionPointsClamped",
     "UnitStack_SpendActionPointsByIndexClamped",
     "UnitStack_ExecuteQueuedPath",
+    "UnitStats_CalcEffectiveMeleeAttack",
+    "UnitStats_GetMeleeIconIndex",
+    "UnitStats_CalcEffectiveDefensePower",
+    "UnitStats_GetDefenseIconIndex",
+    "UnitStats_CalcEffectiveShotPower",
+    "UnitStats_GetBaseShotPower",
+    "UnitStats_CalcEffectiveWallAttack",
     "Unit_DebugDumpFormationSizes",
     "Render_DrawSprite_v3",
     "LogAllUnits",
@@ -1567,8 +1576,8 @@
     "Unit_Attack",
     "Unit_AttackBuilding"
    ],
-   "internal_function_count": 71,
-   "state_globals": 129
+   "internal_function_count": 64,
+   "state_globals": 128
   },
   "world": {
    "api_functions": [
@@ -1626,7 +1635,7 @@
     "UnitStack_ResetRecord"
    ],
    "internal_function_count": 48,
-   "state_globals": 127
+   "state_globals": 135
   }
  }
 }

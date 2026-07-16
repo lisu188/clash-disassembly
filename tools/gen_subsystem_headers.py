@@ -82,17 +82,119 @@ def tu_subsystem(source: str) -> str:
 
 
 def scan_usage(manifest):
-    """token set per TU -> (fn_users, gl_users): name -> set(subsystems).
+    """PREPROCESSED token set per TU: name -> set of identifiers.
+
+    Raw-text scanning misses macro indirection: accessor macros in
+    recovered_types.h expand to globals (e.g. g_UnitTypeMaxRange ->
+    g_UnitTypeRuntimeCoreMetadata), so a TU that only names the macro still
+    depends on the global. Each TU body (its include lines stripped) is
+    preprocessed together with recovered_types.h; identifiers are collected
+    only AFTER a scan marker so types.h's own content does not pollute the
+    set. Declaration headers are never included, so the only identifiers seen
+    are the TU's own references, macro-expanded.
 
     A function's own defining TU does not count as a user; any other TU does
-    (including other TUs of the home subsystem, which is what distinguishes
-    'internal with cross-TU use' from 'defined-before-use only')."""
+    (including other TUs of the home subsystem, which distinguishes 'internal
+    with cross-TU use' from 'defined-before-use only')."""
+    import subprocess
+    import tempfile
+
+    marker = "CLASH95_SCAN_MARKER_31415"
     sources = sorted({r["source"] for r in manifest["functions"]})
     tu_tokens: dict[str, set] = {}
-    for rel in sources:
-        text = (REPO / rel).read_text(encoding="latin-1")
-        tu_tokens[rel] = set(IDENT.findall(strip_code(text)))
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td) / "scan.c"
+        for rel in sources:
+            body = (REPO / rel).read_text(encoding="latin-1")
+            body = re.sub(
+                re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END),
+                " ", body, flags=re.DOTALL)
+            body = re.sub(r'^\s*#\s*include[^\n]*$', " ", body, flags=re.M)
+            tmp.write_text(
+                '#include "recovered_types.h"\n'
+                f"int {marker};\n" + body,
+                encoding="latin-1", newline="")
+            proc = subprocess.run(
+                ["gcc", "-std=gnu17", "-E", "-P",
+                 "-I", str(REPO / "src"), "-I", str(REPO), str(tmp)],
+                capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise SystemExit(
+                    f"scan preprocess failed for {rel}:\n{proc.stderr[:500]}")
+            out = proc.stdout.split(marker, 1)
+            payload = out[1] if len(out) == 2 else proc.stdout
+            tu_tokens[rel] = set(IDENT.findall(payload))
     return tu_tokens
+
+
+def expanded_names(fn_db, gl_db):
+    """Map each DB entry to its POST-macro-expansion declared name.
+
+    Alias macros in recovered_types.h rewrite address-suffixed declarations to
+    clean names (e.g. `extern int g_UnitBattleChargeModeActive_532060;` becomes
+    `extern int g_UnitBattleChargeModeActive;` once the `#define suffixed
+    clean` macro is in scope — which is exactly how the umbrella worked). The
+    usage scan sees post-expansion identifiers, so usage matching must happen
+    in the same namespace. One preprocess pass over all decl texts yields
+    db_key -> expanded_name."""
+    import subprocess
+    import tempfile
+
+    marker = "CLASH95_DECL_MARKER_27182"
+    keys = [("fn", k) for k in fn_db] + [("gl", k) for k in gl_db]
+    parts = ['#include "recovered_types.h"', f"int {marker};"]
+    for kind, k in keys:
+        decl = (fn_db if kind == "fn" else gl_db)[k]["decl"]
+        parts.append(f"/*{marker}*/")
+        parts.append(decl)
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td) / "decls.c"
+        tmp.write_text("\n".join(parts), encoding="latin-1", newline="")
+        proc = subprocess.run(
+            ["gcc", "-std=gnu17", "-E", "-C",
+             "-I", str(REPO / "src"), "-I", str(REPO), str(tmp)],
+            capture_output=True, text=True)
+        if proc.returncode != 0:
+            raise SystemExit(f"decl preprocess failed:\n{proc.stderr[:500]}")
+    chunks = proc.stdout.split(f"/*{marker}*/")[1:]
+    if len(chunks) != len(keys):
+        raise SystemExit(
+            f"decl marker mismatch: {len(chunks)} chunks vs {len(keys)} keys")
+    out = {}
+    for (kind, k), chunk in zip(keys, chunks):
+        chunk = re.sub(r"^#[^\n]*$", " ", chunk, flags=re.M)
+        try:
+            _, name = _classify_expanded(chunk)
+        except ValueError:
+            name = k  # fall back to the raw key
+        out[(kind, k)] = name
+    return out
+
+
+def _classify_expanded(decl: str):
+    """Name extraction over an expanded declaration (same shapes as the
+    extractor's classifier, duplicated here to stay dependency-free)."""
+    code = re.sub(r"/\*.*?\*/", " ", decl, flags=re.DOTALL)
+    code = re.sub(r"__attribute__\s*\(\((?:[^()]|\([^()]*\))*\)\)", " ", code)
+    if "(" in code:
+        mptr = re.search(
+            r"\(\s*(?:__\w+\s+)?\*\s*([A-Za-z_][A-Za-z0-9_]*)"
+            r"\s*(?:\[[^\]]*\])?\s*\)", code)
+        if mptr and re.match(r"\s*extern\b", code.strip()):
+            return "global", mptr.group(1)
+        mret = re.search(
+            r"\(\s*(?:__\w+\s+)?\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(", code)
+        if mret:
+            return "function", mret.group(1)
+        m = re.search(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", code)
+        if m:
+            return "function", m.group(1)
+    m = re.search(
+        r"\b([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^\]]*\])*\s*(?:=[^;]*)?;",
+        code.strip())
+    if m:
+        return "global", m.group(1)
+    raise ValueError("unclassifiable")
 
 
 def main() -> int:
@@ -111,14 +213,29 @@ def main() -> int:
     man_order = {r["name"]: i for i, r in enumerate(man_fns)}
 
     tu_tokens = scan_usage(manifest)
+    xname = expanded_names(fn_db, gl_db)
+    fn_xname = {k: xname[("fn", k)] for k in fn_db}
+    gl_xname = {k: xname[("gl", k)] for k in gl_db}
+
+    # reverse maps: expanded name -> db key (prefer identity mapping on
+    # collision, i.e. the entry whose raw name IS the expanded name)
+    def reverse(xmap):
+        rev = {}
+        for k, x in xmap.items():
+            if x not in rev or k == x:
+                rev[x] = k
+        return rev
+    rev_fn = reverse(fn_xname)
+    rev_gl = reverse(gl_xname)
 
     # ---- classify functions ------------------------------------------------
     fn_users: dict[str, set] = {}
     for rel, toks in tu_tokens.items():
         sub = tu_subsystem(rel)
-        for name in toks:
-            if name in fn_db and defining_tu.get(name) != rel:
-                fn_users.setdefault(name, set()).add(sub)
+        for tok in toks:
+            key = rev_fn.get(tok)
+            if key is not None and defining_tu.get(key) != rel:
+                fn_users.setdefault(key, set()).add(sub)
 
     api: dict[str, list] = {s: [] for s in SUBSYSTEMS}
     internal: dict[str, list] = {s: [] for s in SUBSYSTEMS}
@@ -148,9 +265,10 @@ def main() -> int:
     gl_users: dict[str, set] = {}
     for rel, toks in tu_tokens.items():
         sub = tu_subsystem(rel)
-        for name in toks:
-            if name in gl_db:
-                gl_users.setdefault(name, set()).add(sub)
+        for tok in toks:
+            key = rev_gl.get(tok)
+            if key is not None:
+                gl_users.setdefault(key, set()).add(sub)
 
     state_slice: dict[str, list] = {s: [] for s in SUBSYSTEMS if s != "state"}
     shared, local = [], []
@@ -248,13 +366,16 @@ def main() -> int:
     }
     # peer edges: for each TU, which OTHER subsystems' api functions it uses
     edges: dict[str, set] = {}
-    api_home = {n: s for s in SUBSYSTEMS for n in api[s]}
+    api_home_x = {fn_xname[n]: (s, n) for s in SUBSYSTEMS for n in api[s]}
     for rel, toks in tu_tokens.items():
         src_sub = tu_subsystem(rel)
-        for name in toks:
-            tgt = api_home.get(name)
-            if tgt and tgt != src_sub and defining_tu.get(name) != rel:
-                edges.setdefault(f"{src_sub}->{tgt}", set()).add(name)
+        for tok in toks:
+            hit = api_home_x.get(tok)
+            if hit is None:
+                continue
+            tgt, key = hit
+            if tgt != src_sub and defining_tu.get(key) != rel:
+                edges.setdefault(f"{src_sub}->{tgt}", set()).add(key)
     surface["peer_edges"] = {k: len(v) for k, v in sorted(edges.items())}
     surface_text = json.dumps(surface, indent=1, sort_keys=True) + "\n"
 
@@ -267,17 +388,18 @@ def main() -> int:
         else:
             incs += ["state_shared.h", "state_local.h"]
             incs += [f"../{t}/{t}_state.h" for t in SUBSYSTEMS if t != "state"]
-        if sub != "state" and any(n in toks for n in shared):
+        if sub != "state" and any(gl_xname[n] in toks for n in shared):
             incs.append("../state/state_shared.h")
         for t in SUBSYSTEMS:
             if t == sub:
                 continue
-            if any(name in toks and defining_tu.get(name) != rel
+            if any(fn_xname[name] in toks and defining_tu.get(name) != rel
                    for name in api[t]):
                 incs.append(f"../{t}/{t}_api.h")
-        if any(n in toks for n in legacy):
+        if any(fn_xname[n] in toks for n in legacy):
             incs.append("../recovered_legacy_imports.h")
-        if any(n in toks and defining_tu.get(n) == rel for n in seams):
+        if any(fn_xname[n] in toks and defining_tu.get(n) == rel
+               for n in seams):
             incs.append("../recovered_test_seams.h")
         lines = [MARK_BEGIN] + [f'#include "{i}"' for i in incs] + [MARK_END]
         return "\n".join(lines)
