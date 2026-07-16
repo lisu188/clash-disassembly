@@ -318,3 +318,32 @@ Route plan once verified: transfer one builder each into stacks 0/1/3,
 multi-turn march the builder-carrying army across the bridge to the SW
 staging tiles, manual tactical battles per cyclop stack (autoresolve
 rejected), capture building 4, then the remote stack 21 at (87,66).
+
+## BUILDER TRANSFER + ARMY CROSSING PROVEN END-TO-END (2026-07-16)
+
+Run 20260716T203603Z-191466 (`mission_05_stack_transfer_probe` iteration 14)
+completes the whole unlock chain in one deterministic same-turn script:
+
+1. select stack 4 (5x next-unit, marked wait);
+2. center-click idiom: `world_pan_viewport (row-4) (col-3)` then
+   `click 320 240` for every tile action (the view follows moving units, so
+   re-pin before each targeted click - absolute coordinates are only valid
+   immediately after a pan);
+3. move stack 4 to (70,46); toggle BUILDER slot 0 (portrait x=40; slot 5 at
+   x=240 is a LightInfantry - builders occupy the low slots, matching
+   world `first=17`); split-click stack 0's tile -> selection_split_done;
+4. same-turn: center-click stack 0's tile -> selected_stack_changed
+   selected=0 (clicking another own stack's tile with a selection active
+   selects it); pan 43 55; center-click ->
+   `bridge_pathing_enable_move selected=0` +
+   `move_order_track_result selected=0 a=47 b=58 c=32`.
+
+The 10-slot combat stack (9 heavies + 1 builder) paths 32 nodes across the
+water. Negative control retained: iteration 13 (slot 5 = light infantry)
+got c=-1 with no bridge marker.
+
+Completion-route assembly from here (all mechanics proven): transfer one
+builder each into stacks 0/1/3 on turn 1, confirm the crossing waypoints,
+multi-turn resume marches (existing per-turn playbook), then per-stack
+manual tactical battles at the cluster, building 4 capture, and the remote
+stack 21 leg.
