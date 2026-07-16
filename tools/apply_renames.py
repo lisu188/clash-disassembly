@@ -67,6 +67,8 @@ def main():
 
     manifest = lc.load_source_manifest()
     manifest_function_names = {record["name"] for record in manifest["functions"]}
+    constant_entries, _ = lc.load_manifest()
+    constant_names = {entry["name"] for entry in constant_entries}
     texts = {}
     for cf in CODE_FILES:
         try:
@@ -87,6 +89,9 @@ def main():
             continue
         if old in manifest_function_names:
             rejected.append((old, new, "function identity requires manifest migration"))
+            continue
+        if old in constant_names:
+            rejected.append((old, new, "constant identity requires manifest migration"))
             continue
         if not IDENT_RE.match(new or "") or MACHINE_RE.match(new):
             rejected.append((old, new, "bad/again-machine new"))

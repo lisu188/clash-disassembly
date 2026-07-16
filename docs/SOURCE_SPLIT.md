@@ -123,9 +123,10 @@ default-visible symbol surface:
 
 The split and oracle executables also passed the same default-menu, shutdown,
 `/A`, `/A0`, and castle-economy scripts. The split executable separately passed
-the asset-backed save-slot verifier. The exact reviewed exception evidence is
-retained under `docs/archive/`; the old-to-new paths remain in
-`docs/SOURCE_PATH_MAP.csv`.
+the asset-backed save-slot verifier. The exact reviewed exception hashes and
+reasons are retained in
+`docs/archive/SPLIT_DISASSEMBLY_EXCEPTIONS.json`; the old-to-new paths remain
+in `docs/SOURCE_PATH_MAP.csv`.
 
 These results justify the repository cutover. They do not prove that future
 semantic edits preserve behavior, and they do not advance campaign completion.

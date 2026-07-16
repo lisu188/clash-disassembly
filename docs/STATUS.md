@@ -167,6 +167,8 @@ audio/device table.
 - Current milestone table: `docs/RUNTIME_MILESTONES.md`
 - Full historical progress: `docs/archive/COMPILATION_PROGRESS.md`
 - Rename/recovery log: `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
+- Pre-cutover normalized-disassembly exceptions:
+  `docs/archive/SPLIT_DISASSEMBLY_EXCEPTIONS.json`
 - CLIPS engine provenance + source cross-reference:
   `docs/archive/CLIPS_SOURCE_CROSSREF.md`
 - Strategic-AI host-function API: `docs/AI_SCRIPTING_API.md`

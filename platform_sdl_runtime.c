@@ -1,1 +1,0 @@
-src/platform/platform_sdl_runtime.c

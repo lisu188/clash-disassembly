@@ -1,1 +1,0 @@
-src/bootstrap/bootstrap_main.c
