@@ -150,7 +150,7 @@ LABEL_13:
 // 545150: using guessed type int dword_545150;
 
 //----- (00425850) --------------------------------------------------------
-int UnitBattle_InitPathingTables()
+int UnitBattle_InitPathingTables(void)
 {
   int cellIndex; // edx
   int columnIndex; // ecx

@@ -301,7 +301,7 @@ int * InstanceQuery_DelayedDoForAllInstances(_DWORD *returnValue, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004CF2F0) --------------------------------------------------------
-_DWORD *InstanceQuery_PushQueryFrame()
+_DWORD *InstanceQuery_PushQueryFrame(void)
 {
   _DWORD *freeListNode; // edx
   _DWORD *result; // eax
@@ -328,7 +328,7 @@ _DWORD *InstanceQuery_PushQueryFrame()
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004CF340) --------------------------------------------------------
-int InstanceQuery_PopQueryFrame()
+int InstanceQuery_PopQueryFrame(void)
 {
   _DWORD *topFrame; // eax
   int result; // eax
@@ -896,7 +896,7 @@ LABEL_7:
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004CFCB0) --------------------------------------------------------
-int InstanceQuery_EnqueueDelayedBinding()
+int InstanceQuery_EnqueueDelayedBinding(void)
 {
   _DWORD *bindingNode; // edi
   _DWORD *valuesArray; // eax
@@ -934,7 +934,7 @@ int InstanceQuery_EnqueueDelayedBinding()
 // 51B458: using guessed type int dword_51B458;
 
 //----- (004CFD30) --------------------------------------------------------
-signed int InstanceQuery_DequeueDelayedBinding()
+signed int InstanceQuery_DequeueDelayedBinding(void)
 {
   *(_DWORD *)(g_ClipsQueryCore + 16) = *(_DWORD *)(g_ClipsQueryCore + 12);
   *(_DWORD *)(g_ClipsQueryCore + 12) = *(_DWORD *)(*(_DWORD *)(g_ClipsQueryCore + 12) + 4);
@@ -944,7 +944,7 @@ signed int InstanceQuery_DequeueDelayedBinding()
 // 51B458: using guessed type int dword_51B458;
 
 //----- (004CFD80) --------------------------------------------------------
-int ObjectsCompiler_RegisterCodeGenerator()
+int ObjectsCompiler_RegisterCodeGenerator(void)
 {
   int result; // eax
 
@@ -981,7 +981,7 @@ int  ObjectsCompiler_WriteModuleItemHeaderRef(int imageID, int fileID)
 // 54E8F8: using guessed type int dword_54E8F8;
 
 //----- (004CFE40) --------------------------------------------------------
-int ObjectsCompiler_AssignConstructIndices()
+int ObjectsCompiler_AssignConstructIndices(void)
 {
   int slotIndex; // edx
   int i; // ecx

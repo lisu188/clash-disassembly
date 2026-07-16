@@ -2,13 +2,13 @@
 #include "../recovered_internal.h"
 
 //----- (00461520) --------------------------------------------------------
-int Input_Init()
+int Input_Init(void)
 {
   return 0;
 }
 
 //----- (00461530) --------------------------------------------------------
-int Input_Shutdown()
+int Input_Shutdown(void)
 {
   return 0;
 }
@@ -26,7 +26,7 @@ BOOL  Input_IsKeyPressed(int scanCode)
 }
 
 //----- (00461580) --------------------------------------------------------
-BOOL Input_IsAnyKeyPressed()
+BOOL Input_IsAnyKeyPressed(void)
 {
   int scanCode; // edx
   BOOL result; // eax
@@ -47,7 +47,7 @@ BOOL Input_IsAnyKeyPressed()
 // 46158E: variable 'v2' is possibly undefined
 
 //----- (004615A0) --------------------------------------------------------
-signed int Input_PopKey()
+signed int Input_PopKey(void)
 {
   int scanCode; // edx
   int pressedScanCode; // edx
@@ -125,7 +125,7 @@ BOOL  Input_ClearKey(int keyCode, int a2)
 // 54517C: using guessed type int dword_54517C;
 
 //----- (004616E0) --------------------------------------------------------
-int Input_MouseInit()
+int Input_MouseInit(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -139,13 +139,13 @@ int Input_MouseInit()
 // 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461740) --------------------------------------------------------
-BOOL Input_MousePresent()
+BOOL Input_MousePresent(void)
 {
   return (GetVersion() & 0x80000000) == 0 && (unsigned __int8)GetVersion() == 4;
 }
 
 //----- (00461770) --------------------------------------------------------
-BOOL Input_MouseAcquire()
+BOOL Input_MouseAcquire(void)
 {
   return (GetVersion() & 0x80000000) != 0 && (unsigned __int8)GetVersion() == 4;
 }
@@ -1201,7 +1201,7 @@ int  IO_StreamAdapterInvokeAtEnd(int adapter)
 }
 
 //----- (00462CC0) --------------------------------------------------------
-int IO_StreamAdapterReadStub()
+int IO_StreamAdapterReadStub(void)
 {
   return 0;
 }
@@ -1265,13 +1265,13 @@ int  ExcString_ReleaseTextDup(_DWORD *excStr)
 // 462D58: variable 'v1' is possibly undefined
 
 //----- (00462D60) --------------------------------------------------------
-int ExcString_GetErrorCodeStub()
+int ExcString_GetErrorCodeStub(void)
 {
   return 0;
 }
 
 //----- (00462D80) --------------------------------------------------------
-int ExcString_GetErrorCodeStubDup()
+int ExcString_GetErrorCodeStubDup(void)
 {
   return 0;
 }

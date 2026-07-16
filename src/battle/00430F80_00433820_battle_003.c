@@ -486,7 +486,7 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int tileCol, int sprit
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00431CC0) --------------------------------------------------------
-__int16 UnitBattle_UpdateIdleAnimatedUnits()
+__int16 UnitBattle_UpdateIdleAnimatedUnits(void)
 {
   int slot_index;
   unsigned char *slot;
@@ -703,7 +703,7 @@ __int16  Battle_PlaceReservedUnitSlotAtTile(int unitRecord, int tileRow, int til
 // 532048: using guessed type int g_MapData;
 
 //----- (004321D0) --------------------------------------------------------
-int Battle_ClearReservedUnitSlot()
+int Battle_ClearReservedUnitSlot(void)
 {
   int result; // eax
   int reservedUnitType; // ebx
@@ -732,7 +732,7 @@ int Battle_ClearReservedUnitSlot()
 // 532048: using guessed type int g_MapData;
 
 //----- (00432770) --------------------------------------------------------
-signed int Battle_RestoreSavedActionPointsBeforeResultCopy()
+signed int Battle_RestoreSavedActionPointsBeforeResultCopy(void)
 {
   signed int result; // eax
   int recordOffset; // edx
@@ -813,7 +813,7 @@ signed int  Battle_PlaceUnit(unsigned __int8 *unitRecord, int tileRow, char faci
 // 532048: using guessed type int g_MapData;
 
 //----- (00432910) --------------------------------------------------------
-int BuildingGarrisonDialog_CountSelectedSlots()
+int BuildingGarrisonDialog_CountSelectedSlots(void)
 {
   int selectedCount; // edx
   int i; // eax
@@ -1051,7 +1051,7 @@ void * BuildingGarrisonDialog_TickExitCountdown(int a1, double a2)
 // 5321F4: using guessed type int g_BuildingGarrisonDialogPendingExitCountdown;
 
 //----- (00432ED0) --------------------------------------------------------
-void *BuildingGarrisonDialog_DrawSelectedUnitPanel()
+void *BuildingGarrisonDialog_DrawSelectedUnitPanel(void)
 {
   int overlayPresented; // edi
   __int16 placeholderSpriteHeight; // ax
@@ -1431,7 +1431,7 @@ void *__thiscall BuildingGarrisonDialog_AnimateSelectedUnit(void *this)
 // 532190: using guessed type int g_BuildingGarrisonDialogSelectedUnitAnimFrame;
 
 //----- (00433820) --------------------------------------------------------
-int BuildingGarrisonDialog_HitTestSlotGrid()
+int BuildingGarrisonDialog_HitTestSlotGrid(void)
 {
   int mouseX; // eax
   int relY; // ebx

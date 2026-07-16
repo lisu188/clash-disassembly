@@ -379,7 +379,7 @@ BOOL  MapTile_IsCastleFoundationAnchorTile(int row, signed int column, int check
 // 5202E4: using guessed type int gameData;
 
 //----- (0041DB20) --------------------------------------------------------
-int Rules_RebuildCastleSiteFacts()
+int Rules_RebuildCastleSiteFacts(void)
 {
   int row; // esi
   int i; // ebp

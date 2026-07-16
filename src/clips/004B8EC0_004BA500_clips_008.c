@@ -828,7 +828,7 @@ LABEL_6:
 // 4B9A61: variable 'v7' is possibly undefined
 
 //----- (004B9A70) --------------------------------------------------------
-int Rules_CEAllocTestNode()
+int Rules_CEAllocTestNode(void)
 {
   signed int testNode; // eax
   int patternParser; // edx
@@ -1143,7 +1143,7 @@ int  Rules_CEPropagateJoinCoordinates(int result, int joinDepth, int patternInde
 }
 
 //----- (004B9EC0) --------------------------------------------------------
-signed int Rules_RegisterDeftemplateBinaryItem()
+signed int Rules_RegisterDeftemplateBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aDeftemplate_2,
@@ -1158,7 +1158,7 @@ signed int Rules_RegisterDeftemplateBinaryItem()
 }
 
 //----- (004B9F00) --------------------------------------------------------
-int Rules_DeftemplateBsaveFind()
+int Rules_DeftemplateBsaveFind(void)
 {
   int result; // eax
   int i; // ebx
@@ -1407,7 +1407,7 @@ int __thiscall Rules_DeftemplateBloadStorage(void *this)
 // 54E854: using guessed type int dword_54E854;
 
 //----- (004BA460) --------------------------------------------------------
-signed int Rules_DeftemplateBload()
+signed int Rules_DeftemplateBload(void)
 {
   int v3; // [esp-8h] [ebp-Ch] BYREF
 

@@ -839,25 +839,25 @@ int  Sprite_DrawSimpleIgnoringRect(
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 
 //----- (004055C0) --------------------------------------------------------
-void __noreturn Surface_GetReadIncrNotImplemented()
+void __noreturn Surface_GetReadIncrNotImplemented(void)
 {
   App_RequestQuit((int)aGetreadincrZap);
 }
 
 //----- (004055D0) --------------------------------------------------------
-void __noreturn Surface_GetWriteIncrNotImplemented()
+void __noreturn Surface_GetWriteIncrNotImplemented(void)
 {
   App_RequestQuit((int)aGetwriteincrZa);
 }
 
 //----- (004055E0) --------------------------------------------------------
-void __noreturn Surface_DrawPixNotImplemented()
+void __noreturn Surface_DrawPixNotImplemented(void)
 {
   App_RequestQuit((int)aDrawpixZapisNa);
 }
 
 //----- (004055F0) --------------------------------------------------------
-void __noreturn Surface_GetPixNotImplemented()
+void __noreturn Surface_GetPixNotImplemented(void)
 {
   App_RequestQuit((int)aGetpixZapisNaE);
 }
@@ -887,13 +887,13 @@ void __stdcall __noreturn Surface_DotBoxNotImplemented(int a1, int a2)
 }
 
 //----- (00405640) --------------------------------------------------------
-int Surface_GetReadIncrZero()
+int Surface_GetReadIncrZero(void)
 {
   return 0;
 }
 
 //----- (00405650) --------------------------------------------------------
-int Surface_GetWriteIncrZero()
+int Surface_GetWriteIncrZero(void)
 {
   return 0;
 }
@@ -970,19 +970,19 @@ int  SurfaceCursor_Destroy(int result, char flags)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00405720) --------------------------------------------------------
-signed int SurfaceCursor_GetIncrUnbounded()
+signed int SurfaceCursor_GetIncrUnbounded(void)
 {
   return 0x7FFFFFFF;
 }
 
 //----- (00405730) --------------------------------------------------------
-signed int SurfaceCursor_GetExtentUnbounded()
+signed int SurfaceCursor_GetExtentUnbounded(void)
 {
   return 0x7FFFFFFF;
 }
 
 //----- (00405750) --------------------------------------------------------
-int SurfaceCursor_GetOffsetZero()
+int SurfaceCursor_GetOffsetZero(void)
 {
   return 0;
 }
@@ -1025,7 +1025,7 @@ int  RenderSurface_GetBlitCursorRowStride(int cursor)
 }
 
 //----- (004057C0) --------------------------------------------------------
-signed int RenderSurface_GetBlitCursorCapacity()
+signed int RenderSurface_GetBlitCursorCapacity(void)
 {
   return 0x7FFFFFFF;
 }
@@ -1072,7 +1072,7 @@ int  RenderSurface_DestroyLinkedBlitCursor(_DWORD *cursor, char flags)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (00405830) --------------------------------------------------------
-signed int RenderSurface_GetLinkedBlitCursorCapacity()
+signed int RenderSurface_GetLinkedBlitCursorCapacity(void)
 {
   return 0x7FFFFFFF;
 }

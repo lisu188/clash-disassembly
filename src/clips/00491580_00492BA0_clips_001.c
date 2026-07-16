@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00491580) --------------------------------------------------------
-_DWORD *Module_BeginEnum()
+_DWORD *Module_BeginEnum(void)
 {
   _DWORD *freeListNode; // edx
   _DWORD *result; // eax
@@ -32,7 +32,7 @@ _DWORD *Module_BeginEnum()
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004915E0) --------------------------------------------------------
-int Module_EndEnum()
+int Module_EndEnum(void)
 {
   int *savedModule; // eax
   int result; // eax
@@ -73,7 +73,7 @@ int  Module_GetItem(int result, int moduleItemIndex)
 // 51A9B0: using guessed type int dword_51A9B0;
 
 //----- (00491680) --------------------------------------------------------
-int Module_CreateMainModule()
+int Module_CreateMainModule(void)
 {
   int free_module; // edx
   int module; // ecx
@@ -193,7 +193,7 @@ int  Module_GetPPForm(int theModule)
 }
 
 //----- (004917F0) --------------------------------------------------------
-int Module_RemoveAllModules()
+int Module_RemoveAllModules(void)
 {
   int result; // eax
   int next_module; // edx
@@ -363,7 +363,7 @@ int * Module_FindByName(_BYTE *defmoduleName)
 // 51A9AC: using guessed type int dword_51A9AC;
 
 //----- (004919E0) --------------------------------------------------------
-signed int *Module_GetCurrentCommand()
+signed int *Module_GetCurrentCommand(void)
 {
   int v0; // ecx
 
@@ -407,7 +407,7 @@ signed int * Module_SetCurrentCommand(int a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (00491AE0) --------------------------------------------------------
-signed int Module_ReportIllegalSpecifierError()
+signed int Module_ReportIllegalSpecifierError(void)
 {
   int v0; // ecx
 
@@ -418,7 +418,7 @@ signed int Module_ReportIllegalSpecifierError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00491B10) --------------------------------------------------------
-signed int IO_RegisterStringRouter()
+signed int IO_RegisterStringRouter(void)
 {
   return IO_AddRouter((int)aString, 0, (int)IO_StringRouterPrint, (int)IO_StringRouterQuery, (int)IO_StringRouterGetc, (int)IO_StringRouterUngetc, 0);
 }
@@ -1034,7 +1034,7 @@ _DWORD * Rules_StringToFact(const char *theString, int a2, double a3)
 }
 
 //----- (004925D0) --------------------------------------------------------
-signed int Rules_ReportNoTemplateError()
+signed int Rules_ReportNoTemplateError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -1213,7 +1213,7 @@ signed int  Rules_ReportAmbiguousReferenceError(int constructName, int findName)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00492830) --------------------------------------------------------
-int Rules_ClearModuleSearchMarkers()
+int Rules_ClearModuleSearchMarkers(void)
 {
   int result; // eax
 
@@ -1410,7 +1410,7 @@ LABEL_15:
 // 51A968: using guessed type int dword_51A968;
 
 //----- (00492B30) --------------------------------------------------------
-int Rules_RegisterDeftemplateConstruct()
+int Rules_RegisterDeftemplateConstruct(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -1439,7 +1439,7 @@ int Rules_RegisterDeftemplateConstruct()
 // 54E650: using guessed type int dword_54E650;
 
 //----- (00492BA0) --------------------------------------------------------
-int *Rules_InitDeftemplateHashTable()
+int *Rules_InitDeftemplateHashTable(void)
 {
   g_ClipsDeftemplateModuleItemId = Module_RegisterItem(
                    (int)aDeftemplate_1,

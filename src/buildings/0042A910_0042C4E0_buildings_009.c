@@ -1429,7 +1429,7 @@ int  Battle_NewTurn(int a1, char a2, DWORD a3)
 // 42C4CD: variable 'v3' is possibly undefined
 
 //----- (0042C4E0) --------------------------------------------------------
-BOOL Battle_HasUnitsForBothSides()
+BOOL Battle_HasUnitsForBothSides(void)
 {
   int attackerPresent; // esi
   int defenderPresent; // edi

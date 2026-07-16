@@ -678,7 +678,7 @@ LABEL_13:
 // 54E6F0: using guessed type int dword_54E6F0;
 
 //----- (004AD740) --------------------------------------------------------
-signed int Rules_BloadReleaseReadBuffer()
+signed int Rules_BloadReleaseReadBuffer(void)
 {
   signed int result; // eax
   int v1; // ecx
@@ -696,7 +696,7 @@ signed int Rules_BloadReleaseReadBuffer()
 // 51AD2C: using guessed type int dword_51AD2C;
 
 //----- (004AD770) --------------------------------------------------------
-signed int Rules_RegisterMultifieldSlotCommands()
+signed int Rules_RegisterMultifieldSlotCommands(void)
 {
   Rules_RegisterHostFunction(aDirectMvReplac, 98, (int)aDirectmvreplac, (int)Rules_DirectSlotReplaceCommand, (int)a4Wii);
   Rules_RegisterHostFunction(aDirectMvInsert, 98, (int)aDirectmvinsert, (int)Rules_DirectSlotInsertCommand, (int)a3Wi);
@@ -1141,7 +1141,7 @@ signed int __thiscall Rules_ReportUndefinedMessageHandlerName(void *this)
 // 51AD58: using guessed type int dword_51AD58;
 
 //----- (004AE070) --------------------------------------------------------
-signed int MessageHandler_PrintNoApplicableHandlerError()
+signed int MessageHandler_PrintNoApplicableHandlerError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -1158,7 +1158,7 @@ signed int MessageHandler_PrintNoApplicableHandlerError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004AE0C0) --------------------------------------------------------
-signed int MessageHandler_CheckArgCount()
+signed int MessageHandler_CheckArgCount(void)
 {
   int theHandler; // ecx
   int v2; // edx

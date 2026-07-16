@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (004A3790) --------------------------------------------------------
-signed int Rules_RegisterMathBuiltins()
+signed int Rules_RegisterMathBuiltins(void)
 {
   Rules_RegisterHostFunction(aCos, 100, (int)aCosfunction, (int)Rules_CosBuiltin, (int)a11n_0);
   Rules_RegisterHostFunction(aSin, 100, (int)aSinfunction, (int)Rules_SinBuiltin, (int)a11n_0);
@@ -67,7 +67,7 @@ BOOL __stdcall Rules_MathIsNearZero(double theNumber, double range)
 }
 
 //----- (004A3C50) --------------------------------------------------------
-int Rules_MathDomainError()
+int Rules_MathDomainError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -86,7 +86,7 @@ int Rules_MathDomainError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004A3CB0) --------------------------------------------------------
-int Rules_MathArgumentOverflowError()
+int Rules_MathArgumentOverflowError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -105,7 +105,7 @@ int Rules_MathArgumentOverflowError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004A3D10) --------------------------------------------------------
-int Rules_MathSingularityError()
+int Rules_MathSingularityError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -789,7 +789,7 @@ LABEL_20:
 }
 
 //----- (004A4D20) --------------------------------------------------------
-double Rules_MathPi()
+double Rules_MathPi(void)
 {
   Lexer_TokenExpect(0);
   return acos(g_Rules_MathPiAcosArgument);

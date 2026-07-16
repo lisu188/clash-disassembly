@@ -28,7 +28,7 @@ char * CRT_DetachThreadDataAndMaybeCloseHandle(char *result)
 // 4B583C: using guessed type int _RemoveThreadData_(void);
 
 //----- (00486721) --------------------------------------------------------
-char *CRT_DestroyTlsIndexAndThreadData()
+char *CRT_DestroyTlsIndexAndThreadData(void)
 {
   char *result; // eax
 
@@ -42,7 +42,7 @@ char *CRT_DestroyTlsIndexAndThreadData()
 }
 
 //----- (0048674D) --------------------------------------------------------
-void CRT_InitializeThreadAndFileHandleHooks()
+void CRT_InitializeThreadAndFileHandleHooks(void)
 {
   g_CRT_FileHandleLockAcquireHook = (int (__thiscall *)(_DWORD))CRT_AcquireFileHandleLock;
   g_CRT_FileHandleLockReleaseHook = (int (__fastcall *)(_DWORD, _DWORD))CRT_ReleaseFileHandleLock;
@@ -971,7 +971,7 @@ char  CRT_FormatFixedDecimal(char *buffer, int value, int spec)
 
 //----- (0048769A) --------------------------------------------------------
 // attributes: thunk
-int CRT_DispatchFloatFormat()
+int CRT_DispatchFloatFormat(void)
 {
   return g_FloatEfgFormatFn();
 }

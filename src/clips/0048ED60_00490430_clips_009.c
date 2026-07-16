@@ -150,7 +150,7 @@ int  Rules_RemovePMDependencies(int result)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0048EF60) --------------------------------------------------------
-void Rules_FlushPendingDependencyDestructors()
+void Rules_FlushPendingDependencyDestructors(void)
 {
   _DWORD *dependencyPtr; // eax
   int theEntity; // edx
@@ -576,14 +576,14 @@ int  Rules_SetEvaluationErrorFlag(int result)
 // 51A968: using guessed type int dword_51A968;
 
 //----- (0048F620) --------------------------------------------------------
-int Rules_GetHaltExecutionFlag()
+int Rules_GetHaltExecutionFlag(void)
 {
   return g_ClipsEvaluationError;
 }
 // 51A964: using guessed type int dword_51A964;
 
 //----- (0048F630) --------------------------------------------------------
-int Rules_GetEvaluationErrorFlag()
+int Rules_GetEvaluationErrorFlag(void)
 {
   return g_ClipsHaltExecution;
 }
@@ -1378,7 +1378,7 @@ int  Rules_FlushDeferredRetractQueue(double a1)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00490330) --------------------------------------------------------
-void Rules_FlushPendingNetworkGarbage()
+void Rules_FlushPendingNetworkGarbage(void)
 {
   unsigned int next_parser;
   unsigned int next_fact;
@@ -1439,7 +1439,7 @@ BOOL  Lexer_AppendCharToPendingToken(int inchar)
 // 51A984: using guessed type int dword_51A984;
 
 //----- (00490430) --------------------------------------------------------
-signed int Lexer_ResetPendingTokenBuffer()
+signed int Lexer_ResetPendingTokenBuffer(void)
 {
   signed int result; // eax
 

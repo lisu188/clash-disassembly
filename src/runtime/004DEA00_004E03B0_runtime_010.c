@@ -307,7 +307,7 @@ LABEL_28:
 // 54DD64: using guessed type int dword_54DD64;
 
 //----- (004DEF00) --------------------------------------------------------
-_DWORD *Method_BuildTypeRestrictionRecordFromFlags()
+_DWORD *Method_BuildTypeRestrictionRecordFromFlags(void)
 {
   _DWORD *freeListEntry; // edx
   signed int typeExprList; // esi
@@ -992,7 +992,7 @@ int  AST_NewSlotReferenceNode(__int16 refType, int theExpr, int slotDesc)
 // 4DFBC9: variable 'v6' is possibly undefined
 
 //----- (004DFBE0) --------------------------------------------------------
-signed int Rules_SetupDefinstancesBsaveBload()
+signed int Rules_SetupDefinstancesBsaveBload(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aDefinstances_0,
@@ -1014,7 +1014,7 @@ int  Rules_DefinstancesBloadModuleReference(int moduleIndex)
 // 54E914: using guessed type int dword_54E914;
 
 //----- (004DFC40) --------------------------------------------------------
-signed int Rules_CountDefinstancesBsaveExpressions()
+signed int Rules_CountDefinstancesBsaveExpressions(void)
 {
   signed int result; // eax
 
@@ -1050,7 +1050,7 @@ __int16  Rules_MarkDefinstancesExpressionUsage(_DWORD *theDefinstances)
 // 54E680: using guessed type int dword_54E680;
 
 //----- (004DFCC0) --------------------------------------------------------
-signed int Rules_FindDefinstancesBsaveExpressions()
+signed int Rules_FindDefinstancesBsaveExpressions(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Rules_BsaveWriteDefinstancesExpression, 0);
 }
@@ -1187,7 +1187,7 @@ int __thiscall Rules_BloadAllocateDefinstancesArrays(void *this)
 // 54E914: using guessed type int dword_54E914;
 
 //----- (004DFF40) --------------------------------------------------------
-signed int Rules_BloadRefreshDefinstances()
+signed int Rules_BloadRefreshDefinstances(void)
 {
   int space; // [esp-8h] [ebp-Ch] BYREF
 
@@ -1233,7 +1233,7 @@ int  Rules_BloadRefreshDefinstancesExpression(int bsaveBuffer, int itemIndex)
 // 54E914: using guessed type int dword_54E914;
 
 //----- (004E0040) --------------------------------------------------------
-signed int Rules_ClearDefinstancesBloadData()
+signed int Rules_ClearDefinstancesBloadData(void)
 {
   signed int result; // eax
   int recordOffset; // ecx
@@ -1274,7 +1274,7 @@ signed int Rules_ClearDefinstancesBloadData()
 // 54E914: using guessed type int dword_54E914;
 
 //----- (004E00F0) --------------------------------------------------------
-int Rules_RegisterDefinstancesCodeGenerator()
+int Rules_RegisterDefinstancesCodeGenerator(void)
 {
   int result; // eax
 
@@ -1292,7 +1292,7 @@ int  Rules_WriteDefinstancesModuleReference(int theFile, int count)
 // 54E918: using guessed type int dword_54E918;
 
 //----- (004E0160) --------------------------------------------------------
-signed int Compiler_RegisterDefinstancesModuleAssigner()
+signed int Compiler_RegisterDefinstancesModuleAssigner(void)
 {
   return Rules_RegisterModuleItemIdAssigner();
 }

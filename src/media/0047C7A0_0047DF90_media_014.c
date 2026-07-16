@@ -381,14 +381,14 @@ int __fastcall Rules_FindFunctionByName(int functionName, int lastFound)
 }
 
 //----- (0047CEB0) --------------------------------------------------------
-int Rules_IsBloaded()
+int Rules_IsBloaded(void)
 {
   return g_Rules_FactsBloadedFlag;
 }
 // 51A1AC: using guessed type int dword_51A1AC;
 
 //----- (0047CEC0) --------------------------------------------------------
-signed int Rules_ClearBload()
+signed int Rules_ClearBload(void)
 {
   int failed; // edx
   int callback_node; // ecx
@@ -438,7 +438,7 @@ signed int Rules_ClearBload()
 // 51AA3C: using guessed type int dword_51AA3C;
 
 //----- (0047CF90) --------------------------------------------------------
-int Rules_CallAbortBloadFunctions()
+int Rules_CallAbortBloadFunctions(void)
 {
   int callback_node; // edx
   int callback; // eax
@@ -489,7 +489,7 @@ _DWORD * Rules_AddAbortBloadFunction(int name, int priority, int callback)
 // 51A1BC: using guessed type int dword_51A1BC;
 
 //----- (0047D050) --------------------------------------------------------
-signed int Rules_ReportCannotLoadWithBload()
+signed int Rules_ReportCannotLoadWithBload(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -555,7 +555,7 @@ void __fastcall Rules_InitializeEngine(int a1, int a2)
 // 51A1D4: using guessed type int dword_51A1D4;
 
 //----- (0047D320) --------------------------------------------------------
-signed int Rules_RegisterBuiltinFunctionGroups()
+signed int Rules_RegisterBuiltinFunctionGroups(void)
 {
   Rules_RegisterControlFlowFunctions();
   Rules_RegisterMiscFunctions();
@@ -572,7 +572,7 @@ signed int Rules_RegisterBuiltinFunctionGroups()
 }
 
 //----- (0047D360) --------------------------------------------------------
-double Rules_TimeCommand()
+double Rules_TimeCommand(void)
 {
   struct
   {
@@ -650,7 +650,7 @@ LABEL_6:
 // 51A1D0: using guessed type int (*dword_51A1D0)(void);
 
 //----- (0047D4E0) --------------------------------------------------------
-int Rules_ShutdownEngine()
+int Rules_ShutdownEngine(void)
 {
   void *v0; // ecx
   int v1; // edx
@@ -1216,7 +1216,7 @@ int  Rules_SetStrategy(int strategy)
 // 51A1D8: using guessed type int dword_51A1D8;
 
 //----- (0047DBE0) --------------------------------------------------------
-signed int *Rules_GetStrategyCommand()
+signed int *Rules_GetStrategyCommand(void)
 {
   char *strategyName; // eax
   int v1; // ecx
@@ -1344,7 +1344,7 @@ char * Rules_GetStrategyName(int strategy)
 }
 
 //----- (0047DDA0) --------------------------------------------------------
-signed int Rules_RegisterAgendaCommands()
+signed int Rules_RegisterAgendaCommands(void)
 {
   Rules_AddClearFunction((int)aAgenda_0, (int)Rules_ResetActivationSequence, 0);
   Rules_AddWatchItem((int)aActivations, 1, 40, (int)&g_Rules_WatchActivationsFlag, (int)Rules_DefruleWatchAccess, (int)Rules_DefruleWatchPrint);

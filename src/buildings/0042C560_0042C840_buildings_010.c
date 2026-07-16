@@ -48,7 +48,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
 // 532048: using guessed type int g_MapData;
 
 //----- (0042C600) --------------------------------------------------------
-_BOOL2 UnitBattle_HandleManualRotateAndMoveInput()
+_BOOL2 UnitBattle_HandleManualRotateAndMoveInput(void)
 {
   int IsKeyPressed; // eax
   int mapDataCw; // ecx

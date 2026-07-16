@@ -48,7 +48,7 @@ int __fastcall CRT_RemoveUnhandledExceptionFilter(int a1, int a2)
 // 51A568: using guessed type int (__fastcall *g_CrtThreadDataAccessor)(_DWORD, _DWORD);
 
 //----- (004B5310) --------------------------------------------------------
-signed int IO_InitializeFileIORouter()
+signed int IO_InitializeFileIORouter(void)
 {
   return IO_AddRouter(
            (int)aFileio,
@@ -768,7 +768,7 @@ void __thiscall CRT_TzSetFromSystemInfo(int this)
 // 51B0C6: using guessed type int dword_51B0C6;
 
 //----- (004B64C2) --------------------------------------------------------
-void CRT_TzSet()
+void CRT_TzSet(void)
 {
   _BYTE *tzEnvString; // eax
   int v1; // edx
@@ -1313,7 +1313,7 @@ LABEL_10:
 // 4B7452: variable 'v8' is possibly undefined
 
 //----- (004B7460) --------------------------------------------------------
-int PP_BuildDefault()
+int PP_BuildDefault(void)
 {
   _DWORD *v0; // ecx
   int v1; // eax

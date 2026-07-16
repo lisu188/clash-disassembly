@@ -404,7 +404,7 @@ void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this)
 // 51A644: using guessed type __int16 word_51A644;
 
 //----- (00476A80) --------------------------------------------------------
-int FileSystem_InitCurrentEntryPathHolder()
+int FileSystem_InitCurrentEntryPathHolder(void)
 {
   g_FileSystemStrippedPathHolderText = 0;
   g_CurrentEntryPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
@@ -1019,7 +1019,7 @@ int  Compat_FileSystemReleaseFileRecord(int file_system, int *record_ptr)
 // 477591: variable 'v3' is possibly undefined
 
 //----- (004775D0) --------------------------------------------------------
-int Compat_FileSystemFreeFileRecordName()
+int Compat_FileSystemFreeFileRecordName(void)
 {
   int v1; // ecx
 

@@ -5,7 +5,7 @@
 // Deferred to compat/decomp_runtime_stubs.c until the ExcString throw helper is reconstructed.
 
 //----- (00484AED) --------------------------------------------------------
-int CRT_ConstructBadExceptionFromCurrentSEH()
+int CRT_ConstructBadExceptionFromCurrentSEH(void)
 {
   int result; // eax
 
@@ -646,7 +646,7 @@ signed int __fastcall Rules_ReportAlreadyParsed(int coupler, int whichItem)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485BC0) --------------------------------------------------------
-int Parser_ReportSyntaxError()
+int Parser_ReportSyntaxError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -668,7 +668,7 @@ int Parser_ReportSyntaxError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485C30) --------------------------------------------------------
-signed int Rules_ReportLocalVariableError()
+signed int Rules_ReportLocalVariableError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -717,7 +717,7 @@ signed int __fastcall Rules_ReportSystemError(int module, int errorID)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485D20) --------------------------------------------------------
-signed int Rules_ReportDivideByZeroError()
+signed int Rules_ReportDivideByZeroError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -791,7 +791,7 @@ int  Rules_LongIntegerToSymbol(int number)
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (00485E30) --------------------------------------------------------
-signed int Rules_RegisterExitFunction()
+signed int Rules_RegisterExitFunction(void)
 {
   Rules_RegisterHostFunction(aExit, 118, (int)aExitcommand, (int)Rules_ExitCommand, (int)a00_16);
   IO_InitializeFileIORouter();
@@ -919,7 +919,7 @@ LABEL_5:
 // 51A608: using guessed type int dword_51A608;
 
 //----- (00485FF0) --------------------------------------------------------
-int Rules_ExitCommand()
+int Rules_ExitCommand(void)
 {
   int result; // eax
 
@@ -1141,7 +1141,7 @@ int  IO_SetFastSaveFile(int result)
 // 51A60C: using guessed type int dword_51A60C;
 
 //----- (004862A0) --------------------------------------------------------
-int IO_GetFastLoadFile()
+int IO_GetFastLoadFile(void)
 {
   return g_IO_FastLoadFilePtr;
 }
@@ -1203,13 +1203,13 @@ void  CRT_ResetLockSlot(int result)
 }
 
 //----- (00486496) --------------------------------------------------------
-void CRT_AcquireStaticLock1()
+void CRT_AcquireStaticLock1(void)
 {
   CRT_LockEnter((int)&g_CRT_StaticLock1);
 }
 
 //----- (004864A0) --------------------------------------------------------
-void CRT_ReleaseStaticLock1()
+void CRT_ReleaseStaticLock1(void)
 {
   CRT_LockLeave((int)&g_CRT_StaticLock1);
 }
@@ -1235,37 +1235,37 @@ int  CRT_ReleaseAndUnregisterFileHandle(char fileHandle)
 // 4B4C63: using guessed type int _NTRemoveFileHandle_(void);
 
 //----- (004864E8) --------------------------------------------------------
-void CRT_AcquireStaticLock2()
+void CRT_AcquireStaticLock2(void)
 {
   CRT_LockEnter((int)&g_CRT_StaticLock2);
 }
 
 //----- (004864EF) --------------------------------------------------------
-void CRT_ReleaseStaticLock2()
+void CRT_ReleaseStaticLock2(void)
 {
   CRT_LockLeave((int)&g_CRT_StaticLock2);
 }
 
 //----- (004864F9) --------------------------------------------------------
-void CRT_AcquireStaticLock3()
+void CRT_AcquireStaticLock3(void)
 {
   CRT_LockEnter((int)&g_CRT_StaticLock3);
 }
 
 //----- (00486500) --------------------------------------------------------
-void CRT_ReleaseStaticLock3()
+void CRT_ReleaseStaticLock3(void)
 {
   CRT_LockLeave((int)&g_CRT_StaticLock3);
 }
 
 //----- (0048650A) --------------------------------------------------------
-void CRT_AcquireStaticLock4()
+void CRT_AcquireStaticLock4(void)
 {
   CRT_LockEnter((int)&g_CRT_StaticLock4);
 }
 
 //----- (00486511) --------------------------------------------------------
-void CRT_ReleaseStaticLock4()
+void CRT_ReleaseStaticLock4(void)
 {
   CRT_LockLeave((int)&g_CRT_StaticLock4);
 }
@@ -1320,7 +1320,7 @@ void  CRT_LockLeave(int result)
 }
 
 //----- (004865AA) --------------------------------------------------------
-_BYTE *CRT_GetOrCreateThreadDataPreserveLastError()
+_BYTE *CRT_GetOrCreateThreadDataPreserveLastError(void)
 {
   DWORD LastError; // esi
   _BYTE *Value; // eax
@@ -1376,7 +1376,7 @@ int  CRT_AllocateThreadDataBlock(int a1, int a2)
 // 51AF00: using guessed type int dword_51AF00;
 
 //----- (00486628) --------------------------------------------------------
-BOOL CRT_AllocateTlsIndex()
+BOOL CRT_AllocateTlsIndex(void)
 {
   dwTlsIndex = TlsAlloc();
   if ( HIWORD(g_WindowsVersionDword) >= 0x8000u && (unsigned __int8)g_WindowsVersionDword < 4u )

@@ -1359,7 +1359,7 @@ LABEL_23:
 // 532070: using guessed type int g_DefenderStartsOnLeft;
 
 //----- (0043CB80) --------------------------------------------------------
-void UnitBattle_ScanAiWallTargetColumns()
+void UnitBattle_ScanAiWallTargetColumns(void)
 {
   int scanRow; // edx
   int rowByteOffset; // ecx

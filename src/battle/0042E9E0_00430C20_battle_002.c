@@ -1223,7 +1223,7 @@ int  UnitBattle_RedrawTile(int tileRow, int tileCol)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00430C20) --------------------------------------------------------
-int UnitBattle_RedrawVisibleGrid()
+int UnitBattle_RedrawVisibleGrid(void)
 {
   int i; // ebx
   int j; // ecx

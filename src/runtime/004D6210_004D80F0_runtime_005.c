@@ -351,7 +351,7 @@ int  Class_ResolveNamedSlot(int result, int theDefclass, _BYTE *slotName)
 // 4D6800: variable 'v8' is possibly undefined
 
 //----- (004D6971) --------------------------------------------------------
-void Math_CompareAbsToEpsilon()
+void Math_CompareAbsToEpsilon(void)
 {
   return;
 }
@@ -1451,7 +1451,7 @@ int  Compiler_WriteConstraintReference(int codeFile, int constraintPtr, int maxI
 // 4D80AB: variable 'v8' is possibly undefined
 
 //----- (004D80F0) --------------------------------------------------------
-int Compiler_RegisterModuleCodeItem()
+int Compiler_RegisterModuleCodeItem(void)
 {
   int result; // eax
 

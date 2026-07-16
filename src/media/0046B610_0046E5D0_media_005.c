@@ -895,7 +895,7 @@ _DWORD * CSS_FileStream_New(int source, int bufferBytes)
 // 46D937: variable 'v5' is possibly undefined
 
 //----- (0046D960) --------------------------------------------------------
-int CSS_InitStreamingLocks()
+int CSS_InitStreamingLocks(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -934,7 +934,7 @@ int CSS_InitStreamingLocks()
 // 54D440: using guessed type int dword_54D440;
 
 //----- (0046D9F0) --------------------------------------------------------
-int CSS_StreamService_NoOpHook()
+int CSS_StreamService_NoOpHook(void)
 {
   return 0;
 }
@@ -1270,7 +1270,7 @@ int  CSS_SampleCache_FindAndTouch(int fileName)
 // 54D3B8: using guessed type int dword_54D3B8;
 
 //----- (0046E2D0) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels(void)
 {
   int channelOffset; // ebx
   signed int i; // ecx
@@ -1291,7 +1291,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E350) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels(void)
 {
   int channelOffset; // ebx
   signed int i; // esi
@@ -1357,7 +1357,7 @@ int __stdcall CSS_StreamReadingThreadProc(int threadParam)
 // 54D420: using guessed type int dword_54D420;
 
 //----- (0046E510) --------------------------------------------------------
-_DWORD *__stdcall CSS_PauseStreamReading()
+_DWORD *__stdcall CSS_PauseStreamReading(void)
 {
   _DWORD *result; // eax
   int *lockCounter; // ebx
@@ -1388,7 +1388,7 @@ _DWORD *__stdcall CSS_PauseStreamReading()
 // 54D414: using guessed type int dword_54D414;
 
 //----- (0046E5C0) --------------------------------------------------------
-DWORD __stdcall CSS_ResumeStreamReading()
+DWORD __stdcall CSS_ResumeStreamReading(void)
 {
   return ResumeThread(hThread);
 }

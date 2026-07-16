@@ -1055,14 +1055,14 @@ int  Rules_RunConstructTypeIncrementalReset(int constructType, int node)
 }
 
 //----- (004BD160) --------------------------------------------------------
-int Rules_GetIncrementalReset()
+int Rules_GetIncrementalReset(void)
 {
   return g_Rules_IncrementalResetEnabled;
 }
 // 51B358: using guessed type int dword_51B358;
 
 //----- (004BD170) --------------------------------------------------------
-signed int Rules_SetIncrementalReset()
+signed int Rules_SetIncrementalReset(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -1113,7 +1113,7 @@ int  Rules_SetIncrementalResetCommand(int returnValue, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004BD260) --------------------------------------------------------
-int Rules_GetIncrementalResetCommand()
+int Rules_GetIncrementalResetCommand(void)
 {
   int v0; // ecx
 
@@ -1382,7 +1382,7 @@ LABEL_13:
 // 51B360: using guessed type int dword_51B360;
 
 //----- (004BD6C0) --------------------------------------------------------
-_DWORD *Parser_PushFunctionParseState()
+_DWORD *Parser_PushFunctionParseState(void)
 {
   _DWORD *freeBlock; // edx
   _DWORD *result; // eax
@@ -1411,7 +1411,7 @@ _DWORD *Parser_PushFunctionParseState()
 // 54E87C: using guessed type int dword_54E87C;
 
 //----- (004BD710) --------------------------------------------------------
-int Parser_PopFunctionParseState()
+int Parser_PopFunctionParseState(void)
 {
   _DWORD *frame; // eax
   int result; // eax

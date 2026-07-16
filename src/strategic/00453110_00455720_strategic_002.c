@@ -1256,7 +1256,7 @@ _DWORD * Rules_RetractCastleFact(unsigned __int8 *castle_record, double a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455410) --------------------------------------------------------
-int Game_GetTurnNumber()
+int Game_GetTurnNumber(void)
 {
   return *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET);
 }

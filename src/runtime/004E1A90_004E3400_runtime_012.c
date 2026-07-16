@@ -302,7 +302,7 @@ LABEL_24:
 // 54E668: using guessed type int dword_54E668;
 
 //----- (004E2200) --------------------------------------------------------
-signed int Rules_RegisterObjectPatternNetworkBinaryItem()
+signed int Rules_RegisterObjectPatternNetworkBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aObjectPatter_0,
@@ -317,7 +317,7 @@ signed int Rules_RegisterObjectPatternNetworkBinaryItem()
 }
 
 //----- (004E2240) --------------------------------------------------------
-_DWORD *Rules_AssignObjectPatternNetworkBsaveIndices()
+_DWORD *Rules_AssignObjectPatternNetworkBsaveIndices(void)
 {
   _DWORD *i; // eax
   int slotBitmap; // ebx
@@ -535,7 +535,7 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
 // 51C71C: using guessed type int dword_51C71C;
 
 //----- (004E25F0) --------------------------------------------------------
-signed int Rules_BloadObjectPatternNetworkCounts()
+signed int Rules_BloadObjectPatternNetworkCounts(void)
 {
   signed int result; // eax
   unsigned int count_bytes; // [esp+8h] [ebp-Ch] BYREF
@@ -574,7 +574,7 @@ signed int Rules_BloadObjectPatternNetworkCounts()
 // 51C724: using guessed type int dword_51C724;
 
 //----- (004E2680) --------------------------------------------------------
-int Rules_BloadObjectPatternNetworkRecords()
+int Rules_BloadObjectPatternNetworkRecords(void)
 {
   int result; // eax
   int space; // [esp+0h] [ebp-8h] BYREF
@@ -744,7 +744,7 @@ int * Class_ResolveSystemSlotTemplate(_DWORD *bsaveData, int itemIndex)
 // 54E688: using guessed type int dword_54E688;
 
 //----- (004E2970) --------------------------------------------------------
-int Class_ClearClassIDTable()
+int Class_ClearClassIDTable(void)
 {
   int alphaIndex; // ecx
   int recordOffset; // edx

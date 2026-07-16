@@ -752,14 +752,14 @@ LABEL_9:
 
 //----- (004E7DDE) --------------------------------------------------------
 // attributes: thunk
-int CRT_InvokeIoInitHook()
+int CRT_InvokeIoInitHook(void)
 {
   return g_CRT_InitHookPtr();
 }
 // 51A8BB: using guessed type int (*off_51A8BB)();
 
 //----- (004E7DE5) --------------------------------------------------------
-int CRT_DefaultZeroStub()
+int CRT_DefaultZeroStub(void)
 {
   return 0;
 }

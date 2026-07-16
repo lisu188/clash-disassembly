@@ -496,7 +496,7 @@ int  Rules_FindAssertSlotItem(_DWORD *slotPtr, int listOfSlots)
 }
 
 //----- (004C2340) --------------------------------------------------------
-signed int Rules_RegisterModifyDuplicateFunctions()
+signed int Rules_RegisterModifyDuplicateFunctions(void)
 {
   Rules_RegisterHostFunctionNoRestrictions(aModify, 117, (int)aModifycommand, (int)Rules_ModifyCommand);
   Rules_RegisterHostFunctionNoRestrictions(aDuplicate, 117, (int)aDuplicatecomma, (int)Rules_DuplicateCommand);

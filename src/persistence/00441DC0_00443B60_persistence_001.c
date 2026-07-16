@@ -494,7 +494,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
 // 543CB0: using guessed type int g_CurrentUnitMoveSoundTypeId;
 
 //----- (004425B0) --------------------------------------------------------
-void Audio_StopUnitMoveSound()
+void Audio_StopUnitMoveSound(void)
 {
   if ( g_UnitSoundsEnabled )
   {
@@ -695,7 +695,7 @@ char  FileSystem_SetInstallRootPath(char *sourcePath)
 }
 
 //----- (004429C0) --------------------------------------------------------
-char *FileSystem_GetInstallRootPath()
+char *FileSystem_GetInstallRootPath(void)
 {
   return aCClash;
 }
@@ -851,7 +851,7 @@ int  loadFileSusp(char *sourcePath, const CHAR *destPath)
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00442D90) --------------------------------------------------------
-int Port_FindAndInit()
+int Port_FindAndInit(void)
 {
   int rowIndex; // esi
   int rowOffset; // edi
@@ -919,7 +919,7 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (00442F60) --------------------------------------------------------
-_DWORD *Rules_LogPortLocation()
+_DWORD *Rules_LogPortLocation(void)
 {
   _DWORD *result; // eax
   int portRow; // edx
@@ -972,7 +972,7 @@ int  Port_NewTurn(DWORD logContext)
 // 5202E4: using guessed type int gameData;
 
 //----- (00443090) --------------------------------------------------------
-int Port_UpdateShorelineVariantTiles()
+int Port_UpdateShorelineVariantTiles(void)
 {
   int result; // eax
   int portRow; // edx
@@ -1069,7 +1069,7 @@ int Port_UpdateShorelineVariantTiles()
 // 5202E4: using guessed type int gameData;
 
 //----- (00443230) --------------------------------------------------------
-int Port_IsReinforcementReady()
+int Port_IsReinforcementReady(void)
 {
   return PORT_REINFORCEMENT_READY_FLAG;
 }
@@ -1452,7 +1452,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00443B60) --------------------------------------------------------
-int Rules_RebuildTreasureFacts()
+int Rules_RebuildTreasureFacts(void)
 {
   int i; // ebx
   int result; // eax

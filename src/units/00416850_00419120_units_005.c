@@ -876,7 +876,7 @@ int  UI_StartWorldMapUnitAttentionFlash(int unitIndex, int a2, int a3)
 // 52699C: using guessed type int g_WorldMapAttentionFlashStartTick;
 
 //----- (00418DA0) --------------------------------------------------------
-void UI_UpdateWorldMapUnitAttentionFlash()
+void UI_UpdateWorldMapUnitAttentionFlash(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -902,7 +902,7 @@ void UI_UpdateWorldMapUnitAttentionFlash()
 // 52699C: using guessed type int g_WorldMapAttentionFlashStartTick;
 
 //----- (00418E20) --------------------------------------------------------
-BOOL UI_IsWorldMapUnitAttentionFlashActive()
+BOOL UI_IsWorldMapUnitAttentionFlashActive(void)
 {
   return g_WorldMapAttentionFlashUnitIndex != -1;
 }
@@ -1061,14 +1061,14 @@ int  UI_DrawTileHighlightOverlay(int tileX, int tileY, int screenLeft, int scree
 // 5202C8: using guessed type int dword_5202C8;
 
 //----- (004190B0) --------------------------------------------------------
-void BattleLog_Disable()
+void BattleLog_Disable(void)
 {
   battleLogEnabled = 0;
 }
 // 5139FC: using guessed type int battleLogEnabled;
 
 //----- (004190C0) --------------------------------------------------------
-void BattleLog_Enable()
+void BattleLog_Enable(void)
 {
   battleLogEnabled = 1;
 }

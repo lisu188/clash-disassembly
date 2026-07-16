@@ -135,7 +135,7 @@ signed int  MessageHandler_ReportStaticSlotAccessError(int theInstance, int slot
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004B0380) --------------------------------------------------------
-int Class_LookupCurrentScopedName()
+int Class_LookupCurrentScopedName(void)
 {
   _BYTE *v0; // edx
   _BYTE *className; // eax
@@ -286,7 +286,7 @@ int  Class_GetNextRecord(int defclassPtr)
 // 54E6BC: using guessed type int dword_54E6BC;
 
 //----- (004B0590) --------------------------------------------------------
-BOOL Class_IsDeletable()
+BOOL Class_IsDeletable(void)
 {
   int v0; // edx
 
@@ -302,7 +302,7 @@ int __thiscall Class_UndefineCommand(void *this)
 // 54E6B8: using guessed type int dword_54E6B8;
 
 //----- (004B05E0) --------------------------------------------------------
-signed int Class_IsDeletableAlt()
+signed int Class_IsDeletableAlt(void)
 {
   int v0; // edx
 
@@ -446,7 +446,7 @@ signed int  Class_ParseClassReference(int **classOut, int a2, double a3)
 // 4B082F: variable 'v6' is possibly undefined
 
 //----- (004B0850) --------------------------------------------------------
-signed int Class_ListAllConstructs()
+signed int Class_ListAllConstructs(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Class_PrintModuleList, 0);
 }
@@ -524,7 +524,7 @@ BOOL  Class_PrepareUndefineCheck(double a1)
 // 51AD0C: using guessed type int dword_51AD0C;
 
 //----- (004B0940) --------------------------------------------------------
-int Class_InitHashTables()
+int Class_InitHashTables(void)
 {
   int i; // eax
   int result; // eax
@@ -1225,7 +1225,7 @@ signed int  Class_HierarchyHasInstances(int theClass)
 // 4B14EA: variable 'v4' is possibly undefined
 
 //----- (004B1500) --------------------------------------------------------
-signed int Class_RemoveAllDeletableClasses()
+signed int Class_RemoveAllDeletableClasses(void)
 {
   int success; // ebx
   int i; // ecx
@@ -1390,7 +1390,7 @@ LABEL_5:
 // 51AD70: using guessed type int dword_51AD70;
 
 //----- (004B1730) --------------------------------------------------------
-signed int Class_NewTraversalID()
+signed int Class_NewTraversalID(void)
 {
   int i; // edi
   int j; // ebx
@@ -1425,7 +1425,7 @@ signed int Class_NewTraversalID()
 // 51ADA0: using guessed type char byte_51ADA0;
 
 //----- (004B1810) --------------------------------------------------------
-void Class_ReleaseTraversalID()
+void Class_ReleaseTraversalID(void)
 {
   --g_Class_TraversalIDCounter;
 }

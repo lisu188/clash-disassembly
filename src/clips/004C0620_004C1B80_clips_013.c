@@ -469,7 +469,7 @@ _BYTE * Rules_BuildLHSNodeFromToken(__int16 *theExpression)
 // 4C0C37: variable 'v9' is possibly undefined
 
 //----- (004C0D30) --------------------------------------------------------
-_BYTE *Rules_ApplyCEKeywordFlags()
+_BYTE *Rules_ApplyCEKeywordFlags(void)
 {
   _BYTE *result; // eax
   int theFunction; // ecx
@@ -537,7 +537,7 @@ _BYTE *Rules_ApplyCEKeywordFlags()
 // 4C0D3D: variable 'v1' is possibly undefined
 
 //----- (004C0E40) --------------------------------------------------------
-_BYTE *Rules_ApplyPatternKeywordFlags()
+_BYTE *Rules_ApplyPatternKeywordFlags(void)
 {
   _BYTE *result; // eax
   char clearedFlags; // bl
@@ -616,7 +616,7 @@ _BYTE *Rules_ApplyPatternKeywordFlags()
 // 4C0E5B: variable 'v2' is possibly undefined
 
 //----- (004C0F50) --------------------------------------------------------
-int Module_RegisterDefmoduleCommands()
+int Module_RegisterDefmoduleCommands(void)
 {
   int v0; // ecx
 
@@ -632,7 +632,7 @@ int Module_RegisterDefmoduleCommands()
 // 4C0FF0: using guessed type int sub_4C0FF0();
 
 //----- (004C0FF0) --------------------------------------------------------
-int Module_ClearAllModulesResetToMain()
+int Module_ClearAllModulesResetToMain(void)
 {
   int result; // eax
 
@@ -719,7 +719,7 @@ signed int  Module_PrintPPFormByName(_BYTE *defmoduleName, signed int logicalNam
 // 4C10E9: variable 'v4' is possibly undefined
 
 //----- (004C1110) --------------------------------------------------------
-int Module_ListDefmodulesCommand()
+int Module_ListDefmodulesCommand(void)
 {
   int result; // eax
 
@@ -755,7 +755,7 @@ int  Module_PrintAllNamesWithTally(int logicalName)
 // 4C1175: variable 'v7' is possibly undefined
 
 //----- (004C11A0) --------------------------------------------------------
-int Module_GetModuleCount()
+int Module_GetModuleCount(void)
 {
   return g_Module_DefModuleCount;
 }

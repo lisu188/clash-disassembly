@@ -9,7 +9,7 @@ CLASH95_TEST_VISIBLE int Runtime_ExprDescriptorNoop(int value)
   return value;
 }
 
-int MessageHandler_RegisterCommands()
+int MessageHandler_RegisterCommands(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -356,7 +356,7 @@ int  MessageHandler_CountAndPrintHandlers(int logicalName, unsigned __int16 *cla
 // 4CD811: variable 'v6' is possibly undefined
 
 //----- (004CD850) --------------------------------------------------------
-int MessageHandler_RegisterSystemHandlers()
+int MessageHandler_RegisterSystemHandlers(void)
 {
   MessageHandler_AddSystemHandler(aUser_0, aInit, 0, aInitSlots_0);
   MessageHandler_AddSystemHandler(aUser_0, aDelete_0, 0, aDeleteInstan_0);
@@ -644,7 +644,7 @@ signed int  MessageHandler_PrintWatchStatusLine(int theClass, int handlerIndex)
 // 51AD3C: using guessed type char *off_51AD3C[4];
 
 //----- (004CDDE0) --------------------------------------------------------
-int Definstances_SetupConstruct()
+int Definstances_SetupConstruct(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -701,7 +701,7 @@ int  Definstances_FindByName(_BYTE *constructName, int a2)
 // 54E8F4: using guessed type int dword_54E8F4;
 
 //----- (004CDF60) --------------------------------------------------------
-BOOL Definstances_IsDeletable()
+BOOL Definstances_IsDeletable(void)
 {
   int theDefinstances; // edx
 
@@ -724,7 +724,7 @@ int __thiscall Definstances_GetModuleCommand(void *this)
 // 54E8F4: using guessed type int dword_54E8F4;
 
 //----- (004CDFC0) --------------------------------------------------------
-signed int Definstances_DeleteRecord()
+signed int Definstances_DeleteRecord(void)
 {
   int v0; // edx
   signed int result; // eax
@@ -1004,7 +1004,7 @@ int  Definstances_SaveConstruct(signed int logicalName)
 // 54E8F4: using guessed type int dword_54E8F4;
 
 //----- (004CE4A0) --------------------------------------------------------
-signed int Definstances_RemoveAll()
+signed int Definstances_RemoveAll(void)
 {
   int allDeleted; // esi
   int currentRecord; // ebx
@@ -1050,7 +1050,7 @@ signed int  Definstances_ReportCannotDelete(int constructName, int a2)
 }
 
 //----- (004CE530) --------------------------------------------------------
-int Definstances_CreateDefaultRecord()
+int Definstances_CreateDefaultRecord(void)
 {
   int free_record; // edx
   int definstances_record; // ecx
@@ -1093,7 +1093,7 @@ int Definstances_CreateDefaultRecord()
 // 54E6F4: using guessed type int dword_54E6F4;
 
 //----- (004CE600) --------------------------------------------------------
-signed int Definstances_AllocModuleData()
+signed int Definstances_AllocModuleData(void)
 {
   _DWORD *freeListHead; // edx
 
@@ -1145,7 +1145,7 @@ int  Definstances_CheckRecordBusy(int result, _DWORD *clearReadyFlag)
 }
 
 //----- (004CE6B0) --------------------------------------------------------
-signed int Definstances_ResetAll()
+signed int Definstances_ResetAll(void)
 {
   return sub_4A9430_Impl((int (*)(int, intptr_t))Definstances_ExecuteRecordActions, g_Clips_DefinstancesModuleItemIndex, 0, 1);
 }

@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (004D8120) --------------------------------------------------------
-int Compiler_AssignModuleIndices()
+int Compiler_AssignModuleIndices(void)
 {
   int result; // eax
   int i; // ecx
@@ -1059,7 +1059,7 @@ unsigned int  Str_DecodeMultibyteChar(_WORD *wideChar, unsigned __int8 *mbChar, 
 // 54E718: using guessed type int dword_54E718;
 
 //----- (004D977B) --------------------------------------------------------
-void Fpu_ClearExceptions()
+void Fpu_ClearExceptions(void)
 {
   return;
 }

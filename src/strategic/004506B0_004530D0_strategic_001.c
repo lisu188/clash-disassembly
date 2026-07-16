@@ -763,7 +763,7 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451690) --------------------------------------------------------
-int Cheat_RevealMapForCurrentPlayer()
+int Cheat_RevealMapForCurrentPlayer(void)
 {
   Map_RevealAllTilesForPlayer(g_CurrentPlayerIndex);
   return WorldMap_RedrawViewport(1);
@@ -771,7 +771,7 @@ int Cheat_RevealMapForCurrentPlayer()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004516B0) --------------------------------------------------------
-void Cheat_FillSelectedSquadWithCannons()
+void Cheat_FillSelectedSquadWithCannons(void)
 {
   int i; // esi
   signed int squad_count; // eax
@@ -797,7 +797,7 @@ void Cheat_FillSelectedSquadWithCannons()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451730) --------------------------------------------------------
-signed int Cheat_ClearSelectedSquadDamageFlags()
+signed int Cheat_ClearSelectedSquadDamageFlags(void)
 {
   signed int result; // eax
   int slot_offset; // edx
@@ -825,14 +825,14 @@ signed int Cheat_ClearSelectedSquadDamageFlags()
 // 5202E4: using guessed type int gameData;
 
 //----- (004517B0) --------------------------------------------------------
-void Cheat_ForceWinCurrentMission()
+void Cheat_ForceWinCurrentMission(void)
 {
   g_CheatForceWinMissionFlag = 1;
 }
 // 5448A0: using guessed type int dword_5448A0;
 
 //----- (004517C0) --------------------------------------------------------
-void Cheat_HealSelectedSquadAndClearDamage()
+void Cheat_HealSelectedSquadAndClearDamage(void)
 {
   signed int squad_count; // eax
   int slot_offset; // ecx
@@ -902,7 +902,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00451910) --------------------------------------------------------
-int Cheat_TeleportSelectedUnitToCursor()
+int Cheat_TeleportSelectedUnitToCursor(void)
 {
   int tile_x; // esi
   int result; // eax
@@ -938,7 +938,7 @@ int Cheat_TeleportSelectedUnitToCursor()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00451A60) --------------------------------------------------------
-signed int Cheat_FillSelectedSquadWithPegasi()
+signed int Cheat_FillSelectedSquadWithPegasi(void)
 {
   int i; // esi
   signed int result; // eax
@@ -1012,13 +1012,13 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451C50) --------------------------------------------------------
-void __noreturn Cheat_QuitWithJokeMessage()
+void __noreturn Cheat_QuitWithJokeMessage(void)
 {
   App_RequestQuit((int)aHeheNoBonus);
 }
 
 //----- (00451C60) --------------------------------------------------------
-void Cheat_SetFactionColorAndCastleFlags()
+void Cheat_SetFactionColorAndCastleFlags(void)
 {
   int building_index; // eax
   int building_record; // edx
@@ -1137,7 +1137,7 @@ int  UI_ReadCheatString(char a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451DF0) --------------------------------------------------------
-signed int Rules_ShowBanner_StrategicClash()
+signed int Rules_ShowBanner_StrategicClash(void)
 {
   int v0; // ecx
   int v1; // edx
@@ -1154,7 +1154,7 @@ signed int Rules_ShowBanner_StrategicClash()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451E20) --------------------------------------------------------
-int Rules_ResetEngineOnLoad()
+int Rules_ResetEngineOnLoad(void)
 {
   int result; // eax
 
@@ -1165,7 +1165,7 @@ int Rules_ResetEngineOnLoad()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451E46) --------------------------------------------------------
-signed int Rules_CompileStrategicRulesFile()
+signed int Rules_CompileStrategicRulesFile(void)
 {
   int v0; // ecx
   int v1; // edx
@@ -1185,7 +1185,7 @@ signed int Rules_CompileStrategicRulesFile()
 // 47E7B0: using guessed type int __fastcall unknown_libname_7(int);
 
 //----- (00451E87) --------------------------------------------------------
-signed int Rules_RegisterAllHostFunctions()
+signed int Rules_RegisterAllHostFunctions(void)
 {
   CRT_ProbeStackFrame(32);
   Rules_RegisterStrategicActionHostFunctions();
@@ -1195,7 +1195,7 @@ signed int Rules_RegisterAllHostFunctions()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451EC0) --------------------------------------------------------
-int Rules_LogMissionSetupInfo()
+int Rules_LogMissionSetupInfo(void)
 {
   double formatted;
   int player_index;
@@ -1230,7 +1230,7 @@ int Rules_LogMissionSetupInfo()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451F70) --------------------------------------------------------
-signed int Rules_ExecuteAITurn()
+signed int Rules_ExecuteAITurn(void)
 {
   double formatted_turn; // st7
   double formatted_player; // st7
@@ -1395,7 +1395,7 @@ _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00452390) --------------------------------------------------------
-signed int Rules_RegisterStrategicActionHostFunctions()
+signed int Rules_RegisterStrategicActionHostFunctions(void)
 {
   CRT_ProbeStackFrame(36);
   Rules_RegisterHostFunction(aSwiatynia, 105, (int)aSwiatynia00, (int)&Rules_HostTemple, (int)a22i_1);

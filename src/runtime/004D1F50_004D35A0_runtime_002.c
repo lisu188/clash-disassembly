@@ -1232,7 +1232,7 @@ LABEL_24:
 // 4D33DD: variable 'v9' is possibly undefined
 
 //----- (004D3430) --------------------------------------------------------
-int Rules_CreateDefaultObjectPatternRestriction()
+int Rules_CreateDefaultObjectPatternRestriction(void)
 {
   int classID; // ecx
   _WORD *theBitmap; // eax

@@ -990,7 +990,7 @@ LABEL_8:
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (004A6610) --------------------------------------------------------
-signed int Rules_RegisterHelpFunctions()
+signed int Rules_RegisterHelpFunctions(void)
 {
   Rules_RegisterHostFunction(aHelp, 118, (int)aHelpfunction, (int)Help_RunInteractiveHelpBrowser, 0);
   Rules_RegisterHostFunction(aHelpPath, 118, (int)aHelppathfuncti, (int)Help_SetHelpFilePathCommand, (int)a1k);

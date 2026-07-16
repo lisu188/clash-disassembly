@@ -1381,7 +1381,7 @@ LABEL_5:
 // 51B3D4: using guessed type int dword_51B3D4;
 
 //----- (004CB560) --------------------------------------------------------
-int Deffunction_RegisterCodeGenerator()
+int Deffunction_RegisterCodeGenerator(void)
 {
   int result; // eax
 
@@ -1417,7 +1417,7 @@ int  Deffunction_WriteModuleItemReference(int filePtr, int a2)
 // 54E8DC: using guessed type int dword_54E8DC;
 
 //----- (004CB620) --------------------------------------------------------
-signed int Deffunction_RegisterModuleItemAssigner()
+signed int Deffunction_RegisterModuleItemAssigner(void)
 {
   return Rules_RegisterModuleItemIdAssigner();
 }

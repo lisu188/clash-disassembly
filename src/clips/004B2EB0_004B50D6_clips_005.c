@@ -1250,7 +1250,7 @@ int  IO_ScanfNextFieldChar(int streamContext)
 // 4B3E5E: variable 'v4' is possibly undefined
 
 //----- (004B4E7A) --------------------------------------------------------
-BOOL CRT_HasActiveWindow()
+BOOL CRT_HasActiveWindow(void)
 {
   HMODULE LibraryA; // eax
   HWND v1; // ebx

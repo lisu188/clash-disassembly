@@ -340,7 +340,7 @@ int  Rules_EvalGetPrognFieldBuiltin(int returnValue)
 // 51ACD8: using guessed type int dword_51ACD8;
 
 //----- (004A22D0) --------------------------------------------------------
-int Rules_EvalGetPrognIndexBuiltin()
+int Rules_EvalGetPrognIndexBuiltin(void)
 {
   int depth; // eax
   int i; // edx
@@ -760,7 +760,7 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
 // 4A2988: variable 'v9' is possibly undefined
 
 //----- (004A2AB0) --------------------------------------------------------
-signed int Rules_RegisterStringBuiltins()
+signed int Rules_RegisterStringBuiltins(void)
 {
   Rules_RegisterHostFunction(aStrCat, 107, (int)aStrcatfunction, (int)Rules_StrCatBuiltin, (int)a1_1);
   Rules_RegisterHostFunction(aSymCat, 107, (int)aSymcatfunction, (int)Rules_SymCatBuiltin, (int)a1_1);

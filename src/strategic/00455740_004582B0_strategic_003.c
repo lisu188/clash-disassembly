@@ -484,7 +484,7 @@ signed int  Map_IsCastleSiteDistanceMinimal(int candidate_row, int candidate_col
 }
 
 //----- (00455FF0) --------------------------------------------------------
-void Map_RebuildCastleSiteAnchorCache()
+void Map_RebuildCastleSiteAnchorCache(void)
 {
   int anchor_slot;
   int row;
@@ -573,7 +573,7 @@ int  Building_OnGarrisonChange(int building_index, int instance_record, double a
 // 5202E4: using guessed type int gameData;
 
 //----- (004561B0) --------------------------------------------------------
-signed int Rules_RegisterBuildingHostFunctions()
+signed int Rules_RegisterBuildingHostFunctions(void)
 {
   CRT_ProbeStackFrame(36);
   Rules_RegisterHostFunction(aLeczenie, 118, (int)aLeczenie, (int)&Rules_HostHealing, (int)a11i_3);
@@ -623,7 +623,7 @@ signed int Rules_RegisterBuildingHostFunctions()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (004570E3) --------------------------------------------------------
-signed int Rules_RegisterArmyHostFunctions()
+signed int Rules_RegisterArmyHostFunctions(void)
 {
   CRT_ProbeStackFrame(36);
   Rules_RegisterHostFunction(aWejdzDoZamku, 98, (int)aWejdzdozamku, (int)&Rules_HostEnterCastle, (int)a22i_0);

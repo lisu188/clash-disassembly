@@ -249,7 +249,7 @@ signed int  Rules_PrintTemplateFactSlots(int logicalName, int theFact, int a3)
 // 48D839: variable 'v10' is possibly undefined
 
 //----- (0048D8C0) --------------------------------------------------------
-int Lexer_MarkImpliedTemplates()
+int Lexer_MarkImpliedTemplates(void)
 {
   int result; // eax
   int i; // edi

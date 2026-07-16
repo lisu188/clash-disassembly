@@ -187,7 +187,7 @@ LABEL_60:
 // 54D768: using guessed type int dword_54D768;
 
 //----- (00470620) --------------------------------------------------------
-signed int CSS_CloseWaveOutDevice()
+signed int CSS_CloseWaveOutDevice(void)
 {
   MMRESULT mm_result; // eax
   int all_buffers_done; // ebx
@@ -506,7 +506,7 @@ int __cdecl CSS_InitMixBuffers(int sample_rate, int channel_count)
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (00470BD0) --------------------------------------------------------
-int CSS_FreeMixBuffers()
+int CSS_FreeMixBuffers(void)
 {
   CSS_Mem_FreeIfSet(g_CSS_MixBufferAllocBase);
   return CSS_Mem_FreeIfSet(g_CSS_QueuedSoundSlotTable);
@@ -546,7 +546,7 @@ int __cdecl CSS_InitMixChannels(int channel_count)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470C60) --------------------------------------------------------
-int CSS_FreeMixChannels()
+int CSS_FreeMixChannels(void)
 {
   int result; // eax
 
@@ -563,7 +563,7 @@ int CSS_FreeMixChannels()
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470C90) --------------------------------------------------------
-int CSS_ResetAllMixChannels()
+int CSS_ResetAllMixChannels(void)
 {
   unsigned int i; // ebx
   int result; // eax

@@ -25,7 +25,7 @@ int  Rules_CountJoinNetworkEntryNodes(int theJoin)
 }
 
 //----- (004A85A0) --------------------------------------------------------
-signed int Rules_PrintJoinNetworkSharingReport()
+signed int Rules_PrintJoinNetworkSharingReport(void)
 {
   int v0; // edx
   signed int v1; // ecx
@@ -70,7 +70,7 @@ signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int linePref
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004A8650) --------------------------------------------------------
-int Rules_ClearJoinNetworkMarkedFlags()
+int Rules_ClearJoinNetworkMarkedFlags(void)
 {
   int i; // esi
   int theDefrule; // ebx
@@ -159,7 +159,7 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
 }
 
 //----- (004A87A0) --------------------------------------------------------
-int Rules_DefruleCommandDefinitions()
+int Rules_DefruleCommandDefinitions(void)
 {
   Rules_AddResetFunction((int)aDefrule_0, (int)Rules_ResetDefrules, 70);
   Rules_AddSaveFunction((int)aDefrule_0, (int)Rules_SaveDefrules, 0);
@@ -180,7 +180,7 @@ int Rules_DefruleCommandDefinitions()
 // 51AD08: using guessed type int dword_51AD08;
 
 //----- (004A88D0) --------------------------------------------------------
-int Rules_ResetDefrules()
+int Rules_ResetDefrules(void)
 {
   int *mainModule; // eax
 
@@ -193,7 +193,7 @@ int Rules_ResetDefrules()
 // 51A998: using guessed type int dword_51A998;
 
 //----- (004A88F0) --------------------------------------------------------
-int Rules_ClearDefrulesReady()
+int Rules_ClearDefrulesReady(void)
 {
   int result; // eax
   int v1; // edx
@@ -214,7 +214,7 @@ int Rules_ClearDefrulesReady()
 // 51A998: using guessed type int dword_51A998;
 
 //----- (004A8920) --------------------------------------------------------
-int Rules_ClearDefrules()
+int Rules_ClearDefrules(void)
 {
   int *mainModule; // eax
 

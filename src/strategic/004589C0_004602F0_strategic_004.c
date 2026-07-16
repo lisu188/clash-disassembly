@@ -1115,7 +1115,7 @@ LABEL_105:
 // 5448A0: using guessed type int dword_5448A0;
 
 //----- (004602F0) --------------------------------------------------------
-int Mission_CheckFailureCondition()
+int Mission_CheckFailureCondition(void)
 {
   int result; // eax
   int personage_count; // ebx

@@ -92,7 +92,7 @@ signed int  Rules_PackConstraintRecord(int *constraints, int bc)
 // 495B9E: variable 'v23' is possibly undefined
 
 //----- (00495BB0) --------------------------------------------------------
-int Rules_BloadConstraints()
+int Rules_BloadConstraints(void)
 {
   int result; // eax
 
@@ -235,7 +235,7 @@ int  Rules_UpdateBloadedConstraint(_DWORD *bsaveConstraint, int constraintIndex)
 // 54E68C: using guessed type int dword_54E68C;
 
 //----- (00495E00) --------------------------------------------------------
-signed int Rules_ClearBloadedConstraints()
+signed int Rules_ClearBloadedConstraints(void)
 {
   signed int result; // eax
 

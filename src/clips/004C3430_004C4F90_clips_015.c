@@ -415,7 +415,7 @@ int  Rules_RemoveConstantFromConstraint(int result, int theValue, int theConstra
 // 4C3C60: variable 'v5' is possibly undefined
 
 //----- (004C3CA0) --------------------------------------------------------
-signed int Rules_RegisterDefglobalBinaryItem()
+signed int Rules_RegisterDefglobalBinaryItem(void)
 {
   Rules_AddAfterBloadFunction((int)aDefglobal_1, (int)Defglobal_ResetAllDefglobals, 50);
   return Rules_RegisterBinaryItem(
@@ -431,7 +431,7 @@ signed int Rules_RegisterDefglobalBinaryItem()
 }
 
 //----- (004C3CF0) --------------------------------------------------------
-int Rules_BsaveFindDefglobals()
+int Rules_BsaveFindDefglobals(void)
 {
   int result; // eax
   int i; // ebx
@@ -535,7 +535,7 @@ int  Rules_BsaveDefglobals(int fp)
 // 54E88C: using guessed type int dword_54E88C;
 
 //----- (004C3F20) --------------------------------------------------------
-signed int Rules_BloadDefglobalStorage()
+signed int Rules_BloadDefglobalStorage(void)
 {
   signed int result; // eax
   int space[3]; // [esp+0h] [ebp-Ch] BYREF
@@ -569,7 +569,7 @@ signed int Rules_BloadDefglobalStorage()
 // 54E890: using guessed type int dword_54E890;
 
 //----- (004C3FD0) --------------------------------------------------------
-signed int Rules_BloadDefglobals()
+signed int Rules_BloadDefglobals(void)
 {
   int space; // [esp-8h] [ebp-Ch] BYREF
 
@@ -620,7 +620,7 @@ int  Rules_UpdateDefglobal(int buf, int obji)
 // 54E890: using guessed type int dword_54E890;
 
 //----- (004C4100) --------------------------------------------------------
-signed int Rules_ClearDefglobalBload()
+signed int Rules_ClearDefglobalBload(void)
 {
   int globalIndex; // ecx
   int recordOffset; // edx
@@ -669,7 +669,7 @@ int  Rules_GetDefglobalModulePointer(int theIndex)
 // 54E890: using guessed type int dword_54E890;
 
 //----- (004C41D0) --------------------------------------------------------
-signed int Defgeneric_RegisterBinaryItem()
+signed int Defgeneric_RegisterBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aGenericFunct_0,
@@ -691,7 +691,7 @@ int  Defgeneric_RecordAtIndex(int theIndex)
 // 51B390: using guessed type int dword_51B390;
 
 //----- (004C4230) --------------------------------------------------------
-signed int Defgeneric_CountBsaveEntries()
+signed int Defgeneric_CountBsaveEntries(void)
 {
   signed int result; // eax
 
@@ -782,7 +782,7 @@ int  Defgeneric_CountMethodsAndMarkExpressions(_DWORD *theDefgeneric)
 // 54E680: using guessed type int dword_54E680;
 
 //----- (004C4380) --------------------------------------------------------
-signed int Defgeneric_BsaveWriteExpressions()
+signed int Defgeneric_BsaveWriteExpressions(void)
 {
   Rules_DoForAllConstructs((void (*)(void))Defgeneric_BsaveWriteMethodActionExpressions, 0);
   return Rules_DoForAllConstructs((void (*)(void))Defgeneric_BsaveWriteRestrictionExpressions, 0);
@@ -1154,7 +1154,7 @@ _DWORD * Defgeneric_BsaveWriteRestrictionTypeRecord(_DWORD *result, int fp)
 // 4C4906: variable 'v8' is possibly undefined
 
 //----- (004C4950) --------------------------------------------------------
-int Defgeneric_BloadAllocateBinaryStorage()
+int Defgeneric_BloadAllocateBinaryStorage(void)
 {
   int result; // eax
   _DWORD counts[4]; // [esp+0h] [ebp-30h] BYREF
@@ -1376,7 +1376,7 @@ int  Defgeneric_BloadRefreshExpressionPointer(_DWORD *buf, int obji)
 // 51B3AC: using guessed type int dword_51B3AC;
 
 //----- (004C4E10) --------------------------------------------------------
-signed int Defgeneric_ClearBinaryData()
+signed int Defgeneric_ClearBinaryData(void)
 {
   signed int result; // eax
   int recordOffset; // edx
@@ -1436,7 +1436,7 @@ signed int Defgeneric_ClearBinaryData()
 // 51B39C: using guessed type int dword_51B39C;
 
 //----- (004C4F50) --------------------------------------------------------
-signed int Deffunction_RegisterBinaryItem()
+signed int Deffunction_RegisterBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aDeffunctions_0,

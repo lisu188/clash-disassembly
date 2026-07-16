@@ -717,7 +717,7 @@ LABEL_6:
 // 54E6DC: using guessed type int dword_54E6DC;
 
 //----- (004A7730) --------------------------------------------------------
-signed int Rules_RegisterConstructsToCFunction()
+signed int Rules_RegisterConstructsToCFunction(void)
 {
   return Rules_RegisterHostFunction(aConstructsToC, 118, (int)aConstructstocc, (int)Rules_ConstructsToCCommand, (int)a23Kii);
 }
@@ -991,7 +991,7 @@ int  Rules_ConstructCodeFileOpen(
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004A7B10) --------------------------------------------------------
-signed int Rules_RegisterModuleItemIdAssigner()
+signed int Rules_RegisterModuleItemIdAssigner(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Rules_AssignNextModuleItemId, 0);
 }

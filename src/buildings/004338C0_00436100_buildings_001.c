@@ -213,7 +213,7 @@ int  BuildingGarrisonDialog_TickAnimations(double deltaTime)
 }
 
 //----- (00434110) --------------------------------------------------------
-int CastleProduction_DrawSelectedUnitPortrait()
+int CastleProduction_DrawSelectedUnitPortrait(void)
 {
   void *savedRenderDevice; // ebp
   __int16 SpriteWidth; // ax
@@ -476,7 +476,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
 // 5322D0: using guessed type int dword_5322D0[];
 
 //----- (00434E20) --------------------------------------------------------
-void * CastleProduction_DrawLicenceGrid()
+void * CastleProduction_DrawLicenceGrid(void)
 {
   int slotIndex; // esi
   int slotX; // edi
@@ -807,7 +807,7 @@ int  UI_DrawActionBox(int drawContext)
 // 532218: using guessed type int dword_532218;
 
 //----- (00435580) --------------------------------------------------------
-int UI_GetGridIndexFromMouse()
+int UI_GetGridIndexFromMouse(void)
 {
   int mouseX; // eax
   int gridY; // ebx

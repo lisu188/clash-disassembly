@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (0047F820) --------------------------------------------------------
-int Rules_GetCurrentFocus()
+int Rules_GetCurrentFocus(void)
 {
   if ( g_Rules_FocusStackTop )
     return *(_DWORD *)g_Rules_FocusStackTop;
@@ -51,7 +51,7 @@ signed int  Rules_FocusCommand(int a1, double a2)
 // 47F8B4: variable 'v6' is possibly undefined
 
 //----- (0047F8F0) --------------------------------------------------------
-signed int Rules_RegisterInstanceFunctions()
+signed int Rules_RegisterInstanceFunctions(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -534,7 +534,7 @@ int  Rules_GetInstanceClassName(int instance)
 }
 
 //----- (004801F0) --------------------------------------------------------
-int Rules_GetActiveInstanceCount()
+int Rules_GetActiveInstanceCount(void)
 {
   return g_Rules_ActiveInstanceCount;
 }
@@ -1336,7 +1336,7 @@ signed int  Rules_GetArgRestrictionType(int theFunction, int position)
 }
 
 //----- (00480F70) --------------------------------------------------------
-int Rules_GetFunctionDefinitionListHead()
+int Rules_GetFunctionDefinitionListHead(void)
 {
   return g_Rules_HostFunctionListHead;
 }
@@ -1365,7 +1365,7 @@ int ** Rules_MakeSymbol(_BYTE *functionName)
 // 54DD40: using guessed type int dword_54DD40;
 
 //----- (00481050) --------------------------------------------------------
-int Rules_InitFunctionNameHashTable()
+int Rules_InitFunctionNameHashTable(void)
 {
   int result; // eax
 

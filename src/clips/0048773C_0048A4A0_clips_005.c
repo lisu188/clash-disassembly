@@ -499,7 +499,7 @@ _BYTE * CRT_ToUpperInPlace(_BYTE *result, int a2)
 // 476271: using guessed type int __thiscall toupper_(_DWORD);
 
 //----- (004880E1) --------------------------------------------------------
-int Mem_NearMallocHookStub()
+int Mem_NearMallocHookStub(void)
 {
   return 0;
 }
@@ -626,7 +626,7 @@ LABEL_26:
 // 51AF64: using guessed type int dword_51AF64;
 
 //----- (00488514) --------------------------------------------------------
-DWORD Process_GetCurrentId()
+DWORD Process_GetCurrentId(void)
 {
   return GetCurrentProcessId();
 }
@@ -813,7 +813,7 @@ DWORD  CRT_ReadFileHandle(int fileDescriptor, int buffer, DWORD length)
 // 51AED0: using guessed type int dword_51AED0;
 
 //----- (004890EC) --------------------------------------------------------
-void CRT_InstallFloatPrintfSupport()
+void CRT_InstallFloatPrintfSupport(void)
 {
   g_FloatEfgFormatFn = EFG_Format_;
   g_StringToDoubleScanFn = (int (__fastcall *)(_DWORD, _DWORD))_cnvs2d_;
@@ -981,31 +981,31 @@ _DWORD * IO_StreambufAlloc(int a1, char a2, DWORD a3)
 // 511054: using guessed type int (*off_511054[4])();
 
 //----- (0048A0A0) --------------------------------------------------------
-int Rules_Builtin_0()
+int Rules_Builtin_0(void)
 {
   return 0;
 }
 
 //----- (0048A0C0) --------------------------------------------------------
-void *Rules_Builtin_1()
+void *Rules_Builtin_1(void)
 {
   return &g_Rules_BuiltinSentinelAddress;
 }
 
 //----- (0048A0D0) --------------------------------------------------------
-int Rules_Builtin_2()
+int Rules_Builtin_2(void)
 {
   return 0;
 }
 
 //----- (0048A0E0) --------------------------------------------------------
-int Rules_Builtin_3()
+int Rules_Builtin_3(void)
 {
   return 0;
 }
 
 //----- (0048A0F0) --------------------------------------------------------
-int IO_StreambufStubZero()
+int IO_StreambufStubZero(void)
 {
   return 0;
 }
@@ -1031,7 +1031,7 @@ _DWORD * IO_StreambufInitVTable(_DWORD *result)
 // 511054: using guessed type int (*off_511054[4])();
 
 //----- (0048A170) --------------------------------------------------------
-int Rules_Builtin_4()
+int Rules_Builtin_4(void)
 {
   return 0;
 }
@@ -1091,7 +1091,7 @@ int  Rules_ConstructRecordVectorDtor(int result, char dtorFlags)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0048A230) --------------------------------------------------------
-signed int Rules_RegisterFactsConstruct()
+signed int Rules_RegisterFactsConstruct(void)
 {
   Rules_RegisterPatternConstraintEvaluators();
   return Rules_AddPatternParser(

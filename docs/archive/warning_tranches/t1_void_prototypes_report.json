@@ -1,0 +1,3358 @@
+{
+ "rewritten": [
+  {
+   "decl_line": 480,
+   "def_line": 5,
+   "name": "App_Shutdown",
+   "source": "src/core/00401020_004011F0_core_001.c"
+  },
+  {
+   "decl_line": 723,
+   "def_line": 5,
+   "name": "Render_LoadResourceBackbuffer",
+   "source": "src/render/00401A40_00402BB0_render_001.c"
+  },
+  {
+   "decl_line": 787,
+   "def_line": 842,
+   "name": "Surface_GetReadIncrNotImplemented",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 788,
+   "def_line": 848,
+   "name": "Surface_GetWriteIncrNotImplemented",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 789,
+   "def_line": 854,
+   "name": "Surface_DrawPixNotImplemented",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 790,
+   "def_line": 860,
+   "name": "Surface_GetPixNotImplemented",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 795,
+   "def_line": 890,
+   "name": "Surface_GetReadIncrZero",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 796,
+   "def_line": 896,
+   "name": "Surface_GetWriteIncrZero",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 802,
+   "def_line": 973,
+   "name": "SurfaceCursor_GetIncrUnbounded",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 803,
+   "def_line": 979,
+   "name": "SurfaceCursor_GetExtentUnbounded",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 804,
+   "def_line": 985,
+   "name": "SurfaceCursor_GetOffsetZero",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 807,
+   "def_line": 1028,
+   "name": "RenderSurface_GetBlitCursorCapacity",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 811,
+   "def_line": 1075,
+   "name": "RenderSurface_GetLinkedBlitCursorCapacity",
+   "source": "src/render/004046D0_00405D20_render_003.c"
+  },
+  {
+   "decl_line": 867,
+   "def_line": 1247,
+   "name": "Render_RestoreLostSurfaces",
+   "source": "src/render/00405DB0_00407D20_render_004.c"
+  },
+  {
+   "decl_line": 869,
+   "def_line": 5,
+   "name": "UI_TrySelectFriendlyStackUnderCursor",
+   "source": "src/world/00408030_0040A0A0_world_001.c"
+  },
+  {
+   "decl_line": 887,
+   "def_line": 1253,
+   "name": "WorldMap_ToggleSelectedUnitModeFlag",
+   "source": "src/world/00408030_0040A0A0_world_001.c"
+  },
+  {
+   "decl_line": 902,
+   "def_line": 970,
+   "name": "WorldMap_DisableFrameRedraw",
+   "source": "src/world/0040A0E0_0040B020_world_002.c"
+  },
+  {
+   "decl_line": 928,
+   "def_line": 908,
+   "name": "TextSprite_ReleaseAllResourceSlots",
+   "source": "src/world/0040B0A0_0040D560_world_003.c"
+  },
+  {
+   "decl_line": 941,
+   "def_line": 91,
+   "name": "Locale_DrawInteger",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 944,
+   "def_line": 194,
+   "name": "MiniMap_UpdateViewportFromCursor",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 945,
+   "def_line": 289,
+   "name": "MiniMap_ToggleVisibility",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 946,
+   "def_line": 298,
+   "name": "MiniMap_IsCursorInside",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 947,
+   "def_line": 317,
+   "name": "MiniMap_ShowAllLayers",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 948,
+   "def_line": 329,
+   "name": "MiniMap_ShowUnitsOnly",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 949,
+   "def_line": 341,
+   "name": "MiniMap_ShowBuildingsOnly",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 950,
+   "def_line": 353,
+   "name": "MiniMap_Hide",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 954,
+   "def_line": 920,
+   "name": "WorldMapTopMenu_LoadSpriteSet",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 955,
+   "def_line": 940,
+   "name": "WorldMapTopMenu_FreeSpriteSet",
+   "source": "src/world/0040D6D0_0040F4D0_world_004.c"
+  },
+  {
+   "decl_line": 982,
+   "def_line": 434,
+   "name": "WorldMap_HandleViewportScrollKeys",
+   "source": "src/units/0040F510_00411560_units_001.c"
+  },
+  {
+   "decl_line": 1013,
+   "def_line": 442,
+   "name": "Map_UpdateIdleAnimatedUnits",
+   "source": "src/units/004115E0_00412BE0_units_002.c"
+  },
+  {
+   "decl_line": 1048,
+   "def_line": 182,
+   "name": "UnitSpriteCache_ClearAllEntries",
+   "source": "src/units/00412C00_00414350_units_003.c"
+  },
+  {
+   "decl_line": 1052,
+   "def_line": 318,
+   "name": "UnitSpriteCache_CountActiveEntries",
+   "source": "src/units/00412C00_00414350_units_003.c"
+  },
+  {
+   "decl_line": 1063,
+   "def_line": 1275,
+   "name": "Map_InitTerrainMoveTableOffsets",
+   "source": "src/units/00412C00_00414350_units_003.c"
+  },
+  {
+   "decl_line": 1094,
+   "def_line": 879,
+   "name": "UI_UpdateWorldMapUnitAttentionFlash",
+   "source": "src/units/00416850_00419120_units_005.c"
+  },
+  {
+   "decl_line": 1095,
+   "def_line": 905,
+   "name": "UI_IsWorldMapUnitAttentionFlashActive",
+   "source": "src/units/00416850_00419120_units_005.c"
+  },
+  {
+   "decl_line": 1104,
+   "def_line": 1064,
+   "name": "BattleLog_Disable",
+   "source": "src/units/00416850_00419120_units_005.c"
+  },
+  {
+   "decl_line": 1105,
+   "def_line": 1071,
+   "name": "BattleLog_Enable",
+   "source": "src/units/00416850_00419120_units_005.c"
+  },
+  {
+   "decl_line": 1138,
+   "def_line": 382,
+   "name": "Rules_RebuildCastleSiteFacts",
+   "source": "src/buildings/0041D030_0041F0C0_buildings_001.c"
+  },
+  {
+   "decl_line": 1170,
+   "def_line": 839,
+   "name": "Timer_InitPerfCounterFrequency",
+   "source": "src/buildings/0041F1A0_00421010_buildings_002.c"
+  },
+  {
+   "decl_line": 1176,
+   "def_line": 898,
+   "name": "Castle_RebuildMissingAddonFlags",
+   "source": "src/buildings/0041F1A0_00421010_buildings_002.c"
+  },
+  {
+   "decl_line": 1177,
+   "def_line": 927,
+   "name": "Castle_ShowNewBuildingMenu",
+   "source": "src/buildings/0041F1A0_00421010_buildings_002.c"
+  },
+  {
+   "decl_line": 1184,
+   "def_line": 1300,
+   "name": "Building_HandleUpgradeButtonAction",
+   "source": "src/buildings/0041F1A0_00421010_buildings_002.c"
+  },
+  {
+   "decl_line": 1187,
+   "def_line": 1341,
+   "name": "Castle_DrawStatusPanel",
+   "source": "src/buildings/0041F1A0_00421010_buildings_002.c"
+  },
+  {
+   "decl_line": 1192,
+   "def_line": 544,
+   "name": "Castle_UpdateAmbientAnimationLayers",
+   "source": "src/buildings/00421240_00422020_buildings_003.c"
+  },
+  {
+   "decl_line": 1194,
+   "def_line": 17,
+   "name": "Castle_UpdateGateToggles",
+   "source": "src/buildings/00422100_00422AC0_buildings_004.c"
+  },
+  {
+   "decl_line": 1197,
+   "def_line": 1417,
+   "name": "Tooltip_ReleaseBackdropSurface",
+   "source": "src/buildings/00422100_00422AC0_buildings_004.c"
+  },
+  {
+   "decl_line": 1199,
+   "def_line": 1489,
+   "name": "Tooltip_RestoreBackdrop",
+   "source": "src/buildings/00422100_00422AC0_buildings_004.c"
+  },
+  {
+   "decl_line": 1208,
+   "def_line": 297,
+   "name": "UI_FreeCurrentPlayerInfoSpriteSet",
+   "source": "src/buildings/00422B50_004254E0_buildings_005.c"
+  },
+  {
+   "decl_line": 1212,
+   "def_line": 580,
+   "name": "UnitStackSelection_HasSelectedSlots",
+   "source": "src/buildings/00422B50_004254E0_buildings_005.c"
+  },
+  {
+   "decl_line": 1261,
+   "def_line": 1264,
+   "name": "Map_AutoUpgradeVillages",
+   "source": "src/buildings/00422B50_004254E0_buildings_005.c"
+  },
+  {
+   "decl_line": 1263,
+   "def_line": 1325,
+   "name": "RoadBuildMode_RequestExit",
+   "source": "src/buildings/00422B50_004254E0_buildings_005.c"
+  },
+  {
+   "decl_line": 1267,
+   "def_line": 153,
+   "name": "UnitBattle_InitPathingTables",
+   "source": "src/buildings/00425540_00426FC0_buildings_006.c"
+  },
+  {
+   "decl_line": 1291,
+   "def_line": 945,
+   "name": "BuildCursor_RequestExit",
+   "source": "src/buildings/00428880_0042A890_buildings_008.c"
+  },
+  {
+   "decl_line": 1322,
+   "def_line": 1432,
+   "name": "Battle_HasUnitsForBothSides",
+   "source": "src/buildings/0042A910_0042C4E0_buildings_009.c"
+  },
+  {
+   "decl_line": 1324,
+   "def_line": 51,
+   "name": "UnitBattle_HandleManualRotateAndMoveInput",
+   "source": "src/buildings/0042C560_0042C840_buildings_010.c"
+  },
+  {
+   "decl_line": 1326,
+   "def_line": 5,
+   "name": "UnitBattle_HandleBattlefieldInteraction",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1327,
+   "def_line": 288,
+   "name": "UnitBattle_EnableSelectedChargeMode",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1328,
+   "def_line": 303,
+   "name": "UnitBattle_RefreshSelectedUnitUI",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1329,
+   "def_line": 315,
+   "name": "UnitBattle_RefreshSelectedActionButtons",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1344,
+   "def_line": 1264,
+   "name": "UnitBattle_TemporarilyClearGateBlocker",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1345,
+   "def_line": 1285,
+   "name": "UnitBattle_RestoreGateBlocker",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1347,
+   "def_line": 1326,
+   "name": "UnitBattle_RestoreControllerOrderBits",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1348,
+   "def_line": 1353,
+   "name": "UnitBattle_InitBattleScreenFrame",
+   "source": "src/battle/0042CB50_0042E8B0_battle_001.c"
+  },
+  {
+   "decl_line": 1356,
+   "def_line": 1226,
+   "name": "UnitBattle_RedrawVisibleGrid",
+   "source": "src/battle/0042E9E0_00430C20_battle_002.c"
+  },
+  {
+   "decl_line": 1359,
+   "def_line": 489,
+   "name": "UnitBattle_UpdateIdleAnimatedUnits",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1364,
+   "def_line": 706,
+   "name": "Battle_ClearReservedUnitSlot",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1365,
+   "def_line": 735,
+   "name": "Battle_RestoreSavedActionPointsBeforeResultCopy",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1367,
+   "def_line": 816,
+   "name": "BuildingGarrisonDialog_CountSelectedSlots",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1372,
+   "def_line": 1054,
+   "name": "BuildingGarrisonDialog_DrawSelectedUnitPanel",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1375,
+   "def_line": 1434,
+   "name": "BuildingGarrisonDialog_HitTestSlotGrid",
+   "source": "src/battle/00430F80_00433820_battle_003.c"
+  },
+  {
+   "decl_line": 1382,
+   "def_line": 216,
+   "name": "CastleProduction_DrawSelectedUnitPortrait",
+   "source": "src/buildings/004338C0_00436100_buildings_001.c"
+  },
+  {
+   "decl_line": 1385,
+   "def_line": 479,
+   "name": "CastleProduction_DrawLicenceGrid",
+   "source": "src/buildings/004338C0_00436100_buildings_001.c"
+  },
+  {
+   "decl_line": 1391,
+   "def_line": 810,
+   "name": "UI_GetGridIndexFromMouse",
+   "source": "src/buildings/004338C0_00436100_buildings_001.c"
+  },
+  {
+   "decl_line": 1418,
+   "def_line": 350,
+   "name": "BuildingTransferTargetList_FreeSpriteSet",
+   "source": "src/buildings/00436180_00437A90_buildings_002.c"
+  },
+  {
+   "decl_line": 1435,
+   "def_line": 1362,
+   "name": "UnitBattle_ScanAiWallTargetColumns",
+   "source": "src/buildings/0043A8B0_0043CC50_buildings_004.c"
+  },
+  {
+   "decl_line": 1440,
+   "def_line": 216,
+   "name": "WCIsvListBase_vtblFree",
+   "source": "src/buildings/0043CD00_0043E4B0_buildings_005.c"
+  },
+  {
+   "decl_line": 1497,
+   "def_line": 946,
+   "name": "BuildingSpriteCache_Reset",
+   "source": "src/buildings/0043E500_0043FDE0_buildings_006.c"
+  },
+  {
+   "decl_line": 1500,
+   "def_line": 1111,
+   "name": "BuildingSpriteCache_Clear",
+   "source": "src/buildings/0043E500_0043FDE0_buildings_006.c"
+  },
+  {
+   "decl_line": 1501,
+   "def_line": 1136,
+   "name": "BuildingSpriteCache_CountEntries",
+   "source": "src/buildings/0043E500_0043FDE0_buildings_006.c"
+  },
+  {
+   "decl_line": 1502,
+   "def_line": 1151,
+   "name": "Rules_RebuildTempleFacts",
+   "source": "src/buildings/0043E500_0043FDE0_buildings_006.c"
+  },
+  {
+   "decl_line": 1525,
+   "def_line": 1173,
+   "name": "Audio_StopMainMusic",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1527,
+   "def_line": 1193,
+   "name": "Audio_DuckMusicVolume",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1528,
+   "def_line": 1202,
+   "name": "Audio_RestoreMusicVolume",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1532,
+   "def_line": 1246,
+   "name": "Audio_StopMainMusicIfPlaying",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1533,
+   "def_line": 1262,
+   "name": "Audio_SetMusicActiveFlag",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1534,
+   "def_line": 1269,
+   "name": "Audio_ClearMusicActiveFlag",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1535,
+   "def_line": 1276,
+   "name": "Audio_EnableUnitSounds",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1536,
+   "def_line": 1283,
+   "name": "Audio_DisableUnitSounds",
+   "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c"
+  },
+  {
+   "decl_line": 1546,
+   "def_line": 497,
+   "name": "Audio_StopUnitMoveSound",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1558,
+   "def_line": 698,
+   "name": "FileSystem_GetInstallRootPath",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1562,
+   "def_line": 854,
+   "name": "Port_FindAndInit",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1563,
+   "def_line": 922,
+   "name": "Rules_LogPortLocation",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1565,
+   "def_line": 975,
+   "name": "Port_UpdateShorelineVariantTiles",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1566,
+   "def_line": 1072,
+   "name": "Port_IsReinforcementReady",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1570,
+   "def_line": 1455,
+   "name": "Rules_RebuildTreasureFacts",
+   "source": "src/persistence/00441DC0_00443B60_persistence_001.c"
+  },
+  {
+   "decl_line": 1600,
+   "def_line": 942,
+   "name": "Debug_GetUsedMemoryCount",
+   "source": "src/persistence/00446230_00447840_persistence_003.c"
+  },
+  {
+   "decl_line": 1620,
+   "def_line": 806,
+   "name": "MultiplayerSetup_RedrawPlayerSlotIcons",
+   "source": "src/persistence/004479C0_0044AE10_persistence_004.c"
+  },
+  {
+   "decl_line": 1621,
+   "def_line": 848,
+   "name": "MultiplayerSetup_RedrawOpponentNameList",
+   "source": "src/persistence/004479C0_0044AE10_persistence_004.c"
+  },
+  {
+   "decl_line": 1641,
+   "def_line": 223,
+   "name": "Scenario_SetupSirArthurRosterVariantA",
+   "source": "src/persistence/0044AE90_0044E850_persistence_005.c"
+  },
+  {
+   "decl_line": 1642,
+   "def_line": 313,
+   "name": "Scenario_SetupSirArthurRosterVariantB",
+   "source": "src/persistence/0044AE90_0044E850_persistence_005.c"
+  },
+  {
+   "decl_line": 1654,
+   "def_line": 502,
+   "name": "Game_InitPlayerViewState",
+   "source": "src/persistence/0044AE90_0044E850_persistence_005.c"
+  },
+  {
+   "decl_line": 1698,
+   "def_line": 766,
+   "name": "Cheat_RevealMapForCurrentPlayer",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1699,
+   "def_line": 774,
+   "name": "Cheat_FillSelectedSquadWithCannons",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1700,
+   "def_line": 800,
+   "name": "Cheat_ClearSelectedSquadDamageFlags",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1701,
+   "def_line": 828,
+   "name": "Cheat_ForceWinCurrentMission",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1702,
+   "def_line": 835,
+   "name": "Cheat_HealSelectedSquadAndClearDamage",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1704,
+   "def_line": 905,
+   "name": "Cheat_TeleportSelectedUnitToCursor",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1705,
+   "def_line": 941,
+   "name": "Cheat_FillSelectedSquadWithPegasi",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1707,
+   "def_line": 1015,
+   "name": "Cheat_QuitWithJokeMessage",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1708,
+   "def_line": 1021,
+   "name": "Cheat_SetFactionColorAndCastleFlags",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1710,
+   "def_line": 1140,
+   "name": "Rules_ShowBanner_StrategicClash",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1711,
+   "def_line": 1157,
+   "name": "Rules_ResetEngineOnLoad",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1712,
+   "def_line": 1168,
+   "name": "Rules_CompileStrategicRulesFile",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1713,
+   "def_line": 1188,
+   "name": "Rules_RegisterAllHostFunctions",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1714,
+   "def_line": 1198,
+   "name": "Rules_LogMissionSetupInfo",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1715,
+   "def_line": 1233,
+   "name": "Rules_ExecuteAITurn",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1718,
+   "def_line": 1398,
+   "name": "Rules_RegisterStrategicActionHostFunctions",
+   "source": "src/strategic/004506B0_004530D0_strategic_001.c"
+  },
+  {
+   "decl_line": 1760,
+   "def_line": 1259,
+   "name": "Game_GetTurnNumber",
+   "source": "src/strategic/00453110_00455720_strategic_002.c"
+  },
+  {
+   "decl_line": 1811,
+   "def_line": 487,
+   "name": "Map_RebuildCastleSiteAnchorCache",
+   "source": "src/strategic/00455740_004582B0_strategic_003.c"
+  },
+  {
+   "decl_line": 1814,
+   "def_line": 576,
+   "name": "Rules_RegisterBuildingHostFunctions",
+   "source": "src/strategic/00455740_004582B0_strategic_003.c"
+  },
+  {
+   "decl_line": 1815,
+   "def_line": 626,
+   "name": "Rules_RegisterArmyHostFunctions",
+   "source": "src/strategic/00455740_004582B0_strategic_003.c"
+  },
+  {
+   "decl_line": 1845,
+   "def_line": 1118,
+   "name": "Mission_CheckFailureCondition",
+   "source": "src/strategic/004589C0_004602F0_strategic_004.c"
+  },
+  {
+   "decl_line": 1868,
+   "def_line": 423,
+   "name": "Render_Pump",
+   "source": "src/strategic/00460950_004612E0_strategic_006.c"
+  },
+  {
+   "decl_line": 1869,
+   "def_line": 455,
+   "name": "Input_Flush",
+   "source": "src/strategic/00460950_004612E0_strategic_006.c"
+  },
+  {
+   "decl_line": 1876,
+   "def_line": 5,
+   "name": "Input_Init",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1877,
+   "def_line": 11,
+   "name": "Input_Shutdown",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1881,
+   "def_line": 29,
+   "name": "Input_IsAnyKeyPressed",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1882,
+   "def_line": 50,
+   "name": "Input_PopKey",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1885,
+   "def_line": 128,
+   "name": "Input_MouseInit",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1887,
+   "def_line": 142,
+   "name": "Input_MousePresent",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1888,
+   "def_line": 148,
+   "name": "Input_MouseAcquire",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1912,
+   "def_line": 1204,
+   "name": "IO_StreamAdapterReadStub",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1919,
+   "def_line": 1268,
+   "name": "ExcString_GetErrorCodeStub",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1920,
+   "def_line": 1274,
+   "name": "ExcString_GetErrorCodeStubDup",
+   "source": "src/runtime/00461520_00463070_runtime_001.c"
+  },
+  {
+   "decl_line": 1974,
+   "def_line": 663,
+   "name": "CAviDecompressor_FreeMemberA",
+   "source": "src/media/004637B0_00465D30_media_001.c"
+  },
+  {
+   "decl_line": 1975,
+   "def_line": 673,
+   "name": "CAviDecompressor_FreeMemberB",
+   "source": "src/media/004637B0_00465D30_media_001.c"
+  },
+  {
+   "decl_line": 2019,
+   "def_line": 161,
+   "name": "AviException_CtorFromExceptionList",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2020,
+   "def_line": 172,
+   "name": "AviException_CtorForSurfaceCreateFailure",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2021,
+   "def_line": 183,
+   "name": "AviException_CtorForDrawFailure",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2023,
+   "def_line": 218,
+   "name": "AviException_GetMessage",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2052,
+   "def_line": 617,
+   "name": "Audio_InitDSoundDevice",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2053,
+   "def_line": 789,
+   "name": "Audio_ReleaseDSoundDevice",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2055,
+   "def_line": 862,
+   "name": "Audio_ShutdownSoundSystem",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2057,
+   "def_line": 885,
+   "name": "Audio_RefreshPlayCursor",
+   "source": "src/media/00469680_0046B200_media_004.c"
+  },
+  {
+   "decl_line": 2102,
+   "def_line": 898,
+   "name": "CSS_InitStreamingLocks",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2103,
+   "def_line": 937,
+   "name": "CSS_StreamService_NoOpHook",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2115,
+   "def_line": 1273,
+   "name": "CSS_SweepFinishedChannels",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2116,
+   "def_line": 1294,
+   "name": "CSS_ServiceStreamingChannels",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2118,
+   "def_line": 1360,
+   "name": "CSS_PauseStreamReading",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2119,
+   "def_line": 1391,
+   "name": "CSS_ResumeStreamReading",
+   "source": "src/media/0046B610_0046E5D0_media_005.c"
+  },
+  {
+   "decl_line": 2121,
+   "def_line": 5,
+   "name": "CSS_EmptySampleCache",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2147,
+   "def_line": 993,
+   "name": "CSS_ShutdownVoicePool",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2150,
+   "def_line": 1066,
+   "name": "CSS_InitDeviceSearchState",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2151,
+   "def_line": 1081,
+   "name": "CSS_IsNullSoundDevice",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2152,
+   "def_line": 1088,
+   "name": "CSS_PollAudioDeviceChange",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2156,
+   "def_line": 1144,
+   "name": "CSS_ResetDeviceConfigDefaults",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2158,
+   "def_line": 1179,
+   "name": "CSS_SetDefaults",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2159,
+   "def_line": 1186,
+   "name": "CSS_ResetDeviceHandleCache",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2160,
+   "def_line": 1201,
+   "name": "CSS_Close",
+   "source": "src/media/0046E870_004701E0_media_006.c"
+  },
+  {
+   "decl_line": 2166,
+   "def_line": 190,
+   "name": "CSS_CloseWaveOutDevice",
+   "source": "src/media/00470220_00471C40_media_007.c"
+  },
+  {
+   "decl_line": 2176,
+   "def_line": 509,
+   "name": "CSS_FreeMixBuffers",
+   "source": "src/media/00470220_00471C40_media_007.c"
+  },
+  {
+   "decl_line": 2179,
+   "def_line": 549,
+   "name": "CSS_FreeMixChannels",
+   "source": "src/media/00470220_00471C40_media_007.c"
+  },
+  {
+   "decl_line": 2180,
+   "def_line": 566,
+   "name": "CSS_ResetAllMixChannels",
+   "source": "src/media/00470220_00471C40_media_007.c"
+  },
+  {
+   "decl_line": 2233,
+   "def_line": 525,
+   "name": "Mem_FatalOutOfMemory",
+   "source": "src/media/00471C60_00473570_media_008.c"
+  },
+  {
+   "decl_line": 2237,
+   "def_line": 625,
+   "name": "Mem_GetTotalAllocatedBytes",
+   "source": "src/media/00471C60_00473570_media_008.c"
+  },
+  {
+   "decl_line": 2238,
+   "def_line": 632,
+   "name": "Mem_GetTotalAllocationCount",
+   "source": "src/media/00471C60_00473570_media_008.c"
+  },
+  {
+   "decl_line": 2246,
+   "def_line": 837,
+   "name": "Mem_GetAllocFlag",
+   "source": "src/media/00471C60_00473570_media_008.c"
+  },
+  {
+   "decl_line": 2295,
+   "def_line": 436,
+   "name": "Compat_NoOpQueryCallback",
+   "source": "src/media/004735F0_00475080_media_009.c"
+  },
+  {
+   "decl_line": 2356,
+   "def_line": 407,
+   "name": "FileSystem_InitCurrentEntryPathHolder",
+   "source": "src/media/004753E0_00477CC0_media_010.c"
+  },
+  {
+   "decl_line": 2373,
+   "def_line": 1022,
+   "name": "Compat_FileSystemFreeFileRecordName",
+   "source": "src/media/004753E0_00477CC0_media_010.c"
+  },
+  {
+   "decl_line": 2450,
+   "def_line": 1096,
+   "name": "FileSystem_ArchiveStreamNoOpFlush",
+   "source": "src/media/00477CE0_00479020_media_011.c"
+  },
+  {
+   "decl_line": 2499,
+   "def_line": 808,
+   "name": "Rules_InitFacts",
+   "source": "src/media/004790E0_0047AA80_media_012.c"
+  },
+  {
+   "decl_line": 2508,
+   "def_line": 1007,
+   "name": "Rules_RemoveGarbageFacts",
+   "source": "src/media/004790E0_0047AA80_media_012.c"
+  },
+  {
+   "decl_line": 2520,
+   "def_line": 1434,
+   "name": "Rules_GetInstalledFactCount",
+   "source": "src/media/004790E0_0047AA80_media_012.c"
+  },
+  {
+   "decl_line": 2523,
+   "def_line": 30,
+   "name": "Rules_FindFactByIndex",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2524,
+   "def_line": 49,
+   "name": "Rules_RegisterFactCommands",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2528,
+   "def_line": 230,
+   "name": "Rules_GetFactDuplicationCommand",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2555,
+   "def_line": 1138,
+   "name": "Rules_FindConstructByName",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2557,
+   "def_line": 1184,
+   "name": "Rules_GetWatchCompilations",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2559,
+   "def_line": 1199,
+   "name": "Rules_GetLoadInProgress",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2560,
+   "def_line": 1206,
+   "name": "Rules_RegisterClearResetCommands",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2561,
+   "def_line": 1215,
+   "name": "Rules_ClearCommand",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2562,
+   "def_line": 1226,
+   "name": "Rules_ResetCommand",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2563,
+   "def_line": 1233,
+   "name": "Rules_Reset",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2565,
+   "def_line": 1287,
+   "name": "Rules_Clear",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2566,
+   "def_line": 1324,
+   "name": "Rules_ClearReady",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2570,
+   "def_line": 1374,
+   "name": "Rules_GetReentryGuardFlag",
+   "source": "src/media/0047AA90_0047C760_media_013.c"
+  },
+  {
+   "decl_line": 2580,
+   "def_line": 384,
+   "name": "Rules_IsBloaded",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2581,
+   "def_line": 391,
+   "name": "Rules_ClearBload",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2582,
+   "def_line": 441,
+   "name": "Rules_CallAbortBloadFunctions",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2586,
+   "def_line": 492,
+   "name": "Rules_ReportCannotLoadWithBload",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2589,
+   "def_line": 558,
+   "name": "Rules_RegisterBuiltinFunctionGroups",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2590,
+   "def_line": 575,
+   "name": "Rules_TimeCommand",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2592,
+   "def_line": 653,
+   "name": "Rules_ShutdownEngine",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2613,
+   "def_line": 1219,
+   "name": "Rules_GetStrategyCommand",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2616,
+   "def_line": 1347,
+   "name": "Rules_RegisterAgendaCommands",
+   "source": "src/media/0047C7A0_0047DF90_media_014.c"
+  },
+  {
+   "decl_line": 2625,
+   "def_line": 156,
+   "name": "Rules_ResetActivationSequence",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2626,
+   "def_line": 163,
+   "name": "Rules_ClearActivationsForModule",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2629,
+   "def_line": 233,
+   "name": "Rules_GetActivationCount",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2632,
+   "def_line": 282,
+   "name": "Rules_SalienceInformationError",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2633,
+   "def_line": 304,
+   "name": "Rules_SalienceRangeError",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2634,
+   "def_line": 327,
+   "name": "Rules_SalienceNonIntegerError",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2638,
+   "def_line": 445,
+   "name": "Rules_GetSalienceEvaluationCommand",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2640,
+   "def_line": 470,
+   "name": "Rules_GetSalienceEvaluation",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2646,
+   "def_line": 885,
+   "name": "Rules_NextActivationToFire",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2648,
+   "def_line": 990,
+   "name": "Rules_PopFocus",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2650,
+   "def_line": 1047,
+   "name": "Rules_ClearFocusStackCommand",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2651,
+   "def_line": 1058,
+   "name": "Rules_ClearFocusStack",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2652,
+   "def_line": 1071,
+   "name": "Rules_RegisterAgendaWatchFlags",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2654,
+   "def_line": 1109,
+   "name": "Rules_HaltCommand",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2657,
+   "def_line": 1156,
+   "name": "Rules_RemoveAllBreakFlags",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2663,
+   "def_line": 1304,
+   "name": "Rules_ListFocusStackCommand",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2665,
+   "def_line": 1346,
+   "name": "Rules_GetFocusStackFunction",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2667,
+   "def_line": 1418,
+   "name": "Rules_PopFocusFunction",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2668,
+   "def_line": 1432,
+   "name": "Rules_GetFocusFunction",
+   "source": "src/media/0047DFE0_0047F7F0_media_015.c"
+  },
+  {
+   "decl_line": 2669,
+   "def_line": 5,
+   "name": "Rules_GetCurrentFocus",
+   "source": "src/media/0047F820_00481100_media_016.c"
+  },
+  {
+   "decl_line": 2671,
+   "def_line": 54,
+   "name": "Rules_RegisterInstanceFunctions",
+   "source": "src/media/0047F820_00481100_media_016.c"
+  },
+  {
+   "decl_line": 2681,
+   "def_line": 537,
+   "name": "Rules_GetActiveInstanceCount",
+   "source": "src/media/0047F820_00481100_media_016.c"
+  },
+  {
+   "decl_line": 2706,
+   "def_line": 1339,
+   "name": "Rules_GetFunctionDefinitionListHead",
+   "source": "src/media/0047F820_00481100_media_016.c"
+  },
+  {
+   "decl_line": 2708,
+   "def_line": 1368,
+   "name": "Rules_InitFunctionNameHashTable",
+   "source": "src/media/0047F820_00481100_media_016.c"
+  },
+  {
+   "decl_line": 2714,
+   "def_line": 121,
+   "name": "Rules_RtnArgCount",
+   "source": "src/media/004811C0_004814A0_media_017.c"
+  },
+  {
+   "decl_line": 2736,
+   "def_line": 757,
+   "name": "Rules_InitAtomTables",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2747,
+   "def_line": 1140,
+   "name": "Rules_RemoveEphemeralAtoms",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2749,
+   "def_line": 1219,
+   "name": "Rules_GetSymbolTable",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2750,
+   "def_line": 1226,
+   "name": "Rules_GetFloatTable",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2751,
+   "def_line": 1233,
+   "name": "Rules_GetIntegerTable",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2752,
+   "def_line": 1240,
+   "name": "Rules_GetBitmapTable",
+   "source": "src/clips/00481720_00482D40_clips_001.c"
+  },
+  {
+   "decl_line": 2758,
+   "def_line": 108,
+   "name": "Rules_RestoreAtomicValueBuckets",
+   "source": "src/clips/00482D70_0048469F_clips_002.c"
+  },
+  {
+   "decl_line": 2761,
+   "def_line": 217,
+   "name": "Instance_InitHashTable",
+   "source": "src/clips/00482D70_0048469F_clips_002.c"
+  },
+  {
+   "decl_line": 2762,
+   "def_line": 229,
+   "name": "Instance_PurgeDeletedInstances",
+   "source": "src/clips/00482D70_0048469F_clips_002.c"
+  },
+  {
+   "decl_line": 2777,
+   "def_line": 875,
+   "name": "Instance_ReportInvalidInstanceAddressError",
+   "source": "src/clips/00482D70_0048469F_clips_002.c"
+  },
+  {
+   "decl_line": 2798,
+   "def_line": 8,
+   "name": "CRT_ConstructBadExceptionFromCurrentSEH",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2830,
+   "def_line": 649,
+   "name": "Parser_ReportSyntaxError",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2831,
+   "def_line": 671,
+   "name": "Rules_ReportLocalVariableError",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2833,
+   "def_line": 720,
+   "name": "Rules_ReportDivideByZeroError",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2836,
+   "def_line": 794,
+   "name": "Rules_RegisterExitFunction",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2840,
+   "def_line": 922,
+   "name": "Rules_ExitCommand",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2850,
+   "def_line": 1144,
+   "name": "IO_GetFastLoadFile",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2855,
+   "def_line": 1206,
+   "name": "CRT_AcquireStaticLock1",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2856,
+   "def_line": 1212,
+   "name": "CRT_ReleaseStaticLock1",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2861,
+   "def_line": 1238,
+   "name": "CRT_AcquireStaticLock2",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2862,
+   "def_line": 1244,
+   "name": "CRT_ReleaseStaticLock2",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2863,
+   "def_line": 1250,
+   "name": "CRT_AcquireStaticLock3",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2864,
+   "def_line": 1256,
+   "name": "CRT_ReleaseStaticLock3",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2865,
+   "def_line": 1262,
+   "name": "CRT_AcquireStaticLock4",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2866,
+   "def_line": 1268,
+   "name": "CRT_ReleaseStaticLock4",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2871,
+   "def_line": 1323,
+   "name": "CRT_GetOrCreateThreadDataPreserveLastError",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2873,
+   "def_line": 1379,
+   "name": "CRT_AllocateTlsIndex",
+   "source": "src/clips/004849EE_0048667D_clips_003.c"
+  },
+  {
+   "decl_line": 2876,
+   "def_line": 31,
+   "name": "CRT_DestroyTlsIndexAndThreadData",
+   "source": "src/clips/004866CC_004876E4_clips_004.c"
+  },
+  {
+   "decl_line": 2878,
+   "def_line": 45,
+   "name": "CRT_InitializeThreadAndFileHandleHooks",
+   "source": "src/clips/004866CC_004876E4_clips_004.c"
+  },
+  {
+   "decl_line": 2894,
+   "def_line": 974,
+   "name": "CRT_DispatchFloatFormat",
+   "source": "src/clips/004866CC_004876E4_clips_004.c"
+  },
+  {
+   "decl_line": 2899,
+   "def_line": 502,
+   "name": "Mem_NearMallocHookStub",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2909,
+   "def_line": 629,
+   "name": "Process_GetCurrentId",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2921,
+   "def_line": 816,
+   "name": "CRT_InstallFloatPrintfSupport",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2934,
+   "def_line": 984,
+   "name": "Rules_Builtin_0",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2935,
+   "def_line": 990,
+   "name": "Rules_Builtin_1",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2936,
+   "def_line": 996,
+   "name": "Rules_Builtin_2",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2937,
+   "def_line": 1002,
+   "name": "Rules_Builtin_3",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2938,
+   "def_line": 1008,
+   "name": "IO_StreambufStubZero",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2941,
+   "def_line": 1034,
+   "name": "Rules_Builtin_4",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2947,
+   "def_line": 1094,
+   "name": "Rules_RegisterFactsConstruct",
+   "source": "src/clips/0048773C_0048A4A0_clips_005.c"
+  },
+  {
+   "decl_line": 2961,
+   "def_line": 471,
+   "name": "Rules_GetFactDuplicationFlag",
+   "source": "src/clips/0048A670_0048BD30_clips_006.c"
+  },
+  {
+   "decl_line": 2963,
+   "def_line": 489,
+   "name": "Rules_InitFactHashTable",
+   "source": "src/clips/0048A670_0048BD30_clips_006.c"
+  },
+  {
+   "decl_line": 2996,
+   "def_line": 1369,
+   "name": "Rules_RegisterWatchFunctions",
+   "source": "src/clips/0048A670_0048BD30_clips_006.c"
+  },
+  {
+   "decl_line": 2998,
+   "def_line": 1389,
+   "name": "Rules_WatchAlwaysTrueStub",
+   "source": "src/clips/0048A670_0048BD30_clips_006.c"
+  },
+  {
+   "decl_line": 2999,
+   "def_line": 1396,
+   "name": "Rules_RegisterFactQueryFunctions",
+   "source": "src/clips/0048A670_0048BD30_clips_006.c"
+  },
+  {
+   "decl_line": 3008,
+   "def_line": 191,
+   "name": "Rules_BuildFactAddressList",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3010,
+   "def_line": 306,
+   "name": "Rules_RegisterFactPatternNetworkPersistence",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3011,
+   "def_line": 321,
+   "name": "Rules_FactPatternNetworkBsaveFind",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3016,
+   "def_line": 488,
+   "name": "Rules_FactPatternNetworkBloadStorage",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3017,
+   "def_line": 511,
+   "name": "Rules_FactPatternNetworkBload",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3019,
+   "def_line": 567,
+   "name": "Rules_FactPatternNetworkClearBloaded",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3020,
+   "def_line": 579,
+   "name": "Rules_RegisterFactPatternNetworkCodeGen",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3021,
+   "def_line": 590,
+   "name": "Rules_FactPatternNetworkAssignCodeGenIds",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3035,
+   "def_line": 1069,
+   "name": "Rules_FreeUnusedEphemeralMultifields",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3043,
+   "def_line": 1419,
+   "name": "Rules_ReportSingleFieldSlotCardError",
+   "source": "src/clips/0048BD50_0048D520_clips_007.c"
+  },
+  {
+   "decl_line": 3050,
+   "def_line": 252,
+   "name": "Lexer_MarkImpliedTemplates",
+   "source": "src/clips/0048D570_0048ED00_clips_008.c"
+  },
+  {
+   "decl_line": 3076,
+   "def_line": 153,
+   "name": "Rules_FlushPendingDependencyDestructors",
+   "source": "src/clips/0048ED60_00490430_clips_009.c"
+  },
+  {
+   "decl_line": 3087,
+   "def_line": 579,
+   "name": "Rules_GetHaltExecutionFlag",
+   "source": "src/clips/0048ED60_00490430_clips_009.c"
+  },
+  {
+   "decl_line": 3088,
+   "def_line": 586,
+   "name": "Rules_GetEvaluationErrorFlag",
+   "source": "src/clips/0048ED60_00490430_clips_009.c"
+  },
+  {
+   "decl_line": 3109,
+   "def_line": 1381,
+   "name": "Rules_FlushPendingNetworkGarbage",
+   "source": "src/clips/0048ED60_00490430_clips_009.c"
+  },
+  {
+   "decl_line": 3111,
+   "def_line": 1442,
+   "name": "Lexer_ResetPendingTokenBuffer",
+   "source": "src/clips/0048ED60_00490430_clips_009.c"
+  },
+  {
+   "decl_line": 3119,
+   "def_line": 360,
+   "name": "Rules_IsEvaluatingTopLevelCommand",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3120,
+   "def_line": 367,
+   "name": "Rules_InitializeDefrules",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3121,
+   "def_line": 402,
+   "name": "Rules_RegisterDefruleModuleItem",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3122,
+   "def_line": 419,
+   "name": "Rules_AllocateDefruleModule",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3127,
+   "def_line": 479,
+   "name": "Rules_IsDefruleDeletable",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3131,
+   "def_line": 912,
+   "name": "Module_InitializeDefmodules",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3133,
+   "def_line": 963,
+   "name": "Module_GetItemList",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3134,
+   "def_line": 970,
+   "name": "Module_GetItemCount",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3136,
+   "def_line": 994,
+   "name": "Module_GetCurrent",
+   "source": "src/clips/00490530_00491530_clips_010.c"
+  },
+  {
+   "decl_line": 3138,
+   "def_line": 5,
+   "name": "Module_BeginEnum",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3139,
+   "def_line": 35,
+   "name": "Module_EndEnum",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3141,
+   "def_line": 76,
+   "name": "Module_CreateMainModule",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3146,
+   "def_line": 196,
+   "name": "Module_RemoveAllModules",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3149,
+   "def_line": 366,
+   "name": "Module_GetCurrentCommand",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3151,
+   "def_line": 410,
+   "name": "Module_ReportIllegalSpecifierError",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3152,
+   "def_line": 421,
+   "name": "IO_RegisterStringRouter",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3166,
+   "def_line": 1037,
+   "name": "Rules_ReportNoTemplateError",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3173,
+   "def_line": 1216,
+   "name": "Rules_ClearModuleSearchMarkers",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3176,
+   "def_line": 1413,
+   "name": "Rules_RegisterDeftemplateConstruct",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3177,
+   "def_line": 1442,
+   "name": "Rules_InitDeftemplateHashTable",
+   "source": "src/clips/00491580_00492BA0_clips_001.c"
+  },
+  {
+   "decl_line": 3178,
+   "def_line": 5,
+   "name": "Rules_AllocDeftemplateHashNode",
+   "source": "src/clips/00492BE0_004942C0_clips_002.c"
+  },
+  {
+   "decl_line": 3182,
+   "def_line": 51,
+   "name": "Rules_DeftemplateIsDeletable",
+   "source": "src/clips/00492BE0_004942C0_clips_002.c"
+  },
+  {
+   "decl_line": 3187,
+   "def_line": 142,
+   "name": "Rules_InitExpressionHashTable",
+   "source": "src/clips/00492BE0_004942C0_clips_002.c"
+  },
+  {
+   "decl_line": 3188,
+   "def_line": 155,
+   "name": "Rules_CacheConnectiveSymbols",
+   "source": "src/clips/00492BE0_004942C0_clips_002.c"
+  },
+  {
+   "decl_line": 3216,
+   "def_line": 204,
+   "name": "Rules_FlushPPBuffer",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3217,
+   "def_line": 220,
+   "name": "Rules_DestroyPPBuffer",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3220,
+   "def_line": 293,
+   "name": "Rules_CopyPPBuffer",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3221,
+   "def_line": 323,
+   "name": "Rules_GetPPBuffer",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3227,
+   "def_line": 384,
+   "name": "Rules_GetPPBufferStatus",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3231,
+   "def_line": 407,
+   "name": "Rules_ClearAtomInUseMarks",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3236,
+   "def_line": 693,
+   "name": "Rules_BloadAtomTables",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3237,
+   "def_line": 731,
+   "name": "Rules_BloadSymbolTable",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3238,
+   "def_line": 766,
+   "name": "Rules_BloadFloatTable",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3239,
+   "def_line": 794,
+   "name": "Rules_BloadIntegerTable",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3240,
+   "def_line": 822,
+   "name": "Rules_FreeBloadAtomTables",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3241,
+   "def_line": 846,
+   "name": "Rules_BloadAllocExpressionArray",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3242,
+   "def_line": 866,
+   "name": "Rules_BloadRefreshExpressions",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3244,
+   "def_line": 1053,
+   "name": "Rules_FreeBloadedExpressions",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3245,
+   "def_line": 1132,
+   "name": "Rules_CountHashedExpressions",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3247,
+   "def_line": 1179,
+   "name": "Rules_InvokeConstructCallbacks",
+   "source": "src/clips/004943E0_00495930_clips_001.c"
+  },
+  {
+   "decl_line": 3251,
+   "def_line": 95,
+   "name": "Rules_BloadConstraints",
+   "source": "src/clips/00495A20_00495E80_clips_002.c"
+  },
+  {
+   "decl_line": 3253,
+   "def_line": 238,
+   "name": "Rules_ClearBloadedConstraints",
+   "source": "src/clips/00495A20_00495E80_clips_002.c"
+  },
+  {
+   "decl_line": 3256,
+   "def_line": 5,
+   "name": "Event_ClearHandlers",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3257,
+   "def_line": 15,
+   "name": "Event_InitHandlers",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3259,
+   "def_line": 81,
+   "name": "Rules_BsaveFunctionNamesLength",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3269,
+   "def_line": 312,
+   "name": "Rules_RegisterConstraintCheckingCommands",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3278,
+   "def_line": 821,
+   "name": "Rules_GetDynamicConstraintCheckingCommand",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3280,
+   "def_line": 855,
+   "name": "Rules_GetStaticConstraintCheckingCommand",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3282,
+   "def_line": 878,
+   "name": "Rules_DynamicConstraintCheckingEnabled",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3283,
+   "def_line": 885,
+   "name": "Rules_StaticConstraintCheckingEnabled",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3284,
+   "def_line": 892,
+   "name": "Rules_InitDeffactsConstruct",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3285,
+   "def_line": 918,
+   "name": "Rules_RegisterDeffactsModuleItem",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3286,
+   "def_line": 935,
+   "name": "Rules_AllocDeffactsModuleData",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3291,
+   "def_line": 986,
+   "name": "Rules_DeffactsIsDeletable",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3293,
+   "def_line": 1024,
+   "name": "Defgeneric_SetupConstruct",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3299,
+   "def_line": 1149,
+   "name": "Defgeneric_IsDeletable",
+   "source": "src/clips/00496000_00497BD0_clips_001.c"
+  },
+  {
+   "decl_line": 3324,
+   "def_line": 353,
+   "name": "Defmethod_SaveConstructs",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3334,
+   "def_line": 682,
+   "name": "Deffunction_InitConstructType",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3337,
+   "def_line": 740,
+   "name": "Deffunction_Delete",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3339,
+   "def_line": 770,
+   "name": "Deffunction_IsDeletable",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3350,
+   "def_line": 909,
+   "name": "Deffunction_AllocateModule",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3352,
+   "def_line": 941,
+   "name": "Deffunction_IsClearReady",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3353,
+   "def_line": 948,
+   "name": "Deffunction_ClearAll",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3355,
+   "def_line": 1040,
+   "name": "Deffunction_SaveHeaders",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3362,
+   "def_line": 1126,
+   "name": "Defglobal_InitConstructType",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3363,
+   "def_line": 1158,
+   "name": "Defglobal_RegisterModuleItem",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3364,
+   "def_line": 1172,
+   "name": "Defglobal_AllocateModule",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3368,
+   "def_line": 1218,
+   "name": "Defglobal_IsDeletable",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3371,
+   "def_line": 1309,
+   "name": "Defglobal_FindNextChanged",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3376,
+   "def_line": 1413,
+   "name": "Class_RefreshWatchFlags",
+   "source": "src/clips/00497C80_004995B0_clips_002.c"
+  },
+  {
+   "decl_line": 3378,
+   "def_line": 28,
+   "name": "Class_CreateSystemClasses",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3379,
+   "def_line": 104,
+   "name": "Rules_RegisterDefclassConstruct",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3381,
+   "def_line": 229,
+   "name": "Class_AllocRecord",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3383,
+   "def_line": 269,
+   "name": "Class_RefreshWatchExpressions",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3391,
+   "def_line": 732,
+   "name": "ProcParam_PopFrame",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3392,
+   "def_line": 773,
+   "name": "ProcParam_BuildArgumentExpressionChain",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3404,
+   "def_line": 1376,
+   "name": "Rules_RegisterFileIOCommands",
+   "source": "src/clips/004996D0_0049B490_clips_003.c"
+  },
+  {
+   "decl_line": 3407,
+   "def_line": 68,
+   "name": "Dribble_GetcRouter",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3409,
+   "def_line": 133,
+   "name": "Dribble_UngetcRouter",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3413,
+   "def_line": 220,
+   "name": "Rules_DribbleOffCommand",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3414,
+   "def_line": 229,
+   "name": "Dribble_TurnOff",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3423,
+   "def_line": 498,
+   "name": "Rules_CloseBatch",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3424,
+   "def_line": 553,
+   "name": "Rules_BatchIsActive",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3434,
+   "def_line": 925,
+   "name": "Rules_ParseConstruct",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3438,
+   "def_line": 1209,
+   "name": "Rules_RegisterControlFlowFunctions",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3441,
+   "def_line": 1395,
+   "name": "Rules_GetLoopCountFunction",
+   "source": "src/clips/0049B530_0049CD60_clips_004.c"
+  },
+  {
+   "decl_line": 3445,
+   "def_line": 153,
+   "name": "Rules_FreeBoundVariableEntry",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3448,
+   "def_line": 230,
+   "name": "Rules_BreakFunction",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3450,
+   "def_line": 285,
+   "name": "Rules_RegisterMiscFunctions",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3455,
+   "def_line": 385,
+   "name": "Rules_HostRandom",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3458,
+   "def_line": 445,
+   "name": "Rules_HostReleaseMem",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3460,
+   "def_line": 485,
+   "name": "Rules_HostMemUsed",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3461,
+   "def_line": 494,
+   "name": "Rules_HostMemRequests",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3463,
+   "def_line": 540,
+   "name": "Rules_HostOptionsCommand",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3467,
+   "def_line": 980,
+   "name": "Rules_HostSetEvaluationError",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3470,
+   "def_line": 1036,
+   "name": "Rules_RegisterIOHostFunctions",
+   "source": "src/clips/0049CE10_0049E8D0_clips_005.c"
+  },
+  {
+   "decl_line": 3484,
+   "def_line": 516,
+   "name": "Rules_ReportIllegalLogicalName",
+   "source": "src/clips/0049E930_0049FF80_clips_006.c"
+  },
+  {
+   "decl_line": 3485,
+   "def_line": 533,
+   "name": "Rules_RegisterPredicateHostFunctions",
+   "source": "src/clips/0049E930_0049FF80_clips_006.c"
+  },
+  {
+   "decl_line": 3507,
+   "def_line": 69,
+   "name": "Rules_RegisterArithmeticFunctions",
+   "source": "src/clips/004A0080_004A1CF0_clips_001.c"
+  },
+  {
+   "decl_line": 3514,
+   "def_line": 515,
+   "name": "Rules_GetAutoFloatDividendCommand",
+   "source": "src/clips/004A0080_004A1CF0_clips_001.c"
+  },
+  {
+   "decl_line": 3520,
+   "def_line": 739,
+   "name": "Rules_RegisterMultifieldFunctions",
+   "source": "src/clips/004A0080_004A1CF0_clips_001.c"
+  },
+  {
+   "decl_line": 3540,
+   "def_line": 343,
+   "name": "Rules_EvalGetPrognIndexBuiltin",
+   "source": "src/clips/004A1D40_004A36B0_clips_002.c"
+  },
+  {
+   "decl_line": 3545,
+   "def_line": 763,
+   "name": "Rules_RegisterStringBuiltins",
+   "source": "src/clips/004A1D40_004A36B0_clips_002.c"
+  },
+  {
+   "decl_line": 3559,
+   "def_line": 5,
+   "name": "Rules_RegisterMathBuiltins",
+   "source": "src/clips/004A3790_004A5610_clips_003.c"
+  },
+  {
+   "decl_line": 3562,
+   "def_line": 70,
+   "name": "Rules_MathDomainError",
+   "source": "src/clips/004A3790_004A5610_clips_003.c"
+  },
+  {
+   "decl_line": 3563,
+   "def_line": 89,
+   "name": "Rules_MathArgumentOverflowError",
+   "source": "src/clips/004A3790_004A5610_clips_003.c"
+  },
+  {
+   "decl_line": 3564,
+   "def_line": 108,
+   "name": "Rules_MathSingularityError",
+   "source": "src/clips/004A3790_004A5610_clips_003.c"
+  },
+  {
+   "decl_line": 3595,
+   "def_line": 792,
+   "name": "Rules_MathPi",
+   "source": "src/clips/004A3790_004A5610_clips_003.c"
+  },
+  {
+   "decl_line": 3625,
+   "def_line": 993,
+   "name": "Rules_RegisterHelpFunctions",
+   "source": "src/clips/004A57D0_004A6B10_clips_004.c"
+  },
+  {
+   "decl_line": 3637,
+   "def_line": 720,
+   "name": "Rules_RegisterConstructsToCFunction",
+   "source": "src/clips/004A6C40_004A8520_clips_005.c"
+  },
+  {
+   "decl_line": 3641,
+   "def_line": 994,
+   "name": "Rules_RegisterModuleItemIdAssigner",
+   "source": "src/clips/004A6C40_004A8520_clips_005.c"
+  },
+  {
+   "decl_line": 3657,
+   "def_line": 28,
+   "name": "Rules_PrintJoinNetworkSharingReport",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3659,
+   "def_line": 73,
+   "name": "Rules_ClearJoinNetworkMarkedFlags",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3661,
+   "def_line": 162,
+   "name": "Rules_DefruleCommandDefinitions",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3662,
+   "def_line": 183,
+   "name": "Rules_ResetDefrules",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3663,
+   "def_line": 196,
+   "name": "Rules_ClearDefrulesReady",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3664,
+   "def_line": 217,
+   "name": "Rules_ClearDefrules",
+   "source": "src/clips/004A8570_004A9970_clips_006.c"
+  },
+  {
+   "decl_line": 3716,
+   "def_line": 384,
+   "name": "Instance_AllocateInstanceRecord",
+   "source": "src/clips/004A9A20_004AB4E0_clips_007.c"
+  },
+  {
+   "decl_line": 3728,
+   "def_line": 1308,
+   "name": "Instance_RegisterModifyAndDuplicateFunctions",
+   "source": "src/clips/004A9A20_004AB4E0_clips_007.c"
+  },
+  {
+   "decl_line": 3745,
+   "def_line": 546,
+   "name": "Rules_RegisterInstanceIOCommands",
+   "source": "src/clips/004AB610_004ACA00_clips_008.c"
+  },
+  {
+   "decl_line": 3773,
+   "def_line": 681,
+   "name": "Rules_BloadReleaseReadBuffer",
+   "source": "src/clips/004ACB00_004AE690_clips_001.c"
+  },
+  {
+   "decl_line": 3774,
+   "def_line": 699,
+   "name": "Rules_RegisterMultifieldSlotCommands",
+   "source": "src/clips/004ACB00_004AE690_clips_001.c"
+  },
+  {
+   "decl_line": 3785,
+   "def_line": 1144,
+   "name": "MessageHandler_PrintNoApplicableHandlerError",
+   "source": "src/clips/004ACB00_004AE690_clips_001.c"
+  },
+  {
+   "decl_line": 3786,
+   "def_line": 1161,
+   "name": "MessageHandler_CheckArgCount",
+   "source": "src/clips/004ACB00_004AE690_clips_001.c"
+  },
+  {
+   "decl_line": 3800,
+   "def_line": 493,
+   "name": "MessageHandler_ReportUnableToDelete",
+   "source": "src/clips/004AE6D0_004B0030_clips_002.c"
+  },
+  {
+   "decl_line": 3811,
+   "def_line": 750,
+   "name": "MessageHandler_HasNextHandler",
+   "source": "src/clips/004AE6D0_004B0030_clips_002.c"
+  },
+  {
+   "decl_line": 3823,
+   "def_line": 138,
+   "name": "Class_LookupCurrentScopedName",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3829,
+   "def_line": 289,
+   "name": "Class_IsDeletable",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3831,
+   "def_line": 305,
+   "name": "Class_IsDeletableAlt",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3843,
+   "def_line": 449,
+   "name": "Class_ListAllConstructs",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3848,
+   "def_line": 527,
+   "name": "Class_InitHashTables",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3866,
+   "def_line": 1228,
+   "name": "Class_RemoveAllDeletableClasses",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3872,
+   "def_line": 1393,
+   "name": "Class_NewTraversalID",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3873,
+   "def_line": 1428,
+   "name": "Class_ReleaseTraversalID",
+   "source": "src/clips/004B00A0_004B1820_clips_003.c"
+  },
+  {
+   "decl_line": 3875,
+   "def_line": 5,
+   "name": "Class_FindUnusedSlotNameID",
+   "source": "src/clips/004B1860_004B2E40_clips_004.c"
+  },
+  {
+   "decl_line": 3879,
+   "def_line": 135,
+   "name": "Rules_GetObjectPatternNetworkRoot",
+   "source": "src/clips/004B1860_004B2E40_clips_004.c"
+  },
+  {
+   "decl_line": 3880,
+   "def_line": 142,
+   "name": "Rules_GetReactiveRuleList",
+   "source": "src/clips/004B1860_004B2E40_clips_004.c"
+  },
+  {
+   "decl_line": 3884,
+   "def_line": 213,
+   "name": "Rules_ResetRuleMarkCounters",
+   "source": "src/clips/004B1860_004B2E40_clips_004.c"
+  },
+  {
+   "decl_line": 3898,
+   "def_line": 949,
+   "name": "Rules_PrintObjectPatternNetworkError",
+   "source": "src/clips/004B1860_004B2E40_clips_004.c"
+  },
+  {
+   "decl_line": 3951,
+   "def_line": 1253,
+   "name": "CRT_HasActiveWindow",
+   "source": "src/clips/004B2EB0_004B50D6_clips_005.c"
+  },
+  {
+   "decl_line": 3957,
+   "def_line": 51,
+   "name": "IO_InitializeFileIORouter",
+   "source": "src/clips/004B529A_004B75B0_clips_006.c"
+  },
+  {
+   "decl_line": 3990,
+   "def_line": 771,
+   "name": "CRT_TzSet",
+   "source": "src/clips/004B529A_004B75B0_clips_006.c"
+  },
+  {
+   "decl_line": 4006,
+   "def_line": 1316,
+   "name": "PP_BuildDefault",
+   "source": "src/clips/004B529A_004B75B0_clips_006.c"
+  },
+  {
+   "decl_line": 4009,
+   "def_line": 5,
+   "name": "PP_MakeConst26",
+   "source": "src/clips/004B76F0_004B8D90_clips_007.c"
+  },
+  {
+   "decl_line": 4011,
+   "def_line": 58,
+   "name": "PP_MakeConst28",
+   "source": "src/clips/004B76F0_004B8D90_clips_007.c"
+  },
+  {
+   "decl_line": 4042,
+   "def_line": 286,
+   "name": "AST_AllocNode",
+   "source": "src/clips/00492BE0_004942C0_clips_002.c"
+  },
+  {
+   "decl_line": 4047,
+   "def_line": 831,
+   "name": "Rules_CEAllocTestNode",
+   "source": "src/clips/004B8EC0_004BA500_clips_008.c"
+  },
+  {
+   "decl_line": 4052,
+   "def_line": 1146,
+   "name": "Rules_RegisterDeftemplateBinaryItem",
+   "source": "src/clips/004B8EC0_004BA500_clips_008.c"
+  },
+  {
+   "decl_line": 4053,
+   "def_line": 1161,
+   "name": "Rules_DeftemplateBsaveFind",
+   "source": "src/clips/004B8EC0_004BA500_clips_008.c"
+  },
+  {
+   "decl_line": 4057,
+   "def_line": 1410,
+   "name": "Rules_DeftemplateBload",
+   "source": "src/clips/004B8EC0_004BA500_clips_008.c"
+  },
+  {
+   "decl_line": 4061,
+   "def_line": 60,
+   "name": "Rules_DeftemplateClearBloaded",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4063,
+   "def_line": 120,
+   "name": "Rules_RegisterDeftemplateCodeGen",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4071,
+   "def_line": 465,
+   "name": "Rules_RegisterDefruleBinaryItem",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4072,
+   "def_line": 480,
+   "name": "Rules_DefruleBsaveFind",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4080,
+   "def_line": 881,
+   "name": "Rules_JoinNetworkBloadStorage",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4081,
+   "def_line": 922,
+   "name": "Rules_JoinNetworkBload",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4086,
+   "def_line": 1210,
+   "name": "Rules_ClearBloadedJoinNetwork",
+   "source": "src/clips/004BA5F0_004BBF90_clips_009.c"
+  },
+  {
+   "decl_line": 4112,
+   "def_line": 1058,
+   "name": "Rules_GetIncrementalReset",
+   "source": "src/clips/004BBFE0_004BD710_clips_010.c"
+  },
+  {
+   "decl_line": 4113,
+   "def_line": 1065,
+   "name": "Rules_SetIncrementalReset",
+   "source": "src/clips/004BBFE0_004BD710_clips_010.c"
+  },
+  {
+   "decl_line": 4115,
+   "def_line": 1116,
+   "name": "Rules_GetIncrementalResetCommand",
+   "source": "src/clips/004BBFE0_004BD710_clips_010.c"
+  },
+  {
+   "decl_line": 4120,
+   "def_line": 1385,
+   "name": "Parser_PushFunctionParseState",
+   "source": "src/clips/004BBFE0_004BD710_clips_010.c"
+  },
+  {
+   "decl_line": 4121,
+   "def_line": 1414,
+   "name": "Parser_PopFunctionParseState",
+   "source": "src/clips/004BBFE0_004BD710_clips_010.c"
+  },
+  {
+   "decl_line": 4128,
+   "def_line": 271,
+   "name": "Parser_GetSequenceOperatorRecognition",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4131,
+   "def_line": 391,
+   "name": "Parser_GetLoopContextStack",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4133,
+   "def_line": 406,
+   "name": "Parser_FreeLoopContextStack",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4134,
+   "def_line": 432,
+   "name": "Parser_LoopContextStackIsEmpty",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4147,
+   "def_line": 1191,
+   "name": "Rules_CountNamedContextEntries",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4150,
+   "def_line": 1304,
+   "name": "Rules_RegisterRuleCommands",
+   "source": "src/clips/004BD750_004BEEF0_clips_011.c"
+  },
+  {
+   "decl_line": 4166,
+   "def_line": 958,
+   "name": "Rules_SetupDefruleCodeGenerator",
+   "source": "src/clips/004BEF30_004C0550_clips_012.c"
+  },
+  {
+   "decl_line": 4167,
+   "def_line": 969,
+   "name": "Rules_PrepareDefrulesForCodeGen",
+   "source": "src/clips/004BEF30_004C0550_clips_012.c"
+  },
+  {
+   "decl_line": 4174,
+   "def_line": 1397,
+   "name": "Rules_CreateLHSParseNode",
+   "source": "src/clips/004BEF30_004C0550_clips_012.c"
+  },
+  {
+   "decl_line": 4181,
+   "def_line": 472,
+   "name": "Rules_ApplyCEKeywordFlags",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4182,
+   "def_line": 540,
+   "name": "Rules_ApplyPatternKeywordFlags",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4183,
+   "def_line": 619,
+   "name": "Module_RegisterDefmoduleCommands",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4184,
+   "def_line": 635,
+   "name": "Module_ClearAllModulesResetToMain",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4189,
+   "def_line": 722,
+   "name": "Module_ListDefmodulesCommand",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4191,
+   "def_line": 758,
+   "name": "Module_GetModuleCount",
+   "source": "src/clips/004C0620_004C1B80_clips_013.c"
+  },
+  {
+   "decl_line": 4210,
+   "def_line": 499,
+   "name": "Rules_RegisterModifyDuplicateFunctions",
+   "source": "src/clips/004C1BB0_004C33E0_clips_014.c"
+  },
+  {
+   "decl_line": 4231,
+   "def_line": 418,
+   "name": "Rules_RegisterDefglobalBinaryItem",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4232,
+   "def_line": 434,
+   "name": "Rules_BsaveFindDefglobals",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4235,
+   "def_line": 538,
+   "name": "Rules_BloadDefglobalStorage",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4236,
+   "def_line": 572,
+   "name": "Rules_BloadDefglobals",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4239,
+   "def_line": 623,
+   "name": "Rules_ClearDefglobalBload",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4241,
+   "def_line": 672,
+   "name": "Defgeneric_RegisterBinaryItem",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4243,
+   "def_line": 694,
+   "name": "Defgeneric_CountBsaveEntries",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4245,
+   "def_line": 785,
+   "name": "Defgeneric_BsaveWriteExpressions",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4254,
+   "def_line": 1157,
+   "name": "Defgeneric_BloadAllocateBinaryStorage",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4261,
+   "def_line": 1379,
+   "name": "Defgeneric_ClearBinaryData",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4262,
+   "def_line": 1439,
+   "name": "Deffunction_RegisterBinaryItem",
+   "source": "src/clips/004C3430_004C4F90_clips_015.c"
+  },
+  {
+   "decl_line": 4264,
+   "def_line": 5,
+   "name": "Deffunction_CountBsaveEntries",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4266,
+   "def_line": 41,
+   "name": "Deffunction_BsaveWriteExpressions",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4272,
+   "def_line": 181,
+   "name": "Deffunction_BloadRefreshConstructs",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4275,
+   "def_line": 231,
+   "name": "Deffunction_ClearBinaryData",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4276,
+   "def_line": 271,
+   "name": "Class_RegisterBinaryItem",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4278,
+   "def_line": 294,
+   "name": "Class_CountBsaveEntries",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4280,
+   "def_line": 442,
+   "name": "Class_BsaveWriteExpressions",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4292,
+   "def_line": 1187,
+   "name": "Class_BloadBinaryItem",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4293,
+   "def_line": 1233,
+   "name": "Class_BloadFixupNameTable",
+   "source": "src/clips/004C4FB0_004C6950_clips_016.c"
+  },
+  {
+   "decl_line": 4301,
+   "def_line": 241,
+   "name": "Class_ClearBloadedData",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4302,
+   "def_line": 427,
+   "name": "Deffacts_CommandDefinitions",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4303,
+   "def_line": 445,
+   "name": "Deffacts_Reset",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4305,
+   "def_line": 470,
+   "name": "Deffacts_ClearAction",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4314,
+   "def_line": 655,
+   "name": "Deffacts_RegisterBinaryItem",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4315,
+   "def_line": 670,
+   "name": "Deffacts_BsaveFind",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4320,
+   "def_line": 847,
+   "name": "Deffacts_BloadBinaryItem",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4323,
+   "def_line": 886,
+   "name": "Deffacts_ClearBload",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4325,
+   "def_line": 925,
+   "name": "Deffacts_CompilerSetup",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4326,
+   "def_line": 936,
+   "name": "Deffacts_BeforeCode",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4332,
+   "def_line": 1146,
+   "name": "Defgeneric_NoActiveCall",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4333,
+   "def_line": 1153,
+   "name": "Defgeneric_AllocateModule",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4335,
+   "def_line": 1185,
+   "name": "Defgeneric_ClearDefgenericsReady",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4338,
+   "def_line": 1325,
+   "name": "Defgeneric_ClearDefgenerics",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4339,
+   "def_line": 1365,
+   "name": "Defgeneric_PrintCannotModifyError",
+   "source": "src/clips/004C6990_004C8290_clips_017.c"
+  },
+  {
+   "decl_line": 4349,
+   "def_line": 324,
+   "name": "Defgeneric_CompilerSetup",
+   "source": "src/clips/004C82D0_004C9DB0_clips_001.c"
+  },
+  {
+   "decl_line": 4352,
+   "def_line": 360,
+   "name": "Defgeneric_BeforeCode",
+   "source": "src/clips/004C82D0_004C9DB0_clips_001.c"
+  },
+  {
+   "decl_line": 4366,
+   "def_line": 1300,
+   "name": "Defgeneric_ParseDeclaration",
+   "source": "src/clips/004C82D0_004C9DB0_clips_001.c"
+  },
+  {
+   "decl_line": 4393,
+   "def_line": 1384,
+   "name": "Deffunction_RegisterCodeGenerator",
+   "source": "src/clips/004C9E20_004CB620_clips_002.c"
+  },
+  {
+   "decl_line": 4396,
+   "def_line": 1420,
+   "name": "Deffunction_RegisterModuleItemAssigner",
+   "source": "src/clips/004C9E20_004CB620_clips_002.c"
+  },
+  {
+   "decl_line": 4402,
+   "def_line": 276,
+   "name": "Deffunction_ValidateNewName",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4407,
+   "def_line": 580,
+   "name": "Defglobal_RegisterConstructCommands",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4408,
+   "def_line": 599,
+   "name": "Defglobal_ResetAllDefglobals",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4421,
+   "def_line": 710,
+   "name": "Defglobal_RegisterResetGlobalsCommands",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4423,
+   "def_line": 741,
+   "name": "Defglobal_GetResetGlobalsCommand",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4424,
+   "def_line": 752,
+   "name": "Defglobal_GetResetGlobalsFlag",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4432,
+   "def_line": 1173,
+   "name": "Defglobal_PrintUndefinedVariableError",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4433,
+   "def_line": 1190,
+   "name": "Defglobal_RegisterCodeGeneratorItem",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4434,
+   "def_line": 1202,
+   "name": "Defglobal_AssignModuleItemIds",
+   "source": "src/clips/004CB630_004CCE70_clips_003.c"
+  },
+  {
+   "decl_line": 4442,
+   "def_line": 12,
+   "name": "MessageHandler_RegisterCommands",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4453,
+   "def_line": 359,
+   "name": "MessageHandler_RegisterSystemHandlers",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4460,
+   "def_line": 647,
+   "name": "Definstances_SetupConstruct",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4463,
+   "def_line": 704,
+   "name": "Definstances_IsDeletable",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4466,
+   "def_line": 727,
+   "name": "Definstances_DeleteRecord",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4474,
+   "def_line": 1007,
+   "name": "Definstances_RemoveAll",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4476,
+   "def_line": 1053,
+   "name": "Definstances_CreateDefaultRecord",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4477,
+   "def_line": 1096,
+   "name": "Definstances_AllocModuleData",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4481,
+   "def_line": 1148,
+   "name": "Definstances_ResetAll",
+   "source": "src/clips/004CCEC0_004CEAC0_clips_004.c"
+  },
+  {
+   "decl_line": 4492,
+   "def_line": 304,
+   "name": "InstanceQuery_PushQueryFrame",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4493,
+   "def_line": 331,
+   "name": "InstanceQuery_PopQueryFrame",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4502,
+   "def_line": 899,
+   "name": "InstanceQuery_EnqueueDelayedBinding",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4503,
+   "def_line": 937,
+   "name": "InstanceQuery_DequeueDelayedBinding",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4504,
+   "def_line": 947,
+   "name": "ObjectsCompiler_RegisterCodeGenerator",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4507,
+   "def_line": 984,
+   "name": "ObjectsCompiler_AssignConstructIndices",
+   "source": "src/clips/004CEC60_004CFFC0_clips_005.c"
+  },
+  {
+   "decl_line": 4554,
+   "def_line": 1235,
+   "name": "Rules_CreateDefaultObjectPatternRestriction",
+   "source": "src/runtime/004D1F50_004D35A0_runtime_002.c"
+  },
+  {
+   "decl_line": 4628,
+   "def_line": 354,
+   "name": "Math_CompareAbsToEpsilon",
+   "source": "src/runtime/004D6210_004D80F0_runtime_005.c"
+  },
+  {
+   "decl_line": 4646,
+   "def_line": 1454,
+   "name": "Compiler_RegisterModuleCodeItem",
+   "source": "src/runtime/004D6210_004D80F0_runtime_005.c"
+  },
+  {
+   "decl_line": 4647,
+   "def_line": 5,
+   "name": "Compiler_AssignModuleIndices",
+   "source": "src/runtime/004D8120_004D9F20_runtime_006.c"
+  },
+  {
+   "decl_line": 4677,
+   "def_line": 1062,
+   "name": "Fpu_ClearExceptions",
+   "source": "src/runtime/004D8120_004D9F20_runtime_006.c"
+  },
+  {
+   "decl_line": 4703,
+   "def_line": 826,
+   "name": "Module_RegisterBsaveBloadHandlers",
+   "source": "src/runtime/004D9FD0_004DB8D0_runtime_007.c"
+  },
+  {
+   "decl_line": 4706,
+   "def_line": 889,
+   "name": "Module_BsaveCountModulesAndItems",
+   "source": "src/runtime/004D9FD0_004DB8D0_runtime_007.c"
+  },
+  {
+   "decl_line": 4710,
+   "def_line": 1132,
+   "name": "Module_BloadRefreshModules",
+   "source": "src/runtime/004D9FD0_004DB8D0_runtime_007.c"
+  },
+  {
+   "decl_line": 4713,
+   "def_line": 1265,
+   "name": "Module_ClearBloadData",
+   "source": "src/runtime/004D9FD0_004DB8D0_runtime_007.c"
+  },
+  {
+   "decl_line": 4739,
+   "def_line": 272,
+   "name": "Rules_ReportVariableFieldTypeConflict",
+   "source": "src/runtime/004DD3F0_004DE9B0_runtime_009.c"
+  },
+  {
+   "decl_line": 4740,
+   "def_line": 289,
+   "name": "Rules_CheckAndReportUnmatchableFieldConstraint",
+   "source": "src/runtime/004DD3F0_004DE9B0_runtime_009.c"
+  },
+  {
+   "decl_line": 4758,
+   "def_line": 310,
+   "name": "Method_BuildTypeRestrictionRecordFromFlags",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4767,
+   "def_line": 995,
+   "name": "Rules_SetupDefinstancesBsaveBload",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4769,
+   "def_line": 1017,
+   "name": "Rules_CountDefinstancesBsaveExpressions",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4771,
+   "def_line": 1053,
+   "name": "Rules_FindDefinstancesBsaveExpressions",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4777,
+   "def_line": 1190,
+   "name": "Rules_BloadRefreshDefinstances",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4780,
+   "def_line": 1236,
+   "name": "Rules_ClearDefinstancesBloadData",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4781,
+   "def_line": 1277,
+   "name": "Rules_RegisterDefinstancesCodeGenerator",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4783,
+   "def_line": 1295,
+   "name": "Compiler_RegisterDefinstancesModuleAssigner",
+   "source": "src/runtime/004DEA00_004E03B0_runtime_010.c"
+  },
+  {
+   "decl_line": 4797,
+   "def_line": 637,
+   "name": "Compiler_RegisterObjectPatternNetworkCodeGenerator",
+   "source": "src/runtime/004E03F0_004E1A40_runtime_011.c"
+  },
+  {
+   "decl_line": 4799,
+   "def_line": 667,
+   "name": "Compiler_AssignObjectPatternAndRuleCodeIndices",
+   "source": "src/runtime/004E03F0_004E1A40_runtime_011.c"
+  },
+  {
+   "decl_line": 4809,
+   "def_line": 1073,
+   "name": "Rules_BuildMultifieldIndexTestNode",
+   "source": "src/runtime/004E03F0_004E1A40_runtime_011.c"
+  },
+  {
+   "decl_line": 4818,
+   "def_line": 305,
+   "name": "Rules_RegisterObjectPatternNetworkBinaryItem",
+   "source": "src/runtime/004E1A90_004E3400_runtime_012.c"
+  },
+  {
+   "decl_line": 4819,
+   "def_line": 320,
+   "name": "Rules_AssignObjectPatternNetworkBsaveIndices",
+   "source": "src/runtime/004E1A90_004E3400_runtime_012.c"
+  },
+  {
+   "decl_line": 4822,
+   "def_line": 538,
+   "name": "Rules_BloadObjectPatternNetworkCounts",
+   "source": "src/runtime/004E1A90_004E3400_runtime_012.c"
+  },
+  {
+   "decl_line": 4823,
+   "def_line": 577,
+   "name": "Rules_BloadObjectPatternNetworkRecords",
+   "source": "src/runtime/004E1A90_004E3400_runtime_012.c"
+  },
+  {
+   "decl_line": 4826,
+   "def_line": 747,
+   "name": "Class_ClearClassIDTable",
+   "source": "src/runtime/004E1A90_004E3400_runtime_012.c"
+  },
+  {
+   "decl_line": 4876,
+   "def_line": 755,
+   "name": "CRT_InvokeIoInitHook",
+   "source": "src/runtime/004E5760_004E7F70_runtime_014.c"
+  },
+  {
+   "decl_line": 4877,
+   "def_line": 762,
+   "name": "CRT_DefaultZeroStub",
+   "source": "src/runtime/004E5760_004E7F70_runtime_014.c"
+  }
+ ],
+ "skipped": {
+  "Building_FindRandomOwnedCompletedCastle": "definition is not old-style zero-arg",
+  "Building_New": "definition is not old-style zero-arg",
+  "CRT_ConstructThreadDataBlock": "no manifest definition (legacy import; later tranche)",
+  "CRT_DestroyThreadDataBlock": "no manifest definition (legacy import; later tranche)",
+  "CRT_FreeTlsIndex": "no manifest definition (legacy import; later tranche)",
+  "CRT_ThrowExcStringException": "no manifest definition (legacy import; later tranche)",
+  "CRT_WatcomEHFrameHandler": "no manifest definition (legacy import; later tranche)",
+  "Defglobals_ResetCallback": "definition is not old-style zero-arg",
+  "EFG_Format_": "no manifest definition (legacy import; later tranche)",
+  "GetACP": "no manifest definition (legacy import; later tranche)",
+  "GetCommandLineA": "no manifest definition (legacy import; later tranche)",
+  "GetCurrentProcessId": "no manifest definition (legacy import; later tranche)",
+  "GetCurrentThreadId": "no manifest definition (legacy import; later tranche)",
+  "GetLastError": "no manifest definition (legacy import; later tranche)",
+  "IF_DACOS": "no manifest definition (legacy import; later tranche)",
+  "IO_OutNewline": "no manifest definition (legacy import; later tranche)",
+  "IO_RunRouterExitCallbacks": "definition is not old-style zero-arg",
+  "Noop_CrtSingleThreadLockStub": "no manifest definition (legacy import; later tranche)",
+  "Parser_ParseExpression": "definition is not old-style zero-arg",
+  "Render_CreateSprite": "no manifest definition (legacy import; later tranche)",
+  "Render_DrawSprite": "no manifest definition (legacy import; later tranche)",
+  "Render_LoadResourceSprite_v2": "no manifest definition (legacy import; later tranche)",
+  "Rules_CreateArmyFact": "definition is not old-style zero-arg",
+  "Rules_RetractTreasureFact": "definition is not old-style zero-arg",
+  "Temple_Random": "definition is not old-style zero-arg",
+  "Unit_Create": "definition is not old-style zero-arg",
+  "_cnvs2d_": "no manifest definition (legacy import; later tranche)",
+  "_wcpp_4_ctor_array_storage_1m__": "no manifest definition (legacy import; later tranche)",
+  "fread_": "no manifest definition (legacy import; later tranche)",
+  "j___NTAddFileHandle_": "no manifest definition (legacy import; later tranche)",
+  "j___NTAddFileHandle__0": "no manifest definition (legacy import; later tranche)",
+  "j__nfree_": "no manifest definition (legacy import; later tranche)",
+  "j_j__nfree_": "no manifest definition (legacy import; later tranche)",
+  "strrchr_": "no manifest definition (legacy import; later tranche)"
+ }
+}

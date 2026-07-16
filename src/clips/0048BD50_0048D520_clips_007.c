@@ -188,7 +188,7 @@ _DWORD * Rules_GetFactListFunction(int returnValue, double a2)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (0048C030) --------------------------------------------------------
-int Rules_BuildFactAddressList()
+int Rules_BuildFactAddressList(void)
 {
   int v0; // edx
   int theModule; // esi
@@ -303,7 +303,7 @@ int  Rules_ResolveFactArgument(int argumentPosition, int theFunction, int noFact
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (0048C1C0) --------------------------------------------------------
-signed int Rules_RegisterFactPatternNetworkPersistence()
+signed int Rules_RegisterFactPatternNetworkPersistence(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aFacts_3,
@@ -318,7 +318,7 @@ signed int Rules_RegisterFactPatternNetworkPersistence()
 }
 
 //----- (0048C200) --------------------------------------------------------
-int Rules_FactPatternNetworkBsaveFind()
+int Rules_FactPatternNetworkBsaveFind(void)
 {
   int result; // eax
   int i; // esi
@@ -485,7 +485,7 @@ const void * Rules_FactPatternNetworkWriteNodeRecord(int thePattern, int theFile
 // 48C41A: variable 'v7' is possibly undefined
 
 //----- (0048C490) --------------------------------------------------------
-int Rules_FactPatternNetworkBloadStorage()
+int Rules_FactPatternNetworkBloadStorage(void)
 {
   int result; // eax
   int space; // [esp+0h] [ebp-8h] BYREF
@@ -508,7 +508,7 @@ int Rules_FactPatternNetworkBloadStorage()
 // 54E520: using guessed type int dword_54E520;
 
 //----- (0048C4E0) --------------------------------------------------------
-signed int Rules_FactPatternNetworkBload()
+signed int Rules_FactPatternNetworkBload(void)
 {
   int space; // [esp-8h] [ebp-Ch] BYREF
 
@@ -564,7 +564,7 @@ int  Rules_FactPatternNetworkFixupNodeRecord(int *bsaveNode, int nodeIndex)
 // 54E688: using guessed type int dword_54E688;
 
 //----- (0048C670) --------------------------------------------------------
-signed int Rules_FactPatternNetworkClearBloaded()
+signed int Rules_FactPatternNetworkClearBloaded(void)
 {
   signed int result; // eax
 
@@ -576,7 +576,7 @@ signed int Rules_FactPatternNetworkClearBloaded()
 // 54E520: using guessed type int dword_54E520;
 
 //----- (0048C690) --------------------------------------------------------
-int Rules_RegisterFactPatternNetworkCodeGen()
+int Rules_RegisterFactPatternNetworkCodeGen(void)
 {
   int result; // eax
 
@@ -587,7 +587,7 @@ int Rules_RegisterFactPatternNetworkCodeGen()
 // 54E524: using guessed type int dword_54E524;
 
 //----- (0048C6C0) --------------------------------------------------------
-int Rules_FactPatternNetworkAssignCodeGenIds()
+int Rules_FactPatternNetworkAssignCodeGenIds(void)
 {
   int result; // eax
   int deftemplateIndex; // esi
@@ -1066,7 +1066,7 @@ int  Rules_RegisterEphemeralMultifield(int theSegment)
 // 51A96C: using guessed type int dword_51A96C;
 
 //----- (0048CF20) --------------------------------------------------------
-int Rules_FreeUnusedEphemeralMultifields()
+int Rules_FreeUnusedEphemeralMultifields(void)
 {
   int result; // eax
   int lastSegment; // ebx
@@ -1416,7 +1416,7 @@ signed int __fastcall Rules_ReportInvalidSlotError(int a1, int deftemplateName)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0048D520) --------------------------------------------------------
-signed int Rules_ReportSingleFieldSlotCardError()
+signed int Rules_ReportSingleFieldSlotCardError(void)
 {
   int v0; // ecx
   int v1; // ecx

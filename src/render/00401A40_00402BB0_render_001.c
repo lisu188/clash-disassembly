@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00401A40) --------------------------------------------------------
-__int16 Render_LoadResourceBackbuffer()
+__int16 Render_LoadResourceBackbuffer(void)
 {
   Render_InitRecoveredVtableStorage();
   g_ActiveBlitCursor = (int)g_NullBlitCursor_Vtable;

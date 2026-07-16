@@ -66,7 +66,7 @@ signed int  Rules_EvenpFunction(int returnValue, double a2)
 }
 
 //----- (004A0240) --------------------------------------------------------
-signed int Rules_RegisterArithmeticFunctions()
+signed int Rules_RegisterArithmeticFunctions(void)
 {
   Rules_RegisterHostFunction(asc_506D2C, 110, (int)aAdditionfuncti, (int)Rules_AdditionFunction, (int)a2N_0);
   Rules_RegisterHostFunction(asc_506D48, 110, (int)aMultiplication, (int)Rules_MultiplicationFunction, (int)a2N_0);
@@ -512,7 +512,7 @@ int  Rules_SetAutoFloatDividendCommand(int returnValue, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004A0A80) --------------------------------------------------------
-int Rules_GetAutoFloatDividendCommand()
+int Rules_GetAutoFloatDividendCommand(void)
 {
   Lexer_TokenExpect(0);
   return g_Rules_AutoFloatDividendEnabled;
@@ -736,7 +736,7 @@ LABEL_9:
 }
 
 //----- (004A0E30) --------------------------------------------------------
-signed int Rules_RegisterMultifieldFunctions()
+signed int Rules_RegisterMultifieldFunctions(void)
 {
   int v0; // ecx
 

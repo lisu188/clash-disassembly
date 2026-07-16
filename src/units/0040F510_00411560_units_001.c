@@ -431,7 +431,7 @@ __int16 * UnitStack_ClearRemainingActionPoints(__int16 *result, DWORD a2, double
 }
 
 //----- (0040FEF0) --------------------------------------------------------
-signed int WorldMap_HandleViewportScrollKeys()
+signed int WorldMap_HandleViewportScrollKeys(void)
 {
   int viewportXLeft; // edx
   int viewportXRight; // ecx

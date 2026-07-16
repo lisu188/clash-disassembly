@@ -823,7 +823,7 @@ int  Rules_ReleaseSymbolReference(int *symbolPtr, int a2)
 }
 
 //----- (004DAD20) --------------------------------------------------------
-_DWORD *Module_RegisterBsaveBloadHandlers()
+_DWORD *Module_RegisterBsaveBloadHandlers(void)
 {
   Rules_AddBeforeBloadFunction((int)aDefmodule_3, (int)Module_RemoveAllModules, 2000);
   Rules_RegisterBinaryItem(
@@ -886,7 +886,7 @@ _DWORD * Module_AssignBsaveItemHeaderIndices(_DWORD *result, _DWORD *theHeader)
 }
 
 //----- (004DADF0) --------------------------------------------------------
-_DWORD *Module_BsaveCountModulesAndItems()
+_DWORD *Module_BsaveCountModulesAndItems(void)
 {
   _DWORD *result; // eax
   _DWORD *i; // ecx
@@ -1129,7 +1129,7 @@ int __fastcall Module_BloadReadHeaderCounts(int a1)
 // 51C704: using guessed type int dword_51C704;
 
 //----- (004DB290) --------------------------------------------------------
-int Module_BloadRefreshModules()
+int Module_BloadRefreshModules(void)
 {
   int result; // eax
   int Enum; // eax
@@ -1262,7 +1262,7 @@ int  Module_BloadFixupPortItemRecord(_DWORD *bsavePortItem, int portItemIndex)
 // 54E674: using guessed type int dword_54E674;
 
 //----- (004DB590) --------------------------------------------------------
-int Module_ClearBloadData()
+int Module_ClearBloadData(void)
 {
   int moduleIndex; // ebx
   int moduleOffset; // ecx

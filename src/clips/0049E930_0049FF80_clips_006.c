@@ -513,7 +513,7 @@ char * Rules_ReadLineWithEscaping(int logicalName, int *currentPosition, unsigne
 // 49F2DB: variable 'v7' is possibly undefined
 
 //----- (0049F310) --------------------------------------------------------
-signed int Rules_ReportIllegalLogicalName()
+signed int Rules_ReportIllegalLogicalName(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -530,7 +530,7 @@ signed int Rules_ReportIllegalLogicalName()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049F360) --------------------------------------------------------
-signed int Rules_RegisterPredicateHostFunctions()
+signed int Rules_RegisterPredicateHostFunctions(void)
 {
   Rules_RegisterHostFunction(aNot_0, 98, (int)aNotfunction, (int)Rules_NotFunction, (int)a11_6);
   Rules_RegisterHostFunction(aAnd_0, 98, (int)aAndfunction, (int)Rules_AndFunction, (int)a2);

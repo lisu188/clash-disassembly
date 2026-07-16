@@ -268,7 +268,7 @@ LABEL_10:
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (004BDC10) --------------------------------------------------------
-int Parser_GetSequenceOperatorRecognition()
+int Parser_GetSequenceOperatorRecognition(void)
 {
   return g_SequenceOperatorRecognition;
 }
@@ -388,7 +388,7 @@ int Parser_RegisterProceduralFunctionParsers()
 }
 
 //----- (004BDDC0) --------------------------------------------------------
-int Parser_GetLoopContextStack()
+int Parser_GetLoopContextStack(void)
 {
   return g_ClipsLoopContextStackTop;
 }
@@ -403,7 +403,7 @@ int  Parser_SetLoopContextStack(int result)
 // 54E880: using guessed type int dword_54E880;
 
 //----- (004BDDE0) --------------------------------------------------------
-int Parser_FreeLoopContextStack()
+int Parser_FreeLoopContextStack(void)
 {
   int result; // eax
   int nextEntry; // edx
@@ -429,7 +429,7 @@ int Parser_FreeLoopContextStack()
 // 54E880: using guessed type int dword_54E880;
 
 //----- (004BDE40) --------------------------------------------------------
-BOOL Parser_LoopContextStackIsEmpty()
+BOOL Parser_LoopContextStackIsEmpty(void)
 {
   return g_ClipsLoopContextStackTop == 0;
 }
@@ -1188,7 +1188,7 @@ int  Rules_GetNamedContextValue(int contextName)
 // 54E880: using guessed type int dword_54E880;
 
 //----- (004BEB80) --------------------------------------------------------
-int Rules_CountNamedContextEntries()
+int Rules_CountNamedContextEntries(void)
 {
   int entry; // eax
   int i; // edx
@@ -1301,7 +1301,7 @@ int  Rules_RemoveNamedContextEntry(int result)
 // 54E880: using guessed type int dword_54E880;
 
 //----- (004BECC0) --------------------------------------------------------
-signed int Rules_RegisterRuleCommands()
+signed int Rules_RegisterRuleCommands(void)
 {
   Rules_RegisterHostFunction(aRun, 118, (int)aRuncommand, (int)Rules_RunCommand, (int)a1i);
   Rules_RegisterHostFunction(aHalt, 118, (int)aHaltcommand, (int)Rules_HaltCommand, (int)a00_9);

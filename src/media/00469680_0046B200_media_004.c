@@ -158,7 +158,7 @@ int __stdcall AviPlayer_SendICDrawBegin(
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00469EF0) --------------------------------------------------------
-int AviException_CtorFromExceptionList()
+int AviException_CtorFromExceptionList(void)
 {
   int result; // eax
 
@@ -169,7 +169,7 @@ int AviException_CtorFromExceptionList()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469F50) --------------------------------------------------------
-int AviException_CtorForSurfaceCreateFailure()
+int AviException_CtorForSurfaceCreateFailure(void)
 {
   int result; // eax
 
@@ -180,7 +180,7 @@ int AviException_CtorForSurfaceCreateFailure()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469FB0) --------------------------------------------------------
-int AviException_CtorForDrawFailure()
+int AviException_CtorForDrawFailure(void)
 {
   int result; // eax
 
@@ -215,7 +215,7 @@ int  AviException_ScalarDeletingDtor(int self, char dtorFlags)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0046A0A0) --------------------------------------------------------
-int AviException_GetMessage()
+int AviException_GetMessage(void)
 {
   return ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))ExcString_AsCharPtr)(
            NtCurrentTeb()->NtTib.ExceptionList,
@@ -614,7 +614,7 @@ int __thiscall Audio_ComputeBytesPerFrame(void *this)
 // 54D388: using guessed type int dword_54D388;
 
 //----- (0046A750) --------------------------------------------------------
-signed int Audio_InitDSoundDevice()
+signed int Audio_InitDSoundDevice(void)
 {
   unsigned int hr; // eax
   void *v2; // ecx
@@ -786,7 +786,7 @@ signed int Audio_InitDSoundDevice()
 // 54D470: using guessed type int dword_54D470;
 
 //----- (0046AB70) --------------------------------------------------------
-unsigned int Audio_ReleaseDSoundDevice()
+unsigned int Audio_ReleaseDSoundDevice(void)
 {
   unsigned int hr; // eax
 
@@ -859,7 +859,7 @@ LABEL_11:
 // 54D39C: using guessed type int dword_54D39C;
 
 //----- (0046AD10) --------------------------------------------------------
-unsigned int Audio_ShutdownSoundSystem()
+unsigned int Audio_ShutdownSoundSystem(void)
 {
   unsigned int errCode; // ebx
 
@@ -882,7 +882,7 @@ int __cdecl Audio_GetSoundFormatFlags(_DWORD *flagsOut)
 // 54D384: using guessed type int dword_54D384;
 
 //----- (0046AD70) --------------------------------------------------------
-unsigned int Audio_RefreshPlayCursor()
+unsigned int Audio_RefreshPlayCursor(void)
 {
   unsigned int hr; // eax
   int playCursor; // [esp+Ch] [ebp-8h] BYREF

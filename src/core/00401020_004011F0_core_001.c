@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00401020) --------------------------------------------------------
-int App_Shutdown()
+int App_Shutdown(void)
 {
   int v0; // ecx
 

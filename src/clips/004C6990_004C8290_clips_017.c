@@ -238,7 +238,7 @@ char * Class_BloadRefreshTemplateSlotRecord(int *buf, int obji)
 // 54E688: using guessed type int dword_54E688;
 
 //----- (004C6D80) --------------------------------------------------------
-signed int Class_ClearBloadedData()
+signed int Class_ClearBloadedData(void)
 {
   signed int result; // eax
   int defclassIdCount; // edx
@@ -424,7 +424,7 @@ signed int Class_ClearBloadedData()
 // 54E8B8: using guessed type int dword_54E8B8;
 
 //----- (004C70F0) --------------------------------------------------------
-int Deffacts_CommandDefinitions()
+int Deffacts_CommandDefinitions(void)
 {
   int v0; // ecx
 
@@ -442,7 +442,7 @@ int Deffacts_CommandDefinitions()
 // 4C7142: variable 'v0' is possibly undefined
 
 //----- (004C71D0) --------------------------------------------------------
-signed int Deffacts_Reset()
+signed int Deffacts_Reset(void)
 {
   return sub_4A9430_Impl((int (*)(int, intptr_t))Deffacts_ResetAction, g_ClipsDeffactsModuleItemId, 0, 1);
 }
@@ -467,7 +467,7 @@ int  Deffacts_ResetAction(int result, intptr_t context)
 }
 
 //----- (004C7220) --------------------------------------------------------
-int Deffacts_ClearAction()
+int Deffacts_ClearAction(void)
 {
   int **assert_symbol; // eax
   int assert_node; // ebx
@@ -652,7 +652,7 @@ signed int  Deffacts_ParseAndInstall(int readSource)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004C7580) --------------------------------------------------------
-signed int Deffacts_RegisterBinaryItem()
+signed int Deffacts_RegisterBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aDeffacts_1,
@@ -667,7 +667,7 @@ signed int Deffacts_RegisterBinaryItem()
 }
 
 //----- (004C75C0) --------------------------------------------------------
-int Deffacts_BsaveFind()
+int Deffacts_BsaveFind(void)
 {
   int result; // eax
   int i; // ebx
@@ -844,7 +844,7 @@ int __fastcall Deffacts_BloadStorage(int a1)
 // 54E8C0: using guessed type int dword_54E8C0;
 
 //----- (004C7910) --------------------------------------------------------
-signed int Deffacts_BloadBinaryItem()
+signed int Deffacts_BloadBinaryItem(void)
 {
   int space; // [esp-8h] [ebp-Ch] BYREF
 
@@ -883,7 +883,7 @@ int  Deffacts_UpdateDeffacts(int buf, int obji)
 // 54E8C0: using guessed type int dword_54E8C0;
 
 //----- (004C7A10) --------------------------------------------------------
-signed int Deffacts_ClearBload()
+signed int Deffacts_ClearBload(void)
 {
   int recordOffset; // ecx
   int v1; // ecx
@@ -922,7 +922,7 @@ int  Deffacts_GetModuleItem(int theIndex)
 // 54E8C0: using guessed type int dword_54E8C0;
 
 //----- (004C7AC0) --------------------------------------------------------
-int Deffacts_CompilerSetup()
+int Deffacts_CompilerSetup(void)
 {
   int result; // eax
 
@@ -933,7 +933,7 @@ int Deffacts_CompilerSetup()
 // 54E8C4: using guessed type int dword_54E8C4;
 
 //----- (004C7AF0) --------------------------------------------------------
-signed int Deffacts_BeforeCode()
+signed int Deffacts_BeforeCode(void)
 {
   return Rules_RegisterModuleItemIdAssigner();
 }
@@ -1143,14 +1143,14 @@ int  Deffacts_PrintModuleReference(int theFile, int count)
 // 54E8C4: using guessed type int dword_54E8C4;
 
 //----- (004C7E30) --------------------------------------------------------
-BOOL Defgeneric_NoActiveCall()
+BOOL Defgeneric_NoActiveCall(void)
 {
   return g_ClipsCurrentGeneric == 0;
 }
 // 51B3D4: using guessed type int dword_51B3D4;
 
 //----- (004C7E40) --------------------------------------------------------
-signed int Defgeneric_AllocateModule()
+signed int Defgeneric_AllocateModule(void)
 {
   _DWORD *freeNode; // edx
 
@@ -1182,7 +1182,7 @@ int  Defgeneric_FreeModule(int theItem)
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (004C7EB0) --------------------------------------------------------
-int Defgeneric_ClearDefgenericsReady()
+int Defgeneric_ClearDefgenericsReady(void)
 {
   int v0; // eax
   int v1; // ecx
@@ -1322,7 +1322,7 @@ int  Defgeneric_RemoveDefgeneric(int theDefgeneric)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004C80D0) --------------------------------------------------------
-signed int Defgeneric_ClearDefgenerics()
+signed int Defgeneric_ClearDefgenerics(void)
 {
   int success; // ebx
   int theDefgeneric; // ecx
@@ -1362,7 +1362,7 @@ signed int Defgeneric_ClearDefgenerics()
 // 4C8118: variable 'v6' is possibly undefined
 
 //----- (004C8140) --------------------------------------------------------
-signed int Defgeneric_PrintCannotModifyError()
+signed int Defgeneric_PrintCannotModifyError(void)
 {
   int v0; // ecx
   int v1; // ecx

@@ -1244,7 +1244,7 @@ unsigned int  WorldMap_TickPaletteFlashEffect(int reset_flag, int a2, int a3)
 // 5202F4: using guessed type int dword_5202F4;
 
 //----- (00407B90) --------------------------------------------------------
-int Render_RestoreLostSurfaces()
+int Render_RestoreLostSurfaces(void)
 {
   int last_cursor_x; // esi
   int last_cursor_y; // ebx

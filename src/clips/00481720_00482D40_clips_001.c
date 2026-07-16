@@ -754,7 +754,7 @@ LABEL_10:
 // 54DD5C: using guessed type int dword_54DD5C;
 
 //----- (00482260) --------------------------------------------------------
-int *Rules_InitAtomTables()
+int *Rules_InitAtomTables(void)
 {
   int v0; // ecx
   int i; // eax
@@ -1137,7 +1137,7 @@ int  Rules_AddEphemeralHashNode(int theHashNode, _DWORD *theEphemeralList, int a
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00482830) --------------------------------------------------------
-int Rules_RemoveEphemeralAtoms()
+int Rules_RemoveEphemeralAtoms(void)
 {
   Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralSymbolListHead, (uintptr_t)(unsigned int)g_Clips_SymbolHashTable, 2, 20, 10);
   Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralFloatListHead, (uintptr_t)(unsigned int)g_ClipsFloatHashTable, 0, 24, 0);
@@ -1216,28 +1216,28 @@ int  Rules_RemoveEphemeralHashNodes(uintptr_t result, uintptr_t theTable, int ha
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004829F0) --------------------------------------------------------
-int Rules_GetSymbolTable()
+int Rules_GetSymbolTable(void)
 {
   return g_Clips_SymbolHashTable;
 }
 // 54DD50: using guessed type int dword_54DD50;
 
 //----- (00482A10) --------------------------------------------------------
-int Rules_GetFloatTable()
+int Rules_GetFloatTable(void)
 {
   return g_ClipsFloatHashTable;
 }
 // 54DD58: using guessed type int dword_54DD58;
 
 //----- (00482A30) --------------------------------------------------------
-int Rules_GetIntegerTable()
+int Rules_GetIntegerTable(void)
 {
   return g_ClipsIntegerHashTable;
 }
 // 54DD54: using guessed type int dword_54DD54;
 
 //----- (00482A50) --------------------------------------------------------
-int Rules_GetBitmapTable()
+int Rules_GetBitmapTable(void)
 {
   return g_ClipsBitmapHashTable;
 }

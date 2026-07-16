@@ -1170,7 +1170,7 @@ int  Audio_ResumeMusicAndStopLoopedSound(int result)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (004418E0) --------------------------------------------------------
-int Audio_StopMainMusic()
+int Audio_StopMainMusic(void)
 {
   return Audio_StopMusicWithFade(g_MainMapMusicHandle);
 }
@@ -1190,7 +1190,7 @@ int  Audio_StopMusicWithFade(int result)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441900) --------------------------------------------------------
-void Audio_DuckMusicVolume()
+void Audio_DuckMusicVolume(void)
 {
   if ( g_Audio_MusicActiveFlag )
     CSS_SetSoundVolume(g_MainMapMusicHandle, 16, 1000);
@@ -1199,7 +1199,7 @@ void Audio_DuckMusicVolume()
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441930) --------------------------------------------------------
-void Audio_RestoreMusicVolume()
+void Audio_RestoreMusicVolume(void)
 {
   if ( g_Audio_MusicActiveFlag )
     CSS_SetSoundVolume(g_MainMapMusicHandle, 64, 1000);
@@ -1243,7 +1243,7 @@ int  Audio_StartMainMusicIfStopped(int a1, DWORD gameContext)
 // 5202E4: using guessed type int gameData;
 
 //----- (004419D0) --------------------------------------------------------
-int Audio_StopMainMusicIfPlaying()
+int Audio_StopMainMusicIfPlaying(void)
 {
   int result; // eax
   int v1; // ecx
@@ -1259,28 +1259,28 @@ int Audio_StopMainMusicIfPlaying()
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419F0) --------------------------------------------------------
-void Audio_SetMusicActiveFlag()
+void Audio_SetMusicActiveFlag(void)
 {
   g_Audio_MusicActiveFlag = 1;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A00) --------------------------------------------------------
-void Audio_ClearMusicActiveFlag()
+void Audio_ClearMusicActiveFlag(void)
 {
   g_Audio_MusicActiveFlag = 0;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A10) --------------------------------------------------------
-void Audio_EnableUnitSounds()
+void Audio_EnableUnitSounds(void)
 {
   g_UnitSoundsEnabled = 1;
 }
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441A20) --------------------------------------------------------
-void Audio_DisableUnitSounds()
+void Audio_DisableUnitSounds(void)
 {
   g_UnitSoundsEnabled = 0;
 }

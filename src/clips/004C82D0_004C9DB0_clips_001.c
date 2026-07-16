@@ -321,7 +321,7 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (004C8940) --------------------------------------------------------
-int Defgeneric_CompilerSetup()
+int Defgeneric_CompilerSetup(void)
 {
   int result; // eax
 
@@ -357,7 +357,7 @@ int  Defgeneric_PrintModuleReference(int fp, int imageID)
 // 54E8CC: using guessed type int dword_54E8CC;
 
 //----- (004C8A00) --------------------------------------------------------
-signed int Defgeneric_BeforeCode()
+signed int Defgeneric_BeforeCode(void)
 {
   return Rules_RegisterModuleItemIdAssigner();
 }
@@ -1297,7 +1297,7 @@ LABEL_8:
 }
 
 //----- (004C9C20) --------------------------------------------------------
-signed int Defgeneric_ParseDeclaration()
+signed int Defgeneric_ParseDeclaration(void)
 {
   _BYTE *name; // ecx
   int v1; // eax

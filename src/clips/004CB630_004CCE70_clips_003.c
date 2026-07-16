@@ -273,7 +273,7 @@ int  Deffunction_ParseConstruct(int readSource)
 // 54E8E8: using guessed type int dword_54E8E8;
 
 //----- (004CBAD0) --------------------------------------------------------
-signed int Deffunction_ValidateNewName()
+signed int Deffunction_ValidateNewName(void)
 {
   _BYTE *v0; // edx
   _BYTE *v1; // edx
@@ -577,7 +577,7 @@ signed int  Deffunction_PrintCallTrace(int a1)
 // 51B3E8: using guessed type int dword_51B3E8;
 
 //----- (004CC010) --------------------------------------------------------
-int Defglobal_RegisterConstructCommands()
+int Defglobal_RegisterConstructCommands(void)
 {
   int v0; // ecx
 
@@ -596,7 +596,7 @@ int Defglobal_RegisterConstructCommands()
 // 51B3EC: using guessed type int dword_51B3EC;
 
 //----- (004CC100) --------------------------------------------------------
-signed int Defglobal_ResetAllDefglobals()
+signed int Defglobal_ResetAllDefglobals(void)
 {
   signed int result; // eax
 
@@ -707,7 +707,7 @@ signed int  Defglobal_GetWatchAll(int a1, int a2, double a3)
 // 54E6B4: using guessed type int dword_54E6B4;
 
 //----- (004CC2E0) --------------------------------------------------------
-signed int Defglobal_RegisterResetGlobalsCommands()
+signed int Defglobal_RegisterResetGlobalsCommands(void)
 {
   Rules_RegisterHostFunction(aSetResetGlobal, 98, (int)aSetresetglobal, (int)Defglobal_SetResetGlobalsCommand, (int)a11_5);
   Rules_RegisterHostFunction(aGetResetGlobal, 98, (int)aGetresetglobal, (int)Defglobal_GetResetGlobalsCommand, (int)a00_11);
@@ -738,7 +738,7 @@ int  Defglobal_SetResetGlobalsCommand(int a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004CC3E0) --------------------------------------------------------
-int Defglobal_GetResetGlobalsCommand()
+int Defglobal_GetResetGlobalsCommand(void)
 {
   int v0; // ecx
 
@@ -749,7 +749,7 @@ int Defglobal_GetResetGlobalsCommand()
 // 51B3F0: using guessed type int dword_51B3F0;
 
 //----- (004CC400) --------------------------------------------------------
-int Defglobal_GetResetGlobalsFlag()
+int Defglobal_GetResetGlobalsFlag(void)
 {
   return g_DefglobalResetGlobalsFlag;
 }
@@ -1170,7 +1170,7 @@ signed int  Defglobal_ResolveGlobalVariableReference(int exprNode, int a2)
 }
 
 //----- (004CCA50) --------------------------------------------------------
-signed int Defglobal_PrintUndefinedVariableError()
+signed int Defglobal_PrintUndefinedVariableError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -1187,7 +1187,7 @@ signed int Defglobal_PrintUndefinedVariableError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004CCAA0) --------------------------------------------------------
-int Defglobal_RegisterCodeGeneratorItem()
+int Defglobal_RegisterCodeGeneratorItem(void)
 {
   int result; // eax
 
@@ -1199,7 +1199,7 @@ int Defglobal_RegisterCodeGeneratorItem()
 // 54E8EC: using guessed type int dword_54E8EC;
 
 //----- (004CCAD0) --------------------------------------------------------
-signed int Defglobal_AssignModuleItemIds()
+signed int Defglobal_AssignModuleItemIds(void)
 {
   return Rules_RegisterModuleItemIdAssigner();
 }

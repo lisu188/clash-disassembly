@@ -269,7 +269,7 @@ signed int  Rules_ReportUnboundVariableUsage(int theVariable, int theExpression,
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004DD940) --------------------------------------------------------
-signed int Rules_ReportVariableFieldTypeConflict()
+signed int Rules_ReportVariableFieldTypeConflict(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -286,7 +286,7 @@ signed int Rules_ReportVariableFieldTypeConflict()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004DD990) --------------------------------------------------------
-int Rules_CheckAndReportUnmatchableFieldConstraint()
+int Rules_CheckAndReportUnmatchableFieldConstraint(void)
 {
   int result; // eax
   int v1; // ecx

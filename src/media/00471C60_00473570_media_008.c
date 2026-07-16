@@ -522,7 +522,7 @@ LABEL_5:
 // 519F10: using guessed type signed int (*off_519F10)();
 
 //----- (004726C0) --------------------------------------------------------
-signed int Mem_FatalOutOfMemory()
+signed int Mem_FatalOutOfMemory(void)
 {
   int v0; // ecx
 
@@ -622,14 +622,14 @@ _DWORD * Mem_Realloc(char *old_block, unsigned int old_size, unsigned int new_si
 }
 
 //----- (00472800) --------------------------------------------------------
-int Mem_GetTotalAllocatedBytes()
+int Mem_GetTotalAllocatedBytes(void)
 {
   return g_Mem_TotalAllocatedBytes;
 }
 // 519EFC: using guessed type int dword_519EFC;
 
 //----- (00472810) --------------------------------------------------------
-int Mem_GetTotalAllocationCount()
+int Mem_GetTotalAllocationCount(void)
 {
   return g_Mem_TotalAllocationCount;
 }
@@ -834,7 +834,7 @@ LABEL_5:
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472B10) --------------------------------------------------------
-int Mem_GetAllocFlag()
+int Mem_GetAllocFlag(void)
 {
   return g_Mem_AllocFlag;
 }

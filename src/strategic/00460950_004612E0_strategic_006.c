@@ -420,7 +420,7 @@ int  Render_Present(int render_state)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460F90) --------------------------------------------------------
-int Render_Pump()
+int Render_Pump(void)
 {
   _DWORD *cursor_descriptor;
   _DWORD *present_surface;
@@ -452,7 +452,7 @@ int Render_Pump()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00461000) --------------------------------------------------------
-void Input_Flush()
+void Input_Flush(void)
 {
   g_CursorOverlayPresented = 0;
 }

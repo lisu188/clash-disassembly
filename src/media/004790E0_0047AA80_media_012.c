@@ -805,7 +805,7 @@ int  Compat_QueryCloseAndDestruct(_DWORD *query, char flags)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00479D60) --------------------------------------------------------
-int Rules_InitFacts()
+int Rules_InitFacts(void)
 {
   Rules_InitFactHashTable();
   Rules_AddResetFunction((int)aFacts_0, (int)Rules_ResetFacts, 60);
@@ -1004,7 +1004,7 @@ signed int  Rules_RetractFact(int fact_ptr, double a2)
 // 51A97C: using guessed type int dword_51A97C;
 
 //----- (0047A120) --------------------------------------------------------
-_DWORD *Rules_RemoveGarbageFacts()
+_DWORD *Rules_RemoveGarbageFacts(void)
 {
   _DWORD *result; // eax
   int v1; // edx
@@ -1431,7 +1431,7 @@ _DWORD * Rules_Log(const char *string, int a2, double a3)
 }
 
 //----- (0047AA80) --------------------------------------------------------
-int Rules_GetInstalledFactCount()
+int Rules_GetInstalledFactCount(void)
 {
   return g_Rules_InstalledFactCount;
 }

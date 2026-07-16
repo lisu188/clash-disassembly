@@ -490,7 +490,7 @@ int  Class_FindMessageHandlerNameGroup(_DWORD *theClass, int handlerName)
 }
 
 //----- (004AEEB0) --------------------------------------------------------
-signed int MessageHandler_ReportUnableToDelete()
+signed int MessageHandler_ReportUnableToDelete(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -747,7 +747,7 @@ int  MessageHandler_GetNthArgument(int argIndex)
 // 51ABB8: using guessed type int dword_51ABB8;
 
 //----- (004AF3D0) --------------------------------------------------------
-BOOL MessageHandler_HasNextHandler()
+BOOL MessageHandler_HasNextHandler(void)
 {
   if ( !g_ClipsCurrentHandlerCore )
     return 0;

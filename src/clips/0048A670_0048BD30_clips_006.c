@@ -468,7 +468,7 @@ signed int  Rules_DeduplicateFactOnAssert(int theFact)
 // 51A928: using guessed type int dword_51A928;
 
 //----- (0048AC70) --------------------------------------------------------
-int Rules_GetFactDuplicationFlag()
+int Rules_GetFactDuplicationFlag(void)
 {
   return g_Rules_FactDuplicationEnabled;
 }
@@ -486,7 +486,7 @@ int __fastcall Rules_SetFactDuplicationEnabled(int a1)
 // 51A928: using guessed type int dword_51A928;
 
 //----- (0048AC90) --------------------------------------------------------
-int Rules_InitFactHashTable()
+int Rules_InitFactHashTable(void)
 {
   int result; // eax
 
@@ -1366,7 +1366,7 @@ signed int  Rules_ListWatchItemsCommand(int returnValue, double a2)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (0048BB40) --------------------------------------------------------
-signed int Rules_RegisterWatchFunctions()
+signed int Rules_RegisterWatchFunctions(void)
 {
   Rules_RegisterHostFunction(aWatch, 118, (int)aWatchcommand, (int)Rules_WatchCommand, (int)a1W);
   Rules_RegisterHostFunction(aUnwatch, 118, (int)aUnwatchcommand, (int)Rules_UnwatchCommand, (int)a1W);
@@ -1386,14 +1386,14 @@ BOOL __thiscall Rules_WatchNameMatches(void *this)
 // 51A618: using guessed type char *off_51A618[4];
 
 //----- (0048BBF0) --------------------------------------------------------
-int Rules_WatchAlwaysTrueStub()
+int Rules_WatchAlwaysTrueStub(void)
 {
   return 1;
 }
 // 48BBF0: using guessed type int sub_48BBF0();
 
 //----- (0048BC00) --------------------------------------------------------
-signed int Rules_RegisterFactQueryFunctions()
+signed int Rules_RegisterFactQueryFunctions(void)
 {
   Rules_RegisterHostFunction(aFactExistp, 98, (int)aFactexistpfunc, (int)Rules_CheckFactExistp, (int)a11z);
   Rules_RegisterHostFunction(aFactRelation, 119, (int)aFactrelationfu, (int)Rules_GetFactRelationName, (int)a11z);

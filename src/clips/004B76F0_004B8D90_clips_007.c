@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (004B76F0) --------------------------------------------------------
-int PP_MakeConst26()
+int PP_MakeConst26(void)
 {
   int v0; // ecx
   int packedWord; // eax
@@ -55,7 +55,7 @@ int __fastcall PP_MakeConst27(int a1, int a2)
 // 4B77E5: variable 'v2' is possibly undefined
 
 //----- (004B7810) --------------------------------------------------------
-int PP_MakeConst28()
+int PP_MakeConst28(void)
 {
   _DWORD *fieldNode; // ecx
   unsigned __int8 fieldMax; // al

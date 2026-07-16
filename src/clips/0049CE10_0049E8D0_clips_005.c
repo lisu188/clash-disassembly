@@ -150,7 +150,7 @@ signed int  Rules_FindBoundVariable(_DWORD *vPtr, int variableSymbol)
 // 51ACCC: using guessed type int dword_51ACCC;
 
 //----- (0049D010) --------------------------------------------------------
-int Rules_FreeBoundVariableEntry()
+int Rules_FreeBoundVariableEntry(void)
 {
   int result; // eax
   int v1; // edx
@@ -227,7 +227,7 @@ int  Rules_ReturnFunction(double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049D0E0) --------------------------------------------------------
-void Rules_BreakFunction()
+void Rules_BreakFunction(void)
 {
   g_ClipsBreakFlag = 1;
 }
@@ -282,7 +282,7 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049D1A0) --------------------------------------------------------
-signed int Rules_RegisterMiscFunctions()
+signed int Rules_RegisterMiscFunctions(void)
 {
   int v0; // ecx
 
@@ -382,7 +382,7 @@ signed int *__thiscall Rules_GensymStarFunction(void *this)
 // 51ACD0: using guessed type int dword_51ACD0;
 
 //----- (0049D5B0) --------------------------------------------------------
-int Rules_HostRandom()
+int Rules_HostRandom(void)
 {
   Lexer_TokenExpect(0);
   return j_rand_();
@@ -442,7 +442,7 @@ int  Rules_HostLength(double context)
 // 49D6A0: variable 'v2' is possibly undefined
 
 //----- (0049D6B0) --------------------------------------------------------
-int Rules_HostReleaseMem()
+int Rules_HostReleaseMem(void)
 {
   int v0; // ecx
 
@@ -482,7 +482,7 @@ int  Rules_HostConserveMem(int a1, double context)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (0049D780) --------------------------------------------------------
-int Rules_HostMemUsed()
+int Rules_HostMemUsed(void)
 {
   if ( Lexer_TokenExpect(0) == -1 )
     return 0;
@@ -491,7 +491,7 @@ int Rules_HostMemUsed()
 }
 
 //----- (0049D7B0) --------------------------------------------------------
-int Rules_HostMemRequests()
+int Rules_HostMemRequests(void)
 {
   if ( Lexer_TokenExpect(0) == -1 )
     return 0;
@@ -537,7 +537,7 @@ int ** Rules_HostApropos(double context)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0049D870) --------------------------------------------------------
-int Rules_HostOptionsCommand()
+int Rules_HostOptionsCommand(void)
 {
   int result; // eax
   int v1; // ecx
@@ -977,7 +977,7 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0049E070) --------------------------------------------------------
-int Rules_HostSetEvaluationError()
+int Rules_HostSetEvaluationError(void)
 {
   Lexer_ErrorRecover(1);
   return g_ClipsFalseSymbol;
@@ -1033,7 +1033,7 @@ signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
 // 49E10C: variable 'v3' is possibly undefined
 
 //----- (0049E150) --------------------------------------------------------
-signed int Rules_RegisterIOHostFunctions()
+signed int Rules_RegisterIOHostFunctions(void)
 {
   Rules_RegisterHostFunction(aPrintout, 118, (int)aPrintoutfuncti, (int)Rules_HostPrintout, (int)a1_0);
   Rules_RegisterHostFunction(aRead, 117, (int)aReadfunction, (int)Rules_HostRead, (int)a1);

@@ -955,7 +955,7 @@ _DWORD * Rules_AddConstructToModuleList(_DWORD *result)
 // 4BFC41: conditional instruction was optimized away because ebx.4!=0
 
 //----- (004BFC70) --------------------------------------------------------
-int Rules_SetupDefruleCodeGenerator()
+int Rules_SetupDefruleCodeGenerator(void)
 {
   int result; // eax
 
@@ -966,7 +966,7 @@ int Rules_SetupDefruleCodeGenerator()
 // 54E884: using guessed type int dword_54E884;
 
 //----- (004BFCA0) --------------------------------------------------------
-int Rules_PrepareDefrulesForCodeGen()
+int Rules_PrepareDefrulesForCodeGen(void)
 {
   int v3; // [esp-4h] [ebp-14h] BYREF
   int v4; // [esp+0h] [ebp-10h] BYREF
@@ -1394,7 +1394,7 @@ int  Rules_WriteJoinHashStructRef(int theFile, int count)
 // 54E884: using guessed type int dword_54E884;
 
 //----- (004C0550) --------------------------------------------------------
-int Rules_CreateLHSParseNode()
+int Rules_CreateLHSParseNode(void)
 {
   _DWORD *freeNode; // edx
   _BYTE *newConstraint; // ecx

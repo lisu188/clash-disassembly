@@ -439,7 +439,7 @@ int  Map_RedrawUnitNeighborhoodByIndex(int stackIndex)
 // 5202E4: using guessed type int gameData;
 
 //----- (00411D70) --------------------------------------------------------
-void Map_UpdateIdleAnimatedUnits()
+void Map_UpdateIdleAnimatedUnits(void)
 {
   int stackIndex; // ecx
   int stackPtr; // edx

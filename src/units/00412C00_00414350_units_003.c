@@ -179,7 +179,7 @@ int  UnitTrackElement_CopyFromTemplate(int result, int srcElement)
 }
 
 //----- (00412F00) --------------------------------------------------------
-int UnitSpriteCache_ClearAllEntries()
+int UnitSpriteCache_ClearAllEntries(void)
 {
   int result; // eax
 
@@ -315,7 +315,7 @@ void  UnitSpriteCache_FreeAllEntries(int a1, DWORD a2)
 // 523F8F: using guessed type int dword_523F8F;
 
 //----- (00413180) --------------------------------------------------------
-int UnitSpriteCache_CountActiveEntries()
+int UnitSpriteCache_CountActiveEntries(void)
 {
   int activeCount; // edx
   int i; // eax
@@ -1272,7 +1272,7 @@ signed int  UnitStack_BuildMergedTerrainMoveProfile(intptr_t profileRecord, intp
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
 //----- (00413B10) --------------------------------------------------------
-signed int Map_InitTerrainMoveTableOffsets()
+signed int Map_InitTerrainMoveTableOffsets(void)
 {
   int terrain_id;
 

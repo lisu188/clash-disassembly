@@ -27,7 +27,7 @@ BOOL  Rules_ClearFacts(double a1)
 // 51A160: using guessed type int dword_51A160;
 
 //----- (0047AB20) --------------------------------------------------------
-int Rules_FindFactByIndex()
+int Rules_FindFactByIndex(void)
 {
   int result; // eax
   int target_index; // ecx
@@ -46,7 +46,7 @@ int Rules_FindFactByIndex()
 // 47AB31: variable 'v1' is possibly undefined
 
 //----- (0047AB50) --------------------------------------------------------
-signed int Rules_RegisterFactCommands()
+signed int Rules_RegisterFactCommands(void)
 {
   Rules_RegisterHostFunction(aFacts_1, 118, (int)aFactscommand, (int)Rules_FactsCommand, (int)a4iu);
   Rules_RegisterHostFunctionNoRestrictions(aAssert, 117, (int)aAssertcommand, (int)Rules_AssertCommand);
@@ -227,7 +227,7 @@ int  Rules_SetFactDuplicationCommand(int a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0047AF50) --------------------------------------------------------
-int Rules_GetFactDuplicationCommand()
+int Rules_GetFactDuplicationCommand(void)
 {
   int v0; // ecx
 
@@ -1135,7 +1135,7 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
 }
 
 //----- (0047C200) --------------------------------------------------------
-int Rules_FindConstructByName()
+int Rules_FindConstructByName(void)
 {
   _DWORD *current; // ecx
   int v1; // ecx
@@ -1181,7 +1181,7 @@ signed int  Rules_Save(const CHAR *fileName, int a2, DWORD a3)
 // 51A188: using guessed type int dword_51A188;
 
 //----- (0047C340) --------------------------------------------------------
-int Rules_GetWatchCompilations()
+int Rules_GetWatchCompilations(void)
 {
   return g_Rules_WatchCompilationsFlag;
 }
@@ -1196,14 +1196,14 @@ int  Rules_SetLoadInProgress(int result)
 // 51A18C: using guessed type int dword_51A18C;
 
 //----- (0047C360) --------------------------------------------------------
-int Rules_GetLoadInProgress()
+int Rules_GetLoadInProgress(void)
 {
   return g_Rules_LoadInProgressFlag;
 }
 // 51A18C: using guessed type int dword_51A18C;
 
 //----- (0047C370) --------------------------------------------------------
-int Rules_RegisterClearResetCommands()
+int Rules_RegisterClearResetCommands(void)
 {
   Rules_RegisterHostFunction(aClear, 118, (int)aClearcommand, (int)Rules_ClearCommand, (int)a00_13);
   Rules_RegisterHostFunction(aReset, 118, (int)aResetcommand, (int)Rules_ResetCommand, (int)a00_13);
@@ -1212,7 +1212,7 @@ int Rules_RegisterClearResetCommands()
 // 51A190: using guessed type int dword_51A190;
 
 //----- (0047C3D0) --------------------------------------------------------
-int Rules_ClearCommand()
+int Rules_ClearCommand(void)
 {
   int result; // eax
 
@@ -1223,14 +1223,14 @@ int Rules_ClearCommand()
 }
 
 //----- (0047C3F0) --------------------------------------------------------
-void Rules_ResetCommand()
+void Rules_ResetCommand(void)
 {
   if ( Lexer_TokenExpect(0) != -1 )
     Rules_Reset();
 }
 
 //----- (0047C410) --------------------------------------------------------
-void Rules_Reset()
+void Rules_Reset(void)
 {
   int resetNode; // edx
   int *mainModule; // eax
@@ -1284,7 +1284,7 @@ signed int  Rules_AddResetFunction(int name, int priority, int callback)
 // 51A198: using guessed type int dword_51A198;
 
 //----- (0047C530) --------------------------------------------------------
-signed int Rules_Clear()
+signed int Rules_Clear(void)
 {
   int i; // edx
   int (*clear_callback)(void); // eax
@@ -1321,7 +1321,7 @@ signed int Rules_Clear()
 // 51A97C: using guessed type int dword_51A97C;
 
 //----- (0047C5E0) --------------------------------------------------------
-int Rules_ClearReady()
+int Rules_ClearReady(void)
 {
   int item; // edx
   int result; // eax
@@ -1371,7 +1371,7 @@ BOOL Rules_RemoveClearFunction(int name)
 // 51A19C: using guessed type int dword_51A19C;
 
 //----- (0047C6B0) --------------------------------------------------------
-int Rules_GetReentryGuardFlag()
+int Rules_GetReentryGuardFlag(void)
 {
   return g_Rules_ReentryGuardFlag;
 }

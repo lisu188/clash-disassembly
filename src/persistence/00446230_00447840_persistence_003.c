@@ -939,7 +939,7 @@ int  UI_ShowMissionStatusPanel(int a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004476B0) --------------------------------------------------------
-int Debug_GetUsedMemoryCount()
+int Debug_GetUsedMemoryCount(void)
 {
   return 0;
 }

@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (0046E870) --------------------------------------------------------
-_DWORD *__stdcall CSS_EmptySampleCache()
+_DWORD *__stdcall CSS_EmptySampleCache(void)
 {
   _DWORD *result; // eax
   int channelOffset; // ebx
@@ -990,7 +990,7 @@ signed int  CSS_InitVoicePool(int voice_count, int stream_buffer_ms, int sample_
 // 54D45C: using guessed type int dword_54D45C;
 
 //----- (0046FA60) --------------------------------------------------------
-_DWORD *CSS_ShutdownVoicePool()
+_DWORD *CSS_ShutdownVoicePool(void)
 {
   _DWORD *result; // eax
   int v1; // edx
@@ -1063,7 +1063,7 @@ int  CSS_UnlockAudioThreads(int a1)
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046FC00) --------------------------------------------------------
-int CSS_InitDeviceSearchState()
+int CSS_InitDeviceSearchState(void)
 {
   int v0; // edx
   int v1; // ecx
@@ -1078,14 +1078,14 @@ int CSS_InitDeviceSearchState()
 // 54D498: using guessed type int dword_54D498;
 
 //----- (0046FC30) --------------------------------------------------------
-BOOL CSS_IsNullSoundDevice()
+BOOL CSS_IsNullSoundDevice(void)
 {
   return g_CSS_ActiveSoundDriver == (_DWORD)&g_CSS_NullDriverSentinel;
 }
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046FC50) --------------------------------------------------------
-int CSS_PollAudioDeviceChange()
+int CSS_PollAudioDeviceChange(void)
 {
   _DWORD *v0; // eax
   int result; // eax
@@ -1141,7 +1141,7 @@ int __stdcall CSS_SetDeviceSearch(int search_index)
 // 54D48C: using guessed type int dword_54D48C;
 
 //----- (0046FE30) --------------------------------------------------------
-signed int CSS_ResetDeviceConfigDefaults()
+signed int CSS_ResetDeviceConfigDefaults(void)
 {
   signed int result; // eax
 
@@ -1176,14 +1176,14 @@ int __stdcall CSS_SetMasterVolume(int volume)
 }
 
 //----- (0046FEB0) --------------------------------------------------------
-void __stdcall CSS_SetDefaults()
+void __stdcall CSS_SetDefaults(void)
 {
   CSS_ResetDeviceConfigDefaults();
   CSS_ResetDeviceHandleCache();
 }
 
 //----- (0046FEC0) --------------------------------------------------------
-void CSS_ResetDeviceHandleCache()
+void CSS_ResetDeviceHandleCache(void)
 {
   g_CSS_DeviceHandleCache_DriverIndex = -1;
   g_CSS_DeviceHandleCache_Param1 = -1;
@@ -1198,7 +1198,7 @@ void CSS_ResetDeviceHandleCache()
 // 519D18: using guessed type int dword_519D18;
 
 //----- (0046FEF0) --------------------------------------------------------
-void __stdcall CSS_Close()
+void __stdcall CSS_Close(void)
 {
   g_CSS_DevicePollThreadRunning = 0;
   ++g_CSS_DeviceSearchThreadRefCount;

@@ -57,7 +57,7 @@ int  Rules_DeftemplateBloadRefreshSlot(_DWORD *bsaveSlot, int slotIndex)
 // 54E844: using guessed type int dword_54E844;
 
 //----- (004BA700) --------------------------------------------------------
-int Rules_DeftemplateClearBloaded()
+int Rules_DeftemplateClearBloaded(void)
 {
   int v0; // ecx
   int v1; // edx
@@ -117,7 +117,7 @@ int  Rules_DeftemplateGetBloadedModuleItem(int moduleIndex)
 // 54E84C: using guessed type int dword_54E84C;
 
 //----- (004BA820) --------------------------------------------------------
-int Rules_RegisterDeftemplateCodeGen()
+int Rules_RegisterDeftemplateCodeGen(void)
 {
   int result; // eax
 
@@ -462,7 +462,7 @@ int  Rules_DeftemplateWriteRecordRefToCode(int filePtr, int recordIndex, int max
 // 54E858: using guessed type int dword_54E858;
 
 //----- (004BAE60) --------------------------------------------------------
-signed int Rules_RegisterDefruleBinaryItem()
+signed int Rules_RegisterDefruleBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
            (int)aDefrule_1,
@@ -477,7 +477,7 @@ signed int Rules_RegisterDefruleBinaryItem()
 }
 
 //----- (004BAEA0) --------------------------------------------------------
-int Rules_DefruleBsaveFind()
+int Rules_DefruleBsaveFind(void)
 {
   int i; // ebx
   _DWORD *j; // ecx
@@ -878,7 +878,7 @@ int  Rules_BsavePackSharedRecordHeader(int result, int sourceRecord)
 }
 
 //----- (004BB550) --------------------------------------------------------
-signed int Rules_JoinNetworkBloadStorage()
+signed int Rules_JoinNetworkBloadStorage(void)
 {
   signed int result; // eax
   int v1[3]; // [esp+0h] [ebp-Ch] BYREF
@@ -919,7 +919,7 @@ signed int Rules_JoinNetworkBloadStorage()
 // 54E870: using guessed type int dword_54E870;
 
 //----- (004BB620) --------------------------------------------------------
-signed int Rules_JoinNetworkBload()
+signed int Rules_JoinNetworkBload(void)
 {
   int v3; // [esp-8h] [ebp-Ch] BYREF
 
@@ -1207,7 +1207,7 @@ int  Rules_BloadUnpackSharedRecordHeader(int destHeader, int *bsaveRecord)
 // 54E86C: using guessed type int dword_54E86C;
 
 //----- (004BBC30) --------------------------------------------------------
-signed int Rules_ClearBloadedJoinNetwork()
+signed int Rules_ClearBloadedJoinNetwork(void)
 {
   int module_node; // edx
   int offset; // edx

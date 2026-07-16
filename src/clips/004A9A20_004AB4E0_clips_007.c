@@ -381,7 +381,7 @@ int  Instance_MakeInstanceFunction(uintptr_t returnValue, uintptr_t a2, double a
 }
 
 //----- (004AA1A0) --------------------------------------------------------
-signed int Instance_AllocateInstanceRecord()
+signed int Instance_AllocateInstanceRecord(void)
 {
   _DWORD *freeNode; // edx
   signed int result; // eax
@@ -1305,7 +1305,7 @@ signed int  Rules_ResolveClassNameNode(int theExpression)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004AB150) --------------------------------------------------------
-signed int Instance_RegisterModifyAndDuplicateFunctions()
+signed int Instance_RegisterModifyAndDuplicateFunctions(void)
 {
   int v0; // ecx
   int v1; // ecx

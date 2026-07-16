@@ -153,14 +153,14 @@ int  Rules_RemoveActivation(_DWORD *theActivation, int updateAgenda, int updateL
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0047E2B0) --------------------------------------------------------
-void Rules_ResetActivationSequence()
+void Rules_ResetActivationSequence(void)
 {
   g_Rules_ActivationSequenceCounter = 0;
 }
 // 51A1E4: using guessed type int dword_51A1E4;
 
 //----- (0047E2C0) --------------------------------------------------------
-_DWORD *Rules_ClearActivationsForModule()
+_DWORD *Rules_ClearActivationsForModule(void)
 {
   _DWORD *result; // eax
   _DWORD *nextActivation; // ecx
@@ -230,7 +230,7 @@ int  Rules_ReorderAgenda(int result)
 }
 
 //----- (0047E3A0) --------------------------------------------------------
-int Rules_GetActivationCount()
+int Rules_GetActivationCount(void)
 {
   return g_Rules_ActivationCount;
 }
@@ -279,7 +279,7 @@ signed int  Rules_RefreshRule(int defrule, double a2)
 // 47E429: variable 'j' is possibly undefined
 
 //----- (0047E450) --------------------------------------------------------
-signed int Rules_SalienceInformationError()
+signed int Rules_SalienceInformationError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -301,7 +301,7 @@ signed int Rules_SalienceInformationError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0047E4C0) --------------------------------------------------------
-signed int Rules_SalienceRangeError()
+signed int Rules_SalienceRangeError(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -324,7 +324,7 @@ signed int Rules_SalienceRangeError()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0047E530) --------------------------------------------------------
-signed int Rules_SalienceNonIntegerError()
+signed int Rules_SalienceNonIntegerError(void)
 {
   int v0; // ecx
 
@@ -442,7 +442,7 @@ signed int * Rules_SetSalienceEvaluationCommand(int context, double a2)
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E740) --------------------------------------------------------
-signed int *Rules_GetSalienceEvaluationCommand()
+signed int *Rules_GetSalienceEvaluationCommand(void)
 {
   char *modeName; // eax
   int v1; // ecx
@@ -467,7 +467,7 @@ char * Rules_SalienceEvaluationModeName(unsigned int mode)
 }
 
 //----- (0047E7A0) --------------------------------------------------------
-int Rules_GetSalienceEvaluation()
+int Rules_GetSalienceEvaluation(void)
 {
   return g_Rules_SalienceEvaluationMode;
 }
@@ -882,7 +882,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
 // 51AD00: using guessed type int dword_51AD00;
 
 //----- (0047F000) --------------------------------------------------------
-int Rules_NextActivationToFire()
+int Rules_NextActivationToFire(void)
 {
   int activation; // edx
   int *mainModule; // eax
@@ -987,7 +987,7 @@ int  Rules_RemoveModuleFocus(int module)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0047F190) --------------------------------------------------------
-int Rules_PopFocus()
+int Rules_PopFocus(void)
 {
   if ( g_Rules_FocusStackTop )
     return Rules_RemoveModuleFocus(*(_DWORD *)g_Rules_FocusStackTop);
@@ -1044,7 +1044,7 @@ int  Rules_PushFocus(int a1)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0047F2A0) --------------------------------------------------------
-int Rules_ClearFocusStackCommand()
+int Rules_ClearFocusStackCommand(void)
 {
   int result; // eax
 
@@ -1055,7 +1055,7 @@ int Rules_ClearFocusStackCommand()
 }
 
 //----- (0047F2C0) --------------------------------------------------------
-int Rules_ClearFocusStack()
+int Rules_ClearFocusStack(void)
 {
   int result; // eax
 
@@ -1068,7 +1068,7 @@ int Rules_ClearFocusStack()
 // 51A204: using guessed type int dword_51A204;
 
 //----- (0047F340) --------------------------------------------------------
-int Rules_RegisterAgendaWatchFlags()
+int Rules_RegisterAgendaWatchFlags(void)
 {
   Rules_AddWatchItem((int)aStatistics, 0, 20, (int)&g_Rules_WatchStatisticsFlag, 0, 0);
   return Rules_AddWatchItem((int)aFocus_1, 0, 0, (int)&g_Rules_WatchFocusFlag, 0, 0);
@@ -1106,7 +1106,7 @@ int  Rules_RunCommand(int a1, double a2)
 // 47F3A1: variable 'v3' is possibly undefined
 
 //----- (0047F3F0) --------------------------------------------------------
-int Rules_HaltCommand()
+int Rules_HaltCommand(void)
 {
   int result; // eax
 
@@ -1153,7 +1153,7 @@ signed int  Rules_ClearBreakFlag(int disjunct)
 }
 
 //----- (0047F480) --------------------------------------------------------
-void Rules_RemoveAllBreakFlags()
+void Rules_RemoveAllBreakFlags(void)
 {
   int module; // ecx
   int defrule; // edx
@@ -1301,7 +1301,7 @@ int * Rules_ShowBreaksCommand(int a1, double a2)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047F670) --------------------------------------------------------
-int Rules_ListFocusStackCommand()
+int Rules_ListFocusStackCommand(void)
 {
   int result; // eax
 
@@ -1343,7 +1343,7 @@ signed int  Rules_PrintFocusStack(signed int result)
 // 51A200: using guessed type int dword_51A200;
 
 //----- (0047F6F0) --------------------------------------------------------
-int Rules_GetFocusStackFunction()
+int Rules_GetFocusStackFunction(void)
 {
   int result; // eax
   _DWORD *returnValue; // ecx
@@ -1415,7 +1415,7 @@ signed int  Rules_BuildFocusStackList(_DWORD *returnValue)
 // 51A200: using guessed type int dword_51A200;
 
 //----- (0047F7C0) --------------------------------------------------------
-int Rules_PopFocusFunction()
+int Rules_PopFocusFunction(void)
 {
   int focusModule; // eax
 
@@ -1429,7 +1429,7 @@ int Rules_PopFocusFunction()
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0047F7F0) --------------------------------------------------------
-int Rules_GetFocusFunction()
+int Rules_GetFocusFunction(void)
 {
   int focusModule; // eax
 

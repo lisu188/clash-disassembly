@@ -943,7 +943,7 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F600) --------------------------------------------------------
-int BuildingSpriteCache_Reset()
+int BuildingSpriteCache_Reset(void)
 {
   int result; // eax
 
@@ -1108,7 +1108,7 @@ int  BuildingSpriteCache_GetOrLoadEntry(DWORD buildingKind, int variantIndex, si
 // 5438F1: using guessed type int dword_5438F1;
 
 //----- (0043F920) --------------------------------------------------------
-int BuildingSpriteCache_Clear()
+int BuildingSpriteCache_Clear(void)
 {
   int i; // edx
   int result; // eax
@@ -1133,7 +1133,7 @@ int BuildingSpriteCache_Clear()
 // 5438ED: using guessed type int dword_5438ED;
 
 //----- (0043F980) --------------------------------------------------------
-int BuildingSpriteCache_CountEntries()
+int BuildingSpriteCache_CountEntries(void)
 {
   int count; // edx
   int i; // eax
@@ -1148,7 +1148,7 @@ int BuildingSpriteCache_CountEntries()
 }
 
 //----- (0043F9B0) --------------------------------------------------------
-int Rules_RebuildTempleFacts()
+int Rules_RebuildTempleFacts(void)
 {
   int i; // ebx
   int result; // eax

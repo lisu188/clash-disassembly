@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (0042CB50) --------------------------------------------------------
-__int16 UnitBattle_HandleBattlefieldInteraction()
+__int16 UnitBattle_HandleBattlefieldInteraction(void)
 {
   DWORD localTileRow; // ebp
   unsigned int localTileCol; // eax
@@ -285,7 +285,7 @@ LABEL_13:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0042D250) --------------------------------------------------------
-__int16 UnitBattle_EnableSelectedChargeMode()
+__int16 UnitBattle_EnableSelectedChargeMode(void)
 {
   g_UnitBattleChargeModeActive_532060 = 1;
   g_UnitBattleChargeModeStartTick_532074 = Time_Now(2, 1);
@@ -300,7 +300,7 @@ __int16 UnitBattle_EnableSelectedChargeMode()
 // 532074: using guessed type int dword_532074;
 
 //----- (0042D290) --------------------------------------------------------
-__int16 UnitBattle_RefreshSelectedUnitUI()
+__int16 UnitBattle_RefreshSelectedUnitUI(void)
 {
   g_UnitBattleChargeModeActive_532060 = 0;
   g_UnitBattleChargeButtonState = 1;
@@ -312,7 +312,7 @@ __int16 UnitBattle_RefreshSelectedUnitUI()
 // 532060: using guessed type int dword_532060;
 
 //----- (0042D2C0) --------------------------------------------------------
-int UnitBattle_RefreshSelectedActionButtons()
+int UnitBattle_RefreshSelectedActionButtons(void)
 {
   void *savedRenderDevice; // ebx
   int result; // eax
@@ -1261,7 +1261,7 @@ void  HandleBattleResults(
 // 532048: using guessed type int g_MapData;
 
 //----- (0042E6F0) --------------------------------------------------------
-int UnitBattle_TemporarilyClearGateBlocker()
+int UnitBattle_TemporarilyClearGateBlocker(void)
 {
   int result; // eax
   char gateBlockerCost; // bl
@@ -1282,7 +1282,7 @@ int UnitBattle_TemporarilyClearGateBlocker()
 // 532048: using guessed type int g_MapData;
 
 //----- (0042E770) --------------------------------------------------------
-char UnitBattle_RestoreGateBlocker()
+char UnitBattle_RestoreGateBlocker(void)
 {
   char result; // al
 
@@ -1323,7 +1323,7 @@ int  UnitBattle_OverrideControllerOrderBits(int playerAIndex, int overrideA, int
 // 532048: using guessed type int g_MapData;
 
 //----- (0042E860) --------------------------------------------------------
-int UnitBattle_RestoreControllerOrderBits()
+int UnitBattle_RestoreControllerOrderBits(void)
 {
   int backupIndex; // edx
   int recordOffset; // ecx
@@ -1350,7 +1350,7 @@ int UnitBattle_RestoreControllerOrderBits()
 // 532048: using guessed type int g_MapData;
 
 //----- (0042E8B0) --------------------------------------------------------
-int *UnitBattle_InitBattleScreenFrame()
+int *UnitBattle_InitBattleScreenFrame(void)
 {
   void *v0; // edx
   int SpriteForChar; // eax

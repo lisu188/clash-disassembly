@@ -294,7 +294,7 @@ _DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int playerIndex, int a2, char a3, DWO
 // 527C24: using guessed type int dword_527C24;
 
 //----- (004233E0) --------------------------------------------------------
-int UI_FreeCurrentPlayerInfoSpriteSet()
+int UI_FreeCurrentPlayerInfoSpriteSet(void)
 {
   int result; // eax
 
@@ -577,7 +577,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00423AC0) --------------------------------------------------------
-signed int UnitStackSelection_HasSelectedSlots()
+signed int UnitStackSelection_HasSelectedSlots(void)
 {
   int byte_offset; // eax
 
@@ -1261,7 +1261,7 @@ BOOL  Map_TileHasOwner(int row, int column)
 // 5202E4: using guessed type int gameData;
 
 //----- (00424FD0) --------------------------------------------------------
-int Map_AutoUpgradeVillages()
+int Map_AutoUpgradeVillages(void)
 {
   int result; // eax
   int columnIndex; // esi
@@ -1322,7 +1322,7 @@ int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2)
 // 527C30: using guessed type int g_RoadBuildModeExitRequested;
 
 //----- (00425110) --------------------------------------------------------
-void RoadBuildMode_RequestExit()
+void RoadBuildMode_RequestExit(void)
 {
   g_RoadBuildModeExitRequested = 1;
 }

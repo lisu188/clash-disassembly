@@ -25,7 +25,7 @@ signed int __thiscall Rules_InitObjectSystem(void *this)
 // 54E6FC: using guessed type int dword_54E6FC;
 
 //----- (00499730) --------------------------------------------------------
-int Class_CreateSystemClasses()
+int Class_CreateSystemClasses(void)
 {
   int primitive_class; // ecx
   int number_class; // ebp
@@ -101,7 +101,7 @@ int Class_CreateSystemClasses()
 // 54E6FC: using guessed type int dword_54E6FC;
 
 //----- (00499990) --------------------------------------------------------
-int Rules_RegisterDefclassConstruct()
+int Rules_RegisterDefclassConstruct(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -226,7 +226,7 @@ int  Class_CreateSystemClass(char *className, int superclass, int a3)
 // 51AD68: using guessed type int dword_51AD68;
 
 //----- (00499F20) --------------------------------------------------------
-signed int Class_AllocRecord()
+signed int Class_AllocRecord(void)
 {
   _DWORD *freeListHead; // edx
 
@@ -266,7 +266,7 @@ int  Class_FreeRecord(int theModuleItem)
 // 54E6B8: using guessed type int dword_54E6B8;
 
 //----- (00499FA0) --------------------------------------------------------
-signed int Class_RefreshWatchExpressions()
+signed int Class_RefreshWatchExpressions(void)
 {
   int moduleCount; // eax
   int v1; // edx
@@ -729,7 +729,7 @@ int (* ProcParam_PushEvaluatedArgumentFrame(
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0049A7F0) --------------------------------------------------------
-int ProcParam_PopFrame()
+int ProcParam_PopFrame(void)
 {
   int *frameNode; // edx
   int result; // eax
@@ -770,7 +770,7 @@ int ProcParam_PopFrame()
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0049A8F0) --------------------------------------------------------
-int ProcParam_BuildArgumentExpressionChain()
+int ProcParam_BuildArgumentExpressionChain(void)
 {
   int srcParamOffset; // ecx
   int paramIndex; // edx
@@ -1373,7 +1373,7 @@ _DWORD * AST_UnwrapActionListWrapper(_DWORD *result)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049B370) --------------------------------------------------------
-signed int Rules_RegisterFileIOCommands()
+signed int Rules_RegisterFileIOCommands(void)
 {
   Rules_RegisterHostFunction(aBatch, 98, (int)aBatchcommand, (int)Rules_BatchCommand, (int)a11k_4);
   Rules_RegisterHostFunction(aBatch_0, 98, (int)aBatchstarcomma, (int)Rules_BatchStarCommand, (int)a11k_4);

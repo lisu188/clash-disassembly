@@ -433,7 +433,7 @@ int  FileSystem_OpenViaOpenSlotAndNotify(int entry)
 // 473F30: variable 'v3' is possibly undefined
 
 //----- (00473F50) --------------------------------------------------------
-int Compat_NoOpQueryCallback()
+int Compat_NoOpQueryCallback(void)
 {
   return 0;
 }

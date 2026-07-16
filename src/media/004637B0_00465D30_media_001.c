@@ -660,7 +660,7 @@ HANDLE * CAviDecompressor_DestroyEventHandle(HANDLE *eventHandlePtr)
 }
 
 //----- (004649B0) --------------------------------------------------------
-int CAviDecompressor_FreeMemberA()
+int CAviDecompressor_FreeMemberA(void)
 {
   int v2; // ecx
 
@@ -670,7 +670,7 @@ int CAviDecompressor_FreeMemberA()
 // 4649BA: variable 'v2' is possibly undefined
 
 //----- (004649C0) --------------------------------------------------------
-int CAviDecompressor_FreeMemberB()
+int CAviDecompressor_FreeMemberB(void)
 {
   int v2; // ecx
 

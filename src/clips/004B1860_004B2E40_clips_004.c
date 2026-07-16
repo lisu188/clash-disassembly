@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (004B1860) --------------------------------------------------------
-int Class_FindUnusedSlotNameID()
+int Class_FindUnusedSlotNameID(void)
 {
   int candidateID; // ecx
   unsigned int bucketIndex; // ebx
@@ -132,14 +132,14 @@ int  Rules_SetObjectPatternMatchDelay(int delayFlag, double a2)
 // 51AEB4: using guessed type int dword_51AEB4;
 
 //----- (004B1A40) --------------------------------------------------------
-int Rules_GetObjectPatternNetworkRoot()
+int Rules_GetObjectPatternNetworkRoot(void)
 {
   return g_Rules_ObjectPatternNetworkRoot;
 }
 // 51AEAC: using guessed type int dword_51AEAC;
 
 //----- (004B1A50) --------------------------------------------------------
-int Rules_GetReactiveRuleList()
+int Rules_GetReactiveRuleList(void)
 {
   return g_ReactiveRuleListHead;
 }
@@ -210,7 +210,7 @@ LABEL_6:
 // 51AEBC: using guessed type int dword_51AEBC;
 
 //----- (004B1B30) --------------------------------------------------------
-int Rules_ResetRuleMarkCounters()
+int Rules_ResetRuleMarkCounters(void)
 {
   int result; // eax
   _DWORD *ruleCursor; // edx
@@ -946,7 +946,7 @@ _DWORD * Rules_RetractObjectPatternMatches(_DWORD *result, unsigned __int16 *slo
 }
 
 //----- (004B2680) --------------------------------------------------------
-signed int Rules_PrintObjectPatternNetworkError()
+signed int Rules_PrintObjectPatternNetworkError(void)
 {
   int v0; // ecx
   int v1; // ecx

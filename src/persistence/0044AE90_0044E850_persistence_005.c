@@ -220,7 +220,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
 // 5202E4: using guessed type int gameData;
 
 //----- (0044B2F0) --------------------------------------------------------
-char Scenario_SetupSirArthurRosterVariantA()
+char Scenario_SetupSirArthurRosterVariantA(void)
 {
   int i; // edx
   char *arthurNameSrc; // esi
@@ -310,7 +310,7 @@ char Scenario_SetupSirArthurRosterVariantA()
 // 5202E4: using guessed type int gameData;
 
 //----- (0044B430) --------------------------------------------------------
-char Scenario_SetupSirArthurRosterVariantB()
+char Scenario_SetupSirArthurRosterVariantB(void)
 {
   int i; // edx
   char *arthurNameSrc; // esi
@@ -499,7 +499,7 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044C2A0) --------------------------------------------------------
-signed int Game_InitPlayerViewState()
+signed int Game_InitPlayerViewState(void)
 {
   int playerIndex; // edi
   int playerRecordOffset; // ebp

@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (004C4FB0) --------------------------------------------------------
-signed int Deffunction_CountBsaveEntries()
+signed int Deffunction_CountBsaveEntries(void)
 {
   signed int result; // eax
 
@@ -38,7 +38,7 @@ __int16  Deffunction_CountAndMarkExpressions(_DWORD *theDeffunction)
 // 54E680: using guessed type int dword_54E680;
 
 //----- (004C5030) --------------------------------------------------------
-signed int Deffunction_BsaveWriteExpressions()
+signed int Deffunction_BsaveWriteExpressions(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Deffunction_BsaveWriteBodyExpression, 0);
 }
@@ -178,7 +178,7 @@ int __thiscall Deffunction_BloadAllocateBinaryStorage(void *this)
 // 54E894: using guessed type int dword_54E894;
 
 //----- (004C52B0) --------------------------------------------------------
-signed int Deffunction_BloadRefreshConstructs()
+signed int Deffunction_BloadRefreshConstructs(void)
 {
   int space; // [esp-8h] [ebp-Ch] BYREF
 
@@ -228,7 +228,7 @@ int  Deffunction_BloadRefreshBodyRecord(_DWORD *buf, int obji)
 // 54E894: using guessed type int dword_54E894;
 
 //----- (004C53B0) --------------------------------------------------------
-signed int Deffunction_ClearBinaryData()
+signed int Deffunction_ClearBinaryData(void)
 {
   signed int result; // eax
   int recordOffset; // ecx
@@ -268,7 +268,7 @@ signed int Deffunction_ClearBinaryData()
 // 54E894: using guessed type int dword_54E894;
 
 //----- (004C5450) --------------------------------------------------------
-signed int Class_RegisterBinaryItem()
+signed int Class_RegisterBinaryItem(void)
 {
   Rules_AddAbortBloadFunction((int)aDefclass_0, (int)Class_CreateSystemClasses, 0);
   return Rules_RegisterBinaryItem(
@@ -291,7 +291,7 @@ int  Class_RecordAtIndex(int theIndex)
 // 54E8B8: using guessed type int dword_54E8B8;
 
 //----- (004C54C0) --------------------------------------------------------
-_DWORD *Class_CountBsaveEntries()
+_DWORD *Class_CountBsaveEntries(void)
 {
   int i; // ecx
   _DWORD *result; // eax
@@ -439,7 +439,7 @@ int  Class_CountSlotsAndMarkExpressions(int theDefclass)
 // 54E8B4: using guessed type int dword_54E8B4;
 
 //----- (004C5740) --------------------------------------------------------
-void Class_BsaveWriteExpressions()
+void Class_BsaveWriteExpressions(void)
 {
   if ( g_ClipsBloadDefclassCount || g_ClipsBloadSlotRecordCount )
   {
@@ -1184,7 +1184,7 @@ _DWORD *__thiscall Class_BloadStorage(void *this)
 // 54E8B8: using guessed type int dword_54E8B8;
 
 //----- (004C6530) --------------------------------------------------------
-int Class_BloadBinaryItem()
+int Class_BloadBinaryItem(void)
 {
   int result; // eax
   int space[5]; // [esp+0h] [ebp-14h] BYREF
@@ -1230,7 +1230,7 @@ int Class_BloadBinaryItem()
 // 54E8B4: using guessed type int dword_54E8B4;
 
 //----- (004C6650) --------------------------------------------------------
-int Class_BloadFixupNameTable()
+int Class_BloadFixupNameTable(void)
 {
   int result; // eax
   int classOffset; // edx

@@ -118,7 +118,7 @@ int  Rules_RtnUnknown(int argumentPosition, _DWORD *returnValue, double a3)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00481420) --------------------------------------------------------
-int Rules_RtnArgCount()
+int Rules_RtnArgCount(void)
 {
   int argExpr; // eax
   int i; // edx

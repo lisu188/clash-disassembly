@@ -350,7 +350,7 @@ int  Defgeneric_SaveConstructs(signed int logicalName)
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (004982F0) --------------------------------------------------------
-signed int Defmethod_SaveConstructs()
+signed int Defmethod_SaveConstructs(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Defgeneric_WriteMethodPPForms, 0);
 }
@@ -679,7 +679,7 @@ signed int  Method_PrintWatchStatusLine(int logicalName, int theGeneric, int met
 // 4988C6: variable 'v9' is possibly undefined
 
 //----- (004988F0) --------------------------------------------------------
-int Deffunction_InitConstructType()
+int Deffunction_InitConstructType(void)
 {
   int v0; // ecx
 
@@ -737,7 +737,7 @@ int  Deffunction_LookupByName(_BYTE *deffunctionName)
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498AD0) --------------------------------------------------------
-signed int Deffunction_Delete()
+signed int Deffunction_Delete(void)
 {
   int v0; // edx
   signed int result; // eax
@@ -767,7 +767,7 @@ int  Deffunction_EnumNext(int deffunctionPtr)
 // 54E6A8: using guessed type int dword_54E6A8;
 
 //----- (00498B20) --------------------------------------------------------
-BOOL Deffunction_IsDeletable()
+BOOL Deffunction_IsDeletable(void)
 {
   int v0; // edx
 
@@ -906,7 +906,7 @@ int  Deffunction_IncrementBusyCount(int result)
 }
 
 //----- (00498D40) --------------------------------------------------------
-signed int Deffunction_AllocateModule()
+signed int Deffunction_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
@@ -938,14 +938,14 @@ int  Deffunction_FreeModule(int theModuleItem)
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498DB0) --------------------------------------------------------
-BOOL Deffunction_IsClearReady()
+BOOL Deffunction_IsClearReady(void)
 {
   return g_CurrentDeffunction == 0;
 }
 // 51B3E8: using guessed type int dword_51B3E8;
 
 //----- (00498DC0) --------------------------------------------------------
-signed int Deffunction_ClearAll()
+signed int Deffunction_ClearAll(void)
 {
   int clearSuccess; // ebx
   int i; // ecx
@@ -1037,7 +1037,7 @@ signed int  Deffunction_ReportCantDelete(int deffunctionName, int a2)
 }
 
 //----- (00498F00) --------------------------------------------------------
-signed int Deffunction_SaveHeaders()
+signed int Deffunction_SaveHeaders(void)
 {
   return Rules_DoForAllConstructs((void (*)(void))Deffunction_WriteHeaderForm, 0);
 }
@@ -1123,7 +1123,7 @@ int  Deffunction_GetWatchFlagField(int theDeffunction)
 }
 
 //----- (00499050) --------------------------------------------------------
-_DWORD *Defglobal_InitConstructType()
+_DWORD *Defglobal_InitConstructType(void)
 {
   _DWORD *result; // eax
 
@@ -1155,7 +1155,7 @@ _DWORD *Defglobal_InitConstructType()
 // 54E6B4: using guessed type int dword_54E6B4;
 
 //----- (004990D0) --------------------------------------------------------
-int *Defglobal_RegisterModuleItem()
+int *Defglobal_RegisterModuleItem(void)
 {
   g_ClipsDefglobalModuleItemId = Module_RegisterItem(
                    (int)aDefglobal,
@@ -1169,7 +1169,7 @@ int *Defglobal_RegisterModuleItem()
 // 54E6B0: using guessed type int dword_54E6B0;
 
 //----- (00499110) --------------------------------------------------------
-signed int Defglobal_AllocateModule()
+signed int Defglobal_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
@@ -1215,7 +1215,7 @@ int  Defglobal_EnumNext(int defglobalPtr)
 // 54E6B0: using guessed type int dword_54E6B0;
 
 //----- (004991B0) --------------------------------------------------------
-BOOL Defglobal_IsDeletable()
+BOOL Defglobal_IsDeletable(void)
 {
   int v0; // edx
 
@@ -1306,7 +1306,7 @@ int  Defglobal_SetValue(int theGlobal, _DWORD *vPtr, int resetVar, double contex
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (00499360) --------------------------------------------------------
-_DWORD *Defglobal_FindNextChanged()
+_DWORD *Defglobal_FindNextChanged(void)
 {
   _DWORD *result; // eax
   int v1; // ecx
@@ -1410,7 +1410,7 @@ int  Class_IncrementBusyCount(int result)
 }
 
 //----- (004995B0) --------------------------------------------------------
-int Class_RefreshWatchFlags()
+int Class_RefreshWatchFlags(void)
 {
   int result; // eax
   int i; // edi

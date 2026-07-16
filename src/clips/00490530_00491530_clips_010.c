@@ -357,14 +357,14 @@ BOOL __thiscall Lexer_ClassifyNextStdinChar(void *this)
 }
 
 //----- (00490BB0) --------------------------------------------------------
-int Rules_IsEvaluatingTopLevelCommand()
+int Rules_IsEvaluatingTopLevelCommand(void)
 {
   return g_Rules_EvaluatingTopLevelCommand;
 }
 // 51A988: using guessed type int dword_51A988;
 
 //----- (00490BC0) --------------------------------------------------------
-_DWORD *Rules_InitializeDefrules()
+_DWORD *Rules_InitializeDefrules(void)
 {
   _DWORD *result; // eax
 
@@ -399,7 +399,7 @@ _DWORD *Rules_InitializeDefrules()
 // 54E648: using guessed type int dword_54E648;
 
 //----- (00490C80) --------------------------------------------------------
-int Rules_RegisterDefruleModuleItem()
+int Rules_RegisterDefruleModuleItem(void)
 {
   int result; // eax
 
@@ -416,7 +416,7 @@ int Rules_RegisterDefruleModuleItem()
 // 54E64C: using guessed type int dword_54E64C;
 
 //----- (00490CB0) --------------------------------------------------------
-signed int Rules_AllocateDefruleModule()
+signed int Rules_AllocateDefruleModule(void)
 {
   _DWORD *freeListEntry; // edx
   signed int result; // eax
@@ -476,7 +476,7 @@ int  Rules_GetNextDefrule(int defrulePtr)
 // 54E64C: using guessed type int dword_54E64C;
 
 //----- (00490D60) --------------------------------------------------------
-BOOL Rules_IsDefruleDeletable()
+BOOL Rules_IsDefruleDeletable(void)
 {
   int v0; // edx
   int theDefrule; // eax
@@ -909,7 +909,7 @@ LABEL_10:
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004913B0) --------------------------------------------------------
-signed int Module_InitializeDefmodules()
+signed int Module_InitializeDefmodules(void)
 {
   Module_RegisterDefmoduleCommands();
   Module_CreateMainModule();
@@ -960,14 +960,14 @@ int  Module_RegisterItem(int theItem, int allocateFunction, int bloadModuleRefer
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004914D0) --------------------------------------------------------
-int Module_GetItemList()
+int Module_GetItemList(void)
 {
   return g_ModuleItemDescriptorListHead;
 }
 // 51A9BC: using guessed type int dword_51A9BC;
 
 //----- (004914E0) --------------------------------------------------------
-int Module_GetItemCount()
+int Module_GetItemCount(void)
 {
   return g_ClipsModuleItemCount;
 }
@@ -991,7 +991,7 @@ int  Module_FindItemByName(int moduleItemName)
 // 51A9BC: using guessed type int dword_51A9BC;
 
 //----- (00491520) --------------------------------------------------------
-int Module_GetCurrent()
+int Module_GetCurrent(void)
 {
   return g_Clips_CurrentModule;
 }

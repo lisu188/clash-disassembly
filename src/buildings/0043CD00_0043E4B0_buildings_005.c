@@ -213,7 +213,7 @@ int  WCIsvListBase_dtorRoot(int result, char dtorFlags)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0043CF90) --------------------------------------------------------
-int __cdecl WCIsvListBase_vtblFree()
+int __cdecl WCIsvListBase_vtblFree(void)
 {
   return j__nfree_();
 }

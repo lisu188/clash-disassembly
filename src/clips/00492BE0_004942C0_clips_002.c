@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00492BE0) --------------------------------------------------------
-signed int Rules_AllocDeftemplateHashNode()
+signed int Rules_AllocDeftemplateHashNode(void)
 {
   _DWORD *freeListNode; // edx
 
@@ -48,7 +48,7 @@ int  Rules_GetNextDeftemplate(int deftemplatePtr)
 // 54E654: using guessed type int dword_54E654;
 
 //----- (00492C80) --------------------------------------------------------
-int Rules_DeftemplateIsDeletable()
+int Rules_DeftemplateIsDeletable(void)
 {
   int result; // eax
   int theDeftemplate; // edx
@@ -139,7 +139,7 @@ int  Rules_IncrementBusyCount(int result)
 }
 
 //----- (00492DD0) --------------------------------------------------------
-int Rules_InitExpressionHashTable()
+int Rules_InitExpressionHashTable(void)
 {
   int result; // eax
 
@@ -152,7 +152,7 @@ int Rules_InitExpressionHashTable()
 // 51A9FC: using guessed type int dword_51A9FC;
 
 //----- (00492E10) --------------------------------------------------------
-int **Rules_CacheConnectiveSymbols()
+int **Rules_CacheConnectiveSymbols(void)
 {
   int **result; // eax
   int v1; // ecx
@@ -283,7 +283,7 @@ int  AST_FreePackedNodeChain(int result)
 }
 
 //----- (00492FF0) --------------------------------------------------------
-signed int AST_AllocNode()
+signed int AST_AllocNode(void)
 {
   int node;
 

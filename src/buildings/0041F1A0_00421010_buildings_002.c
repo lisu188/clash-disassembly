@@ -836,7 +836,7 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
 // 545150: using guessed type int dword_545150;
 
 //----- (00420770) --------------------------------------------------------
-DWORD Timer_InitPerfCounterFrequency()
+DWORD Timer_InitPerfCounterFrequency(void)
 {
   QueryPerformanceFrequency(&Frequency);
   Frequency.QuadPart /= 100;
@@ -895,7 +895,7 @@ int  Castle_RequestManagementScreenExit(uintptr_t widgetRecord, int animationDel
 // 526E80: using guessed type int g_CastleScreenExitRequested;
 
 //----- (00420870) --------------------------------------------------------
-int Castle_RebuildMissingAddonFlags()
+int Castle_RebuildMissingAddonFlags(void)
 {
   int anyAddonMissing; // edx
   int result; // eax
@@ -924,7 +924,7 @@ int Castle_RebuildMissingAddonFlags()
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420910) --------------------------------------------------------
-void *Castle_ShowNewBuildingMenu()
+void *Castle_ShowNewBuildingMenu(void)
 {
   void *result; // eax
   int v1; // ecx
@@ -1297,7 +1297,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD runtime_context)
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420F70) --------------------------------------------------------
-BOOL Building_HandleUpgradeButtonAction()
+BOOL Building_HandleUpgradeButtonAction(void)
 {
   BOOL result; // eax
 
@@ -1338,7 +1338,7 @@ int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4)
 // 526E84: using guessed type int g_CastleDestroyConfirmed;
 
 //----- (00421010) --------------------------------------------------------
-int Castle_DrawStatusPanel()
+int Castle_DrawStatusPanel(void)
 {
   int SpriteForChar; // eax
   int buildingSprite; // eax

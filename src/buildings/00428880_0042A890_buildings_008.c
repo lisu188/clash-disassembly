@@ -942,7 +942,7 @@ int  BuildCursor_HandleCancelButtonPress(int widget, int a2)
 // 531CD0: using guessed type int dword_531CD0;
 
 //----- (00429EB0) --------------------------------------------------------
-void BuildCursor_RequestExit()
+void BuildCursor_RequestExit(void)
 {
   g_BuildPlacementLoopDone = 1;
 }

@@ -634,7 +634,7 @@ BOOL  Rules_IsInstanceSetQueryFunctionCall(int theExp)
 }
 
 //----- (004E0D60) --------------------------------------------------------
-int Compiler_RegisterObjectPatternNetworkCodeGenerator()
+int Compiler_RegisterObjectPatternNetworkCodeGenerator(void)
 {
   int result; // eax
 
@@ -664,7 +664,7 @@ int  Compiler_WriteObjectPatternSecondaryIndexRef(int theNode, int theFile, int 
 // 54E91C: using guessed type int dword_54E91C;
 
 //----- (004E0DF0) --------------------------------------------------------
-int Compiler_AssignObjectPatternAndRuleCodeIndices()
+int Compiler_AssignObjectPatternAndRuleCodeIndices(void)
 {
   _DWORD *patternNode; // eax
   int i; // ecx
@@ -1070,7 +1070,7 @@ signed int  Rules_BuildSlotRangeTestNode(int selfNode, int referringNode)
 }
 
 //----- (004E1480) --------------------------------------------------------
-signed int Rules_BuildMultifieldIndexTestNode()
+signed int Rules_BuildMultifieldIndexTestNode(void)
 {
   int slotNode; // ecx
   int bitmapFlags; // esi

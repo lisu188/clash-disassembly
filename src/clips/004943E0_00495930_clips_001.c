@@ -201,7 +201,7 @@ int  AST_AppendNodeList(int expr1, int expr2)
 }
 
 //----- (00494690) --------------------------------------------------------
-void Rules_FlushPPBuffer()
+void Rules_FlushPPBuffer(void)
 {
   if ( g_Clips_PPBuffer )
   {
@@ -217,7 +217,7 @@ void Rules_FlushPPBuffer()
 // 51AA28: using guessed type int dword_51AA28;
 
 //----- (004946C0) --------------------------------------------------------
-signed int Rules_DestroyPPBuffer()
+signed int Rules_DestroyPPBuffer(void)
 {
   signed int result; // eax
 
@@ -290,7 +290,7 @@ int Rules_BackupPPBuffer()
 // 51AA28: using guessed type int dword_51AA28;
 
 //----- (00494810) --------------------------------------------------------
-char *Rules_CopyPPBuffer()
+char *Rules_CopyPPBuffer(void)
 {
   char *copyBuffer; // eax
   char *sourcePtr; // esi
@@ -320,7 +320,7 @@ char *Rules_CopyPPBuffer()
 // 51AA28: using guessed type int dword_51AA28;
 
 //----- (00494860) --------------------------------------------------------
-int Rules_GetPPBuffer()
+int Rules_GetPPBuffer(void)
 {
   return g_Clips_PPBuffer;
 }
@@ -381,7 +381,7 @@ int  Rules_SetPPBufferStatus(int result)
 // 51AA10: using guessed type int dword_51AA10;
 
 //----- (00494900) --------------------------------------------------------
-int Rules_GetPPBufferStatus()
+int Rules_GetPPBufferStatus(void)
 {
   return g_Rules_PPBufferEnabled;
 }
@@ -404,7 +404,7 @@ const void * Rules_BsaveAtomTables(int fp)
 // 4949D8: variable 'v3' is possibly undefined
 
 //----- (004949E0) --------------------------------------------------------
-int *Rules_ClearAtomInUseMarks()
+int *Rules_ClearAtomInUseMarks(void)
 {
   _DWORD *symbolBucket; // edx
   _DWORD *symbolTableEnd; // ecx
@@ -690,7 +690,7 @@ const void * Rules_BsaveBitmapTable(int fp)
 // 494D93: variable 'j' is possibly undefined
 
 //----- (00494DB0) --------------------------------------------------------
-int Rules_BloadAtomTables()
+int Rules_BloadAtomTables(void)
 {
   int result; // eax
   int buffer; // edi
@@ -728,7 +728,7 @@ int Rules_BloadAtomTables()
 // 54E67C: using guessed type int dword_54E67C;
 
 //----- (00494E00) --------------------------------------------------------
-int Rules_BloadSymbolTable()
+int Rules_BloadSymbolTable(void)
 {
   int result; // eax
   int buffer; // ebp
@@ -763,7 +763,7 @@ int Rules_BloadSymbolTable()
 // 54E674: using guessed type int dword_54E674;
 
 //----- (00494ED0) --------------------------------------------------------
-int Rules_BloadFloatTable()
+int Rules_BloadFloatTable(void)
 {
   int result; // eax
   int buffer; // esi
@@ -791,7 +791,7 @@ int Rules_BloadFloatTable()
 // 54E670: using guessed type int dword_54E670;
 
 //----- (00494F90) --------------------------------------------------------
-int Rules_BloadIntegerTable()
+int Rules_BloadIntegerTable(void)
 {
   int result; // eax
   int buffer; // edi
@@ -819,7 +819,7 @@ int Rules_BloadIntegerTable()
 // 54E678: using guessed type int dword_54E678;
 
 //----- (004950D0) --------------------------------------------------------
-signed int Rules_FreeBloadAtomTables()
+signed int Rules_FreeBloadAtomTables(void)
 {
   signed int result; // eax
 
@@ -843,7 +843,7 @@ signed int Rules_FreeBloadAtomTables()
 // 54E67C: using guessed type int dword_54E67C;
 
 //----- (00495160) --------------------------------------------------------
-int Rules_BloadAllocExpressionArray()
+int Rules_BloadAllocExpressionArray(void)
 {
   int result; // eax
 
@@ -863,7 +863,7 @@ int Rules_BloadAllocExpressionArray()
 // 54E688: using guessed type int dword_54E688;
 
 //----- (004951A0) --------------------------------------------------------
-void Rules_BloadRefreshExpressions()
+void Rules_BloadRefreshExpressions(void)
 {
   if ( g_ClipsPackedExpressionArray )
     Rules_BloadAndRefresh(g_ClipsBloadExpressionCount, 14, (void (__fastcall *)(signed int, signed int))Rules_RefreshExpressionEntry);
@@ -1050,7 +1050,7 @@ LABEL_7:
 // 54E840: using guessed type int dword_54E840;
 
 //----- (00495590) --------------------------------------------------------
-signed int Rules_FreeBloadedExpressions()
+signed int Rules_FreeBloadedExpressions(void)
 {
   unsigned int exprIndex; // ebx
   int exprOffset; // ecx
@@ -1129,7 +1129,7 @@ LABEL_6:
 // 54E688: using guessed type int dword_54E688;
 
 //----- (004956B0) --------------------------------------------------------
-int Rules_CountHashedExpressions()
+int Rules_CountHashedExpressions(void)
 {
   int i; // ecx
   int result; // eax
@@ -1176,7 +1176,7 @@ __int16 * Rules_AssignHashedExpressionIndices(int fp)
 // 51A9FC: using guessed type int dword_51A9FC;
 
 //----- (00495740) --------------------------------------------------------
-int Rules_InvokeConstructCallbacks()
+int Rules_InvokeConstructCallbacks(void)
 {
   int i; // edx
   int result; // eax

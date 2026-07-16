@@ -105,7 +105,7 @@ int  Rules_SetAtomicValueIndices(int setAll)
 // 54DD5C: using guessed type int dword_54DD5C;
 
 //----- (00482EF0) --------------------------------------------------------
-int *Rules_RestoreAtomicValueBuckets()
+int *Rules_RestoreAtomicValueBuckets(void)
 {
   _DWORD *symbolBucket; // ebx
   int i; // ecx
@@ -214,7 +214,7 @@ int  Instance_DecrementBusyCount(int result)
 }
 
 //----- (00483060) --------------------------------------------------------
-int Instance_InitHashTable()
+int Instance_InitHashTable(void)
 {
   int result; // eax
 
@@ -226,7 +226,7 @@ int Instance_InitHashTable()
 // 51A278: using guessed type int dword_51A278;
 
 //----- (004830A0) --------------------------------------------------------
-void Instance_PurgeDeletedInstances()
+void Instance_PurgeDeletedInstances(void)
 {
   int current_node; // edx
   int previous_node; // ecx
@@ -872,7 +872,7 @@ int __fastcall Instance_ReportNoSuchSlotError(int slotName, int functionName)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00483C70) --------------------------------------------------------
-signed int Instance_ReportInvalidInstanceAddressError()
+signed int Instance_ReportInvalidInstanceAddressError(void)
 {
   int v0; // ecx
   int v1; // ecx

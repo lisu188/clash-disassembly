@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00496000) --------------------------------------------------------
-int Event_ClearHandlers()
+int Event_ClearHandlers(void)
 {
   int result; // eax
 
@@ -12,7 +12,7 @@ int Event_ClearHandlers()
 }
 
 //----- (00496030) --------------------------------------------------------
-int Event_InitHandlers()
+int Event_InitHandlers(void)
 {
   int i; // edx
   int result; // eax
@@ -78,7 +78,7 @@ const void * Rules_BsaveWriteFunctionNames(int fp)
 }
 
 //----- (00496130) --------------------------------------------------------
-int Rules_BsaveFunctionNamesLength()
+int Rules_BsaveFunctionNamesLength(void)
 {
   int functionDef; // edx
   int totalLength; // ebx
@@ -309,7 +309,7 @@ const void * Rules_BsaveWriteBlock(int size, int fp, const void *result)
 }
 
 //----- (004967B0) --------------------------------------------------------
-signed int Rules_RegisterConstraintCheckingCommands()
+signed int Rules_RegisterConstraintCheckingCommands(void)
 {
   int i; // eax
 
@@ -818,7 +818,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int returnValue, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004970E0) --------------------------------------------------------
-int Rules_GetDynamicConstraintCheckingCommand()
+int Rules_GetDynamicConstraintCheckingCommand(void)
 {
   int currentFlag; // ecx
 
@@ -852,7 +852,7 @@ int  Rules_SetStaticConstraintCheckingCommand(int returnValue, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (00497180) --------------------------------------------------------
-int Rules_GetStaticConstraintCheckingCommand()
+int Rules_GetStaticConstraintCheckingCommand(void)
 {
   int currentFlag; // ecx
 
@@ -875,21 +875,21 @@ int __fastcall Rules_SetDynamicConstraintChecking(int newValue, int a2)
 // 51AAB4: using guessed type int dword_51AAB4;
 
 //----- (004971B0) --------------------------------------------------------
-int Rules_DynamicConstraintCheckingEnabled()
+int Rules_DynamicConstraintCheckingEnabled(void)
 {
   return g_CLIPS_DynamicConstraintCheckingFlag;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
 
 //----- (004971D0) --------------------------------------------------------
-int Rules_StaticConstraintCheckingEnabled()
+int Rules_StaticConstraintCheckingEnabled(void)
 {
   return g_CLIPS_StaticConstraintCheckingFlag;
 }
 // 51AAB0: using guessed type int dword_51AAB0;
 
 //----- (004971E0) --------------------------------------------------------
-_DWORD *Rules_InitDeffactsConstruct()
+_DWORD *Rules_InitDeffactsConstruct(void)
 {
   _DWORD *result; // eax
 
@@ -915,7 +915,7 @@ _DWORD *Rules_InitDeffactsConstruct()
 // 54E69C: using guessed type int dword_54E69C;
 
 //----- (00497240) --------------------------------------------------------
-int Rules_RegisterDeffactsModuleItem()
+int Rules_RegisterDeffactsModuleItem(void)
 {
   int result; // eax
 
@@ -932,7 +932,7 @@ int Rules_RegisterDeffactsModuleItem()
 // 54E698: using guessed type int dword_54E698;
 
 //----- (00497270) --------------------------------------------------------
-signed int Rules_AllocDeffactsModuleData()
+signed int Rules_AllocDeffactsModuleData(void)
 {
   _DWORD *freeListHead; // edx
 
@@ -983,7 +983,7 @@ int  Rules_DeffactsGetNextItem(int deffactsPtr)
 // 54E698: using guessed type int dword_54E698;
 
 //----- (00497310) --------------------------------------------------------
-int Rules_DeffactsIsDeletable()
+int Rules_DeffactsIsDeletable(void)
 {
   int result; // eax
 
@@ -1021,7 +1021,7 @@ int  Deffacts_FreeConstruct(int result)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00497370) --------------------------------------------------------
-int Defgeneric_SetupConstruct()
+int Defgeneric_SetupConstruct(void)
 {
   int v0; // ecx
   int v1; // ecx
@@ -1146,7 +1146,7 @@ int  Class_NextMethod(int theGeneric, int methodIndex)
 // 497771: variable 'v5' is possibly undefined
 
 //----- (00497790) --------------------------------------------------------
-BOOL Defgeneric_IsDeletable()
+BOOL Defgeneric_IsDeletable(void)
 {
   int v0; // edx
 

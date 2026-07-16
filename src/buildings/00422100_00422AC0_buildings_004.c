@@ -14,7 +14,7 @@ CLASH95_TEST_VISIBLE int Diagnostics_ShouldTraceWorldMapActionStage (const char 
 CLASH95_TEST_VISIBLE void Diagnostics_TraceCastleHotspots (int surface_handle);
 
 //----- (00422100) --------------------------------------------------------
-int Castle_UpdateGateToggles()
+int Castle_UpdateGateToggles(void)
 {
   if ( (*(_BYTE *)(g_SelectedBuildingRecord + 420) & 1) != 0 )
     UI_MenuEntry_Disable((int)&g_CastleNewBuildingMenu, 0);
@@ -1414,7 +1414,7 @@ int  Tooltip_CaptureBackdrop(int top, int bottom, int resourceHandle, int rightX
 // 526F0C: using guessed type int dword_526F0C;
 
 //----- (00422960) --------------------------------------------------------
-int Tooltip_ReleaseBackdropSurface()
+int Tooltip_ReleaseBackdropSurface(void)
 {
   int result; // eax
 
@@ -1486,7 +1486,7 @@ void * Tooltip_ShowText(int a1, char *format, ...)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00422AC0) --------------------------------------------------------
-int Tooltip_RestoreBackdrop()
+int Tooltip_RestoreBackdrop(void)
 {
   RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(

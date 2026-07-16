@@ -543,7 +543,7 @@ LABEL_24:
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004ABFD0) --------------------------------------------------------
-signed int Rules_RegisterInstanceIOCommands()
+signed int Rules_RegisterInstanceIOCommands(void)
 {
   Rules_RegisterHostFunction(aSaveInstances, 108, (int)aSaveinstancesc, (int)Rules_SaveInstancesCommand, (int)a1Wk_0);
   Rules_RegisterHostFunction(aLoadInstances, 108, (int)aLoadinstancesc, (int)Rules_LoadInstancesCommand, (int)a11k_3);

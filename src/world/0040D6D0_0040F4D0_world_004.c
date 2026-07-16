@@ -88,7 +88,7 @@ void MiniMap_RedrawAllTiles()
 }
 // 40D86A: control flows out of bounds to 40D410
 
-void Locale_DrawInteger()
+void Locale_DrawInteger(void)
 {
   MiniMap_RedrawAllTiles();
 }
@@ -191,7 +191,7 @@ signed int  Map_GetTileSurfaceClassOrUnexplored(int tileX, signed int tileY)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DC10) --------------------------------------------------------
-int MiniMap_UpdateViewportFromCursor()
+int MiniMap_UpdateViewportFromCursor(void)
 {
   int result; // eax
   int tileX; // ebx
@@ -286,7 +286,7 @@ int MiniMap_UpdateViewportFromCursor()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040DD30) --------------------------------------------------------
-int MiniMap_ToggleVisibility()
+int MiniMap_ToggleVisibility(void)
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) ^= 1u;
   return WorldMap_RedrawViewport(1);
@@ -295,7 +295,7 @@ int MiniMap_ToggleVisibility()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DD60) --------------------------------------------------------
-BOOL MiniMap_IsCursorInside()
+BOOL MiniMap_IsCursorInside(void)
 {
   if ( !PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX) )
     return 0;
@@ -314,7 +314,7 @@ BOOL MiniMap_IsCursorInside()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040DDE0) --------------------------------------------------------
-int MiniMap_ShowAllLayers()
+int MiniMap_ShowAllLayers(void)
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   g_MiniMapDrawMask_511FF0 = 7;
@@ -326,7 +326,7 @@ int MiniMap_ShowAllLayers()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE20) --------------------------------------------------------
-int MiniMap_ShowUnitsOnly()
+int MiniMap_ShowUnitsOnly(void)
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   g_MiniMapDrawMask_511FF0 = 2;
@@ -338,7 +338,7 @@ int MiniMap_ShowUnitsOnly()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE60) --------------------------------------------------------
-int MiniMap_ShowBuildingsOnly()
+int MiniMap_ShowBuildingsOnly(void)
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   g_MiniMapDrawMask_511FF0 = 4;
@@ -350,7 +350,7 @@ int MiniMap_ShowBuildingsOnly()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DEA0) --------------------------------------------------------
-int MiniMap_Hide()
+int MiniMap_Hide(void)
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 0;
   return WorldMap_RedrawViewport(1);
@@ -917,7 +917,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040ECF0) --------------------------------------------------------
-_DWORD * WorldMapTopMenu_LoadSpriteSet()
+_DWORD * WorldMapTopMenu_LoadSpriteSet(void)
 {
   _DWORD *result; // eax
 
@@ -937,7 +937,7 @@ _DWORD * WorldMapTopMenu_LoadSpriteSet()
 // 523F5C: using guessed type int dword_523F5C;
 
 //----- (0040ED20) --------------------------------------------------------
-int WorldMapTopMenu_FreeSpriteSet()
+int WorldMapTopMenu_FreeSpriteSet(void)
 {
   return DLXSpriteSet_ReleaseAndClear(&g_MapPanelSpriteSet);
 }

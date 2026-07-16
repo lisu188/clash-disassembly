@@ -905,7 +905,7 @@ int  UI_EndDraw(int slotIndex)
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 
 //----- (0040C3F0) --------------------------------------------------------
-int TextSprite_ReleaseAllResourceSlots()
+int TextSprite_ReleaseAllResourceSlots(void)
 {
   int slot_index;
   int result; // eax

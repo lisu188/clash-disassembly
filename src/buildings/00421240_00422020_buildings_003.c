@@ -541,7 +541,7 @@ int __thiscall Castle_DrawAllAmbientAnimationLayers(void *this)
 }
 
 //----- (00421C40) --------------------------------------------------------
-unsigned int Castle_UpdateAmbientAnimationLayers()
+unsigned int Castle_UpdateAmbientAnimationLayers(void)
 {
   void *savedRenderDevice; // ebx
   unsigned int v2; // eax

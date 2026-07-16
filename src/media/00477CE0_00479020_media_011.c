@@ -1093,7 +1093,7 @@ int  FileSystem_ArchiveStreamReadBytes(_DWORD *stream, unsigned __int8 *buffer, 
 }
 
 //----- (00478CA0) --------------------------------------------------------
-int FileSystem_ArchiveStreamNoOpFlush()
+int FileSystem_ArchiveStreamNoOpFlush(void)
 {
   return 0;
 }

@@ -2,7 +2,7 @@
 #include "../recovered_internal.h"
 
 //----- (00408030) --------------------------------------------------------
-BOOL UI_TrySelectFriendlyStackUnderCursor()
+BOOL UI_TrySelectFriendlyStackUnderCursor(void)
 {
   BOOL result; // eax
   int tileX; // esi
@@ -1250,7 +1250,7 @@ int  WorldMap_HandleHideUnitAction(int widget, int a2, unsigned __int16 a3, DWOR
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A040) --------------------------------------------------------
-char *WorldMap_ToggleSelectedUnitModeFlag()
+char *WorldMap_ToggleSelectedUnitModeFlag(void)
 {
   int v1; // ecx
   char *result; // eax

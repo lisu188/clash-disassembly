@@ -803,7 +803,7 @@ int  MultiplayerSetup_HandleBackButtonRelease(int widgetRecord)
 // 544190: using guessed type int dword_544190;
 
 //----- (00448EA0) --------------------------------------------------------
-int MultiplayerSetup_RedrawPlayerSlotIcons()
+int MultiplayerSetup_RedrawPlayerSlotIcons(void)
 {
   int iconLeftX; // edi
   int slotIndex; // esi
@@ -845,7 +845,7 @@ int MultiplayerSetup_RedrawPlayerSlotIcons()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00449330) --------------------------------------------------------
-int MultiplayerSetup_RedrawOpponentNameList()
+int MultiplayerSetup_RedrawOpponentNameList(void)
 {
   DWORD cursorOverlayPresented; // ebp
   int rowTopY; // edi

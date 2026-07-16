@@ -347,7 +347,7 @@ int  BuildingTransferTargetList_HandleClick(DWORD renderContext)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00436AF0) --------------------------------------------------------
-int BuildingTransferTargetList_FreeSpriteSet()
+int BuildingTransferTargetList_FreeSpriteSet(void)
 {
   int result; // eax
 

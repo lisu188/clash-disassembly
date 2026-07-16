@@ -967,7 +967,7 @@ int  WorldMap_RedrawFrameForAIWhenEnabled(int a1)
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AEB0) --------------------------------------------------------
-void WorldMap_DisableFrameRedraw()
+void WorldMap_DisableFrameRedraw(void)
 {
   g_WorldMapFrameRedrawDisabled = 1;
 }

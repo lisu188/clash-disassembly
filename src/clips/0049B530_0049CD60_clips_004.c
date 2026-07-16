@@ -65,7 +65,7 @@ signed int  Dribble_PrintRouter(int logicalName, unsigned __int8 *str, int a3)
 // 54E6C0: using guessed type int dword_54E6C0;
 
 //----- (0049B610) --------------------------------------------------------
-int Dribble_GetcRouter()
+int Dribble_GetcRouter(void)
 {
   int v0; // edx
   unsigned int v1; // ecx
@@ -130,7 +130,7 @@ char * Dribble_AppendChar(char *result, int a2, int a3)
 // 54E6C4: using guessed type int dword_54E6C4;
 
 //----- (0049B710) --------------------------------------------------------
-int Dribble_UngetcRouter()
+int Dribble_UngetcRouter(void)
 {
   int v0; // edx
   signed int v1; // ecx
@@ -217,7 +217,7 @@ signed int  Dribble_TurnOn(const CHAR *fileName, DWORD a2)
 // 51ACA4: using guessed type int (__thiscall *dword_51ACA4)(_DWORD);
 
 //----- (0049B890) --------------------------------------------------------
-signed int Rules_DribbleOffCommand()
+signed int Rules_DribbleOffCommand(void)
 {
   if ( Lexer_TokenExpect(0) == -1 )
     return 0;
@@ -226,7 +226,7 @@ signed int Rules_DribbleOffCommand()
 }
 
 //----- (0049B8C0) --------------------------------------------------------
-signed int Dribble_TurnOff()
+signed int Dribble_TurnOff(void)
 {
   int (__thiscall *statusCallback)(_DWORD); // edx
   int v1; // ecx
@@ -495,7 +495,7 @@ _DWORD * Rules_AddBatchEntry(int placeAtEnd, int theSource, int theString, int s
 // 54E6CC: using guessed type int dword_54E6CC;
 
 //----- (0049BD60) --------------------------------------------------------
-signed int Rules_CloseBatch()
+signed int Rules_CloseBatch(void)
 {
   _DWORD *poppedEntry; // eax
   signed int result; // eax
@@ -550,7 +550,7 @@ signed int Rules_CloseBatch()
 // 54E6CC: using guessed type int dword_54E6CC;
 
 //----- (0049BE60) --------------------------------------------------------
-BOOL Rules_BatchIsActive()
+BOOL Rules_BatchIsActive(void)
 {
   return g_Rules_BatchStackTop != 0;
 }
@@ -922,7 +922,7 @@ LABEL_4:
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049C3C0) --------------------------------------------------------
-signed int Rules_ParseConstruct()
+signed int Rules_ParseConstruct(void)
 {
   int constructRecord; // ebx
   int v2; // edx
@@ -1206,7 +1206,7 @@ signed int  Rules_ImportExportConflictMessage(int constructName, int itemName, i
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049C8A0) --------------------------------------------------------
-signed int Rules_RegisterControlFlowFunctions()
+signed int Rules_RegisterControlFlowFunctions(void)
 {
   Rules_RegisterHostFunction(aIf, 117, (int)aIffunction, (int)Rules_IfFunction, 0);
   Rules_RegisterHostFunction(aWhile, 117, (int)aWhilefunction, (int)Rules_WhileFunction, 0);
@@ -1392,7 +1392,7 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049CD20) --------------------------------------------------------
-int Rules_GetLoopCountFunction()
+int Rules_GetLoopCountFunction(void)
 {
   int depth; // eax
   _DWORD *i; // edx
