@@ -1,0 +1,195 @@
+# Mission 05 stack-transfer, completion route, leg 1: army crossing march.
+# Every targeted click = world_pan_viewport (row-4) (col-3) so the target
+# tile sits at screen center, then click 320 240. The view follows moving
+# units after orders, so re-pin before every coordinate click. This is the
+# Built on the proven iteration-14 unlock chain (commit 441186a).
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 496 416 0.18 0.55 next-unit-1
+click 496 416 0.18 0.55 next-unit-2
+click 496 416 0.18 0.55 next-unit-3
+click 496 416 0.18 0.55 next-unit-4
+mark_log_count sel4 next_unit_selected selected=4
+click 496 416 0.18 0.8 next-unit-5
+wait_log_marked 30 sel4
+
+# Move stack 4 to (70,46): pan so (70,46) is centered, click center twice.
+world_pan_viewport 66 43 80
+click 320 240 0.18 0.8 waypoint-stack4-70-46
+wait_log 20 move_order_track_result selected=4 a=70 b=46
+click 320 240 0.05 2.0 confirm-waypoint-stack4
+wait_log 60 unit_move_after_path_state selected=4 a=70 b=46 c=0
+screenshot mission05-at-70-46
+
+# Toggle builder slot 5, then split-click stack 0's tile (70,47) centered.
+click 40 400 0.18 0.8 toggle-slot0
+wait_log 10 selection_slot_toggle selected=4 a=0 b=1
+world_pan_viewport 66 44 80
+click 320 240 0.18 2.0 split-click-stack0
+wait_log 20 selection_split_attempt selected=4 a=70 b=47
+wait_log 20 selection_split_done selected=4 a=70 b=47
+screenshot mission05-split-done
+
+# Same-turn verification: with stack 4 still selected (mask cleared after
+# split_done), clicking stack 0's tile selects it (iteration-1 semantics),
+# then the cross-water waypoint proves builder presence via
+# bridge_pathing_enable_move.
+world_pan_viewport 66 44 80
+mark_log_count sel0 selected_stack_changed selected=0
+click 320 240 0.18 1.0 select-stack0-center
+wait_log_marked 30 sel0
+world_pan_viewport 43 55 80
+click 320 240 0.18 1.0 waypoint-stack0-47-58
+wait_log 20 bridge_pathing_enable_move selected=0
+wait_log 20 move_order_track_result selected=0 a=47 b=58
+screenshot mission05-builder-crossing-proof
+nonblank mission05-builder-crossing-proof
+click 320 240 0.05 2.0 confirm-crossing-stack0
+wait_log 60 unit_move_after_path_state selected=0
+screenshot mission05-army-march-leg1
+
+mark_log_count sel0_t2 next_unit_selected selected=0
+mark_log_count leg0_t2 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-1-skip-1
+click 320 240 0.12 0.65 post-end-turn-1-skip-2
+click 320 240 0.12 0.65 post-end-turn-1-skip-3
+click 320 240 0.12 0.65 post-end-turn-1-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+click 496 416 0.18 0.9 next-unit-t2-a
+wait_log_marked 30 sel0_t2
+click 320 240 0.18 3.0 resume-stack0-t2
+wait_log_marked 90 leg0_t2
+
+mark_log_count sel0_t3 next_unit_selected selected=0
+mark_log_count leg0_t3 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-2-skip-1
+click 320 240 0.12 0.65 post-end-turn-2-skip-2
+click 320 240 0.12 0.65 post-end-turn-2-skip-3
+click 320 240 0.12 0.65 post-end-turn-2-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=3
+click 496 416 0.18 0.9 next-unit-t3-a
+wait_log_marked 30 sel0_t3
+click 320 240 0.18 3.0 resume-stack0-t3
+wait_log_marked 90 leg0_t3
+
+mark_log_count sel0_t4 next_unit_selected selected=0
+mark_log_count leg0_t4 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-3-skip-1
+click 320 240 0.12 0.65 post-end-turn-3-skip-2
+click 320 240 0.12 0.65 post-end-turn-3-skip-3
+click 320 240 0.12 0.65 post-end-turn-3-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=4
+click 496 416 0.18 0.9 next-unit-t4-a
+wait_log_marked 30 sel0_t4
+click 320 240 0.18 3.0 resume-stack0-t4
+wait_log_marked 90 leg0_t4
+
+mark_log_count sel0_t5 next_unit_selected selected=0
+mark_log_count leg0_t5 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-4-skip-1
+click 320 240 0.12 0.65 post-end-turn-4-skip-2
+click 320 240 0.12 0.65 post-end-turn-4-skip-3
+click 320 240 0.12 0.65 post-end-turn-4-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=5
+click 496 416 0.18 0.9 next-unit-t5-a
+wait_log_marked 30 sel0_t5
+click 320 240 0.18 3.0 resume-stack0-t5
+wait_log_marked 90 leg0_t5
+
+mark_log_count sel0_t6 next_unit_selected selected=0
+mark_log_count leg0_t6 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-5-skip-1
+click 320 240 0.12 0.65 post-end-turn-5-skip-2
+click 320 240 0.12 0.65 post-end-turn-5-skip-3
+click 320 240 0.12 0.65 post-end-turn-5-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=6
+click 496 416 0.18 0.9 next-unit-t6-a
+wait_log_marked 30 sel0_t6
+click 320 240 0.18 3.0 resume-stack0-t6
+wait_log_marked 90 leg0_t6
+
+mark_log_count sel0_t7 next_unit_selected selected=0
+mark_log_count leg0_t7 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-6-skip-1
+click 320 240 0.12 0.65 post-end-turn-6-skip-2
+click 320 240 0.12 0.65 post-end-turn-6-skip-3
+click 320 240 0.12 0.65 post-end-turn-6-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=7
+click 496 416 0.18 0.9 next-unit-t7-a
+wait_log_marked 30 sel0_t7
+click 320 240 0.18 3.0 resume-stack0-t7
+wait_log_marked 90 leg0_t7
+
+mark_log_count sel0_t8 next_unit_selected selected=0
+mark_log_count leg0_t8 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-7-skip-1
+click 320 240 0.12 0.65 post-end-turn-7-skip-2
+click 320 240 0.12 0.65 post-end-turn-7-skip-3
+click 320 240 0.12 0.65 post-end-turn-7-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=8
+click 496 416 0.18 0.9 next-unit-t8-a
+wait_log_marked 30 sel0_t8
+click 320 240 0.18 3.0 resume-stack0-t8
+wait_log_marked 90 leg0_t8
+
+mark_log_count sel0_t9 next_unit_selected selected=0
+mark_log_count leg0_t9 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-8-skip-1
+click 320 240 0.12 0.65 post-end-turn-8-skip-2
+click 320 240 0.12 0.65 post-end-turn-8-skip-3
+click 320 240 0.12 0.65 post-end-turn-8-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=9
+click 496 416 0.18 0.9 next-unit-t9-a
+wait_log_marked 30 sel0_t9
+click 320 240 0.18 3.0 resume-stack0-t9
+wait_log_marked 90 leg0_t9
+
+mark_log_count sel0_t10 next_unit_selected selected=0
+mark_log_count leg0_t10 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-9-skip-1
+click 320 240 0.12 0.65 post-end-turn-9-skip-2
+click 320 240 0.12 0.65 post-end-turn-9-skip-3
+click 320 240 0.12 0.65 post-end-turn-9-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=10
+click 496 416 0.18 0.9 next-unit-t10-a
+wait_log_marked 30 sel0_t10
+click 320 240 0.18 3.0 resume-stack0-t10
+wait_log_marked 90 leg0_t10
+
+mark_log_count sel0_t11 next_unit_selected selected=0
+mark_log_count leg0_t11 unit_move_after_path_state selected=0
+click 500 2 0.18 1.0 end-human-turn-10
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-10-skip-1
+click 320 240 0.12 0.65 post-end-turn-10-skip-2
+click 320 240 0.12 0.65 post-end-turn-10-skip-3
+click 320 240 0.12 0.65 post-end-turn-10-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=11
+click 496 416 0.18 0.9 next-unit-t11-a
+wait_log_marked 30 sel0_t11
+click 320 240 0.18 3.0 resume-stack0-t11
+wait_log_marked 90 leg0_t11
+
+wait_log 30 unit_move_after_path_state selected=0 a=47 b=58 c=0
+fail_if_log mission05_failure_friendly_attack
+screenshot mission05-army-arrival
+nonblank mission05-army-arrival

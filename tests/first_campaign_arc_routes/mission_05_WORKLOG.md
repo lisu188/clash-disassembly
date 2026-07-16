@@ -347,3 +347,25 @@ builder each into stacks 0/1/3 on turn 1, confirm the crossing waypoints,
 multi-turn resume marches (existing per-turn playbook), then per-stack
 manual tactical battles at the cluster, building 4 capture, and the remote
 stack 21 leg.
+
+## ARMY CROSSING IN MOTION (2026-07-16, run 20260716T204536Z-195584)
+
+`mission_05_army_crossing_probe.{script,env}` = the proven iteration-14
+unlock chain (builder transfer into stack 0) + per-turn resume marches.
+Stack 0 (10 slots incl. the transferred builder) crossed the water it was
+walled off from before the transfer:
+  (70,47) -> ... -> (67,47) -> (51,49) -> (47,50)
+i.e. it traversed the bridge tiles onto the SW side over ~6 turns. This
+confirms the builder-transfer bridge unlock carries into a real multi-turn
+march, not just a single waypoint query.
+
+Failure point (script:132): a later turn's `next_unit_selected selected=0`
+never fires - once stack 0 spends all AP for a turn, the next-unit cycle
+SKIPS it (only ready stacks are in rotation), so the fixed single-click
+resume lands on stack 1. This is the documented manual-reselection problem.
+FIX for the next iteration: resume stack 0 by CENTER-CLICK on its current
+tile (select-by-tile works regardless of AP/ready state, per the transfer
+probe), not by next-unit cycling; read stack 0's live tile each turn from
+the [mission-state]/[world_units] trace and pan+click it. Alternatively give
+each combat stack a builder and march them together so a single next-unit
+resume advances the whole column.
