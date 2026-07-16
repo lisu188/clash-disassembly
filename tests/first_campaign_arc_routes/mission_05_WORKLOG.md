@@ -235,3 +235,44 @@ Next: author the squad choreography from this table (battle_click/battle_key
 on the battle channel; the quarantined probe's coordinates predate this
 deployment and must be re-derived from the battlefield screenshot
 checkpoint-mission05-stack19-tactical-open.bmp).
+
+## BRIDGE-CROSSING MECHANIC DECODED (2026-07-16) - THE ARMY ROUTE ANSWER
+
+Army waypoints to the SW cluster fail with `move_order_track_result c=-1`
+for stacks 0/1 (heavy/cavalry) while builder stack 4 paths with c=33.
+Source-traced root cause (no per-type water flag differs - all land types
+have water=0 in `g_UnitTypeWorldMoveCosts`):
+
+- Every pathfinding entry point brackets the search with
+  `UnitStack_HasBuilder(stack)` -> `Pathing_EnableBridgeCrossings` /
+  `Pathing_DisableBridgeCrossings` (world_001.c:939-955; strategic_002.c
+  AI callers likewise). The `bridge_pathing_disable_move` marker is that
+  bracket closing, not an error.
+- The gate: `UnitStack_GetTileMoveCostFromMergedProfileOrZero`
+  (units_003.c:1408-1413) - with `g_PathingAllowBridgeCrossings` set,
+  `Map_GetBridgeCrossingCostOrZero` (buildings_005.c:867-878) returns cost 5
+  for bridge terrain ids 0x25B..0x262; without it the water profile cost 0
+  makes the tile a wall.
+- `UnitStack_HasBuilder` (units_002.c:327-348) = any of the 10 slots holds
+  UNIT_TYPE_BUILDER (17). The merged stack profile takes the most-restricted
+  member, so composition cannot unlock water - only the builder flag opens
+  bridges.
+- Permanent fix: the builder action `Road_Build` (buildings_005.c:882) lays
+  bridge road-overlay ids onto the tile record; the road branch
+  (units_003.c:1406) then prices it for EVERY stack.
+- Path length is uncapped for this purpose (buffer holds 100 waypoints);
+  33 nodes is just the natural route.
+
+Consequences for the completion route:
+1. `mission_05_army_march_probe` as-written cannot work: (47,58)/(46,57)
+   are across the water; no overland route exists for builder-less stacks.
+2. Two authentic options: (a) transfer one builder from stack 4 into each
+   combat stack (stack-merge/transfer UI - mechanics to discover), giving
+   them temporary crossing rights; or (b) march stack 4 to the bridge site
+   and Road_Build the permanent overlay, then march the army across.
+3. `mission_05_pathing_class_probe` records the c=-1 evidence for stacks
+   1 (cavalry lead) and 5; stack-5's leg needs next-unit cycling repair if
+   rerun.
+
+This also explains the original 33-node builder march: the route crosses
+the bridge tiles that only stack 4 could enter.
