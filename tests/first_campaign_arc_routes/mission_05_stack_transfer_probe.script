@@ -1,0 +1,61 @@
+# Mission 05 stack-transfer, iteration 8: the real builder transfer.
+# Code-decoded flow (buildings_005.c:532-570): with portrait slots toggled
+# (selection_slot_toggle), a world click within distance<=1 of the selected
+# stack fires selection_split_attempt -> Unit_MoveSelectionFromGroupToTile ->
+# selection_split_done, moving the toggled units onto the target tile
+# (merging into an existing own stack there). Portraits sit at y=400,
+# 40px/slot (x=160 -> slot 3 ... x=240 -> slot 5).
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 496 416 0.18 0.55 next-unit-1
+click 496 416 0.18 0.55 next-unit-2
+click 496 416 0.18 0.55 next-unit-3
+click 496 416 0.18 0.55 next-unit-4
+mark_log_count sel4 next_unit_selected selected=4
+click 496 416 0.18 0.8 next-unit-5
+wait_log_marked 30 sel4
+world_pan_viewport 67 42 40
+
+# Move stack 4 adjacent to stack 0: (240,360) -> (70,46) per iteration 7.
+click 240 360 0.18 0.8 waypoint-stack4-70-46
+wait_log 20 move_order_track_result selected=4 a=70 b=46
+click 240 360 0.05 2.0 confirm-waypoint-stack4
+wait_log 60 unit_move_after_path_state selected=4 a=70 b=46 c=0
+screenshot mission05-at-70-46
+
+# Toggle one builder slot (slot 5) and split-click stack 0's tile (70,47).
+world_pan_viewport 67 42 40
+click 240 400 0.18 0.8 toggle-slot5
+wait_log 10 selection_slot_toggle selected=4 a=5 b=1
+click 240 380 0.18 2.0 split-click-a
+wait 2.5
+screenshot mission05-split-a
+click 240 400 0.18 2.0 split-click-b
+wait 2.5
+screenshot mission05-split-b
+
+# End turn; turn-2 entry table reveals the post-transfer compositions.
+click 500 2 0.18 1.0 end-human-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-skip-1
+click 320 240 0.12 0.65 post-end-turn-skip-2
+click 320 240 0.12 0.65 post-end-turn-skip-3
+click 320 240 0.12 0.65 post-end-turn-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+screenshot mission05-transfer-turn2
+
+# Definitive builder-transfer verification: stack 0 (now 10 slots) waypoints
+# to the cross-water tile (47,58). bridge_pathing_enable_move fires ONLY when
+# UnitStack_HasBuilder(stack) - if the split moved a builder, the pathfinder
+# brackets the search and returns a real path instead of c=-1.
+world_pan_viewport 67 42 40
+mark_log_count sel0_t2 selected_stack_changed selected=0
+click 240 380 0.18 1.0 select-stack0-by-tile
+wait_log_marked 30 sel0_t2
+world_pan_viewport 43 55 80
+click 320 240 0.18 1.0 waypoint-stack0-47-58
+wait_log 20 bridge_pathing_enable_move selected=0
+wait_log 20 move_order_track_result selected=0 a=47 b=58
+screenshot mission05-builder-crossing-proof
+nonblank mission05-builder-crossing-proof

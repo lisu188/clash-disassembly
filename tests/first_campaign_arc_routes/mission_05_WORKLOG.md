@@ -276,3 +276,45 @@ Consequences for the completion route:
 
 This also explains the original 33-node builder march: the route crosses
 the bridge tiles that only stack 4 could enter.
+
+## SPLIT/TRANSFER UI DECODED + BUILDER TRANSFER PROVEN (2026-07-16)
+
+`mission_05_stack_transfer_probe.{script,env}` iterations 1-10 recovered the
+unit-transfer mechanics end to end (code + live proof):
+
+- Screen->tile transform near the pinned view (left,top):
+  row ~= left + 4 + (x-320)/80, col ~= top + 3 + (y-240)/40 with isometric
+  stagger - ALWAYS pin the view (world_pan_viewport) and verify targets with
+  a world_move cursor sample first; the post-selection view drifts (67 vs 68)
+  because selection auto-scrolls.
+- next-unit order is stack 0..5 on turn 1 (5 clicks select stack 4);
+  turn-2 cycling differs (first click landed on 2/3) - selection needs the
+  marked-wait pattern per turn.
+- (69,46) is a temple site: clicking it runs the temple pathing bracket
+  (bridge_pathing_enable_temple / temple_track_request c=728 /
+  temple_path_queued) - avoid in movement scripts.
+- The bottom status panel (y~=400) shows the selected stack's slots at
+  40px/portrait: x=160 -> slot 3, 200 -> 4, 240 -> 5; clicking toggles
+  selection_slot_toggle (buildings_005.c:486-492).
+- THE SPLIT FLOW (buildings_005.c:532-570): with slots toggled, a world
+  click within distance<=1 of the selected stack fires
+  selection_split_attempt -> Unit_MoveSelectionFromGroupToTile ->
+  selection_split_done, moving the toggled units onto the target tile and
+  merging into an own stack standing there.
+- PROOF (run 20260716T202103Z-184484): stack 4 moved to (70,46); slot 5
+  toggled; split-click on (70,47) fired selection_split_attempt/done; the
+  turn-2 world_units table shows stack 0 slots 9 -> 10 and stack 4 slots
+  6 -> 5. One unit transferred into the combat stack.
+
+Remaining verification: whether the transferred slot was a Builder - the
+one-marker test is `bridge_pathing_enable_move selected=0` on a cross-water
+waypoint from stack 0 (fires only when UnitStack_HasBuilder). Iterations
+9-10 stalled on turn-2 stack-0 selection (turn-2 next-unit cycling starts
+mid-list and tile-click selection needs an existing selection for the pan);
+next run selects stack 0 with the marked next-unit pattern before the
+crossing waypoint. If slot 5 was not the builder, toggle slots 0-4 in turn.
+
+Route plan once verified: transfer one builder each into stacks 0/1/3,
+multi-turn march the builder-carrying army across the bridge to the SW
+staging tiles, manual tactical battles per cyclop stack (autoresolve
+rejected), capture building 4, then the remote stack 21 at (87,66).
