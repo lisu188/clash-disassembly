@@ -1,5 +1,13 @@
 /* Generated from src/recovered/media/004637B0_media.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "media_internal.h"
+#include "media_state.h"
+#include "../state/state_shared.h"
+#include "../clips/clips_api.h"
+#include "../runtime/runtime_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00477CE0) --------------------------------------------------------
 _DWORD * Compat_FileStreamOpen(_DWORD *stream, const CHAR *file_path, int a3, char mode_flags, DWORD a5)

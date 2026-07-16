@@ -110,13 +110,18 @@ def classify(decl: str):
     code = re.sub(r"__attribute__\s*\(\((?:[^()]|\([^()]*\))*\)\)", " ", code)
     if "(" in code:
         # extern object of function-pointer type (scalar or array), with an
-        # optional calling-convention macro: (__thiscall *g_X)
+        # optional calling-convention macro: (__thiscall *g_X). Only valid
+        # when the (*name) group is the FIRST function-ish paren -- a
+        # prototype like `extern void PlayAvi(char *f, int (*cb)(void))`
+        # also contains (*cb) but has `PlayAvi(` before it.
         mptr = re.search(
             r"\(\s*(?:__\w+\s+)?\*\s*([A-Za-z_][A-Za-z0-9_]*)"
             r"\s*(?:\[[^\]]*\])?\s*\)", code
         )
         if mptr and re.match(r"\s*extern\b", code):
-            return "global", mptr.group(1)
+            prefix = code[: mptr.start()]
+            if not re.search(r"\b[A-Za-z_][A-Za-z0-9_]*\s*\(", prefix):
+                return "global", mptr.group(1)
         # function RETURNING a function pointer:
         #   extern int (*Name (params)) (params);
         mret = re.search(
@@ -131,6 +136,19 @@ def classify(decl: str):
     if m:
         return "global", m.group(1)
     raise ValueError(f"unclassifiable declaration: {decl[:100]!r}")
+
+
+def has_param_list(decl: str) -> bool:
+    """True when the declaration's own parameter parens are non-empty (a real
+    prototype, including (void)); False for K&R empty parens."""
+    code = decl.split("//")[0]
+    code = re.sub(r"__attribute__\s*\(\((?:[^()]|\([^()]*\))*\)\)", " ", code)
+    m = re.search(r"\b[A-Za-z_][A-Za-z0-9_]*\s*\(([^()]*(?:\([^()]*\)[^()]*)*)\)\s*;?\s*$",
+                  code.strip())
+    if not m:
+        # fn-returning-fn-ptr etc.: treat outer-most paren group after name
+        m = re.search(r"\b[A-Za-z_][A-Za-z0-9_]*\s*\(([^()]*)\)", code)
+    return bool(m and m.group(1).strip())
 
 
 def better_global_decl(a: str, b: str) -> str:
@@ -183,9 +201,20 @@ def build():
                    else "legacy-import")
             prev = functions.get(name)
             if prev:
-                # keep the first; identical re-decl is fine, conflict is not
-                if prev["decl"] != decl and prev["class"] == cls:
-                    problems.append(f"conflicting function decls for {name}")
+                # Duplicate declarations: the umbrella included BOTH, and the
+                # later (typically full-prototype) one refined the earlier
+                # empty-paren spelling at every call site. Keep the decl with
+                # a real parameter list; two DIFFERENT real prototypes are an
+                # error.
+                if prev["decl"] != decl:
+                    prev_proto = has_param_list(prev["decl"])
+                    new_proto = has_param_list(decl)
+                    if prev_proto and new_proto:
+                        problems.append(
+                            f"conflicting function prototypes for {name}")
+                    elif new_proto:
+                        prev["decl"] = decl
+                        prev["class"] = cls if cls != "legacy-import" else prev["class"]
                 continue
             functions[name] = {
                 "decl": decl,

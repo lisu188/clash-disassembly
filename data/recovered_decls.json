@@ -11095,6 +11095,11 @@
    "decl": "WPARAM  Platform_PumpMessagesAndBlitFrame(char a1);",
    "home": "runtime"
   },
+  "PlayAvi": {
+   "class": "manifest",
+   "decl": "extern void PlayAvi (char *fileName, IDirectDrawSurface *ddSurface, int x, int y, int (*continueCallback) (void), int openFlags);",
+   "home": "media"
+  },
   "PlayAviStretch": {
    "class": "manifest",
    "decl": "void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int (*a4)(void), int a5); // idb",
@@ -11313,6 +11318,11 @@
   "ProcParam_PrintArguments": {
    "class": "manifest",
    "decl": "signed int  ProcParam_PrintArguments(int logicalName);",
+   "home": "clips"
+  },
+  "ProcParam_PushEvaluatedArgumentFrame": {
+   "class": "manifest",
+   "decl": "extern int (* ProcParam_PushEvaluatedArgumentFrame(_DWORD *a1, int a2, int a3, int a4, double a5, int (*a6)(void)))(void);",
    "home": "clips"
   },
   "ProcParam_RegisterPrimitiveTypes": {
@@ -22922,10 +22932,6 @@
   },
   "a5Uewii": {
    "decl": "extern char a5Uewii[8];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "a6": {
-   "decl": "extern int (*ProcParam_PushEvaluatedArgumentFrame (_DWORD *a1, int a2, int a3, int a4, double a5, int (*a6) (void))) (void);",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "aA": {
@@ -37162,10 +37168,6 @@
   },
   "battleLogEnabled": {
    "decl": "extern int battleLogEnabled;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "continueCallback": {
-   "decl": "extern void PlayAvi (char *fileName, IDirectDrawSurface *ddSurface, int x, int y, int (*continueCallback) (void), int openFlags);",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "dwBytes": {

@@ -1,5 +1,12 @@
 /* Generated from src/recovered/media/004637B0_media.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "media_internal.h"
+#include "media_state.h"
+#include "../state/state_shared.h"
+#include "../runtime/runtime_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_LOCAL int Audio_MixVoiceSpanDispatch_46BB40 (int stepFixed, int sampleCount, char accumFlag, void *accumBuffer);
 CLASH95_LOCAL unsigned int Audio_MixVoiceSpanDispatch_46BB9A (unsigned int result, int stepFixed, unsigned int sampleCount, short int volumeAndFlag, void *accumBuffer);

@@ -1,5 +1,13 @@
 /* Generated from src/recovered/runtime/004D0560_legacy_runtime.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "runtime_internal.h"
+#include "runtime_state.h"
+#include "../state/state_shared.h"
+#include "../clips/clips_api.h"
+#include "../media/media_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (004E03F0) --------------------------------------------------------
 int  Compiler_WriteDefinstancesConstructToCode(int theFile, int theDefinstances, int maxIndices, int moduleCount)

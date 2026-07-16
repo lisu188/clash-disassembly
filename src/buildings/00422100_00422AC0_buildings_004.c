@@ -1,5 +1,21 @@
 /* Generated from src/recovered/buildings/0041D030_buildings.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "buildings_internal.h"
+#include "buildings_state.h"
+#include "../state/state_shared.h"
+#include "../render/render_api.h"
+#include "../world/world_api.h"
+#include "../units/units_api.h"
+#include "../battle/battle_api.h"
+#include "../persistence/persistence_api.h"
+#include "../strategic/strategic_api.h"
+#include "../media/media_api.h"
+#include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
+#include "../recovered_legacy_imports.h"
+#include "../recovered_test_seams.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_TEST_VISIBLE int Castle_InvokePrisonerPanel (int building_record, int callback_context, DWORD runtime_context);
 CLASH95_TEST_VISIBLE int Castle_InvokeEconomyPanel (int building_record, int callback_context, DWORD runtime_context);

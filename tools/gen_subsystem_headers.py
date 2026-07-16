@@ -100,7 +100,8 @@ def scan_usage(manifest):
     import tempfile
 
     marker = "CLASH95_SCAN_MARKER_31415"
-    sources = sorted({r["source"] for r in manifest["functions"]})
+    sources = sorted({r["source"] for r in manifest["functions"]}
+                     | {manifest["state_owner"]})
     tu_tokens: dict[str, set] = {}
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td) / "scan.c"
@@ -180,7 +181,9 @@ def _classify_expanded(decl: str):
         mptr = re.search(
             r"\(\s*(?:__\w+\s+)?\*\s*([A-Za-z_][A-Za-z0-9_]*)"
             r"\s*(?:\[[^\]]*\])?\s*\)", code)
-        if mptr and re.match(r"\s*extern\b", code.strip()):
+        if (mptr and re.match(r"\s*extern\b", code.strip())
+                and not re.search(r"\b[A-Za-z_][A-Za-z0-9_]*\s*\(",
+                                  code[: mptr.start()])):
             return "global", mptr.group(1)
         mret = re.search(
             r"\(\s*(?:__\w+\s+)?\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(", code)

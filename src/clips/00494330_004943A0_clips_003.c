@@ -1,5 +1,9 @@
 /* Generated from src/recovered/rules/clips/00491580_objects.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "clips_internal.h"
+#include "clips_state.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00494330) --------------------------------------------------------
 signed int  AST_TreeContainsSpecialTag(int theExpression, int globalsAreVariables)

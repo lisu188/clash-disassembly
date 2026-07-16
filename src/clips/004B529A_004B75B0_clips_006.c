@@ -1,5 +1,13 @@
 /* Generated from src/recovered/rules/clips/004ACB00_compiler.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "clips_internal.h"
+#include "clips_state.h"
+#include "../state/state_shared.h"
+#include "../media/media_api.h"
+#include "../state/state_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (004B529A) --------------------------------------------------------
 LPTOP_LEVEL_EXCEPTION_FILTER  CRT_InstallUnhandledExceptionFilter(int a1, int a2)

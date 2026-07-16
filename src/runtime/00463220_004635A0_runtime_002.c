@@ -1,5 +1,9 @@
 /* Generated from src/recovered/runtime/00461520_platform_input.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "runtime_internal.h"
+#include "runtime_state.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00463220) --------------------------------------------------------
 __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, int dstPitch, int srcBmiHeader, int srcPitch)

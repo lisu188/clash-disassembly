@@ -1,5 +1,19 @@
 /* Generated from src/recovered/buildings/0041D030_buildings.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "buildings_internal.h"
+#include "buildings_state.h"
+#include "../state/state_shared.h"
+#include "../render/render_api.h"
+#include "../world/world_api.h"
+#include "../units/units_api.h"
+#include "../battle/battle_api.h"
+#include "../persistence/persistence_api.h"
+#include "../strategic/strategic_api.h"
+#include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_LOCAL void BuildingEconomyDialog_InitWidget (unsigned char *record, int left, int top, int normal_sprite, int hover_sprite, int (*transition_callback) (short unsigned int *, int, DWORD), void *action_callback, const char *text_pl, const char *text_en, const char *text_de, unsigned char tooltip_mode, const char *sound);
 CLASH95_LOCAL void BuildingEconomyDialog_EnsureWidgets (void);

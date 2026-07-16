@@ -1,5 +1,12 @@
 /* Generated from src/recovered/rules/clips/00481720_language_part2.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "clips_internal.h"
+#include "clips_state.h"
+#include "../state/state_shared.h"
+#include "../media/media_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0048ED60) --------------------------------------------------------
 int  Rules_ReleaseLogicalSupportList(int result)

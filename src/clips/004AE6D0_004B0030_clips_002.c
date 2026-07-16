@@ -1,5 +1,11 @@
 /* Generated from src/recovered/rules/clips/004ACB00_compiler.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "clips_internal.h"
+#include "clips_state.h"
+#include "../state/state_shared.h"
+#include "../media/media_api.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (004AE6D0) --------------------------------------------------------
 signed int  MessageHandler_RemoveByNameAndType(_DWORD *theClass, int handlerName, int indicateMissing, int handlerType)

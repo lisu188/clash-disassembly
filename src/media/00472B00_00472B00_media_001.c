@@ -1,5 +1,10 @@
 /* Generated from src/recovered/media/00472B00_media_part2.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "media_internal.h"
+#include "media_state.h"
+#include "../state/state_shared.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00472B00) --------------------------------------------------------
 int __fastcall Mem_SetAllocFlag(int new_alloc_flag, int a2)
