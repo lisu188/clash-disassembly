@@ -1,7 +1,7 @@
 # Campaign mission completion notes
 
 Objectives decoded from `Mission_CheckObjectiveComplete`
-(`src/recovered/split/strategic/004589C0_004602F0_strategic_004.c`),
+(`src/strategic/004589C0_004602F0_strategic_004.c`),
 switch on `ACTIVE_MISSION_INDEX`. Difficulty and tractability of the 15 partial missions:
 
 | M | case | objective | tractable? |

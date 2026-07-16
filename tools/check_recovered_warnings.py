@@ -29,7 +29,20 @@ from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BASELINE = ROOT / "data" / "recovered_warning_baseline.json"
-DEFAULT_SOURCE_PREFIXES = ("src/recovered/",)
+DEFAULT_SOURCE_PREFIXES = (
+    "src/battle/",
+    "src/buildings/",
+    "src/clips/",
+    "src/core/",
+    "src/media/",
+    "src/persistence/",
+    "src/render/",
+    "src/runtime/",
+    "src/state/",
+    "src/strategic/",
+    "src/units/",
+    "src/world/",
+)
 SUPPORTED_COMPILERS = ("gcc", "clang")
 
 DIAGNOSTIC_RE = re.compile(

@@ -7,7 +7,7 @@ ONLY within the byte range of the named function, token-aware (skips strings and
 comments so trailing `// reg@n` anchors stay stable).
 
 Input JSON: a list of
-  {"file": "src/recovered/split/battle/0042CB50_0042E8B0_battle_001.c",
+  {"file": "src/battle/0042CB50_0042E8B0_battle_001.c",
    "func": "UnitBattle_HandleRetreatAction",
    "renames": {"a1": "unitStack", "v5": "targetTileRow", ...},
    "confidence": "...", "evidence": "..."}

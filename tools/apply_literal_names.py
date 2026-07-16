@@ -11,7 +11,7 @@ rules.json is a list of rule objects:
    "classes": ["mul_adjacent", "mul_adjacent_anchored", "additive_anchored",
                "increment_rhs"],
    "confidence": "map-confirmed", "evidence": "...", "area": "units",
-   "files": ["src/recovered/split/units/*.c"], # optional glob filter
+   "files": ["src/units/*.c"], # optional glob filter
    "allow_suffix_drop": false}              # optional; suffixed sites (0x194u)
   {"kind": "regex", "value": 32768, "name": "TILE_OCCUPANT_BUILDING_INDEX_BASE",
    "pattern": "- (?P<lit>0x8000)\\b", ...}  # surgical scope for workstream B

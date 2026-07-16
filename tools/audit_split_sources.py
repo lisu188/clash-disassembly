@@ -17,7 +17,12 @@ from split_source_index import Definition, body_sha256, scan_definitions
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "data" / "recovered_sources.json"
-SPLIT_ROOT = ROOT / "src" / "recovered" / "split"
+SOURCE_ROOT = ROOT / "src"
+SOURCE_LIST = SOURCE_ROOT / "sources.cmake"
+RECOVERED_SUBSYSTEMS = {
+    "battle", "buildings", "clips", "core", "media", "persistence",
+    "render", "runtime", "state", "strategic", "units", "world",
+}
 MARKER_RE = re.compile(r"(?m)^//----- \(([0-9A-Fa-f]{8})\) [-]+\r?$")
 ORIGIN_RE = re.compile(
     r"Generated from ([^;\r\n]+); original address order retained\."
@@ -26,6 +31,9 @@ C_INCLUDE_RE = re.compile(
     r'^\s*#\s*include\s*[<"]([^>"\r\n]+\.c)[>"]', re.MULTILINE
 )
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+CMAKE_SOURCE_RE = re.compile(
+    r"(?m)^\s+(?:\$\{CMAKE_CURRENT_SOURCE_DIR\}/)?(src/[^\s)]+\.c)\s*$"
+)
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 C_KEYWORDS = {
     "auto", "break", "case", "char", "const", "continue", "default",
@@ -143,6 +151,10 @@ def audit_production_layout(audit: Audit) -> None:
                 f"production C inclusion: {rel(path)}:{line}: {match.group(1)}"
             )
     audit.require(not (ROOT / "clash95.c").exists(), "unified clash95.c still exists")
+    audit.require(
+        not (ROOT / "src" / "recovered").exists(),
+        "canonical recovered sources remain nested under src/recovered",
+    )
     legacy_fragments = sorted((ROOT / "src").rglob("*.inc.c"))
     audit.require(
         not legacy_fragments,
@@ -193,12 +205,51 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     )
     state_owner = repo_path(manifest.get("state_owner"), "state_owner", audit)
 
-    generated = sorted(SPLIT_ROOT.rglob("*.c")) if SPLIT_ROOT.is_dir() else []
+    generated = sorted(
+        {
+            ROOT / value["source"]
+            for value in records
+            if isinstance(value, dict) and isinstance(value.get("source"), str)
+        }
+        | ({state_owner} if state_owner is not None else set())
+    )
+    actual_sources = {
+        path
+        for subsystem in RECOVERED_SUBSYSTEMS
+        for path in (SOURCE_ROOT / subsystem).rglob("*.c")
+    }
     audit.require(bool(generated), "canonical split contains no C sources")
+    audit.require(
+        actual_sources == set(generated),
+        "recovered subsystem directories differ from the manifest-backed source inventory",
+    )
+    try:
+        source_list_text = SOURCE_LIST.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        audit.errors.append(f"cannot read canonical CMake source list: {exc}")
+        source_list_text = ""
+    listed_sources = [ROOT / value for value in CMAKE_SOURCE_RE.findall(source_list_text)]
+    audit.require(
+        len(listed_sources) == len(set(listed_sources)),
+        "src/sources.cmake contains duplicate translation units",
+    )
+    audit.require(
+        set(listed_sources) == set(generated),
+        "src/sources.cmake differs from the manifest-backed source inventory",
+    )
     audit.require(
         manifest.get("source_file_count") == len(generated),
         f"source_file_count differs: {manifest.get('source_file_count')} != {len(generated)}",
     )
+    for path in generated:
+        try:
+            source_parts = path.relative_to(SOURCE_ROOT).parts
+        except ValueError:
+            source_parts = ()
+        audit.require(
+            len(source_parts) == 2 and source_parts[0] in RECOVERED_SUBSYSTEMS,
+            f"canonical recovered source is not directly under src: {rel(path)}",
+        )
     if state_owner is not None:
         audit.require(state_owner in generated, "state_owner is not a canonical split source")
 

@@ -3,7 +3,7 @@ build_state,clash95_recovered,CMakeLists.txt,present,Canonical recovered C stati
 build_state,clash95_bootstrap,CMakeLists.txt,present,SDL-backed executable target
 build_state,clash95_cpp_core,commit 99e09cb1,removed,Historical parallel C++ target removed from active build
 build_state,clash95_cpp_regen,commit 99e09cb1,removed,Historical parallel C++ executable removed from active build
-source_layout,canonical recovered sources,data/recovered_sources.json;src/recovered/split,manifest,4070 functions are compiled from 138 independent GNU C17 translation units
+source_layout,canonical recovered sources,data/recovered_sources.json;src,manifest,4070 functions are compiled from 138 independent GNU C17 translation units
 source_layout,removed unified and legacy paths,docs/SOURCE_PATH_MAP.csv,historical,Old fragments wrappers and symlinks are removed; the path map preserves their replacements
 build_state,direct gcc link probe,build/clash95_unresolved.txt;build/platform_unresolved.txt;build/stubs_unresolved.txt,historical_blocked,Raw historical link audit predates the current CMake bootstrap composition
 entrypoint,start -> sub_486369 -> _WinMain@16,clash95.map,canonical,Original entry chain from the binary map
@@ -12,14 +12,14 @@ startup,main,build/clash95_unresolved.txt,historical,Direct raw link historicall
 startup,_wcpp_4_static_init__ / _wcpp_4_copy_array__,build/clash95_unresolved.txt;clash95.map,runtime,Core WCpp startup helpers remain part of legacy runtime recovery
 startup,CRT_GetBootstrapThreadData / CRT_RegisterFinalizableObject,build/clash95_unresolved.txt,runtime,CRT runtime support remains quarantined or partially recovered
 platform,Platform_MainWindowProc,src/platform/platform_sdl_runtime.c,host_seam,SDL implementation owns the host message and window seam
-platform,CreateWindowExA / GetMessageA / DispatchMessageA,src/recovered/split;src/platform/platform_sdl_runtime.c,win32_shaped_seam,Recovered core retains Win32-shaped calls behind SDL adapters
-media,AVIFileInit / AVIFileOpenA / AVIStreamRead,src/recovered/split/media;src/platform/platform_sdl_runtime.c,runtime,AVI runtime remains part of the recovery surface
-graphics,DirectDrawCreate / CreateCompatibleDC / DeleteDC,src/recovered/split/render;src/platform/platform_sdl_runtime.c,platform_seam,Graphics setup remains behind host adapters
-input,DirectInputCreateA,src/recovered/split/runtime;src/platform/platform_sdl_runtime.c,platform_seam,Input backend remains behind the SDL seam
-audio,DirectSoundCreate / Audio_ReturnDSoundError,src/recovered/split/media;src/compatibility/decomp_runtime_stubs.c,platform_or_compatibility_seam,CSS_Init device-table recovery remains deferred
-compiler,AST_AllocNode / AST_FreeNode / IO_OutWriteToken / IO_OutNewline,src/recovered/split/clips,compiler_runtime,Recovered CLIPS object and compiler surface
-memory,Mem_Alloc / nrealloc_ / memmove_ / memcpy_,src/recovered/split;src/compatibility/decomp_runtime_stubs.c,mixed_recovered_and_wrapper,Allocation semantics remain split between recovered code and quarantined host wrappers
-control_flow,JUMPOUT,src/recovered/split;tools/audit_split_sources.py,recovered,All 17 control-flow scars are recovered and zero JUMPOUT code markers remain
+platform,CreateWindowExA / GetMessageA / DispatchMessageA,src;src/platform/platform_sdl_runtime.c,win32_shaped_seam,Recovered core retains Win32-shaped calls behind SDL adapters
+media,AVIFileInit / AVIFileOpenA / AVIStreamRead,src/media;src/platform/platform_sdl_runtime.c,runtime,AVI runtime remains part of the recovery surface
+graphics,DirectDrawCreate / CreateCompatibleDC / DeleteDC,src/render;src/platform/platform_sdl_runtime.c,platform_seam,Graphics setup remains behind host adapters
+input,DirectInputCreateA,src/runtime;src/platform/platform_sdl_runtime.c,platform_seam,Input backend remains behind the SDL seam
+audio,DirectSoundCreate / Audio_ReturnDSoundError,src/media;src/compatibility/decomp_runtime_stubs.c,platform_or_compatibility_seam,CSS_Init device-table recovery remains deferred
+compiler,AST_AllocNode / AST_FreeNode / IO_OutWriteToken / IO_OutNewline,src/clips,compiler_runtime,Recovered CLIPS object and compiler surface
+memory,Mem_Alloc / nrealloc_ / memmove_ / memcpy_,src;src/compatibility/decomp_runtime_stubs.c,mixed_recovered_and_wrapper,Allocation semantics remain split between recovered code and quarantined host wrappers
+control_flow,JUMPOUT,src;tools/audit_split_sources.py,recovered,All 17 control-flow scars are recovered and zero JUMPOUT code markers remain
 quarantine,Compat_WcppCtorArrayStorage1m / Compat_WcppCtorArrayStorage1s,src/compatibility/decomp_runtime_stubs.c,quarantine,Wrapper-band helpers remain explicitly isolated
 quarantine,CreateProcessA / CreateThread / WaitForSingleObject,src/compatibility/decomp_runtime_stubs.c,quarantine,Process and thread helpers require evidence before promotion
 quarantine,fopen/fread/fwrite/strcmp/strlen/strrchr family,src/compatibility/decomp_runtime_stubs.c,wrapper,Host CRT and file wrappers remain explicitly isolated
@@ -29,4 +29,4 @@ runtime_route,direct /A0 unit-stack merge/delete,docs/archive/REVERSE_ENGINEERIN
 runtime_validation,direct /A0 CTest smoke,CMakeLists.txt;tests/verify_direct_a0_route_smoke.sh,present,Direct /A0 liveness is covered for clash95_bootstrap
 runtime_route,direct /A0 new-turn corridor,docs/archive/COMPILATION_PROGRESS.md,present,Route reaches strategic new-turn systems under debugger timeout
 runtime_wrapper,low32 small-allocation arena,src/compatibility/decomp_runtime_stubs.c,wrapper,Low-address allocation preserves original 32-bit pointer storage
-memory,Mem_PurgeFreeListsForSpace free-list traversal,src/recovered/split/media/00471C60_00473570_media_008.c,host_width_fix,Free-list links are traversed as recovered 32-bit addresses rather than host pointers
+memory,Mem_PurgeFreeListsForSpace free-list traversal,src/media/00471C60_00473570_media_008.c,host_width_fix,Free-list links are traversed as recovered 32-bit addresses rather than host pointers

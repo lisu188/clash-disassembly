@@ -68,7 +68,7 @@ PYTHON_BIN="${PYTHON:-python3}"
 COMMON_FLAGS=(
   -w -ffunction-sections -fdata-sections -fno-pie
   -Isrc/platform -Isrc/compatibility -Isrc/instrumentation
-  -Isrc/recovered/split -c
+  -Isrc -c
 )
 
 manifest_path() {

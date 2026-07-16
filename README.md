@@ -3,7 +3,8 @@
 Evidence-driven recovery of the original Win95 Clash binary.
 
 - `clash95.asm` is the protected Win95 behavioral source of truth.
-- `src/recovered/split/` is the canonical recovered GNU C17 implementation
+- The 12 manifest-backed subsystem directories directly under `src/` are the
+  canonical recovered GNU C17 implementation
   under SDL build, runtime, and campaign-route validation.
 - `data/recovered_sources.json` maps all 4,070 recovered functions to 138
   independently compiled translation units.
@@ -33,7 +34,8 @@ git diff --check
 ## Source organization
 
 The recovered implementation is compiled as 12 subsystem object libraries from
-the C files under `src/recovered/split/`. SDL, compatibility, instrumentation,
+the manifest-backed C files in subsystem directories directly under `src/`.
+SDL, compatibility, instrumentation,
 and bootstrap code remain in their own `src/` areas. The former unified source,
 recovered include-C fragments, and compatibility symlinks were removed at the
 split-only cutover; [docs/SOURCE_PATH_MAP.csv](docs/SOURCE_PATH_MAP.csv)

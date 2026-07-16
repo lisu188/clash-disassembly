@@ -1,15 +1,16 @@
 # Source organization
 
 Production targets compile the canonical recovered implementation from 138 GNU
-C17 translation units under `src/recovered/split/`.
+C17 translation units in 12 subsystem directories directly under `src/`.
 `data/recovered_sources.json` is the authoritative function/source manifest.
 Tests link independently compiled coverage objects and do not include recovered
 implementation files directly.
 
 ## Canonical areas
 
-- `src/recovered/split/` contains behavior attributable to the original
-  executable, its private headers, and the exhaustive source list.
+- The 12 recovered subsystem directories directly under `src/` contain behavior
+  attributable to the original executable. Private recovered headers and the
+  exhaustive `sources.cmake` list are directly in `src/`.
 - `src/platform/` contains the separately compiled SDL/X11 host implementation.
 - `src/compatibility/` contains decompiler support and quarantined runtime scaffolding.
 - `src/instrumentation/` contains mission tracing and other observation-only support.
@@ -19,18 +20,18 @@ implementation files directly.
 
 | Directory | Translation units | Functions | Purpose |
 |---|---:|---:|---|
-| `split/core/` | 2 | 16 | Bootstrap and shared utilities |
-| `split/render/` | 4 | 132 | Core rendering, surfaces, sprites, palettes, and fonts |
-| `split/world/` | 4 | 104 | Strategic map, minimap, camera, fog, roads, and map UI |
-| `split/units/` | 7 | 186 | Strategic units, stacks, movement, fatigue, and morale |
-| `split/buildings/` | 18 | 370 | Buildings, economy, production, garrisons, and modal UI |
-| `split/battle/` | 3 | 50 | Tactical interaction, simulation, rendering, and outcomes |
-| `split/persistence/` | 6 | 136 | Special sites, saves, and persistence helpers |
-| `split/strategic/` | 6 | 204 | Campaign rules, strategic AI, and host functions |
-| `split/clips/` | 52 | 1,706 | Embedded CLIPS language and object/compiler runtime |
-| `split/media/` | 18 | 743 | Audio, music, AVI, and media support |
-| `split/runtime/` | 16 | 403 | Input-facing behavior and recovered legacy runtime |
-| `split/state/` | 2 | 20 | Prelude helpers and quarantined global-state ownership |
+| `core/` | 2 | 16 | Bootstrap and shared utilities |
+| `render/` | 4 | 132 | Core rendering, surfaces, sprites, palettes, and fonts |
+| `world/` | 4 | 104 | Strategic map, minimap, camera, fog, roads, and map UI |
+| `units/` | 7 | 186 | Strategic units, stacks, movement, fatigue, and morale |
+| `buildings/` | 18 | 370 | Buildings, economy, production, garrisons, and modal UI |
+| `battle/` | 3 | 50 | Tactical interaction, simulation, rendering, and outcomes |
+| `persistence/` | 6 | 136 | Special sites, saves, and persistence helpers |
+| `strategic/` | 6 | 204 | Campaign rules, strategic AI, and host functions |
+| `clips/` | 52 | 1,706 | Embedded CLIPS language and object/compiler runtime |
+| `media/` | 18 | 743 | Audio, music, AVI, and media support |
+| `runtime/` | 16 | 403 | Input-facing behavior and recovered legacy runtime |
+| `state/` | 2 | 20 | Prelude helpers and quarantined global-state ownership |
 
 The cutover removed the unified aggregator, recovered include-C fragments, and
 legacy path symlinks. `docs/SOURCE_PATH_MAP.csv` retains those historical paths

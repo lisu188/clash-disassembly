@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "source_prefixes": [
-    "src/recovered/"
+    "src/battle/",
+    "src/buildings/",
+    "src/clips/",
+    "src/core/",
+    "src/media/",
+    "src/persistence/",
+    "src/render/",
+    "src/runtime/",
+    "src/state/",
+    "src/strategic/",
+    "src/units/",
+    "src/world/"
   ],
   "profiles": {
     "gcc": {

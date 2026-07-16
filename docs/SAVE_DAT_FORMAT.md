@@ -6,7 +6,7 @@ The boot-time `strateg/clash.dat` file is a separate CLIPS binary construct file
 ## Evidence
 
 The recovered save writer and loader in the manifest-backed persistence sources
-under `src/recovered/split/persistence/` show the complete outer file shape:
+under `src/persistence/` show the complete outer file shape:
 
 - `saveGame` formats `save\\%d.dat`, writes a 16-byte slot label, then writes
   `586398` bytes from `gameData` (`GAMEDATA_SAVE_IMAGE_BYTES`).

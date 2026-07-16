@@ -20,11 +20,11 @@ import literal_common as lc  # noqa: E402
 import glob as _glob  # noqa: E402
 
 PRIVATE_HEADERS = (
-    "src/recovered/split/recovered_abi.h",
-    "src/recovered/split/recovered_foundation.h",
-    "src/recovered/split/recovered_functions.h",
-    "src/recovered/split/recovered_internal.h",
-    "src/recovered/split/recovered_layout.h",
+    "src/recovered_abi.h",
+    "src/recovered_foundation.h",
+    "src/recovered_functions.h",
+    "src/recovered_internal.h",
+    "src/recovered_layout.h",
 )
 SUPPORT_FILES = (
     "src/bootstrap/bootstrap_main.c",
