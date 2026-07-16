@@ -3,7 +3,7 @@
   "clang": {
    "counts": {
     "data": 5137,
-    "text": 3817
+    "text": 3820
    },
    "data_ordered": {
     "b": [
@@ -8411,13 +8411,16 @@
     "Rules_WriteJoinHashStructRef T",
     "Rules_WriteJoinNodeStructEntry T",
     "RuntimeMissionTrace_CollectSnapshot t",
+    "RuntimeMissionTrace_CollectStacksForPlayer t",
     "RuntimeMissionTrace_CountOccupiedSlots t",
     "RuntimeMissionTrace_EmitSnapshot t",
     "RuntimeMissionTrace_HashU32 t",
+    "RuntimeMissionTrace_MinSlotActionPoints t",
     "RuntimeMissionTrace_ParseBoundedInt t",
     "RuntimeMissionTrace_ReadI16 t",
     "RuntimeMissionTrace_ReadI32 t",
     "RuntimeMissionTrace_ReadU16 t",
+    "RuntimeMissionTrace_ResolveGameData t",
     "RuntimeMissionTrace_SnapshotsMatch t",
     "RuntimeMissionTrace_Start t",
     "RuntimeMissionTrace_Thread t",
@@ -8973,7 +8976,7 @@
   "gcc": {
    "counts": {
     "data": 5136,
-    "text": 3817
+    "text": 3820
    },
    "data_ordered": {
     "b": [
@@ -17380,13 +17383,16 @@
     "Rules_WriteJoinHashStructRef T",
     "Rules_WriteJoinNodeStructEntry T",
     "RuntimeMissionTrace_CollectSnapshot t",
+    "RuntimeMissionTrace_CollectStacksForPlayer t",
     "RuntimeMissionTrace_CountOccupiedSlots t",
     "RuntimeMissionTrace_EmitSnapshot t",
     "RuntimeMissionTrace_HashU32 t",
+    "RuntimeMissionTrace_MinSlotActionPoints t",
     "RuntimeMissionTrace_ParseBoundedInt t",
     "RuntimeMissionTrace_ReadI16 t",
     "RuntimeMissionTrace_ReadI32 t",
     "RuntimeMissionTrace_ReadU16 t",
+    "RuntimeMissionTrace_ResolveGameData t",
     "RuntimeMissionTrace_SnapshotsMatch t",
     "RuntimeMissionTrace_Start t",
     "RuntimeMissionTrace_Thread t",
