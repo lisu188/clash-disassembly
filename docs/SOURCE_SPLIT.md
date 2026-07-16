@@ -75,12 +75,27 @@ through the JSON manifest.
 - production sources do not include `.c` files;
 - removed unified, fragment, wrapper, and symlink paths do not return.
 
+`tools/check_link_surface.py` additionally pins the LINKED artifact per compiler
+(`data/link_surface_baseline.json`): which recovered symbols survive
+`--gc-sections`, their classes, data/BSS symbol sizes, and the address-ordered
+data-symbol sequence — the physical-adjacency property the quarantined state
+translation unit exists to protect. It also cross-checks every manifest function
+against `libclash95_recovered.a` (external/internal exactly once as a global;
+static/test-visible exactly once as a local). It runs in CI for both compilers;
+re-seed only with `--mode update` on a reviewed clean build. The preprocessed-
+token and object-diff snapshot gates intentionally stay manual-loop tools: their
+baselines are large transient artifacts and any legitimate edit re-baselines
+them, so CI relies on the manifest hash audit, this link-surface gate, the
+warning ratchet, and the coverage floor instead.
+
 Typical static checks are:
 
 ```sh
 python3 tools/audit_split_sources.py
 python3 tools/migrate_pure_coverage_metadata.py --check
 python3 tools/check_save_format_contract.py
+python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
+  --lib build/lib/libclash95_recovered.a --compiler gcc --mode check
 bash tools/pp_token_gate.sh --snapshot /tmp/clash95-split.i
 bash tools/obj_diff_gate.sh --snapshot /tmp/clash95-split.asm
 git diff --check

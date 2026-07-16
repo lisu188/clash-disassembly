@@ -40,6 +40,7 @@ jobs:
           python3 -m json.tool UNIT_TYPES_AND_STATS.json >/dev/null
           python3 -m json.tool data/recovered_sources.json >/dev/null
           python3 -m json.tool data/recovered_warning_baseline.json >/dev/null
+          python3 -m json.tool data/link_surface_baseline.json >/dev/null
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
 
@@ -112,6 +113,13 @@ jobs:
       - name: Check recovered warning ratchet
         shell: bash
         run: python3 tools/check_recovered_warnings.py compiler.log --compiler ${{ matrix.compiler_id }} --mode ${{ matrix.warning_mode }}
+
+      - name: Check linked symbol surface and data layout
+        shell: bash
+        run: |
+          python3 tools/check_link_surface.py build/bin/clash95_bootstrap \
+            --lib build/lib/libclash95_recovered.a \
+            --compiler ${{ matrix.compiler_id }} --mode check
 
       - name: Run asset-free CTest gates
         run: ctest --test-dir build -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' --output-on-failure
