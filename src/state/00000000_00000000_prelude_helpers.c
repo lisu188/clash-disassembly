@@ -1,5 +1,27 @@
 /* Generated recovered prelude helpers. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "state_internal.h"
+#include "state_shared.h"
+#include "state_local.h"
+#include "../core/core_state.h"
+#include "../render/render_state.h"
+#include "../world/world_state.h"
+#include "../units/units_state.h"
+#include "../buildings/buildings_state.h"
+#include "../battle/battle_state.h"
+#include "../persistence/persistence_state.h"
+#include "../strategic/strategic_state.h"
+#include "../clips/clips_state.h"
+#include "../media/media_state.h"
+#include "../runtime/runtime_state.h"
+#include "../core/core_api.h"
+#include "../render/render_api.h"
+#include "../clips/clips_api.h"
+#include "../media/media_api.h"
+#include "../recovered_legacy_imports.h"
+#include "../recovered_test_seams.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 CLASH95_TEST_VISIBLE uintptr_t RenderSurface_GetCompactMethodPointer (_DWORD *surface, unsigned int table_offset);
 

@@ -1,5 +1,15 @@
 /* Generated from src/recovered/render/00401A40_render.inc.c; original address order retained. */
-#include "../recovered_internal.h"
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "render_internal.h"
+#include "render_state.h"
+#include "../state/state_shared.h"
+#include "../units/units_api.h"
+#include "../media/media_api.h"
+#include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00402E80) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
