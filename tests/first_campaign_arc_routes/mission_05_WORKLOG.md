@@ -178,3 +178,37 @@ Earlier pan failures were solely the missing selection.
 - **This unblocks the march**: once the view shows player 3, `world_click` a path tile
   toward them (verify `enemy_stack=1`/adjacency), end turn, repeat; then attempt
   autoresolve per stack. The selection→pan→march→battle loop is now unblocked end-to-end.
+
+## STACK-19 ATTACK CALIBRATED FROM THE AUTHENTIC ARRIVAL (2026-07-16)
+
+`mission_05_stack19_from_arrival_probe.{script,env}` composes the proven
+145-input march via `include_script`, ends turn 9, reselects stack 4 on turn
+10 (refreshed 20 AP), pans, and attacks stack 19. Two calibration facts:
+
+- **Screen center resolves to tile `(left+4, top+3)`** (run 20260716T192728Z:
+  pan target 44,56 put the center click on 48,59 and ordered a plain move).
+  Pan to `left=40 top=53` puts stack 19's tile (44,56) under the center click,
+  which then yields `enemy_attack_call selected=4 a=19 b=44 c=56`.
+- Prerequisite: the world_pan_viewport regression was repaired first (commit
+  7fabf98 — recovered scroll-gate init + `CLASH95_PAN_KEY_PULSE_READS` budget;
+  the runtime drains ~10.6 input polls per frame).
+
+**Autoresolve decision (run 20260716T194132Z-165364): REJECTED.** Forced
+autoresolve of stack 4 (6 units, mixed, 20-AP floor) vs stack 19 (10 units):
+`unit_attack_autoresolve selected=4 a=19 b=6 c=10` →
+`unit_attack_autoresolve_done selected=4 a=19 b=0 c=10` — the attacker is
+annihilated, the defender keeps all 10 units, and stack index 4 disappears
+from the player-0 AP table while target_remaining stays 7. The route flow
+itself (march → end-turn → reselect → pan → attack → battle prompt →
+return) is deterministic across two consecutive full-chain passes.
+
+**Cluster playbook consequence:** stacks 16-20 need manual tactical battles
+(the mission-04 approach) and/or a multi-stack support march before contact;
+single-stack autoresolve is not viable. Next: author the tactical-entry
+branch at the battle prompt (battle-input channel) for stack 19 with stack 4,
+or first mass stacks 0-3 at the (47,58) staging tile.
+
+Note for trace consumers: the mission-state sampler's per-run log can be
+capped by the durable-log head/tail retention; raise
+`CLASH95_CAMPAIGN_ROUTE_LOG_TAIL_LINES` (this probe uses 20000) when the
+post-battle table is the evidence.

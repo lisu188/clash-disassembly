@@ -1,0 +1,48 @@
+# Mission 05 stack-19 attack probe, rebased on the authentic turn-9 arrival.
+# Composes the proven 145-input multi-turn march (stack 4 ends turn 9 at tile
+# 47,58 with a zero-length retained path), then ends turn 9, reselects stack 4
+# on turn 10 with refreshed action points, pans to the player-3 SW cluster,
+# and attacks stack 19 at tile 44,56 with the forced-autoresolve branch.
+# Diagnostic calibration only: autoresolve viability vs manual tactical entry
+# is the decision this probe informs (complete routes avoid autoresolve).
+include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
+
+# --- turn 10: refresh AP, reselect stack 4 ---------------------------------
+mark_log_count stack4_turn_10 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-9-skip-1
+click 320 240 0.12 0.65 post-end-turn-9-skip-2
+click 320 240 0.12 0.65 post-end-turn-9-skip-3
+click 320 240 0.12 0.65 post-end-turn-9-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=10
+click 496 416 0.18 0.55 next-unit-turn-10-stack0
+click 496 416 0.18 0.55 next-unit-turn-10-stack1
+click 496 416 0.18 0.55 next-unit-turn-10-stack2
+click 496 416 0.18 0.55 next-unit-turn-10-stack3
+click 496 416 0.18 0.8 next-unit-turn-10-stack4
+wait_log_marked 30 stack4_turn_10
+fail_if_log mission05_failure_friendly_attack
+
+# --- pan to the player-3 cluster and attack stack 19 at 44,56 --------------
+# Screen center resolves to tile (left+4, top+3) (measured 20260716T192728Z:
+# left=44 top=56 put the center click on 48,59), so target left=40 top=53 to
+# put stack 19's tile 44,56 under the center click.
+screenshot mission05-turn10-before-pan
+world_pan_viewport 40 53 80
+screenshot mission05-turn10-after-pan
+click 320 240 0.18 1.0 attack-owner3-stack19-center
+wait_log 30 enemy_attack_call selected=4 a=19
+wait_log 30 battle_prompt_layout_secondary
+fail_if_log mission05_failure_friendly_attack
+
+click 354 158 0.18 4.0 choose-autoresolve-stack19
+wait_log 90 unit_attack_autoresolve_done selected=4 a=19
+wait_log 90 unit_attack_autoresolve_return selected=4 a=19
+fail_if_log mission05_failure_friendly_attack
+
+# Let the mission-state sampler emit the post-battle target table (outcome
+# evidence: stack 19 unit count / removal, stack 4 survivors).
+wait 4.0
+screenshot mission05-stack19-autoresolve-return
+nonblank mission05-stack19-autoresolve-return
