@@ -66,7 +66,6 @@ signed int __fastcall Rules_ReportSystemError(int module, int errorID);
 int __fastcall Rules_FloatToSymbol(int a1, double number);
 signed int Rules_RegisterExitFunction(void);
 signed int  Output_Write(int logicalName, int str, int a3);
-int IO_RunRouterExitCallbacks();
 signed int  IO_AddRouter(int routerName, int priority, int printFunction, int queryFunction, int getcFunction, int ungetcFunction, int exitFunction);
 signed int  IO_DeactivateRouter(int routerName);
 signed int  IO_ActivateRouter(int routerName);
@@ -379,5 +378,12 @@ int * InstanceQuery_DoForAllInstances(int returnValue, int a2, double a3);
 int * InstanceQuery_DelayedDoForAllInstances(_DWORD *returnValue, double a2);
 int  ObjectsCompiler_WriteDefclassPointerRef(int imageID, int theDefclass, int fileID);
 int  ObjectsCompiler_WriteSlotNamePointerRef(int imageID, int slotNamePtr, int fileID);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+int IO_RunRouterExitCallbacks();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_CLIPS_API_H */

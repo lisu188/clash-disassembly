@@ -52,7 +52,6 @@ extern int g_ActiveBlitCursor;
 extern _UNKNOWN g_BlitCursor_DtorArrayTag;
 extern __int16 g_ColorCycleDelayLookupIndex;
 extern _UNKNOWN g_DLXSpriteSet_DtorArrayTag;
-extern int (*g_DLXSpriteSet_Vtable)();
 extern _BYTE g_DefaultPaletteTable[1024];
 extern int g_DlxDirEntryEndOffsetTable[1022];
 extern int g_DlxDirTotalDataOffset;
@@ -90,5 +89,12 @@ extern int g_WorldMapKeyScrollRepeatTime;
 extern int g_WorldMap_NextPaletteAnimTime;
 extern int g_WorldMap_NextTileStateAnimTime;
 extern int g_WorldMap_PaletteFlashStep;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int (*g_DLXSpriteSet_Vtable)();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_RENDER_STATE_H */

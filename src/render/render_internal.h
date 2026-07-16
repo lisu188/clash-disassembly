@@ -27,7 +27,13 @@ int  DLXSprite_Destroy(int result);
 int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite);
 int  DLXSprite_Save(int sprite, int file_handle);
 char  DLXSprite_RemapPalette(int sprite, const unsigned __int8 *remap_table);
-extern int Menu_DrawFrameBackdrop();
 int Render_RestoreLostSurfaces(void);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int Menu_DrawFrameBackdrop();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_RENDER_INTERNAL_H */

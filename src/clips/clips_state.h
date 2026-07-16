@@ -1953,7 +1953,6 @@ extern int g_CLIPS_GenericParseTokenPrintStr;
 extern int g_CLIPS_PatternParserTableByTypeId[];
 extern int g_CLIPS_PeriodicFunctionListHead;
 extern int g_CLIPS_StaticConstraintCheckingFlag;
-extern _DWORD (*g_CRT_AddFileHandleHook)();
 extern int (__cdecl *g_CRT_ConsoleOpenHook)(_DWORD, _DWORD, _DWORD);
 extern int (*g_CRT_CustomReadAvailablePredicateHook)(void);
 extern int (*g_CRT_CustomReadHook)(void);
@@ -1963,12 +1962,9 @@ extern int (__fastcall *g_CRT_ExceptionHandlerCallback)(_DWORD, _DWORD);
 extern int g_CRT_ExecutablePathA;
 extern int g_CRT_ExecutablePathW;
 extern _UNKNOWN g_CRT_FileHandleLockSlots;
-extern int (*g_CRT_FileHandleRemoveHookTable[14])();
 extern char g_CRT_FpuExceptionActiveFlag;
 extern int g_CRT_LeapMonthDayTable;
-extern int (*g_CRT_LockEnterHookTable[3])();
 extern int g_CRT_LockInitCriticalSection;
-extern int (*g_CRT_LockLeaveHookTable[2])();
 extern _UNKNOWN g_CRT_LockSlotPool;
 extern int (__fastcall *g_CRT_LockSlotResetHook)(_DWORD, _DWORD);
 extern int g_CRT_ModulePathA;
@@ -1981,13 +1977,7 @@ extern _UNKNOWN g_CRT_StartupThreadDataBlock;
 extern _UNKNOWN g_CRT_StaticLock1;
 extern _UNKNOWN g_CRT_StaticLock2;
 extern _UNKNOWN g_CRT_StaticLock3;
-extern int (*g_CRT_StaticLock3AcquireHookTable[10])();
-extern int (*g_CRT_StaticLock3ReleaseHookTable[8])();
 extern _UNKNOWN g_CRT_StaticLock4;
-extern int (*g_CRT_StaticLock4AcquireHookTable[7])();
-extern int (*g_CRT_StaticLock4ReleaseHookTable[6])();
-extern int (*g_CRT_ThreadDataConstructHookTable[5])();
-extern int (*g_CRT_ThreadDataDestroyHookTable[4])();
 extern int g_CRT_ThreadLockSystemInitialized;
 extern int g_CRT_TimezoneSeconds;
 extern char g_CRT_TzDaylightNameBufEnd;
@@ -2179,14 +2169,11 @@ extern EvalNodeDescriptorCompact g_EvalNodeDescCopyMultifieldBinding;
 extern int g_EvalStringRouterCounter;
 extern int g_ExpressionHashTable;
 extern int g_FactPatternNodeCount;
-extern int (*g_FloatEfgFormatFn)();
 extern int (*g_FpuExceptionResignalFn)(void);
-extern int (*g_FuncTable_511094[6])();
 extern int g_HelpLoadedTopicFileList;
 extern int g_HelpSystemInitialized;
 extern unsigned __int8 g_Help_FileOpenModeRead[4];
 extern char g_HexDigitCharTable[1];
-extern int (*g_IOStreambuf_VTable[4])();
 extern int g_IO_FastLoadFilePtr;
 extern int g_IO_FastSaveFilePtr;
 extern _UNKNOWN g_IO_FileGetcSentinelAddr;
@@ -2321,5 +2308,24 @@ extern int g_WatchRulesFlag;
 extern LPSTR lpCmdLine;
 extern LPVOID lpTlsValue;
 extern _UNKNOWN strncat_;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern _DWORD (*g_CRT_AddFileHandleHook)();
+extern int (*g_CRT_FileHandleRemoveHookTable[14])();
+extern int (*g_CRT_LockEnterHookTable[3])();
+extern int (*g_CRT_LockLeaveHookTable[2])();
+extern int (*g_CRT_StaticLock3AcquireHookTable[10])();
+extern int (*g_CRT_StaticLock3ReleaseHookTable[8])();
+extern int (*g_CRT_StaticLock4AcquireHookTable[7])();
+extern int (*g_CRT_StaticLock4ReleaseHookTable[6])();
+extern int (*g_CRT_ThreadDataConstructHookTable[5])();
+extern int (*g_CRT_ThreadDataDestroyHookTable[4])();
+extern int (*g_FloatEfgFormatFn)();
+extern int (*g_FuncTable_511094[6])();
+extern int (*g_IOStreambuf_VTable[4])();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_CLIPS_STATE_H */

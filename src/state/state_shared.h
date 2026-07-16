@@ -68,14 +68,8 @@ extern int (__fastcall *g_CRT_FileHandleLockReleaseHook)(_DWORD, _DWORD);
 extern int g_CRT_MaxFileDescriptor;
 extern int g_CRT_MbcsCodePageActive;
 extern int g_CRT_OsHandleTable;
-extern _DWORD (*g_CRT_StaticLock1AcquireHook)();
-extern _DWORD (*g_CRT_StaticLock1ReleaseHook)();
-extern _DWORD (*g_CRT_StaticLock2AcquireHook)();
-extern _DWORD (*g_CRT_StaticLock2ReleaseHook)();
 extern _UNKNOWN g_CRT_StdoutStream;
 extern int g_CRT_ThreadDataBlockSize;
-extern _DWORD (*g_CRT_ThreadStartupHook)();
-extern _DWORD (*g_CRT_TlsIndexDestroyHook)();
 extern int g_Class_InstanceAddress;
 extern int g_Class_InstanceName;
 extern int g_ClipsBloadBitmapPointerTable;
@@ -245,5 +239,17 @@ extern int g_WorldMap_KeyboardInputDisabled;
 extern int gameData;
 extern HANDLE hThread;
 extern HWND hWnd;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern _DWORD (*g_CRT_StaticLock1AcquireHook)();
+extern _DWORD (*g_CRT_StaticLock1ReleaseHook)();
+extern _DWORD (*g_CRT_StaticLock2AcquireHook)();
+extern _DWORD (*g_CRT_StaticLock2ReleaseHook)();
+extern _DWORD (*g_CRT_ThreadStartupHook)();
+extern _DWORD (*g_CRT_TlsIndexDestroyHook)();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_STATE_SHARED_H */

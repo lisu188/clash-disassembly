@@ -21,7 +21,6 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
 extern int Building_CalcGarrisonAverageHealthPercent (int buildingPtr);
 int  UI_DrawUnitStatsValues(int a1);
 int  Building_CalcRemainingConstructionTurns(int buildingPtr);
-signed int  Building_FindRandomOwnedCompletedCastle();
 DWORD Timer_InitPerfCounterFrequency(void);
 int __thiscall Mem_ConstructObjectArray256(void *this);
 int  Castle_RequestManagementScreenExit(uintptr_t widgetRecord, int animationDelay);
@@ -203,5 +202,12 @@ void  Audio_SetSoundLoopIfMusicActive(int soundHandle, int loopStart, int loopEn
 int  Audio_PlayUnitRangedAttackSound(int result);
 int  Audio_PlayUnitHitSound(int result);
 int  Audio_PlayUnitDeathSound(int result);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+signed int  Building_FindRandomOwnedCompletedCastle();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_BUILDINGS_INTERNAL_H */

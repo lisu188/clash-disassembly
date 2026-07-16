@@ -349,7 +349,6 @@ extern _UNKNOWN g_App_QuitReason_DemoSkipKey;
 extern float g_Building_MaxTaxRate;
 extern int g_CastleSiteAnchorColumns[CASTLE_SITE_ANCHOR_CACHE_COUNT];
 extern int g_CastleSiteAnchorRows[CASTLE_SITE_ANCHOR_CACHE_COUNT];
-extern int (*g_CheatCodeHandlerTable)();
 extern char *g_CheatCodeStringTable;
 extern int g_CheatForceWinMissionFlag;
 extern char *g_CheatTable;
@@ -368,7 +367,6 @@ extern __int16 g_DeviceRectTargetWidth;
 extern int g_DeviceRectTweenTimeBase;
 extern int g_DeviceReplaySegmentBaseTick;
 extern int g_DeviceReplaySegmentTargetTick;
-extern int (*g_Device_Vtable[6])();
 extern int g_InGameOptionsDialogExitSignal;
 extern int g_InGameOptionsSpriteSet;
 extern _UNKNOWN g_InGameSettingsButtonWidgetsTemplate;
@@ -387,8 +385,16 @@ extern __int16 g_QueenWhimRecords_5191F0;
 extern __int16 g_RenderCursor_TweenPrevY;
 extern int g_RenderStateNextRefreshTick;
 extern CLASH95_INTERNAL CompatRenderStateTail g_RenderStateTail;
-extern int (*g_RenderState_Vtable[6])();
 extern CLASH95_INTERNAL _DWORD g_RenderVideoInitCursorDescriptor[9];
 extern int g_RulesArmyFactCreatedCount;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int (*g_CheatCodeHandlerTable)();
+extern int (*g_Device_Vtable[6])();
+extern int (*g_RenderState_Vtable[6])();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_STRATEGIC_STATE_H */

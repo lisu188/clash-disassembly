@@ -17,7 +17,6 @@ int Rules_ResetEngineOnLoad(void);
 signed int Rules_RegisterAllHostFunctions(void);
 int Rules_LogMissionSetupInfo(void);
 signed int Rules_ExecuteAITurn(void);
-unsigned int  Rules_CreateArmyFact();
 _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4);
 signed int  Rules_LinkArmyFact(__int16 *stack, int army_id, int a3, double a4, char a5, DWORD a6);
 signed int  Rules_SyncArmyFactStrength(__int16 *army_stack, int army_id, int a3, char a4, DWORD a5, double a6);
@@ -27,7 +26,6 @@ _DWORD * Rules_LogTrapFact(int tile_x, int tile_y);
 _DWORD * Rules_RetractTrapFact(int tile_x, int tile_y);
 _DWORD * Rules_LogTempleFact(int tile_x, int tile_y);
 _DWORD * Rules_LogTreasureFact(int tile_x, int tile_y);
-_DWORD * Rules_RetractTreasureFact();
 _DWORD * Rules_RetractTempleFact(int tile_x, int tile_y, char a3, DWORD a4);
 int  Rules_AssertCastleFact(unsigned __int8 *castle_record, int building_index);
 _DWORD * Rules_RetractCastleFact(unsigned __int8 *castle_record, double a2);
@@ -75,5 +73,13 @@ int  Device_DoOp(int render_state, int a2, DWORD a3);
 __int16  Device_GetParamB(int render_state, DWORD a2, int a3, int a4);
 int  Device_SetParamA(int render_state, DWORD a2);
 int  Device_UpdateRect(_DWORD *render_state, int a2, int a3);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+unsigned int  Rules_CreateArmyFact();
+_DWORD * Rules_RetractTreasureFact();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_STRATEGIC_API_H */

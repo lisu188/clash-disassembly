@@ -273,7 +273,6 @@ extern int g_BattleWallScanTileX;
 extern double g_Battle_RoleDeployRatioHighThreshold;
 extern double g_Battle_RoleDeployRatioLowThreshold;
 extern int g_BridgeApproachRoadOverlayTileIds[1];
-extern int (*g_BuildBuildingActionWidgetHandlerBase[])();
 extern int g_BuildBuildingActionWidgetStateBase[];
 extern unsigned char g_BuildBuildingActionWidgetTable[];
 extern char *g_BuildBuildingCompletionMessageStrings[];
@@ -490,12 +489,19 @@ extern char g_UnitTypeProductionTime[1];
 extern char g_UnitTypeShotSoundFrameIndex[1];
 extern int (__thiscall *g_WCIsvListBaseDestroyElements_Vtable)(WCIsvListBase *this);
 extern _DWORD (*g_WCIsvListBaseDtor_Vtable)(WCIsvListBase * this);
-extern int (*g_WCIsvListBaseFreeOnly_Vtable[2])();
 extern _UNKNOWN g_WCIsvListBaseRoot_DtorArrayTag;
-extern int (*g_WCIsvListBaseRoot_Vtable)();
 extern _UNKNOWN g_WCIsvListBaseVariant124_DtorArrayTag;
 extern void *g_WCIsvListBaseVariant124_Vtable;
 extern _UNKNOWN g_WCIsvListBaseVariant134_DtorArrayTag;
 extern void *g_WCIsvListBaseVariant134_Vtable;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int (*g_BuildBuildingActionWidgetHandlerBase[])();
+extern int (*g_WCIsvListBaseFreeOnly_Vtable[2])();
+extern int (*g_WCIsvListBaseRoot_Vtable)();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_BUILDINGS_STATE_H */

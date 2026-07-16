@@ -33,8 +33,6 @@ int  ExcString_ReleaseText(_DWORD *excStr);
 int  ExcString_GetTextPtr(int excStr);
 int ExcString_GetErrorCodeStub(void);
 int  CAviDecompressor_ConvertRGB888to565Row(_WORD *dest, _DWORD *src, int pixelCount);
-extern int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))();
-__int16  CAviDecompressor_SetupBlitFormat(int (*a1)(), int a2, int a3, int a4, int a5);
 signed int  CAviDecompressor_BlitRows(_DWORD *blitDesc, char *dest, char *src);
 int  ObjectsCompiler_WriteClassPointerArray(const char *fileName, const char *pathName, int fileID, int a4, int imageID, int *fileCount);
 signed int  ObjectsCompiler_WriteClassHashTable(const char *fileName, const char *pathName, int fileID, int a4, int imageID, int *fileCount);
@@ -112,5 +110,13 @@ signed int Rules_SetupDefinstancesBsaveBload(void);
 int  Rules_DefinstancesBloadModuleReference(int moduleIndex);
 int Rules_RegisterDefinstancesCodeGenerator(void);
 int  Rules_WriteDefinstancesModuleReference(int theFile, int count);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))();
+__int16  CAviDecompressor_SetupBlitFormat(int (*a1)(), int a2, int a3, int a4, int a5);
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_RUNTIME_API_H */

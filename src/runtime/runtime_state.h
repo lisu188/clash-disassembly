@@ -508,11 +508,9 @@ extern char asc_50E844[2];
 extern char asc_50E858[2];
 extern int g_AppCommandLine;
 extern int g_AppIsActive;
-extern int (*g_AviDecompressor_PixelCopyFnTable[7])();
 extern int g_BootstrapSkipIntroAviPlayback;
 extern char g_CRT_HeapCoalesceStateByte;
 extern int g_CRT_HeapSegmentListHead;
-extern int (*g_CRT_InitHookPtr)();
 extern char g_CRT_MbcsLeadByteTable[];
 extern int (__cdecl *g_CRT_ThreadEndHook)(_DWORD, _DWORD);
 extern int g_ClipsBloadPortItemCount;
@@ -540,7 +538,6 @@ extern EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotElementsEqual;
 extern EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotFieldsEqual;
 extern EvalNodeDescriptorCompact g_EvalNodeDescObjectSlotIndexInRange;
 extern _UNKNOWN g_IOStreamAdapter_DtorArrayTag;
-extern int (*g_IOStreamAdapter_Vtable[4])();
 extern int g_Input_KeyRepeatCount;
 extern int g_Input_LastRepeatKeyCode;
 extern char g_Input_ScanCodeChar_LangSwap;
@@ -562,5 +559,14 @@ extern int g_SoundPausedForInactiveApp;
 extern char *g_StrToLongOverflowLimitTable[2];
 extern char *g_UI_CdMissingMessageByLanguage[3];
 extern int g_VideoModeSwitchStartTick;
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int (*g_AviDecompressor_PixelCopyFnTable[7])();
+extern int (*g_CRT_InitHookPtr)();
+extern int (*g_IOStreamAdapter_Vtable[4])();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_RUNTIME_STATE_H */

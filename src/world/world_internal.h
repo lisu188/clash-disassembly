@@ -26,7 +26,6 @@ void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2);
 void * WorldMap_DrawTurnBannerReveal(int animate);
 extern int WorldMap_RenderPlayerTurnIntroScreen (char a1, DWORD a2);
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4);
-extern void WorldMap_EnableFrameRedraw();
 _DWORD * WorldMap_LoadResources(char a1, DWORD loadContext);
 int  WorldMap_UnloadResources(DWORD allocContext);
 void  WorldMap_RunHumanTurnLoop(
@@ -44,10 +43,8 @@ extern void TextSprite_BuildOrLoadCachedFont (int slotIndex, _BYTE *fontData, in
 _WORD * Font_ResetGlyphFallbackTable(_WORD *result);
 int  Font_SetGlyphFallbackEntry(int tableBase, unsigned __int16 glyphId, char flagByte, __int16 fallbackValue);
 int __cdecl Font_BuildGlyphFallbackChain(int tableBase, char flagByte, unsigned __int16 firstGlyphId, ...);
-extern int Font_InitGlyphFallbackTablesForLanguage();
 int  MiniMap_BuildTileColorTables(unsigned int themeIndex, int a2);
 int __thiscall MiniMap_DestroySurface(void *this);
-extern void MiniMap_RedrawAllTiles();
 int MiniMap_UpdateViewportFromCursor(void);
 int MiniMap_ShowAllLayers(void);
 int MiniMap_ShowUnitsOnly(void);
@@ -57,5 +54,14 @@ signed int  UI_MenuHitTestEntry(_WORD *menu);
 BOOL  WorldMap_HandleTopMenuBar(char a1, int a2);
 _DWORD * WorldMapTopMenu_LoadSpriteSet(void);
 int WorldMapTopMenu_FreeSpriteSet(void);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern void WorldMap_EnableFrameRedraw();
+extern int Font_InitGlyphFallbackTablesForLanguage();
+extern void MiniMap_RedrawAllTiles();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_WORLD_INTERNAL_H */

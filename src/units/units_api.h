@@ -5,7 +5,6 @@
 
 #include "../recovered_types.h"
 
-signed int  Unit_Create();
 unsigned int  UnitStack_LinkArmyFact(__int16 *stackPtr, char a2, DWORD a3);
 int  Unit_Kill(int stackRecord, char killReason, DWORD a3, double a4);
 int  UnitStack_KillByIndex(int stackIndex, char killReason, DWORD a3, double a4);
@@ -134,5 +133,12 @@ int  UIWidget_ShowReleasedState(uintptr_t widget, int a2);
 int  Unit_Info(int leftArg, int topArg, int a3, unsigned __int8 *unitRecord, DWORD allocContext, DWORD a6);
 void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, double a5);
 void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWORD a4, double a5);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+signed int  Unit_Create();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_UNITS_API_H */

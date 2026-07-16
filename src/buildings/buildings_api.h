@@ -5,7 +5,6 @@
 
 #include "../recovered_types.h"
 
-BOOL  Building_New();
 CLASH95_INTERNAL BOOL Building_NewAt (int row, int column, int building_type, DWORD stack_index, double st7_0, char *name, int force);
 _DWORD * Building_LogBuiltCastleFacts(unsigned __int8 *buildingPtr);
 BOOL  MapTile_IsCastleFoundationTile(int row, signed int column, int checkMode);
@@ -155,7 +154,6 @@ int Rules_RebuildTempleFacts(void);
 signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY);
 int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY);
 int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int a4, DWORD gameContext);
-_DWORD * Temple_Random();
 void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char tileX, double gameTime);
 int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameContext, double gameTime);
 void  BattleMapFileName(char *outPath, int tileX, int tileY);
@@ -177,5 +175,13 @@ void Audio_EnableUnitSounds(void);
 void Audio_DisableUnitSounds(void);
 int  Audio_PlayUnitActivateSound(int result);
 int  Audio_PlayUnitMoveOrderSound(int result);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+BOOL  Building_New();
+_DWORD * Temple_Random();
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_BUILDINGS_API_H */

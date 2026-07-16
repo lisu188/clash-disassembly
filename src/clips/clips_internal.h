@@ -270,7 +270,6 @@ signed int  Rules_ExpressionConstraintsCompatible(__int16 *theExpression);
 int  AST_CountListNodes(uintptr_t exprList);
 int  AST_AppendNodeList(int expr1, int expr2);
 extern char *Rules_SavePPBuffer (char *result);
-extern int Rules_BackupPPBuffer();
 int Rules_GetPPBuffer(void);
 const void * Rules_BsaveAtomTables(int fp);
 int *Rules_ClearAtomInUseMarks(void);
@@ -907,7 +906,6 @@ _DWORD * Rules_CEMultiplyAndOverOr(_DWORD *andNode, int orList, int branchIndex)
 int  Rules_CEMergeRedundantNodes(int ceNode, _DWORD *changedFlag);
 int  Rules_CECloneNode(_DWORD *node);
 int  Rules_CECopyNodeFields(int dest, _DWORD *src, int deepCopy);
-extern int Rules_CEAllocDefaultNode();
 extern int Rules_CEFreeNode (int result);
 int * Rules_CECountPatternNodes(int *result, int isTail);
 int Rules_CEAllocTestNode(void);
@@ -976,7 +974,6 @@ int  Rules_RunConstructTypeIncrementalReset(int constructType, int node);
 signed int Rules_SetIncrementalReset(void);
 int  Rules_SetIncrementalResetCommand(int returnValue, double context);
 int Rules_GetIncrementalResetCommand(void);
-int Parser_ParseExpression();
 int  Parser_ParseFunctionCallExpr(int readSource, _BYTE *functionName);
 signed int  Parser_ParseExpansion(int theExpression, int topNode, int expandSymbol, int expansionCallSymbol);
 _DWORD *Parser_PushFunctionParseState(void);
@@ -1268,7 +1265,6 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
 signed int Defglobal_PrintUndefinedVariableError(void);
 int Defglobal_RegisterCodeGeneratorItem(void);
 signed int Defglobal_AssignModuleItemIds(void);
-int Defglobals_ResetCallback(); // weak
 int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName, int fileID, int headerFP, int maxIndices);
 int  Defglobal_CloseConstructCodeFiles(int headerFP, int codeFP, int a3, int maxIndices);
 int  Defglobal_WriteModuleHeaderToCode(int filePtr, int theModule, int maxIndices, int moduleCount);
@@ -1335,5 +1331,15 @@ int ObjectsCompiler_AssignConstructIndices(void); // weak
 _DWORD * ObjectsCompiler_AssignClassCompileIndex(_DWORD *theClass, _DWORD *indexCounter);
 int  ObjectsCompiler_WriteRuntimeInitCall(int fileID, int imageID);
 void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *pathName, DWORD fileNameBuffer, int fileID, int maxIndices);
+
+/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
+ * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+extern int Rules_BackupPPBuffer();
+extern int Rules_CEAllocDefaultNode();
+int Parser_ParseExpression();
+int Defglobals_ResetCallback(); // weak
+#pragma GCC diagnostic pop
 
 #endif /* CLASH95_CLIPS_INTERNAL_H */

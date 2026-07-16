@@ -315,6 +315,8 @@ def main() -> int:
             shared.append(name)
 
     # ---- render headers ----------------------------------------------------
+    knr_re = re.compile(r"\(\s*\)")
+
     def hdr(guard: str, includes: list[str], body_lines: list[str],
             purpose: str, ifdef_testing: bool = False) -> str:
         out = [BANNER, f"/* {purpose} */",
@@ -323,7 +325,24 @@ def main() -> int:
         out.append("")
         if ifdef_testing:
             out.append("#ifdef CLASH95_TESTING")
-        out += body_lines
+        # Deliberate K&R residue (empty-paren decls: call-site-arity-dependent
+        # legacy imports and untyped recovered vtable slots) is quarantined
+        # from -Wstrict-prototypes: the spelling is load-bearing provenance,
+        # the diagnostic adds no information, and the quarantine keeps a
+        # future -Werror=strict-prototypes promotion binding everywhere else.
+        clean = [l for l in body_lines if not knr_re.search(l)]
+        knr = [l for l in body_lines if knr_re.search(l)]
+        out += clean
+        if knr:
+            out += ["",
+                    "/* Deliberate unprototyped residue: recovered call sites"
+                    " depend on K&R semantics",
+                    " * (varying arity) or the slot type is unrecovered;"
+                    " kept verbatim as provenance. */",
+                    "#pragma GCC diagnostic push",
+                    '#pragma GCC diagnostic ignored "-Wstrict-prototypes"']
+            out += knr
+            out += ["#pragma GCC diagnostic pop"]
         if ifdef_testing:
             out.append("#endif /* CLASH95_TESTING */")
         out += ["", f"#endif /* {guard} */", ""]
