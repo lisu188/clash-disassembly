@@ -50,7 +50,7 @@ char __thiscall DetectGameCDPath(void *this)
   char *v8; // [esp-4h] [ebp-38h]
   char pathBuffer[52]; // [esp+0h] [ebp-34h] BYREF
 
-  *(_DWORD *)&pathBuffer[44] = this;
+  *(_DWORD *)&pathBuffer[44] = (_DWORD)(uintptr_t)this;
   driveLetter = 67;
   qmemcpy(pathBuffer, &g_CDPathTemplate, 0x1Eu);
   while ( 1 )
