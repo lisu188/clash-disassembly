@@ -94,6 +94,9 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
       -Werror=implicit-function-declaration
       -Werror=implicit-int
       -Werror=return-type
+      # Promoted after the warning-drawdown campaign zeroed the category on
+      # both compilers (was 214): it can never return.
+      -Werror=unused-parameter
       -ffunction-sections
       -fdata-sections
       -fno-pie

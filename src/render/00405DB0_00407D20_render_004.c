@@ -1331,12 +1331,12 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
   int v6; // ecx
   int viewport_left; // ebx
   int v8; // ecx
-  int v9; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   int v10; // edx
   int v11; // ecx
   int viewport_top; // ebx
   int v13; // ecx
-  int v14; // ecx
+  int v14 CLASH95_UNUSED; // ecx
   int v15; // ecx
   int result; // eax
   int tile_x; // esi

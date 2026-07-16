@@ -127,13 +127,25 @@ ratchet, including diagnostics attributed to the private recovered headers
 `src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
 `src/recovered_all.h`, and the generated per-subsystem headers under
 `src/<subsystem>/`) and the shared compatibility ABI definitions.
-The reviewed baselines are **60,143 GCC diagnostics in 25 categories** and
-**60,455 Clang 18 diagnostics in 35 categories** (re-seeded downward from the
-original 146,171/147,027 by the P2 `(void)`-prototype wave and the P3
-per-subsystem header narrowing); later cleanup may reduce a
-category but may not increase it or add another one. This is substantial
-cleanup debt and is not a zero-warning claim. Support implementations are
-outside that baseline and remain strict-warning clean.
+The reviewed baselines are **9,766 GCC diagnostics** and **9,812 Clang 18
+diagnostics** (re-seeded downward from the original 146,171/147,027 by the
+`(void)`-prototype wave, the per-subsystem header narrowing, legacy-import
+typing from stub-definition evidence, explicit `(u)intptr_t` chains at ~27.4k
+int↔pointer cast sites and inside the 45 accessor macros, `CLASH95_UNUSED`
+annotations on unused decompiler artifacts, and a `-Wstrict-prototypes`
+quarantine around the deliberate K&R residue); later cleanup may reduce a
+category but may not increase it or add another one. `-Wunused-parameter`
+reached zero on both compilers and is promoted to `-Werror`. The remaining
+inventory is a documented floor, dominated by the uninitialized family
+(recovered stale-register reads; fixing them without per-function assembly
+proof would be semantic invention) plus expression-extent-dependent
+categories (`-Wint-conversion`, `-Wsign-compare`, `-Wpointer-sign`,
+`-Wincompatible-pointer-types`, parentheses suggestions) that cannot be
+respelled safely without AST-based tooling — recorded as follow-up work, not
+silently absorbed. Per-tranche evidence (object-diff classifications, review
+verdicts, exclusion reasons) is archived under
+`docs/archive/warning_tranches/`. Support implementations are outside that
+baseline and remain strict-warning clean.
 
 The reviewed 2026-07-16 compiler gate is reproduced with:
 
@@ -204,7 +216,9 @@ The source audit, manifest-backed unit metadata, save-format contract, GCC
 build, and selected SDL/runtime routes have passed during the migration and
 cutover work. The following remain explicit debt:
 
-- reduction and eventual elimination of the recovered warning inventory;
+- further reduction of the residual recovered warning floor (~9.8k): the
+  uninitialized family needs per-function assembly evidence; the
+  expression-extent categories need AST-based (libclang-class) tooling;
 - completion of all long asset-backed campaign and multiplayer acceptance
   routes after the cutover;
 - mission `05`, full Campaign-menu entry, and automatic mission advancement;
