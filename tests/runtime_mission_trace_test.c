@@ -8,6 +8,7 @@
 #define GAME_TURN_OFFSET 140022
 #define TURN_OWNER_OFFSET 147139
 #define STACK_TABLE_OFFSET 147174
+#define STACK_TABLE_COUNT 500
 #define STACK_STRIDE 725
 #define STACK_SLOT_BASE_OFFSET 6
 #define STACK_SLOT_STRIDE 31
@@ -55,8 +56,17 @@ int main(void)
   unsigned char *stack;
   unsigned char *ap_stack;
   int slot_index;
+  int stack_index;
 
   memset(gameData, 0, sizeof(gameData));
+  /* Mirror real game data: an unused stack slot holds the 0xFFFF empty
+   * marker. A zeroed fixture reads as 10 occupied slots owned by player 0,
+   * which the AP-stack collector (player 0 here) would sweep up. */
+  for ( stack_index = 0; stack_index < STACK_TABLE_COUNT; ++stack_index )
+    for ( slot_index = 0; slot_index < 10; ++slot_index )
+      WriteU16(gameData + STACK_TABLE_OFFSET + STACK_STRIDE * stack_index
+               + STACK_SLOT_BASE_OFFSET + STACK_SLOT_STRIDE * slot_index,
+               0xFFFFu);
   WriteI32(gameData + ACTIVE_MISSION_OFFSET, 5);
   WriteU16(gameData + GAME_TURN_OFFSET, 7);
   WriteI32(gameData + TURN_OWNER_OFFSET, 1);
