@@ -41,6 +41,9 @@ jobs:
           python3 -m json.tool data/recovered_sources.json >/dev/null
           python3 -m json.tool data/recovered_warning_baseline.json >/dev/null
           python3 -m json.tool data/link_surface_baseline.json >/dev/null
+          python3 -m json.tool data/recovered_decls.json >/dev/null
+          python3 -m json.tool data/subsystem_api.json >/dev/null
+          python3 -m json.tool data/header_surface_baseline.json >/dev/null
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
 
@@ -49,6 +52,9 @@ jobs:
           python3 tools/audit_split_sources.py
           python3 tools/migrate_pure_coverage_metadata.py --check
           python3 tools/check_save_format_contract.py
+
+      - name: Audit header surface and coupling ratchet
+        run: python3 tools/audit_header_surface.py --mode check
 
       - name: Check Markdown links
         id: markdown-links

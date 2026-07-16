@@ -205,6 +205,9 @@ def main() -> int:
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--write-tu-includes", metavar="S")
+    ap.add_argument("--check-tu-includes", action="store_true",
+                    help="verify every TU's generated include block matches "
+                         "a fresh regeneration (no staleness, no hand edits)")
     ap.add_argument("--report", type=Path)
     args = ap.parse_args()
 
@@ -406,6 +409,24 @@ def main() -> int:
             incs.append("../recovered_test_seams.h")
         lines = [MARK_BEGIN] + [f'#include "{i}"' for i in incs] + [MARK_END]
         return "\n".join(lines)
+
+    if args.check_tu_includes:
+        stale = []
+        for rel in sorted(tu_tokens):
+            text = (REPO / rel).read_text(encoding="latin-1")
+            m = re.search(re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END),
+                          text, flags=re.DOTALL)
+            if not m:
+                stale.append(f"{rel}: missing generated include block")
+                continue
+            want = tu_block(rel, tu_tokens[rel])
+            if m.group(0).replace("\r\n", "\n") != want:
+                stale.append(f"{rel}: include block differs from regeneration")
+        for s_ in stale[:10]:
+            print("STALE:", s_)
+        print(f"tu-include check: {'PASS' if not stale else 'FAIL'} "
+              f"({len(tu_tokens)} TUs, {len(stale)} stale)")
+        return 0 if not stale else 1
 
     if args.write_tu_includes:
         s = args.write_tu_includes
