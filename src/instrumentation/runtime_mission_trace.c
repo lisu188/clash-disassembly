@@ -25,11 +25,12 @@
 #define RUNTIME_MISSION_TRACE_BUILDING_GARRISON_BASE_OFFSET 18
 #define RUNTIME_MISSION_TRACE_BUILDING_GARRISON_STRIDE 31
 #define RUNTIME_MISSION_TRACE_BUILDING_GARRISON_COUNT 12
+#define RUNTIME_MISSION_TRACE_PLAYER_TABLE_OFFSET 140024
+#define RUNTIME_MISSION_TRACE_PLAYER_STRIDE 1423
+#define RUNTIME_MISSION_TRACE_STACK_SLOT_AP_OFFSET 8
 #define RUNTIME_MISSION_TRACE_DEFAULT_MISSION 5
 #define RUNTIME_MISSION_TRACE_DEFAULT_TARGET_PLAYER 3
 #define RUNTIME_MISSION_TRACE_DEFAULT_INTERVAL_MS 250
-
-extern unsigned char gameData[];
 
 typedef struct RuntimeMissionTraceBuilding
 {
@@ -46,6 +47,7 @@ typedef struct RuntimeMissionTraceStack
   int row;
   int column;
   int units;
+  int min_action_points;
 } RuntimeMissionTraceStack;
 
 typedef struct RuntimeMissionTraceSnapshot
@@ -53,6 +55,7 @@ typedef struct RuntimeMissionTraceSnapshot
   RuntimeMissionTraceSummary summary;
   RuntimeMissionTraceBuilding buildings[RUNTIME_MISSION_TRACE_BUILDING_COUNT];
   RuntimeMissionTraceStack stacks[RUNTIME_MISSION_TRACE_STACK_COUNT];
+  RuntimeMissionTraceStack ap_stacks[RUNTIME_MISSION_TRACE_STACK_COUNT];
 } RuntimeMissionTraceSnapshot;
 
 static unsigned int RuntimeMissionTrace_ReadU16(const volatile unsigned char *data)
@@ -106,17 +109,100 @@ static int RuntimeMissionTrace_CountOccupiedSlots(
   return occupied_count;
 }
 
+static int RuntimeMissionTrace_MinSlotActionPoints(
+  const volatile unsigned char *record,
+  int slot_base_offset,
+  int slot_stride,
+  int slot_count)
+{
+  int slot_index;
+  int min_action_points;
+
+  min_action_points = -1;
+  for ( slot_index = 0; slot_index < slot_count; ++slot_index )
+  {
+    const volatile unsigned char *slot;
+    int action_points;
+
+    slot = record + slot_base_offset + slot_stride * slot_index;
+    if ( RuntimeMissionTrace_ReadI16(slot) == -1 )
+      continue;
+    action_points = slot[RUNTIME_MISSION_TRACE_STACK_SLOT_AP_OFFSET];
+    if ( min_action_points < 0 || action_points < min_action_points )
+      min_action_points = action_points;
+  }
+  return min_action_points;
+}
+
+static int RuntimeMissionTrace_CollectStacksForPlayer(
+  const volatile unsigned char *volatile_data,
+  int player_index,
+  RuntimeMissionTraceStack *stacks,
+  int *world_unit_count,
+  unsigned int *fingerprint,
+  unsigned int fingerprint_tag)
+{
+  int stack_index;
+  int collected;
+
+  collected = 0;
+  for ( stack_index = 0; stack_index < RUNTIME_MISSION_TRACE_STACK_COUNT; ++stack_index )
+  {
+    const volatile unsigned char *stack;
+    RuntimeMissionTraceStack *trace_stack;
+    int units;
+
+    stack = volatile_data
+          + RUNTIME_MISSION_TRACE_STACK_TABLE_OFFSET
+          + RUNTIME_MISSION_TRACE_STACK_STRIDE * stack_index;
+    units = RuntimeMissionTrace_CountOccupiedSlots(
+      stack,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_BASE_OFFSET,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_STRIDE,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_COUNT);
+    if ( !units || stack[RUNTIME_MISSION_TRACE_STACK_OWNER_OFFSET] != player_index )
+      continue;
+
+    trace_stack = &stacks[collected++];
+    trace_stack->index = stack_index;
+    trace_stack->row = RuntimeMissionTrace_ReadI16(stack);
+    trace_stack->column = RuntimeMissionTrace_ReadI16(stack + 2);
+    trace_stack->units = units;
+    trace_stack->min_action_points = RuntimeMissionTrace_MinSlotActionPoints(
+      stack,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_BASE_OFFSET,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_STRIDE,
+      RUNTIME_MISSION_TRACE_STACK_SLOT_COUNT);
+    if ( world_unit_count )
+      *world_unit_count += units;
+
+    *fingerprint = RuntimeMissionTrace_HashU32(
+      *fingerprint,
+      fingerprint_tag | (unsigned int)stack_index);
+    *fingerprint = RuntimeMissionTrace_HashU32(*fingerprint, (unsigned int)trace_stack->row);
+    *fingerprint = RuntimeMissionTrace_HashU32(*fingerprint, (unsigned int)trace_stack->column);
+    *fingerprint = RuntimeMissionTrace_HashU32(*fingerprint, (unsigned int)units);
+    *fingerprint = RuntimeMissionTrace_HashU32(
+      *fingerprint,
+      (unsigned int)trace_stack->min_action_points);
+  }
+  return collected;
+}
+
 static int RuntimeMissionTrace_CollectSnapshot(
   const unsigned char *data,
   int target_player_index,
+  int ap_player_index,
   RuntimeMissionTraceSnapshot *snapshot)
 {
   const volatile unsigned char *volatile_data;
   unsigned int fingerprint;
   int building_index;
-  int stack_index;
+  int player_index;
 
   if ( !data || !snapshot || target_player_index < 0 || target_player_index > 4 )
+    return 0;
+  if ( ap_player_index < -1 || ap_player_index > 4 )
     return 0;
 
   memset(snapshot, 0, sizeof(*snapshot));
@@ -128,6 +214,7 @@ static int RuntimeMissionTrace_CollectSnapshot(
   snapshot->summary.turn_owner_player_index = RuntimeMissionTrace_ReadI32(
     volatile_data + RUNTIME_MISSION_TRACE_TURN_OWNER_OFFSET);
   snapshot->summary.target_player_index = target_player_index;
+  snapshot->summary.ap_player_index = ap_player_index;
 
   fingerprint = 2166136261u;
   fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)snapshot->summary.mission_index);
@@ -136,6 +223,17 @@ static int RuntimeMissionTrace_CollectSnapshot(
     fingerprint,
     (unsigned int)snapshot->summary.turn_owner_player_index);
   fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)target_player_index);
+
+  for ( player_index = 0; player_index < RUNTIME_MISSION_TRACE_PLAYER_COUNT; ++player_index )
+  {
+    snapshot->summary.player_active[player_index] = RuntimeMissionTrace_ReadI32(
+      volatile_data
+      + RUNTIME_MISSION_TRACE_PLAYER_TABLE_OFFSET
+      + RUNTIME_MISSION_TRACE_PLAYER_STRIDE * player_index);
+    fingerprint = RuntimeMissionTrace_HashU32(
+      fingerprint,
+      0xAC000000u | (unsigned int)snapshot->summary.player_active[player_index]);
+  }
 
   for ( building_index = 0; building_index < RUNTIME_MISSION_TRACE_BUILDING_COUNT; ++building_index )
   {
@@ -175,34 +273,23 @@ static int RuntimeMissionTrace_CollectSnapshot(
     fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)garrison_units);
   }
 
-  for ( stack_index = 0; stack_index < RUNTIME_MISSION_TRACE_STACK_COUNT; ++stack_index )
+  snapshot->summary.target_stack_count = RuntimeMissionTrace_CollectStacksForPlayer(
+    volatile_data,
+    target_player_index,
+    snapshot->stacks,
+    &snapshot->summary.target_world_unit_count,
+    &fingerprint,
+    0x5A000000u);
+
+  if ( ap_player_index >= 0 )
   {
-    const volatile unsigned char *stack;
-    RuntimeMissionTraceStack *trace_stack;
-    int units;
-
-    stack = volatile_data
-          + RUNTIME_MISSION_TRACE_STACK_TABLE_OFFSET
-          + RUNTIME_MISSION_TRACE_STACK_STRIDE * stack_index;
-    units = RuntimeMissionTrace_CountOccupiedSlots(
-      stack,
-      RUNTIME_MISSION_TRACE_STACK_SLOT_BASE_OFFSET,
-      RUNTIME_MISSION_TRACE_STACK_SLOT_STRIDE,
-      RUNTIME_MISSION_TRACE_STACK_SLOT_COUNT);
-    if ( !units || stack[RUNTIME_MISSION_TRACE_STACK_OWNER_OFFSET] != target_player_index )
-      continue;
-
-    trace_stack = &snapshot->stacks[snapshot->summary.target_stack_count++];
-    trace_stack->index = stack_index;
-    trace_stack->row = RuntimeMissionTrace_ReadI16(stack);
-    trace_stack->column = RuntimeMissionTrace_ReadI16(stack + 2);
-    trace_stack->units = units;
-    snapshot->summary.target_world_unit_count += units;
-
-    fingerprint = RuntimeMissionTrace_HashU32(fingerprint, 0x5A000000u | (unsigned int)stack_index);
-    fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)trace_stack->row);
-    fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)trace_stack->column);
-    fingerprint = RuntimeMissionTrace_HashU32(fingerprint, (unsigned int)units);
+    snapshot->summary.ap_stack_count = RuntimeMissionTrace_CollectStacksForPlayer(
+      volatile_data,
+      ap_player_index,
+      snapshot->ap_stacks,
+      0,
+      &fingerprint,
+      0xA9000000u);
   }
 
   fingerprint = RuntimeMissionTrace_HashU32(
@@ -224,11 +311,13 @@ static int RuntimeMissionTrace_CollectSnapshot(
 int RuntimeMissionTrace_CollectSummary(
   const unsigned char *data,
   int target_player_index,
+  int ap_player_index,
   RuntimeMissionTraceSummary *summary)
 {
   RuntimeMissionTraceSnapshot snapshot;
 
-  if ( !summary || !RuntimeMissionTrace_CollectSnapshot(data, target_player_index, &snapshot) )
+  if ( !summary
+    || !RuntimeMissionTrace_CollectSnapshot(data, target_player_index, ap_player_index, &snapshot) )
     return 0;
   *summary = snapshot.summary;
   return 1;
@@ -284,6 +373,17 @@ static void RuntimeMissionTrace_EmitSnapshot(const RuntimeMissionTraceSnapshot *
     snapshot->summary.target_world_unit_count,
     target_remaining);
 
+  fprintf(
+    stderr,
+    "[mission-state] players active=%d,%d,%d,%d,%d ap_player=%d ap_stacks=%d\n",
+    snapshot->summary.player_active[0],
+    snapshot->summary.player_active[1],
+    snapshot->summary.player_active[2],
+    snapshot->summary.player_active[3],
+    snapshot->summary.player_active[4],
+    snapshot->summary.ap_player_index,
+    snapshot->summary.ap_stack_count);
+
   for ( building_index = 0; building_index < snapshot->summary.target_building_count; ++building_index )
   {
     const RuntimeMissionTraceBuilding *building;
@@ -307,14 +407,47 @@ static void RuntimeMissionTrace_EmitSnapshot(const RuntimeMissionTraceSnapshot *
     stack = &snapshot->stacks[stack_index];
     fprintf(
       stderr,
-      "[mission-state] stack index=%d owner=%d row=%d column=%d units=%d\n",
+      "[mission-state] stack index=%d owner=%d row=%d column=%d units=%d min_ap=%d\n",
       stack->index,
       snapshot->summary.target_player_index,
       stack->row,
       stack->column,
-      stack->units);
+      stack->units,
+      stack->min_action_points);
+  }
+
+  for ( stack_index = 0; stack_index < snapshot->summary.ap_stack_count; ++stack_index )
+  {
+    const RuntimeMissionTraceStack *stack;
+
+    stack = &snapshot->ap_stacks[stack_index];
+    fprintf(
+      stderr,
+      "[mission-state] ap_stack index=%d owner=%d row=%d column=%d units=%d min_ap=%d\n",
+      stack->index,
+      snapshot->summary.ap_player_index,
+      stack->row,
+      stack->column,
+      stack->units,
+      stack->min_action_points);
   }
   fflush(stderr);
+}
+
+/* The recovered state stores the game-state block as a 32-bit pointer
+   (`int gameData;` in the state TU) into the low-32 allocation arena; the
+   block itself is heap-allocated at boot. Resolve the stored pointer each
+   sample: 0 means the block does not exist yet. */
+extern int gameData;
+
+static const unsigned char *RuntimeMissionTrace_ResolveGameData(void)
+{
+  unsigned int stored;
+
+  stored = (unsigned int)gameData;
+  if ( !stored )
+    return 0;
+  return (const unsigned char *)(uintptr_t)stored;
 }
 
 static void *RuntimeMissionTrace_Thread(void *unused)
@@ -325,6 +458,7 @@ static void *RuntimeMissionTrace_Thread(void *unused)
   int have_previous_fingerprint;
   int mission_index;
   int target_player_index;
+  int ap_player_index;
   int interval_ms;
 
   (void)unused;
@@ -338,6 +472,14 @@ static void *RuntimeMissionTrace_Thread(void *unused)
     RUNTIME_MISSION_TRACE_DEFAULT_TARGET_PLAYER,
     0,
     4);
+  /* Default AP player = the human controller: player 1 in the second
+     campaign (missions 10..19), player 0 otherwise (Scenario_LoadMissionByIndex
+     cases 10..19 set PLAYER_HAS_HUMAN_CONTROLLER(1)). -1 disables. */
+  ap_player_index = RuntimeMissionTrace_ParseBoundedInt(
+    getenv("CLASH95_TRACE_MISSION_AP_PLAYER"),
+    mission_index >= 10 ? 1 : 0,
+    -1,
+    4);
   interval_ms = RuntimeMissionTrace_ParseBoundedInt(
     getenv("CLASH95_TRACE_MISSION_INTERVAL_MS"),
     RUNTIME_MISSION_TRACE_DEFAULT_INTERVAL_MS,
@@ -348,17 +490,22 @@ static void *RuntimeMissionTrace_Thread(void *unused)
 
   fprintf(
     stderr,
-    "[mission-state] sampler_start mission=%d target=%d interval_ms=%d\n",
+    "[mission-state] sampler_start mission=%d target=%d ap_player=%d interval_ms=%d\n",
     mission_index,
     target_player_index,
+    ap_player_index,
     interval_ms);
   fflush(stderr);
 
   for ( ; ; )
   {
-    if ( RuntimeMissionTrace_CollectSnapshot(gameData, target_player_index, &first_snapshot)
+    const unsigned char *data;
+
+    data = RuntimeMissionTrace_ResolveGameData();
+    if ( data
+      && RuntimeMissionTrace_CollectSnapshot(data, target_player_index, ap_player_index, &first_snapshot)
       && first_snapshot.summary.mission_index == mission_index
-      && RuntimeMissionTrace_CollectSnapshot(gameData, target_player_index, &second_snapshot)
+      && RuntimeMissionTrace_CollectSnapshot(data, target_player_index, ap_player_index, &second_snapshot)
       && RuntimeMissionTrace_SnapshotsMatch(&first_snapshot, &second_snapshot) )
     {
       if ( !have_previous_fingerprint

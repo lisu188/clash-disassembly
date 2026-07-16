@@ -13,7 +13,7 @@ switch on `ACTIVE_MISSION_INDEX`. Difficulty and tractability of the 14 partial 
 | 09 | 9 | eliminate players 1..4 (`PLAYER_IS_ACTIVE` scan, offsets 1423..7115) | conquest (hard; first-campaign finale) |
 | 10 | A | eliminate all player-2 stacks | conquest (hard) |
 | 11 | B | religious site @(2,44) == EMPTY_CULT_PLACE | shrine (like M01; movement) |
-| 12 | C | castle @(59,14) owned by player 1 (the human) | **CRASHES** (SIGSEGV in turn-advance) |
+| 12 | C | castle @(59,14) owned by player 1 (the human) | capture (crash resolved; see below) |
 | 13 | D | GAME_TURN_COUNTER > 10 (survive) | **COMPLETE** (turn-advance, like M03) |
 | 14 | E | castle @(52,24) owned by player 1 (the human) | capture; **fails at turn > 20** (case 0xE, strategic_004.c:1155) |
 | 15 | F | eliminate all player-4 stacks | conquest (hard) |
@@ -41,4 +41,19 @@ registers). Campaign: 6/20 complete.
 
 The remaining 14 are combat/capture routes (multi-session, iterative per
 `mission_05_WORKLOG.md`) except the two survival missions (03, 13) now both done.
-Mission 12 has a runtime crash (SIGSEGV) during turn-advance to investigate separately.
+
+Mission 12 crash triage (2026-07-16, resolved): the reported turn-advance
+SIGSEGV was NOT game code. The mission-state sampler
+(`src/instrumentation/runtime_mission_trace.c`) still declared
+`extern unsigned char gameData[]` and walked tables from the symbol's own
+address, but the recovered state stores the game-state block as a 32-bit
+pointer (`int gameData;`); the sampler's building walk started 16 bytes past
+the mapped BSS and killed the process from its own thread whenever tracing
+was enabled. With the sampler fixed to resolve the stored pointer, a
+gdb-wrapped 40-turn end-turn probe (`mission_12_turn_advance_probe.script`)
+completed with no fault and live `[mission-state]` evidence
+(`artifacts/campaign-routes/mission-12/20260716T142538Z-77806`): players 1
+and 2 active, target castle = building 0 at (59,14) garrison 1, eight
+player-2 stacks (min_ap 20..26). Mission 12 is an ordinary capture route.
+The July-13 `first_ap=255` metadata smell on unit types 15/16 remains a
+separate open item for the unit-metadata tail recovery.

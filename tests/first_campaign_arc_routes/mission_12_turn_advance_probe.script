@@ -1,0 +1,332 @@
+# Mission 12 turn-advance SIGSEGV triage probe (G2).
+# 40 end-turn cycles adapted from mission_13_turn_survival_route.script;
+# run under CLASH95_CAMPAIGN_ROUTE_GDB=1 to capture the turn-advance crash
+# backtrace. Objective evidence is NOT expected; this is a diagnostic probe.
+wait_log 60 mission_load_done selected=-1 a=12
+wait 3.0
+screenshot mission12-triage-start
+nonblank mission12-triage-start
+
+world_click 500 2 2 0.5 turn-01-position-top
+world_click 500 2 4 0.5 turn-01-open-top-menu
+world_click 500 2 4 1.0 turn-01-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-01-skip-1
+world_click 320 240 2 0.35 turn-01-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-02-position-top
+world_click 500 2 4 0.5 turn-02-open-top-menu
+world_click 500 2 4 1.0 turn-02-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-02-skip-1
+world_click 320 240 2 0.35 turn-02-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-03-position-top
+world_click 500 2 4 0.5 turn-03-open-top-menu
+world_click 500 2 4 1.0 turn-03-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-03-skip-1
+world_click 320 240 2 0.35 turn-03-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-04-position-top
+world_click 500 2 4 0.5 turn-04-open-top-menu
+world_click 500 2 4 1.0 turn-04-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-04-skip-1
+world_click 320 240 2 0.35 turn-04-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-05-position-top
+world_click 500 2 4 0.5 turn-05-open-top-menu
+world_click 500 2 4 1.0 turn-05-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-05-skip-1
+world_click 320 240 2 0.35 turn-05-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-06-position-top
+world_click 500 2 4 0.5 turn-06-open-top-menu
+world_click 500 2 4 1.0 turn-06-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-06-skip-1
+world_click 320 240 2 0.35 turn-06-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-07-position-top
+world_click 500 2 4 0.5 turn-07-open-top-menu
+world_click 500 2 4 1.0 turn-07-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-07-skip-1
+world_click 320 240 2 0.35 turn-07-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-08-position-top
+world_click 500 2 4 0.5 turn-08-open-top-menu
+world_click 500 2 4 1.0 turn-08-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-08-skip-1
+world_click 320 240 2 0.35 turn-08-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-09-position-top
+world_click 500 2 4 0.5 turn-09-open-top-menu
+world_click 500 2 4 1.0 turn-09-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-09-skip-1
+world_click 320 240 2 0.35 turn-09-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-10-position-top
+world_click 500 2 4 0.5 turn-10-open-top-menu
+world_click 500 2 4 1.0 turn-10-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-10-skip-1
+world_click 320 240 2 0.35 turn-10-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-11-position-top
+world_click 500 2 4 0.5 turn-11-open-top-menu
+world_click 500 2 4 1.0 turn-11-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-11-skip-1
+world_click 320 240 2 0.35 turn-11-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-12-position-top
+world_click 500 2 4 0.5 turn-12-open-top-menu
+world_click 500 2 4 1.0 turn-12-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-12-skip-1
+world_click 320 240 2 0.35 turn-12-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-13-position-top
+world_click 500 2 4 0.5 turn-13-open-top-menu
+world_click 500 2 4 1.0 turn-13-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-13-skip-1
+world_click 320 240 2 0.35 turn-13-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-14-position-top
+world_click 500 2 4 0.5 turn-14-open-top-menu
+world_click 500 2 4 1.0 turn-14-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-14-skip-1
+world_click 320 240 2 0.35 turn-14-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-15-position-top
+world_click 500 2 4 0.5 turn-15-open-top-menu
+world_click 500 2 4 1.0 turn-15-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-15-skip-1
+world_click 320 240 2 0.35 turn-15-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-16-position-top
+world_click 500 2 4 0.5 turn-16-open-top-menu
+world_click 500 2 4 1.0 turn-16-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-16-skip-1
+world_click 320 240 2 0.35 turn-16-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-17-position-top
+world_click 500 2 4 0.5 turn-17-open-top-menu
+world_click 500 2 4 1.0 turn-17-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-17-skip-1
+world_click 320 240 2 0.35 turn-17-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-18-position-top
+world_click 500 2 4 0.5 turn-18-open-top-menu
+world_click 500 2 4 1.0 turn-18-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-18-skip-1
+world_click 320 240 2 0.35 turn-18-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-19-position-top
+world_click 500 2 4 0.5 turn-19-open-top-menu
+world_click 500 2 4 1.0 turn-19-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-19-skip-1
+world_click 320 240 2 0.35 turn-19-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-20-position-top
+world_click 500 2 4 0.5 turn-20-open-top-menu
+world_click 500 2 4 1.0 turn-20-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-20-skip-1
+world_click 320 240 2 0.35 turn-20-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-21-position-top
+world_click 500 2 4 0.5 turn-21-open-top-menu
+world_click 500 2 4 1.0 turn-21-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-21-skip-1
+world_click 320 240 2 0.35 turn-21-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-22-position-top
+world_click 500 2 4 0.5 turn-22-open-top-menu
+world_click 500 2 4 1.0 turn-22-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-22-skip-1
+world_click 320 240 2 0.35 turn-22-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-23-position-top
+world_click 500 2 4 0.5 turn-23-open-top-menu
+world_click 500 2 4 1.0 turn-23-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-23-skip-1
+world_click 320 240 2 0.35 turn-23-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-24-position-top
+world_click 500 2 4 0.5 turn-24-open-top-menu
+world_click 500 2 4 1.0 turn-24-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-24-skip-1
+world_click 320 240 2 0.35 turn-24-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-25-position-top
+world_click 500 2 4 0.5 turn-25-open-top-menu
+world_click 500 2 4 1.0 turn-25-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-25-skip-1
+world_click 320 240 2 0.35 turn-25-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-26-position-top
+world_click 500 2 4 0.5 turn-26-open-top-menu
+world_click 500 2 4 1.0 turn-26-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-26-skip-1
+world_click 320 240 2 0.35 turn-26-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-27-position-top
+world_click 500 2 4 0.5 turn-27-open-top-menu
+world_click 500 2 4 1.0 turn-27-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-27-skip-1
+world_click 320 240 2 0.35 turn-27-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-28-position-top
+world_click 500 2 4 0.5 turn-28-open-top-menu
+world_click 500 2 4 1.0 turn-28-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-28-skip-1
+world_click 320 240 2 0.35 turn-28-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-29-position-top
+world_click 500 2 4 0.5 turn-29-open-top-menu
+world_click 500 2 4 1.0 turn-29-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-29-skip-1
+world_click 320 240 2 0.35 turn-29-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-30-position-top
+world_click 500 2 4 0.5 turn-30-open-top-menu
+world_click 500 2 4 1.0 turn-30-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-30-skip-1
+world_click 320 240 2 0.35 turn-30-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-31-position-top
+world_click 500 2 4 0.5 turn-31-open-top-menu
+world_click 500 2 4 1.0 turn-31-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-31-skip-1
+world_click 320 240 2 0.35 turn-31-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-32-position-top
+world_click 500 2 4 0.5 turn-32-open-top-menu
+world_click 500 2 4 1.0 turn-32-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-32-skip-1
+world_click 320 240 2 0.35 turn-32-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-33-position-top
+world_click 500 2 4 0.5 turn-33-open-top-menu
+world_click 500 2 4 1.0 turn-33-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-33-skip-1
+world_click 320 240 2 0.35 turn-33-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-34-position-top
+world_click 500 2 4 0.5 turn-34-open-top-menu
+world_click 500 2 4 1.0 turn-34-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-34-skip-1
+world_click 320 240 2 0.35 turn-34-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-35-position-top
+world_click 500 2 4 0.5 turn-35-open-top-menu
+world_click 500 2 4 1.0 turn-35-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-35-skip-1
+world_click 320 240 2 0.35 turn-35-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-36-position-top
+world_click 500 2 4 0.5 turn-36-open-top-menu
+world_click 500 2 4 1.0 turn-36-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-36-skip-1
+world_click 320 240 2 0.35 turn-36-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-37-position-top
+world_click 500 2 4 0.5 turn-37-open-top-menu
+world_click 500 2 4 1.0 turn-37-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-37-skip-1
+world_click 320 240 2 0.35 turn-37-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-38-position-top
+world_click 500 2 4 0.5 turn-38-open-top-menu
+world_click 500 2 4 1.0 turn-38-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-38-skip-1
+world_click 320 240 2 0.35 turn-38-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-39-position-top
+world_click 500 2 4 0.5 turn-39-open-top-menu
+world_click 500 2 4 1.0 turn-39-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-39-skip-1
+world_click 320 240 2 0.35 turn-39-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-40-position-top
+world_click 500 2 4 0.5 turn-40-open-top-menu
+world_click 500 2 4 1.0 turn-40-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-40-skip-1
+world_click 320 240 2 0.35 turn-40-skip-2
+wait 7.0
+
+screenshot mission12-triage-turn-40
+nonblank mission12-triage-turn-40
+expect_log playgame_before_human_turn
