@@ -19,7 +19,7 @@ CLASH95_LOCAL void BuildingEconomyDialog_InitWidget (unsigned char *record, int 
 CLASH95_LOCAL void BuildingEconomyDialog_EnsureWidgets (void);
 
 //----- (0042A910) --------------------------------------------------------
-int  UI_DrawConfirmBottom(DWORD renderState, int a2)
+int  UI_DrawConfirmBottom(DWORD renderState, int a2 CLASH95_UNUSED)
 {
   void *savedRenderDevice; // esi
   int result; // eax
@@ -218,7 +218,7 @@ CLASH95_LOCAL void BuildingEconomyDialog_EnsureWidgets(void)
 }
 
 //----- (0042A990) --------------------------------------------------------
-int  BuildingEconomyDialog_SetExitSignal(int widget, int a2)
+int  BuildingEconomyDialog_SetExitSignal(int widget, int a2 CLASH95_UNUSED)
 {
   int result; // eax
 
@@ -923,7 +923,7 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
   int scanRow; // esi
   int i; // edx
   int stackCol; // edi
-  int v20; // eax
+  int v20 CLASH95_UNUSED; // eax
   char owner; // cl
   int stackAddr; // eax
   int trapMaskRowBase; // ebx
@@ -1287,7 +1287,7 @@ void  Battle_LogAllUnits(int a1, char a2, DWORD a3)
 {
   int slotIndex; // ebx
   __int16 *unitRecord; // ecx
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
 
   Debug_Log(a1, a2, a3, (int)(intptr_t)aBattle_logallu);
   slotIndex = 0;
@@ -1316,16 +1316,16 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
   int k; // ecx
   int unitRecord; // esi
   int result; // eax
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
+  int v7 CLASH95_UNUSED; // ecx
+  int v8 CLASH95_UNUSED; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   _DWORD *spriteSet; // eax
   int i; // esi
   __lock *blackFadeStepArg; // ecx
   int SpriteForChar; // eax
-  unsigned __int8 *v14; // edx
-  __lock *v15; // ecx
-  int v16; // ecx
+  unsigned __int8 *v14 CLASH95_UNUSED; // edx
+  __lock *v15 CLASH95_UNUSED; // ecx
+  int v16 CLASH95_UNUSED; // ecx
   __int16 SpriteHeight; // ax
   int flashLevel; // esi
   __lock *flashLevelArg; // ecx

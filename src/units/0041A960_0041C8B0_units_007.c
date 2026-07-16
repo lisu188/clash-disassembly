@@ -204,28 +204,28 @@ CLASH95_LOCAL int Diagnostics_ForceAutoresolveEnabled(void)
 //----- (0041AD20) --------------------------------------------------------
 void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, double a5)
 {
-  int v5; // ecx
-  int v6; // edx
-  int v7; // edx
+  int v5 CLASH95_UNUSED; // ecx
+  int v6 CLASH95_UNUSED; // edx
+  int v7 CLASH95_UNUSED; // edx
   __int16 *attackerStack; // ebp
   int attackerPlayerOffset; // eax
   BOOL bothHuman; // eax
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int xDistance; // eax
   int yDistance; // eax
   _DWORD *movePath; // eax
   int xDistanceAfterMove; // eax
   int yDistanceAfterMove; // eax
-  int v17; // edx
+  int v17 CLASH95_UNUSED; // edx
   unsigned __int8 *attackerHasSpecial; // esi
   signed int attackerSquadCount; // eax
   unsigned __int8 *v20; // ebx
   signed int defenderSquadCount; // eax
-  int v22; // ecx
+  int v22 CLASH95_UNUSED; // ecx
   BOOL eitherHuman; // eax
   __int16 *defenderStackForPrompt; // ebx
   signed int attackerSquadCountForPrompt; // eax
-  int v26; // ecx
+  int v26 CLASH95_UNUSED; // ecx
   BOOL leadTroopsManually; // ecx
   BOOL defenderEliminated; // edx
   int v29; // ecx
@@ -234,31 +234,31 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
   signed int defenderSquadCountRemaining; // eax
   int useManualBattle; // ecx
   int v34; // ecx
-  int v35; // edx
-  int v36; // ecx
+  int v35 CLASH95_UNUSED; // edx
+  int v36 CLASH95_UNUSED; // ecx
   unsigned __int8 mapThemeIndex; // al
   _DWORD *backgroundSpriteSet; // eax
   _DWORD *frameSpriteSet; // eax
-  int v40; // ecx
+  int v40 CLASH95_UNUSED; // ecx
   int needFullRedraw; // esi
   int v42; // ecx
   signed int attackerUnitCount; // eax
-  _WORD *v44; // ecx
+  _WORD *v44 CLASH95_UNUSED; // ecx
   int v45; // ecx
   int v46; // ecx
   int attackerSpawnStack; // eax
-  int v48; // edx
-  signed int v49; // ecx
-  int v50; // edx
+  int v48 CLASH95_UNUSED; // edx
+  signed int v49 CLASH95_UNUSED; // ecx
+  int v50 CLASH95_UNUSED; // edx
   int defenderSpawnStack; // eax
-  int v52; // edx
-  signed int v53; // ecx
+  int v52 CLASH95_UNUSED; // edx
+  signed int v53 CLASH95_UNUSED; // ecx
   signed int defenderUnitCount; // [esp-10h] [ebp-368h]
   int defenderHasSpecialArg; // [esp-Ch] [ebp-364h]
   char attackerSpecialEntries[404]; // [esp+0h] [ebp-358h] BYREF
   unsigned __int8 defenderSpecialEntries[404]; // [esp+194h] [ebp-1C4h] BYREF
   int defenderStackIndex; // [esp+328h] [ebp-30h]
-  unsigned __int8 *bothPlayersHuman; // [esp+32Ch] [ebp-2Ch]
+  unsigned __int8 *bothPlayersHuman CLASH95_UNUSED; // [esp+32Ch] [ebp-2Ch]
   int defenderHasSpecial; // [esp+330h] [ebp-28h]
   int manualBattleFought; // [esp+334h] [ebp-24h]
   __int16 *defenderStack; // [esp+338h] [ebp-20h]
@@ -626,13 +626,13 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
   int buildingRecordOffset; // ebx
   int v33; // ecx
   unsigned __int8 *buildingRecordPtr; // ebx
-  int v35; // ecx
+  int v35 CLASH95_UNUSED; // ecx
   DWORD battleWinner; // esi
   unsigned __int8 mapThemeIndex; // al
   _DWORD *backgroundSpriteSet; // eax
   _DWORD *frameSpriteSet; // eax
   char v40; // bl
-  int v41; // ecx
+  int v41 CLASH95_UNUSED; // ecx
   DWORD savedRefreshIndex; // ebp
   __int16 *attackerSlots; // esi
   signed int autoresolveSquadCount; // eax
@@ -1240,14 +1240,14 @@ signed int  UI_PromptLeadTroopsPersonally(
         int a6,
         int showThirdOption)
 {
-  int v7; // ecx
-  int v8; // ecx
+  int v7 CLASH95_UNUSED; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   _DWORD *promptSpriteSetTmp; // eax
-  void *v10; // ecx
+  void *v10 CLASH95_UNUSED; // ecx
   int SpriteForChar; // eax
   int thirdOptionSprite; // eax
-  int v13; // edx
-  int v14; // edx
+  int v13 CLASH95_UNUSED; // edx
+  int v14 CLASH95_UNUSED; // edx
   int attackerSlotIndex; // esi
   unsigned __int8 *attackerSlotPtr; // edi
   char attackerOwner; // bl
@@ -1268,22 +1268,22 @@ signed int  UI_PromptLeadTroopsPersonally(
   unsigned __int16 SpriteHeight; // ax
   int secondaryButtonBottom; // edx
   int userChoice; // esi
-  unsigned __int16 v35; // cx
-  unsigned __int16 v36; // bx
+  unsigned __int16 v35 CLASH95_UNUSED; // cx
+  unsigned __int16 v36 CLASH95_UNUSED; // bx
   __int16 SpriteWidth; // ax
-  __int16 v38; // cx
+  __int16 v38 CLASH95_UNUSED; // cx
   __int16 panelHeight; // ax
-  int v40; // ecx
-  unsigned __int16 v42; // [esp-Ch] [ebp-140h]
-  unsigned __int16 v43; // [esp-8h] [ebp-13Ch]
-  unsigned __int16 v44; // [esp-4h] [ebp-138h]
+  int v40 CLASH95_UNUSED; // ecx
+  unsigned __int16 v42 CLASH95_UNUSED; // [esp-Ch] [ebp-140h]
+  unsigned __int16 v43 CLASH95_UNUSED; // [esp-8h] [ebp-13Ch]
+  unsigned __int16 v44 CLASH95_UNUSED; // [esp-4h] [ebp-138h]
   char v45[100]; // [esp+0h] [ebp-134h] BYREF
   char v46[100]; // [esp+64h] [ebp-D0h] BYREF
   int promptTextByLang[3]; // [esp+C8h] [ebp-6Ch]
   _DWORD *promptSpriteSet; // [esp+D4h] [ebp-60h] BYREF
   _DWORD *attackerUnitSpriteHandle; // [esp+D8h] [ebp-5Ch] BYREF
   _DWORD *defenderUnitSpriteHandle; // [esp+DCh] [ebp-58h] BYREF
-  int v51; // [esp+E0h] [ebp-54h]
+  int v51 CLASH95_UNUSED; // [esp+E0h] [ebp-54h]
   int (*savedRenderHook)(); // [esp+E4h] [ebp-50h]
   int savedResourceHandle; // [esp+E8h] [ebp-4Ch]
   int panelLeft; // [esp+ECh] [ebp-48h]

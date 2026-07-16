@@ -290,7 +290,7 @@ unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this)
 //----- (004347A0) --------------------------------------------------------
 void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderContext, int a4, int a5)
 {
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
   _DWORD *spriteSet; // eax
   int v7; // ecx
   int queryHandle; // ecx
@@ -302,11 +302,11 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
   int rowY; // esi
   int availableUnitByteOffset; // ecx
   int unitType; // edx
-  int v17; // ecx
-  int v18; // ecx
-  int v19; // ecx
-  int v20; // ecx
-  int v21; // ecx
+  int v17 CLASH95_UNUSED; // ecx
+  int v18 CLASH95_UNUSED; // ecx
+  int v19 CLASH95_UNUSED; // ecx
+  int v20 CLASH95_UNUSED; // ecx
+  int v21 CLASH95_UNUSED; // ecx
   int selectedUnitMetaOffset; // esi
   int infoPanelSprite; // eax
   DWORD renderMethods; // ebp
@@ -729,7 +729,7 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   int statusDetailA_Strings[3]; // [esp+24h] [ebp-48h]
   int statusDetailB_Strings[3]; // [esp+30h] [ebp-3Ch]
   int statusHeader_Strings[2]; // [esp+3Ch] [ebp-30h]
-  char *v11; // [esp+44h] [ebp-28h]
+  char *v11 CLASH95_UNUSED; // [esp+44h] [ebp-28h]
   int statusHeaderFull_Strings[9]; // [esp+48h] [ebp-24h]
 
   Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
@@ -904,7 +904,7 @@ int  CastleProduction_HandleBuyLicenceAction(int widget, DWORD gameContext, int 
   int v5; // ecx
   int i; // ecx
   int selectedUnitType; // esi
-  int v9; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   int v10; // edx
   void *v11; // ecx
   int v12; // ecx
@@ -1012,7 +1012,7 @@ int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, ch
   int renderSurface; // esi
   int v8; // ecx
   char infoGraphicPath[108]; // [esp-70h] [ebp-74h] BYREF
-  int v11; // [esp-4h] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp-4h] [ebp-8h]
 
   v11 = a2;
   UIWidget_PlayPressedReleaseAnimation(widget);
@@ -1197,8 +1197,8 @@ int  CastleProduction_TickAnimations(DWORD gameContext)
 //----- (00435BC0) --------------------------------------------------------
 int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int actionBoxArg)
 {
-  unsigned int v3; // eax
-  int v4; // ecx
+  unsigned int v3 CLASH95_UNUSED; // eax
+  int v4 CLASH95_UNUSED; // ecx
   int v5; // ecx
   int paletteBuffer; // eax
   int v7; // ecx
@@ -1219,7 +1219,7 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int ac
   int v22; // ecx
   int (*previousAnimationHook)(void); // ecx
   int slotIndex; // edx
-  int v25; // ecx
+  int v25 CLASH95_UNUSED; // ecx
 
   g_CastleProductionBuildingPtr = buildingPtr;
   g_CastleProductionUseChrTheme = *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + 140063);

@@ -283,7 +283,7 @@ int  Compat_StringHolderFindSubstringOffset(_DWORD *holder, int a2, int needle)
 // 471EFD: variable 'v5' is possibly undefined
 
 //----- (00471F10) --------------------------------------------------------
-const char ** Compat_StringHolderUppercaseInPlace(const char **holder_ref, unsigned int a2)
+const char ** Compat_StringHolderUppercaseInPlace(const char **holder_ref, unsigned int a2 CLASH95_UNUSED)
 {
   const char *text; // eax
 

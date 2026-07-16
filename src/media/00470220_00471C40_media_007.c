@@ -8,7 +8,7 @@
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00470220) --------------------------------------------------------
-unsigned int __cdecl CSS_OpenWaveOutDevice(int driver, char format_flags)
+unsigned int __cdecl CSS_OpenWaveOutDevice(int driver CLASH95_UNUSED, char format_flags)
 {
   bool format_unsupported; // zf
   unsigned int buffer_bytes; // eax

@@ -277,7 +277,7 @@ _DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int playerIndex, int a2, char a3, DWO
   int v5; // ecx
   _DWORD *result; // eax
   _BYTE fileName[24]; // [esp+0h] [ebp-1Ch] BYREF
-  int v8; // [esp+18h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v8 = a2;
   playerIndexCopy = playerIndex;
@@ -324,7 +324,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
   int chosenUnitIndex; // edx
   int chosenUnitIndexScaled; // eax
   int *slotListPtr; // ebx
-  void *v5; // ecx
+  void *v5 CLASH95_UNUSED; // ecx
   int v6; // ecx
   int ownerIndex; // eax
   int SpriteForChar; // eax

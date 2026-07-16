@@ -251,7 +251,7 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
   int switchData; // [esp+14h] [ebp-28h] BYREF
   int switchType; // [esp+18h] [ebp-24h]
   int switchValue; // [esp+1Ch] [ebp-20h]
-  int v13; // [esp+34h] [ebp-8h]
+  int v13 CLASH95_UNUSED; // [esp+34h] [ebp-8h]
 
   v13 = a2;
   returnValue[1] = 2;
@@ -334,7 +334,7 @@ signed int  Rules_SetGenFunction(int a1, double context)
   signed int result; // eax
   int argData; // [esp-8h] [ebp-24h] BYREF
   int argValue; // [esp+0h] [ebp-1Ch]
-  int v5; // [esp+14h] [ebp-8h]
+  int v5 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v5 = a1;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &argData, 1, context) )
@@ -354,10 +354,10 @@ signed int  Rules_SetGenFunction(int a1, double context)
 // 51ACD0: using guessed type int dword_51ACD0;
 
 //----- (0049D500) --------------------------------------------------------
-signed int *__fastcall Rules_GensymFunction(int a1, int a2)
+signed int *__fastcall Rules_GensymFunction(int a1, int a2 CLASH95_UNUSED)
 {
   char symbolBuffer[20]; // [esp+0h] [ebp-1Ch] BYREF
-  int v4; // [esp+14h] [ebp-8h]
+  int v4 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v4 = a1;
   Lexer_TokenExpect(0);
@@ -372,7 +372,7 @@ signed int *__thiscall Rules_GensymStarFunction(void *this)
 {
   int v1; // ecx
   char symbolBuffer[20]; // [esp+0h] [ebp-18h] BYREF
-  void *v4; // [esp+14h] [ebp-4h]
+  void *v4 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v4 = this;
   Lexer_TokenExpect(0);
@@ -1014,7 +1014,7 @@ signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
   char *restrictionString; // eax
   int argData; // [esp-8h] [ebp-24h] BYREF
   int argValue; // [esp+0h] [ebp-1Ch]
-  int v9; // [esp+14h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v9 = returnValue;
   if ( !Lexer_ParseValueList(1, &argData, 2, context) )
@@ -1062,12 +1062,12 @@ int  Rules_HostPrintout(int returnValue, double context)
   int argIndex; // ebx
   int argString; // ecx
   char *outputString; // edx
-  int v9; // eax
+  int v9 CLASH95_UNUSED; // eax
   int logical_name; // ecx
   int argData; // [esp-4h] [ebp-2Ch] BYREF
   unsigned int argType; // [esp+0h] [ebp-28h]
   int argValue; // [esp+4h] [ebp-24h]
-  int v13; // [esp+20h] [ebp-8h]
+  int v13 CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   v13 = returnValue;
   result = Lexer_TokenExpect(1);
@@ -1165,7 +1165,7 @@ signed int * Rules_HostRead(int returnValue, double context)
   int theToken; // [esp+0h] [ebp-1Ch] BYREF
   signed int *tokenValue; // [esp+4h] [ebp-18h]
   char *tokenString; // [esp+8h] [ebp-14h]
-  int v16; // [esp+14h] [ebp-8h]
+  int v16 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v16 = returnValue;
   argCount = Lexer_TokenExpect(1);

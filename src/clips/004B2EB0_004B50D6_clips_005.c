@@ -770,7 +770,7 @@ void  IO_ScanfReadFloatField(int streamContext, int *argList)
   _BYTE v24[3]; // [esp+1h] [ebp-83h] BYREF
   _DWORD doubleValue[2]; // [esp+50h] [ebp-34h] BYREF
   int *argCursor; // [esp+58h] [ebp-2Ch]
-  int v27; // [esp+5Ch] [ebp-28h]
+  int v27 CLASH95_UNUSED; // [esp+5Ch] [ebp-28h]
   unsigned int j; // [esp+60h] [ebp-24h]
   int integerValue; // [esp+64h] [ebp-20h]
   int i; // [esp+68h] [ebp-1Ch]
@@ -987,7 +987,7 @@ signed int  IO_ScanfReadIntegerField(int streamContext, int *argList, int radix)
   int v25; // eax
   char flagsByte; // bh
   int farArgPtr; // edx
-  __int16 v28; // ax
+  __int16 v28 CLASH95_UNUSED; // ax
   int v29; // edi
   int nearArgPtr; // edi
   int defaultArgPtr; // esi
@@ -1419,7 +1419,7 @@ LABEL_42:
 // 51AED0: using guessed type int dword_51AED0;
 
 //----- (004B50D6) --------------------------------------------------------
-signed int __cdecl CRT_FpuExceptionFrameHandler(EXCEPTION_RECORD *exceptionRecord, int establisherFrame, int contextRecord)
+signed int __cdecl CRT_FpuExceptionFrameHandler(EXCEPTION_RECORD *exceptionRecord, int establisherFrame CLASH95_UNUSED, int contextRecord)
 {
   int v3; // ecx
   signed int result; // eax

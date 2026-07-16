@@ -218,8 +218,8 @@ int  Queen_ShowWhimDecisionDialog(int text, int requiredAmount, int a3, int a4, 
   DWORD backdropSurface; // ebp
   int SpriteForChar; // eax
   int v12; // edx
-  int v13; // ecx
-  int v14; // ecx
+  int v13 CLASH95_UNUSED; // ecx
+  int v14 CLASH95_UNUSED; // ecx
   int v15; // ecx
   int result; // eax
   _DWORD widgetTable[40]; // [esp+38h] [ebp-D8h] BYREF
@@ -383,11 +383,11 @@ int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext
   int SpriteForChar; // eax
   int deviceVtable; // edi
   int panelLeftForButtons; // eax
-  int v17; // ecx
-  _DWORD *v18; // edi
-  char *v19; // esi
-  int v20; // edx
-  int v21; // ecx
+  int v17 CLASH95_UNUSED; // ecx
+  _DWORD *v18 CLASH95_UNUSED; // edi
+  char *v19 CLASH95_UNUSED; // esi
+  int v20 CLASH95_UNUSED; // edx
+  int v21 CLASH95_UNUSED; // ecx
   int v22; // ecx
   _DWORD widgetTable[40]; // [esp+1Ch] [ebp-D0h] BYREF
   _DWORD *scrollSpriteSet; // [esp+BCh] [ebp-30h] BYREF
@@ -522,8 +522,8 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD context)
   int (*previousRenderHook)(); // [esp+24h] [ebp-30h]
   int SpriteHeight; // [esp+28h] [ebp-2Ch]
   int messageText; // [esp+2Ch] [ebp-28h]
-  int v21; // [esp+30h] [ebp-24h]
-  int v22; // [esp+34h] [ebp-20h]
+  int v21 CLASH95_UNUSED; // [esp+30h] [ebp-24h]
+  int v22 CLASH95_UNUSED; // [esp+34h] [ebp-20h]
   int panelTop; // [esp+38h] [ebp-1Ch]
 
   messageText = a1;
@@ -604,11 +604,11 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
   DWORD backdropSurface; // ebp
   int SpriteForChar; // eax
   int v10; // eax
-  int v11; // ecx
-  _DWORD *v12; // edi
-  char *v13; // esi
-  int v14; // ecx
-  int v15; // ecx
+  int v11 CLASH95_UNUSED; // ecx
+  _DWORD *v12 CLASH95_UNUSED; // edi
+  char *v13 CLASH95_UNUSED; // esi
+  int v14 CLASH95_UNUSED; // ecx
+  int v15 CLASH95_UNUSED; // ecx
   int v16; // ecx
   _DWORD widgetTable[40]; // [esp+38h] [ebp-DCh] BYREF
   int proposalTextTable[3]; // [esp+D8h] [ebp-3Ch]

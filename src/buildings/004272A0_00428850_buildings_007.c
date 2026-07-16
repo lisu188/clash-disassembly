@@ -26,17 +26,17 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   signed int impact_offset_x; // ebp
   unsigned int direction; // edi
   int dir_index; // ebx
-  unsigned __int16 *SpriteForChar; // eax
-  int v16; // eax
-  unsigned __int16 *v17; // ecx
-  unsigned __int16 *v18; // eax
-  unsigned __int16 *v19; // ecx
-  int v20; // eax
-  int v21; // edx
+  unsigned __int16 *SpriteForChar CLASH95_UNUSED; // eax
+  int v16 CLASH95_UNUSED; // eax
+  unsigned __int16 *v17 CLASH95_UNUSED; // ecx
+  unsigned __int16 *v18 CLASH95_UNUSED; // eax
+  unsigned __int16 *v19 CLASH95_UNUSED; // ecx
+  int v20 CLASH95_UNUSED; // eax
+  int v21 CLASH95_UNUSED; // edx
   int vertical_offset; // edx
   int v23; // edx
   int v24; // ecx
-  int v25; // ecx
+  int v25 CLASH95_UNUSED; // ecx
   int anim_start_time; // ebx
   int v27; // eax
   int v28; // edx
@@ -44,23 +44,23 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   int move_tick_interval_ms; // edx
   int v31; // ecx
   int v32; // eax
-  unsigned __int8 v33; // dl
+  unsigned __int8 v33 CLASH95_UNUSED; // dl
   char tick_parity; // al
   int v35; // eax
   int v36; // edx
   int v37; // eax
   int attacker_type_move; // eax
   int step_dir_x; // eax
-  unsigned __int16 *v40; // eax
-  signed int v41; // ebp
-  unsigned __int16 *v42; // ecx
-  int v43; // eax
-  unsigned __int16 *v44; // eax
-  unsigned __int16 *v45; // ecx
-  int v46; // eax
-  int v47; // edx
+  unsigned __int16 *v40 CLASH95_UNUSED; // eax
+  signed int v41 CLASH95_UNUSED; // ebp
+  unsigned __int16 *v42 CLASH95_UNUSED; // ecx
+  int v43 CLASH95_UNUSED; // eax
+  unsigned __int16 *v44 CLASH95_UNUSED; // eax
+  unsigned __int16 *v45 CLASH95_UNUSED; // ecx
+  int v46 CLASH95_UNUSED; // eax
+  int v47 CLASH95_UNUSED; // edx
   unsigned __int16 *attacker_sprite_alone; // eax
-  int v49; // eax
+  int v49 CLASH95_UNUSED; // eax
   int v50; // eax
   int sign_x; // edx
   int v52; // eax
@@ -79,18 +79,18 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   int v65; // ebx
   int v66; // ecx
   int v67; // eax
-  unsigned int v68; // edx
+  unsigned int v68 CLASH95_UNUSED; // edx
   int attacker_unit_type; // eax
   int v70; // edx
   int v71; // edx
   int v73; // eax
-  int v74; // edx
-  int v75; // ecx
-  int v76; // edx
-  int v77; // edx
-  int v78; // ecx
+  int v74 CLASH95_UNUSED; // edx
+  int v75 CLASH95_UNUSED; // ecx
+  int v76 CLASH95_UNUSED; // edx
+  int v77 CLASH95_UNUSED; // edx
+  int v78 CLASH95_UNUSED; // ecx
   int v79; // eax
-  int v80; // edx
+  int v80 CLASH95_UNUSED; // edx
   char attacker_owner_return; // bl
   int v82; // ecx
   _DWORD *return_sprite_set; // eax

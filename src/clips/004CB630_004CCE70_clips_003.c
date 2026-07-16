@@ -729,7 +729,7 @@ int  Defglobal_SetResetGlobalsCommand(int a1, double a2)
   int v5; // esi
   int v7; // [esp-4h] [ebp-28h] BYREF
   __int64 argValue; // [esp+0h] [ebp-24h]
-  int v9; // [esp+1Ch] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v9 = a1;
   tokenType = Lexer_TokenExpect(1);
@@ -795,7 +795,7 @@ void  Defglobal_ShowDefglobalsCommand(int a1, double a2, int a3)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (004CC480) --------------------------------------------------------
-void __fastcall Defglobal_ShowDefglobalsForModules(int a1, int theModule)
+void __fastcall Defglobal_ShowDefglobalsForModules(int a1 CLASH95_UNUSED, int theModule)
 {
   int Enum; // edi
   int printModuleName; // esi
@@ -1358,7 +1358,7 @@ LABEL_5:
 }
 
 //----- (004CCD30) --------------------------------------------------------
-int  Defglobal_WriteModuleHeaderToCode(int filePtr, int theModule, int maxIndices, int moduleCount)
+int  Defglobal_WriteModuleHeaderToCode(int filePtr, int theModule, int maxIndices, int moduleCount CLASH95_UNUSED)
 {
   int v5; // edx
   int v6; // ecx

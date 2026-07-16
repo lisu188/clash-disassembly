@@ -287,7 +287,7 @@ signed int Class_RefreshWatchExpressions(void)
   int v9; // [esp+0h] [ebp-34h] BYREF
   _BYTE *scopeBytePtr; // [esp+4h] [ebp-30h]
   int bucketOffset; // [esp+8h] [ebp-2Ch]
-  int v12; // [esp+Ch] [ebp-28h]
+  int v12 CLASH95_UNUSED; // [esp+Ch] [ebp-28h]
   int scopeBitMask; // [esp+10h] [ebp-24h]
   int bitmapSize; // [esp+14h] [ebp-20h]
   _BYTE *bitmapBuffer; // [esp+18h] [ebp-1Ch]

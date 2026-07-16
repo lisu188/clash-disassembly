@@ -355,7 +355,7 @@ int  Class_PrintSlotBasicInfoTable(
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004D51D0) --------------------------------------------------------
-signed int  Class_PrintSlotSourceClasses(int logicalName, int slotName, int classIndex, unsigned __int16 *precedenceList, int a5)
+signed int  Class_PrintSlotSourceClasses(int logicalName, int slotName, int classIndex, unsigned __int16 *precedenceList, int a5 CLASH95_UNUSED)
 {
   _BYTE *foundSlot; // eax
   int v9; // ecx
@@ -651,7 +651,7 @@ unsigned int  Class_ClassAbstractPCommand(int a1, double a2)
   int v4; // ecx
   int argValue; // [esp-8h] [ebp-24h] BYREF
   int argDataObject; // [esp+0h] [ebp-1Ch]
-  int v7; // [esp+14h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v7 = a1;
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
@@ -680,7 +680,7 @@ unsigned int  Class_ClassReactivePCommand(int a1, double a2)
   int v4; // ecx
   int argValue; // [esp-8h] [ebp-24h] BYREF
   int argDataObject; // [esp+0h] [ebp-1Ch]
-  int v7; // [esp+14h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v7 = a1;
   result = Lexer_ParseValueList(1, &argValue, 2, a2);

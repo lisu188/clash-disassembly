@@ -173,7 +173,7 @@ int * Defgeneric_GetMethodRestrictionsCommand(_DWORD *returnValue, int a2, doubl
   int theGeneric; // edi
   _DWORD argData[2]; // [esp-8h] [ebp-2Ch] BYREF
   int argValue; // [esp+0h] [ebp-24h]
-  int v9; // [esp+1Ch] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v9 = a2;
   if ( Lexer_ParseValueList(1, argData, 2, context)
@@ -470,7 +470,7 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004984D0) --------------------------------------------------------
-int __fastcall Defgeneric_PrintMethodsList(int logicalName, int theGeneric)
+int __fastcall Defgeneric_PrintMethodsList(int logicalName CLASH95_UNUSED, int theGeneric)
 {
   unsigned int methodIndex; // ebp
   int methodOffset; // edi

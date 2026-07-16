@@ -64,11 +64,11 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
   int v52; // ecx
   int savedOccupants[66]; // [esp+0h] [ebp-164h]
   int candidateListCopy; // [esp+108h] [ebp-5Ch] BYREF
-  void **candidateListVtable; // [esp+10Ch] [ebp-58h]
-  int v56; // [esp+110h] [ebp-54h]
-  int v57; // [esp+114h] [ebp-50h]
-  int v58; // [esp+118h] [ebp-4Ch]
-  int v59; // [esp+11Ch] [ebp-48h]
+  void **candidateListVtable CLASH95_UNUSED; // [esp+10Ch] [ebp-58h]
+  int v56 CLASH95_UNUSED; // [esp+110h] [ebp-54h]
+  int v57 CLASH95_UNUSED; // [esp+114h] [ebp-50h]
+  int v58 CLASH95_UNUSED; // [esp+118h] [ebp-4Ch]
+  int v59 CLASH95_UNUSED; // [esp+11Ch] [ebp-48h]
   int trackStep; // [esp+120h] [ebp-44h]
   int rowByteOffset; // [esp+124h] [ebp-40h]
   int savedRow; // [esp+128h] [ebp-3Ch]
@@ -890,8 +890,8 @@ LABEL_5:
 //----- (0043C1E0) --------------------------------------------------------
 signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int side)
 {
-  int v1; // edx
-  int v2; // ecx
+  int v1 CLASH95_UNUSED; // edx
+  int v2 CLASH95_UNUSED; // ecx
   int bestEffectiveness; // esi
   int slotCounter; // ebx
   int slotByteOffset; // ecx
@@ -1160,10 +1160,10 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
   int targetRow; // ebp
   int enemyRecordAddr; // ebx
   int targetCol; // ebx
-  int recordBase; // esi
-  int v9; // edx
+  int recordBase CLASH95_UNUSED; // esi
+  int v9 CLASH95_UNUSED; // edx
   BOOL inRange; // eax
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int enemyRecord; // esi
   int v14; // ecx
   int enemyUnitRecord; // eax
@@ -1173,9 +1173,9 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
   int enemyUnitRecord3; // eax
   int pathMoveCost; // edx
   int rangeValue; // eax
-  int *v22; // ecx
+  int *v22 CLASH95_UNUSED; // ecx
   int trackIndex; // eax
-  int v24; // edx
+  int v24 CLASH95_UNUSED; // edx
   int unitRange; // edx
   int firstTrackStep; // [esp+8h] [ebp-34h]
   int trackEntry; // [esp+8h] [ebp-34h]

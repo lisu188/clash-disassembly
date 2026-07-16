@@ -72,8 +72,8 @@ int  Method_ParseWildcardRestrictionString(_DWORD *theDefgeneric, char *restrict
   int argPosition; // [esp+24h] [ebp-20h]
   signed int lastRestriction; // [esp+28h] [ebp-1Ch]
   int charIndex; // [esp+2Ch] [ebp-18h]
-  char curChar; // [esp+30h] [ebp-14h]
-  char v66; // [esp+31h] [ebp-13h]
+  char curChar CLASH95_UNUSED; // [esp+30h] [ebp-14h]
+  char v66 CLASH95_UNUSED; // [esp+31h] [ebp-13h]
   char defaultTypeChar; // [esp+34h] [ebp-10h]
 
   defgeneric = theDefgeneric;
@@ -984,8 +984,8 @@ int  AST_NewSlotReferenceNode(__int16 refType, int theExpr, int slotDesc)
   int result; // eax
   int v6; // ecx
   __int16 handlerSlotRef; // [esp+0h] [ebp-10h] BYREF
-  int slotID; // [esp+2h] [ebp-Eh]
-  int savedExpr; // [esp+Ch] [ebp-4h]
+  int slotID CLASH95_UNUSED; // [esp+2h] [ebp-Eh]
+  int savedExpr CLASH95_UNUSED; // [esp+Ch] [ebp-4h]
 
   savedExpr = theExpr;
   Mem_AllocArray(&handlerSlotRef, 6);
@@ -1134,8 +1134,8 @@ const void * Rules_BsaveWriteDefinstancesRecord(int theDefinstances, int filePtr
 {
   int v4; // ecx
   _DWORD bsaveRecord[3]; // [esp-Ch] [ebp-18h] BYREF
-  int expressionIndex; // [esp+0h] [ebp-Ch]
-  int v8; // [esp+4h] [ebp-8h]
+  int expressionIndex CLASH95_UNUSED; // [esp+0h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+4h] [ebp-8h]
 
   v8 = a3;
   AST_ExtractPatternBindingInfo(bsaveRecord, theDefinstances);

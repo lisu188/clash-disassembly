@@ -1425,7 +1425,7 @@ int  WCIsvListBase_TransferAllInto(int result, int destList)
 // 43A82C: variable 'v4' is possibly undefined
 
 //----- (0043A880) --------------------------------------------------------
-signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int matchValue, int list)
+signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int matchValue CLASH95_UNUSED, int list)
 {
   int poppedValue; // eax
   int targetValue; // ecx

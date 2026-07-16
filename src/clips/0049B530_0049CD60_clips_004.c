@@ -20,7 +20,7 @@ signed int  Dribble_PrintRouter(int logicalName, unsigned __int8 *str, int a3)
   int v11; // edx
   char v12; // al
   _BYTE timestampBuffer[16]; // [esp+0h] [ebp-18h] BYREF
-  int v14; // [esp+10h] [ebp-8h]
+  int v14 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
 
   v14 = a3;
   v4 = str;

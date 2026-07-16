@@ -805,7 +805,7 @@ int  UI_GetTextXOffset(int slotIndex)
 void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, char a4, DWORD allocContext)
 {
   TextSpriteResourceSlotRecord *slot;
-  int v6; // edx
+  int v6 CLASH95_UNUSED; // edx
   int existingSpriteSet; // ecx
   _BYTE *fontCursor; // eax
   unsigned __int8 *checksum; // ebx
@@ -823,7 +823,7 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
   char secondChar; // al
   int v22; // ecx
   int v23; // ecx
-  int v24; // edx
+  int v24 CLASH95_UNUSED; // edx
   _DWORD *cachedSpriteSet; // eax
   unsigned __int8 v26[1024]; // [esp+0h] [ebp-4E0h] BYREF
   CHAR cacheFilename[100]; // [esp+400h] [ebp-E0h] BYREF

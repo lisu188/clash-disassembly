@@ -197,7 +197,7 @@ int  Rules_FreeDeftemplateSlotList(int slotList)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0048A910) --------------------------------------------------------
-int __fastcall Rules_PatchDeftemplateSlotModuleRef(int oldSlotHead, int newPatternHead)
+int __fastcall Rules_PatchDeftemplateSlotModuleRef(int oldSlotHead CLASH95_UNUSED, int newPatternHead)
 {
   int Enum; // ebx
   int theDeftemplate; // edx
@@ -625,7 +625,7 @@ signed int  Rules_InsertPriorityCallbackByRef(int name, int theFunction, int *li
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0048AED0) --------------------------------------------------------
-signed int __fastcall Rules_RemoveNamedCallListEntry(int name, _DWORD *listHead)
+signed int __fastcall Rules_RemoveNamedCallListEntry(int name CLASH95_UNUSED, _DWORD *listHead)
 {
   _DWORD *currentNode; // ecx
   _DWORD *lastNode; // esi
@@ -725,7 +725,7 @@ char * Str_Append(const char *appendStr, char *oldStr, unsigned int *oldMax, _DW
   char *theString; // ebp
   unsigned int lengthWithNull; // kr04_4
   signed int requiredSize; // ebx
-  int v9; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   char *destPtr; // edi
   char currentChar; // al
   char nextChar; // al

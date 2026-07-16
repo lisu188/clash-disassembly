@@ -773,9 +773,9 @@ int  Method_DispatchGenericCall(
   int v23; // ecx
   int v24; // ecx
   __int16 callExpr; // [esp+0h] [ebp-34h] BYREF
-  int v26; // [esp+2h] [ebp-32h]
-  int argExprChain; // [esp+6h] [ebp-2Eh]
-  int v28; // [esp+Ah] [ebp-2Ah]
+  int v26 CLASH95_UNUSED; // [esp+2h] [ebp-32h]
+  int argExprChain CLASH95_UNUSED; // [esp+6h] [ebp-2Eh]
+  int v28 CLASH95_UNUSED; // [esp+Ah] [ebp-2Ah]
   int savedReentryFlag; // [esp+10h] [ebp-24h]
   int prevMethodArg; // [esp+14h] [ebp-20h]
   int oldGeneric; // [esp+18h] [ebp-1Ch]
@@ -1065,10 +1065,10 @@ int  Method_OverrideNextMethod(_DWORD *returnValue, int a2, double a3)
   int savedMethod; // esi
   int v6; // ecx
   __int16 callExpr; // [esp+0h] [ebp-20h] BYREF
-  int v8; // [esp+2h] [ebp-1Eh]
-  int v9; // [esp+6h] [ebp-1Ah]
-  int v10; // [esp+Ah] [ebp-16h]
-  int v11; // [esp+18h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+2h] [ebp-1Eh]
+  int v9 CLASH95_UNUSED; // [esp+6h] [ebp-1Ah]
+  int v10 CLASH95_UNUSED; // [esp+Ah] [ebp-16h]
+  int v11 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v11 = a2;
   returnValuePtr = returnValue;

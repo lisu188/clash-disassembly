@@ -214,7 +214,7 @@ _DWORD * RenderState_LoadDefaultCursorSprite(int render_state)
 }
 
 //----- (00460CB0) --------------------------------------------------------
-_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int render_state, int label_text, int a3, DWORD a4)
+_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int render_state, int label_text, int a3 CLASH95_UNUSED, DWORD a4)
 {
   unsigned __int8 *source_bytes; // eax
   unsigned __int8 checksum_xor; // bl

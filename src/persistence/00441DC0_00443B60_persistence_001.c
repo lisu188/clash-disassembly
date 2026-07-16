@@ -872,7 +872,7 @@ int Port_FindAndInit(void)
   int columnIndex; // eax
   int tileStride; // edx
   int tileId; // ecx
-  int dataBase; // eax
+  int dataBase CLASH95_UNUSED; // eax
   int portColumnOffset; // ecx
   int shoreTileId; // edx
   _WORD *bottomRightTile; // edx
@@ -957,7 +957,7 @@ _DWORD *Rules_LogPortLocation(void)
 int  Port_NewTurn(DWORD logContext)
 {
   int result; // eax
-  int dataBase; // eax
+  int dataBase CLASH95_UNUSED; // eax
   int reinforcementArrivalTurn; // ebx
   int logArg; // ecx
 

@@ -26,21 +26,21 @@ DWORD  Battle_RunTacticalCombat(
 {
   int v6; // ecx
   int v7; // ecx
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   unsigned __int8 backgroundVariant; // al
   _DWORD *backgroundSpriteSet; // eax
   _DWORD *buttonsSpriteSet; // eax
-  int v12; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   _DWORD *panelIconSpriteSet; // eax
-  int v14; // ecx
+  int v14 CLASH95_UNUSED; // ecx
   _DWORD *casualtySpriteSet; // eax
   _DWORD *uiFrameSpriteSet; // eax
   int SpriteForChar; // eax
   int uiFrameSprite1; // eax
   int uiFrameSprite2; // eax
   int uiFrameSprite3; // eax
-  int v21; // edx
-  unsigned int v22; // ecx
+  int v21 CLASH95_UNUSED; // edx
+  unsigned int v22 CLASH95_UNUSED; // ecx
   unsigned __int8 defenderPlayerIndex; // al
   int otherMapX; // eax
   int otherMapY; // ecx
@@ -51,10 +51,10 @@ DWORD  Battle_RunTacticalCombat(
   int colCount; // eax
   int j; // edx
   int colTileValue; // ecx
-  int v33; // ecx
+  int v33 CLASH95_UNUSED; // ecx
   int k; // eax
-  int v35; // ecx
-  int v36; // ecx
+  int v35 CLASH95_UNUSED; // ecx
+  int v36 CLASH95_UNUSED; // ecx
   unsigned __int8 *buildingRecordPtr; // esi
   int activeRowBase; // edx
   __int16 *defenderGroupPtr; // esi
@@ -83,7 +83,7 @@ DWORD  Battle_RunTacticalCombat(
   char v62; // bl
   unsigned __int8 *buildingRecordForSave; // edi
   int v64; // ecx
-  int v65; // ecx
+  int v65 CLASH95_UNUSED; // ecx
   int v66; // ecx
   int playerData; // eax
   int v69; // ecx
@@ -878,10 +878,10 @@ int  UnitBattle_DrawTileContents(int tileRow, int tileCol)
   int nextRowMoveOffsetY; // eax
   int overlaySprite; // eax
   int selectSprite; // eax
-  int v34; // ecx
+  int v34 CLASH95_UNUSED; // ecx
   int result; // eax
   int casualtySprite; // eax
-  int v37; // ecx
+  int v37 CLASH95_UNUSED; // ecx
   int gateSpriteEarly; // eax
   int prevRowGateCellPtr; // ecx
   _BYTE *cornerCellPtr; // edx

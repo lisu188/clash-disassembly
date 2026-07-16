@@ -789,7 +789,7 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
   int valueBuffer; // [esp-4h] [ebp-20h] BYREF
   int theType; // [esp+0h] [ebp-1Ch]
   int theValue; // [esp+4h] [ebp-18h]
-  int v13; // [esp+18h] [ebp-4h]
+  int v13 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v13 = functionName;
   Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &valueBuffer, a1, a3);
@@ -831,7 +831,7 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00483B90) --------------------------------------------------------
-int __fastcall Instance_ReportNoSuchInstanceError(int instanceName, int functionName)
+int __fastcall Instance_ReportNoSuchInstanceError(int instanceName CLASH95_UNUSED, int functionName)
 {
   int v3; // ecx
   int v4; // ecx
@@ -855,7 +855,7 @@ int __fastcall Instance_ReportNoSuchInstanceError(int instanceName, int function
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00483C00) --------------------------------------------------------
-int __fastcall Instance_ReportNoSuchSlotError(int slotName, int functionName)
+int __fastcall Instance_ReportNoSuchSlotError(int slotName CLASH95_UNUSED, int functionName)
 {
   int v3; // ecx
   int v4; // ecx

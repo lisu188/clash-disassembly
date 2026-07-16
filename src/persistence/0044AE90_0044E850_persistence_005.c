@@ -46,7 +46,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
   int mapWidthTiles; // eax
   int mapHeightTiles; // eax
   int n; // edx
-  int v35; // eax
+  int v35 CLASH95_UNUSED; // eax
   int ii; // edx
   int jj; // ecx
   int kk; // eax
@@ -794,21 +794,21 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
   int buildingRecordByteOffset; // edx
   int v13; // ecx
   int cavalryColumn; // ebx
-  int v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
+  int v15 CLASH95_UNUSED; // ecx
+  int v16 CLASH95_UNUSED; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   int castleRecordByteOffset; // edx
   int v19; // ecx
   int cavalryColumn2; // ebx
-  int v21; // ecx
-  int v22; // ecx
-  int v23; // ecx
-  int v24; // ecx
-  int v25; // ecx
-  int v26; // ecx
-  int v27; // ecx
-  int v28; // ecx
-  int v29; // ecx
+  int v21 CLASH95_UNUSED; // ecx
+  int v22 CLASH95_UNUSED; // ecx
+  int v23 CLASH95_UNUSED; // ecx
+  int v24 CLASH95_UNUSED; // ecx
+  int v25 CLASH95_UNUSED; // ecx
+  int v26 CLASH95_UNUSED; // ecx
+  int v27 CLASH95_UNUSED; // ecx
+  int v28 CLASH95_UNUSED; // ecx
+  int v29 CLASH95_UNUSED; // ecx
   int builderColumn; // [esp-4h] [ebp-B4h]
   _BYTE mapPathBuffer[100]; // [esp+0h] [ebp-B0h] BYREF
   int rowMinus1; // [esp+64h] [ebp-4Ch]

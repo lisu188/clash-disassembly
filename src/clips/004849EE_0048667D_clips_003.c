@@ -110,7 +110,7 @@ unsigned int  CRT_WatcomEHUnwindToState(unsigned int targetState, int unwindBloc
   int cleanupInfo; // esi
   _BYTE traverseCursor[4]; // [esp+4h] [ebp-24h] BYREF
   unsigned int currentState; // [esp+8h] [ebp-20h]
-  unsigned int traverseTargetState; // [esp+Ch] [ebp-1Ch]
+  unsigned int traverseTargetState CLASH95_UNUSED; // [esp+Ch] [ebp-1Ch]
   char traverseFlags; // [esp+11h] [ebp-17h]
   int entry; // [esp+14h] [ebp-14h]
 
@@ -210,7 +210,7 @@ unsigned int  CRT_WatcomEHUnwindThreadToState(int a1, int a2)
 // 4B42EA: using guessed type __int64 __thiscall _wcpp_4_pgm_thread__(_DWORD);
 
 //----- (0048509C) --------------------------------------------------------
-unsigned int __fastcall CRT_WatcomEHUnwindToExceptionList(int a1, int a2)
+unsigned int __fastcall CRT_WatcomEHUnwindToExceptionList(int a1, int a2 CLASH95_UNUSED)
 {
   unsigned int v2; // ecx
   _DWORD v4[6]; // [esp+0h] [ebp-18h] BYREF
@@ -255,7 +255,7 @@ int  CRT_InitializeProcessStartupInfo(int threadDataMgmtDisabled, int a2, int a3
   _BYTE v13[520]; // [esp+0h] [ebp-41Ch] BYREF
   CHAR Filename[260]; // [esp+208h] [ebp-214h] BYREF
   CHAR moduleFilename[268]; // [esp+30Ch] [ebp-110h] BYREF
-  int v16; // [esp+418h] [ebp-4h]
+  int v16 CLASH95_UNUSED; // [esp+418h] [ebp-4h]
   static const _WORD emptyWideCommandLine[] = { 0 };
 
   v16 = a3;
@@ -589,7 +589,7 @@ signed int  Rules_PrintWarningID(int module, int warningID, int printCR)
 // 51A610: using guessed type char *off_51A610[6];
 
 //----- (00485A60) --------------------------------------------------------
-signed int __fastcall Rules_ReportCantFindItem(int itemType, int itemName)
+signed int __fastcall Rules_ReportCantFindItem(int itemType CLASH95_UNUSED, int itemName)
 {
   int v3; // ecx
   int v4; // ecx
@@ -612,7 +612,7 @@ signed int __fastcall Rules_ReportCantFindItem(int itemType, int itemName)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485AD0) --------------------------------------------------------
-signed int __fastcall Rules_ReportCantDeleteItem(int itemType, int itemName)
+signed int __fastcall Rules_ReportCantDeleteItem(int itemType CLASH95_UNUSED, int itemName)
 {
   int v3; // ecx
   int v4; // ecx
@@ -635,7 +635,7 @@ signed int __fastcall Rules_ReportCantDeleteItem(int itemType, int itemName)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485B40) --------------------------------------------------------
-signed int __fastcall Rules_ReportAlreadyParsed(int coupler, int whichItem)
+signed int __fastcall Rules_ReportAlreadyParsed(int coupler CLASH95_UNUSED, int whichItem)
 {
   int v3; // ecx
   int v4; // ecx
@@ -692,7 +692,7 @@ signed int Rules_ReportLocalVariableError(void)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00485C80) --------------------------------------------------------
-signed int __fastcall Rules_ReportSystemError(int module, int errorID)
+signed int __fastcall Rules_ReportSystemError(int module CLASH95_UNUSED, int errorID)
 {
   int v3; // ecx
   int v4; // ecx
@@ -806,7 +806,7 @@ signed int Rules_RegisterExitFunction(void)
 }
 
 //----- (00485E60) --------------------------------------------------------
-signed int  Output_Write(int logicalName, int str, int a3)
+signed int  Output_Write(int logicalName, int str, int a3 CLASH95_UNUSED)
 {
   int router; // ecx
   void (__fastcall *router_write)(int, int); // ecx

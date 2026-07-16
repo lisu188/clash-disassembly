@@ -9,7 +9,7 @@
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0048D570) --------------------------------------------------------
-int __fastcall Rules_ReportMultifieldAssertIntoSingleSlotError(int a1, int theDeftemplate)
+int __fastcall Rules_ReportMultifieldAssertIntoSingleSlotError(int a1 CLASH95_UNUSED, int theDeftemplate)
 {
   int v3; // ecx
   int v4; // ecx
@@ -73,10 +73,10 @@ int  Rules_CheckFactAgainstSlotConstraints(int theFact)
   int v10; // ecx
   int *v11; // ecx
   int dataObject; // [esp+0h] [ebp-44h] BYREF
-  int valueType; // [esp+4h] [ebp-40h]
-  int value; // [esp+8h] [ebp-3Ch]
-  int rangeBegin; // [esp+Ch] [ebp-38h]
-  int rangeEnd; // [esp+10h] [ebp-34h]
+  int valueType CLASH95_UNUSED; // [esp+4h] [ebp-40h]
+  int value CLASH95_UNUSED; // [esp+8h] [ebp-3Ch]
+  int rangeBegin CLASH95_UNUSED; // [esp+Ch] [ebp-38h]
+  int rangeEnd CLASH95_UNUSED; // [esp+10h] [ebp-34h]
   _BYTE factIdBuffer[44]; // [esp+18h] [ebp-2Ch] BYREF
 
   result = Rules_DynamicConstraintCheckingEnabled();
@@ -581,14 +581,14 @@ int  Rules_EvaluatePatternNetworkTest(signed int patternPtr, int theTest, int a3
   int operatorValue; // eax
   int orChild; // ecx
   int result; // eax
-  int v9; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   int savedExprNested; // esi
   int savedExprSimple; // esi
   int savedExprRange; // esi
   int andChild; // ecx
-  int v14; // ecx
+  int v14 CLASH95_UNUSED; // ecx
   _DWORD parsed[6]; // [esp-4h] [ebp-24h] BYREF
-  int v17; // [esp+1Ch] [ebp-4h]
+  int v17 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v17 = a3;
   if ( !theTest )
@@ -734,7 +734,7 @@ signed int  Rules_ReportPatternNetworkRules(signed int result, int processSiblin
   int v6; // ecx
   int v7; // ecx
   _BYTE messageBuffer[68]; // [esp+0h] [ebp-4Ch] BYREF
-  int v9; // [esp+44h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+44h] [ebp-8h]
 
   v9 = j;
   for ( i = result; i; i = *(_DWORD *)(uintptr_t)(i + 40) )
@@ -976,8 +976,8 @@ signed int  Rules_EvaluateJoinExpression(
   __int16 v19; // ax
   __int16 v20; // ax
   __int16 v21; // ax
-  int v22; // edx
-  int v23; // ecx
+  int v22 CLASH95_UNUSED; // edx
+  int v23 CLASH95_UNUSED; // ecx
   __int16 v24; // ax
   __int16 v25; // ax
   __int16 v26; // ax

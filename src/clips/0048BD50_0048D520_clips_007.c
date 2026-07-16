@@ -167,7 +167,7 @@ _DWORD * Rules_GetFactListFunction(int returnValue, double a2)
   int v8; // edx
   _DWORD argValue[2]; // [esp-4h] [ebp-24h] BYREF
   int v10; // [esp+4h] [ebp-1Ch]
-  int v11; // [esp+18h] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v11 = returnValue;
   numArgs = Lexer_TokenExpect(1);
@@ -277,7 +277,7 @@ int  Rules_ResolveFactArgument(int argumentPosition, int theFunction, int noFact
   int argType; // [esp+0h] [ebp-30h]
   int argValue; // [esp+4h] [ebp-2Ch]
   _BYTE tempBuffer[24]; // [esp+14h] [ebp-1Ch] BYREF
-  int v12; // [esp+2Ch] [ebp-4h]
+  int v12 CLASH95_UNUSED; // [esp+2Ch] [ebp-4h]
 
   v12 = theFunction;
   Rules_RtnUnknown(argumentPosition, &v8, a4);
@@ -445,11 +445,11 @@ const void * Rules_FactPatternNetworkWriteNodeRecord(int thePattern, int theFile
   int v15; // eax
   _BYTE tempNode[8]; // [esp+0h] [ebp-34h] BYREF
   int packedFields; // [esp+8h] [ebp-2Ch]
-  signed int networkTestIndex; // [esp+Ch] [ebp-28h]
-  int nextLevelIndex; // [esp+10h] [ebp-24h]
-  int lastLevelIndex; // [esp+14h] [ebp-20h]
-  int leftNodeIndex; // [esp+18h] [ebp-1Ch]
-  int rightNodeIndex; // [esp+1Ch] [ebp-18h]
+  signed int networkTestIndex CLASH95_UNUSED; // [esp+Ch] [ebp-28h]
+  int nextLevelIndex CLASH95_UNUSED; // [esp+10h] [ebp-24h]
+  int lastLevelIndex CLASH95_UNUSED; // [esp+14h] [ebp-20h]
+  int leftNodeIndex CLASH95_UNUSED; // [esp+18h] [ebp-1Ch]
+  int rightNodeIndex CLASH95_UNUSED; // [esp+1Ch] [ebp-18h]
 
   Rules_BsavePackSharedRecordHeader((int)(intptr_t)tempNode, thePattern);
   v4 = *(_DWORD *)(uintptr_t)(v3 + 20);
@@ -1400,7 +1400,7 @@ int  Rules_MultifieldsEqual(int segment1, int segment2)
 // 48D478: variable 'i' is possibly undefined
 
 //----- (0048D4B0) --------------------------------------------------------
-signed int __fastcall Rules_ReportInvalidSlotError(int a1, int deftemplateName)
+signed int __fastcall Rules_ReportInvalidSlotError(int a1 CLASH95_UNUSED, int deftemplateName)
 {
   int v3; // ecx
   int v4; // ecx

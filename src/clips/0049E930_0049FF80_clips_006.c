@@ -864,8 +864,8 @@ double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
   int currentData; // [esp+18h] [ebp-2Ch] BYREF
   int currentType; // [esp+1Ch] [ebp-28h]
   int currentValue; // [esp+20h] [ebp-24h]
-  int v14; // [esp+38h] [ebp-Ch]
-  int v15; // [esp+3Ch] [ebp-8h]
+  int v14 CLASH95_UNUSED; // [esp+38h] [ebp-Ch]
+  int v15 CLASH95_UNUSED; // [esp+3Ch] [ebp-8h]
 
   v15 = a1;
   v14 = a3;

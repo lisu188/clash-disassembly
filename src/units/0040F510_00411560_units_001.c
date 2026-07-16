@@ -673,23 +673,23 @@ signed int  UnitStack_CanReachQueuedPathTileWithFogOverlay(__int16 *stackPtr, in
 //----- (00410330) --------------------------------------------------------
 void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, char a3, DWORD a4, double a5)
 {
-  int v5; // ecx
-  int v6; // ecx
+  int v5 CLASH95_UNUSED; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   __int16 *stackPtr; // esi
   int pathLength; // ebx
   signed int v9; // ebp
   signed int viewportLeft; // edi
   int v11; // eax
-  int v12; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   int v13; // ebx
   int stackRecordBase; // eax
   DWORD v15; // ebp
   int v16; // edx
-  int v17; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   _DWORD *v18; // ecx
   int remainingPathLen; // edi
   char unitOwner; // bl
-  int v21; // ecx
+  int v21 CLASH95_UNUSED; // ecx
   _DWORD *spriteSet; // eax
   signed int currentActionPoints; // eax
   int stepCost; // edx
@@ -705,7 +705,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
   DWORD destCol; // ebp
   int destRow; // edi
   int moveCost; // ecx
-  int v37; // ecx
+  int v37 CLASH95_UNUSED; // ecx
   int v38; // eax
   DWORD v39; // ebp
   __int16 *stackTilePtr; // edi

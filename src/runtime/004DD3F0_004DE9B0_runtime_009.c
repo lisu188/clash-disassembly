@@ -871,7 +871,7 @@ signed int  Rules_CheckRHSActionsAgainstCEConstraints(signed int result, int the
 // 4DE1B3: variable 'v5' is possibly undefined
 
 //----- (004DE1D0) --------------------------------------------------------
-signed int  Rules_CheckFieldRestrictionAgainstRHSAction(int theExpression, int lastOne, int theFunction, int argNumber, int theLHS)
+signed int  Rules_CheckFieldRestrictionAgainstRHSAction(int theExpression, int lastOne, int theFunction, int argNumber, int theLHS CLASH95_UNUSED)
 {
   int errorFlag; // ebx
   _DWORD *v10; // ecx
@@ -1173,7 +1173,7 @@ BOOL  Rules_JoinTestNodeMatches(
         int negatedRHS,
         __int16 *joinTest,
         int endDepth,
-        int currentDepth,
+        int currentDepth CLASH95_UNUSED,
         int isLastPattern,
         int joinStack)
 {
@@ -1289,10 +1289,10 @@ int ** Defgeneric_InitializeFromRestrictionString(int theDefgeneric, int a2)
   int **result; // eax
   _DWORD *v3; // ecx
   __int16 actionExpr; // [esp+0h] [ebp-14h] BYREF
-  int **exprValue; // [esp+2h] [ebp-12h]
-  int v6; // [esp+6h] [ebp-Eh]
-  int v7; // [esp+Ah] [ebp-Ah]
-  int v8; // [esp+10h] [ebp-4h]
+  int **exprValue CLASH95_UNUSED; // [esp+2h] [ebp-12h]
+  int v6 CLASH95_UNUSED; // [esp+6h] [ebp-Eh]
+  int v7 CLASH95_UNUSED; // [esp+Ah] [ebp-Ah]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-4h]
 
   v8 = a2;
   result = Rules_MakeSymbol(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)theDefgeneric + 16));

@@ -950,9 +950,9 @@ const void * Defgeneric_BsaveWriteGenericRecord(int theDefgeneric, int fp, int a
 {
   int v4; // ecx
   _DWORD dummyGeneric[3]; // [esp-Ch] [ebp-1Ch] BYREF
-  int methodsIndex; // [esp+0h] [ebp-10h]
-  int methodCount; // [esp+4h] [ebp-Ch]
-  int v9; // [esp+8h] [ebp-8h]
+  int methodsIndex CLASH95_UNUSED; // [esp+0h] [ebp-10h]
+  int methodCount CLASH95_UNUSED; // [esp+4h] [ebp-Ch]
+  int v9 CLASH95_UNUSED; // [esp+8h] [ebp-8h]
 
   v9 = a3;
   AST_ExtractPatternBindingInfo(dummyGeneric, theDefgeneric);
@@ -980,8 +980,8 @@ _DWORD * Defgeneric_BsaveWriteMethodRecord(_DWORD *result, int fp)
   _DWORD *theMethod; // edx
   int v7; // ecx
   _DWORD dummyMethod[6]; // [esp+0h] [ebp-34h] BYREF
-  int restrictionsIndex; // [esp+18h] [ebp-1Ch]
-  int actionsIndex; // [esp+1Ch] [ebp-18h]
+  int restrictionsIndex CLASH95_UNUSED; // [esp+18h] [ebp-1Ch]
+  int actionsIndex CLASH95_UNUSED; // [esp+1Ch] [ebp-18h]
 
   theDefgeneric = (int)(intptr_t)result;
   methodIndex = 0;
@@ -1038,8 +1038,8 @@ _DWORD * Defgeneric_BsaveWriteRestrictionRecord(_DWORD *result, int fp)
   _DWORD *theRestriction; // edx
   int v9; // ecx
   int typesIndex; // [esp+0h] [ebp-2Ch] BYREF
-  int queryIndex; // [esp+4h] [ebp-28h]
-  int typeCount; // [esp+8h] [ebp-24h]
+  int queryIndex CLASH95_UNUSED; // [esp+4h] [ebp-28h]
+  int typeCount CLASH95_UNUSED; // [esp+8h] [ebp-24h]
   unsigned int methodIndex; // [esp+Ch] [ebp-20h]
   int methodOffset; // [esp+10h] [ebp-1Ch]
   int v15; // [esp+14h] [ebp-18h]

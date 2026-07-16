@@ -134,8 +134,8 @@ int Rules_MathSingularityError(void)
 double  Rules_CosBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -149,8 +149,8 @@ double  Rules_CosBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_SinBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -167,8 +167,8 @@ double  Rules_TanBuiltin(int a1, int a2, int a3, double a4)
   long double theNumber; // [esp+0h] [ebp-20h] BYREF
   long double cosValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -193,8 +193,8 @@ double  Rules_SecBuiltin(int a1, int a2, int a3, double a4)
   long double theNumber; // [esp+0h] [ebp-20h] BYREF
   long double cosValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -219,8 +219,8 @@ double  Rules_CscBuiltin(int a1, int a2, int a3, double a4)
   long double theNumber; // [esp+0h] [ebp-20h] BYREF
   long double sinValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -245,8 +245,8 @@ double  Rules_CotBuiltin(int a1, int a2, int a3, double a4)
   long double theNumber; // [esp+0h] [ebp-20h] BYREF
   long double sinValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -268,8 +268,8 @@ double  Rules_CotBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AcosBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v9; // [esp+10h] [ebp-8h]
-  int v10; // [esp+14h] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -286,8 +286,8 @@ double  Rules_AcosBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AsinBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v9; // [esp+10h] [ebp-8h]
-  int v10; // [esp+14h] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -304,8 +304,8 @@ double  Rules_AsinBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AtanBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -319,8 +319,8 @@ double  Rules_AtanBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AsecBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v9; // [esp+10h] [ebp-8h]
-  int v10; // [esp+14h] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -337,8 +337,8 @@ double  Rules_AsecBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AcscBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v9; // [esp+10h] [ebp-8h]
-  int v10; // [esp+14h] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v10 = a1;
   v9 = a2;
@@ -355,10 +355,10 @@ double  Rules_AcscBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_AcotBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-1Ch] BYREF
-  double v6; // [esp+8h] [ebp-14h]
-  int v7; // [esp+10h] [ebp-Ch]
-  int v8; // [esp+14h] [ebp-8h]
-  int v9; // [esp+18h] [ebp-4h]
+  double v6 CLASH95_UNUSED; // [esp+8h] [ebp-14h]
+  int v7 CLASH95_UNUSED; // [esp+10h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -386,8 +386,8 @@ double  Rules_AcotBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_CoshBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -401,8 +401,8 @@ double  Rules_CoshBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_SinhBuiltin(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -416,8 +416,8 @@ double  Rules_SinhBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_MathTanh(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -431,8 +431,8 @@ double  Rules_MathTanh(int a1, int a2, int a3, double a4)
 double  Rules_MathSech(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v7; // [esp+10h] [ebp-8h]
-  int v8; // [esp+14h] [ebp-4h]
+  int v7 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v8 = a1;
   v7 = a2;
@@ -446,9 +446,9 @@ double  Rules_MathSech(int a1, int a2, int a3, double a4)
 double  Rules_MathCsch(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-20h] BYREF
-  int v8; // [esp+14h] [ebp-Ch]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-Ch]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a3;
@@ -470,9 +470,9 @@ double  Rules_MathCsch(int a1, int a2, int a3, double a4)
 double  Rules_MathCoth(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-20h] BYREF
-  int v8; // [esp+14h] [ebp-Ch]
-  int v9; // [esp+18h] [ebp-8h]
-  int v10; // [esp+1Ch] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-Ch]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v10 = a1;
   v9 = a3;
@@ -494,8 +494,8 @@ double  Rules_MathCoth(int a1, int a2, int a3, double a4)
 double  Rules_MathAcosh(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a2;
@@ -512,8 +512,8 @@ double  Rules_MathAcosh(int a1, int a2, int a3, double a4)
 double  Rules_MathAsinh(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -527,8 +527,8 @@ double  Rules_MathAsinh(int a1, int a2, int a3, double a4)
 double  Rules_MathAtanh(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a2;
@@ -546,8 +546,8 @@ double  Rules_MathAtanh(int a1, int a2, int a3, double a4)
 double  Rules_MathAsech(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a2;
@@ -564,9 +564,9 @@ double  Rules_MathAsech(int a1, int a2, int a3, double a4)
 double  Rules_MathAcsch(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-1Ch] BYREF
-  int v7; // [esp+10h] [ebp-Ch]
-  int v8; // [esp+14h] [ebp-8h]
-  int v9; // [esp+18h] [ebp-4h]
+  int v7 CLASH95_UNUSED; // [esp+10h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -583,8 +583,8 @@ double  Rules_MathAcsch(int a1, int a2, int a3, double a4)
 double  Rules_MathAcoth(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a2;
@@ -602,8 +602,8 @@ double  Rules_MathAcoth(int a1, int a2, int a3, double a4)
 double  Rules_MathExp(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -617,9 +617,9 @@ double  Rules_MathExp(int a1, int a2, int a3, double a4)
 double  Rules_MathLog(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v7; // [esp+8h] [ebp-Ch]
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v7 CLASH95_UNUSED; // [esp+8h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -641,9 +641,9 @@ double  Rules_MathLog(int a1, int a2, int a3, double a4)
 double  Rules_MathLog10(int a1, int a2, int a3, double a4)
 {
   double theNumber; // [esp+0h] [ebp-18h] BYREF
-  int v7; // [esp+8h] [ebp-Ch]
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v7 CLASH95_UNUSED; // [esp+8h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -667,8 +667,8 @@ double  Rules_MathSqrt(int a1, int a2, int a3, double a4)
   int v5; // edx
   long double theNumber; // [esp+0h] [ebp-18h] BYREF
   double v7; // [esp+8h] [ebp-10h]
-  int v8; // [esp+10h] [ebp-8h]
-  int v9; // [esp+14h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a2;
@@ -807,8 +807,8 @@ double Rules_MathPi(void)
 double  Rules_MathDegToRad(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -824,8 +824,8 @@ double  Rules_MathDegToRad(int a1, int a2, int a3, double a4)
 double  Rules_MathRadToDeg(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -841,8 +841,8 @@ double  Rules_MathRadToDeg(int a1, int a2, int a3, double a4)
 double  Rules_MathDegToGrad(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -857,8 +857,8 @@ double  Rules_MathDegToGrad(int a1, int a2, int a3, double a4)
 double  Rules_MathGradToDeg(int a1, int a2, int a3, double a4)
 {
   double theNumber[2]; // [esp+0h] [ebp-18h] BYREF
-  int v6; // [esp+10h] [ebp-8h]
-  int v7; // [esp+14h] [ebp-4h]
+  int v6 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v7 = a1;
   v6 = a2;
@@ -876,7 +876,7 @@ signed int  Rules_MathRound(int returnValue, double a2)
   int theValue; // [esp+8h] [ebp-28h] BYREF
   int theValueType; // [esp+Ch] [ebp-24h]
   int theValueContents; // [esp+10h] [ebp-20h]
-  int v8; // [esp+28h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+28h] [ebp-8h]
 
   v8 = returnValue;
   if ( Lexer_TokenExpect(1) == -1 )
@@ -895,7 +895,7 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
 {
   int *fp; // esi
   _DWORD *result; // eax
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   int lineNumber; // ebp
   int v10; // edx
   int v11; // edx

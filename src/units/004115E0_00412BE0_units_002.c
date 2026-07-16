@@ -457,9 +457,9 @@ void Map_UpdateIdleAnimatedUnits(void)
   int metadataOffset; // eax
   unsigned int nextAnimTick; // ebx
   int now; // eax
-  int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
+  int v6 CLASH95_UNUSED; // ecx
+  int v7 CLASH95_UNUSED; // edx
+  int v8 CLASH95_UNUSED; // ecx
 
   stackIndex = 0;
   stackPtr = gameData + UNIT_STACK_TABLE_OFFSET;
@@ -765,9 +765,9 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
   int clearIndex; // eax
   __int16 *clearSlotPtr; // ebx
   signed int squadCount; // edi
-  int v14; // edx
+  int v14 CLASH95_UNUSED; // edx
   int fullCargoUnits; // eax
-  __int64 v16; // rtt
+  __int64 v16 CLASH95_UNUSED; // rtt
   int addedIndex; // ebx
   int v18; // ebp
   char minActionPoints; // [esp+4h] [ebp-18h]

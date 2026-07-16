@@ -153,8 +153,8 @@ void  Rules_RetractCommand(int a1, int a2, double a3)
   int arg_type; // [esp+0h] [ebp-38h]
   int arg_value; // [esp+4h] [ebp-34h]
   _BYTE buffer[24]; // [esp+14h] [ebp-24h] BYREF
-  int v15; // [esp+2Ch] [ebp-Ch]
-  int v16; // [esp+30h] [ebp-8h]
+  int v15 CLASH95_UNUSED; // [esp+2Ch] [ebp-Ch]
+  int v16 CLASH95_UNUSED; // [esp+30h] [ebp-8h]
 
   v16 = a2;
   v15 = a1;
@@ -921,14 +921,14 @@ signed int  InputBackend_Initialize(InputBackendState *state, int hInstance, int
 {
   _DWORD *raw; // esi
   _DWORD rangeProp[2]; // [esp+94h] [ebp-3Ch] BYREF
-  int rangeObj; // [esp+9Ch] [ebp-34h]
-  int rangeHow; // [esp+A0h] [ebp-30h]
-  int rangeMin; // [esp+A4h] [ebp-2Ch]
-  int rangeMax; // [esp+A8h] [ebp-28h]
+  int rangeObj CLASH95_UNUSED; // [esp+9Ch] [ebp-34h]
+  int rangeHow CLASH95_UNUSED; // [esp+A0h] [ebp-30h]
+  int rangeMin CLASH95_UNUSED; // [esp+A4h] [ebp-2Ch]
+  int rangeMax CLASH95_UNUSED; // [esp+A8h] [ebp-28h]
   _DWORD deadzoneProp[2]; // [esp+ACh] [ebp-24h] BYREF
-  int deadzoneObj; // [esp+B4h] [ebp-1Ch]
-  int deadzoneHow; // [esp+B8h] [ebp-18h]
-  int deadzoneValue; // [esp+BCh] [ebp-14h]
+  int deadzoneObj CLASH95_UNUSED; // [esp+B4h] [ebp-1Ch]
+  int deadzoneHow CLASH95_UNUSED; // [esp+B8h] [ebp-18h]
+  int deadzoneValue CLASH95_UNUSED; // [esp+BCh] [ebp-14h]
 
   raw = (_DWORD *)state;
   if ( DirectInputCreateA(hInstance, 768, raw, 0) )
@@ -1065,7 +1065,7 @@ int  InputBackend_PollState(InputBackendState *state, int renderState, int a3)
   unsigned __int8 mouseButtonSecondary; // [esp+81h] [ebp-Fh]
   unsigned __int8 mouseButtonMiddle; // [esp+82h] [ebp-Eh]
   int renderStateLocal; // [esp+84h] [ebp-Ch]
-  int v12; // [esp+88h] [ebp-8h]
+  int v12 CLASH95_UNUSED; // [esp+88h] [ebp-8h]
   int fallback_mouse_delta_x;
   int fallback_mouse_delta_y;
   signed char fallback_mouse_primary;

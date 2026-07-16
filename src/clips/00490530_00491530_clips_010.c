@@ -243,7 +243,7 @@ int  Rules_RouteCommand(int result, int printResult, int a3, double a4)
   _DWORD theResult[6]; // [esp-4h] [ebp-34h] BYREF
   unsigned int tokenType; // [esp+14h] [ebp-1Ch] BYREF
   int *tokenValue; // [esp+18h] [ebp-18h]
-  int v26; // [esp+28h] [ebp-8h]
+  int v26 CLASH95_UNUSED; // [esp+28h] [ebp-8h]
 
   v26 = a3;
   if ( !result )

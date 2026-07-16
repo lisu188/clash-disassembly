@@ -268,7 +268,7 @@ int * UnitBattle_MoveTrack(int unitIndex, int targetRow, int a3, int targetColum
   int goalOffset; // eax
   unsigned __int16 goalCost; // dx
   int *allocatedPath; // eax
-  unsigned __int8 v30; // dl
+  unsigned __int8 v30 CLASH95_UNUSED; // dl
   int pathCount; // ecx
   int rowDelta; // ebp
   int colDelta; // ecx
@@ -827,7 +827,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   int unit_row; // eax
   int unit_record_addr; // edx
   int v11; // ebx
-  int v12; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   _DWORD *sprite_set; // eax
   int unit_type; // eax
   int init_frame_index; // eax
@@ -837,13 +837,13 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   int *v19; // edx
   int new_count; // ecx
   int player_data_offset; // eax
-  int v22; // edx
+  int v22 CLASH95_UNUSED; // edx
   int dest_row; // ebp
-  int v24; // ecx
+  int v24 CLASH95_UNUSED; // ecx
   int col_delta; // edx
   int row_delta; // eax
   unsigned __int8 facing_dir; // al
-  int v28; // ecx
+  int v28 CLASH95_UNUSED; // ecx
   unsigned __int16 current_col; // ax
   int is_first_frame; // ebp
   int v31; // eax
@@ -854,7 +854,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   int last_tick; // ecx
   unsigned int tick_interval; // edx
   char step_parity; // al
-  int v39; // edx
+  int v39 CLASH95_UNUSED; // edx
   int v40; // eax
   int v41; // edx
   int v42; // eax

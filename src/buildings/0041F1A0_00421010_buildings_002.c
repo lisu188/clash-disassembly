@@ -279,10 +279,10 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   DWORD personageSlotPtr; // ebx
   int i; // edi
   int personageType; // edx
-  int v20; // ecx
+  int v20 CLASH95_UNUSED; // ecx
   int k; // edi
   int garrisonSlotIndex; // edx
-  int v23; // ecx
+  int v23 CLASH95_UNUSED; // ecx
   DWORD buildingRecordOffset; // ebx
   DWORD buildingRecordOffset2; // ecx
   int m; // edi
@@ -452,7 +452,7 @@ int a2;
   int buildingByteOffset; // ebx
   int recordBase; // edx
   char matchList[113]; // [esp+1h] [ebp-79h]
-  int v10; // [esp+72h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+72h] [ebp-8h]
 
   v10 = a2;
   matchCount = 0;
@@ -515,7 +515,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *buildingPtr, char spriteSetI
   int buildingNamesByLang[3]; // [esp+48h] [ebp-3Ch]
   _DWORD *spriteSet; // [esp+54h] [ebp-30h] BYREF
   int panelY; // [esp+58h] [ebp-2Ch]
-  int v37; // [esp+5Ch] [ebp-28h]
+  int v37 CLASH95_UNUSED; // [esp+5Ch] [ebp-28h]
   _DWORD *surface; // [esp+60h] [ebp-24h]
   void *savedRenderDevice; // [esp+64h] [ebp-20h]
   int panelX; // [esp+68h] [ebp-1Ch]

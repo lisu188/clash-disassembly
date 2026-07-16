@@ -636,7 +636,7 @@ int  Lexer_ParsePatternBinding(int readSource, _DWORD *error)
   int v7; // ecx
   int v8; // ecx
   int tokenType; // [esp+0h] [ebp-18h]
-  int v11; // [esp+14h] [ebp-4h]
+  int v11 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v11 = readSource;
   if ( g_Parser_InsideNegatedCEFlag )
@@ -987,14 +987,14 @@ int  Module_BsaveWriteModuleRecords(int filePtr)
   int j; // eax
   int k; // eax
   int nameIndex; // [esp+0h] [ebp-40h] BYREF
-  int importListIndex; // [esp+4h] [ebp-3Ch]
-  int exportListIndex; // [esp+8h] [ebp-38h]
-  int nextIndex; // [esp+Ch] [ebp-34h]
-  int bsaveId; // [esp+10h] [ebp-30h]
+  int importListIndex CLASH95_UNUSED; // [esp+4h] [ebp-3Ch]
+  int exportListIndex CLASH95_UNUSED; // [esp+8h] [ebp-38h]
+  int nextIndex CLASH95_UNUSED; // [esp+Ch] [ebp-34h]
+  int bsaveId CLASH95_UNUSED; // [esp+10h] [ebp-30h]
   int portModuleName; // [esp+14h] [ebp-2Ch] BYREF
-  int portConstructType; // [esp+18h] [ebp-28h]
-  int portConstructName; // [esp+1Ch] [ebp-24h]
-  int portNextIndex; // [esp+20h] [ebp-20h]
+  int portConstructType CLASH95_UNUSED; // [esp+18h] [ebp-28h]
+  int portConstructName CLASH95_UNUSED; // [esp+1Ch] [ebp-24h]
+  int portNextIndex CLASH95_UNUSED; // [esp+20h] [ebp-20h]
   int space[7]; // [esp+24h] [ebp-1Ch] BYREF
 
   space[0] = 16 * g_ClipsBloadPortItemCount + 20 * g_ClipsBsaveModuleCount;
@@ -1406,7 +1406,7 @@ LABEL_2:
 // 4DB7A1: variable 'v5' is possibly undefined
 
 //----- (004DB850) --------------------------------------------------------
-signed int __fastcall Rules_ReportAttributeConflict(int attribute1, int attribute2)
+signed int __fastcall Rules_ReportAttributeConflict(int attribute1 CLASH95_UNUSED, int attribute2)
 {
   int v3; // ecx
   int v4; // ecx

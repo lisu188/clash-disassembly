@@ -1119,7 +1119,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
 }
 
 //----- (00460370) --------------------------------------------------------
-int  Scenario_LoadMissionByIndexAndPlay(char *mission_index_arg, int a2, DWORD a3, double a4)
+int  Scenario_LoadMissionByIndexAndPlay(char *mission_index_arg, int a2 CLASH95_UNUSED, DWORD a3, double a4)
 {
   int mission_index; // eax
   unsigned __int8 saved_campaign_state[27]; // [esp-1Bh] [ebp-1Bh] BYREF

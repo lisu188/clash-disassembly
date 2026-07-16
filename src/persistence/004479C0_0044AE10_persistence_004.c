@@ -22,11 +22,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   _DWORD *mainMenuSpriteSet; // eax
   int v12; // ecx
   int mainMenuWidgetOffset; // eax
-  int v18; // ecx
-  char *v19; // edi
-  char *v20; // esi
+  int v18 CLASH95_UNUSED; // ecx
+  char *v19 CLASH95_UNUSED; // edi
+  char *v20 CLASH95_UNUSED; // esi
   int mainMenuSecondLabelOffset; // ecx
-  int v24; // ecx
+  int v24 CLASH95_UNUSED; // ecx
   _DWORD *campaignSpriteSet; // eax
   bool i; // zf
   int campaign_menu_cancelled_by_escape; // ecx

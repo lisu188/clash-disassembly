@@ -113,7 +113,7 @@ signed int  Building_UnitsLeaveReadyGarrisonSlots(int building_index, int a2, do
   int leave_slot_indices[10]; // [esp+4h] [ebp-44h] BYREF
   int v14; // [esp+2Ch] [ebp-1Ch]
   int building_offset; // [esp+30h] [ebp-18h]
-  int v16; // [esp+40h] [ebp-8h]
+  int v16 CLASH95_UNUSED; // [esp+40h] [ebp-8h]
 
   v16 = a2;
   v14 = building_index;
@@ -561,7 +561,7 @@ int  Building_OnGarrisonChange(int building_index, int instance_record, double a
   int previous_strength; // ebx
   _DWORD moc_value[2]; // [esp-4h] [ebp-28h] BYREF
   int *strength_value_ptr; // [esp+4h] [ebp-20h]
-  int v11; // [esp+1Ch] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v11 = instance_record;
   building_offset = BUILDING_RECORD_SIZE * building_index;

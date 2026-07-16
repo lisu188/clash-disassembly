@@ -573,7 +573,7 @@ int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *capabilityOut)
 }
 
 //----- (0046D300) --------------------------------------------------------
-int __cdecl Audio_SetMixerParamValue(int driver, int volume)
+int __cdecl Audio_SetMixerParamValue(int driver CLASH95_UNUSED, int volume)
 {
   g_CSS_NullDriverMasterVolume = volume;
   return 0;
@@ -1115,7 +1115,7 @@ int  CSS_Channel_StoreFormatParams(int channel, int formatCode)
 }
 
 //----- (0046DF20) --------------------------------------------------------
-void  CSS_Channel_StartFileStream(unsigned int channelIndex, int *formatInfo, int panning, int volume, int a5, int channelFlags)
+void  CSS_Channel_StartFileStream(unsigned int channelIndex, int *formatInfo, int panning, int volume, int a5 CLASH95_UNUSED, int channelFlags)
 {
   _DWORD *channel; // ebx
   int chunkBytes; // eax
@@ -1341,7 +1341,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels(void)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E400) --------------------------------------------------------
-int __stdcall CSS_StreamReadingThreadProc(int threadParam)
+int __stdcall CSS_StreamReadingThreadProc(int threadParam CLASH95_UNUSED)
 {
   ++g_CSS_StreamReadThreadLockRefCount;
   EnterCriticalSection(&stru_54D424);
@@ -1369,7 +1369,7 @@ _DWORD *__stdcall CSS_PauseStreamReading(void)
   _DWORD *result; // eax
   int *lockCounter; // ebx
   _DWORD ehFrame[3]; // [esp+0h] [ebp-20h] BYREF
-  int tryLevel; // [esp+Ch] [ebp-14h]
+  int tryLevel CLASH95_UNUSED; // [esp+Ch] [ebp-14h]
   int *lockCounterPtr; // [esp+14h] [ebp-Ch]
 
   result = ehFrame;
@@ -1401,7 +1401,7 @@ DWORD __stdcall CSS_ResumeStreamReading(void)
 }
 
 //----- (0046E5D0) --------------------------------------------------------
-int __stdcall CSS_StreamBufferServiceThreadProc(int threadParam)
+int __stdcall CSS_StreamBufferServiceThreadProc(int threadParam CLASH95_UNUSED)
 {
   signed int channelIndex; // ebx
   int channelOffset; // esi

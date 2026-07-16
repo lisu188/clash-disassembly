@@ -298,7 +298,7 @@ LABEL_15:
 //----- (00440600) --------------------------------------------------------
 int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameContext, double gameTime)
 {
-  int v6; // edx
+  int v6 CLASH95_UNUSED; // edx
   __int16 *unitStack; // ebp
   int playerData; // eax
   _DWORD *outcomeTable; // esi
@@ -491,7 +491,7 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int widget, int delayTicks, doub
   int SpriteForChar; // eax
   int v16; // ecx
   int prevSpriteFrame; // edi
-  int v18; // [esp+0h] [ebp-50h]
+  int v18 CLASH95_UNUSED; // [esp+0h] [ebp-50h]
   int selectedSlots[11]; // [esp+4h] [ebp-4Ch] BYREF
   int v20; // [esp+30h] [ebp-20h]
   int spriteFrame; // [esp+34h] [ebp-1Ch]
@@ -717,7 +717,7 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
   int v24; // edx
   char unitInfoBuffer[100]; // [esp+0h] [ebp-74h] BYREF
   void *savedRenderDevice; // [esp+64h] [ebp-10h]
-  int v27; // [esp+70h] [ebp-4h]
+  int v27 CLASH95_UNUSED; // [esp+70h] [ebp-4h]
 
   v27 = a2;
   savedRenderDevice = g_RenderDevice;
@@ -1096,8 +1096,8 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD gameContext)
   int v15; // ecx
   CHAR wavPath[100]; // [esp+0h] [ebp-D0h] BYREF
   char sourcePath[100]; // [esp+64h] [ebp-6Ch] BYREF
-  int v18; // [esp+C8h] [ebp-8h]
-  int v19; // [esp+CCh] [ebp-4h]
+  int v18 CLASH95_UNUSED; // [esp+C8h] [ebp-8h]
+  int v19 CLASH95_UNUSED; // [esp+CCh] [ebp-4h]
 
   v19 = a3;
   v18 = a2;
@@ -1310,7 +1310,7 @@ int  Audio_PlayUnitActivateSound(int result)
   char *suffixWriteCursor; // edi
   char suffixChar; // al
   char suffixNextChar; // al
-  char digitSlot[5]; // [esp+1h] [ebp-69h]
+  char digitSlot[5] CLASH95_UNUSED; // [esp+1h] [ebp-69h]
   char soundPath[100]; // [esp+6h] [ebp-64h] BYREF
 
   if ( g_UnitSoundsEnabled )
@@ -1366,7 +1366,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
   char *suffixWriteCursor; // edi
   char suffixChar; // al
   char suffixNextChar; // al
-  char digitSlot[5]; // [esp+1h] [ebp-6Dh]
+  char digitSlot[5] CLASH95_UNUSED; // [esp+1h] [ebp-6Dh]
   char soundPath[104]; // [esp+6h] [ebp-68h] BYREF
 
   if ( g_UnitSoundsEnabled )

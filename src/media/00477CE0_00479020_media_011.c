@@ -136,7 +136,7 @@ signed int  Compat_FileStreamSeekFromEnd(int stream, int offset, int a3)
 }
 
 //----- (00477E80) --------------------------------------------------------
-int __fastcall Compat_FileStreamTell(int stream, int a2)
+int __fastcall Compat_FileStreamTell(int stream, int a2 CLASH95_UNUSED)
 {
   return Compat_StreamTell(*(_DWORD *)(uintptr_t)(stream + 4));
 }
@@ -163,7 +163,7 @@ int  Compat_FileFinderOpen(_DWORD *finder, int search_path)
   int v5; // ecx
   const char *pattern_holder; // [esp+0h] [ebp-18h] BYREF
   int (**vtable_ptr)(); // [esp+4h] [ebp-14h]
-  int search_path_saved; // [esp+10h] [ebp-8h]
+  int search_path_saved CLASH95_UNUSED; // [esp+10h] [ebp-8h]
 
   search_path_saved = search_path;
   finder[71] = -1;
@@ -448,7 +448,7 @@ int __thiscall FileSystem_DiskMountDirectoryExists(void *this)
   int find_data; // [esp-118h] [ebp-130h] BYREF
   const char *search_pattern; // [esp+0h] [ebp-18h] BYREF
   int (**vtable_ptr)(); // [esp+4h] [ebp-14h]
-  void *this_saved; // [esp+10h] [ebp-8h]
+  void *this_saved CLASH95_UNUSED; // [esp+10h] [ebp-8h]
 
   this_saved = this;
   search_pattern = 0;
@@ -658,7 +658,7 @@ _DWORD * FileSystem_ArchiveRecordCacheCopyCtor(int *cache, int *source_cache)
   int total_records; // edx
   int window_size; // eax
   int records_buffer; // eax
-  _DWORD *v9; // ecx
+  _DWORD *v9 CLASH95_UNUSED; // ecx
   int capacity; // ebx
   _DWORD *result; // eax
 
@@ -1235,7 +1235,7 @@ int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD allocContex
   int v11; // ecx
   int path_holder; // [esp+0h] [ebp-14h] BYREF
   int (**vtable_ptr)(); // [esp+4h] [ebp-10h]
-  int v14; // [esp+10h] [ebp-4h]
+  int v14 CLASH95_UNUSED; // [esp+10h] [ebp-4h]
 
   v14 = a3;
   node[2] = 0;

@@ -243,7 +243,7 @@ int * Class_LookupInScope(_BYTE *className)
 // 51AD68: using guessed type int dword_51AD68;
 
 //----- (004B04D0) --------------------------------------------------------
-int *__fastcall Class_LookupByModule(int a1, _BYTE *className)
+int *__fastcall Class_LookupByModule(int a1 CLASH95_UNUSED, _BYTE *className)
 {
   int *result; // eax
   int *nameSymbol; // ebx
@@ -427,7 +427,7 @@ signed int  Class_ParseClassReference(int **classOut, int a2, double a3)
   int v6; // ecx
   _DWORD argBuffer[2]; // [esp-8h] [ebp-28h] BYREF
   int argValue; // [esp+0h] [ebp-20h]
-  int v9; // [esp+18h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v9 = a2;
   result = Lexer_ParseValueList(1, argBuffer, 2, a3);
@@ -564,7 +564,7 @@ int  Class_FindSlotBySymbol(int theClass, int slotName)
 }
 
 //----- (004B09E0) --------------------------------------------------------
-int __fastcall Class_ReportLookupError(int a1, int className)
+int __fastcall Class_ReportLookupError(int a1 CLASH95_UNUSED, int className)
 {
   int v3; // ecx
   int v4; // ecx

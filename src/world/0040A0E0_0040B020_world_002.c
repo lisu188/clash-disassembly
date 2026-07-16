@@ -493,7 +493,7 @@ int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3)
 // 52030C: using guessed type int dword_52030C;
 
 //----- (0040A450) --------------------------------------------------------
-int __fastcall WorldMap_UnloadActionButtonSprites(int a1, int a2)
+int __fastcall WorldMap_UnloadActionButtonSprites(int a1 CLASH95_UNUSED, int a2)
 {
   DLXSpriteSet_ReleaseAndClear(&g_ActionButtonSpriteSet);
   return a2;
@@ -584,15 +584,15 @@ void * WorldMap_DrawTurnBannerReveal(int animate)
   int aiSpriteForChar; // eax
   void *renderDevice; // edi
   DWORD renderSurfaceHandle; // ebp
-  int v6; // edx
-  int v7; // ecx
-  int v8; // edx
-  int v9; // ecx
+  int v6 CLASH95_UNUSED; // edx
+  int v7 CLASH95_UNUSED; // ecx
+  int v8 CLASH95_UNUSED; // edx
+  int v9 CLASH95_UNUSED; // ecx
   int startTime; // edi
   unsigned __int16 SpriteWidth; // ax
-  int v12; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   __int16 bannerSpriteWidth; // ax
-  __int16 v14; // cx
+  __int16 v14 CLASH95_UNUSED; // cx
   __int16 SpriteHeight; // ax
   __int16 bannerSpriteHeight; // ax
   void *result; // eax
@@ -906,7 +906,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD loadContext, double gam
 //----- (0040AD40) --------------------------------------------------------
 int * WorldMap_RenderHook(DWORD a1)
 {
-  int v1; // ecx
+  int v1 CLASH95_UNUSED; // ecx
   void *v2; // ecx
   int *result; // eax
 
@@ -997,7 +997,7 @@ void WorldMap_EnableFrameRedraw()
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AED0) --------------------------------------------------------
-_DWORD * WorldMap_LoadResources(char a1, DWORD loadContext)
+_DWORD * WorldMap_LoadResources(char a1 CLASH95_UNUSED, DWORD loadContext)
 {
   _DWORD *frameSpriteSet; // eax
   _DWORD *marksSpriteSet; // eax

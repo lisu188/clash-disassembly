@@ -20,17 +20,17 @@ __int16  UnitBattle_PlayShotAnimation(
         int target_unit_index,
         int target_col,
         int a4,
-        int a5,
-        int a6,
+        int a5 CLASH95_UNUSED,
+        int a6 CLASH95_UNUSED,
         __int128 a7,
-        int a8,
-        int a9,
-        int a10,
-        int a11,
-        int a12,
-        int a13,
-        int a14,
-        int a15,
+        int a8 CLASH95_UNUSED,
+        int a9 CLASH95_UNUSED,
+        int a10 CLASH95_UNUSED,
+        int a11 CLASH95_UNUSED,
+        int a12 CLASH95_UNUSED,
+        int a13 CLASH95_UNUSED,
+        int a14 CLASH95_UNUSED,
+        int a15 CLASH95_UNUSED,
         __int64 a16)
 {
   char shooter_owner; // bl
@@ -678,7 +678,7 @@ int  UnitBattle_Shot(int shooter_index, int target_index)
   char *shooter_unit; // edi
   char *target_unit; // esi
   int volleys_used; // eax
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   unsigned __int16 target_row; // dx
   unsigned __int16 target_col; // ax
 
@@ -739,10 +739,10 @@ int  UnitBattle_AttackWall(int unitSlot, DWORD wallRow, int a3, int wallCol)
   unsigned __int16 unitCol; // dx
   unsigned __int16 unitRow; // ax
   int v12; // ebx
-  int v13; // eax
-  int v14; // ecx
+  int v13 CLASH95_UNUSED; // eax
+  int v14 CLASH95_UNUSED; // ecx
   int wallTilePtr; // eax
-  int v16; // ecx
+  int v16 CLASH95_UNUSED; // ecx
   int moveTrackPtr; // ecx
   int rowDistAfterMove; // eax
   DWORD wallTileBase; // [esp+4h] [ebp-1Ch]
@@ -878,7 +878,7 @@ int  UnitBattle_ShotWall(int unitSlot, int targetRow)
   int wallRowBase; // eax
   int v12; // edx
   int wallHpAfter; // eax
-  int v14; // eax
+  int v14 CLASH95_UNUSED; // eax
 
   targetCol = g_BattleTargetTileCol;
   Debug_Log(unitSlot, targetRow, targetCol, (int)(intptr_t)aUnitbattle_s_0, unitSlot, targetRow, targetCol);
@@ -1260,7 +1260,7 @@ int  BuildBuilding(int buildingType, int a2, char a3, double a4)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0042A760) --------------------------------------------------------
-int  UI_DrawNoticeBoxSmall(DWORD renderState, int a2)
+int  UI_DrawNoticeBoxSmall(DWORD renderState, int a2 CLASH95_UNUSED)
 {
   int spriteIndex; // edx
   int SpriteForChar; // eax
@@ -1294,7 +1294,7 @@ int  UI_DrawNoticeBoxSmall(DWORD renderState, int a2)
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
 
 //----- (0042A890) --------------------------------------------------------
-int  UI_DrawConfirmTop(DWORD renderState, int a2)
+int  UI_DrawConfirmTop(DWORD renderState, int a2 CLASH95_UNUSED)
 {
   void *savedRenderDevice; // esi
   int result; // eax

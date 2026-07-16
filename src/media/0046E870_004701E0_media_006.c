@@ -1006,9 +1006,9 @@ _DWORD *CSS_ShutdownVoicePool(void)
   signed int i; // ecx
   int v4; // ecx
   _DWORD eh_frame[3]; // [esp+0h] [ebp-30h] BYREF
-  int try_level; // [esp+Ch] [ebp-24h]
-  int *read_lock_refcount; // [esp+14h] [ebp-1Ch]
-  int *service_lock_refcount; // [esp+18h] [ebp-18h]
+  int try_level CLASH95_UNUSED; // [esp+Ch] [ebp-24h]
+  int *read_lock_refcount CLASH95_UNUSED; // [esp+14h] [ebp-1Ch]
+  int *service_lock_refcount CLASH95_UNUSED; // [esp+18h] [ebp-18h]
 
   result = eh_frame;
   eh_frame[0] = NtCurrentTeb()->NtTib.ExceptionList;
@@ -1109,7 +1109,7 @@ int CSS_PollAudioDeviceChange(void)
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046FC80) --------------------------------------------------------
-int __stdcall CSS_DeviceSearchThreadProc(int thread_param)
+int __stdcall CSS_DeviceSearchThreadProc(int thread_param CLASH95_UNUSED)
 {
   ++g_CSS_DeviceSearchThreadRefCount;
   EnterCriticalSection(&stru_54D49C);

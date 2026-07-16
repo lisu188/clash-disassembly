@@ -1054,7 +1054,7 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
 {
   int v4; // ecx
   int v5; // ecx
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   int v7; // ecx
   _DWORD *iconSpriteSet; // eax
   int v9; // ecx
@@ -1068,8 +1068,8 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
   int v17; // ecx
   _DWORD *Surface; // eax
   DWORD buildingRecordByteOffset; // ebp
-  int v20; // edx
-  int v21; // ecx
+  int v20 CLASH95_UNUSED; // edx
+  int v21 CLASH95_UNUSED; // ecx
   char *v22; // ebx
   int activeTooltipId; // esi
   int v24; // edx

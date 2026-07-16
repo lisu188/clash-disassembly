@@ -65,7 +65,7 @@ signed int __fastcall Rules_PrintActivation(int logicalName, int activation)
   int v5; // ecx
   int v6; // ecx
   _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
-  int v9; // [esp+14h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v9 = logicalName;
   sprintf_(buffer, "%-6d ", *(_DWORD *)(uintptr_t)(activation + 8));
@@ -573,7 +573,7 @@ int * Rules_AgendaCommand(int a1, double a2)
 // 51A624: using guessed type char *off_51A624;
 
 //----- (0047E8E4) --------------------------------------------------------
-int __fastcall IO_PrintfToStdout(int format, int a2, int a3, char firstArg)
+int __fastcall IO_PrintfToStdout(int format, int a2 CLASH95_UNUSED, int a3 CLASH95_UNUSED, char firstArg)
 {
   int args[3]; // [esp+0h] [ebp-Ch] BYREF
 
@@ -622,21 +622,21 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int v38; // ecx
   int v39; // ecx
   int v40; // ecx
-  int v42; // edx
-  int v43; // ecx
+  int v42 CLASH95_UNUSED; // edx
+  int v43 CLASH95_UNUSED; // ecx
   char *messageString; // edx
   int v45; // ecx
   int v46; // ecx
   int v47; // ecx
   double rulesPerSecond; // [esp+0h] [ebp-ECh]
-  int v49; // [esp+4h] [ebp-E8h]
+  int v49 CLASH95_UNUSED; // [esp+4h] [ebp-E8h]
   int v50; // [esp+8h] [ebp-E4h]
-  int v51; // [esp+8h] [ebp-E4h]
-  int v52; // [esp+8h] [ebp-E4h]
+  int v51 CLASH95_UNUSED; // [esp+8h] [ebp-E4h]
+  int v52 CLASH95_UNUSED; // [esp+8h] [ebp-E4h]
   _DWORD fireTraceBuffer[15]; // [esp+Ch] [ebp-E0h] BYREF
   _BYTE statsBuffer[60]; // [esp+48h] [ebp-A4h] BYREF
   int returnValue[6]; // [esp+84h] [ebp-68h] BYREF
-  double runtimeSeconds; // [esp+9Ch] [ebp-50h]
+  double runtimeSeconds CLASH95_UNUSED; // [esp+9Ch] [ebp-50h]
   double startTime; // [esp+A4h] [ebp-48h]
   int maxInstances; // [esp+B4h] [ebp-38h]
   int maxFacts; // [esp+B8h] [ebp-34h]
@@ -1089,7 +1089,7 @@ int  Rules_RunCommand(int a1, double a2)
   int v3; // ecx
   int v4; // [esp-8h] [ebp-24h] BYREF
   int argValue; // [esp+0h] [ebp-1Ch]
-  int savedContext; // [esp+14h] [ebp-8h]
+  int savedContext CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   savedContext = a1;
   result = Lexer_TokenExpect(1);
@@ -1237,8 +1237,8 @@ void  Rules_RemoveBreakCommand(int a1, double a2, int a3)
   int v8; // ecx
   int v9; // [esp-8h] [ebp-24h] BYREF
   int v10; // [esp+0h] [ebp-1Ch]
-  int v11; // [esp+10h] [ebp-Ch]
-  int v12; // [esp+14h] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp+10h] [ebp-Ch]
+  int v12 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v12 = a1;
   v11 = a3;

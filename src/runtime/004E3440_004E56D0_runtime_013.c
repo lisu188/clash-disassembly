@@ -973,7 +973,7 @@ BOOL __cdecl CRT_ThreadStartTrampoline(LPVOID lpThreadParameter)
   int v1; // ecx
   int threadDataMgmtDisabled; // edx
   int alignedDataSize; // eax
-  void *v4; // esp
+  void *v4 CLASH95_UNUSED; // esp
   int threadDataBlock; // ecx
   HANDLE ownThreadHandle; // ebx
   int v8; // ecx
@@ -1022,7 +1022,7 @@ HANDLE  CRT_BeginThread(int startAddress, int stackSize, int argList)
   CHAR eventName[32]; // [esp+0h] [ebp-50h] BYREF
   _DWORD Parameter[3]; // [esp+20h] [ebp-30h] BYREF
   HANDLE hHandle; // [esp+2Ch] [ebp-24h]
-  HANDLE *v10; // [esp+30h] [ebp-20h]
+  HANDLE *v10 CLASH95_UNUSED; // [esp+30h] [ebp-20h]
   HANDLE Thread; // [esp+34h] [ebp-1Ch] BYREF
   DWORD ThreadId[6]; // [esp+38h] [ebp-18h] BYREF
 

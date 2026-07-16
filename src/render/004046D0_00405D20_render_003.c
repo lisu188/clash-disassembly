@@ -177,7 +177,7 @@ int  Render_BeginModeSwitch(_DWORD *render_device)
 int  Render_EndModeSwitch(int result, char a2, DWORD a3)
 {
   int render_device; // esi
-  int v5; // eax
+  int v5 CLASH95_UNUSED; // eax
   int v6; // ecx
   int cursor_visible; // edi
   int surface_handle;
@@ -641,7 +641,7 @@ int * Palette_FadeInFromBlack(int *result, unsigned __int8 *target_palette, sign
 void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD a4)
 {
   _DWORD *Surface; // eax
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   int remap_index; // ebp
   int candidate_index; // eax
   unsigned __int8 red_value; // bh
@@ -749,7 +749,7 @@ void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD
 void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target_palette, int a3, char a4, DWORD a5)
 {
   _DWORD *Surface; // eax
-  void *current_render_device; // ebp
+  void *current_render_device CLASH95_UNUSED; // ebp
   _DWORD *snapshot_surface; // esi
   int i; // edx
   _BYTE *pixel_ptr; // ebx
@@ -758,7 +758,7 @@ void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target
   int k; // edx
   _BYTE *pixel_byte_ptr; // ebx
   unsigned int pixel_value; // ecx
-  int v16; // ecx
+  int v16 CLASH95_UNUSED; // ecx
   void *result; // eax
   void *saved_render_device; // [esp+4h] [ebp-18h]
 
@@ -876,25 +876,25 @@ void __noreturn Surface_GetPixNotImplemented(void)
 }
 
 //----- (00405600) --------------------------------------------------------
-void __stdcall __noreturn Surface_DrawLineNotImplemented(int a1, int a2)
+void __stdcall __noreturn Surface_DrawLineNotImplemented(int a1 CLASH95_UNUSED, int a2 CLASH95_UNUSED)
 {
   App_RequestQuit((int)(intptr_t)aDrawlineZapisN);
 }
 
 //----- (00405610) --------------------------------------------------------
-void __stdcall __noreturn Surface_DrawRectNotImplemented(int a1, int a2)
+void __stdcall __noreturn Surface_DrawRectNotImplemented(int a1 CLASH95_UNUSED, int a2 CLASH95_UNUSED)
 {
   App_RequestQuit((int)(intptr_t)aDrawrectZapisN);
 }
 
 //----- (00405620) --------------------------------------------------------
-void __stdcall __noreturn Surface_DrawBoxNotImplemented(int a1, int a2)
+void __stdcall __noreturn Surface_DrawBoxNotImplemented(int a1 CLASH95_UNUSED, int a2 CLASH95_UNUSED)
 {
   App_RequestQuit((int)(intptr_t)aDrawboxZapisNa);
 }
 
 //----- (00405630) --------------------------------------------------------
-void __stdcall __noreturn Surface_DotBoxNotImplemented(int a1, int a2)
+void __stdcall __noreturn Surface_DotBoxNotImplemented(int a1 CLASH95_UNUSED, int a2 CLASH95_UNUSED)
 {
   App_RequestQuit((int)(intptr_t)aDotboxZapisNaE);
 }
@@ -1199,7 +1199,7 @@ int  DLXSprite_ReleaseAndClear(int *sprite_slot)
 // 405959: variable 'v1' is possibly undefined
 
 //----- (00405980) --------------------------------------------------------
-int  Res_ProbeGfxFileExists(CHAR *file_name, int a2, DWORD context, int a4)
+int  Res_ProbeGfxFileExists(CHAR *file_name, int a2 CLASH95_UNUSED, DWORD context, int a4 CLASH95_UNUSED)
 {
   unsigned int path_len; // kr04_4
   int open_handle;

@@ -173,9 +173,9 @@ LABEL_28:
 //----- (00475B9E) --------------------------------------------------------
 int  IO_OpenStreamWithMode(
         const CHAR *file_path,
-        int a2,
+        int a2 CLASH95_UNUSED,
         int stream_flags,
-        DWORD a4,
+        DWORD a4 CLASH95_UNUSED,
         int a5,
         int a6,
         int stream)
@@ -654,7 +654,7 @@ const char ** FileSystem_StripMountPrefix(int mount_table, int entry_index, unsi
   const char *holder_text;
   unsigned int holder_len;
   int entry_path_len;
-  const char **result; // eax
+  const char **result CLASH95_UNUSED; // eax
 
   entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * entry_index + *(_DWORD *)(uintptr_t)(mount_table + 20) + 4));
   if ( entry_path )
@@ -736,7 +736,7 @@ int  FileSystem_ResolveAndInvokeForPath(int mount_table, int default_result, int
   int next_index; // eax
   const char *normalized_path; // [esp+0h] [ebp-18h] BYREF
   int (**normalized_vtable)(); // [esp+4h] [ebp-14h]
-  int entries_ptr; // [esp+8h] [ebp-10h]
+  int entries_ptr CLASH95_UNUSED; // [esp+8h] [ebp-10h]
 
   normalized_path = 0;
   normalized_vtable = &g_CompatStringHolder_Vtable;
@@ -1086,8 +1086,8 @@ int  Compat_FileSystemProcessDirectChildren(int (__thiscall ***file_system)(_DWO
   int v6; // ecx
   int entry_list; // [esp+0h] [ebp-18h] BYREF
   int v9; // [esp+4h] [ebp-14h]
-  int v10; // [esp+8h] [ebp-10h]
-  int v11; // [esp+10h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+8h] [ebp-10h]
+  int v11 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
 
   v11 = a2;
   entry_list = (**file_system)(0);
@@ -1153,7 +1153,7 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int d
   int v15; // ecx
   int enumerator; // [esp+0h] [ebp-48h] BYREF
   int (***file_system_saved)(void); // [esp+4h] [ebp-44h]
-  int v18; // [esp+8h] [ebp-40h]
+  int v18 CLASH95_UNUSED; // [esp+8h] [ebp-40h]
   _DWORD recurse_path_holder[2]; // [esp+Ch] [ebp-3Ch] BYREF
   const char *v20; // [esp+14h] [ebp-34h] BYREF
   int (**v21)(); // [esp+18h] [ebp-30h]
@@ -1245,7 +1245,7 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int d
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00477950) --------------------------------------------------------
-signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem, int a2)
+signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem CLASH95_UNUSED, int a2)
 {
   int (__fastcall ***v3)(_DWORD, const char *); // ecx
   int v4; // ecx
@@ -1260,7 +1260,7 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem, int 
   int v14; // esi
   int enumerator; // [esp+0h] [ebp-40h] BYREF
   int queryHandle; // [esp+4h] [ebp-3Ch]
-  int v17; // [esp+8h] [ebp-38h]
+  int v17 CLASH95_UNUSED; // [esp+8h] [ebp-38h]
   _DWORD file_path_holder[2]; // [esp+Ch] [ebp-34h] BYREF
   _DWORD subdir_path_holder[2]; // [esp+14h] [ebp-2Ch] BYREF
   const char *entry_name_holder; // [esp+1Ch] [ebp-24h] BYREF

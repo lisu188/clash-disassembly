@@ -242,8 +242,8 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   char v37; // bl
   __int16 *Supply; // eax
   __int16 *shipment; // eax
-  int v40; // esi
-  int v41; // ecx
+  int v40 CLASH95_UNUSED; // esi
+  int v41 CLASH95_UNUSED; // ecx
   int buildingIndex; // eax
   int buildingRecordOffset; // ebx
   __int16 constructionState; // si
@@ -251,8 +251,8 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   int buildingTileXOffset; // esi
   int ownBuildingTileYOffset; // ecx
   int targetBuildingIndex; // edx
-  int v49; // ecx
-  int v50; // ecx
+  int v49 CLASH95_UNUSED; // ecx
+  int v50 CLASH95_UNUSED; // ecx
   char v51; // bl
   int v52; // ecx
   int tileStackPtr; // eax
@@ -260,7 +260,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   void *v55; // ecx
   DWORD prevSelectedIndex; // ebp
   void *v57; // ecx
-  int v58; // ecx
+  int v58 CLASH95_UNUSED; // ecx
   void *v59; // ecx
   void *v60; // ecx
   DWORD v61; // ebp
@@ -269,7 +269,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   const void *moveTrack; // eax
   DWORD selectedStackByteOffset; // ebp
   DWORD selectedStackRecord; // edx
-  int v67; // ecx
+  int v67 CLASH95_UNUSED; // ecx
   int stackPosPacked; // eax
   char *tooltipTextPl; // [esp+0h] [ebp-70h]
   char *tooltipTextEn; // [esp+4h] [ebp-6Ch]

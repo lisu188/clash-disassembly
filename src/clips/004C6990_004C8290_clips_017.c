@@ -36,7 +36,7 @@ int  Class_BloadRefreshHandlerRecord(int *buf, int obji, double a3)
   _DWORD *valuePtr; // ebx
   int defaultExprIndex; // eax
   int defaultExpr; // edx
-  int v28; // ecx
+  int v28 CLASH95_UNUSED; // ecx
 
   theSlot = 44 * obji + g_DefclassSlotDescriptorArrayPtr;
   v4 = *buf;
@@ -765,7 +765,7 @@ int  Deffacts_BsaveWriteData(int fp)
   int v8; // ecx
   int result; // eax
   _DWORD dummyDeffacts[3]; // [esp+0h] [ebp-38h] BYREF
-  int assertListIndex; // [esp+Ch] [ebp-2Ch]
+  int assertListIndex CLASH95_UNUSED; // [esp+Ch] [ebp-2Ch]
   _DWORD dummyModule[3]; // [esp+10h] [ebp-28h] BYREF
   int space[7]; // [esp+1Ch] [ebp-1Ch] BYREF
 
@@ -1087,7 +1087,7 @@ LABEL_5:
 }
 
 //----- (004C7D40) --------------------------------------------------------
-int  Deffacts_ModuleToCode(int theFile, int theModule, int maxIndices, int moduleCount)
+int  Deffacts_ModuleToCode(int theFile, int theModule, int maxIndices, int moduleCount CLASH95_UNUSED)
 {
   int v5; // edx
   int v6; // ecx

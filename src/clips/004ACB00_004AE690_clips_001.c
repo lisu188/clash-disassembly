@@ -18,7 +18,7 @@ int  Compiler_WriteHeaders(int fp)
 // 51AD24: using guessed type char *off_51AD24;
 
 //----- (004ACB60) --------------------------------------------------------
-void __fastcall Compiler_MarkAndEmit(int a1, int theInstance)
+void __fastcall Compiler_MarkAndEmit(int a1 CLASH95_UNUSED, int theInstance)
 {
   unsigned int slotIndex; // ebp
   int slotOffset; // edi
@@ -187,8 +187,8 @@ int  Compiler_WriteAtomicValueRef(int type, int value, int fp, int a4)
 {
   signed int bucketBits; // eax
   int typeCode; // [esp+0h] [ebp-Ch] BYREF
-  int valueIndex; // [esp+4h] [ebp-8h]
-  int v8; // [esp+8h] [ebp-4h]
+  int valueIndex CLASH95_UNUSED; // [esp+4h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+8h] [ebp-4h]
 
   v8 = a4;
   typeCode = type;
@@ -317,7 +317,7 @@ signed int  Rules_ReadInstancesTextFile(
 // 54E8FC: using guessed type int dword_54E8FC;
 
 //----- (004AD090) --------------------------------------------------------
-signed int __fastcall Rules_ReportInstanceFileProcessError(int functionName, int fileName)
+signed int __fastcall Rules_ReportInstanceFileProcessError(int functionName CLASH95_UNUSED, int fileName)
 {
   int v3; // ecx
   int v4; // ecx
@@ -729,9 +729,9 @@ _DWORD * Rules_MvSlotReplaceCommand(int *returnValue, int a2, double a3)
   _DWORD newSlotValue[6]; // [esp+18h] [ebp-60h] BYREF
   _DWORD slotValueDesc[6]; // [esp+30h] [ebp-48h] BYREF
   __int16 exprType; // [esp+48h] [ebp-30h] BYREF
-  _DWORD *exprValue; // [esp+4Ah] [ebp-2Eh]
-  int exprNext; // [esp+4Eh] [ebp-2Ah]
-  int exprArgList; // [esp+52h] [ebp-26h]
+  _DWORD *exprValue CLASH95_UNUSED; // [esp+4Ah] [ebp-2Eh]
+  int exprNext CLASH95_UNUSED; // [esp+4Eh] [ebp-2Ah]
+  int exprArgList CLASH95_UNUSED; // [esp+52h] [ebp-26h]
   int rangeEnd; // [esp+58h] [ebp-20h] BYREF
   int rangeStart[7]; // [esp+5Ch] [ebp-1Ch] BYREF
 
@@ -781,9 +781,9 @@ _DWORD * Rules_MvSlotInsertCommand(int *returnValue, int a2, double a3)
   _DWORD newSlotValue[6]; // [esp+18h] [ebp-5Ch] BYREF
   _DWORD slotValueDesc[6]; // [esp+30h] [ebp-44h] BYREF
   __int16 exprType; // [esp+48h] [ebp-2Ch] BYREF
-  _DWORD *exprValue; // [esp+4Ah] [ebp-2Ah]
-  int exprNext; // [esp+4Eh] [ebp-26h]
-  int exprArgList; // [esp+52h] [ebp-22h]
+  _DWORD *exprValue CLASH95_UNUSED; // [esp+4Ah] [ebp-2Ah]
+  int exprNext CLASH95_UNUSED; // [esp+4Eh] [ebp-26h]
+  int exprArgList CLASH95_UNUSED; // [esp+52h] [ebp-22h]
   int insertIndex[7]; // [esp+58h] [ebp-1Ch] BYREF
 
   returnValue[1] = 2;
@@ -831,9 +831,9 @@ _DWORD * Rules_MvSlotDeleteCommand(int *returnValue, int a2, double a3)
   _DWORD newSlotValue[6]; // [esp+0h] [ebp-60h] BYREF
   _DWORD slotValueDesc[6]; // [esp+18h] [ebp-48h] BYREF
   __int16 exprType; // [esp+30h] [ebp-30h] BYREF
-  _DWORD *exprValue; // [esp+32h] [ebp-2Eh]
-  int exprNext; // [esp+36h] [ebp-2Ah]
-  int exprArgList; // [esp+3Ah] [ebp-26h]
+  _DWORD *exprValue CLASH95_UNUSED; // [esp+32h] [ebp-2Eh]
+  int exprNext CLASH95_UNUSED; // [esp+36h] [ebp-2Ah]
+  int exprArgList CLASH95_UNUSED; // [esp+3Ah] [ebp-26h]
   int rangeEnd; // [esp+40h] [ebp-20h] BYREF
   int rangeStart[7]; // [esp+44h] [ebp-1Ch] BYREF
 
@@ -986,7 +986,7 @@ _DWORD * Rules_ResolveSlotEditInstanceArg(int functionName, int a2, double a3)
   int v7; // ecx
   _DWORD instanceArg[2]; // [esp-4h] [ebp-28h] BYREF
   int argValue; // [esp+4h] [ebp-20h]
-  int v10; // [esp+1Ch] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v10 = a2;
   if ( !Lexer_ParseValueList(1, instanceArg, 112, a3) )

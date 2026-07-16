@@ -440,7 +440,7 @@ LABEL_6:
 // 51B454: using guessed type int dword_51B454;
 
 //----- (004CF480) --------------------------------------------------------
-int *__fastcall InstanceQuery_ResolveClassRestriction(int a1, _DWORD *classToken)
+int *__fastcall InstanceQuery_ResolveClassRestriction(int a1 CLASH95_UNUSED, _DWORD *classToken)
 {
   int v2; // edx
   int currentModule; // edi
@@ -1086,7 +1086,7 @@ void  ObjectsCompiler_GenerateObjectsCode(const char *fileName, const char *path
   int v14; // eax
   int v15; // eax
   int v16; // edx
-  _DWORD v17[3]; // [esp+0h] [ebp-10Ch]
+  _DWORD v17[3] CLASH95_UNUSED; // [esp+0h] [ebp-10Ch]
   const char *v18[3]; // [esp+Ch] [ebp-100h] BYREF
   const char *v19[3]; // [esp+18h] [ebp-F4h] BYREF
   const char *v20; // [esp+24h] [ebp-E8h] BYREF

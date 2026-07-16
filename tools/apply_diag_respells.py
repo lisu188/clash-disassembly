@@ -42,6 +42,15 @@ RULES = {
     "void-pointer-to-int-cast": "(intptr_t)",    # clang spelling
 }
 
+# Annotation categories: caret points at an identifier in its declaration;
+# append the attribute macro after the declarator. Codegen-free.
+ANNOTATE = {
+    "unused-variable": " CLASH95_UNUSED",
+    "unused-but-set-variable": " CLASH95_UNUSED",
+    "unused-parameter": " CLASH95_UNUSED",
+}
+IDENT_AT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
 DIAG = re.compile(
     r"^(?P<file>[^:\n\s][^:\n]*):(?P<line>\d+):(?P<col>\d+):\s+warning:.*"
     r"\[-W(?P<cat>[a-z0-9-]+)\]\s*$", re.M)
@@ -71,11 +80,11 @@ def collect_sites(log_text: str, categories, subsystem: str | None):
             continue
         key = (int(m.group("line")), int(m.group("col")))
         prev = sites.setdefault(rel, {}).get(key)
-        if prev and prev != RULES[cat]:
+        if prev and prev != {**RULES, **ANNOTATE}[cat]:
             # same site flagged with conflicting rules -> leave for review
             sites[rel][key] = None
         else:
-            sites[rel][key] = RULES[cat]
+            sites[rel][key] = {**RULES, **ANNOTATE}[cat]
     return sites
 
 
@@ -108,6 +117,38 @@ def apply_file(rel: str, positions):
             continue
         line = lines[line_no - 1]
         i = col - 1
+        if insert.startswith(" "):   # annotation rule: caret at identifier
+            m = IDENT_AT.match(line, i)
+            if not m:
+                review.append((line_no, col, "caret not at identifier"))
+                continue
+            # function-pointer declarators (`void (*v24)(void)`,
+            # `void (__fastcall **m)(...)`) cannot take the attribute right
+            # after the identifier; if the nearest unclosed paren before the
+            # caret contains only stars/convention tokens, leave to review
+            stack = []
+            for k, ch in enumerate(line[:i]):
+                if ch == "(":
+                    stack.append(k)
+                elif ch == ")" and stack:
+                    stack.pop()
+            if stack:
+                between = line[stack[-1] + 1: i]
+                if re.fullmatch(r"[\s\*]*(?:__\w+[\s\*]*)*", between):
+                    review.append((line_no, col, "fn-ptr declarator"))
+                    continue
+            end = m.end()
+            # array declarators: the attribute goes AFTER the [...] suffixes
+            while end < len(line) and line[end] == "[":
+                close_b = line.find("]", end)
+                if close_b == -1:
+                    break
+                end = close_b + 1
+            if line[end: end + len(insert)] == insert:
+                continue  # idempotent
+            lines[line_no - 1] = line[:end] + insert + line[end:]
+            applied += 1
+            continue
         if i >= len(line) or line[i] != "(":
             review.append((line_no, col, "caret not at cast paren"))
             continue
@@ -146,7 +187,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("buildlog", type=Path)
     ap.add_argument("--category", required=True, action="append",
-                    choices=sorted(RULES),
+                    choices=sorted({**RULES, **ANNOTATE}),
                     help="repeatable; all given categories apply in ONE pass")
     ap.add_argument("--subsystem")
     ap.add_argument("--write", action="store_true")

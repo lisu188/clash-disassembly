@@ -308,7 +308,7 @@ int  Render_BlitRectViaVirtualSurfaces(
         __int16 src_right,
         unsigned __int16 src_bottom,
         unsigned __int16 dest_x,
-        __int16 a8)
+        __int16 a8 CLASH95_UNUSED)
 {
   int read_cursor; // eax
   int v11; // ecx
@@ -495,7 +495,7 @@ int  Render_FillRect(
 {
   _DWORD *src_resolved; // esi
   _DWORD *dest_resolved; // edi
-  int v10; // ecx
+  int v10 CLASH95_UNUSED; // ecx
   void (**v11)(void); // ecx
   __int64 v12; // rax
   int v13; // ecx
@@ -504,15 +504,15 @@ int  Render_FillRect(
   const void *copy_source; // esi
   unsigned int v17; // ecx
   int v18; // ecx
-  int v19; // ecx
-  __int64 v20; // rax
-  int v21; // ecx
-  __int64 v22; // rax
+  int v19 CLASH95_UNUSED; // ecx
+  __int64 v20 CLASH95_UNUSED; // rax
+  int v21 CLASH95_UNUSED; // ecx
+  __int64 v22 CLASH95_UNUSED; // rax
   int src_view_handle; // ebx
   int dest_view_handle; // eax
   int (__fastcall **v25)(_DWORD, int); // ecx
   void *copy_dest; // [esp-4h] [ebp-114h]
-  _DWORD v28[49]; // [esp+0h] [ebp-110h] BYREF
+  _DWORD v28[49] CLASH95_UNUSED; // [esp+0h] [ebp-110h] BYREF
   int v29; // [esp+C4h] [ebp-4Ch]
   int span_width; // [esp+C8h] [ebp-48h]
   int rows_remaining; // [esp+CCh] [ebp-44h]
@@ -523,9 +523,9 @@ int  Render_FillRect(
   int (***src_cursor)(void); // [esp+E0h] [ebp-30h]
   int src_bottom_saved; // [esp+E4h] [ebp-2Ch]
   int span_height; // [esp+E8h] [ebp-28h]
-  int v39; // [esp+ECh] [ebp-24h]
+  int v39 CLASH95_UNUSED; // [esp+ECh] [ebp-24h]
   unsigned int row_width; // [esp+F0h] [ebp-20h]
-  int v41; // [esp+F4h] [ebp-1Ch]
+  int v41 CLASH95_UNUSED; // [esp+F4h] [ebp-1Ch]
   int v42; // [esp+F8h] [ebp-18h]
   int v43; // [esp+FCh] [ebp-14h]
   unsigned int pixels_remaining; // [esp+100h] [ebp-10h]
@@ -752,7 +752,7 @@ int  Render_BlitSurfaceRect(
   _DWORD scratch_surface[51]; // [esp+0h] [ebp-110h] BYREF
   int blit_interface; // [esp+CCh] [ebp-44h]
   int span_height; // [esp+D0h] [ebp-40h]
-  int v42; // [esp+D4h] [ebp-3Ch]
+  int v42 CLASH95_UNUSED; // [esp+D4h] [ebp-3Ch]
   int v43; // [esp+D8h] [ebp-38h]
   int pixels_remaining; // [esp+DCh] [ebp-34h]
   int (***src_cursor)(void); // [esp+E0h] [ebp-30h]
@@ -761,7 +761,7 @@ int  Render_BlitSurfaceRect(
   void (***dest_cursor)(void); // [esp+ECh] [ebp-24h]
   int rows_remaining; // [esp+F0h] [ebp-20h]
   int span_width; // [esp+F4h] [ebp-1Ch]
-  int v51; // [esp+F8h] [ebp-18h]
+  int v51 CLASH95_UNUSED; // [esp+F8h] [ebp-18h]
   int row_width; // [esp+FCh] [ebp-14h]
   int i; // [esp+100h] [ebp-10h]
   int v54; // [esp+104h] [ebp-Ch]
@@ -896,7 +896,7 @@ int  Render_BlendSurfaceRect(
   __int64 v24; // rax
   _DWORD scratch_surface[49]; // [esp+0h] [ebp-120h] BYREF
   int (***second_src_cursor)(void); // [esp+C4h] [ebp-5Ch]
-  int v28; // [esp+C8h] [ebp-58h]
+  int v28 CLASH95_UNUSED; // [esp+C8h] [ebp-58h]
   int src_top_saved; // [esp+CCh] [ebp-54h]
   int second_source_saved; // [esp+D0h] [ebp-50h]
   unsigned __int8 *blend_source_ptr; // [esp+D4h] [ebp-4Ch]
@@ -910,10 +910,10 @@ int  Render_BlendSurfaceRect(
   int v39; // [esp+F4h] [ebp-2Ch]
   _DWORD *v40; // [esp+F8h] [ebp-28h]
   int v41; // [esp+FCh] [ebp-24h]
-  int v42; // [esp+100h] [ebp-20h]
+  int v42 CLASH95_UNUSED; // [esp+100h] [ebp-20h]
   unsigned int row_width; // [esp+104h] [ebp-1Ch]
-  int v44; // [esp+108h] [ebp-18h]
-  int v45; // [esp+10Ch] [ebp-14h]
+  int v44 CLASH95_UNUSED; // [esp+108h] [ebp-18h]
+  int v45 CLASH95_UNUSED; // [esp+10Ch] [ebp-14h]
   int rows_remaining; // [esp+110h] [ebp-10h]
   int v47; // [esp+114h] [ebp-Ch]
   unsigned int pixels_remaining; // [esp+118h] [ebp-8h]

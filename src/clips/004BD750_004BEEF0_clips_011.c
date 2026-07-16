@@ -923,7 +923,7 @@ LABEL_19:
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (004BE720) --------------------------------------------------------
-int __fastcall Parser_ParseReturn(int topNode, int readSource)
+int __fastcall Parser_ParseReturn(int topNode CLASH95_UNUSED, int readSource)
 {
   _DWORD *v3; // edx
   int v4; // ecx
@@ -980,7 +980,7 @@ int __fastcall Parser_ParseReturn(int topNode, int readSource)
 // 54E87C: using guessed type int dword_54E87C;
 
 //----- (004BE800) --------------------------------------------------------
-int __fastcall Parser_ParseBreak(int topNode, int readSource)
+int __fastcall Parser_ParseBreak(int topNode CLASH95_UNUSED, int readSource)
 {
   int v3; // edx
   int v4; // ecx

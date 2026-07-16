@@ -1115,7 +1115,7 @@ int  UI_DrawUnitInfoPane(
   _DWORD *v42; // [esp+70h] [ebp-34h] BYREF
   int textLeft; // [esp+74h] [ebp-30h]
   int panelTop; // [esp+78h] [ebp-2Ch]
-  int v45; // [esp+7Ch] [ebp-28h]
+  int v45 CLASH95_UNUSED; // [esp+7Ch] [ebp-28h]
   DWORD v46; // [esp+80h] [ebp-24h]
   void *savedRenderDevice; // [esp+84h] [ebp-20h]
   int statLineBottom; // [esp+88h] [ebp-1Ch]
@@ -1413,7 +1413,7 @@ int  Unit_Info(
   int renderSpriteObj; // [esp+6Ch] [ebp-20h]
   _DWORD *surface; // [esp+70h] [ebp-1Ch]
   int screenLeft; // [esp+74h] [ebp-18h]
-  int animSpriteLeft; // [esp+78h] [ebp-14h]
+  int animSpriteLeft CLASH95_UNUSED; // [esp+78h] [ebp-14h]
   int lastAnimTick; // [esp+7Ch] [ebp-10h]
 
   screenLeft = leftArg;

@@ -63,36 +63,36 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
   char ch; // al
   char next_ch; // al
   unsigned int message_len; // kr04_4
-  __int16 v12; // ax
-  int v13; // ecx
-  __int16 v14; // bx
+  __int16 v12 CLASH95_UNUSED; // ax
+  int v13 CLASH95_UNUSED; // ecx
+  __int16 v14 CLASH95_UNUSED; // bx
   int proposal_accepted; // eax
   int player_offset; // edx
-  int v17; // ecx
-  __int16 v18; // ax
-  int v19; // ecx
-  __int16 v20; // dx
+  int v17 CLASH95_UNUSED; // ecx
+  __int16 v18 CLASH95_UNUSED; // ax
+  int v19 CLASH95_UNUSED; // ecx
+  __int16 v20 CLASH95_UNUSED; // dx
   int host_building; // eax
-  int v22; // ecx
+  int v22 CLASH95_UNUSED; // ecx
   int v23; // ecx
-  int v24; // edx
-  int v25; // ecx
+  int v24 CLASH95_UNUSED; // edx
+  int v25 CLASH95_UNUSED; // ecx
   signed int theft_castle_index; // eax
   int theft_castle_offset; // eax
-  int v28; // edx
-  int v29; // ecx
+  int v28 CLASH95_UNUSED; // edx
+  int v29 CLASH95_UNUSED; // ecx
   signed int poison_castle_index; // eax
   int poison_castle_offset; // edx
   int poison_castle_record; // eax
   char plague_state_byte; // bh
-  int v34; // edx
-  int v35; // ecx
+  int v34 CLASH95_UNUSED; // edx
+  int v35 CLASH95_UNUSED; // ecx
   signed int arson_castle_index; // eax
-  int v37; // edx
+  int v37 CLASH95_UNUSED; // edx
   unsigned int whim_index; // eax
   int available_funds; // eax
-  int v40; // ecx
-  int v41; // ecx
+  int v40 CLASH95_UNUSED; // ecx
+  int v41 CLASH95_UNUSED; // ecx
   int player_record_accepted; // eax
   int player_record_declined; // eax
   int castle_name_ptr; // [esp-4h] [ebp-1Ch]
@@ -1385,8 +1385,8 @@ _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
 {
   __int16 *stack;
   char fact_text[1000]; // [esp+0h] [ebp-3F0h] BYREF
-  int v9; // [esp+3E8h] [ebp-8h]
-  int v10; // [esp+3ECh] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+3E8h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+3ECh] [ebp-4h]
 
   stack = (__int16 *)result;
   v10 = a3;

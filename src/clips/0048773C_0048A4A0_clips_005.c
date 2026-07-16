@@ -778,7 +778,7 @@ DWORD  CRT_ReadFileHandle(int fileDescriptor, int buffer, DWORD length)
   int v9; // edx
   int v10; // ecx
   DWORD NumberOfBytesRead; // [esp+0h] [ebp-Ch] BYREF
-  int v12; // [esp+8h] [ebp-4h]
+  int v12 CLASH95_UNUSED; // [esp+8h] [ebp-4h]
 
   v12 = buffer;
   if ( fileDescriptor >= 0 && fileDescriptor <= (unsigned int)g_CRT_MaxFileDescriptor )

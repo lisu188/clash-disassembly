@@ -132,7 +132,7 @@ int  Rules_FindImportExportConflict(char *constructName, int matchModule, _BYTE 
 {
   int result; // eax
   int Enum; // esi
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   _DWORD count[6]; // [esp+0h] [ebp-18h] BYREF
 
   count[1] = matchModule;

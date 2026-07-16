@@ -69,12 +69,12 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
   _DWORD *result; // eax
   int i; // eax
   int v5; // ecx
-  _BYTE v6[2]; // [esp+0h] [ebp-5BEh]
+  _BYTE v6[2] CLASH95_UNUSED; // [esp+0h] [ebp-5BEh]
   char paletteEntries[1024]; // [esp+2h] [ebp-5BCh] BYREF
   int (**v8)(); // [esp+466h] [ebp-158h]
   int (**v9)(); // [esp+4CEh] [ebp-F0h]
   _DWORD ehFrame[3]; // [esp+59Ah] [ebp-24h] BYREF
-  int ehState; // [esp+5A6h] [ebp-18h]
+  int ehState CLASH95_UNUSED; // [esp+5A6h] [ebp-18h]
 
   result = ehFrame;
   ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
@@ -320,7 +320,7 @@ int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *codecPtr, int lockedBits,
   int result; // eax
   int v11; // [esp+0h] [ebp-124h]
   _DWORD drawParams[16]; // [esp+CCh] [ebp-58h] BYREF
-  int v13; // [esp+10Ch] [ebp-18h]
+  int v13 CLASH95_UNUSED; // [esp+10Ch] [ebp-18h]
   int hic; // [esp+110h] [ebp-14h]
   int biWidth; // [esp+114h] [ebp-10h]
 
@@ -368,7 +368,7 @@ int  AviPlayer_StreamBitmapInfoPtr(int codecState)
 }
 
 //----- (0046A360) --------------------------------------------------------
-int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *rect)
+int __fastcall AviPlayer_SpanDelta(int a1 CLASH95_UNUSED, _DWORD *rect)
 {
   return rect[2] - *rect;
 }
@@ -598,7 +598,7 @@ int __thiscall Audio_ComputeBytesPerFrame(void *this)
   int result; // eax
   int dsCaps; // [esp+4h] [ebp-6Ch] BYREF
   char dsCapsFlags; // [esp+8h] [ebp-68h]
-  void *v4; // [esp+68h] [ebp-8h]
+  void *v4 CLASH95_UNUSED; // [esp+68h] [ebp-8h]
 
   v4 = this;
   memset_(this, 0);
@@ -635,16 +635,16 @@ signed int Audio_InitDSoundDevice(void)
   int v11; // ecx
   _DWORD bufferCaps[5]; // [esp+24h] [ebp-54h] BYREF
   int bufferDescSize; // [esp+38h] [ebp-40h] BYREF
-  int bufferDescFlags; // [esp+3Ch] [ebp-3Ch]
-  int bufferBytes; // [esp+40h] [ebp-38h]
-  __int16 *formatPtr; // [esp+48h] [ebp-30h]
+  int bufferDescFlags CLASH95_UNUSED; // [esp+3Ch] [ebp-3Ch]
+  int bufferBytes CLASH95_UNUSED; // [esp+40h] [ebp-38h]
+  __int16 *formatPtr CLASH95_UNUSED; // [esp+48h] [ebp-30h]
   __int16 wFormatTag; // [esp+4Ch] [ebp-2Ch] BYREF
-  __int16 nChannels; // [esp+4Eh] [ebp-2Ah]
-  int samplesPerSec; // [esp+50h] [ebp-28h]
-  int avgBytesPerSec; // [esp+54h] [ebp-24h]
-  __int16 blockAlign; // [esp+58h] [ebp-20h]
-  __int16 bitsPerSample; // [esp+5Ah] [ebp-1Eh]
-  __int16 cbSize; // [esp+5Ch] [ebp-1Ch]
+  __int16 nChannels CLASH95_UNUSED; // [esp+4Eh] [ebp-2Ah]
+  int samplesPerSec CLASH95_UNUSED; // [esp+50h] [ebp-28h]
+  int avgBytesPerSec CLASH95_UNUSED; // [esp+54h] [ebp-24h]
+  __int16 blockAlign CLASH95_UNUSED; // [esp+58h] [ebp-20h]
+  __int16 bitsPerSample CLASH95_UNUSED; // [esp+5Ah] [ebp-1Eh]
+  __int16 cbSize CLASH95_UNUSED; // [esp+5Ch] [ebp-1Ch]
 
   if ( !g_AudioWindowHandle )
     return 1;

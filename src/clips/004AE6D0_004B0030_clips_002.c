@@ -294,7 +294,7 @@ signed int  MessageHandler_TypeIndexFromKeyword(int typeName)
 // 51AD3C: using guessed type char *off_51AD3C[4];
 
 //----- (004AEB50) --------------------------------------------------------
-signed int __fastcall MessageHandler_CheckCurrentMessage(int functionName, int instanceRequired)
+signed int __fastcall MessageHandler_CheckCurrentMessage(int functionName CLASH95_UNUSED, int instanceRequired)
 {
   int firstArgument; // eax
   int v5; // ecx
@@ -723,10 +723,10 @@ signed int  MessageHandler_ParseAndSend(_DWORD *returnValue, int a2, double a3)
   signed int result; // eax
   _DWORD argBuffer[6]; // [esp-8h] [ebp-38h] BYREF
   __int16 exprType; // [esp+10h] [ebp-20h] BYREF
-  int exprValue; // [esp+12h] [ebp-1Eh]
-  int exprNext; // [esp+16h] [ebp-1Ah]
-  int exprArgList; // [esp+1Ah] [ebp-16h]
-  int v10; // [esp+28h] [ebp-8h]
+  int exprValue CLASH95_UNUSED; // [esp+12h] [ebp-1Eh]
+  int exprNext CLASH95_UNUSED; // [esp+16h] [ebp-1Ah]
+  int exprArgList CLASH95_UNUSED; // [esp+1Ah] [ebp-16h]
+  int v10 CLASH95_UNUSED; // [esp+28h] [ebp-8h]
 
   v10 = a2;
   returnValue[1] = 2;
@@ -782,9 +782,9 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *returnValue, double a2)
   int *savedCursor; // esi
   int v12; // ecx
   __int16 exprType; // [esp+0h] [ebp-2Ch] BYREF
-  int exprValue; // [esp+2h] [ebp-2Ah]
-  int exprNext; // [esp+6h] [ebp-26h]
-  int exprArgList; // [esp+Ah] [ebp-22h]
+  int exprValue CLASH95_UNUSED; // [esp+2h] [ebp-2Ah]
+  int exprNext CLASH95_UNUSED; // [esp+6h] [ebp-26h]
+  int exprArgList CLASH95_UNUSED; // [esp+Ah] [ebp-22h]
   int argFramePushed; // [esp+10h] [ebp-1Ch]
 
   returnValue[1] = 2;
@@ -994,7 +994,7 @@ signed int  MessageHandler_GetSelfSlotDirect(int theValue, _DWORD *theResult)
   int slot_value; // edx
   unsigned int slot_id; // edi
   int mapped_slot; // edx
-  int slot_descriptor; // eax
+  int slot_descriptor CLASH95_UNUSED; // eax
 
   payload = *(_DWORD *)((uintptr_t)(unsigned int)theValue + 16);
   instance = *(_DWORD *)((uintptr_t)(unsigned int)g_ClipsProcParamArray + 8);
@@ -1237,20 +1237,20 @@ int  MessageHandler_Send(_DWORD *returnValue, _DWORD *argExprs, int messageSymbo
   int classPtr; // ebp
   _DWORD *instancePtr; // edi
   int messageNameStr; // ebx
-  int v9; // edx
+  int v9 CLASH95_UNUSED; // edx
   int argCount; // eax
-  int v11; // ecx
-  int v12; // ecx
+  int v11 CLASH95_UNUSED; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   int firstArgType; // edx
   int handlerCore; // eax
   int savedCursor; // ebp
-  int v16; // edx
+  int v16 CLASH95_UNUSED; // edx
   int currentModule; // eax
-  int v18; // ecx
+  int v18 CLASH95_UNUSED; // ecx
   _DWORD *namedInstance; // eax
-  int v20; // ecx
-  int v21; // ecx
-  int v22; // ecx
+  int v20 CLASH95_UNUSED; // ecx
+  int v21 CLASH95_UNUSED; // ecx
+  int v22 CLASH95_UNUSED; // ecx
   int savedHandlerCore; // [esp+0h] [ebp-2Ch]
   int savedDispatchCore; // [esp+4h] [ebp-28h]
   int savedReentryFlag; // [esp+10h] [ebp-1Ch]

@@ -793,7 +793,7 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
   char *copyDst; // edi
   char nodeByte; // al
   char nodeNextByte; // al
-  char v24; // [esp-1h] [ebp-16Dh]
+  char v24 CLASH95_UNUSED; // [esp-1h] [ebp-16Dh]
   _BYTE lineBuffer[256]; // [esp+0h] [ebp-16Ch]
   char wordBuffer[80]; // [esp+100h] [ebp-6Ch] BYREF
   char *newTopicPtr; // [esp+150h] [ebp-1Ch]

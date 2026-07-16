@@ -623,7 +623,7 @@ LABEL_20:
 // 54E708: using guessed type int dword_54E708;
 
 //----- (004E7AAE) --------------------------------------------------------
-DWORD __cdecl CRT_SpawnveLaunchProcess(int spawnMode, int a2, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5)
+DWORD __cdecl CRT_SpawnveLaunchProcess(int spawnMode, int a2 CLASH95_UNUSED, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5)
 {
   int v5; // ecx
   DWORD dwProcessId; // eax

@@ -347,7 +347,7 @@ signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3)
   int v5; // ecx
   int fileHandle; // esi
   int v7; // ecx
-  int v8; // edx
+  int v8 CLASH95_UNUSED; // edx
   CHAR filePathBuffer[120]; // [esp+0h] [ebp-78h] BYREF
 
   SaveSlot_FormatDataFilePath(slotIndex, filePathBuffer);
@@ -913,12 +913,12 @@ int  UI_ShowInfoWindow(
 {
   DWORD deviceVtable; // ebp
   int v8; // ecx
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // ecx
+  int v9 CLASH95_UNUSED; // ecx
+  int v10 CLASH95_UNUSED; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   _DWORD *templeSprites; // eax
-  int v13; // edx
-  int v14; // ecx
+  int v13 CLASH95_UNUSED; // edx
+  int v14 CLASH95_UNUSED; // ecx
   int contentWidth; // eax
   _DWORD *infoBackdrop; // eax
   int headerSprite; // eax
@@ -1084,8 +1084,8 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
 {
   int buildingRecordOffset; // ecx
   int result; // eax
-  int v6; // ecx
-  int v7; // ecx
+  int v6 CLASH95_UNUSED; // ecx
+  int v7 CLASH95_UNUSED; // ecx
   _BYTE messageBuffer[256]; // [esp+0h] [ebp-120h] BYREF
   int noticeTextTable[8]; // [esp+100h] [ebp-20h] BYREF
 

@@ -42,7 +42,7 @@ _DWORD * Instance_BuildInstance(int instanceName, int theDefclass, int initMessa
   int v31; // eax
   int prevInstance; // [esp+0h] [ebp-20h] BYREF
   int hashBucket; // [esp+4h] [ebp-1Ch]
-  int deleteMessageSymbol; // [esp+8h] [ebp-18h]
+  int deleteMessageSymbol CLASH95_UNUSED; // [esp+8h] [ebp-18h]
   int savedInitMessage; // [esp+Ch] [ebp-14h]
 
   nameSymbol = (signed int *)(uintptr_t)instanceName;

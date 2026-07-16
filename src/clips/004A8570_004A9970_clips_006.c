@@ -431,7 +431,7 @@ int __fastcall Rules_UndefconstructCommand(int a1, int constructClass)
   int v8; // ecx
   int v9; // ecx
   _BYTE argNameBuffer[84]; // [esp+0h] [ebp-5Ch] BYREF
-  int v11; // [esp+54h] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp+54h] [ebp-8h]
 
   v11 = a1;
   v4 = sprintf_(argNameBuffer, "%s name", (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)constructClass);
@@ -466,7 +466,7 @@ int __fastcall Rules_PPConstructCommand(int a1, const char **constructClass)
   int result; // eax
   int v7; // ecx
   _BYTE argNameBuffer[84]; // [esp+0h] [ebp-5Ch] BYREF
-  int v9; // [esp+54h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+54h] [ebp-8h]
 
   v9 = a1;
   v4 = sprintf_(argNameBuffer, "%s name", *constructClass);
@@ -514,7 +514,7 @@ int __fastcall Rules_GetConstructModuleCommand(int a1, const char **constructCla
   int *theModule; // eax
   int v8; // ecx
   _BYTE argNameBuffer[80]; // [esp+0h] [ebp-58h] BYREF
-  int v10; // [esp+50h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+50h] [ebp-8h]
 
   v10 = a1;
   v3 = sprintf_(argNameBuffer, "%s name", *constructClass);
@@ -669,7 +669,7 @@ _DWORD * Rules_GetConstructListCommand(int returnValue, int constructClass, doub
   int v8; // edx
   _DWORD argValue[2]; // [esp-4h] [ebp-24h] BYREF
   int v10; // [esp+4h] [ebp-1Ch]
-  int v11; // [esp+1Ch] [ebp-4h]
+  int v11 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v11 = returnValue;
   numArgs = Lexer_TokenExpect(1);
@@ -731,7 +731,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   signed int *nameSymbol; // eax
   int v35; // edx
   char qualifiedName[512]; // [esp+0h] [ebp-224h] BYREF
-  _DWORD *savedMultifield; // [esp+200h] [ebp-24h]
+  _DWORD *savedMultifield CLASH95_UNUSED; // [esp+200h] [ebp-24h]
   int allModules; // [esp+204h] [ebp-20h]
   int moduleCursor; // [esp+208h] [ebp-1Ch]
   int nextConstruct; // [esp+20Ch] [ebp-18h]
@@ -855,7 +855,7 @@ int  Rules_ListConstructsCommand(int constructClass, int a2, double a3)
   int v6; // ecx
   _DWORD argValue[2]; // [esp-4h] [ebp-24h] BYREF
   int v8; // [esp+4h] [ebp-1Ch]
-  int v9; // [esp+18h] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v9 = a2;
   result = Lexer_TokenExpect(1);
@@ -1141,7 +1141,7 @@ signed int  Rules_ProcessWatchFlagRequest(
         int logicalName,
         double a5,
         int setMode,
-        int newState,
+        int newState CLASH95_UNUSED,
         int getWatchFunc,
         void (*setWatchFunc)(void))
 {

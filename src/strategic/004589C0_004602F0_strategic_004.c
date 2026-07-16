@@ -268,7 +268,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
 double  AI_CalcStrategicPriorityScore(int target_type, DWORD tile_x, int origin_x, int tile_y, int origin_y)
 {
   int file; // ecx
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   _BYTE line_buffer[80]; // [esp+0h] [ebp-70h] BYREF
   int entry_type; // [esp+50h] [ebp-20h] BYREF
   float entry_weight; // [esp+54h] [ebp-1Ch] BYREF

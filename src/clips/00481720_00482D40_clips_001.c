@@ -61,7 +61,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   int valueBuffer; // [esp-4h] [ebp-20h] BYREF
   int theType; // [esp+0h] [ebp-1Ch]
   int theValue; // [esp+4h] [ebp-18h]
-  int v15; // [esp+14h] [ebp-8h]
+  int v15 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v15 = a3;
   Rules_RtnUnknown(whichArgument, &valueBuffer, a4);
@@ -102,7 +102,7 @@ int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
   int valueBuffer; // [esp-4h] [ebp-20h] BYREF
   int theType; // [esp+0h] [ebp-1Ch]
   int theValue; // [esp+4h] [ebp-18h]
-  int v8; // [esp+18h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v8 = functionName;
   Rules_RtnUnknown(whichArgument, &valueBuffer, a3);
@@ -114,7 +114,7 @@ int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
 // 4818A7: variable 'v3' is possibly undefined
 
 //----- (004818C0) --------------------------------------------------------
-signed int __fastcall Rules_OpenFileErrorMessage(int functionName, int fileName)
+signed int __fastcall Rules_OpenFileErrorMessage(int functionName CLASH95_UNUSED, int fileName)
 {
   int v3; // ecx
   int v4; // ecx
@@ -144,7 +144,7 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   int v6; // ecx
   _DWORD valueBuffer[2]; // [esp-4h] [ebp-24h] BYREF
   int theValue; // [esp+4h] [ebp-1Ch]
-  int v9; // [esp+1Ch] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v9 = functionName;
   *error = 0;
@@ -892,7 +892,7 @@ int  Rules_HashSymbolName(_BYTE *word, unsigned int range)
 }
 
 //----- (00482440) --------------------------------------------------------
-unsigned int __stdcall Rules_HashDoubleValue(unsigned int valueLowBits, int valueHighBits, unsigned int range)
+unsigned int __stdcall Rules_HashDoubleValue(unsigned int valueLowBits, int valueHighBits CLASH95_UNUSED, unsigned int range)
 {
   if ( ((valueLowBits % range) & 0x80000000) != 0 )
     return -(valueLowBits % range);

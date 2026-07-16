@@ -456,8 +456,8 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   int mouseY; // edx
   int mouseX; // ecx
   int i; // eax
-  int v26; // edi
-  int v27; // esi
+  int v26 CLASH95_UNUSED; // edi
+  int v27 CLASH95_UNUSED; // esi
   signed int submenuHitIndex; // eax
   _WORD *v29; // ebx
   __int16 v30; // ax

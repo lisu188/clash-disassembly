@@ -1169,7 +1169,7 @@ int  Rules_CloseDefruleCodeFiles(int moduleFile, int defruleFile, int maxIndices
 }
 
 //----- (004C0010) --------------------------------------------------------
-int  Rules_WriteDefruleModuleHeaderEntry(int theFile, int theModule, int maxIndices, int moduleCount)
+int  Rules_WriteDefruleModuleHeaderEntry(int theFile, int theModule, int maxIndices, int moduleCount CLASH95_UNUSED)
 {
   int v5; // edx
   int v6; // ecx

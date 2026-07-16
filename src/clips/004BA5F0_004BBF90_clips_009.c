@@ -327,7 +327,7 @@ int  Rules_DeftemplateCodeGenCloseFiles(int moduleFile, int recordFile, int maxI
 }
 
 //----- (004BAB90) --------------------------------------------------------
-int  Rules_DeftemplateWriteModuleHeaderToCode(int filePtr, int theModule, int maxIndices, int moduleCount)
+int  Rules_DeftemplateWriteModuleHeaderToCode(int filePtr, int theModule, int maxIndices, int moduleCount CLASH95_UNUSED)
 {
   int v5; // edx
   int v6; // ecx
@@ -350,7 +350,7 @@ int  Rules_DeftemplateWriteModuleHeaderToCode(int filePtr, int theModule, int ma
 // 54E858: using guessed type int dword_54E858;
 
 //----- (004BABE0) --------------------------------------------------------
-int  Rules_DeftemplateWriteRecordToCode(int filePtr, int theDeftemplate, int maxIndices, char a4, int moduleCount, int a6)
+int  Rules_DeftemplateWriteRecordToCode(int filePtr, int theDeftemplate, int maxIndices, char a4, int moduleCount, int a6 CLASH95_UNUSED)
 {
   int v9; // edx
   int v10; // ecx
@@ -640,11 +640,11 @@ const void * Rules_BsaveDefruleDisjuncts(const void *result, int theDefrule)
   int v13; // ecx
   _DWORD bsaveDisjunct[5]; // [esp+0h] [ebp-40h] BYREF
   int packedFlags; // [esp+14h] [ebp-2Ch]
-  int dynamicSalienceIndex; // [esp+18h] [ebp-28h]
-  int actionsIndex; // [esp+1Ch] [ebp-24h]
-  int logicalJoinIndex; // [esp+20h] [ebp-20h]
-  int lastJoinIndex; // [esp+24h] [ebp-1Ch]
-  int nextDisjunctIndex; // [esp+28h] [ebp-18h]
+  int dynamicSalienceIndex CLASH95_UNUSED; // [esp+18h] [ebp-28h]
+  int actionsIndex CLASH95_UNUSED; // [esp+1Ch] [ebp-24h]
+  int logicalJoinIndex CLASH95_UNUSED; // [esp+20h] [ebp-20h]
+  int lastJoinIndex CLASH95_UNUSED; // [esp+24h] [ebp-1Ch]
+  int nextDisjunctIndex CLASH95_UNUSED; // [esp+28h] [ebp-18h]
 
   filePtr = (int)(intptr_t)result;
   isFirstDisjunct = 1;
@@ -776,12 +776,12 @@ const void * Rules_BsaveJoinNode(int filePtr, int *theJoin)
   int v18; // eax
   int ruleToActivate; // ebp
   _DWORD bsaveJoin[2]; // [esp+0h] [ebp-34h] BYREF
-  int rightSideEntryIndex; // [esp+8h] [ebp-2Ch]
-  int nextLevelIndex; // [esp+Ch] [ebp-28h]
-  int lastLevelIndex; // [esp+10h] [ebp-24h]
-  int rightDriveIndex; // [esp+14h] [ebp-20h]
-  int rightMatchIndex; // [esp+18h] [ebp-1Ch]
-  int ruleBsaveIndex; // [esp+1Ch] [ebp-18h]
+  int rightSideEntryIndex CLASH95_UNUSED; // [esp+8h] [ebp-2Ch]
+  int nextLevelIndex CLASH95_UNUSED; // [esp+Ch] [ebp-28h]
+  int lastLevelIndex CLASH95_UNUSED; // [esp+10h] [ebp-24h]
+  int rightDriveIndex CLASH95_UNUSED; // [esp+14h] [ebp-20h]
+  int rightMatchIndex CLASH95_UNUSED; // [esp+18h] [ebp-1Ch]
+  int ruleBsaveIndex CLASH95_UNUSED; // [esp+1Ch] [ebp-18h]
 
   *(_BYTE *)theJoin &= ~0x20u;
   v3 = (unsigned int)(*theJoin << 16) >> 25;

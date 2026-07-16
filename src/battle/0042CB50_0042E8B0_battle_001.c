@@ -28,20 +28,20 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
   void *cursorDesc; // ecx
   int currentPlayer; // ebx
   int prevSelectedUnitIndex; // esi
-  int v10; // ecx
-  int v11; // ecx
+  int v10 CLASH95_UNUSED; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int v12; // ecx
   int shooterUnitRecord; // eax
   int rowDelta; // eax
-  int v15; // ecx
-  int v16; // ecx
+  int v15 CLASH95_UNUSED; // ecx
+  int v16 CLASH95_UNUSED; // ecx
   int wallShooterUnitRecord; // eax
-  int v18; // ecx
-  int v19; // ecx
+  int v18 CLASH95_UNUSED; // ecx
+  int v19 CLASH95_UNUSED; // ecx
   int *moveTrackResult; // ecx
   int *moveTrackPath; // eax
-  __int16 v22; // bx
-  int v23; // ecx
+  __int16 v22 CLASH95_UNUSED; // bx
+  int v23 CLASH95_UNUSED; // ecx
   void (*v24)(void); // edx
   int pathCostPacked; // [esp+0h] [ebp-20h]
 
@@ -371,7 +371,7 @@ int  UnitBattle_SelectNextControllableUnit(int widget, int a2, char a3)
   int i; // ecx
   int unitRecord; // edx
   int mapData; // ebx
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   int selectedUnitRecord; // edx
   int result; // eax
 
@@ -541,7 +541,7 @@ int  UnitBattle_HandlePrepareDefenceAction(int widget, int a2, DWORD a3, char a4
 {
   int mapData; // ebx
   int result; // eax
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   int defenceMessageStrings[6]; // [esp+0h] [ebp-18h]
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_prepare_defence_enter", g_SelectedUnitIndex, widget, a2, 0);
@@ -603,18 +603,18 @@ int  UnitBattle_ShowPlayerMessageBanner(int messageText, int playerIndex, int do
   int v4; // ecx
   int v5; // ecx
   _DWORD *windowSpriteSet; // eax
-  void *v7; // ecx
+  void *v7 CLASH95_UNUSED; // ecx
   int v8; // ecx
   _DWORD *Surface; // eax
   DWORD bannerSurface; // ebp
   int SpriteForChar; // eax
   int labelText; // edi
-  int v13; // edx
+  int v13 CLASH95_UNUSED; // edx
   int msgTextBottom; // ebx
   int msgTextTop; // esi
-  int v16; // ecx
-  int v17; // ecx
-  int v18; // ecx
+  int v16 CLASH95_UNUSED; // ecx
+  int v17 CLASH95_UNUSED; // ecx
+  int v18 CLASH95_UNUSED; // ecx
   int v19; // ecx
   int playerLabelStrings[3]; // [esp+1Ch] [ebp-48h]
   int spriteSetSlot[2]; // [esp+28h] [ebp-3Ch] BYREF
@@ -846,7 +846,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int aiMode, int a2, int a3)
   int volleyCount; // edx
   int moraleValue; // eax
   int lastSprite; // edi
-  int v10; // ecx
+  int v10 CLASH95_UNUSED; // ecx
   unsigned int now; // eax
   unsigned int frameDeadline; // edx
   int iconArrayIndex; // esi

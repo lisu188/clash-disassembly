@@ -20,9 +20,9 @@ double st7_0;
 char *name;
 int force;
 {
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
   int stackByteOffset; // ecx
-  int v10; // edx
+  int v10 CLASH95_UNUSED; // edx
   int foundFreeSlot; // ecx
   int scanByteOffset; // eax
   int foundBuildingIndex; // eax
@@ -41,11 +41,11 @@ int force;
   char v26; // dh
   char nameChar; // al
   char nameNextChar; // al
-  int v29; // ecx
+  int v29 CLASH95_UNUSED; // ecx
   int slotInitPtr; // eax
   int recordInitPtr; // eax
   int byteInitPtr; // eax
-  int v33; // ecx
+  int v33 CLASH95_UNUSED; // ecx
   int tileRowOffsetBelow; // edi
   int revealRow; // edi
   int revealColEnd; // ebp
@@ -56,8 +56,8 @@ int force;
   void *minimapRowPtr; // eax
   BOOL result; // eax
   int occupantAtTile; // eax
-  int v44; // ecx
-  signed int v45; // ecx
+  int v44 CLASH95_UNUSED; // ecx
+  signed int v45 CLASH95_UNUSED; // ecx
   int occupantBelow; // eax
   int occupantBelowLayer2; // eax
   int occupantLayer2; // eax
@@ -66,8 +66,8 @@ int force;
   int castleTerrainTileId; // eax
   int terrainRowOffsetBelow; // ebx
   int terrainColOffset; // esi
-  int v54; // ecx
-  void *v55; // ecx
+  int v54 CLASH95_UNUSED; // ecx
+  void *v55 CLASH95_UNUSED; // ecx
   signed int column; // [esp+4h] [ebp-34h]
   int buildingIndexCopy; // [esp+8h] [ebp-30h]
   int row; // [esp+14h] [ebp-24h]
@@ -351,7 +351,7 @@ _DWORD * Building_LogBuiltCastleFacts(unsigned __int8 *buildingPtr)
 BOOL  MapTile_IsCastleFoundationTile(int row, signed int column, int checkMode)
 {
   signed int surfaceClass; // eax
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
   int v6; // esi
   int rowBase; // ecx
 
@@ -373,7 +373,7 @@ BOOL  MapTile_IsCastleFoundationTile(int row, signed int column, int checkMode)
 BOOL  MapTile_IsCastleFoundationAnchorTile(int row, signed int column, int checkMode)
 {
   signed int surfaceClass; // eax
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
   int tileId; // eax
 
   surfaceClass = Map_GetTileSurfaceClassOrUnexplored(row, column);
@@ -558,7 +558,7 @@ signed int  Building_Stop(DWORD buildingPtr, int a2, char a3, DWORD a4, double a
   int slotIndex; // eax
   int occupiedCount; // ebx
   int outIndex; // ecx
-  DWORD buildingPtrCopy; // [esp+0h] [ebp-34h]
+  DWORD buildingPtrCopy CLASH95_UNUSED; // [esp+0h] [ebp-34h]
   int occupiedSlots[12]; // [esp+4h] [ebp-30h] BYREF
 
   buildingPtrCopy = buildingPtr;
@@ -945,7 +945,7 @@ int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *buildingPtr, doub
   int garrisonChanged; // edx
   int i; // esi
   int result; // eax
-  int v7; // ecx
+  int v7 CLASH95_UNUSED; // ecx
 
   slotPtr = (CSyncObject *)(buildingPtr + 18);
   garrisonChanged = 0;

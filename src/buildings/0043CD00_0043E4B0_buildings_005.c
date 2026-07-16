@@ -23,28 +23,28 @@ CLASH95_TEST_VISIBLE WCCompatLink *WCCompat_LinkFromHandle (int link_handle);
 signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 side)
 {
   signed int turnResult; // esi
-  int v3; // edx
+  int v3 CLASH95_UNUSED; // edx
   int poppedUnitId; // eax
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
+  int v5 CLASH95_UNUSED; // ecx
+  int v6 CLASH95_UNUSED; // ecx
+  int v7 CLASH95_UNUSED; // ecx
+  int v8 CLASH95_UNUSED; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   signed int queueIndex; // esi
   int i; // edi
   int queuedUnitId; // eax
-  int v13; // ecx
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
-  int v18; // edx
+  int v13 CLASH95_UNUSED; // ecx
+  int v14 CLASH95_UNUSED; // ecx
+  int v15 CLASH95_UNUSED; // ecx
+  int v16 CLASH95_UNUSED; // ecx
+  int v17 CLASH95_UNUSED; // ecx
+  int v18 CLASH95_UNUSED; // edx
   int unitRecordAddr; // eax
-  int v20; // ecx
-  int v21; // ecx
-  int v22; // ecx
-  int v23; // ecx
-  int v24; // ecx
+  int v20 CLASH95_UNUSED; // ecx
+  int v21 CLASH95_UNUSED; // ecx
+  int v22 CLASH95_UNUSED; // ecx
+  int v23 CLASH95_UNUSED; // ecx
+  int v24 CLASH95_UNUSED; // ecx
   int unitIndex; // [esp+0h] [ebp-1Ch]
 
   turnResult = 1;

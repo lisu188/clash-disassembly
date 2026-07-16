@@ -268,7 +268,7 @@ int  Render_DrawLine(int surface, int x0, int x1, int y0, int y1, char color)
   int x_start; // [esp+20h] [ebp-1Ch] BYREF
   int y_start; // [esp+24h] [ebp-18h] BYREF
   int x_end; // [esp+28h] [ebp-14h] BYREF
-  int last_plot; // [esp+2Ch] [ebp-10h]
+  int last_plot CLASH95_UNUSED; // [esp+2Ch] [ebp-10h]
 
   color_byte = color;
   x_start = x0;
@@ -555,7 +555,7 @@ void  __noreturn Render_HandleDirectDrawFatalError(unsigned int error_code, int 
 {
   const char *error_name; // eax
   char message_buffer[256]; // [esp+0h] [ebp-104h] BYREF
-  int saved_context; // [esp+100h] [ebp-4h]
+  int saved_context CLASH95_UNUSED; // [esp+100h] [ebp-4h]
 
   saved_context = a2;
   if ( error_code >= 0x8876019A )
@@ -1291,10 +1291,10 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, vo
   unsigned int set_clipper_hr; // eax
   int v26; // ecx
   int surface_desc; // [esp+2Ch] [ebp-84h] BYREF
-  int surface_flags; // [esp+30h] [ebp-80h]
-  int desc_height; // [esp+34h] [ebp-7Ch]
-  DWORD desc_width; // [esp+38h] [ebp-78h]
-  int surface_caps; // [esp+94h] [ebp-1Ch]
+  int surface_flags CLASH95_UNUSED; // [esp+30h] [ebp-80h]
+  int desc_height CLASH95_UNUSED; // [esp+34h] [ebp-7Ch]
+  DWORD desc_width CLASH95_UNUSED; // [esp+38h] [ebp-78h]
+  int surface_caps CLASH95_UNUSED; // [esp+94h] [ebp-1Ch]
   LPDIRECTDRAW lpDD; // [esp+98h] [ebp-18h] BYREF
   int DeviceCaps; // [esp+9Ch] [ebp-14h]
   int saved_height; // [esp+A0h] [ebp-10h]
@@ -1386,9 +1386,9 @@ signed int  Render_InitDirectDrawFullscreenMode(
   int ddraw_handle; // ebx
   _DWORD *back_surface; // eax
   int surface_desc_size; // [esp+34h] [ebp-80h] BYREF
-  int desc_flags; // [esp+38h] [ebp-7Ch]
-  BOOL has_backbuffer; // [esp+48h] [ebp-6Ch]
-  int surface_caps; // [esp+9Ch] [ebp-18h]
+  int desc_flags CLASH95_UNUSED; // [esp+38h] [ebp-7Ch]
+  BOOL has_backbuffer CLASH95_UNUSED; // [esp+48h] [ebp-6Ch]
+  int surface_caps CLASH95_UNUSED; // [esp+9Ch] [ebp-18h]
   int attach_caps; // [esp+A0h] [ebp-14h] BYREF
   LPDIRECTDRAW lpDD; // [esp+A4h] [ebp-10h] BYREF
 

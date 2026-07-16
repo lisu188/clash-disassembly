@@ -588,7 +588,7 @@ LABEL_76:
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004DC550) --------------------------------------------------------
-signed int __fastcall Rules_ReportAttributeCannotCombine(int attribute1, int attribute2)
+signed int __fastcall Rules_ReportAttributeCannotCombine(int attribute1 CLASH95_UNUSED, int attribute2)
 {
   int v3; // ecx
   int v4; // ecx

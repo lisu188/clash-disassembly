@@ -179,7 +179,7 @@ signed int  Building_HasUnitLicence(int building, unit_type unitType)
 //----- (0043E850) --------------------------------------------------------
 BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD gameContext)
 {
-  int v5; // edx
+  int v5 CLASH95_UNUSED; // edx
   BOOL result; // eax
   int nationData; // eax
   unsigned int licenceCost; // esi
@@ -1339,7 +1339,7 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, cha
   char partialGold; // dl
   __int16 *result; // eax
   _WORD cargoStack[4]; // [esp+0h] [ebp-170h] BYREF
-  char v14[335]; // [esp+9h] [ebp-167h]
+  char v14[335] CLASH95_UNUSED; // [esp+9h] [ebp-167h]
   int spawnY; // [esp+158h] [ebp-18h]
   int spawnX; // [esp+15Ch] [ebp-14h]
   signed int goldAmountCopy; // [esp+160h] [ebp-10h]

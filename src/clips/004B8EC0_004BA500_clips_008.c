@@ -1257,14 +1257,14 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
   int result; // eax
   int constraint; // ebx
   _DWORD bsaveDeftemplate[3]; // [esp+0h] [ebp-54h] BYREF
-  int firstSlotIndex; // [esp+Ch] [ebp-48h]
+  int firstSlotIndex CLASH95_UNUSED; // [esp+Ch] [ebp-48h]
   int deftemplateBsaveFlags; // [esp+10h] [ebp-44h]
-  int patternNetworkIndex; // [esp+14h] [ebp-40h]
+  int patternNetworkIndex CLASH95_UNUSED; // [esp+14h] [ebp-40h]
   int bsaveSlot; // [esp+18h] [ebp-3Ch] BYREF
   int slotBsaveFlags; // [esp+1Ch] [ebp-38h]
-  int slotConstraintIndex; // [esp+20h] [ebp-34h]
-  signed int slotNameIndex; // [esp+24h] [ebp-30h]
-  int defaultValueIndex; // [esp+28h] [ebp-2Ch]
+  int slotConstraintIndex CLASH95_UNUSED; // [esp+20h] [ebp-34h]
+  signed int slotNameIndex CLASH95_UNUSED; // [esp+24h] [ebp-30h]
+  int defaultValueIndex CLASH95_UNUSED; // [esp+28h] [ebp-2Ch]
   _DWORD bsaveModuleItem[3]; // [esp+2Ch] [ebp-28h] BYREF
   int spaceBuffer[7]; // [esp+38h] [ebp-1Ch] BYREF
 

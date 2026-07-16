@@ -334,7 +334,7 @@ int Rules_GetPPBuffer(void)
 // 51AA28: using guessed type int dword_51AA28;
 
 //----- (00494870) --------------------------------------------------------
-char *__fastcall AST_Append(int a1, int a2)
+char *__fastcall AST_Append(int a1, int a2 CLASH95_UNUSED)
 {
   int i; // eax
   int indentDepth; // ecx
@@ -1219,9 +1219,9 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
   int theDefgeneric; // edx
   int theDeffunction; // ebp
   unsigned __int16 newTestType; // [esp+0h] [ebp-24h] BYREF
-  int newTestValue; // [esp+2h] [ebp-22h]
-  int newTestArgList; // [esp+6h] [ebp-1Eh]
-  int newTestNextArg; // [esp+Ah] [ebp-1Ah]
+  int newTestValue CLASH95_UNUSED; // [esp+2h] [ebp-22h]
+  int newTestArgList CLASH95_UNUSED; // [esp+6h] [ebp-1Eh]
+  int newTestNextArg CLASH95_UNUSED; // [esp+Ah] [ebp-1Ah]
 
   for ( i = result; i; i = *(__int16 **)(uintptr_t)(v7 + 10) )
   {

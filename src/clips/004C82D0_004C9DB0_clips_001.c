@@ -108,7 +108,7 @@ _DWORD * Defgeneric_AppendMethodSignatureText(char *buf, int bufMax, int a3, int
   int restrictionOffset; // [esp+10h] [ebp-28h]
   _DWORD *restrictionIndex; // [esp+14h] [ebp-24h]
   _DWORD *meth; // [esp+18h] [ebp-20h]
-  int v17; // [esp+1Ch] [ebp-1Ch]
+  int v17 CLASH95_UNUSED; // [esp+1Ch] [ebp-1Ch]
   int typeOffset; // [esp+20h] [ebp-18h]
   _DWORD *restriction; // [esp+24h] [ebp-14h]
 
@@ -391,8 +391,8 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
   unsigned int methodLimit; // esi
   int prevModuleIndex; // ebp
   int v23; // [esp+0h] [ebp-D8h]
-  int v24; // [esp+4h] [ebp-D4h]
-  const char **nameBuffer; // [esp+8h] [ebp-D0h]
+  int v24 CLASH95_UNUSED; // [esp+4h] [ebp-D4h]
+  const char **nameBuffer CLASH95_UNUSED; // [esp+8h] [ebp-D0h]
   const char *moduleNameBuf[3]; // [esp+Ch] [ebp-CCh] BYREF
   const char *genericNameBuf[3]; // [esp+18h] [ebp-C0h] BYREF
   const char *methodNameBuf[3]; // [esp+24h] [ebp-B4h] BYREF
@@ -665,7 +665,7 @@ int  Defgeneric_ModuleToCode(int fp, int theModule, int imageID)
 // 54E8CC: using guessed type int dword_54E8CC;
 
 //----- (004C9110) --------------------------------------------------------
-int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndices, int moduleIndex, int a6, int methodArrayIndex)
+int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndices, int moduleIndex, int a6 CLASH95_UNUSED, int methodArrayIndex)
 {
   int v9; // edx
   int v10; // ecx
@@ -698,7 +698,7 @@ int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndic
 // 54E8CC: using guessed type int dword_54E8CC;
 
 //----- (004C91B0) --------------------------------------------------------
-int  Defgeneric_MethodToCode(int fp, int imageID, int restrictionArrayIndex, int theMethod, int a5)
+int  Defgeneric_MethodToCode(int fp, int imageID, int restrictionArrayIndex, int theMethod, int a5 CLASH95_UNUSED)
 {
   DWORD restrictionArrayName; // ebp
   int v7; // edx

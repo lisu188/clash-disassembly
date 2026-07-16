@@ -15,7 +15,7 @@
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00430F80) --------------------------------------------------------
-int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a4)
+int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH95_UNUSED, int a4 CLASH95_UNUSED)
 {
   __int16 *unitRecord; // esi
   int SpriteForChar; // eax
@@ -51,12 +51,12 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3, int a
   _DWORD *portraitSprites; // eax
   int portraitSprite; // eax
   int shouldRestore; // edi
-  unsigned __int16 v37; // cx
+  unsigned __int16 v37 CLASH95_UNUSED; // cx
   char v38[92]; // [esp+B0h] [ebp-8Ch] BYREF
   int portraitHandle; // [esp+10Ch] [ebp-30h] BYREF
   int savedRestoreFlag; // [esp+110h] [ebp-2Ch]
   void *savedRenderDevice; // [esp+114h] [ebp-28h]
-  DWORD v42; // [esp+120h] [ebp-1Ch]
+  DWORD v42 CLASH95_UNUSED; // [esp+120h] [ebp-1Ch]
   int i; // [esp+124h] [ebp-18h]
   int orderMarkerIndex; // [esp+128h] [ebp-14h]
   char *(**unitMetadata)[102]; // [esp+12Ch] [ebp-10h]
@@ -368,11 +368,11 @@ int  UnitBattle_ShowWallInfoPopup(int popupX, int popupY, int tileCol, int sprit
   int labelTextByLanguage[3]; // [esp+48h] [ebp-38h]
   _DWORD *spriteSet; // [esp+54h] [ebp-2Ch] BYREF
   int lastFrameTime; // [esp+58h] [ebp-28h]
-  int savedSpriteName; // [esp+5Ch] [ebp-24h]
+  int savedSpriteName CLASH95_UNUSED; // [esp+5Ch] [ebp-24h]
   int savedPopupY; // [esp+60h] [ebp-20h]
   int flagDrawX; // [esp+64h] [ebp-1Ch]
   _DWORD *savedSurface; // [esp+68h] [ebp-18h]
-  int savedTileCol; // [esp+6Ch] [ebp-14h]
+  int savedTileCol CLASH95_UNUSED; // [esp+6Ch] [ebp-14h]
   int savedPopupX; // [esp+70h] [ebp-10h]
 
   savedPopupX = popupX;
@@ -768,7 +768,7 @@ signed int Battle_RestoreSavedActionPointsBeforeResultCopy(void)
 //----- (004327B0) --------------------------------------------------------
 signed int  Battle_PlaceUnit(unsigned __int8 *unitRecord, int tileRow, char facing, int tileCol)
 {
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
   int slotIndex; // edx
   int i; // eax
   int recordOffset; // eax
@@ -844,7 +844,7 @@ int BuildingGarrisonDialog_CountSelectedSlots(void)
 //----- (00432940) --------------------------------------------------------
 void * BuildingGarrisonDialog_DrawSlotGrid(int targetSlot)
 {
-  int v1; // esi
+  int v1 CLASH95_UNUSED; // esi
   unsigned __int8 outlineColor; // al
   int slotIndex; // esi
   int cellY; // edi

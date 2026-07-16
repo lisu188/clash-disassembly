@@ -121,8 +121,8 @@ const void * Deffunction_BsaveWriteRecord(int theDeffunction, int fp, int a3)
 {
   int v4; // ecx
   _DWORD dummyDeffunction[7]; // [esp-Ch] [ebp-28h] BYREF
-  int codeIndex; // [esp+10h] [ebp-Ch]
-  int v8; // [esp+14h] [ebp-8h]
+  int codeIndex CLASH95_UNUSED; // [esp+10h] [ebp-Ch]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v8 = a3;
   AST_ExtractPatternBindingInfo(dummyDeffunction, theDeffunction);
@@ -691,23 +691,23 @@ const void * Class_BsaveWriteClassRecord(int theDefclass, int fp)
   int v7; // eax
   _DWORD dummyClass[3]; // [esp+0h] [ebp-60h] BYREF
   int flagsWord; // [esp+Ch] [ebp-54h]
-  __int16 classId; // [esp+10h] [ebp-50h]
-  __int16 directSuperclassCount; // [esp+12h] [ebp-4Eh]
-  int superclassListIndex; // [esp+14h] [ebp-4Ch]
-  __int16 directSubclassCount; // [esp+18h] [ebp-48h]
-  int subclassListIndex; // [esp+1Ah] [ebp-46h]
-  __int16 allSuperclassCount; // [esp+1Eh] [ebp-42h]
-  int allSuperclassListIndex; // [esp+20h] [ebp-40h]
-  int slotCount; // [esp+24h] [ebp-3Ch]
-  int v19; // [esp+28h] [ebp-38h]
-  int v20; // [esp+2Ch] [ebp-34h]
-  int maxSlotNameID; // [esp+30h] [ebp-30h]
-  int handlerCount; // [esp+34h] [ebp-2Ch]
-  int slotsIndex; // [esp+38h] [ebp-28h]
-  int instanceTemplateIndex; // [esp+3Ch] [ebp-24h]
-  int slotNameMapIndex; // [esp+40h] [ebp-20h]
-  int handlersIndex; // [esp+44h] [ebp-1Ch]
-  int scopeMapIndex; // [esp+48h] [ebp-18h]
+  __int16 classId CLASH95_UNUSED; // [esp+10h] [ebp-50h]
+  __int16 directSuperclassCount CLASH95_UNUSED; // [esp+12h] [ebp-4Eh]
+  int superclassListIndex CLASH95_UNUSED; // [esp+14h] [ebp-4Ch]
+  __int16 directSubclassCount CLASH95_UNUSED; // [esp+18h] [ebp-48h]
+  int subclassListIndex CLASH95_UNUSED; // [esp+1Ah] [ebp-46h]
+  __int16 allSuperclassCount CLASH95_UNUSED; // [esp+1Eh] [ebp-42h]
+  int allSuperclassListIndex CLASH95_UNUSED; // [esp+20h] [ebp-40h]
+  int slotCount CLASH95_UNUSED; // [esp+24h] [ebp-3Ch]
+  int v19 CLASH95_UNUSED; // [esp+28h] [ebp-38h]
+  int v20 CLASH95_UNUSED; // [esp+2Ch] [ebp-34h]
+  int maxSlotNameID CLASH95_UNUSED; // [esp+30h] [ebp-30h]
+  int handlerCount CLASH95_UNUSED; // [esp+34h] [ebp-2Ch]
+  int slotsIndex CLASH95_UNUSED; // [esp+38h] [ebp-28h]
+  int instanceTemplateIndex CLASH95_UNUSED; // [esp+3Ch] [ebp-24h]
+  int slotNameMapIndex CLASH95_UNUSED; // [esp+40h] [ebp-20h]
+  int handlersIndex CLASH95_UNUSED; // [esp+44h] [ebp-1Ch]
+  int scopeMapIndex CLASH95_UNUSED; // [esp+48h] [ebp-18h]
 
   AST_ExtractPatternBindingInfo(dummyClass, theDefclass);
   v5 = *(_DWORD *)(uintptr_t)(classPtr + 20) << 29;
@@ -892,9 +892,9 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
   int v23; // ecx
   int theConstraint; // ebx
   _DWORD dummySlot[3]; // [esp+0h] [ebp-30h] BYREF
-  int defaultValueIndex; // [esp+Ch] [ebp-24h]
-  int constraintIndex; // [esp+10h] [ebp-20h]
-  int slotNameIndex; // [esp+14h] [ebp-1Ch]
+  int defaultValueIndex CLASH95_UNUSED; // [esp+Ch] [ebp-24h]
+  int constraintIndex CLASH95_UNUSED; // [esp+10h] [ebp-20h]
+  int slotNameIndex CLASH95_UNUSED; // [esp+14h] [ebp-1Ch]
   int theDefclass; // [esp+18h] [ebp-18h]
 
   theDefclass = result;
@@ -1032,7 +1032,7 @@ _DWORD * Class_BsaveWriteSlotRecords(_DWORD *result, int fp)
   int classIndex; // eax
   int v11; // ecx
   _DWORD dummyHandler[6]; // [esp+0h] [ebp-30h] BYREF
-  int actionsIndex; // [esp+18h] [ebp-18h]
+  int actionsIndex CLASH95_UNUSED; // [esp+18h] [ebp-18h]
 
   theDefclass = (int)(intptr_t)result;
   handlerIndex = 0;

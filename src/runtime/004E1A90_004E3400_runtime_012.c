@@ -428,11 +428,11 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
   _DWORD *traverseNode; // ecx
   _DWORD bsavePatternRecord[8]; // [esp+0h] [ebp-58h] BYREF
   _BYTE bsaveAlphaRecord[8]; // [esp+20h] [ebp-38h] BYREF
-  int classBitmapIndex; // [esp+28h] [ebp-30h]
-  int slotBitmapIndex; // [esp+2Ch] [ebp-2Ch]
-  int patternNodeIndex; // [esp+30h] [ebp-28h]
-  int nextAlphaIndex; // [esp+34h] [ebp-24h]
-  int nextTerminalIndex; // [esp+38h] [ebp-20h]
+  int classBitmapIndex CLASH95_UNUSED; // [esp+28h] [ebp-30h]
+  int slotBitmapIndex CLASH95_UNUSED; // [esp+2Ch] [ebp-2Ch]
+  int patternNodeIndex CLASH95_UNUSED; // [esp+30h] [ebp-28h]
+  int nextAlphaIndex CLASH95_UNUSED; // [esp+34h] [ebp-24h]
+  int nextTerminalIndex CLASH95_UNUSED; // [esp+38h] [ebp-20h]
   int bsaveSpace[7]; // [esp+3Ch] [ebp-1Ch] BYREF
 
   bsaveSpace[0] = 32 * g_ObjectPatternNetworkBloadCount + 28 * g_ReactiveRuleBloadCount;

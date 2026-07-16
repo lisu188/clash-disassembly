@@ -1173,7 +1173,7 @@ _DWORD * Rules_RetractTempleFact(int tile_x, int tile_y, char a3, DWORD a4)
   double formatted; // st7
   int v8; // ecx
   char fact_text[200]; // [esp+0h] [ebp-CCh] BYREF
-  int v11; // [esp+C8h] [ebp-4h]
+  int v11 CLASH95_UNUSED; // [esp+C8h] [ebp-4h]
 
   v11 = tile_y;
   Debug_Log(tile_x, a3, a4, (int)(intptr_t)aKasuj_swiatyni);

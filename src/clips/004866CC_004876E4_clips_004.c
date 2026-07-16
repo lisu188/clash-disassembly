@@ -156,7 +156,7 @@ int  Surface_DDCopyBitmapToNewSurface(int directDraw, const CHAR *bitmapName, _D
   _DWORD surface_desc[2]; // [esp+8h] [ebp-9Ch] BYREF
   int surface_height; // [esp+10h] [ebp-94h]
   int surface_width; // [esp+14h] [ebp-90h]
-  int surface_caps; // [esp+70h] [ebp-34h]
+  int surface_caps CLASH95_UNUSED; // [esp+70h] [ebp-34h]
   _BYTE pv[4]; // [esp+74h] [ebp-30h] BYREF
   int bitmap_width; // [esp+78h] [ebp-2Ch]
   int bitmap_height; // [esp+7Ch] [ebp-28h]
@@ -407,7 +407,7 @@ int  Surface_MatchColorToNativePixel(int pdds, COLORREF rgb, COLORREF Pixel)
 }
 
 //----- (00487002) --------------------------------------------------------
-int __fastcall CRT_RunRegisteredFinalizers(int a1, __lock *lock)
+int __fastcall CRT_RunRegisteredFinalizers(int a1 CLASH95_UNUSED, __lock *lock)
 {
   int result; // eax
   int finalizerEntry; // edx
@@ -476,7 +476,7 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
   int char_count; // [esp+10h] [ebp-70h]
   char conversion_char; // [esp+15h] [ebp-6Bh]
   char pad_char; // [esp+16h] [ebp-6Ah]
-  __int16 v29; // [esp+1Ch] [ebp-64h]
+  __int16 v29 CLASH95_UNUSED; // [esp+1Ch] [ebp-64h]
   __int16 flags; // [esp+1Eh] [ebp-62h]
   int prefix_len; // [esp+20h] [ebp-60h]
   int zero_pad_len; // [esp+24h] [ebp-5Ch]
@@ -488,7 +488,7 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
   int argCursor; // [esp+60h] [ebp-20h] BYREF
   int convArgCursor; // [esp+64h] [ebp-1Ch] BYREF
   _BYTE *format_ptr; // [esp+68h] [ebp-18h]
-  char v41; // [esp+6Ch] [ebp-14h]
+  char v41 CLASH95_UNUSED; // [esp+6Ch] [ebp-14h]
 
   outputStream = stream;
   v41 = 0;
@@ -825,7 +825,7 @@ LABEL_13:
 }
 
 //----- (004874D4) --------------------------------------------------------
-int  CRT_FarStrLenBounded(int stringOffset, __int16 stringSegment, int maxLength)
+int  CRT_FarStrLenBounded(int stringOffset, __int16 stringSegment CLASH95_UNUSED, int maxLength)
 {
   int result; // eax
   char curr_char; // bl

@@ -63,7 +63,7 @@ int * PathEntryArray_CopyConstruct(int *dest, _DWORD *source, int a3)
   int byteOffset; // ecx
   _DWORD *srcEntry; // ebx
   _DWORD *destEntry; // esi
-  int v12; // ecx
+  int v12 CLASH95_UNUSED; // ecx
 
   dest[4] = (int)(intptr_t)g_PathEntryArray_Vtable;
   dest[1] = source[1];
@@ -141,7 +141,7 @@ _DWORD * PathEntryArray_DestructElements(_DWORD *result)
   _DWORD *v6; // ecx
   int tempEntry; // [esp+4h] [ebp-14h] BYREF
   int (**tempEntryVtable)(); // [esp+8h] [ebp-10h]
-  int tempEntryData; // [esp+Ch] [ebp-Ch]
+  int tempEntryData CLASH95_UNUSED; // [esp+Ch] [ebp-Ch]
 
   array = result;
   if ( *result )
@@ -245,7 +245,7 @@ _DWORD * PathEntryArray_RemoveAt(_DWORD *result, int index, int destroyElement)
   int removedValue; // [esp+0h] [ebp-20h]
   int tempEntry; // [esp+4h] [ebp-1Ch] BYREF
   int (**tempEntryVtable)(); // [esp+8h] [ebp-18h]
-  int tempEntryData; // [esp+Ch] [ebp-14h]
+  int tempEntryData CLASH95_UNUSED; // [esp+Ch] [ebp-14h]
 
   array = result;
   if ( destroyElement )

@@ -126,7 +126,7 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD renderContext)
 {
   _DWORD *spriteSet; // eax
   int row_y_offset; // ebp
-  int target_index; // edi
+  int target_index CLASH95_UNUSED; // edi
   void *saved_render_device; // eax
   int highlight_surface; // eax
   int building_index; // eax

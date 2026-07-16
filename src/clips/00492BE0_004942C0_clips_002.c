@@ -41,7 +41,7 @@ int  Rules_FreeDeftemplateHashNode(int theItem)
 // 54E650: using guessed type int dword_54E650;
 
 //----- (00492C60) --------------------------------------------------------
-int  Rules_FindDeftemplateByName(_BYTE *deftemplateName, int a2)
+int  Rules_FindDeftemplateByName(_BYTE *deftemplateName, int a2 CLASH95_UNUSED)
 {
   return Rules_FindConstructByNameGeneric(deftemplateName, g_DeftemplateConstructType);
 }
@@ -606,7 +606,7 @@ char * Parser_NextToken(int readSource, int theToken)
   signed int *orSymbol; // eax
   signed int *ampersandSymbol; // eax
   unsigned int v47; // ecx
-  int v48; // ecx
+  int v48 CLASH95_UNUSED; // ecx
   int scannedType; // [esp+0h] [ebp-1Ch] BYREF
   int i; // [esp+4h] [ebp-18h]
 
@@ -1018,14 +1018,14 @@ int  Lexer_ScanNumberToken(int logicalName, _DWORD *theToken, unsigned int a3)
   char *appended; // eax
   unsigned int v11; // ecx
   char *digitBuffer; // eax
-  int v13; // ecx
+  int v13 CLASH95_UNUSED; // ecx
   int theLong; // eax
   signed int longValue; // ecx
   int v16; // ecx
   int *integerValue; // eax
-  int v18; // edx
+  int v18 CLASH95_UNUSED; // edx
   int result; // eax
-  int v20; // edx
+  int v20 CLASH95_UNUSED; // edx
   signed int symbolCount; // edi
   char *symbolBuffer; // eax
   unsigned int v23; // ecx
@@ -1033,10 +1033,10 @@ int  Lexer_ScanNumberToken(int logicalName, _DWORD *theToken, unsigned int a3)
   _DWORD *v25; // edx
   char lastChar; // al
   signed int *symbolValue; // eax
-  int v28; // edx
+  int v28 CLASH95_UNUSED; // edx
   int doubleValue; // eax
-  int v30; // edx
-  int v31; // edx
+  int v30 CLASH95_UNUSED; // edx
+  int v31 CLASH95_UNUSED; // edx
   double theFloat; // [esp+0h] [ebp-44h]
   int scannedType; // [esp+8h] [ebp-3Ch] BYREF
   _DWORD *tokenOut; // [esp+Ch] [ebp-38h]

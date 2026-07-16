@@ -255,11 +255,11 @@ void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
   int overlaySurface; // ebp
   int hideResult; // eax
   RECT frameRect; // [esp+170h] [ebp-30h] BYREF
-  struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+180h] [ebp-20h]
-  tagRECT *v19; // [esp+184h] [ebp-1Ch]
-  void *v20; // [esp+188h] [ebp-18h]
-  int v21; // [esp+18Ch] [ebp-14h]
-  int v22; // [esp+19Ch] [ebp-4h]
+  struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList CLASH95_UNUSED; // [esp+180h] [ebp-20h]
+  tagRECT *v19 CLASH95_UNUSED; // [esp+184h] [ebp-1Ch]
+  void *v20 CLASH95_UNUSED; // [esp+188h] [ebp-18h]
+  int v21 CLASH95_UNUSED; // [esp+18Ch] [ebp-14h]
+  int v22 CLASH95_UNUSED; // [esp+19Ch] [ebp-4h]
 
   instance = *playerHandle;
   v22 = a3;
@@ -387,7 +387,7 @@ void  CAviDecompressor_BlitTo(int *playerHandle, LONG x, int a3, LONG y)
   int v7; // ecx
   int v8; // ecx
   RECT destRect; // [esp+0h] [ebp-14h] BYREF
-  int v10; // [esp+10h] [ebp-4h]
+  int v10 CLASH95_UNUSED; // [esp+10h] [ebp-4h]
 
   v10 = a3;
   instance = *playerHandle;
@@ -562,7 +562,7 @@ void __stdcall PlayAviStretch(char *fileName, IDirectDrawSurface *ddSurface, tag
 // 464774: variable 'v10' is possibly undefined
 
 //----- (00464780) --------------------------------------------------------
-void __stdcall PlayAviSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, int x, int y, int (*continueCallback)(void), int openFlags)
+void __stdcall PlayAviSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2 CLASH95_UNUSED, int x, int y, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   char *v9; // [esp+4h] [ebp-24h]
@@ -600,7 +600,7 @@ void __stdcall PlayAviSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, 
 // 464849: variable 'v11' is possibly undefined
 
 //----- (00464860) --------------------------------------------------------
-void __stdcall PlayAviStretchSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, tagRECT *destRect, int (*continueCallback)(void), int openFlags)
+void __stdcall PlayAviStretchSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2 CLASH95_UNUSED, tagRECT *destRect, int (*continueCallback)(void), int openFlags)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   tagRECT *v8; // [esp+4h] [ebp-24h]
@@ -1122,24 +1122,24 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
         int self,
         int fileName,
         int a3,
-        int a4,
-        int a5,
-        int a6,
-        int a7,
-        int a8,
-        int a9,
-        int a10,
-        int a11,
-        int a12,
-        int a13,
-        int a14,
+        int a4 CLASH95_UNUSED,
+        int a5 CLASH95_UNUSED,
+        int a6 CLASH95_UNUSED,
+        int a7 CLASH95_UNUSED,
+        int a8 CLASH95_UNUSED,
+        int a9 CLASH95_UNUSED,
+        int a10 CLASH95_UNUSED,
+        int a11 CLASH95_UNUSED,
+        int a12 CLASH95_UNUSED,
+        int a13 CLASH95_UNUSED,
+        int a14 CLASH95_UNUSED,
         int a15,
-        int Buffer_2,
+        int Buffer_2 CLASH95_UNUSED,
         __int64 Buffer_6,
-        int Buffer_18,
-        int Buffer_22,
-        int Buffer_26,
-        char Buffer_30,
+        int Buffer_18 CLASH95_UNUSED,
+        int Buffer_22 CLASH95_UNUSED,
+        int Buffer_26 CLASH95_UNUSED,
+        char Buffer_30 CLASH95_UNUSED,
         char Buffer_30a,
         __int64 a23,
         __int64 a24,

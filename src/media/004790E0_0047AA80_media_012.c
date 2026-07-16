@@ -553,7 +553,7 @@ int  File_PrimePathCacheEntry(int a1, DWORD a2)
   int v3; // ecx
   int v5; // [esp+0h] [ebp-18h] BYREF
   int (**v6)(); // [esp+4h] [ebp-14h]
-  int v7; // [esp+10h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
 
   v7 = a1;
   v5 = 0;
@@ -834,7 +834,7 @@ signed int __fastcall Rules_PrintFactWithIndex(int logicalName, int fact)
   int v3; // ecx
   int v4; // ecx
   _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
-  int v7; // [esp+14h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v7 = logicalName;
   sprintf_(buffer, "f-%-5ld ", *(_DWORD *)(uintptr_t)(fact + 24));
@@ -850,7 +850,7 @@ signed int __fastcall Rules_PrintFactLabel(int logicalName, int fact)
 {
   int v2; // ecx
   _BYTE buffer[20]; // [esp+0h] [ebp-1Ch] BYREF
-  int v5; // [esp+14h] [ebp-8h]
+  int v5 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v5 = logicalName;
   sprintf_(buffer, "f-%ld", *(_DWORD *)(uintptr_t)(fact + 24));
@@ -1069,7 +1069,7 @@ _DWORD * Rules_AssertFactDriver(_DWORD *fact, double a2)
   int v14; // ecx
   int v15; // ecx
   int v16; // ecx
-  _DWORD *v17; // ecx
+  _DWORD *v17 CLASH95_UNUSED; // ecx
 
   if ( g_Rules_JoinOperationInProgress )
   {

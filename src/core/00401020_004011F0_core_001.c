@@ -58,7 +58,7 @@ char __thiscall DetectGameCDPath(void *this)
   char *pathEnd; // edi
   char curChar; // al
   char nextChar; // al
-  char *v8; // [esp-4h] [ebp-38h]
+  char *v8 CLASH95_UNUSED; // [esp-4h] [ebp-38h]
   char pathBuffer[52]; // [esp+0h] [ebp-34h] BYREF
 
   *(_DWORD *)&pathBuffer[44] = (_DWORD)(uintptr_t)this;

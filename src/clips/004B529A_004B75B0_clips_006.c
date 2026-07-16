@@ -161,7 +161,7 @@ signed int __thiscall IO_FileIOExitCallback(void *this)
 }
 
 //----- (004B5430) --------------------------------------------------------
-int __fastcall IO_FileIOQueryCallback(int a1, void *logicalName)
+int __fastcall IO_FileIOQueryCallback(int a1 CLASH95_UNUSED, void *logicalName)
 {
   int filePtr; // eax
   int v3; // ecx
@@ -730,7 +730,7 @@ void __thiscall CRT_TzSetFromSystemInfo(int this)
   int v4; // ecx
   int v5; // ecx
   struct _TIME_ZONE_INFORMATION v6; // [esp+0h] [ebp-BCh] BYREF
-  int v7; // [esp+B4h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+B4h] [ebp-8h]
 
   v7 = this;
   if ( (g_TzInitFlags & 1) == 0 || (g_TzInitFlags & 2) == 0 )
@@ -1230,7 +1230,7 @@ signed int  PP_ShouldEmit(int fieldDescriptor)
 // 4B7210: variable 'v1' is possibly undefined
 
 //----- (004B72D0) --------------------------------------------------------
-signed int __fastcall PP_MakeConst25(int a1, int a2)
+signed int __fastcall PP_MakeConst25(int a1, int a2 CLASH95_UNUSED)
 {
   char v2; // cl
   int v3; // eax
@@ -1363,7 +1363,7 @@ int PP_BuildDefault(void)
 // 4B7476: variable 'v0' is possibly undefined
 
 //----- (004B7550) --------------------------------------------------------
-int __fastcall PP_MakeConst31(int a1, int a2)
+int __fastcall PP_MakeConst31(int a1, int a2 CLASH95_UNUSED)
 {
   int v2; // ecx
   unsigned __int8 v3; // al
@@ -1383,7 +1383,7 @@ int __fastcall PP_MakeConst31(int a1, int a2)
 // 4B7563: variable 'v2' is possibly undefined
 
 //----- (004B75B0) --------------------------------------------------------
-int __fastcall PP_MakeConst30(int a1, int a2)
+int __fastcall PP_MakeConst30(int a1, int a2 CLASH95_UNUSED)
 {
   _DWORD *node; // ecx
   unsigned __int8 v3; // al

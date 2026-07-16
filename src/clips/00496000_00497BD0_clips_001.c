@@ -809,7 +809,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int returnValue, double context)
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
   __int64 argValue; // [esp+0h] [ebp-24h]
-  int savedReturnValue; // [esp+1Ch] [ebp-8h]
+  int savedReturnValue CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   savedReturnValue = returnValue;
   argCheck = Lexer_TokenExpect(1);
@@ -843,7 +843,7 @@ int  Rules_SetStaticConstraintCheckingCommand(int returnValue, double context)
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
   __int64 argValue; // [esp+0h] [ebp-24h]
-  int savedReturnValue; // [esp+1Ch] [ebp-8h]
+  int savedReturnValue CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   savedReturnValue = returnValue;
   argCheck = Lexer_TokenExpect(1);
@@ -1188,7 +1188,7 @@ signed int  Defgeneric_UndefmethodCommand(int returnValue, double context)
   int argData; // [esp-4h] [ebp-24h] BYREF
   int argType; // [esp+0h] [ebp-20h]
   int argValue; // [esp+4h] [ebp-1Ch]
-  int savedReturnValue; // [esp+18h] [ebp-8h]
+  int savedReturnValue CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   savedReturnValue = returnValue;
   result = Lexer_ParseValueList(1, &argData, 2, context);
@@ -1268,7 +1268,7 @@ BOOL  Defgeneric_RemoveConstruct(int theConstruct)
 // 4979AF: variable 'v4' is possibly undefined
 
 //----- (004979C0) --------------------------------------------------------
-int __fastcall Defgeneric_RemoveMethod(int theGeneric, int methodIndex)
+int __fastcall Defgeneric_RemoveMethod(int theGeneric CLASH95_UNUSED, int methodIndex)
 {
   int v3; // edx
   int v4; // ecx
@@ -1413,7 +1413,7 @@ int  Defgeneric_PpdefmethodCommand(int returnValue, double context)
   int methodPtr; // edx
   _DWORD argData[2]; // [esp-8h] [ebp-28h] BYREF
   int argValue; // [esp+0h] [ebp-20h]
-  int savedReturnValue; // [esp+18h] [ebp-8h]
+  int savedReturnValue CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   savedReturnValue = returnValue;
   result = Lexer_ParseValueList(1, argData, 2, context);

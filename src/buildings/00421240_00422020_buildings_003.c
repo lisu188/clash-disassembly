@@ -536,7 +536,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
 // 526EE8: using guessed type int dword_526EE8;
 
 //----- (00421C20) --------------------------------------------------------
-int __thiscall Castle_DrawAllAmbientAnimationLayers(void *this)
+int __thiscall Castle_DrawAllAmbientAnimationLayers(void *this CLASH95_UNUSED)
 {
   int i; // edx
   int layerIndex; // eax
@@ -798,7 +798,7 @@ int * Castle_RebuildSceneBuffers(int paletteBuffer, DWORD runtime_context)
   int v5; // ecx
   int v6; // ecx
   char castleSpriteName[20]; // [esp-6h] [ebp-1Ch] BYREF
-  int savedArg; // [esp+Eh] [ebp-8h]
+  int savedArg CLASH95_UNUSED; // [esp+Eh] [ebp-8h]
   unsigned int primary_surface_handle;
 
   savedArg = paletteBuffer;

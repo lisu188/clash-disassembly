@@ -490,7 +490,7 @@ unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult
   int v12; // [esp-4h] [ebp-28h] BYREF
   int comparisonType; // [esp+0h] [ebp-24h]
   int comparisonValue; // [esp+4h] [ebp-20h]
-  int v15; // [esp+1Ch] [ebp-8h]
+  int v15 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v15 = a3;
   compareInfo = *(_DWORD *)(uintptr_t)(theValue + 16);

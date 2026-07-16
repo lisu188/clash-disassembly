@@ -536,7 +536,7 @@ int  UnitBattle_CountTrailingBlankSpriteRows(unsigned __int16 *sprite)
 //----- (00406740) --------------------------------------------------------
 int Menu_DrawFrameBackdrop()
 {
-  int result; // eax
+  int result CLASH95_UNUSED; // eax
 
   g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 0), 1u);
@@ -558,12 +558,12 @@ int Menu_DrawFrameBackdrop()
 //----- (00406980) --------------------------------------------------------
 void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
 {
-  int v1; // ecx
+  int v1 CLASH95_UNUSED; // ecx
   unsigned __int16 v2; // dx
   int scaled_current_ap; // esi
   char v4; // bl
   signed int ap_percent; // ebp
-  int v6; // ecx
+  int v6 CLASH95_UNUSED; // ecx
   _DWORD *Surface; // eax
   int surface_addr; // esi
   __int16 SpriteWidth; // ax
@@ -573,7 +573,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
   __int16 bar_sprite_width; // ax
   int min_base_action_points; // eax
   void *result; // eax
-  char v16; // [esp+1Ch] [ebp-18h]
+  char v16 CLASH95_UNUSED; // [esp+1Ch] [ebp-18h]
   _DWORD *bar_surface; // [esp+1Ch] [ebp-18h]
   void *saved_render_device; // [esp+20h] [ebp-14h]
 
@@ -752,20 +752,20 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   int next_row_index; // ebp
   unsigned __int16 *tile_ptr; // edx
   unsigned int now; // eax
-  int v8; // edx
+  int v8 CLASH95_UNUSED; // edx
   int anim_now; // eax
-  int v10; // edx
-  int v11; // ecx
+  int v10 CLASH95_UNUSED; // edx
+  int v11 CLASH95_UNUSED; // ecx
   _WORD *next_row_tile; // eax
   int special_now; // eax
   int special_frame_duration; // edx
-  int v15; // ecx
+  int v15 CLASH95_UNUSED; // ecx
   int overlay_frame; // eax
   unsigned int overlay_now; // eax
-  int v18; // edx
+  int v18 CLASH95_UNUSED; // edx
   int overlay_anim_now; // eax
   int anim_frame_duration; // edx
-  int v21; // ecx
+  int v21 CLASH95_UNUSED; // ecx
   int v22; // edx
   int v23; // ecx
   int k; // eax

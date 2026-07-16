@@ -82,14 +82,14 @@ int  AviPlayer_Flip(int self)
   __int64 lockDesc[2]; // [esp+80h] [ebp-4ACh] BYREF
   int v71; // [esp+A8h] [ebp-484h]
   int (**v72)(); // [esp+154h] [ebp-3D8h]
-  int v73; // [esp+1BCh] [ebp-370h]
+  int v73 CLASH95_UNUSED; // [esp+1BCh] [ebp-370h]
   int (**v74)(); // [esp+224h] [ebp-308h]
-  int v75; // [esp+28Ch] [ebp-2A0h]
+  int v75 CLASH95_UNUSED; // [esp+28Ch] [ebp-2A0h]
   int (**v76)(); // [esp+2F4h] [ebp-238h]
-  struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+4ECh] [ebp-40h]
-  tagRECT *v78; // [esp+4F0h] [ebp-3Ch]
-  void *v79; // [esp+4F4h] [ebp-38h]
-  int v80; // [esp+4F8h] [ebp-34h]
+  struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList CLASH95_UNUSED; // [esp+4ECh] [ebp-40h]
+  tagRECT *v78 CLASH95_UNUSED; // [esp+4F0h] [ebp-3Ch]
+  void *v79 CLASH95_UNUSED; // [esp+4F4h] [ebp-38h]
+  int v80 CLASH95_UNUSED; // [esp+4F8h] [ebp-34h]
   int busyGuardAddr; // [esp+500h] [ebp-2Ch]
   int backLockedBits; // [esp+504h] [ebp-28h]
   int v83; // [esp+508h] [ebp-24h]
@@ -791,7 +791,7 @@ int  CAviDecompressor_PresentFrameForRect(int player, const RECT *destRect)
   int overlayFlags; // edi
   int v10; // ecx
   _DWORD sehFrame[3]; // [esp+198h] [ebp-24h] BYREF
-  int ehState; // [esp+1A4h] [ebp-18h]
+  int ehState CLASH95_UNUSED; // [esp+1A4h] [ebp-18h]
 
   v2 = player;
   result = (int)(intptr_t)sehFrame;
@@ -1019,16 +1019,16 @@ LABEL_8:
 char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
         int self,
         int a2,
-        int a3,
-        int a4,
-        int a5,
-        int a6,
-        int a7,
-        int a8,
-        int a9,
-        int a10,
-        int a11,
-        int a12,
+        int a3 CLASH95_UNUSED,
+        int a4 CLASH95_UNUSED,
+        int a5 CLASH95_UNUSED,
+        int a6 CLASH95_UNUSED,
+        int a7 CLASH95_UNUSED,
+        int a8 CLASH95_UNUSED,
+        int a9 CLASH95_UNUSED,
+        int a10 CLASH95_UNUSED,
+        int a11 CLASH95_UNUSED,
+        int a12 CLASH95_UNUSED,
         __int64 a13,
         __int64 a14,
         __int64 a15,
@@ -1375,7 +1375,7 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int self, int a2)
   int v6; // ecx
   int v7; // ecx
   _DWORD surfaceDesc[183]; // [esp+0h] [ebp-2F4h] BYREF
-  int v9; // [esp+2DCh] [ebp-18h]
+  int v9 CLASH95_UNUSED; // [esp+2DCh] [ebp-18h]
 
   surfaceDesc[180] = NtCurrentTeb()->NtTib.ExceptionList;
   surfaceDesc[181] = &j____wcpp_4_fs_handler_rtn_;
@@ -1460,11 +1460,11 @@ int  AviPlayer_CreateOverlaySurfaceAndEnable(int self, int a2)
   int v6; // ecx
   int result; // eax
   int descSize; // [esp+0h] [ebp-80h] BYREF
-  int descFlags; // [esp+4h] [ebp-7Ch]
-  int surfaceHeight; // [esp+8h] [ebp-78h]
-  int surfaceWidth; // [esp+Ch] [ebp-74h]
-  int backBufferCount; // [esp+14h] [ebp-6Ch]
-  int surfaceCaps; // [esp+68h] [ebp-18h]
+  int descFlags CLASH95_UNUSED; // [esp+4h] [ebp-7Ch]
+  int surfaceHeight CLASH95_UNUSED; // [esp+8h] [ebp-78h]
+  int surfaceWidth CLASH95_UNUSED; // [esp+Ch] [ebp-74h]
+  int backBufferCount CLASH95_UNUSED; // [esp+14h] [ebp-6Ch]
+  int surfaceCaps CLASH95_UNUSED; // [esp+68h] [ebp-18h]
 
   memset_(a2, 0);
   descSize = 108;

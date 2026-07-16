@@ -44,7 +44,7 @@ signed int  Rules_OddpFunction(int returnValue, double a2)
   signed int result; // eax
   int item; // [esp-8h] [ebp-24h] BYREF
   int itemValue; // [esp+0h] [ebp-1Ch]
-  int returnValueCopy; // [esp+14h] [ebp-8h]
+  int returnValueCopy CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) == -1 )
@@ -61,7 +61,7 @@ signed int  Rules_EvenpFunction(int returnValue, double a2)
   signed int result; // eax
   int item; // [esp-8h] [ebp-24h] BYREF
   int itemValue; // [esp+0h] [ebp-1Ch]
-  int returnValueCopy; // [esp+14h] [ebp-8h]
+  int returnValueCopy CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) == -1 )
@@ -159,7 +159,7 @@ int * Rules_MultiplicationFunction(int returnValue, double a2)
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int i; // [esp+24h] [ebp-20h]
-  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 1;
@@ -227,7 +227,7 @@ int * Rules_SubtractionFunction(int returnValue, double a2)
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 0;
@@ -322,7 +322,7 @@ int * Rules_DivisionFunction(int returnValue, double a2)
   double ftotal; // [esp+18h] [ebp-2Ch]
   int returnValueCopy; // [esp+20h] [ebp-24h]
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int savedLtotal; // [esp+28h] [ebp-1Ch]
+  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
   returnValueCopy = returnValue;
   ltotal = 1;
@@ -426,7 +426,7 @@ double  Rules_DivFunction(double result)
   int theArgument; // [esp+0h] [ebp-3Ch] BYREF
   int argType; // [esp+4h] [ebp-38h]
   int argValuePtr; // [esp+8h] [ebp-34h]
-  int v11; // [esp+18h] [ebp-24h]
+  int v11 CLASH95_UNUSED; // [esp+18h] [ebp-24h]
   int theNumber; // [esp+1Ch] [ebp-20h]
   int total; // [esp+20h] [ebp-1Ch]
 
@@ -504,7 +504,7 @@ int  Rules_SetAutoFloatDividendCommand(int returnValue, double a2)
   int result; // ecx
   int theValue; // [esp-4h] [ebp-24h] BYREF
   __int64 typeValuePair; // [esp+0h] [ebp-20h]
-  int returnValueCopy; // [esp+18h] [ebp-8h]
+  int returnValueCopy CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(1) != -1 )
@@ -548,9 +548,9 @@ double  Rules_FloatFunction(int a1, int a2, int a3, double a4)
   int item; // [esp-8h] [ebp-30h] BYREF
   int itemValue; // [esp+0h] [ebp-28h]
   double floatValue; // [esp+10h] [ebp-18h]
-  int v9; // [esp+18h] [ebp-10h]
-  int v10; // [esp+1Ch] [ebp-Ch]
-  int v11; // [esp+24h] [ebp-4h]
+  int v9 CLASH95_UNUSED; // [esp+18h] [ebp-10h]
+  int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-Ch]
+  int v11 CLASH95_UNUSED; // [esp+24h] [ebp-4h]
 
   v11 = a1;
   v10 = a3;
@@ -802,7 +802,7 @@ _DWORD * Rules_MVDeleteFunction(_DWORD *returnValue, int a2, double a3)
   _DWORD multifieldValue[6]; // [esp+0h] [ebp-40h] BYREF
   int indexValue; // [esp+18h] [ebp-28h] BYREF
   int indexValuePtr; // [esp+20h] [ebp-20h]
-  int v8; // [esp+38h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+38h] [ebp-8h]
 
   v8 = a2;
   if ( !Lexer_ParseValueList(1, &indexValue, 1, a3)
@@ -1284,7 +1284,7 @@ _DWORD * Rules_FirstFunction(_DWORD *returnValue, int a2, double a3)
   _DWORD theValue[3]; // [esp-8h] [ebp-28h] BYREF
   signed int begin; // [esp+4h] [ebp-1Ch]
   int end; // [esp+8h] [ebp-18h]
-  int v10; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v10 = a2;
   if ( !Lexer_ParseValueList(1, theValue, 4, a3) )
@@ -1315,7 +1315,7 @@ _DWORD * Rules_RestFunction(_DWORD *returnValue, int a2, double a3)
   _DWORD theValue[3]; // [esp-8h] [ebp-28h] BYREF
   int begin; // [esp+4h] [ebp-1Ch]
   signed int end; // [esp+8h] [ebp-18h]
-  int v10; // [esp+18h] [ebp-8h]
+  int v10 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v10 = a2;
   if ( !Lexer_ParseValueList(1, theValue, 4, a3) )
@@ -1350,7 +1350,7 @@ signed int * Rules_NthFunction(int returnValue, int a2, double a3)
   int multifieldPtr; // [esp+18h] [ebp-20h]
   int begin; // [esp+1Ch] [ebp-1Ch]
   int end; // [esp+20h] [ebp-18h]
-  int v14; // [esp+30h] [ebp-8h]
+  int v14 CLASH95_UNUSED; // [esp+30h] [ebp-8h]
 
   v14 = a2;
   if ( Lexer_TokenExpect(2) != -1
@@ -1386,7 +1386,7 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
   int item1Value; // [esp+8h] [ebp-20h]
   int item1Begin; // [esp+Ch] [ebp-1Ch]
   int item1End; // [esp+10h] [ebp-18h]
-  int returnValueCopy; // [esp+20h] [ebp-8h]
+  int returnValueCopy CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   returnValueCopy = returnValue;
   if ( Lexer_TokenExpect(2) == -1 )

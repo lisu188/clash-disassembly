@@ -314,7 +314,7 @@ _DWORD * Rules_ResolveFactOrInstanceArg(_DWORD *item, _BYTE *functionName, int a
   _BYTE *itemName; // edx
   int v11; // ecx
   _BYTE numberBuffer[20]; // [esp+0h] [ebp-1Ch] BYREF
-  int v13; // [esp+14h] [ebp-8h]
+  int v13 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v13 = a3;
   Rules_RtnUnknown(1, item, a4);
@@ -358,21 +358,21 @@ int  Parser_ParseForm(__int16 *problem, _DWORD *returnValue, int a3, double a4)
   int oldArgument; // ebx
   int theFunction; // edx
   void *theValue; // eax
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int *longResult; // eax
-  int v13; // ecx
+  int v13 CLASH95_UNUSED; // ecx
   int v14; // ecx
   int v15; // ecx
   int v16; // ecx
-  int v17; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   int entityRecord; // edx
   int savedExpression; // edi
-  int v20; // ecx
+  int v20 CLASH95_UNUSED; // ecx
   uintptr_t function_ptr;
   uintptr_t evaluator;
   double doubleResult; // [esp+0h] [ebp-18h]
   char charBuffer[8]; // [esp+Ch] [ebp-Ch] BYREF
-  int v23; // [esp+14h] [ebp-4h]
+  int v23 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v23 = a3;
   valuePtr = returnValue;

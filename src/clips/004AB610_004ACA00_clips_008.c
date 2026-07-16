@@ -224,12 +224,12 @@ _DWORD * Rules_ModifyInstanceCore(int returnValue, int msgpass, double a3)
   int sendResult; // [esp+0h] [ebp-40h] BYREF
   int sendResultType; // [esp+4h] [ebp-3Ch]
   _DWORD *sendResultValue; // [esp+8h] [ebp-38h]
-  int multifieldBegin; // [esp+Ch] [ebp-34h]
-  int multifieldEnd; // [esp+10h] [ebp-30h]
+  int multifieldBegin CLASH95_UNUSED; // [esp+Ch] [ebp-34h]
+  int multifieldEnd CLASH95_UNUSED; // [esp+10h] [ebp-30h]
   __int16 tmpExprType; // [esp+18h] [ebp-28h] BYREF
-  int tmpExprValue; // [esp+1Ah] [ebp-26h]
-  int tmpExprArgList; // [esp+1Eh] [ebp-22h]
-  int tmpExprNext; // [esp+22h] [ebp-1Eh]
+  int tmpExprValue CLASH95_UNUSED; // [esp+1Ah] [ebp-26h]
+  int tmpExprArgList CLASH95_UNUSED; // [esp+1Eh] [ebp-22h]
+  int tmpExprNext CLASH95_UNUSED; // [esp+22h] [ebp-1Eh]
   int v22; // [esp+28h] [ebp-18h]
 
   v22 = returnValue;
@@ -345,12 +345,12 @@ _DWORD * Rules_DuplicateInstanceCore(int *returnValue, int msgpass, double a3)
   int sendResult; // [esp+0h] [ebp-54h] BYREF
   int sendResultType; // [esp+4h] [ebp-50h]
   _DWORD *sendResultValue; // [esp+8h] [ebp-4Ch]
-  int multifieldBegin; // [esp+Ch] [ebp-48h]
-  int multifieldEnd; // [esp+10h] [ebp-44h]
+  int multifieldBegin CLASH95_UNUSED; // [esp+Ch] [ebp-48h]
+  int multifieldEnd CLASH95_UNUSED; // [esp+10h] [ebp-44h]
   __int16 exprType; // [esp+18h] [ebp-3Ch] BYREF
-  int exprValue; // [esp+1Ah] [ebp-3Ah]
-  int exprArgList; // [esp+1Eh] [ebp-36h]
-  int exprNext; // [esp+22h] [ebp-32h]
+  int exprValue CLASH95_UNUSED; // [esp+1Ah] [ebp-3Ah]
+  int exprArgList CLASH95_UNUSED; // [esp+1Eh] [ebp-36h]
+  int exprNext CLASH95_UNUSED; // [esp+22h] [ebp-32h]
   int msgpassFlag; // [esp+28h] [ebp-2Ch]
   int savedFlag; // [esp+2Ch] [ebp-28h]
   int initExpr; // [esp+30h] [ebp-24h]
@@ -573,7 +573,7 @@ signed int  Rules_LoadInstancesCommand(int a1, DWORD a2, double a3)
   signed int instancesLoaded; // ebx
   int fileArgValue; // [esp-8h] [ebp-24h] BYREF
   int fileNameSymbol; // [esp+0h] [ebp-1Ch]
-  int v8; // [esp+14h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v8 = a1;
   result = Lexer_ParseValueList(1, &fileArgValue, 111, a3);
@@ -597,7 +597,7 @@ signed int  Rules_RestoreInstancesCommand(int a1, DWORD a2, double a3)
   signed int instancesLoaded; // ebx
   int fileArgValue; // [esp-8h] [ebp-24h] BYREF
   int fileNameSymbol; // [esp+0h] [ebp-1Ch]
-  int v8; // [esp+14h] [ebp-8h]
+  int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v8 = a1;
   result = Lexer_ParseValueList(1, &fileArgValue, 111, a3);
@@ -894,8 +894,8 @@ _DWORD * Rules_BuildClassListForSave(int functionName, int classExprs, int inher
   int nextFree; // eax
   _DWORD argValue[2]; // [esp+0h] [ebp-38h] BYREF
   int argSymbol; // [esp+8h] [ebp-30h]
-  int v24; // [esp+18h] [ebp-20h]
-  int currentModule; // [esp+1Ch] [ebp-1Ch]
+  int v24 CLASH95_UNUSED; // [esp+18h] [ebp-20h]
+  int currentModule CLASH95_UNUSED; // [esp+1Ch] [ebp-1Ch]
   int v26; // [esp+20h] [ebp-18h]
   int argIndex; // [esp+24h] [ebp-14h]
   int memoryTable; // [esp+28h] [ebp-10h]

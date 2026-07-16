@@ -591,7 +591,7 @@ char  Unit_BuildGarrisonSlotIconSpritePath(char *destPath, unsigned __int8 unitT
   char *extDst; // edi
   char result; // al
   char prefixBuffer[12]; // [esp+0h] [ebp-14h] BYREF
-  int v24; // [esp+Ch] [ebp-8h]
+  int v24 CLASH95_UNUSED; // [esp+Ch] [ebp-8h]
 
   v24 = a3;
   dirPrefixSrc = aUnits_i_0;
@@ -692,7 +692,7 @@ char  Unit_BuildSelectedUnitPanelIconSpritePath(char *destPath, unsigned __int8 
   char *suffixDst; // edi
   char result; // al
   char prefixBuffer[12]; // [esp+0h] [ebp-14h] BYREF
-  int v24; // [esp+Ch] [ebp-8h]
+  int v24 CLASH95_UNUSED; // [esp+Ch] [ebp-8h]
 
   v24 = a3;
   unitsDirSrc = aUnits_i_1;
@@ -793,7 +793,7 @@ char  Unit_BuildSelectedUnitPanelIconPalettePath(char *destPath, unsigned __int8
   char *appendCursor4; // edi
   char result; // al
   char prefixBuffer[12]; // [esp+0h] [ebp-14h] BYREF
-  int v24; // [esp+Ch] [ebp-8h]
+  int v24 CLASH95_UNUSED; // [esp+Ch] [ebp-8h]
 
   v24 = a3;
   dirPrefixSrc = aUnits_i_2;
@@ -1337,9 +1337,9 @@ int  Map_GetUnitTileMoveCostOrZero(int playerIndex, int unitType, int tileColumn
 {
   unsigned int tileOccupant; // edx
   int occupantStackRecord; // eax
-  int unitMetadataOffset; // edi
+  int unitMetadataOffset CLASH95_UNUSED; // edi
   unsigned __int16 *terrainRecord; // ecx
-  unsigned __int16 *v12; // ecx
+  unsigned __int16 *v12 CLASH95_UNUSED; // ecx
 
   tileOccupant = *(unsigned __int16 *)(uintptr_t)(2 * tileColumn + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET);
   if ( (unsigned __int16)tileOccupant != 0xFFFF )
@@ -1426,7 +1426,7 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *stackPtr, int tileRow, int 
   signed int result; // eax
   unsigned __int16 *terrain_record; // ecx
   _BYTE merged_profile[96]; // [esp-1Ch] [ebp-64h] BYREF
-  int v16; // [esp+44h] [ebp-4h]
+  int v16 CLASH95_UNUSED; // [esp+44h] [ebp-4h]
 
   v16 = a3;
   tile_index_ptr = TILE_INDEX(tileRow, tileColumn);

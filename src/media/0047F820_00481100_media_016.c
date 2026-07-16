@@ -616,7 +616,7 @@ int  Rules_ClassCommand(int returnValue, int a2, double a3)
   int temp; // [esp-4h] [ebp-24h] BYREF
   int valueType; // [esp+0h] [ebp-20h]
   int valueField; // [esp+4h] [ebp-1Ch]
-  int v15; // [esp+1Ch] [ebp-4h]
+  int v15 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v15 = a2;
   argName = *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16);
@@ -701,7 +701,7 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
   int v8; // [esp-4h] [ebp-2Ch] BYREF
   int resultType; // [esp+0h] [ebp-28h]
   int resultValue; // [esp+4h] [ebp-24h]
-  int v11; // [esp+20h] [ebp-8h]
+  int v11 CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   v11 = a1;
   argumentIndex = 1;
@@ -882,7 +882,7 @@ int  Rules_InstanceNameCommand(int returnValue, int a2, double a3)
   int v6; // ecx
   _DWORD v7[2]; // [esp-4h] [ebp-28h] BYREF
   int resultValue; // [esp+4h] [ebp-20h]
-  int v9; // [esp+1Ch] [ebp-8h]
+  int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v9 = a2;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;

@@ -368,7 +368,7 @@ signed int  Rules_MultifieldReplaceRange(
         int rangeEnd,
         int rangeBegin,
         _DWORD *field,
-        int functionName)
+        int functionName CLASH95_UNUSED)
 {
   int srcLength; // eax
   int srcBegin; // ecx
@@ -494,7 +494,7 @@ signed int  Rules_MultifieldReplaceRange(
 // 4A23D8: variable 'v14' is possibly undefined
 
 //----- (004A2580) --------------------------------------------------------
-signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theField, int theIndex, int functionName)
+signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theField, int theIndex, int functionName CLASH95_UNUSED)
 {
   int srcLength; // eax
   int srcLengthCopy; // edx
@@ -679,7 +679,7 @@ signed int  Rules_MultifieldIndexRangeError(int rangeBegin, int rangeEnd, int fi
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004A28E0) --------------------------------------------------------
-signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, int rangeBegin, int functionName)
+signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, int rangeBegin, int functionName CLASH95_UNUSED)
 {
   int srcLength; // eax
   int absBegin; // edi
@@ -819,8 +819,8 @@ signed int  Rules_ConcatBuiltinCore(int returnValue, int returnType, int a3, dou
   int theArgType; // [esp+4h] [ebp-3Ch]
   int theArgValue; // [esp+8h] [ebp-38h]
   const char **arrayOfStrings; // [esp+18h] [ebp-28h]
-  int v28; // [esp+1Ch] [ebp-24h]
-  char *functionName; // [esp+20h] [ebp-20h]
+  int v28 CLASH95_UNUSED; // [esp+1Ch] [ebp-24h]
+  char *functionName CLASH95_UNUSED; // [esp+20h] [ebp-20h]
   unsigned int totalSize; // [esp+24h] [ebp-1Ch]
   int numArgs; // [esp+28h] [ebp-18h]
 
@@ -1065,8 +1065,8 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
   int arg1; // [esp+14h] [ebp-44h] BYREF
   int arg2; // [esp+2Ch] [ebp-2Ch] BYREF
   int arg2Value; // [esp+34h] [ebp-24h]
-  int maxChars; // [esp+44h] [ebp-14h]
-  int v14; // [esp+50h] [ebp-8h]
+  int maxChars CLASH95_UNUSED; // [esp+44h] [ebp-14h]
+  int v14 CLASH95_UNUSED; // [esp+50h] [ebp-8h]
 
   v14 = returnValue;
   numArgs = Rules_ArgRangeCheck((int)(intptr_t)aStrCompare, 3);
@@ -1298,7 +1298,7 @@ int  Rules_EvalBuiltin(_DWORD *returnValue, int a2, double a3)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004A3440) --------------------------------------------------------
-BOOL __fastcall Rules_EvalStringCore(_DWORD theString, _DWORD *returnValue)
+BOOL __fastcall Rules_EvalStringCore(_DWORD theString CLASH95_UNUSED, _DWORD *returnValue)
 {
   double v3; // st7
   const char *v4; // ecx

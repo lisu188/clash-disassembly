@@ -1,0 +1,229 @@
+{
+ "categories": [
+  "unused-but-set-variable",
+  "unused-parameter",
+  "unused-variable"
+ ],
+ "applied": 962,
+ "review": {
+  "src/battle/0042CB50_0042E8B0_battle_001.c": [
+   [
+    45,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/battle/00430F80_00433820_battle_003.c": [
+   [
+    27,
+    22,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/core/004015A0_00401A00_core_001.c": [
+   [
+    247,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    143,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/00465DD0_00466C60_media_002.c": [
+   [
+    722,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    721,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    720,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    719,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    718,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    516,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    515,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/004674A0_00469590_media_003.c": [
+   [
+    88,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    86,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    84,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/00469680_0046B200_media_004.c": [
+   [
+    75,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    74,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/004753E0_00477CC0_media_010.c": [
+   [
+    1269,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    1267,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    1163,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    1161,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    1159,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    919,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    838,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    778,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    738,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    458,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/00477CE0_00479020_media_011.c": [
+   [
+    1237,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    450,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    165,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/media/004790E0_0047AA80_media_012.c": [
+   [
+    555,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    493,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    491,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    398,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    396,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    394,
+    10,
+    "fn-ptr declarator"
+   ],
+   [
+    392,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/render/00401A40_00402BB0_render_001.c": [
+   [
+    513,
+    21,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/strategic/004506B0_004530D0_strategic_001.c": [
+   [
+    668,
+    10,
+    "fn-ptr declarator"
+   ]
+  ],
+  "src/world/00408030_0040A0A0_world_001.c": [
+   [
+    239,
+    10,
+    "fn-ptr declarator"
+   ]
+  ]
+ }
+}

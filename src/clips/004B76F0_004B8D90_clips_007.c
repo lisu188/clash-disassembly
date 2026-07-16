@@ -47,7 +47,7 @@ int PP_MakeConst26(void)
 // 4B7705: variable 'v0' is possibly undefined
 
 //----- (004B77D0) --------------------------------------------------------
-int __fastcall PP_MakeConst27(int a1, int a2)
+int __fastcall PP_MakeConst27(int a1, int a2 CLASH95_UNUSED)
 {
   int v2; // ecx
   int v3; // eax
@@ -112,7 +112,7 @@ int PP_MakeConst28(void)
 // 4B7825: variable 'v0' is possibly undefined
 
 //----- (004B7940) --------------------------------------------------------
-signed int __fastcall Rules_BuildFieldRangeConstraintNode(int firstField, int secondField)
+signed int __fastcall Rules_BuildFieldRangeConstraintNode(int firstField CLASH95_UNUSED, int secondField)
 {
   int v3; // ecx
   char v4; // al
@@ -353,7 +353,7 @@ int  Rules_ParseOrderedFactPattern(int readSource, int theToken)
 }
 
 //----- (004B7E60) --------------------------------------------------------
-int __fastcall Rules_CreateInitialFactPatternNode(int a1, int a2)
+int __fastcall Rules_CreateInitialFactPatternNode(int a1, int a2 CLASH95_UNUSED)
 {
   _DWORD *patternNode; // eax
   _DWORD *relationNode; // eax
@@ -505,7 +505,7 @@ int __fastcall Rules_IsReservedPatternSymbol(int symbolName, int constructName)
 // 51B350: using guessed type int dword_51B350;
 
 //----- (004B80D0) --------------------------------------------------------
-signed int __fastcall Rules_PrintReservedSymbolErrorMessage(int symbolName, int constructName)
+signed int __fastcall Rules_PrintReservedSymbolErrorMessage(int symbolName CLASH95_UNUSED, int constructName)
 {
   int v3; // ecx
   int v4; // ecx

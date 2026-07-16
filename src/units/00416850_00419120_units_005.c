@@ -64,7 +64,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   _DWORD *pathBuffer; // ecx
   int markerSprite; // eax
   int activeMission; // edx
-  int v54; // edx
+  int v54 CLASH95_UNUSED; // edx
   int fogSprite; // eax
   int v56; // ecx
   char textStyleFlag; // dl
@@ -90,7 +90,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 screenX, unsigned __int16 screenY, un
   int v77; // eax
   int v78; // eax
   int v79; // eax
-  int v80; // eax
+  int v80 CLASH95_UNUSED; // eax
   int flagSprite; // eax
   int deferredFgGlyph; // eax
   int deferredFgSprite; // eax
@@ -1174,18 +1174,18 @@ CLASH95_INTERNAL int Compat_CountPrintfArgs32(const char *format)
 }
 
 //----- (00419120) --------------------------------------------------------
-void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...)
+void  Debug_Log(int a1 CLASH95_UNUSED, char a2 CLASH95_UNUSED, DWORD a3 CLASH95_UNUSED, int a4 CLASH95_UNUSED, ...)
 {
-  const CHAR *log_path;
-  unsigned __int8 *open_mode;
-  int output_handle;
-  const char *format;
-  unsigned int centiseconds;
-  unsigned int seconds;
-  unsigned int minutes;
-  int low32_line_ptr;
-  char *line_buffer;
-  int line_length;
+  const CHAR *log_path CLASH95_UNUSED;
+  unsigned __int8 *open_mode CLASH95_UNUSED;
+  int output_handle CLASH95_UNUSED;
+  const char *format CLASH95_UNUSED;
+  unsigned int centiseconds CLASH95_UNUSED;
+  unsigned int seconds CLASH95_UNUSED;
+  unsigned int minutes CLASH95_UNUSED;
+  int low32_line_ptr CLASH95_UNUSED;
+  char *line_buffer CLASH95_UNUSED;
+  int line_length CLASH95_UNUSED;
 
   if ( !logEnabled || !battleLogEnabled )
     return;

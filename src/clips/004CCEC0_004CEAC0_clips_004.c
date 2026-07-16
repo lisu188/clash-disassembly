@@ -108,7 +108,7 @@ int  MessageHandler_UndefineCommand(int a1, double a2)
   int v10; // ecx
   _DWORD v11[2]; // [esp-8h] [ebp-2Ch] BYREF
   signed int *parseBuffer; // [esp+0h] [ebp-24h]
-  int v13; // [esp+1Ch] [ebp-8h]
+  int v13 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v13 = a1;
   if ( Rules_IsBloaded() )
@@ -251,7 +251,7 @@ int * MessageHandler_PreviewSendCommand(int a1, double a2)
   int v3; // ecx
   _DWORD parseBuffer[2]; // [esp-8h] [ebp-28h] BYREF
   int argSlot; // [esp+0h] [ebp-20h]
-  int v6; // [esp+18h] [ebp-8h]
+  int v6 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v6 = a1;
   result = (int *)(uintptr_t)Lexer_ParseValueList(1, parseBuffer, 2, a2);
@@ -286,7 +286,7 @@ int  MessageHandler_PrintHandlerListTally(int logicalName, int classPtr, int a3,
   int handlerCount; // edi
   int v8; // ecx
   unsigned __int16 v9; // [esp+0h] [ebp-18h] BYREF
-  int *v10; // [esp+2h] [ebp-16h]
+  int *v10 CLASH95_UNUSED; // [esp+2h] [ebp-16h]
   int classFrame[4]; // [esp+8h] [ebp-10h] BYREF
 
   classFrame[3] = a3;
@@ -588,7 +588,7 @@ BOOL  MessageHandler_ForEachMatchingHandler(
         int handlerName,
         int logicalName,
         int typeIndex,
-        int a5,
+        int a5 CLASH95_UNUSED,
         int printHeader,
         void (*printFunction)(void),
         void (*actionFunction)(void))
@@ -1134,7 +1134,7 @@ int  Definstances_FreeModuleData(int moduleData)
 // 54E8F4: using guessed type int dword_54E8F4;
 
 //----- (004CE670) --------------------------------------------------------
-__int64 __fastcall Definstances_IsClearReady(int a1, int a2)
+__int64 __fastcall Definstances_IsClearReady(int a1 CLASH95_UNUSED, int a2)
 {
   __int64 clearReadyResult; // [esp+0h] [ebp-10h]
 

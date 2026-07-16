@@ -503,7 +503,7 @@ int  IO_StringRouterGetc(int logicalName)
 // 491C0F: variable 'v1' is possibly undefined
 
 //----- (00491C70) --------------------------------------------------------
-int __fastcall IO_StringRouterUngetc(int ch, int logicalName)
+int __fastcall IO_StringRouterUngetc(int ch CLASH95_UNUSED, int logicalName)
 {
   int stringRouter; // ecx
   int currentPosition; // ebx
@@ -673,7 +673,7 @@ int  IO_FindStringRouter(int name)
 // 51A9C8: using guessed type int dword_51A9C8;
 
 //----- (00491F60) --------------------------------------------------------
-int  Rules_ParseAssertCommand(int logicalName, _DWORD *theToken, int atLeastOne, int *error, int readFirstParen, int a6)
+int  Rules_ParseAssertCommand(int logicalName, _DWORD *theToken, int atLeastOne, int *error, int readFirstParen, int a6 CLASH95_UNUSED)
 {
   int readParenFlag; // eax
   signed int lastOne; // esi
@@ -764,10 +764,10 @@ unsigned int  Rules_ParseAssertRHSPattern(
         int endType)
 {
   unsigned int tokenType; // eax
-  int v11; // ecx
-  int v12; // ecx
-  int v13; // ecx
-  int v14; // ecx
+  int v11 CLASH95_UNUSED; // ecx
+  int v12 CLASH95_UNUSED; // ecx
+  int v13 CLASH95_UNUSED; // ecx
+  int v14 CLASH95_UNUSED; // ecx
   int foundConstruct; // eax
   int theDeftemplate; // ebx
   int nextOne; // eax
@@ -978,8 +978,8 @@ _DWORD * Rules_StringToFact(const char *theString, int a2, double a3)
 {
   signed int numberOfFields; // esi
   unsigned int assertArgs; // edi
-  int v6; // ecx
-  int v7; // ecx
+  int v6 CLASH95_UNUSED; // ecx
+  int v7 CLASH95_UNUSED; // ecx
   int i; // eax
   _DWORD *theFact; // eax
   __int16 *currentArg; // ecx

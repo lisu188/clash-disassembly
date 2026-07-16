@@ -223,7 +223,7 @@ LABEL_11:
 // 54E900: using guessed type int dword_54E900;
 
 //----- (004D3AC0) --------------------------------------------------------
-signed int __fastcall Rules_ValidateClassRedefinition(int a1, int *existingClass)
+signed int __fastcall Rules_ValidateClassRedefinition(int a1 CLASH95_UNUSED, int *existingClass)
 {
   int v2; // eax
   int v4; // ecx
@@ -779,7 +779,7 @@ int  Class_BrowseClassesCommand(int a1, double a2)
   int v4; // ecx
   int argValue; // [esp-8h] [ebp-24h] BYREF
   int v6; // [esp+0h] [ebp-1Ch]
-  int v7; // [esp+14h] [ebp-8h]
+  int v7 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v7 = a1;
   if ( !Rules_RtnArgCount() )
@@ -1244,7 +1244,7 @@ int * Class_ResolveSlotBySymbolName(_BYTE *slotName, int inheritFlag)
 // 4D4C2E: variable 'v5' is possibly undefined
 
 //----- (004D4C50) --------------------------------------------------------
-int *__fastcall Class_LookupClassOrReportError(int a1, _BYTE *className)
+int *__fastcall Class_LookupClassOrReportError(int a1 CLASH95_UNUSED, _BYTE *className)
 {
   int *result; // eax
   int v3; // ecx

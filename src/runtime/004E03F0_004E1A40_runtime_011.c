@@ -314,7 +314,7 @@ signed int  Rules_ReplaceClassNameWithClassReference(int theExp)
 // 4E084A: variable 'v4' is possibly undefined
 
 //----- (004E0860) --------------------------------------------------------
-signed int __fastcall Parser_ParseInstanceQueryTestExpression(int top, int readSource)
+signed int __fastcall Parser_ParseInstanceQueryTestExpression(int top CLASH95_UNUSED, int readSource)
 {
   int oldBindList; // ebx
   _DWORD *v4; // edx
@@ -1055,7 +1055,7 @@ int  Compiler_WriteReactiveRulesToCode(const char *fileName, int constructFileID
 // 54E91C: using guessed type int dword_54E91C;
 
 //----- (004E1410) --------------------------------------------------------
-int __fastcall Rules_BuildSlotBoundTestNode(int a1, int theNode)
+int __fastcall Rules_BuildSlotBoundTestNode(int a1 CLASH95_UNUSED, int theNode)
 {
   return Rules_BuildSlotConstraintBitmapTestNode(1, theNode);
 }
@@ -1215,7 +1215,7 @@ _DWORD * Rules_AppendFieldCardinalityBitmapTest(_DWORD *result)
 // 4E16B1: variable 'v6' is possibly undefined
 
 //----- (004E1700) --------------------------------------------------------
-_DWORD *__fastcall Rules_AppendMultifieldWildcardBitmapTest(int a1, int a2)
+_DWORD *__fastcall Rules_AppendMultifieldWildcardBitmapTest(int a1, int a2 CLASH95_UNUSED)
 {
   int bitmapValue; // eax
   _DWORD *lengthTestNode; // eax
@@ -1223,7 +1223,7 @@ _DWORD *__fastcall Rules_AppendMultifieldWildcardBitmapTest(int a1, int a2)
   _DWORD *result; // eax
   int v6; // ecx
   _WORD matchLengthBitmap[4]; // [esp+0h] [ebp-Ch] BYREF
-  int v8; // [esp+8h] [ebp-4h]
+  int v8 CLASH95_UNUSED; // [esp+8h] [ebp-4h]
 
   v8 = a1;
   Mem_AllocArray(matchLengthBitmap, 4);

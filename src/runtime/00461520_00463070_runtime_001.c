@@ -278,7 +278,7 @@ HWND  Platform_CreateMainWindow(HINSTANCE a1, int nCmdShow)
   DWORD windowStyle; // ebx
   HWND result; // eax
   WNDCLASSA wndClass; // [esp+0h] [ebp-34h] BYREF
-  int savedCmdShow; // [esp+2Ch] [ebp-8h]
+  int savedCmdShow CLASH95_UNUSED; // [esp+2Ch] [ebp-8h]
 
   savedCmdShow = nCmdShow;
   wndClass.hInstance = a1;
@@ -443,13 +443,13 @@ void  Video_Avi_playIn(const char *aviName, int a2, int fadeOutFirst, int a4, in
   int v7; // edi
   int v9; // ecx
   DWORD TickCount; // eax
-  int v11; // ecx
-  int v12; // ecx
+  int v11 CLASH95_UNUSED; // ecx
+  int v12 CLASH95_UNUSED; // ecx
   int v13; // ecx
   int (*renderHook)(); // ebp
   int v15; // ecx
   int v16; // ecx
-  int v17; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   char pathBuffer[100]; // [esp+0h] [ebp-80h] BYREF
   int (*savedRenderHook)(); // [esp+64h] [ebp-1Ch]
   int v20; // [esp+68h] [ebp-18h]
@@ -547,15 +547,15 @@ signed int  Win_PlayModeChangeFrameTransition(const char *aviName, int restorePa
   int v8; // ecx
   void *paletteArrayCtorDescriptor; // ebx
   int v10; // ecx
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int v12; // eax
-  int v13; // ecx
+  int v13 CLASH95_UNUSED; // ecx
   _DWORD *loadedSpriteSet; // eax
-  int v15; // ecx
+  int v15 CLASH95_UNUSED; // ecx
   _DWORD *Surface; // eax
   _DWORD *animSurface; // esi
   DWORD v18; // ebp
-  int v19; // ecx
+  int v19 CLASH95_UNUSED; // ecx
   void (**v20)(void); // ebx
   int v21; // ecx
   int v22; // edx
@@ -734,9 +734,9 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   _DWORD *Surface; // eax
   int v7; // ecx
   int v8; // eax
-  int v9; // edx
+  int v9 CLASH95_UNUSED; // edx
   int surfaceC; // esi
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int slideANumber; // eax
   unsigned __int8 slideAPrefixChar; // al
   int slideBNumber; // eax
@@ -747,16 +747,16 @@ int  Mission_PlayInfoSlideshow(int missionIndex, char *a2)
   int v19; // edx
   int v20; // ecx
   int musicHandle; // edi
-  int v22; // ecx
-  int v23; // edx
-  int v24; // edx
-  int v25; // ecx
-  int v26; // ecx
-  int v27; // edx
-  int v29; // ecx
-  int v30; // edx
-  int v31; // ecx
-  int v32; // edx
+  int v22 CLASH95_UNUSED; // ecx
+  int v23 CLASH95_UNUSED; // edx
+  int v24 CLASH95_UNUSED; // edx
+  int v25 CLASH95_UNUSED; // ecx
+  int v26 CLASH95_UNUSED; // ecx
+  int v27 CLASH95_UNUSED; // edx
+  int v29 CLASH95_UNUSED; // ecx
+  int v30 CLASH95_UNUSED; // edx
+  int v31 CLASH95_UNUSED; // ecx
+  int v32 CLASH95_UNUSED; // edx
   int v33; // ecx
   int v34; // ecx
   int intro_start_time;

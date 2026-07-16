@@ -150,10 +150,10 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   int sourceTileOccupant; // edx
   int sourceTilePtr; // eax
   DWORD stackIndexArg; // ebp
-  int v14; // edx
-  __int64 v15; // rax
-  unsigned int v16; // ecx
-  unsigned int v17; // ecx
+  int v14 CLASH95_UNUSED; // edx
+  __int64 v15 CLASH95_UNUSED; // rax
+  unsigned int v16 CLASH95_UNUSED; // ecx
+  unsigned int v17 CLASH95_UNUSED; // ecx
   int gridInitRow; // ebp
   int gridInitColumn; // esi
   int distColByteOffset; // edi
@@ -171,7 +171,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   int *pathResult; // ebp
   unsigned __int16 targetDistance; // dx
   int *pathBuffer; // eax
-  unsigned __int8 v35; // dl
+  unsigned __int8 v35 CLASH95_UNUSED; // dl
   int waypointCount; // esi
   int rowDelta; // ebx
   int traceNeighborColumn; // edx
@@ -202,8 +202,8 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   int anyRelaxed; // [esp+8Ch] [ebp-78h]
   int expansionBudget; // [esp+90h] [ebp-74h]
   int overflowFlag; // [esp+94h] [ebp-70h]
-  int v67; // [esp+98h] [ebp-6Ch] BYREF
-  int v68; // [esp+9Ch] [ebp-68h] BYREF
+  int v67 CLASH95_UNUSED; // [esp+98h] [ebp-6Ch] BYREF
+  int v68 CLASH95_UNUSED; // [esp+9Ch] [ebp-68h] BYREF
   int distGridRowOffset; // [esp+A0h] [ebp-64h]
   int costGridRowOffset; // [esp+A4h] [ebp-60h]
   int row; // [esp+A8h] [ebp-5Ch]
@@ -1131,11 +1131,11 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int screenX, int screenY, in
   int v14; // ecx
   signed int squadCount; // eax
   int squadCountSprite; // eax
-  int v17; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   int moraleSprite; // eax
-  int v19; // ecx
+  int v19 CLASH95_UNUSED; // ecx
   int overlaySprite; // eax
-  int v21; // ecx
+  int v21 CLASH95_UNUSED; // ecx
   int tileRightX; // [esp+64h] [ebp-20h]
   int unitSpriteCopy; // [esp+6Ch] [ebp-18h]
   int stackIndex; // [esp+74h] [ebp-10h]
