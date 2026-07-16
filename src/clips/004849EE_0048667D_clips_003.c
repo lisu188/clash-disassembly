@@ -242,17 +242,14 @@ int  Str_ParseSignedInt(char *str)
 int  CRT_InitializeProcessStartupInfo(int threadDataMgmtDisabled, int a2, int a3, HMODULE moduleHandle)
 {
   int result; // eax
-  int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
   CHAR *cmdLineA; // eax
   _BYTE *cmdLineW; // eax
-  int v11; // ecx
-  int v12; // [esp-208h] [ebp-624h] BYREF
+  LPWSTR rawCmdLineW;
   _BYTE v13[520]; // [esp+0h] [ebp-41Ch] BYREF
   CHAR Filename[260]; // [esp+208h] [ebp-214h] BYREF
   CHAR moduleFilename[268]; // [esp+30Ch] [ebp-110h] BYREF
   int v16; // [esp+418h] [ebp-4h]
+  static const _WORD emptyWideCommandLine[] = { 0 };
 
   v16 = a3;
   g_CrtThreadDataMgmtDisabledFlag = threadDataMgmtDisabled;
@@ -269,11 +266,11 @@ int  CRT_InitializeProcessStartupInfo(int threadDataMgmtDisabled, int a2, int a3
     g_CRT_WinMinorVersion = BYTE1(g_WindowsVersionDword);
     g_CRT_WinVersion = BYTE1(g_WindowsVersionDword) | ((unsigned __int8)g_WindowsVersionDword << 8);
     GetModuleFileNameA(0, Filename, 0x104u);
-    g_CRT_ExecutablePathA = CRT_FinalizeAnsiApiStringResult(v6, &v12);
-    _lib_GetModuleFileNameW_();
-    g_CRT_ExecutablePathW = CRT_FinalizeWideApiStringResult();
-    GetCommandLineA();
-    cmdLineA = (CHAR *)CRT_FinalizeAnsiApiStringResult(v8, v7);
+    g_CRT_ExecutablePathA = CRT_FinalizeAnsiApiStringResult(Filename);
+    _lib_GetModuleFileNameW_(0, (_WORD *)v13, 0x208u);
+    g_CRT_ExecutablePathW = CRT_FinalizeWideApiStringResult((_WORD *)v13);
+    cmdLineA = GetCommandLineA();
+    cmdLineA = (CHAR *)(uintptr_t)CRT_FinalizeAnsiApiStringResult(cmdLineA);
     if ( *cmdLineA != 34 )
     {
       while ( (IsTable[(unsigned __int8)(*cmdLineA + 1)] & 2) == 0 && *cmdLineA )
@@ -293,9 +290,10 @@ LABEL_12:
     }
     while ( (IsTable[(unsigned __int8)(*cmdLineA + 1)] & 2) != 0 );
     lpCmdLine = cmdLineA;
-    if ( GetCommandLineW() )
+    rawCmdLineW = GetCommandLineW();
+    if ( rawCmdLineW )
     {
-      cmdLineW = (_BYTE *)CRT_FinalizeWideApiStringResult();
+      cmdLineW = (_BYTE *)(uintptr_t)CRT_FinalizeWideApiStringResult((const _WORD *)rawCmdLineW);
       if ( *(_WORD *)cmdLineW != 34 )
       {
         while ( (IsTable[(unsigned __int8)(*cmdLineW + 1)] & 2) == 0 && *(_WORD *)cmdLineW )
@@ -317,15 +315,15 @@ LABEL_22:
     }
     else
     {
-      cmdLineW = (_BYTE *)CRT_FinalizeWideApiStringResult();
+      cmdLineW = (_BYTE *)(uintptr_t)CRT_FinalizeWideApiStringResult(emptyWideCommandLine);
     }
     g_CRT_WideCommandLine = (int)cmdLineW;
     if ( threadDataMgmtDisabled )
     {
       GetModuleFileNameA(moduleHandle, moduleFilename, 0x104u);
-      g_CRT_ModulePathA = CRT_FinalizeAnsiApiStringResult(v11, v13);
-      _lib_GetModuleFileNameW_();
-      g_CRT_ModulePathW = CRT_FinalizeWideApiStringResult();
+      g_CRT_ModulePathA = CRT_FinalizeAnsiApiStringResult(moduleFilename);
+      _lib_GetModuleFileNameW_((_DWORD)(uintptr_t)moduleHandle, (_WORD *)v13, 0x208u);
+      g_CRT_ModulePathW = CRT_FinalizeWideApiStringResult((_WORD *)v13);
     }
     return 1;
   }
@@ -335,14 +333,10 @@ LABEL_22:
   }
   return result;
 }
-// 48545C: variable 'v6' is possibly undefined
-// 485480: variable 'v8' is possibly undefined
-// 485480: variable 'v7' is possibly undefined
-// 48557E: variable 'v11' is possibly undefined
 // 4B4C8F: using guessed type int _NTInitFileHandles_(void);
-// 4B4D17: using guessed type int __fastcall sub_4B4D17(_DWORD, _DWORD);
-// 4B4D5C: using guessed type int _lib_GetModuleFileNameW_(void);
-// 4B4DEC: using guessed type int sub_4B4DEC(void);
+// 4B4D17: source pointer is passed in EAX; allocated copy is returned in EAX.
+// 4B4D5C: module, output buffer, and byte count arrive in EAX, EDX, and EBX.
+// 4B4DEC: wide source pointer is passed in EAX; allocated copy is returned in EAX.
 // 51A868: using guessed type int dword_51A868;
 // 51A86C: using guessed type int dword_51A86C;
 // 51A870: using guessed type int dword_51A870;

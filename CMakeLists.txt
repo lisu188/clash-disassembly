@@ -99,6 +99,16 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
       -fno-pie
     )
   endif()
+  # Recovered calls and fields intentionally preserve the original 32-bit ABI.
+  # Clang diagnoses unresolved pointer/integer signatures as constraint errors;
+  # keep them visible as ratcheted warnings until each signature is proven.
+  if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${target} PRIVATE
+      -Wno-error=int-conversion
+      -Wno-error=incompatible-pointer-types
+      -Wno-error=incompatible-function-pointer-types
+    )
+  endif()
 endforeach()
 
 foreach(target IN LISTS CLASH95_SUPPORT_OBJECT_TARGETS)

@@ -2702,7 +2702,7 @@ BOOL __stdcall IntersectRect(LPRECT lprcDst, const RECT *lprcSrc1, const RECT *l
   return 1;
 }
 
-HWND __stdcall GetForegroundWindow()
+HWND __stdcall GetForegroundWindow(void)
 {
   return g_platform_foreground_window;
 }
@@ -3000,7 +3000,7 @@ BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)
   return 1;
 }
 
-DWORD __stdcall timeGetTime()
+DWORD __stdcall timeGetTime(void)
 {
   struct timeval tv;
 
@@ -3009,7 +3009,7 @@ DWORD __stdcall timeGetTime()
   return (DWORD)(tv.tv_sec * 1000u + tv.tv_usec / 1000u);
 }
 
-DWORD __stdcall GetTickCount()
+DWORD __stdcall GetTickCount(void)
 {
   return timeGetTime();
 }
@@ -3039,7 +3039,7 @@ BOOL __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency)
   return 1;
 }
 
-DWORD __stdcall GetVersion()
+DWORD __stdcall GetVersion(void)
 {
   /*
    * Report an NT-style major version 4 so the recovered platform probes pick a
@@ -3264,7 +3264,7 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
   return 1;
 }
 
-BOOL __stdcall WaitMessage()
+BOOL __stdcall WaitMessage(void)
 {
   PlatformPumpHostEvents();
   if ( PlatformQueueIsEmpty() && !g_platform_quit_requested )

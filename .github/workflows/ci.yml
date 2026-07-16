@@ -84,7 +84,7 @@ jobs:
             cc: clang-18
             package: clang-18
             compiler_id: clang
-            warning_mode: report
+            warning_mode: check
 
     steps:
       - name: Check out repository

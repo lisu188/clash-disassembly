@@ -1,6 +1,6 @@
 # Current Status
 
-Last consolidated: 2026-07-15.
+Last consolidated: 2026-07-16.
 
 ## Disassembly Control-Flow Recovery: Complete
 
@@ -45,10 +45,21 @@ format-select thunks) is in
   manifest functions and the complete default-visible symbol surface. It
   reported 4051 normalized-identical functions and 19 exact-hash reviewed
   cross-TU code-generation exceptions, with no missing, unexpected, or
-  symbol-only entries. The recovered warning ratchet remains seeded at 146721
-  GCC diagnostics in 23 categories; this is explicit cleanup debt, not a
-  zero-warning result. Support code is compiled separately with warnings as
-  errors. Reviewed Clang warning results remain pending.
+  symbol-only entries. The recovered warning ratchet, including the private
+  recovered headers and their shared ABI definitions, is seeded at 146171 GCC
+  diagnostics in 25 categories and 147027 Clang 18 diagnostics in 35
+  categories; this is explicit cleanup debt, not a zero-warning result. Both
+  compiler profiles reject category increases. Support code is compiled
+  separately with warnings as errors.
+- The first post-cutover Clang 18 cleanup wave now uses explicit 32-bit
+  pointer-storage casts, standard no-argument `rand` calls, and assembly-backed
+  source-pointer contracts for the CRT ANSI/wide string-copy helpers. The call
+  sequences at `0x485453..0x485480`, `0x4854D5..0x485548`, and
+  `0x485570..0x485598` preserve the EAX source plus EDX/EBX wide-buffer inputs
+  shown in `clash95.asm`. Recovered byte
+  strings now terminate two-digit `\xHH` escapes before following hexadecimal
+  text, preventing the C lexer from consuming original character bytes. Clean
+  GCC 13 and Clang 18 builds and the four asset-free CI CTest gates pass.
 - Startup now initializes the assembly-backed 100 Hz performance-counter
   timebase; UI animation and timeout helpers run in recovered centiseconds.
 - `UnitStack_ExecuteQueuedPath` now compares elapsed animation time against the

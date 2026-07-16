@@ -99,11 +99,40 @@ instrumentation, compatibility, bootstrap, and test support use the stricter
 `-Wall -Wextra -Wpedantic -Werror` profile.
 
 `data/recovered_warning_baseline.json` records the recovered-code diagnostic
-ratchet. The cutover baseline is **146,721 GCC diagnostics in 23 categories**;
-later cleanup may reduce a category but may not increase it or add another one.
-This is substantial cleanup debt and is not a zero-warning claim. Support code
-is outside that baseline and remains strict-warning clean. The Clang warning
-profile still requires a reviewed CI seed.
+ratchet, including diagnostics attributed to the five private recovered
+headers directly under `src/` and the shared compatibility ABI definitions.
+The reviewed baselines are **146,171 GCC diagnostics in 25 categories** and
+**147,027 Clang 18 diagnostics in 35 categories**; later cleanup may reduce a
+category but may not increase it or add another one. This is substantial
+cleanup debt and is not a zero-warning claim. Support implementations are
+outside that baseline and remain strict-warning clean.
+
+The reviewed 2026-07-16 compiler gate is reproduced with:
+
+```sh
+CC=gcc-13 cmake -S . -B build/gcc -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/gcc --target clash95_recovered clash95_bootstrap \
+  runtime_mission_trace_tests clash95_split_audit -j2 \
+  >compiler-gcc.log 2>&1
+python3 tools/check_recovered_warnings.py compiler-gcc.log \
+  --compiler gcc --mode check
+ctest --test-dir build/gcc -R \
+  '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' \
+  --output-on-failure
+
+CC=clang-18 cmake -S . -B build/clang -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/clang --target clash95_recovered clash95_bootstrap \
+  runtime_mission_trace_tests clash95_split_audit -j2 \
+  >compiler-clang.log 2>&1
+python3 tools/check_recovered_warnings.py compiler-clang.log \
+  --compiler clang --mode check
+ctest --test-dir build/clang -R \
+  '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' \
+  --output-on-failure
+```
+
+CI captures the corresponding complete compiler logs before running the split,
+pure-metadata, save-contract, and mission-trace CTest gates.
 
 The coverage build instruments the same 138 split sources and compiles every
 test case independently. See `docs/UNIT_TESTING.md` for its runner and
@@ -147,7 +176,6 @@ The source audit, manifest-backed unit metadata, save-format contract, GCC
 build, and selected SDL/runtime routes have passed during the migration and
 cutover work. The following remain explicit debt:
 
-- reviewed Clang compilation and warning-baseline results in CI;
 - reduction and eventual elimination of the recovered warning inventory;
 - completion of all long asset-backed campaign and multiplayer acceptance
   routes after the cutover;

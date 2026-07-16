@@ -30,6 +30,12 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BASELINE = ROOT / "data" / "recovered_warning_baseline.json"
 DEFAULT_SOURCE_PREFIXES = (
+    "src/compatibility/defs.h",
+    "src/recovered_abi.h",
+    "src/recovered_foundation.h",
+    "src/recovered_functions.h",
+    "src/recovered_internal.h",
+    "src/recovered_layout.h",
     "src/battle/",
     "src/buildings/",
     "src/clips/",
@@ -156,6 +162,14 @@ def load_baseline(path: Path, *, allow_missing: bool) -> dict[str, Any]:
         isinstance(item, str) and item for item in prefixes
     ):
         raise BaselineError("source_prefixes must be a non-empty string array")
+    if (
+        path.resolve() == DEFAULT_BASELINE.resolve()
+        and tuple(prefixes) != DEFAULT_SOURCE_PREFIXES
+    ):
+        raise BaselineError(
+            "default warning baseline source_prefixes do not match the canonical "
+            "recovered source/header scope"
+        )
     profiles = data.get("profiles")
     if not isinstance(profiles, dict):
         raise BaselineError("profiles must be an object")

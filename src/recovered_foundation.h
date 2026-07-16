@@ -3946,9 +3946,7 @@ int  IO_ScanfNextFieldChar(int streamContext);
 // int _NTRemoveFileHandle_(void); weak
 // int _NTInitFileHandles_(void); weak
 // int __cdecl _NTGetFakeHandle_(_DWORD, _DWORD, _DWORD); weak
-// int __fastcall sub_4B4D17(_DWORD, _DWORD); weak
-// int _lib_GetModuleFileNameW_(void); weak
-// int sub_4B4DEC(void); weak
+// int _lib_GetModuleFileNameW_(_DWORD, _WORD *, _DWORD); weak
 // int _init_stack_limits_(void); weak
 BOOL CRT_HasActiveWindow();
 unsigned int  CRT_FormatExceptionMessage(unsigned int result, char *appendText, unsigned int addressValue);

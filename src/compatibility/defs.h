@@ -128,8 +128,8 @@ int atoi_(const char *text);
 int __cdecl abs32(int value);
 int __fastcall CRT_PutcToStream(_DWORD value, _DWORD stream);
 int __fastcall CRT_SignedLongToDecimalString(_DWORD value, _DWORD buffer);
-int CRT_FinalizeAnsiApiStringResult();
-int CRT_FinalizeWideApiStringResult();
+_DWORD CRT_FinalizeAnsiApiStringResult(const char *source);
+_DWORD CRT_FinalizeWideApiStringResult(const _WORD *source);
 void __lock_p(__lock *lock);
 void __lock_v(__lock *lock);
 int CRT_DispatchRegisteredFpeHandler(void);
@@ -141,8 +141,8 @@ int __cdecl sprintf_(char *buffer, const char *format, ...);
 char *strlwr_(char *text);
 int __thiscall toupper_(_DWORD character);
 int time_(void);
-/* Some recovered callers retain register-shaped extra arguments. */
-int rand_();
+/* The recovered CRT import has the standard no-argument signature. */
+int rand_(void);
 
 #define BYTEn(x, n) (*((_BYTE *)&(x) + (n)))
 #define WORDn(x, n) (*((_WORD *)&(x) + (n)))

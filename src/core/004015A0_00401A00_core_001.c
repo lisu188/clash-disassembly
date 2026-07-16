@@ -8,10 +8,10 @@ int  Str_ConstructHolderViaBaseCtor(_DWORD *holder)
   int result; // eax
 
   *holder = 0;
-  holder[1] = &g_CompatStringHolder_Vtable;
+  holder[1] = (_DWORD)(uintptr_t)&g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(holder);
   result = holderBase;
-  *(_DWORD *)(holderBase + 4) = &g_PathEntry_Vtable;
+  *(_DWORD *)(holderBase + 4) = (_DWORD)(uintptr_t)&g_PathEntry_Vtable;
   return result;
 }
 // 4015B7: variable 'v2' is possibly undefined
@@ -22,8 +22,8 @@ int  Str_ConstructHolderViaBaseCtor(_DWORD *holder)
 _DWORD * Str_ConstructHolderInline(_DWORD *result)
 {
   *result = 0;
-  result[1] = &g_CompatStringHolder_Vtable;
-  result[1] = &g_PathEntry_Vtable;
+  result[1] = (_DWORD)(uintptr_t)&g_CompatStringHolder_Vtable;
+  result[1] = (_DWORD)(uintptr_t)&g_PathEntry_Vtable;
   return result;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -42,7 +42,7 @@ _BYTE * Mem_ZeroFourByteGlobal(_BYTE *result)
 //----- (00401610) --------------------------------------------------------
 int __thiscall PathEntryArray_ConstructCapacity256(void *this)
 {
-  return _wcpp_4_ctor_array__(this, 256);
+  return _wcpp_4_ctor_array__((_DWORD)(uintptr_t)this, 256);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
@@ -104,13 +104,13 @@ int  PathEntryArray_Destruct(_DWORD *array, char dtorFlags)
 
   if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(array, &g_PathEntryArray_DtorDescriptor);
+    _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)array, (_DWORD)(uintptr_t)&g_PathEntryArray_DtorDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    array[4] = g_PathEntryArray_Vtable;
+    array[4] = (_DWORD)(uintptr_t)g_PathEntryArray_Vtable;
     PathEntryArray_DestructElements(array);
     if ( (v3 & 2) != 0 )
       j__nfree_();
@@ -159,7 +159,7 @@ _DWORD * PathEntryArray_DestructElements(_DWORD *result)
       }
       while ( index < array[2] );
     }
-    _wcpp_4_dtor_array_store__(array, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)array, (_DWORD)(uintptr_t)&g_PathEntryArray_ElementDtorDescriptor);
     result = (_DWORD *)j_j__nfree_();
     *v6 = 0;
     v6[2] = 0;
@@ -189,7 +189,7 @@ int  PathEntryArray_GrowByDelta(int *array, int delta)
   array[3] = delta + array[3];
   if ( becameEmpty )
   {
-    _wcpp_4_dtor_array_store__(*array, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__(*array, (_DWORD)(uintptr_t)&g_PathEntryArray_ElementDtorDescriptor);
     result = j_j__nfree_();
     *array = 0;
   }
@@ -216,7 +216,7 @@ int  PathEntryArray_GrowByDelta(int *array, int delta)
       }
       while ( index < array[2] );
     }
-    _wcpp_4_dtor_array_store__(*array, &g_PathEntryArray_ElementDtorDescriptor);
+    _wcpp_4_dtor_array_store__(*array, (_DWORD)(uintptr_t)&g_PathEntryArray_ElementDtorDescriptor);
     j_j__nfree_();
     result = newStorage;
     *array = newStorage;
@@ -265,7 +265,7 @@ _DWORD * PathEntryArray_RemoveAt(_DWORD *result, int index, int destroyElement)
       *destEntry = *srcEntry;
       Compat_StringHolderCopyText(destEntry + 1, Compat_StringHolderGetText(srcEntry + 1));
       result = (_DWORD *)srcEntry[3];
-      destEntry[3] = result;
+      destEntry[3] = (_DWORD)(uintptr_t)result;
       ++index;
       destOffset += 16;
     }
@@ -294,9 +294,9 @@ int  PathEntry_CopyConstruct(_DWORD *dest, _DWORD *source)
 {
   *dest = *source;
   dest[1] = 0;
-  dest[2] = &g_CompatStringHolder_Vtable;
+  dest[2] = (_DWORD)(uintptr_t)&g_CompatStringHolder_Vtable;
   Compat_StringHolderCopyText(dest + 1, Compat_StringHolderGetText(source + 1));
-  dest[2] = &g_PathEntry_Vtable;
+  dest[2] = (_DWORD)(uintptr_t)&g_PathEntry_Vtable;
   dest[3] = source[3];
   return (int)dest;
 }
@@ -312,7 +312,7 @@ int  PathEntry_Destruct(int entry, char dtorFlags)
 
   if ( (dtorFlags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(entry, &g_PathEntry_DtorDescriptor);
+    _wcpp_4_dtor_array_store__(entry, (_DWORD)(uintptr_t)&g_PathEntry_DtorDescriptor);
     j_j__nfree_();
     return v4;
   }
@@ -341,10 +341,10 @@ int  PathEntry_ConstructDefault(_DWORD *entry)
   *entry = 0;
   entry[1] = 0;
   holder = entry + 1;
-  holder[1] = &g_CompatStringHolder_Vtable;
+  holder[1] = (_DWORD)(uintptr_t)&g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(holder);
   result = holderBase - 4;
-  *(_DWORD *)(holderBase + 4) = &g_PathEntry_Vtable;
+  *(_DWORD *)(holderBase + 4) = (_DWORD)(uintptr_t)&g_PathEntry_Vtable;
   *(_DWORD *)(holderBase - 4 + 12) = 0;
   return result;
 }
