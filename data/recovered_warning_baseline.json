@@ -24,7 +24,7 @@
   "profiles": {
     "gcc": {
       "status": "seeded",
-      "total": 11316,
+      "total": 10728,
       "warnings": {
         "-Waddress-of-packed-member": 2,
         "-Wcast-function-type": 119,
@@ -33,7 +33,7 @@
         "-Wincompatible-pointer-types": 580,
         "-Wint-conversion": 1319,
         "-Wint-in-bool-context": 31,
-        "-Wint-to-pointer-cast": 661,
+        "-Wint-to-pointer-cast": 73,
         "-Wmaybe-uninitialized": 4182,
         "-Wmisleading-indentation": 1,
         "-Wmissing-prototypes": 1,
@@ -55,7 +55,7 @@
     },
     "clang": {
       "status": "seeded",
-      "total": 11356,
+      "total": 10768,
       "warnings": {
         "-Warray-bounds": 1,
         "-Wbitwise-op-parentheses": 58,
@@ -71,7 +71,7 @@
         "-Wincompatible-pointer-types": 401,
         "-Wincompatible-pointer-types-discards-qualifiers": 15,
         "-Wint-conversion": 1319,
-        "-Wint-to-pointer-cast": 667,
+        "-Wint-to-pointer-cast": 79,
         "-Wint-to-void-pointer-cast": 2,
         "-Winvalid-noreturn": 1,
         "-Wlogical-op-parentheses": 186,
