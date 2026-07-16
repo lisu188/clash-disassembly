@@ -1,0 +1,40 @@
+# Mission 05 stack-19 MANUAL tactical entry from the authentic turn-9 arrival.
+# Reconnaissance probe: reuse the calibrated attack chain
+# (mission_05_stack19_from_arrival_probe), but choose the manual-battle branch
+# at the prompt and capture the opening battlefield state (battle_units table,
+# widget turn loop, screenshot). No exchanges are attempted yet; squad
+# choreography is authored from this probe's evidence.
+include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
+
+# --- turn 10: refresh AP, reselect stack 4 ---------------------------------
+mark_log_count stack4_turn_10 next_unit_selected selected=4
+click 500 2 0.18 1.0 end-human-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-9-skip-1
+click 320 240 0.12 0.65 post-end-turn-9-skip-2
+click 320 240 0.12 0.65 post-end-turn-9-skip-3
+click 320 240 0.12 0.65 post-end-turn-9-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=10
+click 496 416 0.18 0.55 next-unit-turn-10-stack0
+click 496 416 0.18 0.55 next-unit-turn-10-stack1
+click 496 416 0.18 0.55 next-unit-turn-10-stack2
+click 496 416 0.18 0.55 next-unit-turn-10-stack3
+click 496 416 0.18 0.8 next-unit-turn-10-stack4
+wait_log_marked 30 stack4_turn_10
+fail_if_log mission05_failure_friendly_attack
+
+# --- pan and attack stack 19 at 44,56 (screen center = left+4, top+3) ------
+world_pan_viewport 40 53 80
+click 320 240 0.18 1.0 attack-owner3-stack19-center
+wait_log 30 enemy_attack_call selected=4 a=19
+wait_log 30 battle_prompt_layout
+fail_if_log mission05_failure_friendly_attack
+
+# --- choose MANUAL battle and capture the opening tactical state -----------
+click 276 158 0.18 4.0 choose-manual-battle-stack19
+wait_log 90 unit_attack_battle_enter selected=4 a=19
+wait_log 90 battle_turn_loop_after_input_widgets
+wait 4.0
+screenshot mission05-stack19-tactical-open
+nonblank mission05-stack19-tactical-open
+fail_if_log mission05_failure_friendly_attack

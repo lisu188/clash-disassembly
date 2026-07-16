@@ -212,3 +212,26 @@ Note for trace consumers: the mission-state sampler's per-run log can be
 capped by the durable-log head/tail retention; raise
 `CLASH95_CAMPAIGN_ROUTE_LOG_TAIL_LINES` (this probe uses 20000) when the
 post-battle table is the evidence.
+
+## MANUAL TACTICAL ENTRY PROVEN (2026-07-16, run 20260716T194745Z-170502)
+
+`mission_05_stack19_tactical_entry_probe.{script,env}`: the calibrated attack
+chain with `click 276 158` (manual-battle button; autoresolve sits at
+354,158) enters the stack-19 tactical battle deterministically:
+`unit_attack_battle_enter selected=4 a=19` -> `battle_turn_loop_after_input_widgets
+selected=5 a=0 b=1` + nonblank battlefield screenshot.
+
+Opening deployment (`[battle_units] after_deploy_defender`):
+- Player 0 (attacker, 6 units, row 14): idx0/1 type 1 ap=20 @(14,3),(14,4);
+  idx2..5 type 17 ap=26 @(14,2),(14,5),(14,1),(14,6).
+- Player 3 (defender, 10 units, rows 0-1): idx6 type 6 ap=32 @(1,3);
+  idx7..11 type 20 ap=26 @(1,4),(1,2),(1,5),(1,1),(1,6);
+  idx12..15 type 2 ap=20 @(1,0),(0,3),(0,4),(0,2).
+- Initial selected unit after restore = idx 5; stray world-channel click
+  residue produced harmless `battle_move_execute_no_flip selected=5 a=13 b=3
+  c=-1` rejections (keep battle scripts free of leftover pulses).
+
+Next: author the squad choreography from this table (battle_click/battle_key
+on the battle channel; the quarantined probe's coordinates predate this
+deployment and must be re-derived from the battlefield screenshot
+checkpoint-mission05-stack19-tactical-open.bmp).
