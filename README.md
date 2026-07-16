@@ -11,7 +11,7 @@ Evidence-driven recovery of the original Win95 Clash binary.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
 
-Current validated campaign-route state: missions `00..04` are complete through their route gates. Mission `04` clears Hopenberg through three authentic tactical assaults, transfers the empty-garrison castle, and reaches `mission_objective_complete`; missions `05..19` remain direct-load evidence probes. See `docs/STATUS.md` for the active blocker and latest milestone.
+Current validated campaign-route state: missions `00..04` and `13` are complete through their route gates (6/20). Mission `04` clears Hopenberg through three authentic tactical assaults, transfers the empty-garrison castle, and reaches `mission_objective_complete`; mission `13` completes its survival objective through authentic turn advancement; the remaining missions are direct-load evidence probes. See `docs/STATUS.md` for the active blocker and latest milestone.
 
 ## Quick Start
 

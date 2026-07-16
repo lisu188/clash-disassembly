@@ -127,8 +127,10 @@ ratchet, including diagnostics attributed to the private recovered headers
 `src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
 `src/recovered_all.h`, and the generated per-subsystem headers under
 `src/<subsystem>/`) and the shared compatibility ABI definitions.
-The reviewed baselines are **146,171 GCC diagnostics in 25 categories** and
-**147,027 Clang 18 diagnostics in 35 categories**; later cleanup may reduce a
+The reviewed baselines are **60,143 GCC diagnostics in 25 categories** and
+**60,455 Clang 18 diagnostics in 35 categories** (re-seeded downward from the
+original 146,171/147,027 by the P2 `(void)`-prototype wave and the P3
+per-subsystem header narrowing); later cleanup may reduce a
 category but may not increase it or add another one. This is substantial
 cleanup debt and is not a zero-warning claim. Support implementations are
 outside that baseline and remain strict-warning clean.

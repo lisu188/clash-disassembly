@@ -72,12 +72,13 @@ Run this for the current campaign route table:
 bash tests/summarize_campaign_arc_routes.sh
 ```
 
-At the time this index was last updated, missions `00` through `04` were
-marked complete. Mission `04` now has a passing three-assault Hopenberg route:
-the final tactical return reports an empty garrison, capture transfers the
-castle to player `0`, and the world loop logs `mission_objective_complete`.
-Missions `05` through `19` have partial direct probes. The route env files
-remain the canonical machine-readable status source.
+At the time this index was last updated, missions `00` through `04` and `13`
+were marked complete (6/20). Mission `04` has a passing three-assault Hopenberg
+route: the final tactical return reports an empty garrison, capture transfers
+the castle to player `0`, and the world loop logs `mission_objective_complete`.
+Mission `13` completes its recovered survival objective through authentic
+top-menu turn advancement. The remaining missions have partial direct probes.
+The route env files remain the canonical machine-readable status source.
 
 ## Artifact Policy
 

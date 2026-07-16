@@ -32,8 +32,9 @@ language for each track.
 
 ### Campaign validation
 
-- Missions `00..04` are complete through their canonical direct-route gates.
-- Missions `05..19` remain partial direct-load probes.
+- Missions `00..04` and `13` are complete through their canonical direct-route
+  gates (6/20).
+- Missions `05..12` and `14..19` remain partial direct-load probes.
 - Mission `05` is the first active campaign blocker.
 - Full Campaign-menu entry and automatic mission advancement remain unproven.
 

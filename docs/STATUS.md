@@ -45,12 +45,14 @@ format-select thunks) is in
   manifest functions and the complete default-visible symbol surface. It
   reported 4051 normalized-identical functions and 19 exact-hash reviewed
   cross-TU code-generation exceptions, with no missing, unexpected, or
-  symbol-only entries. The recovered warning ratchet, including the private
-  recovered headers and their shared ABI definitions, is seeded at 146171 GCC
-  diagnostics in 25 categories and 147027 Clang 18 diagnostics in 35
-  categories; this is explicit cleanup debt, not a zero-warning result. Both
-  compiler profiles reject category increases. Support code is compiled
-  separately with warnings as errors.
+  symbol-only entries. The recovered warning ratchet was originally seeded at
+  146171 GCC / 147027 Clang 18 diagnostics; the P2 `(void)`-prototype wave and
+  the P3 per-subsystem header narrowing reduced the reviewed baseline to 60143
+  GCC diagnostics in 25 categories and 60455 Clang 18 diagnostics in 35
+  categories (`data/recovered_warning_baseline.json` is authoritative). This is
+  explicit cleanup debt, not a zero-warning result. Both compiler profiles
+  reject category increases. Support code is compiled separately with warnings
+  as errors.
 - The first post-cutover Clang 18 cleanup wave now uses explicit 32-bit
   pointer-storage casts, standard no-argument `rand` calls, and assembly-backed
   source-pointer contracts for the CRT ANSI/wide string-copy helpers. The call
@@ -74,8 +76,8 @@ format-select thunks) is in
   format checks, and opt-in real-input probes.
 - Campaign route env files are the canonical machine-readable status source.
   `tests/summarize_campaign_arc_routes.sh` currently reports:
-  - missions `00..04`: `complete`
-  - missions `05..19`: `partial` direct-load evidence probes
+  - missions `00..04` and `13`: `complete` (6/20)
+  - missions `05..12` and `14..19`: `partial` direct-load evidence probes
 
 ## Highest Runtime Milestone
 
@@ -99,7 +101,9 @@ evidence is at
 
 Earlier validated milestones include first-mission completion, mission `01`
 shrine completion, mission `02` Treg Rock capture, and mission `03` survival
-completion through route gates.
+completion through route gates. Mission `13` (second campaign) is also
+route-complete via authentic top-menu turn advancement to its recovered
+survival objective (`GAME_TURN_COUNTER > 10`, case `0xD`).
 
 ## Environment Requirement (runtime work)
 

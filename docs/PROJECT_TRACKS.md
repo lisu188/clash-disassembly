@@ -48,8 +48,9 @@ Primary artifacts:
 
 Current baseline:
 
-- missions `00..04` are complete through their direct-route gates;
-- missions `05..19` remain partial direct-load probes;
+- missions `00..04` and `13` are complete through their direct-route gates
+  (6/20);
+- missions `05..12` and `14..19` remain partial direct-load probes;
 - mission `05` is the first active campaign blocker;
 - full Campaign-menu entry and automatic mission advancement remain unproven.
 
