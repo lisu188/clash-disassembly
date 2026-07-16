@@ -369,3 +369,21 @@ probe), not by next-unit cycling; read stack 0's live tile each turn from
 the [mission-state]/[world_units] trace and pan+click it. Alternatively give
 each combat stack a builder and march them together so a single next-unit
 resume advances the whole column.
+
+### Leg-1 resume failure precisely diagnosed (run ...204536Z)
+
+Turn 7 (`playgame_before_human_turn a=0 b=7`): the single next-unit click
+returned `next_unit_selected selected=1` (stack 1 at home 71,47), NOT stack 0.
+Cause: stack 0 spent all its AP on turn 6's leg, so on turn 7 it is not
+"ready" and drops out of the next-unit rotation; the click falls through to
+the next ready stack. Turns 2 and 6 worked only because stack 0 happened to
+be ready then.
+
+ROBUST FIX (next iteration): do not rely on next-unit for a mid-map stack.
+Each turn, select stack 0 by CENTER-CLICK on its current tile (select-by-tile
+is ready-state-independent), then RE-ISSUE the full waypoint to the target
+(pathfinder rebuilds fresh, no retained-path/ready-bit dependency). The
+per-turn tiles are deterministic for a fixed AP budget - discover them once
+by logging `human_turn_enter idx=0` each turn, then hardcode the pan+click.
+(Observed so far with retained-path resume: 70,47 -> 67,47 -> 51,49 ->
+47,50, then stalled.)
