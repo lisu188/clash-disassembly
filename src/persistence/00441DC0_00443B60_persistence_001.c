@@ -58,7 +58,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
       suffixCursor += 2;
     }
     while ( suffixNextChar );
-    return CSS_PlaySound((int)soundPathBuffer, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPathBuffer, 64, 0, 0);
   }
   return result;
 }
@@ -109,7 +109,7 @@ int  Audio_PlayUnitShotSound(int result)
       suffixCursor += 2;
     }
     while ( suffixNextChar );
-    return CSS_PlaySound((int)soundPathBuffer, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPathBuffer, 64, 0, 0);
   }
   return result;
 }
@@ -262,7 +262,7 @@ LABEL_25:
       extCursor += 2;
     }
     while ( extNextChar );
-    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
     g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[volumeTableIndex];
     return;
   }
@@ -298,7 +298,7 @@ LABEL_25:
       loopExtCursor += 2;
     }
     while ( loopExtNextChar );
-    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
     if ( unitTypeId > 0xD )
     {
       if ( unitTypeId <= 0xE )
@@ -393,7 +393,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
           loopExtCursor += 2;
         }
         while ( loopExtNextChar );
-        g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
+        g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
         if ( unitTypeId > 0xD )
         {
           if ( unitTypeId <= 0xE )
@@ -490,7 +490,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
         extCursor += 2;
       }
       while ( extNextChar );
-      g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
+      g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
       g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[volumeTableIndex];
     }
   }
@@ -563,7 +563,7 @@ char * Audio_PlayButtonSound(char *result)
       suffixCursor += 2;
     }
     while ( suffixNextChar );
-    return (char *)CSS_PlaySound((int)soundPathBuffer, 32, 0, 0);
+    return (char *)(uintptr_t)CSS_PlaySound((int)(intptr_t)soundPathBuffer, 32, 0, 0);
   }
   return result;
 }
@@ -577,7 +577,7 @@ int  Audio_PlayArtifactSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     sprintf_(soundPathBuffer, "sfx\\artefakt\\%d.wav", result);
-    return CSS_PlaySound((int)soundPathBuffer, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPathBuffer, 64, 0, 0);
   }
   return result;
 }
@@ -626,7 +626,7 @@ int  Audio_PlaySoundEffectByName(char *soundName, int volume)
     suffixCursor += 2;
   }
   while ( suffixNextChar );
-  return CSS_PlaySound((int)soundPathBuffer, volume, 0, 0);
+  return CSS_PlaySound((int)(intptr_t)soundPathBuffer, volume, 0, 0);
 }
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
@@ -636,8 +636,8 @@ int  FileSystem_InitRootMount(int a1, char a2, DWORD a3)
   const char **filesystem_root; // eax
 
   filesystem_root = FileSystem_DiskMountCreate(a1, a2, a3);
-  FileSystem_ConstructMountTable((int)&g_FileSystemMountTable, (int)filesystem_root, 0, a3);
-  return CRT_RegisterFinalizableObject((int)&g_FileSystemRootMountObject, 0);
+  FileSystem_ConstructMountTable((int)(intptr_t)&g_FileSystemMountTable, (int)(intptr_t)filesystem_root, 0, a3);
+  return CRT_RegisterFinalizableObject((int)(intptr_t)&g_FileSystemRootMountObject, 0);
 }
 
 //----- (004427C0) --------------------------------------------------------
@@ -649,15 +649,15 @@ int  IO_QueryVTableStreamSize(int streamObject)
 
   if ( !streamObject )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)streamObject;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)streamObject;
   if ( !vtable )
     return 0;
   cursor = ((int (*)(int, int))(uintptr_t)vtable[1])(streamObject, 0);
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)streamObject;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)streamObject;
   ((int (*)(int, int))(uintptr_t)vtable[2])(streamObject, 0);
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)streamObject;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)streamObject;
   size = ((int (*)(int, int))(uintptr_t)vtable[1])(streamObject, cursor);
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)streamObject;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)streamObject;
   ((int (*)(int, int))(uintptr_t)vtable[0])(streamObject, cursor);
   return size;
 }
@@ -671,15 +671,15 @@ int  FileSystem_ResolveReadPath(char *relativePath, int quitOnFailFlag)
 
   quitOnFailFlagCopy = quitOnFailFlag;
   g_FileSystemMountOpenMode = 6;
-  queryHandle = Compat_FileSystemQuery((int)&g_FileSystemMountTable, relativePath, 0, FileSystem_TryOpenEntryCallback);
+  queryHandle = Compat_FileSystemQuery((int)(intptr_t)&g_FileSystemMountTable, relativePath, 0, FileSystem_TryOpenEntryCallback);
   if ( !queryHandle )
   {
     strcpy(fullPathBuffer, aCClash);
     strcat(fullPathBuffer, relativePath);
     g_FileSystemMountOpenMode = 6;
-    queryHandle = Compat_FileSystemQuery((int)&g_FileSystemMountTable, fullPathBuffer, 0, FileSystem_TryOpenEntryCallback);
+    queryHandle = Compat_FileSystemQuery((int)(intptr_t)&g_FileSystemMountTable, fullPathBuffer, 0, FileSystem_TryOpenEntryCallback);
     if ( !queryHandle && quitOnFailFlagCopy )
-      App_RequestQuit((int)aIOCouldnTOpenF);
+      App_RequestQuit((int)(intptr_t)aIOCouldnTOpenF);
   }
   return queryHandle;
 }
@@ -735,15 +735,15 @@ int  FileSystem_MountArchiveAtIndex(int mountPrefix, const CHAR *archiveFileName
     canOpenPath = Compat_CanOpenReadPath(resolvedPathBuffer);
     if ( !canOpenPath )
     {
-      errorTextTable[0] = (int)g_ArchiveMountFailedErrorText[0];
-      errorTextTable[1] = (int)g_ArchiveMountFailedErrorText[1];
-      errorTextTable[2] = (int)g_ArchiveMountFailedErrorText[2];
-      errorTextTable[3] = (int)g_ArchiveMountFailedErrorText[3];
+      errorTextTable[0] = (int)(intptr_t)g_ArchiveMountFailedErrorText[0];
+      errorTextTable[1] = (int)(intptr_t)g_ArchiveMountFailedErrorText[1];
+      errorTextTable[2] = (int)(intptr_t)g_ArchiveMountFailedErrorText[2];
+      errorTextTable[3] = (int)(intptr_t)g_ArchiveMountFailedErrorText[3];
       App_RequestQuit(errorTextTable[(unsigned __int8)g_LanguageIndex]);
     }
   }
-  readOnlySource = File_AllocateReadOnlySource(resolvedPathBuffer, mountFlags, 0, mountFlags, (int)resolvedPathBuffer);
-  return FileSystem_AddMountEntry(g_FileSystemMountTable, (const CHAR *)(uintptr_t)(unsigned int)mountPrefix, 0, (DWORD)readOnlySource);
+  readOnlySource = File_AllocateReadOnlySource(resolvedPathBuffer, mountFlags, 0, mountFlags, (int)(intptr_t)resolvedPathBuffer);
+  return FileSystem_AddMountEntry(g_FileSystemMountTable, (const CHAR *)(uintptr_t)(unsigned int)mountPrefix, 0, (DWORD)(intptr_t)readOnlySource);
 }
 // 442A16: variable 'v3' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
@@ -762,17 +762,17 @@ int __thiscall ResourceArchives_MountStartupArchives(int this)
   int v10[4]; // [esp+Ch] [ebp-10h] BYREF
 
   v10[2] = this;
-  FileSystem_MountArchiveAtIndex((int)aDot_MinimumResourcePrefix, aDataMinimum_re, 0x14u);
-  FileSystem_MountArchiveAtIndex((int)aDot_NormalResourcePrefix, aDataNormal_res, 1u);
-  FileSystem_MountArchiveAtIndex((int)aDot_MaximumResourcePrefix, aDataMaximum_re, 1u);
-  FileSystem_MountArchiveAtIndex((int)aMaps_0, aDataMaps_res, 1u);
-  FileSystem_MountArchiveAtIndex((int)aGfx_6, aDataGfx3_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aDot_MinimumResourcePrefix, aDataMinimum_re, 0x14u);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aDot_NormalResourcePrefix, aDataNormal_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aDot_MaximumResourcePrefix, aDataMaximum_re, 1u);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aMaps_0, aDataMaps_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aGfx_6, aDataGfx3_res, 1u);
   if ( !g_LanguageIndex )
   {
     langInfoArchivePath = aDataInfopol_re;
     langInfoGfxPrefix = aGfxBiginfo_pol;
 LABEL_3:
-    FileSystem_MountArchiveAtIndex((int)langInfoGfxPrefix, langInfoArchivePath, 1u);
+    FileSystem_MountArchiveAtIndex((int)(intptr_t)langInfoGfxPrefix, langInfoArchivePath, 1u);
     goto LABEL_4;
   }
   if ( (unsigned __int8)g_LanguageIndex <= 1u )
@@ -793,12 +793,12 @@ LABEL_4:
     langMisinfoArchivePath = aDataMisinfop_r;
     langMisinfoMountPrefix = aGfxMisinfo;
 LABEL_6:
-    FileSystem_MountArchiveAtIndex((int)langMisinfoMountPrefix, langMisinfoArchivePath, 1u);
+    FileSystem_MountArchiveAtIndex((int)(intptr_t)langMisinfoMountPrefix, langMisinfoArchivePath, 1u);
     goto LABEL_7;
   }
   if ( (unsigned __int8)g_LanguageIndex <= 1u )
   {
-    FileSystem_MountArchiveAtIndex((int)aGfxMisinfo_0, aDataMisinfoa_r, 1u);
+    FileSystem_MountArchiveAtIndex((int)(intptr_t)aGfxMisinfo_0, aDataMisinfoa_r, 1u);
     langMisinfoArchivePath = aDataMiswava_re;
     langMisinfoMountPrefix = aSfxMisinfo;
     goto LABEL_6;
@@ -810,14 +810,14 @@ LABEL_6:
     goto LABEL_6;
   }
 LABEL_7:
-  FileSystem_MountArchiveAtIndex((int)aSfxMusic_0, aDataMusic_res, 1u);
-  CSS_SetFileSystem((int)g_FileSystemMountTable);
+  FileSystem_MountArchiveAtIndex((int)(intptr_t)aSfxMusic_0, aDataMusic_res, 1u);
+  CSS_SetFileSystem((int)(intptr_t)g_FileSystemMountTable);
   v10[0] = FileSystem_ResolveReadPath(aGfxBackgr1_s32, 0);
   if ( !v10[0] )
   {
-    v9[0] = (int)g_StartupResourceMissingErrorText[0];
-    v9[1] = (int)g_StartupResourceMissingErrorText[1];
-    v9[2] = (int)g_StartupResourceMissingErrorText[2];
+    v9[0] = (int)(intptr_t)g_StartupResourceMissingErrorText[0];
+    v9[1] = (int)(intptr_t)g_StartupResourceMissingErrorText[1];
+    v9[2] = (int)(intptr_t)g_StartupResourceMissingErrorText[2];
     App_RequestQuit(v9[(unsigned __int8)g_LanguageIndex]);
   }
   return Compat_FileSystemQueryRelease(v7, v10);
@@ -840,14 +840,14 @@ int  loadFileSusp(char *sourcePath, const CHAR *destPath)
   copy_buffer = (unsigned char *)(uintptr_t)(unsigned int)nmalloc_(0x80000, 4);
   if ( !copy_buffer )
   {
-    Debug_Log(0, (char)sourcePath, (DWORD)destPath, (int)aNotEnoughMe_11);
-    App_RequestQuit((int)aNotEnoughMe_12);
+    Debug_Log(0, (char)(intptr_t)sourcePath, (DWORD)(intptr_t)destPath, (int)(intptr_t)aNotEnoughMe_11);
+    App_RequestQuit((int)(intptr_t)aNotEnoughMe_12);
   }
   query_handle = FileSystem_ResolveReadPath(sourcePath, 1);
   if ( !query_handle )
-    App_RequestQuit((int)aBrakPlikuS);
+    App_RequestQuit((int)(intptr_t)aBrakPlikuS);
 
-  output_handle = IO_FOpen(destPath, (unsigned __int8 *)aWb_2, 0, (DWORD)destPath);
+  output_handle = IO_FOpen(destPath, (unsigned __int8 *)aWb_2, 0, (DWORD)(intptr_t)destPath);
   do
   {
     bytes_read = Compat_QueryRead(query_handle, copy_buffer, 0x80000);
@@ -855,7 +855,7 @@ int  loadFileSusp(char *sourcePath, const CHAR *destPath)
       fwrite_(copy_buffer, bytes_read, output_handle, 1);
   }
   while ( bytes_read == 0x80000 );
-  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
   fclose_(output_handle);
   Compat_FreeLow32Bytes((int)(uintptr_t)copy_buffer);
   return 0;
@@ -886,18 +886,18 @@ LABEL_2:
   while ( 1 )
   {
     result = gameData;
-    if ( rowIndex >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+    if ( rowIndex >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
       return result;
     columnIndex = 0;
     for ( tileStride = 0; ; tileStride += 14 )
     {
-      if ( columnIndex >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+      if ( columnIndex >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         rowOffset += TILE_TERRAIN_ROW_STRIDE;
         ++rowIndex;
         goto LABEL_2;
       }
-      tileId = *(unsigned __int16 *)(rowOffset + gameData + tileStride + 2);
+      tileId = *(unsigned __int16 *)(uintptr_t)(rowOffset + gameData + tileStride + 2);
       if ( tileId == 716 || tileId == 726 )
         break;
       ++columnIndex;
@@ -910,18 +910,18 @@ LABEL_2:
     PORT_NEXT_REINFORCEMENT_TURN = Rng_RandRange(8, 10);
     PORT_REINFORCEMENT_UNIT_COUNT = Rng_RandRange(3, 5);
     portColumnOffset = 14 * PORT_COLUMN;
-    shoreTileId = *(unsigned __int16 *)(portColumnOffset + gameData + TILE_TERRAIN_ROW_STRIDE * PORT_ROW + 2);
+    shoreTileId = *(unsigned __int16 *)(uintptr_t)(portColumnOffset + gameData + TILE_TERRAIN_ROW_STRIDE * PORT_ROW + 2);
     if ( shoreTileId == 726 || shoreTileId == 722 )
     {
-      bottomRightTile = (_WORD *)(TILE_TERRAIN_RECORD_STRIDE * (PORT_COLUMN + 1) + gameData + TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1));
+      bottomRightTile = (_WORD *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (PORT_COLUMN + 1) + gameData + TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1));
       *bottomRightTile = 715;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1) + TILE_TERRAIN_RECORD_STRIDE * PORT_COLUMN) = *bottomRightTile;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1) + TILE_TERRAIN_RECORD_STRIDE * PORT_COLUMN) = *bottomRightTile;
     }
     else
     {
-      bottomLeftTile = (_WORD *)(TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1) + gameData + portColumnOffset);
+      bottomLeftTile = (_WORD *)(uintptr_t)(TILE_TERRAIN_ROW_STRIDE * (PORT_ROW + 1) + gameData + portColumnOffset);
       *bottomLeftTile = 715;
-      *(_WORD *)(TILE_TERRAIN_RECORD_STRIDE * PORT_COLUMN + gameData + TILE_TERRAIN_ROW_STRIDE * PORT_ROW) = *bottomLeftTile;
+      *(_WORD *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * PORT_COLUMN + gameData + TILE_TERRAIN_ROW_STRIDE * PORT_ROW) = *bottomLeftTile;
     }
     Port_UpdateShorelineVariantTiles();
     Rules_LogPortLocation();
@@ -940,7 +940,7 @@ _DWORD *Rules_LogPortLocation(void)
   int v4; // ecx
   char logTextBuffer[204]; // [esp+0h] [ebp-CCh] BYREF
 
-  result = (_DWORD *)gameData;
+  result = (_DWORD *)(uintptr_t)gameData;
   portRow = PORT_ROW;
   if ( portRow != -1 )
   {
@@ -969,12 +969,12 @@ int  Port_NewTurn(DWORD logContext)
     if ( !PORT_REINFORCEMENT_READY_FLAG )
     {
       reinforcementArrivalTurn = PORT_NEXT_REINFORCEMENT_TURN;
-      if ( *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET) >= reinforcementArrivalTurn )
+      if ( *(unsigned __int16 *)(uintptr_t)(gameData + GAME_TURN_COUNTER_OFFSET) >= reinforcementArrivalTurn )
       {
       PORT_SHORE_VARIANT_FLAG = 1;
       PORT_REINFORCEMENT_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
         PORT_REINFORCEMENT_UNIT_COUNT = Rng_RandRange(3, 5);
-        Debug_Log(logArg, reinforcementArrivalTurn, logContext, (int)aPort_newturnPo);
+        Debug_Log(logArg, reinforcementArrivalTurn, logContext, (int)(intptr_t)aPort_newturnPo);
       }
     }
     return Port_UpdateShorelineVariantTiles();
@@ -1017,19 +1017,19 @@ int Port_UpdateShorelineVariantTiles(void)
         while ( colCursor <= PORT_COLUMN + 1 )
         {
           tileAddr = colByteOffset + i + gameData;
-          switch ( *(_WORD *)(tileAddr + 2) )
+          switch ( *(_WORD *)(uintptr_t)(tileAddr + 2) )
           {
             case 0x2D0:
-              *(_WORD *)(tileAddr + 2) = 718;
+              *(_WORD *)(uintptr_t)(tileAddr + 2) = 718;
               break;
             case 0x2D1:
-              *(_WORD *)(tileAddr + 2) = 719;
+              *(_WORD *)(uintptr_t)(tileAddr + 2) = 719;
               break;
             case 0x2D6:
-              *(_WORD *)(tileAddr + 2) = 722;
+              *(_WORD *)(uintptr_t)(tileAddr + 2) = 722;
               break;
             case 0x2D7:
-              *(_WORD *)(tileAddr + 2) = 724;
+              *(_WORD *)(uintptr_t)(tileAddr + 2) = 724;
               break;
             default:
               break;
@@ -1053,19 +1053,19 @@ int Port_UpdateShorelineVariantTiles(void)
         while ( colCursorB <= PORT_COLUMN + 1 )
         {
           tileAddrB = colByteOffsetB + j + gameData;
-          switch ( *(_WORD *)(tileAddrB + 2) )
+          switch ( *(_WORD *)(uintptr_t)(tileAddrB + 2) )
           {
             case 0x2CE:
-              *(_WORD *)(tileAddrB + 2) = 720;
+              *(_WORD *)(uintptr_t)(tileAddrB + 2) = 720;
               break;
             case 0x2CF:
-              *(_WORD *)(tileAddrB + 2) = 721;
+              *(_WORD *)(uintptr_t)(tileAddrB + 2) = 721;
               break;
             case 0x2D2:
-              *(_WORD *)(tileAddrB + 2) = 726;
+              *(_WORD *)(uintptr_t)(tileAddrB + 2) = 726;
               break;
             case 0x2D4:
-              *(_WORD *)(tileAddrB + 2) = 727;
+              *(_WORD *)(uintptr_t)(tileAddrB + 2) = 727;
               break;
             default:
               break;
@@ -1130,24 +1130,24 @@ int * Port_GenerateApproachTrack(int unitStackIndex)
   portColumn = PORT_COLUMN;
   portRowByteOffset = TILE_TERRAIN_ROW_STRIDE * portRowValue;
   topRowTileBase = TILE_TERRAIN_ROW_STRIDE * portRowValue + gameData;
-  savedTileTopLeft = *(_WORD *)(topRowTileBase + 14 * portColumn);
+  savedTileTopLeft = *(_WORD *)(uintptr_t)(topRowTileBase + 14 * portColumn);
   bottomRowTileBase = TILE_TERRAIN_ROW_STRIDE * (portRowValue + 1) + gameData;
   bottomRowByteOffset = TILE_TERRAIN_ROW_STRIDE * (portRowValue + 1);
-  savedTileBottomLeft = *(_WORD *)(bottomRowTileBase + 14 * portColumn);
+  savedTileBottomLeft = *(_WORD *)(uintptr_t)(bottomRowTileBase + 14 * portColumn);
   bottomRowTileBaseCopy = bottomRowTileBase;
   rightColumnByteOffset = 14 * (portColumn + 1);
-  savedTileTopRight = *(_WORD *)(rightColumnByteOffset + topRowTileBase);
-  bottomRightTile = *(_WORD *)(rightColumnByteOffset + bottomRowTileBaseCopy);
-  *(_WORD *)(topRowTileBase + 14 * portColumn) = 0;
+  savedTileTopRight = *(_WORD *)(uintptr_t)(rightColumnByteOffset + topRowTileBase);
+  bottomRightTile = *(_WORD *)(uintptr_t)(rightColumnByteOffset + bottomRowTileBaseCopy);
+  *(_WORD *)(uintptr_t)(topRowTileBase + 14 * portColumn) = 0;
   savedTileBottomRight = bottomRightTile;
-  *(_WORD *)(14 * portColumn + bottomRowByteOffset + gameData) = 0;
-  *(_WORD *)(rightColumnByteOffset + portRowByteOffset + gameData) = 0;
-  *(_WORD *)(rightColumnByteOffset + bottomRowByteOffset + gameData) = 0;
-  stackColumn = *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176);
-  trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), portRow, stackColumn, portRow, portColumn);
+  *(_WORD *)(uintptr_t)(14 * portColumn + bottomRowByteOffset + gameData) = 0;
+  *(_WORD *)(uintptr_t)(rightColumnByteOffset + portRowByteOffset + gameData) = 0;
+  *(_WORD *)(uintptr_t)(rightColumnByteOffset + bottomRowByteOffset + gameData) = 0;
+  stackColumn = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176);
+  trackList = Unit_MoveTrack(unitStackIndex, *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), portRow, stackColumn, portRow, portColumn);
   if ( trackList )
   {
-    reversedTrack = (int *)Mem_Alloc(404, (int)trackList, stackColumn, portRow);
+    reversedTrack = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)trackList, stackColumn, portRow);
     trackReadPtr = reversedTrack;
     if ( reversedTrack )
       *reversedTrack = 0;
@@ -1199,12 +1199,12 @@ int * Port_GenerateApproachTrack(int unitStackIndex)
   }
   restoreTopRowByteOffset = TILE_TERRAIN_ROW_STRIDE * portRow;
   leftColumnByteOffset = 14 * portColumn;
-  *(_WORD *)(leftColumnByteOffset + gameData + TILE_TERRAIN_ROW_STRIDE * portRow) = savedTileTopLeft;
+  *(_WORD *)(uintptr_t)(leftColumnByteOffset + gameData + TILE_TERRAIN_ROW_STRIDE * portRow) = savedTileTopLeft;
   restoreBottomRowByteOffset = TILE_TERRAIN_ROW_STRIDE * (portRow + 1);
-  *(_WORD *)(restoreBottomRowByteOffset + gameData + leftColumnByteOffset) = savedTileBottomLeft;
+  *(_WORD *)(uintptr_t)(restoreBottomRowByteOffset + gameData + leftColumnByteOffset) = savedTileBottomLeft;
   restoreRightColumnByteOffset = 14 * (portColumn + 1);
-  *(_WORD *)(restoreRightColumnByteOffset + gameData + restoreTopRowByteOffset) = savedTileTopRight;
-  *(_WORD *)(restoreBottomRowByteOffset + gameData + restoreRightColumnByteOffset) = savedTileBottomRight;
+  *(_WORD *)(uintptr_t)(restoreRightColumnByteOffset + gameData + restoreTopRowByteOffset) = savedTileTopRight;
+  *(_WORD *)(uintptr_t)(restoreBottomRowByteOffset + gameData + restoreRightColumnByteOffset) = savedTileBottomRight;
   return trackList;
 }
 // 443267: conditional instruction was optimized away because ecx.4!=FFFFFFFF
@@ -1249,7 +1249,7 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
   int scanRow; // [esp+1Ch] [ebp-20h]
   int scanRowByteOffset; // [esp+20h] [ebp-1Ch]
 
-  Debug_Log(a1, a2, a3, (int)aPort_getsupply, v28);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aPort_getsupply, v28);
   if ( PORT_ROW == -1 )
     return 0;
   portRow = PORT_ROW;
@@ -1271,12 +1271,12 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
         {
           while ( 1 )
           {
-            tileUnitIndex = *(unsigned __int16 *)(gameData + scanRowByteOffset + colByteOffset + TILE_MAP_OFFSET);
+            tileUnitIndex = *(unsigned __int16 *)(uintptr_t)(gameData + scanRowByteOffset + colByteOffset + TILE_MAP_OFFSET);
             if ( (unsigned __int16)tileUnitIndex <= 0x1F4u )
             {
               unitStackBase = UNIT_STACK_STRIDE * tileUnitIndex;
-              if ( (unsigned int)*(__int16 *)(unitStackBase + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28
-                && *(unsigned __int8 *)(unitStackBase + gameData + 147178) == g_CurrentPlayerIndex )
+              if ( (unsigned int)*(__int16 *)(uintptr_t)(unitStackBase + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28
+                && *(unsigned __int8 *)(uintptr_t)(unitStackBase + gameData + 147178) == g_CurrentPlayerIndex )
               {
                 break;
               }
@@ -1301,7 +1301,7 @@ LABEL_16:
       {
         spawnRow = g_PortReinforcementSpawnRingOffsets[i].row_delta + portRow;
         spawnColumn = g_PortReinforcementSpawnRingOffsets[i].column_delta + portColumn;
-        if ( *(unsigned __int16 *)(TILE_INDEX(spawnRow, spawnColumn)) == 0xFFFF
+        if ( *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(spawnRow, spawnColumn)) == 0xFFFF
           && Map_GetUnitTileMoveCostOrZero(g_CurrentPlayerIndex, 0, spawnColumn, spawnRow) )
         {
           break;
@@ -1315,9 +1315,9 @@ LABEL_16:
       reinforcementSpawnRow = spawnRowDelta + PORT_ROW;
       v12 = Facing_DirectionFromDelta8(spawnRowDelta, g_PortReinforcementSpawnRingOffsets[spawnSlotIndex].column_delta);
       Unit_Create(UNIT_TYPE_PEASANT, g_CurrentPlayerIndex, reinforcementSpawnRow, v12, a4, reinforcementSpawnColumn);
-      armyFactBase = 145 * *(unsigned __int16 *)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn));
+      armyFactBase = 145 * *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn));
       remainingUnitCount = PORT_REINFORCEMENT_UNIT_COUNT - 1;
-      for ( j = UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn)) + gameData + UNIT_STACK_TABLE_OFFSET;
+      for ( j = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn)) + gameData + UNIT_STACK_TABLE_OFFSET;
             remainingUnitCount >= 0;
             v13 = v19 - 31 )
       {
@@ -1328,7 +1328,7 @@ LABEL_16:
       }
       Rules_LinkArmyFact(j, armyFactBase, v13, a4, v12, reinforcementSpawnRow);
       Rules_SyncArmyFactStrength(j, v20, v21, v12, reinforcementSpawnRow, a4);
-      UI_StartWorldMapUnitAttentionFlash(*(unsigned __int16 *)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn)), 200 * reinforcementSpawnRow + gameData, v22);
+      UI_StartWorldMapUnitAttentionFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(reinforcementSpawnRow, reinforcementSpawnColumn)), 200 * reinforcementSpawnRow + gameData, v22);
       PORT_REINFORCEMENT_READY_FLAG = 0;
       reinforcementDelay = Rng_RandRange(8, 10);
       PORT_NEXT_REINFORCEMENT_TURN = currentTurn + reinforcementDelay;
@@ -1385,27 +1385,27 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   previousRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v2, a1, a2);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, "port.s32");
   portSpriteSet = spriteSet;
   panelLeft = 100;
   panelTop = 100;
-  Surface = (_DWORD *)Mem_Alloc(188, 100, a1, a2);
-  surfacePtr = (int)Surface;
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 100, a1, a2);
+  surfacePtr = (int)(intptr_t)Surface;
   if ( Surface )
   {
-    SpriteWidth = DLX_GetSpriteWidth((int)portSpriteSet, 0);
-    SpriteHeight = DLX_GetSpriteHeight((int)portSpriteSet, 0);
+    SpriteWidth = DLX_GetSpriteWidth((int)(intptr_t)portSpriteSet, 0);
+    SpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)portSpriteSet, 0);
     Surface = Render_CreateSurface(surfacePtr, SpriteHeight, SpriteWidth);
   }
-  panelSurface = (DWORD)Surface;
-  rectBottom = panelTop + DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
-  spriteHeightDraw = DLX_GetSpriteHeight((int)portSpriteSet, 0);
-  Render_FillRect(0, (_DWORD *)panelSurface, (unsigned __int16)panelTop, (unsigned __int16)panelLeft, panelLeft + spriteHeightDraw - 1, rectBottom, 0, 0);
+  panelSurface = (DWORD)(intptr_t)Surface;
+  rectBottom = panelTop + DLX_GetSpriteWidth((int)(intptr_t)portSpriteSet, 0) - 1;
+  spriteHeightDraw = DLX_GetSpriteHeight((int)(intptr_t)portSpriteSet, 0);
+  Render_FillRect(0, (_DWORD *)(uintptr_t)panelSurface, (unsigned __int16)panelTop, (unsigned __int16)panelLeft, panelLeft + spriteHeightDraw - 1, rectBottom, 0, 0);
   Render_ReleaseSurface(7, panelSurface);
-  SpriteForChar = DLX_GetSpriteForChar((int)portSpriteSet, PORT_REINFORCEMENT_READY_FLAG);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)portSpriteSet, PORT_REINFORCEMENT_READY_FLAG);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     panelTop,
     SpriteForChar,
     -1,
@@ -1419,18 +1419,18 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
     portLabelText = aHafen;
   else
     portLabelText = aPort;
-  UI_DrawTextFmt((int)arrivedTexts, panelLeft + 10, panelLeft + 235, panelTop + 5, 3, (int)portLabelText);
-  arrivedTexts[0] = (int)g_PortReinforcementArrivedTexts[0];
-  arrivedTexts[1] = (int)g_PortReinforcementArrivedTexts[1];
-  arrivedTexts[2] = (int)g_PortReinforcementArrivedTexts[2];
-  emptyTexts[0] = (int)g_PortEmptyTexts[0];
-  emptyTexts[1] = (int)g_PortEmptyTexts[1];
-  emptyTexts[2] = (int)g_PortEmptyTexts[2];
+  UI_DrawTextFmt((int)(intptr_t)arrivedTexts, panelLeft + 10, panelLeft + 235, panelTop + 5, 3, (int)(intptr_t)portLabelText);
+  arrivedTexts[0] = (int)(intptr_t)g_PortReinforcementArrivedTexts[0];
+  arrivedTexts[1] = (int)(intptr_t)g_PortReinforcementArrivedTexts[1];
+  arrivedTexts[2] = (int)(intptr_t)g_PortReinforcementArrivedTexts[2];
+  emptyTexts[0] = (int)(intptr_t)g_PortEmptyTexts[0];
+  emptyTexts[1] = (int)(intptr_t)g_PortEmptyTexts[1];
+  emptyTexts[2] = (int)(intptr_t)g_PortEmptyTexts[2];
   if ( PORT_REINFORCEMENT_READY_FLAG )
   {
-    UI_DrawTextFmt((int)arrivedTexts, panelLeft + 122, panelLeft + 200, panelTop + 54, 6, arrivedTexts[(unsigned __int8)g_LanguageIndex]);
+    UI_DrawTextFmt((int)(intptr_t)arrivedTexts, panelLeft + 122, panelLeft + 200, panelTop + 54, 6, arrivedTexts[(unsigned __int8)g_LanguageIndex]);
     Render_ReleaseSurface(15, panelSurface);
-    UI_DrawTextFmt((int)arrivedTexts, panelLeft + 42, panelLeft + 85, panelTop + 29, 1, (int)aD_36);
+    UI_DrawTextFmt((int)(intptr_t)arrivedTexts, panelLeft + 42, panelLeft + 85, panelTop + 29, 1, (int)(intptr_t)aD_36);
   }
   else
   {
@@ -1442,16 +1442,16 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
       6,
       emptyTexts[(unsigned __int8)g_LanguageIndex]);
   }
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   topEdge = panelTop;
   leftEdge = panelLeft;
-  spriteWidthMax = DLX_GetSpriteWidth((int)portSpriteSet, 0) - 1;
-  spriteHeightRedraw = DLX_GetSpriteHeight((int)portSpriteSet, 0);
-  Render_FillRect((_DWORD *)panelSurface, 0, 0, 0, spriteHeightRedraw - 1, spriteWidthMax, leftEdge, topEdge);
+  spriteWidthMax = DLX_GetSpriteWidth((int)(intptr_t)portSpriteSet, 0) - 1;
+  spriteHeightRedraw = DLX_GetSpriteHeight((int)(intptr_t)portSpriteSet, 0);
+  Render_FillRect((_DWORD *)(uintptr_t)panelSurface, 0, 0, 0, spriteHeightRedraw - 1, spriteWidthMax, leftEdge, topEdge);
   if ( panelSurface )
-    (**(void (__cdecl ***)(int, int, int, int, int, int))(panelSurface + 184))(emptyTexts[0], emptyTexts[1], emptyTexts[2], arrivedTexts[0], arrivedTexts[1], arrivedTexts[2]);
+    (**(void (__cdecl ***)(int, int, int, int, int, int))(uintptr_t)(panelSurface + 184))(emptyTexts[0], emptyTexts[1], emptyTexts[2], arrivedTexts[0], arrivedTexts[1], arrivedTexts[2]);
   DLXSpriteSet_ReleaseAndClear((int *)&portSpriteSet);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   result = previousRenderDevice;
   g_RenderDevice = previousRenderDevice;
   return result;
@@ -1475,9 +1475,9 @@ int Rules_RebuildTreasureFacts(void)
   for ( i = 0; ; ++i )
   {
     result = gameData;
-    if ( i >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+    if ( i >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
       break;
-    for ( j = 0; j < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
+    for ( j = 0; j < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
     {
       if ( MapTile_HasHiddenTreasure(i, j) )
         Rules_LogTreasureFact(i, v4);

@@ -71,11 +71,11 @@ signed int  Rules_BuildDualSlotConstraintBitmapTestNode(int joinTest, int selfNo
 
   if ( Rules_IsMultiplyConstrainedSlot(selfNode) && Rules_IsMultiplyConstrainedSlot(referringNode) )
   {
-    if ( (*(_BYTE *)(v10 + 9) & 0x40) == 0 && (*(_BYTE *)(referringNode + 9) & 0x40) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v10 + 9) & 0x40) == 0 && (*(_BYTE *)(uintptr_t)(referringNode + 9) & 0x40) == 0 )
     {
       Mem_AllocArray(pnVars1, 4);
       Mem_AllocArray(&jnVars1, 8);
-      if ( (*(_BYTE *)(v11 + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(v11 + 8) & 1) != 0 )
       {
         HIBYTE(jnVars1) |= 0x80u;
         HIBYTE(pnVars1[0]) = HIBYTE(pnVars1[0]) & 0x7F | 0x80;
@@ -85,24 +85,24 @@ signed int  Rules_BuildDualSlotConstraintBitmapTestNode(int joinTest, int selfNo
         BYTE1(jnVars1) |= 0x80u;
         BYTE1(pnVars1[0]) = BYTE1(pnVars1[0]) & 0x7F | 0x80;
       }
-      v12 = *(_DWORD *)(v11 + 40);
+      v12 = *(_DWORD *)(uintptr_t)(v11 + 40);
       LOWORD(jnVars1) = jnVars1 & 0x8000;
       jnVars1 |= v12 & 0x7FFF;
-      v13 = *(_DWORD *)(v11 + 40);
+      v13 = *(_DWORD *)(uintptr_t)(v11 + 40);
       LOWORD(pnVars1[0]) &= 0x8000u;
       pnVars1[0] |= v13 & 0x7FFF;
-      v14 = *(_DWORD *)(referringNode + 40);
+      v14 = *(_DWORD *)(uintptr_t)(referringNode + 40);
       HIWORD(jnVars1) &= 0x8000u;
       jnVars1 |= (v14 & 0x7FFF) << 16;
-      v15 = *(_DWORD *)(referringNode + 40);
+      v15 = *(_DWORD *)(uintptr_t)(referringNode + 40);
       HIWORD(pnVars1[0]) &= 0x8000u;
       pnVars1[0] |= (v15 & 0x7FFF) << 16;
       if ( joinTest )
       {
-        v16 = *(_DWORD *)(v11 + 28);
+        v16 = *(_DWORD *)(uintptr_t)(v11 + 28);
         LOBYTE(jnVars1Hi) = 0;
         jnVars1Hi |= (unsigned __int8)v16;
-        v17 = *(_DWORD *)(referringNode + 28);
+        v17 = *(_DWORD *)(uintptr_t)(referringNode + 28);
         BYTE1(jnVars1Hi) = 0;
         jnVars1Hi |= (unsigned __int8)v17 << 8;
         v18 = Rules_AddBitmapValue(&jnVars1, 8);
@@ -114,11 +114,11 @@ signed int  Rules_BuildDualSlotConstraintBitmapTestNode(int joinTest, int selfNo
         return AST_NewNode(51, v19);
       }
     }
-    if ( (*(_BYTE *)(v5 + 9) & 0x40) == 0 || (*(_BYTE *)(referringNode + 9) & 0x40) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v5 + 9) & 0x40) == 0 || (*(_BYTE *)(uintptr_t)(referringNode + 9) & 0x40) == 0 )
     {
       Mem_AllocArray(&pnVars2, 8);
       Mem_AllocArray(&jnVars2, 8);
-      if ( (*(_BYTE *)(v20 + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(v20 + 8) & 1) != 0 )
       {
         BYTE2(jnVars2Hi) |= 0x80u;
         HIBYTE(pnVars2) = HIBYTE(pnVars2) & 0x7F | 0x80;
@@ -132,56 +132,56 @@ signed int  Rules_BuildDualSlotConstraintBitmapTestNode(int joinTest, int selfNo
       v21 = jnVars2 & 0xFFFF8000;
       v23 = pnVars2 & 0xFFFF8000;
       LOBYTE(v22) = 0;
-      if ( (*(_BYTE *)(v20 + 9) & 0x40) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(v20 + 9) & 0x40) != 0 )
       {
-        jnVars2 = v21 | *(_DWORD *)(v20 + 40) & 0x7FFF;
-        pnVars2 = *(_DWORD *)(v20 + 40) & 0x7FFF | v23;
-        v24 = *(_DWORD *)(referringNode + 40);
+        jnVars2 = v21 | *(_DWORD *)(uintptr_t)(v20 + 40) & 0x7FFF;
+        pnVars2 = *(_DWORD *)(uintptr_t)(v20 + 40) & 0x7FFF | v23;
+        v24 = *(_DWORD *)(uintptr_t)(referringNode + 40);
         HIWORD(jnVars2) &= 0x8000u;
         jnVars2 |= (v24 & 0x7FFF) << 16;
-        v25 = *(_DWORD *)(referringNode + 40);
+        v25 = *(_DWORD *)(uintptr_t)(referringNode + 40);
         HIWORD(pnVars2) &= 0x8000u;
         pnVars2 |= (v25 & 0x7FFF) << 16;
         if ( joinTest )
         {
-          jnVars2Hi = (unsigned __int8)*(_DWORD *)(v20 + 28) | v22;
-          v26 = *(_DWORD *)(referringNode + 28);
+          jnVars2Hi = (unsigned __int8)*(_DWORD *)(uintptr_t)(v20 + 28) | v22;
+          v26 = *(_DWORD *)(uintptr_t)(referringNode + 28);
           BYTE1(jnVars2Hi) = 0;
           jnVars2Hi |= (unsigned __int8)v26 << 8;
         }
         v27 = jnVars2Hi & 0xFF80FFFF;
-        if ( (*(_DWORD *)(v20 + 8) & 0x3F8000) != 0 )
+        if ( (*(_DWORD *)(uintptr_t)(v20 + 8) & 0x3F8000) != 0 )
         {
-          v30 = (unsigned __int8)(*(_DWORD *)(v20 + 12) << 18 >> 24) >> 1;
+          v30 = (unsigned __int8)(*(_DWORD *)(uintptr_t)(v20 + 12) << 18 >> 24) >> 1;
           LOBYTE(pnVars2Hi) = pnVars2Hi & 0x80;
           jnVars2Hi = (v30 << 16) | v27;
           goto LABEL_24;
         }
         HIBYTE(jnVars2) |= 0x80u;
         LOBYTE(pnVars2Hi) = pnVars2Hi & 0x7F | 0x80;
-        v28 = *(_DWORD *)(v20 + 12);
+        v28 = *(_DWORD *)(uintptr_t)(v20 + 12);
       }
       else
       {
-        jnVars2 = v21 | *(_DWORD *)(referringNode + 40) & 0x7FFF;
-        pnVars2 = *(_DWORD *)(referringNode + 40) & 0x7FFF | v23;
-        v32 = *(_DWORD *)(v20 + 40);
+        jnVars2 = v21 | *(_DWORD *)(uintptr_t)(referringNode + 40) & 0x7FFF;
+        pnVars2 = *(_DWORD *)(uintptr_t)(referringNode + 40) & 0x7FFF | v23;
+        v32 = *(_DWORD *)(uintptr_t)(v20 + 40);
         HIWORD(jnVars2) &= 0x8000u;
         jnVars2 |= (v32 & 0x7FFF) << 16;
-        v33 = *(_DWORD *)(v20 + 40) & 0x7FFF;
+        v33 = *(_DWORD *)(uintptr_t)(v20 + 40) & 0x7FFF;
         HIWORD(pnVars2) &= 0x8000u;
         pnVars2 |= v33 << 16;
         if ( joinTest )
         {
-          jnVars2Hi = (unsigned __int8)*(_DWORD *)(referringNode + 28) | v22;
-          v34 = *(_DWORD *)(v20 + 28);
+          jnVars2Hi = (unsigned __int8)*(_DWORD *)(uintptr_t)(referringNode + 28) | v22;
+          v34 = *(_DWORD *)(uintptr_t)(v20 + 28);
           BYTE1(jnVars2Hi) = 0;
           jnVars2Hi |= (unsigned __int8)v34 << 8;
         }
         v27 = jnVars2Hi & 0xFF80FFFF;
-        if ( (*(_DWORD *)(referringNode + 8) & 0x3F8000) != 0 )
+        if ( (*(_DWORD *)(uintptr_t)(referringNode + 8) & 0x3F8000) != 0 )
         {
-          v35 = (unsigned __int8)(*(_DWORD *)(referringNode + 12) << 18 >> 24) >> 1;
+          v35 = (unsigned __int8)(*(_DWORD *)(uintptr_t)(referringNode + 12) << 18 >> 24) >> 1;
           LOBYTE(pnVars2Hi) = pnVars2Hi & 0x80;
           jnVars2Hi = (v35 << 16) | v27;
           pnVars2Hi |= v35;
@@ -199,7 +199,7 @@ LABEL_25:
         }
         HIBYTE(jnVars2) |= 0x80u;
         LOBYTE(pnVars2Hi) = pnVars2Hi & 0x7F | 0x80;
-        v28 = *(_DWORD *)(referringNode + 12);
+        v28 = *(_DWORD *)(uintptr_t)(referringNode + 12);
       }
       v29 = v28 & 0x7F;
       jnVars2Hi = (v29 << 16) | v27;
@@ -211,7 +211,7 @@ LABEL_24:
     }
     Mem_AllocArray(&pnVars3, 8);
     Mem_AllocArray(&jnVars3, 8);
-    if ( (*(_BYTE *)(v37 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v37 + 8) & 1) != 0 )
     {
       HIBYTE(jnVars3) |= 0x80u;
       HIBYTE(pnVars3) = HIBYTE(pnVars3) & 0x7F | 0x80;
@@ -221,21 +221,21 @@ LABEL_24:
       BYTE1(jnVars3) |= 0x80u;
       BYTE1(pnVars3) = BYTE1(pnVars3) & 0x7F | 0x80;
     }
-    v38 = *(_DWORD *)(v37 + 40);
+    v38 = *(_DWORD *)(uintptr_t)(v37 + 40);
     LOWORD(jnVars3) = jnVars3 & 0x8000;
     jnVars3 |= v38 & 0x7FFF;
-    v39 = *(_DWORD *)(v37 + 40);
+    v39 = *(_DWORD *)(uintptr_t)(v37 + 40);
     LOWORD(pnVars3) = pnVars3 & 0x8000;
     pnVars3 |= v39 & 0x7FFF;
-    v40 = *(_DWORD *)(referringNode + 40);
+    v40 = *(_DWORD *)(uintptr_t)(referringNode + 40);
     HIWORD(jnVars3) &= 0x8000u;
     jnVars3 |= (v40 & 0x7FFF) << 16;
-    v41 = *(_DWORD *)(referringNode + 40);
+    v41 = *(_DWORD *)(uintptr_t)(referringNode + 40);
     HIWORD(pnVars3) &= 0x8000u;
     pnVars3 |= (v41 & 0x7FFF) << 16;
-    if ( (*(_DWORD *)(v37 + 8) & 0x3F8000) != 0 )
+    if ( (*(_DWORD *)(uintptr_t)(v37 + 8) & 0x3F8000) != 0 )
     {
-      v44 = (unsigned __int8)(*(_DWORD *)(v37 + 12) << 18 >> 24) >> 1;
+      v44 = (unsigned __int8)(*(_DWORD *)(uintptr_t)(v37 + 12) << 18 >> 24) >> 1;
       BYTE2(jnVars3Hi) &= 0x80u;
       LOBYTE(pnVars3Hi) = pnVars3Hi & 0x80;
       jnVars3Hi |= v44 << 16;
@@ -244,7 +244,7 @@ LABEL_24:
     {
       BYTE2(jnVars3Hi) |= 0x80u;
       LOBYTE(pnVars3Hi) = pnVars3Hi & 0x7F | 0x80;
-      v42 = *(_DWORD *)(v37 + 12) & 0x7F;
+      v42 = *(_DWORD *)(uintptr_t)(v37 + 12) & 0x7F;
       BYTE2(jnVars3Hi) &= 0x80u;
       v43 = (v42 << 16) | jnVars3Hi;
       LOBYTE(pnVars3Hi) = pnVars3Hi & 0x80;
@@ -252,9 +252,9 @@ LABEL_24:
       jnVars3Hi = v43;
     }
     pnVars3Hi |= v44;
-    if ( (*(_DWORD *)(referringNode + 8) & 0x3F8000) != 0 )
+    if ( (*(_DWORD *)(uintptr_t)(referringNode + 8) & 0x3F8000) != 0 )
     {
-      v46 = (unsigned __int8)(*(_DWORD *)(referringNode + 12) << 18 >> 24) >> 1;
+      v46 = (unsigned __int8)(*(_DWORD *)(uintptr_t)(referringNode + 12) << 18 >> 24) >> 1;
       HIBYTE(jnVars3Hi) &= 0x80u;
       jnVars3Hi |= v46 << 24;
     }
@@ -262,7 +262,7 @@ LABEL_24:
     {
       HIBYTE(jnVars3Hi) |= 0x80u;
       BYTE1(pnVars3Hi) = BYTE1(pnVars3Hi) & 0x7F | 0x80;
-      v45 = *(_DWORD *)(referringNode + 12) & 0x7F;
+      v45 = *(_DWORD *)(uintptr_t)(referringNode + 12) & 0x7F;
       HIBYTE(jnVars3Hi) &= 0x80u;
       jnVars3Hi |= v45 << 24;
       v46 = v45 & 0x7F;
@@ -271,10 +271,10 @@ LABEL_24:
     pnVars3Hi |= v46 << 8;
     if ( joinTest )
     {
-      v47 = *(_DWORD *)(v37 + 28);
+      v47 = *(_DWORD *)(uintptr_t)(v37 + 28);
       LOBYTE(jnVars3Hi) = 0;
       jnVars3Hi |= (unsigned __int8)v47;
-      v48 = *(_DWORD *)(referringNode + 28);
+      v48 = *(_DWORD *)(uintptr_t)(referringNode + 28);
       BYTE1(jnVars3Hi) = 0;
       jnVars3Hi |= (unsigned __int8)v48 << 8;
       v49 = Rules_AddBitmapValue(&jnVars3, 8);
@@ -288,14 +288,14 @@ LABEL_24:
   }
   else
   {
-    if ( (*(_BYTE *)(v5 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v5 + 8) & 1) != 0 )
       compareSymbol = g_ClipsSymbolNeq;
     else
       compareSymbol = g_ClipsSymbolEq;
     compareCallNode = AST_NewNode(10, compareSymbol);
-    *(_DWORD *)(compareCallNode + 6) = AST_NewNode(0, 0);
+    *(_DWORD *)(uintptr_t)(compareCallNode + 6) = AST_NewNode(0, 0);
     Rules_BuildSlotConstraintBitmapTestNode(joinTest, v8);
-    *(_DWORD *)(*(_DWORD *)(compareCallNode + 6) + 10) = AST_NewNode(0, 0);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(compareCallNode + 6) + 10) = AST_NewNode(0, 0);
     Rules_BuildSlotConstraintBitmapTestNode(joinTest, referringNode);
     return compareCallNode;
   }
@@ -313,15 +313,15 @@ LABEL_24:
 signed int Rules_RegisterObjectPatternNetworkBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
-           (int)aObjectPatter_0,
+           (int)(intptr_t)aObjectPatter_0,
            0,
            0,
-           (int)Rules_AssignObjectPatternNetworkBsaveIndices,
-           (int)Rules_BsaveObjectPatternNetworkCounts,
-           (int)Rules_BsaveObjectPatternNetworkRecords,
-           (int)Rules_BloadObjectPatternNetworkCounts,
-           (int)Rules_BloadObjectPatternNetworkRecords,
-           (int)Class_ClearClassIDTable);
+           (int)(intptr_t)Rules_AssignObjectPatternNetworkBsaveIndices,
+           (int)(intptr_t)Rules_BsaveObjectPatternNetworkCounts,
+           (int)(intptr_t)Rules_BsaveObjectPatternNetworkRecords,
+           (int)(intptr_t)Rules_BloadObjectPatternNetworkCounts,
+           (int)(intptr_t)Rules_BloadObjectPatternNetworkRecords,
+           (int)(intptr_t)Class_ClearClassIDTable);
 }
 
 //----- (004E2240) --------------------------------------------------------
@@ -340,17 +340,17 @@ _DWORD *Rules_AssignObjectPatternNetworkBsaveIndices(void)
     Rules_ConstructQueuePush(g_ObjectPatternNetworkBloadCount);
   }
   g_ReactiveRuleBloadCount = 0;
-  for ( i = (_DWORD *)Rules_GetReactiveRuleList(); i; i = (_DWORD *)i[9] )
+  for ( i = (_DWORD *)(uintptr_t)Rules_GetReactiveRuleList(); i; i = (_DWORD *)(uintptr_t)i[9] )
   {
-    *(_BYTE *)(i[5] + 12) |= 2u;
+    *(_BYTE *)(uintptr_t)(i[5] + 12) |= 2u;
     slotBitmap = i[6];
     if ( slotBitmap )
-      *(_BYTE *)(i[6] + 12) = *(_BYTE *)(slotBitmap + 12) | 2;
+      *(_BYTE *)(uintptr_t)(i[6] + 12) = *(_BYTE *)(uintptr_t)(slotBitmap + 12) | 2;
     alphaIndex = g_ReactiveRuleBloadCount++;
     i[10] = alphaIndex;
   }
   g_ObjectPatternNetworkBloadCount = 0;
-  result = (_DWORD *)Rules_GetObjectPatternNetworkRoot();
+  result = (_DWORD *)(uintptr_t)Rules_GetObjectPatternNetworkRoot();
   if ( result )
   {
     while ( 1 )
@@ -358,7 +358,7 @@ _DWORD *Rules_AssignObjectPatternNetworkBsaveIndices(void)
       while ( 1 )
       {
         patternIndex = g_ObjectPatternNetworkBloadCount++;
-        nextLevelNode = (_DWORD *)result[4];
+        nextLevelNode = (_DWORD *)(uintptr_t)result[4];
         result[9] = patternIndex;
         if ( !nextLevelNode )
           break;
@@ -366,11 +366,11 @@ _DWORD *Rules_AssignObjectPatternNetworkBsaveIndices(void)
       }
       while ( !result[7] )
       {
-        result = (_DWORD *)result[5];
+        result = (_DWORD *)(uintptr_t)result[5];
         if ( !result )
           return result;
       }
-      result = (_DWORD *)result[7];
+      result = (_DWORD *)(uintptr_t)result[7];
     }
   }
   return result;
@@ -437,30 +437,30 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
 
   bsaveSpace[0] = 32 * g_ObjectPatternNetworkBloadCount + 28 * g_ReactiveRuleBloadCount;
   Rules_BsaveWriteBlock(4, outFile, bsaveSpace);
-  for ( i = Rules_GetReactiveRuleList(); i; i = *(_DWORD *)(v11 + 36) )
+  for ( i = Rules_GetReactiveRuleList(); i; i = *(_DWORD *)(uintptr_t)(v11 + 36) )
   {
-    Rules_BsavePackSharedRecordHeader((int)bsaveAlphaRecord, i);
-    classBitmapIndex = *(_DWORD *)(alphaNode[5] + 12) << 16 >> 18;
+    Rules_BsavePackSharedRecordHeader((int)(intptr_t)bsaveAlphaRecord, i);
+    classBitmapIndex = *(_DWORD *)(uintptr_t)(alphaNode[5] + 12) << 16 >> 18;
     slotBitmapRef = alphaNode[6];
     if ( slotBitmapRef )
-      slotBitmapIndex = *(_DWORD *)(slotBitmapRef + 12) << 16 >> 18;
+      slotBitmapIndex = *(_DWORD *)(uintptr_t)(slotBitmapRef + 12) << 16 >> 18;
     else
       slotBitmapIndex = -1;
     patternNodeRef = alphaNode[7];
     if ( patternNodeRef )
-      patternIndex = *(_DWORD *)(patternNodeRef + 36);
+      patternIndex = *(_DWORD *)(uintptr_t)(patternNodeRef + 36);
     else
       patternIndex = -1;
     patternNodeIndex = patternIndex;
     nextAlphaPtr = alphaNode[8];
     if ( nextAlphaPtr )
-      nextAlphaIdx = *(_DWORD *)(nextAlphaPtr + 40);
+      nextAlphaIdx = *(_DWORD *)(uintptr_t)(nextAlphaPtr + 40);
     else
       nextAlphaIdx = -1;
     nextAlphaIndex = nextAlphaIdx;
     nextTerminalPtr = alphaNode[9];
     if ( nextTerminalPtr )
-      nextTerminalIdx = *(_DWORD *)(nextTerminalPtr + 40);
+      nextTerminalIdx = *(_DWORD *)(uintptr_t)(nextTerminalPtr + 40);
     else
       nextTerminalIdx = -1;
     nextTerminalIndex = nextTerminalIdx;
@@ -469,45 +469,45 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
   currentPattern = Rules_GetObjectPatternNetworkRoot();
   while ( currentPattern )
   {
-    multifieldNodeFlag = *(_DWORD *)currentPattern << 30;
+    multifieldNodeFlag = *(_DWORD *)(uintptr_t)currentPattern << 30;
     LOBYTE(bsavePatternRecord[0]) &= ~1u;
     bsavePatternRecord[0] |= multifieldNodeFlag >> 31;
-    whichField = *(_DWORD *)currentPattern << 21 >> 24;
+    whichField = *(_DWORD *)(uintptr_t)currentPattern << 21 >> 24;
     LOWORD(bsavePatternRecord[0]) &= 0xFC03u;
     bsavePatternRecord[0] |= 4 * (unsigned __int8)whichField;
-    bsavePatternRecord[0] = ((unsigned __int8)(*(_DWORD *)currentPattern << 13 >> 24) << 10) | bsavePatternRecord[0] & 0xFFFC03FF;
-    endSlotFlag = *(_DWORD *)currentPattern << 29 >> 31;
+    bsavePatternRecord[0] = ((unsigned __int8)(*(_DWORD *)(uintptr_t)currentPattern << 13 >> 24) << 10) | bsavePatternRecord[0] & 0xFFFC03FF;
+    endSlotFlag = *(_DWORD *)(uintptr_t)currentPattern << 29 >> 31;
     LOBYTE(bsavePatternRecord[0]) &= ~2u;
     bsavePatternRecord[0] |= 2 * (endSlotFlag & 1);
-    bsavePatternRecord[1] = *(_DWORD *)(currentPattern + 8);
-    bsavePatternRecord[2] = AST_GetHashedNodeIndex(*(__int16 **)(currentPattern + 12));
+    bsavePatternRecord[1] = *(_DWORD *)(uintptr_t)(currentPattern + 8);
+    bsavePatternRecord[2] = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(currentPattern + 12));
     nextLevelPtr = patternNode[4];
     if ( nextLevelPtr )
-      nextLevelIndex = *(_DWORD *)(nextLevelPtr + 36);
+      nextLevelIndex = *(_DWORD *)(uintptr_t)(nextLevelPtr + 36);
     else
       nextLevelIndex = -1;
     bsavePatternRecord[3] = nextLevelIndex;
     lastLevelPtr = patternNode[5];
     if ( lastLevelPtr )
-      lastLevelIndex = *(_DWORD *)(lastLevelPtr + 36);
+      lastLevelIndex = *(_DWORD *)(uintptr_t)(lastLevelPtr + 36);
     else
       lastLevelIndex = -1;
     bsavePatternRecord[4] = lastLevelIndex;
     leftNodePtr = patternNode[6];
     if ( leftNodePtr )
-      leftNodeIndex = *(_DWORD *)(leftNodePtr + 36);
+      leftNodeIndex = *(_DWORD *)(uintptr_t)(leftNodePtr + 36);
     else
       leftNodeIndex = -1;
     bsavePatternRecord[5] = leftNodeIndex;
     rightNodePtr = patternNode[7];
     if ( rightNodePtr )
-      rightNodeIndex = *(_DWORD *)(rightNodePtr + 36);
+      rightNodeIndex = *(_DWORD *)(uintptr_t)(rightNodePtr + 36);
     else
       rightNodeIndex = -1;
     bsavePatternRecord[6] = rightNodeIndex;
     alphaPtr = patternNode[8];
     if ( alphaPtr )
-      alphaNodeIndex = *(_DWORD *)(alphaPtr + 40);
+      alphaNodeIndex = *(_DWORD *)(uintptr_t)(alphaPtr + 40);
     else
       alphaNodeIndex = -1;
     bsavePatternRecord[7] = alphaNodeIndex;
@@ -520,18 +520,18 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
     {
       while ( !traverseNode[7] )
       {
-        traverseNode = (_DWORD *)traverseNode[5];
+        traverseNode = (_DWORD *)(uintptr_t)traverseNode[5];
         if ( !traverseNode )
           return result;
       }
       currentPattern = traverseNode[7];
     }
   }
-  result = (const void *)Rules_IsBloaded();
+  result = (const void *)(uintptr_t)Rules_IsBloaded();
   if ( result )
   {
     Rules_ConstructQueuePop(&g_ReactiveRuleBloadCount);
-    return (const void *)Rules_ConstructQueuePop(&g_ObjectPatternNetworkBloadCount);
+    return (const void *)(uintptr_t)Rules_ConstructQueuePop(&g_ObjectPatternNetworkBloadCount);
   }
   return result;
 }
@@ -557,7 +557,7 @@ signed int Rules_BloadObjectPatternNetworkCounts(void)
   if ( counts[0] )
   {
     count_bytes = 44 * counts[0];
-    result = Mem_HeapAllocWithRetry((_DWORD *)(44 * counts[0]));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(44 * counts[0]));
     g_ReactiveRuleArrayPtr = result;
   }
   else
@@ -567,7 +567,7 @@ signed int Rules_BloadObjectPatternNetworkCounts(void)
   if ( g_ObjectPatternNetworkBloadCount )
   {
     count_bytes = 40 * g_ObjectPatternNetworkBloadCount;
-    result = Mem_HeapAllocWithRetry((_DWORD *)(40 * g_ObjectPatternNetworkBloadCount));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(40 * g_ObjectPatternNetworkBloadCount));
     g_ObjectPatternNetworkArrayPtr = result;
   }
   else
@@ -616,43 +616,43 @@ int  Rules_RefreshBloadedReactiveRuleRecord(int *bsaveAlpha, int itemIndex)
 
   record = 44 * itemIndex + g_ReactiveRuleArrayPtr;
   Rules_BloadUnpackSharedRecordHeader(record, bsaveAlpha);
-  *(_DWORD *)(record + 16) = 0;
-  *(_DWORD *)(record + 20) = *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * bsaveAlpha[2]);
+  *(_DWORD *)(uintptr_t)(record + 16) = 0;
+  *(_DWORD *)(uintptr_t)(record + 20) = *(_DWORD *)(uintptr_t)(g_ClipsBloadBitmapPointerTable + 4 * bsaveAlpha[2]);
   if ( bsaveAlpha[3] == -1 )
   {
-    *(_DWORD *)(record + 24) = 0;
+    *(_DWORD *)(uintptr_t)(record + 24) = 0;
   }
   else
   {
-    role_symbol = *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * bsaveAlpha[3]);
-    *(_DWORD *)(record + 24) = role_symbol;
-    ++*(_DWORD *)(role_symbol + 4);
+    role_symbol = *(_DWORD *)(uintptr_t)(g_ClipsBloadBitmapPointerTable + 4 * bsaveAlpha[3]);
+    *(_DWORD *)(uintptr_t)(record + 24) = role_symbol;
+    ++*(_DWORD *)(uintptr_t)(role_symbol + 4);
   }
-  ++*(_DWORD *)(*(_DWORD *)(record + 20) + 4);
+  ++*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(record + 20) + 4);
   reactive_slots_index = bsaveAlpha[4];
   if ( reactive_slots_index == -1 )
     reactive_slots = 0;
   else
     reactive_slots = 40 * reactive_slots_index + g_ObjectPatternNetworkArrayPtr;
-  *(_DWORD *)(record + 28) = reactive_slots;
+  *(_DWORD *)(uintptr_t)(record + 28) = reactive_slots;
   direct_super_index = bsaveAlpha[5];
   if ( direct_super_index == -1 )
     result = 0;
   else
     result = g_ReactiveRuleArrayPtr + 44 * direct_super_index;
-  *(_DWORD *)(record + 32) = result;
+  *(_DWORD *)(uintptr_t)(record + 32) = result;
   superclass_index = bsaveAlpha[6];
   if ( superclass_index == -1 )
   {
-    *(_DWORD *)(record + 40) = 0;
-    *(_DWORD *)(record + 36) = 0;
+    *(_DWORD *)(uintptr_t)(record + 40) = 0;
+    *(_DWORD *)(uintptr_t)(record + 36) = 0;
   }
   else
   {
     result = 44 * superclass_index;
     superclass = 44 * superclass_index + g_ReactiveRuleArrayPtr;
-    *(_DWORD *)(record + 40) = 0;
-    *(_DWORD *)(record + 36) = superclass;
+    *(_DWORD *)(uintptr_t)(record + 40) = 0;
+    *(_DWORD *)(uintptr_t)(record + 36) = superclass;
   }
   return result;
 }
@@ -684,7 +684,7 @@ int * Class_ResolveSystemSlotTemplate(_DWORD *bsaveData, int itemIndex)
   int alphaNodeIndex; // ebp
   int alphaNode; // edx
 
-  result = (int *)(40 * itemIndex + g_ObjectPatternNetworkArrayPtr);
+  result = (int *)(uintptr_t)(40 * itemIndex + g_ObjectPatternNetworkArrayPtr);
   *(_BYTE *)result &= ~1u;
   packedFlags = *bsaveData;
   *(_BYTE *)result &= ~2u;
@@ -765,9 +765,9 @@ int Class_ClearClassIDTable(void)
     recordOffset = 0;
     do
     {
-      Rules_DecrementBitmapCount(*(_DWORD *)(recordOffset + g_ReactiveRuleArrayPtr + 20), alphaIndex);
-      if ( *(_DWORD *)(v2 + g_ReactiveRuleArrayPtr + 24) )
-        Rules_DecrementBitmapCount(*(_DWORD *)(v2 + g_ReactiveRuleArrayPtr + 24), v3);
+      Rules_DecrementBitmapCount(*(_DWORD *)(uintptr_t)(recordOffset + g_ReactiveRuleArrayPtr + 20), alphaIndex);
+      if ( *(_DWORD *)(uintptr_t)(v2 + g_ReactiveRuleArrayPtr + 24) )
+        Rules_DecrementBitmapCount(*(_DWORD *)(uintptr_t)(v2 + g_ReactiveRuleArrayPtr + 24), v3);
       alphaIndex = v3 + 1;
       recordOffset = v2 + 44;
     }
@@ -816,7 +816,7 @@ int  Class_ParseSuperclasses(int readSource, int className)
   linkHead = 0;
   linkTail = 0;
   if ( g_ParserCurrentTokenType == 100
-    && (Parser_NextToken(readSource, (int)&g_ParserCurrentTokenType), g_ParserCurrentTokenType == 2)
+    && (Parser_NextToken(readSource, (int)(intptr_t)&g_ParserCurrentTokenType), g_ParserCurrentTokenType == 2)
     && g_ClipsParserTokenValue == g_Symbol_IsA )
   {
     IO_OutWriteToken(asc_50E6E8);
@@ -829,11 +829,11 @@ LABEL_23:
         IO_OutNewline();
         IO_OutNewline();
         IO_OutWriteToken(asc_50E7F8);
-        freeNode = *(_DWORD **)(g_ClipsMemoryTable + 24);
+        freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 24);
         if ( freeNode )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 24);
-          *(_DWORD *)(g_ClipsMemoryTable + 24) = *freeNode;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24) = *freeNode;
           Class_PackClassLinkList(g_ClipsMemFreeListTemp, linkHead);
         }
         else
@@ -845,8 +845,8 @@ LABEL_23:
       }
       else
       {
-        Rules_PrintErrorID((int)aInherpsr, 4, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMustHaveAtLeas, v23);
+        Rules_PrintErrorID((int)(intptr_t)aInherpsr, 4, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMustHaveAtLeas, v23);
         return 0;
       }
     }
@@ -860,7 +860,7 @@ LABEL_23:
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
-        if ( Rules_FindModuleSeparator(*(_BYTE **)(className + 16)) )
+        if ( Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(className + 16)) )
         {
           Module_ReportIllegalSpecifierError();
           Mem_ReturnListToFreePool(linkHead);
@@ -868,8 +868,8 @@ LABEL_23:
         }
         if ( className == g_ClipsParserTokenValue )
         {
-          Rules_PrintErrorID((int)aInherpsr, 1, 0);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMayNotHa, v16);
+          Rules_PrintErrorID((int)(intptr_t)aInherpsr, 1, 0);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAClassMayNotHa, v16);
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
@@ -877,35 +877,35 @@ LABEL_23:
         if ( linkHead )
           break;
 LABEL_14:
-        superclass = Class_LookupInScope(*(_BYTE **)(g_ClipsParserTokenValue + 16));
+        superclass = Class_LookupInScope(*(_BYTE **)(uintptr_t)(g_ClipsParserTokenValue + 16));
         theClass = superclass;
         if ( !superclass )
         {
-          Rules_PrintErrorID((int)aInherpsr, 3, 0);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMustBe_0, v18);
+          Rules_PrintErrorID((int)(intptr_t)aInherpsr, 3, 0);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAClassMustBe_0, v18);
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
-        if ( superclass == (int *)g_Class_InstanceName || superclass == (int *)g_Class_InstanceAddress || superclass == **(int ***)(g_Class_InstanceName + 36) )
+        if ( superclass == (int *)(uintptr_t)g_Class_InstanceName || superclass == (int *)(uintptr_t)g_Class_InstanceAddress || superclass == **(int ***)(uintptr_t)(g_Class_InstanceName + 36) )
         {
-          Rules_PrintErrorID((int)aInherpsr, 6, 0);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAUserDefinedCl, v19);
+          Rules_PrintErrorID((int)(intptr_t)aInherpsr, 6, 0);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAUserDefinedCl, v19);
           constructNameStr = Rules_GetConstructNameString(v20);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], constructNameStr, (int)g_IO_LogicalNameTable_WError[0]);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__28, v22);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], constructNameStr, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__28, v22);
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
-        freeLink = *(_DWORD **)(g_ClipsMemoryTable + 32);
+        freeLink = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
         if ( freeLink )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-          *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeLink;
-          newLink = (int **)g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeLink;
+          newLink = (int **)(uintptr_t)g_ClipsMemFreeListTemp;
         }
         else
         {
-          newLink = (int **)Mem_HeapAllocWithRetry((_DWORD *)8);
+          newLink = (int **)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         *newLink = theClass;
         if ( linkHead )
@@ -915,7 +915,7 @@ LABEL_14:
         linkTail = newLink;
         newLink[1] = 0;
         IO_OutWriteToken(asc_50E6E8);
-        Parser_NextToken(readSource, (int)&g_ParserCurrentTokenType);
+        Parser_NextToken(readSource, (int)(intptr_t)&g_ParserCurrentTokenType);
         if ( g_ParserCurrentTokenType == 101 )
           goto LABEL_23;
       }
@@ -925,8 +925,8 @@ LABEL_14:
         if ( !linkScan )
           goto LABEL_14;
       }
-      Rules_PrintErrorID((int)aInherpsr, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMayInher, v17);
+      Rules_PrintErrorID((int)(intptr_t)aInherpsr, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAClassMayInher, v17);
       Mem_ReturnListToFreePool(linkHead);
       return 0;
     }
@@ -998,22 +998,22 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   partialOrderList = allSuperclasses;
   if ( theClass )
   {
-    freeOrderNode = *(_DWORD **)(g_ClipsMemoryTable + 64);
+    freeOrderNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
     if ( freeOrderNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-      *(_DWORD *)(g_ClipsMemoryTable + 64) = *freeOrderNode;
-      classOrderNode = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *freeOrderNode;
+      classOrderNode = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      classOrderNode = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+      classOrderNode = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x10);
     }
     classOrderNode[1] = 0;
     classOrderNode[2] = 0;
     classOrderNode[3] = partialOrderList;
     *classOrderNode = theClass;
-    scanNode = (int *)classOrderNode[3];
+    scanNode = (int *)(uintptr_t)classOrderNode[3];
     partialOrderList = classOrderNode;
     Class_AddPrecedenceDependency(classOrderNode, theClass, 0, superclassLinks);
   }
@@ -1024,19 +1024,19 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   while ( scanNode )
   {
     superOffset = 0;
-    Class_AddPrecedenceDependency(partialOrderList, *scanNode, 0, (unsigned __int16 *)(*scanNode + 34));
+    Class_AddPrecedenceDependency(partialOrderList, *scanNode, 0, (unsigned __int16 *)(uintptr_t)(*scanNode + 34));
     for ( i = 0; ; i = nextIndex )
     {
       scanClass = *scanNode;
-      if ( i >= *(unsigned __int16 *)(*scanNode + 34) )
+      if ( i >= *(unsigned __int16 *)(uintptr_t)(*scanNode + 34) )
         break;
       nextIndex = i + 1;
       linkIndex = i + 1;
-      superClass = *(_DWORD *)(*(_DWORD *)(scanClass + 36) + superOffset);
+      superClass = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(scanClass + 36) + superOffset);
       superOffset += 4;
-      Class_AddPrecedenceDependency(partialOrderList, superClass, linkIndex, (unsigned __int16 *)(scanClass + 34));
+      Class_AddPrecedenceDependency(partialOrderList, superClass, linkIndex, (unsigned __int16 *)(uintptr_t)(scanClass + 34));
     }
-    scanNode = (int *)scanNode[3];
+    scanNode = (int *)(uintptr_t)scanNode[3];
   }
   directIndex = 0;
   directOffset = 0;
@@ -1044,7 +1044,7 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   {
     nextDirectIndex = directIndex + 1;
     directLinkIndex = directIndex + 1;
-    directSuperClass = *(_DWORD *)(*(_DWORD *)(superclassLinks + 1) + directOffset);
+    directSuperClass = *(_DWORD *)(uintptr_t)(*(_DWORD *)(superclassLinks + 1) + directOffset);
     directOffset += 4;
     Class_AddPrecedenceDependency(partialOrderList, directSuperClass, directLinkIndex, superclassLinks);
     directIndex = nextDirectIndex;
@@ -1061,53 +1061,53 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
       if ( !currentNode )
       {
         currentNode = partialOrderList;
-        progressMarker = (_DWORD *)progressMarker[3];
+        progressMarker = (_DWORD *)(uintptr_t)progressMarker[3];
         prevNode = 0;
       }
       if ( currentNode[1] )
       {
         prevNode = currentNode;
-        currentNode = (_DWORD *)currentNode[3];
+        currentNode = (_DWORD *)(uintptr_t)currentNode[3];
       }
       else
       {
         while ( 1 )
         {
-          dependencyLink = (_DWORD *)currentNode[2];
+          dependencyLink = (_DWORD *)(uintptr_t)currentNode[2];
           if ( !dependencyLink )
             break;
           currentNode[2] = dependencyLink[1];
-          --*(_DWORD *)(*dependencyLink + 4);
-          g_ClipsMemFreeListTemp = (int)dependencyLink;
-          *dependencyLink = *(_DWORD *)(g_ClipsMemoryTable + 32);
-          *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+          --*(_DWORD *)(uintptr_t)(*dependencyLink + 4);
+          g_ClipsMemFreeListTemp = (int)(intptr_t)dependencyLink;
+          *dependencyLink = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
         }
         removedNode = currentNode;
         if ( prevNode )
           prevNode[3] = currentNode[3];
         else
-          partialOrderList = (_DWORD *)currentNode[3];
+          partialOrderList = (_DWORD *)(uintptr_t)currentNode[3];
         progressMarker = prevNode;
-        freePrecedenceLink = *(_DWORD **)(g_ClipsMemoryTable + 32);
-        currentNode = (_DWORD *)currentNode[3];
+        freePrecedenceLink = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+        currentNode = (_DWORD *)(uintptr_t)currentNode[3];
         if ( freePrecedenceLink )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-          *(_DWORD *)(g_ClipsMemoryTable + 32) = *freePrecedenceLink;
-          precedenceLink = (int *)g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freePrecedenceLink;
+          precedenceLink = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
         }
         else
         {
-          precedenceLink = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
+          precedenceLink = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         classPtr = *removedNode;
         precedenceLink[1] = 0;
         *precedenceLink = classPtr;
-        g_ClipsMemFreeListTemp = (int)removedNode;
-        *removedNode = *(_DWORD *)(g_ClipsMemoryTable + 64);
-        *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+        g_ClipsMemFreeListTemp = (int)(intptr_t)removedNode;
+        *removedNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
         if ( precedenceList )
-          precedenceTail[1] = (int)precedenceLink;
+          precedenceTail[1] = (int)(intptr_t)precedenceLink;
         else
           precedenceList = precedenceLink;
         precedenceTail = precedenceLink;
@@ -1117,26 +1117,26 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   }
   if ( partialOrderList )
   {
-    Rules_PrintErrorID((int)aInherpsr, 5, 0);
-    Class_PrintClassNameList((int)g_IO_LogicalNameTable_WError[0], (int)aPartialPrecede, precedenceList);
+    Rules_PrintErrorID((int)(intptr_t)aInherpsr, 5, 0);
+    Class_PrintClassNameList((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPartialPrecede, precedenceList);
     Class_ReportPrecedenceLoop(partialOrderList);
     do
     {
       while ( 1 )
       {
-        cycleDepLink = (_DWORD *)partialOrderList[2];
+        cycleDepLink = (_DWORD *)(uintptr_t)partialOrderList[2];
         if ( !cycleDepLink )
           break;
         partialOrderList[2] = cycleDepLink[1];
-        g_ClipsMemFreeListTemp = (int)cycleDepLink;
-        *cycleDepLink = *(_DWORD *)(g_ClipsMemoryTable + 32);
-        *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+        g_ClipsMemFreeListTemp = (int)(intptr_t)cycleDepLink;
+        *cycleDepLink = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
       }
       cycleNode = partialOrderList;
-      partialOrderList = (_DWORD *)partialOrderList[3];
-      g_ClipsMemFreeListTemp = (int)cycleNode;
-      *cycleNode = *(_DWORD *)(g_ClipsMemoryTable + 64);
-      *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+      partialOrderList = (_DWORD *)(uintptr_t)partialOrderList[3];
+      g_ClipsMemFreeListTemp = (int)(intptr_t)cycleNode;
+      *cycleNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
     }
     while ( partialOrderList );
     Mem_ReturnListToFreePool(precedenceList);
@@ -1146,11 +1146,11 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   {
     if ( !theClass )
     {
-      freeLinkNode = *(_DWORD **)(g_ClipsMemoryTable + 32);
+      freeLinkNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
       if ( freeLinkNode )
       {
-        g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-        *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeLinkNode;
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeLinkNode;
         sentinelNode = g_ClipsMemFreeListTemp;
       }
       else
@@ -1158,15 +1158,15 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
         sentinelNode = Mem_HeapAllocWithRetry((_DWORD *)8);
       }
       oldListHead = precedenceList;
-      precedenceList = (int *)sentinelNode;
-      *(_DWORD *)(sentinelNode + 4) = oldListHead;
+      precedenceList = (int *)(uintptr_t)sentinelNode;
+      *(_DWORD *)(uintptr_t)(sentinelNode + 4) = oldListHead;
     }
     *precedenceList = 0;
-    freePackedLinks = *(_DWORD **)(g_ClipsMemoryTable + 24);
+    freePackedLinks = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 24);
     if ( freePackedLinks )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 24);
-      *(_DWORD *)(g_ClipsMemoryTable + 24) = *freePackedLinks;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24) = *freePackedLinks;
       packedLinksMem = g_ClipsMemFreeListTemp;
     }
     else
@@ -1197,11 +1197,11 @@ _DWORD * Class_PackClassLinkList(int packedLinks, _DWORD *linkList)
 
   countScan = linkList;
   for ( i = 0; countScan; ++i )
-    countScan = (_DWORD *)countScan[1];
+    countScan = (_DWORD *)(uintptr_t)countScan[1];
   if ( i )
-    *(_DWORD *)(packedLinks + 2) = Mem_SmallBlockAlloc(4 * i);
+    *(_DWORD *)(uintptr_t)(packedLinks + 2) = Mem_SmallBlockAlloc(4 * i);
   else
-    *(_DWORD *)(packedLinks + 2) = 0;
+    *(_DWORD *)(uintptr_t)(packedLinks + 2) = 0;
   copyScan = linkList;
   v7 = 0;
   if ( linkList )
@@ -1209,15 +1209,15 @@ _DWORD * Class_PackClassLinkList(int packedLinks, _DWORD *linkList)
     arrayOffset = 0;
     do
     {
-      *(_DWORD *)(*(_DWORD *)(packedLinks + 2) + arrayOffset) = *copyScan;
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(packedLinks + 2) + arrayOffset) = *copyScan;
       ++v7;
-      copyScan = (_DWORD *)copyScan[1];
+      copyScan = (_DWORD *)(uintptr_t)copyScan[1];
       arrayOffset += 4;
     }
     while ( copyScan );
   }
   result = Mem_ReturnListToFreePool(linkList);
-  *(_WORD *)packedLinks = v10;
+  *(_WORD *)(uintptr_t)packedLinks = v10;
   return result;
 }
 // 4E30F7: variable 'v10' is possibly undefined
@@ -1238,9 +1238,9 @@ _DWORD * Class_CollectAllSuperclasses(_DWORD *orderList, unsigned __int16 *super
   while ( *superclasses > superIndex )
   {
     existingOrder = orderList;
-    for ( i = 0; existingOrder; existingOrder = (_DWORD *)existingOrder[3] )
+    for ( i = 0; existingOrder; existingOrder = (_DWORD *)(uintptr_t)existingOrder[3] )
     {
-      if ( *existingOrder == *(_DWORD *)(linkOffset + *(_DWORD *)(superclasses + 1)) )
+      if ( *existingOrder == *(_DWORD *)(uintptr_t)(linkOffset + *(_DWORD *)(superclasses + 1)) )
         break;
       i = existingOrder;
     }
@@ -1251,18 +1251,18 @@ _DWORD * Class_CollectAllSuperclasses(_DWORD *orderList, unsigned __int16 *super
     }
     else
     {
-      freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 64);
+      freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
       if ( freeListEntry )
       {
-        g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-        *(_DWORD *)(g_ClipsMemoryTable + 64) = *freeListEntry;
-        newOrder = (_DWORD *)g_ClipsMemFreeListTemp;
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *freeListEntry;
+        newOrder = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
       }
       else
       {
-        newOrder = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+        newOrder = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x10);
       }
-      superclass = *(_DWORD *)(*(_DWORD *)(superclasses + 1) + linkOffset);
+      superclass = *(_DWORD *)(uintptr_t)(*(_DWORD *)(superclasses + 1) + linkOffset);
       newOrder[3] = 0;
       newOrder[2] = 0;
       newOrder[1] = 0;
@@ -1271,7 +1271,7 @@ _DWORD * Class_CollectAllSuperclasses(_DWORD *orderList, unsigned __int16 *super
         i[3] = newOrder;
       else
         orderList = newOrder;
-      orderList = (_DWORD *)Class_CollectAllSuperclasses((int)orderList, *(_DWORD *)(linkOffset + *(_DWORD *)(superclasses + 1)) + 34);
+      orderList = (_DWORD *)Class_CollectAllSuperclasses((int)(intptr_t)orderList, *(_DWORD *)(uintptr_t)(linkOffset + *(_DWORD *)(superclasses + 1)) + 34);
       linkOffset += 4;
       ++superIndex;
     }
@@ -1299,22 +1299,22 @@ __int16  Class_AddPrecedenceDependency(_DWORD *classList, int theClass, unsigned
     result = *superclassLinks;
     if ( startIndex >= *superclassLinks )
       break;
-    freeNode = *(_DWORD **)(g_ClipsMemoryTable + 32);
+    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
     if ( freeNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeNode;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeNode;
     }
     else
     {
       Mem_HeapAllocWithRetry((_DWORD *)8);
     }
-    superNode = Class_FindClassLinkNode(classList, *(_DWORD *)(*(_DWORD *)(superclassLinks + 1) + i));
+    superNode = Class_FindClassLinkNode(classList, *(_DWORD *)(uintptr_t)(*(_DWORD *)(superclassLinks + 1) + i));
     *newDependency = superNode;
     newDependency[1] = classNode[2];
     classNode[2] = newDependency;
     ++startIndex;
-    ++*(_DWORD *)(*newDependency + 4);
+    ++*(_DWORD *)(uintptr_t)(*newDependency + 4);
   }
   return result;
 }
@@ -1326,7 +1326,7 @@ __int16  Class_AddPrecedenceDependency(_DWORD *classList, int theClass, unsigned
 //----- (004E3270) --------------------------------------------------------
 _DWORD * Class_FindClassLinkNode(_DWORD *result, int theClass)
 {
-  for ( ; result; result = (_DWORD *)result[3] )
+  for ( ; result; result = (_DWORD *)(uintptr_t)result[3] )
   {
     if ( theClass == *result )
       break;
@@ -1350,15 +1350,15 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *orderList)
   int v11; // ecx
   int v12; // ecx
 
-  for ( i = orderList; orderList; orderList = (_DWORD *)orderList[3] )
+  for ( i = orderList; orderList; orderList = (_DWORD *)(uintptr_t)orderList[3] )
     orderList[1] = 0;
-  for ( j = i; j; j = (_DWORD *)j[3] )
+  for ( j = i; j; j = (_DWORD *)(uintptr_t)j[3] )
   {
     if ( j[1] )
     {
       v6 = j[2];
-      supportList = *(_DWORD *)(v6 + 4);
-      *(_DWORD *)(v6 + 4) = 0;
+      supportList = *(_DWORD *)(uintptr_t)(v6 + 4);
+      *(_DWORD *)(uintptr_t)(v6 + 4) = 0;
     }
     else
     {
@@ -1367,50 +1367,50 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *orderList)
     }
     while ( supportList )
     {
-      supportedOrder = Class_FindClassLinkNode(i, **(_DWORD **)supportList);
+      supportedOrder = Class_FindClassLinkNode(i, **(_DWORD **)(uintptr_t)supportList);
       if ( !supportedOrder[1] )
       {
-        freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 32);
+        freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
         if ( freeListEntry )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-          *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeListEntry;
-          newLink = (_DWORD *)g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeListEntry;
+          newLink = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
         }
         else
         {
-          newLink = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
+          newLink = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         *newLink = j;
         newLink[1] = supportedOrder[2];
         supportedOrder[1] = 1;
         supportedOrder[2] = newLink;
       }
-      freedLink = (_DWORD *)supportList;
-      supportList = *(_DWORD *)(supportList + 4);
-      g_ClipsMemFreeListTemp = (int)freedLink;
-      *freedLink = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      freedLink = (_DWORD *)(uintptr_t)supportList;
+      supportList = *(_DWORD *)(uintptr_t)(supportList + 4);
+      g_ClipsMemFreeListTemp = (int)(intptr_t)freedLink;
+      *freedLink = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     }
   }
-  for ( k = i; k; k = (_DWORD *)k[3] )
+  for ( k = i; k; k = (_DWORD *)(uintptr_t)k[3] )
     k[1] = 0;
-  for ( m = i; !m[1]; m = *(int **)m[2] )
+  for ( m = i; !m[1]; m = *(int **)(uintptr_t)m[2] )
     m[1] = 1;
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPrecedenceLoop, (int)i);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPrecedenceLoop, (int)(intptr_t)i);
   if ( m[1] == 1 )
   {
     v11 = 0;
     do
     {
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50E6E8, v11);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50E6E8, v11);
       Class_PrintName(*m, v12);
       m[1] = v11;
-      m = *(int **)m[2];
+      m = *(int **)(uintptr_t)m[2];
     }
     while ( m[1] == 1 );
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50E6E8, v11);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50E6E8, v11);
   return Class_PrintName(*m, 1);
 }
 // 4E32C7: variable 'i' is possibly undefined
@@ -1430,10 +1430,10 @@ signed int  Class_PrintClassNameList(int logicalName, int headerMessage, int *cl
     Output_Write(logicalName, headerMessage, logicalName);
   while ( classLinks )
   {
-    Output_Write(v3, (int)asc_50E6E8, v3);
+    Output_Write(v3, (int)(intptr_t)asc_50E6E8, v3);
     Class_PrintName(*classLinks, 0);
-    classLinks = (int *)classLinks[1];
+    classLinks = (int *)(uintptr_t)classLinks[1];
   }
-  return Output_Write(v3, (int)asc_50E840, v3);
+  return Output_Write(v3, (int)(intptr_t)asc_50E840, v3);
 }
 // 4E3415: variable 'v3' is possibly undefined

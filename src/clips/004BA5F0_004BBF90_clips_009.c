@@ -25,38 +25,38 @@ int  Rules_DeftemplateBloadRefreshSlot(_DWORD *bsaveSlot, int slotIndex)
   int v15; // edx
 
   result = g_DeftemplateSlotTable + 20 * slotIndex;
-  slotNameSymbol = *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * *bsaveSlot);
-  *(_DWORD *)result = slotNameSymbol;
-  ++*(_DWORD *)(slotNameSymbol + 4);
+  slotNameSymbol = *(_DWORD *)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * *bsaveSlot);
+  *(_DWORD *)(uintptr_t)result = slotNameSymbol;
+  ++*(_DWORD *)(uintptr_t)(slotNameSymbol + 4);
   defaultExprIndex = bsaveSlot[3];
   if ( defaultExprIndex == -1 )
     v8 = 0;
   else
     v8 = 14 * defaultExprIndex + g_ClipsPackedExpressionArray;
-  *(_DWORD *)(result + 12) = v8;
+  *(_DWORD *)(uintptr_t)(result + 12) = v8;
   constraintIndex = bsaveSlot[2];
   if ( constraintIndex == -1 )
     v10 = 0;
   else
     v10 = g_ClipsConstraintRecordArrayBase + 42 * constraintIndex;
-  v11 = *(_BYTE *)(result + 4);
-  *(_DWORD *)(result + 8) = v10;
+  v11 = *(_BYTE *)(uintptr_t)(result + 4);
+  *(_DWORD *)(uintptr_t)(result + 8) = v10;
   v12 = bsaveSlot[1];
-  *(_BYTE *)(result + 4) = v11 & 0xFE;
-  *(_DWORD *)(result + 4) |= v12 & 1;
+  *(_BYTE *)(uintptr_t)(result + 4) = v11 & 0xFE;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v12 & 1;
   v13 = bsaveSlot[1];
-  *(_BYTE *)(result + 4) &= ~2u;
-  *(_DWORD *)(result + 4) |= v13 & 2;
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~2u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v13 & 2;
   v14 = bsaveSlot[1];
-  *(_BYTE *)(result + 4) &= ~4u;
-  *(_DWORD *)(result + 4) |= v14 & 4;
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~4u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v14 & 4;
   v15 = bsaveSlot[1];
-  *(_BYTE *)(result + 4) &= ~8u;
-  *(_DWORD *)(result + 4) |= v15 & 8;
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~8u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v15 & 8;
   if ( bsaveSlot[4] == -1 )
-    *(_DWORD *)(result + 16) = 0;
+    *(_DWORD *)(uintptr_t)(result + 16) = 0;
   else
-    *(_DWORD *)(result + 16) = 20 * (slotIndex + 1) + g_DeftemplateSlotTable;
+    *(_DWORD *)(uintptr_t)(result + 16) = 20 * (slotIndex + 1) + g_DeftemplateSlotTable;
   return result;
 }
 // 54E674: using guessed type int dword_54E674;
@@ -81,7 +81,7 @@ int Rules_DeftemplateClearBloaded(void)
     v1 = 0;
     do
     {
-      Rules_ReleaseSymbolReference((int *)(v1 + g_DeftemplateRecordTable), v0 + 1);
+      Rules_ReleaseSymbolReference((int *)(uintptr_t)(v1 + g_DeftemplateRecordTable), v0 + 1);
       v1 = v2 + 36;
     }
     while ( v0 < g_DeftemplateBsaveCount );
@@ -91,7 +91,7 @@ int Rules_DeftemplateClearBloaded(void)
     v0 = 0;
     do
     {
-      Rules_DecrementSymbolCount(*(_DWORD *)(v0 + g_DeftemplateSlotTable), v0);
+      Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(v0 + g_DeftemplateSlotTable), v0);
       v0 = v3 + 20;
     }
     while ( v4 < g_Deftemplate_SlotCount );
@@ -103,7 +103,7 @@ int Rules_DeftemplateClearBloaded(void)
   if ( 20 * g_Deftemplate_SlotCount )
     Mem_ReleasePoolBlock(g_DeftemplateSlotTable, 20 * g_Deftemplate_SlotCount);
   v5 = Str_Intern(aInitialFact_0, v0);
-  return Rules_CreateDeftemplateRecord((int)v5, v6);
+  return Rules_CreateDeftemplateRecord((int)(intptr_t)v5, v6);
 }
 // 4BA71A: variable 'v0' is possibly undefined
 // 4BA726: variable 'v2' is possibly undefined
@@ -129,7 +129,7 @@ int Rules_RegisterDeftemplateCodeGen(void)
 {
   int result; // eax
 
-  result = Rules_AddCodeGeneratorItem((int)aDeftemplate_3, 0, 0, 0, (int)Rules_DeftemplateGenerateCode, 3);
+  result = Rules_AddCodeGeneratorItem((int)(intptr_t)aDeftemplate_3, 0, 0, 0, (int)(intptr_t)Rules_DeftemplateGenerateCode, 3);
   g_Clips_DeftemplateCodeGenItem = result;
   return result;
 }
@@ -187,7 +187,7 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
   recordArrayVersion = 1;
   moduleFile = 0;
   recordFile = 0;
-  Output_WriteFormatted(0, 1, headerFP, (int)aIncludeTmpltde, 1);
+  Output_WriteFormatted(0, 1, headerFP, (int)(intptr_t)aIncludeTmpltde, 1);
   v6 = v5;
   Enum = Module_NextEnum(0);
   slotFile = v8 ^ v6;
@@ -205,8 +205,8 @@ int  Rules_DeftemplateGenerateCode(const char *fileName, const char *fileNameBuf
               &fileCount,
               moduleArrayVersion,
               headerFilePtr,
-              (char)aStructDeftempl,
-              **(const char ***)(g_Clips_DeftemplateCodeGenItem + 20),
+              (char)(intptr_t)aStructDeftempl,
+              **(const char ***)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20),
               0,
               0);
       moduleFilePtr = v10;
@@ -237,8 +237,8 @@ LABEL_9:
               &fileCount,
               recordArrayVersion,
               headerFilePtr,
-              (char)aStructDeftem_0,
-              *(const char **)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
+              (char)(intptr_t)aStructDeftem_0,
+              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
               0,
               0);
       recordFilePtr = v12;
@@ -252,7 +252,7 @@ LABEL_9:
       ++recordArrayCount;
       v15 = theDeftemplate;
       v16 = Rules_ConstructCodeFileClose(v14, &recordArrayCount, maxIndices, &recordArrayVersion, 0, 0);
-      theSlot = *(_DWORD *)(v15 + 20);
+      theSlot = *(_DWORD *)(uintptr_t)(v15 + 20);
       recordFile = v16;
       if ( theSlot )
         break;
@@ -271,8 +271,8 @@ LABEL_8:
               &fileCount,
               slotArrayVersion,
               headerFilePtr,
-              (char)aStructTemplate,
-              *(const char **)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
+              (char)(intptr_t)aStructTemplate,
+              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
               0,
               0);
       slotFilePtr = v18;
@@ -281,7 +281,7 @@ LABEL_8:
       Rules_DeftemplateWriteSlotToCode(v18, theSlot, maxIndices, pathNamePtr, slotCount++);
       ++slotArrayCount;
       v20 = Rules_ConstructCodeFileClose(slotFilePtr, &slotArrayCount, maxIndices, &slotArrayVersion, 0, 0);
-      theSlot = *(_DWORD *)(theSlot + 16);
+      theSlot = *(_DWORD *)(uintptr_t)(theSlot + 16);
       slotFile = v20;
       if ( !theSlot )
         goto LABEL_8;
@@ -336,9 +336,9 @@ int  Rules_DeftemplateWriteModuleHeaderToCode(int filePtr, int theModule, int ma
   char v10; // [esp+0h] [ebp-Ch]
   char v11; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)asc_50A17C, v10);
-  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v5, v6, g_ClipsDeftemplateModuleItemId, *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
-  return Output_WriteFormatted(v8, v7, filePtr, (int)asc_50A180, v11);
+  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)(intptr_t)asc_50A17C, v10);
+  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v5, v6, g_ClipsDeftemplateModuleItemId, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
+  return Output_WriteFormatted(v8, v7, filePtr, (int)(intptr_t)asc_50A180, v11);
 }
 // 4BAB9B: variable 'v10' is possibly undefined
 // 4BABB8: variable 'v5' is possibly undefined
@@ -366,25 +366,25 @@ int  Rules_DeftemplateWriteRecordToCode(int filePtr, int theDeftemplate, int max
   char v21; // [esp+0h] [ebp-10h]
   int v22; // [esp+0h] [ebp-10h]
 
-  Output_WriteFormatted(maxIndices, theDeftemplate, filePtr, (int)asc_50A17C, a4);
-  Rules_WriteConstructHeaderToCode(filePtr, theDeftemplate, maxIndices, moduleCount, **(_DWORD **)(g_Clips_DeftemplateCodeGenItem + 20), *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
-  Output_WriteFormatted(v10, v9, filePtr, (int)asc_50A184, v21);
-  if ( *(_DWORD *)(theDeftemplate + 20) )
+  Output_WriteFormatted(maxIndices, theDeftemplate, filePtr, (int)(intptr_t)asc_50A17C, a4);
+  Rules_WriteConstructHeaderToCode(filePtr, theDeftemplate, maxIndices, moduleCount, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
+  Output_WriteFormatted(v10, v9, filePtr, (int)(intptr_t)asc_50A184, v21);
+  if ( *(_DWORD *)(uintptr_t)(theDeftemplate + 20) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
       v22,
       filePtr,
-      (int)aSD_DD_5,
-      *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 8));
+      (int)(intptr_t)aSD_DD_5,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8));
   else
-    Output_WriteFormatted(v12, v11, filePtr, (int)aNull_19, v22);
-  Output_WriteFormatted(v14, v13, filePtr, (int)aD00DLd, *(_BYTE *)(theDeftemplate + 24) & 1);
-  v17 = *(_DWORD *)(theDeftemplate + 32);
+    Output_WriteFormatted(v12, v11, filePtr, (int)(intptr_t)aNull_19, v22);
+  Output_WriteFormatted(v14, v13, filePtr, (int)(intptr_t)aD00DLd, *(_BYTE *)(uintptr_t)(theDeftemplate + 24) & 1);
+  v17 = *(_DWORD *)(uintptr_t)(theDeftemplate + 32);
   if ( v17 )
     Rules_FactPatternNetworkWriteNodeRefToCode(v17, filePtr, maxIndices);
   else
-    Output_WriteFormatted(v16, v15, filePtr, (int)aNull_3, v22);
-  return Output_WriteFormatted(v19, v18, filePtr, (int)asc_50A180, v22);
+    Output_WriteFormatted(v16, v15, filePtr, (int)(intptr_t)aNull_3, v22);
+  return Output_WriteFormatted(v19, v18, filePtr, (int)(intptr_t)asc_50A180, v22);
 }
 // 4BAC26: variable 'v10' is possibly undefined
 // 4BAC26: variable 'v9' is possibly undefined
@@ -417,17 +417,17 @@ int  Rules_DeftemplateWriteSlotToCode(int filePtr, int theSlot, int maxIndices, 
   char v20; // [esp+0h] [ebp-10h]
   int v21; // [esp+0h] [ebp-10h]
 
-  Output_WriteFormatted(maxIndices, theSlot, filePtr, (int)asc_50A17C, a4);
+  Output_WriteFormatted(maxIndices, theSlot, filePtr, (int)(intptr_t)asc_50A17C, a4);
   Compiler_WriteSymbolReference(filePtr, *v8, v9);
-  Output_WriteFormatted(v11, v10, filePtr, (int)aDDDD, *(_BYTE *)(theSlot + 4) & 1);
-  Compiler_WriteConstraintReference(filePtr, *(_DWORD *)(theSlot + 8), v12, a4);
-  Output_WriteFormatted(maxIndices, v13, filePtr, (int)asc_50A184, v19);
-  Rules_WriteExpressionRefToCode(filePtr, *(__int16 **)(theSlot + 12), v14, v20);
-  Output_WriteFormatted(v16, v15, filePtr, (int)asc_50A184, v20);
-  if ( *(_DWORD *)(theSlot + 16) )
-    return Output_WriteFormatted(v21, (slotIndex + 1) % maxIndices, filePtr, (int)aSD_DD_6, *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 8));
+  Output_WriteFormatted(v11, v10, filePtr, (int)(intptr_t)aDDDD, *(_BYTE *)(uintptr_t)(theSlot + 4) & 1);
+  Compiler_WriteConstraintReference(filePtr, *(_DWORD *)(uintptr_t)(theSlot + 8), v12, a4);
+  Output_WriteFormatted(maxIndices, v13, filePtr, (int)(intptr_t)asc_50A184, v19);
+  Rules_WriteExpressionRefToCode(filePtr, *(__int16 **)(uintptr_t)(theSlot + 12), v14, v20);
+  Output_WriteFormatted(v16, v15, filePtr, (int)(intptr_t)asc_50A184, v20);
+  if ( *(_DWORD *)(uintptr_t)(theSlot + 16) )
+    return Output_WriteFormatted(v21, (slotIndex + 1) % maxIndices, filePtr, (int)(intptr_t)aSD_DD_6, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8));
   else
-    return Output_WriteFormatted(v17, 0, filePtr, (int)aNull_20, v21);
+    return Output_WriteFormatted(v17, 0, filePtr, (int)(intptr_t)aNull_20, v21);
 }
 // 4BACFF: variable 'v8' is possibly undefined
 // 4BAD01: variable 'v9' is possibly undefined
@@ -447,7 +447,7 @@ int  Rules_DeftemplateWriteSlotToCode(int filePtr, int theSlot, int maxIndices, 
 //----- (004BADD0) --------------------------------------------------------
 int  Rules_DeftemplateWriteModuleHeaderRef(int filePtr, int maxIndices)
 {
-  return Output_WriteFormatted(maxIndices, **(_DWORD **)(g_Clips_DeftemplateCodeGenItem + 20), filePtr, (int)aMihsSD_DD_3, **(_DWORD **)(g_Clips_DeftemplateCodeGenItem + 20));
+  return Output_WriteFormatted(maxIndices, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), filePtr, (int)(intptr_t)aMihsSD_DD_3, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20));
 }
 // 54E858: using guessed type int dword_54E858;
 
@@ -459,12 +459,12 @@ int  Rules_DeftemplateWriteRecordRefToCode(int filePtr, int recordIndex, int max
   if ( recordIndex )
     return Output_WriteFormatted(
              maxIndices,
-             *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
              filePtr,
-             (int)aSD_LdLd,
-             *(_DWORD *)(*(_DWORD *)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
+             (int)(intptr_t)aSD_LdLd,
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
   else
-    return Output_WriteFormatted(maxIndices, 0, filePtr, (int)aNull_3, v4);
+    return Output_WriteFormatted(maxIndices, 0, filePtr, (int)(intptr_t)aNull_3, v4);
 }
 // 4BAE20: variable 'v4' is possibly undefined
 // 54E858: using guessed type int dword_54E858;
@@ -473,15 +473,15 @@ int  Rules_DeftemplateWriteRecordRefToCode(int filePtr, int recordIndex, int max
 signed int Rules_RegisterDefruleBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
-           (int)aDefrule_1,
+           (int)(intptr_t)aDefrule_1,
            20,
-           (int)Rules_DefruleBsaveWriteExpressions,
-           (int)Rules_DefruleBsaveFind,
-           (int)Rules_DefruleBsaveWriteCounts,
-           (int)Rules_DefruleBsaveWriteData,
-           (int)Rules_JoinNetworkBloadStorage,
-           (int)Rules_JoinNetworkBload,
-           (int)Rules_ClearBloadedJoinNetwork);
+           (int)(intptr_t)Rules_DefruleBsaveWriteExpressions,
+           (int)(intptr_t)Rules_DefruleBsaveFind,
+           (int)(intptr_t)Rules_DefruleBsaveWriteCounts,
+           (int)(intptr_t)Rules_DefruleBsaveWriteData,
+           (int)(intptr_t)Rules_JoinNetworkBloadStorage,
+           (int)(intptr_t)Rules_JoinNetworkBload,
+           (int)(intptr_t)Rules_ClearBloadedJoinNetwork);
 }
 
 //----- (004BAEA0) --------------------------------------------------------
@@ -506,15 +506,15 @@ int Rules_DefruleBsaveFind(void)
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(i) )
   {
     Module_SetCurrent(i);
-    for ( j = (_DWORD *)Rules_GetNextDefrule(0); j; j = (_DWORD *)Rules_GetNextDefrule(v4) )
+    for ( j = (_DWORD *)(uintptr_t)Rules_GetNextDefrule(0); j; j = (_DWORD *)(uintptr_t)Rules_GetNextDefrule(v4) )
     {
       AST_MarkNodeFieldBound(j, j[3]);
-      g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(v2 + 32));
-      Rules_MarkReferencedFunctions(*(__int16 **)(v3 + 32));
-      for ( k = v4; k; k = *(_DWORD *)(v7 + 48) )
+      g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v2 + 32));
+      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v3 + 32));
+      for ( k = v4; k; k = *(_DWORD *)(uintptr_t)(v7 + 48) )
       {
-        g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(k + 36));
-        Rules_MarkReferencedFunctions(*(__int16 **)(v6 + 36));
+        g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(k + 36));
+        Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v6 + 36));
       }
     }
   }
@@ -543,9 +543,9 @@ int  Rules_DefruleBsaveWriteExpressions(int a1)
     Module_SetCurrent(i);
     for ( j = Rules_GetNextDefrule(0); j; j = Rules_GetNextDefrule(j) )
     {
-      Rules_BsaveWriteExpression(*(__int16 **)(j + 32), a1);
-      for ( k = j; k; k = *(_DWORD *)(v5 + 48) )
-        Rules_BsaveWriteExpression(*(__int16 **)(k + 36), a1);
+      Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(j + 32), a1);
+      for ( k = j; k; k = *(_DWORD *)(uintptr_t)(v5 + 48) )
+        Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(k + 36), a1);
     }
   }
   return Rules_ClearJoinNetworkMarkedFlags();
@@ -590,15 +590,15 @@ int  Rules_DefruleBsaveWriteData(const void *filePtr, int a2)
 
   v12[3] = a2;
   v12[0] = 12 * g_DefruleModuleBloadCount + 32 * g_Clips_JoinTestCount + 44 * g_RuleJoinNodeBsaveCount;
-  Rules_BsaveWriteBlock(4, (int)filePtr, v12);
+  Rules_BsaveWriteBlock(4, (int)(intptr_t)filePtr, v12);
   g_RuleJoinNodeBsaveCount = 0;
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(v6) )
   {
     Module_SetCurrent(i);
-    v4 = Module_FindItemByName((int)aDefrule_1);
-    moduleItem = (_DWORD *)Module_GetItem(0, *(_DWORD *)(v4 + 4));
+    v4 = Module_FindItemByName((int)(intptr_t)aDefrule_1);
+    moduleItem = (_DWORD *)(uintptr_t)Module_GetItem(0, *(_DWORD *)(uintptr_t)(v4 + 4));
     Module_AssignBsaveItemHeaderIndices(v11, moduleItem);
-    Rules_BsaveWriteBlock(12, (int)filePtr, v11);
+    Rules_BsaveWriteBlock(12, (int)(intptr_t)filePtr, v11);
   }
   for ( j = Module_NextEnum(0); j; j = Module_NextEnum(j) )
   {
@@ -607,7 +607,7 @@ int  Rules_DefruleBsaveWriteData(const void *filePtr, int a2)
       Rules_BsaveDefruleDisjuncts(filePtr, k);
   }
   Rules_ClearJoinNetworkMarkedFlags();
-  Rules_BsaveJoinNetworkForModules((int)filePtr);
+  Rules_BsaveJoinNetworkForModules((int)(intptr_t)filePtr);
   result = Rules_IsBloaded();
   if ( result )
   {
@@ -646,7 +646,7 @@ const void * Rules_BsaveDefruleDisjuncts(const void *result, int theDefrule)
   int lastJoinIndex; // [esp+24h] [ebp-1Ch]
   int nextDisjunctIndex; // [esp+28h] [ebp-18h]
 
-  filePtr = (int)result;
+  filePtr = (int)(intptr_t)result;
   isFirstDisjunct = 1;
   theDisjunct = theDefrule;
   for ( i = 0; theDisjunct; isFirstDisjunct = 0 )
@@ -689,13 +689,13 @@ const void * Rules_BsaveDefruleDisjuncts(const void *result, int theDefrule)
     }
     logicalJoinNode = disjunctData[10];
     if ( logicalJoinNode )
-      logicalJoinBsaveId = *(_DWORD *)(logicalJoinNode + 4);
+      logicalJoinBsaveId = *(_DWORD *)(uintptr_t)(logicalJoinNode + 4);
     else
       logicalJoinBsaveId = -1;
     logicalJoinIndex = logicalJoinBsaveId;
     lastJoinNode = disjunctData[11];
     if ( lastJoinNode )
-      lastJoinBsaveId = *(_DWORD *)(lastJoinNode + 4);
+      lastJoinBsaveId = *(_DWORD *)(uintptr_t)(lastJoinNode + 4);
     else
       lastJoinBsaveId = -1;
     lastJoinIndex = lastJoinBsaveId;
@@ -704,7 +704,7 @@ const void * Rules_BsaveDefruleDisjuncts(const void *result, int theDefrule)
     else
       nextDisjunctIndex = -1;
     result = Rules_BsaveWriteBlock(44, filePtr, bsaveDisjunct);
-    theDisjunct = *(_DWORD *)(v13 + 48);
+    theDisjunct = *(_DWORD *)(uintptr_t)(v13 + 48);
   }
   return result;
 }
@@ -729,7 +729,7 @@ int  Rules_BsaveJoinNetworkForModules(int filePtr)
     theDefrule = Rules_GetNextDefrule(0);
     while ( theDefrule )
     {
-      joinNode = *(int **)(theDefrule + 44);
+      joinNode = *(int **)(uintptr_t)(theDefrule + 44);
       if ( joinNode )
       {
         do
@@ -737,15 +737,15 @@ int  Rules_BsaveJoinNetworkForModules(int filePtr)
           if ( (*(_BYTE *)joinNode & 0x20) != 0 )
             Rules_BsaveJoinNode(filePtr, joinNode);
           if ( (*(_BYTE *)joinNode & 4) != 0 )
-            nextJoin = (int *)joinNode[4];
+            nextJoin = (int *)(uintptr_t)joinNode[4];
           else
-            nextJoin = (int *)joinNode[6];
+            nextJoin = (int *)(uintptr_t)joinNode[6];
           joinNode = nextJoin;
         }
         while ( nextJoin );
       }
-      if ( *(_DWORD *)(theDefrule + 48) )
-        theDefrule = *(_DWORD *)(theDefrule + 48);
+      if ( *(_DWORD *)(uintptr_t)(theDefrule + 48) )
+        theDefrule = *(_DWORD *)(uintptr_t)(theDefrule + 48);
       else
         theDefrule = Rules_GetNextDefrule(theDefrule);
     }
@@ -806,7 +806,7 @@ const void * Rules_BsaveJoinNode(int filePtr, int *theJoin)
   {
     rightSideEntry = theJoin[4];
     if ( rightSideEntry )
-      v10 = *(_DWORD *)(rightSideEntry + 4);
+      v10 = *(_DWORD *)(uintptr_t)(rightSideEntry + 4);
     else
       v10 = -1;
     rightSideEntryIndex = v10;
@@ -817,32 +817,32 @@ const void * Rules_BsaveJoinNode(int filePtr, int *theJoin)
   }
   lastLevel = theJoin[6];
   if ( lastLevel )
-    v12 = *(_DWORD *)(lastLevel + 4);
+    v12 = *(_DWORD *)(uintptr_t)(lastLevel + 4);
   else
     v12 = -1;
   lastLevelIndex = v12;
   nextLevel = theJoin[5];
   if ( nextLevel )
-    v14 = *(_DWORD *)(nextLevel + 4);
+    v14 = *(_DWORD *)(uintptr_t)(nextLevel + 4);
   else
     v14 = -1;
   nextLevelIndex = v14;
   rightMatchNode = theJoin[8];
   if ( rightMatchNode )
-    v16 = *(_DWORD *)(rightMatchNode + 4);
+    v16 = *(_DWORD *)(uintptr_t)(rightMatchNode + 4);
   else
     v16 = -1;
   rightMatchIndex = v16;
   rightDriveNode = theJoin[7];
   if ( rightDriveNode )
-    v18 = *(_DWORD *)(rightDriveNode + 4);
+    v18 = *(_DWORD *)(uintptr_t)(rightDriveNode + 4);
   else
     v18 = -1;
   rightDriveIndex = v18;
-  bsaveJoin[1] = AST_GetHashedNodeIndex((__int16 *)theJoin[3]);
+  bsaveJoin[1] = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)theJoin[3]);
   ruleToActivate = theJoin[9];
   if ( ruleToActivate )
-    ruleBsaveIndex = *(_DWORD *)(ruleToActivate + 12);
+    ruleBsaveIndex = *(_DWORD *)(uintptr_t)(ruleToActivate + 12);
   else
     ruleBsaveIndex = -1;
   return Rules_BsaveWriteBlock(32, filePtr, bsaveJoin);
@@ -860,28 +860,28 @@ int  Rules_BsavePackSharedRecordHeader(int result, int sourceRecord)
   int v8; // ecx
   int v9; // edx
 
-  v2 = *(_DWORD *)(sourceRecord + 12);
-  *(_BYTE *)(result + 4) &= ~2u;
-  *(_DWORD *)(result + 4) |= v2 & 2;
-  linkedNode = *(_DWORD *)(sourceRecord + 8);
+  v2 = *(_DWORD *)(uintptr_t)(sourceRecord + 12);
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~2u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v2 & 2;
+  linkedNode = *(_DWORD *)(uintptr_t)(sourceRecord + 8);
   if ( linkedNode )
-    linkedIndex = *(_DWORD *)(linkedNode + 4);
+    linkedIndex = *(_DWORD *)(uintptr_t)(linkedNode + 4);
   else
     linkedIndex = -1;
-  v5 = *(_BYTE *)(result + 4);
-  *(_DWORD *)result = linkedIndex;
-  v6 = *(_DWORD *)(sourceRecord + 12);
-  *(_BYTE *)(result + 4) = v5 & 0xFE;
-  *(_DWORD *)(result + 4) |= v6 & 1;
-  v7 = *(_DWORD *)(sourceRecord + 12);
-  *(_BYTE *)(result + 4) &= ~4u;
-  *(_DWORD *)(result + 4) |= v7 & 4;
-  v8 = *(_DWORD *)(sourceRecord + 12) << 26 >> 31;
-  *(_BYTE *)(result + 4) &= ~0x40u;
-  *(_DWORD *)(result + 4) |= (v8 & 1) << 6;
-  v9 = *(_DWORD *)(sourceRecord + 12) << 25 >> 31;
-  *(_BYTE *)(result + 4) &= ~0x80u;
-  *(_DWORD *)(result + 4) |= (v9 & 1) << 7;
+  v5 = *(_BYTE *)(uintptr_t)(result + 4);
+  *(_DWORD *)(uintptr_t)result = linkedIndex;
+  v6 = *(_DWORD *)(uintptr_t)(sourceRecord + 12);
+  *(_BYTE *)(uintptr_t)(result + 4) = v5 & 0xFE;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v6 & 1;
+  v7 = *(_DWORD *)(uintptr_t)(sourceRecord + 12);
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~4u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= v7 & 4;
+  v8 = *(_DWORD *)(uintptr_t)(sourceRecord + 12) << 26 >> 31;
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~0x40u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= (v8 & 1) << 6;
+  v9 = *(_DWORD *)(uintptr_t)(sourceRecord + 12) << 25 >> 31;
+  *(_BYTE *)(uintptr_t)(result + 4) &= ~0x80u;
+  *(_DWORD *)(uintptr_t)(result + 4) |= (v9 & 1) << 7;
   return result;
 }
 
@@ -902,14 +902,14 @@ signed int Rules_JoinNetworkBloadStorage(void)
     g_ClipsJoinNodeArray = 0;
   }
   v1[0] = 16 * g_DefruleModuleBloadCount;
-  result = Mem_HeapAllocWithRetry((_DWORD *)(16 * g_DefruleModuleBloadCount));
+  result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(16 * g_DefruleModuleBloadCount));
   g_ClipsJoinNetworkModuleBloadArray = result;
   if ( g_RuleJoinNodeBsaveCount )
   {
     v1[0] = 52 * g_RuleJoinNodeBsaveCount;
-    g_ClipsBloadJoinArray = Mem_HeapAllocWithRetry((_DWORD *)(52 * g_RuleJoinNodeBsaveCount));
+    g_ClipsBloadJoinArray = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(52 * g_RuleJoinNodeBsaveCount));
     v1[0] = 40 * g_Clips_JoinTestCount;
-    result = Mem_HeapAllocWithRetry((_DWORD *)(40 * g_Clips_JoinTestCount));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(40 * g_Clips_JoinTestCount));
     g_ClipsJoinNodeArray = result;
   }
   else
@@ -947,9 +947,9 @@ int  Rules_DefruleModuleBloadFixup(_DWORD *bsaveModule, int moduleIndex)
   int result; // eax
 
   offset = 16 * moduleIndex;
-  Module_UpdateItemHeader(bsaveModule, (_DWORD *)(16 * moduleIndex + g_ClipsJoinNetworkModuleBloadArray), g_ClipsBloadJoinArray, 52);
+  Module_UpdateItemHeader(bsaveModule, (_DWORD *)(uintptr_t)(16 * moduleIndex + g_ClipsJoinNetworkModuleBloadArray), g_ClipsBloadJoinArray, 52);
   result = g_ClipsJoinNetworkModuleBloadArray;
-  *(_DWORD *)(offset + g_ClipsJoinNetworkModuleBloadArray + 12) = 0;
+  *(_DWORD *)(uintptr_t)(offset + g_ClipsJoinNetworkModuleBloadArray + 12) = 0;
   return result;
 }
 // 54E860: using guessed type int dword_54E860;
@@ -978,58 +978,58 @@ int  Rules_JoinBloadFixup(_DWORD *bsaveJoin, int joinIndex)
   int result; // eax
   int watchRules; // edx
 
-  Rules_BuildIndexedSlotDescriptor((int)bsaveJoin, (_DWORD *)(g_ClipsBloadJoinArray + 52 * joinIndex), g_ClipsJoinNetworkModuleBloadArray, 16, 52, g_ClipsBloadJoinArray);
+  Rules_BuildIndexedSlotDescriptor((int)(intptr_t)bsaveJoin, (_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + 52 * joinIndex), g_ClipsJoinNetworkModuleBloadArray, 16, 52, g_ClipsBloadJoinArray);
   networkTestIndex = bsaveJoin[6];
   if ( networkTestIndex == -1 )
     networkTestExpr = 0;
   else
     networkTestExpr = g_ClipsPackedExpressionArray + 14 * networkTestIndex;
-  *(_DWORD *)(g_ClipsBloadJoinArray + 52 * joinIndex + 32) = networkTestExpr;
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + 52 * joinIndex + 32) = networkTestExpr;
   secondaryTestIndex = bsaveJoin[7];
   if ( secondaryTestIndex == -1 )
     secondaryTestExpr = 0;
   else
     secondaryTestExpr = g_ClipsPackedExpressionArray + 14 * secondaryTestIndex;
-  *(_DWORD *)(52 * joinIndex + g_ClipsBloadJoinArray + 36) = secondaryTestExpr;
+  *(_DWORD *)(uintptr_t)(52 * joinIndex + g_ClipsBloadJoinArray + 36) = secondaryTestExpr;
   join40Index = bsaveJoin[8];
   if ( join40Index == -1 )
     join40Ptr = 0;
   else
     join40Ptr = g_ClipsJoinNodeArray + 40 * join40Index;
-  *(_DWORD *)(g_ClipsBloadJoinArray + 52 * joinIndex + 40) = join40Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + 52 * joinIndex + 40) = join40Ptr;
   join44Index = bsaveJoin[9];
   if ( join44Index == -1 )
     join44Ptr = 0;
   else
     join44Ptr = 40 * join44Index + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsBloadJoinArray + 52 * joinIndex + 44) = join44Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + 52 * joinIndex + 44) = join44Ptr;
   bloadJoinIndex = bsaveJoin[10];
   if ( bloadJoinIndex == -1 )
     bloadJoinPtr = 0;
   else
     bloadJoinPtr = g_ClipsBloadJoinArray + 52 * bloadJoinIndex;
   joinOffset = 52 * joinIndex;
-  *(_DWORD *)(g_ClipsBloadJoinArray + joinOffset + 48) = bloadJoinPtr;
-  *(_DWORD *)(g_ClipsBloadJoinArray + joinOffset + 20) = bsaveJoin[3];
-  *(_DWORD *)(g_ClipsBloadJoinArray + 52 * joinIndex + 24) = bsaveJoin[4];
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 48) = bloadJoinPtr;
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 20) = bsaveJoin[3];
+  *(_DWORD *)(uintptr_t)(g_ClipsBloadJoinArray + 52 * joinIndex + 24) = bsaveJoin[4];
   v16 = g_ClipsBloadJoinArray;
   packedFlags = bsaveJoin[5];
-  *(_WORD *)(g_ClipsBloadJoinArray + joinOffset + 28) &= 0xF800u;
-  *(_DWORD *)(v16 + joinOffset + 28) |= packedFlags & 0x7FF;
+  *(_WORD *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 28) &= 0xF800u;
+  *(_DWORD *)(uintptr_t)(v16 + joinOffset + 28) |= packedFlags & 0x7FF;
   v18 = g_ClipsBloadJoinArray;
   v19 = bsaveJoin[5] << 19 >> 31;
-  *(_BYTE *)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x40u;
-  *(_DWORD *)(v18 + joinOffset + 28) |= v19 << 14;
-  *(_BYTE *)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x80u;
-  *(_BYTE *)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~8u;
+  *(_BYTE *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x40u;
+  *(_DWORD *)(uintptr_t)(v18 + joinOffset + 28) |= v19 << 14;
+  *(_BYTE *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x80u;
+  *(_BYTE *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~8u;
   v20 = g_ClipsBloadJoinArray;
   watchActivations = g_Rules_WatchActivationsFlag & 1;
-  *(_BYTE *)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x10u;
-  *(_DWORD *)(v20 + joinOffset + 28) |= watchActivations << 12;
+  *(_BYTE *)(uintptr_t)(g_ClipsBloadJoinArray + joinOffset + 29) &= ~0x10u;
+  *(_DWORD *)(uintptr_t)(v20 + joinOffset + 28) |= watchActivations << 12;
   result = g_ClipsBloadJoinArray + joinOffset;
   watchRules = g_WatchRulesFlag & 1;
-  *(_BYTE *)(result + 29) &= ~0x20u;
-  *(_DWORD *)(result + 28) |= watchRules << 13;
+  *(_BYTE *)(uintptr_t)(result + 29) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)(result + 28) |= watchRules << 13;
   return result;
 }
 // 51A1DC: using guessed type int dword_51A1DC;
@@ -1074,25 +1074,25 @@ int  Rules_JoinTestBloadFixup(int *bsaveNode, int nodeIndex)
   joinBase = g_ClipsJoinNodeArray;
   nodeOffset = 40 * nodeIndex;
   packedFlags = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~1u;
-  *(_DWORD *)(joinBase + nodeOffset) |= packedFlags & 1;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + nodeOffset) &= ~1u;
+  *(_DWORD *)(uintptr_t)(joinBase + nodeOffset) |= packedFlags & 1;
   v5 = g_ClipsJoinNodeArray;
   v6 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~2u;
-  *(_DWORD *)(v5 + nodeOffset) |= v6 & 2;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + nodeOffset) &= ~2u;
+  *(_DWORD *)(uintptr_t)(v5 + nodeOffset) |= v6 & 2;
   v7 = g_ClipsJoinNodeArray;
   v8 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~4u;
-  *(_DWORD *)(v7 + nodeOffset) |= v8 & 4;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + nodeOffset) &= ~4u;
+  *(_DWORD *)(uintptr_t)(v7 + nodeOffset) |= v8 & 4;
   v9 = g_ClipsJoinNodeArray;
   v10 = *bsaveNode;
-  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset) &= ~8u;
-  *(_DWORD *)(v9 + nodeOffset) |= v10 & 8;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + nodeOffset) &= ~8u;
+  *(_DWORD *)(uintptr_t)(v9 + nodeOffset) |= v10 & 8;
   v11 = g_ClipsJoinNodeArray;
   depthBits = (unsigned int)(*bsaveNode << 18) >> 25;
-  *(_BYTE *)(g_ClipsJoinNodeArray + nodeOffset + 1) &= 1u;
-  *(_DWORD *)(v11 + nodeOffset) = ((depthBits & 0x7F) << 9) | *(_DWORD *)(v11 + 40 * nodeIndex);
-  v13 = (_WORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex);
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + nodeOffset + 1) &= 1u;
+  *(_DWORD *)(uintptr_t)(v11 + nodeOffset) = ((depthBits & 0x7F) << 9) | *(_DWORD *)(uintptr_t)(v11 + 40 * nodeIndex);
+  v13 = (_WORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex);
   rhsTypeBits = (unsigned int)(*bsaveNode << 25) >> 29;
   *v13 &= 0xFE3Fu;
   *(_DWORD *)v13 |= (rhsTypeBits & 7) << 6;
@@ -1101,19 +1101,19 @@ int  Rules_JoinTestBloadFixup(int *bsaveNode, int nodeIndex)
     networkTestExpr = 0;
   else
     networkTestExpr = 14 * exprIndex + g_ClipsPackedExpressionArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 12) = networkTestExpr;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 12) = networkTestExpr;
   join20Index = bsaveNode[3];
   if ( join20Index == -1 )
     join20Ptr = 0;
   else
     join20Ptr = 40 * join20Index + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 20) = join20Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 20) = join20Ptr;
   join24Index = bsaveNode[4];
   if ( join24Index == -1 )
     join24Ptr = 0;
   else
     join24Ptr = 40 * join24Index + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 24) = join24Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 24) = join24Ptr;
   if ( (*(_BYTE *)bsaveNode & 4) != 0 )
   {
     join16Index = bsaveNode[2];
@@ -1121,31 +1121,31 @@ int  Rules_JoinTestBloadFixup(int *bsaveNode, int nodeIndex)
       join16Ptr = 0;
     else
       join16Ptr = 40 * join16Index + g_ClipsJoinNodeArray;
-    *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 16) = join16Ptr;
+    *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 16) = join16Ptr;
   }
   join32Index = bsaveNode[6];
   if ( join32Index == -1 )
     join32Ptr = 0;
   else
     join32Ptr = 40 * join32Index + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 32) = join32Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 32) = join32Ptr;
   join28Index = bsaveNode[5];
   if ( join28Index == -1 )
     join28Ptr = 0;
   else
     join28Ptr = 40 * join28Index + g_ClipsJoinNodeArray;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 40 * nodeIndex + 28) = join28Ptr;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 40 * nodeIndex + 28) = join28Ptr;
   bloadJoinIndex = bsaveNode[7];
   if ( bloadJoinIndex == -1 )
     bloadJoinPtr = 0;
   else
     bloadJoinPtr = 52 * bloadJoinIndex + g_ClipsBloadJoinArray;
   result = 5 * nodeIndex;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 36) = bloadJoinPtr;
-  *(_BYTE *)(g_ClipsJoinNodeArray + 8 * result) &= ~0x10u;
-  *(_BYTE *)(g_ClipsJoinNodeArray + 8 * result) &= ~0x20u;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 4) = 0;
-  *(_DWORD *)(g_ClipsJoinNodeArray + 8 * result + 8) = 0;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 8 * result + 36) = bloadJoinPtr;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + 8 * result) &= ~0x10u;
+  *(_BYTE *)(uintptr_t)(g_ClipsJoinNodeArray + 8 * result) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 8 * result + 4) = 0;
+  *(_DWORD *)(uintptr_t)(g_ClipsJoinNodeArray + 8 * result + 8) = 0;
   return result;
 }
 // 54E688: using guessed type int dword_54E688;
@@ -1167,27 +1167,27 @@ int  Rules_BloadUnpackSharedRecordHeader(int destHeader, int *bsaveRecord)
   int v12; // edx
   int result; // eax
 
-  v3 = *(_BYTE *)(destHeader + 12) & 0xFE;
+  v3 = *(_BYTE *)(uintptr_t)(destHeader + 12) & 0xFE;
   v4 = bsaveRecord[1];
-  *(_BYTE *)(destHeader + 12) = v3;
-  *(_DWORD *)(destHeader + 12) |= v4 & 1;
+  *(_BYTE *)(uintptr_t)(destHeader + 12) = v3;
+  *(_DWORD *)(uintptr_t)(destHeader + 12) |= v4 & 1;
   v5 = bsaveRecord[1];
-  *(_BYTE *)(destHeader + 12) &= ~2u;
-  *(_DWORD *)(destHeader + 12) |= v5 & 2;
+  *(_BYTE *)(uintptr_t)(destHeader + 12) &= ~2u;
+  *(_DWORD *)(uintptr_t)(destHeader + 12) |= v5 & 2;
   v6 = bsaveRecord[1];
-  *(_BYTE *)(destHeader + 12) &= ~4u;
-  *(_DWORD *)(destHeader + 12) |= v6 & 4;
+  *(_BYTE *)(uintptr_t)(destHeader + 12) &= ~4u;
+  *(_DWORD *)(uintptr_t)(destHeader + 12) |= v6 & 4;
   v7 = (unsigned int)(bsaveRecord[1] << 25) >> 31;
-  *(_BYTE *)(destHeader + 12) &= ~0x20u;
-  *(_DWORD *)(destHeader + 12) |= 32 * (v7 & 1);
+  *(_BYTE *)(uintptr_t)(destHeader + 12) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)(destHeader + 12) |= 32 * (v7 & 1);
   v8 = (unsigned int)(bsaveRecord[1] << 24) >> 31;
-  *(_BYTE *)(destHeader + 12) &= ~0x40u;
-  v9 = *(_DWORD *)(destHeader + 12);
-  *(_DWORD *)destHeader = 0;
-  *(_DWORD *)(destHeader + 12) = ((v8 & 1) << 6) | v9;
-  BYTE1(v9) = *(_BYTE *)(destHeader + 12);
-  *(_DWORD *)(destHeader + 4) = 0;
-  *(_BYTE *)(destHeader + 12) = BYTE1(v9) & 0xE7;
+  *(_BYTE *)(uintptr_t)(destHeader + 12) &= ~0x40u;
+  v9 = *(_DWORD *)(uintptr_t)(destHeader + 12);
+  *(_DWORD *)(uintptr_t)destHeader = 0;
+  *(_DWORD *)(uintptr_t)(destHeader + 12) = ((v8 & 1) << 6) | v9;
+  BYTE1(v9) = *(_BYTE *)(uintptr_t)(destHeader + 12);
+  *(_DWORD *)(uintptr_t)(destHeader + 4) = 0;
+  *(_BYTE *)(uintptr_t)(destHeader + 12) = BYTE1(v9) & 0xE7;
   joinIndex = *bsaveRecord;
   if ( *bsaveRecord == -1 )
   {
@@ -1200,13 +1200,13 @@ int  Rules_BloadUnpackSharedRecordHeader(int destHeader, int *bsaveRecord)
     v12 = 40 * joinIndex + g_ClipsJoinNodeArray;
   }
   result = v12;
-  *(_DWORD *)(destHeader + 8) = v12;
+  *(_DWORD *)(uintptr_t)(destHeader + 8) = v12;
   if ( !v11 )
   {
     do
     {
-      *(_DWORD *)(result + 16) = destHeader;
-      result = *(_DWORD *)(result + 32);
+      *(_DWORD *)(uintptr_t)(result + 16) = destHeader;
+      result = *(_DWORD *)(uintptr_t)(result + 32);
     }
     while ( result );
   }
@@ -1231,7 +1231,7 @@ signed int Rules_ClearBloadedJoinNetwork(void)
   {
     do
     {
-      (*(void (__fastcall **)(int))(*(_DWORD *)parserEntry[0] + 12))(parserEntry[0]);
+      (*(void (__fastcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)parserEntry[0] + 12))(parserEntry[0]);
       parserEntry[0] = 0;
       Rules_FindPatternParser((_DWORD *)&findCursor, parserEntry);
     }
@@ -1250,7 +1250,7 @@ signed int Rules_ClearBloadedJoinNetwork(void)
     offset = 0;
     for ( index = 0; index < g_Clips_JoinTestCount; ++index )
     {
-      Rules_ReleaseJoinNetworkNodeChain(*(_DWORD *)(offset + g_ClipsJoinNodeArray + 8));
+      Rules_ReleaseJoinNetworkNodeChain(*(_DWORD *)(uintptr_t)(offset + g_ClipsJoinNodeArray + 8));
       offset += 40;
     }
   }
@@ -1259,7 +1259,7 @@ signed int Rules_ClearBloadedJoinNetwork(void)
     offset = 0;
     for ( index = 0; index < g_RuleJoinNodeBsaveCount; ++index )
     {
-      Rules_ReleaseSymbolReference((int *)(offset + g_ClipsBloadJoinArray), index + 1);
+      Rules_ReleaseSymbolReference((int *)(uintptr_t)(offset + g_ClipsBloadJoinArray), index + 1);
       offset += 52;
     }
   }
@@ -1315,8 +1315,8 @@ int  Rules_ParseDeftemplate(char *readSource, double a2)
   }
   g_Rules_DeftemplateWatchFlag = v3;
   deftemplateName = Rules_GetConstructNameAndComment(
-         (int)readSource,
-         (int)inputToken,
+         (int)(intptr_t)readSource,
+         (int)(intptr_t)inputToken,
          (int (*)(void))Rules_FindDeftemplateByName,
          aDeftemplate_9,
          (int (*)(void))Rules_DeleteDeftemplate,
@@ -1326,9 +1326,9 @@ int  Rules_ParseDeftemplate(char *readSource, double a2)
          1);
   if ( !deftemplateName )
     return 1;
-  if ( Rules_IsReservedPatternSymbol(v4, (int)aDeftemplate_9) )
+  if ( Rules_IsReservedPatternSymbol(v4, (int)(intptr_t)aDeftemplate_9) )
   {
-    Rules_PrintReservedSymbolErrorMessage(v7, (int)aADeftemplateNa);
+    Rules_PrintReservedSymbolErrorMessage(v7, (int)(intptr_t)aADeftemplateNa);
     return 1;
   }
   else
@@ -1340,44 +1340,44 @@ int  Rules_ParseDeftemplate(char *readSource, double a2)
     }
     else
     {
-      freeNode = *(_DWORD **)(g_ClipsMemoryTable + 144);
+      freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 144);
       if ( freeNode )
       {
-        g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 144);
-        *(_DWORD *)(g_ClipsMemoryTable + 144) = *freeNode;
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144) = *freeNode;
         newDeftemplate = g_ClipsMemFreeListTemp;
       }
       else
       {
         newDeftemplate = Mem_HeapAllocWithRetry((_DWORD *)0x24);
       }
-      *(_DWORD *)(newDeftemplate + 16) = 0;
-      *(_WORD *)(newDeftemplate + 24) = 0;
-      *(_DWORD *)(newDeftemplate + 28) = 0;
-      *(_DWORD *)(newDeftemplate + 32) = 0;
-      *(_DWORD *)newDeftemplate = deftemplateName;
-      v11 = *(_BYTE *)(newDeftemplate + 24);
-      *(_DWORD *)(newDeftemplate + 20) = slotList;
-      *(_BYTE *)(newDeftemplate + 24) = v11 | 4;
-      for ( *(_DWORD *)(newDeftemplate + 8) = Module_GetItem(0, g_ClipsDeftemplateModuleItemId); slotList; slotList = (_DWORD *)slotList[4] )
+      *(_DWORD *)(uintptr_t)(newDeftemplate + 16) = 0;
+      *(_WORD *)(uintptr_t)(newDeftemplate + 24) = 0;
+      *(_DWORD *)(uintptr_t)(newDeftemplate + 28) = 0;
+      *(_DWORD *)(uintptr_t)(newDeftemplate + 32) = 0;
+      *(_DWORD *)(uintptr_t)newDeftemplate = deftemplateName;
+      v11 = *(_BYTE *)(uintptr_t)(newDeftemplate + 24);
+      *(_DWORD *)(uintptr_t)(newDeftemplate + 20) = slotList;
+      *(_BYTE *)(uintptr_t)(newDeftemplate + 24) = v11 | 4;
+      for ( *(_DWORD *)(uintptr_t)(newDeftemplate + 8) = Module_GetItem(0, g_ClipsDeftemplateModuleItemId); slotList; slotList = (_DWORD *)(uintptr_t)slotList[4] )
       {
-        v13 = (*(_WORD *)(v12 + 24) >> 3) + 1;
-        *(_WORD *)(v12 + 24) &= 7u;
-        *(_DWORD *)(v12 + 24) |= 8 * (v13 & 0x1FFF);
+        v13 = (*(_WORD *)(uintptr_t)(v12 + 24) >> 3) + 1;
+        *(_WORD *)(uintptr_t)(v12 + 24) &= 7u;
+        *(_DWORD *)(uintptr_t)(v12 + 24) |= 8 * (v13 & 0x1FFF);
       }
       if ( Mem_GetAllocFlag() == 1 )
       {
-        *(_DWORD *)(v14 + 4) = 0;
+        *(_DWORD *)(uintptr_t)(v14 + 4) = 0;
       }
       else
       {
         v16 = Rules_CopyPPBuffer();
-        *(_DWORD *)(v14 + 4) = v16;
+        *(_DWORD *)(uintptr_t)(v14 + 4) = v16;
       }
-      if ( (g_Rules_DeftemplateWatchFlag & 1) != 0 || Rules_GetWatchItemState((int)aFacts_0) )
+      if ( (g_Rules_DeftemplateWatchFlag & 1) != 0 || Rules_GetWatchItemState((int)(intptr_t)aFacts_0) )
         Rules_SetFactWatchFlag(1, v14);
       Rules_AppendConstructToModuleList(v14);
-      Rules_DeftemplateInstallSlots(v15, (int)v15);
+      Rules_DeftemplateInstallSlots(v15, (int)(intptr_t)v15);
       return 0;
     }
   }
@@ -1404,16 +1404,16 @@ _DWORD * Rules_DeftemplateInstallSlots(_DWORD *result, int a2)
   int v6; // ecx
   int v7; // edx
 
-  ++*(_DWORD *)(*result + 4);
-  for ( i = (__int16 **)result[5]; i; i = *(__int16 ***)(v7 + 16) )
+  ++*(_DWORD *)(uintptr_t)(*result + 4);
+  for ( i = (__int16 **)(uintptr_t)result[5]; i; i = *(__int16 ***)(uintptr_t)(v7 + 16) )
   {
     ++*((_DWORD *)*i + 1);
-    AST_AddHashedNodeChain(i[3], (int)i, a2);
-    AST_Free(*(_DWORD *)(v3 + 12));
-    v5 = *(_DWORD **)(v4 + 8);
-    *(_DWORD *)(v4 + 12) = v6;
+    AST_AddHashedNodeChain(i[3], (int)(intptr_t)i, a2);
+    AST_Free(*(_DWORD *)(uintptr_t)(v3 + 12));
+    v5 = *(_DWORD **)(uintptr_t)(v4 + 8);
+    *(_DWORD *)(uintptr_t)(v4 + 12) = v6;
     result = AST_InternNode(v5);
-    *(_DWORD *)(v7 + 8) = result;
+    *(_DWORD *)(uintptr_t)(v7 + 8) = result;
   }
   return result;
 }

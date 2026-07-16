@@ -89,37 +89,37 @@ char  Castle_RenderCompositeSceneLayers(int surface, int drawModeArg, int buildi
   castleSpriteName[6] = g_CurrentPlayerIndex + 49;
   if ( variantArg != 2 )
   {
-    addonFlags = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+    addonFlags = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
     if ( (addonFlags & 1) == 0 || (addonFlags & 2) != 0 || (addonFlags & 4) != 0 )
     {
-      v6 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+      v6 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
       if ( (v6 & 1) != 0 || (v6 & 2) != 0 || (v6 & 4) == 0 )
       {
-        v7 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+        v7 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
         if ( (v7 & 1) != 0 || (v7 & 2) == 0 || (v7 & 4) != 0 )
         {
-          v8 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+          v8 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
           if ( (v8 & 1) == 0 && (v8 & 2) != 0 && (v8 & 4) != 0 )
           {
             addonLayerName = a11_7;
           }
           else
           {
-            v9 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+            v9 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
             if ( (v9 & 1) != 0 && (v9 & 2) != 0 && (v9 & 4) != 0 )
             {
               addonLayerName = a12;
             }
             else
             {
-              v55 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+              v55 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
               if ( (v55 & 1) != 0 && (v55 & 2) != 0 && (v55 & 4) == 0 )
               {
                 addonLayerName = a10;
               }
               else
               {
-                v56 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+                v56 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
                 if ( (v56 & 1) != 0 && (v56 & 2) == 0 && (v56 & 4) != 0 )
                   addonLayerName = a07;
                 else
@@ -212,17 +212,17 @@ char  Castle_RenderCompositeSceneLayers(int surface, int drawModeArg, int buildi
   }
   if ( variant != 1 )
   {
-    addonFlags2 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+    addonFlags2 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
     if ( (addonFlags2 & 8) != 0 && (addonFlags2 & 0x10) == 0 )
     {
       addonLayer2Name = a04;
     }
     else
     {
-      v28 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+      v28 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
       if ( (v28 & 8) != 0 || (v28 & 0x10) == 0 )
       {
-        v29 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+        v29 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
         if ( (v29 & 8) != 0 && (v29 & 0x10) != 0 )
           addonLayer2Name = a08;
         else
@@ -292,7 +292,7 @@ char  Castle_RenderCompositeSceneLayers(int surface, int drawModeArg, int buildi
     load_result = RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)surface2, pathBuffer, 1, 0);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(stderr, "[castle] load_layer path=%s transparent=1 result=%d target=%08x\n", pathBuffer, load_result, surface2);
-    surface = *(char *)(g_SelectedBuildingRecord + 4);
+    surface = *(char *)(uintptr_t)(g_SelectedBuildingRecord + 4);
     if ( surface == 1 )
     {
       v47 = castleSpriteName;
@@ -332,11 +332,11 @@ char  Castle_RenderCompositeSceneLayers(int surface, int drawModeArg, int buildi
   if ( !drawMode )
   {
     savedRenderDevice = g_RenderDevice;
-    g_RenderDevice = (_UNKNOWN *)surface2;
+    g_RenderDevice = (_UNKNOWN *)(uintptr_t)surface2;
     SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 0);
     Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 0);
     qmemcpy(ownerIconPositions, &g_CastleOwnerIconPositions, sizeof(ownerIconPositions));
-    castle_icon_owner = *(unsigned __int8 *)(g_SelectedBuildingRecord + 2);
+    castle_icon_owner = *(unsigned __int8 *)(uintptr_t)(g_SelectedBuildingRecord + 2);
     SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 8);
     Compat_RenderDeviceDrawMenuSprite(ownerIconPositions[2 * castle_icon_owner + 1], ownerIconPositions[2 * castle_icon_owner], SpriteForChar, 1);
     savedBuildingRecord = g_SelectedBuildingRecord;
@@ -345,7 +345,7 @@ char  Castle_RenderCompositeSceneLayers(int surface, int drawModeArg, int buildi
     g_SelectedBuildingRecord = savedBuildingRecord;
     Castle_EnsureCompositeStatusWidget();
     UIWidgetTable_InitDrawStates((_DWORD *)g_CastleStatusWidgetRecord);
-    LOBYTE(surface) = (_BYTE)savedRenderDevice;
+    LOBYTE(surface) = (_BYTE)(intptr_t)savedRenderDevice;
     g_RenderDevice = savedRenderDevice;
   }
   return surface;
@@ -382,7 +382,7 @@ int  Castle_DrawAmbientAnimationSprite(
   SpriteForChar = DLX_GetSpriteForChar(spriteSet, spriteChar);
   result = Compat_RenderDeviceDrawMenuSprite(left, top, SpriteForChar, drawFlags);
   if ( overlayWasPresented )
-    return Render_Present((int)g_RenderState);
+    return Render_Present((int)(intptr_t)g_RenderState);
   return result;
 }
 // 42177B: variable 'v7' is possibly undefined
@@ -401,7 +401,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
   {
     case 1:
       result = g_SelectedBuildingRecord;
-      addonFlagsLayer1 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+      addonFlagsLayer1 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
       if ( (addonFlagsLayer1 & 4) != 0 && (addonFlagsLayer1 & 1) != 0 )
       {
         result = g_CastleAmbientLayer1_SpriteIds[20 * g_CurrentPlayerIndex];
@@ -416,7 +416,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 2:
       result = g_SelectedBuildingRecord;
-      addonFlagsLayer2 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
+      addonFlagsLayer2 = *(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416);
       if ( (addonFlagsLayer2 & 0x10) != 0 && (addonFlagsLayer2 & 8) != 0 )
       {
         result = g_CastleAmbientLayer2_SpriteIds[20 * g_CurrentPlayerIndex];
@@ -426,7 +426,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 3:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
       {
         result = g_CastleAmbientLayer3_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -435,10 +435,10 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 4:
       if ( g_CurrentPlayerIndex != 1 && g_CurrentPlayerIndex != 4
-        || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 28 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0) )
+        || (result = *(_DWORD *)(uintptr_t)(g_SelectedBuildingRecord + 416) << 28 >> 31, (*(_DWORD *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0) )
       {
         if ( g_CurrentPlayerIndex != 3
-          || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 30 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0) )
+          || (result = *(_DWORD *)(uintptr_t)(g_SelectedBuildingRecord + 416) << 30 >> 31, (*(_DWORD *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0) )
         {
           result = g_CastleAmbientLayer4_SpriteIds[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
@@ -452,7 +452,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
         result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer5_XOffsets[20 * g_CurrentPlayerIndex], g_CastleAmbientLayer5_Frame + 48, g_CastleAmbientSpriteSet, 0);
       break;
     case 6:
-      result = *(char *)(g_SelectedBuildingRecord + 4);
+      result = *(char *)(uintptr_t)(g_SelectedBuildingRecord + 4);
       if ( result != 1 )
       {
         result = g_CastleAmbientLayer6_SpriteIds[20 * g_CurrentPlayerIndex];
@@ -462,7 +462,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 7:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
       {
         result = g_CastleAmbientLayer7_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -471,7 +471,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 8:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
       {
         result = g_CastleAmbientLayer8_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -480,7 +480,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 9:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
       {
         result = g_CastleAmbientLayer9_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -489,7 +489,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       break;
     case 10:
       result = g_SelectedBuildingRecord;
-      if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
       {
         result = g_CastleAmbientLayer10_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
@@ -497,7 +497,7 @@ int  Castle_DrawAmbientAnimationLayer(int layerIndex)
       }
       break;
     default:
-      App_RequestQuit((int)asc_4EE6D4);
+      App_RequestQuit((int)(intptr_t)asc_4EE6D4);
   }
   return result;
 }
@@ -603,7 +603,7 @@ unsigned int Castle_UpdateAmbientAnimationLayers(void)
 
   savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  v2 = Time_Now(g_CastleAmbientLayer1_LastTick + 10, (int)&g_MainRenderDevice);
+  v2 = Time_Now(g_CastleAmbientLayer1_LastTick + 10, (int)(intptr_t)&g_MainRenderDevice);
   if ( v4 < v2 )
   {
     g_CastleAmbientLayer1_LastTick = Time_Now(v4, v3);
@@ -805,14 +805,14 @@ int * Castle_RebuildSceneBuffers(int paletteBuffer, DWORD runtime_context)
   Castle_RenderCompositeSceneLayers(g_PrimaryRenderSurface, 0, g_SelectedBuildingRecord, 0);
   strcpy(castleSpriteName, "zamek_1");
   castleSpriteName[6] = g_CurrentPlayerIndex + 49;
-  Palette_LoadOrBuildBlendLookupTable(castleSpriteName, (int)g_CastleScreenPaletteBuffer, v3, runtime_context);
+  Palette_LoadOrBuildBlendLookupTable(castleSpriteName, (int)(intptr_t)g_CastleScreenPaletteBuffer, v3, runtime_context);
   Render_LoadResourceSprite_v4(8, g_CastleScreenPaletteBuffer, v4, 0, runtime_context);
   Render_LoadResourceSprite_v4(7, g_CastleScreenPaletteBuffer, v5, 0, runtime_context);
   Render_LoadResourceSprite_v4(13, g_CastleScreenPaletteBuffer, v6, 0, runtime_context);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   Castle_DrawStatusPanel();
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_CastleScreenPaletteBuffer, 0, runtime_context);
-  RenderState_DrawCursorSpriteToPrimarySurface((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_CastleScreenPaletteBuffer, 0, runtime_context);
+  RenderState_DrawCursorSpriteToPrimarySurface((int)(intptr_t)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
   {
     primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&g_MainRenderDevice + 0xD0);

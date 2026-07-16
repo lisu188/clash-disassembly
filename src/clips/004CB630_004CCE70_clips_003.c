@@ -44,7 +44,7 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
   deffunctionArrayCount = 0;
   deffunctionArrayVersion = 1;
   moduleFile = 0;
-  Output_WriteFormatted(0, 1, headerFP, (int)aIncludeDffnxfu, 1);
+  Output_WriteFormatted(0, 1, headerFP, (int)(intptr_t)aIncludeDffnxfu, 1);
   codeFP = 0;
   Enum = Module_NextEnum(0);
   if ( Enum )
@@ -60,8 +60,8 @@ int  Deffunction_WriteConstructCodeFiles(const char *fileName, const char *pathN
              &fileCount,
              moduleArrayVersion,
              v25,
-             (char)aDeffunction_mo,
-             **(const char ***)(g_DeffunctionCodeGeneratorItem + 20),
+             (char)(intptr_t)aDeffunction_mo,
+             **(const char ***)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20),
              0,
              0);
       v9 = openedModuleFile;
@@ -93,8 +93,8 @@ LABEL_6:
               &fileCount,
               deffunctionArrayVersion,
               v25,
-              (char)aDeffunction_8,
-              *(const char **)(*(_DWORD *)(g_DeffunctionCodeGeneratorItem + 20) + 4),
+              (char)(intptr_t)aDeffunction_8,
+              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20) + 4),
               0,
               0);
       v13 = openedDeffunctionFile;
@@ -159,9 +159,9 @@ int  Deffunction_WriteConstructHeader(int filePtr, int theModule, int maxIndices
   char v9; // [esp+0h] [ebp-Ch]
   char v10; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)asc_50B89C, v9);
-  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v4, v5, g_Clips_DeffunctionModuleItemIndex, *(_DWORD *)(*(_DWORD *)(g_DeffunctionCodeGeneratorItem + 20) + 4));
-  return Output_WriteFormatted(v7, v6, filePtr, (int)asc_50B8A0, v10);
+  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)(intptr_t)asc_50B89C, v9);
+  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v4, v5, g_Clips_DeffunctionModuleItemIndex, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20) + 4));
+  return Output_WriteFormatted(v7, v6, filePtr, (int)(intptr_t)asc_50B8A0, v10);
 }
 // 4CB87B: variable 'v9' is possibly undefined
 // 4CB898: variable 'v4' is possibly undefined
@@ -187,14 +187,14 @@ int  Deffunction_WriteConstructBody(int filePtr, int deffunction, int maxIndices
   char v16; // [esp+0h] [ebp-Ch]
   char v17; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(maxIndices, deffunction, filePtr, (int)asc_50B89C, v15);
-  v6 = *(int **)(g_DeffunctionCodeGeneratorItem + 20);
+  Output_WriteFormatted(maxIndices, deffunction, filePtr, (int)(intptr_t)asc_50B89C, v15);
+  v6 = *(int **)(uintptr_t)(g_DeffunctionCodeGeneratorItem + 20);
   moduleImage = *v6;
   Rules_WriteConstructHeaderToCode(filePtr, deffunction, v8, moduleCount, *v6, v6[1]);
-  Output_WriteFormatted(v10, v9, filePtr, (int)a000_0, v16);
-  Rules_ExpressionToCode(filePtr, *(__int16 **)(deffunction + 30), v11, moduleImage);
-  Output_WriteFormatted(*(_DWORD *)(deffunction + 38), *(_DWORD *)(deffunction + 42), filePtr, (int)aDDD, *(_DWORD *)(deffunction + 34));
-  return Output_WriteFormatted(v13, v12, filePtr, (int)asc_50B8A0, v17);
+  Output_WriteFormatted(v10, v9, filePtr, (int)(intptr_t)a000_0, v16);
+  Rules_ExpressionToCode(filePtr, *(__int16 **)(uintptr_t)(deffunction + 30), v11, moduleImage);
+  Output_WriteFormatted(*(_DWORD *)(uintptr_t)(deffunction + 38), *(_DWORD *)(uintptr_t)(deffunction + 42), filePtr, (int)(intptr_t)aDDD, *(_DWORD *)(uintptr_t)(deffunction + 34));
+  return Output_WriteFormatted(v13, v12, filePtr, (int)(intptr_t)asc_50B8A0, v17);
 }
 // 4CB8BD: variable 'v15' is possibly undefined
 // 4CB8DD: variable 'v8' is possibly undefined
@@ -233,7 +233,7 @@ int  Deffunction_ParseConstruct(int readSource)
     Rules_ReportCannotLoadWithBload();
     return 1;
   }
-  deffunctionName = Rules_GetConstructNameAndComment(readSource, (int)g_Rules_ParsedConstructNameComment, (int (*)(void))Deffunction_FindByName, aDeffunction_4, v2, asc_50B8D8, 1, 1, 1);
+  deffunctionName = Rules_GetConstructNameAndComment(readSource, (int)(intptr_t)g_Rules_ParsedConstructNameComment, (int (*)(void))Deffunction_FindByName, aDeffunction_4, v2, asc_50B8D8, 1, 1, 1);
   if ( !deffunctionName )
     return 1;
   if ( !Deffunction_ValidateNewName() )
@@ -246,10 +246,10 @@ int  Deffunction_ParseConstruct(int readSource)
   {
     AST_Append(v7, v6);
     g_ClipsParseReturnContext = 1;
-    if ( !Parser_ParseProcActions((int)aDeffunction_4, readSource, parameterList, v9, 0, 0, &v12, 0) )
+    if ( !Parser_ParseProcActions((int)(intptr_t)aDeffunction_4, readSource, parameterList, v9, 0, 0, &v12, 0) )
     {
       AST_Free(parameterList);
-      if ( !*(_DWORD *)(deffunction + 20) )
+      if ( !*(_DWORD *)(uintptr_t)(deffunction + 20) )
       {
         Rules_UnlinkListNode(deffunction);
         Deffunction_Free(deffunction);
@@ -259,7 +259,7 @@ int  Deffunction_ParseConstruct(int readSource)
     }
     IO_OutNewline();
     IO_OutNewline();
-    IO_OutWriteToken((char *)g_Clips_DeffunctionEchoToken);
+    IO_OutWriteToken((char *)(uintptr_t)g_Clips_DeffunctionEchoToken);
     IO_OutWriteToken(asc_50B8E8);
     Deffunction_AddDeffunction(deffunctionName, v8, maxParams, minParams, v12, 0);
     AST_Free(parameterList);
@@ -304,14 +304,14 @@ signed int Deffunction_ValidateNewName(void)
 
   if ( Rules_FindConstructByName() )
   {
-    Rules_PrintErrorID((int)aDffnxpsr, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctionsAr, v12);
+    Rules_PrintErrorID((int)(intptr_t)aDffnxpsr, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDeffunctionsAr, v12);
     return 0;
   }
   else if ( Rules_MakeSymbol(v0) )
   {
-    Rules_PrintErrorID((int)aDffnxpsr, 2, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctions_3, v13);
+    Rules_PrintErrorID((int)(intptr_t)aDffnxpsr, 2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDeffunctions_3, v13);
     return 0;
   }
   else
@@ -319,35 +319,35 @@ signed int Deffunction_ValidateNewName(void)
     conflictingGeneric = Defgeneric_LookupLocalOnly(v1);
     if ( conflictingGeneric )
     {
-      conflictModule = *(_DWORD *)Rules_GetConstructOwnerModule(conflictingGeneric);
+      conflictModule = *(_DWORD *)(uintptr_t)Rules_GetConstructOwnerModule(conflictingGeneric);
       if ( conflictModule == Module_GetCurrent() )
       {
-        Rules_PrintErrorID((int)aDffnxpsr, 3, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctions_4, v14);
+        Rules_PrintErrorID((int)(intptr_t)aDffnxpsr, 3, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDeffunctions_4, v14);
       }
       else
       {
-        Rules_PrintErrorID((int)aDffnxpsr, 5, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefgeneric_4, v5);
+        Rules_PrintErrorID((int)(intptr_t)aDffnxpsr, 5, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDefgeneric_4, v5);
         v7 = Rules_GetConstructNameString(v6);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, (int)g_IO_LogicalNameTable_WError[0]);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aImportedFrom_0, v8);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v7, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aImportedFrom_0, v8);
         Name = Module_GetName(conflictModule);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], Name, (int)g_IO_LogicalNameTable_WError[0]);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConflictsWit_0, v10);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], Name, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aConflictsWit_0, v10);
       }
       return 0;
     }
     else
     {
       existingDeffunction = Deffunction_FindByName(v3, 0);
-      if ( existingDeffunction && *(_DWORD *)(existingDeffunction + 24) )
+      if ( existingDeffunction && *(_DWORD *)(uintptr_t)(existingDeffunction + 24) )
       {
-        Rules_PrintErrorID((int)aDfnxpsr, 4, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunction_5, v16);
+        Rules_PrintErrorID((int)(intptr_t)aDfnxpsr, 4, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDeffunction_5, v16);
         v18 = Rules_GetConstructNameString(v17);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], v18, (int)g_IO_LogicalNameTable_WError[0]);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMayNotBeRedefi, v19);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v18, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMayNotBeRedefi, v19);
         return 0;
       }
       else
@@ -392,52 +392,52 @@ int  Deffunction_AddDeffunction(int name, __int16 *actions, int maxParams, int m
   char *ppForm; // eax
   int watchFlag; // [esp+4h] [ebp-14h]
 
-  existingDeffunction = Deffunction_FindByName(*(_BYTE **)(name + 16), maxParams);
+  existingDeffunction = Deffunction_FindByName(*(_BYTE **)(uintptr_t)(name + 16), maxParams);
   watchFlag = v9;
   deffunction = existingDeffunction;
   if ( existingDeffunction )
   {
     watchFlag = Deffunction_GetWatchFlagField(existingDeffunction);
-    *(_DWORD *)(v16 + 38) = maxParams;
-    *(_DWORD *)(v16 + 42) = numLocalVars;
-    oldCode = *(__int16 **)(v16 + 30);
-    *(_DWORD *)(v16 + 34) = minParams;
+    *(_DWORD *)(uintptr_t)(v16 + 38) = maxParams;
+    *(_DWORD *)(uintptr_t)(v16 + 42) = numLocalVars;
+    oldCode = *(__int16 **)(uintptr_t)(v16 + 30);
+    *(_DWORD *)(uintptr_t)(v16 + 34) = minParams;
     AST_DeinstallNodeChain(oldCode);
-    oldPackedCode = *(_DWORD *)(v18 + 30);
-    *(_DWORD *)(v18 + 20) = v20;
+    oldPackedCode = *(_DWORD *)(uintptr_t)(v18 + 30);
+    *(_DWORD *)(uintptr_t)(v18 + 20) = v20;
     AST_FreePackedNodeChain(oldPackedCode);
-    *(_DWORD *)(v21 + 30) = 0;
+    *(_DWORD *)(uintptr_t)(v21 + 30) = 0;
     Rules_ReplaceConstructPPForm(v21, 0);
     Rules_UnlinkListNode(v22);
   }
   else
   {
-    freeListItem = *(_DWORD **)(g_ClipsMemoryTable + 184);
+    freeListItem = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 184);
     if ( freeListItem )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 184);
-      *(_DWORD *)(g_ClipsMemoryTable + 184) = *freeListItem;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 184);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 184) = *freeListItem;
     }
     else
     {
       Mem_HeapAllocWithRetry((_DWORD *)0x2E);
     }
-    Rules_InitConstructModuleRecord((int)aDeffunction_4, name);
-    ++*(_DWORD *)(name + 4);
+    Rules_InitConstructModuleRecord((int)(intptr_t)aDeffunction_4, name);
+    ++*(_DWORD *)(uintptr_t)(name + 4);
     *(_DWORD *)((char *)newDeffunction + 30) = 0;
     newDeffunction[5] = 0;
     newDeffunction[6] = 0;
     *(_DWORD *)((char *)newDeffunction + 34) = minParams;
     *(_DWORD *)((char *)newDeffunction + 38) = maxParams;
-    deffunction = (int)newDeffunction;
+    deffunction = (int)(intptr_t)newDeffunction;
     *(_DWORD *)((char *)newDeffunction + 42) = numLocalVars;
   }
   Rules_AppendConstructToModuleList(deffunction);
   if ( actions )
   {
     AST_InstallNodeChain(actions);
-    *(_DWORD *)(deffunction + 20) = v13;
-    *(_DWORD *)(deffunction + 30) = actions;
+    *(_DWORD *)(uintptr_t)(deffunction + 20) = v13;
+    *(_DWORD *)(uintptr_t)(deffunction + 30) = actions;
   }
   if ( watchFlag )
     watchValue = 1;
@@ -447,7 +447,7 @@ int  Deffunction_AddDeffunction(int name, __int16 *actions, int maxParams, int m
   if ( Mem_GetAllocFlag() || headerFlag )
     return deffunction;
   ppForm = Rules_CopyPPBuffer();
-  Rules_ReplaceConstructPPForm(deffunction, (int)ppForm);
+  Rules_ReplaceConstructPPForm(deffunction, (int)(intptr_t)ppForm);
   return deffunction;
 }
 // 4CBC8B: variable 'v9' is possibly undefined
@@ -486,13 +486,13 @@ int  Deffunction_CallDeffunction(int deffunction, _DWORD *argExprs, _DWORD *retu
     g_CurrentDeffunction = deffunction;
     ++g_ClipsCurrentEvaluationDepth;
     savedDeffunction = v8;
-    ++*(_DWORD *)(deffunction + 24);
+    ++*(_DWORD *)(uintptr_t)(deffunction + 24);
     nameString = Rules_GetConstructNameString(deffunction);
-    argCount = AST_CountListNodes((int)argExprs);
+    argCount = AST_CountListNodes((int)(intptr_t)argExprs);
     ProcParam_PushEvaluatedArgumentFrame(argExprs, argCount, v11, nameString, a4, (int (*)(void))Deffunction_PrintErrorContext);
     if ( g_ClipsEvaluationError )
     {
-      --*(_DWORD *)(deffunction + 24);
+      --*(_DWORD *)(uintptr_t)(deffunction + 24);
       g_CurrentDeffunction = savedDeffunction;
       --g_ClipsCurrentEvaluationDepth;
       Rules_RunPeriodicCleanup(0, 1);
@@ -500,23 +500,23 @@ int  Deffunction_CallDeffunction(int deffunction, _DWORD *argExprs, _DWORD *retu
     }
     else
     {
-      if ( *(_WORD *)(deffunction + 28) )
-        Deffunction_PrintCallTrace((int)asc_50BA48);
+      if ( *(_WORD *)(uintptr_t)(deffunction + 28) )
+        Deffunction_PrintCallTrace((int)(intptr_t)asc_50BA48);
       Rules_ExecuteRuleActions(
-        **(_DWORD **)(deffunction + 8),
-        *(__int16 **)(deffunction + 30),
+        **(_DWORD **)(uintptr_t)(deffunction + 8),
+        *(__int16 **)(uintptr_t)(deffunction + 30),
         returnValue,
-        *(_DWORD *)(deffunction + 42),
+        *(_DWORD *)(uintptr_t)(deffunction + 42),
         a4,
         (void (*)(void))Deffunction_PrintErrorContext);
-      if ( *(_WORD *)(deffunction + 28) )
-        Deffunction_PrintCallTrace((int)asc_50BA4C);
+      if ( *(_WORD *)(uintptr_t)(deffunction + 28) )
+        Deffunction_PrintCallTrace((int)(intptr_t)asc_50BA4C);
       LODWORD(g_ClipsHaltExecutionFlag) = 0;
-      --*(_DWORD *)(deffunction + 24);
+      --*(_DWORD *)(uintptr_t)(deffunction + 24);
       ProcParam_PopFrame();
       g_CurrentDeffunction = savedDeffunction;
       --g_ClipsCurrentEvaluationDepth;
-      Rules_PropagateReturnValueDepth((int)returnValue);
+      Rules_PropagateReturnValueDepth((int)(intptr_t)returnValue);
       Rules_RunPeriodicCleanup(0, v12);
       return Rules_SetReentryGuardFlag(savedReentryFlag);
     }
@@ -538,10 +538,10 @@ signed int __thiscall Deffunction_PrintErrorContext(void *this)
   int v1; // eax
   int v2; // ecx
 
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunction_9, (int)this);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDeffunction_9, (int)(intptr_t)this);
   v1 = Rules_GetConstructNameString(g_CurrentDeffunction);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, (int)g_IO_LogicalNameTable_WError[0]);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__33, v2);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__33, v2);
 }
 // 4CBF64: variable 'v2' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
@@ -559,19 +559,19 @@ signed int  Deffunction_PrintCallTrace(int a1)
   int Name; // eax
   int v9; // ecx
 
-  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aDfn, a1);
-  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v1, v1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aDfn, a1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], v1, v1);
   currentModule = Module_GetCurrent();
   if ( currentModule != *v4 )
   {
-    Name = Module_GetName(**(_DWORD **)(g_CurrentDeffunction + 8));
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], Name, (int)g_IO_LogicalNameTable_WTrace[0]);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50BA6C, v9);
+    Name = Module_GetName(**(_DWORD **)(uintptr_t)(g_CurrentDeffunction + 8));
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], Name, (int)(intptr_t)g_IO_LogicalNameTable_WTrace[0]);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_50BA6C, v9);
   }
-  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)g_CurrentDeffunction + 16), v3);
-  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aEd_2, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_CurrentDeffunction + 16), v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aEd_2, v5);
   Rules_PrintLongInteger(v6, g_ClipsCurrentEvaluationDepth);
-  return ProcParam_PrintArguments((int)g_IO_LogicalNameTable_WTrace[0]);
+  return ProcParam_PrintArguments((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0]);
 }
 // 4CBF8A: variable 'v1' is possibly undefined
 // 4CBF9C: variable 'v4' is possibly undefined
@@ -588,14 +588,14 @@ int Defglobal_RegisterConstructCommands(void)
 {
   int v0; // ecx
 
-  Rules_AddSaveFunction((int)aDefglobal_0, (int)Defglobal_SaveDefglobals, 40);
-  Rules_AddResetFunction((int)aDefglobal_0, (int)Defglobal_ResetAllDefglobals, 50);
-  Rules_RegisterHostFunction(aGetDefglobalLi, 109, v0, (int)Defglobal_GetDefglobalListCommand, (int)a01w_7);
-  Rules_RegisterHostFunction(aUndefglobal, 118, (int)aUndefglobalcom, (int)Defglobal_UndefglobalCommand, (int)a11w_11);
-  Rules_RegisterHostFunction(aDefglobalModul, 119, (int)aDefglobalmodul, (int)Defglobal_DefglobalModuleCommand, (int)a11w_11);
-  Rules_RegisterHostFunction(aListDefglobals, 118, (int)aListdefglobals, (int)Defglobal_ListDefglobalsCommand, (int)a01w_7);
-  Rules_RegisterHostFunction(aPpdefglobal, 118, (int)aPpdefglobalcom, (int)Defglobal_PpdefglobalCommand, (int)a11w_11);
-  Rules_AddWatchItem((int)aGlobals, 0, 0, (int)&g_Rules_WatchGlobals, (int)Defglobal_SetWatchAll, (int)Defglobal_GetWatchAll);
+  Rules_AddSaveFunction((int)(intptr_t)aDefglobal_0, (int)(intptr_t)Defglobal_SaveDefglobals, 40);
+  Rules_AddResetFunction((int)(intptr_t)aDefglobal_0, (int)(intptr_t)Defglobal_ResetAllDefglobals, 50);
+  Rules_RegisterHostFunction(aGetDefglobalLi, 109, v0, (int)(intptr_t)Defglobal_GetDefglobalListCommand, (int)(intptr_t)a01w_7);
+  Rules_RegisterHostFunction(aUndefglobal, 118, (int)(intptr_t)aUndefglobalcom, (int)(intptr_t)Defglobal_UndefglobalCommand, (int)(intptr_t)a11w_11);
+  Rules_RegisterHostFunction(aDefglobalModul, 119, (int)(intptr_t)aDefglobalmodul, (int)(intptr_t)Defglobal_DefglobalModuleCommand, (int)(intptr_t)a11w_11);
+  Rules_RegisterHostFunction(aListDefglobals, 118, (int)(intptr_t)aListdefglobals, (int)(intptr_t)Defglobal_ListDefglobalsCommand, (int)(intptr_t)a01w_7);
+  Rules_RegisterHostFunction(aPpdefglobal, 118, (int)(intptr_t)aPpdefglobalcom, (int)(intptr_t)Defglobal_PpdefglobalCommand, (int)(intptr_t)a11w_11);
+  Rules_AddWatchItem((int)(intptr_t)aGlobals, 0, 0, (int)(intptr_t)&g_Rules_WatchGlobals, (int)(intptr_t)Defglobal_SetWatchAll, (int)(intptr_t)Defglobal_GetWatchAll);
   Rules_RegisterDefglobalBinaryItem();
   return Defglobal_RegisterCodeGeneratorItem();
 }
@@ -620,7 +620,7 @@ int  Defglobal_ResetSingleDefglobal(int defglobal, int a2, double a3)
   _DWORD valueBuffer[6]; // [esp+0h] [ebp-18h] BYREF
 
   (void)a2;
-  if ( Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(defglobal + 52), valueBuffer, defglobal, a3) )
+  if ( Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(defglobal + 52), valueBuffer, defglobal, a3) )
   {
     valueBuffer[1] = 2;
     valueBuffer[2] = g_ClipsFalseSymbol;
@@ -639,7 +639,7 @@ int  Defglobal_SaveDefglobals(signed int logicalName)
 //----- (004CC180) --------------------------------------------------------
 int __thiscall Defglobal_UndefglobalCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, g_ClipsDefglobalConstructType);
+  return Rules_UndefconstructCommand((int)(intptr_t)this, g_ClipsDefglobalConstructType);
 }
 // 54E6B4: using guessed type int dword_54E6B4;
 
@@ -660,14 +660,14 @@ _DWORD * Defglobal_GetDefglobalListCommand(int returnValue, double a2)
 //----- (004CC1F0) --------------------------------------------------------
 int __thiscall Defglobal_DefglobalModuleCommand(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)g_ClipsDefglobalConstructType);
+  return Rules_GetConstructModuleCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_ClipsDefglobalConstructType);
 }
 // 54E6B4: using guessed type int dword_54E6B4;
 
 //----- (004CC210) --------------------------------------------------------
 int __thiscall Defglobal_PpdefglobalCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)g_ClipsDefglobalConstructType);
+  return Rules_PPConstructCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_ClipsDefglobalConstructType);
 }
 // 54E6B4: using guessed type int dword_54E6B4;
 
@@ -681,7 +681,7 @@ int  Defglobal_ListDefglobalsCommand(int logicalName, double a2)
 //----- (004CC280) --------------------------------------------------------
 int  Defglobal_GetWatchFlagField(int defglobal)
 {
-  return *(_DWORD *)(defglobal + 20) & 1;
+  return *(_DWORD *)(uintptr_t)(defglobal + 20) & 1;
 }
 
 //----- (004CC290) --------------------------------------------------------
@@ -689,16 +689,16 @@ int  Defglobal_SetWatchFlagField(char newState, int defglobal)
 {
   int result; // eax
 
-  *(_BYTE *)(defglobal + 20) &= ~1u;
+  *(_BYTE *)(uintptr_t)(defglobal + 20) &= ~1u;
   result = newState & 1;
-  *(_DWORD *)(defglobal + 20) |= result;
+  *(_DWORD *)(uintptr_t)(defglobal + 20) |= result;
   return result;
 }
 
 //----- (004CC2A0) --------------------------------------------------------
 signed int  Defglobal_SetWatchAll(int a1, int a2, double a3)
 {
-  return Rules_ApplyWatchFlagCommand(g_ClipsDefglobalConstructType, a1, (int)Defglobal_GetWatchFlagField, a2, a3, (void (*)(void))Defglobal_SetWatchFlagField);
+  return Rules_ApplyWatchFlagCommand(g_ClipsDefglobalConstructType, a1, (int)(intptr_t)Defglobal_GetWatchFlagField, a2, a3, (void (*)(void))Defglobal_SetWatchFlagField);
 }
 // 4CC280: using guessed type int sub_4CC280();
 // 4CC290: using guessed type int sub_4CC290();
@@ -707,7 +707,7 @@ signed int  Defglobal_SetWatchAll(int a1, int a2, double a3)
 //----- (004CC2C0) --------------------------------------------------------
 signed int  Defglobal_GetWatchAll(int a1, int a2, double a3)
 {
-  return Rules_ListWatchFlagStatus(g_ClipsDefglobalConstructType, a1, (int)Defglobal_GetWatchFlagField, a2, a3, (void (*)(void))Defglobal_SetWatchFlagField);
+  return Rules_ListWatchFlagStatus(g_ClipsDefglobalConstructType, a1, (int)(intptr_t)Defglobal_GetWatchFlagField, a2, a3, (void (*)(void))Defglobal_SetWatchFlagField);
 }
 // 4CC280: using guessed type int sub_4CC280();
 // 4CC290: using guessed type int sub_4CC290();
@@ -716,9 +716,9 @@ signed int  Defglobal_GetWatchAll(int a1, int a2, double a3)
 //----- (004CC2E0) --------------------------------------------------------
 signed int Defglobal_RegisterResetGlobalsCommands(void)
 {
-  Rules_RegisterHostFunction(aSetResetGlobal, 98, (int)aSetresetglobal, (int)Defglobal_SetResetGlobalsCommand, (int)a11_5);
-  Rules_RegisterHostFunction(aGetResetGlobal, 98, (int)aGetresetglobal, (int)Defglobal_GetResetGlobalsCommand, (int)a00_11);
-  return Rules_RegisterHostFunction(aShowDefglobals, 118, (int)aShowdefglobals, (int)Defglobal_ShowDefglobalsCommand, (int)a01w_8);
+  Rules_RegisterHostFunction(aSetResetGlobal, 98, (int)(intptr_t)aSetresetglobal, (int)(intptr_t)Defglobal_SetResetGlobalsCommand, (int)(intptr_t)a11_5);
+  Rules_RegisterHostFunction(aGetResetGlobal, 98, (int)(intptr_t)aGetresetglobal, (int)(intptr_t)Defglobal_GetResetGlobalsCommand, (int)(intptr_t)a00_11);
+  return Rules_RegisterHostFunction(aShowDefglobals, 118, (int)(intptr_t)aShowdefglobals, (int)(intptr_t)Defglobal_ShowDefglobalsCommand, (int)(intptr_t)a01w_8);
 }
 
 //----- (004CC350) --------------------------------------------------------
@@ -781,7 +781,7 @@ void  Defglobal_ShowDefglobalsCommand(int a1, double a2, int a3)
     {
       moduleArg = Rules_GetModuleNameArg(1, v4, v8, a2);
       if ( !v8[0] )
-        Defglobal_ShowDefglobalsForModules(0, (int)moduleArg);
+        Defglobal_ShowDefglobalsForModules(0, (int)(intptr_t)moduleArg);
     }
     else
     {
@@ -819,18 +819,18 @@ void __fastcall Defglobal_ShowDefglobalsForModules(int a1, int theModule)
     {
       Name = Module_GetName(Enum);
       Output_Write(v5, Name, v5);
-      Output_Write(v6, (int)asc_50BBE4, v6);
+      Output_Write(v6, (int)(intptr_t)asc_50BBE4, v6);
     }
-    defglobal = *(_DWORD *)(Module_GetItem(Enum, g_ClipsDefglobalModuleItemId) + 4);
+    defglobal = *(_DWORD *)(uintptr_t)(Module_GetItem(Enum, g_ClipsDefglobalModuleItemId) + 4);
     if ( defglobal )
     {
       while ( g_ClipsHaltExecution != 1 )
       {
         if ( printModuleName )
-          Output_Write(v7, (int)asc_50BBE8, v7);
+          Output_Write(v7, (int)(intptr_t)asc_50BBE8, v7);
         Defglobal_PrintDefglobalValue(v7, defglobal);
-        Output_Write(v9, (int)asc_50BBEC, v9);
-        defglobal = *(_DWORD *)(defglobal + 16);
+        Output_Write(v9, (int)(intptr_t)asc_50BBEC, v9);
+        defglobal = *(_DWORD *)(uintptr_t)(defglobal + 16);
         if ( !defglobal )
           goto LABEL_11;
       }
@@ -856,9 +856,9 @@ signed int  Defglobal_PrintDefglobalValue(int logicalName, int defglobal)
   int v4; // ecx
   int v5; // ecx
 
-  Output_Write(logicalName, (int)aDefglobalVariablePrefix, logicalName);
-  Output_Write(v3, *(_DWORD *)(*(_DWORD *)defglobal + 16), v3);
-  Output_Write(v4, (int)asc_50BBF4, v4);
+  Output_Write(logicalName, (int)(intptr_t)aDefglobalVariablePrefix, logicalName);
+  Output_Write(v3, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)defglobal + 16), v3);
+  Output_Write(v4, (int)(intptr_t)asc_50BBF4, v4);
   return Rules_PrintDataObject(v5, defglobal + 28);
 }
 // 4CC547: variable 'v3' is possibly undefined
@@ -891,18 +891,18 @@ int  Defglobal_ParseDefglobalConstruct(int readSource, double a2)
     Rules_ReportCannotLoadWithBload();
     return 1;
   }
-  Parser_NextToken(readSource, (int)&tokenType);
+  Parser_NextToken(readSource, (int)(intptr_t)&tokenType);
   if ( tokenType == 2 )
   {
     tokenPrimed = 0;
-    if ( Rules_FindModuleSeparator(*(_BYTE **)(v13 + 16)) )
+    if ( Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(v13 + 16)) )
     {
       Parser_ReportSyntaxError();
       return 1;
     }
-    if ( !Module_FindByName(*(_BYTE **)(v13 + 16)) )
+    if ( !Module_FindByName(*(_BYTE **)(uintptr_t)(v13 + 16)) )
     {
-      Rules_ReportCantFindItem(v10, *(_DWORD *)(v13 + 16));
+      Rules_ReportCantFindItem(v10, *(_DWORD *)(uintptr_t)(v13 + 16));
       return 1;
     }
     IO_OutWriteToken(asc_50BC20);
@@ -912,7 +912,7 @@ int  Defglobal_ParseDefglobalConstruct(int readSource, double a2)
   {
     IO_OutNewline();
     v5 = Module_GetCurrent();
-    Name = (char *)Module_GetName(v5);
+    Name = (char *)(uintptr_t)Module_GetName(v5);
     IO_OutWriteToken(Name);
     IO_OutWriteToken(asc_50BC20);
     IO_OutWriteToken(v14);
@@ -922,7 +922,7 @@ int  Defglobal_ParseDefglobalConstruct(int readSource, double a2)
     Rules_FlushPPBuffer();
     IO_OutWriteToken(aDefglobal_5);
     v7 = Module_GetCurrent();
-    v8 = (char *)Module_GetName(v7);
+    v8 = (char *)(uintptr_t)Module_GetName(v7);
     IO_OutWriteToken(v8);
     tokenPrimed = 0;
     IO_OutWriteToken(asc_50BC20);
@@ -953,21 +953,21 @@ int  Lexer_ParseDefglobal(int readSource, _DWORD *errorFlag, _DWORD *token, int 
   int v22; // edx
 
   if ( !tokenPrimed )
-    Parser_NextToken(readSource, (int)token);
+    Parser_NextToken(readSource, (int)(intptr_t)token);
   if ( *token == 101 )
     return 0;
   if ( *token != 13 )
     goto LABEL_16;
   globalSymbol = token[1];
   IO_OutWriteToken(asc_50BC20);
-  if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
+  if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
   {
     if ( Defglobal_FindNextChanged() )
       v9 = aRedefiningDefg;
     else
       v9 = aDefiningDefglo;
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v9, v8);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(globalSymbol + 16), v10);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)v9, v8);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(uintptr_t)(globalSymbol + 16), v10);
     v12 = asc_50BC64;
     goto LABEL_10;
   }
@@ -975,13 +975,13 @@ int  Lexer_ParseDefglobal(int readSource, _DWORD *errorFlag, _DWORD *token, int 
   {
     v12 = asc_50BC68;
 LABEL_10:
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v12, v11);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)v12, v11);
   }
-  v13 = *(_BYTE **)(globalSymbol + 16);
+  v13 = *(_BYTE **)(uintptr_t)(globalSymbol + 16);
   v14 = Module_GetCurrent();
   if ( Rules_FindImportExportConflict(aDefglobal_2, v14, v13) )
   {
-    Lexer_WarnImpliedTemplate((int)aDefglobal_2, *(_DWORD *)(globalSymbol + 16), 0);
+    Lexer_WarnImpliedTemplate((int)(intptr_t)aDefglobal_2, *(_DWORD *)(uintptr_t)(globalSymbol + 16), 0);
     *errorFlag = 1;
     return 0;
   }
@@ -995,13 +995,13 @@ LABEL_16:
   }
   IO_OutWriteToken(asc_50BC20);
   result = Parser_ParseSingleExpression(readSource, 0, v17);
-  valueExpr = (__int16 *)result;
+  valueExpr = (__int16 *)(uintptr_t)result;
   if ( result )
   {
     Lexer_ErrorRecover(0);
     if ( Parser_ParseForm(valueExpr, v20, v21, a5) )
     {
-      AST_Free((int)valueExpr);
+      AST_Free((int)(intptr_t)valueExpr);
       *errorFlag = 1;
       return 0;
     }
@@ -1063,42 +1063,42 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
   watchFlag = 0;
   if ( foundDefglobal )
   {
-    Rules_FreeConstructHeaderString(foundDefglobal, (int)foundDefglobal);
+    Rules_FreeConstructHeaderString(foundDefglobal, (int)(intptr_t)foundDefglobal);
     watchFlag = existingDefglobal[5] & 1;
   }
   else
   {
-    freeList = *(_DWORD **)(g_ClipsMemoryTable + 224);
+    freeList = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 224);
     isNew = 1;
     if ( freeList )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 224);
-      *(_DWORD *)(g_ClipsMemoryTable + 224) = *freeList;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 224);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 224) = *freeList;
       allocatedStruct = g_ClipsMemFreeListTemp;
     }
     else
     {
       allocatedStruct = Mem_HeapAllocWithRetry((_DWORD *)0x38);
     }
-    defglobal = (_DWORD *)allocatedStruct;
+    defglobal = (_DWORD *)(uintptr_t)allocatedStruct;
   }
   if ( !isNew )
   {
-    Rules_ValueDeinstall((int)(defglobal + 7), (int)defglobal);
-    if ( *(_DWORD *)(v11 + 32) == 4 )
-      Rules_ReturnMultifieldToPool(*(_DWORD **)(v11 + 36));
-    AST_RemoveHashedNodeChain(*(__int16 **)(v11 + 52), v11);
+    Rules_ValueDeinstall((int)(intptr_t)(defglobal + 7), (int)(intptr_t)defglobal);
+    if ( *(_DWORD *)(uintptr_t)(v11 + 32) == 4 )
+      Rules_ReturnMultifieldToPool(*(_DWORD **)(uintptr_t)(v11 + 36));
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v11 + 52), v11);
   }
-  valueType = *(_DWORD *)(valueData + 4);
+  valueType = *(_DWORD *)(uintptr_t)(valueData + 4);
   defglobal[8] = valueType;
   if ( valueType == 4 )
     Rules_AssignMultifieldRangeCopy(defglobal + 7, valueData);
   else
-    defglobal[9] = *(_DWORD *)(valueData + 8);
-  Rules_ValueInstall((int)(defglobal + 7), (int)defglobal);
+    defglobal[9] = *(_DWORD *)(uintptr_t)(valueData + 8);
+  Rules_ValueInstall((int)(intptr_t)(defglobal + 7), (int)(intptr_t)defglobal);
   v15 = AST_AddHashedNodeChain(valueExpr, v13, v14);
-  *(_DWORD *)(v16 + 52) = v15;
-  AST_Free((int)valueExpr);
+  *(_DWORD *)(uintptr_t)(v16 + 52) = v15;
+  AST_Free((int)(intptr_t)valueExpr);
   g_Defglobal_ChangedFlag = 1;
   if ( watchFlag )
     watchValue = 1;
@@ -1107,28 +1107,28 @@ char * Defglobal_AddDefglobal(int globalName, int valueData, __int16 *valueExpr)
   *v17 &= ~1u;
   *(_DWORD *)v17 |= watchValue & 1;
   *v18 = globalName;
-  ++*(_DWORD *)(globalName + 4);
+  ++*(_DWORD *)(uintptr_t)(globalName + 4);
   IO_OutWriteToken(asc_50BC64);
-  result = (char *)Mem_GetAllocFlag();
+  result = (char *)(uintptr_t)Mem_GetAllocFlag();
   if ( result != (char *)1 )
   {
     result = Rules_CopyPPBuffer();
-    *(_DWORD *)(v21 + 4) = result;
-    *(_BYTE *)(v21 + 20) |= 2u;
+    *(_DWORD *)(uintptr_t)(v21 + 4) = result;
+    *(_BYTE *)(uintptr_t)(v21 + 20) |= 2u;
     if ( !isNew )
       return result;
     goto LABEL_21;
   }
-  *(_DWORD *)(v21 + 4) = 0;
-  *(_BYTE *)(v21 + 20) |= 2u;
+  *(_DWORD *)(uintptr_t)(v21 + 4) = 0;
+  *(_BYTE *)(uintptr_t)(v21 + 20) |= 2u;
   if ( isNew )
   {
 LABEL_21:
-    *(_DWORD *)(v21 + 24) = 0;
-    moduleItem = Module_FindItemByName((int)aDefglobal_2);
-    whichModule = Module_GetItem(0, *(_DWORD *)(moduleItem + 4));
-    *(_DWORD *)(v24 + 8) = whichModule;
-    return (char *)Rules_AppendConstructToModuleList(v24);
+    *(_DWORD *)(uintptr_t)(v21 + 24) = 0;
+    moduleItem = Module_FindItemByName((int)(intptr_t)aDefglobal_2);
+    whichModule = Module_GetItem(0, *(_DWORD *)(uintptr_t)(moduleItem + 4));
+    *(_DWORD *)(uintptr_t)(v24 + 8) = whichModule;
+    return (char *)(uintptr_t)Rules_AppendConstructToModuleList(v24);
   }
   return result;
 }
@@ -1154,18 +1154,18 @@ signed int  Defglobal_ResolveGlobalVariableReference(int exprNode, int a2)
   _DWORD lookupBuffer[5]; // [esp+0h] [ebp-14h] BYREF
 
   lookupBuffer[3] = a2;
-  defglobal = Rules_FindImportExportConstruct(aDefglobal_2, lookupBuffer, *(_BYTE **)(*(_DWORD *)(exprNode + 2) + 16), 1, 0);
+  defglobal = Rules_FindImportExportConstruct(aDefglobal_2, lookupBuffer, *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(exprNode + 2) + 16), 1, 0);
   if ( defglobal )
   {
     if ( lookupBuffer[0] > 1 )
     {
-      Rules_ReportAmbiguousReferenceError((int)aDefglobal_2, *(_DWORD *)(*(_DWORD *)(exprNode + 2) + 16));
+      Rules_ReportAmbiguousReferenceError((int)(intptr_t)aDefglobal_2, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(exprNode + 2) + 16));
       return 0;
     }
     else
     {
-      *(_WORD *)exprNode = 60;
-      *(_DWORD *)(exprNode + 2) = defglobal;
+      *(_WORD *)(uintptr_t)exprNode = 60;
+      *(_DWORD *)(uintptr_t)(exprNode + 2) = defglobal;
       return 1;
     }
   }
@@ -1183,10 +1183,10 @@ signed int Defglobal_PrintUndefinedVariableError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aGloblpsr, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGlobalVariable, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasReferencedB, v2);
+  Rules_PrintErrorID((int)(intptr_t)aGloblpsr, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aGlobalVariable, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWasReferencedB, v2);
 }
 // 4CCA70: variable 'v0' is possibly undefined
 // 4CCA7C: variable 'v1' is possibly undefined
@@ -1198,7 +1198,7 @@ int Defglobal_RegisterCodeGeneratorItem(void)
 {
   int result; // eax
 
-  result = Rules_AddCodeGeneratorItem((int)aDefglobal_3, 0, (int)Defglobals_ResetCallback, (int)Defglobal_AssignModuleItemIds, (int)Defglobal_WriteConstructsToCCode, 2);
+  result = Rules_AddCodeGeneratorItem((int)(intptr_t)aDefglobal_3, 0, (int)(intptr_t)Defglobals_ResetCallback, (int)(intptr_t)Defglobal_AssignModuleItemIds, (int)(intptr_t)Defglobal_WriteConstructsToCCode, 2);
   g_ClipsDefglobalCodeGenItem = result;
   return result;
 }
@@ -1253,7 +1253,7 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
   defglobalArrayCount = 0;
   defglobalArrayVersion = 1;
   moduleFile = 0;
-  Output_WriteFormatted(0, 1, headerFP, (int)aIncludeGloblde, 1);
+  Output_WriteFormatted(0, 1, headerFP, (int)(intptr_t)aIncludeGloblde, 1);
   codeFP = 0;
   Enum = Module_NextEnum(0);
   if ( Enum )
@@ -1269,8 +1269,8 @@ int  Defglobal_WriteConstructsToCCode(const char *fileName, const char *pathName
              &fileCount,
              moduleArrayVersion,
              v24,
-             (char)aStructDefgloba,
-             **(const char ***)(g_ClipsDefglobalCodeGenItem + 20),
+             (char)(intptr_t)aStructDefgloba,
+             **(const char ***)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20),
              0,
              0);
       v9 = openedModuleFile;
@@ -1301,8 +1301,8 @@ LABEL_6:
               &fileCount,
               defglobalArrayVersion,
               v24,
-              (char)aStructDefglo_0,
-              *(const char **)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4),
+              (char)(intptr_t)aStructDefglo_0,
+              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4),
               0,
               0);
       v13 = openedDefglobalFile;
@@ -1367,9 +1367,9 @@ int  Defglobal_WriteModuleHeaderToCode(int filePtr, int theModule, int maxIndice
   char v10; // [esp+0h] [ebp-Ch]
   char v11; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)asc_50BD24, v10);
-  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v5, v6, g_ClipsDefglobalModuleItemId, *(_DWORD *)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4));
-  return Output_WriteFormatted(v8, v7, filePtr, (int)asc_50BD28, v11);
+  Output_WriteFormatted(maxIndices, theModule, filePtr, (int)(intptr_t)asc_50BD24, v10);
+  Rules_WriteConstructModuleItemHeaderToCode(filePtr, v5, v6, g_ClipsDefglobalModuleItemId, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4));
+  return Output_WriteFormatted(v8, v7, filePtr, (int)(intptr_t)asc_50BD28, v11);
 }
 // 4CCD3B: variable 'v10' is possibly undefined
 // 4CCD58: variable 'v5' is possibly undefined
@@ -1398,14 +1398,14 @@ int  Defglobal_WriteDefglobalEntryToCode(int filePtr, int defglobal, int maxIndi
   char v21; // [esp+0h] [ebp-10h]
   char v22; // [esp+0h] [ebp-10h]
 
-  Output_WriteFormatted(maxIndices, defglobal, filePtr, (int)asc_50BD24, a4);
-  Rules_WriteConstructHeaderToCode(filePtr, defglobal, maxIndices, moduleCount, **(_DWORD **)(g_ClipsDefglobalCodeGenItem + 20), *(_DWORD *)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4));
-  Output_WriteFormatted(v9, v8, filePtr, (int)asc_50BD2C, v19);
-  Output_WriteFormatted(v11, v10, filePtr, (int)a00Ld, *(_DWORD *)(defglobal + 24));
-  Output_WriteFormatted(v13, v12, filePtr, (int)aNullRvoid, v20);
-  Output_WriteFormatted(maxIndices, v14, filePtr, (int)asc_50BD2C, v21);
-  Rules_WriteExpressionRefToCode(filePtr, *(__int16 **)(defglobal + 52), v15, v22);
-  return Output_WriteFormatted(v17, v16, filePtr, (int)asc_50BD28, v22);
+  Output_WriteFormatted(maxIndices, defglobal, filePtr, (int)(intptr_t)asc_50BD24, a4);
+  Rules_WriteConstructHeaderToCode(filePtr, defglobal, maxIndices, moduleCount, **(_DWORD **)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4));
+  Output_WriteFormatted(v9, v8, filePtr, (int)(intptr_t)asc_50BD2C, v19);
+  Output_WriteFormatted(v11, v10, filePtr, (int)(intptr_t)a00Ld, *(_DWORD *)(uintptr_t)(defglobal + 24));
+  Output_WriteFormatted(v13, v12, filePtr, (int)(intptr_t)aNullRvoid, v20);
+  Output_WriteFormatted(maxIndices, v14, filePtr, (int)(intptr_t)asc_50BD2C, v21);
+  Rules_WriteExpressionRefToCode(filePtr, *(__int16 **)(uintptr_t)(defglobal + 52), v15, v22);
+  return Output_WriteFormatted(v17, v16, filePtr, (int)(intptr_t)asc_50BD28, v22);
 }
 // 4CCDC6: variable 'v9' is possibly undefined
 // 4CCDC6: variable 'v8' is possibly undefined
@@ -1426,7 +1426,7 @@ int  Defglobal_WriteDefglobalEntryToCode(int filePtr, int defglobal, int maxIndi
 //----- (004CCE30) --------------------------------------------------------
 int  Defglobal_WriteModuleItemHeaderReference(int filePtr, int a2)
 {
-  return Output_WriteFormatted(a2, **(_DWORD **)(g_ClipsDefglobalCodeGenItem + 20), filePtr, (int)aMihsSD_DD_6, **(_DWORD **)(g_ClipsDefglobalCodeGenItem + 20));
+  return Output_WriteFormatted(a2, **(_DWORD **)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20), filePtr, (int)(intptr_t)aMihsSD_DD_6, **(_DWORD **)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20));
 }
 // 54E8EC: using guessed type int dword_54E8EC;
 
@@ -1438,12 +1438,12 @@ int  Defglobal_WriteDefglobalArrayReference(int filePtr, int defglobalIndex, int
   if ( defglobalIndex )
     return Output_WriteFormatted(
              maxIndices,
-             *(_DWORD *)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4),
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4),
              filePtr,
-             (int)aSD_LdLd_0,
-             *(_DWORD *)(*(_DWORD *)(g_ClipsDefglobalCodeGenItem + 20) + 4));
+             (int)(intptr_t)aSD_LdLd_0,
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefglobalCodeGenItem + 20) + 4));
   else
-    return Output_WriteFormatted(maxIndices, 0, filePtr, (int)aNull_6, v4);
+    return Output_WriteFormatted(maxIndices, 0, filePtr, (int)(intptr_t)aNull_6, v4);
 }
 // 4CCE80: variable 'v4' is possibly undefined
 // 54E8EC: using guessed type int dword_54E8EC;

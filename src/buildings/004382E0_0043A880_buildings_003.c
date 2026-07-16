@@ -231,51 +231,51 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int unitIndex, int side, int a3,
       actingUnitOffset = 31 * unitIndex;
       do
       {
-        if ( *(__int16 *)(enemyScanOffset + g_MapData + 852) != -1 && *(unsigned __int8 *)(enemyScanOffset + g_MapData + 854) != side )
+        if ( *(__int16 *)(uintptr_t)(enemyScanOffset + g_MapData + 852) != -1 && *(unsigned __int8 *)(uintptr_t)(enemyScanOffset + g_MapData + 854) != side )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
           result = 0;
-          targetRow = *(unsigned __int16 *)(g_MapData + enemyScanOffset + 856);
-          targetCol = *(unsigned __int16 *)(g_MapData + enemyScanOffset + 858);
+          targetRow = *(unsigned __int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 856);
+          targetCol = *(unsigned __int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 858);
           v140 = 160 * targetRow + unitScoreBase * 4;
           v141 = 2 * targetCol + g_MapData + 40 * targetRow;
-          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + enemyScanOffset + 852)]];
-          v142 = *(_WORD *)(v141 + 1534);
-          *(_WORD *)(v141 + 1534) = -1;
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 852)]];
+          v142 = *(_WORD *)(uintptr_t)(v141 + 1534);
+          *(_WORD *)(uintptr_t)(v141 + 1534) = -1;
           savedTileOccupant = v142;
           tileScore = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) - 800;
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) = tileScore;
           v144 = UnitBattle_EstimateDamageScoreAgainstUnit(unitIndex, enemyScanIndex);
-          v146 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) - 15 * (_DWORD)v144;
+          v146 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) - 15 * (_DWORD)(intptr_t)v144;
           v147 = enemyScanOffset + g_MapData;
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146;
-          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(uintptr_t)(v147 + 860);
           v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(enemyScanIndex, side, tileScore);
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v149] + v140) -= 2 * v148;
           trackTargetCol = v149;
-          Debug_Log(v149, v140, targetRow, (int)aOddzial_w_zasi);
+          Debug_Log(v149, v140, targetRow, (int)(intptr_t)aOddzial_w_zasi);
           actingUnitPtr = actingUnitOffset + g_MapData + 852;
           if ( UnitBattle_IsTileWithinRange(unitIndex, v151, v152)
-            && (*(_BYTE *)(actingUnitOffset + g_MapData + 864) & 3)
+            && (*(_BYTE *)(uintptr_t)(actingUnitOffset + g_MapData + 864) & 3)
              + 1
-             - ((unsigned __int8)(2 * *(_BYTE *)(actingUnitOffset + g_MapData + 864)) >> 5) > 0 )
+             - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(actingUnitOffset + g_MapData + 864)) >> 5) > 0 )
           {
             v153 = 0;
 LABEL_278:
-            LOBYTE(v153) = *(_BYTE *)(actingUnitPtr + 8);
+            LOBYTE(v153) = *(_BYTE *)(uintptr_t)(actingUnitPtr + 8);
             goto LABEL_279;
           }
           v154 = trackTargetCol;
-          if ( *(char *)(trackTargetCol + g_MapData + 20 * targetRow + 3134) <= 0 )
+          if ( *(char *)(uintptr_t)(trackTargetCol + g_MapData + 20 * targetRow + 3134) <= 0 )
           {
             v156 = trackTargetCol;
           }
           else
           {
             v154 = g_MapData + 40 * targetRow;
-            if ( *(__int16 *)(v154 + 2 * trackTargetCol + 1534) == -1
-              || (v155 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
-              && (*(_BYTE *)(v155 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v155 + 864)) >> 5) <= 0 )
+            if ( *(__int16 *)(uintptr_t)(v154 + 2 * trackTargetCol + 1534) == -1
+              || (v155 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v155 + 852)] & 1) == 0)
+              && (*(_BYTE *)(uintptr_t)(v155 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v155 + 864)) >> 5) <= 0 )
             {
               v157 = UnitBattle_MoveTrackNearWall(unitIndex, targetRow, trackTargetCol, targetRow);
               goto LABEL_289;
@@ -288,9 +288,9 @@ LABEL_289:
           if ( !v157 )
           {
             v159 = g_MapData + 31 * unitIndex;
-            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v159 + 852)] )
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v159 + 852)] )
             {
-              if ( (*(_BYTE *)(v159 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v159 + 864)) >> 5) > 0 )
+              if ( (*(_BYTE *)(uintptr_t)(v159 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v159 + 864)) >> 5) > 0 )
                 v158 = UnitBattle_MoveTrackForce(unitIndex, trackTargetCol, targetRow);
             }
           }
@@ -302,12 +302,12 @@ LABEL_289:
             goto LABEL_278;
           }
           v160 = 31 * unitIndex + g_MapData;
-          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v160 + 852)]
-            && (*(_BYTE *)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v160 + 864)) >> 5) > 0 )
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v160 + 852)]
+            && (*(_BYTE *)(uintptr_t)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v160 + 864)) >> 5) > 0 )
           {
-            v176 = *(_WORD *)(actingUnitPtr + 4);
+            v176 = *(_WORD *)(uintptr_t)(actingUnitPtr + 4);
             HIWORD(v174) = 0;
-            v169 = *(_WORD *)(actingUnitPtr + 6);
+            v169 = *(_WORD *)(uintptr_t)(actingUnitPtr + 6);
             if ( *v158 )
             {
               while ( !UnitBattle_IsTileWithinRange(unitIndex, targetRow, trackTargetCol) )
@@ -315,18 +315,18 @@ LABEL_289:
                 v165 = *v162 - 1;
                 *v162 = v165;
                 v174 = v162[v165 + 1];
-                if ( HIWORD(v174) > (int)*(unsigned __int8 *)(actingUnitPtr + 8) )
+                if ( HIWORD(v174) > (int)*(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8) )
                   goto LABEL_317;
-                *(_WORD *)(actingUnitPtr + 4) = (unsigned __int8)v174;
-                *(_WORD *)(actingUnitPtr + 6) = BYTE1(v174);
+                *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = (unsigned __int8)v174;
+                *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = BYTE1(v174);
                 if ( !*v162 )
                   goto LABEL_314;
               }
-              *(_WORD *)(actingUnitPtr + 4) = v176;
-              *(_WORD *)(actingUnitPtr + 6) = v169;
+              *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
+              *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
               j__nfree_();
               LOWORD(v163) = HIWORD(v174);
-              v164 = *(unsigned __int8 *)(actingUnitPtr + 8);
+              v164 = *(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8);
               if ( v164 > v163 )
               {
                 v153 = v164 - v163;
@@ -340,24 +340,24 @@ LABEL_314:
             if ( !UnitBattle_IsTileWithinRange(unitIndex, targetRow, trackTargetCol) )
             {
 LABEL_317:
-              *(_WORD *)(actingUnitPtr + 4) = v176;
-              *(_WORD *)(actingUnitPtr + 6) = v169;
+              *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
+              *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
               j__nfree_();
               goto LABEL_280;
             }
-            *(_WORD *)(actingUnitPtr + 4) = v176;
-            *(_WORD *)(actingUnitPtr + 6) = v169;
-            if ( *(unsigned __int8 *)(actingUnitPtr + 8) > (int)HIWORD(v174) )
+            *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
+            *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
+            if ( *(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8) > (int)HIWORD(v174) )
             {
               j__nfree_();
-              v153 = *(unsigned __int8 *)(actingUnitPtr + 8) - v166;
+              v153 = *(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8) - v166;
 LABEL_279:
               if ( v153 > -1 )
               {
 LABEL_280:
                 g_UnitBattleTileScoreGrid[40 * targetRow + 2 * targetCol + unitScoreBase] -= 5 * (v153 / 5);
 LABEL_281:
-                *(_WORD *)(40 * targetRow + g_MapData + 2 * targetCol + 1534) = savedTileOccupant;
+                *(_WORD *)(uintptr_t)(40 * targetRow + g_MapData + 2 * targetCol + 1534) = savedTileOccupant;
                 goto LABEL_282;
               }
 LABEL_294:
@@ -369,7 +369,7 @@ LABEL_294:
           {
             v173 = v158[1];
             j__nfree_();
-            LOBYTE(v161) = *(_BYTE *)(actingUnitPtr + 8);
+            LOBYTE(v161) = *(_BYTE *)(uintptr_t)(actingUnitPtr + 8);
             if ( v161 <= HIWORD(v173) )
             {
               v153 = 0;
@@ -389,14 +389,14 @@ LABEL_282:
       return result;
     case BATTLE_AI_PLAN_RANGED_ENGAGE:
     case BATTLE_AI_PLAN_INITIAL_SWEEP:
-      if ( side == *(_DWORD *)(g_MapData + 836) )
+      if ( side == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
       {
         if ( g_AttackerStartsOnLeft == 1 )
           advanceDir = 1;
         else
           advanceDir = -1;
       }
-      if ( side == *(_DWORD *)(g_MapData + 840) )
+      if ( side == *(_DWORD *)(uintptr_t)(g_MapData + 840) )
       {
         if ( g_DefenderStartsOnLeft == 1 )
           advanceDir = 1;
@@ -405,63 +405,63 @@ LABEL_282:
       }
       scoreGridUnitBase = 801 * unitIndex;
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(31 * unitIndex + g_MapData + 852),
-             *(unsigned __int16 *)(31 * unitIndex + g_MapData + 856) + 3 * advanceDir,
-             *(unsigned __int16 *)(31 * unitIndex + g_MapData + 858)) )
+             *(__int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 852),
+             *(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 856) + 3 * advanceDir,
+             *(unsigned __int16 *)(uintptr_t)(31 * unitIndex + g_MapData + 858)) )
       {
         g_UnitBattleTileScoreGrid[120 * advanceDir
-                   + 40 * *(unsigned __int16 *)(g_MapData + v5 + 856)
-                   + 2 * *(unsigned __int16 *)(g_MapData + v5 + 858)
+                   + 40 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v5 + 856)
+                   + 2 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v5 + 858)
                    + scoreGridUnitBase] -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v5 + g_MapData + 852),
-             4 * advanceDir + *(unsigned __int16 *)(v5 + g_MapData + 856),
-             *(unsigned __int16 *)(v5 + g_MapData + 858)) )
+             *(__int16 *)(uintptr_t)(v5 + g_MapData + 852),
+             4 * advanceDir + *(unsigned __int16 *)(uintptr_t)(v5 + g_MapData + 856),
+             *(unsigned __int16 *)(uintptr_t)(v5 + g_MapData + 858)) )
       {
         g_UnitBattleTileScoreGrid[160 * advanceDir
-                   + 40 * *(unsigned __int16 *)(g_MapData + v8 + 856)
-                   + 2 * *(unsigned __int16 *)(g_MapData + v8 + 858)
+                   + 40 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v8 + 856)
+                   + 2 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v8 + 858)
                    + scoreGridUnitBase] -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v8 + g_MapData + 852),
-             2 * advanceDir + *(unsigned __int16 *)(v8 + g_MapData + 856),
-             *(unsigned __int16 *)(v8 + g_MapData + 858)) )
+             *(__int16 *)(uintptr_t)(v8 + g_MapData + 852),
+             2 * advanceDir + *(unsigned __int16 *)(uintptr_t)(v8 + g_MapData + 856),
+             *(unsigned __int16 *)(uintptr_t)(v8 + g_MapData + 858)) )
       {
         v10 = g_MapData + v9;
-        v11 = 160 * (*(unsigned __int16 *)(v10 + 856) + 2 * advanceDir) + scoreGridUnitBase * 4;
-        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(v10 + 858)] + v11) -= 500;
+        v11 = 160 * (*(unsigned __int16 *)(uintptr_t)(v10 + 856) + 2 * advanceDir) + scoreGridUnitBase * 4;
+        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(uintptr_t)(v10 + 858)] + v11) -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v9 + g_MapData + 852),
-             5 * advanceDir + *(unsigned __int16 *)(v9 + g_MapData + 856),
-             *(unsigned __int16 *)(v9 + g_MapData + 858)) )
+             *(__int16 *)(uintptr_t)(v9 + g_MapData + 852),
+             5 * advanceDir + *(unsigned __int16 *)(uintptr_t)(v9 + g_MapData + 856),
+             *(unsigned __int16 *)(uintptr_t)(v9 + g_MapData + 858)) )
       {
         g_UnitBattleTileScoreGrid[200 * advanceDir
-                   + 40 * *(unsigned __int16 *)(g_MapData + v12 + 856)
-                   + 2 * *(unsigned __int16 *)(g_MapData + v12 + 858)
+                   + 40 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v12 + 856)
+                   + 2 * *(unsigned __int16 *)(uintptr_t)(g_MapData + v12 + 858)
                    + scoreGridUnitBase] -= 500;
         return 0;
       }
-      a3 = *(unsigned __int16 *)(v12 + g_MapData + 856);
+      a3 = *(unsigned __int16 *)(uintptr_t)(v12 + g_MapData + 856);
       advanceOffset6 = 6 * advanceDir;
-      if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v12 + g_MapData + 852), advanceOffset6 + a3, *(unsigned __int16 *)(v12 + g_MapData + 858)) )
+      if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(uintptr_t)(v12 + g_MapData + 852), advanceOffset6 + a3, *(unsigned __int16 *)(uintptr_t)(v12 + g_MapData + 858)) )
       {
         v19 = g_MapData + v14;
-        v20 = 160 * (advanceOffset6 + *(unsigned __int16 *)(v19 + 856)) + scoreGridUnitBase * 4;
-        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(v19 + 858)] + v20) -= 500;
+        v20 = 160 * (advanceOffset6 + *(unsigned __int16 *)(uintptr_t)(v19 + 856)) + scoreGridUnitBase * 4;
+        *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * *(unsigned __int16 *)(uintptr_t)(v19 + 858)] + v20) -= 500;
         return 0;
       }
       for ( i = 0; i < 682; i += 31 )
       {
         scanRecordPtr = i + g_MapData;
-        if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(scanRecordPtr + 854) != side )
+        if ( *(__int16 *)(uintptr_t)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(uintptr_t)(scanRecordPtr + 854) != side )
         {
-          scanTrackPath = (int *)UnitBattle_MoveTrackNear(unitIndex, i, *(unsigned __int16 *)(scanRecordPtr + 858), a3);
+          scanTrackPath = (int *)UnitBattle_MoveTrackNear(unitIndex, i, *(unsigned __int16 *)(uintptr_t)(scanRecordPtr + 858), a3);
           if ( scanTrackPath && *scanTrackPath > 3 )
           {
             pathNode = scanTrackPath[*scanTrackPath - 3];
@@ -484,52 +484,52 @@ LABEL_29:
   }
   while ( 1 )
   {
-    if ( *(__int16 *)(enemyRecordOffset + g_MapData + 852) == -1 || *(unsigned __int8 *)(enemyRecordOffset + g_MapData + 854) == side )
+    if ( *(__int16 *)(uintptr_t)(enemyRecordOffset + g_MapData + 852) == -1 || *(unsigned __int8 *)(uintptr_t)(enemyRecordOffset + g_MapData + 854) == side )
       goto LABEL_39;
     UnitBattle_UpdateIdleAnimatedUnits();
-    enemyRow = *(unsigned __int16 *)(g_MapData + enemyRecordOffset + 856);
-    enemyCol = *(unsigned __int16 *)(g_MapData + enemyRecordOffset + 858);
+    enemyRow = *(unsigned __int16 *)(uintptr_t)(g_MapData + enemyRecordOffset + 856);
+    enemyCol = *(unsigned __int16 *)(uintptr_t)(g_MapData + enemyRecordOffset + 858);
     result = 0;
     scoreRowByteOffset = 160 * enemyRow + scoreGridBase * 4;
     occupantCellPtr = 40 * enemyRow + g_MapData + 2 * enemyCol;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * enemyCol] + scoreRowByteOffset) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
-                                                                                               * *(__int16 *)(g_MapData + enemyRecordOffset + 852)]];
-    v23 = *(_WORD *)(occupantCellPtr + 1534);
-    *(_WORD *)(occupantCellPtr + 1534) = -1;
+                                                                                               * *(__int16 *)(uintptr_t)(g_MapData + enemyRecordOffset + 852)]];
+    v23 = *(_WORD *)(uintptr_t)(occupantCellPtr + 1534);
+    *(_WORD *)(uintptr_t)(occupantCellPtr + 1534) = -1;
     savedOccupant = v23;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * enemyCol] + scoreRowByteOffset) -= 800;
     v24 = UnitBattle_EstimateDamageScoreAgainstUnit(unitIndex, enemyIndex);
-    v26 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + scoreRowByteOffset) - 15 * (_DWORD)v24;
+    v26 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + scoreRowByteOffset) - 15 * (_DWORD)(intptr_t)v24;
     v27 = enemyRecordOffset + g_MapData;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + scoreRowByteOffset) = v26;
-    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + scoreRowByteOffset) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + scoreRowByteOffset) = v26 - 2 * *(unsigned __int8 *)(uintptr_t)(v27 + 860);
     v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(enemyIndex, side, a3);
     v30 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + scoreRowByteOffset) - 2 * v28;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + scoreRowByteOffset) = v30;
-    Debug_Log(v29, scoreRowByteOffset, v30, (int)aOddzial_w_zasi);
+    Debug_Log(v29, scoreRowByteOffset, v30, (int)(intptr_t)aOddzial_w_zasi);
     unitRecordPtr = unitRecordOffset + g_MapData + 852;
     a3 = v32;
     if ( UnitBattle_IsTileWithinRange(unitIndex, v33, v32)
-      && (*(_BYTE *)(unitRecordOffset + g_MapData + 864) & 3)
+      && (*(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864) & 3)
        + 1
-       - ((unsigned __int8)(2 * *(_BYTE *)(unitRecordOffset + g_MapData + 864)) >> 5) > 0 )
+       - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordOffset + g_MapData + 864)) >> 5) > 0 )
     {
       moveScoreDelta = 0;
 LABEL_35:
-      LOBYTE(moveScoreDelta) = *(_BYTE *)(unitRecordPtr + 8);
+      LOBYTE(moveScoreDelta) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
       goto LABEL_36;
     }
     trackRowArg = enemyRow;
-    if ( *(char *)(g_MapData + 20 * enemyRow + a3 + 3134) <= 0 )
+    if ( *(char *)(uintptr_t)(g_MapData + 20 * enemyRow + a3 + 3134) <= 0 )
     {
       trackColArg = a3;
     }
     else
     {
       trackRowArg = g_MapData + 40 * enemyRow;
-      if ( *(__int16 *)(trackRowArg + 2 * a3 + 1534) == -1
-        || (v84 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
-        && (*(_BYTE *)(v84 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v84 + 864)) >> 5) <= 0 )
+      if ( *(__int16 *)(uintptr_t)(trackRowArg + 2 * a3 + 1534) == -1
+        || (v84 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v84 + 852)] & 1) == 0)
+        && (*(_BYTE *)(uintptr_t)(v84 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v84 + 864)) >> 5) <= 0 )
       {
         trackPath = UnitBattle_MoveTrackNearWall(unitIndex, enemyRow, a3, a3);
         goto LABEL_83;
@@ -542,9 +542,9 @@ LABEL_83:
     if ( !trackPath )
     {
       v88 = 31 * unitIndex + g_MapData;
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v88 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v88 + 852)] )
       {
-        if ( (*(_BYTE *)(v88 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v88 + 864)) >> 5) > 0 )
+        if ( (*(_BYTE *)(uintptr_t)(v88 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v88 + 864)) >> 5) > 0 )
           trackPathPtr = UnitBattle_MoveTrackForce(unitIndex, a3, a3);
       }
     }
@@ -560,12 +560,12 @@ LABEL_88:
       goto LABEL_35;
     }
     v89 = g_MapData + 31 * unitIndex;
-    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v89 + 852)]
-      && (*(_BYTE *)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v89 + 864)) >> 5) > 0 )
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v89 + 852)]
+      && (*(_BYTE *)(uintptr_t)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v89 + 864)) >> 5) > 0 )
     {
-      savedUnitRow = *(_WORD *)(unitRecordPtr + 4);
+      savedUnitRow = *(_WORD *)(uintptr_t)(unitRecordPtr + 4);
       HIWORD(pathEntry) = 0;
-      savedUnitCol = *(_WORD *)(unitRecordPtr + 6);
+      savedUnitCol = *(_WORD *)(uintptr_t)(unitRecordPtr + 6);
       if ( *trackPathPtr )
       {
         while ( !UnitBattle_IsTileWithinRange(unitIndex, enemyRow, a3) )
@@ -573,17 +573,17 @@ LABEL_88:
           v93 = *v91 - 1;
           *v91 = v93;
           pathEntry = v91[v93 + 1];
-          if ( HIWORD(pathEntry) > (int)*(unsigned __int8 *)(unitRecordPtr + 8) )
+          if ( HIWORD(pathEntry) > (int)*(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) )
             goto LABEL_111;
-          *(_WORD *)(unitRecordPtr + 4) = (unsigned __int8)pathEntry;
-          *(_WORD *)(unitRecordPtr + 6) = BYTE1(pathEntry);
+          *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = (unsigned __int8)pathEntry;
+          *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = BYTE1(pathEntry);
           if ( !*v91 )
             goto LABEL_108;
         }
-        *(_WORD *)(unitRecordPtr + 4) = savedUnitRow;
-        *(_WORD *)(unitRecordPtr + 6) = savedUnitCol;
+        *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
+        *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
         j__nfree_();
-        LOBYTE(v92) = *(_BYTE *)(unitRecordPtr + 8);
+        LOBYTE(v92) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
         if ( v92 <= HIWORD(pathEntry) )
           goto LABEL_105;
         moveScoreDelta = v92 - HIWORD(pathEntry);
@@ -594,14 +594,14 @@ LABEL_108:
         if ( !UnitBattle_IsTileWithinRange(unitIndex, enemyRow, a3) )
         {
 LABEL_111:
-          *(_WORD *)(unitRecordPtr + 4) = savedUnitRow;
-          *(_WORD *)(unitRecordPtr + 6) = savedUnitCol;
+          *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
+          *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
           j__nfree_();
           goto LABEL_37;
         }
-        *(_WORD *)(unitRecordPtr + 4) = savedUnitRow;
-        *(_WORD *)(unitRecordPtr + 6) = savedUnitCol;
-        if ( *(unsigned __int8 *)(unitRecordPtr + 8) <= (int)HIWORD(pathEntry) )
+        *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
+        *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
+        if ( *(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) <= (int)HIWORD(pathEntry) )
         {
 LABEL_104:
           j__nfree_();
@@ -610,7 +610,7 @@ LABEL_105:
           goto LABEL_37;
         }
         j__nfree_();
-        moveScoreDelta = *(unsigned __int8 *)(unitRecordPtr + 8) - v94;
+        moveScoreDelta = *(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) - v94;
       }
     }
     else
@@ -619,7 +619,7 @@ LABEL_105:
         goto LABEL_104;
       pathCost = trackPathPtr[1];
       j__nfree_();
-      LOBYTE(v90) = *(_BYTE *)(unitRecordPtr + 8);
+      LOBYTE(v90) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
       if ( v90 <= HIWORD(pathCost) )
       {
         moveScoreDelta = 0;
@@ -633,32 +633,32 @@ LABEL_36:
 LABEL_37:
     g_UnitBattleTileScoreGrid[40 * enemyRow + 2 * enemyCol + scoreGridBase] -= 5 * (moveScoreDelta / 5);
 LABEL_38:
-    *(_WORD *)(g_MapData + 40 * enemyRow + 2 * enemyCol + 1534) = savedOccupant;
+    *(_WORD *)(uintptr_t)(g_MapData + 40 * enemyRow + 2 * enemyCol + 1534) = savedOccupant;
 LABEL_39:
     enemyRecordOffset += 31;
     if ( (int)++enemyIndex >= 22 )
     {
       v35 = g_UnitBattleWallScanTileRow;
-      if ( g_UnitBattleWallScanTileRow <= 0 || *(unsigned __int16 *)(g_MapData + 31 * unitIndex + 856) == g_UnitBattleWallScanTileRow )
+      if ( g_UnitBattleWallScanTileRow <= 0 || *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * unitIndex + 856) == g_UnitBattleWallScanTileRow )
         return result;
       v36 = g_BattleWallScanColumn;
-      if ( *(char *)(g_BattleWallScanColumn + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
+      if ( *(char *)(uintptr_t)(g_BattleWallScanColumn + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
         goto LABEL_49;
-      Debug_Log(31 * unitIndex, g_BattleWallScanColumn, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
+      Debug_Log(31 * unitIndex, g_BattleWallScanColumn, g_UnitBattleWallScanTileRow, (int)(intptr_t)aOddzial_w_zasi);
       v38 = v37 + g_MapData + 852;
       v39 = v36;
       if ( UnitBattle_IsTileWithinRange(unitIndex, v35, v36)
-        && (*(_BYTE *)(v40 + g_MapData + 864) & 3)
+        && (*(_BYTE *)(uintptr_t)(v40 + g_MapData + 864) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(v40 + g_MapData + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v40 + g_MapData + 864)) >> 5) > 0 )
       {
         v41 = 0;
         goto LABEL_46;
       }
-      if ( *(char *)(v36 + g_MapData + 20 * v35 + 3134) <= 0
-        || *(__int16 *)(g_MapData + 40 * v35 + 2 * v36 + 1534) != -1
-        && ((v95 = g_MapData + 31 * unitIndex, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
-         || (*(_BYTE *)(v95 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v95 + 864)) >> 5) > 0) )
+      if ( *(char *)(uintptr_t)(v36 + g_MapData + 20 * v35 + 3134) <= 0
+        || *(__int16 *)(uintptr_t)(g_MapData + 40 * v35 + 2 * v36 + 1534) != -1
+        && ((v95 = g_MapData + 31 * unitIndex, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v95 + 852)] & 1) != 0)
+         || (*(_BYTE *)(uintptr_t)(v95 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v95 + 864)) >> 5) > 0) )
       {
         v96 = (int *)UnitBattle_MoveTrackNear(unitIndex, g_MapData, v36, v35);
       }
@@ -671,10 +671,10 @@ LABEL_39:
       {
         LOBYTE(v36) = g_MapData;
         v98 = g_MapData + 31 * unitIndex;
-        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v98 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v98 + 852)] )
         {
-          v36 = *(_BYTE *)(v98 + 864) & 3;
-          if ( v36 + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v98 + 864)) >> 5) > 0 )
+          v36 = *(_BYTE *)(uintptr_t)(v98 + 864) & 3;
+          if ( v36 + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v98 + 864)) >> 5) > 0 )
           {
             LOBYTE(v36) = v39;
             v97 = UnitBattle_MoveTrackForce(unitIndex, v39, v35);
@@ -685,28 +685,28 @@ LABEL_39:
       {
 LABEL_49:
         g_BattleWallScanTileX = g_BattleWallScanColumn + 1;
-        if ( *(char *)(g_BattleWallScanColumn + 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
+        if ( *(char *)(uintptr_t)(g_BattleWallScanColumn + 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
           goto LABEL_56;
         v48 = g_UnitBattleWallScanTileRow;
-        Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
+        Debug_Log(g_MapData, v36, v35, (int)(intptr_t)aOddzial_w_zasi);
         v35 = v49;
         v50 = 31 * unitIndex + g_MapData + 852;
         if ( UnitBattle_IsTileWithinRange(unitIndex, v48, v49) )
         {
           LOBYTE(v36) = 31 * unitIndex;
-          if ( (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
+          if ( (*(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864) & 3)
              + 1
-             - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
+             - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
           {
             v51 = 0;
             goto LABEL_53;
           }
         }
         v105 = g_MapData;
-        if ( *(char *)(g_MapData + 20 * v48 + v35 + 3134) <= 0
-          || *(__int16 *)(g_MapData + 40 * v48 + 2 * v35 + 1534) != -1
-          && ((v105 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
-           || (*(_BYTE *)(v105 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v105 + 864)) >> 5) > 0) )
+        if ( *(char *)(uintptr_t)(g_MapData + 20 * v48 + v35 + 3134) <= 0
+          || *(__int16 *)(uintptr_t)(g_MapData + 40 * v48 + 2 * v35 + 1534) != -1
+          && ((v105 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v105 + 852)] & 1) != 0)
+           || (*(_BYTE *)(uintptr_t)(v105 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v105 + 864)) >> 5) > 0) )
         {
           LOBYTE(v36) = v35;
           v106 = (int *)UnitBattle_MoveTrackNear(unitIndex, v105, v35, v35);
@@ -720,9 +720,9 @@ LABEL_49:
         if ( !v106 )
         {
           v36 = 31 * unitIndex + g_MapData;
-          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)] )
           {
-            if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
+            if ( (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
             {
               LOBYTE(v36) = v35;
               v107 = UnitBattle_MoveTrackForce(unitIndex, v35, v35);
@@ -733,28 +733,28 @@ LABEL_49:
         {
 LABEL_56:
           g_BattleWallScanTileX = g_BattleWallScanColumn - 1;
-          if ( *(char *)(g_BattleWallScanColumn - 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
+          if ( *(char *)(uintptr_t)(g_BattleWallScanColumn - 1 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
             goto LABEL_63;
           v55 = g_UnitBattleWallScanTileRow;
-          Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
+          Debug_Log(g_MapData, v36, v35, (int)(intptr_t)aOddzial_w_zasi);
           v35 = v56;
           v57 = 31 * unitIndex + g_MapData + 852;
           if ( UnitBattle_IsTileWithinRange(unitIndex, v55, v56) )
           {
             LOBYTE(v36) = 31 * unitIndex;
-            if ( (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
+            if ( (*(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864) & 3)
                + 1
-               - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
+               - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
             {
               v58 = 0;
               goto LABEL_60;
             }
           }
           v113 = g_MapData;
-          if ( *(char *)(g_MapData + 20 * v55 + v35 + 3134) <= 0
-            || *(__int16 *)(g_MapData + 40 * v55 + 2 * v35 + 1534) != -1
-            && ((v113 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
-             || (*(_BYTE *)(v113 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v113 + 864)) >> 5) > 0) )
+          if ( *(char *)(uintptr_t)(g_MapData + 20 * v55 + v35 + 3134) <= 0
+            || *(__int16 *)(uintptr_t)(g_MapData + 40 * v55 + 2 * v35 + 1534) != -1
+            && ((v113 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v113 + 852)] & 1) != 0)
+             || (*(_BYTE *)(uintptr_t)(v113 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v113 + 864)) >> 5) > 0) )
           {
             LOBYTE(v36) = v35;
             v114 = (int *)UnitBattle_MoveTrackNear(unitIndex, v113, v35, v35);
@@ -768,9 +768,9 @@ LABEL_56:
           if ( !v114 )
           {
             v36 = 31 * unitIndex + g_MapData;
-            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)] )
             {
-              if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
+              if ( (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
               {
                 LOBYTE(v36) = v35;
                 v115 = UnitBattle_MoveTrackForce(unitIndex, v35, v35);
@@ -781,27 +781,27 @@ LABEL_56:
           {
 LABEL_63:
             g_BattleWallScanTileX = g_BattleWallScanColumn + 2;
-            if ( *(char *)(g_BattleWallScanColumn + 2 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
+            if ( *(char *)(uintptr_t)(g_BattleWallScanColumn + 2 + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
               goto LABEL_70;
             v35 = g_UnitBattleWallScanTileRow;
             v62 = g_BattleWallScanColumn + 2;
             v36 = g_BattleWallScanColumn + 2;
-            Debug_Log(unitIndex, g_BattleWallScanColumn + 2, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
+            Debug_Log(unitIndex, g_BattleWallScanColumn + 2, g_UnitBattleWallScanTileRow, (int)(intptr_t)aOddzial_w_zasi);
             v63 = g_MapData + 852;
             v64 = UnitBattle_IsTileWithinRange(unitIndex, v35, v36);
             v66 = v65 + v63;
             if ( v64
-              && (*(_BYTE *)(v65 + g_MapData + 864) & 3)
+              && (*(_BYTE *)(uintptr_t)(v65 + g_MapData + 864) & 3)
                + 1
-               - ((unsigned __int8)(2 * *(_BYTE *)(v65 + g_MapData + 864)) >> 5) > 0 )
+               - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v65 + g_MapData + 864)) >> 5) > 0 )
             {
               v67 = 0;
               goto LABEL_67;
             }
-            if ( *(char *)(v62 + g_MapData + 20 * v35 + 3134) <= 0
-              || *(__int16 *)(g_MapData + 40 * v35 + 2 * v62 + 1534) != -1
-              && ((v65 = unitIndex, v121 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
-               || (*(_BYTE *)(v121 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v121 + 864)) >> 5) > 0) )
+            if ( *(char *)(uintptr_t)(v62 + g_MapData + 20 * v35 + 3134) <= 0
+              || *(__int16 *)(uintptr_t)(g_MapData + 40 * v35 + 2 * v62 + 1534) != -1
+              && ((v65 = unitIndex, v121 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v121 + 852)] & 1) != 0)
+               || (*(_BYTE *)(uintptr_t)(v121 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v121 + 864)) >> 5) > 0) )
             {
               LOBYTE(v36) = v62;
               v122 = (int *)UnitBattle_MoveTrackNear(unitIndex, v65, v62, v35);
@@ -816,9 +816,9 @@ LABEL_63:
             {
               LOBYTE(v36) = g_MapData;
               v124 = g_MapData + 31 * unitIndex;
-              if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v124 + 852)] )
+              if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v124 + 852)] )
               {
-                if ( (*(_BYTE *)(v124 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v124 + 864)) >> 5) > 0 )
+                if ( (*(_BYTE *)(uintptr_t)(v124 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v124 + 864)) >> 5) > 0 )
                 {
                   LOBYTE(v36) = v62;
                   v123 = UnitBattle_MoveTrackForce(unitIndex, v62, v35);
@@ -831,26 +831,26 @@ LABEL_70:
               g_BattleWallScanTileX = g_BattleWallScanColumn - 2;
               v71 = g_BattleWallScanColumn - 2;
               v72 = g_BattleWallScanColumn - 2 + 20 * g_UnitBattleWallScanTileRow + g_MapData;
-              if ( *(char *)(v72 + 3134) <= 0 )
+              if ( *(char *)(uintptr_t)(v72 + 3134) <= 0 )
                 return result;
-              Debug_Log(v72, v36, v35, (int)aOddzial_w_zasi);
+              Debug_Log(v72, v36, v35, (int)(intptr_t)aOddzial_w_zasi);
               v74 = v73;
               v75 = v71;
               v76 = v71;
               v77 = 31 * unitIndex + g_MapData + 852;
               if ( UnitBattle_IsTileWithinRange(unitIndex, v73, v76)
-                && (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
+                && (*(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864) & 3)
                  + 1
-                 - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
+                 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
               {
                 v78 = 0;
                 goto LABEL_74;
               }
               v130 = g_MapData;
-              if ( *(char *)(v75 + g_MapData + 20 * v74 + 3134) <= 0
-                || *(__int16 *)(g_MapData + 40 * v74 + 2 * v75 + 1534) != -1
-                && ((v130 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
-                 || (*(_BYTE *)(v130 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v130 + 864)) >> 5) > 0) )
+              if ( *(char *)(uintptr_t)(v75 + g_MapData + 20 * v74 + 3134) <= 0
+                || *(__int16 *)(uintptr_t)(g_MapData + 40 * v74 + 2 * v75 + 1534) != -1
+                && ((v130 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(uintptr_t)(v130 + 852)] & 1) != 0)
+                 || (*(_BYTE *)(uintptr_t)(v130 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v130 + 864)) >> 5) > 0) )
               {
                 v131 = (int *)UnitBattle_MoveTrackNear(unitIndex, v130, v75, v74);
               }
@@ -862,9 +862,9 @@ LABEL_70:
               if ( !v131 )
               {
                 v133 = 31 * unitIndex + g_MapData;
-                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v133 + 852)] )
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v133 + 852)] )
                 {
-                  if ( (*(_BYTE *)(v133 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v133 + 864)) >> 5) > 0 )
+                  if ( (*(_BYTE *)(uintptr_t)(v133 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v133 + 864)) >> 5) > 0 )
                     v132 = UnitBattle_MoveTrackForce(unitIndex, v75, v74);
                 }
               }
@@ -873,11 +873,11 @@ LABEL_70:
               if ( *v132 )
               {
                 v134 = 31 * unitIndex + g_MapData;
-                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v134 + 852)]
-                  && (*(_BYTE *)(v134 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v134 + 864)) >> 5) > 0 )
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v134 + 852)]
+                  && (*(_BYTE *)(uintptr_t)(v134 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v134 + 864)) >> 5) > 0 )
                 {
-                  v192 = *(_WORD *)(v77 + 4);
-                  v195 = *(_WORD *)(v77 + 6);
+                  v192 = *(_WORD *)(uintptr_t)(v77 + 4);
+                  v195 = *(_WORD *)(uintptr_t)(v77 + 6);
                   HIWORD(v210) = 0;
                   if ( *v132 )
                   {
@@ -886,17 +886,17 @@ LABEL_70:
                       v138 = *v136 - 1;
                       *v136 = v138;
                       v210 = v136[v138 + 1];
-                      if ( HIWORD(v210) > (int)*(unsigned __int8 *)(v77 + 8) )
+                      if ( HIWORD(v210) > (int)*(unsigned __int8 *)(uintptr_t)(v77 + 8) )
                         goto LABEL_271;
-                      *(_WORD *)(v77 + 4) = (unsigned __int8)v210;
-                      *(_WORD *)(v77 + 6) = BYTE1(v210);
+                      *(_WORD *)(uintptr_t)(v77 + 4) = (unsigned __int8)v210;
+                      *(_WORD *)(uintptr_t)(v77 + 6) = BYTE1(v210);
                       if ( !*v136 )
                         goto LABEL_268;
                     }
-                    *(_WORD *)(v77 + 4) = v192;
-                    *(_WORD *)(v77 + 6) = v195;
+                    *(_WORD *)(uintptr_t)(v77 + 4) = v192;
+                    *(_WORD *)(uintptr_t)(v77 + 6) = v195;
                     j__nfree_();
-                    LOBYTE(v137) = *(_BYTE *)(v77 + 8);
+                    LOBYTE(v137) = *(_BYTE *)(uintptr_t)(v77 + 8);
                     if ( v137 > HIWORD(v210) )
                     {
                       v78 = v137 - HIWORD(v210);
@@ -911,24 +911,24 @@ LABEL_76:
                     v82 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
                     *(int *)((char *)g_UnitBattleTileScoreGrid + v79) -= 640;
                     *(int *)((char *)g_UnitBattleTileScoreGrid + v79) = v80;
-                    *(int *)((char *)g_UnitBattleTileScoreGrid + v79) = *(char *)(v81 + v82 + 3134) + v80;
+                    *(int *)((char *)g_UnitBattleTileScoreGrid + v79) = *(char *)(uintptr_t)(v81 + v82 + 3134) + v80;
                     return result;
                   }
 LABEL_268:
                   if ( !UnitBattle_IsTileWithinRange(unitIndex, v74, v75) )
                   {
 LABEL_271:
-                    *(_WORD *)(v77 + 4) = v192;
-                    *(_WORD *)(v77 + 6) = v195;
+                    *(_WORD *)(uintptr_t)(v77 + 4) = v192;
+                    *(_WORD *)(uintptr_t)(v77 + 6) = v195;
                     j__nfree_();
                     goto LABEL_76;
                   }
-                  *(_WORD *)(v77 + 4) = v192;
-                  *(_WORD *)(v77 + 6) = v195;
-                  if ( *(unsigned __int8 *)(v77 + 8) > (int)HIWORD(v210) )
+                  *(_WORD *)(uintptr_t)(v77 + 4) = v192;
+                  *(_WORD *)(uintptr_t)(v77 + 6) = v195;
+                  if ( *(unsigned __int8 *)(uintptr_t)(v77 + 8) > (int)HIWORD(v210) )
                   {
                     j__nfree_();
-                    LOBYTE(v139) = *(_BYTE *)(v77 + 8);
+                    LOBYTE(v139) = *(_BYTE *)(uintptr_t)(v77 + 8);
                     v78 = v139 - HIWORD(v210);
                     goto LABEL_75;
                   }
@@ -937,7 +937,7 @@ LABEL_271:
                 {
                   v209 = v132[1];
                   j__nfree_();
-                  LOBYTE(v135) = *(_BYTE *)(v77 + 8);
+                  LOBYTE(v135) = *(_BYTE *)(uintptr_t)(v77 + 8);
                   if ( v135 > HIWORD(v209) )
                   {
                     v78 = v135 - HIWORD(v209);
@@ -951,7 +951,7 @@ LABEL_271:
               }
               j__nfree_();
 LABEL_74:
-              LOBYTE(v78) = *(_BYTE *)(v77 + 8);
+              LOBYTE(v78) = *(_BYTE *)(uintptr_t)(v77 + 8);
 LABEL_75:
               if ( v78 > -1 )
                 goto LABEL_76;
@@ -961,15 +961,15 @@ LABEL_75:
             {
               j__nfree_();
 LABEL_67:
-              LOBYTE(v67) = *(_BYTE *)(v66 + 8);
+              LOBYTE(v67) = *(_BYTE *)(uintptr_t)(v66 + 8);
               goto LABEL_68;
             }
             v36 = 31 * unitIndex + g_MapData;
-            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
-              && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)]
+              && (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
             {
-              v196 = *(_WORD *)(v66 + 4);
-              v189 = *(_WORD *)(v66 + 6);
+              v196 = *(_WORD *)(uintptr_t)(v66 + 4);
+              v189 = *(_WORD *)(uintptr_t)(v66 + 6);
               HIWORD(v200) = 0;
               if ( *v123 )
               {
@@ -981,17 +981,17 @@ LABEL_67:
                   v128 = *v126 - 1;
                   *v126 = v128;
                   v200 = v126[v128 + 1];
-                  if ( HIWORD(v200) > (int)*(unsigned __int8 *)(v66 + 8) )
+                  if ( HIWORD(v200) > (int)*(unsigned __int8 *)(uintptr_t)(v66 + 8) )
                     goto LABEL_239;
-                  *(_WORD *)(v66 + 4) = (unsigned __int8)v200;
-                  *(_WORD *)(v66 + 6) = BYTE1(v200);
+                  *(_WORD *)(uintptr_t)(v66 + 4) = (unsigned __int8)v200;
+                  *(_WORD *)(uintptr_t)(v66 + 6) = BYTE1(v200);
                   if ( !*v126 )
                     goto LABEL_236;
                 }
-                *(_WORD *)(v66 + 4) = v196;
-                *(_WORD *)(v66 + 6) = v189;
+                *(_WORD *)(uintptr_t)(v66 + 4) = v196;
+                *(_WORD *)(uintptr_t)(v66 + 6) = v189;
                 j__nfree_();
-                LOBYTE(v127) = *(_BYTE *)(v66 + 8);
+                LOBYTE(v127) = *(_BYTE *)(uintptr_t)(v66 + 8);
                 if ( v127 > HIWORD(v200) )
                 {
                   v67 = v127 - HIWORD(v200);
@@ -1006,7 +1006,7 @@ LABEL_69:
                 v70 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
                 *(int *)((char *)g_UnitBattleTileScoreGrid + v68) -= 640;
                 *(int *)((char *)g_UnitBattleTileScoreGrid + v68) = v35;
-                v36 = *(char *)(v69 + v70 + 3134) + v35;
+                v36 = *(char *)(uintptr_t)(v69 + v70 + 3134) + v35;
                 *(int *)((char *)g_UnitBattleTileScoreGrid + v68) = v36;
                 goto LABEL_70;
               }
@@ -1014,18 +1014,18 @@ LABEL_236:
               if ( !UnitBattle_IsTileWithinRange(unitIndex, v35, v62) )
               {
 LABEL_239:
-                *(_WORD *)(v66 + 4) = v196;
-                *(_WORD *)(v66 + 6) = v189;
+                *(_WORD *)(uintptr_t)(v66 + 4) = v196;
+                *(_WORD *)(uintptr_t)(v66 + 6) = v189;
                 j__nfree_();
                 goto LABEL_69;
               }
-              *(_WORD *)(v66 + 4) = v196;
-              *(_WORD *)(v66 + 6) = v189;
+              *(_WORD *)(uintptr_t)(v66 + 4) = v196;
+              *(_WORD *)(uintptr_t)(v66 + 6) = v189;
               v36 = HIWORD(v200);
-              if ( *(unsigned __int8 *)(v66 + 8) > (int)HIWORD(v200) )
+              if ( *(unsigned __int8 *)(uintptr_t)(v66 + 8) > (int)HIWORD(v200) )
               {
                 j__nfree_();
-                LOBYTE(v129) = *(_BYTE *)(v66 + 8);
+                LOBYTE(v129) = *(_BYTE *)(uintptr_t)(v66 + 8);
                 v67 = v129 - HIWORD(v200);
                 goto LABEL_68;
               }
@@ -1034,7 +1034,7 @@ LABEL_239:
             {
               v199 = v123[1];
               j__nfree_();
-              LOBYTE(v125) = *(_BYTE *)(v66 + 8);
+              LOBYTE(v125) = *(_BYTE *)(uintptr_t)(v66 + 8);
               if ( v125 <= HIWORD(v199) )
               {
                 v67 = 0;
@@ -1055,16 +1055,16 @@ LABEL_68:
           {
             j__nfree_();
 LABEL_60:
-            LOBYTE(v58) = *(_BYTE *)(v57 + 8);
+            LOBYTE(v58) = *(_BYTE *)(uintptr_t)(v57 + 8);
             goto LABEL_61;
           }
           v36 = 31 * unitIndex + g_MapData;
-          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
-            && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)]
+            && (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
           {
-            v193 = *(_WORD *)(v57 + 4);
+            v193 = *(_WORD *)(uintptr_t)(v57 + 4);
             HIWORD(v202) = 0;
-            v191 = *(_WORD *)(v57 + 6);
+            v191 = *(_WORD *)(uintptr_t)(v57 + 6);
             if ( *v115 )
             {
               while ( 1 )
@@ -1075,17 +1075,17 @@ LABEL_60:
                 v119 = *v117 - 1;
                 *v117 = v119;
                 v202 = v117[v119 + 1];
-                if ( HIWORD(v202) > (int)*(unsigned __int8 *)(v57 + 8) )
+                if ( HIWORD(v202) > (int)*(unsigned __int8 *)(uintptr_t)(v57 + 8) )
                   goto LABEL_207;
-                *(_WORD *)(v57 + 4) = (unsigned __int8)v202;
-                *(_WORD *)(v57 + 6) = BYTE1(v202);
+                *(_WORD *)(uintptr_t)(v57 + 4) = (unsigned __int8)v202;
+                *(_WORD *)(uintptr_t)(v57 + 6) = BYTE1(v202);
                 if ( !*v117 )
                   goto LABEL_204;
               }
-              *(_WORD *)(v57 + 4) = v193;
-              *(_WORD *)(v57 + 6) = v191;
+              *(_WORD *)(uintptr_t)(v57 + 4) = v193;
+              *(_WORD *)(uintptr_t)(v57 + 6) = v191;
               j__nfree_();
-              LOBYTE(v118) = *(_BYTE *)(v57 + 8);
+              LOBYTE(v118) = *(_BYTE *)(uintptr_t)(v57 + 8);
               if ( v118 > HIWORD(v202) )
               {
                 v58 = v118 - HIWORD(v202);
@@ -1100,7 +1100,7 @@ LABEL_62:
               LOBYTE(v36) = g_MapData;
               v61 = g_BattleWallScanTileX + g_MapData + 20 * g_UnitBattleWallScanTileRow;
               *(int *)((char *)g_UnitBattleTileScoreGrid + v59) = v60;
-              v35 = v60 + *(char *)(v61 + 3134);
+              v35 = v60 + *(char *)(uintptr_t)(v61 + 3134);
               *(int *)((char *)g_UnitBattleTileScoreGrid + v59) = v35;
               goto LABEL_63;
             }
@@ -1108,18 +1108,18 @@ LABEL_204:
             if ( !UnitBattle_IsTileWithinRange(unitIndex, v55, v35) )
             {
 LABEL_207:
-              *(_WORD *)(v57 + 4) = v193;
-              *(_WORD *)(v57 + 6) = v191;
+              *(_WORD *)(uintptr_t)(v57 + 4) = v193;
+              *(_WORD *)(uintptr_t)(v57 + 6) = v191;
               j__nfree_();
               goto LABEL_62;
             }
-            *(_WORD *)(v57 + 4) = v193;
-            *(_WORD *)(v57 + 6) = v191;
+            *(_WORD *)(uintptr_t)(v57 + 4) = v193;
+            *(_WORD *)(uintptr_t)(v57 + 6) = v191;
             v36 = HIWORD(v202);
-            if ( *(unsigned __int8 *)(v57 + 8) > (int)HIWORD(v202) )
+            if ( *(unsigned __int8 *)(uintptr_t)(v57 + 8) > (int)HIWORD(v202) )
             {
               j__nfree_();
-              LOBYTE(v120) = *(_BYTE *)(v57 + 8);
+              LOBYTE(v120) = *(_BYTE *)(uintptr_t)(v57 + 8);
               v58 = v120 - HIWORD(v202);
               goto LABEL_61;
             }
@@ -1128,7 +1128,7 @@ LABEL_207:
           {
             v201 = v115[1];
             j__nfree_();
-            LOBYTE(v116) = *(_BYTE *)(v57 + 8);
+            LOBYTE(v116) = *(_BYTE *)(uintptr_t)(v57 + 8);
             if ( v116 <= HIWORD(v201) )
             {
               v58 = 0;
@@ -1149,16 +1149,16 @@ LABEL_61:
         {
           j__nfree_();
 LABEL_53:
-          LOBYTE(v51) = *(_BYTE *)(v50 + 8);
+          LOBYTE(v51) = *(_BYTE *)(uintptr_t)(v50 + 8);
           goto LABEL_54;
         }
         v36 = 31 * unitIndex + g_MapData;
-        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
-          && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v36 + 852)]
+          && (*(_BYTE *)(uintptr_t)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v36 + 864)) >> 5) > 0 )
         {
-          v188 = *(_WORD *)(v50 + 4);
+          v188 = *(_WORD *)(uintptr_t)(v50 + 4);
           HIWORD(v207) = 0;
-          v187 = *(_WORD *)(v50 + 6);
+          v187 = *(_WORD *)(uintptr_t)(v50 + 6);
           if ( *v107 )
           {
             while ( 1 )
@@ -1169,17 +1169,17 @@ LABEL_53:
               v111 = *v109 - 1;
               *v109 = v111;
               v207 = v109[v111 + 1];
-              if ( HIWORD(v207) > (int)*(unsigned __int8 *)(v50 + 8) )
+              if ( HIWORD(v207) > (int)*(unsigned __int8 *)(uintptr_t)(v50 + 8) )
                 goto LABEL_175;
-              *(_WORD *)(v50 + 4) = (unsigned __int8)v207;
-              *(_WORD *)(v50 + 6) = BYTE1(v207);
+              *(_WORD *)(uintptr_t)(v50 + 4) = (unsigned __int8)v207;
+              *(_WORD *)(uintptr_t)(v50 + 6) = BYTE1(v207);
               if ( !*v109 )
                 goto LABEL_172;
             }
-            *(_WORD *)(v50 + 4) = v188;
-            *(_WORD *)(v50 + 6) = v187;
+            *(_WORD *)(uintptr_t)(v50 + 4) = v188;
+            *(_WORD *)(uintptr_t)(v50 + 6) = v187;
             j__nfree_();
-            LOBYTE(v110) = *(_BYTE *)(v50 + 8);
+            LOBYTE(v110) = *(_BYTE *)(uintptr_t)(v50 + 8);
             if ( v110 > HIWORD(v207) )
             {
               v51 = v110 - HIWORD(v207);
@@ -1194,7 +1194,7 @@ LABEL_55:
             LOBYTE(v36) = g_MapData;
             v54 = g_BattleWallScanTileX + g_MapData + 20 * g_UnitBattleWallScanTileRow;
             *(int *)((char *)g_UnitBattleTileScoreGrid + v52) = v53;
-            v35 = v53 + *(char *)(v54 + 3134);
+            v35 = v53 + *(char *)(uintptr_t)(v54 + 3134);
             *(int *)((char *)g_UnitBattleTileScoreGrid + v52) = v35;
             goto LABEL_56;
           }
@@ -1202,18 +1202,18 @@ LABEL_172:
           if ( !UnitBattle_IsTileWithinRange(unitIndex, v48, v35) )
           {
 LABEL_175:
-            *(_WORD *)(v50 + 4) = v188;
-            *(_WORD *)(v50 + 6) = v187;
+            *(_WORD *)(uintptr_t)(v50 + 4) = v188;
+            *(_WORD *)(uintptr_t)(v50 + 6) = v187;
             j__nfree_();
             goto LABEL_55;
           }
-          *(_WORD *)(v50 + 4) = v188;
-          *(_WORD *)(v50 + 6) = v187;
+          *(_WORD *)(uintptr_t)(v50 + 4) = v188;
+          *(_WORD *)(uintptr_t)(v50 + 6) = v187;
           v36 = HIWORD(v207);
-          if ( *(unsigned __int8 *)(v50 + 8) > (int)HIWORD(v207) )
+          if ( *(unsigned __int8 *)(uintptr_t)(v50 + 8) > (int)HIWORD(v207) )
           {
             j__nfree_();
-            LOBYTE(v112) = *(_BYTE *)(v50 + 8);
+            LOBYTE(v112) = *(_BYTE *)(uintptr_t)(v50 + 8);
             v51 = v112 - HIWORD(v207);
             goto LABEL_54;
           }
@@ -1222,7 +1222,7 @@ LABEL_175:
         {
           v206 = v107[1];
           j__nfree_();
-          LOBYTE(v108) = *(_BYTE *)(v50 + 8);
+          LOBYTE(v108) = *(_BYTE *)(uintptr_t)(v50 + 8);
           if ( v108 <= HIWORD(v206) )
           {
             v51 = 0;
@@ -1243,16 +1243,16 @@ LABEL_54:
       {
         j__nfree_();
 LABEL_46:
-        LOBYTE(v41) = *(_BYTE *)(v38 + 8);
+        LOBYTE(v41) = *(_BYTE *)(uintptr_t)(v38 + 8);
         goto LABEL_47;
       }
       LOBYTE(v36) = g_MapData;
       v99 = g_MapData + 31 * unitIndex;
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v99 + 852)]
-        && (*(_BYTE *)(v99 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v99 + 864)) >> 5) > 0 )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v99 + 852)]
+        && (*(_BYTE *)(uintptr_t)(v99 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v99 + 864)) >> 5) > 0 )
       {
-        v197 = *(_WORD *)(v38 + 4);
-        v190 = *(_WORD *)(v38 + 6);
+        v197 = *(_WORD *)(uintptr_t)(v38 + 4);
+        v190 = *(_WORD *)(uintptr_t)(v38 + 6);
         HIWORD(v204) = 0;
         if ( *v97 )
         {
@@ -1264,17 +1264,17 @@ LABEL_46:
             v103 = *v101 - 1;
             *v101 = v103;
             v204 = v101[v103 + 1];
-            if ( HIWORD(v204) > (int)*(unsigned __int8 *)(v38 + 8) )
+            if ( HIWORD(v204) > (int)*(unsigned __int8 *)(uintptr_t)(v38 + 8) )
               goto LABEL_143;
-            *(_WORD *)(v38 + 4) = (unsigned __int8)v204;
-            *(_WORD *)(v38 + 6) = BYTE1(v204);
+            *(_WORD *)(uintptr_t)(v38 + 4) = (unsigned __int8)v204;
+            *(_WORD *)(uintptr_t)(v38 + 6) = BYTE1(v204);
             if ( !*v101 )
               goto LABEL_140;
           }
-          *(_WORD *)(v38 + 4) = v197;
-          *(_WORD *)(v38 + 6) = v190;
+          *(_WORD *)(uintptr_t)(v38 + 4) = v197;
+          *(_WORD *)(uintptr_t)(v38 + 6) = v190;
           j__nfree_();
-          LOBYTE(v102) = *(_BYTE *)(v38 + 8);
+          LOBYTE(v102) = *(_BYTE *)(uintptr_t)(v38 + 8);
           if ( v102 > HIWORD(v204) )
           {
             v41 = v102 - HIWORD(v204);
@@ -1293,7 +1293,7 @@ LABEL_48:
           LOBYTE(v36) = g_MapData;
           v47 = g_BattleWallScanColumn + g_MapData + 4 * (v44 + v45);
           *(int *)((char *)g_UnitBattleTileScoreGrid + v42) = v46;
-          v35 = v46 + *(char *)(v47 + 3134);
+          v35 = v46 + *(char *)(uintptr_t)(v47 + 3134);
           *(int *)((char *)g_UnitBattleTileScoreGrid + v42) = v35;
           goto LABEL_49;
         }
@@ -1301,18 +1301,18 @@ LABEL_140:
         if ( !UnitBattle_IsTileWithinRange(unitIndex, v35, v39) )
         {
 LABEL_143:
-          *(_WORD *)(v38 + 4) = v197;
-          *(_WORD *)(v38 + 6) = v190;
+          *(_WORD *)(uintptr_t)(v38 + 4) = v197;
+          *(_WORD *)(uintptr_t)(v38 + 6) = v190;
           j__nfree_();
           goto LABEL_48;
         }
-        *(_WORD *)(v38 + 4) = v197;
-        *(_WORD *)(v38 + 6) = v190;
+        *(_WORD *)(uintptr_t)(v38 + 4) = v197;
+        *(_WORD *)(uintptr_t)(v38 + 6) = v190;
         v36 = HIWORD(v204);
-        if ( *(unsigned __int8 *)(v38 + 8) > (int)HIWORD(v204) )
+        if ( *(unsigned __int8 *)(uintptr_t)(v38 + 8) > (int)HIWORD(v204) )
         {
           j__nfree_();
-          LOBYTE(v104) = *(_BYTE *)(v38 + 8);
+          LOBYTE(v104) = *(_BYTE *)(uintptr_t)(v38 + 8);
           v41 = v104 - HIWORD(v204);
           goto LABEL_47;
         }
@@ -1321,7 +1321,7 @@ LABEL_143:
       {
         v203 = v97[1];
         j__nfree_();
-        LOBYTE(v100) = *(_BYTE *)(v38 + 8);
+        LOBYTE(v100) = *(_BYTE *)(uintptr_t)(v38 + 8);
         if ( v100 <= HIWORD(v203) )
         {
           v41 = 0;
@@ -1413,7 +1413,7 @@ int  WCIsvListBase_TransferAllInto(int result, int destList)
   int v3; // ecx
   int v4; // ecx
 
-  if ( *(_DWORD *)(result + 8) )
+  if ( *(_DWORD *)(uintptr_t)(result + 8) )
   {
     WCIsvListBase_PopFrontValue(result, destList);
     WCIsvListBase_TransferAllInto(v3, destList);
@@ -1430,14 +1430,14 @@ signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int matchValue, int lis
   int poppedValue; // eax
   int targetValue; // ecx
 
-  if ( !*(_DWORD *)(list + 8) )
+  if ( !*(_DWORD *)(uintptr_t)(list + 8) )
     return 0;
   while ( 1 )
   {
     poppedValue = WCIsvListBase_PopFrontValue(list, list);
     if ( poppedValue == targetValue )
       break;
-    if ( !*(_DWORD *)(list + 8) )
+    if ( !*(_DWORD *)(uintptr_t)(list + 8) )
       return 0;
   }
   return 1;

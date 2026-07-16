@@ -75,14 +75,14 @@ unsigned __int16 * CRT_ConvertPrintfArgument(unsigned __int8 *outputBuffer, int 
 
   ctx = formatCtx;
   __ES__ = __DS__;
-  *(_DWORD *)(formatCtx + 32) = 0;
-  *(_DWORD *)(formatCtx + 36) = 0;
-  *(_DWORD *)(formatCtx + 40) = 0;
-  *(_DWORD *)(formatCtx + 44) = 0;
-  *(_DWORD *)(formatCtx + 48) = 0;
+  *(_DWORD *)(uintptr_t)(formatCtx + 32) = 0;
+  *(_DWORD *)(uintptr_t)(formatCtx + 36) = 0;
+  *(_DWORD *)(uintptr_t)(formatCtx + 40) = 0;
+  *(_DWORD *)(uintptr_t)(formatCtx + 44) = 0;
+  *(_DWORD *)(uintptr_t)(formatCtx + 48) = 0;
   result_text = (unsigned __int16 *)outputBuffer;
-  format_char = *(_BYTE *)(formatCtx + 21);
-  *(_DWORD *)(formatCtx + 52) = 0;
+  format_char = *(_BYTE *)(uintptr_t)(formatCtx + 21);
+  *(_DWORD *)(uintptr_t)(formatCtx + 52) = 0;
   if ( format_char < 0x69u )
   {
     if ( format_char < 0x58u )
@@ -108,20 +108,20 @@ LABEL_6:
       goto LABEL_6;
     }
 LABEL_13:
-    if ( (*(_BYTE *)(formatCtx + 31) & 1) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(formatCtx + 31) & 1) == 0 )
     {
-      if ( (*(_BYTE *)(formatCtx + 30) & 0x20) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(formatCtx + 30) & 0x20) != 0 )
       {
         v11 = *argList + 4;
         *argList = v11;
-        v12 = *(_DWORD *)(v11 - 4);
+        v12 = *(_DWORD *)(uintptr_t)(v11 - 4);
       }
       else
       {
         v13 = *argList + 4;
         *argList = v13;
-        HIDWORD(value64) = *(_DWORD *)(v13 - 4);
-        if ( (*(_BYTE *)(formatCtx + 30) & 0x10) == 0 )
+        HIDWORD(value64) = *(_DWORD *)(uintptr_t)(v13 - 4);
+        if ( (*(_BYTE *)(uintptr_t)(formatCtx + 30) & 0x10) == 0 )
           goto LABEL_42;
         v12 = WORD2(value64);
       }
@@ -130,26 +130,26 @@ LABEL_13:
     }
     v8 = *argList + 4;
     *argList = v8;
-    valueLow = *(_DWORD *)(v8 - 4);
+    valueLow = *(_DWORD *)(uintptr_t)(v8 - 4);
     v9 = *argList + 4;
     *argList = v9;
-    v10 = *(_DWORD *)(v9 - 4);
+    v10 = *(_DWORD *)(uintptr_t)(v9 - 4);
     goto LABEL_15;
   }
-  if ( (*(_BYTE *)(formatCtx + 31) & 1) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(formatCtx + 31) & 1) == 0 )
   {
-    if ( (*(_BYTE *)(formatCtx + 30) & 0x20) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(formatCtx + 30) & 0x20) != 0 )
     {
       v16 = *argList + 4;
       *argList = v16;
-      v17 = *(_DWORD *)(v16 - 4);
+      v17 = *(_DWORD *)(uintptr_t)(v16 - 4);
     }
     else
     {
       v18 = *argList + 4;
       *argList = v18;
-      HIDWORD(value64) = *(_DWORD *)(v18 - 4);
-      if ( (*(_BYTE *)(ctx + 30) & 0x10) == 0 )
+      HIDWORD(value64) = *(_DWORD *)(uintptr_t)(v18 - 4);
+      if ( (*(_BYTE *)(uintptr_t)(ctx + 30) & 0x10) == 0 )
         goto LABEL_28;
       v17 = *(int *)((char *)&value64 + 2) >> 16;
     }
@@ -158,12 +158,12 @@ LABEL_13:
   }
   v14 = *argList + 4;
   *argList = v14;
-  valueLow = *(_DWORD *)(v14 - 4);
+  valueLow = *(_DWORD *)(uintptr_t)(v14 - 4);
   v15 = *argList + 4;
   *argList = v15;
-  LODWORD(value64) = *(_DWORD *)(v15 - 4);
+  LODWORD(value64) = *(_DWORD *)(uintptr_t)(v15 - 4);
 LABEL_28:
-  if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(ctx + 31) & 1) != 0 )
   {
     if ( (value64 & 0x80000000LL) != 0 )
       goto LABEL_33;
@@ -171,10 +171,10 @@ LABEL_28:
   else if ( value64 < 0 )
   {
 LABEL_33:
-    v19 = *(_DWORD *)(ctx + 32);
-    *(_DWORD *)(ctx + 32) = v19 + 1;
+    v19 = *(_DWORD *)(uintptr_t)(ctx + 32);
+    *(_DWORD *)(uintptr_t)(ctx + 32) = v19 + 1;
     outputBuffer[v19] = 45;
-    if ( (*(_BYTE *)(ctx + 31) & 1) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(ctx + 31) & 1) == 0 )
     {
       HIDWORD(value64) = -HIDWORD(value64);
       goto LABEL_42;
@@ -188,21 +188,21 @@ LABEL_15:
     LODWORD(value64) = v10;
     goto LABEL_42;
   }
-  v20 = *(_BYTE *)(ctx + 30);
+  v20 = *(_BYTE *)(uintptr_t)(ctx + 30);
   if ( (v20 & 4) != 0 )
   {
-    v21 = *(_DWORD *)(ctx + 32);
-    *(_DWORD *)(ctx + 32) = v21 + 1;
+    v21 = *(_DWORD *)(uintptr_t)(ctx + 32);
+    *(_DWORD *)(uintptr_t)(ctx + 32) = v21 + 1;
     outputBuffer[v21] = 43;
   }
   else if ( (v20 & 2) != 0 )
   {
-    v22 = *(_DWORD *)(ctx + 32);
-    *(_DWORD *)(ctx + 32) = v22 + 1;
+    v22 = *(_DWORD *)(uintptr_t)(ctx + 32);
+    *(_DWORD *)(uintptr_t)(ctx + 32) = v22 + 1;
     outputBuffer[v22] = 32;
   }
 LABEL_42:
-  conversion_char = *(_BYTE *)(ctx + 21);
+  conversion_char = *(_BYTE *)(uintptr_t)(ctx + 21);
   if ( conversion_char >= 0x64u )
   {
     if ( conversion_char <= 0x64u )
@@ -222,9 +222,9 @@ LABEL_42:
             if ( conversion_char != 120 )
               goto LABEL_139;
 LABEL_94:
-            if ( (*(_BYTE *)(ctx + 30) & 1) != 0 )
+            if ( (*(_BYTE *)(uintptr_t)(ctx + 30) & 1) != 0 )
             {
-              if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
+              if ( (*(_BYTE *)(uintptr_t)(ctx + 31) & 1) != 0 )
               {
                 if ( valueLow || (_DWORD)value64 )
                   goto LABEL_100;
@@ -232,39 +232,39 @@ LABEL_94:
               else if ( HIDWORD(value64) )
               {
 LABEL_100:
-                v37 = *(_DWORD *)(ctx + 32);
-                *(_DWORD *)(ctx + 32) = v37 + 1;
+                v37 = *(_DWORD *)(uintptr_t)(ctx + 32);
+                *(_DWORD *)(uintptr_t)(ctx + 32) = v37 + 1;
                 outputBuffer[v37] = 48;
-                v38 = *(_DWORD *)(ctx + 32);
-                *(_DWORD *)(ctx + 32) = v38 + 1;
-                outputBuffer[v38] = *(_BYTE *)(ctx + 21);
+                v38 = *(_DWORD *)(uintptr_t)(ctx + 32);
+                *(_DWORD *)(uintptr_t)(ctx + 32) = v38 + 1;
+                outputBuffer[v38] = *(_BYTE *)(uintptr_t)(ctx + 21);
               }
             }
 LABEL_101:
-            if ( *(_BYTE *)(ctx + 21) == 111 && (*(_BYTE *)(ctx + 30) & 1) != 0 )
+            if ( *(_BYTE *)(uintptr_t)(ctx + 21) == 111 && (*(_BYTE *)(uintptr_t)(ctx + 30) & 1) != 0 )
             {
-              v39 = *(_DWORD *)(ctx + 32);
-              *(_DWORD *)(ctx + 32) = v39 + 1;
+              v39 = *(_DWORD *)(uintptr_t)(ctx + 32);
+              *(_DWORD *)(uintptr_t)(ctx + 32) = v39 + 1;
               outputBuffer[v39] = 48;
             }
             goto LABEL_104;
           }
 LABEL_139:
-          *(_DWORD *)(ctx + 4) = 0;
-          *outputBuffer = *(_BYTE *)(ctx + 21);
-          *(_DWORD *)(ctx + 32) = 1;
+          *(_DWORD *)(uintptr_t)(ctx + 4) = 0;
+          *outputBuffer = *(_BYTE *)(uintptr_t)(ctx + 21);
+          *(_DWORD *)(uintptr_t)(ctx + 32) = 1;
           return result_text;
         }
 LABEL_77:
         *outputBuffer = 0;
-        v29 = *(_BYTE *)(ctx + 30);
+        v29 = *(_BYTE *)(uintptr_t)(ctx + 30);
         if ( v29 >= 0 )
         {
           if ( (v29 & 0x40) != 0 )
           {
             v31 = *argList + 4;
             *argList = v31;
-            string_arg = *(unsigned __int16 **)(v31 - 4);
+            string_arg = *(unsigned __int16 **)(uintptr_t)(v31 - 4);
             if ( !string_arg )
               goto LABEL_86;
           }
@@ -272,7 +272,7 @@ LABEL_77:
           {
             v33 = *argList + 4;
             *argList = v33;
-            string_arg = *(unsigned __int16 **)(v33 - 4);
+            string_arg = *(unsigned __int16 **)(uintptr_t)(v33 - 4);
             if ( !string_arg )
               goto LABEL_86;
           }
@@ -283,32 +283,32 @@ LABEL_77:
         {
           v30 = *argList + 8;
           *argList = v30;
-          if ( *(_DWORD *)(v30 - 8) || *(_WORD *)(v30 - 4) )
+          if ( *(_DWORD *)(uintptr_t)(v30 - 8) || *(_WORD *)(uintptr_t)(v30 - 4) )
           {
-            __ES__ = *(_WORD *)(v30 - 4);
-            result_text = *(unsigned __int16 **)(v30 - 8);
+            __ES__ = *(_WORD *)(uintptr_t)(v30 - 4);
+            result_text = *(unsigned __int16 **)(uintptr_t)(v30 - 8);
           }
         }
 LABEL_86:
-        if ( *(_BYTE *)(ctx + 21) == 83 )
+        if ( *(_BYTE *)(uintptr_t)(ctx + 21) == 83 )
         {
-          if ( (*(_BYTE *)(ctx + 30) & 0x10) == 0 )
+          if ( (*(_BYTE *)(uintptr_t)(ctx + 30) & 0x10) == 0 )
           {
 LABEL_88:
-            string_length = CRT_WideCharToMultiByteLenBounded(result_text, __ES__, *(_DWORD *)(ctx + 8));
+            string_length = CRT_WideCharToMultiByteLenBounded(result_text, __ES__, *(_DWORD *)(uintptr_t)(ctx + 8));
 LABEL_91:
-            v36 = *(_DWORD *)(v35 + 8);
-            *(_DWORD *)(v35 + 40) = string_length;
+            v36 = *(_DWORD *)(uintptr_t)(v35 + 8);
+            *(_DWORD *)(uintptr_t)(v35 + 40) = string_length;
             if ( v36 >= 0 && string_length > v36 )
-              *(_DWORD *)(v35 + 40) = v36;
+              *(_DWORD *)(uintptr_t)(v35 + 40) = v36;
             return result_text;
           }
         }
-        else if ( (*(_BYTE *)(ctx + 30) & 0x20) != 0 )
+        else if ( (*(_BYTE *)(uintptr_t)(ctx + 30) & 0x20) != 0 )
         {
           goto LABEL_88;
         }
-        string_length = CRT_FarStrLenBounded((int)result_text, __ES__, *(_DWORD *)(ctx + 8));
+        string_length = CRT_FarStrLenBounded((int)(intptr_t)result_text, __ES__, *(_DWORD *)(uintptr_t)(ctx + 8));
         goto LABEL_91;
       }
       v24 = conversion_char == 112;
@@ -323,50 +323,50 @@ LABEL_91:
           if ( conversion_char != 105 )
             goto LABEL_139;
 LABEL_104:
-          result_text = (unsigned __int16 *)&outputBuffer[*(_DWORD *)(ctx + 32)];
-          if ( (*(_BYTE *)(ctx + 31) & 1) != 0 )
+          result_text = (unsigned __int16 *)&outputBuffer[*(_DWORD *)(uintptr_t)(ctx + 32)];
+          if ( (*(_BYTE *)(uintptr_t)(ctx + 31) & 1) != 0 )
           {
-            if ( !*(_DWORD *)(ctx + 8) && !valueLow && !(_DWORD)value64 )
+            if ( !*(_DWORD *)(uintptr_t)(ctx + 8) && !valueLow && !(_DWORD)value64 )
             {
 LABEL_108:
-              outputBuffer[*(_DWORD *)(ctx + 32)] = 0;
+              outputBuffer[*(_DWORD *)(uintptr_t)(ctx + 32)] = 0;
               formattedLength = 0;
 LABEL_116:
-              *(_DWORD *)(ctx + 40) = formattedLength;
+              *(_DWORD *)(uintptr_t)(ctx + 40) = formattedLength;
               v42 = formattedLength;
-              v43 = *(_DWORD *)(ctx + 8);
+              v43 = *(_DWORD *)(uintptr_t)(ctx + 8);
               if ( v42 < v43 )
-                *(_DWORD *)(ctx + 36) = v43 - v42;
-              if ( *(_DWORD *)(ctx + 8) == -1 )
+                *(_DWORD *)(uintptr_t)(ctx + 36) = v43 - v42;
+              if ( *(_DWORD *)(uintptr_t)(ctx + 8) == -1 )
                 CRT_ApplyZeroPadWidth(ctx);
               return result_text;
             }
-            _clib_ulltoa_(ctx, &outputBuffer[*(_DWORD *)(ctx + 32)]);
-            if ( *(_BYTE *)(v41 + 21) == 88 )
+            _clib_ulltoa_(ctx, &outputBuffer[*(_DWORD *)(uintptr_t)(ctx + 32)]);
+            if ( *(_BYTE *)(uintptr_t)(v41 + 21) == 88 )
               goto LABEL_114;
           }
           else
           {
-            if ( !*(_DWORD *)(ctx + 8) && !HIDWORD(value64) )
+            if ( !*(_DWORD *)(uintptr_t)(ctx + 8) && !HIDWORD(value64) )
               goto LABEL_108;
-            CRT_SignedLongToDecimalString(ctx, &outputBuffer[*(_DWORD *)(ctx + 32)]);
-            if ( *(_BYTE *)(v41 + 21) == 88 )
+            CRT_SignedLongToDecimalString(ctx, &outputBuffer[*(_DWORD *)(uintptr_t)(ctx + 32)]);
+            if ( *(_BYTE *)(uintptr_t)(v41 + 21) == 88 )
 LABEL_114:
               CRT_ToUpperInPlace(outputBuffer, v41);
           }
-          formattedLength = CRT_FarStrLenBounded((int)result_text, __DS__, -1);
+          formattedLength = CRT_FarStrLenBounded((int)(intptr_t)result_text, __DS__, -1);
           goto LABEL_116;
         }
         goto LABEL_76;
       }
 LABEL_74:
-      if ( (*(_BYTE *)(ctx + 30) & 0x10) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(ctx + 30) & 0x10) != 0 )
       {
         v25 = *argList + 4;
         *argList = v25;
-        CRT_FormatFixedDecimal((char *)outputBuffer, *(_DWORD *)(v25 - 4), ctx);
-        v26 = CRT_FarStrLenBounded((int)outputBuffer, __DS__, '\xFF');
-        *(_DWORD *)(v27 + 40) = v26;
+        CRT_FormatFixedDecimal((char *)outputBuffer, *(_DWORD *)(uintptr_t)(v25 - 4), ctx);
+        v26 = CRT_FarStrLenBounded((int)(intptr_t)outputBuffer, __DS__, '\xFF');
+        *(_DWORD *)(uintptr_t)(v27 + 40) = v26;
         return result_text;
       }
     }
@@ -383,10 +383,10 @@ LABEL_76:
         goto LABEL_139;
       arg_ptr = *argList + 4;
       *argList = arg_ptr;
-      converted_length = wctomb_(ctx, *(unsigned __int16 *)(arg_ptr - 4));
+      converted_length = wctomb_(ctx, *(unsigned __int16 *)(uintptr_t)(arg_ptr - 4));
       if ( converted_length == -1 )
       {
-        *(_DWORD *)(v51 + 32) = 0;
+        *(_DWORD *)(uintptr_t)(v51 + 32) = 0;
         return result_text;
       }
       goto LABEL_130;
@@ -403,37 +403,37 @@ LABEL_76:
 LABEL_53:
     if ( !v24 )
       goto LABEL_139;
-    if ( !*(_DWORD *)(ctx + 4) )
+    if ( !*(_DWORD *)(uintptr_t)(ctx + 4) )
     {
-      if ( *(char *)(ctx + 30) >= 0 )
-        *(_DWORD *)(ctx + 4) = 8;
+      if ( *(char *)(uintptr_t)(ctx + 30) >= 0 )
+        *(_DWORD *)(uintptr_t)(ctx + 4) = 8;
       else
-        *(_DWORD *)(ctx + 4) = 13;
+        *(_DWORD *)(uintptr_t)(ctx + 4) = 13;
     }
-    *(_BYTE *)(ctx + 30) &= 0xF9u;
+    *(_BYTE *)(uintptr_t)(ctx + 30) &= 0xF9u;
     v44 = *argList + 4;
     *argList = v44;
-    pointer_value = *(_DWORD *)(v44 - 4);
-    if ( *(char *)(ctx + 30) >= 0 )
+    pointer_value = *(_DWORD *)(uintptr_t)(v44 - 4);
+    if ( *(char *)(uintptr_t)(ctx + 30) >= 0 )
     {
       v47 = (char *)outputBuffer;
-      v48 = *(_DWORD *)(v44 - 4);
+      v48 = *(_DWORD *)(uintptr_t)(v44 - 4);
     }
     else
     {
       v46 = v44 + 4;
       *argList = v46;
-      CRT_FormatPaddedHexDigits((unsigned __int16)*(_DWORD *)(v46 - 4), (char *)outputBuffer, 4);
+      CRT_FormatPaddedHexDigits((unsigned __int16)*(_DWORD *)(uintptr_t)(v46 - 4), (char *)outputBuffer, 4);
       v47 = (char *)(outputBuffer + 5);
       v48 = pointer_value;
       outputBuffer[4] = 58;
     }
     CRT_FormatPaddedHexDigits(v48, v47, 8);
-    if ( *(_BYTE *)(v49 + 21) == 80 )
+    if ( *(_BYTE *)(uintptr_t)(v49 + 21) == 80 )
       CRT_ToUpperInPlace(outputBuffer, v49);
-    converted_length = CRT_FarStrLenBounded((int)outputBuffer, __DS__, -1);
+    converted_length = CRT_FarStrLenBounded((int)(intptr_t)outputBuffer, __DS__, -1);
 LABEL_130:
-    *(_DWORD *)(v51 + 32) = converted_length;
+    *(_DWORD *)(uintptr_t)(v51 + 32) = converted_length;
     return result_text;
   }
   if ( conversion_char <= 0x53u )
@@ -444,13 +444,13 @@ LABEL_130:
     goto LABEL_94;
   if ( conversion_char != 99 )
     goto LABEL_139;
-  format_flags = *(_BYTE *)(ctx + 30);
-  *(_DWORD *)(ctx + 32) = 1;
+  format_flags = *(_BYTE *)(uintptr_t)(ctx + 30);
+  *(_DWORD *)(uintptr_t)(ctx + 32) = 1;
   if ( (format_flags & 0x20) != 0 )
   {
     wideCharArgCursor = *argList + 4;
     *argList = wideCharArgCursor;
-    if ( wctomb_(ctx, *(unsigned __int16 *)(wideCharArgCursor - 4)) != -1 )
+    if ( wctomb_(ctx, *(unsigned __int16 *)(uintptr_t)(wideCharArgCursor - 4)) != -1 )
     {
       mbcsCodePageActive = g_CRT_MbcsCodePageActive;
       *outputBuffer = mbLeadByte;
@@ -459,7 +459,7 @@ LABEL_130:
         if ( (g_Clips_DbcsLeadByteTable[mbLeadByte] & 1) != 0 )
         {
           outputBuffer[1] = mbTrailByte;
-          ++*(_DWORD *)(v54 + 32);
+          ++*(_DWORD *)(uintptr_t)(v54 + 32);
         }
       }
     }
@@ -468,7 +468,7 @@ LABEL_130:
   {
     charArgCursor = *argList + 4;
     *argList = charArgCursor;
-    *outputBuffer = *(_BYTE *)(charArgCursor - 4);
+    *outputBuffer = *(_BYTE *)(uintptr_t)(charArgCursor - 4);
   }
   return result_text;
 }
@@ -497,8 +497,8 @@ _BYTE * CRT_ToUpperInPlace(_BYTE *result, int a2)
 
   for ( i = result; *i; i = v3 + 1 )
   {
-    result = (_BYTE *)toupper_(a2);
-    *v3 = (_BYTE)result;
+    result = (_BYTE *)(uintptr_t)toupper_(a2);
+    *v3 = (_BYTE)(intptr_t)result;
   }
   return result;
 }
@@ -568,7 +568,7 @@ unsigned int  CRT_CreateFileHandleFromPath(const CHAR *fileName, int openMode, i
   {
     v11 = *v9 + 4;
     *v9 = v11;
-    v18 = *(_DWORD *)(v11 - 4);
+    v18 = *(_DWORD *)(uintptr_t)(v11 - 4);
     *v9 = 0;
     v18 &= ~g_CRT_OpenModeStripMask;
     if ( (v18 & 0x100) != 0 && (v18 & 0x80u) == 0 )
@@ -724,10 +724,10 @@ int  CRT_VfprintfLockedWrite(int stream, int format, int *argList)
   int write_result;
   unsigned char stream_flags;
 
-  lock_key = *(_DWORD *)(stream + 16);
+  lock_key = *(_DWORD *)(uintptr_t)(stream + 16);
   g_CRT_FileHandleLockAcquireHook(lock_key);
-  stream_state = *(_DWORD *)(stream + 8);
-  busy_state = *(_DWORD *)(stream_state + 12);
+  stream_state = *(_DWORD *)(uintptr_t)(stream + 8);
+  busy_state = *(_DWORD *)(uintptr_t)(stream_state + 12);
   if ( busy_state != 1 )
   {
     if ( busy_state )
@@ -735,31 +735,31 @@ int  CRT_VfprintfLockedWrite(int stream, int format, int *argList)
       g_CRT_FileHandleLockReleaseHook(lock_key, 0);
       return 0;
     }
-    *(_DWORD *)(stream_state + 12) = 1;
+    *(_DWORD *)(uintptr_t)(stream_state + 12) = 1;
   }
-  saved_mode_bits = *(_DWORD *)(stream + 12) & 0x30;
-  *(_BYTE *)(stream + 12) &= 0xCFu;
-  if ( !*(_DWORD *)(*(_DWORD *)(stream + 8) + 8) )
+  saved_mode_bits = *(_DWORD *)(uintptr_t)(stream + 12) & 0x30;
+  *(_BYTE *)(uintptr_t)(stream + 12) &= 0xCFu;
+  if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(stream + 8) + 8) )
     _ioalloc_();
   flush_after_write = 0;
-  if ( (*(_BYTE *)(stream + 13) & 4) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(stream + 13) & 4) != 0 )
   {
-    stream_flags = *(_BYTE *)(stream + 13) & 0xFA;
-    *(_BYTE *)(stream + 13) = stream_flags;
-    *(_BYTE *)(stream + 13) = stream_flags | 1;
+    stream_flags = *(_BYTE *)(uintptr_t)(stream + 13) & 0xFA;
+    *(_BYTE *)(uintptr_t)(stream + 13) = stream_flags;
+    *(_BYTE *)(uintptr_t)(stream + 13) = stream_flags | 1;
     flush_after_write = 1;
   }
   write_result = CRT_PrintfFormatEngine(stream, (_BYTE *)(uintptr_t)(unsigned int)format, (void (*)(void))CRT_PutcCallbackForWrite, argList);
   if ( flush_after_write )
   {
-    stream_flags = *(_BYTE *)(stream + 13) & 0xFA;
-    *(_BYTE *)(stream + 13) = stream_flags;
-    *(_BYTE *)(stream + 13) = stream_flags | 4;
+    stream_flags = *(_BYTE *)(uintptr_t)(stream + 13) & 0xFA;
+    *(_BYTE *)(uintptr_t)(stream + 13) = stream_flags;
+    *(_BYTE *)(uintptr_t)(stream + 13) = stream_flags | 4;
     _flush_(stream, write_result);
   }
-  if ( (*(_BYTE *)(stream + 12) & 0x20) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(stream + 12) & 0x20) != 0 )
     write_result = -1;
-  *(_DWORD *)(stream + 12) |= saved_mode_bits;
+  *(_DWORD *)(uintptr_t)(stream + 12) |= saved_mode_bits;
   g_CRT_FileHandleLockReleaseHook(lock_key, write_result);
   return write_result;
 }
@@ -790,7 +790,7 @@ DWORD  CRT_ReadFileHandle(int fileDescriptor, int buffer, DWORD length)
       g_CRT_FileHandleLockReleaseHook(v7, v6);
       return v8;
     }
-    else if ( ReadFile(*(HANDLE *)(g_CRT_OsHandleTable + 4 * fileDescriptor), v5, length, &NumberOfBytesRead, 0) )
+    else if ( ReadFile(*(HANDLE *)(uintptr_t)(g_CRT_OsHandleTable + 4 * fileDescriptor), v5, length, &NumberOfBytesRead, 0) )
     {
       g_CRT_FileHandleLockReleaseHook(v10, v9);
       return NumberOfBytesRead;
@@ -857,7 +857,7 @@ signed int  CRT_FlushBufferAndPutChar(signed int result, int lockKey)
   {
     g_CRT_FileHandleLockAcquireHook(lockKey);
     stream_state = stream[2];
-    v6 = (unsigned __int8 *)*((_DWORD *)stream_state + 3);
+    v6 = (unsigned __int8 *)(uintptr_t)*((_DWORD *)stream_state + 3);
     if ( v6 != (unsigned __int8 *)1 )
     {
       if ( v6 )
@@ -868,7 +868,7 @@ LABEL_4:
       }
       *((_DWORD *)stream_state + 3) = 1;
     }
-    if ( (*((_BYTE *)stream + 13) & 0x10) != 0 || ((_BYTE)stream[3] & 1) == 0 )
+    if ( (*((_BYTE *)stream + 13) & 0x10) != 0 || ((_BYTE)(intptr_t)stream[3] & 1) == 0 )
       goto LABEL_4;
     if ( !*((_DWORD *)stream[2] + 2) )
       _ioalloc_();
@@ -981,7 +981,7 @@ _DWORD * IO_StreambufAlloc(int a1, char a2, DWORD a3)
 {
   _DWORD *result; // eax
 
-  result = (_DWORD *)Mem_Alloc(4, a1, a2, a3);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(4, a1, a2, a3);
   if ( result )
     *result = g_IOStreambuf_VTable;
   return result;
@@ -1023,7 +1023,7 @@ _DWORD * IO_StreambufAllocDerived(int a1, char a2, DWORD a3)
 {
   _DWORD *result; // eax
 
-  result = (_DWORD *)Mem_Alloc(4, a1, a2, a3);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(4, a1, a2, a3);
   if ( result )
     *result = g_FuncTable_511094;
   return result;
@@ -1103,28 +1103,28 @@ signed int Rules_RegisterFactsConstruct(void)
 {
   Rules_RegisterPatternConstraintEvaluators();
   return Rules_AddPatternParser(
-           (int)aFacts_2,
+           (int)(intptr_t)aFacts_2,
            0,
-           (int)CSyncObject_Unlock,
-           (int)&g_Rules_FactPatternEntityRecord,
-           (int)Rules_ParseFactPatternRelation,
+           (int)(intptr_t)CSyncObject_Unlock,
+           (int)(intptr_t)&g_Rules_FactPatternEntityRecord,
+           (int)(intptr_t)Rules_ParseFactPatternRelation,
            0,
-           (int)Rules_ParseDeftemplateSlotList,
-           (int)Rules_FreeDeftemplateSlotList,
+           (int)(intptr_t)Rules_ParseDeftemplateSlotList,
+           (int)(intptr_t)Rules_FreeDeftemplateSlotList,
            0,
-           (int)PP_PatchHighTierConst,
-           (int)PP_ParsePrimary,
-           (int)Rules_BuildFieldRangeOrValueConstraintNode,
-           (int)Rules_BuildFieldIndexConstraintNode,
-           (int)PP_PatchLowTierConst,
-           (int)PP_MakeLowTierConst,
-           (int)Rules_BuildFieldRangeConstraintNode,
+           (int)(intptr_t)PP_PatchHighTierConst,
+           (int)(intptr_t)PP_ParsePrimary,
+           (int)(intptr_t)Rules_BuildFieldRangeOrValueConstraintNode,
+           (int)(intptr_t)Rules_BuildFieldIndexConstraintNode,
+           (int)(intptr_t)PP_PatchLowTierConst,
+           (int)(intptr_t)PP_MakeLowTierConst,
+           (int)(intptr_t)Rules_BuildFieldRangeConstraintNode,
            0,
            0,
-           (int)Rules_PropagatePatternNodeResetFlag,
-           (int)Rules_RematchAllFactsAgainstPatternNetwork,
-           (int)Rules_CreateInitialFactPatternNode,
-           (int)Rules_FactPatternNetworkWriteNodeRefToCode);
+           (int)(intptr_t)Rules_PropagatePatternNodeResetFlag,
+           (int)(intptr_t)Rules_RematchAllFactsAgainstPatternNetwork,
+           (int)(intptr_t)Rules_CreateInitialFactPatternNode,
+           (int)(intptr_t)Rules_FactPatternNetworkWriteNodeRefToCode);
 }
 // 4B6DD0: using guessed type int .fn_init(void);
 
@@ -1144,44 +1144,44 @@ _DWORD * Rules_ParseDeftemplateSlotList(int thePattern, _DWORD *theSlot)
   _DWORD *lastSlot; // [esp+8h] [ebp-20h]
   int savedNode; // [esp+Ch] [ebp-1Ch]
 
-  parseTree = *(_DWORD *)(thePattern + 64);
-  deftemplateName = *(_BYTE **)(*(_DWORD *)(*(_DWORD *)(parseTree + 68) + 4) + 16);
+  parseTree = *(_DWORD *)(uintptr_t)(thePattern + 64);
+  deftemplateName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(parseTree + 68) + 4) + 16);
   prunedTree = Rules_PruneDeftemplateParseTree(parseTree);
-  *(_DWORD *)(thePattern + 64) = prunedTree;
-  nextNode = *(_DWORD *)(prunedTree + 64);
+  *(_DWORD *)(uintptr_t)(thePattern + 64) = prunedTree;
+  nextNode = *(_DWORD *)(uintptr_t)(prunedTree + 64);
   savedNode = 0;
   if ( nextNode )
   {
-    *(_DWORD *)(thePattern + 64) = nextNode;
+    *(_DWORD *)(uintptr_t)(thePattern + 64) = nextNode;
     savedNode = prunedTree;
-    *(_DWORD *)(prunedTree + 64) = 0;
+    *(_DWORD *)(uintptr_t)(prunedTree + 64) = 0;
     AST_FreeNode(prunedTree);
   }
   else
   {
-    AST_Free(*(_DWORD *)(prunedTree + 52));
-    *(_DWORD *)(*(_DWORD *)(thePattern + 64) + 52) = v11;
+    AST_Free(*(_DWORD *)(uintptr_t)(prunedTree + 52));
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(thePattern + 64) + 52) = v11;
   }
   g_ClipsDeftemplateBeingParsedPtr = Rules_FindImportExportConstruct(aDeftemplate_5, &count, deftemplateName, 1, 0);
   lastSlot = 0;
-  fieldNode = *(_DWORD *)(thePattern + 64);
-  for ( i = *(_DWORD *)(g_ClipsDeftemplateBeingParsedPtr + 32); fieldNode; i = theSlot[7] )
+  fieldNode = *(_DWORD *)(uintptr_t)(thePattern + 64);
+  for ( i = *(_DWORD *)(uintptr_t)(g_ClipsDeftemplateBeingParsedPtr + 32); fieldNode; i = theSlot[7] )
   {
-    if ( (*(_BYTE *)(fieldNode + 8) & 4) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(fieldNode + 8) & 4) != 0 )
     {
       savedNode = fieldNode;
-      fieldNode = *(_DWORD *)(fieldNode + 68);
+      fieldNode = *(_DWORD *)(uintptr_t)(fieldNode + 68);
     }
-    withinMultifield = !*(_DWORD *)(fieldNode + 64) && savedNode;
-    theSlot = (_DWORD *)Rules_FindDuplicateDeftemplateSlot(i, (int *)fieldNode, withinMultifield, &precedingSlot);
+    withinMultifield = !*(_DWORD *)(uintptr_t)(fieldNode + 64) && savedNode;
+    theSlot = (_DWORD *)(uintptr_t)Rules_FindDuplicateDeftemplateSlot(i, (int *)(uintptr_t)fieldNode, withinMultifield, &precedingSlot);
     if ( !theSlot )
-      theSlot = Rules_CreateDeftemplateSlot((int *)fieldNode, precedingSlot, withinMultifield, (int)lastSlot);
-    if ( !*(_DWORD *)(fieldNode + 64) && savedNode )
+      theSlot = Rules_CreateDeftemplateSlot((int *)(uintptr_t)fieldNode, precedingSlot, withinMultifield, (int)(intptr_t)lastSlot);
+    if ( !*(_DWORD *)(uintptr_t)(fieldNode + 64) && savedNode )
     {
       fieldNode = savedNode;
       savedNode = 0;
     }
-    fieldNode = *(_DWORD *)(fieldNode + 64);
+    fieldNode = *(_DWORD *)(uintptr_t)(fieldNode + 64);
     if ( !fieldNode )
       *((_BYTE *)theSlot + 12) |= 4u;
     lastSlot = theSlot;
@@ -1208,11 +1208,11 @@ int  Rules_FindDuplicateDeftemplateSlot(int slotList, int *fieldNode, int within
       nodeType = *fieldNode;
       if ( *fieldNode == 17 || nodeType == 15 )
       {
-        if ( (*(_BYTE *)(curSlot + 12) & 1) != 0
-          && *(_DWORD *)(curSlot + 12) << 25 >> 31 == withinMultifield
-          && (unsigned __int8)*(_DWORD *)(curSlot + 20) == fieldNode[8]
-          && *(_DWORD *)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
-          && AST_NodeListsEqual(*(__int16 **)(curSlot + 24), (__int16 *)fieldNode[13]) )
+        if ( (*(_BYTE *)(uintptr_t)(curSlot + 12) & 1) != 0
+          && *(_DWORD *)(uintptr_t)(curSlot + 12) << 25 >> 31 == withinMultifield
+          && (unsigned __int8)*(_DWORD *)(uintptr_t)(curSlot + 20) == fieldNode[8]
+          && *(_DWORD *)(uintptr_t)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
+          && AST_NodeListsEqual(*(__int16 **)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
         {
           return curSlot;
         }
@@ -1220,23 +1220,23 @@ int  Rules_FindDuplicateDeftemplateSlot(int slotList, int *fieldNode, int within
       }
       if ( nodeType != 18 && nodeType != 16 )
         break;
-      if ( (*(_BYTE *)(curSlot + 12) & 2) != 0
-        && *(_DWORD *)(curSlot + 12) << 25 >> 31 == withinMultifield
-        && *(_DWORD *)(curSlot + 20) << 8 >> 24 == (unsigned int)(fieldNode[3] << 18) >> 25
-        && (unsigned __int8)*(_DWORD *)(curSlot + 20) == fieldNode[8]
-        && *(_DWORD *)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
-        && AST_NodeListsEqual(*(__int16 **)(curSlot + 24), (__int16 *)fieldNode[13]) )
+      if ( (*(_BYTE *)(uintptr_t)(curSlot + 12) & 2) != 0
+        && *(_DWORD *)(uintptr_t)(curSlot + 12) << 25 >> 31 == withinMultifield
+        && *(_DWORD *)(uintptr_t)(curSlot + 20) << 8 >> 24 == (unsigned int)(fieldNode[3] << 18) >> 25
+        && (unsigned __int8)*(_DWORD *)(uintptr_t)(curSlot + 20) == fieldNode[8]
+        && *(_DWORD *)(uintptr_t)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
+        && AST_NodeListsEqual(*(__int16 **)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
       {
         return curSlot;
       }
 LABEL_8:
       *precedingSlot = curSlot;
-      curSlot = *(_DWORD *)(curSlot + 40);
+      curSlot = *(_DWORD *)(uintptr_t)(curSlot + 40);
       if ( !curSlot )
         return 0;
     }
     *precedingSlot = curSlot;
-    curSlot = *(_DWORD *)(curSlot + 40);
+    curSlot = *(_DWORD *)(uintptr_t)(curSlot + 40);
   }
   while ( curSlot );
   return 0;
@@ -1277,88 +1277,88 @@ int  Rules_PruneDeftemplateParseTree(int nodeList)
             {
               while ( 1 )
               {
-                nodeType = *(_DWORD *)curNode;
-                if ( *(_DWORD *)curNode != 17 && nodeType != 15 )
+                nodeType = *(_DWORD *)(uintptr_t)curNode;
+                if ( *(_DWORD *)(uintptr_t)curNode != 17 && nodeType != 15 )
                   break;
-                if ( *(_DWORD *)(curNode + 52) )
+                if ( *(_DWORD *)(uintptr_t)(curNode + 52) )
                   break;
                 if ( prevNode )
-                  *(_DWORD *)(prevNode + 64) = *(_DWORD *)(curNode + 64);
+                  *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(curNode + 64);
                 else
-                  listHead = *(_DWORD *)(curNode + 64);
-                *(_DWORD *)(curNode + 64) = 0;
+                  listHead = *(_DWORD *)(uintptr_t)(curNode + 64);
+                *(_DWORD *)(uintptr_t)(curNode + 64) = 0;
                 AST_FreeNode(curNode);
                 if ( !prevNode )
                   goto LABEL_21;
-                curNode = *(_DWORD *)(prevNode + 64);
+                curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
                 if ( !curNode )
                   return listHead;
               }
-              if ( *(_DWORD *)curNode != 18 && *(_DWORD *)curNode != 16
-                || (*(_BYTE *)(curNode + 8) & 4) != 0
-                || *(_DWORD *)(curNode + 52)
-                || (*(_DWORD *)(curNode + 8) & 0x3F8000) != 0
-                || (*(_WORD *)(curNode + 10) & 0x1FC0) != 0 )
+              if ( *(_DWORD *)(uintptr_t)curNode != 18 && *(_DWORD *)(uintptr_t)curNode != 16
+                || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0
+                || *(_DWORD *)(uintptr_t)(curNode + 52)
+                || (*(_DWORD *)(uintptr_t)(curNode + 8) & 0x3F8000) != 0
+                || (*(_WORD *)(uintptr_t)(curNode + 10) & 0x1FC0) != 0 )
               {
                 break;
               }
               if ( prevNode )
-                *(_DWORD *)(prevNode + 64) = *(_DWORD *)(curNode + 64);
+                *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(curNode + 64);
               else
-                listHead = *(_DWORD *)(curNode + 64);
-              *(_DWORD *)(curNode + 64) = 0;
+                listHead = *(_DWORD *)(uintptr_t)(curNode + 64);
+              *(_DWORD *)(uintptr_t)(curNode + 64) = 0;
               AST_FreeNode(curNode);
               if ( !prevNode )
                 goto LABEL_21;
-              curNode = *(_DWORD *)(prevNode + 64);
+              curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
               if ( !curNode )
                 return listHead;
             }
-            if ( *(_DWORD *)curNode != 18 && *(_DWORD *)curNode != 16
-              || (*(_BYTE *)(curNode + 8) & 4) != 0
-              || !*(_DWORD *)(curNode + 52)
-              || (*(_DWORD *)(curNode + 8) & 0x3F8000) != 0
-              || (*(_WORD *)(curNode + 10) & 0x1FC0) != 0 )
+            if ( *(_DWORD *)(uintptr_t)curNode != 18 && *(_DWORD *)(uintptr_t)curNode != 16
+              || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0
+              || !*(_DWORD *)(uintptr_t)(curNode + 52)
+              || (*(_DWORD *)(uintptr_t)(curNode + 8) & 0x3F8000) != 0
+              || (*(_WORD *)(uintptr_t)(curNode + 10) & 0x1FC0) != 0 )
             {
               break;
             }
-            *(_DWORD *)curNode = 17;
+            *(_DWORD *)(uintptr_t)curNode = 17;
             prevNode = curNode;
-            curNode = *(_DWORD *)(curNode + 64);
+            curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
             if ( !curNode )
               return listHead;
           }
-          if ( *(_DWORD *)curNode != 18 || (*(_BYTE *)(curNode + 8) & 4) == 0 || *(_DWORD *)(curNode + 68) )
+          if ( *(_DWORD *)(uintptr_t)curNode != 18 || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) == 0 || *(_DWORD *)(uintptr_t)(curNode + 68) )
             break;
-          *(_DWORD *)curNode = 17;
+          *(_DWORD *)(uintptr_t)curNode = 17;
           constExpr = PP_MakeConst25(curNode, nodeType);
-          *(_DWORD *)(v7 + 52) = constExpr;
-          *(_BYTE *)(v7 + 8) &= ~4u;
+          *(_DWORD *)(uintptr_t)(v7 + 52) = constExpr;
+          *(_BYTE *)(uintptr_t)(v7 + 8) &= ~4u;
 LABEL_41:
           prevNode = v7;
-          curNode = *(_DWORD *)(v7 + 64);
+          curNode = *(_DWORD *)(uintptr_t)(v7 + 64);
           if ( !curNode )
             return listHead;
         }
-        if ( *(_DWORD *)curNode == 18 && (*(_BYTE *)(curNode + 8) & 4) != 0 )
+        if ( *(_DWORD *)(uintptr_t)curNode == 18 && (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0 )
           break;
         prevNode = curNode;
-        curNode = *(_DWORD *)(curNode + 64);
+        curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
         if ( !curNode )
           return listHead;
       }
-      ShouldEmit = (_DWORD *)PP_ShouldEmit(*(_DWORD *)(curNode + 68));
-      v10 = AST_MergeFieldAccessNodes(ShouldEmit, *(_DWORD **)(*(_DWORD *)(v9 + 68) + 52));
-      *(_DWORD *)(*(_DWORD *)(v11 + 68) + 52) = v10;
-      prunedChild = Rules_PruneDeftemplateParseTree(*(_DWORD *)(v11 + 68));
-      *(_DWORD *)(v7 + 68) = prunedChild;
+      ShouldEmit = (_DWORD *)(uintptr_t)PP_ShouldEmit(*(_DWORD *)(uintptr_t)(curNode + 68));
+      v10 = AST_MergeFieldAccessNodes(ShouldEmit, *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v9 + 68) + 52));
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v11 + 68) + 52) = v10;
+      prunedChild = Rules_PruneDeftemplateParseTree(*(_DWORD *)(uintptr_t)(v11 + 68));
+      *(_DWORD *)(uintptr_t)(v7 + 68) = prunedChild;
       if ( prunedChild )
         goto LABEL_41;
       if ( prevNode )
-        *(_DWORD *)(prevNode + 64) = *(_DWORD *)(v7 + 64);
+        *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(v7 + 64);
       else
-        listHead = *(_DWORD *)(v7 + 64);
-      *(_DWORD *)(v7 + 64) = 0;
+        listHead = *(_DWORD *)(uintptr_t)(v7 + 64);
+      *(_DWORD *)(uintptr_t)(v7 + 64) = 0;
       AST_FreeNode(v7);
       if ( prevNode )
         break;
@@ -1367,7 +1367,7 @@ LABEL_21:
       if ( !listHead )
         return 0;
     }
-    curNode = *(_DWORD *)(prevNode + 64);
+    curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
   }
   while ( curNode );
   return listHead;

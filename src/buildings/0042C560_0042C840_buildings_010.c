@@ -22,7 +22,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int sideOwner)
   char newHealth; // ah
 
   slotIndex = 0;
-  unitRecord = (__int16 *)(g_MapData + 852);
+  unitRecord = (__int16 *)(uintptr_t)(g_MapData + 852);
   do
   {
     while ( 1 )
@@ -78,14 +78,14 @@ _BOOL2 UnitBattle_HandleManualRotateAndMoveInput(void)
 
   if ( Input_IsKeyPressed(34) )
   {
-    if ( *(_DWORD *)(gameData + 147151) )
+    if ( *(_DWORD *)(uintptr_t)(gameData + 147151) )
       goto LABEL_5;
-    *(_DWORD *)(gameData + 147151) = 1;
+    *(_DWORD *)(uintptr_t)(gameData + 147151) = 1;
     goto LABEL_4;
   }
-  if ( *(_DWORD *)(gameData + 147151) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 147151) )
   {
-    *(_DWORD *)(gameData + 147151) = 0;
+    *(_DWORD *)(uintptr_t)(gameData + 147151) = 0;
 LABEL_4:
     UnitBattle_RedrawVisibleGrid();
   }
@@ -97,28 +97,28 @@ LABEL_5:
     {
       mapDataCw = g_MapData;
       unitOffsetCw = 31 * g_SelectedUnitIndex;
-      facingCW = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) + 1;
-      *(_BYTE *)(g_MapData + unitOffsetCw + 855) = facingCW;
-      *(_BYTE *)(mapDataCw + unitOffsetCw + 855) = facingCW & 7;
+      facingCW = *(_BYTE *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 855) + 1;
+      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCw + 855) = facingCW;
+      *(_BYTE *)(uintptr_t)(mapDataCw + unitOffsetCw + 855) = facingCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(205) )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)g_RenderState, (char)g_RenderState);
+        DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
       }
     }
     if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
     {
       mapDataCcw = g_MapData;
       unitOffsetCcw = 31 * g_SelectedUnitIndex;
-      facingCCW = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) - 1;
-      *(_BYTE *)(g_MapData + unitOffsetCcw + 855) = facingCCW;
-      *(_BYTE *)(mapDataCcw + unitOffsetCcw + 855) = facingCCW & 7;
+      facingCCW = *(_BYTE *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 855) - 1;
+      *(_BYTE *)(uintptr_t)(g_MapData + unitOffsetCcw + 855) = facingCCW;
+      *(_BYTE *)(uintptr_t)(mapDataCcw + unitOffsetCcw + 855) = facingCCW & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(203) )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)g_RenderState, (char)g_RenderState);
+        DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
       }
     }
     IsKeyPressed = Input_IsKeyPressed(200);
@@ -127,27 +127,27 @@ LABEL_5:
       if ( g_SelectedUnitIndex != -1 )
       {
         unitRecord = 31 * g_SelectedUnitIndex + g_MapData + 852;
-        facing = *(unsigned __int8 *)(unitRecord + 3);
+        facing = *(unsigned __int8 *)(uintptr_t)(unitRecord + 3);
         deltaY = Map_NeighborDY[2 * facing];
         movePath = UnitBattle_MoveTrack(
                 g_SelectedUnitIndex,
-                Map_NeighborDX[2 * facing] + *(unsigned __int16 *)(unitRecord + 4),
+                Map_NeighborDX[2 * facing] + *(unsigned __int16 *)(uintptr_t)(unitRecord + 4),
                 unitRecord,
-                deltaY + *(unsigned __int16 *)(unitRecord + 6),
+                deltaY + *(unsigned __int16 *)(uintptr_t)(unitRecord + 6),
                 deltaY);
         LOWORD(IsKeyPressed) = 31 * g_SelectedUnitIndex;
-        *(_DWORD *)(g_MapData + 31 * g_SelectedUnitIndex + 875) = movePath;
+        *(_DWORD *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 875) = movePath;
         if ( movePath )
         {
-          requiredAp = HIWORD(*(_DWORD *)(*(_DWORD *)(pathNode + 23) + 4));
-          if ( *(unsigned __int8 *)(pathNode + 8) < (int)requiredAp )
+          requiredAp = HIWORD(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(pathNode + 23) + 4));
+          if ( *(unsigned __int8 *)(uintptr_t)(pathNode + 8) < (int)requiredAp )
           {
             LOWORD(IsKeyPressed) = j__nfree_();
-            *(_DWORD *)(v15 + 23) = 0;
+            *(_DWORD *)(uintptr_t)(v15 + 23) = 0;
           }
           else
           {
-            Audio_PlayUnitMoveOrderSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
             LOWORD(IsKeyPressed) = UnitBattle_Move(g_SelectedUnitIndex, v14, requiredAp, deltaY);
           }
         }
@@ -182,41 +182,41 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
   int deltaY; // eax
 
   (void)this;
-  scroll_deadline = 16 - *(unsigned __int8 *)(gameData + 147171) + g_BattleViewportScrollRepeatDelayBias;
+  scroll_deadline = 16 - *(unsigned __int8 *)(uintptr_t)(gameData + 147171) + g_BattleViewportScrollRepeatDelayBias;
   now = Time_Now(0, 0);
   if ( now > scroll_deadline && !Input_IsKeyPressed(56) )
   {
     if ( Input_IsKeyPressed(203) )
     {
-      scrollCol = *(_DWORD *)(g_MapData + 808);
+      scrollCol = *(_DWORD *)(uintptr_t)(g_MapData + 808);
       if ( scrollCol )
       {
-        *(_DWORD *)(g_MapData + 808) = scrollCol - 1;
+        *(_DWORD *)(uintptr_t)(g_MapData + 808) = scrollCol - 1;
         UnitBattle_RedrawVisibleGrid();
       }
     }
-    if ( Input_IsKeyPressed(205) && *(_DWORD *)(g_MapData + 808) + 7 < *(_DWORD *)(g_MapData + 804) )
+    if ( Input_IsKeyPressed(205) && *(_DWORD *)(uintptr_t)(g_MapData + 808) + 7 < *(_DWORD *)(uintptr_t)(g_MapData + 804) )
     {
-      ++*(_DWORD *)(g_MapData + 808);
+      ++*(_DWORD *)(uintptr_t)(g_MapData + 808);
       UnitBattle_RedrawVisibleGrid();
     }
     if ( Input_IsKeyPressed(200) )
     {
-      scrollRow = *(_DWORD *)(g_MapData + 812);
+      scrollRow = *(_DWORD *)(uintptr_t)(g_MapData + 812);
       if ( scrollRow )
       {
-        *(_DWORD *)(g_MapData + 812) = scrollRow - 1;
+        *(_DWORD *)(uintptr_t)(g_MapData + 812) = scrollRow - 1;
         UnitBattle_RedrawVisibleGrid();
       }
     }
-    if ( Input_IsKeyPressed(208) && *(_DWORD *)(g_MapData + 812) + 7 < *(_DWORD *)(g_MapData + 800) )
+    if ( Input_IsKeyPressed(208) && *(_DWORD *)(uintptr_t)(g_MapData + 812) + 7 < *(_DWORD *)(uintptr_t)(g_MapData + 800) )
     {
-      ++*(_DWORD *)(g_MapData + 812);
+      ++*(_DWORD *)(uintptr_t)(g_MapData + 812);
       UnitBattle_RedrawVisibleGrid();
     }
   }
-  result = *(__int16 *)(40
-                      * (*(_DWORD *)(g_MapData + 808)
+  result = *(__int16 *)(uintptr_t)(40
+                      * (*(_DWORD *)(uintptr_t)(g_MapData + 808)
                        + (((g_MouseCursorRawX >> g_CursorCoordShift)
                          - 32
                          - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
@@ -227,19 +227,19 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
                          - 16
                          - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
                           + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-                       + *(_DWORD *)(g_MapData + 812))
+                       + *(_DWORD *)(uintptr_t)(g_MapData + 812))
                       + 1534);
   if ( result == -1 )
   {
-    result = DD_IsLost((int)g_RenderState);
+    result = DD_IsLost((int)(intptr_t)g_RenderState);
     if ( result )
     {
       Render_Pump();
       dragAnchorX = g_MouseCursorRawX >> g_CursorCoordShift;
       dragAnchorY = g_MouseCursorRawY >> g_CursorCoordShift;
-      while ( DD_IsLost((int)g_RenderState) )
+      while ( DD_IsLost((int)(intptr_t)g_RenderState) )
       {
-        DD_Pump((int)g_RenderState, dragAnchorY);
+        DD_Pump((int)(intptr_t)g_RenderState, dragAnchorY);
         deltaX = (g_MouseCursorRawX >> g_CursorCoordShift) - dragAnchorX;
         if ( deltaX <= 0 )
           deltaX = dragAnchorX - (g_MouseCursorRawX >> g_CursorCoordShift);
@@ -251,30 +251,30 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
           if ( deltaY < 8 )
             continue;
         }
-        *(_DWORD *)(g_MapData + 808) += ((g_MouseCursorRawX >> g_CursorCoordShift)
+        *(_DWORD *)(uintptr_t)(g_MapData + 808) += ((g_MouseCursorRawX >> g_CursorCoordShift)
                                           - dragAnchorX
                                           - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - dragAnchorX) >> 31, 3)
                                            + 8 * (((g_MouseCursorRawX >> g_CursorCoordShift) - dragAnchorX) >> 31))) >> 3;
-        *(_DWORD *)(g_MapData + 812) += ((g_MouseCursorRawY >> g_CursorCoordShift)
+        *(_DWORD *)(uintptr_t)(g_MapData + 812) += ((g_MouseCursorRawY >> g_CursorCoordShift)
                                           - dragAnchorY
                                           - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - dragAnchorY) >> 31, 3)
                                            + 8 * (((g_MouseCursorRawY >> g_CursorCoordShift) - dragAnchorY) >> 31))) >> 3;
-        if ( *(int *)(g_MapData + 808) < 0 )
-          *(_DWORD *)(g_MapData + 808) = 0;
-        mapWidthTiles = *(_DWORD *)(g_MapData + 804);
-        if ( *(_DWORD *)(g_MapData + 808) + 7 > mapWidthTiles )
-          *(_DWORD *)(g_MapData + 808) = mapWidthTiles - 7;
-        if ( *(int *)(g_MapData + 812) < 0 )
-          *(_DWORD *)(g_MapData + 812) = 0;
-        mapHeightTiles = *(_DWORD *)(g_MapData + 800);
-        if ( *(_DWORD *)(g_MapData + 812) + 7 > mapHeightTiles )
-          *(_DWORD *)(g_MapData + 812) = mapHeightTiles - 7;
+        if ( *(int *)(uintptr_t)(g_MapData + 808) < 0 )
+          *(_DWORD *)(uintptr_t)(g_MapData + 808) = 0;
+        mapWidthTiles = *(_DWORD *)(uintptr_t)(g_MapData + 804);
+        if ( *(_DWORD *)(uintptr_t)(g_MapData + 808) + 7 > mapWidthTiles )
+          *(_DWORD *)(uintptr_t)(g_MapData + 808) = mapWidthTiles - 7;
+        if ( *(int *)(uintptr_t)(g_MapData + 812) < 0 )
+          *(_DWORD *)(uintptr_t)(g_MapData + 812) = 0;
+        mapHeightTiles = *(_DWORD *)(uintptr_t)(g_MapData + 800);
+        if ( *(_DWORD *)(uintptr_t)(g_MapData + 812) + 7 > mapHeightTiles )
+          *(_DWORD *)(uintptr_t)(g_MapData + 812) = mapHeightTiles - 7;
         UnitBattle_RedrawVisibleGrid();
         dragAnchorX = g_MouseCursorRawX >> g_CursorCoordShift;
         dragAnchorY = g_MouseCursorRawY >> g_CursorCoordShift;
       }
       UnitBattle_RedrawVisibleGrid();
-      return Render_Present((int)g_RenderState);
+      return Render_Present((int)(intptr_t)g_RenderState);
     }
   }
   return result;

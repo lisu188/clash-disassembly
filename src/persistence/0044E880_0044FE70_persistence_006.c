@@ -23,16 +23,16 @@ int  BuildingPrisoner_RecalculateRansomValue(int prisonerRecord)
   int result; // eax
   int v6; // eax
 
-  basePower = AI_TickNationPostTurn(*(unsigned __int8 *)(prisonerRecord + 1));
+  basePower = AI_TickNationPostTurn(*(unsigned __int8 *)(uintptr_t)(prisonerRecord + 1));
   ransomValue = basePower * Rng_RandRange(7, v2) / 0x64;
-  *(_WORD *)(v4 + 4) = ransomValue;
+  *(_WORD *)(uintptr_t)(v4 + 4) = ransomValue;
   if ( !(_WORD)ransomValue )
   {
     v6 = AI_TickNationPostTurn(g_CurrentPlayerIndex);
-    *(_WORD *)(v4 + 4) = 13 * v6 / 10;
+    *(_WORD *)(uintptr_t)(v4 + 4) = 13 * v6 / 10;
   }
-  result = 10 * (*(unsigned __int16 *)(v4 + 4) / 10);
-  *(_WORD *)(v4 + 4) = result;
+  result = 10 * (*(unsigned __int16 *)(uintptr_t)(v4 + 4) / 10);
+  *(_WORD *)(uintptr_t)(v4 + 4) = result;
   return result;
 }
 // 44E89B: variable 'v2' is possibly undefined
@@ -59,12 +59,12 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
   const char *message_format; // edi
   int message_table[3]; // [esp+0h] [ebp-2Ch]
 
-  Debug_Log(a1, a2, a3, (int)aPrisoner_setin);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aPrisoner_setin);
   result = 0;
   for ( queued_index = 0; queued_index < 10; ++queued_index )
   {
     queued_prisoner = PLAYER_DATA(g_CurrentPlayerIndex) + 1357 + 6 * queued_index;
-    if ( *(char *)queued_prisoner == -1 )
+    if ( *(char *)(uintptr_t)queued_prisoner == -1 )
       continue;
 
     building_index = 0;
@@ -73,13 +73,13 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
     while ( building_index < 100 )
     {
       building = UNIT_RECORD(building_index);
-      result = *(char *)(building + 4);
-      if ( (unsigned int)result < 4 && *(__int16 *)(building + 16) != -1 )
+      result = *(char *)(uintptr_t)(building + 4);
+      if ( (unsigned int)result < 4 && *(__int16 *)(uintptr_t)(building + 16) != -1 )
       {
-        if ( *(char *)(building + 4) == 2 && *(unsigned __int8 *)(building + 2) == g_CurrentPlayerIndex )
+        if ( *(char *)(uintptr_t)(building + 4) == 2 && *(unsigned __int8 *)(uintptr_t)(building + 2) == g_CurrentPlayerIndex )
         {
-          dx = *(unsigned __int16 *)(queued_prisoner + 4) - *(unsigned __int8 *)(building + 1);
-          dy = *(unsigned __int16 *)(queued_prisoner + 2) - *(unsigned __int8 *)building;
+          dx = *(unsigned __int16 *)(uintptr_t)(queued_prisoner + 4) - *(unsigned __int8 *)(uintptr_t)(building + 1);
+          dy = *(unsigned __int16 *)(uintptr_t)(queued_prisoner + 2) - *(unsigned __int8 *)(uintptr_t)building;
           distance = Math_CeilSqrt(dx * dx + dy * dy);
           if ( distance < best_distance && Building_FindFreePrisonerSlot(building) != -1 )
           {
@@ -93,7 +93,7 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
 
     if ( best_building_index == -1 )
     {
-      *(_BYTE *)queued_prisoner = -1;
+      *(_BYTE *)(uintptr_t)queued_prisoner = -1;
       continue;
     }
 
@@ -101,29 +101,29 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
     building = UNIT_RECORD(best_building_index);
     prisoner_slot = Building_FindFreePrisonerSlot(building);
     prisoner = BUILDING_PRISONER_SLOT(building, prisoner_slot);
-    BUILDING_PRISONER_TYPE(prisoner) = *(char *)queued_prisoner;
-    prisoner_owner = *(_BYTE *)(queued_prisoner + 1);
-    *(_BYTE *)(prisoner + 2) = 0;
+    BUILDING_PRISONER_TYPE(prisoner) = *(char *)(uintptr_t)queued_prisoner;
+    prisoner_owner = *(_BYTE *)(uintptr_t)(queued_prisoner + 1);
+    *(_BYTE *)(uintptr_t)(prisoner + 2) = 0;
     BUILDING_PRISONER_ACTION(prisoner) = 0;
     BUILDING_PRISONER_OWNER(prisoner) = prisoner_owner;
     BuildingPrisoner_RecalculateRansomValue(prisoner);
-    *(_BYTE *)queued_prisoner = -1;
+    *(_BYTE *)(uintptr_t)queued_prisoner = -1;
     result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       continue;
     Win_PlayModeChangeFrameTransition(aUwiezic, 1, queued_index, prisoner_owner, building_offset);
-    message_table[0] = (int)g_PrisonerCastleIntakeTexts[0];
-    message_table[1] = (int)g_PrisonerCastleIntakeTexts[1];
-    message_table[2] = (int)g_PrisonerCastleIntakeTexts[2];
-    message_format = (const char *)message_table[(unsigned __int8)g_LanguageIndex];
+    message_table[0] = (int)(intptr_t)g_PrisonerCastleIntakeTexts[0];
+    message_table[1] = (int)(intptr_t)g_PrisonerCastleIntakeTexts[1];
+    message_table[2] = (int)(intptr_t)g_PrisonerCastleIntakeTexts[2];
+    message_format = (const char *)(uintptr_t)message_table[(unsigned __int8)g_LanguageIndex];
     sprintf_(&g_PrisonerIntakeMessageBuffer, message_format, building + 5);
     result = UI_ShowInfoWindow(
-               (int)&g_PrisonerIntakeMessageBuffer,
+               (int)(intptr_t)&g_PrisonerIntakeMessageBuffer,
                0,
                0,
                building_offset,
-               (int)message_format,
-               (int)&g_PrisonerCastleIntakeTexts[3]);
+               (int)(intptr_t)message_format,
+               (int)(intptr_t)&g_PrisonerCastleIntakeTexts[3]);
   }
   return result;
 }
@@ -140,7 +140,7 @@ int  BuildingPrisoner_SetAction(int a1, char actionCode, DWORD a3)
   int result; // eax
   int buildingRecord; // ecx
 
-  Debug_Log(a1, actionCode, a3, (int)aBuilding_setpr);
+  Debug_Log(a1, actionCode, a3, (int)(intptr_t)aBuilding_setpr);
   result = slotIndex;
   BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(buildingRecord, slotIndex)) = actionCode;
   return result;
@@ -159,7 +159,7 @@ int  Prisoner_Kill(int buildingRecord, char prisonerSlot, DWORD a3)
 {
   unsigned __int8 prisoner_slot; // edx
 
-  Debug_Log(buildingRecord, prisonerSlot, a3, (int)aPrisoner_kill0);
+  Debug_Log(buildingRecord, prisonerSlot, a3, (int)(intptr_t)aPrisoner_kill0);
   prisoner_slot = (unsigned __int8)prisonerSlot;
   BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(buildingRecord, prisoner_slot)) = -1;
   return prisoner_slot;
@@ -178,18 +178,18 @@ int  Prisoner_Behead(int buildingRecord, int prisonerRecord, char slotIndex, DWO
   int beheadTextTable[4]; // [esp+64h] [ebp-10h] BYREF
 
   beheadTextTable[3] = prisonerRecord;
-  Debug_Log(buildingRecord, slotIndex, a4, (int)aPrisoner_behea);
+  Debug_Log(buildingRecord, slotIndex, a4, (int)(intptr_t)aPrisoner_behea);
   Prisoner_Kill(v4, slotIndex, a4);
   result = gameData;
-  if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v5 + 2) + gameData + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v5 + 2) + gameData + 140051) )
   {
     Win_PlayModeChangeFrameTransition(aZciecie, 1, v5, slotIndex, a4);
-    beheadTextTable[0] = (int)g_PrisonerBeheadingTexts[0];
-    beheadTextTable[1] = (int)g_PrisonerBeheadingTexts[1];
-    beheadTextTable[2] = (int)g_PrisonerBeheadingTexts[2];
-    formatString = (const char *)beheadTextTable[(unsigned __int8)g_LanguageIndex];
+    beheadTextTable[0] = (int)(intptr_t)g_PrisonerBeheadingTexts[0];
+    beheadTextTable[1] = (int)(intptr_t)g_PrisonerBeheadingTexts[1];
+    beheadTextTable[2] = (int)(intptr_t)g_PrisonerBeheadingTexts[2];
+    formatString = (const char *)(uintptr_t)beheadTextTable[(unsigned __int8)g_LanguageIndex];
     sprintf_(messageBuffer, formatString, v7 + 5);
-    return UI_ShowInfoWindow((const char *)messageBuffer, 0, v9, a4, (int)&beheadTextTable[3], (int)formatString);
+    return UI_ShowInfoWindow((const char *)messageBuffer, 0, v9, a4, (int)(intptr_t)&beheadTextTable[3], (int)(intptr_t)formatString);
   }
   return result;
 }
@@ -240,9 +240,9 @@ int  Prisoner_FindRichestHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlaye
   bestCastleIndex = -1;
   do
   {
-    if ( *(_BYTE *)(castleRecordOffset + gameData + 509678) == 2
-      && *(unsigned __int8 *)(castleRecordOffset + gameData + 509676) == enemyPlayerIndex
-      && !Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
+    if ( *(_BYTE *)(uintptr_t)(castleRecordOffset + gameData + 509678) == 2
+      && *(unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + 509676) == enemyPlayerIndex
+      && !Building_IsVisibleToPlayer((unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
     {
       castleValue = Building_GetTotalValue(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET);
       if ( castleValue > bestValue )
@@ -269,9 +269,9 @@ int  Prisoner_FindAnyHiddenEnemyCastle(int enemyPlayerIndex, int viewerPlayerInd
   int castleRecordOffset; // ecx
 
   castleRecordOffset = 0;
-  while ( *(_BYTE *)(gameData + castleRecordOffset + 509678) != 2
-       || *(unsigned __int8 *)(gameData + castleRecordOffset + 509676) != enemyPlayerIndex
-       || Building_IsVisibleToPlayer((unsigned __int8 *)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
+  while ( *(_BYTE *)(uintptr_t)(gameData + castleRecordOffset + 509678) != 2
+       || *(unsigned __int8 *)(uintptr_t)(gameData + castleRecordOffset + 509676) != enemyPlayerIndex
+       || Building_IsVisibleToPlayer((unsigned __int8 *)(uintptr_t)(castleRecordOffset + gameData + BUILDING_TABLE_OFFSET), viewerPlayerIndex) )
   {
     castleRecordOffset += 467;
     if ( castleRecordOffset >= 46700 )
@@ -291,12 +291,12 @@ int  Prisoner_FindAnyHiddenEnemyUnitStack(int enemyPlayerIndex, int viewerPlayer
 
   stackIndex = 0;
 LABEL_2:
-  if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6) <= 0x28 )
   {
     stackRecordOffset = UNIT_STACK_STRIDE * stackIndex;
     stackRecordBase = gameData + UNIT_STACK_STRIDE * stackIndex;
-    if ( *(unsigned __int8 *)(stackRecordBase + 147178) == enemyPlayerIndex
-      && !Map_IsTileVisibleToPlayer(*(__int16 *)(stackRecordBase + 147174), *(__int16 *)(stackRecordBase + 147176), viewerPlayerIndex) )
+    if ( *(unsigned __int8 *)(uintptr_t)(stackRecordBase + 147178) == enemyPlayerIndex
+      && !Map_IsTileVisibleToPlayer(*(__int16 *)(uintptr_t)(stackRecordBase + 147174), *(__int16 *)(uintptr_t)(stackRecordBase + 147176), viewerPlayerIndex) )
     {
       return gameData + UNIT_STACK_TABLE_OFFSET + stackRecordOffset;
     }
@@ -376,75 +376,75 @@ unsigned int  Prisoner_Torture(int buildingRecord, int prisonerSlot, int prisone
   int localizedEnemyStackTexts[7]; // [esp+30h] [ebp-1Ch] BYREF
 
   localizedEnemyStackTexts[5] = prisonerRecord;
-  Debug_Log(buildingRecord, slotIndex, context, (int)aPrisoner_tortu);
+  Debug_Log(buildingRecord, slotIndex, context, (int)(intptr_t)aPrisoner_tortu);
   result = Rng_RandRange(0, 7);
   switch ( result )
   {
     case 0u:
     case 5u:
-      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_0);
-      revealTarget = (unsigned __int8 *)Prisoner_FindRichestHiddenEnemyCastle(*(unsigned __int8 *)(v8 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v8 + 2));
+      Debug_Log(v7, slotIndex, context, (int)(intptr_t)aPrisoner_tor_0);
+      revealTarget = (unsigned __int8 *)(uintptr_t)Prisoner_FindRichestHiddenEnemyCastle(*(unsigned __int8 *)(uintptr_t)(v8 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(uintptr_t)(v8 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
-      Prisoner_Kill(v9, (char)revealTarget, context);
-      Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v11 + 2));
-      localizedRichestCastleTexts[0] = (int)g_PrisonerTortureRichestCastleRevealTexts[0];
-      localizedRichestCastleTexts[1] = (int)g_PrisonerTortureRichestCastleRevealTexts[1];
-      localizedRichestCastleTexts[2] = (int)g_PrisonerTortureRichestCastleRevealTexts[2];
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)(intptr_t)revealTarget, context);
+      Prisoner_Kill(v9, (char)(intptr_t)revealTarget, context);
+      Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(uintptr_t)(v11 + 2));
+      localizedRichestCastleTexts[0] = (int)(intptr_t)g_PrisonerTortureRichestCastleRevealTexts[0];
+      localizedRichestCastleTexts[1] = (int)(intptr_t)g_PrisonerTortureRichestCastleRevealTexts[1];
+      localizedRichestCastleTexts[2] = (int)(intptr_t)g_PrisonerTortureRichestCastleRevealTexts[2];
       revealTextTablePtr = &g_PrisonerTortureRichestCastleRevealTexts[3];
-      revealFormatArg = (int *)localizedRichestCastleTexts[(unsigned __int8)g_LanguageIndex];
+      revealFormatArg = (int *)(uintptr_t)localizedRichestCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealFormatArg, v13 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)(intptr_t)revealFormatArg, (int)(intptr_t)revealTextTablePtr);
     case 1u:
     case 6u:
-      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_1);
-      revealTarget = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyCastle(*(unsigned __int8 *)(v16 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v16 + 2));
+      Debug_Log(v7, slotIndex, context, (int)(intptr_t)aPrisoner_tor_1);
+      revealTarget = (unsigned __int8 *)(uintptr_t)Prisoner_FindAnyHiddenEnemyCastle(*(unsigned __int8 *)(uintptr_t)(v16 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(uintptr_t)(v16 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
-      Prisoner_Kill(v9, (char)revealTarget, context);
-      Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(v17 + 2));
-      localizedCastleTexts[0] = (int)g_PrisonerTortureCastleRevealTexts[0];
-      localizedCastleTexts[1] = (int)g_PrisonerTortureCastleRevealTexts[1];
-      localizedCastleTexts[2] = (int)g_PrisonerTortureCastleRevealTexts[2];
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)(intptr_t)revealTarget, context);
+      Prisoner_Kill(v9, (char)(intptr_t)revealTarget, context);
+      Map_RevealTilesInRadius2ForPlayer(*revealTarget, revealTarget[1], *(unsigned __int8 *)(uintptr_t)(v17 + 2));
+      localizedCastleTexts[0] = (int)(intptr_t)g_PrisonerTortureCastleRevealTexts[0];
+      localizedCastleTexts[1] = (int)(intptr_t)g_PrisonerTortureCastleRevealTexts[1];
+      localizedCastleTexts[2] = (int)(intptr_t)g_PrisonerTortureCastleRevealTexts[2];
       revealFormatArg = localizedResistanceTexts;
-      revealTextTablePtr = (char **)localizedCastleTexts[(unsigned __int8)g_LanguageIndex];
+      revealTextTablePtr = (char **)(uintptr_t)localizedCastleTexts[(unsigned __int8)g_LanguageIndex];
       sprintf_(&g_InfoWindowFormatBuffer, (const char *)revealTextTablePtr, v18 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)(intptr_t)revealFormatArg, (int)(intptr_t)revealTextTablePtr);
     case 2u:
     case 7u:
-      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_2);
-      revealTarget = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyUnitStack(*(unsigned __int8 *)(v19 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(v19 + 2));
+      Debug_Log(v7, slotIndex, context, (int)(intptr_t)aPrisoner_tor_2);
+      revealTarget = (unsigned __int8 *)(uintptr_t)Prisoner_FindAnyHiddenEnemyUnitStack(*(unsigned __int8 *)(uintptr_t)(v19 + 6 * prisonerSlot + 446), *(unsigned __int8 *)(uintptr_t)(v19 + 2));
       if ( !revealTarget )
-        return Prisoner_Torture(v9, prisonerSlot, v9, (char)revealTarget, context);
-      Prisoner_Kill(v9, (char)revealTarget, context);
-      Map_RevealTilesInRadius2ForPlayer(*(__int16 *)revealTarget, *((__int16 *)revealTarget + 1), *(unsigned __int8 *)(v20 + 2));
-      localizedEnemyStackTexts[0] = (int)g_PrisonerTortureEnemyStackRevealTexts[0];
-      localizedEnemyStackTexts[1] = (int)g_PrisonerTortureEnemyStackRevealTexts[1];
-      localizedEnemyStackTexts[2] = (int)g_PrisonerTortureEnemyStackRevealTexts[2];
+        return Prisoner_Torture(v9, prisonerSlot, v9, (char)(intptr_t)revealTarget, context);
+      Prisoner_Kill(v9, (char)(intptr_t)revealTarget, context);
+      Map_RevealTilesInRadius2ForPlayer(*(__int16 *)revealTarget, *((__int16 *)revealTarget + 1), *(unsigned __int8 *)(uintptr_t)(v20 + 2));
+      localizedEnemyStackTexts[0] = (int)(intptr_t)g_PrisonerTortureEnemyStackRevealTexts[0];
+      localizedEnemyStackTexts[1] = (int)(intptr_t)g_PrisonerTortureEnemyStackRevealTexts[1];
+      localizedEnemyStackTexts[2] = (int)(intptr_t)g_PrisonerTortureEnemyStackRevealTexts[2];
       revealTextTablePtr = &g_PrisonerTortureEnemyStackRevealTexts[3];
       revealFormatArg = &localizedEnemyStackTexts[3];
-      sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedEnemyStackTexts[(unsigned __int8)g_LanguageIndex], v21 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)(uintptr_t)localizedEnemyStackTexts[(unsigned __int8)g_LanguageIndex], v21 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)(intptr_t)revealFormatArg, (int)(intptr_t)revealTextTablePtr);
     case 3u:
-      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_3);
+      Debug_Log(v7, slotIndex, context, (int)(intptr_t)aPrisoner_tor_3);
       Prisoner_Kill(v22, slotIndex, context);
-      localizedNoConfessionTexts[0] = (int)g_PrisonerTortureNoConfessionDeathTexts[0];
-      localizedNoConfessionTexts[1] = (int)g_PrisonerTortureNoConfessionDeathTexts[1];
-      localizedNoConfessionTexts[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
+      localizedNoConfessionTexts[0] = (int)(intptr_t)g_PrisonerTortureNoConfessionDeathTexts[0];
+      localizedNoConfessionTexts[1] = (int)(intptr_t)g_PrisonerTortureNoConfessionDeathTexts[1];
+      localizedNoConfessionTexts[2] = (int)(intptr_t)g_PrisonerTortureNoConfessionDeathTexts[2];
       revealTextTablePtr = &g_PrisonerTortureNoConfessionDeathTexts[3];
       revealFormatArg = localizedEnemyStackTexts;
-      sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedNoConfessionTexts[(unsigned __int8)g_LanguageIndex], v23 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)(uintptr_t)localizedNoConfessionTexts[(unsigned __int8)g_LanguageIndex], v23 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)(intptr_t)revealFormatArg, (int)(intptr_t)revealTextTablePtr);
     case 4u:
-      Debug_Log(v7, slotIndex, context, (int)aPrisoner_tor_4);
+      Debug_Log(v7, slotIndex, context, (int)(intptr_t)aPrisoner_tor_4);
       BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, prisonerSlot)) = BUILDING_PRISONER_ACTION_NONE;
-      localizedResistanceTexts[0] = (int)g_PrisonerTortureResistanceTexts[0];
-      localizedResistanceTexts[1] = (int)g_PrisonerTortureResistanceTexts[1];
-      localizedResistanceTexts[2] = (int)g_PrisonerTortureResistanceTexts[2];
+      localizedResistanceTexts[0] = (int)(intptr_t)g_PrisonerTortureResistanceTexts[0];
+      localizedResistanceTexts[1] = (int)(intptr_t)g_PrisonerTortureResistanceTexts[1];
+      localizedResistanceTexts[2] = (int)(intptr_t)g_PrisonerTortureResistanceTexts[2];
       revealTextTablePtr = &g_PrisonerTortureResistanceTexts[3];
       revealFormatArg = localizedRichestCastleTexts;
-      sprintf_(&g_InfoWindowFormatBuffer, (const char *)localizedResistanceTexts[(unsigned __int8)g_LanguageIndex], v24 + 5);
-      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)revealFormatArg, (int)revealTextTablePtr);
+      sprintf_(&g_InfoWindowFormatBuffer, (const char *)(uintptr_t)localizedResistanceTexts[(unsigned __int8)g_LanguageIndex], v24 + 5);
+      return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v15, context, (int)(intptr_t)revealFormatArg, (int)(intptr_t)revealTextTablePtr);
     default:
       return result;
   }
@@ -481,23 +481,23 @@ int  Building_CreateSpecialPersonageGarrisonUnit(DWORD buildingRecord, unit_type
   int slot_offset; // ecx
   int leave_mask[12]; // [esp+0h] [ebp-48h] BYREF
 
-  Debug_Log(a3, prisonerSlot, buildingRecord, (int)aBuilding_creat);
+  Debug_Log(a3, prisonerSlot, buildingRecord, (int)(intptr_t)aBuilding_creat);
   garrison_slot_ptr = buildingRecord + 18;
   for ( slot_index = 0; slot_index < 12; ++slot_index )
   {
-    if ( *(__int16 *)garrison_slot_ptr == -1 )
+    if ( *(__int16 *)(uintptr_t)garrison_slot_ptr == -1 )
       break;
     garrison_slot_ptr += 31;
   }
   if ( slot_index == 12 )
   {
     qmemcpy(leave_mask, &g_SpecialPersonageLeaveMaskTemplate, sizeof(leave_mask));
-    Building_UnitsLeave((unsigned __int8 *)buildingRecord, leave_mask, a5);
+    Building_UnitsLeave((unsigned __int8 *)(uintptr_t)buildingRecord, leave_mask, a5);
     slot_index = 0;
   }
   slot_offset = 31 * slot_index;
-  result = UnitSlot_InitFromType(buildingRecord + 18 + slot_offset, unitType, *(_BYTE *)(buildingRecord + 2));
-  *(_BYTE *)(buildingRecord + 30 + slot_offset) |= 3u;
+  result = UnitSlot_InitFromType(buildingRecord + 18 + slot_offset, unitType, *(_BYTE *)(uintptr_t)(buildingRecord + 2));
+  *(_BYTE *)(uintptr_t)(buildingRecord + 30 + slot_offset) |= 3u;
   return result;
 }
 
@@ -513,27 +513,27 @@ unsigned int  Prisoner_Pay(int a1, int prisonerSlot, DWORD a3, double a4)
   int v11; // ecx
   int defectionTexts[8]; // [esp+0h] [ebp-20h] BYREF
 
-  Debug_Log(a1, prisonerSlot, a3, (int)aPrisoner_pay0x);
-  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2) + 140051) )
+  Debug_Log(a1, prisonerSlot, a3, (int)(intptr_t)aPrisoner_pay0x);
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2) + 140051) )
   {
     result = BUILDING_PRISONER_RANSOM(BUILDING_PRISONER_SLOT(buildingRecord, prisonerSlot));
-    playerGold = *(_DWORD *)(buildingRecord + 438);
+    playerGold = *(_DWORD *)(uintptr_t)(buildingRecord + 438);
     if ( result > playerGold )
       return result;
     a3 = playerGold - result;
-    *(_DWORD *)(buildingRecord + 438) = playerGold - result;
+    *(_DWORD *)(uintptr_t)(buildingRecord + 438) = playerGold - result;
   }
   Building_CreateSpecialPersonageGarrisonUnit(buildingRecord, BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(buildingRecord, prisonerSlot)), buildingRecord, prisonerSlot, a4);
   Prisoner_Kill(v8, prisonerSlot, a3);
-  result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v9 + 2);
-  if ( *(_DWORD *)(gameData + result + 140051) )
+  result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v9 + 2);
+  if ( *(_DWORD *)(uintptr_t)(gameData + result + 140051) )
   {
-    defectionTexts[0] = (int)g_PrisonerBriberyDefectionTexts[0];
-    defectionTexts[1] = (int)g_PrisonerBriberyDefectionTexts[1];
-    defectionTexts[2] = (int)g_PrisonerBriberyDefectionTexts[2];
-    defectionFormat = (const char *)defectionTexts[(unsigned __int8)g_LanguageIndex];
+    defectionTexts[0] = (int)(intptr_t)g_PrisonerBriberyDefectionTexts[0];
+    defectionTexts[1] = (int)(intptr_t)g_PrisonerBriberyDefectionTexts[1];
+    defectionTexts[2] = (int)(intptr_t)g_PrisonerBriberyDefectionTexts[2];
+    defectionFormat = (const char *)(uintptr_t)defectionTexts[(unsigned __int8)g_LanguageIndex];
     sprintf_(&g_InfoWindowFormatBuffer, defectionFormat, v9 + 5);
-    return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v11, a3, (int)&defectionTexts[3], (int)defectionFormat);
+    return UI_ShowInfoWindow((const char *)&g_InfoWindowFormatBuffer, 0, v11, a3, (int)(intptr_t)&defectionTexts[3], (int)(intptr_t)defectionFormat);
   }
   return result;
 }
@@ -560,12 +560,12 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
   DWORD buildingNamePtr; // [esp+74h] [ebp-1Ch]
 
   missionIndex = ACTIVE_MISSION_INDEX;
-  if ( missionIndex != 4 && missionIndex != 6 || (result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2), *(_DWORD *)(gameData + result + 140051)) )
+  if ( missionIndex != 4 && missionIndex != 6 || (result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2), *(_DWORD *)(uintptr_t)(gameData + result + 140051)) )
   {
-    Debug_Log(a2, a3, buildingRecord, (int)aPrisoner_newtu);
+    Debug_Log(a2, a3, buildingRecord, (int)(intptr_t)aPrisoner_newtu);
     buildingNamePtr = buildingRecord + 5;
     slotIndex = 0;
-    prisonerCursor = (char *)buildingRecord;
+    prisonerCursor = (char *)(uintptr_t)buildingRecord;
     prisonerSlotPtr = buildingRecord + 445;
     do
     {
@@ -573,20 +573,20 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
       if ( result != -1 )
       {
         ++prisonerCursor[447];
-        if ( !*(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2) + 140051) && prisonerCursor[447] == 9 )
+        if ( !*(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2) + 140051) && prisonerCursor[447] == 9 )
           prisonerCursor[448] = BUILDING_PRISONER_ACTION_PAY;
         BuildingPrisoner_RecalculateRansomValue(prisonerSlotPtr);
         if ( prisonerCursor[447] == 10 )
         {
           prisonerCursor[445] = -1;
-          result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingRecord + 2);
-          if ( *(_DWORD *)(gameData + result + 140051) )
+          result = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2);
+          if ( *(_DWORD *)(uintptr_t)(gameData + result + 140051) )
           {
-            exhaustionTextTable[0] = (int)g_PrisonerDeathByExhaustionTexts[0];
-            exhaustionTextTable[1] = (int)g_PrisonerDeathByExhaustionTexts[1];
-            exhaustionTextTable[2] = (int)g_PrisonerDeathByExhaustionTexts[2];
-            a4 = sprintf_(messageBuffer, (const char *)exhaustionTextTable[(unsigned __int8)g_LanguageIndex], buildingNamePtr);
-            LOBYTE(result) = UI_ShowInfoWindow((const char *)messageBuffer, 0, v9, buildingRecord, (int)&prisonerSlotPtr, (int)&g_PrisonerDeathByExhaustionTexts[3]);
+            exhaustionTextTable[0] = (int)(intptr_t)g_PrisonerDeathByExhaustionTexts[0];
+            exhaustionTextTable[1] = (int)(intptr_t)g_PrisonerDeathByExhaustionTexts[1];
+            exhaustionTextTable[2] = (int)(intptr_t)g_PrisonerDeathByExhaustionTexts[2];
+            a4 = sprintf_(messageBuffer, (const char *)(uintptr_t)exhaustionTextTable[(unsigned __int8)g_LanguageIndex], buildingNamePtr);
+            LOBYTE(result) = UI_ShowInfoWindow((const char *)messageBuffer, 0, v9, buildingRecord, (int)(intptr_t)&prisonerSlotPtr, (int)(intptr_t)&g_PrisonerDeathByExhaustionTexts[3]);
           }
         }
         else
@@ -596,7 +596,7 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
           {
             if ( (unsigned __int8)result <= BUILDING_PRISONER_ACTION_TORTURE )
             {
-              LOBYTE(result) = Prisoner_Torture(buildingRecord, slotIndex, (int)prisonerCursor, slotIndex, buildingRecord);
+              LOBYTE(result) = Prisoner_Torture(buildingRecord, slotIndex, (int)(intptr_t)prisonerCursor, slotIndex, buildingRecord);
             }
             else if ( (_BYTE)result == BUILDING_PRISONER_ACTION_PAY )
             {
@@ -605,7 +605,7 @@ char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4)
           }
           else if ( (_BYTE)result == BUILDING_PRISONER_ACTION_BEHEAD )
           {
-            LOBYTE(result) = Prisoner_Behead(buildingRecord, (int)prisonerCursor, slotIndex, buildingRecord);
+            LOBYTE(result) = Prisoner_Behead(buildingRecord, (int)(intptr_t)prisonerCursor, slotIndex, buildingRecord);
           }
         }
       }
@@ -634,7 +634,7 @@ int  Building_CountPrisoners(int buildingRecord)
   prisonerCount = 0;
   do
   {
-    if ( *(char *)(buildingRecord + 445) != -1 )
+    if ( *(char *)(uintptr_t)(buildingRecord + 445) != -1 )
       ++prisonerCount;
     buildingRecord += 6;
   }
@@ -645,7 +645,7 @@ int  Building_CountPrisoners(int buildingRecord)
 //----- (0044F510) --------------------------------------------------------
 BOOL  BuildingPrisonerActionWidget_HasPrisoner(int widgetRecord)
 {
-  return *(char *)(g_CurrentPrisonBuildingRecord + 6 * ((widgetRecord - (int)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
+  return *(char *)(uintptr_t)(g_CurrentPrisonBuildingRecord + 6 * ((widgetRecord - (int)(intptr_t)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
 }
 // 5443FC: using guessed type int dword_5443FC;
 
@@ -657,13 +657,13 @@ char * BuildingPrisonerActionButton_SelectBehead(int widgetRecord)
   _DWORD *widgetCursor; // ebx
   int buttonIndex; // ecx
 
-  Render_Begin((int)g_RenderState, 0);
-  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  result = (char *)(uintptr_t)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
   if ( result )
   {
-    toggledState = *(_BYTE *)(widgetRecord + 8) ^ 1;
-    *(_BYTE *)(widgetRecord + 8) = toggledState;
-    *(_BYTE *)(widgetRecord + 8) = toggledState ^ 2;
+    toggledState = *(_BYTE *)(uintptr_t)(widgetRecord + 8) ^ 1;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState ^ 2;
     if ( ((toggledState ^ 2) & 2) != 0 )
     {
       widgetCursor = g_PrisonerActionButtonWidgets;
@@ -671,13 +671,13 @@ char * BuildingPrisonerActionButton_SelectBehead(int widgetRecord)
       do
       {
         *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
-        UIWidget_RefreshActionButtonState((int)widgetCursor, buttonIndex + 1);
+        UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
         widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
       }
       while ( buttonIndex < 9 );
-      *(_DWORD *)(widgetRecord + 8) = 2;
+      *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
     }
-    return Audio_PlayButtonSound(*(char **)(widgetRecord + 49));
+    return Audio_PlayButtonSound(*(char **)(uintptr_t)(widgetRecord + 49));
   }
   return result;
 }
@@ -694,13 +694,13 @@ char * BuildingPrisonerActionButton_SelectTorture(int widgetRecord)
   _DWORD *widgetCursor; // ebx
   int buttonIndex; // ecx
 
-  Render_Begin((int)g_RenderState, 0);
-  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  result = (char *)(uintptr_t)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
   if ( result )
   {
-    toggledState = *(_BYTE *)(widgetRecord + 8) ^ 1;
-    *(_BYTE *)(widgetRecord + 8) = toggledState;
-    *(_BYTE *)(widgetRecord + 8) = toggledState ^ 2;
+    toggledState = *(_BYTE *)(uintptr_t)(widgetRecord + 8) ^ 1;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState ^ 2;
     if ( ((toggledState ^ 2) & 2) != 0 )
     {
       widgetCursor = g_PrisonerActionButtonWidgets;
@@ -708,13 +708,13 @@ char * BuildingPrisonerActionButton_SelectTorture(int widgetRecord)
       do
       {
         *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
-        UIWidget_RefreshActionButtonState((int)widgetCursor, buttonIndex + 1);
+        UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
         widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
       }
       while ( buttonIndex < 9 );
-      *(_DWORD *)(widgetRecord + 8) = 2;
+      *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
     }
-    return Audio_PlayButtonSound(*(char **)(widgetRecord + 49));
+    return Audio_PlayButtonSound(*(char **)(uintptr_t)(widgetRecord + 49));
   }
   return result;
 }
@@ -731,13 +731,13 @@ char * BuildingPrisonerActionButton_SelectBribery(int widgetRecord)
   _DWORD *widgetCursor; // ebx
   int buttonIndex; // ecx
 
-  Render_Begin((int)g_RenderState, 0);
-  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  result = (char *)(uintptr_t)BuildingPrisonerActionWidget_HasPrisoner(widgetRecord);
   if ( result )
   {
-    toggledState = *(_BYTE *)(widgetRecord + 8) ^ 1;
-    *(_BYTE *)(widgetRecord + 8) = toggledState;
-    *(_BYTE *)(widgetRecord + 8) = toggledState ^ 2;
+    toggledState = *(_BYTE *)(uintptr_t)(widgetRecord + 8) ^ 1;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState;
+    *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState ^ 2;
     if ( ((toggledState ^ 2) & 2) != 0 )
     {
       widgetCursor = g_PrisonerActionButtonWidgets;
@@ -745,13 +745,13 @@ char * BuildingPrisonerActionButton_SelectBribery(int widgetRecord)
       do
       {
         *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * buttonIndex) = 1;
-        UIWidget_RefreshActionButtonState((int)widgetCursor, buttonIndex + 1);
+        UIWidget_RefreshActionButtonState((int)(intptr_t)widgetCursor, buttonIndex + 1);
         widgetCursor = (_DWORD *)((char *)widgetCursor + 53);
       }
       while ( buttonIndex < 9 );
-      *(_DWORD *)(widgetRecord + 8) = 2;
+      *(_DWORD *)(uintptr_t)(widgetRecord + 8) = 2;
     }
-    return Audio_PlayButtonSound(*(char **)(widgetRecord + 49));
+    return Audio_PlayButtonSound(*(char **)(uintptr_t)(widgetRecord + 49));
   }
   return result;
 }
@@ -788,11 +788,11 @@ int  Building_DrawPrisonerRows(DWORD a1)
   Render_ReleaseSurface(18, a1);
   do
   {
-    result = *(char *)(prisonerRecordOffset + g_CurrentPrisonBuildingRecord + 445);
+    result = *(char *)(uintptr_t)(prisonerRecordOffset + g_CurrentPrisonBuildingRecord + 445);
     if ( result != -1 )
     {
       SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 5);
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         368,
         SpriteForChar,
         -1,
@@ -802,8 +802,8 @@ int  Building_DrawPrisonerRows(DWORD a1)
         1,
         0,
         0);
-      prisonerTypeSprite = DLX_GetSpriteForChar(g_StatScreenSpriteSet, *(unsigned __int8 *)(prisonerRecordOffset + g_CurrentPrisonBuildingRecord + 446));
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      prisonerTypeSprite = DLX_GetSpriteForChar(g_StatScreenSpriteSet, *(unsigned __int8 *)(uintptr_t)(prisonerRecordOffset + g_CurrentPrisonBuildingRecord + 446));
+      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         378,
         prisonerTypeSprite,
         -1,
@@ -819,7 +819,7 @@ int  Building_DrawPrisonerRows(DWORD a1)
                  (unsigned __int16)g_PrisonerRowTextXTable[rowIndex] + 68,
                  461,
                  3,
-                 (int)aD_79);
+                 (int)(intptr_t)aD_79);
     }
     ++rowIndex;
     prisonerRecordOffset += 6;
@@ -843,7 +843,7 @@ int  Queen_DrawRelationshipPanel(DWORD a1, int a2)
   if ( queenRelationshipState > 0 )
   {
     SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 25);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       199,
       SpriteForChar,
       -1,
@@ -863,7 +863,7 @@ int  Queen_DrawRelationshipPanel(DWORD a1, int a2)
            500,
            215,
            6,
-           (int)(&g_QueenRelationshipStateTexts[3 * queenRelationshipState])[(unsigned __int8)g_LanguageIndex]);
+           (int)(intptr_t)(&g_QueenRelationshipStateTexts[3 * queenRelationshipState])[(unsigned __int8)g_LanguageIndex]);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -964,31 +964,31 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     }
     actionWidgetCursor = (_DWORD *)((char *)actionWidgetCursor + 159);
   }
-  paletteBuffer = Mem_Alloc(1024, selectedButtonState, (char)a2, a3);
+  paletteBuffer = Mem_Alloc(1024, selectedButtonState, (char)(intptr_t)a2, a3);
   if ( paletteBuffer )
   {
     a2 = &g_Runtime_PaletteArrayCtorDescriptor;
     paletteBuffer = _wcpp_4_ctor_array__(v9, 256);
   }
   g_StatScreenPaletteBuffer = paletteBuffer;
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v9, (char)a2, a3);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v9, (char)(intptr_t)a2, a3);
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)a2);
-  g_StatScreenSpriteSet = (int)spriteSet;
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)a2);
+  g_StatScreenSpriteSet = (int)(intptr_t)spriteSet;
   paletteBufferByte = g_StatScreenPaletteBuffer;
-  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aStat_gfx);
+  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aStat_gfx);
   Palette_LoadOrBuildBlendLookupTable(aStat, g_StatScreenPaletteBuffer, v12, a3);
-  Render_LoadResourceSprite_v4(8, (_BYTE *)g_StatScreenPaletteBuffer, v13, paletteBufferByte, a3);
-  Render_LoadResourceSprite_v4(18, (_BYTE *)g_StatScreenPaletteBuffer, v14, paletteBufferByte, a3);
-  Render_LoadResourceSprite_v4(17, (_BYTE *)g_StatScreenPaletteBuffer, v15, paletteBufferByte, a3);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_StatScreenPaletteBuffer, v16, a3);
-  (*(void (__thiscall **)(void *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
+  Render_LoadResourceSprite_v4(8, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v13, paletteBufferByte, a3);
+  Render_LoadResourceSprite_v4(18, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v14, paletteBufferByte, a3);
+  Render_LoadResourceSprite_v4(17, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v15, paletteBufferByte, a3);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, g_StatScreenPaletteBuffer, v16, a3);
+  (*(void (__thiscall **)(void *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
-  if ( *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )
   {
-    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 140063) == 0) + 13);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    SpriteForChar = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 140063) == 0) + 13);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       SpriteForChar,
       -1,
@@ -1000,11 +1000,11 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       0);
     UI_DrawTextFmt(j, 88, 214, 30, 3, gameData + 140028);
   }
-  if ( *(_DWORD *)(gameData + 141447) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 141447) )
   {
-    nationFlagSpriteP1 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 141486) == 0) + 15);
+    nationFlagSpriteP1 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 141486) == 0) + 15);
     j = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(j + 52))(
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(j + 52))(
       8,
       nationFlagSpriteP1,
       -1,
@@ -1016,10 +1016,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       0);
     UI_DrawTextFmt(j, 254, 380, 30, 3, gameData + 141451);
   }
-  if ( *(_DWORD *)(gameData + 142870) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 142870) )
   {
-    nationFlagSpriteP2 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 142909) == 0) + 17);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    nationFlagSpriteP2 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 142909) == 0) + 17);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       nationFlagSpriteP2,
       -1,
@@ -1031,10 +1031,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       0);
     UI_DrawTextFmt(j, 420, 546, 30, 3, gameData + 142874);
   }
-  if ( *(_DWORD *)(gameData + 144293) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 144293) )
   {
-    nationFlagSpriteP3 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 144332) == 0) + 19);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    nationFlagSpriteP3 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 144332) == 0) + 19);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       52,
       nationFlagSpriteP3,
       -1,
@@ -1046,11 +1046,11 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       0);
     UI_DrawTextFmt(j, 172, 298, 75, 3, gameData + 144297);
   }
-  if ( *(_DWORD *)(gameData + 145716) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 145716) )
   {
-    nationFlagSpriteP4 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(gameData + 145755) == 0) + 21);
+    nationFlagSpriteP4 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, (*(_DWORD *)(uintptr_t)(gameData + 145755) == 0) + 21);
     player5RenderMethods = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(player5RenderMethods + 52))(
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(player5RenderMethods + 52))(
       52,
       nationFlagSpriteP4,
       -1,
@@ -1072,7 +1072,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   minPopulation = 0;
   do
   {
-    playerRuntimeState = *(_DWORD *)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET);
+    playerRuntimeState = *(_DWORD *)(uintptr_t)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET);
     if ( zeroBaseline == playerRuntimeState )
     {
       populationBars[barIndex] = playerRuntimeState;
@@ -1091,7 +1091,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
       militaryStrengthBars[barIndex] = militaryStrength;
       if ( militaryStrength > prevMaxMilitaryStrength )
         maxMilitaryStrength = militaryStrength;
-      population = *(__int16 *)(playerRecordOffset + gameData + 141441);
+      population = *(__int16 *)(uintptr_t)(playerRecordOffset + gameData + 141441);
       populationBars[barIndex] = population;
       if ( maxPopulation < population )
         maxPopulation = population;
@@ -1104,10 +1104,10 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     ++barIndex;
   }
   while ( playerIndex < 5 );
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   chartBgSprite1 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
   populationRange = maxPopulation - minPopulation;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
     chartBgSprite1,
     -1,
@@ -1118,7 +1118,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     0,
     0);
   chartBgSprite2 = DLX_GetSpriteForChar(g_StatScreenSpriteSet, 24);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     107,
     chartBgSprite2,
     -1,
@@ -1132,7 +1132,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   barRowIndex = 0;
   chartBgRenderMethods = *((_DWORD *)g_RenderDevice + 46);
   barPlayerOffset = 0;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(chartBgRenderMethods + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(chartBgRenderMethods + 52))(
     107,
     chartBgSprite3,
     -1,
@@ -1145,7 +1145,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   barValueIndex = 0;
   do
   {
-    if ( *(_DWORD *)(barPlayerOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
+    if ( *(_DWORD *)(uintptr_t)(barPlayerOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
     {
       if ( maxNationScore )
         nationScoreDivisor = maxNationScore;
@@ -1168,7 +1168,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
         populationDivisor = 1;
       populationBars[barValueIndex] = populationBarNumerator / populationDivisor;
       Render_FillRect(
-        (_DWORD *)g_PrimaryRenderSurface,
+        (_DWORD *)(uintptr_t)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[barRowIndex] + 107),
         299,
@@ -1177,7 +1177,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
         0x12Bu,
         g_PrisonerRowBarTopYTable[barRowIndex] + 107);
       Render_FillRect(
-        (_DWORD *)g_PrimaryRenderSurface,
+        (_DWORD *)(uintptr_t)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[barRowIndex] + 107),
         88,
@@ -1186,7 +1186,7 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
         0x58u,
         g_PrisonerRowBarTopYTable[barRowIndex] + 107);
       Render_FillRect(
-        (_DWORD *)g_PrimaryRenderSurface,
+        (_DWORD *)(uintptr_t)g_PrimaryRenderSurface,
         0,
         (unsigned __int16)(g_PrisonerRowBarTopYTable[barRowIndex] + 107),
         510,
@@ -1203,12 +1203,12 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
   Building_DrawPrisonerRows(populationRange);
   Queen_DrawRelationshipPanel(populationRange, 10);
   UIWidgetTable_InitDrawStates(g_PrisonerActionButtonWidgets);
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_StatScreenPaletteBuffer, 20);
-  Render_Present((int)g_RenderState);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_StatScreenPaletteBuffer, 20);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_PrisonerDialogExitSignal = initialExitSignal;
   do
   {
-    DD_Pump((int)g_RenderState, (char)g_RenderState);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
     g_RenderDevice = &g_MainRenderDevice;
     UIWidgetTable_PollHoverAndActions(g_PrisonerActionButtonWidgets, populationRange);
   }

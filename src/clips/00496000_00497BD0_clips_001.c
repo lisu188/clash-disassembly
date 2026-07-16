@@ -13,8 +13,8 @@ int Event_ClearHandlers(void)
 {
   int result; // eax
 
-  for ( result = Rules_GetFunctionDefinitionListHead(); result; result = *(_DWORD *)(result + 27) )
-    *(_WORD *)(result + 25) = 0;
+  for ( result = Rules_GetFunctionDefinitionListHead(); result; result = *(_DWORD *)(uintptr_t)(result + 27) )
+    *(_WORD *)(uintptr_t)(result + 25) = 0;
   return result;
 }
 
@@ -25,15 +25,15 @@ int Event_InitHandlers(void)
   int result; // eax
   int currentItem; // edx
 
-  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(currentItem + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(currentItem + 36) )
   {
-    while ( !*(_DWORD *)(i + 4) )
+    while ( !*(_DWORD *)(uintptr_t)(i + 4) )
     {
-      i = *(_DWORD *)(i + 36);
+      i = *(_DWORD *)(uintptr_t)(i + 36);
       if ( !i )
         return result;
     }
-    result = (*(int (**)(void))(i + 4))();
+    result = (*(int (**)(void))(uintptr_t)(i + 4))();
   }
   return result;
 }
@@ -51,17 +51,17 @@ const void * Rules_BsaveWriteFunctionNames(int fp)
   _DWORD functionCount[7]; // [esp+4h] [ebp-1Ch] BYREF
 
   functionCount[0] = 0;
-  for ( i = Rules_GetFunctionDefinitionListHead(); i; i = *(_DWORD *)(i + 27) )
+  for ( i = Rules_GetFunctionDefinitionListHead(); i; i = *(_DWORD *)(uintptr_t)(i + 27) )
   {
-    if ( *(_WORD *)(i + 25) )
+    if ( *(_WORD *)(uintptr_t)(i + 25) )
     {
       assignedIndex = functionCount[0];
       ++functionCount[0];
-      *(_WORD *)(i + 25) = assignedIndex;
+      *(_WORD *)(uintptr_t)(i + 25) = assignedIndex;
     }
     else
     {
-      *(_WORD *)(i + 25) = -1;
+      *(_WORD *)(uintptr_t)(i + 25) = -1;
     }
   }
   Rules_BsaveWriteBlock(4, fp, functionCount);
@@ -69,15 +69,15 @@ const void * Rules_BsaveWriteFunctionNames(int fp)
     return Rules_BsaveWriteBlock(4, fp, functionCount);
   space = Rules_BsaveFunctionNamesLength();
   Rules_BsaveWriteBlock(4, fp, &space);
-  result = (const void *)Rules_GetFunctionDefinitionListHead();
-  functionCursor = (int)result;
+  result = (const void *)(uintptr_t)Rules_GetFunctionDefinitionListHead();
+  functionCursor = (int)(intptr_t)result;
   if ( result )
   {
     do
     {
-      if ( *(__int16 *)(functionCursor + 25) >= 0 )
-        result = Rules_BsaveWriteBlock(strlen(*(const char **)(*(_DWORD *)functionCursor + 16)) + 1, fp, *(const void **)(*(_DWORD *)functionCursor + 16));
-      functionCursor = *(_DWORD *)(functionCursor + 27);
+      if ( *(__int16 *)(uintptr_t)(functionCursor + 25) >= 0 )
+        result = Rules_BsaveWriteBlock(strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16)) + 1, fp, *(const void **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16));
+      functionCursor = *(_DWORD *)(uintptr_t)(functionCursor + 27);
     }
     while ( functionCursor );
   }
@@ -96,14 +96,14 @@ int Rules_BsaveFunctionNamesLength(void)
     return totalLength;
   do
   {
-    while ( *(__int16 *)(functionDef + 25) < 0 )
+    while ( *(__int16 *)(uintptr_t)(functionDef + 25) < 0 )
     {
-      functionDef = *(_DWORD *)(functionDef + 27);
+      functionDef = *(_DWORD *)(uintptr_t)(functionDef + 27);
       if ( !functionDef )
         return totalLength;
     }
-    totalLength += strlen(*(const char **)(*(_DWORD *)functionDef + 16)) + 1;
-    functionDef = *(_DWORD *)(functionDef + 27);
+    totalLength += strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionDef + 16)) + 1;
+    functionDef = *(_DWORD *)(uintptr_t)(functionDef + 27);
   }
   while ( functionDef );
   return totalLength;
@@ -116,29 +116,29 @@ _DWORD * Rules_ConstructQueuePush(int item)
   _DWORD *result; // eax
   _DWORD *newNode; // ecx
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 32);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-    *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeListHead;
-    result = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeListHead;
+    result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
+    result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   result[1] = 0;
   *result = item;
   newNode = result;
   if ( g_ClipsConstructQueueHead )
   {
-    for ( result = (_DWORD *)g_ClipsConstructQueueHead; result[1]; result = (_DWORD *)result[1] )
+    for ( result = (_DWORD *)(uintptr_t)g_ClipsConstructQueueHead; result[1]; result = (_DWORD *)(uintptr_t)result[1] )
       ;
     result[1] = newNode;
   }
   else
   {
-    g_ClipsConstructQueueHead = (int)result;
+    g_ClipsConstructQueueHead = (int)(intptr_t)result;
   }
   return result;
 }
@@ -152,13 +152,13 @@ int  Rules_ConstructQueuePop(_DWORD *itemOut)
   _DWORD *poppedNode; // eax
   int result; // eax
 
-  *itemOut = *(_DWORD *)g_ClipsConstructQueueHead;
-  poppedNode = (_DWORD *)g_ClipsConstructQueueHead;
-  g_ClipsConstructQueueHead = *(_DWORD *)(g_ClipsConstructQueueHead + 4);
-  g_ClipsMemFreeListTemp = (int)poppedNode;
-  *poppedNode = *(_DWORD *)(g_ClipsMemoryTable + 32);
+  *itemOut = *(_DWORD *)(uintptr_t)g_ClipsConstructQueueHead;
+  poppedNode = (_DWORD *)(uintptr_t)g_ClipsConstructQueueHead;
+  g_ClipsConstructQueueHead = *(_DWORD *)(uintptr_t)(g_ClipsConstructQueueHead + 4);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)poppedNode;
+  *poppedNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   result = g_ClipsMemFreeListTemp;
-  *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 51AA40: using guessed type int dword_51AA40;
@@ -176,28 +176,28 @@ __int16  Rules_MarkReferencedFunctions(__int16 *result)
     LOWORD(result) = *i;
     if ( (unsigned __int16)*i >= 4u )
     {
-      if ( (unsigned __int16)result >= 0xAu )
+      if ( (unsigned __int16)(intptr_t)result >= 0xAu )
       {
-        if ( (unsigned __int16)result <= 0xAu )
+        if ( (unsigned __int16)(intptr_t)result <= 0xAu )
         {
           result = *(__int16 **)(i + 1);
           *(__int16 *)((char *)result + 25) = 1;
           goto LABEL_4;
         }
-        if ( (unsigned __int16)result < 0xDu )
+        if ( (unsigned __int16)(intptr_t)result < 0xDu )
           goto LABEL_10;
-        if ( (unsigned __int16)result > 0xDu )
+        if ( (unsigned __int16)(intptr_t)result > 0xDu )
         {
-          if ( (_WORD)result == 105 )
+          if ( (_WORD)(intptr_t)result == 105 )
             goto LABEL_4;
 LABEL_10:
-          result = (__int16 *)(4 * *i);
-          entityRecord = *(int *)((char *)g_Clips_PrimitiveEntityTable + (_DWORD)result);
-          if ( !entityRecord || (*(_BYTE *)(entityRecord + 1) & 0x40) == 0 )
+          result = (__int16 *)(uintptr_t)(4 * *i);
+          entityRecord = *(int *)((char *)g_Clips_PrimitiveEntityTable + (_DWORD)(intptr_t)result);
+          if ( !entityRecord || (*(_BYTE *)(uintptr_t)(entityRecord + 1) & 0x40) == 0 )
             goto LABEL_4;
         }
       }
-      else if ( (_WORD)result != 8 )
+      else if ( (_WORD)(intptr_t)result != 8 )
       {
         goto LABEL_10;
       }
@@ -208,7 +208,7 @@ LABEL_4:
     if ( *(_DWORD *)(i + 3) )
       LOWORD(result) = Rules_MarkReferencedFunctions(*(_DWORD *)(i + 3));
   }
-  return (__int16)result;
+  return (__int16)(intptr_t)result;
 }
 // 496240: simplified comparisons for '[ds.2:edx.4].2': >=3u && >=4u became >=4u
 // 496266: variable 'i' is possibly undefined
@@ -255,17 +255,17 @@ signed int  Rules_RegisterBinaryItem(
   int newItemAddr; // ebx
   int currentItem; // eax
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 160);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 160);
   prevItem = 0;
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 160);
-    *(_DWORD *)(g_ClipsMemoryTable + 160) = *freeListHead;
-    newItem = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = *freeListHead;
+    newItem = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    newItem = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x28);
+    newItem = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x28);
   }
   newItem[1] = expressionFunction;
   newItem[5] = findFunction;
@@ -276,30 +276,30 @@ signed int  Rules_RegisterBinaryItem(
   newItem[2] = bloadStorageFunction;
   newItem[3] = bloadFunction;
   newItem[4] = clearFunction;
-  newItemAddr = (int)newItem;
+  newItemAddr = (int)(intptr_t)newItem;
   if ( !g_BinaryItemListHead )
   {
     newItem[9] = 0;
-    g_BinaryItemListHead = (int)newItem;
+    g_BinaryItemListHead = (int)(intptr_t)newItem;
     return 1;
   }
   currentItem = g_BinaryItemListHead;
   do
   {
-    if ( priority >= *(_DWORD *)(currentItem + 32) )
+    if ( priority >= *(_DWORD *)(uintptr_t)(currentItem + 32) )
       break;
     prevItem = currentItem;
-    currentItem = *(_DWORD *)(currentItem + 36);
+    currentItem = *(_DWORD *)(uintptr_t)(currentItem + 36);
   }
   while ( currentItem );
   if ( !prevItem )
   {
-    *(_DWORD *)(newItemAddr + 36) = g_BinaryItemListHead;
+    *(_DWORD *)(uintptr_t)(newItemAddr + 36) = g_BinaryItemListHead;
     g_BinaryItemListHead = newItemAddr;
     return 1;
   }
-  *(_DWORD *)(newItemAddr + 36) = currentItem;
-  *(_DWORD *)(prevItem + 36) = newItemAddr;
+  *(_DWORD *)(uintptr_t)(newItemAddr + 36) = currentItem;
+  *(_DWORD *)(uintptr_t)(prevItem + 36) = newItemAddr;
   return 1;
 }
 // 4963D1: variable 'v13' is possibly undefined
@@ -311,7 +311,7 @@ signed int  Rules_RegisterBinaryItem(
 const void * Rules_BsaveWriteBlock(int size, int fp, const void *result)
 {
   if ( size )
-    return (const void *)fwrite_(result, size, fp, 1);
+    return (const void *)(uintptr_t)fwrite_(result, size, fp, 1);
   return result;
 }
 
@@ -320,15 +320,15 @@ signed int Rules_RegisterConstraintCheckingCommands(void)
 {
   int i; // eax
 
-  g_ConstraintHashTable = (int)Mem_SmallBlockAlloc(0x29Cu);
+  g_ConstraintHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x29Cu);
   if ( !g_ConstraintHashTable )
     IO_RunRouterExitCallbacks();
   for ( i = 0; i != 668; i += 4 )
-    *(_DWORD *)(g_ConstraintHashTable + i) = 0;
-  Rules_RegisterHostFunction(aGetDynamicCons, 98, (int)aGdccommand, (int)Rules_GetDynamicConstraintCheckingCommand, (int)a00_14);
-  Rules_RegisterHostFunction(aSetDynamicCons, 98, (int)aSdccommand, (int)Rules_SetDynamicConstraintCheckingCommand, (int)a11_0);
-  Rules_RegisterHostFunction(aGetStaticConst, 98, (int)aGsccommand, (int)Rules_GetStaticConstraintCheckingCommand, (int)a00_14);
-  return Rules_RegisterHostFunction(aSetStaticConst, 98, (int)aSsccommand, (int)Rules_SetStaticConstraintCheckingCommand, (int)a11_0);
+    *(_DWORD *)(uintptr_t)(g_ConstraintHashTable + i) = 0;
+  Rules_RegisterHostFunction(aGetDynamicCons, 98, (int)(intptr_t)aGdccommand, (int)(intptr_t)Rules_GetDynamicConstraintCheckingCommand, (int)(intptr_t)a00_14);
+  Rules_RegisterHostFunction(aSetDynamicCons, 98, (int)(intptr_t)aSdccommand, (int)(intptr_t)Rules_SetDynamicConstraintCheckingCommand, (int)(intptr_t)a11_0);
+  Rules_RegisterHostFunction(aGetStaticConst, 98, (int)(intptr_t)aGsccommand, (int)(intptr_t)Rules_GetStaticConstraintCheckingCommand, (int)(intptr_t)a00_14);
+  return Rules_RegisterHostFunction(aSetStaticConst, 98, (int)(intptr_t)aSsccommand, (int)(intptr_t)Rules_SetStaticConstraintCheckingCommand, (int)(intptr_t)a11_0);
 }
 // 54E694: using guessed type int dword_54E694;
 
@@ -345,19 +345,19 @@ int  AST_FreeNodeChildren(int result)
   constraints = result;
   if ( result )
   {
-    if ( *(int *)(result + 34) < 0 )
+    if ( *(int *)(uintptr_t)(result + 34) < 0 )
     {
-      AST_Free(*(_DWORD *)(result + 6));
-      AST_Free(*(_DWORD *)(v3 + 14));
-      AST_Free(*(_DWORD *)(v4 + 10));
-      AST_Free(*(_DWORD *)(v5 + 18));
-      AST_Free(*(_DWORD *)(v6 + 22));
+      AST_Free(*(_DWORD *)(uintptr_t)(result + 6));
+      AST_Free(*(_DWORD *)(uintptr_t)(v3 + 14));
+      AST_Free(*(_DWORD *)(uintptr_t)(v4 + 10));
+      AST_Free(*(_DWORD *)(uintptr_t)(v5 + 18));
+      AST_Free(*(_DWORD *)(uintptr_t)(v6 + 22));
     }
-    AST_FreeNodeChildren(*(_DWORD *)(constraints + 26));
-    g_ClipsMemFreeListTemp = (int)v2;
-    *v2 = *(_DWORD *)(g_ClipsMemoryTable + 168);
+    AST_FreeNodeChildren(*(_DWORD *)(uintptr_t)(constraints + 26));
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v2;
+    *v2 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 168) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -391,25 +391,25 @@ __int16 * AST_ReleaseNodeChildSlots(int constraints, int hashBucket)
 
   while ( 1 )
   {
-    while ( *(int *)(constraints + 34) < 0 )
+    while ( *(int *)(uintptr_t)(constraints + 34) < 0 )
     {
-      AST_DeinstallNodeChain(*(__int16 **)(constraints + 6));
-      AST_DeinstallNodeChain(*(__int16 **)(v3 + 14));
-      AST_DeinstallNodeChain(*(__int16 **)(v4 + 10));
-      AST_DeinstallNodeChain(*(__int16 **)(v5 + 18));
-      result = AST_DeinstallNodeChain(*(__int16 **)(v6 + 22));
-      if ( !*(_DWORD *)(v8 + 26) )
+      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(constraints + 6));
+      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v3 + 14));
+      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v4 + 10));
+      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v5 + 18));
+      result = AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v6 + 22));
+      if ( !*(_DWORD *)(uintptr_t)(v8 + 26) )
         return result;
-      constraints = *(_DWORD *)(v8 + 26);
+      constraints = *(_DWORD *)(uintptr_t)(v8 + 26);
     }
-    AST_RemoveHashedNodeChain(*(__int16 **)(constraints + 6), hashBucket);
-    AST_RemoveHashedNodeChain(*(__int16 **)(v9 + 14), v10);
-    AST_RemoveHashedNodeChain(*(__int16 **)(v11 + 10), v12);
-    AST_RemoveHashedNodeChain(*(__int16 **)(v13 + 18), v14);
-    result = AST_RemoveHashedNodeChain(*(__int16 **)(v15 + 22), v16);
-    if ( !*(_DWORD *)(v17 + 26) )
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(constraints + 6), hashBucket);
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v9 + 14), v10);
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v11 + 10), v12);
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v13 + 18), v14);
+    result = AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v15 + 22), v16);
+    if ( !*(_DWORD *)(uintptr_t)(v17 + 26) )
       break;
-    constraints = *(_DWORD *)(v17 + 26);
+    constraints = *(_DWORD *)(uintptr_t)(v17 + 26);
   }
   return result;
 }
@@ -438,42 +438,42 @@ _DWORD * AST_DecrementNodeRefCount(_DWORD *result)
   int newCount; // esi
   int v5; // edx
 
-  v1 = (int)result;
+  v1 = (int)(intptr_t)result;
   prevConstraint = 0;
   if ( result )
   {
     bucketIndex = *(_DWORD *)((char *)result + 34);
     if ( bucketIndex < 0 )
     {
-      return (_DWORD *)AST_FreeNodeChildren((int)result);
+      return (_DWORD *)(uintptr_t)AST_FreeNodeChildren((int)(intptr_t)result);
     }
     else
     {
-      result = *(_DWORD **)(g_ConstraintHashTable + 4 * bucketIndex);
+      result = *(_DWORD **)(uintptr_t)(g_ConstraintHashTable + 4 * bucketIndex);
       if ( result )
       {
-        while ( result != (_DWORD *)v1 )
+        while ( result != (_DWORD *)(uintptr_t)v1 )
         {
           prevConstraint = result;
           result = *(_DWORD **)((char *)result + 30);
           if ( !result )
             return result;
         }
-        newCount = *(_DWORD *)(v1 + 38) - 1;
-        *(_DWORD *)(v1 + 38) = newCount;
+        newCount = *(_DWORD *)(uintptr_t)(v1 + 38) - 1;
+        *(_DWORD *)(uintptr_t)(v1 + 38) = newCount;
         if ( !newCount )
         {
           if ( prevConstraint )
           {
-            *(_DWORD *)((char *)prevConstraint + 30) = *(_DWORD *)(v1 + 30);
+            *(_DWORD *)((char *)prevConstraint + 30) = *(_DWORD *)(uintptr_t)(v1 + 30);
           }
           else
           {
-            prevConstraint = (_DWORD *)(4 * *(_DWORD *)(v1 + 34) + g_ConstraintHashTable);
-            *prevConstraint = *(_DWORD *)(v1 + 30);
+            prevConstraint = (_DWORD *)(uintptr_t)(4 * *(_DWORD *)(uintptr_t)(v1 + 34) + g_ConstraintHashTable);
+            *prevConstraint = *(_DWORD *)(uintptr_t)(v1 + 30);
           }
-          AST_ReleaseNodeChildSlots(v1, (int)prevConstraint);
-          return (_DWORD *)AST_FreeNodeChildren(v5);
+          AST_ReleaseNodeChildSlots(v1, (int)(intptr_t)prevConstraint);
+          return (_DWORD *)(uintptr_t)AST_FreeNodeChildren(v5);
         }
       }
     }
@@ -702,28 +702,28 @@ _DWORD * AST_InternNode(_DWORD *result)
   if ( result )
   {
     hashValue = AST_HashNodeChildren(result);
-    existingConstraint = *(_DWORD **)(g_ConstraintHashTable + 4 * hashValue);
+    existingConstraint = *(_DWORD **)(uintptr_t)(g_ConstraintHashTable + 4 * hashValue);
     savedHash = hashValue;
     if ( existingConstraint )
     {
       while ( !AST_NodesStructurallyEqual(theConstraint, existingConstraint) )
       {
-        existingConstraint = *(_DWORD **)(v5 + 30);
+        existingConstraint = *(_DWORD **)(uintptr_t)(v5 + 30);
         if ( !existingConstraint )
           goto LABEL_5;
       }
-      ++*(_DWORD *)(v5 + 38);
-      AST_FreeNodeChildren((int)theConstraint);
-      return (_DWORD *)v6;
+      ++*(_DWORD *)(uintptr_t)(v5 + 38);
+      AST_FreeNodeChildren((int)(intptr_t)theConstraint);
+      return (_DWORD *)(uintptr_t)v6;
     }
     else
     {
 LABEL_5:
-      AST_CollapseNodeChildSlots((int)theConstraint, (int)existingConstraint);
+      AST_CollapseNodeChildSlots((int)(intptr_t)theConstraint, (int)(intptr_t)existingConstraint);
       *(_DWORD *)((char *)theConstraint + 38) = 1;
       *(_DWORD *)((char *)theConstraint + 34) = savedHash;
-      *(_DWORD *)((char *)theConstraint + 30) = *(_DWORD *)(g_ConstraintHashTable + 4 * savedHash);
-      *(_DWORD *)(g_ConstraintHashTable + 4 * savedHash) = theConstraint;
+      *(_DWORD *)((char *)theConstraint + 30) = *(_DWORD *)(uintptr_t)(g_ConstraintHashTable + 4 * savedHash);
+      *(_DWORD *)(uintptr_t)(g_ConstraintHashTable + 4 * savedHash) = theConstraint;
       return theConstraint;
     }
   }
@@ -759,29 +759,29 @@ int  AST_CollapseNodeChildSlots(int constraints, int hashBucket)
 
   while ( 1 )
   {
-    AST_AddHashedNodeChain(*(__int16 **)(constraints + 6), constraints, hashBucket);
-    AST_Free(*(_DWORD *)(v3 + 6));
-    childNode1 = *(__int16 **)(v4 + 14);
-    *(_DWORD *)(v4 + 6) = v6;
+    AST_AddHashedNodeChain(*(__int16 **)(uintptr_t)(constraints + 6), constraints, hashBucket);
+    AST_Free(*(_DWORD *)(uintptr_t)(v3 + 6));
+    childNode1 = *(__int16 **)(uintptr_t)(v4 + 14);
+    *(_DWORD *)(uintptr_t)(v4 + 6) = v6;
     AST_AddHashedNodeChain(childNode1, v4, v6);
-    AST_Free(*(_DWORD *)(v7 + 14));
-    childNode2 = *(__int16 **)(v8 + 10);
-    *(_DWORD *)(v8 + 14) = v10;
+    AST_Free(*(_DWORD *)(uintptr_t)(v7 + 14));
+    childNode2 = *(__int16 **)(uintptr_t)(v8 + 10);
+    *(_DWORD *)(uintptr_t)(v8 + 14) = v10;
     AST_AddHashedNodeChain(childNode2, v8, v10);
-    AST_Free(*(_DWORD *)(v11 + 10));
-    childNode3 = *(__int16 **)(v12 + 18);
-    *(_DWORD *)(v12 + 10) = v14;
+    AST_Free(*(_DWORD *)(uintptr_t)(v11 + 10));
+    childNode3 = *(__int16 **)(uintptr_t)(v12 + 18);
+    *(_DWORD *)(uintptr_t)(v12 + 10) = v14;
     AST_AddHashedNodeChain(childNode3, v12, v14);
-    AST_Free(*(_DWORD *)(v15 + 18));
-    childNode4 = *(__int16 **)(v16 + 22);
-    *(_DWORD *)(v16 + 18) = v18;
+    AST_Free(*(_DWORD *)(uintptr_t)(v15 + 18));
+    childNode4 = *(__int16 **)(uintptr_t)(v16 + 22);
+    *(_DWORD *)(uintptr_t)(v16 + 18) = v18;
     AST_AddHashedNodeChain(childNode4, v16, v18);
-    result = AST_Free(*(_DWORD *)(v19 + 22));
-    *(_DWORD *)(v21 + 22) = v22;
-    hashBucket = *(_DWORD *)(v21 + 26);
+    result = AST_Free(*(_DWORD *)(uintptr_t)(v19 + 22));
+    *(_DWORD *)(uintptr_t)(v21 + 22) = v22;
+    hashBucket = *(_DWORD *)(uintptr_t)(v21 + 26);
     if ( !hashBucket )
       break;
-    constraints = *(_DWORD *)(v21 + 26);
+    constraints = *(_DWORD *)(uintptr_t)(v21 + 26);
   }
   return result;
 }
@@ -903,19 +903,19 @@ _DWORD *Rules_InitDeffactsConstruct(void)
   Rules_RegisterDeffactsModuleItem();
   Deffacts_CommandDefinitions();
   result = Rules_RegisterConstructType(
-             (int)aDeffacts,
-             (int)aDeffacts,
-             (int)Rules_ParseDeffactsConstruct,
-             (int)Deffacts_ParseAndInstall,
-             (int)Rules_GetConstructNameSymbol,
-             (int)Rules_GetModuleConstructListHead,
-             (int)Rules_GetConstructOwnerModule,
-             (int)Rules_DeffactsGetNextItem,
-             (int)Rules_SetConstructNextInModule,
-             (int)Rules_DeffactsIsDeletable,
-             (int)Deffacts_DeleteConstruct,
-             (int)Deffacts_FreeConstruct);
-  g_ClipsDeffactsConstructType = (int)result;
+             (int)(intptr_t)aDeffacts,
+             (int)(intptr_t)aDeffacts,
+             (int)(intptr_t)Rules_ParseDeffactsConstruct,
+             (int)(intptr_t)Deffacts_ParseAndInstall,
+             (int)(intptr_t)Rules_GetConstructNameSymbol,
+             (int)(intptr_t)Rules_GetModuleConstructListHead,
+             (int)(intptr_t)Rules_GetConstructOwnerModule,
+             (int)(intptr_t)Rules_DeffactsGetNextItem,
+             (int)(intptr_t)Rules_SetConstructNextInModule,
+             (int)(intptr_t)Rules_DeffactsIsDeletable,
+             (int)(intptr_t)Deffacts_DeleteConstruct,
+             (int)(intptr_t)Deffacts_FreeConstruct);
+  g_ClipsDeffactsConstructType = (int)(intptr_t)result;
   return result;
 }
 // 497310: using guessed type int sub_497310();
@@ -927,12 +927,12 @@ int Rules_RegisterDeffactsModuleItem(void)
   int result; // eax
 
   result = Module_RegisterItem(
-             (int)aDeffacts,
-             (int)Rules_AllocDeffactsModuleData,
-             (int)Deffacts_GetModuleItem,
-             (int)Rules_FreeDeffactsModuleData,
-             (int)Deffacts_PrintModuleReference,
-             (int)Rules_ParseDeffactsConstruct);
+             (int)(intptr_t)aDeffacts,
+             (int)(intptr_t)Rules_AllocDeffactsModuleData,
+             (int)(intptr_t)Deffacts_GetModuleItem,
+             (int)(intptr_t)Rules_FreeDeffactsModuleData,
+             (int)(intptr_t)Deffacts_PrintModuleReference,
+             (int)(intptr_t)Rules_ParseDeffactsConstruct);
   g_ClipsDeffactsModuleItemId = result;
   return result;
 }
@@ -943,11 +943,11 @@ signed int Rules_AllocDeffactsModuleData(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeListHead;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeListHead;
   return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -960,8 +960,8 @@ int  Rules_FreeDeffactsModuleData(int theModuleItem)
 
   result = Rules_ClearModuleConstructList(theModuleItem, g_ClipsDeffactsConstructType, theModuleItem);
   g_ClipsMemFreeListTemp = theModuleItem;
-  *(_DWORD *)theModuleItem = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(uintptr_t)theModuleItem = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -1013,13 +1013,13 @@ int  Deffacts_FreeConstruct(int result)
   if ( result )
   {
     fact = result;
-    expression = *(_DWORD *)(fact + 20);
+    expression = *(_DWORD *)(uintptr_t)(fact + 20);
     AST_DeinstallNodeChain((__int16 *)(uintptr_t)(unsigned int)expression);
     AST_FreePackedNodeChain(expression);
     Rules_FreeConstructHeaderString((int *)(uintptr_t)(unsigned int)fact, fact);
     g_ClipsMemFreeListTemp = fact;
-    *(_DWORD *)fact = *(_DWORD *)(g_ClipsMemoryTable + 96);
-    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)fact = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
     result = g_ClipsMemoryTable;
   }
   return result;
@@ -1036,57 +1036,57 @@ int Defgeneric_SetupConstruct(void)
   int v3; // ecx
   int v4; // ecx
 
-  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_Defgeneric, 11);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDescriptor_Defgeneric, 11);
   g_DefgenericModuleItemIndex = Module_RegisterItem(
-                   (int)aDefgeneric,
-                   (int)Defgeneric_AllocateModule,
-                   (int)Defgeneric_RecordAtIndex,
-                   (int)Defgeneric_FreeModule,
-                   (int)Defgeneric_PrintModuleReference,
-                   (int)Defgeneric_ParseConstruct);
-  g_Clips_DefgenericConstructType = (int)Rules_RegisterConstructType(
-                        (int)aDefgeneric,
-                        (int)aDefgenerics,
-                        (int)Defgeneric_ParseConstruct,
-                        (int)Defgeneric_ParseDefgeneric,
-                        (int)Rules_GetConstructNameSymbol,
-                        (int)Rules_GetModuleConstructListHead,
-                        (int)Rules_GetConstructOwnerModule,
-                        (int)Defgeneric_GetNextInModule,
-                        (int)Rules_SetConstructNextInModule,
-                        (int)Defgeneric_IsDeletable,
-                        (int)Defgeneric_RemoveConstruct,
-                        (int)Defgeneric_RemoveDefgeneric);
-  Rules_AddClearReadyFunction((int)aDefgeneric, (int)Defgeneric_NoActiveCall, 0);
+                   (int)(intptr_t)aDefgeneric,
+                   (int)(intptr_t)Defgeneric_AllocateModule,
+                   (int)(intptr_t)Defgeneric_RecordAtIndex,
+                   (int)(intptr_t)Defgeneric_FreeModule,
+                   (int)(intptr_t)Defgeneric_PrintModuleReference,
+                   (int)(intptr_t)Defgeneric_ParseConstruct);
+  g_Clips_DefgenericConstructType = (int)(intptr_t)Rules_RegisterConstructType(
+                        (int)(intptr_t)aDefgeneric,
+                        (int)(intptr_t)aDefgenerics,
+                        (int)(intptr_t)Defgeneric_ParseConstruct,
+                        (int)(intptr_t)Defgeneric_ParseDefgeneric,
+                        (int)(intptr_t)Rules_GetConstructNameSymbol,
+                        (int)(intptr_t)Rules_GetModuleConstructListHead,
+                        (int)(intptr_t)Rules_GetConstructOwnerModule,
+                        (int)(intptr_t)Defgeneric_GetNextInModule,
+                        (int)(intptr_t)Rules_SetConstructNextInModule,
+                        (int)(intptr_t)Defgeneric_IsDeletable,
+                        (int)(intptr_t)Defgeneric_RemoveConstruct,
+                        (int)(intptr_t)Defgeneric_RemoveDefgeneric);
+  Rules_AddClearReadyFunction((int)(intptr_t)aDefgeneric, (int)(intptr_t)Defgeneric_NoActiveCall, 0);
   Defgeneric_RegisterBinaryItem();
   Defgeneric_CompilerSetup();
-  Module_RegisterImportExportConstructType((int)aDefgeneric, 2);
-  Rules_RegisterConstructType((int)aDefmethod, (int)aDefmethods, 0, (int)Defgeneric_ParseDefmethod, 0, 0, 0, 0, 0, 0, 0, 0);
-  Rules_AddSaveFunction((int)aDefgeneric, (int)Defgeneric_SaveConstructs, 1000);
-  Rules_AddSaveFunction((int)aDefmethod, (int)Defmethod_SaveConstructs, -1000);
-  Rules_RegisterHostFunction(aUndefgeneric, 118, v0, (int)Defgeneric_UndefgenericCommand, (int)a11w_2);
-  Rules_RegisterHostFunction(aUndefmethod, 118, (int)aUndefmethodcom, (int)Defgeneric_UndefmethodCommand, (int)a22Wg);
-  Rules_RegisterHostFunction(aCallNextMethod, 117, (int)aCallnextmethod, (int)Method_OverrideNextMethod, (int)a00_2);
+  Module_RegisterImportExportConstructType((int)(intptr_t)aDefgeneric, 2);
+  Rules_RegisterConstructType((int)(intptr_t)aDefmethod, (int)(intptr_t)aDefmethods, 0, (int)(intptr_t)Defgeneric_ParseDefmethod, 0, 0, 0, 0, 0, 0, 0, 0);
+  Rules_AddSaveFunction((int)(intptr_t)aDefgeneric, (int)(intptr_t)Defgeneric_SaveConstructs, 1000);
+  Rules_AddSaveFunction((int)(intptr_t)aDefmethod, (int)(intptr_t)Defmethod_SaveConstructs, -1000);
+  Rules_RegisterHostFunction(aUndefgeneric, 118, v0, (int)(intptr_t)Defgeneric_UndefgenericCommand, (int)(intptr_t)a11w_2);
+  Rules_RegisterHostFunction(aUndefmethod, 118, (int)(intptr_t)aUndefmethodcom, (int)(intptr_t)Defgeneric_UndefmethodCommand, (int)(intptr_t)a22Wg);
+  Rules_RegisterHostFunction(aCallNextMethod, 117, (int)(intptr_t)aCallnextmethod, (int)(intptr_t)Method_OverrideNextMethod, (int)(intptr_t)a00_2);
   Rules_SetFunctionSeqOverloadFlags(aCallNextMethod, 0);
-  Rules_RegisterHostFunction(aCallSpecificMe, 117, v1, (int)Method_EvaluateCallSpecificMethod, (int)a2Wi);
+  Rules_RegisterHostFunction(aCallSpecificMe, 117, v1, (int)(intptr_t)Method_EvaluateCallSpecificMethod, (int)(intptr_t)a2Wi);
   Rules_SetFunctionSeqOverloadFlags(aCallSpecificMe, 0);
-  Rules_RegisterHostFunction(aOverrideNextMe, 117, v2, (int)Method_CallNextMethod, 0);
+  Rules_RegisterHostFunction(aOverrideNextMe, 117, v2, (int)(intptr_t)Method_CallNextMethod, 0);
   Rules_SetFunctionSeqOverloadFlags(aOverrideNextMe, 0);
-  Rules_RegisterHostFunction(aNextMethodp, 98, v3, (int)Method_HasNextApplicableMethod, (int)a00_2);
+  Rules_RegisterHostFunction(aNextMethodp, 98, v3, (int)(intptr_t)Method_HasNextApplicableMethod, (int)(intptr_t)a00_2);
   Rules_SetFunctionSeqOverloadFlags(aNextMethodp, 0);
-  Rules_RegisterHostFunction(aGnrcCurrentArg, 117, v4, (int)Method_SaveCurrentArgContext, 0);
-  Rules_RegisterHostFunction(aPpdefgeneric, 118, (int)aPpdefgenericco, (int)Defgeneric_PpdefgenericCommand, (int)a11w_2);
-  Rules_RegisterHostFunction(aListDefgeneric, 118, (int)aListdefgeneric, (int)Defgeneric_ListDefgenericsCommand, (int)a01);
-  Rules_RegisterHostFunction(aPpdefmethod, 118, (int)aPpdefmethodcom, (int)Defgeneric_PpdefmethodCommand, (int)a22Wi);
-  Rules_RegisterHostFunction(aListDefmethods, 118, (int)aListdefmethods, (int)Defgeneric_ListDefmethodsCommand, (int)a01w_2);
-  Rules_RegisterHostFunction(aPreviewGeneric, 118, (int)aPreviewgeneric, (int)Defgeneric_PreviewGenericCommand, (int)a1W_0);
-  Rules_RegisterHostFunction(aGetDefgenericL, 109, (int)aGetdefgenericl, (int)Defgeneric_GetDefgenericListCommand, (int)a01);
-  Rules_RegisterHostFunction(aGetDefmethodLi, 109, (int)aGetdefmethodli, (int)Defgeneric_GetDefmethodListCommand, (int)a01w_2);
-  Rules_RegisterHostFunction(aGetMethodRestr, 109, (int)aGetmethodrestr, (int)Defgeneric_GetMethodRestrictionsCommand, (int)a22iw);
-  Rules_RegisterHostFunction(aDefgenericModu, 119, (int)aGetdefgenericm, (int)Defgeneric_ModuleCommand, (int)a11w_2);
-  Rules_RegisterHostFunction(aType, 117, (int)aClasscommand, (int)Rules_ClassCommand, (int)a11_1);
-  Rules_AddWatchItem((int)aGenericFunctio, 0, 34, (int)&g_Rules_WatchGenericFunctions, (int)Defgeneric_WatchAccessFunction, (int)Defgeneric_WatchPrintFunction);
-  return Rules_AddWatchItem((int)aMethods, 0, 33, (int)&g_Rules_WatchMethods, (int)Defgeneric_MethodsWatchAccessFunction, (int)Defgeneric_MethodsWatchPrintFunction);
+  Rules_RegisterHostFunction(aGnrcCurrentArg, 117, v4, (int)(intptr_t)Method_SaveCurrentArgContext, 0);
+  Rules_RegisterHostFunction(aPpdefgeneric, 118, (int)(intptr_t)aPpdefgenericco, (int)(intptr_t)Defgeneric_PpdefgenericCommand, (int)(intptr_t)a11w_2);
+  Rules_RegisterHostFunction(aListDefgeneric, 118, (int)(intptr_t)aListdefgeneric, (int)(intptr_t)Defgeneric_ListDefgenericsCommand, (int)(intptr_t)a01);
+  Rules_RegisterHostFunction(aPpdefmethod, 118, (int)(intptr_t)aPpdefmethodcom, (int)(intptr_t)Defgeneric_PpdefmethodCommand, (int)(intptr_t)a22Wi);
+  Rules_RegisterHostFunction(aListDefmethods, 118, (int)(intptr_t)aListdefmethods, (int)(intptr_t)Defgeneric_ListDefmethodsCommand, (int)(intptr_t)a01w_2);
+  Rules_RegisterHostFunction(aPreviewGeneric, 118, (int)(intptr_t)aPreviewgeneric, (int)(intptr_t)Defgeneric_PreviewGenericCommand, (int)(intptr_t)a1W_0);
+  Rules_RegisterHostFunction(aGetDefgenericL, 109, (int)(intptr_t)aGetdefgenericl, (int)(intptr_t)Defgeneric_GetDefgenericListCommand, (int)(intptr_t)a01);
+  Rules_RegisterHostFunction(aGetDefmethodLi, 109, (int)(intptr_t)aGetdefmethodli, (int)(intptr_t)Defgeneric_GetDefmethodListCommand, (int)(intptr_t)a01w_2);
+  Rules_RegisterHostFunction(aGetMethodRestr, 109, (int)(intptr_t)aGetmethodrestr, (int)(intptr_t)Defgeneric_GetMethodRestrictionsCommand, (int)(intptr_t)a22iw);
+  Rules_RegisterHostFunction(aDefgenericModu, 119, (int)(intptr_t)aGetdefgenericm, (int)(intptr_t)Defgeneric_ModuleCommand, (int)(intptr_t)a11w_2);
+  Rules_RegisterHostFunction(aType, 117, (int)(intptr_t)aClasscommand, (int)(intptr_t)Rules_ClassCommand, (int)(intptr_t)a11_1);
+  Rules_AddWatchItem((int)(intptr_t)aGenericFunctio, 0, 34, (int)(intptr_t)&g_Rules_WatchGenericFunctions, (int)(intptr_t)Defgeneric_WatchAccessFunction, (int)(intptr_t)Defgeneric_WatchPrintFunction);
+  return Rules_AddWatchItem((int)(intptr_t)aMethods, 0, 33, (int)(intptr_t)&g_Rules_WatchMethods, (int)(intptr_t)Defgeneric_MethodsWatchAccessFunction, (int)(intptr_t)Defgeneric_MethodsWatchPrintFunction);
 }
 // 497481: variable 'v0' is possibly undefined
 // 4974EC: variable 'v1' is possibly undefined
@@ -1108,14 +1108,14 @@ int  Defgeneric_ParseConstruct(_BYTE *genericName, int a2)
 //----- (00497700) --------------------------------------------------------
 int  Defgeneric_LookupWithImports(_BYTE *genericName)
 {
-  return Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, genericName, 1);
+  return Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, genericName, 1);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497720) --------------------------------------------------------
 int  Defgeneric_LookupLocalOnly(_BYTE *genericName)
 {
-  return Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, genericName, 0);
+  return Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, genericName, 0);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1136,16 +1136,16 @@ int  Class_NextMethod(int theGeneric, int methodIndex)
   if ( methodIndex )
   {
     nextPosition = Method_FindByIndex(theGeneric, methodIndex) + 1;
-    if ( nextPosition == *(_DWORD *)(v5 + 32) )
+    if ( nextPosition == *(_DWORD *)(uintptr_t)(v5 + 32) )
       return 0;
     else
-      return *(_DWORD *)(*(_DWORD *)(v5 + 28) + 40 * nextPosition);
+      return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 28) + 40 * nextPosition);
   }
   else
   {
-    methodArray = *(_DWORD *)(theGeneric + 28);
+    methodArray = *(_DWORD *)(uintptr_t)(theGeneric + 28);
     if ( methodArray )
-      return *(_DWORD *)methodArray;
+      return *(_DWORD *)(uintptr_t)methodArray;
     else
       return 0;
   }
@@ -1157,21 +1157,21 @@ BOOL Defgeneric_IsDeletable(void)
 {
   int v0; // edx
 
-  return !Rules_IsBloaded() && *(_DWORD *)(v0 + 20) == 0;
+  return !Rules_IsBloaded() && *(_DWORD *)(uintptr_t)(v0 + 20) == 0;
 }
 // 4977A0: variable 'v0' is possibly undefined
 
 //----- (00497800) --------------------------------------------------------
 int __thiscall Defgeneric_UndefgenericCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, g_Clips_DefgenericConstructType);
+  return Rules_UndefconstructCommand((int)(intptr_t)this, g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00497820) --------------------------------------------------------
 int __thiscall Defgeneric_ModuleCommand(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)g_Clips_DefgenericConstructType);
+  return Rules_GetConstructModuleCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1194,7 +1194,7 @@ signed int  Defgeneric_UndefmethodCommand(int returnValue, double context)
   result = Lexer_ParseValueList(1, &argData, 2, context);
   if ( result )
   {
-    if ( Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, *(_BYTE **)(argValue + 16), 1) || !strcmp_(0, asc_50529C) )
+    if ( Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, *(_BYTE **)(uintptr_t)(argValue + 16), 1) || !strcmp_(0, asc_50529C) )
     {
       Rules_RtnUnknown(2, &argData, context);
       if ( argType == 2 )
@@ -1203,15 +1203,15 @@ signed int  Defgeneric_UndefmethodCommand(int returnValue, double context)
         if ( methodIndex )
         {
 LABEL_7:
-          Rules_PrintErrorID((int)aGenrccom, 2, 0);
-          return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_0, v5);
+          Rules_PrintErrorID((int)(intptr_t)aGenrccom, 2, 0);
+          return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAVal_0, v5);
         }
       }
       else
       {
         if ( argType != 1 )
           goto LABEL_7;
-        methodIndex = *(_DWORD *)(argValue + 16);
+        methodIndex = *(_DWORD *)(uintptr_t)(argValue + 16);
         if ( !methodIndex )
           goto LABEL_7;
       }
@@ -1219,10 +1219,10 @@ LABEL_7:
     }
     else
     {
-      Rules_PrintErrorID((int)aGenrccom, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchGenericF, v6);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(argValue + 16), v7);
-      return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionUnde, v8);
+      Rules_PrintErrorID((int)(intptr_t)aGenrccom, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoSuchGenericF, v6);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(argValue + 16), v7);
+      return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunctionUnde, v8);
     }
   }
   return result;
@@ -1286,20 +1286,20 @@ int __fastcall Defgeneric_RemoveMethod(int theGeneric, int methodIndex)
 
   if ( Rules_IsBloaded() == 1 )
   {
-    Rules_PrintErrorID((int)aPrntutil_0, 4, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDelete, v7);
+    Rules_PrintErrorID((int)(intptr_t)aPrntutil_0, 4, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToDelete, v7);
     if ( v8 )
     {
       v9 = Rules_GetConstructNameString(v8);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], v9, (int)g_IO_LogicalNameTable_WError[0]);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505344, v10);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v9, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_505344, v10);
       Rules_PrintLongInteger(v11, methodIndex);
     }
     else
     {
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50529C, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50529C, 0);
     }
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__15, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__15, v12);
     return 0;
   }
   else if ( v4 )
@@ -1311,7 +1311,7 @@ int __fastcall Defgeneric_RemoveMethod(int theGeneric, int methodIndex)
     }
     else if ( v13 )
     {
-      methodPosition = Defgeneric_CheckMethodExists((int)aUndefmethod, v14, v13);
+      methodPosition = Defgeneric_CheckMethodExists((int)(intptr_t)aUndefmethod, v14, v13);
       if ( methodPosition == -1 )
         return 0;
       Defgeneric_DeleteMethod(v16, methodPosition);
@@ -1327,8 +1327,8 @@ int __fastcall Defgeneric_RemoveMethod(int theGeneric, int methodIndex)
   {
     if ( v3 )
     {
-      Rules_PrintErrorID((int)aGenrccom, 3, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIncompleteMeth, v5);
+      Rules_PrintErrorID((int)(intptr_t)aGenrccom, 3, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIncompleteMeth, v5);
       return 0;
     }
     return Defgeneric_ClearDefgenericsReady();
@@ -1354,20 +1354,20 @@ _DWORD * Defgeneric_FormatMethodRestrictionsString(const char *buffer, int buffe
   int v7; // ecx
 
   methodPosition = Method_FindByIndex(theGeneric, methodIndex);
-  return Defgeneric_AppendMethodSignatureText(buffer, bufferMax, v7, 40 * methodPosition + *(_DWORD *)(theGeneric + 28));
+  return Defgeneric_AppendMethodSignatureText(buffer, bufferMax, v7, 40 * methodPosition + *(_DWORD *)(uintptr_t)(theGeneric + 28));
 }
 // 497B0A: variable 'v7' is possibly undefined
 
 //----- (00497B20) --------------------------------------------------------
 int  Defgeneric_GetTraceFlag(int theGeneric)
 {
-  return *(_DWORD *)(theGeneric + 24);
+  return *(_DWORD *)(uintptr_t)(theGeneric + 24);
 }
 
 //----- (00497B30) --------------------------------------------------------
 int  Defgeneric_SetTraceFlag(int result, int theGeneric)
 {
-  *(_DWORD *)(theGeneric + 24) = result;
+  *(_DWORD *)(uintptr_t)(theGeneric + 24) = result;
   return result;
 }
 
@@ -1378,7 +1378,7 @@ int  Defgeneric_GetMethodTraceFlag(int theGeneric, int methodIndex)
   int v3; // ecx
 
   methodPosition = Method_FindByIndex(theGeneric, methodIndex);
-  return *(_DWORD *)(*(_DWORD *)(v3 + 28) + 40 * methodPosition + 24) << 30 >> 31;
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v3 + 28) + 40 * methodPosition + 24) << 30 >> 31;
 }
 // 497B53: variable 'v3' is possibly undefined
 
@@ -1390,9 +1390,9 @@ int  Defgeneric_SetMethodTraceFlag(char newState, int theGeneric, int methodInde
   int result; // eax
 
   methodPosition = Method_FindByIndex(theGeneric, methodIndex);
-  result = *(_DWORD *)(v5 + 28) + 40 * methodPosition;
-  *(_BYTE *)(result + 24) &= ~2u;
-  *(_DWORD *)(result + 24) |= 2 * (newState & 1);
+  result = *(_DWORD *)(uintptr_t)(v5 + 28) + 40 * methodPosition;
+  *(_BYTE *)(uintptr_t)(result + 24) &= ~2u;
+  *(_DWORD *)(uintptr_t)(result + 24) |= 2 * (newState & 1);
   return result;
 }
 // 497B91: variable 'v5' is possibly undefined
@@ -1400,7 +1400,7 @@ int  Defgeneric_SetMethodTraceFlag(char newState, int theGeneric, int methodInde
 //----- (00497BB0) --------------------------------------------------------
 int __thiscall Defgeneric_PpdefgenericCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)g_Clips_DefgenericConstructType);
+  return Rules_PPConstructCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1419,20 +1419,20 @@ int  Defgeneric_PpdefmethodCommand(int returnValue, double context)
   result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
-    genericName = *(_BYTE **)(argValue + 16);
+    genericName = *(_BYTE **)(uintptr_t)(argValue + 16);
     result = Lexer_ParseValueList(2, argData, 1, context);
     if ( result )
     {
-      result = Defgeneric_CheckGenericExists((int)aPpdefmethod, genericName);
+      result = Defgeneric_CheckGenericExists((int)(intptr_t)aPpdefmethod, genericName);
       if ( result )
       {
-        result = Defgeneric_CheckMethodExists((int)aPpdefmethod, result, *(_DWORD *)(argValue + 16));
+        result = Defgeneric_CheckMethodExists((int)(intptr_t)aPpdefmethod, result, *(_DWORD *)(uintptr_t)(argValue + 16));
         if ( result != -1 )
         {
           result *= 40;
-          methodPtr = result + *(_DWORD *)(v4 + 28);
-          if ( *(_DWORD *)(methodPtr + 36) )
-            return Output_WriteLongString((signed int)g_IO_LogicalName_WDisplay, *(char **)(methodPtr + 36));
+          methodPtr = result + *(_DWORD *)(uintptr_t)(v4 + 28);
+          if ( *(_DWORD *)(uintptr_t)(methodPtr + 36) )
+            return Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalName_WDisplay, *(char **)(uintptr_t)(methodPtr + 36));
         }
       }
     }

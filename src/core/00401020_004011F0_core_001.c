@@ -17,7 +17,7 @@ int App_Shutdown(void)
 {
   int v0; // ecx
 
-  RenderState_ReleaseCursorResources((int)&g_RenderState);
+  RenderState_ReleaseCursorResources((int)(intptr_t)&g_RenderState);
   Noop_AppShutdownPreAudioCloseHook();
   CSS_Close();
   Noop_AppShutdownPostAudioCloseHook(v0);

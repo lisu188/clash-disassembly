@@ -32,14 +32,14 @@ CLASH95_TEST_VISIBLE void Diagnostics_TraceCastleHotspots (int surface_handle);
 //----- (00422100) --------------------------------------------------------
 int Castle_UpdateGateToggles(void)
 {
-  if ( (*(_BYTE *)(g_SelectedBuildingRecord + 420) & 1) != 0 )
-    UI_MenuEntry_Disable((int)&g_CastleNewBuildingMenu, 0);
+  if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 420) & 1) != 0 )
+    UI_MenuEntry_Disable((int)(intptr_t)&g_CastleNewBuildingMenu, 0);
   else
-    UI_MenuEntry_Enable((int)&g_CastleNewBuildingMenu, 0);
-  if ( Building_CanStartUpgrade((unsigned __int8 *)g_SelectedBuildingRecord) )
-    return UI_MenuEntry_Enable((int)&g_CastleNewBuildingMenu, 2);
+    UI_MenuEntry_Enable((int)(intptr_t)&g_CastleNewBuildingMenu, 0);
+  if ( Building_CanStartUpgrade((unsigned __int8 *)(uintptr_t)g_SelectedBuildingRecord) )
+    return UI_MenuEntry_Enable((int)(intptr_t)&g_CastleNewBuildingMenu, 2);
   else
-    return UI_MenuEntry_Disable((int)&g_CastleNewBuildingMenu, 2);
+    return UI_MenuEntry_Disable((int)(intptr_t)&g_CastleNewBuildingMenu, 2);
 }
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
@@ -108,7 +108,7 @@ CLASH95_INTERNAL void BuildingGarrisonDialog_EnsureActionWidgets(int building_re
   static const char text_leave_de[] = "Kaserne verlassen";
   int addon_flags;
 
-  addon_flags = *(unsigned char *)(building_record + 416);
+  addon_flags = *(unsigned char *)(uintptr_t)(building_record + 416);
   memset(BuildingGarrisonDialogActions, 0, sizeof(BuildingGarrisonDialogActions));
   BuildingGarrisonDialog_WriteActionWidgetRecord(
     BuildingGarrisonDialogActions + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
@@ -200,7 +200,7 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] enter building=%08x runtime=%u\n", building_record, (unsigned int)runtime_context);
   g_BuildingGarrisonDialogActiveBuilding = building_record;
-  owner_index = *(unsigned char *)(building_record + 2);
+  owner_index = *(unsigned char *)(uintptr_t)(building_record + 2);
   g_BuildingGarrisonDialogUseChrTheme = PLAYER_RELIGION_FLAG(owner_index);
   g_BuildingGarrisonDialogSelectedUnitSpriteSet = 0;
   memset(g_BuildingGarrisonDialogSlotSpriteSets, 0, 12 * sizeof(g_BuildingGarrisonDialogSlotSpriteSets[0]));
@@ -210,13 +210,13 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   g_BuildingGarrisonDialogPendingExitCountdown = 0;
   g_BuildingGarrisonDialogSelectedSlotIndex = -1;
 
-  surface = (_DWORD *)Mem_Alloc(188, 0, 0, runtime_context);
+  surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, 0, runtime_context);
   if ( surface )
-    surface = Render_CreateSurface((int)surface, 33, 64);
+    surface = Render_CreateSurface((int)(intptr_t)surface, 33, 64);
   g_GarrisonUnitCellSurface = (int)(uintptr_t)surface;
-  scratch_surface = (_DWORD *)Mem_Alloc(188, 0, 0, runtime_context);
+  scratch_surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, 0, runtime_context);
   if ( scratch_surface )
-    scratch_surface = Render_CreateSurface((int)scratch_surface, 33, 64);
+    scratch_surface = Render_CreateSurface((int)(intptr_t)scratch_surface, 33, 64);
 
   resource_handle = Mem_Alloc(1024, 0, -1, runtime_context);
   if ( resource_handle )
@@ -233,7 +233,7 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
     (uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] background_loaded gfx=%s palette=%08x\n", gfx_path, g_BuildingGarrisonDialogResourceHandle);
-  sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, runtime_context);
+  sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, runtime_context);
   if ( sprite_set )
     sprite_set = DLXSpriteSet_Load(sprite_set, sprite_path);
   g_BuildingGarrisonDialogUiSpriteSet = (int)(uintptr_t)sprite_set;
@@ -242,17 +242,17 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   Palette_LoadOrBuildBlendLookupTable((CHAR *)resource_base, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] palette_loaded base=%s\n", resource_base);
-  Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
-  Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
-  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
+  Render_LoadResourceSprite_v4(5, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
+  Render_LoadResourceSprite_v4(7, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] resource_sprites_loaded cursor_base=%d\n", g_ActiveWidgetSpriteTableIndex);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
   UI_SetActiveWidgetTable(8);
   BuildingGarrisonDialog_EnsureActionWidgets(building_record);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_ready\n");
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -266,11 +266,11 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   BuildingGarrisonDialog_DrawSelectedUnitPanel();
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] selected_panel_drawn\n");
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, 20);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   Render_Pump();
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] initial_present_done\n");
 
@@ -280,7 +280,7 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   while ( !g_BuildingGarrisonDialogCloseRequested && !Input_IsKeyPressed(1) )
   {
     BuildingGarrisonDialog_TickAnimations((double)runtime_context);
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     g_RenderDevice = &g_MainRenderDevice;
     handled_widget = UIWidgetTable_PollHoverAndActions((_DWORD *)BuildingGarrisonDialogActions, runtime_context);
     if ( handled_widget )
@@ -290,8 +290,8 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
     if ( slot_index == -1 )
       continue;
     slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * slot_index;
-    primary_down = DD_IsFlipping((int)g_RenderState);
-    secondary_down = DD_IsLost((int)g_RenderState);
+    primary_down = DD_IsFlipping((int)(intptr_t)g_RenderState);
+    secondary_down = DD_IsLost((int)(intptr_t)g_RenderState);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(
         stderr,
@@ -299,9 +299,9 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
         slot_index,
         primary_down,
         secondary_down,
-        *(__int16 *)(slot_record + 18),
+        *(__int16 *)(uintptr_t)(slot_record + 18),
         g_BuildingGarrisonDialogSelectedSlots[slot_index]);
-    if ( primary_down && *(__int16 *)(slot_record + 18) != -1 )
+    if ( primary_down && *(__int16 *)(uintptr_t)(slot_record + 18) != -1 )
     {
       selected_count = BuildingGarrisonDialog_CountSelectedSlots();
       if ( selected_count < 10 || g_BuildingGarrisonDialogSelectedSlots[slot_index] )
@@ -316,15 +316,15 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
             selected_count);
         Audio_PlaySoundEffectByName("marker", 64);
         BuildingGarrisonDialog_DrawSlotGrid(slot_index);
-        Render_Present((int)g_RenderState);
+        Render_Present((int)(intptr_t)g_RenderState);
       }
-      while ( DD_IsFlipping((int)g_RenderState) )
+      while ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
       {
-        DD_Pump((int)g_RenderState, 0);
+        DD_Pump((int)(intptr_t)g_RenderState, 0);
         BuildingGarrisonDialog_TickAnimations((double)runtime_context);
       }
     }
-    else if ( secondary_down && *(__int16 *)(slot_record + 18) != -1 )
+    else if ( secondary_down && *(__int16 *)(uintptr_t)(slot_record + 18) != -1 )
     {
       old_selected_slot = g_BuildingGarrisonDialogSelectedSlotIndex;
       if ( old_selected_slot != -1 )
@@ -338,18 +338,18 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
         fprintf(stderr, "[barracks] slot_detail_begin idx=%d\n", slot_index);
       Diagnostics_ResetFrameDumpOnBarracksDetail();
       BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(0, 20, runtime_context);
-      Render_Present((int)g_RenderState);
+      Render_Present((int)(intptr_t)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_present idx=%d\n", slot_index);
       Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
-      while ( DD_IsLost((int)g_RenderState) )
+      while ( DD_IsLost((int)(intptr_t)g_RenderState) )
       {
-        DD_Pump((int)g_RenderState, 0);
+        DD_Pump((int)(intptr_t)g_RenderState, 0);
         BuildingGarrisonDialog_TickAnimations((double)runtime_context);
       }
       g_BuildingGarrisonDialogSelectedSlotIndex = -1;
       BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(0, 20, runtime_context);
-      Render_Present((int)g_RenderState);
+      Render_Present((int)(intptr_t)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_end idx=%d\n", slot_index);
     }
@@ -379,8 +379,8 @@ CLASH95_LOCAL int BuildingGarrisonDialog_Run(int building_record, int callback_c
   }
   if ( scratch_surface )
     RenderSurface_InvokeSlot0(scratch_surface, 2);
-  saved_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
-  Render_SetResourceHandle((int)&g_MainRenderDevice, saved_resource_handle);
+  saved_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, saved_resource_handle);
   return 0;
 }
 
@@ -506,8 +506,8 @@ CLASH95_INTERNAL int Diagnostics_CountBattleUnitsForOwner(int owner)
   count = 0;
   for ( offset = 0; offset != 682; offset += 31 )
   {
-    if ( *(__int16 *)(g_MapData + offset + 852) != -1
-      && *(unsigned __int8 *)(g_MapData + offset + 854) == owner )
+    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + 852) != -1
+      && *(unsigned __int8 *)(uintptr_t)(g_MapData + offset + 854) == owner )
     {
       ++count;
     }
@@ -525,7 +525,7 @@ CLASH95_INTERNAL int Diagnostics_CountBattleUnitsTotal(void)
   count = 0;
   for ( offset = 0; offset != 682; offset += 31 )
   {
-    if ( *(__int16 *)(g_MapData + offset + 852) != -1 )
+    if ( *(__int16 *)(uintptr_t)(g_MapData + offset + 852) != -1 )
       ++count;
   }
   return count;
@@ -540,7 +540,7 @@ CLASH95_INTERNAL void Diagnostics_TraceBattleUnitSnapshot(const char *stage)
   for ( slot_index = 0; slot_index < 22; ++slot_index )
   {
     int unit_record = g_MapData + 852 + 31 * slot_index;
-    int unit_type = *(__int16 *)unit_record;
+    int unit_type = *(__int16 *)(uintptr_t)unit_record;
 
     if ( unit_type == -1 )
       continue;
@@ -549,17 +549,17 @@ CLASH95_INTERNAL void Diagnostics_TraceBattleUnitSnapshot(const char *stage)
       "[battle_units] %s idx=%d owner=%u type=%d tile=%u,%u ap=%u count=%u flags=0x%02x selected=%d current_player=%d viewport=%d,%d\n",
       stage,
       slot_index,
-      (unsigned)*(unsigned char *)(unit_record + 2),
+      (unsigned)*(unsigned char *)(uintptr_t)(unit_record + 2),
       unit_type,
-      (unsigned)*(unsigned __int16 *)(unit_record + 4),
-      (unsigned)*(unsigned __int16 *)(unit_record + 6),
-      (unsigned)*(unsigned char *)(unit_record + 8),
-      (unsigned)*(unsigned char *)(unit_record + 9),
-      (unsigned)*(unsigned char *)(unit_record + 12),
+      (unsigned)*(unsigned __int16 *)(uintptr_t)(unit_record + 4),
+      (unsigned)*(unsigned __int16 *)(uintptr_t)(unit_record + 6),
+      (unsigned)*(unsigned char *)(uintptr_t)(unit_record + 8),
+      (unsigned)*(unsigned char *)(uintptr_t)(unit_record + 9),
+      (unsigned)*(unsigned char *)(uintptr_t)(unit_record + 12),
       g_SelectedUnitIndex,
       g_CurrentPlayerIndex,
-      *(_DWORD *)(g_MapData + 808),
-      *(_DWORD *)(g_MapData + 812));
+      *(_DWORD *)(uintptr_t)(g_MapData + 808),
+      *(_DWORD *)(uintptr_t)(g_MapData + 812));
   }
   fflush(stderr);
 }
@@ -785,21 +785,21 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapClickEvent(
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() )
     return;
   in_bounds = tile_x >= 0
-           && tile_x < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+           && tile_x < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
            && tile_y >= 0
-           && tile_y < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+           && tile_y < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET);
   if ( in_bounds && MapTile_HasBuilding(tile_x, tile_y) )
   {
-    building_index = *(unsigned __int16 *)TILE_INDEX(tile_x, tile_y) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    building_index = *(unsigned __int16 *)(uintptr_t)TILE_INDEX(tile_x, tile_y) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( building_index >= 0 && building_index <= 100 )
     {
       int building_record = BUILDING_RECORD(building_index);
 
-      building_row = *(unsigned __int8 *)(building_record + 0);
-      building_column = *(unsigned __int8 *)(building_record + 1);
-      building_owner = *(unsigned __int8 *)(building_record + 2);
-      building_kind = *(unsigned __int8 *)(building_record + 4);
-      building_construction = *(__int16 *)(building_record + 16);
+      building_row = *(unsigned __int8 *)(uintptr_t)(building_record + 0);
+      building_column = *(unsigned __int8 *)(uintptr_t)(building_record + 1);
+      building_owner = *(unsigned __int8 *)(uintptr_t)(building_record + 2);
+      building_kind = *(unsigned __int8 *)(uintptr_t)(building_record + 4);
+      building_construction = *(__int16 *)(uintptr_t)(building_record + 16);
     }
   }
   fprintf(
@@ -816,8 +816,8 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapClickEvent(
     g_CurrentPlayerIndex,
     VIEWED_PLAYER_INDEX,
     TURN_OWNER_PLAYER_INDEX,
-    DD_IsFlipping((int)&g_RenderState),
-    DD_IsLost((int)&g_RenderState),
+    DD_IsFlipping((int)(intptr_t)&g_RenderState),
+    DD_IsLost((int)(intptr_t)&g_RenderState),
     in_bounds ? MapTile_HasOwnUnitStack(tile_x, tile_y) : 0,
     in_bounds ? MapTile_HasVisibleEnemyUnitStack(tile_x, tile_y) : 0,
     in_bounds ? MapTile_HasBuilding(tile_x, tile_y) : 0,
@@ -851,15 +851,15 @@ CLASH95_INTERNAL void Diagnostics_TraceBattlefieldClickEvent(
   if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !g_MapData )
     return;
   if ( g_SelectedUnitIndex >= 0 && g_SelectedUnitIndex < 22 )
-    selected_type = *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852);
+    selected_type = *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852);
   if ( occupant_slot >= 0 && occupant_slot < 22 )
   {
     int occupant_record = g_MapData + 31 * occupant_slot;
 
-    occupant_type = *(__int16 *)(occupant_record + 852);
-    occupant_owner = *(unsigned __int8 *)(occupant_record + 854);
-    occupant_ap = *(unsigned __int8 *)(occupant_record + 860);
-    occupant_flags = *(unsigned __int8 *)(occupant_record + 864);
+    occupant_type = *(__int16 *)(uintptr_t)(occupant_record + 852);
+    occupant_owner = *(unsigned __int8 *)(uintptr_t)(occupant_record + 854);
+    occupant_ap = *(unsigned __int8 *)(uintptr_t)(occupant_record + 860);
+    occupant_flags = *(unsigned __int8 *)(uintptr_t)(occupant_record + 864);
   }
   fprintf(
     stderr,
@@ -871,8 +871,8 @@ CLASH95_INTERNAL void Diagnostics_TraceBattlefieldClickEvent(
     local_y,
     tile_x,
     tile_y,
-    *(_DWORD *)(g_MapData + 808),
-    *(_DWORD *)(g_MapData + 812),
+    *(_DWORD *)(uintptr_t)(g_MapData + 808),
+    *(_DWORD *)(uintptr_t)(g_MapData + 812),
     g_SelectedUnitIndex,
     selected_type,
     g_CurrentPlayerIndex,
@@ -883,8 +883,8 @@ CLASH95_INTERNAL void Diagnostics_TraceBattlefieldClickEvent(
     occupant_flags,
     g_Battle_ShootModeEnabled,
     g_UnitBattleChargeModeActive_532060,
-    DD_IsFlipping((int)&g_RenderState),
-    DD_IsLost((int)&g_RenderState));
+    DD_IsFlipping((int)(intptr_t)&g_RenderState),
+    DD_IsLost((int)(intptr_t)&g_RenderState));
 }
 
 CLASH95_INTERNAL void Diagnostics_TraceWorldMapActionEvent(
@@ -908,8 +908,8 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapActionEvent(
     detail_c,
     g_MouseCursorRawX >> g_CursorCoordShift,
     g_MouseCursorRawY >> g_CursorCoordShift,
-    DD_IsFlipping((int)&g_RenderState),
-    DD_IsLost((int)&g_RenderState));
+    DD_IsFlipping((int)(intptr_t)&g_RenderState),
+    DD_IsLost((int)(intptr_t)&g_RenderState));
   fflush(stderr);
 }
 
@@ -947,7 +947,7 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage)
   for ( stack_index = 0; stack_index < UNIT_STACK_TABLE_COUNT; ++stack_index )
   {
     int stack_record = UNIT_STACK(stack_index);
-    int first_unit_type = *(__int16 *)UNIT_STACK_SLOT(stack_record, 0);
+    int first_unit_type = *(__int16 *)(uintptr_t)UNIT_STACK_SLOT(stack_record, 0);
     if ( first_unit_type != -1 && first_unit_type <= 0x28 )
     {
       int first_slot_record = UNIT_STACK_SLOT(stack_record, 0);
@@ -962,13 +962,13 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage)
         (int)UNIT_STACK_TILE_COLUMN(stack_record),
         first_unit_type,
         Unit_GetSquadCount(stack_record),
-        (unsigned)*(unsigned char *)(first_slot_record + 8),
-        (unsigned)*(unsigned char *)(first_slot_record + 9),
-        (unsigned)*(unsigned char *)(first_slot_record + 11),
-        (unsigned)*(unsigned char *)(first_slot_record + 10),
+        (unsigned)*(unsigned char *)(uintptr_t)(first_slot_record + 8),
+        (unsigned)*(unsigned char *)(uintptr_t)(first_slot_record + 9),
+        (unsigned)*(unsigned char *)(uintptr_t)(first_slot_record + 11),
+        (unsigned)*(unsigned char *)(uintptr_t)(first_slot_record + 10),
         UnitStack_GetMinCurrentActionPoints(stack_record),
-        *(_DWORD *)UNIT_STACK_PATH_BUFFER(stack_record),
-        (unsigned)*(unsigned char *)(stack_record + 720));
+        *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER(stack_record),
+        (unsigned)*(unsigned char *)(uintptr_t)(stack_record + 720));
       if ( getenv("CLASH95_TRACE_WORLD_UNIT_SLOTS") )
       {
         int slot_index;
@@ -976,7 +976,7 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage)
         for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
         {
           int slot_record = UNIT_STACK_SLOT(stack_record, slot_index);
-          int unit_type = *(__int16 *)slot_record;
+          int unit_type = *(__int16 *)(uintptr_t)slot_record;
 
           if ( unit_type == -1 )
             break;
@@ -987,12 +987,12 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage)
             stack_index,
             slot_index,
             unit_type,
-            (unsigned)*(unsigned char *)(slot_record + 8),
-            (unsigned)*(unsigned char *)(slot_record + 9),
-            (unsigned)*(unsigned char *)(slot_record + 11),
-            (unsigned)*(unsigned char *)(slot_record + 10),
-            (unsigned)*(unsigned char *)(slot_record + 12),
-            (unsigned)*(unsigned char *)(slot_record + 13));
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 8),
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 9),
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 11),
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 10),
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 12),
+            (unsigned)*(unsigned char *)(uintptr_t)(slot_record + 13));
         }
       }
     }
@@ -1020,8 +1020,8 @@ CLASH95_INTERNAL void Diagnostics_TraceWorldMapCursorSample(
     return;
   cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
   cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
-  flipping = DD_IsFlipping((int)&g_RenderState);
-  lost = DD_IsLost((int)&g_RenderState);
+  flipping = DD_IsFlipping((int)(intptr_t)&g_RenderState);
+  lost = DD_IsLost((int)(intptr_t)&g_RenderState);
   if ( initialized
     && cursor_x == last_cursor_x
     && cursor_y == last_cursor_y
@@ -1101,28 +1101,28 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[castle] open_enter building_idx=%u current_player=%d\n", (unsigned int)buildingIndex, g_CurrentPlayerIndex);
   Diagnostics_ResetFrameDumpOnCastleEnter();
-  savedResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, (char *)Castle_RebuildSceneBuffers == (char *)Render_DefaultRH);
+  savedResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, (char *)Castle_RebuildSceneBuffers == (char *)Render_DefaultRH);
   savedRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Castle_RebuildSceneBuffers;
-  Debug_Log(v4, a2, buildingIndex, (int)aSetrhS08x_6);
+  Debug_Log(v4, a2, buildingIndex, (int)(intptr_t)aSetrhS08x_6);
   TextSprite_ReleaseAllResourceSlots();
   BuildingSpriteCache_Clear();
   UnitSpriteCache_FreeAllEntries(v5, buildingIndex);
   CSS_EmptySampleCache();
-  Debug_Log(BUILDING_RECORD_SIZE * buildingIndex, a2, buildingIndex, (int)aCastleD);
+  Debug_Log(BUILDING_RECORD_SIZE * buildingIndex, a2, buildingIndex, (int)(intptr_t)aCastleD);
   g_SelectedBuildingRecord = BUILDING_RECORD(buildingIndex);
-  g_ActiveCastleOwnerIsChristian = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
-  savedMusicState = Audio_PauseMusicAndPlayLoopedSound(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
+  g_ActiveCastleOwnerIsChristian = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(uintptr_t)(g_SelectedBuildingRecord + 2));
+  savedMusicState = Audio_PauseMusicAndPlayLoopedSound(aCastle, *(unsigned __int8 *)(uintptr_t)(g_SelectedBuildingRecord + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateGateToggles();
   strcpy(spritePath, "zamek_1\\z_iko.s32");
   spritePath[6] = g_CurrentPlayerIndex + 49;
-  iconSpriteSet = (_DWORD *)Mem_Alloc(4112, v7, a2, buildingIndex);
+  iconSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v7, a2, buildingIndex);
   if ( iconSpriteSet )
     iconSpriteSet = DLXSpriteSet_Load(iconSpriteSet, spritePath);
   animPathSrc = aZamek_1Anim_s3;
   pathDst = spritePath;
-  g_CastleSceneIconSpriteSet = (int)iconSpriteSet;
+  g_CastleSceneIconSpriteSet = (int)(intptr_t)iconSpriteSet;
   do
   {
     srcChar = *animPathSrc;
@@ -1136,42 +1136,42 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
   }
   while ( nextChar );
   spritePath[6] = g_CurrentPlayerIndex + 49;
-  ambientSpriteSet = (_DWORD *)Mem_Alloc(4112, v9, a2, buildingIndex);
+  ambientSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v9, a2, buildingIndex);
   if ( ambientSpriteSet )
     ambientSpriteSet = DLXSpriteSet_Load(ambientSpriteSet, spritePath);
-  g_CastleAmbientSpriteSet = (int)ambientSpriteSet;
-  statusSpriteSet = (_DWORD *)Mem_Alloc(4112, v15, a2, buildingIndex);
+  g_CastleAmbientSpriteSet = (int)(intptr_t)ambientSpriteSet;
+  statusSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v15, a2, buildingIndex);
   if ( statusSpriteSet )
     statusSpriteSet = DLXSpriteSet_Load(statusSpriteSet, aDz_info_s32);
-  g_CastleStatusSpriteSet = (int)statusSpriteSet;
+  g_CastleStatusSpriteSet = (int)(intptr_t)statusSpriteSet;
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   Render_Pump();
-  Surface = (_DWORD *)Mem_Alloc(188, v17, a2, buildingIndex);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v17, a2, buildingIndex);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   buildingRecordByteOffset = BUILDING_RECORD_SIZE * buildingIndex;
-  g_CastleScreenSurface = (int)Surface;
-  Castle_RebuildSceneBuffers((int)g_CastleScreenPaletteBuffer, buildingRecordByteOffset);
-  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 3, (int)g_CastleScreenPaletteBuffer, aMap_pal_0);
-  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 4, (int)g_CastleScreenPaletteBuffer, aMap_pal_1);
-  DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)g_CastleScreenPaletteBuffer, (unsigned __int8 *)g_MapPalettePtr);
+  g_CastleScreenSurface = (int)(intptr_t)Surface;
+  Castle_RebuildSceneBuffers((int)(intptr_t)g_CastleScreenPaletteBuffer, buildingRecordByteOffset);
+  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 3, (int)(intptr_t)g_CastleScreenPaletteBuffer, aMap_pal_0);
+  DLXSpriteSet_DrawFormattedText(g_MapPanelSpriteSet, 4, (int)(intptr_t)g_CastleScreenPaletteBuffer, aMap_pal_1);
+  DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)(intptr_t)g_CastleScreenPaletteBuffer, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
   CSS_ResumeStreamReading();
   LOBYTE(v22) = -57;
   Tooltip_CaptureBackdrop(190, 455, 7, 455, 248);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[castle] first_present building_idx=%u\n", (unsigned int)buildingIndex);
   Diagnostics_TraceCastleHotspots(g_CastleScreenSurface);
   g_CastleDestroyConfirmed = 0;
   g_CastleScreenExitRequested = 0;
-  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
   activeTooltipId = 0;
   castle_loop_iterations = 0;
   while ( !Input_IsKeyPressed(1) && !g_CastleScreenExitRequested )
   {
     ++castle_loop_iterations;
-    DD_Pump((int)g_RenderState, (char)v22);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)v22);
     Castle_UpdateAmbientAnimationLayers();
     Castle_ShowNewBuildingMenu();
     UI_RunHoverTooltipZones(g_CastleHoverTooltipZones);
@@ -1179,8 +1179,8 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
     Castle_EnsureCompositeStatusWidget();
     UIWidgetTable_PollHoverAndActions((_DWORD *)g_CastleStatusWidgetRecord, buildingRecordByteOffset);
     LOBYTE(v32) = g_CursorCoordShift;
-    g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-    v22 = (char *)(g_MouseCursorRawY >> g_CursorCoordShift);
+    g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_CastleScreenSurface;
+    v22 = (char *)(uintptr_t)(g_MouseCursorRawY >> g_CursorCoordShift);
     castle_panel_callback = NULL;
     switch ( RenderSurface_InvokeSlot16ReadPixel(
                (_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface,
@@ -1232,7 +1232,7 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
         castle_panel_callback = BuildingGarrisonDialog_Run;
         if ( activeTooltipId != 99 )
         {
-          if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
             tooltipNameIndex = 3;
           else
             tooltipNameIndex = 8;
@@ -1255,7 +1255,7 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
         activeTooltipId = 0;
         break;
     }
-    if ( DD_IsFlipping((int)g_RenderState) && castle_panel_callback )
+    if ( DD_IsFlipping((int)(intptr_t)g_RenderState) && castle_panel_callback )
     {
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(
@@ -1273,29 +1273,29 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
       Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
       if ( g_CastleScreenSurface )
         RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
-      savedCallbackResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+      savedCallbackResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
       v22 = (char *)g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
-      Debug_Log(v34, (char)v22, buildingRecordByteOffset, (int)aSetrhS08x_7);
+      Debug_Log(v34, (char)(intptr_t)v22, buildingRecordByteOffset, (int)(intptr_t)aSetrhS08x_7);
       castle_panel_callback(g_SelectedBuildingRecord, 0, buildingRecordByteOffset);
-      Debug_Log((int)g_RenderHook, (char)v22, buildingRecordByteOffset, (int)aUnsetrh08x_7);
+      Debug_Log((int)(intptr_t)g_RenderHook, (char)(intptr_t)v22, buildingRecordByteOffset, (int)(intptr_t)aUnsetrh08x_7);
       g_RenderHook = (int (*)())v22;
-      Render_SetResourceHandle((int)&g_MainRenderDevice, savedCallbackResourceHandle);
-      newScreenSurface = (_DWORD *)Mem_Alloc(188, v37, (char)v22, buildingRecordByteOffset);
+      Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, savedCallbackResourceHandle);
+      newScreenSurface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v37, (char)(intptr_t)v22, buildingRecordByteOffset);
       if ( newScreenSurface )
       {
         LOBYTE(v22) = -32;
-        newScreenSurface = Render_CreateSurface((int)newScreenSurface, SCREEN_WIDTH, SCREEN_HEIGHT);
+        newScreenSurface = Render_CreateSurface((int)(intptr_t)newScreenSurface, SCREEN_WIDTH, SCREEN_HEIGHT);
       }
-      g_CastleScreenSurface = (int)newScreenSurface;
+      g_CastleScreenSurface = (int)(intptr_t)newScreenSurface;
       Castle_RebuildSceneBuffers(v39, buildingRecordByteOffset);
-      g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-      RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_CastleScreenPaletteBuffer, v40, buildingRecordByteOffset);
-      Render_LoadResourceSprite_v4(8, g_CastleScreenPaletteBuffer, v41, (char)v22, buildingRecordByteOffset);
-      Render_LoadResourceSprite_v4(7, g_CastleScreenPaletteBuffer, v42, (char)v22, buildingRecordByteOffset);
-      Render_LoadResourceSprite_v4(13, g_CastleScreenPaletteBuffer, v43, (char)v22, buildingRecordByteOffset);
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-      Render_Present((int)g_RenderState);
+      g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_CastleScreenSurface;
+      RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_CastleScreenPaletteBuffer, v40, buildingRecordByteOffset);
+      Render_LoadResourceSprite_v4(8, g_CastleScreenPaletteBuffer, v41, (char)(intptr_t)v22, buildingRecordByteOffset);
+      Render_LoadResourceSprite_v4(7, g_CastleScreenPaletteBuffer, v42, (char)(intptr_t)v22, buildingRecordByteOffset);
+      Render_LoadResourceSprite_v4(13, g_CastleScreenPaletteBuffer, v43, (char)(intptr_t)v22, buildingRecordByteOffset);
+      RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+      Render_Present((int)(intptr_t)g_RenderState);
     }
   }
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -1307,15 +1307,15 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
       Input_IsKeyPressed(1),
       g_CastleScreenExitRequested);
   Render_Pump();
-  RenderState_LoadDefaultCursorSprite((int)g_RenderState);
+  RenderState_LoadDefaultCursorSprite((int)(intptr_t)g_RenderState);
   Audio_SetMusicVolume(v24, 400);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   DLXSpriteSet_ReleaseAndClear(&g_MapPanelSpriteSet);
-  menuSpriteSet = (_DWORD *)Mem_Alloc(4112, v25, 144, buildingRecordByteOffset);
+  menuSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v25, 144, buildingRecordByteOffset);
   if ( menuSpriteSet )
     menuSpriteSet = DLXSpriteSet_Load(menuSpriteSet, "menu.s32");
   savedScreenSurfaceByte = g_CastleScreenSurface;
-  g_MapPanelSpriteSet = (int)menuSpriteSet;
+  g_MapPanelSpriteSet = (int)(intptr_t)menuSpriteSet;
   if ( g_CastleScreenSurface )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
   DLXSpriteSet_ReleaseAndClear(&g_CastleSceneIconSpriteSet);
@@ -1325,13 +1325,13 @@ int * Castle_OpenManagementScreen(DWORD buildingIndex, char a2)
   CSS_EmptySampleCache();
   Palette_LoadOrBuildBlendLookupTable(aMainmap_2, g_MapPalettePtr, v28, buildingRecordByteOffset);
   Audio_ResumeMusicAndStopLoopedSound(savedMusicState);
-  Debug_Log(v29, savedScreenSurfaceByte, buildingRecordByteOffset, (int)aUnsetrh08x_6);
+  Debug_Log(v29, savedScreenSurfaceByte, buildingRecordByteOffset, (int)(intptr_t)aUnsetrh08x_6);
   g_RenderHook = savedRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, savedResourceHandle);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, savedResourceHandle);
   Diagnostics_ResetFrameDumpOnCastleReturn();
   result = WorldMap_RenderHook(buildingRecordByteOffset);
   if ( g_CastleDestroyConfirmed )
-    return (int *)Win_PlayModeChangeFrameTransition(aZniszcze, 1, v31, savedScreenSurfaceByte, buildingRecordByteOffset);
+    return (int *)(uintptr_t)Win_PlayModeChangeFrameTransition(aZniszcze, 1, v31, savedScreenSurfaceByte, buildingRecordByteOffset);
   return result;
 }
 // 4225A0: conditional instruction was optimized away because ecx.4!=0
@@ -1404,10 +1404,10 @@ int  Tooltip_CaptureBackdrop(int top, int bottom, int resourceHandle, int rightX
     --left;
   if ( g_TooltipBackdropSurface )
     Compat_InvokeCompactSurfaceDestructor(g_TooltipBackdropSurface, 2);
-  Surface = (_DWORD *)Mem_Alloc(188, 0, (char)rightX, resourceHandle);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, (char)rightX, resourceHandle);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, bottom - top + 1, i - left + 1);
-  g_TooltipBackdropSurface = (int)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, bottom - top + 1, i - left + 1);
+  g_TooltipBackdropSurface = (int)(intptr_t)Surface;
   Render_FillRect(0, Surface, (unsigned __int16)left, (unsigned __int16)top, bottom, i, 0, 0);
   g_TooltipLeft = left;
   g_TooltipTop = top;
@@ -1459,7 +1459,7 @@ void * Tooltip_ShowText(int a1, char *format, ...)
   textSpriteSlot = g_ActiveTextSpriteSlot;
   RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
-    (_DWORD *)g_TooltipBackdropSurface,
+    (_DWORD *)(uintptr_t)g_TooltipBackdropSurface,
     0,
     0,
     0,
@@ -1472,7 +1472,7 @@ void * Tooltip_ShowText(int a1, char *format, ...)
   UI_DrawTextFmtV(g_TooltipTop, g_TooltipBottom, a1, g_TooltipLeft, format, args);
   va_end(args);
   bufferDst = (char *)&g_TooltipTextBuffer;
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   textSrc = format;
   do
   {
@@ -1506,7 +1506,7 @@ int Tooltip_RestoreBackdrop(void)
 {
   RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
-    (_DWORD *)g_TooltipBackdropSurface,
+    (_DWORD *)(uintptr_t)g_TooltipBackdropSurface,
     0,
     0,
     0,
@@ -1514,7 +1514,7 @@ int Tooltip_RestoreBackdrop(void)
     g_TooltipRight - g_TooltipLeft,
     g_TooltipTop,
     g_TooltipLeft);
-  return Render_Present((int)g_RenderState);
+  return Render_Present((int)(intptr_t)g_RenderState);
 }
 // 526EF4: using guessed type int g_TooltipBackdropSurface;
 // 526EF8: using guessed type int g_TooltipTop;

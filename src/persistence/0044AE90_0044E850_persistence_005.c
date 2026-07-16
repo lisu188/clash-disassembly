@@ -97,7 +97,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
   do
   {
     tileSrc = tileScratchBuffer;
-    for ( i = 0; i != 1400; *(_WORD *)(i + tileByteOffset + gameData - 14) = tileValue )
+    for ( i = 0; i != 1400; *(_WORD *)(uintptr_t)(i + tileByteOffset + gameData - 14) = tileValue )
     {
       i += 14;
       tileValue = *tileSrc++;
@@ -112,7 +112,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
   do
   {
     layerSrc = layerRow;
-    for ( j = 0; j != 1400; *(_WORD *)(j + layerByteOffset + gameData - 12) = layerValue )
+    for ( j = 0; j != 1400; *(_WORD *)(uintptr_t)(j + layerByteOffset + gameData - 12) = layerValue )
     {
       j += 14;
       layerValue = *layerSrc++;
@@ -131,7 +131,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
     {
       ++layer2Src;
       layer2CellAddr = layer2ByteOffset + gameData + k;
-      *(_WORD *)(layer2CellAddr + 4) = *(layer2Src - 1);
+      *(_WORD *)(uintptr_t)(layer2CellAddr + 4) = *(layer2Src - 1);
     }
     layer2ByteOffset += 1400;
     layer2Row += 200;
@@ -155,13 +155,13 @@ int  Map_LoadFromFile(uintptr_t mapName)
   }
   while ( trapRowIndex < 100 );
   Compat_QueryRead(readQueryHandle, (void *)(uintptr_t)(unsigned int)(gameData + MAP_THEME_INDEX_OFFSET), 1);
-  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &readQueryHandle);
+  Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &readQueryHandle);
   Compat_FreeLow32Bytes(scratchAlloc);
   widthScanOffset = 0;
   mapWidthTiles = 0;
   do
   {
-    if ( *(unsigned __int16 *)(gameData + widthScanOffset) == 0xFFFF )
+    if ( *(unsigned __int16 *)(uintptr_t)(gameData + widthScanOffset) == 0xFFFF )
       break;
     widthScanOffset += 1400;
     ++mapWidthTiles;
@@ -171,7 +171,7 @@ int  Map_LoadFromFile(uintptr_t mapName)
   mapHeightTiles = 0;
   for ( n = 0; n < 1400; n += 14 )
   {
-    if ( *(unsigned __int16 *)(gameData + n) == 0xFFFF )
+    if ( *(unsigned __int16 *)(uintptr_t)(gameData + n) == 0xFFFF )
       break;
     ++mapHeightTiles;
   }
@@ -182,10 +182,10 @@ int  Map_LoadFromFile(uintptr_t mapName)
   Rules_RebuildCastleSiteFacts();
   Render_CreateSprite();
   UI_ClearTileHighlight(0);
-  *(_DWORD *)(gameData + 147147) = 1;
-  *(_DWORD *)(gameData + 147151) = 0;
-  *(_DWORD *)(gameData + 147155) = 0;
-  *(_DWORD *)(gameData + 147159) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + 147147) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 147151) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + 147155) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + 147159) = 0;
   MAP_VIEW_LEFT = 0;
   MAP_VIEW_TOP = 0;
   GAME_TURN_COUNTER = 1;
@@ -194,10 +194,10 @@ int  Map_LoadFromFile(uintptr_t mapName)
   TURN_OWNER_PLAYER_INDEX = VIEWED_PLAYER_INDEX;
   for ( ii = 0; ii != 362500; ii += 725 )
   {
-    for ( jj = 0; jj != 310; *(_WORD *)(jj + ii + gameData + 147149) = -1 )
+    for ( jj = 0; jj != 310; *(_WORD *)(uintptr_t)(jj + ii + gameData + 147149) = -1 )
       jj += 31;
   }
-  for ( kk = 0; kk != 46700; *(_BYTE *)(gameData + kk + 509211) = -1 )
+  for ( kk = 0; kk != 46700; *(_BYTE *)(uintptr_t)(gameData + kk + 509211) = -1 )
     kk += 467;
   tileInitRowOffset = 0;
   tileInitByteRowOffset = 0;
@@ -208,10 +208,10 @@ int  Map_LoadFromFile(uintptr_t mapName)
     tileInitColByteOffset = 0;
     do
     {
-      *(_WORD *)(tileInitRowOffset + gameData + tileInitColByteOffset + TILE_MAP_OFFSET) = -1;
+      *(_WORD *)(uintptr_t)(tileInitRowOffset + gameData + tileInitColByteOffset + TILE_MAP_OFFSET) = -1;
       ++tileInitColIndex;
       tileInitColByteOffset += 2;
-      *(_BYTE *)(tileInitColIndex + tileInitRowBase + gameData + 576373) = 0;
+      *(_BYTE *)(uintptr_t)(tileInitColIndex + tileInitRowBase + gameData + 576373) = 0;
     }
     while ( tileInitColIndex < 100 );
     tileInitRowOffset += 200;
@@ -219,13 +219,13 @@ int  Map_LoadFromFile(uintptr_t mapName)
   }
   while ( tileInitRowOffset != 20000 );
   optionsCopyDst = gameData + 147147;
-  qmemcpy((void *)(gameData + 147147), &g_OptionsConfigRecordBase, 0x18u);
+  qmemcpy((void *)(uintptr_t)(gameData + 147147), &g_OptionsConfigRecordBase, 0x18u);
   optionsCopyDst += 24;
-  *(_WORD *)optionsCopyDst = *((_WORD *)&g_OptionsConfigRecordBase + 12);
-  *(_BYTE *)(optionsCopyDst + 2) = *((_BYTE *)&g_OptionsConfigRecordBase + 26);
+  *(_WORD *)(uintptr_t)optionsCopyDst = *((_WORD *)&g_OptionsConfigRecordBase + 12);
+  *(_BYTE *)(uintptr_t)(optionsCopyDst + 2) = *((_BYTE *)&g_OptionsConfigRecordBase + 26);
   ACTIVE_MISSION_INDEX = -1;
   result = gameData;
-  *(_BYTE *)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
+  *(_BYTE *)(uintptr_t)(gameData + MISSION_FAILURE_FLAG_OFFSET) = 0;
   return result;
 }
 // 44B059: variable 'm' is possibly undefined
@@ -255,15 +255,15 @@ char Scenario_SetupSirArthurRosterVariantA(void)
 
   for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
-  *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
-  *(_DWORD *)(gameData + 141447) = 1;
-  *(_DWORD *)(gameData + 142870) = 1;
-  *(_DWORD *)(gameData + 140051) = 0;
-  *(_DWORD *)(gameData + 140051) = 0;
-  *(_DWORD *)(gameData + 142897) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 141447) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 142870) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 140051) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + 140051) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + 142897) = 0;
   PLAYER_MINIMAP_VISIBLE(0) = 1;
   arthurNameSrc = aSirArthur;
-  arthurNameDst = (char *)(gameData + 140028);
+  arthurNameDst = (char *)(uintptr_t)(gameData + 140028);
   do
   {
     arthurChar0 = *arthurNameSrc;
@@ -277,7 +277,7 @@ char Scenario_SetupSirArthurRosterVariantA(void)
   }
   while ( arthurChar1 );
   lesterNameSrc = aLester;
-  lesterNameDst = (char *)(gameData + 141451);
+  lesterNameDst = (char *)(uintptr_t)(gameData + 141451);
   do
   {
     lesterChar0 = *lesterNameSrc;
@@ -291,7 +291,7 @@ char Scenario_SetupSirArthurRosterVariantA(void)
   }
   while ( lesterChar1 );
   computerNameSrc = aComputer;
-  computerNameDst = (char *)(gameData + 142874);
+  computerNameDst = (char *)(uintptr_t)(gameData + 142874);
   do
   {
     computerChar0 = *computerNameSrc;
@@ -305,7 +305,7 @@ char Scenario_SetupSirArthurRosterVariantA(void)
   }
   while ( computerChar1 );
   tomekNameSrc = aTomek;
-  tomekNameDst = (char *)(gameData + 144297);
+  tomekNameDst = (char *)(uintptr_t)(gameData + 144297);
   do
   {
     result = *tomekNameSrc;
@@ -345,13 +345,13 @@ char Scenario_SetupSirArthurRosterVariantB(void)
 
   for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
-  *(_DWORD *)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
-  *(_DWORD *)(gameData + 142870) = 1;
-  *(_DWORD *)(gameData + 140051) = 1;
-  *(_DWORD *)(gameData + 142897) = 0;
+  *(_DWORD *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 142870) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 140051) = 1;
+  *(_DWORD *)(uintptr_t)(gameData + 142897) = 0;
   PLAYER_MINIMAP_VISIBLE(0) = 1;
   arthurNameSrc = aSirArthur_0;
-  arthurNameDst = (char *)(gameData + 140028);
+  arthurNameDst = (char *)(uintptr_t)(gameData + 140028);
   do
   {
     arthurChar0 = *arthurNameSrc;
@@ -365,7 +365,7 @@ char Scenario_SetupSirArthurRosterVariantB(void)
   }
   while ( arthurChar1 );
   lesterNameSrc = aLester_0;
-  lesterNameDst = (char *)(gameData + 141451);
+  lesterNameDst = (char *)(uintptr_t)(gameData + 141451);
   do
   {
     lesterChar0 = *lesterNameSrc;
@@ -379,7 +379,7 @@ char Scenario_SetupSirArthurRosterVariantB(void)
   }
   while ( lesterChar1 );
   computerNameSrc = aComputer_0;
-  computerNameDst = (char *)(gameData + 142874);
+  computerNameDst = (char *)(uintptr_t)(gameData + 142874);
   do
   {
     computerChar0 = *computerNameSrc;
@@ -393,7 +393,7 @@ char Scenario_SetupSirArthurRosterVariantB(void)
   }
   while ( computerChar1 );
   tomekNameSrc = aTomek_0;
-  tomekNameDst = (char *)(gameData + 144297);
+  tomekNameDst = (char *)(uintptr_t)(gameData + 144297);
   do
   {
     result = *tomekNameSrc;
@@ -434,65 +434,65 @@ _DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
 
   Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 4);
   Unit_Create(UNIT_TYPE_RAM, 0, 5, 0, 5);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
-  Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
-  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, v3);
-  *(_DWORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510112) = 1000;
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557384), *(unsigned __int16 *)(uintptr_t)(gameData + 557382), 0, a2, a3);
+  Building_New(1, *(unsigned __int16 *)(uintptr_t)(gameData + 557382), a3, aCantbelly_3, 1);
+  *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, v3);
+  *(_DWORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510112) = 1000;
   gameDataBase = gameData;
-  buildingRecordOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-  buildingFlagsByte = *(_BYTE *)(buildingRecordOffset + gameData + 510118) & 0xF8;
-  *(_BYTE *)(buildingRecordOffset + gameData + 510118) = buildingFlagsByte;
-  *(_BYTE *)(buildingRecordOffset + gameDataBase + 510118) = buildingFlagsByte | 2;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 2u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 1u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 8u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 4u;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 0x10u;
-  *(_DWORD *)(gameData + 140063) = 0;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510119) = 33;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510120) = 2;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510125) = 34;
-  *(_BYTE *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510126) = 4;
+  buildingRecordOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  buildingFlagsByte = *(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + 510118) & 0xF8;
+  *(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + 510118) = buildingFlagsByte;
+  *(_BYTE *)(uintptr_t)(buildingRecordOffset + gameDataBase + 510118) = buildingFlagsByte | 2;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 2u;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 1u;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 8u;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 4u;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510090) |= 0x10u;
+  *(_DWORD *)(uintptr_t)(gameData + 140063) = 0;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510119) = 33;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510120) = 2;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510125) = 34;
+  *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 510126) = 4;
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
+    (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557382) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
   Unit_Create(UNIT_TYPE_BUILDER, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
   Unit_Create(UNIT_TYPE_ARCHER, 0, 7, 0, 7);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557788), *(unsigned __int16 *)(uintptr_t)(gameData + 557586), 0, a2, a3);
   Unit_Create(UNIT_TYPE_CYCLOP, 0, v8, 0, 7);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557788), *(unsigned __int16 *)(uintptr_t)(gameData + 557586), 0, a2, a3);
   Unit_Create(UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, 0, v9, 0, 7);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557788), *(unsigned __int16 *)(uintptr_t)(gameData + 557586), 0, a2, a3);
   Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, 0, v10, 0, 7);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  *(_BYTE *)(gameData + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557788), *(unsigned __int16 *)(uintptr_t)(gameData + 557586), 0, a2, a3);
+  *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 557586) + 147189) = 1;
   Unit_Create(UNIT_TYPE_PEGASUS, 2, 10, 0, 7);
   Unit_Create(UNIT_TYPE_WINGER, 0, 10, 0, 8);
   Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 0, 5, 0, 45);
   Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, 0, 5, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_EAGLE, 0, v11, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_RAM, 0, v12, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v13, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v14, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v15, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v16, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
   Unit_Create(UNIT_TYPE_PIKEMAN, 0, v17, 0, 46);
-  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
-  *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, this);
+  Unit_AddToGroup(*(unsigned __int16 *)(uintptr_t)(gameData + 557466), *(unsigned __int16 *)(uintptr_t)(gameData + 557464), 0, a2, a3);
+  Building_New(0, *(unsigned __int16 *)(uintptr_t)(gameData + 557464), a3, aKopegon, 1);
+  *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, this);
   result = Building_LogBuiltCastleFacts(
-             (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
+             (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 557464) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET));
   g_CurrentPlayerIndex = v19;
   return result;
 }
@@ -534,20 +534,20 @@ signed int Game_InitPlayerViewState(void)
     {
       castleIndex = 0;
       castleRecordOffset = 0;
-      while ( *(unsigned __int8 *)(gameData + castleRecordOffset + 509676) != playerIndex )
+      while ( *(unsigned __int8 *)(uintptr_t)(gameData + castleRecordOffset + 509676) != playerIndex )
       {
         castleRecordOffset += BUILDING_RECORD_SIZE;
         ++castleIndex;
         if ( castleRecordOffset >= 46700 )
           goto LABEL_13;
       }
-      PLAYER_CAMERA_LEFT(playerIndex) = *(unsigned __int8 *)(gameData + castleRecordOffset + BUILDING_TABLE_OFFSET) - 4;
+      PLAYER_CAMERA_LEFT(playerIndex) = *(unsigned __int8 *)(uintptr_t)(gameData + castleRecordOffset + BUILDING_TABLE_OFFSET) - 4;
       if ( PLAYER_CAMERA_LEFT(playerIndex) < 0 )
         PLAYER_CAMERA_LEFT(playerIndex) = 0;
       maxCameraLeft = MAP_WIDTH_TILES - 9;
       if ( maxCameraLeft < PLAYER_CAMERA_LEFT(playerIndex) )
         PLAYER_CAMERA_LEFT(playerIndex) = maxCameraLeft;
-      PLAYER_CAMERA_TOP(playerIndex) = *(unsigned __int8 *)(BUILDING_RECORD_SIZE * castleIndex + gameData + 509675) - 3;
+      PLAYER_CAMERA_TOP(playerIndex) = *(unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * castleIndex + gameData + 509675) - 3;
       if ( PLAYER_CAMERA_TOP(playerIndex) < 0 )
         PLAYER_CAMERA_TOP(playerIndex) = 0;
       maxCameraTop = MAP_HEIGHT_TILES - 7;
@@ -640,140 +640,140 @@ DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD logCtx, double s
   switch ( scenarioIndex )
   {
     case 0:
-      *(_WORD *)gameData = 0;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
+      *(_WORD *)(uintptr_t)gameData = 0;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 1:
-      *(_WORD *)gameData = 0;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
+      *(_WORD *)(uintptr_t)gameData = 0;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 2:
-      *(_WORD *)gameData = 0;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
+      *(_WORD *)(uintptr_t)gameData = 0;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_ARCHER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 3:
-      *(_WORD *)gameData = 4;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 4;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
+      *(_WORD *)(uintptr_t)gameData = 4;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 4;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 4:
-      *(_WORD *)gameData = 9;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 9;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
+      *(_WORD *)(uintptr_t)gameData = 9;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 9;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_CROSSBOWER, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_MUSKETEER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 5:
-      *(_WORD *)gameData = 21;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 21;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
+      *(_WORD *)(uintptr_t)gameData = 21;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 21;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_HEAVY_SPEARMAN, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_CATAPULT, UNIT_TYPE_CYCLOP, UNIT_TYPE_SKELETON, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 6:
-      *(_WORD *)gameData = 9;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 9;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
+      *(_WORD *)(uintptr_t)gameData = 9;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 9;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 0;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_SKELETON, UNIT_TYPE_WORM, UNIT_TYPE_KNIGHTS, -1);
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
       goto LABEL_3;
     case 7:
-      *(_WORD *)gameData = 4;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 4;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
+      *(_WORD *)(uintptr_t)gameData = 4;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 4;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_RAM, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createCastle(spawnArg, 1, 0, 1, 2, aZamek, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_CYCLOP, -1);
       return Battle_RunTacticalCombat(
-               (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET),
+               (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET) + gameData + UNIT_STACK_TABLE_OFFSET),
                0,
                0,
-               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
+               (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
                logCtx,
                0);
     case 8:
-      *(_WORD *)gameData = 0;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
+      *(_WORD *)(uintptr_t)gameData = 0;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 0;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 1;
       createUnit(spawnArg, 0, 0, 1, UNIT_TYPE_CANNON, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createCastle(spawnArg, 1, 0, 0, 2, aZamek_0, UNIT_TYPE_CANNON, UNIT_TYPE_WIZARD, UNIT_TYPE_LIGHT_CAVALRY, -1);
       return Battle_RunTacticalCombat(
-               (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET)),
+               (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET)),
                0,
                0,
-               (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
+               (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + 556574) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET),
                logCtx,
                0);
     case 9:
-      *(_WORD *)gameData = 28;
-      *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE) = 28;
-      *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
+      *(_WORD *)(uintptr_t)gameData = 28;
+      *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE) = 28;
+      *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) = 2;
       createUnit(spawnArg, 0, 0, 0, UNIT_TYPE_GHOST, UNIT_TYPE_WIZARD, UNIT_TYPE_WINGER, -1);
       v8 = gameData;
-      attackerFlagRecordOffset = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      attackerFlagByte = *(_BYTE *)(gameData + attackerFlagRecordOffset + 147285) & 0xFC;
-      *(_BYTE *)(gameData + attackerFlagRecordOffset + 147285) = attackerFlagByte;
-      *(_BYTE *)(v8 + attackerFlagRecordOffset + 147285) = attackerFlagByte | 1;
+      attackerFlagRecordOffset = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      attackerFlagByte = *(_BYTE *)(uintptr_t)(gameData + attackerFlagRecordOffset + 147285) & 0xFC;
+      *(_BYTE *)(uintptr_t)(gameData + attackerFlagRecordOffset + 147285) = attackerFlagByte;
+      *(_BYTE *)(uintptr_t)(v8 + attackerFlagRecordOffset + 147285) = attackerFlagByte | 1;
       createUnit(spawnArg, 1, 0, 1, UNIT_TYPE_DRAGON, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, -1);
       v11 = gameData;
-      defenderFlagRecordOffset1 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
-      defenderFlagByte1 = *(_BYTE *)(gameData + defenderFlagRecordOffset1 + 147223) & 0xFC;
-      *(_BYTE *)(gameData + defenderFlagRecordOffset1 + 147223) = defenderFlagByte1;
-      *(_BYTE *)(v11 + defenderFlagRecordOffset1 + 147223) = defenderFlagByte1 | 1;
+      defenderFlagRecordOffset1 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574);
+      defenderFlagByte1 = *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset1 + 147223) & 0xFC;
+      *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset1 + 147223) = defenderFlagByte1;
+      *(_BYTE *)(uintptr_t)(v11 + defenderFlagRecordOffset1 + 147223) = defenderFlagByte1 | 1;
       v14 = gameData;
-      defenderFlagRecordOffset2 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
-      defenderFlagByte2 = *(_BYTE *)(gameData + defenderFlagRecordOffset2 + 147316) & 0xFC;
-      *(_BYTE *)(gameData + defenderFlagRecordOffset2 + 147316) = defenderFlagByte2;
-      *(_BYTE *)(v14 + defenderFlagRecordOffset2 + 147316) = defenderFlagByte2 | 1;
+      defenderFlagRecordOffset2 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574);
+      defenderFlagByte2 = *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset2 + 147316) & 0xFC;
+      *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset2 + 147316) = defenderFlagByte2;
+      *(_BYTE *)(uintptr_t)(v14 + defenderFlagRecordOffset2 + 147316) = defenderFlagByte2 | 1;
       v17 = gameData;
-      defenderFlagRecordOffset3 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574);
-      defenderFlagByte3 = *(_BYTE *)(gameData + defenderFlagRecordOffset3 + 147378) & 0xFC;
-      *(_BYTE *)(gameData + defenderFlagRecordOffset3 + 147378) = defenderFlagByte3;
-      *(_BYTE *)(v17 + defenderFlagRecordOffset3 + 147378) = defenderFlagByte3 | 1;
+      defenderFlagRecordOffset3 = UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574);
+      defenderFlagByte3 = *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset3 + 147378) & 0xFC;
+      *(_BYTE *)(uintptr_t)(gameData + defenderFlagRecordOffset3 + 147378) = defenderFlagByte3;
+      *(_BYTE *)(uintptr_t)(v17 + defenderFlagRecordOffset3 + 147378) = defenderFlagByte3 | 1;
       unitStackTableBase = gameData + UNIT_STACK_TABLE_OFFSET;
-      attackerStackIndex = *(unsigned __int16 *)(gameData + TILE_MAP_OFFSET);
-      defenderStackPtr = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(gameData + 556574));
+      attackerStackIndex = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_MAP_OFFSET);
+      defenderStackPtr = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(gameData + 556574));
       attackerStackScaledIndex = 144 * (unsigned __int16)attackerStackIndex;
 LABEL_3:
-      result = Battle_RunTacticalCombat((__int16 *)(unitStackTableBase + 5 * (attackerStackIndex + attackerStackScaledIndex)), defenderStackPtr, 0, 0, logCtx, 0);
+      result = Battle_RunTacticalCombat((__int16 *)(uintptr_t)(unitStackTableBase + 5 * (attackerStackIndex + attackerStackScaledIndex)), defenderStackPtr, 0, 0, logCtx, 0);
       break;
     default:
       result = 1;
@@ -828,7 +828,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
 
   v4 = sprintf_(mapPathBuffer, "multi%d.map", mapIndex + 1);
   Map_LoadFromFile((uintptr_t)mapPathBuffer);
-  qmemcpy((void *)(gameData + PLAYER_RUNTIME_STATE_OFFSET), (const void *)playerStatesSource, PLAYER_DATA_STRIDE * 5);
+  qmemcpy((void *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET), (const void *)playerStatesSource, PLAYER_DATA_STRIDE * 5);
   MiniMap_CreateSurface((DWORD)playerStatesSource);
   religionToggle = 1;
   playerIndex = 0;
@@ -837,7 +837,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
   do
   {
     playerRecordPtr = playerRecordOffset + gameData;
-    if ( *(_DWORD *)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
+    if ( *(_DWORD *)(uintptr_t)(playerRecordOffset + gameData + PLAYER_RUNTIME_STATE_OFFSET) )
     {
       startRow = g_MultiplayerStartRows[startPosTableIndex / 4];
       startColumn = g_MultiplayerStartColumns[startPosTableIndex / 4];
@@ -850,106 +850,106 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
       rowPlus2ByteOffset = 200 * (startRow + 2);
       rowPlus1ByteOffset = 200 * (startRow + 1);
       startColumnDoubled = 2 * startColumn;
-      if ( *(_DWORD *)(playerRecordPtr + 140051) )
+      if ( *(_DWORD *)(uintptr_t)(playerRecordPtr + 140051) )
       {
         Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRow, 0, startColumn);
         Unit_Create(UNIT_TYPE_PEASANT, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
-        Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(rowByteOffset + gameData + startColumnDoubled + TILE_MAP_OFFSET), v4, aCantbelly, 1);
-        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
-        buildingRecordByteOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-        *(_DWORD *)(buildingRecordByteOffset + gameData + 510112) += 50;
+        Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(uintptr_t)(rowByteOffset + gameData + startColumnDoubled + TILE_MAP_OFFSET), v4, aCantbelly, 1);
+        *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+        buildingRecordByteOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+        *(_DWORD *)(uintptr_t)(buildingRecordByteOffset + gameData + 510112) += 50;
         Unit_UpdatePerTurn(
-          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v13);
         cavalryColumn = colPlus2;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
+          (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, cavalryColumn);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colPlus2);
         Unit_Create(UNIT_TYPE_ARCHER, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_FORESTER, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRowPlus1, 0, colPlus3);
         Unit_Create(UNIT_TYPE_ARCHER, playerIndex, rowPlus2, 0, colPlus3);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, rowPlus2, 0, colMinus1);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
@@ -957,91 +957,91 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
       else
       {
         builderColumn = startColumn;
-        *(_DWORD *)(playerRecordPtr + 140063) = religionToggle;
+        *(_DWORD *)(uintptr_t)(playerRecordPtr + 140063) = religionToggle;
         LOBYTE(religionToggle) = religionToggle ^ 1;
         Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRow, 0, builderColumn);
         Unit_Create(UNIT_TYPE_PIKEMAN, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_FORESTER, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_PEASANT, playerIndex, startRowPlus1, 0, startColumn);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
-          *(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + TILE_MAP_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET),
           0,
           startRowPlus1,
           v4);
-        Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + TILE_MAP_OFFSET), v4, aCantbelly_0, 1);
-        *(_WORD *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
-        castleRecordByteOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-        *(_DWORD *)(castleRecordByteOffset + gameData + 510112) += 100;
+        Building_NewAt(startRow, startColumn, 2, *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + TILE_MAP_OFFSET), v4, aCantbelly_0, 1);
+        *(_WORD *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + 509690) = 0;
+        castleRecordByteOffset = BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+        *(_DWORD *)(uintptr_t)(castleRecordByteOffset + gameData + 510112) += 100;
         Unit_UpdatePerTurn(
-          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
+          BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET,
           v19);
         cavalryColumn2 = colPlus2;
         Building_LogBuiltCastleFacts(
-          (unsigned __int8 *)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
+          (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (*(unsigned __int16 *)(uintptr_t)(gameData + rowByteOffset + startColumnDoubled + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE)
                             + gameData
                             + BUILDING_TABLE_OFFSET));
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, startRow, 0, cavalryColumn2);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colPlus2);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_FORESTER, playerIndex, rowPlus2, 0, colPlus2);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556378),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556378),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_BUILDER, playerIndex, startRowPlus1, 0, colPlus3);
         Unit_Create(UNIT_TYPE_BUILDER, playerIndex, rowPlus2, 0, colPlus3);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_ARCHER, playerIndex, rowPlus2, 0, colPlus3);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
-          *(unsigned __int16 *)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus2ByteOffset + gameData + 556380),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus1ByteOffset + startColumnDoubled + 556380),
           0,
           startRowPlus1,
           v4);
@@ -1050,109 +1050,109 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int mapIndex, uintptr_t pl
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRow, 0, colMinus1);
         rowMinus1ByteOffset = 200 * rowMinus1;
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + 200 * rowMinus1 + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + 200 * rowMinus1 + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_PIKEMAN, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_PIKEMAN, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_PEASANT, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
         Unit_Create(UNIT_TYPE_GORAL, playerIndex, startRow, 0, colMinus1);
         Unit_AddToGroup(
-          *(unsigned __int16 *)(startColumnDoubled + rowByteOffset + gameData + 556372),
-          *(unsigned __int16 *)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
+          *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowByteOffset + gameData + 556372),
+          *(unsigned __int16 *)(uintptr_t)(gameData + rowMinus1ByteOffset + startColumnDoubled + 556372),
           0,
           startRowPlus1,
           v4);
-        if ( *(int *)(playerRecordOffset + gameData + 140055) > 0 )
+        if ( *(int *)(uintptr_t)(playerRecordOffset + gameData + 140055) > 0 )
         {
           Unit_Create(UNIT_TYPE_PEASANT, playerIndex, rowPlus2, 0, colMinus1);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_ARCHER, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_ARCHER, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
           Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, playerIndex, startRowPlus1, 0, colMinus1);
           Unit_AddToGroup(
-            *(unsigned __int16 *)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
-            *(unsigned __int16 *)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
+            *(unsigned __int16 *)(uintptr_t)(startColumnDoubled + rowPlus1ByteOffset + gameData + 556372),
+            *(unsigned __int16 *)(uintptr_t)(gameData + rowPlus2ByteOffset + startColumnDoubled + 556372),
             0,
             startRowPlus1,
             v4);
@@ -1204,7 +1204,7 @@ char  Player_AssignRandomUniqueRulerNames(int requestedNameCount, int *nameSlotP
   int *slotCursor; // [esp+18h] [ebp-18h]
 
   nameCount = requestedNameCount;
-  result = (char)nameSlotPtrs;
+  result = (char)(intptr_t)nameSlotPtrs;
   assignedCount = 0;
   qmemcpy(usedNameHistory, &g_RulerNameHistorySeed, sizeof(usedNameHistory));
   if ( nameCount > 0 )
@@ -1227,7 +1227,7 @@ char  Player_AssignRandomUniqueRulerNames(int requestedNameCount, int *nameSlotP
       if ( historyScanCount == 5 )
       {
         candidateNameChars = g_RulerNameCandidatesTable[candidateIndex];
-        destNameChars = (char *)*slotCursor;
+        destNameChars = (char *)(uintptr_t)*slotCursor;
         do
         {
           nameChar0 = *candidateNameChars;
@@ -1240,7 +1240,7 @@ char  Player_AssignRandomUniqueRulerNames(int requestedNameCount, int *nameSlotP
           destNameChars += 2;
         }
         while ( nameChar1 );
-        result = Str_TitleCase((_BYTE *)*slotCursor, 5, candidateIndex);
+        result = Str_TitleCase((_BYTE *)(uintptr_t)*slotCursor, 5, candidateIndex);
         usedNameHistory[assignedCount++] = v11;
         ++slotCursor;
         if ( assignedCount >= nameCount )
@@ -1299,7 +1299,7 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
   unsigned __int16 fadeInWidth; // [esp+44h] [ebp-8h]
 
   previousRenderDevice = g_RenderDevice;
-  result = DD_IsLost((int)g_RenderState);
+  result = DD_IsLost((int)(intptr_t)g_RenderState);
   if ( result )
   {
     while ( 1 )
@@ -1324,9 +1324,9 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
       tooltipTextBottom = UI_GetTextXOffset(g_ActiveTextSpriteSlot) + mouseY;
       tooltipLeft = tooltipBaseLeft;
       tooltipBottom = tooltipTextBottom;
-      if ( tooltipBaseLeft + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12) > tooltipRight )
-        tooltipRight = tooltipBaseLeft + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12);
-      cursorHeight = *(_DWORD *)(g_ActiveCursorDescriptorPtr + 16);
+      if ( tooltipBaseLeft + *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 12) > tooltipRight )
+        tooltipRight = tooltipBaseLeft + *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 12);
+      cursorHeight = *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 16);
       v9 = tooltipTextBottom;
       if ( tooltipTop + cursorHeight > tooltipTextBottom )
         tooltipBottom = tooltipTop + cursorHeight;
@@ -1343,23 +1343,23 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
         LOWORD(tooltipBottom) = 479;
         tooltipTop -= v11 - 479;
       }
-      Surface = (_DWORD *)Mem_Alloc(188, clampedRight, v11, v9);
+      Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, clampedRight, v11, v9);
       if ( Surface )
       {
         LOWORD(v11) = tooltipBottom - tooltipTop + 1;
-        Surface = Render_CreateSurface((int)Surface, tooltipRight - tooltipLeft + 1, v11);
+        Surface = Render_CreateSurface((int)(intptr_t)Surface, tooltipRight - tooltipLeft + 1, v11);
       }
-      savedBackgroundSurface = (int)Surface;
-      tooltipSurfacePtr = (_DWORD *)Mem_Alloc(188, v13, v11, v9);
+      savedBackgroundSurface = (int)(intptr_t)Surface;
+      tooltipSurfacePtr = (_DWORD *)(uintptr_t)Mem_Alloc(188, v13, v11, v9);
       if ( tooltipSurfacePtr )
-        tooltipSurfacePtr = Render_CreateSurface((int)tooltipSurfacePtr, tooltipRight - tooltipLeft + 1, tooltipBottom - tooltipTop + 1);
-      tooltipSurface = (int)tooltipSurfacePtr;
-      Render_FillRect(0, (_DWORD *)savedBackgroundSurface, (unsigned __int16)tooltipTop, (unsigned __int16)tooltipLeft, tooltipRight, tooltipBottom, 0, 0);
-      Render_SaveBackbuffer((int)&g_MainRenderDevice);
+        tooltipSurfacePtr = Render_CreateSurface((int)(intptr_t)tooltipSurfacePtr, tooltipRight - tooltipLeft + 1, tooltipBottom - tooltipTop + 1);
+      tooltipSurface = (int)(intptr_t)tooltipSurfacePtr;
+      Render_FillRect(0, (_DWORD *)(uintptr_t)savedBackgroundSurface, (unsigned __int16)tooltipTop, (unsigned __int16)tooltipLeft, tooltipRight, tooltipBottom, 0, 0);
+      Render_SaveBackbuffer((int)(intptr_t)&g_MainRenderDevice);
       Render_Pump();
-      Render_FillRect(0, (_DWORD *)tooltipSurface, (unsigned __int16)tooltipTop, (unsigned __int16)tooltipLeft, tooltipRight, tooltipBottom, 0, 0);
-      Render_Present((int)g_RenderState);
-      g_RenderDevice = (_UNKNOWN *)tooltipSurface;
+      Render_FillRect(0, (_DWORD *)(uintptr_t)tooltipSurface, (unsigned __int16)tooltipTop, (unsigned __int16)tooltipLeft, tooltipRight, tooltipBottom, 0, 0);
+      Render_Present((int)(intptr_t)g_RenderState);
+      g_RenderDevice = (_UNKNOWN *)(uintptr_t)tooltipSurface;
       UI_DrawText(0, 0, *(_DWORD *)&tooltipZoneTable[2 * (unsigned __int8)g_LanguageIndex + 4]);
       fadeStartTime = Time_Now(v18, v17);
       v20 = 30;
@@ -1370,8 +1370,8 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
         fadeInNow = Time_Now(fadeStartTime, v21);
         Render_BlendSurfaceRect(0, savedBackgroundSurface, 0, tooltipSurface, 0, fadeInWidth, fadeInHeight, tooltipLeft, tooltipTop, 255 * (fadeInNow - v23) / 0x1Eu);
       }
-      Render_FillRect((_DWORD *)tooltipSurface, 0, 0, 0, fadeInWidth, fadeInHeight, tooltipLeft, tooltipTop);
-      Render_FlipRect((int)g_RenderState, 0);
+      Render_FillRect((_DWORD *)(uintptr_t)tooltipSurface, 0, 0, 0, fadeInWidth, fadeInHeight, tooltipLeft, tooltipTop);
+      Render_FlipRect((int)(intptr_t)g_RenderState, 0);
       fadeOutStartTime = Time_Now(v25, v24);
       v26 = tooltipLeft;
       v27 = tooltipTop;
@@ -1382,12 +1382,12 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
         fadeOutNow = Time_Now(v28, fadeOutStartTime);
         Render_BlendSurfaceRect(0, tooltipSurface, 0, savedBackgroundSurface, 0, fadeOutWidth, fadeOutHeight, tooltipLeft, tooltipTop, 255 * (fadeOutNow - v30) / 0x1Eu);
       }
-      Render_FillRect((_DWORD *)savedBackgroundSurface, 0, 0, 0, fadeOutWidth, fadeOutHeight, tooltipLeft, tooltipTop);
+      Render_FillRect((_DWORD *)(uintptr_t)savedBackgroundSurface, 0, 0, 0, fadeOutWidth, fadeOutHeight, tooltipLeft, tooltipTop);
       if ( savedBackgroundSurface )
-        (**(void (***)(void))(savedBackgroundSurface + 184))();
+        (**(void (***)(void))(uintptr_t)(savedBackgroundSurface + 184))();
       if ( tooltipSurface )
       {
-        (**(void (***)(void))(tooltipSurface + 184))();
+        (**(void (***)(void))(uintptr_t)(tooltipSurface + 184))();
         tooltipZoneTable += 10;
       }
       else
@@ -1396,7 +1396,7 @@ LABEL_4:
         tooltipZoneTable += 10;
       }
     }
-    result = (BOOL)previousRenderDevice;
+    result = (BOOL)(intptr_t)previousRenderDevice;
     g_RenderDevice = previousRenderDevice;
   }
   return result;
@@ -1442,11 +1442,11 @@ signed int  Prisoner_QueueCapturedUnit(
 
   capturedOwner = capturedUnitOwner;
   playerRecordOffset = PLAYER_DATA_STRIDE * playerIndex;
-  Debug_Log(capturedUnitOwner, playerRecordOffset, a5, (int)aPrisoner_addto);
+  Debug_Log(capturedUnitOwner, playerRecordOffset, a5, (int)(intptr_t)aPrisoner_addto);
   prisonerQueueBase = gameData + PLAYER_RUNTIME_STATE_OFFSET + playerRecordOffset;
   slotScanPtr = prisonerQueueBase;
   result = 0;
-  while ( *(char *)(slotScanPtr + 1357) != -1 )
+  while ( *(char *)(uintptr_t)(slotScanPtr + 1357) != -1 )
   {
     ++result;
     slotScanPtr += 6;
@@ -1458,10 +1458,10 @@ signed int  Prisoner_QueueCapturedUnit(
     }
   }
   result *= 3;
-  *(_WORD *)(prisonerQueueBase + 2 * result + 1359) = a3;
-  *(_BYTE *)(prisonerQueueBase + 2 * result + 1357) = capturedUnitType;
-  *(_BYTE *)(prisonerQueueBase + 2 * result + 1358) = capturedOwner;
-  *(_WORD *)(prisonerQueueBase + 2 * result + 1361) = a6;
+  *(_WORD *)(uintptr_t)(prisonerQueueBase + 2 * result + 1359) = a3;
+  *(_BYTE *)(uintptr_t)(prisonerQueueBase + 2 * result + 1357) = capturedUnitType;
+  *(_BYTE *)(uintptr_t)(prisonerQueueBase + 2 * result + 1358) = capturedOwner;
+  *(_WORD *)(uintptr_t)(prisonerQueueBase + 2 * result + 1361) = a6;
   return result;
 }
 // 44E7EC: conditional instruction was optimized away because eax.4<A

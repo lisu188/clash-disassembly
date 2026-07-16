@@ -27,17 +27,17 @@ _DWORD *__stdcall CSS_EmptySampleCache(void)
   ehFrame[3] = 0;
   for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
-    result = (_DWORD *)(channelOffset + g_SoundChannelArrayBase);
-    channelFlags = *(_BYTE *)(channelOffset + g_SoundChannelArrayBase + 36);
+    result = (_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase);
+    channelFlags = *(_BYTE *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 36);
     if ( (channelFlags & 1) != 0 || (channelFlags & 2) != 0 )
-      result = (_DWORD *)CSS_CloseChannel(i, 0);
+      result = (_DWORD *)(uintptr_t)CSS_CloseChannel(i, 0);
     ++i;
   }
   while ( g_SampleCacheListHead )
   {
-    entry = (int *)g_SampleCacheListHead;
-    g_SampleCacheListHead = *(_DWORD *)(g_SampleCacheListHead + 20);
-    result = (_DWORD *)CSS_SampleCache_FreeEntry(entry);
+    entry = (int *)(uintptr_t)g_SampleCacheListHead;
+    g_SampleCacheListHead = *(_DWORD *)(uintptr_t)(g_SampleCacheListHead + 20);
+    result = (_DWORD *)(uintptr_t)CSS_SampleCache_FreeEntry(entry);
   }
   return result;
 }
@@ -54,10 +54,10 @@ void  CSS_Channel_StartMemSound(unsigned int channelIndex, int voiceId, int volu
 
   CSS_Channel_StoreFormatParams(52 * channelIndex + g_SoundChannelArrayBase, sampleEntry[1]);
   channelBase = g_SoundChannelArrayBase;
-  *(_DWORD *)(v9 + g_SoundChannelArrayBase + 36) = 1;
-  *(_DWORD *)(v9 + channelBase + 48) = 0;
-  *(_DWORD *)(v9 + channelBase + 40) = voiceId;
-  *(_DWORD *)(channelBase + v9) = *sampleEntry;
+  *(_DWORD *)(uintptr_t)(v9 + g_SoundChannelArrayBase + 36) = 1;
+  *(_DWORD *)(uintptr_t)(v9 + channelBase + 48) = 0;
+  *(_DWORD *)(uintptr_t)(v9 + channelBase + 40) = voiceId;
+  *(_DWORD *)(uintptr_t)(channelBase + v9) = *sampleEntry;
   CSS_ChannelQueueSound(channelIndex, *sampleEntry, sampleEntry[2], sampleEntry[3], sampleEntry[1]);
   CSS_ChannelSetVolumeImmediate(channelIndex, 0);
   CSS_ChannelBeginVolumeFade(channelIndex, volume, fadeMs);
@@ -84,10 +84,10 @@ int  CSS_Channel_SelectAndPlay(int *sampleEntry, int volume, signed int fadeMs, 
     channelOffset = 0;
     do
     {
-      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
+      channelState = *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40);
         bestChannel = scanIndex;
       }
       ++scanIndex;
@@ -120,32 +120,32 @@ _DWORD * CSS_CreateSampleCacheEntry(int stream, int fileName, _DWORD *formatInfo
   CSS_StreamService_NoOpHook();
   CSS_SampleCache_MakeRoom(formatInfo[1]);
   CSS_Mem_TryAlloc(24, &entry);
-  CSS_Mem_TryAlloc(strlen((const char *)fileName) + 1, entry + 4);
-  nameDest = (_BYTE *)entry[4];
+  CSS_Mem_TryAlloc(strlen((const char *)(uintptr_t)fileName) + 1, entry + 4);
+  nameDest = (_BYTE *)(uintptr_t)entry[4];
   do
   {
-    ch = *(_BYTE *)fileName;
-    *nameDest = *(_BYTE *)fileName;
+    ch = *(_BYTE *)(uintptr_t)fileName;
+    *nameDest = *(_BYTE *)(uintptr_t)fileName;
     if ( !ch )
       break;
-    ch2 = *(_BYTE *)(fileName + 1);
+    ch2 = *(_BYTE *)(uintptr_t)(fileName + 1);
     fileName += 2;
     nameDest[1] = ch2;
     nameDest += 2;
   }
   while ( ch2 );
   CSS_Mem_TryAlloc(formatInfo[1], entry);
-  (*(void (**)(void))(*(_DWORD *)stream + 20))();
-  (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 20))();
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)g_MediaFileStreamProvider + 20))();
   entry[5] = 0;
   fieldPtr = entry + 1;
   entry[1] = *formatInfo;
   *++fieldPtr = formatInfo[1];
   fieldPtr[1] = formatInfo[2];
   if ( g_SampleCacheListHead )
-    CSS_SampleCache_AppendEntry(g_SampleCacheListHead, (int)entry);
+    CSS_SampleCache_AppendEntry(g_SampleCacheListHead, (int)(intptr_t)entry);
   else
-    g_SampleCacheListHead = (int)entry;
+    g_SampleCacheListHead = (int)(intptr_t)entry;
   g_CSS_SampleCacheBytesUsed += formatInfo[1];
   return entry;
 }
@@ -173,10 +173,10 @@ int  CSS_StartSampleVoice(int stream, int *formatInfo, int panning, int volume, 
     channelOffset = 0;
     do
     {
-      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
+      channelState = *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40);
         bestChannel = scanIndex;
       }
       ++scanIndex;
@@ -189,11 +189,11 @@ int  CSS_StartSampleVoice(int stream, int *formatInfo, int panning, int volume, 
   channelByteOffset = 52 * bestChannel;
   bufferBytes = g_CSS_StreamBufferMs * formatInfo[2] / 1000;
   sampleSize = CSS_GetFormatSampleSize(*formatInfo);
-  *(_DWORD *)(g_SoundChannelArrayBase + channelByteOffset + 20) = CSS_FileStream_New(stream, sampleSize * bufferBytes);
+  *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelByteOffset + 20) = CSS_FileStream_New(stream, sampleSize * bufferBytes);
   CSS_Channel_StartFileStream(bestChannel, formatInfo, panning, volume, fadeMs, 4);
-  *(_DWORD *)(channelByteOffset + g_SoundChannelArrayBase + 44) = 1;
+  *(_DWORD *)(uintptr_t)(channelByteOffset + g_SoundChannelArrayBase + 44) = 1;
   CSS_ChannelMarkPlaying(bestChannel);
-  return *(_DWORD *)(g_SoundChannelArrayBase + 52 * bestChannel + 40);
+  return *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + 52 * bestChannel + 40);
 }
 // 46EB80: could not find valid save-restore pair for ebx
 // 519C8C: using guessed type int dword_519C8C[];
@@ -216,7 +216,7 @@ int __stdcall CSS_ResumeStream(int soundHandle)
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++channelIndex;
@@ -225,7 +225,7 @@ int __stdcall CSS_ResumeStream(int soundHandle)
       }
       if ( channelIndex != -1 )
       {
-        *(_DWORD *)(result + g_SoundChannelArrayBase + 44) = 1;
+        *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 44) = 1;
         return CSS_ChannelMarkPlaying(channelIndex);
       }
     }
@@ -254,15 +254,15 @@ int  CSS_StartStreamVoice(int aviPlayer, int volume, int a3, DWORD panning)
   savedPanArg = a3;
   if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
-  if ( *(_WORD *)(*(_DWORD *)(aviPlayer + 363) + 2) == 1 )
+  if ( *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(aviPlayer + 363) + 2) == 1 )
     formatCode = 1;
   else
     formatCode = 3;
   formatInfo[0] = formatCode;
-  if ( *(_WORD *)(*(_DWORD *)(aviPlayer + 363) + 14) == 16 )
+  if ( *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(aviPlayer + 363) + 14) == 16 )
     ++formatInfo[0];
-  formatInfo[1] = *(_DWORD *)(aviPlayer + 251);
-  formatInfo[2] = *(_DWORD *)(*(_DWORD *)(aviPlayer + 363) + 4);
+  formatInfo[1] = *(_DWORD *)(uintptr_t)(aviPlayer + 251);
+  formatInfo[2] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(aviPlayer + 363) + 4);
   streamAdapter = IO_StreamAdapterAlloc(v7, 0, panning);
   if ( !streamAdapter )
     return 0;
@@ -274,10 +274,10 @@ int  CSS_StartStreamVoice(int aviPlayer, int volume, int a3, DWORD panning)
     channelOffset = 0;
     do
     {
-      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
+      channelState = *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40);
         bestChannel = scanIndex;
       }
       ++scanIndex;
@@ -287,9 +287,9 @@ int  CSS_StartStreamVoice(int aviPlayer, int volume, int a3, DWORD panning)
   }
   if ( bestChannel != -1 )
     CSS_CloseChannel(bestChannel, 0);
-  *(_DWORD *)(g_SoundChannelArrayBase + 52 * bestChannel + 20) = streamAdapter;
+  *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + 52 * bestChannel + 20) = streamAdapter;
   CSS_Channel_StartFileStream(bestChannel, formatInfo, panning, savedVolume, savedPanArg, 8);
-  return *(_DWORD *)(52 * bestChannel + g_SoundChannelArrayBase + 40);
+  return *(_DWORD *)(uintptr_t)(52 * bestChannel + g_SoundChannelArrayBase + 40);
 }
 // 46EDCD: variable 'v7' is possibly undefined
 // 519C8C: using guessed type int dword_519C8C[];
@@ -351,10 +351,10 @@ int __stdcall CSS_PlayMemSound(int sampleData, int formatCode, signed int dataBy
     channelOffset = 0;
     do
     {
-      channelState = *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 36);
-      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
+      channelState = *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 36);
+      if ( g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) < bestScore )
       {
-        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40);
+        bestScore = g_CSS_ChannelPriorityWeightTable[channelState] + *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40);
         bestChannel = scanIndex;
       }
       ++scanIndex;
@@ -368,10 +368,10 @@ int __stdcall CSS_PlayMemSound(int sampleData, int formatCode, signed int dataBy
   voiceId = g_CSS_VoiceSequenceCounter++;
   CSS_Channel_StoreFormatParams(52 * bestChannel + g_SoundChannelArrayBase, formatCode);
   channelBase = g_SoundChannelArrayBase;
-  *(_DWORD *)(v16 + g_SoundChannelArrayBase + 36) = 1;
-  *(_DWORD *)(v16 + channelBase + 48) = 0;
-  *(_DWORD *)(v16 + channelBase + 40) = voiceId;
-  *(_DWORD *)(v16 + channelBase) = sampleData;
+  *(_DWORD *)(uintptr_t)(v16 + g_SoundChannelArrayBase + 36) = 1;
+  *(_DWORD *)(uintptr_t)(v16 + channelBase + 48) = 0;
+  *(_DWORD *)(uintptr_t)(v16 + channelBase + 40) = voiceId;
+  *(_DWORD *)(uintptr_t)(v16 + channelBase) = sampleData;
   CSS_ChannelQueueSound(bestChannel, sampleData, dataBytes, sampleRate, formatCode);
   CSS_ChannelSetVolumeImmediate(bestChannel, 0);
   CSS_ChannelBeginVolumeFade(bestChannel, volume, fadeMs);
@@ -396,7 +396,7 @@ int __stdcall CSS_PlaySound(int fileName, int volume, int panning, signed int fa
 
   if ( !g_CSS_ActiveSoundDriver || !g_SoundChannelArrayBase || CSS_IsNullSoundDevice() )
     return 0;
-  cachedEntry = (int *)CSS_SampleCache_FindAndTouch(fileName);
+  cachedEntry = (int *)(uintptr_t)CSS_SampleCache_FindAndTouch(fileName);
   if ( cachedEntry )
     return CSS_Channel_SelectAndPlay(cachedEntry, volume, fadeMs, panning);
   stream = Audio_ReadWavHeaderFromStream(fileName, formatInfo);
@@ -420,7 +420,7 @@ int __stdcall CSS_StopSound(int soundHandle, signed int fadeMs)
   unsigned int channelIndex; // ecx
   _DWORD ehFrame[8]; // [esp+0h] [ebp-20h] BYREF
 
-  result = (int)ehFrame;
+  result = (int)(intptr_t)ehFrame;
   ehFrame[0] = NtCurrentTeb()->NtTib.ExceptionList;
   ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
   ehFrame[2] = &g_CSSStopSound_EHScopeTable;
@@ -431,7 +431,7 @@ int __stdcall CSS_StopSound(int soundHandle, signed int fadeMs)
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + result + 40) )
       {
         result += 52;
         ++channelIndex;
@@ -459,7 +459,7 @@ int __stdcall CSS_GetSoundPos(int soundHandle)
   if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
     channelOffset = 0;
-    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+    while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
     {
       channelOffset += 52;
       ++channelIndex;
@@ -475,12 +475,12 @@ LABEL_10:
   foundChannel = channelIndex;
   if ( channelIndex == -1 )
     return 0;
-  channelState = *(_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase + 36);
+  channelState = *(_DWORD *)(uintptr_t)(52 * channelIndex + g_SoundChannelArrayBase + 36);
   if ( channelState == 4 || channelState == 8 )
-    playPosOut[0] = (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 24))();
+    playPosOut[0] = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 24))();
   else
     CSS_ChannelGetPlayPosition(channelIndex, playPosOut);
-  return playPosOut[0] / *(_DWORD *)(g_SoundChannelArrayBase + 52 * foundChannel + 16);
+  return playPosOut[0] / *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + 52 * foundChannel + 16);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
@@ -502,7 +502,7 @@ void __stdcall CSS_SetSoundPos(int soundHandle, int samplePos)
   if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
     channelOffset = 0;
-    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+    while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
     {
       channelOffset += 52;
       ++channelIndex;
@@ -519,19 +519,19 @@ LABEL_12:
   if ( channelIndex != -1 )
   {
     channelBase = g_SoundChannelArrayBase + 52 * channelIndex;
-    channelState = *(_DWORD *)(channelBase + 36);
+    channelState = *(_DWORD *)(uintptr_t)(channelBase + 36);
     if ( channelState == 4 || channelState == 8 )
     {
       ++g_StreamServiceLockEntryCount;
       EnterCriticalSection(&CriticalSection);
       ++g_CSS_MixerLockNestingCount;
       EnterCriticalSection(&stru_54D3FC);
-      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(channelBase + 20) + 28))(
+      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(channelBase + 20) + 28))(
         ExceptionList,
         &j____wcpp_4_fs_handler_rtn_,
         &g_CSSSetSoundPos_EHScopeTable,
         1);
-      channel = (_DWORD *)(52 * foundChannel + g_SoundChannelArrayBase);
+      channel = (_DWORD *)(uintptr_t)(52 * foundChannel + g_SoundChannelArrayBase);
       if ( *channel )
       {
         CSS_ChannelGetPlayPosition(foundChannel, playPosOut);
@@ -547,7 +547,7 @@ LABEL_12:
     }
     else
     {
-      CSS_ChannelSetPlayPosition(channelIndex, *(_DWORD *)(channelBase + 16) * samplePos);
+      CSS_ChannelSetPlayPosition(channelIndex, *(_DWORD *)(uintptr_t)(channelBase + 16) * samplePos);
     }
   }
 }
@@ -569,7 +569,7 @@ int __stdcall CSS_PauseSound(int soundHandle, signed int fadeMs)
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++channelIndex;
@@ -578,7 +578,7 @@ int __stdcall CSS_PauseSound(int soundHandle, signed int fadeMs)
       }
       if ( channelIndex != -1 )
       {
-        CSS_ChannelGetVolume(channelIndex, (_DWORD *)(result + g_SoundChannelArrayBase + 32));
+        CSS_ChannelGetVolume(channelIndex, (_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 32));
         return CSS_ChannelBeginVolumeFade(channelIndex, 0, fadeMs);
       }
     }
@@ -601,7 +601,7 @@ int __stdcall CSS_ResumeSound(int soundHandle, signed int fadeMs)
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++channelIndex;
@@ -609,7 +609,7 @@ int __stdcall CSS_ResumeSound(int soundHandle, signed int fadeMs)
           return result;
       }
       if ( channelIndex != -1 )
-        return CSS_ChannelBeginVolumeFade(channelIndex, *(_DWORD *)(result + g_SoundChannelArrayBase + 32), fadeMs);
+        return CSS_ChannelBeginVolumeFade(channelIndex, *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 32), fadeMs);
     }
   }
   return result;
@@ -634,7 +634,7 @@ void __stdcall CSS_SetSoundLoop(int soundHandle, int loopStart, int loopEnd)
       while ( 1 )
       {
         channelBase = channelOffset + g_SoundChannelArrayBase;
-        if ( soundHandle == *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) )
+        if ( soundHandle == *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) )
           break;
         channelOffset += 52;
         ++channelIndex;
@@ -643,17 +643,17 @@ void __stdcall CSS_SetSoundLoop(int soundHandle, int loopStart, int loopEnd)
       }
       if ( channelIndex != -1 )
       {
-        channelState = *(_DWORD *)(channelBase + 36);
+        channelState = *(_DWORD *)(uintptr_t)(channelBase + 36);
         if ( channelState == 4 || channelState == 8 )
         {
-          (*(void (__fastcall **)(_DWORD, int))(**(_DWORD **)(channelBase + 20) + 12))(
-            *(_DWORD *)(channelBase + 20),
-            *(_DWORD *)(channelBase + 16) * loopStart);
+          (*(void (__fastcall **)(_DWORD, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(channelBase + 20) + 12))(
+            *(_DWORD *)(uintptr_t)(channelBase + 20),
+            *(_DWORD *)(uintptr_t)(channelBase + 16) * loopStart);
         }
         else
         {
           CSS_SetMixChannelLoopPoints(channelIndex, loopStart, loopEnd);
-          *(_DWORD *)(channelBase + 36) = 2;
+          *(_DWORD *)(uintptr_t)(channelBase + 36) = 2;
         }
       }
     }
@@ -681,7 +681,7 @@ int __stdcall CSS_GetSoundLoop(int soundHandle, _DWORD *loopStartOut, _DWORD *lo
   while ( 1 )
   {
     channelBase = result + g_SoundChannelArrayBase;
-    if ( soundHandle == *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+    if ( soundHandle == *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
       break;
     result += 52;
     ++channelIndex;
@@ -696,13 +696,13 @@ LABEL_10:
   }
   else
   {
-    channelState = *(_DWORD *)(channelBase + 36);
+    channelState = *(_DWORD *)(uintptr_t)(channelBase + 36);
     channelRec = result + g_SoundChannelArrayBase;
     if ( channelState == 4 || channelState == 8 )
     {
-      (*(void (**)(void))(**(_DWORD **)(channelBase + 20) + 16))();
-      *loopStartOut /= *(_DWORD *)(channelRec + 16);
-      result = *loopEndOut / *(_DWORD *)(channelRec + 16);
+      (*(void (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(channelBase + 20) + 16))();
+      *loopStartOut /= *(_DWORD *)(uintptr_t)(channelRec + 16);
+      result = *loopEndOut / *(_DWORD *)(uintptr_t)(channelRec + 16);
       *loopEndOut = result;
     }
     else
@@ -727,7 +727,7 @@ int __stdcall CSS_UnLoopSound(int soundHandle)
   if ( soundHandle && (channelIndex = 0, g_CssVoicePoolSize > 0) )
   {
     result = 0;
-    while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + result + 40) )
+    while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + result + 40) )
     {
       result += 52;
       ++channelIndex;
@@ -743,16 +743,16 @@ LABEL_11:
   if ( channelIndex != -1 )
   {
     channelByteOffset = 52 * channelIndex;
-    channelState = *(_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase + 36);
+    channelState = *(_DWORD *)(uintptr_t)(52 * channelIndex + g_SoundChannelArrayBase + 36);
     if ( channelState == 4 || channelState == 8 )
     {
-      return (*(int (**)(void))(**(_DWORD **)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 20))();
+      return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(g_SoundChannelArrayBase + 52 * channelIndex + 20) + 20))();
     }
     else
     {
       CSS_ClearMixChannelLoopPoints(channelIndex);
       result = g_SoundChannelArrayBase;
-      *(_DWORD *)(channelByteOffset + g_SoundChannelArrayBase + 36) = 1;
+      *(_DWORD *)(uintptr_t)(channelByteOffset + g_SoundChannelArrayBase + 36) = 1;
     }
   }
   return result;
@@ -772,7 +772,7 @@ void __stdcall CSS_SetSoundRate(int soundHandle, unsigned __int32 sampleRate)
     if ( g_CssVoicePoolSize > 0 )
     {
       channelOffset = 0;
-      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
       {
         channelOffset += 52;
         ++channelIndex;
@@ -800,7 +800,7 @@ int __stdcall CSS_GetSoundRate(int soundHandle)
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
   channelOffset = 0;
-  while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+  while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
   {
     channelOffset += 52;
     ++channelIndex;
@@ -828,7 +828,7 @@ int __stdcall CSS_SetSoundVolume(int soundHandle, int volume, signed int fadeMs)
     if ( g_CssVoicePoolSize > 0 )
     {
       result = 0;
-      while ( soundHandle != *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
       {
         result += 52;
         ++channelIndex;
@@ -837,7 +837,7 @@ int __stdcall CSS_SetSoundVolume(int soundHandle, int volume, signed int fadeMs)
       }
       if ( channelIndex != -1 )
       {
-        *(_DWORD *)(result + g_SoundChannelArrayBase + 32) = volume;
+        *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 32) = volume;
         return CSS_ChannelBeginVolumeFade(channelIndex, volume, fadeMs);
       }
     }
@@ -860,7 +860,7 @@ int __stdcall CSS_GetSoundVolume(int soundHandle)
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
   channelOffset = 0;
-  while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+  while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
   {
     channelOffset += 52;
     ++channelIndex;
@@ -887,7 +887,7 @@ void __stdcall CSS_SetSoundPanning(int soundHandle, int panning)
     if ( g_CssVoicePoolSize > 0 )
     {
       channelOffset = 0;
-      while ( soundHandle != *(_DWORD *)(g_SoundChannelArrayBase + channelOffset + 40) )
+      while ( soundHandle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channelOffset + 40) )
       {
         channelOffset += 52;
         ++channelIndex;
@@ -915,7 +915,7 @@ int __stdcall CSS_GetSoundPanning(int sound_handle)
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
   channel_offset = 0;
-  while ( sound_handle != *(_DWORD *)(g_SoundChannelArrayBase + channel_offset + 40) )
+  while ( sound_handle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channel_offset + 40) )
   {
     channel_offset += 52;
     ++channel_index;
@@ -942,7 +942,7 @@ BOOL __stdcall CSS_IsPlaying(int sound_handle)
   if ( g_CssVoicePoolSize <= 0 )
     return 0;
   channel_offset = 0;
-  while ( sound_handle != *(_DWORD *)(g_SoundChannelArrayBase + channel_offset + 40) )
+  while ( sound_handle != *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channel_offset + 40) )
   {
     channel_offset += 52;
     ++channel_index;
@@ -971,11 +971,11 @@ signed int  CSS_InitVoicePool(int voice_count, int stream_buffer_ms, int sample_
     do
     {
       array_base = g_SoundChannelArrayBase;
-      *(_DWORD *)(g_SoundChannelArrayBase + channel_offset) = 0;
+      *(_DWORD *)(uintptr_t)(g_SoundChannelArrayBase + channel_offset) = 0;
       channel_offset += 52;
-      *(_DWORD *)(array_base + channel_offset - 12) = 0;
-      *(_DWORD *)(array_base + channel_offset - 16) = 0;
-      *(_DWORD *)(array_base + channel_offset - 4) = 0;
+      *(_DWORD *)(uintptr_t)(array_base + channel_offset - 12) = 0;
+      *(_DWORD *)(uintptr_t)(array_base + channel_offset - 16) = 0;
+      *(_DWORD *)(uintptr_t)(array_base + channel_offset - 4) = 0;
     }
     while ( channel_offset < pool_bytes );
   }
@@ -985,7 +985,7 @@ signed int  CSS_InitVoicePool(int voice_count, int stream_buffer_ms, int sample_
   g_CSS_StreamThreadRunning = 1;
   hThread = (HANDLE)beginthreadex_(0, thread_args);
   g_CSS_StreamThreadHandle = beginthreadex_(0, thread_args);
-  SetThreadPriority((HANDLE)g_CSS_StreamThreadHandle, 2);
+  SetThreadPriority((HANDLE)(uintptr_t)g_CSS_StreamThreadHandle, 2);
   return 1;
 }
 // 484E65: using guessed type _DWORD __stdcall beginthreadex_(_DWORD, _DWORD);
@@ -1031,7 +1031,7 @@ _DWORD *CSS_ShutdownVoicePool(void)
     for ( i = 0; i < g_CssVoicePoolSize; i = v4 + 1 )
       CSS_CloseChannel(i, 0);
     CSS_EmptySampleCache();
-    result = (_DWORD *)CSS_Mem_FreeIfSet(g_SoundChannelArrayBase);
+    result = (_DWORD *)(uintptr_t)CSS_Mem_FreeIfSet(g_SoundChannelArrayBase);
     g_SoundChannelArrayBase = 0;
   }
   return result;
@@ -1088,7 +1088,7 @@ int CSS_InitDeviceSearchState(void)
 //----- (0046FC30) --------------------------------------------------------
 BOOL CSS_IsNullSoundDevice(void)
 {
-  return g_CSS_ActiveSoundDriver == (_DWORD)&g_CSS_NullDriverSentinel;
+  return g_CSS_ActiveSoundDriver == (_DWORD)(intptr_t)&g_CSS_NullDriverSentinel;
 }
 // 54D468: using guessed type int dword_54D468;
 
@@ -1098,10 +1098,10 @@ int CSS_PollAudioDeviceChange(void)
   _DWORD *v0; // eax
   int result; // eax
 
-  v0 = (_DWORD *)(*(int (**)(void))(g_CSS_ActiveSoundDriver + 88))();
+  v0 = (_DWORD *)(uintptr_t)(*(int (**)(void))(uintptr_t)(g_CSS_ActiveSoundDriver + 88))();
   CSS_AdvanceVolumeFades(v0);
   do
-    result = (*(int (__cdecl **)(int *))(g_CSS_ActiveSoundDriver + 92))(&g_CSS_DevicePollPending);
+    result = (*(int (__cdecl **)(int *))(uintptr_t)(g_CSS_ActiveSoundDriver + 92))(&g_CSS_DevicePollPending);
   while ( !result && g_CSS_DevicePollPending );
   return result;
 }
@@ -1163,7 +1163,7 @@ signed int CSS_ResetDeviceConfigDefaults(void)
   g_CSS_MixUpdateRateHz = 10;
   g_CSS_ActiveSoundDriver = 0;
   g_CSS_DSoundAccelDetectEnabled = 1;
-  g_CSS_FatalErrorHandler = (int)CSS_FatalErrorExit;
+  g_CSS_FatalErrorHandler = (int)(intptr_t)CSS_FatalErrorExit;
   return result;
 }
 // 519CF4: using guessed type int dword_519CF4;
@@ -1219,7 +1219,7 @@ void __stdcall CSS_Close(void)
     CSS_ShutdownVoicePool();
     CSS_FreeMixChannels();
     g_CSS_VoiceCount = 0;
-    (*(void (**)(void))(g_CSS_ActiveSoundDriver + 56))();
+    (*(void (**)(void))(uintptr_t)(g_CSS_ActiveSoundDriver + 56))();
     g_CSS_AudioDeviceActive = 0;
     g_CSS_ActiveSoundDriver = 0;
   }
@@ -1274,17 +1274,17 @@ signed int __stdcall CSS_Init(int voice_count, int volume_scale, int stream_buff
   {
     (*((void (__cdecl **)(int *))*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex) + 12))(&device_available);
   }
-  driver_ptr = (int)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
+  driver_ptr = (int)(intptr_t)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
   g_CSS_ActiveSoundDriver = driver_ptr;
   if ( g_CSS_DeviceHandleCache_Param1 != -1 )
-    *(_DWORD *)(driver_ptr + 8) = g_CSS_DeviceHandleCache_Param1;
+    *(_DWORD *)(uintptr_t)(driver_ptr + 8) = g_CSS_DeviceHandleCache_Param1;
   if ( g_CSS_DeviceHandleCache_Param2 != -1 )
-    *(_DWORD *)(g_CSS_ActiveSoundDriver + 12) = g_CSS_DeviceHandleCache_Param2;
+    *(_DWORD *)(uintptr_t)(g_CSS_ActiveSoundDriver + 12) = g_CSS_DeviceHandleCache_Param2;
   if ( g_CSS_DeviceHandleCacheParam3 != -1 )
-    *(_DWORD *)(g_CSS_ActiveSoundDriver + 16) = g_CSS_DeviceHandleCacheParam3;
+    *(_DWORD *)(uintptr_t)(g_CSS_ActiveSoundDriver + 16) = g_CSS_DeviceHandleCacheParam3;
   if ( g_CSS_DeviceHandleCacheParam4 != -1 )
-    *(_DWORD *)(g_CSS_ActiveSoundDriver + 20) = g_CSS_DeviceHandleCacheParam4;
-  if ( (*(int (__cdecl **)(int, int))(g_CSS_ActiveSoundDriver + 52))(g_CSS_DeviceSampleRateHz, g_CSS_DeviceOpenParam2) )
+    *(_DWORD *)(uintptr_t)(g_CSS_ActiveSoundDriver + 20) = g_CSS_DeviceHandleCacheParam4;
+  if ( (*(int (__cdecl **)(int, int))(uintptr_t)(g_CSS_ActiveSoundDriver + 52))(g_CSS_DeviceSampleRateHz, g_CSS_DeviceOpenParam2) )
   {
     g_CSS_ActiveSoundDriver = 0;
     g_CSS_DeviceHandleCache_DriverIndex = -1;

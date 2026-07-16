@@ -45,13 +45,13 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
         if ( Rng_RandRange(0, 100) >= 0x32 )
         {
           anyDisbanded = 1;
-          Debug_Log(0, slotIndex, (DWORD)stackPtr, (int)aUnit_checklo_0);
+          Debug_Log(0, slotIndex, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)aUnit_checklo_0);
           *slotPtr = -1;
           v17[0] = 1;
         }
         else
         {
-          Debug_Log(0, slotIndex, (DWORD)stackPtr, (int)aUnit_checklowm);
+          Debug_Log(0, slotIndex, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)aUnit_checklowm);
           slotFlags = *((_BYTE *)slotPtr + 13);
           *((_BYTE *)slotPtr + 8) = 0;
           *((_BYTE *)slotPtr + 13) = slotFlags | UNIT_SLOT_FLAG_LOW_MORALE;
@@ -62,16 +62,16 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
     slotPtr = (__int16 *)((char *)slotPtr + 31);
   }
   while ( slotIndex < 10 );
-  if ( anyDisbanded && *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * (unsigned __int8)stackPtr[4] + 140051) )
+  if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * (unsigned __int8)stackPtr[4] + 140051) )
   {
     stackRow = *(__int16 *)stackPtr;
     UI_CenterWorldMapViewportOnRectIfFit(stackRow, *((__int16 *)stackPtr + 1), *((__int16 *)stackPtr + 1) - 5, stackRow);
-    v16[0] = (int)g_Text_UnitDisbandedLowMoraleMessages[0];
-    v16[1] = (int)g_Text_UnitDisbandedLowMoraleMessages[1];
-    v16[2] = (int)g_Text_UnitDisbandedLowMoraleMessages[2];
-    UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, 0, (DWORD)stackPtr, (int)v17, (int)&g_Text_UnitDisbandedLowMoraleMessages[3]);
+    v16[0] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[0];
+    v16[1] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[1];
+    v16[2] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[2];
+    UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, 0, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)v17, (int)(intptr_t)&g_Text_UnitDisbandedLowMoraleMessages[3]);
     UI_StartWorldMapUnitAttentionFlash(
-      *(unsigned __int16 *)(gameData + TILE_ROW_STRIDE * *(__int16 *)stackPtr + 2 * *((__int16 *)stackPtr + 1) + TILE_MAP_OFFSET),
+      *(unsigned __int16 *)(uintptr_t)(gameData + TILE_ROW_STRIDE * *(__int16 *)stackPtr + 2 * *((__int16 *)stackPtr + 1) + TILE_MAP_OFFSET),
       *((__int16 *)stackPtr + 1),
       *(__int16 *)stackPtr);
     while ( UI_IsWorldMapUnitAttentionFlashActive() )
@@ -84,7 +84,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
   {
     Unit_CompactSquad((__int16 *)stackPtr, 0, a2);
     Rules_LinkArmyFinalize((__int16 *)stackPtr, a2);
-    Rules_LinkArmyFact((__int16 *)stackPtr, 0, 0, a2, 0, (DWORD)stackPtr);
+    Rules_LinkArmyFact((__int16 *)stackPtr, 0, 0, a2, 0, (DWORD)(intptr_t)stackPtr);
   }
 }
 // 4116CD: variable 'v8' is possibly undefined
@@ -132,7 +132,7 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
   }
   if ( anyRemoved )
   {
-    Unit_CompactSquad(stackPtr, (int)slotPtr, a3);
+    Unit_CompactSquad(stackPtr, (int)(intptr_t)slotPtr, a3);
     Rules_LinkArmyFinalize(stackPtr, a3);
     if ( stackPtr[3] != -1 )
       Rules_LinkArmyFact(stackPtr, v10, v11, a3, i, a2);
@@ -147,19 +147,19 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 //----- (004118A0) --------------------------------------------------------
 BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
 {
-  return *(unsigned __int8 *)(slotPtr + 8) <= 3u && (*(_BYTE *)(slotPtr + 13) & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
+  return *(unsigned __int8 *)(uintptr_t)(slotPtr + 8) <= 3u && (*(_BYTE *)(uintptr_t)(slotPtr + 13) & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
 }
 
 //----- (004118C0) --------------------------------------------------------
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
 {
-  return (*(_BYTE *)(slotPtr + 13) & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
+  return (*(_BYTE *)(uintptr_t)(slotPtr + 13) & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
 }
 
 //----- (004118D0) --------------------------------------------------------
 BOOL  UnitSlot_HasSevereFatigue(int slotPtr)
 {
-  return *(char *)(slotPtr + 10) >= 80;
+  return *(char *)(uintptr_t)(slotPtr + 10) >= 80;
 }
 
 //----- (004118E0) --------------------------------------------------------
@@ -176,128 +176,128 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
   int i; // [esp+0h] [ebp-20h]
   unsigned int stackIndex; // [esp+4h] [ebp-1Ch]
 
-  Debug_Log(a1, a2, a3, (int)aUnit_newturn);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aUnit_newturn);
   Diagnostics_TraceWorldMapActionEvent("unit_new_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, (unsigned __int8)a2);
   stackIndex = 0;
   for ( i = 0; ; i += 725 )
   {
-    if ( *(__int16 *)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(gameData + i + 147178) != g_CurrentPlayerIndex )
+    if ( *(__int16 *)(uintptr_t)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(uintptr_t)(gameData + i + 147178) != g_CurrentPlayerIndex )
       goto LABEL_16;
     stackPtr = gameData + UNIT_STACK_TABLE_OFFSET + i;
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_stack",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
-      *(_DWORD *)(stackPtr + 316));
-    UnitStack_AdjustFatigueByPredicate((__int16 *)stackPtr, -20, UnitSlot_CanRecoverFatigue, 0xFFFFFFFF, a4);
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
+      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+    UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, -20, UnitSlot_CanRecoverFatigue, 0xFFFFFFFF, a4);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_recover_fatigue",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
-      *(_DWORD *)(stackPtr + 316));
-    if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(stackPtr + 4) + 140051) )
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
+      *(_DWORD *)(uintptr_t)(stackPtr + 316));
+    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(stackPtr + 4) + 140051) )
     {
-      UnitStack_AdjustFatigueByPredicate((__int16 *)stackPtr, 10, UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
-      UnitStack_AdjustMoraleByPredicate((__int16 *)stackPtr, -1, UnitSlot_HasSevereFatigue, 0xFFFFFFFF, a4);
+      UnitStack_AdjustFatigueByPredicate((__int16 *)(uintptr_t)stackPtr, 10, UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
+      UnitStack_AdjustMoraleByPredicate((__int16 *)(uintptr_t)stackPtr, -1, UnitSlot_HasSevereFatigue, 0xFFFFFFFF, a4);
     }
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_human_fatigue",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
-      *(_DWORD *)(stackPtr + 316));
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
+      *(_DWORD *)(uintptr_t)(stackPtr + 316));
     UnitStack_ClearSpentTurnFlag(stackPtr);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_clear_spent",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
-      *(_DWORD *)(stackPtr + 316));
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
+      *(_DWORD *)(uintptr_t)(stackPtr + 316));
     slotIndex = 0;
     slotCursor = stackPtr;
     do
     {
-      slotType = *(__int16 *)(slotCursor + 6);
+      slotType = *(__int16 *)(uintptr_t)(slotCursor + 6);
       if ( slotType == -1 )
         break;
       if ( slotType < 0 || slotType >= UNIT_TYPE_COUNT )
       {
-        *(_WORD *)(slotCursor + 6) = -1;
+        *(_WORD *)(uintptr_t)(slotCursor + 6) = -1;
         break;
       }
       slotCursor += 31;
-      actionPoints = UnitSlot_CalcActionPointsFromFatigue((__int16 *)(stackPtr + 6 + 31 * slotIndex++));
-      *(_BYTE *)(slotCursor - 17) = actionPoints;
+      actionPoints = UnitSlot_CalcActionPointsFromFatigue((__int16 *)(uintptr_t)(stackPtr + 6 + 31 * slotIndex++));
+      *(_BYTE *)(uintptr_t)(slotCursor - 17) = actionPoints;
     }
     while ( slotIndex < 10 );
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_ap",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
       slotIndex);
-    Rules_LinkArmyFact((__int16 *)stackPtr, slotCursor, slotType, a4, slotIndex, 0xFFFFFFFF);
+    Rules_LinkArmyFact((__int16 *)(uintptr_t)stackPtr, slotCursor, slotType, a4, slotIndex, 0xFFFFFFFF);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_rules_fact",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
       slotIndex);
-    Unit_CheckLowMorale((_BYTE *)stackPtr, a4);
+    Unit_CheckLowMorale((_BYTE *)(uintptr_t)stackPtr, a4);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_low_morale",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
       slotIndex);
-    UnitStack_ApplyPlagueAttritionToPeasantCargo((__int16 *)stackPtr, 0xFFFFFFFF, a4);
+    UnitStack_ApplyPlagueAttritionToPeasantCargo((__int16 *)(uintptr_t)stackPtr, 0xFFFFFFFF, a4);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_plague",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
       slotIndex);
     if ( !UnitStack_HasReadyUnits(stackPtr) )
       goto LABEL_16;
     Diagnostics_TraceWorldMapActionEvent(
       "unit_new_turn_after_ready_check",
       (int)stackIndex,
-      *(__int16 *)stackPtr,
-      *(__int16 *)(stackPtr + 2),
+      *(__int16 *)(uintptr_t)stackPtr,
+      *(__int16 *)(uintptr_t)(stackPtr + 2),
       slotIndex);
-    buildingIndex = *(unsigned __int16 *)(gameData
-                             + TILE_ROW_STRIDE * (unsigned __int8)*(_DWORD *)(stackPtr + 320)
-                             + 2 * (unsigned __int8)BYTE1(*(_DWORD *)(stackPtr + 320))
+    buildingIndex = *(unsigned __int16 *)(uintptr_t)(gameData
+                             + TILE_ROW_STRIDE * (unsigned __int8)*(_DWORD *)(uintptr_t)(stackPtr + 320)
+                             + 2 * (unsigned __int8)BYTE1(*(_DWORD *)(uintptr_t)(stackPtr + 320))
                              + TILE_MAP_OFFSET)
        - TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( buildingIndex <= 0x64 )
     {
       slotIndex = BUILDING_RECORD_SIZE * buildingIndex;
       buildingRecord = UNIT_RECORD(buildingIndex);
-      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4
-        && *(__int16 *)(buildingRecord + 16) != -1
-        && *(_BYTE *)(slotIndex + gameData + 509676) != *(_BYTE *)(stackPtr + 4) )
+      if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
+        && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1
+        && *(_BYTE *)(uintptr_t)(slotIndex + gameData + 509676) != *(_BYTE *)(uintptr_t)(stackPtr + 4) )
       {
         break;
       }
     }
-    if ( *(_DWORD *)(stackPtr + 316) )
+    if ( *(_DWORD *)(uintptr_t)(stackPtr + 316) )
     {
       Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_before_path",
         (int)stackIndex,
-        *(__int16 *)stackPtr,
-        *(__int16 *)(stackPtr + 2),
-        *(_DWORD *)(stackPtr + 316));
+        *(__int16 *)(uintptr_t)stackPtr,
+        *(__int16 *)(uintptr_t)(stackPtr + 2),
+        *(_DWORD *)(uintptr_t)(stackPtr + 316));
       UnitStack_ExecuteQueuedPath(stackIndex, 0, slotIndex, 0xFFFFFFFF, a4);
       Diagnostics_TraceWorldMapActionEvent(
         "unit_new_turn_after_path",
         (int)stackIndex,
-        *(__int16 *)stackPtr,
-        *(__int16 *)(stackPtr + 2),
-        *(_DWORD *)(stackPtr + 316));
+        *(__int16 *)(uintptr_t)stackPtr,
+        *(__int16 *)(uintptr_t)(stackPtr + 2),
+        *(_DWORD *)(uintptr_t)(stackPtr + 316));
     }
     else
       UnitStack_ClearReadyFlags(stackPtr);
@@ -312,7 +312,7 @@ LABEL_16:
     }
   }
   UnitStack_ClearReadyFlags(stackPtr);
-  Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done_enemy_contact", (int)stackIndex, *(__int16 *)stackPtr, *(__int16 *)(stackPtr + 2), slotIndex);
+  Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done_enemy_contact", (int)stackIndex, *(__int16 *)(uintptr_t)stackPtr, *(__int16 *)(uintptr_t)(stackPtr + 2), slotIndex);
   return LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);
 }
 // 4119FD: simplified comparisons for 'edx.4': <0 || >=65 became >=65u
@@ -330,7 +330,7 @@ signed int  UnitStack_HasBuilder(int stackIndex)
   int slotIndex; // eax
   int slotType; // ecx
 
-  slotPtr = (__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6);
+  slotPtr = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET + 6);
   slotIndex = 0;
   while ( 1 )
   {
@@ -358,7 +358,7 @@ __int16  Map_RedrawUnitFootprintByIndex(int stackIndex)
   int x; // eax
   int y; // edx
 
-  unit_stack = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex);
+  unit_stack = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex);
   x = unit_stack[0];
   y = unit_stack[1];
   result = WorldMap_RedrawTileIfVisible(x, y);
@@ -428,7 +428,7 @@ int  Map_RedrawUnitNeighborhoodByIndex(int stackIndex)
   int x; // eax
   int y; // edx
 
-  unit_stack = (__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+  unit_stack = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
   x = unit_stack[0];
   y = unit_stack[1];
   result = WorldMap_RedrawTileIfVisible(x, y);
@@ -465,24 +465,24 @@ void Map_UpdateIdleAnimatedUnits(void)
   stackPtr = gameData + UNIT_STACK_TABLE_OFFSET;
   do
   {
-    unitType = *(__int16 *)(stackPtr + 6);
+    unitType = *(__int16 *)(uintptr_t)(stackPtr + 6);
     if ( unitType != -1 )
     {
       metadataOffset = 88 * unitType;
       if ( (g_UnitTypeHasIdleAnimationFlags[metadataOffset] & 1) != 0 )
       {
-        nextAnimTick = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[metadataOffset] + *(_DWORD *)(stackPtr + 24);
+        nextAnimTick = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[metadataOffset] + *(_DWORD *)(uintptr_t)(stackPtr + 24);
         if ( nextAnimTick < Time_Now(stackIndex, stackPtr) )
         {
           now = Time_Now(stackIndex, stackPtr);
-          *(_DWORD *)(stackPtr + 24) = now;
-          LOBYTE(now) = ((*(_BYTE *)(stackPtr + 23) & 7) + 1) & 7;
-          BYTE1(now) = *(_BYTE *)(stackPtr + 23) & 0xF8;
-          *(_BYTE *)(stackPtr + 23) = BYTE1(now);
+          *(_DWORD *)(uintptr_t)(stackPtr + 24) = now;
+          LOBYTE(now) = ((*(_BYTE *)(uintptr_t)(stackPtr + 23) & 7) + 1) & 7;
+          BYTE1(now) = *(_BYTE *)(uintptr_t)(stackPtr + 23) & 0xF8;
+          *(_BYTE *)(uintptr_t)(stackPtr + 23) = BYTE1(now);
           BYTE1(now) |= now;
-          *(_BYTE *)(stackPtr + 23) = BYTE1(now);
-          *(_BYTE *)(stackPtr + 23) = BYTE1(now) & 0xF8;
-          *(_BYTE *)(stackPtr + 23) = BYTE1(now);
+          *(_BYTE *)(uintptr_t)(stackPtr + 23) = BYTE1(now);
+          *(_BYTE *)(uintptr_t)(stackPtr + 23) = BYTE1(now) & 0xF8;
+          *(_BYTE *)(uintptr_t)(stackPtr + 23) = BYTE1(now);
           Map_RedrawUnitFootprintByIndex(stackIndex);
         }
       }
@@ -499,7 +499,7 @@ void Map_UpdateIdleAnimatedUnits(void)
 //----- (00411E20) --------------------------------------------------------
 int  Unit_GetSpriteVerticalOffsetPx(int stackIndex)
 {
-  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180)];
+  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147180)];
 }
 // 5202E4: using guessed type int gameData;
 
@@ -524,17 +524,17 @@ signed int  Unit_AttemptNeighborMove(int stackIndex)
   direction_index = 0;
   while ( direction_index < 16 )
   {
-    neighbor_column = Map_NeighborDY[direction_index] + *(__int16 *)(stack_record + 2);
-    neighbor_row = Map_NeighborDX[direction_index] + *(__int16 *)stack_record;
+    neighbor_column = Map_NeighborDY[direction_index] + *(__int16 *)(uintptr_t)(stack_record + 2);
+    neighbor_row = Map_NeighborDX[direction_index] + *(__int16 *)(uintptr_t)stack_record;
     if ( neighbor_row >= 0 && neighbor_row < MAP_WIDTH_TILES && neighbor_column >= 0 && neighbor_column < MAP_HEIGHT_TILES )
     {
       queued_path = Unit_MoveTrack(
                       stackIndex,
-                      *(__int16 *)stack_record,
-                      *(__int16 *)stack_record + Map_NeighborDX[direction_index],
-                      *(__int16 *)(stack_record + 2),
+                      *(__int16 *)(uintptr_t)stack_record,
+                      *(__int16 *)(uintptr_t)stack_record + Map_NeighborDX[direction_index],
+                      *(__int16 *)(uintptr_t)(stack_record + 2),
                       available_action_points,
-                      *(__int16 *)(stack_record + 2) + Map_NeighborDY[direction_index]);
+                      *(__int16 *)(uintptr_t)(stack_record + 2) + Map_NeighborDY[direction_index]);
       if ( queued_path )
       {
         last_path_step = queued_path[*queued_path];
@@ -562,12 +562,12 @@ BOOL  UnitStack_CanExecuteQueuedPathNow(int stackIndex)
   unsigned __int16 lastStepActionPoints; // si
 
   stackPtr = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex;
-  pathLength = *(_DWORD *)(stackPtr + 316);
+  pathLength = *(_DWORD *)(uintptr_t)(stackPtr + 316);
   pathBufferPtr = stackPtr + 316;
   result = 0;
   if ( pathLength )
   {
-    lastStepActionPoints = HIWORD(*(_DWORD *)(pathBufferPtr + 4 * (pathLength - 1) + 4));
+    lastStepActionPoints = HIWORD(*(_DWORD *)(uintptr_t)(pathBufferPtr + 4 * (pathLength - 1) + 4));
     if ( UnitStack_GetMinCurrentActionPoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex) >= lastStepActionPoints )
       return 1;
   }
@@ -716,7 +716,7 @@ signed int  UnitStack_HasGoldCargo(int stackPtr)
   slotIndex = 0;
   while ( 1 )
   {
-    slotType = *(__int16 *)(stackPtr + 6);
+    slotType = *(__int16 *)(uintptr_t)(stackPtr + 6);
     if ( slotType == -1 )
       return 0;
     if ( slotType == UNIT_TYPE_GOLD_CARGO )
@@ -738,7 +738,7 @@ signed int  UnitStack_HasPeasantCargo(int stackPtr)
   slotIndex = 0;
   while ( 1 )
   {
-    slotType = *(__int16 *)(stackPtr + 6);
+    slotType = *(__int16 *)(uintptr_t)(stackPtr + 6);
     if ( slotType == -1 )
       return 0;
     if ( slotType == UNIT_TYPE_PEASANT_CARGO )
@@ -788,7 +788,7 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
     slotPtr = (__int16 *)((char *)slotPtr + 31);
   }
   minActionPoints = UnitStack_GetMinCurrentActionPoints((intptr_t)stackPtr);
-  if ( (int)v8 > totalPeasantQuantity )
+  if ( (int)(intptr_t)v8 > totalPeasantQuantity )
   {
     clearCursor = stackPtr;
     clearIndex = 0;
@@ -804,33 +804,33 @@ signed int  UnitStack_NormalizePeasantCargo(__int16 *stackPtr, DWORD a2, double 
       clearSlotPtr = (__int16 *)((char *)clearSlotPtr + 31);
     }
     while ( clearIndex < 10 );
-    Unit_CompactSquad(stackPtr, (int)clearCursor, a3);
-    squadCount = Unit_GetSquadCount((int)stackPtr);
+    Unit_CompactSquad(stackPtr, (int)(intptr_t)clearCursor, a3);
+    squadCount = Unit_GetSquadCount((int)(intptr_t)stackPtr);
     fullCargoUnits = totalPeasantQuantity / 100;
     addedIndex = 0;
-    for ( j = (int)stackPtr + 31 * squadCount; ; *(_BYTE *)(j - 17) = minActionPoints )
+    for ( j = (int)(intptr_t)stackPtr + 31 * squadCount; ; *(_BYTE *)(uintptr_t)(j - 17) = minActionPoints )
     {
       v18 = addedIndex + squadCount;
       if ( addedIndex >= fullCargoUnits )
         break;
       j += 31;
-      *(_WORD *)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
-      *(_BYTE *)(j - 16) = 100;
-      *(_BYTE *)(j - 15) = 0;
-      *(_BYTE *)(j - 14) = 10;
+      *(_WORD *)(uintptr_t)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
+      *(_BYTE *)(uintptr_t)(j - 16) = 100;
+      *(_BYTE *)(uintptr_t)(j - 15) = 0;
+      *(_BYTE *)(uintptr_t)(j - 14) = 10;
       ++addedIndex;
     }
     LOBYTE(i) = 100;
-    *(_BYTE *)(j + 14) = minActionPoints;
-    *(_WORD *)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
-    *(_BYTE *)(j + 15) = totalPeasantQuantity % 100;
+    *(_BYTE *)(uintptr_t)(j + 14) = minActionPoints;
+    *(_WORD *)(uintptr_t)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
+    *(_BYTE *)(uintptr_t)(j + 15) = totalPeasantQuantity % 100;
     v8 = stackPtr;
-    *(_BYTE *)(j + 16) = 0;
-    a2 = (DWORD)stackPtr + 31 * v18 + 31;
-    *(_BYTE *)(j + 17) = 10;
-    *(_WORD *)(a2 + 6) = -1;
+    *(_BYTE *)(uintptr_t)(j + 16) = 0;
+    a2 = (DWORD)(intptr_t)stackPtr + 31 * v18 + 31;
+    *(_BYTE *)(uintptr_t)(j + 17) = 10;
+    *(_WORD *)(uintptr_t)(a2 + 6) = -1;
   }
-  return Rules_SyncArmyFactStrength(stackPtr, (int)v8, j, i, a2, a3);
+  return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)v8, j, i, a2, a3);
 }
 // 412213: variable 'v8' is possibly undefined
 // 41224F: variable 'v14' is possibly undefined
@@ -854,23 +854,23 @@ __int16 * UnitStack_CaptureDefeatedStack(
   int defeated_count;
   __int16 *result;
 
-  Debug_Log(a3, a4, (DWORD)winnerStack, (int)aUnit_capture0x);
+  Debug_Log(a3, a4, (DWORD)(intptr_t)winnerStack, (int)(intptr_t)aUnit_capture0x);
   winner_stack = winnerStack;
-  defeated_stack = (__int16 *)defeatedStackPtr;
+  defeated_stack = (__int16 *)(uintptr_t)defeatedStackPtr;
   if ( !winner_stack || !defeated_stack )
     return winner_stack;
 
-  winner_owner = UNIT_STACK_OWNER_INDEX((int)winner_stack);
+  winner_owner = UNIT_STACK_OWNER_INDEX((int)(intptr_t)winner_stack);
   Diagnostics_TraceWorldMapActionEvent(
     "capture_defeated_stack_enter",
-    Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-    Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+    Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+    Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
     winner_owner,
-    Unit_GetSquadCount((int)defeated_stack));
-  defeated_had_plague = UnitStack_HasPlagueFlag((int)defeated_stack);
+    Unit_GetSquadCount((int)(intptr_t)defeated_stack));
+  defeated_had_plague = UnitStack_HasPlagueFlag((int)(intptr_t)defeated_stack);
   for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
   {
-    __int16 *slot = (__int16 *)UNIT_STACK_SLOT((int)defeated_stack, slot_index);
+    __int16 *slot = (__int16 *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)defeated_stack, slot_index);
     unit_type = *slot;
     if ( unit_type == -1 )
       break;
@@ -881,7 +881,7 @@ __int16 * UnitStack_CaptureDefeatedStack(
         *((unsigned __int8 *)slot + 2),
         slot[2],
         winner_owner,
-        (DWORD)winner_stack,
+        (DWORD)(intptr_t)winner_stack,
         slot[3]);
       *slot = -1;
     }
@@ -892,95 +892,95 @@ __int16 * UnitStack_CaptureDefeatedStack(
   {
     Diagnostics_TraceWorldMapActionEvent(
       "capture_defeated_stack_empty_before_owner",
-      Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-      Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
       winner_owner,
       0);
     return Rules_UnlinkArmyFact(defeated_stack, a5);
   }
 
-  defeated_count = Unit_GetSquadCount((int)defeated_stack);
+  defeated_count = Unit_GetSquadCount((int)(intptr_t)defeated_stack);
   for ( slot_index = 0; slot_index < defeated_count; ++slot_index )
   {
-    char *slot = (char *)UNIT_STACK_SLOT((int)defeated_stack, slot_index);
+    char *slot = (char *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)defeated_stack, slot_index);
     slot[2] = winner_owner;
   }
-  UNIT_STACK_OWNER_INDEX((int)defeated_stack) = winner_owner;
+  UNIT_STACK_OWNER_INDEX((int)(intptr_t)defeated_stack) = winner_owner;
   Diagnostics_TraceWorldMapActionEvent(
     "capture_defeated_stack_owner_changed",
-    Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-    Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+    Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+    Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
     winner_owner,
     defeated_count);
-  UnitStack_ClearReadyFlags((int)defeated_stack);
+  UnitStack_ClearReadyFlags((int)(intptr_t)defeated_stack);
   Unit_CompactSquad(defeated_stack, 0, a5);
   if ( defeated_stack[3] == -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "capture_defeated_stack_empty_after_owner",
-      Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-      Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
       winner_owner,
       0);
     return Rules_UnlinkArmyFact(defeated_stack, a5);
   }
 
-  UnitStack_NormalizePeasantCargo(defeated_stack, (DWORD)winner_stack, a5);
-  Rules_SyncArmyFactOwner(defeated_stack, winner_owner, (DWORD)winner_stack, a5);
+  UnitStack_NormalizePeasantCargo(defeated_stack, (DWORD)(intptr_t)winner_stack, a5);
+  Rules_SyncArmyFactOwner(defeated_stack, winner_owner, (DWORD)(intptr_t)winner_stack, a5);
 
-  winner_count = Unit_GetSquadCount((int)winner_stack);
-  defeated_count = Unit_GetSquadCount((int)defeated_stack);
+  winner_count = Unit_GetSquadCount((int)(intptr_t)winner_stack);
+  defeated_count = Unit_GetSquadCount((int)(intptr_t)defeated_stack);
   if ( winner_count + defeated_count <= UNIT_STACK_SLOT_COUNT
     && UnitStack_GetMoveCostToTileIgnoringOccupancy(defeated_stack, *winner_stack, winner_stack[1]) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "capture_defeated_stack_merge_kill",
-      Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-      Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
       winner_count,
       defeated_count);
     qmemcpy(
-      (void *)UNIT_STACK_SLOT((int)winner_stack, winner_count),
-      (const void *)UNIT_STACK_SLOT((int)defeated_stack, 0),
+      (void *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)winner_stack, winner_count),
+      (const void *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)defeated_stack, 0),
       UNIT_STACK_SLOT_STRIDE * defeated_count);
     if ( winner_count + defeated_count < UNIT_STACK_SLOT_COUNT )
-      *(__int16 *)UNIT_STACK_SLOT((int)winner_stack, winner_count + defeated_count) = -1;
-    Unit_Kill((int)defeated_stack, 0, (DWORD)winner_stack, a5);
-    Rules_LinkArmyFact(winner_stack, 0, 0, a5, 0, (DWORD)winner_stack);
-    result = (__int16 *)Rules_SyncArmyFactStrength(winner_stack, 0, 0, 0, (DWORD)winner_stack, a5);
+      *(__int16 *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)winner_stack, winner_count + defeated_count) = -1;
+    Unit_Kill((int)(intptr_t)defeated_stack, 0, (DWORD)(intptr_t)winner_stack, a5);
+    Rules_LinkArmyFact(winner_stack, 0, 0, a5, 0, (DWORD)(intptr_t)winner_stack);
+    result = (__int16 *)(uintptr_t)Rules_SyncArmyFactStrength(winner_stack, 0, 0, 0, (DWORD)(intptr_t)winner_stack, a5);
   }
   else
   {
     for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
     {
-      char *slot = (char *)UNIT_STACK_SLOT((int)defeated_stack, slot_index);
+      char *slot = (char *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)defeated_stack, slot_index);
       if ( *(__int16 *)slot == -1 )
         break;
       slot[2] = winner_owner;
     }
-    UNIT_STACK_OWNER_INDEX((int)defeated_stack) = winner_owner;
-    if ( *(_DWORD *)UNIT_STACK_PATH_BUFFER((int)defeated_stack) )
-      *(_DWORD *)UNIT_STACK_PATH_BUFFER((int)defeated_stack) = 0;
+    UNIT_STACK_OWNER_INDEX((int)(intptr_t)defeated_stack) = winner_owner;
+    if ( *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER((int)(intptr_t)defeated_stack) )
+      *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER((int)(intptr_t)defeated_stack) = 0;
     Diagnostics_TraceWorldMapActionEvent(
       "capture_defeated_stack_retained",
-      Diagnostics_UnitStackIndexFromRecord((int)winner_stack),
-      Diagnostics_UnitStackIndexFromRecord((int)defeated_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)winner_stack),
+      Diagnostics_UnitStackIndexFromRecord((int)(intptr_t)defeated_stack),
       winner_owner,
-      Unit_GetSquadCount((int)defeated_stack));
-    result = (__int16 *)Rules_SyncArmyFactOwner(defeated_stack, winner_owner, (DWORD)winner_stack, a5);
+      Unit_GetSquadCount((int)(intptr_t)defeated_stack));
+    result = (__int16 *)(uintptr_t)Rules_SyncArmyFactOwner(defeated_stack, winner_owner, (DWORD)(intptr_t)winner_stack, a5);
   }
   if ( defeated_had_plague )
   {
     for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
     {
-      __int16 *slot = (__int16 *)UNIT_STACK_SLOT((int)winner_stack, slot_index);
+      __int16 *slot = (__int16 *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)winner_stack, slot_index);
       unit_type = *slot;
       if ( unit_type == -1 )
         break;
       if ( unit_type == UNIT_TYPE_PEASANT_CARGO )
         *((_BYTE *)slot + 13) |= UNIT_SLOT_FLAG_PLAGUE;
     }
-    return Trap_HurtStack(winner_stack, 0, (DWORD)winner_stack, a5);
+    return Trap_HurtStack(winner_stack, 0, (DWORD)(intptr_t)winner_stack, a5);
   }
   return result;
 }
@@ -1007,7 +1007,7 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
 
   sourceSlotsPtr = sourceSlots;
   createSucceeded = 0;
-  Debug_Log(originRow, (char)sourceSlots, (DWORD)sourceSlots, (int)aUnitCreateNearbyUnitGroup);
+  Debug_Log(originRow, (char)(intptr_t)sourceSlots, (DWORD)(intptr_t)sourceSlots, (int)(intptr_t)aUnitCreateNearbyUnitGroup);
   neighborIndex = 0;
   neighborOrdinal = 0;
   do
@@ -1018,14 +1018,14 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
     if ( v7 + originRow >= 0 )
     {
       v7 = gameData;
-      if ( neighborRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) && neighborColumn >= 0 && neighborColumn < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+      if ( neighborRow < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) && neighborColumn >= 0 && neighborColumn < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         LOBYTE(sourceSlots) = -1;
         if ( !Trap_GetTileOwnerMask(neighborRow, neighborColumn, -1) )
         {
           neighborColumnArg = Map_NeighborDY[neighborIndex] + originColumn;
           LOBYTE(sourceSlots) = Rng_RandRange(0, 7);
-          createSucceeded = Unit_Create(*(__int16 *)sourceSlotsPtr, sourceSlotsPtr[2], v13, (char)sourceSlots, neighborColumnArg);
+          createSucceeded = Unit_Create(*(__int16 *)sourceSlotsPtr, sourceSlotsPtr[2], v13, (char)(intptr_t)sourceSlots, neighborColumnArg);
           if ( createSucceeded )
             break;
         }
@@ -1039,7 +1039,7 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
   {
     slotCount = 0;
     targetStackPtr = UNIT_STACK_STRIDE
-        * *(unsigned __int16 *)(gameData
+        * *(unsigned __int16 *)(uintptr_t)(gameData
                               + TILE_ROW_STRIDE * (Map_NeighborDX[2 * neighborOrdinal] + originRow)
                               + 2 * (Map_NeighborDY[2 * neighborOrdinal] + originColumn)
                               + TILE_MAP_OFFSET)
@@ -1052,21 +1052,21 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
         break;
       ++slotCount;
     }
-    qmemcpy((void *)(targetStackPtr + 6), sourceSlotsPtr, 31 * slotCount);
+    qmemcpy((void *)(uintptr_t)(targetStackPtr + 6), sourceSlotsPtr, 31 * slotCount);
     if ( slotCount < 9 )
     {
       slotByteOffset += targetStackPtr;
-      *(_WORD *)(slotByteOffset + 6) = -1;
+      *(_WORD *)(uintptr_t)(slotByteOffset + 6) = -1;
     }
-    Rules_LinkArmyFact((__int16 *)targetStackPtr, slotCount, 0, a4, slotByteOffset, (DWORD)sourceSlotsPtr);
-    Rules_SyncArmyFactStrength((__int16 *)targetStackPtr, v15, v16, slotByteOffset, (DWORD)sourceSlotsPtr, a4);
-    Debug_Log(v17, slotByteOffset, targetStackPtr, (int)aUnit_createn_1);
+    Rules_LinkArmyFact((__int16 *)(uintptr_t)targetStackPtr, slotCount, 0, a4, slotByteOffset, (DWORD)(intptr_t)sourceSlotsPtr);
+    Rules_SyncArmyFactStrength((__int16 *)(uintptr_t)targetStackPtr, v15, v16, slotByteOffset, (DWORD)(intptr_t)sourceSlotsPtr, a4);
+    Debug_Log(v17, slotByteOffset, targetStackPtr, (int)(intptr_t)aUnit_createn_1);
     Unit_DebugDumpFormationSizes(targetStackPtr, targetStackPtr);
     return targetStackPtr;
   }
   else
   {
-    Debug_Log(v7, (char)sourceSlots, (DWORD)sourceSlotsPtr, (int)aUnit_createn_0);
+    Debug_Log(v7, (char)(intptr_t)sourceSlots, (DWORD)(intptr_t)sourceSlotsPtr, (int)(intptr_t)aUnit_createn_0);
     return 0;
   }
 }
@@ -1088,19 +1088,19 @@ int  UnitSlot_AdjustFatigueByPredicate(int slotPtr, int fatigueDelta, BOOL ( *pr
   result = predicate(slotPtr);
   if ( result )
   {
-    result = *(__int16 *)slotPtr;
+    result = *(__int16 *)(uintptr_t)slotPtr;
     if ( result != UNIT_TYPE_GOLD_CARGO
       && result != UNIT_TYPE_PEASANT_CARGO
       && result != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
       && result != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      newFatigue = fatigueDelta + *(char *)(slotPtr + 10);
-      *(_BYTE *)(slotPtr + 10) = newFatigue;
+      newFatigue = fatigueDelta + *(char *)(uintptr_t)(slotPtr + 10);
+      *(_BYTE *)(uintptr_t)(slotPtr + 10) = newFatigue;
       if ( newFatigue < 0 )
-        *(_BYTE *)(slotPtr + 10) = 0;
-      if ( *(char *)(slotPtr + 10) > 100 )
-        *(_BYTE *)(slotPtr + 10) = 100;
-      return *(char *)(slotPtr + 10);
+        *(_BYTE *)(uintptr_t)(slotPtr + 10) = 0;
+      if ( *(char *)(uintptr_t)(slotPtr + 10) > 100 )
+        *(_BYTE *)(uintptr_t)(slotPtr + 10) = 100;
+      return *(char *)(uintptr_t)(slotPtr + 10);
     }
   }
   return result;
@@ -1135,7 +1135,7 @@ signed int  UnitStack_AdjustFatigueByPredicate(
     {
       if ( *slotPtr == -1 )
         break;
-      if ( predicate((int)slotPtr) )
+      if ( predicate((int)(intptr_t)slotPtr) )
       {
         slotType = *slotPtr;
         if ( slotType != UNIT_TYPE_GOLD_CARGO
@@ -1154,7 +1154,7 @@ signed int  UnitStack_AdjustFatigueByPredicate(
       ++slotIndex;
       slotPtr = (__int16 *)((char *)slotPtr + 31);
     }
-    return Rules_SyncArmyFactStrength(stackPtr, (int)slotPtr, slotIndex, (char)predicate, a4, a5);
+    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slotPtr, slotIndex, (char)(intptr_t)predicate, a4, a5);
   }
   return result;
 }
@@ -1169,21 +1169,21 @@ int  UnitSlot_AdjustMoraleByPredicate(int slotPtr, int moraleDelta, BOOL ( *pred
   result = predicate(slotPtr);
   if ( result )
   {
-    unit_type = *(__int16 *)slotPtr;
+    unit_type = *(__int16 *)(uintptr_t)slotPtr;
     if ( unit_type != UNIT_TYPE_GOLD_CARGO
       && unit_type != UNIT_TYPE_PEASANT_CARGO
       && unit_type != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
       && unit_type != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      morale = *(char *)(slotPtr + 11) + moraleDelta;
-      *(_BYTE *)(slotPtr + 11) = morale;
+      morale = *(char *)(uintptr_t)(slotPtr + 11) + moraleDelta;
+      *(_BYTE *)(uintptr_t)(slotPtr + 11) = morale;
       if ( moraleDelta > 0 )
-        *(_BYTE *)(slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
-      if ( *(char *)(slotPtr + 11) < 0 )
-        *(_BYTE *)(slotPtr + 11) = 0;
-      if ( *(char *)(slotPtr + 11) > 20 )
-        *(_BYTE *)(slotPtr + 11) = 20;
-      return *(char *)(slotPtr + 11);
+        *(_BYTE *)(uintptr_t)(slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
+      if ( *(char *)(uintptr_t)(slotPtr + 11) < 0 )
+        *(_BYTE *)(uintptr_t)(slotPtr + 11) = 0;
+      if ( *(char *)(uintptr_t)(slotPtr + 11) > 20 )
+        *(_BYTE *)(uintptr_t)(slotPtr + 11) = 20;
+      return *(char *)(uintptr_t)(slotPtr + 11);
     }
   }
   return result;
@@ -1210,7 +1210,7 @@ signed int  UnitStack_AdjustMoraleByPredicate(
     {
       if ( *slotPtr == -1 )
         break;
-      if ( predicate((int)slotPtr) )
+      if ( predicate((int)(intptr_t)slotPtr) )
       {
         slotType = *slotPtr;
         if ( slotType != UNIT_TYPE_GOLD_CARGO
@@ -1230,7 +1230,7 @@ signed int  UnitStack_AdjustMoraleByPredicate(
       ++slotIndex;
       slotPtr = (__int16 *)((char *)slotPtr + 31);
     }
-    return Rules_SyncArmyFactStrength(stackPtr, (int)slotPtr, slotIndex, (char)predicate, a4, a5);
+    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slotPtr, slotIndex, (char)(intptr_t)predicate, a4, a5);
   }
   return result;
 }
@@ -1243,17 +1243,17 @@ int  UnitSlot_CycleOrderState(int result)
   char updatedFlags; // bl
 
   nextOrderState = (UNIT_SLOT_ORDER_STATE(result) + 1) & 3;
-  clearedFlags = *(_BYTE *)(result + 12) & 0xF3;
-  *(_BYTE *)(result + 12) = clearedFlags;
+  clearedFlags = *(_BYTE *)(uintptr_t)(result + 12) & 0xF3;
+  *(_BYTE *)(uintptr_t)(result + 12) = clearedFlags;
   updatedFlags = (4 * nextOrderState) | clearedFlags;
-  *(_BYTE *)(result + 12) = updatedFlags;
+  *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags;
   if ( (unsigned __int8)((unsigned __int8)(16 * updatedFlags) >> 6) > 2u )
   {
-    *(_BYTE *)(result + 12) = updatedFlags & 0xF3;
+    *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags & 0xF3;
     if ( (clearedFlags & 3u) < 3 )
     {
-      *(_BYTE *)(result + 12) = updatedFlags & 0xF0;
-      *(_BYTE *)(result + 12) = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
+      *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags & 0xF0;
+      *(_BYTE *)(uintptr_t)(result + 12) = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
     }
   }
   return result;
@@ -1290,7 +1290,7 @@ __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
   int i; // edx
   char slotFlags; // bl
 
-  result = (__int16 *)(stackPtr + 6);
+  result = (__int16 *)(uintptr_t)(stackPtr + 6);
   for ( i = 0; i < 10; ++i )
   {
     if ( *result == -1 )
@@ -1309,7 +1309,7 @@ __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
   int i; // edx
   char slotFlags; // bl
 
-  result = (__int16 *)(stackPtr + 6);
+  result = (__int16 *)(uintptr_t)(stackPtr + 6);
   for ( i = 0; i < 10; ++i )
   {
     if ( *result == -1 )
@@ -1329,11 +1329,11 @@ int  UnitStack_SetPlagueFlag(int result)
 
   for ( i = 0; i < 10; ++i )
   {
-    if ( *(__int16 *)(result + 6) == -1 )
+    if ( *(__int16 *)(uintptr_t)(result + 6) == -1 )
       break;
-    slotFlags = *(_BYTE *)(result + 19);
+    slotFlags = *(_BYTE *)(uintptr_t)(result + 19);
     result += 31;
-    *(_BYTE *)(result - 12) = slotFlags | 8;
+    *(_BYTE *)(uintptr_t)(result - 12) = slotFlags | 8;
   }
   return result;
 }
@@ -1346,9 +1346,9 @@ signed int  UnitStack_HasPlague(int stackPtr)
   slotIndex = 0;
   while ( 1 )
   {
-    if ( *(__int16 *)(stackPtr + 6) == -1 )
+    if ( *(__int16 *)(uintptr_t)(stackPtr + 6) == -1 )
       return 0;
-    if ( (*(_BYTE *)(stackPtr + 19) & UNIT_SLOT_FLAG_PLAGUE) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(stackPtr + 19) & UNIT_SLOT_FLAG_PLAGUE) != 0 )
       break;
     ++slotIndex;
     stackPtr += 31;
@@ -1364,7 +1364,7 @@ signed int  UnitStack_HasLowMoraleUnit(int stackPtr)
   __int16 *slotPtr; // eax
   int slotIndex; // edx
 
-  slotPtr = (__int16 *)(stackPtr + 6);
+  slotPtr = (__int16 *)(uintptr_t)(stackPtr + 6);
   slotIndex = 0;
   while ( 1 )
   {
@@ -1390,7 +1390,7 @@ int  UnitStackSelection_BuildSelectedSlotIndexList(int result, int slotCount, in
   selectionFlags = result;
   for ( i = 0; slotCount > i; ++i )
   {
-    if ( *(_DWORD *)(selectionFlags + 4 * i) )
+    if ( *(_DWORD *)(uintptr_t)(selectionFlags + 4 * i) )
     {
       outCursor = selectedOut++;
       *outCursor = i;
@@ -1459,6 +1459,6 @@ int  UnitStack_CalcMilitaryStrength(int stackPtr)
   int v2; // edx
 
   squadCount = Unit_GetSquadCount(stackPtr);
-  return UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck((char *)(v2 + 6), squadCount, 0);
+  return UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck((char *)(uintptr_t)(v2 + 6), squadCount, 0);
 }
 // 412BEA: variable 'v2' is possibly undefined

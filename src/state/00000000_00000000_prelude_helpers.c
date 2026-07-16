@@ -153,7 +153,7 @@ CLASH95_INTERNAL int RenderSurface_InvokeSlot60(_DWORD *surface)
 
   vtable = (unsigned int)surface[46];
   if ( vtable == (unsigned int)(uintptr_t)g_Surface_Vtable || vtable == (unsigned int)(uintptr_t)g_ScratchSurface_Vtable )
-    return Surface_GetReadIncrFromStride((int)surface);
+    return Surface_GetReadIncrFromStride((int)(intptr_t)surface);
   if ( vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable )
     return Surface_GetReadIncrZero();
   return 0;
@@ -167,7 +167,7 @@ CLASH95_INTERNAL int RenderSurface_InvokeSlot64(_DWORD *surface)
   if ( vtable == (unsigned int)(uintptr_t)g_Surface_Vtable )
     return Surface_GetWriteIncrAndMarkDirty(surface);
   if ( vtable == (unsigned int)(uintptr_t)g_ScratchSurface_Vtable )
-    return Surface_GetWriteIncrFromStride((int)surface);
+    return Surface_GetWriteIncrFromStride((int)(intptr_t)surface);
   if ( vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable )
     return Surface_GetWriteIncrZero();
   return 0;
@@ -246,7 +246,7 @@ CLASH95_INTERNAL int RenderHandle_InvokeCopyDispatch(int source_handle, int dest
 {
   int dispatch_fn;
 
-  dispatch_fn = *(_DWORD *)(source_handle + 172);
+  dispatch_fn = *(_DWORD *)(uintptr_t)(source_handle + 172);
   if ( !dispatch_fn )
     return 0;
   return ((int (__cdecl *)(int, int))(uintptr_t)(unsigned int)dispatch_fn)(source_handle, destination_handle);

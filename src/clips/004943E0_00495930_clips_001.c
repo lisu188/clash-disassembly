@@ -16,21 +16,21 @@ signed int  AST_NewNode(__int16 type, int value)
   signed int result; // eax
 
   nodeType = type;
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 56);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = *freeListHead;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeListHead;
     result = g_ClipsMemFreeListTemp;
   }
   else
   {
     result = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_DWORD *)(result + 10) = 0;
-  *(_DWORD *)(result + 6) = 0;
-  *(_WORD *)result = nodeType;
-  *(_DWORD *)(result + 2) = value;
+  *(_DWORD *)(uintptr_t)(result + 10) = 0;
+  *(_DWORD *)(uintptr_t)(result + 6) = 0;
+  *(_WORD *)(uintptr_t)result = nodeType;
+  *(_DWORD *)(uintptr_t)(result + 2) = value;
   return result;
 }
 // 49440E: variable 'v2' is possibly undefined
@@ -58,38 +58,38 @@ signed int  Rules_PrintFieldExprList(signed int result, __int16 *theExpression)
       switch ( *exprPtr )
       {
         case 10:
-          Output_Write(fileid, (int)asc_504DE0, fileid);
-          Output_Write(v4, *(_DWORD *)(**(_DWORD **)(exprPtr + 1) + 16), v4);
+          Output_Write(fileid, (int)(intptr_t)asc_504DE0, fileid);
+          Output_Write(v4, *(_DWORD *)(uintptr_t)(**(_DWORD **)(exprPtr + 1) + 16), v4);
           if ( *(_DWORD *)(exprPtr + 3) )
-            Output_Write(v5, (int)asc_504DE4, v5);
+            Output_Write(v5, (int)(intptr_t)asc_504DE4, v5);
           Rules_PrintFieldExprList(v5, *(_DWORD *)(exprPtr + 3));
           printString = asc_504DE8;
           v8 = v6;
           goto LABEL_7;
         case 13:
         case 15:
-          Output_Write(fileid, (int)aQuestion_PrintSingleFieldVarPrefix, fileid);
+          Output_Write(fileid, (int)(intptr_t)aQuestion_PrintSingleFieldVarPrefix, fileid);
           v8 = v6;
-          printString = *(char **)(*(_DWORD *)(exprPtr + 1) + 16);
+          printString = *(char **)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
           goto LABEL_7;
         case 14:
         case 16:
-          Output_Write(fileid, (int)aQuestion_PrintMultiFieldVarPrefix, fileid);
+          Output_Write(fileid, (int)(intptr_t)aQuestion_PrintMultiFieldVarPrefix, fileid);
           v8 = v6;
-          printString = *(char **)(*(_DWORD *)(exprPtr + 1) + 16);
+          printString = *(char **)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
 LABEL_7:
-          result = Output_Write(v8, (int)printString, v6);
+          result = Output_Write(v8, (int)(intptr_t)printString, v6);
           break;
         default:
           oldExpression = g_ClipsCurrentExpression;
-          g_ClipsCurrentExpression = (int)exprPtr;
+          g_ClipsCurrentExpression = (int)(intptr_t)exprPtr;
           result = Rules_PrintAtomValue(fileid, *exprPtr, *(int **)(exprPtr + 1));
           g_ClipsCurrentExpression = oldExpression;
           break;
       }
       exprPtr = *(__int16 **)(exprPtr + 5);
       if ( exprPtr )
-        result = Output_Write(fileid, (int)asc_504DE4, fileid);
+        result = Output_Write(fileid, (int)(intptr_t)asc_504DE4, fileid);
     }
   }
   return result;
@@ -123,27 +123,27 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *expr2)
           expr1LastArg = *(_DWORD *)((char *)result + 6);
           if ( expr1LastArg )
           {
-            while ( *(_DWORD *)(expr1LastArg + 10) )
-              expr1LastArg = *(_DWORD *)(expr1LastArg + 10);
-            *(_DWORD *)(expr1LastArg + 10) = *(_DWORD *)((char *)expr2 + 6);
-            g_ClipsMemFreeListTemp = (int)expr2;
-            *expr2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-            *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+            while ( *(_DWORD *)(uintptr_t)(expr1LastArg + 10) )
+              expr1LastArg = *(_DWORD *)(uintptr_t)(expr1LastArg + 10);
+            *(_DWORD *)(uintptr_t)(expr1LastArg + 10) = *(_DWORD *)((char *)expr2 + 6);
+            g_ClipsMemFreeListTemp = (int)(intptr_t)expr2;
+            *expr2 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+            *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
             return expr1;
           }
           else
           {
-            g_ClipsMemFreeListTemp = (int)expr1;
-            *expr1 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-            *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+            g_ClipsMemFreeListTemp = (int)(intptr_t)expr1;
+            *expr1 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+            *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
             return expr2;
           }
         }
         else
         {
-          result = (_DWORD *)AST_NewNode(10, g_Clips_SymbolAnd);
+          result = (_DWORD *)(uintptr_t)AST_NewNode(10, g_Clips_SymbolAnd);
           *(_DWORD *)((char *)result + 6) = firstArg;
-          *(_DWORD *)(firstArg + 10) = expr2;
+          *(_DWORD *)(uintptr_t)(firstArg + 10) = expr2;
         }
       }
       else
@@ -157,9 +157,9 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *expr2)
         }
         else
         {
-          g_ClipsMemFreeListTemp = (int)expr2;
-          *expr2 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-          *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = (int)(intptr_t)expr2;
+          *expr2 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
           return expr1;
         }
       }
@@ -169,16 +169,16 @@ _DWORD * AST_MergeFieldAccessNodes(_DWORD *result, _DWORD *expr2)
       lastArg = *(_DWORD *)((char *)result + 6);
       if ( lastArg )
       {
-        while ( *(_DWORD *)(lastArg + 10) )
-          lastArg = *(_DWORD *)(lastArg + 10);
-        *(_DWORD *)(lastArg + 10) = expr2;
+        while ( *(_DWORD *)(uintptr_t)(lastArg + 10) )
+          lastArg = *(_DWORD *)(uintptr_t)(lastArg + 10);
+        *(_DWORD *)(uintptr_t)(lastArg + 10) = expr2;
         return expr1;
       }
       else
       {
-        g_ClipsMemFreeListTemp = (int)expr1;
-        *expr1 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+        g_ClipsMemFreeListTemp = (int)(intptr_t)expr1;
+        *expr1 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
         return expr2;
       }
     }
@@ -200,9 +200,9 @@ int  AST_AppendNodeList(int expr1, int expr2)
     return expr2;
   if ( expr2 )
   {
-    for ( ; *(_DWORD *)(expr1 + 10); expr1 = *(_DWORD *)(expr1 + 10) )
+    for ( ; *(_DWORD *)(uintptr_t)(expr1 + 10); expr1 = *(_DWORD *)(uintptr_t)(expr1 + 10) )
       ;
-    *(_DWORD *)(expr1 + 10) = expr2;
+    *(_DWORD *)(uintptr_t)(expr1 + 10) = expr2;
   }
   return listHead;
 }
@@ -215,7 +215,7 @@ void Rules_FlushPPBuffer(void)
     g_ClipsPPBackupOnce = 0;
     g_Rules_PPBackupTwicePos = 0;
     g_PPBufferLength = 0;
-    *(_BYTE *)g_Clips_PPBuffer = 0;
+    *(_BYTE *)(uintptr_t)g_Clips_PPBuffer = 0;
   }
 }
 // 51AA18: using guessed type int dword_51AA18;
@@ -232,7 +232,7 @@ signed int Rules_DestroyPPBuffer(void)
   g_Rules_PPBackupTwicePos = 0;
   g_PPBufferLength = 0;
   if ( g_Clips_PPBuffer )
-    result = Mem_SmallBlockFree((_DWORD *)g_Clips_PPBuffer, g_ClipsPPBufferMax);
+    result = Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_Clips_PPBuffer, g_ClipsPPBufferMax);
   g_Clips_PPBuffer = 0;
   g_ClipsPPBufferMax = 0;
   return result;
@@ -254,13 +254,13 @@ char * Rules_SavePPBuffer(char *result)
     strlen(result);
     if ( (int)(strlen(result) + 1 + g_PPBufferLength) >= g_ClipsPPBufferMax )
     {
-      g_Clips_PPBuffer = (int)Mem_Realloc((char *)g_Clips_PPBuffer, g_ClipsPPBufferMax, g_ClipsPPBufferMax + 512);
+      g_Clips_PPBuffer = (int)(intptr_t)Mem_Realloc((char *)(uintptr_t)g_Clips_PPBuffer, g_ClipsPPBufferMax, g_ClipsPPBufferMax + 512);
       g_ClipsPPBufferMax += 512;
     }
     g_Rules_PPBackupTwicePos = g_ClipsPPBackupOnce;
     g_ClipsPPBackupOnce = g_PPBufferLength;
-    result = Str_Append(str, (char *)g_Clips_PPBuffer, (unsigned int *)&g_ClipsPPBufferMax, &g_PPBufferLength);
-    g_Clips_PPBuffer = (int)result;
+    result = Str_Append(str, (char *)(uintptr_t)g_Clips_PPBuffer, (unsigned int *)&g_ClipsPPBufferMax, &g_PPBufferLength);
+    g_Clips_PPBuffer = (int)(intptr_t)result;
   }
   return result;
 }
@@ -285,7 +285,7 @@ int Rules_BackupPPBuffer()
       backupPos = g_ClipsPPBackupOnce;
       g_ClipsPPBackupOnce = g_Rules_PPBackupTwicePos;
       result = g_Clips_PPBuffer + backupPos;
-      *(_BYTE *)(g_Clips_PPBuffer + backupPos) = 0;
+      *(_BYTE *)(uintptr_t)(g_Clips_PPBuffer + backupPos) = 0;
     }
   }
   return result;
@@ -306,8 +306,8 @@ char *Rules_CopyPPBuffer(void)
   char currentChar; // al
   char nextChar; // al
 
-  copyBuffer = (char *)Mem_SmallBlockAlloc(strlen((const char *)g_Clips_PPBuffer) + 1);
-  sourcePtr = (char *)g_Clips_PPBuffer;
+  copyBuffer = (char *)Mem_SmallBlockAlloc(strlen((const char *)(uintptr_t)g_Clips_PPBuffer) + 1);
+  sourcePtr = (char *)(uintptr_t)g_Clips_PPBuffer;
   destPtr = copyBuffer;
   bufferStart = copyBuffer;
   do
@@ -426,68 +426,68 @@ int *Rules_ClearAtomInUseMarks(void)
   int *bitmapTableEnd; // ecx
   int *result; // eax
 
-  symbolBucket = (_DWORD *)Rules_GetSymbolTable();
+  symbolBucket = (_DWORD *)(uintptr_t)Rules_GetSymbolTable();
   symbolTableEnd = symbolBucket + 1013;
   do
   {
-    symbolPtr = (_DWORD *)*symbolBucket;
+    symbolPtr = (_DWORD *)(uintptr_t)*symbolBucket;
     if ( *symbolBucket )
     {
       do
       {
         symbolPtr[3] &= ~2u;
-        symbolPtr = (_DWORD *)*symbolPtr;
+        symbolPtr = (_DWORD *)(uintptr_t)*symbolPtr;
       }
       while ( symbolPtr );
     }
     ++symbolBucket;
   }
   while ( symbolBucket != symbolTableEnd );
-  floatBucket = (_DWORD *)Rules_GetFloatTable();
+  floatBucket = (_DWORD *)(uintptr_t)Rules_GetFloatTable();
   floatTableEnd = floatBucket + 503;
   do
   {
-    floatPtr = (_DWORD *)*floatBucket;
+    floatPtr = (_DWORD *)(uintptr_t)*floatBucket;
     if ( *floatBucket )
     {
       do
       {
         floatPtr[3] &= ~2u;
-        floatPtr = (_DWORD *)*floatPtr;
+        floatPtr = (_DWORD *)(uintptr_t)*floatPtr;
       }
       while ( floatPtr );
     }
     ++floatBucket;
   }
   while ( floatBucket != floatTableEnd );
-  integerBucket = (_DWORD *)Rules_GetIntegerTable();
+  integerBucket = (_DWORD *)(uintptr_t)Rules_GetIntegerTable();
   integerTableEnd = integerBucket + 167;
   do
   {
-    integerPtr = (_DWORD *)*integerBucket;
+    integerPtr = (_DWORD *)(uintptr_t)*integerBucket;
     if ( *integerBucket )
     {
       do
       {
         integerPtr[3] &= ~2u;
-        integerPtr = (_DWORD *)*integerPtr;
+        integerPtr = (_DWORD *)(uintptr_t)*integerPtr;
       }
       while ( integerPtr );
     }
     ++integerBucket;
   }
   while ( integerBucket != integerTableEnd );
-  bitmapBucket = (int *)Rules_GetBitmapTable();
+  bitmapBucket = (int *)(uintptr_t)Rules_GetBitmapTable();
   bitmapTableEnd = bitmapBucket + 167;
   do
   {
-    result = (int *)*bitmapBucket;
+    result = (int *)(uintptr_t)*bitmapBucket;
     if ( *bitmapBucket )
     {
       do
       {
         result[3] &= ~2u;
-        result = (int *)*result;
+        result = (int *)(uintptr_t)*result;
       }
       while ( result );
     }
@@ -513,12 +513,12 @@ const void * Rules_BsaveSymbolTable(int fp)
   numberOfUsedSymbols = 0;
   size = 0;
   symbolTable = Rules_GetSymbolTable();
-  bucketPtr = (int ***)symbolTable;
+  bucketPtr = (int ***)(uintptr_t)symbolTable;
   do
   {
     for ( i = *bucketPtr; i; i = (int **)*i )
     {
-      if ( ((_BYTE)i[3] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)i[3] & 2) != 0 )
       {
         ++numberOfUsedSymbols;
         size += strlen((const char *)i[4]) + 1;
@@ -526,17 +526,17 @@ const void * Rules_BsaveSymbolTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(symbolTable + 4052) );
+  while ( bucketPtr != (int ***)(uintptr_t)(symbolTable + 4052) );
   Rules_BsaveWriteBlock(4, fp, &numberOfUsedSymbols);
   Rules_BsaveWriteBlock(4, fp, &size);
-  writeBucket = (int ***)symbolTable;
-  result = (const void *)(symbolTable + 4052);
-  tableEnd = (int ***)(symbolTable + 4052);
+  writeBucket = (int ***)(uintptr_t)symbolTable;
+  result = (const void *)(uintptr_t)(symbolTable + 4052);
+  tableEnd = (int ***)(uintptr_t)(symbolTable + 4052);
   do
   {
     for ( j = *writeBucket; j; j = (int **)*j )
     {
-      if ( ((_BYTE)j[3] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)j[3] & 2) != 0 )
         result = Rules_BsaveWriteBlock(strlen((const char *)j[4]) + 1, fp, j[4]);
     }
     ++writeBucket;
@@ -559,20 +559,20 @@ const void * Rules_BsaveFloatTable(int fp)
 
   numberOfUsedFloats[0] = 0;
   floatTable = Rules_GetFloatTable();
-  bucketPtr = (int ***)floatTable;
+  bucketPtr = (int ***)(uintptr_t)floatTable;
   do
   {
     for ( i = *bucketPtr; i; i = (int **)*i )
     {
-      if ( ((_BYTE)i[3] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)i[3] & 2) != 0 )
         ++numberOfUsedFloats[0];
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(floatTable + 2012) );
+  while ( bucketPtr != (int ***)(uintptr_t)(floatTable + 2012) );
   result = Rules_BsaveWriteBlock(4, fp, numberOfUsedFloats);
-  writeBucket = (int **)floatTable;
-  tableEnd = (int **)(floatTable + 2012);
+  writeBucket = (int **)(uintptr_t)floatTable;
+  tableEnd = (int **)(uintptr_t)(floatTable + 2012);
   do
   {
     floatPtr = (int **)*writeBucket;
@@ -580,7 +580,7 @@ const void * Rules_BsaveFloatTable(int fp)
     {
       do
       {
-        if ( ((_BYTE)floatPtr[3] & 2) != 0 )
+        if ( ((_BYTE)(intptr_t)floatPtr[3] & 2) != 0 )
           result = Rules_BsaveWriteBlock(8, fp, floatPtr + 4);
         floatPtr = (int **)*floatPtr;
       }
@@ -607,20 +607,20 @@ const void * Rules_BsaveIntegerTable(int fp)
 
   numberOfUsedIntegers[0] = 0;
   integerTable = Rules_GetIntegerTable();
-  bucketPtr = (int ***)integerTable;
+  bucketPtr = (int ***)(uintptr_t)integerTable;
   do
   {
     for ( i = *bucketPtr; i; i = (int **)*i )
     {
-      if ( ((_BYTE)i[3] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)i[3] & 2) != 0 )
         ++numberOfUsedIntegers[0];
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(integerTable + 668) );
+  while ( bucketPtr != (int ***)(uintptr_t)(integerTable + 668) );
   result = Rules_BsaveWriteBlock(4, fp, numberOfUsedIntegers);
-  writeBucket = (int **)integerTable;
-  tableEnd = (int **)(integerTable + 668);
+  writeBucket = (int **)(uintptr_t)integerTable;
+  tableEnd = (int **)(uintptr_t)(integerTable + 668);
   do
   {
     integerPtr = (int **)*writeBucket;
@@ -628,7 +628,7 @@ const void * Rules_BsaveIntegerTable(int fp)
     {
       do
       {
-        if ( ((_BYTE)integerPtr[3] & 2) != 0 )
+        if ( ((_BYTE)(intptr_t)integerPtr[3] & 2) != 0 )
           result = Rules_BsaveWriteBlock(4, fp, integerPtr + 4);
         integerPtr = (int **)*integerPtr;
       }
@@ -659,12 +659,12 @@ const void * Rules_BsaveBitmapTable(int fp)
   numberOfUsedBitMaps = 0;
   size = 0;
   bitmapTable = Rules_GetBitmapTable();
-  bucketPtr = (int ***)bitmapTable;
+  bucketPtr = (int ***)(uintptr_t)bitmapTable;
   do
   {
     for ( i = *bucketPtr; i; i = (int **)*i )
     {
-      if ( ((_BYTE)i[3] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)i[3] & 2) != 0 )
       {
         ++numberOfUsedBitMaps;
         size += *((unsigned __int16 *)i + 10) + 1;
@@ -672,20 +672,20 @@ const void * Rules_BsaveBitmapTable(int fp)
     }
     ++bucketPtr;
   }
-  while ( bucketPtr != (int ***)(bitmapTable + 668) );
+  while ( bucketPtr != (int ***)(uintptr_t)(bitmapTable + 668) );
   Rules_BsaveWriteBlock(4, fp, &numberOfUsedBitMaps);
-  writeBucket = (int **)bitmapTable;
+  writeBucket = (int **)(uintptr_t)bitmapTable;
   result = Rules_BsaveWriteBlock(4, fp, &size);
-  tableEnd = (int **)(bitmapTable + 668);
+  tableEnd = (int **)(uintptr_t)(bitmapTable + 668);
   do
   {
-    for ( j = *writeBucket; j; j = (int *)*j )
+    for ( j = *writeBucket; j; j = (int *)(uintptr_t)*j )
     {
       if ( (j[3] & 2) != 0 )
       {
         tempSize[0] = *((_BYTE *)j + 20);
         Rules_BsaveWriteBlock(1, fp, tempSize);
-        result = Rules_BsaveWriteBlock(*(unsigned __int16 *)(bitmapNode + 20), fp, *(const void **)(bitmapNode + 16));
+        result = Rules_BsaveWriteBlock(*(unsigned __int16 *)(uintptr_t)(bitmapNode + 20), fp, *(const void **)(uintptr_t)(bitmapNode + 16));
       }
     }
     ++writeBucket;
@@ -720,7 +720,7 @@ int Rules_BloadAtomTables(void)
     entry = (unsigned __int8 *)(uintptr_t)(unsigned int)buffer;
     for ( i = 0; i < g_Rules_BloadBitmapCount; ++i )
     {
-      *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * i) = Rules_AddBitmapValue(entry + 1, *entry);
+      *(_DWORD *)(uintptr_t)(g_ClipsBloadBitmapPointerTable + 4 * i) = Rules_AddBitmapValue(entry + 1, *entry);
       entry += *entry + 1;
     }
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, byte_count);
@@ -755,7 +755,7 @@ int Rules_BloadSymbolTable(void)
     symbol_name = (char *)(uintptr_t)(unsigned int)buffer;
     for ( i = 0; i < g_Rules_BloadSymbolCount; ++i )
     {
-      *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * i) = (int)(uintptr_t)Str_Intern(symbol_name, 0);
+      *(_DWORD *)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * i) = (int)(uintptr_t)Str_Intern(symbol_name, 0);
       symbol_name += strlen(symbol_name) + 1;
     }
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, byte_count);
@@ -785,7 +785,7 @@ int Rules_BloadFloatTable(void)
     g_Clips_FloatConstantTable = (int)(uintptr_t)Mem_NewArray(4 * g_BloadFloatTableCount);
     numbers = (double *)(uintptr_t)(unsigned int)buffer;
     for ( i = 0; i < g_BloadFloatTableCount; ++i )
-      *(_DWORD *)(g_Clips_FloatConstantTable + 4 * i) = Rules_AddDoubleValue(numbers[i]);
+      *(_DWORD *)(uintptr_t)(g_Clips_FloatConstantTable + 4 * i) = Rules_AddDoubleValue(numbers[i]);
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 8 * g_BloadFloatTableCount);
   }
   else
@@ -813,7 +813,7 @@ int Rules_BloadIntegerTable(void)
     g_Clips_IntegerConstantTable = (int)(uintptr_t)Mem_NewArray(4 * g_BloadIntegerTableCount);
     integers = (int *)(uintptr_t)(unsigned int)buffer;
     for ( i = 0; i < g_BloadIntegerTableCount; ++i )
-      *(_DWORD *)(g_Clips_IntegerConstantTable + 4 * i) = Rules_AddIntegerValue(integers[i]);
+      *(_DWORD *)(uintptr_t)(g_Clips_IntegerConstantTable + 4 * i) = Rules_AddIntegerValue(integers[i]);
     return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)(unsigned int)buffer, 4 * g_BloadIntegerTableCount);
   }
   else
@@ -831,13 +831,13 @@ signed int Rules_FreeBloadAtomTables(void)
   signed int result; // eax
 
   if ( g_ClipsBloadSymbolPointerArray )
-    result = Mem_SmallBlockRelease((_DWORD *)g_ClipsBloadSymbolPointerArray, 4 * g_Rules_BloadSymbolCount);
+    result = Mem_SmallBlockRelease((_DWORD *)(uintptr_t)g_ClipsBloadSymbolPointerArray, 4 * g_Rules_BloadSymbolCount);
   if ( g_Clips_FloatConstantTable )
-    result = Mem_SmallBlockRelease((_DWORD *)g_Clips_FloatConstantTable, 4 * g_BloadFloatTableCount);
+    result = Mem_SmallBlockRelease((_DWORD *)(uintptr_t)g_Clips_FloatConstantTable, 4 * g_BloadFloatTableCount);
   if ( g_Clips_IntegerConstantTable )
-    result = Mem_SmallBlockRelease((_DWORD *)g_Clips_IntegerConstantTable, 4 * g_BloadIntegerTableCount);
+    result = Mem_SmallBlockRelease((_DWORD *)(uintptr_t)g_Clips_IntegerConstantTable, 4 * g_BloadIntegerTableCount);
   if ( g_ClipsBloadBitmapPointerTable )
-    return Mem_SmallBlockRelease((_DWORD *)g_ClipsBloadBitmapPointerTable, 4 * g_Rules_BloadBitmapCount);
+    return Mem_SmallBlockRelease((_DWORD *)(uintptr_t)g_ClipsBloadBitmapPointerTable, 4 * g_Rules_BloadBitmapCount);
   return result;
 }
 // 51AA2C: using guessed type int dword_51AA2C;
@@ -857,7 +857,7 @@ int Rules_BloadAllocExpressionArray(void)
   result = Rules_BloadReadBlock((uintptr_t)&g_ClipsBloadExpressionCount, 4u);
   if ( g_ClipsBloadExpressionCount )
   {
-    result = Mem_HeapAllocWithRetry((_DWORD *)(14 * g_ClipsBloadExpressionCount));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(14 * g_ClipsBloadExpressionCount));
     g_ClipsPackedExpressionArray = result;
   }
   else
@@ -901,7 +901,7 @@ int  Rules_RefreshExpressionEntry(__int16 *bexp, int obji)
 
   exprOffset = 14 * obji;
   theType = *bexp;
-  *(_WORD *)(g_ClipsPackedExpressionArray + 14 * obji) = *bexp;
+  *(_WORD *)(uintptr_t)(g_ClipsPackedExpressionArray + 14 * obji) = *bexp;
   if ( theType < 8u )
   {
     if ( theType < 3u )
@@ -911,10 +911,10 @@ int  Rules_RefreshExpressionEntry(__int16 *bexp, int obji)
         v6 = g_Clips_FloatConstantTable;
         v7 = 4 * *(_DWORD *)(bexp + 1);
 LABEL_5:
-        *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * obji + 2) = *(_DWORD *)(v7 + v6);
+        *(_DWORD *)(uintptr_t)(g_ClipsPackedExpressionArray + 14 * obji + 2) = *(_DWORD *)(uintptr_t)(v7 + v6);
         v8 = 14 * obji;
 LABEL_6:
-        ++*(_DWORD *)(*(_DWORD *)(v8 + g_ClipsPackedExpressionArray + 2) + 4);
+        ++*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + g_ClipsPackedExpressionArray + 2) + 4);
         goto LABEL_7;
       }
       if ( theType <= 1u )
@@ -925,7 +925,7 @@ LABEL_6:
       }
 LABEL_12:
       v8 = 14 * obji;
-      *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * obji + 2) = *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * *(_DWORD *)(bexp + 1));
+      *(_DWORD *)(uintptr_t)(g_ClipsPackedExpressionArray + 14 * obji + 2) = *(_DWORD *)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * *(_DWORD *)(bexp + 1));
       goto LABEL_6;
     }
     if ( theType <= 3u )
@@ -934,27 +934,27 @@ LABEL_12:
     {
       if ( theType > 6u )
       {
-        *(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2) = &g_Instance_DummyInstanceRecord;
-        Rules_IncrementRefCountField40(*(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2));
+        *(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2) = &g_Instance_DummyInstanceRecord;
+        Rules_IncrementRefCountField40(*(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2));
       }
       else
       {
-        *(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2) = &g_Rules_DummyFactPtr;
-        Rules_IncrementFactRefCount(*(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2));
+        *(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2) = &g_Rules_DummyFactPtr;
+        Rules_IncrementFactRefCount(*(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2));
       }
       goto LABEL_7;
     }
     if ( theType == 5 )
     {
-      *(_DWORD *)(14 * obji + g_ClipsPackedExpressionArray + 2) = 0;
+      *(_DWORD *)(uintptr_t)(14 * obji + g_ClipsPackedExpressionArray + 2) = 0;
       goto LABEL_7;
     }
 LABEL_26:
     primitiveEntity = g_Clips_PrimitiveEntityTable[*bexp];
-    if ( !primitiveEntity || (*(_BYTE *)(primitiveEntity + 1) & 0x40) == 0 )
+    if ( !primitiveEntity || (*(_BYTE *)(uintptr_t)(primitiveEntity + 1) & 0x40) == 0 )
       goto LABEL_7;
     v8 = 14 * obji;
-    *(_DWORD *)(14 * obji + g_ClipsPackedExpressionArray + 2) = *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * *(_DWORD *)(bexp + 1));
+    *(_DWORD *)(uintptr_t)(14 * obji + g_ClipsPackedExpressionArray + 2) = *(_DWORD *)(uintptr_t)(g_ClipsBloadBitmapPointerTable + 4 * *(_DWORD *)(bexp + 1));
     goto LABEL_6;
   }
   if ( theType <= 8u )
@@ -967,7 +967,7 @@ LABEL_26:
     {
       if ( theType == 35 )
       {
-        *(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2) = g_DeftemplateRecordTable + 36 * *(_DWORD *)(bexp + 1);
+        *(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2) = g_DeftemplateRecordTable + 36 * *(_DWORD *)(bexp + 1);
         goto LABEL_7;
       }
       goto LABEL_26;
@@ -978,7 +978,7 @@ LABEL_26:
         goto LABEL_26;
       if ( theType <= 0x3Cu )
       {
-        *(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2) = g_DefglobalBloadRecords + 56 * *(_DWORD *)(bexp + 1);
+        *(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2) = g_DefglobalBloadRecords + 56 * *(_DWORD *)(bexp + 1);
         goto LABEL_7;
       }
       if ( theType != 105 )
@@ -991,7 +991,7 @@ LABEL_26:
         theDefclass = 0;
       else
         theDefclass = 124 * classIndex + g_Clips_DefclassArrayBase;
-      *(_DWORD *)(14 * obji + g_ClipsPackedExpressionArray + 2) = theDefclass;
+      *(_DWORD *)(uintptr_t)(14 * obji + g_ClipsPackedExpressionArray + 2) = theDefclass;
     }
   }
   else
@@ -1000,7 +1000,7 @@ LABEL_26:
     {
       if ( theType == 10 )
       {
-        *(_DWORD *)(g_ClipsPackedExpressionArray + exprOffset + 2) = *(_DWORD *)(4 * *(_DWORD *)(bexp + 1) + g_Rules_BloadFunctionPtrTable);
+        *(_DWORD *)(uintptr_t)(g_ClipsPackedExpressionArray + exprOffset + 2) = *(_DWORD *)(uintptr_t)(4 * *(_DWORD *)(bexp + 1) + g_Rules_BloadFunctionPtrTable);
         goto LABEL_7;
       }
       goto LABEL_26;
@@ -1012,7 +1012,7 @@ LABEL_26:
         theDeffunction = 0;
       else
         theDeffunction = 46 * deffunctionIndex + g_DeffunctionBloadRecordArray;
-      *(_DWORD *)(14 * obji + g_ClipsPackedExpressionArray + 2) = theDeffunction;
+      *(_DWORD *)(uintptr_t)(14 * obji + g_ClipsPackedExpressionArray + 2) = theDeffunction;
     }
     else
     {
@@ -1021,23 +1021,23 @@ LABEL_26:
         theDefgeneric = 0;
       else
         theDefgeneric = 40 * genericIndex + g_DefgenericMethodArray;
-      *(_DWORD *)(g_ClipsPackedExpressionArray + 14 * obji + 2) = theDefgeneric;
+      *(_DWORD *)(uintptr_t)(g_ClipsPackedExpressionArray + 14 * obji + 2) = theDefgeneric;
     }
   }
 LABEL_7:
   nextArgIndex = *(_DWORD *)(bexp + 5);
   v10 = 14 * obji;
   if ( nextArgIndex == -1 )
-    *(_DWORD *)(v10 + g_ClipsPackedExpressionArray + 10) = 0;
+    *(_DWORD *)(uintptr_t)(v10 + g_ClipsPackedExpressionArray + 10) = 0;
   else
-    *(_DWORD *)(v10 + g_ClipsPackedExpressionArray + 10) = g_ClipsPackedExpressionArray + 14 * nextArgIndex;
+    *(_DWORD *)(uintptr_t)(v10 + g_ClipsPackedExpressionArray + 10) = g_ClipsPackedExpressionArray + 14 * nextArgIndex;
   argListIndex = *(_DWORD *)(bexp + 3);
   v12 = 14 * obji;
   result = g_ClipsPackedExpressionArray;
   if ( argListIndex == -1 )
-    *(_DWORD *)(v12 + g_ClipsPackedExpressionArray + 6) = 0;
+    *(_DWORD *)(uintptr_t)(v12 + g_ClipsPackedExpressionArray + 6) = 0;
   else
-    *(_DWORD *)(v12 + g_ClipsPackedExpressionArray + 6) = g_ClipsPackedExpressionArray + 14 * argListIndex;
+    *(_DWORD *)(uintptr_t)(v12 + g_ClipsPackedExpressionArray + 6) = g_ClipsPackedExpressionArray + 14 * argListIndex;
   return result;
 }
 // 49526E: variable 'a2' is possibly undefined
@@ -1073,17 +1073,17 @@ signed int Rules_FreeBloadedExpressions(void)
     do
     {
       exprPtr = exprOffset + g_ClipsPackedExpressionArray;
-      theType = *(_WORD *)(exprOffset + g_ClipsPackedExpressionArray);
+      theType = *(_WORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray);
       if ( theType >= 6u )
       {
         if ( theType <= 6u )
         {
-          Rules_DecrementFactRefCount(*(_DWORD *)(exprPtr + 2));
+          Rules_DecrementFactRefCount(*(_DWORD *)(uintptr_t)(exprPtr + 2));
           goto LABEL_6;
         }
         if ( theType < 8u )
         {
-          Instance_DecrementBusyCount(*(_DWORD *)(exprPtr + 2));
+          Instance_DecrementBusyCount(*(_DWORD *)(uintptr_t)(exprPtr + 2));
           goto LABEL_6;
         }
         if ( theType <= 8u )
@@ -1101,22 +1101,22 @@ signed int Rules_FreeBloadedExpressions(void)
         {
           if ( theType <= 1u )
           {
-            Rules_DecrementIntegerCount(*(_DWORD *)(exprPtr + 2), exprOffset);
+            Rules_DecrementIntegerCount(*(_DWORD *)(uintptr_t)(exprPtr + 2), exprOffset);
             goto LABEL_6;
           }
           if ( theType >= 4u )
           {
 LABEL_13:
-            primitiveEntity = g_Clips_PrimitiveEntityTable[*(__int16 *)(exprOffset + g_ClipsPackedExpressionArray)];
-            if ( primitiveEntity && (*(_BYTE *)(primitiveEntity + 1) & 0x40) != 0 )
-              Rules_DecrementBitmapCount(*(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2), exprOffset);
+            primitiveEntity = g_Clips_PrimitiveEntityTable[*(__int16 *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray)];
+            if ( primitiveEntity && (*(_BYTE *)(uintptr_t)(primitiveEntity + 1) & 0x40) != 0 )
+              Rules_DecrementBitmapCount(*(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2), exprOffset);
             goto LABEL_6;
           }
 LABEL_21:
-          Rules_DecrementSymbolCount(*(_DWORD *)(exprOffset + g_ClipsPackedExpressionArray + 2), exprOffset);
+          Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(exprOffset + g_ClipsPackedExpressionArray + 2), exprOffset);
           goto LABEL_6;
         }
-        Rules_DecrementFloatCount(*(_DWORD *)(exprPtr + 2), exprOffset);
+        Rules_DecrementFloatCount(*(_DWORD *)(uintptr_t)(exprPtr + 2), exprOffset);
       }
 LABEL_6:
       ++exprIndex;
@@ -1147,11 +1147,11 @@ int Rules_CountHashedExpressions(void)
   for ( i = 0; i != 2012; i += 4 )
   {
     result = g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(v4 + 12) )
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v4 + 12) )
     {
-      Rules_MarkReferencedFunctions(*(__int16 **)(j + 8));
-      *(_DWORD *)(exphash + 16) = g_ClipsExpressionNodeIndex;
-      result = AST_CountTreeNodes(*(_DWORD *)(exphash + 8));
+      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(j + 8));
+      *(_DWORD *)(uintptr_t)(exphash + 16) = g_ClipsExpressionNodeIndex;
+      result = AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(exphash + 8));
       g_ClipsExpressionNodeIndex += result;
     }
   }
@@ -1173,9 +1173,9 @@ __int16 * Rules_AssignHashedExpressionIndices(int fp)
 
   for ( i = 0; i != 2012; i += 4 )
   {
-    result = (__int16 *)g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(v5 + 12) )
-      result = Rules_BsaveWriteExpression(*(__int16 **)(j + 8), fp);
+    result = (__int16 *)(uintptr_t)g_ExpressionHashTable;
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v5 + 12) )
+      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(j + 8), fp);
   }
   return result;
 }
@@ -1189,15 +1189,15 @@ int Rules_InvokeConstructCallbacks(void)
   int result; // eax
   int v2; // edx
 
-  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(v2 + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(v2 + 36) )
   {
-    while ( !*(_DWORD *)(i + 20) )
+    while ( !*(_DWORD *)(uintptr_t)(i + 20) )
     {
-      i = *(_DWORD *)(i + 36);
+      i = *(_DWORD *)(uintptr_t)(i + 36);
       if ( !i )
         return result;
     }
-    result = (*(int (**)(void))(i + 20))();
+    result = (*(int (**)(void))(uintptr_t)(i + 20))();
   }
   return result;
 }
@@ -1223,7 +1223,7 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
   int newTestArgList; // [esp+6h] [ebp-1Eh]
   int newTestNextArg; // [esp+Ah] [ebp-1Ah]
 
-  for ( i = result; i; i = *(__int16 **)(v7 + 10) )
+  for ( i = result; i; i = *(__int16 **)(uintptr_t)(v7 + 10) )
   {
     currentIndex = ++g_ClipsExpressionNodeIndex;
     newTestType = *i;
@@ -1251,7 +1251,7 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
             theDefclass = *(_DWORD *)(i + 1);
             if ( !theDefclass )
               goto LABEL_42;
-            bsaveValue = *(_DWORD *)(theDefclass + 12);
+            bsaveValue = *(_DWORD *)(uintptr_t)(theDefclass + 12);
             goto LABEL_9;
           }
           if ( theType >= 0x3Cu )
@@ -1261,7 +1261,7 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
               theDefglobal = *(_DWORD *)(i + 1);
               if ( !theDefglobal )
                 goto LABEL_42;
-              bsaveValue = *(_DWORD *)(theDefglobal + 12);
+              bsaveValue = *(_DWORD *)(uintptr_t)(theDefglobal + 12);
               goto LABEL_9;
             }
             if ( theType == 105 )
@@ -1273,7 +1273,7 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
           theDeftemplate = *(_DWORD *)(i + 1);
           if ( !theDeftemplate )
             goto LABEL_42;
-          bsaveValue = *(_DWORD *)(theDeftemplate + 12);
+          bsaveValue = *(_DWORD *)(uintptr_t)(theDeftemplate + 12);
           goto LABEL_9;
         }
       }
@@ -1290,20 +1290,20 @@ LABEL_42:
               newTestValue = -1;
               goto LABEL_10;
             }
-            bsaveValue = *(_DWORD *)(theDeffunction + 12);
+            bsaveValue = *(_DWORD *)(uintptr_t)(theDeffunction + 12);
           }
           else
           {
             theDefgeneric = *(_DWORD *)(i + 1);
             if ( !theDefgeneric )
               goto LABEL_42;
-            bsaveValue = *(_DWORD *)(theDefgeneric + 12);
+            bsaveValue = *(_DWORD *)(uintptr_t)(theDefgeneric + 12);
           }
           goto LABEL_9;
         }
         if ( theType == 10 )
         {
-          bsaveValue = *(__int16 *)(*(_DWORD *)(i + 1) + 25);
+          bsaveValue = *(__int16 *)(uintptr_t)(*(_DWORD *)(i + 1) + 25);
           goto LABEL_9;
         }
       }
@@ -1316,18 +1316,18 @@ LABEL_42:
         goto LABEL_42;
     }
     primitiveEntity = g_Clips_PrimitiveEntityTable[*i];
-    if ( primitiveEntity && (*(_BYTE *)(primitiveEntity + 1) & 0x40) != 0 )
+    if ( primitiveEntity && (*(_BYTE *)(uintptr_t)(primitiveEntity + 1) & 0x40) != 0 )
     {
 LABEL_8:
-      bsaveValue = *(_DWORD *)(*(_DWORD *)(i + 1) + 12) << 16 >> 18;
+      bsaveValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(i + 1) + 12) << 16 >> 18;
 LABEL_9:
       newTestValue = bsaveValue;
     }
 LABEL_10:
     Rules_BsaveWriteBlock(14, fp, &newTestType);
-    result = *(__int16 **)(v7 + 6);
+    result = *(__int16 **)(uintptr_t)(v7 + 6);
     if ( result )
-      result = (__int16 *)Rules_BsaveWriteExpression((int)result, fp);
+      result = (__int16 *)Rules_BsaveWriteExpression((int)(intptr_t)result, fp);
   }
   return result;
 }
@@ -1358,11 +1358,11 @@ const void * Rules_BsaveWriteConstraints(int fp)
   numberOfConstraints[0] = 0;
   do
   {
-    for ( i = *(_DWORD *)(g_ConstraintHashTable + hashOffset); i; ++theIndex )
+    for ( i = *(_DWORD *)(uintptr_t)(g_ConstraintHashTable + hashOffset); i; ++theIndex )
     {
-      *(_WORD *)(i + 4) = theIndex;
+      *(_WORD *)(uintptr_t)(i + 4) = theIndex;
       ++numberOfConstraints[0];
-      i = *(_DWORD *)(i + 30);
+      i = *(_DWORD *)(uintptr_t)(i + 30);
     }
     hashOffset += 4;
   }
@@ -1370,19 +1370,19 @@ const void * Rules_BsaveWriteConstraints(int fp)
   if ( !Rules_DynamicConstraintCheckingEnabled() && numberOfConstraints[0] )
   {
     numberOfConstraints[0] = 0;
-    Rules_PrintWarningID((int)aCstrnbin, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aConstraintsAre, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aWhenDynamicCon, v6);
+    Rules_PrintWarningID((int)(intptr_t)aCstrnbin, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aConstraintsAre, v5);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aWhenDynamicCon, v6);
   }
   result = Rules_BsaveWriteBlock(4, fp, numberOfConstraints);
   if ( numberOfConstraints[0] )
   {
     for ( j = 0; j != 668; j += 4 )
     {
-      result = (const void *)g_ConstraintHashTable;
-      for ( k = *(int **)(j + g_ConstraintHashTable); k; k = *(int **)(v10 + 30) )
+      result = (const void *)(uintptr_t)g_ConstraintHashTable;
+      for ( k = *(int **)(uintptr_t)(j + g_ConstraintHashTable); k; k = *(int **)(uintptr_t)(v10 + 30) )
       {
-        Rules_PackConstraintRecord(k, (int)bsaveRecord);
+        Rules_PackConstraintRecord(k, (int)(intptr_t)bsaveRecord);
         result = Rules_BsaveWriteBlock(24, fp, bsaveRecord);
       }
     }

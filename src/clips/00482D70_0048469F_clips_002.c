@@ -33,11 +33,11 @@ int  Rules_SetAtomicValueIndices(int setAll)
   int bitmapFlags; // ebp
 
   symbolIndex = 0;
-  symbolBucket = (int **)g_Clips_SymbolHashTable;
+  symbolBucket = (int **)(uintptr_t)g_Clips_SymbolHashTable;
   symbolTableEnd = g_Clips_SymbolHashTable + 4052;
   do
   {
-    for ( i = *symbolBucket; i; i = (int *)*i )
+    for ( i = *symbolBucket; i; i = (int *)(uintptr_t)*i )
     {
       if ( (i[3] & 2) != 0 || setAll )
       {
@@ -49,13 +49,13 @@ int  Rules_SetAtomicValueIndices(int setAll)
     }
     ++symbolBucket;
   }
-  while ( symbolBucket != (int **)symbolTableEnd );
+  while ( symbolBucket != (int **)(uintptr_t)symbolTableEnd );
   floatIndex = 0;
-  floatBucket = (int **)g_ClipsFloatHashTable;
+  floatBucket = (int **)(uintptr_t)g_ClipsFloatHashTable;
   floatTableEnd = g_ClipsFloatHashTable + 2012;
   do
   {
-    for ( j = *floatBucket; j; j = (int *)*j )
+    for ( j = *floatBucket; j; j = (int *)(uintptr_t)*j )
     {
       if ( (j[3] & 2) != 0 || setAll )
       {
@@ -67,13 +67,13 @@ int  Rules_SetAtomicValueIndices(int setAll)
     }
     ++floatBucket;
   }
-  while ( floatBucket != (int **)floatTableEnd );
+  while ( floatBucket != (int **)(uintptr_t)floatTableEnd );
   integerIndex = 0;
-  integerBucket = (int **)g_ClipsIntegerHashTable;
+  integerBucket = (int **)(uintptr_t)g_ClipsIntegerHashTable;
   integerTableEnd = g_ClipsIntegerHashTable + 668;
   do
   {
-    for ( k = *integerBucket; k; k = (int *)*k )
+    for ( k = *integerBucket; k; k = (int *)(uintptr_t)*k )
     {
       if ( (k[3] & 2) != 0 || setAll )
       {
@@ -85,25 +85,25 @@ int  Rules_SetAtomicValueIndices(int setAll)
     }
     ++integerBucket;
   }
-  while ( integerBucket != (int **)integerTableEnd );
+  while ( integerBucket != (int **)(uintptr_t)integerTableEnd );
   bitmapIndex = 0;
-  bitmapBucket = (int *)g_ClipsBitmapHashTable;
+  bitmapBucket = (int *)(uintptr_t)g_ClipsBitmapHashTable;
   bitmapTableEnd = g_ClipsBitmapHashTable + 668;
   do
   {
-    for ( result = *bitmapBucket; result; result = *(_DWORD *)result )
+    for ( result = *bitmapBucket; result; result = *(_DWORD *)(uintptr_t)result )
     {
-      if ( (*(_BYTE *)(result + 12) & 2) != 0 || setAll )
+      if ( (*(_BYTE *)(uintptr_t)(result + 12) & 2) != 0 || setAll )
       {
-        *(_BYTE *)(result + 13) = 0;
-        *(_BYTE *)(result + 12) &= 3u;
-        bitmapFlags = (4 * (bitmapIndex++ & 0x3FFF)) | *(_DWORD *)(result + 12);
-        *(_DWORD *)(result + 12) = bitmapFlags;
+        *(_BYTE *)(uintptr_t)(result + 13) = 0;
+        *(_BYTE *)(uintptr_t)(result + 12) &= 3u;
+        bitmapFlags = (4 * (bitmapIndex++ & 0x3FFF)) | *(_DWORD *)(uintptr_t)(result + 12);
+        *(_DWORD *)(uintptr_t)(result + 12) = bitmapFlags;
       }
     }
     ++bitmapBucket;
   }
-  while ( bitmapBucket != (int *)bitmapTableEnd );
+  while ( bitmapBucket != (int *)(uintptr_t)bitmapTableEnd );
   return result;
 }
 // 54DD50: using guessed type int dword_54DD50;
@@ -131,10 +131,10 @@ int *Rules_RestoreAtomicValueBuckets(void)
   int *result; // eax
   unsigned int bitmapFlags; // ebp
 
-  symbolBucket = (_DWORD *)g_Clips_SymbolHashTable;
+  symbolBucket = (_DWORD *)(uintptr_t)g_Clips_SymbolHashTable;
   for ( i = 0; i < 1013; ++i )
   {
-    symbolNode = (_DWORD *)*symbolBucket;
+    symbolNode = (_DWORD *)(uintptr_t)*symbolBucket;
     if ( *symbolBucket )
     {
       do
@@ -142,16 +142,16 @@ int *Rules_RestoreAtomicValueBuckets(void)
         symbolFlags = symbolNode[3] & 0xFFFF0003;
         symbolNode[3] = symbolFlags;
         symbolNode[3] = (4 * (i & 0x3FFF)) | symbolFlags;
-        symbolNode = (_DWORD *)*symbolNode;
+        symbolNode = (_DWORD *)(uintptr_t)*symbolNode;
       }
       while ( symbolNode );
     }
     ++symbolBucket;
   }
-  floatBucket = (_DWORD *)g_ClipsFloatHashTable;
+  floatBucket = (_DWORD *)(uintptr_t)g_ClipsFloatHashTable;
   for ( j = 0; j < 503; ++j )
   {
-    floatNode = (_DWORD *)*floatBucket;
+    floatNode = (_DWORD *)(uintptr_t)*floatBucket;
     if ( *floatBucket )
     {
       do
@@ -159,16 +159,16 @@ int *Rules_RestoreAtomicValueBuckets(void)
         floatFlags = floatNode[3] & 0xFFFF0003;
         floatNode[3] = floatFlags;
         floatNode[3] = (4 * (j & 0x3FFF)) | floatFlags;
-        floatNode = (_DWORD *)*floatNode;
+        floatNode = (_DWORD *)(uintptr_t)*floatNode;
       }
       while ( floatNode );
     }
     ++floatBucket;
   }
-  integerBucket = (_DWORD *)g_ClipsIntegerHashTable;
+  integerBucket = (_DWORD *)(uintptr_t)g_ClipsIntegerHashTable;
   for ( k = 0; k < 167; ++k )
   {
-    integerNode = (_DWORD *)*integerBucket;
+    integerNode = (_DWORD *)(uintptr_t)*integerBucket;
     if ( *integerBucket )
     {
       do
@@ -176,16 +176,16 @@ int *Rules_RestoreAtomicValueBuckets(void)
         integerFlags = integerNode[3] & 0xFFFF0003;
         integerNode[3] = integerFlags;
         integerNode[3] = (4 * (k & 0x3FFF)) | integerFlags;
-        integerNode = (_DWORD *)*integerNode;
+        integerNode = (_DWORD *)(uintptr_t)*integerNode;
       }
       while ( integerNode );
     }
     ++integerBucket;
   }
-  bitmapBucket = (int *)g_ClipsBitmapHashTable;
+  bitmapBucket = (int *)(uintptr_t)g_ClipsBitmapHashTable;
   for ( m = 0; m < 167; ++m )
   {
-    result = (int *)*bitmapBucket;
+    result = (int *)(uintptr_t)*bitmapBucket;
     if ( *bitmapBucket )
     {
       do
@@ -193,7 +193,7 @@ int *Rules_RestoreAtomicValueBuckets(void)
         bitmapFlags = result[3] & 0xFFFF0003;
         result[3] = bitmapFlags;
         result[3] = (4 * (m & 0x3FFF)) | bitmapFlags;
-        result = (int *)*result;
+        result = (int *)(uintptr_t)*result;
       }
       while ( result );
     }
@@ -209,14 +209,14 @@ int *Rules_RestoreAtomicValueBuckets(void)
 //----- (00483040) --------------------------------------------------------
 int  Rules_IncrementRefCountField40(int result)
 {
-  ++*(_DWORD *)(result + 40);
+  ++*(_DWORD *)(uintptr_t)(result + 40);
   return result;
 }
 
 //----- (00483050) --------------------------------------------------------
 int  Instance_DecrementBusyCount(int result)
 {
-  --*(_DWORD *)(result + 40);
+  --*(_DWORD *)(uintptr_t)(result + 40);
   return result;
 }
 
@@ -225,9 +225,9 @@ int Instance_InitHashTable(void)
 {
   int result; // eax
 
-  g_Instance_HashTableBase = (int)Mem_SmallBlockAlloc(0xAACu);
+  g_Instance_HashTableBase = (int)(intptr_t)Mem_SmallBlockAlloc(0xAACu);
   for ( result = 0; result != 2732; result += 4 )
-    *(_DWORD *)(g_Instance_HashTableBase + result) = 0;
+    *(_DWORD *)(uintptr_t)(g_Instance_HashTableBase + result) = 0;
   return result;
 }
 // 51A278: using guessed type int dword_51A278;
@@ -247,9 +247,9 @@ void Instance_PurgeDeletedInstances(void)
     while ( current_node )
     {
       object_record = *(_DWORD *)(uintptr_t)(unsigned int)current_node;
-      if ( *(_DWORD *)(object_record + 40)
-        || g_ClipsCurrentEvaluationDepth >= *(_DWORD *)(object_record + 32)
-        || *(_DWORD *)(object_record + 8) )
+      if ( *(_DWORD *)(uintptr_t)(object_record + 40)
+        || g_ClipsCurrentEvaluationDepth >= *(_DWORD *)(uintptr_t)(object_record + 32)
+        || *(_DWORD *)(uintptr_t)(object_record + 8) )
       {
         previous_node = current_node;
         current_node = *(_DWORD *)(uintptr_t)(unsigned int)(current_node + 4);
@@ -258,11 +258,11 @@ void Instance_PurgeDeletedInstances(void)
 
       g_ClipsEphemeralItemCount -= 2;
       g_ClipsEphemeralItemBytes -= 88;
-      Rules_DecrementSymbolCount(*(_DWORD *)(object_record + 28), previous_node);
+      Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(object_record + 28), previous_node);
 
       g_ClipsMemFreeListTemp = object_record;
-      *(_DWORD *)(uintptr_t)(unsigned int)object_record = *(_DWORD *)(g_ClipsMemoryTable + 320);
-      *(_DWORD *)(g_ClipsMemoryTable + 320) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(unsigned int)object_record = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 320);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 320) = g_ClipsMemFreeListTemp;
 
       next_node = *(_DWORD *)(uintptr_t)(unsigned int)(current_node + 4);
       if ( previous_node )
@@ -271,8 +271,8 @@ void Instance_PurgeDeletedInstances(void)
         g_Instance_DeletedListHead = next_node;
 
       g_ClipsMemFreeListTemp = current_node;
-      *(_DWORD *)(uintptr_t)(unsigned int)current_node = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(unsigned int)current_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
       current_node = next_node;
     }
   }
@@ -288,7 +288,7 @@ void Instance_PurgeDeletedInstances(void)
 //----- (00483190) --------------------------------------------------------
 unsigned int  Instance_HashNameToBucket(int instanceName)
 {
-  return 11329 * (*(_DWORD *)(instanceName + 12) << 16 >> 18) % 0x2ABu;
+  return 11329 * (*(_DWORD *)(uintptr_t)(instanceName + 12) << 16 >> 18) % 0x2ABu;
 }
 
 //----- (004831B0) --------------------------------------------------------
@@ -301,15 +301,15 @@ int  Instance_PrintClassInstanceSummary(double a1)
 
   Module_BeginEnum();
   savedPurgeFlag = g_Instance_PurgeInProgress;
-  i = (_DWORD *)g_Clips_InstanceListHead;
+  i = (_DWORD *)(uintptr_t)g_Clips_InstanceListHead;
   g_Instance_PurgeInProgress = 1;
   if ( g_Clips_InstanceListHead )
   {
     do
     {
-      Module_SetCurrent(**(_DWORD **)(i[11] + 8));
+      Module_SetCurrent(**(_DWORD **)(uintptr_t)(i[11] + 8));
       MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, v3, v4, 0, a1);
-      for ( i = (_DWORD *)i[17]; i; i = (_DWORD *)i[17] )
+      for ( i = (_DWORD *)(uintptr_t)i[17]; i; i = (_DWORD *)(uintptr_t)i[17] )
       {
         if ( (i[6] & 2) == 0 )
           break;
@@ -513,14 +513,14 @@ BOOL  Parser_ParseSlotDefaultOrRestriction(int mfp, int theExp, _DWORD *val, dou
   val[4] = -1;
   if ( theExp )
   {
-    if ( mfp || *(_DWORD *)(theExp + 10) )
+    if ( mfp || *(_DWORD *)(uintptr_t)(theExp + 10) )
     {
       Rules_StoreEvaluatedNodesAsMultifield(val, theExp, 1, a4);
       return g_ClipsEvaluationError == 0;
     }
     else
     {
-      Parser_ParseForm((__int16 *)theExp, val, (int)val, a4);
+      Parser_ParseForm((__int16 *)(uintptr_t)theExp, val, (int)(intptr_t)val, a4);
       return g_ClipsEvaluationError == 0;
     }
   }
@@ -537,7 +537,7 @@ signed int  Instance_PutSlotValue(_DWORD *ins, int *sp, _DWORD *val, double a4)
 {
   signed int result; // eax
 
-  result = Instance_ValidateSlotValueConstraints(val, *sp, (int)ins);
+  result = Instance_ValidateSlotValueConstraints(val, *sp, (int)(intptr_t)ins);
   if ( result )
     return Instance_StoreSlotValueAndMatch(ins, sp, 0, (uintptr_t)val, a4);
   return result;
@@ -581,12 +581,12 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *ins, int *sp, __int16 a3, ui
     IO_RunRouterExitCallbacks();
   }
   if ( g_Rules_JoinOperationInProgress
-    && (*(_BYTE *)(*sp + 1) & 2) != 0
-    && ((*(_BYTE *)(ins[11] + 20) & 8) != 0 || (*(_BYTE *)*sp & 1) != 0) )
+    && (*(_BYTE *)(uintptr_t)(*sp + 1) & 2) != 0
+    && ((*(_BYTE *)(uintptr_t)(ins[11] + 20) & 8) != 0 || (*(_BYTE *)(uintptr_t)*sp & 1) != 0) )
   {
-    Rules_PrintErrorID((int)aInsfun, 5, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotModifyRe, v21);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPatternMatchin, v22);
+    Rules_PrintErrorID((int)(intptr_t)aInsfun, 5, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotModifyRe, v21);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPatternMatchin, v22);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -595,41 +595,41 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *ins, int *sp, __int16 a3, ui
     if ( ins[5] )
     {
       savedSlotEntry = ins[5]
-         + 12 * ((4 * (*(_DWORD *)(*(_DWORD *)(ins[11] + 60) + 4 * *(_DWORD *)(*(_DWORD *)(*sp + 8) + 8)) - 1)) >> 2);
-      if ( !*(_DWORD *)(savedSlotEntry + 8) )
+         + 12 * ((4 * (*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(ins[11] + 60) + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*sp + 8) + 8)) - 1)) >> 2);
+      if ( !*(_DWORD *)(uintptr_t)(savedSlotEntry + 8) )
       {
-        LOBYTE(a3) = *(_BYTE *)(savedSlotEntry + 4) & 3;
+        LOBYTE(a3) = *(_BYTE *)(uintptr_t)(savedSlotEntry + 4) & 3;
         sourceSlotFlags = sp[1];
-        *(_BYTE *)(savedSlotEntry + 4) = a3;
-        *(_DWORD *)(savedSlotEntry + 4) |= sourceSlotFlags & 0xFC;
-        *(_DWORD *)(savedSlotEntry + 8) = sp[2];
-        if ( (*(_BYTE *)*sp & 2) != 0 )
-          Rules_InstallMultifield(*(__int16 **)(savedSlotEntry + 8));
+        *(_BYTE *)(uintptr_t)(savedSlotEntry + 4) = a3;
+        *(_DWORD *)(uintptr_t)(savedSlotEntry + 4) |= sourceSlotFlags & 0xFC;
+        *(_DWORD *)(uintptr_t)(savedSlotEntry + 8) = sp[2];
+        if ( (*(_BYTE *)(uintptr_t)*sp & 2) != 0 )
+          Rules_InstallMultifield(*(__int16 **)(uintptr_t)(savedSlotEntry + 8));
         else
-          Rules_AtomInstall(*(_DWORD *)(savedSlotEntry + 4) << 24 >> 26, *(_DWORD *)(savedSlotEntry + 8), a3);
+          Rules_AtomInstall(*(_DWORD *)(uintptr_t)(savedSlotEntry + 4) << 24 >> 26, *(_DWORD *)(uintptr_t)(savedSlotEntry + 8), a3);
       }
     }
-    if ( (*(_BYTE *)*sp & 2) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)*sp & 2) != 0 )
     {
-      Rules_DeinstallMultifield((__int16 *)sp[2]);
+      Rules_DeinstallMultifield((__int16 *)(uintptr_t)sp[2]);
       Rules_RegisterEphemeralMultifield(sp[2]);
       flagBits = sp[1] & 3;
       *((_BYTE *)sp + 4) = flagBits;
       *((_BYTE *)sp + 4) = flagBits | 0x10;
       if ( *(_DWORD *)(val + 4) == 4 )
       {
-        sp[2] = (int)Rules_CreateMultifield(*(_DWORD *)(val + 16) - *(_DWORD *)(val + 12) + 1);
+        sp[2] = (int)(intptr_t)Rules_CreateMultifield(*(_DWORD *)(val + 16) - *(_DWORD *)(val + 12) + 1);
         fieldIndex = 1;
         srcFieldIndex = *(_DWORD *)(val + 12) + 1;
         destOffset = 0;
         srcOffset = 6 * srcFieldIndex - 6;
         while ( fieldIndex <= *(_DWORD *)(val + 16) - *(_DWORD *)(val + 12) + 1 )
         {
-          *(_WORD *)(destOffset + sp[2] + 14) = *(_WORD *)(srcOffset + *(_DWORD *)(val + 8) + 14);
+          *(_WORD *)(uintptr_t)(destOffset + sp[2] + 14) = *(_WORD *)(uintptr_t)(srcOffset + *(_DWORD *)(val + 8) + 14);
           ++fieldIndex;
-          fieldValue = *(_DWORD *)(*(_DWORD *)(val + 8) + srcOffset + 16);
+          fieldValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(val + 8) + srcOffset + 16);
           srcOffset += 6;
-          *(_DWORD *)(destOffset + sp[2] + 16) = fieldValue;
+          *(_DWORD *)(uintptr_t)(destOffset + sp[2] + 16) = fieldValue;
           destOffset += 6;
           ++srcFieldIndex;
         }
@@ -637,15 +637,15 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *ins, int *sp, __int16 a3, ui
       else
       {
         newSegment = Rules_CreateMultifield(1);
-        sp[2] = (int)newSegment;
+        sp[2] = (int)(intptr_t)newSegment;
         *((_WORD *)newSegment + 7) = *(_WORD *)(val + 4);
-        *(_DWORD *)(sp[2] + 16) = *(_DWORD *)(val + 8);
+        *(_DWORD *)(uintptr_t)(sp[2] + 16) = *(_DWORD *)(val + 8);
       }
-      Rules_InstallMultifield((__int16 *)sp[2]);
+      Rules_InstallMultifield((__int16 *)(uintptr_t)sp[2]);
     }
     else
     {
-      Rules_AtomDeinstall((unsigned int)(sp[1] << 24) >> 26, (__int16 *)sp[2], a3);
+      Rules_AtomDeinstall((unsigned int)(sp[1] << 24) >> 26, (__int16 *)(uintptr_t)sp[2], a3);
       HIBYTE(v8) = sp[1] & 3;
       valueType = *(_DWORD *)(val + 4) & 0x3F;
       *((_BYTE *)sp + 4) = HIBYTE(v8);
@@ -654,50 +654,50 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *ins, int *sp, __int16 a3, ui
       sp[2] = valueField;
       Rules_AtomInstall((unsigned int)(sp[1] << 24) >> 26, valueField, v8);
     }
-    if ( (*(_BYTE *)(ins[11] + 20) & 0x20) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(ins[11] + 20) & 0x20) != 0 )
     {
-      if ( (*(_BYTE *)*sp & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)*sp & 1) != 0 )
         slotScopeText = aSharedSlot;
       else
         slotScopeText = aLocalSlot;
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)slotScopeText, v11);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*sp + 8) + 12) + 16), v13);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aInInstance, v14);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(ins[7] + 16), v15);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_503AF0, v16);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)slotScopeText, v11);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*sp + 8) + 12) + 16), v13);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aInInstance, v14);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(ins[7] + 16), v15);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_503AF0, v16);
       if ( (sp[1] & 0xFC) == 0x10 )
-        Lexer_OutputFieldRange((int)g_IO_LogicalNameTable_WTrace[0], sp[2], *(_DWORD *)(sp[2] + 6) - 1, 0, 1);
+        Lexer_OutputFieldRange((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], sp[2], *(_DWORD *)(uintptr_t)(sp[2] + 6) - 1, 0, 1);
       else
-        Rules_PrintAtomValue((int)g_IO_LogicalNameTable_WTrace[0], (unsigned int)(sp[1] << 24) >> 26, (int *)sp[2]);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_503AF8, v17);
+        Rules_PrintAtomValue((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (unsigned int)(sp[1] << 24) >> 26, (int *)(uintptr_t)sp[2]);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_503AF8, v17);
     }
     g_Instance_InstancesChangedFlag = 1;
-    if ( (*(_BYTE *)(ins[11] + 20) & 8) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(ins[11] + 20) & 8) == 0 )
       return 1;
     slotDesc = *sp;
-    if ( (*(_BYTE *)(*sp + 1) & 2) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(*sp + 1) & 2) == 0 )
       return 1;
-    if ( (*(_BYTE *)slotDesc & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)slotDesc & 1) != 0 )
     {
       traversalID = Class_NewTraversalID();
       if ( traversalID != -1 )
       {
-        Rules_MarkObjectPatternNetworkTraversal(traversalID, *(_DWORD *)(*sp + 4), *sp, a5);
+        Rules_MarkObjectPatternNetworkTraversal(traversalID, *(_DWORD *)(uintptr_t)(*sp + 4), *sp, a5);
         Class_ReleaseTraversalID();
         return 1;
       }
-      Rules_PrintErrorID((int)aInsfun, 6, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToPatter, v29);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*sp + 8) + 12) + 16), v30);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInClass, v31);
-      classNameText = Rules_GetConstructNameString(*(_DWORD *)(*sp + 4));
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], classNameText, (int)g_IO_LogicalNameTable_WError[0]);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v33);
+      Rules_PrintErrorID((int)(intptr_t)aInsfun, 6, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToPatter, v29);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*sp + 8) + 12) + 16), v30);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInClass, v31);
+      classNameText = Rules_GetConstructNameString(*(_DWORD *)(uintptr_t)(*sp + 4));
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], classNameText, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v33);
       return 1;
     }
     else
     {
-      Rules_ObjectMatchAction((unsigned __int16 *)3, ins, *(_DWORD *)(*(_DWORD *)(slotDesc + 8) + 8), a5);
+      Rules_ObjectMatchAction((unsigned __int16 *)3, ins, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 8), a5);
       return 1;
     }
   }
@@ -734,32 +734,32 @@ signed int  Instance_ValidateSlotValueConstraints(_DWORD *val, int sd, int ins)
   int v13; // ecx
   signed int violationCode; // [esp+0h] [ebp-10h]
 
-  if ( (*(_BYTE *)sd & 2) == 0 && val[1] == 4 )
+  if ( (*(_BYTE *)(uintptr_t)sd & 2) == 0 && val[1] == 4 )
   {
-    Rules_PrintErrorID((int)aInsfun, 7, 0);
-    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], (int)val);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalForSing, v6);
-    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], sd, v7, ins);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v8);
+    Rules_PrintErrorID((int)(intptr_t)aInsfun, 7, 0);
+    Rules_PrintDataObject((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)val);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIllegalForSing, v6);
+    Instance_PrintSlotErrorContext((int)(intptr_t)g_IO_LogicalNameTable_WError[0], sd, v7, ins);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v8);
     Lexer_ErrorRecover(1);
     return 0;
   }
   else if ( val[1] == 105 )
   {
-    Rules_PrintErrorID((int)aInsfun, 8, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVoidFunctionIl, v9);
-    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], sd, v10, ins);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v11);
+    Rules_PrintErrorID((int)(intptr_t)aInsfun, 8, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aVoidFunctionIl, v9);
+    Instance_PrintSlotErrorContext((int)(intptr_t)g_IO_LogicalNameTable_WError[0], sd, v10, ins);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v11);
     Lexer_ErrorRecover(1);
     return 0;
   }
-  else if ( Rules_DynamicConstraintCheckingEnabled() && (violationCode = Rules_CheckFieldAgainstConstraint(val, *(_DWORD *)(sd + 20))) != 0 )
+  else if ( Rules_DynamicConstraintCheckingEnabled() && (violationCode = Rules_CheckFieldAgainstConstraint(val, *(_DWORD *)(uintptr_t)(sd + 20))) != 0 )
   {
-    Rules_PrintErrorID((int)aCstrnchk, 1, 0);
-    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], (int)val);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFor, v12);
-    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], sd, v13, ins);
-    Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, violationCode, *(_DWORD *)(sd + 20), 0);
+    Rules_PrintErrorID((int)(intptr_t)aCstrnchk, 1, 0);
+    Rules_PrintDataObject((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)val);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFor, v12);
+    Instance_PrintSlotErrorContext((int)(intptr_t)g_IO_LogicalNameTable_WError[0], sd, v13, ins);
+    Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, violationCode, *(_DWORD *)(uintptr_t)(sd + 20), 0);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -792,11 +792,11 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
   int v13; // [esp+18h] [ebp-4h]
 
   v13 = functionName;
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &valueBuffer, a1, a3);
+  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &valueBuffer, a1, a3);
   if ( theType == 7 )
   {
-    ins = (_DWORD *)theValue;
-    if ( (*(_BYTE *)(theValue + 24) & 2) != 0 )
+    ins = (_DWORD *)(uintptr_t)theValue;
+    if ( (*(_BYTE *)(uintptr_t)(theValue + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       Lexer_ErrorRecover(1);
@@ -807,10 +807,10 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
   {
     if ( theType != 8 && theType != 2 )
     {
-      Rules_PrintErrorID((int)aInsfun, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_1, v7);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], v8, v8);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v9);
+      Rules_PrintErrorID((int)(intptr_t)aInsfun, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAVal_1, v7);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v8, v8);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v9);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -839,12 +839,12 @@ int __fastcall Instance_ReportNoSuchInstanceError(int instanceName, int function
   int v6; // ecx
   int v7; // ecx
 
-  Rules_PrintErrorID((int)aInsfun, 2, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchInstance, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v7);
+  Rules_PrintErrorID((int)(intptr_t)aInsfun, 2, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoSuchInstance, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunction, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v7);
   return Lexer_ErrorRecover(1);
 }
 // 483BB2: variable 'v3' is possibly undefined
@@ -863,12 +863,12 @@ int __fastcall Instance_ReportNoSuchSlotError(int slotName, int functionName)
   int v6; // ecx
   int v7; // ecx
 
-  Rules_PrintErrorID((int)aInsfun, 3, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchSlot, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v7);
+  Rules_PrintErrorID((int)(intptr_t)aInsfun, 3, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoSuchSlot, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunction, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v7);
   return Lexer_ErrorRecover(1);
 }
 // 483C22: variable 'v3' is possibly undefined
@@ -885,10 +885,10 @@ signed int Instance_ReportInvalidInstanceAddressError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aInsfun, 4, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInvalidInstanc, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v2);
+  Rules_PrintErrorID((int)(intptr_t)aInsfun, 4, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInvalidInstanc, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_InstanceError, v2);
 }
 // 483C90: variable 'v0' is possibly undefined
 // 483C9C: variable 'v1' is possibly undefined
@@ -913,28 +913,28 @@ signed int  Instance_PrintSlotErrorContext(int logicalName, int sd, int a3, int 
   int v10; // ecx
   int v12; // ecx
 
-  Output_Write(logicalName, (int)aSlot, a3);
-  Output_Write(logicalName, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(sd + 8) + 12) + 16), v6);
+  Output_Write(logicalName, (int)(intptr_t)aSlot, a3);
+  Output_Write(logicalName, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(sd + 8) + 12) + 16), v6);
   if ( ins )
   {
-    Output_Write(logicalName, (int)aOfInstance, v7);
-    Output_Write(logicalName, *(_DWORD *)(*(_DWORD *)(ins + 28) + 16), v12);
+    Output_Write(logicalName, (int)(intptr_t)aOfInstance, v7);
+    Output_Write(logicalName, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(ins + 28) + 16), v12);
     contextText = asc_503C24;
   }
   else
   {
-    if ( !*(_DWORD *)(sd + 4) )
+    if ( !*(_DWORD *)(uintptr_t)(sd + 4) )
       goto LABEL_5;
-    Output_Write(logicalName, (int)aOfClass, v7);
-    contextText = (char *)Rules_GetConstructNameString(*(_DWORD *)(sd + 4));
+    Output_Write(logicalName, (int)(intptr_t)aOfClass, v7);
+    contextText = (char *)(uintptr_t)Rules_GetConstructNameString(*(_DWORD *)(uintptr_t)(sd + 4));
   }
-  Output_Write(logicalName, (int)contextText, v9);
+  Output_Write(logicalName, (int)(intptr_t)contextText, v9);
 LABEL_5:
-  Output_Write(logicalName, (int)aFoundIn, v7);
+  Output_Write(logicalName, (int)(intptr_t)aFoundIn, v7);
   if ( v10 )
     return Output_Write(logicalName, v10, v10);
   else
-    return MessageHandler_PrintNameTypeAndClass(logicalName, *(_DWORD **)g_ClipsCurrentHandlerCore, 0);
+    return MessageHandler_PrintNameTypeAndClass(logicalName, *(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore, 0);
 }
 // 483CFB: variable 'v6' is possibly undefined
 // 483D11: variable 'v7' is possibly undefined
@@ -950,11 +950,11 @@ signed int  Instance_PrintNameOfClass(int logicalName, int theInstance, int a3)
   int v5; // ecx
   int v6; // ecx
 
-  Output_Write(logicalName, (int)asc_503C40, logicalName);
+  Output_Write(logicalName, (int)(intptr_t)asc_503C40, logicalName);
   class_name = Rules_GetInstanceClassName(theInstance);
   Output_Write(v5, class_name, v5);
-  Output_Write(v6, (int)aOf, v6);
-  return Class_PrintName(*(_DWORD *)(theInstance + 44), a3);
+  Output_Write(v6, (int)(intptr_t)aOf, v6);
+  return Class_PrintName(*(_DWORD *)(uintptr_t)(theInstance + 44), a3);
 }
 // 483D9B: variable 'v5' is possibly undefined
 // 483DA7: variable 'v6' is possibly undefined
@@ -969,18 +969,18 @@ _DWORD * Instance_FindInSubclasses(int theModule, _DWORD *startInstance)
   int theClass; // eax
   _DWORD *result; // eax
 
-  if ( *(_DWORD *)(theModule + 20) )
+  if ( *(_DWORD *)(uintptr_t)(theModule + 20) )
     return 0;
-  importList = *(_DWORD **)(theModule + 12);
-  *(_DWORD *)(theModule + 20) = 1;
+  importList = *(_DWORD **)(uintptr_t)(theModule + 12);
+  *(_DWORD *)(uintptr_t)(theModule + 20) = 1;
   if ( !importList )
   {
 LABEL_10:
-    for ( result = startInstance; result; result = (_DWORD *)result[15] )
+    for ( result = startInstance; result; result = (_DWORD *)(uintptr_t)result[15] )
     {
       if ( result[7] != startInstance[7] )
         break;
-      if ( (*(_BYTE *)(result[11] + 20) & 2) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(result[11] + 20) & 2) != 0 )
         return result;
     }
     return 0;
@@ -988,23 +988,23 @@ LABEL_10:
   while ( 1 )
   {
     ins = startInstance;
-    importedModule = Module_FindByName(*(_BYTE **)(*importList + 16));
+    importedModule = Module_FindByName(*(_BYTE **)(uintptr_t)(*importList + 16));
     if ( startInstance )
     {
       while ( ins[7] == startInstance[7] )
       {
         theClass = ins[11];
-        if ( importedModule == **(int ***)(theClass + 8) && Class_IsInScope(theClass, v5) )
+        if ( importedModule == **(int ***)(uintptr_t)(theClass + 8) && Class_IsInScope(theClass, v5) )
           return ins;
-        ins = (_DWORD *)ins[15];
+        ins = (_DWORD *)(uintptr_t)ins[15];
         if ( !ins )
           break;
       }
     }
-    result = (_DWORD *)Instance_FindInSubclasses((int)importedModule, (int)startInstance);
+    result = (_DWORD *)Instance_FindInSubclasses((int)(intptr_t)importedModule, (int)(intptr_t)startInstance);
     if ( result )
       return result;
-    importList = (_DWORD *)importList[3];
+    importList = (_DWORD *)(uintptr_t)importList[3];
     if ( !importList )
       goto LABEL_10;
   }
@@ -1021,18 +1021,18 @@ signed int  Instance_PrintStaleOrClassLabel(int logicalName, int theInstance)
   int v8; // ecx
   int v9; // ecx
 
-  if ( (*(_BYTE *)(theInstance + 24) & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(theInstance + 24) & 2) != 0 )
   {
-    Output_Write(logicalName, (int)aStaleInstance, logicalName);
-    Output_Write(v3, *(_DWORD *)(*(_DWORD *)(theInstance + 28) + 16), v3);
-    return Output_Write(v4, (int)asc_503C60, v4);
+    Output_Write(logicalName, (int)(intptr_t)aStaleInstance, logicalName);
+    Output_Write(v3, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 28) + 16), v3);
+    return Output_Write(v4, (int)(intptr_t)asc_503C60, v4);
   }
   else
   {
-    Output_Write(logicalName, (int)asc_503C40, logicalName);
+    Output_Write(logicalName, (int)(intptr_t)asc_503C40, logicalName);
     qualifiedName = Instance_GetQualifiedName(theInstance, v6);
     Output_Write(v8, qualifiedName[4], v8);
-    return Output_Write(v9, (int)asc_503C24, v9);
+    return Output_Write(v9, (int)(intptr_t)asc_503C24, v9);
   }
 }
 // 483E90: variable 'v3' is possibly undefined
@@ -1066,40 +1066,40 @@ signed int  Instance_PrintNameOrDummyLabel(int logicalName, void **theInstance)
     }
     else
     {
-      Output_Write(logicalName, (int)asc_503C40, logicalName);
-      qualifiedName = Instance_GetQualifiedName((int)theInstance, v7);
+      Output_Write(logicalName, (int)(intptr_t)asc_503C40, logicalName);
+      qualifiedName = Instance_GetQualifiedName((int)(intptr_t)theInstance, v7);
       Output_Write(v9, qualifiedName[4], v9);
       labelText = asc_503C24;
       logicalName = v2;
     }
-    return Output_Write(logicalName, (int)labelText, v2);
+    return Output_Write(logicalName, (int)(intptr_t)labelText, v2);
   }
   else
   {
     if ( g_Print_AddressesToStringsFlag )
-      Output_Write(logicalName, (int)asc_503C78, logicalName);
+      Output_Write(logicalName, (int)(intptr_t)asc_503C78, logicalName);
     if ( theInstance == &g_Instance_DummyInstanceRecord )
     {
       suffixText = aDummyInstanc_1;
     }
     else
     {
-      if ( ((_BYTE)theInstance[6] & 2) != 0 )
+      if ( ((_BYTE)(intptr_t)theInstance[6] & 2) != 0 )
       {
-        Output_Write(v2, (int)aStaleInstanc_0, v2);
+        Output_Write(v2, (int)(intptr_t)aStaleInstanc_0, v2);
         Output_Write(v12, *((_DWORD *)theInstance[7] + 4), v12);
       }
       else
       {
-        Output_Write(v2, (int)aInstance_7, v2);
-        fullName = Instance_GetQualifiedName((int)theInstance, v13);
+        Output_Write(v2, (int)(intptr_t)aInstance_7, v2);
+        fullName = Instance_GetQualifiedName((int)(intptr_t)theInstance, v13);
         Output_Write(v15, fullName[4], v15);
       }
       suffixText = asc_503CA4;
     }
-    result = Output_Write(v2, (int)suffixText, v2);
+    result = Output_Write(v2, (int)(intptr_t)suffixText, v2);
     if ( g_Print_AddressesToStringsFlag )
-      return Output_Write(v11, (int)asc_503C78, v11);
+      return Output_Write(v11, (int)(intptr_t)asc_503C78, v11);
   }
   return result;
 }
@@ -1128,27 +1128,27 @@ signed int  Rules_MarkObjectPatternNetworkTraversal(signed int traversalID, sign
 
   traversalRecord = ((traversalID - (__CFSHL__(traversalID >> 31, 3) + 8 * (traversalID >> 31))) >> 3) + theClass;
   result = 1 << (traversalID % 8);
-  if ( ((unsigned __int8)result & *(_BYTE *)(traversalRecord + 108)) == 0 )
+  if ( ((unsigned __int8)result & *(_BYTE *)(uintptr_t)(traversalRecord + 108)) == 0 )
   {
-    *(_BYTE *)(traversalRecord + 108) |= result;
-    slotNameID = *(_DWORD *)(*(_DWORD *)(sd + 8) + 8);
-    if ( slotNameID <= *(_DWORD *)(theClass + 76) )
+    *(_BYTE *)(uintptr_t)(traversalRecord + 108) |= result;
+    slotNameID = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(sd + 8) + 8);
+    if ( slotNameID <= *(_DWORD *)(uintptr_t)(theClass + 76) )
     {
-      slotIndex = *(_DWORD *)(*(_DWORD *)(theClass + 60) + 4 * slotNameID);
+      slotIndex = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theClass + 60) + 4 * slotNameID);
       if ( slotIndex )
       {
-        if ( sd == *(_DWORD *)(*(_DWORD *)(theClass + 56) + 4 * slotIndex - 4) )
+        if ( sd == *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theClass + 56) + 4 * slotIndex - 4) )
         {
-          for ( i = *(_DWORD **)(theClass + 80); i; i = *(_DWORD **)(v13 + 52) )
-            Rules_ObjectMatchAction((unsigned __int16 *)3, i, *(_DWORD *)(*(_DWORD *)(sd + 8) + 8), a4);
+          for ( i = *(_DWORD **)(uintptr_t)(theClass + 80); i; i = *(_DWORD **)(uintptr_t)(v13 + 52) )
+            Rules_ObjectMatchAction((unsigned __int16 *)3, i, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(sd + 8) + 8), a4);
         }
       }
     }
     subclassIndex = 0;
-    for ( j = 0; ; Rules_MarkObjectPatternNetworkTraversal(traversalID, *(_DWORD *)(*(_DWORD *)(theClass + 42) + j - 4), sd, a4) )
+    for ( j = 0; ; Rules_MarkObjectPatternNetworkTraversal(traversalID, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theClass + 42) + j - 4), sd, a4) )
     {
       result = theClass;
-      if ( subclassIndex >= *(unsigned __int16 *)(theClass + 40) )
+      if ( subclassIndex >= *(unsigned __int16 *)(uintptr_t)(theClass + 40) )
         break;
       j += 4;
     }
@@ -1170,34 +1170,34 @@ int  Instance_ReleaseSlotValueContainer(int result)
   __int16 *slotValue; // ebp
 
   theInstance = result;
-  newRefCount = *(_DWORD *)(result + 8) - 1;
-  *(_DWORD *)(result + 8) = newRefCount;
+  newRefCount = *(_DWORD *)(uintptr_t)(result + 8) - 1;
+  *(_DWORD *)(uintptr_t)(result + 8) = newRefCount;
   if ( !newRefCount )
   {
-    if ( (*(_BYTE *)(result + 24) & 2) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(result + 24) & 2) != 0 )
       Instance_ReleaseSlotValues(result);
-    result = *(_DWORD *)(theInstance + 44);
-    if ( *(_DWORD *)(result + 72) )
+    result = *(_DWORD *)(uintptr_t)(theInstance + 44);
+    if ( *(_DWORD *)(uintptr_t)(result + 72) )
     {
       slotIndex = 0;
       for ( i = 0; ; i += 12 )
       {
-        slotCount = *(_DWORD *)(*(_DWORD *)(theInstance + 44) + 72);
+        slotCount = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 72);
         if ( slotIndex >= slotCount )
           break;
-        slotEntry = i + *(_DWORD *)(theInstance + 20);
-        slotValue = *(__int16 **)(slotEntry + 8);
+        slotEntry = i + *(_DWORD *)(uintptr_t)(theInstance + 20);
+        slotValue = *(__int16 **)(uintptr_t)(slotEntry + 8);
         if ( slotValue )
         {
-          if ( (**(_BYTE **)slotEntry & 2) != 0 )
-            Rules_DeinstallMultifield(*(__int16 **)(slotEntry + 8));
+          if ( (**(_BYTE **)(uintptr_t)slotEntry & 2) != 0 )
+            Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(slotEntry + 8));
           else
-            Rules_AtomDeinstall(*(_DWORD *)(slotEntry + 4) << 24 >> 26, slotValue, i);
+            Rules_AtomDeinstall(*(_DWORD *)(uintptr_t)(slotEntry + 4) << 24 >> 26, slotValue, i);
         }
         ++slotIndex;
       }
-      result = Mem_SmallBlockFree(*(_DWORD **)(theInstance + 20), 12 * slotCount);
-      *(_DWORD *)(theInstance + 20) = 0;
+      result = Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theInstance + 20), 12 * slotCount);
+      *(_DWORD *)(uintptr_t)(theInstance + 20) = 0;
     }
   }
   return result;
@@ -1217,17 +1217,17 @@ _DWORD * Instance_AcquireLocalSlotArray(_DWORD *result)
   theInstance = result;
   if ( !result[2] )
   {
-    sharedSlotCount = *(_DWORD *)(result[11] + 72);
+    sharedSlotCount = *(_DWORD *)(uintptr_t)(result[11] + 72);
     if ( sharedSlotCount )
     {
       srcOffset = 0;
       slotArray = Mem_SmallBlockAlloc(12 * sharedSlotCount);
-      *(_DWORD *)(v6 + 20) = slotArray;
+      *(_DWORD *)(uintptr_t)(v6 + 20) = slotArray;
       slotIndex = 0;
       result = 0;
-      while ( slotIndex < *(_DWORD *)(theInstance[11] + 72) )
+      while ( slotIndex < *(_DWORD *)(uintptr_t)(theInstance[11] + 72) )
       {
-        *(_DWORD *)((char *)result + theInstance[5]) = **(_DWORD **)(theInstance[18] + srcOffset);
+        *(_DWORD *)((char *)result + theInstance[5]) = **(_DWORD **)(uintptr_t)(theInstance[18] + srcOffset);
         result += 3;
         srcOffset += 4;
         ++slotIndex;

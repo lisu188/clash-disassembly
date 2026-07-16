@@ -19,7 +19,7 @@ int PP_MakeConst26(void)
   _DWORD bitmap[5]; // [esp+0h] [ebp-14h] BYREF
 
   Mem_AllocArray(bitmap, 4);
-  if ( *(int *)(v0 + 40) <= 0 )
+  if ( *(int *)(uintptr_t)(v0 + 40) <= 0 )
   {
     LOBYTE(bitmap[0]) |= 1u;
     bitmap[0] &= 0xFFFC0001;
@@ -27,20 +27,20 @@ int PP_MakeConst26(void)
   }
   packedWord = bitmap[0];
   LOBYTE(packedWord) = bitmap[0] & 0xFC;
-  if ( *(int *)(v0 + 32) > 0 )
+  if ( *(int *)(uintptr_t)(v0 + 32) > 0 )
   {
     bitmap[0] = packedWord;
-    v2 = (unsigned __int8)(*(_DWORD *)(v0 + 40) - 1);
+    v2 = (unsigned __int8)(*(_DWORD *)(uintptr_t)(v0 + 40) - 1);
     bitmap[0] = (v2 << 10) | packedWord & 0xFFFC03FF;
     LOWORD(v2) = ((_WORD)v2 << 10) | packedWord & 3;
-    v3 = *(_DWORD *)(v0 + 32) - 1;
+    v3 = *(_DWORD *)(uintptr_t)(v0 + 32) - 1;
     LOWORD(bitmap[0]) = v2;
     bitmap[0] |= 4 * v3;
     return Rules_AddBitmapValue(bitmap, 4);
   }
   LOBYTE(packedWord) = packedWord | 2;
   bitmap[0] = packedWord;
-  bitmap[0] = ((unsigned __int8)(*(_DWORD *)(v0 + 40) - 1) << 10) | packedWord & 0xFFFC03FF;
+  bitmap[0] = ((unsigned __int8)(*(_DWORD *)(uintptr_t)(v0 + 40) - 1) << 10) | packedWord & 0xFFFC03FF;
   LOWORD(bitmap[0]) &= 0xFC03u;
   return Rules_AddBitmapValue(bitmap, 4);
 }
@@ -55,7 +55,7 @@ int __fastcall PP_MakeConst27(int a1, int a2)
 
   v5[2] = a1;
   Mem_AllocArray(v5, 4);
-  v3 = *(_DWORD *)(v2 + 40);
+  v3 = *(_DWORD *)(uintptr_t)(v2 + 40);
   LOBYTE(v5[0]) = 0;
   v5[0] |= (unsigned __int8)(v3 - 1);
   return Rules_AddBitmapValue(v5, 4);
@@ -129,32 +129,32 @@ signed int __fastcall Rules_BuildFieldRangeConstraintNode(int firstField, int se
   _DWORD bitmapData[4]; // [esp+0h] [ebp-10h] BYREF
 
   Mem_AllocArray(bitmapData, 4);
-  if ( (*(_BYTE *)(v3 + 9) & 0x40) != 0
-    || *(int *)(v3 + 40) <= 0
-    || (*(_BYTE *)(secondField + 9) & 0x40) != 0
-    || *(int *)(secondField + 40) <= 0 )
+  if ( (*(_BYTE *)(uintptr_t)(v3 + 9) & 0x40) != 0
+    || *(int *)(uintptr_t)(v3 + 40) <= 0
+    || (*(_BYTE *)(uintptr_t)(secondField + 9) & 0x40) != 0
+    || *(int *)(uintptr_t)(secondField + 40) <= 0 )
   {
-    if ( (*(_BYTE *)(v3 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v3 + 8) & 1) != 0 )
       comparisonSymbol = g_ClipsSymbolNeq;
     else
       comparisonSymbol = g_ClipsSymbolEq;
     testNode = AST_NewNode(10, comparisonSymbol);
     v11 = PP_MakeLowTierConst(v10, testNode, v10);
-    *(_DWORD *)(v12 + 6) = v11;
+    *(_DWORD *)(uintptr_t)(v12 + 6) = v11;
     v14 = PP_MakeLowTierConst(secondField, v12, v13);
-    *(_DWORD *)(*(_DWORD *)(v15 + 6) + 10) = v14;
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v15 + 6) + 10) = v14;
     return v15;
   }
   else
   {
     LOBYTE(bitmapData[0]) &= 0xFCu;
-    v4 = *(_DWORD *)(v3 + 40) - 1;
+    v4 = *(_DWORD *)(uintptr_t)(v3 + 40) - 1;
     LOWORD(bitmapData[0]) &= 0xFE03u;
     bitmapData[0] |= 4 * (v4 & 0x7F);
-    v5 = *(_DWORD *)(secondField + 40) - 1;
+    v5 = *(_DWORD *)(uintptr_t)(secondField + 40) - 1;
     BYTE1(bitmapData[0]) &= 1u;
     bitmapData[0] |= (v5 & 0x7F) << 9;
-    if ( (*(_BYTE *)(v3 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v3 + 8) & 1) != 0 )
       LOBYTE(bitmapData[0]) |= 2u;
     else
       LOBYTE(bitmapData[0]) |= 1u;
@@ -195,28 +195,28 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
   int rangeBitmapHigh; // [esp+4h] [ebp-1Ch]
   _DWORD bitmapData[6]; // [esp+8h] [ebp-18h] BYREF
 
-  if ( (*(_BYTE *)(firstField + 9) & 0x40) != 0
-    || *(int *)(firstField + 40) <= 0
-    || (*(_BYTE *)(secondField + 9) & 0x40) != 0
-    || *(int *)(secondField + 40) <= 0 )
+  if ( (*(_BYTE *)(uintptr_t)(firstField + 9) & 0x40) != 0
+    || *(int *)(uintptr_t)(firstField + 40) <= 0
+    || (*(_BYTE *)(uintptr_t)(secondField + 9) & 0x40) != 0
+    || *(int *)(uintptr_t)(secondField + 40) <= 0 )
   {
-    if ( *(int *)(firstField + 40) <= 0
-      || *(_DWORD *)firstField != 15
-      || (firstFlags = *(_DWORD *)(firstField + 8), (firstFlags & 0x3F8000) != 0)
-      && ((firstFlags & 0x3F8000) != 0x8000 || (*(_WORD *)(firstField + 10) & 0x1FC0) != 0)
-      || *(int *)(secondField + 40) <= 0
-      || *(_DWORD *)secondField != 15
-      || (*(_DWORD *)(secondField + 8) & 0x3F8000) != 0 && (*(_WORD *)(secondField + 10) & 0x1FC0) != 0 )
+    if ( *(int *)(uintptr_t)(firstField + 40) <= 0
+      || *(_DWORD *)(uintptr_t)firstField != 15
+      || (firstFlags = *(_DWORD *)(uintptr_t)(firstField + 8), (firstFlags & 0x3F8000) != 0)
+      && ((firstFlags & 0x3F8000) != 0x8000 || (*(_WORD *)(uintptr_t)(firstField + 10) & 0x1FC0) != 0)
+      || *(int *)(uintptr_t)(secondField + 40) <= 0
+      || *(_DWORD *)(uintptr_t)secondField != 15
+      || (*(_DWORD *)(uintptr_t)(secondField + 8) & 0x3F8000) != 0 && (*(_WORD *)(uintptr_t)(secondField + 10) & 0x1FC0) != 0 )
     {
-      if ( (*(_BYTE *)(firstField + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(firstField + 8) & 1) != 0 )
         comparisonSymbol = g_ClipsSymbolNeq;
       else
         comparisonSymbol = g_ClipsSymbolEq;
       testNode = AST_NewNode(10, comparisonSymbol);
       firstConstNode = PP_ParsePrimary(v17, testNode, v17);
-      *(_DWORD *)(v19 + 6) = firstConstNode;
+      *(_DWORD *)(uintptr_t)(v19 + 6) = firstConstNode;
       secondConstNode = PP_ParsePrimary(secondField, v19, v20);
-      *(_DWORD *)(*(_DWORD *)(v22 + 6) + 10) = secondConstNode;
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v22 + 6) + 10) = secondConstNode;
       return v22;
     }
     else
@@ -226,10 +226,10 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
       firstRangeMax = v10[10] - 1;
       LOWORD(rangeBitmapData) = rangeBitmapData & 0xFE03;
       rangeBitmapData |= 4 * (firstRangeMax & 0x7F);
-      v12 = (unsigned __int8)*(_DWORD *)(secondField + 28);
+      v12 = (unsigned __int8)*(_DWORD *)(uintptr_t)(secondField + 28);
       HIWORD(rangeBitmapData) &= 0xFE01u;
       rangeBitmapData |= v12 << 17;
-      LOBYTE(v12) = *(_DWORD *)(secondField + 40) - 1;
+      LOBYTE(v12) = *(_DWORD *)(uintptr_t)(secondField + 40) - 1;
       HIBYTE(rangeBitmapData) &= 1u;
       rangeBitmapData |= (unsigned __int8)v12 << 25;
       if ( (v10[2] & 0x3F8000) != 0 )
@@ -242,15 +242,15 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
         BYTE1(rangeBitmapData) |= 2u;
         rangeBitmapData = ((v10[3] & 0x7F) << 10) | rangeBitmapData & 0xFFFE03FF;
       }
-      if ( (*(_DWORD *)(secondField + 8) & 0x3F8000) != 0 )
+      if ( (*(_DWORD *)(uintptr_t)(secondField + 8) & 0x3F8000) != 0 )
       {
         LOBYTE(rangeBitmapHigh) = rangeBitmapHigh & 0xFE;
-        secondFieldValue = *(_DWORD *)(secondField + 12) << 18 >> 25;
+        secondFieldValue = *(_DWORD *)(uintptr_t)(secondField + 12) << 18 >> 25;
       }
       else
       {
         LOBYTE(rangeBitmapHigh) = rangeBitmapHigh | 1;
-        secondFieldValue = *(_DWORD *)(secondField + 12);
+        secondFieldValue = *(_DWORD *)(uintptr_t)(secondField + 12);
       }
       rangeBitmapHigh |= 2 * (secondFieldValue & 0x7F);
       if ( (v10[2] & 1) != 0 )
@@ -265,15 +265,15 @@ signed int  Rules_BuildFieldRangeOrValueConstraintNode(int firstField, int secon
   {
     Mem_AllocArray(bitmapData, 4);
     LOBYTE(bitmapData[0]) &= 0xFCu;
-    firstFieldMax = *(_DWORD *)(v4 + 40) - 1;
+    firstFieldMax = *(_DWORD *)(uintptr_t)(v4 + 40) - 1;
     LOWORD(bitmapData[0]) &= 0xFE03u;
     bitmapData[0] |= 4 * (firstFieldMax & 0x7F);
-    bitmapData[0] = ((unsigned __int8)*(_DWORD *)(secondField + 28) << 9) | bitmapData[0] & 0xFFFE01FF;
+    bitmapData[0] = ((unsigned __int8)*(_DWORD *)(uintptr_t)(secondField + 28) << 9) | bitmapData[0] & 0xFFFE01FF;
     packedBits = bitmapData[0] & 0xFF01FFFF;
-    if ( *(int *)(secondField + 32) >= 0 )
-      packedBits |= (((unsigned __int8)*(_DWORD *)(secondField + 40) - 1) & 0x7F) << 17;
+    if ( *(int *)(uintptr_t)(secondField + 32) >= 0 )
+      packedBits |= (((unsigned __int8)*(_DWORD *)(uintptr_t)(secondField + 40) - 1) & 0x7F) << 17;
     bitmapData[0] = packedBits;
-    if ( (*(_BYTE *)(v4 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v4 + 8) & 1) != 0 )
       LOBYTE(bitmapData[0]) |= 2u;
     else
       LOBYTE(bitmapData[0]) |= 1u;
@@ -300,19 +300,19 @@ int  Rules_ParseOrderedFactPattern(int readSource, int theToken)
   unsigned int *fieldList; // eax
 
   patternNode = AST_AllocNode();
-  *(_DWORD *)patternNode = 17;
-  v5 = *(_BYTE *)(patternNode + 8);
-  *(_DWORD *)(patternNode + 32) = -1;
-  *(_DWORD *)(patternNode + 40) = 1;
-  *(_BYTE *)(patternNode + 8) = v5 & 0xFE;
-  relationNode = (_DWORD *)AST_AllocNode();
-  *(_DWORD *)(patternNode + 68) = relationNode;
+  *(_DWORD *)(uintptr_t)patternNode = 17;
+  v5 = *(_BYTE *)(uintptr_t)(patternNode + 8);
+  *(_DWORD *)(uintptr_t)(patternNode + 32) = -1;
+  *(_DWORD *)(uintptr_t)(patternNode + 40) = 1;
+  *(_BYTE *)(uintptr_t)(patternNode + 8) = v5 & 0xFE;
+  relationNode = (_DWORD *)(uintptr_t)AST_AllocNode();
+  *(_DWORD *)(uintptr_t)(patternNode + 68) = relationNode;
   *relationNode = 2;
-  *(_BYTE *)(*(_DWORD *)(patternNode + 68) + 8) &= ~1u;
-  *(_DWORD *)(*(_DWORD *)(patternNode + 68) + 4) = *(_DWORD *)(theToken + 4);
+  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(patternNode + 68) + 8) &= ~1u;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(patternNode + 68) + 4) = *(_DWORD *)(uintptr_t)(theToken + 4);
   IO_OutWriteToken(asc_509EB8);
   Parser_NextToken(readSource, theToken);
-  if ( *(_DWORD *)theToken == 92 || *(_DWORD *)theToken == 91 )
+  if ( *(_DWORD *)(uintptr_t)theToken == 92 || *(_DWORD *)(uintptr_t)theToken == 91 )
   {
     AST_FreeNode(patternNode);
     Parser_ReportSyntaxError();
@@ -320,11 +320,11 @@ int  Rules_ParseOrderedFactPattern(int readSource, int theToken)
   }
   else
   {
-    fieldList = Rules_ParsePatternFieldList(readSource, (int *)theToken, 0, 1, 1u, 0, 1);
+    fieldList = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, 0, 1, 1u, 0, 1);
     if ( fieldList )
     {
-      *(_DWORD *)(patternNode + 64) = fieldList;
-      if ( *(_DWORD *)theToken == 101 )
+      *(_DWORD *)(uintptr_t)(patternNode + 64) = fieldList;
+      if ( *(_DWORD *)(uintptr_t)theToken == 101 )
       {
         if ( !fieldList[17] )
         {
@@ -338,7 +338,7 @@ int  Rules_ParseOrderedFactPattern(int readSource, int theToken)
       {
         IO_OutNewline();
         IO_OutWriteToken(asc_509EB8);
-        IO_OutWriteToken(*(char **)(theToken + 8));
+        IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
         Parser_ReportSyntaxError();
         AST_FreeNode(patternNode);
         return 0;
@@ -374,25 +374,25 @@ int __fastcall Rules_CreateInitialFactPatternNode(int a1, int a2)
   v17[2] = a1;
   if ( !Rules_FindImportExportConstruct(aDeftemplate_7, v17, aInitialFact, 1, 0) )
   {
-    Rules_PrintWarningID((int)aFactlhs, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aCreatingImplie, v9);
+    Rules_PrintWarningID((int)(intptr_t)aFactlhs, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aCreatingImplie, v9);
     currentModule = Module_GetCurrent();
     Name = Module_GetName(currentModule);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], Name, (int)g_IO_LogicalNameTable_WWarning[0]);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)a__22, v12);
-    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aYouProbablyWan, v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], Name, (int)(intptr_t)g_IO_LogicalNameTable_WWarning[0]);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)a__22, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aYouProbablyWan, v13);
     deftemplateSymbol = Str_Intern(aInitialFact, v14);
-    Rules_CreateDeftemplateRecord((int)deftemplateSymbol, v16);
+    Rules_CreateDeftemplateRecord((int)(intptr_t)deftemplateSymbol, v16);
   }
-  patternNode = (_DWORD *)AST_AllocNode();
+  patternNode = (_DWORD *)(uintptr_t)AST_AllocNode();
   *patternNode = 17;
   patternNode[8] = 0;
   patternNode[10] = 1;
-  relationNode = (_DWORD *)AST_AllocNode();
-  *(_DWORD *)(v4 + 68) = relationNode;
+  relationNode = (_DWORD *)(uintptr_t)AST_AllocNode();
+  *(_DWORD *)(uintptr_t)(v4 + 68) = relationNode;
   *relationNode = 2;
   initialFactSymbol = Str_Intern(aInitialFact, v5);
-  *(_DWORD *)(*(_DWORD *)(v7 + 68) + 4) = initialFactSymbol;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 68) + 4) = initialFactSymbol;
   return v7;
 }
 // 4B7EE0: variable 'v9' is possibly undefined
@@ -415,32 +415,32 @@ int  Rules_ParseFactPatternRelation(int readSource, int theToken, int a3)
   _DWORD v10[5]; // [esp+0h] [ebp-14h] BYREF
 
   v10[3] = a3;
-  if ( Rules_FindModuleSeparator(*(_BYTE **)(*(_DWORD *)(theToken + 4) + 16)) )
+  if ( Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16)) )
   {
     Module_ReportIllegalSpecifierError();
     return 0;
   }
-  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_7, v10, *(_BYTE **)(*(_DWORD *)(v5 + 4) + 16), 1, 0);
+  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_7, v10, *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 4) + 16), 1, 0);
   if ( v10[0] > 1 )
   {
-    Rules_ReportAmbiguousReferenceError((int)aDeftemplate_7, *(_DWORD *)(*(_DWORD *)(theToken + 4) + 16));
+    Rules_ReportAmbiguousReferenceError((int)(intptr_t)aDeftemplate_7, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16));
     return 0;
   }
   if ( !deftemplate )
   {
-    templateName = *(_BYTE **)(*(_DWORD *)(theToken + 4) + 16);
+    templateName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16);
     currentModule = Module_GetCurrent();
     if ( Rules_FindImportExportConflict(aDeftemplate_7, currentModule, templateName) )
     {
-      Lexer_WarnImpliedTemplate((int)aImpliedDefte_0, *(_DWORD *)(*(_DWORD *)(theToken + 4) + 16), 0);
+      Lexer_WarnImpliedTemplate((int)(intptr_t)aImpliedDefte_0, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16), 0);
       return 0;
     }
-    deftemplate = Rules_CreateDeftemplateRecord(*(_DWORD *)(theToken + 4), 1);
+    deftemplate = Rules_CreateDeftemplateRecord(*(_DWORD *)(uintptr_t)(theToken + 4), 1);
   }
-  if ( (*(_BYTE *)(deftemplate + 24) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(deftemplate + 24) & 1) != 0 )
     return Rules_ParseOrderedFactPattern(readSource, theToken);
   else
-    return Rules_ParseDeftemplateFactPattern(readSource, (_DWORD *)deftemplate);
+    return Rules_ParseDeftemplateFactPattern(readSource, (_DWORD *)(uintptr_t)deftemplate);
 }
 // 4B7F6F: variable 'v5' is possibly undefined
 
@@ -452,21 +452,21 @@ int * Rules_AddReservedPatternSymbol(int symbolName, int constructName)
   int *result; // eax
 
   v2 = symbolName;
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-    *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeEntry;
-    result = (int *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeEntry;
+    result = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    result = (int *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+    result = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *result = v2;
   result[1] = constructName;
   result[2] = g_Rules_ReservedPatternSymbolList;
-  g_Rules_ReservedPatternSymbolList = (int)result;
+  g_Rules_ReservedPatternSymbolList = (int)(intptr_t)result;
   return result;
 }
 // 4B8050: variable 'v2' is possibly undefined
@@ -484,13 +484,13 @@ int __fastcall Rules_IsReservedPatternSymbol(int symbolName, int constructName)
   item = g_Rules_ReservedPatternSymbolList;
   if ( !item )
     return 0;
-  while ( strcmp_(symbolName, *(_DWORD *)item) )
+  while ( strcmp_(symbolName, *(_DWORD *)(uintptr_t)item) )
   {
-    item = *(_DWORD *)(item + 8);
+    item = *(_DWORD *)(uintptr_t)(item + 8);
     if ( !item )
       return 0;
   }
-  storedConstruct = *(_DWORD *)(item + 4);
+  storedConstruct = *(_DWORD *)(uintptr_t)(item + 4);
   if ( !storedConstruct )
     return 1;
   if ( !constructName )
@@ -514,13 +514,13 @@ signed int __fastcall Rules_PrintReservedSymbolErrorMessage(int symbolName, int 
   int v7; // ecx
   int v8; // ecx
 
-  Rules_PrintErrorID((int)aPattern, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheSymbol, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasSpecialMean, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAndMayNotBeUse, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], constructName, v7);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__8, v8);
+  Rules_PrintErrorID((int)(intptr_t)aPattern, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheSymbol, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aHasSpecialMean, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAndMayNotBeUse, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], constructName, v7);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__8, v8);
 }
 // 4B80F2: variable 'v3' is possibly undefined
 // 4B80FE: variable 'v4' is possibly undefined
@@ -543,13 +543,13 @@ int  Rules_FindPatternParser(_DWORD *parserCursor, _DWORD *entityPtr)
   {
     if ( entityPtr )
     {
-      callback_table = *(_DWORD *)(current + 4);
-      callback_address = *(_DWORD *)(callback_table + 20);
+      callback_table = *(_DWORD *)(uintptr_t)(current + 4);
+      callback_address = *(_DWORD *)(uintptr_t)(callback_table + 20);
       result = ((int (__fastcall *)(int))(uintptr_t)(unsigned int)callback_address)(*entityPtr);
       *entityPtr = result;
       if ( result )
         return result;
-      result = *(_DWORD *)(current + 92);
+      result = *(_DWORD *)(uintptr_t)(current + 92);
       *parserCursor = result;
     }
     else
@@ -569,13 +569,13 @@ int  Rules_FindPatternParser(_DWORD *parserCursor, _DWORD *entityPtr)
     current = *parserCursor;
     if ( !current )
       break;
-    callback_table = *(_DWORD *)(current + 4);
-    callback_address = *(_DWORD *)(callback_table + 20);
+    callback_table = *(_DWORD *)(uintptr_t)(current + 4);
+    callback_address = *(_DWORD *)(uintptr_t)(callback_table + 20);
     result = ((int (__fastcall *)(int))(uintptr_t)(unsigned int)callback_address)(*entityPtr);
     *entityPtr = result;
     if ( result )
       break;
-    result = *(_DWORD *)(current + 92);
+    result = *(_DWORD *)(uintptr_t)(current + 92);
     *parserCursor = result;
   }
   return result;
@@ -590,7 +590,7 @@ int  Rules_DeletePatternNetworkForType(int result, int *a2, int a3)
   if ( g_CLIPS_PatternParserTableByTypeId[result] )
   {
     Rules_ReleaseJoinNetworkNodeChain(*a2);
-    return (*(int (__cdecl **)(int))(*(int *)((char *)g_CLIPS_PatternParserTableByTypeId + v3) + 28))(a3);
+    return (*(int (__cdecl **)(int))(uintptr_t)(*(int *)((char *)g_CLIPS_PatternParserTableByTypeId + v3) + 28))(a3);
   }
   return result;
 }
@@ -633,16 +633,16 @@ signed int  Rules_AddPatternParser(
   prevNode = 0;
   if ( g_PatternParserCount >= 8 )
     return 0;
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 384);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 384);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 384);
-    *(_DWORD *)(g_ClipsMemoryTable + 384) = *freeEntry;
-    newParser = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 384);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 384) = *freeEntry;
+    newParser = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    newParser = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x60);
+    newParser = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x60);
   }
   newParser[1] = entityType;
   newParser[3] = recognizeFunction;
@@ -669,33 +669,33 @@ signed int  Rules_AddPatternParser(
   parserIndex = g_PatternParserCount;
   newParser[2] = g_PatternParserCount;
   ++parserIndex;
-  newParserAddr = (int)newParser;
+  newParserAddr = (int)(intptr_t)newParser;
   listHead = g_PatternParserListHead;
-  g_Rules_PatternParserTable[parserIndex] = (int)newParser;
+  g_Rules_PatternParserTable[parserIndex] = (int)(intptr_t)newParser;
   g_PatternParserCount = parserIndex;
   if ( !listHead )
   {
     newParser[23] = 0;
-    g_PatternParserListHead = (int)newParser;
+    g_PatternParserListHead = (int)(intptr_t)newParser;
     return 1;
   }
   node = listHead;
   do
   {
-    if ( priority >= *(_DWORD *)(node + 88) )
+    if ( priority >= *(_DWORD *)(uintptr_t)(node + 88) )
       break;
     prevNode = node;
-    node = *(_DWORD *)(node + 92);
+    node = *(_DWORD *)(uintptr_t)(node + 92);
   }
   while ( node );
   if ( !prevNode )
   {
-    *(_DWORD *)(newParserAddr + 92) = g_PatternParserListHead;
+    *(_DWORD *)(uintptr_t)(newParserAddr + 92) = g_PatternParserListHead;
     g_PatternParserListHead = newParserAddr;
     return 1;
   }
-  *(_DWORD *)(newParserAddr + 92) = node;
-  *(_DWORD *)(prevNode + 92) = newParserAddr;
+  *(_DWORD *)(uintptr_t)(newParserAddr + 92) = node;
+  *(_DWORD *)(uintptr_t)(prevNode + 92) = newParserAddr;
   return 1;
 }
 // 4B82E8: conditional instruction was optimized away because edi.4!=0
@@ -717,7 +717,7 @@ int  Rules_FindPatternParserByName(int name)
     return 0;
   while ( strcmp_(node, name) )
   {
-    node = *(_DWORD *)(current + 92);
+    node = *(_DWORD *)(uintptr_t)(current + 92);
     if ( !node )
       return 0;
   }
@@ -744,17 +744,17 @@ int  Rules_PrintPatternNetworkNodeTrace(int logicalName, int patternNode, int a3
   char v11; // [esp+0h] [ebp-Ch]
   char v12; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(a3, patternNode, logicalName, (int)aNullNull, v11);
-  if ( *(_DWORD *)(v7 + 8) )
+  Output_WriteFormatted(a3, patternNode, logicalName, (int)(intptr_t)aNullNull, v11);
+  if ( *(_DWORD *)(uintptr_t)(v7 + 8) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsDefruleCodeGenItem + 20) + 8),
-      *(_DWORD *)(*(_DWORD *)(patternNode + 8) + 4) % a3,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 8),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(patternNode + 8) + 4) % a3,
       logicalName,
-      (int)aSD_DD_4,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsDefruleCodeGenItem + 20) + 8));
+      (int)(intptr_t)aSD_DD_4,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 8));
   else
-    Output_WriteFormatted(v6, 0, logicalName, (int)aNull_15, v12);
-  return Output_WriteFormatted(v9, v8, logicalName, (int)aDDD00DD, *(_BYTE *)(patternNode + 12) & 1);
+    Output_WriteFormatted(v6, 0, logicalName, (int)(intptr_t)aNull_15, v12);
+  return Output_WriteFormatted(v9, v8, logicalName, (int)(intptr_t)aDDD00DD, *(_BYTE *)(uintptr_t)(patternNode + 12) & 1);
 }
 // 4B83B1: variable 'v11' is possibly undefined
 // 4B83B6: variable 'v7' is possibly undefined
@@ -780,11 +780,11 @@ signed int  Rules_PatternChainHasActiveType80Callback(_DWORD *patternList)
       parser = node[6];
       if ( parser )
       {
-        if ( *(_DWORD *)(parser + 20) && (*(int (**)(void))(parser + 20))() )
+        if ( *(_DWORD *)(uintptr_t)(parser + 20) && (*(int (**)(void))(uintptr_t)(parser + 20))() )
           break;
       }
     }
-    node = (_DWORD *)node[17];
+    node = (_DWORD *)(uintptr_t)node[17];
     if ( !node )
       return 0;
   }
@@ -841,62 +841,62 @@ LABEL_24:
       Parser_ReportSyntaxError();
       return 0;
     }
-    node = (int)fieldList;
+    node = (int)(intptr_t)fieldList;
     if ( !fieldList )
     {
 LABEL_33:
       if ( multifieldMode )
       {
         wrapperNode = AST_AllocNode();
-        *(_DWORD *)wrapperNode = 18;
-        nodeFlags = *(_BYTE *)(wrapperNode + 8);
-        *(_DWORD *)(wrapperNode + 16) = slotConstraint;
-        *(_BYTE *)(wrapperNode + 8) = nodeFlags | 4;
-        *(_DWORD *)(wrapperNode + 68) = fieldList;
-        *(_DWORD *)(wrapperNode + 36) = slotSymbol;
-        *(_DWORD *)(wrapperNode + 40) = slotNumber;
-        *(_DWORD *)(wrapperNode + 32) = startIndex;
-        fieldList = (unsigned int *)wrapperNode;
-        Rules_ComputePatternFieldPositions(*(_DWORD **)(wrapperNode + 68));
+        *(_DWORD *)(uintptr_t)wrapperNode = 18;
+        nodeFlags = *(_BYTE *)(uintptr_t)(wrapperNode + 8);
+        *(_DWORD *)(uintptr_t)(wrapperNode + 16) = slotConstraint;
+        *(_BYTE *)(uintptr_t)(wrapperNode + 8) = nodeFlags | 4;
+        *(_DWORD *)(uintptr_t)(wrapperNode + 68) = fieldList;
+        *(_DWORD *)(uintptr_t)(wrapperNode + 36) = slotSymbol;
+        *(_DWORD *)(uintptr_t)(wrapperNode + 40) = slotNumber;
+        *(_DWORD *)(uintptr_t)(wrapperNode + 32) = startIndex;
+        fieldList = (unsigned int *)(uintptr_t)wrapperNode;
+        Rules_ComputePatternFieldPositions(*(_DWORD **)(uintptr_t)(wrapperNode + 68));
       }
       return fieldList;
     }
     while ( !slotConstraint )
     {
-      if ( *(_DWORD *)node == 15 )
+      if ( *(_DWORD *)(uintptr_t)node == 15 )
       {
         constraintNode = Rules_CreateLHSParseNode();
 LABEL_30:
-        *(_DWORD *)(node + 16) = constraintNode;
-        AST_Free(*(_DWORD *)(*(_DWORD *)(node + 16) + 18));
-        AST_Free(*(_DWORD *)(*(_DWORD *)(node + 16) + 22));
-        *(_DWORD *)(*(_DWORD *)(node + 16) + 18) = AST_NewNode(2, g_Clips_NegativeInfinitySymbol);
-        *(_DWORD *)(*(_DWORD *)(node + 16) + 22) = AST_NewNode(2, g_ClipsPositiveInfinitySymbol);
-        nodeType = *(_DWORD *)node;
-        *(_BYTE *)(node + 8) |= 0x10u;
+        *(_DWORD *)(uintptr_t)(node + 16) = constraintNode;
+        AST_Free(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 16) + 18));
+        AST_Free(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 16) + 22));
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 16) + 18) = AST_NewNode(2, g_Clips_NegativeInfinitySymbol);
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 16) + 22) = AST_NewNode(2, g_ClipsPositiveInfinitySymbol);
+        nodeType = *(_DWORD *)(uintptr_t)node;
+        *(_BYTE *)(uintptr_t)(node + 8) |= 0x10u;
         if ( nodeType == 18 || nodeType == 16 )
         {
           v19 = Rules_CreateLHSParseNode();
           Rules_UpdateCETypeFlag(4u, v19);
-          *(_BYTE *)(v20 + 2) &= ~1u;
-          *(_DWORD *)(v20 + 26) = *(_DWORD *)(node + 16);
-          *(_DWORD *)(node + 16) = v20;
-          if ( g_ClipsPositiveInfinitySymbol != *(_DWORD *)(*(int *)((char *)slotConstraint + 22) + 2) )
+          *(_BYTE *)(uintptr_t)(v20 + 2) &= ~1u;
+          *(_DWORD *)(uintptr_t)(v20 + 26) = *(_DWORD *)(uintptr_t)(node + 16);
+          *(_DWORD *)(uintptr_t)(node + 16) = v20;
+          if ( g_ClipsPositiveInfinitySymbol != *(_DWORD *)(uintptr_t)(*(int *)((char *)slotConstraint + 22) + 2) )
           {
-            AST_Free(*(_DWORD *)(v20 + 22));
-            v21 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 22) + 2) + 16) - singleFieldCount);
-            v22 = AST_NewNode(1, (int)v21);
-            *(_DWORD *)(v23 + 22) = v22;
+            AST_Free(*(_DWORD *)(uintptr_t)(v20 + 22));
+            v21 = Rules_AddIntegerValue(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(int *)((char *)slotConstraint + 22) + 2) + 16) - singleFieldCount);
+            v22 = AST_NewNode(1, (int)(intptr_t)v21);
+            *(_DWORD *)(uintptr_t)(v23 + 22) = v22;
           }
-          if ( multiFieldCount == 1 && g_Clips_NegativeInfinitySymbol != *(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) )
+          if ( multiFieldCount == 1 && g_Clips_NegativeInfinitySymbol != *(_DWORD *)(uintptr_t)(*(int *)((char *)slotConstraint + 18) + 2) )
           {
-            AST_Free(*(_DWORD *)(v19 + 18));
-            v24 = Rules_AddIntegerValue(*(_DWORD *)(*(_DWORD *)(*(int *)((char *)slotConstraint + 18) + 2) + 16) - singleFieldCount);
-            *(_DWORD *)(v19 + 18) = AST_NewNode(1, (int)v24);
+            AST_Free(*(_DWORD *)(uintptr_t)(v19 + 18));
+            v24 = Rules_AddIntegerValue(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(int *)((char *)slotConstraint + 18) + 2) + 16) - singleFieldCount);
+            *(_DWORD *)(uintptr_t)(v19 + 18) = AST_NewNode(1, (int)(intptr_t)v24);
           }
         }
       }
-      node = *(_DWORD *)(node + 64);
+      node = *(_DWORD *)(uintptr_t)(node + 64);
       if ( !node )
         goto LABEL_33;
     }
@@ -908,17 +908,17 @@ LABEL_30:
     if ( *theToken == 17 || *theToken == 18 )
     {
       newField = AST_AllocNode();
-      *(_DWORD *)newField = *theToken;
-      fieldNode = (unsigned int *)newField;
-      *(_BYTE *)(newField + 8) &= ~1u;
-      Parser_NextToken(readSource, (int)theToken);
+      *(_DWORD *)(uintptr_t)newField = *theToken;
+      fieldNode = (unsigned int *)(uintptr_t)newField;
+      *(_BYTE *)(uintptr_t)(newField + 8) &= ~1u;
+      Parser_NextToken(readSource, (int)(intptr_t)theToken);
     }
     else
     {
       fieldNode = Rules_ParseConnectedConstraint(readSource, &errorFlag);
       if ( !fieldNode )
       {
-        AST_FreeNode((int)fieldList);
+        AST_FreeNode((int)(intptr_t)fieldList);
         return 0;
       }
     }
@@ -926,7 +926,7 @@ LABEL_30:
     {
       IO_OutNewline();
       IO_OutWriteToken(asc_50A02C);
-      IO_OutWriteToken((char *)theToken[2]);
+      IO_OutWriteToken((char *)(uintptr_t)theToken[2]);
     }
     if ( *fieldNode == 17 || *fieldNode == 15 )
       ++singleFieldCount;
@@ -938,7 +938,7 @@ LABEL_30:
     if ( !multifieldMode )
       break;
     if ( lastField )
-      *(_DWORD *)(lastField + 64) = fieldNode;
+      *(_DWORD *)(uintptr_t)(lastField + 64) = fieldNode;
     else
       fieldList = fieldNode;
     if ( *theToken == 101 )
@@ -946,7 +946,7 @@ LABEL_30:
   }
   if ( slotConstraint )
   {
-    fieldNode[4] = (unsigned int)slotConstraint;
+    fieldNode[4] = (unsigned int)(intptr_t)slotConstraint;
   }
   else if ( *fieldNode == 15 )
   {
@@ -996,14 +996,14 @@ int  Rules_ComputePatternFieldPositions(_DWORD *fieldList)
   result = 0;
   multifieldCount = 0;
   singleFieldIndex = 0;
-  for ( i = 0; node; node = (_DWORD *)node[16] )
+  for ( i = 0; node; node = (_DWORD *)(uintptr_t)node[16] )
   {
     if ( *node == 15 || *node == 17 )
       ++result;
     else
       ++multifieldCount;
   }
-  fieldNode = (int)fieldList;
+  fieldNode = (int)(intptr_t)fieldList;
   if ( fieldList )
   {
     multifieldsAfter = multifieldCount - 1;
@@ -1012,35 +1012,35 @@ int  Rules_ComputePatternFieldPositions(_DWORD *fieldList)
     singleFieldsAfter = result - 1;
     do
     {
-      *(_BYTE *)(fieldNode + 12) &= 0x80u;
-      v8 = singleFieldIndex & 0x7F | *(_DWORD *)(fieldNode + 12);
-      v9 = *(_DWORD *)(fieldNode + 8) & 0xFFC07FFF;
-      *(_DWORD *)(fieldNode + 8) = v9;
-      *(_DWORD *)(fieldNode + 8) = ((i & 0x7F) << 15) | v9;
-      v10 = *(_BYTE *)(fieldNode + 9);
-      *(_DWORD *)(fieldNode + 12) = v8;
-      v11 = *(_DWORD *)fieldNode;
-      *(_BYTE *)(fieldNode + 9) = v10 | 0x40;
+      *(_BYTE *)(uintptr_t)(fieldNode + 12) &= 0x80u;
+      v8 = singleFieldIndex & 0x7F | *(_DWORD *)(uintptr_t)(fieldNode + 12);
+      v9 = *(_DWORD *)(uintptr_t)(fieldNode + 8) & 0xFFC07FFF;
+      *(_DWORD *)(uintptr_t)(fieldNode + 8) = v9;
+      *(_DWORD *)(uintptr_t)(fieldNode + 8) = ((i & 0x7F) << 15) | v9;
+      v10 = *(_BYTE *)(uintptr_t)(fieldNode + 9);
+      *(_DWORD *)(uintptr_t)(fieldNode + 12) = v8;
+      v11 = *(_DWORD *)(uintptr_t)fieldNode;
+      *(_BYTE *)(uintptr_t)(fieldNode + 9) = v10 | 0x40;
       if ( v11 == 15 || v11 == 17 )
       {
-        v12 = *(_WORD *)(fieldNode + 10);
-        *(_WORD *)(fieldNode + 12) &= 0xC07Fu;
-        v13 = ((singleFieldsAfter & 0x7F) << 7) | *(_DWORD *)(fieldNode + 12);
-        *(_WORD *)(fieldNode + 10) = v12 & 0xE03F;
-        v14 = *(_DWORD *)(fieldNode + 8);
+        v12 = *(_WORD *)(uintptr_t)(fieldNode + 10);
+        *(_WORD *)(uintptr_t)(fieldNode + 12) &= 0xC07Fu;
+        v13 = ((singleFieldsAfter & 0x7F) << 7) | *(_DWORD *)(uintptr_t)(fieldNode + 12);
+        *(_WORD *)(uintptr_t)(fieldNode + 10) = v12 & 0xE03F;
+        v14 = *(_DWORD *)(uintptr_t)(fieldNode + 8);
         result = (multifieldsRemaining & 0x7F) << 22;
-        *(_DWORD *)(fieldNode + 12) = v13;
-        *(_DWORD *)(fieldNode + 8) = result | v14;
+        *(_DWORD *)(uintptr_t)(fieldNode + 12) = v13;
+        *(_DWORD *)(uintptr_t)(fieldNode + 8) = result | v14;
       }
       else
       {
-        *(_WORD *)(fieldNode + 12) &= 0xC07Fu;
-        *(_DWORD *)(fieldNode + 12) |= (singleFieldsRemaining & 0x7F) << 7;
-        *(_WORD *)(fieldNode + 10) &= 0xE03Fu;
+        *(_WORD *)(uintptr_t)(fieldNode + 12) &= 0xC07Fu;
+        *(_DWORD *)(uintptr_t)(fieldNode + 12) |= (singleFieldsRemaining & 0x7F) << 7;
+        *(_WORD *)(uintptr_t)(fieldNode + 10) &= 0xE03Fu;
         result = (multifieldsAfter & 0x7F) << 22;
-        *(_DWORD *)(fieldNode + 8) |= result;
+        *(_DWORD *)(uintptr_t)(fieldNode + 8) |= result;
       }
-      subField = *(_DWORD *)(fieldNode + 68);
+      subField = *(_DWORD *)(uintptr_t)(fieldNode + 68);
       for ( j = subField == 0; subField; j = subField == 0 )
       {
         result = subField;
@@ -1048,27 +1048,27 @@ int  Rules_ComputePatternFieldPositions(_DWORD *fieldList)
         {
           do
           {
-            v17 = *(_DWORD *)(fieldNode + 12);
-            *(_BYTE *)(result + 12) &= 0x80u;
-            *(_DWORD *)(result + 12) |= v17 & 0x7F;
-            v18 = *(_DWORD *)(fieldNode + 12);
-            *(_WORD *)(result + 12) &= 0xC07Fu;
-            *(_DWORD *)(result + 12) |= v18 & 0x3F80;
-            v19 = *(_DWORD *)(result + 8) & 0xFFC07FFF;
-            v20 = *(_DWORD *)(fieldNode + 8) & 0x3F8000;
-            *(_DWORD *)(result + 8) = v19;
-            *(_DWORD *)(result + 8) = v20 | v19;
-            v21 = *(_DWORD *)(fieldNode + 8);
-            *(_WORD *)(result + 10) &= 0xE03Fu;
-            *(_DWORD *)(result + 8) |= v21 & 0x1FC00000;
-            *(_BYTE *)(result + 9) |= 0x40u;
-            result = *(_DWORD *)(result + 64);
+            v17 = *(_DWORD *)(uintptr_t)(fieldNode + 12);
+            *(_BYTE *)(uintptr_t)(result + 12) &= 0x80u;
+            *(_DWORD *)(uintptr_t)(result + 12) |= v17 & 0x7F;
+            v18 = *(_DWORD *)(uintptr_t)(fieldNode + 12);
+            *(_WORD *)(uintptr_t)(result + 12) &= 0xC07Fu;
+            *(_DWORD *)(uintptr_t)(result + 12) |= v18 & 0x3F80;
+            v19 = *(_DWORD *)(uintptr_t)(result + 8) & 0xFFC07FFF;
+            v20 = *(_DWORD *)(uintptr_t)(fieldNode + 8) & 0x3F8000;
+            *(_DWORD *)(uintptr_t)(result + 8) = v19;
+            *(_DWORD *)(uintptr_t)(result + 8) = v20 | v19;
+            v21 = *(_DWORD *)(uintptr_t)(fieldNode + 8);
+            *(_WORD *)(uintptr_t)(result + 10) &= 0xE03Fu;
+            *(_DWORD *)(uintptr_t)(result + 8) |= v21 & 0x1FC00000;
+            *(_BYTE *)(uintptr_t)(result + 9) |= 0x40u;
+            result = *(_DWORD *)(uintptr_t)(result + 64);
           }
           while ( result );
         }
-        subField = *(_DWORD *)(subField + 68);
+        subField = *(_DWORD *)(uintptr_t)(subField + 68);
       }
-      if ( *(_DWORD *)fieldNode == 15 || *(_DWORD *)fieldNode == 17 )
+      if ( *(_DWORD *)(uintptr_t)fieldNode == 15 || *(_DWORD *)(uintptr_t)fieldNode == 17 )
       {
         ++singleFieldIndex;
         --singleFieldsRemaining;
@@ -1080,7 +1080,7 @@ int  Rules_ComputePatternFieldPositions(_DWORD *fieldList)
         result = --multifieldsAfter;
         --multifieldsRemaining;
       }
-      fieldNode = *(_DWORD *)(fieldNode + 64);
+      fieldNode = *(_DWORD *)(uintptr_t)(fieldNode + 64);
     }
     while ( fieldNode );
   }
@@ -1113,11 +1113,11 @@ unsigned int * Rules_ParseConnectedConstraint(int readSource, _DWORD *errorFlag)
   {
     v11 = AST_AllocNode();
     v12 = *andChain;
-    topNode = (unsigned int *)v11;
-    *(_DWORD *)(v11 + 68) = andChain;
-    v13 = *(_BYTE *)(v11 + 8) & 0xFE;
-    *(_DWORD *)v11 = (v12 == 16) + 17;
-    *(_BYTE *)(v11 + 8) = v13;
+    topNode = (unsigned int *)(uintptr_t)v11;
+    *(_DWORD *)(uintptr_t)(v11 + 68) = andChain;
+    v13 = *(_BYTE *)(uintptr_t)(v11 + 8) & 0xFE;
+    *(_DWORD *)(uintptr_t)v11 = (v12 == 16) + 17;
+    *(_BYTE *)(uintptr_t)(v11 + 8) = v13;
   }
   else
   {
@@ -1129,19 +1129,19 @@ unsigned int * Rules_ParseConnectedConstraint(int readSource, _DWORD *errorFlag)
   while ( *token == 92 || *token == 91 )
   {
     connectorType = *token;
-    Parser_NextToken(readSource, (int)token);
+    Parser_NextToken(readSource, (int)(intptr_t)token);
     term = Rules_ParseSingleFieldConstraintTerm(readSource, errorFlag);
     if ( *errorFlag == 1 )
     {
-      AST_FreeNode((int)topNode);
+      AST_FreeNode((int)(intptr_t)topNode);
       return 0;
     }
     if ( connectorType == 92 )
     {
       if ( andChain )
-        andChain[17] = (unsigned int)term;
+        andChain[17] = (unsigned int)(intptr_t)term;
       else
-        topNode[17] = (unsigned int)term;
+        topNode[17] = (unsigned int)(intptr_t)term;
       andChain = term;
       orChain = term;
       Parser_NextToken(readSource, v10);
@@ -1150,12 +1150,12 @@ unsigned int * Rules_ParseConnectedConstraint(int readSource, _DWORD *errorFlag)
     {
       if ( orChain )
       {
-        orChain[16] = (unsigned int)term;
+        orChain[16] = (unsigned int)(intptr_t)term;
       }
       else
       {
         andChain = term;
-        topNode[17] = (unsigned int)term;
+        topNode[17] = (unsigned int)(intptr_t)term;
       }
       orChain = term;
       Parser_NextToken(readSource, v10);
@@ -1170,7 +1170,7 @@ unsigned int * Rules_ParseConnectedConstraint(int readSource, _DWORD *errorFlag)
   if ( !Rules_CheckMixedWildcardConstraint(topNode) )
     return topNode;
   *errorFlag = 1;
-  AST_FreeNode((int)topNode);
+  AST_FreeNode((int)(intptr_t)topNode);
   return 0;
 }
 // 4B899D: variable 'v3' is possibly undefined
@@ -1200,7 +1200,7 @@ signed int  Rules_CheckMixedWildcardConstraint(_DWORD *constraintNode)
     hasSingleField = 1;
   else
     hasMultifield = *constraintNode == 16;
-  for ( i = (int *)constraintNode[17]; i; i = (int *)i[17] )
+  for ( i = (int *)(uintptr_t)constraintNode[17]; i; i = (int *)(uintptr_t)i[17] )
   {
     term = i;
     do
@@ -1236,7 +1236,7 @@ LABEL_22:
         AST_DecrementNodeRefCount(v6);
       }
 LABEL_7:
-      term = (int *)term[16];
+      term = (int *)(uintptr_t)term[16];
     }
     while ( term );
   }
@@ -1244,8 +1244,8 @@ LABEL_7:
     return 0;
   if ( !hasMultifield && !v9 )
     return 0;
-  Rules_PrintErrorID((int)aPattern, 2, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSingleAndMulti, v7);
+  Rules_PrintErrorID((int)(intptr_t)aPattern, 2, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSingleAndMulti, v7);
   return 1;
 }
 // 4B8B48: conditional instruction was optimized away because %var_24.4!=0
@@ -1270,15 +1270,15 @@ unsigned int * Rules_ParseSingleFieldConstraintTerm(int readSource, _DWORD *erro
 
   v4 = AST_AllocNode();
   nodeAddr = v4;
-  node = (unsigned int *)v4;
+  node = (unsigned int *)(uintptr_t)v4;
   if ( *v7 == 90 )
   {
-    Parser_NextToken(readSource, (int)token);
-    *(_BYTE *)(nodeAddr + 8) |= 1u;
+    Parser_NextToken(readSource, (int)(intptr_t)token);
+    *(_BYTE *)(uintptr_t)(nodeAddr + 8) |= 1u;
   }
   else
   {
-    *(_BYTE *)(v4 + 8) &= ~1u;
+    *(_BYTE *)(uintptr_t)(v4 + 8) &= ~1u;
   }
   tokenType = *token;
   *node = *token;
@@ -1286,11 +1286,11 @@ unsigned int * Rules_ParseSingleFieldConstraintTerm(int readSource, _DWORD *erro
   {
     if ( !strcmp_(token, asc_50A08C) )
     {
-      v12 = (__int16 *)Parser_ParseRequiredFunctionCall(readSource, v11);
+      v12 = (__int16 *)(uintptr_t)Parser_ParseRequiredFunctionCall(readSource, v11);
       if ( v12 )
       {
         *node = 94;
-        node[14] = (unsigned int)Rules_CECloneRestrictionExpr(v12);
+        node[14] = (unsigned int)(intptr_t)Rules_CECloneRestrictionExpr(v12);
         AST_Free(v13);
         return node;
       }
@@ -1303,24 +1303,24 @@ LABEL_5:
         node[1] = token[1];
         return node;
       }
-      v14 = (__int16 *)Parser_ParseRequiredFunctionCall(readSource, (int)token);
+      v14 = (__int16 *)(uintptr_t)Parser_ParseRequiredFunctionCall(readSource, (int)(intptr_t)token);
       if ( v14 )
       {
         *node = 93;
-        node[14] = (unsigned int)Rules_CECloneRestrictionExpr(v14);
+        node[14] = (unsigned int)(intptr_t)Rules_CECloneRestrictionExpr(v14);
         AST_Free(v15);
         return node;
       }
     }
     *errorFlag = 1;
-    AST_FreeNode((int)node);
+    AST_FreeNode((int)(intptr_t)node);
     return 0;
   }
   if ( tokenType == 15 || tokenType == 16 || tokenType < 2 || tokenType == 3 || tokenType == 8 )
     goto LABEL_5;
   Parser_ReportSyntaxError();
   *errorFlag = 1;
-  AST_FreeNode((int)node);
+  AST_FreeNode((int)(intptr_t)node);
   return 0;
 }
 // 4B8D4F: simplified comparisons for 'eax.4': ==0 || ==1 became <2u
@@ -1354,7 +1354,7 @@ int * Rules_BuildConjunctionFromPatternList(int patternList)
   int *wrapperNode; // eax
   int v20; // edx
 
-  v2 = (int *)AST_AllocNode();
+  v2 = (int *)(uintptr_t)AST_AllocNode();
   rootNode = v2;
   *v2 = 81;
   if ( patternList )
@@ -1364,56 +1364,56 @@ int * Rules_BuildConjunctionFromPatternList(int patternList)
   else
   {
     testNode = Rules_CEAllocTestNode();
-    *(_DWORD *)(v18 + 64) = testNode;
+    *(_DWORD *)(uintptr_t)(v18 + 64) = testNode;
   }
   andOrNormalized = Rules_NormalizeNestedConnectives(rootNode, v3, 1);
   fullyNormalized = Rules_NormalizeNestedConnectives(andOrNormalized, v6, 2);
   node = fullyNormalized;
   if ( *fullyNormalized == 82 )
   {
-    for ( i = (_DWORD *)fullyNormalized[16]; i; i = (_DWORD *)i[17] )
+    for ( i = (_DWORD *)(uintptr_t)fullyNormalized[16]; i; i = (_DWORD *)(uintptr_t)i[17] )
     {
       if ( *i != 81 )
       {
-        newAndNode = (_DWORD *)AST_AllocNode();
+        newAndNode = (_DWORD *)(uintptr_t)AST_AllocNode();
         *newAndNode = 81;
         newAndNode[16] = v12;
-        newAndNode[17] = *(_DWORD *)(v12 + 68);
-        *(_DWORD *)(v12 + 68) = 0;
+        newAndNode[17] = *(_DWORD *)(uintptr_t)(v12 + 68);
+        *(_DWORD *)(uintptr_t)(v12 + 68) = 0;
         if ( v11 )
-          *(_DWORD *)(v11 + 68) = newAndNode;
+          *(_DWORD *)(uintptr_t)(v11 + 68) = newAndNode;
         else
-          node[16] = (int)newAndNode;
+          node[16] = (int)(intptr_t)newAndNode;
         i = newAndNode;
       }
     }
   }
   else if ( *fullyNormalized != 81 )
   {
-    wrapperNode = (int *)AST_AllocNode();
+    wrapperNode = (int *)(uintptr_t)AST_AllocNode();
     *wrapperNode = 81;
     node = wrapperNode;
     wrapperNode[16] = v20;
   }
   Rules_FinalizeConjunctionChain(node);
   if ( *node == 82 )
-    andNode = (int *)node[16];
+    andNode = (int *)(uintptr_t)node[16];
   else
     andNode = node;
   while ( andNode )
   {
     conjunctNode = andNode[16];
-    for ( j = 1; conjunctNode; conjunctNode = *(_DWORD *)(conjunctNode + 68) )
+    for ( j = 1; conjunctNode; conjunctNode = *(_DWORD *)(uintptr_t)(conjunctNode + 68) )
     {
-      if ( (*(_BYTE *)(conjunctNode + 8) & 0x20) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(conjunctNode + 8) & 0x20) != 0 )
       {
-        *(_WORD *)(conjunctNode + 8) &= 0xE03Fu;
-        updatedFlags = ((j++ & 0x7F) << 6) | *(_DWORD *)(conjunctNode + 8);
-        *(_DWORD *)(conjunctNode + 8) = updatedFlags;
+        *(_WORD *)(uintptr_t)(conjunctNode + 8) &= 0xE03Fu;
+        updatedFlags = ((j++ & 0x7F) << 6) | *(_DWORD *)(uintptr_t)(conjunctNode + 8);
+        *(_DWORD *)(uintptr_t)(conjunctNode + 8) = updatedFlags;
       }
     }
-    Rules_CEAssignJoinDepth((_DWORD *)andNode[16], 1);
-    andNode = (int *)andNode[17];
+    Rules_CEAssignJoinDepth((_DWORD *)(uintptr_t)andNode[16], 1);
+    andNode = (int *)(uintptr_t)andNode[17];
   }
   return node;
 }

@@ -27,16 +27,16 @@ _DWORD * Rules_RegisterConstructType(
   _DWORD *block; // edi
   _DWORD *result; // eax
 
-  block = *(_DWORD **)(g_ClipsMemoryTable + 208);
+  block = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 208);
   if ( block )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 208);
-    *(_DWORD *)(g_ClipsMemoryTable + 208) = *block;
-    result = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208) = *block;
+    result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x34);
+    result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x34);
   }
   *result = constructName;
   result[1] = pluralName;
@@ -51,7 +51,7 @@ _DWORD * Rules_RegisterConstructType(
   result[10] = a11;
   result[11] = a12;
   result[12] = g_Rules_ConstructTypeListHead;
-  g_Rules_ConstructTypeListHead = (int)result;
+  g_Rules_ConstructTypeListHead = (int)(intptr_t)result;
   return result;
 }
 // 47C7CE: variable 'a3' is possibly undefined
@@ -62,7 +62,7 @@ _DWORD * Rules_RegisterConstructType(
 //----- (0047C830) --------------------------------------------------------
 signed int  Rules_AddSaveFunction(int name, int priority, int callback)
 {
-  g_Rules_SaveFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_SaveFunctionListHead, priority);
+  g_Rules_SaveFunctionListHead = (int)(intptr_t)Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_SaveFunctionListHead, priority);
   return 1;
 }
 // 51A188: using guessed type int dword_51A188;
@@ -88,20 +88,20 @@ signed int  Rules_Bload(int fileName, DWORD a2)
   Rules_BloadReadBlock((uintptr_t)header, strlen((const char *)g_Rules_BloadFileHeaderID) + 1);
   if ( strcmp(header, (const char *)g_Rules_BloadFileHeaderID) )
   {
-    Rules_PrintErrorID((int)aBload_0, 2, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotABinaryCo, 0);
+    Rules_PrintErrorID((int)(intptr_t)aBload_0, 2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFile, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsNotABinaryCo, 0);
     Rules_BloadCloseFile(0);
     return 0;
   }
   Rules_BloadReadBlock((uintptr_t)header, strlen(g_Rules_BsaveVersionID) + 1);
   if ( strcmp(header, g_Rules_BsaveVersionID) )
   {
-    Rules_PrintErrorID((int)aBload_0, 3, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsAnIncompatib, 0);
+    Rules_PrintErrorID((int)(intptr_t)aBload_0, 3, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFile, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsAnIncompatib, 0);
 LABEL_20:
     Rules_BloadCloseFile(0);
     return 0;
@@ -111,13 +111,13 @@ LABEL_20:
   if ( !Rules_ClearReady() )
   {
     Rules_BloadCloseFile(0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheClipsEnviro, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBinaryLoadCann, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheClipsEnviro, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aBinaryLoadCann, 0);
     return 0;
   }
-  for ( i = g_Rules_BeforeBloadFunctionListHead; i; i = *(_DWORD *)(i + 12) )
+  for ( i = g_Rules_BeforeBloadFunctionListHead; i; i = *(_DWORD *)(uintptr_t)(i + 12) )
   {
-    callback = *(_DWORD *)(i + 4);
+    callback = *(_DWORD *)(uintptr_t)(i + 4);
     if ( callback )
       ((void (*)(void))(uintptr_t)(unsigned int)callback)();
   }
@@ -136,13 +136,13 @@ LABEL_20:
     construct = g_BinaryItemListHead;
     if ( construct )
     {
-      while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)construct, construct_name, 0x14u) )
+      while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)construct, construct_name, 0x14u) )
       {
-        construct = *(_DWORD *)(construct + 36);
+        construct = *(_DWORD *)(uintptr_t)(construct + 36);
         if ( !construct )
           goto LABEL_29;
       }
-      callback = *(_DWORD *)(construct + 8);
+      callback = *(_DWORD *)(uintptr_t)(construct + 8);
       if ( callback )
       {
         ((void (*)(void))(uintptr_t)(unsigned int)callback)();
@@ -154,9 +154,9 @@ LABEL_29:
     Rules_BloadSeekFile(skip_size, 0);
     if ( skip_size )
     {
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aSkipping, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], fileName, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aConstructsBeca, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aSkipping, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], fileName, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aConstructsBeca, 0);
       Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
     }
     else
@@ -173,13 +173,13 @@ LABEL_27:
     construct_table = g_BinaryItemListHead;
     if ( !construct_table )
       goto LABEL_32;
-    while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)construct_table, construct_name, 0x14u) )
+    while ( strncmp((const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)construct_table, construct_name, 0x14u) )
     {
-      construct_table = *(_DWORD *)(construct_table + 36);
+      construct_table = *(_DWORD *)(uintptr_t)(construct_table + 36);
       if ( !construct_table )
         goto LABEL_32;
     }
-    next_construct = *(_DWORD *)(construct_table + 12);
+    next_construct = *(_DWORD *)(uintptr_t)(construct_table + 12);
     if ( next_construct )
     {
       ((void (*)(void))(uintptr_t)(unsigned int)next_construct)();
@@ -197,14 +197,14 @@ LABEL_32:
   if ( g_Rules_BloadFunctionPtrTable )
     Mem_ReleasePoolBlock(g_Rules_BloadFunctionPtrTable, 4 * function_table_count);
   Rules_FreeBloadAtomTables();
-  for ( i = g_Rules_AfterBloadCallbackListHead; i; i = *(_DWORD *)(i + 12) )
+  for ( i = g_Rules_AfterBloadCallbackListHead; i; i = *(_DWORD *)(uintptr_t)(i + 12) )
   {
-    callback = *(_DWORD *)(i + 4);
+    callback = *(_DWORD *)(uintptr_t)(i + 4);
     if ( callback )
       ((void (*)(void))(uintptr_t)(unsigned int)callback)();
   }
   g_Rules_FactsBloadedFlag = 1;
-  Rules_AddClearFunction((int)aBload, (int)Rules_ClearBload, 10000);
+  Rules_AddClearFunction((int)(intptr_t)aBload, (int)(intptr_t)Rules_ClearBload, 10000);
   return 1;
 }
 // 47CAF7: conditional instruction was optimized away because edi.4==0
@@ -261,12 +261,12 @@ signed int  Rules_BloadAndRefresh(
   if ( !result )
     return result;
 
-  previous_allocator_handler = Mem_SetOutOfMemoryHandler((int)CSyncObject_Unlock);
+  previous_allocator_handler = Mem_SetOutOfMemoryHandler((int)(intptr_t)CSyncObject_Unlock);
   chunk_count = result;
   do
   {
     chunk_bytes = itemSize * chunk_count;
-    chunk_base = Mem_HeapAllocWithRetry((_DWORD *)chunk_bytes);
+    chunk_base = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)chunk_bytes);
     if ( !chunk_base )
     {
       if ( chunk_count / 2 )
@@ -325,10 +325,10 @@ int  Rules_ReadNeededFunctions(int *functionCountPtr, int *errorFlagPtr)
     *errorFlagPtr = 0;
     return 0;
   }
-  names = (char *)(uintptr_t)(unsigned int)Mem_HeapAllocWithRetry((_DWORD *)string_bytes);
+  names = (char *)(uintptr_t)(unsigned int)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)string_bytes);
   Rules_BloadReadBlock((uintptr_t)names, (unsigned int)string_bytes);
   table_bytes = 4 * function_count;
-  table = Mem_HeapAllocWithRetry((_DWORD *)table_bytes);
+  table = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)table_bytes);
   resolved_function = 0;
   function_name = names;
   for ( i = 0; i < function_count; ++i )
@@ -338,16 +338,16 @@ int  Rules_ReadNeededFunctions(int *functionCountPtr, int *errorFlagPtr)
     {
       if ( !unresolved )
       {
-        Rules_PrintErrorID((int)aBload_0, 6, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheFollowingUn, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReferencedByTh, 0);
+        Rules_PrintErrorID((int)(intptr_t)aBload_0, 6, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheFollowingUn, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReferencedByTh, 0);
       }
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A88, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)(uintptr_t)function_name, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_502A88, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(uintptr_t)function_name, 0);
       unresolved = 1;
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A8C, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_502A8C, 0);
     }
-    *(_DWORD *)(table + 4 * i) = resolved_function;
+    *(_DWORD *)(uintptr_t)(table + 4 * i) = resolved_function;
     function_name += strlen(function_name) + 1;
   }
   Mem_ReleasePoolBlock((int)(uintptr_t)names, string_bytes);
@@ -374,13 +374,13 @@ int __fastcall Rules_FindFunctionByName(int functionName, int lastFound)
   head = Rules_GetFunctionDefinitionListHead();
   if ( !head )
     return 0;
-  current = lastFound ? *(_DWORD *)(lastFound + 27) : head;
+  current = lastFound ? *(_DWORD *)(uintptr_t)(lastFound + 27) : head;
   while ( current )
   {
-    registered_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(*(_DWORD *)current + 16);
+    registered_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)current + 16);
     if ( !strcmp((const char *)(uintptr_t)(unsigned int)functionName, registered_name) )
       return current;
-    next = *(_DWORD *)(current + 27);
+    next = *(_DWORD *)(uintptr_t)(current + 27);
     if ( next == lastFound )
       return 0;
     current = next ? next : head;
@@ -404,39 +404,39 @@ signed int Rules_ClearBload(void)
   int callback; // eax
 
   failed = 0;
-  for ( callback_node = g_Rules_BloadClearReadyCallbackListHead; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
+  for ( callback_node = g_Rules_BloadClearReadyCallbackListHead; callback_node; callback_node = *(_DWORD *)(uintptr_t)(callback_node + 12) )
   {
-    callback = *(_DWORD *)(callback_node + 4);
+    callback = *(_DWORD *)(uintptr_t)(callback_node + 4);
     if ( callback && !((int (*)(void))(uintptr_t)(unsigned int)callback)() )
     {
       if ( !failed )
       {
-        Rules_PrintErrorID((int)aBload_0, 5, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSomeConstruc_0, 0);
+        Rules_PrintErrorID((int)(intptr_t)aBload_0, 5, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSomeConstruc_0, 0);
       }
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A88, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(callback_node + 0), 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A8C, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_502A88, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(callback_node + 0), 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_502A8C, 0);
       failed = 1;
     }
   }
   if ( failed == 1 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBinaryClearCan, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aBinaryClearCan, 0);
     return 0;
   }
   else
   {
-    for ( construct_node = g_BinaryItemListHead; construct_node; construct_node = *(_DWORD *)(construct_node + 36) )
+    for ( construct_node = g_BinaryItemListHead; construct_node; construct_node = *(_DWORD *)(uintptr_t)(construct_node + 36) )
     {
-      callback = *(_DWORD *)(construct_node + 16);
+      callback = *(_DWORD *)(uintptr_t)(construct_node + 16);
       if ( callback )
         ((void (*)(void))(uintptr_t)(unsigned int)callback)();
     }
     Rules_FreeBloadedExpressions();
     Rules_ClearBloadedConstraints();
     g_Rules_FactsBloadedFlag = 0;
-    Rules_RemoveClearFunction((int)aBload);
+    Rules_RemoveClearFunction((int)(intptr_t)aBload);
     return 1;
   }
 }
@@ -453,9 +453,9 @@ int Rules_CallAbortBloadFunctions(void)
   int result; // eax
 
   result = 0;
-  for ( callback_node = g_Rules_AbortBloadCallbackListHead; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
+  for ( callback_node = g_Rules_AbortBloadCallbackListHead; callback_node; callback_node = *(_DWORD *)(uintptr_t)(callback_node + 12) )
   {
-    callback = *(_DWORD *)(callback_node + 4);
+    callback = *(_DWORD *)(uintptr_t)(callback_node + 4);
     if ( callback )
       result = ((int (*)(void))(uintptr_t)(unsigned int)callback)();
   }
@@ -469,7 +469,7 @@ _DWORD * Rules_AddBeforeBloadFunction(int name, int priority, int callback)
   _DWORD *result; // eax
 
   result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_BeforeBloadFunctionListHead, priority);
-  g_Rules_BeforeBloadFunctionListHead = (int)result;
+  g_Rules_BeforeBloadFunctionListHead = (int)(intptr_t)result;
   return result;
 }
 // 51A1B0: using guessed type int dword_51A1B0;
@@ -480,7 +480,7 @@ _DWORD * Rules_AddAfterBloadFunction(int name, int priority, int callback)
   _DWORD *result; // eax
 
   result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_AfterBloadCallbackListHead, priority);
-  g_Rules_AfterBloadCallbackListHead = (int)result;
+  g_Rules_AfterBloadCallbackListHead = (int)(intptr_t)result;
   return result;
 }
 // 51A1B4: using guessed type int dword_51A1B4;
@@ -491,7 +491,7 @@ _DWORD * Rules_AddAbortBloadFunction(int name, int priority, int callback)
   _DWORD *result; // eax
 
   result = Rules_InsertPriorityCallbackReturningHead(name, callback, g_Rules_AbortBloadCallbackListHead, priority);
-  g_Rules_AbortBloadCallbackListHead = (int)result;
+  g_Rules_AbortBloadCallbackListHead = (int)(intptr_t)result;
   return result;
 }
 // 51A1BC: using guessed type int dword_51A1BC;
@@ -503,10 +503,10 @@ signed int Rules_ReportCannotLoadWithBload(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aBload_0, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotLoad, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConstructWithB, v2);
+  Rules_PrintErrorID((int)(intptr_t)aBload_0, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotLoad, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aConstructWithB, v2);
 }
 // 47D070: variable 'v0' is possibly undefined
 // 47D07C: variable 'v1' is possibly undefined
@@ -640,14 +640,14 @@ LABEL_6:
         if ( v7 != 3 && v7 != 2 )
           break;
         ++argIndex;
-        result = (int)Str_Append(*(const char **)(v8 + 16), commandBuffer, v10, &v9);
-        commandBuffer = (char *)result;
+        result = (int)(intptr_t)Str_Append(*(const char **)(uintptr_t)(v8 + 16), commandBuffer, v10, &v9);
+        commandBuffer = (char *)(uintptr_t)result;
         if ( argIndex > argCount )
           goto LABEL_6;
       }
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      return (int)Rules_ReportSymbolTypeError(aSystem_0, v5);
+      return (int)(intptr_t)Rules_ReportSymbolTypeError(aSystem_0, v5);
     }
   }
   return result;
@@ -692,7 +692,7 @@ signed int  Rules_BloadOpenFile(const CHAR *fileName, DWORD a2)
 {
   int v2; // ecx
 
-  g_ClipsBloadFileHandle = IO_FOpen(fileName, (unsigned __int8 *)aRb_1, (int)fileName, a2);
+  g_ClipsBloadFileHandle = IO_FOpen(fileName, (unsigned __int8 *)aRb_1, (int)(intptr_t)fileName, a2);
   if ( g_ClipsBloadFileHandle )
     return 1;
   Rules_OpenFileErrorMessage(v2, v2);
@@ -798,8 +798,8 @@ _DWORD * Rules_PlaceInDepthList(_DWORD *listHead, int newActivation)
   _DWORD *insertAfter; // edx
   int nodeSalience; // esi
 
-  salience = *(_DWORD *)(newActivation + 8);
-  timeTag = *(_DWORD *)(newActivation + 12);
+  salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
+  timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
   insertAfter = 0;
   if ( !listHead )
     return insertAfter;
@@ -814,7 +814,7 @@ _DWORD * Rules_PlaceInDepthList(_DWORD *listHead, int newActivation)
         break;
     }
     insertAfter = listHead;
-    listHead = (_DWORD *)listHead[7];
+    listHead = (_DWORD *)(uintptr_t)listHead[7];
     if ( !listHead )
       return insertAfter;
   }
@@ -829,8 +829,8 @@ _DWORD * Rules_PlaceInBreadthList(_DWORD *listHead, int newActivation)
   _DWORD *insertAfter; // edx
   int nodeSalience; // esi
 
-  salience = *(_DWORD *)(newActivation + 8);
-  timeTag = *(_DWORD *)(newActivation + 12);
+  salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
+  timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
   insertAfter = 0;
   if ( !listHead )
     return insertAfter;
@@ -845,7 +845,7 @@ _DWORD * Rules_PlaceInBreadthList(_DWORD *listHead, int newActivation)
         break;
     }
     insertAfter = listHead;
-    listHead = (_DWORD *)listHead[7];
+    listHead = (_DWORD *)(uintptr_t)listHead[7];
     if ( !listHead )
       return insertAfter;
   }
@@ -863,10 +863,10 @@ _DWORD * Rules_PlaceInLexList(_DWORD *listHead, int newActivation)
   signed int comparison; // eax
 
   current = listHead;
-  if ( !*(_DWORD *)(newActivation + 16) )
-    *(_DWORD *)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(newActivation + 4));
-  timeTag = *(_DWORD *)(newActivation + 12);
-  salience = *(_DWORD *)(newActivation + 8);
+  if ( !*(_DWORD *)(uintptr_t)(newActivation + 16) )
+    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(newActivation + 4));
+  timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
+  salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
   insertAfter = 0;
   if ( !current )
     return insertAfter;
@@ -877,7 +877,7 @@ _DWORD * Rules_PlaceInLexList(_DWORD *listHead, int newActivation)
     {
       if ( salience > nodeSalience )
         return insertAfter;
-      comparison = Rules_CompareActivationBasis((int)current, (_DWORD **)newActivation);
+      comparison = Rules_CompareActivationBasis((int)(intptr_t)current, (_DWORD **)(uintptr_t)newActivation);
       if ( comparison )
       {
         if ( comparison == 1 )
@@ -887,7 +887,7 @@ _DWORD * Rules_PlaceInLexList(_DWORD *listHead, int newActivation)
       }
     }
     insertAfter = current;
-    current = (_DWORD *)current[7];
+    current = (_DWORD *)(uintptr_t)current[7];
     if ( !current )
       return insertAfter;
   }
@@ -910,11 +910,11 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
   int salience; // [esp+4h] [ebp-18h]
 
   current = listHead;
-  if ( !*(_DWORD *)(newActivation + 16) )
-    *(_DWORD *)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(newActivation + 4));
-  timeTag = *(_DWORD *)(newActivation + 12);
+  if ( !*(_DWORD *)(uintptr_t)(newActivation + 16) )
+    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(newActivation + 4));
+  timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
   insertAfter = 0;
-  salience = *(_DWORD *)(newActivation + 8);
+  salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
   if ( !current )
     return insertAfter;
   while ( 1 )
@@ -924,14 +924,14 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
       goto LABEL_5;
     if ( nodeSalience < salience )
       return insertAfter;
-    newBasisList = *(_DWORD *)(*(_DWORD *)(newActivation + 4) + 8);
+    newBasisList = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(newActivation + 4) + 8);
     newFirstTag = -1;
     nodeFirstTag = -1;
-    if ( *(_DWORD *)newBasisList )
-      newFirstTag = *(_DWORD *)(*(_DWORD *)newBasisList + 12);
-    nodeFirstMatch = **(_DWORD **)(current[1] + 8);
+    if ( *(_DWORD *)(uintptr_t)newBasisList )
+      newFirstTag = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)newBasisList + 12);
+    nodeFirstMatch = **(_DWORD **)(uintptr_t)(current[1] + 8);
     if ( nodeFirstMatch )
-      nodeFirstTag = *(_DWORD *)(nodeFirstMatch + 12);
+      nodeFirstTag = *(_DWORD *)(uintptr_t)(nodeFirstMatch + 12);
     if ( nodeFirstTag < newFirstTag )
     {
       if ( newFirstTag > 0 )
@@ -944,7 +944,7 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
         return insertAfter;
       goto LABEL_5;
     }
-    comparison = Rules_CompareActivationBasis((int)current, (_DWORD **)newActivation);
+    comparison = Rules_CompareActivationBasis((int)(intptr_t)current, (_DWORD **)(uintptr_t)newActivation);
     if ( comparison )
     {
       if ( comparison == 1 )
@@ -954,7 +954,7 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
     }
 LABEL_5:
     insertAfter = current;
-    current = (_DWORD *)current[7];
+    current = (_DWORD *)(uintptr_t)current[7];
     if ( !current )
       return insertAfter;
   }
@@ -973,7 +973,7 @@ _DWORD * Rules_PlaceInComplexityList(_DWORD *listHead, _DWORD *newActivation)
 
   timeTag = newActivation[3];
   salience = newActivation[2];
-  complexity = *(_DWORD *)(*newActivation + 28) & 0x7FF;
+  complexity = *(_DWORD *)(uintptr_t)(*newActivation + 28) & 0x7FF;
   insertAfter = 0;
   if ( !listHead )
     return insertAfter;
@@ -984,7 +984,7 @@ _DWORD * Rules_PlaceInComplexityList(_DWORD *listHead, _DWORD *newActivation)
     {
       if ( salience > nodeSalience )
         return insertAfter;
-      nodeComplexity = *(_DWORD *)(*listHead + 28) & 0x7FF;
+      nodeComplexity = *(_DWORD *)(uintptr_t)(*listHead + 28) & 0x7FF;
       if ( complexity >= nodeComplexity )
       {
         if ( complexity > nodeComplexity )
@@ -994,7 +994,7 @@ _DWORD * Rules_PlaceInComplexityList(_DWORD *listHead, _DWORD *newActivation)
       }
     }
     insertAfter = listHead;
-    listHead = (_DWORD *)listHead[7];
+    listHead = (_DWORD *)(uintptr_t)listHead[7];
     if ( !listHead )
       return insertAfter;
   }
@@ -1013,7 +1013,7 @@ _DWORD * Rules_PlaceInSimplicityList(_DWORD *listHead, _DWORD *newActivation)
 
   timeTag = newActivation[3];
   salience = newActivation[2];
-  complexity = *(_DWORD *)(*newActivation + 28) & 0x7FF;
+  complexity = *(_DWORD *)(uintptr_t)(*newActivation + 28) & 0x7FF;
   insertAfter = 0;
   if ( !listHead )
     return insertAfter;
@@ -1024,7 +1024,7 @@ _DWORD * Rules_PlaceInSimplicityList(_DWORD *listHead, _DWORD *newActivation)
     {
       if ( salience > nodeSalience )
         return insertAfter;
-      nodeComplexity = *(_DWORD *)(*listHead + 28) & 0x7FF;
+      nodeComplexity = *(_DWORD *)(uintptr_t)(*listHead + 28) & 0x7FF;
       if ( complexity <= nodeComplexity )
       {
         if ( complexity < nodeComplexity )
@@ -1034,7 +1034,7 @@ _DWORD * Rules_PlaceInSimplicityList(_DWORD *listHead, _DWORD *newActivation)
       }
     }
     insertAfter = listHead;
-    listHead = (_DWORD *)listHead[7];
+    listHead = (_DWORD *)(uintptr_t)listHead[7];
     if ( !listHead )
       return insertAfter;
   }
@@ -1074,7 +1074,7 @@ _DWORD * Rules_PlaceInRandomList(_DWORD *listHead, _DWORD *newActivation)
       }
     }
     insertAfter = listHead;
-    listHead = (_DWORD *)listHead[7];
+    listHead = (_DWORD *)(uintptr_t)listHead[7];
     if ( !listHead )
       return insertAfter;
   }
@@ -1105,12 +1105,12 @@ _DWORD * Rules_BuildLexBasisOrder(int *pattern)
       do
       {
         v5 = entry[2];
-        if ( *(_DWORD *)v5 )
+        if ( *(_DWORD *)(uintptr_t)v5 )
         {
           v6 = entry[3];
-          if ( *(_DWORD *)v6 )
+          if ( *(_DWORD *)(uintptr_t)v6 )
           {
-            if ( *(_DWORD *)(*(_DWORD *)v5 + 12) < *(_DWORD *)(*(_DWORD *)v6 + 12) )
+            if ( *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 12) < *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v6 + 12) )
             {
               entry[3] = v5;
               entry[2] = v6;
@@ -1149,39 +1149,39 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
   int count2; // [esp+4h] [ebp-20h]
   int minCount; // [esp+8h] [ebp-1Ch]
 
-  if ( !*(_DWORD *)(activation + 16) )
+  if ( !*(_DWORD *)(uintptr_t)(activation + 16) )
   {
-    lexBasisOrder = Rules_BuildLexBasisOrder(*(int **)(activation + 4));
-    *(_DWORD *)(v16 + 16) = lexBasisOrder;
+    lexBasisOrder = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(activation + 4));
+    *(_DWORD *)(uintptr_t)(v16 + 16) = lexBasisOrder;
   }
   count2 = *candidate[4] << 17 >> 23;
-  count1 = **(_DWORD **)(activation + 16) << 17 >> 23;
+  count1 = **(_DWORD **)(uintptr_t)(activation + 16) << 17 >> 23;
   if ( count1 <= count2 )
-    minCount = **(_DWORD **)(activation + 16) << 17 >> 23;
+    minCount = **(_DWORD **)(uintptr_t)(activation + 16) << 17 >> 23;
   else
     minCount = *candidate[4] << 17 >> 23;
   index = 0;
   if ( minCount > 0 )
   {
-    actBasisEntry = *(_DWORD *)(activation + 16);
+    actBasisEntry = *(_DWORD *)(uintptr_t)(activation + 16);
     candBasisEntry = candidate[4];
     do
     {
-      actMatchSlot = *(int **)(actBasisEntry + 8);
-      if ( *actMatchSlot && (candMatchSlot = (int *)candidate[4][index + 2], (candMatch = *candMatchSlot) != 0) )
+      actMatchSlot = *(int **)(uintptr_t)(actBasisEntry + 8);
+      if ( *actMatchSlot && (candMatchSlot = (int *)(uintptr_t)candidate[4][index + 2], (candMatch = *candMatchSlot) != 0) )
       {
         actMatch = *actMatchSlot;
         candMatch2 = *candMatchSlot;
-        if ( *(_DWORD *)(candMatch + 12) < *(_DWORD *)(actMatch + 12) )
+        if ( *(_DWORD *)(uintptr_t)(candMatch + 12) < *(_DWORD *)(uintptr_t)(actMatch + 12) )
           return 0;
-        if ( *(_DWORD *)(candMatch2 + 12) > *(_DWORD *)(actMatch + 12) )
+        if ( *(_DWORD *)(uintptr_t)(candMatch2 + 12) > *(_DWORD *)(uintptr_t)(actMatch + 12) )
           return 1;
       }
       else
       {
-        if ( *(_DWORD *)candBasisEntry[2] )
+        if ( *(_DWORD *)(uintptr_t)candBasisEntry[2] )
           return 1;
-        if ( **(_DWORD **)(*(_DWORD *)(activation + 16) + 4 * index + 8) )
+        if ( **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(activation + 16) + 4 * index + 8) )
           return 0;
       }
       actBasisEntry += 4;
@@ -1194,7 +1194,7 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
     return 0;
   if ( count2 > count1 )
     return 1;
-  actSalience = *(_DWORD *)(*(_DWORD *)activation + 28) & 0x7FF;
+  actSalience = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)activation + 28) & 0x7FF;
   candSalience = (*candidate)[7] & 0x7FF;
   if ( candSalience < actSalience )
   {
@@ -1261,7 +1261,7 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
     reportedStrategy = g_Rules_ConflictResolutionStrategy;
     goto LABEL_5;
   }
-  newStrategy = strcmp_(*(_DWORD *)(argValue[2] + 16), aDepth);
+  newStrategy = strcmp_(*(_DWORD *)(uintptr_t)(argValue[2] + 16), aDepth);
   if ( !newStrategy )
   {
 LABEL_4:
@@ -1301,7 +1301,7 @@ LABEL_5:
     newStrategy = 6;
     goto LABEL_4;
   }
-  Parser_ReportError(1, (int)aSymbolWithVa_0);
+  Parser_ReportError(1, (int)(intptr_t)aSymbolWithVa_0);
   currentStrategyName = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
   return Str_Intern(currentStrategyName, v16);
 }
@@ -1354,13 +1354,13 @@ char * Rules_GetStrategyName(int strategy)
 //----- (0047DDA0) --------------------------------------------------------
 signed int Rules_RegisterAgendaCommands(void)
 {
-  Rules_AddClearFunction((int)aAgenda_0, (int)Rules_ResetActivationSequence, 0);
-  Rules_AddWatchItem((int)aActivations, 1, 40, (int)&g_Rules_WatchActivationsFlag, (int)Rules_DefruleWatchAccess, (int)Rules_DefruleWatchPrint);
-  Rules_RegisterHostFunction(aRefresh, 118, (int)aRefreshcommand, (int)Rules_RefreshCommand, (int)a11w);
-  Rules_RegisterHostFunction(aRefreshAgenda, 118, (int)aRefreshagendac, (int)Rules_RefreshAgendaCommand, (int)a01w);
-  Rules_RegisterHostFunction(aGetSalienceEva, 119, (int)aGetsalienceeva, (int)Rules_GetSalienceEvaluationCommand, (int)a00);
-  Rules_RegisterHostFunction(aSetSalienceEva, 119, (int)aSetsalienceeva, (int)Rules_SetSalienceEvaluationCommand, (int)a11w);
-  return Rules_RegisterHostFunction(aAgenda_0, 118, (int)aAgendacommand, (int)Rules_AgendaCommand, (int)a01w);
+  Rules_AddClearFunction((int)(intptr_t)aAgenda_0, (int)(intptr_t)Rules_ResetActivationSequence, 0);
+  Rules_AddWatchItem((int)(intptr_t)aActivations, 1, 40, (int)(intptr_t)&g_Rules_WatchActivationsFlag, (int)(intptr_t)Rules_DefruleWatchAccess, (int)(intptr_t)Rules_DefruleWatchPrint);
+  Rules_RegisterHostFunction(aRefresh, 118, (int)(intptr_t)aRefreshcommand, (int)(intptr_t)Rules_RefreshCommand, (int)(intptr_t)a11w);
+  Rules_RegisterHostFunction(aRefreshAgenda, 118, (int)(intptr_t)aRefreshagendac, (int)(intptr_t)Rules_RefreshAgendaCommand, (int)(intptr_t)a01w);
+  Rules_RegisterHostFunction(aGetSalienceEva, 119, (int)(intptr_t)aGetsalienceeva, (int)(intptr_t)Rules_GetSalienceEvaluationCommand, (int)(intptr_t)a00);
+  Rules_RegisterHostFunction(aSetSalienceEva, 119, (int)(intptr_t)aSetsalienceeva, (int)(intptr_t)Rules_SetSalienceEvaluationCommand, (int)(intptr_t)a11w);
+  return Rules_RegisterHostFunction(aAgenda_0, 118, (int)(intptr_t)aAgendacommand, (int)(intptr_t)Rules_AgendaCommand, (int)(intptr_t)a01w);
 }
 // 51A1DC: using guessed type int dword_51A1DC;
 
@@ -1409,9 +1409,9 @@ _DWORD * Rules_AddActivation(int rule, int binds, double a3)
   *(_DWORD *)(partial_match + 4 * bucket + 8) = (int)activation;
   if ( (*(_BYTE *)(join + 29) & 0x10) != 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aActivation_0, (int)activation);
-    Rules_PrintActivation((int)g_IO_LogicalNameTable_WTrace[0], (int)activation);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502D24, (int)activation);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aActivation_0, (int)activation);
+    Rules_PrintActivation((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)activation);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_502D24, (int)activation);
   }
   agenda = (uintptr_t)(unsigned int)*(_DWORD *)(join + 8);
   return Rules_InsertActivationSorted((int *)(agenda + 12), (_DWORD *)activation);
@@ -1430,7 +1430,7 @@ int  Rules_ClearActivationsForRule(int result)
   int v2; // edi
   _DWORD *nextActivation; // esi
 
-  activation = *(_DWORD **)(*(_DWORD *)(result + 8) + 12);
+  activation = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 12);
   v2 = result;
   if ( activation )
   {
@@ -1439,7 +1439,7 @@ int  Rules_ClearActivationsForRule(int result)
       while ( 1 )
       {
         result = v2;
-        nextActivation = (_DWORD *)activation[7];
+        nextActivation = (_DWORD *)(uintptr_t)activation[7];
         if ( v2 )
           break;
 LABEL_5:
@@ -1454,10 +1454,10 @@ LABEL_5:
           result = Rules_RemoveActivation(activation, 1, 1);
           goto LABEL_5;
         }
-        result = *(_DWORD *)(result + 48);
+        result = *(_DWORD *)(uintptr_t)(result + 48);
       }
       while ( result );
-      activation = (_DWORD *)activation[7];
+      activation = (_DWORD *)(uintptr_t)activation[7];
     }
     while ( nextActivation );
   }

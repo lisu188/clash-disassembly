@@ -41,7 +41,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext
 
   UIWidget_PlayPressedReleaseAnimation(widget);
   result = g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
     Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
     Render_Pump();
@@ -51,29 +51,29 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext
     else
       backgroundPath = aCastle_pogD_15;
     resourceHandle = g_BuildingGarrisonDialogResourceHandle;
-    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, backgroundPath);
+    (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, backgroundPath);
     if ( g_BuildingGarrisonDialogUseChrTheme )
       palettePath = aCastle_chrD_16;
     else
       palettePath = aCastle_pogD_16;
     Palette_LoadOrBuildBlendLookupTable(palettePath, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, renderContext);
-    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, renderContext);
-    Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, resourceHandle, renderContext);
-    Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, resourceHandle, renderContext);
-    Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, resourceHandle, renderContext);
-    g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+    RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, renderContext);
+    Render_LoadResourceSprite_v4(5, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, v8, resourceHandle, renderContext);
+    Render_LoadResourceSprite_v4(7, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, v9, resourceHandle, renderContext);
+    Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, v10, resourceHandle, renderContext);
+    g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
     BuildingGarrisonDialog_EnsureActionWidgets(g_BuildingGarrisonDialogActiveBuilding);
     UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
-    (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+    (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, renderContext);
-    Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
-    Render_Present((int)g_RenderState);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-    Render_Present((int)g_RenderState);
+    Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_BuildingGarrisonDialogResourceHandle, 20);
+    Render_Present((int)(intptr_t)g_RenderState);
+    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+    Render_Present((int)(intptr_t)g_RenderState);
     Render_Pump();
-    return Render_Present((int)g_RenderState);
+    return Render_Present((int)(intptr_t)g_RenderState);
   }
   return result;
 }
@@ -99,8 +99,8 @@ void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int widget, DWORD gameCo
   int selectedSlotIndex; // ebx
 
   UIWidget_PlayPressedReleaseAnimation(widget);
-  result = (void *)g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
+  result = (void *)(uintptr_t)g_BuildingGarrisonDialogActiveBuilding;
+  if ( (*(_BYTE *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
   {
     slotIndex = 0;
     selectedSlotIndex = 0;
@@ -133,8 +133,8 @@ void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int widget, DWORD game
   int selectedSlotIndex; // ebx
 
   UIWidget_PlayPressedReleaseAnimation(widget);
-  result = (void *)g_BuildingGarrisonDialogActiveBuilding;
-  if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
+  result = (void *)(uintptr_t)g_BuildingGarrisonDialogActiveBuilding;
+  if ( (*(_BYTE *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
   {
     slotIndex = 0;
     selectedSlotIndex = 0;
@@ -189,18 +189,18 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int widget)
     "garrison_exit_begin",
     selectedCount,
     selectedSlots[0],
-    *(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 0),
-    *(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 1));
-  if ( selectedSlots[0] == -1 || !Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding) )
+    *(_BYTE *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 0),
+    *(_BYTE *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 1));
+  if ( selectedSlots[0] == -1 || !Building_HasFreeAdjacentExitTile((unsigned __int8 *)(uintptr_t)g_BuildingGarrisonDialogActiveBuilding) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "garrison_exit_blocked",
       selectedCount,
       selectedSlots[0],
-      Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding),
+      Building_HasFreeAdjacentExitTile((unsigned __int8 *)(uintptr_t)g_BuildingGarrisonDialogActiveBuilding),
       0);
     Audio_PlayButtonSound(aWrong_7);
-    return Render_Begin((int)g_RenderState, 0);
+    return Render_Begin((int)(intptr_t)g_RenderState, 0);
   }
   else
   {
@@ -220,10 +220,10 @@ int  BuildingGarrisonDialog_TickAnimations(double deltaTime)
 {
   int previous_resource_handle;
 
-  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  previous_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   BuildingGarrisonDialog_AnimateSelectedUnit(0);
   BuildingGarrisonDialog_TickExitCountdown(0, deltaTime);
-  return Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
+  return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previous_resource_handle);
 }
 
 //----- (00434110) --------------------------------------------------------
@@ -243,7 +243,7 @@ int CastleProduction_DrawSelectedUnitPortrait(void)
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0x50u, spriteHeight + 80, 0xC3u, SpriteWidth + 195);
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, g_CastleProductionUnitPortraitFrame);
-  result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
+  result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46)
                                                                                     + 52))(
              193,
              SpriteForChar,
@@ -255,7 +255,7 @@ int CastleProduction_DrawSelectedUnitPortrait(void)
              0,
              0);
   if ( cursorOverlayPresented )
-    result = Render_Present((int)g_RenderState);
+    result = Render_Present((int)(intptr_t)g_RenderState);
   g_RenderDevice = savedRenderDevice;
   return result;
 }
@@ -273,7 +273,7 @@ unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this)
   unsigned int v2; // edx
   int v3; // ecx
 
-  result = Time_Now((int)this, g_CastleProductionPortraitAnimLastTickMs + 10);
+  result = Time_Now((int)(intptr_t)this, g_CastleProductionPortraitAnimLastTickMs + 10);
   if ( v2 <= result )
   {
     g_CastleProductionPortraitAnimLastTickMs = Time_Now(v3, v2);
@@ -329,11 +329,11 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
   if ( g_CastleProductionSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
   Unit_BuildSelectedUnitPanelIconSpritePath(pathBuffer, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], a1);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, renderContext);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0x1010, a2, renderContext);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, pathBuffer);
   v35 = v7;
-  g_CastleProductionSelectedUnitSpriteSet = (int)spriteSet;
+  g_CastleProductionSelectedUnitSpriteSet = (int)(intptr_t)spriteSet;
   Unit_BuildSelectedUnitPanelIconPalettePath(pathBuffer, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v7);
   Palette_LoadFromQueryHandle(queryHandle, renderContext);
   paletteIndex = 224;
@@ -341,14 +341,14 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
   do
   {
     ++srcPalettePtr;
-    dstPaletteEntry = (_DWORD *)(g_CastleProductionPaletteBuffer + 4 * paletteIndex++);
+    dstPaletteEntry = (_DWORD *)(uintptr_t)(g_CastleProductionPaletteBuffer + 4 * paletteIndex++);
     *dstPaletteEntry = *(srcPalettePtr - 1);
   }
   while ( paletteIndex <= 255 );
   savedRenderDevice = g_RenderDevice;
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 20);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD, int, int, int, int))(*((_DWORD *)g_RenderDevice
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD, int, int, int, int))(uintptr_t)(*((_DWORD *)g_RenderDevice
                                                                                                   + 46)
                                                                                                 + 52))(
     28,
@@ -382,7 +382,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
       UI_DrawText(
         45,
         rowY,
-        (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+        (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
       Render_ReleaseSurface(5, 0x2Du);
       availableUnitByteOffset += 4;
       ++stripUnitIndex;
@@ -396,7 +396,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
         UI_DrawText(
           45,
           rowY,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+          (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
@@ -404,7 +404,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
         UI_DrawText(
           45,
           rowY,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+          (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
       }
       availableUnitByteOffset += 4;
       ++stripUnitIndex;
@@ -414,29 +414,29 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
   selectedUnitMetaOffset = 88 * g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
   infoPanelSprite = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 17);
   renderMethods = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int))(renderMethods + 52))(186, infoPanelSprite, -1, -1, -1);
+  (*(void (__fastcall **)(int, int, int, int, int))(uintptr_t)(renderMethods + 52))(186, infoPanelSprite, -1, -1, -1);
   unitMetadataPtr = (char *)&g_UnitTypeMetadataRecords + selectedUnitMetaOffset;
   Render_ReleaseSurface(7, renderMethods);
-  v26 = *(_DWORD *)(*(_DWORD *)unitMetadataPtr + 4 * (unsigned __int8)g_LanguageIndex);
+  v26 = *(_DWORD *)(uintptr_t)(*(_DWORD *)unitMetadataPtr + 4 * (unsigned __int8)g_LanguageIndex);
   UI_DrawTextFmt(69, 133, 261, 191, 3, v26);
-  UI_DrawTextFmt(69, 201, 217, panelBaseY + 95, 2, (int)aD_68);
-  UI_DrawTextFmt(69, 154, 174, panelBaseY + 50, 2, (int)aD_69);
-  UI_DrawTextFmt(69, 201, 217, panelBaseY + 50, 2, (int)aD_70);
-  UI_DrawTextFmt(69, 229, 260, v27, 2, (int)a0_3);
+  UI_DrawTextFmt(69, 201, 217, panelBaseY + 95, 2, (int)(intptr_t)aD_68);
+  UI_DrawTextFmt(69, 154, 174, panelBaseY + 50, 2, (int)(intptr_t)aD_69);
+  UI_DrawTextFmt(69, 201, 217, panelBaseY + 50, 2, (int)(intptr_t)aD_70);
+  UI_DrawTextFmt(69, 229, 260, v27, 2, (int)(intptr_t)a0_3);
   if ( unitMetadataPtr[25] )
   {
     if ( unitMetadataPtr[22] )
     {
-      UI_DrawTextFmt(154, 154, 174, panelBaseY + 74, 2, (int)aD_73);
-      UI_DrawTextFmt(154, 154, v28, panelBaseY + 95, 2, (int)aD_74);
+      UI_DrawTextFmt(154, 154, 174, panelBaseY + 74, 2, (int)(intptr_t)aD_73);
+      UI_DrawTextFmt(154, 154, v28, panelBaseY + 95, 2, (int)(intptr_t)aD_74);
     }
     else
     {
       DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 19);
       renderMethods2 = *((_DWORD *)g_RenderDevice + 46);
       v26 = renderMethods2;
-      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
-      UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)aD_72);
+      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
+      UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)(intptr_t)aD_72);
     }
   }
   else
@@ -444,22 +444,22 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
     DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 18);
     renderMethods2 = *((_DWORD *)g_RenderDevice + 46);
     v26 = renderMethods2;
-    (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
-    UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)aD_71);
+    (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
+    UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)(intptr_t)aD_71);
   }
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 340, 72, 0x138u, 0x16Eu, 0x48u, 0x154u);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 340, 72, 0x138u, 0x16Eu, 0x48u, 0x154u);
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, v26);
-  UI_DrawTextFmt(-1, 0, 119, 348, 2, (int)aD_75);
-  UI_DrawTextFmt(-1, 0, 215, 348, 2, (int)aD_76);
-  UI_DrawTextFmt(-1, 0, 311, 348, 2, (int)aD_77);
+  UI_DrawTextFmt(-1, 0, 119, 348, 2, (int)(intptr_t)aD_75);
+  UI_DrawTextFmt(-1, 0, 215, 348, 2, (int)(intptr_t)aD_76);
+  UI_DrawTextFmt(-1, 0, 311, 348, 2, (int)(intptr_t)aD_77);
   unitStripRight = DLX_GetSpriteWidth(g_BuildingUiDlxSpriteSet, 0x14u) + 28;
   SpriteHeight = DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x14u);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 28, 40, SpriteHeight + 40, unitStripRight, 0x28u, 0x1Cu);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 28, 40, SpriteHeight + 40, unitStripRight, 0x28u, 0x1Cu);
   infoPanelRight = DLX_GetSpriteWidth(g_BuildingUiDlxSpriteSet, 0x11u) + 186;
   infoSpriteHeight = DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x11u);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 186, 69, infoSpriteHeight + 69, infoPanelRight, 0x45u, 0xBAu);
-  Render_SaveBackbuffer((int)&g_MainRenderDevice);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 186, 69, infoSpriteHeight + 69, infoPanelRight, 0x45u, 0xBAu);
+  Render_SaveBackbuffer((int)(intptr_t)&g_MainRenderDevice);
   CastleProduction_DrawSelectedUnitPortrait();
   result = savedRenderDevice;
   g_RenderDevice = savedRenderDevice;
@@ -518,10 +518,10 @@ void * CastleProduction_DrawLicenceGrid(void)
       slotX = 48 * (slotIndex % 4) + 425;
     cursorOverlayPresented = g_CursorOverlayPresented;
     RenderState_PumpIfRectInViewBounds(g_RenderState, slotX, slotX + 31, slotY, slotY + 63);
-    if ( *(char *)(slotIndex + g_CastleProductionBuildingPtr + 402) == -1 )
+    if ( *(char *)(uintptr_t)(slotIndex + g_CastleProductionBuildingPtr + 402) == -1 )
     {
       SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 22);
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         slotY,
         SpriteForChar,
         -1,
@@ -535,7 +535,7 @@ void * CastleProduction_DrawLicenceGrid(void)
     else
     {
       v2 = DLX_GetSpriteForChar(g_CastleProduction_LicenceSlotSpriteHandles[slotAnimIndex], g_CastleProductionSlotAnimFrames[slotAnimIndex]);
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         slotY,
         v2,
         -1,
@@ -548,7 +548,7 @@ void * CastleProduction_DrawLicenceGrid(void)
       if ( slotIndex == g_ProductionGridSelectedIndex )
       {
         v3 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 32);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
           82 * ((slotIndex - (__CFSHL__(slotIndex >> 31, 2) + 4 * (slotIndex >> 31))) >> 2) + 33,
           v3,
           -1,
@@ -562,7 +562,7 @@ void * CastleProduction_DrawLicenceGrid(void)
       if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) == slotIndex )
       {
         v4 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 21);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
           slotY,
           v4,
           -1,
@@ -576,7 +576,7 @@ void * CastleProduction_DrawLicenceGrid(void)
       if ( slotIndex == g_LicenceGridAddAnimSlotIndex )
       {
         v5 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, g_CastleProductionLicenceTransitionFrame + 22);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
           slotY,
           v5,
           -1,
@@ -590,7 +590,7 @@ void * CastleProduction_DrawLicenceGrid(void)
       if ( slotIndex == g_CastleLicenceRemovalSlotIndex )
       {
         v6 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 30 - g_CastleProductionLicenceTransitionFrame);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
           slotY,
           v6,
           -1,
@@ -603,7 +603,7 @@ void * CastleProduction_DrawLicenceGrid(void)
       }
     }
     if ( cursorOverlayPresented )
-      Render_Present((int)g_RenderState);
+      Render_Present((int)(intptr_t)g_RenderState);
     ++slotIndex;
     ++slotAnimIndex;
   }
@@ -631,7 +631,7 @@ int  CastleProduction_ReloadLicenceSlotSprite(int slotIndex, char resourceContex
   DWORD sprite_set; // ebp
   char iconSpritePath[112]; // [esp+0h] [ebp-70h] BYREF
 
-  result = *(char *)(slotIndex + g_CastleProductionBuildingPtr + 402);
+  result = *(char *)(uintptr_t)(slotIndex + g_CastleProductionBuildingPtr + 402);
   if ( result == -1 )
   {
     if ( g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] )
@@ -649,10 +649,10 @@ int  CastleProduction_ReloadLicenceSlotSprite(int slotIndex, char resourceContex
       nfree_(sprite_set);
       g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = 0;
     }
-    Unit_BuildGarrisonSlotIconSpritePath(iconSpritePath, *(_BYTE *)(slotIndex + g_CastleProductionBuildingPtr + 402), slotIndex);
+    Unit_BuildGarrisonSlotIconSpritePath(iconSpritePath, *(_BYTE *)(uintptr_t)(slotIndex + g_CastleProductionBuildingPtr + 402), slotIndex);
     result = Mem_Alloc(4112, 0x1010, resourceContext, sprite_set);
     if ( result )
-      result = (int)DLXSpriteSet_Load((_DWORD *)result, iconSpritePath);
+      result = (int)(intptr_t)DLXSpriteSet_Load((_DWORD *)(uintptr_t)result, iconSpritePath);
     g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = result;
   }
   return result;
@@ -680,8 +680,8 @@ void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD gameContext)
   int v4; // ecx
   int i; // eax
 
-  result = (void *)Time_Now(a1, g_CastleProductionLicenceGridAnimLastTickMs + 10);
-  if ( v3 <= (unsigned int)result )
+  result = (void *)(uintptr_t)Time_Now(a1, g_CastleProductionLicenceGridAnimLastTickMs + 10);
+  if ( v3 <= (unsigned int)(intptr_t)result )
   {
     g_CastleProductionLicenceGridAnimLastTickMs = Time_Now(v4, v3);
     for ( i = 0; i != 12; ++i )
@@ -690,7 +690,7 @@ void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD gameContext)
     {
       if ( g_CastleLicenceRemovalSlotIndex != -1 )
       {
-        Building_RemoveUnitLicence(g_CastleProductionBuildingPtr, *(char *)(g_CastleLicenceRemovalSlotIndex + g_CastleProductionBuildingPtr + 402), gameContext);
+        Building_RemoveUnitLicence(g_CastleProductionBuildingPtr, *(char *)(uintptr_t)(g_CastleLicenceRemovalSlotIndex + g_CastleProductionBuildingPtr + 402), gameContext);
         nfree_(g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex]);
         g_ProductionGridSelectedIndex = -1;
         g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex] = 0;
@@ -732,7 +732,7 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   char *v11; // [esp+44h] [ebp-28h]
   int statusHeaderFull_Strings[9]; // [esp+48h] [ebp-24h]
 
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, renderContext);
   result = g_CastleProductionBuildingPtr;
@@ -740,27 +740,27 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
   {
     if ( Building_CountGarrison(g_CastleProductionBuildingPtr) < 12 || BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) > 1 )
     {
-      statusHeader_Strings[0] = (int)UI_Locale_StatusHeader[0];
-      statusHeader_Strings[1] = (int)UI_Locale_StatusHeader[1];
+      statusHeader_Strings[0] = (int)(intptr_t)UI_Locale_StatusHeader[0];
+      statusHeader_Strings[1] = (int)(intptr_t)UI_Locale_StatusHeader[1];
       v11 = UI_Locale_StatusHeader[2];
       if ( BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) == 1 )
         turnLabelText = aDZugBisZum;
       else
         turnLabelText = aDZbgeBisZum;
-      statusLine1_Strings[0] = (int)UI_Locale_StatusLine1[0];
-      statusLine1_Strings[1] = (int)UI_Locale_StatusLine1[1];
-      statusLine1_Strings[2] = (int)UI_Locale_StatusLine1[2];
-      statusDetailA_Strings[0] = (int)UI_Locale_StatusDetail_A[0];
-      statusDetailA_Strings[1] = (int)UI_Locale_StatusDetail_A[1];
-      statusDetailA_Strings[2] = (int)UI_Locale_StatusDetail_A[2];
-      statusDetailB_Strings[0] = (int)UI_Locale_StatusDetail_B[0];
-      statusDetailB_Strings[1] = (int)UI_Locale_StatusDetail_B[1];
-      statusDetailB_Strings[2] = (int)UI_Locale_StatusDetail_B[2];
-      statusDetailC_Strings[0] = (int)UI_Locale_StatusDetail_C[0];
-      statusDetailC_Strings[1] = (int)UI_Locale_StatusDetail_C[1];
-      statusDetailC_Strings[2] = (int)UI_Locale_StatusDetail_C[2];
+      statusLine1_Strings[0] = (int)(intptr_t)UI_Locale_StatusLine1[0];
+      statusLine1_Strings[1] = (int)(intptr_t)UI_Locale_StatusLine1[1];
+      statusLine1_Strings[2] = (int)(intptr_t)UI_Locale_StatusLine1[2];
+      statusDetailA_Strings[0] = (int)(intptr_t)UI_Locale_StatusDetail_A[0];
+      statusDetailA_Strings[1] = (int)(intptr_t)UI_Locale_StatusDetail_A[1];
+      statusDetailA_Strings[2] = (int)(intptr_t)UI_Locale_StatusDetail_A[2];
+      statusDetailB_Strings[0] = (int)(intptr_t)UI_Locale_StatusDetail_B[0];
+      statusDetailB_Strings[1] = (int)(intptr_t)UI_Locale_StatusDetail_B[1];
+      statusDetailB_Strings[2] = (int)(intptr_t)UI_Locale_StatusDetail_B[2];
+      statusDetailC_Strings[0] = (int)(intptr_t)UI_Locale_StatusDetail_C[0];
+      statusDetailC_Strings[1] = (int)(intptr_t)UI_Locale_StatusDetail_C[1];
+      statusDetailC_Strings[2] = (int)(intptr_t)UI_Locale_StatusDetail_C[2];
       v11 = turnLabelText;
-      UI_DrawTextFmt((int)v6, 401, 593, 297, 3, statusHeader_Strings[(unsigned __int8)g_LanguageIndex]);
+      UI_DrawTextFmt((int)(intptr_t)v6, 401, 593, 297, 3, statusHeader_Strings[(unsigned __int8)g_LanguageIndex]);
       statusLine1 = statusLine1_Strings[(unsigned __int8)g_LanguageIndex];
       UI_DrawTextFmt(statusLine1, 401, 593, 317, 3, statusLine1);
       turnsRemaining = BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr);
@@ -779,14 +779,14 @@ int  CastleProduction_DrawProductionStatus(DWORD renderContext)
     }
     else
     {
-      statusHeaderFull_Strings[0] = (int)UI_Locale_StatusHeader_Full[0];
-      statusHeaderFull_Strings[1] = (int)UI_Locale_StatusHeader_Full[1];
-      statusHeaderFull_Strings[2] = (int)UI_Locale_StatusHeader_Full[2];
-      v6[0] = (int)UI_Locale_StatusLine1_Full[0];
-      v6[1] = (int)UI_Locale_StatusLine1_Full[1];
-      v6[2] = (int)UI_Locale_StatusLine1_Full[2];
-      UI_DrawTextFmt((int)statusLine1_Strings, 401, 593, 307, 3, statusHeaderFull_Strings[(unsigned __int8)g_LanguageIndex]);
-      return UI_DrawTextFmt((int)statusLine1_Strings, 401, 593, 327, 3, v6[(unsigned __int8)g_LanguageIndex]);
+      statusHeaderFull_Strings[0] = (int)(intptr_t)UI_Locale_StatusHeader_Full[0];
+      statusHeaderFull_Strings[1] = (int)(intptr_t)UI_Locale_StatusHeader_Full[1];
+      statusHeaderFull_Strings[2] = (int)(intptr_t)UI_Locale_StatusHeader_Full[2];
+      v6[0] = (int)(intptr_t)UI_Locale_StatusLine1_Full[0];
+      v6[1] = (int)(intptr_t)UI_Locale_StatusLine1_Full[1];
+      v6[2] = (int)(intptr_t)UI_Locale_StatusLine1_Full[2];
+      UI_DrawTextFmt((int)(intptr_t)statusLine1_Strings, 401, 593, 307, 3, statusHeaderFull_Strings[(unsigned __int8)g_LanguageIndex]);
+      return UI_DrawTextFmt((int)(intptr_t)statusLine1_Strings, 401, 593, 327, 3, v6[(unsigned __int8)g_LanguageIndex]);
     }
   }
   return result;
@@ -811,8 +811,8 @@ int  UI_DrawActionBox(int drawContext)
 
   savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 425, 285, 0x15Eu, 0x1C2u, 0x11Du, 0x1A9u);
-  result = UI_DrawTextFmt(drawContext, 285, 349, 430, 3, (int)aD_38);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 425, 285, 0x15Eu, 0x1C2u, 0x11Du, 0x1A9u);
+  result = UI_DrawTextFmt(drawContext, 285, 349, 430, 3, (int)(intptr_t)aD_38);
   g_RenderDevice = savedRenderDevice;
   return result;
 }
@@ -870,7 +870,7 @@ int  CastleProduction_SelectPreviousAvailableUnit(int widget, int a2, DWORD rend
   if ( g_CastleProductionSelectedAvailableUnitIndex )
     --g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, renderContext, a4, a5);
-  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43565E: variable 'v5' is possibly undefined
@@ -888,7 +888,7 @@ int  CastleProduction_SelectNextAvailableUnit(int widget, int a2, DWORD renderCo
   if ( g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex + 1] != -1 )
     ++g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, renderContext, a4, a5);
-  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
+  Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43569E: variable 'v5' is possibly undefined
@@ -914,18 +914,18 @@ int  CastleProduction_HandleBuyLicenceAction(int widget, DWORD gameContext, int 
   if ( !Building_BuyUnitLicence(g_CastleProductionBuildingPtr, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v4, gameContext) )
     return UIWidget_ShowReleasedState(widget, v5);
   v13 = v5;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Busy);
   for ( i = 0; ; ++i )
   {
     selectedUnitType = g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
-    if ( *(char *)(i + g_CastleProductionBuildingPtr + 402) == selectedUnitType )
+    if ( *(char *)(uintptr_t)(i + g_CastleProductionBuildingPtr + 402) == selectedUnitType )
       break;
   }
   g_LicenceGridAddAnimSlotIndex = i;
   Audio_PlaySoundEffectByName(aDopen, 64);
   CastleProduction_ReloadLicenceSlotSprite(i, widget);
   UI_DrawActionBox(actionContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, v10);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, v10);
   CastleProduction_RebuildAvailableUnitList(v11);
   CastleProduction_RedrawSelectedUnitPanel(v12, widget, gameContext, actionContext, selectedUnitType);
   return UIWidget_ShowReleasedState(widget, v13);
@@ -949,13 +949,13 @@ int  CastleProduction_HandleRemoveLicenceAction(int widget)
   int v2; // ecx
 
   UIWidget_ShowPressedState(widget);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   if ( g_ProductionGridSelectedIndex != -1 )
   {
     g_CastleLicenceRemovalSlotIndex = g_ProductionGridSelectedIndex;
     Audio_PlaySoundEffectByName(aDclose_0, 64);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Busy);
+    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
   }
   return UIWidget_ShowReleasedState(v2, v2);
 }
@@ -973,7 +973,7 @@ int  CastleProduction_HandleProduceAction(int result, char productionSlot, DWORD
   if ( g_ProductionGridSelectedIndex != -1 )
   {
     UIWidget_ShowPressedState(result);
-    Render_Begin((int)g_RenderState, 0);
+    Render_Begin((int)(intptr_t)g_RenderState, 0);
     Building_SetUnitProduction(g_CastleProductionBuildingPtr, productionSlot, gameContext);
     CastleProduction_DrawLicenceGrid();
     CastleProduction_DrawProductionStatus(gameContext);
@@ -1019,29 +1019,29 @@ int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, ch
   Render_Pump();
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   Unit_BuildBigInfoGraphicPath(infoGraphicPath, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v5);
-  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, infoGraphicPath);
-  (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
-  Render_Begin((int)g_RenderState, 0);
-  while ( !DD_IsFlipping((int)g_RenderState) )
-    DD_Pump((int)g_RenderState, (char)g_RenderState);
+  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, infoGraphicPath);
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_CastleProductionPaletteBuffer, 20);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   if ( g_CastleProductionUseChrTheme )
     backgroundPath = aCastle_chrD_23;
   else
     backgroundPath = aCastle_pogD_23;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *))(renderSurface + 48))(0, backgroundPath);
-  Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(renderSurface + 48))(0, backgroundPath);
+  Palette_QuantizeChannelsInPlace((_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, 6);
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v8, 20, gameContext, actionBoxArg, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(gameContext);
   UI_DrawActionBox(actionBoxArg);
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
-  return Render_Present((int)g_RenderState);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_CastleProductionPaletteBuffer, 20);
+  return Render_Present((int)(intptr_t)g_RenderState);
 }
 // 43589A: variable 'v5' is possibly undefined
 // 435970: variable 'v8' is possibly undefined
@@ -1069,7 +1069,7 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
   unitType = UNIT_TYPE_PEASANT;
   do
   {
-    result = Building_IsUnitLicenceEligible((char *)g_CastleProductionBuildingPtr, unitType);
+    result = Building_IsUnitLicenceEligible((char *)(uintptr_t)g_CastleProductionBuildingPtr, unitType);
     if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
       g_CastleProduction_AvailableUnitTypes[out_index++] = unitType;
     ++unitType;
@@ -1091,20 +1091,20 @@ int  CastleProduction_HandleLicenceGridClick(DWORD gameContext, int renderDevice
   int availableUnitIndex; // edx
   int slotUnitType; // ecx
 
-  result = DD_IsFlipping((int)g_RenderState);
+  result = DD_IsFlipping((int)(intptr_t)g_RenderState);
   if ( result )
   {
     result = UI_GetGridIndexFromMouse();
     gridIndex = result;
     if ( result != -1 )
     {
-      result = *(char *)(result + g_CastleProductionBuildingPtr + 402);
+      result = *(char *)(uintptr_t)(result + g_CastleProductionBuildingPtr + 402);
       if ( result != -1 && gridIndex != g_ProductionGridSelectedIndex )
       {
         Audio_PlaySoundEffectByName(aMarker_0, 64);
         g_ProductionGridSelectedIndex = v5;
         availableUnitIndex = 0;
-        slotUnitType = *(char *)(v5 + g_CastleProductionBuildingPtr + 402);
+        slotUnitType = *(char *)(uintptr_t)(v5 + g_CastleProductionBuildingPtr + 402);
         result = 0;
         if ( g_CastleProduction_AvailableUnitTypes[0] != -1 )
         {
@@ -1122,7 +1122,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD gameContext, int renderDevice
         {
           g_CastleProductionSelectedAvailableUnitIndex = availableUnitIndex;
           CastleProduction_RedrawSelectedUnitPanel(slotUnitType, g_CastleProduction_AvailableUnitTypes[0], gameContext, renderDevice, a3);
-          return Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
+          return Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)g_CastleProductionPaletteBuffer);
         }
       }
     }
@@ -1146,7 +1146,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD gameContext, int rende
   int v5; // ecx
 
   stripRowOffset = ((g_MouseCursorRawY >> g_CursorCoordShift) - 35) / 17 - 2;
-  result = DD_IsFlipping((int)g_RenderState);
+  result = DD_IsFlipping((int)(intptr_t)g_RenderState);
   if ( result )
   {
     if ( g_MouseCursorRawX >> g_CursorCoordShift >= 40 )
@@ -1161,9 +1161,9 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD gameContext, int rende
         g_CastleProductionSelectedAvailableUnitIndex += stripRowOffset;
         Render_Pump();
         CastleProduction_RedrawSelectedUnitPanel(v5, stripRowOffset, gameContext, renderDevice, widgetTable);
-        Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
-        Render_Present((int)g_RenderState);
-        return Render_Begin((int)g_RenderState, 0);
+        Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)g_CastleProductionPaletteBuffer);
+        Render_Present((int)(intptr_t)g_RenderState);
+        return Render_Begin((int)(intptr_t)g_RenderState, 0);
       }
     }
   }
@@ -1186,10 +1186,10 @@ int  CastleProduction_TickAnimations(DWORD gameContext)
   void *v2; // ecx
   int v3; // ecx
 
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   CastleProduction_AnimateSelectedUnitPortrait(v2);
   CastleProduction_TickLicenceGridAnimations(v3, gameContext);
-  return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
 }
 // 435B9F: variable 'v2' is possibly undefined
 // 435BA4: variable 'v3' is possibly undefined
@@ -1222,7 +1222,7 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int ac
   int v25; // ecx
 
   g_CastleProductionBuildingPtr = buildingPtr;
-  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + 140063);
+  g_CastleProductionUseChrTheme = *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + 140063);
   g_CastleProductionSelectedAvailableUnitIndex = 0;
   g_CastleProductionSelectedUnitSpriteSet = 0;
   memset(g_CastleProduction_LicenceSlotSpriteHandles, 0, sizeof(g_CastleProduction_LicenceSlotSpriteHandles));
@@ -1241,48 +1241,48 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int ac
     panelBackgroundPath = aCastle_chrD_17;
   else
     panelBackgroundPath = aCastle_pogD_17;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
   v11 = g_CastleProductionPaletteBuffer;
-  (*(void (__fastcall **)(_DWORD, char *))(renderSurface + 48))(0, panelBackgroundPath);
-  Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
-  dlxSpriteSet = (_DWORD *)Mem_Alloc(4112, v12, v11, useChrTheme);
+  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(renderSurface + 48))(0, panelBackgroundPath);
+  Palette_QuantizeChannelsInPlace((_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, 6);
+  dlxSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v12, v11, useChrTheme);
   if ( dlxSpriteSet )
     dlxSpriteSet = DLXSpriteSet_Load(dlxSpriteSet, g_CastleProductionUseChrTheme ? aCastle_chrD_19 : aCastle_pogD_19);
-  g_BuildingUiDlxSpriteSet = (int)dlxSpriteSet;
+  g_BuildingUiDlxSpriteSet = (int)(intptr_t)dlxSpriteSet;
   if ( g_CastleProductionUseChrTheme )
     panelPalettePath = aCastle_chrD_19;
   else
     panelPalettePath = aCastle_pogD_19;
   Palette_LoadOrBuildBlendLookupTable(panelPalettePath, g_CastleProductionPaletteBuffer, g_CastleProductionUseChrTheme, useChrTheme);
-  Render_LoadResourceSprite_v4(5, (_BYTE *)g_CastleProductionPaletteBuffer, v15, v11, useChrTheme);
-  Render_LoadResourceSprite_v4(20, (_BYTE *)g_CastleProductionPaletteBuffer, v16, v11, useChrTheme);
-  Render_LoadResourceSprite_v4(9, (_BYTE *)g_CastleProductionPaletteBuffer, v17, v11, useChrTheme);
-  Render_LoadResourceSprite_v4(7, (_BYTE *)g_CastleProductionPaletteBuffer, v18, v11, useChrTheme);
-  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_CastleProductionPaletteBuffer, v19, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(5, (_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, v15, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(20, (_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, v16, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(9, (_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, v17, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(7, (_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, v18, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, v19, v11, useChrTheme);
   UI_SetActiveWidgetTable(8);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_CastleProductionPaletteBuffer, v20, useChrTheme);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, g_CastleProductionPaletteBuffer, v20, useChrTheme);
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, v21);
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v22, 20, useChrTheme, actionBoxArg, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(useChrTheme);
   UI_DrawActionBox(actionBoxArg);
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
-  Render_Present((int)g_RenderState);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_CastleProductionPaletteBuffer, 20);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_CastleProductionExitSignal = 0;
   g_ActiveDialogAnimationTickHook = (int (*)(void))CastleProduction_TickAnimations;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     CastleProduction_TickAnimations(useChrTheme);
     UI_RunHoverTooltipZones(g_CastleUnitProductionTooltipZone);
     g_RenderDevice = &g_MainRenderDevice;
     if ( !UIWidgetTable_PollHoverAndActions(g_CastleUnitProductionWidgetTable, useChrTheme) )
     {
-      CastleProduction_HandleLicenceGridClick(useChrTheme, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
-      CastleProduction_HandleAvailableUnitStripClick(useChrTheme, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleLicenceGridClick(useChrTheme, (int)(intptr_t)&g_MainRenderDevice, (int)(intptr_t)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleAvailableUnitStripClick(useChrTheme, (int)(intptr_t)&g_MainRenderDevice, (int)(intptr_t)g_CastleUnitProductionWidgetTable);
     }
   }
   while ( !g_CastleProductionExitSignal );
@@ -1358,7 +1358,7 @@ int  Palette_LoadOrBuildBlendLookupTable(CHAR *themeName, int palettePtr, int a3
     cube_size *= cube_size * cube_size;
     g_Palette_ActivePalettePtr = palettePtr;
     Compat_QueryRead(query_handle, g_Rgb15ToPaletteLut, (int)cube_size);
-    return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+    return Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
   }
 
   Palette_BuildNearestColorLUT(palettePtr);
@@ -1383,8 +1383,8 @@ int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD renderContext, int dr
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, renderContext);
   Render_SaveBackbuffer(v3);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 48, 400, 0x1BBu, 0x3Cu, 0x190u, 0x30u);
-  result = UI_DrawTextFmt(drawContext, 347, 445, 48, 3, (int)aD_39);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 48, 400, 0x1BBu, 0x3Cu, 0x190u, 0x30u);
+  result = UI_DrawTextFmt(drawContext, 347, 445, 48, 3, (int)(intptr_t)aD_39);
   g_RenderDevice = savedRenderDevice;
   return result;
 }
@@ -1404,8 +1404,8 @@ int  BuildingTransferDialog_DrawTransferAmountValue(DWORD renderContext, int dra
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, renderContext);
   Render_SaveBackbuffer(v3);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x12Cu, 0x224u, 0x110u);
-  result = UI_DrawTextFmt(drawContext, 548, 601, 272, 3, (int)aD_40);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x12Cu, 0x224u, 0x110u);
+  result = UI_DrawTextFmt(drawContext, 548, 601, 272, 3, (int)(intptr_t)aD_40);
   g_RenderDevice = savedRenderDevice;
   return result;
 }

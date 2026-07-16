@@ -18,14 +18,14 @@
 __int16 Render_LoadResourceBackbuffer(void)
 {
   Render_InitRecoveredVtableStorage();
-  g_ActiveBlitCursor = (int)g_NullBlitCursor_Vtable;
-  Surface_ConstructBackbufferInstance((int)&g_MainRenderDevice);
-  CRT_RegisterFinalizableObject((int)&g_RenderBackbufferScanlineBuffer, 640);
-  Render_ConstructSurfaceObject((int)&g_RenderDeviceStorage, 640, SCREEN_HEIGHT);
-  CRT_RegisterFinalizableObject((int)&g_RenderPaletteRemapBuffer, 256);
-  _wcpp_4_ctor_array__((int)&g_DefaultPaletteTable, 256);
+  g_ActiveBlitCursor = (int)(intptr_t)g_NullBlitCursor_Vtable;
+  Surface_ConstructBackbufferInstance((int)(intptr_t)&g_MainRenderDevice);
+  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderBackbufferScanlineBuffer, 640);
+  Render_ConstructSurfaceObject((int)(intptr_t)&g_RenderDeviceStorage, 640, SCREEN_HEIGHT);
+  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderPaletteRemapBuffer, 256);
+  _wcpp_4_ctor_array__((int)(intptr_t)&g_DefaultPaletteTable, 256);
   g_Render_BackgroundColorIndex = 0;
-  return (unsigned __int8)Palette_BuildGrayscaleIdentityTable((int)g_PaletteScratchSurfaceBuffer);
+  return (unsigned __int8)Palette_BuildGrayscaleIdentityTable((int)(intptr_t)g_PaletteScratchSurfaceBuffer);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -88,7 +88,7 @@ int  Palette_ExpandRGBTripletsToTable(int palette_table, int query_handle, int c
     green = (unsigned __int8)palette_bytes[palette_offset + 1];
     blue = (unsigned __int8)palette_bytes[palette_offset + 2];
     packed_rgb = red | (green << 8) | (blue << 16);
-    *(_DWORD *)write_ptr = packed_rgb;
+    *(_DWORD *)(uintptr_t)write_ptr = packed_rgb;
     write_ptr += 4;
     palette_offset += 3;
   }
@@ -102,13 +102,13 @@ int  LoadPalPCX(int palette_table, const char *palette_name, DWORD context)
   int query_handle; // [esp+100h] [ebp-14h] BYREF
 
   (void)context;
-  Debug_Log(63, (DWORD)(uintptr_t)palette_name, (DWORD)palette_table, (int)a_loadpalpcxS0x);
+  Debug_Log(63, (DWORD)(uintptr_t)palette_name, (DWORD)palette_table, (int)(intptr_t)a_loadpalpcxS0x);
   strcpy(path, aGfx_7);
   strcat(path, palette_name);
   query_handle = FileSystem_ResolveReadPath(path, 1);
   Compat_QuerySkipBytes(query_handle, -0x300);
   Palette_ExpandRGBTripletsToTable(palette_table, query_handle, 0);
-  return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  return Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
 }
 
 //----- (00401C40) --------------------------------------------------------
@@ -119,13 +119,13 @@ int  LoadPalCOL(int palette_table, intptr_t palette_name_addr, DWORD context)
   int query_handle; // [esp+100h] [ebp-14h] BYREF
 
   palette_name = (const char *)(uintptr_t)palette_name_addr;
-  Debug_Log(63, palette_table, context, (int)a_loadpalcolS0x);
+  Debug_Log(63, palette_table, context, (int)(intptr_t)a_loadpalcolS0x);
   strcpy(path, aGfx_0);
   strcat(path, palette_name);
   query_handle = FileSystem_ResolveReadPath(path, 1);
   Compat_QuerySkipBytes(query_handle, 8);
   Palette_ExpandRGBTripletsToTable(palette_table, query_handle, 0);
-  return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  return Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
 }
 
 CLASH95_INTERNAL int Compat_LoadPalCOLIntoTable(int *palette_table, const char *palette_name, DWORD context)
@@ -150,7 +150,7 @@ CLASH95_INTERNAL int Compat_LoadPalCOLIntoTable(int *palette_table, const char *
     unsigned char blue = palette_bytes[3 * palette_index + 2];
     palette_table[palette_index] = red | (green << 8) | (blue << 16);
   }
-  return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  return Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
 }
 
 //----- (00401CE0) --------------------------------------------------------
@@ -175,7 +175,7 @@ int  Palette_BuildGrayscaleIdentityTable(int palette_table)
     BYTE1(packed_entry) = i;
     HIWORD(packed_entry) = (unsigned __int8)i;
     write_ptr += 4;
-    *(_DWORD *)(write_ptr - 4) = packed_entry;
+    *(_DWORD *)(uintptr_t)(write_ptr - 4) = packed_entry;
   }
   return table_base;
 }
@@ -226,7 +226,7 @@ _DWORD * Render_ConstructSurfaceObject(int surface_addr, __int16 width, __int16 
   _DWORD *surface_body; // eax
   _DWORD *surface; // eax
 
-  surface_body = (_DWORD *)(surface_addr + 8);
+  surface_body = (_DWORD *)(uintptr_t)(surface_addr + 8);
   *(surface_body - 1) = 0;
   *((_WORD *)surface_body - 4) = width;
   *((_WORD *)surface_body - 3) = height;
@@ -245,7 +245,7 @@ int  Render_ClearGameScreen(_DWORD *surface)
 //----- (00401E60) --------------------------------------------------------
 int  Surface_ClearWholeArea(unsigned __int16 *surface)
 {
-  return (*(int (__fastcall **)(_DWORD, _DWORD, int))(*((_DWORD *)surface + 46) + 32))(0, 0, surface[1] * *surface);
+  return (*(int (__fastcall **)(_DWORD, _DWORD, int))(uintptr_t)(*((_DWORD *)surface + 46) + 32))(0, 0, surface[1] * *surface);
 }
 
 //----- (00401E90) --------------------------------------------------------
@@ -264,29 +264,29 @@ int  Render_FillClippedScanlines(int surface, unsigned int pixel_count)
   int write_cursor; // [esp+4h] [ebp-14h]
   unsigned __int8 fill_color; // [esp+8h] [ebp-10h]
 
-  write_cursor = (*(int (**)(void))(*(_DWORD *)(surface + 184) + 8))();
+  write_cursor = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 8))();
   fill_color = v3;
   do
   {
-    if ( pixel_count > (*(int (__thiscall **)(unsigned int))(g_ActiveBlitCursor + 8))(pixel_count) )
-      (*(void (**)(void))(g_ActiveBlitCursor + 8))();
-    v4 = (*(int (**)(void))(*(_DWORD *)write_cursor + 8))();
+    if ( pixel_count > (*(int (__thiscall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(pixel_count) )
+      (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+    v4 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 8))();
     if ( v5 > v4 )
-      v5 = (*(int (**)(void))(*(_DWORD *)write_cursor + 8))();
-    v6 = (*(int (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 8))(v5);
+      v5 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 8))();
+    v6 = (*(int (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(v5);
     if ( v7 > v6 )
-      v7 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-    (*(void (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 16))(v7);
-    (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-    (*(void (**)(void))(*(_DWORD *)write_cursor + 16))();
+      v7 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+    (*(void (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 16))(v7);
+    (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 16))();
     memset_(v8, fill_color);
-    (*(void (__fastcall **)(int, int))(*(_DWORD *)write_cursor + 12))(v9, v9);
-    (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v10, v10);
-    (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v11, v11);
+    (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 12))(v9, v9);
+    (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v10, v10);
+    (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v11, v11);
     pixel_count -= v12;
   }
   while ( pixel_count );
-  return (**(int (***)(void))write_cursor)();
+  return (**(int (***)(void))(uintptr_t)write_cursor)();
 }
 // 401EAD: variable 'v3' is possibly undefined
 // 401ED7: variable 'v5' is possibly undefined
@@ -322,8 +322,8 @@ int  Render_BlitRectViaVirtualSurfaces(
   int (__fastcall ***v19)(_DWORD, int); // ecx
   unsigned __int16 span_width; // [esp+0h] [ebp-14h]
 
-  read_cursor = (*(int (**)(void))(*(_DWORD *)(source_surface + 184) + 4))();
-  write_cursor = (*(int (__fastcall **)(int, _DWORD))(*(_DWORD *)(dest_surface + 184) + 8))(read_cursor, dest_x);
+  read_cursor = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(source_surface + 184) + 4))();
+  write_cursor = (*(int (__fastcall **)(int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)(dest_surface + 184) + 8))(read_cursor, dest_x);
   span_width = src_right - src_left + 1;
   while ( 1 )
   {
@@ -332,20 +332,20 @@ int  Render_BlitRectViaVirtualSurfaces(
       break;
     for ( i = 0; i < span_width / 2; ++i )
     {
-      (*(void (**)(void))(*(_DWORD *)v11 + 16))();
-      v14 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)write_cursor + 16))();
-      *(_BYTE *)v14 = *(_BYTE *)HIDWORD(v14);
-      (*(void (__fastcall **)(int, int))(*(_DWORD *)v15 + 12))(v15, 2);
-      (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v11 + 16))();
+      v14 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 16))();
+      *(_BYTE *)v14 = *(_BYTE *)(uintptr_t)HIDWORD(v14);
+      (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v15 + 12))(v15, 2);
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 12))();
     }
-    v16 = *(_DWORD *)write_cursor;
-    (*(void (**)(void))(*(_DWORD *)write_cursor + 4))();
-    (*(void (**)(void))(v16 + 12))();
+    v16 = *(_DWORD *)(uintptr_t)write_cursor;
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)write_cursor + 4))();
+    (*(void (**)(void))(uintptr_t)(v16 + 12))();
     v18 = *v17;
-    (*(void (**)(void))(*v17 + 4))();
-    (*(void (**)(void))(v18 + 12))();
+    (*(void (**)(void))(uintptr_t)(*v17 + 4))();
+    (*(void (**)(void))(uintptr_t)(v18 + 12))();
   }
-  (**(void (***)(void))write_cursor)();
+  (**(void (***)(void))(uintptr_t)write_cursor)();
   return (**v19)(v19, 2);
 }
 // 402018: variable 'v11' is possibly undefined
@@ -374,7 +374,7 @@ int  Render_LoadPCXImage(int surface, char *file_name, int transparent, uintptr_
   int query_handle;
   char path[256];
 
-  Debug_Log(transparent, 0, (DWORD)file_name, (int)a_loadpcxS0x08x);
+  Debug_Log(transparent, 0, (DWORD)(intptr_t)file_name, (int)(intptr_t)a_loadpcxS0x08x);
   if ( !surface || !file_name )
     return 0;
 
@@ -387,26 +387,26 @@ int  Render_LoadPCXImage(int surface, char *file_name, int transparent, uintptr_
   file_size = (unsigned int)IO_QueryVTableStreamSize(query_handle);
   if ( !file_size )
   {
-    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+    Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
     return 0;
   }
 
   file_buffer = (unsigned char *)(uintptr_t)(unsigned int)nmalloc_(file_size, 4);
   if ( !file_buffer )
   {
-    Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+    Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
     return 0;
   }
 
   Compat_QueryRead(query_handle, file_buffer, file_size);
-  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
   if ( file_size < 128 )
   {
     Compat_FreeLow32Bytes((int)(uintptr_t)file_buffer);
     return 0;
   }
 
-  surface_pixels = (unsigned char *)(uintptr_t)(unsigned int)*(_DWORD *)(surface + 4);
+  surface_pixels = (unsigned char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(surface + 4);
   if ( !surface_pixels )
   {
     Compat_FreeLow32Bytes((int)(uintptr_t)file_buffer);
@@ -427,8 +427,8 @@ int  Render_LoadPCXImage(int surface, char *file_name, int transparent, uintptr_
       width,
       height,
       surface,
-      *(unsigned __int16 *)surface,
-      *((unsigned __int16 *)surface + 1),
+      *(unsigned __int16 *)(uintptr_t)surface,
+      *((unsigned __int16 *)(uintptr_t)surface + 1),
       transparent,
       palette_out_addr != 0);
   pixel_count = (unsigned int)width * (unsigned int)height;
@@ -647,27 +647,27 @@ int  Render_FillRect(
   {
     if ( (src_resolved == (_DWORD *)&g_MainRenderDevice && !src_resolved[47]) || (dest_resolved == (_DWORD *)&g_MainRenderDevice && !dest_resolved[47]) )
       return 0;
-    temp_surface = (_DWORD *)Mem_Alloc(196, 0, 0, 0);
+    temp_surface = (_DWORD *)(uintptr_t)Mem_Alloc(196, 0, 0, 0);
     if ( !temp_surface )
       return 0;
-    Render_ConstructScratchSurface((int)temp_surface, span_width, 1u, span_height);
+    Render_ConstructScratchSurface((int)(intptr_t)temp_surface, span_width, 1u, span_height);
     Render_FillRect(src_resolved, temp_surface, (unsigned __int16)src_top_saved, (unsigned __int16)src_left_saved, src_right, src_bottom, 0, 0);
     Render_FillRect(temp_surface, dest_resolved, 0, 0, LOWORD(temp_surface[0]) - 1, HIWORD(temp_surface[0]) - 1, dest_x, dest_y);
     return Render_DestructScratchSurface(temp_surface, 2);
   }
   else
   {
-    dest_cursor = (void (***)(void))(*(int (**)(void))(dest_resolved[46] + 8))();
-    src_cursor = (int (***)(void))(*(int (**)(void))(src_resolved[46] + 4))();
+    dest_cursor = (void (***)(void))(uintptr_t)(*(int (**)(void))(uintptr_t)(dest_resolved[46] + 8))();
+    src_cursor = (int (***)(void))(uintptr_t)(*(int (**)(void))(uintptr_t)(src_resolved[46] + 4))();
     rows_remaining = span_height;
     v11 = *dest_cursor;
     row_width = span_width;
     v12 = ((__int64 (*)(void))v11[1])();
     v42 = v12 - span_width;
-    v13 = *(_DWORD *)HIDWORD(v12);
+    v13 = *(_DWORD *)(uintptr_t)HIDWORD(v12);
     v43 = HIDWORD(v12);
-    v39 = (*(int (**)(void))(v13 + 4))() - span_width;
-    v14 = (*(int (**)(void))(g_ActiveBlitCursor + 4))();
+    v39 = (*(int (**)(void))(uintptr_t)(v13 + 4))() - span_width;
+    v14 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 4))();
     v32 = dest_cursor;
     v41 = v14 - span_width;
     while ( --rows_remaining != -1 )
@@ -678,25 +678,25 @@ int  Render_FillRect(
       do
       {
         chunk_length = pixels_remaining;
-        if ( (*(int (**)(void))(*(_DWORD *)v45 + 8))() < pixels_remaining )
-          chunk_length = (*(int (**)(void))(*(_DWORD *)v45 + 8))();
+        if ( (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v45 + 8))() < pixels_remaining )
+          chunk_length = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v45 + 8))();
         if ( chunk_length > ((int (*)(void))(*v33)[2])() )
           chunk_length = ((int (*)(void))(*v33)[2])();
-        if ( chunk_length > (*(int (**)(void))(g_ActiveBlitCursor + 8))() )
-          chunk_length = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-        (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-        copy_source = (const void *)(*(int (**)(void))(*(_DWORD *)v45 + 16))();
-        copy_dest = (void *)((int (__thiscall *)(unsigned int))(*v33)[4])(chunk_length);
+        if ( chunk_length > (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))() )
+          chunk_length = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+        (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
+        copy_source = (const void *)(uintptr_t)(*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v45 + 16))();
+        copy_dest = (void *)(uintptr_t)((int (__thiscall *)(unsigned int))(*v33)[4])(chunk_length);
         qmemcpy(copy_dest, copy_source, v17);
         (*v33)[3]();
-        (*(void (**)(void))(*(_DWORD *)v45 + 12))();
-        (*(void (__fastcall **)(unsigned int, unsigned int))(g_ActiveBlitCursor + 12))(pixels_remaining, chunk_length);
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v45 + 12))();
+        (*(void (__fastcall **)(unsigned int, unsigned int))(uintptr_t)(g_ActiveBlitCursor + 12))(pixels_remaining, chunk_length);
         pixels_remaining = v18 - chunk_length;
       }
       while ( v18 != chunk_length );
       ((void (__fastcall *)(_DWORD, int))(*v32)[3])(0, v42);
-      (*(void (**)(void))(*(_DWORD *)v43 + 12))();
-      (*(void (**)(void))(g_ActiveBlitCursor + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 12))();
+      (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 12))();
     }
     (**dest_cursor)();
     return (**src_cursor)();
@@ -781,70 +781,70 @@ int  Render_BlitSurfaceRect(
   src_top_u16 = (unsigned __int16)src_top_saved;
   src_backend = src_resolved[46];
   span_height = src_bottom - (unsigned __int16)src_top_saved + 1;
-  if ( (*(int (**)(void))(src_backend + 60))() && (*(int (**)(void))(dest_resolved[46] + 64))() )
+  if ( (*(int (**)(void))(uintptr_t)(src_backend + 60))() && (*(int (**)(void))(uintptr_t)(dest_resolved[46] + 64))() )
   {
-    colorkey_surface = (*(int (**)(void))(src_resolved[46] + 60))();
+    colorkey_surface = (*(int (**)(void))(uintptr_t)(src_resolved[46] + 60))();
     Surface_SetSrcColorKey(colorkey_surface, 0, v29);
-    src_rect_surface = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(v30 + 1);
+    src_rect_surface = (_DWORD *)(uintptr_t)(*(int (__thiscall **)(int))(uintptr_t)(src_resolved[46] + 60))(v30 + 1);
     Surface_SetSrcRect(src_rect_surface, src_top_u16, v32, (unsigned __int16)src_left_saved, src_right_saved + 1);
     scratch_surface[49] = dest_x;
     scratch_surface[50] = dest_y;
-    dest_rect_surface = (_DWORD *)(*(int (__thiscall **)(int))(src_resolved[46] + 60))(dest_y + span_height);
+    dest_rect_surface = (_DWORD *)(uintptr_t)(*(int (__thiscall **)(int))(uintptr_t)(src_resolved[46] + 60))(dest_y + span_height);
     Surface_SetDestRect(dest_rect_surface, dest_y, v34, dest_x, span_width + dest_x);
-    src_blit_surface = (*(int (**)(void))(src_resolved[46] + 60))();
+    src_blit_surface = (*(int (**)(void))(uintptr_t)(src_resolved[46] + 60))();
     dest_backend = dest_resolved[46];
-    blit_interface = *(_DWORD *)(src_blit_surface + 172);
-    dest_target_surface = (*(int (**)(void))(dest_backend + 64))();
-    return (*(int (__fastcall **)(int, _DWORD))(blit_interface + 8))(dest_target_surface, dest_x);
+    blit_interface = *(_DWORD *)(uintptr_t)(src_blit_surface + 172);
+    dest_target_surface = (*(int (**)(void))(uintptr_t)(dest_backend + 64))();
+    return (*(int (__fastcall **)(int, _DWORD))(uintptr_t)(blit_interface + 8))(dest_target_surface, dest_x);
   }
   else if ( g_MousePresentAtStartup && (src_resolved == (_DWORD *)&g_MainRenderDevice || dest_resolved == (_DWORD *)&g_MainRenderDevice) )
   {
-    Render_ConstructScratchSurface((int)scratch_surface, span_width, 1u, span_height);
+    Render_ConstructScratchSurface((int)(intptr_t)scratch_surface, span_width, 1u, span_height);
     Render_FillRect(src_resolved, scratch_surface, (unsigned __int16)src_top_saved, (unsigned __int16)src_left_saved, src_right, src_bottom, 0, 0);
     Render_BlitSurfaceRect(scratch_surface, dest_resolved, 0, 0, LOWORD(scratch_surface[0]) - 1, HIWORD(scratch_surface[0]) - 1, dest_x, dest_y);
     return Render_DestructScratchSurface(scratch_surface, 0);
   }
   else
   {
-    dest_cursor = (void (***)(void))(*(int (**)(void))(dest_resolved[46] + 8))();
-    src_cursor = (int (***)(void))(*(int (__fastcall **)(void (***)(void), _DWORD))(src_resolved[46] + 4))(dest_cursor, (unsigned __int16)src_left_saved);
+    dest_cursor = (void (***)(void))(uintptr_t)(*(int (**)(void))(uintptr_t)(dest_resolved[46] + 8))();
+    src_cursor = (int (***)(void))(uintptr_t)(*(int (__fastcall **)(void (***)(void), _DWORD))(uintptr_t)(src_resolved[46] + 4))(dest_cursor, (unsigned __int16)src_left_saved);
     rows_remaining = span_height;
     v12 = *v11;
     row_width = span_width;
-    v13 = ((__int64 (__fastcall *)(int *, int (***)(void)))*(_DWORD *)(v12 + 4))(v11, src_cursor);
+    v13 = ((__int64 (__fastcall *)(int *, int (***)(void)))(uintptr_t)*(_DWORD *)(uintptr_t)(v12 + 4))(v11, src_cursor);
     v54 = v14;
-    v15 = *(_DWORD *)HIDWORD(v13);
+    v15 = *(_DWORD *)(uintptr_t)HIDWORD(v13);
     v42 = v13 - span_width;
     v43 = HIDWORD(v13);
-    v51 = (*(int (**)(void))(v15 + 4))() - span_width;
-    for ( i = (*(int (**)(void))(g_ActiveBlitCursor + 4))() - span_width;
+    v51 = (*(int (**)(void))(uintptr_t)(v15 + 4))() - span_width;
+    for ( i = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 4))() - span_width;
           --rows_remaining != -1;
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, i) )
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, i) )
     {
       pixels_remaining = row_width;
       do
       {
-        v16 = (*(int (__thiscall **)(int))(*(_DWORD *)v43 + 8))(pixels_remaining);
+        v16 = (*(int (__thiscall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 8))(pixels_remaining);
         if ( v16 < v17 )
-          v17 = (*(int (**)(void))(*(_DWORD *)v43 + 8))();
-        v18 = (*(int (__fastcall **)(unsigned int))(*(_DWORD *)v54 + 8))(v17);
+          v17 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 8))();
+        v18 = (*(int (__fastcall **)(unsigned int))(uintptr_t)(*(_DWORD *)(uintptr_t)v54 + 8))(v17);
         if ( v19 > v18 )
-          v19 = (*(int (**)(void))(*(_DWORD *)v54 + 8))();
-        v20 = (*(int (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 8))(v19);
+          v19 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v54 + 8))();
+        v20 = (*(int (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(v19);
         if ( v21 > v20 )
-          v21 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-        (*(void (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 16))(v21);
-        (*(void (**)(void))(*(_DWORD *)v43 + 16))();
-        v22 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)v54 + 16))();
-        Str_CompactSkippingZeroBytes((_BYTE *)v22, (_BYTE *)HIDWORD(v22), v23);
-        (*(void (__fastcall **)(int, int))(*(_DWORD *)v54 + 12))(v24, v24);
-        (*(void (__fastcall **)(int, int))(*(_DWORD *)v43 + 12))(v25, v25);
-        (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v26, v26);
+          v21 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+        (*(void (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 16))(v21);
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 16))();
+        v22 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v54 + 16))();
+        Str_CompactSkippingZeroBytes((_BYTE *)v22, (_BYTE *)(uintptr_t)HIDWORD(v22), v23);
+        (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v54 + 12))(v24, v24);
+        (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 12))(v25, v25);
+        (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v26, v26);
         pixels_remaining -= v27;
       }
       while ( pixels_remaining );
-      (*(void (**)(void))(*(_DWORD *)v54 + 12))();
-      (*(void (**)(void))(*(_DWORD *)v43 + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v54 + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v43 + 12))();
     }
     (**dest_cursor)();
     return (**src_cursor)();
@@ -932,35 +932,35 @@ int  Render_BlendSurfaceRect(
   span_height = src_bottom - src_top + 1;
   if ( g_MousePresentAtStartup && dest_device == (_DWORD *)&g_MainRenderDevice )
   {
-    Render_ConstructScratchSurface((int)scratch_surface, span_width, 1u, span_height);
+    Render_ConstructScratchSurface((int)(intptr_t)scratch_surface, span_width, 1u, span_height);
     Render_BlendSurfaceRect(scratch_surface, first_source, v33, second_source_saved, src_top_saved, src_right_saved, src_bottom_saved, 0, 0, blend_ratio);
     Render_FillRect(scratch_surface, dest_device, 0, 0, LOWORD(scratch_surface[0]) - 1, HIWORD(scratch_surface[0]) - 1, dest_x, dest_y);
     return Render_DestructScratchSurface(scratch_surface, 0);
   }
   else
   {
-    dest_cursor = (void (***)(void))(*(int (**)(void))(dest_device[46] + 8))();
+    dest_cursor = (void (***)(void))(uintptr_t)(*(int (**)(void))(uintptr_t)(dest_device[46] + 8))();
     v28 = src_top;
-    v12 = *(_DWORD *)(first_source + 184);
-    blend_source_ptr = (unsigned __int8 *)(unsigned __int16)src_left_saved;
-    v13 = (*(int (__fastcall **)(void (***)(void), _DWORD))(v12 + 4))(dest_cursor, (unsigned __int16)src_left_saved);
-    v14 = *(_DWORD *)(second_source_saved + 184);
-    first_src_cursor = (void (***)(void))v13;
-    second_src_cursor = (int (***)(void))(*(int (**)(void))(v14 + 4))();
+    v12 = *(_DWORD *)(uintptr_t)(first_source + 184);
+    blend_source_ptr = (unsigned __int8 *)(uintptr_t)(unsigned __int16)src_left_saved;
+    v13 = (*(int (__fastcall **)(void (***)(void), _DWORD))(uintptr_t)(v12 + 4))(dest_cursor, (unsigned __int16)src_left_saved);
+    v14 = *(_DWORD *)(uintptr_t)(second_source_saved + 184);
+    first_src_cursor = (void (***)(void))(uintptr_t)v13;
+    second_src_cursor = (int (***)(void))(uintptr_t)(*(int (**)(void))(uintptr_t)(v14 + 4))();
     g_Palette_BlendRatio = blend_ratio;
     v40 = v15;
     rows_remaining = span_height;
     v16 = *v15;
     row_width = span_width;
-    v17 = (*(int (__fastcall **)(_DWORD *, int (***)(void)))(v16 + 4))(v15, second_src_cursor);
-    v18 = *(_DWORD *)v13;
+    v17 = (*(int (__fastcall **)(_DWORD *, int (***)(void)))(uintptr_t)(v16 + 4))(v15, second_src_cursor);
+    v18 = *(_DWORD *)(uintptr_t)v13;
     v45 = v17 - span_width;
     v41 = v13;
-    v19 = ((__int64 (*)(void))*(_DWORD *)(v18 + 4))();
-    v20 = *(_DWORD *)HIDWORD(v19);
+    v19 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(v18 + 4))();
+    v20 = *(_DWORD *)(uintptr_t)HIDWORD(v19);
     v42 = v19 - span_width;
     v47 = HIDWORD(v19);
-    v44 = (*(int (**)(void))(v20 + 4))() - span_width;
+    v44 = (*(int (**)(void))(uintptr_t)(v20 + 4))() - span_width;
     while ( --rows_remaining != -1 )
     {
       pixels_remaining = row_width;
@@ -968,27 +968,27 @@ int  Render_BlendSurfaceRect(
       do
       {
         chunk_length = pixels_remaining;
-        if ( (*(int (**)(void))(*(_DWORD *)v13 + 8))() < pixels_remaining )
-          chunk_length = (*(int (**)(void))(*(_DWORD *)v13 + 8))();
-        if ( chunk_length > (*(int (**)(void))(*v40 + 8))() )
-          chunk_length = (*(int (**)(void))(*v40 + 8))();
-        if ( chunk_length > (*(int (**)(void))(*(_DWORD *)v39 + 8))() )
-          chunk_length = (*(int (**)(void))(*(_DWORD *)v39 + 8))();
-        second_read_ptr = (unsigned __int8 *)(*(int (**)(void))(*(_DWORD *)v39 + 16))();
-        v23 = *(_DWORD *)v13;
+        if ( (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v13 + 8))() < pixels_remaining )
+          chunk_length = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v13 + 8))();
+        if ( chunk_length > (*(int (**)(void))(uintptr_t)(*v40 + 8))() )
+          chunk_length = (*(int (**)(void))(uintptr_t)(*v40 + 8))();
+        if ( chunk_length > (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v39 + 8))() )
+          chunk_length = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v39 + 8))();
+        second_read_ptr = (unsigned __int8 *)(uintptr_t)(*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v39 + 16))();
+        v23 = *(_DWORD *)(uintptr_t)v13;
         blend_source_ptr = second_read_ptr;
-        (*(void (**)(void))(v23 + 16))();
-        v24 = ((__int64 (*)(void))*(_DWORD *)(*v40 + 16))();
-        Palette_BlendIndexedPixelRun((char *)v24, (char *)HIDWORD(v24), blend_source_ptr, chunk_length);
-        (*(void (**)(void))(*v40 + 12))();
-        (*(void (**)(void))(*(_DWORD *)v13 + 12))();
-        (*(void (**)(void))(*(_DWORD *)v39 + 12))();
+        (*(void (**)(void))(uintptr_t)(v23 + 16))();
+        v24 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*v40 + 16))();
+        Palette_BlendIndexedPixelRun((char *)v24, (char *)(uintptr_t)HIDWORD(v24), blend_source_ptr, chunk_length);
+        (*(void (**)(void))(uintptr_t)(*v40 + 12))();
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v13 + 12))();
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v39 + 12))();
         pixels_remaining -= chunk_length;
       }
       while ( pixels_remaining );
-      (*(void (**)(void))(*v40 + 12))();
-      (*(void (**)(void))(*(_DWORD *)v41 + 12))();
-      (*(void (**)(void))(*(_DWORD *)v47 + 12))();
+      (*(void (**)(void))(uintptr_t)(*v40 + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v41 + 12))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v47 + 12))();
     }
     (**dest_cursor)();
     (**first_src_cursor)();

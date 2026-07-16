@@ -20,7 +20,7 @@ BOOL  MapTile_HasHiddenTreasure(int tileRow, int tileColumn)
 {
   int tileId; // eax
 
-  tileId = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileRow + TILE_TERRAIN_RECORD_STRIDE * tileColumn);
+  tileId = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * tileRow + TILE_TERRAIN_RECORD_STRIDE * tileColumn);
   return tileId == 755 || tileId == 752;
 }
 // 5202E4: using guessed type int gameData;
@@ -49,10 +49,10 @@ signed int  Treasure_TryDigHere(
   _BYTE mission17EventBuffer[24]; // [esp+0h] [ebp-40h] BYREF
   _BYTE mission7EventBuffer[40]; // [esp+18h] [ebp-28h] BYREF
 
-  Debug_Log(a1, a2, a3, (int)aTreasure_dighe, a1);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aTreasure_dighe, a1);
   v6 = gameData;
-  stackTileRecord = (__int16 *)(UNIT_STACK_STRIDE * unitStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176))
+  stackTileRecord = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * unitStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176))
     || !UnitStack_HasBuilder(v9) )
   {
     return 0;
@@ -75,19 +75,19 @@ signed int  Treasure_TryDigHere(
   }
   else
   {
-    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
       outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleActive;
     else
       outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleInactive;
-    digOutcome = Temple_Random((int)outcomeTablePtr, v11, v6, (DWORD)stackTileRecord, a4);
-    Debug_Log(digOutcome, v6, (DWORD)stackTileRecord, (int)aTreasure_dig_0, digOutcome);
+    digOutcome = Temple_Random((int)(intptr_t)outcomeTablePtr, v11, v6, (DWORD)(intptr_t)stackTileRecord, a4);
+    Debug_Log(digOutcome, v6, (DWORD)(intptr_t)stackTileRecord, (int)(intptr_t)aTreasure_dig_0, digOutcome);
   }
-  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
   {
-    Win_PlayModeChangeFrameTransition((int)aKop_bud, 1, (int)scriptedEventData, v6, (DWORD)stackTileRecord, (char)a5);
-    Temple_ShowOutcomePopup(outcomeRecord[(unsigned __int8)g_LanguageIndex + 3], outcomeRecord[2], (int)outcomeRecord, *outcomeRecord != 15, (DWORD)stackTileRecord);
+    Win_PlayModeChangeFrameTransition((int)(intptr_t)aKop_bud, 1, (int)(intptr_t)scriptedEventData, v6, (DWORD)(intptr_t)stackTileRecord, (char)(intptr_t)a5);
+    Temple_ShowOutcomePopup(outcomeRecord[(unsigned __int8)g_LanguageIndex + 3], outcomeRecord[2], (int)(intptr_t)outcomeRecord, *outcomeRecord != 15, (DWORD)(intptr_t)stackTileRecord);
   }
-  tileWordPtr = (unsigned __int16 *)(TILE_TERRAIN_ROW_STRIDE * *stackTileRecord + gameData + TILE_TERRAIN_RECORD_STRIDE * stackTileRecord[1]);
+  tileWordPtr = (unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_ROW_STRIDE * *stackTileRecord + gameData + TILE_TERRAIN_RECORD_STRIDE * stackTileRecord[1]);
   tileValue = *tileWordPtr;
   if ( *tileWordPtr >= 0x2F0u )
   {
@@ -102,7 +102,7 @@ signed int  Treasure_TryDigHere(
     }
   }
   Rules_RetractTreasureFact(*stackTileRecord, stackTileRecord[1], a6);
-  Temple_ProcessGift(*v16, (int)stackTileRecord, stackTileRecord[1], *stackTileRecord, a6);
+  Temple_ProcessGift(*v16, (int)(intptr_t)stackTileRecord, stackTileRecord[1], *stackTileRecord, a6);
   return 1;
 }
 // 443C53: variable 'v7' is possibly undefined
@@ -134,18 +134,18 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
   int columnDeltaSquared; // [esp+1Ch] [ebp-20h]
   int columnDelta; // [esp+20h] [ebp-1Ch]
 
-  stackRecord = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * unitStackIndex);
+  stackRecord = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * unitStackIndex);
   if ( UnitStack_GetMinCurrentActionPoints((intptr_t)stackRecord) < 0 || *((_BYTE *)stackRecord + 720) || !UnitStack_HasNormalCombatUnits((intptr_t)stackRecord) )
     return 0;
   if ( UnitStack_GetMaxOrderTier((intptr_t)stackRecord) < 2 )
   {
-    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
     {
-      lowRankMessageTable[0] = (int)g_UnitHideFailedLowRankText[0];
-      lowRankMessageTable[1] = (int)g_UnitHideFailedLowRankText[1];
-      lowRankMessageTable[2] = (int)g_UnitHideFailedLowRankText[2];
+      lowRankMessageTable[0] = (int)(intptr_t)g_UnitHideFailedLowRankText[0];
+      lowRankMessageTable[1] = (int)(intptr_t)g_UnitHideFailedLowRankText[1];
+      lowRankMessageTable[2] = (int)(intptr_t)g_UnitHideFailedLowRankText[2];
       Audio_PlaySoundEffectByName(aWrong_0, 64);
-      UI_ShowInfoWindow(lowRankMessageTable[(unsigned __int8)g_LanguageIndex], 1u, v6, a3, (int)noSpotMessageTable, (int)&g_UnitHideFailedLowRankText[3]);
+      UI_ShowInfoWindow(lowRankMessageTable[(unsigned __int8)g_LanguageIndex], 1u, v6, a3, (int)(intptr_t)noSpotMessageTable, (int)(intptr_t)&g_UnitHideFailedLowRankText[3]);
       return 0;
     }
     return 0;
@@ -160,14 +160,14 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
     {
       if ( Math_CeilSqrt(columnDeltaSquared + rowDelta * rowDelta) <= 8 )
       {
-        neighborStackIndex = *(_WORD *)(gameData + TILE_ROW_STRIDE * (v8 + *stackRecord) + 2 * (columnDelta + stackRecord[1]) + TILE_MAP_OFFSET);
+        neighborStackIndex = *(_WORD *)(uintptr_t)(gameData + TILE_ROW_STRIDE * (v8 + *stackRecord) + 2 * (columnDelta + stackRecord[1]) + TILE_MAP_OFFSET);
         if ( neighborStackIndex != 0xFFFF )
         {
           if ( neighborStackIndex <= 0x1F4u )
           {
             neighborStackByteOffset = UNIT_STACK_STRIDE * neighborStackIndex;
-            if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + neighborStackByteOffset + 6) <= 0x28
-              && *(_BYTE *)(gameData + neighborStackByteOffset + 147178) != *((_BYTE *)stackRecord + 4) )
+            if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + neighborStackByteOffset + 6) <= 0x28
+              && *(_BYTE *)(uintptr_t)(gameData + neighborStackByteOffset + 147178) != *((_BYTE *)stackRecord + 4) )
             {
               break;
             }
@@ -178,9 +178,9 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
             buildingByteOffset = BUILDING_RECORD_SIZE * buildingIndex;
             LOBYTE(neighborStackIndex) = gameData;
             buildingRecord = buildingByteOffset + gameData + BUILDING_TABLE_OFFSET;
-            if ( (unsigned int)*(char *)(buildingRecord + 4) < 4
-              && *(__int16 *)(buildingRecord + 16) != -1
-              && *(_BYTE *)(gameData + buildingByteOffset + 509676) != *((_BYTE *)stackRecord + 4) )
+            if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
+              && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1
+              && *(_BYTE *)(uintptr_t)(gameData + buildingByteOffset + 509676) != *((_BYTE *)stackRecord + 4) )
             {
               break;
             }
@@ -198,13 +198,13 @@ LABEL_16:
   while ( columnDelta < 8 );
   if ( spotBlocked )
   {
-    if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
       return 0;
-    noSpotMessageTable[0] = (int)g_UnitHideFailedNoSpotText[0];
-    noSpotMessageTable[1] = (int)g_UnitHideFailedNoSpotText[1];
-    noSpotMessageTable[2] = (int)g_UnitHideFailedNoSpotText[2];
+    noSpotMessageTable[0] = (int)(intptr_t)g_UnitHideFailedNoSpotText[0];
+    noSpotMessageTable[1] = (int)(intptr_t)g_UnitHideFailedNoSpotText[1];
+    noSpotMessageTable[2] = (int)(intptr_t)g_UnitHideFailedNoSpotText[2];
     Audio_PlaySoundEffectByName(aWrong_1, 64);
-    UI_ShowInfoWindow(noSpotMessageTable[(unsigned __int8)g_LanguageIndex], 0, v10, 0, (int)&spotBlocked, (int)&g_UnitHideFailedNoSpotText[3]);
+    UI_ShowInfoWindow(noSpotMessageTable[(unsigned __int8)g_LanguageIndex], 0, v10, 0, (int)(intptr_t)&spotBlocked, (int)(intptr_t)&g_UnitHideFailedNoSpotText[3]);
     return 0;
   }
   else
@@ -212,7 +212,7 @@ LABEL_16:
     UnitStack_ClearRemainingActionPoints(stackRecord, 0, a4);
     playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4);
     *((_BYTE *)stackRecord + 720) = 1;
-    if ( *(_DWORD *)(gameData + playerDataOffset + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140051) )
       Win_PlayModeChangeFrameTransition(aUkrycie, 1, v14, neighborStackIndex, 0);
     WorldMap_RedrawTileIfVisible(*stackRecord, stackRecord[1]);
     return 1;
@@ -240,14 +240,14 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int attackin
 
   if ( attackingStackIndex > 0x1F4 )
     return 0;
-  stack = (__int16 *)UNIT_STACK(attackingStackIndex);
+  stack = (__int16 *)(uintptr_t)UNIT_STACK(attackingStackIndex);
   if ( (unsigned int)stack[3] > 0x28 )
     return 0;
 
   result = 0;
   if ( UnitStack_GetMaxOrderTier((intptr_t)stack) >= 3 )
   {
-    int vision_radius = UnitStack_GetVisionRadius((int)stack);
+    int vision_radius = UnitStack_GetVisionRadius((int)(intptr_t)stack);
     int center_row = *stack;
     int center_column = stack[1];
     int row;
@@ -270,12 +270,12 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int attackin
                    + (row - center_row) * (row - center_row));
         if ( distance > vision_radius )
           continue;
-        hidden_stack_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
+        hidden_stack_index = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(row, column));
         if ( hidden_stack_index <= 0x1F4 )
         {
-          __int16 *hidden_stack = (__int16 *)UNIT_STACK(hidden_stack_index);
+          __int16 *hidden_stack = (__int16 *)(uintptr_t)UNIT_STACK(hidden_stack_index);
           if ( (unsigned int)hidden_stack[3] <= 0x28
-            && UNIT_STACK_OWNER_INDEX((int)hidden_stack) != UNIT_STACK_OWNER_INDEX((int)stack)
+            && UNIT_STACK_OWNER_INDEX((int)(intptr_t)hidden_stack) != UNIT_STACK_OWNER_INDEX((int)(intptr_t)stack)
             && *((_BYTE *)hidden_stack + 720) )
           {
             *((_BYTE *)hidden_stack + 720) = 0;
@@ -294,15 +294,15 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int attackin
 
     if ( row < 0 || row >= MAP_WIDTH_TILES || column < 0 || column >= MAP_HEIGHT_TILES )
       continue;
-    adjacent_stack_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
+    adjacent_stack_index = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(row, column));
     if ( adjacent_stack_index <= 0x1F4 )
     {
-      __int16 *adjacent_stack = (__int16 *)UNIT_STACK(adjacent_stack_index);
+      __int16 *adjacent_stack = (__int16 *)(uintptr_t)UNIT_STACK(adjacent_stack_index);
       if ( (unsigned int)adjacent_stack[3] <= 0x28
-        && UNIT_STACK_OWNER_INDEX((int)adjacent_stack) != UNIT_STACK_OWNER_INDEX((int)stack)
+        && UNIT_STACK_OWNER_INDEX((int)(intptr_t)adjacent_stack) != UNIT_STACK_OWNER_INDEX((int)(intptr_t)stack)
         && *((_BYTE *)adjacent_stack + 720) )
       {
-        Unit_Attack(adjacent_stack_index, attackingStackIndex, (char)stack, 1u, a2);
+        Unit_Attack(adjacent_stack_index, attackingStackIndex, (char)(intptr_t)stack, 1u, a2);
         UnitStack_ClearRemainingActionPoints(stack, 1u, a2);
         *((_BYTE *)adjacent_stack + 720) = 0;
         result = 1;
@@ -311,7 +311,7 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int attackin
     }
     if ( attackingStackIndex > 0x1F4 )
       break;
-    if ( (unsigned int)*(__int16 *)(UNIT_STACK(attackingStackIndex) + 6) > 0x28 )
+    if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK(attackingStackIndex) + 6) > 0x28 )
       break;
   }
   return result;
@@ -354,8 +354,8 @@ signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3)
   PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX) = MAP_VIEW_TOP;
   fileHandle = IO_FOpen(filePathBuffer, (unsigned __int8 *)aWb_4, v5, headerBuffer);
-  fwrite_((const void *)headerBuffer, 16, fileHandle, 1);
-  fwrite_((const void *)gameData, GAMEDATA_SAVE_IMAGE_BYTES, fileHandle, 1);
+  fwrite_((const void *)(uintptr_t)headerBuffer, 16, fileHandle, 1);
+  fwrite_((const void *)(uintptr_t)gameData, GAMEDATA_SAVE_IMAGE_BYTES, fileHandle, 1);
   fclose_(v7);
   SaveSlot_FormatFactsFilePath(slotIndex, filePathBuffer);
   return Rules_SaveFactsToFile(filePathBuffer, 2, 0, a3);
@@ -400,32 +400,32 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
       fprintf(stderr, "[menu-probe] load-save-after-fact-reset\n");
     for ( stack_index = 0; stack_index < 500; ++stack_index )
     {
-      if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
       {
         if ( trace_load_save )
           fprintf(
             stderr,
             "[menu-probe] load-save-link-army stack=%d type=%d x=%d y=%d owner=%u\n",
             stack_index,
-            *(unsigned __int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180),
-            *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
-            *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178));
-        UnitStack_LinkArmyFact((__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index), 1, a2);
+            *(unsigned __int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180),
+            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
+            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
+            *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178));
+        UnitStack_LinkArmyFact((__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index), 1, a2);
       }
       for ( slot_index = 0; slot_index < 10; ++slot_index )
       {
-        *(_DWORD *)(gameData + UNIT_STACK_STRIDE * stack_index + 31 * slot_index + 147198) = 0;
+        *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 31 * slot_index + 147198) = 0;
       }
     }
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-army-loop\n");
-    for ( building_index = 0; building_index < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET); ++building_index )
+    for ( building_index = 0; building_index < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET); ++building_index )
     {
-      for ( slot_index = 0; slot_index < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); ++slot_index )
+      for ( slot_index = 0; slot_index < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET); ++slot_index )
       {
-        *(_DWORD *)(TILE_TERRAIN_RECORD_STRIDE * slot_index + TILE_TERRAIN_ROW_STRIDE * building_index + gameData + 6) = 0;
-        *(_DWORD *)(TILE_TERRAIN_RECORD_STRIDE * slot_index + TILE_TERRAIN_ROW_STRIDE * building_index + gameData + 10) = 0;
+        *(_DWORD *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * slot_index + TILE_TERRAIN_ROW_STRIDE * building_index + gameData + 6) = 0;
+        *(_DWORD *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * slot_index + TILE_TERRAIN_ROW_STRIDE * building_index + gameData + 10) = 0;
       }
     }
     if ( trace_load_save )
@@ -433,8 +433,8 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
     for ( unit_record_index = 0; unit_record_index < 100; ++unit_record_index )
     {
       unit_record = UNIT_RECORD(unit_record_index);
-      if ( (unsigned int)*(char *)(unit_record + 4) < 4 && *(__int16 *)(unit_record + 16) != -1 )
-        Rules_AssertCastleFact((unsigned __int8 *)unit_record, unit_record_index);
+      if ( (unsigned int)*(char *)(uintptr_t)(unit_record + 4) < 4 && *(__int16 *)(uintptr_t)(unit_record + 16) != -1 )
+        Rules_AssertCastleFact((unsigned __int8 *)(uintptr_t)unit_record, unit_record_index);
     }
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-castle-loop\n");
@@ -562,23 +562,23 @@ int  SaveSlotDialog_RepaintRow(int a1)
   }
   else
   {
-    SaveSlot_LoadLabelOrPlaceholder(rowIndex, labelBuffer, (DWORD)g_RenderDevice);
+    SaveSlot_LoadLabelOrPlaceholder(rowIndex, labelBuffer, (DWORD)(intptr_t)g_RenderDevice);
   }
   g_RenderDevice = &g_MainRenderDevice;
   rowBottomY = (unsigned __int16)(22 * rowIndex + 157);
   rowTopY = 22 * rowIndex + 137;
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, rowTopY, rowBottomY);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, rowTopY, 244, 0x1A4u, rowBottomY, 0xF4u, rowTopY);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, rowTopY, 244, 0x1A4u, rowBottomY, 0xF4u, rowTopY);
   if ( rowIndex == g_SaveSlotDialogSelectedRow )
     rowRenderIndex = 18;
   else
     rowRenderIndex = 21;
-  Render_ReleaseSurface(rowRenderIndex, (DWORD)previousRenderDevice);
+  Render_ReleaseSurface(rowRenderIndex, (DWORD)(intptr_t)previousRenderDevice);
   if ( g_SaveSlotDialogIsSaveMode )
     UI_SetTextCursorPosition(g_TextInputCaretPos);
-  UI_DrawTextFmt(rowBottomY, 244, 410, 22 * rowIndex + 137, 3, (int)labelBuffer);
+  UI_DrawTextFmt(rowBottomY, 244, 410, 22 * rowIndex + 137, 3, (int)(intptr_t)labelBuffer);
   UI_SetTextCursorPosition(-1);
-  result = Render_Present((int)g_RenderState);
+  result = Render_Present((int)(intptr_t)g_RenderState);
   g_RenderDevice = previousRenderDevice;
   return result;
 }
@@ -611,7 +611,7 @@ signed int  SaveSlotDialog_HandleConfirm(int widgetHandle, int delay, DWORD a3, 
     UIWidget_PlayPressedReleaseAnimationWithDelay(widgetHandle, delay);
   if ( g_SaveSlotDialogIsSaveMode && g_SaveSlotDialogSelectedRow != -1 )
   {
-    result = saveGame(g_SaveSlotDialogSelectedRow, (DWORD)g_SaveSlotNameEditBuffer, a4);
+    result = saveGame(g_SaveSlotDialogSelectedRow, (DWORD)(intptr_t)g_SaveSlotNameEditBuffer, a4);
     g_SaveSlotDialogDone = 1;
     goto LABEL_6;
   }
@@ -678,23 +678,23 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   int previousResourceHandleA; // [esp+ECh] [ebp-20h]
   char typedChar; // [esp+F0h] [ebp-1Ch]
 
-  spriteSet = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a1, a2, a3);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, a2);
   dialogSpriteSet = spriteSet;
-  previousResourceHandleA = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  previousResourceHandleA = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v6, 0, a3, (int)aSetrhS08x_22);
+  Debug_Log(v6, 0, a3, (int)(intptr_t)aSetrhS08x_22);
   g_SaveSlotDialogIsSaveMode = v7;
   g_TextInputCaretPos = 0;
   g_SaveSlotDialogSelectedRow = -1;
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, v8);
-  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  SpriteForChar = DLX_GetSpriteForChar((int)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, v8);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     51,
     SpriteForChar,
     v10,
@@ -705,8 +705,8 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  mainDeviceSprite = DLX_GetSpriteForChar((int)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  mainDeviceSprite = DLX_GetSpriteForChar((int)(intptr_t)dialogSpriteSet, g_SaveSlotDialogIsSaveMode != 0);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     51,
     mainDeviceSprite,
     -1,
@@ -731,8 +731,8 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   g_RenderDevice = &g_MainRenderDevice;
   UIWidgetTable_InitDrawStates(v38);
   g_SaveSlotDialogDone = 0;
-  Render_Present((int)g_RenderState);
-  v16 = Render_SetResourceHandle((int)&g_MainRenderDevice, v15);
+  Render_Present((int)(intptr_t)g_RenderState);
+  v16 = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, v15);
   v17 = g_SaveSlotDialogDone;
   savedResourceHandle = v16;
   while ( !g_SaveSlotDialogDone )
@@ -830,8 +830,8 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
         }
       }
     }
-    DD_Pump((int)g_RenderState, v14);
-    if ( DD_IsFlipping((int)g_RenderState) )
+    DD_Pump((int)(intptr_t)g_RenderState, v14);
+    if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
     {
       if ( g_MouseCursorRawX >> g_CursorCoordShift >= 244 && g_MouseCursorRawX >> g_CursorCoordShift <= 410 )
       {
@@ -853,18 +853,18 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
             }
             SaveSlotDialog_RepaintRow(g_SaveSlotDialogSelectedRow);
           }
-          if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
+          if ( RenderState_IsCursorFlipStillActive((int)(intptr_t)g_RenderState) )
             SaveSlotDialog_HandleConfirm(0, v20, v17, a4);
         }
       }
     }
     UIWidgetTable_PollHoverAndActions(v38, v17);
   }
-  Render_SetResourceHandle((int)&g_MainRenderDevice, savedResourceHandle);
-  Render_Begin((int)g_RenderState, 0);
-  Debug_Log(v21, v14, (DWORD)g_RenderHook, (int)aUnsetrh08x_22);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, savedResourceHandle);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  Debug_Log(v21, v14, (DWORD)(intptr_t)g_RenderHook, (int)(intptr_t)aUnsetrh08x_22);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandleA);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandleA);
   DLXSpriteSet_ReleaseAndClear((int *)&dialogSpriteSet);
   return g_SaveSlotDialogResult;
 }
@@ -946,13 +946,13 @@ int  UI_ShowInfoWindow(
   int info_header_width;
 
   messageText = message;
-  Debug_Log(a3, windowStyle, a4, (int)aWindowmessageS);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a3, windowStyle, a4, (int)(intptr_t)aWindowmessageS);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, windowStyle, a4, (int)aSetrhS08x_10);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, windowStyle, a4, (int)(intptr_t)aSetrhS08x_10);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   deviceVtable = 0;
   Render_ReleaseSurface(17, 0);
   scrollSpriteSet = 0;
@@ -960,17 +960,17 @@ int  UI_ShowInfoWindow(
   {
     if ( windowStyle <= 1 )
     {
-      parchmentSprites = (_DWORD *)Mem_Alloc(4112, v8, windowStyle, 0);
+      parchmentSprites = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, windowStyle, 0);
       if ( parchmentSprites )
         parchmentSprites = DLXSpriteSet_Load(parchmentSprites, "pergamin.s32");
       scrollSpriteSet = parchmentSprites;
-      windowTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)parchmentSprites, 3u)) / 2;
-      windowLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 3u)) / 2;
-      SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 3u);
-      SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 3u);
-      Surface = (_DWORD *)Mem_Alloc(188, v20, windowStyle, 0);
+      windowTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)parchmentSprites, 3u)) / 2;
+      windowLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 3u)) / 2;
+      SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 3u);
+      SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 3u);
+      Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v20, windowStyle, 0);
       if ( Surface )
-        Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
+        Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
       backdropSurface = Surface;
       Render_FillRect(
         0,
@@ -982,7 +982,7 @@ int  UI_ShowInfoWindow(
         0,
         0);
       g_RenderDevice = &g_MainRenderDevice;
-      SpriteForChar = DLX_GetSpriteForChar((int)scrollSpriteSet, 3);
+      SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 3);
       deviceVtableTmp = *((_DWORD *)g_RenderDevice + 46);
       deviceVtable = deviceVtableTmp;
       Compat_RenderDeviceDrawMenuSprite(windowTop, windowLeft, SpriteForChar, 1);
@@ -990,17 +990,17 @@ int  UI_ShowInfoWindow(
     }
     else if ( windowStyle == 2 )
     {
-      parchmentSpritesSmall = (_DWORD *)Mem_Alloc(4112, v8, 2, 0);
+      parchmentSpritesSmall = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, 2, 0);
       if ( parchmentSpritesSmall )
         parchmentSpritesSmall = DLXSpriteSet_Load(parchmentSpritesSmall, "pergamin.s32");
       scrollSpriteSet = parchmentSpritesSmall;
-      windowTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)parchmentSpritesSmall, 2u)) / 2;
-      windowLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 2u)) / 2;
-      SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 2u);
-      SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 2u);
-      scrollBackdrop = (_DWORD *)Mem_Alloc(188, v24, 2, 0);
+      windowTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)parchmentSpritesSmall, 2u)) / 2;
+      windowLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 2u)) / 2;
+      SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 2u);
+      SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 2u);
+      scrollBackdrop = (_DWORD *)(uintptr_t)Mem_Alloc(188, v24, 2, 0);
       if ( scrollBackdrop )
-        scrollBackdrop = Render_CreateSurface((int)scrollBackdrop, SpriteHeight, SpriteWidth);
+        scrollBackdrop = Render_CreateSurface((int)(intptr_t)scrollBackdrop, SpriteHeight, SpriteWidth);
       backdropSurface = scrollBackdrop;
       Render_FillRect(
         0,
@@ -1012,7 +1012,7 @@ int  UI_ShowInfoWindow(
         0,
         0);
       g_RenderDevice = &g_MainRenderDevice;
-      scrollSprite = DLX_GetSpriteForChar((int)scrollSpriteSet, 2);
+      scrollSprite = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 2);
       deviceVtable = *((_DWORD *)g_RenderDevice + 46);
       Compat_RenderDeviceDrawMenuSprite(windowTop, windowLeft, scrollSprite, 1);
       UI_DrawTextFmt(windowLeft, windowLeft + 25, windowLeft + SpriteHeight - 25, windowTop + 25, 6, messageText);
@@ -1020,49 +1020,49 @@ int  UI_ShowInfoWindow(
   }
   else
   {
-    templeSprites = (_DWORD *)Mem_Alloc(4112, v8, 0, 0);
+    templeSprites = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, 0, 0);
     if ( templeSprites )
       templeSprites = DLXSpriteSet_Load(templeSprites, "temple.s32");
     windowTop = 150;
     scrollSpriteSet = templeSprites;
-    info_footer_width = (unsigned __int16)DLX_GetSpriteWidth((int)templeSprites, 0x17u);
+    info_footer_width = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)templeSprites, 0x17u);
     windowLeft = 0;
-    info_header_width = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 0x16u);
+    info_header_width = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 0x16u);
     contentWidth = info_footer_width + 6;
     SpriteHeight = 640;
     if ( info_header_width > info_footer_width + 6 )
       contentWidth = info_header_width;
     SpriteWidth = contentWidth;
-    infoBackdrop = (_DWORD *)Mem_Alloc(188, 0, 0, 0x280u);
+    infoBackdrop = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, 0, 0x280u);
     if ( infoBackdrop )
-      infoBackdrop = Render_CreateSurface((int)infoBackdrop, SCREEN_WIDTH, SpriteWidth);
+      infoBackdrop = Render_CreateSurface((int)(intptr_t)infoBackdrop, SCREEN_WIDTH, SpriteWidth);
     backdropSurface = infoBackdrop;
     Render_FillRect(0, infoBackdrop, 150, 0, SCREEN_MAX_X, SpriteWidth + 149, 0, 0);
     g_RenderDevice = &g_MainRenderDevice;
-    headerSprite = DLX_GetSpriteForChar((int)scrollSpriteSet, 22);
+    headerSprite = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 22);
     Compat_RenderDeviceDrawMenuSprite(150, 0, headerSprite, 1);
-    info_header_height = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 0x16u);
-    footerSprite = DLX_GetSpriteForChar((int)scrollSpriteSet, 23);
+    info_header_height = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 0x16u);
+    footerSprite = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 23);
     deviceVtable = *((_DWORD *)g_RenderDevice + 46);
     Compat_RenderDeviceDrawMenuSprite(156, info_header_height, footerSprite, 1);
     UI_DrawTextFmt(0, 70, 569, 210, 6, messageText);
   }
   DLXSpriteSet_ReleaseAndClear((int *)&scrollSpriteSet);
-  Render_Present((int)g_RenderState);
-  Render_Begin((int)g_RenderState, 0);
-  while ( !DD_IsFlipping((int)g_RenderState) && !DD_IsLost((int)g_RenderState) )
-    DD_Pump((int)g_RenderState, 0);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Present((int)(intptr_t)g_RenderState);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) && !DD_IsLost((int)(intptr_t)g_RenderState) )
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   Render_Pump();
-  Debug_Log((int)g_RenderHook, 0, deviceVtable, (int)aUnsetrh08x_10);
+  Debug_Log((int)(intptr_t)g_RenderHook, 0, deviceVtable, (int)(intptr_t)aUnsetrh08x_10);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
   if ( (uintptr_t)backdropSurface >> 32 )
     backdropSurface = 0;
   if ( backdropSurface )
     Render_FillRect(backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, windowLeft, windowTop);
   finalSurface = backdropSurface;
-  result = Render_Present((int)g_RenderState);
+  result = Render_Present((int)(intptr_t)g_RenderState);
   if ( finalSurface )
     return RenderSurface_InvokeSlot0(finalSurface, 2);
   return result;
@@ -1092,24 +1092,24 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
   result = 0;
   noticeTextTable[6] = a1;
   buildingRecordOffset = 0;
-  noticeTextTable[0] = (int)g_PlagueOutbreakNoticeFmtText[0];
-  noticeTextTable[1] = (int)g_PlagueOutbreakNoticeFmtText[1];
-  noticeTextTable[2] = (int)g_PlagueOutbreakNoticeFmtText[2];
+  noticeTextTable[0] = (int)(intptr_t)g_PlagueOutbreakNoticeFmtText[0];
+  noticeTextTable[1] = (int)(intptr_t)g_PlagueOutbreakNoticeFmtText[1];
+  noticeTextTable[2] = (int)(intptr_t)g_PlagueOutbreakNoticeFmtText[2];
   do
   {
     result = buildingRecordOffset + gameData;
-    if ( (*(_BYTE *)(buildingRecordOffset + gameData + 510109) & 7) == 5 )
+    if ( (*(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + 510109) & 7) == 5 )
     {
-      result = *(unsigned __int8 *)(result + 509676);
+      result = *(unsigned __int8 *)(uintptr_t)(result + 509676);
       if ( result == g_CurrentPlayerIndex )
       {
         Diagnostics_TraceWorldMapActionEvent("plague_notice_match", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
-        Win_PlayModeChangeFrameTransition(aZaraza, 1, buildingRecordOffset, (char)a2, a3);
+        Win_PlayModeChangeFrameTransition(aZaraza, 1, buildingRecordOffset, (char)(intptr_t)a2, a3);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_after_transition", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
-        a2 = (const char *)noticeTextTable[(unsigned __int8)g_LanguageIndex];
+        a2 = (const char *)(uintptr_t)noticeTextTable[(unsigned __int8)g_LanguageIndex];
         sprintf_(messageBuffer, a2, gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET + 5);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_before_info_window", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, 0);
-        result = UI_ShowInfoWindow((const char *)messageBuffer, 0, 0, a3, (int)&noticeTextTable[3], (int)&g_PlagueOutbreakNoticeFmtText[3]);
+        result = UI_ShowInfoWindow((const char *)messageBuffer, 0, 0, a3, (int)(intptr_t)&noticeTextTable[3], (int)(intptr_t)&g_PlagueOutbreakNoticeFmtText[3]);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_after_info_window", buildingRecordOffset / BUILDING_RECORD_SIZE, buildingRecordOffset, g_CurrentPlayerIndex, result);
       }
     }
@@ -1133,17 +1133,17 @@ int  UI_ShowTechnologyLevelUpIfChanged(int a1, DWORD a2)
   int result; // eax
   int noticeTextTable[6]; // [esp+0h] [ebp-18h] BYREF
 
-  noticeTextTable[0] = (int)g_TechLevelUpNoticeText[0];
-  noticeTextTable[1] = (int)g_TechLevelUpNoticeText[1];
-  noticeTextTable[2] = (int)g_TechLevelUpNoticeText[2];
-  if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) )
+  noticeTextTable[0] = (int)(intptr_t)g_TechLevelUpNoticeText[0];
+  noticeTextTable[1] = (int)(intptr_t)g_TechLevelUpNoticeText[1];
+  noticeTextTable[2] = (int)(intptr_t)g_TechLevelUpNoticeText[2];
+  if ( *(_BYTE *)(uintptr_t)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) != *(_BYTE *)(uintptr_t)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) )
   {
     Diagnostics_TraceWorldMapActionEvent("color_notice_before_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
-    UI_ShowInfoWindow(noticeTextTable[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&noticeTextTable[3], (int)&g_TechLevelUpNoticeText[3]);
+    UI_ShowInfoWindow(noticeTextTable[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)(intptr_t)&noticeTextTable[3], (int)(intptr_t)&g_TechLevelUpNoticeText[3]);
     Diagnostics_TraceWorldMapActionEvent("color_notice_after_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
   }
   result = PLAYER_DATA(g_CurrentPlayerIndex);
-  *(_BYTE *)(result + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) = *(_BYTE *)(result + PLAYER_TECH_LEVEL_OFFSET);
+  *(_BYTE *)(uintptr_t)(result + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) = *(_BYTE *)(uintptr_t)(result + PLAYER_TECH_LEVEL_OFFSET);
   return result;
 }
 // 511130: using guessed type char g_LanguageIndex;
@@ -1162,12 +1162,12 @@ int  UI_CheatEditRepaint(DWORD backdropSurface, int a2)
   strupr_(440, 200);
   g_CheatEntryTextBuffer[0] = savedFirstChar;
   RenderState_PumpIfRectInViewBounds(g_RenderState, v2, v3, 0x104u, 0x122u);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
   Render_ReleaseSurface(22, backdropSurface);
   UI_SetTextCursorPosition(g_CheatEditCaretIndex);
-  UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)g_CheatEntryTextBuffer);
+  UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)(intptr_t)g_CheatEntryTextBuffer);
   UI_SetTextCursorPosition(-1);
-  return Render_Present((int)g_RenderState);
+  return Render_Present((int)(intptr_t)g_RenderState);
 }
 // 445A7C: variable 'v2' is possibly undefined
 // 445A7C: variable 'v3' is possibly undefined
@@ -1226,19 +1226,19 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
   char typedChar; // [esp+68h] [ebp-1Ch]
 
   buildingRecord = building;
-  Debug_Log(a2, spriteSetName, a4, (int)aMessage_buildf);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a2, spriteSetName, a4, (int)(intptr_t)aMessage_buildf);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v4, spriteSetName, a4, (int)aSetrhS08x_11);
-  buildingCompleteText[0] = (int)g_BuildingCompleteNoticeText[0];
-  buildingCompleteText[1] = (int)g_BuildingCompleteNoticeText[1];
-  buildingCompleteText[2] = (int)g_BuildingCompleteNoticeText[2];
-  buildingCompleteAltText[0] = (int)g_BuildingCompleteNoticeTextAlt[0];
-  buildingCompleteAltText[1] = (int)g_BuildingCompleteNoticeTextAlt[1];
-  buildingCompleteAltText[2] = (int)g_BuildingCompleteNoticeTextAlt[2];
+  Debug_Log(v4, spriteSetName, a4, (int)(intptr_t)aSetrhS08x_11);
+  buildingCompleteText[0] = (int)(intptr_t)g_BuildingCompleteNoticeText[0];
+  buildingCompleteText[1] = (int)(intptr_t)g_BuildingCompleteNoticeText[1];
+  buildingCompleteText[2] = (int)(intptr_t)g_BuildingCompleteNoticeText[2];
+  buildingCompleteAltText[0] = (int)(intptr_t)g_BuildingCompleteNoticeTextAlt[0];
+  buildingCompleteAltText[1] = (int)(intptr_t)g_BuildingCompleteNoticeTextAlt[1];
+  buildingCompleteAltText[2] = (int)(intptr_t)g_BuildingCompleteNoticeTextAlt[2];
   editDstCursor = g_CheatEntryTextBuffer;
-  buildingNameChars = (char *)(buildingRecord + 5);
+  buildingNameChars = (char *)(uintptr_t)(buildingRecord + 5);
   do
   {
     currentNameChar = *buildingNameChars;
@@ -1252,27 +1252,27 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
   }
   while ( nextNameChar );
   editTextCursor = g_CheatEntryTextBuffer;
-  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, a4);
+  spriteSetAlloc = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v5, spriteSetName, a4);
   if ( spriteSetAlloc )
     spriteSetAlloc = DLXSpriteSet_Load(spriteSetAlloc, spriteSetName);
   spriteSet = spriteSetAlloc;
   Render_Pump();
   panelLeft = v12;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
-  DLX_GetSpriteWidth((int)spriteSet, 0x17u);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)spriteSet, 0x16u);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
+  DLX_GetSpriteWidth((int)(intptr_t)spriteSet, 0x17u);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)spriteSet, 0x16u);
   panelWidthMax = v14 + 6;
   if ( (unsigned __int16)SpriteWidth > v14 + 6 )
     panelWidthMax = SpriteWidth;
   panelWidth = panelWidthMax;
-  Surface = (_DWORD *)Mem_Alloc(188, v14, spriteSetName, a4);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v14, spriteSetName, a4);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, panelWidth);
-  backdropSurface = (DWORD)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, panelWidth);
+  backdropSurface = (DWORD)(intptr_t)Surface;
   Render_FillRect(0, Surface, (unsigned __int16)panelLeft, 0, SCREEN_MAX_X, panelWidth + panelLeft - 1, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 22);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, 22);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     panelLeft,
     SpriteForChar,
     -1,
@@ -1282,9 +1282,9 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
     1,
     0,
     0);
-  DLX_GetSpriteHeight((int)spriteSet, 0x16u);
-  spriteForChar23 = DLX_GetSpriteForChar((int)spriteSet, 23);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  DLX_GetSpriteHeight((int)(intptr_t)spriteSet, 0x16u);
+  spriteForChar23 = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, 23);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     panelLeft + 6,
     spriteForChar23,
     -1,
@@ -1295,24 +1295,24 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
     0,
     0);
   Render_ReleaseSurface(17, backdropSurface);
-  if ( *(_BYTE *)(buildingRecord + 4) == 2 )
+  if ( *(_BYTE *)(uintptr_t)(buildingRecord + 4) == 2 )
     completionText = buildingCompleteText[(unsigned __int8)g_LanguageIndex];
   else
     completionText = buildingCompleteAltText[(unsigned __int8)g_LanguageIndex];
-  UI_DrawTextFmt((int)g_CheatEntryTextBuffer, 70, 569, panelLeft + 60, 6, completionText);
+  UI_DrawTextFmt((int)(intptr_t)g_CheatEntryTextBuffer, 70, 569, panelLeft + 60, 6, completionText);
   v21 = -56;
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
-  UI_CheatEditRepaint(backdropSurface, (int)g_CheatEntryTextBuffer);
-  Render_Present((int)g_RenderState);
-  Render_Begin((int)g_RenderState, 0);
+  Render_FillRect(0, (_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
+  UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)g_CheatEntryTextBuffer);
+  Render_Present((int)(intptr_t)g_RenderState);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   g_DecisionDialogExitSignal = 0;
-  while ( !DD_IsFlipping((int)g_RenderState) && !g_DecisionDialogExitSignal )
+  while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) && !g_DecisionDialogExitSignal )
   {
-    DD_Pump((int)g_RenderState, v21);
+    DD_Pump((int)(intptr_t)g_RenderState, v21);
     if ( Input_IsKeyPressed(203) && g_CheatEditCaretIndex )
     {
       --g_CheatEditCaretIndex;
-      UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
+      UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)editTextCursor);
       Input_ClearKey(203, v22);
     }
     if ( Input_IsKeyPressed(205) )
@@ -1323,17 +1323,17 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
       if ( textLength - 1 > g_CheatEditCaretIndex )
       {
         ++g_CheatEditCaretIndex;
-        UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
+        UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)editTextCursor);
         Input_ClearKey(205, v24);
       }
     }
     if ( Input_IsKeyPressed(211) )
     {
       deleteTailLen = strlen(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1]) + 1;
-      editTextCursor = (char *)g_CheatEditCaretIndex;
+      editTextCursor = (char *)(uintptr_t)g_CheatEditCaretIndex;
       v21 = deleteTailLen;
       memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], deleteTailLen);
-      UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
+      UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)editTextCursor);
       Input_ClearKey(211, v26);
     }
     if ( Input_IsKeyPressed(14) && g_CheatEditCaretIndex )
@@ -1343,7 +1343,7 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
       editTextCursor = (char *)&backspaceSrc[backspaceTailLen];
       v21 = backspaceTailLen;
       memmove_(&g_CheatEntryTextBuffer[g_CheatEditCaretIndex], &g_CheatEntryTextBuffer[g_CheatEditCaretIndex + 1], backspaceTailLen);
-      UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
+      UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)editTextCursor);
       Input_ClearKey(14, v29);
     }
     if ( Input_IsKeyPressed(28) )
@@ -1366,23 +1366,23 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
           newCaretIndex = g_CheatEditCaretIndex + 1;
           *((_BYTE *)&g_CheatEditCaretIndex + newCaretIndex + 3) = typedChar;
           g_CheatEditCaretIndex = newCaretIndex;
-          UI_CheatEditRepaint(backdropSurface, (int)editTextCursor);
+          UI_CheatEditRepaint(backdropSurface, (int)(intptr_t)editTextCursor);
           Input_ClearKey(poppedKey, v35);
         }
       }
     }
   }
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   Render_Pump();
-  Debug_Log(v36, (char)g_RenderHook, backdropSurface, (int)aUnsetrh08x_11);
+  Debug_Log(v36, (char)(intptr_t)g_RenderHook, backdropSurface, (int)(intptr_t)aUnsetrh08x_11);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, SCREEN_MAX_X, panelWidth - 1, 0, panelLeft);
-  Render_Present((int)g_RenderState);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
+  Render_FillRect((_DWORD *)(uintptr_t)backdropSurface, 0, 0, 0, SCREEN_MAX_X, panelWidth - 1, 0, panelLeft);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    (**(void (__cdecl ***)(int, int, int, int, int, int))(backdropSurface + 184))(buildingCompleteAltText[0], buildingCompleteAltText[1], buildingCompleteAltText[2], buildingCompleteText[0], buildingCompleteText[1], buildingCompleteText[2]);
+    (**(void (__cdecl ***)(int, int, int, int, int, int))(uintptr_t)(backdropSurface + 184))(buildingCompleteAltText[0], buildingCompleteAltText[1], buildingCompleteAltText[2], buildingCompleteText[0], buildingCompleteText[1], buildingCompleteText[2]);
   copyBackSrc = g_CheatEntryTextBuffer;
-  copyBackDst = (char *)(buildingRecord + 5);
+  copyBackDst = (char *)(uintptr_t)(buildingRecord + 5);
   DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
   do
   {

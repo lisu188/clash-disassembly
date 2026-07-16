@@ -18,15 +18,15 @@ signed int  Help_InsertEntryIntoTopicTree(int fileRecord, _DWORD *entry, int err
   int v11; // ecx
   _DWORD *nextTopic; // edx
 
-  if ( !*(_DWORD *)(fileRecord + 80) )
+  if ( !*(_DWORD *)(uintptr_t)(fileRecord + 80) )
   {
-    *(_DWORD *)(fileRecord + 80) = entry;
+    *(_DWORD *)(uintptr_t)(fileRecord + 80) = entry;
     goto LABEL_6;
   }
   currentTopic = g_ClipsHelpCurrentTopicNode;
-  if ( *entry > *(_DWORD *)g_ClipsHelpCurrentTopicNode )
+  if ( *entry > *(_DWORD *)(uintptr_t)g_ClipsHelpCurrentTopicNode )
   {
-    if ( *(_DWORD *)(g_ClipsHelpCurrentTopicNode + 4) != -45 )
+    if ( *(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 4) != -45 )
     {
       Mem_SmallBlockFree(entry, 104);
       fclose_(v10);
@@ -38,42 +38,42 @@ signed int  Help_InsertEntryIntoTopicTree(int fileRecord, _DWORD *entry, int err
     entry[24] = g_ClipsHelpCurrentTopicNode;
     goto LABEL_5;
   }
-  if ( *entry == *(_DWORD *)g_ClipsHelpCurrentTopicNode )
+  if ( *entry == *(_DWORD *)(uintptr_t)g_ClipsHelpCurrentTopicNode )
     goto LABEL_13;
   if ( g_ClipsHelpCurrentTopicNode )
   {
     do
     {
-      nextTopic = *(_DWORD **)(g_ClipsHelpCurrentTopicNode + 96);
-      g_ClipsHelpCurrentTopicNode = (int)nextTopic;
+      nextTopic = *(_DWORD **)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 96);
+      g_ClipsHelpCurrentTopicNode = (int)(intptr_t)nextTopic;
     }
     while ( nextTopic && *entry < *nextTopic );
   }
   if ( g_ClipsHelpCurrentTopicNode )
   {
-    if ( *(_DWORD *)g_ClipsHelpCurrentTopicNode < *entry )
+    if ( *(_DWORD *)(uintptr_t)g_ClipsHelpCurrentTopicNode < *entry )
     {
       entry[24] = g_ClipsHelpCurrentTopicNode;
-      entry[25] = *(_DWORD *)(g_ClipsHelpCurrentTopicNode + 92);
+      entry[25] = *(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 92);
       currentTopic = g_ClipsHelpCurrentTopicNode;
 LABEL_5:
-      *(_DWORD *)(currentTopic + 92) = entry;
+      *(_DWORD *)(uintptr_t)(currentTopic + 92) = entry;
 LABEL_6:
       v8 = 1;
-      g_ClipsHelpCurrentTopicNode = (int)entry;
+      g_ClipsHelpCurrentTopicNode = (int)(intptr_t)entry;
       return v8;
     }
 LABEL_13:
-    entry[24] = *(_DWORD *)(g_ClipsHelpCurrentTopicNode + 96);
-    entry[25] = *(_DWORD *)(g_ClipsHelpCurrentTopicNode + 100);
-    *(_DWORD *)(g_ClipsHelpCurrentTopicNode + 100) = entry;
-    g_ClipsHelpCurrentTopicNode = (int)entry;
+    entry[24] = *(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 96);
+    entry[25] = *(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 100);
+    *(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 100) = entry;
+    g_ClipsHelpCurrentTopicNode = (int)(intptr_t)entry;
     return 1;
   }
   entry[24] = 0;
-  entry[25] = *(_DWORD *)(fileRecord + 80);
-  *(_DWORD *)(fileRecord + 80) = entry;
-  g_ClipsHelpCurrentTopicNode = (int)entry;
+  entry[25] = *(_DWORD *)(uintptr_t)(fileRecord + 80);
+  *(_DWORD *)(uintptr_t)(fileRecord + 80) = entry;
+  g_ClipsHelpCurrentTopicNode = (int)(intptr_t)entry;
   return 1;
 }
 // 4A581A: variable 'v10' is possibly undefined
@@ -105,72 +105,72 @@ signed int  Help_FindOrAdvanceTopicEntry(int fileName, _DWORD *menu, _DWORD *sta
   if ( noMatch > 0 )
   {
     do
-      fileRecord = *(_DWORD *)(fileRecord + 88);
+      fileRecord = *(_DWORD *)(uintptr_t)(fileRecord + 88);
     while ( fileRecord && strcmp_(fileRecord, fileName) );
   }
   if ( fileRecord )
   {
     if ( topicName )
     {
-      Str_UppercaseToDelimiter((int)topicName, fileRecord);
-      curEntry = *(_DWORD *)(v12 + 84);
+      Str_UppercaseToDelimiter((int)(intptr_t)topicName, fileRecord);
+      curEntry = *(_DWORD *)(uintptr_t)(v12 + 84);
       if ( curEntry )
-        theEntry = *(_DWORD *)(curEntry + 92);
+        theEntry = *(_DWORD *)(uintptr_t)(curEntry + 92);
       else
-        theEntry = *(_DWORD *)(v12 + 80);
+        theEntry = *(_DWORD *)(uintptr_t)(v12 + 80);
       if ( theEntry )
-        noTopicMatch = Str_FindSubstringIndex((_BYTE *)(theEntry + 8), topicName) != 0;
+        noTopicMatch = Str_FindSubstringIndex((_BYTE *)(uintptr_t)(theEntry + 8), topicName) != 0;
       else
         noTopicMatch = 0;
       if ( noTopicMatch > 0 )
       {
         do
-          theEntry = *(_DWORD *)(theEntry + 100);
-        while ( theEntry && Str_FindSubstringIndex((_BYTE *)(theEntry + 8), topicName) );
+          theEntry = *(_DWORD *)(uintptr_t)(theEntry + 100);
+        while ( theEntry && Str_FindSubstringIndex((_BYTE *)(uintptr_t)(theEntry + 8), topicName) );
       }
       if ( theEntry )
       {
-        if ( *(_DWORD *)(theEntry + 4) == -45 )
+        if ( *(_DWORD *)(uintptr_t)(theEntry + 4) == -45 )
         {
           *status = -40;
-          *(_DWORD *)(v12 + 84) = theEntry;
+          *(_DWORD *)(uintptr_t)(v12 + 84) = theEntry;
         }
         else
         {
           *status = 0;
         }
-        menuEntry = *(_DWORD *)(v12 + 84);
+        menuEntry = *(_DWORD *)(uintptr_t)(v12 + 84);
         if ( menuEntry )
           *menu = menuEntry + 8;
-        return *(_DWORD *)(theEntry + 88);
+        return *(_DWORD *)(uintptr_t)(theEntry + 88);
       }
       else
       {
         *status = -25;
-        fallbackEntry = *(_DWORD *)(v12 + 84);
+        fallbackEntry = *(_DWORD *)(uintptr_t)(v12 + 84);
         if ( !fallbackEntry )
           return -1;
         *menu = fallbackEntry + 8;
-        return *(_DWORD *)(*(_DWORD *)(v12 + 84) + 88);
+        return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v12 + 84) + 88);
       }
     }
     else
     {
-      currentEntry = *(_DWORD *)(fileRecord + 84);
+      currentEntry = *(_DWORD *)(uintptr_t)(fileRecord + 84);
       if ( currentEntry )
       {
-        parentEntry = *(_DWORD *)(currentEntry + 96);
+        parentEntry = *(_DWORD *)(uintptr_t)(currentEntry + 96);
         if ( !parentEntry )
         {
           *status = -30;
-          *(_DWORD *)(fileRecord + 84) = 0;
+          *(_DWORD *)(uintptr_t)(fileRecord + 84) = 0;
           *menu = 0;
           return -1;
         }
-        *(_DWORD *)(fileRecord + 84) = parentEntry;
+        *(_DWORD *)(uintptr_t)(fileRecord + 84) = parentEntry;
         *status = -35;
-        *menu = *(_DWORD *)(fileRecord + 84) + 8;
-        return *(_DWORD *)(*(_DWORD *)(fileRecord + 84) + 88);
+        *menu = *(_DWORD *)(uintptr_t)(fileRecord + 84) + 8;
+        return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fileRecord + 84) + 88);
       }
       else
       {
@@ -196,7 +196,7 @@ _DWORD * Help_FreeTopicTree(_DWORD *result)
 {
   _DWORD *i; // ecx
 
-  for ( i = result; i; result = (_DWORD *)Mem_SmallBlockFree(i, 104) )
+  for ( i = result; i; result = (_DWORD *)(uintptr_t)Mem_SmallBlockFree(i, 104) )
   {
     if ( i[23] )
       Help_FreeTopicTree(i[23]);
@@ -251,7 +251,7 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
     {
       defaultPathSrc = aClips_hlp;
       helpPathDst = Mem_SmallBlockAlloc(strlen(aClips_hlp) + 1);
-      g_ClipsHelpFilePath = (int)helpPathDst;
+      g_ClipsHelpFilePath = (int)(intptr_t)helpPathDst;
       do
       {
         pathChar = *defaultPathSrc;
@@ -265,24 +265,24 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
       }
       while ( pathCharNext );
     }
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aLoadingHelpFil, a1);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], g_ClipsHelpFilePath, v3);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)a_PleaseWait___, v4);
-    status = Help_IndexTopicFile((CHAR *)g_ClipsHelpFilePath, lineBuffer, v5, 256, a2);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aLoadingHelpFil, a1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], g_ClipsHelpFilePath, v3);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)a_PleaseWait___, v4);
+    status = Help_IndexTopicFile((CHAR *)(uintptr_t)g_ClipsHelpFilePath, lineBuffer, v5, 256, a2);
     if ( !status )
     {
-      Rules_PrintErrorID((int)aTextpro, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToAccess, v27);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)lineBuffer, v28);
-      return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50797C, v29);
+      Rules_PrintErrorID((int)(intptr_t)aTextpro, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToAccess, v27);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)lineBuffer, v28);
+      return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50797C, v29);
     }
-    IO_AddRouter((int)aWhelp, 10, (int)Rules_HelpRouterPrint, (int)Help_RouterQueryMatchesWhelp, (int)Rules_HelpRouterGetc, (int)Rules_HelpRouterUngetc, 0);
+    IO_AddRouter((int)(intptr_t)aWhelp, 10, (int)(intptr_t)Rules_HelpRouterPrint, (int)(intptr_t)Help_RouterQueryMatchesWhelp, (int)(intptr_t)Rules_HelpRouterGetc, (int)(intptr_t)Rules_HelpRouterUngetc, 0);
     g_HelpSystemInitialized = 1;
   }
-  IO_ActivateRouter((int)aWhelp);
+  IO_ActivateRouter((int)(intptr_t)aWhelp);
   mainTopicSrc = aMain_2;
   topicNameDst = Mem_SmallBlockAlloc(0x58u);
-  topicList = (int)topicNameDst;
+  topicList = (int)(intptr_t)topicNameDst;
   do
   {
     srcChar = *mainTopicSrc;
@@ -296,12 +296,12 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
   }
   while ( srcCharNext );
   argTopicList = Rules_HelpBuildTopicListFromArgs(a3);
-  *(_DWORD *)(topicNode + 80) = 0;
-  *(_DWORD *)(topicNode + 84) = argTopicList;
-  Output_Write((int)aWhelp, (int)asc_50797C, v13);
+  *(_DWORD *)(uintptr_t)(topicNode + 80) = 0;
+  *(_DWORD *)(uintptr_t)(topicNode + 84) = argTopicList;
+  Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)asc_50797C, v13);
   while ( 1 )
   {
-    locatedFp = Rules_HelpLocateTopicEntry((const CHAR *)g_ClipsHelpFilePath, topicList, &status, menu);
+    locatedFp = Rules_HelpLocateTopicEntry((const CHAR *)(uintptr_t)g_ClipsHelpFilePath, topicList, &status, menu);
     fp = locatedFp;
     if ( status == (_DWORD *)-10 )
       break;
@@ -311,13 +311,13 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
     {
       if ( !locatedFp )
       {
-        Output_Write((int)aWhelp, (int)aRootEntryMainN, lineCount);
-        Output_Write((int)aWhelp, g_ClipsHelpFilePath, v34);
+        Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)aRootEntryMainN, lineCount);
+        Output_Write((int)(intptr_t)aWhelp, g_ClipsHelpFilePath, v34);
         messageText = a_SeeExternalDo;
         routerName = aWhelp;
         goto LABEL_11;
       }
-      Output_Write((int)aWhelp, (int)aSorryNoInforma, lineCount);
+      Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)aSorryNoInforma, lineCount);
     }
     if ( status != (_DWORD *)-35 )
     {
@@ -327,11 +327,11 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
           goto LABEL_43;
         if ( lineCount < 23 )
           goto LABEL_37;
-        Output_Write((int)aWhelp, (int)aPressReturnFor, lineCount);
-        Output_Write((int)aWhelp, (int)aPressAReturnTo, v30);
+        Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)aPressReturnFor, lineCount);
+        Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)aPressAReturnTo, v30);
         g_Lexer_PendingLineCharIndex = 0;
 LABEL_29:
-        inputChar = Lexer_PeekChar((int)aWhelp, charIndex);
+        inputChar = Lexer_PeekChar((int)(intptr_t)aWhelp, charIndex);
         commandChar = inputChar;
         switch ( inputChar )
         {
@@ -350,7 +350,7 @@ LABEL_32:
             ++g_Lexer_PendingLineCharIndex;
             break;
         }
-        Lexer_PeekChar((int)aWhelp, charIndex);
+        Lexer_PeekChar((int)(intptr_t)aWhelp, charIndex);
 LABEL_34:
         if ( commandChar == 10 || commandChar == 65 )
         {
@@ -359,7 +359,7 @@ LABEL_34:
           if ( commandChar == 65 )
             goto LABEL_42;
 LABEL_37:
-          Output_Write((int)aWhelp, (int)lineBuffer, lineCount + 1);
+          Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)lineBuffer, lineCount + 1);
           continue;
         }
         goto LABEL_29;
@@ -374,27 +374,27 @@ LABEL_43:
     {
       while ( status != (_DWORD *)-30 )
       {
-        if ( Help_OpenFileAtNavigatedTopic((const CHAR *)g_ClipsHelpFilePath, menu, &status, 0) )
+        if ( Help_OpenFileAtNavigatedTopic((const CHAR *)(uintptr_t)g_ClipsHelpFilePath, menu, &status, 0) )
           fclose_(v35);
       }
     }
     if ( status == (_DWORD *)-30 )
       goto LABEL_12;
   }
-  Rules_PrintErrorID((int)aTextpro, 1, 0);
+  Rules_PrintErrorID((int)(intptr_t)aTextpro, 1, 0);
   messageText = aUnableToAccess;
   routerName = g_IO_LogicalNameTable_WError[0];
 LABEL_11:
-  Output_Write((int)routerName, (int)messageText, v17);
+  Output_Write((int)(intptr_t)routerName, (int)(intptr_t)messageText, v17);
 LABEL_12:
-  result = IO_DeactivateRouter((int)aWhelp);
+  result = IO_DeactivateRouter((int)(intptr_t)aWhelp);
   if ( topicList )
   {
     nodeSize = 88;
     do
     {
-      nodeToFree = (_DWORD *)topicList;
-      topicList = *(_DWORD *)(topicList + 84);
+      nodeToFree = (_DWORD *)(uintptr_t)topicList;
+      topicList = *(_DWORD *)(uintptr_t)(topicList + 84);
       result = Mem_SmallBlockFree(nodeToFree, nodeSize);
     }
     while ( topicList );
@@ -454,22 +454,22 @@ signed int  Help_SetHelpFilePathCommand(int a1, double a2)
     {
       if ( g_HelpSystemInitialized == 1 )
       {
-        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aReleasingHelpE, v2);
-        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], g_ClipsHelpFilePath, v3);
-        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)a___, v4);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aReleasingHelpE, v2);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], g_ClipsHelpFilePath, v3);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)a___, v4);
         Help_UnloadTopicFile(g_ClipsHelpFilePath);
-        IO_DeleteRouter((int)aWhelp);
+        IO_DeleteRouter((int)(intptr_t)aWhelp);
         g_HelpSystemInitialized = 0;
       }
-      Mem_SmallBlockFree((_DWORD *)g_ClipsHelpFilePath, strlen((const char *)g_ClipsHelpFilePath) + 1);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_ClipsHelpFilePath, strlen((const char *)(uintptr_t)g_ClipsHelpFilePath) + 1);
     }
     result = Lexer_ParseValueList(1, item, 111, a2);
     if ( result )
     {
-      newPath = *(const char **)(item[2] + 16);
+      newPath = *(const char **)(uintptr_t)(item[2] + 16);
       srcPtr = newPath;
       dstPtr = Mem_SmallBlockAlloc(strlen(newPath) + 1);
-      g_ClipsHelpFilePath = (int)dstPtr;
+      g_ClipsHelpFilePath = (int)(intptr_t)dstPtr;
       do
       {
         v15 = *srcPtr;
@@ -482,26 +482,26 @@ signed int  Help_SetHelpFilePathCommand(int a1, double a2)
         dstPtr += 2;
       }
       while ( v16 );
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], v12, v13);
-      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)newPath, v17);
-      return Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50797C, v18);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], v12, v13);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)newPath, v17);
+      return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)asc_50797C, v18);
     }
   }
   else
   {
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aTheCurrentHelp, v2);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aTheCurrentHelp, v2);
     if ( g_ClipsHelpFilePath )
     {
       dialogRouter = g_IO_LogicalNameTable_WDialog[0];
-      pathToPrint = (char *)g_ClipsHelpFilePath;
+      pathToPrint = (char *)(uintptr_t)g_ClipsHelpFilePath;
     }
     else
     {
       pathToPrint = aClips_hlp;
       dialogRouter = g_IO_LogicalNameTable_WDialog[0];
     }
-    Output_Write((int)dialogRouter, (int)pathToPrint, v6);
-    return Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50797C, v9);
+    Output_Write((int)(intptr_t)dialogRouter, (int)(intptr_t)pathToPrint, v6);
+    return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)asc_50797C, v9);
   }
   return result;
 }
@@ -536,13 +536,13 @@ int * Help_LoadHelpFileCommand(DWORD returnValue, double a2)
   _BYTE errorBuffer[80]; // [esp+50h] [ebp-80h] BYREF
   _DWORD item[12]; // [esp+A0h] [ebp-30h] BYREF
 
-  *(_DWORD *)(returnValue + 4) = 2;
-  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = (int *)Lexer_ParseValueList(1, item, 111, a2);
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+  *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
+  result = (int *)(uintptr_t)Lexer_ParseValueList(1, item, 111, a2);
   if ( result )
   {
     dstPtr = fileName;
-    srcPtr = *(CHAR **)(item[2] + 16);
+    srcPtr = *(CHAR **)(uintptr_t)(item[2] + 16);
     do
     {
       v7 = *srcPtr;
@@ -558,20 +558,20 @@ int * Help_LoadHelpFileCommand(DWORD returnValue, double a2)
     entryCount = Help_IndexTopicFile(fileName, errorBuffer, v4, 80, returnValue);
     if ( entryCount )
     {
-      *(_DWORD *)(returnValue + 4) = 1;
-      result = Rules_AddIntegerValue((signed int)entryCount);
-      *(_DWORD *)(returnValue + 8) = result;
+      *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;
+      result = Rules_AddIntegerValue((signed int)(intptr_t)entryCount);
+      *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
     }
     else
     {
-      Rules_PrintErrorID((int)aTextpro, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToLoadFi, v10);
+      Rules_PrintErrorID((int)(intptr_t)aTextpro, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToLoadFi, v10);
       if ( errorBuffer[0] )
         errorMsg = errorBuffer;
       else
         errorMsg = aNoEntriesFound;
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)errorMsg, v11);
-      return (int *)Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50797C, v13);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)errorMsg, v11);
+      return (int *)(uintptr_t)Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50797C, v13);
     }
   }
   return result;
@@ -604,7 +604,7 @@ int  Help_PrintRegionCommand(double a1)
 
   topicList = Rules_HelpBuildTopicListFromArgs(a1);
   topicListHead = topicList;
-  fp = Rules_HelpLocateTopicEntry((const CHAR *)topicList[21], *(_DWORD *)(topicList[21] + 84), statusBuf, &menuBuf);
+  fp = Rules_HelpLocateTopicEntry((const CHAR *)(uintptr_t)topicList[21], *(_DWORD *)(uintptr_t)(topicList[21] + 84), statusBuf, &menuBuf);
   if ( statusBuf[0] == -10 || statusBuf[0] == -25 || statusBuf[0] == -30 )
   {
     if ( fp )
@@ -630,9 +630,9 @@ int  Help_PrintRegionCommand(double a1)
       while ( v9 );
     }
     lineText = asc_50797C;
-    for ( i = (int)topicListHead; ; i = (int)topicListHead )
+    for ( i = (int)(intptr_t)topicListHead; ; i = (int)(intptr_t)topicListHead )
     {
-      Output_Write(i, (int)lineText, v4);
+      Output_Write(i, (int)(intptr_t)lineText, v4);
       if ( !Help_ReadEntryLine(fp, lineBuffer, 256) )
         break;
       lineText = lineBuffer;
@@ -643,7 +643,7 @@ int  Help_PrintRegionCommand(double a1)
   while ( topicListHead )
   {
     nodeToFree = topicListHead;
-    topicListHead = (_DWORD *)topicListHead[21];
+    topicListHead = (_DWORD *)(uintptr_t)topicListHead[21];
     Mem_SmallBlockFree(nodeToFree, v11);
   }
   return success;
@@ -665,13 +665,13 @@ signed int  Help_UnloadHelpFileCommand(int returnValue, double a2)
   result = Lexer_ParseValueList(1, theValue, 111, a2);
   if ( result )
   {
-    fileName = *(_DWORD *)(theValue[2] + 16);
+    fileName = *(_DWORD *)(uintptr_t)(theValue[2] + 16);
     if ( g_ClipsHelpFilePath && !strcmp_(v4, g_ClipsHelpFilePath) && g_HelpSystemInitialized == 1 )
     {
-      Mem_SmallBlockFree((_DWORD *)g_ClipsHelpFilePath, strlen((const char *)g_ClipsHelpFilePath) + 1);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_ClipsHelpFilePath, strlen((const char *)(uintptr_t)g_ClipsHelpFilePath) + 1);
       g_ClipsHelpFilePath = 0;
       g_HelpSystemInitialized = 0;
-      IO_DeleteRouter((int)aWhelp);
+      IO_DeleteRouter((int)(intptr_t)aWhelp);
     }
     return Help_UnloadTopicFile(fileName);
   }
@@ -692,20 +692,20 @@ BOOL __thiscall Help_RouterQueryMatchesWhelp(void *this)
 //----- (004A6240) --------------------------------------------------------
 int __fastcall Rules_HelpRouterPrint(int logicalName, int message)
 {
-  Output_Write((int)aStdout_3, message, logicalName);
+  Output_Write((int)(intptr_t)aStdout_3, message, logicalName);
   return 1;
 }
 
 //----- (004A6250) --------------------------------------------------------
 int __thiscall Rules_HelpRouterGetc(void *this)
 {
-  return Lexer_PeekChar((int)aStdin_3, (unsigned int)this);
+  return Lexer_PeekChar((int)(intptr_t)aStdin_3, (unsigned int)(intptr_t)this);
 }
 
 //----- (004A6260) --------------------------------------------------------
 signed int  Rules_HelpRouterUngetc(signed int theChar, int logicalName)
 {
-  return Lexer_SkipChar(theChar, (int)aStdin_3, logicalName);
+  return Lexer_SkipChar(theChar, (int)(intptr_t)aStdin_3, logicalName);
 }
 
 //----- (004A6270) --------------------------------------------------------
@@ -733,25 +733,25 @@ _DWORD * Rules_HelpBuildTopicListFromArgs(double a1)
       Rules_RtnUnknown(theIndex, v4, a1);
       if ( argType == 2 || argType == 3 )
       {
-        topicName = *(char **)(argValue + 16);
+        topicName = *(char **)(uintptr_t)(argValue + 16);
       }
       else if ( argType )
       {
         if ( argType == 1 )
-          topicName = (char *)Rules_LongIntegerToSymbol(*(_DWORD *)(argValue + 16));
+          topicName = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(argValue + 16));
         else
           topicName = aError_4;
       }
       else
       {
-        topicName = (char *)Rules_FloatToSymbol(v5, *(double *)(argValue + 16));
+        topicName = (char *)(uintptr_t)Rules_FloatToSymbol(v5, *(double *)(uintptr_t)(argValue + 16));
       }
       strncpy_(v5, topicName);
       theTopic[21] = 0;
       theTopic[20] = 0;
       if ( head )
       {
-        for ( i = head; i[21]; i = (_DWORD *)i[21] )
+        for ( i = head; i[21]; i = (_DWORD *)(uintptr_t)i[21] )
           ;
         i[21] = theTopic;
       }
@@ -799,14 +799,14 @@ int  Rules_HelpReadTopicListFromInput(int topicList, int *menu, int a3)
   char *newTopicPtr; // [esp+150h] [ebp-1Ch]
   int listHead; // [esp+154h] [ebp-18h]
 
-  Output_Write((int)aWhelp, *menu, a3);
-  Output_Write((int)aWhelp, (int)aTopic_, v4);
+  Output_Write((int)(intptr_t)aWhelp, *menu, a3);
+  Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)aTopic_, v4);
   charIndex = 0;
   g_Lexer_PendingLineCharIndex = 0;
   peekOffset = -2;
   while ( 1 )
   {
-    inputChar = Lexer_PeekChar((int)aWhelp, peekOffset);
+    inputChar = Lexer_PeekChar((int)(intptr_t)aWhelp, peekOffset);
     lineBuffer[charIndex] = inputChar;
     if ( inputChar == 10 || charIndex >= 254 || g_ClipsHaltExecution )
       break;
@@ -832,8 +832,8 @@ LABEL_14:
   g_Lexer_PendingLineCharIndex = -1;
   if ( g_ClipsHaltExecution )
   {
-    Output_Write((int)aWhelp, (int)asc_50797C, g_ClipsHaltExecution);
-    *(_DWORD *)(topicList + 80) = topicList;
+    Output_Write((int)(intptr_t)aWhelp, (int)(intptr_t)asc_50797C, g_ClipsHaltExecution);
+    *(_DWORD *)(uintptr_t)(topicList + 80) = topicList;
     return topicList;
   }
   else
@@ -865,7 +865,7 @@ LABEL_14:
           if ( topicList )
           {
             copySrc = wordBuffer;
-            copyDst = (char *)topicList;
+            copyDst = (char *)(uintptr_t)topicList;
             v24 = HIBYTE(topicList);
             do
             {
@@ -879,7 +879,7 @@ LABEL_14:
               copyDst += 2;
             }
             while ( nodeNextByte );
-            topicList = *(_DWORD *)(topicList + 84);
+            topicList = *(_DWORD *)(uintptr_t)(topicList + 84);
           }
           else
           {
@@ -905,13 +905,13 @@ LABEL_14:
             *((_DWORD *)newTopic + 20) = wordLength;
             if ( tailNode )
             {
-              for ( ; *(_DWORD *)(tailNode + 84); tailNode = *(_DWORD *)(tailNode + 84) )
+              for ( ; *(_DWORD *)(uintptr_t)(tailNode + 84); tailNode = *(_DWORD *)(uintptr_t)(tailNode + 84) )
                 ;
-              *(_DWORD *)(tailNode + 84) = newTopicPtr;
+              *(_DWORD *)(uintptr_t)(tailNode + 84) = newTopicPtr;
             }
             else
             {
-              listHead = (int)newTopic;
+              listHead = (int)(intptr_t)newTopic;
             }
           }
         }
@@ -924,7 +924,7 @@ LABEL_14:
       }
     }
     resultList = listHead;
-    *(_DWORD *)(listHead + 80) = topicList;
+    *(_DWORD *)(uintptr_t)(listHead + 80) = topicList;
     return resultList;
   }
 }
@@ -951,7 +951,7 @@ int  Rules_HelpLocateTopicEntry(const CHAR *fileName, int topicList, _DWORD *sta
   statusPtr = statusOut;
   result = 0;
   if ( topicList )
-    listEnd = *(_DWORD *)(topicList + 80);
+    listEnd = *(_DWORD *)(uintptr_t)(topicList + 80);
   else
     listEnd = 0;
   topicNode = topicList;
@@ -963,20 +963,20 @@ int  Rules_HelpLocateTopicEntry(const CHAR *fileName, int topicList, _DWORD *sta
         fclose_(statusOut);
       if ( !strcmp_(statusOut, asc_507B10) )
         break;
-      if ( strcmp_(v8, aQuestionMark_507B14) || listEnd != *(_DWORD *)(topicNode + 84) )
+      if ( strcmp_(v8, aQuestionMark_507B14) || listEnd != *(_DWORD *)(uintptr_t)(topicNode + 84) )
       {
         v9 = entryTitleOut;
         v10 = statusPtr;
-        topicName = (_BYTE *)topicNode;
+        topicName = (_BYTE *)(uintptr_t)topicNode;
         v11 = fileName;
         goto LABEL_8;
       }
-      result = Help_ReopenFileAtActiveEntry(fileName, statusPtr, (DWORD)fileName);
+      result = Help_ReopenFileAtActiveEntry(fileName, statusPtr, (DWORD)(intptr_t)fileName);
 LABEL_9:
-      statusOut = (_DWORD *)*statusPtr;
+      statusOut = (_DWORD *)(uintptr_t)*statusPtr;
       if ( *statusPtr != -10 && statusOut != (_DWORD *)-25 )
       {
-        topicNode = *(_DWORD *)(topicNode + 84);
+        topicNode = *(_DWORD *)(uintptr_t)(topicNode + 84);
         if ( topicNode != listEnd )
           continue;
       }
@@ -1000,11 +1000,11 @@ LABEL_8:
 //----- (004A6610) --------------------------------------------------------
 signed int Rules_RegisterHelpFunctions(void)
 {
-  Rules_RegisterHostFunction(aHelp, 118, (int)aHelpfunction, (int)Help_RunInteractiveHelpBrowser, 0);
-  Rules_RegisterHostFunction(aHelpPath, 118, (int)aHelppathfuncti, (int)Help_SetHelpFilePathCommand, (int)a1k);
-  Rules_RegisterHostFunction(aFetch, 117, (int)aFetchcommand, (int)Help_LoadHelpFileCommand, (int)a11k_2);
-  Rules_RegisterHostFunction(aToss, 98, (int)aTosscommand, (int)Help_UnloadHelpFileCommand, (int)a11k_2);
-  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)aPrintregioncom, (int)Help_PrintRegionCommand, (int)a2Wk);
+  Rules_RegisterHostFunction(aHelp, 118, (int)(intptr_t)aHelpfunction, (int)(intptr_t)Help_RunInteractiveHelpBrowser, 0);
+  Rules_RegisterHostFunction(aHelpPath, 118, (int)(intptr_t)aHelppathfuncti, (int)(intptr_t)Help_SetHelpFilePathCommand, (int)(intptr_t)a1k);
+  Rules_RegisterHostFunction(aFetch, 117, (int)(intptr_t)aFetchcommand, (int)(intptr_t)Help_LoadHelpFileCommand, (int)(intptr_t)a11k_2);
+  Rules_RegisterHostFunction(aToss, 98, (int)(intptr_t)aTosscommand, (int)(intptr_t)Help_UnloadHelpFileCommand, (int)(intptr_t)a11k_2);
+  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)(intptr_t)aPrintregioncom, (int)(intptr_t)Help_PrintRegionCommand, (int)(intptr_t)a2Wk);
 }
 
 //----- (004A66B0) --------------------------------------------------------
@@ -1021,43 +1021,43 @@ int  Rules_ConstructsToCCommand(double a1)
   _DWORD item[2]; // [esp+0h] [ebp-30h] BYREF
   int itemValue; // [esp+8h] [ebp-28h]
 
-  result = Rules_ArgRangeCheck((int)aConstructsToC, 3);
+  result = Rules_ArgRangeCheck((int)(intptr_t)aConstructsToC, 3);
   argCount = result;
   if ( result != -1 )
   {
     result = Lexer_ParseValueList(1, item, 111, a1);
     if ( result )
     {
-      fileName = *(const char **)(itemValue + 16);
+      fileName = *(const char **)(uintptr_t)(itemValue + 16);
       if ( (int)strlen(fileName) > 3 )
       {
-        Rules_PrintWarningID((int)aConscomp, 1, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aBaseFileNameEx, v4);
-        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aThisMayCauseFi, v5);
-        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aIsLimitedOnYou, v6);
+        Rules_PrintWarningID((int)(intptr_t)aConscomp, 1, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aBaseFileNameEx, v4);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aThisMayCauseFi, v5);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aIsLimitedOnYou, v6);
       }
       result = Lexer_ParseValueList(2, item, 1, a1);
       if ( result )
       {
-        imageId = *(_DWORD *)(itemValue + 16);
+        imageId = *(_DWORD *)(uintptr_t)(itemValue + 16);
         if ( imageId < 0 )
         {
-          return Parser_ReportError(2, (int)aPositiveIntege);
+          return Parser_ReportError(2, (int)(intptr_t)aPositiveIntege);
         }
         else
         {
           if ( argCount != 3 )
           {
             maxIndices = 10000;
-            return Rules_ConstructsToC(fileName, imageId, maxIndices, (char)fileName);
+            return Rules_ConstructsToC(fileName, imageId, maxIndices, (char)(intptr_t)fileName);
           }
           result = Lexer_ParseValueList(3, item, 1, a1);
           if ( result )
           {
-            maxIndices = *(_DWORD *)(itemValue + 16);
+            maxIndices = *(_DWORD *)(uintptr_t)(itemValue + 16);
             if ( maxIndices >= 0 )
-              return Rules_ConstructsToC(fileName, imageId, maxIndices, (char)fileName);
-            return Parser_ReportError(3, (int)aPositiveIntege);
+              return Rules_ConstructsToC(fileName, imageId, maxIndices, (char)(intptr_t)fileName);
+            return Parser_ReportError(3, (int)(intptr_t)aPositiveIntege);
           }
         }
       }
@@ -1126,65 +1126,65 @@ signed int  Rules_ConstructsToC(const char *fileName, int imageId, int maxIndice
 
   imageIdLocal = imageId;
   codeGenItem = g_CodeGeneratorItemList;
-  for ( g_ClipsCodeMaxIndicesPerArray = maxIndices; codeGenItem; codeGenItem = *(_DWORD *)(codeGenItem + 24) )
+  for ( g_ClipsCodeMaxIndicesPerArray = maxIndices; codeGenItem; codeGenItem = *(_DWORD *)(uintptr_t)(codeGenItem + 24) )
   {
-    if ( *(_DWORD *)(codeGenItem + 4) )
-      (*(void (__fastcall **)(int))(codeGenItem + 4))(imageIdLocal);
+    if ( *(_DWORD *)(uintptr_t)(codeGenItem + 4) )
+      (*(void (__fastcall **)(int))(uintptr_t)(codeGenItem + 4))(imageIdLocal);
   }
   Rules_RunPeriodicCleanup(0, 0);
-  g_Rules_ConstructsToCodeBaseName = (int)fileName;
+  g_Rules_ConstructsToCodeBaseName = (int)(intptr_t)fileName;
   g_ConstructsToCImageId = v7;
   g_ClipsCodeDataFile = 0;
   g_ClipsConstructCodeEntryIndexInFile = 0;
   g_ClipsExpressionCodeFileVersion = 1;
   g_Rules_ExprCodeNeedNewFileFlag = 1;
   sprintf_(headerFileName, "%s.h", fileName);
-  headerFile = IO_FOpen(headerFileName, (unsigned __int8 *)aW_2, v8, (DWORD)fileName);
+  headerFile = IO_FOpen(headerFileName, (unsigned __int8 *)aW_2, v8, (DWORD)(intptr_t)fileName);
   g_ClipsCodeHeaderFile = headerFile;
   if ( headerFile )
   {
-    Output_WriteFormatted(v11, v10, headerFile, (int)aIfndef_constru, a4);
-    Output_WriteFormatted(v13, v12, g_ClipsCodeHeaderFile, (int)aDefine_constru, v42);
-    Output_WriteFormatted(v15, v14, g_ClipsCodeHeaderFile, (int)aIncludeStdio_h, v43);
-    Output_WriteFormatted(v16, g_ClipsCodeHeaderFile, g_ClipsCodeHeaderFile, (int)aIncludeSetup_h, v44);
-    Output_WriteFormatted(g_ClipsCodeHeaderFile, v17, g_ClipsCodeHeaderFile, (int)aIncludeExpress, v45);
-    Output_WriteFormatted(v19, v18, g_ClipsCodeHeaderFile, (int)aIncludeExtnfun, v46);
-    Output_WriteFormatted(v21, v20, g_ClipsCodeHeaderFile, (int)aIncludeClips_h, v47);
-    Output_WriteFormatted(v23, v22, g_ClipsCodeHeaderFile, (int)aDefineVsVoid, v48);
-    Output_WriteFormatted(v25, v24, g_ClipsCodeHeaderFile, (int)asc_507D2C, v49);
+    Output_WriteFormatted(v11, v10, headerFile, (int)(intptr_t)aIfndef_constru, a4);
+    Output_WriteFormatted(v13, v12, g_ClipsCodeHeaderFile, (int)(intptr_t)aDefine_constru, v42);
+    Output_WriteFormatted(v15, v14, g_ClipsCodeHeaderFile, (int)(intptr_t)aIncludeStdio_h, v43);
+    Output_WriteFormatted(v16, g_ClipsCodeHeaderFile, g_ClipsCodeHeaderFile, (int)(intptr_t)aIncludeSetup_h, v44);
+    Output_WriteFormatted(g_ClipsCodeHeaderFile, v17, g_ClipsCodeHeaderFile, (int)(intptr_t)aIncludeExpress, v45);
+    Output_WriteFormatted(v19, v18, g_ClipsCodeHeaderFile, (int)(intptr_t)aIncludeExtnfun, v46);
+    Output_WriteFormatted(v21, v20, g_ClipsCodeHeaderFile, (int)(intptr_t)aIncludeClips_h, v47);
+    Output_WriteFormatted(v23, v22, g_ClipsCodeHeaderFile, (int)(intptr_t)aDefineVsVoid, v48);
+    Output_WriteFormatted(v25, v24, g_ClipsCodeHeaderFile, (int)(intptr_t)asc_507D2C, v49);
     Rules_PrintExternalFunctionDeclarations(g_ClipsCodeHeaderFile, v26);
-    Output_WriteFormatted(v27, g_ClipsCodeHeaderFile, g_ClipsCodeHeaderFile, (int)aEndif, v50);
-    Output_WriteFormatted(g_ClipsCodeHeaderFile, v28, g_ClipsCodeHeaderFile, (int)asc_507D3C, v51);
-    Output_WriteFormatted(v30, v29, g_ClipsCodeHeaderFile, (int)aExternArrayDef, v52);
-    Output_WriteFormatted(v32, v31, g_ClipsCodeHeaderFile, (int)asc_507D7C, v53);
-    Compiler_GenerateConstructTables((DWORD)fileName);
+    Output_WriteFormatted(v27, g_ClipsCodeHeaderFile, g_ClipsCodeHeaderFile, (int)(intptr_t)aEndif, v50);
+    Output_WriteFormatted(g_ClipsCodeHeaderFile, v28, g_ClipsCodeHeaderFile, (int)(intptr_t)asc_507D3C, v51);
+    Output_WriteFormatted(v30, v29, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternArrayDef, v52);
+    Output_WriteFormatted(v32, v31, g_ClipsCodeHeaderFile, (int)(intptr_t)asc_507D7C, v53);
+    Compiler_GenerateConstructTables((DWORD)(intptr_t)fileName);
     Rules_WriteFunctionDefinitionRecordsToCode(fileName);
-    Rules_WriteHashedExpressionsToCode((DWORD)fileName);
+    Rules_WriteHashedExpressionsToCode((DWORD)(intptr_t)fileName);
     headerFileHandle = g_ClipsCodeHeaderFile;
     Compiler_WriteConstraintTableFile(fileName, v34, g_ConstructsToCImageId, g_ClipsCodeHeaderFile, g_ClipsCodeMaxIndicesPerArray);
     codeItem = g_CodeGeneratorItemList;
-    for ( i = 5; codeItem; codeItem = *(_DWORD *)(codeItem + 24) )
+    for ( i = 5; codeItem; codeItem = *(_DWORD *)(uintptr_t)(codeItem + 24) )
     {
-      if ( *(_DWORD *)(codeItem + 12) )
+      if ( *(_DWORD *)(uintptr_t)(codeItem + 12) )
       {
         headerFileHandle = g_ClipsCodeHeaderFile;
         codeGenIndex = i++;
-        (*(void (__fastcall **)(int, int, int))(codeItem + 12))(g_ConstructsToCImageId, codeGenIndex, g_ClipsCodeMaxIndicesPerArray);
+        (*(void (__fastcall **)(int, int, int))(uintptr_t)(codeItem + 12))(g_ConstructsToCImageId, codeGenIndex, g_ClipsCodeMaxIndicesPerArray);
       }
     }
     Rules_RestoreAtomicValueBuckets();
     if ( g_ClipsCodeDataFile )
     {
-      Output_WriteFormatted(v38, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)asc_507DA0, v54);
+      Output_WriteFormatted(v38, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)(intptr_t)asc_507DA0, v54);
       fclose_(v39);
     }
-    Rules_WriteConstructsToCDriverFile(fileName, headerFileHandle, (DWORD)fileName);
+    Rules_WriteConstructsToCDriverFile(fileName, headerFileHandle, (DWORD)(intptr_t)fileName);
     fclose_(v40);
     return 1;
   }
   else
   {
-    Rules_OpenFileErrorMessage(v11, (int)headerFileName);
+    Rules_OpenFileErrorMessage(v11, (int)(intptr_t)headerFileName);
     return 0;
   }
 }
@@ -1268,32 +1268,32 @@ int  Rules_PrintExternalFunctionDeclarations(int codeFile, int a2)
   char v20; // [esp-8h] [ebp-Ch]
   char v21; // [esp-8h] [ebp-Ch]
 
-  Output_WriteFormatted(codeFile, a2, codeFile, (int)asc_507D2C, a2);
-  Output_WriteFormatted(v3, v2, v3, (int)asc_507DA4, v17);
-  Output_WriteFormatted(v5, v4, v5, (int)aExternalFuncti, v18);
-  Output_WriteFormatted(v7, v6, v7, (int)asc_507DF4, v19);
+  Output_WriteFormatted(codeFile, a2, codeFile, (int)(intptr_t)asc_507D2C, a2);
+  Output_WriteFormatted(v3, v2, v3, (int)(intptr_t)asc_507DA4, v17);
+  Output_WriteFormatted(v5, v4, v5, (int)(intptr_t)aExternalFuncti, v18);
+  Output_WriteFormatted(v7, v6, v7, (int)(intptr_t)asc_507DF4, v19);
   result = Rules_GetFunctionDefinitionListHead();
-  for ( i = result; i; i = *(_DWORD *)(i + 27) )
+  for ( i = result; i; i = *(_DWORD *)(uintptr_t)(i + 27) )
   {
-    Output_WriteFormatted(v10, v9, v10, (int)aExtern, v20);
-    switch ( *(_BYTE *)(i + 8) )
+    Output_WriteFormatted(v10, v9, v10, (int)(intptr_t)aExtern, v20);
+    switch ( *(_BYTE *)(uintptr_t)(i + 8) )
     {
       case 'a':
       case 'x':
-        Output_WriteFormatted(v13, v12, v13, (int)aVoid, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aVoid, v21);
         break;
       case 'b':
       case 'i':
-        Output_WriteFormatted(v13, v12, v13, (int)aInt, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aInt, v21);
         break;
       case 'c':
-        Output_WriteFormatted(v13, v12, v13, (int)aChar, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aChar, v21);
         break;
       case 'd':
-        Output_WriteFormatted(v13, v12, v13, (int)aDouble, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aDouble, v21);
         break;
       case 'f':
-        Output_WriteFormatted(v13, v12, v13, (int)aFloat_3, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aFloat_3, v21);
         break;
       case 'j':
       case 'k':
@@ -1301,22 +1301,22 @@ int  Rules_PrintExternalFunctionDeclarations(int codeFile, int a2)
       case 'n':
       case 'u':
       case 'v':
-        Output_WriteFormatted(v13, v12, v13, (int)aVoid_0, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aVoid_0, v21);
         break;
       case 'l':
-        Output_WriteFormatted(v13, v12, v13, (int)aLong, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aLong, v21);
         break;
       case 'o':
       case 's':
       case 'w':
-        Output_WriteFormatted(v13, v12, v13, (int)aSymbol_hn, v21);
+        Output_WriteFormatted(v13, v12, v13, (int)(intptr_t)aSymbol_hn, v21);
         break;
       default:
         Rules_ReportSystemError(v13, 1);
         break;
     }
-    Output_WriteFormatted(v14, *(_DWORD *)(i + 4), v14, (int)aS_10, *(_DWORD *)(i + 4));
-    switch ( *(_BYTE *)(i + 8) )
+    Output_WriteFormatted(v14, *(_DWORD *)(uintptr_t)(i + 4), v14, (int)(intptr_t)aS_10, *(_DWORD *)(uintptr_t)(i + 4));
+    switch ( *(_BYTE *)(uintptr_t)(i + 8) )
     {
       case 'a':
       case 'b':
@@ -1330,19 +1330,19 @@ int  Rules_PrintExternalFunctionDeclarations(int codeFile, int a2)
       case 'v':
       case 'w':
       case 'x':
-        Output_WriteFormatted(v16, v15, v16, (int)aVoid_arg, v21);
+        Output_WriteFormatted(v16, v15, v16, (int)(intptr_t)aVoid_arg, v21);
         break;
       case 'j':
       case 'k':
       case 'm':
       case 'n':
       case 'u':
-        Output_WriteFormatted(v16, v15, v16, (int)aData_object_pt, v21);
+        Output_WriteFormatted(v16, v15, v16, (int)(intptr_t)aData_object_pt, v21);
         break;
       default:
         break;
     }
-    result = Output_WriteFormatted(v16, v15, v16, (int)asc_507E90, v21);
+    result = Output_WriteFormatted(v16, v15, v16, (int)(intptr_t)asc_507E90, v21);
   }
   return result;
 }

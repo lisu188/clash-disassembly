@@ -26,7 +26,7 @@ signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int e
   Rules_RtnUnknown(argumentPosition, returnValue, a4);
   if ( g_ClipsEvaluationError )
     return 0;
-  if ( expectedType == *(_DWORD *)(v7 + 4) || expectedType == 110 && returnValue[1] < 2u )
+  if ( expectedType == *(_DWORD *)(uintptr_t)(v7 + 4) || expectedType == 110 && returnValue[1] < 2u )
     return 1;
   if ( expectedType == 111 )
   {
@@ -52,7 +52,7 @@ signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int e
   {
     integerNode = returnValue[2];
     returnValue[1] = 0;
-    returnValue[2] = Rules_AddDoubleValue((double)*(int *)(integerNode + 16));
+    returnValue[2] = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(integerNode + 16));
     return v14;
   }
   else
@@ -98,7 +98,7 @@ signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int e
       {
         expectedTypeName = aFloat_1;
       }
-      Parser_ReportError(argumentPosition, (int)expectedTypeName);
+      Parser_ReportError(argumentPosition, (int)(intptr_t)expectedTypeName);
 LABEL_24:
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
@@ -106,7 +106,7 @@ LABEL_24:
     }
     floatNode = returnValue[2];
     returnValue[1] = 1;
-    floatValue = *(double *)(floatNode + 16);
+    floatValue = *(double *)(uintptr_t)(floatNode + 16);
     _CHP(v17, v18);
     returnValue[2] = Rules_AddIntegerValue((int)floatValue);
     return 1;

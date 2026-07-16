@@ -34,39 +34,39 @@ _DWORD * Rules_AddObjectPatternNode(int thePattern)
 
   currentLevel = Rules_GetObjectPatternNetworkRoot();
   multifieldNode = 0;
-  slotBitmap = Rules_BuildAttributeIndexBitmap(*(_DWORD *)(thePattern + 64));
-  patternList = *(_DWORD *)(thePattern + 64);
+  slotBitmap = Rules_BuildAttributeIndexBitmap(*(_DWORD *)(uintptr_t)(thePattern + 64));
+  patternList = *(_DWORD *)(uintptr_t)(thePattern + 64);
   lastNode = 0;
   prunedPattern = Rules_PruneEmptyObjectPatternNodes(patternList, v4);
-  *(_DWORD *)(thePattern + 64) = prunedPattern;
+  *(_DWORD *)(uintptr_t)(thePattern + 64) = prunedPattern;
   curPattern = prunedPattern;
   do
   {
-    if ( (*(_BYTE *)(curPattern + 8) & 4) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(curPattern + 8) & 4) != 0 )
     {
       multifieldNode = curPattern;
-      curPattern = *(_DWORD *)(curPattern + 68);
+      curPattern = *(_DWORD *)(uintptr_t)(curPattern + 68);
     }
-    endSlot = !*(_DWORD *)(curPattern + 64) && multifieldNode;
-    patternNode = (int *)Rules_FindObjectPatternNode(currentLevel, curPattern, endSlot, (int *)&nodeSlotGroup);
+    endSlot = !*(_DWORD *)(uintptr_t)(curPattern + 64) && multifieldNode;
+    patternNode = (int *)(uintptr_t)Rules_FindObjectPatternNode(currentLevel, curPattern, endSlot, (int *)&nodeSlotGroup);
     if ( !patternNode )
-      patternNode = Rules_CreateObjectPatternNode(curPattern, nodeSlotGroup, endSlot, (int)lastNode);
-    if ( !*(_DWORD *)(curPattern + 64) && multifieldNode )
+      patternNode = Rules_CreateObjectPatternNode(curPattern, nodeSlotGroup, endSlot, (int)(intptr_t)lastNode);
+    if ( !*(_DWORD *)(uintptr_t)(curPattern + 64) && multifieldNode )
     {
       curPattern = multifieldNode;
       multifieldNode = 0;
     }
     lastNode = patternNode;
-    curPattern = *(_DWORD *)(curPattern + 64);
+    curPattern = *(_DWORD *)(uintptr_t)(curPattern + 64);
     currentLevel = patternNode[4];
   }
-  while ( curPattern && !*(_DWORD *)(curPattern + 60) );
-  alphaNode = (_DWORD *)lastNode[8];
+  while ( curPattern && !*(_DWORD *)(uintptr_t)(curPattern + 60) );
+  alphaNode = (_DWORD *)(uintptr_t)lastNode[8];
   if ( alphaNode )
   {
     while ( classBitmap != alphaNode[5] || slotBitmap != alphaNode[6] )
     {
-      alphaNode = (_DWORD *)alphaNode[8];
+      alphaNode = (_DWORD *)(uintptr_t)alphaNode[8];
       if ( !alphaNode )
         goto LABEL_18;
     }
@@ -75,35 +75,35 @@ _DWORD * Rules_AddObjectPatternNode(int thePattern)
   else
   {
 LABEL_18:
-    freeAlphaNode = *(_DWORD **)(g_ClipsMemoryTable + 176);
+    freeAlphaNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 176);
     if ( freeAlphaNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 176);
-      *(_DWORD *)(g_ClipsMemoryTable + 176) = *freeAlphaNode;
-      newAlphaNode = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = *freeAlphaNode;
+      newAlphaNode = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      newAlphaNode = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x2C);
+      newAlphaNode = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x2C);
     }
-    Rules_ResetDataObjectValue((int)newAlphaNode);
-    v12 = (int)lastNode;
+    Rules_ResetDataObjectValue((int)(intptr_t)newAlphaNode);
+    v12 = (int)(intptr_t)lastNode;
     newAlphaNode[4] = 0;
     newAlphaNode[7] = v12;
     v13 = classBitmap;
     newAlphaNode[5] = classBitmap;
-    ++*(_DWORD *)(v13 + 4);
+    ++*(_DWORD *)(uintptr_t)(v13 + 4);
     Rules_AdjustClassBusyCountFromBitmap(classBitmap, 1);
     v14 = slotBitmap;
     newAlphaNode[6] = slotBitmap;
     if ( v14 )
-      ++*(_DWORD *)(v14 + 4);
-    v15 = (int)lastNode;
+      ++*(_DWORD *)(uintptr_t)(v14 + 4);
+    v15 = (int)(intptr_t)lastNode;
     newAlphaNode[10] = 0;
-    newAlphaNode[8] = *(_DWORD *)(v15 + 32);
-    lastNode[8] = (int)newAlphaNode;
+    newAlphaNode[8] = *(_DWORD *)(uintptr_t)(v15 + 32);
+    lastNode[8] = (int)(intptr_t)newAlphaNode;
     newAlphaNode[9] = Rules_GetReactiveRuleList();
-    Rules_SetReactiveRuleList((int)newAlphaNode);
+    Rules_SetReactiveRuleList((int)(intptr_t)newAlphaNode);
     return newAlphaNode;
   }
 }
@@ -123,19 +123,19 @@ int  Rules_FindObjectPatternNode(int listOfNodes, int thePattern, int endSlot, i
     return 0;
   while ( 1 )
   {
-    selectorsMatch = *(_DWORD *)thePattern == 18 || *(_DWORD *)thePattern == 16 ? *(_DWORD *)curNode << 30 >> 31 : (*(_BYTE *)curNode & 2) == 0;
+    selectorsMatch = *(_DWORD *)(uintptr_t)thePattern == 18 || *(_DWORD *)(uintptr_t)thePattern == 16 ? *(_DWORD *)(uintptr_t)curNode << 30 >> 31 : (*(_BYTE *)(uintptr_t)curNode & 2) == 0;
     if ( selectorsMatch
-      && *(_DWORD *)(thePattern + 40) == *(_DWORD *)(curNode + 8)
-      && *(_DWORD *)curNode << 21 >> 24 == *(_DWORD *)(thePattern + 32)
-      && *(_DWORD *)(thePattern + 12) << 18 >> 25 == *(_DWORD *)curNode << 13 >> 24
-      && endSlot == *(_DWORD *)curNode << 29 >> 31
-      && AST_NodeListsEqual(*(__int16 **)(curNode + 12), *(__int16 **)(thePattern + 52)) )
+      && *(_DWORD *)(uintptr_t)(thePattern + 40) == *(_DWORD *)(uintptr_t)(curNode + 8)
+      && *(_DWORD *)(uintptr_t)curNode << 21 >> 24 == *(_DWORD *)(uintptr_t)(thePattern + 32)
+      && *(_DWORD *)(uintptr_t)(thePattern + 12) << 18 >> 25 == *(_DWORD *)(uintptr_t)curNode << 13 >> 24
+      && endSlot == *(_DWORD *)(uintptr_t)curNode << 29 >> 31
+      && AST_NodeListsEqual(*(__int16 **)(uintptr_t)(curNode + 12), *(__int16 **)(uintptr_t)(thePattern + 52)) )
     {
       break;
     }
-    if ( !*nodeSlotGroup && *(_DWORD *)curNode << 21 >> 24 == *(_DWORD *)(thePattern + 32) && *(_DWORD *)(thePattern + 40) == *(_DWORD *)(curNode + 8) )
+    if ( !*nodeSlotGroup && *(_DWORD *)(uintptr_t)curNode << 21 >> 24 == *(_DWORD *)(uintptr_t)(thePattern + 32) && *(_DWORD *)(uintptr_t)(thePattern + 40) == *(_DWORD *)(uintptr_t)(curNode + 8) )
       *nodeSlotGroup = curNode;
-    curNode = *(_DWORD *)(curNode + 28);
+    curNode = *(_DWORD *)(uintptr_t)(curNode + 28);
     if ( !curNode )
       return 0;
   }
@@ -163,36 +163,36 @@ int * Rules_CreateObjectPatternNode(int thePattern, _DWORD *nodeSlotGroup, int e
   int patternField; // [esp+0h] [ebp-10h]
   int patternBits; // [esp+0h] [ebp-10h]
 
-  freeListNode = *(_DWORD **)(g_ClipsMemoryTable + 160);
+  freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 160);
   if ( freeListNode )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 160);
-    *(_DWORD *)(g_ClipsMemoryTable + 160) = *freeListNode;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = *freeListNode;
     nodeMem = g_ClipsMemFreeListTemp;
   }
   else
   {
     nodeMem = Mem_HeapAllocWithRetry((_DWORD *)0x28);
   }
-  *(_DWORD *)(nodeMem + 32) = 0;
-  *(_DWORD *)(nodeMem + 4) = 0;
-  *(_DWORD *)(nodeMem + 16) = 0;
-  *(_DWORD *)(nodeMem + 28) = 0;
-  *(_DWORD *)(nodeMem + 24) = 0;
-  flagsByte = *(_BYTE *)nodeMem;
-  *(_DWORD *)(nodeMem + 36) = 0;
-  *(_BYTE *)nodeMem = flagsByte & 0xFC;
-  networkTest = AST_AddHashedNodeChain(*(__int16 **)(thePattern + 52), nodeMem, endSlot);
-  nodeRecord[3] = (int)networkTest;
-  patternField = (unsigned __int8)*(_DWORD *)(thePattern + 32);
+  *(_DWORD *)(uintptr_t)(nodeMem + 32) = 0;
+  *(_DWORD *)(uintptr_t)(nodeMem + 4) = 0;
+  *(_DWORD *)(uintptr_t)(nodeMem + 16) = 0;
+  *(_DWORD *)(uintptr_t)(nodeMem + 28) = 0;
+  *(_DWORD *)(uintptr_t)(nodeMem + 24) = 0;
+  flagsByte = *(_BYTE *)(uintptr_t)nodeMem;
+  *(_DWORD *)(uintptr_t)(nodeMem + 36) = 0;
+  *(_BYTE *)(uintptr_t)nodeMem = flagsByte & 0xFC;
+  networkTest = AST_AddHashedNodeChain(*(__int16 **)(uintptr_t)(thePattern + 52), nodeMem, endSlot);
+  nodeRecord[3] = (int)(intptr_t)networkTest;
+  patternField = (unsigned __int8)*(_DWORD *)(uintptr_t)(thePattern + 32);
   *(_WORD *)nodeRecord &= 0xF807u;
   *nodeRecord |= 8 * patternField;
-  patternBits = *(_DWORD *)(thePattern + 12) << 18 >> 25;
+  patternBits = *(_DWORD *)(uintptr_t)(thePattern + 12) << 18 >> 25;
   *nodeRecord &= 0xFFF807FF;
   *nodeRecord |= patternBits << 11;
-  nodeRecord[2] = *(_DWORD *)(thePattern + 40);
+  nodeRecord[2] = *(_DWORD *)(uintptr_t)(thePattern + 40);
   newNode = nodeRecord;
-  if ( *(_DWORD *)thePattern == 18 || *(_DWORD *)thePattern == 16 )
+  if ( *(_DWORD *)(uintptr_t)thePattern == 18 || *(_DWORD *)(uintptr_t)thePattern == 16 )
     *(_BYTE *)nodeRecord |= 2u;
   *(_BYTE *)nodeRecord &= ~4u;
   flagsWord = *nodeRecord;
@@ -211,36 +211,36 @@ int * Rules_CreateObjectPatternNode(int thePattern, _DWORD *nodeSlotGroup, int e
       curNetworkTest = curNode[3];
       if ( curNetworkTest )
       {
-        if ( *(_WORD *)curNetworkTest == 50 && (**(_DWORD **)(*(_DWORD *)(curNetworkTest + 2) + 16) & 0x80) != 0 )
+        if ( *(_WORD *)(uintptr_t)curNetworkTest == 50 && (**(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(curNetworkTest + 2) + 16) & 0x80) != 0 )
           break;
       }
       prevNode = curNode;
-      curNode = (_DWORD *)curNode[7];
+      curNode = (_DWORD *)(uintptr_t)curNode[7];
     }
     while ( curNode );
     if ( curNode )
     {
       newNode[6] = curNode[6];
-      newNode[7] = (int)curNode;
+      newNode[7] = (int)(intptr_t)curNode;
       prevSibling = curNode[6];
       if ( prevSibling )
       {
-        *(_DWORD *)(prevSibling + 28) = newNode;
+        *(_DWORD *)(uintptr_t)(prevSibling + 28) = newNode;
       }
       else
       {
         parentNode = curNode[5];
         if ( parentNode )
-          *(_DWORD *)(parentNode + 16) = newNode;
+          *(_DWORD *)(uintptr_t)(parentNode + 16) = newNode;
         else
-          Rules_SetObjectPatternNetworkRoot((int)newNode);
+          Rules_SetObjectPatternNetworkRoot((int)(intptr_t)newNode);
       }
       curNode[6] = newNode;
       return newNode;
     }
     else
     {
-      newNode[6] = (int)prevNode;
+      newNode[6] = (int)(intptr_t)prevNode;
       prevNode[7] = newNode;
       return newNode;
     }
@@ -249,17 +249,17 @@ int * Rules_CreateObjectPatternNode(int thePattern, _DWORD *nodeSlotGroup, int e
   {
     if ( upperLevel )
     {
-      newNode[7] = *(_DWORD *)(upperLevel + 16);
-      *(_DWORD *)(upperLevel + 16) = newNode;
+      newNode[7] = *(_DWORD *)(uintptr_t)(upperLevel + 16);
+      *(_DWORD *)(uintptr_t)(upperLevel + 16) = newNode;
     }
     else
     {
       newNode[7] = Rules_GetObjectPatternNetworkRoot();
-      Rules_SetObjectPatternNetworkRoot((int)newNode);
+      Rules_SetObjectPatternNetworkRoot((int)(intptr_t)newNode);
     }
     nextNode = newNode[7];
     if ( nextNode )
-      *(_DWORD *)(nextNode + 24) = newNode;
+      *(_DWORD *)(uintptr_t)(nextNode + 24) = newNode;
     return newNode;
   }
 }
@@ -300,88 +300,88 @@ int  Rules_RemoveObjectPatternNode(int *alphaNode)
   if ( alphaNode[6] )
     Rules_DecrementBitmapCount(alphaNode[6], v4);
   curReactiveNode = Rules_GetReactiveRuleList();
-  for ( i = 0; (_DWORD *)curReactiveNode != v6; curReactiveNode = *(_DWORD *)(curReactiveNode + 36) )
+  for ( i = 0; (_DWORD *)(uintptr_t)curReactiveNode != v6; curReactiveNode = *(_DWORD *)(uintptr_t)(curReactiveNode + 36) )
     i = curReactiveNode;
   if ( i )
-    *(_DWORD *)(i + 36) = *(_DWORD *)(curReactiveNode + 36);
+    *(_DWORD *)(uintptr_t)(i + 36) = *(_DWORD *)(uintptr_t)(curReactiveNode + 36);
   else
-    Rules_SetReactiveRuleList(*(_DWORD *)(curReactiveNode + 36));
-  curAlphaNode = *(_DWORD **)(v6[7] + 32);
-  for ( j = 0; curAlphaNode != v6; curAlphaNode = (_DWORD *)curAlphaNode[8] )
+    Rules_SetReactiveRuleList(*(_DWORD *)(uintptr_t)(curReactiveNode + 36));
+  curAlphaNode = *(_DWORD **)(uintptr_t)(v6[7] + 32);
+  for ( j = 0; curAlphaNode != v6; curAlphaNode = (_DWORD *)(uintptr_t)curAlphaNode[8] )
     j = curAlphaNode;
   if ( j )
   {
     j[8] = v6[8];
-    g_ClipsMemFreeListTemp = (int)v6;
-    *v6 = *(_DWORD *)(g_ClipsMemoryTable + 176);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v6;
+    *v6 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
   }
   else
   {
     nextAlphaNode = v6[8];
     if ( nextAlphaNode )
     {
-      *(_DWORD *)(v6[7] + 32) = nextAlphaNode;
-      g_ClipsMemFreeListTemp = (int)v6;
-      *v6 = *(_DWORD *)(g_ClipsMemoryTable + 176);
+      *(_DWORD *)(uintptr_t)(v6[7] + 32) = nextAlphaNode;
+      g_ClipsMemFreeListTemp = (int)(intptr_t)v6;
+      *v6 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
     }
     else
     {
-      *(_DWORD *)(v6[7] + 32) = 0;
-      g_ClipsMemFreeListTemp = (int)v6;
-      *v6 = *(_DWORD *)(g_ClipsMemoryTable + 176);
+      *(_DWORD *)(uintptr_t)(v6[7] + 32) = 0;
+      g_ClipsMemFreeListTemp = (int)(intptr_t)v6;
+      *v6 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
       result = g_ClipsMemoryTable;
-      *(_DWORD *)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
       patternNode = v6[7];
-      if ( !*(_DWORD *)(patternNode + 16) )
+      if ( !*(_DWORD *)(uintptr_t)(patternNode + 16) )
       {
         while ( patternNode )
         {
-          if ( *(_DWORD *)(patternNode + 24) || (rightNode = *(_DWORD *)(patternNode + 28)) != 0 )
+          if ( *(_DWORD *)(uintptr_t)(patternNode + 24) || (rightNode = *(_DWORD *)(uintptr_t)(patternNode + 28)) != 0 )
           {
-            if ( *(_DWORD *)(patternNode + 24) )
+            if ( *(_DWORD *)(uintptr_t)(patternNode + 24) )
             {
-              rightSibling = *(_DWORD *)(patternNode + 28);
-              *(_DWORD *)(*(_DWORD *)(patternNode + 24) + 28) = rightSibling;
+              rightSibling = *(_DWORD *)(uintptr_t)(patternNode + 28);
+              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(patternNode + 24) + 28) = rightSibling;
               if ( rightSibling )
-                *(_DWORD *)(rightSibling + 24) = *(_DWORD *)(patternNode + 24);
-              AST_RemoveHashedNodeChain(*(__int16 **)(patternNode + 12), patternNode);
-              g_ClipsMemFreeListTemp = (int)v18;
-              *v18 = *(_DWORD *)(g_ClipsMemoryTable + 160);
+                *(_DWORD *)(uintptr_t)(rightSibling + 24) = *(_DWORD *)(uintptr_t)(patternNode + 24);
+              AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(patternNode + 12), patternNode);
+              g_ClipsMemFreeListTemp = (int)(intptr_t)v18;
+              *v18 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
               result = g_ClipsMemFreeListTemp;
-              *(_DWORD *)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
+              *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
             }
             else
             {
               v19 = patternNode;
-              lastLevel = *(_DWORD *)(patternNode + 20);
+              lastLevel = *(_DWORD *)(uintptr_t)(patternNode + 20);
               if ( lastLevel )
-                *(_DWORD *)(lastLevel + 16) = *(_DWORD *)(v19 + 28);
+                *(_DWORD *)(uintptr_t)(lastLevel + 16) = *(_DWORD *)(uintptr_t)(v19 + 28);
               else
-                Rules_SetObjectPatternNetworkRoot(*(_DWORD *)(v19 + 28));
-              *(_DWORD *)(*(_DWORD *)(v19 + 28) + 24) = 0;
-              AST_RemoveHashedNodeChain(*(__int16 **)(v19 + 12), v19);
-              g_ClipsMemFreeListTemp = (int)v21;
-              *v21 = *(_DWORD *)(g_ClipsMemoryTable + 160);
+                Rules_SetObjectPatternNetworkRoot(*(_DWORD *)(uintptr_t)(v19 + 28));
+              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v19 + 28) + 24) = 0;
+              AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v19 + 12), v19);
+              g_ClipsMemFreeListTemp = (int)(intptr_t)v21;
+              *v21 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
               result = g_ClipsMemFreeListTemp;
-              *(_DWORD *)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
+              *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
             }
             return result;
           }
           v14 = patternNode;
-          parentNode = *(_DWORD *)(patternNode + 20);
+          parentNode = *(_DWORD *)(uintptr_t)(patternNode + 20);
           if ( parentNode )
-            *(_DWORD *)(parentNode + 16) = rightNode;
+            *(_DWORD *)(uintptr_t)(parentNode + 16) = rightNode;
           else
             Rules_SetObjectPatternNetworkRoot(rightNode);
-          AST_RemoveHashedNodeChain(*(__int16 **)(v14 + 12), v14);
-          g_ClipsMemFreeListTemp = (int)v16;
-          *v16 = *(_DWORD *)(g_ClipsMemoryTable + 160);
+          AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v14 + 12), v14);
+          g_ClipsMemFreeListTemp = (int)(intptr_t)v16;
+          *v16 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
           result = g_ClipsMemoryTable;
-          *(_DWORD *)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = g_ClipsMemFreeListTemp;
         }
       }
     }
@@ -410,16 +410,16 @@ int * Rules_UnlinkObjectPatternFromGlobalLists(int *result)
   int *deletedInstance; // ecx
   int v5; // ecx
 
-  alphaNodeAddr = (int)result;
-  for ( i = g_Clips_InstanceListHead; i; i = *(_DWORD *)(v3 + 68) )
+  alphaNodeAddr = (int)(intptr_t)result;
+  for ( i = g_Clips_InstanceListHead; i; i = *(_DWORD *)(uintptr_t)(v3 + 68) )
     result = Rules_RemoveMatchingPatternListEntry(i, alphaNodeAddr);
-  deletedInstance = (int *)g_Instance_DeletedListHead;
+  deletedInstance = (int *)(uintptr_t)g_Instance_DeletedListHead;
   if ( g_Instance_DeletedListHead )
   {
     do
     {
       result = Rules_RemoveMatchingPatternListEntry(*deletedInstance, alphaNodeAddr);
-      deletedInstance = *(int **)(v5 + 4);
+      deletedInstance = *(int **)(uintptr_t)(v5 + 4);
     }
     while ( deletedInstance );
   }
@@ -436,7 +436,7 @@ int * Rules_RemoveMatchingPatternListEntry(int theInstance, int patternNode)
   int *result; // eax
   int *prevEntry; // edx
 
-  result = *(int **)(theInstance + 16);
+  result = *(int **)(uintptr_t)(theInstance + 16);
   prevEntry = 0;
   if ( result )
   {
@@ -447,26 +447,26 @@ int * Rules_RemoveMatchingPatternListEntry(int theInstance, int patternNode)
         while ( patternNode != result[2] )
         {
           prevEntry = result;
-          result = (int *)*result;
+          result = (int *)(uintptr_t)*result;
           if ( !result )
             return result;
         }
-        --*(_DWORD *)(theInstance + 40);
+        --*(_DWORD *)(uintptr_t)(theInstance + 40);
         if ( prevEntry )
           break;
-        *(_DWORD *)(theInstance + 16) = *result;
-        g_ClipsMemFreeListTemp = (int)result;
-        *result = *(_DWORD *)(g_ClipsMemoryTable + 48);
-        *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
-        result = *(int **)(theInstance + 16);
+        *(_DWORD *)(uintptr_t)(theInstance + 16) = *result;
+        g_ClipsMemFreeListTemp = (int)(intptr_t)result;
+        *result = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+        result = *(int **)(uintptr_t)(theInstance + 16);
         if ( !result )
           return result;
       }
       *prevEntry = *result;
-      g_ClipsMemFreeListTemp = (int)result;
-      *result = *(_DWORD *)(g_ClipsMemoryTable + 48);
-      *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
-      result = (int *)*prevEntry;
+      g_ClipsMemFreeListTemp = (int)(intptr_t)result;
+      *result = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+      result = (int *)(uintptr_t)*prevEntry;
     }
     while ( *prevEntry );
   }
@@ -484,16 +484,16 @@ signed int  Rules_CheckDuplicateAttributeRestriction(int restrictionList, int sl
 
   if ( !restrictionList )
     return 0;
-  while ( slotName != *(_DWORD *)(restrictionList + 36) )
+  while ( slotName != *(_DWORD *)(uintptr_t)(restrictionList + 36) )
   {
-    restrictionList = *(_DWORD *)(restrictionList + 64);
+    restrictionList = *(_DWORD *)(uintptr_t)(restrictionList + 64);
     if ( !restrictionList )
       return 0;
   }
-  Rules_PrintErrorID((int)aObjrtbld, 4, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMultipleRestri, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v4 + 16), v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNotAllowed_, v5);
+  Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 4, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMultipleRestri, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v4 + 16), v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNotAllowed_, v5);
   return 1;
 }
 // 4D26F6: variable 'v3' is possibly undefined
@@ -511,13 +511,13 @@ unsigned int * Rules_ParseObjectPatternClassRestriction(int readSource, int theT
   int v8; // ecx
   int *v9; // eax
 
-  newNode = (int *)Rules_CreateLHSParseNode();
+  newNode = (int *)(uintptr_t)Rules_CreateLHSParseNode();
   v5 = *(_BYTE *)newNode & 0xFC;
   *(_BYTE *)newNode = v5;
   *(_BYTE *)newNode = v5 | 2;
   IO_OutWriteToken(asc_50C7F8);
   Parser_NextToken(readSource, theToken);
-  result = Rules_ParsePatternFieldList(readSource, (int *)theToken, v6, 0, 0, newNode, 0);
+  result = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, v6, 0, 0, newNode, 0);
   if ( !result )
   {
     v9 = newNode;
@@ -525,13 +525,13 @@ LABEL_7:
     AST_DecrementNodeRefCount(v9);
     return 0;
   }
-  if ( *(_DWORD *)theToken != 101 || *result == 18 || *result == 16 )
+  if ( *(_DWORD *)(uintptr_t)theToken != 101 || *result == 18 || *result == 16 )
   {
     IO_OutNewline();
-    if ( *(_DWORD *)theToken != 101 )
+    if ( *(_DWORD *)(uintptr_t)theToken != 101 )
     {
       IO_OutWriteToken(asc_50C7F8);
-      IO_OutWriteToken(*(char **)(theToken + 8));
+      IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
     }
     Parser_ReportSyntaxError();
     AST_FreeNode(v8);
@@ -554,13 +554,13 @@ unsigned int * Rules_ParseObjectPatternNameRestriction(int readSource, int theTo
   int v8; // ecx
   int *v9; // eax
 
-  newNode = (int *)Rules_CreateLHSParseNode();
+  newNode = (int *)(uintptr_t)Rules_CreateLHSParseNode();
   v5 = *(_BYTE *)newNode & 0xDE;
   *(_BYTE *)newNode = v5;
   *(_BYTE *)newNode = v5 | 0x20;
   IO_OutWriteToken(asc_50C7F8);
   Parser_NextToken(readSource, theToken);
-  result = Rules_ParsePatternFieldList(readSource, (int *)theToken, v6, 0, 1u, newNode, 0);
+  result = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, v6, 0, 1u, newNode, 0);
   if ( !result )
   {
     v9 = newNode;
@@ -568,13 +568,13 @@ LABEL_7:
     AST_DecrementNodeRefCount(v9);
     return 0;
   }
-  if ( *(_DWORD *)theToken != 101 || *result == 18 || *result == 16 )
+  if ( *(_DWORD *)(uintptr_t)theToken != 101 || *result == 18 || *result == 16 )
   {
     IO_OutNewline();
-    if ( *(_DWORD *)theToken != 101 )
+    if ( *(_DWORD *)(uintptr_t)theToken != 101 )
     {
       IO_OutWriteToken(asc_50C7F8);
-      IO_OutWriteToken(*(char **)(theToken + 8));
+      IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
     }
     Parser_ReportSyntaxError();
     AST_FreeNode(v8);
@@ -601,10 +601,10 @@ unsigned int * Rules_ParseObjectPatternSlotRestriction(int readSource, int theTo
   IO_OutWriteToken(asc_50C7F8);
   Parser_NextToken(readSource, v8);
   slotNameID = Class_FindSlotNameID(v9);
-  result = Rules_ParsePatternFieldList(readSource, (int *)theToken, v11, multiSlot, slotNameID, slotConstraints, 1);
+  result = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, v11, multiSlot, slotNameID, slotConstraints, 1);
   if ( result )
   {
-    if ( *(_DWORD *)theToken == 101 )
+    if ( *(_DWORD *)(uintptr_t)theToken == 101 )
     {
       if ( !result[17] && (result[2] & 4) != 0 )
       {
@@ -623,7 +623,7 @@ unsigned int * Rules_ParseObjectPatternSlotRestriction(int readSource, int theTo
     {
       IO_OutNewline();
       IO_OutWriteToken(asc_50C7F8);
-      IO_OutWriteToken(*(char **)(theToken + 8));
+      IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
       Parser_ReportSyntaxError();
       AST_FreeNode(v13);
       AST_DecrementNodeRefCount(slotConstraints);
@@ -701,9 +701,9 @@ __int16  Rules_ResetClassBitmapToScope(_WORD *theBitmap, int set)
       LOWORD(v3) = *theBitmap;
       if ( classID > (unsigned __int16)*theBitmap )
         break;
-      if ( *(_DWORD *)(tableOffset + g_ClipsDefclassIdTable)
-        && Class_IsInScope(*(_DWORD *)(tableOffset + g_ClipsDefclassIdTable), theModule)
-        && (classFlags = *(_BYTE *)(theDefclass + 20), (classFlags & 8) != 0)
+      if ( *(_DWORD *)(uintptr_t)(tableOffset + g_ClipsDefclassIdTable)
+        && Class_IsInScope(*(_DWORD *)(uintptr_t)(tableOffset + g_ClipsDefclassIdTable), theModule)
+        && (classFlags = *(_BYTE *)(uintptr_t)(theDefclass + 20), (classFlags & 8) != 0)
         && (classFlags & 4) == 0 )
       {
         classBytePtr = (char *)theBitmap + ((classID - (__CFSHL__(classID >> 31, 3) + 8 * (classID >> 31))) >> 3);
@@ -727,7 +727,7 @@ __int16  Rules_ResetClassBitmapToScope(_WORD *theBitmap, int set)
 int  Rules_IncrementBitmapRefCount(int result)
 {
   if ( result )
-    ++*(_DWORD *)(result + 4);
+    ++*(_DWORD *)(uintptr_t)(result + 4);
   return result;
 }
 
@@ -747,11 +747,11 @@ void  Rules_AdjustClassBusyCountFromBitmap(int bitmapHashNode, int offset)
 
   if ( !g_Rules_ClearInProgressFlag )
   {
-    theBitmap = *(unsigned __int16 **)(bitmapHashNode + 16);
+    theBitmap = *(unsigned __int16 **)(uintptr_t)(bitmapHashNode + 16);
     for ( i = 0; i <= (int)*theBitmap; ++i )
     {
       if ( ((unsigned __int8)(1 << (i % 8)) & *((_BYTE *)theBitmap + ((int)i >> 3) + 2)) != 0 )
-        *(_DWORD *)(*(_DWORD *)(g_ClipsDefclassIdTable + 4 * i) + 26) += offset;
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + 4 * i) + 26) += offset;
     }
   }
   return;
@@ -794,7 +794,7 @@ signed int  Rules_ClassBitmapsIdentical(unsigned __int16 *cs1, _WORD *cs2)
   bytePtr2 = cs2;
   bytePtr1 = v2;
   LOWORD(cs1) = *cs2;
-  for ( i = (unsigned int)cs1 ^ v3; i < ((int)*v2 >> 3) + 1; ++i )
+  for ( i = (unsigned int)(intptr_t)cs1 ^ v3; i < ((int)*v2 >> 3) + 1; ++i )
   {
     if ( *((_BYTE *)bytePtr1 + 2) != *((_BYTE *)bytePtr2 + 2) )
       return 0;
@@ -830,10 +830,10 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *clsset, int *class
     constantRestriction = 1;
     if ( !*classRestrictions )
       break;
-    tmpset1 = (unsigned __int16 *)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
+    tmpset1 = (unsigned __int16 *)(uintptr_t)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
     tmpset2Alloc = Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - v6, 0);
     chkNode = *v8;
-    tmpset2 = (unsigned __int16 *)tmpset2Alloc;
+    tmpset2 = (unsigned __int16 *)(uintptr_t)tmpset2Alloc;
     if ( chkNode )
     {
       tmpset2Map = tmpset2Alloc + 2;
@@ -841,17 +841,17 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *clsset, int *class
       {
         if ( *chkNode == 2 )
         {
-          theDefclass = Class_LookupInScope(*(_BYTE **)(chkNode[1] + 16));
-          *(_DWORD *)(v15 + 4) = theDefclass;
+          theDefclass = Class_LookupInScope(*(_BYTE **)(uintptr_t)(chkNode[1] + 16));
+          *(_DWORD *)(uintptr_t)(v15 + 4) = theDefclass;
           if ( !theDefclass )
           {
-            Rules_PrintErrorID((int)aObjrtbld, 5, 0);
-            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedClass, v18);
+            Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 5, 0);
+            Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUndefinedClass, v18);
             Mem_SmallBlockFree(tmpset1, ((int)*tmpset1 >> 3) + 3);
             Mem_SmallBlockFree(tmpset2, ((int)*tmpset2 >> 3) + 3);
             return 0;
           }
-          if ( (*(_BYTE *)(v15 + 8) & 1) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(v15 + 8) & 1) != 0 )
           {
             Rules_ResetClassBitmapToScope(tmpset2, 1);
             includeFlag = 0;
@@ -861,22 +861,22 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *clsset, int *class
             includeFlag = 1;
             Rules_ResetClassBitmapToScope(tmpset2, 0);
           }
-          Class_MarkBitmapSubclasses(tmpset2Map, *(_DWORD *)(v16 + 4), includeFlag);
-          Rules_AndClassBitmaps((int)tmpset1, tmpset2);
+          Class_MarkBitmapSubclasses(tmpset2Map, *(_DWORD *)(uintptr_t)(v16 + 4), includeFlag);
+          Rules_AndClassBitmaps((int)(intptr_t)tmpset1, tmpset2);
         }
         else
         {
           constantRestriction = 0;
         }
-        chkNode = (_DWORD *)chkNode[16];
+        chkNode = (_DWORD *)(uintptr_t)chkNode[16];
       }
       while ( chkNode );
     }
     if ( Rules_IsClassBitmapEmpty(tmpset1) )
     {
-      Rules_PrintErrorID((int)aObjrtbld, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_0, v19);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsARestriction, v20);
+      Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfE_0, v19);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsARestriction, v20);
       Mem_SmallBlockFree(tmpset1, ((int)*tmpset1 >> 3) + 3);
       Mem_SmallBlockFree(tmpset2, ((int)*tmpset2 >> 3) + 3);
       return 0;
@@ -884,11 +884,11 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *clsset, int *class
     if ( constantRestriction )
     {
       theNode = *classRestrictions;
-      *classRestrictions = *(_DWORD *)(*classRestrictions + 68);
-      *(_DWORD *)(theNode + 68) = 0;
+      *classRestrictions = *(_DWORD *)(uintptr_t)(*classRestrictions + 68);
+      *(_DWORD *)(uintptr_t)(theNode + 68) = 0;
       AST_FreeNode(theNode);
     }
-    Rules_OrClassBitmaps((int)clsset, tmpset1);
+    Rules_OrClassBitmaps((int)(intptr_t)clsset, tmpset1);
     Mem_SmallBlockFree(tmpset1, ((int)*tmpset1 >> 3) + 3);
     classRestrictions = v13;
     Mem_SmallBlockFree(tmpset2, ((int)*tmpset2 >> 3) + 3);
@@ -927,25 +927,25 @@ _DWORD * Rules_ResolveSlotConstraintAcrossClasses(int clsset, int slotName, _DWO
   *multip = 0;
   do
   {
-    for ( i = *(_DWORD *)(bucketOffset + g_DefclassHashTable); i; i = *(_DWORD *)(i + 100) )
+    for ( i = *(_DWORD *)(uintptr_t)(bucketOffset + g_DefclassHashTable); i; i = *(_DWORD *)(uintptr_t)(i + 100) )
     {
       v6 = 8;
-      if ( ((unsigned __int8)(1 << (*(unsigned __int16 *)(i + 24) % 8)) & *(_BYTE *)(clsset
-                                                                                   + ((int)*(unsigned __int16 *)(i + 24) >> 3)
+      if ( ((unsigned __int8)(1 << (*(unsigned __int16 *)(uintptr_t)(i + 24) % 8)) & *(_BYTE *)(uintptr_t)(clsset
+                                                                                   + ((int)*(unsigned __int16 *)(uintptr_t)(i + 24) >> 3)
                                                                                    + 2)) != 0 )
       {
-        LOBYTE(v6) = *(unsigned __int16 *)(i + 24) % 8;
+        LOBYTE(v6) = *(unsigned __int16 *)(uintptr_t)(i + 24) % 8;
         slotIndex = Instance_ResolveSlotIndex(v6, slotName);
-        if ( slotIndex == -1 || (slotDesc = *(_BYTE **)(4 * slotIndex + *(_DWORD *)(i + 56)), (*(_DWORD *)slotDesc & 0x200) == 0) )
+        if ( slotIndex == -1 || (slotDesc = *(_BYTE **)(uintptr_t)(4 * slotIndex + *(_DWORD *)(uintptr_t)(i + 56)), (*(_DWORD *)slotDesc & 0x200) == 0) )
         {
-          v11 = ((int)*(unsigned __int16 *)(i + 24) >> 3) + clsset;
-          *(_BYTE *)(v11 + 2) &= ~(1 << (*(unsigned __int16 *)(i + 24) % 8));
+          v11 = ((int)*(unsigned __int16 *)(uintptr_t)(i + 24) >> 3) + clsset;
+          *(_BYTE *)(uintptr_t)(v11 + 2) &= ~(1 << (*(unsigned __int16 *)(uintptr_t)(i + 24) % 8));
         }
         else
         {
           if ( (*slotDesc & 2) != 0 )
             *multip = 1;
-          Rules_UnionConstraints(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(i + 56) + 4 * slotIndex) + 20), (int)slotConstraints);
+          Rules_UnionConstraints(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(i + 56) + 4 * slotIndex) + 20), (int)(intptr_t)slotConstraints);
           AST_DecrementNodeRefCount(slotConstraints);
           slotConstraints = v9;
         }
@@ -972,8 +972,8 @@ int  Rules_AndClassBitmaps(int cs1, unsigned __int16 *cs2)
     do
     {
       v5 = cs1 + (unsigned __int16)result;
-      v6 = *((_BYTE *)cs2 + (unsigned __int16)result-- + 1) & *(_BYTE *)(v5 + 1);
-      *(_BYTE *)(v5 + 1) = v6;
+      v6 = *((_BYTE *)cs2 + (unsigned __int16)result-- + 1) & *(_BYTE *)(uintptr_t)(v5 + 1);
+      *(_BYTE *)(uintptr_t)(v5 + 1) = v6;
     }
     while ( (_WORD)result );
   }
@@ -993,8 +993,8 @@ int  Rules_OrClassBitmaps(int cs1, unsigned __int16 *cs2)
     do
     {
       v5 = cs1 + (unsigned __int16)result;
-      v6 = *((_BYTE *)cs2 + (unsigned __int16)result-- + 1) | *(_BYTE *)(v5 + 1);
-      *(_BYTE *)(v5 + 1) = v6;
+      v6 = *((_BYTE *)cs2 + (unsigned __int16)result-- + 1) | *(_BYTE *)(uintptr_t)(v5 + 1);
+      *(_BYTE *)(uintptr_t)(v5 + 1) = v6;
     }
     while ( (_WORD)result );
   }
@@ -1018,9 +1018,9 @@ _WORD * Rules_TrimClassBitmapToHighestBit(_WORD *result)
   if ( i != (unsigned __int16)*result )
   {
     newBitmap = Rules_AllocateClassBitmap(i, 0);
-    qmemcpy((void *)(newBitmap + 2), (char *)oldBitmap + 2, ((v4 - (__CFSHL__(v4 >> 31, 3) + 8 * (v4 >> 31))) >> 3) + 1);
+    qmemcpy((void *)(uintptr_t)(newBitmap + 2), (char *)oldBitmap + 2, ((v4 - (__CFSHL__(v4 >> 31, 3) + 8 * (v4 >> 31))) >> 3) + 1);
     Mem_SmallBlockFree(oldBitmap, ((int)*(unsigned __int16 *)oldBitmap >> 3) + 3);
-    return (_WORD *)newBitmap;
+    return (_WORD *)(uintptr_t)newBitmap;
   }
   return result;
 }
@@ -1037,19 +1037,19 @@ int  Rules_ExtractObjectPatternRestrictionNodes(int a1, int restrictionList, _DW
 
   *isaNodeOut = 0;
   *nameNodeOut = 0;
-  newNode = (_DWORD *)AST_AllocNode();
-  *(_DWORD *)endNodeOut = newNode;
+  newNode = (_DWORD *)(uintptr_t)AST_AllocNode();
+  *(_DWORD *)(uintptr_t)endNodeOut = newNode;
   *newNode = 17;
-  *(_DWORD *)(*(_DWORD *)endNodeOut + 36) = g_Symbol_IsA;
-  *(_DWORD *)(*(_DWORD *)endNodeOut + 40) = 0;
-  *(_DWORD *)(*(_DWORD *)endNodeOut + 32) = 1;
-  *(_DWORD *)(*(_DWORD *)endNodeOut + 24) = a1;
-  *(_DWORD *)(*(_DWORD *)endNodeOut + 60) = *(_DWORD *)(restrictionList + 60);
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)endNodeOut + 36) = g_Symbol_IsA;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)endNodeOut + 40) = 0;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)endNodeOut + 32) = 1;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)endNodeOut + 24) = a1;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)endNodeOut + 60) = *(_DWORD *)(uintptr_t)(restrictionList + 60);
   curNode = restrictionList;
-  *(_DWORD *)(restrictionList + 60) = 0;
+  *(_DWORD *)(uintptr_t)(restrictionList + 60) = 0;
   do
   {
-    slotSymbol = *(_DWORD *)(curNode + 36);
+    slotSymbol = *(_DWORD *)(uintptr_t)(curNode + 36);
     if ( slotSymbol == g_Symbol_IsA )
     {
       *v7 = curNode;
@@ -1059,12 +1059,12 @@ int  Rules_ExtractObjectPatternRestrictionNodes(int a1, int restrictionList, _DW
       *nameNodeOut = curNode;
     }
     lastNode = curNode;
-    curNode = *(_DWORD *)(curNode + 64);
+    curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
   }
   while ( curNode );
   if ( !lastNode )
-    return *(_DWORD *)endNodeOut;
-  *(_DWORD *)(lastNode + 64) = *(_DWORD *)endNodeOut;
+    return *(_DWORD *)(uintptr_t)endNodeOut;
+  *(_DWORD *)(uintptr_t)(lastNode + 64) = *(_DWORD *)(uintptr_t)endNodeOut;
   return restrictionList;
 }
 // 4D3150: variable 'v7' is possibly undefined
@@ -1084,10 +1084,10 @@ int  Rules_BuildAttributeIndexBitmap(int thePattern)
   int bitmapValue; // ecx
 
   v1 = thePattern;
-  for ( i = -1; thePattern; thePattern = *(_DWORD *)(thePattern + 64) )
+  for ( i = -1; thePattern; thePattern = *(_DWORD *)(uintptr_t)(thePattern + 64) )
   {
-    if ( i < *(_DWORD *)(thePattern + 40) )
-      i = *(_DWORD *)(thePattern + 40);
+    if ( i < *(_DWORD *)(uintptr_t)(thePattern + 40) )
+      i = *(_DWORD *)(uintptr_t)(thePattern + 40);
   }
   if ( (unsigned int)i < 2 )
     return 0;
@@ -1095,10 +1095,10 @@ int  Rules_BuildAttributeIndexBitmap(int thePattern)
   theBitmap = Mem_SmallBlockAlloc(bitmapSize);
   Mem_AllocArray(theBitmap, bitmapSize);
   *v5 = i;
-  for ( j = v1; j; j = *(_DWORD *)(j + 64) )
+  for ( j = v1; j; j = *(_DWORD *)(uintptr_t)(j + 64) )
   {
-    bytePtr = &theBitmap[(*(_DWORD *)(j + 40) - (__CFSHL__(*(int *)(j + 40) >> 31, 3) + 8 * (*(int *)(j + 40) >> 31))) >> 3];
-    bytePtr[2] |= 1 << (*(_DWORD *)(j + 40) % 8);
+    bytePtr = &theBitmap[(*(_DWORD *)(uintptr_t)(j + 40) - (__CFSHL__(*(int *)(uintptr_t)(j + 40) >> 31, 3) + 8 * (*(int *)(uintptr_t)(j + 40) >> 31))) >> 3];
+    bytePtr[2] |= 1 << (*(_DWORD *)(uintptr_t)(j + 40) % 8);
   }
   Rules_AddBitmapValue(theBitmap, ((int)*(unsigned __int16 *)theBitmap >> 3) + 3);
   Mem_SmallBlockFree(theBitmap, bitmapSize);
@@ -1138,91 +1138,91 @@ int  Rules_PruneEmptyObjectPatternNodes(int topNode, _DWORD *classBitmapOut)
             {
               while ( 1 )
               {
-                bitmapValue = *(_DWORD *)(curNode + 60);
+                bitmapValue = *(_DWORD *)(uintptr_t)(curNode + 60);
                 if ( bitmapValue )
                 {
                   *classBitmapOut = bitmapValue;
                   prevNode = curNode;
-                  curNode = *(_DWORD *)(curNode + 64);
+                  curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
                   goto LABEL_9;
                 }
-                if ( *(_DWORD *)curNode != 17 && *(_DWORD *)curNode != 15 || *(_DWORD *)(curNode + 52) )
+                if ( *(_DWORD *)(uintptr_t)curNode != 17 && *(_DWORD *)(uintptr_t)curNode != 15 || *(_DWORD *)(uintptr_t)(curNode + 52) )
                   break;
                 if ( prevNode )
-                  *(_DWORD *)(prevNode + 64) = *(_DWORD *)(curNode + 64);
+                  *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(curNode + 64);
                 else
-                  listHead = *(_DWORD *)(curNode + 64);
-                *(_DWORD *)(curNode + 64) = 0;
+                  listHead = *(_DWORD *)(uintptr_t)(curNode + 64);
+                *(_DWORD *)(uintptr_t)(curNode + 64) = 0;
                 AST_FreeNode(curNode);
                 if ( !prevNode )
                   goto LABEL_24;
-                curNode = *(_DWORD *)(prevNode + 64);
+                curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
 LABEL_9:
                 if ( !curNode )
                   return listHead;
               }
-              if ( *(_DWORD *)curNode != 18 && *(_DWORD *)curNode != 16
-                || (*(_BYTE *)(curNode + 8) & 4) != 0
-                || *(_DWORD *)(curNode + 52)
-                || (*(_DWORD *)(curNode + 8) & 0x3F8000) != 0
-                || (*(_WORD *)(curNode + 10) & 0x1FC0) != 0 )
+              if ( *(_DWORD *)(uintptr_t)curNode != 18 && *(_DWORD *)(uintptr_t)curNode != 16
+                || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0
+                || *(_DWORD *)(uintptr_t)(curNode + 52)
+                || (*(_DWORD *)(uintptr_t)(curNode + 8) & 0x3F8000) != 0
+                || (*(_WORD *)(uintptr_t)(curNode + 10) & 0x1FC0) != 0 )
               {
                 break;
               }
               if ( prevNode )
-                *(_DWORD *)(prevNode + 64) = *(_DWORD *)(curNode + 64);
+                *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(curNode + 64);
               else
-                listHead = *(_DWORD *)(curNode + 64);
-              *(_DWORD *)(curNode + 64) = 0;
+                listHead = *(_DWORD *)(uintptr_t)(curNode + 64);
+              *(_DWORD *)(uintptr_t)(curNode + 64) = 0;
               AST_FreeNode(curNode);
               if ( !prevNode )
                 goto LABEL_24;
-              curNode = *(_DWORD *)(prevNode + 64);
+              curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
               if ( !curNode )
                 return listHead;
             }
-            if ( *(_DWORD *)curNode != 18 && *(_DWORD *)curNode != 16
-              || (*(_BYTE *)(curNode + 8) & 4) != 0
-              || !*(_DWORD *)(curNode + 52)
-              || (*(_DWORD *)(curNode + 8) & 0x3F8000) != 0
-              || (*(_WORD *)(curNode + 10) & 0x1FC0) != 0 )
+            if ( *(_DWORD *)(uintptr_t)curNode != 18 && *(_DWORD *)(uintptr_t)curNode != 16
+              || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0
+              || !*(_DWORD *)(uintptr_t)(curNode + 52)
+              || (*(_DWORD *)(uintptr_t)(curNode + 8) & 0x3F8000) != 0
+              || (*(_WORD *)(uintptr_t)(curNode + 10) & 0x1FC0) != 0 )
             {
               break;
             }
-            *(_DWORD *)curNode = 17;
+            *(_DWORD *)(uintptr_t)curNode = 17;
             prevNode = curNode;
-            curNode = *(_DWORD *)(curNode + 64);
+            curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
             if ( !curNode )
               return listHead;
           }
-          if ( *(_DWORD *)curNode != 18 || (*(_BYTE *)(curNode + 8) & 4) == 0 || *(_DWORD *)(curNode + 68) )
+          if ( *(_DWORD *)(uintptr_t)curNode != 18 || (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) == 0 || *(_DWORD *)(uintptr_t)(curNode + 68) )
             break;
-          *(_DWORD *)curNode = 17;
+          *(_DWORD *)(uintptr_t)curNode = 17;
           Rules_AppendMultifieldWildcardBitmapTest(curNode, 0);
-          *(_BYTE *)(v8 + 8) &= ~4u;
+          *(_BYTE *)(uintptr_t)(v8 + 8) &= ~4u;
 LABEL_44:
           prevNode = v8;
-          curNode = *(_DWORD *)(v8 + 64);
+          curNode = *(_DWORD *)(uintptr_t)(v8 + 64);
           if ( !curNode )
             return listHead;
         }
-        if ( *(_DWORD *)curNode == 18 && (*(_BYTE *)(curNode + 8) & 4) != 0 )
+        if ( *(_DWORD *)(uintptr_t)curNode == 18 && (*(_BYTE *)(uintptr_t)(curNode + 8) & 4) != 0 )
           break;
         prevNode = curNode;
-        curNode = *(_DWORD *)(curNode + 64);
+        curNode = *(_DWORD *)(uintptr_t)(curNode + 64);
         if ( !curNode )
           return listHead;
       }
-      Rules_AppendFieldCardinalityBitmapTest(*(_DWORD **)(curNode + 68));
-      childList = Rules_PruneEmptyObjectPatternNodes(*(_DWORD *)(v9 + 68), (int)classBitmapOut);
-      *(_DWORD *)(v8 + 68) = childList;
+      Rules_AppendFieldCardinalityBitmapTest(*(_DWORD **)(uintptr_t)(curNode + 68));
+      childList = Rules_PruneEmptyObjectPatternNodes(*(_DWORD *)(uintptr_t)(v9 + 68), (int)(intptr_t)classBitmapOut);
+      *(_DWORD *)(uintptr_t)(v8 + 68) = childList;
       if ( childList )
         goto LABEL_44;
       if ( prevNode )
-        *(_DWORD *)(prevNode + 64) = *(_DWORD *)(v8 + 64);
+        *(_DWORD *)(uintptr_t)(prevNode + 64) = *(_DWORD *)(uintptr_t)(v8 + 64);
       else
-        listHead = *(_DWORD *)(v8 + 64);
-      *(_DWORD *)(v8 + 64) = 0;
+        listHead = *(_DWORD *)(uintptr_t)(v8 + 64);
+      *(_DWORD *)(uintptr_t)(v8 + 64) = 0;
       AST_FreeNode(v8);
       if ( prevNode )
         break;
@@ -1231,7 +1231,7 @@ LABEL_24:
       if ( !listHead )
         return 0;
     }
-    curNode = *(_DWORD *)(prevNode + 64);
+    curNode = *(_DWORD *)(uintptr_t)(prevNode + 64);
   }
   while ( curNode );
   return listHead;
@@ -1256,25 +1256,25 @@ int Rules_CreateDefaultObjectPatternRestriction(void)
   int v11; // ecx
 
   LOWORD(classID) = *((_WORD *)Class_LookupInScope(aInitialObjec_2) + 12);
-  theBitmap = (_WORD *)Rules_AllocateClassBitmap(classID, 0);
+  theBitmap = (_WORD *)(uintptr_t)Rules_AllocateClassBitmap(classID, 0);
   bytePtr = (char *)theBitmap + ((v2 - (__CFSHL__(v2 >> 31, 3) + 8 * (v2 >> 31))) >> 3);
   bytePtr[2] |= 1 << (v2 % 8);
   packedBitmap = Rules_TrimClassBitmapToHighestBit(theBitmap);
   AST_AllocNode();
   LOWORD(v5) = *packedBitmap;
   bitmapValue = Rules_AddBitmapValue(packedBitmap, v5 / 8 + 3);
-  *(_DWORD *)(v7 + 60) = bitmapValue;
-  ++*(_DWORD *)(bitmapValue + 4);
+  *(_DWORD *)(uintptr_t)(v7 + 60) = bitmapValue;
+  ++*(_DWORD *)(uintptr_t)(bitmapValue + 4);
   Mem_SmallBlockFree(packedBitmap, (unsigned __int16)*packedBitmap / 8 + 3);
   *topNode = 17;
   topNode[8] = 1;
   v9 = g_Clips_NameSymbol;
   topNode[10] = 1;
   topNode[9] = v9;
-  valueNode = (_DWORD *)AST_AllocNode();
-  *(_DWORD *)(v11 + 68) = valueNode;
+  valueNode = (_DWORD *)(uintptr_t)AST_AllocNode();
+  *(_DWORD *)(uintptr_t)(v11 + 68) = valueNode;
   *valueNode = 8;
-  *(_DWORD *)(*(_DWORD *)(v11 + 68) + 4) = g_Rules_InitialObjectSymbol;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v11 + 68) + 4) = g_Rules_InitialObjectSymbol;
   return v11;
 }
 // 4D3449: variable 'v0' is possibly undefined
@@ -1296,12 +1296,12 @@ int  Rules_ParseActionExpressionList(int a1, int readSource)
 
   Rules_IncrementIndentDepth(3);
   AST_Append(v5, v4);
-  *(_DWORD *)(a1 + 6) = Parser_ParseProgram(readSource, v6, 1);
+  *(_DWORD *)(uintptr_t)(a1 + 6) = Parser_ParseProgram(readSource, v6, 1);
   IO_OutNewline();
   IO_OutNewline();
   IO_OutWriteToken(v8);
   Rules_DecrementIndentDepth(3);
-  if ( *(_DWORD *)(a1 + 6) )
+  if ( *(_DWORD *)(uintptr_t)(a1 + 6) )
     return a1;
   AST_Free(a1);
   return 0;
@@ -1316,11 +1316,11 @@ int  Rules_SetObjectPatternNegatedFlag(int result, char value)
 {
   char patternFlags; // bl
 
-  patternFlags = *(_BYTE *)(result + 12);
+  patternFlags = *(_BYTE *)(uintptr_t)(result + 12);
   if ( (patternFlags & 8) != 0 )
   {
-    *(_BYTE *)(result + 12) = patternFlags & 0xF7;
-    *(_DWORD *)(result + 12) |= 8 * (value & 1);
+    *(_BYTE *)(uintptr_t)(result + 12) = patternFlags & 0xF7;
+    *(_DWORD *)(uintptr_t)(result + 12) |= 8 * (value & 1);
   }
   return result;
 }
@@ -1331,13 +1331,13 @@ void  Rules_TriggerObjectPatternMatchForAll(double a1)
   _DWORD *theInstance; // ecx
   int v2; // ecx
 
-  theInstance = (_DWORD *)g_Clips_InstanceListHead;
+  theInstance = (_DWORD *)(uintptr_t)g_Clips_InstanceListHead;
   if ( g_Clips_InstanceListHead )
   {
     do
     {
       Rules_ObjectMatchAction((unsigned __int16 *)1, theInstance, -1, a1);
-      theInstance = *(_DWORD **)(v2 + 68);
+      theInstance = *(_DWORD **)(uintptr_t)(v2 + 68);
     }
     while ( theInstance );
   }

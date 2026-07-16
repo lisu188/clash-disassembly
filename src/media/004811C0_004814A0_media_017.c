@@ -18,32 +18,32 @@ double  Rules_RtnDouble(int argumentPosition, int a2, double a3)
   int resultValue; // [esp+8h] [ebp-28h]
   double returnValue; // [esp+18h] [ebp-18h]
 
-  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  argExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 1; argExpr; ++i )
   {
     if ( i >= argumentPosition )
       break;
-    argExpr = *(_DWORD *)(argExpr + 10);
+    argExpr = *(_DWORD *)(uintptr_t)(argExpr + 10);
   }
   if ( !argExpr )
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     returnValue = 1.0;
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return returnValue;
   }
-  Parser_ParseForm((__int16 *)argExpr, &v8, a2, a3);
+  Parser_ParseForm((__int16 *)(uintptr_t)argExpr, &v8, a2, a3);
   if ( !resultType )
   {
-    v7 = *(_DWORD *)(resultValue + 20);
-    LODWORD(returnValue) = *(_DWORD *)(resultValue + 16);
+    v7 = *(_DWORD *)(uintptr_t)(resultValue + 20);
+    LODWORD(returnValue) = *(_DWORD *)(uintptr_t)(resultValue + 16);
     HIDWORD(returnValue) = v7;
     return returnValue;
   }
   if ( resultType == 1 )
-    return (double)*(int *)(resultValue + 16);
-  Rules_ExpectedTypeError((int)aRtndouble, *(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    return (double)*(int *)(uintptr_t)(resultValue + 16);
+  Rules_ExpectedTypeError((int)(intptr_t)aRtndouble, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
   HIDWORD(returnValue) = 1072693248;
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
@@ -86,7 +86,7 @@ signed int  Rules_RtnLong(int argumentPosition, int a2, double a3)
     return Parser_NumberValueAsInt(parsed[2]);
   function_node = expression ? (uintptr_t)(unsigned int)*(_DWORD *)(expression + 2) : 0;
   function_symbol = function_node ? (uintptr_t)(unsigned int)*(_DWORD *)function_node : 0;
-  Rules_ExpectedTypeError((int)aRtnlong, function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, argumentPosition);
+  Rules_ExpectedTypeError((int)(intptr_t)aRtnlong, function_symbol ? *(_DWORD *)(function_symbol + 16) : 0, argumentPosition);
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
   return 1;
@@ -100,21 +100,21 @@ int  Rules_RtnUnknown(int argumentPosition, _DWORD *returnValue, double a3)
   int i; // edx
   int resultType; // ecx
 
-  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  argExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 1; argExpr; ++i )
   {
     if ( i >= argumentPosition )
       break;
-    argExpr = *(_DWORD *)(argExpr + 10);
+    argExpr = *(_DWORD *)(uintptr_t)(argExpr + 10);
   }
   if ( argExpr )
   {
-    Parser_ParseForm((__int16 *)argExpr, returnValue, (int)returnValue, a3);
+    Parser_ParseForm((__int16 *)(uintptr_t)argExpr, returnValue, (int)(intptr_t)returnValue, a3);
     return resultType;
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(**(_DWORD **)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -129,9 +129,9 @@ int Rules_RtnArgCount(void)
   int argExpr; // eax
   int i; // edx
 
-  argExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  argExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 0; argExpr; ++i )
-    argExpr = *(_DWORD *)(argExpr + 10);
+    argExpr = *(_DWORD *)(uintptr_t)(argExpr + 10);
   return i;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -184,14 +184,14 @@ int  Rules_ArgRangeCheck(int functionName, int maxArgs)
   result = Rules_RtnArgCount();
   if ( result < minArgs || result > maxArgs )
   {
-    Rules_PrintErrorID((int)aArgacces, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v6);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAtLeas, v7);
+    Rules_PrintErrorID((int)(intptr_t)aArgacces, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v5);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v6);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAtLeas, v7);
     Rules_PrintLongInteger(v8, v8);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAndNoMoreThan, v9);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAndNoMoreThan, v9);
     Rules_PrintLongInteger(v10, maxArgs);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArguments_, v11);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aArguments_, v11);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return -1;

@@ -20,13 +20,13 @@ int  Surface_BltToWindowClient(int surface, int dest_surface)
   int result; // eax
   struct tagRECT client_rect[2]; // [esp+0h] [ebp-24h] BYREF
 
-  GetClientRect(*(HWND *)(*(_DWORD *)(surface + 168) + 36), client_rect);
-  ClientToScreen(*(HWND *)(*(_DWORD *)(surface + 168) + 36), (LPPOINT)client_rect);
-  ClientToScreen(*(HWND *)(*(_DWORD *)(surface + 168) + 36), (LPPOINT)&client_rect[0].right);
-  result = (*(int (__stdcall **)(_DWORD, struct tagRECT *, _DWORD, _DWORD, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
-             *(_DWORD *)(dest_surface + 164),
+  GetClientRect(*(HWND *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 168) + 36), client_rect);
+  ClientToScreen(*(HWND *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 168) + 36), (LPPOINT)client_rect);
+  ClientToScreen(*(HWND *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 168) + 36), (LPPOINT)&client_rect[0].right);
+  result = (*(int (__stdcall **)(_DWORD, struct tagRECT *, _DWORD, _DWORD, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(dest_surface + 164) + 20))(
+             *(_DWORD *)(uintptr_t)(dest_surface + 164),
              client_rect,
-             *(_DWORD *)(surface + 164),
+             *(_DWORD *)(uintptr_t)(surface + 164),
              0,
              0x1000000,
              0);
@@ -61,9 +61,9 @@ int  Surface_BltScaledKeyedOnto(_DWORD *src_surface, int dest_top, int a3, float
   v8[9] = v10;
   scaled_right = scale * (double)(width + v10);
   _CHP(width + v10, v15);
-  *(_DWORD *)(v12 + 44) = (int)scaled_right;
-  result = (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD *, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
-             *(_DWORD *)(dest_surface + 164),
+  *(_DWORD *)(uintptr_t)(v12 + 44) = (int)scaled_right;
+  result = (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD *, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(dest_surface + 164) + 20))(
+             *(_DWORD *)(uintptr_t)(dest_surface + 164),
              src_surface + 9,
              src_surface[41],
              src_surface + 5,
@@ -71,7 +71,7 @@ int  Surface_BltScaledKeyedOnto(_DWORD *src_surface, int dest_top, int a3, float
              0);
   if ( result == -2005532222 )
   {
-    Surface_Restore((int)src_surface);
+    Surface_Restore((int)(intptr_t)src_surface);
     return v14;
   }
   return result;
@@ -89,8 +89,8 @@ int  Surface_BltMirrorLeftRight(int surface)
 
   blt_fx[0] = 100;
   blt_fx[1] = 2;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
-           *(_DWORD *)(surface + 164),
+  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 20))(
+           *(_DWORD *)(uintptr_t)(surface + 164),
            0,
            0,
            0,
@@ -105,8 +105,8 @@ int  Surface_BltMirrorUpDown(int surface)
 
   blt_fx[0] = 100;
   blt_fx[1] = 4;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
-           *(_DWORD *)(surface + 164),
+  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 20))(
+           *(_DWORD *)(uintptr_t)(surface + 164),
            0,
            0,
            0,
@@ -140,16 +140,16 @@ int  Surface_SetSrcColorKey(int surface, int color_key, int a3)
   _DWORD color_key_struct[3]; // [esp+0h] [ebp-Ch] BYREF
 
   color_key_struct[2] = a3;
-  *(_DWORD *)(surface + 16) = color_key;
+  *(_DWORD *)(uintptr_t)(surface + 16) = color_key;
   color_key_struct[0] = color_key;
   color_key_struct[1] = color_key;
-  return (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 116))(*(_DWORD *)(surface + 164), 8, color_key_struct);
+  return (*(int (__stdcall **)(_DWORD, int, _DWORD *))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 116))(*(_DWORD *)(uintptr_t)(surface + 164), 8, color_key_struct);
 }
 
 //----- (00473820) --------------------------------------------------------
 int  Surface_Restore(int surface)
 {
-  return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(surface + 164) + 108))(*(_DWORD *)(surface + 164));
+  return (*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 108))(*(_DWORD *)(uintptr_t)(surface + 164));
 }
 
 //----- (00473840) --------------------------------------------------------
@@ -161,14 +161,14 @@ int  Surface_LockWithRestore(int surface, int a2)
 
   surface_desc = surface + 56;
   memset_(a2, 0);
-  dd_surface = *(_DWORD *)(surface + 164);
-  *(_DWORD *)(surface + 56) = 108;
-  result = (*(int (__stdcall **)(int, _DWORD, int, int, _DWORD))(*(_DWORD *)dd_surface + 100))(dd_surface, 0, surface_desc, 1, 0);
+  dd_surface = *(_DWORD *)(uintptr_t)(surface + 164);
+  *(_DWORD *)(uintptr_t)(surface + 56) = 108;
+  result = (*(int (__stdcall **)(int, _DWORD, int, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)dd_surface + 100))(dd_surface, 0, surface_desc, 1, 0);
   if ( result == -2005532222 )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(surface + 164) + 108))(*(_DWORD *)(surface + 164));
-    (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _DWORD))(**(_DWORD **)(surface + 164) + 100))(
-      *(_DWORD *)(surface + 164),
+    (*(void (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 108))(*(_DWORD *)(uintptr_t)(surface + 164));
+    (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 100))(
+      *(_DWORD *)(uintptr_t)(surface + 164),
       0,
       surface_desc,
       1,
@@ -182,20 +182,20 @@ int  Surface_LockWithRestore(int surface, int a2)
 //----- (004738B0) --------------------------------------------------------
 int  Surface_Unlock(int surface)
 {
-  return (*(int (__stdcall **)(_DWORD, int))(**(_DWORD **)(surface + 164) + 128))(*(_DWORD *)(surface + 164), surface + 56);
+  return (*(int (__stdcall **)(_DWORD, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 128))(*(_DWORD *)(uintptr_t)(surface + 164), surface + 56);
 }
 
 //----- (004739C0) --------------------------------------------------------
 int  Surface_SetPixelByte(int result, int x, char color, int y)
 {
-  *(_BYTE *)(*(_DWORD *)(result + 72) * y + x + *(_DWORD *)(result + 92)) = color;
+  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 72) * y + x + *(_DWORD *)(uintptr_t)(result + 92)) = color;
   return result;
 }
 
 //----- (004739D0) --------------------------------------------------------
 int  Surface_GetPixelByte(int surface, int x, int y)
 {
-  return *(unsigned __int8 *)(*(_DWORD *)(surface + 92) + *(_DWORD *)(surface + 72) * y + x);
+  return *(unsigned __int8 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 92) + *(_DWORD *)(uintptr_t)(surface + 72) * y + x);
 }
 
 //----- (004739F0) --------------------------------------------------------
@@ -241,8 +241,8 @@ int  Surface_FillRectColor(int surface, int left, int right, int top, int bottom
   blt_fx[20] = fill_color;
   dest_rect[1] = top;
   dest_rect[2] = right;
-  return (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(surface + 164) + 20))(
-           *(_DWORD *)(surface + 164),
+  return (*(int (__stdcall **)(_DWORD, _DWORD *, _DWORD, _DWORD, int, _DWORD *))(uintptr_t)(**(_DWORD **)(uintptr_t)(surface + 164) + 20))(
+           *(_DWORD *)(uintptr_t)(surface + 164),
            dest_rect,
            0,
            0,
@@ -330,10 +330,10 @@ int  Render_DrawVerticalRun(int surface, int y_start, int x, int y_end, char col
   int result; // eax
   int row_offset; // edx
 
-  pixels_base = *(_DWORD *)(surface + 92);
-  for ( result = y_start; result < y_end; *(_BYTE *)(row_offset + pixels_base) = color )
+  pixels_base = *(_DWORD *)(uintptr_t)(surface + 92);
+  for ( result = y_start; result < y_end; *(_BYTE *)(uintptr_t)(row_offset + pixels_base) = color )
   {
-    row_offset = x + result * *(_DWORD *)(surface + 72);
+    row_offset = x + result * *(_DWORD *)(uintptr_t)(surface + 72);
     ++result;
   }
   return result;
@@ -361,7 +361,7 @@ int  Render_FillSurfaceSolidColor(int surface, int fill_color, int a3)
   blt_fx[20] = fill_color;
   blt_fx[0] = 100;
   return Compat_DirectDrawSurface_Blt(
-           (LPDIRECTDRAWSURFACE)*(int *)(surface + 164),
+           (LPDIRECTDRAWSURFACE)(uintptr_t)*(int *)(uintptr_t)(surface + 164),
            0,
            0,
            0,
@@ -419,7 +419,7 @@ int __fastcall Compat_FileSystemQueryRelease(int a1, int *handle_ptr)
     *handle_ptr = 0;
     return 0;
   }
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)object_handle;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)object_handle;
   result = ((int (*)(int, int))(uintptr_t)vtable[3])(object_handle, 2);
   *handle_ptr = 0;
   return result;
@@ -431,10 +431,10 @@ int  FileSystem_OpenViaOpenSlotAndNotify(int entry)
   int result; // eax
   int v3; // ecx
 
-  result = (*(int (__thiscall **)(int))(*(_DWORD *)entry + 12))(entry);
+  result = (*(int (__thiscall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)entry + 12))(entry);
   if ( result )
   {
-    (*(void (__cdecl **)(int))(*(_DWORD *)v3 + 20))(result);
+    (*(void (__cdecl **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)v3 + 20))(result);
     return 1;
   }
   return result;
@@ -463,7 +463,7 @@ CLASH95_LOCAL _DWORD *Compat_FileSystemQueryOpen(int file_system, int mode_flags
   {
     if ( vtable[2] == (uintptr_t)FileSystem_DiskMountScalarDeletingDtor
       || vtable[2] == (uintptr_t)FileSystem_DiskMountVariantScalarDeletingDtor )
-      return (_DWORD *)FileSystem_DiskMountOpenFileQuery(file_system, query_mode, 0);
+      return (_DWORD *)(uintptr_t)FileSystem_DiskMountOpenFileQuery(file_system, query_mode, 0);
   }
   return File_OpenMountRootEntry(file_system, query_mode, 0);
 }
@@ -474,17 +474,17 @@ CLASH95_LOCAL int Compat_FileSystemQueryResultIsReady(_DWORD *opened_query)
 
   if ( !opened_query )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)opened_query;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)(intptr_t)opened_query;
   if ( !vtable )
     return 0;
   if ( vtable[0] == (uintptr_t)Compat_FileStreamSeekFromStart
     && vtable[1] == (uintptr_t)Compat_FileStreamTell
     && vtable[2] == (uintptr_t)Compat_FileStreamSeekFromEnd )
-    return Compat_FileStreamIsReady((int)opened_query);
+    return Compat_FileStreamIsReady((int)(intptr_t)opened_query);
   if ( vtable[0] == (uintptr_t)Compat_QuerySkipBytes
     && vtable[1] == (uintptr_t)Compat_QueryGetLength
     && vtable[2] == (uintptr_t)Compat_QuerySkipBytesFromBase )
-    return FileSystem_ArchiveStreamHasRemainingData((int)opened_query);
+    return FileSystem_ArchiveStreamHasRemainingData((int)(intptr_t)opened_query);
   return 0;
 }
 
@@ -494,7 +494,7 @@ CLASH95_TEST_VISIBLE void Compat_FileSystemQueryResultRelease(_DWORD *opened_que
 
   if ( !opened_query )
     return;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)opened_query;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)(intptr_t)opened_query;
   if ( !vtable )
     return;
   if ( vtable[0] == (uintptr_t)Compat_FileStreamSeekFromStart
@@ -507,7 +507,7 @@ CLASH95_TEST_VISIBLE void Compat_FileSystemQueryResultRelease(_DWORD *opened_que
   if ( vtable[0] == (uintptr_t)Compat_QuerySkipBytes
     && vtable[1] == (uintptr_t)Compat_QueryGetLength
     && vtable[2] == (uintptr_t)Compat_QuerySkipBytesFromBase )
-    Compat_QueryDestruct((int)opened_query, 2);
+    Compat_QueryDestruct((int)(intptr_t)opened_query, 2);
 }
 
 CLASH95_INTERNAL int Compat_FileSystemOnMounted(int mounted_file_system, int *root_file_system)
@@ -523,7 +523,7 @@ CLASH95_INTERNAL int Compat_FileSystemOnMounted(int mounted_file_system, int *ro
     && vtable[1] == (uintptr_t)Compat_FileSystemCloseQuery )
   {
     if ( vtable[2] == (uintptr_t)FileSystem_DiskMountScalarDeletingDtor )
-      return FileSystem_DiskMountResolveRegisteredRootPath(mounted_file_system, (int)root_file_system);
+      return FileSystem_DiskMountResolveRegisteredRootPath(mounted_file_system, (int)(intptr_t)root_file_system);
     if ( vtable[2] == (uintptr_t)FileSystem_DiskMountVariantScalarDeletingDtor )
       return FileSystem_DiskMountRegisterNestedMount(mounted_file_system, root_file_system, 0, 0);
   }
@@ -543,7 +543,7 @@ int  Compat_FileSystemOpenIfReady(int file_system, int mode_flags)
 
   opened_query = Compat_FileSystemQueryOpen(file_system, mode_flags);
   if ( opened_query && Compat_FileSystemQueryResultIsReady(opened_query) == 1 )
-    return (int)opened_query;
+    return (int)(intptr_t)opened_query;
   if ( opened_query )
     Compat_FileSystemQueryResultRelease(opened_query);
   return 0;
@@ -666,7 +666,7 @@ void  __noreturn Render_HandleDirectDrawFatalError(unsigned int error_code, int 
         }
 LABEL_11:
         sprintf_(&g_DirectDrawErrorMessageBuffer, "DirectDraw Error %s", message_buffer);
-        App_RequestQuit((int)aDirectdrawEr_0);
+        App_RequestQuit((int)(intptr_t)aDirectdrawEr_0);
       }
       if ( error_code <= 0x8876024E )
       {
@@ -1299,16 +1299,16 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, vo
   int DeviceCaps; // [esp+9Ch] [ebp-14h]
   int saved_height; // [esp+A0h] [ebp-10h]
 
-  saved_height = (int)height;
+  saved_height = (int)(intptr_t)height;
   *dd_context = 0;
   dd_context[10] = 0;
   dd_context[4] = 0;
-  dd_context[6] = (LPVOID)width;
+  dd_context[6] = (LPVOID)(uintptr_t)width;
   dd_context[7] = height;
   dd_context[9] = hwnd;
   DC = GetDC(0);
   DeviceCaps = GetDeviceCaps(DC, 14);
-  dd_context[8] = (LPVOID)(GetDeviceCaps(DC, 12) * DeviceCaps);
+  dd_context[8] = (LPVOID)(uintptr_t)(GetDeviceCaps(DC, 12) * DeviceCaps);
   ReleaseDC(0, DC);
   dd_create_hr = DirectDrawCreate(0, &lpDD, 0);
   if ( dd_create_hr )
@@ -1321,22 +1321,22 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, vo
     lpDD->lpVtbl->Release(lpDD);
     lpDD = 0;
   }
-  coop_hr = (*(int (__stdcall **)(LPVOID, void *, int))(*(_DWORD *)*dd_context + 80))(*dd_context, hwnd, 8);
+  coop_hr = (*(int (__stdcall **)(LPVOID, void *, int))(uintptr_t)(*(_DWORD *)*dd_context + 80))(*dd_context, hwnd, 8);
   if ( coop_hr )
     Render_HandleDirectDrawFatalError(coop_hr, v14);
   surface_desc = 108;
   surface_flags = 1;
   surface_caps = 512;
-  primary_surface_obj = (_DWORD *)Mem_Alloc(176, v14, 108, width);
+  primary_surface_obj = (_DWORD *)(uintptr_t)Mem_Alloc(176, v14, 108, width);
   if ( primary_surface_obj )
     primary_surface_obj = Surface_Construct(primary_surface_obj);
   dd_context[1] = primary_surface_obj;
-  create_primary_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)dd_context[1] + 164, 0);
+  create_primary_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(uintptr_t)(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)(intptr_t)dd_context[1] + 164, 0);
   if ( create_primary_hr )
     Render_HandleDirectDrawFatalError(create_primary_hr, v17);
   if ( create_back_surface )
   {
-    back_surface_obj = (_DWORD *)Mem_Alloc(176, v17, (char)&surface_desc, width);
+    back_surface_obj = (_DWORD *)(uintptr_t)Mem_Alloc(176, v17, (char)(intptr_t)&surface_desc, width);
     if ( back_surface_obj )
       back_surface_obj = Surface_Construct(back_surface_obj);
     dd_context[2] = back_surface_obj;
@@ -1344,17 +1344,17 @@ signed int  Render_InitDirectDrawWindowedMode(LPVOID *dd_context, void *hwnd, vo
     surface_caps = 64;
     desc_width = width;
     desc_height = saved_height;
-    create_back_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)dd_context[2] + 164, 0);
+    create_back_hr = (*(int (__stdcall **)(LPVOID, int *, int, _DWORD))(uintptr_t)(*(_DWORD *)*dd_context + 24))(*dd_context, &surface_desc, (int)(intptr_t)dd_context[2] + 164, 0);
     if ( create_back_hr )
       Render_HandleDirectDrawFatalError(create_back_hr, v20);
   }
-  create_clipper_hr = (*(int (__stdcall **)(LPVOID, _DWORD, LPVOID *, _DWORD))(*(_DWORD *)*dd_context + 16))(*dd_context, 0, dd_context + 5, 0);
+  create_clipper_hr = (*(int (__stdcall **)(LPVOID, _DWORD, LPVOID *, _DWORD))(uintptr_t)(*(_DWORD *)*dd_context + 16))(*dd_context, 0, dd_context + 5, 0);
   if ( create_clipper_hr )
     Render_HandleDirectDrawFatalError(create_clipper_hr, v22);
-  clipper_hwnd_hr = (*(int (__stdcall **)(LPVOID, _DWORD, void *))(*(_DWORD *)dd_context[5] + 32))(dd_context[5], 0, hwnd);
+  clipper_hwnd_hr = (*(int (__stdcall **)(LPVOID, _DWORD, void *))(uintptr_t)(*(_DWORD *)dd_context[5] + 32))(dd_context[5], 0, hwnd);
   if ( clipper_hwnd_hr )
     Render_HandleDirectDrawFatalError(clipper_hwnd_hr, v24);
-  set_clipper_hr = (*(int (__stdcall **)(_DWORD, LPVOID))(**((_DWORD **)dd_context[1] + 41) + 112))(*((_DWORD *)dd_context[1] + 41), dd_context[5]);
+  set_clipper_hr = (*(int (__stdcall **)(_DWORD, LPVOID))(uintptr_t)(**((_DWORD **)dd_context[1] + 41) + 112))(*((_DWORD *)dd_context[1] + 41), dd_context[5]);
   if ( set_clipper_hr )
     Render_HandleDirectDrawFatalError(set_clipper_hr, v26);
   return 1;
@@ -1440,7 +1440,7 @@ signed int  Render_InitDirectDrawFullscreenMode(
   }
   if ( hr )
     Render_HandleDirectDrawFatalError(hr, 0);
-  primary_surface = (_DWORD *)Mem_Alloc(176, 0, (char)display_dim, use_flip_chain);
+  primary_surface = (_DWORD *)(uintptr_t)Mem_Alloc(176, 0, (char)(intptr_t)display_dim, use_flip_chain);
   if ( primary_surface )
     primary_surface = Surface_Construct(primary_surface);
   raw[1] = (int)(uintptr_t)primary_surface;
@@ -1459,13 +1459,13 @@ signed int  Render_InitDirectDrawFullscreenMode(
     Render_HandleDirectDrawFatalError(hr, 0);
   if ( use_flip_chain )
   {
-    back_surface = (_DWORD *)Mem_Alloc(176, 0, ddraw_handle, use_flip_chain);
+    back_surface = (_DWORD *)(uintptr_t)Mem_Alloc(176, 0, ddraw_handle, use_flip_chain);
     if ( back_surface )
       back_surface = Surface_Construct(back_surface);
     raw[2] = (int)(uintptr_t)back_surface;
     attach_caps = 4;
     hr = Compat_DirectDrawSurface_GetAttachedSurface(
-           (LPDIRECTDRAWSURFACE)*((_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41),
+           (LPDIRECTDRAWSURFACE)(uintptr_t)*((_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41),
            &attach_caps,
            (_DWORD *)(uintptr_t)(unsigned int)raw[2] + 41);
     if ( hr )

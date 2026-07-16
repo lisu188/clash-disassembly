@@ -59,27 +59,27 @@ int  UI_DrawSpecialUnitInfoPane(
 
   screenLeft = paneLeft;
   screenTop = paneTop;
-  iconSet = (_DWORD *)Mem_Alloc(4112, a3, (char)unitRecord, allocContext);
+  iconSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a3, (char)(intptr_t)unitRecord, allocContext);
   if ( iconSet )
-    iconSet = DLXSpriteSet_Load(iconSet, (char)unitRecord);
+    iconSet = DLXSpriteSet_Load(iconSet, (char)(intptr_t)unitRecord);
   iconSpriteSet = iconSet;
   ownerIndex = unitRecord[2];
   UI_BeginUnitInfo(unitInfoBuf, *unitRecord, ownerIndex);
-  animSet = (_DWORD *)Mem_Alloc(4112, v9, ownerIndex, allocContext);
+  animSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v9, ownerIndex, allocContext);
   if ( animSet )
     animSet = DLXSpriteSet_Load(animSet, ownerIndex);
   animSpriteSet = animSet;
   Render_Pump();
-  Surface = (_DWORD *)Mem_Alloc(188, v11, ownerIndex, allocContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v11, ownerIndex, allocContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 201, 116);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, 201, 116);
   surface = Surface;
   Render_FillRect(0, Surface, (unsigned __int16)screenTop, (unsigned __int16)screenLeft, screenLeft + 200, screenTop + 115, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(7, allocContext);
-  SpriteForChar = DLX_GetSpriteForChar((int)iconSpriteSet, 24);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)iconSpriteSet, 24);
   renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderSpriteObj + 52))(
     screenTop,
     SpriteForChar,
     -1,
@@ -104,9 +104,9 @@ int  UI_DrawSpecialUnitInfoPane(
     default:
       break;
   }
-  typeSprite = DLX_GetSpriteForChar((int)iconSpriteSet, iconSpriteIndex);
+  typeSprite = DLX_GetSpriteForChar((int)(intptr_t)iconSpriteSet, iconSpriteIndex);
   renderSpriteObj2 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj2 + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderSpriteObj2 + 52))(
     screenTop + 20,
     typeSprite,
     -1,
@@ -117,16 +117,16 @@ int  UI_DrawSpecialUnitInfoPane(
     0,
     0);
   Render_ReleaseSurface(15, renderSpriteObj);
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 120, screenLeft + 173, screenTop + 30, 2, (int)aD_19);
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 120, screenLeft + 173, screenTop + 30, 2, (int)(intptr_t)aD_19);
   Render_ReleaseSurface(7, renderSpriteObj);
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 15, screenLeft + 88, screenTop + 32, 2, (int)aD_20);
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 15, screenLeft + 88, screenTop + 32, 2, (int)(intptr_t)aD_20);
   unitName = (**(&g_UnitTypeMetadataRecords + 22 * *(__int16 *)unitRecord))[(unsigned __int8)g_LanguageIndex];
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, (int)unitName);
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, (int)(intptr_t)unitName);
   if ( (unitRecord[13] & 8) != 0 )
   {
-    extraIconSprite = DLX_GetSpriteForChar((int)iconSpriteSet, 27);
+    extraIconSprite = DLX_GetSpriteForChar((int)(intptr_t)iconSpriteSet, 27);
     LOBYTE(unitName) = screenLeft - 105;
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       screenTop + 52,
       extraIconSprite,
       -1,
@@ -141,17 +141,17 @@ int  UI_DrawSpecialUnitInfoPane(
   animSpriteLeft = screenLeft + 11;
   animFrameIndex = 0;
   animSpriteTop = screenTop + 5;
-  while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
+  while ( DD_IsLost((int)(intptr_t)g_RenderState) || DD_IsFlipping((int)(intptr_t)g_RenderState) )
   {
-    DD_Pump((int)g_RenderState, (char)unitName);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)unitName);
     currentTime = Time_Now(v22, lastFrameTime + 10);
     if ( v24 < currentTime )
     {
       lastFrameTime = Time_Now(v25, v24);
       animFrameIndex = (animFrameIndex + 1) % 8;
-      animSprite = DLX_GetSpriteForChar((int)animSpriteSet, animFrameIndex);
+      animSprite = DLX_GetSpriteForChar((int)(intptr_t)animSpriteSet, animFrameIndex);
       LOBYTE(unitName) = animSpriteLeft;
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         animSpriteTop,
         animSprite,
         -1,
@@ -165,9 +165,9 @@ int  UI_DrawSpecialUnitInfoPane(
   }
   Render_FillRect(surface, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
   finalSurface = surface;
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( finalSurface )
-    (*(void (**)(void))finalSurface[46])();
+    (*(void (**)(void))(uintptr_t)finalSurface[46])();
   DLXSpriteSet_ReleaseAndClear((int *)&iconSpriteSet);
   return DLXSpriteSet_ReleaseAndClear((int *)&animSpriteSet);
 }
@@ -269,15 +269,15 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
   attackerStackIndex = attackerIndex;
   defenderStackIndex = defenderIndex;
   autoresolveRan = 0;
-  Debug_Log(attackerIndex, a3, a4, (int)aUnit_attackDD);
+  Debug_Log(attackerIndex, a3, a4, (int)(intptr_t)aUnit_attackDD);
   Render_DrawSprite_v3(attackerStackIndex, a4);
   Render_DrawSprite_v3(defenderStackIndex, a4);
-  attackerStack = (__int16 *)UNIT_STACK(attackerStackIndex);
+  attackerStack = (__int16 *)(uintptr_t)UNIT_STACK(attackerStackIndex);
   attackerPlayerOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4);
-  defenderStack = (__int16 *)(UNIT_STACK_STRIDE * defenderStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
+  defenderStack = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * defenderStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("unit_attack_enter", attackerStackIndex, defenderStackIndex, *defenderStack, defenderStack[1]);
-  bothHuman = *(_DWORD *)(gameData + attackerPlayerOffset + 140051) && *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 140051);
-  bothPlayersHuman = (unsigned __int8 *)bothHuman;
+  bothHuman = *(_DWORD *)(uintptr_t)(gameData + attackerPlayerOffset + 140051) && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 140051);
+  bothPlayersHuman = (unsigned __int8 *)(uintptr_t)bothHuman;
   capturedCargoFlag = 0;
   if ( UnitStack_HasNormalCombatUnits((intptr_t)attackerStack) )
   {
@@ -292,7 +292,7 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
       if ( yDistance <= 1 )
         goto LABEL_22;
     }
-    movePath = Unit_MoveTrackNearTile(attackerStackIndex, *defenderStack, (int)attackerStack, defenderStack[1], (DWORD)attackerStack);
+    movePath = Unit_MoveTrackNearTile(attackerStackIndex, *defenderStack, (int)(intptr_t)attackerStack, defenderStack[1], (DWORD)(intptr_t)attackerStack);
     Diagnostics_TraceWorldMapActionEvent(movePath ? "unit_attack_track" : "unit_attack_no_track", attackerStackIndex, defenderStackIndex, *defenderStack, defenderStack[1]);
     if ( movePath )
     {
@@ -303,7 +303,7 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
         movePath[0],
         movePath[0] > 0 ? HIWORD(movePath[movePath[0]]) : 0);
       qmemcpy(attackerStack + 158, movePath, UNIT_STACK_PATH_BYTES);
-      UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)attackerStack + 60, (DWORD)attackerStack, a5);
+      UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)(intptr_t)attackerStack + 60, (DWORD)(intptr_t)attackerStack, a5);
       Diagnostics_TraceWorldMapActionEvent("unit_attack_after_track", attackerStackIndex, defenderStackIndex, *attackerStack, attackerStack[1]);
       Diagnostics_TraceWorldMapActionEvent(
         "unit_attack_after_track_state",
@@ -328,31 +328,31 @@ LABEL_22:
               "unit_attack_adjacent",
               attackerStackIndex,
               defenderStackIndex,
-              Unit_GetSquadCount((int)attackerStack),
-              Unit_GetSquadCount((int)defenderStack));
-            UnitStack_SetSpentTurnFlag((int)attackerStack);
-            UnitStack_AdjustFatigueByPredicate(attackerStack, 10, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
-            UnitStack_AdjustFatigueByPredicate(defenderStack, 10, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
+              Unit_GetSquadCount((int)(intptr_t)attackerStack),
+              Unit_GetSquadCount((int)(intptr_t)defenderStack));
+            UnitStack_SetSpentTurnFlag((int)(intptr_t)attackerStack);
+            UnitStack_AdjustFatigueByPredicate(attackerStack, 10, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
+            UnitStack_AdjustFatigueByPredicate(defenderStack, 10, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
             if ( ACTIVE_MISSION_INDEX == 15 )
               Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)attackerStack + 4), *((unsigned __int8 *)defenderStack + 4));
             if ( ACTIVE_MISSION_INDEX == 5 )
               Mission05_MarkFailureOnFriendlyAttack(*((unsigned __int8 *)attackerStack + 4), *((unsigned __int8 *)defenderStack + 4));
-            attackerHasSpecial = (unsigned __int8 *)UnitStack_HasSpecialPersonageUnits((intptr_t)attackerStack);
+            attackerHasSpecial = (unsigned __int8 *)(uintptr_t)UnitStack_HasSpecialPersonageUnits((intptr_t)attackerStack);
             defenderHasSpecial = UnitStack_HasSpecialPersonageUnits((intptr_t)defenderStack);
-            attackerSquadCount = Unit_GetSquadCount((int)attackerStack);
+            attackerSquadCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
             UnitSlots_ExtractSpecialEntries((char *)attackerStack + 6, attackerSquadCount, attackerSpecialEntries);
             v20 = defenderSpecialEntries;
-            defenderSquadCount = Unit_GetSquadCount((int)defenderStack);
+            defenderSquadCount = Unit_GetSquadCount((int)(intptr_t)defenderStack);
             UnitSlots_ExtractSpecialEntries((char *)defenderStack + 6, defenderSquadCount, (char *)defenderSpecialEntries);
-            eitherHuman = *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 140051)
-               || *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + gameData + 140051);
-            if ( eitherHuman && Unit_GetSquadCount((int)attackerStack) && Unit_GetSquadCount((int)defenderStack) )
+            eitherHuman = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 140051)
+               || *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + gameData + 140051);
+            if ( eitherHuman && Unit_GetSquadCount((int)(intptr_t)attackerStack) && Unit_GetSquadCount((int)(intptr_t)defenderStack) )
             {
               defenderStackForPrompt = defenderStack;
-              defenderSquadCount = Unit_GetSquadCount((int)defenderStack);
+              defenderSquadCount = Unit_GetSquadCount((int)(intptr_t)defenderStack);
               v20 = (unsigned __int8 *)(defenderStackForPrompt + 3);
-              attackerSquadCountForPrompt = Unit_GetSquadCount((int)attackerStack);
-              leadTroopsManually = UI_PromptLeadTroopsPersonally((int)(attackerStack + 3), attackerSquadCountForPrompt, defenderSquadCount, (int)v20, (DWORD)attackerStack, (int)(attackerStack + 3), 0) == 0;
+              attackerSquadCountForPrompt = Unit_GetSquadCount((int)(intptr_t)attackerStack);
+              leadTroopsManually = UI_PromptLeadTroopsPersonally((int)(intptr_t)(attackerStack + 3), attackerSquadCountForPrompt, defenderSquadCount, (int)(intptr_t)v20, (DWORD)(intptr_t)attackerStack, (int)(intptr_t)(attackerStack + 3), 0) == 0;
             }
             else
             {
@@ -363,20 +363,20 @@ LABEL_22:
             {
               if ( *((_BYTE *)attackerStack + 720) )
               {
-                defenderEliminated = Unit_GetSquadCount((int)defenderStack) == 0;
+                defenderEliminated = Unit_GetSquadCount((int)(intptr_t)defenderStack) == 0;
                 transitionScript = aAtak_zas;
               }
               else
               {
-                defenderEliminated = Unit_GetSquadCount((int)defenderStack) == 0;
+                defenderEliminated = Unit_GetSquadCount((int)(intptr_t)defenderStack) == 0;
                 transitionScript = aBattle;
               }
               Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_transition_enter", attackerStackIndex, defenderStackIndex, defenderEliminated, 0);
-              Win_PlayModeChangeFrameTransition(transitionScript, defenderEliminated, v29, (char)v20, (DWORD)attackerStack);
+              Win_PlayModeChangeFrameTransition(transitionScript, defenderEliminated, v29, (char)(intptr_t)v20, (DWORD)(intptr_t)attackerStack);
               Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_transition_return", attackerStackIndex, defenderStackIndex, defenderEliminated, 0);
             }
             battleWinner = 0;
-            defenderSquadCountRemaining = Unit_GetSquadCount((int)defenderStack);
+            defenderSquadCountRemaining = Unit_GetSquadCount((int)(intptr_t)defenderStack);
             manualBattleFought = 0;
             if ( defenderSquadCountRemaining <= 0 )
             {
@@ -390,20 +390,20 @@ LABEL_48:
                   {
                     defenderSpawnStack = Unit_CreateNearbyUnitGroup(*defenderStack, defenderStack[1], (unsigned __int8 *)attackerSpecialEntries, a5);
                     if ( (UnitStack_HasPeasantCargo(defenderSpawnStack) || UnitStack_HasGoldCargo(defenderSpawnStack))
-                      && *(unsigned __int8 *)(defenderSpawnStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
+                      && *(unsigned __int8 *)(uintptr_t)(defenderSpawnStack + 4) == *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
-                    UnitStack_CaptureDefeatedStack(defenderStack, defenderSpawnStack, defenderSpawnStack, (int)attackerSpecialEntries, a5);
+                    UnitStack_CaptureDefeatedStack(defenderStack, defenderSpawnStack, defenderSpawnStack, (int)(intptr_t)attackerSpecialEntries, a5);
                   }
-                  UnitStack_AdjustMoraleByPredicate(attackerStack, -5, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
+                  UnitStack_AdjustMoraleByPredicate(attackerStack, -5, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
                   v20 = (unsigned __int8 *)CSyncObject_Unlock;
-                  UnitStack_AdjustMoraleByPredicate(defenderStack, 4, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  UnitStack_AdjustMoraleByPredicate(defenderStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
                 else if ( battleWinner == 2 )
                 {
@@ -412,21 +412,21 @@ LABEL_48:
                   {
                     attackerSpawnStack = Unit_CreateNearbyUnitGroup(*attackerStack, attackerStack[1], defenderSpecialEntries, a5);
                     if ( (UnitStack_HasPeasantCargo(attackerSpawnStack) || UnitStack_HasGoldCargo(attackerSpawnStack))
-                      && *(unsigned __int8 *)(attackerSpawnStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
+                      && *(unsigned __int8 *)(uintptr_t)(attackerSpawnStack + 4) == *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
-                    UnitStack_CaptureDefeatedStack(attackerStack, attackerSpawnStack, attackerSpawnStack, (int)defenderSpecialEntries, a5);
+                    UnitStack_CaptureDefeatedStack(attackerStack, attackerSpawnStack, attackerSpawnStack, (int)(intptr_t)defenderSpecialEntries, a5);
                   }
-                  UnitStack_AdjustMoraleByPredicate(defenderStack, -5, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
+                  UnitStack_AdjustMoraleByPredicate(defenderStack, -5, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
                   v20 = (unsigned __int8 *)CSyncObject_Unlock;
-                  UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                  UnitStack_SubtractActionPointsFloorZero(attackerStack, 10, (DWORD)attackerStack, a5);
-                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_SubtractActionPointsFloorZero(attackerStack, 10, (DWORD)(intptr_t)attackerStack, a5);
+                  ++*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
                 goto LABEL_52;
               }
@@ -439,76 +439,76 @@ LABEL_49:
                 {
                   if ( (unsigned int)attackerStack[3] <= 0x28 )
                   {
-                    if ( (UnitStack_HasPeasantCargo((int)attackerStack) || UnitStack_HasGoldCargo((int)attackerStack))
-                      && *((unsigned __int8 *)defenderStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
+                    if ( (UnitStack_HasPeasantCargo((int)(intptr_t)attackerStack) || UnitStack_HasGoldCargo((int)(intptr_t)attackerStack))
+                      && *((unsigned __int8 *)defenderStack + 4) == *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                     {
                       capturedCargoFlag = 1;
                     }
-                    UnitStack_CaptureDefeatedStack(defenderStack, (signed int)attackerStack, v46, (int)v20, a5);
+                    UnitStack_CaptureDefeatedStack(defenderStack, (signed int)(intptr_t)attackerStack, v46, (int)(intptr_t)v20, a5);
                   }
                   v20 = (unsigned __int8 *)CSyncObject_Unlock;
-                  UnitStack_AdjustMoraleByPredicate(defenderStack, 4, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)attackerStack, a5);
-                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                  UnitStack_AdjustMoraleByPredicate(defenderStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  UnitStack_CycleAllSlotOrders(defenderStack, (DWORD)(intptr_t)attackerStack, a5);
+                  --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
                 }
               }
               else
               {
                 if ( (unsigned int)defenderStack[3] <= 0x28 )
                 {
-                  if ( (UnitStack_HasPeasantCargo((int)defenderStack) || UnitStack_HasGoldCargo((int)defenderStack))
-                    && *((unsigned __int8 *)attackerStack + 4) == *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
+                  if ( (UnitStack_HasPeasantCargo((int)(intptr_t)defenderStack) || UnitStack_HasGoldCargo((int)(intptr_t)defenderStack))
+                    && *((unsigned __int8 *)attackerStack + 4) == *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) )
                   {
                     capturedCargoFlag = 1;
                   }
-                  UnitStack_CaptureDefeatedStack(attackerStack, (signed int)defenderStack, v45, (int)v20, a5);
+                  UnitStack_CaptureDefeatedStack(attackerStack, (signed int)(intptr_t)defenderStack, v45, (int)(intptr_t)v20, a5);
                 }
                 v20 = (unsigned __int8 *)CSyncObject_Unlock;
-                UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)attackerStack, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)attackerStack, a5);
-                ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
+                UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)attackerStack, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)attackerStack, a5);
+                ++*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)defenderStack + 4) + 141441);
               }
 LABEL_52:
               if ( attackerStack[3] == -1 )
                 Rules_UnlinkArmyFact(attackerStack, a5);
               if ( defenderStack[3] == -1 )
                 Rules_UnlinkArmyFact(defenderStack, a5);
-              WorldMap_SyncSelectionForHumanPlayer((DWORD)attackerStack);
+              WorldMap_SyncSelectionForHumanPlayer((DWORD)(intptr_t)attackerStack);
               needFullRedraw = manualBattleFought;
-              UnitStackSelection_RefreshForSelectedStack((DWORD)attackerStack);
+              UnitStackSelection_RefreshForSelectedStack((DWORD)(intptr_t)attackerStack);
               if ( needFullRedraw )
-                WorldMap_RenderHook((DWORD)attackerStack);
+                WorldMap_RenderHook((DWORD)(intptr_t)attackerStack);
               else
                 WorldMap_RedrawViewport(1);
               if ( capturedCargoFlag )
-                Win_PlayModeChangeFrameTransition(aChlop, 1, v42, (char)v20, (DWORD)attackerStack);
+                Win_PlayModeChangeFrameTransition(aChlop, 1, v42, (char)(intptr_t)v20, (DWORD)(intptr_t)attackerStack);
               if ( autoresolveRan )
                 Diagnostics_TraceWorldMapActionEvent("unit_attack_autoresolve_return", attackerStackIndex, defenderStackIndex, *attackerStack, attackerStack[1]);
-              Render_DrawSprite_v3(attackerStackIndex, (DWORD)attackerStack);
-              Render_DrawSprite_v3(defenderStackIndex, (DWORD)attackerStack);
+              Render_DrawSprite_v3(attackerStackIndex, (DWORD)(intptr_t)attackerStack);
+              Render_DrawSprite_v3(defenderStackIndex, (DWORD)(intptr_t)attackerStack);
               return;
             }
             if ( !useManualBattle )
             {
               defenderHasSpecialArg = defenderHasSpecial;
               v20 = attackerHasSpecial;
-              defenderUnitCount = Unit_GetSquadCount((int)defenderStack);
-              attackerUnitCount = Unit_GetSquadCount((int)attackerStack);
+              defenderUnitCount = Unit_GetSquadCount((int)(intptr_t)defenderStack);
+              attackerUnitCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
               Diagnostics_TraceWorldMapActionEvent("unit_attack_autoresolve", attackerStackIndex, defenderStackIndex, attackerUnitCount, defenderUnitCount);
               autoresolveRan = 1;
-              CalculateBattleResult(attackerStack + 3, attackerUnitCount, defenderStack + 3, (int)attackerHasSpecial, (DWORD)attackerStack, defenderUnitCount, defenderHasSpecialArg, 0, 0);
+              CalculateBattleResult(attackerStack + 3, attackerUnitCount, defenderStack + 3, (int)(intptr_t)attackerHasSpecial, (DWORD)(intptr_t)attackerStack, defenderUnitCount, defenderHasSpecialArg, 0, 0);
               Diagnostics_TraceWorldMapActionEvent(
                 "unit_attack_autoresolve_done",
                 attackerStackIndex,
                 defenderStackIndex,
-                Unit_GetSquadCount((int)attackerStack),
-                Unit_GetSquadCount((int)defenderStack));
+                Unit_GetSquadCount((int)(intptr_t)attackerStack),
+                Unit_GetSquadCount((int)(intptr_t)defenderStack));
               goto LABEL_49;
             }
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_prepare", attackerStackIndex, defenderStackIndex, useManualBattle, 0);
@@ -520,54 +520,54 @@ LABEL_52:
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_frame_free", attackerStackIndex, defenderStackIndex, 0, 0);
             BuildingSpriteCache_Clear();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_building_cache_clear", attackerStackIndex, defenderStackIndex, 0, 0);
-            UnitSpriteCache_FreeAllEntries(v34, (DWORD)attackerStack);
+            UnitSpriteCache_FreeAllEntries(v34, (DWORD)(intptr_t)attackerStack);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_unit_cache_clear", attackerStackIndex, defenderStackIndex, 0, 0);
             CSS_EmptySampleCache();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_sample_clear", attackerStackIndex, defenderStackIndex, 0, 0);
             TextSprite_ReleaseAllResourceSlots();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_text_enddraw", attackerStackIndex, defenderStackIndex, 0, 0);
-            defenderUnitCount = Unit_GetSquadCount((int)defenderStack);
-            attackerUnitCount = Unit_GetSquadCount((int)attackerStack);
+            defenderUnitCount = Unit_GetSquadCount((int)(intptr_t)defenderStack);
+            attackerUnitCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_battle_enter", attackerStackIndex, defenderStackIndex, attackerUnitCount, defenderUnitCount);
             Battle_ResetInputScriptReader();
             battleWinner = Battle_RunTacticalCombat(
-                    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * attackerStackIndex),
-                    (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * defenderStackIndex),
-                    (int)attackerHasSpecial,
+                    (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * attackerStackIndex),
+                    (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * defenderStackIndex),
+                    (int)(intptr_t)attackerHasSpecial,
                     0,
-                    (DWORD)attackerStack,
+                    (DWORD)(intptr_t)attackerStack,
                     defenderHasSpecial);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_battle_return", attackerStackIndex, defenderStackIndex, battleWinner, 0);
-            mapThemeIndex = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
+            mapThemeIndex = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
             if ( g_WorldMapBackgroundSpriteSet )
               DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
             if ( mapThemeIndex == 0 )
             {
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)attackerStack);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)attackerStack);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr1.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
             else if ( mapThemeIndex == 1 )
             {
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)attackerStack);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)attackerStack);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr2.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
             else if ( mapThemeIndex == 2 )
             {
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)attackerStack);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)attackerStack);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr3.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
-            frameSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)attackerStack);
+            frameSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)attackerStack);
             if ( frameSpriteSet )
               frameSpriteSet = DLXSpriteSet_Load(frameSpriteSet, "frame.s32");
-            g_ActiveUiSpriteSet = (int)frameSpriteSet;
+            g_ActiveUiSpriteSet = (int)(intptr_t)frameSpriteSet;
             Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
-            Palette_LoadOrBuildBlendLookupTable(aMainmap_0, g_MapPalettePtr, 1, (DWORD)attackerStack);
+            Palette_LoadOrBuildBlendLookupTable(aMainmap_0, g_MapPalettePtr, 1, (DWORD)(intptr_t)attackerStack);
             manualBattleFought = 1;
             goto LABEL_48;
           }
@@ -652,11 +652,11 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
 
   attackerStackIndex = attackerIndex;
   buildingIndex = buildingIndexArg;
-  Debug_Log(attackerIndex, a3, a4, (int)aUnit_attackbui);
+  Debug_Log(attackerIndex, a3, a4, (int)(intptr_t)aUnit_attackbui);
   Render_DrawSprite_v3(attackerStackIndex, BUILDING_RECORD_SIZE * buildingIndex);
-  attackerStack = (__int16 *)UNIT_STACK(attackerStackIndex);
-  buildingRecord = (unsigned __int8 *)(UNIT_RECORD(buildingIndex));
-  bothHumanControlled = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)attackerStack)) && PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
+  attackerStack = (__int16 *)(uintptr_t)UNIT_STACK(attackerStackIndex);
+  buildingRecord = (unsigned __int8 *)(uintptr_t)(UNIT_RECORD(buildingIndex));
+  bothHumanControlled = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)(intptr_t)attackerStack)) && PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
   bothPlayersHuman = bothHumanControlled;
   if ( UnitStack_HasNormalCombatUnits((intptr_t)attackerStack) )
   {
@@ -676,30 +676,30 @@ void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWOR
     if ( approachTrack )
     {
       qmemcpy(attackerStack + 158, approachTrack, UNIT_STACK_PATH_BYTES);
-      UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)attackerStack + 60, (DWORD)buildingRecord, a5);
+      UnitStack_ExecuteQueuedPath(attackerStackIndex, 1, (_BYTE)(intptr_t)attackerStack + 60, (DWORD)(intptr_t)buildingRecord, a5);
       if ( !*((_DWORD *)attackerStack + 79) )
       {
 LABEL_15:
         if ( UnitStack_GetMinCurrentActionPoints((intptr_t)attackerStack) >= 5 )
         {
-          UnitStack_SpendActionPointsByIndexClamped(attackerStackIndex, 5, (DWORD)buildingRecord, a5);
-          UnitStack_SetSpentTurnFlag((int)attackerStack);
-          UnitStack_AdjustFatigueByPredicate(attackerStack, 10, UnitSlot_PredicateAlways, (DWORD)buildingRecord, a5);
+          UnitStack_SpendActionPointsByIndexClamped(attackerStackIndex, 5, (DWORD)(intptr_t)buildingRecord, a5);
+          UnitStack_SetSpentTurnFlag((int)(intptr_t)attackerStack);
+          UnitStack_AdjustFatigueByPredicate(attackerStack, 10, UnitSlot_PredicateAlways, (DWORD)(intptr_t)buildingRecord, a5);
           if ( ACTIVE_MISSION_INDEX == 15 )
             Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)attackerStack + 4), buildingRecord[2]);
           if ( ACTIVE_MISSION_INDEX == 5 )
             Mission05_MarkFailureOnFriendlyAttack(*((unsigned __int8 *)attackerStack + 4), buildingRecord[2]);
           attackerHasSpecial = UnitStack_HasSpecialPersonageUnits((intptr_t)attackerStack);
-          buildingHasSpecial = Building_HasSpecialPersonageGarrisonEntries((int)buildingRecord);
-          eitherHuman = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)attackerStack)) || PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
-          if ( !eitherHuman || Building_CountGarrison((int)buildingRecord) == Building_CountNonCombatGarrisonEntries((int)buildingRecord) )
+          buildingHasSpecial = Building_HasSpecialPersonageGarrisonEntries((int)(intptr_t)buildingRecord);
+          eitherHuman = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)(intptr_t)attackerStack)) || PLAYER_HAS_HUMAN_CONTROLLER(buildingRecord[2]);
+          if ( !eitherHuman || Building_CountGarrison((int)(intptr_t)buildingRecord) == Building_CountNonCombatGarrisonEntries((int)(intptr_t)buildingRecord) )
           {
             useManualBattle = 0;
           }
           else
           {
-            attackerSquadCount = Unit_GetSquadCount((int)attackerStack);
-            useManualBattle = UI_PromptLeadTroopsPersonally((int)(attackerStack + 3), attackerSquadCount, 12, (int)(buildingRecord + 18), (DWORD)buildingRecord, attackerHasSpecial, 1) == 0;
+            attackerSquadCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
+            useManualBattle = UI_PromptLeadTroopsPersonally((int)(intptr_t)(attackerStack + 3), attackerSquadCount, 12, (int)(intptr_t)(buildingRecord + 18), (DWORD)(intptr_t)buildingRecord, attackerHasSpecial, 1) == 0;
           }
           Diagnostics_TraceWorldMapActionEvent("unit_attack_building_prompt_result", attackerStackIndex, buildingIndex, useManualBattle, g_ManualTacticalBattleEnabled);
           if ( g_ManualTacticalBattleEnabled && !Diagnostics_ForceAutoresolveEnabled() )
@@ -712,17 +712,17 @@ LABEL_28:
             selectionRefreshIndex = 0;
             if ( !Building_CountGarrison(UNIT_RECORD(buildingIndex)) )
             {
-              UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)buildingRecord, a5);
-              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
-              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
-              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
+              UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)buildingRecord, a5);
+              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
+              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
+              UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
               Unit_CaptureBuilding(attackerStackIndex, buildingIndex, 0, useManualBattle, a5);
-              ++*(_WORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
-              --*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
+              ++*(_WORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
+              --*(_WORD *)(uintptr_t)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
 LABEL_47:
               if ( attackerStack[3] == -1 )
                 Rules_UnlinkArmyFact(attackerStack, a5);
-              WorldMap_SyncSelectionForHumanPlayer((DWORD)buildingRecord);
+              WorldMap_SyncSelectionForHumanPlayer((DWORD)(intptr_t)buildingRecord);
               savedRefreshIndex = selectionRefreshIndex;
               UnitStackSelection_RefreshForSelectedStack(selectionRefreshIndex);
               if ( savedRefreshIndex )
@@ -731,15 +731,15 @@ LABEL_47:
               return;
             }
             Building_CompactGarrison(buildingRecord, (unsigned __int8 *)attackerStack, a5);
-            compactedSquadCount = Unit_GetSquadCount((int)attackerStack);
+            compactedSquadCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
             UnitSlots_ExtractSpecialEntriesForBuildingAttack((char *)attackerStack + 6, compactedSquadCount, attackerSpecialEntries);
-            garrisonCount = Building_CountGarrison((int)buildingRecord);
+            garrisonCount = Building_CountGarrison((int)(intptr_t)buildingRecord);
             UnitSlots_ExtractSpecialEntriesForBuildingAttack((char *)buildingRecord + 18, garrisonCount, garrisonSpecialEntries);
             Building_CompactGarrison(buildingRecord, buildingRecord + 18, a5);
             for ( garrisonSlot = 0; garrisonSlot < 12; ++garrisonSlot )
             {
-              Building_ClearGarrisonTrainingTimer((int)buildingRecord, garrisonSlot);
-              Building_ClearGarrisonRepairTimer((int)buildingRecord, garrisonSlot);
+              Building_ClearGarrisonTrainingTimer((int)(intptr_t)buildingRecord, garrisonSlot);
+              Building_ClearGarrisonRepairTimer((int)(intptr_t)buildingRecord, garrisonSlot);
             }
             buildingRecordOffset = BUILDING_RECORD_SIZE * buildingIndex;
             if ( !useManualBattle )
@@ -749,14 +749,14 @@ LABEL_47:
               defenderGarrisonCount = Building_CountGarrison(defenderBuildingRecord);
               attackerSlots = attackerStack + 3;
               v40 = (char)attackerHasSpecial;
-              autoresolveSquadCount = Unit_GetSquadCount((int)attackerStack);
+              autoresolveSquadCount = Unit_GetSquadCount((int)(intptr_t)attackerStack);
               Diagnostics_TraceWorldMapActionEvent("unit_attack_building_autoresolve", attackerStackIndex, buildingIndex, autoresolveSquadCount, defenderGarrisonCount);
-              CalculateBattleResult(attackerSlots, autoresolveSquadCount, v45, attackerHasSpecial, (DWORD)buildingRecord, defenderGarrisonCount, defenderSpecialFlag, defenderBuildingRecord, 0);
+              CalculateBattleResult(attackerSlots, autoresolveSquadCount, v45, attackerHasSpecial, (DWORD)(intptr_t)buildingRecord, defenderGarrisonCount, defenderSpecialFlag, defenderBuildingRecord, 0);
               Diagnostics_TraceWorldMapActionEvent(
                 "unit_attack_building_autoresolve_done",
                 attackerStackIndex,
                 buildingIndex,
-                Unit_GetSquadCount((int)attackerStack),
+                Unit_GetSquadCount((int)(intptr_t)attackerStack),
                 Building_CountGarrison(defenderBuildingRecord));
               battleWinner = 0;
 LABEL_42:
@@ -765,13 +765,13 @@ LABEL_42:
               {
                 if ( battleWinner == 1 )
                 {
-                  UnitStack_AdjustMoraleByPredicate(attackerStack, -5, UnitSlot_PredicateAlways, (DWORD)buildingRecord, a5);
-                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
-                  ++*(_WORD *)(gameData + PLAYER_DATA_STRIDE * buildingRecord[2] + 141441);
-                  Building_AdjustAllGarrisonMoraleByDelta((int)buildingRecord, 4);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
+                  UnitStack_AdjustMoraleByPredicate(attackerStack, -5, UnitSlot_PredicateAlways, (DWORD)(intptr_t)buildingRecord, a5);
+                  --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + 141441);
+                  ++*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * buildingRecord[2] + 141441);
+                  Building_AdjustAllGarrisonMoraleByDelta((int)(intptr_t)buildingRecord, 4);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
                 }
               }
               else if ( Building_CountGarrison(UNIT_RECORD(buildingIndex))
@@ -781,29 +781,29 @@ LABEL_42:
                   && !UnitStack_HasNormalCombatUnits(UNIT_STACK_STRIDE * attackerStackIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
                 {
                   UnitSlots_AppendEntriesForBuildingAttack((char *)buildingRecord + 18, garrisonSpecialEntries);
-                  UnitStack_KillByIndex(attackerStackIndex, v40, (DWORD)buildingRecord, a5);
-                  --*(_WORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(v48 + 4) + 141441);
-                  ++*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
-                  Building_AdjustAllGarrisonMoraleByDelta((int)buildingRecord, 4);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
-                  Building_CycleAllGarrisonOrdersOnce((int)buildingRecord);
+                  UnitStack_KillByIndex(attackerStackIndex, v40, (DWORD)(intptr_t)buildingRecord, a5);
+                  --*(_WORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(v48 + 4) + 141441);
+                  ++*(_WORD *)(uintptr_t)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
+                  Building_AdjustAllGarrisonMoraleByDelta((int)(intptr_t)buildingRecord, 4);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
+                  Building_CycleAllGarrisonOrdersOnce((int)(intptr_t)buildingRecord);
                 }
                 else if ( !Building_CountGarrison(UNIT_RECORD(buildingIndex))
                        && !UnitStack_HasNormalCombatUnits(UNIT_STACK_STRIDE * attackerStackIndex + gameData + UNIT_STACK_TABLE_OFFSET) )
                 {
-                  UnitStack_KillByIndex(attackerStackIndex, v40, (DWORD)buildingRecord, a5);
+                  UnitStack_KillByIndex(attackerStackIndex, v40, (DWORD)(intptr_t)buildingRecord, a5);
                 }
               }
               else
               {
-                UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)buildingRecord, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
-                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)buildingRecord, a5);
+                UnitStack_AdjustMoraleByPredicate(attackerStack, 4, UnitSlot_PredicateAlways, (DWORD)(intptr_t)buildingRecord, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
+                UnitStack_CycleAllSlotOrders(attackerStack, (DWORD)(intptr_t)buildingRecord, a5);
                 Unit_CaptureBuilding(attackerStackIndex, buildingIndex, 0, 0, a5);
-                ++*(_WORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
-                --*(_WORD *)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
+                ++*(_WORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)attackerStack + 4) + gameData + 141441);
+                --*(_WORD *)(uintptr_t)(PLAYER_DATA_STRIDE * buildingRecord[2] + gameData + 141441);
               }
               goto LABEL_47;
             }
@@ -811,61 +811,61 @@ LABEL_42:
             Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
             DLXSpriteSet_ReleaseAndClear(&g_ActiveUiSpriteSet);
             BuildingSpriteCache_Clear();
-            UnitSpriteCache_FreeAllEntries(v33, (DWORD)buildingRecord);
+            UnitSpriteCache_FreeAllEntries(v33, (DWORD)(intptr_t)buildingRecord);
             CSS_EmptySampleCache();
             TextSprite_ReleaseAllResourceSlots();
-            buildingRecordPtr = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + buildingRecordOffset);
+            buildingRecordPtr = (unsigned __int8 *)(uintptr_t)(gameData + BUILDING_TABLE_OFFSET + buildingRecordOffset);
             Diagnostics_TraceWorldMapActionEvent(
               "unit_attack_building_battle_enter",
               attackerStackIndex,
               buildingIndex,
-              Unit_GetSquadCount((int)attackerStack),
-              Building_CountGarrison((int)buildingRecord));
-            battleWinner = Battle_RunTacticalCombat((__int16 *)(UNIT_STACK_STRIDE * attackerStackIndex + gameData + UNIT_STACK_TABLE_OFFSET), 0, (int)attackerHasSpecial, buildingRecordPtr, (DWORD)buildingRecord, buildingHasSpecial);
+              Unit_GetSquadCount((int)(intptr_t)attackerStack),
+              Building_CountGarrison((int)(intptr_t)buildingRecord));
+            battleWinner = Battle_RunTacticalCombat((__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * attackerStackIndex + gameData + UNIT_STACK_TABLE_OFFSET), 0, (int)attackerHasSpecial, buildingRecordPtr, (DWORD)(intptr_t)buildingRecord, buildingHasSpecial);
             Diagnostics_TraceWorldMapActionEvent(
               "unit_attack_building_battle_return",
               attackerStackIndex,
               buildingIndex,
               battleWinner,
-              Building_CountGarrison((int)buildingRecord));
-            mapThemeIndex = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
+              Building_CountGarrison((int)(intptr_t)buildingRecord));
+            mapThemeIndex = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
             if ( mapThemeIndex == 0 )
             {
               if ( g_WorldMapBackgroundSpriteSet )
                 DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)buildingRecord);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)buildingRecord);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr1.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
             else if ( mapThemeIndex == 1 )
             {
               if ( g_WorldMapBackgroundSpriteSet )
                 DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)buildingRecord);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)buildingRecord);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr2.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
             else if ( mapThemeIndex == 2 )
             {
               if ( g_WorldMapBackgroundSpriteSet )
                 DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-              backgroundSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)buildingRecord);
+              backgroundSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)buildingRecord);
               if ( backgroundSpriteSet )
                 backgroundSpriteSet = DLXSpriteSet_Load(backgroundSpriteSet, "backgr3.s32");
-              g_WorldMapBackgroundSpriteSet = (int)backgroundSpriteSet;
+              g_WorldMapBackgroundSpriteSet = (int)(intptr_t)backgroundSpriteSet;
             }
-            frameSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)buildingRecord);
+            frameSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, (DWORD)(intptr_t)buildingRecord);
             if ( frameSpriteSet )
               frameSpriteSet = DLXSpriteSet_Load(frameSpriteSet, "frame.s32");
             v40 = -45;
-            g_ActiveUiSpriteSet = (int)frameSpriteSet;
+            g_ActiveUiSpriteSet = (int)(intptr_t)frameSpriteSet;
             Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
-            Palette_LoadOrBuildBlendLookupTable(aMainmap_1, g_MapPalettePtr, 1, (DWORD)buildingRecord);
+            Palette_LoadOrBuildBlendLookupTable(aMainmap_1, g_MapPalettePtr, 1, (DWORD)(intptr_t)buildingRecord);
             selectionRefreshIndex = 1;
             if ( bothPlayersHuman )
-              UI_LoadTurnBannerGfx(211, (DWORD)buildingRecord);
+              UI_LoadTurnBannerGfx(211, (DWORD)(intptr_t)buildingRecord);
             goto LABEL_42;
           }
           Win_PlayModeChangeFrameTransition(aAtak_zam, 0, 0, 0, 0);
@@ -1017,21 +1017,21 @@ int  Building_ApplySiegeDamageToWallSections(int buildingRecord, signed int sieg
   while ( sectionsToClear )
   {
     result = Rng_RandRange(0, 6);
-    sectionHitPoints = *(unsigned __int8 *)(buildingRecord + result + 422);
-    *(_BYTE *)(buildingRecord + result + 422) = 0;
+    sectionHitPoints = *(unsigned __int8 *)(uintptr_t)(buildingRecord + result + 422);
+    *(_BYTE *)(uintptr_t)(buildingRecord + result + 422) = 0;
     remainingDamage -= sectionHitPoints;
   }
   if ( remainingDamage )
   {
     do
       sectionIndex = Rng_RandRange(0, 6);
-    while ( !*(_BYTE *)(buildingRecord + sectionIndex + 422) && v7 + 1 < 6 );
+    while ( !*(_BYTE *)(uintptr_t)(buildingRecord + sectionIndex + 422) && v7 + 1 < 6 );
     result = Rng_RandRange(10, 25);
     damageAmount = result;
-    existingSectionHP = *(unsigned __int8 *)(v10 + 422);
+    existingSectionHP = *(unsigned __int8 *)(uintptr_t)(v10 + 422);
     if ( result > existingSectionHP )
       damageAmount = existingSectionHP;
-    *(_BYTE *)(buildingRecord + sectionIndex + 422) -= damageAmount;
+    *(_BYTE *)(uintptr_t)(buildingRecord + sectionIndex + 422) -= damageAmount;
   }
   return result;
 }
@@ -1054,9 +1054,9 @@ int  Building_CalcWallDefenseBonus(int buildingRecord, signed int weakestSection
   firstPassPtr = buildingRecord;
   for ( i = 0; i < 7; ++i )
   {
-    if ( *(unsigned __int8 *)(firstPassPtr + 422) < minSectionHP )
+    if ( *(unsigned __int8 *)(uintptr_t)(firstPassPtr + 422) < minSectionHP )
     {
-      minSectionHP = *(unsigned __int8 *)(firstPassPtr + 422);
+      minSectionHP = *(unsigned __int8 *)(uintptr_t)(firstPassPtr + 422);
       weakestSection = i;
     }
     ++firstPassPtr;
@@ -1065,11 +1065,11 @@ int  Building_CalcWallDefenseBonus(int buildingRecord, signed int weakestSection
   firstMinHP = minSectionHP;
   for ( j = 0; j < 7; ++j )
   {
-    if ( *(unsigned __int8 *)(secondPassPtr + 422) < minSectionHP && j != weakestSection )
-      minSectionHP = *(unsigned __int8 *)(secondPassPtr + 422);
+    if ( *(unsigned __int8 *)(uintptr_t)(secondPassPtr + 422) < minSectionHP && j != weakestSection )
+      minSectionHP = *(unsigned __int8 *)(uintptr_t)(secondPassPtr + 422);
     ++secondPassPtr;
   }
-  wallDefenseRaw = (minSectionHP + firstMinHP) / 2 * (unsigned __int16)g_WallKindDefenseFactor[2 * *(unsigned __int8 *)(buildingRecord + 421)];
+  wallDefenseRaw = (minSectionHP + firstMinHP) / 2 * (unsigned __int16)g_WallKindDefenseFactor[2 * *(unsigned __int8 *)(uintptr_t)(buildingRecord + 421)];
   return (wallDefenseRaw - (__CFSHL__(wallDefenseRaw >> 31, 8) + (wallDefenseRaw >> 31 << 8))) >> 8;
 }
 // 513A78: using guessed type __int16 word_513A78[];
@@ -1113,20 +1113,20 @@ int  CalculateBattleResult(
   attackerSlotsPtr = attackerSlots;
   attackerStatCtx = attackerStatContext;
   Battle_StoreLastOutcomeValue(1);
-  Debug_Log(0, 0, a5, (int)aNewBattle);
-  Debug_Log((int)attackerSlotsPtr, (char)attackerCount, a5, (int)aCalculatebattl, (int)attackerSlotsPtr, attackerCount, attackerStatCtx, (int)defenderSlots, defenderCount, defenderStatContext, buildingRecord, applyAttackerBonus);
-  Debug_Log(0, 0, a5, (int)aJednostka1);
-  Debug_Log(0, 0, a5, (int)aJednostka2);
+  Debug_Log(0, 0, a5, (int)(intptr_t)aNewBattle);
+  Debug_Log((int)(intptr_t)attackerSlotsPtr, (char)attackerCount, a5, (int)(intptr_t)aCalculatebattl, (int)(intptr_t)attackerSlotsPtr, attackerCount, attackerStatCtx, (int)(intptr_t)defenderSlots, defenderCount, defenderStatContext, buildingRecord, applyAttackerBonus);
+  Debug_Log(0, 0, a5, (int)(intptr_t)aJednostka1);
+  Debug_Log(0, 0, a5, (int)(intptr_t)aJednostka2);
   if ( buildingRecord )
-    wall_defense_bonus = Building_CalcWallDefenseBonus(buildingRecord, (signed int)defenderSlots);
+    wall_defense_bonus = Building_CalcWallDefenseBonus(buildingRecord, (signed int)(intptr_t)defenderSlots);
   else
     wall_defense_bonus = 0;
   attackerCombatScore = UnitSlots_CalcCombatStrengthScore((char *)attackerSlotsPtr, attackerCount, attackerStatCtx, wall_defense_bonus);
   defender_combat = UnitSlots_CalcCombatStrengthScore((char *)defenderSlots, defenderCount, defenderStatContext, 0);
   attackerNetScore = attackerCombatScore - UnitSlots_CalcDefenseScore((char *)defenderSlots, defenderCount, defenderStatContext);
   defender_score = defender_combat - UnitSlots_CalcDefenseScore((char *)attackerSlotsPtr, attackerCount, attackerStatCtx);
-  Debug_Log(attackerNetScore, 0, a5, (int)aAs1D, attackerNetScore);
-  Debug_Log(defender_score, 0, a5, (int)aAs2D, defender_score);
+  Debug_Log(attackerNetScore, 0, a5, (int)(intptr_t)aAs1D, attackerNetScore);
+  Debug_Log(defender_score, 0, a5, (int)(intptr_t)aAs2D, defender_score);
   if ( attackerNetScore < 0 )
     attackerNetScore = 0;
   if ( defender_score < 0 )
@@ -1165,7 +1165,7 @@ int  CalculateBattleResult(
   for ( i = 0; i < attackerCount; ++i )
     casualtyBudget += *((signed char *)winnerSlots + 31 * i + 9);
   casualtyBudget = casualtyBudget * lowerNetScore / higherNetScore;
-  Debug_Log(casualtyBudget, (char)higherNetScore, a5, (int)aSum_quantDAtt_, casualtyBudget);
+  Debug_Log(casualtyBudget, (char)higherNetScore, a5, (int)(intptr_t)aSum_quantDAtt_, casualtyBudget);
   while ( casualtyBudget > 0 )
   {
     applied_loss = 0;
@@ -1211,7 +1211,7 @@ int  CalculateBattleResult(
     if ( !applied_loss )
       break;
   }
-  Debug_Log(0, 0, a5, (int)aJednostkaZwyci);
+  Debug_Log(0, 0, a5, (int)(intptr_t)aJednostkaZwyci);
   for ( i = 0; i < attackerCount; ++i )
   {
     if ( !*((_BYTE *)winnerSlots + 31 * i + 9) )
@@ -1306,50 +1306,50 @@ signed int  UI_PromptLeadTroopsPersonally(
   attackerCountCopy = attackerCount;
   defenderSlotsBase = defenderSlots;
   defenderCountCopy = defenderCount;
-  savedResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  savedResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   savedRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(0, defenderSlots, a5, (int)aSetrhS08x_3);
-  promptSpriteSetTmp = (_DWORD *)Mem_Alloc(4112, 0, defenderSlots, a5);
+  Debug_Log(0, defenderSlots, a5, (int)(intptr_t)aSetrhS08x_3);
+  promptSpriteSetTmp = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, defenderSlots, a5);
   if ( promptSpriteSetTmp )
     promptSpriteSetTmp = DLXSpriteSet_Load(promptSpriteSetTmp, "auto.s32");
   promptSpriteSet = promptSpriteSetTmp;
   Render_Pump();
   g_RenderDevice = &g_MainRenderDevice;
-  panelTop = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)promptSpriteSet, 0)) / 2;
-  panelLeft = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)promptSpriteSet, 0)) / 2;
-  SpriteForChar = DLX_GetSpriteForChar((int)promptSpriteSet, 0);
+  panelTop = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 0)) / 2;
+  panelLeft = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 0)) / 2;
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)promptSpriteSet, 0);
   Compat_RenderDeviceDrawMenuSprite(panelLeft, panelTop, SpriteForChar, 1);
   if ( showThirdOption )
   {
-    thirdOptionSprite = DLX_GetSpriteForChar((int)promptSpriteSet, 3);
+    thirdOptionSprite = DLX_GetSpriteForChar((int)(intptr_t)promptSpriteSet, 3);
     Compat_RenderDeviceDrawMenuSprite(panelLeft + 59, panelTop + 441, thirdOptionSprite, 1);
   }
   Render_ReleaseSurface(7, a5);
-  UI_DrawTextFmt(a6, panelTop + 42, panelTop + 166, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(attackerSlotsBase + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
-  UI_DrawTextFmt(a6, panelTop + 395, panelTop + 518, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(defenderSlotsBase + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
+  UI_DrawTextFmt(a6, panelTop + 42, panelTop + 166, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(attackerSlotsBase + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
+  UI_DrawTextFmt(a6, panelTop + 395, panelTop + 518, panelLeft + 85, 3, PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(defenderSlotsBase + 2) + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
   attackerSlotIndex = 0;
   if ( attackerCountCopy > 0 )
   {
     attackerGridLeft = panelLeft + 110;
-    attackerSlotPtr = (unsigned __int8 *)attackerSlotsBase;
+    attackerSlotPtr = (unsigned __int8 *)(uintptr_t)attackerSlotsBase;
     attackerGridTop = panelTop + 18;
     do
     {
       if ( *(__int16 *)attackerSlotPtr != -1 )
       {
-        attackerOwner = *(_BYTE *)(attackerSlotsBase + 2);
+        attackerOwner = *(_BYTE *)(uintptr_t)(attackerSlotsBase + 2);
         UI_BeginUnitInfo(v45, *attackerSlotPtr, attackerOwner);
-        attackerUnitSpriteSet = (_DWORD *)Mem_Alloc(4112, v18, attackerOwner, a5);
+        attackerUnitSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v18, attackerOwner, a5);
         if ( attackerUnitSpriteSet )
           attackerUnitSpriteSet = DLXSpriteSet_Load(attackerUnitSpriteSet, v45);
         attackerCellX = 76 * ((attackerSlotIndex - (__CFSHL__(attackerSlotIndex >> 31, 2) + 4 * (attackerSlotIndex >> 31))) >> 2) + attackerGridLeft;
         attackerCellY = 48 * (attackerSlotIndex % 4) + attackerGridTop;
         attackerUnitSpriteHandle = attackerUnitSpriteSet;
-        attackerUnitSprite = DLX_GetSpriteForChar((int)attackerUnitSpriteSet, 0);
+        attackerUnitSprite = DLX_GetSpriteForChar((int)(intptr_t)attackerUnitSpriteSet, 0);
         Compat_RenderDeviceDrawMenuSprite(attackerCellX, attackerCellY, attackerUnitSprite, 1);
-        if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(attackerSlotsBase + 2) + 140051) )
-          UI_DrawTextFmt((int)attackerSlotPtr, attackerCellY, attackerCellY + 32, attackerCellX + 50, 3, (int)aD_3);
+        if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(attackerSlotsBase + 2) + 140051) )
+          UI_DrawTextFmt((int)(intptr_t)attackerSlotPtr, attackerCellY, attackerCellY + 32, attackerCellX + 50, 3, (int)(intptr_t)aD_3);
         DLXSpriteSet_ReleaseAndClear((int *)&attackerUnitSpriteHandle);
       }
       a5 = attackerCountCopy;
@@ -1362,24 +1362,24 @@ signed int  UI_PromptLeadTroopsPersonally(
   if ( defenderCountCopy > 0 )
   {
     defenderGridLeft = panelLeft + 110;
-    defenderSlotPtr = (unsigned __int8 *)defenderSlotsBase;
+    defenderSlotPtr = (unsigned __int8 *)(uintptr_t)defenderSlotsBase;
     defenderGridTop = panelTop + 371;
     do
     {
       if ( *(__int16 *)defenderSlotPtr != -1 )
       {
-        defenderOwner = *(_BYTE *)(defenderSlotsBase + 2);
+        defenderOwner = *(_BYTE *)(uintptr_t)(defenderSlotsBase + 2);
         UI_BeginUnitInfo(v46, *defenderSlotPtr, defenderOwner);
-        defenderUnitSpriteSet = (_DWORD *)Mem_Alloc(4112, v24, defenderOwner, a5);
+        defenderUnitSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v24, defenderOwner, a5);
         if ( defenderUnitSpriteSet )
           defenderUnitSpriteSet = DLXSpriteSet_Load(defenderUnitSpriteSet, v46);
         defenderCellX = 76 * ((defenderSlotIndex - (__CFSHL__(defenderSlotIndex >> 31, 2) + 4 * (defenderSlotIndex >> 31))) >> 2) + defenderGridLeft;
         defenderCellY = 48 * (defenderSlotIndex % 4) + defenderGridTop;
         defenderUnitSpriteHandle = defenderUnitSpriteSet;
-        defenderUnitSprite = DLX_GetSpriteForChar((int)defenderUnitSpriteSet, 0);
+        defenderUnitSprite = DLX_GetSpriteForChar((int)(intptr_t)defenderUnitSpriteSet, 0);
         Compat_RenderDeviceDrawMenuSprite(defenderCellX, defenderCellY, defenderUnitSprite, 1);
-        if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(defenderSlotsBase + 2) + gameData + 140051) )
-          UI_DrawTextFmt((int)defenderSlotPtr, defenderCellY, defenderCellY + 32, defenderCellX + 50, 3, (int)aD_4);
+        if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(defenderSlotsBase + 2) + gameData + 140051) )
+          UI_DrawTextFmt((int)(intptr_t)defenderSlotPtr, defenderCellY, defenderCellY + 32, defenderCellX + 50, 3, (int)(intptr_t)aD_4);
         DLXSpriteSet_ReleaseAndClear((int *)&defenderUnitSpriteHandle);
       }
       a5 = defenderCountCopy;
@@ -1388,15 +1388,15 @@ signed int  UI_PromptLeadTroopsPersonally(
     }
     while ( defenderSlotIndex < defenderCountCopy );
   }
-  promptTextByLang[0] = (int)g_LeadTroopsPersonallyPromptTexts[0];
-  promptTextByLang[1] = (int)g_LeadTroopsPersonallyPromptTexts[1];
-  promptTextByLang[2] = (int)g_LeadTroopsPersonallyPromptTexts[2];
+  promptTextByLang[0] = (int)(intptr_t)g_LeadTroopsPersonallyPromptTexts[0];
+  promptTextByLang[1] = (int)(intptr_t)g_LeadTroopsPersonallyPromptTexts[1];
+  promptTextByLang[2] = (int)(intptr_t)g_LeadTroopsPersonallyPromptTexts[2];
   Render_ReleaseSurface(17, a5);
-  UI_DrawTextFmt((int)&promptSpriteSet, panelTop + 160, panelTop + 390, panelLeft + 10, 6, promptTextByLang[(unsigned __int8)g_LanguageIndex]);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+  UI_DrawTextFmt((int)(intptr_t)&promptSpriteSet, panelTop + 160, panelTop + 390, panelLeft + 10, 6, promptTextByLang[(unsigned __int8)g_LanguageIndex]);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
   baseLeft = panelLeft;
   baseTop = panelTop;
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   buttonColumnX = baseLeft + 61;
   secondaryButtonTop = baseTop + 279;
   primaryButtonTop = panelTop + 201;
@@ -1404,24 +1404,24 @@ signed int  UI_PromptLeadTroopsPersonally(
     "battle_prompt_layout_primary",
     primaryButtonTop,
     buttonColumnX,
-    primaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)promptSpriteSet, 1u),
-    buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)promptSpriteSet, 1u));
+    primaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 1u),
+    buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 1u));
   Diagnostics_TraceWorldMapActionEvent(
     "battle_prompt_layout_secondary",
     secondaryButtonTop,
     buttonColumnX,
-    secondaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)promptSpriteSet, 2u),
-    buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)promptSpriteSet, 2u));
+    secondaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 2u),
+    buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 2u));
   while ( 1 )
   {
     do
     {
       WorldMap_RunInputScriptStep();
-      DD_Pump((int)g_RenderState, buttonColumnX);
+      DD_Pump((int)(intptr_t)g_RenderState, buttonColumnX);
     }
-    while ( !DD_IsFlipping((int)g_RenderState) );
-    buttonRight = buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)promptSpriteSet, 1u);
-    SpriteHeight = DLX_GetSpriteHeight((int)promptSpriteSet, 1u);
+    while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) );
+    buttonRight = buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 1u);
+    SpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 1u);
     if ( g_MouseCursorRawX >> g_CursorCoordShift >= primaryButtonTop
       && g_MouseCursorRawY >> g_CursorCoordShift >= buttonColumnX
       && g_MouseCursorRawX >> g_CursorCoordShift <= SpriteHeight + primaryButtonTop
@@ -1429,8 +1429,8 @@ signed int  UI_PromptLeadTroopsPersonally(
     {
       break;
     }
-    buttonRight = buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)promptSpriteSet, 2u);
-    secondaryButtonBottom = secondaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)promptSpriteSet, 2u);
+    buttonRight = buttonColumnX + (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 2u);
+    secondaryButtonBottom = secondaryButtonTop + (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 2u);
     if ( g_MouseCursorRawX >> g_CursorCoordShift >= secondaryButtonTop
       && g_MouseCursorRawY >> g_CursorCoordShift >= buttonColumnX
       && g_MouseCursorRawX >> g_CursorCoordShift <= secondaryButtonBottom
@@ -1445,13 +1445,13 @@ signed int  UI_PromptLeadTroopsPersonally(
   userChoice = 0;
 LABEL_34:
   Render_Pump();
-  Debug_Log(0, buttonColumnX, buttonRight, (int)aUnsetrh08x_3);
+  Debug_Log(0, buttonColumnX, buttonRight, (int)(intptr_t)aUnsetrh08x_3);
   g_RenderHook = savedRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, savedResourceHandle);
-  SpriteWidth = DLX_GetSpriteWidth((int)promptSpriteSet, 0);
-  panelHeight = DLX_GetSpriteHeight((int)promptSpriteSet, 0);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, panelLeft, panelTop, panelTop + panelHeight, panelLeft + SpriteWidth, panelTop, panelLeft);
-  Render_Present((int)g_RenderState);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, savedResourceHandle);
+  SpriteWidth = DLX_GetSpriteWidth((int)(intptr_t)promptSpriteSet, 0);
+  panelHeight = DLX_GetSpriteHeight((int)(intptr_t)promptSpriteSet, 0);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, panelLeft, panelTop, panelTop + panelHeight, panelLeft + SpriteWidth, panelTop, panelLeft);
+  Render_Present((int)(intptr_t)g_RenderState);
   DLXSpriteSet_ReleaseAndClear((int *)&promptSpriteSet);
   return userChoice;
 }

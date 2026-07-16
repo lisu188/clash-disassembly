@@ -41,10 +41,10 @@ void  Audio_MixResampledVoice(int *mixArgs)
   g_Audio_MixVoice_SamplesRemaining = mixArgs[5];
   g_Audio_MixVoice_ChannelIndexArg = mixArgs[2];
   g_Audio_MixVoice_AccumBufferPtr = g_CSS_MixAccumBufferPtr;
-  g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))mixArgs[3];
-  channel = (unsigned int *)(108 * mixArgs[2] + g_CssMixChannels);
-  g_Audio_CurrentVoiceRecordPtr = (int)channel;
-  g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))channel[26];
+  g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))(uintptr_t)mixArgs[3];
+  channel = (unsigned int *)(uintptr_t)(108 * mixArgs[2] + g_CssMixChannels);
+  g_Audio_CurrentVoiceRecordPtr = (int)(intptr_t)channel;
+  g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))(uintptr_t)channel[26];
   g_Audio_MixVoice_LoopDirection = channel[16];
   g_Audio_MixVoice_PositionInt = channel[12];
   g_Audio_MixVoice_PositionFrac = channel[13];
@@ -76,7 +76,7 @@ LABEL_4:
 LABEL_11:
           g_Audio_MixVoice_LoopFinalFlag = channel[18]
                       && (channel[3] == 5 || channel[3] == 4)
-                      && ((queueSlot = 40 * channel[17] + g_CSS_QueuedSoundSlotTable, *(_DWORD *)(queueSlot + 12) == 4) || *(_DWORD *)(queueSlot + 12) == 5);
+                      && ((queueSlot = 40 * channel[17] + g_CSS_QueuedSoundSlotTable, *(_DWORD *)(uintptr_t)(queueSlot + 12) == 4) || *(_DWORD *)(uintptr_t)(queueSlot + 12) == 5);
           sampleStep = *channel;
           formatCode = channel[1];
           switch ( formatCode )
@@ -165,7 +165,7 @@ LABEL_38:
               if ( !mixArgs[2] )
               {
                 accumPtrSaved = g_Audio_MixVoice_AccumBufferPtr;
-                Audio_ZeroMixAccumulatorBuffer(spanSamples, (void *)g_Audio_MixVoice_AccumBufferPtr);
+                Audio_ZeroMixAccumulatorBuffer(spanSamples, (void *)(uintptr_t)g_Audio_MixVoice_AccumBufferPtr);
                 g_Audio_MixVoice_AccumBufferPtr = accumPtrSaved;
               }
             }
@@ -259,7 +259,7 @@ LABEL_72:
   }
 LABEL_78:
   if ( !mixArgs[2] )
-    Audio_ZeroMixAccumulatorBuffer(g_Audio_MixVoice_SamplesRemaining, (void *)g_Audio_MixVoice_AccumBufferPtr);
+    Audio_ZeroMixAccumulatorBuffer(g_Audio_MixVoice_SamplesRemaining, (void *)(uintptr_t)g_Audio_MixVoice_AccumBufferPtr);
 LABEL_80:
   channel[12] = g_Audio_MixVoice_PositionInt;
   channel[13] = g_Audio_MixVoice_PositionFrac;
@@ -300,12 +300,12 @@ int  Audio_MixMonoVoiceIntoBuffer(signed int stepFixed, int sampleCount, char ac
   int (__thiscall *mixInnerFunc)(signed int); // eax
   int result; // eax
 
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixMonoVoiceDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_MixMonoVoiceDispatchBase;
   if ( sampleCount )
   {
     if ( !accumFlag )
       memset(accumBuffer, 0, 4 * sampleCount);
-    mixInnerFunc = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    mixInnerFunc = *(int (__thiscall **)(signed int))(uintptr_t)(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
     g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
     return mixInnerFunc(stepFixed << 16);
   }
@@ -327,7 +327,7 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
   int (__thiscall *mixInnerFunc)(unsigned int); // eax
   __int16 packedCount; // cx
 
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixPannedVoiceDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_MixPannedVoiceDispatchBase;
   if ( sampleCount )
   {
     if ( !(_BYTE)volumeAndFlag )
@@ -360,7 +360,7 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
       }
     }
     g_Audio_MixVoice_PanStepFracArg = stepFixed << 16;
-    mixInnerFunc = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    mixInnerFunc = *(int (__thiscall **)(unsigned int))(uintptr_t)(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
     LOBYTE(packedCount) = (sampleCount >> 2) + 1;
     g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
     HIBYTE(packedCount) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
@@ -394,7 +394,7 @@ CLASH95_LOCAL int Audio_MixVoiceSpanDispatch_46BB40(signed int stepFixed, int sa
   {
     if ( !accumFlag )
       memset(accumBuffer, 0, 4 * sampleCount);
-    mixInnerFunc = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    mixInnerFunc = *(int (__thiscall **)(signed int))(uintptr_t)(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
     g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
     return mixInnerFunc(stepFixed << 16);
   }
@@ -443,7 +443,7 @@ CLASH95_LOCAL unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
       }
     }
     g_Audio_MixVoice_PanStepFracArg = stepFixed << 16;
-    mixInnerFunc = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
+    mixInnerFunc = *(int (__thiscall **)(unsigned int))(uintptr_t)(g_Audio_MixFormatDispatchTable + -4 * (sampleCount & 3) + 16);
     LOBYTE(packedCount) = (sampleCount >> 2) + 1;
     g_Audio_MixVoice_StepIntArg = stepFixed >> 16;
     HIBYTE(packedCount) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
@@ -455,7 +455,7 @@ CLASH95_LOCAL unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
 //----- (0046BE88) --------------------------------------------------------
 int Audio_SelectMixFormat1Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1MonoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat1MonoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46BDD1: using guessed type void *off_46BDD1;
@@ -464,7 +464,7 @@ int Audio_SelectMixFormat1Mono(signed int stepFixed, int sampleCount, char accum
 //----- (0046BF5E) --------------------------------------------------------
 unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1StereoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat1StereoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46BE97: using guessed type void *off_46BE97;
@@ -473,7 +473,7 @@ unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int stepFi
 //----- (0046C030) --------------------------------------------------------
 int Audio_SelectMixFormat2Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2MonoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat2MonoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46BF6D: using guessed type void *off_46BF6D;
@@ -482,7 +482,7 @@ int Audio_SelectMixFormat2Mono(signed int stepFixed, int sampleCount, char accum
 //----- (0046C1A2) --------------------------------------------------------
 unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2StereoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat2StereoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C03F: using guessed type void *off_46C03F;
@@ -491,7 +491,7 @@ unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int stepFi
 //----- (0046C2FC) --------------------------------------------------------
 int Audio_SelectMixFormat3Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3MonoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat3MonoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C1B1: using guessed type void *off_46C1B1;
@@ -500,7 +500,7 @@ int Audio_SelectMixFormat3Mono(signed int stepFixed, int sampleCount, char accum
 //----- (0046C472) --------------------------------------------------------
 unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3StereoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat3StereoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C30B: using guessed type void *off_46C30B;
@@ -509,7 +509,7 @@ unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int stepFi
 //----- (0046C6B4) --------------------------------------------------------
 int Audio_SelectMixFormat4Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4MonoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat4MonoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C481: using guessed type void *off_46C481;
@@ -518,7 +518,7 @@ int Audio_SelectMixFormat4Mono(signed int stepFixed, int sampleCount, char accum
 //----- (0046C996) --------------------------------------------------------
 unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4StereoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat4StereoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46C6C3: using guessed type void *off_46C6C3;
@@ -527,7 +527,7 @@ unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int stepFi
 //----- (0046CE10) --------------------------------------------------------
 int Audio_SelectMixFormat5Mono(signed int stepFixed, int sampleCount, char accumFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5MonoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat5MonoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB40(stepFixed, sampleCount, accumFlag, accumBuffer);
 }
 // 46C9A5: using guessed type void *off_46C9A5;
@@ -536,7 +536,7 @@ int Audio_SelectMixFormat5Mono(signed int stepFixed, int sampleCount, char accum
 //----- (0046D2A6) --------------------------------------------------------
 unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int stepFixed, unsigned int sampleCount, __int16 volumeAndFlag, void *accumBuffer)
 {
-  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5StereoDispatchBase;
+  g_Audio_MixFormatDispatchTable = (int)(intptr_t)&g_Audio_SelectMixFormat5StereoDispatchBase;
   return Audio_MixVoiceSpanDispatch_46BB9A(result, stepFixed, sampleCount, volumeAndFlag, accumBuffer);
 }
 // 46CE1F: using guessed type void *off_46CE1F;
@@ -545,7 +545,7 @@ unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int stepFi
 //----- (0046D2B5) --------------------------------------------------------
 int __cdecl Audio_ClearGlobalMixBuffer(int sampleCount)
 {
-  Audio_ZeroMixAccumulatorBuffer(sampleCount, (void *)g_CSS_MixAccumBufferPtr);
+  Audio_ZeroMixAccumulatorBuffer(sampleCount, (void *)(uintptr_t)g_CSS_MixAccumBufferPtr);
   return 0;
 }
 
@@ -606,7 +606,7 @@ int __cdecl CSS_Mem_TryAllocRaw(int byteCount, _DWORD *ptrOut)
   if ( byteCount )
   {
     v3 = nmalloc_(v2, ptrOut);
-    *(_DWORD *)HIDWORD(v3) = v3;
+    *(_DWORD *)(uintptr_t)HIDWORD(v3) = v3;
   }
   return v3;
 }
@@ -647,7 +647,7 @@ _DWORD * CSS_FileStream_Create(_DWORD *stream, int source, int bufferSizeHint, i
   stream[10] = 0;
   stream[14] = bufferSizeHint;
   *stream = g_CSSFileStream_VTable;
-  stream[2] = (*(int (**)(void))(*(_DWORD *)source + 4))();
+  stream[2] = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)source + 4))();
   stream[3] = stream[2];
   stream[4] = dataBytes + stream[3];
   stream[5] = stream[3];
@@ -681,7 +681,7 @@ _DWORD * CSS_FileStream_Destroy(_DWORD *stream, char dtorFlags, int a3, int a4, 
   {
     *stream = g_CSSFileStream_VTable;
     CSS_Mem_FreeIfSet(stream[15]);
-    (*(void (__cdecl **)(int, int, int))(*(_DWORD *)g_MediaFileStreamProvider + 20))(a3, a5, a4);
+    (*(void (__cdecl **)(int, int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_MediaFileStreamProvider + 20))(a3, a5, a4);
     if ( (dtorFlags & 2) != 0 )
       j__nfree_();
     return stream;
@@ -699,8 +699,8 @@ int  CSS_FileStream_FillSequential(int stream)
   int result; // eax
   int v2; // ecx
 
-  result = (*(int (__thiscall **)(int))(**(_DWORD **)(stream + 4) + 20))(stream);
-  *(_DWORD *)(v2 + 8) += result;
+  result = (*(int (__thiscall **)(int))(uintptr_t)(**(_DWORD **)(uintptr_t)(stream + 4) + 20))(stream);
+  *(_DWORD *)(uintptr_t)(v2 + 8) += result;
   return result;
 }
 // 46D53C: variable 'v2' is possibly undefined
@@ -712,12 +712,12 @@ int  CSS_FileStream_FillWithLoopWrap(int stream, int loopStart, int fillBytes, i
   int bytesRead; // eax
   int v9; // ecx
 
-  if ( fillBytes < loopEnd - *(_DWORD *)(stream + 8) )
+  if ( fillBytes < loopEnd - *(_DWORD *)(uintptr_t)(stream + 8) )
     return CSS_FileStream_FillSequential(stream);
-  readBytes = (*(int (**)(void))(**(_DWORD **)(stream + 4) + 20))();
-  (***(void (__fastcall ****)(int, int))(stream + 4))(readBytes, loopStart);
-  bytesRead = (*(int (**)(void))(**(_DWORD **)(stream + 4) + 20))();
-  *(_DWORD *)(stream + 8) = bytesRead + loopStart;
+  readBytes = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(stream + 4) + 20))();
+  (***(void (__fastcall ****)(int, int))(uintptr_t)(stream + 4))(readBytes, loopStart);
+  bytesRead = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(stream + 4) + 20))();
+  *(_DWORD *)(uintptr_t)(stream + 8) = bytesRead + loopStart;
   return v9 + bytesRead;
 }
 // 46D5B2: variable 'v9' is possibly undefined
@@ -731,10 +731,10 @@ int  CSS_FileStream_FillOneBlock(_DWORD *stream, int blockBytes)
     return 0;
   dataEnd = stream[4];
   if ( stream[6] > dataEnd )
-    return CSS_FileStream_FillSequential((int)stream);
+    return CSS_FileStream_FillSequential((int)(intptr_t)stream);
   if ( stream[2] <= stream[6] )
-    return CSS_FileStream_FillWithLoopWrap((int)stream, stream[5], blockBytes, stream[6]);
-  return CSS_FileStream_FillWithLoopWrap((int)stream, stream[3], blockBytes, stream[4]);
+    return CSS_FileStream_FillWithLoopWrap((int)(intptr_t)stream, stream[5], blockBytes, stream[6]);
+  return CSS_FileStream_FillWithLoopWrap((int)(intptr_t)stream, stream[3], blockBytes, stream[4]);
 }
 
 //----- (0046D620) --------------------------------------------------------
@@ -786,7 +786,7 @@ int  CSS_FileStream_PreloadFully(int stream)
 
   v1 = stream;
   do
-    result = (*(int (**)(void))(*(_DWORD *)v1 + 32))();
+    result = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v1 + 32))();
   while ( result );
   return result;
 }
@@ -808,7 +808,7 @@ int  CSS_FileStream_Read(_DWORD *stream, char *dest, int byteCount)
     contiguousBytes = stream[8] - stream[7] % stream[8];
     if ( contiguousBytes >= bytesWanted )
       contiguousBytes = bytesWanted;
-    qmemcpy(dest, (const void *)(stream[7] % stream[8] + stream[15]), contiguousBytes);
+    qmemcpy(dest, (const void *)(uintptr_t)(stream[7] % stream[8] + stream[15]), contiguousBytes);
     stream[7] += contiguousBytes;
     dest += contiguousBytes;
     totalCopied += contiguousBytes;
@@ -828,7 +828,7 @@ BOOL  CSS_FileStream_IsFinished(_DWORD *stream)
 //----- (0046D7F0) --------------------------------------------------------
 int  CSS_FileStream_QueryDone(int stream)
 {
-  return (*(int (**)(void))(*(_DWORD *)stream + 4))();
+  return (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 4))();
 }
 
 //----- (0046D800) --------------------------------------------------------
@@ -868,7 +868,7 @@ signed int  CSS_FileStream_ClearLoop(_DWORD *stream)
 //----- (0046D890) --------------------------------------------------------
 int  CSS_FileStream_GetSourceBytesFetched(int stream)
 {
-  return *(_DWORD *)(stream + 8) - *(_DWORD *)(stream + 12);
+  return *(_DWORD *)(uintptr_t)(stream + 8) - *(_DWORD *)(uintptr_t)(stream + 12);
 }
 
 //----- (0046D8A0) --------------------------------------------------------
@@ -877,11 +877,11 @@ signed int  CSS_FileStream_DispatchIfInRange(int stream, int offset, int callbac
   int basePos; // ecx
   int absPos; // edx
 
-  basePos = *(_DWORD *)(stream + 12);
+  basePos = *(_DWORD *)(uintptr_t)(stream + 12);
   absPos = basePos + offset;
-  if ( absPos < basePos || absPos >= *(_DWORD *)(stream + 16) )
+  if ( absPos < basePos || absPos >= *(_DWORD *)(uintptr_t)(stream + 16) )
     return 0;
-  (***(void (__cdecl ****)(int))(stream + 4))(callbackArg);
+  (***(void (__cdecl ****)(int))(uintptr_t)(stream + 4))(callbackArg);
   return 1;
 }
 
@@ -892,7 +892,7 @@ _DWORD * CSS_FileStream_New(int source, int bufferBytes)
   int v5; // edx
   int v6; // ecx
 
-  stream = (_DWORD *)Mem_Alloc(64, bufferBytes, (char)&j____wcpp_4_fs_handler_rtn_, 0);
+  stream = (_DWORD *)(uintptr_t)Mem_Alloc(64, bufferBytes, (char)(intptr_t)&j____wcpp_4_fs_handler_rtn_, 0);
   if ( stream )
     return CSS_FileStream_Create(stream, source, v6, v5);
   else
@@ -956,8 +956,8 @@ unsigned int  CSS_CloseChannel(unsigned int channelIndex, signed int fadeMs)
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   result = 52 * channelIndex;
-  channel = (int *)(result + g_SoundChannelArrayBase);
-  if ( *(_DWORD *)(result + g_SoundChannelArrayBase + 40) )
+  channel = (int *)(uintptr_t)(result + g_SoundChannelArrayBase);
+  if ( *(_DWORD *)(uintptr_t)(result + g_SoundChannelArrayBase + 40) )
   {
     channel[10] = 0;
     if ( (channel[9] & 0xC) != 0 )
@@ -973,7 +973,7 @@ unsigned int  CSS_CloseChannel(unsigned int channelIndex, signed int fadeMs)
       *channel = 0;
       streamObj = channel[5];
       if ( streamObj )
-        (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(*(_DWORD *)streamObj + 44))(
+        (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(uintptr_t)(*(_DWORD *)(uintptr_t)streamObj + 44))(
           ExceptionList,
           &j____wcpp_4_fs_handler_rtn_,
           &g_CSSCloseChannel_EHScopeTable,
@@ -1015,17 +1015,17 @@ int  CSS_Channel_FillSilence(int channel, int byteCount)
 
   if ( !byteCount )
     return 1;
-  bytesRead = (***(int (__fastcall ****)(int, int))(channel + 20))(channel, *(_DWORD *)(channel + 12) + *(_DWORD *)channel);
-  *(_DWORD *)(v5 + 12) += bytesRead;
+  bytesRead = (***(int (__fastcall ****)(int, int))(uintptr_t)(channel + 20))(channel, *(_DWORD *)(uintptr_t)(channel + 12) + *(_DWORD *)(uintptr_t)channel);
+  *(_DWORD *)(uintptr_t)(v5 + 12) += bytesRead;
   if ( bytesRead >= byteCount )
     return 1;
-  result = (*(int (**)(void))(**(_DWORD **)(v5 + 20) + 4))();
+  result = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(v5 + 20) + 4))();
   if ( result )
   {
     silenceBytes = byteCount - v6;
-    memset_(v7, *(_DWORD *)(v7 + 24));
-    *(_DWORD *)(v9 + 12) += silenceBytes;
-    *(_DWORD *)(v9 + 28) += silenceBytes;
+    memset_(v7, *(_DWORD *)(uintptr_t)(v7 + 24));
+    *(_DWORD *)(uintptr_t)(v9 + 12) += silenceBytes;
+    *(_DWORD *)(uintptr_t)(v9 + 28) += silenceBytes;
     return 1;
   }
   return result;
@@ -1053,21 +1053,21 @@ void  CSS_Channel_ServiceStream(unsigned int channelIndex)
   int savedPlayPos; // [esp+4h] [ebp-10h]
 
   channel = g_SoundChannelArrayBase + 52 * channelIndex;
-  if ( (!*(_DWORD *)(g_CSS_ActiveSoundDriver + 28) || *(_DWORD *)(channel + 28) >= *(_DWORD *)(channel + 8))
-    && (*(int (**)(void))(**(_DWORD **)(channel + 20) + 8))() )
+  if ( (!*(_DWORD *)(uintptr_t)(g_CSS_ActiveSoundDriver + 28) || *(_DWORD *)(uintptr_t)(channel + 28) >= *(_DWORD *)(uintptr_t)(channel + 8))
+    && (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)(channel + 20) + 8))() )
   {
-    *(_DWORD *)(channel + 48) = 1;
+    *(_DWORD *)(uintptr_t)(channel + 48) = 1;
     return;
   }
-  if ( *(_DWORD *)channel && *(_DWORD *)(g_CSS_ActiveSoundDriver + 28) )
+  if ( *(_DWORD *)(uintptr_t)channel && *(_DWORD *)(uintptr_t)(g_CSS_ActiveSoundDriver + 28) )
   {
     CSS_ChannelGetPlayPosition(channelIndex, &playPosOut);
     if ( playPosOut )
       playPos = playPosOut;
     else
-      playPos = *(_DWORD *)(channel + 8);
-    writePos = *(_DWORD *)(channel + 12);
-    bufferBytes = *(_DWORD *)(channel + 8);
+      playPos = *(_DWORD *)(uintptr_t)(channel + 8);
+    writePos = *(_DWORD *)(uintptr_t)(channel + 12);
+    bufferBytes = *(_DWORD *)(uintptr_t)(channel + 8);
     if ( playPos <= writePos )
     {
       savedPlayPos = playPos;
@@ -1077,26 +1077,26 @@ void  CSS_Channel_ServiceStream(unsigned int channelIndex)
         leadBytes = bufferBytes;
       if ( !CSS_Channel_FillSilence(channel, leadBytes) )
         goto LABEL_15;
-      *(_DWORD *)(v10 + 12) = 0;
+      *(_DWORD *)(uintptr_t)(v10 + 12) = 0;
       remainingBytes = savedBufferBytes - leadBytes;
       if ( !remainingBytes )
         goto LABEL_15;
-      if ( savedPlayPos - *(_DWORD *)(v10 + 16) <= remainingBytes )
-        fillBytes = savedPlayPos - *(_DWORD *)(v10 + 16);
+      if ( savedPlayPos - *(_DWORD *)(uintptr_t)(v10 + 16) <= remainingBytes )
+        fillBytes = savedPlayPos - *(_DWORD *)(uintptr_t)(v10 + 16);
       else
         fillBytes = remainingBytes;
       fillTarget = v10;
     }
     else
     {
-      if ( playPos - writePos - *(_DWORD *)(channel + 16) <= bufferBytes )
-        bufferBytes = playPos - writePos - *(_DWORD *)(channel + 16);
+      if ( playPos - writePos - *(_DWORD *)(uintptr_t)(channel + 16) <= bufferBytes )
+        bufferBytes = playPos - writePos - *(_DWORD *)(uintptr_t)(channel + 16);
       fillBytes = bufferBytes;
       fillTarget = channel;
     }
     CSS_Channel_FillSilence(fillTarget, fillBytes);
 LABEL_15:
-    CSS_ChannelSetPositionOffset(channelIndex, *(_DWORD *)(channel + 12));
+    CSS_ChannelSetPositionOffset(channelIndex, *(_DWORD *)(uintptr_t)(channel + 12));
   }
 }
 // 46DD6D: variable 'v10' is possibly undefined
@@ -1108,9 +1108,9 @@ int  CSS_Channel_StoreFormatParams(int channel, int formatCode)
 {
   int result; // eax
 
-  *(_DWORD *)(channel + 16) = CSS_GetFormatSampleSize(formatCode);
+  *(_DWORD *)(uintptr_t)(channel + 16) = CSS_GetFormatSampleSize(formatCode);
   result = CSS_GetFormatSilenceValue(formatCode);
-  *(_DWORD *)(channel + 24) = result;
+  *(_DWORD *)(uintptr_t)(channel + 24) = result;
   return result;
 }
 
@@ -1125,8 +1125,8 @@ void  CSS_Channel_StartFileStream(unsigned int channelIndex, int *formatInfo, in
 
   savedPanning = panning;
   streamBuffer = 0;
-  channel = (_DWORD *)(52 * channelIndex + g_SoundChannelArrayBase);
-  CSS_Channel_StoreFormatParams((int)channel, *formatInfo);
+  channel = (_DWORD *)(uintptr_t)(52 * channelIndex + g_SoundChannelArrayBase);
+  CSS_Channel_StoreFormatParams((int)(intptr_t)channel, *formatInfo);
   chunkBytes = 3 * formatInfo[2] / g_CSS_StreamServiceRateHz;
   LOBYTE(chunkBytes) = chunkBytes & 0xFC;
   channel[1] = chunkBytes;
@@ -1158,7 +1158,7 @@ int  CSS_SampleCache_FreeEntry(int *entry)
   g_CSS_SampleCacheBytesUsed -= entry[2];
   CSS_Mem_FreeIfSet(*entry);
   CSS_Mem_FreeIfSet(entry[4]);
-  return CSS_Mem_FreeIfSet((int)entry);
+  return CSS_Mem_FreeIfSet((int)(intptr_t)entry);
 }
 // 54D3BC: using guessed type int dword_54D3BC;
 
@@ -1174,14 +1174,14 @@ signed int  CSS_SampleCache_EvictEntry(int **entryLink)
   {
 LABEL_7:
     entry = *entryLink;
-    *entryLink = (int *)(*entryLink)[5];
+    *entryLink = (int *)(uintptr_t)(*entryLink)[5];
     CSS_SampleCache_FreeEntry(entry);
     return 1;
   }
   else
   {
     channelOffset = 0;
-    while ( !*(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 40) || *(_DWORD *)(channelOffset + g_SoundChannelArrayBase) != **entryLink || !CSS_ChannelIsPlaying(channelIndex) )
+    while ( !*(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 40) || *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase) != **entryLink || !CSS_ChannelIsPlaying(channelIndex) )
     {
       ++channelIndex;
       channelOffset += 52;
@@ -1213,10 +1213,10 @@ int  CSS_SampleCache_MakeRoom(int byteCount)
     while ( 1 )
     {
       result = bytesNeeded + g_CSS_SampleCacheBytesUsed;
-      if ( bytesNeeded + g_CSS_SampleCacheBytesUsed <= g_CSS_SampleCacheByteBudget || !*(_DWORD *)(node + 20) )
+      if ( bytesNeeded + g_CSS_SampleCacheBytesUsed <= g_CSS_SampleCacheByteBudget || !*(_DWORD *)(uintptr_t)(node + 20) )
         break;
-      if ( !CSS_SampleCache_EvictEntry((int **)(node + 20)) )
-        node = *(_DWORD *)(node + 20);
+      if ( !CSS_SampleCache_EvictEntry((int **)(uintptr_t)(node + 20)) )
+        node = *(_DWORD *)(uintptr_t)(node + 20);
     }
   }
   return result;
@@ -1231,9 +1231,9 @@ int  CSS_SampleCache_MakeRoom(int byteCount)
 //----- (0046E220) --------------------------------------------------------
 int  CSS_SampleCache_AppendEntry(int result, int entry)
 {
-  for ( ; *(_DWORD *)(result + 20); result = *(_DWORD *)(result + 20) )
+  for ( ; *(_DWORD *)(uintptr_t)(result + 20); result = *(_DWORD *)(uintptr_t)(result + 20) )
     ;
-  *(_DWORD *)(result + 20) = entry;
+  *(_DWORD *)(uintptr_t)(result + 20) = entry;
   return result;
 }
 
@@ -1244,9 +1244,9 @@ int  CSS_SampleCache_TouchEntry(int *listHead)
   int result; // eax
 
   CSS_SampleCache_AppendEntry(*listHead, *listHead);
-  *listHead = *(_DWORD *)(v2 + 20);
+  *listHead = *(_DWORD *)(uintptr_t)(v2 + 20);
   result = v2;
-  *(_DWORD *)(v2 + 20) = 0;
+  *(_DWORD *)(uintptr_t)(v2 + 20) = 0;
   return result;
 }
 // 46E250: variable 'v2' is possibly undefined
@@ -1261,11 +1261,11 @@ int  CSS_SampleCache_FindAndTouch(int fileName)
     return 0;
   if ( stricmp_(g_SampleCacheListHead, fileName) )
   {
-    while ( *(_DWORD *)(v3 + 20) )
+    while ( *(_DWORD *)(uintptr_t)(v3 + 20) )
     {
       if ( !stricmp_(v3, fileName) )
-        return CSS_SampleCache_TouchEntry((int *)(v4 + 20));
-      v3 = *(_DWORD *)(v4 + 20);
+        return CSS_SampleCache_TouchEntry((int *)(uintptr_t)(v4 + 20));
+      v3 = *(_DWORD *)(uintptr_t)(v4 + 20);
     }
     return 0;
   }
@@ -1287,7 +1287,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels(void)
   channelOffset = 0;
   for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
-    if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 48) )
+    if ( *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 48) )
       CSS_CloseChannel(i, 0);
     ++i;
   }
@@ -1317,12 +1317,12 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels(void)
   for ( i = 0; i < g_CssVoicePoolSize; channelOffset += 52 )
   {
     channel = channelOffset + g_SoundChannelArrayBase;
-    if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 44)
-      && *(_DWORD *)(channel + 40)
-      && (*(_BYTE *)(channel + 36) & 0xC) != 0
+    if ( *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 44)
+      && *(_DWORD *)(uintptr_t)(channel + 40)
+      && (*(_BYTE *)(uintptr_t)(channel + 36) & 0xC) != 0
       && CSS_ChannelIsPlaying(i) )
     {
-      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(channelOffset + g_SoundChannelArrayBase + 20)
+      (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 20)
                                                                                            + 32))(
         ExceptionList,
         ehHandler,
@@ -1387,7 +1387,7 @@ _DWORD *__stdcall CSS_PauseStreamReading(void)
     tryLevel = 0;
     lockCounter = lockCounterPtr;
     LeaveCriticalSection((LPCRITICAL_SECTION)(lockCounterPtr + 1));
-    return (_DWORD *)(*lockCounter)--;
+    return (_DWORD *)(uintptr_t)(*lockCounter)--;
   }
   return result;
 }
@@ -1420,9 +1420,9 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int threadParam)
       do
       {
         channel = channelOffset + g_SoundChannelArrayBase;
-        if ( *(_DWORD *)(channelOffset + g_SoundChannelArrayBase + 44)
-          && *(_DWORD *)(channel + 40)
-          && (*(_BYTE *)(channel + 36) & 0xC) != 0
+        if ( *(_DWORD *)(uintptr_t)(channelOffset + g_SoundChannelArrayBase + 44)
+          && *(_DWORD *)(uintptr_t)(channel + 40)
+          && (*(_BYTE *)(uintptr_t)(channel + 36) & 0xC) != 0
           && CSS_ChannelIsPlaying(channelIndex) )
         {
           CSS_Channel_ServiceStream(channelIndex);

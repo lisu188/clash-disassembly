@@ -23,7 +23,7 @@ LPTOP_LEVEL_EXCEPTION_FILTER  CRT_InstallUnhandledExceptionFilter(int a1, int a2
   *(_DWORD *)(v3 + 84) = HIDWORD(v3);
   v5 = g_CrtThreadDataAccessor(v4, NtCurrentTeb()->NtTib.ExceptionList);
   **(_DWORD **)(v5 + 84) = HIDWORD(v5);
-  *(_DWORD *)(*(_DWORD *)(g_CrtThreadDataAccessor(v6, HIDWORD(v5)) + 84) + 4) = CRT_FpuExceptionFrameHandler;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(g_CrtThreadDataAccessor(v6, HIDWORD(v5)) + 84) + 4) = CRT_FpuExceptionFrameHandler;
   v8 = g_CrtThreadDataAccessor(v7, 0);
   __writefsdword(HIDWORD(v8), *(_DWORD *)(v8 + 84));
   return SetUnhandledExceptionFilter(TopLevelExceptionFilter);
@@ -48,7 +48,7 @@ int __fastcall CRT_RemoveUnhandledExceptionFilter(int a1, int a2)
     __writefsdword(0, *exceptionRegistration);
   }
   result = g_CrtThreadDataAccessor(v4, v3);
-  *(_DWORD *)(result + 84) = 0;
+  *(_DWORD *)(uintptr_t)(result + 84) = 0;
   return result;
 }
 // 4B52FB: variable 'v4' is possibly undefined
@@ -59,13 +59,13 @@ int __fastcall CRT_RemoveUnhandledExceptionFilter(int a1, int a2)
 signed int IO_InitializeFileIORouter(void)
 {
   return IO_AddRouter(
-           (int)aFileio,
+           (int)(intptr_t)aFileio,
            0,
-           (int)IO_FileIOQueryCallback,
-           (int)ismbdprint_,
-           (int)IO_FileIOGetcCallback,
-           (int)IO_FileIOUngetcCallback,
-           (int)IO_FileIOExitCallback);
+           (int)(intptr_t)IO_FileIOQueryCallback,
+           (int)(intptr_t)ismbdprint_,
+           (int)(intptr_t)IO_FileIOGetcCallback,
+           (int)(intptr_t)IO_FileIOUngetcCallback,
+           (int)(intptr_t)IO_FileIOExitCallback);
 }
 
 //----- (004B5340) --------------------------------------------------------
@@ -105,14 +105,14 @@ int __thiscall IO_FindOpenFileByLogicalName(void *this)
                 result = strcmp_(v8, g_IO_LogicalNameTable_WWarning[0]);
                 if ( result )
                 {
-                  fileListCursor = (_DWORD *)g_IO_LogicalNameFileListHead;
+                  fileListCursor = (_DWORD *)(uintptr_t)g_IO_LogicalNameFileListHead;
                   if ( g_IO_LogicalNameFileListHead )
                   {
                     do
                     {
                       if ( !strcmp_(fileListCursor, *fileListCursor) )
                         break;
-                      fileListCursor = (_DWORD *)fileListCursor[2];
+                      fileListCursor = (_DWORD *)(uintptr_t)fileListCursor[2];
                     }
                     while ( fileListCursor );
                   }
@@ -168,7 +168,7 @@ int __fastcall IO_FileIOQueryCallback(int a1, void *logicalName)
   int v4; // ecx
 
   filePtr = IO_FindOpenFileByLogicalName(logicalName);
-  Output_WriteFormatted(v3, filePtr, filePtr, (int)aS_13, v3);
+  Output_WriteFormatted(v3, filePtr, filePtr, (int)(intptr_t)aS_13, v3);
   fflush_(v4);
   return 1;
 }
@@ -235,11 +235,11 @@ int  IO_OpenNamedFile(
   filePtr = result;
   if ( result )
   {
-    freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 48);
+    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
     if ( freeListHead )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-      *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeListHead;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeListHead;
     }
     else
     {
@@ -263,7 +263,7 @@ int  IO_OpenNamedFile(
     fileEntry[1] = filePtr;
     fileEntry[2] = g_IO_LogicalNameFileListHead;
     result = 1;
-    g_IO_LogicalNameFileListHead = (int)fileEntry;
+    g_IO_LogicalNameFileListHead = (int)(intptr_t)fileEntry;
   }
   return result;
 }
@@ -287,17 +287,17 @@ signed int  IO_CloseNamedFile(int logicalName)
   while ( strcmp_(v1, v1) )
   {
     previousEntry = fileEntry;
-    fileEntry = *(_DWORD *)(fileEntry + 8);
+    fileEntry = *(_DWORD *)(uintptr_t)(fileEntry + 8);
     if ( !fileEntry )
       return 0;
   }
   fclose_(v1);
-  Mem_SmallBlockFree(*(_DWORD **)fileEntry, strlen(*(const char **)fileEntry) + 1);
+  Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)fileEntry, strlen(*(const char **)(uintptr_t)fileEntry) + 1);
   if ( previousEntry )
-    *(_DWORD *)(previousEntry + 8) = *(_DWORD *)(fileEntry + 8);
+    *(_DWORD *)(uintptr_t)(previousEntry + 8) = *(_DWORD *)(uintptr_t)(fileEntry + 8);
   else
-    g_IO_LogicalNameFileListHead = *(_DWORD *)(fileEntry + 8);
-  Mem_SmallBlockFree((_DWORD *)fileEntry, 12);
+    g_IO_LogicalNameFileListHead = *(_DWORD *)(uintptr_t)(fileEntry + 8);
+  Mem_SmallBlockFree((_DWORD *)(uintptr_t)fileEntry, 12);
   return 1;
 }
 // 4B5596: variable 'v1' is possibly undefined
@@ -314,7 +314,7 @@ signed int __thiscall IO_CloseAllNamedFiles(void *this)
 
   if ( !g_IO_LogicalNameFileListHead )
     return 0;
-  fileEntry = (_DWORD **)g_IO_LogicalNameFileListHead;
+  fileEntry = (_DWORD **)(uintptr_t)g_IO_LogicalNameFileListHead;
   do
   {
     fclose_(this);
@@ -463,7 +463,7 @@ int  CRT_TzRuleDayOfYear(_DWORD *tzRule, int year)
     timeFields[4] = tzRule[4];
     timeFields[5] = v4;
     timeFields[8] = 0;
-    CRT_MkTime((int)timeFields);
+    CRT_MkTime((int)(intptr_t)timeFields);
     weekdayOffset = (tzRule[6] - timeFields[6] + 7) % 7;
     ruleWeek = tzRule[3];
     if ( ruleWeek == 5 )
@@ -492,10 +492,10 @@ signed int  CRT_TzYearStartsInDaylightTime(_DWORD *dstStartRule, int dstEndRule,
   int startYday; // esi
   _DWORD *endRulePtr; // ecx
 
-  if ( dstStartRule[8] || *(_DWORD *)(dstEndRule + 32) )
+  if ( dstStartRule[8] || *(_DWORD *)(uintptr_t)(dstEndRule + 32) )
     goto LABEL_6;
   startMonth = dstStartRule[4];
-  endMonth = *(_DWORD *)(dstEndRule + 16);
+  endMonth = *(_DWORD *)(uintptr_t)(dstEndRule + 16);
   if ( startMonth > endMonth )
     return 1;
   if ( startMonth >= endMonth )
@@ -546,7 +546,7 @@ int  CRT_IsDaylightTime(_DWORD *timeFields)
   inDaylight = 0;
   if ( !*g_CRT_TzDaylightNamePtr )
     goto LABEL_54;
-  startsInDst = CRT_TzYearStartsInDaylightTime(g_CRT_TzDstStartRule, (int)&g_CRT_TzDstEndRule, timeFields[5]);
+  startsInDst = CRT_TzYearStartsInDaylightTime(g_CRT_TzDstStartRule, (int)(intptr_t)&g_CRT_TzDstEndRule, timeFields[5]);
   if ( startsInDst )
   {
     firstRule = &g_CRT_TzDstEndRule;
@@ -557,8 +557,8 @@ int  CRT_IsDaylightTime(_DWORD *timeFields)
     firstRule = g_CRT_TzDstStartRule;
     secondRule = &g_CRT_TzDstEndRule;
   }
-  ruleMonth = *(_DWORD *)(v3 + 16);
-  if ( CRT_IsLeapYear(*(_DWORD *)(v3 + 20) + 1900) )
+  ruleMonth = *(_DWORD *)(uintptr_t)(v3 + 16);
+  if ( CRT_IsLeapYear(*(_DWORD *)(uintptr_t)(v3 + 20) + 1900) )
   {
     monthEndOffset = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth + 2);
     monthStartOffset = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * ruleMonth);
@@ -787,7 +787,7 @@ void CRT_TzSet(void)
   _BYTE *ruleCursor; // edx
   int dstOffset[7]; // [esp+0h] [ebp-1Ch] BYREF
 
-  tzEnvString = (_BYTE *)getenv_();
+  tzEnvString = (_BYTE *)(uintptr_t)getenv_();
   if ( tzEnvString )
   {
     dstOffset[5] = v2;
@@ -803,10 +803,10 @@ void CRT_TzSet(void)
       g_CRT_DaylightBiasSeconds = g_CRT_TimezoneSeconds - dstOffset[0];
       ruleCursor = afterDstName;
       if ( *afterDstName == 44 )
-        ruleCursor = CRT_ParseTzDstRule(afterDstName + 1, (int)g_CRT_TzDstStartRule, dstOffset[0]);
+        ruleCursor = CRT_ParseTzDstRule(afterDstName + 1, (int)(intptr_t)g_CRT_TzDstStartRule, dstOffset[0]);
       if ( *ruleCursor == 44 )
       {
-        CRT_ParseTzDstRule(ruleCursor + 1, (int)&g_CRT_TzDstEndRule, v5);
+        CRT_ParseTzDstRule(ruleCursor + 1, (int)(intptr_t)&g_CRT_TzDstEndRule, v5);
         g_CRT_TzDstEndRuleHour -= g_CRT_DaylightBiasSeconds / 3600;
         g_CRT_TzDstEndRuleMinute -= g_CRT_DaylightBiasSeconds / 60 % 60;
         g_CRT_TzDstEndRule -= g_CRT_DaylightBiasSeconds % 60;
@@ -937,7 +937,7 @@ _BYTE * CRT_ParseTzDstRule(_BYTE *ruleString, int ruleStruct, int offsetSeconds)
     ++cursor;
     ruleType = 0;
   }
-  *(_DWORD *)(ruleStruct + 32) = ruleType;
+  *(_DWORD *)(uintptr_t)(ruleStruct + 32) = ruleType;
   v5 = CRT_ParseTzDecimalDigits(cursor, parsed);
   v7 = v5;
   if ( ruleType )
@@ -1022,20 +1022,20 @@ int Rules_RegisterPatternConstraintEvaluators()
   g_EvalDesc_TestPatternNestedField[1] = (int)(uintptr_t)Runtime_DescriptorNoop;
   g_EvalDesc_TestPatternNestedField[2] = (int)(uintptr_t)Runtime_DescriptorNoop;
   g_EvalDesc_TestPatternNestedField[4] = (int)(uintptr_t)Rules_TestPatternNestedField;
-  Rules_RegisterEvaluationHandler((int)&g_Rules_FactPatternEntityRecord, 6);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchJoinBindingFieldRecord, 29);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchJoinBindingFieldSimple, 30);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchJoinBindingNestedField, 31);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchPatternFieldRecord, 26);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchPatternFieldSimple, 27);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_FetchPatternNestedFieldRecord, 28);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_TestJoinBindingFieldsEqual, 23);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_TestJoinBindingFieldsEqualRanged, 24);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_EvalPatternFieldsEqual, 22);
-  Rules_RegisterEvaluationHandler((int)&g_EvalNodeDescCopyMultifieldBinding, 34);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_EvalMultifieldIndexInRange, 25);
-  Rules_RegisterEvaluationHandler((int)&g_EvalDesc_TestPatternFieldSimple, 32);
-  return Rules_RegisterEvaluationHandler((int)&g_EvalDesc_TestPatternNestedField, 33);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_Rules_FactPatternEntityRecord, 6);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingFieldRecord, 29);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingFieldSimple, 30);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingNestedField, 31);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchPatternFieldRecord, 26);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchPatternFieldSimple, 27);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchPatternNestedFieldRecord, 28);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_TestJoinBindingFieldsEqual, 23);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_TestJoinBindingFieldsEqualRanged, 24);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_EvalPatternFieldsEqual, 22);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalNodeDescCopyMultifieldBinding, 34);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_EvalMultifieldIndexInRange, 25);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_TestPatternFieldSimple, 32);
+  return Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_TestPatternNestedField, 33);
 }
 
 //----- (004B6EB0) --------------------------------------------------------
@@ -1063,65 +1063,65 @@ signed int  Rules_BuildFieldIndexConstraintNode(int fieldDescriptor)
   int bitmapWord; // [esp+0h] [ebp-1Ch] BYREF
   _DWORD bitmapData[6]; // [esp+4h] [ebp-18h] BYREF
 
-  if ( (*(_BYTE *)(fieldDescriptor + 9) & 0x40) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(fieldDescriptor + 9) & 0x40) != 0 )
   {
-    fieldFlags = *(_DWORD *)(fieldDescriptor + 8);
-    if ( (fieldFlags & 0x3F8000) != 0 && ((fieldFlags & 0x3F8000) != 0x8000 || (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) != 0) )
+    fieldFlags = *(_DWORD *)(uintptr_t)(fieldDescriptor + 8);
+    if ( (fieldFlags & 0x3F8000) != 0 && ((fieldFlags & 0x3F8000) != 0x8000 || (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) != 0) )
     {
-      if ( (*(_BYTE *)(fieldDescriptor + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(fieldDescriptor + 8) & 1) != 0 )
         comparisonSymbol = g_ClipsSymbolNeq;
       else
         comparisonSymbol = g_ClipsSymbolEq;
       testNode = AST_NewNode(10, comparisonSymbol);
       savedFieldType = *v17;
       *v17 = 15;
-      *(_DWORD *)(testNode + 6) = PP_MakeLowTierConst((int)v17, savedFieldType, (int)v17);
+      *(_DWORD *)(uintptr_t)(testNode + 6) = PP_MakeLowTierConst((int)(intptr_t)v17, savedFieldType, (int)(intptr_t)v17);
       *v20 = v19;
-      *(_DWORD *)(*(_DWORD *)(testNode + 6) + 10) = AST_NewNode(*v20, v20[1]);
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(testNode + 6) + 10) = AST_NewNode(*v20, v20[1]);
       return testNode;
     }
     else
     {
       Mem_AllocArray(bitmapData, 4);
-      if ( (*(_BYTE *)(v2 + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(v2 + 8) & 1) != 0 )
         LOBYTE(bitmapData[0]) &= ~1u;
       else
         LOBYTE(bitmapData[0]) |= 1u;
-      bitmapData[0] = ((unsigned __int8)(*(_DWORD *)(v2 + 40) - 1) << 10) | bitmapData[0] & 0xFFFC03FF;
-      if ( (*(_DWORD *)(v2 + 8) & 0x3F8000) != 0 )
+      bitmapData[0] = ((unsigned __int8)(*(_DWORD *)(uintptr_t)(v2 + 40) - 1) << 10) | bitmapData[0] & 0xFFFC03FF;
+      if ( (*(_DWORD *)(uintptr_t)(v2 + 8) & 0x3F8000) != 0 )
       {
         LOBYTE(bitmapData[0]) &= ~2u;
-        v14 = *(_DWORD *)(v2 + 12) << 18 >> 25;
+        v14 = *(_DWORD *)(uintptr_t)(v2 + 12) << 18 >> 25;
         LOWORD(bitmapData[0]) &= 0xFC03u;
         v4 = 4 * (unsigned __int8)v14;
       }
       else
       {
         LOBYTE(bitmapData[0]) |= 2u;
-        v3 = *(_DWORD *)(v2 + 12) & 0x7F;
+        v3 = *(_DWORD *)(uintptr_t)(v2 + 12) & 0x7F;
         LOWORD(bitmapData[0]) &= 0xFC03u;
         v4 = 4 * v3;
       }
       bitmapData[0] |= v4;
       bitmapValue = Rules_AddBitmapValue(bitmapData, 4);
       constraintNode = AST_NewNode(33, bitmapValue);
-      *(_DWORD *)(constraintNode + 6) = AST_NewNode(*v7, v7[1]);
+      *(_DWORD *)(uintptr_t)(constraintNode + 6) = AST_NewNode(*v7, v7[1]);
       return constraintNode;
     }
   }
   else
   {
     Mem_AllocArray(&bitmapWord, 4);
-    if ( (*(_BYTE *)(v9 + 8) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(v9 + 8) & 1) != 0 )
       LOBYTE(bitmapWord) = bitmapWord & 0xFE;
     else
       LOBYTE(bitmapWord) = bitmapWord | 1;
-    v10 = *(_DWORD *)(v9 + 40) - 1;
+    v10 = *(_DWORD *)(uintptr_t)(v9 + 40) - 1;
     LOWORD(bitmapWord) = bitmapWord & 0xFE01;
     bitmapWord |= 2 * v10;
     indexBitmapValue = Rules_AddBitmapValue(&bitmapWord, 4);
     indexConstraintNode = AST_NewNode(32, indexBitmapValue);
-    *(_DWORD *)(indexConstraintNode + 6) = AST_NewNode(*v13, v13[1]);
+    *(_DWORD *)(uintptr_t)(indexConstraintNode + 6) = AST_NewNode(*v13, v13[1]);
     return indexConstraintNode;
   }
 }
@@ -1143,18 +1143,18 @@ signed int  PP_MakeLowTierConst(int fieldDescriptor, int a2, int a3)
   __int16 v5; // ax
   int Const26; // eax
 
-  if ( *(int *)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(fieldDescriptor + 9) & 0x40) == 0 )
+  if ( *(int *)(uintptr_t)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(uintptr_t)(fieldDescriptor + 9) & 0x40) == 0 )
   {
     Const28 = PP_MakeConst27(a3, a2);
     v5 = 27;
     return AST_NewNode(v5, Const28);
   }
-  if ( (*(_DWORD *)fieldDescriptor == 17 || *(_DWORD *)fieldDescriptor == 15)
-    && ((v3 = *(_DWORD *)(fieldDescriptor + 8), (v3 & 0x3F8000) == 0)
-     || (v3 & 0x3F8000) == 0x8000 && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0)
-    || (*(_DWORD *)fieldDescriptor == 18 || *(_DWORD *)fieldDescriptor == 16)
-    && (*(_DWORD *)(fieldDescriptor + 8) & 0x3F8000) == 0
-    && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0 )
+  if ( (*(_DWORD *)(uintptr_t)fieldDescriptor == 17 || *(_DWORD *)(uintptr_t)fieldDescriptor == 15)
+    && ((v3 = *(_DWORD *)(uintptr_t)(fieldDescriptor + 8), (v3 & 0x3F8000) == 0)
+     || (v3 & 0x3F8000) == 0x8000 && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0)
+    || (*(_DWORD *)(uintptr_t)fieldDescriptor == 18 || *(_DWORD *)(uintptr_t)fieldDescriptor == 16)
+    && (*(_DWORD *)(uintptr_t)(fieldDescriptor + 8) & 0x3F8000) == 0
+    && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0 )
   {
     Const28 = PP_MakeConst28();
     v5 = 28;
@@ -1173,19 +1173,19 @@ signed int  PP_ParsePrimary(int fieldDescriptor, int a2, int a3)
   __int16 v6; // ax
   int v8; // eax
 
-  if ( *(int *)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(fieldDescriptor + 9) & 0x40) == 0 )
+  if ( *(int *)(uintptr_t)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(uintptr_t)(fieldDescriptor + 9) & 0x40) == 0 )
   {
     Const31 = PP_MakeConst31(a3, a2);
     v6 = 30;
     return AST_NewNode(v6, Const31);
   }
-  v3 = *(_DWORD *)fieldDescriptor;
-  if ( (*(_DWORD *)fieldDescriptor == 17 || v3 == 15)
-    && ((v4 = *(_DWORD *)(fieldDescriptor + 8), (v4 & 0x3F8000) == 0)
-     || (a2 = v4 & 0x3F8000, (v4 & 0x3F8000) == 0x8000) && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0)
-    || (*(_DWORD *)fieldDescriptor == 18 || *(_DWORD *)fieldDescriptor == 16)
-    && (*(_DWORD *)(fieldDescriptor + 8) & 0x3F8000) == 0
-    && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0 )
+  v3 = *(_DWORD *)(uintptr_t)fieldDescriptor;
+  if ( (*(_DWORD *)(uintptr_t)fieldDescriptor == 17 || v3 == 15)
+    && ((v4 = *(_DWORD *)(uintptr_t)(fieldDescriptor + 8), (v4 & 0x3F8000) == 0)
+     || (a2 = v4 & 0x3F8000, (v4 & 0x3F8000) == 0x8000) && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0)
+    || (*(_DWORD *)(uintptr_t)fieldDescriptor == 18 || *(_DWORD *)(uintptr_t)fieldDescriptor == 16)
+    && (*(_DWORD *)(uintptr_t)(fieldDescriptor + 8) & 0x3F8000) == 0
+    && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0 )
   {
     Const31 = PP_MakeConst30(v3, a2);
     v6 = 31;
@@ -1204,23 +1204,23 @@ signed int  PP_ShouldEmit(int fieldDescriptor)
   unsigned int v5; // eax
   _DWORD bitmapData[4]; // [esp+0h] [ebp-10h] BYREF
 
-  if ( (*(_WORD *)(fieldDescriptor + 12) & 0x3F80) == 0 && *(_DWORD *)fieldDescriptor != 15 && *(_DWORD *)fieldDescriptor != 17 )
+  if ( (*(_WORD *)(uintptr_t)(fieldDescriptor + 12) & 0x3F80) == 0 && *(_DWORD *)(uintptr_t)fieldDescriptor != 15 && *(_DWORD *)(uintptr_t)fieldDescriptor != 17 )
     return 0;
   Mem_AllocArray(bitmapData, 4);
-  bitmapData[0] = ((unsigned __int8)(*(_DWORD *)(v1 + 40) - 1) << 9) | bitmapData[0] & 0xFFFE01FF;
-  if ( *(_DWORD *)v1 == 16 || *(_DWORD *)v1 == 18 || (*(_WORD *)(v1 + 10) & 0x1FC0) != 0 )
+  bitmapData[0] = ((unsigned __int8)(*(_DWORD *)(uintptr_t)(v1 + 40) - 1) << 9) | bitmapData[0] & 0xFFFE01FF;
+  if ( *(_DWORD *)(uintptr_t)v1 == 16 || *(_DWORD *)(uintptr_t)v1 == 18 || (*(_WORD *)(uintptr_t)(v1 + 10) & 0x1FC0) != 0 )
     BYTE1(bitmapData[0]) &= ~1u;
   else
     BYTE1(bitmapData[0]) |= 1u;
-  if ( *(_DWORD *)v1 == 15 || *(_DWORD *)v1 == 17 )
+  if ( *(_DWORD *)(uintptr_t)v1 == 15 || *(_DWORD *)(uintptr_t)v1 == 17 )
   {
-    v2 = *(_DWORD *)(v1 + 12) << 18 >> 25;
+    v2 = *(_DWORD *)(uintptr_t)(v1 + 12) << 18 >> 25;
     LOBYTE(bitmapData[0]) = 0;
     bitmapData[0] |= (unsigned __int8)(v2 + 1);
   }
   else
   {
-    v5 = *(_DWORD *)(v1 + 12) << 18;
+    v5 = *(_DWORD *)(uintptr_t)(v1 + 12) << 18;
     LOBYTE(bitmapData[0]) = 0;
     bitmapData[0] |= v5 >> 25;
   }
@@ -1256,28 +1256,28 @@ int  PP_PatchHighTierConst(_WORD *astNode, int fieldDescriptor)
   int v7; // ecx
 
   v3 = fieldDescriptor;
-  if ( *(int *)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(fieldDescriptor + 9) & 0x40) == 0 )
+  if ( *(int *)(uintptr_t)(fieldDescriptor + 40) > 0 && (*(_BYTE *)(uintptr_t)(fieldDescriptor + 9) & 0x40) == 0 )
   {
     *astNode = 30;
-    result = PP_MakeConst31((int)astNode, fieldDescriptor);
+    result = PP_MakeConst31((int)(intptr_t)astNode, fieldDescriptor);
     goto LABEL_11;
   }
-  if ( (*(_DWORD *)fieldDescriptor == 17 || *(_DWORD *)fieldDescriptor == 15)
-    && ((v4 = *(_DWORD *)(fieldDescriptor + 8), (v4 & 0x3F8000) == 0)
-     || (fieldDescriptor = v4 & 0x3F8000, (v4 & 0x3F8000) == 0x8000) && (*(_WORD *)(v3 + 10) & 0x1FC0) == 0)
-    || (*(_DWORD *)v3 == 18 || *(_DWORD *)v3 == 16)
-    && (*(_DWORD *)(v3 + 8) & 0x3F8000) == 0
-    && (*(_WORD *)(v3 + 10) & 0x1FC0) == 0 )
+  if ( (*(_DWORD *)(uintptr_t)fieldDescriptor == 17 || *(_DWORD *)(uintptr_t)fieldDescriptor == 15)
+    && ((v4 = *(_DWORD *)(uintptr_t)(fieldDescriptor + 8), (v4 & 0x3F8000) == 0)
+     || (fieldDescriptor = v4 & 0x3F8000, (v4 & 0x3F8000) == 0x8000) && (*(_WORD *)(uintptr_t)(v3 + 10) & 0x1FC0) == 0)
+    || (*(_DWORD *)(uintptr_t)v3 == 18 || *(_DWORD *)(uintptr_t)v3 == 16)
+    && (*(_DWORD *)(uintptr_t)(v3 + 8) & 0x3F8000) == 0
+    && (*(_WORD *)(uintptr_t)(v3 + 10) & 0x1FC0) == 0 )
   {
     *astNode = 31;
-    result = PP_MakeConst30((int)astNode, fieldDescriptor);
+    result = PP_MakeConst30((int)(intptr_t)astNode, fieldDescriptor);
 LABEL_11:
-    *(_DWORD *)(v6 + 2) = result;
+    *(_DWORD *)(uintptr_t)(v6 + 2) = result;
     return result;
   }
   *astNode = 29;
   result = PP_BuildDefault();
-  *(_DWORD *)(v7 + 2) = result;
+  *(_DWORD *)(uintptr_t)(v7 + 2) = result;
   return result;
 }
 // 4B7390: variable 'v6' is possibly undefined
@@ -1292,29 +1292,29 @@ int  PP_PatchLowTierConst(_WORD *astNode, int fieldDescriptor)
   int v7; // ecx
   int v8; // ecx
 
-  if ( (*(_BYTE *)(fieldDescriptor + 9) & 0x40) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(fieldDescriptor + 9) & 0x40) == 0 )
   {
     *astNode = 27;
-    result = PP_MakeConst27((int)astNode, fieldDescriptor);
+    result = PP_MakeConst27((int)(intptr_t)astNode, fieldDescriptor);
     goto LABEL_10;
   }
-  v4 = *(_DWORD *)fieldDescriptor;
-  if ( (*(_DWORD *)fieldDescriptor == 17 || v4 == 15)
-    && ((v5 = *(_DWORD *)(fieldDescriptor + 8), (v5 & 0x3F8000) == 0)
-     || (v5 & 0x3F8000) == 0x8000 && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0)
-    || (*(_DWORD *)fieldDescriptor == 18 || *(_DWORD *)fieldDescriptor == 16)
-    && (*(_DWORD *)(fieldDescriptor + 8) & 0x3F8000) == 0
-    && (*(_WORD *)(fieldDescriptor + 10) & 0x1FC0) == 0 )
+  v4 = *(_DWORD *)(uintptr_t)fieldDescriptor;
+  if ( (*(_DWORD *)(uintptr_t)fieldDescriptor == 17 || v4 == 15)
+    && ((v5 = *(_DWORD *)(uintptr_t)(fieldDescriptor + 8), (v5 & 0x3F8000) == 0)
+     || (v5 & 0x3F8000) == 0x8000 && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0)
+    || (*(_DWORD *)(uintptr_t)fieldDescriptor == 18 || *(_DWORD *)(uintptr_t)fieldDescriptor == 16)
+    && (*(_DWORD *)(uintptr_t)(fieldDescriptor + 8) & 0x3F8000) == 0
+    && (*(_WORD *)(uintptr_t)(fieldDescriptor + 10) & 0x1FC0) == 0 )
   {
     *astNode = 28;
     result = PP_MakeConst28();
 LABEL_10:
-    *(_DWORD *)(v7 + 2) = result;
+    *(_DWORD *)(uintptr_t)(v7 + 2) = result;
     return result;
   }
   *astNode = 26;
   result = PP_MakeConst26();
-  *(_DWORD *)(v8 + 2) = result;
+  *(_DWORD *)(uintptr_t)(v8 + 2) = result;
   return result;
 }
 // 4B7429: variable 'v7' is possibly undefined
@@ -1372,10 +1372,10 @@ int __fastcall PP_MakeConst31(int a1, int a2)
 
   v6[2] = a1;
   Mem_AllocArray(v6, 4);
-  v3 = *(_DWORD *)(v2 + 40) - 1;
+  v3 = *(_DWORD *)(uintptr_t)(v2 + 40) - 1;
   BYTE1(v6[0]) = 0;
   v6[0] |= v3 << 8;
-  v4 = *(_DWORD *)(v2 + 28);
+  v4 = *(_DWORD *)(uintptr_t)(v2 + 28);
   LOBYTE(v6[0]) = 0;
   v6[0] |= (unsigned __int8)(v4 - 1);
   return Rules_AddBitmapValue(v6, 4);

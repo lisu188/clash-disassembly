@@ -40,12 +40,12 @@ void  WorldMap_RunHumanTurnLoop(
   UI_ShowTechnologyLevelUpIfChanged(0, runtime_context);
   g_CursorDesc_Default[5] = 0;
   g_CursorDesc_Default[6] = 0;
-  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)(intptr_t)g_RenderState, 0, 640, 0, 480);
   Diagnostics_TraceWorldMapActionEvent("human_turn_cursor_restored", g_SelectedUnitIndex, g_ActiveCursorDescriptorPtr, g_ActiveCursorDescriptor, 0);
   {
-    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)g_RenderState;
+    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)(intptr_t)g_RenderState;
     Diagnostics_TraceWorldMapActionEvent(
       "human_turn_cursor_bounds",
       g_SelectedUnitIndex,
@@ -61,7 +61,7 @@ void  WorldMap_RunHumanTurnLoop(
   {
     UI_ReadCheatString(0);
     WorldMap_RunInputScriptStep();
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     WorldMap_TickPaletteFlashEffect(0, 0, 0);
     WorldMap_RedrawFrame(0);
     MiniMap_UpdateViewportFromCursor();
@@ -78,15 +78,15 @@ void  WorldMap_RunHumanTurnLoop(
       {
         if ( Input_IsKeyPressed(34) )
         {
-          if ( !*(_DWORD *)(gameData + 147151) )
+          if ( !*(_DWORD *)(uintptr_t)(gameData + 147151) )
           {
-            *(_DWORD *)(gameData + 147151) = 1;
+            *(_DWORD *)(uintptr_t)(gameData + 147151) = 1;
             goto LABEL_24;
           }
         }
-        else if ( *(_DWORD *)(gameData + 147151) )
+        else if ( *(_DWORD *)(uintptr_t)(gameData + 147151) )
         {
-          *(_DWORD *)(gameData + 147151) = 0;
+          *(_DWORD *)(uintptr_t)(gameData + 147151) = 0;
 LABEL_24:
           WorldMap_RedrawViewport(1);
         }
@@ -100,7 +100,7 @@ LABEL_24:
           UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
           Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
           while ( Input_IsKeyPressed(205) )
-            DD_Pump((int)g_RenderState, 0);
+            DD_Pump((int)(intptr_t)g_RenderState, 0);
         }
         if ( Input_IsKeyPressed(203) )
         {
@@ -111,7 +111,7 @@ LABEL_24:
             UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
             Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
             while ( Input_IsKeyPressed(203) )
-              DD_Pump((int)g_RenderState, 0);
+              DD_Pump((int)(intptr_t)g_RenderState, 0);
           }
         }
         if ( Input_IsKeyPressed(200) )
@@ -135,9 +135,9 @@ LABEL_24:
               available_action_points = UnitStack_GetMinCurrentActionPoints(selected_stack_record);
               if ( available_action_points >= required_action_points )
               {
-                qmemcpy((void *)UNIT_STACK_PATH_BUFFER(selected_stack_record), queued_path, UNIT_STACK_PATH_BYTES);
+                qmemcpy((void *)(uintptr_t)UNIT_STACK_PATH_BUFFER(selected_stack_record), queued_path, UNIT_STACK_PATH_BYTES);
                 if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
-                  Audio_PlayUnitMoveOrderSound(*(__int16 *)UNIT_STACK_SLOT(selected_stack_record, 0));
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)UNIT_STACK_SLOT(selected_stack_record, 0));
                 UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, 0, 0, st0_runtime);
               }
               j__nfree_();
@@ -164,14 +164,14 @@ LABEL_24:
       0);
     if ( Input_IsKeyPressed(1) )
     {
-      saved_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+      saved_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
       saved_render_hook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
-      Debug_Log(saved_resource_handle, 0, 0, (int)aSetrhS08x_0);
+      Debug_Log(saved_resource_handle, 0, 0, (int)(intptr_t)aSetrhS08x_0);
       WorldMap_ShowQuitConfirmDialog(0, 0, 0);
-      Debug_Log((int)g_RenderHook, 0, 0, (int)aUnsetrh08x);
+      Debug_Log((int)(intptr_t)g_RenderHook, 0, 0, (int)(intptr_t)aUnsetrh08x);
       g_RenderHook = saved_render_hook;
-      Render_SetResourceHandle((int)&g_MainRenderDevice, saved_resource_handle);
+      Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, saved_resource_handle);
     }
     if ( Player_CheckForDefeatAndHandleElimination(g_CurrentPlayerIndex, 0) )
     {
@@ -183,7 +183,7 @@ LABEL_24:
       g_WorldMapGameLostExitFlag = 1;
       g_WorldMapTurnLoopExitFlag = 1;
       Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-      Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
+      Video_PlayAviWithModeGuard((int)(intptr_t)aArama1, aKon_por1);
       return;
     }
     if ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) )
@@ -249,7 +249,7 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   (void)a2;
 
   g_MissionDefeatVideoPlayedGuard = 0;
-  Debug_Log(0, 0, allocContext, (int)aPlaygame);
+  Debug_Log(0, 0, allocContext, (int)(intptr_t)aPlaygame);
   Noop_PlayGameSessionBoundaryHook(0);
   for ( player_index = 0; player_index < 5; ++player_index )
   {
@@ -277,22 +277,22 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   {
     if ( g_WorldMapBackgroundSpriteSet )
       DLXSpriteSet_ReleaseAndClear(&g_WorldMapBackgroundSpriteSet);
-    background_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, allocContext);
+    background_sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, allocContext);
     if ( background_sprite_set )
       background_sprite_set = DLXSpriteSet_Load(background_sprite_set, background_resource_name);
-    g_WorldMapBackgroundSpriteSet = (int)background_sprite_set;
-    tree_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, allocContext);
+    g_WorldMapBackgroundSpriteSet = (int)(intptr_t)background_sprite_set;
+    tree_sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, allocContext);
     if ( tree_sprite_set )
       tree_sprite_set = DLXSpriteSet_Load(tree_sprite_set, tree_resource_name);
-    g_TreeSpriteSet = (int)tree_sprite_set;
+    g_TreeSpriteSet = (int)(intptr_t)tree_sprite_set;
   }
-  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   UI_SetActiveWidgetTable(8);
-  *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140039);
-  *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(PLAYER_DATA_STRIDE * *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140043);
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140039);
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140043);
   Locale_DrawInteger();
   Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, allocContext);
   Render_DrawSprite();
@@ -301,11 +301,11 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   WorldMap_LoadActionButtonSprites(0, 0, allocContext);
   g_CursorDesc_Default[5] = 0;
   g_CursorDesc_Default[6] = 0;
-  g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
+  g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)(intptr_t)g_RenderState, 0, 640, 0, 480);
   {
-    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)g_RenderState;
+    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)(intptr_t)g_RenderState;
     Diagnostics_TraceWorldMapActionEvent(
       "playgame_cursor_bounds_restored",
       g_SelectedUnitIndex,
@@ -314,10 +314,10 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
       g_CursorDesc_Default[6]);
   }
   UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, allocContext);
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
-  Render_Present((int)g_RenderState);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr, 20);
+  Render_Present((int)(intptr_t)g_RenderState);
   WorldMap_RedrawViewport(1);
-  Debug_Log(0, 20, allocContext, (int)aStart);
+  Debug_Log(0, 20, allocContext, (int)(intptr_t)aStart);
   LogAllUnits(0, 20, allocContext);
   LogAllBuildings(0, 20, allocContext);
   if ( ACTIVE_MISSION_INDEX != -1 && GAME_TURN_COUNTER == 1 && !getenv("CLASH95_SKIP_MISSION_STATUS_PANEL") )
@@ -327,10 +327,10 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   g_AdvanceToNextPlayerFlag = 0;
   g_WorldMapTurnLoopExitFlag = 0;
   g_PendingLoadGameSlotIndex = -1;
-  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  previous_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   previous_render_hook = (int (*)(int, char, DWORD))g_RenderHook;
   g_RenderHook = (int (*)())WorldMap_RenderHook;
-  Debug_Log(previous_resource_handle, 0, allocContext, (int)aSetrhS08x, "RedrawMainMap", WorldMap_RenderHook);
+  Debug_Log(previous_resource_handle, 0, allocContext, (int)(intptr_t)aSetrhS08x, "RedrawMainMap", WorldMap_RenderHook);
   while ( 1 )
   {
     Diagnostics_TraceWorldMapActionEvent("playgame_loop_top", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
@@ -345,10 +345,10 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
     else if ( GAME_TURN_COUNTER )
     {
       Diagnostics_TraceWorldMapActionEvent("playgame_before_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
-      Debug_Log(0, 0, allocContext, (int)aComputerplay);
+      RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Busy);
+      Debug_Log(0, 0, allocContext, (int)(intptr_t)aComputerplay);
       Rules_ExecuteAITurn();
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+      RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, g_WorldMapTurnLoopExitFlag);
     }
     if ( g_WorldMapTurnLoopExitFlag )
@@ -359,10 +359,10 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
     Diagnostics_TraceWorldMapUnitSnapshot("after_turn_advance");
   }
   Render_Pump();
-  Debug_Log(0, 0, allocContext, (int)aUnsetrh08x_1, g_RenderHook);
+  Debug_Log(0, 0, allocContext, (int)(intptr_t)aUnsetrh08x_1, g_RenderHook);
   g_RenderHook = (int (*)())previous_render_hook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
-  Debug_Log(0, 0, allocContext, (int)aKoniecGryPoDTu, GAME_TURN_COUNTER);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previous_resource_handle);
+  Debug_Log(0, 0, allocContext, (int)(intptr_t)aKoniecGryPoDTu, GAME_TURN_COUNTER);
   LogAllUnits(0, 20, allocContext);
   LogAllBuildings(0, 20, allocContext);
   Audio_StopMainMusic();
@@ -373,7 +373,7 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   Tooltip_ReleaseBackdropSurface();
   Rules_ShowBanner_StrategicClash();
   Mem_PurgeFreeListsForSpace(-1, 0, 0);
-  Debug_Log(0, 0, allocContext, (int)aPlaygameEnd);
+  Debug_Log(0, 0, allocContext, (int)(intptr_t)aPlaygameEnd);
   Noop_PlayGameSessionBoundaryHook(0);
   if ( g_PendingLoadGameSlotIndex != -1 )
   {
@@ -455,7 +455,7 @@ int  Render_ReleaseSurface(int slotIndex, DWORD allocContext)
   sprite_set = (_DWORD *)(uintptr_t)(unsigned int)slot->cached_sprite_set;
   if ( !sprite_set )
   {
-    sprite_set = (_DWORD *)Mem_Alloc(4112, slotIndex, 0, allocContext);
+    sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, slotIndex, 0, allocContext);
     if ( sprite_set )
       sprite_set = DLXSpriteSet_Load(sprite_set, slot->source_stem);
     slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
@@ -481,7 +481,7 @@ char  TextSprite_ActivateResourceSlot(int slotIndex, char styleFlag, DWORD alloc
   sprite_set = (_DWORD *)(uintptr_t)(unsigned int)slot->cached_sprite_set;
   if ( !sprite_set )
   {
-    sprite_set = (_DWORD *)Mem_Alloc(4112, slotIndex, 0, allocContext);
+    sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, slotIndex, 0, allocContext);
     if ( sprite_set )
       sprite_set = DLXSpriteSet_Load(sprite_set, slot->source_stem);
     slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
@@ -832,7 +832,7 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
 
   fontBytes = fontData;
   slot = TextSprite_GetResourceSlot(slotIndex);
-  Debug_Log(a3, a4, allocContext, (int)a_conformfont2p);
+  Debug_Log(a3, a4, allocContext, (int)(intptr_t)a_conformfont2p);
   if ( !slot )
     return;
   existingSpriteSet = slot->cached_sprite_set;
@@ -847,24 +847,24 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
   for ( i = 0; i < 768; ++i )
   {
     BYTE1(checksum) = *fontCursor;
-    LOBYTE(checksum) = *fontCursor++ ^ (unsigned __int8)checksum;
+    LOBYTE(checksum) = *fontCursor++ ^ (unsigned __int8)(intptr_t)checksum;
     checksumSum += BYTE1(checksum);
   }
-  sprintf_(cacheFilename, "cache\\%02x%02x%04x.s32", slotIndex, (unsigned __int8)checksum, checksumSum);
+  sprintf_(cacheFilename, "cache\\%02x%02x%04x.s32", slotIndex, (unsigned __int8)(intptr_t)checksum, checksumSum);
   Res_ProbeGfxFileExists(cacheFilename, v13, allocContext, v12);
   if ( cacheFileExists )
   {
-    cachedSpriteSet = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, allocContext);
+    cachedSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v14, (char)(intptr_t)checksum, allocContext);
     if ( cachedSpriteSet )
-      cachedSpriteSet = DLXSpriteSet_Load(cachedSpriteSet, (char)checksum);
+      cachedSpriteSet = DLXSpriteSet_Load(cachedSpriteSet, (char)(intptr_t)checksum);
     slot->cached_sprite_set = (int)(uintptr_t)cachedSpriteSet;
   }
   else
   {
-    spriteSet = (_DWORD *)Mem_Alloc(4112, v14, (char)checksum, allocContext);
+    spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v14, (char)(intptr_t)checksum, allocContext);
     loadedSpriteSet = spriteSet;
     if ( spriteSet )
-      loadedSpriteSet = DLXSpriteSet_Load(spriteSet, (char)checksum);
+      loadedSpriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)checksum);
     destCursor = sourceStemCopy;
     srcCursor = (char *)slot->source_stem;
     slot->cached_sprite_set = (int)(uintptr_t)loadedSpriteSet;
@@ -882,11 +882,11 @@ void  TextSprite_BuildOrLoadCachedFont(int slotIndex, _BYTE *fontData, int a3, c
     while ( secondChar );
     checksum = v26;
     cacheFilename[strlen(sourceStemCopy) + 97] = 'p';
-    Palette_LoadFromQueryHandle((int)fontBytes, 12 * slotIndex);
+    Palette_LoadFromQueryHandle((int)(intptr_t)fontBytes, 12 * slotIndex);
     DLXSpriteSet_DrawText(slot->cached_sprite_set, -1, v22, v26);
-    DLXSpriteSet_Save((int *)(uintptr_t)(unsigned int)slot->cached_sprite_set, (int)cacheFilename, (char)v26);
+    DLXSpriteSet_Save((int *)(uintptr_t)(unsigned int)slot->cached_sprite_set, (int)(intptr_t)cacheFilename, (char)(intptr_t)v26);
   }
-  Debug_Log(v23, (char)checksum, allocContext, (int)a_end);
+  Debug_Log(v23, (char)(intptr_t)checksum, allocContext, (int)(intptr_t)a_end);
 }
 // 40C21A: variable 'v6' is possibly undefined
 // 40C364: variable 'v24' is possibly undefined
@@ -988,8 +988,8 @@ int  Font_SetGlyphFallbackEntry(int tableBase, unsigned __int16 glyphId, char fl
   int result; // eax
 
   result = 3 * glyphId;
-  *(_WORD *)(tableBase + result) = fallbackValue;
-  *(_BYTE *)(tableBase + result + 2) = flagByte;
+  *(_WORD *)(uintptr_t)(tableBase + result) = fallbackValue;
+  *(_BYTE *)(uintptr_t)(tableBase + result + 2) = flagByte;
   return result;
 }
 
@@ -1006,7 +1006,7 @@ int __cdecl Font_BuildGlyphFallbackChain(int tableBase, char flagByte, unsigned 
   va_start(args, firstGlyphId);
   while ( 1 )
   {
-    if ( current_id == 0xFFFF || current_id == 0xFFFE || *(unsigned __int16 *)(3 * (unsigned int)current_id + tableBase) != 0xFFFF )
+    if ( current_id == 0xFFFF || current_id == 0xFFFE || *(unsigned __int16 *)(uintptr_t)(3 * (unsigned int)current_id + tableBase) != 0xFFFF )
       break;
     fallback_id = (unsigned __int16)va_arg(args, unsigned int);
     result = Font_SetGlyphFallbackEntry(tableBase, current_id, flagByte, fallback_id);
@@ -1028,11 +1028,11 @@ int Font_InitGlyphFallbackTablesForLanguage()
   Font_ResetGlyphFallbackTable(g_FontGlyphFallbackTable3);
   for ( i = 0; i < 0x400u; ++i )
     g_Font_GlyphRemapTable[i] = i;
-  Font_BuildGlyphFallbackChain((int)&g_SpriteCodeRemapTable, 15, 0x24Bu, 0x24Cu, 0x24Du, 0x24Eu, 0x24Fu, 0x250u, 0x251u, 0x252u, 0x24Bu);
+  Font_BuildGlyphFallbackChain((int)(intptr_t)&g_SpriteCodeRemapTable, 15, 0x24Bu, 0x24Cu, 0x24Du, 0x24Eu, 0x24Fu, 0x250u, 0x251u, 0x252u, 0x24Bu);
   for ( base = 0xDF; base <= 0xEA; ++base )
   {
     Font_BuildGlyphFallbackChain(
-      (int)&g_SpriteCodeRemapTable,
+      (int)(intptr_t)&g_SpriteCodeRemapTable,
       15,
       (unsigned __int16)base,
       (unsigned __int16)(base + 0x0C),
@@ -1056,7 +1056,7 @@ int Font_InitGlyphFallbackTablesForLanguage()
   {
     base = 0x253 + 8 * i;
     Font_BuildGlyphFallbackChain(
-      (int)&g_SpriteCodeRemapTable,
+      (int)(intptr_t)&g_SpriteCodeRemapTable,
       15,
       (unsigned __int16)base,
       (unsigned __int16)(base + 1),
@@ -1069,14 +1069,14 @@ int Font_InitGlyphFallbackTablesForLanguage()
       (unsigned __int16)base);
   }
 
-  language = *(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET);
+  language = *(unsigned __int8 *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
   switch ( language )
   {
     case 0:
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
         Font_BuildGlyphFallbackChain(
-          (int)&g_SpriteCodeRemapTable,
+          (int)(intptr_t)&g_SpriteCodeRemapTable,
           15,
           (unsigned __int16)base,
           (unsigned __int16)(base + 8),
@@ -1101,7 +1101,7 @@ int Font_InitGlyphFallbackTablesForLanguage()
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
         Font_BuildGlyphFallbackChain(
-          (int)&g_SpriteCodeRemapTable,
+          (int)(intptr_t)&g_SpriteCodeRemapTable,
           15,
           (unsigned __int16)base,
           (unsigned __int16)(base + 8),
@@ -1118,7 +1118,7 @@ int Font_InitGlyphFallbackTablesForLanguage()
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
         Font_BuildGlyphFallbackChain(
-          (int)&g_SpriteCodeRemapTable,
+          (int)(intptr_t)&g_SpriteCodeRemapTable,
           10,
           (unsigned __int16)base,
           (unsigned __int16)(base + 8),
@@ -1147,7 +1147,7 @@ int Font_InitGlyphFallbackTablesForLanguage()
   {
     base = 0x253 + 8 * i;
     Font_BuildGlyphFallbackChain(
-      (int)&g_TerrainAnimationRemapTable,
+      (int)(intptr_t)&g_TerrainAnimationRemapTable,
       10,
       (unsigned __int16)base,
       (unsigned __int16)(base + 1),
@@ -1160,33 +1160,33 @@ int Font_InitGlyphFallbackTablesForLanguage()
       (unsigned __int16)base);
   }
   if ( language == 2 )
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0xBBu, 0x2BDu, 0x2BEu, 0x2BFu, 0x2C0u, 0x2C1u, 0x2C2u, 0xBBu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0xBBu, 0x2BDu, 0x2BEu, 0x2BFu, 0x2C0u, 0x2C1u, 0x2C2u, 0xBBu);
   if ( language )
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 15, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x303u, 0xFFFFu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 15, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x303u, 0xFFFFu);
   else
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 5, 0x303u, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x24u, 0xFFFFu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 5, 0x303u, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x24u, 0xFFFFu);
 
   if ( language == 0 )
   {
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x321u, 0x322u, 0x323u, 0x324u, 0x325u, 0x326u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x327u, 0x328u, 0x329u, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x321u, 0x322u, 0x323u, 0x324u, 0x325u, 0x326u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x327u, 0x328u, 0x329u, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0xFFFEu);
   }
   else if ( language == 1 )
   {
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0x313u, 0x314u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0x313u, 0x314u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0xFFFEu);
   }
   else if ( language == 2 )
   {
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0x321u, 0x322u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x323u, 0x324u, 0x325u, 0x326u, 0x327u, 0x328u, 0x329u, 0xFFFEu);
-    Font_BuildGlyphFallbackChain((int)&g_TerrainAnimationRemapTable, 10, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0x333u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0x321u, 0x322u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x323u, 0x324u, 0x325u, 0x326u, 0x327u, 0x328u, 0x329u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)(intptr_t)&g_TerrainAnimationRemapTable, 10, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0x333u, 0xFFFEu);
   }
 
   return language;
@@ -1355,16 +1355,16 @@ int  MiniMap_CreateSurface(DWORD allocContext)
   int minimap_frame_sprite; // eax
 
   g_MiniMapPixelsPerTile_523F54 = 2;
-  if ( *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) * *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) <= 2500 )
+  if ( *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) * *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) <= 2500 )
     g_MiniMapPixelsPerTile_523F54 = 4;
-  g_MiniMapRectWidth_523348 = (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_WIDTH_TILES_OFFSET) + 14;
-  g_MiniMapRectHeight_52334A = *(_WORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) * (unsigned __int8)g_MiniMapPixelsPerTile_523F54 + 14;
+  g_MiniMapRectWidth_523348 = (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) + 14;
+  g_MiniMapRectHeight_52334A = *(_WORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) * (unsigned __int8)g_MiniMapPixelsPerTile_523F54 + 14;
   g_MiniMapRectTop_523346 = 16;
   g_MiniMapRectLeft_523344 = 608 - g_MiniMapRectWidth_523348;
-  Surface = (_DWORD *)Mem_Alloc(188, 16, g_MiniMapRectWidth_523348, allocContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 16, g_MiniMapRectWidth_523348, allocContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, g_MiniMapRectWidth_523348, g_MiniMapRectHeight_52334A);
-  g_MiniMapSurface_52334C = (int)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, g_MiniMapRectWidth_523348, g_MiniMapRectHeight_52334A);
+  g_MiniMapSurface_52334C = (int)(intptr_t)Surface;
   g_RenderDevice = Surface;
   minimap_frame_sprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 4);
   Compat_RenderDeviceDrawMenuSprite(0, 0, minimap_frame_sprite, 1u);
@@ -1409,7 +1409,7 @@ int  MiniMap_BlitDirtyRectAndDrawViewportBox(
     if ( bottom > (unsigned __int16)g_MiniMapRectHeight_52334A + (unsigned __int16)g_MiniMapRectTop_523346 )
       bottom = g_MiniMapRectHeight_52334A + g_MiniMapRectTop_523346 - 1;
     Render_FillRect(
-      (_DWORD *)g_MiniMapSurface_52334C,
+      (_DWORD *)(uintptr_t)g_MiniMapSurface_52334C,
       g_RenderDevice,
       (unsigned __int16)(top - g_MiniMapRectTop_523346),
       (unsigned __int16)(result - g_MiniMapRectLeft_523344),
@@ -1427,10 +1427,10 @@ int  MiniMap_BlitDirtyRectAndDrawViewportBox(
       surface = RenderSurface_ResolvePrimaryCompanion((_DWORD *)g_RenderDevice);
       if ( !surface )
         return result;
-      right = (unsigned __int16)(g_MiniMapRectLeft_523344 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9));
-      top = (unsigned __int16)(g_MiniMapRectTop_523346 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_VIEW_TOP_OFFSET));
-      left = (unsigned __int16)(g_MiniMapRectLeft_523344 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(gameData + MAP_VIEW_LEFT_OFFSET));
-      bottom = (unsigned __int16)(g_MiniMapRectTop_523346 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7));
+      right = (unsigned __int16)(g_MiniMapRectLeft_523344 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9));
+      top = (unsigned __int16)(g_MiniMapRectTop_523346 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET));
+      left = (unsigned __int16)(g_MiniMapRectLeft_523344 + 6 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * *(_WORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET));
+      bottom = (unsigned __int16)(g_MiniMapRectTop_523346 + 7 + (unsigned __int8)g_MiniMapPixelsPerTile_523F54 * (*(_WORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7));
       Surface_DrawRectOutline((unsigned __int16 *)surface, left, right, top, bottom, 0x4Cu);
       return result;
     }

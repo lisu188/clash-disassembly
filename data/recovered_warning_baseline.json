@@ -24,7 +24,7 @@
   "profiles": {
     "gcc": {
       "status": "seeded",
-      "total": 38684,
+      "total": 11316,
       "warnings": {
         "-Waddress-of-packed-member": 2,
         "-Wcast-function-type": 119,
@@ -33,13 +33,13 @@
         "-Wincompatible-pointer-types": 580,
         "-Wint-conversion": 1319,
         "-Wint-in-bool-context": 31,
-        "-Wint-to-pointer-cast": 19070,
+        "-Wint-to-pointer-cast": 661,
         "-Wmaybe-uninitialized": 4182,
         "-Wmisleading-indentation": 1,
         "-Wmissing-prototypes": 1,
         "-Wparentheses": 209,
         "-Wpointer-sign": 682,
-        "-Wpointer-to-int-cast": 8967,
+        "-Wpointer-to-int-cast": 8,
         "-Wsign-compare": 853,
         "-Wstrict-prototypes": 176,
         "-Wstringop-overflow=": 3,
@@ -55,7 +55,7 @@
     },
     "clang": {
       "status": "seeded",
-      "total": 38724,
+      "total": 11356,
       "warnings": {
         "-Warray-bounds": 1,
         "-Wbitwise-op-parentheses": 58,
@@ -71,14 +71,14 @@
         "-Wincompatible-pointer-types": 401,
         "-Wincompatible-pointer-types-discards-qualifiers": 15,
         "-Wint-conversion": 1319,
-        "-Wint-to-pointer-cast": 18911,
-        "-Wint-to-void-pointer-cast": 167,
+        "-Wint-to-pointer-cast": 667,
+        "-Wint-to-void-pointer-cast": 2,
         "-Winvalid-noreturn": 1,
         "-Wlogical-op-parentheses": 186,
         "-Wmisleading-indentation": 1,
         "-Wmissing-prototypes": 15,
         "-Wpointer-sign": 682,
-        "-Wpointer-to-int-cast": 8884,
+        "-Wpointer-to-int-cast": 8,
         "-Wsign-compare": 828,
         "-Wsometimes-uninitialized": 100,
         "-Wstrict-prototypes": 176,
@@ -90,7 +90,6 @@
         "-Wunused-value": 9,
         "-Wunused-variable": 340,
         "-Wvarargs": 1,
-        "-Wvoid-pointer-to-int-cast": 83,
         "clang/unknown": 20
       }
     }

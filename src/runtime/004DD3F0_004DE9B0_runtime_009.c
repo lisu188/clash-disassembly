@@ -31,34 +31,34 @@ signed int  Rules_CEFindBoundVariableOccurrence(
   {
     while ( 1 )
     {
-      testExpression = *(_DWORD *)(theField + 56);
+      testExpression = *(_DWORD *)(uintptr_t)(theField + 56);
       if ( testExpression )
       {
-        Rules_CEFindBoundVariableOccurrence(testExpression, theType, (int)theReference, theVariable, nandDepth, assignReference, 1);
+        Rules_CEFindBoundVariableOccurrence(testExpression, theType, (int)(intptr_t)theReference, theVariable, nandDepth, assignReference, 1);
       }
       else
       {
-        if ( (*(_DWORD *)theField == 15 || *(_DWORD *)theField == 16) && theVariable == *(_DWORD *)(theField + 4) )
+        if ( (*(_DWORD *)(uintptr_t)theField == 15 || *(_DWORD *)(uintptr_t)theField == 16) && theVariable == *(_DWORD *)(uintptr_t)(theField + 4) )
         {
-          if ( !allowMixing && (theType == 15 && *(_DWORD *)theField == 16 || theType == 16 && *(_DWORD *)theField == 15) )
+          if ( !allowMixing && (theType == 15 && *(_DWORD *)(uintptr_t)theField == 16 || theType == 16 && *(_DWORD *)(uintptr_t)theField == 15) )
             return 1;
-          if ( theReference[4] && (*(_BYTE *)(theField + 8) & 1) == 0 )
+          if ( theReference[4] && (*(_BYTE *)(uintptr_t)(theField + 8) & 1) == 0 )
           {
-            newConstraints = Rules_IntersectConstraints(theReference[4], *(_DWORD *)(theField + 16));
-            nodeFlags = *(_BYTE *)(theField + 8);
-            *(_DWORD *)(theField + 16) = newConstraints;
+            newConstraints = Rules_IntersectConstraints(theReference[4], *(_DWORD *)(uintptr_t)(theField + 16));
+            nodeFlags = *(_BYTE *)(uintptr_t)(theField + 8);
+            *(_DWORD *)(uintptr_t)(theField + 16) = newConstraints;
             if ( (nodeFlags & 0x10) != 0 )
               AST_DecrementNodeRefCount(v12);
-            *(_BYTE *)(theField + 8) |= 0x10u;
+            *(_BYTE *)(uintptr_t)(theField + 8) |= 0x10u;
           }
-          if ( !assignReference || *(_DWORD *)(theField + 20) && theReference[7] != *(_DWORD *)(theField + 28) && theReference[6] != *(_DWORD *)(theField + 24) )
+          if ( !assignReference || *(_DWORD *)(uintptr_t)(theField + 20) && theReference[7] != *(_DWORD *)(uintptr_t)(theField + 28) && theReference[6] != *(_DWORD *)(uintptr_t)(theField + 24) )
             goto LABEL_18;
         }
         else
         {
-          if ( *(_DWORD *)theField != 80 )
+          if ( *(_DWORD *)(uintptr_t)theField != 80 )
             goto LABEL_18;
-          if ( theVariable != *(_DWORD *)(theField + 4) )
+          if ( theVariable != *(_DWORD *)(uintptr_t)(theField + 4) )
             goto LABEL_18;
           result = assignReference;
           if ( assignReference != 1 )
@@ -66,15 +66,15 @@ signed int  Rules_CEFindBoundVariableOccurrence(
           if ( theType == 16 )
             return result;
         }
-        *(_DWORD *)(theField + 20) = theReference;
+        *(_DWORD *)(uintptr_t)(theField + 20) = theReference;
       }
 LABEL_18:
-      rightField = *(_DWORD *)(theField + 64);
-      if ( rightField && Rules_CEFindBoundVariableOccurrence(rightField, theType, (int)theReference, theVariable, nandDepth, assignReference, allowMixing) )
+      rightField = *(_DWORD *)(uintptr_t)(theField + 64);
+      if ( rightField && Rules_CEFindBoundVariableOccurrence(rightField, theType, (int)(intptr_t)theReference, theVariable, nandDepth, assignReference, allowMixing) )
         return 1;
-      if ( (*(_DWORD *)theField == 80 || *(_DWORD *)theField == 84) && nandDepth > *(_DWORD *)(theField + 48) )
+      if ( (*(_DWORD *)(uintptr_t)theField == 80 || *(_DWORD *)(uintptr_t)theField == 84) && nandDepth > *(_DWORD *)(uintptr_t)(theField + 48) )
         return 0;
-      theField = *(_DWORD *)(theField + 68);
+      theField = *(_DWORD *)(uintptr_t)(theField + 68);
       if ( !theField )
         return 0;
     }
@@ -96,14 +96,14 @@ signed int  Rules_CEValidateLiteralAgainstConstraints(int theNode, int whichCE, 
   int theConstraints; // [esp+4h] [ebp-1Ch]
   int fieldPosition; // [esp+8h] [ebp-18h]
 
-  if ( (*(_BYTE *)(theNode + 8) & 4) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 4) != 0 )
   {
-    theField = *(_DWORD *)(theNode + 68);
+    theField = *(_DWORD *)(uintptr_t)(theNode + 68);
     if ( theField )
     {
       while ( !Rules_CEValidateLiteralAgainstConstraints(theField, whichCE, a3) )
       {
-        theField = *(_DWORD *)(theField + 64);
+        theField = *(_DWORD *)(uintptr_t)(theField + 64);
         if ( !theField )
           return 0;
       }
@@ -111,10 +111,10 @@ signed int  Rules_CEValidateLiteralAgainstConstraints(int theNode, int whichCE, 
     }
     return 0;
   }
-  fieldPosition = *(_DWORD *)(theNode + 32);
-  theConstraints = *(_DWORD *)(theNode + 16);
-  slotName = *(_DWORD *)(theNode + 36);
-  orField = *(unsigned int **)(theNode + 68);
+  fieldPosition = *(_DWORD *)(uintptr_t)(theNode + 32);
+  theConstraints = *(_DWORD *)(uintptr_t)(theNode + 16);
+  slotName = *(_DWORD *)(uintptr_t)(theNode + 36);
+  orField = *(unsigned int **)(uintptr_t)(theNode + 68);
   if ( !orField )
     return 0;
   while ( 2 )
@@ -140,15 +140,15 @@ signed int  Rules_CEValidateLiteralAgainstConstraints(int theNode, int whichCE, 
           violationCode = Rules_CheckValueAgainstConstraint(*andField, andField[1], theConstraints);
           if ( violationCode )
           {
-            Rules_PrintConstraintViolationMessage((int)aALiteralRestri, 0, whichCE, 0, slotName, fieldPosition, violationCode, theConstraints, 1);
+            Rules_PrintConstraintViolationMessage((int)(intptr_t)aALiteralRestri, 0, whichCE, 0, slotName, fieldPosition, violationCode, theConstraints, 1);
             return 1;
           }
         }
       }
-      andField = (unsigned int *)andField[16];
+      andField = (unsigned int *)(uintptr_t)andField[16];
     }
     while ( andField );
-    orField = (unsigned int *)orField[17];
+    orField = (unsigned int *)(uintptr_t)orField[17];
     if ( orField )
       continue;
     break;
@@ -178,41 +178,41 @@ int  Rules_CEFindUnboundVariableReference(int exprPtr, int theExpression, int sl
     return 0;
   while ( 1 )
   {
-    if ( *(_DWORD *)currentExpr == 15 )
+    if ( *(_DWORD *)(uintptr_t)currentExpr == 15 )
     {
-      if ( !*(_DWORD *)(currentExpr + 20) )
+      if ( !*(_DWORD *)(uintptr_t)(currentExpr + 20) )
         break;
-      if ( Rules_ConstraintIsUnmatchable(*(char **)(currentExpr + 16)) && Rules_StaticConstraintCheckingEnabled() )
+      if ( Rules_ConstraintIsUnmatchable(*(char **)(uintptr_t)(currentExpr + 16)) && Rules_StaticConstraintCheckingEnabled() )
       {
-        Rules_PrintVariableBindingConstraintViolation(*(_DWORD *)(currentExpr + 4), savedExpression, whichCE, argNumber, slotName, theField);
+        Rules_PrintVariableBindingConstraintViolation(*(_DWORD *)(uintptr_t)(currentExpr + 4), savedExpression, whichCE, argNumber, slotName, theField);
         return currentExpr;
       }
       goto LABEL_6;
     }
-    if ( *(_DWORD *)currentExpr == 16 && !*(_DWORD *)(currentExpr + 20) )
+    if ( *(_DWORD *)(uintptr_t)currentExpr == 16 && !*(_DWORD *)(uintptr_t)(currentExpr + 20) )
       break;
-    nodeType = *(_DWORD *)currentExpr;
-    if ( *(_DWORD *)currentExpr == 13 )
+    nodeType = *(_DWORD *)(uintptr_t)currentExpr;
+    if ( *(_DWORD *)(uintptr_t)currentExpr == 13 )
     {
-      if ( !Rules_FindImportExportConstruct(aDefglobal_6, &count, *(_BYTE **)(*(_DWORD *)(currentExpr + 4) + 16), 1, 0) )
+      if ( !Rules_FindImportExportConstruct(aDefglobal_6, &count, *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(currentExpr + 4) + 16), 1, 0) )
         break;
     }
     else if ( nodeType == 10 || nodeType == 11 || nodeType == 12 )
     {
-      if ( *(_DWORD *)(currentExpr + 68) )
+      if ( *(_DWORD *)(uintptr_t)(currentExpr + 68) )
       {
-        result = Rules_CEFindUnboundVariableReference(*(_DWORD *)(currentExpr + 68), currentExpr, slotName, whichCE, theField);
+        result = Rules_CEFindUnboundVariableReference(*(_DWORD *)(uintptr_t)(currentExpr + 68), currentExpr, slotName, whichCE, theField);
         if ( result )
           return result;
       }
     }
 LABEL_6:
-    currentExpr = *(_DWORD *)(currentExpr + 64);
+    currentExpr = *(_DWORD *)(uintptr_t)(currentExpr + 64);
     ++argNumber;
     if ( !currentExpr )
       return 0;
   }
-  Rules_ReportUnboundVariableUsage(*(_DWORD *)(currentExpr + 4), savedExpression, slotName, whichCE, theField);
+  Rules_ReportUnboundVariableUsage(*(_DWORD *)(uintptr_t)(currentExpr + 4), savedExpression, slotName, whichCE, theField);
   return currentExpr;
 }
 
@@ -233,33 +233,33 @@ signed int  Rules_ReportUnboundVariableUsage(int theVariable, int theExpression,
   int v19; // ecx
   int v20; // ecx
 
-  Rules_PrintErrorID((int)aAnalysis, 4, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable_, v7);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(theVariable + 16), v8);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DE28, v9);
+  Rules_PrintErrorID((int)(intptr_t)aAnalysis, 4, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aVariable_, v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(theVariable + 16), v8);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50DE28, v9);
   if ( theExpression )
   {
     clonedExpression = Rules_CECloneBindingList(theExpression);
-    AST_Free(*(_DWORD *)(clonedExpression + 10));
-    *(_DWORD *)(v12 + 10) = 0;
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInTheExpr, v12);
-    Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], v13);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DE48, v14);
+    AST_Free(*(_DWORD *)(uintptr_t)(clonedExpression + 10));
+    *(_DWORD *)(uintptr_t)(v12 + 10) = 0;
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFoundInTheExpr, v12);
+    Rules_PrintFieldExprList((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50DE48, v14);
     AST_Free(v15);
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasReferencedI, v10);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWasReferencedI, v10);
   Rules_PrintLongInteger(v16, whichCE);
   if ( slotName )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_8, v17);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(slotName + 16), v20);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSlot_8, v17);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(slotName + 16), v20);
   }
   else if ( theField > 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_1, v17);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aField_1, v17);
     Rules_PrintLongInteger(v19, theField);
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBeforeBeingDef, v17);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aBeforeBeingDef, v17);
 }
 // 4DD84D: variable 'v7' is possibly undefined
 // 4DD85D: variable 'v8' is possibly undefined
@@ -282,10 +282,10 @@ signed int Rules_ReportVariableFieldTypeConflict(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aAnalysis, 3, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable_, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v1 + 16), v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUsedAsBothAS, v2);
+  Rules_PrintErrorID((int)(intptr_t)aAnalysis, 3, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aVariable_, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v1 + 16), v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsUsedAsBothAS, v2);
 }
 // 4DD963: variable 'v0' is possibly undefined
 // 4DD96D: variable 'v1' is possibly undefined
@@ -303,10 +303,10 @@ int Rules_CheckAndReportUnmatchableFieldConstraint(void)
   result = Rules_StaticConstraintCheckingEnabled();
   if ( result )
   {
-    result = (int)Rules_ConstraintIsUnmatchable(*(char **)(v1 + 16));
+    result = (int)(intptr_t)Rules_ConstraintIsUnmatchable(*(char **)(uintptr_t)(v1 + 16));
     if ( result )
     {
-      Rules_ReportConstraintReferenceConflict(*(_DWORD *)(v3 + 4), v2, *(_DWORD *)(v3 + 32));
+      Rules_ReportConstraintReferenceConflict(*(_DWORD *)(uintptr_t)(v3 + 4), v2, *(_DWORD *)(uintptr_t)(v3 + 32));
       return 1;
     }
   }
@@ -328,30 +328,30 @@ signed int  Rules_ReportConstraintReferenceConflict(int theVariable, int whichCE
   int v12; // ecx
   int v13; // ecx
 
-  Rules_PrintErrorID((int)aRulecstr, 1, 1);
+  Rules_PrintErrorID((int)(intptr_t)aRulecstr, 1, 1);
   if ( theVariable )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable__0, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(theVariable + 16), v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aVariable__0, v5);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(theVariable + 16), v12);
     contextText = aInCe;
   }
   else
   {
     contextText = aPattern_0;
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)contextText, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)contextText, v5);
   Rules_PrintLongInteger(v7, whichCE);
   if ( v8 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_9, v8);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v13 + 16), v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSlot_9, v8);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v13 + 16), v13);
   }
   else
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aField_2, 0);
     Rules_PrintLongInteger(v9, theField);
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasConstraintC, v10);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aHasConstraintC, v10);
 }
 // 4DD9F8: variable 'v5' is possibly undefined
 // 4DDA04: variable 'v7' is possibly undefined
@@ -387,9 +387,9 @@ int  Rules_DeriveCEFieldCardinalityConstraint(int theNode)
   minFields = 0;
   maxFields = 0;
   posInfinity = 0;
-  if ( (*(_BYTE *)(theNode + 8) & 4) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 4) == 0 )
     return 0;
-  for ( i = *(_DWORD **)(theNode + 68); i; i = (_DWORD *)i[16] )
+  for ( i = *(_DWORD **)(uintptr_t)(theNode + 68); i; i = (_DWORD *)(uintptr_t)i[16] )
   {
     if ( *i == 15 || *i == 17 )
     {
@@ -401,50 +401,50 @@ int  Rules_DeriveCEFieldCardinalityConstraint(int theNode)
       theConstraint = i[4];
       if ( !theConstraint )
         goto LABEL_22;
-      minBound = *(_DWORD *)(*(_DWORD *)(theConstraint + 18) + 2);
+      minBound = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theConstraint + 18) + 2);
       if ( minBound != g_Clips_NegativeInfinitySymbol )
-        minFields += *(_DWORD *)(minBound + 16);
-      for ( j = *(_DWORD *)(i[4] + 22); *(_DWORD *)(j + 10); j = *(_DWORD *)(j + 10) )
+        minFields += *(_DWORD *)(uintptr_t)(minBound + 16);
+      for ( j = *(_DWORD *)(uintptr_t)(i[4] + 22); *(_DWORD *)(uintptr_t)(j + 10); j = *(_DWORD *)(uintptr_t)(j + 10) )
         ;
-      maxBound = *(_DWORD *)(j + 2);
+      maxBound = *(_DWORD *)(uintptr_t)(j + 2);
       if ( maxBound != g_ClipsPositiveInfinitySymbol )
-        maxFields += *(_DWORD *)(maxBound + 16);
+        maxFields += *(_DWORD *)(uintptr_t)(maxBound + 16);
       else
 LABEL_22:
         posInfinity = 1;
     }
   }
-  if ( *(_DWORD *)(theNode + 16) )
-    constraintNode = Rules_CloneLHSParseNode(*(int **)(theNode + 16));
+  if ( *(_DWORD *)(uintptr_t)(theNode + 16) )
+    constraintNode = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(theNode + 16));
   else
     constraintNode = Rules_CreateLHSParseNode();
-  newConstraint = (_DWORD *)constraintNode;
-  AST_Free(*(_DWORD *)(constraintNode + 18));
+  newConstraint = (_DWORD *)(uintptr_t)constraintNode;
+  AST_Free(*(_DWORD *)(uintptr_t)(constraintNode + 18));
   AST_Free(*(_DWORD *)((char *)newConstraint + 22));
   minValue = Rules_AddIntegerValue(v8);
-  *(_DWORD *)((char *)newConstraint + 18) = AST_NewNode(1, (int)minValue);
+  *(_DWORD *)((char *)newConstraint + 18) = AST_NewNode(1, (int)(intptr_t)minValue);
   if ( posInfinity )
   {
     maxType = 2;
-    maxValueNode = (int *)g_ClipsPositiveInfinitySymbol;
+    maxValueNode = (int *)(uintptr_t)g_ClipsPositiveInfinitySymbol;
   }
   else
   {
     maxValueNode = Rules_AddIntegerValue(maxFields);
     maxType = 1;
   }
-  *(_DWORD *)((char *)newConstraint + 22) = AST_NewNode(maxType, (int)maxValueNode);
-  Rules_IntersectConstraints(*(_DWORD *)(theNode + 16), (int)newConstraint);
-  if ( (*(_BYTE *)(theNode + 8) & 0x10) != 0 )
-    AST_DecrementNodeRefCount(*(_DWORD **)(theNode + 16));
+  *(_DWORD *)((char *)newConstraint + 22) = AST_NewNode(maxType, (int)(intptr_t)maxValueNode);
+  Rules_IntersectConstraints(*(_DWORD *)(uintptr_t)(theNode + 16), (int)(intptr_t)newConstraint);
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 0x10) != 0 )
+    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(theNode + 16));
   AST_DecrementNodeRefCount(newConstraint);
-  nodeFlags = *(_BYTE *)(theNode + 8);
-  *(_DWORD *)(theNode + 16) = v13;
-  *(_BYTE *)(theNode + 8) = nodeFlags | 0x10;
+  nodeFlags = *(_BYTE *)(uintptr_t)(theNode + 8);
+  *(_DWORD *)(uintptr_t)(theNode + 16) = v13;
+  *(_BYTE *)(uintptr_t)(theNode + 8) = nodeFlags | 0x10;
   result = Rules_StaticConstraintCheckingEnabled();
   if ( result )
   {
-    result = (int)Rules_ConstraintIsUnmatchable(v15);
+    result = (int)(intptr_t)Rules_ConstraintIsUnmatchable(v15);
     if ( result )
       return 1;
   }
@@ -477,7 +477,7 @@ signed int  Rules_ComputeConnectedCEConstraintGroup(int theNode, int *multifield
   int orField; // [esp+10h] [ebp-14h]
 
   accumConstraints = 0;
-  orField = *(_DWORD *)(theNode + 68);
+  orField = *(_DWORD *)(uintptr_t)(theNode + 68);
   if ( !orField )
     goto LABEL_15;
   do
@@ -486,70 +486,70 @@ signed int  Rules_ComputeConnectedCEConstraintGroup(int theNode, int *multifield
     branchConstraint = 0;
     do
     {
-      if ( (*(_BYTE *)(andField + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(andField + 8) & 1) != 0 )
         goto LABEL_8;
-      if ( *(_DWORD *)andField == 94 )
+      if ( *(_DWORD *)(uintptr_t)andField == 94 )
       {
-        if ( **(_DWORD **)(andField + 56) != 10 )
+        if ( **(_DWORD **)(uintptr_t)(andField + 56) != 10 )
           goto LABEL_8;
         returnConstraint = Rules_ApplyCEKeywordFlags();
-        oldBranchConstraint = (_DWORD *)v6;
-        Rules_IntersectConstraints(v6, (int)returnConstraint);
+        oldBranchConstraint = (_DWORD *)(uintptr_t)v6;
+        Rules_IntersectConstraints(v6, (int)(intptr_t)returnConstraint);
         AST_DecrementNodeRefCount(oldBranchConstraint);
         goto LABEL_7;
       }
-      if ( Rules_TagIsConstantType(*(_DWORD *)andField) )
+      if ( Rules_TagIsConstantType(*(_DWORD *)(uintptr_t)andField) )
       {
-        constantExpr = (__int16 *)AST_NewNode(*(_DWORD *)andField, *(_DWORD *)(andField + 4));
+        constantExpr = (__int16 *)(uintptr_t)AST_NewNode(*(_DWORD *)(uintptr_t)andField, *(_DWORD *)(uintptr_t)(andField + 4));
         constantConstraint = Rules_BuildLHSNodeFromToken(constantExpr);
-        prevBranchConstraint = (_DWORD *)v16;
-        Rules_IntersectConstraints(v16, (int)constantConstraint);
+        prevBranchConstraint = (_DWORD *)(uintptr_t)v16;
+        Rules_IntersectConstraints(v16, (int)(intptr_t)constantConstraint);
         AST_DecrementNodeRefCount(prevBranchConstraint);
         AST_DecrementNodeRefCount(constantConstraint);
-        AST_Free((int)constantExpr);
+        AST_Free((int)(intptr_t)constantExpr);
       }
-      else if ( *(_DWORD *)(andField + 16) )
+      else if ( *(_DWORD *)(uintptr_t)(andField + 16) )
       {
-        returnConstraint = (_BYTE *)branchConstraint;
-        Rules_IntersectConstraints(branchConstraint, *(_DWORD *)(andField + 16));
+        returnConstraint = (_BYTE *)(uintptr_t)branchConstraint;
+        Rules_IntersectConstraints(branchConstraint, *(_DWORD *)(uintptr_t)(andField + 16));
 LABEL_7:
         AST_DecrementNodeRefCount(returnConstraint);
       }
 LABEL_8:
-      andField = *(_DWORD *)(andField + 64);
+      andField = *(_DWORD *)(uintptr_t)(andField + 64);
     }
     while ( andField );
-    mergedBranchConstraint = (_DWORD *)branchConstraint;
-    Rules_IntersectConstraints(branchConstraint, *(_DWORD *)(theNode + 16));
+    mergedBranchConstraint = (_DWORD *)(uintptr_t)branchConstraint;
+    Rules_IntersectConstraints(branchConstraint, *(_DWORD *)(uintptr_t)(theNode + 16));
     cleanupField = orField;
     AST_DecrementNodeRefCount(mergedBranchConstraint);
     do
     {
-      if ( (*(_BYTE *)(cleanupField + 8) & 1) != 0 && Rules_TagIsConstantType(*(_DWORD *)cleanupField) )
-        Rules_RemoveConstantFromConstraint(*(_DWORD *)cleanupField, *(_DWORD *)(cleanupField + 4), branchGroupConstraint);
-      cleanupField = *(_DWORD *)(cleanupField + 64);
+      if ( (*(_BYTE *)(uintptr_t)(cleanupField + 8) & 1) != 0 && Rules_TagIsConstantType(*(_DWORD *)(uintptr_t)cleanupField) )
+        Rules_RemoveConstantFromConstraint(*(_DWORD *)(uintptr_t)cleanupField, *(_DWORD *)(uintptr_t)(cleanupField + 4), branchGroupConstraint);
+      cleanupField = *(_DWORD *)(uintptr_t)(cleanupField + 64);
     }
     while ( cleanupField );
-    prevAccumConstraints = (_DWORD *)accumConstraints;
+    prevAccumConstraints = (_DWORD *)(uintptr_t)accumConstraints;
     accumConstraints = Rules_UnionConstraints(accumConstraints, branchGroupConstraint);
     AST_DecrementNodeRefCount(prevAccumConstraints);
     AST_DecrementNodeRefCount(unionedBranchConstraint);
-    orField = *(_DWORD *)(orField + 68);
+    orField = *(_DWORD *)(uintptr_t)(orField + 68);
   }
   while ( orField );
 LABEL_15:
   if ( accumConstraints )
   {
-    if ( (*(_BYTE *)(theNode + 8) & 0x10) != 0 )
-      AST_DecrementNodeRefCount(*(_DWORD **)(theNode + 16));
-    *(_DWORD *)(theNode + 16) = accumConstraints;
-    *(_BYTE *)(theNode + 8) |= 0x10u;
+    if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 0x10) != 0 )
+      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(theNode + 16));
+    *(_DWORD *)(uintptr_t)(theNode + 16) = accumConstraints;
+    *(_BYTE *)(uintptr_t)(theNode + 8) |= 0x10u;
   }
   if ( Rules_CheckAndReportUnmatchableFieldConstraint() )
     return 1;
-  if ( !multifieldNodesList || *(_DWORD *)(theNode + 64) || !Rules_DeriveCEFieldCardinalityConstraint((int)multifieldNodesList) )
+  if ( !multifieldNodesList || *(_DWORD *)(uintptr_t)(theNode + 64) || !Rules_DeriveCEFieldCardinalityConstraint((int)(intptr_t)multifieldNodesList) )
     return 0;
-  Rules_PrintConstraintViolationMessage((int)aTheGroupOfRest, 0, *(_DWORD *)(patternHead + 8) << 19 >> 25, 0, multifieldNodesList[9], multifieldNodesList[8], 5, multifieldNodesList[4], 1);
+  Rules_PrintConstraintViolationMessage((int)(intptr_t)aTheGroupOfRest, 0, *(_DWORD *)(uintptr_t)(patternHead + 8) << 19 >> 25, 0, multifieldNodesList[9], multifieldNodesList[8], 5, multifieldNodesList[4], 1);
   return 1;
 }
 // 4DDC2F: conditional instruction was optimized away because %var_14.4!=0
@@ -581,36 +581,36 @@ signed int  Rules_PrintVariableBindingConstraintViolation(int theVariable, int t
   int v24; // ecx
   int v25; // ecx
 
-  Rules_PrintErrorID((int)aRulecstr, 2, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPreviousVariab, v8);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(theVariable + 16), v9);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedTheTypeR, v10);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument_0, v11);
+  Rules_PrintErrorID((int)(intptr_t)aRulecstr, 2, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPreviousVariab, v8);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(theVariable + 16), v9);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCausedTheTypeR, v10);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForArgument_0, v11);
   Rules_PrintLongInteger(v12, whichArgument);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfTheExpressio, v13);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOfTheExpressio, v13);
   clonedExpression = Rules_CECloneBindingList(theExpression);
-  AST_Free(*(_DWORD *)(clonedExpression + 10));
-  *(_DWORD *)(clonedExprNode + 10) = 0;
-  Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], (__int16 *)clonedExprNode);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DFD4, v16);
+  AST_Free(*(_DWORD *)(uintptr_t)(clonedExpression + 10));
+  *(_DWORD *)(uintptr_t)(clonedExprNode + 10) = 0;
+  Rules_PrintFieldExprList((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], (__int16 *)(uintptr_t)clonedExprNode);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50DFD4, v16);
   AST_Free(v17);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v18, v19);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v18, v19);
   Rules_PrintLongInteger(v20, whichCE);
   if ( slotName )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_9, v21);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(slotName + 16), v25);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSlot_9, v21);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(slotName + 16), v25);
   }
   else
   {
     v22 = theField;
     if ( theField > 0 )
     {
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_2, theField);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aField_2, theField);
       Rules_PrintLongInteger(v24, v24);
     }
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aToBeViolated_, v22);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aToBeViolated_, v22);
 }
 // 4DDE3D: variable 'v8' is possibly undefined
 // 4DDE4D: variable 'v9' is possibly undefined
@@ -646,20 +646,20 @@ _DWORD * Rules_MergeConstraintListsByFieldIndex(_DWORD *theList, _DWORD *newItem
     do
     {
       tempList = theList;
-      nextItem = (_DWORD *)theItem[16];
+      nextItem = (_DWORD *)(uintptr_t)theItem[16];
       theItem[16] = 0;
       if ( theList )
       {
         while ( tempList[1] != theItem[1] )
         {
-          tempList = (_DWORD *)tempList[16];
+          tempList = (_DWORD *)(uintptr_t)tempList[16];
           if ( !tempList )
             goto LABEL_5;
         }
         Rules_IntersectConstraints(tempList[4], theItem[4]);
-        AST_DecrementNodeRefCount(*(_DWORD **)(v6 + 16));
-        *(_DWORD *)(v8 + 16) = v7;
-        AST_FreeNode((int)theItem);
+        AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(v6 + 16));
+        *(_DWORD *)(uintptr_t)(v8 + 16) = v7;
+        AST_FreeNode((int)(intptr_t)theItem);
       }
 LABEL_5:
       if ( !tempList )
@@ -698,21 +698,21 @@ signed int  Rules_IntersectConstraintListsByFieldIndex(int theList1, int theList
       otherNode = theList2;
       if ( theList2 )
       {
-        while ( *(_DWORD *)(theNode + 4) != *(_DWORD *)(otherNode + 4) )
+        while ( *(_DWORD *)(uintptr_t)(theNode + 4) != *(_DWORD *)(uintptr_t)(otherNode + 4) )
         {
-          otherNode = *(_DWORD *)(otherNode + 64);
+          otherNode = *(_DWORD *)(uintptr_t)(otherNode + 64);
           if ( !otherNode )
             goto LABEL_5;
         }
         tempNode = AST_AllocNode();
-        *(_BYTE *)(tempNode + 8) |= 0x10u;
-        *(_DWORD *)(tempNode + 4) = *(_DWORD *)(v7 + 4);
-        *(_DWORD *)(tempNode + 16) = Rules_UnionConstraints(*(_DWORD *)(v7 + 16), *(_DWORD *)(v8 + 16));
-        *(_DWORD *)(tempNode + 64) = theHead;
+        *(_BYTE *)(uintptr_t)(tempNode + 8) |= 0x10u;
+        *(_DWORD *)(uintptr_t)(tempNode + 4) = *(_DWORD *)(uintptr_t)(v7 + 4);
+        *(_DWORD *)(uintptr_t)(tempNode + 16) = Rules_UnionConstraints(*(_DWORD *)(uintptr_t)(v7 + 16), *(_DWORD *)(uintptr_t)(v8 + 16));
+        *(_DWORD *)(uintptr_t)(tempNode + 64) = theHead;
         theHead = tempNode;
       }
 LABEL_5:
-      *(_DWORD *)(theNode + 64) = 0;
+      *(_DWORD *)(uintptr_t)(theNode + 64) = 0;
       AST_FreeNode(theNode);
       theNode = v9;
     }
@@ -741,7 +741,7 @@ _DWORD * Rules_ClonePatternPositionConstraintList(int *theExpression)
   _DWORD *v11; // edx
 
   expPtr = theExpression;
-  for ( i = 0; expPtr; expPtr = (int *)expPtr[17] )
+  for ( i = 0; expPtr; expPtr = (int *)(uintptr_t)expPtr[17] )
   {
     if ( expPtr[16] )
     {
@@ -752,14 +752,14 @@ _DWORD * Rules_ClonePatternPositionConstraintList(int *theExpression)
     if ( *expPtr == 15 )
     {
       newNode = AST_AllocNode();
-      referringNode = *(int **)(v5 + 20);
-      theConstraint = (_DWORD *)newNode;
+      referringNode = *(int **)(uintptr_t)(v5 + 20);
+      theConstraint = (_DWORD *)(uintptr_t)newNode;
       if ( referringNode )
         nodeType = *referringNode;
-      *(_DWORD *)newNode = nodeType;
-      *(_DWORD *)(newNode + 4) = *(_DWORD *)(v5 + 4);
-      *(_BYTE *)(newNode + 8) |= 0x10u;
-      *(_DWORD *)(newNode + 16) = Rules_CloneLHSParseNode(*(int **)(v5 + 16));
+      *(_DWORD *)(uintptr_t)newNode = nodeType;
+      *(_DWORD *)(uintptr_t)(newNode + 4) = *(_DWORD *)(uintptr_t)(v5 + 4);
+      *(_BYTE *)(uintptr_t)(newNode + 8) |= 0x10u;
+      *(_DWORD *)(uintptr_t)(newNode + 16) = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(v5 + 16));
       i = Rules_MergeConstraintListsByFieldIndex(theConstraint, v8);
     }
   }
@@ -782,7 +782,7 @@ signed int  Rules_IntersectConnectedCEConstraints(int theNode)
   signed int result; // eax
 
   first = 1;
-  orField = *(_DWORD *)(theNode + 68);
+  orField = *(_DWORD *)(uintptr_t)(theNode + 68);
   list1 = 0;
   if ( !orField )
     return list1;
@@ -794,25 +794,25 @@ signed int  Rules_IntersectConnectedCEConstraints(int theNode)
       list2 = 0;
       do
       {
-        if ( *(_DWORD *)andField == 94 || *(_DWORD *)andField == 93 )
+        if ( *(_DWORD *)(uintptr_t)andField == 94 || *(_DWORD *)(uintptr_t)andField == 93 )
         {
-          clonedList = Rules_ClonePatternPositionConstraintList(*(int **)(andField + 56));
+          clonedList = Rules_ClonePatternPositionConstraintList(*(int **)(uintptr_t)(andField + 56));
           list2 = Rules_MergeConstraintListsByFieldIndex(list2, clonedList);
         }
-        andField = *(_DWORD *)(andField + 64);
+        andField = *(_DWORD *)(uintptr_t)(andField + 64);
       }
       while ( andField );
       if ( !first )
         break;
-      list1 = (int)list2;
+      list1 = (int)(intptr_t)list2;
       first = 0;
-      orField = *(_DWORD *)(orField + 68);
+      orField = *(_DWORD *)(uintptr_t)(orField + 68);
       if ( !orField )
         return list1;
     }
-    result = Rules_IntersectConstraintListsByFieldIndex(list1, (int)list2);
+    result = Rules_IntersectConstraintListsByFieldIndex(list1, (int)(intptr_t)list2);
     list1 = result;
-    orField = *(_DWORD *)(orField + 68);
+    orField = *(_DWORD *)(uintptr_t)(orField + 68);
   }
   while ( orField );
   return result;
@@ -836,11 +836,11 @@ signed int  Rules_CheckRHSActionsAgainstCEConstraints(signed int result, int the
     while ( 2 )
     {
       argNumber = 1;
-      theExpression = *(_DWORD *)(exprPtr + 6);
-      if ( *(_WORD *)exprPtr == 10 )
+      theExpression = *(_DWORD *)(uintptr_t)(exprPtr + 6);
+      if ( *(_WORD *)(uintptr_t)exprPtr == 10 )
       {
         lastOne = exprPtr;
-        theFunction = *(_DWORD *)(exprPtr + 2);
+        theFunction = *(_DWORD *)(uintptr_t)(exprPtr + 2);
       }
       else
       {
@@ -850,14 +850,14 @@ signed int  Rules_CheckRHSActionsAgainstCEConstraints(signed int result, int the
       {
         if ( Rules_CheckFieldRestrictionAgainstRHSAction(theExpression, lastOne, theFunction, argNumber, theLHS) )
           return 1;
-        *(_DWORD *)(theExpression + 10) = 0;
+        *(_DWORD *)(uintptr_t)(theExpression + 10) = 0;
         ++argNumber;
         if ( Rules_CheckRHSActionsAgainstCEConstraints(theExpression, theLHS) )
           return 1;
-        *(_DWORD *)(theExpression + 10) = nextExpression;
+        *(_DWORD *)(uintptr_t)(theExpression + 10) = nextExpression;
         theExpression = nextExpression;
       }
-      exprPtr = *(_DWORD *)(exprPtr + 10);
+      exprPtr = *(_DWORD *)(uintptr_t)(exprPtr + 10);
       if ( exprPtr )
         continue;
       break;
@@ -893,11 +893,11 @@ signed int  Rules_CheckFieldRestrictionAgainstRHSAction(int theExpression, int l
   _BYTE *constraint1; // [esp+8h] [ebp-10h]
 
   errorFlag = 0;
-  if ( *(_WORD *)theExpression != 15 || !theFunction )
+  if ( *(_WORD *)(uintptr_t)theExpression != 15 || !theFunction )
     return 0;
   Rules_GetArgRestrictionType(theFunction, argNumber);
   constraint1 = Rules_ApplyPatternKeywordFlags();
-  theCE = Rules_FindCEByIndex(*(_DWORD *)(theExpression + 2), v10);
+  theCE = Rules_FindCEByIndex(*(_DWORD *)(uintptr_t)(theExpression + 2), v10);
   if ( theCE )
   {
     if ( *theCE == 16 )
@@ -907,33 +907,33 @@ signed int  Rules_CheckFieldRestrictionAgainstRHSAction(int theExpression, int l
     }
     else if ( theCE[4] )
     {
-      Rules_CloneLHSParseNode((int *)theCE[4]);
+      Rules_CloneLHSParseNode((int *)(uintptr_t)theCE[4]);
     }
     else
     {
       Rules_CreateLHSParseNode();
     }
   }
-  namedContextConstraint = Rules_GetNamedContextValue(*(_DWORD *)(theExpression + 2));
-  constraint3 = (_DWORD *)Rules_UnionConstraints(namedContextConstraint, v14);
-  constraint4 = Rules_IntersectConstraints((int)constraint3, (int)constraint1);
+  namedContextConstraint = Rules_GetNamedContextValue(*(_DWORD *)(uintptr_t)(theExpression + 2));
+  constraint3 = (_DWORD *)(uintptr_t)Rules_UnionConstraints(namedContextConstraint, v14);
+  constraint4 = Rules_IntersectConstraints((int)(intptr_t)constraint3, (int)(intptr_t)constraint1);
   if ( Rules_ConstraintIsUnmatchable(constraint4) )
   {
     if ( Rules_StaticConstraintCheckingEnabled() )
     {
-      Rules_PrintErrorID((int)aRulecstr, 3, 1);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPreviousVariab, v15);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(theExpression + 2) + 16), v16);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedTheTypeR, v17);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument_0, v18);
+      Rules_PrintErrorID((int)(intptr_t)aRulecstr, 3, 1);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPreviousVariab, v15);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theExpression + 2) + 16), v16);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCausedTheTypeR, v17);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForArgument_0, v18);
       Rules_PrintLongInteger(v19, argNumber);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfTheExpressio, v20);
-      nextOne = *(_DWORD *)(lastOne + 10);
-      *(_DWORD *)(lastOne + 10) = 0;
-      Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], (__int16 *)lastOne);
-      *(_DWORD *)(lastOne + 10) = nextOne;
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOfTheExpressio, v20);
+      nextOne = *(_DWORD *)(uintptr_t)(lastOne + 10);
+      *(_DWORD *)(uintptr_t)(lastOne + 10) = 0;
+      Rules_PrintFieldExprList((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], (__int16 *)(uintptr_t)lastOne);
+      *(_DWORD *)(uintptr_t)(lastOne + 10) = nextOne;
       errorFlag = 1;
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInTheRule, v22);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFoundInTheRule, v22);
     }
   }
   AST_DecrementNodeRefCount(constraint1);
@@ -1000,12 +1000,12 @@ _DWORD * Rules_BuildJoinTestExpressionChain(int logicalJoin, _DWORD *theLHS, _DW
     {
       ++depthCursor;
       ++currentDepth;
-      joinStack[depthCursor - 1] = (int)lastJoin;
+      joinStack[depthCursor - 1] = (int)(intptr_t)lastJoin;
     }
     patternEntity = currentPattern[6];
-    entityType = *(_DWORD *)(patternEntity + 8);
+    entityType = *(_DWORD *)(uintptr_t)(patternEntity + 8);
     logicalJoinCE = savedLogicalJoin;
-    v10 = ((__int64 (*)(void))*(_DWORD *)(patternEntity + 24))();
+    v10 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(patternEntity + 24))();
     rhsEntry = v10;
     isLogical = currentCE == logicalJoinCE;
     if ( HIDWORD(v10) == 1 )
@@ -1014,17 +1014,17 @@ _DWORD * Rules_BuildJoinTestExpressionChain(int logicalJoin, _DWORD *theLHS, _DW
       LODWORD(v10) = lastJoin[5];
     patternDepth = thePattern[12];
     if ( tryToReuse == 1
-      && Rules_FindExistingJoinTestNode((_DWORD *)v10, rhsEntry, thePattern[2] & 1, SHIDWORD(v10), isLogical, (__int16 *)thePattern[13], patternDepth, currentDepth, i, (int)&joinStack[1]) )
+      && Rules_FindExistingJoinTestNode((_DWORD *)v10, rhsEntry, thePattern[2] & 1, SHIDWORD(v10), isLogical, (__int16 *)(uintptr_t)thePattern[13], patternDepth, currentDepth, i, (int)(intptr_t)&joinStack[1]) )
     {
-      if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
-        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ, existingJoin);
-      lastJoin = (_DWORD *)existingJoin;
+      if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aJ, existingJoin);
+      lastJoin = (_DWORD *)(uintptr_t)existingJoin;
     }
     else
     {
       joinStack[0] = thePattern[2] & 1;
       tryToReuse = 0;
-      newJoin = (_WORD *)Rules_InternJoinTestNode(thePattern[13], lastJoin, 0, rhsEntry, joinStack[0]);
+      newJoin = (_WORD *)(uintptr_t)Rules_InternJoinTestNode(thePattern[13], lastJoin, 0, rhsEntry, joinStack[0]);
       typeBits = entityType & 7;
       *newJoin &= 0xFE3Fu;
       lastJoin = newJoin;
@@ -1043,27 +1043,27 @@ _DWORD * Rules_BuildJoinTestExpressionChain(int logicalJoin, _DWORD *theLHS, _DW
       }
       if ( tryToReuse )
       {
-        if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
+        if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
         {
-          Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ, v16);
-          lastJoin = (_DWORD *)lastJoin[5];
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aJ, v16);
+          lastJoin = (_DWORD *)(uintptr_t)lastJoin[5];
         }
         else
         {
-          lastJoin = (_DWORD *)lastJoin[5];
+          lastJoin = (_DWORD *)(uintptr_t)lastJoin[5];
         }
       }
       else
       {
 LABEL_19:
-        lastJoin = (_DWORD *)Rules_InternJoinTestNode(0, (_DWORD *)joinStack[depthOffset / 4u], 1, (int)lastJoin, 0);
+        lastJoin = (_DWORD *)(uintptr_t)Rules_InternJoinTestNode(0, (_DWORD *)(uintptr_t)joinStack[depthOffset / 4u], 1, (int)(intptr_t)lastJoin, 0);
       }
     }
-    thePattern = (_DWORD *)thePattern[17];
+    thePattern = (_DWORD *)(uintptr_t)thePattern[17];
   }
-  if ( Rules_GetWatchItemState((int)aCompilations) != 1 || !Rules_GetLoadInProgress() )
+  if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) != 1 || !Rules_GetLoadInProgress() )
     return lastJoin;
-  Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50E03C, v18);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)asc_50E03C, v18);
   return lastJoin;
 }
 // 4DE3A3: variable 'v4' is possibly undefined
@@ -1081,7 +1081,7 @@ _DWORD * Rules_MergeRedundantFieldAccessNodes(_DWORD *result, _DWORD *lastNode)
   int v5; // edx
   int v6; // edx
 
-  for ( i = result; i; i = (_DWORD *)i[17] )
+  for ( i = result; i; i = (_DWORD *)(uintptr_t)i[17] )
   {
     if ( (i[2] & 1) != 0 )
     {
@@ -1094,31 +1094,31 @@ _DWORD * Rules_MergeRedundantFieldAccessNodes(_DWORD *result, _DWORD *lastNode)
     }
     while ( scanNode )
     {
-      result = *(_DWORD **)(scanNode + 44);
-      if ( result != (_DWORD *)i[11] || (*(_DWORD *)(scanNode + 8) & 1) != 0 )
+      result = *(_DWORD **)(uintptr_t)(scanNode + 44);
+      if ( result != (_DWORD *)(uintptr_t)i[11] || (*(_DWORD *)(uintptr_t)(scanNode + 8) & 1) != 0 )
       {
-        lastNode = (_DWORD *)scanNode;
-        scanNode = *(_DWORD *)(scanNode + 68);
+        lastNode = (_DWORD *)(uintptr_t)scanNode;
+        scanNode = *(_DWORD *)(uintptr_t)(scanNode + 68);
       }
       else
       {
-        if ( *(_DWORD *)scanNode == 80 )
+        if ( *(_DWORD *)(uintptr_t)scanNode == 80 )
           break;
-        if ( *(_DWORD *)scanNode == 84 )
+        if ( *(_DWORD *)(uintptr_t)scanNode == 84 )
         {
-          i[13] = AST_MergeFieldAccessNodes((_DWORD *)i[13], *(_DWORD **)(scanNode + 52));
+          i[13] = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)i[13], *(_DWORD **)(uintptr_t)(scanNode + 52));
           testCE[13] = 0;
           v5 = testCE[17];
           testCE[17] = 0;
           lastNode[17] = v5;
           lastNode[12] = testCE[12];
-          result = (_DWORD *)AST_FreeNode((int)testCE);
+          result = (_DWORD *)(uintptr_t)AST_FreeNode((int)(intptr_t)testCE);
           scanNode = v6;
         }
         else
         {
           Rules_ReportSystemError(scanNode, 1);
-          result = (_DWORD *)IO_RunRouterExitCallbacks();
+          result = (_DWORD *)(uintptr_t)IO_RunRouterExitCallbacks();
         }
       }
     }
@@ -1151,15 +1151,15 @@ _DWORD * Rules_FindExistingJoinTestNode(
   {
     while ( 1 )
     {
-      if ( rhsStruct == theJoin[4] && Rules_JoinTestNodeMatches((int)theJoin, firstJoin, a5, negatedRHS, joinTest, endDepth, currentDepth, isLastPattern, joinStack) )
+      if ( rhsStruct == theJoin[4] && Rules_JoinTestNodeMatches((int)(intptr_t)theJoin, firstJoin, a5, negatedRHS, joinTest, endDepth, currentDepth, isLastPattern, joinStack) )
         return theJoin;
       if ( !firstJoin )
         break;
-      theJoin = (_DWORD *)theJoin[8];
+      theJoin = (_DWORD *)(uintptr_t)theJoin[8];
       if ( !theJoin )
         return 0;
     }
-    theJoin = (_DWORD *)theJoin[7];
+    theJoin = (_DWORD *)(uintptr_t)theJoin[7];
   }
   while ( theJoin );
   return 0;
@@ -1183,25 +1183,25 @@ BOOL  Rules_JoinTestNodeMatches(
   int v13; // eax
 
   currentJoin = theJoin;
-  if ( firstJoin != (*(_DWORD *)theJoin & 1)
-    || *(_DWORD *)theJoin << 28 >> 31 != negatedRHS
-    || a3 == 1 && (*(_BYTE *)theJoin & 2) == 0 && *(_DWORD *)(theJoin + 8)
-    || AST_NodeListsEqual(*(__int16 **)(theJoin + 12), joinTest) != 1 )
+  if ( firstJoin != (*(_DWORD *)(uintptr_t)theJoin & 1)
+    || *(_DWORD *)(uintptr_t)theJoin << 28 >> 31 != negatedRHS
+    || a3 == 1 && (*(_BYTE *)(uintptr_t)theJoin & 2) == 0 && *(_DWORD *)(uintptr_t)(theJoin + 8)
+    || AST_NodeListsEqual(*(__int16 **)(uintptr_t)(theJoin + 12), joinTest) != 1 )
   {
     return 0;
   }
   stackPtr = joinStack + 4 * depthCursor;
   while ( endDepth < depthCursor )
   {
-    currentJoin = *(_DWORD *)(currentJoin + 20);
-    if ( !currentJoin || (*(_BYTE *)currentJoin & 4) == 0 || *(_DWORD *)(stackPtr - 8) != *(_DWORD *)(currentJoin + 24) )
+    currentJoin = *(_DWORD *)(uintptr_t)(currentJoin + 20);
+    if ( !currentJoin || (*(_BYTE *)(uintptr_t)currentJoin & 4) == 0 || *(_DWORD *)(uintptr_t)(stackPtr - 8) != *(_DWORD *)(uintptr_t)(currentJoin + 24) )
       return 0;
     stackPtr -= 4;
     --depthCursor;
   }
-  if ( isLastPattern && (*(_DWORD *)(currentJoin + 36) || *(_DWORD *)(currentJoin + 8)) )
+  if ( isLastPattern && (*(_DWORD *)(uintptr_t)(currentJoin + 36) || *(_DWORD *)(uintptr_t)(currentJoin + 8)) )
     return 0;
-  return isLastPattern || (v13 = *(_DWORD *)(currentJoin + 20)) == 0 || (*(_BYTE *)v13 & 4) == 0 || currentJoin != *(_DWORD *)(v13 + 16);
+  return isLastPattern || (v13 = *(_DWORD *)(uintptr_t)(currentJoin + 20)) == 0 || (*(_BYTE *)(uintptr_t)v13 & 4) == 0 || currentJoin != *(_DWORD *)(uintptr_t)(v13 + 16);
 }
 // 4DE79F: variable 'v10' is possibly undefined
 
@@ -1219,59 +1219,59 @@ int  Rules_InternJoinTestNode(int joinTest, _DWORD *lhsEntry, int joinFromTheRig
   char joinDepth; // al
   int incrementalResetFlag; // [esp+0h] [ebp-10h]
 
-  if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ_0, v16);
-  freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 160);
+  if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aJ_0, v16);
+  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 160);
   if ( freeListEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 160);
-    *(_DWORD *)(g_ClipsMemoryTable + 160) = *freeListEntry;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160) = *freeListEntry;
     newJoin = g_ClipsMemFreeListTemp;
   }
   else
   {
     newJoin = Mem_HeapAllocWithRetry(40);
   }
-  *(_BYTE *)newJoin &= ~4u;
-  *(_DWORD *)newJoin |= 4 * (joinFromTheRight & 1);
-  *(_BYTE *)newJoin &= ~8u;
-  *(_DWORD *)(newJoin + 8) = 0;
-  *(_DWORD *)(newJoin + 20) = 0;
-  *(_DWORD *)newJoin |= 8 * (negatedRHS & 1);
+  *(_BYTE *)(uintptr_t)newJoin &= ~4u;
+  *(_DWORD *)(uintptr_t)newJoin |= 4 * (joinFromTheRight & 1);
+  *(_BYTE *)(uintptr_t)newJoin &= ~8u;
+  *(_DWORD *)(uintptr_t)(newJoin + 8) = 0;
+  *(_DWORD *)(uintptr_t)(newJoin + 20) = 0;
+  *(_DWORD *)(uintptr_t)newJoin |= 8 * (negatedRHS & 1);
   incrementalResetFlag = Rules_GetIncrementalReset() & 1;
-  *(_BYTE *)joinNodeInit &= ~0x10u;
-  *(_DWORD *)joinNodeInit |= 16 * incrementalResetFlag;
-  *(_BYTE *)joinNodeInit &= ~2u;
-  *(_DWORD *)(joinNodeInit + 36) = 0;
+  *(_BYTE *)(uintptr_t)joinNodeInit &= ~0x10u;
+  *(_DWORD *)(uintptr_t)joinNodeInit |= 16 * incrementalResetFlag;
+  *(_BYTE *)(uintptr_t)joinNodeInit &= ~2u;
+  *(_DWORD *)(uintptr_t)(joinNodeInit + 36) = 0;
   hashedJoinTest = AST_AddHashedNodeChain(joinTest, joinNodeInit, v11);
-  *(_DWORD *)(joinNode + 12) = hashedJoinTest;
-  *(_DWORD *)(joinNode + 24) = lhsEntry;
+  *(_DWORD *)(uintptr_t)(joinNode + 12) = hashedJoinTest;
+  *(_DWORD *)(uintptr_t)(joinNode + 24) = lhsEntry;
   if ( lhsEntry )
   {
-    *(_BYTE *)joinNode &= ~1u;
+    *(_BYTE *)(uintptr_t)joinNode &= ~1u;
     joinDepth = (*lhsEntry << 16 >> 25) + 1;
-    *(_BYTE *)(joinNode + 1) &= 1u;
-    *(_DWORD *)joinNode |= (joinDepth & 0x7F) << 9;
-    *(_DWORD *)(joinNode + 28) = lhsEntry[5];
+    *(_BYTE *)(uintptr_t)(joinNode + 1) &= 1u;
+    *(_DWORD *)(uintptr_t)joinNode |= (joinDepth & 0x7F) << 9;
+    *(_DWORD *)(uintptr_t)(joinNode + 28) = lhsEntry[5];
     lhsEntry[5] = joinNode;
   }
   else
   {
-    firstJoinFlags = *(_WORD *)joinNode & 0x1FE;
-    *(_DWORD *)(joinNode + 28) = 0;
-    *(_WORD *)joinNode = firstJoinFlags;
-    *(_WORD *)joinNode = firstJoinFlags | 0x201;
+    firstJoinFlags = *(_WORD *)(uintptr_t)joinNode & 0x1FE;
+    *(_DWORD *)(uintptr_t)(joinNode + 28) = 0;
+    *(_WORD *)(uintptr_t)joinNode = firstJoinFlags;
+    *(_WORD *)(uintptr_t)joinNode = firstJoinFlags | 0x201;
   }
-  *(_DWORD *)(joinNode + 16) = rhsEntry;
+  *(_DWORD *)(uintptr_t)(joinNode + 16) = rhsEntry;
   if ( joinFromTheRight )
   {
-    *(_DWORD *)(joinNode + 32) = 0;
-    *(_DWORD *)(rhsEntry + 20) = joinNode;
+    *(_DWORD *)(uintptr_t)(joinNode + 32) = 0;
+    *(_DWORD *)(uintptr_t)(rhsEntry + 20) = joinNode;
   }
   else
   {
-    *(_DWORD *)(joinNode + 32) = *(_DWORD *)(rhsEntry + 8);
-    *(_DWORD *)(rhsEntry + 8) = joinNode;
+    *(_DWORD *)(uintptr_t)(joinNode + 32) = *(_DWORD *)(uintptr_t)(rhsEntry + 8);
+    *(_DWORD *)(uintptr_t)(rhsEntry + 8) = joinNode;
   }
   return joinNode;
 }
@@ -1295,14 +1295,14 @@ int ** Defgeneric_InitializeFromRestrictionString(int theDefgeneric, int a2)
   int v8; // [esp+10h] [ebp-4h]
 
   v8 = a2;
-  result = Rules_MakeSymbol(*(_BYTE **)(*(_DWORD *)theDefgeneric + 16));
+  result = Rules_MakeSymbol(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)theDefgeneric + 16));
   if ( result )
   {
     actionExpr = 10;
     exprValue = result;
     v7 = 0;
     v6 = 0;
-    return (int **)Method_ParseWildcardRestrictionString(v3, *(char **)((char *)result + 17), (int)v3, &actionExpr);
+    return (int **)(uintptr_t)Method_ParseWildcardRestrictionString(v3, *(char **)((char *)result + 17), (int)(intptr_t)v3, &actionExpr);
   }
   return result;
 }

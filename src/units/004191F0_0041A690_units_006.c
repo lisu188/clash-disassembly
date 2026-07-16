@@ -63,7 +63,7 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
         (unsigned __int16)top);
     }
     if ( g_RenderDevice == &g_MainRenderDevice && g_CursorOverlayPresented )
-      return (unsigned __int16 *)Render_Present((int)g_RenderState);
+      return (unsigned __int16 *)(uintptr_t)Render_Present((int)(intptr_t)g_RenderState);
   }
   return result;
 }
@@ -457,7 +457,7 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *iconWidget, int animate, 
           result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
         }
         if ( cursorOverlayPresented )
-          return Render_Present((int)g_RenderState);
+          return Render_Present((int)(intptr_t)g_RenderState);
         return result;
       }
     }
@@ -465,19 +465,19 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *iconWidget, int animate, 
     {
       transSpriteHeight = DLX_GetSpriteHeight(sprite_set, spriteIndex);
       SpriteWidth = DLX_GetSpriteWidth(sprite_set, spriteIndex);
-      Surface = (_DWORD *)Mem_Alloc(188, v7, transitionDuration, allocContext);
+      Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, transitionDuration, allocContext);
       if ( Surface )
       {
         LOBYTE(transitionDuration) = SpriteWidth;
-        Surface = Render_CreateSurface((int)Surface, transSpriteHeight, SpriteWidth);
+        Surface = Render_CreateSurface((int)(intptr_t)Surface, transSpriteHeight, SpriteWidth);
       }
-      savedSurface = (int)Surface;
-      iconSurface = (_DWORD *)Mem_Alloc(188, v9, transitionDuration, allocContext);
+      savedSurface = (int)(intptr_t)Surface;
+      iconSurface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v9, transitionDuration, allocContext);
       if ( iconSurface )
-        iconSurface = Render_CreateSurface((int)iconSurface, transSpriteHeight, SpriteWidth);
+        iconSurface = Render_CreateSurface((int)(intptr_t)iconSurface, transSpriteHeight, SpriteWidth);
       renderedSurface = iconSurface;
-      renderedSurfaceHandle = (int)iconSurface;
-      Render_FillRect(g_RenderDevice, (_DWORD *)savedSurface, iconWidget[2], *iconWidget, transSpriteHeight + *iconWidget - 1, SpriteWidth + iconWidget[2] - 1, 0, 0);
+      renderedSurfaceHandle = (int)(intptr_t)iconSurface;
+      Render_FillRect(g_RenderDevice, (_DWORD *)(uintptr_t)savedSurface, iconWidget[2], *iconWidget, transSpriteHeight + *iconWidget - 1, SpriteWidth + iconWidget[2] - 1, 0, 0);
       prevRenderDevice = g_RenderDevice;
       g_RenderDevice = renderedSurface;
       restoreRenderDevice = prevRenderDevice;
@@ -497,9 +497,9 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *iconWidget, int animate, 
         if ( g_ActiveDialogAnimationTickHook )
           g_ActiveDialogAnimationTickHook();
       }
-      result = Render_FillRect((_DWORD *)renderedSurfaceHandle, 0, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
+      result = Render_FillRect((_DWORD *)(uintptr_t)renderedSurfaceHandle, 0, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
       if ( g_RenderDevice != &g_MainRenderDevice )
-        result = Render_FillRect((_DWORD *)renderedSurfaceHandle, g_RenderDevice, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
+        result = Render_FillRect((_DWORD *)(uintptr_t)renderedSurfaceHandle, g_RenderDevice, 0, 0, transBottom, transRight, *iconWidget, iconWidget[2]);
       if ( savedSurface )
         result = RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)savedSurface, 2);
       if ( renderedSurfaceHandle )
@@ -516,7 +516,7 @@ int  UI_DrawWidgetIconWithTransition(unsigned __int16 *iconWidget, int animate, 
       result = Compat_RenderDeviceDrawMenuSprite(left, top, overlaySprite, 1);
     }
     if ( animate && cursorOverlayPresented )
-      return Render_Present((int)g_RenderState);
+      return Render_Present((int)(intptr_t)g_RenderState);
   }
   return result;
 }
@@ -649,9 +649,9 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
   rectLeft = cursorX;
   v6 = rectRight;
   rectBottom = textBottom;
-  if ( cursorX + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12) > rectRight )
-    rectRight = cursorX + *(_DWORD *)(g_ActiveCursorDescriptorPtr + 12);
-  v7 = *(_DWORD *)(g_ActiveCursorDescriptorPtr + 16);
+  if ( cursorX + *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 12) > rectRight )
+    rectRight = cursorX + *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 12);
+  v7 = *(_DWORD *)(uintptr_t)(g_ActiveCursorDescriptorPtr + 16);
   if ( cursorY + v7 > textBottom )
     rectBottom = cursorY + v7;
   if ( rectRight > 639 )
@@ -668,23 +668,23 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
     LOWORD(rectBottom) = 479;
     cursorY -= v8 - 479;
   }
-  Surface = (_DWORD *)Mem_Alloc(188, v6, v7, allocContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v6, v7, allocContext);
   if ( Surface )
   {
     LOWORD(v7) = rectBottom - cursorY + 1;
-    Surface = Render_CreateSurface((int)Surface, rectRight - rectLeft + 1, v7);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, rectRight - rectLeft + 1, v7);
   }
-  backgroundSurface = (int)Surface;
-  v12 = (_DWORD *)Mem_Alloc(188, v10, v7, allocContext);
+  backgroundSurface = (int)(intptr_t)Surface;
+  v12 = (_DWORD *)(uintptr_t)Mem_Alloc(188, v10, v7, allocContext);
   if ( v12 )
-    v12 = Render_CreateSurface((int)v12, rectRight - rectLeft + 1, rectBottom - cursorY + 1);
+    v12 = Render_CreateSurface((int)(intptr_t)v12, rectRight - rectLeft + 1, rectBottom - cursorY + 1);
   textSurface = v12;
-  Render_FillRect(0, (_DWORD *)backgroundSurface, (unsigned __int16)cursorY, (unsigned __int16)rectLeft, rectRight, rectBottom, 0, 0);
-  Render_SaveBackbuffer((int)&g_MainRenderDevice);
+  Render_FillRect(0, (_DWORD *)(uintptr_t)backgroundSurface, (unsigned __int16)cursorY, (unsigned __int16)rectLeft, rectRight, rectBottom, 0, 0);
+  Render_SaveBackbuffer((int)(intptr_t)&g_MainRenderDevice);
   Render_Pump();
   Render_FillRect(0, textSurface, (unsigned __int16)cursorY, (unsigned __int16)rectLeft, rectRight, rectBottom, 0, 0);
-  textSurfaceHandle = (int)textSurface;
-  Render_Present((int)&g_RenderState);
+  textSurfaceHandle = (int)(intptr_t)textSurface;
+  Render_Present((int)(intptr_t)&g_RenderState);
   g_RenderDevice = textSurface;
   UI_DrawText(0, 0, *(_DWORD *)(widget + 4 * (unsigned __int8)g_LanguageIndex + 36));
   fadeInStart = Time_Now(v16, v15);
@@ -694,10 +694,10 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
   while ( Time_Now(v17, v18) < (unsigned int)(fadeInStart + 30) )
   {
     fadeInNow = Time_Now(fadeInStart, v19);
-    Render_BlendSurfaceRect(0, backgroundSurface, 0, (int)textSurface, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY, 255 * (fadeInNow - v21) / 0x1Eu);
+    Render_BlendSurfaceRect(0, backgroundSurface, 0, (int)(intptr_t)textSurface, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY, 255 * (fadeInNow - v21) / 0x1Eu);
   }
   Render_FillRect(textSurface, 0, 0, 0, rectWidthIn, rectHeightIn, rectLeft, cursorY);
-  Render_FlipRect((int)&g_RenderState, 0);
+  Render_FlipRect((int)(intptr_t)&g_RenderState, 0);
   fadeOutStart = Time_Now(v23, v22);
   fadeOutDeadline = fadeOutStart + 30;
   v25 = rectLeft;
@@ -709,14 +709,14 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
     fadeOutNow = Time_Now(v27, fadeOutStart);
     Render_BlendSurfaceRect(0, textSurfaceHandle, 0, backgroundSurface, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY, 255 * (fadeOutNow - v29) / 0x1Eu);
   }
-  Render_FillRect((_DWORD *)backgroundSurface, 0, 0, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY);
+  Render_FillRect((_DWORD *)(uintptr_t)backgroundSurface, 0, 0, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY);
   if ( backgroundSurface )
-    (**(void (__cdecl ***)(int))(backgroundSurface + 184))(savedTextSlot);
+    (**(void (__cdecl ***)(int))(uintptr_t)(backgroundSurface + 184))(savedTextSlot);
   if ( textSurfaceHandle )
-    (**(void (***)(void))(textSurfaceHandle + 184))();
+    (**(void (***)(void))(uintptr_t)(textSurfaceHandle + 184))();
   Render_ReleaseSurface(savedTextSlot, fadeOutDeadline);
   g_RenderDevice = savedRenderDevice;
-  return Render_Begin((int)&g_RenderState, 0);
+  return Render_Begin((int)(intptr_t)&g_RenderState, 0);
 }
 // 419827: variable 'v4' is possibly undefined
 // 4198E5: variable 'v10' is possibly undefined
@@ -765,7 +765,7 @@ signed int  UIWidget_PollHitHoverAndClick(uintptr_t widget, DWORD a2)
   if ( g_QueenMarriageProposalWidgetTableBase
     && widget >= g_QueenMarriageProposalWidgetTableBase
     && widget < g_QueenMarriageProposalWidgetTableBase + 2 * 53
-    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState)) )
+    && (DD_IsFlipping((int)(intptr_t)g_RenderState) || DD_IsLost((int)(intptr_t)g_RenderState)) )
   {
     queen_cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
     queen_cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
@@ -796,7 +796,7 @@ signed int  UIWidget_PollHitHoverAndClick(uintptr_t widget, DWORD a2)
   if ( widget >= (uintptr_t)BuildingGarrisonDialogActions
     && widget < (uintptr_t)(BuildingGarrisonDialogActions
                       + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_GARRISON_DIALOG_WIDGET_COUNT)
-    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState) || getenv("CLASH95_TRACE_GARRISON_WIDGET_VERBOSE")) )
+    && (DD_IsFlipping((int)(intptr_t)g_RenderState) || DD_IsLost((int)(intptr_t)g_RenderState) || getenv("CLASH95_TRACE_GARRISON_WIDGET_VERBOSE")) )
   {
     int garrison_cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
     int garrison_cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
@@ -856,7 +856,7 @@ LABEL_23:
   }
   if ( (uintptr_t)widget >= (uintptr_t)g_WorldMapActionButtonWidgetTable
     && (uintptr_t)widget < (uintptr_t)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT)
-    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState)) )
+    && (DD_IsFlipping((int)(intptr_t)g_RenderState) || DD_IsLost((int)(intptr_t)g_RenderState)) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "action_widget_hit",
@@ -865,9 +865,9 @@ LABEL_23:
       *(_DWORD *)(widget + 4),
       *(_DWORD *)(widget + 8));
   }
-  if ( DD_IsLost((int)g_RenderState) && *(_BYTE *)(widget + 48) == 2 )
+  if ( DD_IsLost((int)(intptr_t)g_RenderState) && *(_BYTE *)(widget + 48) == 2 )
     UIWidget_ShowTextWithFadeTransition(widget, a2);
-  if ( DD_IsFlipping((int)g_RenderState) && *(_DWORD *)(widget + 32) )
+  if ( DD_IsFlipping((int)(intptr_t)g_RenderState) && *(_DWORD *)(widget + 32) )
   {
     if ( widget >= (uintptr_t)BuildingGarrisonDialogActions
       && widget < (uintptr_t)(BuildingGarrisonDialogActions
@@ -1000,13 +1000,13 @@ signed int  UIWidgetTable_PollHoverAndActions(_DWORD *widgetTable, DWORD allocCo
   if ( !g_TooltipCursorActive && has_tooltip )
   {
     g_SavedCursorDescriptor = g_ActiveCursorDescriptorPtr;
-    RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
     g_TooltipCursorActive = 1;
     return result;
   }
   if ( !g_TooltipCursorActive || has_tooltip )
     return result;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_SavedCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_SavedCursorDescriptor);
   g_TooltipCursorActive = 0;
   return result;
 }
@@ -1031,8 +1031,8 @@ int  UIWidget_PlayPressedReleaseAnimationWithDelay(uintptr_t widget, int a2)
   UIWidget_RefreshActionButtonState(widget, 1);
   deadline = Time_Now(0, 0) + 20;
   while ( Time_Now(0, 0) < deadline )
-    DD_Pump((int)g_RenderState, 0);
-  Render_Begin((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   *(_DWORD *)(widget + 8) = 5;
   return UIWidget_RefreshActionButtonState(widget, 1);
 }
@@ -1045,7 +1045,7 @@ int  UIWidget_PlayPressedReleaseAnimation(uintptr_t widget)
     Audio_PlayButtonSound((char *)Compat_WidgetPackedString(widget, 49));
   *(_DWORD *)(widget + 8) = 6;
   UIWidget_RefreshActionButtonState(widget, 1);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   *(_DWORD *)(widget + 8) = 5;
   return UIWidget_RefreshActionButtonState(widget, 1);
 }
@@ -1128,28 +1128,28 @@ int  UI_DrawUnitInfoPane(
   panelTop = panelTopArg;
   slotRecord = slotRecordArg;
   unitMetadata = &g_UnitTypeMetadataRecords + 22 * *slotRecordArg;
-  spriteSet = (_DWORD *)Mem_Alloc(4112, a3, (char)slotRecordArg, allocContext);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a3, (char)(intptr_t)slotRecordArg, allocContext);
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)slotRecordArg);
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)slotRecordArg);
   v42 = spriteSet;
   Render_ReleaseSurface(7, allocContext);
-  if ( *(unsigned __int8 *)(v9 + 2) == g_CurrentPlayerIndex )
+  if ( *(unsigned __int8 *)(uintptr_t)(v9 + 2) == g_CurrentPlayerIndex )
   {
     if ( v8 )
-      DLXSpriteSet_DrawText((int)v42, 0, v8, (unsigned __int8 *)g_MapPalettePtr);
-    v10 = (int)v42;
+      DLXSpriteSet_DrawText((int)(intptr_t)v42, 0, v8, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
+    v10 = (int)(intptr_t)v42;
     sideIndex = 0;
   }
   else
   {
     if ( v8 )
-      DLXSpriteSet_DrawText((int)v42, 1, v8, (unsigned __int8 *)g_MapPalettePtr);
+      DLXSpriteSet_DrawText((int)(intptr_t)v42, 1, v8, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
     sideIndex = 1;
-    v10 = (int)v42;
+    v10 = (int)(intptr_t)v42;
   }
   SpriteForChar = DLX_GetSpriteForChar(v10, sideIndex);
   v13 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v13 + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(uintptr_t)(v13 + 52))(
     panelTop,
     SpriteForChar,
     -1,
@@ -1162,17 +1162,17 @@ int  UI_DrawUnitInfoPane(
   if ( *((char *)slotRecord + 9) < 100 )
   {
     savedRenderDevice = g_RenderDevice;
-    Surface = (_DWORD *)Mem_Alloc(188, v14, panelLeft, v13);
+    Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v14, panelLeft, v13);
     if ( Surface )
     {
-      spriteWidth = DLX_GetSpriteWidth((int)v42, 2u) + 1;
-      SpriteHeight = DLX_GetSpriteHeight((int)v42, 2u);
-      Surface = Render_CreateSurface((int)Surface, SpriteHeight + 1, spriteWidth);
+      spriteWidth = DLX_GetSpriteWidth((int)(intptr_t)v42, 2u) + 1;
+      SpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)v42, 2u);
+      Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight + 1, spriteWidth);
     }
     g_RenderDevice = Surface;
-    healthBarSpriteFrame = DLX_GetSpriteForChar((int)v42, 2);
+    healthBarSpriteFrame = DLX_GetSpriteForChar((int)(intptr_t)v42, 2);
     v13 = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v13 + 52))(
+    (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v13 + 52))(
       0,
       healthBarSpriteFrame,
       -1,
@@ -1184,12 +1184,12 @@ int  UI_DrawUnitInfoPane(
       0);
     g_RenderDevice = savedRenderDevice;
     healthBarFillRight = 106 * (100 - *((char *)slotRecord + 9)) / 100 + 5;
-    v19 = DLX_GetSpriteHeight((int)v42, 2u);
+    v19 = DLX_GetSpriteHeight((int)(intptr_t)v42, 2u);
     Render_FillRect(Surface, g_RenderDevice, 5, 0, v19 - 1, healthBarFillRight, panelLeft + 42, panelTop + 5);
     if ( Surface )
-      (*(void (**)(void))Surface[46])();
+      (*(void (**)(void))(uintptr_t)Surface[46])();
   }
-  UI_DrawTextFmt(drawContext, panelLeft + 64, panelLeft + 192, panelTop + 5, 3, (int)(**unitMetadata)[(unsigned __int8)g_LanguageIndex]);
+  UI_DrawTextFmt(drawContext, panelLeft + 64, panelLeft + 192, panelTop + 5, 3, (int)(intptr_t)(**unitMetadata)[(unsigned __int8)g_LanguageIndex]);
   if ( *((unsigned __int8 *)slotRecord + 2) == g_CurrentPlayerIndex )
   {
     statLineBottom = panelTop + 95;
@@ -1200,25 +1200,25 @@ int  UI_DrawUnitInfoPane(
       if ( *((_BYTE *)unitMetadata + 22) )
       {
         UI_IconIndexFromStats(slotRecord);
-        UI_DrawTextFmt(drawContext, textLeft, textRight, panelTop + 74, 2, (int)aD_12);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, panelTop + 74, 2, (int)(intptr_t)aD_12);
         Unit_GetBaseC(slotRecord);
         v13 = statLineBottom;
-        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)aD_13);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_13);
       }
       else
       {
-        DLX_GetSpriteForChar((int)v42, 10);
+        DLX_GetSpriteForChar((int)(intptr_t)v42, 10);
         v46 = *((_DWORD *)g_RenderDevice + 46);
         v13 = v46;
-        (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v46 + 52))(-1, -1, -1, -1, 1, 0, 0);
+        (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v46 + 52))(-1, -1, -1, -1, 1, 0, 0);
         Unit_GetBaseC(slotRecord);
-        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)aD_2);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_2);
       }
     }
     else
     {
-      DLX_GetSpriteForChar((int)v42, 9);
-      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      DLX_GetSpriteForChar((int)(intptr_t)v42, 9);
+      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         -1,
         -1,
         -1,
@@ -1228,10 +1228,10 @@ int  UI_DrawUnitInfoPane(
         0);
       UI_IconIndexFromStats(slotRecord);
       v13 = statLineBottom;
-      UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)aD_1);
+      UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_1);
     }
-    UI_DrawTextFmt(drawContext, panelLeft + 85, panelLeft + 105, panelTop + 50, 2, (int)aD_14);
-    if ( (unsigned int)*(char *)(v21 + 11) > 4 )
+    UI_DrawTextFmt(drawContext, panelLeft + 85, panelLeft + 105, panelTop + 50, 2, (int)(intptr_t)aD_14);
+    if ( (unsigned int)*(char *)(uintptr_t)(v21 + 11) > 4 )
     {
       v32 = *((char *)slotRecord + 11);
       if ( v32 < 11 || v32 > 15 )
@@ -1250,8 +1250,8 @@ int  UI_DrawUnitInfoPane(
     {
       rankSpriteIndex = 5;
     }
-    v23 = DLX_GetSpriteForChar((int)v42, rankSpriteIndex);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    v23 = DLX_GetSpriteForChar((int)(intptr_t)v42, rankSpriteIndex);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       panelTop + 21,
       v23,
       -1,
@@ -1267,16 +1267,16 @@ LABEL_19:
     else
       v24 = 13;
     Render_ReleaseSurface(v24, v13);
-    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 50, 2, (int)aD_15);
+    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 50, 2, (int)(intptr_t)aD_15);
     if ( *((char *)slotRecord + 10) <= 90 )
       v25 = 7;
     else
       v25 = 13;
     Render_ReleaseSurface(v25, v13);
-    UI_DrawTextFmt(drawContext, panelLeft + 160, panelLeft + 191, panelTop + 50, 2, (int)aD_16);
+    UI_DrawTextFmt(drawContext, panelLeft + 160, panelLeft + 191, panelTop + 50, 2, (int)(intptr_t)aD_16);
     Render_ReleaseSurface(7, v13);
     Unit_CalcIndexB(slotRecord);
-    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 95, 2, (int)aD_17);
+    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 95, 2, (int)(intptr_t)aD_17);
     orderStateFlags = slotRecord[6] & 3;
     if ( orderStateFlags )
     {
@@ -1294,12 +1294,12 @@ LABEL_26:
           v45 = panelLeft + 178;
           while ( v6 <= (unsigned __int8)(16 * *((_BYTE *)slotRecord + 12)) >> 6 )
           {
-            v30 = DLX_GetSpriteForChar((int)v42, 14);
+            v30 = DLX_GetSpriteForChar((int)(intptr_t)v42, 14);
             v31 = chevronTop;
             v13 = *((_DWORD *)g_RenderDevice + 46);
             ++v6;
             chevronTop += 10;
-            (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v13 + 52))(
+            (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v13 + 52))(
               v31,
               v30,
               -1,
@@ -1319,8 +1319,8 @@ LABEL_26:
     {
       orderSpriteIndex = 6;
     }
-    v28 = DLX_GetSpriteForChar((int)v42, orderSpriteIndex);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+    v28 = DLX_GetSpriteForChar((int)(intptr_t)v42, orderSpriteIndex);
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
       panelTop + 65,
       v28,
       -1,
@@ -1349,11 +1349,11 @@ LABEL_47:
     specialSpriteIndex = 13;
   }
   v36 = specialSpriteIndex;
-  iconTop = (33 - (unsigned __int16)DLX_GetSpriteWidth((int)v42, specialSpriteIndex)) / 2 + 76 + panelTop;
-  v6 = (34 - (unsigned __int16)DLX_GetSpriteHeight((int)v42, v36)) / 2 + 8 + panelLeft;
-  v39 = DLX_GetSpriteForChar((int)v42, v38);
+  iconTop = (33 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)v42, specialSpriteIndex)) / 2 + 76 + panelTop;
+  v6 = (34 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)v42, v36)) / 2 + 8 + panelLeft;
+  v39 = DLX_GetSpriteForChar((int)(intptr_t)v42, v38);
   v13 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v13 + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v13 + 52))(
     iconTop,
     v39,
     -1,
@@ -1365,7 +1365,7 @@ LABEL_47:
     0);
 LABEL_50:
   Render_ReleaseSurface(7, v13);
-  UI_DrawTextFmt(v6, panelLeft + 41, panelLeft + 70, panelTop + 98, 3, (int)aD_18);
+  UI_DrawTextFmt(v6, panelLeft + 41, panelLeft + 70, panelTop + 98, 3, (int)(intptr_t)aD_18);
   Render_ReleaseSurface(7, v13);
   return DLXSpriteSet_ReleaseAndClear((int *)&v42);
 }
@@ -1418,7 +1418,7 @@ int  Unit_Info(
 
   screenLeft = leftArg;
   screenTop = topArg;
-  Debug_Log(topArg, (char)unitRecord, allocContext, (int)aUnit_infoDD0x0);
+  Debug_Log(topArg, (char)(intptr_t)unitRecord, allocContext, (int)(intptr_t)aUnit_infoDD0x0);
   unitType = *(__int16 *)unitRecord;
   if ( unitType == UNIT_TYPE_PEASANT_CARGO
     || unitType == UNIT_TYPE_GOLD_CARGO
@@ -1427,28 +1427,28 @@ int  Unit_Info(
     return UI_DrawSpecialUnitInfoPane(screenLeft, screenTop, v8, unitRecord, allocContext, iconSpriteIndex);
   ownerIndex = unitRecord[2];
   UI_BeginUnitInfo(infoBuffer, *unitRecord, ownerIndex);
-  unitSpriteSet = (_DWORD *)Mem_Alloc(4112, v11, ownerIndex, allocContext);
+  unitSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v11, ownerIndex, allocContext);
   if ( unitSpriteSet )
     unitSpriteSet = DLXSpriteSet_Load(unitSpriteSet, ownerIndex);
   spriteSet = unitSpriteSet;
   if ( drawContext )
   {
     ownerIndex = g_MapPalettePtr;
-    DLXSpriteSet_DrawText((int)unitSpriteSet, 0, drawContext, (unsigned __int8 *)g_MapPalettePtr);
+    DLXSpriteSet_DrawText((int)(intptr_t)unitSpriteSet, 0, drawContext, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
   }
   Render_Pump();
-  Surface = (_DWORD *)Mem_Alloc(188, v13, ownerIndex, drawContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v13, ownerIndex, drawContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 201, 116);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, 201, 116);
   surface = Surface;
   Render_FillRect(0, Surface, (unsigned __int16)screenTop, (unsigned __int16)screenLeft, screenLeft + 200, screenTop + 115, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
   UI_DrawUnitInfoPane(screenLeft, screenTop, drawContext, (__int16 *)unitRecord, drawContext, iconSpriteIndex);
-  SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 0);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, 0);
   animSpriteTop = screenTop + 5;
   renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
   animSpriteLeft = screenLeft + 11;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderSpriteObj + 52))(
     screenTop + 5,
     SpriteForChar,
     -1,
@@ -1460,10 +1460,10 @@ int  Unit_Info(
     0);
   animFrameIndex = 0;
   g_RenderDevice = &g_MainRenderDevice;
-  lastAnimTick = Time_Now(v18, (int)&g_MainRenderDevice);
-  while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
+  lastAnimTick = Time_Now(v18, (int)(intptr_t)&g_MainRenderDevice);
+  while ( DD_IsLost((int)(intptr_t)g_RenderState) || DD_IsFlipping((int)(intptr_t)g_RenderState) )
   {
-    DD_Pump((int)g_RenderState, drawContext);
+    DD_Pump((int)(intptr_t)g_RenderState, drawContext);
     if ( !drawContext )
     {
       currentTick = Time_Now(v19, lastAnimTick + 10);
@@ -1471,9 +1471,9 @@ int  Unit_Info(
       {
         lastAnimTick = Time_Now(v22, v21);
         animFrameIndex = (animFrameIndex + 1) % 8;
-        animSprite = DLX_GetSpriteForChar((int)spriteSet, animFrameIndex);
+        animSprite = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, animFrameIndex);
         renderSpriteObj = *((_DWORD *)g_RenderDevice + 46);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderSpriteObj + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderSpriteObj + 52))(
           animSpriteTop,
           animSprite,
           -1,
@@ -1487,9 +1487,9 @@ int  Unit_Info(
     }
   }
   Render_FillRect(surface, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( v25 )
-    (**(void (***)(void))(v25 + 184))();
+    (**(void (***)(void))(uintptr_t)(v25 + 184))();
   return DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
 }
 // 41A6FD: variable 'v11' is possibly undefined

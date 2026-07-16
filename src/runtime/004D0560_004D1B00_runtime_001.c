@@ -40,8 +40,8 @@ int  ObjectsCompiler_WriteClassPointerArray(
              fileCount,
              1,
              headerFP,
-             (char)aDefclass_7,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 44),
+             (char)(intptr_t)aDefclass_7,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 44),
              0,
              0);
   outFile = result;
@@ -52,19 +52,19 @@ int  ObjectsCompiler_WriteClassPointerArray(
     while ( classIndex < (unsigned __int16)g_ClipsDefclassIdCount )
     {
       if ( classIndex > 0 )
-        Output_WriteFormatted(v7, (unsigned __int16)g_ClipsDefclassIdCount, outFile, (int)asc_50C57C, v15);
+        Output_WriteFormatted(v7, (unsigned __int16)g_ClipsDefclassIdCount, outFile, (int)(intptr_t)asc_50C57C, v15);
       tableOffset += 4;
       ++classIndex;
-      ObjectsCompiler_WriteDefclassPointerRef(outFile, *(_DWORD *)(g_ClipsDefclassIdTable + tableOffset - 4), imageID);
+      ObjectsCompiler_WriteDefclassPointerRef(outFile, *(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + tableOffset - 4), imageID);
     }
-    Output_WriteFormatted(v7, (unsigned __int16)g_ClipsDefclassIdCount, outFile, (int)asc_50C580, v15);
+    Output_WriteFormatted(v7, (unsigned __int16)g_ClipsDefclassIdCount, outFile, (int)(intptr_t)asc_50C580, v15);
     Output_WriteFormatted(
       v11,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 48),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 48),
       outFile,
-      (int)aUnsignedSDU,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 48));
-    Output_WriteFormatted(v13, v12, v16, (int)aExternUnsign_0, *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 48));
+      (int)(intptr_t)aUnsignedSDU,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 48));
+    Output_WriteFormatted(v13, v12, v16, (int)(intptr_t)aExternUnsign_0, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 48));
     fclose_(v14);
     return 1;
   }
@@ -106,8 +106,8 @@ signed int  ObjectsCompiler_WriteClassHashTable(
          fileCount,
          1,
          a4,
-         (char)aDefclass_7,
-         *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 40),
+         (char)(intptr_t)aDefclass_7,
+         *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 40),
          0,
          0);
   if ( !outFile )
@@ -115,13 +115,13 @@ signed int  ObjectsCompiler_WriteClassHashTable(
   hashIndex = 0;
   while ( 1 )
   {
-    ObjectsCompiler_WriteDefclassPointerRef(outFile, *(_DWORD *)(g_DefclassHashTable + 4 * hashIndex), imageID);
+    ObjectsCompiler_WriteDefclassPointerRef(outFile, *(_DWORD *)(uintptr_t)(g_DefclassHashTable + 4 * hashIndex), imageID);
     v8 = hashIndex + 1;
     hashIndex = v8;
     if ( v8 >= 167 )
       break;
     if ( v8 > 0 )
-      Output_WriteFormatted(v7, v8, outFile, (int)asc_50C57C, hashIndex);
+      Output_WriteFormatted(v7, v8, outFile, (int)(intptr_t)asc_50C57C, hashIndex);
   }
   Rules_ConstructCodeFileClose(outFile, &hashIndex, v8, arrayVersion, 0, 0);
   return 1;
@@ -149,8 +149,8 @@ void  ObjectsCompiler_WriteSlotNameHashTable(const char *fileName, const char *p
          fileCount,
          1,
          a4,
-         (char)aSlot_name,
-         *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 36),
+         (char)(intptr_t)aSlot_name,
+         *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 36),
          0,
          0);
   if ( !outFile )
@@ -158,13 +158,13 @@ void  ObjectsCompiler_WriteSlotNameHashTable(const char *fileName, const char *p
   hashIndex = 0;
   while ( 1 )
   {
-    ObjectsCompiler_WriteSlotNamePointerRef(outFile, *(_DWORD *)(g_Defclass_SlotNameHashTablePtr + 4 * hashIndex), imageID);
+    ObjectsCompiler_WriteSlotNamePointerRef(outFile, *(_DWORD *)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + 4 * hashIndex), imageID);
     v8 = hashIndex + 1;
     hashIndex = v8;
     if ( v8 >= 167 )
       break;
     if ( v8 > 0 )
-      Output_WriteFormatted(v7, v8, outFile, (int)asc_50C57C, v8);
+      Output_WriteFormatted(v7, v8, outFile, (int)(intptr_t)asc_50C57C, v8);
   }
   Rules_ConstructCodeFileClose(outFile, &hashIndex, v8, arrayVersion, 0, 0);
 }
@@ -215,7 +215,7 @@ signed int  ObjectsCompiler_WriteSlotNameRecords(
   bucketOffset = 0;
   while ( 1 )
   {
-    slotNameEntry = *(int **)(bucketOffset + g_Defclass_SlotNameHashTablePtr);
+    slotNameEntry = *(int **)(uintptr_t)(bucketOffset + g_Defclass_SlotNameHashTablePtr);
     if ( slotNameEntry )
       break;
 LABEL_5:
@@ -237,22 +237,22 @@ LABEL_5:
                fileCount,
                arrayVersion,
                headerFPCopy,
-               (char)aSlot_name_0,
-               *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 32),
+               (char)(intptr_t)aSlot_name_0,
+               *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 32),
                0,
                0);
     outFile = result;
     if ( !result )
       return result;
-    Output_WriteFormatted(v10, *slotNameEntry, result, (int)aU1U, *slotNameEntry);
+    Output_WriteFormatted(v10, *slotNameEntry, result, (int)(intptr_t)aU1U, *slotNameEntry);
     Compiler_WriteSymbolReference(outFile, slotNameEntry[3], v12);
-    Output_WriteFormatted(v14, v13, outFile, (int)asc_50C5DC, elementCount);
+    Output_WriteFormatted(v14, v13, outFile, (int)(intptr_t)asc_50C5DC, elementCount);
     Compiler_WriteSymbolReference(outFile, slotNameEntry[4], v15);
-    Output_WriteFormatted(v17, v16, outFile, (int)asc_50C5DC, elementCount);
+    Output_WriteFormatted(v17, v16, outFile, (int)(intptr_t)asc_50C5DC, elementCount);
     ObjectsCompiler_WriteSlotNamePointerRef(outFile, slotNameEntry[5], imageID);
-    Output_WriteFormatted(v19, v18, outFile, (int)a0l, elementCount++);
+    Output_WriteFormatted(v19, v18, outFile, (int)(intptr_t)a0l, elementCount++);
     theFile = Rules_ConstructCodeFileClose(outFile, &elementCount, imageID, &arrayVersion, 0, 0);
-    slotNameEntry = (int *)slotNameEntry[5];
+    slotNameEntry = (int *)(uintptr_t)slotNameEntry[5];
     if ( !slotNameEntry )
       goto LABEL_5;
   }
@@ -308,9 +308,9 @@ int  ObjectsCompiler_WriteModuleRecord(int theFile, int a2, int a3)
   char v9; // [esp+0h] [ebp-Ch]
   char v10; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(a3, a2, theFile, (int)asc_50C5E8, v9);
-  Rules_WriteConstructModuleItemHeaderToCode(theFile, v4, v5, g_CLIPS_DefclassModuleItemIndex, *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 4));
-  return Output_WriteFormatted(v7, v6, theFile, (int)asc_50C5EC, v10);
+  Output_WriteFormatted(a3, a2, theFile, (int)(intptr_t)asc_50C5E8, v9);
+  Rules_WriteConstructModuleItemHeaderToCode(theFile, v4, v5, g_CLIPS_DefclassModuleItemIndex, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 4));
+  return Output_WriteFormatted(v7, v6, theFile, (int)(intptr_t)asc_50C5EC, v10);
 }
 // 4D096B: variable 'v9' is possibly undefined
 // 4D0988: variable 'v4' is possibly undefined
@@ -368,92 +368,92 @@ int  ObjectsCompiler_WriteClassRecord(
   signed int v44; // [esp+0h] [ebp-10h]
   char v45; // [esp+0h] [ebp-10h]
 
-  Output_WriteFormatted(theDefclass, fileNameBuffer, theFile, (int)asc_50C5E8, a4);
-  Rules_WriteConstructHeaderToCode(theFile, theDefclass, v44, moduleIndex, **(_DWORD **)(g_ClipsConstructCompilerData + 20), *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 4));
-  Output_WriteFormatted(v19, *(_DWORD *)(theDefclass + 20) << 30 >> 31, theFile, (int)a1UUU00U0U, (*(_DWORD *)(theDefclass + 20) & 2) != 0);
-  LOWORD(v21) = *(_WORD *)(theDefclass + 34);
+  Output_WriteFormatted(theDefclass, fileNameBuffer, theFile, (int)(intptr_t)asc_50C5E8, a4);
+  Rules_WriteConstructHeaderToCode(theFile, theDefclass, v44, moduleIndex, **(_DWORD **)(uintptr_t)(g_ClipsConstructCompilerData + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 4));
+  Output_WriteFormatted(v19, *(_DWORD *)(uintptr_t)(theDefclass + 20) << 30 >> 31, theFile, (int)(intptr_t)a1UUU00U0U, (*(_DWORD *)(uintptr_t)(theDefclass + 20) & 2) != 0);
+  LOWORD(v21) = *(_WORD *)(uintptr_t)(theDefclass + 34);
   if ( (_WORD)v21 )
-    Output_WriteFormatted(a7, *(unsigned __int16 *)(theDefclass + 34), theFile, (int)aUSD_DD, *(_WORD *)(theDefclass + 34));
+    Output_WriteFormatted(a7, *(unsigned __int16 *)(uintptr_t)(theDefclass + 34), theFile, (int)(intptr_t)aUSD_DD, *(_WORD *)(uintptr_t)(theDefclass + 34));
   else
-    Output_WriteFormatted(v20, v21, theFile, (int)a0Null, v44);
+    Output_WriteFormatted(v20, v21, theFile, (int)(intptr_t)a0Null, v44);
   HIWORD(v22) = 0;
-  subclassCount = *(_WORD *)(theDefclass + 40);
+  subclassCount = *(_WORD *)(uintptr_t)(theDefclass + 40);
   if ( subclassCount )
   {
-    Output_WriteFormatted(*(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 8), subclassCount, theFile, (int)aUSD_DD, subclassCount);
+    Output_WriteFormatted(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 8), subclassCount, theFile, (int)(intptr_t)aUSD_DD, subclassCount);
   }
   else
   {
-    LOWORD(v22) = *(_WORD *)(theDefclass + 34);
-    Output_WriteFormatted((unsigned __int16)v22 + a7, v22, theFile, (int)a0Null, v44);
+    LOWORD(v22) = *(_WORD *)(uintptr_t)(theDefclass + 34);
+    Output_WriteFormatted((unsigned __int16)v22 + a7, v22, theFile, (int)(intptr_t)a0Null, v44);
   }
   HIWORD(v25) = 0;
-  LOWORD(v24) = *(_WORD *)(theDefclass + 46);
+  LOWORD(v24) = *(_WORD *)(uintptr_t)(theDefclass + 46);
   if ( (_WORD)v24 )
   {
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 8),
-      *(unsigned __int16 *)(theDefclass + 46),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 8),
+      *(unsigned __int16 *)(uintptr_t)(theDefclass + 46),
       theFile,
-      (int)aUSD_DD,
-      *(_WORD *)(theDefclass + 46));
+      (int)(intptr_t)aUSD_DD,
+      *(_WORD *)(uintptr_t)(theDefclass + 46));
   }
   else
   {
-    LOWORD(v25) = *(_WORD *)(theDefclass + 40);
-    Output_WriteFormatted(v24, v25, theFile, (int)a0Null_0, v44);
+    LOWORD(v25) = *(_WORD *)(uintptr_t)(theDefclass + 40);
+    Output_WriteFormatted(v24, v25, theFile, (int)(intptr_t)a0Null_0, v44);
   }
-  if ( *(_DWORD *)(theDefclass + 52) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 52) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12),
-      *(_DWORD *)(g_ClipsConstructCompilerData + 20),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12),
+      *(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20),
       theFile,
-      (int)aSD_DD_8,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12));
+      (int)(intptr_t)aSD_DD_8,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12));
   else
-    Output_WriteFormatted(v27, v26, theFile, (int)aNull_27, v44);
-  if ( *(_DWORD *)(theDefclass + 56) )
+    Output_WriteFormatted(v27, v26, theFile, (int)(intptr_t)aNull_27, v44);
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 56) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 16),
-      *(_DWORD *)(g_ClipsConstructCompilerData + 20),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 16),
+      *(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20),
       theFile,
-      (int)aSD_DD_8,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 16));
+      (int)(intptr_t)aSD_DD_8,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 16));
   else
-    Output_WriteFormatted(v29, v28, theFile, (int)aNull_27, v44);
-  if ( *(_DWORD *)(theDefclass + 60) )
+    Output_WriteFormatted(v29, v28, theFile, (int)(intptr_t)aNull_27, v44);
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 60) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 20),
-      *(_DWORD *)(g_ClipsConstructCompilerData + 20),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 20),
+      *(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20),
       theFile,
-      (int)aSD_DD_8,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 20));
+      (int)(intptr_t)aSD_DD_8,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 20));
   else
-    Output_WriteFormatted(v31, v30, theFile, (int)aNull_27, v44);
-  Output_WriteFormatted(*(_DWORD *)(theDefclass + 64), *(_DWORD *)(theDefclass + 68), theFile, (int)aUUUUNullNull, *(_DWORD *)(theDefclass + 64));
-  if ( *(_DWORD *)(theDefclass + 88) )
+    Output_WriteFormatted(v31, v30, theFile, (int)(intptr_t)aNull_27, v44);
+  Output_WriteFormatted(*(_DWORD *)(uintptr_t)(theDefclass + 64), *(_DWORD *)(uintptr_t)(theDefclass + 68), theFile, (int)(intptr_t)aUUUUNullNull, *(_DWORD *)(uintptr_t)(theDefclass + 64));
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 88) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 24),
-      *(_DWORD *)(g_ClipsConstructCompilerData + 20),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 24),
+      *(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20),
       theFile,
-      (int)aSD_DD_8,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 24));
+      (int)(intptr_t)aSD_DD_8,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 24));
   else
-    Output_WriteFormatted(v33, v32, theFile, (int)aNull_27, v44);
-  if ( *(_DWORD *)(theDefclass + 92) )
+    Output_WriteFormatted(v33, v32, theFile, (int)(intptr_t)aNull_27, v44);
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 92) )
     Output_WriteFormatted(
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 28),
-      *(_DWORD *)(g_ClipsConstructCompilerData + 20),
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 28),
+      *(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20),
       theFile,
-      (int)aSD_DD_8,
-      *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 28));
+      (int)(intptr_t)aSD_DD_8,
+      *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 28));
   else
-    Output_WriteFormatted(v35, v34, theFile, (int)aNull_27, v44);
-  Output_WriteFormatted(v37, v36, theFile, (int)aU_0, *(_DWORD *)(theDefclass + 96));
-  ObjectsCompiler_WriteDefclassPointerRef(theFile, *(_DWORD *)(theDefclass + 100), v44);
-  Output_WriteFormatted(v39, v38, theFile, (int)asc_50C5DC, v44);
-  Compiler_WriteBitMapReference(theFile, *(_DWORD *)(theDefclass + 104), v40);
-  return Output_WriteFormatted(v42, v41, theFile, (int)asc_50C67C, v45);
+    Output_WriteFormatted(v35, v34, theFile, (int)(intptr_t)aNull_27, v44);
+  Output_WriteFormatted(v37, v36, theFile, (int)(intptr_t)aU_0, *(_DWORD *)(uintptr_t)(theDefclass + 96));
+  ObjectsCompiler_WriteDefclassPointerRef(theFile, *(_DWORD *)(uintptr_t)(theDefclass + 100), v44);
+  Output_WriteFormatted(v39, v38, theFile, (int)(intptr_t)asc_50C5DC, v44);
+  Compiler_WriteBitMapReference(theFile, *(_DWORD *)(uintptr_t)(theDefclass + 104), v40);
+  return Output_WriteFormatted(v42, v41, theFile, (int)(intptr_t)asc_50C67C, v45);
 }
 // 4D09DC: variable 'v44' is possibly undefined
 // 4D0A10: variable 'v19' is possibly undefined
@@ -508,7 +508,7 @@ int  ObjectsCompiler_WriteClassLinkPointerArray(
   int wroteElement; // [esp+1Ch] [ebp-10h]
 
   wroteElement = 0;
-  totalLinkCount = *(unsigned __int16 *)(theDefclass + 40) + *(unsigned __int16 *)(theDefclass + 34) + *(unsigned __int16 *)(theDefclass + 46);
+  totalLinkCount = *(unsigned __int16 *)(uintptr_t)(theDefclass + 40) + *(unsigned __int16 *)(uintptr_t)(theDefclass + 34) + *(unsigned __int16 *)(uintptr_t)(theDefclass + 46);
   if ( !totalLinkCount )
     return 1;
   result = Rules_ConstructCodeFileOpen(
@@ -519,8 +519,8 @@ int  ObjectsCompiler_WriteClassLinkPointerArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)aDefclass_7,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 8),
+             (char)(intptr_t)aDefclass_7,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 8),
              *a11,
              codeFile);
   *theFilePtr = result;
@@ -531,21 +531,21 @@ int  ObjectsCompiler_WriteClassLinkPointerArray(
     for ( i = 0; ; i += 4 )
     {
       v15 = superclassIndex;
-      if ( *(unsigned __int16 *)(theDefclass + 34) <= superclassIndex )
+      if ( *(unsigned __int16 *)(uintptr_t)(theDefclass + 34) <= superclassIndex )
         break;
       if ( wroteElement )
-        Output_WriteFormatted(v14, *theFilePtr, *theFilePtr, (int)asc_50C5DC, totalLinkCount);
-      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(i + *(_DWORD *)(theDefclass + 36)), imageID);
+        Output_WriteFormatted(v14, *theFilePtr, *theFilePtr, (int)(intptr_t)asc_50C5DC, totalLinkCount);
+      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 36)), imageID);
       wroteElement = 1;
       ++superclassIndex;
     }
     subclassIndex = 0;
     subclassOffset = 0;
-    while ( *(unsigned __int16 *)(theDefclass + 40) > subclassIndex )
+    while ( *(unsigned __int16 *)(uintptr_t)(theDefclass + 40) > subclassIndex )
     {
       if ( wroteElement )
-        Output_WriteFormatted(*theFilePtr, v15, *theFilePtr, (int)asc_50C5DC, totalLinkCount);
-      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(subclassOffset + *(_DWORD *)(theDefclass + 42)), imageID);
+        Output_WriteFormatted(*theFilePtr, v15, *theFilePtr, (int)(intptr_t)asc_50C5DC, totalLinkCount);
+      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(subclassOffset + *(_DWORD *)(uintptr_t)(theDefclass + 42)), imageID);
       wroteElement = 1;
       v15 = subclassOffset + 4;
       subclassOffset += 4;
@@ -553,18 +553,18 @@ int  ObjectsCompiler_WriteClassLinkPointerArray(
     }
     precedenceIndex = 0;
     precedenceOffset = 0;
-    while ( *(unsigned __int16 *)(theDefclass + 46) > precedenceIndex )
+    while ( *(unsigned __int16 *)(uintptr_t)(theDefclass + 46) > precedenceIndex )
     {
       if ( wroteElement )
-        Output_WriteFormatted(*theFilePtr, v15, *theFilePtr, (int)asc_50C5DC, totalLinkCount);
-      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(precedenceOffset + *(_DWORD *)(theDefclass + 48)), imageID);
+        Output_WriteFormatted(*theFilePtr, v15, *theFilePtr, (int)(intptr_t)asc_50C5DC, totalLinkCount);
+      ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(precedenceOffset + *(_DWORD *)(uintptr_t)(theDefclass + 48)), imageID);
       wroteElement = 1;
       v15 = precedenceOffset + 4;
       precedenceOffset += 4;
       ++precedenceIndex;
     }
     *elementCount += totalLinkCount;
-    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)codeFile);
+    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)(intptr_t)codeFile);
     return 1;
   }
   return result;
@@ -613,7 +613,7 @@ int  ObjectsCompiler_WriteSlotDescArray(
   int v36; // [esp+0h] [ebp-14h]
   unsigned int slotIndex; // [esp+4h] [ebp-10h]
 
-  if ( !*(_DWORD *)(theDefclass + 64) )
+  if ( !*(_DWORD *)(uintptr_t)(theDefclass + 64) )
     return 1;
   result = Rules_ConstructCodeFileOpen(
              *theFilePtr,
@@ -623,72 +623,72 @@ int  ObjectsCompiler_WriteSlotDescArray(
              fileCount,
              *arrayVersion,
              headerFP,
-             (char)aSlot_desc,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12),
+             (char)(intptr_t)aSlot_desc,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12),
              *reopenOldFile,
              codeFile);
   *theFilePtr = result;
   if ( result )
   {
     slotIndex = 0;
-    if ( *(_DWORD *)(theDefclass + 64) )
+    if ( *(_DWORD *)(uintptr_t)(theDefclass + 64) )
     {
       slotOffset = 0;
       do
       {
         v15 = slotOffset;
         v16 = slotIndex;
-        slotDesc = slotOffset + *(_DWORD *)(theDefclass + 52);
+        slotDesc = slotOffset + *(_DWORD *)(uintptr_t)(theDefclass + 52);
         if ( slotIndex )
-          Output_WriteFormatted(slotIndex, slotOffset, *theFilePtr, (int)asc_50C57C, slotOffset);
-        Output_WriteFormatted(v16, v15, *theFilePtr, (int)aUUUUUUUUUUUUUU, *(_BYTE *)slotDesc & 1);
-        ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(slotDesc + 4), imageID);
-        Output_WriteFormatted(v18, *theFilePtr, *theFilePtr, (int)asc_50C5DC, slotOffset);
-        ObjectsCompiler_WriteSlotNamePointerRef(*theFilePtr, *(_DWORD *)(slotDesc + 8), imageID);
-        Output_WriteFormatted(*theFilePtr, v19, *theFilePtr, (int)asc_50C6C0, v32);
-        Compiler_WriteSymbolReference(*theFilePtr, *(_DWORD *)(slotDesc + 12), v20);
-        if ( *(_DWORD *)(slotDesc + 16) )
+          Output_WriteFormatted(slotIndex, slotOffset, *theFilePtr, (int)(intptr_t)asc_50C57C, slotOffset);
+        Output_WriteFormatted(v16, v15, *theFilePtr, (int)(intptr_t)aUUUUUUUUUUUUUU, *(_BYTE *)(uintptr_t)slotDesc & 1);
+        ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(slotDesc + 4), imageID);
+        Output_WriteFormatted(v18, *theFilePtr, *theFilePtr, (int)(intptr_t)asc_50C5DC, slotOffset);
+        ObjectsCompiler_WriteSlotNamePointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(slotDesc + 8), imageID);
+        Output_WriteFormatted(*theFilePtr, v19, *theFilePtr, (int)(intptr_t)asc_50C6C0, v32);
+        Compiler_WriteSymbolReference(*theFilePtr, *(_DWORD *)(uintptr_t)(slotDesc + 12), v20);
+        if ( *(_DWORD *)(uintptr_t)(slotDesc + 16) )
         {
-          Output_WriteFormatted(v22, *theFilePtr, *theFilePtr, (int)aVoid_2, v33);
-          if ( (*(_BYTE *)slotDesc & 0x40) != 0 )
+          Output_WriteFormatted(v22, *theFilePtr, *theFilePtr, (int)(intptr_t)aVoid_2, v33);
+          if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x40) != 0 )
           {
-            Rules_ExpressionToCode(*theFilePtr, *(__int16 **)(slotDesc + 16), v23, fileID);
+            Rules_ExpressionToCode(*theFilePtr, *(__int16 **)(uintptr_t)(slotDesc + 16), v23, fileID);
           }
           else
           {
-            defaultExpr = (__int16 *)AST_BuildExpressionFromValue(*(_DWORD **)(slotDesc + 16));
-            Rules_ExpressionToCode(*theFilePtr, defaultExpr, (int)defaultExpr, fileID);
+            defaultExpr = (__int16 *)(uintptr_t)AST_BuildExpressionFromValue(*(_DWORD **)(uintptr_t)(slotDesc + 16));
+            Rules_ExpressionToCode(*theFilePtr, defaultExpr, (int)(intptr_t)defaultExpr, fileID);
             AST_Free(v30);
           }
         }
         else
         {
-          Output_WriteFormatted(v22, v21, *theFilePtr, (int)aNull_28, v33);
+          Output_WriteFormatted(v22, v21, *theFilePtr, (int)(intptr_t)aNull_28, v33);
         }
-        Output_WriteFormatted(*theFilePtr, v24, *theFilePtr, (int)asc_50C5DC, v34);
-        Compiler_WriteConstraintReference(*theFilePtr, *(_DWORD *)(slotDesc + 20), imageID, fileID);
-        Output_WriteFormatted(v26, v25, *theFilePtr, (int)a00l, v35);
-        if ( (*(_BYTE *)slotDesc & 1) != 0 )
+        Output_WriteFormatted(*theFilePtr, v24, *theFilePtr, (int)(intptr_t)asc_50C5DC, v34);
+        Compiler_WriteConstraintReference(*theFilePtr, *(_DWORD *)(uintptr_t)(slotDesc + 20), imageID, fileID);
+        Output_WriteFormatted(v26, v25, *theFilePtr, (int)(intptr_t)a00l, v35);
+        if ( (*(_BYTE *)(uintptr_t)slotDesc & 1) != 0 )
         {
           Output_WriteFormatted(
             *theFilePtr,
-            *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12),
+            *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12),
             *theFilePtr,
-            (int)aSD_UU000Null,
-            *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12));
+            (int)(intptr_t)aSD_UU000Null,
+            *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12));
         }
         else
         {
-          LOBYTE(v27) = *(_BYTE *)slotDesc;
-          Output_WriteFormatted(v28, v27, *theFilePtr, (int)aNull000Null, v36);
+          LOBYTE(v27) = *(_BYTE *)(uintptr_t)slotDesc;
+          Output_WriteFormatted(v28, v27, *theFilePtr, (int)(intptr_t)aNull000Null, v36);
         }
         slotOffset = v36 + 44;
         ++slotIndex;
       }
-      while ( slotIndex < *(_DWORD *)(theDefclass + 64) );
+      while ( slotIndex < *(_DWORD *)(uintptr_t)(theDefclass + 64) );
     }
-    *elementCount += *(_DWORD *)(theDefclass + 64);
-    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, reopenOldFile, (int)codeFile);
+    *elementCount += *(_DWORD *)(uintptr_t)(theDefclass + 64);
+    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, reopenOldFile, (int)(intptr_t)codeFile);
     return 1;
   }
   return result;
@@ -735,7 +735,7 @@ signed int  ObjectsCompiler_WriteSlotDescPointerArray(
   int slotOffset; // ecx
   char v17; // [esp+0h] [ebp-Ch]
 
-  if ( !*(_DWORD *)(theDefclass + 72) )
+  if ( !*(_DWORD *)(uintptr_t)(theDefclass + 72) )
     return 1;
   outFile = Rules_ConstructCodeFileOpen(
           *theFilePtr,
@@ -745,27 +745,27 @@ signed int  ObjectsCompiler_WriteSlotDescPointerArray(
           fileCount,
           *arrayVersion,
           a5,
-          (char)aSlot_desc_0,
-          *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 16),
+          (char)(intptr_t)aSlot_desc_0,
+          *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 16),
           *a11,
           codeFile);
   *theFilePtr = outFile;
   if ( !outFile )
     return 0;
   slotIndex = 0;
-  if ( *(_DWORD *)(theDefclass + 72) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 72) )
   {
     slotOffset = 0;
     do
     {
       if ( slotIndex )
-        Output_WriteFormatted(slotOffset, slotIndex, *theFilePtr, (int)asc_50C5DC, v17);
-      Output_WriteFormatted(slotOffset + 4, slotIndex + 1, *theFilePtr, (int)aSD_UU, *(_DWORD *)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 12));
+        Output_WriteFormatted(slotOffset, slotIndex, *theFilePtr, (int)(intptr_t)asc_50C5DC, v17);
+      Output_WriteFormatted(slotOffset + 4, slotIndex + 1, *theFilePtr, (int)(intptr_t)aSD_UU, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 12));
     }
-    while ( slotIndex < *(_DWORD *)(theDefclass + 72) );
+    while ( slotIndex < *(_DWORD *)(uintptr_t)(theDefclass + 72) );
   }
-  *elementCount += *(_DWORD *)(theDefclass + 72);
-  *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)codeFile);
+  *elementCount += *(_DWORD *)(uintptr_t)(theDefclass + 72);
+  *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)(intptr_t)codeFile);
   return 1;
 }
 // 4D1212: variable 'v15' is possibly undefined
@@ -803,8 +803,8 @@ int  ObjectsCompiler_WriteSlotIndexMapArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)aUnsigned,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 20),
+             (char)(intptr_t)aUnsigned,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 20),
              *a11,
              codeFile);
   *theFilePtr = result;
@@ -815,12 +815,12 @@ int  ObjectsCompiler_WriteSlotIndexMapArray(
     do
     {
       if ( mapIndex )
-        Output_WriteFormatted(mapOffset, mapIndex, *theFilePtr, (int)asc_50C5DC, separatorChar);
-      Output_WriteFormatted(mapOffset + 4, mapIndex + 1, *theFilePtr, (int)aU_1, *(_DWORD *)(mapOffset + theDefclass[15]));
+        Output_WriteFormatted(mapOffset, mapIndex, *theFilePtr, (int)(intptr_t)asc_50C5DC, separatorChar);
+      Output_WriteFormatted(mapOffset + 4, mapIndex + 1, *theFilePtr, (int)(intptr_t)aU_1, *(_DWORD *)(uintptr_t)(mapOffset + theDefclass[15]));
     }
     while ( mapIndex <= theDefclass[19] );
     *elementCount += theDefclass[19] + 1;
-    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)codeFile);
+    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)(intptr_t)codeFile);
     return 1;
   }
   return result;
@@ -859,7 +859,7 @@ int  ObjectsCompiler_WriteHandlerArray(
   int handlerOffset; // [esp+4h] [ebp-10h]
 
   fileIDCopy = fileID;
-  if ( !*(_DWORD *)(theDefclass + 96) )
+  if ( !*(_DWORD *)(uintptr_t)(theDefclass + 96) )
     return 1;
   result = Rules_ConstructCodeFileOpen(
              *theFilePtr,
@@ -869,14 +869,14 @@ int  ObjectsCompiler_WriteHandlerArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)aHandler_1,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 24),
+             (char)(intptr_t)aHandler_1,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 24),
              *a11,
              codeFile);
   *theFilePtr = result;
   if ( result )
   {
-    handlerCount = *(_DWORD *)(theDefclass + 96);
+    handlerCount = *(_DWORD *)(uintptr_t)(theDefclass + 96);
     handlerIndex = 0;
     if ( handlerCount )
     {
@@ -884,22 +884,22 @@ int  ObjectsCompiler_WriteHandlerArray(
       do
       {
         if ( handlerIndex )
-          Output_WriteFormatted(handlerCount, v14, *theFilePtr, (int)asc_50C57C, fileIDCopy);
-        theHandler = handlerOffset + *(_DWORD *)(theDefclass + 88);
-        Output_WriteFormatted(handlerCount, v14, *theFilePtr, (int)aUU000, *(_BYTE *)theHandler & 1);
-        Compiler_WriteSymbolReference(*theFilePtr, *(_DWORD *)(theHandler + 8), v18);
-        Output_WriteFormatted(v19, *theFilePtr, *theFilePtr, (int)asc_50C5DC, fileIDCopy);
-        ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(theHandler + 12), imageID);
-        Output_WriteFormatted(*(_DWORD *)(theHandler + 24), *theFilePtr, *theFilePtr, (int)aDDD_0, *(_DWORD *)(theHandler + 16));
-        Rules_ExpressionToCode(*theFilePtr, *(__int16 **)(theHandler + 28), v20, handlerIndex);
-        Output_WriteFormatted(*theFilePtr, v21, *theFilePtr, (int)aNull_29, v23);
+          Output_WriteFormatted(handlerCount, v14, *theFilePtr, (int)(intptr_t)asc_50C57C, fileIDCopy);
+        theHandler = handlerOffset + *(_DWORD *)(uintptr_t)(theDefclass + 88);
+        Output_WriteFormatted(handlerCount, v14, *theFilePtr, (int)(intptr_t)aUU000, *(_BYTE *)(uintptr_t)theHandler & 1);
+        Compiler_WriteSymbolReference(*theFilePtr, *(_DWORD *)(uintptr_t)(theHandler + 8), v18);
+        Output_WriteFormatted(v19, *theFilePtr, *theFilePtr, (int)(intptr_t)asc_50C5DC, fileIDCopy);
+        ObjectsCompiler_WriteDefclassPointerRef(*theFilePtr, *(_DWORD *)(uintptr_t)(theHandler + 12), imageID);
+        Output_WriteFormatted(*(_DWORD *)(uintptr_t)(theHandler + 24), *theFilePtr, *theFilePtr, (int)(intptr_t)aDDD_0, *(_DWORD *)(uintptr_t)(theHandler + 16));
+        Rules_ExpressionToCode(*theFilePtr, *(__int16 **)(uintptr_t)(theHandler + 28), v20, handlerIndex);
+        Output_WriteFormatted(*theFilePtr, v21, *theFilePtr, (int)(intptr_t)aNull_29, v23);
         ++handlerIndex;
         handlerOffset += 36;
       }
-      while ( handlerIndex < *(_DWORD *)(theDefclass + 96) );
+      while ( handlerIndex < *(_DWORD *)(uintptr_t)(theDefclass + 96) );
     }
-    *elementCount += *(_DWORD *)(theDefclass + 96);
-    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)codeFile);
+    *elementCount += *(_DWORD *)(uintptr_t)(theDefclass + 96);
+    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)(intptr_t)codeFile);
     return 1;
   }
   return result;
@@ -934,7 +934,7 @@ int  ObjectsCompiler_WriteHandlerIndexMapArray(
   int mapOffset; // ecx
   char v16; // [esp+0h] [ebp-Ch]
 
-  if ( !*(_DWORD *)(theDefclass + 96) )
+  if ( !*(_DWORD *)(uintptr_t)(theDefclass + 96) )
     return 1;
   result = Rules_ConstructCodeFileOpen(
              *theFilePtr,
@@ -944,27 +944,27 @@ int  ObjectsCompiler_WriteHandlerIndexMapArray(
              fileCount,
              *arrayVersion,
              a5,
-             (char)aUnsigned,
-             *(const char **)(*(_DWORD *)(g_ClipsConstructCompilerData + 20) + 28),
+             (char)(intptr_t)aUnsigned,
+             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsConstructCompilerData + 20) + 28),
              *a11,
              codeFile);
   *theFilePtr = result;
   if ( result )
   {
     mapIndex = 0;
-    if ( *(_DWORD *)(theDefclass + 96) )
+    if ( *(_DWORD *)(uintptr_t)(theDefclass + 96) )
     {
       mapOffset = 0;
       do
       {
         if ( mapIndex )
-          Output_WriteFormatted(mapOffset, mapIndex, *theFilePtr, (int)asc_50C5DC, v16);
-        Output_WriteFormatted(mapOffset + 4, mapIndex + 1, *theFilePtr, (int)aU_1, *(_DWORD *)(mapOffset + *(_DWORD *)(theDefclass + 92)));
+          Output_WriteFormatted(mapOffset, mapIndex, *theFilePtr, (int)(intptr_t)asc_50C5DC, v16);
+        Output_WriteFormatted(mapOffset + 4, mapIndex + 1, *theFilePtr, (int)(intptr_t)aU_1, *(_DWORD *)(uintptr_t)(mapOffset + *(_DWORD *)(uintptr_t)(theDefclass + 92)));
       }
-      while ( mapIndex < *(_DWORD *)(theDefclass + 96) );
+      while ( mapIndex < *(_DWORD *)(uintptr_t)(theDefclass + 96) );
     }
-    *elementCount += *(_DWORD *)(theDefclass + 96);
-    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)codeFile);
+    *elementCount += *(_DWORD *)(uintptr_t)(theDefclass + 96);
+    *theFilePtr = Rules_ConstructCodeFileClose(*theFilePtr, elementCount, imageID, arrayVersion, a11, (int)(intptr_t)codeFile);
     return 1;
   }
   return result;
@@ -980,36 +980,36 @@ signed int __thiscall Rules_RegisterObjectPatternType(void *this)
   int v1; // ecx
 
   Rules_EnsureObjectPatternVTable();
-  if ( Rules_IsReservedPatternSymbol((int)this, 0) == 1 )
+  if ( Rules_IsReservedPatternSymbol((int)(intptr_t)this, 0) == 1 )
   {
     Rules_ReportSystemError(v1, 1);
     IO_RunRouterExitCallbacks();
   }
-  Rules_AddReservedPatternSymbol((int)aObject, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aObject, 0);
   Rules_AddPatternParser(
-    (int)aObjects_0,
+    (int)(intptr_t)aObjects_0,
     20,
-    (int)Rules_IsObjectPatternKeyword,
+    (int)(intptr_t)Rules_IsObjectPatternKeyword,
     (int)(uintptr_t)g_Rules_ObjectPatternVTable,
-    (int)Rules_ParseObjectPattern,
-    (int)Rules_AnalyzeObjectPatternRestrictions,
-    (int)Rules_AddObjectPatternNode,
-    (int)Rules_RemoveObjectPatternNode,
+    (int)(intptr_t)Rules_ParseObjectPattern,
+    (int)(intptr_t)Rules_AnalyzeObjectPatternRestrictions,
+    (int)(intptr_t)Rules_AddObjectPatternNode,
+    (int)(intptr_t)Rules_RemoveObjectPatternNode,
     0,
-    (int)Rules_BuildSlotBoundTestNode,
-    (int)Rules_BuildSlotBoundTestExpression,
-    (int)Rules_BuildSlotRangeTestNode,
-    (int)Rules_BuildMultifieldIndexTestNode,
-    (int)mblen_,
-    (int)Rules_BuildSlotUnboundTestExpression,
-    (int)mblen__0,
-    (int)Rules_DecrementBitmapRefCountIfSet,
-    (int)Rules_IncrementBitmapRefCount,
-    (int)Rules_SetObjectPatternNegatedFlag,
-    (int)Rules_TriggerObjectPatternMatchForAll,
-    (int)Rules_CreateDefaultObjectPatternRestriction,
-    (int)Compiler_WriteObjectPatternSecondaryIndexRef);
-  Rules_RegisterHostFunction(aObjectPatternM, 117, (int)aObjectmatchdel, (int)Rules_EvaluatePatternQueryExpression, 0);
+    (int)(intptr_t)Rules_BuildSlotBoundTestNode,
+    (int)(intptr_t)Rules_BuildSlotBoundTestExpression,
+    (int)(intptr_t)Rules_BuildSlotRangeTestNode,
+    (int)(intptr_t)Rules_BuildMultifieldIndexTestNode,
+    (int)(intptr_t)mblen_,
+    (int)(intptr_t)Rules_BuildSlotUnboundTestExpression,
+    (int)(intptr_t)mblen__0,
+    (int)(intptr_t)Rules_DecrementBitmapRefCountIfSet,
+    (int)(intptr_t)Rules_IncrementBitmapRefCount,
+    (int)(intptr_t)Rules_SetObjectPatternNegatedFlag,
+    (int)(intptr_t)Rules_TriggerObjectPatternMatchForAll,
+    (int)(intptr_t)Rules_CreateDefaultObjectPatternRestriction,
+    (int)(intptr_t)Compiler_WriteObjectPatternSecondaryIndexRef);
+  Rules_RegisterHostFunction(aObjectPatternM, 117, (int)(intptr_t)aObjectmatchdel, (int)(intptr_t)Rules_EvaluatePatternQueryExpression, 0);
   Rules_AddFunctionParser(aObjectPatternM);
   Rules_SetFunctionSeqOverloadFlags(aObjectPatternM, 0);
   Compiler_RegisterObjectPatternNetworkCodeGenerator();
@@ -1066,18 +1066,18 @@ _DWORD * Rules_ParseObjectPattern(int readSource)
   firstNode = 0;
   lastNode = 0;
   multipleRestrictions = 0;
-  v2 = (unsigned __int16 *)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
+  v2 = (unsigned __int16 *)(uintptr_t)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
   clsset = v2;
   if ( Rules_IsClassBitmapEmpty(v2) )
   {
-    Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v7);
+    Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfExi, v7);
     Mem_SmallBlockFree(v2, ((int)*v2 >> 3) + 3);
     return 0;
   }
   else
   {
-    tmpset = (unsigned __int16 *)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
+    tmpset = (unsigned __int16 *)(uintptr_t)Rules_AllocateClassBitmap((unsigned __int16)g_ClipsDefclassIdCount - 1, 1);
     Rules_IncrementIndentDepth(7);
     Parser_NextToken(readSource, v5);
     if ( tokenType != 101 )
@@ -1088,52 +1088,52 @@ _DWORD * Rules_ParseObjectPattern(int readSource)
         IO_OutNewline();
         IO_OutWriteToken(asc_50C7F8);
         IO_OutWriteToken(tokenPrintForm);
-        if ( tokenType != 100 || (Parser_NextToken(readSource, (int)&tokenType), tokenType != 2) )
+        if ( tokenType != 100 || (Parser_NextToken(readSource, (int)(intptr_t)&tokenType), tokenType != 2) )
         {
           Parser_ReportSyntaxError();
           goto LABEL_5;
         }
-        if ( Rules_CheckDuplicateAttributeRestriction((int)firstNode, tokenValue) )
+        if ( Rules_CheckDuplicateAttributeRestriction((int)(intptr_t)firstNode, tokenValue) )
           goto LABEL_5;
         if ( tokenValue == g_Symbol_IsA )
         {
-          if ( !Rules_ParseObjectPatternClassRestriction(readSource, (int)&tokenType) )
+          if ( !Rules_ParseObjectPatternClassRestriction(readSource, (int)(intptr_t)&tokenType) )
             goto LABEL_5;
           Rules_ResetClassBitmapToScope(tmpset, 0);
-          if ( !Rules_ProcessObjectPatternClassRestriction(tmpset, (int *)(v14 + 68), 1) )
+          if ( !Rules_ProcessObjectPatternClassRestriction(tmpset, (int *)(uintptr_t)(v14 + 68), 1) )
           {
             AST_FreeNode(v15);
             goto LABEL_5;
           }
-          Rules_AndClassBitmaps((int)clsset, tmpset);
+          Rules_AndClassBitmaps((int)(intptr_t)clsset, tmpset);
         }
         else if ( tokenValue == g_Clips_NameSymbol )
         {
-          if ( !Rules_ParseObjectPatternNameRestriction(readSource, (int)&tokenType) )
+          if ( !Rules_ParseObjectPatternNameRestriction(readSource, (int)(intptr_t)&tokenType) )
             goto LABEL_5;
           Rules_ResetClassBitmapToScope(tmpset, 1);
         }
         else
         {
-          slotConstraints = Rules_ResolveSlotConstraintAcrossClasses((int)clsset, tokenValue, &multip);
+          slotConstraints = Rules_ResolveSlotConstraintAcrossClasses((int)(intptr_t)clsset, tokenValue, &multip);
           if ( slotConstraints )
           {
             Rules_ResetClassBitmapToScope(tmpset, 1);
-            if ( !Rules_ParseObjectPatternSlotRestriction(readSource, (int)&tokenType, multip, slotConstraints) )
+            if ( !Rules_ParseObjectPatternSlotRestriction(readSource, (int)(intptr_t)&tokenType, multip, slotConstraints) )
               goto LABEL_5;
           }
           else
           {
             Rules_ResetClassBitmapToScope(tmpset, 0);
-            *(_DWORD *)(AST_AllocNode() + 36) = tokenValue;
+            *(_DWORD *)(uintptr_t)(AST_AllocNode() + 36) = tokenValue;
           }
         }
         if ( Rules_IsClassBitmapEmpty(tmpset) )
         {
-          Rules_PrintErrorID((int)aObjrtbld, 2, 0);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_0, v17);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v18 + 36) + 16), v18);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRestrictionInO, v19);
+          Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 2, 0);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfE_0, v17);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v18 + 36) + 16), v18);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aRestrictionInO, v19);
           AST_FreeNode(v20);
           goto LABEL_5;
         }
@@ -1142,18 +1142,18 @@ _DWORD * Rules_ParseObjectPattern(int readSource)
         if ( restrictionNode )
         {
           if ( firstNode )
-            *(_DWORD *)(lastNode + 64) = restrictionNode;
+            *(_DWORD *)(uintptr_t)(lastNode + 64) = restrictionNode;
           else
-            firstNode = (_DWORD *)restrictionNode;
+            firstNode = (_DWORD *)(uintptr_t)restrictionNode;
           lastNode = restrictionNode;
         }
         AST_Append(restrictionNode, v8);
-        Parser_NextToken(readSource, (int)&tokenType);
+        Parser_NextToken(readSource, (int)(intptr_t)&tokenType);
         if ( tokenType == 101 )
           goto LABEL_20;
       }
-      Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v21);
+      Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfExi, v21);
       AST_FreeNode(v22);
       goto LABEL_5;
     }
@@ -1162,16 +1162,16 @@ LABEL_20:
     {
       if ( Rules_IsClassBitmapEmpty(clsset) )
       {
-        Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v23);
+        Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 1, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfExi, v23);
 LABEL_5:
         Mem_SmallBlockFree(clsset, ((int)*clsset >> 3) + 3);
         Mem_SmallBlockFree(tmpset, ((int)*tmpset >> 3) + 3);
-        AST_FreeNode((int)firstNode);
+        AST_FreeNode((int)(intptr_t)firstNode);
         Rules_DecrementIndentDepth(7);
         return 0;
       }
-      isaNode = (_DWORD *)AST_AllocNode();
+      isaNode = (_DWORD *)(uintptr_t)AST_AllocNode();
       *isaNode = 17;
       isaSymbol = g_Symbol_IsA;
       isaNode[8] = 1;
@@ -1190,7 +1190,7 @@ LABEL_5:
     LOWORD(bitCount) = *(_WORD *)packedBitmap;
     bitmapValue = Rules_AddBitmapValue(packedBitmap, ((bitCount - (__CFSHL__(bitCount >> 31, 3) + 8 * (bitCount >> 31))) >> 3) + 3);
     firstNode[15] = bitmapValue;
-    ++*(_DWORD *)(bitmapValue + 4);
+    ++*(_DWORD *)(uintptr_t)(bitmapValue + 4);
     Mem_SmallBlockFree(v13, ((int)*(unsigned __int16 *)v13 >> 3) + 3);
     Rules_DecrementIndentDepth(7);
     return firstNode;
@@ -1267,19 +1267,19 @@ int  Rules_AnalyzeObjectPatternRestrictions(int topNode)
 
   patternPtr = topNode;
   bitmapModified = 0;
-  extractedNodes = Rules_ExtractObjectPatternRestrictionNodes(*(_DWORD *)(topNode + 24), *(_DWORD *)(topNode + 64), &isaRestriction, (int)&isaEndNode, (int *)&nameRestriction);
-  *(_DWORD *)(patternPtr + 64) = extractedNodes;
+  extractedNodes = Rules_ExtractObjectPatternRestrictionNodes(*(_DWORD *)(uintptr_t)(topNode + 24), *(_DWORD *)(uintptr_t)(topNode + 64), &isaRestriction, (int)(intptr_t)&isaEndNode, (int *)&nameRestriction);
+  *(_DWORD *)(uintptr_t)(patternPtr + 64) = extractedNodes;
   result = Rules_StaticConstraintCheckingEnabled();
   if ( result )
   {
-    origBitmap = *(unsigned __int16 **)(isaEndNode[15] + 16);
-    newBitmap = (_WORD *)Rules_AllocateClassBitmap(*origBitmap, 0);
-    if ( isaRestriction && (isaValueList = isaRestriction[4]) != 0 && *(_DWORD *)(isaValueList + 6) )
+    origBitmap = *(unsigned __int16 **)(uintptr_t)(isaEndNode[15] + 16);
+    newBitmap = (_WORD *)(uintptr_t)Rules_AllocateClassBitmap(*origBitmap, 0);
+    if ( isaRestriction && (isaValueList = isaRestriction[4]) != 0 && *(_DWORD *)(uintptr_t)(isaValueList + 6) )
     {
-      classNameItem = *(_DWORD *)(isaValueList + 6);
+      classNameItem = *(_DWORD *)(uintptr_t)(isaValueList + 6);
       do
       {
-        theDefclass = Class_LookupInScope(*(_BYTE **)(*(_DWORD *)(classNameItem + 2) + 16));
+        theDefclass = Class_LookupInScope(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(classNameItem + 2) + 16));
         if ( theDefclass )
         {
           defclassIndex = *((unsigned __int16 *)theDefclass + 12);
@@ -1291,7 +1291,7 @@ int  Rules_AnalyzeObjectPatternRestrictions(int topNode)
               *((_BYTE *)newBitmap + byteOffset + 2) |= classBit;
           }
         }
-        classNameItem = *(_DWORD *)(classNameItem + 10);
+        classNameItem = *(_DWORD *)(uintptr_t)(classNameItem + 10);
       }
       while ( classNameItem );
       bitmapModified = Rules_ClassBitmapsIdentical(newBitmap, origBitmap) == 0;
@@ -1300,13 +1300,13 @@ int  Rules_AnalyzeObjectPatternRestrictions(int topNode)
     {
       qmemcpy(newBitmap + 1, origBitmap + 1, ((int)(unsigned __int16)*newBitmap >> 3) + 1);
     }
-    curNode = *(_DWORD **)(patternPtr + 64);
+    curNode = *(_DWORD **)(uintptr_t)(patternPtr + 64);
     if ( curNode != isaEndNode )
     {
       while ( curNode == isaRestriction || curNode == nameRestriction )
       {
 LABEL_6:
-        curNode = (_DWORD *)curNode[16];
+        curNode = (_DWORD *)(uintptr_t)curNode[16];
         if ( curNode == isaEndNode )
           goto LABEL_7;
       }
@@ -1320,9 +1320,9 @@ LABEL_20:
         bitMask = 1 << ((unsigned __int16)classID % 8);
         if ( ((unsigned __int8)bitMask & (unsigned __int8)bytePtr[2]) != 0 )
         {
-          slotIndex = Instance_ResolveSlotIndex(*(_DWORD *)(g_ClipsDefclassIdTable + 4 * (unsigned __int16)classID), curNode[9]);
-          slotDesc = *(_DWORD *)(*(_DWORD *)(slotDefclass + 56) + 4 * slotIndex);
-          intersectedConstraint = Rules_IntersectConstraints(curNode[4], *(_DWORD *)(slotDesc + 20));
+          slotIndex = Instance_ResolveSlotIndex(*(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + 4 * (unsigned __int16)classID), curNode[9]);
+          slotDesc = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDefclass + 56) + 4 * slotIndex);
+          intersectedConstraint = Rules_IntersectConstraints(curNode[4], *(_DWORD *)(uintptr_t)(slotDesc + 20));
           Rules_ConstraintIsUnmatchable(intersectedConstraint);
           AST_DecrementNodeRefCount(tmpConstraint);
           if ( isUnmatchable )
@@ -1336,22 +1336,22 @@ LABEL_20:
           {
             if ( *curNode != 18 )
               goto LABEL_22;
-            subNode = (_DWORD *)curNode[17];
+            subNode = (_DWORD *)(uintptr_t)curNode[17];
             if ( !subNode )
               goto LABEL_22;
             do
             {
               if ( *subNode == 18 || *subNode == 16 )
-                subConstraint = *(_DWORD *)(subNode[4] + 26);
+                subConstraint = *(_DWORD *)(uintptr_t)(subNode[4] + 26);
               else
                 subConstraint = subNode[4];
-              savedMinFields = *(_DWORD *)(subConstraint + 18);
-              *(_DWORD *)(subConstraint + 18) = *(_DWORD *)(*(_DWORD *)(slotDesc + 20) + 18);
-              savedMaxFields = *(_DWORD *)(subConstraint + 22);
-              *(_DWORD *)(subConstraint + 22) = *(_DWORD *)(*(_DWORD *)(slotDesc + 20) + 22);
-              subIntersected = Rules_IntersectConstraints(subConstraint, *(_DWORD *)(slotDesc + 20));
-              *(_DWORD *)(restoreConstraint + 18) = savedMinFields;
-              *(_DWORD *)(restoreConstraint + 22) = savedMaxFields;
+              savedMinFields = *(_DWORD *)(uintptr_t)(subConstraint + 18);
+              *(_DWORD *)(uintptr_t)(subConstraint + 18) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 20) + 18);
+              savedMaxFields = *(_DWORD *)(uintptr_t)(subConstraint + 22);
+              *(_DWORD *)(uintptr_t)(subConstraint + 22) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 20) + 22);
+              subIntersected = Rules_IntersectConstraints(subConstraint, *(_DWORD *)(uintptr_t)(slotDesc + 20));
+              *(_DWORD *)(uintptr_t)(restoreConstraint + 18) = savedMinFields;
+              *(_DWORD *)(uintptr_t)(restoreConstraint + 22) = savedMaxFields;
               Rules_ConstraintIsUnmatchable(subIntersected);
               AST_DecrementNodeRefCount(subTmpConstraint);
               if ( subUnmatchable )
@@ -1363,7 +1363,7 @@ LABEL_20:
                 ++classID;
                 goto LABEL_20;
               }
-              subNode = (_DWORD *)subNode[16];
+              subNode = (_DWORD *)(uintptr_t)subNode[16];
             }
             while ( subNode );
             ++classID;
@@ -1381,21 +1381,21 @@ LABEL_7:
     {
       if ( Rules_IsClassBitmapEmpty(newBitmap) )
       {
-        Rules_PrintErrorID((int)aObjrtbld, 3, 1);
+        Rules_PrintErrorID((int)(intptr_t)aObjrtbld, 3, 1);
         Mem_SmallBlockFree(newBitmap, ((int)(unsigned __int16)*newBitmap >> 3) + 3);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_1, v33);
-        Rules_PrintLongInteger(v34, *(_DWORD *)(patternPtr + 28));
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__25, v35);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoObjectsOfE_1, v33);
+        Rules_PrintLongInteger(v34, *(_DWORD *)(uintptr_t)(patternPtr + 28));
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__25, v35);
         return 1;
       }
       else
       {
         packedBitmap = Rules_TrimClassBitmapToHighestBit(newBitmap);
-        Rules_DecrementBitmapRefCountIfSet(isaEndNode[15], (int)packedBitmap);
+        Rules_DecrementBitmapRefCountIfSet(isaEndNode[15], (int)(intptr_t)packedBitmap);
         LOWORD(bitmapWord) = *(_WORD *)trimmedPtr;
         bitmapValue = Rules_AddBitmapValue(trimmedPtr, ((bitmapWord - (__CFSHL__(bitmapWord >> 31, 3) + 8 * (bitmapWord >> 31))) >> 3) + 3);
         isaEndNode[15] = bitmapValue;
-        ++*(_DWORD *)(isaEndNode[15] + 4);
+        ++*(_DWORD *)(uintptr_t)(isaEndNode[15] + 4);
         Mem_SmallBlockFree(freedBitmap, ((int)*(unsigned __int16 *)freedBitmap >> 3) + 3);
         return 0;
       }

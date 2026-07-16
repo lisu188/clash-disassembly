@@ -105,11 +105,11 @@ LABEL_19:
     while ( 1 )
     {
       buffer_mem_handle = GlobalAlloc(0x2002u, dwBytes);
-      g_CSS_WaveBufferMemHandles[buffer_index] = (int)buffer_mem_handle;
+      g_CSS_WaveBufferMemHandles[buffer_index] = (int)(intptr_t)buffer_mem_handle;
       if ( !buffer_mem_handle )
         return 2;
       buffer_ptr = GlobalLock(buffer_mem_handle);
-      g_CSS_WaveBufferDataPtrs[buffer_index] = (int)buffer_ptr;
+      g_CSS_WaveBufferDataPtrs[buffer_index] = (int)(intptr_t)buffer_ptr;
       if ( !buffer_ptr )
         return 43;
       ++buffer_count;
@@ -128,14 +128,14 @@ LABEL_50:
       while ( 1 )
       {
         header_mem_handle = GlobalAlloc(0x2002u, 0x20u);
-        g_CSS_WaveHeaderMemHandles[header_index] = (int)header_mem_handle;
+        g_CSS_WaveHeaderMemHandles[header_index] = (int)(intptr_t)header_mem_handle;
         if ( !header_mem_handle )
           return 2;
         wave_header = (struct wavehdr_tag *)GlobalLock(header_mem_handle);
         *(LPWAVEHDR *)((char *)&pwh + header_index * 4) = wave_header;
         if ( !wave_header )
           return 43;
-        wave_header->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[header_index];
+        wave_header->lpData = (LPSTR)(uintptr_t)g_CSS_WaveBufferDataPtrs[header_index];
         buffer_length = dwBytes;
         wave_header->dwFlags = 1;
         ++header_index;
@@ -254,7 +254,7 @@ signed int CSS_CloseWaveOutDevice(void)
   if ( g_CSS_MixChannelCount )
   {
     buffer_index = 0;
-    while ( (GlobalUnlock((HGLOBAL)g_CSS_WaveBufferMemHandles[buffer_index]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveBufferMemHandles[buffer_index]) )
+    while ( (GlobalUnlock((HGLOBAL)(uintptr_t)g_CSS_WaveBufferMemHandles[buffer_index]) || !GetLastError()) && !GlobalFree((HGLOBAL)(uintptr_t)g_CSS_WaveBufferMemHandles[buffer_index]) )
     {
       ++free_count;
       ++buffer_index;
@@ -269,7 +269,7 @@ LABEL_20:
     header_free_count = 0;
     if ( g_CSS_MixChannelCount )
     {
-      for ( i = 0; (GlobalUnlock((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]) || !GetLastError()) && !GlobalFree((HGLOBAL)g_CSS_WaveHeaderMemHandles[i]); ++i )
+      for ( i = 0; (GlobalUnlock((HGLOBAL)(uintptr_t)g_CSS_WaveHeaderMemHandles[i]) || !GetLastError()) && !GlobalFree((HGLOBAL)(uintptr_t)g_CSS_WaveHeaderMemHandles[i]); ++i )
       {
         if ( ++header_free_count >= (unsigned int)g_CSS_MixChannelCount )
           return 0;
@@ -346,7 +346,7 @@ unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *chunk_completed_out)
     if ( g_CSS_WaveOutFillByteOffset >= dwBytes )
     {
       pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
-      pwh[g_WaveOutBufferRingIndex]->lpData = (LPSTR)g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex];
+      pwh[g_WaveOutBufferRingIndex]->lpData = (LPSTR)(uintptr_t)g_CSS_WaveBufferDataPtrs[g_WaveOutBufferRingIndex];
       pwh[g_WaveOutBufferRingIndex]->dwBufferLength = dwBytes;
       pwh[g_WaveOutBufferRingIndex]->dwFlags = 0;
       pwh[g_WaveOutBufferRingIndex]->dwLoops = 0;
@@ -651,7 +651,7 @@ int __cdecl CSS_BuildVolumeScaleTable(int volume_scale)
         table_write_ptr += 4;
         ++sample_index;
         weighted_sum += row_step;
-        *(_DWORD *)(table_write_ptr - 4) = scaled_value;
+        *(_DWORD *)(uintptr_t)(table_write_ptr - 4) = scaled_value;
       }
       while ( sample_index < 128 );
       result = row_index + 1;
@@ -674,21 +674,21 @@ int __cdecl CSS_ResetMixChannelRecord(int channel_index)
 
   channel_offset = 108 * channel_index;
   result = g_CssMixChannels;
-  *(_DWORD *)(channel_offset + g_CssMixChannels + 96) = 0;
-  *(_DWORD *)(channel_offset + result + 68) = 0;
-  *(_DWORD *)(channel_offset + result + 72) = 0;
-  *(_DWORD *)(channel_offset + result + 4) = 0;
-  *(_DWORD *)(channel_offset + result + 60) = 0;
-  *(_DWORD *)(channel_offset + result + 64) = 1;
-  *(_DWORD *)(channel_offset + result + 76) = 0;
-  *(_DWORD *)(channel_offset + result + 92) = 0;
-  *(_DWORD *)(channel_offset + result + 104) = 0;
-  *(_DWORD *)(channel_offset + result + 48) = 0;
-  *(_DWORD *)(channel_offset + result + 12) = 0;
-  *(_DWORD *)(channel_offset + result + 16) = 0;
-  *(_DWORD *)(channel_offset + result + 20) = 0;
-  *(_DWORD *)(channel_offset + result + 24) = 0;
-  *(_DWORD *)(channel_offset + result + 8) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + g_CssMixChannels + 96) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 68) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 72) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 4) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 60) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 64) = 1;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 76) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 92) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 104) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 48) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 12) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 16) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 20) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 24) = 0;
+  *(_DWORD *)(uintptr_t)(channel_offset + result + 8) = 0;
   return result;
 }
 // 54DB90: using guessed type int dword_54DB90;
@@ -698,7 +698,7 @@ void __cdecl CSS_StartMixChannelPlayback(unsigned int channel_index, int playbac
 {
   if ( channel_index < g_CssMixChannelCount )
   {
-    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 2;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 96) = 2;
     CSS_ChannelSetRate(channel_index, playback_rate);
     CSS_ChannelSetPlayPosition(channel_index, 0);
   }
@@ -720,14 +720,14 @@ void __cdecl CSS_SetMixChannelLoopPoints(unsigned int channel_index, int loop_st
   {
     channel_offset = 108 * channel_index;
     channels_base = g_CssMixChannels;
-    *(_DWORD *)(g_CssMixChannels + channel_offset + 12) = 1;
-    *(_DWORD *)(channels_base + channel_offset + 16) = loop_start;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + channel_offset + 12) = 1;
+    *(_DWORD *)(uintptr_t)(channels_base + channel_offset + 16) = loop_start;
     if ( loop_end == -1 )
-      resolved_end = *(_DWORD *)(channels_base + channel_offset + 8);
+      resolved_end = *(_DWORD *)(uintptr_t)(channels_base + channel_offset + 8);
     v6 = 108 * channel_index;
     v7 = g_CssMixChannels;
-    *(_DWORD *)(g_CssMixChannels + v6 + 20) = resolved_end;
-    *(_DWORD *)(v7 + v6 + 24) = 1;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + v6 + 20) = resolved_end;
+    *(_DWORD *)(uintptr_t)(v7 + v6 + 24) = 1;
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
@@ -743,10 +743,10 @@ unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int channel_index)
   {
     result = 108 * channel_index;
     channels_base = g_CssMixChannels;
-    *(_DWORD *)(g_CssMixChannels + result + 12) = 0;
-    *(_DWORD *)(channels_base + result + 16) = 0;
-    *(_DWORD *)(channels_base + result + 20) = 0;
-    *(_DWORD *)(channels_base + result + 24) = 0;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + result + 12) = 0;
+    *(_DWORD *)(uintptr_t)(channels_base + result + 16) = 0;
+    *(_DWORD *)(uintptr_t)(channels_base + result + 20) = 0;
+    *(_DWORD *)(uintptr_t)(channels_base + result + 24) = 0;
   }
   return result;
 }
@@ -760,8 +760,8 @@ int __cdecl CSS_ChannelGetLoopRange(unsigned int channel_index, _DWORD *loop_sta
 
   if ( channel_index < g_CssMixChannelCount )
   {
-    *loop_start_out = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 16);
-    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 20);
+    *loop_start_out = *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 16);
+    result = *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 20);
     *loop_end_out = result;
   }
   return result;
@@ -777,7 +777,7 @@ unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int channel_index)
   if ( channel_index < g_CssMixChannelCount )
   {
     result = 108 * channel_index;
-    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 0;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 96) = 0;
   }
   return result;
 }
@@ -792,7 +792,7 @@ unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int channel_index)
   if ( channel_index < g_CssMixChannelCount )
   {
     result = 108 * channel_index;
-    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 96) = 3;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 96) = 3;
   }
   return result;
 }
@@ -807,7 +807,7 @@ BOOL __cdecl CSS_ChannelIsPlaying(unsigned int channel_index)
   if ( channel_index >= g_CssMixChannelCount )
     return 0;
   channel_base = g_CssMixChannels + 108 * channel_index;
-  return *(_DWORD *)(channel_base + 96) == 3 || *(_DWORD *)(channel_base + 96) == 2;
+  return *(_DWORD *)(uintptr_t)(channel_base + 96) == 3 || *(_DWORD *)(uintptr_t)(channel_base + 96) == 2;
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
@@ -822,7 +822,7 @@ int __cdecl CSS_ChannelBeginVolumeFade(unsigned int channel_index, int target_vo
   duration = fade_duration;
   if ( channel_index < g_CssMixChannelCount )
   {
-    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    channel = (_DWORD *)(uintptr_t)(108 * channel_index + g_CssMixChannels);
     if ( !fade_duration )
       duration = 1;
     channel[21] = 1000 * (1000 * target_volume - channel[20]) / (g_CSS_MixUpdateRateHz * duration);
@@ -850,9 +850,9 @@ _DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
     channel_offset = 0;
     do
     {
-      result = (_DWORD *)(channel_offset + g_CssMixChannels);
-      new_volume = *(_DWORD *)(channel_offset + g_CssMixChannels + 80);
-      if ( *(int *)(channel_offset + g_CssMixChannels + 84) <= 0 )
+      result = (_DWORD *)(uintptr_t)(channel_offset + g_CssMixChannels);
+      new_volume = *(_DWORD *)(uintptr_t)(channel_offset + g_CssMixChannels + 80);
+      if ( *(int *)(uintptr_t)(channel_offset + g_CssMixChannels + 84) <= 0 )
       {
         if ( (int)result[21] < 0 )
         {
@@ -894,7 +894,7 @@ unsigned int __cdecl CSS_ChannelSetRate(unsigned int channel_index, int rate)
   if ( channel_index < g_CssMixChannelCount )
   {
     result = g_CssMixChannels + 108 * channel_index;
-    *(_DWORD *)(result + 60) = rate;
+    *(_DWORD *)(uintptr_t)(result + 60) = rate;
   }
   return result;
 }
@@ -909,8 +909,8 @@ void __cdecl CSS_ChannelGetRate(unsigned int channel_index, _DWORD *rate_out)
   if ( channel_index < g_CssMixChannelCount )
   {
     channel_base = g_CssMixChannels + 108 * channel_index;
-    if ( *(_DWORD *)(channel_base + 96) > 1u )
-      *rate_out = *(_DWORD *)(channel_base + 60);
+    if ( *(_DWORD *)(uintptr_t)(channel_base + 96) > 1u )
+      *rate_out = *(_DWORD *)(uintptr_t)(channel_base + 60);
     else
       *rate_out = 0;
   }
@@ -928,7 +928,7 @@ unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int channel_index, i
   if ( channel_index < g_CssMixChannelCount )
   {
     result = 108 * channel_index;
-    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 80) = 1000 * volume;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 80) = 1000 * volume;
   }
   return result;
 }
@@ -942,7 +942,7 @@ unsigned int __cdecl CSS_ChannelGetVolume(unsigned int channel_index, _DWORD *vo
 
   if ( channel_index < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 80) / 0x3E8u;
+    result = *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 80) / 0x3E8u;
     *volume_out = result;
   }
   return result;
@@ -958,14 +958,14 @@ void __cdecl CSS_ChannelAssignQueueSlot(unsigned int channel_index, int queue_sl
 
   if ( channel_index < g_CssMixChannelCount )
   {
-    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    channel = (_DWORD *)(uintptr_t)(108 * channel_index + g_CssMixChannels);
     queue_slot = g_CSS_QueuedSoundSlotTable + 40 * (queue_slot_index - 1);
     channel[17] = queue_slot_index;
     channel[18] = 1;
-    if ( *(_DWORD *)(queue_slot + 12) == 5 && channel[24] == 1 )
+    if ( *(_DWORD *)(uintptr_t)(queue_slot + 12) == 5 && channel[24] == 1 )
     {
       channel[24] = 3;
-      CSS_ChannelSetPlayPosition(channel_index, *(_DWORD *)(queue_slot + 16));
+      CSS_ChannelSetPlayPosition(channel_index, *(_DWORD *)(uintptr_t)(queue_slot + 16));
     }
   }
 }
@@ -997,7 +997,7 @@ unsigned int __cdecl CSS_QueueSoundDescriptor(int sample_data, signed int sample
   slot_number = ring_index;
   if ( ring_index >= 4 )
     g_CSS_SoundDescriptorRingIndex = 0;
-  slot = (_DWORD *)(40 * (ring_index - 1) + g_CSS_QueuedSoundSlotTable);
+  slot = (_DWORD *)(uintptr_t)(40 * (ring_index - 1) + g_CSS_QueuedSoundSlotTable);
   *slot = sample_data;
   format_shift = CSS_GetFormatTableValue(format_index);
   slot[3] = 0;
@@ -1020,8 +1020,8 @@ _DWORD *__cdecl CSS_ChannelLoadQueuedSound(int channel_index)
   _DWORD *result; // eax
   _DWORD *queue_slot; // edx
 
-  result = (_DWORD *)(g_CssMixChannels + 108 * channel_index);
-  queue_slot = (_DWORD *)(g_CSS_QueuedSoundSlotTable + 40 * (result[17] - 1));
+  result = (_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index);
+  queue_slot = (_DWORD *)(uintptr_t)(g_CSS_QueuedSoundSlotTable + 40 * (result[17] - 1));
   *result = *queue_slot;
   result[2] = queue_slot[2];
   result[3] = queue_slot[3];
@@ -1050,7 +1050,7 @@ void __cdecl CSS_ChannelSetPlayPosition(unsigned int channel_index, unsigned int
 
   if ( channel_index < g_CssMixChannelCount )
   {
-    channel = (int *)(g_CssMixChannels + 108 * channel_index);
+    channel = (int *)(uintptr_t)(g_CssMixChannels + 108 * channel_index);
     sample_position = a2 >> CSS_GetFormatTableValue(channel[1]);
     if ( !channel[18] || (CSS_ChannelLoadQueuedSound(channel_index), channel[3] == 2) || channel[3] == 3 || channel[24] != 4 )
     {
@@ -1172,7 +1172,7 @@ int __cdecl CSS_ChannelGetPlayPosition(unsigned int channel_index, _DWORD *posit
   if ( channel_index < g_CssMixChannelCount )
   {
     channel_base = 108 * channel_index + g_CssMixChannels;
-    result = *(_DWORD *)(channel_base + 48) << CSS_GetFormatTableValue(*(_DWORD *)(channel_base + 4));
+    result = *(_DWORD *)(uintptr_t)(channel_base + 48) << CSS_GetFormatTableValue(*(_DWORD *)(uintptr_t)(channel_base + 4));
     *position_out = result;
   }
   return result;
@@ -1190,9 +1190,9 @@ void __cdecl CSS_ChannelSetPanning(unsigned int channel_index, int panning)
   if ( channel_index < g_CssMixChannelCount )
   {
     channel_base = 108 * channel_index + g_CssMixChannels;
-    if ( *(_DWORD *)(channel_base + 4) != 1 && *(_DWORD *)(channel_base + 4) != 2 && *(_DWORD *)(channel_base + 4) != 5 && panning == 128 )
+    if ( *(_DWORD *)(uintptr_t)(channel_base + 4) != 1 && *(_DWORD *)(uintptr_t)(channel_base + 4) != 2 && *(_DWORD *)(uintptr_t)(channel_base + 4) != 5 && panning == 128 )
       adjusted_panning = 0;
-    *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 76) = adjusted_panning;
+    *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 76) = adjusted_panning;
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
@@ -1205,7 +1205,7 @@ int __cdecl CSS_ChannelGetPanning(unsigned int channel_index, _DWORD *panning_ou
 
   if ( channel_index < g_CssMixChannelCount )
   {
-    result = *(_DWORD *)(g_CssMixChannels + 108 * channel_index + 76);
+    result = *(_DWORD *)(uintptr_t)(g_CssMixChannels + 108 * channel_index + 76);
     *panning_out = result;
   }
   return result;
@@ -1227,10 +1227,10 @@ void  CSS_TickChannelLevels(int a1, int sample_count)
       channel_offset = 0;
       do
       {
-        if ( !*(_DWORD *)(channel_offset + g_CssMixChannels + 92) && !g_CSS_MixIdleChannelFlag )
+        if ( !*(_DWORD *)(uintptr_t)(channel_offset + g_CssMixChannels + 92) && !g_CSS_MixIdleChannelFlag )
           a1 = 1000;
         channel_offset += 108;
-        Audio_MixResampledVoice((int *)a1);
+        Audio_MixResampledVoice((int *)(uintptr_t)a1);
         a1 = g_CssMixChannelCount;
         ++channel_index;
       }
@@ -1259,7 +1259,7 @@ unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int channel_index, int sam
   result = channel_index;
   if ( channel_index < g_CssMixChannelCount )
   {
-    channel = (_DWORD *)(108 * channel_index + g_CssMixChannels);
+    channel = (_DWORD *)(uintptr_t)(108 * channel_index + g_CssMixChannels);
     *channel = sample_data;
     channel[3] = 1;
     channel[13] = 0;
@@ -1307,7 +1307,7 @@ void __cdecl CSS_ChannelSetPositionOffset(unsigned int channel_index, unsigned i
   if ( channel_index < g_CssMixChannelCount )
   {
     channel_base = 108 * channel_index + g_CssMixChannels;
-    *(_DWORD *)(channel_base + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(channel_base + 4));
+    *(_DWORD *)(uintptr_t)(channel_base + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(uintptr_t)(channel_base + 4));
   }
 }
 // 54DB80: using guessed type int dword_54DB80;

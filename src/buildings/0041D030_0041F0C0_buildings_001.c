@@ -77,9 +77,9 @@ int force;
   int revealRowDelta; // [esp+24h] [ebp-14h]
 
   Diagnostics_TraceBootstrapEvent("Building_New-enter");
-  Debug_Log(buildingType, stackIndex, force, (int)aBuilding_newDD);
+  Debug_Log(buildingType, stackIndex, force, (int)(intptr_t)aBuilding_newDD);
   stackByteOffset = UNIT_STACK_STRIDE * stackIndex;
-  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + stackByteOffset + 147178);
+  g_CurrentPlayerIndex = *(unsigned __int8 *)(uintptr_t)(gameData + stackByteOffset + 147178);
   if ( g_BuildingNewOverrideActive )
   {
     row = g_BuildingNewOverrideRow;
@@ -87,8 +87,8 @@ int force;
   }
   else
   {
-    row = *(__int16 *)(gameData + stackByteOffset + UNIT_STACK_TABLE_OFFSET);
-    column = *(__int16 *)(gameData + stackByteOffset + 147176);
+    row = *(__int16 *)(uintptr_t)(gameData + stackByteOffset + UNIT_STACK_TABLE_OFFSET);
+    column = *(__int16 *)(uintptr_t)(gameData + stackByteOffset + 147176);
   }
   if ( buildingType == 1 && UnitStack_HasPeasantCargo(stackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET) )
     return 0;
@@ -103,17 +103,17 @@ int force;
         --row;
       if ( MapTile_IsCastleFoundationTile(row, column - 1, buildingType) )
         --column;
-      occupantBelow = *(unsigned __int16 *)(TILE_ROW_STRIDE * (row + 1) + gameData + 2 * column + TILE_MAP_OFFSET);
+      occupantBelow = *(unsigned __int16 *)(uintptr_t)(TILE_ROW_STRIDE * (row + 1) + gameData + 2 * column + TILE_MAP_OFFSET);
       if ( occupantBelow != 0xFFFF && occupantBelow != stackIndex )
         return 0;
-      occupantBelowLayer2 = *(unsigned __int16 *)(200 * (row + 1) + gameData + 2 * column + 556376);
+      occupantBelowLayer2 = *(unsigned __int16 *)(uintptr_t)(200 * (row + 1) + gameData + 2 * column + 556376);
       if ( occupantBelowLayer2 != 0xFFFF && occupantBelowLayer2 != stackIndex )
         return 0;
-      occupantLayer2 = *(unsigned __int16 *)(gameData + 200 * row + 2 * column + 556376);
+      occupantLayer2 = *(unsigned __int16 *)(uintptr_t)(gameData + 200 * row + 2 * column + 556376);
       if ( occupantLayer2 != 0xFFFF && occupantLayer2 != stackIndex )
         return 0;
     }
-    occupantAtTile = *(unsigned __int16 *)(TILE_INDEX(row, column));
+    occupantAtTile = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(row, column));
     if ( occupantAtTile != 0xFFFF && occupantAtTile != stackIndex )
       return 0;
   }
@@ -122,7 +122,7 @@ int force;
   scanIndex = 0;
   do
   {
-    if ( *(char *)(gameData + scanByteOffset + 509678) == -1 )
+    if ( *(char *)(uintptr_t)(gameData + scanByteOffset + 509678) == -1 )
       foundFreeSlot = 1;
     scanByteOffset += 467;
     ++scanIndex;
@@ -134,38 +134,38 @@ int force;
     return 0;
   buildingIndexCopy = foundBuildingIndex;
   buildingPtr = UNIT_RECORD(buildingIndex);
-  *(_BYTE *)buildingPtr = row;
-  *(_BYTE *)(buildingPtr + 1) = column;
+  *(_BYTE *)(uintptr_t)buildingPtr = row;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 1) = column;
   ownerByte = g_CurrentPlayerIndex;
-  *(_BYTE *)(buildingPtr + 3) = g_CurrentPlayerIndex;
-  *(_BYTE *)(buildingPtr + 2) = ownerByte;
-  *(_BYTE *)(buildingPtr + 4) = buildingType;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 3) = g_CurrentPlayerIndex;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 2) = ownerByte;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 4) = buildingType;
   v15 = g_BuildingTypeMaxHitPoints[buildingType];
-  *(_BYTE *)(buildingPtr + 421) = 0;
-  *(_BYTE *)(buildingPtr + 434) = 50;
-  addonFlags = *(_BYTE *)(buildingPtr + 416);
-  *(_WORD *)(buildingPtr + 16) = v15;
-  v17 = *(_BYTE *)(buildingPtr + 435);
-  *(_BYTE *)(buildingPtr + 416) = addonFlags & 0xE0;
-  v18 = *(_BYTE *)(buildingPtr + 420);
-  *(_BYTE *)(buildingPtr + 435) = v17 & 0xF8;
-  v19 = *(_BYTE *)(buildingPtr + 436);
-  *(_BYTE *)(buildingPtr + 420) = v18 & 0xFE;
-  v20 = *(_WORD *)(buildingPtr + 432);
-  *(_BYTE *)(buildingPtr + 436) = v19 & 0xC0;
-  *(_WORD *)(buildingPtr + 432) = v20 & 0xF000;
-  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) & 7;
-  HIBYTE(v15) = *(_BYTE *)(buildingPtr + 444) & 0xF8;
-  *(_BYTE *)(buildingPtr + 444) = HIBYTE(v15);
-  *(_BYTE *)(buildingPtr + 444) = v15 | HIBYTE(v15);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 421) = 0;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 434) = 50;
+  addonFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 416);
+  *(_WORD *)(uintptr_t)(buildingPtr + 16) = v15;
+  v17 = *(_BYTE *)(uintptr_t)(buildingPtr + 435);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) = addonFlags & 0xE0;
+  v18 = *(_BYTE *)(uintptr_t)(buildingPtr + 420);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 435) = v17 & 0xF8;
+  v19 = *(_BYTE *)(uintptr_t)(buildingPtr + 436);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) = v18 & 0xFE;
+  v20 = *(_WORD *)(uintptr_t)(buildingPtr + 432);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 436) = v19 & 0xC0;
+  *(_WORD *)(uintptr_t)(buildingPtr + 432) = v20 & 0xF000;
+  LOBYTE(v15) = *(_BYTE *)(uintptr_t)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) & 7;
+  HIBYTE(v15) = *(_BYTE *)(uintptr_t)(buildingPtr + 444) & 0xF8;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 444) = HIBYTE(v15);
+  *(_BYTE *)(uintptr_t)(buildingPtr + 444) = v15 | HIBYTE(v15);
   if ( buildingType )
   {
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       v21 = 200;
     else
       v21 = 300;
-    *(_DWORD *)(buildingPtr + 438) = v21;
-    v22 = (_WORD *)(buildingPtr + 430);
+    *(_DWORD *)(uintptr_t)(buildingPtr + 438) = v21;
+    v22 = (_WORD *)(uintptr_t)(buildingPtr + 430);
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       v23 = 100;
     else
@@ -175,11 +175,11 @@ int force;
     *v22 = v24;
     *v22 = v23 | v24;
   }
-  nameDest = (char *)(buildingPtr + 5);
-  v26 = *(_BYTE *)(buildingPtr + 437) & 0xC0;
-  *(_WORD *)(buildingPtr + 442) = 0;
-  *(_BYTE *)(buildingPtr + 437) = v26;
-  *(_BYTE *)(buildingPtr + 437) = v26 | 0x32;
+  nameDest = (char *)(uintptr_t)(buildingPtr + 5);
+  v26 = *(_BYTE *)(uintptr_t)(buildingPtr + 437) & 0xC0;
+  *(_WORD *)(uintptr_t)(buildingPtr + 442) = 0;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 437) = v26;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 437) = v26 | 0x32;
   do
   {
     nameChar = *name;
@@ -195,44 +195,44 @@ int force;
   memset((void *)(uintptr_t)(unsigned int)(buildingPtr + 422), 0, 7);
   if ( buildingType == 1 )
   {
-    *(_BYTE *)(buildingPtr + 421) = 1;
-    v49 = *(_WORD *)(buildingPtr + 430) & 0xF000;
-    *(_BYTE *)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
-    *(_WORD *)(buildingPtr + 430) = v49;
+    *(_BYTE *)(uintptr_t)(buildingPtr + 421) = 1;
+    v49 = *(_WORD *)(uintptr_t)(buildingPtr + 430) & 0xF000;
+    *(_BYTE *)(uintptr_t)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
+    *(_WORD *)(uintptr_t)(buildingPtr + 430) = v49;
   }
   slotInitPtr = buildingPtr;
   do
   {
     slotInitPtr += 6;
-    *(_BYTE *)(slotInitPtr + 439) = -1;
+    *(_BYTE *)(uintptr_t)(slotInitPtr + 439) = -1;
   }
   while ( slotInitPtr != buildingPtr + 18 );
   recordInitPtr = buildingPtr;
   do
   {
     recordInitPtr += 31;
-    *(_WORD *)(recordInitPtr - 13) = -1;
+    *(_WORD *)(uintptr_t)(recordInitPtr - 13) = -1;
   }
   while ( recordInitPtr != buildingPtr + 372 );
   byteInitPtr = buildingPtr + 1;
-  *(_BYTE *)(buildingPtr + 402) = 0;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 402) = 0;
   do
-    *(_BYTE *)(++byteInitPtr + 401) = -1;
+    *(_BYTE *)(uintptr_t)(++byteInitPtr + 401) = -1;
   while ( byteInitPtr != buildingPtr + 12 );
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = -1;
   Diagnostics_TraceBootstrapEvent("Building_New-before-unit-get-into");
   Building_UnitGetInto(stackIndex, buildingIndexCopy, 7, stackIndex, st7_0);
   Diagnostics_TraceBootstrapEvent("Building_New-after-unit-get-into");
-  *(_WORD *)(TILE_INDEX(row, column)) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  *(_WORD *)(uintptr_t)(TILE_INDEX(row, column)) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingType == 1 || buildingType == 2 )
   {
     tileRowOffsetBelow = 200 * (row + 1);
-    *(_WORD *)(tileRowOffsetBelow + gameData + 2 * column + TILE_MAP_OFFSET) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + 200 * row + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(tileRowOffsetBelow + gameData + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(tileRowOffsetBelow + gameData + 2 * column + TILE_MAP_OFFSET) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(gameData + 200 * row + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(tileRowOffsetBelow + gameData + 2 * column + 556376) = buildingIndex + TILE_OCCUPANT_BUILDING_INDEX_BASE;
     if ( !force )
     {
-      castleTerrainTileId = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
+      castleTerrainTileId = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
       if ( castleTerrainTileId == 707 )
       {
         LOWORD(castleTerrainTileId) = 0;
@@ -243,15 +243,15 @@ int force;
       }
       terrainRowOffsetBelow = TILE_TERRAIN_ROW_STRIDE * (row + 1);
       terrainColOffset = 14 * (column + 1);
-      *(_WORD *)(terrainColOffset + terrainRowOffsetBelow + gameData) = castleTerrainTileId;
-      *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + terrainColOffset) = castleTerrainTileId;
-      *(_WORD *)(gameData + terrainRowOffsetBelow + 14 * column) = castleTerrainTileId;
-      *(_WORD *)(TILE_TERRAIN_RECORD_STRIDE * column + gameData + TILE_TERRAIN_ROW_STRIDE * row) = castleTerrainTileId;
+      *(_WORD *)(uintptr_t)(terrainColOffset + terrainRowOffsetBelow + gameData) = castleTerrainTileId;
+      *(_WORD *)(uintptr_t)(TILE_TERRAIN_ROW_STRIDE * row + gameData + terrainColOffset) = castleTerrainTileId;
+      *(_WORD *)(uintptr_t)(gameData + terrainRowOffsetBelow + 14 * column) = castleTerrainTileId;
+      *(_WORD *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * column + gameData + TILE_TERRAIN_ROW_STRIDE * row) = castleTerrainTileId;
     }
   }
   else if ( !force )
   {
-    terrainTileId = *(unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
+    terrainTileId = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
     if ( terrainTileId == 707 )
     {
       LOWORD(terrainTileId) = 0;
@@ -260,7 +260,7 @@ int force;
     {
       LOWORD(terrainTileId) = 4;
     }
-    *(_WORD *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column) = terrainTileId;
+    *(_WORD *)(uintptr_t)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column) = terrainTileId;
   }
   Diagnostics_TraceBootstrapEvent("Building_New-after-tile-markers");
   if ( buildingType )
@@ -285,27 +285,27 @@ int force;
   }
   Diagnostics_TraceBootstrapEvent("Building_New-after-reveal");
   playerData = PLAYER_DATA(g_CurrentPlayerIndex);
-  if ( *(_DWORD *)(playerData + 140067) == -1 && buildingType == 2 )
-    *(_DWORD *)(playerData + 140067) = buildingIndex;
+  if ( *(_DWORD *)(uintptr_t)(playerData + 140067) == -1 && buildingType == 2 )
+    *(_DWORD *)(uintptr_t)(playerData + 140067) = buildingIndex;
   if ( ACTIVE_MISSION_INDEX == -1 || GAME_TURN_COUNTER != 1 )
     Building_AssignUniqueGeneratedName(buildingPtr);
   Diagnostics_TraceBootstrapEvent("Building_New-before-minimap");
   if ( buildingType )
   {
-    MiniMap_DrawTileCell((void *)row, column);
-    MiniMap_DrawTileCell((void *)(row + 1), column);
-    MiniMap_DrawTileCell((void *)row, column + 1);
+    MiniMap_DrawTileCell((void *)(uintptr_t)row, column);
+    MiniMap_DrawTileCell((void *)(uintptr_t)(row + 1), column);
+    MiniMap_DrawTileCell((void *)(uintptr_t)row, column + 1);
     minimapColumn = column + 1;
-    minimapRowPtr = (void *)(row + 1);
+    minimapRowPtr = (void *)(uintptr_t)(row + 1);
   }
   else
   {
     minimapColumn = column;
-    minimapRowPtr = (void *)row;
+    minimapRowPtr = (void *)(uintptr_t)row;
   }
   MiniMap_DrawTileCell(minimapRowPtr, minimapColumn);
   Diagnostics_TraceBootstrapEvent("Building_New-before-rules-assert");
-  Rules_AssertCastleFact((unsigned __int8 *)buildingPtr, buildingIndex);
+  Rules_AssertCastleFact((unsigned __int8 *)(uintptr_t)buildingPtr, buildingIndex);
   Diagnostics_TraceBootstrapEvent("Building_New-before-under-construction-fact");
   Rules_LogCastleUnderConstructionFact(buildingIndex);
   Diagnostics_TraceBootstrapEvent("Building_New-done");
@@ -342,7 +342,7 @@ _DWORD * Building_LogBuiltCastleFacts(unsigned __int8 *buildingPtr)
 {
   int castleIndex; // edx
 
-  castleIndex = *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * *buildingPtr + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  castleIndex = *(unsigned __int16 *)(uintptr_t)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * *buildingPtr + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE;
   return Rules_LogCastleBuiltFactAndScheme(castleIndex, castleIndex);
 }
 // 5202E4: using guessed type int gameData;
@@ -362,7 +362,7 @@ BOOL  MapTile_IsCastleFoundationTile(int row, signed int column, int checkMode)
   {
     v6 = 2 * column;
     rowBase = TILE_TERRAIN_ROW_STRIDE * row + gameData;
-    return *(unsigned __int16 *)(rowBase + 7 * v6) >= 0x2C3u && *(unsigned __int16 *)(rowBase + 7 * v6) <= 0x2CAu;
+    return *(unsigned __int16 *)(uintptr_t)(rowBase + 7 * v6) >= 0x2C3u && *(unsigned __int16 *)(uintptr_t)(rowBase + 7 * v6) <= 0x2CAu;
   }
   return MapTile_IsCastleFoundationTile(row, column, 2) == 0;
 }
@@ -381,7 +381,7 @@ BOOL  MapTile_IsCastleFoundationAnchorTile(int row, signed int column, int check
     return 0;
   if ( checkMode )
   {
-    tileId = *(unsigned __int16 *)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column);
+    tileId = *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_ROW_STRIDE * row + gameData + TILE_TERRAIN_RECORD_STRIDE * column);
     return tileId == 707 || tileId == 711;
   }
   return !MapTile_IsCastleFoundationTile(row, column, 2);
@@ -403,13 +403,13 @@ int Rules_RebuildCastleSiteFacts(void)
   for ( i = 0; ; i += 1400 )
   {
     result = gameData;
-    if ( row >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+    if ( row >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
       break;
     column = 0;
     colByteOffset = 0;
-    while ( column < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+    while ( column < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     {
-      tileId = *(unsigned __int16 *)(colByteOffset + i + gameData);
+      tileId = *(unsigned __int16 *)(uintptr_t)(colByteOffset + i + gameData);
       if ( tileId == 707 || tileId == 711 )
         Rules_LogCastleSiteFact(row, column);
       colByteOffset += 14;
@@ -460,23 +460,23 @@ signed int  BuildCursor_IsPlacementValid(int row, int column, int buildingType, 
       break;
   }
   savedPlayerIndex = g_CurrentPlayerIndex;
-  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178);
-  rowDelta = row - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_TABLE_OFFSET);
+  g_CurrentPlayerIndex = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178);
+  rowDelta = row - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_TABLE_OFFSET);
   isValid = 1;
   rowDeltaAbs = rowDelta;
   if ( rowDelta <= 0 )
     rowDeltaAbs = -rowDelta;
   if ( rowDeltaAbs > footprintRadius )
     goto LABEL_6;
-  if ( column - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) > 0 )
+  if ( column - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) > 0 )
   {
-    if ( column - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) <= footprintRadius )
+    if ( column - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) <= footprintRadius )
       goto LABEL_7;
 LABEL_6:
     isValid = 0;
     goto LABEL_7;
   }
-  if ( *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) - column > footprintRadius )
+  if ( *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) - column > footprintRadius )
     goto LABEL_6;
 LABEL_7:
   colEnd = column + footprintRadius;
@@ -499,8 +499,8 @@ LABEL_24:
         {
           for ( i = 2 * colScanStart; i < colScanByteEnd; i += 2 )
           {
-            if ( *(unsigned __int16 *)(scanRowByteOffset + gameData + i + TILE_MAP_OFFSET) >= 0x8000u
-              && *(unsigned __int16 *)(scanRowByteOffset + gameData + i + TILE_MAP_OFFSET) != 0xFFFF )
+            if ( *(unsigned __int16 *)(uintptr_t)(scanRowByteOffset + gameData + i + TILE_MAP_OFFSET) >= 0x8000u
+              && *(unsigned __int16 *)(uintptr_t)(scanRowByteOffset + gameData + i + TILE_MAP_OFFSET) != 0xFFFF )
             {
               isValid = 0;
             }
@@ -532,7 +532,7 @@ LABEL_23:
       surfaceClass = Map_GetTileSurfaceClassOrUnexplored(currentRow, scanColumn);
       if ( surfaceClass == 185 || surfaceClass == 39 || surfaceClass == 204 || surfaceClass == 202 || surfaceClass == 147 || surfaceClass == 1 )
         isValid = 0;
-      tileOwner = *(unsigned __int16 *)(rowByteBase + gameData + scanColByteOffset + TILE_MAP_OFFSET);
+      tileOwner = *(unsigned __int16 *)(uintptr_t)(rowByteBase + gameData + scanColByteOffset + TILE_MAP_OFFSET);
       if ( tileOwner != 0xFFFF && tileOwner != stackIndex )
         isValid = 0;
       if ( Trap_GetTileOwnerMask(row, column, g_CurrentPlayerIndex) || MapTile_GetReligiousSiteCategory(row, column) || MapTile_HasHiddenTreasure(row, column) )
@@ -562,8 +562,8 @@ signed int  Building_Stop(DWORD buildingPtr, int a2, char a3, DWORD a4, double a
   int occupiedSlots[12]; // [esp+4h] [ebp-30h] BYREF
 
   buildingPtrCopy = buildingPtr;
-  Debug_Log(a2, a3, a4, (int)aBuilding_stop0);
-  if ( !*(_WORD *)(buildingPtr + 16) )
+  Debug_Log(a2, a3, a4, (int)(intptr_t)aBuilding_stop0);
+  if ( !*(_WORD *)(uintptr_t)(buildingPtr + 16) )
     return 0;
   slotPtr = buildingPtr;
   slotIndex = 0;
@@ -571,7 +571,7 @@ signed int  Building_Stop(DWORD buildingPtr, int a2, char a3, DWORD a4, double a
   outIndex = 0;
   do
   {
-    if ( *(__int16 *)(slotPtr + 18) != -1 )
+    if ( *(__int16 *)(uintptr_t)(slotPtr + 18) != -1 )
     {
       ++outIndex;
       ++occupiedCount;
@@ -583,9 +583,9 @@ signed int  Building_Stop(DWORD buildingPtr, int a2, char a3, DWORD a4, double a
   while ( slotIndex < 12 );
   if ( occupiedCount < 10 )
     occupiedSlots[occupiedCount] = -1;
-  Building_UnitsLeave((unsigned __int8 *)buildingPtr, occupiedSlots, a5);
-  *(_WORD *)(buildingPtr + 16) = -1;
-  Rules_RetractCastleFact((unsigned __int8 *)buildingPtr, a5);
+  Building_UnitsLeave((unsigned __int8 *)(uintptr_t)buildingPtr, occupiedSlots, a5);
+  *(_WORD *)(uintptr_t)(buildingPtr + 16) = -1;
+  Rules_RetractCastleFact((unsigned __int8 *)(uintptr_t)buildingPtr, a5);
   return 1;
 }
 
@@ -597,7 +597,7 @@ char  Building_AssignUniqueGeneratedName(int buildingPtr)
   unsigned int name_index; // [esp+Ch] [ebp-24h]
   char lower_name[24]; // [esp+0h] [ebp-30h] BYREF
 
-  namePtr = (char *)(buildingPtr + 5);
+  namePtr = (char *)(uintptr_t)(buildingPtr + 5);
   duplicate_count = 0;
   while ( 1 )
   {
@@ -641,11 +641,11 @@ char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3,
   int revealRowDelta; // [esp+Ch] [ebp-24h]
   int revealColEnd; // [esp+14h] [ebp-1Ch]
 
-  Debug_Log(a2, a3, (DWORD)buildingPtr, (int)aBuilding_build);
+  Debug_Log(a2, a3, (DWORD)(intptr_t)buildingPtr, (int)(intptr_t)aBuilding_build);
   LOBYTE(tileRow) = *buildingPtr;
-  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-  Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v7, gameTime);
+  Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(uintptr_t)(2 * buildingPtr[1] + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  Rules_LogNewCastleFact(buildingPtr[2], *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(uintptr_t)(2 * buildingPtr[1] + TILE_ROW_STRIDE * *buildingPtr + gameData + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v7, gameTime);
   buildingType = (char)buildingPtr[4];
   if ( buildingType == 2 || buildingType == 1 )
     Map_RebuildRoadOverlayAtTile(*buildingPtr, buildingPtr[1] + 2);
@@ -678,16 +678,16 @@ char  Building_FinishConstruction(unsigned __int8 *buildingPtr, int a2, char a3,
       while ( revealRow < revealRowEnd );
     }
   }
-  Unit_UpdatePerTurn((int)buildingPtr, v8);
+  Unit_UpdatePerTurn((int)(intptr_t)buildingPtr, v8);
   result = buildingPtr[4];
   if ( result )
   {
     result = gameData;
-    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * buildingPtr[2] + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * buildingPtr[2] + gameData + 140051) )
     {
       row = *buildingPtr;
       UI_CenterWorldMapViewportOnRectIfFit(row, buildingPtr[1], buildingPtr[1] - 5, row);
-      return Building_ShowConstructionFinishedDialog((int)buildingPtr, v17, row, (DWORD)buildingPtr);
+      return Building_ShowConstructionFinishedDialog((int)(intptr_t)buildingPtr, v17, row, (DWORD)(intptr_t)buildingPtr);
     }
   }
   return result;
@@ -709,8 +709,8 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
   int remainingGold; // ecx
   int playerDataOffset; // eax
 
-  buildingPtr = (unsigned __int8 *)result;
-  if ( (*(_BYTE *)(result + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
+  buildingPtr = (unsigned __int8 *)(uintptr_t)result;
+  if ( (*(_BYTE *)(uintptr_t)(result + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
     result = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(result);
     if ( result != -1 )
@@ -722,9 +722,9 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
         result = (unsigned __int8)g_UnitTypeProductionCost[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
         if ( (unsigned int)result <= *(_DWORD *)(buildingPtr + 438) )
         {
-          Debug_Log(a2, a3, a4, (int)aBuilding_produ);
+          Debug_Log(a2, a3, a4, (int)(intptr_t)aBuilding_produ);
           result = 0;
-          while ( *(__int16 *)(garrisonSlotPtr + 18) != -1 )
+          while ( *(__int16 *)(uintptr_t)(garrisonSlotPtr + 18) != -1 )
           {
             ++result;
             garrisonSlotPtr += 31;
@@ -734,11 +734,11 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
               return result;
             }
           }
-          UnitSlot_InitFromType((int)&buildingPtr[31 * result + 18], (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402], buildingPtr[2]);
+          UnitSlot_InitFromType((int)(intptr_t)&buildingPtr[31 * result + 18], (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402], buildingPtr[2]);
           remainingGold = *(_DWORD *)(buildingPtr + 438) - (unsigned __int8)g_UnitTypeProductionCost[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
           playerDataOffset = PLAYER_DATA_STRIDE * buildingPtr[2];
           *(_DWORD *)(buildingPtr + 438) = remainingGold;
-          if ( *(_DWORD *)(gameData + playerDataOffset + 140051) )
+          if ( *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140051) )
           {
             BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
           }
@@ -748,7 +748,7 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
             BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = -1;
           }
           return Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
+                   *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
                    remainingGold,
                    a5);
         }
@@ -812,9 +812,9 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *buildingPtr, dou
         BUILDING_GARRISON_SERVICE_STATE(garrisonBytePtr, 0) = BYTE1(v6);
         if ( (v6 & 0x700) == 0 )
         {
-          if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * buildingPtr[2] + 140051) )
+          if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * buildingPtr[2] + 140051) )
           {
-            LOBYTE(v6) = UnitSlot_CycleOrderState((int)&firstSlotPtr[31 * slotIndex]);
+            LOBYTE(v6) = UnitSlot_CycleOrderState((int)(intptr_t)&firstSlotPtr[31 * slotIndex]);
           }
           else
           {
@@ -840,8 +840,8 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *buildingPtr, dou
   while ( slotIndex < 12 );
   if ( garrisonChanged )
     LOBYTE(v6) = Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
-                   (int)buildingPtr,
+                   *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
+                   (int)(intptr_t)buildingPtr,
                    a2);
   return v6;
 }
@@ -897,13 +897,13 @@ int  Unit_UpdatePerTurn(int buildingPtr, int a2)
   char rolledDamage; // dl
 
   (void)a2;
-  currentHitPoints = *(_WORD *)(buildingPtr + 16);
+  currentHitPoints = *(_WORD *)(uintptr_t)(buildingPtr + 16);
   if ( !currentHitPoints )
   {
     memset((void *)(uintptr_t)(unsigned int)(buildingPtr + 422), 100, 7);
     return buildingPtr + 422;
   }
-  maxHitPoints = g_BuildingTypeMaxHitPoints[*(char *)(buildingPtr + 4)];
+  maxHitPoints = g_BuildingTypeMaxHitPoints[*(char *)(uintptr_t)(buildingPtr + 4)];
   damagePercent = 100 * (maxHitPoints - currentHitPoints) / maxHitPoints;
   damageUpper = damagePercent + 10;
   damageLower = damagePercent - 10;
@@ -921,7 +921,7 @@ int  Unit_UpdatePerTurn(int buildingPtr, int a2)
       rolledDamage = 100;
     }
     ++slotWalker;
-    *(_BYTE *)(slotWalker + 421) = rolledDamage;
+    *(_BYTE *)(uintptr_t)(slotWalker + 421) = rolledDamage;
   }
   while ( slotWalker != buildingPtr + 7 );
   return result;
@@ -954,16 +954,16 @@ int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *buildingPtr, doub
     result = *(__int16 *)slotPtr;
     if ( result != -1 )
     {
-      UnitSlot_AdjustFatigueByPredicate((int)slotPtr, -50, UnitSlot_PredicateAlways);
-      result = UnitSlot_AdjustMoraleByPredicate((int)slotPtr, 1, (BOOL ( *)(int))UnitSlot_NeedsMoraleRecovery);
+      UnitSlot_AdjustFatigueByPredicate((int)(intptr_t)slotPtr, -50, UnitSlot_PredicateAlways);
+      result = UnitSlot_AdjustMoraleByPredicate((int)(intptr_t)slotPtr, 1, (BOOL ( *)(int))UnitSlot_NeedsMoraleRecovery);
       garrisonChanged = 1;
     }
     slotPtr = (CSyncObject *)((char *)slotPtr + 31);
   }
   if ( garrisonChanged )
     return Building_OnGarrisonChange(
-             *(unsigned __int16 *)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
-             (int)slotPtr,
+             *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*buildingPtr, buildingPtr[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
+             (int)(intptr_t)slotPtr,
              a2);
   return result;
 }
@@ -988,8 +988,8 @@ unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int playerIndex, i
   fullyUpgradedCount = 0;
   settlementCount = 0;
   buildingIndex = 0;
-  Debug_Log(a2, playerIndex, a3, (int)aBuilding_check);
-  buildingPtr = (_BYTE *)(gameData + BUILDING_TABLE_OFFSET);
+  Debug_Log(a2, playerIndex, a3, (int)(intptr_t)aBuilding_check);
+  buildingPtr = (_BYTE *)(uintptr_t)(gameData + BUILDING_TABLE_OFFSET);
   do
   {
     if ( (unsigned __int8)buildingPtr[3] == playerIndex )
@@ -1018,12 +1018,12 @@ unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int playerIndex, i
   {
     newTechLevel = 1;
   }
-  result = (unsigned __int8 *)(PLAYER_DATA_STRIDE * playerIndex + gameData);
+  result = (unsigned __int8 *)(uintptr_t)(PLAYER_DATA_STRIDE * playerIndex + gameData);
   if ( result[140071] < newTechLevel )
   {
     result[140071] = newTechLevel;
     updateIndex = 0;
-    result = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET);
+    result = (unsigned __int8 *)(uintptr_t)(gameData + BUILDING_TABLE_OFFSET);
     do
     {
       if ( result[2] == playerIndex && (result[444] & 7) < newTechLevel )
@@ -1049,7 +1049,7 @@ void  Building_DebugDump(unsigned __int8 *buildingPtr, char a2, DWORD a3)
     *buildingPtr,
     a2,
     a3,
-    (int)aD0x08xDDTDPDGD,
+    (int)(intptr_t)aD0x08xDDTDPDGD,
     a2,
     buildingPtr,
     buildingPtr[0],
@@ -1063,7 +1063,7 @@ void  Building_DebugDump(unsigned __int8 *buildingPtr, char a2, DWORD a3)
     *(__int16 *)(buildingPtr + 18),
     a2,
     a3,
-    (int)aUDDDDDDDDDD,
+    (int)(intptr_t)aUDDDDDDDDDD,
     *(__int16 *)(buildingPtr + 18),
     *(__int16 *)(buildingPtr + 49),
     *(__int16 *)(buildingPtr + 80),
@@ -1084,19 +1084,19 @@ void  LogAllBuildings(int a1, char a2, DWORD a3)
   int buildingIndex; // ebx
   int buildingPtr; // ecx
 
-  Debug_Log(a1, a2, a3, (int)aLogallbuilding);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aLogallbuilding);
   buildingIndex = 0;
   buildingPtr = gameData + BUILDING_TABLE_OFFSET;
   do
   {
-    while ( *(char *)(buildingPtr + 4) == -1 )
+    while ( *(char *)(uintptr_t)(buildingPtr + 4) == -1 )
     {
       ++buildingIndex;
       buildingPtr += 467;
       if ( buildingIndex >= 100 )
         return;
     }
-    Building_DebugDump((unsigned __int8 *)buildingPtr, buildingIndex++, a3);
+    Building_DebugDump((unsigned __int8 *)(uintptr_t)buildingPtr, buildingIndex++, a3);
     buildingPtr += 467;
   }
   while ( buildingIndex < 100 );
@@ -1119,55 +1119,55 @@ unsigned __int8 * Building_NewTurn(
   int v12; // ecx
   int buildingType; // eax
 
-  Debug_Log(a1, (char)buildingPtr, a3, (int)aBuilding_newtu);
+  Debug_Log(a1, (char)(intptr_t)buildingPtr, a3, (int)(intptr_t)aBuilding_newtu);
   for ( i = 0; i != 46700; i += 467 )
   {
-    currentPlayerIndex = *(char *)(gameData + i + 509678);
+    currentPlayerIndex = *(char *)(uintptr_t)(gameData + i + 509678);
     if ( currentPlayerIndex != -1 )
     {
       currentPlayerIndex = g_CurrentPlayerIndex;
-      if ( *(unsigned __int8 *)(gameData + i + 509676) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(uintptr_t)(gameData + i + 509676) == g_CurrentPlayerIndex )
       {
-        buildingPtr = (unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + i);
+        buildingPtr = (unsigned __int8 *)(uintptr_t)(gameData + BUILDING_TABLE_OFFSET + i);
         buildingPtr[420] &= ~1u;
-        if ( *(__int16 *)(i + gameData + 509690) != -1 )
+        if ( *(__int16 *)(uintptr_t)(i + gameData + 509690) != -1 )
         {
-          if ( *(_WORD *)(i + gameData + 509690) )
+          if ( *(_WORD *)(uintptr_t)(i + gameData + 509690) )
           {
             constructionDelta = 0;
             for ( j = 0; j != 372; j += 31 )
             {
-              slotUnitType = *(__int16 *)(i + gameData + j + 509692);
+              slotUnitType = *(__int16 *)(uintptr_t)(i + gameData + j + 509692);
               if ( slotUnitType == 17 )
               {
                 slotUnitType = (unsigned __int8)g_BuilderConstructionProgressPerTurn;
                 constructionDelta += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
               }
             }
-            *(_WORD *)(i + gameData + 509690) -= constructionDelta;
-            if ( *(__int16 *)(i + gameData + 509690) < 0 )
+            *(_WORD *)(uintptr_t)(i + gameData + 509690) -= constructionDelta;
+            if ( *(__int16 *)(uintptr_t)(i + gameData + 509690) < 0 )
             {
-              *(_WORD *)(i + gameData + 509690) = 0;
-              Building_FinishConstruction(buildingPtr, slotUnitType, (char)buildingPtr, a4);
+              *(_WORD *)(uintptr_t)(i + gameData + 509690) = 0;
+              Building_FinishConstruction(buildingPtr, slotUnitType, (char)(intptr_t)buildingPtr, a4);
             }
             else
             {
-              Unit_UpdatePerTurn((int)buildingPtr, slotUnitType);
+              Unit_UpdatePerTurn((int)(intptr_t)buildingPtr, slotUnitType);
             }
           }
           else
           {
             if ( buildingPtr[4] == 2 )
             {
-              Building_CollectGoldIncome((int)buildingPtr);
-              Building_UpdatePopulationGrowth((int)buildingPtr);
-              Building_UpdatePlagueState((unsigned int)buildingPtr);
-              Prisoner_NewTurn((DWORD)buildingPtr, v12, (char)buildingPtr, a4);
+              Building_CollectGoldIncome((int)(intptr_t)buildingPtr);
+              Building_UpdatePopulationGrowth((int)(intptr_t)buildingPtr);
+              Building_UpdatePlagueState((unsigned int)(intptr_t)buildingPtr);
+              Prisoner_NewTurn((DWORD)(intptr_t)buildingPtr, v12, (char)(intptr_t)buildingPtr, a4);
             }
             buildingType = (char)buildingPtr[4];
             if ( buildingType == 2 || buildingType == 1 )
             {
-              Building_ProcessUnitProductionTurn((int)buildingPtr, currentPlayerIndex, (char)buildingPtr, a3, a4);
+              Building_ProcessUnitProductionTurn((int)(intptr_t)buildingPtr, currentPlayerIndex, (char)(intptr_t)buildingPtr, a3, a4);
               Building_AutoFillOrUseGarrison(buildingPtr, a4);
               Unit_NewTurnRegen(buildingPtr);
               Building_RecoverGarrisonFatigueAndMorale(buildingPtr, a4);
@@ -1181,7 +1181,7 @@ unsigned __int8 * Building_NewTurn(
       }
     }
   }
-  LogAllBuildings(currentPlayerIndex, (char)buildingPtr, a3);
+  LogAllBuildings(currentPlayerIndex, (char)(intptr_t)buildingPtr, a3);
   return Player_UpdateTechnologyLevelFromSettlements(g_CurrentPlayerIndex, v7, a3);
 }
 // 41EB6A: variable 'v6' is possibly undefined
@@ -1199,43 +1199,43 @@ char  Building_GetInto(int buildingIndex, char a2, DWORD a3)
   int previousResourceHandle; // edx
   int (*previousRenderHook)(); // ebx
 
-  Debug_Log(buildingIndex, a2, a3, (int)aBuilding_getin);
+  Debug_Log(buildingIndex, a2, a3, (int)(intptr_t)aBuilding_getin);
   buildingPtr = UNIT_RECORD(buildingIndex);
-  if ( !*(_WORD *)(buildingPtr + 16) )
+  if ( !*(_WORD *)(uintptr_t)(buildingPtr + 16) )
   {
-    if ( !*(_BYTE *)(buildingPtr + 4) )
+    if ( !*(_BYTE *)(uintptr_t)(buildingPtr + 4) )
     {
       previousResourceHandle = Render_SetResourceHandle(
-                                 (int)&g_MainRenderDevice,
+                                 (int)(intptr_t)&g_MainRenderDevice,
                                  (char *)RenderHook_DemoText == (char *)Render_DefaultRH);
       previousRenderHook = g_RenderHook;
       g_RenderHook = (int (*)())RenderHook_DemoText;
-      Debug_Log(buildingIndex, (char)previousRenderHook, (DWORD)RenderHook_DemoText, (int)aSetrhS08x_4, aKeep_redraw, RenderHook_DemoText);
-      UI_DemoTextPresent(buildingIndex, buildingIndex, (char)previousRenderHook, (DWORD)RenderHook_DemoText);
-      Debug_Log(buildingIndex, (char)previousRenderHook, (DWORD)RenderHook_DemoText, (int)aUnsetrh08x_4, previousRenderHook);
+      Debug_Log(buildingIndex, (char)(intptr_t)previousRenderHook, (DWORD)(intptr_t)RenderHook_DemoText, (int)(intptr_t)aSetrhS08x_4, aKeep_redraw, RenderHook_DemoText);
+      UI_DemoTextPresent(buildingIndex, buildingIndex, (char)(intptr_t)previousRenderHook, (DWORD)(intptr_t)RenderHook_DemoText);
+      Debug_Log(buildingIndex, (char)(intptr_t)previousRenderHook, (DWORD)(intptr_t)RenderHook_DemoText, (int)(intptr_t)aUnsetrh08x_4, previousRenderHook);
       g_RenderHook = previousRenderHook;
-      return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+      return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
     }
-    if ( (unsigned __int8)*(_BYTE *)(buildingPtr + 4) <= 2u )
+    if ( (unsigned __int8)*(_BYTE *)(uintptr_t)(buildingPtr + 4) <= 2u )
     {
-      previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+      previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
       previousRenderHook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
-      Debug_Log(buildingIndex, (char)previousRenderHook, a3, (int)aSetrhS08x_5, aStdrh_3, Render_DefaultRH);
+      Debug_Log(buildingIndex, (char)(intptr_t)previousRenderHook, a3, (int)(intptr_t)aSetrhS08x_5, aStdrh_3, Render_DefaultRH);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(
           stderr,
           "[castle] building_getinto_open building_idx=%d kind=%d owner=%d construction=%d\n",
           buildingIndex,
-          *(unsigned __int8 *)(buildingPtr + 4),
-          *(unsigned __int8 *)(buildingPtr + 2),
-          *(__int16 *)(buildingPtr + 16));
-      Castle_OpenManagementScreen(buildingIndex, (char)previousRenderHook);
+          *(unsigned __int8 *)(uintptr_t)(buildingPtr + 4),
+          *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2),
+          *(__int16 *)(uintptr_t)(buildingPtr + 16));
+      Castle_OpenManagementScreen(buildingIndex, (char)(intptr_t)previousRenderHook);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[castle] building_getinto_return building_idx=%d\n", buildingIndex);
-      Debug_Log(buildingIndex, (char)previousRenderHook, a3, (int)aUnsetrh08x_5, previousRenderHook);
+      Debug_Log(buildingIndex, (char)(intptr_t)previousRenderHook, a3, (int)(intptr_t)aUnsetrh08x_5, previousRenderHook);
       g_RenderHook = previousRenderHook;
-      return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+      return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
     }
   }
   return buildingPtr;
@@ -1254,22 +1254,22 @@ signed int  Building_BuildSchool(char *a1, char a2, DWORD a3)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a2, a3, (int)aBuilding_bui_0, *a1);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(buildingPtr + 2);
+  Debug_Log(0, a2, a3, (int)(intptr_t)aBuilding_bui_0, *a1);
+  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
   goldCost = 400;
-  if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
+  if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 300;
-  if ( (*(_BYTE *)(buildingPtr + 420) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(buildingPtr + 420) & 1) != 0 )
     return 0;
-  availableGold = *(_DWORD *)(buildingPtr + 438);
+  availableGold = *(_DWORD *)(uintptr_t)(buildingPtr + 438);
   if ( goldCost > availableGold )
     return 0;
-  buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SCHOOL;
-  *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
-  *(_BYTE *)(buildingPtr + 416) = addonFlags;
+  buildLockFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 420);
+  addonFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SCHOOL;
+  *(_DWORD *)(uintptr_t)(buildingPtr + 438) = availableGold - goldCost;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) = addonFlags;
   result = 1;
-  *(_BYTE *)(buildingPtr + 420) = buildLockFlags | 1;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
 // 41EDEF: variable 'v3' is possibly undefined
@@ -1287,22 +1287,22 @@ signed int  Building_BuildWorkshop(char a1, DWORD a2)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a1, a2, (int)aBuilding_bui_4);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(buildingPtr + 2);
+  Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_4);
+  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
   goldCost = 190;
-  if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
+  if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 90;
-  if ( (*(_BYTE *)(buildingPtr + 420) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(buildingPtr + 420) & 1) != 0 )
     return 0;
-  availableGold = *(_DWORD *)(buildingPtr + 438);
+  availableGold = *(_DWORD *)(uintptr_t)(buildingPtr + 438);
   if ( goldCost > availableGold )
     return 0;
-  buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_WORKSHOP;
-  *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
-  *(_BYTE *)(buildingPtr + 416) = addonFlags;
+  buildLockFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 420);
+  addonFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 416) | BUILDING_ADDON_FLAG_WORKSHOP;
+  *(_DWORD *)(uintptr_t)(buildingPtr + 438) = availableGold - goldCost;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) = addonFlags;
   result = 1;
-  *(_BYTE *)(buildingPtr + 420) = buildLockFlags | 1;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
 // 41EE8F: variable 'v3' is possibly undefined
@@ -1316,16 +1316,16 @@ signed int  Building_BuildBarracks(int a1, char a2, DWORD a3)
   unsigned int availableGold; // ecx
   signed int result; // eax
 
-  Debug_Log(a1, a2, a3, (int)aBuilding_bui_2);
-  if ( (*(_BYTE *)(buildingPtr + 420) & 1) != 0 )
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aBuilding_bui_2);
+  if ( (*(_BYTE *)(uintptr_t)(buildingPtr + 420) & 1) != 0 )
     return 0;
-  availableGold = *(_DWORD *)(buildingPtr + 438);
+  availableGold = *(_DWORD *)(uintptr_t)(buildingPtr + 438);
   if ( availableGold < 0xC8 )
     return 0;
-  *(_DWORD *)(buildingPtr + 438) = availableGold - 200;
-  *(_BYTE *)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
+  *(_DWORD *)(uintptr_t)(buildingPtr + 438) = availableGold - 200;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) |= BUILDING_ADDON_FLAG_BARRACKS;
   result = 1;
-  *(_BYTE *)(buildingPtr + 420) |= 1u;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) |= 1u;
   return result;
 }
 // 41EF29: variable 'v4' is possibly undefined
@@ -1341,22 +1341,22 @@ signed int  Building_BuildHospital(char a1, DWORD a2)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a1, a2, (int)aBuilding_bui_3);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(buildingPtr + 2);
+  Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_3);
+  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
   goldCost = 200;
-  if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
+  if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 100;
-  if ( (*(_BYTE *)(buildingPtr + 420) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(buildingPtr + 420) & 1) != 0 )
     return 0;
-  availableGold = *(_DWORD *)(buildingPtr + 438);
+  availableGold = *(_DWORD *)(uintptr_t)(buildingPtr + 438);
   if ( goldCost > availableGold )
     return 0;
-  buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_HOSPITAL;
-  *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
-  *(_BYTE *)(buildingPtr + 416) = addonFlags;
+  buildLockFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 420);
+  addonFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 416) | BUILDING_ADDON_FLAG_HOSPITAL;
+  *(_DWORD *)(uintptr_t)(buildingPtr + 438) = availableGold - goldCost;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) = addonFlags;
   result = 1;
-  *(_BYTE *)(buildingPtr + 420) = buildLockFlags | 1;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
 // 41EF9F: variable 'v3' is possibly undefined
@@ -1374,22 +1374,22 @@ signed int  Building_BuildSmiths(char a1, DWORD a2)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a1, a2, (int)aBuilding_bui_1);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(buildingPtr + 2);
+  Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_1);
+  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
   goldCost = 230;
-  if ( !*(_DWORD *)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
+  if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 130;
-  if ( (*(_BYTE *)(buildingPtr + 420) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(buildingPtr + 420) & 1) != 0 )
     return 0;
-  availableGold = *(_DWORD *)(buildingPtr + 438);
+  availableGold = *(_DWORD *)(uintptr_t)(buildingPtr + 438);
   if ( goldCost > availableGold )
     return 0;
-  buildLockFlags = *(_BYTE *)(buildingPtr + 420);
-  addonFlags = *(_BYTE *)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SMITHS;
-  *(_DWORD *)(buildingPtr + 438) = availableGold - goldCost;
-  *(_BYTE *)(buildingPtr + 416) = addonFlags;
+  buildLockFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 420);
+  addonFlags = *(_BYTE *)(uintptr_t)(buildingPtr + 416) | BUILDING_ADDON_FLAG_SMITHS;
+  *(_DWORD *)(uintptr_t)(buildingPtr + 438) = availableGold - goldCost;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 416) = addonFlags;
   result = 1;
-  *(_BYTE *)(buildingPtr + 420) = buildLockFlags | 1;
+  *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
 // 41F03F: variable 'v3' is possibly undefined
@@ -1406,12 +1406,12 @@ signed int  Building_FindFreeAdjacentSpawnTile(unsigned __int8 *buildingPtr, _DW
 
   attemptCount = 0;
   offsetTableIndex = 0;
-  Debug_Log(a3, (char)outColumn, 0, (int)aBuildingFindFreePlaceNear);
+  Debug_Log(a3, (char)(intptr_t)outColumn, 0, (int)(intptr_t)aBuildingFindFreePlaceNear);
   do
   {
     candidateRow = g_BuildingSpawnTileSearchOffsetsX[offsetTableIndex] + *buildingPtr;
     candidateColumn = g_BuildingSpawnTileSearchOffsetsY[offsetTableIndex] + buildingPtr[1];
-    if ( *(unsigned __int16 *)(TILE_INDEX(candidateRow, candidateColumn)) == 0xFFFF && Map_GetUnitTileMoveCostOrZero(buildingPtr[2], 31, candidateColumn, candidateRow) )
+    if ( *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(candidateRow, candidateColumn)) == 0xFFFF && Map_GetUnitTileMoveCostOrZero(buildingPtr[2], 31, candidateColumn, candidateRow) )
       break;
     offsetTableIndex += 2;
     ++attemptCount;

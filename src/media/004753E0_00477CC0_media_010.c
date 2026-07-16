@@ -17,10 +17,10 @@ int  Render_RestoreLostSurfaceIfNeeded(int ddraw_ctx)
   int result; // eax
   int dd_surface; // edx
 
-  result = *(_DWORD *)(ddraw_ctx + 4);
+  result = *(_DWORD *)(uintptr_t)(ddraw_ctx + 4);
   if ( !result )
     return 0;
-  dd_surface = *(_DWORD *)(result + 164);
+  dd_surface = *(_DWORD *)(uintptr_t)(result + 164);
   if ( dd_surface )
   {
     result = Compat_DirectDrawSurface_IsLost((LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)dd_surface);
@@ -37,8 +37,8 @@ int  Render_SetPaletteEntryColor(int ddraw_ctx, int entry_index, char green, int
   int red_value; // [esp+18h] [ebp-Ch]
 
   red_value = red;
-  (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(ddraw_ctx + 16) + 16))(
-    *(_DWORD *)(ddraw_ctx + 16),
+  (*(void (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(uintptr_t)(**(_DWORD **)(uintptr_t)(ddraw_ctx + 16) + 16))(
+    *(_DWORD *)(uintptr_t)(ddraw_ctx + 16),
     0,
     entry_index,
     1,
@@ -46,8 +46,8 @@ int  Render_SetPaletteEntryColor(int ddraw_ctx, int entry_index, char green, int
   palette_entry[0] = red_value;
   palette_entry[1] = green;
   palette_entry[2] = blue;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(**(_DWORD **)(ddraw_ctx + 16) + 24))(
-           *(_DWORD *)(ddraw_ctx + 16),
+  return (*(int (__stdcall **)(_DWORD, _DWORD, int, int, _BYTE *))(uintptr_t)(**(_DWORD **)(uintptr_t)(ddraw_ctx + 16) + 24))(
+           *(_DWORD *)(uintptr_t)(ddraw_ctx + 16),
            0,
            entry_index,
            1,
@@ -59,9 +59,9 @@ int  IO_StreamWrite(int result, int a2, int a3, int a4)
 {
   int backing_stream; // esi
 
-  backing_stream = *(_DWORD *)(result + 16);
+  backing_stream = *(_DWORD *)(uintptr_t)(result + 16);
   if ( backing_stream )
-    return (*(int (__stdcall **)(int, _DWORD, int, int, int))(*(_DWORD *)backing_stream + 24))(backing_stream, 0, a2, a4, a3);
+    return (*(int (__stdcall **)(int, _DWORD, int, int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)backing_stream + 24))(backing_stream, 0, a2, a4, a3);
   return result;
 }
 
@@ -186,8 +186,8 @@ int  IO_OpenStreamWithMode(
 
   (void)a5;
   (void)a6;
-  *(_BYTE *)(stream + 12) &= 0xFCu;
-  *(_BYTE *)(stream + 12) |= (unsigned __int8)stream_flags;
+  *(_BYTE *)(uintptr_t)(stream + 12) &= 0xFCu;
+  *(_BYTE *)(uintptr_t)(stream + 12) |= (unsigned __int8)stream_flags;
   if ( (stream_flags & 0x80u) != 0 )
     mode_char = 'a';
   else if ( (stream_flags & 2) != 0 )
@@ -275,28 +275,28 @@ int  IO_CloseStream(int stream, int error_code)
   int old_head; // edx
 
   g_CRT_StaticLock1AcquireHook();
-  for ( i = (_DWORD *)g_CRT_OpenStreamListHead; i; i = (_DWORD *)*i )
+  for ( i = (_DWORD *)(uintptr_t)g_CRT_OpenStreamListHead; i; i = (_DWORD *)(uintptr_t)*i )
   {
     stream_handle = i[1];
     if ( stream == stream_handle )
     {
-      if ( (*(_BYTE *)(stream_handle + 12) & 3) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(stream_handle + 12) & 3) != 0 )
         _doclose_(v3, 1);
 LABEL_6:
       g_CRT_StaticLock1ReleaseHook();
       return stream;
     }
   }
-  for ( j = &g_IO_OpenStreamListHead; ; j = (int *)*j )
+  for ( j = &g_IO_OpenStreamListHead; ; j = (int *)(uintptr_t)*j )
   {
-    list_node = (int *)*j;
+    list_node = (int *)(uintptr_t)*j;
     if ( !*j )
       break;
     if ( stream == list_node[1] )
     {
       *j = *list_node;
       old_head = g_CRT_OpenStreamListHead;
-      g_CRT_OpenStreamListHead = (int)list_node;
+      g_CRT_OpenStreamListHead = (int)(intptr_t)list_node;
       *list_node = old_head;
       goto LABEL_6;
     }
@@ -417,7 +417,7 @@ void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this)
 int FileSystem_InitCurrentEntryPathHolder(void)
 {
   g_FileSystemStrippedPathHolderText = 0;
-  g_CurrentEntryPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
+  g_CurrentEntryPathHolder_VtablePtr = (int)(intptr_t)&g_PathEntry_Vtable;
   return CRT_RegisterFinalizableObject(&g_PathEntry_Vtable, 0);
 }
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -433,12 +433,12 @@ int  FileSystem_WalkEntryListInvokingCleanup(int result)
   int (__fastcall ***v3)(_DWORD *, _DWORD); // esi
   int v4; // ecx
 
-  for ( i = result; *(_DWORD *)i; result = (*(int (**)(void))(**(_DWORD **)v4 + 16))() )
+  for ( i = result; *(_DWORD *)(uintptr_t)i; result = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)v4 + 16))() )
   {
-    result = (*(int (**)(void))(**(_DWORD **)i + 12))();
+    result = (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)i + 12))();
     if ( !result )
       break;
-    v3 = (int (__fastcall ***)(_DWORD *, _DWORD))v2[2];
+    v3 = (int (__fastcall ***)(_DWORD *, _DWORD))(uintptr_t)v2[2];
     if ( !v3 )
       break;
     result = (**v3)(v2, *v2);
@@ -461,16 +461,16 @@ int  FileSystem_ConstructMountTable(int mount_table, int file_system, const CHAR
   int entry_index;
   int child_path;
 
-  *(_DWORD *)(mount_table + 4) = 0;
-  *(_DWORD *)(mount_table + 8) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)(mount_table + 12) = 0;
-  *(_DWORD *)(mount_table + 16) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)(mount_table + 24) = 1;
-  *(_DWORD *)(mount_table + 28) = 0;
-  *(_DWORD *)(mount_table + 32) = 0;
-  *(_DWORD *)(mount_table + 36) = (int)g_PathEntryArray_Vtable;
-  *(_DWORD *)(mount_table + 20) = 0;
-  *(_DWORD *)mount_table = (int)g_FileSystemMountTable_VTable;
+  *(_DWORD *)(uintptr_t)(mount_table + 4) = 0;
+  *(_DWORD *)(uintptr_t)(mount_table + 8) = (int)(intptr_t)&g_PathEntry_Vtable;
+  *(_DWORD *)(uintptr_t)(mount_table + 12) = 0;
+  *(_DWORD *)(uintptr_t)(mount_table + 16) = (int)(intptr_t)&g_PathEntry_Vtable;
+  *(_DWORD *)(uintptr_t)(mount_table + 24) = 1;
+  *(_DWORD *)(uintptr_t)(mount_table + 28) = 0;
+  *(_DWORD *)(uintptr_t)(mount_table + 32) = 0;
+  *(_DWORD *)(uintptr_t)(mount_table + 36) = (int)(intptr_t)g_PathEntryArray_Vtable;
+  *(_DWORD *)(uintptr_t)(mount_table + 20) = 0;
+  *(_DWORD *)(uintptr_t)mount_table = (int)(intptr_t)g_FileSystemMountTable_VTable;
   open_mode_handle = 0;
   if ( log_file_path )
     open_mode_handle = IO_FOpen(log_file_path, (unsigned __int8 *)aWt, mount_table, alloc_context);
@@ -478,11 +478,11 @@ int  FileSystem_ConstructMountTable(int mount_table, int file_system, const CHAR
   entry_path_vtable = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&entry_path_holder);
   entry_path_vtable = &g_PathEntry_Vtable;
-  if ( *(_DWORD *)(mount_table + 28) == *(_DWORD *)(mount_table + 32) )
-    PathEntryArray_GrowByDelta((_DWORD *)(mount_table + 20), *(_DWORD *)(mount_table + 24));
-  entry_index = *(_DWORD *)(mount_table + 28);
-  *(_DWORD *)(mount_table + 28) = entry_index + 1;
-  entry_record = (_DWORD *)(16 * entry_index + *(_DWORD *)(mount_table + 20));
+  if ( *(_DWORD *)(uintptr_t)(mount_table + 28) == *(_DWORD *)(uintptr_t)(mount_table + 32) )
+    PathEntryArray_GrowByDelta((_DWORD *)(uintptr_t)(mount_table + 20), *(_DWORD *)(uintptr_t)(mount_table + 24));
+  entry_index = *(_DWORD *)(uintptr_t)(mount_table + 28);
+  *(_DWORD *)(uintptr_t)(mount_table + 28) = entry_index + 1;
+  entry_record = (_DWORD *)(uintptr_t)(16 * entry_index + *(_DWORD *)(uintptr_t)(mount_table + 20));
   *entry_record = file_system;
   Compat_StringHolderCopyText(entry_record + 1, Compat_StringHolderGetText((_DWORD *)&entry_path_holder));
   entry_record[3] = open_mode_handle;
@@ -513,7 +513,7 @@ int  FileSystem_DestructMountTable(_DWORD *mount_table, char flags)
   else
   {
     *mount_table = g_FileSystemMountTable_VTable;
-    FileSystem_RemoveMountsFromIndex((int)mount_table, 0);
+    FileSystem_RemoveMountsFromIndex((int)(intptr_t)mount_table, 0);
     v3[4] = g_PathEntryArray_Vtable;
     PathEntryArray_DestructElements(v3);
     v5 = Compat_StringHolderScalarDeletingDtor(v4 - 8, 0);
@@ -549,8 +549,8 @@ _DWORD * FileSystem_RemoveMountsFromIndex(int mount_table, int start_index)
   int v8; // ecx
   _DWORD *v9; // [esp+0h] [ebp-1Ch]
 
-  entry_index = *(_DWORD *)(mount_table + 28) - 1;
-  result = (_DWORD *)(mount_table + 20);
+  entry_index = *(_DWORD *)(uintptr_t)(mount_table + 28) - 1;
+  result = (_DWORD *)(uintptr_t)(mount_table + 20);
   if ( entry_index >= start_index )
   {
     v4 = result;
@@ -559,13 +559,13 @@ _DWORD * FileSystem_RemoveMountsFromIndex(int mount_table, int start_index)
     entry_offset = 16 * entry_index;
     do
     {
-      mount_obj = *(_DWORD *)(entry_offset + *v9);
+      mount_obj = *(_DWORD *)(uintptr_t)(entry_offset + *v9);
       if ( mount_obj )
-        (*(void (**)(void))(*(_DWORD *)mount_obj + 8))();
-      if ( *(_DWORD *)(entry_offset + *v5 + 12) )
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)mount_obj + 8))();
+      if ( *(_DWORD *)(uintptr_t)(entry_offset + *v5 + 12) )
       {
         fclose_(entry_index);
-        *(_DWORD *)(entry_offset + *v5 + 12) = 0;
+        *(_DWORD *)(uintptr_t)(entry_offset + *v5 + 12) = 0;
       }
       result = PathEntryArray_RemoveAt(v4, entry_index, 1);
       entry_index = v8 - 1;
@@ -597,13 +597,13 @@ char  FileSystem_NormalizePath(int mount_table, const char **path_holder)
   {
     if ( *path_text == 92 )
     {
-      Compat_StringHolderPrependText(path_holder, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount_table + 4));
+      Compat_StringHolderPrependText(path_holder, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(mount_table + 4));
     }
     else
     {
       v18[0] = 0;
-      v18[1] = (int)&g_PathEntry_Vtable;
-      Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(mount_table + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount_table + 12));
+      v18[1] = (int)(intptr_t)&g_PathEntry_Vtable;
+      Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(mount_table + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(mount_table + 12));
       Compat_StringHolderPrependText(path_holder, Compat_StringHolderGetText(v18));
       Compat_StringHolderDestroyStack(v18, 1);
     }
@@ -656,7 +656,7 @@ const char ** FileSystem_StripMountPrefix(int mount_table, int entry_index, unsi
   int entry_path_len;
   const char **result; // eax
 
-  entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * entry_index + *(_DWORD *)(mount_table + 20) + 4));
+  entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * entry_index + *(_DWORD *)(uintptr_t)(mount_table + 20) + 4));
   if ( entry_path )
   {
     a3 = (unsigned int)strlen(entry_path);
@@ -680,7 +680,7 @@ const char ** FileSystem_StripMountPrefix(int mount_table, int entry_index, unsi
 //----- (00476F40) --------------------------------------------------------
 int  FileSystem_CallEntryOpSlot12(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)entry + 48))();
+  return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)entry + 48))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
@@ -695,13 +695,13 @@ signed int  FileSystem_FindMatchingMountIndex(int mount_table, const char **path
   int limit_offset;
 
   current_index = start_index;
-  if ( start_index >= *(_DWORD *)(mount_table + 28) )
+  if ( start_index >= *(_DWORD *)(uintptr_t)(mount_table + 28) )
     return -1;
   current_offset = 16 * start_index;
-  limit_offset = 16 * *(_DWORD *)(mount_table + 28);
+  limit_offset = 16 * *(_DWORD *)(uintptr_t)(mount_table + 28);
   do
   {
-    entry_path = Compat_StringHolderGetText((_DWORD *)(current_offset + *(_DWORD *)(mount_table + 20) + 4));
+    entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(current_offset + *(_DWORD *)(uintptr_t)(mount_table + 20) + 4));
     if ( entry_path )
       entry_path_len = strlen(entry_path);
     else
@@ -785,7 +785,7 @@ CLASH95_INTERNAL int Compat_FileSystemQuery(int filesystem, const char *requeste
   if ( normalized_path && *normalized_path )
   {
     next_entry = 0;
-    entry_base = *(_DWORD *)(filesystem + 20);
+    entry_base = *(_DWORD *)(uintptr_t)(filesystem + 20);
     while ( 1 )
     {
       current_entry = FileSystem_FindMatchingMountIndex(filesystem, &normalized_path, next_entry);
@@ -811,15 +811,15 @@ int  FileSystem_TryOpenEntryCallback(int entry)
 {
   int opened_query; // ebx
 
-  opened_query = Compat_FileSystemOpenIfReady(*(_DWORD *)entry, g_FileSystemMountOpenMode);
-  if ( !*(_DWORD *)(entry + 12) )
+  opened_query = Compat_FileSystemOpenIfReady(*(_DWORD *)(uintptr_t)entry, g_FileSystemMountOpenMode);
+  if ( !*(_DWORD *)(uintptr_t)(entry + 12) )
     return opened_query;
   if ( opened_query )
   {
-    Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(entry + 12), (int)aS_15, g_FileSystemStrippedPathHolderText);
+    Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(uintptr_t)(entry + 12), (int)(intptr_t)aS_15, g_FileSystemStrippedPathHolderText);
     return opened_query;
   }
-  Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(entry + 12), (int)aS_2, g_FileSystemStrippedPathHolderText);
+  Output_WriteFormatted(entry + 12, g_FileSystemStrippedPathHolderText, *(_DWORD *)(uintptr_t)(entry + 12), (int)(intptr_t)aS_2, g_FileSystemStrippedPathHolderText);
   return opened_query;
 }
 // 54DD00: using guessed type int dword_54DD00;
@@ -844,7 +844,7 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **file_system, int
   normalized_vtable = &g_CompatStringHolder_Vtable;
   Compat_StringHolderInitText((_DWORD *)&normalized_path, (const char *)(uintptr_t)(unsigned int)dir_path);
   normalized_vtable = &g_PathEntry_Vtable;
-  FileSystem_NormalizePath((int)file_system, &normalized_path);
+  FileSystem_NormalizePath((int)(intptr_t)file_system, &normalized_path);
   if ( normalized_path && *normalized_path )
   {
     path_len_with_nul = (unsigned int)strlen(normalized_path) + 1;
@@ -861,12 +861,12 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **file_system, int
     normalized_text_len = (unsigned int)strlen(normalized_path);
     Compat_StringHolderRemoveRange(&normalized_path, 0, normalized_text_len, colon_index + 1);
     Compat_StringHolderCopyText(fs_words + 3, normalized_path);
-    Compat_StringHolderScalarDeletingDtor((int)&normalized_path, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&normalized_path, 1);
     return 1;
   }
   else
   {
-    Compat_StringHolderScalarDeletingDtor((int)&normalized_path, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&normalized_path, 1);
     return 0;
   }
 }
@@ -889,13 +889,13 @@ int  FileSystem_ResolveRelativeToCurrentDir(int file_system, int path_holder)
     path_holder_saved = path_holder;
     g_FileSystem_CwdHolderInitFlag |= 1u;
     g_FS_ResolvedPathEntryHolder = 0;
-    g_CurrentDirPathHolder_VtablePtr = (int)&g_PathEntry_Vtable;
+    g_CurrentDirPathHolder_VtablePtr = (int)(intptr_t)&g_PathEntry_Vtable;
     CRT_RegisterFinalizableObject(0, file_system);
     path_holder = path_holder_saved;
   }
-  Compat_StringHolderConstructJoined(joined_holder, path_holder, *(const char **)(fs_saved + 12));
+  Compat_StringHolderConstructJoined(joined_holder, path_holder, *(const char **)(uintptr_t)(fs_saved + 12));
   Compat_StringHolderDestructor(&g_FS_ResolvedPathEntryHolder);
-  Compat_StringHolderScalarDeletingDtor((int)joined_holder, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_holder, 1);
   return g_FS_ResolvedPathEntryHolder;
 }
 // 477312: variable 'v3' is possibly undefined
@@ -924,7 +924,7 @@ int  FileSystem_AddMountEntry(int *mount_table, const CHAR *mount_path, const CH
   normalized_path = 0;
   vtable_ptr = &g_CompatStringHolder_Vtable;
   Compat_StringHolderInitText((_DWORD *)&normalized_path, mount_path);
-  FileSystem_NormalizePath((int)mount_table, &normalized_path);
+  FileSystem_NormalizePath((int)(intptr_t)mount_table, &normalized_path);
   path_text = Compat_StringHolderGetText((_DWORD *)&normalized_path);
   if ( path_text && *path_text )
   {
@@ -940,7 +940,7 @@ int  FileSystem_AddMountEntry(int *mount_table, const CHAR *mount_path, const CH
       PathEntryArray_GrowByDelta(mount_table + 5, mount_table[6]);
     entry_index = entry_array[2];
     entry_array[2] = entry_index + 1;
-    entry_record = (_DWORD *)(16 * entry_index + *entry_array);
+    entry_record = (_DWORD *)(uintptr_t)(16 * entry_index + *entry_array);
     *entry_record = mount;
     entry_path_holder = entry_record + 1;
     Compat_StringHolderCopyText(entry_path_holder, Compat_StringHolderGetText((_DWORD *)&normalized_path));
@@ -966,14 +966,14 @@ _DWORD * FileSystem_CreateEntryHandleWrapper(DWORD *file_system, int a2, int a3)
   _DWORD *wrapper; // esi
   _DWORD *opened_entry; // [esp+0h] [ebp-10h]
 
-  result = (_DWORD *)(*(int (__fastcall **)(int, int))(*file_system + 12))(a2, a3);
+  result = (_DWORD *)(uintptr_t)(*(int (__fastcall **)(int, int))(uintptr_t)(*file_system + 12))(a2, a3);
   opened_entry = result;
   if ( result )
   {
     vtable = *file_system;
-    if ( (*(int (**)(void))(*file_system + 16))() )
+    if ( (*(int (**)(void))(uintptr_t)(*file_system + 16))() )
     {
-      result = (_DWORD *)Mem_Alloc(16, v7, 10, vtable);
+      result = (_DWORD *)(uintptr_t)Mem_Alloc(16, v7, 10, vtable);
       wrapper = result;
       if ( result )
       {
@@ -986,7 +986,7 @@ _DWORD * FileSystem_CreateEntryHandleWrapper(DWORD *file_system, int a2, int a3)
     }
     else
     {
-      (*(void (**)(void))(*file_system + 20))();
+      (*(void (**)(void))(uintptr_t)(*file_system + 20))();
       return 0;
     }
   }
@@ -1003,8 +1003,8 @@ int  FileSystem_AdvanceEntryEnumerator(int enumerator)
   int advance_result; // esi
   int v2; // ecx
 
-  advance_result = (*(int (__fastcall **)(int, _DWORD))(**(_DWORD **)(enumerator + 8) + 20))(enumerator, *(_DWORD *)(enumerator + 4));
-  (*(void (__fastcall **)(int, _DWORD))(**(_DWORD **)(v2 + 12) + 24))(v2, *(_DWORD *)(v2 + 4));
+  advance_result = (*(int (__fastcall **)(int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(enumerator + 8) + 20))(enumerator, *(_DWORD *)(uintptr_t)(enumerator + 4));
+  (*(void (__fastcall **)(int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(v2 + 12) + 24))(v2, *(_DWORD *)(uintptr_t)(v2 + 4));
   return advance_result;
 }
 // 477566: variable 'v2' is possibly undefined
@@ -1015,8 +1015,8 @@ int  Compat_FileSystemReleaseFileRecord(int file_system, int *record_ptr)
   int v3; // ecx
   int result; // eax
 
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)file_system + 20))(file_system, *record_ptr + 8);
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)v3 + 20))(v3, *record_ptr + 12);
+  (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)file_system + 20))(file_system, *record_ptr + 8);
+  (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v3 + 20))(v3, *record_ptr + 12);
   result = *record_ptr;
   if ( *record_ptr )
   {
@@ -1047,9 +1047,9 @@ signed int  Compat_FileSystemVisitFile(DWORD *file_system, int a2, int a3)
   wrapper = FileSystem_CreateEntryHandleWrapper(file_system, a2, a3);
   if ( !wrapper )
     return -1;
-  while ( FileSystem_AdvanceEntryEnumerator((int)wrapper) )
+  while ( FileSystem_AdvanceEntryEnumerator((int)(intptr_t)wrapper) )
     ;
-  Compat_FileSystemReleaseFileRecord((int)file_system, (int *)&wrapper);
+  Compat_FileSystemReleaseFileRecord((int)(intptr_t)file_system, (int *)&wrapper);
   return v5;
 }
 // 47760B: variable 'v5' is possibly undefined
@@ -1062,14 +1062,14 @@ _DWORD * Compat_FileSystemReleaseMountedPaths(int mount_table)
   _DWORD *entries_ptr; // esi
   int entry_offset; // edx
 
-  entry_index = *(_DWORD *)(mount_table + 28) - 1;
-  result = (_DWORD *)(mount_table + 20);
+  entry_index = *(_DWORD *)(uintptr_t)(mount_table + 28) - 1;
+  result = (_DWORD *)(uintptr_t)(mount_table + 20);
   if ( entry_index >= 0 )
   {
     entries_ptr = result;
     entry_offset = 16 * entry_index;
     do
-      result = (_DWORD *)(*(int (__fastcall **)(int, int))(**(_DWORD **)(entry_offset + *entries_ptr) + 40))(entry_index - 1, entry_offset - 16);
+      result = (_DWORD *)(uintptr_t)(*(int (__fastcall **)(int, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(entry_offset + *entries_ptr) + 40))(entry_index - 1, entry_offset - 16);
     while ( entry_offset >= 0 );
   }
   return result;
@@ -1091,17 +1091,17 @@ int  Compat_FileSystemProcessDirectChildren(int (__thiscall ***file_system)(_DWO
 
   v11 = a2;
   entry_list = (**file_system)(0);
-  v9 = (int)file_system;
+  v9 = (int)(intptr_t)file_system;
   v10 = v3;
-  FileSystem_WalkEntryListInvokingCleanup((int)&entry_list);
+  FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&entry_list);
   for ( ; entry_list; v4 = v5 + 1 )
   {
-    if ( !(*(int (**)(void))(*(_DWORD *)entry_list + 12))() )
+    if ( !(*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)entry_list + 12))() )
       break;
-    (*(void (**)(void))(*(_DWORD *)entry_list + 16))();
-    FileSystem_WalkEntryListInvokingCleanup((int)&entry_list);
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)entry_list + 16))();
+    FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&entry_list);
   }
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)v9 + 4))(v4, entry_list);
+  (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v9 + 4))(v4, entry_list);
   return v6;
 }
 // 477677: variable 'v3' is possibly undefined
@@ -1118,15 +1118,15 @@ int  Compat_FileSystemFindMountedPathById(int mount_table, int mount_id)
   int entry_offset; // eax
   _DWORD *entry_record; // ecx
 
-  entry_index = *(_DWORD *)(mount_table + 28) - 1;
-  v4 = (_DWORD *)(mount_table + 20);
+  entry_index = *(_DWORD *)(uintptr_t)(mount_table + 28) - 1;
+  v4 = (_DWORD *)(uintptr_t)(mount_table + 20);
   if ( entry_index < 0 )
     return 0;
   entries_ptr = v4;
   entry_offset = 16 * entry_index;
   while ( 1 )
   {
-    entry_record = (_DWORD *)(entry_offset + *entries_ptr);
+    entry_record = (_DWORD *)(uintptr_t)(entry_offset + *entries_ptr);
     if ( mount_id == *entry_record )
       break;
     entry_offset -= 16;
@@ -1180,13 +1180,13 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int d
   enumerator = (**file_system)();
   v18 = dir_path_copy;
   file_system_saved = file_system;
-  FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+  FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&enumerator);
   visit_result = 0;
   if ( enumerator )
   {
-    while ( (*(int (**)(void))(*(_DWORD *)enumerator + 12))() )
+    while ( (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 12))() )
     {
-      (**(void (__thiscall ***)(_DWORD))enumerator)(0);
+      (**(void (__thiscall ***)(_DWORD))(uintptr_t)enumerator)(0);
       entry_name_holder = v6;
       v25 = &g_CompatStringHolder_Vtable;
       Compat_StringHolderDestructor(&entry_name_holder);
@@ -1194,41 +1194,41 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int d
       Compat_StringHolderConstructJoined(joined_path_holder, v7, entry_name_holder);
       if ( strcmp_(v8, a__34) && strcmp_(v9, a___1) )
       {
-        if ( ((*(int (**)(void))(*(_DWORD *)enumerator + 4))() & 0x10) != 0 )
+        if ( ((*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 4))() & 0x10) != 0 )
         {
           Compat_StringHolderConstructJoined(subdir_path_holder, v10, entry_name_holder);
           visit_result += Compat_FileSystemProcessDirectChildren((int (__thiscall ***)(_DWORD))file_system, v11);
-          Compat_StringHolderScalarDeletingDtor((int)subdir_path_holder, 1);
+          Compat_StringHolderScalarDeletingDtor((int)(intptr_t)subdir_path_holder, 1);
           (*file_system)[6]();
           Compat_StringHolderConstructJoined(recurse_path_holder, dir_path_copy, entry_name_holder);
-          Compat_FileSystemWalkDirectoryTree((int)file_system, v12, base_path);
-          Compat_StringHolderScalarDeletingDtor((int)recurse_path_holder, 1);
+          Compat_FileSystemWalkDirectoryTree((int)(intptr_t)file_system, v12, base_path);
+          Compat_StringHolderScalarDeletingDtor((int)(intptr_t)recurse_path_holder, 1);
         }
         else
         {
           file_visit_failed = *Compat_StringHolderConstructJoined(file_path_holder, base_path, entry_name_holder);
           LOBYTE(file_visit_failed) = Compat_FileSystemVisitFile((DWORD *)file_system, v15, file_visit_failed) == -1;
-          Compat_StringHolderScalarDeletingDtor((int)file_path_holder, 1);
+          Compat_StringHolderScalarDeletingDtor((int)(intptr_t)file_path_holder, 1);
           if ( (_BYTE)file_visit_failed )
           {
-            Compat_StringHolderScalarDeletingDtor((int)joined_path_holder, 1);
+            Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_path_holder, 1);
             visit_result = -1;
-            Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
+            Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&entry_name_holder, 1);
             break;
           }
         }
       }
-      Compat_StringHolderScalarDeletingDtor((int)joined_path_holder, 1);
-      Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
-      (*(void (**)(void))(*(_DWORD *)enumerator + 16))();
-      FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+      Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_path_holder, 1);
+      Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&entry_name_holder, 1);
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 16))();
+      FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&enumerator);
       if ( !enumerator )
         break;
     }
   }
   (*file_system_saved)[1]();
-  Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
-  Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&v22, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&v20, 1);
   return visit_result;
 }
 // 47774A: variable 'v4' is possibly undefined
@@ -1276,49 +1276,49 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem, int 
   enumerator = (**v3)(v3, pattern_holder);
   queryHandle = v4;
   v17 = 0;
-  FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+  FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&enumerator);
   if ( enumerator )
   {
-    while ( (*(int (**)(void))(*(_DWORD *)enumerator + 12))() )
+    while ( (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 12))() )
     {
-      (**(void (***)(void))enumerator)();
+      (**(void (***)(void))(uintptr_t)enumerator)();
       entry_name_holder = 0;
       v21 = &g_CompatStringHolder_Vtable;
       Compat_StringHolderDestructor(&entry_name_holder);
       v21 = &g_PathEntry_Vtable;
       if ( strcmp_(v6, a__35) && strcmp_(v7, a___2) )
       {
-        if ( ((*(int (**)(void))(*(_DWORD *)enumerator + 4))() & 0x10) != 0 )
+        if ( ((*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 4))() & 0x10) != 0 )
         {
-          v9 = Compat_StringHolderConstructJoined(subdir_path_holder, (int)v8, entry_name_holder);
+          v9 = Compat_StringHolderConstructJoined(subdir_path_holder, (int)(intptr_t)v8, entry_name_holder);
           recurse_failed = Compat_FileSystemWalkDirectoryEntries(v10, *v9) == -1;
-          Compat_StringHolderScalarDeletingDtor((int)subdir_path_holder, 1);
+          Compat_StringHolderScalarDeletingDtor((int)(intptr_t)subdir_path_holder, 1);
           if ( recurse_failed )
           {
-            Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
-            (*(void (**)(void))(*(_DWORD *)queryHandle + 4))();
-            Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
+            Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&entry_name_holder, 1);
+            (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)queryHandle + 4))();
+            Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&pattern_holder, 1);
             return -1;
           }
         }
         else
         {
           v14 = *v8;
-          Compat_StringHolderConstructJoined(file_path_holder, (int)v8, entry_name_holder);
-          (*(void (**)(void))(v14 + 32))();
-          Compat_StringHolderScalarDeletingDtor((int)file_path_holder, 1);
+          Compat_StringHolderConstructJoined(file_path_holder, (int)(intptr_t)v8, entry_name_holder);
+          (*(void (**)(void))(uintptr_t)(v14 + 32))();
+          Compat_StringHolderScalarDeletingDtor((int)(intptr_t)file_path_holder, 1);
         }
       }
-      Compat_StringHolderScalarDeletingDtor((int)&entry_name_holder, 1);
-      (*(void (**)(void))(*(_DWORD *)enumerator + 16))();
-      FileSystem_WalkEntryListInvokingCleanup((int)&enumerator);
+      Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&entry_name_holder, 1);
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 16))();
+      FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&enumerator);
       if ( !enumerator )
         break;
     }
   }
-  callback_result = (*(int (__fastcall **)(int, int))(*(_DWORD *)v5 + 28))(v5, a2);
-  (*(void (**)(void))(*(_DWORD *)queryHandle + 4))();
-  Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
+  callback_result = (*(int (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 28))(v5, a2);
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)queryHandle + 4))();
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&pattern_holder, 1);
   return callback_result;
 }
 // 477991: variable 'v3' is possibly undefined
@@ -1339,7 +1339,7 @@ int __fastcall Compat_FileSystemCloseQuery(int a1, int query)
 
   result = query;
   if ( query )
-    return (*(int (__cdecl **)(int))(*(_DWORD *)query + 20))(a1);
+    return (*(int (__cdecl **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)query + 20))(a1);
   return result;
 }
 
@@ -1348,7 +1348,7 @@ int  Compat_FileSystemInvokeInnerHandleMethod(int wrapper, int method_arg)
 {
   int v2; // ecx
 
-  (*(void (__cdecl **)(int))(**(_DWORD **)(wrapper + 4) + 4))(method_arg);
+  (*(void (__cdecl **)(int))(uintptr_t)(**(_DWORD **)(uintptr_t)(wrapper + 4) + 4))(method_arg);
   return v2;
 }
 // 477B4E: variable 'v2' is possibly undefined
@@ -1356,7 +1356,7 @@ int  Compat_FileSystemInvokeInnerHandleMethod(int wrapper, int method_arg)
 //----- (00477B60) --------------------------------------------------------
 int  Compat_FileSystemMountInvokeSlot16(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)entry + 16))();
+  return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)entry + 16))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
@@ -1364,14 +1364,14 @@ int  Compat_FileSystemMountInvokeSlot16(int entry)
 //----- (00477B80) --------------------------------------------------------
 int  Compat_FileSystemMountInvokeSlot32(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)entry + 32))();
+  return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)entry + 32))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 
 //----- (00477BA0) --------------------------------------------------------
 int  Compat_FileSystemMountInvokeSlot24(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)entry + 24))();
+  return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)entry + 24))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
@@ -1379,7 +1379,7 @@ int  Compat_FileSystemMountInvokeSlot24(int entry)
 //----- (00477BC0) --------------------------------------------------------
 int  Compat_FileSystemMountInvokeSlot28(int entry)
 {
-  return (*(int (**)(void))(**(_DWORD **)entry + 28))();
+  return (*(int (**)(void))(uintptr_t)(**(_DWORD **)(uintptr_t)entry + 28))();
 }
 // 54DD00: using guessed type int dword_54DD00;
 

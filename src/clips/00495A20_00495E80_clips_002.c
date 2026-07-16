@@ -35,62 +35,62 @@ signed int  Rules_PackConstraintRecord(int *constraints, int bc)
   signed int result; // eax
 
   v3 = *constraints;
-  *(_BYTE *)bc &= ~1u;
-  *(_DWORD *)bc |= v3 & 1;
+  *(_BYTE *)(uintptr_t)bc &= ~1u;
+  *(_DWORD *)(uintptr_t)bc |= v3 & 1;
   v4 = *constraints;
-  *(_BYTE *)bc &= ~2u;
-  *(_DWORD *)bc |= v4 & 2;
+  *(_BYTE *)(uintptr_t)bc &= ~2u;
+  *(_DWORD *)(uintptr_t)bc |= v4 & 2;
   v5 = *constraints;
-  *(_BYTE *)bc &= ~4u;
-  *(_DWORD *)bc |= v5 & 4;
+  *(_BYTE *)(uintptr_t)bc &= ~4u;
+  *(_DWORD *)(uintptr_t)bc |= v5 & 4;
   v6 = *constraints;
-  *(_BYTE *)bc &= ~8u;
-  *(_DWORD *)bc |= v6 & 8;
+  *(_BYTE *)(uintptr_t)bc &= ~8u;
+  *(_DWORD *)(uintptr_t)bc |= v6 & 8;
   v7 = *constraints;
-  *(_BYTE *)bc &= ~0x10u;
-  *(_DWORD *)bc |= v7 & 0x10;
+  *(_BYTE *)(uintptr_t)bc &= ~0x10u;
+  *(_DWORD *)(uintptr_t)bc |= v7 & 0x10;
   v8 = *constraints;
-  *(_BYTE *)bc &= ~0x20u;
-  *(_DWORD *)bc |= v8 & 0x20;
+  *(_BYTE *)(uintptr_t)bc &= ~0x20u;
+  *(_DWORD *)(uintptr_t)bc |= v8 & 0x20;
   v9 = *constraints;
-  *(_BYTE *)bc &= ~0x40u;
-  *(_DWORD *)bc |= v9 & 0x40;
+  *(_BYTE *)(uintptr_t)bc &= ~0x40u;
+  *(_DWORD *)(uintptr_t)bc |= v9 & 0x40;
   v10 = *constraints;
-  *(_BYTE *)bc &= ~0x80u;
-  *(_DWORD *)bc |= v10 & 0x80;
+  *(_BYTE *)(uintptr_t)bc &= ~0x80u;
+  *(_DWORD *)(uintptr_t)bc |= v10 & 0x80;
   v11 = (unsigned int)(*constraints << 16) >> 31;
-  *(_BYTE *)(bc + 2) &= ~1u;
-  *(_DWORD *)bc |= (v11 & 1) << 16;
+  *(_BYTE *)(uintptr_t)(bc + 2) &= ~1u;
+  *(_DWORD *)(uintptr_t)bc |= (v11 & 1) << 16;
   v12 = (unsigned int)(*constraints << 15) >> 31;
-  *(_BYTE *)(bc + 2) &= ~2u;
-  *(_DWORD *)bc |= (v12 & 1) << 17;
+  *(_BYTE *)(uintptr_t)(bc + 2) &= ~2u;
+  *(_DWORD *)(uintptr_t)bc |= (v12 & 1) << 17;
   v13 = *constraints;
-  *(_BYTE *)(bc + 1) &= ~1u;
-  *(_DWORD *)bc |= v13 & 0x100;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~1u;
+  *(_DWORD *)(uintptr_t)bc |= v13 & 0x100;
   v14 = *constraints;
-  *(_BYTE *)(bc + 1) &= ~2u;
-  *(_DWORD *)bc |= v14 & 0x200;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~2u;
+  *(_DWORD *)(uintptr_t)bc |= v14 & 0x200;
   v15 = *constraints;
-  *(_BYTE *)(bc + 1) &= ~4u;
-  *(_DWORD *)bc |= v15 & 0x400;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~4u;
+  *(_DWORD *)(uintptr_t)bc |= v15 & 0x400;
   v16 = *constraints;
-  *(_BYTE *)(bc + 1) &= ~8u;
-  *(_DWORD *)bc |= v16 & 0x800;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~8u;
+  *(_DWORD *)(uintptr_t)bc |= v16 & 0x800;
   v17 = (unsigned int)(*constraints << 19) >> 31;
-  *(_BYTE *)(bc + 1) &= ~0x20u;
-  *(_DWORD *)bc |= (v17 & 1) << 13;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)bc |= (v17 & 1) << 13;
   v18 = (unsigned int)(*constraints << 18) >> 31;
-  *(_BYTE *)(bc + 1) &= ~0x40u;
-  *(_DWORD *)bc |= (v18 & 1) << 14;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~0x40u;
+  *(_DWORD *)(uintptr_t)bc |= (v18 & 1) << 14;
   v19 = (unsigned int)(*constraints << 17) >> 31;
-  *(_BYTE *)(bc + 1) &= ~0x80u;
-  *(_DWORD *)bc |= (v19 & 1) << 15;
-  *(_DWORD *)(bc + 4) = AST_GetHashedNodeIndex(*(__int16 **)((char *)constraints + 6));
-  *(_DWORD *)(bc + 8) = AST_GetHashedNodeIndex(*(__int16 **)(v20 + 10));
-  *(_DWORD *)(bc + 12) = AST_GetHashedNodeIndex(*(__int16 **)(v21 + 14));
-  *(_DWORD *)(bc + 16) = AST_GetHashedNodeIndex(*(__int16 **)(v22 + 18));
-  result = AST_GetHashedNodeIndex(*(__int16 **)(v23 + 22));
-  *(_DWORD *)(bc + 20) = result;
+  *(_BYTE *)(uintptr_t)(bc + 1) &= ~0x80u;
+  *(_DWORD *)(uintptr_t)bc |= (v19 & 1) << 15;
+  *(_DWORD *)(uintptr_t)(bc + 4) = AST_GetHashedNodeIndex(*(__int16 **)((char *)constraints + 6));
+  *(_DWORD *)(uintptr_t)(bc + 8) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v20 + 10));
+  *(_DWORD *)(uintptr_t)(bc + 12) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v21 + 14));
+  *(_DWORD *)(uintptr_t)(bc + 16) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v22 + 18));
+  result = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v23 + 22));
+  *(_DWORD *)(uintptr_t)(bc + 20) = result;
   return result;
 }
 // 495B7D: variable 'v20' is possibly undefined
@@ -106,7 +106,7 @@ int Rules_BloadConstraints(void)
   result = Rules_BloadReadBlock((uintptr_t)&g_Clips_BloadedConstraintCount, 4u);
   if ( g_Clips_BloadedConstraintCount )
   {
-    g_ClipsConstraintRecordArrayBase = Mem_HeapAllocWithRetry((_DWORD *)(42 * g_Clips_BloadedConstraintCount));
+    g_ClipsConstraintRecordArrayBase = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(42 * g_Clips_BloadedConstraintCount));
     return Rules_BloadAndRefresh(g_Clips_BloadedConstraintCount, 24, (void (__fastcall *)(signed int, signed int))Rules_UpdateBloadedConstraint);
   }
   return result;
@@ -149,92 +149,92 @@ int  Rules_UpdateBloadedConstraint(_DWORD *bsaveConstraint, int constraintIndex)
 
   result = g_ClipsConstraintRecordArrayBase + 42 * constraintIndex;
   v4 = *bsaveConstraint;
-  *(_BYTE *)result &= ~1u;
-  *(_DWORD *)result |= v4 & 1;
+  *(_BYTE *)(uintptr_t)result &= ~1u;
+  *(_DWORD *)(uintptr_t)result |= v4 & 1;
   v5 = *bsaveConstraint;
-  *(_BYTE *)result &= ~2u;
-  *(_DWORD *)result |= v5 & 2;
+  *(_BYTE *)(uintptr_t)result &= ~2u;
+  *(_DWORD *)(uintptr_t)result |= v5 & 2;
   v6 = *bsaveConstraint;
-  *(_BYTE *)result &= ~4u;
-  *(_DWORD *)result |= v6 & 4;
+  *(_BYTE *)(uintptr_t)result &= ~4u;
+  *(_DWORD *)(uintptr_t)result |= v6 & 4;
   v7 = *bsaveConstraint;
-  *(_BYTE *)result &= ~8u;
-  *(_DWORD *)result |= v7 & 8;
+  *(_BYTE *)(uintptr_t)result &= ~8u;
+  *(_DWORD *)(uintptr_t)result |= v7 & 8;
   v8 = *bsaveConstraint;
-  *(_BYTE *)result &= ~0x10u;
-  *(_DWORD *)result |= v8 & 0x10;
+  *(_BYTE *)(uintptr_t)result &= ~0x10u;
+  *(_DWORD *)(uintptr_t)result |= v8 & 0x10;
   v9 = *bsaveConstraint;
-  *(_BYTE *)result &= ~0x20u;
-  *(_DWORD *)result |= v9 & 0x20;
+  *(_BYTE *)(uintptr_t)result &= ~0x20u;
+  *(_DWORD *)(uintptr_t)result |= v9 & 0x20;
   v10 = *bsaveConstraint;
-  *(_BYTE *)result &= ~0x40u;
-  *(_DWORD *)result |= v10 & 0x40;
+  *(_BYTE *)(uintptr_t)result &= ~0x40u;
+  *(_DWORD *)(uintptr_t)result |= v10 & 0x40;
   v11 = *bsaveConstraint;
-  *(_BYTE *)result &= ~0x80u;
-  *(_DWORD *)result |= v11 & 0x80;
+  *(_BYTE *)(uintptr_t)result &= ~0x80u;
+  *(_DWORD *)(uintptr_t)result |= v11 & 0x80;
   v12 = *bsaveConstraint << 15 >> 31;
-  *(_BYTE *)(result + 1) &= ~0x80u;
-  *(_DWORD *)result |= (v12 & 1) << 15;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~0x80u;
+  *(_DWORD *)(uintptr_t)result |= (v12 & 1) << 15;
   v13 = *bsaveConstraint << 14 >> 31;
-  *(_BYTE *)(result + 2) &= ~1u;
-  *(_DWORD *)result |= (v13 & 1) << 16;
+  *(_BYTE *)(uintptr_t)(result + 2) &= ~1u;
+  *(_DWORD *)(uintptr_t)result |= (v13 & 1) << 16;
   v14 = *bsaveConstraint;
-  *(_BYTE *)(result + 1) &= ~1u;
-  *(_DWORD *)result |= v14 & 0x100;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~1u;
+  *(_DWORD *)(uintptr_t)result |= v14 & 0x100;
   v15 = *bsaveConstraint;
-  *(_BYTE *)(result + 1) &= ~2u;
-  *(_DWORD *)result |= v15 & 0x200;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~2u;
+  *(_DWORD *)(uintptr_t)result |= v15 & 0x200;
   v16 = *bsaveConstraint;
-  *(_BYTE *)(result + 1) &= ~4u;
-  *(_DWORD *)result |= v16 & 0x400;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~4u;
+  *(_DWORD *)(uintptr_t)result |= v16 & 0x400;
   v17 = *bsaveConstraint;
-  *(_BYTE *)(result + 1) &= ~8u;
-  *(_DWORD *)result |= v17 & 0x800;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~8u;
+  *(_DWORD *)(uintptr_t)result |= v17 & 0x800;
   v18 = *bsaveConstraint << 18 >> 31;
-  *(_BYTE *)(result + 1) &= ~0x10u;
-  *(_DWORD *)result |= (v18 & 1) << 12;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~0x10u;
+  *(_DWORD *)(uintptr_t)result |= (v18 & 1) << 12;
   v19 = *bsaveConstraint << 17 >> 31;
-  *(_BYTE *)(result + 1) &= ~0x20u;
-  *(_DWORD *)result |= (v19 & 1) << 13;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)result |= (v19 & 1) << 13;
   v20 = *bsaveConstraint << 16 >> 31;
-  *(_BYTE *)(result + 1) &= ~0x40u;
-  *(_DWORD *)result |= (v20 & 1) << 14;
+  *(_BYTE *)(uintptr_t)(result + 1) &= ~0x40u;
+  *(_DWORD *)(uintptr_t)result |= (v20 & 1) << 14;
   restrictionListIndex = bsaveConstraint[1];
   bsaveData = bsaveConstraint;
   if ( restrictionListIndex == -1 )
     restrictionList = 0;
   else
     restrictionList = g_ClipsPackedExpressionArray + 14 * restrictionListIndex;
-  *(_DWORD *)(result + 6) = restrictionList;
+  *(_DWORD *)(uintptr_t)(result + 6) = restrictionList;
   minValueIndex = bsaveData[2];
   if ( minValueIndex == -1 )
     minValue = 0;
   else
     minValue = g_ClipsPackedExpressionArray + 14 * minValueIndex;
-  *(_DWORD *)(result + 10) = minValue;
+  *(_DWORD *)(uintptr_t)(result + 10) = minValue;
   maxValueIndex = bsaveData[3];
   if ( maxValueIndex == -1 )
     maxValue = 0;
   else
     maxValue = g_ClipsPackedExpressionArray + 14 * maxValueIndex;
-  *(_DWORD *)(result + 14) = maxValue;
+  *(_DWORD *)(uintptr_t)(result + 14) = maxValue;
   minFieldsIndex = bsaveData[4];
   if ( minFieldsIndex == -1 )
     minFields = 0;
   else
     minFields = g_ClipsPackedExpressionArray + 14 * minFieldsIndex;
-  *(_DWORD *)(result + 18) = minFields;
+  *(_DWORD *)(uintptr_t)(result + 18) = minFields;
   maxFieldsIndex = bsaveData[5];
   if ( maxFieldsIndex == -1 )
   {
-    *(_DWORD *)(result + 26) = 0;
-    *(_DWORD *)(result + 22) = 0;
+    *(_DWORD *)(uintptr_t)(result + 26) = 0;
+    *(_DWORD *)(uintptr_t)(result + 22) = 0;
   }
   else
   {
     maxFields = 14 * maxFieldsIndex + g_ClipsPackedExpressionArray;
-    *(_DWORD *)(result + 26) = 0;
-    *(_DWORD *)(result + 22) = maxFields;
+    *(_DWORD *)(uintptr_t)(result + 26) = 0;
+    *(_DWORD *)(uintptr_t)(result + 22) = maxFields;
   }
   return result;
 }
@@ -267,7 +267,7 @@ BOOL  Rules_BsaveCommand(DWORD a1, double a2)
   result = 0;
   if ( Lexer_TokenExpect(1) != -1 )
   {
-    fileName = (const CHAR *)Rules_GetFileNameArg(1, v2, a2);
+    fileName = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, a2);
     if ( fileName )
     {
       if ( Rules_PerformBsave(fileName, a1, v5) )
@@ -302,8 +302,8 @@ signed int  Rules_PerformBsave(const CHAR *fileName, DWORD a2, int a3)
   constructBuffer[7] = a3;
   if ( Rules_IsBloaded() )
   {
-    Rules_PrintErrorID((int)aBsave_1, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotPerformA, v19);
+    Rules_PrintErrorID((int)(intptr_t)aBsave_1, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotPerformA, v19);
     return 0;
   }
   else
@@ -322,13 +322,13 @@ signed int  Rules_PerformBsave(const CHAR *fileName, DWORD a2, int a3)
       Rules_BsaveWriteFunctionNames(fp);
       Rules_BsaveAtomTables(fp);
       Rules_BsaveWriteBlock(v7, fp, &g_ClipsExpressionNodeIndex);
-      for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(i + 36) )
+      for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(i + 36) )
       {
-        if ( *(_DWORD *)(i + 24) )
+        if ( *(_DWORD *)(uintptr_t)(i + 24) )
         {
-          strncpy_(v8, *(_DWORD *)i);
+          strncpy_(v8, *(_DWORD *)(uintptr_t)i);
           Rules_BsaveWriteBlock(20, v10, constructBuffer);
-          (*(void (**)(void))(i + 24))();
+          (*(void (**)(void))(uintptr_t)(i + 24))();
         }
       }
       Rules_BsaveWriteEndTag(v8, v8);
@@ -337,13 +337,13 @@ signed int  Rules_PerformBsave(const CHAR *fileName, DWORD a2, int a3)
       Rules_InvokeConstructCallbacks();
       g_ClipsExpressionNodeIndex = v12;
       Rules_BsaveWriteConstraints(v13);
-      for ( j = g_BinaryItemListHead; j; j = *(_DWORD *)(j + 36) )
+      for ( j = g_BinaryItemListHead; j; j = *(_DWORD *)(uintptr_t)(j + 36) )
       {
-        if ( *(_DWORD *)(j + 28) )
+        if ( *(_DWORD *)(uintptr_t)(j + 28) )
         {
-          strncpy_(v14, *(_DWORD *)j);
+          strncpy_(v14, *(_DWORD *)(uintptr_t)j);
           Rules_BsaveWriteBlock(20, v16, constructBuffer);
-          (*(void (**)(void))(j + 28))();
+          (*(void (**)(void))(uintptr_t)(j + 28))();
         }
       }
       Rules_BsaveWriteEndTag(v14, v14);
@@ -354,7 +354,7 @@ signed int  Rules_PerformBsave(const CHAR *fileName, DWORD a2, int a3)
     }
     else
     {
-      Rules_OpenFileErrorMessage(0, (int)fileName);
+      Rules_OpenFileErrorMessage(0, (int)(intptr_t)fileName);
       return 0;
     }
   }

@@ -1,0 +1,8 @@
+{
+ "categories": [
+  "int-to-pointer-cast",
+  "pointer-to-int-cast"
+ ],
+ "applied": 27408,
+ "review": {}
+}

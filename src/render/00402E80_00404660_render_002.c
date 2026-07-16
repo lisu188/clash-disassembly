@@ -192,20 +192,20 @@ int  Render_BlitCompressedSpriteRLE(
 
   rgb_offset_table = *(int **)((char *)&rgb_offsets_packed + 2);
   device_addr = dest_device;
-  sprite_header = (__int16 *)sprite;
+  sprite_header = (__int16 *)(uintptr_t)sprite;
   var2 = draw_x;
   draw_y_saved = draw_y;
-  rle_cursor = *(_BYTE **)(sprite + 10);
-  sprite_format = *(_WORD *)(sprite + 4);
+  rle_cursor = *(_BYTE **)(uintptr_t)(sprite + 10);
+  sprite_format = *(_WORD *)(uintptr_t)(sprite + 4);
   offscreen_surface = 0;
   BYTE2(fill_color_source) = g_TextSprite_StyleFlag;
-  if ( g_MousePresentAtStartup && (_UNKNOWN *)device_addr == &g_MainRenderDevice )
+  if ( g_MousePresentAtStartup && (_UNKNOWN *)(uintptr_t)device_addr == &g_MainRenderDevice )
   {
     if ( *(_DWORD *)((char *)&clip_bounds + 2) != -1 )
-      App_RequestQuit((int)aDlxvscreenDraw);
-    Surface = (_DWORD *)Mem_Alloc(188, g_MousePresentAtStartup, draw_x, (DWORD)v130);
+      App_RequestQuit((int)(intptr_t)aDlxvscreenDraw);
+    Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, g_MousePresentAtStartup, draw_x, (DWORD)(intptr_t)v130);
     if ( Surface )
-      Surface = Render_CreateSurface((int)Surface, *sprite_header, sprite_header[1]);
+      Surface = Render_CreateSurface((int)(intptr_t)Surface, *sprite_header, sprite_header[1]);
     offscreen_surface = Surface;
     if ( BYTE2(transparent_flags) )
       Render_FillRect(
@@ -227,10 +227,10 @@ int  Render_BlitCompressedSpriteRLE(
   else
   {
     origin_y = draw_y_saved;
-    dest_context = *(_DWORD *)(device_addr + 184);
+    dest_context = *(_DWORD *)(uintptr_t)(device_addr + 184);
     cursor_x = var2;
   }
-  write_cursor = (void *)(*(int (__fastcall **)(int, int))(dest_context + 8))(dest_context, cursor_x);
+  write_cursor = (void *)(uintptr_t)(*(int (__fastcall **)(int, int))(uintptr_t)(dest_context + 8))(dest_context, cursor_x);
   skip_clip_left = *(_DWORD *)((char *)&clip_bounds + 2);
   skip_clip_top = *(_DWORD *)((char *)&clip_bounds + 6);
   skip_clip_right = *(_DWORD *)((char *)&clip_bounds + 10);
@@ -269,7 +269,7 @@ int  Render_BlitCompressedSpriteRLE(
   offset_clip_ctx = 0;
   if ( sprite_format == 1 )
   {
-    fill_ctx = (unsigned __int8 **)Mem_Alloc(24, *(int *)((char *)&clip_bounds + 2), origin_y, (DWORD)v130);
+    fill_ctx = (unsigned __int8 **)(uintptr_t)Mem_Alloc(24, *(int *)((char *)&clip_bounds + 2), origin_y, (DWORD)(intptr_t)v130);
     if ( fill_ctx )
     {
       fill_clip_left = *(unsigned __int8 **)((char *)&clip_bounds + 2);
@@ -292,13 +292,13 @@ int  Render_BlitCompressedSpriteRLE(
       {
         v46 = 1;
       }
-      v43[5] = (unsigned __int8 *)v46;
+      v43[5] = (unsigned __int8 *)(uintptr_t)v46;
     }
     fill_clip_ctx = v43;
   }
   if ( BYTE2(blend_mode_flags) == 1 )
   {
-    blend_ctx = (int **)Mem_Alloc(24, v40, origin_y, (DWORD)v130);
+    blend_ctx = (int **)(uintptr_t)Mem_Alloc(24, v40, origin_y, (DWORD)(intptr_t)v130);
     if ( blend_ctx )
     {
       blend_clip_left = *(int **)((char *)&clip_bounds + 2);
@@ -321,14 +321,14 @@ int  Render_BlitCompressedSpriteRLE(
       {
         v51 = 1;
       }
-      v50[5] = (int *)v51;
+      v50[5] = (int *)(uintptr_t)v51;
       blend_ctx = v50;
     }
     blend_clip_ctx = blend_ctx;
   }
   if ( BYTE2(blend_mode_flags) != 2 )
     goto LABEL_40;
-  offset_ctx = (int **)Mem_Alloc(24, v40, origin_y, (DWORD)v130);
+  offset_ctx = (int **)(uintptr_t)Mem_Alloc(24, v40, origin_y, (DWORD)(intptr_t)v130);
   if ( offset_ctx )
   {
     offset_clip_left = *(int **)((char *)&clip_bounds + 2);
@@ -345,7 +345,7 @@ int  Render_BlitCompressedSpriteRLE(
       offset_clip_ctx = offset_ctx;
       goto LABEL_40;
     }
-    offset_ctx[5] = (int *)~*(_DWORD *)((char *)&clip_bounds + 10);
+    offset_ctx[5] = (int *)(uintptr_t)~*(_DWORD *)((char *)&clip_bounds + 10);
   }
   offset_clip_ctx = offset_ctx;
 LABEL_40:
@@ -386,7 +386,7 @@ LABEL_40:
           {
             if ( BYTE2(blend_mode_flags) <= 1u )
             {
-              v130[1] = (*(int (__thiscall **)(_DWORD))(*(_DWORD *)write_cursor + 16))(0);
+              v130[1] = (*(int (__thiscall **)(_DWORD))(uintptr_t)(*(_DWORD *)write_cursor + 16))(0);
               LOBYTE(v86) = run_length;
               blend_x_saved = screen_x;
               v130[0] = g_RenderSurface_BlitCursorVtable;
@@ -396,28 +396,28 @@ LABEL_40:
               blend_clip_overflow = 0;
               if ( blend_clip_enabled )
               {
-                if ( screen_y < (int)blend_clip_ctx[2]
-                  || screen_y > (int)blend_clip_ctx[4]
-                  || screen_x > (int)blend_clip_ctx[3]
-                  || (int)(v86 + screen_x) < (int)blend_clip_ctx[1] + 1 )
+                if ( screen_y < (int)(intptr_t)blend_clip_ctx[2]
+                  || screen_y > (int)(intptr_t)blend_clip_ctx[4]
+                  || screen_x > (int)(intptr_t)blend_clip_ctx[3]
+                  || (int)(v86 + screen_x) < (int)(intptr_t)blend_clip_ctx[1] + 1 )
                 {
-                  (*(void (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 12))();
-                  (*(void (**)(void))(v130[0] + 12))();
+                  (*(void (**)(void))(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 12))();
+                  (*(void (**)(void))(uintptr_t)(v130[0] + 12))();
                   run_pixel_ptr += blend_run_length;
                   goto LABEL_97;
                 }
                 blend_clip_left_ptr = blend_clip_ctx[1];
-                if ( (int)blend_clip_left_ptr > screen_x )
+                if ( (int)(intptr_t)blend_clip_left_ptr > screen_x )
                 {
-                  v93 = (int)blend_clip_left_ptr - screen_x;
-                  (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
-                  (*(void (**)(void))(v130[0] + 12))();
+                  v93 = (int)(intptr_t)blend_clip_left_ptr - screen_x;
+                  (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
+                  (*(void (**)(void))(uintptr_t)(v130[0] + 12))();
                   run_pixel_ptr += v93;
                   blend_run_length = v94 - v93;
                 }
-                if ( (int)blend_clip_ctx[3] + 1 < (int)(blend_run_length + blend_x_saved) )
+                if ( (int)(intptr_t)blend_clip_ctx[3] + 1 < (int)(blend_run_length + blend_x_saved) )
                 {
-                  blend_clip_overflow = blend_run_length + blend_x_saved - (_DWORD)blend_clip_ctx[3] - 1;
+                  blend_clip_overflow = blend_run_length + blend_x_saved - (_DWORD)(intptr_t)blend_clip_ctx[3] - 1;
                   blend_run_length -= blend_clip_overflow;
                 }
               }
@@ -425,18 +425,18 @@ LABEL_40:
               do
               {
                 blend_chunk_length = blend_run_remaining;
-                if ( (*(int (**)(void))(v130[0] + 8))() < blend_run_remaining )
-                  blend_chunk_length = (*(int (**)(void))(v130[0] + 8))();
-                if ( blend_chunk_length > (*(int (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 8))() )
-                  blend_chunk_length = (*(int (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 8))();
+                if ( (*(int (**)(void))(uintptr_t)(v130[0] + 8))() < blend_run_remaining )
+                  blend_chunk_length = (*(int (**)(void))(uintptr_t)(v130[0] + 8))();
+                if ( blend_chunk_length > (*(int (**)(void))(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 8))() )
+                  blend_chunk_length = (*(int (**)(void))(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 8))();
                 if ( blend_chunk_length > 0x7FFFFFFF )
                   blend_chunk_length = 0x7FFFFFFF;
                 blend_src_ptr = run_pixel_ptr;
-                (*(void (**)(void))(v130[0] + 16))();
-                blend_dest_packed = ((__int64 (*)(void))*(_DWORD *)(**(_DWORD **)((char *)&retaddr + 2) + 16))();
-                Palette_BlendIndexedPixelRun((char *)blend_dest_packed, (char *)HIDWORD(blend_dest_packed), blend_src_ptr, blend_chunk_length);
-                (*(void (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 12))();
-                (*(void (**)(void))(v130[0] + 12))();
+                (*(void (**)(void))(uintptr_t)(v130[0] + 16))();
+                blend_dest_packed = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 16))();
+                Palette_BlendIndexedPixelRun((char *)blend_dest_packed, (char *)(uintptr_t)HIDWORD(blend_dest_packed), blend_src_ptr, blend_chunk_length);
+                (*(void (**)(void))(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 12))();
+                (*(void (**)(void))(uintptr_t)(v130[0] + 12))();
                 run_pixel_ptr += blend_chunk_length;
                 blend_run_remaining -= blend_chunk_length;
               }
@@ -444,37 +444,37 @@ LABEL_40:
               v91 = blend_clip_overflow;
               if ( blend_clip_overflow )
               {
-                (*(void (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 12))();
-                (*(void (**)(void))(v130[0] + 12))();
+                (*(void (**)(void))(uintptr_t)(**(_DWORD **)((char *)&retaddr + 2) + 12))();
+                (*(void (**)(void))(uintptr_t)(v130[0] + 12))();
                 run_pixel_ptr += v91;
               }
               goto LABEL_97;
             }
             if ( BYTE2(blend_mode_flags) != 2 )
-              App_RequestQuit((int)aDlxmemscreenDr);
+              App_RequestQuit((int)(intptr_t)aDlxmemscreenDr);
             offset_x_saved = screen_x;
             offset_clip_overflow = 0;
             offset_run_length = run_length;
             offset_write_cursor = write_cursor;
             if ( offset_clip_ctx[5] )
             {
-              if ( screen_y < (int)offset_clip_ctx[2] || screen_y > (int)offset_clip_ctx[4] || screen_x > (int)offset_clip_ctx[3] || run_length + screen_x < (int)offset_clip_ctx[1] + 1 )
+              if ( screen_y < (int)(intptr_t)offset_clip_ctx[2] || screen_y > (int)(intptr_t)offset_clip_ctx[4] || screen_x > (int)(intptr_t)offset_clip_ctx[3] || run_length + screen_x < (int)(intptr_t)offset_clip_ctx[1] + 1 )
               {
-                (*(void (__fastcall **)(_DWORD, _DWORD))(*(_DWORD *)write_cursor + 12))(run_length, run_length);
+                (*(void (__fastcall **)(_DWORD, _DWORD))(uintptr_t)(*(_DWORD *)write_cursor + 12))(run_length, run_length);
                 run_pixel_ptr += v100;
-                (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v100, v100);
+                (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v100, v100);
                 goto LABEL_97;
               }
-              if ( (int)offset_clip_ctx[1] > screen_x )
+              if ( (int)(intptr_t)offset_clip_ctx[1] > screen_x )
               {
-                v101 = run_length - ((_DWORD)offset_clip_ctx[1] - screen_x);
-                (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
+                v101 = run_length - ((_DWORD)(intptr_t)offset_clip_ctx[1] - screen_x);
+                (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
                 run_pixel_ptr += v102;
-                (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v101, v102);
+                (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v101, v102);
               }
-              if ( (int)offset_clip_ctx[3] + 1 < (int)(offset_run_length + offset_x_saved) )
+              if ( (int)(intptr_t)offset_clip_ctx[3] + 1 < (int)(offset_run_length + offset_x_saved) )
               {
-                offset_clip_overflow = offset_run_length + offset_x_saved - (_DWORD)offset_clip_ctx[3] - 1;
+                offset_clip_overflow = offset_run_length + offset_x_saved - (_DWORD)(intptr_t)offset_clip_ctx[3] - 1;
                 offset_run_length -= offset_clip_overflow;
               }
             }
@@ -484,32 +484,32 @@ LABEL_40:
               offset_chunk_length = offset_run_remaining;
               if ( offset_run_remaining > 0x7FFFFFFF )
                 offset_chunk_length = 0x7FFFFFFF;
-              if ( offset_chunk_length > (unsigned int)(*(int (**)(void))(*(_DWORD *)offset_write_cursor + 8))() )
-                offset_chunk_length = (*(int (**)(void))(*(_DWORD *)offset_write_cursor + 8))();
-              if ( offset_chunk_length > (unsigned int)(*(int (**)(void))(g_ActiveBlitCursor + 8))() )
-                offset_chunk_length = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-              (*(void (**)(void))(g_ActiveBlitCursor + 16))();
+              if ( offset_chunk_length > (unsigned int)(*(int (**)(void))(uintptr_t)(*(_DWORD *)offset_write_cursor + 8))() )
+                offset_chunk_length = (*(int (**)(void))(uintptr_t)(*(_DWORD *)offset_write_cursor + 8))();
+              if ( offset_chunk_length > (unsigned int)(*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))() )
+                offset_chunk_length = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+              (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
               run_start_ptr = run_pixel_ptr;
               copy_src_ptr = run_pixel_ptr;
-              dest_write_ptr = (unsigned __int8 *)(*(int (__thiscall **)(int))(*(_DWORD *)offset_write_cursor + 16))(offset_chunk_length);
+              dest_write_ptr = (unsigned __int8 *)(uintptr_t)(*(int (__thiscall **)(int))(uintptr_t)(*(_DWORD *)offset_write_cursor + 16))(offset_chunk_length);
               offset_rgb_table = *offset_clip_ctx;
               qmemcpy(dest_write_ptr, copy_src_ptr, v99);
               if ( offset_chunk_length > 1 || *run_start_ptr != offset_rgb_table[3] )
                 Palette_OffsetIndexedPixelsRGB(dest_write_ptr, offset_chunk_length, *offset_rgb_table, offset_rgb_table[1], offset_rgb_table[2]);
-              (*(void (**)(void))(*(_DWORD *)offset_write_cursor + 12))();
+              (*(void (**)(void))(uintptr_t)(*(_DWORD *)offset_write_cursor + 12))();
               run_pixel_ptr += offset_chunk_length;
-              (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, offset_chunk_length);
+              (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, offset_chunk_length);
               offset_run_remaining -= offset_chunk_length;
             }
             while ( offset_run_remaining );
             if ( offset_clip_overflow )
             {
-              (*(void (**)(void))(*(_DWORD *)offset_write_cursor + 12))();
+              (*(void (**)(void))(uintptr_t)(*(_DWORD *)offset_write_cursor + 12))();
               run_pixel_ptr += offset_clip_overflow;
               v81 = g_ActiveBlitCursor;
               v82 = offset_clip_overflow;
 LABEL_96:
-              (*(void (__fastcall **)(int, int))(v81 + 12))(v81, v82);
+              (*(void (__fastcall **)(int, int))(uintptr_t)(v81 + 12))(v81, v82);
             }
           }
           else
@@ -521,18 +521,18 @@ LABEL_96:
               goto LABEL_86;
             if ( screen_y < copy_clip_top || screen_y > copy_clip_bottom || screen_x > copy_clip_right || screen_x + run_length < copy_clip_left_plus1 )
             {
-              (*(void (__fastcall **)(_DWORD, _DWORD))(*(_DWORD *)copy_write_cursor + 12))(run_length, run_length);
+              (*(void (__fastcall **)(_DWORD, _DWORD))(uintptr_t)(*(_DWORD *)copy_write_cursor + 12))(run_length, run_length);
               run_pixel_ptr += v83;
-              (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v83, v83);
+              (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v83, v83);
             }
             else
             {
               if ( copy_clip_left > screen_x )
               {
-                (*(void (__fastcall **)(int, int))(*(_DWORD *)write_cursor + 12))(copy_clip_left - screen_x, copy_clip_left - screen_x);
+                (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)write_cursor + 12))(copy_clip_left - screen_x, copy_clip_left - screen_x);
                 run_pixel_ptr += v84;
                 v85 = run_length - v84;
-                (*(void (**)(void))(g_ActiveBlitCursor + 12))();
+                (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 12))();
                 copy_run_length = v85;
               }
               if ( screen_x + copy_run_length > copy_clip_right_plus1 )
@@ -548,24 +548,24 @@ LABEL_86:
                 copy_chunk_length = copy_run_remaining;
                 if ( copy_run_remaining > 0x7FFFFFFF )
                   copy_chunk_length = 0x7FFFFFFF;
-                if ( copy_chunk_length > (*(int (**)(void))(*(_DWORD *)v172 + 8))() )
-                  copy_chunk_length = (*(int (**)(void))(*(_DWORD *)v172 + 8))();
-                if ( copy_chunk_length > (*(int (**)(void))(g_ActiveBlitCursor + 8))() )
-                  copy_chunk_length = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-                (*(void (**)(void))(g_ActiveBlitCursor + 16))();
+                if ( copy_chunk_length > (*(int (**)(void))(uintptr_t)(*(_DWORD *)v172 + 8))() )
+                  copy_chunk_length = (*(int (**)(void))(uintptr_t)(*(_DWORD *)v172 + 8))();
+                if ( copy_chunk_length > (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))() )
+                  copy_chunk_length = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+                (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
                 copy_read_ptr = run_pixel_ptr;
-                copy_dest_ptr = (unsigned __int8 *)(*(int (__thiscall **)(unsigned int))(*(_DWORD *)v172 + 16))(copy_chunk_length);
+                copy_dest_ptr = (unsigned __int8 *)(uintptr_t)(*(int (__thiscall **)(unsigned int))(uintptr_t)(*(_DWORD *)v172 + 16))(copy_chunk_length);
                 qmemcpy(copy_dest_ptr, copy_read_ptr, v79);
-                (*(void (**)(void))(*(_DWORD *)v172 + 12))();
+                (*(void (**)(void))(uintptr_t)(*(_DWORD *)v172 + 12))();
                 run_pixel_ptr += copy_chunk_length;
-                (*(void (__fastcall **)(int, unsigned int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, copy_chunk_length);
+                (*(void (__fastcall **)(int, unsigned int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, copy_chunk_length);
                 copy_run_remaining -= copy_chunk_length;
               }
               while ( copy_run_remaining );
               v80 = copy_clip_overflow;
               if ( copy_clip_overflow )
               {
-                (*(void (**)(void))(*(_DWORD *)copy_write_cursor + 12))();
+                (*(void (**)(void))(uintptr_t)(*(_DWORD *)copy_write_cursor + 12))();
                 v81 = g_ActiveBlitCursor;
                 v82 = v80;
                 run_pixel_ptr += v80;
@@ -583,61 +583,61 @@ LABEL_97:
         if ( sprite_format != 1 )
           goto LABEL_180;
         if ( BYTE2(blend_mode_flags) )
-          App_RequestQuit((int)aDlxmemscreen_0);
+          App_RequestQuit((int)(intptr_t)aDlxmemscreen_0);
         fill_x_saved = screen_x;
         fill_clip_overflow = 0;
         fill_run_length = run_byte;
         fill_write_cursor = write_cursor;
         if ( fill_clip_ctx[5] )
         {
-          if ( screen_y < (int)fill_clip_ctx[2] || screen_y > (int)fill_clip_ctx[4] || screen_x > (int)fill_clip_ctx[3] || run_byte + screen_x < (int)(fill_clip_ctx[1] + 1) )
+          if ( screen_y < (int)(intptr_t)fill_clip_ctx[2] || screen_y > (int)(intptr_t)fill_clip_ctx[4] || screen_x > (int)(intptr_t)fill_clip_ctx[3] || run_byte + screen_x < (int)(intptr_t)(fill_clip_ctx[1] + 1) )
           {
-            (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
-            (*(void (__fastcall **)(int, _DWORD))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, run_length);
-            (*(void (__fastcall **)(int, _DWORD))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, run_length);
+            (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
+            (*(void (__fastcall **)(int, _DWORD))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, run_length);
+            (*(void (__fastcall **)(int, _DWORD))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, run_length);
             goto LABEL_180;
           }
           fill_clip_left_ptr = fill_clip_ctx[1];
-          if ( (int)fill_clip_left_ptr > screen_x )
+          if ( (int)(intptr_t)fill_clip_left_ptr > screen_x )
           {
             v115 = &fill_clip_left_ptr[-screen_x];
-            (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
-            (*(void (**)(void))(g_ActiveBlitCursor + 12))();
-            (*(void (__fastcall **)(int, unsigned __int8 *))(g_ActiveBlitCursor + 12))(v116 - (_DWORD)v115, v115);
+            (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
+            (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 12))();
+            (*(void (__fastcall **)(int, unsigned __int8 *))(uintptr_t)(g_ActiveBlitCursor + 12))(v116 - (_DWORD)(intptr_t)v115, v115);
             fill_run_length = v117;
           }
-          if ( (int)(fill_clip_ctx[3] + 1) < (int)(fill_run_length + fill_x_saved) )
+          if ( (int)(intptr_t)(fill_clip_ctx[3] + 1) < (int)(fill_run_length + fill_x_saved) )
           {
-            fill_clip_overflow = fill_run_length + fill_x_saved - (_DWORD)fill_clip_ctx[3] - 1;
-            fill_run_length = 1 - (fill_x_saved - (_DWORD)fill_clip_ctx[3]);
+            fill_clip_overflow = fill_run_length + fill_x_saved - (_DWORD)(intptr_t)fill_clip_ctx[3] - 1;
+            fill_run_length = 1 - (fill_x_saved - (_DWORD)(intptr_t)fill_clip_ctx[3]);
           }
         }
         fill_ctx_ref = fill_clip_ctx;
         do
         {
-          if ( fill_run_length > (*(int (__thiscall **)(unsigned int))(g_ActiveBlitCursor + 8))(fill_run_length) )
-            v104 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-          v105 = (*(int (__fastcall **)(int))(*(_DWORD *)fill_write_cursor + 8))(v104);
+          if ( fill_run_length > (*(int (__thiscall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(fill_run_length) )
+            v104 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+          v105 = (*(int (__fastcall **)(int))(uintptr_t)(*(_DWORD *)fill_write_cursor + 8))(v104);
           if ( v106 > v105 )
-            v106 = (*(int (**)(void))(*(_DWORD *)fill_write_cursor + 8))();
-          v107 = (*(int (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 8))(v106);
+            v106 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)fill_write_cursor + 8))();
+          v107 = (*(int (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(v106);
           if ( v108 > v107 )
-            v108 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-          (*(void (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 16))(v108);
-          (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-          (*(void (**)(void))(*(_DWORD *)fill_write_cursor + 16))();
+            v108 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+          (*(void (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 16))(v108);
+          (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
+          (*(void (**)(void))(uintptr_t)(*(_DWORD *)fill_write_cursor + 16))();
           memset_(v109, **fill_ctx_ref);
-          (*(void (__fastcall **)(int, int))(*(_DWORD *)fill_write_cursor + 12))(v110, v110);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v111, v111);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v112, v112);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)fill_write_cursor + 12))(v110, v110);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v111, v111);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v112, v112);
           fill_run_length -= v113;
         }
         while ( fill_run_length );
         if ( fill_clip_overflow )
         {
-          (*(void (**)(void))(*(_DWORD *)fill_write_cursor + 12))();
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, fill_clip_overflow);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, fill_clip_overflow);
+          (*(void (**)(void))(uintptr_t)(*(_DWORD *)fill_write_cursor + 12))();
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, fill_clip_overflow);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, fill_clip_overflow);
         }
       }
       else
@@ -646,7 +646,7 @@ LABEL_97:
         run_length = run_byte & 0x7F;
         if ( BYTE2(transparent_flags) )
         {
-          (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
+          (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
           goto LABEL_180;
         }
         *(_DWORD *)&_10E = write_cursor;
@@ -656,16 +656,16 @@ LABEL_97:
         {
           if ( screen_y < skip_clip_top || screen_y > skip_clip_bottom || screen_x > skip_clip_right || screen_x + transparent_run_length < skip_clip_left_plus1 )
           {
-            (*(void (**)(void))(**(_DWORD **)&_10E + 12))();
-            (*(void (__fastcall **)(int, unsigned int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_remaining);
-            (*(void (__fastcall **)(int, unsigned int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_remaining);
+            (*(void (**)(void))(uintptr_t)(**(_DWORD **)&_10E + 12))();
+            (*(void (__fastcall **)(int, unsigned int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_remaining);
+            (*(void (__fastcall **)(int, unsigned int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_remaining);
             goto LABEL_180;
           }
           if ( skip_clip_left > screen_x )
           {
-            (*(void (**)(void))(*(_DWORD *)write_cursor + 12))();
-            (*(void (**)(void))(g_ActiveBlitCursor + 12))();
-            (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v73 - (skip_clip_left - screen_x), skip_clip_left - screen_x);
+            (*(void (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 12))();
+            (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 12))();
+            (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v73 - (skip_clip_left - screen_x), skip_clip_left - screen_x);
             skip_remaining = v74;
           }
           if ( (int)(screen_x + skip_remaining) > skip_clip_right_plus1 )
@@ -677,37 +677,37 @@ LABEL_97:
         skip_write_cursor = *(_DWORD *)&_10E;
         do
         {
-          if ( skip_remaining > (*(int (__thiscall **)(unsigned int))(g_ActiveBlitCursor + 8))(skip_remaining) )
-            v63 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-          v64 = (*(int (__fastcall **)(int))(*(_DWORD *)skip_write_cursor + 8))(v63);
+          if ( skip_remaining > (*(int (__thiscall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(skip_remaining) )
+            v63 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+          v64 = (*(int (__fastcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)skip_write_cursor + 8))(v63);
           if ( v65 > v64 )
-            v65 = (*(int (**)(void))(*(_DWORD *)skip_write_cursor + 8))();
-          v66 = (*(int (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 8))(v65);
+            v65 = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)skip_write_cursor + 8))();
+          v66 = (*(int (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 8))(v65);
           if ( v67 > v66 )
-            v67 = (*(int (**)(void))(g_ActiveBlitCursor + 8))();
-          (*(void (__fastcall **)(unsigned int))(g_ActiveBlitCursor + 16))(v67);
-          (*(void (**)(void))(g_ActiveBlitCursor + 16))();
-          (*(void (**)(void))(*(_DWORD *)skip_write_cursor + 16))();
+            v67 = (*(int (**)(void))(uintptr_t)(g_ActiveBlitCursor + 8))();
+          (*(void (__fastcall **)(unsigned int))(uintptr_t)(g_ActiveBlitCursor + 16))(v67);
+          (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
+          (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)skip_write_cursor + 16))();
           memset_(v68, (unsigned __int8)g_Render_BackgroundColorIndex);
-          (*(void (__fastcall **)(int, int))(*(_DWORD *)skip_write_cursor + 12))(v69, v69);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v70, v70);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(v71, v71);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)skip_write_cursor + 12))(v69, v69);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v70, v70);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(v71, v71);
           skip_remaining -= v72;
         }
         while ( skip_remaining );
         if ( skip_clip_overflow )
         {
-          (*(void (**)(void))(**(_DWORD **)&_10E + 12))();
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_clip_overflow);
-          (*(void (__fastcall **)(int, int))(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_clip_overflow);
+          (*(void (**)(void))(uintptr_t)(**(_DWORD **)&_10E + 12))();
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_clip_overflow);
+          (*(void (__fastcall **)(int, int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, skip_clip_overflow);
         }
       }
 LABEL_180:
       vars2 += run_length;
       screen_x += run_length;
     }
-    row_write_pos = (*(int (**)(void))(*(_DWORD *)write_cursor + 4))();
-    (*(void (__fastcall **)(int, int))(v53 + 12))(v53, row_write_pos - (unsigned __int16)*sprite_header);
+    row_write_pos = (*(int (**)(void))(uintptr_t)(*(_DWORD *)write_cursor + 4))();
+    (*(void (__fastcall **)(int, int))(uintptr_t)(v53 + 12))(v53, row_write_pos - (unsigned __int16)*sprite_header);
     ++row_index;
     ++screen_y;
   }
@@ -722,7 +722,7 @@ LABEL_180:
   {
     result = Render_FillRect(offscreen_surface, &g_MainRenderDevice, 0, 0, *sprite_header - 1, sprite_header[1] - 1, var2, draw_y_saved);
     if ( offscreen_surface )
-      return (*(int (**)(void))offscreen_surface[46])();
+      return (*(int (**)(void))(uintptr_t)offscreen_surface[46])();
   }
   return result;
 }
@@ -761,12 +761,12 @@ _DWORD * Render_CreateSurface(int surface_addr, __int16 width, __int16 height)
   surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
   if ( !surface[1] )
   {
-    Debug_Log(0, 0, pixel_count, (int)aNotEnoughMemor);
-    App_RequestQuit((int)aNotEnoughMem_0);
+    Debug_Log(0, 0, pixel_count, (int)(intptr_t)aNotEnoughMemor);
+    App_RequestQuit((int)(intptr_t)aNotEnoughMem_0);
   }
   memset((void *)(uintptr_t)(unsigned int)surface[1], 0, pixel_count);
   if ( !surface[1] )
-    App_RequestQuit((int)aNotEnoughFreeM);
+    App_RequestQuit((int)(intptr_t)aNotEnoughFreeM);
   return surface;
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
@@ -784,9 +784,9 @@ int  Surface_DestructRawBuffer(int surface, char flags)
     j_j__nfree_();
     return surface;
   }
-  *(_DWORD *)(surface + 184) = g_Surface_RawBuffer8Vtable;
-  nfree_(*(_DWORD *)(surface + 4));
-  *(_DWORD *)(surface + 4) = 0;
+  *(_DWORD *)(uintptr_t)(surface + 184) = g_Surface_RawBuffer8Vtable;
+  nfree_(*(_DWORD *)(uintptr_t)(surface + 4));
+  *(_DWORD *)(uintptr_t)(surface + 4) = 0;
   result = Surface_Destruct(surface + 8) - 8;
   if ( (flags & 2) != 0 )
   {
@@ -809,7 +809,7 @@ _DWORD * Surface_ConstructRegionViewA(int x, int y, DWORD context)
   int row_offset; // ebx
   int pixel_base; // ecx
 
-  result = (_DWORD *)Mem_Alloc(12, x, y, context);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(12, x, y, context);
   if ( result )
   {
     row_pitch = *surface;
@@ -835,7 +835,7 @@ _DWORD * Surface_ConstructRegionViewB(int x, int y, DWORD context)
   int row_offset; // ebx
   int pixel_base; // ecx
 
-  result = (_DWORD *)Mem_Alloc(12, x, y, context);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(12, x, y, context);
   if ( result )
   {
     row_pitch = *surface;
@@ -857,14 +857,14 @@ int  Surface_SetPixel8(unsigned __int16 *surface, int x, char color, int y)
   int result; // eax
 
   result = *surface * y + *((_DWORD *)surface + 1);
-  *(_BYTE *)(x + result) = color;
+  *(_BYTE *)(uintptr_t)(x + result) = color;
   return result;
 }
 
 //----- (00403F50) --------------------------------------------------------
 int  Surface_GetPixel8(unsigned __int16 *surface, int x, int y)
 {
-  return *(unsigned __int8 *)(x + y * *surface + *((_DWORD *)surface + 1));
+  return *(unsigned __int8 *)(uintptr_t)(x + y * *surface + *((_DWORD *)surface + 1));
 }
 
 //----- (00403F70) --------------------------------------------------------
@@ -885,7 +885,7 @@ _BYTE * Surface_DrawDashedLine(
 
   v6 = color_flags;
   pitch = *surface;
-  result = (_BYTE *)(x_start + *((_DWORD *)surface + 1) + *surface * (unsigned __int16)y_start);
+  result = (_BYTE *)(uintptr_t)(x_start + *((_DWORD *)surface + 1) + *surface * (unsigned __int16)y_start);
   if ( (color_flags & 0x100) != 0 )
   {
     if ( (_WORD)y_start == y_end )
@@ -917,7 +917,7 @@ _BYTE * Surface_DrawDashedLine(
   else if ( (_WORD)y_start == y_end )
   {
     BYTE1(v6) = 0;
-    return (_BYTE *)memset_(v6, (unsigned __int8)color_flags);
+    return (_BYTE *)(uintptr_t)memset_(v6, (unsigned __int8)color_flags);
   }
   else
   {
@@ -1001,7 +1001,7 @@ unsigned __int16 * Surface_FillVerticalSpan(
     row_addr = x + row_base;
     if ( row_index > y_end )
       break;
-    result = (unsigned __int16 *)memset_(row_addr, color);
+    result = (unsigned __int16 *)(uintptr_t)memset_(row_addr, color);
     x = *surface_ptr;
     ++row_index;
   }
@@ -1030,7 +1030,7 @@ __int16  Surface_FillCheckerPattern(
   for ( i = row_base + x_start; row_y <= y_end; i += *surface )
   {
     col_x = x_start;
-    for ( j = i + (row_y & 1); col_x <= x_end; *(_BYTE *)(j - 2) = color )
+    for ( j = i + (row_y & 1); col_x <= x_end; *(_BYTE *)(uintptr_t)(j - 2) = color )
     {
       j += 2;
       col_x += 2;
@@ -1058,7 +1058,7 @@ _DWORD * Render_ConstructScratchSurface(int surface_addr, unsigned __int16 width
   if ( companion_flag )
   {
     companion_surface = 0;
-    allocated_companion = (_DWORD *)Mem_Alloc(176, 0, height, companion_flag);
+    allocated_companion = (_DWORD *)(uintptr_t)Mem_Alloc(176, 0, height, companion_flag);
     render_context = g_RenderContext;
     if ( allocated_companion && render_context )
       companion_surface = Surface_ConstructWithSurface(allocated_companion, (_DWORD *)(uintptr_t)(unsigned int)render_context, height, width_saved);
@@ -1088,7 +1088,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
   {
     _wcpp_4_dtor_array_store__(surface, &g_ScratchSurface_DtorArrayTag);
     j_j__nfree_();
-    return (int)surface;
+    return (int)(intptr_t)surface;
   }
   owned_buffer = surface[47];
   surface[46] = g_ScratchSurface_Vtable;
@@ -1097,7 +1097,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
     Surface_Destruct(owned_buffer);
     j__nfree_();
   }
-  result = Surface_Destruct((int)(surface + 2)) - 8;
+  result = Surface_Destruct((int)(intptr_t)(surface + 2)) - 8;
   if ( (flags & 2) != 0 )
   {
     j__nfree_();
@@ -1123,14 +1123,14 @@ int  Surface_ConstructLockedRegionView(int surface, int x, int y, DWORD context)
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
   {
-    v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 60))();
-    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
-    *(_DWORD *)(HIDWORD(v7) + 4) = v7;
+    v7 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v6 + 184) + 60))();
+    *(_DWORD *)(uintptr_t)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
+    *(_DWORD *)(uintptr_t)(HIDWORD(v7) + 4) = v7;
     lock_error = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( lock_error )
       Render_HandleDirectDrawFatalError(lock_error, v9);
-    pitch = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(region_view + 8) = y * pitch + x + *(_DWORD *)(*(_DWORD *)(region_view + 4) + 92);
+    pitch = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v9 + 4))();
+    *(_DWORD *)(uintptr_t)(region_view + 8) = y * pitch + x + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(region_view + 4) + 92);
     return region_view;
   }
   return result;
@@ -1154,14 +1154,14 @@ int  Surface_ConstructPitchRegionView(int surface, int x, int y, DWORD context)
   result = Mem_Alloc(12, surface, y, context);
   if ( result )
   {
-    v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 64))();
-    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
-    *(_DWORD *)(HIDWORD(v7) + 4) = v7;
+    v7 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v6 + 184) + 64))();
+    *(_DWORD *)(uintptr_t)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
+    *(_DWORD *)(uintptr_t)(HIDWORD(v7) + 4) = v7;
     lock_error = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( lock_error )
       Render_HandleDirectDrawFatalError(lock_error, v9);
-    pitch = (*(int (**)(void))(*(_DWORD *)v9 + 4))();
-    *(_DWORD *)(region_view + 8) = y * pitch + x + *(_DWORD *)(*(_DWORD *)(region_view + 4) + 92);
+    pitch = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)v9 + 4))();
+    *(_DWORD *)(uintptr_t)(region_view + 8) = y * pitch + x + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(region_view + 4) + 92);
     return region_view;
   }
   return result;
@@ -1179,7 +1179,7 @@ int  Surface_DrawPix(int surface, int y)
   int v4; // edx
   char v5; // cl
 
-  write_view = (*(int (**)(void))(*(_DWORD *)(surface + 184) + 64))();
+  write_view = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))();
   Surface_LockWithRestore(write_view, v3);
   Surface_SetPixelByte(write_view, v4, v5, y);
   return Surface_Unlock(write_view);
@@ -1197,7 +1197,7 @@ int  Surface_GetPix(int surface, int x, int y)
   int v6; // ecx
   unsigned __int8 pixel_value; // dl
 
-  read_view = (*(int (__cdecl **)(int))(*(_DWORD *)(surface + 184) + 60))(x);
+  read_view = (*(int (__cdecl **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 60))(x);
   Surface_LockWithRestore(read_view, read_view);
   Surface_GetPixelByte(v5, v4, y);
   Surface_Unlock(v6);
@@ -1244,7 +1244,7 @@ unsigned __int16  Surface_DrawLine(
           break;
         if ( (result & 3) == 3 )
         {
-          (*(void (__fastcall **)(_DWORD, _DWORD))(*(_DWORD *)(surface + 184) + 12))((unsigned __int8)color_flags, result);
+          (*(void (__fastcall **)(_DWORD, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 12))((unsigned __int8)color_flags, result);
         }
         else
         {
@@ -1254,7 +1254,7 @@ unsigned __int16  Surface_DrawLine(
             if ( prev_y >= y_end )
               break;
             if ( (y_cursor & 3) == 3 )
-              (*(void (__fastcall **)(_DWORD, _DWORD))(*(_DWORD *)(surface + 184) + 12))((unsigned __int8)color_flags, x_cursor);
+              (*(void (__fastcall **)(_DWORD, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 12))((unsigned __int8)color_flags, x_cursor);
           }
         }
       }
@@ -1262,17 +1262,17 @@ unsigned __int16  Surface_DrawLine(
   }
   else if ( y_start == y_end )
   {
-    v13 = ((__int64 (__fastcall *)(_DWORD, _DWORD))*(_DWORD *)(*(_DWORD *)(surface + 184) + 64))(y_end, x_start);
+    v13 = ((__int64 (__fastcall *)(_DWORD, _DWORD))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))(y_end, x_start);
     return Render_DrawHorizontalRun(v13, SHIDWORD(v13), v14, x_end, color_flags);
   }
   else if ( x_end == x_start )
   {
-    v11 = ((__int64 (__fastcall *)(_DWORD, _DWORD))*(_DWORD *)(*(_DWORD *)(surface + 184) + 64))(x_start, y_start);
+    v11 = ((__int64 (__fastcall *)(_DWORD, _DWORD))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))(x_start, y_start);
     return Render_DrawVerticalRun(v11, SHIDWORD(v11), v12, y_end, color_flags);
   }
   else
   {
-    v15 = ((__int64 (__fastcall *)(_DWORD, _DWORD))*(_DWORD *)(*(_DWORD *)(surface + 184) + 64))(x_end, x_start);
+    v15 = ((__int64 (__fastcall *)(_DWORD, _DWORD))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))(x_end, x_start);
     return Render_DrawLine(v15, SHIDWORD(v15), v16, y_start, y_end, color_flags);
   }
   return result;
@@ -1293,7 +1293,7 @@ int  Surface_DrawRect(
   __int64 v6; // rax
   int v7; // ecx
 
-  v6 = ((__int64 (__fastcall *)(_DWORD, _DWORD))*(_DWORD *)(*(_DWORD *)(surface + 184) + 64))(x1, y1);
+  v6 = ((__int64 (__fastcall *)(_DWORD, _DWORD))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))(x1, y1);
   return Surface_DrawRectBorderByte(v6, SHIDWORD(v6), v7, x2, y2, color);
 }
 // 40458C: variable 'v7' is possibly undefined
@@ -1310,7 +1310,7 @@ int  Surface_DrawBox(
   __int64 v6; // rax
   int v7; // ecx
 
-  v6 = ((__int64 (__fastcall *)(unsigned int, _DWORD))*(_DWORD *)(*(_DWORD *)(surface + 184) + 64))((unsigned int)x2 + 1, x1);
+  v6 = ((__int64 (__fastcall *)(unsigned int, _DWORD))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 64))((unsigned int)x2 + 1, x1);
   return Surface_FillRectColor(v6, SHIDWORD(v6), v7, y1, y2 + 1, color);
 }
 // 4045CE: variable 'v7' is possibly undefined
@@ -1327,7 +1327,7 @@ int  Surface_DotBox(int result, int x1, int x2, int y1, int y2, int color)
   {
     for ( j = x1; j <= x2; j += 2 )
     {
-      (*(void (__fastcall **)(int, int))(*(_DWORD *)(surface + 184) + 12))(color, j);
+      (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)(surface + 184) + 12))(color, j);
       result = x2;
     }
   }
@@ -1349,15 +1349,15 @@ int  Surface_ConstructBackbufferInstance(int surface_addr)
 {
   int palette_array;
 
-  palette_array = (int)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, 480) + 0xDC;
-  *(_DWORD *)(palette_array - 24) = 0;
-  *(_DWORD *)(palette_array - 20) = 1;
-  *(_DWORD *)(palette_array - 16) = 1;
-  *(_DWORD *)(palette_array - 12) = 0;
-  *(_DWORD *)(palette_array - 8) = 0;
-  *(_DWORD *)(palette_array - 4) = 0;
+  palette_array = (int)(intptr_t)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, 480) + 0xDC;
+  *(_DWORD *)(uintptr_t)(palette_array - 24) = 0;
+  *(_DWORD *)(uintptr_t)(palette_array - 20) = 1;
+  *(_DWORD *)(uintptr_t)(palette_array - 16) = 1;
+  *(_DWORD *)(uintptr_t)(palette_array - 12) = 0;
+  *(_DWORD *)(uintptr_t)(palette_array - 8) = 0;
+  *(_DWORD *)(uintptr_t)(palette_array - 4) = 0;
   palette_array = _wcpp_4_ctor_array__(palette_array, 256);
-  *(_DWORD *)(palette_array - 36) = g_Surface_Vtable;
+  *(_DWORD *)(uintptr_t)(palette_array - 36) = g_Surface_Vtable;
   return palette_array - 0xDC;
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);

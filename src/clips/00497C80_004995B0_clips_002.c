@@ -16,13 +16,13 @@ int  Defgeneric_ListDefmethodsCommand(int returnValue, double context)
 
   argData[7] = returnValue;
   if ( !Rules_RtnArgCount() )
-    return Defgeneric_ListMethodsAndTally((int)g_IO_LogicalName_WDisplay, 0, v2);
+    return Defgeneric_ListMethodsAndTally((int)(intptr_t)g_IO_LogicalName_WDisplay, 0, v2);
   result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
-    result = Defgeneric_CheckGenericExists((int)aListDefmethods, *(_BYTE **)(argData[2] + 16));
+    result = Defgeneric_CheckGenericExists((int)(intptr_t)aListDefmethods, *(_BYTE **)(uintptr_t)(argData[2] + 16));
     if ( result )
-      return Defgeneric_ListMethodsAndTally((int)g_IO_LogicalName_WDisplay, result, (int)g_IO_LogicalName_WDisplay);
+      return Defgeneric_ListMethodsAndTally((int)(intptr_t)g_IO_LogicalName_WDisplay, result, (int)(intptr_t)g_IO_LogicalName_WDisplay);
   }
   return result;
 }
@@ -55,10 +55,10 @@ int  Defgeneric_ListMethodsAndTally(int logicalName, int theGeneric, int a3)
     {
       methodCount += Defgeneric_PrintMethodsList(i, i);
       if ( Class_Enum(v6, g_DefgenericModuleItemIndex) )
-        Output_Write(logicalName, (int)asc_50537C, v7);
+        Output_Write(logicalName, (int)(intptr_t)asc_50537C, v7);
     }
   }
-  return Rules_PrintTally(logicalName, methodCount, (int)aMethods, (int)aMethod_1);
+  return Rules_PrintTally(logicalName, methodCount, (int)(intptr_t)aMethods, (int)(intptr_t)aMethod_1);
 }
 // 497D82: variable 'v6' is possibly undefined
 // 497D92: variable 'v7' is possibly undefined
@@ -81,10 +81,10 @@ _DWORD * Defgeneric_GetDefmethodListCommand(_DWORD *returnValue, int a2, double 
   theGeneric = Rules_RtnArgCount();
   if ( !theGeneric )
     return Defgeneric_BuildMethodListValue(theGeneric, returnValue);
-  if ( Lexer_ParseValueList(1, argData, 2, context) && (theGeneric = Defgeneric_CheckGenericExists((int)aGetDefmethodLi, *(_BYTE **)(argData[2] + 16))) != 0 )
+  if ( Lexer_ParseValueList(1, argData, 2, context) && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetDefmethodLi, *(_BYTE **)(uintptr_t)(argData[2] + 16))) != 0 )
     return Defgeneric_BuildMethodListValue(theGeneric, returnValue);
   else
-    return Rules_SetMultifieldErrorValue((int)returnValue);
+    return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
 }
 
 //----- (00497E70) --------------------------------------------------------
@@ -122,7 +122,7 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
   }
   firstGeneric = genericCursor;
   for ( i = 0; genericCursor; genericCursor = Class_Enum(genericCursor, g_DefgenericModuleItemIndex) )
-    i += *(_DWORD *)(genericCursor + 32);
+    i += *(_DWORD *)(uintptr_t)(genericCursor + 32);
   multifieldSize = 2 * i;
   returnValue[1] = 4;
   returnValue[4] = multifieldSize - 1;
@@ -135,7 +135,7 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
   {
     do
     {
-      if ( *(_DWORD *)(currentGeneric + 32) )
+      if ( *(_DWORD *)(uintptr_t)(currentGeneric + 32) )
       {
         methodOffset = 0;
         do
@@ -146,18 +146,18 @@ _DWORD * Defgeneric_BuildMethodListValue(int theGeneric, _DWORD *returnValue)
           *(_DWORD *)((char *)theMultifield + v13 + 16) = Rules_GetConstructNameSymbol(currentGeneric);
           *((_WORD *)theMultifield + 3 * v18 + 7) = 1;
           methodOffset += 40;
-          *(_DWORD *)((char *)theMultifield + 6 * v14 + 16) = Rules_AddIntegerValue(*(_DWORD *)(methodOffset + *(_DWORD *)(currentGeneric + 28) - 40));
+          *(_DWORD *)((char *)theMultifield + 6 * v14 + 16) = Rules_AddIntegerValue(*(_DWORD *)(uintptr_t)(methodOffset + *(_DWORD *)(uintptr_t)(currentGeneric + 28) - 40));
           v9 = v15 + 1;
         }
-        while ( v16 < *(_DWORD *)(currentGeneric + 32) );
+        while ( v16 < *(_DWORD *)(uintptr_t)(currentGeneric + 32) );
       }
-      result = (_DWORD *)Class_Enum(currentGeneric, g_DefgenericModuleItemIndex);
-      currentGeneric = (int)result;
+      result = (_DWORD *)(uintptr_t)Class_Enum(currentGeneric, g_DefgenericModuleItemIndex);
+      currentGeneric = (int)(intptr_t)result;
     }
     while ( result );
   }
   if ( firstGeneric )
-    return (_DWORD *)Rules_SetConstructNextInModule(firstGeneric, savedNext);
+    return (_DWORD *)(uintptr_t)Rules_SetConstructNextInModule(firstGeneric, savedNext);
   return result;
 }
 // 497EA3: variable 'v5' is possibly undefined
@@ -177,15 +177,15 @@ int * Defgeneric_GetMethodRestrictionsCommand(_DWORD *returnValue, int a2, doubl
 
   v9 = a2;
   if ( Lexer_ParseValueList(1, argData, 2, context)
-    && (theGeneric = Defgeneric_CheckGenericExists((int)aGetMethodRestr, *(_BYTE **)(argValue + 16))) != 0
+    && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetMethodRestr, *(_BYTE **)(uintptr_t)(argValue + 16))) != 0
     && Lexer_ParseValueList(2, argData, 1, context)
-    && Defgeneric_CheckMethodExists((int)aGetMethodRestr, theGeneric, *(_DWORD *)(argValue + 16)) != -1 )
+    && Defgeneric_CheckMethodExists((int)(intptr_t)aGetMethodRestr, theGeneric, *(_DWORD *)(uintptr_t)(argValue + 16)) != -1 )
   {
-    return Defgeneric_BuildMethodRestrictionsValue(theGeneric, *(_DWORD *)(argValue + 16), returnValue);
+    return Defgeneric_BuildMethodRestrictionsValue(theGeneric, *(_DWORD *)(uintptr_t)(argValue + 16), returnValue);
   }
   else
   {
-    return Rules_SetMultifieldErrorValue((int)returnValue);
+    return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
   }
 }
 
@@ -226,16 +226,16 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   _DWORD *multifieldPtr; // [esp+18h] [ebp-14h]
 
   methodPosition = Method_FindByIndex(theGeneric, methodIndex);
-  methodAddr = 40 * methodPosition + *(_DWORD *)(v5 + 28);
+  methodAddr = 40 * methodPosition + *(_DWORD *)(uintptr_t)(v5 + 28);
   fieldCount = 3;
-  theMethod = (signed int *)methodAddr;
+  theMethod = (signed int *)(uintptr_t)methodAddr;
   restrictionScanIndex = 0;
-  if ( *(int *)(methodAddr + 8) > 0 )
+  if ( *(int *)(uintptr_t)(methodAddr + 8) > 0 )
   {
-    restrictionScanPtr = *(_DWORD *)(methodAddr + 28);
+    restrictionScanPtr = *(_DWORD *)(uintptr_t)(methodAddr + 28);
     do
     {
-      fieldCount += *(_DWORD *)(restrictionScanPtr + 8) + 3;
+      fieldCount += *(_DWORD *)(uintptr_t)(restrictionScanPtr + 8) + 3;
       ++restrictionScanIndex;
       restrictionScanPtr += 12;
     }
@@ -257,17 +257,17 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
   restrictionIndex = 0;
   result = theMethod;
   v31 = 4;
-  fieldIndex = *(_DWORD *)(v14 + 8) + 4;
+  fieldIndex = *(_DWORD *)(uintptr_t)(v14 + 8) + 4;
   if ( theMethod[2] > 0 )
   {
     restrictionCellPtr = (char *)multifield + 18;
     restrictionOffset = 0;
     do
     {
-      restriction = (_DWORD *)(restrictionOffset + theMethod[7]);
+      restriction = (_DWORD *)(uintptr_t)(restrictionOffset + theMethod[7]);
       *((_WORD *)restrictionCellPtr + 7) = 1;
       fieldIndexValue = Rules_AddIntegerValue(fieldIndex);
-      *(_DWORD *)(v19 + 16) = fieldIndexValue;
+      *(_DWORD *)(uintptr_t)(v19 + 16) = fieldIndexValue;
       *((_WORD *)multifieldPtr + 3 * v18 + 4) = 2;
       restrictionCellPtr += 6;
       ++v31;
@@ -278,7 +278,7 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
       *(_DWORD *)((char *)multifieldPtr + 6 * v18 + 10) = querySymbol;
       *((_WORD *)multifieldPtr + 3 * v18 + 7) = 1;
       result = Rules_AddIntegerValue(restriction[2]);
-      *(_DWORD *)(v21 + 16) = result;
+      *(_DWORD *)(uintptr_t)(v21 + 16) = result;
       fieldIndex = v22 + 1;
       typeIndex = 0;
       if ( restriction[2] )
@@ -291,12 +291,12 @@ int * Defgeneric_BuildMethodRestrictionsValue(int theGeneric, int methodIndex, _
           typeCellPtr += 6;
           ++typeIndex;
           typeValueCell = (char *)multifieldPtr + 6 * fieldIndex - 6;
-          className = (char *)Rules_GetConstructNameString(*(_DWORD *)(typeOffset + *restriction));
+          className = (char *)(uintptr_t)Rules_GetConstructNameString(*(_DWORD *)(uintptr_t)(typeOffset + *restriction));
           *((_DWORD *)typeValueCell + 4) = Str_Intern(className, v28);
           fieldIndex = v29 + 1;
-          result = (int *)restriction[2];
+          result = (int *)(uintptr_t)restriction[2];
         }
-        while ( typeIndex < (unsigned int)result );
+        while ( typeIndex < (unsigned int)(intptr_t)result );
       }
       restrictionOffset += 12;
       ++restrictionIndex;
@@ -323,7 +323,7 @@ int  Defgeneric_EvaluateGenericFunctionCall(int theGeneric, _DWORD *returnValue,
 {
   int v4; // eax
 
-  Method_DispatchGenericCall(theGeneric, 0, *(_DWORD **)(g_ClipsCurrentExpression + 6), 0, context, returnValue);
+  Method_DispatchGenericCall(theGeneric, 0, *(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 6), 0, context, returnValue);
   if ( returnValue[1] == 2 && (v4 = returnValue[2], v4 == g_ClipsFalseSymbol) )
     return g_ClipsFalseSymbol ^ v4;
   else
@@ -336,7 +336,7 @@ int  Defgeneric_EvaluateGenericFunctionCall(int theGeneric, _DWORD *returnValue,
 int  Defgeneric_DecrementGenericBusyCount(int result)
 {
   if ( !g_Rules_ClearInProgressFlag )
-    --*(_DWORD *)(result + 20);
+    --*(_DWORD *)(uintptr_t)(result + 20);
   return result;
 }
 // 51A180: using guessed type int dword_51A180;
@@ -344,7 +344,7 @@ int  Defgeneric_DecrementGenericBusyCount(int result)
 //----- (004982D0) --------------------------------------------------------
 int  Defgeneric_IncrementGenericBusyCount(int result)
 {
-  ++*(_DWORD *)(result + 20);
+  ++*(_DWORD *)(uintptr_t)(result + 20);
   return result;
 }
 
@@ -375,22 +375,22 @@ signed int  Defgeneric_WriteMethodPPForms(signed int result, signed int logicalN
   theGeneric = result;
   logName = logicalName;
   methodIndex = 0;
-  if ( *(_DWORD *)(result + 32) )
+  if ( *(_DWORD *)(uintptr_t)(result + 32) )
   {
     methodOffset = 0;
     do
     {
-      result = methodOffset + *(_DWORD *)(theGeneric + 28);
-      ppForm = *(char **)(result + 36);
+      result = methodOffset + *(_DWORD *)(uintptr_t)(theGeneric + 28);
+      ppForm = *(char **)(uintptr_t)(result + 36);
       if ( ppForm )
       {
         Output_WriteLongString(logName, ppForm);
-        result = Output_Write(v7, (int)asc_50537C, v7);
+        result = Output_Write(v7, (int)(intptr_t)asc_50537C, v7);
       }
       ++methodIndex;
       methodOffset += 40;
     }
-    while ( methodIndex < *(_DWORD *)(theGeneric + 32) );
+    while ( methodIndex < *(_DWORD *)(uintptr_t)(theGeneric + 32) );
   }
   return result;
 }
@@ -414,50 +414,50 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
   int v13; // ecx
   signed int newArrayAddr; // [esp+0h] [ebp-14h]
 
-  methodAddr = 40 * methodIndex + *(_DWORD *)(theGeneric + 28);
-  if ( (*(_BYTE *)(methodAddr + 24) & 1) != 0 )
+  methodAddr = 40 * methodIndex + *(_DWORD *)(uintptr_t)(theGeneric + 28);
+  if ( (*(_BYTE *)(uintptr_t)(methodAddr + 24) & 1) != 0 )
   {
     Lexer_ErrorRecover(1);
-    Rules_PrintErrorID((int)aGenrccom, v9, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRemoveIm, v10);
+    Rules_PrintErrorID((int)(intptr_t)aGenrccom, v9, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotRemoveIm, v10);
     v11 = Rules_GetConstructNameString(theGeneric);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], v11, v12);
-    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__15, v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v11, v12);
+    return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__15, v13);
   }
   else
   {
     Defgeneric_DeleteMethodInfo(theGeneric, methodAddr);
-    methodCount = *(_DWORD *)(theGeneric + 32);
+    methodCount = *(_DWORD *)(uintptr_t)(theGeneric + 32);
     if ( methodCount == 1 )
     {
-      Mem_SmallBlockFree(*(_DWORD **)(theGeneric + 28), 40);
+      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theGeneric + 28), 40);
       result = theGeneric;
-      *(_DWORD *)(theGeneric + 32) = 0;
-      *(_DWORD *)(theGeneric + 28) = 0;
+      *(_DWORD *)(uintptr_t)(theGeneric + 32) = 0;
+      *(_DWORD *)(uintptr_t)(theGeneric + 28) = 0;
     }
     else
     {
-      *(_DWORD *)(theGeneric + 32) = methodCount - 1;
+      *(_DWORD *)(uintptr_t)(theGeneric + 32) = methodCount - 1;
       copyIndex = 0;
       newMethodArray = (char *)Mem_SmallBlockAlloc(40 * (methodCount - 1));
-      newArrayAddr = (signed int)newMethodArray;
-      if ( *(_DWORD *)(theGeneric + 32) )
+      newArrayAddr = (signed int)(intptr_t)newMethodArray;
+      if ( *(_DWORD *)(uintptr_t)(theGeneric + 32) )
       {
         destPtr = newMethodArray;
         do
         {
           if ( copyIndex == methodIndex )
             ++sourceIndex;
-          qmemcpy(destPtr, (const void *)(40 * sourceIndex + *(_DWORD *)(theGeneric + 28)), 0x28u);
+          qmemcpy(destPtr, (const void *)(uintptr_t)(40 * sourceIndex + *(_DWORD *)(uintptr_t)(theGeneric + 28)), 0x28u);
           ++copyIndex;
           destPtr += 40;
           ++sourceIndex;
         }
-        while ( copyIndex < *(_DWORD *)(theGeneric + 32) );
+        while ( copyIndex < *(_DWORD *)(uintptr_t)(theGeneric + 32) );
       }
-      Mem_SmallBlockFree(*(_DWORD **)(theGeneric + 28), 40 * (*(_DWORD *)(theGeneric + 32) + 1));
+      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theGeneric + 28), 40 * (*(_DWORD *)(uintptr_t)(theGeneric + 32) + 1));
       result = newArrayAddr;
-      *(_DWORD *)(theGeneric + 28) = newArrayAddr;
+      *(_DWORD *)(uintptr_t)(theGeneric + 28) = newArrayAddr;
     }
   }
   return result;
@@ -483,23 +483,23 @@ int __fastcall Defgeneric_PrintMethodsList(int logicalName, int theGeneric)
   char signatureBuffer[276]; // [esp+0h] [ebp-114h] BYREF
 
   methodIndex = 0;
-  if ( *(_DWORD *)(theGeneric + 32) )
+  if ( *(_DWORD *)(uintptr_t)(theGeneric + 32) )
   {
     methodOffset = 0;
     do
     {
       v5 = Rules_GetConstructNameString(theGeneric);
       Output_Write(v6, v5, v6);
-      Output_Write(v7, (int)asc_505344, v7);
-      Defgeneric_AppendMethodSignatureText(signatureBuffer, 255, v8, methodOffset + *(_DWORD *)(theGeneric + 28));
-      Output_Write(v9, (int)signatureBuffer, v9);
+      Output_Write(v7, (int)(intptr_t)asc_505344, v7);
+      Defgeneric_AppendMethodSignatureText(signatureBuffer, 255, v8, methodOffset + *(_DWORD *)(uintptr_t)(theGeneric + 28));
+      Output_Write(v9, (int)(intptr_t)signatureBuffer, v9);
       ++methodIndex;
-      Output_Write(v10, (int)asc_50537C, v10);
+      Output_Write(v10, (int)(intptr_t)asc_50537C, v10);
       methodOffset += 40;
     }
-    while ( methodIndex < *(_DWORD *)(theGeneric + 32) );
+    while ( methodIndex < *(_DWORD *)(uintptr_t)(theGeneric + 32) );
   }
-  return *(_DWORD *)(theGeneric + 32);
+  return *(_DWORD *)(uintptr_t)(theGeneric + 32);
 }
 // 4984F5: variable 'v6' is possibly undefined
 // 498501: variable 'v7' is possibly undefined
@@ -510,14 +510,14 @@ int __fastcall Defgeneric_PrintMethodsList(int logicalName, int theGeneric)
 //----- (00498550) --------------------------------------------------------
 signed int  Defgeneric_WatchAccessFunction(int newState, int argExprs, double context)
 {
-  return Rules_ApplyWatchFlagCommand(g_Clips_DefgenericConstructType, newState, (int)Defgeneric_GetTraceFlag, argExprs, context, (void (*)(void))Defgeneric_SetTraceFlag);
+  return Rules_ApplyWatchFlagCommand(g_Clips_DefgenericConstructType, newState, (int)(intptr_t)Defgeneric_GetTraceFlag, argExprs, context, (void (*)(void))Defgeneric_SetTraceFlag);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
 //----- (00498570) --------------------------------------------------------
 signed int  Defgeneric_WatchPrintFunction(int logicalName, int argExprs, double context)
 {
-  return Rules_ListWatchFlagStatus(g_Clips_DefgenericConstructType, logicalName, (int)Defgeneric_GetTraceFlag, argExprs, context, (void (*)(void))Defgeneric_SetTraceFlag);
+  return Rules_ListWatchFlagStatus(g_Clips_DefgenericConstructType, logicalName, (int)(intptr_t)Defgeneric_GetTraceFlag, argExprs, context, (void (*)(void))Defgeneric_SetTraceFlag);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -525,15 +525,15 @@ signed int  Defgeneric_WatchPrintFunction(int logicalName, int argExprs, double 
 signed int  Defgeneric_MethodsWatchAccessFunction(int newState, int argExprs, double context)
 {
   if ( newState )
-    return Defgeneric_WatchMethodsDispatch((int)aWatch_1, 0, 0, newState, 0, context, (void (*)(void))Defgeneric_SetMethodTraceFlag, argExprs);
+    return Defgeneric_WatchMethodsDispatch((int)(intptr_t)aWatch_1, 0, 0, newState, 0, context, (void (*)(void))Defgeneric_SetMethodTraceFlag, argExprs);
   else
-    return Defgeneric_WatchMethodsDispatch((int)aUnwatch_0, 0, 0, 0, 0, context, (void (*)(void))Defgeneric_SetMethodTraceFlag, argExprs);
+    return Defgeneric_WatchMethodsDispatch((int)(intptr_t)aUnwatch_0, 0, 0, 0, 0, context, (void (*)(void))Defgeneric_SetMethodTraceFlag, argExprs);
 }
 
 //----- (004985C0) --------------------------------------------------------
 signed int  Defgeneric_MethodsWatchPrintFunction(int logicalName, int argExprs, int a3, double context)
 {
-  return Defgeneric_WatchMethodsDispatch((int)aListWatchIte_1, logicalName, (void (*)(void))Method_PrintWatchStatusLine, -1, a3, context, 0, argExprs);
+  return Defgeneric_WatchMethodsDispatch((int)(intptr_t)aListWatchIte_1, logicalName, (void (*)(void))Method_PrintWatchStatusLine, -1, a3, context, 0, argExprs);
 }
 
 //----- (004985E0) --------------------------------------------------------
@@ -576,33 +576,33 @@ signed int  Defgeneric_WatchMethodsDispatch(
     {
       if ( !argExprs )
         return 1;
-      if ( Parser_ParseForm((__int16 *)argExprs, argData, v9, context) )
+      if ( Parser_ParseForm((__int16 *)(uintptr_t)argExprs, argData, v9, context) )
         return 0;
-      if ( argData[1] != 2 || (theGeneric = Symbol_LookupInModule((char **)g_Clips_DefgenericConstructType, *(_BYTE **)(argData[2] + 16), 1)) == 0 )
+      if ( argData[1] != 2 || (theGeneric = Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, *(_BYTE **)(uintptr_t)(argData[2] + 16), 1)) == 0 )
       {
-        Parser_ReportError(argIndex, (int)aGenericFunct_4);
+        Parser_ReportError(argIndex, (int)(intptr_t)aGenericFunct_4);
         return 0;
       }
-      nextExpr = *(_DWORD *)(argExprs + 10);
+      nextExpr = *(_DWORD *)(uintptr_t)(argExprs + 10);
       if ( !nextExpr )
         goto LABEL_20;
       ++argIndex;
       argExprs = nextExpr;
-      if ( Parser_ParseForm((__int16 *)nextExpr, indexArgData, theGeneric, context) )
+      if ( Parser_ParseForm((__int16 *)(uintptr_t)nextExpr, indexArgData, theGeneric, context) )
         return 0;
-      if ( indexArgData[1] != 1 || *(int *)(indexArgValue + 16) <= 0 || Method_FindByIndex(v20, i) == -1 )
+      if ( indexArgData[1] != 1 || *(int *)(uintptr_t)(indexArgValue + 16) <= 0 || Method_FindByIndex(v20, i) == -1 )
       {
-        Parser_ReportError(argIndex, (int)aMethodIndex);
+        Parser_ReportError(argIndex, (int)(intptr_t)aMethodIndex);
         return 0;
       }
-      i = *(_DWORD *)(indexArgValue + 16);
+      i = *(_DWORD *)(uintptr_t)(indexArgValue + 16);
       if ( i )
       {
         if ( traceFunc )
           ((void (__fastcall *)(int, int))traceFunc)(theGeneric, theGeneric);
         else
           ((void (__fastcall *)(int, int))savedPrintFunc)(theGeneric, theGeneric);
-        argExprs = *(_DWORD *)(nextExpr + 10);
+        argExprs = *(_DWORD *)(uintptr_t)(nextExpr + 10);
         ++argIndex;
       }
       else
@@ -615,7 +615,7 @@ LABEL_20:
           else
             ((void (__fastcall *)(int, int))savedPrintFunc)(v9, v9);
         }
-        argExprs = *(_DWORD *)(argExprs + 10);
+        argExprs = *(_DWORD *)(uintptr_t)(argExprs + 10);
         ++argIndex;
       }
     }
@@ -628,7 +628,7 @@ LABEL_20:
     {
       Name = Module_GetName(j);
       Output_Write(logicalName, Name, v12);
-      Output_Write(logicalName, (int)asc_5053F0, v13);
+      Output_Write(logicalName, (int)(intptr_t)asc_5053F0, v13);
     }
     for ( k = Class_Enum(0, g_DefgenericModuleItemIndex); k; k = Class_Enum(k, g_DefgenericModuleItemIndex) )
     {
@@ -640,7 +640,7 @@ LABEL_20:
         }
         else
         {
-          Output_Write(logicalName, (int)asc_5053F4, m);
+          Output_Write(logicalName, (int)(intptr_t)asc_5053F4, m);
           savedPrintFunc();
         }
       }
@@ -671,13 +671,13 @@ signed int  Method_PrintWatchStatusLine(int logicalName, int theGeneric, int met
 
   v5 = Rules_GetConstructNameString(theGeneric);
   Output_Write(logicalName, v5, methodIndex);
-  Output_Write(logicalName, (int)asc_505420, v6);
+  Output_Write(logicalName, (int)(intptr_t)asc_505420, v6);
   Defgeneric_FormatMethodRestrictionsString(signatureBuffer, 59, v7, theGeneric);
-  Output_Write(logicalName, (int)signatureBuffer, v8);
+  Output_Write(logicalName, (int)(intptr_t)signatureBuffer, v8);
   if ( Defgeneric_GetMethodTraceFlag(theGeneric, methodIndex) )
-    return Output_Write(logicalName, (int)aOn_3, v9);
+    return Output_Write(logicalName, (int)(intptr_t)aOn_3, v9);
   else
-    return Output_Write(logicalName, (int)aOff_3, v9);
+    return Output_Write(logicalName, (int)(intptr_t)aOff_3, v9);
 }
 // 498898: variable 'v6' is possibly undefined
 // 4988A4: variable 'v7' is possibly undefined
@@ -689,39 +689,39 @@ int Deffunction_InitConstructType(void)
 {
   int v0; // ecx
 
-  Rules_RegisterEvaluationHandler((int)&g_EvalDescriptor_Deffunction, 12);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDescriptor_Deffunction, 12);
   g_Clips_DeffunctionModuleItemIndex = Module_RegisterItem(
-                   (int)aDeffunction,
-                   (int)Deffunction_AllocateModule,
-                   (int)Deffunction_RecordAtIndex,
-                   (int)Deffunction_FreeModule,
-                   (int)Deffunction_WriteModuleItemReference,
-                   (int)Deffunction_FindByName);
-  g_ClipsDeffunctionConstructType = (int)Rules_RegisterConstructType(
-                        (int)aDeffunction,
-                        (int)aDeffunctions,
-                        (int)Deffunction_FindByName,
-                        (int)Deffunction_ParseConstruct,
-                        (int)Rules_GetConstructNameSymbol,
-                        (int)Rules_GetModuleConstructListHead,
-                        (int)Rules_GetConstructOwnerModule,
-                        (int)Deffunction_EnumNext,
-                        (int)Rules_SetConstructNextInModule,
-                        (int)Deffunction_IsDeletable,
-                        (int)Deffunction_Delete,
-                        (int)Deffunction_Free);
-  Rules_AddClearReadyFunction((int)aDeffunction, (int)Deffunction_IsClearReady, 0);
-  Module_RegisterImportExportConstructType((int)aDeffunction, 2);
-  Rules_AddSaveFunction((int)aDeffunctionHea, (int)Deffunction_SaveHeaders, 1000);
-  Rules_AddSaveFunction((int)aDeffunctions, (int)Deffunction_SaveBodies, 0);
-  Rules_RegisterHostFunction(aUndeffunction, 118, v0, (int)Deffunction_UndeffunctionCommand, (int)a11w_3);
-  Rules_RegisterHostFunction(aListDeffunctio, 118, (int)aListdeffunctio, (int)Deffunction_ListCommand, (int)a01_0);
-  Rules_RegisterHostFunction(aPpdeffunction, 118, (int)aPpdeffunctionc, (int)Deffunction_PPCommand, (int)a11w_3);
-  Rules_RegisterHostFunction(aGetDeffunction, 109, (int)aGetdeffunction, (int)Deffunction_GetListCommand, (int)a01_0);
-  Rules_RegisterHostFunction(aDeffunctionMod, 119, (int)aGetdeffuncti_0, (int)Deffunction_ModuleCommand, (int)a11w_3);
+                   (int)(intptr_t)aDeffunction,
+                   (int)(intptr_t)Deffunction_AllocateModule,
+                   (int)(intptr_t)Deffunction_RecordAtIndex,
+                   (int)(intptr_t)Deffunction_FreeModule,
+                   (int)(intptr_t)Deffunction_WriteModuleItemReference,
+                   (int)(intptr_t)Deffunction_FindByName);
+  g_ClipsDeffunctionConstructType = (int)(intptr_t)Rules_RegisterConstructType(
+                        (int)(intptr_t)aDeffunction,
+                        (int)(intptr_t)aDeffunctions,
+                        (int)(intptr_t)Deffunction_FindByName,
+                        (int)(intptr_t)Deffunction_ParseConstruct,
+                        (int)(intptr_t)Rules_GetConstructNameSymbol,
+                        (int)(intptr_t)Rules_GetModuleConstructListHead,
+                        (int)(intptr_t)Rules_GetConstructOwnerModule,
+                        (int)(intptr_t)Deffunction_EnumNext,
+                        (int)(intptr_t)Rules_SetConstructNextInModule,
+                        (int)(intptr_t)Deffunction_IsDeletable,
+                        (int)(intptr_t)Deffunction_Delete,
+                        (int)(intptr_t)Deffunction_Free);
+  Rules_AddClearReadyFunction((int)(intptr_t)aDeffunction, (int)(intptr_t)Deffunction_IsClearReady, 0);
+  Module_RegisterImportExportConstructType((int)(intptr_t)aDeffunction, 2);
+  Rules_AddSaveFunction((int)(intptr_t)aDeffunctionHea, (int)(intptr_t)Deffunction_SaveHeaders, 1000);
+  Rules_AddSaveFunction((int)(intptr_t)aDeffunctions, (int)(intptr_t)Deffunction_SaveBodies, 0);
+  Rules_RegisterHostFunction(aUndeffunction, 118, v0, (int)(intptr_t)Deffunction_UndeffunctionCommand, (int)(intptr_t)a11w_3);
+  Rules_RegisterHostFunction(aListDeffunctio, 118, (int)(intptr_t)aListdeffunctio, (int)(intptr_t)Deffunction_ListCommand, (int)(intptr_t)a01_0);
+  Rules_RegisterHostFunction(aPpdeffunction, 118, (int)(intptr_t)aPpdeffunctionc, (int)(intptr_t)Deffunction_PPCommand, (int)(intptr_t)a11w_3);
+  Rules_RegisterHostFunction(aGetDeffunction, 109, (int)(intptr_t)aGetdeffunction, (int)(intptr_t)Deffunction_GetListCommand, (int)(intptr_t)a01_0);
+  Rules_RegisterHostFunction(aDeffunctionMod, 119, (int)(intptr_t)aGetdeffuncti_0, (int)(intptr_t)Deffunction_ModuleCommand, (int)(intptr_t)a11w_3);
   Deffunction_RegisterBinaryItem();
   Deffunction_RegisterCodeGenerator();
-  return Rules_AddWatchItem((int)aDeffunctions, 0, 32, (int)&g_Rules_WatchDeffunctions, (int)Deffunction_SetWatchAll, (int)Deffunction_GetWatchAll);
+  return Rules_AddWatchItem((int)(intptr_t)aDeffunctions, 0, 32, (int)(intptr_t)&g_Rules_WatchDeffunctions, (int)(intptr_t)Deffunction_SetWatchAll, (int)(intptr_t)Deffunction_GetWatchAll);
 }
 // 4989CE: variable 'v0' is possibly undefined
 // 51AAE8: using guessed type int dword_51AAE8;
@@ -738,7 +738,7 @@ int  Deffunction_FindByName(_BYTE *deffunctionName, int a2)
 //----- (00498AB0) --------------------------------------------------------
 int  Deffunction_LookupByName(_BYTE *deffunctionName)
 {
-  return Symbol_LookupInModule((char **)g_ClipsDeffunctionConstructType, deffunctionName, 0);
+  return Symbol_LookupInModule((char **)(uintptr_t)g_ClipsDeffunctionConstructType, deffunctionName, 0);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -777,7 +777,7 @@ BOOL Deffunction_IsDeletable(void)
 {
   int v0; // edx
 
-  return !Rules_IsBloaded() && !*(_DWORD *)(v0 + 20) && !*(_DWORD *)(v0 + 24);
+  return !Rules_IsBloaded() && !*(_DWORD *)(uintptr_t)(v0 + 20) && !*(_DWORD *)(uintptr_t)(v0 + 24);
 }
 // 498B2C: variable 'v0' is possibly undefined
 
@@ -796,13 +796,13 @@ int  Deffunction_Free(int result)
   {
     v1 = Rules_GetConstructNameSymbol(result);
     Rules_DecrementSymbolCount(v1, v2);
-    AST_DeinstallNodeChain(*(__int16 **)(v3 + 30));
-    AST_FreePackedNodeChain(*(_DWORD *)(v4 + 30));
+    AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v3 + 30));
+    AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(v4 + 30));
     Rules_ReplaceConstructPPForm(v6, v5);
-    g_ClipsMemFreeListTemp = (int)v7;
-    *v7 = *(_DWORD *)(g_ClipsMemoryTable + 184);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v7;
+    *v7 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 184);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 184) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 184) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -818,21 +818,21 @@ int  Deffunction_Free(int result)
 //----- (00498BB0) --------------------------------------------------------
 int __thiscall Deffunction_UndeffunctionCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, g_ClipsDeffunctionConstructType);
+  return Rules_UndefconstructCommand((int)(intptr_t)this, g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498BD0) --------------------------------------------------------
 int __thiscall Deffunction_ModuleCommand(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)g_ClipsDeffunctionConstructType);
+  return Rules_GetConstructModuleCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498BF0) --------------------------------------------------------
 int __thiscall Deffunction_PPCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)g_ClipsDeffunctionConstructType);
+  return Rules_PPConstructCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -859,21 +859,21 @@ int  Deffunction_CheckArgumentCount(int result, int argCount)
 
   if ( result )
   {
-    minArgs = *(_DWORD *)(result + 34);
+    minArgs = *(_DWORD *)(uintptr_t)(result + 34);
     if ( argCount >= minArgs )
     {
-      if ( argCount <= minArgs || *(_DWORD *)(result + 38) == -1 )
+      if ( argCount <= minArgs || *(_DWORD *)(uintptr_t)(result + 38) == -1 )
         return 1;
     }
-    else if ( *(_DWORD *)(result + 38) == -1 )
+    else if ( *(_DWORD *)(uintptr_t)(result + 38) == -1 )
     {
-      expectedArgs = *(_DWORD *)(result + 34);
+      expectedArgs = *(_DWORD *)(uintptr_t)(result + 34);
 LABEL_5:
       deffunctionName = Rules_GetConstructNameString(result);
       Rules_ExpectedCountError(deffunctionName, expectedArgs);
       return 0;
     }
-    expectedArgs = *(_DWORD *)(result + 34);
+    expectedArgs = *(_DWORD *)(uintptr_t)(result + 34);
     goto LABEL_5;
   }
   return result;
@@ -885,8 +885,8 @@ int  Deffunction_CallForBooleanResult(int theDeffunction, _DWORD *returnValue, d
   int v3; // ecx
   int resultValue; // eax
 
-  Deffunction_CallDeffunction(theDeffunction, *(_DWORD **)(g_ClipsCurrentExpression + 6), returnValue, context);
-  if ( *(_DWORD *)(v3 + 4) == 2 && (resultValue = *(_DWORD *)(v3 + 8), resultValue == g_ClipsFalseSymbol) )
+  Deffunction_CallDeffunction(theDeffunction, *(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 6), returnValue, context);
+  if ( *(_DWORD *)(uintptr_t)(v3 + 4) == 2 && (resultValue = *(_DWORD *)(uintptr_t)(v3 + 8), resultValue == g_ClipsFalseSymbol) )
     return g_ClipsFalseSymbol ^ resultValue;
   else
     return 1;
@@ -899,7 +899,7 @@ int  Deffunction_CallForBooleanResult(int theDeffunction, _DWORD *returnValue, d
 int  Deffunction_DecrementBusyCount(int result)
 {
   if ( !g_Rules_ClearInProgressFlag )
-    --*(_DWORD *)(result + 20);
+    --*(_DWORD *)(uintptr_t)(result + 20);
   return result;
 }
 // 51A180: using guessed type int dword_51A180;
@@ -907,7 +907,7 @@ int  Deffunction_DecrementBusyCount(int result)
 //----- (00498D30) --------------------------------------------------------
 int  Deffunction_IncrementBusyCount(int result)
 {
-  ++*(_DWORD *)(result + 20);
+  ++*(_DWORD *)(uintptr_t)(result + 20);
   return result;
 }
 
@@ -916,11 +916,11 @@ signed int Deffunction_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeListHead;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeListHead;
   return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -933,10 +933,10 @@ int  Deffunction_FreeModule(int theModuleItem)
   _DWORD *freed_node; // ecx
 
   result = Rules_ClearModuleConstructList(theModuleItem, g_ClipsDeffunctionConstructType, theModuleItem);
-  freed_node = (_DWORD *)theModuleItem;
+  freed_node = (_DWORD *)(uintptr_t)theModuleItem;
   g_ClipsMemFreeListTemp = theModuleItem;
-  *freed_node = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+  *freed_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -976,7 +976,7 @@ signed int Deffunction_ClearAll(void)
     return 0;
   for ( i = Class_Enum(0, g_Clips_DeffunctionModuleItemIndex); i; i = Class_Enum(v5, g_Clips_DeffunctionModuleItemIndex) )
   {
-    if ( *(_DWORD *)(i + 24) )
+    if ( *(_DWORD *)(uintptr_t)(i + 24) )
     {
       nameString = Rules_GetConstructNameString(i);
       Deffunction_ReportCantDelete(nameString, v4);
@@ -984,11 +984,11 @@ signed int Deffunction_ClearAll(void)
     }
     else
     {
-      AST_DeinstallNodeChain(*(__int16 **)(i + 30));
-      v15 = *(_DWORD *)(v14 + 30);
-      *(_DWORD *)(v14 + 20) = v16;
+      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(i + 30));
+      v15 = *(_DWORD *)(uintptr_t)(v14 + 30);
+      *(_DWORD *)(uintptr_t)(v14 + 20) = v16;
       AST_FreePackedNodeChain(v15);
-      *(_DWORD *)(v5 + 30) = 0;
+      *(_DWORD *)(uintptr_t)(v5 + 30) = 0;
     }
   }
   theDeffunction = Class_Enum(0, g_Clips_DeffunctionModuleItemIndex);
@@ -999,19 +999,19 @@ signed int Deffunction_ClearAll(void)
     while ( 1 )
     {
       theDeffunction = Class_Enum(theDeffunction, g_Clips_DeffunctionModuleItemIndex);
-      if ( !*(_DWORD *)(v7 + 24) )
+      if ( !*(_DWORD *)(uintptr_t)(v7 + 24) )
         break;
 LABEL_11:
       if ( !theDeffunction )
         return clearSuccess;
     }
-    if ( *(_DWORD *)(v7 + 20) )
+    if ( *(_DWORD *)(uintptr_t)(v7 + 20) )
     {
-      Rules_PrintWarningID((int)aDffnxfun, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aDeffunction_6, v8);
+      Rules_PrintWarningID((int)(intptr_t)aDffnxfun, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aDeffunction_6, v8);
       v10 = Rules_GetConstructNameString(v9);
-      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], v10, v11);
-      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aOnlyPartiallyD, v12);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], v10, v11);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WWarning[0], (int)(intptr_t)aOnlyPartiallyD, v12);
       clearSuccess = 0;
       Rules_ReplaceConstructPPForm(v13, 0);
       goto LABEL_11;
@@ -1064,26 +1064,26 @@ int  Deffunction_WriteHeaderForm(int theDeffunction, int logicalName)
   result = Rules_GetModuleConstructListHead(theDeffunction);
   if ( result )
   {
-    Output_Write(logicalName, (int)aDeffunction_1, v6);
+    Output_Write(logicalName, (int)(intptr_t)aDeffunction_1, v6);
     nameString = Rules_GetConstructNameString(theDeffunction);
     Output_Write(logicalName, nameString, v8);
-    Output_Write(logicalName, (int)asc_5055B4, v9);
-    for ( i = 0; i < *(_DWORD *)(theDeffunction + 34); ++i )
+    Output_Write(logicalName, (int)(intptr_t)asc_5055B4, v9);
+    for ( i = 0; i < *(_DWORD *)(uintptr_t)(theDeffunction + 34); ++i )
     {
-      Output_Write(v10, (int)aQuestionP_DeffunctionArgumentPrefix, v10);
+      Output_Write(v10, (int)(intptr_t)aQuestionP_DeffunctionArgumentPrefix, v10);
       Rules_PrintLongInteger(v12, i);
-      if ( i != *(_DWORD *)(theDeffunction + 34) - 1 )
-        Output_Write(v10, (int)asc_5055BC, v10);
+      if ( i != *(_DWORD *)(uintptr_t)(theDeffunction + 34) - 1 )
+        Output_Write(v10, (int)(intptr_t)asc_5055BC, v10);
     }
-    if ( *(_DWORD *)(theDeffunction + 38) == -1 )
+    if ( *(_DWORD *)(uintptr_t)(theDeffunction + 38) == -1 )
     {
-      if ( *(_DWORD *)(theDeffunction + 34) )
-        Output_Write(v10, (int)asc_5055BC, v10);
-      return Output_Write(v10, (int)a_wildargs, v10);
+      if ( *(_DWORD *)(uintptr_t)(theDeffunction + 34) )
+        Output_Write(v10, (int)(intptr_t)asc_5055BC, v10);
+      return Output_Write(v10, (int)(intptr_t)a_wildargs, v10);
     }
     else
     {
-      return Output_Write(v10, (int)asc_5055D0, v10);
+      return Output_Write(v10, (int)(intptr_t)asc_5055D0, v10);
     }
   }
   return result;
@@ -1104,28 +1104,28 @@ int  Deffunction_SaveBodies(signed int logicalName)
 //----- (00498FF0) --------------------------------------------------------
 signed int  Deffunction_SetWatchAll(int newState, int argExprs, double context)
 {
-  return Rules_ApplyWatchFlagCommand(g_ClipsDeffunctionConstructType, newState, (int)Deffunction_GetWatchFlagField, argExprs, context, (void (*)(void))Deffunction_SetWatchFlagField);
+  return Rules_ApplyWatchFlagCommand(g_ClipsDeffunctionConstructType, newState, (int)(intptr_t)Deffunction_GetWatchFlagField, argExprs, context, (void (*)(void))Deffunction_SetWatchFlagField);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00499010) --------------------------------------------------------
 signed int  Deffunction_GetWatchAll(int logicalName, int argExprs, double context)
 {
-  return Rules_ListWatchFlagStatus(g_ClipsDeffunctionConstructType, logicalName, (int)Deffunction_GetWatchFlagField, argExprs, context, (void (*)(void))Deffunction_SetWatchFlagField);
+  return Rules_ListWatchFlagStatus(g_ClipsDeffunctionConstructType, logicalName, (int)(intptr_t)Deffunction_GetWatchFlagField, argExprs, context, (void (*)(void))Deffunction_SetWatchFlagField);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00499030) --------------------------------------------------------
 __int16  Deffunction_SetWatchFlagField(__int16 result, int theDeffunction)
 {
-  *(_WORD *)(theDeffunction + 28) = result;
+  *(_WORD *)(uintptr_t)(theDeffunction + 28) = result;
   return result;
 }
 
 //----- (00499040) --------------------------------------------------------
 int  Deffunction_GetWatchFlagField(int theDeffunction)
 {
-  return *(unsigned __int16 *)(theDeffunction + 28);
+  return *(unsigned __int16 *)(uintptr_t)(theDeffunction + 28);
 }
 
 //----- (00499050) --------------------------------------------------------
@@ -1137,25 +1137,25 @@ _DWORD *Defglobal_InitConstructType(void)
   g_Defglobal_PtrEntityRecord[4] = (int)(uintptr_t)Mem_CopyDataObjectRecord;
   g_Defglobal_PtrEntityRecord[6] = (int)(uintptr_t)Class_DecrementBusyCount;
   g_Defglobal_PtrEntityRecord[7] = (int)(uintptr_t)Class_IncrementBusyCount;
-  Rules_RegisterEvaluationHandler((int)&g_CLIPS_DefglobalEvalNodeDescriptor, 13);
-  Rules_RegisterEvaluationHandler((int)&g_Defglobal_PtrEntityRecord, 60);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_CLIPS_DefglobalEvalNodeDescriptor, 13);
+  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_Defglobal_PtrEntityRecord, 60);
   Defglobal_RegisterModuleItem();
   Defglobal_RegisterConstructCommands();
   Defglobal_RegisterResetGlobalsCommands();
   result = Rules_RegisterConstructType(
-             (int)aDefglobal,
-             (int)aDefglobals,
-             (int)Defglobal_FindByName,
-             (int)Defglobal_ParseDefglobalConstruct,
-             (int)Rules_GetConstructNameSymbol,
-             (int)Rules_GetModuleConstructListHead,
-             (int)Rules_GetConstructOwnerModule,
-             (int)Defglobal_EnumNext,
-             (int)Rules_SetConstructNextInModule,
-             (int)Defglobal_IsDeletable,
-             (int)Defglobal_DeleteConstructOrAll,
-             (int)Defglobal_Free);
-  g_ClipsDefglobalConstructType = (int)result;
+             (int)(intptr_t)aDefglobal,
+             (int)(intptr_t)aDefglobals,
+             (int)(intptr_t)Defglobal_FindByName,
+             (int)(intptr_t)Defglobal_ParseDefglobalConstruct,
+             (int)(intptr_t)Rules_GetConstructNameSymbol,
+             (int)(intptr_t)Rules_GetModuleConstructListHead,
+             (int)(intptr_t)Rules_GetConstructOwnerModule,
+             (int)(intptr_t)Defglobal_EnumNext,
+             (int)(intptr_t)Rules_SetConstructNextInModule,
+             (int)(intptr_t)Defglobal_IsDeletable,
+             (int)(intptr_t)Defglobal_DeleteConstructOrAll,
+             (int)(intptr_t)Defglobal_Free);
+  g_ClipsDefglobalConstructType = (int)(intptr_t)result;
   return result;
 }
 // 54E6B4: using guessed type int dword_54E6B4;
@@ -1164,13 +1164,13 @@ _DWORD *Defglobal_InitConstructType(void)
 int *Defglobal_RegisterModuleItem(void)
 {
   g_ClipsDefglobalModuleItemId = Module_RegisterItem(
-                   (int)aDefglobal,
-                   (int)Defglobal_AllocateModule,
-                   (int)Rules_GetDefglobalModulePointer,
-                   (int)Defglobal_FreeModule,
-                   (int)Defglobal_WriteModuleItemHeaderReference,
-                   (int)Defglobal_FindByName);
-  return Module_RegisterImportExportConstructType((int)aDefglobal, 2);
+                   (int)(intptr_t)aDefglobal,
+                   (int)(intptr_t)Defglobal_AllocateModule,
+                   (int)(intptr_t)Rules_GetDefglobalModulePointer,
+                   (int)(intptr_t)Defglobal_FreeModule,
+                   (int)(intptr_t)Defglobal_WriteModuleItemHeaderReference,
+                   (int)(intptr_t)Defglobal_FindByName);
+  return Module_RegisterImportExportConstructType((int)(intptr_t)aDefglobal, 2);
 }
 // 54E6B0: using guessed type int dword_54E6B0;
 
@@ -1179,11 +1179,11 @@ signed int Defglobal_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
-  g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeListHead;
+  g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeListHead;
   return g_ClipsMemFreeListTemp;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -1196,10 +1196,10 @@ int  Defglobal_FreeModule(int theModuleItem)
   _DWORD *freed_node; // ecx
 
   result = Rules_ClearModuleConstructList(theModuleItem, g_ClipsDefglobalConstructType, theModuleItem);
-  freed_node = (_DWORD *)theModuleItem;
+  freed_node = (_DWORD *)(uintptr_t)theModuleItem;
   g_ClipsMemFreeListTemp = theModuleItem;
-  *freed_node = *(_DWORD *)(g_ClipsMemoryTable + 48);
-  *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+  *freed_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -1225,7 +1225,7 @@ BOOL Defglobal_IsDeletable(void)
 {
   int v0; // edx
 
-  return !Rules_IsBloaded() && *(_DWORD *)(v0 + 24) == 0;
+  return !Rules_IsBloaded() && *(_DWORD *)(uintptr_t)(v0 + 24) == 0;
 }
 // 4991BC: variable 'v0' is possibly undefined
 
@@ -1240,14 +1240,14 @@ int  Defglobal_Free(int result)
   if ( result )
   {
     Rules_ValueDeinstall(result + 28, result);
-    if ( *(_DWORD *)(v1 + 32) == 4 )
-      Rules_ReturnMultifieldToPool(*(_DWORD **)(v1 + 36));
-    AST_RemoveHashedNodeChain(*(__int16 **)(v2 + 52), v2);
-    Rules_FreeConstructHeaderString(v3, (int)v3);
-    g_ClipsMemFreeListTemp = (int)v4;
-    *v4 = *(_DWORD *)(g_ClipsMemoryTable + 224);
+    if ( *(_DWORD *)(uintptr_t)(v1 + 32) == 4 )
+      Rules_ReturnMultifieldToPool(*(_DWORD **)(uintptr_t)(v1 + 36));
+    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v2 + 52), v2);
+    Rules_FreeConstructHeaderString(v3, (int)(intptr_t)v3);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v4;
+    *v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 224);
     result = g_ClipsMemFreeListTemp;
-    *(_DWORD *)(g_ClipsMemoryTable + 224) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 224) = g_ClipsMemFreeListTemp;
     g_Defglobal_ChangedFlag = 1;
   }
   return result;
@@ -1270,32 +1270,32 @@ int  Defglobal_SetValue(int theGlobal, _DWORD *vPtr, int resetVar, double contex
   record = theGlobal;
   if ( resetVar )
   {
-    Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(theGlobal + 52), vPtr, theGlobal, context);
+    Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(theGlobal + 52), vPtr, theGlobal, context);
     if ( g_ClipsEvaluationError )
     {
       vPtr[1] = 2;
       vPtr[2] = g_ClipsFalseSymbol;
     }
   }
-  if ( (*(_BYTE *)(record + 20) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(record + 20) & 1) != 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aDefglobalWatchPrefix, record);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)record + 16), record);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_5055F8, record);
-    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WTrace[0], (int)vPtr);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_505600, record);
-    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WTrace[0], record + 28);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_505608, record);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aDefglobalWatchPrefix, record);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)record + 16), record);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_5055F8, record);
+    Rules_PrintDataObject((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)vPtr);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_505600, record);
+    Rules_PrintDataObject((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], record + 28);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_505608, record);
   }
   Rules_ValueDeinstall(record + 28, record);
-  if ( *(_DWORD *)(record + 32) == 4 )
-    Rules_ReturnMultifieldToPool((_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(record + 36));
+  if ( *(_DWORD *)(uintptr_t)(record + 32) == 4 )
+    Rules_ReturnMultifieldToPool((_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(record + 36));
   new_type = vPtr[1];
-  *(_DWORD *)(record + 32) = new_type;
+  *(_DWORD *)(uintptr_t)(record + 32) = new_type;
   if ( new_type == 4 )
-    Rules_AssignMultifieldRangeCopy((_DWORD *)(record + 28), (int)vPtr);
+    Rules_AssignMultifieldRangeCopy((_DWORD *)(uintptr_t)(record + 28), (int)(intptr_t)vPtr);
   else
-    *(_DWORD *)(record + 36) = vPtr[2];
+    *(_DWORD *)(uintptr_t)(record + 36) = vPtr[2];
   Rules_ValueInstall(record + 28, record);
   result = g_ClipsCurrentEvaluationDepth;
   g_Defglobal_ChangedFlag = 1;
@@ -1317,12 +1317,12 @@ _DWORD *Defglobal_FindNextChanged(void)
   _DWORD *result; // eax
   int v1; // ecx
 
-  result = (_DWORD *)Class_Enum(0, g_ClipsDefglobalModuleItemId);
+  result = (_DWORD *)(uintptr_t)Class_Enum(0, g_ClipsDefglobalModuleItemId);
   if ( !result )
     return 0;
   while ( v1 != *result )
   {
-    result = (_DWORD *)Class_Enum((int)result, g_ClipsDefglobalModuleItemId);
+    result = (_DWORD *)(uintptr_t)Class_Enum((int)(intptr_t)result, g_ClipsDefglobalModuleItemId);
     if ( !result )
       return 0;
   }
@@ -1341,18 +1341,18 @@ signed int  Defglobal_EvaluateReference(int theValue, _DWORD *returnValue, int a
   _DWORD countBuf[5]; // [esp+0h] [ebp-14h] BYREF
 
   countBuf[3] = a3;
-  theGlobal = (_DWORD *)Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(theValue + 16), 1, 0);
+  theGlobal = (_DWORD *)(uintptr_t)Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(uintptr_t)(theValue + 16), 1, 0);
   if ( !theGlobal )
   {
-    Rules_PrintErrorID((int)aGlobldef, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGlobalVariab_0, v7);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(theValue + 16), v8);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUnbound_, v9);
+    Rules_PrintErrorID((int)(intptr_t)aGlobldef, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aGlobalVariab_0, v7);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(theValue + 16), v8);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsUnbound_, v9);
     goto LABEL_4;
   }
   if ( countBuf[0] > 1 )
   {
-    Rules_ReportAmbiguousReferenceError((int)aDefglobal, *(_DWORD *)(theValue + 16));
+    Rules_ReportAmbiguousReferenceError((int)(intptr_t)aDefglobal, *(_DWORD *)(uintptr_t)(theValue + 16));
 LABEL_4:
     returnValue[1] = 2;
     returnValue[2] = g_ClipsFalseSymbol;
@@ -1387,11 +1387,11 @@ signed int  Mem_CopyDataObjectRecord(_DWORD *src, _DWORD *dst)
   if ( valueType == 4 )
   {
     newMultifield = Rules_CreateEphemeralMultifield(fieldCount + 1);
-    copyLength = *(_DWORD *)(v6 + 16) + 1;
-    *(_DWORD *)(v6 + 8) = newMultifield;
+    copyLength = *(_DWORD *)(uintptr_t)(v6 + 16) + 1;
+    *(_DWORD *)(uintptr_t)(v6 + 8) = newMultifield;
     qmemcpy(
-      (void *)(*(_DWORD *)(v6 + 8) + 14),
-      (const void *)(6 * *(_DWORD *)(v8 + 40) + *(_DWORD *)(v8 + 36) + 14),
+      (void *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v6 + 8) + 14),
+      (const void *)(uintptr_t)(6 * *(_DWORD *)(uintptr_t)(v8 + 40) + *(_DWORD *)(uintptr_t)(v8 + 36) + 14),
       6 * copyLength);
   }
   return 1;
@@ -1403,7 +1403,7 @@ signed int  Mem_CopyDataObjectRecord(_DWORD *src, _DWORD *dst)
 int  Class_DecrementBusyCount(int result)
 {
   if ( !g_Rules_ClearInProgressFlag )
-    --*(_DWORD *)(result + 24);
+    --*(_DWORD *)(uintptr_t)(result + 24);
   return result;
 }
 // 51A180: using guessed type int dword_51A180;
@@ -1411,7 +1411,7 @@ int  Class_DecrementBusyCount(int result)
 //----- (004995A0) --------------------------------------------------------
 int  Class_IncrementBusyCount(int result)
 {
-  ++*(_DWORD *)(result + 24);
+  ++*(_DWORD *)(uintptr_t)(result + 24);
   return result;
 }
 
@@ -1426,9 +1426,9 @@ int Class_RefreshWatchFlags(void)
   result = Module_NextEnum(0);
   for ( i = result; result; i = result )
   {
-    for ( j = *(_BYTE **)(Module_GetItem(i, g_ClipsDefglobalModuleItemId) + 4); j; j = (_BYTE *)Class_Enum((int)j, g_ClipsDefglobalModuleItemId) )
+    for ( j = *(_BYTE **)(uintptr_t)(Module_GetItem(i, g_ClipsDefglobalModuleItemId) + 4); j; j = (_BYTE *)(uintptr_t)Class_Enum((int)(intptr_t)j, g_ClipsDefglobalModuleItemId) )
     {
-      if ( Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(*(_DWORD *)j + 16), 1, 0) )
+      if ( Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(uintptr_t)(*(_DWORD *)j + 16), 1, 0) )
         j[20] |= 2u;
       else
         j[20] &= ~2u;

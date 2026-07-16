@@ -24,13 +24,13 @@ int  Compiler_WriteDefinstancesConstructToCode(int theFile, int theDefinstances,
   char v16; // [esp+0h] [ebp-Ch]
   char v17; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(maxIndices, theDefinstances, theFile, (int)asc_50E3D0, v15);
-  itemNames = *(int **)(g_DefinstancesCodeGenItem + 20);
+  Output_WriteFormatted(maxIndices, theDefinstances, theFile, (int)(intptr_t)asc_50E3D0, v15);
+  itemNames = *(int **)(uintptr_t)(g_DefinstancesCodeGenItem + 20);
   constructPrefix = *itemNames;
   Rules_WriteConstructHeaderToCode(theFile, theDefinstances, v8, moduleCount, *itemNames, itemNames[1]);
-  Output_WriteFormatted(v10, v9, theFile, (int)a0_2, v16);
-  Rules_ExpressionToCode(theFile, *(__int16 **)(theDefinstances + 24), v11, constructPrefix);
-  return Output_WriteFormatted(v13, v12, theFile, (int)asc_50E3D4, v17);
+  Output_WriteFormatted(v10, v9, theFile, (int)(intptr_t)a0_2, v16);
+  Rules_ExpressionToCode(theFile, *(__int16 **)(uintptr_t)(theDefinstances + 24), v11, constructPrefix);
+  return Output_WriteFormatted(v13, v12, theFile, (int)(intptr_t)asc_50E3D4, v17);
 }
 // 4E03FD: variable 'v15' is possibly undefined
 // 4E041D: variable 'v8' is possibly undefined
@@ -56,7 +56,7 @@ char * Parser_ParseInstanceQueryNoAction(int top, int readSource)
   int queryInputToken[7]; // [esp+0h] [ebp-1Ch] BYREF
 
   queryInputToken[5] = readSource;
-  result = (char *)Parser_ParseInstanceQueryRestrictions(top, queryInputToken);
+  result = (char *)(uintptr_t)Parser_ParseInstanceQueryRestrictions(top, queryInputToken);
   insQuerySetVars = result;
   if ( result )
   {
@@ -68,22 +68,22 @@ char * Parser_ParseInstanceQueryNoAction(int top, int readSource)
       Parser_NextToken(v9, v8);
       if ( queryInputToken[0] == 101 )
       {
-        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(top + 6), 0, 1);
-        AST_Free((int)insQuerySetVars);
-        return (char *)top;
+        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(uintptr_t)(top + 6), 0, 1);
+        AST_Free((int)(intptr_t)insQuerySetVars);
+        return (char *)(uintptr_t)top;
       }
       else
       {
         Parser_ReportSyntaxError();
         AST_Free(top);
-        AST_Free((int)insQuerySetVars);
+        AST_Free((int)(intptr_t)insQuerySetVars);
         return 0;
       }
     }
     else
     {
       Rules_DecrementIndentDepth(3);
-      AST_Free((int)insQuerySetVars);
+      AST_Free((int)(intptr_t)insQuerySetVars);
       return 0;
     }
   }
@@ -111,35 +111,35 @@ char * Parser_ParseInstanceQueryAction(int top, int readSource)
   int queryInputToken[7]; // [esp+0h] [ebp-1Ch] BYREF
 
   queryInputToken[5] = readSource;
-  result = (char *)Parser_ParseInstanceQueryRestrictions(top, queryInputToken);
+  result = (char *)(uintptr_t)Parser_ParseInstanceQueryRestrictions(top, queryInputToken);
   insQuerySetVars = result;
   if ( result )
   {
     Rules_IncrementIndentDepth(3);
     AST_Append(v6, v5);
-    if ( Parser_ParseInstanceQueryTestExpression(v7, v7) && (AST_Append(v9, v8), Parser_ParseInstanceQueryActionExpression(top, v10, (int)insQuerySetVars)) )
+    if ( Parser_ParseInstanceQueryTestExpression(v7, v7) && (AST_Append(v9, v8), Parser_ParseInstanceQueryActionExpression(top, v10, (int)(intptr_t)insQuerySetVars)) )
     {
       Rules_DecrementIndentDepth(3);
       Parser_NextToken(v12, v11);
       if ( queryInputToken[0] == 101 )
       {
-        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(top + 6), 0, 1);
-        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(*(_DWORD *)(top + 6) + 10), 0, 0);
-        AST_Free((int)insQuerySetVars);
-        return (char *)top;
+        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(uintptr_t)(top + 6), 0, 1);
+        Parser_ReplaceInstanceQuerySlotReferences(insQuerySetVars, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(top + 6) + 10), 0, 0);
+        AST_Free((int)(intptr_t)insQuerySetVars);
+        return (char *)(uintptr_t)top;
       }
       else
       {
         Parser_ReportSyntaxError();
         AST_Free(top);
-        AST_Free((int)insQuerySetVars);
+        AST_Free((int)(intptr_t)insQuerySetVars);
         return 0;
       }
     }
     else
     {
       Rules_DecrementIndentDepth(3);
-      AST_Free((int)insQuerySetVars);
+      AST_Free((int)(intptr_t)insQuerySetVars);
       return 0;
     }
   }
@@ -190,32 +190,32 @@ int  Parser_ParseInstanceQueryRestrictions(int top, int *queryInputToken)
   Parser_NextToken(v6, v5);
   initialTokenType = *queryInputToken;
   lastOne = 0;
-  if ( initialTokenType == 100 && (Parser_NextToken(v7, (int)queryInputToken), *queryInputToken == 100) )
+  if ( initialTokenType == 100 && (Parser_NextToken(v7, (int)(intptr_t)queryInputToken), *queryInputToken == 100) )
   {
     while ( *queryInputToken == 100 )
     {
-      Parser_NextToken(v10, (int)queryInputToken);
+      Parser_NextToken(v10, (int)(intptr_t)queryInputToken);
       if ( *queryInputToken != 15 )
         goto LABEL_2;
       varScan = insQuerySetVars;
       if ( insQuerySetVars )
       {
-        while ( *(_DWORD *)(varScan + 2) != queryInputToken[1] )
+        while ( *(_DWORD *)(uintptr_t)(varScan + 2) != queryInputToken[1] )
         {
-          varScan = *(_DWORD *)(varScan + 10);
+          varScan = *(_DWORD *)(uintptr_t)(varScan + 10);
           if ( !varScan )
             goto LABEL_12;
         }
-        Rules_PrintErrorID((int)aInsqypsr, 1, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateIns_0, v20);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(top + 2) + 16), v21);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v22);
+        Rules_PrintErrorID((int)(intptr_t)aInsqypsr, 1, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDuplicateIns_0, v20);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(top + 2) + 16), v21);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__27, v22);
         goto LABEL_3;
       }
 LABEL_12:
       memberVarNode = AST_NewNode(15, queryInputToken[1]);
       if ( insQuerySetVars )
-        *(_DWORD *)(lastInsQuerySetVars + 10) = memberVarNode;
+        *(_DWORD *)(uintptr_t)(lastInsQuerySetVars + 10) = memberVarNode;
       else
         insQuerySetVars = memberVarNode;
       lastInsQuerySetVars = memberVarNode;
@@ -237,7 +237,7 @@ LABEL_12:
           break;
         if ( !Rules_ReplaceClassNameWithClassReference(nextClassExp) )
           goto LABEL_3;
-        *(_DWORD *)(lastClassExp + 10) = v23;
+        *(_DWORD *)(uintptr_t)(lastClassExp + 10) = v23;
         IO_OutWriteToken(asc_50E3F8);
         lastClassExp = v24;
       }
@@ -247,14 +247,14 @@ LABEL_12:
       IO_OutNewline();
       IO_OutWriteToken(asc_50E444);
       delimiterExp = AST_NewNode(2, g_InternedSym_Qds);
-      *(_DWORD *)(lastClassExp + 10) = delimiterExp;
-      if ( *(_DWORD *)(top + 6) )
-        *(_DWORD *)(lastOne + 10) = classExpChain;
+      *(_DWORD *)(uintptr_t)(lastClassExp + 10) = delimiterExp;
+      if ( *(_DWORD *)(uintptr_t)(top + 6) )
+        *(_DWORD *)(uintptr_t)(lastOne + 10) = classExpChain;
       else
-        *(_DWORD *)(top + 6) = classExpChain;
+        *(_DWORD *)(uintptr_t)(top + 6) = classExpChain;
       lastOne = delimiterExp;
       IO_OutWriteToken(asc_50E3F8);
-      Parser_NextToken(v19, (int)queryInputToken);
+      Parser_NextToken(v19, (int)(intptr_t)queryInputToken);
       classExpChain = 0;
     }
     if ( *queryInputToken != 101 )
@@ -296,13 +296,13 @@ signed int  Rules_ReplaceClassNameWithClassReference(int theExp)
   int *theDefclass; // eax
   int v4; // ecx
 
-  if ( *(_WORD *)theExp != 2 )
+  if ( *(_WORD *)(uintptr_t)theExp != 2 )
     return 1;
-  theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(*(_DWORD *)(theExp + 2) + 16));
+  theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theExp + 2) + 16));
   if ( theDefclass )
   {
-    *(_WORD *)theExp = 57;
-    *(_DWORD *)(theExp + 2) = theDefclass;
+    *(_WORD *)(uintptr_t)theExp = 57;
+    *(_DWORD *)(uintptr_t)(theExp + 2) = theDefclass;
     return 1;
   }
   else
@@ -333,8 +333,8 @@ signed int __fastcall Parser_ParseInstanceQueryTestExpression(int top, int readS
   queryTest = Parser_ParseArgument(readSource, v4, v5);
   if ( queryTest )
   {
-    *(_DWORD *)(queryTest + 10) = *(_DWORD *)(v7 + 6);
-    *(_DWORD *)(v7 + 6) = queryTest;
+    *(_DWORD *)(uintptr_t)(queryTest + 10) = *(_DWORD *)(uintptr_t)(v7 + 6);
+    *(_DWORD *)(uintptr_t)(v7 + 6) = queryTest;
     if ( Parser_LoopContextStackIsEmpty() )
     {
       Parser_SetLoopContextStack(oldBindList);
@@ -344,10 +344,10 @@ signed int __fastcall Parser_ParseInstanceQueryTestExpression(int top, int readS
     {
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(oldBindList);
-      Rules_PrintErrorID((int)aInsqypsr, v8, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBindsAreNotA_0, v9);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(v10 + 2) + 16), v10);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v11);
+      Rules_PrintErrorID((int)(intptr_t)aInsqypsr, v8, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aBindsAreNotA_0, v9);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(v10 + 2) + 16), v10);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__27, v11);
       AST_Free(v12);
       return 0;
     }
@@ -394,7 +394,7 @@ signed int  Parser_ParseInstanceQueryActionExpression(int top, int readSource, i
   oldBindList = Parser_GetLoopContextStack();
   Parser_SetLoopContextStack(0);
   g_ParserBreakContextFlag = 1;
-  g_ClipsParseReturnContext = *(_DWORD *)g_ClipsParseContextSaveStack;
+  g_ClipsParseReturnContext = *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack;
   queryAction = Parser_ParseArgument(readSource, parseError, v6);
   g_ParserBreakContextFlag = 0;
   if ( parseError[0] == 1 )
@@ -405,9 +405,9 @@ signed int  Parser_ParseInstanceQueryActionExpression(int top, int readSource, i
   }
   else if ( queryAction )
   {
-    *(_DWORD *)(queryAction + 10) = *(_DWORD *)(*(_DWORD *)(top + 6) + 10);
-    *(_DWORD *)(*(_DWORD *)(top + 6) + 10) = queryAction;
-    currentBind = (_DWORD *)Parser_GetLoopContextStack();
+    *(_DWORD *)(uintptr_t)(queryAction + 10) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(top + 6) + 10);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(top + 6) + 10) = queryAction;
+    currentBind = (_DWORD *)(uintptr_t)Parser_GetLoopContextStack();
     prevBind = 0;
     if ( currentBind )
     {
@@ -418,24 +418,24 @@ signed int  Parser_ParseInstanceQueryActionExpression(int top, int readSource, i
           break;
 LABEL_7:
         prevBind = currentBind;
-        currentBind = (_DWORD *)currentBind[2];
+        currentBind = (_DWORD *)(uintptr_t)currentBind[2];
         if ( !currentBind )
           goto LABEL_8;
       }
-      while ( *(_DWORD *)(setVar + 2) != *currentBind )
+      while ( *(_DWORD *)(uintptr_t)(setVar + 2) != *currentBind )
       {
-        setVar = *(_DWORD *)(setVar + 10);
+        setVar = *(_DWORD *)(uintptr_t)(setVar + 10);
         if ( !setVar )
           goto LABEL_7;
       }
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(oldBindList);
-      Rules_PrintErrorID((int)aInsqypsr, v13, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindIn, v14);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v15 + 2) + 16), v15);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_3, v16);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(top + 2) + 16), v17);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v18);
+      Rules_PrintErrorID((int)(intptr_t)aInsqypsr, v13, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotRebindIn, v14);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v15 + 2) + 16), v15);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunction_3, v16);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(top + 2) + 16), v17);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__27, v18);
       AST_Free(top);
       return 0;
     }
@@ -489,39 +489,39 @@ char * Parser_ReplaceInstanceQuerySlotReferences(char *varList, int bodyExp, sig
 
   Symbol = Rules_MakeSymbol(aQueryInstanc_0);
   result = (char *)Rules_MakeSymbol(aQueryInstanc_1);
-  querySlotSymbol = (int)result;
+  querySlotSymbol = (int)(intptr_t)result;
   if ( v9 )
   {
-    result = (char *)(v8 + 1);
+    result = (char *)(uintptr_t)(v8 + 1);
     nestedDepth = v8 + 1;
     do
     {
-      if ( *(_WORD *)bodyExp == 15 )
+      if ( *(_WORD *)(uintptr_t)bodyExp == 15 )
       {
         result = varList;
         for ( i = 0; result; ++i )
         {
-          if ( *(_DWORD *)(result + 2) == *(_DWORD *)(bodyExp + 2) )
+          if ( *(_DWORD *)(result + 2) == *(_DWORD *)(uintptr_t)(bodyExp + 2) )
             break;
           result = *(char **)(result + 10);
         }
         if ( result )
         {
-          *(_DWORD *)(bodyExp + 2) = Symbol;
-          *(_WORD *)bodyExp = 10;
+          *(_DWORD *)(uintptr_t)(bodyExp + 2) = Symbol;
+          *(_WORD *)(uintptr_t)bodyExp = 10;
           depthValue = Rules_AddIntegerValue(ndepth);
-          depthExpr = AST_NewNode(1, (int)depthValue);
+          depthExpr = AST_NewNode(1, (int)(intptr_t)depthValue);
           posnValue = Rules_AddIntegerValue(v13);
-          result = (char *)AST_NewNode(1, (int)posnValue);
-          *(_DWORD *)(depthExpr + 10) = result;
-          *(_DWORD *)(bodyExp + 6) = depthExpr;
+          result = (char *)(uintptr_t)AST_NewNode(1, (int)(intptr_t)posnValue);
+          *(_DWORD *)(uintptr_t)(depthExpr + 10) = result;
+          *(_DWORD *)(uintptr_t)(bodyExp + 6) = depthExpr;
         }
         else if ( sdirect == 1 )
         {
-          result = (char *)Parser_ResolveInstanceQuerySlotReference((int)varList, bodyExp, ndepth, querySlotSymbol);
+          result = (char *)Parser_ResolveInstanceQuerySlotReference((int)(intptr_t)varList, bodyExp, ndepth, querySlotSymbol);
         }
       }
-      if ( *(_DWORD *)(bodyExp + 6) )
+      if ( *(_DWORD *)(uintptr_t)(bodyExp + 6) )
       {
         if ( Rules_IsInstanceSetQueryFunctionCall(bodyExp) )
         {
@@ -533,9 +533,9 @@ char * Parser_ReplaceInstanceQuerySlotReferences(char *varList, int bodyExp, sig
           childSdirect = sdirect;
           childDepth = ndepth;
         }
-        result = (char *)Parser_ReplaceInstanceQuerySlotReferences((int)varList, *(_DWORD *)(bodyExp + 6), childDepth, childSdirect);
+        result = (char *)Parser_ReplaceInstanceQuerySlotReferences((int)(intptr_t)varList, *(_DWORD *)(uintptr_t)(bodyExp + 6), childDepth, childSdirect);
       }
-      bodyExp = *(_DWORD *)(bodyExp + 10);
+      bodyExp = *(_DWORD *)(uintptr_t)(bodyExp + 10);
     }
     while ( bodyExp );
   }
@@ -625,9 +625,9 @@ BOOL  Rules_IsInstanceSetQueryFunctionCall(int theExp)
   BOOL result; // eax
 
   result = 0;
-  if ( *(_WORD *)theExp == 10 )
+  if ( *(_WORD *)(uintptr_t)theExp == 10 )
   {
-    theFunction = *(int *( **)(int, double))(*(_DWORD *)(theExp + 2) + 9);
+    theFunction = *(int *( **)(int, double))(uintptr_t)(*(_DWORD *)(uintptr_t)(theExp + 2) + 9);
     if ( theFunction == InstanceQuery_AnyInstancep
       || (char *)theFunction == (char *)InstanceQuery_FindInstance
       || (char *)theFunction == (char *)InstanceQuery_FindAllInstances
@@ -646,7 +646,7 @@ int Compiler_RegisterObjectPatternNetworkCodeGenerator(void)
 {
   int result; // eax
 
-  result = Rules_AddCodeGeneratorItem((int)aObjectPatterns, 0, (int)Compiler_WriteObjectPatternNetworkSetupCode, (int)Compiler_AssignObjectPatternAndRuleCodeIndices, (int)Compiler_WriteObjectPatternsAndRulesToCode, 2);
+  result = Rules_AddCodeGeneratorItem((int)(intptr_t)aObjectPatterns, 0, (int)(intptr_t)Compiler_WriteObjectPatternNetworkSetupCode, (int)(intptr_t)Compiler_AssignObjectPatternAndRuleCodeIndices, (int)(intptr_t)Compiler_WriteObjectPatternsAndRulesToCode, 2);
   g_ObjectPatternNetworkCodeGenItem = result;
   return result;
 }
@@ -661,12 +661,12 @@ int  Compiler_WriteObjectPatternSecondaryIndexRef(int theNode, int theFile, int 
   if ( theNode )
     return Output_WriteFormatted(
              imageID,
-             *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
              theFile,
-             (int)aSD_DD_11,
-             *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
+             (int)(intptr_t)aSD_DD_11,
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
   else
-    return Output_WriteFormatted(imageID, theFile, theFile, (int)aNull_33, v4);
+    return Output_WriteFormatted(imageID, theFile, theFile, (int)(intptr_t)aNull_33, v4);
 }
 // 4E0DA0: variable 'v4' is possibly undefined
 // 54E91C: using guessed type int dword_54E91C;
@@ -680,7 +680,7 @@ int Compiler_AssignObjectPatternAndRuleCodeIndices(void)
   int result; // eax
   int j; // edx
 
-  patternNode = (_DWORD *)Rules_GetObjectPatternNetworkRoot();
+  patternNode = (_DWORD *)(uintptr_t)Rules_GetObjectPatternNetworkRoot();
   for ( i = 0; patternNode; i = v2 + 1 )
   {
     patternNode[9] = i;
@@ -689,8 +689,8 @@ int Compiler_AssignObjectPatternAndRuleCodeIndices(void)
   result = Rules_GetReactiveRuleList();
   for ( j = 0; result; ++j )
   {
-    *(_DWORD *)(result + 40) = j;
-    result = *(_DWORD *)(result + 36);
+    *(_DWORD *)(uintptr_t)(result + 40) = j;
+    result = *(_DWORD *)(uintptr_t)(result + 36);
   }
   return result;
 }
@@ -701,14 +701,14 @@ int Compiler_AssignObjectPatternAndRuleCodeIndices(void)
 _DWORD * Rules_GetNextObjectPatternNode(_DWORD *result)
 {
   if ( result[4] )
-    return (_DWORD *)result[4];
+    return (_DWORD *)(uintptr_t)result[4];
   while ( !result[7] )
   {
-    result = (_DWORD *)result[5];
+    result = (_DWORD *)(uintptr_t)result[5];
     if ( !result )
       return result;
   }
-  return (_DWORD *)result[7];
+  return (_DWORD *)(uintptr_t)result[7];
 }
 
 //----- (004E0E70) --------------------------------------------------------
@@ -727,18 +727,18 @@ int  Compiler_WriteObjectPatternNetworkSetupCode(int theFile, int maxIndices)
   {
     Rules_GetObjectPatternNetworkRoot();
     alphaListHead = Rules_GetReactiveRuleList();
-    Output_WriteFormatted(*(_DWORD *)(alphaListHead + 40), *(_DWORD *)(alphaListHead + 40), theFile, (int)aSetobjectnetwo, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20));
+    Output_WriteFormatted(*(_DWORD *)(uintptr_t)(alphaListHead + 40), *(_DWORD *)(uintptr_t)(alphaListHead + 40), theFile, (int)(intptr_t)aSetobjectnetwo, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20));
     return Output_WriteFormatted(
-             *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
              v6 % maxIndices,
              theFile,
-             (int)aSetobjectnet_0,
-             *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
+             (int)(intptr_t)aSetobjectnet_0,
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
   }
   else
   {
-    Output_WriteFormatted(v4, v3, theFile, (int)aSetobjectnet_1, v10);
-    return Output_WriteFormatted(v9, v8, theFile, (int)aSetobjectnet_2, v11);
+    Output_WriteFormatted(v4, v3, theFile, (int)(intptr_t)aSetobjectnet_1, v10);
+    return Output_WriteFormatted(v9, v8, theFile, (int)(intptr_t)aSetobjectnet_2, v11);
   }
 }
 // 4E0ED3: variable 'v6' is possibly undefined
@@ -771,9 +771,9 @@ int  Compiler_WriteObjectPatternValueIndexRef(int patternNode, int outFile, int 
   char v4; // [esp+0h] [ebp-8h]
 
   if ( patternNode )
-    return Output_WriteFormatted(maxIndices, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20), outFile, (int)aSD_DD_11, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20));
+    return Output_WriteFormatted(maxIndices, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20), outFile, (int)(intptr_t)aSD_DD_11, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20));
   else
-    return Output_WriteFormatted(maxIndices, outFile, outFile, (int)aNull_33, v4);
+    return Output_WriteFormatted(maxIndices, outFile, outFile, (int)(intptr_t)aNull_33, v4);
 }
 // 4E0F90: variable 'v4' is possibly undefined
 // 54E91C: using guessed type int dword_54E91C;
@@ -819,14 +819,14 @@ int  Compiler_WriteObjectPatternNodesToCode(const char *fileName, char a2, DWORD
 
   if ( !Rules_GetObjectPatternNetworkRoot() )
     return 1;
-  Output_WriteFormatted(v8, v7, headerFile, (int)aIncludeObjrt_0, a2);
+  Output_WriteFormatted(v8, v7, headerFile, (int)(intptr_t)aIncludeObjrt_0, a2);
   result = Rules_OpenConstructCodeFile(fileName, v10, version, fileID);
   patternFile = result;
   if ( result )
   {
     rootNode = Rules_GetObjectPatternNetworkRoot();
     v14 = 1;
-    patternNode = (_DWORD *)rootNode;
+    patternNode = (_DWORD *)(uintptr_t)rootNode;
     newHeader = 1;
     arrayVersion = 1;
     indexInFile = 1;
@@ -836,34 +836,34 @@ int  Compiler_WriteObjectPatternNodesToCode(const char *fileName, char a2, DWORD
       {
         if ( newHeader )
         {
-          Output_WriteFormatted(**(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20), arrayVersion, patternFile, (int)aObject_pattern, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20));
-          Output_WriteFormatted(headerFile, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20), headerFile, (int)aExternObject_p, **(_DWORD **)(g_ObjectPatternNetworkCodeGenItem + 20));
+          Output_WriteFormatted(**(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20), arrayVersion, patternFile, (int)(intptr_t)aObject_pattern, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20));
+          Output_WriteFormatted(headerFile, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20), headerFile, (int)(intptr_t)aExternObject_p, **(_DWORD **)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20));
           newHeader = 0;
         }
-        Output_WriteFormatted(v14, v13, patternFile, (int)a0UUUU0lU, (*patternNode & 2) != 0);
-        Rules_WriteExpressionRefToCode(patternFile, (__int16 *)patternNode[3], maxIndices, fileID);
-        Output_WriteFormatted(v16, patternFile, patternFile, (int)asc_50E654, v33);
+        Output_WriteFormatted(v14, v13, patternFile, (int)(intptr_t)a0UUUU0lU, (*patternNode & 2) != 0);
+        Rules_WriteExpressionRefToCode(patternFile, (__int16 *)(uintptr_t)patternNode[3], maxIndices, fileID);
+        Output_WriteFormatted(v16, patternFile, patternFile, (int)(intptr_t)asc_50E654, v33);
         Compiler_WriteObjectPatternValueIndexRef(patternNode[4], v17, maxIndices);
-        Output_WriteFormatted(v18, patternFile, patternFile, (int)asc_50E654, v34);
+        Output_WriteFormatted(v18, patternFile, patternFile, (int)(intptr_t)asc_50E654, v34);
         Compiler_WriteObjectPatternValueIndexRef(patternNode[5], v19, maxIndices);
-        Output_WriteFormatted(v20, patternFile, patternFile, (int)asc_50E654, v35);
+        Output_WriteFormatted(v20, patternFile, patternFile, (int)(intptr_t)asc_50E654, v35);
         Compiler_WriteObjectPatternValueIndexRef(patternNode[6], v21, maxIndices);
-        Output_WriteFormatted(v22, patternFile, patternFile, (int)asc_50E654, v36);
+        Output_WriteFormatted(v22, patternFile, patternFile, (int)(intptr_t)asc_50E654, v36);
         Compiler_WriteObjectPatternValueIndexRef(patternNode[7], v23, maxIndices);
-        Output_WriteFormatted(v24, patternFile, patternFile, (int)asc_50E654, v37);
+        Output_WriteFormatted(v24, patternFile, patternFile, (int)(intptr_t)asc_50E654, v37);
         Compiler_WriteObjectPatternSecondaryIndexRef(patternNode[8], v25, maxIndices);
-        Output_WriteFormatted(v27, v26, patternFile, (int)a0l_0, v38);
+        Output_WriteFormatted(v27, v26, patternFile, (int)(intptr_t)a0l_0, v38);
         nextNode = Rules_GetNextObjectPatternNode(patternNode);
         nextIndexInFile = indexInFile + 1;
         patternNode = nextNode;
         indexInFile = nextIndexInFile;
         if ( nextIndexInFile <= maxIndices && nextNode )
         {
-          Output_WriteFormatted(maxIndices, nextIndexInFile, patternFile, (int)asc_50E664, v39);
+          Output_WriteFormatted(maxIndices, nextIndexInFile, patternFile, (int)(intptr_t)asc_50E664, v39);
         }
         else
         {
-          Output_WriteFormatted(maxIndices, nextIndexInFile, patternFile, (int)asc_50E660, v39);
+          Output_WriteFormatted(maxIndices, nextIndexInFile, patternFile, (int)(intptr_t)asc_50E660, v39);
           fclose_(v30);
           indexInFile = 1;
           nextVersion = version + 1;
@@ -959,7 +959,7 @@ int  Compiler_WriteReactiveRulesToCode(const char *fileName, int constructFileID
   alphaFile = result;
   if ( result )
   {
-    alphaNode = (int *)Rules_GetReactiveRuleList();
+    alphaNode = (int *)(uintptr_t)Rules_GetReactiveRuleList();
     newHeader = 1;
     arrayVersion = 1;
     indexInFile = 1;
@@ -970,40 +970,40 @@ int  Compiler_WriteReactiveRulesToCode(const char *fileName, int constructFileID
       if ( newHeader )
       {
         Output_WriteFormatted(
-          *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
+          *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
           arrayVersion,
           alphaFile,
-          (int)aObject_alpha_n,
-          *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
+          (int)(intptr_t)aObject_alpha_n,
+          *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
         Output_WriteFormatted(
           savedHeaderFile,
-          *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
+          *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4),
           savedHeaderFile,
-          (int)aExternObject_a,
-          *(_DWORD *)(*(_DWORD *)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
+          (int)(intptr_t)aExternObject_a,
+          *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ObjectPatternNetworkCodeGenItem + 20) + 4));
         newHeader = 0;
       }
-      Output_WriteFormatted(v10, (int)alphaNode, alphaFile, (int)asc_50E6B4, savedHeaderFile);
+      Output_WriteFormatted(v10, (int)(intptr_t)alphaNode, alphaFile, (int)(intptr_t)asc_50E6B4, savedHeaderFile);
       Rules_PrintPatternNetworkNodeTrace(alphaFile, v12, maxIndices);
-      Output_WriteFormatted(v14, v13, alphaFile, (int)a0l_1, v30);
+      Output_WriteFormatted(v14, v13, alphaFile, (int)(intptr_t)a0l_1, v30);
       Compiler_WriteBitMapReference(alphaFile, alphaNode[5], v15);
-      Output_WriteFormatted(v17, v16, alphaFile, (int)asc_50E654, v31);
+      Output_WriteFormatted(v17, v16, alphaFile, (int)(intptr_t)asc_50E654, v31);
       Compiler_WriteBitMapReference(alphaFile, alphaNode[6], v18);
-      Output_WriteFormatted(v19, alphaFile, alphaFile, (int)asc_50E654, v32);
+      Output_WriteFormatted(v19, alphaFile, alphaFile, (int)(intptr_t)asc_50E654, v32);
       Compiler_WriteObjectPatternValueIndexRef(alphaNode[7], v20, maxIndices);
-      Output_WriteFormatted(v21, alphaFile, alphaFile, (int)asc_50E654, v33);
+      Output_WriteFormatted(v21, alphaFile, alphaFile, (int)(intptr_t)asc_50E654, v33);
       Compiler_WriteObjectPatternSecondaryIndexRef(alphaNode[8], v22, maxIndices);
-      Output_WriteFormatted(v23, alphaFile, alphaFile, (int)asc_50E654, v34);
+      Output_WriteFormatted(v23, alphaFile, alphaFile, (int)(intptr_t)asc_50E654, v34);
       Compiler_WriteObjectPatternSecondaryIndexRef(alphaNode[9], v24, maxIndices);
-      Output_WriteFormatted(v26, v25, alphaFile, (int)a0l_0, v35);
-      alphaNode = (int *)alphaNode[9];
+      Output_WriteFormatted(v26, v25, alphaFile, (int)(intptr_t)a0l_0, v35);
+      alphaNode = (int *)(uintptr_t)alphaNode[9];
       if ( ++indexInFile <= maxIndices && alphaNode )
       {
-        Output_WriteFormatted(v27, maxIndices, alphaFile, (int)asc_50E664, v36);
+        Output_WriteFormatted(v27, maxIndices, alphaFile, (int)(intptr_t)asc_50E664, v36);
       }
       else
       {
-        Output_WriteFormatted(v27, maxIndices, alphaFile, (int)asc_50E660, v36);
+        Output_WriteFormatted(v27, maxIndices, alphaFile, (int)(intptr_t)asc_50E660, v36);
         fclose_(1);
         indexInFile = v10;
         nextVersion = v10 + version;
@@ -1095,33 +1095,33 @@ signed int Rules_BuildMultifieldIndexTestNode(void)
   _DWORD bitmapBuffer[7]; // [esp+0h] [ebp-1Ch] BYREF
 
   Mem_AllocArray(bitmapBuffer, 4);
-  if ( (*(_BYTE *)(slotNode + 8) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(slotNode + 8) & 1) != 0 )
     BYTE1(bitmapBuffer[0]) |= 1u;
   else
     LOBYTE(bitmapBuffer[0]) |= 0x80u;
-  if ( (*(_BYTE *)(slotNode + 9) & 0x40) != 0 && (*(_WORD *)(slotNode + 10) & 0x1FC0) != 0 && (*(_DWORD *)(slotNode + 8) & 0x3F8000) != 0
-    || *(_DWORD *)(slotNode + 40) < 2u )
+  if ( (*(_BYTE *)(uintptr_t)(slotNode + 9) & 0x40) != 0 && (*(_WORD *)(uintptr_t)(slotNode + 10) & 0x1FC0) != 0 && (*(_DWORD *)(uintptr_t)(slotNode + 8) & 0x3F8000) != 0
+    || *(_DWORD *)(uintptr_t)(slotNode + 40) < 2u )
   {
     BYTE1(bitmapBuffer[0]) |= 2u;
     eqBitmapValue = Rules_AddBitmapValue(bitmapBuffer, 4);
     eqTestNode = AST_NewNode(50, eqBitmapValue);
-    *(_DWORD *)(eqTestNode + 6) = AST_NewNode(0, 0);
+    *(_DWORD *)(uintptr_t)(eqTestNode + 6) = AST_NewNode(0, 0);
     savedNodeType = *v8;
     *v8 = 15;
-    Rules_BuildSlotConstraintBitmapTestNode(0, (int)v8);
+    Rules_BuildSlotConstraintBitmapTestNode(0, (int)(intptr_t)v8);
     nodeValue = v10[1];
     *v10 = savedNodeType;
-    *(_DWORD *)(*(_DWORD *)(eqTestNode + 6) + 10) = AST_NewNode(savedNodeType, nodeValue);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(eqTestNode + 6) + 10) = AST_NewNode(savedNodeType, nodeValue);
     return eqTestNode;
   }
   else
   {
     bitmapFlags = bitmapBuffer[0] | 0x400;
-    if ( (*(_BYTE *)(slotNode + 9) & 0x40) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(slotNode + 9) & 0x40) != 0 )
     {
-      if ( (*(_DWORD *)(slotNode + 8) & 0x3F8000) != 0 )
+      if ( (*(_DWORD *)(uintptr_t)(slotNode + 8) & 0x3F8000) != 0 )
       {
-        fieldCountBits = *(_DWORD *)(slotNode + 12) << 18;
+        fieldCountBits = *(_DWORD *)(uintptr_t)(slotNode + 12) << 18;
         LOBYTE(bitmapBuffer[0]) &= 0x80u;
         bitmapBuffer[0] |= fieldCountBits >> 25;
       }
@@ -1129,7 +1129,7 @@ signed int Rules_BuildMultifieldIndexTestNode(void)
       {
         bitmapBuffer[0] |= 0x400u;
         LOWORD(bitmapFlags) = bitmapFlags & 0xFF80;
-        bitmapBuffer[0] = *(_DWORD *)(slotNode + 12) & 0x7F | bitmapFlags;
+        bitmapBuffer[0] = *(_DWORD *)(uintptr_t)(slotNode + 12) & 0x7F | bitmapFlags;
       }
     }
     else
@@ -1138,7 +1138,7 @@ signed int Rules_BuildMultifieldIndexTestNode(void)
     }
     bitmapValue = Rules_AddBitmapValue(bitmapBuffer, 4);
     lengthTestNode = AST_NewNode(50, bitmapValue);
-    *(_DWORD *)(lengthTestNode + 6) = AST_NewNode(*v4, v4[1]);
+    *(_DWORD *)(uintptr_t)(lengthTestNode + 6) = AST_NewNode(*v4, v4[1]);
     return lengthTestNode;
   }
 }
@@ -1187,26 +1187,26 @@ _DWORD * Rules_AppendFieldCardinalityBitmapTest(_DWORD *result)
   if ( (result[3] & 0x3F80) != 0 || *result == 15 || *result == 17 )
   {
     Mem_AllocArray(bitmapBuffer, 4);
-    if ( *(_DWORD *)slotNode == 16 || *(_DWORD *)slotNode == 18 || (*(_WORD *)(slotNode + 10) & 0x1FC0) != 0 )
+    if ( *(_DWORD *)(uintptr_t)slotNode == 16 || *(_DWORD *)(uintptr_t)slotNode == 18 || (*(_WORD *)(uintptr_t)(slotNode + 10) & 0x1FC0) != 0 )
       BYTE1(bitmapBuffer[0]) &= ~0x80u;
     else
       BYTE1(bitmapBuffer[0]) |= 0x80u;
-    if ( *(_DWORD *)slotNode == 15 || *(_DWORD *)slotNode == 17 )
+    if ( *(_DWORD *)(uintptr_t)slotNode == 15 || *(_DWORD *)(uintptr_t)slotNode == 17 )
     {
-      fieldCount = *(_DWORD *)(slotNode + 12) << 18 >> 25;
+      fieldCount = *(_DWORD *)(uintptr_t)(slotNode + 12) << 18 >> 25;
       LOWORD(bitmapBuffer[0]) &= 0x8000u;
       bitmapBuffer[0] |= ((_WORD)fieldCount + 1) & 0x7FFF;
     }
     else
     {
-      multifieldCount = *(_DWORD *)(slotNode + 12) << 18;
+      multifieldCount = *(_DWORD *)(uintptr_t)(slotNode + 12) << 18;
       LOWORD(bitmapBuffer[0]) &= 0x8000u;
       bitmapBuffer[0] |= (multifieldCount >> 25) & 0x7FFF;
     }
     bitmapValue = Rules_AddBitmapValue(bitmapBuffer, 4);
-    testNode = (_DWORD *)AST_NewNode(49, bitmapValue);
-    result = AST_MergeFieldAccessNodes(testNode, *(_DWORD **)(v5 + 52));
-    *(_DWORD *)(v6 + 52) = result;
+    testNode = (_DWORD *)(uintptr_t)AST_NewNode(49, bitmapValue);
+    result = AST_MergeFieldAccessNodes(testNode, *(_DWORD **)(uintptr_t)(v5 + 52));
+    *(_DWORD *)(uintptr_t)(v6 + 52) = result;
   }
   return result;
 }
@@ -1230,9 +1230,9 @@ _DWORD *__fastcall Rules_AppendMultifieldWildcardBitmapTest(int a1, int a2)
   HIBYTE(matchLengthBitmap[0]) |= 0x80u;
   matchLengthBitmap[0] &= 0x8000u;
   bitmapValue = Rules_AddBitmapValue(matchLengthBitmap, 4);
-  lengthTestNode = (_DWORD *)AST_NewNode(49, bitmapValue);
-  result = AST_MergeFieldAccessNodes(lengthTestNode, *(_DWORD **)(v4 + 52));
-  *(_DWORD *)(v6 + 52) = result;
+  lengthTestNode = (_DWORD *)(uintptr_t)AST_NewNode(49, bitmapValue);
+  result = AST_MergeFieldAccessNodes(lengthTestNode, *(_DWORD **)(uintptr_t)(v4 + 52));
+  *(_DWORD *)(uintptr_t)(v6 + 52) = result;
   return result;
 }
 // 4E173C: variable 'v4' is possibly undefined
@@ -1267,26 +1267,26 @@ int  Rules_BuildSlotConstraintBitmapTestNode(int joinTest, int theNode)
   Mem_AllocArray(&matchVar2Bitmap, 8);
   if ( joinTest )
   {
-    matchVar1Bitmap = ((unsigned __int8)*(_DWORD *)(theNode + 28) << 15) | matchVar1Bitmap & 0xFF807FFF;
-    v8 = *(_DWORD *)(theNode + 28);
+    matchVar1Bitmap = ((unsigned __int8)*(_DWORD *)(uintptr_t)(theNode + 28) << 15) | matchVar1Bitmap & 0xFF807FFF;
+    v8 = *(_DWORD *)(uintptr_t)(theNode + 28);
     LOBYTE(matchVar2BitmapHi) = 0;
     matchVar2BitmapHi |= (unsigned __int8)v8;
   }
-  if ( *(int *)(theNode + 40) < 0 )
+  if ( *(int *)(uintptr_t)(theNode + 40) < 0 )
   {
     HIBYTE(matchVar1Bitmap) |= 0x80u;
     if ( !joinTest )
       goto LABEL_13;
     goto LABEL_10;
   }
-  if ( (*(_BYTE *)(theNode + 12) & 0x7F) == 0
-    && (*(_WORD *)(theNode + 12) & 0x3F80) == 0
-    && (*(_DWORD *)(theNode + 8) & 0x3F8000) == 0
-    && (*(_WORD *)(theNode + 10) & 0x1FC0) == 0
-    && ((*(_BYTE *)(theNode + 9) & 0x40) == 0 || *(_DWORD *)theNode == 16 || *(_DWORD *)theNode == 18) )
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 12) & 0x7F) == 0
+    && (*(_WORD *)(uintptr_t)(theNode + 12) & 0x3F80) == 0
+    && (*(_DWORD *)(uintptr_t)(theNode + 8) & 0x3F8000) == 0
+    && (*(_WORD *)(uintptr_t)(theNode + 10) & 0x1FC0) == 0
+    && ((*(_BYTE *)(uintptr_t)(theNode + 9) & 0x40) == 0 || *(_DWORD *)(uintptr_t)theNode == 16 || *(_DWORD *)(uintptr_t)theNode == 18) )
   {
     matchVar1BitmapHi |= 1u;
-    v4 = *(_DWORD *)(theNode + 40);
+    v4 = *(_DWORD *)(uintptr_t)(theNode + 40);
     LOWORD(matchVar1Bitmap) = matchVar1Bitmap & 0x8000;
     matchVar1Bitmap |= v4 & 0x7FFF;
     if ( !joinTest )
@@ -1296,26 +1296,26 @@ LABEL_10:
 LABEL_11:
     *v3 = var1NodeType;
     result = Rules_AddBitmapValue(&matchVar1Bitmap, 8);
-    *(_DWORD *)(v7 + 2) = result;
+    *(_DWORD *)(uintptr_t)(v7 + 2) = result;
     return result;
   }
-  if ( (*(_DWORD *)theNode == 17 || *(_DWORD *)theNode == 15)
-    && ((*(_DWORD *)(theNode + 8) & 0x3F8000) == 0 || (*(_WORD *)(theNode + 10) & 0x1FC0) == 0) )
+  if ( (*(_DWORD *)(uintptr_t)theNode == 17 || *(_DWORD *)(uintptr_t)theNode == 15)
+    && ((*(_DWORD *)(uintptr_t)(theNode + 8) & 0x3F8000) == 0 || (*(_WORD *)(uintptr_t)(theNode + 10) & 0x1FC0) == 0) )
   {
-    v9 = *(_DWORD *)(theNode + 40);
+    v9 = *(_DWORD *)(uintptr_t)(theNode + 40);
     LOWORD(matchVar2Bitmap) = matchVar2Bitmap & 0x8000;
     matchVar2Bitmap |= v9 & 0x7FFF;
-    if ( (*(_DWORD *)(theNode + 8) & 0x3F8000) != 0 )
+    if ( (*(_DWORD *)(uintptr_t)(theNode + 8) & 0x3F8000) != 0 )
     {
       BYTE2(matchVar2Bitmap) |= 0x80u;
-      v17 = *(_DWORD *)(theNode + 12) << 18 >> 25;
+      v17 = *(_DWORD *)(uintptr_t)(theNode + 12) << 18 >> 25;
       HIBYTE(matchVar2Bitmap) &= 0x80u;
       v11 = (v17 & 0x7F) << 24;
     }
     else
     {
       BYTE1(matchVar2Bitmap) |= 0x80u;
-      v10 = *(_DWORD *)(theNode + 12);
+      v10 = *(_DWORD *)(uintptr_t)(theNode + 12);
       BYTE2(matchVar2Bitmap) &= 0x80u;
       v11 = (v10 & 0x7F) << 16;
     }
@@ -1326,14 +1326,14 @@ LABEL_11:
       var2NodeType = 46;
     goto LABEL_22;
   }
-  if ( *(_DWORD *)theNode != 18 && *(_DWORD *)theNode != 16
-    || (*(_DWORD *)(theNode + 8) & 0x3F8000) != 0
-    || (*(_WORD *)(theNode + 10) & 0x1FC0) != 0 )
+  if ( *(_DWORD *)(uintptr_t)theNode != 18 && *(_DWORD *)(uintptr_t)theNode != 16
+    || (*(_DWORD *)(uintptr_t)(theNode + 8) & 0x3F8000) != 0
+    || (*(_WORD *)(uintptr_t)(theNode + 10) & 0x1FC0) != 0 )
   {
-    v18 = *(_DWORD *)(theNode + 40);
+    v18 = *(_DWORD *)(uintptr_t)(theNode + 40);
     LOWORD(matchVar1Bitmap) = matchVar1Bitmap & 0x8000;
     matchVar1Bitmap |= v18 & 0x7FFF;
-    v19 = (unsigned __int8)*(_DWORD *)(theNode + 32);
+    v19 = (unsigned __int8)*(_DWORD *)(uintptr_t)(theNode + 32);
     HIWORD(matchVar1Bitmap) &= 0x807Fu;
     matchVar1Bitmap |= v19 << 23;
     if ( joinTest )
@@ -1342,13 +1342,13 @@ LABEL_13:
     var1NodeType = 45;
     goto LABEL_11;
   }
-  v14 = *(_DWORD *)(theNode + 40);
+  v14 = *(_DWORD *)(uintptr_t)(theNode + 40);
   LOWORD(matchVar2Bitmap) = matchVar2Bitmap & 0x8000;
   matchVar2Bitmap |= v14 & 0x7FFF | 0x808000;
-  v15 = *(_DWORD *)(theNode + 12) & 0x7F;
+  v15 = *(_DWORD *)(uintptr_t)(theNode + 12) & 0x7F;
   BYTE2(matchVar2Bitmap) &= 0x80u;
   matchVar2Bitmap |= v15 << 16;
-  v16 = *(_DWORD *)(theNode + 12) << 18 >> 25;
+  v16 = *(_DWORD *)(uintptr_t)(theNode + 12) << 18 >> 25;
   HIBYTE(matchVar2Bitmap) &= 0x80u;
   matchVar2Bitmap |= (v16 & 0x7F) << 24;
   if ( joinTest )
@@ -1358,7 +1358,7 @@ LABEL_13:
 LABEL_22:
   *v3 = var2NodeType;
   result = Rules_AddBitmapValue(&matchVar2Bitmap, 8);
-  *(_DWORD *)(v13 + 2) = result;
+  *(_DWORD *)(uintptr_t)(v13 + 2) = result;
   return result;
 }
 // 4E17EA: variable 'v3' is possibly undefined
@@ -1368,12 +1368,12 @@ LABEL_22:
 //----- (004E1A40) --------------------------------------------------------
 BOOL  Rules_IsMultiplyConstrainedSlot(int theNode)
 {
-  return *(_DWORD *)theNode != 18
-      && *(_DWORD *)theNode != 16
-      && *(int *)(theNode + 40) >= 2
-      && ((*(_BYTE *)(theNode + 9) & 0x40) == 0
-       || (*(_BYTE *)(theNode + 8) & 4) == 0
-       && ((*(_DWORD *)(theNode + 8) & 0x3F8000) == 0 || (*(_WORD *)(theNode + 10) & 0x1FC0) == 0));
+  return *(_DWORD *)(uintptr_t)theNode != 18
+      && *(_DWORD *)(uintptr_t)theNode != 16
+      && *(int *)(uintptr_t)(theNode + 40) >= 2
+      && ((*(_BYTE *)(uintptr_t)(theNode + 9) & 0x40) == 0
+       || (*(_BYTE *)(uintptr_t)(theNode + 8) & 4) == 0
+       && ((*(_DWORD *)(uintptr_t)(theNode + 8) & 0x3F8000) == 0 || (*(_WORD *)(uintptr_t)(theNode + 10) & 0x1FC0) == 0));
 }
 // 4E1A53: simplified comparisons for 'ebx.4': <0 || ==0 became <1
 // 4E1A53: simplified comparisons for 'ebx.4': <1 || ==1 became <2

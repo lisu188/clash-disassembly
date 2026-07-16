@@ -29,15 +29,15 @@ signed int  Dribble_PrintRouter(int logicalName, unsigned __int8 *str, int a3)
     sprintf_(
       timestampBuffer,
       "%03d:%02d:%02d ",
-      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr / 0x1770u % 0x3C,
-      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr / 0x64u % 0x3C,
-      *(_DWORD *)g_CLIPS_DribbleClockCentisecsPtr % 0x64u);
+      *(_DWORD *)(uintptr_t)g_CLIPS_DribbleClockCentisecsPtr / 0x1770u % 0x3C,
+      *(_DWORD *)(uintptr_t)g_CLIPS_DribbleClockCentisecsPtr / 0x64u % 0x3C,
+      *(_DWORD *)(uintptr_t)g_CLIPS_DribbleClockCentisecsPtr % 0x64u);
     timestampIndex = 0;
     if ( timestampBuffer[0] )
     {
       do
       {
-        Dribble_AppendChar((char *)(unsigned __int8)timestampBuffer[timestampIndex], timestampIndex, (int)v4);
+        Dribble_AppendChar((char *)(uintptr_t)(unsigned __int8)timestampBuffer[timestampIndex], timestampIndex, (int)(intptr_t)v4);
         v12 = timestampBuffer[v11 + 1];
         timestampIndex = v11 + 1;
       }
@@ -50,7 +50,7 @@ signed int  Dribble_PrintRouter(int logicalName, unsigned __int8 *str, int a3)
   {
     do
     {
-      Dribble_AppendChar((char *)*charPtr, (int)charPtr, (int)v4);
+      Dribble_AppendChar((char *)(uintptr_t)*charPtr, (int)(intptr_t)charPtr, (int)(intptr_t)v4);
       if ( *v6 == 10 )
         g_Dribble_LineStartNeedsTimestamp = 1;
       v7 = v6[1];
@@ -58,9 +58,9 @@ signed int  Dribble_PrintRouter(int logicalName, unsigned __int8 *str, int a3)
     }
     while ( v7 );
   }
-  IO_DeactivateRouter((int)aDribble);
+  IO_DeactivateRouter((int)(intptr_t)aDribble);
   Output_Write(logicalName, v8, v8);
-  IO_ActivateRouter((int)aDribble);
+  IO_ActivateRouter((int)(intptr_t)aDribble);
   return 1;
 }
 // 49B545: variable 'v4' is possibly undefined
@@ -80,10 +80,10 @@ int Dribble_GetcRouter(void)
   int v3; // ecx
   int v4; // edx
 
-  IO_DeactivateRouter((int)aDribble);
+  IO_DeactivateRouter((int)(intptr_t)aDribble);
   Lexer_PeekChar(v0, v1);
-  IO_ActivateRouter((int)aDribble);
-  Dribble_AppendChar(v2, (int)v2, v3);
+  IO_ActivateRouter((int)(intptr_t)aDribble);
+  Dribble_AppendChar(v2, (int)(intptr_t)v2, v3);
   return v4;
 }
 // 49B61F: variable 'v0' is possibly undefined
@@ -100,31 +100,31 @@ char * Dribble_AppendChar(char *result, int a2, int a3)
   {
     if ( g_DribbleBufferLength > 0 )
     {
-      Output_WriteFormatted(g_DribbleFileHandle, g_Clips_DribbleBuffer, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
-      result = (char *)g_Clips_DribbleBuffer;
+      Output_WriteFormatted(g_DribbleFileHandle, g_Clips_DribbleBuffer, g_DribbleFileHandle, (int)(intptr_t)aS_3, g_Clips_DribbleBuffer);
+      result = (char *)(uintptr_t)g_Clips_DribbleBuffer;
       g_DribbleBufferLength = 0;
-      *(_BYTE *)g_Clips_DribbleBuffer = 0;
+      *(_BYTE *)(uintptr_t)g_Clips_DribbleBuffer = 0;
     }
   }
   else if ( g_Lexer_PendingLineCharIndex >= 0 )
   {
     result = Str_AppendCharEscaping(
-               (int)result,
-               (char *)g_Clips_DribbleBuffer,
+               (int)(intptr_t)result,
+               (char *)(uintptr_t)g_Clips_DribbleBuffer,
                (unsigned int *)&g_Dribble_BufferCapacity,
                &g_DribbleBufferLength,
                g_Dribble_BufferCapacity + 120);
-    g_Clips_DribbleBuffer = (int)result;
+    g_Clips_DribbleBuffer = (int)(intptr_t)result;
   }
   else
   {
     if ( g_DribbleBufferLength > 0 )
     {
-      Output_WriteFormatted(a3, a2, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
+      Output_WriteFormatted(a3, a2, g_DribbleFileHandle, (int)(intptr_t)aS_3, g_Clips_DribbleBuffer);
       g_DribbleBufferLength = 0;
-      *(_BYTE *)g_Clips_DribbleBuffer = 0;
+      *(_BYTE *)(uintptr_t)g_Clips_DribbleBuffer = 0;
     }
-    return (char *)CRT_PutcToStream(a3, g_DribbleFileHandle);
+    return (char *)(uintptr_t)CRT_PutcToStream(a3, g_DribbleFileHandle);
   }
   return result;
 }
@@ -145,10 +145,10 @@ int Dribble_UngetcRouter(void)
 
   if ( g_DribbleBufferLength > 0 )
     --g_DribbleBufferLength;
-  *(_BYTE *)(g_DribbleBufferLength + g_Clips_DribbleBuffer) = 0;
-  IO_DeactivateRouter((int)aDribble);
+  *(_BYTE *)(uintptr_t)(g_DribbleBufferLength + g_Clips_DribbleBuffer) = 0;
+  IO_DeactivateRouter((int)(intptr_t)aDribble);
   Lexer_SkipChar(v1, v0, v1);
-  IO_ActivateRouter((int)aDribble);
+  IO_ActivateRouter((int)(intptr_t)aDribble);
   return v2;
 }
 // 49B743: variable 'v1' is possibly undefined
@@ -165,7 +165,7 @@ int __fastcall Dribble_ExitRouter(int a1, int a2)
   if ( g_DribbleBufferLength > 0 )
   {
     v3 = a1;
-    Output_WriteFormatted(g_Clips_DribbleBuffer, a2, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
+    Output_WriteFormatted(g_Clips_DribbleBuffer, a2, g_DribbleFileHandle, (int)(intptr_t)aS_3, g_Clips_DribbleBuffer);
     a1 = v3;
   }
   if ( g_DribbleFileHandle )
@@ -185,9 +185,9 @@ const CHAR * Rules_DribbleOnCommand(DWORD a1, double context)
 
   if ( Lexer_TokenExpect(1) == -1 )
     return 0;
-  result = (const CHAR *)Rules_GetFileNameArg(1, v2, context);
+  result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
-    return (const CHAR *)Dribble_TurnOn(result, a1);
+    return (const CHAR *)(uintptr_t)Dribble_TurnOn(result, a1);
   return result;
 }
 // 49B7D7: variable 'v2' is possibly undefined
@@ -201,10 +201,10 @@ signed int  Dribble_TurnOn(const CHAR *fileName, DWORD a2)
   v2 = fileName;
   if ( g_DribbleFileHandle )
     Dribble_TurnOff();
-  g_DribbleFileHandle = IO_FOpen(v2, (unsigned __int8 *)aW_3, (int)v2, a2);
+  g_DribbleFileHandle = IO_FOpen(v2, (unsigned __int8 *)aW_3, (int)(intptr_t)v2, a2);
   if ( g_DribbleFileHandle )
   {
-    IO_AddRouter((int)aDribble, 40, (int)Dribble_PrintRouter, (int)Dribble_QueryRouter, (int)Dribble_GetcRouter, (int)Dribble_UngetcRouter, (int)Dribble_ExitRouter);
+    IO_AddRouter((int)(intptr_t)aDribble, 40, (int)(intptr_t)Dribble_PrintRouter, (int)(intptr_t)Dribble_QueryRouter, (int)(intptr_t)Dribble_GetcRouter, (int)(intptr_t)Dribble_UngetcRouter, (int)(intptr_t)Dribble_ExitRouter);
     g_DribbleBufferLength = 0;
     if ( g_Dribble_StatusChangeCallback )
       g_Dribble_StatusChangeCallback(0);
@@ -248,15 +248,15 @@ signed int Dribble_TurnOff(void)
   if ( !g_DribbleFileHandle )
     goto LABEL_7;
   if ( g_DribbleBufferLength > 0 )
-    Output_WriteFormatted(v1, (int)statusCallback, g_DribbleFileHandle, (int)aS_3, g_Clips_DribbleBuffer);
-  IO_DeleteRouter((int)aDribble);
+    Output_WriteFormatted(v1, (int)(intptr_t)statusCallback, g_DribbleFileHandle, (int)(intptr_t)aS_3, g_Clips_DribbleBuffer);
+  IO_DeleteRouter((int)(intptr_t)aDribble);
   if ( !fclose_(v2) )
 LABEL_7:
     v3 = 1;
   g_DribbleFileHandle = 0;
   if ( g_Clips_DribbleBuffer )
   {
-    Mem_SmallBlockFree((_DWORD *)g_Clips_DribbleBuffer, g_Dribble_BufferCapacity);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_Clips_DribbleBuffer, g_Dribble_BufferCapacity);
     g_Clips_DribbleBuffer = 0;
   }
   result = v3;
@@ -311,12 +311,12 @@ int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
     }
     else
     {
-      remainingChars = *(_DWORD *)(g_CurrentStringInputSource + 4);
-      if ( remainingChars > 0 && (returnOnEOF = **(unsigned __int8 **)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
+      remainingChars = *(_DWORD *)(uintptr_t)(g_CurrentStringInputSource + 4);
+      if ( remainingChars > 0 && (returnOnEOF = **(unsigned __int8 **)(uintptr_t)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
       {
-        *(_DWORD *)(g_CurrentStringInputSource + 4) = remainingChars - 1;
+        *(_DWORD *)(uintptr_t)(g_CurrentStringInputSource + 4) = remainingChars - 1;
         returnOnEOF = g_CurrentStringInputSource;
-        charPtr = (unsigned __int8 *)(*(_DWORD *)g_CurrentStringInputSource)++;
+        charPtr = (unsigned __int8 *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_CurrentStringInputSource)++;
         ch = *charPtr;
       }
       else
@@ -328,7 +328,7 @@ int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
     if ( ch == -1 )
     {
       if ( g_BatchEchoBufferLength > 0 )
-        Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
+        Output_Write((int)(intptr_t)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
       closeStatus = Rules_CloseBatch();
     }
   }
@@ -336,8 +336,8 @@ int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
   if ( rv == -1 )
   {
     if ( g_BatchEchoBufferLength > 0 )
-      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
-    IO_DeleteRouter((int)aBatch);
+      Output_Write((int)(intptr_t)aStdout_2, g_ClipsBatchEchoLineBuffer, closeStatus);
+    IO_DeleteRouter((int)(intptr_t)aBatch);
     Rules_CloseBatch();
     if ( returnOnEofFlag == 1 )
       return -1;
@@ -348,20 +348,20 @@ int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
   {
     appended = Str_AppendCharEscaping(
                  (unsigned __int8)rv,
-                 (char *)g_ClipsBatchEchoLineBuffer,
+                 (char *)(uintptr_t)g_ClipsBatchEchoLineBuffer,
                  (unsigned int *)&g_ClipsBatchLineBufferCapacity,
                  &g_BatchEchoBufferLength,
                  g_ClipsBatchLineBufferCapacity + 120);
-    g_ClipsBatchEchoLineBuffer = (int)appended;
+    g_ClipsBatchEchoLineBuffer = (int)(intptr_t)appended;
     if ( (_BYTE)rv == 10 )
     {
-      Output_Write((int)aStdout_2, (int)appended, v11);
+      Output_Write((int)(intptr_t)aStdout_2, (int)(intptr_t)appended, v11);
       g_BatchEchoBufferLength = 0;
       if ( g_ClipsBatchEchoLineBuffer )
       {
         if ( g_ClipsBatchLineBufferCapacity > 120 )
         {
-          Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+          Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
           g_ClipsBatchLineBufferCapacity = 0;
           g_ClipsBatchEchoLineBuffer = 0;
         }
@@ -387,7 +387,7 @@ signed int  Rules_BatchUngetChar(signed int ch, int logicalName)
   if ( g_BatchEchoBufferLength > 0 )
     logicalName = --g_BatchEchoBufferLength;
   if ( g_ClipsBatchEchoLineBuffer )
-    *(_BYTE *)(g_ClipsBatchEchoLineBuffer + g_BatchEchoBufferLength) = 0;
+    *(_BYTE *)(uintptr_t)(g_ClipsBatchEchoLineBuffer + g_BatchEchoBufferLength) = 0;
   if ( g_ClipsBatchSourceIsStringFlag )
     return Lexer_SkipChar(ch, g_CurrentStringInputSource, logicalName);
   else
@@ -414,9 +414,9 @@ const CHAR * Rules_BatchCommand(DWORD a1, double context)
 
   if ( Lexer_TokenExpect(1) == -1 )
     return 0;
-  result = (const CHAR *)Rules_GetFileNameArg(1, v2, context);
+  result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
-    return (const CHAR *)Rules_OpenBatch(result, 0, v4, a1);
+    return (const CHAR *)(uintptr_t)Rules_OpenBatch(result, 0, v4, a1);
   return result;
 }
 // 49BBC7: variable 'v2' is possibly undefined
@@ -432,13 +432,13 @@ signed int  Rules_OpenBatch(const CHAR *fileName, int placeAtEnd, int a3, DWORD 
   if ( theFile )
   {
     if ( !g_Rules_BatchStackTop )
-      IO_AddRouter((int)aBatch, 20, 0, (int)Rules_BatchQueryStdin, (int)Rules_BatchGetChar, (int)Rules_BatchUngetChar, (int)Rules_BatchExitFunction);
+      IO_AddRouter((int)(intptr_t)aBatch, 20, 0, (int)(intptr_t)Rules_BatchQueryStdin, (int)(intptr_t)Rules_BatchGetChar, (int)(intptr_t)Rules_BatchUngetChar, (int)(intptr_t)Rules_BatchExitFunction);
     Rules_AddBatchEntry(placeAtEnd, theFile, 0, 0);
     return 1;
   }
   else
   {
-    Rules_OpenFileErrorMessage(v6, (int)fileName);
+    Rules_OpenFileErrorMessage(v6, (int)(intptr_t)fileName);
     return 0;
   }
 }
@@ -451,16 +451,16 @@ _DWORD * Rules_AddBatchEntry(int placeAtEnd, int theSource, int theString, int s
   _DWORD *freeListHead; // edi
   _DWORD *result; // eax
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 64);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-    *(_DWORD *)(g_ClipsMemoryTable + 64) = *freeListHead;
-    result = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *freeListHead;
+    result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+    result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   result[3] = 0;
   *result = sourceType;
@@ -470,13 +470,13 @@ _DWORD * Rules_AddBatchEntry(int placeAtEnd, int theSource, int theString, int s
   {
     if ( placeAtEnd )
     {
-      *(_DWORD *)(g_Batch_ListTail + 12) = result;
-      g_Batch_ListTail = (int)result;
+      *(_DWORD *)(uintptr_t)(g_Batch_ListTail + 12) = result;
+      g_Batch_ListTail = (int)(intptr_t)result;
     }
     else
     {
       result[3] = g_Rules_BatchStackTop;
-      g_Rules_BatchStackTop = (int)result;
+      g_Rules_BatchStackTop = (int)(intptr_t)result;
       g_ClipsBatchSourceIsStringFlag = sourceType;
       g_CurrentStringInputSource = theSource;
       g_BatchEchoBufferLength = 0;
@@ -484,8 +484,8 @@ _DWORD * Rules_AddBatchEntry(int placeAtEnd, int theSource, int theString, int s
   }
   else
   {
-    g_Rules_BatchStackTop = (int)result;
-    g_Batch_ListTail = (int)result;
+    g_Rules_BatchStackTop = (int)(intptr_t)result;
+    g_Batch_ListTail = (int)(intptr_t)result;
     g_ClipsBatchSourceIsStringFlag = sourceType;
     g_CurrentStringInputSource = theSource;
     g_BatchEchoBufferLength = 0;
@@ -509,24 +509,24 @@ signed int Rules_CloseBatch(void)
 
   if ( !g_Rules_BatchStackTop )
     return 0;
-  if ( *(_DWORD *)g_Rules_BatchStackTop )
+  if ( *(_DWORD *)(uintptr_t)g_Rules_BatchStackTop )
   {
-    IO_CloseStringRouter(*(_DWORD *)(g_Rules_BatchStackTop + 4));
-    Mem_SmallBlockFree(*(_DWORD **)(g_Rules_BatchStackTop + 8), strlen(*(const char **)(g_Rules_BatchStackTop + 8)) + 1);
+    IO_CloseStringRouter(*(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 4));
+    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(g_Rules_BatchStackTop + 8), strlen(*(const char **)(uintptr_t)(g_Rules_BatchStackTop + 8)) + 1);
   }
   else
   {
     fclose_(0);
   }
-  poppedEntry = (_DWORD *)g_Rules_BatchStackTop;
-  g_Rules_BatchStackTop = *(_DWORD *)(g_Rules_BatchStackTop + 12);
-  g_ClipsMemFreeListTemp = (int)poppedEntry;
-  *poppedEntry = *(_DWORD *)(g_ClipsMemoryTable + 64);
-  *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+  poppedEntry = (_DWORD *)(uintptr_t)g_Rules_BatchStackTop;
+  g_Rules_BatchStackTop = *(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 12);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)poppedEntry;
+  *poppedEntry = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
   if ( g_Rules_BatchStackTop )
   {
-    g_ClipsBatchSourceIsStringFlag = *(_DWORD *)g_Rules_BatchStackTop;
-    g_CurrentStringInputSource = *(_DWORD *)(g_Rules_BatchStackTop + 4);
+    g_ClipsBatchSourceIsStringFlag = *(_DWORD *)(uintptr_t)g_Rules_BatchStackTop;
+    g_CurrentStringInputSource = *(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 4);
     g_BatchEchoBufferLength = 0;
     return 1;
   }
@@ -536,7 +536,7 @@ signed int Rules_CloseBatch(void)
     g_CurrentStringInputSource = 0;
     if ( g_ClipsBatchEchoLineBuffer )
     {
-      Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
       g_ClipsBatchEchoLineBuffer = 0;
     }
     result = 0;
@@ -571,13 +571,13 @@ signed int __thiscall Rules_CloseAllBatchSources(void *this)
   if ( g_ClipsBatchEchoLineBuffer )
   {
     if ( g_BatchEchoBufferLength > 0 )
-      Output_Write((int)aStdout_2, g_ClipsBatchEchoLineBuffer, (int)this);
-    Mem_SmallBlockFree((_DWORD *)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
+      Output_Write((int)(intptr_t)aStdout_2, g_ClipsBatchEchoLineBuffer, (int)(intptr_t)this);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_ClipsBatchEchoLineBuffer, g_ClipsBatchLineBufferCapacity);
     g_ClipsBatchEchoLineBuffer = 0;
     g_BatchEchoBufferLength = 0;
     g_ClipsBatchLineBufferCapacity = 0;
   }
-  IO_DeleteRouter((int)aBatch);
+  IO_DeleteRouter((int)(intptr_t)aBatch);
   do
     result = Rules_CloseBatch();
   while ( result );
@@ -595,9 +595,9 @@ const CHAR * Rules_BatchStarCommand(DWORD a1, double context)
 
   if ( Lexer_TokenExpect(1) == -1 )
     return 0;
-  result = (const CHAR *)Rules_GetFileNameArg(1, v2, context);
+  result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
-    return (const CHAR *)Rules_BatchStar(result, a1, context);
+    return (const CHAR *)(uintptr_t)Rules_BatchStar(result, a1, context);
   return result;
 }
 // 49BEF7: variable 'v2' is possibly undefined
@@ -621,20 +621,20 @@ signed int  Rules_BatchStar(const CHAR *fileName, DWORD a2, double context)
   appended = 0;
   lineLength = 0;
   bufferSize[0] = 0;
-  theFile = (int *)IO_FOpen(fileName, (unsigned __int8 *)aR_1, (int)fileName, a2);
+  theFile = (int *)(uintptr_t)IO_FOpen(fileName, (unsigned __int8 *)aR_1, (int)(intptr_t)fileName, a2);
   if ( theFile )
   {
     Rules_SetEvaluationErrorFlag(0);
     Lexer_ErrorRecover(0);
     while ( 1 )
     {
-      if ( theFile[1] <= 0 || (unsigned int)*(unsigned __int8 *)*theFile - 13 <= 0xFD )
+      if ( theFile[1] <= 0 || (unsigned int)*(unsigned __int8 *)(uintptr_t)*theFile - 13 <= 0xFD )
       {
         ch = fgetc_(v7, v6);
       }
       else
       {
-        charPtr = (unsigned __int8 *)*theFile;
+        charPtr = (unsigned __int8 *)(uintptr_t)*theFile;
         nextCharPtr = *theFile + 1;
         --theFile[1];
         *theFile = nextCharPtr;
@@ -643,7 +643,7 @@ signed int  Rules_BatchStar(const CHAR *fileName, DWORD a2, double context)
       if ( ch == -1 )
         break;
       appended = Str_AppendCharEscaping(ch, appended, bufferSize, &lineLength, bufferSize[0] + 80);
-      if ( Lexer_IsCommandTextComplete((signed int)appended) )
+      if ( Lexer_IsCommandTextComplete((signed int)(intptr_t)appended) )
       {
         Rules_FlushPPBuffer();
         Rules_SetPPBufferStatus(0);
@@ -762,7 +762,7 @@ int  Rules_SaveCommand(DWORD a1, double context)
   fileName = result;
   if ( result )
   {
-    if ( Rules_Save((const CHAR *)result, v4, a1) )
+    if ( Rules_Save((const CHAR *)(uintptr_t)result, v4, a1) )
     {
       return 1;
     }
@@ -835,30 +835,30 @@ int  Rules_LoadConstructsFromLogicalName(int readSource, int a2)
       Rules_FlushPPBuffer();
       if ( Rules_ParseConstruct() == 1 )
       {
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_2, v6);
-        ppBuffer = (char *)Rules_GetPPBuffer();
-        Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], ppBuffer);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505E94, (int)noErrorsFlag);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aError_2, v6);
+        ppBuffer = (char *)(uintptr_t)Rules_GetPPBuffer();
+        Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], ppBuffer);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_505E94, (int)(intptr_t)noErrorsFlag);
         noErrorsFlag[0] = 0;
-        Parser_NextToken(readSource, (int)&theToken);
+        Parser_NextToken(readSource, (int)(intptr_t)&theToken);
         errorCorrection = 1;
       }
       else
       {
-        Parser_NextToken(readSource, (int)&theToken);
+        Parser_NextToken(readSource, (int)(intptr_t)&theToken);
         errorCorrection = 0;
       }
     }
     while ( Rules_SkipToConstructBeginning(readSource, &theToken, v8, errorCorrection) == 1 );
   }
-  if ( Rules_GetWatchItemState((int)aCompilations) == 1 || !Rules_GetLoadInProgress() )
+  if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 || !Rules_GetLoadInProgress() )
   {
     Rules_DestroyPPBuffer();
     return noErrorsFlag[0];
   }
   else
   {
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_505E94, v11);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)asc_505E94, v11);
     Rules_DestroyPPBuffer();
     return noErrorsFlag[0];
   }
@@ -889,7 +889,7 @@ signed int  Rules_SkipToConstructBeginning(int readSource, _DWORD *theToken, _DW
   {
     leftParenFound = 1;
 LABEL_4:
-    Parser_NextToken(readSource, (int)theToken);
+    Parser_NextToken(readSource, (int)(intptr_t)theToken);
     if ( *theToken == 102 )
       return 0;
   }
@@ -901,8 +901,8 @@ LABEL_4:
       {
         errorCorrection = 1;
         *noErrorsOut = 0;
-        Rules_PrintErrorID((int)aCstrcpsr, 1, 1);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedTheBeg, v10);
+        Rules_PrintErrorID((int)(intptr_t)aCstrcpsr, 1, 1);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedTheBeg, v10);
       }
     }
     leftParenFound = 0;
@@ -914,8 +914,8 @@ LABEL_4:
     {
       *noErrorsOut = 0;
       errorCorrection = 1;
-      Rules_PrintErrorID((int)aCstrcpsr, 1, 1);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedTheBeg, v12);
+      Rules_PrintErrorID((int)(intptr_t)aCstrcpsr, 1, 1);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedTheBeg, v12);
     }
     leftParenFound = 0;
     goto LABEL_4;
@@ -946,7 +946,7 @@ signed int Rules_ParseConstruct(void)
   g_ClipsParseReturnContext = 0;
   g_ParserBreakContextFlag = 0;
   ++g_ClipsCurrentEvaluationDepth;
-  (*(void (**)(void))(constructRecord + 8))();
+  (*(void (**)(void))(uintptr_t)(constructRecord + 8))();
   --g_ClipsCurrentEvaluationDepth;
   Parser_PopFunctionParseState();
   Parser_FreeLoopContextStack();
@@ -1006,15 +1006,15 @@ int  Rules_GetConstructNameAndComment(
 
   redefining = 0;
   Parser_NextToken(readSource, inputToken);
-  if ( *(_DWORD *)inputToken != 2 )
+  if ( *(_DWORD *)(uintptr_t)inputToken != 2 )
   {
-    Rules_PrintErrorID((int)aCstrcpsr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMissingNameFor, v31);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)constructName, v32);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConstruct, v33);
+    Rules_PrintErrorID((int)(intptr_t)aCstrcpsr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMissingNameFor, v31);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)constructName, v32);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aConstruct, v33);
     return 0;
   }
-  moduleSeparator = Rules_FindModuleSeparator(*(_BYTE **)(*(_DWORD *)(inputToken + 4) + 16));
+  moduleSeparator = Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16));
   separatorPosition = moduleSeparator;
   if ( moduleSeparator )
   {
@@ -1023,15 +1023,15 @@ int  Rules_GetConstructNameAndComment(
     moduleNameSymbol = Rules_ExtractModuleName(moduleSeparator);
     if ( !moduleNameSymbol )
       goto LABEL_23;
-    theModule = Module_FindByName((_BYTE *)moduleNameSymbol[4]);
-    savedModule = (int)theModule;
+    theModule = Module_FindByName((_BYTE *)(uintptr_t)moduleNameSymbol[4]);
+    savedModule = (int)(intptr_t)theModule;
     if ( !theModule )
     {
-      Rules_ReportCantFindItem(v17, *(_DWORD *)(v16 + 16));
+      Rules_ReportCantFindItem(v17, *(_DWORD *)(uintptr_t)(v16 + 16));
       return 0;
     }
-    Module_SetCurrent((int)theModule);
-    constructNameSymbol = Rules_ExtractConstructName(separatorPosition, *(char **)(v18 + 16), v18);
+    Module_SetCurrent((int)(intptr_t)theModule);
+    constructNameSymbol = Rules_ExtractConstructName(separatorPosition, *(char **)(uintptr_t)(v18 + 16), v18);
     if ( !constructNameSymbol )
     {
 LABEL_23:
@@ -1045,15 +1045,15 @@ LABEL_23:
     if ( moduleNameAllowed )
     {
       IO_OutNewline();
-      Name = (char *)Module_GetName(v34);
+      Name = (char *)(uintptr_t)Module_GetName(v34);
       IO_OutWriteToken(Name);
       IO_OutWriteToken(asc_505F2C);
-      IO_OutWriteToken(*(char **)(v36 + 16));
+      IO_OutWriteToken(*(char **)(uintptr_t)(v36 + 16));
     }
   }
-  if ( Rules_FindImportExportConflict(constructName, savedModule, (_BYTE *)constructNameSymbol[4]) )
+  if ( Rules_FindImportExportConflict(constructName, savedModule, (_BYTE *)(uintptr_t)constructNameSymbol[4]) )
   {
-    Lexer_WarnImpliedTemplate((int)constructName, *(_DWORD *)(v20 + 16), 0);
+    Lexer_WarnImpliedTemplate((int)(intptr_t)constructName, *(_DWORD *)(uintptr_t)(v20 + 16), 0);
     return 0;
   }
   if ( findFunction )
@@ -1065,27 +1065,27 @@ LABEL_23:
       {
         if ( !deleteFunction() )
         {
-          Rules_PrintErrorID((int)aCstrcpsr, 4, 1);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRedefine, v37);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)constructName, v38);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v39);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v40 + 16), v40);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhileItIsInUse, v41);
+          Rules_PrintErrorID((int)(intptr_t)aCstrcpsr, 4, 1);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotRedefine, v37);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)constructName, v38);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_505F44, v39);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v40 + 16), v40);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWhileItIsInUse, v41);
           return 0;
         }
       }
     }
   }
-  if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
+  if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
   {
     if ( redefining )
       definingVerb = aRedefining;
     else
       definingVerb = aDefining;
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)definingVerb, v21);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)constructName, v23);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_505F78, v24);
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(v25 + 16), v25);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)definingVerb, v21);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)constructName, v23);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)asc_505F78, v24);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(uintptr_t)(v25 + 16), v25);
     if ( fullMessageCR )
       trailingText = asc_505E94;
     else
@@ -1096,21 +1096,21 @@ LABEL_23:
   {
     trailingText = constructSymbol;
 LABEL_15:
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)trailingText, v26);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)trailingText, v26);
   }
   Parser_NextToken(readSource, inputToken);
-  if ( *(_DWORD *)inputToken == 3 && getComment )
+  if ( *(_DWORD *)(uintptr_t)inputToken == 3 && getComment )
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_505F44);
-    IO_OutWriteToken(*(char **)(inputToken + 8));
+    IO_OutWriteToken(*(char **)(uintptr_t)(inputToken + 8));
     Parser_NextToken(readSource, v29);
   }
-  if ( *(_DWORD *)inputToken != 101 )
+  if ( *(_DWORD *)(uintptr_t)inputToken != 101 )
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_505F7C);
-    IO_OutWriteToken(*(char **)(inputToken + 8));
+    IO_OutWriteToken(*(char **)(uintptr_t)(inputToken + 8));
   }
   return v28;
 }
@@ -1148,8 +1148,8 @@ int  Rules_UnlinkListNode(int theConstruct)
   int result; // eax
 
   constructAddr = theConstruct;
-  currentItem = *(_DWORD *)(*(_DWORD *)(theConstruct + 8) + 4);
-  for ( i = 0; currentItem != constructAddr; currentItem = *(_DWORD *)(currentItem + 16) )
+  currentItem = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theConstruct + 8) + 4);
+  for ( i = 0; currentItem != constructAddr; currentItem = *(_DWORD *)(uintptr_t)(currentItem + 16) )
     i = currentItem;
   if ( !currentItem )
   {
@@ -1158,17 +1158,17 @@ int  Rules_UnlinkListNode(int theConstruct)
   }
   if ( i )
   {
-    *(_DWORD *)(i + 16) = *(_DWORD *)(constructAddr + 16);
-    result = *(_DWORD *)(constructAddr + 8);
-    if ( constructAddr != *(_DWORD *)(result + 8) )
+    *(_DWORD *)(uintptr_t)(i + 16) = *(_DWORD *)(uintptr_t)(constructAddr + 16);
+    result = *(_DWORD *)(uintptr_t)(constructAddr + 8);
+    if ( constructAddr != *(_DWORD *)(uintptr_t)(result + 8) )
       return result;
     goto LABEL_9;
   }
-  *(_DWORD *)(*(_DWORD *)(constructAddr + 8) + 4) = *(_DWORD *)(constructAddr + 16);
-  result = *(_DWORD *)(constructAddr + 8);
-  if ( constructAddr == *(_DWORD *)(result + 8) )
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(constructAddr + 8) + 4) = *(_DWORD *)(uintptr_t)(constructAddr + 16);
+  result = *(_DWORD *)(uintptr_t)(constructAddr + 8);
+  if ( constructAddr == *(_DWORD *)(uintptr_t)(result + 8) )
 LABEL_9:
-    *(_DWORD *)(result + 8) = i;
+    *(_DWORD *)(uintptr_t)(result + 8) = i;
   return result;
 }
 // 49C7A4: variable 'v1' is possibly undefined
@@ -1186,20 +1186,20 @@ signed int  Rules_ImportExportConflictMessage(int constructName, int itemName, i
   int v13; // ecx
   int v14; // ecx
 
-  Rules_PrintErrorID((int)aCstrcpsr, 3, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotDefine, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], constructName, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v7);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], itemName, v8);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBecauseOfAnImp, v9);
+  Rules_PrintErrorID((int)(intptr_t)aCstrcpsr, 3, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotDefine, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], constructName, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_505F44, v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], itemName, v8);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aBecauseOfAnImp, v9);
   if ( causedByConstruct )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedByThe, v10);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], causedByConstruct, v12);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v13);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], v14, v14);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCausedByThe, v10);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], causedByConstruct, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_505F44, v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v14, v14);
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ConstructError, v10);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_ConstructError, v10);
 }
 // 49C7F7: variable 'v5' is possibly undefined
 // 49C803: variable 'v6' is possibly undefined
@@ -1215,15 +1215,15 @@ signed int  Rules_ImportExportConflictMessage(int constructName, int itemName, i
 //----- (0049C8A0) --------------------------------------------------------
 signed int Rules_RegisterControlFlowFunctions(void)
 {
-  Rules_RegisterHostFunction(aIf, 117, (int)aIffunction, (int)Rules_IfFunction, 0);
-  Rules_RegisterHostFunction(aWhile, 117, (int)aWhilefunction, (int)Rules_WhileFunction, 0);
-  Rules_RegisterHostFunction(aLoopForCount, 117, (int)aLoopforcountfu, (int)Rules_LoopForCountFunction, 0);
-  Rules_RegisterHostFunction(aGetLoopCount, 108, (int)aGetloopcount, (int)Rules_GetLoopCountFunction, 0);
-  Rules_RegisterHostFunction(aBind, 117, (int)aBindfunction, (int)Rules_BindFunction, 0);
-  Rules_RegisterHostFunction(aProgn, 117, (int)aPrognfunction, (int)Rules_PrognFunction, 0);
-  Rules_RegisterHostFunction(aReturn, 117, (int)aReturnfunction, (int)Rules_ReturnFunction, 0);
-  Rules_RegisterHostFunction(aBreak, 118, (int)aBreakfunction, (int)Rules_BreakFunction, 0);
-  Rules_RegisterHostFunction(aSwitch, 117, (int)aSwitchfunction, (int)Rules_SwitchFunction, 0);
+  Rules_RegisterHostFunction(aIf, 117, (int)(intptr_t)aIffunction, (int)(intptr_t)Rules_IfFunction, 0);
+  Rules_RegisterHostFunction(aWhile, 117, (int)(intptr_t)aWhilefunction, (int)(intptr_t)Rules_WhileFunction, 0);
+  Rules_RegisterHostFunction(aLoopForCount, 117, (int)(intptr_t)aLoopforcountfu, (int)(intptr_t)Rules_LoopForCountFunction, 0);
+  Rules_RegisterHostFunction(aGetLoopCount, 108, (int)(intptr_t)aGetloopcount, (int)(intptr_t)Rules_GetLoopCountFunction, 0);
+  Rules_RegisterHostFunction(aBind, 117, (int)(intptr_t)aBindfunction, (int)(intptr_t)Rules_BindFunction, 0);
+  Rules_RegisterHostFunction(aProgn, 117, (int)(intptr_t)aPrognfunction, (int)(intptr_t)Rules_PrognFunction, 0);
+  Rules_RegisterHostFunction(aReturn, 117, (int)(intptr_t)aReturnfunction, (int)(intptr_t)Rules_ReturnFunction, 0);
+  Rules_RegisterHostFunction(aBreak, 118, (int)(intptr_t)aBreakfunction, (int)(intptr_t)Rules_BreakFunction, 0);
+  Rules_RegisterHostFunction(aSwitch, 117, (int)(intptr_t)aSwitchfunction, (int)(intptr_t)Rules_SwitchFunction, 0);
   Parser_RegisterProceduralFunctionParsers();
   Rules_SetFunctionSeqOverloadFlags(aProgn, 0);
   Rules_SetFunctionSeqOverloadFlags(aIf, 0);
@@ -1303,27 +1303,27 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
   int resultBegin; // [esp+Ch] [ebp-24h]
   int resultEnd; // [esp+10h] [ebp-20h]
 
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 32);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-    *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeListHead;
-    loopVarNode = (int *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeListHead;
+    loopVarNode = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    loopVarNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
+    loopVarNode = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *loopVarNode = 0;
   savedLoopVarNode = loopVarNode;
   loopVarNode[1] = g_LoopForCountBindingStack;
-  g_LoopForCountBindingStack = (int)loopVarNode;
+  g_LoopForCountBindingStack = (int)(intptr_t)loopVarNode;
   if ( Lexer_ParseValueList(1, argData, 1, context) )
   {
-    *loopVarNode = *(_DWORD *)(argValue + 16);
+    *loopVarNode = *(_DWORD *)(uintptr_t)(argValue + 16);
     if ( Lexer_ParseValueList(2, argData, 1, context) )
     {
-      if ( *(_DWORD *)(argValue + 16) >= *loopVarNode )
+      if ( *(_DWORD *)(uintptr_t)(argValue + 16) >= *loopVarNode )
       {
         do
         {
@@ -1360,20 +1360,20 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
         returnValue[2] = g_ClipsFalseSymbol;
       }
       g_LoopForCountBindingStack = savedLoopVarNode[1];
-      g_ClipsMemFreeListTemp = (int)savedLoopVarNode;
-      *savedLoopVarNode = *(_DWORD *)(g_ClipsMemoryTable + 32);
+      g_ClipsMemFreeListTemp = (int)(intptr_t)savedLoopVarNode;
+      *savedLoopVarNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     }
     else
     {
       returnValue[1] = 2;
       returnValue[2] = g_ClipsFalseSymbol;
       g_LoopForCountBindingStack = loopVarNode[1];
-      g_ClipsMemFreeListTemp = (int)loopVarNode;
-      *loopVarNode = *(_DWORD *)(g_ClipsMemoryTable + 32);
+      g_ClipsMemFreeListTemp = (int)(intptr_t)loopVarNode;
+      *loopVarNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     }
   }
   else
@@ -1381,10 +1381,10 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
     returnValue[1] = 2;
     returnValue[2] = g_ClipsFalseSymbol;
     g_LoopForCountBindingStack = loopVarNode[1];
-    g_ClipsMemFreeListTemp = (int)loopVarNode;
-    *loopVarNode = *(_DWORD *)(g_ClipsMemoryTable + 32);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)loopVarNode;
+    *loopVarNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -1404,8 +1404,8 @@ int Rules_GetLoopCountFunction(void)
   int depth; // eax
   _DWORD *i; // edx
 
-  depth = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2) + 16);
-  for ( i = (_DWORD *)g_LoopForCountBindingStack; depth > 0; i = (_DWORD *)i[1] )
+  depth = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2) + 16);
+  for ( i = (_DWORD *)(uintptr_t)g_LoopForCountBindingStack; depth > 0; i = (_DWORD *)(uintptr_t)i[1] )
     --depth;
   return *i;
 }
@@ -1421,7 +1421,7 @@ int  Rules_IfFunction(double context)
   int argCount; // ebx
   _DWORD *resultValue; // ecx
 
-  result = Rules_ArgRangeCheck((int)aIf, 3);
+  result = Rules_ArgRangeCheck((int)(intptr_t)aIf, 3);
   argCount = result;
   if ( result == -1 )
   {

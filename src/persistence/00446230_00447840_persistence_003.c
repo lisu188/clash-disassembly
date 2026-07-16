@@ -53,31 +53,31 @@ int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD textScreenNumber)
   void *previousRenderDevice; // [esp+6Ch] [ebp-20h]
   int (*previousRenderHook)(); // [esp+70h] [ebp-1Ch]
 
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v3, spriteSetName, textScreenNumber, (int)aSetrhS08x_23);
+  Debug_Log(v3, spriteSetName, textScreenNumber, (int)(intptr_t)aSetrhS08x_23);
   sprintf_(resourcePathBuffer, "demo\\tekst%02d.s32", v4 + 1);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v5, spriteSetName, textScreenNumber);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v5, spriteSetName, textScreenNumber);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, spriteSetName);
   textSpriteSet = spriteSet;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, spriteSetName, textScreenNumber);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, spriteSetName, textScreenNumber);
   if ( Surface )
   {
-    SpriteWidth = DLX_GetSpriteWidth((int)textSpriteSet, 0);
+    SpriteWidth = DLX_GetSpriteWidth((int)(intptr_t)textSpriteSet, 0);
     Surface = Render_CreateSurface(v10, SCREEN_WIDTH, SpriteWidth);
   }
   fillSurface = Surface;
   backdropSurface = Surface;
-  fillHeight = DLX_GetSpriteWidth((int)textSpriteSet, 0);
+  fillHeight = DLX_GetSpriteWidth((int)(intptr_t)textSpriteSet, 0);
   Render_FillRect(0, fillSurface, 0, 0, SCREEN_MAX_X, fillHeight - 1, 0, 0);
-  DLXSpriteSet_DrawText((int)textSpriteSet, 0, (int)&g_RenderEnvPaletteContext, (unsigned __int8 *)g_MapPalettePtr);
+  DLXSpriteSet_DrawText((int)(intptr_t)textSpriteSet, 0, (int)(intptr_t)&g_RenderEnvPaletteContext, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
   previousRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)textSpriteSet, 0);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)textSpriteSet, 0);
   renderDeviceVtbl = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(renderDeviceVtbl + 52))(
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(uintptr_t)(renderDeviceVtbl + 52))(
     0,
     SpriteForChar,
     -1,
@@ -89,19 +89,19 @@ int  Demo_ShowNumberedTextScreen(char spriteSetName, DWORD textScreenNumber)
     0);
   g_RenderDevice = previousRenderDevice;
   Time_Now(v15, 1);
-  Render_BlitSurface(&g_MainRenderDevice, v16, 0, (DWORD)backdropSurface);
+  Render_BlitSurface(&g_MainRenderDevice, v16, 0, (DWORD)(intptr_t)backdropSurface);
   renderState = g_RenderState;
-  while ( !Input_PollEventsUntil((int)renderState, (char)&g_InputBackendState) )
+  while ( !Input_PollEventsUntil((int)(intptr_t)renderState, (char)(intptr_t)&g_InputBackendState) )
   {
     currentTime = Time_Now(v19, v18);
     if ( currentTime >= deadlineTime || Input_IsAnyKeyPressed() )
       break;
     InputBackend_PollState(&g_InputBackendState, deadlineTime, v19);
   }
-  Debug_Log(v19, (char)g_RenderHook, (DWORD)backdropSurface, (int)aUnsetrh08x_23);
+  Debug_Log(v19, (char)(intptr_t)g_RenderHook, (DWORD)(intptr_t)backdropSurface, (int)(intptr_t)aUnsetrh08x_23);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  clearHeight = DLX_GetSpriteWidth((int)textSpriteSet, 0);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
+  clearHeight = DLX_GetSpriteWidth((int)(intptr_t)textSpriteSet, 0);
   Render_FillRect(backdropSurface, 0, 0, 0, SCREEN_MAX_X, clearHeight - 1, 0, 0);
   return DLXSpriteSet_ReleaseAndClear((int *)&textSpriteSet);
 }
@@ -236,27 +236,27 @@ int  Queen_ShowWhimDecisionDialog(int text, int requiredAmount, int a3, int a4, 
 
   messageText = text;
   playerAmount = a4;
-  Debug_Log(a3, a4, allocContext, (int)aQueenwhimmessa);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a3, a4, allocContext, (int)(intptr_t)aQueenwhimmessa);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, a4, allocContext, (int)aSetrhS08x_18);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, a4, allocContext, (int)(intptr_t)aSetrhS08x_18);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, allocContext);
   whimSpriteSet = 0;
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v6, 0, allocContext);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v6, 0, allocContext);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, 0);
   whimSpriteSet = spriteSet;
-  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)spriteSet, 0)) / 2;
+  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)spriteSet, 0)) / 2;
   panelTop = 150;
-  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)whimSpriteSet, 0);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)whimSpriteSet, 0);
-  Surface = (_DWORD *)Mem_Alloc(188, v8, 0, allocContext);
+  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)whimSpriteSet, 0);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)whimSpriteSet, 0);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v8, 0, allocContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
-  backdropSurface = (DWORD)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
+  backdropSurface = (DWORD)(intptr_t)Surface;
   Render_FillRect(
     0,
     Surface,
@@ -267,17 +267,17 @@ int  Queen_ShowWhimDecisionDialog(int text, int requiredAmount, int a3, int a4, 
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)whimSpriteSet, 0);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)whimSpriteSet, 0);
   deviceVtable = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(panelLeft, panelTop, SpriteForChar, 1);
-  SpriteForChar = DLX_GetSpriteForChar((int)whimSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)whimSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
   deviceVtable = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(panelLeft + 41, panelTop + 18, SpriteForChar, 1);
   Render_ReleaseSurface(17, backdropSurface);
   UI_DrawTextFmt(deviceVtable, panelLeft + 175, panelLeft + 525, panelTop + 65, 6, messageText);
   Render_ReleaseSurface(18, backdropSurface);
-  UI_DrawText(panelLeft + 198, panelTop + 12, (int)aD_6);
-  UI_DrawTextFmt(playerAmount, panelLeft + 126, v12, panelTop + 207, 3, (int)aD_7);
+  UI_DrawText(panelLeft + 198, panelTop + 12, (int)(intptr_t)aD_6);
+  UI_DrawTextFmt(playerAmount, panelLeft + 126, v12, panelTop + 207, 3, (int)(intptr_t)aD_7);
   g_DecisionDialogConfirmDisabled = requiredAmount > playerAmount;
   qmemcpy(widgetTable, &g_QueenWhimDecisionButtonWidgetsTemplate, 0x9Fu);
   widgetTable[0] = panelLeft + 126;
@@ -287,22 +287,22 @@ int  Queen_ShowWhimDecisionDialog(int text, int requiredAmount, int a3, int a4, 
   *(_DWORD *)((char *)&widgetTable[14] + 1) = panelTop + 175;
   *(_DWORD *)((char *)&widgetTable[16] + 1) = &whimSpriteSet;
   UIWidgetTable_InitDrawStates(widgetTable);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(widgetTable, backdropSurface);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v15, (char)g_RenderState, backdropSurface, (int)aUnsetrh08x_18);
+  Debug_Log(v15, (char)(intptr_t)g_RenderState, backdropSurface, (int)(intptr_t)aUnsetrh08x_18);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
-  Render_Present((int)g_RenderState);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
+  Render_FillRect((_DWORD *)(uintptr_t)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    RenderSurface_InvokeSlot0((_DWORD *)backdropSurface, 2);
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)backdropSurface, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&whimSpriteSet);
   result = g_DecisionDialogResult;
   g_DecisionDialogConfirmDisabled = 0;
@@ -402,19 +402,19 @@ int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext
   promptText = text;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] enter text=%p image=%p\n", (void *)(uintptr_t)text, (void *)imageData);
-  Debug_Log(a3, a4, allocContext, (int)aYesnowindowS);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a3, a4, allocContext, (int)(intptr_t)aYesnowindowS);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, a4, allocContext, (int)aSetrhS08x_12);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, a4, allocContext, (int)(intptr_t)aSetrhS08x_12);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, allocContext);
   if ( imageData )
     Render_LoadResourceSprite_v4(17, imageData, v6, a4, allocContext);
   mapPaletteByte = 0;
   scrollSpriteSet = 0;
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v6, 0, allocContext);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v6, 0, allocContext);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, "pergamin.s32");
   scrollSpriteSet = spriteSet;
@@ -427,17 +427,17 @@ int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext
     {
       mapPaletteByte = g_MapPalettePtr;
       drawFrameIndex = i;
-      DLXSpriteSet_DrawText((int)scrollSpriteSet, drawFrameIndex, (int)imageData, (unsigned __int8 *)g_MapPalettePtr);
+      DLXSpriteSet_DrawText((int)(intptr_t)scrollSpriteSet, drawFrameIndex, (int)(intptr_t)imageData, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr);
     }
   }
-  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 4u)) / 2;
+  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 4u)) / 2;
   panelTop = 150;
-  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 4u);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 4u);
-  Surface = (_DWORD *)Mem_Alloc(188, v11, mapPaletteByte, allocContext);
+  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 4u);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 4u);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v11, mapPaletteByte, allocContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
-  backdropSurface = (DWORD)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
+  backdropSurface = (DWORD)(intptr_t)Surface;
   Render_FillRect(
     0,
     Surface,
@@ -448,7 +448,7 @@ int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)scrollSpriteSet, 4);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 4);
   deviceVtable = *((_DWORD *)g_RenderDevice + 46);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] before_background sprite=%x left=%d top=%d\n", SpriteForChar, panelLeft, panelTop);
@@ -465,23 +465,23 @@ int  YesNoWindow(int text, _BYTE *imageData, int a3, char a4, DWORD allocContext
   UIWidgetTable_InitDrawStates(widgetTable);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] after_widget_init\n");
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] after_present\n");
   g_DecisionDialogConfirmDisabled = 0;
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(widgetTable, backdropSurface);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v22, (char)g_RenderState, backdropSurface, (int)aUnsetrh08x_12);
+  Debug_Log(v22, (char)(intptr_t)g_RenderState, backdropSurface, (int)(intptr_t)aUnsetrh08x_12);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
-  Render_Present((int)g_RenderState);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
+  Render_FillRect((_DWORD *)(uintptr_t)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)backdropSurface, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&scrollSpriteSet);
@@ -527,26 +527,26 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD context)
   int panelTop; // [esp+38h] [ebp-1Ch]
 
   messageText = a1;
-  Debug_Log(a2, a3, context, (int)aInfowindowS);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a2, a3, context, (int)(intptr_t)aInfowindowS);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, a3, context, (int)aSetrhS08x_13);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, a3, context, (int)(intptr_t)aSetrhS08x_13);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, context);
   scrollSpriteSet = 0;
-  loadedSpriteSet = (_DWORD *)Mem_Alloc(4112, v4, 0, context);
+  loadedSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v4, 0, context);
   if ( loadedSpriteSet )
     loadedSpriteSet = DLXSpriteSet_Load(loadedSpriteSet, 0);
   scrollSpriteSet = loadedSpriteSet;
-  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)loadedSpriteSet, 9u)) / 2;
-  panelTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 9u)) / 2;
-  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)scrollSpriteSet, 4u);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)scrollSpriteSet, 4u);
-  Surface = (_DWORD *)Mem_Alloc(188, v7, 0, context);
+  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)loadedSpriteSet, 9u)) / 2;
+  panelTop = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 9u)) / 2;
+  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)scrollSpriteSet, 4u);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)scrollSpriteSet, 4u);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, 0, context);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
   backdropSurface = Surface;
   v21 = (unsigned __int16)panelTop;
   v22 = (unsigned __int16)panelLeft;
@@ -560,9 +560,9 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD context)
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)scrollSpriteSet, 9);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)scrollSpriteSet, 9);
   deviceVtable = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceVtable + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceVtable + 52))(
     panelTop,
     SpriteForChar,
     -1,
@@ -573,14 +573,14 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD context)
     0,
     0);
   UI_DrawTextFmt(panelLeft + 25, panelLeft + 25, panelLeft + 250, panelTop + 34, 3, messageText);
-  Render_Begin((int)g_RenderState, 0);
-  Debug_Log(v12, panelLeft, deviceVtable, (int)aUnsetrh08x_13);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  Debug_Log(v12, panelLeft, deviceVtable, (int)(intptr_t)aUnsetrh08x_13);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
   Render_FillRect(backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, v13);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    (*(void (**)(void))backdropSurface[46])();
+    (*(void (**)(void))(uintptr_t)backdropSurface[46])();
   DLXSpriteSet_ReleaseAndClear((int *)&scrollSpriteSet);
   return UI_EndDraw(17);
 }
@@ -620,17 +620,17 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
   int previousResourceHandle; // [esp+F8h] [ebp-1Ch]
   int SpriteHeight; // [esp+FCh] [ebp-18h]
 
-  Debug_Log(a1, a2, logContext, (int)aNewqueenwindow);
+  Debug_Log(a1, a2, logContext, (int)(intptr_t)aNewqueenwindow);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_log",
     g_SelectedUnitIndex,
     a1,
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v3, a2, logContext, (int)aSetrhS08x_17);
+  Debug_Log(v3, a2, logContext, (int)(intptr_t)aSetrhS08x_17);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_set_rh",
     g_SelectedUnitIndex,
@@ -638,7 +638,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_render_pump",
     g_SelectedUnitIndex,
@@ -653,7 +653,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
   proposalSpriteSet = 0;
-  v5 = (_DWORD *)Mem_Alloc(4112, v4, a2, logContext);
+  v5 = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v4, a2, logContext);
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, aQueen_s32_0);
   proposalSpriteSet = v5;
@@ -664,20 +664,20 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     (int)(uintptr_t)proposalSpriteSet,
     proposalSpriteSet ? (int)proposalSpriteSet[1025] : -1,
     proposalSpriteSet ? (int)proposalSpriteSet[1024] : 0);
-  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)v5, 0)) / 2;
+  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)v5, 0)) / 2;
   panelTop = 150;
-  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)proposalSpriteSet, 0);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)proposalSpriteSet, 0);
+  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)proposalSpriteSet, 0);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)proposalSpriteSet, 0);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_dims",
     g_SelectedUnitIndex,
     SpriteHeight,
     SpriteWidth,
     panelLeft);
-  Surface = (_DWORD *)Mem_Alloc(188, v6, 150, logContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v6, 150, logContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
-  backdropSurface = (DWORD)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
+  backdropSurface = (DWORD)(intptr_t)Surface;
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_surface_create",
     g_SelectedUnitIndex,
@@ -694,7 +694,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     0,
     0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)proposalSpriteSet, 0);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)proposalSpriteSet, 0);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_background_lookup",
     g_SelectedUnitIndex,
@@ -714,7 +714,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     panelLeft,
     panelTop,
     0);
-  SpriteForChar = DLX_GetSpriteForChar((int)proposalSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)proposalSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_portrait_lookup",
     g_SelectedUnitIndex,
@@ -734,16 +734,16 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     panelLeft + 41,
     panelTop + 18,
     0);
-  proposalTextTable[0] = (int)g_QueenMarriageProposalTexts[0];
-  proposalTextTable[1] = (int)g_QueenMarriageProposalTexts[1];
-  proposalTextTable[2] = (int)g_QueenMarriageProposalTexts[2];
+  proposalTextTable[0] = (int)(intptr_t)g_QueenMarriageProposalTexts[0];
+  proposalTextTable[1] = (int)(intptr_t)g_QueenMarriageProposalTexts[1];
+  proposalTextTable[2] = (int)(intptr_t)g_QueenMarriageProposalTexts[2];
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_before_text",
     g_SelectedUnitIndex,
     (int)(uintptr_t)proposalTextTable[(unsigned __int8)g_LanguageIndex],
     (unsigned __int8)g_LanguageIndex,
     0);
-  UI_DrawTextFmt((int)widgetTable, panelLeft + 175, panelLeft + 525, panelTop + 55, 6, proposalTextTable[(unsigned __int8)g_LanguageIndex]);
+  UI_DrawTextFmt((int)(intptr_t)widgetTable, panelLeft + 175, panelLeft + 525, panelTop + 55, 6, proposalTextTable[(unsigned __int8)g_LanguageIndex]);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_text",
     g_SelectedUnitIndex,
@@ -777,7 +777,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
     (int)(uintptr_t)widgetTable,
     0,
     0);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_present",
     g_SelectedUnitIndex,
@@ -787,18 +787,18 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD logContext)
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(widgetTable, backdropSurface);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v16, (char)g_RenderState, backdropSurface, (int)aUnsetrh08x_17);
+  Debug_Log(v16, (char)(intptr_t)g_RenderState, backdropSurface, (int)(intptr_t)aUnsetrh08x_17);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
-  Render_FillRect((_DWORD *)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
-  Render_Present((int)g_RenderState);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
+  Render_FillRect((_DWORD *)(uintptr_t)backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, panelTop);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    RenderSurface_InvokeSlot0((_DWORD *)backdropSurface, 2);
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)backdropSurface, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&proposalSpriteSet);
   g_QueenMarriageProposalWidgetSpriteSet = 0;
   g_QueenMarriageProposalWidgetTableBase = 0;
@@ -846,30 +846,30 @@ int  Queen_ShowMessageDialog(int message, int a2, char a3, DWORD a4)
   int SpriteHeight; // [esp+50h] [ebp-1Ch]
 
   messageText = message;
-  Debug_Log(a2, a3, a4, (int)aQueenmessageS);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Debug_Log(a2, a3, a4, (int)(intptr_t)aQueenmessageS);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, a3, a4, (int)aSetrhS08x_16);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, a3, a4, (int)(intptr_t)aSetrhS08x_16);
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
   Render_ReleaseSurface(17, a4);
   queenSpriteSet = 0;
-  loadedSpriteSet = (_DWORD *)Mem_Alloc(4112, v4, 0, a4);
+  loadedSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v4, 0, a4);
   if ( loadedSpriteSet )
     loadedSpriteSet = DLXSpriteSet_Load(loadedSpriteSet, 0);
   queenSpriteSet = loadedSpriteSet;
-  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)loadedSpriteSet, 0)) / 2;
-  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)queenSpriteSet, 0);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)queenSpriteSet, 0);
-  Surface = (_DWORD *)Mem_Alloc(188, v7, 0, a4);
+  panelLeft = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)loadedSpriteSet, 0)) / 2;
+  SpriteHeight = (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)queenSpriteSet, 0);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)queenSpriteSet, 0);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, 0, a4);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SpriteHeight, SpriteWidth);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SpriteHeight, SpriteWidth);
   backdropSurface = Surface;
   Render_FillRect(0, Surface, 150, (unsigned __int16)panelLeft, panelLeft + SpriteHeight - 1, SpriteWidth + 149, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)queenSpriteSet, 14);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)queenSpriteSet, 14);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     150,
     SpriteForChar,
     -1,
@@ -879,9 +879,9 @@ int  Queen_ShowMessageDialog(int message, int a2, char a3, DWORD a4)
     1,
     0,
     0);
-  portraitSprite = DLX_GetSpriteForChar((int)queenSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
+  portraitSprite = DLX_GetSpriteForChar((int)(intptr_t)queenSpriteSet, PLAYER_QUEEN_PORTRAIT_INDEX(g_CurrentPlayerIndex) + 1);
   deviceVtable = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceVtable + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceVtable + 52))(
     168,
     portraitSprite,
     -1,
@@ -892,18 +892,18 @@ int  Queen_ShowMessageDialog(int message, int a2, char a3, DWORD a4)
     0,
     0);
   UI_DrawTextFmt(150, panelLeft + 175, panelLeft + 525, 205, 6, messageText);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   while ( !DD_IsFlipping(v11) )
     DD_Pump(v12, 0);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   Render_Pump();
-  Debug_Log(v13, 0, (DWORD)g_RenderHook, (int)aUnsetrh08x_16);
+  Debug_Log(v13, 0, (DWORD)(intptr_t)g_RenderHook, (int)(intptr_t)aUnsetrh08x_16);
   g_RenderHook = previousRenderHook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
   Render_FillRect(backdropSurface, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, panelLeft, 0x96u);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    (*(void (**)(void))backdropSurface[46])();
+    (*(void (**)(void))(uintptr_t)backdropSurface[46])();
   DLXSpriteSet_ReleaseAndClear((int *)&queenSpriteSet);
   return UI_EndDraw(17);
 }
@@ -930,19 +930,19 @@ int  UI_ShowMissionStatusPanel(int a1, DWORD a2)
   int statusFormatTable[7]; // [esp+64h] [ebp-1Ch] BYREF
 
   statusFormatTable[6] = a1;
-  statusFormatTable[0] = (int)g_MissionStatusFormatsByLanguage[0];
-  statusFormatTable[1] = (int)g_MissionStatusFormatsByLanguage[1];
-  statusFormatTable[2] = (int)g_MissionStatusFormatsByLanguage[2];
+  statusFormatTable[0] = (int)(intptr_t)g_MissionStatusFormatsByLanguage[0];
+  statusFormatTable[1] = (int)(intptr_t)g_MissionStatusFormatsByLanguage[1];
+  statusFormatTable[2] = (int)(intptr_t)g_MissionStatusFormatsByLanguage[2];
   missionIndex = ACTIVE_MISSION_INDEX;
   if ( missionIndex != -1 )
   {
-    formatString = (const char *)statusFormatTable[(unsigned __int8)g_LanguageIndex];
+    formatString = (const char *)(uintptr_t)statusFormatTable[(unsigned __int8)g_LanguageIndex];
     sprintf_(
       messageBuffer,
       formatString,
       ACTIVE_MISSION_INDEX % 10 + 1,
       (&g_MissionStatusTextsByLanguage[3 * missionIndex])[(unsigned __int8)g_LanguageIndex]);
-    return UI_ShowInfoWindow((const char *)messageBuffer, 2u, v5, a2, (int)&statusFormatTable[3], (int)formatString);
+    return UI_ShowInfoWindow((const char *)messageBuffer, 2u, v5, a2, (int)(intptr_t)&statusFormatTable[3], (int)(intptr_t)formatString);
   }
   return result;
 }
@@ -1225,12 +1225,12 @@ signed int  UI_WaitForAnyKeyOrClick(int deadlineTime, int a2)
   Time_Now(0, 0);
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     if ( Input_IsKeyPressed(1)
       || Input_IsKeyPressed(57)
       || Input_IsKeyPressed(28)
-      || DD_IsFlipping((int)g_RenderState)
-      || DD_IsLost((int)g_RenderState) )
+      || DD_IsFlipping((int)(intptr_t)g_RenderState)
+      || DD_IsLost((int)(intptr_t)g_RenderState) )
     {
       return 1;
     }
@@ -1246,13 +1246,13 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   int (*previous_render_hook)(); // edi
   int previous_resource_handle; // esi
 
-  Debug_Log(a1, a2, a3, (int)aStartanims);
-  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aStartanims);
+  previous_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   previous_render_hook = g_RenderHook;
   g_RenderHook = 0;
-  Debug_Log(0, 0, a3, (int)aSetrhS08x_14, aNull, 0);
+  Debug_Log(0, 0, a3, (int)(intptr_t)aSetrhS08x_14, aNull, 0);
   Palette_ApplyDefaultPalette((int *)&g_MainRenderDevice);
-  DD_Pump((int)g_RenderState, 0);
+  DD_Pump((int)(intptr_t)g_RenderState, 0);
   Sleep(0x4B0u);
   Video_Avi_playIn(aLogo_0, 0, 1, 0, 1, 0);
   if ( g_LanguageIndex == 2 )
@@ -1272,11 +1272,11 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   {
     Video_Avi_playIn(aInt_a, 0, 1, 0, 1, 1);
   }
-  DD_Pump((int)g_RenderState, 0);
-  Debug_Log(0, 0, a3, (int)aUnsetrh08x_14, g_RenderHook);
+  DD_Pump((int)(intptr_t)g_RenderState, 0);
+  Debug_Log(0, 0, a3, (int)(intptr_t)aUnsetrh08x_14, g_RenderHook);
   g_RenderHook = previous_render_hook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
-  Debug_Log(0, 0, a3, (int)aStartanimsEnd);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previous_resource_handle);
+  Debug_Log(0, 0, a3, (int)(intptr_t)aStartanimsEnd);
   return a3;
 }
 // 511130: using guessed type char g_LanguageIndex;

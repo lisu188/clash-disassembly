@@ -27,8 +27,8 @@ int  File_SourceScalarDtor(_DWORD *a1, char flags)
   else
   {
     *a1 = g_FileSource_VTable;
-    File_CacheClearEntryTree((int)a1);
-    v4 = *(_DWORD *)(v3 + 4);
+    File_CacheClearEntryTree((int)(intptr_t)a1);
+    v4 = *(_DWORD *)(uintptr_t)(v3 + 4);
     if ( v4 )
     {
       FileSystem_ArchiveEntryReaderScalarDeletingDtor(v4);
@@ -97,7 +97,7 @@ int  File_SourceReadAndDecodeHeader(
   _DWORD savedregs[4]; // [esp+28h] [ebp+0h] BYREF
 
   sourceObj = source;
-  stream_ptr = Res_OpenBufferedStreamForRead(path, a3, mode, (DWORD)savedregs);
+  stream_ptr = Res_OpenBufferedStreamForRead(path, a3, mode, (DWORD)(intptr_t)savedregs);
   sourceObj[13] = 0;
   v25 = sourceObj;
   sourceObj[2] = stream_ptr;
@@ -111,17 +111,17 @@ int  File_SourceReadAndDecodeHeader(
     {
       --a5;
       raw_byte = *headerBytePtr++;
-      decoded_byte = Res_XorDecodeByte((int)decodeSource, i, raw_byte);
+      decoded_byte = Res_XorDecodeByte((int)(intptr_t)decodeSource, i, raw_byte);
       i = v13 + 1;
     }
   }
   v25[12] += bytes_read;
   Compat_StreamSeek(sourceObj[2], header[3], 1);
   sourceObj[12] = Compat_StreamTell(sourceObj[2]);
-  readerResult = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
-  reader = (_DWORD *)readerResult;
+  readerResult = Mem_Alloc(44, 0, 1, (DWORD)(intptr_t)savedregs);
+  reader = (_DWORD *)(uintptr_t)readerResult;
   source_name_holder[0] = 0;
-  source_name_holder[1] = (int)&g_PathEntry_Vtable;
+  source_name_holder[1] = (int)(intptr_t)&g_PathEntry_Vtable;
   if ( readerResult )
   {
     readerResult = FileSystem_ArchiveEntryReaderCtor(reader, sourceObj, sourceObj[12], 26 * header[2] + 4, (const void *)source_name_holder);
@@ -144,13 +144,13 @@ _DWORD * File_CacheNodeNewValidated(int a1, char a2, int a3, DWORD a4)
   int v5; // ecx
   _DWORD *v6; // ebx
 
-  v4 = (_DWORD *)Mem_Alloc(20, a1, a2, a4);
+  v4 = (_DWORD *)(uintptr_t)Mem_Alloc(20, a1, a2, a4);
   if ( v4 )
-    v4 = (_DWORD *)File_SourceEntryConstructor(v4, v5, v5, a4);
+    v4 = (_DWORD *)(uintptr_t)File_SourceEntryConstructor(v4, v5, v5, a4);
   v6 = v4;
-  if ( (*(int (__cdecl **)(int))(*v4 + 12))(a3) )
+  if ( (*(int (__cdecl **)(int))(uintptr_t)(*v4 + 12))(a3) )
     return v6;
-  (*(void (**)(void))(*v6 + 20))();
+  (*(void (**)(void))(uintptr_t)(*v6 + 20))();
   return 0;
 }
 // 4792D8: variable 'v5' is possibly undefined
@@ -160,11 +160,11 @@ int  File_CacheTreeAdvanceSuccessor(_DWORD *a1)
 {
   if ( a1[11] )
   {
-    *(_DWORD *)(a1[11] + 4) = *(_DWORD *)(a1[10] + 4);
-    *(_DWORD *)(a1[10] + 4) = a1[9];
+    *(_DWORD *)(uintptr_t)(a1[11] + 4) = *(_DWORD *)(uintptr_t)(a1[10] + 4);
+    *(_DWORD *)(uintptr_t)(a1[10] + 4) = a1[9];
     a1[9] = a1[10];
   }
-  return *(_DWORD *)a1[9];
+  return *(_DWORD *)(uintptr_t)a1[9];
 }
 
 //----- (00479330) --------------------------------------------------------
@@ -180,7 +180,7 @@ int * File_CacheNodeFreeTree(int *node)
   }
   if ( v1[1] )
   {
-    File_CacheNodeFreeTree((int *)v1[1]);
+    File_CacheNodeFreeTree((int *)(uintptr_t)v1[1]);
     j__nfree_();
   }
   return v1;
@@ -200,24 +200,24 @@ int * File_CacheTreeUnlinkLeftmost(int *result)
   if ( result[9] )
   {
     result[11] = 0;
-    for ( i = result[9]; ; i = *(_DWORD *)(v3 + 4) )
+    for ( i = result[9]; ; i = *(_DWORD *)(uintptr_t)(v3 + 4) )
     {
       v1[10] = i;
       v3 = v1[10];
-      if ( !*(_DWORD *)(v3 + 4) )
+      if ( !*(_DWORD *)(uintptr_t)(v3 + 4) )
         break;
       v1[11] = v3;
     }
     v4 = v1[11];
     if ( v4 )
-      *(_DWORD *)(v4 + 4) = 0;
+      *(_DWORD *)(uintptr_t)(v4 + 4) = 0;
     else
       v1[9] = 0;
-    result = (int *)v1[10];
+    result = (int *)(uintptr_t)v1[10];
     if ( result )
     {
       File_CacheNodeFreeTree(result);
-      result = (int *)j__nfree_();
+      result = (int *)(uintptr_t)j__nfree_();
     }
     --v1[8];
   }
@@ -236,13 +236,13 @@ int  File_CacheInsertWithEviction(int *cache, int entry, char a3, DWORD heap_ctx
     return 0;
   while ( cache[8] >= cache[7] && cache[9] )
     File_CacheTreeUnlinkLeftmost(cache);
-  cache_node = (_DWORD *)Mem_Alloc(8, (int)cache, 0, heap_ctx);
+  cache_node = (_DWORD *)(uintptr_t)Mem_Alloc(8, (int)(intptr_t)cache, 0, heap_ctx);
   if ( cache_node )
   {
     cache_node[0] = entry;
     cache_node[1] = cache[9];
   }
-  cache[9] = (int)cache_node;
+  cache[9] = (int)(intptr_t)cache_node;
   ++cache[8];
   if ( !cache_node )
     return 0;
@@ -273,16 +273,16 @@ int  File_ResolveCachedPathEntry(_DWORD *fs, _DWORD *path_holder, const char *a3
   while ( cache_node )
   {
     entry = cache_node[0];
-    entry_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)entry;
+    entry_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)entry;
     if ( entry_name && !strcmp_(path_text, entry_name) )
       return File_CacheTreeAdvanceSuccessor(fs);
-    fs[11] = (int)cache_node;
+    fs[11] = (int)(intptr_t)cache_node;
     fs[10] = cache_node[1];
     cache_node = (_DWORD *)(uintptr_t)(unsigned int)fs[10];
   }
   ++g_FS_PathEntryCacheMissCount;
   parent_holder[0] = 0;
-  parent_holder[1] = (int)&g_PathEntry_Vtable;
+  parent_holder[1] = (int)(intptr_t)&g_PathEntry_Vtable;
   last_slash = Compat_StrrchrChar(path_text, '\\');
   if ( last_slash )
   {
@@ -298,7 +298,7 @@ int  File_ResolveCachedPathEntry(_DWORD *fs, _DWORD *path_holder, const char *a3
   resolved_entry = FileSystem_ArchiveOpenEntryReader(parent_entry, path_holder);
   if ( !resolved_entry )
     return 0;
-  return File_CacheInsertWithEviction((int *)fs, (int)resolved_entry, 0, heap_ctx);
+  return File_CacheInsertWithEviction((int *)fs, (int)(intptr_t)resolved_entry, 0, heap_ctx);
 }
 // 54DD18: using guessed type int dword_54DD18;
 
@@ -343,15 +343,15 @@ int  File_ResolveAbsolutePathEntry(const char *path, DWORD heap_ctx)
   parent_dir_path[2] = path;
   parent_dir_holder = FileSystem_PathTrimToParentDir(parent_dir_path);
   File_ResolveCachedPathEntry(v4, parent_dir_holder, v4, heap_ctx);
-  Compat_StringHolderScalarDeletingDtor((int)parent_dir_path, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)parent_dir_path, 1);
   if ( !parent_entry )
     return 0;
   leaf_name_holder = (const char **)FileSystem_PathExtractFileName(leaf_name);
   found_entry = FileSystem_ArchiveHashTableFind(v8, leaf_name_holder);
-  Compat_StringHolderScalarDeletingDtor((int)leaf_name, 1);
-  *(_DWORD *)(v10 + 28) = 1;
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)leaf_name, 1);
+  *(_DWORD *)(uintptr_t)(v10 + 28) = 1;
   result = found_entry;
-  *(_DWORD *)(v10 + 12) = 1;
+  *(_DWORD *)(uintptr_t)(v10 + 12) = 1;
   return result;
 }
 // 479576: variable 'v4' is possibly undefined
@@ -364,7 +364,7 @@ char  File_ApplyResolvedEntryFlag(int a1, int flag_value, DWORD heap_ctx)
 {
   _DWORD *v4; // ecx
 
-  *(_DWORD *)(File_ResolveAbsolutePathEntry((const char *)(a1 + 12), heap_ctx) + 22) = flag_value;
+  *(_DWORD *)(uintptr_t)(File_ResolveAbsolutePathEntry((const char *)(uintptr_t)(a1 + 12), heap_ctx) + 22) = flag_value;
   return Compat_StringHolderDestructor(v4);
 }
 // 4795E8: variable 'v4' is possibly undefined
@@ -403,13 +403,13 @@ _DWORD * File_OpenNodeByFlags(char flags)
   v18 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&resolveHolder);
   v18 = &g_PathEntry_Vtable;
-  resolvedEntry = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)&resolveHolder, 1);
+  resolvedEntry = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)(intptr_t)&g_PathEntry_Vtable);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&resolveHolder, 1);
   if ( resolvedEntry )
   {
     if ( (flags & 8) == 0 )
     {
-      result = (_DWORD *)Mem_Alloc(20, self, flags, (DWORD)&g_PathEntry_Vtable);
+      result = (_DWORD *)(uintptr_t)Mem_Alloc(20, self, flags, (DWORD)(intptr_t)&g_PathEntry_Vtable);
       if ( result )
       {
         result = FileSystem_ArchiveEntryStreamCtor(result, resolvedEntry, v5);
@@ -422,45 +422,45 @@ _DWORD * File_OpenNodeByFlags(char flags)
   if ( (flags & 8) == 0 )
     return 0;
   excStringField = self + 12;
-  if ( ExcString_GetTextPtr(self + 12) && *(_BYTE *)ExcString_GetTextPtr(excStringField) )
+  if ( ExcString_GetTextPtr(self + 12) && *(_BYTE *)(uintptr_t)ExcString_GetTextPtr(excStringField) )
     return 0;
   parentDirHolder = 0;
   v22 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&parentDirHolder);
   v22 = &g_PathEntry_Vtable;
   parentDir = FileSystem_PathTrimToParentDir(parentDirPath);
-  parentEntry = (_DWORD *)File_ResolveCachedPathEntry(v8, parentDir, v8, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)parentDirPath, 1);
-  Compat_StringHolderScalarDeletingDtor((int)&parentDirHolder, 1);
+  parentEntry = (_DWORD *)(uintptr_t)File_ResolveCachedPathEntry(v8, parentDir, v8, (DWORD)(intptr_t)&g_PathEntry_Vtable);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)parentDirPath, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&parentDirHolder, 1);
   fileNameHolder = 0;
   v20 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&fileNameHolder);
   v20 = &g_PathEntry_Vtable;
   FileSystem_PathExtractFileName(fileName);
-  Compat_StringHolderScalarDeletingDtor((int)&fileNameHolder, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&fileNameHolder, 1);
   if ( parentEntry && (dirEntry = FileSystem_ArchiveInsertDirectoryEntry(parentEntry, fileName)) != 0 )
   {
     v24 = &g_CompatStringHolder_Vtable;
     dirInsertHolder = 0;
-    v12 = (_DWORD *)(v10 + 12);
+    v12 = (_DWORD *)(uintptr_t)(v10 + 12);
     Compat_StringHolderDestructor(&dirInsertHolder);
     v24 = &g_PathEntry_Vtable;
-    ExcString_GetTextPtr((int)&dirInsertHolder);
+    ExcString_GetTextPtr((int)(intptr_t)&dirInsertHolder);
     ExcString_ReleaseText(v12);
-    Compat_StringHolderScalarDeletingDtor((int)&dirInsertHolder, 1);
-    dirStream = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&g_CompatStringHolder_Vtable);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&dirInsertHolder, 1);
+    dirStream = (_DWORD *)(uintptr_t)Mem_Alloc(20, v13, (char)(intptr_t)v12, (DWORD)(intptr_t)&g_CompatStringHolder_Vtable);
     if ( dirStream )
     {
       dirStream = FileSystem_ArchiveEntryStreamCtor(dirStream, dirEntry, v15);
       *dirStream = g_FileDirNode_VTable;
     }
     resultNode = dirStream;
-    Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)fileName, 1);
     return resultNode;
   }
   else
   {
-    Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)fileName, 1);
     return 0;
   }
 }
@@ -493,30 +493,30 @@ signed int  File_OpenEntryForWrite(int a1, int access_mode)
   int (**v14)(); // [esp+14h] [ebp-18h]
   const char *parentPath[5]; // [esp+18h] [ebp-14h] BYREF
 
-  if ( ExcString_GetTextPtr(a1 + 12) && *(_BYTE *)ExcString_GetTextPtr(v2) )
+  if ( ExcString_GetTextPtr(a1 + 12) && *(_BYTE *)(uintptr_t)ExcString_GetTextPtr(v2) )
     return -1;
   if ( !access_mode )
-    access_mode = *(_DWORD *)(v3 + 24);
+    access_mode = *(_DWORD *)(uintptr_t)(v3 + 24);
   v13 = 0;
   v14 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v13);
   v14 = &g_PathEntry_Vtable;
   parentDirPath = FileSystem_PathTrimToParentDir(parentPath);
-  File_ResolveCachedPathEntry(v5, parentDirPath, v5, (DWORD)&g_PathEntry_Vtable);
-  Compat_StringHolderScalarDeletingDtor((int)parentPath, 1);
-  Compat_StringHolderScalarDeletingDtor((int)&v13, 1);
+  File_ResolveCachedPathEntry(v5, parentDirPath, v5, (DWORD)(intptr_t)&g_PathEntry_Vtable);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)parentPath, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&v13, 1);
   v11 = 0;
   v12 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v11);
   v12 = &g_PathEntry_Vtable;
   FileSystem_PathExtractFileName(fileName);
-  Compat_StringHolderScalarDeletingDtor((int)&v11, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&v11, 1);
   if ( parentEntry )
     insertResult = FileSystem_ArchiveInsertFileEntry(parentEntry, fileName, access_mode);
   else
     insertResult = -1;
   result = insertResult;
-  Compat_StringHolderScalarDeletingDtor((int)fileName, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)fileName, 1);
   return result;
 }
 // 479810: variable 'v3' is possibly undefined
@@ -533,14 +533,14 @@ int * File_CacheClearEntryTree(int a1)
   int *result; // eax
 
   fflush_(a1);
-  result = *(int **)(v1 + 36);
+  result = *(int **)(uintptr_t)(v1 + 36);
   if ( result )
   {
     File_CacheNodeFreeTree(result);
-    result = (int *)j__nfree_();
+    result = (int *)(uintptr_t)j__nfree_();
   }
-  *(_DWORD *)(v1 + 36) = 0;
-  *(_DWORD *)(v1 + 32) = 0;
+  *(_DWORD *)(uintptr_t)(v1 + 36) = 0;
+  *(_DWORD *)(uintptr_t)(v1 + 32) = 0;
   return result;
 }
 // 4798FB: variable 'v1' is possibly undefined
@@ -561,7 +561,7 @@ int  File_PrimePathCacheEntry(int a1, DWORD a2)
   Compat_StringHolderDestructor(&v5);
   v6 = &g_PathEntry_Vtable;
   File_ResolveCachedPathEntry(v2, &v5, v2, a2);
-  Compat_StringHolderScalarDeletingDtor((int)&v5, 1);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&v5, 1);
   return v3;
 }
 // 47995B: variable 'v2' is possibly undefined
@@ -574,9 +574,9 @@ int  File_SeekStreamEndAndRecordPos(int source, int heap_ctx)
 {
   int result; // eax
 
-  IO_SeekStreamGuarded(*(_DWORD *)(source + 8), 0, 2u, heap_ctx);
-  result = Compat_StreamTell(*(_DWORD *)(source + 8));
-  *(_DWORD *)(source + 48) = result;
+  IO_SeekStreamGuarded(*(_DWORD *)(uintptr_t)(source + 8), 0, 2u, heap_ctx);
+  result = Compat_StreamTell(*(_DWORD *)(uintptr_t)(source + 8));
+  *(_DWORD *)(uintptr_t)(source + 48) = result;
   return result;
 }
 
@@ -648,7 +648,7 @@ int * File_ConstructReadOnlySource(int *source, const CHAR *path, int a3, int a4
   int *result; // eax
 
   result = File_SourceConstructFromStream(source, path, (unsigned __int8 *)aRb_11, a4, a5, a3);
-  *result = (int)g_FileReadOnlySource_VTable;
+  *result = (int)(intptr_t)g_FileReadOnlySource_VTable;
   return result;
 }
 // 510C04: using guessed type int (*off_510C04[4])();
@@ -661,10 +661,10 @@ _DWORD * File_OpenMountRootEntry(int fs, char flags, DWORD heap_ctx)
 
   if ( (flags & 8) != 0 )
     return 0;
-  root_entry = File_ResolvePathByParentAndLeaf((_DWORD *)fs, (const char *)(uintptr_t)(unsigned int)g_FileSystemStrippedPathHolderText, heap_ctx);
+  root_entry = File_ResolvePathByParentAndLeaf((_DWORD *)(uintptr_t)fs, (const char *)(uintptr_t)(unsigned int)g_FileSystemStrippedPathHolderText, heap_ctx);
   if ( !root_entry )
     return 0;
-  result = (_DWORD *)Mem_Alloc(20, fs, flags, heap_ctx);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(20, fs, flags, heap_ctx);
   if ( result )
   {
     result = FileSystem_ArchiveEntryStreamCtor(result, root_entry, fs);
@@ -679,7 +679,7 @@ int * File_AllocateReadOnlySource(const CHAR *path, int a2, char cipher_key, DWO
 {
   int *result; // eax
 
-  result = (int *)Mem_Alloc(56, a2, cipher_key, heap_ctx);
+  result = (int *)(uintptr_t)Mem_Alloc(56, a2, cipher_key, heap_ctx);
   if ( result )
     return File_ConstructReadOnlySource(result, path, a2, cipher_key, a5);
   return result;
@@ -696,7 +696,7 @@ _DWORD * File_CacheNodeConstructBase(_DWORD *result)
 //----- (00479C30) --------------------------------------------------------
 int  Res_XorDecodeByte(int stream, int a2, int encoded_byte)
 {
-  return encoded_byte ^ (a2 + *(_DWORD *)(stream + 20));
+  return encoded_byte ^ (a2 + *(_DWORD *)(uintptr_t)(stream + 20));
 }
 
 //----- (00479C40) --------------------------------------------------------
@@ -707,10 +707,10 @@ unsigned __int8 * Compat_QueryXorDecodeBuffer(int stream, unsigned __int8 *buffe
   int decoded_byte; // [esp+0h] [ebp-10h]
 
   result = buffer;
-  for ( i = *(_DWORD *)(stream + 48); length; *(result - 1) = decoded_byte )
+  for ( i = *(_DWORD *)(uintptr_t)(stream + 48); length; *(result - 1) = decoded_byte )
   {
     --length;
-    decoded_byte = (i + *(_DWORD *)(stream + 20)) ^ *result++;
+    decoded_byte = (i + *(_DWORD *)(uintptr_t)(stream + 20)) ^ *result++;
     ++i;
   }
   return result;
@@ -722,7 +722,7 @@ _DWORD * Compat_QueryConstructDefault(int a1)
   _DWORD *v1; // eax
   _DWORD *result; // eax
 
-  v1 = (_DWORD *)(a1 + 12);
+  v1 = (_DWORD *)(uintptr_t)(a1 + 12);
   *v1 = 0;
   result = v1 - 3;
   result[4] = &g_PathEntry_Vtable;
@@ -740,7 +740,7 @@ int  Compat_QuerySkipBytes(int query, int count)
 
   if ( !query )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)query;
   return ((int (*)(int, int))(uintptr_t)vtable[9])(query, count);
 }
 
@@ -751,14 +751,14 @@ int  Compat_QuerySkipBytesFromBase(int query, int offset)
 
   if ( !query )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query;
-  return ((int (*)(int, int))(uintptr_t)vtable[9])(query, offset + *(_DWORD *)(query + 12));
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)query;
+  return ((int (*)(int, int))(uintptr_t)vtable[9])(query, offset + *(_DWORD *)(uintptr_t)(query + 12));
 }
 
 //----- (00479CD0) --------------------------------------------------------
 int  Compat_QueryGetLength(int query)
 {
-  return *(_DWORD *)(query + 8);
+  return *(_DWORD *)(uintptr_t)(query + 8);
 }
 
 //----- (00479CE0) --------------------------------------------------------
@@ -816,11 +816,11 @@ int  Compat_QueryCloseAndDestruct(_DWORD *query, char flags)
 int Rules_InitFacts(void)
 {
   Rules_InitFactHashTable();
-  Rules_AddResetFunction((int)aFacts_0, (int)Rules_ResetFacts, 60);
-  Rules_AddClearReadyFunction((int)aFacts_0, (int)Rules_ClearFacts, 0);
-  Rules_AddPeriodicFunction((int)aFacts_0, (int)Rules_RemoveGarbageFacts, 0);
+  Rules_AddResetFunction((int)(intptr_t)aFacts_0, (int)(intptr_t)Rules_ResetFacts, 60);
+  Rules_AddClearReadyFunction((int)(intptr_t)aFacts_0, (int)(intptr_t)Rules_ClearFacts, 0);
+  Rules_AddPeriodicFunction((int)(intptr_t)aFacts_0, (int)(intptr_t)Rules_RemoveGarbageFacts, 0);
   Rules_RegisterFactsConstruct();
-  Rules_AddWatchItem((int)aFacts_0, 0, 80, (int)&g_Rules_WatchFactsFlag, (int)Rules_ToggleFactWatchFlag, (int)Rules_WatchPrintFactsState);
+  Rules_AddWatchItem((int)(intptr_t)aFacts_0, 0, 80, (int)(intptr_t)&g_Rules_WatchFactsFlag, (int)(intptr_t)Rules_ToggleFactWatchFlag, (int)(intptr_t)Rules_WatchPrintFactsState);
   Rules_RegisterFactCommands();
   Rules_RegisterFactQueryFunctions();
   Rules_RegisterFactPatternNetworkPersistence();
@@ -837,8 +837,8 @@ signed int __fastcall Rules_PrintFactWithIndex(int logicalName, int fact)
   int v7; // [esp+14h] [ebp-8h]
 
   v7 = logicalName;
-  sprintf_(buffer, "f-%-5ld ", *(_DWORD *)(fact + 24));
-  Output_Write(v3, (int)buffer, v3);
+  sprintf_(buffer, "f-%-5ld ", *(_DWORD *)(uintptr_t)(fact + 24));
+  Output_Write(v3, (int)(intptr_t)buffer, v3);
   return Rules_PrintFact(v4, fact);
 }
 // 479E03: variable 'v3' is possibly undefined
@@ -853,8 +853,8 @@ signed int __fastcall Rules_PrintFactLabel(int logicalName, int fact)
   int v5; // [esp+14h] [ebp-8h]
 
   v5 = logicalName;
-  sprintf_(buffer, "f-%ld", *(_DWORD *)(fact + 24));
-  return Output_Write(v2, (int)buffer, v2);
+  sprintf_(buffer, "f-%ld", *(_DWORD *)(uintptr_t)(fact + 24));
+  return Output_Write(v2, (int)(intptr_t)buffer, v2);
 }
 // 479E41: variable 'v2' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
@@ -870,20 +870,20 @@ signed int  Rules_PrintFactIdentifier(int logicalName, int fact)
 
   v2 = logicalName;
   if ( g_Print_AddressesToStringsFlag )
-    Output_Write(logicalName, (int)asc_502524, logicalName);
-  if ( (void **)fact == &g_Rules_DummyFactPtr )
+    Output_Write(logicalName, (int)(intptr_t)asc_502524, logicalName);
+  if ( (void **)(uintptr_t)fact == &g_Rules_DummyFactPtr )
   {
     label_text = aDummyFact;
   }
   else
   {
-    Output_Write(v2, (int)aFact_2, v2);
-    Rules_PrintLongInteger(v4, *(_DWORD *)(fact + 24));
+    Output_Write(v2, (int)(intptr_t)aFact_2, v2);
+    Rules_PrintLongInteger(v4, *(_DWORD *)(uintptr_t)(fact + 24));
     label_text = asc_502530;
   }
-  result = Output_Write(v2, (int)label_text, v2);
+  result = Output_Write(v2, (int)(intptr_t)label_text, v2);
   if ( g_Print_AddressesToStringsFlag )
-    return Output_Write(v7, (int)asc_502524, v7);
+    return Output_Write(v7, (int)(intptr_t)asc_502524, v7);
   return result;
 }
 // 479E6E: variable 'v2' is possibly undefined
@@ -895,14 +895,14 @@ signed int  Rules_PrintFactIdentifier(int logicalName, int fact)
 //----- (00479EC0) --------------------------------------------------------
 int  Rules_DecrementFactRefCount(int result)
 {
-  --*(_DWORD *)(result + 8);
+  --*(_DWORD *)(uintptr_t)(result + 8);
   return result;
 }
 
 //----- (00479ED0) --------------------------------------------------------
 int  Rules_IncrementFactRefCount(int result)
 {
-  ++*(_DWORD *)(result + 8);
+  ++*(_DWORD *)(uintptr_t)(result + 8);
   return result;
 }
 
@@ -913,17 +913,17 @@ signed int  Rules_PrintFact(int logicalName, int fact)
   int v4; // ecx
   int multifield; // edi
 
-  if ( (*(_BYTE *)(*(_DWORD *)(fact + 16) + 24) & 1) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fact + 16) + 24) & 1) == 0 )
     return Rules_PrintTemplateFactSlots(logicalName, fact, fact);
-  Output_Write(logicalName, (int)asc_502544, fact);
-  Output_Write(logicalName, *(_DWORD *)(**(_DWORD **)(v3 + 16) + 16), v3);
-  multifield = *(_DWORD *)(v4 + 56);
-  if ( *(_DWORD *)(multifield + 6) )
+  Output_Write(logicalName, (int)(intptr_t)asc_502544, fact);
+  Output_Write(logicalName, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(v3 + 16) + 16), v3);
+  multifield = *(_DWORD *)(uintptr_t)(v4 + 56);
+  if ( *(_DWORD *)(uintptr_t)(multifield + 6) )
   {
-    Output_Write(logicalName, (int)asc_502548, v4);
-    Lexer_OutputFieldRange(logicalName, multifield, *(_DWORD *)(multifield + 6) - 1, 0, 0);
+    Output_Write(logicalName, (int)(intptr_t)asc_502548, v4);
+    Lexer_OutputFieldRange(logicalName, multifield, *(_DWORD *)(uintptr_t)(multifield + 6) - 1, 0, 0);
   }
-  return Output_Write(logicalName, (int)asc_50254C, v4);
+  return Output_Write(logicalName, (int)(intptr_t)asc_50254C, v4);
 }
 // 479EFC: variable 'v3' is possibly undefined
 // 479F0B: variable 'v4' is possibly undefined
@@ -931,7 +931,7 @@ signed int  Rules_PrintFact(int logicalName, int fact)
 //----- (00479F50) --------------------------------------------------------
 int  Rules_NetworkAssertFact(int fact, double a2)
 {
-  return Rules_MatchFactAgainstPatternNetwork(fact, *(_DWORD *)(*(_DWORD *)(fact + 16) + 32), 0, 0, a2, 0);
+  return Rules_MatchFactAgainstPatternNetwork(fact, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fact + 16) + 32), 0, 0, a2, 0);
 }
 
 //----- (00479F70) --------------------------------------------------------
@@ -942,8 +942,8 @@ signed int  Rules_RetractFact(int fact_ptr, double a2)
   fact = (uintptr_t)(unsigned int)fact_ptr;
   if ( g_Rules_JoinOperationInProgress )
   {
-    Rules_PrintErrorID((int)aFactmngr, 1, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeR, 0);
+    Rules_PrintErrorID((int)(intptr_t)aFactmngr, 1, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFactsMayNotBeR, 0);
     return 0;
   }
   if ( !fact )
@@ -956,9 +956,9 @@ signed int  Rules_RetractFact(int fact_ptr, double a2)
     return 0;
   if ( (*(_BYTE *)((uintptr_t)(unsigned int)*(_DWORD *)(fact + 16) + 24) & 2) != 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502590, 0);
-    Rules_PrintFactWithIndex((int)g_IO_LogicalNameTable_WTrace[0], (int)fact);
-    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502598, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_502590, 0);
+    Rules_PrintFactWithIndex((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)fact);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_502598, 0);
   }
   g_Rules_FactListChangedFlag = 1;
   Rules_ReleaseLogicalSupportList((int)fact);
@@ -1019,7 +1019,7 @@ _DWORD *Rules_RemoveGarbageFacts(void)
   _DWORD *v2; // edx
   int v3; // ecx
 
-  result = (_DWORD *)g_Rules_GarbageFactListHead;
+  result = (_DWORD *)(uintptr_t)g_Rules_GarbageFactListHead;
   if ( g_Rules_GarbageFactListHead )
   {
     do
@@ -1029,7 +1029,7 @@ _DWORD *Rules_RemoveGarbageFacts(void)
         v1 = result[9];
         if ( !result[2] && (result[7] & 0x7FFF) > g_ClipsCurrentEvaluationDepth )
           break;
-        result = (_DWORD *)result[9];
+        result = (_DWORD *)(uintptr_t)result[9];
         if ( !v1 )
           return result;
       }
@@ -1037,9 +1037,9 @@ _DWORD *Rules_RemoveGarbageFacts(void)
       g_ClipsEphemeralItemBytes -= 6 * *(_DWORD *)((char *)result + 46) + 60;
       Rules_ReturnFact(result);
       if ( v3 )
-        *(_DWORD *)(v3 + 36) = v2;
+        *(_DWORD *)(uintptr_t)(v3 + 36) = v2;
       else
-        g_Rules_GarbageFactListHead = (int)v2;
+        g_Rules_GarbageFactListHead = (int)(intptr_t)v2;
       result = v2;
     }
     while ( v2 );
@@ -1074,8 +1074,8 @@ _DWORD * Rules_AssertFactDriver(_DWORD *fact, double a2)
   if ( g_Rules_JoinOperationInProgress )
   {
     Rules_ReturnFact(fact);
-    Rules_PrintErrorID((int)aFactmngr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeA, v9);
+    Rules_PrintErrorID((int)(intptr_t)aFactmngr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFactsMayNotBeA, v9);
     return 0;
   }
   slot_ptr = (char *)fact + 54;
@@ -1097,38 +1097,38 @@ _DWORD * Rules_AssertFactDriver(_DWORD *fact, double a2)
     }
     while ( slot_index < slot_count );
   }
-  hash_value = Rules_DeduplicateFactOnAssert((int)fact);
+  hash_value = Rules_DeduplicateFactOnAssert((int)(intptr_t)fact);
   if ( hash_value < 0 )
     return 0;
-  if ( Rules_AddLogicalDependencyLink((int)fact, 0) )
+  if ( Rules_AddLogicalDependencyLink((int)(intptr_t)fact, 0) )
   {
-    Rules_InsertFactHashEntry((int)fact, hash_value);
+    Rules_InsertFactHashEntry((int)(intptr_t)fact, hash_value);
     fact[9] = 0;
     fact[5] = 0;
     prev_fact = g_Rules_LastFactPointer;
     fact[8] = g_Rules_LastFactPointer;
     if ( prev_fact )
-      *(_DWORD *)(prev_fact + 36) = fact;
+      *(_DWORD *)(uintptr_t)(prev_fact + 36) = fact;
     else
-      g_Rules_FactListHead = (int)fact;
+      g_Rules_FactListHead = (int)(intptr_t)fact;
     fact_index = g_Rules_NextFactIndex;
-    g_Rules_LastFactPointer = (int)fact;
+    g_Rules_LastFactPointer = (int)(intptr_t)fact;
     ++g_Rules_NextFactIndex;
     fact[6] = fact_index;
     time_tag = g_Rules_EntityTimeTagCounter++;
     fact[3] = time_tag;
     Rules_InstallFact(fact);
-    if ( (*(_BYTE *)(fact[4] + 24) & 2) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(fact[4] + 24) & 2) != 0 )
     {
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_5025D4, v14);
-      Rules_PrintFactWithIndex(v15, (int)fact);
-      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502598, v16);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_5025D4, v14);
+      Rules_PrintFactWithIndex(v15, (int)(intptr_t)fact);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_502598, v16);
     }
     g_Rules_FactListChangedFlag = 1;
-    Rules_CheckFactAgainstSlotConstraints((int)fact);
+    Rules_CheckFactAgainstSlotConstraints((int)(intptr_t)fact);
     Lexer_ErrorRecover(0);
     g_Rules_JoinOperationInProgress = 1;
-    Rules_MatchFactAgainstPatternNetwork((int)fact, *(_DWORD *)(fact[4] + 32), 0, 0, a2, 0);
+    Rules_MatchFactAgainstPatternNetwork((int)(intptr_t)fact, *(_DWORD *)(uintptr_t)(fact[4] + 32), 0, 0, a2, 0);
     g_Rules_JoinOperationInProgress = 0;
     Rules_FlushPendingDependencyDestructors();
     if ( !g_Rules_CurrentlyExecutingRule )
@@ -1188,32 +1188,32 @@ int  Lexer_EmitSlotBinding(int fact, char *slot_name, int a3, _DWORD *result_val
   _DWORD slotPosition[4]; // [esp+0h] [ebp-10h] BYREF
 
   slotPosition[3] = a3;
-  deftemplate = *(_DWORD *)(fact + 16);
-  if ( (*(_BYTE *)(deftemplate + 24) & 1) != 0 )
+  deftemplate = *(_DWORD *)(uintptr_t)(fact + 16);
+  if ( (*(_BYTE *)(uintptr_t)(deftemplate + 24) & 1) != 0 )
   {
     if ( !slot_name )
     {
-      result_value[1] = *(__int16 *)(fact + 54);
-      result_value[2] = *(_DWORD *)(fact + 56);
+      result_value[1] = *(__int16 *)(uintptr_t)(fact + 54);
+      result_value[2] = *(_DWORD *)(uintptr_t)(fact + 56);
       multifieldValue = result_value[2];
       result_value[3] = 0;
-      result_value[4] = *(_DWORD *)(multifieldValue + 6) - 1;
+      result_value[4] = *(_DWORD *)(uintptr_t)(multifieldValue + 6) - 1;
       return 1;
     }
     return 0;
   }
-  slot_symbol = Str_Intern(slot_name, (int)result_value);
-  result = (int)Lexer_FindTemplateSlot(deftemplate, (int)slot_symbol, slotPosition);
+  slot_symbol = Str_Intern(slot_name, (int)(intptr_t)result_value);
+  result = (int)(intptr_t)Lexer_FindTemplateSlot(deftemplate, (int)(intptr_t)slot_symbol, slotPosition);
   if ( result )
   {
-    slotDataObject[1] = *(__int16 *)(fact + 6 * (slotPosition[0] - 1) + 54);
+    slotDataObject[1] = *(__int16 *)(uintptr_t)(fact + 6 * (slotPosition[0] - 1) + 54);
     slotType = slotDataObject[1];
-    slotDataObject[2] = *(_DWORD *)(fact + 6 * (slotPosition[0] - 1) + 56);
+    slotDataObject[2] = *(_DWORD *)(uintptr_t)(fact + 6 * (slotPosition[0] - 1) + 56);
     if ( slotType == 4 )
     {
       slotMultifield = slotDataObject[2];
       slotDataObject[3] = 0;
-      slotDataObject[4] = *(_DWORD *)(slotMultifield + 6) - 1;
+      slotDataObject[4] = *(_DWORD *)(uintptr_t)(slotMultifield + 6) - 1;
     }
     return slotDataObject[1] != 105;
   }
@@ -1238,12 +1238,12 @@ _DWORD * Rules_CreateFact(signed int slot_count)
     effective_count = 1;
   else
     effective_count = slot_count;
-  if ( (unsigned int)(6 * (effective_count - 1) + 60) < 0x1F4 && *(_DWORD *)(g_ClipsMemoryTable + 24 * (effective_count - 1) + 240) )
+  if ( (unsigned int)(6 * (effective_count - 1) + 60) < 0x1F4 && *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24 * (effective_count - 1) + 240) )
   {
     v3 = g_ClipsMemoryTable + 24 * (effective_count - 1);
-    g_ClipsMemFreeListTemp = *(_DWORD *)(v3 + 240);
-    *(_DWORD *)(v3 + 240) = *(_DWORD *)g_ClipsMemFreeListTemp;
-    result = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(v3 + 240);
+    *(_DWORD *)(uintptr_t)(v3 + 240) = *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
+    result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
@@ -1293,7 +1293,7 @@ _DWORD * Rules_ReturnFact(_DWORD *fact)
     do
     {
       if ( *((_WORD *)slot_cursor + 7) == 4 )
-        Rules_ReturnMultifieldToPool((_DWORD *)slot_cursor[4]);
+        Rules_ReturnMultifieldToPool((_DWORD *)(uintptr_t)slot_cursor[4]);
       ++slot_index;
       slot_cursor = (_DWORD *)((char *)slot_cursor + 6);
     }
@@ -1306,10 +1306,10 @@ _DWORD * Rules_ReturnFact(_DWORD *fact)
   bucket_size = 6 * (v5 - 1) + 60;
   g_ClipsMemPoolReturnBucketIndex = bucket_size;
   if ( bucket_size >= 0x1F4 )
-    return (_DWORD *)Mem_SmallBlockRelease(fact, bucket_size);
-  g_ClipsMemFreeListTemp = (int)fact;
-  *fact = *(_DWORD *)(g_ClipsMemoryTable + 4 * bucket_size);
-  result = (_DWORD *)(g_ClipsMemoryTable + 4 * g_ClipsMemPoolReturnBucketIndex);
+    return (_DWORD *)(uintptr_t)Mem_SmallBlockRelease(fact, bucket_size);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)fact;
+  *fact = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * bucket_size);
+  result = (_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * g_ClipsMemPoolReturnBucketIndex);
   *result = g_ClipsMemFreeListTemp;
   return result;
 }
@@ -1329,14 +1329,14 @@ int  Rules_InstallFact(_DWORD *fact)
 
   ++g_Rules_InstalledFactCount;
   result = fact[4];
-  ++*(_DWORD *)(result + 28);
+  ++*(_DWORD *)(uintptr_t)(result + 28);
   slot_index = 0;
   if ( *(int *)((char *)fact + 46) > 0 )
   {
-    slot_cursor = (int)(fact + 10);
+    slot_cursor = (int)(intptr_t)(fact + 10);
     do
     {
-      Rules_AtomInstall(*(__int16 *)(slot_cursor + 14), *(_DWORD *)(slot_cursor + 16), slot_cursor);
+      Rules_AtomInstall(*(__int16 *)(uintptr_t)(slot_cursor + 14), *(_DWORD *)(uintptr_t)(slot_cursor + 16), slot_cursor);
       ++slot_index;
       result = *(_DWORD *)((char *)fact + 46);
       slot_cursor = v5 + 6;
@@ -1360,22 +1360,22 @@ int  Rules_DeinstallFact(int fact)
 
   slot_base = fact + 40;
   --g_Rules_InstalledFactCount;
-  result = *(_DWORD *)(fact + 16);
-  --*(_DWORD *)(result + 28);
+  result = *(_DWORD *)(uintptr_t)(fact + 16);
+  --*(_DWORD *)(uintptr_t)(result + 28);
   slot_index = 0;
-  if ( *(int *)(slot_base + 6) > 0 )
+  if ( *(int *)(uintptr_t)(slot_base + 6) > 0 )
   {
     slot_cursor = slot_base;
     do
     {
-      Rules_AtomDeinstall(*(__int16 *)(slot_cursor + 14), *(__int16 **)(slot_cursor + 16), slot_cursor);
+      Rules_AtomDeinstall(*(__int16 *)(uintptr_t)(slot_cursor + 14), *(__int16 **)(uintptr_t)(slot_cursor + 16), slot_cursor);
       ++slot_index;
-      result = *(_DWORD *)(slot_base + 6);
+      result = *(_DWORD *)(uintptr_t)(slot_base + 6);
       slot_cursor = v6 + 6;
     }
     while ( slot_index < result );
   }
-  --*(_DWORD *)(fact + 8);
+  --*(_DWORD *)(uintptr_t)(fact + 8);
   return result;
 }
 // 47A989: variable 'v6' is possibly undefined
@@ -1386,8 +1386,8 @@ int  Rules_GetNextFact(int fact)
 {
   if ( !fact )
     return g_Rules_FactListHead;
-  if ( *(char *)(fact + 29) >= 0 )
-    return *(_DWORD *)(fact + 36);
+  if ( *(char *)(uintptr_t)(fact + 29) >= 0 )
+    return *(_DWORD *)(uintptr_t)(fact + 36);
   return 0;
 }
 // 51A15C: using guessed type int dword_51A15C;
@@ -1399,9 +1399,9 @@ int  Rules_GetNextFactInModule(int fact)
 
   if ( fact )
   {
-    if ( *(char *)(fact + 29) < 0 )
+    if ( *(char *)(uintptr_t)(fact + 29) < 0 )
       return 0;
-    next_fact = *(_DWORD *)(fact + 36);
+    next_fact = *(_DWORD *)(uintptr_t)(fact + 36);
   }
   else
   {
@@ -1412,8 +1412,8 @@ int  Rules_GetNextFactInModule(int fact)
       g_Rules_LastFactModuleCache = g_Module_ChangeGeneration;
     }
   }
-  while ( next_fact && (*(_BYTE *)(*(_DWORD *)(next_fact + 16) + 24) & 4) == 0 )
-    next_fact = *(_DWORD *)(next_fact + 36);
+  while ( next_fact && (*(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(next_fact + 16) + 24) & 4) == 0 )
+    next_fact = *(_DWORD *)(uintptr_t)(next_fact + 36);
   return next_fact;
 }
 // 47A9DD: variable 'v1' is possibly undefined
@@ -1424,7 +1424,7 @@ int  Rules_GetNextFactInModule(int fact)
 //----- (0047AA40) --------------------------------------------------------
 int  Rules_GetFactIndex(int fact)
 {
-  return *(_DWORD *)(fact + 24);
+  return *(_DWORD *)(uintptr_t)(fact + 24);
 }
 
 //----- (0047AA50) --------------------------------------------------------

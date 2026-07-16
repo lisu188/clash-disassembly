@@ -53,7 +53,7 @@ signed int * Rules_HostFormat(double context)
   argCount = Lexer_TokenExpect(2);
   if ( argCount == -1 )
     return emptyResult;
-  logicalName = Rules_GetLogicalNameArg(1, (int)aStdout_0, v3, context);
+  logicalName = Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdout_0, v3, context);
   savedLogicalName = logicalName;
   if ( logicalName )
   {
@@ -64,7 +64,7 @@ signed int * Rules_HostFormat(double context)
       {
         while ( 1 )
         {
-          formatChar = *(_BYTE *)(formatString + formatIndex);
+          formatChar = *(_BYTE *)(uintptr_t)(formatString + formatIndex);
           if ( !formatChar )
             break;
           if ( formatChar == 37 )
@@ -91,7 +91,7 @@ signed int * Rules_HostFormat(double context)
                 longFlag = 1;
                 specBuffer[specLength + 1] = 0;
               }
-              convertedString = (const char *)Rules_FormatConvertArg(specBuffer, argIndex, longFlag, conversionChar, context);
+              convertedString = (const char *)(uintptr_t)Rules_FormatConvertArg(specBuffer, argIndex, longFlag, conversionChar, context);
               if ( !convertedString )
               {
                 if ( outputString )
@@ -108,7 +108,7 @@ signed int * Rules_HostFormat(double context)
           {
             segmentStart = formatIndex;
             segmentLength = 0;
-            for ( i = (_BYTE *)(formatString + formatIndex); *i != 37; ++segmentLength )
+            for ( i = (_BYTE *)(uintptr_t)(formatString + formatIndex); *i != 37; ++segmentLength )
             {
               if ( !*i )
                 break;
@@ -124,9 +124,9 @@ signed int * Rules_HostFormat(double context)
         {
           v20 = Str_Intern(outputString, v7);
           if ( strcmp_(v20, v21) )
-            Output_Write(savedLogicalName, (int)outputString, v22);
+            Output_Write(savedLogicalName, (int)(intptr_t)outputString, v22);
           Mem_SmallBlockFree(outputString, outputCapacity);
-          return (signed int *)v23;
+          return (signed int *)(uintptr_t)v23;
         }
         else
         {
@@ -179,11 +179,11 @@ signed int  Rules_FormatCountConversionSpecs(int argCount, double context)
   if ( result )
   {
     specCount = 0;
-    formatString = *(_DWORD *)(argData[2] + 16);
+    formatString = *(_DWORD *)(uintptr_t)(argData[2] + 16);
     formatIndex[0] = 0;
     while ( 1 )
     {
-      ch = *(_BYTE *)(formatString + formatIndex[0]);
+      ch = *(_BYTE *)(uintptr_t)(formatString + formatIndex[0]);
       if ( !ch )
         break;
       if ( ch == 37 )
@@ -203,7 +203,7 @@ signed int  Rules_FormatCountConversionSpecs(int argCount, double context)
     }
     else
     {
-      Rules_ExpectedCountError((int)aFormat, specCount + 2);
+      Rules_ExpectedCountError((int)(intptr_t)aFormat, specCount + 2);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -228,7 +228,7 @@ char  Rules_FormatParseFlag(int formatString, int *formatIndex, _DWORD *longFlag
 
   copyIndex = 0;
   *longFlagOut = 0;
-  formatChar = *(_BYTE *)(*formatIndex + formatString);
+  formatChar = *(_BYTE *)(uintptr_t)(*formatIndex + formatString);
   switch ( formatChar )
   {
     case 'n':
@@ -262,7 +262,7 @@ char  Rules_FormatParseFlag(int formatString, int *formatIndex, _DWORD *longFlag
       bufferCursor = flagBuffer;
       while ( 1 )
       {
-        charPtr = (char *)(*formatIndex + formatString);
+        charPtr = (char *)(uintptr_t)(*formatIndex + formatString);
         if ( *charPtr == 37 || !*charPtr || *formatIndex - startIndex >= 80 )
           return 32;
         result = *charPtr;
@@ -283,7 +283,7 @@ char  Rules_FormatParseFlag(int formatString, int *formatIndex, _DWORD *longFlag
         }
         ++*formatIndex;
       }
-      if ( *(_BYTE *)(formatString + *formatIndex - 1) == 108 )
+      if ( *(_BYTE *)(uintptr_t)(formatString + *formatIndex - 1) == 108 )
         *longFlagOut = 1;
       ++*formatIndex;
       break;
@@ -333,8 +333,8 @@ signed int  Rules_FormatConvertArg(
         result = Lexer_ParseValueList(argIndex, &argData, 111, context);
         if ( !result )
           return result;
-        stringBuffer = Mem_SmallBlockAlloc(strlen(*(const char **)(argValue + 16)) + strlen(formatSpec) + 200);
-        sprintf_(stringBuffer, formatSpec, *(_DWORD *)(argValue + 16));
+        stringBuffer = Mem_SmallBlockAlloc(strlen(*(const char **)(uintptr_t)(argValue + 16)) + strlen(formatSpec) + 200);
+        sprintf_(stringBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argValue + 16));
         goto LABEL_6;
       }
       if ( conversionChar < 0x75 || conversionChar > 0x75 && conversionChar != 120 )
@@ -351,15 +351,15 @@ LABEL_11:
     numberBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
     if ( argType )
     {
-      sprintf_(numberBuffer, formatSpec, *(_DWORD *)(argValue + 16));
+      sprintf_(numberBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argValue + 16));
     }
     else
     {
-      intValue = (int)*(double *)(argValue + 16);
+      intValue = (int)*(double *)(uintptr_t)(argValue + 16);
       sprintf_(v17, formatSpec, intValue);
     }
 LABEL_6:
-    internedValue = Str_Intern(v9, (int)v9)[4];
+    internedValue = Str_Intern(v9, (int)(intptr_t)v9)[4];
     Mem_SmallBlockFree(v12, v11);
     return internedValue;
   }
@@ -371,12 +371,12 @@ LABEL_6:
       if ( !result )
         return result;
       charBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
-      sprintf_(charBuffer, formatSpec, **(unsigned __int8 **)(argValue + 16));
+      sprintf_(charBuffer, formatSpec, **(unsigned __int8 **)(uintptr_t)(argValue + 16));
       goto LABEL_6;
     }
 LABEL_17:
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aErrorInFormatT, longFlag);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForFormattedOu, v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aErrorInFormatT, longFlag);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForFormattedOu, v13);
     return 0;
   }
   if ( conversionChar <= 0x64 )
@@ -388,12 +388,12 @@ LABEL_19:
     floatBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
     if ( argType )
     {
-      floatValue = (double)*(int *)(argValue + 16);
+      floatValue = (double)*(int *)(uintptr_t)(argValue + 16);
       sprintf_(floatBuffer, formatSpec, floatValue);
     }
     else
     {
-      sprintf_(floatBuffer, formatSpec, *(double *)(argValue + 16));
+      sprintf_(floatBuffer, formatSpec, *(double *)(uintptr_t)(argValue + 16));
     }
     goto LABEL_6;
   }
@@ -430,25 +430,25 @@ signed int * Rules_HostReadline(int returnValue, unsigned int a2, double context
 
   bufferSize[3] = a2;
   bufferSize[0] = 0;
-  *(_DWORD *)(returnValue + 4) = 3;
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
   argCount = Lexer_TokenExpect(1);
   if ( argCount == -1 )
   {
     result = Str_Intern(aReadError, v4);
 LABEL_8:
-    *(_DWORD *)(v10 + 8) = result;
+    *(_DWORD *)(uintptr_t)(v10 + 8) = result;
     return result;
   }
   if ( argCount )
   {
-    logicalName = (char *)Rules_GetLogicalNameArg(1, (int)aStdin, v4, context);
+    logicalName = (char *)(uintptr_t)Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdin, v4, context);
     if ( !logicalName )
     {
       Rules_ReportIllegalLogicalName();
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       result = Str_Intern(aReadError, v11);
-      *(_DWORD *)(v12 + 8) = result;
+      *(_DWORD *)(uintptr_t)(v12 + 8) = result;
       return result;
     }
   }
@@ -456,34 +456,34 @@ LABEL_8:
   {
     logicalName = aStdin;
   }
-  if ( !IO_QueryRouters((int)logicalName) )
+  if ( !IO_QueryRouters((int)(intptr_t)logicalName) )
   {
-    IO_ReportUnrecognizedRouter((int)logicalName);
+    IO_ReportUnrecognizedRouter((int)(intptr_t)logicalName);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     result = Str_Intern(aReadError, v13);
-    *(_DWORD *)(v14 + 8) = result;
+    *(_DWORD *)(uintptr_t)(v14 + 8) = result;
     return result;
   }
   g_Lexer_PendingLineCharIndex = 0;
-  lineBuffer = Rules_ReadLineWithEscaping((int)logicalName, &g_Lexer_PendingLineCharIndex, bufferSize, v6);
+  lineBuffer = Rules_ReadLineWithEscaping((int)(intptr_t)logicalName, &g_Lexer_PendingLineCharIndex, bufferSize, v6);
   g_Lexer_PendingLineCharIndex = -1;
   if ( !Rules_GetEvaluationErrorFlag() )
   {
     if ( lineBuffer )
     {
       v16 = Str_Intern(lineBuffer, v8);
-      *(_DWORD *)(v17 + 8) = v16;
-      return (signed int *)Mem_SmallBlockFree(lineBuffer, bufferSize[0]);
+      *(_DWORD *)(uintptr_t)(v17 + 8) = v16;
+      return (signed int *)(uintptr_t)Mem_SmallBlockFree(lineBuffer, bufferSize[0]);
     }
     result = Str_Intern(aEof, v8);
-    *(_DWORD *)(v10 + 4) = 2;
+    *(_DWORD *)(uintptr_t)(v10 + 4) = 2;
     goto LABEL_8;
   }
   result = Str_Intern(aReadError, v8);
-  *(_DWORD *)(v15 + 8) = result;
+  *(_DWORD *)(uintptr_t)(v15 + 8) = result;
   if ( lineBuffer )
-    return (signed int *)Mem_SmallBlockFree(lineBuffer, bufferSize[0]);
+    return (signed int *)(uintptr_t)Mem_SmallBlockFree(lineBuffer, bufferSize[0]);
   return result;
 }
 // 49F17C: variable 'v6' is possibly undefined
@@ -526,10 +526,10 @@ signed int Rules_ReportIllegalLogicalName(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aIofun, 1, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalLogical, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_, v2);
+  Rules_PrintErrorID((int)(intptr_t)aIofun, 1, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIllegalLogical, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction_, v2);
 }
 // 49F330: variable 'v0' is possibly undefined
 // 49F33C: variable 'v1' is possibly undefined
@@ -539,30 +539,30 @@ signed int Rules_ReportIllegalLogicalName(void)
 //----- (0049F360) --------------------------------------------------------
 signed int Rules_RegisterPredicateHostFunctions(void)
 {
-  Rules_RegisterHostFunction(aNot_0, 98, (int)aNotfunction, (int)Rules_NotFunction, (int)a11_6);
-  Rules_RegisterHostFunction(aAnd_0, 98, (int)aAndfunction, (int)Rules_AndFunction, (int)a2);
-  Rules_RegisterHostFunction(aOr_0, 98, (int)aOrfunction, (int)Rules_OrFunction, (int)a2);
-  Rules_RegisterHostFunction(aEq_0, 98, (int)aEqfunction, (int)Rules_HostEq, (int)a2);
-  Rules_RegisterHostFunction(aNeq_0, 98, (int)aNeqfunction, (int)Rules_HostNeq, (int)a2);
-  Rules_RegisterHostFunction(asc_506B64, 98, (int)aLessthanorequa, (int)Rules_LessThanOrEqualFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506B84, 98, (int)aGreaterthanore, (int)Rules_GreaterThanOrEqualFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506B9C, 98, (int)aLessthanfuncti, (int)Rules_LessThanFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506BB4, 98, (int)aGreaterthanfun, (int)Rules_GreaterThanFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506BD0, 98, (int)aNumericequalfu, (int)Rules_NumericEqualFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506BEC, 98, (int)aNumericnotequa, (int)Rules_NumericNotEqualFunction, (int)a2N);
-  Rules_RegisterHostFunction(asc_506BF0, 98, (int)aNumericnotequa, (int)Rules_NumericNotEqualFunction, (int)a2N);
-  Rules_RegisterHostFunction(aSymbolp, 98, (int)aSymbolpfunctio, (int)Rules_HostSymbolp, (int)a11_6);
-  Rules_RegisterHostFunction(aWordp, 98, (int)aSymbolpfunctio, (int)Rules_HostSymbolp, (int)a11_6);
-  Rules_RegisterHostFunction(aStringp, 98, (int)aStringpfunctio, (int)Rules_HostStringp, (int)a11_6);
-  Rules_RegisterHostFunction(aLexemep, 98, (int)aLexemepfunctio, (int)Rules_HostLexemep, (int)a11_6);
-  Rules_RegisterHostFunction(aNumberp, 98, (int)aNumberpfunctio, (int)Rules_HostNumberp, (int)a11_6);
-  Rules_RegisterHostFunction(aIntegerp, 98, (int)aIntegerpfuncti, (int)Rules_HostIntegerp, (int)a11_6);
-  Rules_RegisterHostFunction(aFloatp, 98, (int)aFloatpfunction, (int)Rules_HostFloatp, (int)a11_6);
-  Rules_RegisterHostFunction(aOddp, 98, (int)aOddpfunction, (int)Rules_OddpFunction, (int)a11i_2);
-  Rules_RegisterHostFunction(aEvenp, 98, (int)aEvenpfunction, (int)Rules_EvenpFunction, (int)a11i_2);
-  Rules_RegisterHostFunction(aMultifieldp, 98, (int)aMultifieldpfun, (int)Rules_HostMultifieldp, (int)a11_6);
-  Rules_RegisterHostFunction(aSequencep, 98, (int)aMultifieldpfun, (int)Rules_HostMultifieldp, (int)a11_6);
-  return Rules_RegisterHostFunction(aPointerp, 98, (int)aPointerpfuncti, (int)Rules_PointerpFunction, (int)a11_6);
+  Rules_RegisterHostFunction(aNot_0, 98, (int)(intptr_t)aNotfunction, (int)(intptr_t)Rules_NotFunction, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aAnd_0, 98, (int)(intptr_t)aAndfunction, (int)(intptr_t)Rules_AndFunction, (int)(intptr_t)a2);
+  Rules_RegisterHostFunction(aOr_0, 98, (int)(intptr_t)aOrfunction, (int)(intptr_t)Rules_OrFunction, (int)(intptr_t)a2);
+  Rules_RegisterHostFunction(aEq_0, 98, (int)(intptr_t)aEqfunction, (int)(intptr_t)Rules_HostEq, (int)(intptr_t)a2);
+  Rules_RegisterHostFunction(aNeq_0, 98, (int)(intptr_t)aNeqfunction, (int)(intptr_t)Rules_HostNeq, (int)(intptr_t)a2);
+  Rules_RegisterHostFunction(asc_506B64, 98, (int)(intptr_t)aLessthanorequa, (int)(intptr_t)Rules_LessThanOrEqualFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506B84, 98, (int)(intptr_t)aGreaterthanore, (int)(intptr_t)Rules_GreaterThanOrEqualFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506B9C, 98, (int)(intptr_t)aLessthanfuncti, (int)(intptr_t)Rules_LessThanFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506BB4, 98, (int)(intptr_t)aGreaterthanfun, (int)(intptr_t)Rules_GreaterThanFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506BD0, 98, (int)(intptr_t)aNumericequalfu, (int)(intptr_t)Rules_NumericEqualFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506BEC, 98, (int)(intptr_t)aNumericnotequa, (int)(intptr_t)Rules_NumericNotEqualFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(asc_506BF0, 98, (int)(intptr_t)aNumericnotequa, (int)(intptr_t)Rules_NumericNotEqualFunction, (int)(intptr_t)a2N);
+  Rules_RegisterHostFunction(aSymbolp, 98, (int)(intptr_t)aSymbolpfunctio, (int)(intptr_t)Rules_HostSymbolp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aWordp, 98, (int)(intptr_t)aSymbolpfunctio, (int)(intptr_t)Rules_HostSymbolp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aStringp, 98, (int)(intptr_t)aStringpfunctio, (int)(intptr_t)Rules_HostStringp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aLexemep, 98, (int)(intptr_t)aLexemepfunctio, (int)(intptr_t)Rules_HostLexemep, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aNumberp, 98, (int)(intptr_t)aNumberpfunctio, (int)(intptr_t)Rules_HostNumberp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aIntegerp, 98, (int)(intptr_t)aIntegerpfuncti, (int)(intptr_t)Rules_HostIntegerp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aFloatp, 98, (int)(intptr_t)aFloatpfunction, (int)(intptr_t)Rules_HostFloatp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aOddp, 98, (int)(intptr_t)aOddpfunction, (int)(intptr_t)Rules_OddpFunction, (int)(intptr_t)a11i_2);
+  Rules_RegisterHostFunction(aEvenp, 98, (int)(intptr_t)aEvenpfunction, (int)(intptr_t)Rules_EvenpFunction, (int)(intptr_t)a11i_2);
+  Rules_RegisterHostFunction(aMultifieldp, 98, (int)(intptr_t)aMultifieldpfun, (int)(intptr_t)Rules_HostMultifieldp, (int)(intptr_t)a11_6);
+  Rules_RegisterHostFunction(aSequencep, 98, (int)(intptr_t)aMultifieldpfun, (int)(intptr_t)Rules_HostMultifieldp, (int)(intptr_t)a11_6);
+  return Rules_RegisterHostFunction(aPointerp, 98, (int)(intptr_t)aPointerpfuncti, (int)(intptr_t)Rules_PointerpFunction, (int)(intptr_t)a11_6);
 }
 
 //----- (0049F640) --------------------------------------------------------
@@ -869,42 +869,42 @@ double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
 
   v15 = a1;
   v14 = a3;
-  firstExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  firstExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   if ( firstExpr )
   {
-    result = Rules_CoerceFormToNumericArg((__int16 *)firstExpr, 0, &previousData, result, 1);
+    result = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)firstExpr, 0, &previousData, result, 1);
     if ( firstArgValid )
     {
-      currentExpr = *(_DWORD *)(firstExpr + 10);
+      currentExpr = *(_DWORD *)(uintptr_t)(firstExpr + 10);
       for ( i = 2; currentExpr; ++i )
       {
-        result = Rules_CoerceFormToNumericArg((__int16 *)currentExpr, 0, &currentData, result, i);
+        result = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)currentExpr, 0, &currentData, result, i);
         if ( !argValid )
           break;
         if ( previousType == 1 )
         {
           if ( currentType == 1 )
           {
-            if ( *(_DWORD *)(previousValue + 16) > *(_DWORD *)(currentValue + 16) )
+            if ( *(_DWORD *)(uintptr_t)(previousValue + 16) > *(_DWORD *)(uintptr_t)(currentValue + 16) )
               return result;
           }
-          else if ( (double)*(int *)(previousValue + 16) > *(double *)(currentValue + 16) )
+          else if ( (double)*(int *)(uintptr_t)(previousValue + 16) > *(double *)(uintptr_t)(currentValue + 16) )
           {
             return result;
           }
         }
         else if ( currentType == 1 )
         {
-          if ( (double)*(int *)(currentValue + 16) < *(double *)(previousValue + 16) )
+          if ( (double)*(int *)(uintptr_t)(currentValue + 16) < *(double *)(uintptr_t)(previousValue + 16) )
             return result;
         }
-        else if ( *(double *)(previousValue + 16) > *(double *)(currentValue + 16) )
+        else if ( *(double *)(uintptr_t)(previousValue + 16) > *(double *)(uintptr_t)(currentValue + 16) )
         {
           return result;
         }
         previousType = currentType;
         previousValue = currentValue;
-        currentExpr = *(_DWORD *)(currentExpr + 10);
+        currentExpr = *(_DWORD *)(uintptr_t)(currentExpr + 10);
       }
     }
   }
@@ -934,7 +934,7 @@ CLASH95_INTERNAL int Parser_ParseNumericFormCompat(__int16 *expression, int coer
   }
   if ( value_type > 1 )
   {
-    Parser_ReportError(argument_index, (int)aIntegerOrFlo_0);
+    Parser_ReportError(argument_index, (int)(intptr_t)aIntegerOrFlo_0);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     parsed[1] = 1;

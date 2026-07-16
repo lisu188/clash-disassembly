@@ -11,42 +11,42 @@
 //----- (004A3790) --------------------------------------------------------
 signed int Rules_RegisterMathBuiltins(void)
 {
-  Rules_RegisterHostFunction(aCos, 100, (int)aCosfunction, (int)Rules_CosBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aSin, 100, (int)aSinfunction, (int)Rules_SinBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aTan, 100, (int)aTanfunction, (int)Rules_TanBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aSec, 100, (int)aSecfunction, (int)Rules_SecBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aCsc, 100, (int)aCscfunction, (int)Rules_CscBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aCot, 100, (int)aCotfunction, (int)Rules_CotBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcos, 100, (int)aAcosfunction, (int)Rules_AcosBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAsin, 100, (int)aAsinfunction, (int)Rules_AsinBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAtan, 100, (int)aAtanfunction, (int)Rules_AtanBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAsec, 100, (int)aAsecfunction, (int)Rules_AsecBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcsc, 100, (int)aAcscfunction, (int)Rules_AcscBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcot, 100, (int)aAcotfunction, (int)Rules_AcotBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aCosh, 100, (int)aCoshfunction, (int)Rules_CoshBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aSinh, 100, (int)aSinhfunction, (int)Rules_SinhBuiltin, (int)a11n_0);
-  Rules_RegisterHostFunction(aTanh, 100, (int)aTanhfunction, (int)Rules_MathTanh, (int)a11n_0);
-  Rules_RegisterHostFunction(aSech, 100, (int)aSechfunction, (int)Rules_MathSech, (int)a11n_0);
-  Rules_RegisterHostFunction(aCsch, 100, (int)aCschfunction, (int)Rules_MathCsch, (int)a11n_0);
-  Rules_RegisterHostFunction(aCoth, 100, (int)aCothfunction, (int)Rules_MathCoth, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcosh, 100, (int)aAcoshfunction, (int)Rules_MathAcosh, (int)a11n_0);
-  Rules_RegisterHostFunction(aAsinh, 100, (int)aAsinhfunction, (int)Rules_MathAsinh, (int)a11n_0);
-  Rules_RegisterHostFunction(aAtanh, 100, (int)aAtanhfunction, (int)Rules_MathAtanh, (int)a11n_0);
-  Rules_RegisterHostFunction(aAsech, 100, (int)aAsechfunction, (int)Rules_MathAsech, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcsch, 100, (int)aAcschfunction, (int)Rules_MathAcsch, (int)a11n_0);
-  Rules_RegisterHostFunction(aAcoth, 100, (int)aAcothfunction, (int)Rules_MathAcoth, (int)a11n_0);
-  Rules_RegisterHostFunction(aMod, 110, (int)aModfunction, (int)Rules_MathMod, (int)a22n);
-  Rules_RegisterHostFunction(aExp, 100, (int)aExpfunction, (int)Rules_MathExp, (int)a11n_0);
-  Rules_RegisterHostFunction(aLog, 100, (int)aLogfunction, (int)Rules_MathLog, (int)a11n_0);
-  Rules_RegisterHostFunction(aLog10, 100, (int)aLog10function, (int)Rules_MathLog10, (int)a11n_0);
-  Rules_RegisterHostFunction(aSqrt, 100, (int)aSqrtfunction, (int)Rules_MathSqrt, (int)a11n_0);
-  Rules_RegisterHostFunction(aPi, 100, (int)aPifunction, (int)Rules_MathPi, (int)a00_8);
-  Rules_RegisterHostFunction(aDegRad, 100, (int)aDegradfunction, (int)Rules_MathDegToRad, (int)a11n_0);
-  Rules_RegisterHostFunction(aRadDeg, 100, (int)aRaddegfunction, (int)Rules_MathRadToDeg, (int)a11n_0);
-  Rules_RegisterHostFunction(aDegGrad, 100, (int)aDeggradfunctio, (int)Rules_MathDegToGrad, (int)a11n_0);
-  Rules_RegisterHostFunction(aGradDeg, 100, (int)aGraddegfunctio, (int)Rules_MathGradToDeg, (int)a11n_0);
-  Rules_RegisterHostFunction(asc_507678, 100, (int)aPowfunction, (int)Rules_MathPow, (int)a22n);
-  return Rules_RegisterHostFunction(aRound, 108, (int)aRoundfunction, (int)Rules_MathRound, (int)a11n_0);
+  Rules_RegisterHostFunction(aCos, 100, (int)(intptr_t)aCosfunction, (int)(intptr_t)Rules_CosBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aSin, 100, (int)(intptr_t)aSinfunction, (int)(intptr_t)Rules_SinBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aTan, 100, (int)(intptr_t)aTanfunction, (int)(intptr_t)Rules_TanBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aSec, 100, (int)(intptr_t)aSecfunction, (int)(intptr_t)Rules_SecBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aCsc, 100, (int)(intptr_t)aCscfunction, (int)(intptr_t)Rules_CscBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aCot, 100, (int)(intptr_t)aCotfunction, (int)(intptr_t)Rules_CotBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcos, 100, (int)(intptr_t)aAcosfunction, (int)(intptr_t)Rules_AcosBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAsin, 100, (int)(intptr_t)aAsinfunction, (int)(intptr_t)Rules_AsinBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAtan, 100, (int)(intptr_t)aAtanfunction, (int)(intptr_t)Rules_AtanBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAsec, 100, (int)(intptr_t)aAsecfunction, (int)(intptr_t)Rules_AsecBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcsc, 100, (int)(intptr_t)aAcscfunction, (int)(intptr_t)Rules_AcscBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcot, 100, (int)(intptr_t)aAcotfunction, (int)(intptr_t)Rules_AcotBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aCosh, 100, (int)(intptr_t)aCoshfunction, (int)(intptr_t)Rules_CoshBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aSinh, 100, (int)(intptr_t)aSinhfunction, (int)(intptr_t)Rules_SinhBuiltin, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aTanh, 100, (int)(intptr_t)aTanhfunction, (int)(intptr_t)Rules_MathTanh, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aSech, 100, (int)(intptr_t)aSechfunction, (int)(intptr_t)Rules_MathSech, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aCsch, 100, (int)(intptr_t)aCschfunction, (int)(intptr_t)Rules_MathCsch, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aCoth, 100, (int)(intptr_t)aCothfunction, (int)(intptr_t)Rules_MathCoth, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcosh, 100, (int)(intptr_t)aAcoshfunction, (int)(intptr_t)Rules_MathAcosh, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAsinh, 100, (int)(intptr_t)aAsinhfunction, (int)(intptr_t)Rules_MathAsinh, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAtanh, 100, (int)(intptr_t)aAtanhfunction, (int)(intptr_t)Rules_MathAtanh, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAsech, 100, (int)(intptr_t)aAsechfunction, (int)(intptr_t)Rules_MathAsech, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcsch, 100, (int)(intptr_t)aAcschfunction, (int)(intptr_t)Rules_MathAcsch, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aAcoth, 100, (int)(intptr_t)aAcothfunction, (int)(intptr_t)Rules_MathAcoth, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aMod, 110, (int)(intptr_t)aModfunction, (int)(intptr_t)Rules_MathMod, (int)(intptr_t)a22n);
+  Rules_RegisterHostFunction(aExp, 100, (int)(intptr_t)aExpfunction, (int)(intptr_t)Rules_MathExp, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aLog, 100, (int)(intptr_t)aLogfunction, (int)(intptr_t)Rules_MathLog, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aLog10, 100, (int)(intptr_t)aLog10function, (int)(intptr_t)Rules_MathLog10, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aSqrt, 100, (int)(intptr_t)aSqrtfunction, (int)(intptr_t)Rules_MathSqrt, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aPi, 100, (int)(intptr_t)aPifunction, (int)(intptr_t)Rules_MathPi, (int)(intptr_t)a00_8);
+  Rules_RegisterHostFunction(aDegRad, 100, (int)(intptr_t)aDegradfunction, (int)(intptr_t)Rules_MathDegToRad, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aRadDeg, 100, (int)(intptr_t)aRaddegfunction, (int)(intptr_t)Rules_MathRadToDeg, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aDegGrad, 100, (int)(intptr_t)aDeggradfunctio, (int)(intptr_t)Rules_MathDegToGrad, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(aGradDeg, 100, (int)(intptr_t)aGraddegfunctio, (int)(intptr_t)Rules_MathGradToDeg, (int)(intptr_t)a11n_0);
+  Rules_RegisterHostFunction(asc_507678, 100, (int)(intptr_t)aPowfunction, (int)(intptr_t)Rules_MathPow, (int)(intptr_t)a22n);
+  return Rules_RegisterHostFunction(aRound, 108, (int)(intptr_t)aRoundfunction, (int)(intptr_t)Rules_MathRound, (int)(intptr_t)a11n_0);
 }
 
 //----- (004A3BD0) --------------------------------------------------------
@@ -62,7 +62,7 @@ signed int  Rules_MathParseSingleArg(double *theNumber, int a2, double a3)
   if ( result )
   {
     result = 1;
-    *theNumber = *(double *)(item[2] + 16);
+    *theNumber = *(double *)(uintptr_t)(item[2] + 16);
   }
   return result;
 }
@@ -80,10 +80,10 @@ int Rules_MathDomainError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aEmathfun, 1, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDomainErrorFor, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
+  Rules_PrintErrorID((int)(intptr_t)aEmathfun, 1, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDomainErrorFor, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -99,10 +99,10 @@ int Rules_MathArgumentOverflowError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aEmathfun, 2, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentOverfl, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
+  Rules_PrintErrorID((int)(intptr_t)aEmathfun, 2, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aArgumentOverfl, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -118,10 +118,10 @@ int Rules_MathSingularityError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aEmathfun, 3, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSingularityAtA, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
+  Rules_PrintErrorID((int)(intptr_t)aEmathfun, 3, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSingularityAtA, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -703,8 +703,8 @@ double  Rules_MathPow(double a1)
   parseOk = Lexer_ParseValueList(2, &value2, 0, a1);
   if ( !parseOk )
     return 0.0;
-  num1 = *(double *)(value1Value + 16);
-  num2 = *(double *)(value2Value + 16);
+  num1 = *(double *)(uintptr_t)(value1Value + 16);
+  num2 = *(double *)(uintptr_t)(value2Value + 16);
   if ( num1 == 0.0 && num2 <= 0.0 )
     goto LABEL_10;
   if ( num1 < 0.0 )
@@ -746,9 +746,9 @@ int * Rules_MathMod(int returnValue, double a2)
   {
     parseStatus = 0;
 LABEL_20:
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;
     result = Rules_AddIntegerValue(parseStatus);
-    *(_DWORD *)(returnValue + 8) = result;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
     return result;
   }
   parseStatus = Lexer_ParseValueList(1, &item1, 110, a2);
@@ -757,40 +757,40 @@ LABEL_20:
   parseStatus = Lexer_ParseValueList(2, &item2, 110, a2);
   if ( !parseStatus )
     goto LABEL_20;
-  if ( item2Type == 1 && !*(_DWORD *)(item2Value + 16) || item2Type != 1 && *(double *)(item2Value + 16) == 0.0 )
+  if ( item2Type == 1 && !*(_DWORD *)(uintptr_t)(item2Value + 16) || item2Type != 1 && *(double *)(uintptr_t)(item2Value + 16) == 0.0 )
   {
     Rules_ReportDivideByZeroError();
     Lexer_ErrorRecover(1);
-    *(_DWORD *)(returnValue + 4) = 1;
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;
     result = Rules_AddIntegerValue(0);
-    *(_DWORD *)(returnValue + 8) = result;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else if ( item1Type && item2Type )
   {
-    intRemainder = *(_DWORD *)(item1Value + 16) % *(_DWORD *)(item2Value + 16);
-    *(_DWORD *)(returnValue + 4) = 1;
+    intRemainder = *(_DWORD *)(uintptr_t)(item1Value + 16) % *(_DWORD *)(uintptr_t)(item2Value + 16);
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;
     result = Rules_AddIntegerValue(intRemainder);
-    *(_DWORD *)(returnValue + 8) = result;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else
   {
     if ( item1Type == 1 )
-      fnum1 = (double)*(int *)(item1Value + 16);
+      fnum1 = (double)*(int *)(uintptr_t)(item1Value + 16);
     else
-      fnum1 = *(double *)(item1Value + 16);
+      fnum1 = *(double *)(uintptr_t)(item1Value + 16);
     if ( item2Type == 1 )
-      fnum2 = (double)*(int *)(item2Value + 16);
+      fnum2 = (double)*(int *)(uintptr_t)(item2Value + 16);
     else
-      fnum2 = *(double *)(item2Value + 16);
+      fnum2 = *(double *)(uintptr_t)(item2Value + 16);
     quotient = fnum1 / fnum2;
-    *(_DWORD *)(returnValue + 4) = 0;
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 0;
     if ( quotient >= 0.0 )
       truncatedQuotient = floor(quotient);
     else
       truncatedQuotient = ceil(quotient);
     floatRemainder = fnum1 - truncatedQuotient * fnum2;
-    result = (int *)Rules_AddDoubleValue(floatRemainder);
-    *(_DWORD *)(returnValue + 8) = result;
+    result = (int *)(uintptr_t)Rules_AddDoubleValue(floatRemainder);
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   return result;
 }
@@ -885,8 +885,8 @@ signed int  Rules_MathRound(int returnValue, double a2)
   if ( !result )
     return result;
   if ( theValueType == 1 )
-    return *(_DWORD *)(theValueContents + 16);
-  return (int)ceil(*(double *)(theValueContents + 16) + g_Rules_MathRoundHalfOffset);
+    return *(_DWORD *)(uintptr_t)(theValueContents + 16);
+  return (int)ceil(*(double *)(uintptr_t)(theValueContents + 16) + g_Rules_MathRoundHalfOffset);
 }
 // 5077C0: using guessed type double dbl_5077C0;
 
@@ -913,7 +913,7 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
   errBufSize = errorBufferSize;
   if ( errorBufferSize > 0 )
     *errorBuffer = 0;
-  fp = (int *)IO_FOpen(fileName, g_Help_FileOpenModeRead, a3, a5);
+  fp = (int *)(uintptr_t)IO_FOpen(fileName, g_Help_FileOpenModeRead, a3, a5);
   if ( fp )
   {
     fileRecord = Help_GetOrCreateFileRecord(fileName);
@@ -923,7 +923,7 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
       entryCount = 0;
       inEntry = 0;
       entryClosed = 1;
-      while ( fgets_(lineBuffer, 256, (int)fp) )
+      while ( fgets_(lineBuffer, 256, (int)(intptr_t)fp) )
       {
         ++lineNumber;
         if ( lineBuffer[0] != 36 || lineBuffer[1] != 36 )
@@ -934,18 +934,18 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
             {
               if ( entryClosed != 1 )
               {
-                fclose_((int)fp);
-                Help_UnloadTopicFile((int)fileName);
+                fclose_((int)(intptr_t)fp);
+                Help_UnloadTopicFile((int)(intptr_t)fileName);
                 if ( v12 < 60 )
                   return 0;
                 goto LABEL_23;
               }
               inEntry = 1;
               entryClosed = 0;
-              result = Help_ParseEntryHeader(fp, (int)fileName, (int)errBuf, errBufSize, lineNumber);
+              result = Help_ParseEntryHeader(fp, (int)(intptr_t)fileName, (int)(intptr_t)errBuf, errBufSize, lineNumber);
               if ( !result )
                 return result;
-              result = (_DWORD *)Help_InsertEntryIntoTopicTree((int)fileRecord, result, (int)errBuf, errBufSize, lineNumber);
+              result = (_DWORD *)(uintptr_t)Help_InsertEntryIntoTopicTree((int)(intptr_t)fileRecord, result, (int)(intptr_t)errBuf, errBufSize, lineNumber);
               if ( !result )
                 return result;
             }
@@ -954,8 +954,8 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
           {
             if ( inEntry != 1 )
             {
-              fclose_((int)fp);
-              Help_UnloadTopicFile((int)fileName);
+              fclose_((int)(intptr_t)fp);
+              Help_UnloadTopicFile((int)(intptr_t)fileName);
               if ( v11 < 60 )
                 return 0;
               sprintf_(errBuf, "Line %d : Unmatched end marker.", lineNumber);
@@ -967,14 +967,14 @@ _DWORD * Help_IndexTopicFile(CHAR *fileName, _BYTE *errorBuffer, int a3, int err
           }
         }
       }
-      fclose_((int)fp);
+      fclose_((int)(intptr_t)fp);
       if ( entryClosed )
       {
         if ( !entryCount )
-          Help_UnloadTopicFile((int)fileName);
-        return (_DWORD *)entryCount;
+          Help_UnloadTopicFile((int)(intptr_t)fileName);
+        return (_DWORD *)(uintptr_t)entryCount;
       }
-      Help_UnloadTopicFile((int)fileName);
+      Help_UnloadTopicFile((int)(intptr_t)fileName);
       if ( v13 >= 60 )
       {
 LABEL_23:
@@ -984,7 +984,7 @@ LABEL_23:
     }
     else
     {
-      fclose_((int)fp);
+      fclose_((int)(intptr_t)fp);
       if ( v10 >= 60 )
       {
         sprintf_(errBuf, "File \"%s\" already loaded.", fileName);
@@ -1027,17 +1027,17 @@ signed int  Help_UnloadTopicFile(int fileName)
     do
     {
       prevFile = topicFile;
-      topicFile = *(_DWORD *)(topicFile + 88);
+      topicFile = *(_DWORD *)(uintptr_t)(topicFile + 88);
     }
     while ( topicFile && strcmp_(topicFile, fileName) );
   }
   if ( !topicFile )
     return 0;
-  Help_FreeTopicTree(*(_DWORD **)(topicFile + 80));
-  if ( (_DWORD *)prevFile == foundFile )
+  Help_FreeTopicTree(*(_DWORD **)(uintptr_t)(topicFile + 80));
+  if ( (_DWORD *)(uintptr_t)prevFile == foundFile )
     g_HelpLoadedTopicFileList = foundFile[22];
   else
-    *(_DWORD *)(prevFile + 88) = foundFile[22];
+    *(_DWORD *)(uintptr_t)(prevFile + 88) = foundFile[22];
   Mem_SmallBlockFree(foundFile, 92);
   return 1;
 }
@@ -1054,13 +1054,13 @@ int  Help_OpenFileAtNavigatedTopic(const CHAR *fileName, _DWORD *menu, _DWORD *c
   int result; // eax
   int fp; // ecx
 
-  offset = Help_FindOrAdvanceTopicEntry((int)fileName, menu, code, topicName);
+  offset = Help_FindOrAdvanceTopicEntry((int)(intptr_t)fileName, menu, code, topicName);
   if ( offset < 0 )
     return 0;
   result = IO_FOpen(fileName, g_Help_FileOpenModeRead, v6, offset);
   if ( result )
   {
-    if ( IO_SeekStreamGuarded(result, offset, 0, (int)code) < 0 )
+    if ( IO_SeekStreamGuarded(result, offset, 0, (int)(intptr_t)code) < 0 )
     {
       fclose_(fp);
       *code = -10;
@@ -1100,7 +1100,7 @@ int  Help_ReopenFileAtActiveEntry(const CHAR *fileName, _DWORD *code, DWORD a3)
   if ( noMatch > 0 )
   {
     do
-      fileRecord = *(_DWORD *)(fileRecord + 88);
+      fileRecord = *(_DWORD *)(uintptr_t)(fileRecord + 88);
     while ( fileRecord && strcmp_(fileRecord, fileName) );
   }
   if ( !fileRecord )
@@ -1108,7 +1108,7 @@ int  Help_ReopenFileAtActiveEntry(const CHAR *fileName, _DWORD *code, DWORD a3)
     *code = -10;
     return 0;
   }
-  if ( !*(_DWORD *)(fileRecord + 84) )
+  if ( !*(_DWORD *)(uintptr_t)(fileRecord + 84) )
   {
     *code = -25;
     return 0;
@@ -1117,7 +1117,7 @@ int  Help_ReopenFileAtActiveEntry(const CHAR *fileName, _DWORD *code, DWORD a3)
   fp = result;
   if ( result )
   {
-    if ( IO_SeekStreamGuarded(result, *(_DWORD *)(*(_DWORD *)(v8 + 84) + 88), 0, (int)code) < 0 )
+    if ( IO_SeekStreamGuarded(result, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 84) + 88), 0, (int)(intptr_t)code) < 0 )
     {
       fclose_(v10);
       *code = -10;
@@ -1211,8 +1211,8 @@ int  Str_UppercaseToDelimiter(int result, int a2)
   _BYTE *v4; // edx
   char nextCh; // bh
 
-  strPtr = (_BYTE *)result;
-  if ( *(_BYTE *)result )
+  strPtr = (_BYTE *)(uintptr_t)result;
+  if ( *(_BYTE *)(uintptr_t)result )
   {
     do
     {
@@ -1271,31 +1271,31 @@ LABEL_6:
     *((_DWORD *)newRecord + 22) = 0;
     if ( g_HelpLoadedTopicFileList )
     {
-      *(_DWORD *)(v6 + 88) = newRecord;
+      *(_DWORD *)(uintptr_t)(v6 + 88) = newRecord;
       return newRecord;
     }
     else
     {
-      g_HelpLoadedTopicFileList = (int)newRecord;
+      g_HelpLoadedTopicFileList = (int)(intptr_t)newRecord;
       return newRecord;
     }
   }
   record = g_HelpLoadedTopicFileList;
-  if ( !*(_DWORD *)(g_HelpLoadedTopicFileList + 88) )
+  if ( !*(_DWORD *)(uintptr_t)(g_HelpLoadedTopicFileList + 88) )
   {
 LABEL_5:
-    result = (char *)strcmp_(record, fileName);
+    result = (char *)(uintptr_t)strcmp_(record, fileName);
     if ( !result )
       return result;
     goto LABEL_6;
   }
   while ( 1 )
   {
-    result = (char *)strcmp_(record, fileName);
+    result = (char *)(uintptr_t)strcmp_(record, fileName);
     if ( !result )
       return result;
-    record = *(_DWORD *)(v4 + 88);
-    if ( !*(_DWORD *)(record + 88) )
+    record = *(_DWORD *)(uintptr_t)(v4 + 88);
+    if ( !*(_DWORD *)(uintptr_t)(record + 88) )
       goto LABEL_5;
   }
 }
@@ -1337,9 +1337,9 @@ LABEL_5:
       if ( !strcmp_(v10, aBeginEntry) )
       {
         bufferedCount = fp[1];
-        if ( bufferedCount > 0 && (unsigned int)*(unsigned __int8 *)*fp - 13 > 0xFD )
+        if ( bufferedCount > 0 && (unsigned int)*(unsigned __int8 *)(uintptr_t)*fp - 13 > 0xFD )
         {
-          streamBufPtr = (unsigned __int8 *)*fp;
+          streamBufPtr = (unsigned __int8 *)(uintptr_t)*fp;
           v14 = *fp + 1;
           fp[1] = bufferedCount - 1;
           *fp = v14;
@@ -1355,7 +1355,7 @@ LABEL_5:
         entry[23] = 0;
         entry[22] = fileOffset;
         entry[25] = 0;
-        Str_UppercaseToDelimiter((int)(entry + 2), v18);
+        Str_UppercaseToDelimiter((int)(intptr_t)(entry + 2), v18);
         return entry;
       }
       else

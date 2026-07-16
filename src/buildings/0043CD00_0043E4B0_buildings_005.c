@@ -52,14 +52,14 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 side)
   Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", side, g_CurrentPlayerIndex, g_UnitBattleAiTurnCounter, 0);
   g_BattleAiActionAttemptCount = 0;
   ++g_UnitBattleAiTurnCounter;
-  if ( *(_DWORD *)(g_MapData + 828) != -1 )
+  if ( *(_DWORD *)(uintptr_t)(g_MapData + 828) != -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "battle_ai_before_wall_scan",
       side,
-      *(_DWORD *)(g_MapData + 828),
-      *(_DWORD *)(g_MapData + 800),
-      *(_DWORD *)(g_MapData + 804));
+      *(_DWORD *)(uintptr_t)(g_MapData + 828),
+      *(_DWORD *)(uintptr_t)(g_MapData + 800),
+      *(_DWORD *)(uintptr_t)(g_MapData + 804));
     UnitBattle_ScanAiWallTargetColumns();
     Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", side, g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX);
   }
@@ -83,7 +83,7 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 side)
       while ( g_UnitBattleAiCandidateQueueTail )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        poppedUnitId = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
+        poppedUnitId = WCIsvListBase_PopFrontValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, 0);
         unitIndex = poppedUnitId;
         UnitBattle_ResetAiReachGridForSide(side);
         UnitBattle_ScoreAiActionGridForUnit(unitIndex, side, 0, 1);
@@ -95,7 +95,7 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 side)
         }
         else
         {
-          WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
+          WCIsvListBase_AppendValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, unitIndex);
         }
       }
       goto LABEL_8;
@@ -105,7 +105,7 @@ LABEL_8:
       for ( i = g_BattleAiUnitQueueCount; queueIndex < i; ++queueIndex )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        queuedUnitId = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
+        queuedUnitId = WCIsvListBase_PopFrontValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, 0);
         unitIndex = queuedUnitId;
         UnitBattle_ResetAiReachGridForSide(side);
         UnitBattle_ScoreAiActionGridForUnit(unitIndex, side, 0, queueIndex);
@@ -115,7 +115,7 @@ LABEL_8:
           UnitBattle_UpdateIdleAnimatedUnits();
           UnitBattle_ExecuteAiActionForUnit(unitIndex, side, 0);
         }
-        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
+        WCIsvListBase_AppendValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, unitIndex);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
       g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(side, side);
@@ -134,10 +134,10 @@ LABEL_13:
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    unitIndex = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
+    unitIndex = WCIsvListBase_PopFrontValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, 0);
     Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", unitIndex, side, g_UnitBattleAiCandidateQueueTail, turnResult);
     unitRecordAddr = g_MapData + 31 * unitIndex;
-    if ( *(__int16 *)(unitRecordAddr + 852) != -1 && side == *(_BYTE *)(unitRecordAddr + 854) )
+    if ( *(__int16 *)(uintptr_t)(unitRecordAddr + 852) != -1 && side == *(_BYTE *)(uintptr_t)(unitRecordAddr + 854) )
       break;
 LABEL_20:
     if ( !g_UnitBattleAiCandidateQueueTail )
@@ -157,7 +157,7 @@ LABEL_21:
     UnitBattle_UpdateIdleAnimatedUnits();
     if ( !UnitBattle_SelectAiActionForUnit(unitIndex, side) )
     {
-      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
+      WCIsvListBase_AppendValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, unitIndex);
 LABEL_19:
       turnResult = 0;
       goto LABEL_20;
@@ -272,7 +272,7 @@ int  WCIsvListBase_dtorVariant124(WCIsvListBase *a1, char dtorFlags)
   }
   else
   {
-    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)a1);
+    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)(intptr_t)a1);
     if ( (dtorFlags & 2) != 0 )
     {
       j__nfree_();
@@ -299,7 +299,7 @@ int  WCIsvListBase_ctorVariant124AndCopy(_DWORD *dest, _DWORD *source)
   dest[1] = &g_WCIsvListBaseDtor_Vtable;
   dest[1] = &g_WCIsvListBaseDestroyElements_Vtable;
   dest[1] = &g_WCIsvListBaseVariant124_Vtable;
-  WCIsvListBase_CopyAppendAll(dest, source, (int)dest);
+  WCIsvListBase_CopyAppendAll(dest, source, (int)(intptr_t)dest);
   return v2;
 }
 // 43D076: variable 'v2' is possibly undefined
@@ -342,7 +342,7 @@ int  WCIsvListBase_dtorVariant134(WCIsvListBase *a1, char dtorFlags)
   }
   else
   {
-    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)a1);
+    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)(intptr_t)a1);
     if ( (dtorFlags & 2) != 0 )
     {
       j__nfree_();
@@ -514,8 +514,8 @@ int  WCIsvListBase_ReleaseLinkNode(int listHandle, int linkHandle, int freeSize)
 {
   if ( !linkHandle )
     return 0;
-  if ( *(_DWORD *)(listHandle + 20) )
-    return (*(int (__cdecl **)(int))(uintptr_t)(unsigned int)*(_DWORD *)(listHandle + 20))(freeSize);
+  if ( *(_DWORD *)(uintptr_t)(listHandle + 20) )
+    return (*(int (__cdecl **)(int))(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(listHandle + 20))(freeSize);
   return nfree_(linkHandle);
 }
 
@@ -605,9 +605,9 @@ int  WCIsvListBase_CopyCtor(_DWORD *dest, _DWORD *source)
   dest[5] = 0;
   dest[1] = &g_WCIsvListBaseDtor_Vtable;
   dest[1] = &g_WCIsvListBaseVariant124_Vtable;
-  WCIsvListBase_CopyAppendAll(dest, source, (int)dest);
+  WCIsvListBase_CopyAppendAll(dest, source, (int)(intptr_t)dest);
   result = v2;
-  *(_DWORD *)(v2 + 4) = &g_WCIsvListBaseVariant134_Vtable;
+  *(_DWORD *)(uintptr_t)(v2 + 4) = &g_WCIsvListBaseVariant134_Vtable;
   return result;
 }
 // 43D2BF: variable 'v2' is possibly undefined
@@ -680,7 +680,7 @@ int  Battle_DeploySideUnitsByRoleBuckets(char *ownUnits, int ownCount, char *ene
     defenseRatio = ownDefenseTotal / enemyDefenseTotal;
   defenseRatioFloat = (float)defenseRatio;
   deployMode = defenseRatioFloat < g_Battle_RoleDeployRatioHighThreshold && (defenseRatioFloat <= g_Battle_RoleDeployRatioLowThreshold || SLODWORD(attackRatioFloat) > 1065353216);
-  Battle_BuildRoleDeploymentBuckets((int)ownUnits, ownCount, deployMode);
+  Battle_BuildRoleDeploymentBuckets((int)(intptr_t)ownUnits, ownCount, deployMode);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_deploy_after_build",
     ownCount,
@@ -724,14 +724,14 @@ int  Battle_BuildRoleDeploymentBuckets(int unitsPtr, int unitCount, unsigned __i
     {
       bucketCode = g_BattleRoleDeploymentBucketTable[7 * deployMode + (unsigned __int8)g_UnitTypeRole[88 * *unitRecord]];
       if ( (bucketCode - bucketCode % 10) / 10 == 1 )
-        g_BattleDeploymentBucketRole1[++bucket1Count] = (int)unitRecord;
+        g_BattleDeploymentBucketRole1[++bucket1Count] = (int)(intptr_t)unitRecord;
       if ( (bucketCode - bucketCode % 10) / 10 == 2 )
-        g_BattleDeploymentBucketRole2[++bucket2Count] = (int)unitRecord;
+        g_BattleDeploymentBucketRole2[++bucket2Count] = (int)(intptr_t)unitRecord;
       result = (bucketCode - bucketCode % 10) / 10;
       if ( result == 3 )
       {
         result = bucket3Count * 4;
-        g_BattleDeploymentBucketRole3[bucket3Count++] = (int)unitRecord;
+        g_BattleDeploymentBucketRole3[bucket3Count++] = (int)(intptr_t)unitRecord;
       }
       ++unitIndex;
       unitRecord = (__int16 *)((char *)unitRecord + 31);
@@ -764,9 +764,9 @@ signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *unitRecord
   {
     while ( 1 )
     {
-      tileY = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(g_MapData + 804) - 3;
-      tileX = *(_DWORD *)(g_MapData + 800) / 2 + *columnCursor;
-      if ( tileX < *(_DWORD *)(g_MapData + 800) )
+      tileY = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(uintptr_t)(g_MapData + 804) - 3;
+      tileX = *(_DWORD *)(uintptr_t)(g_MapData + 800) / 2 + *columnCursor;
+      if ( tileX < *(_DWORD *)(uintptr_t)(g_MapData + 800) )
         break;
       *columnCursor = 0;
       nextRowRight = ++*rowCursor % 3;
@@ -781,8 +781,8 @@ signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *unitRecord
     }
     while ( 1 )
     {
-      tileYLeft = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(g_MapData + 804) - 3;
-      tileX2 = *(_DWORD *)(g_MapData + 800) / 2 - *columnCursor;
+      tileYLeft = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(uintptr_t)(g_MapData + 804) - 3;
+      tileX2 = *(_DWORD *)(uintptr_t)(g_MapData + 800) / 2 - *columnCursor;
       tileYLeftKept = tileYLeft;
       if ( tileX2 >= 0 )
         break;
@@ -952,41 +952,41 @@ int  Building_ShowGateDoorDialog_v1(int buildingPtr, int stringBuffer, DWORD ren
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(stringBuffer, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_3;
   else
     backgroundPath = aCastle_pogDw_3;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
-  spriteSetByte = (char)spriteSet;
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(uintptr_t)(renderSurface + 48))(0, backgroundPath, v5);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, (char)(intptr_t)paletteBuffer, renderContext);
+  spriteSetByte = (char)(intptr_t)spriteSet;
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)spriteSet);
-  g_GateDoorDialogV1SpriteSet = (int)spriteSet;
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)spriteSet);
+  g_GateDoorDialogV1SpriteSet = (int)(intptr_t)spriteSet;
   if ( useChrTheme )
     palettePath = aCastle_chrDw_5;
   else
     palettePath = aCastle_pogDw_5;
-  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)(intptr_t)paletteBuffer, v10, renderContext);
   Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
   Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, renderContext);
-  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_6);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)(intptr_t)aS_6);
   Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V1);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)paletteBuffer, v17, renderContext);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_GateDoorDialogExitFlag_V1 = v18;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V1, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V1 );
@@ -1046,41 +1046,41 @@ int  Building_ShowGateDoorDialog_v2(int buildingPtr, int a2, DWORD renderContext
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_6;
   else
     backgroundPath = aCastle_pogDw_6;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
-  spriteSetByte = (char)spriteSet;
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(uintptr_t)(renderSurface + 48))(0, backgroundPath, v5);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, (char)(intptr_t)paletteBuffer, renderContext);
+  spriteSetByte = (char)(intptr_t)spriteSet;
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)spriteSet);
-  g_GateDoorDialogV2SpriteSet = (int)spriteSet;
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)spriteSet);
+  g_GateDoorDialogV2SpriteSet = (int)(intptr_t)spriteSet;
   if ( useChrTheme )
     palettePath = aCastle_chrDw_8;
   else
     palettePath = aCastle_pogDw_8;
-  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)(intptr_t)paletteBuffer, v10, renderContext);
   Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
   Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, renderContext);
-  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_7);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)(intptr_t)aS_7);
   Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V2);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)paletteBuffer, v17, renderContext);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_GateDoorDialogExitFlag_V2 = v18;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V2, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V2 );
@@ -1140,41 +1140,41 @@ int  Building_ShowGateDoorDialog_v3(int buildingPtr, int objectArray, DWORD rend
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(objectArray, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrDw_9;
   else
     backgroundPath = aCastle_pogDw_9;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
-  spriteSetByte = (char)spriteSet;
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(uintptr_t)(renderSurface + 48))(0, backgroundPath, v5);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, (char)(intptr_t)paletteBuffer, renderContext);
+  spriteSetByte = (char)(intptr_t)spriteSet;
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)spriteSet);
-  g_GateDoorDialogV3SpriteSet = (int)spriteSet;
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)spriteSet);
+  g_GateDoorDialogV3SpriteSet = (int)(intptr_t)spriteSet;
   if ( useChrTheme )
     palettePath = aCastle_chrD_11;
   else
     palettePath = aCastle_pogD_11;
-  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)(intptr_t)paletteBuffer, v10, renderContext);
   Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
   Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, renderContext);
-  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_8);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)(intptr_t)aS_8);
   Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V3);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)paletteBuffer, v17, renderContext);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_GateDoorDialogExitFlag_V3 = v18;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V3, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V3 );
@@ -1234,41 +1234,41 @@ int  Building_ShowGateDoorDialog_v4(int buildingPtr, int ctorArrayBuffer, DWORD 
   int v18; // ecx
   unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  useChrTheme = *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(ctorArrayBuffer, 256);
   if ( useChrTheme )
     backgroundPath = aCastle_chrD_12;
   else
     backgroundPath = aCastle_pogD_12;
-  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
-  spriteSet = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
-  spriteSetByte = (char)spriteSet;
+  renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(uintptr_t)(renderSurface + 48))(0, backgroundPath, v5);
+  spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v8, (char)(intptr_t)paletteBuffer, renderContext);
+  spriteSetByte = (char)(intptr_t)spriteSet;
   if ( spriteSet )
-    spriteSet = DLXSpriteSet_Load(spriteSet, (char)spriteSet);
-  g_GateDoorDialogV4SpriteSet = (int)spriteSet;
+    spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)spriteSet);
+  g_GateDoorDialogV4SpriteSet = (int)(intptr_t)spriteSet;
   if ( useChrTheme )
     palettePath = aCastle_chrD_14;
   else
     palettePath = aCastle_pogD_14;
-  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)(intptr_t)paletteBuffer, v10, renderContext);
   Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
   Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   Render_ReleaseSurface(8, renderContext);
-  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_9);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)(intptr_t)aS_9);
   Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V4);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)paletteBuffer, v17, renderContext);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_GateDoorDialogExitFlag_V4 = v18;
   do
   {
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V4, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V4 );
@@ -1312,10 +1312,10 @@ BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *building)
     neighborX = *neighborOffsets + *building;
     neighborY = neighborOffsets[1] + building[1];
     if ( neighborX >= 0
-      && neighborX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+      && neighborX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
       && neighborY >= 0
-      && neighborY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-      && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
+      && neighborY < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
+      && *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
       && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
       break;
@@ -1353,7 +1353,7 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
   int *neighborOffsets; // [esp+0h] [ebp-20h]
   __int16 *newStackRecord; // [esp+8h] [ebp-18h]
 
-  Debug_Log(exitSlots[3], exitSlots[2], (DWORD)building, (int)aBuildingUnitsLeave);
+  Debug_Log(exitSlots[3], exitSlots[2], (DWORD)(intptr_t)building, (int)(intptr_t)aBuildingUnitsLeave);
   if ( building[4] )
     neighborOffsets = (int *)&g_LargeBuildingNeighborOffsets;
   else
@@ -1364,10 +1364,10 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
     neighborX = *neighborOffset + *building;
     neighborY = neighborOffset[1] + building[1];
     if ( neighborX >= 0
-      && neighborX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+      && neighborX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
       && neighborY >= 0
-      && neighborY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-      && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
+      && neighborY < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
+      && *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
       && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
       break;
@@ -1384,10 +1384,10 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
   Unit_Create(0xFFFFFFFF, building[2], spawnX, facing, spawnY);
   slotIndexPtr = exitSlots;
   movedCount = 0;
-  newStackRecord = (__int16 *)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)) + gameData + UNIT_STACK_TABLE_OFFSET);
+  newStackRecord = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(spawnX, spawnY)) + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent(
     "building_units_leave_spawn",
-    *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)),
+    *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(spawnX, spawnY)),
     spawnX,
     spawnY,
     exitSlots[0]);
@@ -1410,15 +1410,15 @@ signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, doubl
     }
     while ( movedCount < 10 && *slotIndexPtr != -1 );
   }
-  UnitStack_ClearRemainingActionPoints(newStackRecord, (DWORD)building, gameTime);
-  Rules_LinkArmyFact(newStackRecord, v17, v18, gameTime, (char)destSlot, (DWORD)building);
-  Rules_SyncArmyFactStrength(newStackRecord, 0, v19, (char)destSlot, (DWORD)building, gameTime);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v20, v21);
-  UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])));
-  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])), v22);
-  Debug_Log(v23, (char)destSlot, (DWORD)building, (int)aBuildings_unit);
-  Unit_DebugDumpFormationSizes((int)newStackRecord, (DWORD)building);
-  return *(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1]));
+  UnitStack_ClearRemainingActionPoints(newStackRecord, (DWORD)(intptr_t)building, gameTime);
+  Rules_LinkArmyFact(newStackRecord, v17, v18, gameTime, (char)(intptr_t)destSlot, (DWORD)(intptr_t)building);
+  Rules_SyncArmyFactStrength(newStackRecord, 0, v19, (char)(intptr_t)destSlot, (DWORD)(intptr_t)building, gameTime);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v20, v21);
+  UnitStack_UpdateVision(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*newStackRecord, newStackRecord[1])));
+  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*newStackRecord, newStackRecord[1])), v22);
+  Debug_Log(v23, (char)(intptr_t)destSlot, (DWORD)(intptr_t)building, (int)(intptr_t)aBuildings_unit);
+  Unit_DebugDumpFormationSizes((int)(intptr_t)newStackRecord, (DWORD)(intptr_t)building);
+  return *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*newStackRecord, newStackRecord[1]));
 }
 // 43E33C: variable 'v17' is possibly undefined
 // 43E33C: variable 'v18' is possibly undefined
@@ -1444,10 +1444,10 @@ int  Building_CountFreeGarrisonSlots(int buildingId)
   slotPtr = buildingRecord;
   for ( i = 0; ; ++i )
   {
-    slotLimit = *(_BYTE *)(buildingRecord + 4) ? 12 : 10;
+    slotLimit = *(_BYTE *)(uintptr_t)(buildingRecord + 4) ? 12 : 10;
     if ( i >= slotLimit )
       break;
-    if ( *(__int16 *)(slotPtr + 18) == -1 )
+    if ( *(__int16 *)(uintptr_t)(slotPtr + 18) == -1 )
       ++freeCount;
     slotPtr += 31;
   }

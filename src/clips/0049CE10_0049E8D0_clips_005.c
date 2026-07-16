@@ -27,26 +27,26 @@ __int16 * Rules_BindFunction(_DWORD *returnValue, double context)
   int theGlobal; // [esp+0h] [ebp-1Ch]
 
   foundFlag = 0;
-  firstArgExpr = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+  firstArgExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   unbindFlag = 0;
   variableSymbol = 0;
   theGlobal = 0;
-  if ( *(_WORD *)firstArgExpr == 60 )
+  if ( *(_WORD *)(uintptr_t)firstArgExpr == 60 )
   {
-    theGlobal = *(_DWORD *)(firstArgExpr + 2);
+    theGlobal = *(_DWORD *)(uintptr_t)(firstArgExpr + 2);
   }
   else
   {
-    Parser_ParseForm((__int16 *)firstArgExpr, returnValue, 0, context);
+    Parser_ParseForm((__int16 *)(uintptr_t)firstArgExpr, returnValue, 0, context);
     variableSymbol = returnValue[2];
   }
-  v7 = *(_DWORD *)(g_ClipsCurrentExpression + 6);
-  valueExpr = *(_DWORD *)(v7 + 10);
+  v7 = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  valueExpr = *(_DWORD *)(uintptr_t)(v7 + 10);
   if ( valueExpr )
   {
-    v15 = *(__int16 **)(v7 + 10);
-    if ( *(_DWORD *)(valueExpr + 10) )
-      Rules_StoreEvaluatedNodesAsMultifield(returnValue, (int)v15, 1, context);
+    v15 = *(__int16 **)(uintptr_t)(v7 + 10);
+    if ( *(_DWORD *)(uintptr_t)(valueExpr + 10) )
+      Rules_StoreEvaluatedNodesAsMultifield(returnValue, (int)(intptr_t)v15, 1, context);
     else
       Parser_ParseForm(v15, returnValue, foundFlag, context);
   }
@@ -54,10 +54,10 @@ __int16 * Rules_BindFunction(_DWORD *returnValue, double context)
   {
     unbindFlag = 1;
   }
-  prevBinding = (_DWORD *)theGlobal;
+  prevBinding = (_DWORD *)(uintptr_t)theGlobal;
   if ( theGlobal )
-    return (__int16 *)Defglobal_SetValue(theGlobal, returnValue, unbindFlag, context);
-  currentBinding = (_DWORD *)g_BoundVariableList;
+    return (__int16 *)(uintptr_t)Defglobal_SetValue(theGlobal, returnValue, unbindFlag, context);
+  currentBinding = (_DWORD *)(uintptr_t)g_BoundVariableList;
   if ( g_BoundVariableList )
   {
     do
@@ -71,14 +71,14 @@ __int16 * Rules_BindFunction(_DWORD *returnValue, double context)
       else
       {
         prevBinding = currentBinding;
-        currentBinding = (_DWORD *)currentBinding[5];
+        currentBinding = (_DWORD *)(uintptr_t)currentBinding[5];
       }
     }
     while ( currentBinding );
   }
   if ( foundFlag )
   {
-    Rules_ValueDeinstall((int)currentBinding, foundFlag);
+    Rules_ValueDeinstall((int)(intptr_t)currentBinding, foundFlag);
   }
   else
   {
@@ -86,20 +86,20 @@ __int16 * Rules_BindFunction(_DWORD *returnValue, double context)
     {
 LABEL_21:
       returnValue[1] = 2;
-      result = (__int16 *)g_ClipsFalseSymbol;
+      result = (__int16 *)(uintptr_t)g_ClipsFalseSymbol;
       returnValue[2] = g_ClipsFalseSymbol;
       return result;
     }
-    freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 96);
+    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeListHead )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 96);
-      *(_DWORD *)(g_ClipsMemoryTable + 96) = *freeListHead;
-      newBinding = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = *freeListHead;
+      newBinding = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      newBinding = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
+      newBinding = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     newBinding[5] = 0;
     theBinding = newBinding;
@@ -107,7 +107,7 @@ LABEL_21:
     if ( prevBinding )
       prevBinding[5] = newBinding;
     else
-      g_BoundVariableList = (int)newBinding;
+      g_BoundVariableList = (int)(intptr_t)newBinding;
   }
   if ( unbindFlag )
   {
@@ -115,16 +115,16 @@ LABEL_21:
       prevBinding[5] = theBinding[5];
     else
       g_BoundVariableList = theBinding[5];
-    g_ClipsMemFreeListTemp = (int)theBinding;
-    *theBinding = *(_DWORD *)(g_ClipsMemoryTable + 96);
-    *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = (int)(intptr_t)theBinding;
+    *theBinding = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
     goto LABEL_21;
   }
   theBinding[1] = returnValue[1];
   theBinding[2] = returnValue[2];
   theBinding[3] = returnValue[3];
   theBinding[4] = returnValue[4];
-  return Rules_ValueInstall((int)returnValue, foundFlag);
+  return Rules_ValueInstall((int)(intptr_t)returnValue, foundFlag);
 }
 // 49CE6E: variable 'v3' is possibly undefined
 // 49CECF: variable 'v13' is possibly undefined
@@ -139,12 +139,12 @@ signed int  Rules_FindBoundVariable(_DWORD *vPtr, int variableSymbol)
 {
   _DWORD *bindEntry; // eax
 
-  bindEntry = (_DWORD *)g_BoundVariableList;
+  bindEntry = (_DWORD *)(uintptr_t)g_BoundVariableList;
   if ( !g_BoundVariableList )
     return 0;
   while ( variableSymbol != *bindEntry )
   {
-    bindEntry = (_DWORD *)bindEntry[5];
+    bindEntry = (_DWORD *)(uintptr_t)bindEntry[5];
     if ( !bindEntry )
       return 0;
   }
@@ -256,15 +256,15 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
   v13 = a2;
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &switchData, a2, context);
+  result = Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &switchData, a2, context);
   if ( !g_ClipsEvaluationError )
   {
-    caseExpr = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10);
+    caseExpr = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
     if ( caseExpr )
     {
-      while ( *(_WORD *)caseExpr != 105 )
+      while ( *(_WORD *)(uintptr_t)caseExpr != 105 )
       {
-        result = Parser_ParseForm((__int16 *)caseExpr, &caseData, caseExpr, context);
+        result = Parser_ParseForm((__int16 *)(uintptr_t)caseExpr, &caseData, caseExpr, context);
         if ( g_ClipsEvaluationError )
           return result;
         result = switchType;
@@ -274,11 +274,11 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
           if ( result )
             break;
         }
-        caseExpr = *(_DWORD *)(*(_DWORD *)(caseExpr + 10) + 10);
+        caseExpr = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(caseExpr + 10) + 10);
         if ( !caseExpr )
           return result;
       }
-      return Parser_ParseForm(*(__int16 **)(caseExpr + 10), returnValue, caseExpr, context);
+      return Parser_ParseForm(*(__int16 **)(uintptr_t)(caseExpr + 10), returnValue, caseExpr, context);
     }
   }
   return result;
@@ -293,30 +293,30 @@ signed int Rules_RegisterMiscFunctions(void)
 {
   int v0; // ecx
 
-  Rules_RegisterHostFunction(aGensym, 119, (int)aGensymfunction, (int)Rules_GensymFunction, (int)a00_5);
-  Rules_RegisterHostFunction(aGensym_0, 119, (int)aGensymstarfunc, (int)Rules_GensymStarFunction, (int)a00_5);
-  Rules_RegisterHostFunction(aSetgen, 108, (int)aSetgenfunction, (int)Rules_SetGenFunction, (int)a11i_1);
-  Rules_RegisterHostFunction(aSystem, 118, (int)aGensystem, (int)Rules_SystemCommand, (int)a1K);
-  Rules_RegisterHostFunction(aLength, 108, (int)aLengthfunction, (int)Rules_HostLength, (int)a11q);
-  Rules_RegisterHostFunction(aLength_0, 108, (int)aLengthfunction, (int)Rules_HostLength, (int)a11q);
-  Rules_RegisterHostFunction(aTime, 100, (int)aGentime, (int)Rules_TimeCommand, (int)a00_5);
-  Rules_RegisterHostFunction(aRandom, 108, (int)aRandomfunction, (int)Rules_HostRandom, (int)a00_5);
-  Rules_RegisterHostFunction(aSeed, 118, (int)aSeedfunction, (int)Rules_HostSeed, (int)a11i_1);
-  Rules_RegisterHostFunction(aConserveMem, 118, (int)aConservememcom, (int)Rules_HostConserveMem, (int)a11w_6);
-  Rules_RegisterHostFunction(aReleaseMem, 108, (int)aReleasememcomm, (int)Rules_HostReleaseMem, (int)a00_5);
-  Rules_RegisterHostFunction(aMemUsed, 108, (int)aMemusedcommand, (int)Rules_HostMemUsed, (int)a00_5);
-  Rules_RegisterHostFunction(aMemRequests, 108, (int)aMemrequestscom, (int)Rules_HostMemRequests, (int)a00_5);
-  Rules_RegisterHostFunction(aOptions, 118, (int)aOptionscommand, (int)Rules_HostOptionsCommand, (int)a00_5);
-  Rules_RegisterHostFunction(aExpansionCall, 117, (int)aExpandfunccall, (int)Rules_HostExpansionCall, 0);
-  Rules_RegisterHostFunction(aExpand, 117, (int)aDummyexpandfun, (int)Rules_HostExpandDummy, (int)a11m);
+  Rules_RegisterHostFunction(aGensym, 119, (int)(intptr_t)aGensymfunction, (int)(intptr_t)Rules_GensymFunction, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aGensym_0, 119, (int)(intptr_t)aGensymstarfunc, (int)(intptr_t)Rules_GensymStarFunction, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aSetgen, 108, (int)(intptr_t)aSetgenfunction, (int)(intptr_t)Rules_SetGenFunction, (int)(intptr_t)a11i_1);
+  Rules_RegisterHostFunction(aSystem, 118, (int)(intptr_t)aGensystem, (int)(intptr_t)Rules_SystemCommand, (int)(intptr_t)a1K);
+  Rules_RegisterHostFunction(aLength, 108, (int)(intptr_t)aLengthfunction, (int)(intptr_t)Rules_HostLength, (int)(intptr_t)a11q);
+  Rules_RegisterHostFunction(aLength_0, 108, (int)(intptr_t)aLengthfunction, (int)(intptr_t)Rules_HostLength, (int)(intptr_t)a11q);
+  Rules_RegisterHostFunction(aTime, 100, (int)(intptr_t)aGentime, (int)(intptr_t)Rules_TimeCommand, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aRandom, 108, (int)(intptr_t)aRandomfunction, (int)(intptr_t)Rules_HostRandom, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aSeed, 118, (int)(intptr_t)aSeedfunction, (int)(intptr_t)Rules_HostSeed, (int)(intptr_t)a11i_1);
+  Rules_RegisterHostFunction(aConserveMem, 118, (int)(intptr_t)aConservememcom, (int)(intptr_t)Rules_HostConserveMem, (int)(intptr_t)a11w_6);
+  Rules_RegisterHostFunction(aReleaseMem, 108, (int)(intptr_t)aReleasememcomm, (int)(intptr_t)Rules_HostReleaseMem, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aMemUsed, 108, (int)(intptr_t)aMemusedcommand, (int)(intptr_t)Rules_HostMemUsed, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aMemRequests, 108, (int)(intptr_t)aMemrequestscom, (int)(intptr_t)Rules_HostMemRequests, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aOptions, 118, (int)(intptr_t)aOptionscommand, (int)(intptr_t)Rules_HostOptionsCommand, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aExpansionCall, 117, (int)(intptr_t)aExpandfunccall, (int)(intptr_t)Rules_HostExpansionCall, 0);
+  Rules_RegisterHostFunction(aExpand, 117, (int)(intptr_t)aDummyexpandfun, (int)(intptr_t)Rules_HostExpandDummy, (int)(intptr_t)a11m);
   Rules_SetFunctionSeqOverloadFlags(aExpand, 0);
-  Rules_RegisterHostFunction(aSetEvaluationE, 119, v0, (int)Rules_HostSetEvaluationError, 0);
-  Rules_RegisterHostFunction(aSetSequenceOpe, 98, (int)aSetsorcommand, (int)Rules_HostSetSequenceOperatorRecognition, (int)a11w_6);
-  Rules_RegisterHostFunction(aGetSequenceOpe, 98, (int)aGetsequenceope, (int)Parser_GetSequenceOperatorRecognition, (int)a00_5);
-  Rules_RegisterHostFunction(aGetFunctionRes, 115, (int)aGetfunctionres, (int)Rules_HostGetFunctionRestrictions, (int)a11w_6);
-  Rules_RegisterHostFunction(aCreate, 109, (int)aCreatefunction, (int)Rules_CreateMultifieldFunction, 0);
-  Rules_RegisterHostFunction(aMvAppend, 109, (int)aCreatefunction, (int)Rules_CreateMultifieldFunction, 0);
-  return Rules_RegisterHostFunction(aApropos, 118, (int)aAproposcommand, (int)Rules_HostApropos, (int)a11w_6);
+  Rules_RegisterHostFunction(aSetEvaluationE, 119, v0, (int)(intptr_t)Rules_HostSetEvaluationError, 0);
+  Rules_RegisterHostFunction(aSetSequenceOpe, 98, (int)(intptr_t)aSetsorcommand, (int)(intptr_t)Rules_HostSetSequenceOperatorRecognition, (int)(intptr_t)a11w_6);
+  Rules_RegisterHostFunction(aGetSequenceOpe, 98, (int)(intptr_t)aGetsequenceope, (int)(intptr_t)Parser_GetSequenceOperatorRecognition, (int)(intptr_t)a00_5);
+  Rules_RegisterHostFunction(aGetFunctionRes, 115, (int)(intptr_t)aGetfunctionres, (int)(intptr_t)Rules_HostGetFunctionRestrictions, (int)(intptr_t)a11w_6);
+  Rules_RegisterHostFunction(aCreate, 109, (int)(intptr_t)aCreatefunction, (int)(intptr_t)Rules_CreateMultifieldFunction, 0);
+  Rules_RegisterHostFunction(aMvAppend, 109, (int)(intptr_t)aCreatefunction, (int)(intptr_t)Rules_CreateMultifieldFunction, 0);
+  return Rules_RegisterHostFunction(aApropos, 118, (int)(intptr_t)aAproposcommand, (int)(intptr_t)Rules_HostApropos, (int)(intptr_t)a11w_6);
 }
 // 49D3A4: variable 'v0' is possibly undefined
 // 49E070: using guessed type int sub_49E070();
@@ -324,7 +324,7 @@ signed int Rules_RegisterMiscFunctions(void)
 //----- (0049D460) --------------------------------------------------------
 _DWORD * Rules_CreateMultifieldFunction(_DWORD *returnValue, double context)
 {
-  return Rules_StoreEvaluatedNodesAsMultifield(returnValue, *(_DWORD *)(g_ClipsCurrentExpression + 6), 1, context);
+  return Rules_StoreEvaluatedNodesAsMultifield(returnValue, *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), 1, context);
 }
 // 51A960: using guessed type int dword_51A960;
 
@@ -339,15 +339,15 @@ signed int  Rules_SetGenFunction(int a1, double context)
   v5 = a1;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &argData, 1, context) )
     return g_ClipsGensymCounter;
-  result = *(_DWORD *)(argValue + 16);
+  result = *(_DWORD *)(uintptr_t)(argValue + 16);
   if ( result < 1 )
   {
-    Parser_ReportError(1, (int)aNumberGreaterT);
+    Parser_ReportError(1, (int)(intptr_t)aNumberGreaterT);
     return g_ClipsGensymCounter;
   }
   else
   {
-    g_ClipsGensymCounter = *(_DWORD *)(argValue + 16);
+    g_ClipsGensymCounter = *(_DWORD *)(uintptr_t)(argValue + 16);
   }
   return result;
 }
@@ -431,7 +431,7 @@ int  Rules_HostLength(double context)
     Rules_RtnUnknown(1, &argData, context);
     if ( argType == 3 || argType == 2 )
     {
-      return strlen(*(const char **)(argValue + 16));
+      return strlen(*(const char **)(uintptr_t)(argValue + 16));
     }
     else if ( argType == 4 )
     {
@@ -475,10 +475,10 @@ int  Rules_HostConserveMem(int a1, double context)
     result = Lexer_ParseValueList(1, argData, 2, context);
     if ( result )
     {
-      if ( !strcmp_(*(_DWORD *)(argData[2] + 16), aOn_0) || !strcmp_(v4, aOff_0) )
+      if ( !strcmp_(*(_DWORD *)(uintptr_t)(argData[2] + 16), aOn_0) || !strcmp_(v4, aOff_0) )
         return Mem_SetAllocFlag(v4, v3);
       else
-        return Parser_ReportError(1, (int)aSymbolWithVa_2);
+        return Parser_ReportError(1, (int)(intptr_t)aSymbolWithVa_2);
     }
   }
   return result;
@@ -517,14 +517,14 @@ int ** Rules_HostApropos(double context)
   int v6; // ecx
   _DWORD argData[12]; // [esp+0h] [ebp-30h] BYREF
 
-  result = (int **)Lexer_TokenExpect(1);
+  result = (int **)(uintptr_t)Lexer_TokenExpect(1);
   symbolEntry = 0;
   if ( result != (int **)-1 )
   {
-    result = (int **)Lexer_ParseValueList(1, argData, 2, context);
+    result = (int **)(uintptr_t)Lexer_ParseValueList(1, argData, 2, context);
     if ( result )
     {
-      searchString = *(char **)(argData[2] + 16);
+      searchString = *(char **)(uintptr_t)(argData[2] + 16);
       searchLength = strlen(searchString) + 1;
       while ( 1 )
       {
@@ -532,8 +532,8 @@ int ** Rules_HostApropos(double context)
         symbolEntry = (int ***)result;
         if ( !result )
           break;
-        Output_Write((int)g_IO_LogicalName_WDisplay, (int)result[4], v5);
-        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v6);
+        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)result[4], v5);
+        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_5063E0, v6);
       }
     }
   }
@@ -629,84 +629,84 @@ int Rules_HostOptionsCommand(void)
   result = Lexer_TokenExpect(0);
   if ( result != -1 )
   {
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aMachineType, v1);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aUnixSystemIiiV, v2);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v3);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aAnsiCompilerIs, v4);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v5);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefruleConstru, v6);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v7);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aConflictResolu, v8);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v9);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDynamicSalienc, v10);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v11);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aIncrementalRes, v12);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v13);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aLogicalDepende, v14);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v15);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefmoduleConst, v16);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v17);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeftemplateCon, v18);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v19);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeffactsConstr, v20);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v21);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefglobalConst, v22);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v23);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeffunctionCon, v24);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v25);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefgenericDefm, v26);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v27);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aImperativeMeth, v28);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v29);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aObjectSystemIs, v30);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v31);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefinstancesCo, v32);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v33);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aImperativeArou, v34);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v35);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aAuxiliaryBefor, v36);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v37);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aInstanceSetQue, v38);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v39);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDirectPatternM, v40);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v41);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBinaryLoadingO, v42);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v43);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBinarySavingOf, v44);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v45);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aExtendedMathPa, v46);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v47);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aTextProcessing, v48);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v49);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aHelpSystemIs, v50);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v51);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBloadCapabilit, v52);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBloadAndBsave, v53);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v54);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aEmacsEditorIs, v55);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v56);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aConstructCompi, v57);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v58);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBasicIOIs, v59);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v60);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aExtendedIOIs, v61);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v62);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aStringFunction, v63);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v64);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aMultifieldFunc, v65);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v66);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDebuggingFunct, v67);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v68);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBlockMemoryIs, v69);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v70);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aWindowInterfac, v71);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v72);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aShortLinkNames, v73);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v74);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeveloperFlagI, v75);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v76);
-    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aRunTimeModuleI, v77);
-    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v78);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aMachineType, v1);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aUnixSystemIiiV, v2);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_5063E0, v3);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aAnsiCompilerIs, v4);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v5);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDefruleConstru, v6);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v7);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aConflictResolu, v8);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v9);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDynamicSalienc, v10);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v11);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aIncrementalRes, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v13);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aLogicalDepende, v14);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v15);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDefmoduleConst, v16);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v17);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDeftemplateCon, v18);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v19);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDeffactsConstr, v20);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v21);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDefglobalConst, v22);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v23);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDeffunctionCon, v24);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v25);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDefgenericDefm, v26);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v27);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aImperativeMeth, v28);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v29);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aObjectSystemIs, v30);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v31);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDefinstancesCo, v32);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v33);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aImperativeArou, v34);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v35);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aAuxiliaryBefor, v36);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v37);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aInstanceSetQue, v38);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v39);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDirectPatternM, v40);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v41);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBinaryLoadingO, v42);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v43);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBinarySavingOf, v44);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v45);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aExtendedMathPa, v46);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v47);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aTextProcessing, v48);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v49);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aHelpSystemIs, v50);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v51);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBloadCapabilit, v52);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBloadAndBsave, v53);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_5063E0, v54);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aEmacsEditorIs, v55);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOff_1, v56);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aConstructCompi, v57);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v58);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBasicIOIs, v59);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v60);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aExtendedIOIs, v61);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v62);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aStringFunction, v63);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v64);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aMultifieldFunc, v65);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v66);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDebuggingFunct, v67);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v68);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aBlockMemoryIs, v69);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOn_1, v70);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aWindowInterfac, v71);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOff_1, v72);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aShortLinkNames, v73);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOff_1, v74);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aDeveloperFlagI, v75);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOff_1, v76);
+    Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aRunTimeModuleI, v77);
+    return Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aOff_1, v78);
   }
   return result;
 }
@@ -806,52 +806,52 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   int argCount; // eax
   int v15[7]; // [esp+0h] [ebp-1Ch] BYREF
 
-  v15[0] = AST_CloneNodeList(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 6));
+  v15[0] = AST_CloneNodeList(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 6));
   Symbol = Rules_MakeSymbol(aExpand);
-  Rules_ExpandFuncCallForm((int **)returnValue, (_DWORD *)v15[0], (int)Symbol, v15, context);
-  freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 56);
+  Rules_ExpandFuncCallForm((int **)(uintptr_t)returnValue, (_DWORD *)(uintptr_t)v15[0], (int)(intptr_t)Symbol, v15, context);
+  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeListHead )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = *freeListHead;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeListHead;
     newExpr = g_ClipsMemFreeListTemp;
   }
   else
   {
     newExpr = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_WORD *)newExpr = **(_WORD **)(g_ClipsCurrentExpression + 6);
-  nodeValue = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2);
-  *(_DWORD *)(newExpr + 10) = 0;
-  *(_DWORD *)(newExpr + 2) = nodeValue;
-  exprNode = (__int16 *)newExpr;
-  argList = (_DWORD *)v15[0];
-  exprType = *(_WORD *)newExpr;
-  *(_DWORD *)(newExpr + 6) = v15[0];
+  *(_WORD *)(uintptr_t)newExpr = **(_WORD **)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  nodeValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2);
+  *(_DWORD *)(uintptr_t)(newExpr + 10) = 0;
+  *(_DWORD *)(uintptr_t)(newExpr + 2) = nodeValue;
+  exprNode = (__int16 *)(uintptr_t)newExpr;
+  argList = (_DWORD *)(uintptr_t)v15[0];
+  exprType = *(_WORD *)(uintptr_t)newExpr;
+  *(_DWORD *)(uintptr_t)(newExpr + 6) = v15[0];
   if ( exprType == 10 )
   {
-    theFunction = *(_DWORD *)(newExpr + 2);
-    argCount = AST_CountListNodes((int)argList);
-    if ( !Rules_CheckFunctionArgCount(*(_DWORD *)(*(_DWORD *)theFunction + 16), *(_BYTE **)(theFunction + 17), argCount) )
+    theFunction = *(_DWORD *)(uintptr_t)(newExpr + 2);
+    argCount = AST_CountListNodes((int)(intptr_t)argList);
+    if ( !Rules_CheckFunctionArgCount(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theFunction + 16), *(_BYTE **)(uintptr_t)(theFunction + 17), argCount) )
     {
-      *(_DWORD *)(returnValue + 4) = 2;
-      *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
+      *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+      *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
       return AST_Free(newExpr);
     }
   }
   else if ( exprType == 12 )
   {
-    deffunctionArgCount = AST_CountListNodes((int)argList);
-    if ( !Deffunction_CheckArgumentCount(*(_DWORD *)(v11 + 2), deffunctionArgCount) )
+    deffunctionArgCount = AST_CountListNodes((int)(intptr_t)argList);
+    if ( !Deffunction_CheckArgumentCount(*(_DWORD *)(uintptr_t)(v11 + 2), deffunctionArgCount) )
     {
-      *(_DWORD *)(returnValue + 4) = 2;
-      *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
+      *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+      *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
       AST_Free(newExpr);
       return Lexer_ErrorRecover(1);
     }
   }
-  Parser_ParseForm(exprNode, (_DWORD *)returnValue, newExpr, context);
-  return AST_Free((int)exprNode);
+  Parser_ParseForm(exprNode, (_DWORD *)(uintptr_t)returnValue, newExpr, context);
+  return AST_Free((int)(intptr_t)exprNode);
 }
 // 49DDBA: variable 'v11' is possibly undefined
 // 49DDDB: variable 'v5' is possibly undefined
@@ -866,11 +866,11 @@ signed int  Rules_HostExpandDummy(int returnValue)
   int v1; // edx
   int v2; // ecx
 
-  *(_DWORD *)(returnValue + 4) = 2;
-  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+  *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
   Lexer_ErrorRecover(1);
-  Rules_PrintErrorID((int)aMiscfun, v1, 0);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpandMustBeUs, v2);
+  Rules_PrintErrorID((int)(intptr_t)aMiscfun, v1, 0);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpandMustBeUs, v2);
 }
 // 49DE88: variable 'v1' is possibly undefined
 // 49DE97: variable 'v2' is possibly undefined
@@ -901,7 +901,7 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
       {
         expandFuncSymbol = *(_DWORD *)((char *)exprCursor + 6);
         if ( expandFuncSymbol )
-          Rules_ExpandFuncCallForm((int)returnValue, *(_DWORD *)((char *)exprCursor + 6), v12, (int)exprCursor + 6, context);
+          Rules_ExpandFuncCallForm((int)(intptr_t)returnValue, *(_DWORD *)((char *)exprCursor + 6), v12, (int)(intptr_t)exprCursor + 6, context);
         result = (int **)((char *)exprCursor + 10);
         stoPtr = (_DWORD *)((char *)exprCursor + 10);
         exprCursor = *(_DWORD **)((char *)exprCursor + 10);
@@ -912,30 +912,30 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
       AST_Free(*(_DWORD *)((char *)exprCursor + 6));
       if ( g_ClipsEvaluationError || returnValue[1] != (int *)4 )
         break;
-      expandFuncSymbol = (int)returnValue[3] + 1;
+      expandFuncSymbol = (int)(intptr_t)returnValue[3] + 1;
       lastNode = g_ClipsEvaluationError;
       newListHead = g_ClipsEvaluationError;
       fieldOffset = 6 * expandFuncSymbol - 6;
-      while ( expandFuncSymbol <= (int)returnValue[4] + 1 )
+      while ( expandFuncSymbol <= (int)(intptr_t)returnValue[4] + 1 )
       {
-        freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 56);
+        freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
         if ( freeListHead )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-          *(_DWORD *)(g_ClipsMemoryTable + 56) = *freeListHead;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeListHead;
           newNode = g_ClipsMemFreeListTemp;
         }
         else
         {
           newNode = Mem_HeapAllocWithRetry((_DWORD *)0xE);
         }
-        *(_WORD *)newNode = *(_WORD *)((char *)returnValue[2] + fieldOffset + 14);
+        *(_WORD *)(uintptr_t)newNode = *(_WORD *)((char *)returnValue[2] + fieldOffset + 14);
         fieldValue = *(int *)((char *)returnValue[2] + fieldOffset + 16);
-        *(_DWORD *)(newNode + 6) = 0;
-        *(_DWORD *)(newNode + 2) = fieldValue;
-        *(_DWORD *)(newNode + 10) = 0;
+        *(_DWORD *)(uintptr_t)(newNode + 6) = 0;
+        *(_DWORD *)(uintptr_t)(newNode + 2) = fieldValue;
+        *(_DWORD *)(uintptr_t)(newNode + 10) = 0;
         if ( newListHead )
-          *(_DWORD *)(lastNode + 10) = newNode;
+          *(_DWORD *)(uintptr_t)(lastNode + 10) = newNode;
         else
           newListHead = newNode;
         lastNode = newNode;
@@ -944,25 +944,25 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
       }
       if ( newListHead )
       {
-        *(_DWORD *)(lastNode + 10) = *(_DWORD *)((char *)exprCursor + 10);
+        *(_DWORD *)(uintptr_t)(lastNode + 10) = *(_DWORD *)((char *)exprCursor + 10);
         *stoPtr = newListHead;
-        g_ClipsMemFreeListTemp = (int)exprCursor;
-        *exprCursor = *(_DWORD *)(g_ClipsMemoryTable + 56);
-        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
-        result = (int **)(lastNode + 10);
-        exprCursor = *(_DWORD **)(lastNode + 10);
-        stoPtr = (int *)(lastNode + 10);
+        g_ClipsMemFreeListTemp = (int)(intptr_t)exprCursor;
+        *exprCursor = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+        result = (int **)(uintptr_t)(lastNode + 10);
+        exprCursor = *(_DWORD **)(uintptr_t)(lastNode + 10);
+        stoPtr = (int *)(uintptr_t)(lastNode + 10);
         if ( !exprCursor )
           return result;
       }
       else
       {
         *stoPtr = *(_DWORD *)((char *)exprCursor + 10);
-        g_ClipsMemFreeListTemp = (int)exprCursor;
-        *exprCursor = *(_DWORD *)(g_ClipsMemoryTable + 56);
-        result = (int **)g_ClipsMemoryTable;
-        *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
-        exprCursor = (_DWORD *)*stoPtr;
+        g_ClipsMemFreeListTemp = (int)(intptr_t)exprCursor;
+        *exprCursor = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+        result = (int **)(uintptr_t)g_ClipsMemoryTable;
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+        exprCursor = (_DWORD *)(uintptr_t)*stoPtr;
         if ( !*stoPtr )
           return result;
       }
@@ -1022,10 +1022,10 @@ signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
     restrictionString = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(restrictionString, v3);
   }
-  Symbol = Rules_MakeSymbol(*(_BYTE **)(argValue + 16));
+  Symbol = Rules_MakeSymbol(*(_BYTE **)(uintptr_t)(argValue + 16));
   if ( !Symbol )
   {
-    Rules_ReportCantFindItem(v3, *(_DWORD *)(argValue + 16));
+    Rules_ReportCantFindItem(v3, *(_DWORD *)(uintptr_t)(argValue + 16));
     Lexer_ErrorRecover(1);
     restrictionString = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(restrictionString, v3);
@@ -1042,14 +1042,14 @@ signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
 //----- (0049E150) --------------------------------------------------------
 signed int Rules_RegisterIOHostFunctions(void)
 {
-  Rules_RegisterHostFunction(aPrintout, 118, (int)aPrintoutfuncti, (int)Rules_HostPrintout, (int)a1_0);
-  Rules_RegisterHostFunction(aRead, 117, (int)aReadfunction, (int)Rules_HostRead, (int)a1);
-  Rules_RegisterHostFunction(aOpen, 98, (int)aOpenfunction, (int)Rules_HostOpen, (int)a23K);
-  Rules_RegisterHostFunction(aClose, 98, (int)aClosefunction, (int)Rules_HostClose, (int)a1);
-  Rules_RegisterHostFunction(aRemove, 98, (int)aRemovefunction, (int)Rules_HostRemoveFile, (int)a11k_0);
-  Rules_RegisterHostFunction(aRename, 98, (int)aRenamefunction, (int)Rules_HostRenameFile, (int)a22k);
-  Rules_RegisterHostFunction(aFormat, 115, (int)aFormatfunction, (int)Rules_HostFormat, (int)a2Us);
-  return Rules_RegisterHostFunction(aReadline, 107, (int)aReadlinefuncti, (int)Rules_HostReadline, (int)a1);
+  Rules_RegisterHostFunction(aPrintout, 118, (int)(intptr_t)aPrintoutfuncti, (int)(intptr_t)Rules_HostPrintout, (int)(intptr_t)a1_0);
+  Rules_RegisterHostFunction(aRead, 117, (int)(intptr_t)aReadfunction, (int)(intptr_t)Rules_HostRead, (int)(intptr_t)a1);
+  Rules_RegisterHostFunction(aOpen, 98, (int)(intptr_t)aOpenfunction, (int)(intptr_t)Rules_HostOpen, (int)(intptr_t)a23K);
+  Rules_RegisterHostFunction(aClose, 98, (int)(intptr_t)aClosefunction, (int)(intptr_t)Rules_HostClose, (int)(intptr_t)a1);
+  Rules_RegisterHostFunction(aRemove, 98, (int)(intptr_t)aRemovefunction, (int)(intptr_t)Rules_HostRemoveFile, (int)(intptr_t)a11k_0);
+  Rules_RegisterHostFunction(aRename, 98, (int)(intptr_t)aRenamefunction, (int)(intptr_t)Rules_HostRenameFile, (int)(intptr_t)a22k);
+  Rules_RegisterHostFunction(aFormat, 115, (int)(intptr_t)aFormatfunction, (int)(intptr_t)Rules_HostFormat, (int)(intptr_t)a2Us);
+  return Rules_RegisterHostFunction(aReadline, 107, (int)(intptr_t)aReadlinefuncti, (int)(intptr_t)Rules_HostReadline, (int)(intptr_t)a1);
 }
 
 //----- (0049E250) --------------------------------------------------------
@@ -1075,7 +1075,7 @@ int  Rules_HostPrintout(int returnValue, double context)
   lastArgIndex = result;
   if ( result != -1 )
   {
-    logical_name = Rules_GetLogicalNameArg(1, (int)aStdout_0, v3, context);
+    logical_name = Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdout_0, v3, context);
     if ( !logical_name )
     {
       Rules_ReportIllegalLogicalName();
@@ -1100,7 +1100,7 @@ int  Rules_HostPrintout(int returnValue, double context)
           if ( argType == 3 )
             goto LABEL_17;
 LABEL_26:
-          result = Rules_PrintDataObject(argString, (int)&argData);
+          result = Rules_PrintDataObject(argString, (int)(intptr_t)&argData);
           if ( ++argIndex > lastArgIndex )
             return result;
         }
@@ -1127,7 +1127,7 @@ LABEL_26:
             {
 LABEL_17:
               v9 = argString;
-              outputString = *(char **)(argValue + 16);
+              outputString = *(char **)(uintptr_t)(argValue + 16);
               goto LABEL_12;
             }
           }
@@ -1135,7 +1135,7 @@ LABEL_17:
 LABEL_11:
           v9 = argString;
 LABEL_12:
-          result = Output_Write(logical_name, (int)outputString, argString);
+          result = Output_Write(logical_name, (int)(intptr_t)outputString, argString);
           if ( ++argIndex > lastArgIndex )
             return result;
         }
@@ -1176,7 +1176,7 @@ signed int * Rules_HostRead(int returnValue, double context)
   {
     if ( argCount == 1 )
     {
-      logicalName = (char *)Rules_GetLogicalNameArg(1, (int)aStdin, v4, context);
+      logicalName = (char *)(uintptr_t)Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdin, v4, context);
       if ( !logicalName )
       {
         Rules_ReportIllegalLogicalName();
@@ -1190,9 +1190,9 @@ signed int * Rules_HostRead(int returnValue, double context)
   {
     logicalName = aStdin;
   }
-  if ( !IO_QueryRouters((int)logicalName) )
+  if ( !IO_QueryRouters((int)(intptr_t)logicalName) )
   {
-    IO_ReportUnrecognizedRouter((int)logicalName);
+    IO_ReportUnrecognizedRouter((int)(intptr_t)logicalName);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     goto LABEL_14;
@@ -1200,10 +1200,10 @@ signed int * Rules_HostRead(int returnValue, double context)
   if ( !strcmp_(v6, aStdin) )
     Rules_ReadStdinLineToken(&theToken, v7);
   else
-    Parser_NextToken((int)logicalName, (int)&theToken);
+    Parser_NextToken((int)(intptr_t)logicalName, (int)(intptr_t)&theToken);
   tokenType = theToken;
   g_Lexer_PendingLineCharIndex = -1;
-  *(_DWORD *)(v4 + 4) = theToken;
+  *(_DWORD *)(uintptr_t)(v4 + 4) = theToken;
   switch ( tokenType )
   {
     case 0:
@@ -1212,23 +1212,23 @@ signed int * Rules_HostRead(int returnValue, double context)
     case 2:
     case 1:
       result = tokenValue;
-      *(_DWORD *)(v4 + 8) = tokenValue;
+      *(_DWORD *)(uintptr_t)(v4 + 8) = tokenValue;
       break;
     case 102:
-      *(_DWORD *)(v4 + 4) = 2;
+      *(_DWORD *)(uintptr_t)(v4 + 4) = 2;
       result = Str_Intern(aEof, v4);
-      *(_DWORD *)(v11 + 8) = result;
+      *(_DWORD *)(uintptr_t)(v11 + 8) = result;
       break;
     case 103:
 LABEL_14:
-      *(_DWORD *)(v4 + 4) = 3;
+      *(_DWORD *)(uintptr_t)(v4 + 4) = 3;
       result = Str_Intern(aReadError, v4);
-      *(_DWORD *)(v10 + 8) = result;
+      *(_DWORD *)(uintptr_t)(v10 + 8) = result;
       return result;
     default:
-      *(_DWORD *)(v4 + 4) = 3;
+      *(_DWORD *)(uintptr_t)(v4 + 4) = 3;
       result = Str_Intern(tokenString, v4);
-      *(_DWORD *)(v12 + 8) = result;
+      *(_DWORD *)(uintptr_t)(v12 + 8) = result;
       break;
   }
   return result;
@@ -1257,7 +1257,7 @@ signed int * Rules_ReadStdinLineToken(_DWORD *theToken, unsigned int a2)
     appended = 0;
     g_Lexer_PendingLineCharIndex = 0;
     bufferSize[0] = 0;
-    for ( i = Lexer_PeekChar((int)aStdin, a2); i != 10; i = Lexer_PeekChar((int)aStdin, v5) )
+    for ( i = Lexer_PeekChar((int)(intptr_t)aStdin, a2); i != 10; i = Lexer_PeekChar((int)(intptr_t)aStdin, v5) )
     {
       if ( i == 13 )
         break;
@@ -1267,12 +1267,12 @@ signed int * Rules_ReadStdinLineToken(_DWORD *theToken, unsigned int a2)
         break;
       appended = Str_AppendCharEscaping(i, appended, bufferSize, &g_Lexer_PendingLineCharIndex, bufferSize[0] + 80);
     }
-    IO_OpenStringSource((int)aRead, appended, 0);
-    Parser_NextToken((int)aRead, (int)theToken);
-    IO_CloseStringRouter((int)aRead);
+    IO_OpenStringSource((int)(intptr_t)aRead, appended, 0);
+    Parser_NextToken((int)(intptr_t)aRead, (int)(intptr_t)theToken);
+    IO_CloseStringRouter((int)(intptr_t)aRead);
     if ( (int)bufferSize[0] > 0 )
       Mem_SmallBlockFree(appended, bufferSize[0]);
-    result = (signed int *)Rules_GetEvaluationErrorFlag();
+    result = (signed int *)(uintptr_t)Rules_GetEvaluationErrorFlag();
     if ( result )
     {
       *theToken = 3;
@@ -1310,14 +1310,14 @@ const CHAR * Rules_HostOpen(double context)
   int v12; // ecx
   _DWORD argData[12]; // [esp+0h] [ebp-30h] BYREF
 
-  argCount = Rules_ArgRangeCheck((int)aOpen, 3);
+  argCount = Rules_ArgRangeCheck((int)(intptr_t)aOpen, 3);
   if ( argCount == -1 )
     return 0;
-  result = (const CHAR *)Rules_GetFileNameArg(1, 0, context);
+  result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, 0, context);
   fileName = result;
   if ( result )
   {
-    logicalName = (const char *)Rules_GetLogicalNameArg(2, 0, v3, context);
+    logicalName = (const char *)(uintptr_t)Rules_GetLogicalNameArg(2, 0, v3, context);
     if ( !logicalName )
     {
       Rules_SetEvaluationErrorFlag(1);
@@ -1329,10 +1329,10 @@ const CHAR * Rules_HostOpen(double context)
     {
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      Rules_PrintErrorID((int)aIofun, v9, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aLogicalName_0, v10);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)logicalName, v11);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAlreadyInUse_, v12);
+      Rules_PrintErrorID((int)(intptr_t)aIofun, v9, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aLogicalName_0, v10);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)logicalName, v11);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAlreadyInUse_, v12);
       return 0;
     }
     if ( argCount == 2 )
@@ -1341,20 +1341,20 @@ const CHAR * Rules_HostOpen(double context)
     }
     else if ( argCount == 3 )
     {
-      result = (const CHAR *)Lexer_ParseValueList(3, argData, 3, context);
+      result = (const CHAR *)(uintptr_t)Lexer_ParseValueList(3, argData, 3, context);
       if ( !result )
         return result;
-      accessMode = *(char **)(argData[2] + 16);
+      accessMode = *(char **)(uintptr_t)(argData[2] + 16);
     }
     if ( !strcmp_(accessMode, aR_3) || !strcmp_(v7, aR_4) || !strcmp_(v7, aW_4) || !strcmp_(v7, aA_2) )
     {
-      return (const CHAR *)IO_OpenNamedFile(fileName, v7, (int)v7, logicalName, (DWORD)logicalName);
+      return (const CHAR *)(uintptr_t)IO_OpenNamedFile(fileName, v7, (int)(intptr_t)v7, logicalName, (DWORD)(intptr_t)logicalName);
     }
     else
     {
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      Parser_ReportError(v8, (int)aStringWithValu);
+      Parser_ReportError(v8, (int)(intptr_t)aStringWithValu);
       return 0;
     }
   }
@@ -1383,7 +1383,7 @@ signed int  Rules_HostClose(double context)
     return 0;
   if ( !argCount )
     return IO_CloseAllNamedFiles(v2);
-  logicalName = Rules_GetLogicalNameArg(1, 0, (int)v2, context);
+  logicalName = Rules_GetLogicalNameArg(1, 0, (int)(intptr_t)v2, context);
   if ( !logicalName )
   {
     Rules_ReportIllegalLogicalName();
@@ -1423,12 +1423,12 @@ const CHAR * Rules_HostRenameFile(double context)
 
   if ( Lexer_TokenExpect(2) == -1 )
     return 0;
-  result = (const CHAR *)Rules_GetFileNameArg(1, v1, context);
+  result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v1, context);
   if ( result )
   {
-    result = (const CHAR *)Rules_GetFileNameArg(2, (int)result, context);
+    result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(2, (int)(intptr_t)result, context);
     if ( result )
-      return (const CHAR *)Rules_RenameFile(oldFileName, result, (int)oldFileName);
+      return (const CHAR *)(uintptr_t)Rules_RenameFile(oldFileName, result, (int)(intptr_t)oldFileName);
   }
   return result;
 }

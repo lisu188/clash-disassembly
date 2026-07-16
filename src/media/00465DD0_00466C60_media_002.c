@@ -16,39 +16,39 @@ int  AviPlayer_CloseStreams(int self)
   int videoStream; // ecx
 
   CAviDecompressor_RequestDecodeThreadStop(self);
-  ++*(_DWORD *)(self + 175);
-  EnterCriticalSection((LPCRITICAL_SECTION)(self + 179));
-  LeaveCriticalSection((LPCRITICAL_SECTION)(self + 179));
-  --*(_DWORD *)(self + 175);
+  ++*(_DWORD *)(uintptr_t)(self + 175);
+  EnterCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 179));
+  LeaveCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 179));
+  --*(_DWORD *)(uintptr_t)(self + 175);
   while ( 1 )
   {
-    readIndex = *(_DWORD *)(self + 207);
-    if ( *(_DWORD *)(self + 211) == readIndex )
+    readIndex = *(_DWORD *)(uintptr_t)(self + 207);
+    if ( *(_DWORD *)(uintptr_t)(self + 211) == readIndex )
       break;
-    *(_DWORD *)(self + 207) = readIndex + 1;
-    PulseEvent(*(HANDLE *)(self + 171));
+    *(_DWORD *)(uintptr_t)(self + 207) = readIndex + 1;
+    PulseEvent(*(HANDLE *)(uintptr_t)(self + 171));
   }
   AviPlayer_FlushVideoFrameQueue(self);
   j_j__nfree_();
-  *(_DWORD *)(self + 163) = 0;
+  *(_DWORD *)(uintptr_t)(self + 163) = 0;
   result = j_j__nfree_();
-  videoStream = *(_DWORD *)(self + 7);
-  *(_DWORD *)(self + 151) = 0;
+  videoStream = *(_DWORD *)(uintptr_t)(self + 7);
+  *(_DWORD *)(uintptr_t)(self + 151) = 0;
   if ( videoStream )
   {
     AVIStreamEndStreaming(videoStream);
-    result = AVIStreamRelease(*(_DWORD *)(self + 7));
-    *(_DWORD *)(self + 7) = 0;
+    result = AVIStreamRelease(*(_DWORD *)(uintptr_t)(self + 7));
+    *(_DWORD *)(uintptr_t)(self + 7) = 0;
   }
-  if ( *(_DWORD *)(self + 3) )
+  if ( *(_DWORD *)(uintptr_t)(self + 3) )
   {
-    result = AVIFileRelease(*(_DWORD *)(self + 3));
-    *(_DWORD *)(self + 3) = 0;
+    result = AVIFileRelease(*(_DWORD *)(uintptr_t)(self + 3));
+    *(_DWORD *)(uintptr_t)(self + 3) = 0;
   }
-  if ( *(_BYTE *)self )
+  if ( *(_BYTE *)(uintptr_t)self )
   {
     result = AVIFileExit();
-    *(_BYTE *)self = 0;
+    *(_BYTE *)(uintptr_t)self = 0;
   }
   return result;
 }
@@ -65,29 +65,29 @@ int  AviPlayer_GetBufferedVideoFrame(int self, int targetFrame, _DWORD *frameFla
   int scanIndex; // eax
   int i; // edx
 
-  readIndex = *(_DWORD *)(self + 207);
-  if ( *(_DWORD *)(self + 211) != readIndex )
+  readIndex = *(_DWORD *)(uintptr_t)(self + 207);
+  if ( *(_DWORD *)(uintptr_t)(self + 211) != readIndex )
   {
     if ( readIndex < targetFrame )
     {
-      clampedIndex = *(_DWORD *)(self + 211) - 1;
+      clampedIndex = *(_DWORD *)(uintptr_t)(self + 211) - 1;
       if ( clampedIndex >= targetFrame )
         clampedIndex = targetFrame;
       scanIndex = clampedIndex;
-      for ( i = 12 * clampedIndex; scanIndex > *(_DWORD *)(self + 207) && *(_DWORD *)(i + *(_DWORD *)(self + 203)); i -= 12 )
+      for ( i = 12 * clampedIndex; scanIndex > *(_DWORD *)(uintptr_t)(self + 207) && *(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(self + 203)); i -= 12 )
         --scanIndex;
-      if ( scanIndex > *(_DWORD *)(self + 207) )
-        *(_DWORD *)(self + 207) = scanIndex;
+      if ( scanIndex > *(_DWORD *)(uintptr_t)(self + 207) )
+        *(_DWORD *)(uintptr_t)(self + 207) = scanIndex;
     }
-    *frameIndexOut = *(_DWORD *)(self + 207);
+    *frameIndexOut = *(_DWORD *)(uintptr_t)(self + 207);
     goto LABEL_12;
   }
-  *frameIndexOut = *(_DWORD *)(self + 211);
-  if ( !WaitForSingleObject(*(HANDLE *)(self + 167), 0x3E8u) )
+  *frameIndexOut = *(_DWORD *)(uintptr_t)(self + 211);
+  if ( !WaitForSingleObject(*(HANDLE *)(uintptr_t)(self + 167), 0x3E8u) )
   {
 LABEL_12:
-    *frameFlagsOut = *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207));
-    return *(_DWORD *)(self + 163) + *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207) + 4);
+    *frameFlagsOut = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 203) + 12 * *(_DWORD *)(uintptr_t)(self + 207));
+    return *(_DWORD *)(uintptr_t)(self + 163) + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 203) + 12 * *(_DWORD *)(uintptr_t)(self + 207) + 4);
   }
   return 0;
 }
@@ -99,14 +99,14 @@ unsigned int  AviPlayer_PopBufferedAudioData(int self, void *destBuffer)
   _DWORD *entry; // eax
   unsigned int frameBytes; // ebp
 
-  if ( *(_DWORD *)(self + 399) == *(_DWORD *)(self + 395) )
+  if ( *(_DWORD *)(uintptr_t)(self + 399) == *(_DWORD *)(uintptr_t)(self + 395) )
     return 0;
   queueBase = self + 391;
-  entry = (_DWORD *)(*(_DWORD *)(self + 391) + 8 * *(_DWORD *)(self + 395));
+  entry = (_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 391) + 8 * *(_DWORD *)(uintptr_t)(self + 395));
   frameBytes = entry[1];
-  qmemcpy(destBuffer, (const void *)(*entry + *(_DWORD *)(self + 375)), frameBytes);
-  ++*(_DWORD *)(queueBase + 4);
-  PulseEvent(*(HANDLE *)(self + 387));
+  qmemcpy(destBuffer, (const void *)(uintptr_t)(*entry + *(_DWORD *)(uintptr_t)(self + 375)), frameBytes);
+  ++*(_DWORD *)(uintptr_t)(queueBase + 4);
+  PulseEvent(*(HANDLE *)(uintptr_t)(self + 387));
   return frameBytes;
 }
 
@@ -153,12 +153,12 @@ char  AviPlayer_OpenVideoCodec(
   *(_DWORD *)((char *)&a18 + 2) = &j____wcpp_4_fs_handler_rtn_;
   *(_DWORD *)((char *)&a18 + 6) = &g_AviOpenVideoCodec_EHFrame;
   *(_DWORD *)((char *)&a19 + 2) = 0;
-  *(_DWORD *)(codecState + 4) = inputFormat;
-  if ( outputFormat && (*(unsigned __int16 *)(inputFormat + 14) > 8u || outputFormat[2] >= 0) )
+  *(_DWORD *)(uintptr_t)(codecState + 4) = inputFormat;
+  if ( outputFormat && (*(unsigned __int16 *)(uintptr_t)(inputFormat + 14) > 8u || outputFormat[2] >= 0) )
   {
     outFormatDest = *(_DWORD *)((char *)&a20 + 2) + 8;
-    qmemcpy((void *)(*(_DWORD *)((char *)&a20 + 2) + 8), outputFormat, *outputFormat);
-    hic = ICLocate(1667524982, *(_DWORD *)((char *)&a19 + 6), *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4), outFormatDest, 2);
+    qmemcpy((void *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 8), outputFormat, *outputFormat);
+    hic = ICLocate(1667524982, *(_DWORD *)((char *)&a19 + 6), *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 4), outFormatDest, 2);
     **(_DWORD **)((char *)&a20 + 2) = hic;
   }
   BYTE6(a20) = **(_DWORD **)((char *)&a20 + 2) != 0;
@@ -166,7 +166,7 @@ char  AviPlayer_OpenVideoCodec(
   {
     hicFallback = ICGetDisplayFormat(
             0,
-            *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4),
+            *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 4),
             *(_DWORD *)((char *)&a20 + 2) + 8,
             0,
             0,
@@ -175,12 +175,12 @@ char  AviPlayer_OpenVideoCodec(
   }
   if ( **(_DWORD **)((char *)&a20 + 2) )
   {
-    inputBmi = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
-    srcWidth = *(_DWORD *)(inputBmi + 4);
+    inputBmi = *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 4);
+    srcWidth = *(_DWORD *)(uintptr_t)(inputBmi + 4);
     outFormatPtr = *(_DWORD *)((char *)&a20 + 2) + 8;
-    srcHeight = abs32(*(_DWORD *)(inputBmi + 8));
+    srcHeight = abs32(*(_DWORD *)(uintptr_t)(inputBmi + 8));
     hicHandle = **(_DWORD **)((char *)&a20 + 2);
-    inputFormatPtr = *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4);
+    inputFormatPtr = *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 4);
     *(_DWORD *)((char *)&a12 + 2) = 0;
     *(_DWORD *)((char *)&a12 + 6) = inputFormatPtr;
     *(_DWORD *)((char *)&a12 + 10) = 0;
@@ -199,7 +199,7 @@ char  AviPlayer_OpenVideoCodec(
       if ( ICSendMessage(
              **(_DWORD **)((char *)&a20 + 2),
              16396,
-             *(_DWORD *)(*(_DWORD *)((char *)&a20 + 2) + 4),
+             *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 4),
              outFormatPtr,
              v32) )
       {
@@ -211,13 +211,13 @@ char  AviPlayer_OpenVideoCodec(
       }
       else
       {
-        *(_BYTE *)(*(_DWORD *)((char *)&a20 + 2) + 1508) = 0;
+        *(_BYTE *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 1508) = 0;
         BYTE2(a21) = BYTE6(a20) != 0;
       }
     }
     else
     {
-      *(_BYTE *)(*(_DWORD *)((char *)&a20 + 2) + 1508) = 1;
+      *(_BYTE *)(uintptr_t)(*(_DWORD *)((char *)&a20 + 2) + 1508) = 1;
       BYTE2(a21) = BYTE6(a20) != 0;
     }
   }
@@ -251,13 +251,13 @@ _DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int decompressEndPara
     if ( *((_BYTE *)result + 1508) )
     {
       ICSendMessage(*result, 16447, 0, 0, drawEndParam);
-      result = (_DWORD *)ICClose(*codecPtr);
+      result = (_DWORD *)(uintptr_t)ICClose(*codecPtr);
       *codecPtr = 0;
     }
     else
     {
       ICSendMessage(*result, 16398, 0, 0, decompressEndParam);
-      result = (_DWORD *)ICClose(*codecPtr);
+      result = (_DWORD *)(uintptr_t)ICClose(*codecPtr);
       *codecPtr = 0;
     }
   }
@@ -277,24 +277,24 @@ void  CAviDecompressor_RenderLoop(int self)
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v6 = &j____wcpp_4_fs_handler_rtn_;
-  while ( *(_BYTE *)(self + 2191) )
+  while ( *(_BYTE *)(uintptr_t)(self + 2191) )
   {
-    if ( AviPlayer_UpdateTargetFrameFromClock(self) && (*(_DWORD *)(self + 211) < *(_DWORD *)(self + 43) || AviPlayer_QueueBacklogCount(self + 203)) )
+    if ( AviPlayer_UpdateTargetFrameFromClock(self) && (*(_DWORD *)(uintptr_t)(self + 211) < *(_DWORD *)(uintptr_t)(self + 43) || AviPlayer_QueueBacklogCount(self + 203)) )
     {
       sleepMs = 0;
       if ( AviPlayer_CatchUpToTargetFrame(self) )
       {
         timeGetTime();
-        nextFrameTimeMs = (double)*(unsigned int *)(self + 31)
-           * ((double)(*(_DWORD *)(self + 2021) + 1)
+        nextFrameTimeMs = (double)*(unsigned int *)(uintptr_t)(self + 31)
+           * ((double)(*(_DWORD *)(uintptr_t)(self + 2021) + 1)
             * g_CAviDecompressor_MillisecondsPerSecond)
-           / (double)*(unsigned int *)(self + 35);
+           / (double)*(unsigned int *)(uintptr_t)(self + 35);
         _CHP(ExceptionList, v6);
         if ( (int)nextFrameTimeMs - v4 + 1 > 0 )
           sleepMs = (int)nextFrameTimeMs - v4 + 1;
       }
       Sleep(sleepMs);
-      *(_DWORD *)(self + 2038) += sleepMs;
+      *(_DWORD *)(uintptr_t)(self + 2038) += sleepMs;
     }
     else
     {
@@ -315,7 +315,7 @@ DWORD __stdcall CAviDecompressor_RenderThreadProc(char *lpThreadParameter)
     ++*((_DWORD *)lpThreadParameter + 550);
     EnterCriticalSection((LPCRITICAL_SECTION)(lpThreadParameter + 2204));
     SetEvent(*((HANDLE *)lpThreadParameter + 557));
-    CAviDecompressor_RenderLoop((int)lpThreadParameter);
+    CAviDecompressor_RenderLoop((int)(intptr_t)lpThreadParameter);
     LeaveCriticalSection((LPCRITICAL_SECTION)(lpThreadParameter + 2204));
     --*((_DWORD *)lpThreadParameter + 550);
   }
@@ -328,24 +328,24 @@ struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int self)
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  AviException_RebuildClipperOnSurfaceLoss(self, (int)&j____wcpp_4_fs_handler_rtn_, (int)&g_AviBeginPlayback_EHFrame, 0);
-  *(_DWORD *)(self + 2183) = 0;
-  *(_DWORD *)(self + 2034) = 0;
-  *(_DWORD *)(self + 2038) = 0;
+  AviException_RebuildClipperOnSurfaceLoss(self, (int)(intptr_t)&j____wcpp_4_fs_handler_rtn_, (int)(intptr_t)&g_AviBeginPlayback_EHFrame, 0);
+  *(_DWORD *)(uintptr_t)(self + 2183) = 0;
+  *(_DWORD *)(uintptr_t)(self + 2034) = 0;
+  *(_DWORD *)(uintptr_t)(self + 2038) = 0;
   AviPlayer_CatchUpToTargetFrame(self);
-  *(_BYTE *)(self + 2) = 1;
-  *(_DWORD *)(self + 2187) = timeGetTime();
-  CSS_ResumeStream(*(_DWORD *)(self + 359));
-  *(_BYTE *)(self + 2191) = 1;
-  ResumeThread(*(HANDLE *)(self + 2192));
+  *(_BYTE *)(uintptr_t)(self + 2) = 1;
+  *(_DWORD *)(uintptr_t)(self + 2187) = timeGetTime();
+  CSS_ResumeStream(*(_DWORD *)(uintptr_t)(self + 359));
+  *(_BYTE *)(uintptr_t)(self + 2191) = 1;
+  ResumeThread(*(HANDLE *)(uintptr_t)(self + 2192));
   return ExceptionList;
 }
 
 //----- (00466580) --------------------------------------------------------
 BOOL  CAviDecompressor_RequestRenderStop(int self)
 {
-  *(_BYTE *)(self + 2191) = 0;
-  return SetEvent(*(HANDLE *)(self + 2196));
+  *(_BYTE *)(uintptr_t)(self + 2191) = 0;
+  return SetEvent(*(HANDLE *)(uintptr_t)(self + 2196));
 }
 
 //----- (004665A0) --------------------------------------------------------
@@ -362,47 +362,47 @@ _DWORD * AviPlayer_ShutdownDecodeState(int self)
   int *overlaySurfaceIface; // [esp-4h] [ebp-100h]
   int *backSurfaceIface; // [esp-4h] [ebp-100h]
 
-  if ( *(_BYTE *)(self + 2191) )
+  if ( *(_BYTE *)(uintptr_t)(self + 2191) )
   {
     CAviDecompressor_RequestRenderStop(self);
-    WaitForSingleObject(*(HANDLE *)(self + 2228), 0x7D0u);
-    ++*(_DWORD *)(self + 2200);
-    EnterCriticalSection((LPCRITICAL_SECTION)(self + 2204));
-    LeaveCriticalSection((LPCRITICAL_SECTION)(self + 2204));
-    --*(_DWORD *)(self + 2200);
+    WaitForSingleObject(*(HANDLE *)(uintptr_t)(self + 2228), 0x7D0u);
+    ++*(_DWORD *)(uintptr_t)(self + 2200);
+    EnterCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 2204));
+    LeaveCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 2204));
+    --*(_DWORD *)(uintptr_t)(self + 2200);
   }
   else
   {
-    ResumeThread(*(HANDLE *)(self + 2192));
+    ResumeThread(*(HANDLE *)(uintptr_t)(self + 2192));
   }
   CAviDecompressor_RequestDecodeThreadStop(self);
   AviPlayer_CloseStreams(self);
   v2 = self;
-  if ( *(_BYTE *)(self + 1968) )
+  if ( *(_BYTE *)(uintptr_t)(self + 1968) )
   {
-    overlaySurface = *(_DWORD *)(self + 1964);
+    overlaySurface = *(_DWORD *)(uintptr_t)(self + 1964);
     if ( overlaySurface )
     {
-      hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
+      hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 132))(
              overlaySurface,
              self + 2095,
-             *(_DWORD *)(self + 1956),
+             *(_DWORD *)(uintptr_t)(self + 1956),
              self + 2063,
              512,
              0);
       if ( hideResult )
       {
         if ( hideResult != -2005532222
-          || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1964) + 96))(*(_DWORD *)(self + 1964)) != -2005532222
-           || (overlaySurfaceIface = *(int **)(self + 1964), v2 = *overlaySurfaceIface, !(*(int (__stdcall **)(int *))(*overlaySurfaceIface + 108))(overlaySurfaceIface)))
-          && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 96))(*(_DWORD *)(self + 1956)) != -2005532222
-           || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956)))
-          && (v10 = *(int **)(self + 1964),
+          || ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1964) + 96))(*(_DWORD *)(uintptr_t)(self + 1964)) != -2005532222
+           || (overlaySurfaceIface = *(int **)(uintptr_t)(self + 1964), v2 = *overlaySurfaceIface, !(*(int (__stdcall **)(int *))(uintptr_t)(*overlaySurfaceIface + 108))(overlaySurfaceIface)))
+          && ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 96))(*(_DWORD *)(uintptr_t)(self + 1956)) != -2005532222
+           || !(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 108))(*(_DWORD *)(uintptr_t)(self + 1956)))
+          && (v10 = *(int **)(uintptr_t)(self + 1964),
               v2 = *v10,
-              (*(int (__stdcall **)(int *, int, _DWORD, int, int, _DWORD))(*v10 + 132))(
+              (*(int (__stdcall **)(int *, int, _DWORD, int, int, _DWORD))(uintptr_t)(*v10 + 132))(
                 v10,
                 self + 2095,
-                *(_DWORD *)(self + 1956),
+                *(_DWORD *)(uintptr_t)(self + 1956),
                 self + 2063,
                 512,
                 0)) )
@@ -416,53 +416,53 @@ _DWORD * AviPlayer_ShutdownDecodeState(int self)
     }
   }
   j_j__nfree_();
-  *(_DWORD *)(self + 2179) = 0;
+  *(_DWORD *)(uintptr_t)(self + 2179) = 0;
   j_j__nfree_();
-  sourceSurface = *(_DWORD *)(self + 1952);
-  *(_DWORD *)(self + 2058) = 0;
-  if ( sourceSurface && *(_DWORD *)(self + 1956) )
+  sourceSurface = *(_DWORD *)(uintptr_t)(self + 1952);
+  *(_DWORD *)(uintptr_t)(self + 2058) = 0;
+  if ( sourceSurface && *(_DWORD *)(uintptr_t)(self + 1956) )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 8))(*(_DWORD *)(self + 1956));
-    *(_DWORD *)(self + 1956) = 0;
-    *(_DWORD *)(self + 1952) = 0;
+    (*(void (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 8))(*(_DWORD *)(uintptr_t)(self + 1956));
+    *(_DWORD *)(uintptr_t)(self + 1956) = 0;
+    *(_DWORD *)(uintptr_t)(self + 1952) = 0;
   }
   else
   {
-    *(_DWORD *)(self + 1956) = 0;
-    *(_DWORD *)(self + 1952) = 0;
+    *(_DWORD *)(uintptr_t)(self + 1956) = 0;
+    *(_DWORD *)(uintptr_t)(self + 1952) = 0;
   }
-  overlayIface = *(_DWORD *)(self + 1964);
+  overlayIface = *(_DWORD *)(uintptr_t)(self + 1964);
   if ( overlayIface )
   {
-    v2 = *(_DWORD *)overlayIface;
-    (*(void (__stdcall **)(int))(*(_DWORD *)overlayIface + 8))(overlayIface);
-    overlaySurface1 = *(_DWORD *)(self + 1960);
-    *(_DWORD *)(self + 1964) = 0;
+    v2 = *(_DWORD *)(uintptr_t)overlayIface;
+    (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlayIface + 8))(overlayIface);
+    overlaySurface1 = *(_DWORD *)(uintptr_t)(self + 1960);
+    *(_DWORD *)(uintptr_t)(self + 1964) = 0;
     if ( overlaySurface1 )
-      (*(void (__stdcall **)(int))(*(_DWORD *)overlaySurface1 + 8))(overlaySurface1);
-    *(_DWORD *)(self + 1960) = 0;
+      (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface1 + 8))(overlaySurface1);
+    *(_DWORD *)(uintptr_t)(self + 1960) = 0;
   }
   else
   {
-    *(_DWORD *)(self + 1960) = 0;
+    *(_DWORD *)(uintptr_t)(self + 1960) = 0;
   }
-  backSurface = *(_DWORD *)(self + 2017);
-  if ( backSurface && *(_DWORD *)(self + 2013) )
+  backSurface = *(_DWORD *)(uintptr_t)(self + 2017);
+  if ( backSurface && *(_DWORD *)(uintptr_t)(self + 2013) )
   {
-    (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)backSurface + 152))(backSurface, 0);
-    (*(void (__stdcall **)(int))(*(_DWORD *)backSurface + 8))(backSurface);
-    backSurfaceIface = (int *)(uintptr_t)*(unsigned int *)(self + 2013);
+    (*(void (__stdcall **)(int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 152))(backSurface, 0);
+    (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 8))(backSurface);
+    backSurfaceIface = (int *)(uintptr_t)*(unsigned int *)(uintptr_t)(self + 2013);
     v2 = *backSurfaceIface;
-    (*(void (__stdcall **)(int *))(*backSurfaceIface + 8))(backSurfaceIface);
-    *(_DWORD *)(self + 2013) = 0;
-    *(_DWORD *)(self + 2017) = 0;
+    (*(void (__stdcall **)(int *))(uintptr_t)(*backSurfaceIface + 8))(backSurfaceIface);
+    *(_DWORD *)(uintptr_t)(self + 2013) = 0;
+    *(_DWORD *)(uintptr_t)(self + 2017) = 0;
   }
   else
   {
-    *(_DWORD *)(self + 2013) = 0;
-    *(_DWORD *)(self + 2017) = 0;
+    *(_DWORD *)(uintptr_t)(self + 2013) = 0;
+    *(_DWORD *)(uintptr_t)(self + 2017) = 0;
   }
-  return CAviDecompressor_CloseCodecHandle((_DWORD *)(self + 415), backSurface, v2);
+  return CAviDecompressor_CloseCodecHandle((_DWORD *)(uintptr_t)(self + 415), backSurface, v2);
 }
 // 466720: variable 'v8' is possibly undefined
 
@@ -522,11 +522,11 @@ int  AviPlayer_BlitFrameToSurface(
   if ( blitState[5] || blitState[4] )
   {
     surfaceDesc[0] = 108;
-    lockResult = (*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)surface + 100))(surface, destRect, surfaceDesc, 1, 0);
+    lockResult = (*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 100))(surface, destRect, surfaceDesc, 1, 0);
     if ( !lockResult
       || lockResult == -2005532222
-      && ((*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)
-       || !(*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(*(_DWORD *)surface + 100))(surface, destRect, surfaceDesc, 1, 0)) )
+      && ((*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 108))(surface)
+       || !(*(int (__stdcall **)(int, int *, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 100))(surface, destRect, surfaceDesc, 1, 0)) )
     {
       if ( (int)self[484] < 0 )
         signedPitch = -surfacePitch;
@@ -534,12 +534,12 @@ int  AviPlayer_BlitFrameToSurface(
         signedPitch = surfacePitch;
       self[484] = signedPitch;
       CAviDecompressor_BlitRows(self + 481, surfaceBits, *(char **)((char *)&blitScratch + 6));
-      result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 128))(surface, surfaceBits);
+      result = (*(int (__stdcall **)(int, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 128))(surface, surfaceBits);
       if ( result )
       {
         if ( result != -2005532222
-          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)) == 0
-          && (result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 128))(surface, surfaceBits)) != 0 )
+          || (result = (*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 108))(surface)) == 0
+          && (result = (*(int (__stdcall **)(int, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 128))(surface, surfaceBits)) != 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -558,11 +558,11 @@ int  AviPlayer_BlitFrameToSurface(
   }
   else
   {
-    dcResult = (*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&blitScratch + 2);
+    dcResult = (*(int (__stdcall **)(int, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 68))(surface, (char *)&blitScratch + 2);
     if ( !dcResult
       || dcResult == -2005532222
-      && ((*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)
-       || !(*(int (__stdcall **)(int, char *))(*(_DWORD *)surface + 68))(surface, (char *)&blitScratch + 2)) )
+      && ((*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 108))(surface)
+       || !(*(int (__stdcall **)(int, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 68))(surface, (char *)&blitScratch + 2)) )
     {
       if ( *(_DWORD *)((char *)self + 415) )
         bitmapInfo = (const BITMAPINFO *)((char *)self + 423);
@@ -576,18 +576,18 @@ int  AviPlayer_BlitFrameToSurface(
         destRect[3] - destRect[1],
         0,
         0,
-        *(_DWORD *)(*(_DWORD *)((char *)self + 151) + 4),
-        abs32(*(_DWORD *)(*(_DWORD *)((char *)self + 151) + 8)),
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)self + 151) + 4),
+        abs32(*(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)self + 151) + 8)),
         *(const void **)((char *)&blitScratch + 6),
         bitmapInfo,
         0,
         0xCC0020u);
-      result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2));
+      result = (*(int (__stdcall **)(int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2));
       if ( result )
       {
         if ( result != -2005532222
-          || (result = (*(int (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface)) == 0
-          && (result = (*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2))) != 0 )
+          || (result = (*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 108))(surface)) == 0
+          && (result = (*(int (__stdcall **)(int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 104))(surface, *(_DWORD *)((char *)&blitScratch + 2))) != 0 )
         {
           ExcString_Ctor();
           ExcString_Ctor();
@@ -620,13 +620,13 @@ bool  AviPlayer_UpdateTargetFrameFromClock(int self)
   __int64 v6; // [esp+8h] [ebp-18h]
 
   Time = timeGetTime();
-  v6 = *(unsigned int *)(self + 35);
-  elapsedScaled = ((double)Time - (double)*(int *)(self + 2187)) * (double)v6;
-  LODWORD(v6) = *(_DWORD *)(self + 31);
+  v6 = *(unsigned int *)(uintptr_t)(self + 35);
+  elapsedScaled = ((double)Time - (double)*(int *)(uintptr_t)(self + 2187)) * (double)v6;
+  LODWORD(v6) = *(_DWORD *)(uintptr_t)(self + 31);
   targetFrame = elapsedScaled / ((double)v6 * g_AviPlayer_MillisecondsPerSecond);
   _CHP(Time, 0);
-  *(_DWORD *)(self + 2183) = (int)targetFrame;
-  return *(_DWORD *)(self + 43) > *(_DWORD *)(self + 2183);
+  *(_DWORD *)(uintptr_t)(self + 2183) = (int)targetFrame;
+  return *(_DWORD *)(uintptr_t)(self + 43) > *(_DWORD *)(uintptr_t)(self + 2183);
 }
 // 501370: using guessed type float flt_501370;
 
@@ -737,86 +737,86 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
   int frameQueuePtr; // [esp+80Eh] [ebp+72h]
   int frameFlagsSw; // [esp+81Ah] [ebp+7Eh]
 
-  if ( *(_DWORD *)(self + 2183) != *(_DWORD *)(self + 2021) )
+  if ( *(_DWORD *)(uintptr_t)(self + 2183) != *(_DWORD *)(uintptr_t)(self + 2021) )
   {
     frameQueuePtr = self + 203;
-    if ( *(char *)(self + 2033) <= 0 )
+    if ( *(char *)(uintptr_t)(self + 2033) <= 0 )
     {
       busyGuardPtr = self + 1985;
-      ++*(_DWORD *)(self + 1985);
-      EnterCriticalSection((LPCRITICAL_SECTION)(self + 1989));
-      if ( *(_DWORD *)(self + 2034) )
+      ++*(_DWORD *)(uintptr_t)(self + 1985);
+      EnterCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 1989));
+      if ( *(_DWORD *)(uintptr_t)(self + 2034) )
       {
         v49 = frameQueuePtr;
         do
         {
-          if ( *(int *)(self + 2034) > 0 )
+          if ( *(int *)(uintptr_t)(self + 2034) > 0 )
           {
             AviPlayer_IncrementFramesRenderedCount(v49);
             AviPlayer_PulseEventHandle(v50);
-            --*(_DWORD *)(self + 2034);
+            --*(_DWORD *)(uintptr_t)(self + 2034);
           }
         }
-        while ( *(_DWORD *)(self + 2034) );
+        while ( *(_DWORD *)(uintptr_t)(self + 2034) );
       }
-      frameData = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
-      *(_DWORD *)(self + 2025) = frameData;
+      frameData = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(uintptr_t)(self + 2183), (_DWORD *)(uintptr_t)(self + 2029), (_DWORD *)(uintptr_t)(self + 2021));
+      *(_DWORD *)(uintptr_t)(self + 2025) = frameData;
       if ( frameData )
-        ++*(_DWORD *)(self + 2034);
+        ++*(_DWORD *)(uintptr_t)(self + 2034);
       busyGuard = busyGuardPtr;
     }
     else
     {
-      if ( *(_DWORD *)(self + 2034) )
+      if ( *(_DWORD *)(uintptr_t)(self + 2034) )
       {
         frameQueue = self + 203;
         do
         {
-          if ( *(int *)(self + 2034) > 0 )
+          if ( *(int *)(uintptr_t)(self + 2034) > 0 )
           {
             AviPlayer_IncrementFramesRenderedCount(frameQueue);
             AviPlayer_PulseEventHandle(v3);
-            --*(_DWORD *)(self + 2034);
+            --*(_DWORD *)(uintptr_t)(self + 2034);
           }
         }
-        while ( *(_DWORD *)(self + 2034) );
+        while ( *(_DWORD *)(uintptr_t)(self + 2034) );
       }
-      frameDataPtr = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(self + 2183), (_DWORD *)(self + 2029), (_DWORD *)(self + 2021));
-      *(_DWORD *)(self + 2025) = frameDataPtr;
+      frameDataPtr = AviPlayer_GetBufferedVideoFrame(self, *(_DWORD *)(uintptr_t)(self + 2183), (_DWORD *)(uintptr_t)(self + 2029), (_DWORD *)(uintptr_t)(self + 2021));
+      *(_DWORD *)(uintptr_t)(self + 2025) = frameDataPtr;
       if ( !frameDataPtr )
         return 0;
-      ++*(_DWORD *)(self + 2034);
-      ++*(_DWORD *)(self + 1985);
-      EnterCriticalSection((LPCRITICAL_SECTION)(self + 1989));
-      flipState = *(_BYTE *)(self + 2033);
-      codecPtr = (_DWORD *)(self + 415);
+      ++*(_DWORD *)(uintptr_t)(self + 2034);
+      ++*(_DWORD *)(uintptr_t)(self + 1985);
+      EnterCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 1989));
+      flipState = *(_BYTE *)(uintptr_t)(self + 2033);
+      codecPtr = (_DWORD *)(uintptr_t)(self + 415);
       if ( flipState >= 2u )
       {
         if ( flipState <= 2u )
         {
           if ( *codecPtr )
           {
-            backSurface = *(_DWORD *)(self + 2017);
+            backSurface = *(_DWORD *)(uintptr_t)(self + 2017);
             surfaceDesc[0] = 108;
-            lockResult = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0);
+            lockResult = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0);
             if ( !lockResult
               || lockResult == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
-               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0)) )
+              && ((*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 108))(backSurface)
+               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 100))(backSurface, 0, surfaceDesc, 33, 0)) )
             {
               CAviDecompressor_GetVideoFormat(self);
-              videoWidth = *(_DWORD *)(CAviDecompressor_GetVideoFormat(self) + 4);
+              videoWidth = *(_DWORD *)(uintptr_t)(CAviDecompressor_GetVideoFormat(self) + 4);
               lockedBitsSaved = lockedBits;
-              frameBits = *(_DWORD *)(self + 2025);
-              frameFlags = *(_DWORD *)(self + 2029);
-              pitchPixels = surfaceDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
-              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixels;
+              frameBits = *(_DWORD *)(uintptr_t)(self + 2025);
+              frameFlags = *(_DWORD *)(uintptr_t)(self + 2029);
+              pitchPixels = surfaceDesc[4] / ((*(_DWORD *)(uintptr_t)(self + 2123) + 7) >> 3);
+              *(_DWORD *)(uintptr_t)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixels;
               pixelCountBack = videoHeightBack * pitchPixels;
               v26 = AviPlayer_StreamBitmapInfoPtr(v25);
-              imageBytes = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * pixelCountBack;
+              imageBytes = Mem_BitsToBytesCeil(*(unsigned __int16 *)(uintptr_t)(v26 + 14)) * pixelCountBack;
               v29 = AviPlayer_StreamBitmapInfoPtr(v28);
               v53 = v30;
-              *(_DWORD *)(v29 + 20) = imageBytes;
+              *(_DWORD *)(uintptr_t)(v29 + 20) = imageBytes;
               bitmapInfoHeaderBack = AviPlayer_StreamBitmapInfoPtr(v31);
               if ( AviPlayer_SendICDrawBegin(
                      *drawContextBack,
@@ -825,8 +825,8 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                      frameBits,
                      0,
                      0,
-                     *(_DWORD *)(drawContextBack[1] + 4),
-                     *(_DWORD *)(drawContextBack[1] + 8),
+                     *(_DWORD *)(uintptr_t)(drawContextBack[1] + 4),
+                     *(_DWORD *)(uintptr_t)(drawContextBack[1] + 8),
                      bitmapInfoHeaderBack,
                      lockedBitsSaved,
                      0,
@@ -838,11 +838,11 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              unlockResult = (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits);
+              unlockResult = (*(int (__stdcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 128))(backSurface, lockedBits);
               if ( unlockResult
                 && (unlockResult != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)backSurface + 108))(backSurface)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)backSurface + 128))(backSurface, lockedBits)) )
+                 || !(*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 108))(backSurface)
+                 && (*(int (__stdcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)backSurface + 128))(backSurface, lockedBits)) )
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
@@ -861,10 +861,10 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           else
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)self,
-              *(_DWORD *)(self + 2017),
-              *(_DWORD *)(self + 2025),
-              (int *)(self + 2095),
+              (_DWORD *)(uintptr_t)self,
+              *(_DWORD *)(uintptr_t)(self + 2017),
+              *(_DWORD *)(uintptr_t)(self + 2025),
+              (int *)(uintptr_t)(self + 2095),
               v55,
               v56,
               v57,
@@ -898,27 +898,27 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
         {
           if ( *codecPtr )
           {
-            overlaySurface = *(_DWORD *)(self + 1964);
+            overlaySurface = *(_DWORD *)(uintptr_t)(self + 1964);
             overlayDesc[0] = 108;
-            lockResultOvl = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0);
+            lockResultOvl = (*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0);
             if ( !lockResultOvl
               || lockResultOvl == -2005532222
-              && ((*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
-               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0)) )
+              && ((*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 108))(overlaySurface)
+               || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 100))(overlaySurface, 0, overlayDesc, 33, 0)) )
             {
               CAviDecompressor_GetVideoFormat(self);
-              videoWidthOvl = *(_DWORD *)(CAviDecompressor_GetVideoFormat(self) + 4);
+              videoWidthOvl = *(_DWORD *)(uintptr_t)(CAviDecompressor_GetVideoFormat(self) + 4);
               lockedBitsOvlSaved = overlayLockedBits;
-              frameBitsOvl = *(_DWORD *)(self + 2025);
-              frameFlagsOvl = *(_DWORD *)(self + 2029);
-              pitchPixelsOvl = overlayDesc[4] / ((*(_DWORD *)(self + 2123) + 7) >> 3);
-              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixelsOvl;
+              frameBitsOvl = *(_DWORD *)(uintptr_t)(self + 2025);
+              frameFlagsOvl = *(_DWORD *)(uintptr_t)(self + 2029);
+              pitchPixelsOvl = overlayDesc[4] / ((*(_DWORD *)(uintptr_t)(self + 2123) + 7) >> 3);
+              *(_DWORD *)(uintptr_t)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = pitchPixelsOvl;
               pixelCountOvl = videoHeightOvl * pitchPixelsOvl;
               v40 = AviPlayer_StreamBitmapInfoPtr(v39);
-              imageBytesOvl = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * pixelCountOvl;
+              imageBytesOvl = Mem_BitsToBytesCeil(*(unsigned __int16 *)(uintptr_t)(v40 + 14)) * pixelCountOvl;
               v43 = AviPlayer_StreamBitmapInfoPtr(v42);
               v54 = v44;
-              *(_DWORD *)(v43 + 20) = imageBytesOvl;
+              *(_DWORD *)(uintptr_t)(v43 + 20) = imageBytesOvl;
               bitmapInfoHeaderOvl = AviPlayer_StreamBitmapInfoPtr(v45);
               if ( AviPlayer_SendICDrawBegin(
                      *drawContextOvl,
@@ -927,8 +927,8 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                      frameBitsOvl,
                      0,
                      0,
-                     *(_DWORD *)(drawContextOvl[1] + 4),
-                     *(_DWORD *)(drawContextOvl[1] + 8),
+                     *(_DWORD *)(uintptr_t)(drawContextOvl[1] + 4),
+                     *(_DWORD *)(uintptr_t)(drawContextOvl[1] + 8),
                      bitmapInfoHeaderOvl,
                      lockedBitsOvlSaved,
                      0,
@@ -940,11 +940,11 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                 AviException_CtorForDrawFailure();
                 CRT_ThrowExcStringException();
               }
-              unlockResultOvl = (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits);
+              unlockResultOvl = (*(int (__stdcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 128))(overlaySurface, overlayLockedBits);
               if ( unlockResultOvl
                 && (unlockResultOvl != -2005532222
-                 || !(*(int (__stdcall **)(int))(*(_DWORD *)overlaySurface + 108))(overlaySurface)
-                 && (*(int (__stdcall **)(int, int))(*(_DWORD *)overlaySurface + 128))(overlaySurface, overlayLockedBits)) )
+                 || !(*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 108))(overlaySurface)
+                 && (*(int (__stdcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 128))(overlaySurface, overlayLockedBits)) )
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
@@ -963,10 +963,10 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           else
           {
             AviPlayer_BlitFrameToSurface(
-              (_DWORD *)self,
-              *(_DWORD *)(self + 1964),
-              *(_DWORD *)(self + 2025),
-              (int *)(self + 2095),
+              (_DWORD *)(uintptr_t)self,
+              *(_DWORD *)(uintptr_t)(self + 1964),
+              *(_DWORD *)(uintptr_t)(self + 2025),
+              (int *)(uintptr_t)(self + 2095),
               v55,
               v56,
               v57,
@@ -999,19 +999,19 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
       }
       else if ( flipState == 1 )
       {
-        decodeBuffer = *(_DWORD *)(self + 2179);
-        frameBitsSw = *(_DWORD *)(self + 2025);
-        frameFlagsSw = *(_DWORD *)(self + 2029);
-        if ( *(_BYTE *)(self + 1923) )
+        decodeBuffer = *(_DWORD *)(uintptr_t)(self + 2179);
+        frameBitsSw = *(_DWORD *)(uintptr_t)(self + 2025);
+        frameFlagsSw = *(_DWORD *)(uintptr_t)(self + 2029);
+        if ( *(_BYTE *)(uintptr_t)(self + 1923) )
         {
-          decodedWidth = *(_DWORD *)(self + 427);
-          *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = decodedWidth;
+          decodedWidth = *(_DWORD *)(uintptr_t)(self + 427);
+          *(_DWORD *)(uintptr_t)(AviPlayer_StreamBitmapInfoPtr(self + 415) + 4) = decodedWidth;
           pixelCountSw = decodedWidth * videoHeight;
           v10 = AviPlayer_StreamBitmapInfoPtr(v9);
-          imageBytesSw = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * pixelCountSw;
+          imageBytesSw = Mem_BitsToBytesCeil(*(unsigned __int16 *)(uintptr_t)(v10 + 14)) * pixelCountSw;
           v13 = AviPlayer_StreamBitmapInfoPtr(v12);
           v52 = v14;
-          *(_DWORD *)(v13 + 20) = imageBytesSw;
+          *(_DWORD *)(uintptr_t)(v13 + 20) = imageBytesSw;
           bitmapInfoHeaderSw = AviPlayer_StreamBitmapInfoPtr(v15);
           if ( AviPlayer_SendICDrawBegin(
                  *drawContextSw,
@@ -1020,8 +1020,8 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
                  frameBitsSw,
                  0,
                  0,
-                 *(_DWORD *)(drawContextSw[1] + 4),
-                 *(_DWORD *)(drawContextSw[1] + 8),
+                 *(_DWORD *)(uintptr_t)(drawContextSw[1] + 4),
+                 *(_DWORD *)(uintptr_t)(drawContextSw[1] + 8),
                  bitmapInfoHeaderSw,
                  decodeBuffer,
                  0,
@@ -1035,9 +1035,9 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           }
         }
         else if ( ICDecompress(
-                    *(_DWORD *)(self + 415),
-                    *(_DWORD *)(self + 2029),
-                    *(_DWORD *)(self + 419),
+                    *(_DWORD *)(uintptr_t)(self + 415),
+                    *(_DWORD *)(uintptr_t)(self + 2029),
+                    *(_DWORD *)(uintptr_t)(self + 419),
                     frameBitsSw,
                     self + 423,
                     decodeBuffer) < 0 )
@@ -1048,17 +1048,17 @@ char  AviPlayer_CatchUpToTargetFrame(int self)
           CRT_ThrowExcStringException();
         }
       }
-      if ( *(int *)(self + 2034) > 0 )
+      if ( *(int *)(uintptr_t)(self + 2034) > 0 )
       {
-        ++*(_DWORD *)(self + 207);
-        PulseEvent(*(HANDLE *)(self + 171));
-        --*(_DWORD *)(self + 2034);
+        ++*(_DWORD *)(uintptr_t)(self + 207);
+        PulseEvent(*(HANDLE *)(uintptr_t)(self + 171));
+        --*(_DWORD *)(uintptr_t)(self + 2034);
       }
       busyGuard = self + 1985;
     }
-    LeaveCriticalSection((LPCRITICAL_SECTION)(busyGuard + 4));
-    --*(_DWORD *)busyGuard;
-    SetEvent(*(HANDLE *)(self + 2196));
+    LeaveCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(busyGuard + 4));
+    --*(_DWORD *)(uintptr_t)busyGuard;
+    SetEvent(*(HANDLE *)(uintptr_t)(self + 2196));
   }
   return 1;
 }

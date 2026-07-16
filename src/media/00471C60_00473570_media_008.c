@@ -21,8 +21,8 @@ int  Compat_StringHolderScalarDeletingDtor(int holder, char flags)
     j_j__nfree_();
     return holder;
   }
-  *(_DWORD *)(holder + 4) = &g_CompatStringHolder_Vtable;
-  Compat_StringHolderFreeText((_DWORD *)holder);
+  *(_DWORD *)(uintptr_t)(holder + 4) = &g_CompatStringHolder_Vtable;
+  Compat_StringHolderFreeText((_DWORD *)(uintptr_t)holder);
   if ( (flags & 2) != 0 )
     j__nfree_(holder);
   return holder;
@@ -59,7 +59,7 @@ CLASH95_INTERNAL int Compat_QueryRead(int query_handle, void *buffer, int byte_c
 
   if ( !query_handle )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)query_handle;
   if ( !vtable || !vtable[5] )
     return 0;
   return ((int (*)(int, void *, int))(uintptr_t)vtable[5])(query_handle, buffer, byte_count);
@@ -71,7 +71,7 @@ CLASH95_INTERNAL int Compat_QuerySeek(int query_handle, int offset)
 
   if ( !query_handle )
     return 0;
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)query_handle;
   if ( !vtable || !vtable[0] )
     return 0;
   return ((int (*)(int, int))(uintptr_t)vtable[0])(query_handle, offset);
@@ -275,7 +275,7 @@ int  Compat_StringHolderFindSubstringOffset(_DWORD *holder, int a2, int needle)
   int match_ptr; // eax
   _DWORD *v5; // ecx
 
-  if ( a2 && *holder && (match_ptr = ((int (__cdecl *)(int))strstr_)(needle)) != 0 )
+  if ( a2 && *holder && (match_ptr = ((int (__cdecl *)(int))(uintptr_t)strstr_)(needle)) != 0 )
     return match_ptr - *v5;
   else
     return -1;
@@ -476,12 +476,12 @@ int __fastcall Mem_InitReserveBlock(int a1, int a2)
   g_ClipsMemoryTable = nmalloc_(0x7D0, 0);
   if ( !g_ClipsMemoryTable )
   {
-    Rules_PrintErrorID((int)aMemory, 1, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfMemory_, v3);
+    Rules_PrintErrorID((int)(intptr_t)aMemory, 1, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOutOfMemory_, v3);
     IO_RunRouterExitCallbacks();
   }
   for ( result = 0; result != 2000; result += 4 )
-    *(_DWORD *)(g_ClipsMemoryTable + result) = 0;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + result) = 0;
   return result;
 }
 // 472605: variable 'v3' is possibly undefined
@@ -534,8 +534,8 @@ signed int Mem_FatalOutOfMemory(void)
 {
   int v0; // ecx
 
-  Rules_PrintErrorID((int)aMemory, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfMemory_, v0);
+  Rules_PrintErrorID((int)(intptr_t)aMemory, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOutOfMemory_, v0);
   IO_RunRouterExitCallbacks();
   return 1;
 }
@@ -567,8 +567,8 @@ signed int  Mem_ReleasePoolBlock(int block, int block_size)
   }
   else
   {
-    Rules_PrintErrorID((int)aMemory, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReleaseErrorIn, v4);
+    Rules_PrintErrorID((int)(intptr_t)aMemory, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReleaseErrorIn, v4);
     return -1;
   }
   return result;
@@ -654,12 +654,12 @@ int  Mem_PurgeFreeListsForSpace(int bytes_needed, int verbose_flag, int request_
 
   freed_bytes = 0;
   if ( verbose_flag == 1 )
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDeallocatingMe, request_size);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aDeallocatingMe, request_size);
   size_class = 499;
   table_offset = 1996;
   do
   {
-    free_node = *(_DWORD *)(table_offset + g_ClipsMemoryTable);
+    free_node = *(_DWORD *)(uintptr_t)(table_offset + g_ClipsMemoryTable);
     if ( free_node )
     {
       do
@@ -671,7 +671,7 @@ int  Mem_PurgeFreeListsForSpace(int bytes_needed, int verbose_flag, int request_
       }
       while ( next_node );
     }
-    *(_DWORD *)(table_offset + g_ClipsMemoryTable) = 0;
+    *(_DWORD *)(uintptr_t)(table_offset + g_ClipsMemoryTable) = 0;
     if ( freed_bytes > bytes_needed && bytes_needed > 0 )
       break;
     --size_class;
@@ -679,7 +679,7 @@ int  Mem_PurgeFreeListsForSpace(int bytes_needed, int verbose_flag, int request_
   }
   while ( size_class >= 4 );
   if ( verbose_flag == 1 )
-    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMemoryDealloca, size_class);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aMemoryDealloca, size_class);
   return freed_bytes;
 }
 // 47288E: variable 'v5' is possibly undefined
@@ -703,36 +703,36 @@ _BYTE * Mem_SmallBlockAllocZeroed(unsigned int size)
   if ( size >= 4 )
   {
     if ( (int)size >= 500 )
-      return (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)size);
+      return (_BYTE *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)size);
   }
   else
   {
     clamped_size = 4;
   }
   free_list_slot = 4 * clamped_size + g_ClipsMemoryTable;
-  free_node = *(_DWORD *)free_list_slot;
+  free_node = *(_DWORD *)(uintptr_t)free_list_slot;
   if ( free_node )
   {
     block = free_node;
-    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
+    *(_DWORD *)(uintptr_t)free_list_slot = *(_DWORD *)(uintptr_t)free_node;
     for ( i = 0; i < clamped_size; ++free_node )
     {
       ++i;
-      *(_BYTE *)free_node = 0;
+      *(_BYTE *)(uintptr_t)free_node = 0;
     }
-    return (_BYTE *)block;
+    return (_BYTE *)(uintptr_t)block;
   }
   else
   {
     allocation_size = clamped_size;
-    zero_cursor = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)allocation_size);
-    allocated_block = (int)zero_cursor;
+    zero_cursor = (_BYTE *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)allocation_size);
+    allocated_block = (int)(intptr_t)zero_cursor;
     for ( j = 0; j < allocation_size; ++zero_cursor )
     {
       ++j;
       *zero_cursor = 0;
     }
-    return (_BYTE *)allocated_block;
+    return (_BYTE *)(uintptr_t)allocated_block;
   }
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -746,20 +746,20 @@ _DWORD * Mem_SmallBlockAlloc(unsigned int size)
   if ( size >= 4 )
   {
     if ( (int)size >= 500 )
-      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
+      return (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)size);
   }
   else
   {
     size = 4;
   }
   free_list_slot = g_ClipsMemoryTable + 4 * size;
-  free_node = *(_DWORD *)free_list_slot;
+  free_node = *(_DWORD *)(uintptr_t)free_list_slot;
   if ( free_node )
   {
-    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
-    return (_DWORD *)free_node;
+    *(_DWORD *)(uintptr_t)free_list_slot = *(_DWORD *)(uintptr_t)free_node;
+    return (_DWORD *)(uintptr_t)free_node;
   }
-  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
+  return (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)size);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
@@ -772,20 +772,20 @@ _DWORD * Mem_NewArray(unsigned int size)
   if ( size >= 4 )
   {
     if ( (int)size >= 500 )
-      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
+      return (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)size);
   }
   else
   {
     size = 4;
   }
   free_list_slot = g_ClipsMemoryTable + 4 * size;
-  free_node = *(_DWORD *)free_list_slot;
+  free_node = *(_DWORD *)(uintptr_t)free_list_slot;
   if ( free_node )
   {
-    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
-    return (_DWORD *)free_node;
+    *(_DWORD *)(uintptr_t)free_list_slot = *(_DWORD *)(uintptr_t)free_node;
+    return (_DWORD *)(uintptr_t)free_node;
   }
-  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)size);
+  return (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)size);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
@@ -804,13 +804,13 @@ signed int  Mem_SmallBlockFree(_DWORD *block, int size)
   {
     clamped_size = 4;
 LABEL_5:
-    *block = *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size);
-    *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size) = block;
+    *block = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * clamped_size);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * clamped_size) = block;
     return 1;
   }
   if ( clamped_size < 500 )
     goto LABEL_5;
-  return Mem_ReleasePoolBlock((int)block, clamped_size);
+  return Mem_ReleasePoolBlock((int)(intptr_t)block, clamped_size);
 }
 // 472A0D: variable 'v3' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -830,13 +830,13 @@ signed int  Mem_SmallBlockRelease(_DWORD *block, int size)
   {
     clamped_size = 4;
 LABEL_5:
-    *block = *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size);
-    *(_DWORD *)(g_ClipsMemoryTable + 4 * clamped_size) = block;
+    *block = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * clamped_size);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * clamped_size) = block;
     return 1;
   }
   if ( clamped_size < 500 )
     goto LABEL_5;
-  return Mem_ReleasePoolBlock((int)block, clamped_size);
+  return Mem_ReleasePoolBlock((int)(intptr_t)block, clamped_size);
 }
 // 472A6D: variable 'v3' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -869,26 +869,26 @@ signed int  Mem_InitPool(unsigned int requested_bytes, char a2)
   g_MemPoolListHead = nmalloc_(available_size, 0);
   if ( g_MemPoolListHead )
   {
-    *(_DWORD *)g_MemPoolListHead = 0;
-    *(_DWORD *)(g_MemPoolListHead + 4) = 0;
+    *(_DWORD *)(uintptr_t)g_MemPoolListHead = 0;
+    *(_DWORD *)(uintptr_t)(g_MemPoolListHead + 4) = 0;
     first_block = g_MemPoolListHead + g_HeapChunkHeaderSize;
-    *(_DWORD *)(g_MemPoolListHead + 8) = first_block;
-    *(_DWORD *)(g_MemPoolListHead + 12) = available_size;
+    *(_DWORD *)(uintptr_t)(g_MemPoolListHead + 8) = first_block;
+    *(_DWORD *)(uintptr_t)(g_MemPoolListHead + 12) = available_size;
     tail_header = g_MemPoolListHead + g_HeapChunkHeaderSize + g_MemPoolBlockHeaderSize + available_size;
-    *(_DWORD *)(tail_header + 4) = 0;
-    *(_DWORD *)(tail_header + 8) = 0;
-    *(_DWORD *)(tail_header + 12) = 0;
-    *(_DWORD *)tail_header = first_block;
-    *(_DWORD *)(first_block + 4) = 0;
-    *(_DWORD *)(first_block + 8) = 0;
-    *(_DWORD *)first_block = 0;
-    *(_DWORD *)(first_block + 12) = available_size;
+    *(_DWORD *)(uintptr_t)(tail_header + 4) = 0;
+    *(_DWORD *)(uintptr_t)(tail_header + 8) = 0;
+    *(_DWORD *)(uintptr_t)(tail_header + 12) = 0;
+    *(_DWORD *)(uintptr_t)tail_header = first_block;
+    *(_DWORD *)(uintptr_t)(first_block + 4) = 0;
+    *(_DWORD *)(uintptr_t)(first_block + 8) = 0;
+    *(_DWORD *)(uintptr_t)first_block = 0;
+    *(_DWORD *)(uintptr_t)(first_block + 12) = available_size;
     g_Mem_PoolInitializedFlag = 1;
     return 1;
   }
   else
   {
-    Output_WriteFormatted(0, 0, (int)&g_CRT_StdoutStream, (int)aUnableToAlloca, a2);
+    Output_WriteFormatted(0, 0, (int)(intptr_t)&g_CRT_StdoutStream, (int)(intptr_t)aUnableToAlloca, a2);
     return 0;
   }
 }
@@ -913,21 +913,21 @@ int  Mem_GrowPoolChain(int pool, unsigned int requested_bytes)
   new_pool = nmalloc_(available_size, 0);
   if ( new_pool )
   {
-    *(_DWORD *)new_pool = 0;
-    *(_DWORD *)(new_pool + 4) = pool;
+    *(_DWORD *)(uintptr_t)new_pool = 0;
+    *(_DWORD *)(uintptr_t)(new_pool + 4) = pool;
     first_block = new_pool + g_HeapChunkHeaderSize;
-    *(_DWORD *)(new_pool + 12) = available_size;
-    *(_DWORD *)(new_pool + 8) = first_block;
-    *(_DWORD *)pool = new_pool;
+    *(_DWORD *)(uintptr_t)(new_pool + 12) = available_size;
+    *(_DWORD *)(uintptr_t)(new_pool + 8) = first_block;
+    *(_DWORD *)(uintptr_t)pool = new_pool;
     tail_header = new_pool + g_HeapChunkHeaderSize + g_MemPoolBlockHeaderSize + available_size;
-    *(_DWORD *)(tail_header + 4) = 0;
-    *(_DWORD *)(tail_header + 8) = 0;
-    *(_DWORD *)(tail_header + 12) = 0;
-    *(_DWORD *)tail_header = first_block;
-    *(_DWORD *)(first_block + 4) = 0;
-    *(_DWORD *)(first_block + 8) = 0;
-    *(_DWORD *)first_block = 0;
-    *(_DWORD *)(first_block + 12) = available_size;
+    *(_DWORD *)(uintptr_t)(tail_header + 4) = 0;
+    *(_DWORD *)(uintptr_t)(tail_header + 8) = 0;
+    *(_DWORD *)(uintptr_t)(tail_header + 12) = 0;
+    *(_DWORD *)(uintptr_t)tail_header = first_block;
+    *(_DWORD *)(uintptr_t)(first_block + 4) = 0;
+    *(_DWORD *)(uintptr_t)(first_block + 8) = 0;
+    *(_DWORD *)(uintptr_t)first_block = 0;
+    *(_DWORD *)(uintptr_t)(first_block + 12) = available_size;
     return 1;
   }
   return 0;
@@ -950,7 +950,7 @@ signed int  Mem_PoolAllocBlock(unsigned int size, _DWORD *error_context)
     result = Mem_InitPool(size, size);
     if ( !result )
       return result;
-    IO_AddRouter((int)aBmexit, -2000, 0, 0, 0, 0, (int)Mem_HeapExitHandler);
+    IO_AddRouter((int)(intptr_t)aBmexit, -2000, 0, 0, 0, 0, (int)(intptr_t)Mem_HeapExitHandler);
   }
   requested_size = 8 * ((size - 1) >> 3) + 8;
   if ( g_MemPoolListHead )
@@ -1010,20 +1010,20 @@ int  Mem_PoolSplitBlock(int result, _DWORD *block, int alloc_size)
     block[3] = -alloc_size;
     if ( previous_free )
     {
-      *(_DWORD *)(previous_free + 4) = block[1];
+      *(_DWORD *)(uintptr_t)(previous_free + 4) = block[1];
     }
     else
     {
       next_free = block[1];
       if ( next_free )
-        *(_DWORD *)(pool + 8) = next_free;
+        *(_DWORD *)(uintptr_t)(pool + 8) = next_free;
       else
-        *(_DWORD *)(pool + 8) = 0;
+        *(_DWORD *)(uintptr_t)(pool + 8) = 0;
     }
     next_free = block[1];
     if ( next_free )
     {
-      *(_DWORD *)(next_free + 8) = block[2];
+      *(_DWORD *)(uintptr_t)(next_free + 8) = block[2];
     }
     block[2] = 0;
     block[1] = 0;
@@ -1039,12 +1039,12 @@ int  Mem_PoolSplitBlock(int result, _DWORD *block, int alloc_size)
     *tail_header = split_block;
     prev_of_split = split_block[2];
     if ( prev_of_split )
-      *(_DWORD *)(prev_of_split + 4) = (int)(uintptr_t)split_block;
+      *(_DWORD *)(uintptr_t)(prev_of_split + 4) = (int)(uintptr_t)split_block;
     else
-      *(_DWORD *)(pool + 8) = (int)(uintptr_t)split_block;
+      *(_DWORD *)(uintptr_t)(pool + 8) = (int)(uintptr_t)split_block;
     next_of_split = split_block[1];
     if ( next_of_split )
-      *(_DWORD *)(next_of_split + 8) = (int)(uintptr_t)split_block;
+      *(_DWORD *)(uintptr_t)(next_of_split + 8) = (int)(uintptr_t)split_block;
     block[2] = 0;
     block[1] = 0;
     block[3] = -alloc_size;
@@ -1078,7 +1078,7 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   int pool_next; // ecx
 
   aligned_size = 8 * ((unsigned int)(block_size - 1) >> 3) + 8;
-  block_record = (_DWORD *)(block_ptr - g_MemPoolBlockHeaderSize);
+  block_record = (_DWORD *)(uintptr_t)(block_ptr - g_MemPoolBlockHeaderSize);
   if ( block_ptr == g_MemPoolBlockHeaderSize )
     return 0;
   stored_size = block_record[3];
@@ -1090,19 +1090,19 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
   if ( next_link )
   {
     do
-      chain_cursor = (_DWORD *)*chain_cursor;
+      chain_cursor = (_DWORD *)(uintptr_t)*chain_cursor;
     while ( *chain_cursor );
   }
   pool_header = (_DWORD *)((char *)chain_cursor - g_HeapChunkHeaderSize);
-  adjacent_block = (_DWORD *)(block_ptr + aligned_size);
+  adjacent_block = (_DWORD *)(uintptr_t)(block_ptr + aligned_size);
   freelist_head = pool_header[2];
-  chained_block = (_DWORD *)*block_record;
+  chained_block = (_DWORD *)(uintptr_t)*block_record;
   if ( freelist_head )
-    *(_DWORD *)(freelist_head + 8) = block_record;
+    *(_DWORD *)(uintptr_t)(freelist_head + 8) = block_record;
   old_freelist_head = pool_header[2];
   block_record[2] = 0;
   block_record[1] = old_freelist_head;
-  pool_header[2] = (int)block_record;
+  pool_header[2] = (int)(intptr_t)block_record;
   if ( chained_block )
   {
     chained_size = chained_block[3];
@@ -1114,15 +1114,15 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
       *adjacent_block = chained_block;
       prev_free = chained_block[2];
       if ( prev_free )
-        *(_DWORD *)(prev_free + 4) = chained_block[1];
+        *(_DWORD *)(uintptr_t)(prev_free + 4) = chained_block[1];
       if ( chained_block[1] )
-        *(_DWORD *)(chained_block[1] + 8) = chained_block[2];
+        *(_DWORD *)(uintptr_t)(chained_block[1] + 8) = chained_block[2];
       next_free = block_record[1];
       chained_block[1] = next_free;
       if ( next_free )
-        *(_DWORD *)(next_free + 8) = chained_block;
+        *(_DWORD *)(uintptr_t)(next_free + 8) = chained_block;
       chained_block[2] = 0;
-      pool_header[2] = (int)chained_block;
+      pool_header[2] = (int)(intptr_t)chained_block;
       block_record[2] = 0;
       block_record[1] = 0;
       block_record = chained_block;
@@ -1139,10 +1139,10 @@ signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size)
     {
       *following_block = block_record;
       if ( adjacent_block[2] )
-        *(_DWORD *)(adjacent_block[2] + 4) = adjacent_block[1];
+        *(_DWORD *)(uintptr_t)(adjacent_block[2] + 4) = adjacent_block[1];
       adjacent_next = adjacent_block[1];
       if ( adjacent_next )
-        *(_DWORD *)(adjacent_next + 8) = adjacent_block[2];
+        *(_DWORD *)(uintptr_t)(adjacent_next + 8) = adjacent_block[2];
       goto LABEL_27;
     }
     return 0;
@@ -1152,13 +1152,13 @@ LABEL_27:
     return 1;
   if ( pool_header[1] )
   {
-    unlink_node = (int *)pool_header[1];
+    unlink_node = (int *)(uintptr_t)pool_header[1];
     chain_next = *pool_header;
     *unlink_node = *pool_header;
     if ( chain_next )
     {
-      unlink_node = (int *)chain_next;
-      *(_DWORD *)(chain_next + 4) = pool_header[1];
+      unlink_node = (int *)(uintptr_t)chain_next;
+      *(_DWORD *)(uintptr_t)(chain_next + 4) = pool_header[1];
     }
     nfree_(unlink_node);
     return 1;
@@ -1166,7 +1166,7 @@ LABEL_27:
   pool_next = *pool_header;
   if ( !*pool_header )
     return 1;
-  *(_DWORD *)(pool_next + 4) = 0;
+  *(_DWORD *)(uintptr_t)(pool_next + 4) = 0;
   g_MemPoolListHead = *pool_header;
   nfree_(pool_next);
   return 1;
@@ -1189,7 +1189,7 @@ int __thiscall Mem_ReleaseAllPools(void *this)
   {
     do
     {
-      next_pool = *(_DWORD *)g_MemPoolListHead;
+      next_pool = *(_DWORD *)(uintptr_t)g_MemPoolListHead;
       nfree_(g_MemPoolListHead);
       g_MemPoolListHead = next_pool;
     }
@@ -1201,8 +1201,8 @@ int __thiscall Mem_ReleaseAllPools(void *this)
   {
     do
     {
-      freelist_next = *(_DWORD *)(result + 4);
-      Mem_ReleasePoolBlock(result, *(_DWORD *)(result + 8));
+      freelist_next = *(_DWORD *)(uintptr_t)(result + 4);
+      Mem_ReleasePoolBlock(result, *(_DWORD *)(uintptr_t)(result + 8));
       result = freelist_next;
     }
     while ( freelist_next );
@@ -1255,12 +1255,12 @@ int  Surface_Destruct(int result)
   int dd_surface; // edx
 
   surface = result;
-  dd_surface = *(_DWORD *)(result + 164);
-  *(_DWORD *)(result + 172) = g_Surface_BlitFunctionTable;
+  dd_surface = *(_DWORD *)(uintptr_t)(result + 164);
+  *(_DWORD *)(uintptr_t)(result + 172) = g_Surface_BlitFunctionTable;
   if ( dd_surface )
   {
-    (*(void (__stdcall **)(int))(*(_DWORD *)dd_surface + 8))(dd_surface);
-    *(_DWORD *)(surface + 164) = 0;
+    (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)dd_surface + 8))(dd_surface);
+    *(_DWORD *)(uintptr_t)(surface + 164) = 0;
     return surface;
   }
   return result;
@@ -1322,7 +1322,7 @@ int  Surface_CreateFromBitmapFile(_DWORD *surface, int *ddraw_obj, const CHAR *b
 
   if ( !bitmap_path )
     return 0;
-  result = Surface_DDCopyBitmapToNewSurface(*ddraw_obj, bitmap_path, surface + 1, (int)surface);
+  result = Surface_DDCopyBitmapToNewSurface(*ddraw_obj, bitmap_path, surface + 1, (int)(intptr_t)surface);
   surface[41] = result;
   if ( result )
   {
@@ -1359,10 +1359,10 @@ int  Surface_BltOntoSurface(int surface, int dest_surface)
   int result; // eax
   int v4; // edx
 
-  result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(dest_surface + 164) + 20))(
-             *(_DWORD *)(dest_surface + 164),
+  result = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(dest_surface + 164) + 20))(
+             *(_DWORD *)(uintptr_t)(dest_surface + 164),
              surface + 36,
-             *(_DWORD *)(surface + 164),
+             *(_DWORD *)(uintptr_t)(surface + 164),
              surface + 20,
              0x1000000,
              0);
@@ -1380,11 +1380,11 @@ int  Surface_BltFastOpaqueTo(int src_surface, int dest_x, int dest_surface, int 
 {
   int result; // eax
 
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(dest_surface + 164) + 28))(
-             *(_DWORD *)(dest_surface + 164),
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(dest_surface + 164) + 28))(
+             *(_DWORD *)(uintptr_t)(dest_surface + 164),
              dest_x,
              dest_y,
-             *(_DWORD *)(src_surface + 164),
+             *(_DWORD *)(uintptr_t)(src_surface + 164),
              src_surface + 20,
              16);
   if ( result == -2005532222 )
@@ -1400,11 +1400,11 @@ int  Surface_BltFastKeyedTo(int src_surface, int dest_x, int dest_surface, int d
 {
   int result; // eax
 
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(**(_DWORD **)(dest_surface + 164) + 28))(
-             *(_DWORD *)(dest_surface + 164),
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, int, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(dest_surface + 164) + 28))(
+             *(_DWORD *)(uintptr_t)(dest_surface + 164),
              dest_x,
              dest_y,
-             *(_DWORD *)(src_surface + 164),
+             *(_DWORD *)(uintptr_t)(src_surface + 164),
              src_surface + 20,
              17);
   if ( result == -2005532222 )
@@ -1433,8 +1433,8 @@ int  Surface_BltFastKeyedClippedTo(_DWORD *src_surface, int dest_x, int dest_sur
   src_rect[2] = src_surface[7];
   src_rect[3] = src_surface[8];
   Render_ClampBlitRectToBounds(&blit_x, &blit_y, clip_bounds, src_rect);
-  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, _DWORD *, int))(**(_DWORD **)(target_surface + 164) + 28))(
-             *(_DWORD *)(target_surface + 164),
+  result = (*(int (__stdcall **)(_DWORD, int, int, _DWORD, _DWORD *, int))(uintptr_t)(**(_DWORD **)(uintptr_t)(target_surface + 164) + 28))(
+             *(_DWORD *)(uintptr_t)(target_surface + 164),
              blit_x,
              blit_y,
              src_surface[41],
@@ -1442,7 +1442,7 @@ int  Surface_BltFastKeyedClippedTo(_DWORD *src_surface, int dest_x, int dest_sur
              17);
   if ( result == -2005532222 )
   {
-    Surface_Restore((int)src_surface);
+    Surface_Restore((int)(intptr_t)src_surface);
     return v7;
   }
   return result;

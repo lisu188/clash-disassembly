@@ -26,29 +26,29 @@ int  AST_CloneFieldAccessSubtreeJN(int result)
   currentNode = result;
   if ( result )
   {
-    freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 56);
+    freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
     if ( freeListEntry )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-      *(_DWORD *)(g_ClipsMemoryTable + 56) = *freeListEntry;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeListEntry;
       newExpr = g_ClipsMemFreeListTemp;
     }
     else
     {
       newExpr = Mem_HeapAllocWithRetry((_DWORD *)0xE);
     }
-    *(_WORD *)newExpr = *(_WORD *)currentNode;
-    *(_DWORD *)(newExpr + 2) = *(_DWORD *)(currentNode + 4);
-    nextArgExpr = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(currentNode + 64));
-    *(_DWORD *)(v5 + 10) = nextArgExpr;
-    argListExpr = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(v6 + 68));
-    *(_DWORD *)(v9 + 6) = argListExpr;
+    *(_WORD *)(uintptr_t)newExpr = *(_WORD *)(uintptr_t)currentNode;
+    *(_DWORD *)(uintptr_t)(newExpr + 2) = *(_DWORD *)(uintptr_t)(currentNode + 4);
+    nextArgExpr = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(uintptr_t)(currentNode + 64));
+    *(_DWORD *)(uintptr_t)(v5 + 10) = nextArgExpr;
+    argListExpr = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(uintptr_t)(v6 + 68));
+    *(_DWORD *)(uintptr_t)(v9 + 6) = argListExpr;
     resultExpr = v9;
     if ( *v8 == 15 || *v8 == 16 )
     {
-      (*(void (**)(void))(*(_DWORD *)(v8[5] + 24) + 52))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(v8[5] + 24) + 52))();
     }
-    else if ( *(_WORD *)v9 == 13 )
+    else if ( *(_WORD *)(uintptr_t)v9 == 13 )
     {
       Defglobal_ResolveGlobalVariableReference(v9, v9);
       return resultExpr;
@@ -74,23 +74,23 @@ int  AST_BuildCrossClassFieldAccessTest(int selfNode, int referringNode)
   __int64 v8; // rax
   __int64 v9; // rax
 
-  selfPatternType = *(_DWORD *)(selfNode + 24);
-  if ( !*(_DWORD *)(selfPatternType + 44) )
+  selfPatternType = *(_DWORD *)(uintptr_t)(selfNode + 24);
+  if ( !*(_DWORD *)(uintptr_t)(selfPatternType + 44) )
     return 0;
-  referringPatternType = *(_DWORD *)(referringNode + 24);
-  if ( !*(_DWORD *)(referringPatternType + 44) )
+  referringPatternType = *(_DWORD *)(uintptr_t)(referringNode + 24);
+  if ( !*(_DWORD *)(uintptr_t)(referringPatternType + 44) )
     return 0;
-  if ( *(_DWORD *)(selfPatternType + 44) == *(_DWORD *)(referringPatternType + 44) )
-    return (*(int (**)(void))(selfPatternType + 44))();
-  if ( (*(_BYTE *)(selfNode + 8) & 1) != 0 )
+  if ( *(_DWORD *)(uintptr_t)(selfPatternType + 44) == *(_DWORD *)(uintptr_t)(referringPatternType + 44) )
+    return (*(int (**)(void))(uintptr_t)(selfPatternType + 44))();
+  if ( (*(_BYTE *)(uintptr_t)(selfNode + 8) & 1) != 0 )
     compareSymbol = g_ClipsSymbolNeq;
   else
     compareSymbol = g_ClipsSymbolEq;
   AST_NewNode(10, compareSymbol);
-  v8 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v7 + 24) + 40))();
-  *(_DWORD *)(HIDWORD(v8) + 6) = v8;
-  v9 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(referringNode + 24) + 40))();
-  *(_DWORD *)(*(_DWORD *)(HIDWORD(v9) + 6) + 10) = v9;
+  v8 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 24) + 40))();
+  *(_DWORD *)(uintptr_t)(HIDWORD(v8) + 6) = v8;
+  v9 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(referringNode + 24) + 40))();
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(HIDWORD(v9) + 6) + 10) = v9;
   return HIDWORD(v9);
 }
 // 4E5829: variable 'v7' is possibly undefined
@@ -102,9 +102,9 @@ int  AST_InvokeFieldAccessValidator(int theField, int jnTest)
 {
   int patternType; // ecx
 
-  patternType = *(_DWORD *)(theField + 24);
-  if ( *(_DWORD *)(patternType + 60) )
-    return (*(int (__cdecl **)(int))(patternType + 60))(jnTest);
+  patternType = *(_DWORD *)(uintptr_t)(theField + 24);
+  if ( *(_DWORD *)(uintptr_t)(patternType + 60) )
+    return (*(int (__cdecl **)(int))(uintptr_t)(patternType + 60))(jnTest);
   else
     return 0;
 }
@@ -126,27 +126,27 @@ int  AST_IsFieldAccessHomogeneousAcrossHierarchy(int nodeChain, int whichPattern
     if ( chainNode )
       break;
 LABEL_6:
-    chainNode = *(_DWORD *)(chainNode + 68);
+    chainNode = *(_DWORD *)(uintptr_t)(chainNode + 68);
     if ( !chainNode )
       return 1;
   }
   while ( 1 )
   {
-    nodeType = *(_DWORD *)fieldNode;
-    if ( *(_DWORD *)fieldNode == 15 || nodeType == 16 )
+    nodeType = *(_DWORD *)(uintptr_t)fieldNode;
+    if ( *(_DWORD *)(uintptr_t)fieldNode == 15 || nodeType == 16 )
       break;
     if ( nodeType == 93 || nodeType == 94 )
     {
-      result = AST_IsFieldPositionConsistent(*(_DWORD **)(fieldNode + 56), whichPattern);
+      result = AST_IsFieldPositionConsistent(*(_DWORD **)(uintptr_t)(fieldNode + 56), whichPattern);
       if ( !result )
         return result;
     }
 LABEL_5:
-    fieldNode = *(_DWORD *)(fieldNode + 64);
+    fieldNode = *(_DWORD *)(uintptr_t)(fieldNode + 64);
     if ( !fieldNode )
       goto LABEL_6;
   }
-  if ( whichPattern == *(_DWORD *)(*(_DWORD *)(fieldNode + 20) + 28) )
+  if ( whichPattern == *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldNode + 20) + 28) )
     goto LABEL_5;
   return 0;
 }
@@ -162,12 +162,12 @@ int  AST_IsFieldPositionConsistent(_DWORD *theNode, int whichPattern)
   currentNode = theNode;
   if ( !theNode )
     return 1;
-  while ( *currentNode != 15 && *currentNode != 16 || whichPattern == *(_DWORD *)(currentNode[5] + 28) )
+  while ( *currentNode != 15 && *currentNode != 16 || whichPattern == *(_DWORD *)(uintptr_t)(currentNode[5] + 28) )
   {
     result = AST_IsFieldPositionConsistent(currentNode[17], whichPattern);
     if ( !result )
       return result;
-    currentNode = *(_DWORD **)(v5 + 64);
+    currentNode = *(_DWORD **)(uintptr_t)(v5 + 64);
     if ( !currentNode )
       return 1;
   }
@@ -193,7 +193,7 @@ unsigned int  CRT_StrToXLong(unsigned __int8 *numStr, int *endPtr, int signedFla
   radix = requestedBase;
   signedFlagSaved = signedFlag;
   if ( endPtr )
-    *endPtr = (int)numStr;
+    *endPtr = (int)(intptr_t)numStr;
   for ( i = numStr; (IsTable[(unsigned __int8)(*i + 1)] & 2) != 0; ++i )
     ;
   BYTE1(signedFlag) = *i;
@@ -203,7 +203,7 @@ unsigned int  CRT_StrToXLong(unsigned __int8 *numStr, int *endPtr, int signedFla
   {
     if ( requestedBase < 2 || requestedBase > 36 )
     {
-      _set_errno_((int)numStr);
+      _set_errno_((int)(intptr_t)numStr);
       return 0;
     }
     if ( requestedBase == 16 )
@@ -238,19 +238,19 @@ LABEL_25:
   value = 0;
   while ( 1 )
   {
-    digit = CRT_DigitCharToValue(*i, (int)i, signedFlag);
+    digit = CRT_DigitCharToValue(*i, (int)(intptr_t)i, signedFlag);
     if ( digit >= radix )
       break;
-    if ( value > (unsigned int)g_StrToLongOverflowLimitTable[radix] )
+    if ( value > (unsigned int)(intptr_t)g_StrToLongOverflowLimitTable[radix] )
       LOBYTE(signedFlag) = 1;
     prevValue = value;
     value = digit + radix * value;
     if ( value < prevValue )
       LOBYTE(signedFlag) = 1;
-    i = (unsigned __int8 *)(digitPtr + 1);
+    i = (unsigned __int8 *)(uintptr_t)(digitPtr + 1);
   }
-  if ( (unsigned __int8 *)digitPtr == digitsStart )
-    digitPtr = (int)numStr;
+  if ( (unsigned __int8 *)(uintptr_t)digitPtr == digitsStart )
+    digitPtr = (int)(intptr_t)numStr;
   if ( endPtr )
     *endPtr = digitPtr;
   if ( (signedFlagSaved != 1 || value < 0x80000000 || value == 0x80000000 && BYTE1(signedFlag) == 45) && !(_BYTE)signedFlag )
@@ -261,7 +261,7 @@ LABEL_25:
   }
   else
   {
-    _set_errno_((int)numStr);
+    _set_errno_((int)(intptr_t)numStr);
     if ( signedFlagSaved )
     {
       if ( signChar == 45 )
@@ -356,31 +356,31 @@ void  CRT_PutEnvEntryA(_BYTE *envString, _BYTE *i, int a3)
         else
         {
           newBlock = (void *)nmalloc_(tableSizeBytes, v7);
-          envTable = (int)newBlock;
+          envTable = (int)(intptr_t)newBlock;
           if ( !newBlock )
             goto LABEL_23;
-          qmemcpy(newBlock, (const void *)g_CRT_EnvVarPointerArray, copyBytes);
-          g_RuntimeGrowableByteFlagArrayPtr = (int)newBlock + tableBytes;
+          qmemcpy(newBlock, (const void *)(uintptr_t)g_CRT_EnvVarPointerArray, copyBytes);
+          g_RuntimeGrowableByteFlagArrayPtr = (int)(intptr_t)newBlock + tableBytes;
           memset_(0, 0);
         }
         g_CRT_EnvVarPointerArray = envTable;
-        *(_DWORD *)(envTable + 4 * entryIndex + 4) = 0;
+        *(_DWORD *)(uintptr_t)(envTable + 4 * entryIndex + 4) = 0;
         goto LABEL_22;
       }
       if ( i[1] )
       {
         newTable = (_DWORD *)nmalloc_(a3, i);
-        envTable = (int)newTable;
+        envTable = (int)(intptr_t)newTable;
         if ( newTable )
         {
-          g_CRT_EnvVarPointerArray = (int)newTable;
+          g_CRT_EnvVarPointerArray = (int)(intptr_t)newTable;
           *newTable = 0;
-          flagArrayPtr = (int)(newTable + 2);
-          *(_DWORD *)(flagArrayPtr - 4) = 0;
+          flagArrayPtr = (int)(intptr_t)(newTable + 2);
+          *(_DWORD *)(uintptr_t)(flagArrayPtr - 4) = 0;
           g_RuntimeGrowableByteFlagArrayPtr = flagArrayPtr;
 LABEL_22:
-          *(_DWORD *)(envTable + 4 * entryIndex) = envString;
-          *(_BYTE *)(g_RuntimeGrowableByteFlagArrayPtr + entryIndex) = 0;
+          *(_DWORD *)(uintptr_t)(envTable + 4 * entryIndex) = envString;
+          *(_BYTE *)(uintptr_t)(g_RuntimeGrowableByteFlagArrayPtr + entryIndex) = 0;
         }
       }
     }
@@ -415,10 +415,10 @@ int  CRT_FindEnvVarIndexA(_BYTE *envName, int deleteFlag, int a3)
   int v13; // ecx
   unsigned __int8 *flagBytePtr; // eax
 
-  tableEntry = (_DWORD *)g_CRT_EnvVarPointerArray;
+  tableEntry = (_DWORD *)(uintptr_t)g_CRT_EnvVarPointerArray;
 LABEL_20:
   if ( !*tableEntry )
-    return (g_CRT_EnvVarPointerArray - (int)tableEntry) >> 2;
+    return (g_CRT_EnvVarPointerArray - (int)(intptr_t)tableEntry) >> 2;
   for ( i = envName; ; ++i )
   {
     if ( !*i || (v7 = toupper_(a3), v8 = toupper_(v7), a3 != v8) )
@@ -429,21 +429,21 @@ LABEL_20:
     if ( *v9 == 61 )
       break;
   }
-  entryIndex = ((int)tableEntry - g_CRT_EnvVarPointerArray) >> 2;
+  entryIndex = ((int)(intptr_t)tableEntry - g_CRT_EnvVarPointerArray) >> 2;
   if ( !deleteFlag )
     return entryIndex + 1;
   for ( j = tableEntry; *j; ++j )
     *j = j[1];
   if ( g_RuntimeGrowableByteFlagArrayPtr )
   {
-    if ( *(_BYTE *)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) )
+    if ( *(_BYTE *)(uintptr_t)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) )
       nfree_(j);
-    entryCount = ((int)j - g_CRT_EnvVarPointerArray) >> 2;
+    entryCount = ((int)(intptr_t)j - g_CRT_EnvVarPointerArray) >> 2;
     memmove_(j, (const void *)(uintptr_t)g_RuntimeGrowableByteFlagArrayPtr, (size_t)entryCount);
     g_RuntimeGrowableByteFlagArrayPtr = v13;
     if ( entryIndex < entryCount )
     {
-      flagBytePtr = (unsigned __int8 *)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr);
+      flagBytePtr = (unsigned __int8 *)(uintptr_t)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr);
       do
       {
         *flagBytePtr = flagBytePtr[1];
@@ -527,25 +527,25 @@ signed int  CRT_PutEnvEntryW(_WORD *envString, _WORD *i)
         memset_(v14, 0);
       }
       g_CrtWideEnvironTable = envTablePtr;
-      *(_DWORD *)(envTablePtr + 4 * entryIndex + 4) = 0;
+      *(_DWORD *)(uintptr_t)(envTablePtr + 4 * entryIndex + 4) = 0;
       goto LABEL_22;
     }
   }
   else if ( i[1] )
   {
     allocatedTable = (_DWORD *)nmalloc_(0, i);
-    envTablePtr = (int)allocatedTable;
+    envTablePtr = (int)(intptr_t)allocatedTable;
     if ( allocatedTable )
     {
-      g_CrtWideEnvironTable = (int)allocatedTable;
+      g_CrtWideEnvironTable = (int)(intptr_t)allocatedTable;
       *allocatedTable = 0;
-      flagArrayBase = (int)(allocatedTable + 2);
+      flagArrayBase = (int)(intptr_t)(allocatedTable + 2);
       entryIndex = 0;
-      *(_DWORD *)(flagArrayBase - 4) = 0;
+      *(_DWORD *)(uintptr_t)(flagArrayBase - 4) = 0;
       g_RuntimeGrowableByteFlagArrayPtr = flagArrayBase;
 LABEL_22:
-      *(_DWORD *)(envTablePtr + 4 * entryIndex) = envString;
-      *(_BYTE *)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) = 0;
+      *(_DWORD *)(uintptr_t)(envTablePtr + 4 * entryIndex) = envString;
+      *(_BYTE *)(uintptr_t)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) = 0;
       return 0;
     }
     return -1;
@@ -576,10 +576,10 @@ int  CRT_FindEnvVarIndexW(_WORD *envName, int deleteFlag, int a3)
   int v13; // ecx
   _BYTE *flagBytePtr; // eax
 
-  tableEntry = (_DWORD *)g_CrtWideEnvironTable;
+  tableEntry = (_DWORD *)(uintptr_t)g_CrtWideEnvironTable;
 LABEL_20:
   if ( !*tableEntry )
-    return (g_CrtWideEnvironTable - (int)tableEntry) >> 2;
+    return (g_CrtWideEnvironTable - (int)(intptr_t)tableEntry) >> 2;
   for ( i = envName; ; ++i )
   {
     if ( !*i || (v7 = towupper_(a3), v8 = towupper_(v7), (_WORD)a3 != v8) )
@@ -590,19 +590,19 @@ LABEL_20:
     if ( *v9 == 61 )
       break;
   }
-  entryIndex = ((int)tableEntry - g_CrtWideEnvironTable) >> 2;
+  entryIndex = ((int)(intptr_t)tableEntry - g_CrtWideEnvironTable) >> 2;
   if ( !deleteFlag )
     return entryIndex + 1;
   for ( j = tableEntry; *j; ++j )
     *j = j[1];
   if ( g_RuntimeGrowableByteFlagArrayPtr )
   {
-    if ( *(_BYTE *)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) )
+    if ( *(_BYTE *)(uintptr_t)(entryIndex + g_RuntimeGrowableByteFlagArrayPtr) )
       nfree_(j);
-    entryCount = ((int)j - g_CrtWideEnvironTable) >> 2;
+    entryCount = ((int)(intptr_t)j - g_CrtWideEnvironTable) >> 2;
     memmove_(j, (const void *)(uintptr_t)g_RuntimeGrowableByteFlagArrayPtr, (size_t)entryCount);
     g_RuntimeGrowableByteFlagArrayPtr = v13;
-    flagBytePtr = (_BYTE *)(entryIndex + v13);
+    flagBytePtr = (_BYTE *)(uintptr_t)(entryIndex + v13);
     while ( entryIndex < entryCount )
     {
       ++entryIndex;
@@ -657,7 +657,7 @@ DWORD __cdecl CRT_SpawnveLaunchProcess(int spawnMode, int a2, LPSTR lpCommandLin
       v8 = GetCurrentProcess();
       if ( !DuplicateHandle(v8, hProcess, CurrentProcess, &TargetHandle, 0, 0, 2u) )
         TargetHandle = ProcessInformation.hProcess;
-      dwProcessId = (DWORD)TargetHandle;
+      dwProcessId = (DWORD)(intptr_t)TargetHandle;
     }
     ExitCode = dwProcessId;
 LABEL_20:
@@ -709,7 +709,7 @@ const CHAR * CRT_SetEnvironmentVariableCompat(const WCHAR *wideName, const WCHAR
   int v15; // ecx
 
   if ( HIWORD(g_WindowsVersionDword) < 0x8000u )
-    return (const CHAR *)SetEnvironmentVariableW(wideName, wideValue);
+    return (const CHAR *)(uintptr_t)SetEnvironmentVariableW(wideName, wideValue);
   valueLen = wcslen_(a3, wideValue);
   result = (const CHAR *)nmalloc_(2 * valueLen + 1, v6);
   ansiName = result;
@@ -741,7 +741,7 @@ LABEL_9:
     nfree_(v13);
     if ( ansiValue )
       nfree_(v15);
-    return (const CHAR *)v14;
+    return (const CHAR *)(uintptr_t)v14;
   }
   return result;
 }
@@ -776,7 +776,7 @@ int CRT_DefaultZeroStub(void)
 signed int  CRT_GetOsHandleFromFd(int fd, int a2)
 {
   if ( fd >= 0 && fd <= (unsigned int)g_CRT_MaxFileDescriptor )
-    return *(_DWORD *)(4 * fd + g_CRT_OsHandleTable);
+    return *(_DWORD *)(uintptr_t)(4 * fd + g_CRT_OsHandleTable);
   _set_errno_(a2);
   return -1;
 }
@@ -790,13 +790,13 @@ unsigned int  CRT_MbcsBackUpOverLeadByte(unsigned int stringStart, unsigned int 
 
   if ( stringStart >= currentPos )
     return 0;
-  scanPtr = (unsigned __int8 *)(currentPos - 1);
+  scanPtr = (unsigned __int8 *)(uintptr_t)(currentPos - 1);
   if ( g_CRT_MbcsCodePageActive && (g_Clips_DbcsLeadByteTable[*scanPtr] & 1) != 0 )
     return currentPos - 2;
   do
     --scanPtr;
-  while ( stringStart <= (unsigned int)scanPtr && g_CRT_MbcsCodePageActive && (g_Clips_DbcsLeadByteTable[*scanPtr] & 1) != 0 );
-  return currentPos - 1 - (int)(currentPos - (_DWORD)scanPtr) % 2;
+  while ( stringStart <= (unsigned int)(intptr_t)scanPtr && g_CRT_MbcsCodePageActive && (g_Clips_DbcsLeadByteTable[*scanPtr] & 1) != 0 );
+  return currentPos - 1 - (int)(currentPos - (_DWORD)(intptr_t)scanPtr) % 2;
 }
 // 54E718: using guessed type int dword_54E718;
 

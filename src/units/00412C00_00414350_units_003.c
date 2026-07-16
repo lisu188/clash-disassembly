@@ -46,9 +46,9 @@ int  Player_CalcMilitaryStrength(signed int playerIndex)
   buildingIndex = 0;
 LABEL_2:
   v4 = UNIT_RECORD(buildingIndex);
-  if ( (unsigned int)*(char *)(v4 + 4) < 4
-    && *(__int16 *)(v4 + 16) != -1
-    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509676) == playerIndex )
+  if ( (unsigned int)*(char *)(uintptr_t)(v4 + 4) < 4
+    && *(__int16 *)(uintptr_t)(v4 + 16) != -1
+    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509676) == playerIndex )
   {
     buildingStrength = Building_CalcGarrisonStrength(UNIT_RECORD(buildingIndex), playerIndex);
     totalStrength = buildingStrength + v6;
@@ -61,7 +61,7 @@ LABEL_2:
   for ( i = 0; i < 500; ++i )
   {
     stackRecordBase = gameData + UNIT_STACK_STRIDE * i;
-    if ( playerIndex == *(unsigned __int8 *)(stackRecordBase + 147178) && *(__int16 *)(stackRecordBase + 147180) != -1 )
+    if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(stackRecordBase + 147178) && *(__int16 *)(uintptr_t)(stackRecordBase + 147180) != -1 )
     {
       stackStrength = UnitStack_CalcMilitaryStrength(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * i);
       totalStrength = stackStrength + v10;
@@ -90,15 +90,15 @@ int  UnitStack_CopyFromTemplate(int destStack, int srcStack, int a3)
   int result; // eax
   int v7; // [esp-8h] [ebp-Ch]
 
-  *(_WORD *)destStack = *(_WORD *)srcStack;
-  *(_WORD *)(destStack + 2) = *(_WORD *)(srcStack + 2);
-  *(_BYTE *)(destStack + 4) = *(_BYTE *)(srcStack + 4);
-  *(_BYTE *)(destStack + 5) = *(_BYTE *)(srcStack + 5);
-  *(_DWORD *)(_wcpp_4_copy_array__(a3) + 310) = *(_DWORD *)(srcStack + 316);
+  *(_WORD *)(uintptr_t)destStack = *(_WORD *)(uintptr_t)srcStack;
+  *(_WORD *)(uintptr_t)(destStack + 2) = *(_WORD *)(uintptr_t)(srcStack + 2);
+  *(_BYTE *)(uintptr_t)(destStack + 4) = *(_BYTE *)(uintptr_t)(srcStack + 4);
+  *(_BYTE *)(uintptr_t)(destStack + 5) = *(_BYTE *)(uintptr_t)(srcStack + 5);
+  *(_DWORD *)(uintptr_t)(_wcpp_4_copy_array__(a3) + 310) = *(_DWORD *)(uintptr_t)(srcStack + 316);
   v4 = _wcpp_4_copy_array__(v7);
-  *(_BYTE *)(v4 + 400) = *(_BYTE *)(srcStack + 720);
+  *(_BYTE *)(uintptr_t)(v4 + 400) = *(_BYTE *)(uintptr_t)(srcStack + 720);
   result = v4 - 320;
-  *(_DWORD *)(result + 721) = *(_DWORD *)(srcStack + 721);
+  *(_DWORD *)(uintptr_t)(result + 721) = *(_DWORD *)(uintptr_t)(srcStack + 721);
   return result;
 }
 // 412D20: could not find valid save-restore pair for esi
@@ -123,52 +123,52 @@ int  BattleUnitEntry_CopyMergingPackedFlags(int result, int srcEntry)
   char dstByte17Base; // bl
   char dstByte22Base; // bh
 
-  *(_WORD *)result = *(_WORD *)srcEntry;
-  *(_BYTE *)(result + 2) = *(_BYTE *)(srcEntry + 2);
-  *(_BYTE *)(result + 3) = *(_BYTE *)(srcEntry + 3);
-  *(_WORD *)(result + 4) = *(_WORD *)(srcEntry + 4);
-  *(_WORD *)(result + 6) = *(_WORD *)(srcEntry + 6);
-  *(_BYTE *)(result + 8) = *(_BYTE *)(srcEntry + 8);
-  *(_BYTE *)(result + 9) = *(_BYTE *)(srcEntry + 9);
-  *(_BYTE *)(result + 10) = *(_BYTE *)(srcEntry + 10);
-  *(_BYTE *)(result + 11) = *(_BYTE *)(srcEntry + 11);
-  dstByte12Base = *(_BYTE *)(result + 12) & 0xFC;
-  srcField12Low = *(_BYTE *)(srcEntry + 12) & 3;
-  *(_BYTE *)(result + 12) = dstByte12Base;
+  *(_WORD *)(uintptr_t)result = *(_WORD *)(uintptr_t)srcEntry;
+  *(_BYTE *)(uintptr_t)(result + 2) = *(_BYTE *)(uintptr_t)(srcEntry + 2);
+  *(_BYTE *)(uintptr_t)(result + 3) = *(_BYTE *)(uintptr_t)(srcEntry + 3);
+  *(_WORD *)(uintptr_t)(result + 4) = *(_WORD *)(uintptr_t)(srcEntry + 4);
+  *(_WORD *)(uintptr_t)(result + 6) = *(_WORD *)(uintptr_t)(srcEntry + 6);
+  *(_BYTE *)(uintptr_t)(result + 8) = *(_BYTE *)(uintptr_t)(srcEntry + 8);
+  *(_BYTE *)(uintptr_t)(result + 9) = *(_BYTE *)(uintptr_t)(srcEntry + 9);
+  *(_BYTE *)(uintptr_t)(result + 10) = *(_BYTE *)(uintptr_t)(srcEntry + 10);
+  *(_BYTE *)(uintptr_t)(result + 11) = *(_BYTE *)(uintptr_t)(srcEntry + 11);
+  dstByte12Base = *(_BYTE *)(uintptr_t)(result + 12) & 0xFC;
+  srcField12Low = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 3;
+  *(_BYTE *)(uintptr_t)(result + 12) = dstByte12Base;
   byte12Merged = srcField12Low | dstByte12Base;
-  *(_BYTE *)(result + 12) = srcField12Low | dstByte12Base;
-  srcField12Mid = *(_BYTE *)(srcEntry + 12) & 0xC;
-  *(_BYTE *)(result + 12) = byte12Merged & 0xF3;
+  *(_BYTE *)(uintptr_t)(result + 12) = srcField12Low | dstByte12Base;
+  srcField12Mid = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 0xC;
+  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged & 0xF3;
   byte12Merged2 = srcField12Mid | byte12Merged & 0xF3;
-  *(_BYTE *)(result + 12) = byte12Merged2;
-  srcField12High = *(_BYTE *)(srcEntry + 12) & 0x70;
-  *(_BYTE *)(result + 12) = byte12Merged2 & 0x8F;
+  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged2;
+  srcField12High = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 0x70;
+  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged2 & 0x8F;
   byte12Final = srcField12High | byte12Merged2 & 0x8F;
-  dstByte13Base = *(_BYTE *)(result + 13);
-  *(_BYTE *)(result + 12) = byte12Final;
-  srcFlags13 = *(_DWORD *)(srcEntry + 13);
-  *(_BYTE *)(result + 13) = dstByte13Base & 0xFE;
-  *(_DWORD *)(result + 13) |= srcFlags13 & 1;
-  srcFlags13b = *(_DWORD *)(srcEntry + 13);
-  *(_BYTE *)(result + 13) &= ~2u;
-  *(_DWORD *)(result + 13) |= srcFlags13b & 2;
-  srcFlags13c = *(_DWORD *)(srcEntry + 13);
-  *(_BYTE *)(result + 13) &= ~4u;
-  *(_DWORD *)(result + 13) |= srcFlags13c & 4;
-  v13 = *(_DWORD *)(srcEntry + 13);
-  *(_BYTE *)(result + 13) &= ~8u;
-  *(_DWORD *)(result + 13) |= v13 & 8;
-  LOBYTE(v13) = *(_BYTE *)(srcEntry + 17) & 7;
-  dstByte17Base = *(_BYTE *)(result + 17) & 0xF8;
-  *(_BYTE *)(result + 17) = dstByte17Base;
-  *(_BYTE *)(result + 17) = v13 | dstByte17Base;
-  *(_DWORD *)(result + 18) = *(_DWORD *)(srcEntry + 18);
-  dstByte22Base = *(_BYTE *)(result + 22) & 0xFE;
-  LOBYTE(v13) = *(_BYTE *)(srcEntry + 22) & 1;
-  *(_BYTE *)(result + 22) = dstByte22Base;
-  *(_BYTE *)(result + 22) = v13 | dstByte22Base;
-  *(_DWORD *)(result + 23) = *(_DWORD *)(srcEntry + 23);
-  *(_DWORD *)(result + 27) = *(_DWORD *)(srcEntry + 27);
+  dstByte13Base = *(_BYTE *)(uintptr_t)(result + 13);
+  *(_BYTE *)(uintptr_t)(result + 12) = byte12Final;
+  srcFlags13 = *(_DWORD *)(uintptr_t)(srcEntry + 13);
+  *(_BYTE *)(uintptr_t)(result + 13) = dstByte13Base & 0xFE;
+  *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13 & 1;
+  srcFlags13b = *(_DWORD *)(uintptr_t)(srcEntry + 13);
+  *(_BYTE *)(uintptr_t)(result + 13) &= ~2u;
+  *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13b & 2;
+  srcFlags13c = *(_DWORD *)(uintptr_t)(srcEntry + 13);
+  *(_BYTE *)(uintptr_t)(result + 13) &= ~4u;
+  *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13c & 4;
+  v13 = *(_DWORD *)(uintptr_t)(srcEntry + 13);
+  *(_BYTE *)(uintptr_t)(result + 13) &= ~8u;
+  *(_DWORD *)(uintptr_t)(result + 13) |= v13 & 8;
+  LOBYTE(v13) = *(_BYTE *)(uintptr_t)(srcEntry + 17) & 7;
+  dstByte17Base = *(_BYTE *)(uintptr_t)(result + 17) & 0xF8;
+  *(_BYTE *)(uintptr_t)(result + 17) = dstByte17Base;
+  *(_BYTE *)(uintptr_t)(result + 17) = v13 | dstByte17Base;
+  *(_DWORD *)(uintptr_t)(result + 18) = *(_DWORD *)(uintptr_t)(srcEntry + 18);
+  dstByte22Base = *(_BYTE *)(uintptr_t)(result + 22) & 0xFE;
+  LOBYTE(v13) = *(_BYTE *)(uintptr_t)(srcEntry + 22) & 1;
+  *(_BYTE *)(uintptr_t)(result + 22) = dstByte22Base;
+  *(_BYTE *)(uintptr_t)(result + 22) = v13 | dstByte22Base;
+  *(_DWORD *)(uintptr_t)(result + 23) = *(_DWORD *)(uintptr_t)(srcEntry + 23);
+  *(_DWORD *)(uintptr_t)(result + 27) = *(_DWORD *)(uintptr_t)(srcEntry + 27);
   return result;
 }
 
@@ -183,9 +183,9 @@ int  UnitTrackElementStack_CopyFromTemplate(_DWORD *destStack, _DWORD *srcStack,
 //----- (00412EE0) --------------------------------------------------------
 int  UnitTrackElement_CopyFromTemplate(int result, int srcElement)
 {
-  *(_BYTE *)result = *(_BYTE *)srcElement;
-  *(_BYTE *)(result + 1) = *(_BYTE *)(srcElement + 1);
-  *(_WORD *)(result + 2) = *(_WORD *)(srcElement + 2);
+  *(_BYTE *)(uintptr_t)result = *(_BYTE *)(uintptr_t)srcElement;
+  *(_BYTE *)(uintptr_t)(result + 1) = *(_BYTE *)(uintptr_t)(srcElement + 1);
+  *(_WORD *)(uintptr_t)(result + 2) = *(_WORD *)(uintptr_t)(srcElement + 2);
   return result;
 }
 
@@ -305,7 +305,7 @@ void  UnitSpriteCache_FreeAllEntries(int a1, DWORD a2)
   int i; // edx
   int sprite_record; // ecx
 
-  Debug_Log(a1, -1, a2, (int)aUnitscache_cle);
+  Debug_Log(a1, -1, a2, (int)(intptr_t)aUnitscache_cle);
   for ( i = 0; i != UNIT_SPRITE_CACHE_BYTES; i += UNIT_SPRITE_CACHE_RECORD_STRIDE )
   {
     if ( *(int *)(void *)(g_UnitSpriteCacheRecords + i) == -1 )
@@ -1172,9 +1172,9 @@ void  Unit_BuildBigInfoGraphicPath(char *destPath, unsigned __int8 unitType, int
   int languageDirNames[7]; // [esp+0h] [ebp-1Ch]
 
   languageDirNames[5] = extraLanguageDirName;
-  languageDirNames[0] = (int)g_LanguageDirectoryNames[0];
-  languageDirNames[1] = (int)g_LanguageDirectoryNames[1];
-  languageDirNames[2] = (int)g_LanguageDirectoryNames[2];
+  languageDirNames[0] = (int)(intptr_t)g_LanguageDirectoryNames[0];
+  languageDirNames[1] = (int)(intptr_t)g_LanguageDirectoryNames[1];
+  languageDirNames[2] = (int)(intptr_t)g_LanguageDirectoryNames[2];
   prefixSrc = aBiginfo_;
   destCursor = destPath;
   do
@@ -1189,7 +1189,7 @@ void  Unit_BuildBigInfoGraphicPath(char *destPath, unsigned __int8 unitType, int
     destCursor += 2;
   }
   while ( prefixCharNext );
-  langDirSrc = (char *)languageDirNames[(unsigned __int8)g_LanguageIndex];
+  langDirSrc = (char *)(uintptr_t)languageDirNames[(unsigned __int8)g_LanguageIndex];
   langDirCursor = &destPath[strlen(destPath)];
   do
   {
@@ -1341,13 +1341,13 @@ int  Map_GetUnitTileMoveCostOrZero(int playerIndex, int unitType, int tileColumn
   unsigned __int16 *terrainRecord; // ecx
   unsigned __int16 *v12; // ecx
 
-  tileOccupant = *(unsigned __int16 *)(2 * tileColumn + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET);
+  tileOccupant = *(unsigned __int16 *)(uintptr_t)(2 * tileColumn + gameData + TILE_ROW_STRIDE * tileRow + TILE_MAP_OFFSET);
   if ( (unsigned __int16)tileOccupant != 0xFFFF )
   {
     if ( tileOccupant >= 0x8000 )
       return 0;
     occupantStackRecord = gameData + UNIT_STACK_STRIDE * tileOccupant;
-    if ( !*(_BYTE *)(occupantStackRecord + 147894) || *(unsigned __int8 *)(occupantStackRecord + 147178) == playerIndex )
+    if ( !*(_BYTE *)(uintptr_t)(occupantStackRecord + 147894) || *(unsigned __int8 *)(uintptr_t)(occupantStackRecord + 147178) == playerIndex )
       return 0;
   }
   if ( ((1 << playerIndex) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << playerIndex || MapTile_GetReligiousSiteCategory(tileRow, tileColumn) )
@@ -1376,25 +1376,25 @@ signed int  UnitStack_GetTileMoveCostFromMergedProfileOrZero(__int16 *stackPtr, 
   unsigned __int16 *terrain_record; // edi
 
   tile_index_ptr = TILE_INDEX(tileRow, tileColumn);
-  occupant_stack_index = *(unsigned __int16 *)tile_index_ptr;
+  occupant_stack_index = *(unsigned __int16 *)(uintptr_t)tile_index_ptr;
   if ( occupant_stack_index != 0xFFFF )
   {
     if ( occupant_stack_index > 0x7FFF
-      || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
-      || *(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
+      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
     {
       if ( *stackPtr != tileRow || stackPtr[1] != tileColumn )
         return 0;
     }
   }
-  occupant_stack_index = *(unsigned __int16 *)TILE_INDEX(tileRow, tileColumn);
+  occupant_stack_index = *(unsigned __int16 *)(uintptr_t)TILE_INDEX(tileRow, tileColumn);
   if ( occupant_stack_index != 0xFFFF )
   {
     if ( occupant_stack_index >= 0x8000 )
       return 0;
     occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index;
-    if ( !*(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
-      || *(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+    if ( !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
+      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
       return 0;
   }
   if ( ((1 << *((_BYTE *)stackPtr + 4)) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << *((_BYTE *)stackPtr + 4)
@@ -1430,26 +1430,26 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *stackPtr, int tileRow, int 
 
   v16 = a3;
   tile_index_ptr = TILE_INDEX(tileRow, tileColumn);
-  occupant_stack_index = *(unsigned __int16 *)tile_index_ptr;
+  occupant_stack_index = *(unsigned __int16 *)(uintptr_t)tile_index_ptr;
   if ( occupant_stack_index != 0xFFFF )
   {
     if ( occupant_stack_index > 0x7FFF
-      || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
-      || *(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
+      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
     {
       if ( *stackPtr != tileRow || stackPtr[1] != tileColumn )
         return 0;
     }
   }
   UnitStack_BuildMergedTerrainMoveProfile((intptr_t)merged_profile, (intptr_t)stackPtr);
-  occupant_stack_index = *(unsigned __int16 *)TILE_INDEX(tileRow, tileColumn);
+  occupant_stack_index = *(unsigned __int16 *)(uintptr_t)TILE_INDEX(tileRow, tileColumn);
   if ( occupant_stack_index != 0xFFFF )
   {
     if ( occupant_stack_index > 0x7FFF )
       return 0;
     occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index;
-    if ( !*(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
-      || *(_BYTE *)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+    if ( !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
+      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
       return 0;
   }
   if ( ((1 << *((_BYTE *)stackPtr + 4)) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << *((_BYTE *)stackPtr + 4)
@@ -1475,6 +1475,6 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *stackPtr, int tileRow, int 
 //----- (00414350) --------------------------------------------------------
 signed int  UnitStack_GetMoveCostToTile(int stackIndex, int tileRow, int tileColumn)
 {
-  return UnitStack_GetTileMoveCostOrZero((__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex), tileRow, tileRow, tileColumn);
+  return UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex), tileRow, tileRow, tileColumn);
 }
 // 5202E4: using guessed type int gameData;

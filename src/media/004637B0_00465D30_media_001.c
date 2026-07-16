@@ -13,7 +13,7 @@ int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext)
 {
   int instance; // eax
 
-  instance = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
+  instance = Mem_Alloc(2236, (int)(intptr_t)&g_CAviDecompressor_AllocTypeTag, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *instanceOut = instance;
@@ -42,7 +42,7 @@ int * CAviDecompressor_ConstructAndInitCallbacks(
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)&stru_50F60C, 0, (DWORD)ddSurface);
+  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F60C, 0, (DWORD)(intptr_t)ddSurface);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -67,7 +67,7 @@ void  CAviDecompressor_Init(
   surface2Out[0] = 0;
   if ( !(**ddSurface)(ddSurface, &g_AviQueryInterfaceIid, surface2Out) )
   {
-    *(_DWORD *)(instance + 1952) = ddSurface;
+    *(_DWORD *)(uintptr_t)(instance + 1952) = ddSurface;
     CAviDecompressor_ApplyDecoderFormatParams(openFlags, fileName);
   }
 }
@@ -79,7 +79,7 @@ int * CAviDecompressor_ConstructAndInitSource(int *selfOut, DWORD allocContext, 
   int instance; // eax
 
   *selfOut = 0;
-  instance = Mem_Alloc(2236, (int)&stru_50F6A0, 0, allocContext);
+  instance = Mem_Alloc(2236, (int)(intptr_t)&stru_50F6A0, 0, allocContext);
   if ( instance )
     instance = CAviDecompressor_InitCommon(instance);
   *selfOut = instance;
@@ -106,7 +106,7 @@ void  CAviDecompressor_Done(_DWORD *playerHandle)
   handlePtr = playerHandle;
   instance = *playerHandle;
   if ( instance )
-    (**(void (__fastcall ***)(int, int))(instance + 2232))(instance, 2);
+    (**(void (__fastcall ***)(int, int))(uintptr_t)(instance + 2232))(instance, 2);
   *handlePtr = 0;
 }
 // 464229: variable 'v1' is possibly undefined
@@ -114,13 +114,13 @@ void  CAviDecompressor_Done(_DWORD *playerHandle)
 //----- (00464250) --------------------------------------------------------
 int  CAviDecompressor_Frames(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 43);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 43);
 }
 
 //----- (00464260) --------------------------------------------------------
 int  CAviDecompressor_Fps(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 35) / *(_DWORD *)(*(_DWORD *)playerHandle + 31);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 35) / *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 31);
 }
 
 //----- (00464270) --------------------------------------------------------
@@ -138,7 +138,7 @@ void  CAviDecompressor_Stop(int *playerHandle)
 //----- (00464290) --------------------------------------------------------
 BOOL  CAviDecompressor_IsPlaying(int playerHandle)
 {
-  return *(_BYTE *)(*(_DWORD *)playerHandle + 2191) != 0;
+  return *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2191) != 0;
 }
 
 //----- (004642B0) --------------------------------------------------------
@@ -149,7 +149,7 @@ int  CAviDecompressor_Initialized(_DWORD *playerHandle)
   int v3; // ebx
   _DWORD *blitState; // eax
 
-  instance = (_DWORD *)*playerHandle;
+  instance = (_DWORD *)(uintptr_t)*playerHandle;
   if ( *(_DWORD *)((char *)instance + 7) )
     LOBYTE(result) = *(_DWORD *)((char *)instance + 415) || (v3 = instance[486], blitState = instance + 481, v3) || blitState[4];
   else
@@ -163,38 +163,38 @@ void  CAviDecompressor_WaitForNextFrame(int *playerHandle)
   int instance; // eax
 
   instance = *playerHandle;
-  if ( *(_BYTE *)(instance + 2191) )
-    WaitForSingleObject(*(HANDLE *)(instance + 2196), 0x1F4u);
+  if ( *(_BYTE *)(uintptr_t)(instance + 2191) )
+    WaitForSingleObject(*(HANDLE *)(uintptr_t)(instance + 2196), 0x1F4u);
 }
 
 //----- (00464320) --------------------------------------------------------
 int  CAviDecompressor_Palette(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 1948);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 1948);
 }
 
 //----- (00464330) --------------------------------------------------------
 int  CAviDecompressor_Header(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 151);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151);
 }
 
 //----- (00464340) --------------------------------------------------------
 int  CAviDecompressor_PixelSize(int *playerHandle)
 {
-  return (*(unsigned __int16 *)(CAviDecompressor_GetVideoFormat(*playerHandle) + 14) + 7) >> 3;
+  return (*(unsigned __int16 *)(uintptr_t)(CAviDecompressor_GetVideoFormat(*playerHandle) + 14) + 7) >> 3;
 }
 
 //----- (00464360) --------------------------------------------------------
 int  CAviDecompressor_BPP(int playerHandle)
 {
-  return *(unsigned __int16 *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 14);
+  return *(unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 14);
 }
 
 //----- (00464380) --------------------------------------------------------
 int  CAviDecompressor_Width(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 4);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 4);
 }
 
 //----- (00464390) --------------------------------------------------------
@@ -202,14 +202,14 @@ int  CAviDecompressor_Height(int playerHandle)
 {
   __int64 biHeight; // rax
 
-  biHeight = *(int *)(*(_DWORD *)(*(_DWORD *)playerHandle + 151) + 8);
+  biHeight = *(int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 151) + 8);
   return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
 }
 
 //----- (004643B0) --------------------------------------------------------
 int  CAviDecompressor_DecodedFrame(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 2021);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2021);
 }
 
 //----- (004643C0) --------------------------------------------------------
@@ -218,11 +218,11 @@ int  CAviDecompressor_SetBackground(int *playerHandle, _DWORD *bgRect, int ddObj
   int result; // eax
 
   result = *playerHandle;
-  *(_DWORD *)(result + 2155) = *bgRect;
-  *(_DWORD *)(result + 2159) = bgRect[1];
-  *(_DWORD *)(result + 2163) = bgRect[2];
-  *(_DWORD *)(result + 2167) = bgRect[3];
-  *(_DWORD *)(result + 2151) = ddObject;
+  *(_DWORD *)(uintptr_t)(result + 2155) = *bgRect;
+  *(_DWORD *)(uintptr_t)(result + 2159) = bgRect[1];
+  *(_DWORD *)(uintptr_t)(result + 2163) = bgRect[2];
+  *(_DWORD *)(uintptr_t)(result + 2167) = bgRect[3];
+  *(_DWORD *)(uintptr_t)(result + 2151) = ddObject;
   return result;
 }
 
@@ -231,7 +231,7 @@ void  CAviDecompressor_InitClipRect(_DWORD *playerHandle, _DWORD *clipRect)
 {
   _DWORD *clipDest; // edi
 
-  clipDest = (_DWORD *)(*playerHandle + 1969);
+  clipDest = (_DWORD *)(uintptr_t)(*playerHandle + 1969);
   *clipDest++ = *clipRect;
   *clipDest++ = clipRect[1];
   *clipDest = clipRect[2];
@@ -268,46 +268,46 @@ void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
   v19 = &j____wcpp_4_fs_handler_rtn_;
   v20 = &g_AviUpdatePos_EHFrame;
   v21 = 0;
-  if ( !*(_BYTE *)(instance + 2062) )
+  if ( !*(_BYTE *)(uintptr_t)(instance + 2062) )
   {
     frameRect = *(RECT *)g_AviFrameRectInitScratch;
     frameRect.left = x;
     frameRect.top = y;
-    frameRect.right = *(_DWORD *)(*(_DWORD *)(instance + 151) + 4) + x;
-    biHeight = *(int *)(*(_DWORD *)(instance + 151) + 8);
+    frameRect.right = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(instance + 151) + 4) + x;
+    biHeight = *(int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(instance + 151) + 8);
     frameRect.bottom = (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight) + y;
     AviPlayer_RenderFrame(v5, &frameRect);
   }
   playerInstance = v5;
-  if ( *(_BYTE *)(v5 + 1968) && *(_DWORD *)(v5 + 1964) )
+  if ( *(_BYTE *)(uintptr_t)(v5 + 1968) && *(_DWORD *)(uintptr_t)(v5 + 1964) )
   {
-    destWidthScaled = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(v5 + 2063));
-    stretchRatio = destWidthScaled / AviPlayer_SpanDelta(v8, (_DWORD *)(v8 + 2079));
-    if ( stretchRatio < *(_DWORD *)(v10 + 2143) || stretchRatio > *(_DWORD *)(v10 + 2147) )
+    destWidthScaled = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(uintptr_t)(v5 + 2063));
+    stretchRatio = destWidthScaled / AviPlayer_SpanDelta(v8, (_DWORD *)(uintptr_t)(v8 + 2079));
+    if ( stretchRatio < *(_DWORD *)(uintptr_t)(v10 + 2143) || stretchRatio > *(_DWORD *)(uintptr_t)(v10 + 2147) )
     {
-      if ( *(_BYTE *)(playerInstance + 1968) )
+      if ( *(_BYTE *)(uintptr_t)(playerInstance + 1968) )
       {
-        overlaySurface = *(_DWORD *)(playerInstance + 1964);
+        overlaySurface = *(_DWORD *)(uintptr_t)(playerInstance + 1964);
         if ( overlaySurface )
         {
-          hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(*(_DWORD *)overlaySurface + 132))(
+          hideResult = (*(int (__stdcall **)(int, int, _DWORD, int, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)overlaySurface + 132))(
                   overlaySurface,
                   playerInstance + 2095,
-                  *(_DWORD *)(playerInstance + 1956),
+                  *(_DWORD *)(uintptr_t)(playerInstance + 1956),
                   playerInstance + 2063,
                   512,
                   0);
           if ( hideResult )
           {
             if ( hideResult != -2005532222
-              || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 96))(*(_DWORD *)(playerInstance + 1964)) != -2005532222
-               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 108))(*(_DWORD *)(playerInstance + 1964)))
-              && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 96))(*(_DWORD *)(playerInstance + 1956)) != -2005532222
-               || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 108))(*(_DWORD *)(playerInstance + 1956)))
-              && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
-                   *(_DWORD *)(playerInstance + 1964),
+              || ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 96))(*(_DWORD *)(uintptr_t)(playerInstance + 1964)) != -2005532222
+               || !(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 108))(*(_DWORD *)(uintptr_t)(playerInstance + 1964)))
+              && ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1956) + 96))(*(_DWORD *)(uintptr_t)(playerInstance + 1956)) != -2005532222
+               || !(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1956) + 108))(*(_DWORD *)(uintptr_t)(playerInstance + 1956)))
+              && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 132))(
+                   *(_DWORD *)(uintptr_t)(playerInstance + 1964),
                    playerInstance + 2095,
-                   *(_DWORD *)(playerInstance + 1956),
+                   *(_DWORD *)(uintptr_t)(playerInstance + 1956),
                    playerInstance + 2063,
                    512,
                    0) )
@@ -323,26 +323,26 @@ void  CAviDecompressor_UpdatePos(int *playerHandle, LONG x, int a3, LONG y)
     else
     {
       showFlags = 0x4000;
-      if ( *(_DWORD *)(v10 + 2171) )
+      if ( *(_DWORD *)(uintptr_t)(v10 + 2171) )
         showFlags = 20480;
       overlayFlags = showFlags;
-      updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
-              *(_DWORD *)(playerInstance + 1964),
+      updateResult = (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 132))(
+              *(_DWORD *)(uintptr_t)(playerInstance + 1964),
               playerInstance + 2095,
-              *(_DWORD *)(playerInstance + 1956),
+              *(_DWORD *)(uintptr_t)(playerInstance + 1956),
               playerInstance + 2063,
               showFlags,
               0);
       if ( updateResult
         && (updateResult != -2005532222
-         || ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 96))(*(_DWORD *)(playerInstance + 1964)) != -2005532222
-          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1964) + 108))(*(_DWORD *)(playerInstance + 1964)))
-         && ((*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 96))(*(_DWORD *)(playerInstance + 1956)) != -2005532222
-          || !(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(playerInstance + 1956) + 108))(*(_DWORD *)(playerInstance + 1956)))
-         && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(**(_DWORD **)(playerInstance + 1964) + 132))(
-              *(_DWORD *)(playerInstance + 1964),
+         || ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 96))(*(_DWORD *)(uintptr_t)(playerInstance + 1964)) != -2005532222
+          || !(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 108))(*(_DWORD *)(uintptr_t)(playerInstance + 1964)))
+         && ((*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1956) + 96))(*(_DWORD *)(uintptr_t)(playerInstance + 1956)) != -2005532222
+          || !(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1956) + 108))(*(_DWORD *)(uintptr_t)(playerInstance + 1956)))
+         && (*(int (__stdcall **)(_DWORD, int, _DWORD, int, int, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(playerInstance + 1964) + 132))(
+              *(_DWORD *)(uintptr_t)(playerInstance + 1964),
               playerInstance + 2095,
-              *(_DWORD *)(playerInstance + 1956),
+              *(_DWORD *)(uintptr_t)(playerInstance + 1956),
               playerInstance + 2063,
               overlayFlags,
               0)) )
@@ -374,7 +374,7 @@ void  CAviDecompressor_Blit(int *playerHandle)
   int instance; // eax
 
   instance = *playerHandle;
-  if ( *(_BYTE *)(instance + 2191) )
+  if ( *(_BYTE *)(uintptr_t)(instance + 2191) )
     CAviDecompressor_PresentFrameIfStale(instance, 0);
 }
 
@@ -391,14 +391,14 @@ void  CAviDecompressor_BlitTo(int *playerHandle, LONG x, int a3, LONG y)
 
   v10 = a3;
   instance = *playerHandle;
-  if ( *(_BYTE *)(*playerHandle + 2191) )
+  if ( *(_BYTE *)(uintptr_t)(*playerHandle + 2191) )
   {
     destRect = *(RECT *)g_AviDecompressorBlitRectTemplate;
     destRect.left = x;
     destRect.top = y;
     videoFormat = CAviDecompressor_GetVideoFormat(instance);
-    destRect.right = *(_DWORD *)(videoFormat + 4) + v6;
-    destRect.bottom = abs32(*(_DWORD *)(CAviDecompressor_GetVideoFormat(v7) + 8)) + y;
+    destRect.right = *(_DWORD *)(uintptr_t)(videoFormat + 4) + v6;
+    destRect.bottom = abs32(*(_DWORD *)(uintptr_t)(CAviDecompressor_GetVideoFormat(v7) + 8)) + y;
     CAviDecompressor_PresentFrameIfStale(v8, &destRect);
   }
 }
@@ -412,7 +412,7 @@ void  CAviDecompressor_StretchTo(int *playerHandle, const RECT *destRect)
   int instance; // eax
 
   instance = *playerHandle;
-  if ( *(_BYTE *)(instance + 2191) )
+  if ( *(_BYTE *)(uintptr_t)(instance + 2191) )
     CAviDecompressor_PresentFrameIfStale(instance, destRect);
 }
 
@@ -421,7 +421,7 @@ void  CAviDecompressor_GetRect(_DWORD *playerHandle, _DWORD *rectOut)
 {
   _DWORD *srcRect; // esi
 
-  srcRect = (_DWORD *)(*playerHandle + 2063);
+  srcRect = (_DWORD *)(uintptr_t)(*playerHandle + 2063);
   *rectOut = *srcRect++;
   rectOut[1] = *srcRect++;
   rectOut[2] = *srcRect;
@@ -434,9 +434,9 @@ void  CAviDecompressor_InitColorKeys(int *playerHandle, int colorKeyLow, int col
   int instance; // eax
 
   instance = *playerHandle;
-  *(_DWORD *)(instance + 2171) = 8;
-  *(_DWORD *)(instance + 2042) = colorKeyLow;
-  *(_DWORD *)(instance + 2046) = colorKeyHigh;
+  *(_DWORD *)(uintptr_t)(instance + 2171) = 8;
+  *(_DWORD *)(uintptr_t)(instance + 2042) = colorKeyLow;
+  *(_DWORD *)(uintptr_t)(instance + 2046) = colorKeyHigh;
 }
 
 //----- (00464500) --------------------------------------------------------
@@ -445,11 +445,11 @@ void  CAviDecompressor_InitPos(int *playerHandle, int x, int y)
   int instance; // eax
 
   instance = *playerHandle;
-  *(_DWORD *)(instance + 2071) = 0;
-  *(_DWORD *)(instance + 2075) = 0;
-  *(_BYTE *)(instance + 2062) = 1;
-  *(_DWORD *)(instance + 2063) = x;
-  *(_DWORD *)(instance + 2067) = y;
+  *(_DWORD *)(uintptr_t)(instance + 2071) = 0;
+  *(_DWORD *)(uintptr_t)(instance + 2075) = 0;
+  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
+  *(_DWORD *)(uintptr_t)(instance + 2063) = x;
+  *(_DWORD *)(uintptr_t)(instance + 2067) = y;
 }
 
 //----- (00464530) --------------------------------------------------------
@@ -458,31 +458,31 @@ void  CAviDecompressor_InitRect(int *playerHandle, _DWORD *rect)
   int instance; // eax
 
   instance = *playerHandle;
-  *(_DWORD *)(instance + 2063) = *rect;
-  *(_DWORD *)(instance + 2067) = rect[1];
-  *(_DWORD *)(instance + 2071) = rect[2];
-  *(_DWORD *)(instance + 2075) = rect[3];
-  *(_BYTE *)(instance + 2062) = 1;
+  *(_DWORD *)(uintptr_t)(instance + 2063) = *rect;
+  *(_DWORD *)(uintptr_t)(instance + 2067) = rect[1];
+  *(_DWORD *)(uintptr_t)(instance + 2071) = rect[2];
+  *(_DWORD *)(uintptr_t)(instance + 2075) = rect[3];
+  *(_BYTE *)(uintptr_t)(instance + 2062) = 1;
 }
 
 //----- (00464550) --------------------------------------------------------
 void  CAviDecompressor_InitOverlays(int playerHandle, char enabled)
 {
-  *(_BYTE *)(*(_DWORD *)playerHandle + 2050) = enabled != 0;
+  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2050) = enabled != 0;
 }
 
 //----- (00464570) --------------------------------------------------------
 unsigned int  CAviDecompressor_TimeMs(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 43)
-       * ((unsigned int)(1000 * *(_DWORD *)(*(_DWORD *)playerHandle + 31))
-        / *(_DWORD *)(*(_DWORD *)playerHandle + 35));
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 43)
+       * ((unsigned int)(1000 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 31))
+        / *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 35));
 }
 
 //----- (004645C0) --------------------------------------------------------
 int  CAviDecompressor_SumSleepTime(int playerHandle)
 {
-  return *(_DWORD *)(*(_DWORD *)playerHandle + 2038);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)playerHandle + 2038);
 }
 
 //----- (004645D0) --------------------------------------------------------
@@ -500,11 +500,11 @@ void __stdcall PlayAvi(char *fileName, IDirectDrawSurface *ddSurface, int x, int
   CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v11 = 1;
   CAviDecompressor_InitPos(aviHandle, x, y);
-  CAviDecompressor_Init(aviHandle, ddSurface, (int)fileName, openFlags);
+  CAviDecompressor_Init(aviHandle, ddSurface, (int)(intptr_t)fileName, openFlags);
   if ( CAviDecompressor_Initialized(aviHandle) )
   {
     CAviDecompressor_Start(aviHandle);
-    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+    while ( CAviDecompressor_IsPlaying((int)(intptr_t)aviHandle)
          && (!continueCallback
           || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface *, int))continueCallback)(
                ExceptionList,
@@ -538,11 +538,11 @@ void __stdcall PlayAviStretch(char *fileName, IDirectDrawSurface *ddSurface, tag
   CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v10 = 1;
   CAviDecompressor_InitRect(aviHandle, destRect);
-  CAviDecompressor_Init(aviHandle, ddSurface, (int)fileName, openFlags);
+  CAviDecompressor_Init(aviHandle, ddSurface, (int)(intptr_t)fileName, openFlags);
   if ( CAviDecompressor_Initialized(aviHandle) )
   {
     CAviDecompressor_Start(aviHandle);
-    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+    while ( CAviDecompressor_IsPlaying((int)(intptr_t)aviHandle)
          && (!continueCallback
           || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface *, int))continueCallback)(
                ExceptionList,
@@ -576,11 +576,11 @@ void __stdcall PlayAviSurface2(char *fileName, IDirectDrawSurface2 *ddSurface2, 
   CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v11 = 1;
   CAviDecompressor_InitPos(aviHandle, x, y);
-  CAviDecompressor_InitSource(openFlags, (int)fileName);
+  CAviDecompressor_InitSource(openFlags, (int)(intptr_t)fileName);
   if ( CAviDecompressor_Initialized(aviHandle) )
   {
     CAviDecompressor_Start(aviHandle);
-    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+    while ( CAviDecompressor_IsPlaying((int)(intptr_t)aviHandle)
          && (!continueCallback
           || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, char *, IDirectDrawSurface2 *, int))continueCallback)(
                ExceptionList,
@@ -614,11 +614,11 @@ void __stdcall PlayAviStretchSurface2(char *fileName, IDirectDrawSurface2 *ddSur
   CAviDecompressor_ConstructEmpty(aviHandle, 0);
   v10 = 1;
   CAviDecompressor_InitRect(aviHandle, destRect);
-  CAviDecompressor_InitSource(openFlags, (int)fileName);
+  CAviDecompressor_InitSource(openFlags, (int)(intptr_t)fileName);
   if ( CAviDecompressor_Initialized(aviHandle) )
   {
     CAviDecompressor_Start(aviHandle);
-    while ( CAviDecompressor_IsPlaying((int)aviHandle)
+    while ( CAviDecompressor_IsPlaying((int)(intptr_t)aviHandle)
          && (!continueCallback
           || ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, IDirectDrawSurface2 *, int))continueCallback)(
                ExceptionList,
@@ -640,15 +640,15 @@ void __stdcall PlayAviStretchSurface2(char *fileName, IDirectDrawSurface2 *ddSur
 //----- (00464930) --------------------------------------------------------
 int  CAviDecompressor_InitThreadGuard(int guard)
 {
-  *(_DWORD *)guard = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(guard + 4));
+  *(_DWORD *)(uintptr_t)guard = 0;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(guard + 4));
   return guard;
 }
 
 //----- (00464950) --------------------------------------------------------
 int  CAviDecompressor_DoneThreadGuard(int guard)
 {
-  DeleteCriticalSection((LPCRITICAL_SECTION)(guard + 4));
+  DeleteCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(guard + 4));
   return guard;
 }
 
@@ -693,27 +693,27 @@ int  CAviDecompressor_ConstructSourceInterface(int self)
   int basePtr; // edx
   HANDLE *eventPtr; // ebx
 
-  *(_BYTE *)self = 0;
-  *(_BYTE *)(self + 1) = 1;
-  *(_DWORD *)(self + 3) = 0;
-  *(_DWORD *)(self + 7) = 0;
-  *(_DWORD *)(self + 151) = 0;
-  *(_DWORD *)(self + 163) = 0;
+  *(_BYTE *)(uintptr_t)self = 0;
+  *(_BYTE *)(uintptr_t)(self + 1) = 1;
+  *(_DWORD *)(uintptr_t)(self + 3) = 0;
+  *(_DWORD *)(uintptr_t)(self + 7) = 0;
+  *(_DWORD *)(uintptr_t)(self + 151) = 0;
+  *(_DWORD *)(uintptr_t)(self + 163) = 0;
   fieldPtr = self + 171;
-  *(_DWORD *)(self + 167) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)(self + 167) = CreateEventA(0, 0, 0, 0);
   fieldPtr += 4;
-  *(_DWORD *)(fieldPtr - 4) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)fieldPtr = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(fieldPtr + 4));
-  *(_DWORD *)(fieldPtr + 28) = 0;
-  *(_DWORD *)(fieldPtr + 32) = 0;
-  *(_DWORD *)(fieldPtr + 36) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr - 4) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)fieldPtr = 0;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(fieldPtr + 4));
+  *(_DWORD *)(uintptr_t)(fieldPtr + 28) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr + 32) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr + 36) = 0;
   basePtr = fieldPtr - 175;
-  *(_DWORD *)(fieldPtr - 175 + 215) = 0;
-  *(_DWORD *)(fieldPtr - 175 + 363) = 0;
-  *(_DWORD *)(fieldPtr - 175 + 375) = 0;
-  eventPtr = (HANDLE *)(fieldPtr - 175 + 387);
-  *(_DWORD *)(basePtr + 379) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr - 175 + 215) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr - 175 + 363) = 0;
+  *(_DWORD *)(uintptr_t)(fieldPtr - 175 + 375) = 0;
+  eventPtr = (HANDLE *)(uintptr_t)(fieldPtr - 175 + 387);
+  *(_DWORD *)(uintptr_t)(basePtr + 379) = 0;
   *eventPtr = CreateEventA(0, 0, 0, 0);
   eventPtr[1] = 0;
   eventPtr[2] = 0;
@@ -722,7 +722,7 @@ int  CAviDecompressor_ConstructSourceInterface(int self)
   *eventPtr++ = CreateEventA(0, 0, 0, 0);
   *eventPtr = CreateEventA(0, 0, 0, 0);
   eventPtr[1] = &g_CAviSourceInterface_Vtable;
-  return (int)eventPtr - 407;
+  return (int)(intptr_t)eventPtr - 407;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 
@@ -737,12 +737,12 @@ char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags)
   {
     _wcpp_4_dtor_array_store__(self, &g_CAviSourceInterface_DtorArrayTag);
     j_j__nfree_();
-    return (char *)v6;
+    return (char *)(uintptr_t)v6;
   }
   else
   {
-    *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
-    eventPtr = (HANDLE *)(self + 407);
+    *(_DWORD *)(uintptr_t)(self + 411) = &g_CAviSourceInterface_Vtable;
+    eventPtr = (HANDLE *)(uintptr_t)(self + 407);
     AviPlayer_CloseStreams(self);
     CloseHandle(*eventPtr);
     CloseHandle(*(eventPtr - 1));
@@ -767,7 +767,7 @@ char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags)
 //----- (00464CC0) --------------------------------------------------------
 int  CAviDecompressor_GetVideoFormat(int self)
 {
-  return *(_DWORD *)(self + 151);
+  return *(_DWORD *)(uintptr_t)(self + 151);
 }
 
 //----- (00464CD0) --------------------------------------------------------
@@ -775,7 +775,7 @@ int  CAviDecompressor_ReleaseVideoCodec(_DWORD *codecHandlePtr, int drawEndParam
 {
   int v2; // ecx
 
-  CAviDecompressor_CloseCodecHandle(codecHandlePtr, (int)codecHandlePtr, drawEndParam);
+  CAviDecompressor_CloseCodecHandle(codecHandlePtr, (int)(intptr_t)codecHandlePtr, drawEndParam);
   return v2;
 }
 // 464CD8: variable 'v2' is possibly undefined
@@ -784,21 +784,21 @@ int  CAviDecompressor_ReleaseVideoCodec(_DWORD *codecHandlePtr, int drawEndParam
 int  CAviDecompressor_InitCommon(int self)
 {
   memset((void *)(uintptr_t)(unsigned int)self, 0, 2236);
-  *(_BYTE *)self = 0;
-  *(_BYTE *)(self + 1) = 1;
-  *(_DWORD *)(self + 167) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(self + 171) = CreateEventA(0, 0, 0, 0);
-  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 179));
-  *(_DWORD *)(self + 387) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(self + 403) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(self + 407) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 1989));
-  *(_DWORD *)(self + 2196) = CreateEventA(0, 1, 1, 0);
-  InitializeCriticalSection((LPCRITICAL_SECTION)(self + 2204));
-  *(_DWORD *)(self + 2228) = CreateEventA(0, 1, 1, 0);
-  *(_DWORD *)(self + 2232) = &g_CAviDecompressor_Vtable;
-  SetRect((LPRECT)(self + 1969), -100000, -100000, 100000, 100000);
+  *(_BYTE *)(uintptr_t)self = 0;
+  *(_BYTE *)(uintptr_t)(self + 1) = 1;
+  *(_DWORD *)(uintptr_t)(self + 167) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)(self + 171) = CreateEventA(0, 0, 0, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 179));
+  *(_DWORD *)(uintptr_t)(self + 387) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)(self + 403) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)(self + 407) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(uintptr_t)(self + 411) = &g_CAviSourceInterface_Vtable;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 1989));
+  *(_DWORD *)(uintptr_t)(self + 2196) = CreateEventA(0, 1, 1, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 2204));
+  *(_DWORD *)(uintptr_t)(self + 2228) = CreateEventA(0, 1, 1, 0);
+  *(_DWORD *)(uintptr_t)(self + 2232) = &g_CAviDecompressor_Vtable;
+  SetRect((LPRECT)(uintptr_t)(self + 1969), -100000, -100000, 100000, 100000);
   return self;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
@@ -817,23 +817,23 @@ int  CAviDecompressor_Destroy(int self, char dtorFlags)
   }
   else
   {
-    *(_DWORD *)(self + 2232) = &g_CAviDecompressor_Vtable;
+    *(_DWORD *)(uintptr_t)(self + 2232) = &g_CAviDecompressor_Vtable;
     AviPlayer_ShutdownDecodeState(self);
-    CloseHandle(*(HANDLE *)(self + 2228));
-    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 2204));
-    CloseHandle(*(HANDLE *)(self + 2196));
-    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 1989));
-    CAviDecompressor_CloseCodecHandle((_DWORD *)(self + 415), self + 415, 16);
-    *(_DWORD *)(self + 411) = &g_CAviSourceInterface_Vtable;
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 2228));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 2204));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 2196));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 1989));
+    CAviDecompressor_CloseCodecHandle((_DWORD *)(uintptr_t)(self + 415), self + 415, 16);
+    *(_DWORD *)(uintptr_t)(self + 411) = &g_CAviSourceInterface_Vtable;
     AviPlayer_CloseStreams(self);
-    CloseHandle(*(HANDLE *)(self + 407));
-    CloseHandle(*(HANDLE *)(self + 403));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 407));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 403));
     j_j__nfree_();
-    CloseHandle(*(HANDLE *)(self + 387));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 387));
     j_j__nfree_();
-    DeleteCriticalSection((LPCRITICAL_SECTION)(self + 179));
-    CloseHandle(*(HANDLE *)(self + 171));
-    CloseHandle(*(HANDLE *)(self + 167));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(self + 179));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 171));
+    CloseHandle(*(HANDLE *)(uintptr_t)(self + 167));
     if ( (dtorFlags & 2) != 0 )
       j__nfree_();
     return self;
@@ -911,12 +911,12 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         noQueueSpace = 0;
         if ( *(_DWORD *)(lpThreadParameter + 215) )
         {
-          AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
-          AviPlayer_AudioBytesQueued((int)lpThreadParameter);
-          blockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
+          AviPlayer_AudioSampleQueueCount((int)(intptr_t)audioSampleQueue);
+          AviPlayer_AudioBytesQueued((int)(intptr_t)lpThreadParameter);
+          blockAlign = AviPlayer_AudioBlockAlign((int)(intptr_t)lpThreadParameter);
           if ( v4 / blockAlign * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9) <= *((_DWORD *)videoChunkQueue + 2) )
           {
-            Frame = AviPlayer_DecodeNextFrame((int)lpThreadParameter);
+            Frame = AviPlayer_DecodeNextFrame((int)(intptr_t)lpThreadParameter);
             if ( Frame == -1 )
             {
               noQueueSpace = 1;
@@ -926,12 +926,12 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
               frameDecoded = 1;
               destBuffer = *((_DWORD *)audioStreamInfo + 10);
               startSample = Frame + *(_DWORD *)(lpThreadParameter + 375);
-              AviPlayer_AudioSampleQueueBase((int)lpThreadParameter);
-              LOWORD(v7) = *(_WORD *)(AviPlayer_AudioFormatPtr((int)lpThreadParameter) + 12);
+              AviPlayer_AudioSampleQueueBase((int)(intptr_t)lpThreadParameter);
+              LOWORD(v7) = *(_WORD *)(uintptr_t)(AviPlayer_AudioFormatPtr((int)(intptr_t)lpThreadParameter) + 12);
               samplesToRead = v8 / v7;
-              queuedSamples = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
-              AviPlayer_AudioBytesQueued((int)lpThreadParameter);
-              readBlockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
+              queuedSamples = AviPlayer_AudioSampleQueueCount((int)(intptr_t)audioSampleQueue);
+              AviPlayer_AudioBytesQueued((int)(intptr_t)lpThreadParameter);
+              readBlockAlign = AviPlayer_AudioBlockAlign((int)(intptr_t)lpThreadParameter);
               AVIStreamRead(
                 readBlockAlign,
                 v11 % readBlockAlign,
@@ -944,7 +944,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
                 0);
               chunkBytes = bytesRead;
               sampleWriteIndex = audioSampleQueue[2];
-              sampleQueueEntry = (signed int *)(8 * sampleWriteIndex + *audioSampleQueue);
+              sampleQueueEntry = (signed int *)(uintptr_t)(8 * sampleWriteIndex + *audioSampleQueue);
               audioSampleQueue[2] = sampleWriteIndex + 1;
               *sampleQueueEntry = Frame;
               sampleQueueEntry[1] = chunkBytes;
@@ -952,9 +952,9 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
           }
         }
         if ( *(_DWORD *)(lpThreadParameter + 215)
-          && (queuedSampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue),
-              AviPlayer_AudioBytesQueued((int)lpThreadParameter),
-              checkBlockAlign = AviPlayer_AudioBlockAlign((int)lpThreadParameter),
+          && (queuedSampleCount = AviPlayer_AudioSampleQueueCount((int)(intptr_t)audioSampleQueue),
+              AviPlayer_AudioBytesQueued((int)(intptr_t)lpThreadParameter),
+              checkBlockAlign = AviPlayer_AudioBlockAlign((int)(intptr_t)lpThreadParameter),
               *((_DWORD *)videoChunkQueue + 2) > v16 / checkBlockAlign * queuedSampleCount / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)audioStreamInfo + 9)) )
         {
           if ( noQueueSpace )
@@ -968,7 +968,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         }
         else
         {
-          nextOffset = CAviDecompressor_GetNextVideoFrameBufferOffset((int)lpThreadParameter);
+          nextOffset = CAviDecompressor_GetNextVideoFrameBufferOffset((int)(intptr_t)lpThreadParameter);
           if ( nextOffset != -1 )
           {
             sampleOffset = nextOffset;
@@ -1001,7 +1001,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
             v21 = selfPtr;
             chunkWriteIndex = *(_DWORD *)(selfPtr + 211);
             entryOffset = sampleOffset;
-            chunkQueueEntry = (int *)(12 * chunkWriteIndex + *(_DWORD *)(selfPtr + 203));
+            chunkQueueEntry = (int *)(uintptr_t)(12 * chunkWriteIndex + *(_DWORD *)(selfPtr + 203));
             *(_DWORD *)(selfPtr + 211) = chunkWriteIndex + 1;
             *chunkQueueEntry++ = entryFlags;
             *chunkQueueEntry = entryOffset;
@@ -1050,11 +1050,11 @@ LABEL_28:
 //----- (00465560) --------------------------------------------------------
 BOOL  CAviDecompressor_RequestDecodeThreadStop(int self)
 {
-  *(_BYTE *)(self + 1) = 1;
-  CSS_StopSound(*(_DWORD *)(self + 359), 0);
-  PulseEvent(*(HANDLE *)(self + 403));
-  PulseEvent(*(HANDLE *)(self + 171));
-  return PulseEvent(*(HANDLE *)(self + 387));
+  *(_BYTE *)(uintptr_t)(self + 1) = 1;
+  CSS_StopSound(*(_DWORD *)(uintptr_t)(self + 359), 0);
+  PulseEvent(*(HANDLE *)(uintptr_t)(self + 403));
+  PulseEvent(*(HANDLE *)(uintptr_t)(self + 171));
+  return PulseEvent(*(HANDLE *)(uintptr_t)(self + 387));
 }
 
 //----- (004655B0) --------------------------------------------------------
@@ -1064,24 +1064,24 @@ signed int  CAviDecompressor_GetNextVideoFrameBufferOffset(int self)
   int readStart; // edx
   int bufferSize; // esi
 
-  if ( *(_DWORD *)(self + 211) == *(_DWORD *)(self + 207) )
+  if ( *(_DWORD *)(uintptr_t)(self + 211) == *(_DWORD *)(uintptr_t)(self + 207) )
     writeEnd = 0;
   else
-    writeEnd = *(_DWORD *)(12 * (*(_DWORD *)(self + 211) - 1) + *(_DWORD *)(self + 203) + 4)
-       + *(_DWORD *)(12 * (*(_DWORD *)(self + 211) - 1) + *(_DWORD *)(self + 203) + 8);
-  readStart = *(_DWORD *)(self + 211) - *(_DWORD *)(self + 207);
+    writeEnd = *(_DWORD *)(uintptr_t)(12 * (*(_DWORD *)(uintptr_t)(self + 211) - 1) + *(_DWORD *)(uintptr_t)(self + 203) + 4)
+       + *(_DWORD *)(uintptr_t)(12 * (*(_DWORD *)(uintptr_t)(self + 211) - 1) + *(_DWORD *)(uintptr_t)(self + 203) + 8);
+  readStart = *(_DWORD *)(uintptr_t)(self + 211) - *(_DWORD *)(uintptr_t)(self + 207);
   if ( readStart )
-    readStart = *(_DWORD *)(*(_DWORD *)(self + 203) + 12 * *(_DWORD *)(self + 207) + 4);
+    readStart = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 203) + 12 * *(_DWORD *)(uintptr_t)(self + 207) + 4);
   if ( readStart <= writeEnd )
   {
-    bufferSize = *(_DWORD *)(self + 155);
-    if ( *(_DWORD *)(self + 159) - writeEnd >= bufferSize )
+    bufferSize = *(_DWORD *)(uintptr_t)(self + 155);
+    if ( *(_DWORD *)(uintptr_t)(self + 159) - writeEnd >= bufferSize )
       return writeEnd;
     if ( readStart > bufferSize )
       return 0;
     return -1;
   }
-  if ( readStart - writeEnd <= *(_DWORD *)(self + 155) )
+  if ( readStart - writeEnd <= *(_DWORD *)(uintptr_t)(self + 155) )
     return -1;
   return writeEnd;
 }
@@ -1094,24 +1094,24 @@ signed int  AviPlayer_DecodeNextFrame(int self)
   int bufferSize; // esi
   int suggestedBufferSize; // eax
 
-  writeEnd = *(_DWORD *)(self + 399) - *(_DWORD *)(self + 395);
+  writeEnd = *(_DWORD *)(uintptr_t)(self + 399) - *(_DWORD *)(uintptr_t)(self + 395);
   if ( writeEnd )
-    writeEnd = *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * (*(_DWORD *)(self + 399) - 1) + 4)
-       + *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * (*(_DWORD *)(self + 399) - 1));
-  readStart = *(_DWORD *)(self + 399) - *(_DWORD *)(self + 395);
+    writeEnd = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 391) + 8 * (*(_DWORD *)(uintptr_t)(self + 399) - 1) + 4)
+       + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 391) + 8 * (*(_DWORD *)(uintptr_t)(self + 399) - 1));
+  readStart = *(_DWORD *)(uintptr_t)(self + 399) - *(_DWORD *)(uintptr_t)(self + 395);
   if ( readStart )
-    readStart = *(_DWORD *)(*(_DWORD *)(self + 391) + 8 * *(_DWORD *)(self + 395));
+    readStart = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 391) + 8 * *(_DWORD *)(uintptr_t)(self + 395));
   if ( readStart <= writeEnd )
   {
-    bufferSize = *(_DWORD *)(self + 371);
-    suggestedBufferSize = *(_DWORD *)(self + 259);
+    bufferSize = *(_DWORD *)(uintptr_t)(self + 371);
+    suggestedBufferSize = *(_DWORD *)(uintptr_t)(self + 259);
     if ( bufferSize - writeEnd >= suggestedBufferSize )
       return writeEnd;
     if ( readStart > suggestedBufferSize )
       return 0;
     return -1;
   }
-  if ( readStart - writeEnd <= *(_DWORD *)(self + 259) )
+  if ( readStart - writeEnd <= *(_DWORD *)(uintptr_t)(self + 259) )
     return -1;
   return writeEnd;
 }
@@ -1166,77 +1166,77 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
   *(_DWORD *)((char *)&a23 + 2) = &j____wcpp_4_fs_handler_rtn_;
   *(_DWORD *)((char *)&a23 + 6) = &g_AviOpenFileDecodeThread_EHFrame;
   *(_DWORD *)((char *)&a24 + 2) = 0;
-  if ( !*(_BYTE *)self )
+  if ( !*(_BYTE *)(uintptr_t)self )
   {
     AVIFileInit();
-    *(_BYTE *)self = 1;
+    *(_BYTE *)(uintptr_t)self = 1;
   }
-  result = (HANDLE)AVIFileOpenA(self + 3, fileName, 0, 0);
+  result = (HANDLE)(uintptr_t)AVIFileOpenA(self + 3, fileName, 0, 0);
   if ( result )
   {
-    *(_DWORD *)(self + 3) = 0;
+    *(_DWORD *)(uintptr_t)(self + 3) = 0;
   }
   else
   {
-    AVIFileInfoA(*(_DWORD *)(self + 3), fileInfo, 108);
-    if ( AVIFileGetStream(*(_DWORD *)(self + 3), self + 7, 1935960438, 0) )
+    AVIFileInfoA(*(_DWORD *)(uintptr_t)(self + 3), fileInfo, 108);
+    if ( AVIFileGetStream(*(_DWORD *)(uintptr_t)(self + 3), self + 7, 1935960438, 0) )
     {
-      result = (HANDLE)AVIFileRelease(*(_DWORD *)(self + 3));
-      *(_DWORD *)(self + 3) = 0;
-      *(_DWORD *)(self + 7) = 0;
+      result = (HANDLE)(uintptr_t)AVIFileRelease(*(_DWORD *)(uintptr_t)(self + 3));
+      *(_DWORD *)(uintptr_t)(self + 3) = 0;
+      *(_DWORD *)(uintptr_t)(self + 7) = 0;
     }
     else
     {
-      AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, 0, (char *)&a25 + 2);
-      *(_DWORD *)(self + 151) = j_Mem_Alloc(formatSize);
-      AVIStreamReadFormat(*(_DWORD *)(self + 7), 0, *(_DWORD *)(self + 151), (char *)&a25 + 2);
-      videoFormatHdr = *(_DWORD *)(self + 151);
-      formatFlagByte = *(_BYTE *)(videoFormatHdr + 13);
+      AVIStreamReadFormat(*(_DWORD *)(uintptr_t)(self + 7), 0, 0, (char *)&a25 + 2);
+      *(_DWORD *)(uintptr_t)(self + 151) = j_Mem_Alloc(formatSize);
+      AVIStreamReadFormat(*(_DWORD *)(uintptr_t)(self + 7), 0, *(_DWORD *)(uintptr_t)(self + 151), (char *)&a25 + 2);
+      videoFormatHdr = *(_DWORD *)(uintptr_t)(self + 151);
+      formatFlagByte = *(_BYTE *)(uintptr_t)(videoFormatHdr + 13);
       if ( formatFlagByte < 0 )
       {
-        *(_BYTE *)(videoFormatHdr + 13) = formatFlagByte ^ 0x80;
-        *(_DWORD *)(*(_DWORD *)(self + 151) + 16) ^= 0x3ADE68B1u;
+        *(_BYTE *)(uintptr_t)(videoFormatHdr + 13) = formatFlagByte ^ 0x80;
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 16) ^= 0x3ADE68B1u;
       }
-      AVIStreamInfoA(*(_DWORD *)(self + 7), self + 11, 140);
-      AVIStreamBeginStreaming(*(_DWORD *)(self + 7), 0, *(_DWORD *)(self + 43) - 1, 1000);
-      if ( *(_DWORD *)(self + 51) )
-        frameBufferBytes = *(_DWORD *)(self + 51);
+      AVIStreamInfoA(*(_DWORD *)(uintptr_t)(self + 7), self + 11, 140);
+      AVIStreamBeginStreaming(*(_DWORD *)(uintptr_t)(self + 7), 0, *(_DWORD *)(uintptr_t)(self + 43) - 1, 1000);
+      if ( *(_DWORD *)(uintptr_t)(self + 51) )
+        frameBufferBytes = *(_DWORD *)(uintptr_t)(self + 51);
       else
-        frameBufferBytes = abs32(*(_DWORD *)(*(_DWORD *)(self + 151) + 8))
-            * (*(_DWORD *)(*(_DWORD *)(self + 151) + 4) / 20 + *(_DWORD *)(*(_DWORD *)(self + 151) + 4) + 1)
-            * ((*(unsigned __int16 *)(*(_DWORD *)(self + 151) + 14) + 7) >> 3);
-      *(_DWORD *)(self + 155) = frameBufferBytes;
+        frameBufferBytes = abs32(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 8))
+            * (*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 4) / 20 + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 4) + 1)
+            * ((*(unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 14) + 7) >> 3);
+      *(_DWORD *)(uintptr_t)(self + 155) = frameBufferBytes;
       alignedBytes = frameBufferBytes + 3;
       LOBYTE(alignedBytes) = alignedBytes & 0xFC;
       allocSize = 1000;
-      *(_DWORD *)(self + 155) = alignedBytes + 16;
-      dwScale = *(_DWORD *)(self + 31);
-      *(_DWORD *)(self + 159) = (*(_DWORD *)((char *)&ThreadId_2 + 2) - 500)
+      *(_DWORD *)(uintptr_t)(self + 155) = alignedBytes + 16;
+      dwScale = *(_DWORD *)(uintptr_t)(self + 31);
+      *(_DWORD *)(uintptr_t)(self + 159) = (*(_DWORD *)((char *)&ThreadId_2 + 2) - 500)
                             * ((int)(20000 * (fileInfo[0] / 0x3E8u))
                              / (int)(fileInfo[0] / 0x3E8u + 20000));
-      memoryCap = (*(_DWORD *)(self + 155) * (*(_DWORD *)(self + 35) / dwScale)) >> 1;
-      if ( memoryCap > *(_DWORD *)(self + 159) )
+      memoryCap = (*(_DWORD *)(uintptr_t)(self + 155) * (*(_DWORD *)(uintptr_t)(self + 35) / dwScale)) >> 1;
+      if ( memoryCap > *(_DWORD *)(uintptr_t)(self + 159) )
         goto LABEL_11;
-      fps = *(_DWORD *)(self + 35) / *(_DWORD *)(self + 31);
-      totalVideoBytes = *(_DWORD *)(self + 43) * *(_DWORD *)(self + 155);
-      if ( *(_DWORD *)(self + 43) / fps * fileInfo[0] < (unsigned int)totalVideoBytes )
-        totalVideoBytes = *(_DWORD *)(self + 43) / fps * fileInfo[0];
-      if ( totalVideoBytes < *(_DWORD *)(self + 159) )
-        *(_DWORD *)(self + 159) = totalVideoBytes;
+      fps = *(_DWORD *)(uintptr_t)(self + 35) / *(_DWORD *)(uintptr_t)(self + 31);
+      totalVideoBytes = *(_DWORD *)(uintptr_t)(self + 43) * *(_DWORD *)(uintptr_t)(self + 155);
+      if ( *(_DWORD *)(uintptr_t)(self + 43) / fps * fileInfo[0] < (unsigned int)totalVideoBytes )
+        totalVideoBytes = *(_DWORD *)(uintptr_t)(self + 43) / fps * fileInfo[0];
+      if ( totalVideoBytes < *(_DWORD *)(uintptr_t)(self + 159) )
+        *(_DWORD *)(uintptr_t)(self + 159) = totalVideoBytes;
       GlobalMemoryStatus((LPMEMORYSTATUS)((char *)&a15 + 2));
-      allocSize = *(_DWORD *)(self + 159);
+      allocSize = *(_DWORD *)(uintptr_t)(self + 159);
       memoryCap = *(_DWORD *)((char *)&Buffer_6 + 2) >> 4;
       if ( *(_DWORD *)((char *)&Buffer_6 + 2) >> 4 < allocSize )
 LABEL_11:
-        *(_DWORD *)(self + 159) = memoryCap;
-      *(_DWORD *)(self + 163) = j_Mem_Alloc(allocSize);
-      frameFlagsAlloc = j_Mem_Alloc(*(_DWORD *)(self + 43) + 1);
-      *(_QWORD *)(HIDWORD(frameFlagsAlloc) + 4) = 0LL;
-      *(_DWORD *)HIDWORD(frameFlagsAlloc) = frameFlagsAlloc;
-      *(_BYTE *)(self + 2) = 0;
-      AviPlayer_OpenAndPrepare((unsigned int *)self);
-      *(_BYTE *)(self + 1) = 0;
-      return CreateThread(0, 0, (LPTHREAD_START_ROUTINE)StartAddress, (LPVOID)self, 0, (LPDWORD)((char *)&a26 + 2));
+        *(_DWORD *)(uintptr_t)(self + 159) = memoryCap;
+      *(_DWORD *)(uintptr_t)(self + 163) = j_Mem_Alloc(allocSize);
+      frameFlagsAlloc = j_Mem_Alloc(*(_DWORD *)(uintptr_t)(self + 43) + 1);
+      *(_QWORD *)(uintptr_t)(HIDWORD(frameFlagsAlloc) + 4) = 0LL;
+      *(_DWORD *)(uintptr_t)HIDWORD(frameFlagsAlloc) = frameFlagsAlloc;
+      *(_BYTE *)(uintptr_t)(self + 2) = 0;
+      AviPlayer_OpenAndPrepare((unsigned int *)(uintptr_t)self);
+      *(_BYTE *)(uintptr_t)(self + 1) = 0;
+      return CreateThread(0, 0, (LPTHREAD_START_ROUTINE)StartAddress, (LPVOID)(uintptr_t)self, 0, (LPDWORD)((char *)&a26 + 2));
     }
   }
   return result;
@@ -1306,63 +1306,63 @@ char  AviPlayer_OpenAndPrepare(unsigned int *self)
   {
     AVIStreamReadFormat(*(unsigned int *)((char *)player + 215), 0, 0, &formatSize);
     formatAlloc = j_Mem_Alloc(v2);
-    *(_DWORD *)(HIDWORD(formatAlloc) + 363) = formatAlloc;
+    *(_DWORD *)(uintptr_t)(HIDWORD(formatAlloc) + 363) = formatAlloc;
     audioStreamInfo = player;
-    AVIStreamReadFormat(*(_DWORD *)(HIDWORD(formatAlloc) + 215), 0, *(_DWORD *)(HIDWORD(formatAlloc) + 363), &formatSize);
+    AVIStreamReadFormat(*(_DWORD *)(uintptr_t)(HIDWORD(formatAlloc) + 215), 0, *(_DWORD *)(uintptr_t)(HIDWORD(formatAlloc) + 363), &formatSize);
     audioStreamInfo = (unsigned int *)((char *)audioStreamInfo + 219);
     AVIStreamInfoA(*(unsigned int *)((char *)player + 215), audioStreamInfo, 140);
     queueAlloc = j_Mem_Alloc(*(unsigned int *)((char *)player + 251));
-    *(_QWORD *)(HIDWORD(queueAlloc) + 391) = (unsigned int)queueAlloc;
-    *(_DWORD *)(HIDWORD(queueAlloc) + 399) = 0;
-    rateScale64 = *(unsigned int *)(HIDWORD(queueAlloc) + 31);
+    *(_QWORD *)(uintptr_t)(HIDWORD(queueAlloc) + 391) = (unsigned int)queueAlloc;
+    *(_DWORD *)(uintptr_t)(HIDWORD(queueAlloc) + 399) = 0;
+    rateScale64 = *(unsigned int *)(uintptr_t)(HIDWORD(queueAlloc) + 31);
     lengthScaled = (double)audioStreamInfo[6] * (double)rateScale64;
-    LODWORD(rateScale64) = *(_DWORD *)(HIDWORD(queueAlloc) + 35);
+    LODWORD(rateScale64) = *(_DWORD *)(uintptr_t)(HIDWORD(queueAlloc) + 35);
     resampleRatio = lengthScaled / ((double)audioStreamInfo[5] * (double)rateScale64);
     _CHP(audioStreamInfo[5], 0);
-    *(_DWORD *)(v7 + 367) = (int)resampleRatio;
-    playerInt = (int)player;
+    *(_DWORD *)(uintptr_t)(v7 + 367) = (int)resampleRatio;
+    playerInt = (int)(intptr_t)player;
     audioBufferBytes = *(unsigned int *)((char *)player + 367)
-       * *(unsigned __int16 *)(*(unsigned int *)((char *)player + 363) + 12)
-       * (3 * *(_DWORD *)(v7 + 159) / (int)(2 * *(unsigned int *)((char *)player + 155)) + audioStreamInfo[9]);
+       * *(unsigned __int16 *)(uintptr_t)(*(unsigned int *)((char *)player + 363) + 12)
+       * (3 * *(_DWORD *)(uintptr_t)(v7 + 159) / (int)(2 * *(unsigned int *)((char *)player + 155)) + audioStreamInfo[9]);
     *(unsigned int *)((char *)player + 371) = audioBufferBytes;
     suggestedBytes = 4 * audioStreamInfo[10];
     if ( suggestedBytes > audioBufferBytes )
-      *(_DWORD *)(playerInt + 371) = suggestedBytes;
+      *(_DWORD *)(uintptr_t)(playerInt + 371) = suggestedBytes;
     chunkBufAlloc = j_Mem_Alloc(playerInt);
-    *(_DWORD *)(HIDWORD(chunkBufAlloc) + 156) = chunkBufAlloc;
+    *(_DWORD *)(uintptr_t)(HIDWORD(chunkBufAlloc) + 156) = chunkBufAlloc;
     audioSampleQueue = (unsigned int *)((char *)player + 391);
     frameIndexAlloc = j_Mem_Alloc(player);
-    *(_DWORD *)(v14 + 383) = 0;
+    *(_DWORD *)(uintptr_t)(v14 + 383) = 0;
     v38 = HIDWORD(frameIndexAlloc);
-    *(_DWORD *)(v14 + 379) = frameIndexAlloc;
+    *(_DWORD *)(uintptr_t)(v14 + 379) = frameIndexAlloc;
     while ( 1 )
     {
-      queuedSamples = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
-      AviPlayer_AudioBytesQueued((int)player);
-      blockAlign = AviPlayer_AudioBlockAlign((int)player);
-      if ( audioBytesQueued / blockAlign * queuedSamples / *(int *)((char *)player + 367) >= *(_DWORD *)(v38 + 36) )
+      queuedSamples = AviPlayer_AudioSampleQueueCount((int)(intptr_t)audioSampleQueue);
+      AviPlayer_AudioBytesQueued((int)(intptr_t)player);
+      blockAlign = AviPlayer_AudioBlockAlign((int)(intptr_t)player);
+      if ( audioBytesQueued / blockAlign * queuedSamples / *(int *)((char *)player + 367) >= *(_DWORD *)(uintptr_t)(v38 + 36) )
         break;
-      Frame = AviPlayer_DecodeNextFrame((int)player);
+      Frame = AviPlayer_DecodeNextFrame((int)(intptr_t)player);
       if ( Frame == -1 )
         break;
-      destBuffer = *(_DWORD *)(v38 + 40);
-      startSample = Frame + *(_DWORD *)(v18 + 375);
+      destBuffer = *(_DWORD *)(uintptr_t)(v38 + 40);
+      startSample = Frame + *(_DWORD *)(uintptr_t)(v18 + 375);
       AviPlayer_AudioSampleQueueBase(v18);
-      LOWORD(audioBlockAlign) = *(_WORD *)(AviPlayer_AudioFormatPtr(v20) + 12);
+      LOWORD(audioBlockAlign) = *(_WORD *)(uintptr_t)(AviPlayer_AudioFormatPtr(v20) + 12);
       samplesToRead = bytesForSampleCalc / audioBlockAlign;
-      sampleCount = AviPlayer_AudioSampleQueueCount((int)audioSampleQueue);
-      AviPlayer_AudioBytesQueued((int)player);
-      readBlockAlign = AviPlayer_AudioBlockAlign((int)player);
+      sampleCount = AviPlayer_AudioSampleQueueCount((int)(intptr_t)audioSampleQueue);
+      AviPlayer_AudioBytesQueued((int)(intptr_t)player);
+      readBlockAlign = AviPlayer_AudioBlockAlign((int)(intptr_t)player);
       AVIStreamRead(readBlockAlign, bytesForStreamRead % readBlockAlign, *(unsigned int *)((char *)player + 215), sampleCount * (bytesForStreamRead / readBlockAlign), samplesToRead, startSample, destBuffer, &bytesRead, 0);
       chunkBytes = bytesRead;
       sampleWriteIndex = audioSampleQueue[2];
       audioSampleQueue[2] = sampleWriteIndex + 1;
-      sampleQueueEntry = (signed int *)(*audioSampleQueue + 8 * sampleWriteIndex);
+      sampleQueueEntry = (signed int *)(uintptr_t)(*audioSampleQueue + 8 * sampleWriteIndex);
       *sampleQueueEntry = Frame;
       sampleQueueEntry[1] = chunkBytes;
     }
-    soundHandle = CSS_StartStreamVoice((int)player, 64, 0, 0);
-    playerForFlush = (int)player;
+    soundHandle = CSS_StartStreamVoice((int)(intptr_t)player, 64, 0, 0);
+    playerForFlush = (int)(intptr_t)player;
     *(unsigned int *)((char *)player + 359) = soundHandle;
     if ( soundHandle )
     {
@@ -1399,24 +1399,24 @@ int  AviPlayer_FlushVideoFrameQueue(int self)
   int result; // eax
 
   queueBase = self + 391;
-  for ( i = (HANDLE *)(self + 387); ; PulseEvent(*i) )
+  for ( i = (HANDLE *)(uintptr_t)(self + 387); ; PulseEvent(*i) )
   {
-    readIndex = *(_DWORD *)(queueBase + 4);
-    if ( *(_DWORD *)(queueBase + 8) == readIndex )
+    readIndex = *(_DWORD *)(uintptr_t)(queueBase + 4);
+    if ( *(_DWORD *)(uintptr_t)(queueBase + 8) == readIndex )
       break;
-    *(_DWORD *)(queueBase + 4) = readIndex + 1;
+    *(_DWORD *)(uintptr_t)(queueBase + 4) = readIndex + 1;
   }
   j_j__nfree_();
-  *(_DWORD *)(self + 379) = 0;
+  *(_DWORD *)(uintptr_t)(self + 379) = 0;
   j_j__nfree_();
-  *(_DWORD *)(self + 375) = 0;
+  *(_DWORD *)(uintptr_t)(self + 375) = 0;
   j_j__nfree_();
-  result = *(_DWORD *)(self + 215);
-  *(_DWORD *)(self + 363) = 0;
+  result = *(_DWORD *)(uintptr_t)(self + 215);
+  *(_DWORD *)(uintptr_t)(self + 363) = 0;
   if ( result )
   {
     result = AVIStreamRelease(result);
-    *(_DWORD *)(self + 215) = 0;
+    *(_DWORD *)(uintptr_t)(self + 215) = 0;
   }
   return result;
 }

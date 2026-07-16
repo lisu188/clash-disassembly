@@ -35,43 +35,43 @@ int * Rules_NormalizeNestedConnectives(int *ceNode, _DWORD *changedFlagPtr, int 
       if ( mode == 1 )
         v5 = Rules_CENormalizeAndOr(ceNode, &v14);
       else
-        v5 = (_DWORD *)Rules_CECollapseNotWrapper((int)ceNode, &v14);
+        v5 = (_DWORD *)(uintptr_t)Rules_CECollapseNotWrapper((int)(intptr_t)ceNode, &v14);
       if ( v14 )
       {
         changed = 1;
         *outChangedFlag = 1;
       }
-      ceNode = (int *)Rules_CEMergeRedundantNodes((int)v5, &v14);
+      ceNode = (int *)(uintptr_t)Rules_CEMergeRedundantNodes((int)(intptr_t)v5, &v14);
       if ( v14 )
       {
         changed = 1;
         *outChangedFlag = 1;
       }
     }
-    child = (_DWORD *)ceNode[16];
+    child = (_DWORD *)(uintptr_t)ceNode[16];
     prevChild = 0;
     if ( child )
     {
       do
       {
         v8 = *child;
-        nextChild = (_DWORD *)child[17];
+        nextChild = (_DWORD *)(uintptr_t)child[17];
         if ( *child == 81 || v8 == 83 || v8 == 82 )
         {
           child[17] = 0;
           if ( prevChild )
           {
-            v12 = Rules_NormalizeNestedConnectives((int)child, (int)&v14, mode);
-            *(_DWORD *)(v13 + 68) = v12;
-            *(_DWORD *)(v12 + 68) = nextChild;
-            prevChild = *(_DWORD **)(v13 + 68);
+            v12 = Rules_NormalizeNestedConnectives((int)(intptr_t)child, (int)(intptr_t)&v14, mode);
+            *(_DWORD *)(uintptr_t)(v13 + 68) = v12;
+            *(_DWORD *)(uintptr_t)(v12 + 68) = nextChild;
+            prevChild = *(_DWORD **)(uintptr_t)(v13 + 68);
           }
           else
           {
-            v10 = Rules_NormalizeNestedConnectives((int)child, (int)&v14, mode);
+            v10 = Rules_NormalizeNestedConnectives((int)(intptr_t)child, (int)(intptr_t)&v14, mode);
             ceNode[16] = v10;
-            *(_DWORD *)(v10 + 68) = nextChild;
-            prevChild = (_DWORD *)ceNode[16];
+            *(_DWORD *)(uintptr_t)(v10 + 68) = nextChild;
+            prevChild = (_DWORD *)(uintptr_t)ceNode[16];
           }
           if ( v14 )
           {
@@ -108,28 +108,28 @@ _DWORD * Rules_FinalizeConjunctionChain(_DWORD *result)
   node = result;
   if ( *result == 82 )
   {
-    for ( i = result[16]; i; i = *(_DWORD *)(v3 + 68) )
+    for ( i = result[16]; i; i = *(_DWORD *)(uintptr_t)(v3 + 68) )
       result = (_DWORD *)Rules_FinalizeConjunctionChain(i);
   }
   else
   {
-    for ( j = (_DWORD *)result[16]; j; j = (_DWORD *)j[17] )
+    for ( j = (_DWORD *)(uintptr_t)result[16]; j; j = (_DWORD *)(uintptr_t)j[17] )
     {
       if ( *j == 80 )
         break;
     }
     firstChild = result[16];
-    if ( (*(_BYTE *)(firstChild + 8) & 1) != 0 || *(_DWORD *)firstChild == 84 || *(int *)(firstChild + 44) > 1 )
+    if ( (*(_BYTE *)(uintptr_t)(firstChild + 8) & 1) != 0 || *(_DWORD *)(uintptr_t)firstChild == 84 || *(int *)(uintptr_t)(firstChild + 44) > 1 )
     {
       testNode = Rules_CEAllocTestNode();
-      v7 = (_BYTE *)(testNode + 8);
-      v8 = (node[2] & 2) != 0 || (*(_BYTE *)(node[16] + 8) & 2) != 0;
+      v7 = (_BYTE *)(uintptr_t)(testNode + 8);
+      v8 = (node[2] & 2) != 0 || (*(_BYTE *)(uintptr_t)(node[16] + 8) & 2) != 0;
       *v7 &= ~2u;
       *(_DWORD *)v7 |= 2 * v8;
-      *(_DWORD *)(testNode + 68) = node[16];
+      *(_DWORD *)(uintptr_t)(testNode + 68) = node[16];
       node[16] = testNode;
     }
-    return (_DWORD *)Rules_CEInsertBoundVariableJoinTests(node[16]);
+    return (_DWORD *)(uintptr_t)Rules_CEInsertBoundVariableJoinTests(node[16]);
   }
   return result;
 }
@@ -163,31 +163,31 @@ LABEL_2:
     {
       while ( 1 )
       {
-        if ( *node == 81 && *(_DWORD *)i == 82 )
+        if ( *node == 81 && *(_DWORD *)(uintptr_t)i == 82 )
         {
-          node = Rules_CEMultiplyAndOverOr(node, *(_DWORD *)(i + 64), childIndex);
+          node = Rules_CEMultiplyAndOverOr(node, *(_DWORD *)(uintptr_t)(i + 64), childIndex);
           *changedFlag = 1;
           goto LABEL_2;
         }
-        if ( *node == 83 && *(_DWORD *)i == 82 )
+        if ( *node == 83 && *(_DWORD *)(uintptr_t)i == 82 )
           break;
-        if ( *node == 82 && *(_DWORD *)i == 82 || *node == 81 && *(_DWORD *)i == 81 )
+        if ( *node == 82 && *(_DWORD *)(uintptr_t)i == 82 || *node == 81 && *(_DWORD *)(uintptr_t)i == 81 )
         {
-          if ( (*(_BYTE *)(i + 8) & 2) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(i + 8) & 2) != 0 )
             *((_BYTE *)node + 8) |= 2u;
           changed = 1;
           *changedFlag = 1;
-          *(_DWORD *)(i + 64) = 0;
-          v7 = *(_DWORD *)(i + 68);
-          *(_DWORD *)(i + 68) = 0;
+          *(_DWORD *)(uintptr_t)(i + 64) = 0;
+          v7 = *(_DWORD *)(uintptr_t)(i + 68);
+          *(_DWORD *)(uintptr_t)(i + 68) = 0;
           AST_FreeNode(i);
           if ( prevChild )
-            *(_DWORD *)(prevChild + 68) = v8;
+            *(_DWORD *)(uintptr_t)(prevChild + 68) = v8;
           else
             node[16] = v8;
-          for ( i = v8; *(_DWORD *)(v8 + 68); v8 = *(_DWORD *)(v8 + 68) )
+          for ( i = v8; *(_DWORD *)(uintptr_t)(v8 + 68); v8 = *(_DWORD *)(uintptr_t)(v8 + 68) )
             ;
-          *(_DWORD *)(v8 + 68) = v7;
+          *(_DWORD *)(uintptr_t)(v8 + 68) = v7;
           if ( !i )
             goto LABEL_6;
         }
@@ -195,30 +195,30 @@ LABEL_2:
         {
           prevChild = i;
           ++childIndex;
-          i = *(_DWORD *)(i + 68);
+          i = *(_DWORD *)(uintptr_t)(i + 68);
           if ( !i )
             goto LABEL_6;
         }
       }
       changed = 1;
       *changedFlag = 1;
-      *(_DWORD *)(i + 68) = 0;
-      v9 = *(_DWORD *)(i + 64);
-      *(_DWORD *)(i + 64) = 0;
+      *(_DWORD *)(uintptr_t)(i + 68) = 0;
+      v9 = *(_DWORD *)(uintptr_t)(i + 64);
+      *(_DWORD *)(uintptr_t)(i + 64) = 0;
       AST_FreeNode(i);
       *node = 81;
-      for ( node[16] = v9; v9; v9 = *(_DWORD *)(v9 + 68) )
+      for ( node[16] = v9; v9; v9 = *(_DWORD *)(uintptr_t)(v9 + 68) )
       {
         v10 = AST_AllocNode();
-        Rules_CECopyNodeFields(v10, (_DWORD *)v9, 0);
-        *(_DWORD *)(v10 + 64) = *(_DWORD *)(v9 + 64);
-        *(_DWORD *)(v10 + 68) = 0;
-        *(_DWORD *)v9 = 83;
-        *(_DWORD *)(v9 + 4) = 0;
-        *(_DWORD *)(v9 + 56) = 0;
-        v11 = *(_BYTE *)(v9 + 8);
-        *(_DWORD *)(v9 + 64) = v10;
-        *(_BYTE *)(v9 + 8) = v11 & 0xFC;
+        Rules_CECopyNodeFields(v10, (_DWORD *)(uintptr_t)v9, 0);
+        *(_DWORD *)(uintptr_t)(v10 + 64) = *(_DWORD *)(uintptr_t)(v9 + 64);
+        *(_DWORD *)(uintptr_t)(v10 + 68) = 0;
+        *(_DWORD *)(uintptr_t)v9 = 83;
+        *(_DWORD *)(uintptr_t)(v9 + 4) = 0;
+        *(_DWORD *)(uintptr_t)(v9 + 56) = 0;
+        v11 = *(_BYTE *)(uintptr_t)(v9 + 8);
+        *(_DWORD *)(uintptr_t)(v9 + 64) = v10;
+        *(_BYTE *)(uintptr_t)(v9 + 8) = v11 & 0xFC;
       }
     }
 LABEL_6:
@@ -245,47 +245,47 @@ int  Rules_CECollapseNotWrapper(int ceNode, _DWORD *changedFlag)
 LABEL_2:
   while ( 1 )
   {
-    child = *(_DWORD **)(ceNode + 64);
+    child = *(_DWORD **)(uintptr_t)(ceNode + 64);
     if ( !child )
       return ceNode;
     while ( 1 )
     {
-      if ( *(_DWORD *)ceNode == 83 && *child == 80 )
+      if ( *(_DWORD *)(uintptr_t)ceNode == 83 && *child == 80 )
       {
         *changedFlag = 1;
         Rules_CECopyNodeFields(ceNode, child, 0);
-        *(_BYTE *)(ceNode + 8) |= 1u;
-        *(_DWORD *)(ceNode + 64) = v5[16];
+        *(_BYTE *)(uintptr_t)(ceNode + 8) |= 1u;
+        *(_DWORD *)(uintptr_t)(ceNode + 64) = v5[16];
         v5[13] = 0;
         v5[14] = 0;
         v5[15] = 0;
         v5[16] = 0;
         v5[17] = 0;
-        AST_FreeNode((int)v5);
+        AST_FreeNode((int)(intptr_t)v5);
         goto LABEL_2;
       }
-      if ( *(_DWORD *)ceNode == 83 && (*child == 81 || *child == 83) )
+      if ( *(_DWORD *)(uintptr_t)ceNode == 83 && (*child == 81 || *child == 83) )
         break;
-      child = (_DWORD *)child[17];
+      child = (_DWORD *)(uintptr_t)child[17];
       if ( !child )
         return ceNode;
     }
     *changedFlag = 1;
-    v7 = *(_BYTE *)(ceNode + 8);
-    *(_DWORD *)ceNode = *child;
+    v7 = *(_BYTE *)(uintptr_t)(ceNode + 8);
+    *(_DWORD *)(uintptr_t)ceNode = *child;
     v8 = child[2];
-    *(_BYTE *)(ceNode + 8) = v7 & 0xFE;
-    *(_DWORD *)(ceNode + 8) |= v8 & 1;
-    v9 = *(_BYTE *)(ceNode + 8);
-    *(_DWORD *)(ceNode + 4) = child[1];
+    *(_BYTE *)(uintptr_t)(ceNode + 8) = v7 & 0xFE;
+    *(_DWORD *)(uintptr_t)(ceNode + 8) |= v8 & 1;
+    v9 = *(_BYTE *)(uintptr_t)(ceNode + 8);
+    *(_DWORD *)(uintptr_t)(ceNode + 4) = child[1];
     v10 = child[2];
-    *(_BYTE *)(ceNode + 8) = v9 & 0xFD;
-    *(_DWORD *)(ceNode + 8) |= v10 & 2;
-    *(_DWORD *)(ceNode + 64) = child[16];
+    *(_BYTE *)(uintptr_t)(ceNode + 8) = v9 & 0xFD;
+    *(_DWORD *)(uintptr_t)(ceNode + 8) |= v10 & 2;
+    *(_DWORD *)(uintptr_t)(ceNode + 64) = child[16];
     child[16] = 0;
     child[17] = 0;
-    AST_FreeNode((int)child);
-    Rules_CECountPatternNodes(*(int **)(ceNode + 64), v11);
+    AST_FreeNode((int)(intptr_t)child);
+    Rules_CECountPatternNodes(*(int **)(uintptr_t)(ceNode + 64), v11);
   }
 }
 // 4B925B: variable 'v5' is possibly undefined
@@ -306,23 +306,23 @@ _DWORD * Rules_CEMultiplyAndOverOr(_DWORD *andNode, int orList, int branchIndex)
   int i; // [esp+8h] [ebp-14h]
 
   orBranch = orList;
-  for ( i = 0; orBranch; orBranch = *(_DWORD *)(orBranch + 68) )
+  for ( i = 0; orBranch; orBranch = *(_DWORD *)(uintptr_t)(orBranch + 68) )
   {
     clone = Rules_CECloneNode(andNode);
     v5 = 1;
-    for ( j = *(_DWORD *)(clone + 64); v5 != branchIndex; j = *(_DWORD *)(j + 68) )
+    for ( j = *(_DWORD *)(uintptr_t)(clone + 64); v5 != branchIndex; j = *(_DWORD *)(uintptr_t)(j + 68) )
       ++v5;
-    AST_FreeNode(*(_DWORD *)(j + 64));
-    Rules_CECopyNodeFields(v7, (_DWORD *)orBranch, 1);
-    v8 = Rules_CECloneNode(*(_DWORD **)(orBranch + 64));
-    *(_DWORD *)(v9 + 64) = v8;
+    AST_FreeNode(*(_DWORD *)(uintptr_t)(j + 64));
+    Rules_CECopyNodeFields(v7, (_DWORD *)(uintptr_t)orBranch, 1);
+    v8 = Rules_CECloneNode(*(_DWORD **)(uintptr_t)(orBranch + 64));
+    *(_DWORD *)(uintptr_t)(v9 + 64) = v8;
     if ( i )
-      *(_DWORD *)(i + 68) = clone;
+      *(_DWORD *)(uintptr_t)(i + 68) = clone;
     i = clone;
-    *(_DWORD *)(clone + 68) = 0;
+    *(_DWORD *)(uintptr_t)(clone + 68) = 0;
   }
-  AST_FreeNode((int)andNode);
-  result = (_DWORD *)AST_AllocNode();
+  AST_FreeNode((int)(intptr_t)andNode);
+  result = (_DWORD *)(uintptr_t)AST_AllocNode();
   *result = 82;
   result[16] = v11;
   return result;
@@ -362,81 +362,81 @@ int  Rules_CEMergeRedundantNodes(int ceNode, _DWORD *changedFlag)
 LABEL_2:
   while ( 2 )
   {
-    i = *(_DWORD *)(ceNode + 64);
+    i = *(_DWORD *)(uintptr_t)(ceNode + 64);
     prevChild = 0;
     changed = 0;
     while ( i )
     {
-      if ( *(_DWORD *)ceNode == 82 && *(_DWORD *)i == 82 || *(_DWORD *)ceNode == 81 && *(_DWORD *)i == 81 )
+      if ( *(_DWORD *)(uintptr_t)ceNode == 82 && *(_DWORD *)(uintptr_t)i == 82 || *(_DWORD *)(uintptr_t)ceNode == 81 && *(_DWORD *)(uintptr_t)i == 81 )
       {
-        if ( (*(_BYTE *)(i + 8) & 2) != 0 )
-          *(_BYTE *)(ceNode + 8) |= 2u;
+        if ( (*(_BYTE *)(uintptr_t)(i + 8) & 2) != 0 )
+          *(_BYTE *)(uintptr_t)(ceNode + 8) |= 2u;
         *changedFlag = 1;
         changed = 1;
-        *(_DWORD *)(i + 64) = 0;
-        savedTail = *(_DWORD *)(i + 68);
-        *(_DWORD *)(i + 68) = 0;
+        *(_DWORD *)(uintptr_t)(i + 64) = 0;
+        savedTail = *(_DWORD *)(uintptr_t)(i + 68);
+        *(_DWORD *)(uintptr_t)(i + 68) = 0;
         AST_FreeNode(i);
         if ( prevChild )
-          *(_DWORD *)(prevChild + 68) = subChildren;
+          *(_DWORD *)(uintptr_t)(prevChild + 68) = subChildren;
         else
-          *(_DWORD *)(ceNode + 64) = subChildren;
-        for ( i = subChildren; *(_DWORD *)(subChildren + 68); subChildren = *(_DWORD *)(subChildren + 68) )
+          *(_DWORD *)(uintptr_t)(ceNode + 64) = subChildren;
+        for ( i = subChildren; *(_DWORD *)(uintptr_t)(subChildren + 68); subChildren = *(_DWORD *)(uintptr_t)(subChildren + 68) )
           ;
-        *(_DWORD *)(subChildren + 68) = savedTail;
+        *(_DWORD *)(uintptr_t)(subChildren + 68) = savedTail;
       }
       else
       {
-        if ( *(_DWORD *)ceNode == 83 && *(_DWORD *)i == 84 )
+        if ( *(_DWORD *)(uintptr_t)ceNode == 83 && *(_DWORD *)(uintptr_t)i == 84 )
         {
           *changedFlag = 1;
           notNode = AST_NewNode(10, g_ClipsNotSymbol);
-          *(_DWORD *)(notNode + 6) = Rules_CECloneBindingList(*(_DWORD *)(v13 + 56));
+          *(_DWORD *)(uintptr_t)(notNode + 6) = Rules_CECloneBindingList(*(_DWORD *)(uintptr_t)(v13 + 56));
           Rules_CECopyNodeFields(ceNode, v14, 1);
           AST_FreeNode(v15);
-          AST_FreeNode(*(_DWORD *)(ceNode + 56));
-          *(_DWORD *)(ceNode + 56) = Rules_CECloneRestrictionExpr((__int16 *)notNode);
-          *(_DWORD *)(ceNode + 64) = 0;
+          AST_FreeNode(*(_DWORD *)(uintptr_t)(ceNode + 56));
+          *(_DWORD *)(uintptr_t)(ceNode + 56) = Rules_CECloneRestrictionExpr((__int16 *)(uintptr_t)notNode);
+          *(_DWORD *)(uintptr_t)(ceNode + 64) = 0;
           AST_Free(notNode);
           goto LABEL_2;
         }
-        if ( *(_DWORD *)ceNode == 81
-          && *(_DWORD *)i == 84
-          && (v9 = *(_DWORD **)(i + 68)) != 0
+        if ( *(_DWORD *)(uintptr_t)ceNode == 81
+          && *(_DWORD *)(uintptr_t)i == 84
+          && (v9 = *(_DWORD **)(uintptr_t)(i + 68)) != 0
           && *v9 == 84
-          && (v10 = *(_DWORD *)(i + 44), v10 == *(_DWORD *)(i + 48))
-          && v10 == *(_DWORD *)(*(_DWORD *)(i + 68) + 44) )
+          && (v10 = *(_DWORD *)(uintptr_t)(i + 44), v10 == *(_DWORD *)(uintptr_t)(i + 48))
+          && v10 == *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(i + 68) + 44) )
         {
           *changedFlag = 1;
           changed = 1;
-          firstBinds = (_DWORD *)Rules_CECloneBindingList(*(_DWORD *)(i + 56));
-          secondBinds = (_DWORD *)Rules_CECloneBindingList(*(_DWORD *)(*(_DWORD *)(v17 + 68) + 56));
+          firstBinds = (_DWORD *)(uintptr_t)Rules_CECloneBindingList(*(_DWORD *)(uintptr_t)(i + 56));
+          secondBinds = (_DWORD *)(uintptr_t)Rules_CECloneBindingList(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v17 + 68) + 56));
           AST_MergeFieldAccessNodes(firstBinds, secondBinds);
-          AST_FreeNode(*(_DWORD *)(v19 + 56));
+          AST_FreeNode(*(_DWORD *)(uintptr_t)(v19 + 56));
           newRestriction = Rules_CECloneRestrictionExpr(v20);
-          *(_DWORD *)(v22 + 56) = newRestriction;
+          *(_DWORD *)(uintptr_t)(v22 + 56) = newRestriction;
           AST_Free(v23);
-          redundantSibling = *(_DWORD *)(v24 + 68);
-          *(_DWORD *)(v24 + 68) = *(_DWORD *)(redundantSibling + 68);
-          *(_DWORD *)(redundantSibling + 68) = 0;
+          redundantSibling = *(_DWORD *)(uintptr_t)(v24 + 68);
+          *(_DWORD *)(uintptr_t)(v24 + 68) = *(_DWORD *)(uintptr_t)(redundantSibling + 68);
+          *(_DWORD *)(uintptr_t)(redundantSibling + 68) = 0;
           AST_FreeNode(redundantSibling);
         }
         else
         {
-          if ( *(_DWORD *)ceNode == 81 && *(_DWORD *)i == 84 )
+          if ( *(_DWORD *)(uintptr_t)ceNode == 81 && *(_DWORD *)(uintptr_t)i == 84 )
           {
-            firstChild = *(_DWORD **)(ceNode + 64);
-            if ( (_DWORD *)i == firstChild && !firstChild[17] )
+            firstChild = *(_DWORD **)(uintptr_t)(ceNode + 64);
+            if ( (_DWORD *)(uintptr_t)i == firstChild && !firstChild[17] )
             {
               *changedFlag = 1;
               Rules_CECopyNodeFields(ceNode, firstChild, 1);
-              *(_DWORD *)(ceNode + 64) = 0;
+              *(_DWORD *)(uintptr_t)(ceNode + 64) = 0;
               AST_FreeNode(v26);
               goto LABEL_2;
             }
           }
           prevChild = i;
-          i = *(_DWORD *)(i + 68);
+          i = *(_DWORD *)(uintptr_t)(i + 68);
         }
       }
     }
@@ -471,11 +471,11 @@ int  Rules_CECloneNode(_DWORD *node)
   srcNode = node;
   if ( !node )
     return 0;
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 288);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 288);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 288);
-    *(_DWORD *)(g_ClipsMemoryTable + 288) = *freeEntry;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288) = *freeEntry;
     clone = g_ClipsMemFreeListTemp;
   }
   else
@@ -483,8 +483,8 @@ int  Rules_CECloneNode(_DWORD *node)
     clone = Mem_HeapAllocWithRetry((_DWORD *)0x48);
   }
   Rules_CECopyNodeFields(clone, srcNode, 1);
-  *(_DWORD *)(clone + 64) = Rules_CECloneNode(*(_DWORD *)(v4 + 64));
-  *(_DWORD *)(clone + 68) = Rules_CECloneNode(*(_DWORD *)(v5 + 68));
+  *(_DWORD *)(uintptr_t)(clone + 64) = Rules_CECloneNode(*(_DWORD *)(uintptr_t)(v4 + 64));
+  *(_DWORD *)(uintptr_t)(clone + 68) = Rules_CECloneNode(*(_DWORD *)(uintptr_t)(v5 + 68));
   return clone;
 }
 // 4B9607: variable 'v1' is possibly undefined
@@ -519,78 +519,78 @@ int  Rules_CECopyNodeFields(int dest, _DWORD *src, int deepCopy)
   int handlerResult; // eax
   int v25; // ecx
 
-  *(_DWORD *)dest = *src;
-  *(_DWORD *)(dest + 4) = src[1];
+  *(_DWORD *)(uintptr_t)dest = *src;
+  *(_DWORD *)(uintptr_t)(dest + 4) = src[1];
   v4 = src[2];
-  *(_BYTE *)(dest + 8) &= ~1u;
-  *(_DWORD *)(dest + 8) |= v4 & 1;
+  *(_BYTE *)(uintptr_t)(dest + 8) &= ~1u;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v4 & 1;
   v5 = src[2];
-  *(_BYTE *)(dest + 8) &= ~8u;
-  *(_DWORD *)(dest + 8) |= v5 & 8;
+  *(_BYTE *)(uintptr_t)(dest + 8) &= ~8u;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v5 & 8;
   v6 = src[2];
-  *(_BYTE *)(dest + 9) &= ~0x40u;
-  *(_DWORD *)(dest + 8) |= v6 & 0x4000;
+  *(_BYTE *)(uintptr_t)(dest + 9) &= ~0x40u;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v6 & 0x4000;
   v7 = src[2];
-  *(_BYTE *)(dest + 8) &= ~4u;
-  flagWord = v7 & 4 | *(_DWORD *)(dest + 8);
-  *(_DWORD *)(dest + 8) = flagWord;
+  *(_BYTE *)(uintptr_t)(dest + 8) &= ~4u;
+  flagWord = v7 & 4 | *(_DWORD *)(uintptr_t)(dest + 8);
+  *(_DWORD *)(uintptr_t)(dest + 8) = flagWord;
   v9 = src[2] & 0x3F8000;
-  *(_DWORD *)(dest + 8) = flagWord & 0xFFC07FFF;
-  *(_DWORD *)(dest + 8) = v9 | flagWord & 0xFFC07FFF;
+  *(_DWORD *)(uintptr_t)(dest + 8) = flagWord & 0xFFC07FFF;
+  *(_DWORD *)(uintptr_t)(dest + 8) = v9 | flagWord & 0xFFC07FFF;
   v10 = src[2];
-  *(_WORD *)(dest + 10) &= 0xE03Fu;
-  *(_DWORD *)(dest + 8) |= v10 & 0x1FC00000;
+  *(_WORD *)(uintptr_t)(dest + 10) &= 0xE03Fu;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v10 & 0x1FC00000;
   v11 = src[3];
-  *(_BYTE *)(dest + 12) &= 0x80u;
-  *(_DWORD *)(dest + 12) |= v11 & 0x7F;
+  *(_BYTE *)(uintptr_t)(dest + 12) &= 0x80u;
+  *(_DWORD *)(uintptr_t)(dest + 12) |= v11 & 0x7F;
   v12 = src[3];
-  *(_WORD *)(dest + 12) &= 0xC07Fu;
-  *(_DWORD *)(dest + 12) |= v12 & 0x3F80;
+  *(_WORD *)(uintptr_t)(dest + 12) &= 0xC07Fu;
+  *(_DWORD *)(uintptr_t)(dest + 12) |= v12 & 0x3F80;
   v13 = src[2];
-  *(_BYTE *)(dest + 8) &= ~2u;
-  *(_DWORD *)(dest + 8) |= v13 & 2;
+  *(_BYTE *)(uintptr_t)(dest + 8) &= ~2u;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v13 & 2;
   v14 = src[2];
-  *(_BYTE *)(dest + 8) &= ~0x20u;
-  *(_DWORD *)(dest + 8) |= v14 & 0x20;
-  *(_DWORD *)(dest + 20) = src[5];
-  *(_DWORD *)(dest + 24) = src[6];
-  *(_DWORD *)(dest + 28) = src[7];
-  *(_DWORD *)(dest + 32) = src[8];
-  *(_DWORD *)(dest + 36) = src[9];
-  *(_DWORD *)(dest + 40) = src[10];
-  *(_DWORD *)(dest + 44) = src[11];
-  *(_DWORD *)(dest + 48) = src[12];
+  *(_BYTE *)(uintptr_t)(dest + 8) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)(dest + 8) |= v14 & 0x20;
+  *(_DWORD *)(uintptr_t)(dest + 20) = src[5];
+  *(_DWORD *)(uintptr_t)(dest + 24) = src[6];
+  *(_DWORD *)(uintptr_t)(dest + 28) = src[7];
+  *(_DWORD *)(uintptr_t)(dest + 32) = src[8];
+  *(_DWORD *)(uintptr_t)(dest + 36) = src[9];
+  *(_DWORD *)(uintptr_t)(dest + 40) = src[10];
+  *(_DWORD *)(uintptr_t)(dest + 44) = src[11];
+  *(_DWORD *)(uintptr_t)(dest + 48) = src[12];
   if ( deepCopy )
   {
     clonedNodeList = AST_CloneNodeList(src[13]);
-    *(_DWORD *)(v18 + 52) = clonedNodeList;
+    *(_DWORD *)(uintptr_t)(v18 + 52) = clonedNodeList;
     v19 = v17[15];
-    if ( v19 && *(_DWORD *)(v17[6] + 68) )
+    if ( v19 && *(_DWORD *)(uintptr_t)(v17[6] + 68) )
     {
-      handlerResult = (*(int (**)(void))(v17[6] + 68))();
-      *(_DWORD *)(v25 + 60) = handlerResult;
+      handlerResult = (*(int (**)(void))(uintptr_t)(v17[6] + 68))();
+      *(_DWORD *)(uintptr_t)(v25 + 60) = handlerResult;
     }
     else
     {
-      *(_DWORD *)(v18 + 60) = v19;
+      *(_DWORD *)(uintptr_t)(v18 + 60) = v19;
     }
     clonedNode = Rules_CECloneNode(v17[14]);
-    *(_DWORD *)(v21 + 56) = clonedNode;
-    result = Rules_CloneLHSParseNode(*(int **)(v22 + 16));
-    *(_DWORD *)(v23 + 16) = result;
+    *(_DWORD *)(uintptr_t)(v21 + 56) = clonedNode;
+    result = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(v22 + 16));
+    *(_DWORD *)(uintptr_t)(v23 + 16) = result;
     if ( result )
-      *(_BYTE *)(v23 + 8) |= 0x10u;
+      *(_BYTE *)(uintptr_t)(v23 + 8) |= 0x10u;
     else
-      *(_BYTE *)(v23 + 8) &= ~0x10u;
+      *(_BYTE *)(uintptr_t)(v23 + 8) &= ~0x10u;
   }
   else
   {
-    *(_DWORD *)(dest + 52) = src[13];
-    *(_DWORD *)(dest + 60) = src[15];
-    *(_DWORD *)(dest + 56) = src[14];
-    *(_BYTE *)(dest + 8) &= ~0x10u;
+    *(_DWORD *)(uintptr_t)(dest + 52) = src[13];
+    *(_DWORD *)(uintptr_t)(dest + 60) = src[15];
+    *(_DWORD *)(uintptr_t)(dest + 56) = src[14];
+    *(_BYTE *)(uintptr_t)(dest + 8) &= ~0x10u;
     result = src[4];
-    *(_DWORD *)(dest + 16) = result;
+    *(_DWORD *)(uintptr_t)(dest + 16) = result;
   }
   return result;
 }
@@ -609,39 +609,39 @@ signed int Rules_CEAllocDefaultNode()
   int v2; // ecx
   __int16 v3; // dx
 
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 288);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 288);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 288);
-    *(_DWORD *)(g_ClipsMemoryTable + 288) = *freeEntry;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288) = *freeEntry;
     result = g_ClipsMemFreeListTemp;
   }
   else
   {
     result = Mem_HeapAllocWithRetry((_DWORD *)0x48);
   }
-  *(_DWORD *)result = 103;
-  *(_DWORD *)(result + 4) = 0;
-  *(_DWORD *)(result + 16) = 0;
-  *(_DWORD *)(result + 20) = 0;
-  *(_DWORD *)(result + 24) = 0;
-  *(_DWORD *)(result + 28) = -1;
-  *(_DWORD *)(result + 32) = -1;
-  *(_DWORD *)(result + 36) = 0;
-  *(_DWORD *)(result + 40) = -1;
-  *(_DWORD *)(result + 44) = 1;
-  *(_DWORD *)(result + 48) = 1;
-  *(_DWORD *)(result + 60) = 0;
-  *(_DWORD *)(result + 52) = 0;
-  *(_DWORD *)(result + 56) = 0;
-  v2 = *(_DWORD *)(result + 8);
-  v3 = *(_WORD *)(result + 12);
-  *(_DWORD *)(result + 64) = 0;
-  *(_DWORD *)(result + 8) = v2 & 0xE0003FC0;
-  *(_WORD *)(result + 12) = v3 & 0xC000;
-  LOBYTE(v3) = *(_BYTE *)(result + 8);
-  *(_DWORD *)(result + 68) = 0;
-  *(_BYTE *)(result + 8) = v3 | 0x20;
+  *(_DWORD *)(uintptr_t)result = 103;
+  *(_DWORD *)(uintptr_t)(result + 4) = 0;
+  *(_DWORD *)(uintptr_t)(result + 16) = 0;
+  *(_DWORD *)(uintptr_t)(result + 20) = 0;
+  *(_DWORD *)(uintptr_t)(result + 24) = 0;
+  *(_DWORD *)(uintptr_t)(result + 28) = -1;
+  *(_DWORD *)(uintptr_t)(result + 32) = -1;
+  *(_DWORD *)(uintptr_t)(result + 36) = 0;
+  *(_DWORD *)(uintptr_t)(result + 40) = -1;
+  *(_DWORD *)(uintptr_t)(result + 44) = 1;
+  *(_DWORD *)(uintptr_t)(result + 48) = 1;
+  *(_DWORD *)(uintptr_t)(result + 60) = 0;
+  *(_DWORD *)(uintptr_t)(result + 52) = 0;
+  *(_DWORD *)(uintptr_t)(result + 56) = 0;
+  v2 = *(_DWORD *)(uintptr_t)(result + 8);
+  v3 = *(_WORD *)(uintptr_t)(result + 12);
+  *(_DWORD *)(uintptr_t)(result + 64) = 0;
+  *(_DWORD *)(uintptr_t)(result + 8) = v2 & 0xE0003FC0;
+  *(_WORD *)(uintptr_t)(result + 12) = v3 & 0xC000;
+  LOBYTE(v3) = *(_BYTE *)(uintptr_t)(result + 8);
+  *(_DWORD *)(uintptr_t)(result + 68) = 0;
+  *(_BYTE *)(uintptr_t)(result + 8) = v3 | 0x20;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -659,22 +659,22 @@ int  Rules_CEFreeNode(int result)
 
   if ( result )
   {
-    AST_Free(*(_DWORD *)(result + 52));
-    AST_FreeNode(*(_DWORD *)(v1 + 64));
-    AST_FreeNode(*(_DWORD *)(v2 + 68));
-    AST_FreeNode(*(_DWORD *)(v3 + 56));
-    if ( (*(_BYTE *)(v4 + 8) & 0x10) != 0 )
-      AST_DecrementNodeRefCount(*(_DWORD **)(v4 + 16));
-    if ( *(_DWORD *)(v4 + 60) )
+    AST_Free(*(_DWORD *)(uintptr_t)(result + 52));
+    AST_FreeNode(*(_DWORD *)(uintptr_t)(v1 + 64));
+    AST_FreeNode(*(_DWORD *)(uintptr_t)(v2 + 68));
+    AST_FreeNode(*(_DWORD *)(uintptr_t)(v3 + 56));
+    if ( (*(_BYTE *)(uintptr_t)(v4 + 8) & 0x10) != 0 )
+      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(v4 + 16));
+    if ( *(_DWORD *)(uintptr_t)(v4 + 60) )
     {
-      handler = *(_DWORD *)(v4 + 24);
-      if ( *(_DWORD *)(handler + 64) )
-        (*(void (__cdecl **)(int))(handler + 64))(v5);
+      handler = *(_DWORD *)(uintptr_t)(v4 + 24);
+      if ( *(_DWORD *)(uintptr_t)(handler + 64) )
+        (*(void (__cdecl **)(int))(uintptr_t)(handler + 64))(v5);
     }
     g_ClipsMemFreeListTemp = v4;
-    *(_DWORD *)v4 = *(_DWORD *)(g_ClipsMemoryTable + 288);
+    *(_DWORD *)(uintptr_t)v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 288) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -704,11 +704,11 @@ __int16 * Rules_CECloneRestrictionExpr(__int16 *result)
   srcExpr = result;
   if ( result )
   {
-    clone = (_DWORD *)AST_AllocNode();
+    clone = (_DWORD *)(uintptr_t)AST_AllocNode();
     *clone = *srcExpr;
     clone[1] = *(_DWORD *)(srcExpr + 1);
     v3 = Rules_CECloneRestrictionExpr(*(_DWORD *)(srcExpr + 5));
-    *(_DWORD *)(v4 + 64) = v3;
+    *(_DWORD *)(uintptr_t)(v4 + 64) = v3;
     v5 = Rules_CECloneRestrictionExpr(*(_DWORD *)(srcExpr + 3));
     v7 = *cloneNode;
     cloneNode[17] = v5;
@@ -718,14 +718,14 @@ __int16 * Rules_CECloneRestrictionExpr(__int16 *result)
       v9 = cloneNode[1];
       for ( i = v5; i; ++v8 )
       {
-        if ( *(_DWORD *)i == 15 )
+        if ( *(_DWORD *)(uintptr_t)i == 15 )
         {
           Rules_GetArgRestrictionType(v9, v8);
           v11 = Rules_ApplyPatternKeywordFlags();
-          *(_DWORD *)(i + 16) = v11;
-          *(_BYTE *)(i + 8) |= 0x10u;
+          *(_DWORD *)(uintptr_t)(i + 16) = v11;
+          *(_BYTE *)(uintptr_t)(i + 8) |= 0x10u;
         }
-        i = *(_DWORD *)(i + 64);
+        i = *(_DWORD *)(uintptr_t)(i + 64);
       }
       return (__int16 *)clone;
     }
@@ -755,23 +755,23 @@ int  Rules_CECloneBindingList(int bindingList)
   src = bindingList;
   if ( !bindingList )
     return 0;
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 56);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = *freeEntry;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeEntry;
     clone = g_ClipsMemFreeListTemp;
   }
   else
   {
     clone = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_WORD *)clone = *(_WORD *)src;
-  *(_DWORD *)(clone + 2) = *(_DWORD *)(src + 4);
-  v4 = Rules_CECloneBindingList(*(_DWORD *)(src + 64));
-  *(_DWORD *)(v5 + 10) = v4;
-  v7 = Rules_CECloneBindingList(*(_DWORD *)(v6 + 68));
-  *(_DWORD *)(v8 + 6) = v7;
+  *(_WORD *)(uintptr_t)clone = *(_WORD *)(uintptr_t)src;
+  *(_DWORD *)(uintptr_t)(clone + 2) = *(_DWORD *)(uintptr_t)(src + 4);
+  v4 = Rules_CECloneBindingList(*(_DWORD *)(uintptr_t)(src + 64));
+  *(_DWORD *)(uintptr_t)(v5 + 10) = v4;
+  v7 = Rules_CECloneBindingList(*(_DWORD *)(uintptr_t)(v6 + 68));
+  *(_DWORD *)(uintptr_t)(v8 + 6) = v7;
   return v8;
 }
 // 4B99A7: variable 'v1' is possibly undefined
@@ -805,21 +805,21 @@ int * Rules_CECountPatternNodes(int *result, int isTail)
         else
           v5 = 0;
         result = (int *)Rules_CECountPatternNodes(node[16], v5);
-        node = *(int **)(v6 + 68);
+        node = *(int **)(uintptr_t)(v6 + 68);
         if ( !node )
           return result;
       }
       else if ( nodeType == 82 )
       {
-        result = (int *)Rules_ReportSystemError((int)node, 1);
-        node = *(int **)(v7 + 68);
+        result = (int *)(uintptr_t)Rules_ReportSystemError((int)(intptr_t)node, 1);
+        node = *(int **)(uintptr_t)(v7 + 68);
         if ( !node )
           return result;
       }
       else
       {
 LABEL_6:
-        node = (int *)node[17];
+        node = (int *)(uintptr_t)node[17];
         if ( !node )
           return result;
       }
@@ -846,13 +846,13 @@ int Rules_CEAllocTestNode(void)
   int v7; // ecx
 
   testNode = AST_AllocNode();
-  *(_DWORD *)testNode = 80;
-  v2 = *(_BYTE *)(testNode + 8);
-  *(_DWORD *)(testNode + 68) = 0;
+  *(_DWORD *)(uintptr_t)testNode = 80;
+  v2 = *(_BYTE *)(uintptr_t)(testNode + 8);
+  *(_DWORD *)(uintptr_t)(testNode + 68) = 0;
   nodeAddr = testNode;
-  *(_BYTE *)(testNode + 8) = v2 & 0xDF;
+  *(_BYTE *)(uintptr_t)(testNode + 8) = v2 & 0xDF;
   if ( !patternParser )
-    patternParser = Rules_FindPatternParserByName((int)aFacts_6);
+    patternParser = Rules_FindPatternParserByName((int)(intptr_t)aFacts_6);
   if ( !patternParser )
   {
     patternParser = g_PatternParserListHead;
@@ -862,14 +862,14 @@ LABEL_7:
       Rules_ReportSystemError(nodeAddr, 2);
       return 0;
     }
-    while ( !*(_DWORD *)(patternParser + 80) )
+    while ( !*(_DWORD *)(uintptr_t)(patternParser + 80) )
     {
-      patternParser = *(_DWORD *)(patternParser + 92);
+      patternParser = *(_DWORD *)(uintptr_t)(patternParser + 92);
       if ( !patternParser )
         goto LABEL_7;
     }
   }
-  v5 = ((__int64 (__fastcall *)(int))*(_DWORD *)(patternParser + 80))(nodeAddr);
+  v5 = ((__int64 (__fastcall *)(int))(uintptr_t)*(_DWORD *)(uintptr_t)(patternParser + 80))(nodeAddr);
   v6[16] = v5;
   AST_PropagateDepthTag(v6, SHIDWORD(v5));
   return v7;
@@ -890,57 +890,57 @@ int  Rules_CEInsertBoundVariableJoinTests(int result)
   int v5; // eax
   int v6; // eax
 
-  for ( i = result; result; result = *(_DWORD *)(result + 68) )
-    *(_BYTE *)(result + 9) &= ~0x20u;
-  for ( j = 0; i; i = *(_DWORD *)(i + 68) )
+  for ( i = result; result; result = *(_DWORD *)(uintptr_t)(result + 68) )
+    *(_BYTE *)(uintptr_t)(result + 9) &= ~0x20u;
+  for ( j = 0; i; i = *(_DWORD *)(uintptr_t)(i + 68) )
   {
-    if ( (*(_BYTE *)(i + 8) & 1) != 0 && (*(_DWORD *)(i + 8) & 0x2000) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(i + 8) & 1) != 0 && (*(_DWORD *)(uintptr_t)(i + 8) & 0x2000) != 0 )
     {
       result = 0;
     }
-    else if ( (*(_DWORD *)i == 84 || (*(_BYTE *)(i + 8) & 1) != 0) && (*(_DWORD *)(i + 8) & 0x2000) == 0 )
+    else if ( (*(_DWORD *)(uintptr_t)i == 84 || (*(_BYTE *)(uintptr_t)(i + 8) & 1) != 0) && (*(_DWORD *)(uintptr_t)(i + 8) & 0x2000) == 0 )
     {
       joinTestNode = Rules_CEAllocTestNode();
-      v5 = *(_DWORD *)(boundNode + 8);
-      *(_BYTE *)(joinTestNode + 8) &= ~2u;
-      *(_DWORD *)(joinTestNode + 8) |= v5 & 2;
-      v6 = *(_DWORD *)(boundNode + 44);
-      *(_DWORD *)(joinTestNode + 44) = v6;
-      *(_DWORD *)(joinTestNode + 48) = v6;
+      v5 = *(_DWORD *)(uintptr_t)(boundNode + 8);
+      *(_BYTE *)(uintptr_t)(joinTestNode + 8) &= ~2u;
+      *(_DWORD *)(uintptr_t)(joinTestNode + 8) |= v5 & 2;
+      v6 = *(_DWORD *)(uintptr_t)(boundNode + 44);
+      *(_DWORD *)(uintptr_t)(joinTestNode + 44) = v6;
+      *(_DWORD *)(uintptr_t)(joinTestNode + 48) = v6;
       if ( !j )
         Rules_ReportSystemError(boundNode, 3);
-      *(_DWORD *)(j + 68) = joinTestNode;
-      *(_DWORD *)(joinTestNode + 68) = boundNode;
+      *(_DWORD *)(uintptr_t)(j + 68) = joinTestNode;
+      *(_DWORD *)(uintptr_t)(joinTestNode + 68) = boundNode;
       i = joinTestNode;
-      result = *(_DWORD *)(joinTestNode + 68);
+      result = *(_DWORD *)(uintptr_t)(joinTestNode + 68);
     }
     else
     {
-      result = *(_DWORD *)(i + 68);
+      result = *(_DWORD *)(uintptr_t)(i + 68);
     }
     while ( result )
     {
-      if ( *(_DWORD *)(result + 44) != *(_DWORD *)(i + 44) )
+      if ( *(_DWORD *)(uintptr_t)(result + 44) != *(_DWORD *)(uintptr_t)(i + 44) )
         goto LABEL_9;
-      if ( (*(_BYTE *)(result + 8) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(result + 8) & 1) != 0 )
       {
-        *(_DWORD *)(result + 8) |= 0x2000u;
-        result = *(_DWORD *)(result + 68);
+        *(_DWORD *)(uintptr_t)(result + 8) |= 0x2000u;
+        result = *(_DWORD *)(uintptr_t)(result + 68);
       }
       else
       {
-        if ( *(_DWORD *)result == 80 )
+        if ( *(_DWORD *)(uintptr_t)result == 80 )
           break;
-        if ( *(_DWORD *)result == 84 )
+        if ( *(_DWORD *)(uintptr_t)result == 84 )
         {
-          *(_DWORD *)(result + 8) |= 0x2000u;
-          *(_DWORD *)(result + 24) = *(_DWORD *)(i + 24);
-          result = *(_DWORD *)(result + 68);
+          *(_DWORD *)(uintptr_t)(result + 8) |= 0x2000u;
+          *(_DWORD *)(uintptr_t)(result + 24) = *(_DWORD *)(uintptr_t)(i + 24);
+          result = *(_DWORD *)(uintptr_t)(result + 68);
         }
         else
         {
 LABEL_9:
-          result = *(_DWORD *)(result + 68);
+          result = *(_DWORD *)(uintptr_t)(result + 68);
         }
       }
     }
@@ -973,46 +973,46 @@ void  Rules_CEPrintExpression(int logicalName, int ceNode)
   {
     while ( node )
     {
-      switch ( *(_DWORD *)node )
+      switch ( *(_DWORD *)(uintptr_t)node )
       {
         case 'P':
-          Output_Write(logName, (int)asc_50A0A4, logName);
-          if ( (*(_BYTE *)(node + 8) & 1) != 0 )
-            Output_Write(v4, (int)aN, v4);
-          if ( (*(_DWORD *)(node + 8) & 2) != 0 )
-            Output_Write(v4, (int)asc_50A0AC, v4);
-          Rules_PrintLongInteger(v4, *(_DWORD *)(node + 44));
-          Output_Write(v5, (int)asc_50A0B0, v5);
-          Rules_PrintLongInteger(v6, *(_DWORD *)(node + 48));
-          Output_Write(v7, (int)asc_50A0B4, v7);
-          Output_Write(v8, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(node + 64) + 68) + 4) + 16), v8);
+          Output_Write(logName, (int)(intptr_t)asc_50A0A4, logName);
+          if ( (*(_BYTE *)(uintptr_t)(node + 8) & 1) != 0 )
+            Output_Write(v4, (int)(intptr_t)aN, v4);
+          if ( (*(_DWORD *)(uintptr_t)(node + 8) & 2) != 0 )
+            Output_Write(v4, (int)(intptr_t)asc_50A0AC, v4);
+          Rules_PrintLongInteger(v4, *(_DWORD *)(uintptr_t)(node + 44));
+          Output_Write(v5, (int)(intptr_t)asc_50A0B0, v5);
+          Rules_PrintLongInteger(v6, *(_DWORD *)(uintptr_t)(node + 48));
+          Output_Write(v7, (int)(intptr_t)asc_50A0B4, v7);
+          Output_Write(v8, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 64) + 68) + 4) + 16), v8);
           goto LABEL_9;
         case 'Q':
-          if ( (*(_DWORD *)(node + 8) & 2) != 0 )
+          if ( (*(_DWORD *)(uintptr_t)(node + 8) & 2) != 0 )
             keyword = aLand;
           else
             keyword = aAnd_3;
           goto LABEL_21;
         case 'R':
-          if ( (*(_DWORD *)(node + 8) & 2) != 0 )
+          if ( (*(_DWORD *)(uintptr_t)(node + 8) & 2) != 0 )
             keyword = aLor;
           else
             keyword = aOr_3;
           goto LABEL_21;
         case 'S':
-          if ( (*(_DWORD *)(node + 8) & 2) != 0 )
+          if ( (*(_DWORD *)(uintptr_t)(node + 8) & 2) != 0 )
             keyword = aLnot;
           else
             keyword = aNot_3;
 LABEL_21:
-          Output_Write(logName, (int)keyword, logName);
-          Rules_CEPrintExpression(v14, *(_DWORD *)(node + 64));
+          Output_Write(logName, (int)(intptr_t)keyword, logName);
+          Rules_CEPrintExpression(v14, *(_DWORD *)(uintptr_t)(node + 64));
           goto LABEL_9;
         case 'T':
-          Output_Write(logName, (int)aTest_1, logName);
-          Rules_PrintLongInteger(v10, *(_DWORD *)(node + 44));
-          Output_Write(v11, (int)asc_50A0B0, v11);
-          Rules_PrintLongInteger(v12, *(_DWORD *)(node + 48));
+          Output_Write(logName, (int)(intptr_t)aTest_1, logName);
+          Rules_PrintLongInteger(v10, *(_DWORD *)(uintptr_t)(node + 44));
+          Output_Write(v11, (int)(intptr_t)asc_50A0B0, v11);
+          Rules_PrintLongInteger(v12, *(_DWORD *)(uintptr_t)(node + 48));
 LABEL_9:
           printStr = asc_50A0B8;
           break;
@@ -1020,10 +1020,10 @@ LABEL_9:
           printStr = aPrettyPrintUnknownExpressionToken;
           break;
       }
-      Output_Write(logName, (int)printStr, logName);
-      node = *(_DWORD *)(node + 68);
+      Output_Write(logName, (int)(intptr_t)printStr, logName);
+      node = *(_DWORD *)(uintptr_t)(node + 68);
       if ( node )
-        Output_Write(logName, (int)asc_50A0B4, logName);
+        Output_Write(logName, (int)(intptr_t)asc_50A0B4, logName);
     }
   }
   // 4B9C1B: jumps to the shared epilogue loc_4B9BCE (pop ebp/edi/esi/ecx/ebx; retn)
@@ -1060,7 +1060,7 @@ _DWORD * Rules_CEAssignJoinDepth(_DWORD *ceNode, int joinDepth)
   {
     if ( patternIndex < node[11] )
     {
-      result = (_DWORD *)Rules_CEAssignJoinDepth((int)node, joinDepth);
+      result = (_DWORD *)Rules_CEAssignJoinDepth((int)(intptr_t)node, joinDepth);
       node = result;
       if ( result[12] < v5 )
         return result;
@@ -1072,20 +1072,20 @@ _DWORD * Rules_CEAssignJoinDepth(_DWORD *ceNode, int joinDepth)
     if ( patternIndex > node[12] )
       return node;
 LABEL_5:
-    node = (_DWORD *)node[17];
+    node = (_DWORD *)(uintptr_t)node[17];
     if ( !node )
       return 0;
   }
   if ( *node != 80 )
     goto LABEL_5;
-  field = (_DWORD *)node[16];
-  for ( node[7] = joinDepth; field; field = (_DWORD *)field[16] )
+  field = (_DWORD *)(uintptr_t)node[16];
+  for ( node[7] = joinDepth; field; field = (_DWORD *)(uintptr_t)field[16] )
   {
     v7 = field[9];
     v9 = field[10];
     v8 = field[8];
     field[7] = joinDepth;
-    Rules_CEPropagateJoinCoordinates((int)field, joinDepth, v7, v8, v9);
+    Rules_CEPropagateJoinCoordinates((int)(intptr_t)field, joinDepth, v7, v8, v9);
   }
   if ( patternIndex <= node[12] )
   {
@@ -1106,29 +1106,29 @@ int  Rules_CEPropagateJoinCoordinates(int result, int joinDepth, int patternInde
 
   if ( result )
   {
-    if ( (*(_BYTE *)(result + 8) & 4) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(result + 8) & 4) != 0 )
     {
-      *(_DWORD *)(result + 28) = joinDepth;
+      *(_DWORD *)(uintptr_t)(result + 28) = joinDepth;
       if ( fieldIndex > 0 )
-        *(_DWORD *)(result + 32) = fieldIndex;
-      *(_DWORD *)(result + 36) = patternIndex;
-      *(_DWORD *)(result + 40) = slotIndex;
-      result = *(_DWORD *)(result + 68);
-      for ( i = (_DWORD *)result; result; i = (_DWORD *)result )
+        *(_DWORD *)(uintptr_t)(result + 32) = fieldIndex;
+      *(_DWORD *)(uintptr_t)(result + 36) = patternIndex;
+      *(_DWORD *)(uintptr_t)(result + 40) = slotIndex;
+      result = *(_DWORD *)(uintptr_t)(result + 68);
+      for ( i = (_DWORD *)(uintptr_t)result; result; i = (_DWORD *)(uintptr_t)result )
       {
         i[7] = joinDepth;
         v7 = i[8];
         i[9] = patternIndex;
-        Rules_CEPropagateJoinCoordinates((int)i, joinDepth, patternIndex, v7, slotIndex);
+        Rules_CEPropagateJoinCoordinates((int)(intptr_t)i, joinDepth, patternIndex, v7, slotIndex);
         result = i[16];
       }
     }
     else
     {
-      result = *(_DWORD *)(result + 68);
+      result = *(_DWORD *)(uintptr_t)(result + 68);
       for ( j = result; result; j = result )
       {
-        field = (_DWORD *)j;
+        field = (_DWORD *)(uintptr_t)j;
         if ( j )
         {
           do
@@ -1138,11 +1138,11 @@ int  Rules_CEPropagateJoinCoordinates(int result, int joinDepth, int patternInde
               field[8] = fieldIndex;
             field[9] = patternIndex;
             field[10] = slotIndex;
-            field = (_DWORD *)field[16];
+            field = (_DWORD *)(uintptr_t)field[16];
           }
           while ( field );
         }
-        result = *(_DWORD *)(j + 68);
+        result = *(_DWORD *)(uintptr_t)(j + 68);
       }
     }
   }
@@ -1153,15 +1153,15 @@ int  Rules_CEPropagateJoinCoordinates(int result, int joinDepth, int patternInde
 signed int Rules_RegisterDeftemplateBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
-           (int)aDeftemplate_2,
+           (int)(intptr_t)aDeftemplate_2,
            0,
            0,
-           (int)Rules_DeftemplateBsaveFind,
-           (int)Rules_DeftemplateBsaveWriteCounts,
-           (int)Rules_DeftemplateBsaveWriteData,
-           (int)Rules_DeftemplateBloadStorage,
-           (int)Rules_DeftemplateBload,
-           (int)Rules_DeftemplateClearBloaded);
+           (int)(intptr_t)Rules_DeftemplateBsaveFind,
+           (int)(intptr_t)Rules_DeftemplateBsaveWriteCounts,
+           (int)(intptr_t)Rules_DeftemplateBsaveWriteData,
+           (int)(intptr_t)Rules_DeftemplateBloadStorage,
+           (int)(intptr_t)Rules_DeftemplateBload,
+           (int)(intptr_t)Rules_DeftemplateClearBloaded);
 }
 
 //----- (004B9F00) --------------------------------------------------------
@@ -1188,14 +1188,14 @@ int Rules_DeftemplateBsaveFind(void)
   {
     Module_SetCurrent(i);
     ++g_DeftemplateModuleItemCount;
-    for ( j = (_DWORD *)Rules_GetNextDeftemplate(0); j; j = (_DWORD *)Rules_GetNextDeftemplate(v4) )
+    for ( j = (_DWORD *)(uintptr_t)Rules_GetNextDeftemplate(0); j; j = (_DWORD *)(uintptr_t)Rules_GetNextDeftemplate(v4) )
     {
       bsaveIndex = g_DeftemplateBsaveCount++;
       AST_MarkNodeFieldBound(j, bsaveIndex);
-      for ( k = *(_DWORD **)(v4 + 20); k; k = (_DWORD *)k[4] )
+      for ( k = *(_DWORD **)(uintptr_t)(v4 + 20); k; k = (_DWORD *)(uintptr_t)k[4] )
       {
         ++g_Deftemplate_SlotCount;
-        *(_DWORD *)(*k + 12) |= 2u;
+        *(_DWORD *)(uintptr_t)(*k + 12) |= 2u;
       }
     }
     result = Module_NextEnum(i);
@@ -1274,8 +1274,8 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(v5) )
   {
     Module_SetCurrent(i);
-    deftemplateItemDescriptor = Module_FindItemByName((int)aDeftemplate_2);
-    theModuleItem = (_DWORD *)Module_GetItem(0, *(_DWORD *)(deftemplateItemDescriptor + 4));
+    deftemplateItemDescriptor = Module_FindItemByName((int)(intptr_t)aDeftemplate_2);
+    theModuleItem = (_DWORD *)(uintptr_t)Module_GetItem(0, *(_DWORD *)(uintptr_t)(deftemplateItemDescriptor + 4));
     Module_AssignBsaveItemHeaderIndices(bsaveModuleItem, theModuleItem);
     Rules_BsaveWriteBlock(12, fileID, bsaveModuleItem);
   }
@@ -1294,7 +1294,7 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
       deftemplateBsaveFlags |= 2 * (numberOfSlots & 0x7FFF);
       patternNetwork = theDeftemplate[8];
       if ( patternNetwork )
-        v12 = *(_DWORD *)(patternNetwork + 16);
+        v12 = *(_DWORD *)(uintptr_t)(patternNetwork + 16);
       else
         v12 = -1;
       patternNetworkIndex = v12;
@@ -1303,7 +1303,7 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
       else
         firstSlotIndex = -1;
       Rules_BsaveWriteBlock(24, fileID, bsaveDeftemplate);
-      g_Deftemplate_SlotCount += *(_DWORD *)(v13 + 24) << 16 >> 19;
+      g_Deftemplate_SlotCount += *(_DWORD *)(uintptr_t)(v13 + 24) << 16 >> 19;
     }
   }
   for ( m = Module_NextEnum(0); m; m = Module_NextEnum(m) )
@@ -1311,33 +1311,33 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
     Module_SetCurrent(m);
     for ( n = Rules_GetNextDeftemplate(0); n; n = Rules_GetNextDeftemplate(n) )
     {
-      if ( *(_DWORD *)(n + 20) )
+      if ( *(_DWORD *)(uintptr_t)(n + 20) )
       {
         do
         {
-          if ( Rules_DynamicConstraintCheckingEnabled() && (constraint = *(_DWORD *)(slot + 8)) != 0 )
-            constraintIndex = *(unsigned __int16 *)(constraint + 4);
+          if ( Rules_DynamicConstraintCheckingEnabled() && (constraint = *(_DWORD *)(uintptr_t)(slot + 8)) != 0 )
+            constraintIndex = *(unsigned __int16 *)(uintptr_t)(constraint + 4);
           else
             constraintIndex = -1;
           slotConstraintIndex = constraintIndex;
-          bsaveSlot = *(_DWORD *)(*(_DWORD *)slot + 12) << 16 >> 18;
-          slotFlagWord = *(_DWORD *)(slot + 4);
+          bsaveSlot = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)slot + 12) << 16 >> 18;
+          slotFlagWord = *(_DWORD *)(uintptr_t)(slot + 4);
           LOBYTE(slotBsaveFlags) = slotBsaveFlags & 0xFE;
           slotBsaveFlags |= slotFlagWord & 1;
-          v19 = *(_DWORD *)(slot + 4);
+          v19 = *(_DWORD *)(uintptr_t)(slot + 4);
           LOBYTE(slotBsaveFlags) = slotBsaveFlags & 0xFD;
           slotBsaveFlags |= v19 & 2;
-          v20 = *(_DWORD *)(slot + 4);
+          v20 = *(_DWORD *)(uintptr_t)(slot + 4);
           LOBYTE(slotBsaveFlags) = slotBsaveFlags & 0xFB;
           slotBsaveFlags |= v20 & 4;
-          v21 = *(_DWORD *)(slot + 4);
+          v21 = *(_DWORD *)(uintptr_t)(slot + 4);
           LOBYTE(slotBsaveFlags) = slotBsaveFlags & 0xF7;
           slotBsaveFlags |= v21 & 8;
-          slotNameIndex = AST_GetHashedNodeIndex(*(__int16 **)(slot + 12));
-          defaultValueIndex = (*(_DWORD *)(v22 + 16) != 0) - 1;
+          slotNameIndex = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(slot + 12));
+          defaultValueIndex = (*(_DWORD *)(uintptr_t)(v22 + 16) != 0) - 1;
           Rules_BsaveWriteBlock(20, fileID, &bsaveSlot);
         }
-        while ( *(_DWORD *)(v23 + 16) );
+        while ( *(_DWORD *)(uintptr_t)(v23 + 16) );
       }
     }
   }
@@ -1374,17 +1374,17 @@ int __thiscall Rules_DeftemplateBloadStorage(void *this)
   if ( g_DeftemplateModuleItemCount )
   {
     sizeBuffer[0] = 12 * g_DeftemplateModuleItemCount;
-    result = Mem_HeapAllocWithRetry((_DWORD *)(12 * g_DeftemplateModuleItemCount));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * g_DeftemplateModuleItemCount));
     g_ClipsDeftemplateModuleItemArray = result;
     if ( g_DeftemplateBsaveCount )
     {
       sizeBuffer[0] = 36 * g_DeftemplateBsaveCount;
-      result = Mem_HeapAllocWithRetry((_DWORD *)(36 * g_DeftemplateBsaveCount));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(36 * g_DeftemplateBsaveCount));
       g_DeftemplateRecordTable = result;
       if ( g_Deftemplate_SlotCount )
       {
         sizeBuffer[0] = 20 * g_Deftemplate_SlotCount;
-        result = Mem_HeapAllocWithRetry((_DWORD *)(20 * g_Deftemplate_SlotCount));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(20 * g_Deftemplate_SlotCount));
         g_DeftemplateSlotTable = result;
       }
       else
@@ -1430,7 +1430,7 @@ signed int Rules_DeftemplateBload(void)
 //----- (004BA4C0) --------------------------------------------------------
 _DWORD * Rules_DeftemplateBloadRefreshModuleItem(_DWORD *moduleItem, int moduleIndex)
 {
-  return Module_UpdateItemHeader(moduleItem, (_DWORD *)(12 * moduleIndex + g_ClipsDeftemplateModuleItemArray), g_DeftemplateRecordTable, 36);
+  return Module_UpdateItemHeader(moduleItem, (_DWORD *)(uintptr_t)(12 * moduleIndex + g_ClipsDeftemplateModuleItemArray), g_DeftemplateRecordTable, 36);
 }
 // 54E840: using guessed type int dword_54E840;
 // 54E84C: using guessed type int dword_54E84C;
@@ -1447,28 +1447,28 @@ int  Rules_DeftemplateBloadRefreshRecord(_DWORD *bsaveRecord, int recordIndex)
   int result; // eax
 
   targetRecord = g_DeftemplateRecordTable + 36 * recordIndex;
-  Rules_BuildIndexedSlotDescriptor((int)bsaveRecord, (_DWORD *)targetRecord, g_ClipsDeftemplateModuleItemArray, 12, 36, g_DeftemplateRecordTable);
+  Rules_BuildIndexedSlotDescriptor((int)(intptr_t)bsaveRecord, (_DWORD *)(uintptr_t)targetRecord, g_ClipsDeftemplateModuleItemArray, 12, 36, g_DeftemplateRecordTable);
   slotIndex = bsaveRecord[3];
   if ( slotIndex == -1 )
-    *(_DWORD *)(targetRecord + 20) = 0;
+    *(_DWORD *)(uintptr_t)(targetRecord + 20) = 0;
   else
-    *(_DWORD *)(targetRecord + 20) = 20 * slotIndex + g_DeftemplateSlotTable;
+    *(_DWORD *)(uintptr_t)(targetRecord + 20) = 20 * slotIndex + g_DeftemplateSlotTable;
   patternNodeIndex = bsaveRecord[5];
   if ( patternNodeIndex == -1 )
-    *(_DWORD *)(targetRecord + 32) = 0;
+    *(_DWORD *)(uintptr_t)(targetRecord + 32) = 0;
   else
-    *(_DWORD *)(targetRecord + 32) = g_ClipsFactPatternNodeBloadArray + 44 * patternNodeIndex;
+    *(_DWORD *)(uintptr_t)(targetRecord + 32) = g_ClipsFactPatternNodeBloadArray + 44 * patternNodeIndex;
   v7 = bsaveRecord[4];
-  *(_BYTE *)(targetRecord + 24) &= ~1u;
-  *(_DWORD *)(targetRecord + 24) |= v7 & 1;
+  *(_BYTE *)(uintptr_t)(targetRecord + 24) &= ~1u;
+  *(_DWORD *)(uintptr_t)(targetRecord + 24) |= v7 & 1;
   v8 = g_Rules_WatchFactsFlag & 1;
-  *(_BYTE *)(targetRecord + 24) &= ~2u;
-  *(_DWORD *)(targetRecord + 24) |= 2 * v8;
-  *(_BYTE *)(targetRecord + 24) &= ~4u;
+  *(_BYTE *)(uintptr_t)(targetRecord + 24) &= ~2u;
+  *(_DWORD *)(uintptr_t)(targetRecord + 24) |= 2 * v8;
+  *(_BYTE *)(uintptr_t)(targetRecord + 24) &= ~4u;
   v9 = (bsaveRecord[4] << 16 >> 17) & 0x1FFF;
-  *(_WORD *)(targetRecord + 24) &= 7u;
+  *(_WORD *)(uintptr_t)(targetRecord + 24) &= 7u;
   result = 8 * v9;
-  *(_DWORD *)(targetRecord + 24) |= result;
+  *(_DWORD *)(uintptr_t)(targetRecord + 24) |= result;
   return result;
 }
 // 4BA555: conditional instruction was optimized away because ecx.4!=FFFFFFFF

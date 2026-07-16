@@ -37,16 +37,16 @@ int  MiniMap_RedrawTileRect(int x0, signed int y0, int y1, int x1)
     clampedX0 = 0;
   if ( y0 < 0 )
     clampedY0 = 0;
-  mapWidth = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
+  mapWidth = *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET);
   if ( x1 >= mapWidth )
     x1 = mapWidth - 1;
-  mapHeight = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
+  mapHeight = *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET);
   if ( y1 >= mapHeight )
     clampedY1 = mapHeight - 1;
   result = PLAYER_DATA_STRIDE * VIEWED_PLAYER_INDEX;
   if ( PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX) )
   {
-    for ( i = (char *)clampedX0; (int)i <= x1; ++i )
+    for ( i = (char *)(uintptr_t)clampedX0; (int)(intptr_t)i <= x1; ++i )
     {
       for ( j = clampedY0; j <= clampedY1; ++j )
         MiniMap_DrawTileCell(i, j);
@@ -89,10 +89,10 @@ void MiniMap_RedrawAllTiles()
   signed int i; // ecx
 
   tileX = 0;
-  g_RenderDevice = (_UNKNOWN *)g_MiniMapSurface_52334C;
-  while ( (int)tileX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_MiniMapSurface_52334C;
+  while ( (int)(intptr_t)tileX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
   {
-    for ( i = 0; i < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); ++i )
+    for ( i = 0; i < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET); ++i )
       MiniMap_DrawTileCell(tileX, i);
     ++tileX;
   }
@@ -124,7 +124,7 @@ void * MiniMap_DrawTileCell(void *result, signed int tileColumn)
 
   row = (int)(intptr_t)result;
   column = tileColumn;
-  if ( row < 0 || row >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) || column < 0 || column >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+  if ( row < 0 || row >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) || column < 0 || column >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     return result;
 
   previous_render_device = g_RenderDevice;
@@ -138,22 +138,22 @@ void * MiniMap_DrawTileCell(void *result, signed int tileColumn)
   }
   if ( (g_MiniMapDrawMask_511FF0 & 2) != 0 )
   {
-    tile_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
+    tile_index = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(row, column));
     if ( tile_index <= 0x1F4u
-      && (unsigned int)*(__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * tile_index + 6) <= 0x28 )
+      && (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * tile_index + 6) <= 0x28 )
     {
       stack_record = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * tile_index;
-      if ( !*(_BYTE *)(stack_record + 720) )
-        color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(stack_record + 4)];
+      if ( !*(_BYTE *)(uintptr_t)(stack_record + 720) )
+        color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(uintptr_t)(stack_record + 4)];
     }
   }
   if ( (g_MiniMapDrawMask_511FF0 & 4) != 0 )
   {
-    tile_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
+    tile_index = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(row, column));
     if ( tile_index >= 0x8000 && tile_index != 0xFFFF )
-      color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 2)];
+      color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - TILE_OCCUPANT_BUILDING_INDEX_BASE) + 2)];
   }
-  if ( !Map_IsTileVisibleToPlayer(row, column, *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET)) )
+  if ( !Map_IsTileVisibleToPlayer(row, column, *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET)) )
     color = 1;
 
   surface = (_DWORD *)(uintptr_t)(unsigned int)g_MiniMapSurface_52334C;
@@ -189,7 +189,7 @@ signed int  Map_GetTileSurfaceClassOrUnexplored(int tileX, signed int tileY)
   unsigned __int16 *terrainRecord; // eax
   int surfaceClass; // edi
 
-  terrainRecord = (unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY);
+  terrainRecord = (unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY);
   if ( terrainRecord[2] == 0xFFFF )
     surfaceClass = (unsigned __int8)g_MiniMapTileColorTableTheme0[*terrainRecord];
   else
@@ -217,7 +217,7 @@ int MiniMap_UpdateViewportFromCursor(void)
   int trace_minimap_verbose;
   int trace_cursor_on_minimap;
 
-  result = DD_IsFlipping((int)g_RenderState);
+  result = DD_IsFlipping((int)(intptr_t)g_RenderState);
   allow_scripted_update = !result && getenv("CLASH95_ALLOW_MINIMAP_UPDATE_OFF_FLIP");
   if ( result || allow_scripted_update )
   {
@@ -257,29 +257,29 @@ int MiniMap_UpdateViewportFromCursor(void)
           g_SelectedUnitIndex,
           tileX,
           result,
-          *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET));
+          *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET));
       }
       if ( tileX >= 0
         && result >= 0
-        && (tileX != *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) || result != *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
-        && result <= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+        && (tileX != *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) || result != *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET))
+        && result <= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
-        maxViewLeft = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 9;
+        maxViewLeft = *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) - 9;
         if ( tileX <= maxViewLeft )
-          *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = tileX;
+          *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = tileX;
         else
-          *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = maxViewLeft;
-        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = result;
-        maxViewTop = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7;
-        if ( maxViewTop < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) )
-          *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = maxViewTop;
+          *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = maxViewLeft;
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = result;
+        maxViewTop = *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7;
+        if ( maxViewTop < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) )
+          *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = maxViewTop;
         if ( trace_minimap )
         {
           Diagnostics_TraceWorldMapActionEvent(
             "minimap_update",
             g_SelectedUnitIndex,
-            *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET),
-            *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET),
+            *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET),
+            *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET),
             is_flipping);
         }
         return WorldMap_RedrawViewport(1);
@@ -528,13 +528,13 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   panelSpriteWidth = sprite3Width;
   LOWORD(sprite4Width) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
   surfaceHeight = panelSpriteWidth + sprite4Width + 1;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, panelSpriteWidth, a2);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, panelSpriteWidth, a2);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, surfaceWidth, surfaceHeight);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, surfaceWidth, surfaceHeight);
   menuTop = menuPtr[1];
   menuSurface = Surface;
   Render_FillRect(
-    (_DWORD *)g_WorldMapTargetSurface,
+    (_DWORD *)(uintptr_t)g_WorldMapTargetSurface,
     Surface,
     (unsigned __int16)menuPtr[1],
     (unsigned __int16)*menuPtr,
@@ -542,10 +542,10 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     surfaceHeight + menuTop - 1,
     0,
     0);
-  g_RenderDevice = (_UNKNOWN *)g_WorldMapTargetSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_WorldMapTargetSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_MapPanelSpriteSet, 3);
   deviceVTable = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(deviceVTable + 52))(
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceVTable + 52))(
     (unsigned __int16)textBaseY,
     SpriteForChar,
     -1,
@@ -558,9 +558,9 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   v12 = *((_DWORD *)g_RenderDevice + 46);
   textBaseY += 25;
   v57 = (unsigned __int16)(textBaseY + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u));
-  LOWORD(v13) = (_WORD)menuLeft + DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
+  LOWORD(v13) = (_WORD)(intptr_t)menuLeft + DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
   measureIndex = 0;
-  (*(void (__fastcall **)(int, _DWORD, int, _DWORD))(v12 + 28))(v13, (unsigned __int16)menuLeft, v57, 0);
+  (*(void (__fastcall **)(int, _DWORD, int, _DWORD))(uintptr_t)(v12 + 28))(v13, (unsigned __int16)(intptr_t)menuLeft, v57, 0);
   measureEntryPtr = menuPtr;
   Render_ReleaseSurface(19, deviceVTable);
   centerOffset = v16;
@@ -583,16 +583,16 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     if ( *(_DWORD *)(drawEntryPtr + 13) )
     {
       colorActive = 0xFFFFFF;
-      colorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorActive);
+      colorIndex = Render_ApplyColorTripletBytes((int)(intptr_t)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorActive);
     }
     else
     {
       colorInactive = 10395294;
-      colorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorInactive);
+      colorIndex = Render_ApplyColorTripletBytes((int)(intptr_t)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorInactive);
     }
     TextSprite_SetStyleFlag(colorIndex);
     TextSprite_DrawStringWithOrientation(
-      (unsigned __int16)textX,
+      (unsigned __int16)(intptr_t)textX,
       (unsigned __int16)textY,
       0,
       *(unsigned __int8 **)&drawEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
@@ -601,7 +601,7 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     textY += 22;
   }
   DLX_GetSpriteForChar(g_MapPanelSpriteSet, 4);
-  (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     -1,
     -1,
     -1,
@@ -613,13 +613,13 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
   Render_Pump();
   menuY = v19[1];
   menuX = *v19;
-  v22 = (int)menuPtr;
-  LOWORD(v22) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + *(_WORD *)(v22 + 2);
+  v22 = (int)(intptr_t)menuPtr;
+  LOWORD(v22) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + *(_WORD *)(uintptr_t)(v22 + 2);
   menuBottomY = v22 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
   SpriteHeight = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
   v21 = centerOffset;
   Render_BlitSurfaceRect(
-    (_DWORD *)g_WorldMapTargetSurface,
+    (_DWORD *)(uintptr_t)g_WorldMapTargetSurface,
     0,
     (unsigned __int16)menuPtr[1],
     (unsigned __int16)*menuPtr,
@@ -628,13 +628,13 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     menuX,
     menuY);
   LOBYTE(v22) = -1;
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   exitFlag = 0;
   hoveredIndex = -1;
   hoverTextX = (char *)menuLeft + v21;
-  while ( DD_IsFlipping((int)g_RenderState) && !exitFlag )
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) && !exitFlag )
   {
-    DD_Pump((int)g_RenderState, v22);
+    DD_Pump((int)(intptr_t)g_RenderState, v22);
     mouseY = g_MouseCursorRawY >> g_CursorCoordShift;
     mouseX = g_MouseCursorRawX >> g_CursorCoordShift;
     for ( i = 0; i < WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT; ++i )
@@ -654,7 +654,7 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
     if ( *((_DWORD *)menuPtr + 1) )
     {
       submenuHitIndex = UI_MenuHitTestEntry(*((_WORD **)menuPtr + 1));
-      if ( submenuHitIndex != -1 && menuPtr != *(_WORD **)(*((_DWORD *)menuPtr + 1) + 40 * submenuHitIndex + 30) )
+      if ( submenuHitIndex != -1 && menuPtr != *(_WORD **)(uintptr_t)(*((_DWORD *)menuPtr + 1) + 40 * submenuHitIndex + 30) )
         break;
     }
     prevHoveredIndex = hoveredIndex;
@@ -674,19 +674,19 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
           colorPrevPtr = &colorPrevInactive;
           colorPrevInactive = 10395294;
         }
-        prevColorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)colorPrevPtr);
+        prevColorIndex = Render_ApplyColorTripletBytes((int)(intptr_t)&g_RenderEnvPaletteContext, (unsigned __int8 *)colorPrevPtr);
         v44 = hoveredIndex;
         TextSprite_SetStyleFlag(prevColorIndex);
         prevEntryPtr = &menuPtr[20 * v44];
-        LOWORD(v44) = (_WORD)hoverTextX;
+        LOWORD(v44) = (_WORD)(intptr_t)hoverTextX;
         v22 = *(_DWORD *)&prevEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5];
         entryY = 22 * hoveredIndex + textBaseY;
         prevHoveredIndex = (unsigned __int16)entryY;
-        TextSprite_DrawStringWithOrientation((unsigned __int16)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)v22);
+        TextSprite_DrawStringWithOrientation((unsigned __int16)(intptr_t)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)(uintptr_t)v22);
         v55 = entryY + 22;
         prevTextWidth = Render_LoadResourceSprite_v3(*(_BYTE **)&prevEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
         LOBYTE(v22) = v44;
-        Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, prevHoveredIndex, (unsigned __int16)v44, v44 + prevTextWidth, v55, v44, prevHoveredIndex);
+        Render_FillRect((_DWORD *)(uintptr_t)g_WorldMapTargetSurface, 0, prevHoveredIndex, (unsigned __int16)v44, v44 + prevTextWidth, v55, v44, prevHoveredIndex);
       }
       if ( hitIndex == -1 )
         goto LABEL_52;
@@ -695,17 +695,17 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
       if ( !entryEnabled )
         goto LABEL_52;
       colorHighlight = 3342130;
-      highlightColorIndex = Render_ApplyColorTripletBytes((int)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorHighlight);
+      highlightColorIndex = Render_ApplyColorTripletBytes((int)(intptr_t)&g_RenderEnvPaletteContext, (unsigned __int8 *)&colorHighlight);
       TextSprite_SetStyleFlag(highlightColorIndex);
       v22 = *(_DWORD *)&hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5];
-      hitTextX = (unsigned __int16)hoverTextX;
+      hitTextX = (unsigned __int16)(intptr_t)hoverTextX;
       entryY = 22 * hitIndex + textBaseY;
       hitEntryY = (unsigned __int16)entryY;
-      TextSprite_DrawStringWithOrientation((unsigned __int16)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)v22);
+      TextSprite_DrawStringWithOrientation((unsigned __int16)(intptr_t)hoverTextX, (unsigned __int16)entryY, 0, (unsigned __int8 *)(uintptr_t)v22);
       v56 = entryY + 22;
       hitTextWidth = Render_LoadResourceSprite_v3(*(_BYTE **)&hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex + 5]);
       LOBYTE(v22) = hitTextX;
-      Render_FillRect((_DWORD *)g_WorldMapTargetSurface, 0, hitEntryY, hitTextX, hitTextX + hitTextWidth, v56, hitTextX, hitEntryY);
+      Render_FillRect((_DWORD *)(uintptr_t)g_WorldMapTargetSurface, 0, hitEntryY, hitTextX, hitTextX + hitTextWidth, v56, hitTextX, hitEntryY);
       hitEntryLangBase = &hitEntryPtr[2 * (unsigned __int8)g_LanguageIndex];
       prevHoveredIndex = *(_DWORD *)(hitEntryLangBase + 19);
       if ( prevHoveredIndex )
@@ -714,7 +714,7 @@ int  UI_RunMenu(_WORD *menu, DWORD a2)
 LABEL_52:
         Tooltip_RestoreBackdrop();
       hoveredIndex = hitIndex;
-      Render_Present((int)g_RenderState);
+      Render_Present((int)(intptr_t)g_RenderState);
       if ( hitIndex != -1 )
       {
         hitEntry = &menuPtr[20 * hitIndex];
@@ -738,10 +738,10 @@ LABEL_52:
     v59 = *menuPtr;
     v29 = menuPtr;
     LOWORD(v29) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + v29[1];
-    v54 = (_WORD)v29 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
+    v54 = (_WORD)(intptr_t)v29 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u);
     v30 = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
     Render_FillRect(
-      (_DWORD *)g_PrimaryRenderSurface,
+      (_DWORD *)(uintptr_t)g_PrimaryRenderSurface,
       0,
       (unsigned __int16)menuPtr[1],
       (unsigned __int16)*menuPtr,
@@ -751,23 +751,23 @@ LABEL_52:
       v62);
   }
   Render_BlitSurfaceRect(menuSurface, 0, 0, 0, surfaceWidth - 1, surfaceHeight - 1, *menuPtr, menuPtr[1]);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( g_WorldMapTargetSurface != g_PrimaryRenderSurface )
   {
     renderDeviceMethods = *((_DWORD *)g_RenderDevice + 46);
     v32 = menuPtr;
     LOWORD(v32) = DLX_GetSpriteWidth(g_MapPanelSpriteSet, 3u) + v32[1];
-    v60 = (unsigned __int16)((_WORD)v32 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u));
+    v60 = (unsigned __int16)((_WORD)(intptr_t)v32 + DLX_GetSpriteWidth(g_MapPanelSpriteSet, 4u));
     v33 = DLX_GetSpriteHeight(g_MapPanelSpriteSet, 3u);
-    (*(void (__fastcall **)(_DWORD, _DWORD, int, _DWORD))(renderDeviceMethods + 28))(
+    (*(void (__fastcall **)(_DWORD, _DWORD, int, _DWORD))(uintptr_t)(renderDeviceMethods + 28))(
       (unsigned __int16)(*menuPtr + v33),
       (unsigned __int16)*menuPtr,
       v60,
       0);
   }
-  Render_BlitSurfaceRect(menuSurface, (_DWORD *)g_WorldMapTargetSurface, 0, 0, surfaceWidth - 1, surfaceHeight - 1, *menuPtr, menuPtr[1]);
+  Render_BlitSurfaceRect(menuSurface, (_DWORD *)(uintptr_t)g_WorldMapTargetSurface, 0, 0, surfaceWidth - 1, surfaceHeight - 1, *menuPtr, menuPtr[1]);
   if ( menuSurface )
-    (*(void (**)(void))menuSurface[46])();
+    (*(void (**)(void))(uintptr_t)menuSurface[46])();
   if ( hoveredIndex != -1 && (resultEntryPtr = &menuPtr[20 * hoveredIndex], *(_DWORD *)(resultEntryPtr + 13)) )
     return *(_DWORD *)(resultEntryPtr + 17);
   else
@@ -818,21 +818,21 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
     || g_MouseCursorRawY >> g_CursorCoordShift < 0
     || g_MouseCursorRawX >> g_CursorCoordShift > 640
     || g_MouseCursorRawY >> g_CursorCoordShift > 5
-    || DD_IsFlipping((int)g_RenderState) )
+    || DD_IsFlipping((int)(intptr_t)g_RenderState) )
   {
     return 1;
   }
   Diagnostics_TraceWorldMapActionEvent("top_menu_enter", g_SelectedUnitIndex, g_MouseCursorRawX >> g_CursorCoordShift, g_MouseCursorRawY >> g_CursorCoordShift, 0);
-  Debug_Log(0, a1, a2, (int)aMenuDraw);
+  Debug_Log(0, a1, a2, (int)(intptr_t)aMenuDraw);
   Render_Pump();
   previous_screen_handle = g_ActiveCursorDescriptorPtr;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
-  Render_Present((int)g_RenderState);
-  surface = (_DWORD *)Mem_Alloc(188, 0, 0, a2);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_FillRect(0, (_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
+  Render_Present((int)(intptr_t)g_RenderState);
+  surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, 0, a2);
   if ( surface )
-    surface = Render_CreateSurface((int)surface, SCREEN_WIDTH, 400);
-  g_WorldMapTargetSurface = (int)surface;
+    surface = Render_CreateSurface((int)(intptr_t)surface, SCREEN_WIDTH, 400);
+  g_WorldMapTargetSurface = (int)(intptr_t)surface;
   g_RenderDevice = surface;
   RenderSurface_InvokeSlot56(surface);
   menu_sprite = DLX_GetSpriteForChar(g_MapPanelSpriteSet, (unsigned __int8)g_LanguageIndex % 3);
@@ -847,7 +847,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   else
     UI_DrawTextFmt(0, 570, 11, 0, 2, (const char *)aD, GAME_TURN_COUNTER);
   Render_Pump();
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   should_hide_menu = 0;
   menu_callback = 0;
   while ( g_MouseCursorRawX >> g_CursorCoordShift >= 0
@@ -856,7 +856,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
        && g_MouseCursorRawY >> g_CursorCoordShift <= 25 )
   {
     WorldMap_RunInputScriptStep();
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     for ( i = 0; i < WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT; ++i )
     {
       top_menu_record = &g_WorldMapTopMenuHitRecords[i];
@@ -867,15 +867,15 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
         if ( mouse_y >= (unsigned __int16)top_menu_record->top
           && mouse_x <= (unsigned __int16)top_menu_record->right
           && mouse_y <= (unsigned __int16)top_menu_record->bottom
-          && DD_IsFlipping((int)g_RenderState) )
+          && DD_IsFlipping((int)(intptr_t)g_RenderState) )
         {
-          menu_callback = (void (*)(void))UI_RunMenu(
+          menu_callback = (void (*)(void))(uintptr_t)UI_RunMenu(
                                          top_menu_record->menu,
                                          (unsigned __int16)top_menu_record->bottom);
         }
       }
     }
-    if ( DD_IsFlipping((int)g_RenderState) )
+    if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
     {
       close_button_left = g_LanguageIndex == 2 ? 430 : 470;
       if ( g_MouseCursorRawX >> g_CursorCoordShift >= close_button_left
@@ -883,30 +883,30 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
         && g_MouseCursorRawX >> g_CursorCoordShift <= 590
         && g_MouseCursorRawY >> g_CursorCoordShift <= 25 )
       {
-        Render_Begin((int)g_RenderState, 0);
+        Render_Begin((int)(intptr_t)g_RenderState, 0);
         should_hide_menu = 1;
         Diagnostics_TraceWorldMapActionEvent("top_menu_close", g_SelectedUnitIndex, close_button_left, g_MouseCursorRawX >> g_CursorCoordShift, g_MouseCursorRawY >> g_CursorCoordShift);
         break;
       }
     }
   }
-  surface = (_DWORD *)g_WorldMapTargetSurface;
+  surface = (_DWORD *)(uintptr_t)g_WorldMapTargetSurface;
   if ( surface )
     RenderSurface_InvokeSlot0(surface, 2);
   Render_Pump();
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, previous_screen_handle);
-  Render_Present((int)g_RenderState);
-  previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, 0x18Fu, 0, 0);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, previous_screen_handle);
+  Render_Present((int)(intptr_t)g_RenderState);
+  previous_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   previous_render_hook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)Render_DefaultRH, 0, a2, (int)aSetrhS08x_2, aStdrh_3, Render_DefaultRH);
+  Debug_Log((int)(intptr_t)Render_DefaultRH, 0, a2, (int)(intptr_t)aSetrhS08x_2, aStdrh_3, Render_DefaultRH);
   if ( menu_callback )
     menu_callback();
-  Debug_Log((int)g_RenderHook, 0, a2, (int)aUnsetrh08x_2, g_RenderHook);
+  Debug_Log((int)(intptr_t)g_RenderHook, 0, a2, (int)(intptr_t)aUnsetrh08x_2, g_RenderHook);
   g_RenderHook = previous_render_hook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
-  Debug_Log(0, 0, a2, (int)aMenuHide);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previous_resource_handle);
+  Debug_Log(0, 0, a2, (int)(intptr_t)aMenuHide);
   Diagnostics_TraceWorldMapActionEvent("top_menu_return", g_SelectedUnitIndex, should_hide_menu, menu_callback != 0, 0);
   return !should_hide_menu;
 }
@@ -933,11 +933,11 @@ _DWORD * WorldMapTopMenu_LoadSpriteSet(void)
 {
   _DWORD *result; // eax
 
-  result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, "menu.s32");
-    g_MapPanelSpriteSet = (int)result;
+    g_MapPanelSpriteSet = (int)(intptr_t)result;
   }
   else
   {
@@ -961,7 +961,7 @@ int  UI_MenuEntry_Enable(int menuBase, int entryIndex)
   int result; // eax
 
   result = entryIndex;
-  *(_DWORD *)(menuBase + 40 * entryIndex + 26) = 1;
+  *(_DWORD *)(uintptr_t)(menuBase + 40 * entryIndex + 26) = 1;
   return result;
 }
 
@@ -971,7 +971,7 @@ int  UI_MenuEntry_Disable(int menuBase, int entryIndex)
   int result; // eax
 
   result = entryIndex;
-  *(_DWORD *)(menuBase + 40 * entryIndex + 26) = 0;
+  *(_DWORD *)(uintptr_t)(menuBase + 40 * entryIndex + 26) = 0;
   return result;
 }
 
@@ -991,8 +991,8 @@ void  Map_RevealAllTilesForPlayer(int playerIndex)
     for ( i = 0; i < 100; ++i )
     {
       byteAddr = playerBase + gameData + rowOffset + ((i - (__CFSHL__(i >> 31, 3) + 8 * (i >> 31))) >> 3);
-      maskedByte = (1 << (i & 7)) | *(_BYTE *)(byteAddr + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_REVEALED_TILES_OFFSET);
-      *(_BYTE *)(byteAddr + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_REVEALED_TILES_OFFSET) = maskedByte;
+      maskedByte = (1 << (i & 7)) | *(_BYTE *)(uintptr_t)(byteAddr + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_REVEALED_TILES_OFFSET);
+      *(_BYTE *)(uintptr_t)(byteAddr + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_REVEALED_TILES_OFFSET) = maskedByte;
     }
     rowOffset += 13;
   }
@@ -1017,15 +1017,15 @@ signed int  Map_RevealTileWithPropagation(int tileX, signed int tileY, int playe
 
   if ( tileX < 0
     || tileY < 0
-    || tileX >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
-    || tileY >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+    || tileX >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
+    || tileY >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
     || Map_IsTileVisibleToPlayer(tileX, tileY, playerIndex) )
   {
     return 0;
   }
   revealByteAddr = PLAYER_DATA(playerIndex) + PLAYER_REVEALED_TILE_ROW_BYTES * tileX + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3);
-  *(_BYTE *)(revealByteAddr + PLAYER_REVEALED_TILES_OFFSET) |= 1 << (tileY & 7);
-  MiniMap_DrawTileCell((void *)tileX, tileY);
+  *(_BYTE *)(uintptr_t)(revealByteAddr + PLAYER_REVEALED_TILES_OFFSET) |= 1 << (tileY & 7);
+  MiniMap_DrawTileCell((void *)(uintptr_t)tileX, tileY);
   if ( Map_IsTileVisibleToPlayer(tileX - 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX - 1, tileY, playerIndex) )
     Map_RevealTileWithPropagation(leftTileX, tileY, playerIndex);
   if ( Map_IsTileVisibleToPlayer(tileX + 2, tileY, playerIndex) && !Map_IsTileVisibleToPlayer(tileX + 1, tileY, playerIndex) )
@@ -1063,9 +1063,9 @@ BOOL  Map_IsTileVisibleToPlayer(int tileX, signed int tileY, int playerIndex)
 {
   return tileX >= 0
       && tileY >= 0
-      && tileX < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
-      && tileY < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
-      && ((1 << (tileY & 7)) & *(unsigned __int8 *)(PLAYER_DATA(playerIndex)
+      && tileX < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
+      && tileY < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
+      && ((1 << (tileY & 7)) & *(unsigned __int8 *)(uintptr_t)(PLAYER_DATA(playerIndex)
                                                + PLAYER_REVEALED_TILE_ROW_BYTES * tileX
                                                + ((tileY - (__CFSHL__(tileY >> 31, 3) + 8 * (tileY >> 31))) >> 3)
                                                + PLAYER_REVEALED_TILES_OFFSET)) != 0;
@@ -1141,18 +1141,18 @@ signed int  UnitStack_IsIndexOnMap(int stackIndex)
   rowBase = 0;
   tileX = 0;
 LABEL_2:
-  if ( tileX >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+  if ( tileX >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
     return 0;
   tileY = 0;
   for ( i = 0; ; i += 2 )
   {
-    if ( tileY >= *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) )
+    if ( tileY >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     {
       rowBase += 200;
       ++tileX;
       goto LABEL_2;
     }
-    if ( *(unsigned __int16 *)(rowBase + gameData + i + TILE_MAP_OFFSET) == stackIndex )
+    if ( *(unsigned __int16 *)(uintptr_t)(rowBase + gameData + i + TILE_MAP_OFFSET) == stackIndex )
       break;
     ++tileY;
   }
@@ -1169,10 +1169,10 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   char stateBitsByte; // dl
   char flagsByte; // ch
 
-  *(_WORD *)(result + 4) = 0;
-  *(_WORD *)(result + 6) = 0;
-  *(_BYTE *)(result + 3) = 0;
-  *(_DWORD *)(result + 23) = 0;
+  *(_WORD *)(uintptr_t)(result + 4) = 0;
+  *(_WORD *)(uintptr_t)(result + 6) = 0;
+  *(_BYTE *)(uintptr_t)(result + 3) = 0;
+  *(_DWORD *)(uintptr_t)(result + 23) = 0;
   UNIT_SLOT_TYPE(result) = unitType;
   UNIT_SLOT_OWNER(result) = ownerIndex;
   if ( unitType != -1 )
@@ -1189,11 +1189,11 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   UNIT_SLOT_FATIGUE(result) = 0;
   stanceBits = UNIT_SLOT_STANCE_BITS(result);
   UNIT_SLOT_AUX_STATE(result) = 0;
-  auxFlagsByte = *(_BYTE *)(result + 17);
+  auxFlagsByte = *(_BYTE *)(uintptr_t)(result + 17);
   UNIT_SLOT_STANCE_BITS(result) = stanceBits & 0x80;
-  stateBitsByte = *(_BYTE *)(result + 22);
-  *(_BYTE *)(result + 17) = auxFlagsByte & 0xF8;
-  flagsByte = *(_BYTE *)(result + 13);
+  stateBitsByte = *(_BYTE *)(uintptr_t)(result + 22);
+  *(_BYTE *)(uintptr_t)(result + 17) = auxFlagsByte & 0xF8;
+  flagsByte = *(_BYTE *)(uintptr_t)(result + 13);
   UNIT_SLOT_STATE_BITS(result) = stateBitsByte & 0xFE;
   UNIT_SLOT_FLAGS(result) = flagsByte & 0xF0;
   return result;
@@ -1207,8 +1207,8 @@ char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex)
 
   UnitSlot_InitFromType(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET, unitType, ownerIndex);
   for ( slotIndex = 1; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
-    *(_WORD *)UNIT_STACK_SLOT(stackPtr, slotIndex) = -1;
-  *(_DWORD *)UNIT_STACK_PATH_BUFFER(stackPtr) = 0;
+    *(_WORD *)(uintptr_t)UNIT_STACK_SLOT(stackPtr, slotIndex) = -1;
+  *(_DWORD *)(uintptr_t)UNIT_STACK_PATH_BUFFER(stackPtr) = 0;
   UNIT_STACK_OWNER_INDEX(stackPtr) = ownerIndex;
   return ownerIndex;
 }

@@ -58,16 +58,16 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
   bsaveIndex = 0;
   for ( i = 1; functionList; ++bsaveIndex )
   {
-    *(_WORD *)(functionList + 25) = bsaveIndex;
-    functionList = *(_DWORD *)(functionList + 27);
+    *(_WORD *)(uintptr_t)(functionList + 25) = bsaveIndex;
+    functionList = *(_DWORD *)(uintptr_t)(functionList + 27);
   }
   result = Rules_OpenConstructCodeFile(fileName, 2, 1, 1u);
   if ( result )
   {
-    Output_WriteFormatted(result, result, result, (int)asc_507E94, (char)fileName);
-    Output_WriteFormatted(v7, v6, v6, (int)asc_507DA4, v34);
-    Output_WriteFormatted(v9, v8, v8, (int)aFunctionListDe, v35);
-    Output_WriteFormatted(v11, v10, v10, (int)asc_507DF4, v36);
+    Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_507E94, (char)(intptr_t)fileName);
+    Output_WriteFormatted(v7, v6, v6, (int)(intptr_t)asc_507DA4, v34);
+    Output_WriteFormatted(v9, v8, v8, (int)(intptr_t)aFunctionListDe, v35);
+    Output_WriteFormatted(v11, v10, v10, (int)(intptr_t)asc_507DF4, v36);
     functionListHead = Rules_GetFunctionDefinitionListHead();
     entryCount = v13;
     fctnPtr = functionListHead;
@@ -75,30 +75,30 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
     {
       if ( i )
       {
-        Output_WriteFormatted(v14, g_ConstructsToCImageId, v14, (int)aStructFunction, g_ConstructsToCImageId);
-        Output_WriteFormatted(v17, v16, g_ClipsCodeHeaderFile, (int)aExternStructFu, g_ConstructsToCImageId);
+        Output_WriteFormatted(v14, g_ConstructsToCImageId, v14, (int)(intptr_t)aStructFunction, g_ConstructsToCImageId);
+        Output_WriteFormatted(v17, v16, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternStructFu, g_ConstructsToCImageId);
         i = 0;
       }
-      Output_WriteFormatted(v14, v13, v14, (int)asc_507F14, (char)v37);
-      Compiler_WriteSymbolReference(v18, *(_DWORD *)fctnPtr, v18);
-      Output_WriteFormatted(v20, v19, v20, (int)aS_4, *(_DWORD *)(fctnPtr + 4));
-      Output_WriteFormatted(v22, v21, v22, (int)aC, *(_BYTE *)(fctnPtr + 8));
-      Output_WriteFormatted(v23, *(_DWORD *)(fctnPtr + 4), v23, (int)aPtifS, *(_DWORD *)(fctnPtr + 4));
-      Output_WriteFormatted(v25, v24, v25, (int)aNull_0, v38);
-      if ( *(_DWORD *)(fctnPtr + 17) )
-        Output_WriteFormatted(v27, v26, v27, (int)aS_5, *(_DWORD *)(fctnPtr + 17));
+      Output_WriteFormatted(v14, v13, v14, (int)(intptr_t)asc_507F14, (char)(intptr_t)v37);
+      Compiler_WriteSymbolReference(v18, *(_DWORD *)(uintptr_t)fctnPtr, v18);
+      Output_WriteFormatted(v20, v19, v20, (int)(intptr_t)aS_4, *(_DWORD *)(uintptr_t)(fctnPtr + 4));
+      Output_WriteFormatted(v22, v21, v22, (int)(intptr_t)aC, *(_BYTE *)(uintptr_t)(fctnPtr + 8));
+      Output_WriteFormatted(v23, *(_DWORD *)(uintptr_t)(fctnPtr + 4), v23, (int)(intptr_t)aPtifS, *(_DWORD *)(uintptr_t)(fctnPtr + 4));
+      Output_WriteFormatted(v25, v24, v25, (int)(intptr_t)aNull_0, v38);
+      if ( *(_DWORD *)(uintptr_t)(fctnPtr + 17) )
+        Output_WriteFormatted(v27, v26, v27, (int)(intptr_t)aS_5, *(_DWORD *)(uintptr_t)(fctnPtr + 17));
       else
-        Output_WriteFormatted(v27, v26, v27, (int)aNull_0, v39);
-      Output_WriteFormatted(v29, v28, v29, (int)a000, v39);
-      Rules_WriteFunctionRecordRefToCode(v30, *(_DWORD *)(fctnPtr + 27), v30);
-      fctnPtr = *(_DWORD *)(fctnPtr + 27);
+        Output_WriteFormatted(v27, v26, v27, (int)(intptr_t)aNull_0, v39);
+      Output_WriteFormatted(v29, v28, v29, (int)(intptr_t)a000, v39);
+      Rules_WriteFunctionRecordRefToCode(v30, *(_DWORD *)(uintptr_t)(fctnPtr + 27), v30);
+      fctnPtr = *(_DWORD *)(uintptr_t)(fctnPtr + 27);
       if ( (__int16)++entryCount <= g_ClipsCodeMaxIndicesPerArray && fctnPtr )
       {
-        Output_WriteFormatted(v31, g_ClipsCodeMaxIndicesPerArray, v31, (int)asc_507F54, v40);
+        Output_WriteFormatted(v31, g_ClipsCodeMaxIndicesPerArray, v31, (int)(intptr_t)asc_507F54, v40);
       }
       else
       {
-        Output_WriteFormatted(v31, g_ClipsCodeMaxIndicesPerArray, v31, (int)asc_507F4C, v40);
+        Output_WriteFormatted(v31, g_ClipsCodeMaxIndicesPerArray, v31, (int)(intptr_t)asc_507F4C, v40);
         fclose_(v32);
         ++version;
         entryCount = 1;
@@ -159,9 +159,9 @@ int  Rules_WriteFunctionRecordRefToCode(int theFile, int fctnPtr, int a3)
   char v4; // [esp+0h] [ebp-8h]
 
   if ( fctnPtr )
-    return Output_WriteFormatted(*(__int16 *)(fctnPtr + 25), *(__int16 *)(fctnPtr + 25) % g_ClipsCodeMaxIndicesPerArray, theFile, (int)aPD_DD, g_ConstructsToCImageId);
+    return Output_WriteFormatted(*(__int16 *)(uintptr_t)(fctnPtr + 25), *(__int16 *)(uintptr_t)(fctnPtr + 25) % g_ClipsCodeMaxIndicesPerArray, theFile, (int)(intptr_t)aPD_DD, g_ConstructsToCImageId);
   else
-    return Output_WriteFormatted(a3, 0, theFile, (int)aNull_1, v4);
+    return Output_WriteFormatted(a3, 0, theFile, (int)(intptr_t)aNull_1, v4);
 }
 // 4A6E5E: variable 'v4' is possibly undefined
 // 51ACF0: using guessed type int dword_51ACF0;
@@ -256,49 +256,49 @@ signed int  Rules_WriteConstructsToCDriverFile(const char *fileName, char a2, DW
   fp = v4;
   if ( v4 )
   {
-    Output_WriteFormatted(v5, v4, v4, (int)aIncludeS_h, v5);
-    Output_WriteFormatted(v8, v7, v7, (int)asc_507D2C, a2);
-    Output_WriteFormatted(v10, v9, v9, (int)aIncludeUtility, v64);
-    Output_WriteFormatted(v12, v11, v11, (int)aIncludeGenerat, v65);
-    Output_WriteFormatted(v14, v13, v13, (int)aIncludeExpress, v66);
-    Output_WriteFormatted(v16, v15, v15, (int)aIncludeExtnfun, v67);
-    Output_WriteFormatted(v18, v17, v17, (int)aIncludeObjrtmc, v68);
-    Output_WriteFormatted(v20, v19, v19, (int)aIncludeRulebld, v69);
-    Output_WriteFormatted(g_ClipsCodeHeaderFile, v21, g_ClipsCodeHeaderFile, (int)aIfAnsi_compile, v70);
-    Output_WriteFormatted(v23, v22, g_ClipsCodeHeaderFile, (int)aVoidInitcimage, g_ConstructsToCImageId);
-    Output_WriteFormatted(v25, v24, g_ClipsCodeHeaderFile, (int)aElse, v71);
-    Output_WriteFormatted(g_ClipsCodeHeaderFile, v26, g_ClipsCodeHeaderFile, (int)aVoidInitcima_0, g_ConstructsToCImageId);
-    Output_WriteFormatted(v28, v27, g_ClipsCodeHeaderFile, (int)aEndif_0, v72);
-    Output_WriteFormatted(v30, v29, v29, (int)asc_507D2C, v73);
-    Output_WriteFormatted(v32, v31, v31, (int)asc_508048, v74);
-    Output_WriteFormatted(v34, v33, v33, (int)aConstructImage, v75);
-    Output_WriteFormatted(v36, v35, v35, (int)asc_508048, v76);
-    Output_WriteFormatted(v38, v37, v37, (int)aVoidInitcima_1, g_ConstructsToCImageId);
-    Output_WriteFormatted(v40, v39, v39, (int)asc_5080C0, v77);
-    Output_WriteFormatted(v42, v41, v41, (int)aClear_0, v78);
-    Output_WriteFormatted(v44, v43, v43, (int)aPeriodiccleanu, v79);
-    Output_WriteFormatted(v46, v45, v45, (int)aSetsymboltable, g_ConstructsToCImageId);
-    Output_WriteFormatted(v48, v47, v47, (int)aSetfloattableF, g_ConstructsToCImageId);
-    Output_WriteFormatted(g_ConstructsToCImageId, v49, v49, (int)aSetintegertabl, g_ConstructsToCImageId);
-    Output_WriteFormatted(v51, v50, v50, (int)aSetbitmaptable, g_ConstructsToCImageId);
-    Output_WriteFormatted(v53, v52, v52, (int)aRefreshspecial, v80);
-    Output_WriteFormatted(v55, v54, v54, (int)aInstallfunctio, g_ConstructsToCImageId);
-    Output_WriteFormatted(v57, v56, v56, (int)aInitexpression, v81);
-    for ( i = g_CodeGeneratorItemList; i; i = *(_DWORD *)(i + 24) )
+    Output_WriteFormatted(v5, v4, v4, (int)(intptr_t)aIncludeS_h, v5);
+    Output_WriteFormatted(v8, v7, v7, (int)(intptr_t)asc_507D2C, a2);
+    Output_WriteFormatted(v10, v9, v9, (int)(intptr_t)aIncludeUtility, v64);
+    Output_WriteFormatted(v12, v11, v11, (int)(intptr_t)aIncludeGenerat, v65);
+    Output_WriteFormatted(v14, v13, v13, (int)(intptr_t)aIncludeExpress, v66);
+    Output_WriteFormatted(v16, v15, v15, (int)(intptr_t)aIncludeExtnfun, v67);
+    Output_WriteFormatted(v18, v17, v17, (int)(intptr_t)aIncludeObjrtmc, v68);
+    Output_WriteFormatted(v20, v19, v19, (int)(intptr_t)aIncludeRulebld, v69);
+    Output_WriteFormatted(g_ClipsCodeHeaderFile, v21, g_ClipsCodeHeaderFile, (int)(intptr_t)aIfAnsi_compile, v70);
+    Output_WriteFormatted(v23, v22, g_ClipsCodeHeaderFile, (int)(intptr_t)aVoidInitcimage, g_ConstructsToCImageId);
+    Output_WriteFormatted(v25, v24, g_ClipsCodeHeaderFile, (int)(intptr_t)aElse, v71);
+    Output_WriteFormatted(g_ClipsCodeHeaderFile, v26, g_ClipsCodeHeaderFile, (int)(intptr_t)aVoidInitcima_0, g_ConstructsToCImageId);
+    Output_WriteFormatted(v28, v27, g_ClipsCodeHeaderFile, (int)(intptr_t)aEndif_0, v72);
+    Output_WriteFormatted(v30, v29, v29, (int)(intptr_t)asc_507D2C, v73);
+    Output_WriteFormatted(v32, v31, v31, (int)(intptr_t)asc_508048, v74);
+    Output_WriteFormatted(v34, v33, v33, (int)(intptr_t)aConstructImage, v75);
+    Output_WriteFormatted(v36, v35, v35, (int)(intptr_t)asc_508048, v76);
+    Output_WriteFormatted(v38, v37, v37, (int)(intptr_t)aVoidInitcima_1, g_ConstructsToCImageId);
+    Output_WriteFormatted(v40, v39, v39, (int)(intptr_t)asc_5080C0, v77);
+    Output_WriteFormatted(v42, v41, v41, (int)(intptr_t)aClear_0, v78);
+    Output_WriteFormatted(v44, v43, v43, (int)(intptr_t)aPeriodiccleanu, v79);
+    Output_WriteFormatted(v46, v45, v45, (int)(intptr_t)aSetsymboltable, g_ConstructsToCImageId);
+    Output_WriteFormatted(v48, v47, v47, (int)(intptr_t)aSetfloattableF, g_ConstructsToCImageId);
+    Output_WriteFormatted(g_ConstructsToCImageId, v49, v49, (int)(intptr_t)aSetintegertabl, g_ConstructsToCImageId);
+    Output_WriteFormatted(v51, v50, v50, (int)(intptr_t)aSetbitmaptable, g_ConstructsToCImageId);
+    Output_WriteFormatted(v53, v52, v52, (int)(intptr_t)aRefreshspecial, v80);
+    Output_WriteFormatted(v55, v54, v54, (int)(intptr_t)aInstallfunctio, g_ConstructsToCImageId);
+    Output_WriteFormatted(v57, v56, v56, (int)(intptr_t)aInitexpression, v81);
+    for ( i = g_CodeGeneratorItemList; i; i = *(_DWORD *)(uintptr_t)(i + 24) )
     {
-      if ( *(_DWORD *)(i + 8) )
+      if ( *(_DWORD *)(uintptr_t)(i + 8) )
       {
-        (*(void (__fastcall **)(int, int))(i + 8))(i, g_ConstructsToCImageId);
-        Output_WriteFormatted(v61, v60, fp, (int)asc_507D2C, v82);
+        (*(void (__fastcall **)(int, int))(uintptr_t)(i + 8))(i, g_ConstructsToCImageId);
+        Output_WriteFormatted(v61, v60, fp, (int)(intptr_t)asc_507D2C, v82);
       }
     }
-    Output_WriteFormatted(i, v58, fp, (int)asc_5081DC, v82);
+    Output_WriteFormatted(i, v58, fp, (int)(intptr_t)asc_5081DC, v82);
     fclose_(v62);
     return 1;
   }
   else
   {
-    Rules_OpenFileErrorMessage(v5, (int)fileNameBuffer);
+    Rules_OpenFileErrorMessage(v5, (int)(intptr_t)fileNameBuffer);
     return 0;
   }
 }
@@ -400,7 +400,7 @@ int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, 
   int v11; // ecx
   CHAR fileNameBuffer[84]; // [esp+0h] [ebp-54h] BYREF
 
-  v4 = (char)fileName;
+  v4 = (char)(intptr_t)fileName;
   sprintf_(fileNameBuffer, "%s%d_%d.c", fileName, fileID, version);
   if ( v5 )
     fileMode = aA_0;
@@ -412,14 +412,14 @@ int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, 
   {
     if ( !v8 )
     {
-      Output_WriteFormatted(0, v7, v7, (int)aIncludeS_h, v4);
-      Output_WriteFormatted(v11, v10, v10, (int)asc_507D2C, fileNameBuffer[0]);
+      Output_WriteFormatted(0, v7, v7, (int)(intptr_t)aIncludeS_h, v4);
+      Output_WriteFormatted(v11, v10, v10, (int)(intptr_t)asc_507D2C, fileNameBuffer[0]);
     }
     return fp;
   }
   else
   {
-    Rules_OpenFileErrorMessage(v8, (int)fileNameBuffer);
+    Rules_OpenFileErrorMessage(v8, (int)(intptr_t)fileNameBuffer);
     return 0;
   }
 }
@@ -441,10 +441,10 @@ signed int  Rules_WriteHashedExpressionsToCode(DWORD reopenOldFile)
   for ( i = 0; i != 2012; i += 4 )
   {
     result = g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(v5 + 12) )
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v5 + 12) )
     {
-      exprPtr = *(__int16 **)(j + 8);
-      *(_DWORD *)(j + 16) = g_ClipsCodeMaxIndicesPerArray * g_ClipsExpressionCodeFileVersion + g_ClipsConstructCodeEntryIndexInFile;
+      exprPtr = *(__int16 **)(uintptr_t)(j + 8);
+      *(_DWORD *)(uintptr_t)(j + 16) = g_ClipsCodeMaxIndicesPerArray * g_ClipsExpressionCodeFileVersion + g_ClipsConstructCodeEntryIndexInFile;
       result = Rules_ExpressionToCode(0, exprPtr, j, reopenOldFile);
     }
   }
@@ -463,9 +463,9 @@ int  Rules_WriteExpressionRefToCode(int theFile, __int16 *theExpression, int max
   char v9; // [esp+0h] [ebp-8h]
 
   if ( !theExpression )
-    return Output_WriteFormatted(maxIndices, 0, theFile, (int)aNull_1, v9);
+    return Output_WriteFormatted(maxIndices, 0, theFile, (int)(intptr_t)aNull_1, v9);
   exprID = AST_GetHashedNodeIndex(theExpression);
-  return Output_WriteFormatted(exprID, exprID % maxIndices, theFile, (int)aED_LdLd, imageID);
+  return Output_WriteFormatted(exprID, exprID % maxIndices, theFile, (int)(intptr_t)aED_LdLd, imageID);
 }
 // 4A7234: variable 'v9' is possibly undefined
 
@@ -484,27 +484,27 @@ signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, 
   if ( theExpression )
   {
     if ( theFile )
-      Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, g_ClipsConstructCodeEntryIndexInFile, theFile, (int)aED_DLd, g_ConstructsToCImageId);
+      Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, g_ClipsConstructCodeEntryIndexInFile, theFile, (int)(intptr_t)aED_DLd, g_ConstructsToCImageId);
     if ( g_Rules_ExprCodeNeedNewFileFlag == 1 )
     {
-      dataFile = Rules_OpenConstructCodeFile((const char *)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile);
+      dataFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile);
       g_ClipsCodeDataFile = dataFile;
       if ( !dataFile )
         return -1;
-      Output_WriteFormatted(g_ConstructsToCImageId, g_ClipsExpressionCodeFileVersion, dataFile, (int)aStructExprED_D, g_ConstructsToCImageId);
-      Output_WriteFormatted(v12, v11, g_ClipsCodeHeaderFile, (int)aExternStructEx, g_ConstructsToCImageId);
+      Output_WriteFormatted(g_ConstructsToCImageId, g_ClipsExpressionCodeFileVersion, dataFile, (int)(intptr_t)aStructExprED_D, g_ConstructsToCImageId);
+      Output_WriteFormatted(v12, v11, g_ClipsCodeHeaderFile, (int)(intptr_t)aExternStructEx, g_ConstructsToCImageId);
       g_Rules_ExprCodeNeedNewFileFlag = 0;
     }
     else
     {
-      Output_WriteFormatted(a3, (int)theExpression, g_ClipsCodeDataFile, (int)asc_508250, v13);
+      Output_WriteFormatted(a3, (int)(intptr_t)theExpression, g_ClipsCodeDataFile, (int)(intptr_t)asc_508250, v13);
     }
     Rules_WriteExpressionNodeToCode(theExpression, v6);
     if ( g_ClipsConstructCodeEntryIndexInFile >= g_ClipsCodeMaxIndicesPerArray )
     {
       g_ClipsConstructCodeEntryIndexInFile = 0;
       ++g_ClipsExpressionCodeFileVersion;
-      Output_WriteFormatted(0, v7, g_ClipsCodeDataFile, (int)asc_507DA0, v13);
+      Output_WriteFormatted(0, v7, g_ClipsCodeDataFile, (int)(intptr_t)asc_507DA0, v13);
       fclose_(v8);
       g_ClipsCodeDataFile = v9;
       g_Rules_ExprCodeNeedNewFileFlag = 1;
@@ -514,7 +514,7 @@ signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, 
   else
   {
     if ( theFile )
-      Output_WriteFormatted(a3, 0, theFile, (int)aNull_1, v13);
+      Output_WriteFormatted(a3, 0, theFile, (int)(intptr_t)aNull_1, v13);
     return 0;
   }
 }
@@ -568,9 +568,9 @@ __int16 * Rules_WriteExpressionNodeToCode(__int16 *result, int a2)
   {
     while ( 1 )
     {
-      Output_WriteFormatted(a2, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)asc_507F14, v20);
-      Output_WriteFormatted(g_ClipsCodeDataFile, v3, g_ClipsCodeDataFile, (int)aD_37, *exprNode);
-      Output_WriteFormatted(v5, v4, g_ClipsCodeDataFile, (int)aVs, v21);
+      Output_WriteFormatted(a2, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)(intptr_t)asc_507F14, v20);
+      Output_WriteFormatted(g_ClipsCodeDataFile, v3, g_ClipsCodeDataFile, (int)(intptr_t)aD_37, *exprNode);
+      Output_WriteFormatted(v5, v4, g_ClipsCodeDataFile, (int)(intptr_t)aVs, v21);
       nodeType = *exprNode;
       if ( (unsigned __int16)*exprNode >= 0xAu )
       {
@@ -594,7 +594,7 @@ __int16 * Rules_WriteExpressionNodeToCode(__int16 *result, int a2)
             {
               if ( nodeType != 105 )
                 goto LABEL_20;
-              Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)aNull_1, v22);
+              Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)(intptr_t)aNull_1, v22);
             }
           }
           else
@@ -635,26 +635,26 @@ LABEL_20:
               primitiveEntity = g_Clips_PrimitiveEntityTable[*exprNode];
               if ( primitiveEntity )
               {
-                if ( (*(_BYTE *)(primitiveEntity + 1) & 0x40) != 0 )
+                if ( (*(_BYTE *)(uintptr_t)(primitiveEntity + 1) & 0x40) != 0 )
                   Compiler_WriteBitMapReference(g_ClipsCodeDataFile, *(_DWORD *)(exprNode + 1), v7);
                 else
-                  Output_WriteFormatted(g_ClipsCodeDataFile, primitiveEntity, g_ClipsCodeDataFile, (int)aNull_1, v22);
+                  Output_WriteFormatted(g_ClipsCodeDataFile, primitiveEntity, g_ClipsCodeDataFile, (int)(intptr_t)aNull_1, v22);
               }
               else
               {
-                Output_WriteFormatted(v7, 0, g_ClipsCodeDataFile, (int)aNull_1, v22);
+                Output_WriteFormatted(v7, 0, g_ClipsCodeDataFile, (int)(intptr_t)aNull_1, v22);
               }
               goto LABEL_6;
             }
             goto LABEL_36;
           }
-          Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)aDummyinstance, v22);
+          Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)(intptr_t)aDummyinstance, v22);
         }
         else
         {
           if ( nodeType != 6 )
             goto LABEL_20;
-          Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)aDummyfact, v22);
+          Output_WriteFormatted(v7, v6, g_ClipsCodeDataFile, (int)(intptr_t)aDummyfact, v22);
         }
       }
       else
@@ -669,30 +669,30 @@ LABEL_20:
         Compiler_WriteIntegerReference(g_ClipsCodeDataFile, *(_DWORD *)(exprNode + 1));
       }
 LABEL_6:
-      Output_WriteFormatted(v10, v9, g_ClipsCodeDataFile, (int)asc_508278, v22);
+      Output_WriteFormatted(v10, v9, g_ClipsCodeDataFile, (int)(intptr_t)asc_508278, v22);
       ++g_ClipsConstructCodeEntryIndexInFile;
       if ( *(_DWORD *)(exprNode + 3) )
-        Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, v11, g_ClipsCodeDataFile, (int)aED_DLd_0, g_ConstructsToCImageId);
+        Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, v11, g_ClipsCodeDataFile, (int)(intptr_t)aED_DLd_0, g_ConstructsToCImageId);
       else
-        Output_WriteFormatted(v12, v11, g_ClipsCodeDataFile, (int)aNull_0, v23);
+        Output_WriteFormatted(v12, v11, g_ClipsCodeDataFile, (int)(intptr_t)aNull_0, v23);
       if ( *(_DWORD *)(exprNode + 5) )
       {
         AST_CountTreeNodes(*(_DWORD *)(exprNode + 3));
-        result = (__int16 *)Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, v19, g_ClipsCodeDataFile, (int)aED_DLd_1, g_ConstructsToCImageId);
+        result = (__int16 *)(uintptr_t)Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, v19, g_ClipsCodeDataFile, (int)(intptr_t)aED_DLd_1, g_ConstructsToCImageId);
       }
       else
       {
-        result = (__int16 *)Output_WriteFormatted(v14, v13, g_ClipsCodeDataFile, (int)aNull_2, v23);
+        result = (__int16 *)(uintptr_t)Output_WriteFormatted(v14, v13, g_ClipsCodeDataFile, (int)(intptr_t)aNull_2, v23);
       }
       if ( *(_DWORD *)(exprNode + 3) )
       {
-        Output_WriteFormatted(v16, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)asc_508250, v23);
+        Output_WriteFormatted(v16, g_ClipsCodeDataFile, g_ClipsCodeDataFile, (int)(intptr_t)asc_508250, v23);
         result = (__int16 *)Rules_WriteExpressionNodeToCode(*(_DWORD *)(exprNode + 3), v17);
       }
       exprNode = *(__int16 **)(exprNode + 5);
       if ( !exprNode )
         return result;
-      Output_WriteFormatted(g_ClipsCodeDataFile, v15, g_ClipsCodeDataFile, (int)asc_508250, v23);
+      Output_WriteFormatted(g_ClipsCodeDataFile, v15, g_ClipsCodeDataFile, (int)(intptr_t)asc_508250, v23);
     }
   }
   return result;
@@ -727,7 +727,7 @@ LABEL_6:
 //----- (004A7730) --------------------------------------------------------
 signed int Rules_RegisterConstructsToCFunction(void)
 {
-  return Rules_RegisterHostFunction(aConstructsToC, 118, (int)aConstructstocc, (int)Rules_ConstructsToCCommand, (int)a23Kii);
+  return Rules_RegisterHostFunction(aConstructsToC, 118, (int)(intptr_t)aConstructstocc, (int)(intptr_t)Rules_ConstructsToCCommand, (int)(intptr_t)a23Kii);
 }
 
 //----- (004A7760) --------------------------------------------------------
@@ -752,33 +752,33 @@ int  Rules_AddCodeGeneratorItem(int itemName, int priority, int initFunction, in
   char prefixBuffer[16]; // [esp+Ch] [ebp-10h] BYREF
 
   construct_code_count = arrayCount;
-  freeNode = *(_DWORD **)(g_ClipsMemoryTable + 112);
+  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 112);
   prevItem = 0;
   if ( freeNode )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 112);
-    *(_DWORD *)(g_ClipsMemoryTable + 112) = *freeNode;
-    newItem = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112) = *freeNode;
+    newItem = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    newItem = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x1C);
+    newItem = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x1C);
   }
   *newItem = itemName;
   newItem[2] = initFunction;
   newItem[1] = beforeFunction;
   newItem[3] = generateFunction;
-  newItemPtr = (int)newItem;
+  newItemPtr = (int)(intptr_t)newItem;
   newItem[4] = priority;
   if ( construct_code_count )
   {
     if ( construct_code_count + g_Rules_CodeGeneratorItemIndex > 44 )
     {
-      Rules_ReportSystemError((int)aConscomp, 2);
+      Rules_ReportSystemError((int)(intptr_t)aConscomp, 2);
       IO_RunRouterExitCallbacks();
     }
     arrayBytes = 4 * construct_code_count;
-    *(_DWORD *)(newItemPtr + 20) = Mem_SmallBlockAlloc(4 * construct_code_count);
+    *(_DWORD *)(uintptr_t)(newItemPtr + 20) = Mem_SmallBlockAlloc(4 * construct_code_count);
     if ( construct_code_count > 0 )
     {
       totalArrayBytes = arrayBytes;
@@ -791,7 +791,7 @@ int  Rules_AddCodeGeneratorItem(int itemName, int priority, int initFunction, in
           sprintf_(prefixBuffer, "%c", (unsigned __int8)g_Rules_CodeGeneratorItemLetterTable[g_Rules_CodeGeneratorItemIndex]);
         ++g_Rules_CodeGeneratorItemIndex;
         nameCopy = Mem_SmallBlockAlloc(strlen(prefixBuffer) + 1);
-        *(_DWORD *)(*(_DWORD *)(newItemPtr + 20) + slot_offset) = nameCopy;
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(newItemPtr + 20) + slot_offset) = nameCopy;
         copySrc = prefixBuffer;
         copyDst = (char *)nameCopy;
         nextOffset = slot_offset + 4;
@@ -821,27 +821,27 @@ int  Rules_AddCodeGeneratorItem(int itemName, int priority, int initFunction, in
     listCursor = g_CodeGeneratorItemList;
     do
     {
-      if ( priority >= *(_DWORD *)(listCursor + 16) )
+      if ( priority >= *(_DWORD *)(uintptr_t)(listCursor + 16) )
         break;
       prevItem = listCursor;
-      listCursor = *(_DWORD *)(listCursor + 24);
+      listCursor = *(_DWORD *)(uintptr_t)(listCursor + 24);
     }
     while ( listCursor );
     if ( prevItem )
     {
-      *(_DWORD *)(newItemPtr + 24) = listCursor;
-      *(_DWORD *)(prevItem + 24) = newItemPtr;
+      *(_DWORD *)(uintptr_t)(newItemPtr + 24) = listCursor;
+      *(_DWORD *)(uintptr_t)(prevItem + 24) = newItemPtr;
     }
     else
     {
-      *(_DWORD *)(newItemPtr + 24) = g_CodeGeneratorItemList;
+      *(_DWORD *)(uintptr_t)(newItemPtr + 24) = g_CodeGeneratorItemList;
       g_CodeGeneratorItemList = newItemPtr;
     }
     return newItemPtr;
   }
   else
   {
-    *(_DWORD *)(newItemPtr + 24) = 0;
+    *(_DWORD *)(uintptr_t)(newItemPtr + 24) = 0;
     result = newItemPtr;
     g_CodeGeneratorItemList = newItemPtr;
   }
@@ -885,16 +885,16 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
       Rules_ReportSystemError(codeFile, 3);
       IO_RunRouterExitCallbacks();
     }
-    if ( !*(_DWORD *)codeFileInfo )
+    if ( !*(_DWORD *)(uintptr_t)codeFileInfo )
       return 0;
-    curFile = Rules_OpenConstructCodeFile(*(const char **)codeFileInfo, *(_DWORD *)(codeFileInfo + 4), *(_DWORD *)(codeFileInfo + 8), (DWORD)arrayVersion);
+    curFile = Rules_OpenConstructCodeFile(*(const char **)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion);
     if ( !curFile )
     {
       Rules_ReportSystemError(codeFileInfo, 4);
       IO_RunRouterExitCallbacks();
     }
   }
-  Output_WriteFormatted(codeFileInfo, v8, curFile, (int)asc_507DA0, v11);
+  Output_WriteFormatted(codeFileInfo, v8, curFile, (int)(intptr_t)asc_507DA0, v11);
   fclose_(v10);
   *theCount = 0;
   result = 0;
@@ -946,34 +946,34 @@ int  Rules_ConstructCodeFileOpen(
       IO_RunRouterExitCallbacks();
     }
     curFileName = *codeFileInfo;
-    curFileID = (int)codeFileInfo[1];
-    curVersion = (int)codeFileInfo[2];
+    curFileID = (int)(intptr_t)codeFileInfo[1];
+    curVersion = (int)(intptr_t)codeFileInfo[2];
   }
   else
   {
     curFileName = fileName;
-    curFileID = (int)fileID;
+    curFileID = (int)(intptr_t)fileID;
     curVersion = *fileCount;
     if ( codeFile )
     {
-      codeFile[2] = (const char *)curVersion;
+      codeFile[2] = (const char *)(uintptr_t)curVersion;
       *codeFile = fileName;
       codeFile[1] = fileID;
     }
   }
   if ( theFile )
   {
-    Output_WriteFormatted((int)codeFileInfo, curFileID, theFile, (int)asc_508250, arrayNameBuffer[0]);
+    Output_WriteFormatted((int)(intptr_t)codeFileInfo, curFileID, theFile, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
     return theFile;
   }
   else
   {
-    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)fileName);
+    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName);
     if ( result )
     {
       if ( reopenOldFile )
       {
-        Output_WriteFormatted(result, result, result, (int)asc_508250, arrayNameBuffer[0]);
+        Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_508250, arrayNameBuffer[0]);
         return v23;
       }
       else
@@ -981,8 +981,8 @@ int  Rules_ConstructCodeFileOpen(
         v24 = savedImageID;
         ++*fileCount;
         sprintf_(arrayNameBuffer, "%s%d_%d", structPrefix, v24, arrayVersion);
-        Output_WriteFormatted(v19, v18, v19, (int)aSS_0, structureName);
-        Output_WriteFormatted(v21, v20, headerFP, (int)aExternSS, structureName);
+        Output_WriteFormatted(v19, v18, v19, (int)(intptr_t)aSS_0, structureName);
+        Output_WriteFormatted(v21, v20, headerFP, (int)(intptr_t)aExternSS, structureName);
         return v22;
       }
     }
@@ -1010,7 +1010,7 @@ int  Rules_AssignNextModuleItemId(int theConstruct, _DWORD *countBuffer)
   int result; // eax
 
   result = (*countBuffer)++;
-  *(_DWORD *)(theConstruct + 12) = result;
+  *(_DWORD *)(uintptr_t)(theConstruct + 12) = result;
   return result;
 }
 
@@ -1030,16 +1030,16 @@ int  Rules_WriteConstructHeaderToCode(int theFile, int theConstruct, signed int 
   char v20; // [esp+0h] [ebp-Ch]
   char v21; // [esp+0h] [ebp-Ch]
 
-  Output_WriteFormatted(a4, theConstruct, theFile, (int)asc_507F14, v18);
+  Output_WriteFormatted(a4, theConstruct, theFile, (int)(intptr_t)asc_507F14, v18);
   Compiler_WriteSymbolReference(theFile, *v9, v10);
-  Output_WriteFormatted(v11, v11, theFile, (int)aNull_17, v19);
-  Output_WriteFormatted(v12, imageID, theFile, (int)aMihsSD_DD_2, imageID);
-  Output_WriteFormatted(v14, v13, theFile, (int)a0_1, v20);
-  nextConstruct = *(_DWORD *)(theConstruct + 16);
+  Output_WriteFormatted(v11, v11, theFile, (int)(intptr_t)aNull_17, v19);
+  Output_WriteFormatted(v12, imageID, theFile, (int)(intptr_t)aMihsSD_DD_2, imageID);
+  Output_WriteFormatted(v14, v13, theFile, (int)(intptr_t)a0_1, v20);
+  nextConstruct = *(_DWORD *)(uintptr_t)(theConstruct + 16);
   if ( nextConstruct )
-    return Output_WriteFormatted(nextConstruct, *(_DWORD *)(nextConstruct + 12) % maxIndices, theFile, (int)aChsSD_LdLd, constructPrefix);
+    return Output_WriteFormatted(nextConstruct, *(_DWORD *)(uintptr_t)(nextConstruct + 12) % maxIndices, theFile, (int)(intptr_t)aChsSD_LdLd, constructPrefix);
   else
-    return Output_WriteFormatted(0, v15, theFile, (int)aNull_2, v21);
+    return Output_WriteFormatted(0, v15, theFile, (int)(intptr_t)aNull_2, v21);
 }
 // 4A7B75: variable 'v18' is possibly undefined
 // 4A7B7F: variable 'v9' is possibly undefined
@@ -1070,21 +1070,21 @@ int  Rules_WriteConstructModuleItemHeaderToCode(int theFile, int theModule, int 
   char v19; // [esp+0h] [ebp-10h]
   int v20; // [esp+0h] [ebp-10h]
 
-  Output_WriteFormatted(a3, a4, theFile, (int)asc_507F14, v19);
+  Output_WriteFormatted(a3, a4, theFile, (int)(intptr_t)asc_507F14, v19);
   theModuleItem = Module_GetItem(theModule, v7);
   Compiler_WriteModuleReference(theFile, theModule);
-  Output_WriteFormatted(v10, v9, theFile, (int)asc_508278, theModuleItem);
-  firstItem = *(_DWORD *)(theModuleItem + 4);
+  Output_WriteFormatted(v10, v9, theFile, (int)(intptr_t)asc_508278, theModuleItem);
+  firstItem = *(_DWORD *)(uintptr_t)(theModuleItem + 4);
   if ( firstItem )
-    Output_WriteFormatted(v11, *(_DWORD *)(firstItem + 12) % v11, theFile, (int)aChsSD_LdLd_0, constructPrefix);
+    Output_WriteFormatted(v11, *(_DWORD *)(uintptr_t)(firstItem + 12) % v11, theFile, (int)(intptr_t)aChsSD_LdLd_0, constructPrefix);
   else
-    Output_WriteFormatted(v11, 0, theFile, (int)aNull_0, v20);
-  lastItem = *(_DWORD *)(v20 + 8);
+    Output_WriteFormatted(v11, 0, theFile, (int)(intptr_t)aNull_0, v20);
+  lastItem = *(_DWORD *)(uintptr_t)(v20 + 8);
   if ( lastItem )
-    Output_WriteFormatted(v14, *(_DWORD *)(lastItem + 12) % v14, theFile, (int)aChsSD_LdLd_1, constructPrefix);
+    Output_WriteFormatted(v14, *(_DWORD *)(uintptr_t)(lastItem + 12) % v14, theFile, (int)(intptr_t)aChsSD_LdLd_1, constructPrefix);
   else
-    Output_WriteFormatted(v14, v13, theFile, (int)aNull_1, v20);
-  return Output_WriteFormatted(v17, v16, theFile, (int)asc_508384, v20);
+    Output_WriteFormatted(v14, v13, theFile, (int)(intptr_t)aNull_1, v20);
+  return Output_WriteFormatted(v17, v16, theFile, (int)(intptr_t)asc_508384, v20);
 }
 // 4A7C36: variable 'v19' is possibly undefined
 // 4A7C40: variable 'v7' is possibly undefined
@@ -1122,11 +1122,11 @@ signed int  Rules_PrintArgumentValueList(int logicalName, _DWORD *theSegment)
     result = *theSegment << 17 >> 23;
     if ( fieldIndex >= result )
       break;
-    fieldValue = *(_DWORD *)theSegment[fieldIndex + 2];
+    fieldValue = *(_DWORD *)(uintptr_t)theSegment[fieldIndex + 2];
     if ( fieldValue )
-      (*(void (**)(void))(*(_DWORD *)fieldValue + 4))();
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)fieldValue + 4))();
     if ( ++fieldIndex < *theSegment << 17 >> 23 )
-      Output_Write(logicalNameCopy, (int)asc_5083B0, logicalNameCopy);
+      Output_Write(logicalNameCopy, (int)(intptr_t)asc_5083B0, logicalNameCopy);
   }
   return result;
 }
@@ -1146,29 +1146,29 @@ _DWORD * Rules_MultifieldCopyWithMarkers(int *srcSegment, int a2, int a3)
   _DWORD *fieldPtr; // esi
 
   totalFields = a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23);
-  if ( (unsigned int)(4 * totalFields + 8) < 0x1F4 && *(_DWORD *)(g_ClipsMemoryTable + 16 * totalFields + 32) )
+  if ( (unsigned int)(4 * totalFields + 8) < 0x1F4 && *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 16 * totalFields + 32) )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(16 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + g_ClipsMemoryTable + 32);
-    *(_DWORD *)(g_ClipsMemoryTable + 16 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + 32) = *(_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(16 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 16 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + 32) = *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     newSegmentPtr = g_ClipsMemFreeListTemp;
   }
   else
   {
-    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + 8));
+    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * (a3 + a2 + ((unsigned int)(*srcSegment << 17) >> 23)) + 8));
   }
-  v6 = *(_BYTE *)newSegmentPtr | 1;
-  *(_BYTE *)newSegmentPtr = v6;
-  *(_BYTE *)newSegmentPtr = v6 & 0xF9;
-  *(_DWORD *)newSegmentPtr |= 4 * (a2 & 1);
-  *(_BYTE *)newSegmentPtr &= ~8u;
-  *(_DWORD *)newSegmentPtr |= 8 * (a3 & 1);
-  *(_BYTE *)newSegmentPtr &= 0xCFu;
-  v7 = *(_WORD *)newSegmentPtr;
-  *(_DWORD *)(newSegmentPtr + 4) = 0;
+  v6 = *(_BYTE *)(uintptr_t)newSegmentPtr | 1;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v6;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v6 & 0xF9;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 4 * (a2 & 1);
+  *(_BYTE *)(uintptr_t)newSegmentPtr &= ~8u;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 8 * (a3 & 1);
+  *(_BYTE *)(uintptr_t)newSegmentPtr &= 0xCFu;
+  v7 = *(_WORD *)(uintptr_t)newSegmentPtr;
+  *(_DWORD *)(uintptr_t)(newSegmentPtr + 4) = 0;
   v8 = *srcSegment;
-  *(_WORD *)newSegmentPtr = v7 & 0x803F;
-  newSegment = (_DWORD *)newSegmentPtr;
-  *(_DWORD *)newSegmentPtr |= v8 & 0x7FC0;
+  *(_WORD *)(uintptr_t)newSegmentPtr = v7 & 0x803F;
+  newSegment = (_DWORD *)(uintptr_t)newSegmentPtr;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= v8 & 0x7FC0;
   for ( i = 0; ; ++i )
   {
     fieldIndex = i;
@@ -1206,29 +1206,29 @@ _WORD * Rules_MergeMultifieldValues(_DWORD *firstSegment, _DWORD *secondSegment,
   int fieldValue; // ecx
 
   totalFields = a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23);
-  if ( (unsigned int)(4 * totalFields + 8) < 0x1F4 && *(_DWORD *)(16 * totalFields + g_ClipsMemoryTable + 32) )
+  if ( (unsigned int)(4 * totalFields + 8) < 0x1F4 && *(_DWORD *)(uintptr_t)(16 * totalFields + g_ClipsMemoryTable + 32) )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(16 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + g_ClipsMemoryTable + 32);
-    *(_DWORD *)(g_ClipsMemoryTable + 16 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + 32) = *(_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(16 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 16 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + 32) = *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     newSegmentPtr = g_ClipsMemFreeListTemp;
   }
   else
   {
-    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + 8));
+    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * (a3 + a4 + (*firstSegment << 17 >> 23) + (*secondSegment << 17 >> 23)) + 8));
   }
-  v8 = *(_BYTE *)newSegmentPtr | 1;
-  *(_BYTE *)newSegmentPtr = v8;
-  *(_BYTE *)newSegmentPtr = v8 & 0xF9;
-  *(_DWORD *)newSegmentPtr |= 4 * (a4 & 1);
-  *(_BYTE *)newSegmentPtr &= ~8u;
-  *(_DWORD *)newSegmentPtr |= 8 * (a3 & 1);
-  v9 = *(_BYTE *)newSegmentPtr;
-  *(_DWORD *)(newSegmentPtr + 4) = 0;
-  *(_BYTE *)newSegmentPtr = v9 & 0xCF;
+  v8 = *(_BYTE *)(uintptr_t)newSegmentPtr | 1;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v8;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v8 & 0xF9;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 4 * (a4 & 1);
+  *(_BYTE *)(uintptr_t)newSegmentPtr &= ~8u;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 8 * (a3 & 1);
+  v9 = *(_BYTE *)(uintptr_t)newSegmentPtr;
+  *(_DWORD *)(uintptr_t)(newSegmentPtr + 4) = 0;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v9 & 0xCF;
   combinedLength = (((unsigned __int16)(2 * *(_WORD *)firstSegment) >> 7) + ((unsigned __int16)(2 * *(_WORD *)secondSegment) >> 7)) & 0x1FF;
-  *(_WORD *)newSegmentPtr &= 0x803Fu;
-  newSegment = (_WORD *)newSegmentPtr;
-  *(_DWORD *)newSegmentPtr |= combinedLength << 6;
+  *(_WORD *)(uintptr_t)newSegmentPtr &= 0x803Fu;
+  newSegment = (_WORD *)(uintptr_t)newSegmentPtr;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= combinedLength << 6;
   for ( i = 0; i < *firstSegment << 17 >> 23; ++i )
   {
     srcOffset = 4 * i;
@@ -1263,15 +1263,15 @@ int  Rules_ResetDataObjectValue(int theDataObject)
   int v2; // edx
   int result; // eax
 
-  *(_DWORD *)(theDataObject + 8) = 0;
-  *(_DWORD *)theDataObject = 0;
-  *(_DWORD *)(theDataObject + 4) = 0;
-  *(_BYTE *)(theDataObject + 12) &= 0xF8u;
+  *(_DWORD *)(uintptr_t)(theDataObject + 8) = 0;
+  *(_DWORD *)(uintptr_t)theDataObject = 0;
+  *(_DWORD *)(uintptr_t)(theDataObject + 4) = 0;
+  *(_BYTE *)(uintptr_t)(theDataObject + 12) &= 0xF8u;
   incrementalResetFlag = Rules_GetIncrementalReset();
-  *(_BYTE *)(v2 + 12) &= ~8u;
+  *(_BYTE *)(uintptr_t)(v2 + 12) &= ~8u;
   result = 8 * (incrementalResetFlag & 1);
-  *(_DWORD *)(v2 + 12) |= result;
-  *(_BYTE *)(v2 + 12) &= 0x8Fu;
+  *(_DWORD *)(uintptr_t)(v2 + 12) |= result;
+  *(_BYTE *)(uintptr_t)(v2 + 12) &= 0x8Fu;
   return result;
 }
 // 4A8196: variable 'v2' is possibly undefined
@@ -1290,32 +1290,32 @@ signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression,
   int v13; // ecx
   signed int listTail; // esi
 
-  freeNode = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeNode )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-    *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeNode;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeNode;
     listNode = g_ClipsMemFreeListTemp;
   }
   else
   {
     listNode = Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
-  *(_WORD *)listNode &= 0x8000u;
-  v7 = *(_BYTE *)listNode;
-  *(_DWORD *)(listNode + 4) = 0;
-  *(_BYTE *)listNode = v7 | 0x40;
+  *(_WORD *)(uintptr_t)listNode &= 0x8000u;
+  v7 = *(_BYTE *)(uintptr_t)listNode;
+  *(_DWORD *)(uintptr_t)(listNode + 4) = 0;
+  *(_BYTE *)(uintptr_t)listNode = v7 | 0x40;
   newNode = listNode;
-  freeEntry = *(_DWORD **)(g_ClipsMemoryTable + 48);
+  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-    *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeEntry;
-    v10 = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeEntry;
+    v10 = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    v10 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+    v10 = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   v10[2] = 0;
   valueEntry = v10;
@@ -1323,16 +1323,16 @@ signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression,
   if ( theExpression )
   {
     exprCopy = Rules_CopyExpressionChain(theExpression);
-    *(_DWORD *)(v13 + 4) = exprCopy;
+    *(_DWORD *)(uintptr_t)(v13 + 4) = exprCopy;
   }
   else
   {
     v10[1] = 0;
   }
-  *(_DWORD *)(newNode + 8) = valueEntry;
+  *(_DWORD *)(uintptr_t)(newNode + 8) = valueEntry;
   listTail = theList[1];
   if ( listTail )
-    *(_DWORD *)(listTail + 4) = newNode;
+    *(_DWORD *)(uintptr_t)(listTail + 4) = newNode;
   else
     *theList = newNode;
   theList[1] = newNode;
@@ -1359,46 +1359,46 @@ signed int  Rules_MultifieldAppendValue(_DWORD *theSegment, int newValue, int a3
   int v15; // edx
 
   totalFields = a3 + a4 + (*theSegment << 17 >> 23);
-  if ( (unsigned int)(4 * totalFields + 12) < 0x1F4 && *(_DWORD *)(16 * totalFields + g_ClipsMemoryTable + 48) )
+  if ( (unsigned int)(4 * totalFields + 12) < 0x1F4 && *(_DWORD *)(uintptr_t)(16 * totalFields + g_ClipsMemoryTable + 48) )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(16 * (a3 + a4 + (*theSegment << 17 >> 23)) + g_ClipsMemoryTable + 48);
-    *(_DWORD *)(g_ClipsMemoryTable + 16 * (a3 + a4 + (*theSegment << 17 >> 23)) + 48) = *(_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(16 * (a3 + a4 + (*theSegment << 17 >> 23)) + g_ClipsMemoryTable + 48);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 16 * (a3 + a4 + (*theSegment << 17 >> 23)) + 48) = *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     newSegmentPtr = g_ClipsMemFreeListTemp;
   }
   else
   {
-    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a4 + (*theSegment << 17 >> 23)) + 12));
+    newSegmentPtr = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * (a3 + a4 + (*theSegment << 17 >> 23)) + 12));
   }
-  v7 = *(_BYTE *)newSegmentPtr | 1;
-  *(_BYTE *)newSegmentPtr = v7;
-  *(_BYTE *)newSegmentPtr = v7 & 0xF9;
-  *(_DWORD *)newSegmentPtr |= 4 * (a4 & 1);
-  *(_BYTE *)newSegmentPtr &= ~8u;
-  *(_DWORD *)newSegmentPtr |= 8 * (a3 & 1);
-  v8 = *(_BYTE *)newSegmentPtr;
-  *(_DWORD *)(newSegmentPtr + 4) = 0;
-  *(_BYTE *)newSegmentPtr = v8 & 0xCF;
+  v7 = *(_BYTE *)(uintptr_t)newSegmentPtr | 1;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v7;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v7 & 0xF9;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 4 * (a4 & 1);
+  *(_BYTE *)(uintptr_t)newSegmentPtr &= ~8u;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= 8 * (a3 & 1);
+  v8 = *(_BYTE *)(uintptr_t)newSegmentPtr;
+  *(_DWORD *)(uintptr_t)(newSegmentPtr + 4) = 0;
+  *(_BYTE *)(uintptr_t)newSegmentPtr = v8 & 0xCF;
   newLength = ((unsigned __int16)(2 * *(_WORD *)theSegment) >> 7) + 1;
-  *(_WORD *)newSegmentPtr &= 0x803Fu;
+  *(_WORD *)(uintptr_t)newSegmentPtr &= 0x803Fu;
   newSegment = newSegmentPtr;
-  *(_DWORD *)newSegmentPtr |= (newLength & 0x1FF) << 6;
+  *(_DWORD *)(uintptr_t)newSegmentPtr |= (newLength & 0x1FF) << 6;
   for ( i = 0; ; ++i )
   {
     fieldIndex = i;
     fieldPtr = fieldIndex * 4 + newSegment;
     if ( i >= *theSegment << 17 >> 23 )
       break;
-    *(_DWORD *)(fieldPtr + 8) = theSegment[fieldIndex + 2];
+    *(_DWORD *)(uintptr_t)(fieldPtr + 8) = theSegment[fieldIndex + 2];
   }
-  *(_DWORD *)(fieldPtr + 8) = newValue;
+  *(_DWORD *)(uintptr_t)(fieldPtr + 8) = newValue;
   writeIndex = i + 1;
   if ( a4 )
   {
     v15 = writeIndex++;
-    *(_DWORD *)(newSegment + 4 * v15 + 8) = 0;
+    *(_DWORD *)(uintptr_t)(newSegment + 4 * v15 + 8) = 0;
   }
   if ( a3 )
-    *(_DWORD *)(newSegment + 4 * writeIndex + 8) = 0;
+    *(_DWORD *)(uintptr_t)(newSegment + 4 * writeIndex + 8) = 0;
   return newSegment;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -1417,16 +1417,16 @@ _DWORD * Rules_CopyExpressionChain(_DWORD *theExpression)
   copyHead = 0;
   for ( i = 0; srcNode; i = newNode )
   {
-    freeNode = *(_DWORD **)(g_ClipsMemoryTable + 80);
+    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
     if ( freeNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 80);
-      *(_DWORD *)(g_ClipsMemoryTable + 80) = *freeNode;
-      newNode = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80) = *freeNode;
+      newNode = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      newNode = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
+      newNode = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x14);
     }
     newNode[4] = 0;
     *newNode = *srcNode;
@@ -1437,7 +1437,7 @@ _DWORD * Rules_CopyExpressionChain(_DWORD *theExpression)
       i[4] = newNode;
     else
       copyHead = newNode;
-    srcNode = (_DWORD *)srcNode[4];
+    srcNode = (_DWORD *)(uintptr_t)srcNode[4];
   }
   return copyHead;
 }
@@ -1457,10 +1457,10 @@ int  Rules_ReleaseJoinNetworkNodeChain(int result)
     {
       while ( 1 )
       {
-        nextMatch = *(_DWORD *)(result + 4);
-        if ( ((*(_BYTE *)result & 0x10) == 0 || (*(_BYTE *)result & 0x20) != 0) && (*(_BYTE *)result & 1) != 0 )
+        nextMatch = *(_DWORD *)(uintptr_t)(result + 4);
+        if ( ((*(_BYTE *)(uintptr_t)result & 0x10) == 0 || (*(_BYTE *)(uintptr_t)result & 0x20) != 0) && (*(_BYTE *)(uintptr_t)result & 1) != 0 )
           break;
-        *(_DWORD *)(result + 4) = g_PartialMatchFreeListHead;
+        *(_DWORD *)(uintptr_t)(result + 4) = g_PartialMatchFreeListHead;
         g_PartialMatchFreeListHead = result;
         result = nextMatch;
         if ( !nextMatch )

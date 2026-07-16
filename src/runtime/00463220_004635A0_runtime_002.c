@@ -29,28 +29,28 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
   int dstBitCount; // [esp+18h] [ebp-10h]
 
   desc = blitDesc;
-  dstCompression = *(_DWORD *)(dstBmiHeader + 16);
-  LOWORD(blitDesc) = *(_WORD *)(dstBmiHeader + 14);
-  srcBitCount = *(unsigned __int16 *)(srcBmiHeader + 14);
-  dstBitCount = (unsigned __int16)blitDesc;
+  dstCompression = *(_DWORD *)(uintptr_t)(dstBmiHeader + 16);
+  LOWORD(blitDesc) = *(_WORD *)(uintptr_t)(dstBmiHeader + 14);
+  srcBitCount = *(unsigned __int16 *)(uintptr_t)(srcBmiHeader + 14);
+  dstBitCount = (unsigned __int16)(intptr_t)blitDesc;
   if ( dstCompression && dstCompression != 3 )
-    return (__int16)blitDesc;
-  srcCompression = *(_DWORD *)(srcBmiHeader + 16);
+    return (__int16)(intptr_t)blitDesc;
+  srcCompression = *(_DWORD *)(uintptr_t)(srcBmiHeader + 16);
   if ( srcCompression )
   {
     if ( srcCompression != 3 )
-      return (__int16)blitDesc;
+      return (__int16)(intptr_t)blitDesc;
   }
-  v10 = *(_DWORD *)(dstBmiHeader + 16);
+  v10 = *(_DWORD *)(uintptr_t)(dstBmiHeader + 16);
   if ( v10 )
   {
-    dstRedMask = *(_DWORD *)(dstBmiHeader + 40);
-    dstGreenMask = *(_DWORD *)(dstBmiHeader + 44);
-    dstBlueMask = *(_DWORD *)(dstBmiHeader + 48);
+    dstRedMask = *(_DWORD *)(uintptr_t)(dstBmiHeader + 40);
+    dstGreenMask = *(_DWORD *)(uintptr_t)(dstBmiHeader + 44);
+    dstBlueMask = *(_DWORD *)(uintptr_t)(dstBmiHeader + 48);
   }
   else
   {
-    LOWORD(v10) = *(_WORD *)(dstBmiHeader + 14);
+    LOWORD(v10) = *(_WORD *)(uintptr_t)(dstBmiHeader + 14);
     if ( (unsigned __int16)v10 == 16 )
     {
       dstRedMask = 63488;
@@ -70,15 +70,15 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
       dstBlueMask = 1 << v10;
     }
   }
-  if ( *(_DWORD *)(srcBmiHeader + 16) )
+  if ( *(_DWORD *)(uintptr_t)(srcBmiHeader + 16) )
   {
-    srcRedMask = *(_DWORD *)(srcBmiHeader + 40);
-    srcGreenMask = *(_DWORD *)(srcBmiHeader + 44);
-    srcBlueMaskTmp = *(_DWORD *)(srcBmiHeader + 48);
+    srcRedMask = *(_DWORD *)(uintptr_t)(srcBmiHeader + 40);
+    srcGreenMask = *(_DWORD *)(uintptr_t)(srcBmiHeader + 44);
+    srcBlueMaskTmp = *(_DWORD *)(uintptr_t)(srcBmiHeader + 48);
   }
   else
   {
-    srcBitDepth = *(unsigned __int16 *)(srcBmiHeader + 14);
+    srcBitDepth = *(unsigned __int16 *)(uintptr_t)(srcBmiHeader + 14);
     if ( (unsigned __int16)srcBitDepth == 16 )
     {
       srcRedMask = 63488;
@@ -101,7 +101,7 @@ __int16  CAviDecompressor_SetupBlitFormat(int (*blitDesc)(), int dstBmiHeader, i
   }
   srcBlueMask = srcBlueMaskTmp;
 LABEL_12:
-  *(_DWORD *)desc = *(_DWORD *)(srcBmiHeader + 4);
+  *(_DWORD *)desc = *(_DWORD *)(uintptr_t)(srcBmiHeader + 4);
   if ( srcPitch )
   {
     srcStride = srcPitch;
@@ -119,8 +119,8 @@ LABEL_12:
     dstPitch = dstStride;
   }
   *((_DWORD *)desc + 3) = dstPitch;
-  srcHeight = *(_DWORD *)(srcBmiHeader + 8);
-  dstHeight = *(_DWORD *)(dstBmiHeader + 8);
+  srcHeight = *(_DWORD *)(uintptr_t)(srcBmiHeader + 8);
+  dstHeight = *(_DWORD *)(uintptr_t)(dstBmiHeader + 8);
   if ( srcHeight < 0 )
     absHeight = -srcHeight;
   else
@@ -160,14 +160,14 @@ LABEL_12:
   if ( srcHeight >= 0 )
   {
     if ( dstHeight >= 0 )
-      return (__int16)blitDesc;
+      return (__int16)(intptr_t)blitDesc;
     goto LABEL_47;
   }
   *((_DWORD *)desc + 2) = -*((_DWORD *)desc + 2);
   if ( dstHeight < 0 )
 LABEL_47:
     *((_DWORD *)desc + 3) = -*((_DWORD *)desc + 3);
-  return (__int16)blitDesc;
+  return (__int16)(intptr_t)blitDesc;
 }
 // 46333D: variable 'v15' is possibly undefined
 
@@ -200,7 +200,7 @@ signed int  CAviDecompressor_BlitRows(_DWORD *blitDesc, char *dest, char *src)
     for ( i = 0; i < desc[1]; destRow += desc[3] )
     {
       ++i;
-      ((void (__fastcall *)(_DWORD *, char *))desc[5])(desc, srcRow);
+      ((void (__fastcall *)(_DWORD *, char *))(uintptr_t)desc[5])(desc, srcRow);
       result = desc[2];
       srcRow += result;
     }

@@ -51,7 +51,7 @@ int  Audio_PlayUnitHitSound(int result)
       suffixWriteCursor += 2;
     }
     while ( suffixNextChar );
-    return CSS_PlaySound((int)soundPath, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPath, 64, 0, 0);
   }
   return result;
 }
@@ -102,7 +102,7 @@ int  Audio_PlayUnitDeathSound(int result)
       suffixWriteCursor += 2;
     }
     while ( suffixNextChar );
-    return CSS_PlaySound((int)soundPath, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPath, 64, 0, 0);
   }
   return result;
 }

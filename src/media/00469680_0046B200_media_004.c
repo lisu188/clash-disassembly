@@ -19,7 +19,7 @@ int  AviPlayer_AllocDecodedBitmapInfo(int self, int headerBytes)
   int headerSize; // [esp+0h] [ebp-20h]
   int bytesPerPixel; // [esp+4h] [ebp-1Ch]
 
-  bitCount = *(_DWORD *)(self + 2123);
+  bitCount = *(_DWORD *)(uintptr_t)(self + 2123);
   bytesPerPixel = (bitCount + 7) >> 3;
   if ( bitCount == 24 || bitCount == 8 )
     compressionSel = 0;
@@ -27,34 +27,34 @@ int  AviPlayer_AllocDecodedBitmapInfo(int self, int headerBytes)
     compressionSel = 3;
   compression = compressionSel;
   if ( compressionSel )
-    headerBytes = **(_DWORD **)(self + 151);
+    headerBytes = **(_DWORD **)(uintptr_t)(self + 151);
   allocResult = j_Mem_Alloc(headerBytes);
-  *(_DWORD *)(self + 2058) = allocResult;
+  *(_DWORD *)(uintptr_t)(self + 2058) = allocResult;
   headerSize = HIDWORD(allocResult);
-  if ( SHIDWORD(allocResult) > **(_DWORD **)(self + 151) )
-    HIDWORD(allocResult) = **(_DWORD **)(self + 151);
-  qmemcpy(*(void **)(self + 2058), *(const void **)(self + 151), HIDWORD(allocResult));
-  **(_DWORD **)(self + 2058) = headerSize;
-  *(_WORD *)(*(_DWORD *)(self + 2058) + 14) = *(_WORD *)(self + 2123);
-  *(_DWORD *)(*(_DWORD *)(self + 2058) + 16) = compression;
-  *(_DWORD *)(*(_DWORD *)(self + 2058) + 20) = *(_DWORD *)(*(_DWORD *)(self + 2058) + 4)
-                                           * abs32(*(_DWORD *)(*(_DWORD *)(self + 2058) + 8))
+  if ( SHIDWORD(allocResult) > **(_DWORD **)(uintptr_t)(self + 151) )
+    HIDWORD(allocResult) = **(_DWORD **)(uintptr_t)(self + 151);
+  qmemcpy(*(void **)(uintptr_t)(self + 2058), *(const void **)(uintptr_t)(self + 151), HIDWORD(allocResult));
+  **(_DWORD **)(uintptr_t)(self + 2058) = headerSize;
+  *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 14) = *(_WORD *)(uintptr_t)(self + 2123);
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 16) = compression;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 20) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 4)
+                                           * abs32(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 8))
                                            * bytesPerPixel;
-  *(_DWORD *)(*(_DWORD *)(self + 2058) + 32) = 0;
-  decodedBmi = *(_DWORD *)(self + 2058);
-  result = *(_DWORD *)(decodedBmi + 8);
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 32) = 0;
+  decodedBmi = *(_DWORD *)(uintptr_t)(self + 2058);
+  result = *(_DWORD *)(uintptr_t)(decodedBmi + 8);
   if ( result > 0 )
   {
     result = -result;
-    *(_DWORD *)(decodedBmi + 8) = result;
+    *(_DWORD *)(uintptr_t)(decodedBmi + 8) = result;
   }
   if ( compression == 3 )
   {
-    *(_DWORD *)(*(_DWORD *)(self + 2058) + 40) = *(_DWORD *)(self + 2127);
-    *(_DWORD *)(*(_DWORD *)(self + 2058) + 44) = *(_DWORD *)(self + 2131);
-    *(_DWORD *)(*(_DWORD *)(self + 2058) + 48) = *(_DWORD *)(self + 2135);
-    result = *(_DWORD *)(self + 2058);
-    *(_DWORD *)(result + 52) = *(_DWORD *)(self + 2139);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 40) = *(_DWORD *)(uintptr_t)(self + 2127);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 44) = *(_DWORD *)(uintptr_t)(self + 2131);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 2058) + 48) = *(_DWORD *)(uintptr_t)(self + 2135);
+    result = *(_DWORD *)(uintptr_t)(self + 2058);
+    *(_DWORD *)(uintptr_t)(result + 52) = *(_DWORD *)(uintptr_t)(self + 2139);
   }
   return result;
 }
@@ -81,43 +81,43 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
   ehFrame[1] = &j____wcpp_4_fs_handler_rtn_;
   ehFrame[2] = &g_AviPlayerCreatePalette_EHScopeTable;
   ehState = 0;
-  if ( (*(_BYTE *)(self + 2120) & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(self + 2120) & 2) != 0 )
   {
     for ( i = 0; i != 1024; v6[i + 1] = 0 )
     {
-      paletteEntries[i] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i + 2);
-      paletteEntries[i + 1] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i + 1);
+      paletteEntries[i] = *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 151) + *(_DWORD *)(uintptr_t)(self + 151) + i + 2);
+      paletteEntries[i + 1] = *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 151) + *(_DWORD *)(uintptr_t)(self + 151) + i + 1);
       i += 4;
-      v6[i] = *(_BYTE *)(**(_DWORD **)(self + 151) + *(_DWORD *)(self + 151) + i - 4);
+      v6[i] = *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 151) + *(_DWORD *)(uintptr_t)(self + 151) + i - 4);
     }
-    if ( (*(int (__stdcall **)(int, int, char *, int, _DWORD))(*(_DWORD *)ddInterface + 20))(ddInterface, 4, paletteEntries, self + 1948, 0) )
+    if ( (*(int (__stdcall **)(int, int, char *, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)ddInterface + 20))(ddInterface, 4, paletteEntries, self + 1948, 0) )
     {
       ExcString_Ctor();
       ehState = v5;
       ExcString_Ctor();
       v9 = g_AviException_VTable;
       ehState = 0;
-      return (_DWORD *)CRT_ThrowExcStringException();
+      return (_DWORD *)(uintptr_t)CRT_ThrowExcStringException();
     }
     else
     {
-      result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 124))(
-                           *(_DWORD *)(self + 1956),
-                           *(_DWORD *)(self + 1948));
+      result = (_DWORD *)(uintptr_t)(*(int (__stdcall **)(_DWORD, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 124))(
+                           *(_DWORD *)(uintptr_t)(self + 1956),
+                           *(_DWORD *)(uintptr_t)(self + 1948));
       if ( result )
       {
         if ( result != (_DWORD *)-2005532222
-          || (result = (_DWORD *)(*(int (__stdcall **)(_DWORD))(**(_DWORD **)(self + 1956) + 108))(*(_DWORD *)(self + 1956))) == 0
-          && (result = (_DWORD *)(*(int (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(self + 1956) + 124))(
-                                   *(_DWORD *)(self + 1956),
-                                   *(_DWORD *)(self + 1948))) != 0 )
+          || (result = (_DWORD *)(uintptr_t)(*(int (__stdcall **)(_DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 108))(*(_DWORD *)(uintptr_t)(self + 1956))) == 0
+          && (result = (_DWORD *)(uintptr_t)(*(int (__stdcall **)(_DWORD, _DWORD))(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 1956) + 124))(
+                                   *(_DWORD *)(uintptr_t)(self + 1956),
+                                   *(_DWORD *)(uintptr_t)(self + 1948))) != 0 )
         {
           ExcString_Ctor();
           ehState = 3;
           ExcString_Ctor();
           v8 = g_AviException_VTable;
           ehState = 0;
-          return (_DWORD *)CRT_ThrowExcStringException();
+          return (_DWORD *)(uintptr_t)CRT_ThrowExcStringException();
         }
       }
     }
@@ -159,7 +159,7 @@ int __stdcall AviPlayer_SendICDrawBegin(
   drawBeginParams[6] = a12;
   drawBeginParams[7] = a13;
   drawBeginParams[8] = a14;
-  return ICSendMessage(hic, 16446, (DWORD)drawBeginParams, 52, 0);
+  return ICSendMessage(hic, 16446, (DWORD)(intptr_t)drawBeginParams, 52, 0);
 }
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
@@ -169,7 +169,7 @@ int AviException_CtorFromExceptionList(void)
   int result; // eax
 
   result = ExcString_CtorFromPtr((void *)NtCurrentTeb()->NtTib.ExceptionList);
-  *(_DWORD *)(result + 100) = g_AviException_VTable;
+  *(_DWORD *)(uintptr_t)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -180,7 +180,7 @@ int AviException_CtorForSurfaceCreateFailure(void)
   int result; // eax
 
   result = ExcString_Ctor();
-  *(_DWORD *)(result + 100) = g_AviException_VTable;
+  *(_DWORD *)(uintptr_t)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -191,7 +191,7 @@ int AviException_CtorForDrawFailure(void)
   int result; // eax
 
   result = ExcString_Ctor();
-  *(_DWORD *)(result + 100) = g_AviException_VTable;
+  *(_DWORD *)(uintptr_t)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -242,8 +242,8 @@ int  AviPlayer_LeaveBusySectionAndRelease(int guardPtr)
 {
   _DWORD *counter; // ebx
 
-  counter = *(_DWORD **)guardPtr;
-  LeaveCriticalSection((LPCRITICAL_SECTION)(*(_DWORD *)guardPtr + 4));
+  counter = *(_DWORD **)(uintptr_t)guardPtr;
+  LeaveCriticalSection((LPCRITICAL_SECTION)(uintptr_t)(*(_DWORD *)(uintptr_t)guardPtr + 4));
   --*counter;
   return guardPtr;
 }
@@ -257,26 +257,26 @@ int  Mem_BitsToBytesCeil(int bitCount)
 //----- (0046A140) --------------------------------------------------------
 int  AviPlayer_QueueBacklogCount(int queue)
 {
-  return *(_DWORD *)(queue + 8) - *(_DWORD *)(queue + 4);
+  return *(_DWORD *)(uintptr_t)(queue + 8) - *(_DWORD *)(uintptr_t)(queue + 4);
 }
 
 //----- (0046A150) --------------------------------------------------------
 int  AviPlayer_IncrementFramesRenderedCount(int result)
 {
-  ++*(_DWORD *)(result + 4);
+  ++*(_DWORD *)(uintptr_t)(result + 4);
   return result;
 }
 
 //----- (0046A160) --------------------------------------------------------
 int  AviPlayer_AudioBytesQueued(int self)
 {
-  return *(_DWORD *)(self + 259);
+  return *(_DWORD *)(uintptr_t)(self + 259);
 }
 
 //----- (0046A170) --------------------------------------------------------
 int  AviPlayer_AudioSampleQueueCount(int queue)
 {
-  return *(_DWORD *)(queue + 8);
+  return *(_DWORD *)(uintptr_t)(queue + 8);
 }
 
 //----- (0046A180) --------------------------------------------------------
@@ -288,13 +288,13 @@ int  AviPlayer_AudioSampleQueueBase(int self)
 //----- (0046A190) --------------------------------------------------------
 int  AviPlayer_AudioFormatPtr(int self)
 {
-  return *(_DWORD *)(self + 363);
+  return *(_DWORD *)(uintptr_t)(self + 363);
 }
 
 //----- (0046A1A0) --------------------------------------------------------
 int  AviPlayer_BitmapWidth(int self)
 {
-  return *(_DWORD *)(*(_DWORD *)(self + 151) + 4);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 4);
 }
 
 //----- (0046A1B0) --------------------------------------------------------
@@ -302,14 +302,14 @@ int  AviPlayer_BitmapHeightAbs(int self)
 {
   __int64 biHeight; // rax
 
-  biHeight = *(int *)(*(_DWORD *)(self + 151) + 8);
+  biHeight = *(int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 151) + 8);
   return (HIDWORD(biHeight) ^ biHeight) - HIDWORD(biHeight);
 }
 
 //----- (0046A1D0) --------------------------------------------------------
 int  AviPlayer_AudioBlockAlign(int self)
 {
-  return *(unsigned __int16 *)(*(_DWORD *)(self + 363) + 12);
+  return *(unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(self + 363) + 12);
 }
 
 //----- (0046A1E0) --------------------------------------------------------
@@ -332,8 +332,8 @@ int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *codecPtr, int lockedBits,
   codecPtr[7] = pitchPixels * destHeight * ((*((unsigned __int16 *)codecPtr + 11) + 7) >> 3);
   inputFormat = codecPtr[1];
   hic = *codecPtr;
-  biWidth = *(_DWORD *)(inputFormat + 4);
-  biHeight = *(_DWORD *)(inputFormat + 8);
+  biWidth = *(_DWORD *)(uintptr_t)(inputFormat + 4);
+  biHeight = *(_DWORD *)(uintptr_t)(inputFormat + 8);
   drawParams[0] = frameFlags;
   drawParams[1] = inputFormat;
   drawParams[12] = biHeight;
@@ -376,7 +376,7 @@ int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *rect)
 //----- (0046A370) --------------------------------------------------------
 bool  AviPlayer_IsUncompressedFormat(int self)
 {
-  return *(_BYTE *)(self + 1923) != 0;
+  return *(_BYTE *)(uintptr_t)(self + 1923) != 0;
 }
 
 //----- (0046A380) --------------------------------------------------------
@@ -387,11 +387,11 @@ bool  AviPlayer_IsIcmDecoderIdle(int self)
   bool result; // al
 
   result = 0;
-  if ( *(_BYTE *)(self + 2052) )
+  if ( *(_BYTE *)(uintptr_t)(self + 2052) )
   {
-    pendingCount = *(_DWORD *)(self + 1944);
+    pendingCount = *(_DWORD *)(uintptr_t)(self + 1944);
     blitState = self + 1924;
-    if ( !pendingCount && !*(_DWORD *)(blitState + 16) )
+    if ( !pendingCount && !*(_DWORD *)(uintptr_t)(blitState + 16) )
       return 1;
   }
   return result;
@@ -400,27 +400,27 @@ bool  AviPlayer_IsIcmDecoderIdle(int self)
 //----- (0046A3B0) --------------------------------------------------------
 bool  AviPlayer_TestModeFlagBit2(int self)
 {
-  return (*(_BYTE *)(self + 2120) & 4) != 0;
+  return (*(_BYTE *)(uintptr_t)(self + 2120) & 4) != 0;
 }
 
 //----- (0046A3C0) --------------------------------------------------------
 bool  AviPlayer_TestModeFlagBit3(int self)
 {
-  return (*(_BYTE *)(self + 2120) & 8) != 0;
+  return (*(_BYTE *)(uintptr_t)(self + 2120) & 8) != 0;
 }
 
 //----- (0046A3D0) --------------------------------------------------------
 bool  AviPlayer_TestActiveModeFlag(int self)
 {
-  return *(_BYTE *)(self + 2052) && !*(_DWORD *)(self + 1944) && !*(_DWORD *)(self + 1940) && (*(_BYTE *)(self + 2120) & 8) != 0
-      || (!*(_BYTE *)(self + 2052) || *(_DWORD *)(self + 1944) || *(_DWORD *)(self + 1940))
-      && (*(_BYTE *)(self + 2120) & 4) != 0;
+  return *(_BYTE *)(uintptr_t)(self + 2052) && !*(_DWORD *)(uintptr_t)(self + 1944) && !*(_DWORD *)(uintptr_t)(self + 1940) && (*(_BYTE *)(uintptr_t)(self + 2120) & 8) != 0
+      || (!*(_BYTE *)(uintptr_t)(self + 2052) || *(_DWORD *)(uintptr_t)(self + 1944) || *(_DWORD *)(uintptr_t)(self + 1940))
+      && (*(_BYTE *)(uintptr_t)(self + 2120) & 4) != 0;
 }
 
 //----- (0046A430) --------------------------------------------------------
 bool  AviPlayer_TestModeFlagBit2AndSubframe(int self)
 {
-  return (*(_BYTE *)(self + 2120) & 4) != 0 && *(_BYTE *)(self + 1923);
+  return (*(_BYTE *)(uintptr_t)(self + 2120) & 4) != 0 && *(_BYTE *)(uintptr_t)(self + 1923);
 }
 
 //----- (0046A450) --------------------------------------------------------
@@ -428,15 +428,15 @@ bool  AviPlayer_SupportsRequiredPlaybackCaps(int self)
 {
   int requiredCaps; // edx
 
-  requiredCaps = *(_DWORD *)(self + 2171);
+  requiredCaps = *(_DWORD *)(uintptr_t)(self + 2171);
   LOBYTE(requiredCaps) = requiredCaps | 2;
-  return ((*(_DWORD *)(self + 2175) | requiredCaps) & *(_DWORD *)(self + 2119)) == (*(_DWORD *)(self + 2175) | requiredCaps);
+  return ((*(_DWORD *)(uintptr_t)(self + 2175) | requiredCaps) & *(_DWORD *)(uintptr_t)(self + 2119)) == (*(_DWORD *)(uintptr_t)(self + 2175) | requiredCaps);
 }
 
 //----- (0046A480) --------------------------------------------------------
 bool  AviPlayer_HasValidRateParams(int self)
 {
-  return *(_BYTE *)(self + 1968) && *(_DWORD *)(self + 1964);
+  return *(_BYTE *)(uintptr_t)(self + 1968) && *(_DWORD *)(uintptr_t)(self + 1964);
 }
 
 //----- (0046A4A0) --------------------------------------------------------
@@ -444,8 +444,8 @@ bool  AviPlayer_IsPlaybackRateInRange(int self)
 {
   int stretchRatio; // eax
 
-  stretchRatio = 1000 * (*(_DWORD *)(self + 2071) - *(_DWORD *)(self + 2063)) / (*(_DWORD *)(self + 2087) - *(_DWORD *)(self + 2079));
-  return stretchRatio >= *(_DWORD *)(self + 2143) && stretchRatio <= *(_DWORD *)(self + 2147);
+  stretchRatio = 1000 * (*(_DWORD *)(uintptr_t)(self + 2071) - *(_DWORD *)(uintptr_t)(self + 2063)) / (*(_DWORD *)(uintptr_t)(self + 2087) - *(_DWORD *)(uintptr_t)(self + 2079));
+  return stretchRatio >= *(_DWORD *)(uintptr_t)(self + 2143) && stretchRatio <= *(_DWORD *)(uintptr_t)(self + 2147);
 }
 
 //----- (0046A510) --------------------------------------------------------
@@ -557,16 +557,16 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *accelFlagOut)
       {
         memset_(&dsCaps, 0);
         dsCaps = 96;
-        if ( (*(int (__stdcall **)(int, int))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, v2) || (dsCapsFlags & 0x20) != 0 )
+        if ( (*(int (__stdcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 16))(g_DirectSoundDevice, v2) || (dsCapsFlags & 0x20) != 0 )
         {
           *accelFlagOut = 0;
-          (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
+          (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
         else
         {
           *accelFlagOut = 1;
-          (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
+          (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
           return 0;
         }
       }
@@ -603,7 +603,7 @@ int __thiscall Audio_ComputeBytesPerFrame(void *this)
   v4 = this;
   memset_(this, 0);
   dsCaps = 96;
-  (*(void (__stdcall **)(int, int *))(*(_DWORD *)g_DirectSoundDevice + 16))(g_DirectSoundDevice, &dsCaps);
+  (*(void (__stdcall **)(int, int *))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 16))(g_DirectSoundDevice, &dsCaps);
   if ( (dsCapsFlags & 8) == 0 )
     LOBYTE(g_MixerFormatFlags) = g_MixerFormatFlags & 0xF7;
   if ( (dsCapsFlags & 2) == 0 )
@@ -655,11 +655,11 @@ signed int Audio_InitDSoundDevice(void)
     return Audio_ReturnDSoundError(hr);
   Audio_ComputeBytesPerFrame(v2);
   if ( g_CSS_DSoundAccelDetectEnabled != 2
-    || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 4) )
+    || (*(int (__stdcall **)(int, int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 4) )
   {
     if ( !g_CSS_DSoundWritePrimaryMode )
     {
-      hr = (*(int (__stdcall **)(int, int, int))(*(_DWORD *)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 3);
+      hr = (*(int (__stdcall **)(int, int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 24))(g_DirectSoundDevice, g_DSoundCoopWindowHandle, 3);
       if ( hr )
         return Audio_ReturnDSoundError(hr);
       memset_(&bufferDescSize, 0);
@@ -667,7 +667,7 @@ signed int Audio_InitDSoundDevice(void)
       formatPtr = 0;
       bufferDescSize = 20;
       bufferDescFlags = 1;
-      hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+      hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 12))(
              g_DirectSoundDevice,
              v7,
              &g_DSoundPrimaryBuffer,
@@ -685,7 +685,7 @@ signed int Audio_InitDSoundDevice(void)
       else
         bitsPerSample = 8;
       cbSize = 0;
-      (*(void (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
+      (*(void (__stdcall **)(int, __int16 *))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
     }
   }
   else
@@ -716,14 +716,14 @@ signed int Audio_InitDSoundDevice(void)
     bufferBytes = g_DSoundStreamBufferBytes;
     formatPtr = &wFormatTag;
     bufferDescFlags = 0x10000;
-    hr = (*(int (__stdcall **)(int, int *, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+    hr = (*(int (__stdcall **)(int, int *, int *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 12))(
            g_DirectSoundDevice,
            &bufferDescSize,
            &g_DSoundPrimaryBuffer,
            0);
     if ( !hr )
     {
-      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
       if ( !hr )
         return 0;
     }
@@ -734,7 +734,7 @@ signed int Audio_InitDSoundDevice(void)
   bufferBytes = 0;
   formatPtr = 0;
   bufferDescFlags = 1;
-  hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)g_DirectSoundDevice + 12))(
+  hr = (*(int (__stdcall **)(int, int, int *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 12))(
          g_DirectSoundDevice,
          v9,
          &g_DSoundPrimaryBuffer,
@@ -749,16 +749,16 @@ signed int Audio_InitDSoundDevice(void)
   blockAlign = g_CSS_SampleFrameBytes;
   bitsPerSample = (g_MixerFormatFlags & 8) != 0 ? 16 : 8;
   cbSize = 0;
-  hr = (*(int (__stdcall **)(int, __int16 *))(*(_DWORD *)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
+  hr = (*(int (__stdcall **)(int, __int16 *))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 56))(g_DSoundPrimaryBuffer, &wFormatTag);
   if ( hr )
     return Audio_ReturnDSoundError(hr);
   memset_(v11, 0);
   bufferCaps[0] = 20;
-  hr = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)g_DSoundPrimaryBuffer + 12))(g_DSoundPrimaryBuffer, bufferCaps);
+  hr = (*(int (__stdcall **)(int, _DWORD *))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 12))(g_DSoundPrimaryBuffer, bufferCaps);
   if ( hr )
     return Audio_ReturnDSoundError(hr);
   g_DSoundStreamBufferBytes = bufferCaps[2];
-  hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+  hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
   if ( hr )
     return Audio_ReturnDSoundError(hr);
   if ( alignedStreamBytes + 16 >= (unsigned int)g_DSoundStreamBufferBytes )
@@ -796,11 +796,11 @@ unsigned int Audio_ReleaseDSoundDevice(void)
 {
   unsigned int hr; // eax
 
-  hr = (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 72))(g_DSoundPrimaryBuffer);
+  hr = (*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 72))(g_DSoundPrimaryBuffer);
   if ( hr )
     return Audio_ReturnDSoundError(hr);
-  (*(void (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 8))(g_DSoundPrimaryBuffer);
-  (*(void (__stdcall **)(int))(*(_DWORD *)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
+  (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 8))(g_DSoundPrimaryBuffer);
+  (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DirectSoundDevice + 8))(g_DirectSoundDevice);
   return 0;
 }
 // 54D368: using guessed type int dword_54D368;
@@ -895,7 +895,7 @@ unsigned int Audio_RefreshPlayCursor(void)
   _BYTE writeCursor[4]; // [esp+10h] [ebp-4h] BYREF
 
   EnterCriticalSection(&stru_54D350);
-  hr = (*(int (__stdcall **)(int, int *, _BYTE *))(*(_DWORD *)g_DSoundPrimaryBuffer + 16))(g_DSoundPrimaryBuffer, &playCursor, writeCursor);
+  hr = (*(int (__stdcall **)(int, int *, _BYTE *))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 16))(g_DSoundPrimaryBuffer, &playCursor, writeCursor);
   if ( hr )
     return Audio_ReturnDSoundError(hr);
   g_CSS_DSoundPlayCursor = playCursor;
@@ -939,7 +939,7 @@ LABEL_7:
     goto LABEL_8;
   }
   fillBytes = 0;
-  if ( GetForegroundWindow() == (HWND)g_DSoundCoopWindowHandle )
+  if ( GetForegroundWindow() == (HWND)(uintptr_t)g_DSoundCoopWindowHandle )
   {
     if ( g_CSS_AudioHadForegroundFocus )
     {
@@ -950,8 +950,8 @@ LABEL_7:
       }
       if ( GetTickCount() - g_DSoundStallTickTimestamp > 0x3E8 )
       {
-        (*(void (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer);
-        (*(void (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+        (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer);
+        (*(void (__stdcall **)(int, _DWORD, _DWORD, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
         g_DSoundStallTickTimestamp = 0;
       }
     }
@@ -981,7 +981,7 @@ LABEL_8:
     CSS_TickChannelLevels(mixBufSamples, chunkSamples);
     while ( 1 )
     {
-      lockResult = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 44))(
+      lockResult = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 44))(
              g_DSoundPrimaryBuffer,
              g_DSoundStreamWriteOffset,
              chunkSamples * g_CSS_SampleFrameBytes,
@@ -995,13 +995,13 @@ LABEL_8:
         break;
       if ( lockResult != -2005401450 )
         goto LABEL_19;
-      if ( (*(int (__stdcall **)(int))(*(_DWORD *)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer) )
+      if ( (*(int (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 80))(g_DSoundPrimaryBuffer) )
       {
         LeaveCriticalSection(&stru_54D350);
         *mixCompleteOut = 0;
         return 0;
       }
-      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(*(_DWORD *)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
+      hr = (*(int (__stdcall **)(int, _DWORD, _DWORD, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 48))(g_DSoundPrimaryBuffer, 0, 0, 1);
       if ( hr )
         goto LABEL_19;
     }
@@ -1013,7 +1013,7 @@ LABEL_8:
     g_DSoundStreamWriteOffset = newWriteOffset;
     if ( newWriteOffset >= g_DSoundStreamBufferBytes )
       g_DSoundStreamWriteOffset = newWriteOffset - g_DSoundStreamBufferBytes;
-    hr = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(*(_DWORD *)g_DSoundPrimaryBuffer + 76))(
+    hr = (*(int (__stdcall **)(int, int, unsigned int, int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)g_DSoundPrimaryBuffer + 76))(
            g_DSoundPrimaryBuffer,
            lockPtr1,
            lockBytes1,
@@ -1060,7 +1060,7 @@ int __cdecl Audio_ClipMixBufferToPCM16(int sampleCount, int destBase, int destOf
   int i; // ecx
   int sample; // eax
 
-  dest = (_WORD *)(destOffset + destBase);
+  dest = (_WORD *)(uintptr_t)(destOffset + destBase);
   for ( i = sampleCount; i; --i )
   {
     while ( 1 )
@@ -1072,17 +1072,17 @@ int __cdecl Audio_ClipMixBufferToPCM16(int sampleCount, int destBase, int destOf
           break;
         *dest++ = 0x7FFF;
         if ( !--i )
-          return (int)dest - destBase;
+          return (int)(intptr_t)dest - destBase;
       }
       if ( sample < -32768 )
         break;
       *dest++ = sample;
       if ( !--i )
-        return (int)dest - destBase;
+        return (int)(intptr_t)dest - destBase;
     }
     *dest++ = 0x8000;
   }
-  return (int)dest - destBase;
+  return (int)(intptr_t)dest - destBase;
 }
 
 //----- (0046B169) --------------------------------------------------------
@@ -1093,7 +1093,7 @@ _BYTE *__cdecl Audio_ClipMixBufferToPCM8(int sampleCount, int destBase, int dest
   int sample; // eax
   int biased; // eax
 
-  dest = (_BYTE *)(destOffset + destBase);
+  dest = (_BYTE *)(uintptr_t)(destOffset + destBase);
   for ( i = sampleCount; i; --i )
   {
     while ( 1 )
@@ -1149,25 +1149,25 @@ int  Audio_ReadWavHeaderFromStream(int fileName, _DWORD *formatOut)
   char dataTag[4]; // [esp+24h] [ebp-1Ch] BYREF
   int stream; // [esp+28h] [ebp-18h]
 
-  result = (*(int (__fastcall **)(int, int))(*(_DWORD *)g_MediaFileStreamProvider + 12))(fileName, fileName);
+  result = (*(int (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)g_MediaFileStreamProvider + 12))(fileName, fileName);
   stream = result;
   if ( !result )
     return result;
-  (*(void (**)(void))(*(_DWORD *)result + 20))();
-  if ( (*(int (**)(void))(*(_DWORD *)stream + 16))() == -1
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)result + 20))();
+  if ( (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 16))() == -1
     || memcmp(riffTag, aRiff, 4)
     || memcmp(waveTag, aWave, 4)
     || memcmp(fmtTag, aFmt, 4)
-    || (streamPos = (*(int (**)(void))(*(_DWORD *)stream + 4))(),
+    || (streamPos = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 4))(),
         (*seekFunc)(seekFunc, fmtChunkSize + streamPos - 16),
-        (*(void (**)(void))(*(_DWORD *)stream + 20))(),
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 20))(),
         memcmp(dataTag, aData, 4)) )
   {
 LABEL_3:
-    (*(void (**)(void))(*(_DWORD *)g_MediaFileStreamProvider + 20))();
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)g_MediaFileStreamProvider + 20))();
     return 0;
   }
-  (*(void (**)(void))(*(_DWORD *)stream + 20))();
+  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)stream + 20))();
   formatOut[2] = sampleRate;
   if ( wFormatTag != 1 )
   {

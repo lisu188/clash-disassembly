@@ -27,17 +27,17 @@ BOOL  RenderState_IsCursorFlipStillActive(int render_state)
   if ( !DD_IsFlipping(render_state) )
     return 0;
   now = Time_Now(0, 0);
-  if ( (unsigned int)(now - *(_DWORD *)(render_state + 68)) >= *(_DWORD *)(render_state + 1104) )
+  if ( (unsigned int)(now - *(_DWORD *)(uintptr_t)(render_state + 68)) >= *(_DWORD *)(uintptr_t)(render_state + 1104) )
     return 0;
-  delta_x = *(_DWORD *)(render_state + 72) - (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108));
+  delta_x = *(_DWORD *)(uintptr_t)(render_state + 72) - (*(int *)(uintptr_t)(render_state + 36) >> *(_BYTE *)(uintptr_t)(render_state + 1108));
   if ( delta_x <= 0 )
-    delta_x = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(render_state + 72);
-  if ( delta_x >= *(_DWORD *)(render_state + 1116) )
+    delta_x = (*(int *)(uintptr_t)(render_state + 36) >> *(_BYTE *)(uintptr_t)(render_state + 1108)) - *(_DWORD *)(uintptr_t)(render_state + 72);
+  if ( delta_x >= *(_DWORD *)(uintptr_t)(render_state + 1116) )
     return 0;
-  delta_y = *(_DWORD *)(render_state + 76) - (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108));
+  delta_y = *(_DWORD *)(uintptr_t)(render_state + 76) - (*(int *)(uintptr_t)(render_state + 40) >> *(_BYTE *)(uintptr_t)(render_state + 1108));
   if ( delta_y <= 0 )
-    delta_y = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(render_state + 76);
-  return delta_y < *(_DWORD *)(render_state + 1116);
+    delta_y = (*(int *)(uintptr_t)(render_state + 40) >> *(_BYTE *)(uintptr_t)(render_state + 1108)) - *(_DWORD *)(uintptr_t)(render_state + 76);
+  return delta_y < *(_DWORD *)(uintptr_t)(render_state + 1116);
 }
 
 //----- (004609D0) --------------------------------------------------------
@@ -54,7 +54,7 @@ BOOL  Render_Begin(int render_state, void (*idle_callback)(void), ...)
       if ( !result )
         break;
     }
-    DD_Pump(render_state, (char)idle_callback);
+    DD_Pump(render_state, (char)(intptr_t)idle_callback);
     if ( idle_callback )
       idle_callback();
   }
@@ -76,10 +76,10 @@ BOOL  Render_FlipRect(int render_state, char a2)
       if ( !result )
         break;
     }
-    previous_poll_state = *(_DWORD *)(render_state + 56);
-    *(_DWORD *)(render_state + 56) = 0;
+    previous_poll_state = *(_DWORD *)(uintptr_t)(render_state + 56);
+    *(_DWORD *)(uintptr_t)(render_state + 56) = 0;
     Platform_PumpMessagesAndBlitFrame(a2);
-    *(_DWORD *)(render_state + 56) = previous_poll_state;
+    *(_DWORD *)(uintptr_t)(render_state + 56) = previous_poll_state;
     Compat_RenderStateInvokeMethod(render_state, 20);
   }
   return result;
@@ -143,7 +143,7 @@ unsigned int  RenderState_WarpCursorAndPump(_DWORD *render_state, unsigned __int
   render_state[9] = cursor_x << render_state[277];
   render_state[10] = cursor_y << render_state[277];
   Compat_SyncRenderCursorGlobals(render_state);
-  return DD_Pump((int)render_state, cursor_y);
+  return DD_Pump((int)(intptr_t)render_state, cursor_y);
 }
 
 //----- (00460B20) --------------------------------------------------------
@@ -160,7 +160,7 @@ _DWORD * RenderState_RecalculateCursorBoundsForRect(
   unsigned __int16 max_x; // di
   __int16 v10; // cx
 
-  descriptor_words = (_WORD *)result[15];
+  descriptor_words = (_WORD *)(uintptr_t)result[15];
   min_x = descriptor_words[10] + 1 + rect_left;
   min_y = descriptor_words[12] + 1 + rect_top;
   max_x = rect_right - (descriptor_words[6] - descriptor_words[10] + 1);
@@ -169,7 +169,7 @@ _DWORD * RenderState_RecalculateCursorBoundsForRect(
   result[4] = min_x << result[277];
   result[5] = min_y << result[277];
   result[6] = max_x << result[277];
-  result[7] = (unsigned __int16)(rect_bottom - (v10 - (_WORD)descriptor_words + 1)) << result[277];
+  result[7] = (unsigned __int16)(rect_bottom - (v10 - (_WORD)(intptr_t)descriptor_words + 1)) << result[277];
   return result;
 }
 
@@ -184,12 +184,12 @@ _DWORD * RenderState_PumpIfRectInViewBounds(
   int cursor_descriptor; // ebx
 
   cursor_descriptor = result[15];
-  if ( *(_DWORD *)(cursor_descriptor + 12) + result[12] >= rect_left
+  if ( *(_DWORD *)(uintptr_t)(cursor_descriptor + 12) + result[12] >= rect_left
     && rect_right >= (int)result[12]
-    && result[13] + *(_DWORD *)(cursor_descriptor + 16) >= rect_top
+    && result[13] + *(_DWORD *)(uintptr_t)(cursor_descriptor + 16) >= rect_top
     && rect_bottom >= (int)result[13] )
   {
-    return (_DWORD *)Render_Pump();
+    return (_DWORD *)(uintptr_t)Render_Pump();
   }
   return result;
 }
@@ -198,17 +198,17 @@ _DWORD * RenderState_PumpIfRectInViewBounds(
 _DWORD * RenderState_LoadDefaultCursorSprite(int render_state)
 {
   _DWORD *result; // eax
-  if ( *(_DWORD *)(render_state + 64) )
-    DLXSpriteSet_ReleaseAndClear((int *)(render_state + 64));
-  result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+  if ( *(_DWORD *)(uintptr_t)(render_state + 64) )
+    DLXSpriteSet_ReleaseAndClear((int *)(uintptr_t)(render_state + 64));
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, "mouse.s32");
-    *(_DWORD *)(render_state + 64) = result;
+    *(_DWORD *)(uintptr_t)(render_state + 64) = result;
   }
   else
   {
-    *(_DWORD *)(render_state + 64) = 0;
+    *(_DWORD *)(uintptr_t)(render_state + 64) = 0;
   }
   return result;
 }
@@ -226,9 +226,9 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int render_state, int label_t
   CHAR cache_path[104]; // [esp+0h] [ebp-78h] BYREF
   CHAR query_path[104]; // [esp+68h] [ebp-10h] BYREF
 
-  if ( *(_DWORD *)(render_state + 64) )
-    DLXSpriteSet_ReleaseAndClear((int *)(render_state + 64));
-  source_bytes = (unsigned __int8 *)label_text;
+  if ( *(_DWORD *)(uintptr_t)(render_state + 64) )
+    DLXSpriteSet_ReleaseAndClear((int *)(uintptr_t)(render_state + 64));
+  source_bytes = (unsigned __int8 *)(uintptr_t)label_text;
   checksum_xor = 0;
   checksum_sum = 0;
   for ( i = 0; i < 768; ++i )
@@ -246,17 +246,17 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int render_state, int label_t
     cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
-      Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &cache_query_handle);
-      result = (_DWORD *)Mem_Alloc(4112, 0, 0, a4);
+      Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &cache_query_handle);
+      result = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, a4);
       if ( result )
         result = DLXSpriteSet_Load(result, cache_path);
-      *(_DWORD *)(render_state + 64) = result;
+      *(_DWORD *)(uintptr_t)(render_state + 64) = result;
       return result;
     }
   }
   RenderState_LoadDefaultCursorSprite(render_state);
-  DLXSpriteSet_DrawText(*(_DWORD *)(render_state + 64), -1, label_text, (unsigned __int8 *)(render_state + 80));
-  result = *(_DWORD **)(render_state + 64);
+  DLXSpriteSet_DrawText(*(_DWORD *)(uintptr_t)(render_state + 64), -1, label_text, (unsigned __int8 *)(uintptr_t)(render_state + 80));
+  result = *(_DWORD **)(uintptr_t)(render_state + 64);
   return result;
 }
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
@@ -266,7 +266,7 @@ CLASH95_TEST_VISIBLE uintptr_t Compat_RenderStateMethodPointer(int render_state,
 {
   uintptr_t *vtable;
 
-  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(render_state + 1120);
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(render_state + 1120);
   if ( !vtable )
     return 0;
   return vtable[table_offset / 4];
@@ -283,18 +283,18 @@ CLASH95_INTERNAL void Compat_RenderStateInvokeMethod(int render_state, unsigned 
 
 CLASH95_INTERNAL _DWORD *Compat_RenderStateSurface(int render_state, unsigned int field_offset)
 {
-  return (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(render_state + field_offset);
+  return (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(render_state + field_offset);
 }
 
 CLASH95_INTERNAL _DWORD *Compat_RenderStateCursorDescriptor(int render_state)
 {
   unsigned int descriptor_handle;
 
-  descriptor_handle = (unsigned int)*(_DWORD *)(render_state + 60);
+  descriptor_handle = (unsigned int)*(_DWORD *)(uintptr_t)(render_state + 60);
   if ( !descriptor_handle )
   {
     descriptor_handle = (unsigned int)(uintptr_t)g_RenderVideoInitCursorDescriptor;
-    *(_DWORD *)(render_state + 60) = descriptor_handle;
+    *(_DWORD *)(uintptr_t)(render_state + 60) = descriptor_handle;
   }
   return (_DWORD *)(uintptr_t)descriptor_handle;
 }
@@ -321,7 +321,7 @@ CLASH95_LOCAL int Compat_RenderClearPresentedRect(int render_state)
   if ( !g_CursorOverlayPresented )
     return g_CursorOverlayPresented;
   g_CursorOverlayPresented = 0;
-  resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   present_surface = Compat_RenderStateSurface(render_state, 8);
   cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
   Render_FillRect(
@@ -331,9 +331,9 @@ CLASH95_LOCAL int Compat_RenderClearPresentedRect(int render_state)
     0,
     *(unsigned __int16 *)((char *)cursor_descriptor + 12) - 1,
     *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
-    *(unsigned __int16 *)render_state,
-    *(unsigned __int16 *)(render_state + 4));
-  return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
+    *(unsigned __int16 *)(uintptr_t)render_state,
+    *(unsigned __int16 *)(uintptr_t)(render_state + 4));
+  return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, resource_handle);
 }
 
 __int16  RenderState_SelectCursorDescriptor(int render_state, int new_descriptor)
@@ -351,36 +351,36 @@ __int16  RenderState_SelectCursorDescriptor(int render_state, int new_descriptor
   result = render_state;
   active_descriptor = new_descriptor;
   if ( !active_descriptor )
-    active_descriptor = *(_DWORD *)(render_state + 60);
+    active_descriptor = *(_DWORD *)(uintptr_t)(render_state + 60);
   if ( active_descriptor )
     g_ActiveCursorDescriptorPtr = active_descriptor;
-  if ( new_descriptor == *(_DWORD *)(render_state + 60) )
+  if ( new_descriptor == *(_DWORD *)(uintptr_t)(render_state + 60) )
     return result;
   was_presenting = (unsigned char)g_CursorOverlayPresented;
   if ( was_presenting )
     Compat_RenderClearPresentedRect(render_state);
-  *(_DWORD *)(render_state + 60) = new_descriptor;
-  descriptor = *(_DWORD *)(render_state + 60);
+  *(_DWORD *)(uintptr_t)(render_state + 60) = new_descriptor;
+  descriptor = *(_DWORD *)(uintptr_t)(render_state + 60);
   max_height = 0;
   max_width = 0;
-  for ( sprite_index = *(unsigned __int16 *)descriptor; sprite_index <= (unsigned int)*(int *)(descriptor + 4); ++sprite_index )
+  for ( sprite_index = *(unsigned __int16 *)(uintptr_t)descriptor; sprite_index <= (unsigned int)*(int *)(uintptr_t)(descriptor + 4); ++sprite_index )
   {
-    sprite_height = DLX_GetSpriteHeight(*(_DWORD *)(render_state + 64), (int)sprite_index);
-    sprite_width = DLX_GetSpriteWidth(*(_DWORD *)(render_state + 64), (int)sprite_index);
+    sprite_height = DLX_GetSpriteHeight(*(_DWORD *)(uintptr_t)(render_state + 64), (int)sprite_index);
+    sprite_width = DLX_GetSpriteWidth(*(_DWORD *)(uintptr_t)(render_state + 64), (int)sprite_index);
     if ( sprite_height > max_height )
       max_height = sprite_height;
     if ( sprite_width > max_width )
       max_width = sprite_width;
   }
-  *(_DWORD *)(descriptor + 12) = max_height;
-  *(_DWORD *)(descriptor + 16) = max_width;
-  *(_DWORD *)(descriptor + 32) = 0;
-  *(_DWORD *)(descriptor + 28) = 0;
-  RenderState_RecalculateCursorBoundsForRect((_DWORD *)render_state, 0, 640, 0, 480);
+  *(_DWORD *)(uintptr_t)(descriptor + 12) = max_height;
+  *(_DWORD *)(uintptr_t)(descriptor + 16) = max_width;
+  *(_DWORD *)(uintptr_t)(descriptor + 32) = 0;
+  *(_DWORD *)(uintptr_t)(descriptor + 28) = 0;
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)render_state, 0, 640, 0, 480);
   Compat_RenderStateInvokeMethod(render_state, 20);
   Compat_RenderStateInvokeMethod(render_state, 4);
-  *(_DWORD *)(render_state + 48) = (*(int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(descriptor + 20);
-  *(_DWORD *)(render_state + 52) = (*(int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108)) - *(_DWORD *)(descriptor + 24);
+  *(_DWORD *)(uintptr_t)(render_state + 48) = (*(int *)(uintptr_t)(render_state + 36) >> *(_BYTE *)(uintptr_t)(render_state + 1108)) - *(_DWORD *)(uintptr_t)(descriptor + 20);
+  *(_DWORD *)(uintptr_t)(render_state + 52) = (*(int *)(uintptr_t)(render_state + 40) >> *(_BYTE *)(uintptr_t)(render_state + 1108)) - *(_DWORD *)(uintptr_t)(descriptor + 24);
   if ( was_presenting )
     result = Render_Present(render_state);
   return result;
@@ -397,32 +397,32 @@ int  Render_Present(int render_state)
   int SpriteForChar; // eax
   void *saved_render_device; // [esp+1Ch] [ebp-Ch]
 
-  present_surface = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(render_state + 8);
+  present_surface = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(render_state + 8);
   cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
   result = g_CursorOverlayPresented;
   if ( !g_CursorOverlayPresented )
   {
-    resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+    resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
     g_CursorOverlayPresented = 1;
     saved_render_device = g_RenderDevice;
     Render_FillRect(
       0,
       present_surface,
-      *(unsigned __int16 *)(render_state + 52),
-      *(unsigned __int16 *)(render_state + 48),
-      *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(render_state + 48) - 1,
-      *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(render_state + 52) - 1,
+      *(unsigned __int16 *)(uintptr_t)(render_state + 52),
+      *(unsigned __int16 *)(uintptr_t)(render_state + 48),
+      *(unsigned __int16 *)((char *)cursor_descriptor + 12) + *(_WORD *)(uintptr_t)(render_state + 48) - 1,
+      *(unsigned __int16 *)((char *)cursor_descriptor + 16) + *(_WORD *)(uintptr_t)(render_state + 52) - 1,
       0,
       0);
     g_RenderDevice = &g_MainRenderDevice;
     SpriteForChar = DLX_GetSpriteForChar(
-                      *(_DWORD *)(render_state + 64),
+                      *(_DWORD *)(uintptr_t)(render_state + 64),
                       *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
     (void)SpriteForChar;
-    *(_DWORD *)render_state = *(_DWORD *)(render_state + 48);
-    *(_DWORD *)(render_state + 4) = *(_DWORD *)(render_state + 52);
+    *(_DWORD *)(uintptr_t)render_state = *(_DWORD *)(uintptr_t)(render_state + 48);
+    *(_DWORD *)(uintptr_t)(render_state + 4) = *(_DWORD *)(uintptr_t)(render_state + 52);
     g_RenderDevice = saved_render_device;
-    result = Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
+    result = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, resource_handle);
     Compat_PresentPrimaryIndexedSurfaceToPlatform();
     return result;
   }
@@ -445,8 +445,8 @@ int Render_Pump(void)
   if ( g_CursorOverlayPresented )
   {
     g_CursorOverlayPresented = 0;
-    resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
-    render_state = (int)g_RenderState;
+    resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
+    render_state = (int)(intptr_t)g_RenderState;
     present_surface = Compat_RenderStateSurface(render_state, 8);
     cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
     Render_FillRect(
@@ -456,9 +456,9 @@ int Render_Pump(void)
       0,
       *(unsigned __int16 *)((char *)cursor_descriptor + 12) - 1,
       *(unsigned __int16 *)((char *)cursor_descriptor + 16) - 1,
-      *(_WORD *)render_state,
-      *(_WORD *)(render_state + 4));
-    return Render_SetResourceHandle((int)&g_MainRenderDevice, resource_handle);
+      *(_WORD *)(uintptr_t)render_state,
+      *(_WORD *)(uintptr_t)(render_state + 4));
+    return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, resource_handle);
   }
   return result;
 }
@@ -481,7 +481,7 @@ int  RenderState_DrawCursorSpriteToPrimarySurface(int render_state)
   saved_render_device = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, &g_CursorSpritePalette);
-  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(render_state + 64), g_CursorDesc_Busy[0] + 1);
+  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(uintptr_t)(render_state + 64), g_CursorDesc_Busy[0] + 1);
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
   g_RenderDevice = saved_render_device;
   return result;
@@ -538,15 +538,15 @@ __int16  Device_GetParamB(int render_state, DWORD a2, int a3, int a4)
   tail = Compat_RenderStateTailFields(render_state);
   if ( tail->field_464_active )
   {
-    current_flags = *(_DWORD *)(render_state + 44);
-    current_x = *(unsigned int *)(render_state + 36) >> *(_BYTE *)(render_state + 1108);
-    current_y = *(unsigned int *)(render_state + 40) >> *(_BYTE *)(render_state + 1108);
+    current_flags = *(_DWORD *)(uintptr_t)(render_state + 44);
+    current_x = *(unsigned int *)(uintptr_t)(render_state + 36) >> *(_BYTE *)(uintptr_t)(render_state + 1108);
+    current_y = *(unsigned int *)(uintptr_t)(render_state + 40) >> *(_BYTE *)(uintptr_t)(render_state + 1108);
     if ( (unsigned __int8)g_DeviceRecordLastFlipLostState != current_flags
       || current_x != (unsigned __int16)g_DeviceRecordLastX
       || current_y != (unsigned __int16)g_DeviceRecordLastY )
     {
-      g_DeviceRecordLastX = *(_WORD *)(render_state + 36);
-      g_DeviceRecordLastY = *(_WORD *)(render_state + 40);
+      g_DeviceRecordLastX = *(_WORD *)(uintptr_t)(render_state + 36);
+      g_DeviceRecordLastY = *(_WORD *)(uintptr_t)(render_state + 40);
       g_DeviceRecordLastFlipLostState = (unsigned char)(2 * (DD_IsFlipping(render_state) + DD_IsLost(render_state)));
       elapsed_ticks = Time_Now(0, 0) - tail->field_46C_ticks;
       record_handle = IO_FOpen(aDefault_rec, (unsigned __int8 *)aAb, 1, a2);
@@ -591,16 +591,16 @@ int  Device_UpdateRect(_DWORD *render_state, int a2, int a3)
   int message_id; // edi
   unsigned int tween_fraction; // ecx
 
-  tail = Compat_RenderStateTailFields((int)render_state);
+  tail = Compat_RenderStateTailFields((int)(intptr_t)render_state);
   Compat_MenuProbeTraceRenderInput(
     "device-update",
-    (int)render_state,
+    (int)(intptr_t)render_state,
     a2,
     a3,
     tail->field_470_ticks,
     tail->field_474_handle);
   if ( !tail->field_468_active )
-    return RenderState_PollInputAndClampCursor((int)render_state, a3);
+    return RenderState_PollInputAndClampCursor((int)(intptr_t)render_state, a3);
   now = Time_Now(a3, a2);
   v5 = g_DeviceRectTweenTimeBase;
   segment_start_ticks = tail->field_470_ticks;
@@ -631,7 +631,7 @@ int  Device_UpdateRect(_DWORD *render_state, int a2, int a3)
     Compat_SyncRenderCursorGlobals(render_state);
     replay_handle = tail->field_474_handle;
     render_state[11] = (unsigned __int8)g_DemoPlaybackCursorButtonState;
-    if ( (*(_BYTE *)(replay_handle + 12) & 0x10) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)(replay_handle + 12) & 0x10) == 0 )
     {
       fread_();
       fread_();
@@ -655,7 +655,7 @@ int  Device_UpdateRect(_DWORD *render_state, int a2, int a3)
 LABEL_8:
     result = Input_IsKeyPressed(1);
     if ( result )
-      App_RequestQuit((int)&g_App_QuitReason_DemoSkipKey);
+      App_RequestQuit((int)(intptr_t)&g_App_QuitReason_DemoSkipKey);
     ++g_DemoScriptCurrentTick;
   }
   return result;

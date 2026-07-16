@@ -24,10 +24,10 @@ int  Queen_FindEligibleBirthHostBuilding(int player_index)
   building_index = 0;
 LABEL_2:
   building_record = UNIT_RECORD(building_index);
-  if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
+  if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
   {
-    building_type = *(char *)(gameData + BUILDING_RECORD_SIZE * building_index + 509678);
-    if ( (building_type == 2 || building_type == 1) && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
+    building_type = *(char *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509678);
+    if ( (building_type == 2 || building_type == 1) && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
       return UNIT_RECORD(building_index);
   }
   while ( ++building_index < 100 )
@@ -103,7 +103,7 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
   result = gameData;
   if ( ACTIVE_MISSION_INDEX != 6 )
   {
-    Debug_Log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, son_birth_texts[0]);
+    Debug_Log(a1, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newturn, son_birth_texts[0]);
     result = PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex);
     if ( result != -1 )
     {
@@ -111,7 +111,7 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
       {
         if ( result == QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING )
         {
-          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, son_birth_texts[0]);
+          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newturnN, son_birth_texts[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);
           host_building = Queen_FindEligibleBirthHostBuilding(g_CurrentPlayerIndex);
           if ( host_building )
@@ -120,29 +120,29 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
             PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = 5;
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
             {
-              son_birth_texts[0] = (int)g_QueenSonBirthTexts[0];
-              son_birth_texts[1] = (int)g_QueenSonBirthTexts[1];
-              son_birth_texts[2] = (int)g_QueenSonBirthTexts[2];
+              son_birth_texts[0] = (int)(intptr_t)g_QueenSonBirthTexts[0];
+              son_birth_texts[1] = (int)(intptr_t)g_QueenSonBirthTexts[1];
+              son_birth_texts[2] = (int)(intptr_t)g_QueenSonBirthTexts[2];
               castle_name_ptr = host_building + 5;
-              daughter_birth_texts[0] = (int)g_QueenDaughterBirthTexts[0];
-              daughter_birth_texts[1] = (int)g_QueenDaughterBirthTexts[1];
-              daughter_birth_texts[2] = (int)g_QueenDaughterBirthTexts[2];
+              daughter_birth_texts[0] = (int)(intptr_t)g_QueenDaughterBirthTexts[0];
+              daughter_birth_texts[1] = (int)(intptr_t)g_QueenDaughterBirthTexts[1];
+              daughter_birth_texts[2] = (int)(intptr_t)g_QueenDaughterBirthTexts[2];
               if ( a2 == 33 )
-                sprintf_(&g_QueenBirthMessageBuffer, (const char *)son_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
+                sprintf_(&g_QueenBirthMessageBuffer, (const char *)(uintptr_t)son_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
               else
-                sprintf_(&g_QueenBirthMessageBuffer, (const char *)daughter_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
-              UI_ShowInfoWindow((const char *)&g_QueenBirthMessageBuffer, 0, v23, (DWORD)savedregs, (int)savedregs, (int)&g_QueenDaughterBirthTexts[3]);
+                sprintf_(&g_QueenBirthMessageBuffer, (const char *)(uintptr_t)daughter_birth_texts[(unsigned __int8)g_LanguageIndex], castle_name_ptr);
+              UI_ShowInfoWindow((const char *)&g_QueenBirthMessageBuffer, 0, v23, (DWORD)(intptr_t)savedregs, (int)(intptr_t)savedregs, (int)(intptr_t)&g_QueenDaughterBirthTexts[3]);
             }
           }
         }
         else if ( result == 1 )
         {
-          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, son_birth_texts[0]);
+          Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newturnK, son_birth_texts[0]);
           PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:
-              Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_0, 0);
+              Debug_Log(v6, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newtur_0, 0);
               dest = g_QueenDepartureEventMessageBuffer;
               src = g_QueenDepartureTexts[(unsigned __int8)g_LanguageIndex];
               do
@@ -159,12 +159,12 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               while ( next_ch );
               break;
             case 1u:
-              Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_1, 1);
+              Debug_Log(v6, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newtur_1, 1);
               theft_castle_index = Unit_FindById(g_CurrentPlayerIndex);
               if ( theft_castle_index != -1 )
               {
                 theft_castle_offset = BUILDING_RECORD_SIZE * theft_castle_index;
-                *(_DWORD *)(gameData + theft_castle_offset + 510112) = 0;
+                *(_DWORD *)(uintptr_t)(gameData + theft_castle_offset + 510112) = 0;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleTreasuryTheftTexts[(unsigned __int8)g_LanguageIndex],
@@ -172,15 +172,15 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               }
               break;
             case 2u:
-              Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_2, 2);
+              Debug_Log(v6, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newtur_2, 2);
               poison_castle_index = Unit_FindById(g_CurrentPlayerIndex);
               if ( poison_castle_index != -1 )
               {
                 poison_castle_offset = BUILDING_RECORD_SIZE * poison_castle_index;
                 poison_castle_record = gameData + BUILDING_RECORD_SIZE * poison_castle_index;
-                plague_state_byte = *(_BYTE *)(poison_castle_record + 510109) & 0xF8;
-                *(_BYTE *)(poison_castle_record + 510109) = plague_state_byte;
-                *(_BYTE *)(poison_castle_record + 510109) = plague_state_byte | 5;
+                plague_state_byte = *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) & 0xF8;
+                *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) = plague_state_byte;
+                *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) = plague_state_byte | 5;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleWellPoisoningTexts[(unsigned __int8)g_LanguageIndex],
@@ -188,11 +188,11 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               }
               break;
             case 3u:
-              Debug_Log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_3, 3);
+              Debug_Log(v6, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newtur_3, 3);
               arson_castle_index = Unit_FindById(g_CurrentPlayerIndex);
               if ( arson_castle_index != -1 )
               {
-                Building_Destroy(UNIT_RECORD(arson_castle_index), a2, (DWORD)savedregs, a4);
+                Building_Destroy(UNIT_RECORD(arson_castle_index), a2, (DWORD)(intptr_t)savedregs, a4);
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleArsonTexts[(unsigned __int8)g_LanguageIndex],
@@ -204,40 +204,40 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
           }
           message_len = strlen(g_QueenDepartureEventMessageBuffer) + 1;
           if ( message_len != 1 )
-            Queen_ShowMessageDialog((int)g_QueenDepartureEventMessageBuffer, message_len - 1, a2, (DWORD)savedregs);
+            Queen_ShowMessageDialog((int)(intptr_t)g_QueenDepartureEventMessageBuffer, message_len - 1, a2, (DWORD)(intptr_t)savedregs);
         }
         result = PLAYER_DATA(g_CurrentPlayerIndex);
-        if ( GAME_TURN_COUNTER >= *(_WORD *)(result + 141445) )
+        if ( GAME_TURN_COUNTER >= *(_WORD *)(uintptr_t)(result + 141445) )
         {
-          if ( *(_DWORD *)(result + 140051) )
+          if ( *(_DWORD *)(uintptr_t)(result + 140051) )
           {
             whim_index = Rng_RandRange(0, 24);
-            Debug_Log(whim_index, a2, (DWORD)savedregs, (int)aQueen_newturnZ, whim_index);
+            Debug_Log(whim_index, a2, (DWORD)(intptr_t)savedregs, (int)(intptr_t)aQueen_newturnZ, whim_index);
             available_funds = Player_CalcAvailableStrongholdFunds(g_CurrentPlayerIndex);
             if ( Queen_ShowWhimDecisionDialog(
                    g_QueenWhimRecords[whim_index].texts[(unsigned __int8)g_LanguageIndex],
                    g_QueenWhimRecords[whim_index].required_stronghold_funds,
                    7 * whim_index,
                    available_funds,
-                   (DWORD)savedregs) )
+                   (DWORD)(intptr_t)savedregs) )
             {
               Player_SpendStrongholdFundsEvenly(g_CurrentPlayerIndex, g_QueenWhimRecords[whim_index].required_stronghold_funds);
               player_record_accepted = PLAYER_DATA(g_CurrentPlayerIndex);
-              if ( *(char *)(player_record_accepted + 141443) < 9 )
-                ++*(_BYTE *)(player_record_accepted + 141443);
+              if ( *(char *)(uintptr_t)(player_record_accepted + 141443) < 9 )
+                ++*(_BYTE *)(uintptr_t)(player_record_accepted + 141443);
             }
             else
             {
               player_record_declined = PLAYER_DATA(g_CurrentPlayerIndex);
-              if ( *(char *)(player_record_declined + 141443) > 1 )
-                --*(_BYTE *)(player_record_declined + 141443);
+              if ( *(char *)(uintptr_t)(player_record_declined + 141443) > 1 )
+                --*(_BYTE *)(uintptr_t)(player_record_declined + 141443);
             }
             goto LABEL_18;
           }
           if ( ACTIVE_MISSION_INDEX != 14 )
           {
-            if ( *(char *)(result + 141443) < 9 )
-              ++*(_BYTE *)(result + 141443);
+            if ( *(char *)(uintptr_t)(result + 141443) < 9 )
+              ++*(_BYTE *)(uintptr_t)(result + 141443);
 LABEL_18:
             result = gameData;
             PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(g_CurrentPlayerIndex) = GAME_TURN_COUNTER + Rng_RandRange(5, 8);
@@ -259,14 +259,14 @@ LABEL_18:
               result,
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
-            Win_PlayModeChangeFrameTransition((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
+            Win_PlayModeChangeFrameTransition((int)(intptr_t)aP_posla, 1, gameData, a2, (DWORD)(intptr_t)savedregs, a3);
             Diagnostics_TraceWorldMapActionEvent(
               "queen_proposal_dialog_enter",
               g_SelectedUnitIndex,
               result,
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
-            proposal_accepted = Queen_ShowMarriageProposalDialog(0, a2, (DWORD)savedregs);
+            proposal_accepted = Queen_ShowMarriageProposalDialog(0, a2, (DWORD)(intptr_t)savedregs);
             Diagnostics_TraceWorldMapActionEvent(
               "queen_proposal_dialog_return",
               g_SelectedUnitIndex,
@@ -277,14 +277,14 @@ LABEL_18:
           player_offset = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
           if ( proposal_accepted )
           {
-            *(_BYTE *)(player_offset + gameData + 141443) = 5;
+            *(_BYTE *)(uintptr_t)(player_offset + gameData + 141443) = 5;
             result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
             PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(g_CurrentPlayerIndex) = GAME_TURN_COUNTER + Rng_RandRange(5, 8);
           }
           else
           {
             result = gameData;
-            *(_BYTE *)(player_offset + gameData + 141443) = -1;
+            *(_BYTE *)(uintptr_t)(player_offset + gameData + 141443) = -1;
           }
         }
       }
@@ -328,12 +328,12 @@ int  Player_Surrender(int player_index, int a2, DWORD a3, double a4)
   int stack_index; // edx
   int result; // eax
 
-  Debug_Log(a2, player_index, a3, (int)aPlayer_surrend);
+  Debug_Log(a2, player_index, a3, (int)(intptr_t)aPlayer_surrend);
 LABEL_2:
   building_record = UNIT_RECORD(building_index);
-  if ( (unsigned int)*(char *)(building_record + 4) < 4
-    && *(__int16 *)(building_record + 16) != -1
-    && *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
+  if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4
+    && *(__int16 *)(uintptr_t)(building_record + 16) != -1
+    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
   {
     Building_Destroy(UNIT_RECORD(building_index), player_index, a3, a4);
   }
@@ -344,8 +344,8 @@ LABEL_2:
   }
   stack_index = 0;
 LABEL_10:
-  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28
-    && *(unsigned __int8 *)(UNIT_STACK_STRIDE * stack_index + gameData + 147178) == player_index )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28
+    && *(unsigned __int8 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + 147178) == player_index )
   {
     UnitStack_KillByIndex(stack_index, player_index, a3, a4);
   }
@@ -355,7 +355,7 @@ LABEL_10:
       goto LABEL_10;
   }
   result = gameData;
-  *(_DWORD *)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
+  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   return result;
 }
 // 450D50: conditional instruction was optimized away because edx.4<64u
@@ -395,10 +395,10 @@ int  AI_ComputeNationStrengthPercent(
   result = 0;
 LABEL_2:
   building_record = UNIT_RECORD(result);
-  if ( (unsigned int)*(char *)(building_record + 4) >= 4
-    || *(__int16 *)(building_record + 16) == -1
-    || (building_offset = gameData + BUILDING_RECORD_SIZE * result, !*(_BYTE *)(building_offset + 509678))
-    || *(unsigned __int8 *)(building_offset + 509676) != nation )
+  if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) >= 4
+    || *(__int16 *)(uintptr_t)(building_record + 16) == -1
+    || (building_offset = gameData + BUILDING_RECORD_SIZE * result, !*(_BYTE *)(uintptr_t)(building_offset + 509678))
+    || *(unsigned __int8 *)(uintptr_t)(building_offset + 509676) != nation )
   {
     while ( ++result < 100 )
     {
@@ -407,8 +407,8 @@ LABEL_2:
     }
     stack_index = 0;
 LABEL_10:
-    if ( (unsigned int)*(__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) > 0x28
-      || *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) != nation
+    if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) > 0x28
+      || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) != nation
       || (result = UnitStack_HasBuilder(stack_index)) == 0 )
     {
       while ( ++stack_index < 500 )
@@ -419,7 +419,7 @@ LABEL_10:
       max_strength = 0;
       for ( i = 0; i < 5; ++i )
       {
-        if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * i + PLAYER_RUNTIME_STATE_OFFSET) )
+        if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * i + PLAYER_RUNTIME_STATE_OFFSET) )
         {
           strength = Player_CalcMilitaryStrength(i);
           if ( strength > max_strength )
@@ -434,17 +434,17 @@ LABEL_10:
         for ( result = 0; result < 5; ++result )
         {
           player_record = gameData + PLAYER_DATA_STRIDE * result;
-          if ( *(_DWORD *)(player_record + 140051) && *(_DWORD *)(player_record + 140024) )
+          if ( *(_DWORD *)(uintptr_t)(player_record + 140051) && *(_DWORD *)(uintptr_t)(player_record + 140024) )
             human_ally_alive = 1;
         }
         if ( human_ally_alive )
         {
-          notice_texts[0] = (int)g_AllyEliminatedNoticeTexts[0];
-          notice_texts[1] = (int)g_AllyEliminatedNoticeTexts[1];
-          notice_texts[2] = (int)g_AllyEliminatedNoticeTexts[2];
-          notice_format = (const char *)notice_texts[(unsigned __int8)g_LanguageIndex];
+          notice_texts[0] = (int)(intptr_t)g_AllyEliminatedNoticeTexts[0];
+          notice_texts[1] = (int)(intptr_t)g_AllyEliminatedNoticeTexts[1];
+          notice_texts[2] = (int)(intptr_t)g_AllyEliminatedNoticeTexts[2];
+          notice_format = (const char *)(uintptr_t)notice_texts[(unsigned __int8)g_LanguageIndex];
           sprintf_(message_buffer, notice_format, PLAYER_DATA_STRIDE * v13 + gameData + PLAYER_RUNTIME_STATE_OFFSET + 4);
-          return UI_ShowInfoWindow((const char *)message_buffer, 0, v17, a3, (int)notice_format, (int)&g_AllyEliminatedNoticeTexts[3]);
+          return UI_ShowInfoWindow((const char *)message_buffer, 0, v17, a3, (int)(intptr_t)notice_format, (int)(intptr_t)&g_AllyEliminatedNoticeTexts[3]);
         }
       }
     }
@@ -478,9 +478,9 @@ int  Player_CheckForDefeatAndHandleElimination(int player_index, DWORD a2)
 
   stack_index = 0;
 LABEL_2:
-  if ( (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
   {
-    owner_index = *(unsigned __int8 *)(gameData + UNIT_STACK_STRIDE * stack_index + 147178);
+    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178);
     if ( owner_index == player_index )
       return player_index ^ owner_index;
   }
@@ -492,11 +492,11 @@ LABEL_2:
   building_index = 0;
 LABEL_9:
   building_record = UNIT_RECORD(building_index);
-  if ( (unsigned int)*(char *)(building_record + 4) < 4
-    && *(__int16 *)(building_record + 16) != -1
-    && (*(_BYTE *)(gameData + BUILDING_RECORD_SIZE * building_index + 509678) || Building_CountGarrison(UNIT_RECORD(building_index))) )
+  if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4
+    && *(__int16 *)(uintptr_t)(building_record + 16) != -1
+    && (*(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509678) || Building_CountGarrison(UNIT_RECORD(building_index))) )
   {
-    owner_index = *(unsigned __int8 *)(gameData + BUILDING_RECORD_SIZE * building_index + 509676);
+    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676);
     if ( owner_index == player_index )
       return player_index ^ owner_index;
   }
@@ -505,23 +505,23 @@ LABEL_9:
     if ( building_index >= 0 )
       goto LABEL_9;
   }
-  *(_DWORD *)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
+  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * player_index + gameData + PLAYER_RUNTIME_STATE_OFFSET) = 0;
   Render_Pump();
   Audio_StopMainMusic();
-  Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
+  Video_PlayAviWithModeGuard((int)(intptr_t)aArama1, aKon_por1);
   survivor_index = 0;
   while ( 1 )
   {
     survivor_record = gameData + PLAYER_DATA_STRIDE * survivor_index;
-    if ( *(_DWORD *)(survivor_record + 140024) )
+    if ( *(_DWORD *)(uintptr_t)(survivor_record + 140024) )
     {
-      if ( *(_DWORD *)(survivor_record + 140051) )
+      if ( *(_DWORD *)(uintptr_t)(survivor_record + 140051) )
         break;
     }
     if ( ++survivor_index >= 5 )
       return 1;
   }
-  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), survivor_record, gameData, a2);
+  Music_PlayMainMapTrack(*(unsigned __int8 *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET), survivor_record, gameData, a2);
   return 0;
 }
 // 451044: conditional instruction was optimized away because edx.4<1F4u
@@ -543,7 +543,7 @@ signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int player_index)
 
   player_offset = 0;
   own_player_offset = PLAYER_DATA_STRIDE * player_index;
-  while ( !*(_DWORD *)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET) || player_offset == own_player_offset )
+  while ( !*(_DWORD *)(uintptr_t)(gameData + player_offset + PLAYER_RUNTIME_STATE_OFFSET) || player_offset == own_player_offset )
   {
     player_offset += PLAYER_DATA_STRIDE;
     if ( player_offset >= 7115 )
@@ -552,7 +552,7 @@ signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int player_index)
       Audio_StopMainMusic();
       Palette_FadeOutToBlack((int *)&g_MainRenderDevice, v4);
       g_RenderDevice = &g_MainRenderDevice;
-      (*(void (**)(void))(g_RenderDeviceDisplayContextPtr + 56))();
+      (*(void (**)(void))(uintptr_t)(g_RenderDeviceDisplayContextPtr + 56))();
       Video_PlayAviWithModeGuard(v5, aZwy01);
       return 1;
     }
@@ -573,11 +573,11 @@ signed int UI_CheckEndTurnHotkey(int player_index)
 //----- (004511D0) --------------------------------------------------------
 void  Options_ApplyInGameSliders(int a1, DWORD resource_handle)
 {
-  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
+  *(_BYTE *)(uintptr_t)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
                                                     - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
                                                      + ((unsigned __int16)(g_OptionsInGameMusicVolumeRaw << 7 >> 31) << 8))) >> 8)
                                 - 64;
-  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
+  *(_BYTE *)(uintptr_t)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
                                                    - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
                                                     + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
   Options_ApplyRecordSettings(gameData + 147147, a1, resource_handle);
@@ -605,24 +605,24 @@ unsigned __int16 * Options_InitInGameSlidersAndWidgets(int widget, int a2, DWORD
   int widget_base; // ecx
 
   UIWidget_PlayPressedReleaseAnimation(widget);
-  if ( (*(_BYTE *)(widget_base - 98) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widget_base - 98) & 2) == 0 )
   {
-    *(_DWORD *)(widget_base - 98) = 2;
+    *(_DWORD *)(uintptr_t)(widget_base - 98) = 2;
     UIWidget_RefreshActionButtonState(widget_base - 106, widget_base);
   }
-  if ( (*(_BYTE *)(widget_base - 151) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widget_base - 151) & 2) == 0 )
   {
-    *(_DWORD *)(widget_base - 151) = 2;
+    *(_DWORD *)(uintptr_t)(widget_base - 151) = 2;
     UIWidget_RefreshActionButtonState(widget_base - 159, widget_base);
   }
-  if ( (*(_BYTE *)(widget_base - 204) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widget_base - 204) & 2) == 0 )
   {
-    *(_DWORD *)(widget_base - 204) = 2;
+    *(_DWORD *)(uintptr_t)(widget_base - 204) = 2;
     UIWidget_RefreshActionButtonState(widget_base - 212, widget_base);
   }
-  if ( (*(_BYTE *)(widget_base - 257) & 1) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widget_base - 257) & 1) == 0 )
   {
-    *(_DWORD *)(widget_base - 257) = 1;
+    *(_DWORD *)(uintptr_t)(widget_base - 257) = 1;
     UIWidget_RefreshActionButtonState(widget_base - 265, widget_base);
   }
   g_OptionsInGameMusicVolumeRaw = 128;
@@ -641,11 +641,11 @@ BOOL  Options_ToggleCheckboxInGame(int widget)
 {
   char checkbox_state; // dl
 
-  checkbox_state = *(_BYTE *)(widget + 8) ^ 1;
-  *(_BYTE *)(widget + 8) = checkbox_state;
-  *(_BYTE *)(widget + 8) = checkbox_state ^ 2;
-  Audio_PlayButtonSound(*(char **)(widget + 49));
-  return Render_Begin((int)g_RenderState, 0);
+  checkbox_state = *(_BYTE *)(uintptr_t)(widget + 8) ^ 1;
+  *(_BYTE *)(uintptr_t)(widget + 8) = checkbox_state;
+  *(_BYTE *)(uintptr_t)(widget + 8) = checkbox_state ^ 2;
+  Audio_PlayButtonSound(*(char **)(uintptr_t)(widget + 49));
+  return Render_Begin((int)(intptr_t)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
@@ -674,16 +674,16 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   int v24; // [esp+C9h] [ebp-E9h]
   int (*prev_render_hook)(); // [esp+196h] [ebp-1Ch]
 
-  sprite_set = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
+  sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a1, a2, a3);
   if ( sprite_set )
     sprite_set = DLXSpriteSet_Load(sprite_set, a2);
-  g_InGameOptionsSpriteSet = (int)sprite_set;
-  prev_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  g_InGameOptionsSpriteSet = (int)(intptr_t)sprite_set;
+  prev_resource_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   render_hook_fn = Render_DefaultRH;
   *(_DWORD *)&v17[25] = aStdrh_19;
   prev_render_hook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(92, a2, prev_resource_handle, (int)aSetrhS08x_24);
+  Debug_Log(92, a2, prev_resource_handle, (int)(intptr_t)aSetrhS08x_24);
   field_offset = 0;
   qmemcpy(widget_table, &g_InGameSettingsButtonWidgetsTemplate, 4 * v7);
   copy_src = (char *)&g_InGameSettingsButtonWidgetsTemplate + 4 * v7;
@@ -698,25 +698,25 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     *(_DWORD *)&v17[field_offset] = (unsigned __int8)g_LanguageIndex + button_text;
   }
   while ( field_offset != 212 );
-  if ( *(_DWORD *)(gameData + 147159) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 147159) )
     v20 = 2;
-  if ( *(_DWORD *)(gameData + 147147) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 147147) )
     v22 = 2;
-  if ( *(_DWORD *)(gameData + 147163) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 147163) )
     v23 = 2;
-  if ( *(_DWORD *)(gameData + 147167) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + 147167) )
     v24 = 2;
-  music_volume_raw = (*(char *)(gameData + 147173) << 8) + 0x4000;
+  music_volume_raw = (*(char *)(uintptr_t)(gameData + 147173) << 8) + 0x4000;
   g_OptionsInGameMusicVolumeRaw = (music_volume_raw - (__CFSHL__(music_volume_raw >> 31, 7) + (music_volume_raw >> 31 << 7))) >> 7;
-  g_OptionsInGameScrollSpeedRaw = ((*(unsigned __int8 *)(gameData + 147171) << 8)
-                - (__CFSHL__(*(unsigned __int8 *)(gameData + 147171) << 8 >> 31, 4)
-                 + 16 * (*(unsigned __int8 *)(gameData + 147171) << 8 >> 31))) >> 4;
-  g_OptionsInGameSoundVolumeRaw = ((*(unsigned __int8 *)(gameData + 147172) << 8)
-                - (__CFSHL__(*(unsigned __int8 *)(gameData + 147172) << 8 >> 31, 4)
-                 + 16 * (*(unsigned __int8 *)(gameData + 147172) << 8 >> 31))) >> 4;
+  g_OptionsInGameScrollSpeedRaw = ((*(unsigned __int8 *)(uintptr_t)(gameData + 147171) << 8)
+                - (__CFSHL__(*(unsigned __int8 *)(uintptr_t)(gameData + 147171) << 8 >> 31, 4)
+                 + 16 * (*(unsigned __int8 *)(uintptr_t)(gameData + 147171) << 8 >> 31))) >> 4;
+  g_OptionsInGameSoundVolumeRaw = ((*(unsigned __int8 *)(uintptr_t)(gameData + 147172) << 8)
+                - (__CFSHL__(*(unsigned __int8 *)(uintptr_t)(gameData + 147172) << 8 >> 31, 4)
+                 + 16 * (*(unsigned __int8 *)(uintptr_t)(gameData + 147172) << 8 >> 31))) >> 4;
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar(g_InGameOptionsSpriteSet, (unsigned __int8)g_LanguageIndex);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     82,
     SpriteForChar,
     -1,
@@ -731,31 +731,31 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   g_InGameOptionsDialogExitSignal = v13;
   do
   {
-    DD_Pump((int)g_RenderState, 132);
+    DD_Pump((int)(intptr_t)g_RenderState, 132);
     UIWidgetTable_PollHoverAndActions(widget_table, prev_resource_handle);
     Options_AnimateAllSliderThumbs(g_InGameSliderThumbPositions);
   }
   while ( v14 == g_InGameOptionsDialogExitSignal );
-  *(_DWORD *)(gameData + 147159) = v20 == 2;
-  *(_DWORD *)(gameData + 147147) = v22 == 2;
-  *(_DWORD *)(gameData + 147163) = v23 == 2;
-  *(_DWORD *)(gameData + 147167) = v24 == 2;
-  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
+  *(_DWORD *)(uintptr_t)(gameData + 147159) = v20 == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147147) = v22 == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147163) = v23 == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147167) = v24 == 2;
+  *(_BYTE *)(uintptr_t)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
                                                     - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
                                                      + ((unsigned __int16)(g_OptionsInGameMusicVolumeRaw << 7 >> 31) << 8))) >> 8)
                                 - 64;
-  *(_BYTE *)(gameData + 147171) = (unsigned __int16)(16 * g_OptionsInGameScrollSpeedRaw
+  *(_BYTE *)(uintptr_t)(gameData + 147171) = (unsigned __int16)(16 * g_OptionsInGameScrollSpeedRaw
                                                    - (__CFSHL__((16 * g_OptionsInGameScrollSpeedRaw) >> 31, 8)
                                                     + ((unsigned __int16)((16 * g_OptionsInGameScrollSpeedRaw) >> 31) << 8))) >> 8;
-  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
+  *(_BYTE *)(uintptr_t)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
                                                    - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
                                                     + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
   Options_ApplyRecordSettings(gameData + 147147, v14, prev_resource_handle);
   Options_DestroySliderThumbList(g_InGameSliderThumbPositions);
   render_hook_fn = (int ( *)(int, char, DWORD))g_RenderHook;
-  Debug_Log(v15, (char)g_RenderHook, prev_resource_handle, (int)aUnsetrh08x_24);
+  Debug_Log(v15, (char)(intptr_t)g_RenderHook, prev_resource_handle, (int)(intptr_t)aUnsetrh08x_24);
   g_RenderHook = prev_render_hook;
-  Render_SetResourceHandle((int)&g_MainRenderDevice, prev_resource_handle);
+  Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, prev_resource_handle);
   WorldMap_RedrawViewport(1);
   return DLXSpriteSet_ReleaseAndClear(&g_InGameOptionsSpriteSet);
 }
@@ -800,7 +800,7 @@ void Cheat_FillSelectedSquadWithCannons(void)
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
         UNIT_TYPE_CANNON,
-        *(_BYTE *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
+        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
     }
     WorldMap_RedrawViewport(1);
   }
@@ -823,8 +823,8 @@ signed int Cheat_ClearSelectedSquadDamageFlags(void)
       result = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
       if ( slot_index >= result )
         break;
-      *(_BYTE *)(slot_offset + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147192) |= 3u;
-      *(_BYTE *)(slot_offset + 31 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(slot_offset
+      *(_BYTE *)(uintptr_t)(slot_offset + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147192) |= 3u;
+      *(_BYTE *)(uintptr_t)(slot_offset + 31 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(uintptr_t)(slot_offset
                                                                               + UNIT_STACK_STRIDE * g_SelectedUnitIndex
                                                                               + gameData
                                                                               + 147192) & 0xF3;
@@ -858,7 +858,7 @@ void Cheat_HealSelectedSquadAndClearDamage(void)
       squad_count = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
       if ( slot_index >= squad_count )
         break;
-      *(_BYTE *)(slot_offset + 31 + gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147158) = 100;
+      *(_BYTE *)(uintptr_t)(slot_offset + 31 + gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147158) = 100;
     }
   }
   // 4517CA: falls through to the shared epilogue loc_4517A0 (pop edx/ecx/ebx; retn)
@@ -883,18 +883,18 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
             - 32
             - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
              + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-          + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET));
-  tile_occupant_id = *(unsigned __int16 *)(result
+          + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET));
+  tile_occupant_id = *(unsigned __int16 *)(uintptr_t)(result
                            + 2
                            * ((((g_MouseCursorRawY >> g_CursorCoordShift)
                               - 16
                               - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
                                + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-                            + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
+                            + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET))
                            + TILE_MAP_OFFSET);
   if ( (unsigned __int16)tile_occupant_id != 0xFFFF )
   {
-    if ( tile_occupant_id > 0x1F4 || (unsigned int)*(__int16 *)(gameData + UNIT_STACK_STRIDE * tile_occupant_id + 147180) > 0x28 )
+    if ( tile_occupant_id > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * tile_occupant_id + 147180) > 0x28 )
     {
       Building_Destroy(BUILDING_RECORD_SIZE * (tile_occupant_id - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
@@ -925,21 +925,21 @@ int Cheat_TeleportSelectedUnitToCursor(void)
        - 32
        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
         + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-     + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+     + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
   result = ((g_MouseCursorRawY >> g_CursorCoordShift)
           - 16
           - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
            + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6;
-  tile_y = result + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+  tile_y = result + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
   if ( g_SelectedUnitIndex != -1 )
   {
-    *(_WORD *)(TILE_ROW_STRIDE * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
+    *(_WORD *)(uintptr_t)(TILE_ROW_STRIDE * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
              + gameData
-             + 2 * *(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176)
+             + 2 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176)
              + TILE_MAP_OFFSET) = -1;
-    *(_WORD *)(TILE_INDEX(tile_x, tile_y)) = g_SelectedUnitIndex;
-    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = tile_x;
-    *(_WORD *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = tile_y;
+    *(_WORD *)(uintptr_t)(TILE_INDEX(tile_x, tile_y)) = g_SelectedUnitIndex;
+    *(_WORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = tile_x;
+    *(_WORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = tile_y;
     return WorldMap_RedrawViewport(1);
   }
   return result;
@@ -967,7 +967,7 @@ signed int Cheat_FillSelectedSquadWithPegasi(void)
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
         UNIT_TYPE_PEGASUS,
-        *(_BYTE *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
+        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
     }
   }
   return result;
@@ -989,7 +989,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   _DWORD *saved_surface; // [esp+0h] [ebp-1Ch]
 
   LOBYTE(palette_ctor_descriptor) = 0;
-  Render_FillRect(0, (_DWORD *)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
+  Render_FillRect(0, (_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   palette_mem = Mem_Alloc(1024, v2, 0, a1);
   if ( palette_mem )
@@ -997,24 +997,24 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
     palette_ctor_descriptor = &g_Runtime_PaletteArrayCtorDescriptor;
     palette_mem = _wcpp_4_ctor_array__(v4, 256);
   }
-  palette = (unsigned __int8 *)palette_mem;
-  Surface = (_DWORD *)Mem_Alloc(188, v4, (char)palette_ctor_descriptor, a1);
+  palette = (unsigned __int8 *)(uintptr_t)palette_mem;
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v4, (char)(intptr_t)palette_ctor_descriptor, a1);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   team_surface = Surface;
   saved_surface = Surface;
-  (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
-  (*(void (**)(void))(team_surface[46] + 36))();
+  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(Surface[46] + 48))(0, aTeam1_gfx);
+  (*(void (**)(void))(uintptr_t)(team_surface[46] + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, palette, 20);
-  Render_Begin((int)g_RenderState, 0);
-  while ( !DD_IsFlipping((int)g_RenderState) )
-    DD_Pump((int)g_RenderState, 20);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
+    DD_Pump((int)(intptr_t)g_RenderState, 20);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, 20);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr, 20);
   if ( saved_surface )
-    (*(void (**)(void))saved_surface[46])();
+    (*(void (**)(void))(uintptr_t)saved_surface[46])();
   return j__nfree_();
 }
 // 451B1C: variable 'v2' is possibly undefined
@@ -1027,7 +1027,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
 //----- (00451C50) --------------------------------------------------------
 void __noreturn Cheat_QuitWithJokeMessage(void)
 {
-  App_RequestQuit((int)aHeheNoBonus);
+  App_RequestQuit((int)(intptr_t)aHeheNoBonus);
 }
 
 //----- (00451C60) --------------------------------------------------------
@@ -1038,19 +1038,19 @@ void Cheat_SetFactionColorAndCastleFlags(void)
   int building_offset; // edx
   char color_flags; // bl
 
-  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) = 3;
+  *(_BYTE *)(uintptr_t)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) = 3;
   building_index = 0;
   while ( 1 )
   {
     building_record = UNIT_RECORD(building_index);
-    if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
+    if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
     {
       building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
-      if ( *(unsigned __int8 *)(building_offset + 509676) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(uintptr_t)(building_offset + 509676) == g_CurrentPlayerIndex )
       {
-        color_flags = *(_BYTE *)(building_offset + 510118) & 0xF8;
-        *(_BYTE *)(building_offset + 510118) = color_flags;
-        *(_BYTE *)(building_offset + 510118) = color_flags | 3;
+        color_flags = *(_BYTE *)(uintptr_t)(building_offset + 510118) & 0xF8;
+        *(_BYTE *)(uintptr_t)(building_offset + 510118) = color_flags;
+        *(_BYTE *)(uintptr_t)(building_offset + 510118) = color_flags | 3;
       }
     }
     do
@@ -1092,7 +1092,7 @@ int  UI_ReadCheatString(char a1)
   if ( result )
   {
     while ( Input_IsKeyPressed(trigger_key) )
-      DD_Pump((int)g_RenderState, a1);
+      DD_Pump((int)(intptr_t)g_RenderState, a1);
     for ( i = cheat_buffer; ; *(i - 1) = Input_KeyToChar(popped_key) )
     {
       while ( 1 )
@@ -1101,7 +1101,7 @@ int  UI_ReadCheatString(char a1)
         popped_key = key_code;
         if ( key_code != -1 )
           break;
-        DD_Pump((int)g_RenderState, -1);
+        DD_Pump((int)(intptr_t)g_RenderState, -1);
       }
       pressed_key = key_code;
       while ( 1 )
@@ -1109,7 +1109,7 @@ int  UI_ReadCheatString(char a1)
         result = Input_IsKeyPressed(pressed_key);
         if ( !result )
           break;
-        DD_Pump((int)g_RenderState, popped_key);
+        DD_Pump((int)(intptr_t)g_RenderState, popped_key);
       }
       if ( popped_key == 28 )
         break;
@@ -1160,7 +1160,7 @@ signed int Rules_ShowBanner_StrategicClash(void)
   v3[4] = v0;
   v3[3] = v1;
   Rules_Clear();
-  return Rules_Bload((int)aStrategClash_d, (DWORD)v3);
+  return Rules_Bload((int)(intptr_t)aStrategClash_d, (DWORD)(intptr_t)v3);
 }
 // 451DFB: variable 'v0' is possibly undefined
 // 451DFC: variable 'v1' is possibly undefined
@@ -1190,7 +1190,7 @@ signed int Rules_CompileStrategicRulesFile(void)
   Rules_InitializeEngine(v0, v1);
   Rules_SetStrategy(0);
   Rules_SetSalienceEvaluationMode(1);
-  return Rules_Bload((int)aStrategClash_d, (DWORD)v3);
+  return Rules_Bload((int)(intptr_t)aStrategClash_d, (DWORD)(intptr_t)v3);
 }
 // 451E51: variable 'v0' is possibly undefined
 // 451E52: variable 'v1' is possibly undefined
@@ -1223,15 +1223,15 @@ int Rules_LogMissionSetupInfo(void)
   while ( player_index < 5 )
   {
     player_record = player_offset + gameData;
-    if ( *(_DWORD *)(player_record + 140024) )
+    if ( *(_DWORD *)(uintptr_t)(player_record + 140024) )
     {
       formatted = sprintf_(
                     log_line,
                     "(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)",
                     player_index,
-                    1 - *(_DWORD *)(player_record + 140051),
-                    *(_DWORD *)(player_record + 140055),
-                    *(_DWORD *)(player_record + 140063));
+                    1 - *(_DWORD *)(uintptr_t)(player_record + 140051),
+                    *(_DWORD *)(uintptr_t)(player_record + 140055),
+                    *(_DWORD *)(uintptr_t)(player_record + 140063));
       Rules_Log(log_line, 0, formatted);
     }
     ++player_index;
@@ -1261,19 +1261,19 @@ signed int Rules_ExecuteAITurn(void)
 
   Diagnostics_TraceWorldMapActionEvent("ai_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
   Map_RebuildCastleSiteAnchorCache();
-  formatted_turn = sprintf_(fact_text, "(tura %d)", *(unsigned __int16 *)(gameData + GAME_TURN_COUNTER_OFFSET));
-  g_AITurnLogFactHandle_Turn = (int)Rules_Log(fact_text, 0, formatted_turn);
+  formatted_turn = sprintf_(fact_text, "(tura %d)", *(unsigned __int16 *)(uintptr_t)(gameData + GAME_TURN_COUNTER_OFFSET));
+  g_AITurnLogFactHandle_Turn = (int)(intptr_t)Rules_Log(fact_text, 0, formatted_turn);
   formatted_player = sprintf_(fact_text, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
-  g_AITurnPlayerIntelligenceFactHandle = (int)Rules_Log(fact_text, 0, formatted_player);
+  g_AITurnPlayerIntelligenceFactHandle = (int)(intptr_t)Rules_Log(fact_text, 0, formatted_player);
   memset(fact_text, 0, 0xC8);
   castle_count = 0;
   building_index = 0;
 LABEL_2:
   building_record = UNIT_RECORD(building_index);
-  if ( (unsigned int)*(char *)(building_record + 4) < 4 && *(__int16 *)(building_record + 16) != -1 )
+  if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
   {
     building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
-    if ( *(unsigned __int8 *)(building_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(building_offset + 509678) == 2 )
+    if ( *(unsigned __int8 *)(uintptr_t)(building_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(building_offset + 509678) == 2 )
       ++castle_count;
   }
   while ( ++building_index < 100 )
@@ -1282,15 +1282,15 @@ LABEL_2:
       goto LABEL_2;
   }
   formatted_castles = sprintf_(fact_text, "(ilosc-zamkow %d %d)", g_CurrentPlayerIndex, castle_count);
-  g_AITurnCastleCountFactHandle = (int)Rules_Log(fact_text, 0, formatted_castles);
+  g_AITurnCastleCountFactHandle = (int)(intptr_t)Rules_Log(fact_text, 0, formatted_castles);
   fortress_count = 0;
   fortress_scan_index = 0;
 LABEL_11:
   fortress_record = UNIT_RECORD(fortress_scan_index);
-  if ( (unsigned int)*(char *)(fortress_record + 4) < 4 && *(__int16 *)(fortress_record + 16) != -1 )
+  if ( (unsigned int)*(char *)(uintptr_t)(fortress_record + 4) < 4 && *(__int16 *)(uintptr_t)(fortress_record + 16) != -1 )
   {
     fortress_offset = gameData + BUILDING_RECORD_SIZE * fortress_scan_index;
-    if ( *(unsigned __int8 *)(fortress_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(fortress_offset + 509678) == 1 )
+    if ( *(unsigned __int8 *)(uintptr_t)(fortress_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(fortress_offset + 509678) == 1 )
       ++fortress_count;
   }
   while ( ++fortress_scan_index < 100 )
@@ -1299,7 +1299,7 @@ LABEL_11:
       goto LABEL_11;
   }
   formatted_fortresses = sprintf_(fact_text, "(ilosc-twierdz %d %d)", g_CurrentPlayerIndex, fortress_count);
-  g_AiTurnFortressCountFactHandle = (int)Rules_Log(fact_text, 0, formatted_fortresses);
+  g_AiTurnFortressCountFactHandle = (int)(intptr_t)Rules_Log(fact_text, 0, formatted_fortresses);
   Diagnostics_TraceWorldMapActionEvent("ai_turn_before_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, castle_count, fortress_count);
   Rules_RunAgendaLoop(-1, 0, 0.0);
   Diagnostics_TraceWorldMapActionEvent("ai_turn_after_agenda", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_AITurnLogFactHandle_Turn, g_AiTurnFortressCountFactHandle);
@@ -1360,7 +1360,7 @@ DWORD a5;
       stack_record[1]);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] rules-create-army-fact %s\n", fact_text);
-    Debug_Log(0, a4, a5, (int)aMkinstArmyS);
+    Debug_Log(0, a4, a5, (int)(intptr_t)aMkinstArmyS);
     fact = Rules_AssertFact(fact_text, 0, 0.0);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] rules-create-army-after-assert fact=%p\n", fact);
@@ -1394,7 +1394,7 @@ _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
   if ( *(_DWORD *)((char *)result + 721) )
   {
     Rules_RetractFactById(*(_DWORD *)((char *)result + 721), a4);
-    sprintf_(fact_text, "(usunieto armie %d )", *(unsigned __int16 *)(TILE_INDEX(*stack, stack[1])));
+    sprintf_(fact_text, "(usunieto armie %d )", *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*stack, stack[1])));
     result = Rules_Log(fact_text, 0, a4);
     *(_DWORD *)((char *)stack + 721) = 0;
   }
@@ -1411,36 +1411,36 @@ _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4)
 signed int Rules_RegisterStrategicActionHostFunctions(void)
 {
   CRT_ProbeStackFrame(36);
-  Rules_RegisterHostFunction(aSwiatynia, 105, (int)aSwiatynia00, (int)&Rules_HostTemple, (int)a22i_1);
-  Rules_RegisterHostFunction(aKop_skarb, 105, (int)aKop_skarb00, (int)&Rules_HostDigTreasure, (int)a11i);
-  Rules_RegisterHostFunction(aPobierz_oddz_0, 105, (int)aPobierz_oddzia, (int)&Rules_HostCollectPortSupply, (int)a00i);
-  Rules_RegisterHostFunction(aPelny_port, 98, (int)aPelny_port00, (int)&Rules_HostPortHasSupplyReady, (int)a00i);
-  Rules_RegisterHostFunction(aJest_pracown_0, 98, (int)aJest_pracownik, (int)&Rules_HostArmyHasBuilder, (int)a11i);
-  Rules_RegisterHostFunction(aJednostka_bi_0, 98, (int)aJednostka_bite, (int)&Rules_HostArmyHasNormalCombatUnits, (int)a11i);
-  Rules_RegisterHostFunction(aJest_droga, 98, (int)aJest_droga00, (int)&Rules_HostRoadExists, (int)a33i);
-  Rules_RegisterHostFunction(aJest_droga_w_0, 98, (int)aJest_droga_w_p, (int)&Rules_HostRoadExistsNearby, (int)a33i);
-  Rules_RegisterHostFunction(aJest_droga_w_2, 98, (int)aJest_droga_w_1, (int)&Rules_HostRoadExistsNearCastle, (int)a33i);
-  Rules_RegisterHostFunction(aJest_droga_d_0, 98, (int)aJest_droga_do_, (int)&Rules_HostRoadExistsToPort, (int)a33i);
-  Rules_RegisterHostFunction(aJest_droga_d_2, 98, (int)aJest_droga_d_1, (int)&Rules_HostRoadExistsToCastle, (int)a33i);
-  Rules_RegisterHostFunction(aJest_droga_d_4, 98, (int)aJest_droga_d_3, (int)&Rules_HostRoadExistsToTemple, (int)a33i);
-  Rules_RegisterHostFunction(aOddzial_w_za_1, 98, (int)aOddzial_w_za_0, (int)&Rules_HostTroopInArmyRange, (int)a33i);
-  Rules_RegisterHostFunction(aBudowla_w_za_0, 98, (int)aBudowla_w_zasi, (int)&Rules_HostBuildingInArmyRange, (int)a33i);
-  Rules_RegisterHostFunction(aOdleglosc_od_0, 105, (int)aOdleglosc_od_o, (int)&Rules_HostDistanceFromObject, (int)a33i);
-  Rules_RegisterHostFunction(aSwiatynia_w__0, 98, (int)aSwiatynia_w_za, (int)&Rules_HostTempleInArmyRange, (int)a33i);
-  Rules_RegisterHostFunction(aSwiatynia_ok, 98, (int)aSwiatynia_ok00, (int)&Rules_HostTempleOk, (int)a33i);
-  Rules_RegisterHostFunction(aMaszeruj, 105, (int)aMaszeruj00, (int)&Rules_HostMarch, (int)a33i);
-  Rules_RegisterHostFunction(aMaszeruj_do__0, 105, (int)aMaszeruj_do_sw, (int)&Rules_HostMarchToTemple, (int)a33i);
-  Rules_RegisterHostFunction(aMaszeruj_bli_0, 105, (int)aMaszeruj_blisk, (int)&Rules_HostMarchNear, (int)a33i);
-  Rules_RegisterHostFunction(aAtakuj_oddzi_0, 105, (int)aAtakuj_oddzial, (int)&Rules_HostAttackTroop, (int)a22i_1);
-  Rules_RegisterHostFunction(aPrzejmuj_odd_0, 105, (int)aPrzejmuj_oddzi, (int)&Rules_HostCaptureTroop, (int)a22i_1);
-  Rules_RegisterHostFunction(aUkryj_oddzial, 105, (int)aUkryj_oddzial0, (int)&Rules_HostHideTroop, (int)a33i);
-  Rules_RegisterHostFunction(aJest_armia, 98, (int)aJest_armia00, (int)&Rules_HostArmyExists, (int)a11i);
-  Rules_RegisterHostFunction(aLiczba_jedno_0, 105, (int)aLiczba_jednost, (int)&Rules_HostUnitCountInTroop, (int)a11i);
-  Rules_RegisterHostFunction(aAtakuj_budow_0, 105, (int)aAtakuj_budowle, (int)&Rules_HostAttackBuilding, (int)a22i_1);
-  Rules_RegisterHostFunction(aJest_brod, 98, (int)aJest_brod00, (int)&Rules_HostFordExists, (int)a11i);
-  Rules_RegisterHostFunction(aBuduj_droge, 98, (int)aBuduj_droge00, (int)&Rules_HostBuildRoad, (int)a11i);
-  Rules_RegisterHostFunction(aBuduj_pulapke, 105, (int)aBuduj_pulapke0, (int)&Rules_HostBuildTrap, (int)a33i);
-  return Rules_RegisterHostFunction(aUnit_canmove, 105, (int)aUnit_canmove00, (int)&Rules_HostUnitCanMove, (int)a11i);
+  Rules_RegisterHostFunction(aSwiatynia, 105, (int)(intptr_t)aSwiatynia00, (int)(intptr_t)&Rules_HostTemple, (int)(intptr_t)a22i_1);
+  Rules_RegisterHostFunction(aKop_skarb, 105, (int)(intptr_t)aKop_skarb00, (int)(intptr_t)&Rules_HostDigTreasure, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aPobierz_oddz_0, 105, (int)(intptr_t)aPobierz_oddzia, (int)(intptr_t)&Rules_HostCollectPortSupply, (int)(intptr_t)a00i);
+  Rules_RegisterHostFunction(aPelny_port, 98, (int)(intptr_t)aPelny_port00, (int)(intptr_t)&Rules_HostPortHasSupplyReady, (int)(intptr_t)a00i);
+  Rules_RegisterHostFunction(aJest_pracown_0, 98, (int)(intptr_t)aJest_pracownik, (int)(intptr_t)&Rules_HostArmyHasBuilder, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aJednostka_bi_0, 98, (int)(intptr_t)aJednostka_bite, (int)(intptr_t)&Rules_HostArmyHasNormalCombatUnits, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aJest_droga, 98, (int)(intptr_t)aJest_droga00, (int)(intptr_t)&Rules_HostRoadExists, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_droga_w_0, 98, (int)(intptr_t)aJest_droga_w_p, (int)(intptr_t)&Rules_HostRoadExistsNearby, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_droga_w_2, 98, (int)(intptr_t)aJest_droga_w_1, (int)(intptr_t)&Rules_HostRoadExistsNearCastle, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_droga_d_0, 98, (int)(intptr_t)aJest_droga_do_, (int)(intptr_t)&Rules_HostRoadExistsToPort, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_droga_d_2, 98, (int)(intptr_t)aJest_droga_d_1, (int)(intptr_t)&Rules_HostRoadExistsToCastle, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_droga_d_4, 98, (int)(intptr_t)aJest_droga_d_3, (int)(intptr_t)&Rules_HostRoadExistsToTemple, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aOddzial_w_za_1, 98, (int)(intptr_t)aOddzial_w_za_0, (int)(intptr_t)&Rules_HostTroopInArmyRange, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aBudowla_w_za_0, 98, (int)(intptr_t)aBudowla_w_zasi, (int)(intptr_t)&Rules_HostBuildingInArmyRange, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aOdleglosc_od_0, 105, (int)(intptr_t)aOdleglosc_od_o, (int)(intptr_t)&Rules_HostDistanceFromObject, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aSwiatynia_w__0, 98, (int)(intptr_t)aSwiatynia_w_za, (int)(intptr_t)&Rules_HostTempleInArmyRange, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aSwiatynia_ok, 98, (int)(intptr_t)aSwiatynia_ok00, (int)(intptr_t)&Rules_HostTempleOk, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aMaszeruj, 105, (int)(intptr_t)aMaszeruj00, (int)(intptr_t)&Rules_HostMarch, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aMaszeruj_do__0, 105, (int)(intptr_t)aMaszeruj_do_sw, (int)(intptr_t)&Rules_HostMarchToTemple, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aMaszeruj_bli_0, 105, (int)(intptr_t)aMaszeruj_blisk, (int)(intptr_t)&Rules_HostMarchNear, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aAtakuj_oddzi_0, 105, (int)(intptr_t)aAtakuj_oddzial, (int)(intptr_t)&Rules_HostAttackTroop, (int)(intptr_t)a22i_1);
+  Rules_RegisterHostFunction(aPrzejmuj_odd_0, 105, (int)(intptr_t)aPrzejmuj_oddzi, (int)(intptr_t)&Rules_HostCaptureTroop, (int)(intptr_t)a22i_1);
+  Rules_RegisterHostFunction(aUkryj_oddzial, 105, (int)(intptr_t)aUkryj_oddzial0, (int)(intptr_t)&Rules_HostHideTroop, (int)(intptr_t)a33i);
+  Rules_RegisterHostFunction(aJest_armia, 98, (int)(intptr_t)aJest_armia00, (int)(intptr_t)&Rules_HostArmyExists, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aLiczba_jedno_0, 105, (int)(intptr_t)aLiczba_jednost, (int)(intptr_t)&Rules_HostUnitCountInTroop, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aAtakuj_budow_0, 105, (int)(intptr_t)aAtakuj_budowle, (int)(intptr_t)&Rules_HostAttackBuilding, (int)(intptr_t)a22i_1);
+  Rules_RegisterHostFunction(aJest_brod, 98, (int)(intptr_t)aJest_brod00, (int)(intptr_t)&Rules_HostFordExists, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aBuduj_droge, 98, (int)(intptr_t)aBuduj_droge00, (int)(intptr_t)&Rules_HostBuildRoad, (int)(intptr_t)a11i);
+  Rules_RegisterHostFunction(aBuduj_pulapke, 105, (int)(intptr_t)aBuduj_pulapke0, (int)(intptr_t)&Rules_HostBuildTrap, (int)(intptr_t)a33i);
+  return Rules_RegisterHostFunction(aUnit_canmove, 105, (int)(intptr_t)aUnit_canmove00, (int)(intptr_t)&Rules_HostUnitCanMove, (int)(intptr_t)a11i);
 }
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 

@@ -101,20 +101,20 @@ int  Class_PrintSlotBasicInfoTable(
     headerDest += 2;
   }
   while ( v12 );
-  Output_Write(logicalName, (int)buf, ~nameLen);
+  Output_Write(logicalName, (int)(intptr_t)buf, ~nameLen);
   sprintf_(buf, overrideMessagePrintFormat, aOvrdMsg);
-  Output_Write(logicalName, (int)buf, v13);
-  Output_Write(logicalName, (int)aSourceS, v14);
+  Output_Write(logicalName, (int)(intptr_t)buf, v13);
+  Output_Write(logicalName, (int)(intptr_t)aSourceS, v14);
   result = theDefclass;
   slotIndex = 0;
-  if ( *(_DWORD *)(theDefclass + 72) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 72) )
   {
     slotOffset = 0;
     do
     {
-      slotDesc = *(_DWORD *)(slotOffset + *(_DWORD *)(theDefclass + 56));
-      sprintf_(buf, slotNamePrintFormat, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(slotDesc + 8) + 12) + 16));
-      if ( (*(_BYTE *)slotDesc & 2) != 0 )
+      slotDesc = *(_DWORD *)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(theDefclass + 56));
+      sprintf_(buf, slotNamePrintFormat, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 12) + 16));
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 2) != 0 )
         multiplicityStr = aMlt;
       else
         multiplicityStr = aSgl;
@@ -132,13 +132,13 @@ int  Class_PrintSlotBasicInfoTable(
       }
       while ( v20 );
       v21 = buf;
-      if ( (*(_BYTE *)(slotDesc + 1) & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(slotDesc + 1) & 1) != 0 )
       {
         defaultTypeStr = aNil_5;
       }
       else
       {
-        if ( (*(_BYTE *)slotDesc & 0x40) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x40) != 0 )
           defaultTypeStr = aDyn;
         else
           defaultTypeStr = aStc;
@@ -157,7 +157,7 @@ int  Class_PrintSlotBasicInfoTable(
         defaultTypeDest += 2;
       }
       while ( v25 );
-      if ( (*(_BYTE *)slotDesc & 8) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 8) != 0 )
         inheritStr = aNil_5;
       else
         inheritStr = aInh;
@@ -174,11 +174,11 @@ int  Class_PrintSlotBasicInfoTable(
         inheritDest += 2;
       }
       while ( v29 );
-      if ( (*(_BYTE *)slotDesc & 0x20) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x20) != 0 )
       {
         accessStr = aInt_0;
       }
-      else if ( (*(_BYTE *)slotDesc & 0x10) != 0 )
+      else if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x10) != 0 )
       {
         accessStr = aR_5;
       }
@@ -199,7 +199,7 @@ int  Class_PrintSlotBasicInfoTable(
         accessDest += 2;
       }
       while ( v33 );
-      if ( (*(_BYTE *)slotDesc & 1) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 1) != 0 )
         storageStr = aShr;
       else
         storageStr = aLcl;
@@ -216,7 +216,7 @@ int  Class_PrintSlotBasicInfoTable(
         storageDest += 2;
       }
       while ( v37 );
-      if ( (*(_BYTE *)(slotDesc + 1) & 2) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(slotDesc + 1) & 2) != 0 )
         reactiveStr = aRct;
       else
         reactiveStr = aNil_5;
@@ -233,7 +233,7 @@ int  Class_PrintSlotBasicInfoTable(
         reactiveDest += 2;
       }
       while ( v41 );
-      if ( (*(_BYTE *)slotDesc & 4) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 4) != 0 )
         compositionStr = aCmp;
       else
         compositionStr = aExc;
@@ -250,7 +250,7 @@ int  Class_PrintSlotBasicInfoTable(
         compositionDest += 2;
       }
       while ( v45 );
-      if ( (*(_BYTE *)(slotDesc + 1) & 4) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)(slotDesc + 1) & 4) != 0 )
         visibilityStr = aPub;
       else
         visibilityStr = aPrv;
@@ -331,19 +331,19 @@ int  Class_PrintSlotBasicInfoTable(
         finalPadDest += 2;
       }
       while ( v67 );
-      Output_Write(logicalName, (int)buf, ~lineLen);
-      if ( (*(_BYTE *)slotDesc & 0x10) != 0 )
+      Output_Write(logicalName, (int)(intptr_t)buf, ~lineLen);
+      if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x10) != 0 )
         overrideMessage = aNil_6;
       else
-        overrideMessage = *(char **)(*(_DWORD *)(slotDesc + 12) + 16);
+        overrideMessage = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 12) + 16);
       sprintf_(buf, overrideMessagePrintFormat, overrideMessage);
-      Output_Write(logicalName, (int)buf, 0);
-      Class_PrintSlotSourceClasses(logicalName, *(_DWORD *)(*(_DWORD *)(slotDesc + 8) + 12), v69, (unsigned __int16 *)(*(_DWORD *)(slotDesc + 4) + 46), 1);
-      Output_Write(logicalName, (int)asc_50CE14, v70);
+      Output_Write(logicalName, (int)(intptr_t)buf, 0);
+      Class_PrintSlotSourceClasses(logicalName, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 12), v69, (unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 4) + 46), 1);
+      Output_Write(logicalName, (int)(intptr_t)asc_50CE14, v70);
       slotOffset += 4;
       result = ++slotIndex;
     }
-    while ( slotIndex < *(_DWORD *)(theDefclass + 72) );
+    while ( slotIndex < *(_DWORD *)(uintptr_t)(theDefclass + 72) );
   }
   return result;
 }
@@ -366,7 +366,7 @@ signed int  Class_PrintSlotSourceClasses(int logicalName, int slotName, int clas
   {
     if ( classIndex == *precedenceList )
       return 0;
-    foundSlot = (_BYTE *)Class_FindSlotBySymbol(*(_DWORD *)(*(_DWORD *)(precedenceList + 1) + 4 * classIndex), slotName);
+    foundSlot = (_BYTE *)(uintptr_t)Class_FindSlotBySymbol(*(_DWORD *)(uintptr_t)(*(_DWORD *)(precedenceList + 1) + 4 * classIndex), slotName);
     slotDesc = foundSlot;
     if ( foundSlot )
     {
@@ -377,10 +377,10 @@ signed int  Class_PrintSlotSourceClasses(int logicalName, int slotName, int clas
   }
   if ( (*slotDesc & 4) != 0 )
   {
-    if ( Class_PrintSlotSourceClasses(logicalName, slotName, classIndex + 1, (int)precedenceList, 0) )
-      Output_Write(logicalName, (int)asc_50CEE8, v12);
+    if ( Class_PrintSlotSourceClasses(logicalName, slotName, classIndex + 1, (int)(intptr_t)precedenceList, 0) )
+      Output_Write(logicalName, (int)(intptr_t)asc_50CEE8, v12);
   }
-  Class_PrintName(*(_DWORD *)(*(_DWORD *)(precedenceList + 1) + 4 * classIndex), 0);
+  Class_PrintName(*(_DWORD *)(uintptr_t)(*(_DWORD *)(precedenceList + 1) + 4 * classIndex), 0);
   return 1;
 }
 // 4D5240: variable 'v12' is possibly undefined
@@ -463,31 +463,31 @@ signed int  Class_PrintSlotConstraintTable(
     dstPtr += 2;
   }
   while ( v9 );
-  Output_Write(logicalName, (int)buf, ~bufLen);
+  Output_Write(logicalName, (int)(intptr_t)buf, ~bufLen);
   result = theDefclass;
   slotIndex = 0;
-  if ( *(_DWORD *)(theDefclass + 72) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 72) )
   {
     for ( i = 0; ; i += 4 )
     {
-      slotDesc = *(_DWORD *)(i + *(_DWORD *)(theDefclass + 56));
-      theConstraint = *(char **)(slotDesc + 20);
-      sprintf_(buf, slotNamePrintFormat, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(slotDesc + 8) + 12) + 16));
+      slotDesc = *(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56));
+      theConstraint = *(char **)(uintptr_t)(slotDesc + 20);
+      sprintf_(buf, slotNamePrintFormat, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 12) + 16));
       if ( theConstraint )
         break;
-      IO_OpenStringDestination((int)aDescribeClas_1, (const void *)v13, bufferSize);
-      Output_Write((int)aDescribeClas_1, (int)aRngOo__Oo, v14);
-      if ( (**(_BYTE **)(i + *(_DWORD *)(theDefclass + 56)) & 2) != 0 )
+      IO_OpenStringDestination((int)(intptr_t)aDescribeClas_1, (const void *)(uintptr_t)v13, bufferSize);
+      Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)aRngOo__Oo, v14);
+      if ( (**(_BYTE **)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) != 0 )
       {
         cardinalityMarker = aCrd0__Oo;
 LABEL_9:
-        Output_Write((int)aDescribeClas_1, (int)cardinalityMarker, v15);
+        Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)cardinalityMarker, v15);
       }
 LABEL_10:
-      Output_Write((int)aDescribeClas_1, (int)asc_50CE14, v15);
-      IO_CloseStringRouter((int)aDescribeClas_1);
+      Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)asc_50CE14, v15);
+      IO_CloseStringRouter((int)(intptr_t)aDescribeClas_1);
       result = Output_Write(logicalName, v17, v18);
-      if ( (unsigned int)++slotIndex >= *(_DWORD *)(theDefclass + 72) )
+      if ( (unsigned int)++slotIndex >= *(_DWORD *)(uintptr_t)(theDefclass + 72) )
         return result;
     }
     v19 = Class_ConstraintTypeMarker(theConstraint, *(_DWORD *)theConstraint << 30 >> 31, *(_DWORD *)theConstraint << 21 >> 31);
@@ -602,22 +602,22 @@ LABEL_10:
       v48 += 2;
     }
     while ( v50 );
-    IO_OpenStringDestination((int)aDescribeClas_1, &buf[strlen(buf)], bufferSize - (strlen(buf) + 1));
+    IO_OpenStringDestination((int)(intptr_t)aDescribeClas_1, &buf[strlen(buf)], bufferSize - (strlen(buf) + 1));
     constraintFlags = *theConstraint;
     if ( (*theConstraint & 0x10) != 0 || (constraintFlags & 8) != 0 || (constraintFlags & 1) != 0 )
     {
-      Output_Write((int)aDescribeClas_1, (int)aRng, v15);
-      Rules_PrintFieldExprList((signed int)aDescribeClas_1, *(__int16 **)(theConstraint + 10));
-      Output_Write((int)aDescribeClas_1, (int)a___0, v52);
-      Rules_PrintFieldExprList((signed int)aDescribeClas_1, *(__int16 **)(theConstraint + 14));
-      Output_Write((int)aDescribeClas_1, (int)asc_50CF34, v53);
+      Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)aRng, v15);
+      Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 10));
+      Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)a___0, v52);
+      Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 14));
+      Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)asc_50CF34, v53);
     }
-    if ( (**(_BYTE **)(i + *(_DWORD *)(theDefclass + 56)) & 2) == 0 )
+    if ( (**(_BYTE **)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) == 0 )
       goto LABEL_10;
-    Output_Write((int)aDescribeClas_1, (int)aCrd, v15);
-    Rules_PrintFieldExprList((signed int)aDescribeClas_1, *(__int16 **)(theConstraint + 18));
-    Output_Write((int)aDescribeClas_1, (int)a___0, v54);
-    Rules_PrintFieldExprList((signed int)aDescribeClas_1, *(__int16 **)(theConstraint + 22));
+    Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)aCrd, v15);
+    Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 18));
+    Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)a___0, v54);
+    Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 22));
     cardinalityMarker = asc_50CF40;
     goto LABEL_9;
   }
@@ -657,14 +657,14 @@ unsigned int  Class_ClassAbstractPCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(argDataObject + 16));
+    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
     if ( theDefclass )
     {
       return (unsigned int)(theDefclass[5] << 29) >> 31;
     }
     else
     {
-      Class_ReportLookupError(v4, *(_DWORD *)(argDataObject + 16));
+      Class_ReportLookupError(v4, *(_DWORD *)(uintptr_t)(argDataObject + 16));
       return 0;
     }
   }
@@ -686,14 +686,14 @@ unsigned int  Class_ClassReactivePCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(argDataObject + 16));
+    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
     if ( theDefclass )
     {
       return (unsigned int)(theDefclass[5] << 28) >> 31;
     }
     else
     {
-      Class_ReportLookupError(v4, *(_DWORD *)(argDataObject + 16));
+      Class_ReportLookupError(v4, *(_DWORD *)(uintptr_t)(argDataObject + 16));
       return 0;
     }
   }
@@ -714,15 +714,15 @@ int * Class_ParseClassNameAndInheritFlag(int functionName, _DWORD *inheritFlag, 
   *inheritFlag = 0;
   if ( Rules_RtnArgCount() )
   {
-    result = (int *)Lexer_ParseValueList(1, argValue, 2, a3);
+    result = (int *)(uintptr_t)Lexer_ParseValueList(1, argValue, 2, a3);
     if ( result )
     {
-      theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(argDataObject + 16));
+      theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
       if ( theDefclass )
       {
         if ( Rules_RtnArgCount() == 2 )
         {
-          result = (int *)Lexer_ParseValueList(2, argValue, 2, a3);
+          result = (int *)(uintptr_t)Lexer_ParseValueList(2, argValue, 2, a3);
           if ( result )
           {
             if ( !strcmp_(secondArgValue, aInherit_1) )
@@ -745,7 +745,7 @@ int * Class_ParseClassNameAndInheritFlag(int functionName, _DWORD *inheritFlag, 
       }
       else
       {
-        Class_ReportLookupError(v6, *(_DWORD *)(argDataObject + 16));
+        Class_ReportLookupError(v6, *(_DWORD *)(uintptr_t)(argDataObject + 16));
         return 0;
       }
     }
@@ -770,11 +770,11 @@ _DWORD * Class_ClassSlotsCommand(unsigned int a1, double a2)
   unsigned int v5[3]; // [esp+0h] [ebp-Ch] BYREF
 
   v5[2] = a1;
-  theDefclass = Class_ParseClassNameAndInheritFlag((int)aClassSlots_0, v5, a2);
+  theDefclass = Class_ParseClassNameAndInheritFlag((int)(intptr_t)aClassSlots_0, v5, a2);
   if ( theDefclass )
-    return Class_SlotsFunction((int)theDefclass, returnValue, v5[0]);
+    return Class_SlotsFunction((int)(intptr_t)theDefclass, returnValue, v5[0]);
   else
-    return Rules_SetMultifieldErrorValue((int)returnValue);
+    return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
 }
 // 4D5889: variable 'v3' is possibly undefined
 
@@ -786,11 +786,11 @@ __int16  Class_ClassSuperclassesCommand(int a1, double a2)
   int v5[3]; // [esp+0h] [ebp-Ch] BYREF
 
   v5[2] = a1;
-  theDefclass = Class_ParseClassNameAndInheritFlag((int)aClassSupercl_0, v5, a2);
+  theDefclass = Class_ParseClassNameAndInheritFlag((int)(intptr_t)aClassSupercl_0, v5, a2);
   if ( theDefclass )
-    return Class_SuperclassesFunction((int)theDefclass, returnValue, v5[0]);
+    return Class_SuperclassesFunction((int)(intptr_t)theDefclass, returnValue, v5[0]);
   else
-    return (unsigned __int16)Rules_SetMultifieldErrorValue((int)returnValue);
+    return (unsigned __int16)(intptr_t)Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
 }
 // 4D58C9: variable 'v3' is possibly undefined
 
@@ -802,9 +802,9 @@ void  Class_ClassSubclassesCommand(int a1, double a2)
   int v4[3]; // [esp+0h] [ebp-Ch] BYREF
 
   v4[2] = a1;
-  theDefclass = Class_ParseClassNameAndInheritFlag((int)aClassSubclas_0, v4, a2);
+  theDefclass = Class_ParseClassNameAndInheritFlag((int)(intptr_t)aClassSubclas_0, v4, a2);
   if ( theDefclass )
-    Class_SubclassesFunction((int)theDefclass, v4[0]);
+    Class_SubclassesFunction((int)(intptr_t)theDefclass, v4[0]);
   else
     Rules_SetMultifieldErrorValue(returnValue);
 }
@@ -819,10 +819,10 @@ _DWORD * Class_GetDefmessageHandlerListCommand(int a1, double a2)
 
   v6[2] = a1;
   if ( !Rules_RtnArgCount() )
-    return (_DWORD *)Class_MessageHandlerListFunction(0, 0);
-  theDefclass = Class_ParseClassNameAndInheritFlag((int)aGetDefmessag_0, v6, a2);
+    return (_DWORD *)(uintptr_t)Class_MessageHandlerListFunction(0, 0);
+  theDefclass = Class_ParseClassNameAndInheritFlag((int)(intptr_t)aGetDefmessag_0, v6, a2);
   if ( theDefclass )
-    return (_DWORD *)Class_MessageHandlerListFunction((int)theDefclass, v6[0]);
+    return (_DWORD *)(uintptr_t)Class_MessageHandlerListFunction((int)(intptr_t)theDefclass, v6[0]);
   else
     return Rules_SetMultifieldErrorValue(returnValue);
 }
@@ -867,7 +867,7 @@ _DWORD * Class_SlotCardinalityFunction(int a1, int *result, double a3)
 //----- (004D5A40) --------------------------------------------------------
 int  Class_IsAbstract(int theDefclass)
 {
-  return *(_DWORD *)(theDefclass + 20) << 29 >> 31;
+  return *(_DWORD *)(uintptr_t)(theDefclass + 20) << 29 >> 31;
 }
 
 //----- (004D5A60) --------------------------------------------------------
@@ -886,14 +886,14 @@ _DWORD * Class_SlotsFunction(int theDefclass, _DWORD *returnValue, unsigned int 
 
   v3 = inheritFlag;
   if ( inheritFlag )
-    slotCount = *(_DWORD *)(theDefclass + 72);
+    slotCount = *(_DWORD *)(uintptr_t)(theDefclass + 72);
   else
-    slotCount = *(_DWORD *)(theDefclass + 64);
+    slotCount = *(_DWORD *)(uintptr_t)(theDefclass + 64);
   returnValue[1] = 4;
   returnValue[4] = slotCount - 1;
   returnValue[3] = 0;
   result = Rules_CreateEphemeralMultifield(slotCount);
-  *(_DWORD *)(returnObj + 8) = result;
+  *(_DWORD *)(uintptr_t)(returnObj + 8) = result;
   if ( slotCount )
   {
     if ( v3 )
@@ -905,11 +905,11 @@ _DWORD * Class_SlotsFunction(int theDefclass, _DWORD *returnValue, unsigned int 
         result = 0;
         do
         {
-          *(_WORD *)((char *)result + *(_DWORD *)(returnObj + 8) + 14) = 2;
-          slotTemplate = *(_DWORD *)(classPtr[14] + templateOffset);
+          *(_WORD *)((char *)result + *(_DWORD *)(uintptr_t)(returnObj + 8) + 14) = 2;
+          slotTemplate = *(_DWORD *)(uintptr_t)(classPtr[14] + templateOffset);
           templateOffset += 4;
           ++templateIndex;
-          *(_DWORD *)((char *)result + *(_DWORD *)(returnObj + 8) + 16) = *(_DWORD *)(*(_DWORD *)(slotTemplate + 8) + 12);
+          *(_DWORD *)((char *)result + *(_DWORD *)(uintptr_t)(returnObj + 8) + 16) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotTemplate + 8) + 12);
           result = (_DWORD *)((char *)result + 6);
         }
         while ( templateIndex < classPtr[18] );
@@ -921,10 +921,10 @@ _DWORD * Class_SlotsFunction(int theDefclass, _DWORD *returnValue, unsigned int 
       result = 0;
       do
       {
-        *(_WORD *)((char *)result + *(_DWORD *)(returnObj + 8) + 14) = 2;
-        slotName = *(_DWORD *)(classPtr[13] + slotOffset + 8);
+        *(_WORD *)((char *)result + *(_DWORD *)(uintptr_t)(returnObj + 8) + 14) = 2;
+        slotName = *(_DWORD *)(uintptr_t)(classPtr[13] + slotOffset + 8);
         slotOffset += 44;
-        *(_DWORD *)((char *)result + *(_DWORD *)(returnObj + 8) + 16) = *(_DWORD *)(slotName + 12);
+        *(_DWORD *)((char *)result + *(_DWORD *)(uintptr_t)(returnObj + 8) + 16) = *(_DWORD *)(uintptr_t)(slotName + 12);
         ++v3;
         result = (_DWORD *)((char *)result + 6);
       }
@@ -986,19 +986,19 @@ int  Class_MessageHandlerListFunction(int theDefclass, int inheritFlag)
   for ( i = 0; currentClass; currentClass = Class_GetNextRecord(currentClass) )
   {
     if ( inheritFlag )
-      precedenceCount = *(unsigned __int16 *)(currentClass + 46);
+      precedenceCount = *(unsigned __int16 *)(uintptr_t)(currentClass + 46);
     else
       precedenceCount = 1;
     superclassLimit = precedenceCount;
     superclassIndex = 0;
     if ( precedenceCount > 0 )
     {
-      precedenceList = *(int **)(currentClass + 48);
+      precedenceList = *(int **)(uintptr_t)(currentClass + 48);
       do
       {
         precClass = *precedenceList++;
         ++superclassIndex;
-        i += *(_DWORD *)(precClass + 96);
+        i += *(_DWORD *)(uintptr_t)(precClass + 96);
       }
       while ( superclassIndex < superclassLimit );
     }
@@ -1008,13 +1008,13 @@ int  Class_MessageHandlerListFunction(int theDefclass, int inheritFlag)
   fieldCount = 3 * i;
   returnValue[4] = 3 * i - 1;
   multifield = Rules_CreateEphemeralMultifield(3 * i);
-  *(_DWORD *)(v12 + 8) = multifield;
+  *(_DWORD *)(uintptr_t)(v12 + 8) = multifield;
   result = firstClass;
   fieldsFilled = 0;
   for ( j = firstClass; result; j = result )
   {
     if ( inheritFlag )
-      superclassLimit2 = *(unsigned __int16 *)(j + 46);
+      superclassLimit2 = *(unsigned __int16 *)(uintptr_t)(j + 46);
     else
       superclassLimit2 = 1;
     if ( superclassLimit2 > 0 )
@@ -1023,34 +1023,34 @@ int  Class_MessageHandlerListFunction(int theDefclass, int inheritFlag)
       precedenceEnd = 4 * superclassLimit2;
       do
       {
-        sourceClass = *(_DWORD *)(precedenceOffset + *(_DWORD *)(j + 48));
+        sourceClass = *(_DWORD *)(uintptr_t)(precedenceOffset + *(_DWORD *)(uintptr_t)(j + 48));
         if ( inheritFlag )
-          destBaseIndex = fieldCount - 3 * *(_DWORD *)(sourceClass + 96) - fieldsFilled;
+          destBaseIndex = fieldCount - 3 * *(_DWORD *)(uintptr_t)(sourceClass + 96) - fieldsFilled;
         else
           destBaseIndex = fieldsFilled;
         fieldIndex = destBaseIndex + 1;
         handlerIndex = 0;
-        if ( *(_DWORD *)(sourceClass + 96) )
+        if ( *(_DWORD *)(uintptr_t)(sourceClass + 96) )
         {
           handlerOffset = 0;
           do
           {
             fieldOffset = 6 * (fieldIndex - 1);
-            *(_WORD *)(*(_DWORD *)(v12 + 8) + fieldOffset + 14) = 2;
+            *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v12 + 8) + fieldOffset + 14) = 2;
             classNameSymbol = Rules_GetConstructNameSymbol(sourceClass);
-            *(_DWORD *)(fieldOffset + *(_DWORD *)(v21 + 8) + 16) = classNameSymbol;
-            *(_WORD *)(*(_DWORD *)(v21 + 8) + 6 * v22 + 14) = 2;
-            *(_DWORD *)(6 * v22 + *(_DWORD *)(v21 + 8) + 16) = *(_DWORD *)(handlerOffset + *(_DWORD *)(sourceClass + 88) + 8);
-            *(_WORD *)(6 * (v22 + 1) + *(_DWORD *)(v21 + 8) + 14) = 2;
-            handlerTypeSymbol = Str_Intern(g_MessageHandlerTypeNames[*(_DWORD *)(handlerOffset + *(_DWORD *)(sourceClass + 88)) << 29 >> 30], v21);
+            *(_DWORD *)(uintptr_t)(fieldOffset + *(_DWORD *)(uintptr_t)(v21 + 8) + 16) = classNameSymbol;
+            *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v21 + 8) + 6 * v22 + 14) = 2;
+            *(_DWORD *)(uintptr_t)(6 * v22 + *(_DWORD *)(uintptr_t)(v21 + 8) + 16) = *(_DWORD *)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(sourceClass + 88) + 8);
+            *(_WORD *)(uintptr_t)(6 * (v22 + 1) + *(_DWORD *)(uintptr_t)(v21 + 8) + 14) = 2;
+            handlerTypeSymbol = Str_Intern(g_MessageHandlerTypeNames[*(_DWORD *)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(sourceClass + 88)) << 29 >> 30], v21);
             ++handlerIndex;
             handlerOffset += 36;
-            *(_DWORD *)(6 * (v24 - 1) + *(_DWORD *)(v12 + 8) + 16) = handlerTypeSymbol;
+            *(_DWORD *)(uintptr_t)(6 * (v24 - 1) + *(_DWORD *)(uintptr_t)(v12 + 8) + 16) = handlerTypeSymbol;
             fieldIndex = v24 + 1;
           }
-          while ( handlerIndex < *(_DWORD *)(sourceClass + 96) );
+          while ( handlerIndex < *(_DWORD *)(uintptr_t)(sourceClass + 96) );
         }
-        fieldsFilled += 3 * *(_DWORD *)(sourceClass + 96);
+        fieldsFilled += 3 * *(_DWORD *)(uintptr_t)(sourceClass + 96);
         precedenceOffset += 4;
       }
       while ( precedenceOffset < precedenceEnd );
@@ -1087,11 +1087,11 @@ __int16  Class_SuperclassesFunction(int theDefclass, _DWORD *result, int inherit
   if ( inheritFlag )
   {
     startOffset = 1;
-    classLinks = (unsigned __int16 *)(theDefclass + 46);
+    classLinks = (unsigned __int16 *)(uintptr_t)(theDefclass + 46);
   }
   else
   {
-    classLinks = (unsigned __int16 *)(theDefclass + 34);
+    classLinks = (unsigned __int16 *)(uintptr_t)(theDefclass + 34);
     startOffset = 0;
   }
   result[1] = 4;
@@ -1111,18 +1111,18 @@ __int16  Class_SuperclassesFunction(int theDefclass, _DWORD *result, int inherit
     {
       do
       {
-        *(_WORD *)(fieldOffset + result[2] + 14) = 2;
-        v7 = (_DWORD *)Rules_GetConstructNameSymbol(*(_DWORD *)(linkOffset + *(_DWORD *)(classLinks + 1)));
+        *(_WORD *)(uintptr_t)(fieldOffset + result[2] + 14) = 2;
+        v7 = (_DWORD *)(uintptr_t)Rules_GetConstructNameSymbol(*(_DWORD *)(uintptr_t)(linkOffset + *(_DWORD *)(classLinks + 1)));
         linkOffset += 4;
         fieldAddr = v13 + result[2];
         fieldOffset = v13 + 6;
-        *(_DWORD *)(fieldAddr + 16) = v7;
+        *(_DWORD *)(uintptr_t)(fieldAddr + 16) = v7;
         LOWORD(v7) = *classLinks;
       }
       while ( v15 + 1 < (unsigned int)*classLinks );
     }
   }
-  return (__int16)v7;
+  return (__int16)(intptr_t)v7;
 }
 // 4D5DFD: variable 'v8' is possibly undefined
 // 4D5E39: variable 'v13' is possibly undefined
@@ -1149,13 +1149,13 @@ void  Class_SubclassesFunction(int theDefclass, int inheritFlag)
     returnValue[4] = subclassCount - 1;
     returnValue[3] = 0;
     multifield = Rules_CreateEphemeralMultifield(subclassCount);
-    *(_DWORD *)(v7 + 8) = multifield;
+    *(_DWORD *)(uintptr_t)(v7 + 8) = multifield;
     if ( v8 )
     {
       secondTraversalID = Class_NewTraversalID();
       if ( secondTraversalID != -1 )
       {
-        Class_CollectSubclassNames(*(_DWORD *)(v10 + 8), 1, inheritFlag, theDefclass, secondTraversalID);
+        Class_CollectSubclassNames(*(_DWORD *)(uintptr_t)(v10 + 8), 1, inheritFlag, theDefclass, secondTraversalID);
         Class_ReleaseTraversalID();
       }
     }
@@ -1193,18 +1193,18 @@ signed int * Class_SlotFacetsQuery(int theDefclass, _BYTE *slotName, int returnV
   int v23; // ecx
   int v24; // ecx
 
-  result = (signed int *)Class_ResolveNamedSlot(returnValue, theDefclass, slotName);
+  result = (signed int *)(uintptr_t)Class_ResolveNamedSlot(returnValue, theDefclass, slotName);
   if ( result )
   {
-    *(_DWORD *)(returnValue + 16) = 9;
-    *(_DWORD *)(returnValue + 8) = Rules_CreateEphemeralMultifield(10);
-    for ( i = 0; i != 60; *(_WORD *)(*(_DWORD *)(returnValue + 8) + i + 8) = 2 )
+    *(_DWORD *)(uintptr_t)(returnValue + 16) = 9;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = Rules_CreateEphemeralMultifield(10);
+    for ( i = 0; i != 60; *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + i + 8) = 2 )
       i += 6;
     if ( (*slotDesc & 2) != 0 )
       cardinalityStr = aMlt_0;
     else
       cardinalityStr = aSgl_0;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 16) = Str_Intern(cardinalityStr, (int)slotDesc);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 16) = Str_Intern(cardinalityStr, (int)(intptr_t)slotDesc);
     if ( (v7[1] & 1) != 0 )
     {
       defaultModeStr = aNil_7;
@@ -1217,12 +1217,12 @@ signed int * Class_SlotFacetsQuery(int theDefclass, _BYTE *slotName, int returnV
     {
       defaultModeStr = aStc_0;
     }
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 22) = Str_Intern(defaultModeStr, (int)v7);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 22) = Str_Intern(defaultModeStr, (int)(intptr_t)v7);
     if ( (*v9 & 8) != 0 )
       inheritStr = aNil_7;
     else
       inheritStr = aInh_0;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 28) = Str_Intern(inheritStr, (int)v9);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 28) = Str_Intern(inheritStr, (int)(intptr_t)v9);
     if ( (*v11 & 0x20) != 0 )
     {
       accessStr = aInt_1;
@@ -1235,34 +1235,34 @@ signed int * Class_SlotFacetsQuery(int theDefclass, _BYTE *slotName, int returnV
     {
       accessStr = aRw_1;
     }
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 34) = Str_Intern(accessStr, (int)v11);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 34) = Str_Intern(accessStr, (int)(intptr_t)v11);
     if ( (*v13 & 1) != 0 )
       sharingStr = aShr_0;
     else
       sharingStr = aLcl_0;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 40) = Str_Intern(sharingStr, (int)v13);
-    if ( (*(_BYTE *)(v15 + 1) & 2) != 0 )
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 40) = Str_Intern(sharingStr, (int)(intptr_t)v13);
+    if ( (*(_BYTE *)(uintptr_t)(v15 + 1) & 2) != 0 )
       reactiveStr = aRct_0;
     else
       reactiveStr = aNil_7;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 46) = Str_Intern(reactiveStr, v15);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 46) = Str_Intern(reactiveStr, v15);
     if ( (*v17 & 4) != 0 )
       compositeStr = aCmpFacet;
     else
       compositeStr = aExcFacet;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 52) = Str_Intern(compositeStr, (int)v17);
-    if ( (*(_BYTE *)(v19 + 1) & 4) != 0 )
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 52) = Str_Intern(compositeStr, (int)(intptr_t)v17);
+    if ( (*(_BYTE *)(uintptr_t)(v19 + 1) & 4) != 0 )
       visibilityStr = aPubFacet;
     else
       visibilityStr = aPrvFacet;
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 58) = Str_Intern(visibilityStr, v19);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 58) = Str_Intern(visibilityStr, v19);
     accessorStr = Class_SlotAccessModeString(v21);
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 64) = Str_Intern(accessorStr, v23);
-    if ( (*(_BYTE *)v24 & 0x10) != 0 )
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 64) = Str_Intern(accessorStr, v23);
+    if ( (*(_BYTE *)(uintptr_t)v24 & 0x10) != 0 )
       result = Str_Intern(aNil_7, v24);
     else
-      result = *(signed int **)(v24 + 12);
-    *(_DWORD *)(*(_DWORD *)(returnValue + 8) + 70) = result;
+      result = *(signed int **)(uintptr_t)(v24 + 12);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(returnValue + 8) + 70) = result;
   }
   return result;
 }
@@ -1304,21 +1304,21 @@ _DWORD * Class_SlotSourcesQuery(int theDefclass, _BYTE *slotName, int a3)
   _DWORD *slotDesc; // [esp+4h] [ebp-10h]
   int *nameList; // [esp+8h] [ebp-Ch]
 
-  result = (_DWORD *)Class_ResolveNamedSlot(a3, theDefclass, slotName);
+  result = (_DWORD *)(uintptr_t)Class_ResolveNamedSlot(a3, theDefclass, slotName);
   slotDesc = result;
   if ( result )
   {
-    freeNode = *(_DWORD **)(g_ClipsMemoryTable + 32);
+    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
     classCount = 1;
     if ( freeNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = *freeNode;
-      listNode = (int *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeNode;
+      listNode = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      listNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
+      listNode = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     ownerClass = slotDesc[1];
     listNode[1] = 0;
@@ -1330,28 +1330,28 @@ _DWORD * Class_SlotSourcesQuery(int theDefclass, _BYTE *slotName, int a3)
       for ( i = 4; ; i += 4 )
       {
         classRecord = slotDesc[1];
-        if ( precedenceIndex >= *(unsigned __int16 *)(classRecord + 46) )
+        if ( precedenceIndex >= *(unsigned __int16 *)(uintptr_t)(classRecord + 46) )
           break;
-        sourceClass = *(_DWORD *)(i + *(_DWORD *)(classRecord + 48));
-        foundSlot = (_BYTE *)Class_FindSlotBySymbol(sourceClass, *(_DWORD *)(slotDesc[2] + 12));
+        sourceClass = *(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(classRecord + 48));
+        foundSlot = (_BYTE *)(uintptr_t)Class_FindSlotBySymbol(sourceClass, *(_DWORD *)(uintptr_t)(slotDesc[2] + 12));
         inheritedSlot = foundSlot;
         if ( foundSlot )
         {
           if ( (*foundSlot & 8) == 0 )
           {
-            v14 = *(_DWORD **)(g_ClipsMemoryTable + 32);
+            v14 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
             if ( v14 )
             {
-              g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 32);
-              *(_DWORD *)(g_ClipsMemoryTable + 32) = *v14;
-              newNode = (int *)g_ClipsMemFreeListTemp;
+              g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+              *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *v14;
+              newNode = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
             }
             else
             {
-              newNode = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
+              newNode = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
             }
             *newNode = sourceClass;
-            newNode[1] = (int)nameList;
+            newNode[1] = (int)(intptr_t)nameList;
             ++classCount;
             nameList = newNode;
             if ( (*inheritedSlot & 4) == 0 )
@@ -1361,20 +1361,20 @@ _DWORD * Class_SlotSourcesQuery(int theDefclass, _BYTE *slotName, int a3)
         ++precedenceIndex;
       }
     }
-    *(_DWORD *)(a3 + 16) = classCount - 1;
+    *(_DWORD *)(uintptr_t)(a3 + 16) = classCount - 1;
     curEntry = nameList;
     multifield = Rules_CreateEphemeralMultifield(classCount);
-    *(_DWORD *)(v18 + 8) = multifield;
+    *(_DWORD *)(uintptr_t)(v18 + 8) = multifield;
     if ( nameList )
     {
       fieldOffset = 0;
       do
       {
-        *(_WORD *)(fieldOffset + *(_DWORD *)(a3 + 8) + 14) = 2;
+        *(_WORD *)(uintptr_t)(fieldOffset + *(_DWORD *)(uintptr_t)(a3 + 8) + 14) = 2;
         classNameSymbol = Rules_GetConstructNameSymbol(*curEntry);
-        *(_DWORD *)(v21 + *(_DWORD *)(a3 + 8) + 16) = classNameSymbol;
+        *(_DWORD *)(uintptr_t)(v21 + *(_DWORD *)(uintptr_t)(a3 + 8) + 16) = classNameSymbol;
         fieldOffset = v21 + 6;
-        curEntry = (int *)curEntry[1];
+        curEntry = (int *)(uintptr_t)curEntry[1];
       }
       while ( curEntry );
     }

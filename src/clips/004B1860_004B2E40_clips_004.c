@@ -22,9 +22,9 @@ LABEL_2:
   bucketOffset = 0;
   do
   {
-    for ( i = *(_DWORD *)(bucketOffset + g_Defclass_SlotNameHashTablePtr); i; i = *(_DWORD *)(i + 20) )
+    for ( i = *(_DWORD *)(uintptr_t)(bucketOffset + g_Defclass_SlotNameHashTablePtr); i; i = *(_DWORD *)(uintptr_t)(i + 20) )
     {
-      if ( candidateID == *(_DWORD *)(i + 8) )
+      if ( candidateID == *(_DWORD *)(uintptr_t)(i + 8) )
         break;
     }
     if ( i )
@@ -56,17 +56,17 @@ int  Class_ReleaseSlotIDMapEntry(int classID, int a2)
   scanIndex = classID + 1;
   result = g_ClipsDefclassIdTable;
   tableOffset = 4 * scanIndex;
-  *(_DWORD *)(g_ClipsDefclassIdTable + 4 * idCursor) = 0;
+  *(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + 4 * idCursor) = 0;
   while ( scanIndex < (unsigned __int16)g_ClipsDefclassIdCount )
   {
-    if ( *(_DWORD *)(g_ClipsDefclassIdTable + tableOffset) )
+    if ( *(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + tableOffset) )
       return result;
     tableOffset += 4;
     ++scanIndex;
   }
   cursorOffset = 4 * idCursor;
   shrinkPending = 0;
-  while ( !*(_DWORD *)(g_ClipsDefclassIdTable + cursorOffset) )
+  while ( !*(_DWORD *)(uintptr_t)(g_ClipsDefclassIdTable + cursorOffset) )
   {
     result = (unsigned __int16)idCursor / 30;
     g_ClipsDefclassIdCount = idCursor;
@@ -86,7 +86,7 @@ int  Class_ReleaseSlotIDMapEntry(int classID, int a2)
   }
   if ( shrinkPending )
   {
-    result = (int)Mem_Realloc((char *)g_ClipsDefclassIdTable, 4 * oldTableSize, 4 * a2);
+    result = (int)(intptr_t)Mem_Realloc((char *)(uintptr_t)g_ClipsDefclassIdTable, 4 * oldTableSize, 4 * a2);
     g_ClipsDefclassIdTable = result;
   }
   return result;
@@ -104,7 +104,7 @@ int  Rules_EvaluatePatternQueryExpression(_DWORD *returnValue, double a2)
   int v6; // ecx
 
   savedDelayFlag = Rules_SetObjectPatternMatchDelay(1, a2);
-  Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), returnValue, savedDelayFlag, v4);
+  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), returnValue, savedDelayFlag, v4);
   if ( !g_ClipsEvaluationError )
     return Rules_SetObjectPatternMatchDelay(v5, v4);
   Rules_SetEvaluationErrorFlag(0);
@@ -187,9 +187,9 @@ void  Rules_ObjectMatchAction(unsigned __int16 *actionType, _DWORD *theInstance,
       }
       if ( !actionType )
         goto LABEL_5;
-      if ( (unsigned int)actionType <= 1 )
+      if ( (unsigned int)(intptr_t)actionType <= 1 )
       {
-        Rules_AssertNewObjectIntoNetwork((int)theInstance, a4);
+        Rules_AssertNewObjectIntoNetwork((int)(intptr_t)theInstance, a4);
         goto LABEL_6;
       }
       if ( actionType == (unsigned __int16 *)2 )
@@ -227,7 +227,7 @@ int Rules_ResetRuleMarkCounters(void)
   {
     result = g_ReactiveRuleListHead;
     g_RuleTraversalMarkCounter = 0;
-    ruleCursor = (_DWORD *)g_ReactiveRuleListHead;
+    ruleCursor = (_DWORD *)(uintptr_t)g_ReactiveRuleListHead;
     if ( g_ReactiveRuleListHead )
     {
       do
@@ -237,20 +237,20 @@ LABEL_3:
         ruleCursor[4] = 0;
         if ( result )
         {
-          while ( *(_DWORD *)(result + 4) )
+          while ( *(_DWORD *)(uintptr_t)(result + 4) )
           {
-            *(_DWORD *)(result + 4) = 0;
-            result = *(_DWORD *)(result + 20);
+            *(_DWORD *)(uintptr_t)(result + 4) = 0;
+            result = *(_DWORD *)(uintptr_t)(result + 20);
             if ( !result )
             {
-              ruleCursor = (_DWORD *)ruleCursor[9];
+              ruleCursor = (_DWORD *)(uintptr_t)ruleCursor[9];
               if ( ruleCursor )
                 goto LABEL_3;
               return result;
             }
           }
         }
-        ruleCursor = (_DWORD *)ruleCursor[9];
+        ruleCursor = (_DWORD *)(uintptr_t)ruleCursor[9];
       }
       while ( ruleCursor );
     }
@@ -287,7 +287,7 @@ unsigned __int16 * Rules_EnqueueObjectMatchAction(unsigned __int16 *result, uint
           else
             g_ClipsObjectMatchQueueHead = *(_DWORD *)(node + 12);
           --*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(node + 4) + 40);
-          return (unsigned __int16 *)Rules_FreeQueuedObjectMatchNode((_DWORD *)node);
+          return (unsigned __int16 *)(uintptr_t)Rules_FreeQueuedObjectMatchNode((_DWORD *)node);
         }
         return result;
       }
@@ -312,10 +312,10 @@ unsigned __int16 * Rules_EnqueueObjectMatchAction(unsigned __int16 *result, uint
     node = (uintptr_t)(unsigned int)*(_DWORD *)(node + 12);
   }
 
-  if ( *(_DWORD *)(g_ClipsMemoryTable + 64) )
+  if ( *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-    *(_DWORD *)(g_ClipsMemoryTable + 64) = *(_DWORD *)(uintptr_t)(unsigned int)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *(_DWORD *)(uintptr_t)(unsigned int)g_ClipsMemFreeListTemp;
     new_node = (uintptr_t)(unsigned int)g_ClipsMemFreeListTemp;
   }
   else
@@ -381,13 +381,13 @@ int  Rules_FreeQueuedObjectMatchNode(_DWORD *theNode)
   int result; // eax
 
   node = theNode;
-  slotBitmap = (_DWORD *)theNode[2];
+  slotBitmap = (_DWORD *)(uintptr_t)theNode[2];
   if ( slotBitmap )
     Mem_SmallBlockFree(slotBitmap, ((int)*(unsigned __int16 *)slotBitmap >> 3) + 3);
-  g_ClipsMemFreeListTemp = (int)node;
-  *node = *(_DWORD *)(g_ClipsMemoryTable + 64);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)node;
+  *node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   result = g_ClipsMemoryTable;
-  *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 4B1D90: variable 'v1' is possibly undefined
@@ -523,7 +523,7 @@ _DWORD * Rules_TraverseObjectPatternNetwork(_DWORD *result, _DWORD *patternNode,
   int slotValue; // eax
   int savedSlotNode; // [esp+0h] [ebp-14h]
 
-  offset = (int)result;
+  offset = (int)(intptr_t)result;
   patternCursor = patternNode;
   while ( patternCursor )
   {
@@ -534,15 +534,15 @@ _DWORD * Rules_TraverseObjectPatternNetwork(_DWORD *result, _DWORD *patternNode,
         slotNameID = patternCursor[2];
         if ( slotNameID > 1 )
         {
-          if ( !g_ObjectPatternActiveClassNode || *(_DWORD *)(*(_DWORD *)(*(_DWORD *)g_ObjectPatternActiveClassNode + 8) + 8) != slotNameID )
+          if ( !g_ObjectPatternActiveClassNode || *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ObjectPatternActiveClassNode + 8) + 8) != slotNameID )
           {
-            slotValue = *(_DWORD *)(*(_DWORD *)(g_ClipsObjectReteCurrentInstance + 72)
-                           + 4 * *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsObjectReteCurrentInstance + 44) + 60) + 4 * patternCursor[2])
+            slotValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 72)
+                           + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 44) + 60) + 4 * patternCursor[2])
                            - 4);
             g_ObjectPatternActiveClassNode = slotValue;
             offset = 0;
-            if ( (**(_BYTE **)slotValue & 2) != 0 )
-              g_ObjectPatternMatchFieldCount = *(_DWORD *)(*(_DWORD *)(slotValue + 8) + 6);
+            if ( (**(_BYTE **)(uintptr_t)slotValue & 2) != 0 )
+              g_ObjectPatternMatchFieldCount = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotValue + 8) + 6);
             else
               g_ObjectPatternMatchFieldCount = 1;
           }
@@ -555,25 +555,25 @@ _DWORD * Rules_TraverseObjectPatternNetwork(_DWORD *result, _DWORD *patternNode,
         }
         savedSlotNode = g_ObjectPatternActiveClassNode;
         savedFieldCount = g_ObjectPatternMatchFieldCount;
-        Rules_MatchObjectPatternNode(offset, (int)patternCursor, endMark, a4);
+        Rules_MatchObjectPatternNode(offset, (int)(intptr_t)patternCursor, endMark, a4);
         g_ObjectPatternMatchFieldCount = savedFieldCount;
         g_ObjectPatternActiveClassNode = savedSlotNode;
       }
-      result = (_DWORD *)(*patternCursor & 1);
+      result = (_DWORD *)(uintptr_t)(*patternCursor & 1);
       if ( result == (_DWORD *)1 )
         break;
-      patternCursor = (_DWORD *)patternCursor[7];
+      patternCursor = (_DWORD *)(uintptr_t)patternCursor[7];
       if ( !patternCursor )
         return result;
     }
     *(_BYTE *)patternCursor &= ~1u;
     result = patternCursor;
-    patternCursor = (_DWORD *)patternCursor[7];
+    patternCursor = (_DWORD *)(uintptr_t)patternCursor[7];
     if ( patternCursor )
     {
       while ( patternCursor[2] == result[2] && *patternCursor << 21 >> 24 == *result << 21 >> 24 )
       {
-        patternCursor = (_DWORD *)patternCursor[7];
+        patternCursor = (_DWORD *)(uintptr_t)patternCursor[7];
         if ( !patternCursor )
           return result;
       }
@@ -605,54 +605,54 @@ int  Rules_MatchObjectPatternNode(int offset, int patternNode, int endMark, doub
   int savedFieldCount; // [esp+8h] [ebp-1Ch]
   int i; // [esp+10h] [ebp-14h]
 
-  whichField = *(_DWORD *)patternNode << 21 >> 24;
+  whichField = *(_DWORD *)(uintptr_t)patternNode << 21 >> 24;
   fieldPosition = offset + whichField;
   if ( !g_ObjectPatternActiveClassNode )
   {
-    if ( *(_DWORD *)(patternNode + 12) )
+    if ( *(_DWORD *)(uintptr_t)(patternNode + 12) )
     {
-      result = Rules_EvaluatePatternConstraint(fieldPosition, 0, (_BYTE *)patternNode, *(_DWORD *)(patternNode + 12), a4);
+      result = Rules_EvaluatePatternConstraint(fieldPosition, 0, (_BYTE *)(uintptr_t)patternNode, *(_DWORD *)(uintptr_t)(patternNode + 12), a4);
       if ( !result )
         return result;
     }
-    if ( !*(_DWORD *)(patternNode + 32) )
-      return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(patternNode + 16), endMark, a4);
-    alphaNodeList = *(int **)(patternNode + 32);
+    if ( !*(_DWORD *)(uintptr_t)(patternNode + 32) )
+      return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(uintptr_t)(patternNode + 16), endMark, a4);
+    alphaNodeList = *(int **)(uintptr_t)(patternNode + 32);
 LABEL_5:
     Rules_AssertObjectPatternMatch(alphaNodeList, a4);
-    return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(patternNode + 16), endMark, a4);
+    return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(uintptr_t)(patternNode + 16), endMark, a4);
   }
-  if ( (*(_BYTE *)patternNode & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)patternNode & 2) != 0 )
   {
-    freeNode = *(_DWORD **)(g_ClipsMemoryTable + 80);
+    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
     if ( freeNode )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 80);
-      *(_DWORD *)(g_ClipsMemoryTable + 80) = *freeNode;
-      newMarker = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80) = *freeNode;
+      newMarker = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      newMarker = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
+      newMarker = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x14);
     }
     *newMarker = whichField;
-    slotNameRecord = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)g_ObjectPatternActiveClassNode + 8) + 12);
+    slotNameRecord = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ObjectPatternActiveClassNode + 8) + 12);
     newMarker[4] = 0;
     newMarker[1] = slotNameRecord;
     newMarker[2] = fieldPosition;
     theMarker = newMarker;
     if ( g_ObjectPatternMarkerListHead )
-      *(_DWORD *)(endMark + 16) = newMarker;
+      *(_DWORD *)(uintptr_t)(endMark + 16) = newMarker;
     else
-      g_ObjectPatternMarkerListHead = (int)newMarker;
-    if ( (*(_BYTE *)patternNode & 4) != 0 )
+      g_ObjectPatternMarkerListHead = (int)(intptr_t)newMarker;
+    if ( (*(_BYTE *)(uintptr_t)patternNode & 4) != 0 )
     {
       newMarker[3] = g_ObjectPatternMatchFieldCount;
-      if ( !*(_DWORD *)(patternNode + 12) || Rules_EvaluatePatternConstraint(fieldPosition, (int)newMarker, (_BYTE *)patternNode, *(_DWORD *)(patternNode + 12), a4) )
+      if ( !*(_DWORD *)(uintptr_t)(patternNode + 12) || Rules_EvaluatePatternConstraint(fieldPosition, (int)(intptr_t)newMarker, (_BYTE *)(uintptr_t)patternNode, *(_DWORD *)(uintptr_t)(patternNode + 12), a4) )
       {
-        if ( *(_DWORD *)(patternNode + 32) )
-          Rules_AssertObjectPatternMatch(*(int **)(patternNode + 32), a4);
-        Rules_TraverseObjectPatternNetwork(0, *(_DWORD *)(patternNode + 16), (int)theMarker, a4);
+        if ( *(_DWORD *)(uintptr_t)(patternNode + 32) )
+          Rules_AssertObjectPatternMatch(*(int **)(uintptr_t)(patternNode + 32), a4);
+        Rules_TraverseObjectPatternNetwork(0, *(_DWORD *)(uintptr_t)(patternNode + 16), (int)(intptr_t)theMarker, a4);
       }
     }
     else
@@ -661,36 +661,36 @@ LABEL_5:
       savedSlotNode = g_ObjectPatternActiveClassNode;
       markerPosition = newMarker[2];
       newMarker[3] = markerPosition - 1;
-      for ( i = savedFieldCount - markerPosition - (*(_DWORD *)patternNode << 13 >> 24) + 2; i > 0; ++theMarker[3] )
+      for ( i = savedFieldCount - markerPosition - (*(_DWORD *)(uintptr_t)patternNode << 13 >> 24) + 2; i > 0; ++theMarker[3] )
       {
-        if ( !*(_DWORD *)(patternNode + 12) || Rules_EvaluatePatternConstraint(fieldPosition, (int)theMarker, (_BYTE *)patternNode, *(_DWORD *)(patternNode + 12), a4) )
+        if ( !*(_DWORD *)(uintptr_t)(patternNode + 12) || Rules_EvaluatePatternConstraint(fieldPosition, (int)(intptr_t)theMarker, (_BYTE *)(uintptr_t)patternNode, *(_DWORD *)(uintptr_t)(patternNode + 12), a4) )
         {
-          if ( *(_DWORD *)(patternNode + 32) )
-            Rules_AssertObjectPatternMatch(*(int **)(patternNode + 32), a4);
-          Rules_TraverseObjectPatternNetwork(offset + theMarker[3] - fieldPosition, *(_DWORD *)(patternNode + 16), (int)theMarker, a4);
+          if ( *(_DWORD *)(uintptr_t)(patternNode + 32) )
+            Rules_AssertObjectPatternMatch(*(int **)(uintptr_t)(patternNode + 32), a4);
+          Rules_TraverseObjectPatternNetwork(offset + theMarker[3] - fieldPosition, *(_DWORD *)(uintptr_t)(patternNode + 16), (int)(intptr_t)theMarker, a4);
           g_ObjectPatternMatchFieldCount = savedFieldCount;
           g_ObjectPatternActiveClassNode = savedSlotNode;
         }
         --i;
       }
     }
-    if ( theMarker == (_DWORD *)g_ObjectPatternMarkerListHead )
+    if ( theMarker == (_DWORD *)(uintptr_t)g_ObjectPatternMarkerListHead )
       g_ObjectPatternMarkerListHead = 0;
     else
-      *(_DWORD *)(endMark + 16) = 0;
-    g_ClipsMemFreeListTemp = (int)theMarker;
-    *theMarker = *(_DWORD *)(g_ClipsMemoryTable + 80);
+      *(_DWORD *)(uintptr_t)(endMark + 16) = 0;
+    g_ClipsMemFreeListTemp = (int)(intptr_t)theMarker;
+    *theMarker = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
     result = g_ClipsMemoryTable;
-    *(_DWORD *)(g_ClipsMemoryTable + 80) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80) = g_ClipsMemFreeListTemp;
   }
   else
   {
-    networkTest = *(_DWORD *)(patternNode + 12);
-    if ( !networkTest || (result = Rules_EvaluatePatternConstraint(offset + whichField, 0, (_BYTE *)patternNode, networkTest, a4)) != 0 )
+    networkTest = *(_DWORD *)(uintptr_t)(patternNode + 12);
+    if ( !networkTest || (result = Rules_EvaluatePatternConstraint(offset + whichField, 0, (_BYTE *)(uintptr_t)patternNode, networkTest, a4)) != 0 )
     {
-      if ( !*(_DWORD *)(patternNode + 32) )
-        return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(patternNode + 16), endMark, a4);
-      alphaNodeList = *(int **)(patternNode + 32);
+      if ( !*(_DWORD *)(uintptr_t)(patternNode + 32) )
+        return Rules_TraverseObjectPatternNetwork(offset, *(_DWORD *)(uintptr_t)(patternNode + 16), endMark, a4);
+      alphaNodeList = *(int **)(uintptr_t)(patternNode + 32);
       goto LABEL_5;
     }
   }
@@ -768,31 +768,31 @@ int  Rules_EvaluatePatternConstraint(int objectSlotField, int selfSlotMarker, _B
   int objectSlotFieldCopy; // [esp+18h] [ebp-10h]
 
   objectSlotFieldCopy = objectSlotField;
-  if ( *(_WORD *)theTest == 50 )
+  if ( *(_WORD *)(uintptr_t)theTest == 50 )
   {
     savedExpression = g_ClipsCurrentExpression;
     g_ClipsCurrentExpression = theTest;
-    result = Rules_EvalObjectSlotBoundVariableEqual(*(_DWORD *)(theTest + 2), (int)evalResult, (int)patternNode, a5);
+    result = Rules_EvalObjectSlotBoundVariableEqual(*(_DWORD *)(uintptr_t)(theTest + 2), (int)(intptr_t)evalResult, (int)(intptr_t)patternNode, a5);
     g_ClipsCurrentExpression = savedExpression;
     if ( result )
     {
-      if ( **(char **)(*(_DWORD *)(theTest + 2) + 16) < 0 )
+      if ( **(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theTest + 2) + 16) < 0 )
         *v11 |= 1u;
       return 1;
     }
   }
   else
   {
-    testHead = *(_DWORD *)(theTest + 2);
+    testHead = *(_DWORD *)(uintptr_t)(theTest + 2);
     if ( testHead == g_ClipsSymbolOr )
     {
-      orClause = *(_DWORD *)(theTest + 6);
+      orClause = *(_DWORD *)(uintptr_t)(theTest + 6);
       if ( orClause )
       {
-        while ( !Rules_EvaluatePatternConstraint(objectSlotFieldCopy, selfSlotMarker, (int)patternNode, orClause, a5) )
+        while ( !Rules_EvaluatePatternConstraint(objectSlotFieldCopy, selfSlotMarker, (int)(intptr_t)patternNode, orClause, a5) )
         {
           *patternNode &= ~1u;
-          orClause = *(_DWORD *)(orClause + 10);
+          orClause = *(_DWORD *)(uintptr_t)(orClause + 10);
           if ( !orClause )
             return 0;
         }
@@ -806,16 +806,16 @@ int  Rules_EvaluatePatternConstraint(int objectSlotField, int selfSlotMarker, _B
     }
     else if ( testHead == g_Clips_SymbolAnd )
     {
-      andClause = *(_DWORD *)(theTest + 6);
+      andClause = *(_DWORD *)(uintptr_t)(theTest + 6);
       if ( andClause )
       {
         while ( 1 )
         {
-          result = Rules_EvaluatePatternConstraint(objectSlotFieldCopy, selfSlotMarker, (int)patternNode, andClause, a5);
+          result = Rules_EvaluatePatternConstraint(objectSlotFieldCopy, selfSlotMarker, (int)(intptr_t)patternNode, andClause, a5);
           if ( !result )
             break;
           *patternNode &= ~1u;
-          andClause = *(_DWORD *)(andClause + 10);
+          andClause = *(_DWORD *)(uintptr_t)(andClause + 10);
           if ( !andClause )
             return 1;
         }
@@ -829,7 +829,7 @@ int  Rules_EvaluatePatternConstraint(int objectSlotField, int selfSlotMarker, _B
     else
     {
       g_ClipsHaltExecution = 0;
-      if ( Parser_ParseForm((__int16 *)theTest, evalResult, (int)patternNode, a5) )
+      if ( Parser_ParseForm((__int16 *)(uintptr_t)theTest, evalResult, (int)(intptr_t)patternNode, a5) )
       {
         Rules_PrintObjectPatternNetworkError();
         g_ClipsEvaluationError = 0;
@@ -859,11 +859,11 @@ int  Rules_EvaluatePatternConstraint(int objectSlotField, int selfSlotMarker, _B
 //----- (004B2550) --------------------------------------------------------
 _DWORD * Rules_AssertNewObjectIntoNetwork(int theInstance, double a2)
 {
-  *(_DWORD *)(theInstance + 12) = g_Rules_ObjectMatchTimeTag;
+  *(_DWORD *)(uintptr_t)(theInstance + 12) = g_Rules_ObjectMatchTimeTag;
   g_ClipsObjectReteCurrentInstance = theInstance;
   g_ObjectPatternActiveClassNode = 0;
   Rules_MarkDependentRulesForSlotChange(0);
-  return Rules_TraverseObjectPatternNetwork(0, (_DWORD *)g_Rules_ObjectPatternNetworkRoot, 0, a2);
+  return Rules_TraverseObjectPatternNetwork(0, (_DWORD *)(uintptr_t)g_Rules_ObjectPatternNetworkRoot, 0, a2);
 }
 // 51AEAC: using guessed type int dword_51AEAC;
 // 51AEBC: using guessed type int dword_51AEBC;
@@ -878,7 +878,7 @@ _DWORD * Rules_ReassertObjectSlotChange(_DWORD *theInstance, unsigned __int16 *s
   g_ClipsObjectReteCurrentInstance = (int)(uintptr_t)theInstance;
   g_ObjectPatternActiveClassNode = 0;
   Rules_MarkDependentRulesForSlotChange(slotBitmap);
-  return Rules_TraverseObjectPatternNetwork(0, (_DWORD *)g_Rules_ObjectPatternNetworkRoot, 0, a3);
+  return Rules_TraverseObjectPatternNetwork(0, (_DWORD *)(uintptr_t)g_Rules_ObjectPatternNetworkRoot, 0, a3);
 }
 // 51AEAC: using guessed type int dword_51AEAC;
 // 51AEBC: using guessed type int dword_51AEBC;
@@ -907,7 +907,7 @@ _DWORD * Rules_RetractObjectPatternMatches(_DWORD *result, unsigned __int16 *slo
     {
       for ( link = current_link; link; link = *(_DWORD *)(uintptr_t)link )
         --*(_DWORD *)(instance + 40);
-      result = (_DWORD *)Rules_RetractFactFromNetwork((_DWORD *)(uintptr_t)current_link, a3);
+      result = (_DWORD *)(uintptr_t)Rules_RetractFactFromNetwork((_DWORD *)(uintptr_t)current_link, a3);
       *(_DWORD *)(instance + 16) = 0;
     }
     return result;
@@ -946,7 +946,7 @@ _DWORD * Rules_RetractObjectPatternMatches(_DWORD *result, unsigned __int16 *slo
   {
     saved_rule_head = *(_DWORD *)(instance + 4);
     *(_DWORD *)(instance + 4) = 0;
-    result = (_DWORD *)Rules_RetractFactFromNetwork((_DWORD *)(uintptr_t)removed_links, a3);
+    result = (_DWORD *)(uintptr_t)Rules_RetractFactFromNetwork((_DWORD *)(uintptr_t)removed_links, a3);
     *(_DWORD *)(instance + 4) = saved_rule_head;
   }
   return result;
@@ -969,19 +969,19 @@ signed int Rules_PrintObjectPatternNetworkError(void)
   int *v11; // ecx
   int v12; // ecx
 
-  Rules_PrintErrorID((int)aObjrtmch, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOcc_2, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCurrentlyAct_0, v1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(g_ClipsObjectReteCurrentInstance + 28) + 16), v2);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509714, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aProblemResid_2, v4);
-  slotNameSymbol = Class_GetSlotNameByID(*(_DWORD *)(v5 + 8));
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(slotNameSymbol + 16), v7);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField, v8);
-  Rules_PrintLongInteger((int)v9, *v9 << 21 >> 24);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509740, v10);
-  Rules_PrintObjectPatternErrorDetail(1, v11, (int)v11);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509740, v12);
+  Rules_PrintErrorID((int)(intptr_t)aObjrtmch, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aThisErrorOcc_2, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCurrentlyAct_0, v1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 28) + 16), v2);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_509714, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aProblemResid_2, v4);
+  slotNameSymbol = Class_GetSlotNameByID(*(_DWORD *)(uintptr_t)(v5 + 8));
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(slotNameSymbol + 16), v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aField, v8);
+  Rules_PrintLongInteger((int)(intptr_t)v9, *v9 << 21 >> 24);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_509740, v10);
+  Rules_PrintObjectPatternErrorDetail(1, v11, (int)(intptr_t)v11);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_509740, v12);
 }
 // 4B26A0: variable 'v0' is possibly undefined
 // 4B26AF: variable 'v1' is possibly undefined
@@ -1009,16 +1009,16 @@ int  Rules_PrintObjectPatternErrorDetail(int result, int *patternNode, int j)
   int v8; // ecx
 
   stopAfterFirst = result;
-  for ( i = patternNode; i; i = (int *)i[7] )
+  for ( i = patternNode; i; i = (int *)(uintptr_t)i[7] )
   {
     alphaNode = i[8];
     if ( alphaNode )
     {
-      for ( j = *(_DWORD *)(alphaNode + 8); j; j = *(_DWORD *)(v8 + 32) )
+      for ( j = *(_DWORD *)(uintptr_t)(alphaNode + 8); j; j = *(_DWORD *)(uintptr_t)(v8 + 32) )
       {
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfPattern, j);
-        Rules_PrintLongInteger((int)v6, *v6 << 16 >> 25);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInRuleS, v7);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOfPattern, j);
+        Rules_PrintLongInteger((int)(intptr_t)v6, *v6 << 16 >> 25);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInRuleS, v7);
         Rules_PrintJoinNetworkSharingReport();
       }
     }
@@ -1095,16 +1095,16 @@ BOOL  Method_TypeCodeAllowsRestriction(BOOL result, int constraints)
     return 0;
   if ( !constraints )
     return 1;
-  if ( (*(_DWORD *)constraints & 1) == 1 )
+  if ( (*(_DWORD *)(uintptr_t)constraints & 1) == 1 )
     return 1;
-  if ( result == 2 && (*(_BYTE *)constraints & 2) == 0 || result == 3 && (*(_BYTE *)constraints & 4) == 0 )
+  if ( result == 2 && (*(_BYTE *)(uintptr_t)constraints & 2) == 0 || result == 3 && (*(_BYTE *)(uintptr_t)constraints & 4) == 0 )
     return 0;
-  if ( result || (*(_BYTE *)constraints & 8) != 0 )
-    return (result != 1 || (*(_BYTE *)constraints & 0x10) != 0)
-        && (result != 8 || (*(_BYTE *)constraints & 0x20) != 0)
-        && (result != 7 || (*(_BYTE *)constraints & 0x40) != 0)
-        && (result != 5 || *(char *)constraints < 0)
-        && (result != 6 || (*(_BYTE *)(constraints + 1) & 1) != 0);
+  if ( result || (*(_BYTE *)(uintptr_t)constraints & 8) != 0 )
+    return (result != 1 || (*(_BYTE *)(uintptr_t)constraints & 0x10) != 0)
+        && (result != 8 || (*(_BYTE *)(uintptr_t)constraints & 0x20) != 0)
+        && (result != 7 || (*(_BYTE *)(uintptr_t)constraints & 0x40) != 0)
+        && (result != 5 || *(char *)(uintptr_t)constraints < 0)
+        && (result != 6 || (*(_BYTE *)(uintptr_t)(constraints + 1) & 1) != 0);
   return result;
 }
 
@@ -1120,18 +1120,18 @@ BOOL  Method_ParamCountInRange(int number, int constraints)
   result = 1;
   if ( constraints )
   {
-    minRestriction = *(_DWORD *)(constraints + 18);
+    minRestriction = *(_DWORD *)(uintptr_t)(constraints + 18);
     if ( minRestriction )
     {
-      minExpr = *(_DWORD *)(minRestriction + 2);
-      if ( minExpr != g_Clips_NegativeInfinitySymbol && number < *(_DWORD *)(minExpr + 16) )
+      minExpr = *(_DWORD *)(uintptr_t)(minRestriction + 2);
+      if ( minExpr != g_Clips_NegativeInfinitySymbol && number < *(_DWORD *)(uintptr_t)(minExpr + 16) )
         return 0;
     }
-    maxRestriction = *(_DWORD *)(constraints + 22);
+    maxRestriction = *(_DWORD *)(uintptr_t)(constraints + 22);
     if ( maxRestriction )
     {
-      maxExpr = *(_DWORD *)(maxRestriction + 2);
-      if ( maxExpr != g_ClipsPositiveInfinitySymbol && number > *(_DWORD *)(maxExpr + 16) )
+      maxExpr = *(_DWORD *)(uintptr_t)(maxRestriction + 2);
+      if ( maxExpr != g_ClipsPositiveInfinitySymbol && number > *(_DWORD *)(uintptr_t)(maxExpr + 16) )
         return 0;
     }
   }
@@ -1151,19 +1151,19 @@ BOOL  Method_ParamRangeInBounds(int minCount, int maxCount, int constraints)
   result = 1;
   if ( constraints )
   {
-    maxRestriction = *(_DWORD *)(constraints + 22);
+    maxRestriction = *(_DWORD *)(uintptr_t)(constraints + 22);
     if ( maxRestriction )
     {
-      if ( g_ClipsPositiveInfinitySymbol != *(_DWORD *)(maxRestriction + 2) && minCount > *(_DWORD *)(*(_DWORD *)(maxRestriction + 2) + 16) )
+      if ( g_ClipsPositiveInfinitySymbol != *(_DWORD *)(uintptr_t)(maxRestriction + 2) && minCount > *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(maxRestriction + 2) + 16) )
         return 0;
     }
-    minRestriction = *(_DWORD *)(constraints + 18);
+    minRestriction = *(_DWORD *)(uintptr_t)(constraints + 18);
     if ( minRestriction )
     {
       if ( maxCount != -1 )
       {
-        minExpr = *(_DWORD *)(minRestriction + 2);
-        if ( minExpr != g_Clips_NegativeInfinitySymbol && maxCount < *(_DWORD *)(minExpr + 16) )
+        minExpr = *(_DWORD *)(uintptr_t)(minRestriction + 2);
+        if ( minExpr != g_Clips_NegativeInfinitySymbol && maxCount < *(_DWORD *)(uintptr_t)(minExpr + 16) )
           return 0;
       }
     }
@@ -1189,31 +1189,31 @@ signed int  Method_QueryRestrictionAllowsType(int type, int value, int constrain
   switch ( type )
   {
     case 0:
-      v5 = *(_BYTE *)(constraints + 1);
+      v5 = *(_BYTE *)(uintptr_t)(constraints + 1);
       if ( (v5 & 0x10) == 0 && (v5 & 2) == 0 )
         goto LABEL_22;
       goto LABEL_5;
     case 1:
-      v11 = *(_BYTE *)(constraints + 1);
+      v11 = *(_BYTE *)(uintptr_t)(constraints + 1);
       if ( (v11 & 0x20) == 0 && (v11 & 2) == 0 )
         goto LABEL_22;
       goto LABEL_5;
     case 2:
-      v8 = *(_BYTE *)(constraints + 1);
+      v8 = *(_BYTE *)(uintptr_t)(constraints + 1);
       if ( (v8 & 4) != 0 || (v8 & 2) != 0 )
         goto LABEL_5;
       return 1;
     case 3:
-      v10 = *(_BYTE *)(constraints + 1);
+      v10 = *(_BYTE *)(uintptr_t)(constraints + 1);
       if ( (v10 & 8) != 0 || (v10 & 2) != 0 )
         goto LABEL_5;
       return 1;
     case 8:
-      v9 = *(_BYTE *)(constraints + 1);
+      v9 = *(_BYTE *)(uintptr_t)(constraints + 1);
       if ( (v9 & 0x40) != 0 || (v9 & 2) != 0 )
       {
 LABEL_5:
-        restrictionList = *(__int16 **)(constraints + 6);
+        restrictionList = *(__int16 **)(uintptr_t)(constraints + 6);
         if ( !restrictionList )
           return 0;
         while ( *restrictionList != type || value != *(_DWORD *)(restrictionList + 1) )
@@ -1244,8 +1244,8 @@ signed int  Rules_ValueSatisfiesRangeConstraint(unsigned int type, int value, in
 
   if ( !constraints || type > 1 )
     return 1;
-  minList = *(__int16 **)(constraints + 10);
-  maxList = *(__int16 **)(constraints + 14);
+  minList = *(__int16 **)(uintptr_t)(constraints + 10);
+  maxList = *(__int16 **)(uintptr_t)(constraints + 14);
   if ( !minList )
     return 0;
   while ( !Rules_CompareBoundedCEValues(type, value, *(_DWORD *)(minList + 1), *minList) || Rules_CompareBoundedCEValues(type, value, *(_DWORD *)(maxList + 1), *maxList) == 1 )
@@ -1286,31 +1286,31 @@ signed int  Rules_PrintConstraintViolationMessage(
     goto LABEL_12;
   if ( violationType == 4 )
   {
-    Rules_PrintErrorID((int)aCstrnchk_1, 1, 1);
+    Rules_PrintErrorID((int)(intptr_t)aCstrnchk_1, 1, 1);
     preludeMessage = aTheFunctionRet;
   }
   else
   {
     if ( !theWhat )
       goto LABEL_5;
-    Rules_PrintErrorID((int)aCstrnchk_1, 1, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], theWhat, v19);
+    Rules_PrintErrorID((int)(intptr_t)aCstrnchk_1, 1, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], theWhat, v19);
     preludeMessage = asc_50979C;
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)preludeMessage, v13);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)preludeMessage, v13);
 LABEL_5:
   if ( thePlace )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundIn_0, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFoundIn_0, v12);
     if ( commandFlag )
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe, v15);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], thePlace, v15);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aThe, v15);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], thePlace, v15);
     if ( commandFlag )
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCommand_0, v12);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCommand_0, v12);
   }
   if ( thePattern > 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInCe, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFoundInCe, v12);
     Rules_PrintLongInteger(v16, thePattern);
   }
 LABEL_12:
@@ -1320,11 +1320,11 @@ LABEL_12:
     case 4:
       violationMessage = aDoesNotMatchTh;
 LABEL_14:
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)violationMessage, v12);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)violationMessage, v12);
       break;
     case 2:
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotFallInT, 2);
-      Rules_PrintConstraintRange((int)g_IO_LogicalNameTable_WError[0], theConstraint);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDoesNotFallInT, 2);
+      Rules_PrintConstraintRange((int)(intptr_t)g_IO_LogicalNameTable_WError[0], theConstraint);
       break;
     case 3:
       violationMessage = aDoesNotMatch_0;
@@ -1335,15 +1335,15 @@ LABEL_14:
   }
   if ( theSlot )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForSlot, v12);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(theSlot + 16), v20);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForSlot, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(theSlot + 16), v20);
   }
   else if ( theField > 0 )
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForField, v12);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForField, v12);
     Rules_PrintLongInteger(v21, theField);
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__29, v12);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__29, v12);
 }
 // 4B2BD2: variable 'v13' is possibly undefined
 // 4B2BE8: variable 'v12' is possibly undefined
@@ -1362,17 +1362,17 @@ signed int  Rules_PrintConstraintRange(int logicalName, int theConstraint)
   int v5; // ecx
   int maxList; // edx
 
-  minList = *(_DWORD *)(theConstraint + 10);
-  if ( g_Clips_NegativeInfinitySymbol == *(_DWORD *)(minList + 2) )
-    Output_Write(logicalName, *(_DWORD *)(g_Clips_NegativeInfinitySymbol + 16), logicalName);
+  minList = *(_DWORD *)(uintptr_t)(theConstraint + 10);
+  if ( g_Clips_NegativeInfinitySymbol == *(_DWORD *)(uintptr_t)(minList + 2) )
+    Output_Write(logicalName, *(_DWORD *)(uintptr_t)(g_Clips_NegativeInfinitySymbol + 16), logicalName);
   else
-    Rules_PrintFieldExprList(logicalName, (__int16 *)minList);
-  Output_Write(v4, (int)aTo_1, v4);
-  maxList = *(_DWORD *)(theConstraint + 14);
-  if ( g_ClipsPositiveInfinitySymbol == *(_DWORD *)(maxList + 2) )
-    return Output_Write(v5, *(_DWORD *)(g_ClipsPositiveInfinitySymbol + 16), v5);
+    Rules_PrintFieldExprList(logicalName, (__int16 *)(uintptr_t)minList);
+  Output_Write(v4, (int)(intptr_t)aTo_1, v4);
+  maxList = *(_DWORD *)(uintptr_t)(theConstraint + 14);
+  if ( g_ClipsPositiveInfinitySymbol == *(_DWORD *)(uintptr_t)(maxList + 2) )
+    return Output_Write(v5, *(_DWORD *)(uintptr_t)(g_ClipsPositiveInfinitySymbol + 16), v5);
   else
-    return Rules_PrintFieldExprList(v5, (__int16 *)maxList);
+    return Rules_PrintFieldExprList(v5, (__int16 *)(uintptr_t)maxList);
 }
 // 4B2D64: variable 'v4' is possibly undefined
 // 4B2D7C: variable 'v5' is possibly undefined
@@ -1401,14 +1401,14 @@ signed int  Rules_CheckFieldAgainstConstraint(_DWORD *theData, int theConstraint
   fieldIndex = theData[3];
   if ( fieldIndex > theData[4] )
     return 0;
-  fieldPtr = (__int16 *)(6 * fieldIndex + theData[2] + 14);
+  fieldPtr = (__int16 *)(uintptr_t)(6 * fieldIndex + theData[2] + 14);
   while ( 1 )
   {
     result = Rules_CheckValueAgainstConstraint(*fieldPtr, *(_DWORD *)(fieldPtr + 1), theConstraint);
     if ( result )
       break;
     ++fieldIndex;
-    fieldPtr = (__int16 *)(v7 + 6);
+    fieldPtr = (__int16 *)(uintptr_t)(v7 + 6);
     if ( fieldIndex > theData[4] )
       return 0;
   }
@@ -1428,7 +1428,7 @@ signed int  Rules_CheckValueAgainstConstraint(unsigned int type, int value, int 
     return 3;
   if ( !Rules_ValueSatisfiesRangeConstraint(type, value, v6) )
     return 2;
-  if ( type != 10 || Method_CharRestrictionAllowsType(*(unsigned __int8 *)(value + 8), v7) )
+  if ( type != 10 || Method_CharRestrictionAllowsType(*(unsigned __int8 *)(uintptr_t)(value + 8), v7) )
     return 0;
   return 4;
 }

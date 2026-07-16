@@ -27,8 +27,8 @@ int  UI_DrawConfirmBottom(DWORD renderState, int a2)
   savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, renderState);
-  Render_SaveBackbuffer((int)&g_MainRenderDevice);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x124u, 0x224u, 0x110u);
+  Render_SaveBackbuffer((int)(intptr_t)&g_MainRenderDevice);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x124u, 0x224u, 0x110u);
   result = UI_DrawTextFmt(548, 548, 601, 272, 3, aD_9, g_BuildingEconomyDialogPendingGoldTransfer);
   g_RenderDevice = savedRenderDevice;
   return result;
@@ -246,7 +246,7 @@ int  BuildingEconomyDialog_CommitTransfers(
   if ( g_BuildingEconomyDialogPendingPeasantTransfer )
   {
     targetBuildingId = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
-    if ( targetBuildingId == -2 || *(_BYTE *)(BUILDING_RECORD_SIZE * targetBuildingId + gameData + 509678) != 1 )
+    if ( targetBuildingId == -2 || *(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * targetBuildingId + gameData + 509678) != 1 )
     {
       peasantTargetId = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
       if ( peasantTargetId == -2 )
@@ -278,13 +278,13 @@ int  BuildingEconomyDialog_CommitTransfers(
   UI_DrawConfirmTop(renderState, a4);
   UI_DrawConfirmBottom(renderState, a4);
   g_RenderDevice = &g_MainRenderDevice;
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
   Render_ReleaseSurface(16, renderState);
-  UI_DrawTextFmt((int)&g_MainRenderDevice, 0, 370, 20, 2, (int)aD_47);
+  UI_DrawTextFmt((int)(intptr_t)&g_MainRenderDevice, 0, 370, 20, 2, (int)(intptr_t)aD_47);
   g_RenderDevice = &g_MainRenderDevice;
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, renderState);
-  return UI_DrawTextFmt((int)&g_MainRenderDevice, 545, 602, 30, 3, (int)aD_46);
+  return UI_DrawTextFmt((int)(intptr_t)&g_MainRenderDevice, 545, 602, 30, 3, (int)(intptr_t)aD_46);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
@@ -319,20 +319,20 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char startTaxRate)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, startTaxRate);
+  DD_Pump((int)(intptr_t)g_RenderState, startTaxRate);
   Time_Now(v5, v4);
   buildingRecord = g_BuildingEconomyDialogBuilding;
-  taxByte = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436);
+  taxByte = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436);
   if ( (taxByte & 0x3F) != 0 )
   {
-    taxHighBits0 = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
-    *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits0;
-    *(_BYTE *)(buildingRecord + 436) = ((taxByte & 0x3F) - 1) & 0x3F | taxHighBits0;
+    taxHighBits0 = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
+    *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits0;
+    *(_BYTE *)(uintptr_t)(buildingRecord + 436) = ((taxByte & 0x3F) - 1) & 0x3F | taxHighBits0;
   }
-  currentTaxRate = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
+  currentTaxRate = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
   do
   {
-    DD_Pump((int)g_RenderState, currentTaxRate);
+    DD_Pump((int)(intptr_t)g_RenderState, currentTaxRate);
     v11 = Time_Now(v10, v9);
     timeNow = Time_Now(v12, v11);
     taxDecrement = (v14 - v15) * (timeNow - v15) / 0x15Eu;
@@ -340,13 +340,13 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int widget, char startTaxRate)
     if ( (int)(currentTaxRate - taxDecrement) < 0 )
       newTaxRate = 0;
     buildingRecord2 = g_BuildingEconomyDialogBuilding;
-    taxHighBits = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
-    *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits;
-    *(_BYTE *)(buildingRecord2 + 436) = newTaxRate & 0x3F | taxHighBits;
-    UI_DrawNoticeBoxSmall((DWORD)g_RenderState, 0);
+    taxHighBits = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
+    *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits;
+    *(_BYTE *)(uintptr_t)(buildingRecord2 + 436) = newTaxRate & 0x3F | taxHighBits;
+    UI_DrawNoticeBoxSmall((DWORD)(intptr_t)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v20);
 }
 // 42ABA6: variable 'v5' is possibly undefined
@@ -382,30 +382,30 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   Time_Now(v5, v4);
   buildingRecord = g_BuildingEconomyDialogBuilding;
-  newTaxRate = ((*(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F) + 1) & 0x3F;
-  taxHighBits = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
-  *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits;
-  *(_BYTE *)(buildingRecord + 436) = newTaxRate | taxHighBits;
-  currentTaxRate = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
+  newTaxRate = ((*(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0x3F) + 1) & 0x3F;
+  taxHighBits = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
+  *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) = taxHighBits;
+  *(_BYTE *)(uintptr_t)(buildingRecord + 436) = newTaxRate | taxHighBits;
+  currentTaxRate = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
   do
   {
-    DD_Pump((int)g_RenderState, currentTaxRate);
+    DD_Pump((int)(intptr_t)g_RenderState, currentTaxRate);
     timeNow = Time_Now(v11, v10);
     currentTime = Time_Now(v13, timeNow);
     taxRateAnim = currentTaxRate + (v15 - v16) * (currentTime - v16) / 0x15Eu;
     if ( taxRateAnim > 40 )
       LOBYTE(taxRateAnim) = 40;
     buildingRecord2 = g_BuildingEconomyDialogBuilding;
-    BYTE1(taxRateAnim) = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
-    *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = BYTE1(taxRateAnim);
-    *(_BYTE *)(buildingRecord2 + 436) = taxRateAnim & 0x3F | BYTE1(taxRateAnim);
-    UI_DrawNoticeBoxSmall(0x15Eu, (int)g_RenderState);
+    BYTE1(taxRateAnim) = *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
+    *(_BYTE *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 436) = BYTE1(taxRateAnim);
+    *(_BYTE *)(uintptr_t)(buildingRecord2 + 436) = taxRateAnim & 0x3F | BYTE1(taxRateAnim);
+    UI_DrawNoticeBoxSmall(0x15Eu, (int)(intptr_t)g_RenderState);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v19);
 }
 // 42ACA3: variable 'v5' is possibly undefined
@@ -436,22 +436,22 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingPeasantTransfer -= 10;
   peasantAmount = g_BuildingEconomyDialogPendingPeasantTransfer;
   do
   {
-    DD_Pump((int)g_RenderState, peasantAmount);
+    DD_Pump((int)(intptr_t)g_RenderState, peasantAmount);
     v9 = Time_Now(v8, v7);
     currentTime = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount - (v12 - v13) * (currentTime - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingPeasantTransfer < 0 )
       g_BuildingEconomyDialogPendingPeasantTransfer = 0;
-    UI_DrawConfirmTop((DWORD)g_RenderState, 0);
+    UI_DrawConfirmTop((DWORD)(intptr_t)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v14);
 }
 // 42AD96: variable 'v5' is possibly undefined
@@ -483,26 +483,26 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingPeasantTransfer += 10;
   peasantAmount = g_BuildingEconomyDialogPendingPeasantTransfer;
   do
   {
-    DD_Pump((int)g_RenderState, peasantAmount);
+    DD_Pump((int)(intptr_t)g_RenderState, peasantAmount);
     v9 = Time_Now(v8, v7);
     timeNow = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((peasantAmount + (v12 - v13) * (timeNow - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingPeasantTransfer > 1000 )
       g_BuildingEconomyDialogPendingPeasantTransfer = 1000;
-    maxPeasants = *(_WORD *)(g_BuildingEconomyDialogBuilding + 430);
+    maxPeasants = *(_WORD *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 430);
     HIBYTE(maxPeasants) &= 0xFu;
     if ( maxPeasants < g_BuildingEconomyDialogPendingPeasantTransfer )
       g_BuildingEconomyDialogPendingPeasantTransfer = maxPeasants;
-    UI_DrawConfirmTop(0xAu, (int)g_RenderState);
+    UI_DrawConfirmTop(0xAu, (int)(intptr_t)g_RenderState);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v15);
 }
 // 42AE53: variable 'v5' is possibly undefined
@@ -534,22 +534,22 @@ int  BuildingTransferDialog_DecreaseGoldTransferAmount(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingGoldTransfer -= 10;
   goldAmount = g_BuildingEconomyDialogPendingGoldTransfer;
   do
   {
-    DD_Pump((int)g_RenderState, goldAmount);
+    DD_Pump((int)(intptr_t)g_RenderState, goldAmount);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((goldAmount - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingGoldTransfer < 0 )
       g_BuildingEconomyDialogPendingGoldTransfer = 0;
-    UI_DrawConfirmBottom((DWORD)g_RenderState, 0);
+    UI_DrawConfirmBottom((DWORD)(intptr_t)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v14);
 }
 // 42AF36: variable 'v5' is possibly undefined
@@ -581,25 +581,25 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int widget, char a2)
 
   UIWidget_ShowPressedState(widget);
   Render_Pump();
-  DD_Pump((int)g_RenderState, a2);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingGoldTransfer += 10;
   goldAmount = g_BuildingEconomyDialogPendingGoldTransfer;
   do
   {
-    DD_Pump((int)g_RenderState, goldAmount);
+    DD_Pump((int)(intptr_t)g_RenderState, goldAmount);
     timeSample = Time_Now(v8, v7);
     timeSample2 = Time_Now(v10, timeSample);
     g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((goldAmount + (v12 - v13) * (timeSample2 - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingGoldTransfer > 1000 )
       g_BuildingEconomyDialogPendingGoldTransfer = 1000;
-    maxGold = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
+    maxGold = *(_DWORD *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 438);
     if ( g_BuildingEconomyDialogPendingGoldTransfer > maxGold )
-      g_BuildingEconomyDialogPendingGoldTransfer = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
-    UI_DrawConfirmBottom(maxGold, (int)g_RenderState);
+      g_BuildingEconomyDialogPendingGoldTransfer = *(_DWORD *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 438);
+    UI_DrawConfirmBottom(maxGold, (int)(intptr_t)g_RenderState);
   }
-  while ( DD_IsFlipping((int)g_RenderState) );
-  Render_Present((int)g_RenderState);
+  while ( DD_IsFlipping((int)(intptr_t)g_RenderState) );
+  Render_Present((int)(intptr_t)g_RenderState);
   return UIWidget_ShowReleasedState(widget, v15);
 }
 // 42AFF3: variable 'v5' is possibly undefined
@@ -634,9 +634,9 @@ int  BuildingEconomyDialog_Run(int buildingRecord)
       stderr,
       "[economy] enter building_idx=%d owner=%d\n",
       building_index,
-      *(unsigned __int8 *)(buildingRecord + 2));
+      *(unsigned __int8 *)(uintptr_t)(buildingRecord + 2));
   Diagnostics_ResetFrameDumpOnEconomyEnter();
-  player_has_religion = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(buildingRecord + 2));
+  player_has_religion = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(uintptr_t)(buildingRecord + 2));
   BuildingTransferTargetList_Rebuild(buildingRecord, 1);
   g_BuildingEconomyDialogPendingPeasantTransfer = 0;
   g_BuildingEconomyDialogPendingGoldTransfer = 0;
@@ -651,36 +651,36 @@ int  BuildingEconomyDialog_Run(int buildingRecord)
     background_path,
     0,
     (uintptr_t)palette_buffer);
-  dialog_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+  dialog_sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
   if ( player_has_religion )
     sprite_path = aCastle_chrDw_0;
   else
     sprite_path = aCastle_pogDw_0;
   if ( dialog_sprite_set )
     dialog_sprite_set = DLXSpriteSet_Load(dialog_sprite_set, sprite_path);
-  g_BuildingEconomyDialogSpriteSet = (int)dialog_sprite_set;
+  g_BuildingEconomyDialogSpriteSet = (int)(intptr_t)dialog_sprite_set;
   if ( player_has_religion )
     resource_base_path = aCastle_chrDw_2;
   else
     resource_base_path = aCastle_pogDw_2;
-  Palette_LoadOrBuildBlendLookupTable(resource_base_path, (int)(uintptr_t)palette_buffer, (int)dialog_sprite_set, 0);
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  Palette_LoadOrBuildBlendLookupTable(resource_base_path, (int)(uintptr_t)palette_buffer, (int)(intptr_t)dialog_sprite_set, 0);
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingEconomyDialogSpriteSet, (unsigned __int8)g_LanguageIndex);
   Compat_RenderDeviceDrawMenuSprite(267, 149, SpriteForChar, 0);
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, 0);
-  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
-  Render_LoadResourceSprite_v4(5, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
-  Render_LoadResourceSprite_v4(9, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
-  Render_LoadResourceSprite_v4(16, palette_buffer, 0, (char)&g_MainRenderDevice, 0);
-  UI_DrawTextFmt(267, 267, 343, 90, 2, aD_32, *(signed char *)(buildingRecord + 434));
-  UI_DrawTextFmt(444, 444, 503, 198, 3, aD_33, *(unsigned __int16 *)(buildingRecord + 442));
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, palette_buffer, 0, (char)(intptr_t)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(5, palette_buffer, 0, (char)(intptr_t)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(9, palette_buffer, 0, (char)(intptr_t)&g_MainRenderDevice, 0);
+  Render_LoadResourceSprite_v4(16, palette_buffer, 0, (char)(intptr_t)&g_MainRenderDevice, 0);
+  UI_DrawTextFmt(267, 267, 343, 90, 2, aD_32, *(signed char *)(uintptr_t)(buildingRecord + 434));
+  UI_DrawTextFmt(444, 444, 503, 198, 3, aD_33, *(unsigned __int16 *)(uintptr_t)(buildingRecord + 442));
   UI_DrawNoticeBoxSmall(0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
   Render_ReleaseSurface(16, 0);
-  UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(g_BuildingEconomyDialogBuilding + 430));
+  UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 430));
   BuildingEconomyDialog_EnsureWidgets();
   UIWidgetTable_InitDrawStates(g_BuildingEconomyDialogActionWidgets);
   BuildingTransferTargetList_SetDrawOrigin(184, 279);
@@ -688,13 +688,13 @@ int  BuildingEconomyDialog_Run(int buildingRecord)
   UI_DrawConfirmTop(0, 0);
   UI_DrawConfirmBottom(0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, 0);
-  UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
+  UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(uintptr_t)(g_BuildingEconomyDialogBuilding + 438));
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, palette_buffer, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-  Render_Present((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
       stderr,
@@ -706,7 +706,7 @@ int  BuildingEconomyDialog_Run(int buildingRecord)
   exit_signal_snapshot = 0;
   do
   {
-    DD_Pump((int)g_RenderState, (char)g_RenderState);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
     BuildingTransferTargetList_HandleClick(0);
     UIWidgetTable_PollHoverAndActions(g_BuildingEconomyDialogActionWidgets, 0);
     UI_RunHoverTooltipZones(g_BuildingEconomyDialogTooltipZoneRect);
@@ -759,7 +759,7 @@ BOOL  Trap_CanPlaceAtTile(int tileX, int tileY)
       && surfaceClass != 147
       && surfaceClass != 1
       && !MapTile_IsCastleFoundationTile(v6, tileY, 2)
-      && *(unsigned __int16 *)(TILE_INDEX(v7, tileY)) == 0xFFFF
+      && *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(v7, tileY)) == 0xFFFF
       && !MapTile_GetReligiousSiteCategory(v7, tileY)
       && !MapTile_HasHiddenTreasure(v8, tileY) )
     {
@@ -791,25 +791,25 @@ signed int  Trap_New(DWORD tileX, int tileY, int a3, int stackIndex, double a5)
   int v18; // ecx
   int v19; // edx
 
-  Debug_Log(a3, stackIndex, tileX, (int)aTrap_newDDD, tileX);
+  Debug_Log(a3, stackIndex, tileX, (int)(intptr_t)aTrap_newDDD, tileX);
   result = UnitStack_HasBuilder(stackIndex);
   if ( result )
   {
     if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET) < 0 || !Trap_CanPlaceAtTile(tileX, tileY) )
       return 0;
-    dxTile = tileX - *(__int16 *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET);
+    dxTile = tileX - *(__int16 *)(uintptr_t)(v9 + gameData + UNIT_STACK_TABLE_OFFSET);
     if ( dxTile <= 0 )
-      dxTile = *(__int16 *)(v9 + gameData + UNIT_STACK_TABLE_OFFSET) - tileX;
+      dxTile = *(__int16 *)(uintptr_t)(v9 + gameData + UNIT_STACK_TABLE_OFFSET) - tileX;
     if ( dxTile > 1 )
       return 0;
-    dyTile = tileY - *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176);
+    dyTile = tileY - *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176);
     if ( dyTile <= 0 )
-      dyTile = *(__int16 *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) - tileY;
+      dyTile = *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147176) - tileY;
     if ( dyTile <= 1 )
     {
       stackByteOffset = UNIT_STACK_STRIDE * stackIndex;
       tileDataPtr = gameData + 100 * tileX;
-      TILE_TRAP_OWNER_MASK(tileX, tileY) = 1 << *(_BYTE *)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178);
+      TILE_TRAP_OWNER_MASK(tileX, tileY) = 1 << *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147178);
       UnitStack_SpendActionPointsByIndexClamped(stackIndex, 0, tileDataPtr, a5);
       while ( 1 )
       {
@@ -824,7 +824,7 @@ signed int  Trap_New(DWORD tileX, int tileY, int a3, int stackIndex, double a5)
       }
       Rules_SyncArmyFactStrength(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET, UNIT_STACK_STRIDE * stackIndex, gameData, stackByteOffset, tileDataPtr, a5);
       Unit_CompactSquad(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET, v18, v17);
-      if ( *(__int16 *)(gameData + v19 + 147180) == -1 )
+      if ( *(__int16 *)(uintptr_t)(gameData + v19 + 147180) == -1 )
       {
         Rules_UnlinkArmyFact(v19 + gameData + UNIT_STACK_TABLE_OFFSET, v17);
         WorldMap_SyncSelectionForHumanPlayer(tileDataPtr);
@@ -867,7 +867,7 @@ __int16 * Trap_HurtStack(__int16 *stack, char a2, DWORD a3, double a4)
   unsigned int damageRoll; // eax
 
   unitIndex = 0;
-  Debug_Log((int)(stack + 3), a2, a3, (int)Trap_HurtUnit);
+  Debug_Log((int)(intptr_t)(stack + 3), a2, a3, (int)(intptr_t)Trap_HurtUnit);
   do
   {
     if ( *(__int16 *)unitPtr == -1 )
@@ -876,20 +876,20 @@ __int16 * Trap_HurtStack(__int16 *stack, char a2, DWORD a3, double a4)
     if ( effectiveness )
     {
       damageRoll = Rng_RandRange(270, 340);
-      *(_BYTE *)(unitRecord + 9) -= damageRoll / effectiveness;
+      *(_BYTE *)(uintptr_t)(unitRecord + 9) -= damageRoll / effectiveness;
     }
     else
     {
-      *(_BYTE *)(unitRecord + 9) = 0;
+      *(_BYTE *)(uintptr_t)(unitRecord + 9) = 0;
     }
-    if ( *(char *)(unitRecord + 9) <= 0 )
-      *(_WORD *)unitRecord = -1;
-    unitPtr = (char *)(unitRecord + 31);
+    if ( *(char *)(uintptr_t)(unitRecord + 9) <= 0 )
+      *(_WORD *)(uintptr_t)unitRecord = -1;
+    unitPtr = (char *)(uintptr_t)(unitRecord + 31);
     ++unitIndex;
     *(unitPtr - 23) = 0;
   }
   while ( unitIndex < 10 );
-  Unit_CompactSquad(stack, (int)unitPtr, a4);
+  Unit_CompactSquad(stack, (int)(intptr_t)unitPtr, a4);
   return Rules_LinkArmyFinalize(stack, a4);
 }
 // 42B6BA: variable 'v6' is possibly undefined
@@ -931,10 +931,10 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
   int scanRowTileBase; // [esp+4h] [ebp-24h]
   signed int radius; // [esp+Ch] [ebp-1Ch]
 
-  stackRecord = (__int16 *)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex);
+  stackRecord = (__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex);
   if ( UnitStack_GetMaxOrderTier((intptr_t)stackRecord) >= 3 )
   {
-    visionRadius = UnitStack_GetVisionRadius((int)stackRecord);
+    visionRadius = UnitStack_GetVisionRadius((int)(intptr_t)stackRecord);
     scanRow = *stackRecord - visionRadius;
     radius = visionRadius;
     scanRowTileBase = 100 * scanRow;
@@ -946,9 +946,9 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
         if ( i >= stackCol + radius )
           break;
         if ( scanRow >= 0
-          && scanRow < *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET)
+          && scanRow < *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET)
           && i >= 0
-          && i < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET)
+          && i < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET)
           && Math_CeilSqrt((i - stackCol) * (i - stackCol) + (scanRow - *stackRecord) * (scanRow - *stackRecord)) <= radius )
         {
           a2 = scanRowTileBase;
@@ -969,13 +969,13 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
     }
   }
   stackBase = gameData + UNIT_STACK_STRIDE * stackIndex;
-  tileDataPtr = gameData + 100 * *(__int16 *)(stackBase + 147174) + *(__int16 *)(stackBase + 147176);
-  if ( !TILE_TRAP_OWNER_MASK(*(__int16 *)(stackBase + 147174), *(__int16 *)(stackBase + 147176)) )
+  tileDataPtr = gameData + 100 * *(__int16 *)(uintptr_t)(stackBase + 147174) + *(__int16 *)(uintptr_t)(stackBase + 147176);
+  if ( !TILE_TRAP_OWNER_MASK(*(__int16 *)(uintptr_t)(stackBase + 147174), *(__int16 *)(uintptr_t)(stackBase + 147176)) )
     return 0;
-  ownerIndex = *(unsigned __int8 *)(stackBase + 147178);
-  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * ownerIndex + 140059) )
+  ownerIndex = *(unsigned __int8 *)(uintptr_t)(stackBase + 147178);
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * ownerIndex + 140059) )
   {
-    TILE_TRAP_OWNER_MASK(*(__int16 *)(stackBase + 147174), *(__int16 *)(stackBase + 147176)) |= 1 << ownerIndex;
+    TILE_TRAP_OWNER_MASK(*(__int16 *)(uintptr_t)(stackBase + 147174), *(__int16 *)(uintptr_t)(stackBase + 147176)) |= 1 << ownerIndex;
     WorldMap_RedrawViewport(1);
     WorldMap_RedrawViewport(1);
     endTime = Time_Now(v10, v9) + 200;
@@ -989,10 +989,10 @@ signed int  Trap_TriggerAtStackTile(int stackIndex, DWORD a2, double gameTime)
     Win_PlayModeChangeFrameTransition(aWpad_pul, 1, v14, tileDataPtr, a2);
   }
   stackAddr = gameData + UNIT_STACK_STRIDE * stackIndex;
-  trapMaskRowBase = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(stackAddr + 147174);
-  TILE_TRAP_OWNER_MASK(*(__int16 *)(stackAddr + 147174), *(__int16 *)(stackAddr + 147176)) = 0;
-  Rules_RetractTrapFact(*(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176));
-  Trap_HurtStack((__int16 *)(v24 + gameData + UNIT_STACK_TABLE_OFFSET), trapMaskRowBase, a2, gameTime);
+  trapMaskRowBase = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(uintptr_t)(stackAddr + 147174);
+  TILE_TRAP_OWNER_MASK(*(__int16 *)(uintptr_t)(stackAddr + 147174), *(__int16 *)(uintptr_t)(stackAddr + 147176)) = 0;
+  Rules_RetractTrapFact(*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176));
+  Trap_HurtStack((__int16 *)(uintptr_t)(v24 + gameData + UNIT_STACK_TABLE_OFFSET), trapMaskRowBase, a2, gameTime);
   return 1;
 }
 // 42B839: variable 'v10' is possibly undefined
@@ -1050,30 +1050,30 @@ int  Trap_ShowPitfallDiscoveryDialog(int tileX, int tileY, char spritePath, DWOR
   savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Render_Pump();
-  spriteSetAlloc = (_DWORD *)Mem_Alloc(4112, v4, spritePath, a4);
+  spriteSetAlloc = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v4, spritePath, a4);
   if ( spriteSetAlloc )
     spriteSetAlloc = DLXSpriteSet_Load(spriteSetAlloc, spritePath);
   dialogSpriteSet = spriteSetAlloc;
-  dialogX = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)spriteSetAlloc, 0)) / 2;
-  dialogY = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)dialogSpriteSet, 0)) / 2;
-  Surface = (_DWORD *)Mem_Alloc(188, v6, spritePath, a4);
+  dialogX = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)(intptr_t)spriteSetAlloc, 0)) / 2;
+  dialogY = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)dialogSpriteSet, 0)) / 2;
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v6, spritePath, a4);
   if ( Surface )
   {
-    SpriteWidth = DLX_GetSpriteWidth((int)dialogSpriteSet, 0);
-    SpriteHeight = DLX_GetSpriteHeight((int)dialogSpriteSet, 0);
+    SpriteWidth = DLX_GetSpriteWidth((int)(intptr_t)dialogSpriteSet, 0);
+    SpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)dialogSpriteSet, 0);
     Surface = Render_CreateSurface(v10, SpriteHeight, SpriteWidth);
   }
   dialogSurface = Surface;
-  fillRectYMax = dialogY + DLX_GetSpriteWidth((int)dialogSpriteSet, 0) - 1;
-  spriteHeight = DLX_GetSpriteHeight((int)dialogSpriteSet, 0);
+  fillRectYMax = dialogY + DLX_GetSpriteWidth((int)(intptr_t)dialogSpriteSet, 0) - 1;
+  spriteHeight = DLX_GetSpriteHeight((int)(intptr_t)dialogSpriteSet, 0);
   Render_FillRect(0, dialogSurface, (unsigned __int16)dialogY, (unsigned __int16)dialogX, dialogX + spriteHeight - 1, fillRectYMax, 0, 0);
   Render_ReleaseSurface(17, a4);
   if ( g_LanguageIndex == 2 )
     glyphIndex = 10;
   else
     glyphIndex = 0;
-  SpriteForChar = DLX_GetSpriteForChar((int)dialogSpriteSet, glyphIndex);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)dialogSpriteSet, glyphIndex);
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     dialogY,
     SpriteForChar,
     -1,
@@ -1083,29 +1083,29 @@ int  Trap_ShowPitfallDiscoveryDialog(int tileX, int tileY, char spritePath, DWOR
     1,
     0,
     0);
-  messageStrings[0] = (int)g_TrapPitfallDiscoveryMessageStrings[0];
-  messageStrings[1] = (int)g_TrapPitfallDiscoveryMessageStrings[1];
-  messageStrings[2] = (int)g_TrapPitfallDiscoveryMessageStrings[2];
+  messageStrings[0] = (int)(intptr_t)g_TrapPitfallDiscoveryMessageStrings[0];
+  messageStrings[1] = (int)(intptr_t)g_TrapPitfallDiscoveryMessageStrings[1];
+  messageStrings[2] = (int)(intptr_t)g_TrapPitfallDiscoveryMessageStrings[2];
   if ( g_LanguageIndex )
   {
     secondLineY = dialogY + 52;
     if ( (unsigned __int8)g_LanguageIndex <= 1u )
     {
-      UI_DrawTextFmt((int)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 32, 3, (int)aThisIsAPitfall);
-      UI_DrawTextFmt((int)&dialogSpriteSet, v20, v21, secondLineY, 3, (int)aDoYouWantToCov);
+      UI_DrawTextFmt((int)(intptr_t)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 32, 3, (int)(intptr_t)aThisIsAPitfall);
+      UI_DrawTextFmt((int)(intptr_t)&dialogSpriteSet, v20, v21, secondLineY, 3, (int)(intptr_t)aDoYouWantToCov);
       goto LABEL_9;
     }
     if ( g_LanguageIndex == 2 )
     {
-      UI_DrawTextFmt((int)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 32, 3, (int)aDasIstDieWolfs);
-      UI_DrawTextFmt((int)&dialogSpriteSet, v22, v23, secondLineY, 3, (int)aWillstDuSieZus);
+      UI_DrawTextFmt((int)(intptr_t)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 32, 3, (int)(intptr_t)aDasIstDieWolfs);
+      UI_DrawTextFmt((int)(intptr_t)&dialogSpriteSet, v22, v23, secondLineY, 3, (int)(intptr_t)aWillstDuSieZus);
       goto LABEL_9;
     }
   }
-  UI_DrawTextFmt((int)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 42, 3, messageStrings[(unsigned __int8)g_LanguageIndex]);
+  UI_DrawTextFmt((int)(intptr_t)&dialogSpriteSet, dialogX + 30, dialogX + 250, dialogY + 42, 3, messageStrings[(unsigned __int8)g_LanguageIndex]);
 LABEL_9:
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
-  Render_Present((int)g_RenderState);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
+  Render_Present((int)(intptr_t)g_RenderState);
   confirmBtnXMin = dialogX + 175;
   confirmBtnXMax = dialogX + 220;
   confirmBtnYMin = dialogY + 103;
@@ -1117,8 +1117,8 @@ LABEL_9:
   while ( 1 )
   {
     do
-      DD_Pump((int)g_RenderState, cancelBtnXMin);
-    while ( !DD_IsFlipping((int)g_RenderState) );
+      DD_Pump((int)(intptr_t)g_RenderState, cancelBtnXMin);
+    while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) );
     if ( g_MouseCursorRawX >> g_CursorCoordShift >= cancelBtnXMin
       && g_MouseCursorRawY >> g_CursorCoordShift >= cancelBtnYMin
       && g_MouseCursorRawX >> g_CursorCoordShift <= cancelBtnXMax
@@ -1135,17 +1135,17 @@ LABEL_9:
       break;
     }
   }
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   Render_Pump();
   eraseY = dialogY;
   eraseX = dialogX;
-  eraseWidth = DLX_GetSpriteWidth((int)dialogSpriteSet, 0) - 1;
-  eraseHeight = DLX_GetSpriteHeight((int)dialogSpriteSet, 0);
+  eraseWidth = DLX_GetSpriteWidth((int)(intptr_t)dialogSpriteSet, 0) - 1;
+  eraseHeight = DLX_GetSpriteHeight((int)(intptr_t)dialogSpriteSet, 0);
   Render_FillRect(dialogSurface, 0, 0, 0, eraseHeight - 1, eraseWidth, eraseX, eraseY);
   if ( dialogSurface )
-    (*(void (__cdecl **)(int, int, int))dialogSurface[46])(messageStrings[0], messageStrings[1], messageStrings[2]);
+    (*(void (__cdecl **)(int, int, int))(uintptr_t)dialogSurface[46])(messageStrings[0], messageStrings[1], messageStrings[2]);
   DLXSpriteSet_ReleaseAndClear((int *)&dialogSpriteSet);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   g_RenderDevice = savedRenderDevice;
   return WorldMap_RedrawViewport(1);
 }
@@ -1184,21 +1184,21 @@ int  Battle_LoadWallSegmentsFromBuildingRecord(int buildingRecord)
   rowByteOffset = 40;
   prevRowIndex = 0;
   wallRowBase = 20;
-  while ( *(_DWORD *)(g_MapData + 804) - 1 > row )
+  while ( *(_DWORD *)(uintptr_t)(g_MapData + 804) - 1 > row )
   {
     buildingCellPtr = buildingRecord;
     col = 0;
     colByteOffset = 0;
-    while ( col < *(_DWORD *)(g_MapData + 800) )
+    while ( col < *(_DWORD *)(uintptr_t)(g_MapData + 800) )
     {
-      tileValue = *(__int16 *)(colByteOffset + g_MapData + rowByteOffset);
+      tileValue = *(__int16 *)(uintptr_t)(colByteOffset + g_MapData + rowByteOffset);
       if ( tileValue >= 388 && tileValue <= 403 )
       {
-        aboveTileValue = *(__int16 *)(colByteOffset + g_MapData + 40 * prevRowIndex);
-        if ( aboveTileValue < 388 || aboveTileValue > 403 || (belowTileValue = *(__int16 *)(40 * (row + 1) + g_MapData + colByteOffset), belowTileValue < 388) || belowTileValue > 403 )
+        aboveTileValue = *(__int16 *)(uintptr_t)(colByteOffset + g_MapData + 40 * prevRowIndex);
+        if ( aboveTileValue < 388 || aboveTileValue > 403 || (belowTileValue = *(__int16 *)(uintptr_t)(40 * (row + 1) + g_MapData + colByteOffset), belowTileValue < 388) || belowTileValue > 403 )
         {
-          *(_BYTE *)(wallRowBase + g_MapData + col + 3134) = *(_BYTE *)(buildingCellPtr + 422);
-          *(_BYTE *)(wallRowBase + g_MapData + col + 3534) = 100;
+          *(_BYTE *)(uintptr_t)(wallRowBase + g_MapData + col + 3134) = *(_BYTE *)(uintptr_t)(buildingCellPtr + 422);
+          *(_BYTE *)(uintptr_t)(wallRowBase + g_MapData + col + 3534) = 100;
         }
       }
       colByteOffset += 2;
@@ -1210,9 +1210,9 @@ int  Battle_LoadWallSegmentsFromBuildingRecord(int buildingRecord)
     wallRowBase += 20;
     ++row;
   }
-  *(_DWORD *)(g_MapData + 828) = *(_DWORD *)(g_MapData + 800) / 2;
-  result = *(unsigned __int8 *)(buildingRecord + 421);
-  *(_DWORD *)(g_MapData + 820) = result;
+  *(_DWORD *)(uintptr_t)(g_MapData + 828) = *(_DWORD *)(uintptr_t)(g_MapData + 800) / 2;
+  result = *(unsigned __int8 *)(uintptr_t)(buildingRecord + 421);
+  *(_DWORD *)(uintptr_t)(g_MapData + 820) = result;
   return result;
 }
 // 532048: using guessed type int g_MapData;
@@ -1229,22 +1229,22 @@ char  Battle_SaveWallSegmentsToBuildingRecord(int buildingRecord)
   char result; // al
 
   wallRow = 0;
-  for ( i = 0; wallRow < *(_DWORD *)(g_MapData + 804) && !*(_BYTE *)(g_MapData + i + 3534); i += 20 )
+  for ( i = 0; wallRow < *(_DWORD *)(uintptr_t)(g_MapData + 804) && !*(_BYTE *)(uintptr_t)(g_MapData + i + 3534); i += 20 )
     ++wallRow;
   buildingCellPtr = buildingRecord;
   col = 0;
   wallRowBase = 20 * wallRow;
-  while ( col < *(_DWORD *)(g_MapData + 800) )
+  while ( col < *(_DWORD *)(uintptr_t)(g_MapData + 800) )
   {
     ++buildingCellPtr;
-    wallHp = *(_BYTE *)(wallRowBase + g_MapData + col++ + 3134);
-    *(_BYTE *)(buildingCellPtr + 421) = wallHp;
+    wallHp = *(_BYTE *)(uintptr_t)(wallRowBase + g_MapData + col++ + 3134);
+    *(_BYTE *)(uintptr_t)(buildingCellPtr + 421) = wallHp;
   }
   result = g_CurrentPlayerIndex;
-  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(uintptr_t)(g_MapData + 840) )
   {
-    result = *(_BYTE *)(g_MapData + 832);
-    *(_BYTE *)(*(_DWORD *)(g_MapData + 828) + buildingRecord + 422) = result;
+    result = *(_BYTE *)(uintptr_t)(g_MapData + 832);
+    *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_MapData + 828) + buildingRecord + 422) = result;
   }
   return result;
 }
@@ -1258,11 +1258,11 @@ BOOL  UnitBattle_IsTileInViewport(int tileRow, int tileCol)
   int colOrigin; // esi
   BOOL result; // eax
 
-  rowOrigin = *(_DWORD *)(g_MapData + 808);
+  rowOrigin = *(_DWORD *)(uintptr_t)(g_MapData + 808);
   result = 0;
   if ( tileRow >= rowOrigin && tileRow < rowOrigin + 7 )
   {
-    colOrigin = *(_DWORD *)(g_MapData + 812);
+    colOrigin = *(_DWORD *)(uintptr_t)(g_MapData + 812);
     if ( tileCol >= colOrigin && tileCol < colOrigin + 7 )
       return 1;
   }
@@ -1278,7 +1278,7 @@ void  Battle_LogUnitEntry(__int16 *unitRecord, DWORD a2, ...)
   if ( !unitRecord )
     return;
   unit_name = UnitType_GetLocalizedName((unit_type)*unitRecord);
-  Debug_Log((int)(uintptr_t)unitRecord, 0, a2, (int)aD0x08x15sPl1dP, unit_name);
+  Debug_Log((int)(uintptr_t)unitRecord, 0, a2, (int)(intptr_t)aD0x08x15sPl1dP, unit_name);
 }
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
@@ -1289,9 +1289,9 @@ void  Battle_LogAllUnits(int a1, char a2, DWORD a3)
   __int16 *unitRecord; // ecx
   int v6; // ecx
 
-  Debug_Log(a1, a2, a3, (int)aBattle_logallu);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aBattle_logallu);
   slotIndex = 0;
-  unitRecord = (__int16 *)(g_MapData + 852);
+  unitRecord = (__int16 *)(uintptr_t)(g_MapData + 852);
   do
   {
     while ( *unitRecord == -1 )
@@ -1338,11 +1338,11 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
   _DWORD *lightningSpriteSet; // [esp+828h] [ebp-1Ch] BYREF
   void *savedRenderDevice; // [esp+82Ch] [ebp-18h]
 
-  Debug_Log(a2, a3, playerIndex, (int)aGodanger);
-  messageStrings[0] = (int)g_GodAngerMessageStrings[0];
-  messageStrings[1] = (int)g_GodAngerMessageStrings[1];
-  messageStrings[2] = (int)g_GodAngerMessageStrings[2];
-  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * playerIndex + 140059) )
+  Debug_Log(a2, a3, playerIndex, (int)(intptr_t)aGodanger);
+  messageStrings[0] = (int)(intptr_t)g_GodAngerMessageStrings[0];
+  messageStrings[1] = (int)(intptr_t)g_GodAngerMessageStrings[1];
+  messageStrings[2] = (int)(intptr_t)g_GodAngerMessageStrings[2];
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * playerIndex + 140059) )
   {
     UnitBattle_ShowPlayerMessageBanner(messageStrings[(unsigned __int8)g_LanguageIndex], playerIndex, 0, playerIndex);
     Render_Pump();
@@ -1350,29 +1350,29 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
     memset(blackPalette, 0, sizeof(blackPalette));
     Palette_LoadFromQueryHandle((intptr_t)whitePalette, (intptr_t)"white.pal");
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_white_palette", (int)playerIndex, 0, 0, 0);
-    spriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+    spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
     if ( spriteSet )
       spriteSet = DLXSpriteSet_Load(spriteSet, "lightn.s32");
     lightningSpriteSet = spriteSet;
     for ( i = 0; i < 300; ++i )
     {
-      blackFadeStepArg = (__lock *)i;
+      blackFadeStepArg = (__lock *)(uintptr_t)i;
       Palette_CrossfadeStep((int *)&g_MainRenderDevice, blackPalette, blackFadeStepArg, 450);
     }
     g_RenderDevice = &g_MainRenderDevice;
-    SpriteForChar = DLX_GetSpriteForChar((int)lightningSpriteSet, 0);
+    SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)lightningSpriteSet, 0);
     Compat_RenderDeviceDrawMenuSprite(16, 100, SpriteForChar, 1);
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_lightning_draw", (int)playerIndex, (int)(uintptr_t)lightningSpriteSet, SpriteForChar, 0);
     Audio_PlayArtifactSound(0);
     Palette_CrossfadeStep((int *)&g_MainRenderDevice, whitePalette, 150, 200);
     Timer_BusyWaitWithCallback(10, 0, 0);
-    lightningWidth = DLX_GetSpriteWidth((int)lightningSpriteSet, 0) + 16;
-    SpriteHeight = DLX_GetSpriteHeight((int)lightningSpriteSet, 0);
+    lightningWidth = DLX_GetSpriteWidth((int)(intptr_t)lightningSpriteSet, 0) + 16;
+    SpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)lightningSpriteSet, 0);
     flashLevel = 150;
-    Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 16, 50, SpriteHeight + 200, lightningWidth, 0x32u, 0x10u);
+    Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 16, 50, SpriteHeight + 200, lightningWidth, 0x32u, 0x10u);
     do
     {
-      flashLevelArg = (__lock *)flashLevel;
+      flashLevelArg = (__lock *)(uintptr_t)flashLevel;
       flashLevel -= 60;
       Palette_CrossfadeStep((int *)&g_MainRenderDevice, whitePalette, flashLevelArg, 200);
     }
@@ -1380,31 +1380,31 @@ int  GodAnger(DWORD playerIndex, int a2, char a3)
     Palette_CrossfadeStep((int *)&g_MainRenderDevice, blackPalette, (__lock *)0x96, 200);
     for ( j = 0; j < 150; ++j )
     {
-      mapFadeStepArg = (__lock *)j;
-      Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, mapFadeStepArg, 150);
+      mapFadeStepArg = (__lock *)(uintptr_t)j;
+      Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr, mapFadeStepArg, 150);
     }
-    Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_MapPalettePtr);
+    Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)(uintptr_t)g_MapPalettePtr);
     DLXSpriteSet_ReleaseAndClear((int *)&lightningSpriteSet);
     g_RenderDevice = savedRenderDevice;
-    Render_Present((int)g_RenderState);
+    Render_Present((int)(intptr_t)g_RenderState);
     UnitBattle_RedrawVisibleGrid();
   }
   for ( k = 0; k != 682; k += 31 )
   {
     unitRecord = k + g_MapData;
-    result = *(__int16 *)(k + g_MapData + 852);
+    result = *(__int16 *)(uintptr_t)(k + g_MapData + 852);
     if ( result != -1 )
     {
-      result = *(unsigned __int8 *)(unitRecord + 854);
+      result = *(unsigned __int8 *)(uintptr_t)(unitRecord + 854);
       if ( result == playerIndex )
       {
-        *(_BYTE *)(unitRecord + 861) -= Rng_RandRange(20, 30);
-        result = *(char *)(k + g_MapData + 861);
+        *(_BYTE *)(uintptr_t)(unitRecord + 861) -= Rng_RandRange(20, 30);
+        result = *(char *)(uintptr_t)(k + g_MapData + 861);
         if ( result <= 0 )
         {
-          *(_WORD *)(k + g_MapData + 852) = -1;
-          result = *(unsigned __int16 *)(k + g_MapData + 858);
-          *(_WORD *)(g_MapData + 40 * *(unsigned __int16 *)(k + g_MapData + 856) + 2 * result + 1534) = -1;
+          *(_WORD *)(uintptr_t)(k + g_MapData + 852) = -1;
+          result = *(unsigned __int16 *)(uintptr_t)(k + g_MapData + 858);
+          *(_WORD *)(uintptr_t)(g_MapData + 40 * *(unsigned __int16 *)(uintptr_t)(k + g_MapData + 856) + 2 * result + 1534) = -1;
         }
       }
     }
@@ -1434,7 +1434,7 @@ int  Battle_NewTurn(int a1, char a2, DWORD a3)
   int v3; // ecx
   int result; // eax
 
-  Debug_Log(a1, a2, a3, (int)aBattle_newturn);
+  Debug_Log(a1, a2, a3, (int)(intptr_t)aBattle_newturn);
   Battle_LogAllUnits(v3, a2, a3);
   for ( result = 0; result < 2; ++result )
     ;
@@ -1454,14 +1454,14 @@ BOOL Battle_HasUnitsForBothSides(void)
   defenderPresent = 0;
   for ( i = 0; i != 682; i += 31 )
   {
-    if ( *(__int16 *)(i + g_MapData + 852) != -1 )
+    if ( *(__int16 *)(uintptr_t)(i + g_MapData + 852) != -1 )
     {
-      owner = *(unsigned __int8 *)(i + g_MapData + 854);
-      if ( owner == *(_DWORD *)(g_MapData + 836) )
+      owner = *(unsigned __int8 *)(uintptr_t)(i + g_MapData + 854);
+      if ( owner == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
       {
         attackerPresent = 1;
       }
-      else if ( owner == *(_DWORD *)(g_MapData + 840) )
+      else if ( owner == *(_DWORD *)(uintptr_t)(g_MapData + 840) )
       {
         defenderPresent = 1;
       }

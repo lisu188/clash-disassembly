@@ -56,7 +56,7 @@ _DWORD * Compat_FileStreamRelease(_DWORD *result, char flags)
   {
     _wcpp_4_dtor_array_store__(result, &g_CompatFileStream_DtorArrayDescriptor);
     j_j__nfree_();
-    return (_DWORD *)v4;
+    return (_DWORD *)(uintptr_t)v4;
   }
   stream_handle = result[1];
   *result = g_CompatFileStream_VTable;
@@ -64,14 +64,14 @@ _DWORD * Compat_FileStreamRelease(_DWORD *result, char flags)
   {
     fclose_(stream_handle);
     if ( (flags & 2) == 0 )
-      return (_DWORD *)v5;
+      return (_DWORD *)(uintptr_t)v5;
     goto LABEL_8;
   }
   if ( (flags & 2) != 0 )
   {
 LABEL_8:
     j__nfree_();
-    return (_DWORD *)v7;
+    return (_DWORD *)(uintptr_t)v7;
   }
   return result;
 }
@@ -85,7 +85,7 @@ LABEL_8:
 //----- (00477DC0) --------------------------------------------------------
 int Compat_FileStreamRead(int stream, void *buffer, int a3)
 {
-  return fread_(buffer, 1, *(_DWORD *)(stream + 4), a3);
+  return fread_(buffer, 1, *(_DWORD *)(uintptr_t)(stream + 4), a3);
 }
 
 //----- (00477DE0) --------------------------------------------------------
@@ -95,14 +95,14 @@ int  Compat_FileStreamReadChar(int stream, unsigned int a2)
   unsigned __int8 next_byte;
 
   (void)a2;
-  stream_ptr = *(_DWORD *)(stream + 4);
-  if ( *(_DWORD *)(stream_ptr + 4) > 0 )
+  stream_ptr = *(_DWORD *)(uintptr_t)(stream + 4);
+  if ( *(_DWORD *)(uintptr_t)(stream_ptr + 4) > 0 )
   {
-    next_byte = *(unsigned __int8 *)*(_DWORD *)stream_ptr;
+    next_byte = *(unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)stream_ptr;
     if ( (unsigned int)(next_byte - 13) > 0xFD )
     {
-      --*(_DWORD *)(stream_ptr + 4);
-      ++*(_DWORD *)stream_ptr;
+      --*(_DWORD *)(uintptr_t)(stream_ptr + 4);
+      ++*(_DWORD *)(uintptr_t)stream_ptr;
       return next_byte;
     }
   }
@@ -120,25 +120,25 @@ signed int  Compat_FileStreamUngetChar(int stream, signed int pushed_char)
 //----- (00477E40) --------------------------------------------------------
 int  Compat_FileStreamWrite(int stream, const void *buffer, int a3)
 {
-  return fwrite_(buffer, 1, *(_DWORD *)(stream + 4), a3);
+  return fwrite_(buffer, 1, *(_DWORD *)(uintptr_t)(stream + 4), a3);
 }
 
 //----- (00477E60) --------------------------------------------------------
 signed int  Compat_FileStreamSeekFromStart(int stream, int offset, int a3)
 {
-  return IO_SeekStreamGuarded(*(_DWORD *)(stream + 4), offset, 0, a3);
+  return IO_SeekStreamGuarded(*(_DWORD *)(uintptr_t)(stream + 4), offset, 0, a3);
 }
 
 //----- (00477E70) --------------------------------------------------------
 signed int  Compat_FileStreamSeekFromEnd(int stream, int offset, int a3)
 {
-  return IO_SeekStreamGuarded(*(_DWORD *)(stream + 4), offset, 2u, a3);
+  return IO_SeekStreamGuarded(*(_DWORD *)(uintptr_t)(stream + 4), offset, 2u, a3);
 }
 
 //----- (00477E80) --------------------------------------------------------
 int __fastcall Compat_FileStreamTell(int stream, int a2)
 {
-  return Compat_StreamTell(*(_DWORD *)(stream + 4));
+  return Compat_StreamTell(*(_DWORD *)(uintptr_t)(stream + 4));
 }
 
 //----- (00477E90) --------------------------------------------------------
@@ -146,10 +146,10 @@ signed int  Compat_FileStreamIsReady(int stream)
 {
   int stream_handle; // edx
 
-  stream_handle = *(_DWORD *)(stream + 4);
+  stream_handle = *(_DWORD *)(uintptr_t)(stream + 4);
   if ( !stream_handle )
     return -2;
-  if ( (*(_BYTE *)(stream_handle + 12) & 0x10) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(stream_handle + 12) & 0x10) != 0 )
     return -1;
   return 1;
 }
@@ -173,10 +173,10 @@ int  Compat_FileFinderOpen(_DWORD *finder, int search_path)
   Compat_StringHolderDestructor(&pattern_holder);
   vtable_ptr = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&pattern_holder, a__31);
-  find_handle = CRT_FindFirstFile(pattern_holder, (_DWORD *)(v2 + 4), v2);
-  *(_DWORD *)(v4 + 284) = find_handle;
-  *(_DWORD *)(v4 + 288) = find_handle;
-  Compat_StringHolderScalarDeletingDtor((int)&pattern_holder, 1);
+  find_handle = CRT_FindFirstFile(pattern_holder, (_DWORD *)(uintptr_t)(v2 + 4), v2);
+  *(_DWORD *)(uintptr_t)(v4 + 284) = find_handle;
+  *(_DWORD *)(uintptr_t)(v4 + 288) = find_handle;
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&pattern_holder, 1);
   return v5;
 }
 // 477F06: variable 'v2' is possibly undefined
@@ -199,7 +199,7 @@ _DWORD * Compat_FileFinderRelease(_DWORD *result, char flags)
   {
     _wcpp_4_dtor_array_store__(result, &g_CompatFileFinder_DtorArrayDescriptor);
     j_j__nfree_();
-    return (_DWORD *)v4;
+    return (_DWORD *)(uintptr_t)v4;
   }
   find_handle = result[71];
   *result = g_CompatFileFinder_VTable;
@@ -207,14 +207,14 @@ _DWORD * Compat_FileFinderRelease(_DWORD *result, char flags)
   {
     findclose_(result);
     if ( (v6 & 2) == 0 )
-      return (_DWORD *)v5;
+      return (_DWORD *)(uintptr_t)v5;
     goto LABEL_8;
   }
   if ( (flags & 2) != 0 )
   {
 LABEL_8:
     j__nfree_();
-    return (_DWORD *)v7;
+    return (_DWORD *)(uintptr_t)v7;
   }
   return result;
 }
@@ -229,7 +229,7 @@ LABEL_8:
 //----- (00477F90) --------------------------------------------------------
 int  Compat_FileFinderHasEntry(int result)
 {
-  if ( *(_DWORD *)(result + 288) == -1 )
+  if ( *(_DWORD *)(uintptr_t)(result + 288) == -1 )
     return 0;
   return result;
 }
@@ -241,7 +241,7 @@ int  Compat_FileFinderAdvance(int finder)
   int v2; // ecx
 
   result = findnext_(finder, finder + 4);
-  *(_DWORD *)(v2 + 288) = result;
+  *(_DWORD *)(uintptr_t)(v2 + 288) = result;
   return result;
 }
 // 477FB2: variable 'v2' is possibly undefined
@@ -256,13 +256,13 @@ int  Compat_FileFinderGetName(int finder)
 //----- (00477FD0) --------------------------------------------------------
 int  Compat_FileFinderGetAttributes(int finder)
 {
-  return *(_DWORD *)(finder + 4);
+  return *(_DWORD *)(uintptr_t)(finder + 4);
 }
 
 //----- (00477FE0) --------------------------------------------------------
 int  Compat_FileFinderGetSize(int finder)
 {
-  return *(_DWORD *)(finder + 20);
+  return *(_DWORD *)(uintptr_t)(finder + 20);
 }
 
 //----- (00477FF0) --------------------------------------------------------
@@ -272,12 +272,12 @@ int  Compat_FileFinderCreate(int search_path, char a2, DWORD alloc_context)
   int v5; // ecx
   int v6; // ecx
 
-  finder = (_DWORD *)Mem_Alloc(292, search_path, a2, alloc_context);
+  finder = (_DWORD *)(uintptr_t)Mem_Alloc(292, search_path, a2, alloc_context);
   if ( finder )
-    finder = (_DWORD *)Compat_FileFinderOpen(finder, v5);
-  if ( (*(int (__cdecl **)(int))(*finder + 12))(search_path) )
+    finder = (_DWORD *)(uintptr_t)Compat_FileFinderOpen(finder, v5);
+  if ( (*(int (__cdecl **)(int))(uintptr_t)(*finder + 12))(search_path) )
     return v6;
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)v6 + 20))(v6, 2);
+  (*(void (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v6 + 20))(v6, 2);
   return 0;
 }
 // 478010: variable 'v5' is possibly undefined
@@ -290,8 +290,8 @@ const char ** FileSystem_DiskMountCtor(const char **mount, int root_path)
   unsigned int path_len;
 
   *(_DWORD *)(mount + 4) = 0;
-  *(_DWORD *)(mount + 8) = (int)&g_PathEntry_Vtable;
-  *(_DWORD *)mount = (int)g_FileSystemDiskMount_VTable;
+  *(_DWORD *)(mount + 8) = (int)(intptr_t)&g_PathEntry_Vtable;
+  *(_DWORD *)mount = (int)(intptr_t)g_FileSystemDiskMount_VTable;
   if ( !root_path )
     return mount;
   Compat_StringHolderDestructor((const char **)(uintptr_t)((unsigned int)(uintptr_t)mount + 4));
@@ -321,7 +321,7 @@ int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *mount, char flags)
   else
   {
     *mount = g_FileSystemDiskMount_VTable;
-    v3 = Compat_StringHolderScalarDeletingDtor((int)(mount + 1), 0);
+    v3 = Compat_StringHolderScalarDeletingDtor((int)(intptr_t)(mount + 1), 0);
     if ( (flags & 2) != 0 )
     {
       j__nfree_();
@@ -346,14 +346,14 @@ int  FileSystem_DiskMountOpenFileQuery(int mount, char mode_flags, DWORD alloc_c
 
   joined_path[0] = 0;
   joined_path[1] = &g_CompatStringHolder_Vtable;
-  result = (_DWORD *)Mem_Alloc(8, mount, mode_flags, alloc_context);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(8, mount, mode_flags, alloc_context);
   if ( result )
   {
     Compat_StringHolderConstructJoined(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(mount + 4), 0);
     result = Compat_FileStreamOpen(result, (const CHAR *)(uintptr_t)(unsigned int)joined_path[0], 0, mode_flags, alloc_context);
   }
   Compat_StringHolderDestroyStack(joined_path, 1);
-  return (int)result;
+  return (int)(intptr_t)result;
 }
 
 //----- (00478140) --------------------------------------------------------
@@ -367,7 +367,7 @@ int __fastcall FileSystem_DiskMountDeleteFile(int mount, const char *file_name)
   joined_path[2] = mount;
   Compat_StringHolderConstructJoined(joined_path, mount, file_name);
   IO_RemoveFileByPath(v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_path, v4);
   return v5;
 }
 // 478158: variable 'v3' is possibly undefined
@@ -386,7 +386,7 @@ int __fastcall FileSystem_DiskMountCreateDirectory(int mount, const char *dir_na
   joined_path[2] = mount;
   v3 = (const CHAR **)Compat_StringHolderConstructJoined(joined_path, mount, dir_name);
   CRT_MakeDirectory(*v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_path, v4);
   return v5;
 }
 // 478190: variable 'v4' is possibly undefined
@@ -403,7 +403,7 @@ int __fastcall FileSystem_DiskMountRemoveDirectory(int mount, const char *dir_na
   joined_path[2] = mount;
   v3 = (const CHAR **)Compat_StringHolderConstructJoined(joined_path, mount, dir_name);
   CRT_RemoveDirectory(*v3, 1);
-  Compat_StringHolderScalarDeletingDtor((int)joined_path, v4);
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)joined_path, v4);
   return v5;
 }
 // 4781C1: variable 'v4' is possibly undefined
@@ -460,13 +460,13 @@ int __thiscall FileSystem_DiskMountDirectoryExists(void *this)
   Compat_StringHolderAppendText(&search_pattern, a__36);
   if ( CRT_FindFirstFile(search_pattern, &find_data, v1) == -1 )
   {
-    Compat_StringHolderScalarDeletingDtor((int)&search_pattern, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&search_pattern, 1);
     return 0;
   }
   else
   {
     findclose_(v2);
-    Compat_StringHolderScalarDeletingDtor((int)&search_pattern, 1);
+    Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&search_pattern, 1);
     return v3;
   }
 }
@@ -482,9 +482,9 @@ char  FileSystem_DiskMountResolveRegisteredRootPath(int mount, int mount_table)
 {
   const char *resolved_path; // eax
 
-  resolved_path = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(mount + 4);
+  resolved_path = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(mount + 4);
   if ( !resolved_path || !*resolved_path )
-    Compat_StringHolderCopyText((_DWORD *)(mount + 4), (const char *)(uintptr_t)(unsigned int)Compat_FileSystemFindMountedPathById(mount_table, mount));
+    Compat_StringHolderCopyText((_DWORD *)(uintptr_t)(mount + 4), (const char *)(uintptr_t)(unsigned int)Compat_FileSystemFindMountedPathById(mount_table, mount));
   return mount_table;
 }
 
@@ -493,7 +493,7 @@ const char ** FileSystem_DiskMountCreate(int root_path, char a2, DWORD alloc_con
 {
   const char **result; // eax
 
-  result = (const char **)Mem_Alloc(12, root_path, a2, alloc_context);
+  result = (const char **)(uintptr_t)Mem_Alloc(12, root_path, a2, alloc_context);
   if ( result )
     return FileSystem_DiskMountCtor(result, root_path);
   return result;
@@ -507,9 +507,9 @@ int  FileSystem_DiskMountRegisterNestedMount(int mount, int *mount_table, char a
   stream_buf = IO_StreambufAlloc(mount, a3, alloc_context);
   return FileSystem_AddMountEntry(
            mount_table,
-           (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(mount + 4),
+           (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(mount + 4),
            0,
-           (DWORD)stream_buf);
+           (DWORD)(intptr_t)stream_buf);
 }
 
 //----- (004783D0) --------------------------------------------------------
@@ -561,10 +561,10 @@ int  FileSystem_ArchiveFillBlankRecordBytes(int record)
   do
   {
     v2 = rand_();
-    *(_BYTE *)(HIDWORD(v2) - 1) = v2;
+    *(_BYTE *)(uintptr_t)(HIDWORD(v2) - 1) = v2;
   }
   while ( HIDWORD(v2) != record_end );
-  *(_DWORD *)(record + 14) = 0;
+  *(_DWORD *)(uintptr_t)(record + 14) = 0;
   return v2;
 }
 // 478431: variable 'v3' is possibly undefined
@@ -588,7 +588,7 @@ const char ** FileSystem_PathTrimToParentDir(const char **path_holder)
   }
   else
   {
-    text = (const char *)ExcString_GetTextPtr((int)path_holder);
+    text = (const char *)(uintptr_t)ExcString_GetTextPtr((int)(intptr_t)path_holder);
     if ( text )
       text_len = strlen(text);
     else
@@ -692,7 +692,7 @@ int  FileSystem_ArchiveRecordCacheDestruct(_DWORD *cache)
 {
   FileSystem_ArchiveRecordCacheFlushWindow(cache);
   j_j__nfree_(cache[4]);
-  return (int)cache;
+  return (int)(intptr_t)cache;
 }
 
 //----- (00478610) --------------------------------------------------------
@@ -724,13 +724,13 @@ int  FileSystem_ArchiveRecordCacheLoadWindow(_DWORD *cache, int record_index)
   cache[1] = window_start;
   if ( window_start < 0 )
     cache[1] = 0;
-  stream = (int *)cache[5];
-  records_buffer = (unsigned __int8 *)cache[4];
-  File_SeekIfPositionChangedMode1(stream, cache[6] + 26 * cache[1], (int)records_buffer);
+  stream = (int *)(uintptr_t)cache[5];
+  records_buffer = (unsigned __int8 *)(uintptr_t)cache[4];
+  File_SeekIfPositionChangedMode1(stream, cache[6] + 26 * cache[1], (int)(intptr_t)records_buffer);
   result = Compat_StreamRead(stream[2], records_buffer, 26 * cache[2]);
   if ( stream[5] )
   {
-    Compat_QueryXorDecodeBuffer((int)stream, records_buffer, result);
+    Compat_QueryXorDecodeBuffer((int)(intptr_t)stream, records_buffer, result);
   }
   stream[12] += result;
   return result;
@@ -746,9 +746,9 @@ _DWORD * FileSystem_ArchiveRecordCacheFlushWindow(_DWORD *result)
   if ( result[3] )
   {
     window_bytes = 26 * result[2];
-    stream = (int *)result[5];
-    records_buffer = (const void *)result[4];
-    File_SeekIfPositionChangedMode2(stream, result[6] + 26 * result[1], (int)records_buffer);
+    stream = (int *)(uintptr_t)result[5];
+    records_buffer = (const void *)(uintptr_t)result[4];
+    File_SeekIfPositionChangedMode2(stream, result[6] + 26 * result[1], (int)(intptr_t)records_buffer);
     Res_StreamWriteWithXorCipher(stream, records_buffer, window_bytes, window_bytes);
     result[3] = 0;
   }
@@ -767,9 +767,9 @@ int  FileSystem_ArchiveEntryCopyConstruct(_DWORD *entry, int source_reader)
   entry[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(entry);
   v3[1] = &g_PathEntry_Vtable;
-  v3[2] = *(_DWORD *)(source_reader + 8);
+  v3[2] = *(_DWORD *)(uintptr_t)(source_reader + 8);
   v3[3] = 0;
-  FileSystem_ArchiveRecordCacheCopyCtor(v3 + 4, (int *)(source_reader + 16));
+  FileSystem_ArchiveRecordCacheCopyCtor(v3 + 4, (int *)(uintptr_t)(source_reader + 16));
   FileSystem_ArchiveEntryReaderFlushHeader(source_reader);
   return v4;
 }
@@ -799,14 +799,14 @@ int  FileSystem_ArchiveEntryReaderCtor(_DWORD *reader, int *stream, int base_off
   }
   reader[1] = &g_PathEntry_Vtable;
   reader[3] = 0;
-  cache_ptr = FileSystem_ArchiveRecordCacheCtor(reader + 4, (int)stream, base_offset + 4, (data_size - 4) / 0x1Au);
-  reader_base = (int)(cache_ptr - 4);
+  cache_ptr = FileSystem_ArchiveRecordCacheCtor(reader + 4, (int)(intptr_t)stream, base_offset + 4, (data_size - 4) / 0x1Au);
+  reader_base = (int)(intptr_t)(cache_ptr - 4);
   header_buf = (unsigned __int8 *)(cache_ptr - 2);
   File_SeekIfPositionChangedMode1(stream, base_offset, 0);
-  bytes_read = Compat_StreamRead((int)stream, header_buf, 4);
+  bytes_read = Compat_StreamRead((int)(intptr_t)stream, header_buf, 4);
   if ( stream[5] )
   {
-    Compat_QueryXorDecodeBuffer((int)stream, header_buf, bytes_read);
+    Compat_QueryXorDecodeBuffer((int)(intptr_t)stream, header_buf, bytes_read);
     result = reader_base;
     stream[12] += bytes_read;
   }
@@ -831,10 +831,10 @@ int  FileSystem_ArchiveIndexCreateEmpty(_DWORD *index, int stream, int record_co
   index[2] = 0;
   index[3] = 0;
   cache_ptr = index + 4;
-  end_offset = File_SeekStreamEndAndRecordPos(stream, (int)(index + 4));
+  end_offset = File_SeekStreamEndAndRecordPos(stream, (int)(intptr_t)(index + 4));
   FileSystem_ArchiveRecordCacheCtor(cache_ptr, stream, end_offset + 4, record_count);
-  FileSystem_ArchiveWritePaddingRecords((int)cache_ptr, record_count, (int)cache_ptr);
-  return (int)cache_ptr;
+  FileSystem_ArchiveWritePaddingRecords((int)(intptr_t)cache_ptr, record_count, (int)(intptr_t)cache_ptr);
+  return (int)(intptr_t)cache_ptr;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
 
@@ -842,7 +842,7 @@ int  FileSystem_ArchiveIndexCreateEmpty(_DWORD *index, int stream, int record_co
 int  FileSystem_ArchiveEntryReaderScalarDeletingDtor(int reader)
 {
   FileSystem_ArchiveEntryReaderFlushHeader(reader);
-  return Compat_StringHolderScalarDeletingDtor(FileSystem_ArchiveRecordCacheDestruct((_DWORD *)(reader + 16)) - 16, 0);
+  return Compat_StringHolderScalarDeletingDtor(FileSystem_ArchiveRecordCacheDestruct((_DWORD *)(uintptr_t)(reader + 16)) - 16, 0);
 }
 
 //----- (004788A0) --------------------------------------------------------
@@ -852,15 +852,15 @@ int  FileSystem_ArchiveEntryReaderFlushHeader(int reader)
   int *stream; // esi
   const void *header_ptr; // edi
 
-  FileSystem_ArchiveRecordCacheFlushWindow((_DWORD *)(reader + 16));
-  result = *(_DWORD *)(reader + 12);
+  FileSystem_ArchiveRecordCacheFlushWindow((_DWORD *)(uintptr_t)(reader + 16));
+  result = *(_DWORD *)(uintptr_t)(reader + 12);
   if ( result )
   {
-    stream = *(int **)(reader + 36);
-    header_ptr = (const void *)(reader + 8);
-    File_SeekIfPositionChangedMode2(stream, *(_DWORD *)(reader + 40) - 4, (int)header_ptr);
+    stream = *(int **)(uintptr_t)(reader + 36);
+    header_ptr = (const void *)(uintptr_t)(reader + 8);
+    File_SeekIfPositionChangedMode2(stream, *(_DWORD *)(uintptr_t)(reader + 40) - 4, (int)(intptr_t)header_ptr);
     result = Res_StreamWriteWithXorCipher(stream, header_ptr, 4, 4u);
-    *(_DWORD *)(reader + 12) = 0;
+    *(_DWORD *)(uintptr_t)(reader + 12) = 0;
   }
   return result;
 }
@@ -884,7 +884,7 @@ unsigned int  FileSystem_ArchiveNameHash(int archive, const char **name_holder)
     hash_value *= (unsigned __int8)text[index];
     ++index;
   }
-  return hash_value % *(_DWORD *)(archive + 16);
+  return hash_value % *(_DWORD *)(uintptr_t)(archive + 16);
 }
 
 //----- (00478950) --------------------------------------------------------
@@ -899,11 +899,11 @@ int  FileSystem_ArchiveHashTableFind(int archive, const char **name_holder)
   if ( !text || !*text )
     return 0;
   slot_index = FileSystem_ArchiveNameHash(archive, name_holder);
-  table = (_DWORD *)(archive + 16);
+  table = (_DWORD *)(uintptr_t)(archive + 16);
   while ( 1 )
   {
     entry = FileSystem_ArchiveRecordCacheGetRecord(table, slot_index);
-    if ( !*(_DWORD *)(entry + 14) )
+    if ( !*(_DWORD *)(uintptr_t)(entry + 14) )
       return 0;
     if ( !strncmp_(text, (const char *)(uintptr_t)entry, 13) )
       return entry;
@@ -922,8 +922,8 @@ unsigned int  FileSystem_ArchiveHashTableFindFreeSlot(int archive, const char **
   _DWORD *table; // ebx
 
   slot_index = FileSystem_ArchiveNameHash(archive, name_holder);
-  table = (_DWORD *)(archive + 16);
-  while ( *(_DWORD *)(FileSystem_ArchiveRecordCacheGetRecord(table, slot_index) + 14) )
+  table = (_DWORD *)(uintptr_t)(archive + 16);
+  while ( *(_DWORD *)(uintptr_t)(FileSystem_ArchiveRecordCacheGetRecord(table, slot_index) + 14) )
   {
     if ( slot_index )
       --slot_index;
@@ -944,7 +944,7 @@ _DWORD * FileSystem_ArchiveOpenEntryReader(int archive, const void *path_arg)
   _DWORD savedregs[4]; // [esp+8h] [ebp+0h] BYREF
 
   leaf_holder[0] = 0;
-  leaf_holder[1] = (int)&g_PathEntry_Vtable;
+  leaf_holder[1] = (int)(intptr_t)&g_PathEntry_Vtable;
   path_text = Compat_StringArgGetText(path_arg);
   if ( path_text && *path_text )
   {
@@ -957,15 +957,15 @@ _DWORD * FileSystem_ArchiveOpenEntryReader(int archive, const void *path_arg)
   }
   entry = FileSystem_ArchiveHashTableFind(archive, (const char **)leaf_holder);
   Compat_StringHolderDestroyStack(leaf_holder, 1);
-  if ( !entry || (*(_DWORD *)(entry + 14) & 2) == 0 )
+  if ( !entry || (*(_DWORD *)(uintptr_t)(entry + 14) & 2) == 0 )
     return 0;
-  result = (_DWORD *)Mem_Alloc(44, entry, path_arg, (DWORD)savedregs);
+  result = (_DWORD *)(uintptr_t)Mem_Alloc(44, entry, path_arg, (DWORD)(intptr_t)savedregs);
   if ( result )
-    return (_DWORD *)FileSystem_ArchiveEntryReaderCtor(
+    return (_DWORD *)(uintptr_t)FileSystem_ArchiveEntryReaderCtor(
                        result,
-                       (int *)(uintptr_t)(unsigned int)*(_DWORD *)(archive + 36),
-                       *(_DWORD *)(entry + 18),
-                       *(_DWORD *)(entry + 22),
+                       (int *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(archive + 36),
+                       *(_DWORD *)(uintptr_t)(entry + 18),
+                       *(_DWORD *)(uintptr_t)(entry + 22),
                        path_arg);
   return result;
 }
@@ -979,13 +979,13 @@ signed int  FileSystem_ArchiveHashTableInsert(_DWORD *archive, const char **name
 
   if ( archive[2] == archive[4] - 1 || !*name_holder || !**name_holder )
     return -1;
-  slot_index = FileSystem_ArchiveHashTableFindFreeSlot((int)archive, name_holder);
+  slot_index = FileSystem_ArchiveHashTableFindFreeSlot((int)(intptr_t)archive, name_holder);
   entry = FileSystem_ArchiveRecordCacheGetRecord(archive + 4, slot_index);
-  *(_BYTE *)(entry + 13) = 0;
+  *(_BYTE *)(uintptr_t)(entry + 13) = 0;
   Compat_CopyPrefixN((char *)(uintptr_t)entry, *name_holder, 13);
-  *(_DWORD *)(entry + 14) = entry_flags;
-  *(_DWORD *)(entry + 18) = File_SeekStreamEndAndRecordPos(archive[9], (int)name_holder);
-  *(_DWORD *)(entry + 22) = data_size;
+  *(_DWORD *)(uintptr_t)(entry + 14) = entry_flags;
+  *(_DWORD *)(uintptr_t)(entry + 18) = File_SeekStreamEndAndRecordPos(archive[9], (int)(intptr_t)name_holder);
+  *(_DWORD *)(uintptr_t)(entry + 22) = data_size;
   archive[7] = 1;
   entry_count = archive[2];
   archive[3] = 1;
@@ -1005,14 +1005,14 @@ int  FileSystem_ArchiveWritePaddingRecords(int archive, int record_count, int a3
 
   header_words[3] = a3;
   header_words[0] = 0;
-  Res_StreamWriteWithXorCipher(*(int **)(archive + 36), header_words, a3, 4u);
-  result = FileSystem_ArchiveGenerateBlankRecord((int)blank_record);
+  Res_StreamWriteWithXorCipher(*(int **)(uintptr_t)(archive + 36), header_words, a3, 4u);
+  result = FileSystem_ArchiveGenerateBlankRecord((int)(intptr_t)blank_record);
   if ( record_count > 0 )
   {
     do
     {
-      FileSystem_ArchiveFillBlankRecordBytes((int)blank_record);
-      result = Res_StreamWriteWithXorCipher(*(int **)(archive + 36), v7, v6 + 1, 0x1Au);
+      FileSystem_ArchiveFillBlankRecordBytes((int)(intptr_t)blank_record);
+      result = Res_StreamWriteWithXorCipher(*(int **)(uintptr_t)(archive + 36), v7, v6 + 1, 0x1Au);
     }
     while ( v8 < record_count );
   }
@@ -1031,7 +1031,7 @@ signed int  FileSystem_ArchiveInsertFileEntry(_DWORD *archive, const char **name
   result = FileSystem_ArchiveHashTableInsert(archive, name_holder, 26 * record_count, 2);
   if ( result != -1 )
   {
-    FileSystem_ArchiveWritePaddingRecords((int)archive, record_count, v5);
+    FileSystem_ArchiveWritePaddingRecords((int)(intptr_t)archive, record_count, v5);
     return 0;
   }
   return result;
@@ -1056,10 +1056,10 @@ _DWORD * FileSystem_ArchiveEntryStreamCtor(_DWORD *result, int entry_record, int
   int data_offset; // ecx
   int data_size; // edx
 
-  data_offset = *(_DWORD *)(entry_record + 18);
+  data_offset = *(_DWORD *)(uintptr_t)(entry_record + 18);
   result[2] = 0;
   result[1] = data_offset;
-  data_size = *(_DWORD *)(entry_record + 22);
+  data_size = *(_DWORD *)(uintptr_t)(entry_record + 22);
   *result = g_FileSystemArchiveEntryStream_VTable;
   result[3] = data_size;
   result[4] = stream;
@@ -1070,7 +1070,7 @@ _DWORD * FileSystem_ArchiveEntryStreamCtor(_DWORD *result, int entry_record, int
 //----- (00478BF0) --------------------------------------------------------
 signed int  FileSystem_ArchiveStreamHasRemainingData(int stream)
 {
-  if ( *(_DWORD *)(stream + 8) == *(_DWORD *)(stream + 12) )
+  if ( *(_DWORD *)(uintptr_t)(stream + 8) == *(_DWORD *)(uintptr_t)(stream + 12) )
     return -1;
   else
     return 1;
@@ -1089,11 +1089,11 @@ int  FileSystem_ArchiveStreamReadBytes(_DWORD *stream, unsigned __int8 *buffer, 
   remaining_bytes = stream[3] - stream[2];
   if ( a3 > remaining_bytes )
     a3 = remaining_bytes;
-  source_stream = (int *)stream[4];
-  File_SeekIfPositionChangedMode1(source_stream, stream[2] + stream[1], (int)source_stream);
+  source_stream = (int *)(uintptr_t)stream[4];
+  File_SeekIfPositionChangedMode1(source_stream, stream[2] + stream[1], (int)(intptr_t)source_stream);
   bytes_read = Compat_StreamRead(source_stream[2], buffer, a3);
   if ( source_stream[5] )
-    Compat_QueryXorDecodeBuffer((int)source_stream, buffer, bytes_read);
+    Compat_QueryXorDecodeBuffer((int)(intptr_t)source_stream, buffer, bytes_read);
   source_stream[12] += bytes_read;
   result = bytes_read;
   stream[2] += bytes_read;
@@ -1114,11 +1114,11 @@ int  FileSystem_ArchiveStreamReadByte(int stream, int a2)
   int xor_key; // edi
   unsigned __int8 next_byte;
 
-  if ( *(_DWORD *)(stream + 12) == *(_DWORD *)(stream + 8) )
+  if ( *(_DWORD *)(uintptr_t)(stream + 12) == *(_DWORD *)(uintptr_t)(stream + 8) )
     return -1;
-  source_stream = *(int **)(stream + 16);
-  File_SeekIfPositionChangedMode1(source_stream, *(_DWORD *)(stream + 8) + *(_DWORD *)(stream + 4), a2);
-  ++*(_DWORD *)(stream + 8);
+  source_stream = *(int **)(uintptr_t)(stream + 16);
+  File_SeekIfPositionChangedMode1(source_stream, *(_DWORD *)(uintptr_t)(stream + 8) + *(_DWORD *)(uintptr_t)(stream + 4), a2);
+  ++*(_DWORD *)(uintptr_t)(stream + 8);
   if ( Compat_StreamRead(source_stream[2], &next_byte, 1) == 1 )
     result = next_byte;
   else
@@ -1138,16 +1138,16 @@ signed int  Res_StreamPutBackDecodedByte(int entry_stream, int putback_byte)
   signed int result; // eax
   int v6; // ecx
 
-  source_stream = *(_DWORD *)(entry_stream + 16);
+  source_stream = *(_DWORD *)(uintptr_t)(entry_stream + 16);
   if ( putback_byte != -1 )
-    --*(_DWORD *)(source_stream + 48);
-  if ( *(_DWORD *)(source_stream + 20) )
-    encoded_byte = putback_byte ^ (*(_DWORD *)(source_stream + 48) + *(_DWORD *)(source_stream + 20));
+    --*(_DWORD *)(uintptr_t)(source_stream + 48);
+  if ( *(_DWORD *)(uintptr_t)(source_stream + 20) )
+    encoded_byte = putback_byte ^ (*(_DWORD *)(uintptr_t)(source_stream + 48) + *(_DWORD *)(uintptr_t)(source_stream + 20));
   else
     encoded_byte = putback_byte;
   result = CRT_FlushBufferAndPutChar(encoded_byte, putback_byte);
   if ( v6 != -1 )
-    --*(_DWORD *)(entry_stream + 8);
+    --*(_DWORD *)(uintptr_t)(entry_stream + 8);
   return result;
 }
 // 478D3E: variable 'v6' is possibly undefined
@@ -1159,10 +1159,10 @@ int  Res_StreamWriteBytes(int stream, const void *buffer, unsigned int a3)
   int v4; // ecx
   int new_length; // ebx
 
-  result = Res_StreamWriteWithXorCipher(*(int **)(stream + 16), buffer, stream, a3);
-  new_length = result + *(_DWORD *)(v4 + 12);
-  *(_DWORD *)(v4 + 8) += result;
-  *(_DWORD *)(v4 + 12) = new_length;
+  result = Res_StreamWriteWithXorCipher(*(int **)(uintptr_t)(stream + 16), buffer, stream, a3);
+  new_length = result + *(_DWORD *)(uintptr_t)(v4 + 12);
+  *(_DWORD *)(uintptr_t)(v4 + 8) += result;
+  *(_DWORD *)(uintptr_t)(v4 + 12) = new_length;
   return result;
 }
 // 478D7E: variable 'v4' is possibly undefined
@@ -1174,15 +1174,15 @@ int  Res_StreamSeekClamped(int result, int position)
 
   if ( position < 0 )
   {
-    *(_DWORD *)(result + 8) = 0;
+    *(_DWORD *)(uintptr_t)(result + 8) = 0;
   }
   else
   {
-    stream_length = *(_DWORD *)(result + 12);
+    stream_length = *(_DWORD *)(uintptr_t)(result + 12);
     if ( position <= stream_length )
-      *(_DWORD *)(result + 8) = position;
+      *(_DWORD *)(uintptr_t)(result + 8) = position;
     else
-      *(_DWORD *)(result + 8) = stream_length;
+      *(_DWORD *)(uintptr_t)(result + 8) = stream_length;
   }
   return result;
 }
@@ -1247,14 +1247,14 @@ int  File_SourceEntryConstructor(_DWORD *node, int a2, int a3, DWORD allocContex
   vtable_ptr = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&path_holder);
   vtable_ptr = &g_PathEntry_Vtable;
-  resolved_entry = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &path_holder, (const char *)v4, allocContext);
-  *(_DWORD *)(v6 + 8) = resolved_entry;
-  Compat_StringHolderScalarDeletingDtor((int)&path_holder, 1);
-  if ( !*(_DWORD *)(v7 + 8) )
+  resolved_entry = File_ResolveCachedPathEntry(*(_DWORD **)(uintptr_t)(v4 + 4), &path_holder, (const char *)(uintptr_t)v4, allocContext);
+  *(_DWORD *)(uintptr_t)(v6 + 8) = resolved_entry;
+  Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&path_holder, 1);
+  if ( !*(_DWORD *)(uintptr_t)(v7 + 8) )
     return v7;
-  archive_entry = (_DWORD *)Mem_Alloc(44, v7, 0, allocContext);
+  archive_entry = (_DWORD *)(uintptr_t)Mem_Alloc(44, v7, 0, allocContext);
   if ( archive_entry )
-    archive_entry = (_DWORD *)FileSystem_ArchiveEntryCopyConstruct(archive_entry, v10[2]);
+    archive_entry = (_DWORD *)(uintptr_t)FileSystem_ArchiveEntryCopyConstruct(archive_entry, v10[2]);
   v10[2] = archive_entry;
   File_CacheNodeRebalance(v10);
   return v11;
@@ -1280,7 +1280,7 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *node, char flags)
   {
     _wcpp_4_dtor_array_store__(node, &g_FileCacheNode_DtorArrayDescriptor);
     j_j__nfree_();
-    return (_DWORD *)v6;
+    return (_DWORD *)(uintptr_t)v6;
   }
   *node = g_FileCacheNode_VTable;
   entry_reader = node[2];
@@ -1289,14 +1289,14 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *node, char flags)
     FileSystem_ArchiveEntryReaderScalarDeletingDtor(entry_reader);
     j__nfree_();
     if ( (flags & 2) == 0 )
-      return (_DWORD *)v7;
+      return (_DWORD *)(uintptr_t)v7;
   }
   else if ( (flags & 2) == 0 )
   {
     return node;
   }
   j__nfree_();
-  return (_DWORD *)v8;
+  return (_DWORD *)(uintptr_t)v8;
 }
 // 478F01: variable 'v6' is possibly undefined
 // 478F17: variable 'v7' is possibly undefined
@@ -1309,8 +1309,8 @@ int  File_CacheNodeCheckChildHeight(int result)
 {
   int child_node; // edx
 
-  child_node = *(_DWORD *)(result + 8);
-  if ( !child_node || *(_DWORD *)(child_node + 16) <= *(_DWORD *)(result + 16) )
+  child_node = *(_DWORD *)(uintptr_t)(result + 8);
+  if ( !child_node || *(_DWORD *)(uintptr_t)(child_node + 16) <= *(_DWORD *)(uintptr_t)(result + 16) )
     return 0;
   return result;
 }
@@ -1329,13 +1329,13 @@ _DWORD * File_CacheNodeRebalance(_DWORD *cache_node)
   while ( 1 )
   {
     entry_reader = v1[2];
-    total_records = *(_DWORD *)(entry_reader + 16);
-    result = (_DWORD *)(entry_reader + 16);
+    total_records = *(_DWORD *)(uintptr_t)(entry_reader + 16);
+    result = (_DWORD *)(uintptr_t)(entry_reader + 16);
     if ( total_records <= v1[4] )
       break;
     record = FileSystem_ArchiveRecordCacheGetRecord(result, v1[4]);
     v1[3] = record;
-    result = *(_DWORD **)(record + 14);
+    result = *(_DWORD **)(uintptr_t)(record + 14);
     if ( result )
       break;
     ++v1[4];
@@ -1347,13 +1347,13 @@ _DWORD * File_CacheNodeRebalance(_DWORD *cache_node)
 //----- (00478F90) --------------------------------------------------------
 int  File_CacheNodeGetTag(int node)
 {
-  return *(_DWORD *)(node + 12);
+  return *(_DWORD *)(uintptr_t)(node + 12);
 }
 
 //----- (00478FA0) --------------------------------------------------------
 signed int  File_CacheNodeGetEntrySize(int node)
 {
-  if ( (*(_DWORD *)(*(_DWORD *)(node + 12) + 14) & 2) != 0 )
+  if ( (*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 12) + 14) & 2) != 0 )
     return 16;
   else
     return FileSystem_ArchiveStreamNoOpFlush();
@@ -1362,7 +1362,7 @@ signed int  File_CacheNodeGetEntrySize(int node)
 //----- (00478FC0) --------------------------------------------------------
 int  File_CacheNodeGetChildTag(int node)
 {
-  return *(_DWORD *)(*(_DWORD *)(node + 12) + 22);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(node + 12) + 22);
 }
 
 //----- (00478FD0) --------------------------------------------------------
@@ -1375,13 +1375,13 @@ int * File_SourceConstructFromStream(
         int a6)
 {
   source[3] = 0;
-  source[4] = (int)&g_PathEntry_Vtable;
+  source[4] = (int)(intptr_t)&g_PathEntry_Vtable;
   source[8] = 0;
   source[5] = a4;
   source[9] = 0;
   source[7] = a6;
-  *source = (int)g_FileSource_VTable;
-  File_SourceReadAndDecodeHeader(source, path, (int)mode, mode, a5);
+  *source = (int)(intptr_t)g_FileSource_VTable;
+  File_SourceReadAndDecodeHeader(source, path, (int)(intptr_t)mode, mode, a5);
   return source;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
@@ -1405,22 +1405,22 @@ int * File_SourceBuildAndWriteHeader(
 
   source[2] = 0;
   source[3] = 0;
-  source[4] = (int)&g_PathEntry_Vtable;
+  source[4] = (int)(intptr_t)&g_PathEntry_Vtable;
   source[8] = 0;
   source[9] = 0;
   source[6] = a4;
   source[7] = a6;
   source[5] = useCipher;
-  *source = (int)g_FileSource_VTable;
-  CRT_DeleteFile(path, (int)path);
+  *source = (int)(intptr_t)g_FileSource_VTable;
+  CRT_DeleteFile(path, (int)(intptr_t)path);
   source[2] = Res_OpenBufferedStreamForWrite(writePath, 0, (unsigned __int8 *)aWB, heap_ctx);
   Res_BuildTaggedRecordHeader(header, 1, v8, a4);
   source[13] = 0;
   File_SeekIfPositionChangedMode2(source, 0, a4);
   Res_StreamWriteWithXorCipher(source, header, v9, 0x10u);
-  archiveIndex = (_DWORD *)Mem_Alloc(44, v10, 16, heap_ctx);
+  archiveIndex = (_DWORD *)(uintptr_t)Mem_Alloc(44, v10, 16, heap_ctx);
   if ( archiveIndex )
-    source[1] = FileSystem_ArchiveIndexCreateEmpty(archiveIndex, (int)source, a4);
+    source[1] = FileSystem_ArchiveIndexCreateEmpty(archiveIndex, (int)(intptr_t)source, a4);
   else
     source[1] = 0;
   return source;

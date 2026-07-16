@@ -18,20 +18,20 @@ signed int  AST_TreeContainsSpecialTag(int theExpression, int globalsAreVariable
   {
     while ( 1 )
     {
-      if ( *(_DWORD *)(exprPtr + 6) && AST_TreeContainsSpecialTag(*(_DWORD *)(exprPtr + 6), globalsAreVariables) )
+      if ( *(_DWORD *)(uintptr_t)(exprPtr + 6) && AST_TreeContainsSpecialTag(*(_DWORD *)(uintptr_t)(exprPtr + 6), globalsAreVariables) )
         return 1;
-      nodeType = *(_WORD *)exprPtr;
-      if ( *(_WORD *)exprPtr == 16 || nodeType == 15 || nodeType == 6 )
+      nodeType = *(_WORD *)(uintptr_t)exprPtr;
+      if ( *(_WORD *)(uintptr_t)exprPtr == 16 || nodeType == 15 || nodeType == 6 )
         return 1;
       if ( nodeType != 13 && nodeType != 14 )
         break;
       if ( globalsAreVariables == 1 )
         return 1;
-      exprPtr = *(_DWORD *)(exprPtr + 10);
+      exprPtr = *(_DWORD *)(uintptr_t)(exprPtr + 10);
       if ( !exprPtr )
         return 0;
     }
-    exprPtr = *(_DWORD *)(exprPtr + 10);
+    exprPtr = *(_DWORD *)(uintptr_t)(exprPtr + 10);
   }
   while ( exprPtr );
   return 0;
@@ -52,10 +52,10 @@ int  AST_CountTreeNodes(int testPtr)
   while ( node )
   {
     ++count;
-    child_node = *(_DWORD *)(node + 6);
+    child_node = *(_DWORD *)(uintptr_t)(node + 6);
     if ( child_node )
       count += AST_CountTreeNodes(child_node);
-    node = *(_DWORD *)(node + 10);
+    node = *(_DWORD *)(uintptr_t)(node + 10);
   }
   return count;
 }

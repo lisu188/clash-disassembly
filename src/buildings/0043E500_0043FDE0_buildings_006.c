@@ -33,43 +33,43 @@ signed int  Building_UnitGetInto(
   (void)i;
 
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-enter");
-  Debug_Log(unitStackId, buildingId, (DWORD)unitStackId, (int)aBuilding_unitg);
+  Debug_Log(unitStackId, buildingId, (DWORD)unitStackId, (int)(intptr_t)aBuilding_unitg);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-debug-log");
   Render_DrawSprite_v3(unitStackId, unitStackId);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-debug-dump");
 
   stack_record = UNIT_STACK(unitStackId);
   building_record = BUILDING_RECORD(buildingId);
-  stack = (__int16 *)stack_record;
+  stack = (__int16 *)(uintptr_t)stack_record;
 
-  if ( *(_DWORD *)(stack_record + UNIT_STACK_PATH_OFFSET) )
-    *(_DWORD *)(stack_record + UNIT_STACK_PATH_OFFSET) = 0;
-  if ( UnitStack_HasPlague(stack_record) && (*(_BYTE *)(building_record + 435) & 7) == 0 )
-    *(_BYTE *)(building_record + 435) = (*(_BYTE *)(building_record + 435) & 0xF8) | 6;
+  if ( *(_DWORD *)(uintptr_t)(stack_record + UNIT_STACK_PATH_OFFSET) )
+    *(_DWORD *)(uintptr_t)(stack_record + UNIT_STACK_PATH_OFFSET) = 0;
+  if ( UnitStack_HasPlague(stack_record) && (*(_BYTE *)(uintptr_t)(building_record + 435) & 7) == 0 )
+    *(_BYTE *)(uintptr_t)(building_record + 435) = (*(_BYTE *)(uintptr_t)(building_record + 435) & 0xF8) | 6;
 
-  if ( *(_BYTE *)(building_record + 4) )
+  if ( *(_BYTE *)(uintptr_t)(building_record + 4) )
   {
     for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
     {
       int slot = UNIT_STACK_SLOT(stack_record, slot_index);
-      if ( *(__int16 *)slot == UNIT_TYPE_GOLD_CARGO )
+      if ( *(__int16 *)(uintptr_t)slot == UNIT_TYPE_GOLD_CARGO )
       {
-        *(_DWORD *)(building_record + 438) += 100 * *(char *)(slot + 9) / 100;
-        *(__int16 *)slot = -1;
+        *(_DWORD *)(uintptr_t)(building_record + 438) += 100 * *(char *)(uintptr_t)(slot + 9) / 100;
+        *(__int16 *)(uintptr_t)slot = -1;
       }
     }
   }
-  if ( *(_BYTE *)(building_record + 4) == 2 )
+  if ( *(_BYTE *)(uintptr_t)(building_record + 4) == 2 )
   {
     for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
     {
       int slot = UNIT_STACK_SLOT(stack_record, slot_index);
-      if ( *(__int16 *)slot == UNIT_TYPE_PEASANT_CARGO )
+      if ( *(__int16 *)(uintptr_t)slot == UNIT_TYPE_PEASANT_CARGO )
       {
-        peasant_count = (*(_WORD *)(building_record + 430) & 0x0FFF) + 100 * *(char *)(slot + 9) / 100;
-        *(_WORD *)(building_record + 430) =
-          (*(_WORD *)(building_record + 430) & 0xF000) | (peasant_count & 0x0FFF);
-        *(__int16 *)slot = -1;
+        peasant_count = (*(_WORD *)(uintptr_t)(building_record + 430) & 0x0FFF) + 100 * *(char *)(uintptr_t)(slot + 9) / 100;
+        *(_WORD *)(uintptr_t)(building_record + 430) =
+          (*(_WORD *)(uintptr_t)(building_record + 430) & 0xF000) | (peasant_count & 0x0FFF);
+        *(__int16 *)(uintptr_t)slot = -1;
       }
     }
   }
@@ -91,15 +91,15 @@ signed int  Building_UnitGetInto(
     for ( source_slot = 0; source_slot < UNIT_STACK_SLOT_COUNT; ++source_slot )
     {
       int source = UNIT_STACK_SLOT(stack_record, source_slot);
-      if ( *(__int16 *)source == -1 )
+      if ( *(__int16 *)(uintptr_t)source == -1 )
         break;
       for ( target_slot = 0; target_slot < 12; ++target_slot )
       {
         int target = building_record + 18 + UNIT_STACK_SLOT_STRIDE * target_slot;
-        if ( *(__int16 *)target == -1 )
+        if ( *(__int16 *)(uintptr_t)target == -1 )
         {
-          qmemcpy((void *)target, (const void *)source, UNIT_STACK_SLOT_STRIDE);
-          *(__int16 *)source = -1;
+          qmemcpy((void *)(uintptr_t)target, (const void *)(uintptr_t)source, UNIT_STACK_SLOT_STRIDE);
+          *(__int16 *)(uintptr_t)source = -1;
           break;
         }
       }
@@ -115,7 +115,7 @@ signed int  Building_UnitGetInto(
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-sync-strength");
   Rules_SyncArmyFactStrength(stack, 0, 0, 0, (DWORD)stack_record, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-garrison-change");
-  if ( *(_DWORD *)(building_record + 463) )
+  if ( *(_DWORD *)(uintptr_t)(building_record + 463) )
     Building_OnGarrisonChange(buildingId, 0, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-done");
   return 1;
@@ -143,9 +143,9 @@ signed int  Building_CanAcceptUnitStack(int stackIndex, int buildingId)
 
   buildingRecord = UNIT_RECORD(buildingId);
   stackRecord = UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET;
-  if ( *(_WORD *)(buildingRecord + 16) )
+  if ( *(_WORD *)(uintptr_t)(buildingRecord + 16) )
     return 0;
-  buildingType = *(_BYTE *)(buildingRecord + 4);
+  buildingType = *(_BYTE *)(uintptr_t)(buildingRecord + 4);
   if ( !buildingType )
     return UnitStack_HasNormalCombatUnits(stackRecord);
   if ( buildingType > 1u )
@@ -168,7 +168,7 @@ signed int  Building_HasUnitLicence(int building, unit_type unitType)
   hasLicence = 0;
   do
   {
-    if ( *(char *)(building + 402) == unitType )
+    if ( *(char *)(uintptr_t)(building + 402) == unitType )
       hasLicence = 1;
     ++building;
   }
@@ -186,21 +186,21 @@ BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD ga
   int licenceSlotPtr; // edx
   int slotIndex; // eax
 
-  Debug_Log(a3, building, gameContext, (int)aBuildingBuyUnitLicence);
+  Debug_Log(a3, building, gameContext, (int)(intptr_t)aBuildingBuyUnitLicence);
   if ( Building_HasUnitLicence(building, unitType) )
     return 0;
-  result = Building_IsUnitLicenceEligible((char *)building, unitType);
+  result = Building_IsUnitLicenceEligible((char *)(uintptr_t)building, unitType);
   if ( result )
   {
-    nationData = gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(building + 2);
+    nationData = gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(building + 2);
     licenceCost = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * unitType];
-    if ( !*(_DWORD *)(nationData + 140051) && *(int *)(nationData + 140055) >= 2 )
+    if ( !*(_DWORD *)(uintptr_t)(nationData + 140051) && *(int *)(uintptr_t)(nationData + 140055) >= 2 )
       licenceCost = (int)(75 * licenceCost) / 100;
-    if ( licenceCost > *(_DWORD *)(building + 438) )
+    if ( licenceCost > *(_DWORD *)(uintptr_t)(building + 438) )
       return 0;
     licenceSlotPtr = building;
     slotIndex = 0;
-    while ( *(char *)(licenceSlotPtr + 402) != -1 )
+    while ( *(char *)(uintptr_t)(licenceSlotPtr + 402) != -1 )
     {
       ++slotIndex;
       ++licenceSlotPtr;
@@ -211,8 +211,8 @@ BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD ga
         break;
       }
     }
-    *(_DWORD *)(building + 438) -= licenceCost;
-    *(_BYTE *)(building + slotIndex + 402) = unitType;
+    *(_DWORD *)(uintptr_t)(building + 438) -= licenceCost;
+    *(_BYTE *)(uintptr_t)(building + slotIndex + 402) = unitType;
     return 1;
   }
   return result;
@@ -228,15 +228,15 @@ int  Building_RemoveUnitLicence(int building, unit_type unitType, DWORD gameCont
   int activeProductionLicenceSlot; // eax
   int addonSlot; // edx
 
-  Debug_Log(building, unitType, gameContext, (int)aBuildingRemoveUnitLicence);
+  Debug_Log(building, unitType, gameContext, (int)(intptr_t)aBuildingRemoveUnitLicence);
   activeProductionLicenceSlot = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building);
-  if ( activeProductionLicenceSlot != -1 && *(signed __int8 *)(building + activeProductionLicenceSlot + 402) == unitType )
+  if ( activeProductionLicenceSlot != -1 && *(signed __int8 *)(uintptr_t)(building + activeProductionLicenceSlot + 402) == unitType )
     Building_StopUnitProduction(building, unitType, gameContext);
   for ( addonSlot = 0; addonSlot < 12; ++addonSlot )
   {
-    if ( *(signed __int8 *)(building + addonSlot + 402) == unitType )
+    if ( *(signed __int8 *)(uintptr_t)(building + addonSlot + 402) == unitType )
     {
-      *(_BYTE *)(building + addonSlot + 402) = -1;
+      *(_BYTE *)(uintptr_t)(building + addonSlot + 402) = -1;
       return building + addonSlot;
     }
   }
@@ -250,14 +250,14 @@ int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContex
   int slotIndex; // edx
   int result; // eax
 
-  buildingPtr = (unsigned __int8 *)building;
+  buildingPtr = (unsigned __int8 *)(uintptr_t)building;
   slotIndex = (unsigned __int8)licenceSlot;
-  Debug_Log(building, licenceSlot, gameContext, (int)aBuildingSetUnitProduction);
+  Debug_Log(building, licenceSlot, gameContext, (int)(intptr_t)aBuildingSetUnitProduction);
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = slotIndex;
   result = PLAYER_DATA_STRIDE * buildingPtr[2];
   BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[slotIndex + 402]];
-  if ( !*(_DWORD *)(result + gameData + 140051)
-    && *(int *)(result + gameData + 140055) >= 1
+  if ( !*(_DWORD *)(uintptr_t)(result + gameData + 140051)
+    && *(int *)(uintptr_t)(result + gameData + 140055) >= 1
     && (char)BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) > 1 )
   {
     --BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr);
@@ -269,7 +269,7 @@ int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContex
 //----- (0043EA10) --------------------------------------------------------
 void  Building_StopUnitProduction(int building, char unitType, DWORD gameContext)
 {
-  Debug_Log(building, unitType, gameContext, (int)aBuildingStopUnitProduction);
+  Debug_Log(building, unitType, gameContext, (int)(intptr_t)aBuildingStopUnitProduction);
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building) = -1;
 }
 
@@ -284,15 +284,15 @@ _BYTE * Building_TrainUnit(int building, char garrisonSlot, DWORD gameContext)
 
   slotIndex = (unsigned __int8)garrisonSlot;
   buildingBase = building;
-  Debug_Log(building, garrisonSlot, gameContext, (int)aBuildingTrainUnit);
-  result = (_BYTE *)(*(_BYTE *)(buildingBase + 31 * slotIndex + 30) & 3);
+  Debug_Log(building, garrisonSlot, gameContext, (int)(intptr_t)aBuildingTrainUnit);
+  result = (_BYTE *)(uintptr_t)(*(_BYTE *)(uintptr_t)(buildingBase + 31 * slotIndex + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
-    result = (_BYTE *)(buildingBase + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
-    if ( *(_DWORD *)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(buildingBase + 2) + gameData + 140051) )
-      trainingTurns = (*(_BYTE *)(buildingBase + 4) == 2) + 1;
+    result = (_BYTE *)(uintptr_t)(buildingBase + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(buildingBase + 2) + gameData + 140051) )
+      trainingTurns = (*(_BYTE *)(uintptr_t)(buildingBase + 4) == 2) + 1;
     else
-      trainingTurns = (*(_BYTE *)(buildingBase + 4) == 2) + 4;
+      trainingTurns = (*(_BYTE *)(uintptr_t)(buildingBase + 4) == 2) + 4;
     serviceStateBits = *result & 0xF8;
     *result = serviceStateBits;
     *result = trainingTurns & BUILDING_GARRISON_TRAINING_TURNS_MASK | serviceStateBits;
@@ -316,12 +316,12 @@ __int16  Building_RepairUnit(int building, int slotIndex, DWORD gameContext)
   unsigned __int8 *repairTimer; // edx
   unsigned __int8 repairTurns; // al
 
-  Debug_Log(building, slotIndex, gameContext, (int)aBuildingRepairUnit);
-  currentHealth = *(signed __int8 *)(building + 31 * slotIndex + 27);
+  Debug_Log(building, slotIndex, gameContext, (int)(intptr_t)aBuildingRepairUnit);
+  currentHealth = *(signed __int8 *)(uintptr_t)(building + 31 * slotIndex + 27);
   if ( currentHealth != 100 )
   {
-    repairTimer = (unsigned __int8 *)(building + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
-    repairTurns = (*(_BYTE *)(building + 4) == 2) + 2;
+    repairTimer = (unsigned __int8 *)(uintptr_t)(building + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
+    repairTurns = (*(_BYTE *)(uintptr_t)(building + 4) == 2) + 2;
     *repairTimer = *repairTimer & 0xC0 | ((repairTurns & 7) << 3);
   }
   return currentHealth;
@@ -344,7 +344,7 @@ int  Building_CountGarrison(int building)
   count = 0;
   do
   {
-    if ( *(__int16 *)(building + 18) != -1 )
+    if ( *(__int16 *)(uintptr_t)(building + 18) != -1 )
       ++count;
     building += 31;
   }
@@ -365,7 +365,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int building)
   {
     while ( 1 )
     {
-      unitType = *(__int16 *)(building + 18);
+      unitType = *(__int16 *)(uintptr_t)(building + 18);
       if ( unitType != -1 )
         break;
 LABEL_5:
@@ -404,7 +404,7 @@ int  Building_CountNonCombatGarrisonEntries(int building)
   {
     while ( 1 )
     {
-      unitType = *(__int16 *)(slotPtr + 18);
+      unitType = *(__int16 *)(uintptr_t)(slotPtr + 18);
       if ( unitType != -1 )
         break;
 LABEL_5:
@@ -435,7 +435,7 @@ signed int  Building_HasSpecialPersonageGarrisonEntries(int building)
   slotIndex = 0;
   while ( 1 )
   {
-    unitType = *(__int16 *)(building + 18);
+    unitType = *(__int16 *)(uintptr_t)(building + 18);
     if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       break;
     ++slotIndex;
@@ -489,8 +489,8 @@ int  Building_CompactGarrison(unsigned __int8 *building, unsigned __int8 *a2, do
     }
   }
   return Building_OnGarrisonChange(
-           *(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
-           (int)a2,
+           *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*building, building[1])) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
+           (int)(intptr_t)a2,
            gameTime);
 }
 // 5202E4: using guessed type int gameData;
@@ -548,7 +548,7 @@ int  Building_AdjustAllGarrisonMoraleByDelta(int building, int moraleDelta)
   result = 0;
   for ( slot_index = 0; slot_index < 12; ++slot_index )
   {
-    if ( *(__int16 *)slot != -1 )
+    if ( *(__int16 *)(uintptr_t)slot != -1 )
       result = UnitSlot_AdjustMoraleByPredicate(slot, moraleDelta, UnitSlot_PredicateAlways);
     slot += 31;
   }
@@ -573,7 +573,7 @@ int  Building_CycleAllGarrisonOrdersOnce(int building)
     while ( 1 )
     {
       result = 31 * slotIndex;
-      if ( *(__int16 *)(slotPtr + 18) != -1 )
+      if ( *(__int16 *)(uintptr_t)(slotPtr + 18) != -1 )
         break;
       ++slotIndex;
       slotPtr += 31;
@@ -598,7 +598,7 @@ signed int  Building_GetTaxBurdenTier(int building)
   int thresholdIndex; // edx
   signed int result; // eax
 
-  population = *(_WORD *)(building + 430);
+  population = *(_WORD *)(uintptr_t)(building + 430);
   HIBYTE(population) &= 0xFu;
   if ( population >= 0x1F4u )
   {
@@ -613,7 +613,7 @@ signed int  Building_GetTaxBurdenTier(int building)
   }
   thresholdIndex = 4 * populationTier;
   result = 0;
-  while ( (unsigned __int8)(*(_BYTE *)(building + 436) & 0x3F) > (unsigned __int8)g_SettlementTaxBurdenThresholds[thresholdIndex] )
+  while ( (unsigned __int8)(*(_BYTE *)(uintptr_t)(building + 436) & 0x3F) > (unsigned __int8)g_SettlementTaxBurdenThresholds[thresholdIndex] )
   {
     ++result;
     ++thresholdIndex;
@@ -709,24 +709,24 @@ int  Building_CollectGoldIncome(int building)
   int result; // eax
   int currentGold; // esi
 
-  if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(building + 2) + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(building + 2) + 140051) )
     incomeDivisor = 400;
   else
     incomeDivisor = 200;
-  population = *(_WORD *)(building + 430);
+  population = *(_WORD *)(uintptr_t)(building + 430);
   HIBYTE(population) &= 0xFu;
-  goldIncome = (*(_BYTE *)(building + 436) & 0x3F) * population / incomeDivisor;
-  result = *(char *)(building + 434);
+  goldIncome = (*(_BYTE *)(uintptr_t)(building + 436) & 0x3F) * population / incomeDivisor;
+  result = *(char *)(uintptr_t)(building + 434);
   if ( result < 25 )
   {
     result = goldIncome / 2;
     goldIncome /= 2;
   }
-  if ( (*(_BYTE *)(building + 435) & 7) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(building + 435) & 7) != 0 )
     goldIncome = 0;
-  currentGold = *(_DWORD *)(building + 438);
-  *(_WORD *)(building + 442) = goldIncome;
-  *(_DWORD *)(building + 438) = goldIncome + currentGold;
+  currentGold = *(_DWORD *)(uintptr_t)(building + 438);
+  *(_WORD *)(uintptr_t)(building + 442) = goldIncome;
+  *(_DWORD *)(uintptr_t)(building + 438) = goldIncome + currentGold;
   return result;
 }
 // 5202E4: using guessed type int gameData;
@@ -779,21 +779,21 @@ int  Building_GetTotalValue(int building)
   int licenceEnd; // ebx
   int licenceType; // edx
 
-  goldReserve = *(_DWORD *)(building + 438);
-  population = *(_WORD *)(building + 430);
+  goldReserve = *(_DWORD *)(uintptr_t)(building + 438);
+  population = *(_WORD *)(uintptr_t)(building + 430);
   HIBYTE(population) &= 0xFu;
-  totalValue = 190 * (*(_DWORD *)(building + 416) << 29 >> 31)
-     + 200 * (*(_DWORD *)(building + 416) << 30 >> 31)
-     + 230 * (*(_DWORD *)(building + 416) << 27 >> 31)
-     + 400 * (*(_DWORD *)(building + 416) << 28 >> 31)
-     + 200 * (*(_DWORD *)(building + 416) & BUILDING_ADDON_FLAG_HOSPITAL)
+  totalValue = 190 * (*(_DWORD *)(uintptr_t)(building + 416) << 29 >> 31)
+     + 200 * (*(_DWORD *)(uintptr_t)(building + 416) << 30 >> 31)
+     + 230 * (*(_DWORD *)(uintptr_t)(building + 416) << 27 >> 31)
+     + 400 * (*(_DWORD *)(uintptr_t)(building + 416) << 28 >> 31)
+     + 200 * (*(_DWORD *)(uintptr_t)(building + 416) & BUILDING_ADDON_FLAG_HOSPITAL)
      + population
      + goldReserve;
   licencePtr = building;
   licenceEnd = building + 12;
   do
   {
-    licenceType = *(char *)(licencePtr + 402);
+    licenceType = *(char *)(uintptr_t)(licencePtr + 402);
     if ( licenceType != -1 )
       totalValue += (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * licenceType];
     ++licencePtr;
@@ -822,11 +822,11 @@ int  AI_TickNationPostTurn(int playerIndex)
   buildingOffset = 0;
   do
   {
-    buildingState = *(char *)(buildingOffset + gameData + 509678);
-    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
+    buildingState = *(char *)(uintptr_t)(buildingOffset + gameData + 509678);
+    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
       buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
-      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
+      if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4 && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1 )
       {
         buildingValue = Building_GetTotalValue(buildingRecord);
         totalValue = buildingValue + v7;
@@ -838,13 +838,13 @@ int  AI_TickNationPostTurn(int playerIndex)
   while ( buildingIndex < 100 );
   for ( i = 0; i != 362500; i += 725 )
   {
-    if ( *(unsigned __int8 *)(i + gameData + 147178) == playerIndex && *(__int16 *)(i + gameData + 147180) != -1 )
+    if ( *(unsigned __int8 *)(uintptr_t)(i + gameData + 147178) == playerIndex && *(__int16 *)(uintptr_t)(i + gameData + 147180) != -1 )
     {
       for ( j = 0; j != 310; j += 31 )
       {
-        cargoType = *(__int16 *)(i + gameData + j + 147180);
+        cargoType = *(__int16 *)(uintptr_t)(i + gameData + j + 147180);
         if ( cargoType == UNIT_TYPE_GOLD_CARGO || cargoType == UNIT_TYPE_PEASANT_CARGO )
-          totalValue += *(char *)(i + gameData + j + 147189);
+          totalValue += *(char *)(uintptr_t)(i + gameData + j + 147189);
       }
     }
   }
@@ -870,12 +870,12 @@ int  Player_CalcAvailableStrongholdFunds(int playerIndex)
   buildingOffset = 0;
   do
   {
-    buildingState = *(char *)(gameData + buildingOffset + 509678);
-    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
+    buildingState = *(char *)(uintptr_t)(gameData + buildingOffset + 509678);
+    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
       buildingRecord = buildingOffset + gameData + BUILDING_TABLE_OFFSET;
-      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
-        totalFunds += *(_DWORD *)(buildingOffset + gameData + 510112);
+      if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4 && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1 )
+        totalFunds += *(_DWORD *)(uintptr_t)(buildingOffset + gameData + 510112);
     }
     ++buildingIndex;
     buildingOffset += 467;
@@ -903,10 +903,10 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
     strongholdCount = 0;
     for ( i = 0; i != 46700; i += 467 )
     {
-      buildingState = *(char *)(gameData + i + 509678);
+      buildingState = *(char *)(uintptr_t)(gameData + i + 509678);
       if ( (buildingState == 2 || buildingState == 1)
-        && *(unsigned __int8 *)(i + gameData + 509676) == playerIndex
-        && *(_DWORD *)(i + gameData + 510112) )
+        && *(unsigned __int8 *)(uintptr_t)(i + gameData + 509676) == playerIndex
+        && *(_DWORD *)(uintptr_t)(i + gameData + 510112) )
       {
         ++strongholdCount;
       }
@@ -920,25 +920,25 @@ int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
     buildingOffset = 0;
     do
     {
-      result = *(char *)(buildingOffset + gameData + 509678);
+      result = *(char *)(uintptr_t)(buildingOffset + gameData + 509678);
       if ( result == 2 || result == 1 )
       {
         result = buildingOffset + gameData;
-        if ( playerIndex == *(unsigned __int8 *)(buildingOffset + gameData + 509676) )
+        if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(buildingOffset + gameData + 509676) )
         {
-          availableFunds = *(_DWORD *)(result + 510112);
+          availableFunds = *(_DWORD *)(uintptr_t)(result + 510112);
           if ( availableFunds )
           {
             --strongholdCount;
             if ( sharePerStronghold > availableFunds )
             {
-              *(_DWORD *)(result + 510112) = 0;
+              *(_DWORD *)(uintptr_t)(result + 510112) = 0;
               remaining -= availableFunds;
             }
             else
             {
               remaining -= sharePerStronghold;
-              *(_DWORD *)(result + 510112) = availableFunds - sharePerStronghold;
+              *(_DWORD *)(uintptr_t)(result + 510112) = availableFunds - sharePerStronghold;
             }
           }
         }
@@ -1054,7 +1054,7 @@ int  BuildingSpriteCache_LoadEntry(
     }
     spriteAssetIndex = 9 * assetSet + spriteSubIndex;
   }
-  mapThemeIndex = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
+  mapThemeIndex = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
   if ( mapThemeIndex == 0 )
   {
     spriteHandleTheme0 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
@@ -1169,9 +1169,9 @@ int Rules_RebuildTempleFacts(void)
   for ( i = 0; ; ++i )
   {
     result = gameData;
-    if ( i >= *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) )
+    if ( i >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) )
       break;
-    for ( j = 0; j < *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
+    for ( j = 0; j < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET); j = v4 + 1 )
     {
       if ( MapTile_GetReligiousSiteCategory(i, j) )
         Rules_LogTempleFact(i, v4);
@@ -1187,7 +1187,7 @@ signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY)
 {
   signed int result; // eax
 
-  switch ( *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY + 2) )
+  switch ( *(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY + 2) )
   {
     case TILE_OVERLAY_SHRINE_A:
     case TILE_OVERLAY_SHRINE_B:
@@ -1229,20 +1229,20 @@ int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY)
   (void)a3;
   tile_column_offset = TILE_TERRAIN_ROW_STRIDE * tileX;
   tile_record_offset = tile_column_offset + 14 * tileY;
-  Debug_Log(stackIndex, tileX, tileY, (int)aUnit_movetra_2);
-  saved_site_word = *(_WORD *)(gameData + tile_record_offset + 2);
-  *(_WORD *)(gameData + tile_record_offset + 2) = -1;
-  current_y = *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176);
+  Debug_Log(stackIndex, tileX, tileY, (int)(intptr_t)aUnit_movetra_2);
+  saved_site_word = *(_WORD *)(uintptr_t)(gameData + tile_record_offset + 2);
+  *(_WORD *)(uintptr_t)(gameData + tile_record_offset + 2) = -1;
+  current_y = *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + 147176);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     Diagnostics_TraceWorldMapActionEvent("temple_track_request", stackIndex, tileX, tileY, saved_site_word);
   result = Unit_MoveTrack(
              stackIndex,
-             *(__int16 *)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET),
+             *(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET),
              tileX,
              current_y,
              tileX,
              tileY);
-  *(_WORD *)(gameData + tile_record_offset + 2) = saved_site_word;
+  *(_WORD *)(uintptr_t)(gameData + tile_record_offset + 2) = saved_site_word;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     Diagnostics_TraceWorldMapActionEvent("temple_track_result", stackIndex, tileX, tileY, result ? *result : -1);
   return result;
@@ -1278,7 +1278,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double gameTime)
     scriptedSlotPtr = unitStack;
     for ( i = 0; i != 4; ++i )
     {
-      UnitSlot_InitFromType((int)scriptedSlotPtr, g_TempleGiftUnitPool_ScriptedRam[i], v3);
+      UnitSlot_InitFromType((int)(intptr_t)scriptedSlotPtr, g_TempleGiftUnitPool_ScriptedRam[i], v3);
       scriptedSlotPtr = (_WORD *)((char *)scriptedSlotPtr + 31);
     }
     giftUnitCount = 4;
@@ -1304,7 +1304,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double gameTime)
           ownerFaction = v16;
           unitType = g_TempleGiftUnitPool_MinorMonsters[monsterRoll];
         }
-        UnitSlot_InitFromType((int)randomSlotPtr, unitType, ownerFaction);
+        UnitSlot_InitFromType((int)(intptr_t)randomSlotPtr, unitType, ownerFaction);
         ++spawnedCount;
         randomSlotPtr = (_WORD *)((char *)randomSlotPtr + 31);
       }
@@ -1312,11 +1312,11 @@ __int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double gameTime)
     }
   }
   *(_WORD *)((char *)unitStack + 31 * giftUnitCount) = -1;
-  result = (__int16 *)Unit_CreateNearbyUnitGroup(siteX, siteY, (unsigned __int8 *)unitStack, gameTime);
+  result = (__int16 *)(uintptr_t)Unit_CreateNearbyUnitGroup(siteX, siteY, (unsigned __int8 *)unitStack, gameTime);
   if ( result )
-    return (__int16 *)UI_StartWorldMapUnitAttentionFlash(
-                        *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
-                        (int)result,
+    return (__int16 *)(uintptr_t)UI_StartWorldMapUnitAttentionFlash(
+                        *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*result, result[1])),
+                        (int)(intptr_t)result,
                         200 * *result + gameData);
   return result;
 }
@@ -1349,7 +1349,7 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, cha
   spawnY = originY;
   cargoSlotCount = 0;
   fullCargoByteLimit = 31 * (goldAmount / 100);
-  for ( i = 0; i <= fullCargoByteLimit; UnitSlot_InitFromType((int)cargoStack + i, UNIT_TYPE_GOLD_CARGO, ownerFaction) )
+  for ( i = 0; i <= fullCargoByteLimit; UnitSlot_InitFromType((int)(intptr_t)cargoStack + i, UNIT_TYPE_GOLD_CARGO, ownerFaction) )
     ++cargoSlotCount;
   goldTotal = goldAmountCopy;
   *(_WORD *)((char *)cargoStack + i) = -1;
@@ -1358,11 +1358,11 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, cha
   v14[31 * lastSlotIndex] = partialGold;
   if ( !partialGold )
     *(_WORD *)((char *)cargoStack + 31 * lastSlotIndex) = -1;
-  result = (__int16 *)Unit_CreateNearbyUnitGroup(spawnX, spawnY, (unsigned __int8 *)cargoStack, gameTime);
+  result = (__int16 *)(uintptr_t)Unit_CreateNearbyUnitGroup(spawnX, spawnY, (unsigned __int8 *)cargoStack, gameTime);
   if ( result )
-    return (__int16 *)UI_StartWorldMapUnitAttentionFlash(
-                        *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
-                        (int)result,
+    return (__int16 *)(uintptr_t)UI_StartWorldMapUnitAttentionFlash(
+                        *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*result, result[1])),
+                        (int)(intptr_t)result,
                         gameData + 200 * *result);
   return result;
 }

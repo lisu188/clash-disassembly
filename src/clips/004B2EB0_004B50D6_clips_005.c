@@ -22,10 +22,10 @@ signed int  Rules_CheckFieldExprListAgainstConstraint(int *theExpression, int th
 
   exprCursor = theExpression;
   minFields = 0;
-  for ( i = 0; exprCursor; exprCursor = *(int **)(v7 + 10) )
+  for ( i = 0; exprCursor; exprCursor = *(int **)(uintptr_t)(v7 + 10) )
   {
     if ( Rules_TagIsConstantType(*(__int16 *)exprCursor)
-      || *(_WORD *)v7 == 10 && (returnTypeChar = *(_BYTE *)(*(_DWORD *)(v7 + 2) + 8), returnTypeChar != 109) && returnTypeChar != 117 )
+      || *(_WORD *)(uintptr_t)v7 == 10 && (returnTypeChar = *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 2) + 8), returnTypeChar != 109) && returnTypeChar != 117 )
     {
       ++minFields;
     }
@@ -46,7 +46,7 @@ signed int  Rules_CheckFieldExprListAgainstConstraint(int *theExpression, int th
     result = Rules_CheckValueAgainstConstraint(*(__int16 *)checkCursor, *(int *)((char *)checkCursor + 2), theConstraint);
     if ( result )
       break;
-    checkCursor = *(int **)(v10 + 10);
+    checkCursor = *(int **)(uintptr_t)(v10 + 10);
     if ( !checkCursor )
       return 0;
   }
@@ -71,10 +71,10 @@ signed int  Rules_CheckExprTreeAgainstConstraint(__int16 *theExpression, int the
       result = Rules_CheckValueAgainstConstraint(*theExpression, *(_DWORD *)(theExpression + 1), theConstraint);
       if ( result )
         break;
-      result = Rules_CheckExprTreeAgainstConstraint(*(_DWORD *)(v5 + 6), theConstraint);
+      result = Rules_CheckExprTreeAgainstConstraint(*(_DWORD *)(uintptr_t)(v5 + 6), theConstraint);
       if ( result )
         break;
-      theExpression = *(__int16 **)(v6 + 10);
+      theExpression = *(__int16 **)(uintptr_t)(v6 + 10);
     }
     while ( theExpression );
   }
@@ -92,7 +92,7 @@ char * Rules_ConstraintIsUnmatchable(char *result)
   if ( result )
   {
     typeFlags = *result;
-    result = (char *)((*result & 1) == 0
+    result = (char *)(uintptr_t)((*result & 1) == 0
                    && (typeFlags & 2) == 0
                    && (typeFlags & 4) == 0
                    && (typeFlags & 8) == 0
@@ -115,7 +115,7 @@ int  IO_ScanfGetChar(int (**streamOps)(void))
 //----- (004B2FCE) --------------------------------------------------------
 int __fastcall IO_ScanfUngetChar(int ch, int streamOps)
 {
-  return (*(int (__thiscall **)(int))(streamOps + 4))(ch);
+  return (*(int (__thiscall **)(int))(uintptr_t)(streamOps + 4))(ch);
 }
 
 //----- (004B2FD6) --------------------------------------------------------
@@ -139,7 +139,7 @@ signed int  IO_ScanfParseFormat(int streamContext, unsigned __int8 *formatString
   argCursor[0] = *argList;
   assignedCount = 0;
   charsConsumed = 0;
-  *(_BYTE *)(streamContext + 16) &= ~2u;
+  *(_BYTE *)(uintptr_t)(streamContext + 16) &= ~2u;
   while ( 1 )
   {
     formatCharPtr = formatPtr++;
@@ -153,7 +153,7 @@ signed int  IO_ScanfParseFormat(int streamContext, unsigned __int8 *formatString
     }
     if ( formatChar != 37 )
     {
-      if ( IO_ScanfGetChar((int (**)(void))streamContext) != formatChar )
+      if ( IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext) != formatChar )
         goto LABEL_7;
 LABEL_63:
       ++charsConsumed;
@@ -172,10 +172,10 @@ LABEL_63:
         {
           if ( convChar != 37 )
             goto LABEL_64;
-          if ( IO_ScanfGetChar((int (**)(void))streamContext) != 37 )
+          if ( IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext) != 37 )
           {
 LABEL_7:
-            if ( (*(_BYTE *)(streamContext + 16) & 2) == 0 )
+            if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) == 0 )
               IO_ScanfUngetChar(v8, streamContext);
             break;
           }
@@ -183,14 +183,14 @@ LABEL_7:
         }
         if ( convChar <= 0x43 )
         {
-          *(_BYTE *)(streamContext + 16) |= 0x20u;
+          *(_BYTE *)(uintptr_t)(streamContext + 16) |= 0x20u;
 LABEL_57:
-          fieldResult = IO_ScanfReadCharField(streamContext, argCursor, (_WORD *)streamContext);
+          fieldResult = IO_ScanfReadCharField(streamContext, argCursor, (_WORD *)(uintptr_t)streamContext);
 LABEL_58:
           if ( fieldResult <= 0 )
             break;
           charsConsumed += fieldResult;
-          if ( (*(_BYTE *)(streamContext + 16) & 1) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 1) != 0 )
             ++assignedCount;
           goto LABEL_64;
         }
@@ -209,9 +209,9 @@ LABEL_52:
         {
           if ( convChar == 83 )
           {
-            *(_BYTE *)(streamContext + 16) |= 0x20u;
+            *(_BYTE *)(uintptr_t)(streamContext + 16) |= 0x20u;
 LABEL_54:
-            IO_ScanfReadStringField(streamContext, argCursor, (unsigned __int8 *)streamContext);
+            IO_ScanfReadStringField(streamContext, argCursor, (unsigned __int8 *)(uintptr_t)streamContext);
             goto LABEL_58;
           }
         }
@@ -231,7 +231,7 @@ LABEL_47:
           {
             if ( convChar <= 0x5B )
             {
-              fieldResult = IO_ScanfReadScansetField(argCursor, (int *)&formatPtr, (_BYTE *)streamContext);
+              fieldResult = IO_ScanfReadScansetField(argCursor, (int *)&formatPtr, (_BYTE *)(uintptr_t)streamContext);
               goto LABEL_58;
             }
             if ( convChar == 99 )
@@ -296,7 +296,7 @@ LABEL_47:
       }
     }
 LABEL_64:
-    if ( (*(_BYTE *)(streamContext + 16) & 2) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) != 0 )
     {
       if ( *formatPtr == 37 )
       {
@@ -308,7 +308,7 @@ LABEL_64:
       break;
     }
   }
-  if ( assignedCount || (*(_BYTE *)(streamContext + 16) & 2) == 0 )
+  if ( assignedCount || (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) == 0 )
     return assignedCount;
   else
     return -1;
@@ -325,14 +325,14 @@ unsigned __int8 * IO_ScanfParseFieldSpec(unsigned __int8 *result, int streamCont
   char newFlags; // dh
   int digitChar; // [esp+0h] [ebp-10h]
 
-  flagsByte = *(_BYTE *)(streamContext + 16) | 1;
-  *(_BYTE *)(streamContext + 16) = flagsByte;
-  *(_DWORD *)(streamContext + 12) = -1;
-  *(_BYTE *)(streamContext + 16) = flagsByte & 3;
+  flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16) | 1;
+  *(_BYTE *)(uintptr_t)(streamContext + 16) = flagsByte;
+  *(_DWORD *)(uintptr_t)(streamContext + 12) = -1;
+  *(_BYTE *)(uintptr_t)(streamContext + 16) = flagsByte & 3;
   if ( *result == 42 )
   {
     ++result;
-    *(_BYTE *)(streamContext + 16) &= ~1u;
+    *(_BYTE *)(uintptr_t)(streamContext + 16) &= ~1u;
   }
   digitChar = *result;
   if ( (IsTable[(unsigned __int8)(digitChar + 1)] & 0x20) != 0 )
@@ -345,17 +345,17 @@ unsigned __int8 * IO_ScanfParseFieldSpec(unsigned __int8 *result, int streamCont
       digitChar = *result;
     }
     while ( (IsTable[(unsigned __int8)(digitChar + 1)] & 0x20) != 0 );
-    *(_DWORD *)(streamContext + 12) = fieldWidth;
+    *(_DWORD *)(uintptr_t)(streamContext + 12) = fieldWidth;
   }
   if ( *result == 78 )
   {
-    *(_BYTE *)(streamContext + 16) |= 8u;
+    *(_BYTE *)(uintptr_t)(streamContext + 16) |= 8u;
   }
   else
   {
     if ( *result != 70 )
       goto LABEL_12;
-    *(_BYTE *)(streamContext + 16) |= 4u;
+    *(_BYTE *)(uintptr_t)(streamContext + 16) |= 4u;
   }
   ++result;
 LABEL_12:
@@ -367,14 +367,14 @@ LABEL_12:
       if ( sizeChar >= 0x6Cu && (sizeChar <= 0x6Cu || sizeChar == 119) )
       {
         ++result;
-        *(_BYTE *)(streamContext + 16) |= 0x20u;
+        *(_BYTE *)(uintptr_t)(streamContext + 16) |= 0x20u;
       }
       return result;
     }
-    newFlags = *(_BYTE *)(streamContext + 16) | 0x10;
+    newFlags = *(_BYTE *)(uintptr_t)(streamContext + 16) | 0x10;
     ++result;
 LABEL_28:
-    *(_BYTE *)(streamContext + 16) = newFlags;
+    *(_BYTE *)(uintptr_t)(streamContext + 16) = newFlags;
     return result;
   }
   if ( sizeChar < 0x49u )
@@ -383,14 +383,14 @@ LABEL_28:
   {
     if ( result[1] != 54 || result[2] != 52 )
       return result;
-    newFlags = *(_BYTE *)(streamContext + 16) | 0x40;
+    newFlags = *(_BYTE *)(uintptr_t)(streamContext + 16) | 0x40;
     result += 3;
     goto LABEL_28;
   }
   if ( sizeChar == 76 )
   {
     ++result;
-    *(_BYTE *)(streamContext + 16) |= 0x40u;
+    *(_BYTE *)(uintptr_t)(streamContext + 16) |= 0x40u;
   }
   return result;
 }
@@ -402,9 +402,9 @@ int  IO_ScanfSkipWhitespace(int streamContext)
   int v3; // ecx
 
   skippedCount = 0;
-  while ( (IsTable[(unsigned __int8)(IO_ScanfGetChar((int (**)(void))streamContext) + 1)] & 2) != 0 )
+  while ( (IsTable[(unsigned __int8)(IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext) + 1)] & 2) != 0 )
     ++skippedCount;
-  if ( (*(_BYTE *)(streamContext + 16) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) == 0 )
     IO_ScanfUngetChar(v3, streamContext);
   return skippedCount;
 }
@@ -426,39 +426,39 @@ int  IO_ScanfReadCharField(int streamContext, int *argList, _WORD *destBuffer)
   unsigned __int8 mbBuffer[28]; // [esp+4h] [ebp-1Ch] BYREF
 
   v3 = streamContext;
-  if ( (*(_BYTE *)(streamContext + 16) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 1) != 0 )
   {
-    flagsByte = *(_BYTE *)(streamContext + 16);
+    flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16);
     if ( (flagsByte & 4) != 0 )
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destBuffer = *(_WORD **)(farArgPtr - 8);
-      __ES__ = *(_WORD *)(farArgPtr - 8 + 4);
+      destBuffer = *(_WORD **)(uintptr_t)(farArgPtr - 8);
+      __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
     {
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_WORD **)(nearArgPtr - 4);
+      destBuffer = *(_WORD **)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_WORD **)(defaultArgPtr - 4);
+      destBuffer = *(_WORD **)(uintptr_t)(defaultArgPtr - 4);
     }
   }
-  fieldWidth = *(_DWORD *)(streamContext + 12);
+  fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
   charsRead = 0;
   if ( fieldWidth == -1 )
     fieldWidth = 1;
   while ( fieldWidth > 0 )
   {
-    inputChar = IO_ScanfGetChar((int (**)(void))v3);
-    statusFlags = *(_BYTE *)(v3 + 16);
+    inputChar = IO_ScanfGetChar((int (**)(void))(uintptr_t)v3);
+    statusFlags = *(_BYTE *)(uintptr_t)(v3 + 16);
     if ( (statusFlags & 2) != 0 )
       break;
     ++charsRead;
@@ -471,7 +471,7 @@ int  IO_ScanfReadCharField(int streamContext, int *argList, _WORD *destBuffer)
         if ( g_CRT_MbcsCodePageActive )
         {
           if ( (g_Clips_DbcsLeadByteTable[inputChar] & 1) != 0 )
-            mbBuffer[1] = IO_ScanfGetChar((int (**)(void))v3);
+            mbBuffer[1] = IO_ScanfGetChar((int (**)(void))(uintptr_t)v3);
         }
         if ( Str_DecodeMultibyteChar(&wideChar, mbBuffer, 2u) == -1 )
           return 0;
@@ -506,55 +506,55 @@ void  IO_ScanfReadStringField(int streamContext, int *argList, unsigned __int8 *
   unsigned __int8 charSize; // [esp+8h] [ebp-1Ch]
 
   v3 = streamContext;
-  if ( (*(_BYTE *)(streamContext + 16) & 0x20) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x20) != 0 )
     charSize = 2;
   else
     charSize = 1;
-  flagsByte = *(_BYTE *)(streamContext + 16);
+  flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16);
   if ( (flagsByte & 1) != 0 )
   {
     if ( (flagsByte & 4) != 0 )
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destBuffer = *(unsigned __int8 **)(farArgPtr - 8);
-      __ES__ = *(_WORD *)(farArgPtr - 8 + 4);
+      destBuffer = *(unsigned __int8 **)(uintptr_t)(farArgPtr - 8);
+      __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
     {
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(unsigned __int8 **)(nearArgPtr - 4);
+      destBuffer = *(unsigned __int8 **)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(unsigned __int8 **)(defaultArgPtr - 4);
+      destBuffer = *(unsigned __int8 **)(uintptr_t)(defaultArgPtr - 4);
     }
   }
   for ( i = 0; ; ++i )
   {
-    inputChar = IO_ScanfGetChar((int (**)(void))v3);
+    inputChar = IO_ScanfGetChar((int (**)(void))(uintptr_t)v3);
     if ( (IsTable[(unsigned __int8)(inputChar + 1)] & 2) == 0 )
       break;
   }
-  if ( (*(_BYTE *)(v3 + 16) & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(v3 + 16) & 2) != 0 )
   {
     i = 0;
   }
   else
   {
-    fieldWidth = *(_DWORD *)(v3 + 12);
-    *(_DWORD *)(v3 + 12) = fieldWidth - 1;
+    fieldWidth = *(_DWORD *)(uintptr_t)(v3 + 12);
+    *(_DWORD *)(uintptr_t)(v3 + 12) = fieldWidth - 1;
     if ( fieldWidth )
     {
       do
       {
         ++i;
-        if ( (*(_BYTE *)(v3 + 16) & 1) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)(v3 + 16) & 1) != 0 )
         {
           if ( charSize == 1 )
           {
@@ -564,7 +564,7 @@ void  IO_ScanfReadStringField(int streamContext, int *argList, unsigned __int8 *
           {
             mbBuffer[0] = inputChar;
             if ( g_CRT_MbcsCodePageActive && (g_Clips_DbcsLeadByteTable[inputChar] & 1) != 0 )
-              mbBuffer[1] = IO_ScanfGetChar((int (**)(void))v3);
+              mbBuffer[1] = IO_ScanfGetChar((int (**)(void))(uintptr_t)v3);
             if ( Str_DecodeMultibyteChar(&wideChar, mbBuffer, 2u) == -1 )
               goto LABEL_33;
             *(_WORD *)destBuffer = wideChar;
@@ -581,7 +581,7 @@ void  IO_ScanfReadStringField(int streamContext, int *argList, unsigned __int8 *
     IO_ScanfUngetChar(v3, v3);
   }
 LABEL_28:
-  if ( (*(_BYTE *)(v3 + 16) & 1) != 0 && i > 0 )
+  if ( (*(_BYTE *)(uintptr_t)(v3 + 16) & 1) != 0 && i > 0 )
   {
     if ( charSize == 1 )
       *destBuffer = 0;
@@ -606,31 +606,31 @@ int  IO_ScanfStoreScanCount(int result, int *argList, int charCount)
   int nearArgPtr; // esi
   int defaultArgPtr; // ecx
 
-  flagsByte = *(_BYTE *)(result + 16);
+  flagsByte = *(_BYTE *)(uintptr_t)(result + 16);
   if ( (flagsByte & 1) != 0 )
   {
     if ( (flagsByte & 4) != 0 )
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destPtr = *(_WORD **)(farArgPtr - 8);
-      __ES__ = *(_WORD *)(farArgPtr - 8 + 4);
+      destPtr = *(_WORD **)(uintptr_t)(farArgPtr - 8);
+      __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
     {
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destPtr = *(_WORD **)(nearArgPtr - 4);
+      destPtr = *(_WORD **)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destPtr = *(_WORD **)(defaultArgPtr - 4);
+      destPtr = *(_WORD **)(uintptr_t)(defaultArgPtr - 4);
     }
-    if ( (*(_BYTE *)(result + 16) & 0x10) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(result + 16) & 0x10) != 0 )
       *destPtr = charCount;
     else
       *(_DWORD *)destPtr = charCount;
@@ -652,7 +652,7 @@ _BYTE * IO_ScanfParseScanset(int a1, int scansetBitmap)
   {
     do
     {
-      *(_BYTE *)((setChar >> 3) + scansetBitmap) |= g_BitPositionMaskTable[setChar & 7];
+      *(_BYTE *)(uintptr_t)((setChar >> 3) + scansetBitmap) |= g_BitPositionMaskTable[setChar & 7];
       setChar = (unsigned __int8)*formatCursor;
       if ( !*formatCursor )
         break;
@@ -686,13 +686,13 @@ int  IO_ScanfReadScansetField(int *argList, int *formatPtr, _BYTE *destBuffer)
   BOOL negateSet; // [esp+24h] [ebp-1Ch]
   int savedChar; // [esp+28h] [ebp-18h]
 
-  scansetPtr = (_BYTE *)*formatPtr;
-  v5 = *(_BYTE *)*formatPtr != 94;
-  negateSet = *(_BYTE *)*formatPtr == 94;
+  scansetPtr = (_BYTE *)(uintptr_t)*formatPtr;
+  v5 = *(_BYTE *)(uintptr_t)*formatPtr != 94;
+  negateSet = *(_BYTE *)(uintptr_t)*formatPtr == 94;
   if ( !v5 )
-    *formatPtr = (int)(scansetPtr + 1);
-  *formatPtr = (int)IO_ScanfParseScanset(*formatPtr, (int)scansetBitmap);
-  flagsByte = *(_BYTE *)(streamContext + 16);
+    *formatPtr = (int)(intptr_t)(scansetPtr + 1);
+  *formatPtr = (int)(intptr_t)IO_ScanfParseScanset(*formatPtr, (int)(intptr_t)scansetBitmap);
+  flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16);
   if ( (flagsByte & 1) != 0 )
   {
     if ( (flagsByte & 4) != 0 )
@@ -700,29 +700,29 @@ int  IO_ScanfReadScansetField(int *argList, int *formatPtr, _BYTE *destBuffer)
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
       farArgBase = farArgPtr - 8;
-      destBuffer = *(_BYTE **)(farArgPtr - 8);
-      __ES__ = *(_WORD *)(farArgBase + 4);
+      destBuffer = *(_BYTE **)(uintptr_t)(farArgPtr - 8);
+      __ES__ = *(_WORD *)(uintptr_t)(farArgBase + 4);
     }
     else if ( (flagsByte & 8) != 0 )
     {
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_BYTE **)(nearArgPtr - 4);
+      destBuffer = *(_BYTE **)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_BYTE **)(defaultArgPtr - 4);
+      destBuffer = *(_BYTE **)(uintptr_t)(defaultArgPtr - 4);
     }
   }
-  fieldWidth = *(_DWORD *)(streamContext + 12);
+  fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
   for ( i = 0; fieldWidth; ++i )
   {
-    inputChar = IO_ScanfGetChar((int (**)(void))streamContext);
-    statusFlags = *(_BYTE *)(streamContext + 16);
+    inputChar = IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext);
+    statusFlags = *(_BYTE *)(uintptr_t)(streamContext + 16);
     savedChar = inputChar;
     if ( (statusFlags & 2) != 0 )
       break;
@@ -733,10 +733,10 @@ int  IO_ScanfReadScansetField(int *argList, int *formatPtr, _BYTE *destBuffer)
       break;
     }
     fieldWidth = v15 - 1;
-    if ( (*(_BYTE *)(streamContext + 16) & 1) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 1) != 0 )
       *destBuffer++ = savedChar;
   }
-  if ( (*(_BYTE *)(streamContext + 16) & 1) != 0 && i > 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 1) != 0 && i > 0 )
     *destBuffer = 0;
   return i;
 }
@@ -780,15 +780,15 @@ void  IO_ScanfReadFloatField(int streamContext, int *argList)
   bufferCursor = &numberBuffer;
   for ( i = 0; ; ++i )
   {
-    firstChar = IO_ScanfGetChar((int (**)(void))streamContext);
+    firstChar = IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext);
     inputChar = firstChar;
     if ( (IsTable[(unsigned __int8)(firstChar + 1)] & 2) == 0 )
       break;
   }
-  if ( (*(_BYTE *)(streamContext + 16) & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) != 0 )
     goto LABEL_42;
-  fieldWidth = *(_DWORD *)(streamContext + 12);
-  *(_DWORD *)(streamContext + 12) = fieldWidth - 1;
+  fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
+  *(_DWORD *)(uintptr_t)(streamContext + 12) = fieldWidth - 1;
   if ( fieldWidth )
   {
     if ( firstChar == 43 || firstChar == 45 )
@@ -811,7 +811,7 @@ void  IO_ScanfReadFloatField(int streamContext, int *argList)
         while ( 1 )
         {
           *bufferCursor++ = inputChar;
-          if ( (*(_BYTE *)(streamContext + 16) & 0x10) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) != 0 )
             HIWORD(integerValue) = 10 * HIWORD(integerValue) + inputChar - 48;
           ++digitCount;
           nextChar = IO_ScanfNextFieldChar(streamContext);
@@ -822,10 +822,10 @@ void  IO_ScanfReadFloatField(int streamContext, int *argList)
             goto LABEL_17;
         }
 LABEL_42:
-        if ( digitCount > 0 && (*(_BYTE *)(streamContext + 16) & 1) != 0 )
+        if ( digitCount > 0 && (*(_BYTE *)(uintptr_t)(streamContext + 16) & 1) != 0 )
         {
           *bufferCursor = 0;
-          if ( (*(_BYTE *)(streamContext + 16) & 0x10) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) != 0 )
           {
             if ( numberBuffer == 45 )
               integerValue = -integerValue;
@@ -834,29 +834,29 @@ LABEL_42:
           {
             g_StringToDoubleScanFn(inputChar, doubleValue);
           }
-          flagsByte = *(_BYTE *)(streamContext + 16);
+          flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16);
           if ( (flagsByte & 4) != 0 )
           {
             farArgPtr = *argCursor + 8;
             *argCursor = farArgPtr;
-            destPtr = *(int **)(farArgPtr - 8);
-            __ES__ = *(_WORD *)(farArgPtr - 8 + 4);
+            destPtr = *(int **)(uintptr_t)(farArgPtr - 8);
+            __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
           }
           else if ( (flagsByte & 8) != 0 )
           {
             nearArgPtr = *argCursor + 4;
             *argCursor = nearArgPtr;
             __ES__ = __DS__;
-            destPtr = *(int **)(nearArgPtr - 4);
+            destPtr = *(int **)(uintptr_t)(nearArgPtr - 4);
           }
           else
           {
             defaultArgPtr = *argCursor + 4;
             *argCursor = defaultArgPtr;
             __ES__ = __DS__;
-            destPtr = *(int **)(defaultArgPtr - 4);
+            destPtr = *(int **)(uintptr_t)(defaultArgPtr - 4);
           }
-          sizeFlags = *(_BYTE *)(streamContext + 16);
+          sizeFlags = *(_BYTE *)(uintptr_t)(streamContext + 16);
           if ( (sizeFlags & 0x10) != 0 )
           {
             storeValue = integerValue;
@@ -899,7 +899,7 @@ LABEL_17:
           inputChar = IO_ScanfNextFieldChar(streamContext);
         }
         while ( inputChar != -1 );
-        if ( (*(_BYTE *)(streamContext + 16) & 0x10) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) != 0 )
         {
           digitCursor = bufferCursor;
           for ( j = 0; ; j /= 0xAu )
@@ -915,7 +915,7 @@ LABEL_17:
         if ( inputChar == -1 )
           goto LABEL_42;
       }
-      if ( (*(_BYTE *)(streamContext + 16) & 0x10) == 0 && (inputChar == 101 || inputChar == 69) )
+      if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) == 0 && (inputChar == 101 || inputChar == 69) )
       {
         ++digitCount;
         *bufferCursor = inputChar;
@@ -1007,15 +1007,15 @@ signed int  IO_ScanfReadIntegerField(int streamContext, int *argList, int radix)
   intValue = 0;
   for ( i = 0; ; ++i )
   {
-    firstChar = IO_ScanfGetChar((int (**)(void))streamContext);
+    firstChar = IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext);
     inputChar = firstChar;
     if ( (IsTable[(unsigned __int8)(firstChar + 1)] & 2) == 0 )
       break;
   }
-  if ( (*(_BYTE *)(streamContext + 16) & 2) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 2) != 0 )
     goto LABEL_44;
-  fieldWidth = *(_DWORD *)(streamContext + 12);
-  *(_DWORD *)(streamContext + 12) = fieldWidth - 1;
+  fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
+  *(_DWORD *)(uintptr_t)(streamContext + 12) = fieldWidth - 1;
   if ( !fieldWidth )
     goto LABEL_43;
   signChar = 43;
@@ -1073,7 +1073,7 @@ signed int  IO_ScanfReadIntegerField(int streamContext, int *argList, int radix)
   {
     radix = 10;
   }
-  if ( (*(_BYTE *)(streamContext + 16) & 0x40) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x40) != 0 )
   {
     v13 = 0;
     while ( 1 )
@@ -1087,7 +1087,7 @@ signed int  IO_ScanfReadIntegerField(int streamContext, int *argList, int radix)
       if ( inputChar == -1 )
         goto LABEL_44;
     }
-    if ( inputChar == 58 && *(char *)(streamContext + 16) < 0 )
+    if ( inputChar == 58 && *(char *)(uintptr_t)(streamContext + 16) < 0 )
     {
       while ( 1 )
       {
@@ -1116,7 +1116,7 @@ LABEL_43:
     if ( inputChar == -1 )
       goto LABEL_44;
   }
-  if ( inputChar != 58 || *(char *)(streamContext + 16) >= 0 )
+  if ( inputChar != 58 || *(char *)(uintptr_t)(streamContext + 16) >= 0 )
     goto LABEL_43;
   while ( 1 )
   {
@@ -1130,7 +1130,7 @@ LABEL_43:
     intValue = colonDigitValue32 + v7 * intValue;
   }
 LABEL_44:
-  if ( (*(_BYTE *)(streamContext + 16) & 0x40) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x40) != 0 )
   {
     if ( signChar == 45 )
     {
@@ -1142,7 +1142,7 @@ LABEL_44:
     }
     if ( digitCount > 0 )
     {
-      flagsByte = *(_BYTE *)(streamContext + 16);
+      flagsByte = *(_BYTE *)(uintptr_t)(streamContext + 16);
       digitCount += i;
       if ( (flagsByte & 1) != 0 )
       {
@@ -1150,22 +1150,22 @@ LABEL_44:
         {
           farArgPtr = *argList + 8;
           *argList = farArgPtr;
-          v28 = *(_WORD *)(farArgPtr - 4);
-          v29 = *(_DWORD *)(farArgPtr - 8);
+          v28 = *(_WORD *)(uintptr_t)(farArgPtr - 4);
+          v29 = *(_DWORD *)(uintptr_t)(farArgPtr - 8);
         }
         else if ( (flagsByte & 8) != 0 )
         {
           nearArgPtr = *argList + 4;
           *argList = nearArgPtr;
           v28 = __DS__;
-          v29 = *(_DWORD *)(nearArgPtr - 4);
+          v29 = *(_DWORD *)(uintptr_t)(nearArgPtr - 4);
         }
         else
         {
           defaultArgPtr = *argList + 4;
           *argList = defaultArgPtr;
           v28 = __DS__;
-          v29 = *(_DWORD *)(defaultArgPtr - 4);
+          v29 = *(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
         }
         *(__int64 *)MK_FP(v28, v29) = int64Value;
       }
@@ -1177,7 +1177,7 @@ LABEL_44:
       intValue = -intValue;
     if ( digitCount > 0 )
     {
-      flagsByte32 = *(_BYTE *)(streamContext + 16);
+      flagsByte32 = *(_BYTE *)(uintptr_t)(streamContext + 16);
       digitCount += i;
       if ( (flagsByte32 & 1) != 0 )
       {
@@ -1185,24 +1185,24 @@ LABEL_44:
         {
           farArgPtr32 = *argList + 8;
           *argList = farArgPtr32;
-          destPtr = *(_WORD **)(farArgPtr32 - 8);
-          __ES__ = *(_WORD *)(farArgPtr32 - 8 + 4);
+          destPtr = *(_WORD **)(uintptr_t)(farArgPtr32 - 8);
+          __ES__ = *(_WORD *)(uintptr_t)(farArgPtr32 - 8 + 4);
         }
         else if ( (flagsByte32 & 8) != 0 )
         {
           nearArgPtr32 = *argList + 4;
           *argList = nearArgPtr32;
           __ES__ = __DS__;
-          destPtr = *(_WORD **)(nearArgPtr32 - 4);
+          destPtr = *(_WORD **)(uintptr_t)(nearArgPtr32 - 4);
         }
         else
         {
           defaultArgPtr32 = *argList + 4;
           *argList = defaultArgPtr32;
           __ES__ = __DS__;
-          destPtr = *(_WORD **)(defaultArgPtr32 - 4);
+          destPtr = *(_WORD **)(uintptr_t)(defaultArgPtr32 - 4);
         }
-        if ( (*(_BYTE *)(streamContext + 16) & 0x10) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) != 0 )
           *destPtr = intValue;
         else
           *(_DWORD *)destPtr = intValue;
@@ -1245,12 +1245,12 @@ int  IO_ScanfNextFieldChar(int streamContext)
   int result; // eax
   int v4; // edx
 
-  remainingWidth = *(_DWORD *)(streamContext + 12);
-  *(_DWORD *)(streamContext + 12) = remainingWidth - 1;
+  remainingWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
+  *(_DWORD *)(uintptr_t)(streamContext + 12) = remainingWidth - 1;
   if ( !remainingWidth )
     return -1;
-  result = IO_ScanfGetChar((int (**)(void))streamContext);
-  if ( (*(_BYTE *)(v4 + 16) & 2) != 0 )
+  result = IO_ScanfGetChar((int (**)(void))(uintptr_t)streamContext);
+  if ( (*(_BYTE *)(uintptr_t)(v4 + 16) & 2) != 0 )
     return -1;
   return result;
 }
@@ -1283,12 +1283,12 @@ unsigned int  CRT_FormatExceptionMessage(unsigned int result, char *appendText, 
   char hexDigit; // dl
 
   hexInsertPos = 0;
-  while ( *(_BYTE *)result )
+  while ( *(_BYTE *)(uintptr_t)result )
     ++result;
-  for ( i = (char *)(result + 9); ; ++i )
+  for ( i = (char *)(uintptr_t)(result + 9); ; ++i )
   {
     srcChar = *appendText;
-    *(_BYTE *)result = *appendText;
+    *(_BYTE *)(uintptr_t)result = *appendText;
     if ( !srcChar )
       break;
     if ( srcChar == 48 && appendText[1] == 120 )
@@ -1334,9 +1334,9 @@ signed int __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *Excepti
         goto LABEL_41;
       if ( exceptionCode <= 0xC0000005 )
       {
-        CRT_FormatExceptionMessage((unsigned int)Buffer, aTheInstructi_7, exceptionRecord[3]);
-        CRT_FormatExceptionMessage((unsigned int)Buffer, aAt0x00000000_T, *(_DWORD *)(v7 + 24));
-        if ( *(_DWORD *)(v8 + 20) )
+        CRT_FormatExceptionMessage((unsigned int)(intptr_t)Buffer, aTheInstructi_7, exceptionRecord[3]);
+        CRT_FormatExceptionMessage((unsigned int)(intptr_t)Buffer, aAt0x00000000_T, *(_DWORD *)(uintptr_t)(v7 + 24));
+        if ( *(_DWORD *)(uintptr_t)(v8 + 20) )
           messageText = aWritten_;
         else
           messageText = aRead_;
@@ -1398,17 +1398,17 @@ signed int __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *Excepti
     if ( exceptionCode != -1073741571 )
     {
 LABEL_41:
-      CRT_FormatExceptionMessage((unsigned int)Buffer, aTheProgramEnco, *exceptionRecord);
+      CRT_FormatExceptionMessage((unsigned int)(intptr_t)Buffer, aTheProgramEnco, *exceptionRecord);
       messageText = aAddress0x00000;
-      faultAddress = *(_DWORD *)(v9 + 12);
+      faultAddress = *(_DWORD *)(uintptr_t)(v9 + 12);
       goto LABEL_42;
     }
     messageText = aAStackOverflow;
   }
   faultAddress = exceptionRecord[3];
 LABEL_42:
-  CRT_FormatExceptionMessage((unsigned int)Buffer, messageText, faultAddress);
-  WriteFile(*(HANDLE *)(g_CRT_OsHandleTable + 8), Buffer, strlen(Buffer), &NumberOfBytesWritten, 0);
+  CRT_FormatExceptionMessage((unsigned int)(intptr_t)Buffer, messageText, faultAddress);
+  WriteFile(*(HANDLE *)(uintptr_t)(g_CRT_OsHandleTable + 8), Buffer, strlen(Buffer), &NumberOfBytesWritten, 0);
   return 1;
 }
 // 4B4F34: variable 'v2' is possibly undefined
@@ -1443,7 +1443,7 @@ signed int __cdecl CRT_FpuExceptionFrameHandler(EXCEPTION_RECORD *exceptionRecor
       if ( CRT_DispatchRegisteredFpeHandler() == -1 || !g_CRT_FpuExceptionActiveFlag )
         goto LABEL_15;
       result = 0;
-      *(_WORD *)(contextRecord + 32) &= 0x7F00u;
+      *(_WORD *)(uintptr_t)(contextRecord + 32) &= 0x7F00u;
       return result;
     default:
       if ( !g_FpuExceptionResignalFn )
@@ -1460,7 +1460,7 @@ signed int __cdecl CRT_FpuExceptionFrameHandler(EXCEPTION_RECORD *exceptionRecor
       {
 LABEL_15:
         exceptionPointers.ExceptionRecord = exceptionRecord;
-        exceptionPointers.ContextRecord = (PCONTEXT)contextRecord;
+        exceptionPointers.ContextRecord = (PCONTEXT)(uintptr_t)contextRecord;
         if ( UnhandledExceptionFilter(&exceptionPointers) )
           ExitProcess(0xFFFFFFFF);
         return 1;

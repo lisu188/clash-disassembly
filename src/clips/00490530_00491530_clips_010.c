@@ -37,7 +37,7 @@ signed int  Lexer_IsCommandTextComplete(signed int result)
         {
           while ( 1 )
           {
-            theChar = *(_BYTE *)(theString + charIndex++);
+            theChar = *(_BYTE *)(uintptr_t)(theString + charIndex++);
             if ( !theChar )
               return 0;
             if ( theChar >= 0x20u )
@@ -70,7 +70,7 @@ LABEL_22:
               {
                 while ( 1 )
                 {
-                  lineChar = *(_BYTE *)(theString + charIndex++);
+                  lineChar = *(_BYTE *)(uintptr_t)(theString + charIndex++);
                   if ( !lineChar )
                     break;
                   if ( lineChar == 10 || lineChar == 13 )
@@ -119,10 +119,10 @@ LABEL_22:
     charIndex = Lexer_SkipLineComment(theString, charIndex);
     if ( moreThanZero )
     {
-      if ( !depth && *(_BYTE *)(theString + charIndex) )
+      if ( !depth && *(_BYTE *)(uintptr_t)(theString + charIndex) )
         break;
     }
-    if ( *(_BYTE *)(theString + charIndex) )
+    if ( *(_BYTE *)(uintptr_t)(theString + charIndex) )
       ++charIndex;
   }
   if ( !errorFlag )
@@ -137,7 +137,7 @@ int  Lexer_SkipQuotedStringSpan(int theString, int pos, _DWORD *complete)
   int theChar; // eax
   int result; // eax
 
-  theChar = *(unsigned __int8 *)(pos + theString);
+  theChar = *(unsigned __int8 *)(uintptr_t)(pos + theString);
   if ( theChar == 34 )
   {
 LABEL_6:
@@ -151,12 +151,12 @@ LABEL_6:
       if ( theChar == 92 )
       {
         ++pos;
-        theChar = *(unsigned __int8 *)(theString + pos);
+        theChar = *(unsigned __int8 *)(uintptr_t)(theString + pos);
       }
       if ( !theChar )
         break;
       ++pos;
-      theChar = *(unsigned __int8 *)(theString + pos);
+      theChar = *(unsigned __int8 *)(uintptr_t)(theString + pos);
       if ( theChar == 34 )
         goto LABEL_6;
     }
@@ -174,7 +174,7 @@ int  Lexer_SkipLineComment(int theString, int pos)
   int i; // eax
 
   newPos = pos;
-  charPtr = (unsigned __int8 *)(theString + pos);
+  charPtr = (unsigned __int8 *)(uintptr_t)(theString + pos);
   for ( i = *charPtr; i != 10; ++newPos )
   {
     if ( i == 13 )
@@ -194,7 +194,7 @@ int  Str_SkipInlineWhitespaceAt(int theString, int pos)
   int i; // eax
 
   newPos = pos;
-  charPtr = (_BYTE *)(theString + pos);
+  charPtr = (_BYTE *)(uintptr_t)(theString + pos);
   for ( i = 0; ; i = 0 )
   {
     LOBYTE(i) = *charPtr;
@@ -211,7 +211,7 @@ signed int __thiscall Rules_PrintPrompt(void *this)
 {
   signed int result; // eax
 
-  result = Output_Write((int)g_IO_LogicalNameTable_WClips[0], (int)aClips, (int)this);
+  result = Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WClips[0], (int)(intptr_t)aClips, (int)(intptr_t)this);
   if ( g_CLIPS_AfterPromptCallback )
     return g_CLIPS_AfterPromptCallback();
   return result;
@@ -248,15 +248,15 @@ int  Rules_RouteCommand(int result, int printResult, int a3, double a4)
   v26 = a3;
   if ( !result )
     return result;
-  IO_OpenStringSource((int)aCommand_2, (const char *)result, 0);
-  Parser_NextToken((int)aCommand_2, (int)&tokenType);
+  IO_OpenStringSource((int)(intptr_t)aCommand_2, (const char *)(uintptr_t)result, 0);
+  Parser_NextToken((int)(intptr_t)aCommand_2, (int)(intptr_t)&tokenType);
   if ( tokenType == 2 || tokenType == 3 || tokenType < 2 || tokenType == 8 )
   {
-    IO_CloseStringRouter((int)aCommand_2);
+    IO_CloseStringRouter((int)(intptr_t)aCommand_2);
     if ( printResult )
     {
-      Rules_PrintAtomValue((int)aStdout, tokenType, tokenValue);
-      Output_Write((int)aStdout, (int)asc_504990, v5);
+      Rules_PrintAtomValue((int)(intptr_t)aStdout, tokenType, tokenValue);
+      Output_Write((int)(intptr_t)aStdout, (int)(intptr_t)asc_504990, v5);
     }
     return 1;
   }
@@ -264,67 +264,67 @@ int  Rules_RouteCommand(int result, int printResult, int a3, double a4)
   {
     if ( tokenType != 100 )
     {
-      Rules_PrintErrorID((int)aCommline, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedACon_0, v15);
-      IO_CloseStringRouter((int)aCommand_2);
+      Rules_PrintErrorID((int)(intptr_t)aCommline, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedACon_0, v15);
+      IO_CloseStringRouter((int)(intptr_t)aCommand_2);
       return 0;
     }
-    Parser_NextToken((int)aCommand_2, (int)&tokenType);
+    Parser_NextToken((int)(intptr_t)aCommand_2, (int)(intptr_t)&tokenType);
     if ( tokenType == 2 )
     {
       errorFlag = Rules_ParseConstruct();
       if ( errorFlag != -1 )
       {
-        IO_CloseStringRouter((int)aCommand_2);
+        IO_CloseStringRouter((int)(intptr_t)aCommand_2);
         if ( v9 == 1 )
         {
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_1, v8);
-          ppBuffer = (char *)Rules_GetPPBuffer();
-          Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], ppBuffer);
-          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504990, v11);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aError_1, v8);
+          ppBuffer = (char *)(uintptr_t)Rules_GetPPBuffer();
+          Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], ppBuffer);
+          Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_504990, v11);
         }
         Rules_DestroyPPBuffer();
         return errorFlag;
       }
       g_Rules_EvaluatingTopLevelCommand = 1;
-      Parser_ParseFunctionCallExpr((int)aCommand_2, v6);
+      Parser_ParseFunctionCallExpr((int)(intptr_t)aCommand_2, v6);
       g_Rules_EvaluatingTopLevelCommand = 0;
       Parser_FreeLoopContextStack();
-      IO_CloseStringRouter((int)aCommand_2);
+      IO_CloseStringRouter((int)(intptr_t)aCommand_2);
       if ( v17 )
       {
         g_ClipsCommandEvalInProgress = 1;
         AST_InstallNodeChain(v17);
-        Parser_ParseForm(v19, v18, (int)v19, a4);
+        Parser_ParseForm(v19, v18, (int)(intptr_t)v19, a4);
         AST_DeinstallNodeChain(v20);
         g_ClipsCommandEvalInProgress = 0;
         AST_Free(v21);
         if ( theResult[1] != 105 && printResult )
         {
-          Rules_PrintDataObject((int)aStdout, (int)theResult);
-          Output_Write((int)aStdout, (int)asc_504990, v22);
+          Rules_PrintDataObject((int)(intptr_t)aStdout, (int)(intptr_t)theResult);
+          Output_Write((int)(intptr_t)aStdout, (int)(intptr_t)asc_504990, v22);
         }
         return 1;
       }
     }
     else
     {
-      Rules_PrintErrorID((int)aCommline, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAComma, v16);
-      IO_CloseStringRouter((int)aCommand_2);
+      Rules_PrintErrorID((int)(intptr_t)aCommline, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAComma, v16);
+      IO_CloseStringRouter((int)(intptr_t)aCommand_2);
     }
     return 0;
   }
-  IO_CloseStringRouter((int)aCommand_2);
-  theExpression = (__int16 *)AST_NewNode(tokenType, (int)tokenValue);
-  Parser_ParseForm(theExpression, theResult, (int)theExpression, a4);
-  g_ClipsMemFreeListTemp = (int)freedExprNode;
-  *freedExprNode = *(_DWORD *)(g_ClipsMemoryTable + 56);
-  *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+  IO_CloseStringRouter((int)(intptr_t)aCommand_2);
+  theExpression = (__int16 *)(uintptr_t)AST_NewNode(tokenType, (int)(intptr_t)tokenValue);
+  Parser_ParseForm(theExpression, theResult, (int)(intptr_t)theExpression, a4);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)freedExprNode;
+  *freedExprNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
   if ( printResult )
   {
-    Rules_PrintDataObject((int)aStdout, (int)theResult);
-    Output_Write((int)aStdout, (int)asc_504990, v14);
+    Rules_PrintDataObject((int)(intptr_t)aStdout, (int)(intptr_t)theResult);
+    Output_Write((int)(intptr_t)aStdout, (int)(intptr_t)asc_504990, v14);
   }
   return 1;
 }
@@ -356,7 +356,7 @@ BOOL __thiscall Lexer_ClassifyNextStdinChar(void *this)
   int readChar; // eax
   unsigned __int8 inchar; // dl
 
-  readChar = Lexer_PeekChar((int)aStdin_1, (unsigned int)this);
+  readChar = Lexer_PeekChar((int)(intptr_t)aStdin_1, (unsigned int)(intptr_t)this);
   inchar = readChar;
   if ( readChar == -1 )
     inchar = 10;
@@ -378,29 +378,29 @@ _DWORD *Rules_InitializeDefrules(void)
   Rules_RegisterAgendaWatchFlags();
   Rules_RegisterAgendaCommands();
   Rules_RegisterDefruleModuleItem();
-  Rules_AddReservedPatternSymbol((int)aAnd_2, 0);
-  Rules_AddReservedPatternSymbol((int)aNot_2, 0);
-  Rules_AddReservedPatternSymbol((int)aOr_2, 0);
-  Rules_AddReservedPatternSymbol((int)aTest, 0);
-  Rules_AddReservedPatternSymbol((int)aLogical, 0);
-  Rules_AddReservedPatternSymbol((int)aExists, 0);
-  Rules_AddReservedPatternSymbol((int)aForall, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aAnd_2, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aNot_2, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aOr_2, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aTest, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aLogical, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aExists, 0);
+  Rules_AddReservedPatternSymbol((int)(intptr_t)aForall, 0);
   Rules_DefruleCommandDefinitions();
   Rules_RegisterRuleCommands();
   result = Rules_RegisterConstructType(
-             (int)aDefrule,
-             (int)aDefrules,
-             (int)Rules_FindDefruleByName,
-             (int)Rules_ParseDefrule,
-             (int)Rules_GetConstructNameSymbol,
-             (int)Rules_GetModuleConstructListHead,
-             (int)Rules_GetConstructOwnerModule,
-             (int)Rules_GetNextDefrule,
-             (int)Rules_SetConstructNextInModule,
-             (int)Rules_IsDefruleDeletable,
-             (int)Rules_DeleteDefruleOrAll,
-             (int)Rules_FreeDefruleDisjunctChain);
-  g_DefruleConstructTypePtr = (int)result;
+             (int)(intptr_t)aDefrule,
+             (int)(intptr_t)aDefrules,
+             (int)(intptr_t)Rules_FindDefruleByName,
+             (int)(intptr_t)Rules_ParseDefrule,
+             (int)(intptr_t)Rules_GetConstructNameSymbol,
+             (int)(intptr_t)Rules_GetModuleConstructListHead,
+             (int)(intptr_t)Rules_GetConstructOwnerModule,
+             (int)(intptr_t)Rules_GetNextDefrule,
+             (int)(intptr_t)Rules_SetConstructNextInModule,
+             (int)(intptr_t)Rules_IsDefruleDeletable,
+             (int)(intptr_t)Rules_DeleteDefruleOrAll,
+             (int)(intptr_t)Rules_FreeDefruleDisjunctChain);
+  g_DefruleConstructTypePtr = (int)(intptr_t)result;
   return result;
 }
 // 54E648: using guessed type int dword_54E648;
@@ -411,12 +411,12 @@ int Rules_RegisterDefruleModuleItem(void)
   int result; // eax
 
   result = Module_RegisterItem(
-             (int)aDefrule,
-             (int)Rules_AllocateDefruleModule,
-             (int)Rules_JoinNetworkModuleRecord,
-             (int)Rules_FreeDefruleModule,
-             (int)Rules_WriteJoinHashStructRef,
-             (int)Rules_FindDefruleByName);
+             (int)(intptr_t)aDefrule,
+             (int)(intptr_t)Rules_AllocateDefruleModule,
+             (int)(intptr_t)Rules_JoinNetworkModuleRecord,
+             (int)(intptr_t)Rules_FreeDefruleModule,
+             (int)(intptr_t)Rules_WriteJoinHashStructRef,
+             (int)(intptr_t)Rules_FindDefruleByName);
   g_DefruleConstructClass = result;
   return result;
 }
@@ -428,18 +428,18 @@ signed int Rules_AllocateDefruleModule(void)
   _DWORD *freeListEntry; // edx
   signed int result; // eax
 
-  freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 64);
+  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-    *(_DWORD *)(g_ClipsMemoryTable + 64) = *freeListEntry;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *freeListEntry;
     result = g_ClipsMemFreeListTemp;
-    *(_DWORD *)(g_ClipsMemFreeListTemp + 12) = 0;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemFreeListTemp + 12) = 0;
   }
   else
   {
     result = Mem_HeapAllocWithRetry((_DWORD *)0x10);
-    *(_DWORD *)(result + 12) = 0;
+    *(_DWORD *)(uintptr_t)(result + 12) = 0;
   }
   return result;
 }
@@ -453,8 +453,8 @@ int  Rules_FreeDefruleModule(int theItem)
 
   result = Rules_ClearModuleConstructList(theItem, g_DefruleConstructTypePtr, theItem);
   g_ClipsMemFreeListTemp = theItem;
-  *(_DWORD *)theItem = *(_DWORD *)(g_ClipsMemoryTable + 64);
-  *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(uintptr_t)theItem = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -493,9 +493,9 @@ BOOL Rules_IsDefruleDeletable(void)
   theDefrule = v0;
   if ( v0 )
   {
-    while ( *(char *)(theDefrule + 29) >= 0 )
+    while ( *(char *)(uintptr_t)(theDefrule + 29) >= 0 )
     {
-      theDefrule = *(_DWORD *)(theDefrule + 48);
+      theDefrule = *(_DWORD *)(uintptr_t)(theDefrule + 48);
       if ( !theDefrule )
         return !g_Rules_JoinOperationInProgress;
     }
@@ -537,21 +537,21 @@ signed int  Rules_DeriveDefaultFromConstraints(char *constraints, _DWORD *theDef
       theDefault[1] = 4;
       theDefault[4] = -1;
       theDefault[3] = 0;
-      result = (signed int)Rules_CreateEphemeralMultifield(0);
+      result = (signed int)(intptr_t)Rules_CreateEphemeralMultifield(0);
     }
     else
     {
       theDefault[1] = 2;
-      result = (signed int)Str_Intern(aNil, (int)theDefault);
+      result = (signed int)(intptr_t)Str_Intern(aNil, (int)(intptr_t)theDefault);
     }
-    *(_DWORD *)(v6 + 8) = result;
+    *(_DWORD *)(uintptr_t)(v6 + 8) = result;
     return result;
   }
   if ( (*constraints & 1) != 0 || (constraintFlags = *constraints, (*constraints & 2) != 0) )
   {
-    v7 = Str_Intern(aNil, (int)defaultObj);
-    v8 = (int)constraints;
-    standardValue = (int)v7;
+    v7 = Str_Intern(aNil, (int)(intptr_t)defaultObj);
+    v8 = (int)(intptr_t)constraints;
+    standardValue = (int)(intptr_t)v7;
     theType = 2;
     fieldType = 2;
 LABEL_9:
@@ -562,9 +562,9 @@ LABEL_10:
   }
   if ( (constraintFlags & 4) != 0 )
   {
-    v19 = Str_Intern(g_Rules_DefaultEmptyStringConstraint, (int)defaultObj);
-    v8 = (int)constraints;
-    standardValue = (int)v19;
+    v19 = Str_Intern(g_Rules_DefaultEmptyStringConstraint, (int)(intptr_t)defaultObj);
+    v8 = (int)(intptr_t)constraints;
+    standardValue = (int)(intptr_t)v19;
     theType = 3;
     fieldType = 3;
     goto LABEL_9;
@@ -572,8 +572,8 @@ LABEL_10:
   if ( (constraintFlags & 0x10) != 0 )
   {
     zeroInteger = Rules_AddIntegerValue(0);
-    v8 = (int)constraints;
-    standardValue = (int)zeroInteger;
+    v8 = (int)(intptr_t)constraints;
+    standardValue = (int)(intptr_t)zeroInteger;
     theType = 1;
     fieldType = 1;
     goto LABEL_9;
@@ -587,9 +587,9 @@ LABEL_10:
   }
   if ( (constraintFlags & 0x20) != 0 )
   {
-    v21 = Str_Intern(aNil, (int)defaultObj);
-    v8 = (int)constraints;
-    standardValue = (int)v21;
+    v21 = Str_Intern(aNil, (int)(intptr_t)defaultObj);
+    v8 = (int)(intptr_t)constraints;
+    standardValue = (int)(intptr_t)v21;
     theType = 8;
     fieldType = 8;
     goto LABEL_9;
@@ -609,7 +609,7 @@ LABEL_10:
   if ( *constraints >= 0 )
   {
     LOWORD(fieldType) = 2;
-    v12 = Str_Intern(aNil, (int)defaultObj);
+    v12 = Str_Intern(aNil, (int)(intptr_t)defaultObj);
     goto LABEL_10;
   }
   LOWORD(fieldType) = 5;
@@ -620,11 +620,11 @@ LABEL_11:
     v14 = *(_DWORD *)(constraints + 18);
     if ( v14 )
     {
-      v22 = *(_DWORD *)(v14 + 2);
+      v22 = *(_DWORD *)(uintptr_t)(v14 + 2);
       if ( v22 == g_Clips_NegativeInfinitySymbol )
         fieldCount = g_Clips_NegativeInfinitySymbol ^ v22;
       else
-        fieldCount = *(_DWORD *)(v22 + 16);
+        fieldCount = *(_DWORD *)(uintptr_t)(v22 + 16);
     }
     else
     {
@@ -633,17 +633,17 @@ LABEL_11:
     defaultObj[1] = 4;
     defaultObj[4] = fieldCount - 1;
     defaultObj[3] = 0;
-    result = (signed int)Rules_CreateEphemeralMultifield(fieldCount);
-    *(_DWORD *)(v17 + 8) = result;
+    result = (signed int)(intptr_t)Rules_CreateEphemeralMultifield(fieldCount);
+    *(_DWORD *)(uintptr_t)(v17 + 8) = result;
     if ( v16 > 0 )
     {
       result = 6 * v16 - 6;
       do
       {
-        *(_WORD *)(*(_DWORD *)(v17 + 8) + result + 14) = fieldType;
+        *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v17 + 8) + result + 14) = fieldType;
         result -= 6;
         --v16;
-        *(_DWORD *)(*(_DWORD *)(v17 + 8) + result + 22) = theValue;
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v17 + 8) + result + 22) = theValue;
       }
       while ( result > -6 );
     }
@@ -672,7 +672,7 @@ int * Rules_DeriveNumericDefaultFromRange(int theType, int theConstraints, int s
   double theValue; // st7
   int v8; // [esp+8h] [ebp-Ch]
 
-  theList = *(__int16 **)(theConstraints + 6);
+  theList = *(__int16 **)(uintptr_t)(theConstraints + 6);
   if ( theList )
   {
     while ( *theList != theType )
@@ -686,40 +686,40 @@ int * Rules_DeriveNumericDefaultFromRange(int theType, int theConstraints, int s
 LABEL_4:
   if ( theType == 1 )
   {
-    theList = *(__int16 **)(theConstraints + 10);
+    theList = *(__int16 **)(uintptr_t)(theConstraints + 10);
     if ( *theList != 1 )
     {
       if ( !*theList )
       {
 LABEL_11:
-        theValue = *(double *)(*(_DWORD *)(theList + 1) + 16);
+        theValue = *(double *)(uintptr_t)(*(_DWORD *)(theList + 1) + 16);
         _CHP(v8, a4);
         return Rules_AddIntegerValue((int)theValue);
       }
-      theList = *(__int16 **)(theConstraints + 14);
+      theList = *(__int16 **)(uintptr_t)(theConstraints + 14);
       if ( *theList != 1 )
       {
         if ( *theList )
-          return (int *)standardValue;
+          return (int *)(uintptr_t)standardValue;
         goto LABEL_11;
       }
     }
     return *(int **)(theList + 1);
   }
   if ( theType )
-    return (int *)standardValue;
-  theList = *(__int16 **)(theConstraints + 10);
+    return (int *)(uintptr_t)standardValue;
+  theList = *(__int16 **)(uintptr_t)(theConstraints + 10);
   if ( !*theList )
     return *(int **)(theList + 1);
   if ( *theList != 1 )
   {
-    theList = *(__int16 **)(theConstraints + 14);
+    theList = *(__int16 **)(uintptr_t)(theConstraints + 14);
     if ( !*theList )
       return *(int **)(theList + 1);
     if ( *theList != 1 )
-      return (int *)standardValue;
+      return (int *)(uintptr_t)standardValue;
   }
-  return (int *)Rules_AddDoubleValue((double)*(int *)(*(_DWORD *)(theList + 1) + 16));
+  return (int *)(uintptr_t)Rules_AddDoubleValue((double)*(int *)(uintptr_t)(*(_DWORD *)(theList + 1) + 16));
 }
 // 490F90: could not find valid save-restore pair for esi
 // 490FE8: variable 'v8' is possibly undefined
@@ -783,13 +783,13 @@ LABEL_28:
     IO_OutWriteToken(asc_504A98);
     if ( v23 )
       goto LABEL_37;
-    if ( !defaultList || *(_DWORD *)(defaultList + 10) )
+    if ( !defaultList || *(_DWORD *)(uintptr_t)(defaultList + 10) )
     {
       *error = 1;
     }
     else
     {
-      theConstraint = Rules_BuildLHSNodeFromToken((__int16 *)defaultList);
+      theConstraint = Rules_BuildLHSNodeFromToken((__int16 *)(uintptr_t)defaultList);
       theConstraint[1] &= ~0x80u;
       if ( Rules_ConstraintIsUnmatchable(theConstraint) )
         *error = 1;
@@ -804,15 +804,15 @@ LABEL_37:
         do
         {
           Lexer_ErrorRecover(0);
-          if ( Parser_ParseForm(v29, v28, (int)v29, a5) )
+          if ( Parser_ParseForm(v29, v28, (int)(intptr_t)v29, a5) )
             *error = 1;
           if ( theValue[1] == 4 && !multifieldFlag && !*error )
           {
-            Rules_PrintErrorID((int)aDefault_0, 1, 1);
-            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheDefaultValu, v30);
+            Rules_PrintErrorID((int)(intptr_t)aDefault_0, 1, 1);
+            Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheDefaultValu, v30);
             *error = 1;
 LABEL_47:
-            exprToFree = (_WORD *)oldDefaultList;
+            exprToFree = (_WORD *)(uintptr_t)oldDefaultList;
             goto LABEL_9;
           }
           if ( *error )
@@ -820,25 +820,25 @@ LABEL_47:
           newExpr = AST_BuildExpressionFromValue(theValue);
           defaultList = AST_AppendNodeList(defaultList, newExpr);
         }
-        while ( *(_DWORD *)(v32 + 10) );
+        while ( *(_DWORD *)(uintptr_t)(v32 + 10) );
         AST_Free(oldDefaultList);
         return defaultList;
       }
     }
-    Rules_PrintErrorID((int)aDefault_0, 1, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheDefaultValu, v24);
+    Rules_PrintErrorID((int)(intptr_t)aDefault_0, 1, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheDefaultValu, v24);
     AST_Free(defaultList);
     return 0;
   }
   while ( 1 )
   {
-    v13 = (_WORD *)Parser_ParseSingleExpression(readSource, (__int16 *)theToken, v11);
+    v13 = (_WORD *)(uintptr_t)Parser_ParseSingleExpression(readSource, (__int16 *)theToken, v11);
     newItem = v13;
     if ( !v13 )
       goto LABEL_10;
     if ( *v13 == 15 || *v13 == 16 )
       break;
-    if ( AST_TreeContainsSpecialTag((int)v13, 0) == 1 )
+    if ( AST_TreeContainsSpecialTag((int)(intptr_t)v13, 0) == 1 )
     {
       AST_Free(defaultList);
       AST_Free(v21);
@@ -874,20 +874,20 @@ LABEL_47:
     Parser_ReportSyntaxError();
     exprToFree = newItem;
 LABEL_9:
-    AST_Free((int)exprToFree);
+    AST_Free((int)(intptr_t)exprToFree);
 LABEL_10:
     AST_Free(defaultList);
     *error = 1;
     return 0;
   }
-  AST_Free((int)newItem);
+  AST_Free((int)(intptr_t)newItem);
   Parser_NextToken(readSource, v18);
   if ( theToken[0] != 101 )
   {
     Parser_ReportSyntaxError();
     IO_OutNewline();
     IO_OutWriteToken(asc_504A54);
-    IO_OutWriteToken((char *)theToken[2]);
+    IO_OutWriteToken((char *)(uintptr_t)theToken[2]);
     *error = 1;
   }
   if ( v19 )
@@ -920,9 +920,9 @@ signed int Module_InitializeDefmodules(void)
 {
   Module_RegisterDefmoduleCommands();
   Module_CreateMainModule();
-  Rules_RegisterConstructType((int)aDefmodule, (int)aDefmodules, 0, (int)Module_ParseDefmoduleConstruct, 0, 0, 0, 0, 0, 0, 0, 0);
-  Rules_RegisterHostFunction(aGetCurrentModu, 119, (int)aGetcurrentmodu, (int)Module_GetCurrentCommand, (int)a00_0);
-  return Rules_RegisterHostFunction(aSetCurrentModu, 119, (int)aSetcurrentmodu, (int)Module_SetCurrentCommand, (int)a11w_0);
+  Rules_RegisterConstructType((int)(intptr_t)aDefmodule, (int)(intptr_t)aDefmodules, 0, (int)(intptr_t)Module_ParseDefmoduleConstruct, 0, 0, 0, 0, 0, 0, 0, 0);
+  Rules_RegisterHostFunction(aGetCurrentModu, 119, (int)(intptr_t)aGetcurrentmodu, (int)(intptr_t)Module_GetCurrentCommand, (int)(intptr_t)a00_0);
+  return Rules_RegisterHostFunction(aSetCurrentModu, 119, (int)(intptr_t)aSetcurrentmodu, (int)(intptr_t)Module_SetCurrentCommand, (int)(intptr_t)a11w_0);
 }
 
 //----- (00491430) --------------------------------------------------------
@@ -932,16 +932,16 @@ int  Module_RegisterItem(int theItem, int allocateFunction, int bloadModuleRefer
   _DWORD *newModuleItem; // eax
   int moduleIndex; // edx
 
-  freeListEntry = *(_DWORD **)(g_ClipsMemoryTable + 128);
+  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 128);
   if ( freeListEntry )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 128);
-    *(_DWORD *)(g_ClipsMemoryTable + 128) = *freeListEntry;
-    newModuleItem = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128) = *freeListEntry;
+    newModuleItem = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    newModuleItem = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
+    newModuleItem = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x20);
   }
   *newModuleItem = theItem;
   newModuleItem[2] = allocateFunction;
@@ -953,10 +953,10 @@ int  Module_RegisterItem(int theItem, int allocateFunction, int bloadModuleRefer
   newModuleItem[7] = 0;
   newModuleItem[1] = moduleIndex;
   if ( g_Module_ItemListTail )
-    *(_DWORD *)(g_Module_ItemListTail + 28) = newModuleItem;
+    *(_DWORD *)(uintptr_t)(g_Module_ItemListTail + 28) = newModuleItem;
   else
-    g_ModuleItemDescriptorListHead = (int)newModuleItem;
-  g_Module_ItemListTail = (int)newModuleItem;
+    g_ModuleItemDescriptorListHead = (int)(intptr_t)newModuleItem;
+  g_Module_ItemListTail = (int)(intptr_t)newModuleItem;
   return newModuleItem[1];
 }
 // 49145F: variable 'a3' is possibly undefined
@@ -988,9 +988,9 @@ int  Module_FindItemByName(int moduleItemName)
   current = g_ModuleItemDescriptorListHead;
   while ( current )
   {
-    if ( !strcmp_(*(_DWORD *)current, moduleItemName) )
+    if ( !strcmp_(*(_DWORD *)(uintptr_t)current, moduleItemName) )
       return current;
-    current = *(_DWORD *)(current + 28);
+    current = *(_DWORD *)(uintptr_t)(current + 28);
   }
   return 0;
 }
@@ -1021,8 +1021,8 @@ int  Module_SetCurrent(int newModule)
     {
       do
       {
-        (*(void (__fastcall **)(int))(changeFunction + 4))(oldModule);
-        changeFunction = *(_DWORD *)(v3 + 12);
+        (*(void (__fastcall **)(int))(uintptr_t)(changeFunction + 4))(oldModule);
+        changeFunction = *(_DWORD *)(uintptr_t)(v3 + 12);
       }
       while ( changeFunction );
     }

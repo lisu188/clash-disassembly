@@ -1,0 +1,10 @@
+{
+ "reverted_functions": {
+  "src/clips/0049B530_0049CD60_clips_004.c": "Rules_LoadStarCommand",
+  "src/clips/004C9E20_004CB620_clips_002.c": "Method_ReplaceCurrentArgumentRefs",
+  "src/runtime/004D35E0_004D4D50_runtime_003.c": "Class_SlotWritablePCommand",
+  "src/runtime/004E03F0_004E1A40_runtime_011.c": "Parser_ResolveInstanceQuerySlotReference",
+  "src/strategic/00455740_004582B0_strategic_003.c": "UnitStack_MoveToBuildingAndCheckArrival"
+ },
+ "reason": "explicit (u)intptr_t step changes gcc -O0 lowering of bool-ish int expressions (setcc/cltq -> branches); value-identical but fails the strict objdump-identity bar, so per plan these sites drop to review residue"
+}

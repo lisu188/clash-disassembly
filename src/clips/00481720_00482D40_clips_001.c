@@ -26,7 +26,7 @@ double  Rules_CoerceFormToNumericArg(__int16 *theArgument, int convertToFloat, _
   }
   if ( theType > 1 )
   {
-    Parser_ReportError(whichArgument, (int)aIntegerOrFlo_0);
+    Parser_ReportError(whichArgument, (int)(intptr_t)aIntegerOrFlo_0);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     returnValue[1] = 1;
@@ -37,7 +37,7 @@ double  Rules_CoerceFormToNumericArg(__int16 *theArgument, int convertToFloat, _
     if ( convertToFloat )
     {
       if ( theType == 1 )
-        theValue = Rules_AddDoubleValue((double)*(int *)(theValue + 16));
+        theValue = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(theValue + 16));
     }
     returnValue[1] = theType;
     returnValue[2] = theValue;
@@ -67,7 +67,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   Rules_RtnUnknown(whichArgument, &valueBuffer, a4);
   if ( theType == 2 || theType == 3 || theType == 8 )
   {
-    if ( !strcmp_(*(_DWORD *)(theValue + 16), aT) || !strcmp_(v5, aT_0) )
+    if ( !strcmp_(*(_DWORD *)(uintptr_t)(theValue + 16), aT) || !strcmp_(v5, aT_0) )
       return defaultLogicalName;
     return v6;
   }
@@ -75,7 +75,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   {
     if ( theType == 1 )
     {
-      integerSymbol = (char *)Rules_LongIntegerToSymbol(*(_DWORD *)(theValue + 16));
+      integerSymbol = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(theValue + 16));
       return Str_Intern(integerSymbol, v11)[4];
     }
     else
@@ -85,7 +85,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   }
   else
   {
-    floatSymbol = (char *)Rules_FloatToSymbol(*(_DWORD *)(theValue + 16), *(double *)(theValue + 16));
+    floatSymbol = (char *)(uintptr_t)Rules_FloatToSymbol(*(_DWORD *)(uintptr_t)(theValue + 16), *(double *)(uintptr_t)(theValue + 16));
     return Str_Intern(floatSymbol, v9)[4];
   }
 }
@@ -107,8 +107,8 @@ int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
   v8 = functionName;
   Rules_RtnUnknown(whichArgument, &valueBuffer, a3);
   if ( theType == 3 || theType == 2 )
-    return *(_DWORD *)(theValue + 16);
-  Parser_ReportError(v3, (int)aFileName);
+    return *(_DWORD *)(uintptr_t)(theValue + 16);
+  Parser_ReportError(v3, (int)(intptr_t)aFileName);
   return 0;
 }
 // 4818A7: variable 'v3' is possibly undefined
@@ -122,12 +122,12 @@ signed int __fastcall Rules_OpenFileErrorMessage(int functionName, int fileName)
   int v6; // ecx
   int v7; // ecx
 
-  Rules_PrintErrorID((int)aArgacces, 2, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasUnableToOpe, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, v6);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_FileError, v7);
+  Rules_PrintErrorID((int)(intptr_t)aArgacces, 2, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWasUnableToOpe, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, v6);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_FileError, v7);
 }
 // 4818E2: variable 'v3' is possibly undefined
 // 4818EE: variable 'v4' is possibly undefined
@@ -151,12 +151,12 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   Rules_RtnUnknown(whichArgument, valueBuffer, a4);
   if ( valueBuffer[1] == 2 )
   {
-    result = Module_FindByName(*(_BYTE **)(theValue + 16));
+    result = Module_FindByName(*(_BYTE **)(uintptr_t)(theValue + 16));
     if ( !result )
     {
-      if ( strcmp_(v6, *(_DWORD *)(theValue + 16)) )
+      if ( strcmp_(v6, *(_DWORD *)(uintptr_t)(theValue + 16)) )
       {
-        Parser_ReportError(1, (int)aDefmoduleNam_0);
+        Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_0);
         *error = 1;
       }
       return 0;
@@ -164,7 +164,7 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   }
   else
   {
-    Parser_ReportError(v4, (int)aDefmoduleNam_0);
+    Parser_ReportError(v4, (int)(intptr_t)aDefmoduleNam_0);
     *error = 1;
     return 0;
   }
@@ -186,7 +186,7 @@ int  Rules_GetConstructNameArg(int constructType, int functionName, double a3)
     Rules_RtnUnknown(1, valueBuffer, a3);
     if ( valueBuffer[1] == 2 )
     {
-      return *(_DWORD *)(valueBuffer[2] + 16);
+      return *(_DWORD *)(uintptr_t)(valueBuffer[2] + 16);
     }
     else
     {
@@ -213,14 +213,14 @@ signed int  Rules_NonexistentArgError(int functionName, int argumentPosition)
   int v8; // ecx
   int v9; // ecx
 
-  Rules_PrintErrorID((int)aArgacces, 3, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReceivedAReque, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument, v7);
+  Rules_PrintErrorID((int)(intptr_t)aArgacces, 3, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReceivedAReque, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForArgument, v7);
   Rules_PrintLongInteger(v8, argumentPosition);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhichIsNonExis, v9);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWhichIsNonExis, v9);
 }
 // 481A44: variable 'v3' is possibly undefined
 // 481A50: variable 'v4' is possibly undefined
@@ -241,9 +241,9 @@ signed int  Rules_ExpectedCountError(int functionName, int expectedNumber)
   int v7; // ecx
   int v8; // ecx
 
-  Rules_PrintErrorID((int)aArgacces, 4, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v4);
+  Rules_PrintErrorID((int)(intptr_t)aArgacces, 4, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v4);
   if ( countRelation )
   {
     if ( countRelation == 1 )
@@ -263,9 +263,9 @@ signed int  Rules_ExpectedCountError(int functionName, int expectedNumber)
   {
     countRelationText = aExpectedExactl;
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)countRelationText, countRelation);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)countRelationText, countRelation);
   Rules_PrintLongInteger(v7, expectedNumber);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentS, v8);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aArgumentS, v8);
 }
 // 481AC4: variable 'v3' is possibly undefined
 // 481AD0: variable 'v4' is possibly undefined
@@ -326,14 +326,14 @@ signed int  Parser_ReportError(int whichArgument, int expectedType)
   int v8; // ecx
   int v9; // ecx
 
-  Rules_PrintErrorID((int)aArgacces, 5, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedArgume, v5);
+  Rules_PrintErrorID((int)(intptr_t)aArgacces, 5, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedArgume, v5);
   Rules_PrintLongInteger(v6, whichArgument);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aToBeOfType, v7);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], expectedType, v8);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503A24, v9);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aToBeOfType, v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], expectedType, v8);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_503A24, v9);
 }
 // 481C44: variable 'v3' is possibly undefined
 // 481C50: variable 'v4' is possibly undefined
@@ -355,9 +355,9 @@ int ** Rules_ReportSymbolTypeError(_BYTE *functionName, int whichArgument)
   result = Rules_MakeSymbol(functionName);
   if ( result )
   {
-    restrictionType = Rules_GetArgRestrictionType((int)result, v4);
+    restrictionType = Rules_GetArgRestrictionType((int)(intptr_t)result, v4);
     typeName = Rules_GetArgTypeName(restrictionType);
-    return (int **)Parser_ReportError(whichArgument, (int)typeName);
+    return (int **)(uintptr_t)Parser_ReportError(whichArgument, (int)(intptr_t)typeName);
   }
   return result;
 }
@@ -376,16 +376,16 @@ signed int  Rules_ExpectedTypeError(int accessFunction, int functionName, int ar
   int v12; // ecx
   int v13; // ecx
 
-  Rules_PrintErrorID((int)aArgacces, 6, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], accessFunction, v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReceivedAReque, v7);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v8);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument, v9);
+  Rules_PrintErrorID((int)(intptr_t)aArgacces, 6, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], accessFunction, v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReceivedAReque, v7);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v8);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aForArgument, v9);
   Rules_PrintLongInteger(v10, argumentPosition);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhichIsNotOfTy, v11);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v12, v12);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503A24, v13);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWhichIsNotOfTy, v11);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v12, v12);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_503A24, v13);
 }
 // 481CF4: variable 'v5' is possibly undefined
 // 481D00: variable 'v6' is possibly undefined
@@ -502,12 +502,12 @@ int * Rules_FindSymbolEntry(_BYTE *str)
   bucket_index = Rules_HashSymbolName(str, 0x3F5u);
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] symbol-lookup table=%08x bucket=%d key=%s\n", g_Clips_SymbolHashTable, bucket_index, str);
-  bucket_entry = *(_DWORD *)(g_Clips_SymbolHashTable + 4 * bucket_index);
+  bucket_entry = *(_DWORD *)(uintptr_t)(g_Clips_SymbolHashTable + 4 * bucket_index);
   while ( bucket_entry )
   {
-    if ( !strcmp_((int)str, *(_DWORD *)(bucket_entry + 16)) )
-      return (int *)bucket_entry;
-    bucket_entry = *(_DWORD *)bucket_entry;
+    if ( !strcmp_((int)(intptr_t)str, *(_DWORD *)(uintptr_t)(bucket_entry + 16)) )
+      return (int *)(uintptr_t)bucket_entry;
+    bucket_entry = *(_DWORD *)(uintptr_t)bucket_entry;
   }
   return 0;
 }
@@ -526,14 +526,14 @@ int __stdcall Rules_AddDoubleValue(double number)
   __int16 flagsWord; // dx
 
   hashValue = Rules_HashDoubleValue(LODWORD(number), SHIDWORD(number), 0x1F7u);
-  curEntry = *(_DWORD *)(4 * hashValue + g_ClipsFloatHashTable);
+  curEntry = *(_DWORD *)(uintptr_t)(4 * hashValue + g_ClipsFloatHashTable);
   prevEntry = 0;
   if ( curEntry )
   {
-    while ( number != *(double *)(curEntry + 16) )
+    while ( number != *(double *)(uintptr_t)(curEntry + 16) )
     {
-      prevEntry = (signed int *)curEntry;
-      curEntry = *(_DWORD *)curEntry;
+      prevEntry = (signed int *)(uintptr_t)curEntry;
+      curEntry = *(_DWORD *)(uintptr_t)curEntry;
       if ( !curEntry )
         goto LABEL_4;
     }
@@ -542,11 +542,11 @@ int __stdcall Rules_AddDoubleValue(double number)
   else
   {
 LABEL_4:
-    freeListHead = *(_DWORD **)(g_ClipsMemoryTable + 96);
+    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeListHead )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 96);
-      *(_DWORD *)(g_ClipsMemoryTable + 96) = *freeListHead;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = *freeListHead;
       allocatedNode = g_ClipsMemFreeListTemp;
     }
     else
@@ -557,15 +557,15 @@ LABEL_4:
     if ( prevEntry )
       *prevEntry = allocatedNode;
     else
-      *(_DWORD *)(g_ClipsFloatHashTable + 4 * hashValue) = allocatedNode;
-    *(_DWORD *)allocatedNode = 0;
-    flagsWord = *(_WORD *)(allocatedNode + 12);
-    *(_DWORD *)(allocatedNode + 4) = 0;
-    *(double *)(allocatedNode + 16) = number;
-    *(_WORD *)(allocatedNode + 12) = flagsWord & 3;
-    *(_DWORD *)(allocatedNode + 12) |= 4 * (hashValue & 0x3FFF);
+      *(_DWORD *)(uintptr_t)(g_ClipsFloatHashTable + 4 * hashValue) = allocatedNode;
+    *(_DWORD *)(uintptr_t)allocatedNode = 0;
+    flagsWord = *(_WORD *)(uintptr_t)(allocatedNode + 12);
+    *(_DWORD *)(uintptr_t)(allocatedNode + 4) = 0;
+    *(double *)(uintptr_t)(allocatedNode + 16) = number;
+    *(_WORD *)(uintptr_t)(allocatedNode + 12) = flagsWord & 3;
+    *(_DWORD *)(uintptr_t)(allocatedNode + 12) |= 4 * (hashValue & 0x3FFF);
     Rules_AddEphemeralHashNode(allocatedNode, &g_Rules_EphemeralFloatListHead, 0, 24);
-    *(_DWORD *)(newFloat + 8) = g_ClipsCurrentEvaluationDepth;
+    *(_DWORD *)(uintptr_t)(newFloat + 8) = g_ClipsCurrentEvaluationDepth;
     return newFloat;
   }
 }
@@ -633,12 +633,12 @@ int * Rules_FindIntegerValue(signed int number)
   int *result; // eax
   int searchValue; // ecx
 
-  result = *(int **)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, 167));
+  result = *(int **)(uintptr_t)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, 167));
   if ( !result )
     return 0;
   while ( searchValue != result[4] )
   {
-    result = (int *)*result;
+    result = (int *)(uintptr_t)*result;
     if ( !result )
       return 0;
   }
@@ -672,25 +672,25 @@ int  Rules_AddBitmapValue(_BYTE *theBitMap, signed int size)
     Rules_ReportSystemError(0, 2);
     IO_RunRouterExitCallbacks();
   }
-  hashValue = Rules_HashBitmapValue((int)theBitMap, 0xA7u, size);
-  curEntry = *(_DWORD *)(g_ClipsBitmapHashTable + 4 * hashValue);
+  hashValue = Rules_HashBitmapValue((int)(intptr_t)theBitMap, 0xA7u, size);
+  curEntry = *(_DWORD *)(uintptr_t)(g_ClipsBitmapHashTable + 4 * hashValue);
   prevEntry = 0;
   savedHash = hashValue;
   if ( curEntry )
   {
     while ( 1 )
     {
-      entrySize = *(unsigned __int16 *)(curEntry + 20);
+      entrySize = *(unsigned __int16 *)(uintptr_t)(curEntry + 20);
       if ( (unsigned __int16)entrySize == size )
       {
         compareCount = size ^ entrySize;
         if ( size > 0 )
         {
           srcPtr = theBitMap;
-          entryData = *(_DWORD *)(curEntry + 16);
+          entryData = *(_DWORD *)(uintptr_t)(curEntry + 16);
           do
           {
-            if ( *(_BYTE *)entryData != *srcPtr )
+            if ( *(_BYTE *)(uintptr_t)entryData != *srcPtr )
               break;
             ++srcPtr;
             ++compareCount;
@@ -701,8 +701,8 @@ int  Rules_AddBitmapValue(_BYTE *theBitMap, signed int size)
         if ( compareCount == size )
           break;
       }
-      prevEntry = (signed int *)curEntry;
-      curEntry = *(_DWORD *)curEntry;
+      prevEntry = (signed int *)(uintptr_t)curEntry;
+      curEntry = *(_DWORD *)(uintptr_t)curEntry;
       if ( !curEntry )
         goto LABEL_10;
     }
@@ -710,11 +710,11 @@ int  Rules_AddBitmapValue(_BYTE *theBitMap, signed int size)
   else
   {
 LABEL_10:
-    free_node = *(_DWORD *)(g_ClipsMemoryTable + 88);
+    free_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 88);
     if ( free_node )
     {
       g_ClipsMemFreeListTemp = free_node;
-      *(_DWORD *)(g_ClipsMemoryTable + 88) = *(_DWORD *)free_node;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 88) = *(_DWORD *)(uintptr_t)free_node;
       allocatedNode = g_ClipsMemFreeListTemp;
     }
     else
@@ -725,17 +725,17 @@ LABEL_10:
     if ( prevEntry )
       *prevEntry = allocatedNode;
     else
-      *(_DWORD *)(g_ClipsBitmapHashTable + 4 * savedHash) = allocatedNode;
+      *(_DWORD *)(uintptr_t)(g_ClipsBitmapHashTable + 4 * savedHash) = allocatedNode;
     dataBuffer = Mem_SmallBlockAlloc(size);
-    *(_DWORD *)curEntry = 0;
-    *(_DWORD *)(curEntry + 4) = 0;
-    flagsWord = *(_WORD *)(curEntry + 12);
-    *(_DWORD *)(curEntry + 16) = dataBuffer;
-    *(_WORD *)(curEntry + 12) = flagsWord & 3;
-    flagsDword = *(_DWORD *)(curEntry + 12);
-    *(_WORD *)(curEntry + 20) = size;
+    *(_DWORD *)(uintptr_t)curEntry = 0;
+    *(_DWORD *)(uintptr_t)(curEntry + 4) = 0;
+    flagsWord = *(_WORD *)(uintptr_t)(curEntry + 12);
+    *(_DWORD *)(uintptr_t)(curEntry + 16) = dataBuffer;
+    *(_WORD *)(uintptr_t)(curEntry + 12) = flagsWord & 3;
+    flagsDword = *(_DWORD *)(uintptr_t)(curEntry + 12);
+    *(_WORD *)(uintptr_t)(curEntry + 20) = size;
     copyIndex = 0;
-    *(_DWORD *)(curEntry + 12) = (4 * (savedHash & 0x3FFF)) | flagsDword;
+    *(_DWORD *)(uintptr_t)(curEntry + 12) = (4 * (savedHash & 0x3FFF)) | flagsDword;
     if ( size > 0 )
     {
       copySrc = theBitMap;
@@ -743,12 +743,12 @@ LABEL_10:
       {
         ++copyIndex;
         byteValue = *copySrc++;
-        *(_BYTE *)(*(_DWORD *)(curEntry + 16) + copyIndex - 1) = byteValue;
+        *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curEntry + 16) + copyIndex - 1) = byteValue;
       }
       while ( copyIndex < size );
     }
     Rules_AddEphemeralHashNode(curEntry, &g_Rules_EphemeralBitmapListHead, 4, 22);
-    *(_DWORD *)(curEntry + 8) = g_ClipsCurrentEvaluationDepth;
+    *(_DWORD *)(uintptr_t)(curEntry + 8) = g_ClipsCurrentEvaluationDepth;
   }
   return curEntry;
 }
@@ -772,28 +772,28 @@ int *Rules_InitAtomTables(void)
   int v7; // ecx
   int *result; // eax
 
-  g_Clips_SymbolHashTable = (int)Mem_SmallBlockAlloc(0xFD4u);
-  g_ClipsFloatHashTable = (int)Mem_SmallBlockAlloc(0x7DCu);
-  g_ClipsIntegerHashTable = (int)Mem_SmallBlockAlloc(0x29Cu);
-  g_ClipsBitmapHashTable = (int)Mem_SmallBlockAlloc(0x29Cu);
+  g_Clips_SymbolHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0xFD4u);
+  g_ClipsFloatHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x7DCu);
+  g_ClipsIntegerHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x29Cu);
+  g_ClipsBitmapHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x29Cu);
   for ( i = 0; i != 4052; i += 4 )
-    *(_DWORD *)(g_Clips_SymbolHashTable + i) = 0;
+    *(_DWORD *)(uintptr_t)(g_Clips_SymbolHashTable + i) = 0;
   for ( j = 0; j != 2012; j += 4 )
-    *(_DWORD *)(g_ClipsFloatHashTable + j) = 0;
+    *(_DWORD *)(uintptr_t)(g_ClipsFloatHashTable + j) = 0;
   for ( k = 0; k != 668; k += 4 )
-    *(_DWORD *)(g_ClipsIntegerHashTable + k) = 0;
+    *(_DWORD *)(uintptr_t)(g_ClipsIntegerHashTable + k) = 0;
   for ( m = 0; m != 668; m += 4 )
-    *(_DWORD *)(g_ClipsBitmapHashTable + m) = 0;
-  g_ClipsTrueSymbol = (int)Str_Intern(aTrue, v0);
-  ++*(_DWORD *)(g_ClipsTrueSymbol + 4);
-  g_ClipsFalseSymbol = (int)Str_Intern(aFalse, v5);
-  ++*(_DWORD *)(g_ClipsFalseSymbol + 4);
-  g_ClipsPositiveInfinitySymbol = (int)Str_Intern(aOo, v6);
-  ++*(_DWORD *)(g_ClipsPositiveInfinitySymbol + 4);
-  g_Clips_NegativeInfinitySymbol = (int)Str_Intern(aOo_0, v7);
-  ++*(_DWORD *)(g_Clips_NegativeInfinitySymbol + 4);
+    *(_DWORD *)(uintptr_t)(g_ClipsBitmapHashTable + m) = 0;
+  g_ClipsTrueSymbol = (int)(intptr_t)Str_Intern(aTrue, v0);
+  ++*(_DWORD *)(uintptr_t)(g_ClipsTrueSymbol + 4);
+  g_ClipsFalseSymbol = (int)(intptr_t)Str_Intern(aFalse, v5);
+  ++*(_DWORD *)(uintptr_t)(g_ClipsFalseSymbol + 4);
+  g_ClipsPositiveInfinitySymbol = (int)(intptr_t)Str_Intern(aOo, v6);
+  ++*(_DWORD *)(uintptr_t)(g_ClipsPositiveInfinitySymbol + 4);
+  g_Clips_NegativeInfinitySymbol = (int)(intptr_t)Str_Intern(aOo_0, v7);
+  ++*(_DWORD *)(uintptr_t)(g_Clips_NegativeInfinitySymbol + 4);
   result = Rules_AddIntegerValue(0);
-  g_CLIPS_IntegerZeroValueNode = (int)result;
+  g_CLIPS_IntegerZeroValueNode = (int)(intptr_t)result;
   ++result[1];
   return result;
 }
@@ -945,7 +945,7 @@ int  Rules_HashBitmapValue(int bitMap, unsigned int range, unsigned int length)
     {
       chunkDest = chunkBuffer;
       chunkDestEnd = chunkBuffer + 1;
-      chunkSrc = (char *)(byteIndex + bitMapBase);
+      chunkSrc = (char *)(uintptr_t)(byteIndex + bitMapBase);
       do
       {
         chunkDest = (int *)((char *)chunkDest + 1);
@@ -964,7 +964,7 @@ int  Rules_HashBitmapValue(int bitMap, unsigned int range, unsigned int length)
   {
     ++tailPtr;
     ++byteIndex;
-    tally += *(unsigned __int8 *)(tailPtr - 1);
+    tally += *(unsigned __int8 *)(uintptr_t)(tailPtr - 1);
   }
   hashValue = tally % hashRange;
   if ( ((tally % hashRange) & 0x80000000) != 0 )
@@ -980,19 +980,19 @@ int  Rules_DecrementSymbolCount(int result, int a2)
   int newCount; // ebx
 
   theSymbol = result;
-  if ( *(int *)(result + 4) < 0 )
+  if ( *(int *)(uintptr_t)(result + 4) < 0 )
   {
     Rules_ReportSystemError(a2, 3);
     result = IO_RunRouterExitCallbacks();
   }
-  if ( !*(_DWORD *)(theSymbol + 4) )
+  if ( !*(_DWORD *)(uintptr_t)(theSymbol + 4) )
   {
     Rules_ReportSystemError(a2, 4);
     result = IO_RunRouterExitCallbacks();
   }
-  newCount = *(_DWORD *)(theSymbol + 4) - 1;
-  *(_DWORD *)(theSymbol + 4) = newCount;
-  if ( !newCount && (*(_BYTE *)(theSymbol + 12) & 1) == 0 )
+  newCount = *(_DWORD *)(uintptr_t)(theSymbol + 4) - 1;
+  *(_DWORD *)(uintptr_t)(theSymbol + 4) = newCount;
+  if ( !newCount && (*(_BYTE *)(uintptr_t)(theSymbol + 12) & 1) == 0 )
     return Rules_AddEphemeralHashNode(theSymbol, &g_Rules_EphemeralSymbolListHead, 10, 20);
   return result;
 }
@@ -1006,14 +1006,14 @@ int  Rules_DecrementFloatCount(int result, int a2)
   int newCount; // ecx
 
   theFloat = result;
-  if ( *(int *)(result + 4) <= 0 )
+  if ( *(int *)(uintptr_t)(result + 4) <= 0 )
   {
     Rules_ReportSystemError(a2, 5);
     result = IO_RunRouterExitCallbacks();
   }
-  newCount = *(_DWORD *)(theFloat + 4) - 1;
-  *(_DWORD *)(theFloat + 4) = newCount;
-  if ( !newCount && (*(_BYTE *)(theFloat + 12) & 1) == 0 )
+  newCount = *(_DWORD *)(uintptr_t)(theFloat + 4) - 1;
+  *(_DWORD *)(uintptr_t)(theFloat + 4) = newCount;
+  if ( !newCount && (*(_BYTE *)(uintptr_t)(theFloat + 12) & 1) == 0 )
     return Rules_AddEphemeralHashNode(theFloat, &g_Rules_EphemeralFloatListHead, 0, 24);
   return result;
 }
@@ -1026,14 +1026,14 @@ int  Rules_DecrementIntegerCount(int result, int a2)
   int newCount; // ecx
 
   theInteger = result;
-  if ( *(int *)(result + 4) <= 0 )
+  if ( *(int *)(uintptr_t)(result + 4) <= 0 )
   {
     Rules_ReportSystemError(a2, 6);
     result = IO_RunRouterExitCallbacks();
   }
-  newCount = *(_DWORD *)(theInteger + 4) - 1;
-  *(_DWORD *)(theInteger + 4) = newCount;
-  if ( !newCount && (*(_BYTE *)(theInteger + 12) & 1) == 0 )
+  newCount = *(_DWORD *)(uintptr_t)(theInteger + 4) - 1;
+  *(_DWORD *)(uintptr_t)(theInteger + 4) = newCount;
+  if ( !newCount && (*(_BYTE *)(uintptr_t)(theInteger + 12) & 1) == 0 )
     return Rules_AddEphemeralHashNode(theInteger, &g_Rules_EphemeralIntegerListHead, 0, 20);
   return result;
 }
@@ -1046,19 +1046,19 @@ int  Rules_DecrementBitmapCount(int result, int a2)
   int newCount; // ebx
 
   theBitMap = result;
-  if ( *(int *)(result + 4) < 0 )
+  if ( *(int *)(uintptr_t)(result + 4) < 0 )
   {
     Rules_ReportSystemError(a2, 7);
     result = IO_RunRouterExitCallbacks();
   }
-  if ( !*(_DWORD *)(theBitMap + 4) )
+  if ( !*(_DWORD *)(uintptr_t)(theBitMap + 4) )
   {
     Rules_ReportSystemError(a2, 8);
     result = IO_RunRouterExitCallbacks();
   }
-  newCount = *(_DWORD *)(theBitMap + 4) - 1;
-  *(_DWORD *)(theBitMap + 4) = newCount;
-  if ( !newCount && (*(_BYTE *)(theBitMap + 12) & 1) == 0 )
+  newCount = *(_DWORD *)(uintptr_t)(theBitMap + 4) - 1;
+  *(_DWORD *)(uintptr_t)(theBitMap + 4) = newCount;
+  if ( !newCount && (*(_BYTE *)(uintptr_t)(theBitMap + 12) & 1) == 0 )
     return Rules_AddEphemeralHashNode(theBitMap, &g_Rules_EphemeralBitmapListHead, 4, 22);
   return result;
 }
@@ -1072,12 +1072,12 @@ _DWORD * Rules_RemoveHashNode(int theValue, int theTable, int type, int size)
   _DWORD *prevEntry; // edi
   _DWORD *result; // eax
 
-  curEntry = *(_DWORD **)(theTable + 4 * (*(_DWORD *)(theValue + 12) << 16 >> 18));
+  curEntry = *(_DWORD **)(uintptr_t)(theTable + 4 * (*(_DWORD *)(uintptr_t)(theValue + 12) << 16 >> 18));
   prevEntry = 0;
-  while ( curEntry != (_DWORD *)theValue )
+  while ( curEntry != (_DWORD *)(uintptr_t)theValue )
   {
     prevEntry = curEntry;
-    curEntry = (_DWORD *)*curEntry;
+    curEntry = (_DWORD *)(uintptr_t)*curEntry;
     if ( !curEntry )
     {
       Rules_ReportSystemError(0, 9);
@@ -1087,18 +1087,18 @@ _DWORD * Rules_RemoveHashNode(int theValue, int theTable, int type, int size)
   if ( prevEntry )
     *prevEntry = *curEntry;
   else
-    *(_DWORD *)(4 * (*(_DWORD *)(theValue + 12) << 16 >> 18) + theTable) = *(_DWORD *)theValue;
+    *(_DWORD *)(uintptr_t)(4 * (*(_DWORD *)(uintptr_t)(theValue + 12) << 16 >> 18) + theTable) = *(_DWORD *)(uintptr_t)theValue;
   if ( type == 2 )
   {
-    Mem_SmallBlockFree(*(_DWORD **)(theValue + 16), strlen(*(const char **)(theValue + 16)) + 1);
+    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theValue + 16), strlen(*(const char **)(uintptr_t)(theValue + 16)) + 1);
   }
   else if ( type == 19 )
   {
-    Mem_SmallBlockFree(*(_DWORD **)(theValue + 16), *(unsigned __int16 *)(theValue + 20));
+    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theValue + 16), *(unsigned __int16 *)(uintptr_t)(theValue + 20));
   }
   g_ClipsMemFreeListTemp = theValue;
-  *(_DWORD *)theValue = *(_DWORD *)(g_ClipsMemoryTable + 4 * size);
-  result = (_DWORD *)(g_ClipsMemoryTable + 4 * size);
+  *(_DWORD *)(uintptr_t)theValue = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * size);
+  result = (_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * size);
   *result = g_ClipsMemFreeListTemp;
   return result;
 }
@@ -1113,25 +1113,25 @@ int  Rules_AddEphemeralHashNode(int theHashNode, _DWORD *theEphemeralList, int a
   int link_node; // eax
   int result; // eax
 
-  if ( *(_DWORD *)(theHashNode + 4) )
+  if ( *(_DWORD *)(uintptr_t)(theHashNode + 4) )
   {
     Rules_ReportSystemError(averageContentsSize, 10);
     IO_RunRouterExitCallbacks();
   }
-  *(_BYTE *)(theHashNode + 12) |= 1u;
-  free_node = *(_DWORD *)(g_ClipsMemoryTable + 32);
+  *(_BYTE *)(uintptr_t)(theHashNode + 12) |= 1u;
+  free_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( free_node )
   {
     g_ClipsMemFreeListTemp = free_node;
-    *(_DWORD *)(g_ClipsMemoryTable + 32) = *(_DWORD *)free_node;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *(_DWORD *)(uintptr_t)free_node;
     link_node = g_ClipsMemFreeListTemp;
   }
   else
   {
     link_node = Mem_HeapAllocWithRetry((_DWORD *)8);
   }
-  *(_DWORD *)link_node = theHashNode;
-  *(_DWORD *)(link_node + 4) = *theEphemeralList;
+  *(_DWORD *)(uintptr_t)link_node = theHashNode;
+  *(_DWORD *)(uintptr_t)(link_node + 4) = *theEphemeralList;
   *theEphemeralList = link_node;
   result = ++g_ClipsEphemeralItemCount;
   g_ClipsEphemeralItemBytes += hashNodeSize + 8 + averageContentsSize;
@@ -1180,8 +1180,8 @@ int  Rules_RemoveEphemeralHashNodes(uintptr_t result, uintptr_t theTable, int ha
       {
         Rules_RemoveHashNode((int)object, (int)theTable, hashNodeType, hashNodeSize);
         g_ClipsMemFreeListTemp = (int)node;
-        *(_DWORD *)node = *(_DWORD *)(g_ClipsMemoryTable + 32);
-        *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+        *(_DWORD *)node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
         if ( previous )
           *(_DWORD *)(previous + 4) = (int)next;
         else
@@ -1195,8 +1195,8 @@ int  Rules_RemoveEphemeralHashNodes(uintptr_t result, uintptr_t theTable, int ha
       {
         *(_BYTE *)(object + 12) &= ~1u;
         g_ClipsMemFreeListTemp = (int)node;
-        *(_DWORD *)node = *(_DWORD *)(g_ClipsMemoryTable + 32);
-        *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+        *(_DWORD *)node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
         if ( previous )
           *(_DWORD *)(previous + 4) = (int)next;
         else
@@ -1285,14 +1285,14 @@ int ** Rules_GetNextSymbolMatch(int **searchString, int length, int anywhere, in
     *commonPrefix = 0;
   if ( prevSymbol )
   {
-    prevBucketIndex = (_DWORD)prevSymbol[3] << 16 >> 18;
+    prevBucketIndex = (_DWORD)(intptr_t)prevSymbol[3] << 16 >> 18;
     curSymbol = *prevSymbol;
     bucketIndex = prevBucketIndex;
   }
   else
   {
     bucketIndex = 0;
-    curSymbol = *(int ***)g_Clips_SymbolHashTable;
+    curSymbol = *(int ***)(uintptr_t)g_Clips_SymbolHashTable;
   }
   bucketOffset = 4 * bucketIndex;
   while ( 1 )
@@ -1304,10 +1304,10 @@ int ** Rules_GetNextSymbolMatch(int **searchString, int length, int anywhere, in
       ++bucketIndex;
       if ( nextBucketOffset >= 4052 )
         return 0;
-      curSymbol = *(int ***)(nextBucketOffset + g_Clips_SymbolHashTable);
+      curSymbol = *(int ***)(uintptr_t)(nextBucketOffset + g_Clips_SymbolHashTable);
     }
     symbolName = curSymbol[4];
-    if ( *(_BYTE *)symbolName != 40 && ((_BYTE)curSymbol[3] & 1) == 0 )
+    if ( *(_BYTE *)symbolName != 40 && ((_BYTE)(intptr_t)curSymbol[3] & 1) == 0 )
       break;
 LABEL_9:
     curSymbol = (int **)*curSymbol;

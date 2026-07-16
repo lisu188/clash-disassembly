@@ -92,54 +92,54 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int needMenuFadeIn; // [esp+211Ch] [ebp-20h]
   char typedChar; // [esp+2120h] [ebp-1Ch]
 
-  Debug_Log(a1, a2, (DWORD)a3, (int)aStartmenu);
-  Surface = (_DWORD *)Mem_Alloc(188, 0, 0, 0);
+  Debug_Log(a1, a2, (DWORD)(intptr_t)a3, (int)(intptr_t)aStartmenu);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, 0, 0);
   if ( Surface )
   {
     LOBYTE(a2) = -32;
-    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   }
-  g_PrimaryRenderSurface = (int)Surface;
-  UI_StartAnims(0, a2, (DWORD)a3);
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 1);
+  g_PrimaryRenderSurface = (int)(intptr_t)Surface;
+  UI_StartAnims(0, a2, (DWORD)(intptr_t)a3);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 1);
   defaultRenderHook = Render_DefaultRH;
   previousRenderHook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(0, 0, (DWORD)a3, (int)aSetrhS08x_15, aStdrh_10, Render_DefaultRH);
-  DD_Pump((int)g_RenderState, a2);
+  Debug_Log(0, 0, (DWORD)(intptr_t)a3, (int)(intptr_t)aSetrhS08x_15, aStdrh_10, Render_DefaultRH);
+  DD_Pump((int)(intptr_t)g_RenderState, a2);
   needMenuFadeIn = 1;
   do
   {
-    mainMenuSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+    mainMenuSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
     if ( mainMenuSpriteSet )
       mainMenuSpriteSet = DLXSpriteSet_Load(mainMenuSpriteSet, "menu\\main.s32");
-    g_PlayGameMenuSpriteSetHandle = (int)mainMenuSpriteSet;
+    g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)mainMenuSpriteSet;
     Render_LoadPCXImage(g_PrimaryRenderSurface, aMenuMain_gfx, 0, (uintptr_t)g_MenuScreenPaletteBuffer);
-    Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)g_MenuScreenPaletteBuffer, v12, (DWORD)a3);
+    Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)(intptr_t)g_MenuScreenPaletteBuffer, v12, (DWORD)(intptr_t)a3);
     if ( needMenuFadeIn && g_Options_MusicEnabledFlag )
       g_MainMenuMusicHandle = Sound_PlayNamedSfxFile(aMusicMenu, 64);
-    DD_Pump((int)g_RenderState, 0);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
     if ( needMenuFadeIn )
       Palette_ApplyDefaultPalette((int *)&g_MainRenderDevice);
-    DD_Pump((int)g_RenderState, 0);
-    Debug_Log(0, 0, (DWORD)a3, (int)aDraw1);
+    DD_Pump((int)(intptr_t)g_RenderState, 0);
+    Debug_Log(0, 0, (DWORD)(intptr_t)a3, (int)(intptr_t)aDraw1);
     Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
-    Debug_Log(0, 0, (DWORD)a3, (int)aDraw2);
+    Debug_Log(0, 0, (DWORD)(intptr_t)a3, (int)(intptr_t)aDraw2);
     Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
-    Debug_Log(0, 0, (DWORD)a3, (int)aDrawend);
+    Debug_Log(0, 0, (DWORD)(intptr_t)a3, (int)(intptr_t)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
     mainMenuWidgetOffset = 0;
     qmemcpy(mainMenuWidgetTable, g_MainMenuButtonWidgetsTemplate, sizeof(g_MainMenuButtonWidgetsTemplate));
     do
     {
-      a3 = (char *)((unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v121 + mainMenuWidgetOffset));
+      a3 = (char *)(uintptr_t)((unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v121 + mainMenuWidgetOffset));
       *(_DWORD *)((char *)v121 + mainMenuWidgetOffset) = a3;
       mainMenuSecondLabelOffset = *(_DWORD *)((char *)&v121[1] + mainMenuWidgetOffset);
       mainMenuWidgetOffset += 53;
       *(_DWORD *)((char *)v119 + mainMenuWidgetOffset) = (unsigned __int8)g_LanguageIndex + mainMenuSecondLabelOffset;
     }
     while ( mainMenuWidgetOffset != 371 );
-    a2 = (signed int)&g_MainRenderDevice;
+    a2 = (signed int)(intptr_t)&g_MainRenderDevice;
     g_RenderDevice = &g_MainRenderDevice;
     UIWidgetTable_InitDrawStates(mainMenuWidgetTable);
     if ( needMenuFadeIn )
@@ -148,17 +148,17 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       Palette_FadeInFromBlack((int *)&g_MainRenderDevice, g_MenuScreenPaletteBuffer, 60);
     }
     g_PlayGameMenuExitRequested = 0;
-    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-    g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-    Render_Present((int)g_RenderState);
+    RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
+    RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+    g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+    Render_Present((int)(intptr_t)g_RenderState);
     needMenuFadeIn = 0;
     if ( !g_PlayGameMenuExitRequested )
     {
-      a2 = (signed int)g_RenderState;
+      a2 = (signed int)(intptr_t)g_RenderState;
       do
       {
-        DD_Pump((int)g_RenderState, 0);
+        DD_Pump((int)(intptr_t)g_RenderState, 0);
         UIWidgetTable_PollHoverAndActions(mainMenuWidgetTable, 0);
       }
       while ( !g_PlayGameMenuExitRequested );
@@ -168,10 +168,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     switch ( g_MainMenuRequestedScreen )
     {
       case MAIN_MENU_REQUEST_CAMPAIGN:
-        campaignSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+        campaignSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
         if ( campaignSpriteSet )
           campaignSpriteSet = DLXSpriteSet_Load(campaignSpriteSet, "menu\\kamp.s32");
-        g_PlayGameMenuSpriteSetHandle = (int)campaignSpriteSet;
+        g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)campaignSpriteSet;
         RenderSurface_InvokeSlot48LoadPCX(
           (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
           aMenuMain_gfx_0,
@@ -183,15 +183,15 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(campaignWidgetTable);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
         a3 = (char *)&g_CursorDesc_Default;
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-        Render_Present((int)g_RenderState);
+        RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+        g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+        Render_Present((int)(intptr_t)g_RenderState);
         campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
         {
-          DD_Pump((int)g_RenderState, 0);
+          DD_Pump((int)(intptr_t)g_RenderState, 0);
           UIWidgetTable_PollHoverAndActions(campaignWidgetTable, 0);
           if ( Input_IsKeyPressed(1) )
           {
@@ -211,12 +211,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             LOBYTE(a2) = 1;
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
             needMenuFadeIn = 1;
-            Scenario_LoadMissionByIndexAndPlay(0, 0, (DWORD)&g_CursorDesc_Default, a4);
+            Scenario_LoadMissionByIndexAndPlay(0, 0, (DWORD)(intptr_t)&g_CursorDesc_Default, a4);
           }
           else
           {
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
-            Scenario_LoadMissionByIndexAndPlay((char *)0xA, 0, (DWORD)&g_CursorDesc_Default, a4);
+            Scenario_LoadMissionByIndexAndPlay((char *)0xA, 0, (DWORD)(intptr_t)&g_CursorDesc_Default, a4);
             needMenuFadeIn = 1;
           }
         }
@@ -239,17 +239,17 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_MultiplayerSelectedMapIndex = 0;
         g_MpEditNameSlotIndex = -1;
         g_MultiplayerOpponentListScrollOffset = 0;
-        multiplayerSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+        multiplayerSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
         if ( multiplayerSpriteSet )
           multiplayerSpriteSet = DLXSpriteSet_Load(multiplayerSpriteSet, aMenuMultipl_s32);
-        g_PlayGameMenuSpriteSetHandle = (int)multiplayerSpriteSet;
-        a2 = (signed int)g_MenuScreenPaletteBuffer;
-        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuMultipl_gf);
+        g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)multiplayerSpriteSet;
+        a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
+        (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuMultipl_gf);
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
-        g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+        g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
         MultiplayerSetup_RedrawPlayerSlotIcons();
-        (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
         for ( j = 0; j < 5; ++j )
           MultiplayerSetup_RepaintPlayerSlotRow(j, j + 1, 0);
         MultiplayerSetup_RedrawOpponentNameList();
@@ -257,14 +257,14 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(multiplayerWidgetTable);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-        Render_Present((int)g_RenderState);
+        RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
+        RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+        g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+        Render_Present((int)(intptr_t)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)g_RenderState, 0);
-          if ( DD_IsFlipping((int)g_RenderState)
+          DD_Pump((int)(intptr_t)g_RenderState, 0);
+          if ( DD_IsFlipping((int)(intptr_t)g_RenderState)
             && g_MouseCursorRawX >> g_CursorCoordShift >= 176
             && g_MouseCursorRawX >> g_CursorCoordShift <= 236
             && (unsigned int)(((g_MouseCursorRawY >> g_CursorCoordShift) - 129) / 53) <= 4 )
@@ -274,9 +274,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             g_MultiplayerPlayerSlotTypes[multiplayer_player_type_slot] = ((unsigned __int8)g_MultiplayerPlayerSlotTypes[multiplayer_player_type_slot] + 1) % 6;
             MultiplayerSetup_RedrawPlayerSlotIcons();
             MultiplayerSetup_RepaintPlayerSlotRow(multiplayer_player_type_slot, 0, 0);
-            Render_Begin((int)g_RenderState, 0);
+            Render_Begin((int)(intptr_t)g_RenderState, 0);
           }
-          if ( DD_IsFlipping((int)g_RenderState) )
+          if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
           {
             if ( g_MouseCursorRawX >> g_CursorCoordShift >= 239 && g_MouseCursorRawX >> g_CursorCoordShift <= 339 )
             {
@@ -333,7 +333,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               {
                 nameCharPtr = &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos--];
                 nameTailLength = strlen(nameCharPtr) + 1;
-                a3 = (char *)g_PlayerNameEditCaretPos;
+                a3 = (char *)(uintptr_t)g_PlayerNameEditCaretPos;
                 LOBYTE(a2) = nameTailLength;
                 memmove_(
                   &g_MultiplayerPlayerNameEditTable[11 * g_MpEditNameSlotIndex + g_PlayerNameEditCaretPos],
@@ -380,7 +380,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               }
             }
           }
-          if ( DD_IsFlipping((int)g_RenderState) )
+          if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
           {
             if ( g_MouseCursorRawX >> g_CursorCoordShift >= 356 && g_MouseCursorRawX >> g_CursorCoordShift <= 477 )
             {
@@ -394,7 +394,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   g_MultiplayerSelectedMapIndex = selectedMapIndex;
                   Audio_PlayButtonSound(aMale_1);
                   MultiplayerSetup_RedrawOpponentNameList();
-                  Render_Begin((int)g_RenderState, 0);
+                  Render_Begin((int)(intptr_t)g_RenderState, 0);
                 }
               }
             }
@@ -409,7 +409,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         if ( g_PlayGameMenuLaunchGameFlag )
         {
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
-          WorldMap_Initialize(0, (DWORD)a3);
+          WorldMap_Initialize(0, (DWORD)(intptr_t)a3);
           for ( multiplayer_player_index = 0; multiplayer_player_index < 5; ++multiplayer_player_index )
           {
             multiplayer_player_state = &multiplayer_player_states[PLAYER_DATA_STRIDE * multiplayer_player_index];
@@ -449,36 +449,36 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             strcpy(multiplayer_player_state + PLAYER_DISPLAY_NAME_OFFSET, &g_MultiplayerPlayerNameEditTable[11 * multiplayer_player_index]);
           }
           Scenario_LoadMultiplayerMapAndSeedPlayers(g_MultiplayerSelectedMapIndex, (uintptr_t)multiplayer_player_states);
-          PlayGame(0, 0, (DWORD)a3, 0, a4);
+          PlayGame(0, 0, (DWORD)(intptr_t)a3, 0, a4);
         }
         break;
       case MAIN_MENU_REQUEST_OPTIONS:
-        optionsSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+        optionsSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
         if ( optionsSpriteSet )
           optionsSpriteSet = DLXSpriteSet_Load(optionsSpriteSet, aMenuOpt_s32);
-        g_PlayGameMenuSpriteSetHandle = (int)optionsSpriteSet;
+        g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)optionsSpriteSet;
         if ( g_LanguageIndex )
         {
           if ( (unsigned __int8)g_LanguageIndex <= 1u )
           {
-            a2 = (signed int)g_MenuScreenPaletteBuffer;
-            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_a_gfx);
+            a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
+            (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_a_gfx);
           }
           else if ( g_LanguageIndex == 2 )
           {
-            a2 = (signed int)g_MenuScreenPaletteBuffer;
-            (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_g_gfx);
+            a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
+            (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_g_gfx);
           }
         }
         else
         {
-          a2 = (signed int)g_MenuScreenPaletteBuffer;
-          (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_p_gfx);
+          a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
+          (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_p_gfx);
         }
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
-        g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-        (*(void (__thiscall **)(int))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))(92);
+        g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
+        (*(void (__thiscall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))(92);
         optionsWidgetOffset = 0;
         qmemcpy(optionsWidgetTable, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
@@ -512,15 +512,15 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         UIWidgetTable_InitDrawStates(optionsWidgetTable);
         Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, optionsFirstLabelOffset);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-        Render_Present((int)g_RenderState);
+        RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
+        RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+        g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+        Render_Present((int)(intptr_t)g_RenderState);
         if ( !g_PlayGameMenuExitRequested )
         {
           do
           {
-            DD_Pump((int)g_RenderState, 0);
+            DD_Pump((int)(intptr_t)g_RenderState, 0);
             Options_AnimateAllSliderThumbs(g_OptionsMenuSliderThumbPositions);
             UIWidgetTable_PollHoverAndActions(optionsWidgetTable, 0);
           }
@@ -553,7 +553,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             Audio_StopMusicWithFade(g_MainMenuMusicHandle);
           Audio_ClearMusicActiveFlag();
         }
-        Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, 0, 0);
+        Options_ApplyRecordSettings((int)(intptr_t)&g_OptionsConfigRecordBase, 0, 0);
         Options_SaveConfigToFile(0, 0);
         Options_DestroySliderThumbList(g_OptionsMenuSliderThumbPositions);
         Render_Pump();
@@ -561,29 +561,29 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         break;
       case MAIN_MENU_REQUEST_LOAD_GAME:
         g_LoadMenuSelectedSlotIndex = -1;
-        loadMenuSpriteSet = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+        loadMenuSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, 0, 0, 0);
         if ( loadMenuSpriteSet )
           loadMenuSpriteSet = DLXSpriteSet_Load(loadMenuSpriteSet, aMenuLoad_s32);
-        g_PlayGameMenuSpriteSetHandle = (int)loadMenuSpriteSet;
-        (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuLoad_gfx);
+        g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)loadMenuSpriteSet;
+        (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuLoad_gfx);
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
-        (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
+        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
         for ( k = 0; k < 10; ++k )
-          LoadMenu_RedrawSaveSlotRow(k, (DWORD)a3);
+          LoadMenu_RedrawSaveSlotRow(k, (DWORD)(intptr_t)a3);
         LoadMenu_RebuildButtonWidgetTemplate();
         qmemcpy(loadMenuWidgetTable, &g_LoadMenuButtonWidgetsTemplate, 0x9Fu);
         g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(loadMenuWidgetTable);
         g_PlayGameMenuExitRequested = 0;
-        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)g_MenuScreenPaletteBuffer, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
-        g_ActiveCursorDescriptor = (int)&g_CursorDesc_Default;
-        Render_Present((int)g_RenderState);
+        RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
+        RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+        g_ActiveCursorDescriptor = (int)(intptr_t)&g_CursorDesc_Default;
+        Render_Present((int)(intptr_t)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)g_RenderState, 0);
-          if ( DD_IsFlipping((int)g_RenderState) )
+          DD_Pump((int)(intptr_t)g_RenderState, 0);
+          if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
           {
             if ( g_MouseCursorRawX >> g_CursorCoordShift >= 244 && g_MouseCursorRawX >> g_CursorCoordShift <= 410 )
             {
@@ -595,11 +595,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 {
                   g_LoadMenuSelectedSlotIndex = ((g_MouseCursorRawY >> g_CursorCoordShift) - 155) / 22;
                   if ( previous_load_slot != -1 )
-                    LoadMenu_RedrawSaveSlotRow(previous_load_slot, (DWORD)a3);
-                  LoadMenu_RedrawSaveSlotRow(g_LoadMenuSelectedSlotIndex, (DWORD)a3);
+                    LoadMenu_RedrawSaveSlotRow(previous_load_slot, (DWORD)(intptr_t)a3);
+                  LoadMenu_RedrawSaveSlotRow(g_LoadMenuSelectedSlotIndex, (DWORD)(intptr_t)a3);
                 }
-                if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
-                  LoadMenu_HandleSlotConfirmButtonRelease(0, (DWORD)a3);
+                if ( RenderState_IsCursorFlipStillActive((int)(intptr_t)g_RenderState) )
+                  LoadMenu_HandleSlotConfirmButtonRelease(0, (DWORD)(intptr_t)a3);
               }
             }
           }
@@ -615,10 +615,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         if ( selected_load_slot != -1 )
         {
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
-          WorldMap_Initialize((char)selected_load_slot, (DWORD)a3);
+          WorldMap_Initialize((char)selected_load_slot, (DWORD)(intptr_t)a3);
           needMenuFadeIn = 1;
-          SaveSlot_LoadGame(selected_load_slot, (DWORD)a3, a4);
-          PlayGame(0, (char)selected_load_slot, (DWORD)a3, 1, a4);
+          SaveSlot_LoadGame(selected_load_slot, (DWORD)(intptr_t)a3, a4);
+          PlayGame(0, (char)selected_load_slot, (DWORD)(intptr_t)a3, 1, a4);
         }
         break;
       default:
@@ -628,11 +628,11 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   while ( g_MainMenuRequestedScreen );
   CSS_StopSound(g_MainMenuMusicHandle, 1000);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-  Render_UnlockBackbuffer((int)&g_MainRenderDevice);
+  Render_UnlockBackbuffer((int)(intptr_t)&g_MainRenderDevice);
   HIBYTE(defaultRenderHook) = HIBYTE(g_RenderHook);
-  Debug_Log(v33, a2, (DWORD)g_RenderHook, (int)aUnsetrh08x_15);
+  Debug_Log(v33, a2, (DWORD)(intptr_t)g_RenderHook, (int)(intptr_t)aUnsetrh08x_15);
   g_RenderHook = previousRenderHook;
-  return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  return Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
 }
 // 44806D: simplified comparisons for 'eax.4': <0 || >=5 became >=5u
 // 4480F9: simplified comparisons for 'eax.4': <0 || >=B became >=Bu
@@ -746,17 +746,17 @@ int  MultiplayerSetup_RepaintPlayerSlotRow(int slotRow, int a2, int a3)
   rowBottomY16 = rowBaseY + 167;
   rowTopY = (unsigned __int16)(rowBaseY + 144);
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xEFu, 0x153u, rowTopY, rowBottomY16);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, rowTopY, 234, 0x15Du, rowBottomY, 0xEAu, rowTopY);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, rowTopY, 234, 0x15Du, rowBottomY, 0xEAu, rowTopY);
   Render_ReleaseSurface(18, rowBottomY);
   if ( slotRow == g_MpEditNameSlotIndex )
     UI_SetTextCursorPosition(g_PlayerNameEditCaretPos);
   slotType = (unsigned __int8)g_MultiplayerPlayerSlotTypes[slotRow];
   g_RenderDevice = &g_MainRenderDevice;
   if ( slotType != 5 )
-    UI_DrawTextFmt(rowTopY, 239, 339, 53 * slotRow + 144, 3, (int)&g_MultiplayerPlayerNameEditTable[11 * slotRow]);
+    UI_DrawTextFmt(rowTopY, 239, 339, 53 * slotRow + 144, 3, (int)(intptr_t)&g_MultiplayerPlayerNameEditTable[11 * slotRow]);
   result = UI_SetTextCursorPosition(-1);
   if ( cursorOverlayPresented )
-    return Render_Present((int)g_RenderState);
+    return Render_Present((int)(intptr_t)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -836,7 +836,7 @@ int MultiplayerSetup_RedrawPlayerSlotIcons(void)
     iconX = iconLeftX;
     ++slotIndex;
     iconLeftX += 53;
-    result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
+    result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46)
                                                                                       + 52))(
                iconX,
                SpriteForChar,
@@ -850,7 +850,7 @@ int MultiplayerSetup_RedrawPlayerSlotIcons(void)
   }
   while ( slotIndex < 5 );
   if ( cursorOverlayPresented )
-    return Render_Present((int)g_RenderState);
+    return Render_Present((int)(intptr_t)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -875,7 +875,7 @@ int MultiplayerSetup_RedrawOpponentNameList(void)
   g_RenderDevice = &g_MainRenderDevice;
   do
   {
-    result = Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)rowTopY, 356, 0x1DDu, rowTopY + 22, 0x164u, rowTopY);
+    result = Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, (unsigned __int16)rowTopY, 356, 0x1DDu, rowTopY + 22, 0x164u, rowTopY);
     if ( rowIndex + g_MultiplayerOpponentListScrollOffset < 20 )
     {
       if ( rowIndex + g_MultiplayerOpponentListScrollOffset == g_MultiplayerSelectedMapIndex )
@@ -883,14 +883,14 @@ int MultiplayerSetup_RedrawOpponentNameList(void)
       else
         rowSpriteId = 18;
       Render_ReleaseSurface(rowSpriteId, cursorOverlayPresented);
-      result = UI_DrawText(356, rowTopY, (int)&aKarkhan[13 * rowIndex + 13 * g_MultiplayerOpponentListScrollOffset]);
+      result = UI_DrawText(356, rowTopY, (int)(intptr_t)&aKarkhan[13 * rowIndex + 13 * g_MultiplayerOpponentListScrollOffset]);
     }
     ++rowIndex;
     rowTopY += 22;
   }
   while ( rowIndex < 11 );
   if ( cursorOverlayPresented )
-    return Render_Present((int)g_RenderState);
+    return Render_Present((int)(intptr_t)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -930,7 +930,7 @@ void  Options_ApplyMainMenuSliders(int a1, DWORD a2)
   g_OptionsMainMenuSoundVolumeRaw = (unsigned __int16)(16 * g_Options_MouseSpeedSliderValue
                                  - (__CFSHL__((16 * g_Options_MouseSpeedSliderValue) >> 31, 8)
                                   + ((unsigned __int16)((16 * g_Options_MouseSpeedSliderValue) >> 31) << 8))) >> 8;
-  Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, a1, a2);
+  Options_ApplyRecordSettings((int)(intptr_t)&g_OptionsConfigRecordBase, a1, a2);
 }
 // 51860C: using guessed type int dword_51860C;
 // 518654: using guessed type int dword_518654;
@@ -957,24 +957,24 @@ unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int widgetRecord, int a
   int widgetContextBase; // ecx
 
   UIWidget_PlayPressedReleaseAnimation(widgetRecord);
-  if ( (*(_BYTE *)(widgetContextBase - 98) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 98) & 2) == 0 )
   {
-    *(_DWORD *)(widgetContextBase - 98) = 2;
+    *(_DWORD *)(uintptr_t)(widgetContextBase - 98) = 2;
     UIWidget_RefreshActionButtonState(widgetContextBase - 106, widgetContextBase);
   }
-  if ( (*(_BYTE *)(widgetContextBase - 151) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 151) & 2) == 0 )
   {
-    *(_DWORD *)(widgetContextBase - 151) = 2;
+    *(_DWORD *)(uintptr_t)(widgetContextBase - 151) = 2;
     UIWidget_RefreshActionButtonState(widgetContextBase - 159, widgetContextBase);
   }
-  if ( (*(_BYTE *)(widgetContextBase - 204) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 204) & 2) == 0 )
   {
-    *(_DWORD *)(widgetContextBase - 204) = 2;
+    *(_DWORD *)(uintptr_t)(widgetContextBase - 204) = 2;
     UIWidget_RefreshActionButtonState(widgetContextBase - 212, widgetContextBase);
   }
-  if ( (*(_BYTE *)(widgetContextBase - 257) & 1) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 257) & 1) == 0 )
   {
-    *(_DWORD *)(widgetContextBase - 257) = 1;
+    *(_DWORD *)(uintptr_t)(widgetContextBase - 257) = 1;
     UIWidget_RefreshActionButtonState(widgetContextBase - 265, widgetContextBase);
   }
   g_Options_BrightnessSliderValue = 128;
@@ -993,11 +993,11 @@ BOOL  Options_ToggleCheckboxMainMenu(int widgetRecord)
 {
   char toggledState; // dl
 
-  toggledState = *(_BYTE *)(widgetRecord + 8) ^ 1;
-  *(_BYTE *)(widgetRecord + 8) = toggledState;
-  *(_BYTE *)(widgetRecord + 8) = toggledState ^ 2;
-  Audio_PlayButtonSound(*(char **)(widgetRecord + 49));
-  return Render_Begin((int)g_RenderState, 0);
+  toggledState = *(_BYTE *)(uintptr_t)(widgetRecord + 8) ^ 1;
+  *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState;
+  *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState ^ 2;
+  Audio_PlayButtonSound(*(char **)(uintptr_t)(widgetRecord + 49));
+  return Render_Begin((int)(intptr_t)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
@@ -1039,7 +1039,7 @@ void * LoadMenu_RedrawSaveSlotRow(int slotRow, DWORD a2)
   g_RenderDevice = &g_MainRenderDevice;
   rowTopY = (unsigned __int16)(22 * slotRow + 155);
   RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, rowTopY, 22 * slotRow + 175);
-  Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, (unsigned __int16)rowTopY, 244, 0x1A4u, 22 * slotRow + 175, 0xF4u, rowTopY);
+  Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, (unsigned __int16)rowTopY, 244, 0x1A4u, 22 * slotRow + 175, 0xF4u, rowTopY);
   if ( slotRow == g_LoadMenuSelectedSlotIndex )
     rowSpriteId = 18;
   else
@@ -1047,7 +1047,7 @@ void * LoadMenu_RedrawSaveSlotRow(int slotRow, DWORD a2)
   Render_ReleaseSurface(rowSpriteId, (unsigned __int16)(22 * slotRow + 175));
   UI_DrawTextFmt(rowTopY, 244, 410, 22 * slotRow + 155, 3, (int)(uintptr_t)row_label);
   if ( cursorOverlayPresented )
-    Render_Present((int)g_RenderState);
+    Render_Present((int)(intptr_t)g_RenderState);
   Compat_FreeLow32Bytes((int)(uintptr_t)row_label);
   result = previousRenderDevice;
   g_RenderDevice = previousRenderDevice;
@@ -1081,7 +1081,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
   __int16 thumbTravel; // [esp+20h] [ebp-1Ch]
 
   Render_Pump();
-  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  previousResourceHandle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
   previousRenderDevice = g_RenderDevice;
   if ( *((_DWORD *)sliderRecord + 8) )
   {
@@ -1094,7 +1094,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
   }
   else
   {
-    Surface = (_DWORD *)Mem_Alloc(188, v4, a2, a3);
+    Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v4, a2, a3);
     if ( Surface )
     {
       SpriteWidth = DLX_GetSpriteWidth(**((_DWORD **)sliderRecord + 5), sliderRecord[12]);
@@ -1109,7 +1109,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
   }
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar(**((_DWORD **)sliderRecord + 5), *((_DWORD *)sliderRecord + 6));
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     *((_DWORD *)sliderRecord + 2),
     SpriteForChar,
     -1,
@@ -1120,8 +1120,8 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
     0,
     0);
   g_RenderDevice = previousRenderDevice;
-  Render_Present((int)g_RenderState);
-  result = Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
+  Render_Present((int)(intptr_t)g_RenderState);
+  result = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
   if ( *((_DWORD *)sliderRecord + 7) )
     return (*((int (**)(void))sliderRecord + 7))();
   return result;
@@ -1147,58 +1147,58 @@ unsigned int  Options_AnimateSliderThumbDrag(int sliderRecord)
   unsigned __int16 SpriteHeight; // ax
   char v13; // cl
 
-  result = DD_IsFlipping((int)g_RenderState);
+  result = DD_IsFlipping((int)(intptr_t)g_RenderState);
   if ( result )
   {
-    thumbOffsetScaled = *(_DWORD *)(sliderRecord + 12) * (*(_DWORD *)(sliderRecord + 4) - *(_DWORD *)sliderRecord);
-    thumbLeftEdge = *(_DWORD *)sliderRecord + ((thumbOffsetScaled - (__CFSHL__(thumbOffsetScaled >> 31, 8) + (thumbOffsetScaled >> 31 << 8))) >> 8);
+    thumbOffsetScaled = *(_DWORD *)(uintptr_t)(sliderRecord + 12) * (*(_DWORD *)(uintptr_t)(sliderRecord + 4) - *(_DWORD *)(uintptr_t)sliderRecord);
+    thumbLeftEdge = *(_DWORD *)(uintptr_t)sliderRecord + ((thumbOffsetScaled - (__CFSHL__(thumbOffsetScaled >> 31, 8) + (thumbOffsetScaled >> 31 << 8))) >> 8);
     result = g_MouseCursorRawY >> g_CursorCoordShift;
-    if ( g_MouseCursorRawY >> g_CursorCoordShift >= *(_DWORD *)(sliderRecord + 8) )
+    if ( g_MouseCursorRawY >> g_CursorCoordShift >= *(_DWORD *)(uintptr_t)(sliderRecord + 8) )
     {
-      sliderBottomY = (unsigned __int16)DLX_GetSpriteWidth(**(_DWORD **)(sliderRecord + 20), *(_WORD *)(sliderRecord + 24)) + *(_DWORD *)(sliderRecord + 8);
+      sliderBottomY = (unsigned __int16)DLX_GetSpriteWidth(**(_DWORD **)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24)) + *(_DWORD *)(uintptr_t)(sliderRecord + 8);
       result = g_MouseCursorRawY >> g_CursorCoordShift;
       if ( g_MouseCursorRawY >> g_CursorCoordShift <= sliderBottomY )
       {
         if ( thumbLeftEdge > g_MouseCursorRawX >> g_CursorCoordShift
           || g_MouseCursorRawX >> g_CursorCoordShift > (unsigned __int16)DLX_GetSpriteHeight(
-                                                               **(_DWORD **)(sliderRecord + 20),
-                                                               *(_WORD *)(sliderRecord + 24))
+                                                               **(_DWORD **)(uintptr_t)(sliderRecord + 20),
+                                                               *(_WORD *)(uintptr_t)(sliderRecord + 24))
                                          + thumbLeftEdge )
         {
           mouseCursorRawX = g_MouseCursorRawX;
-          sliderMinX = *(_DWORD *)sliderRecord;
-          SpriteHeight = DLX_GetSpriteHeight(**(_DWORD **)(sliderRecord + 20), *(_WORD *)(sliderRecord + 24));
-          result = (int)(((mouseCursorRawX >> v13) - sliderMinX - SpriteHeight / 2) << 8) / (*(_DWORD *)(sliderRecord + 4) - *(_DWORD *)sliderRecord);
+          sliderMinX = *(_DWORD *)(uintptr_t)sliderRecord;
+          SpriteHeight = DLX_GetSpriteHeight(**(_DWORD **)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24));
+          result = (int)(((mouseCursorRawX >> v13) - sliderMinX - SpriteHeight / 2) << 8) / (*(_DWORD *)(uintptr_t)(sliderRecord + 4) - *(_DWORD *)(uintptr_t)sliderRecord);
           if ( result <= 0x100 )
           {
-            *(_DWORD *)(sliderRecord + 12) = result;
-            return Options_DrawSliderThumb((unsigned __int16 *)sliderRecord, sliderRecord, sliderMinX);
+            *(_DWORD *)(uintptr_t)(sliderRecord + 12) = result;
+            return Options_DrawSliderThumb((unsigned __int16 *)(uintptr_t)sliderRecord, sliderRecord, sliderMinX);
           }
         }
         else
         {
           lastMouseX = g_MouseCursorRawX >> g_CursorCoordShift;
           dragStartMouseX = g_MouseCursorRawX >> g_CursorCoordShift;
-          dragBaseValue = *(_DWORD *)(sliderRecord + 12);
+          dragBaseValue = *(_DWORD *)(uintptr_t)(sliderRecord + 12);
           while ( 1 )
           {
-            result = DD_IsFlipping((int)g_RenderState);
+            result = DD_IsFlipping((int)(intptr_t)g_RenderState);
             if ( !result )
               break;
-            DD_Pump((int)g_RenderState, sliderRecord);
+            DD_Pump((int)(intptr_t)g_RenderState, sliderRecord);
             if ( lastMouseX != g_MouseCursorRawX >> g_CursorCoordShift )
             {
-              newThumbValue = (((g_MouseCursorRawX >> g_CursorCoordShift) - dragStartMouseX) << 8) / (*(_DWORD *)(sliderRecord + 4) - *(_DWORD *)sliderRecord) + dragBaseValue;
-              *(_DWORD *)(sliderRecord + 12) = newThumbValue;
+              newThumbValue = (((g_MouseCursorRawX >> g_CursorCoordShift) - dragStartMouseX) << 8) / (*(_DWORD *)(uintptr_t)(sliderRecord + 4) - *(_DWORD *)(uintptr_t)sliderRecord) + dragBaseValue;
+              *(_DWORD *)(uintptr_t)(sliderRecord + 12) = newThumbValue;
               if ( newThumbValue < 0 )
               {
-                *(_DWORD *)(sliderRecord + 12) = 0;
+                *(_DWORD *)(uintptr_t)(sliderRecord + 12) = 0;
               }
               else if ( newThumbValue > 256 )
               {
-                *(_DWORD *)(sliderRecord + 12) = 256;
+                *(_DWORD *)(uintptr_t)(sliderRecord + 12) = 256;
               }
-              Options_DrawSliderThumb((unsigned __int16 *)sliderRecord, sliderRecord, dragBaseValue);
+              Options_DrawSliderThumb((unsigned __int16 *)(uintptr_t)sliderRecord, sliderRecord, dragBaseValue);
               lastMouseX = g_MouseCursorRawX >> g_CursorCoordShift;
             }
           }
@@ -1226,9 +1226,9 @@ unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2,
   {
     do
     {
-      result = (unsigned __int16 *)Options_DrawSliderThumb(currentSlider, a2, a3);
-      a2 = *(_DWORD *)(v4 + 36);
-      currentSlider = (unsigned __int16 *)(v4 + 36);
+      result = (unsigned __int16 *)(uintptr_t)Options_DrawSliderThumb(currentSlider, a2, a3);
+      a2 = *(_DWORD *)(uintptr_t)(v4 + 36);
+      currentSlider = (unsigned __int16 *)(uintptr_t)(v4 + 36);
     }
     while ( a2 != -1 );
   }
@@ -1243,13 +1243,13 @@ _DWORD * Options_AnimateAllSliderThumbs(_DWORD *result)
   int v2; // edx
   int nextLink; // ebx
 
-  currentSlider = (int)result;
+  currentSlider = (int)(intptr_t)result;
   if ( *result != -1 )
   {
     do
     {
-      result = (_DWORD *)Options_AnimateSliderThumbDrag(currentSlider);
-      nextLink = *(_DWORD *)(v2 + 36);
+      result = (_DWORD *)(uintptr_t)Options_AnimateSliderThumbDrag(currentSlider);
+      nextLink = *(_DWORD *)(uintptr_t)(v2 + 36);
       currentSlider = v2 + 36;
     }
     while ( nextLink != -1 );
@@ -1272,7 +1272,7 @@ _DWORD * Options_DestroySliderThumbList(_DWORD *result)
     {
       thumbSurface = currentSlider[8];
       if ( thumbSurface )
-        result = (_DWORD *)(**(int (***)(void))(thumbSurface + 184))();
+        result = (_DWORD *)(uintptr_t)(**(int (***)(void))(uintptr_t)(thumbSurface + 184))();
       currentSlider[8] = 0;
       nextLink = currentSlider[9];
       currentSlider += 9;
@@ -1297,13 +1297,13 @@ void  lodaOptionsCfg(DWORD a1)
   if ( configStream )
   {
     v5 = v3;
-    (*(void (**)(void))(*(_DWORD *)configStream + 20))();
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)configStream + 20))();
     Compat_FileSystemQueryRelease(v4, &configStreamHandle);
-    Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, v5, a1);
+    Options_ApplyRecordSettings((int)(intptr_t)&g_OptionsConfigRecordBase, v5, a1);
   }
   else
   {
-    Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, v3, a1);
+    Options_ApplyRecordSettings((int)(intptr_t)&g_OptionsConfigRecordBase, v3, a1);
   }
 }
 // 44A93C: variable 'v3' is possibly undefined
@@ -1331,18 +1331,18 @@ void  Options_ApplyRecordSettings(int configRecord, int a2, DWORD a3)
   _DWORD paletteArray[260]; // [esp-40Ch] [ebp-410h] BYREF
 
   paletteArray[258] = a2;
-  Palette_SetBrightnessOffset((int)&g_MainRenderDevice, *(char *)(configRecord + 26));
+  Palette_SetBrightnessOffset((int)(intptr_t)&g_MainRenderDevice, *(char *)(uintptr_t)(configRecord + 26));
   _wcpp_4_copy_array__(paletteArray[0]);
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, paletteArray);
-  RenderState_SetMouseSpeed((int)g_RenderState, 8 * *(unsigned __int8 *)(configRecord + 25) + 20, a3);
-  if ( (int *)configRecord == &g_OptionsConfigRecordBase )
+  RenderState_SetMouseSpeed((int)(intptr_t)g_RenderState, 8 * *(unsigned __int8 *)(uintptr_t)(configRecord + 25) + 20, a3);
+  if ( (int *)(uintptr_t)configRecord == &g_OptionsConfigRecordBase )
   {
-    if ( *(_DWORD *)(configRecord + 16) )
+    if ( *(_DWORD *)(uintptr_t)(configRecord + 16) )
       Audio_SetMusicActiveFlag();
     else
       Audio_ClearMusicActiveFlag();
   }
-  else if ( *(_DWORD *)(configRecord + 16) )
+  else if ( *(_DWORD *)(uintptr_t)(configRecord + 16) )
   {
     Audio_StartMainMusicIfStopped(v5, a3);
   }
@@ -1350,7 +1350,7 @@ void  Options_ApplyRecordSettings(int configRecord, int a2, DWORD a3)
   {
     Audio_StopMainMusicIfPlaying();
   }
-  if ( *(_DWORD *)(configRecord + 20) )
+  if ( *(_DWORD *)(uintptr_t)(configRecord + 20) )
     Audio_EnableUnitSounds();
   else
     Audio_DisableUnitSounds();

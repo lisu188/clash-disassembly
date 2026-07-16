@@ -29,23 +29,23 @@ void __fastcall Compiler_MarkAndEmit(int a1, int theInstance)
   int multifieldPtr; // eax
 
   g_ClipsBsaveInstanceDataSpace += 8;
-  *(_BYTE *)(*(_DWORD *)(theInstance + 28) + 12) |= 2u;
-  *(_BYTE *)(**(_DWORD **)(theInstance + 44) + 12) |= 2u;
+  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 28) + 12) |= 2u;
+  *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(theInstance + 44) + 12) |= 2u;
   slotIndex = 0;
   slotOffset = 0;
-  g_ClipsBsaveInstanceDataSpace += 8 * *(_DWORD *)(*(_DWORD *)(theInstance + 44) + 72) + 16;
-  while ( slotIndex < *(_DWORD *)(*(_DWORD *)(theInstance + 44) + 72) )
+  g_ClipsBsaveInstanceDataSpace += 8 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 72) + 16;
+  while ( slotIndex < *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 72) )
   {
-    slotPtr = *(_DWORD **)(slotOffset + *(_DWORD *)(theInstance + 72));
-    slotNameSymbol = *(_DWORD *)(*(_DWORD *)(*slotPtr + 8) + 12);
-    *(_BYTE *)(slotNameSymbol + 12) |= 2u;
-    if ( (*(_BYTE *)*slotPtr & 2) != 0 )
+    slotPtr = *(_DWORD **)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(theInstance + 72));
+    slotNameSymbol = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 12);
+    *(_BYTE *)(uintptr_t)(slotNameSymbol + 12) |= 2u;
+    if ( (*(_BYTE *)(uintptr_t)*slotPtr & 2) != 0 )
     {
       fieldIndex = 1;
-      for ( i = 0; ; Compiler_MarkAtomicValueInUse(*(__int16 *)(i + 6 + multifieldPtr + 8), *(_DWORD *)(i + 6 + multifieldPtr + 10)) )
+      for ( i = 0; ; Compiler_MarkAtomicValueInUse(*(__int16 *)(uintptr_t)(i + 6 + multifieldPtr + 8), *(_DWORD *)(uintptr_t)(i + 6 + multifieldPtr + 10)) )
       {
         multifieldPtr = slotPtr[2];
-        if ( fieldIndex > *(_DWORD *)(multifieldPtr + 6) )
+        if ( fieldIndex > *(_DWORD *)(uintptr_t)(multifieldPtr + 6) )
           break;
         ++fieldIndex;
       }
@@ -68,7 +68,7 @@ signed int * Compiler_MarkAtomicValueInUse(int type, int value)
 {
   signed int *result; // eax
 
-  result = (signed int *)value;
+  result = (signed int *)(uintptr_t)value;
   g_ClipsBsaveInstanceDataSpace += 8;
   switch ( type )
   {
@@ -77,7 +77,7 @@ signed int * Compiler_MarkAtomicValueInUse(int type, int value)
     case 2:
     case 3:
     case 8:
-      *(_BYTE *)(value + 12) |= 2u;
+      *(_BYTE *)(uintptr_t)(value + 12) |= 2u;
       break;
     case 7:
       result = Instance_GetQualifiedName(value, type);
@@ -116,20 +116,20 @@ int  Compiler_WriteInstanceRecord(int fp, int theInstance)
 
   instance = theInstance;
   totalValueCount = 0;
-  symbolIndex = *(_DWORD *)(*(_DWORD *)(theInstance + 28) + 12) << 16 >> 18;
+  symbolIndex = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 28) + 12) << 16 >> 18;
   fwrite_(&symbolIndex, 4, fp, 1);
-  symbolIndex = *(_DWORD *)(**(_DWORD **)(instance + 44) + 12) << 16 >> 18;
+  symbolIndex = *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(instance + 44) + 12) << 16 >> 18;
   slotOffset = 0;
   fwrite_(&symbolIndex, 4, fp, 1);
   v5 = fp;
   slotIndex = 0;
-  fwrite_((const void *)(*(_DWORD *)(instance + 44) + 72), 4, v5, 1);
-  while ( slotIndex < *(_DWORD *)(*(_DWORD *)(instance + 44) + 72) )
+  fwrite_((const void *)(uintptr_t)(*(_DWORD *)(uintptr_t)(instance + 44) + 72), 4, v5, 1);
+  while ( slotIndex < *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(instance + 44) + 72) )
   {
-    slotPtr = *(_DWORD **)(*(_DWORD *)(instance + 72) + slotOffset);
-    slotNameIndex = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*slotPtr + 8) + 12) + 12) << 16 >> 18;
-    if ( (*(_BYTE *)*slotPtr & 2) != 0 )
-      fieldCount = *(_DWORD *)(slotPtr[2] + 6);
+    slotPtr = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(instance + 72) + slotOffset);
+    slotNameIndex = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 12) + 12) << 16 >> 18;
+    if ( (*(_BYTE *)(uintptr_t)*slotPtr & 2) != 0 )
+      fieldCount = *(_DWORD *)(uintptr_t)(slotPtr[2] + 6);
     else
       fieldCount = 1;
     slotValueCount = fieldCount;
@@ -144,15 +144,15 @@ int  Compiler_WriteInstanceRecord(int fp, int theInstance)
   slotOffset2 = 0;
   while ( 1 )
   {
-    result = *(_DWORD *)(instance + 44);
-    if ( slotIndex2 >= *(_DWORD *)(result + 72) )
+    result = *(_DWORD *)(uintptr_t)(instance + 44);
+    if ( slotIndex2 >= *(_DWORD *)(uintptr_t)(result + 72) )
       break;
-    slot = *(_DWORD *)(slotOffset2 + *(_DWORD *)(instance + 72));
-    if ( (**(_BYTE **)slot & 2) != 0 )
-      numFields = *(_DWORD *)(*(_DWORD *)(slot + 8) + 6);
+    slot = *(_DWORD *)(uintptr_t)(slotOffset2 + *(_DWORD *)(uintptr_t)(instance + 72));
+    if ( (**(_BYTE **)(uintptr_t)slot & 2) != 0 )
+      numFields = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slot + 8) + 6);
     else
       numFields = 1;
-    LOBYTE(v7) = **(_BYTE **)slot;
+    LOBYTE(v7) = **(_BYTE **)(uintptr_t)slot;
     slotFieldCount = numFields;
     if ( (v7 & 2) != 0 )
     {
@@ -163,7 +163,7 @@ int  Compiler_WriteInstanceRecord(int fp, int theInstance)
         do
         {
           ++fieldIndex;
-          Compiler_WriteAtomicValueRef(*(__int16 *)(fieldOffset + *(_DWORD *)(slot + 8) + 14), *(_DWORD *)(fieldOffset + *(_DWORD *)(slot + 8) + 16), fp, fieldOffset);
+          Compiler_WriteAtomicValueRef(*(__int16 *)(uintptr_t)(fieldOffset + *(_DWORD *)(uintptr_t)(slot + 8) + 14), *(_DWORD *)(uintptr_t)(fieldOffset + *(_DWORD *)(uintptr_t)(slot + 8) + 16), fp, fieldOffset);
           fieldOffset = v13 + 6;
         }
         while ( fieldIndex <= slotFieldCount );
@@ -171,7 +171,7 @@ int  Compiler_WriteInstanceRecord(int fp, int theInstance)
     }
     else
     {
-      Compiler_WriteAtomicValueRef(*(_DWORD *)(slot + 4) << 24 >> 26, *(_DWORD *)(slot + 8), fp, v7);
+      Compiler_WriteAtomicValueRef(*(_DWORD *)(uintptr_t)(slot + 4) << 24 >> 26, *(_DWORD *)(uintptr_t)(slot + 8), fp, v7);
     }
     v7 = slotIndex2 + 1;
     slotOffset2 += 4;
@@ -196,12 +196,12 @@ int  Compiler_WriteAtomicValueRef(int type, int value, int fp, int a4)
   {
     case 0:
     case 1:
-      bucketBits = *(_DWORD *)(value + 12);
+      bucketBits = *(_DWORD *)(uintptr_t)(value + 12);
       goto LABEL_3;
     case 2:
     case 3:
     case 8:
-      bucketBits = *(_DWORD *)(value + 12);
+      bucketBits = *(_DWORD *)(uintptr_t)(value + 12);
       goto LABEL_3;
     case 7:
       typeCode = 8;
@@ -246,9 +246,9 @@ signed int  Rules_ReadInstancesTextFile(
     savedFastLoadFile = IO_GetFastLoadFile();
     IO_SetFastLoadFile(instanceFile);
     Symbol = Rules_MakeSymbol(aMakeInstance_1);
-    AST_NewNode(10, (int)Symbol);
+    AST_NewNode(10, (int)(intptr_t)Symbol);
     readSource = instanceFile;
-    Parser_NextToken(instanceFile, (int)&g_ParserCurrentTokenType);
+    Parser_NextToken(instanceFile, (int)(intptr_t)&g_ParserCurrentTokenType);
     savedUseMessageDispatch = g_Instance_UseMessageDispatchForInit;
     g_Instance_UseMessageDispatchForInit = useMessageDispatch;
     if ( g_ParserCurrentTokenType != 102 )
@@ -258,16 +258,16 @@ signed int  Rules_ReadInstancesTextFile(
         if ( g_ParserCurrentTokenType != 100 )
         {
           Parser_ReportSyntaxError();
-          g_ClipsMemFreeListTemp = (int)v18;
-          *v18 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-          *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = (int)(intptr_t)v18;
+          *v18 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
           fclose_(v18);
           IO_SetFastLoadFile(savedFastLoadFile);
           Lexer_ErrorRecover(1);
           g_Instance_UseMessageDispatchForInit = savedUseMessageDispatch;
           return instanceCount;
         }
-        if ( !Rules_ParseMakeInstanceNode((int)v9, readSource) )
+        if ( !Rules_ParseMakeInstanceNode((int)(intptr_t)v9, readSource) )
         {
           fclose_(v11);
           IO_SetFastLoadFile(savedFastLoadFile);
@@ -276,19 +276,19 @@ signed int  Rules_ReadInstancesTextFile(
           return instanceCount;
         }
         AST_InstallNodeChain(v11);
-        Parser_ParseForm(v13, v12, (int)v13, a5);
+        Parser_ParseForm(v13, v12, (int)(intptr_t)v13, a5);
         AST_DeinstallNodeChain(v14);
         if ( !g_ClipsEvaluationError )
           ++instanceCount;
-        AST_Free(*(_DWORD *)(v15 + 6));
+        AST_Free(*(_DWORD *)(uintptr_t)(v15 + 6));
         Parser_NextToken(readSource, v16);
         if ( g_ParserCurrentTokenType == 102 )
           break;
       }
     }
-    g_ClipsMemFreeListTemp = (int)v9;
-    *v9 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v9;
+    *v9 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
     fclose_(v9);
     IO_SetFastLoadFile(savedFastLoadFile);
     g_Instance_UseMessageDispatchForInit = savedUseMessageDispatch;
@@ -325,12 +325,12 @@ signed int __fastcall Rules_ReportInstanceFileProcessError(int functionName, int
   int v6; // ecx
   int v7; // ecx
 
-  Rules_PrintErrorID((int)aInsfile, 1, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_1, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCouldNotComple, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, v6);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__18, v7);
+  Rules_PrintErrorID((int)(intptr_t)aInsfile, 1, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction_1, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCouldNotComple, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, v6);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__18, v7);
 }
 // 4AD0B2: variable 'v3' is possibly undefined
 // 4AD0BE: variable 'v4' is possibly undefined
@@ -361,17 +361,17 @@ signed int  Rules_ValidateBloadInstancesHeader(int fileName, int a2)
     }
     else
     {
-      Rules_PrintErrorID((int)aInsfile, 3, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, v9);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFileIsNotAComp, v10);
+      Rules_PrintErrorID((int)(intptr_t)aInsfile, 3, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, v9);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFileIsNotAComp, v10);
       return 0;
     }
   }
   else
   {
-    Rules_PrintErrorID((int)aInsfile, 2, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], fileName, v7);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFileIsNotABina, v8);
+    Rules_PrintErrorID((int)(intptr_t)aInsfile, 2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], fileName, v7);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFileIsNotABina, v8);
     return 0;
   }
 }
@@ -412,19 +412,19 @@ signed int  Rules_BloadReadInstanceRecord(int instanceCount, double a2)
   int atomIndex; // [esp+38h] [ebp-20h]
   int slotIndex; // [esp+3Ch] [ebp-1Ch]
 
-  Rules_BloadReadBufferedBytes((int)&bloadIndex, 4u, instanceCount);
-  instanceName = *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * bloadIndex);
-  Rules_BloadReadBufferedBytes((int)&bloadIndex, 4u, v2);
-  classNameSymbol = *(_DWORD *)(g_ClipsBloadSymbolPointerArray + 4 * bloadIndex);
-  Rules_BloadReadBufferedBytes((int)&slotCount, 4u, v4);
-  theDefclass = Class_LookupInScope(*(_BYTE **)(classNameSymbol + 16));
+  Rules_BloadReadBufferedBytes((int)(intptr_t)&bloadIndex, 4u, instanceCount);
+  instanceName = *(_DWORD *)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * bloadIndex);
+  Rules_BloadReadBufferedBytes((int)(intptr_t)&bloadIndex, 4u, v2);
+  classNameSymbol = *(_DWORD *)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * bloadIndex);
+  Rules_BloadReadBufferedBytes((int)(intptr_t)&slotCount, 4u, v4);
+  theDefclass = Class_LookupInScope(*(_BYTE **)(uintptr_t)(classNameSymbol + 16));
   totalAtomCount[1] = theDefclass;
   if ( !theDefclass )
   {
-    Class_ReportLookupError(v6, *(_DWORD *)(classNameSymbol + 16));
+    Class_ReportLookupError(v6, *(_DWORD *)(uintptr_t)(classNameSymbol + 16));
     return 0;
   }
-  if ( slotCount != theDefclass[18] || (newInstance = Instance_BuildInstance(instanceName, (int)theDefclass, 0, a2)) == 0 )
+  if ( slotCount != theDefclass[18] || (newInstance = Instance_BuildInstance(instanceName, (int)(intptr_t)theDefclass, 0, a2)) == 0 )
   {
     Rules_ReportBloadInstanceError(instanceName);
     return 0;
@@ -432,12 +432,12 @@ signed int  Rules_BloadReadInstanceRecord(int instanceCount, double a2)
   if ( !slotCount )
     return 1;
   bsaveSlotValues = Mem_SmallBlockAlloc(8 * slotCount);
-  Rules_BloadReadBufferedBytes((int)bsaveSlotValues, 8 * slotCount, v8);
-  Rules_BloadReadBufferedBytes((int)totalAtomCount, 4u, v9);
+  Rules_BloadReadBufferedBytes((int)(intptr_t)bsaveSlotValues, 8 * slotCount, v8);
+  Rules_BloadReadBufferedBytes((int)(intptr_t)totalAtomCount, 4u, v9);
   if ( totalAtomCount[0] )
   {
     slotValueAtoms = Mem_NewArray(8 * totalAtomCount[0]);
-    Rules_BloadReadBufferedBytes((int)slotValueAtoms, 8 * totalAtomCount[0], v10);
+    Rules_BloadReadBufferedBytes((int)(intptr_t)slotValueAtoms, 8 * totalAtomCount[0], v10);
   }
   slotIndex = 0;
   atomIndex = 0;
@@ -453,10 +453,10 @@ LABEL_12:
   slotOffset = 0;
   while ( 1 )
   {
-    slotPtr = *(int **)(slotOffset + newInstance[18]);
-    if ( *(_DWORD *)(4 * *slotValueCursor + g_ClipsBloadSymbolPointerArray) != *(_DWORD *)(*(_DWORD *)(*slotPtr + 8) + 12) )
+    slotPtr = *(int **)(uintptr_t)(slotOffset + newInstance[18]);
+    if ( *(_DWORD *)(uintptr_t)(4 * *slotValueCursor + g_ClipsBloadSymbolPointerArray) != *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 12) )
       break;
-    Rules_BloadBuildSlotValue(slotValue, &slotValueAtoms[2 * atomIndex], (int)aBloadInstances, slotValueCursor[1]);
+    Rules_BloadBuildSlotValue(slotValue, &slotValueAtoms[2 * atomIndex], (int)(intptr_t)aBloadInstances, slotValueCursor[1]);
     if ( !Instance_PutSlotValue(newInstance, slotPtr, slotValue, a2) )
       break;
     valueCount = slotValueCursor[1];
@@ -467,7 +467,7 @@ LABEL_12:
       goto LABEL_12;
   }
   Rules_ReportBloadInstanceError(instanceName);
-  Instance_DeleteInstance((int)newInstance, a2);
+  Instance_DeleteInstance((int)(intptr_t)newInstance, a2);
   Mem_SmallBlockFree(bsaveSlotValues, 8 * slotCount);
   Mem_SmallBlockRelease(slotValueAtoms, 8 * totalAtomCount[0]);
   return 0;
@@ -488,10 +488,10 @@ signed int  Rules_ReportBloadInstanceError(int instanceName)
   int v4; // ecx
   int v5; // ecx
 
-  Rules_PrintErrorID((int)aInsfile, 4, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionBloadI, v2);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(instanceName + 16), v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfClass_0, v4);
+  Rules_PrintErrorID((int)(intptr_t)aInsfile, 4, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunctionBloadI, v2);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(instanceName + 16), v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOfClass_0, v4);
   return Class_PrintName(v5, 1);
 }
 // 4AD452: variable 'v2' is possibly undefined
@@ -531,11 +531,11 @@ void ** Rules_BloadBuildSlotValue(_DWORD *returnValue, _DWORD *bsaveValues, int 
       endPtr = &v7[2 * valueCount - 2];
       do
       {
-        *(_WORD *)(returnValue[2] + fieldOffset + 14) = *((_WORD *)fieldCursor - 4);
+        *(_WORD *)(uintptr_t)(returnValue[2] + fieldOffset + 14) = *((_WORD *)fieldCursor - 4);
         result = Rules_BloadLookupAtomByIndex(v7, fieldOffset + 6);
         fieldCursor += 2;
-        v7 = (_DWORD *)(v12 + 8);
-        *(_DWORD *)(fieldOffset + returnValue[2] + 10) = result;
+        v7 = (_DWORD *)(uintptr_t)(v12 + 8);
+        *(_DWORD *)(uintptr_t)(fieldOffset + returnValue[2] + 10) = result;
       }
       while ( v7 <= endPtr );
     }
@@ -563,15 +563,15 @@ void ** Rules_BloadLookupAtomByIndex(_DWORD *bsaveValue, int routineName)
   switch ( *bsaveValue )
   {
     case 0:
-      result = *(void ***)(g_Clips_FloatConstantTable + 4 * bsaveValue[1]);
+      result = *(void ***)(uintptr_t)(g_Clips_FloatConstantTable + 4 * bsaveValue[1]);
       break;
     case 1:
-      result = *(void ***)(g_Clips_IntegerConstantTable + 4 * bsaveValue[1]);
+      result = *(void ***)(uintptr_t)(g_Clips_IntegerConstantTable + 4 * bsaveValue[1]);
       break;
     case 2:
     case 3:
     case 8:
-      result = *(void ***)(g_ClipsBloadSymbolPointerArray + 4 * bsaveValue[1]);
+      result = *(void ***)(uintptr_t)(g_ClipsBloadSymbolPointerArray + 4 * bsaveValue[1]);
       break;
     case 5:
       result = 0;
@@ -621,9 +621,9 @@ unsigned int  Rules_BloadReadBufferedBytes(int dataBuffer, unsigned int bufferSi
           do
           {
             ++destCursor;
-            copyByte = *(_BYTE *)(g_ClipsBloadReadBuffer + bytesCopied + g_BloadReadBufferOffset);
+            copyByte = *(_BYTE *)(uintptr_t)(g_ClipsBloadReadBuffer + bytesCopied + g_BloadReadBufferOffset);
             ++bytesCopied;
-            *(_BYTE *)(destCursor - 1) = copyByte;
+            *(_BYTE *)(uintptr_t)(destCursor - 1) = copyByte;
           }
           while ( bytesCopied < bytesAvailable );
         }
@@ -634,10 +634,10 @@ unsigned int  Rules_BloadReadBufferedBytes(int dataBuffer, unsigned int bufferSi
       if ( !g_ClipsBloadReadBuffer )
         goto LABEL_13;
     }
-    for ( result = 0; result < bufferSize; *(_BYTE *)(dataBuffer - 1) = curByte )
+    for ( result = 0; result < bufferSize; *(_BYTE *)(uintptr_t)(dataBuffer - 1) = curByte )
     {
       ++dataBuffer;
-      curByte = *(_BYTE *)(result + g_BloadReadBufferOffset + g_ClipsBloadReadBuffer);
+      curByte = *(_BYTE *)(uintptr_t)(result + g_BloadReadBufferOffset + g_ClipsBloadReadBuffer);
       ++result;
     }
     g_BloadReadBufferOffset += bufferSize;
@@ -664,12 +664,12 @@ LABEL_13:
         IO_RunRouterExitCallbacks();
       }
     }
-    g_ClipsBloadReadBuffer = Mem_HeapAllocWithRetry((_DWORD *)g_Clips_BloadBufferSize);
+    g_ClipsBloadReadBuffer = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)g_Clips_BloadBufferSize);
     Rules_BloadReadBlock(g_ClipsBloadReadBuffer, g_Clips_BloadBufferSize);
-    for ( i = 0; i < bufferSize; *(_BYTE *)(dataBuffer - 1) = bufferByte )
+    for ( i = 0; i < bufferSize; *(_BYTE *)(uintptr_t)(dataBuffer - 1) = bufferByte )
     {
       ++dataBuffer;
-      bufferByte = *(_BYTE *)(g_ClipsBloadReadBuffer + i++);
+      bufferByte = *(_BYTE *)(uintptr_t)(g_ClipsBloadReadBuffer + i++);
     }
     result = g_Clips_BloadBufferSize;
     g_BloadReadBufferOffset = bufferSize;
@@ -705,18 +705,18 @@ signed int Rules_BloadReleaseReadBuffer(void)
 //----- (004AD770) --------------------------------------------------------
 signed int Rules_RegisterMultifieldSlotCommands(void)
 {
-  Rules_RegisterHostFunction(aDirectMvReplac, 98, (int)aDirectmvreplac, (int)Rules_DirectSlotReplaceCommand, (int)a4Wii);
-  Rules_RegisterHostFunction(aDirectMvInsert, 98, (int)aDirectmvinsert, (int)Rules_DirectSlotInsertCommand, (int)a3Wi);
-  Rules_RegisterHostFunction(aDirectMvDelete, 98, (int)aDirectmvdelete, (int)Rules_DirectSlotDeleteCommand, (int)a33iw);
-  Rules_RegisterHostFunction(aMvSlotReplace, 117, (int)aMvslotreplacec, (int)Rules_MvSlotReplaceCommand, (int)a5Uewii);
-  Rules_RegisterHostFunction(aMvSlotInsert, 117, (int)aMvslotinsertco, (int)Rules_MvSlotInsertCommand, (int)a4Uewi);
-  Rules_RegisterHostFunction(aMvSlotDelete, 117, (int)aMvslotdeleteco, (int)Rules_MvSlotDeleteCommand, (int)a44iew);
-  Rules_RegisterHostFunction(aSlotDirectRepl, 98, (int)aDirectmvreplac, (int)Rules_DirectSlotReplaceCommand, (int)a4Wii);
-  Rules_RegisterHostFunction(aSlotDirectInse, 98, (int)aDirectmvinsert, (int)Rules_DirectSlotInsertCommand, (int)a3Wi);
-  Rules_RegisterHostFunction(aSlotDirectDele, 98, (int)aDirectmvdelete, (int)Rules_DirectSlotDeleteCommand, (int)a33iw);
-  Rules_RegisterHostFunction(aSlotReplace, 117, (int)aMvslotreplacec, (int)Rules_MvSlotReplaceCommand, (int)a5Uewii);
-  Rules_RegisterHostFunction(aSlotInsert, 117, (int)aMvslotinsertco, (int)Rules_MvSlotInsertCommand, (int)a4Uewi);
-  return Rules_RegisterHostFunction(aSlotDelete, 117, (int)aMvslotdeleteco, (int)Rules_MvSlotDeleteCommand, (int)a44iew);
+  Rules_RegisterHostFunction(aDirectMvReplac, 98, (int)(intptr_t)aDirectmvreplac, (int)(intptr_t)Rules_DirectSlotReplaceCommand, (int)(intptr_t)a4Wii);
+  Rules_RegisterHostFunction(aDirectMvInsert, 98, (int)(intptr_t)aDirectmvinsert, (int)(intptr_t)Rules_DirectSlotInsertCommand, (int)(intptr_t)a3Wi);
+  Rules_RegisterHostFunction(aDirectMvDelete, 98, (int)(intptr_t)aDirectmvdelete, (int)(intptr_t)Rules_DirectSlotDeleteCommand, (int)(intptr_t)a33iw);
+  Rules_RegisterHostFunction(aMvSlotReplace, 117, (int)(intptr_t)aMvslotreplacec, (int)(intptr_t)Rules_MvSlotReplaceCommand, (int)(intptr_t)a5Uewii);
+  Rules_RegisterHostFunction(aMvSlotInsert, 117, (int)(intptr_t)aMvslotinsertco, (int)(intptr_t)Rules_MvSlotInsertCommand, (int)(intptr_t)a4Uewi);
+  Rules_RegisterHostFunction(aMvSlotDelete, 117, (int)(intptr_t)aMvslotdeleteco, (int)(intptr_t)Rules_MvSlotDeleteCommand, (int)(intptr_t)a44iew);
+  Rules_RegisterHostFunction(aSlotDirectRepl, 98, (int)(intptr_t)aDirectmvreplac, (int)(intptr_t)Rules_DirectSlotReplaceCommand, (int)(intptr_t)a4Wii);
+  Rules_RegisterHostFunction(aSlotDirectInse, 98, (int)(intptr_t)aDirectmvinsert, (int)(intptr_t)Rules_DirectSlotInsertCommand, (int)(intptr_t)a3Wi);
+  Rules_RegisterHostFunction(aSlotDirectDele, 98, (int)(intptr_t)aDirectmvdelete, (int)(intptr_t)Rules_DirectSlotDeleteCommand, (int)(intptr_t)a33iw);
+  Rules_RegisterHostFunction(aSlotReplace, 117, (int)(intptr_t)aMvslotreplacec, (int)(intptr_t)Rules_MvSlotReplaceCommand, (int)(intptr_t)a5Uewii);
+  Rules_RegisterHostFunction(aSlotInsert, 117, (int)(intptr_t)aMvslotinsertco, (int)(intptr_t)Rules_MvSlotInsertCommand, (int)(intptr_t)a4Uewi);
+  return Rules_RegisterHostFunction(aSlotDelete, 117, (int)(intptr_t)aMvslotdeleteco, (int)(intptr_t)Rules_MvSlotDeleteCommand, (int)(intptr_t)a44iew);
 }
 
 //----- (004AD8E0) --------------------------------------------------------
@@ -737,15 +737,15 @@ _DWORD * Rules_MvSlotReplaceCommand(int *returnValue, int a2, double a3)
 
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Rules_ResolveSlotEditInstanceArg((int)aSlotReplace, a2, a3);
+  result = Rules_ResolveSlotEditInstanceArg((int)(intptr_t)aSlotReplace, a2, a3);
   instancePtr = result;
   if ( result )
   {
-    result = (_DWORD *)Rules_ParseMultifieldSlotEditArgs(
+    result = (_DWORD *)(uintptr_t)Rules_ParseMultifieldSlotEditArgs(
                          1u,
-                         (int)aSlotReplace,
-                         *(__int16 **)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10),
-                         (int)result,
+                         (int)(intptr_t)aSlotReplace,
+                         *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
+                         (int)(intptr_t)result,
                          a3,
                          rangeStart,
                          &rangeEnd,
@@ -753,15 +753,15 @@ _DWORD * Rules_MvSlotReplaceCommand(int *returnValue, int a2, double a3)
     slotPtr = result;
     if ( result )
     {
-      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)result);
-      result = (_DWORD *)Rules_MultifieldReplaceRange(newSlotValue, slotValueDesc, rangeEnd, rangeStart[0], newValue, (int)aSlotReplace);
+      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)(intptr_t)result);
+      result = (_DWORD *)(uintptr_t)Rules_MultifieldReplaceRange(newSlotValue, slotValueDesc, rangeEnd, rangeStart[0], newValue, (int)(intptr_t)aSlotReplace);
       if ( result )
       {
         exprType = 4;
         exprValue = newSlotValue;
         exprArgList = 0;
         exprNext = 0;
-        return (_DWORD *)MessageHandler_SendToInstanceAddress(*(_DWORD *)(*slotPtr + 12), (int)instancePtr, (int)&exprType, returnValue, a3);
+        return (_DWORD *)(uintptr_t)MessageHandler_SendToInstanceAddress(*(_DWORD *)(uintptr_t)(*slotPtr + 12), (int)(intptr_t)instancePtr, (int)(intptr_t)&exprType, returnValue, a3);
       }
     }
   }
@@ -788,15 +788,15 @@ _DWORD * Rules_MvSlotInsertCommand(int *returnValue, int a2, double a3)
 
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Rules_ResolveSlotEditInstanceArg((int)aSlotInsert, a2, a3);
+  result = Rules_ResolveSlotEditInstanceArg((int)(intptr_t)aSlotInsert, a2, a3);
   instancePtr = result;
   if ( result )
   {
-    result = (_DWORD *)Rules_ParseMultifieldSlotEditArgs(
+    result = (_DWORD *)(uintptr_t)Rules_ParseMultifieldSlotEditArgs(
                          0,
-                         (int)aSlotInsert,
-                         *(__int16 **)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10),
-                         (int)result,
+                         (int)(intptr_t)aSlotInsert,
+                         *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
+                         (int)(intptr_t)result,
                          a3,
                          insertIndex,
                          0,
@@ -804,15 +804,15 @@ _DWORD * Rules_MvSlotInsertCommand(int *returnValue, int a2, double a3)
     slotPtr = result;
     if ( result )
     {
-      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)result);
-      result = (_DWORD *)Rules_MultifieldInsertRange(newSlotValue, slotValueDesc, v8, insertIndex[0], (int)aSlotInsert);
+      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)(intptr_t)result);
+      result = (_DWORD *)(uintptr_t)Rules_MultifieldInsertRange(newSlotValue, slotValueDesc, v8, insertIndex[0], (int)(intptr_t)aSlotInsert);
       if ( result )
       {
         exprType = 4;
         exprValue = newSlotValue;
         exprArgList = 0;
         exprNext = 0;
-        return (_DWORD *)MessageHandler_SendToInstanceAddress(*(_DWORD *)(*slotPtr + 12), (int)instancePtr, (int)&exprType, returnValue, a3);
+        return (_DWORD *)(uintptr_t)MessageHandler_SendToInstanceAddress(*(_DWORD *)(uintptr_t)(*slotPtr + 12), (int)(intptr_t)instancePtr, (int)(intptr_t)&exprType, returnValue, a3);
       }
     }
   }
@@ -839,15 +839,15 @@ _DWORD * Rules_MvSlotDeleteCommand(int *returnValue, int a2, double a3)
 
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Rules_ResolveSlotEditInstanceArg((int)aSlotDelete, a2, a3);
+  result = Rules_ResolveSlotEditInstanceArg((int)(intptr_t)aSlotDelete, a2, a3);
   instancePtr = result;
   if ( result )
   {
-    result = (_DWORD *)Rules_ParseMultifieldSlotEditArgs(
+    result = (_DWORD *)(uintptr_t)Rules_ParseMultifieldSlotEditArgs(
                          2u,
-                         (int)aSlotDelete,
-                         *(__int16 **)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10),
-                         (int)result,
+                         (int)(intptr_t)aSlotDelete,
+                         *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
+                         (int)(intptr_t)result,
                          a3,
                          rangeStart,
                          &rangeEnd,
@@ -855,15 +855,15 @@ _DWORD * Rules_MvSlotDeleteCommand(int *returnValue, int a2, double a3)
     slotPtr = result;
     if ( result )
     {
-      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)result);
-      result = (_DWORD *)Rules_MultifieldDeleteRange(newSlotValue, slotValueDesc, rangeEnd, rangeStart[0], (int)aSlotDelete);
+      Rules_MakeMultifieldRangeDescriptor(slotValueDesc, (int)(intptr_t)result);
+      result = (_DWORD *)(uintptr_t)Rules_MultifieldDeleteRange(newSlotValue, slotValueDesc, rangeEnd, rangeStart[0], (int)(intptr_t)aSlotDelete);
       if ( result )
       {
         exprType = 4;
         exprValue = newSlotValue;
         exprArgList = 0;
         exprNext = 0;
-        return (_DWORD *)MessageHandler_SendToInstanceAddress(*(_DWORD *)(*slotPtr + 12), (int)instancePtr, (int)&exprType, returnValue, a3);
+        return (_DWORD *)(uintptr_t)MessageHandler_SendToInstanceAddress(*(_DWORD *)(uintptr_t)(*slotPtr + 12), (int)(intptr_t)instancePtr, (int)(intptr_t)&exprType, returnValue, a3);
       }
     }
   }
@@ -888,13 +888,13 @@ int  Rules_DirectSlotReplaceCommand(int functionName, double a2)
   result = MessageHandler_CheckCurrentMessage(functionName, 1);
   if ( result )
   {
-    instancePtr = *(_DWORD **)(MessageHandler_GetNthArgument(0) + 8);
-    result = Rules_ParseMultifieldSlotEditArgs(1u, (int)aDirectSlotRepl, *(__int16 **)(g_ClipsCurrentExpression + 6), (int)instancePtr, a2, &rangeStart, rangeEnd, newValue);
-    slotPtr = (int *)result;
+    instancePtr = *(_DWORD **)(uintptr_t)(MessageHandler_GetNthArgument(0) + 8);
+    result = Rules_ParseMultifieldSlotEditArgs(1u, (int)(intptr_t)aDirectSlotRepl, *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), (int)(intptr_t)instancePtr, a2, &rangeStart, rangeEnd, newValue);
+    slotPtr = (int *)(uintptr_t)result;
     if ( result )
     {
       Rules_MakeMultifieldRangeDescriptor(slotValueDesc, result);
-      result = Rules_MultifieldReplaceRange(newSlotValue, slotValueDesc, rangeEnd[0], rangeStart, newValue, (int)aDirectSlotRepl);
+      result = Rules_MultifieldReplaceRange(newSlotValue, slotValueDesc, rangeEnd[0], rangeStart, newValue, (int)(intptr_t)aDirectSlotRepl);
       if ( result )
       {
         result = Instance_PutSlotValue(instancePtr, slotPtr, newSlotValue, a2);
@@ -923,13 +923,13 @@ int  Rules_DirectSlotInsertCommand(int functionName, double a2)
   result = MessageHandler_CheckCurrentMessage(functionName, 1);
   if ( result )
   {
-    instancePtr = *(_DWORD **)(MessageHandler_GetNthArgument(0) + 8);
-    result = Rules_ParseMultifieldSlotEditArgs(0, (int)aDirectSlotInse, *(__int16 **)(g_ClipsCurrentExpression + 6), (int)instancePtr, a2, insertIndex, 0, newValue);
-    slotPtr = (int *)result;
+    instancePtr = *(_DWORD **)(uintptr_t)(MessageHandler_GetNthArgument(0) + 8);
+    result = Rules_ParseMultifieldSlotEditArgs(0, (int)(intptr_t)aDirectSlotInse, *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), (int)(intptr_t)instancePtr, a2, insertIndex, 0, newValue);
+    slotPtr = (int *)(uintptr_t)result;
     if ( result )
     {
       Rules_MakeMultifieldRangeDescriptor(slotValueDesc, result);
-      result = Rules_MultifieldInsertRange(newSlotValue, slotValueDesc, v5, insertIndex[0], (int)aDirectSlotInse);
+      result = Rules_MultifieldInsertRange(newSlotValue, slotValueDesc, v5, insertIndex[0], (int)(intptr_t)aDirectSlotInse);
       if ( result )
       {
         result = Instance_PutSlotValue(instancePtr, slotPtr, newSlotValue, a2);
@@ -959,13 +959,13 @@ int  Rules_DirectSlotDeleteCommand(int functionName, double a2)
   result = MessageHandler_CheckCurrentMessage(functionName, 1);
   if ( result )
   {
-    instancePtr = *(_DWORD **)(MessageHandler_GetNthArgument(0) + 8);
-    result = Rules_ParseMultifieldSlotEditArgs(2u, v4, *(__int16 **)(g_ClipsCurrentExpression + 6), (int)instancePtr, a2, &rangeStart, rangeEnd, 0);
-    slotPtr = (int *)result;
+    instancePtr = *(_DWORD **)(uintptr_t)(MessageHandler_GetNthArgument(0) + 8);
+    result = Rules_ParseMultifieldSlotEditArgs(2u, v4, *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), (int)(intptr_t)instancePtr, a2, &rangeStart, rangeEnd, 0);
+    slotPtr = (int *)(uintptr_t)result;
     if ( result )
     {
       Rules_MakeMultifieldRangeDescriptor(slotValueDesc, result);
-      result = Rules_MultifieldDeleteRange(newSlotValue, slotValueDesc, rangeEnd[0], rangeStart, (int)aDirectSlotDele);
+      result = Rules_MultifieldDeleteRange(newSlotValue, slotValueDesc, rangeEnd[0], rangeStart, (int)(intptr_t)aDirectSlotDele);
       if ( result )
       {
         result = Instance_PutSlotValue(instancePtr, slotPtr, newSlotValue, a2);
@@ -996,8 +996,8 @@ _DWORD * Rules_ResolveSlotEditInstanceArg(int functionName, int a2, double a3)
   }
   if ( instanceArg[1] == 7 )
   {
-    instancePtr = (_DWORD *)argValue;
-    if ( (*(_BYTE *)(argValue + 24) & 2) != 0 )
+    instancePtr = (_DWORD *)(uintptr_t)argValue;
+    if ( (*(_BYTE *)(uintptr_t)(argValue + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       Lexer_ErrorRecover(1);
@@ -1010,7 +1010,7 @@ _DWORD * Rules_ResolveSlotEditInstanceArg(int functionName, int a2, double a3)
     if ( !instancePtr )
     {
       Instance_ReportNoSuchInstanceError(0, functionName);
-      return (_DWORD *)v7;
+      return (_DWORD *)(uintptr_t)v7;
     }
   }
   return instancePtr;
@@ -1051,17 +1051,17 @@ BOOL  Rules_ParseMultifieldSlotEditArgs(
   int argPosBase; // [esp+20h] [ebp-10h]
 
   v29 = instancePtr;
-  argPosBase = (argExprs != *(__int16 **)(g_ClipsCurrentExpression + 6)) + 1;
+  argPosBase = (argExprs != *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6)) + 1;
   argPos = argPosBase;
   g_ClipsEvaluationError = 0;
-  Parser_ParseForm(argExprs, &tempValue, (int)argExprs, a5);
+  Parser_ParseForm(argExprs, &tempValue, (int)(intptr_t)argExprs, a5);
   if ( parsedType != 2 )
   {
-    Parser_ReportError(argPosBase, (int)aSymbol_4);
+    Parser_ReportError(argPosBase, (int)(intptr_t)aSymbol_4);
     Lexer_ErrorRecover(1);
     return 0;
   }
-  slotLookup = (_BYTE **)Instance_GetSlotValueBySymbol(v29, parsedValue);
+  slotLookup = (_BYTE **)(uintptr_t)Instance_GetSlotValueBySymbol(v29, parsedValue);
   v13 = slotLookup;
   slotPtr = slotLookup;
   if ( !slotLookup )
@@ -1071,43 +1071,43 @@ BOOL  Rules_ParseMultifieldSlotEditArgs(
   }
   if ( (**slotLookup & 2) == 0 )
   {
-    Rules_PrintErrorID((int)aInsmult, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_2, v18);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], functionName, v19);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeUsedOn, v20);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*((_DWORD *)*v13 + 2) + 12) + 16), v21);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInInstance_1, v22);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v29 + 28) + 16), v23);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__19, v24);
+    Rules_PrintErrorID((int)(intptr_t)aInsmult, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction_2, v18);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v19);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotBeUsedOn, v20);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*((_DWORD *)*v13 + 2) + 12) + 16), v21);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInInstance_1, v22);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v29 + 28) + 16), v23);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__19, v24);
     Lexer_ErrorRecover(1);
     return 0;
   }
-  Parser_ParseForm(*(__int16 **)(v12 + 10), &tempValue, v12, a5);
+  Parser_ParseForm(*(__int16 **)(uintptr_t)(v12 + 10), &tempValue, v12, a5);
   if ( parsedType != 1 )
   {
-    Parser_ReportError(argPos + 1, (int)aInteger_3);
+    Parser_ReportError(argPos + 1, (int)(intptr_t)aInteger_3);
     Lexer_ErrorRecover(1);
     return 0;
   }
-  nextArgExpr = *(__int16 **)(*(_DWORD *)(v14 + 10) + 10);
-  *rangeStart = *(_DWORD *)(parsedValue + 16);
+  nextArgExpr = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v14 + 10) + 10);
+  *rangeStart = *(_DWORD *)(uintptr_t)(parsedValue + 16);
   if ( editCode == 1 || editCode == 2 )
   {
-    Parser_ParseForm(nextArgExpr, &tempValue, (int)nextArgExpr, a5);
+    Parser_ParseForm(nextArgExpr, &tempValue, (int)(intptr_t)nextArgExpr, a5);
     if ( parsedType != 1 )
     {
-      Parser_ReportError(argPos + 2, (int)aInteger_3);
+      Parser_ReportError(argPos + 2, (int)(intptr_t)aInteger_3);
       Lexer_ErrorRecover(1);
       return 0;
     }
-    *rangeEnd = *(_DWORD *)(parsedValue + 16);
-    nextArgExpr = *(__int16 **)(v16 + 10);
+    *rangeEnd = *(_DWORD *)(uintptr_t)(parsedValue + 16);
+    nextArgExpr = *(__int16 **)(uintptr_t)(v16 + 10);
   }
   if ( editCode > 1 )
-    return (BOOL)slotPtr;
-  result = Parser_ParseSlotDefaultOrRestriction(1, (int)nextArgExpr, newValue, a5);
+    return (BOOL)(intptr_t)slotPtr;
+  result = Parser_ParseSlotDefaultOrRestriction(1, (int)(intptr_t)nextArgExpr, newValue, a5);
   if ( result )
-    return (BOOL)slotPtr;
+    return (BOOL)(intptr_t)slotPtr;
   return result;
 }
 // 4ADEAF: simplified comparisons for 'ebp.4': !=0 && !=1 became >=2u
@@ -1130,19 +1130,19 @@ _DWORD * Rules_MakeMultifieldRangeDescriptor(_DWORD *result, int theSlot)
 {
   int multifieldValue; // ecx
 
-  result[1] = *(_DWORD *)(theSlot + 4) << 24 >> 26;
-  multifieldValue = *(_DWORD *)(theSlot + 8);
+  result[1] = *(_DWORD *)(uintptr_t)(theSlot + 4) << 24 >> 26;
+  multifieldValue = *(_DWORD *)(uintptr_t)(theSlot + 8);
   result[3] = 0;
   result[2] = multifieldValue;
-  result[4] = *(_DWORD *)(*(_DWORD *)(theSlot + 8) + 6) - 1;
+  result[4] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theSlot + 8) + 6) - 1;
   return result;
 }
 
 //----- (004AE040) --------------------------------------------------------
 signed int __thiscall Rules_ReportUndefinedMessageHandlerName(void *this)
 {
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMessageHandl_3, (int)this);
-  return MessageHandler_PrintNameTypeAndClass((int)g_IO_LogicalNameTable_WError[0], *(_DWORD **)g_ClipsCurrentHandlerCore, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMessageHandl_3, (int)(intptr_t)this);
+  return MessageHandler_PrintNameTypeAndClass((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore, 1);
 }
 // 51A614: using guessed type char *off_51A614[5];
 // 51AD58: using guessed type int dword_51AD58;
@@ -1154,10 +1154,10 @@ signed int MessageHandler_PrintNoApplicableHandlerError(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aMsgfun, 1, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoApplicablePr, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__20, v2);
+  Rules_PrintErrorID((int)(intptr_t)aMsgfun, 1, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoApplicablePr, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__20, v2);
 }
 // 4AE090: variable 'v0' is possibly undefined
 // 4AE09C: variable 'v1' is possibly undefined
@@ -1183,33 +1183,33 @@ signed int MessageHandler_CheckArgCount(void)
   int v14; // ecx
   int v15; // ecx
 
-  theHandler = *(_DWORD *)g_ClipsCurrentHandlerCore;
-  if ( *(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 20) == -1 )
+  theHandler = *(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore;
+  if ( *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 20) == -1 )
   {
-    if ( g_ClipsProcParamCount >= *(_DWORD *)(theHandler + 16) )
+    if ( g_ClipsProcParamCount >= *(_DWORD *)(uintptr_t)(theHandler + 16) )
       return 1;
   }
-  else if ( g_ClipsProcParamCount == *(_DWORD *)(theHandler + 16) )
+  else if ( g_ClipsProcParamCount == *(_DWORD *)(uintptr_t)(theHandler + 16) )
   {
     return 1;
   }
   Lexer_ErrorRecover(1);
-  Rules_PrintErrorID((int)aMsgfun, v2, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMessageHandl_4, v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v4 + 8) + 16), v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5092EC, v5);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)g_MessageHandlerTypeNames[*v6 << 29 >> 30], (int)v6);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInClass_0, v7);
-  constructName = Rules_GetConstructNameString(*(_DWORD *)(v8 + 12));
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], constructName, v10);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpected, v11);
-  if ( *(_DWORD *)(v12 + 20) == -1 )
+  Rules_PrintErrorID((int)(intptr_t)aMsgfun, v2, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMessageHandl_4, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v4 + 8) + 16), v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_5092EC, v5);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)g_MessageHandlerTypeNames[*v6 << 29 >> 30], (int)(intptr_t)v6);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInClass_0, v7);
+  constructName = Rules_GetConstructNameString(*(_DWORD *)(uintptr_t)(v8 + 12));
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], constructName, v10);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpected, v11);
+  if ( *(_DWORD *)(uintptr_t)(v12 + 20) == -1 )
     quantifierText = aAtLeast;
   else
     quantifierText = aExactly;
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)quantifierText, v12);
-  Rules_PrintLongInteger(v14, *(_DWORD *)(v14 + 16) - 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentS_, v15);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)quantifierText, v12);
+  Rules_PrintLongInteger(v14, *(_DWORD *)(uintptr_t)(v14 + 16) - 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aArgumentS_, v15);
   return 0;
 }
 // 4AE119: variable 'v2' is possibly undefined
@@ -1238,19 +1238,19 @@ signed int  MessageHandler_ReportSlotWriteAccessDenied(int slotName, int instanc
   int v7; // ecx
   int v9; // ecx
 
-  Rules_PrintErrorID((int)aMsgfun, 3, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], slotName, v4);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlotIn, v5);
+  Rules_PrintErrorID((int)(intptr_t)aMsgfun, 3, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], slotName, v4);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSlotIn, v5);
   if ( instanceFlag )
   {
-    Instance_PrintNameOfClass((int)g_IO_LogicalNameTable_WError[0], v6, 0);
+    Instance_PrintNameOfClass((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v6, 0);
   }
   else
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClass_1, v6);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aClass_1, v6);
     Class_PrintName(v9, 0);
   }
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWriteAccessDen, v7);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aWriteAccessDen, v7);
 }
 // 4AE201: variable 'v4' is possibly undefined
 // 4AE210: variable 'v5' is possibly undefined
@@ -1268,12 +1268,12 @@ signed int  MessageHandler_ReportPrivateSlotAccessDenied(int theSlot)
   int v5; // ecx
   int v6; // ecx
 
-  Rules_PrintErrorID((int)aMsgfun, 6, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPrivateSlot, v2);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(theSlot + 8) + 12) + 16), v3);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfClass_1, v4);
-  Class_PrintName(*(_DWORD *)(theSlot + 4), 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeAccess, v5);
+  Rules_PrintErrorID((int)(intptr_t)aMsgfun, 6, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPrivateSlot, v2);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theSlot + 8) + 12) + 16), v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOfClass_1, v4);
+  Class_PrintName(*(_DWORD *)(uintptr_t)(theSlot + 4), 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotBeAccess, v5);
   return Class_PrintName(v6, 1);
 }
 // 4AE292: variable 'v2' is possibly undefined
@@ -1295,21 +1295,21 @@ int  MessageHandler_AddSystemHandler(_BYTE *className, char *handlerName, int ex
   int **symbol; // eax
   int result; // eax
 
-  class_record = (int)Class_LookupInScope(className);
+  class_record = (int)(intptr_t)Class_LookupInScope(className);
   message_name = Str_Intern(handlerName, class_record);
-  message_handler = Class_InsertMessageHandlerRecord((_DWORD *)class_record, (int)message_name, 2);
-  ++*(_DWORD *)(message_handler[2] + 4);
+  message_handler = Class_InsertMessageHandlerRecord((_DWORD *)(uintptr_t)class_record, (int)(intptr_t)message_name, 2);
+  ++*(_DWORD *)(uintptr_t)(message_handler[2] + 4);
   ++extraArgCount;
   message_handler[6] = 0;
   message_handler[5] = extraArgCount;
   handler_flags = *(_BYTE *)message_handler;
   message_handler[4] = extraArgCount;
   *(_BYTE *)message_handler = handler_flags | 1;
-  free_expression_node = *(_DWORD *)(g_ClipsMemoryTable + 56);
+  free_expression_node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( free_expression_node )
   {
     g_ClipsMemFreeListTemp = free_expression_node;
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = *(_DWORD *)free_expression_node;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *(_DWORD *)(uintptr_t)free_expression_node;
     expression_node = g_ClipsMemFreeListTemp;
   }
   else
@@ -1317,12 +1317,12 @@ int  MessageHandler_AddSystemHandler(_BYTE *className, char *handlerName, int ex
     expression_node = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   message_handler[7] = expression_node;
-  *(_DWORD *)(expression_node + 6) = 0;
-  *(_WORD *)message_handler[7] = 10;
+  *(_DWORD *)(uintptr_t)(expression_node + 6) = 0;
+  *(_WORD *)(uintptr_t)message_handler[7] = 10;
   symbol = Rules_MakeSymbol(internalFunctionName);
-  *(_DWORD *)(*(_DWORD *)((char *)message_handler + 28) + 2) = symbol;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)((char *)message_handler + 28) + 2) = symbol;
   result = *(_DWORD *)((char *)message_handler + 28);
-  *(_DWORD *)(result + 10) = 0;
+  *(_DWORD *)(uintptr_t)(result + 10) = 0;
   return result;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -1349,8 +1349,8 @@ _DWORD * Class_InsertMessageHandlerRecord(_DWORD *theClass, int handlerName, cha
   int insertPosition; // [esp+1Ch] [ebp-14h]
 
   insertPosition = -1;
-  oldHandlerArray = (_DWORD *)theClass[22];
-  oldIndexArray = (int *)theClass[23];
+  oldHandlerArray = (_DWORD *)(uintptr_t)theClass[22];
+  oldIndexArray = (int *)(uintptr_t)theClass[23];
   newHandlerArray = Mem_SmallBlockAlloc(36 * (theClass[24] + 1));
   newIndexArray = Mem_SmallBlockAlloc(4 * (theClass[24] + 1));
   qmemcpy(newHandlerArray, oldHandlerArray, 36 * theClass[24]);
@@ -1364,7 +1364,7 @@ _DWORD * Class_InsertMessageHandlerRecord(_DWORD *theClass, int handlerName, cha
       if ( insertPosition == -1 )
       {
         existingName = oldHandlerArray[9 * *indexCursor + 2];
-        if ( *(_DWORD *)(handlerName + 12) << 16 >> 18 < *(_DWORD *)(existingName + 12) << 16 >> 18 || existingName == handlerName )
+        if ( *(_DWORD *)(uintptr_t)(handlerName + 12) << 16 >> 18 < *(_DWORD *)(uintptr_t)(existingName + 12) << 16 >> 18 || existingName == handlerName )
         {
           insertPosition = handlerIndex;
           ++destIndex;
@@ -1419,11 +1419,11 @@ signed int  MessageHandler_AnyHandlerBusy(int theClass)
   int i; // eax
 
   handlerIndex = 0;
-  if ( !*(_DWORD *)(theClass + 96) )
+  if ( !*(_DWORD *)(uintptr_t)(theClass + 96) )
     return 0;
-  for ( i = *(_DWORD *)(theClass + 88); !*(_DWORD *)(i + 4); i += 36 )
+  for ( i = *(_DWORD *)(uintptr_t)(theClass + 88); !*(_DWORD *)(uintptr_t)(i + 4); i += 36 )
   {
-    if ( (unsigned int)++handlerIndex >= *(_DWORD *)(theClass + 96) )
+    if ( (unsigned int)++handlerIndex >= *(_DWORD *)(uintptr_t)(theClass + 96) )
       return 0;
   }
   return 1;

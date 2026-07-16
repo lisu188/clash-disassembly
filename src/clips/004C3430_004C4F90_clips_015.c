@@ -35,75 +35,75 @@ int  Rules_UnionConstraints(int constraint1, int constraint2)
   if ( !constraint1 && !constraint2 )
     return Rules_CreateLHSParseNode();
   if ( !constraint1 )
-    return Rules_CloneLHSParseNode((int *)constraint2);
+    return Rules_CloneLHSParseNode((int *)(uintptr_t)constraint2);
   if ( !constraint2 )
-    return Rules_CloneLHSParseNode((int *)constraint1);
-  newRecord = (_BYTE *)Rules_CreateLHSParseNode();
-  theConstraint = (int)newRecord;
-  if ( *(char *)(constraint1 + 1) < 0 || *(char *)(constraint2 + 1) < 0 )
+    return Rules_CloneLHSParseNode((int *)(uintptr_t)constraint1);
+  newRecord = (_BYTE *)(uintptr_t)Rules_CreateLHSParseNode();
+  theConstraint = (int)(intptr_t)newRecord;
+  if ( *(char *)(uintptr_t)(constraint1 + 1) < 0 || *(char *)(uintptr_t)(constraint2 + 1) < 0 )
     newRecord[1] |= 0x80u;
-  if ( (*(_BYTE *)(constraint1 + 2) & 1) != 0 || (*(_BYTE *)(constraint2 + 2) & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(constraint1 + 2) & 1) != 0 || (*(_BYTE *)(uintptr_t)(constraint2 + 2) & 1) != 0 )
     newRecord[2] |= 1u;
-  if ( (*(_BYTE *)constraint1 & 1) != 0 || (*(_BYTE *)constraint2 & 1) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)constraint1 & 1) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 1) != 0 )
   {
     *newRecord |= 1u;
   }
   else
   {
     *newRecord &= ~1u;
-    v10 = (*(_BYTE *)constraint1 & 2) != 0 || (*(_BYTE *)constraint2 & 2) != 0;
-    *(_BYTE *)theConstraint &= ~2u;
-    *(_DWORD *)theConstraint |= 2 * v10;
-    v11 = (*(_BYTE *)constraint1 & 4) != 0 || (*(_BYTE *)constraint2 & 4) != 0;
-    *(_BYTE *)theConstraint &= ~4u;
-    *(_DWORD *)theConstraint |= 4 * v11;
-    v12 = (*(_BYTE *)constraint1 & 8) != 0 || (*(_BYTE *)constraint2 & 8) != 0;
-    *(_BYTE *)theConstraint &= ~8u;
-    *(_DWORD *)theConstraint |= 8 * v12;
-    v13 = (*(_BYTE *)constraint1 & 0x10) != 0 || (*(_BYTE *)constraint2 & 0x10) != 0;
-    *(_BYTE *)theConstraint &= ~0x10u;
-    *(_DWORD *)theConstraint |= 16 * v13;
-    v14 = (*(_BYTE *)constraint1 & 0x20) != 0 || (*(_BYTE *)constraint2 & 0x20) != 0;
-    *(_BYTE *)theConstraint &= ~0x20u;
-    *(_DWORD *)theConstraint |= 32 * v14;
-    v15 = (*(_BYTE *)constraint1 & 0x40) != 0 || (*(_BYTE *)constraint2 & 0x40) != 0;
-    *(_BYTE *)theConstraint &= ~0x40u;
-    *(_DWORD *)theConstraint |= v15 << 6;
-    v16 = *(char *)constraint1 < 0 || *(char *)constraint2 < 0;
-    *(_BYTE *)theConstraint &= ~0x80u;
-    *(_DWORD *)theConstraint |= v16 << 7;
-    v17 = (*(_BYTE *)(constraint1 + 1) & 1) != 0 || (*(_BYTE *)(constraint2 + 1) & 1) != 0;
-    *(_BYTE *)(theConstraint + 1) &= ~1u;
-    *(_DWORD *)theConstraint |= v17 << 8;
+    v10 = (*(_BYTE *)(uintptr_t)constraint1 & 2) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 2) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~2u;
+    *(_DWORD *)(uintptr_t)theConstraint |= 2 * v10;
+    v11 = (*(_BYTE *)(uintptr_t)constraint1 & 4) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 4) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~4u;
+    *(_DWORD *)(uintptr_t)theConstraint |= 4 * v11;
+    v12 = (*(_BYTE *)(uintptr_t)constraint1 & 8) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 8) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~8u;
+    *(_DWORD *)(uintptr_t)theConstraint |= 8 * v12;
+    v13 = (*(_BYTE *)(uintptr_t)constraint1 & 0x10) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 0x10) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~0x10u;
+    *(_DWORD *)(uintptr_t)theConstraint |= 16 * v13;
+    v14 = (*(_BYTE *)(uintptr_t)constraint1 & 0x20) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 0x20) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~0x20u;
+    *(_DWORD *)(uintptr_t)theConstraint |= 32 * v14;
+    v15 = (*(_BYTE *)(uintptr_t)constraint1 & 0x40) != 0 || (*(_BYTE *)(uintptr_t)constraint2 & 0x40) != 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~0x40u;
+    *(_DWORD *)(uintptr_t)theConstraint |= v15 << 6;
+    v16 = *(char *)(uintptr_t)constraint1 < 0 || *(char *)(uintptr_t)constraint2 < 0;
+    *(_BYTE *)(uintptr_t)theConstraint &= ~0x80u;
+    *(_DWORD *)(uintptr_t)theConstraint |= v16 << 7;
+    v17 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 1) != 0 || (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 1) != 0;
+    *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~1u;
+    *(_DWORD *)(uintptr_t)theConstraint |= v17 << 8;
   }
-  if ( (*(_BYTE *)(constraint1 + 1) & 2) == 0 || (*(_BYTE *)(constraint2 + 1) & 2) == 0 )
+  if ( (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 2) == 0 || (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 2) == 0 )
   {
-    if ( (*(_BYTE *)(constraint1 + 1) & 2) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 2) != 0 )
     {
       tmpConstraint = constraint1;
       c1Changed = 1;
     }
     else
     {
-      if ( (*(_BYTE *)(constraint2 + 1) & 2) == 0 )
+      if ( (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 2) == 0 )
       {
 LABEL_61:
-        *(_BYTE *)(theConstraint + 1) &= ~2u;
-        v19 = (*(_BYTE *)(constraint1 + 1) & 4) != 0 && (*(_BYTE *)(constraint2 + 1) & 4) != 0;
-        *(_BYTE *)(theConstraint + 1) &= ~4u;
-        *(_DWORD *)theConstraint |= v19 << 10;
-        v20 = (*(_BYTE *)(constraint1 + 1) & 8) != 0 && (*(_BYTE *)(constraint2 + 1) & 8) != 0;
-        *(_BYTE *)(theConstraint + 1) &= ~8u;
-        *(_DWORD *)theConstraint |= v20 << 11;
-        v21 = (*(_BYTE *)(constraint1 + 1) & 0x10) != 0 && (*(_BYTE *)(constraint2 + 1) & 0x10) != 0;
-        *(_BYTE *)(theConstraint + 1) &= ~0x10u;
-        *(_DWORD *)theConstraint |= v21 << 12;
-        v22 = (*(_BYTE *)(constraint1 + 1) & 0x20) != 0 && (*(_BYTE *)(constraint2 + 1) & 0x20) != 0;
-        *(_BYTE *)(theConstraint + 1) &= ~0x20u;
-        *(_DWORD *)theConstraint |= v22 << 13;
-        v23 = (*(_BYTE *)(constraint1 + 1) & 0x40) != 0 && (*(_BYTE *)(constraint2 + 1) & 0x40) != 0;
-        *(_BYTE *)(theConstraint + 1) &= ~0x40u;
-        *(_DWORD *)theConstraint |= v23 << 14;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~2u;
+        v19 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 4) != 0 && (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 4) != 0;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~4u;
+        *(_DWORD *)(uintptr_t)theConstraint |= v19 << 10;
+        v20 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 8) != 0 && (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 8) != 0;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~8u;
+        *(_DWORD *)(uintptr_t)theConstraint |= v20 << 11;
+        v21 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 0x10) != 0 && (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 0x10) != 0;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~0x10u;
+        *(_DWORD *)(uintptr_t)theConstraint |= v21 << 12;
+        v22 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 0x20) != 0 && (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 0x20) != 0;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~0x20u;
+        *(_DWORD *)(uintptr_t)theConstraint |= v22 << 13;
+        v23 = (*(_BYTE *)(uintptr_t)(constraint1 + 1) & 0x40) != 0 && (*(_BYTE *)(uintptr_t)(constraint2 + 1) & 0x40) != 0;
+        *(_BYTE *)(uintptr_t)(theConstraint + 1) &= ~0x40u;
+        *(_DWORD *)(uintptr_t)theConstraint |= v23 << 14;
         if ( c1Changed )
         {
           Rules_SetLHSParseNodeExtendedFlags(constraint1, 0);
@@ -119,13 +119,13 @@ LABEL_61:
     Rules_SetLHSParseNodeExtendedFlags(tmpConstraint, 0);
     goto LABEL_61;
   }
-  *(_BYTE *)(theConstraint + 1) |= 2u;
+  *(_BYTE *)(uintptr_t)(theConstraint + 1) |= 2u;
 LABEL_14:
   Rules_UnionAllowedValueExpressions(constraint1, constraint2, theConstraint);
-  Rules_UnionNumericExpressions((__int16 *)constraint1, constraint2, rangeFlag, theConstraint);
-  Rules_UnionNumericExpressions((__int16 *)constraint1, constraint2, 0, theConstraint);
-  if ( *(char *)(theConstraint + 1) < 0 )
-    *(_DWORD *)(theConstraint + 26) = Rules_UnionConstraints(*(_DWORD *)(constraint1 + 26), *(_DWORD *)(constraint2 + 26));
+  Rules_UnionNumericExpressions((__int16 *)(uintptr_t)constraint1, constraint2, rangeFlag, theConstraint);
+  Rules_UnionNumericExpressions((__int16 *)(uintptr_t)constraint1, constraint2, 0, theConstraint);
+  if ( *(char *)(uintptr_t)(theConstraint + 1) < 0 )
+    *(_DWORD *)(uintptr_t)(theConstraint + 26) = Rules_UnionConstraints(*(_DWORD *)(uintptr_t)(constraint1 + 26), *(_DWORD *)(uintptr_t)(constraint2 + 26));
   return theConstraint;
 }
 // 4C34B6: variable 'v8' is possibly undefined
@@ -159,55 +159,55 @@ __int16 * Rules_UnionNumericExpressions(__int16 *result, int constraint2, int ra
   }
   while ( tmpmin )
   {
-    result = Rules_UnionRangeMinMaxValueWithList((__int16 *)tmpmin, (__int16 *)tmpmax, &theMaxList, &theMinList);
-    tmpmin = *(_DWORD *)(tmpmin + 10);
-    tmpmax = *(_DWORD *)(tmpmax + 10);
+    result = Rules_UnionRangeMinMaxValueWithList((__int16 *)(uintptr_t)tmpmin, (__int16 *)(uintptr_t)tmpmax, &theMaxList, &theMinList);
+    tmpmin = *(_DWORD *)(uintptr_t)(tmpmin + 10);
+    tmpmax = *(_DWORD *)(uintptr_t)(tmpmax + 10);
   }
   if ( rangeFlag )
   {
-    tmpmin2 = *(_DWORD *)(otherConstraint + 10);
-    tmpmax2 = *(_DWORD *)(otherConstraint + 14);
+    tmpmin2 = *(_DWORD *)(uintptr_t)(otherConstraint + 10);
+    tmpmax2 = *(_DWORD *)(uintptr_t)(otherConstraint + 14);
   }
   else
   {
-    tmpmin2 = *(_DWORD *)(otherConstraint + 18);
-    tmpmax2 = *(_DWORD *)(otherConstraint + 22);
+    tmpmin2 = *(_DWORD *)(uintptr_t)(otherConstraint + 18);
+    tmpmax2 = *(_DWORD *)(uintptr_t)(otherConstraint + 22);
   }
   while ( tmpmin2 )
   {
-    result = Rules_UnionRangeMinMaxValueWithList((__int16 *)tmpmin2, (__int16 *)tmpmax2, &theMaxList, &theMinList);
-    tmpmin2 = *(_DWORD *)(tmpmin2 + 10);
-    tmpmax2 = *(_DWORD *)(tmpmax2 + 10);
+    result = Rules_UnionRangeMinMaxValueWithList((__int16 *)(uintptr_t)tmpmin2, (__int16 *)(uintptr_t)tmpmax2, &theMaxList, &theMinList);
+    tmpmin2 = *(_DWORD *)(uintptr_t)(tmpmin2 + 10);
+    tmpmax2 = *(_DWORD *)(uintptr_t)(tmpmax2 + 10);
   }
   if ( theMinList )
   {
     if ( rangeFlag )
     {
-      AST_Free(*(_DWORD *)(newConstraint + 10));
-      AST_Free(*(_DWORD *)(newConstraint + 14));
-      *(_DWORD *)(newConstraint + 10) = theMinList;
+      AST_Free(*(_DWORD *)(uintptr_t)(newConstraint + 10));
+      AST_Free(*(_DWORD *)(uintptr_t)(newConstraint + 14));
+      *(_DWORD *)(uintptr_t)(newConstraint + 10) = theMinList;
       result = theMaxList;
-      *(_DWORD *)(newConstraint + 14) = theMaxList;
+      *(_DWORD *)(uintptr_t)(newConstraint + 14) = theMaxList;
     }
     else
     {
-      AST_Free(*(_DWORD *)(newConstraint + 18));
-      AST_Free(*(_DWORD *)(newConstraint + 22));
-      *(_DWORD *)(newConstraint + 18) = theMinList;
+      AST_Free(*(_DWORD *)(uintptr_t)(newConstraint + 18));
+      AST_Free(*(_DWORD *)(uintptr_t)(newConstraint + 22));
+      *(_DWORD *)(uintptr_t)(newConstraint + 18) = theMinList;
       result = theMaxList;
-      *(_DWORD *)(newConstraint + 22) = theMaxList;
+      *(_DWORD *)(uintptr_t)(newConstraint + 22) = theMaxList;
     }
   }
   else if ( rangeFlag )
   {
-    if ( (*(_BYTE *)newConstraint & 1) != 0 )
-      result = (__int16 *)Rules_SetLHSParseNodeDefaultFlags((_BYTE *)newConstraint, 0);
-    *(_BYTE *)newConstraint &= 0xE7u;
+    if ( (*(_BYTE *)(uintptr_t)newConstraint & 1) != 0 )
+      result = (__int16 *)Rules_SetLHSParseNodeDefaultFlags((_BYTE *)(uintptr_t)newConstraint, 0);
+    *(_BYTE *)(uintptr_t)newConstraint &= 0xE7u;
   }
   else
   {
-    result = (__int16 *)Rules_SetLHSParseNodeDefaultFlags((_BYTE *)newConstraint, 1);
-    *(_BYTE *)newConstraint |= 1u;
+    result = (__int16 *)Rules_SetLHSParseNodeDefaultFlags((_BYTE *)(uintptr_t)newConstraint, 1);
+    *(_BYTE *)(uintptr_t)newConstraint |= 1u;
   }
   return result;
 }
@@ -238,7 +238,7 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
       cmaxmax = Rules_CompareBoundedCEValues(*theMax, *(_DWORD *)(theMax + 1), *(_DWORD *)(tmpmax + 1), *tmpmax);
       cminmin = Rules_CompareBoundedCEValues(*theMin, *(_DWORD *)(theMin + 1), *(_DWORD *)(tmpmin + 1), *tmpmin);
       cmaxmin = Rules_CompareBoundedCEValues(*theMax, *(_DWORD *)(theMax + 1), *(_DWORD *)(tmpmin + 1), *tmpmin);
-      result = (__int16 *)Rules_CompareBoundedCEValues(*theMin, *(_DWORD *)(theMin + 1), *(_DWORD *)(tmpmax + 1), *tmpmax);
+      result = (__int16 *)(uintptr_t)Rules_CompareBoundedCEValues(*theMin, *(_DWORD *)(theMin + 1), *(_DWORD *)(tmpmax + 1), *tmpmax);
       if ( (!cmaxmax || cmaxmax == 2) && (cminmin == 1 || cminmin == 2) )
         break;
       if ( cmaxmax == 1 && (!result || result == (__int16 *)2) )
@@ -254,10 +254,10 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
       if ( !cmaxmin )
       {
         AST_NewNode(*theMin, *(_DWORD *)(theMin + 1));
-        result = (__int16 *)AST_NewNode(*theMax, *(_DWORD *)(theMax + 1));
-        *(_DWORD *)(newMinNode + 10) = *theMinList;
+        result = (__int16 *)(uintptr_t)AST_NewNode(*theMax, *(_DWORD *)(theMax + 1));
+        *(_DWORD *)(uintptr_t)(newMinNode + 10) = *theMinList;
         *(_DWORD *)(result + 5) = *theMaxList;
-        *theMinList = (__int16 *)newMinNode;
+        *theMinList = (__int16 *)(uintptr_t)newMinNode;
         *theMaxList = result;
         return result;
       }
@@ -267,37 +267,37 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
       {
         result = *theMinList;
         maxCursor = *theMaxList;
-        minCursor = (signed int)*theMinList;
+        minCursor = (signed int)(intptr_t)*theMinList;
         if ( *theMinList )
         {
           while ( 1 )
           {
-            nextMin = *(_DWORD **)(minCursor + 10);
+            nextMin = *(_DWORD **)(uintptr_t)(minCursor + 10);
             nextMax = *(_DWORD *)(maxCursor + 5);
             if ( !nextMin )
               break;
             mergeCompare = Rules_CompareBoundedCEValues(*maxCursor, *(_DWORD *)(maxCursor + 1), *(_DWORD *)((char *)nextMin + 2), *(__int16 *)nextMin);
             if ( mergeCompare == 1 || mergeCompare == 2 )
             {
-              *maxCursor = *(_WORD *)nextMax;
-              *(_DWORD *)(maxCursor + 1) = *(_DWORD *)(nextMax + 2);
-              *(_DWORD *)(maxCursor + 5) = *(_DWORD *)(nextMax + 10);
-              *(_DWORD *)(minCursor + 10) = *(_DWORD *)((char *)nextMin + 10);
-              g_ClipsMemFreeListTemp = (int)nextMin;
-              *nextMin = *(_DWORD *)(g_ClipsMemoryTable + 56);
-              *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+              *maxCursor = *(_WORD *)(uintptr_t)nextMax;
+              *(_DWORD *)(maxCursor + 1) = *(_DWORD *)(uintptr_t)(nextMax + 2);
+              *(_DWORD *)(maxCursor + 5) = *(_DWORD *)(uintptr_t)(nextMax + 10);
+              *(_DWORD *)(uintptr_t)(minCursor + 10) = *(_DWORD *)((char *)nextMin + 10);
+              g_ClipsMemFreeListTemp = (int)(intptr_t)nextMin;
+              *nextMin = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+              *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
               g_ClipsMemFreeListTemp = nextMax;
-              *(_DWORD *)nextMax = *(_DWORD *)(g_ClipsMemoryTable + 56);
-              result = (__int16 *)g_ClipsMemoryTable;
-              *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+              *(_DWORD *)(uintptr_t)nextMax = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+              result = (__int16 *)(uintptr_t)g_ClipsMemoryTable;
+              *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
               if ( !minCursor )
                 return result;
             }
             else
             {
-              result = *(__int16 **)(minCursor + 10);
+              result = *(__int16 **)(uintptr_t)(minCursor + 10);
               maxCursor = *(__int16 **)(maxCursor + 5);
-              minCursor = (signed int)result;
+              minCursor = (signed int)(intptr_t)result;
               if ( !result )
                 return result;
             }
@@ -309,8 +309,8 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
   }
   else
   {
-    *theMinList = (__int16 *)AST_NewNode(*theMin, *(_DWORD *)(theMin + 1));
-    result = (__int16 *)AST_NewNode(*theMax, *(_DWORD *)(theMax + 1));
+    *theMinList = (__int16 *)(uintptr_t)AST_NewNode(*theMin, *(_DWORD *)(theMin + 1));
+    result = (__int16 *)(uintptr_t)AST_NewNode(*theMax, *(_DWORD *)(theMax + 1));
     *v11 = result;
   }
   return result;
@@ -328,9 +328,9 @@ __int16 * Rules_UnionAllowedValueExpressions(int constraint1, int constraint2, i
   __int16 *result; // eax
   int v7; // ecx
 
-  theHead = Rules_AddToUnionList(*(__int16 **)(constraint1 + 6), 0, newConstraint);
-  result = Rules_AddToUnionList(*(__int16 **)(constraint2 + 6), theHead, v5);
-  *(_DWORD *)(v7 + 6) = result;
+  theHead = Rules_AddToUnionList(*(__int16 **)(uintptr_t)(constraint1 + 6), 0, newConstraint);
+  result = Rules_AddToUnionList(*(__int16 **)(uintptr_t)(constraint2 + 6), theHead, v5);
+  *(_DWORD *)(uintptr_t)(v7 + 6) = result;
   return result;
 }
 // 4C3BB9: variable 'v5' is possibly undefined
@@ -355,10 +355,10 @@ __int16 * Rules_AddToUnionList(__int16 *theList, __int16 *theHead, int theConstr
 LABEL_8:
       if ( Rules_RestrictionOnType(*theItem, theConstraint) )
       {
-        result = (__int16 *)AST_NewNode(*theItem, *(_DWORD *)(theItem + 1));
+        result = (__int16 *)(uintptr_t)AST_NewNode(*theItem, *(_DWORD *)(theItem + 1));
         *(_DWORD *)(result + 5) = theHead;
         theHead = result;
-        theItem = *(__int16 **)(v7 + 10);
+        theItem = *(__int16 **)(uintptr_t)(v7 + 10);
         if ( !theItem )
           return result;
       }
@@ -394,21 +394,21 @@ int  Rules_RemoveConstantFromConstraint(int result, int theValue, int theConstra
   lastOne = 0;
   if ( theConstraint )
   {
-    theList = *(__int16 **)(theConstraint + 6);
-    *(_DWORD *)(theConstraint + 6) = 0;
+    theList = *(__int16 **)(uintptr_t)(theConstraint + 6);
+    *(_DWORD *)(uintptr_t)(theConstraint + 6) = 0;
     while ( theList )
     {
       if ( *theList == theType && theValue == *(_DWORD *)(theList + 1) )
       {
         *(_DWORD *)(theList + 5) = 0;
-        AST_Free((int)theList);
+        AST_Free((int)(intptr_t)theList);
       }
       else
       {
         if ( lastOne )
           *(_DWORD *)(lastOne + 5) = theList;
         else
-          *(_DWORD *)(theConstraint + 6) = theList;
+          *(_DWORD *)(uintptr_t)(theConstraint + 6) = theList;
         lastOne = theList;
         theList = *(__int16 **)(theList + 5);
         *(_DWORD *)(lastOne + 5) = 0;
@@ -424,17 +424,17 @@ int  Rules_RemoveConstantFromConstraint(int result, int theValue, int theConstra
 //----- (004C3CA0) --------------------------------------------------------
 signed int Rules_RegisterDefglobalBinaryItem(void)
 {
-  Rules_AddAfterBloadFunction((int)aDefglobal_1, (int)Defglobal_ResetAllDefglobals, 50);
+  Rules_AddAfterBloadFunction((int)(intptr_t)aDefglobal_1, (int)(intptr_t)Defglobal_ResetAllDefglobals, 50);
   return Rules_RegisterBinaryItem(
-           (int)aDefglobal_1,
+           (int)(intptr_t)aDefglobal_1,
            0,
            0,
-           (int)Rules_BsaveFindDefglobals,
-           (int)Rules_BsaveDefglobalStorage,
-           (int)Rules_BsaveDefglobals,
-           (int)Rules_BloadDefglobalStorage,
-           (int)Rules_BloadDefglobals,
-           (int)Rules_ClearDefglobalBload);
+           (int)(intptr_t)Rules_BsaveFindDefglobals,
+           (int)(intptr_t)Rules_BsaveDefglobalStorage,
+           (int)(intptr_t)Rules_BsaveDefglobals,
+           (int)(intptr_t)Rules_BloadDefglobalStorage,
+           (int)(intptr_t)Rules_BloadDefglobals,
+           (int)(intptr_t)Rules_ClearDefglobalBload);
 }
 
 //----- (004C3CF0) --------------------------------------------------------
@@ -458,7 +458,7 @@ int Rules_BsaveFindDefglobals(void)
   {
     Module_SetCurrent(i);
     ++g_DefglobalModuleItemCount;
-    for ( j = (_DWORD *)Defglobal_EnumNext(0); j; j = (_DWORD *)Defglobal_EnumNext(v4) )
+    for ( j = (_DWORD *)(uintptr_t)Defglobal_EnumNext(0); j; j = (_DWORD *)(uintptr_t)Defglobal_EnumNext(v4) )
     {
       bsaveIndex = g_Defglobal_Count++;
       AST_MarkNodeFieldBound(j, bsaveIndex);
@@ -511,8 +511,8 @@ int  Rules_BsaveDefglobals(int fp)
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(v5) )
   {
     Module_SetCurrent(i);
-    theItem = Module_FindItemByName((int)aDefglobal_1);
-    theModuleItem = (_DWORD *)Module_GetItem(0, *(_DWORD *)(theItem + 4));
+    theItem = Module_FindItemByName((int)(intptr_t)aDefglobal_1);
+    theModuleItem = (_DWORD *)(uintptr_t)Module_GetItem(0, *(_DWORD *)(uintptr_t)(theItem + 4));
     Module_AssignBsaveItemHeaderIndices(dummyModule, theModuleItem);
     Rules_BsaveWriteBlock(12, fp, dummyModule);
   }
@@ -523,7 +523,7 @@ int  Rules_BsaveDefglobals(int fp)
     for ( k = Defglobal_EnumNext(0); k; k = Defglobal_EnumNext(v9) )
     {
       AST_ExtractPatternBindingInfo(dummyGlobal, k);
-      dummyGlobal[3] = AST_GetHashedNodeIndex(*(__int16 **)(v8 + 52));
+      dummyGlobal[3] = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v8 + 52));
       Rules_BsaveWriteBlock(16, fp, dummyGlobal);
     }
   }
@@ -556,12 +556,12 @@ signed int Rules_BloadDefglobalStorage(void)
     g_ClipsDefglobalModuleItemArray = 0;
   }
   space[0] = 12 * g_DefglobalModuleItemCount;
-  result = Mem_HeapAllocWithRetry((_DWORD *)(12 * g_DefglobalModuleItemCount));
+  result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * g_DefglobalModuleItemCount));
   g_ClipsDefglobalModuleItemArray = result;
   if ( g_Defglobal_Count )
   {
     space[0] = 56 * g_Defglobal_Count;
-    result = Mem_HeapAllocWithRetry((_DWORD *)(56 * g_Defglobal_Count));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(56 * g_Defglobal_Count));
     g_DefglobalBloadRecords = result;
   }
   else
@@ -590,7 +590,7 @@ signed int Rules_BloadDefglobals(void)
 //----- (004C4010) --------------------------------------------------------
 _DWORD * Rules_UpdateDefglobalModule(_DWORD *buf, int obji)
 {
-  return Module_UpdateItemHeader(buf, (_DWORD *)(12 * obji + g_ClipsDefglobalModuleItemArray), g_DefglobalBloadRecords, 56);
+  return Module_UpdateItemHeader(buf, (_DWORD *)(uintptr_t)(12 * obji + g_ClipsDefglobalModuleItemArray), g_DefglobalBloadRecords, 56);
 }
 // 51B370: using guessed type int dword_51B370;
 // 54E890: using guessed type int dword_54E890;
@@ -606,19 +606,19 @@ int  Rules_UpdateDefglobal(int buf, int obji)
   int result; // eax
 
   recordOffset = 56 * obji;
-  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)(56 * obji + g_DefglobalBloadRecords), g_ClipsDefglobalModuleItemArray, 12, 56, g_DefglobalBloadRecords);
+  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)(uintptr_t)(56 * obji + g_DefglobalBloadRecords), g_ClipsDefglobalModuleItemArray, 12, 56, g_DefglobalBloadRecords);
   recordsBase = g_DefglobalBloadRecords;
   watchFlag = g_Rules_WatchGlobals;
-  *(_BYTE *)(g_DefglobalBloadRecords + recordOffset + 20) &= ~1u;
-  *(_DWORD *)(recordsBase + recordOffset + 20) |= watchFlag & 1;
-  initialIndex = *(_DWORD *)(buf + 12);
+  *(_BYTE *)(uintptr_t)(g_DefglobalBloadRecords + recordOffset + 20) &= ~1u;
+  *(_DWORD *)(uintptr_t)(recordsBase + recordOffset + 20) |= watchFlag & 1;
+  initialIndex = *(_DWORD *)(uintptr_t)(buf + 12);
   if ( initialIndex == -1 )
     initialExpr = 0;
   else
     initialExpr = 14 * initialIndex + g_ClipsPackedExpressionArray;
   result = 56 * obji;
-  *(_DWORD *)(g_DefglobalBloadRecords + result + 52) = initialExpr;
-  *(_DWORD *)(g_DefglobalBloadRecords + result + 32) = 105;
+  *(_DWORD *)(uintptr_t)(g_DefglobalBloadRecords + result + 52) = initialExpr;
+  *(_DWORD *)(uintptr_t)(g_DefglobalBloadRecords + result + 32) = 105;
   return result;
 }
 // 51B370: using guessed type int dword_51B370;
@@ -643,10 +643,10 @@ signed int Rules_ClearDefglobalBload(void)
     recordOffset = 0;
     do
     {
-      Rules_ReleaseSymbolReference((int *)(recordOffset + g_DefglobalBloadRecords), globalIndex);
+      Rules_ReleaseSymbolReference((int *)(uintptr_t)(recordOffset + g_DefglobalBloadRecords), globalIndex);
       Rules_ValueDeinstall(v2 + g_DefglobalBloadRecords + 28, v3);
-      if ( *(_DWORD *)(v4 + g_DefglobalBloadRecords + 32) == 4 )
-        Rules_ReturnMultifieldToPool(*(_DWORD **)(v4 + g_DefglobalBloadRecords + 36));
+      if ( *(_DWORD *)(uintptr_t)(v4 + g_DefglobalBloadRecords + 32) == 4 )
+        Rules_ReturnMultifieldToPool(*(_DWORD **)(uintptr_t)(v4 + g_DefglobalBloadRecords + 36));
       globalIndex = v5 + 1;
       recordOffset = v4 + 56;
     }
@@ -679,15 +679,15 @@ int  Rules_GetDefglobalModulePointer(int theIndex)
 signed int Defgeneric_RegisterBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
-           (int)aGenericFunct_0,
+           (int)(intptr_t)aGenericFunct_0,
            0,
-           (int)Defgeneric_BsaveWriteExpressions,
-           (int)Defgeneric_CountBsaveEntries,
-           (int)Defgeneric_BsaveWriteBinaryHeader,
-           (int)Defgeneric_BsaveWriteConstructs,
-           (int)Defgeneric_BloadAllocateBinaryStorage,
-           (int)Defgeneric_BloadRefreshConstructs,
-           (int)Defgeneric_ClearBinaryData);
+           (int)(intptr_t)Defgeneric_BsaveWriteExpressions,
+           (int)(intptr_t)Defgeneric_CountBsaveEntries,
+           (int)(intptr_t)Defgeneric_BsaveWriteBinaryHeader,
+           (int)(intptr_t)Defgeneric_BsaveWriteConstructs,
+           (int)(intptr_t)Defgeneric_BloadAllocateBinaryStorage,
+           (int)(intptr_t)Defgeneric_BloadRefreshConstructs,
+           (int)(intptr_t)Defgeneric_ClearBinaryData);
 }
 
 //----- (004C4210) --------------------------------------------------------
@@ -743,17 +743,17 @@ int  Defgeneric_CountMethodsAndMarkExpressions(_DWORD *theDefgeneric)
 
   bsaveId = g_Defgeneric_MethodRecordCount++;
   AST_MarkNodeFieldBound(theDefgeneric, bsaveId);
-  result = *(_DWORD *)(v2 + 32);
+  result = *(_DWORD *)(uintptr_t)(v2 + 32);
   g_Defgeneric_RestrictionRecordCount += result;
   methodIndex = 0;
-  if ( *(_DWORD *)(v2 + 32) )
+  if ( *(_DWORD *)(uintptr_t)(v2 + 32) )
   {
     methodOffset = 0;
     do
     {
-      theMethod = (_DWORD *)(methodOffset + theDefgeneric[7]);
+      theMethod = (_DWORD *)(uintptr_t)(methodOffset + theDefgeneric[7]);
       g_ClipsExpressionNodeIndex += AST_CountTreeNodes(theMethod[8]);
-      Rules_MarkReferencedFunctions((__int16 *)theMethod[8]);
+      Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)theMethod[8]);
       g_Defgeneric_RestrictionTypeCount += theMethod[2];
       restrictionIndex = 0;
       if ( theMethod[2] )
@@ -761,15 +761,15 @@ int  Defgeneric_CountMethodsAndMarkExpressions(_DWORD *theDefgeneric)
         restrictionOffset = 0;
         do
         {
-          g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(restrictionOffset + theMethod[7] + 4));
-          Rules_MarkReferencedFunctions(*(__int16 **)(v10 + v9 + 4));
-          g_Defgeneric_PackedExpressionCount += *(_DWORD *)(v12 + v11 + 8);
+          g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(restrictionOffset + theMethod[7] + 4));
+          Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v10 + v9 + 4));
+          g_Defgeneric_PackedExpressionCount += *(_DWORD *)(uintptr_t)(v12 + v11 + 8);
           ++restrictionIndex;
           restrictionOffset = v12 + 12;
         }
         while ( restrictionIndex < theMethod[2] );
       }
-      result = (int)theDefgeneric;
+      result = (int)(intptr_t)theDefgeneric;
       ++methodIndex;
       methodOffset += 40;
     }
@@ -804,7 +804,7 @@ __int16 * Defgeneric_BsaveWriteMethodActionExpressions(__int16 *result, int fp)
   int methodOffset; // ecx
   int v6; // ecx
 
-  theDefgeneric = (int)result;
+  theDefgeneric = (int)(intptr_t)result;
   methodIndex = 0;
   if ( *((_DWORD *)result + 8) )
   {
@@ -812,10 +812,10 @@ __int16 * Defgeneric_BsaveWriteMethodActionExpressions(__int16 *result, int fp)
     do
     {
       ++methodIndex;
-      result = Rules_BsaveWriteExpression(*(__int16 **)(methodOffset + *(_DWORD *)(theDefgeneric + 28) + 32), fp);
+      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28) + 32), fp);
       methodOffset = v6 + 40;
     }
-    while ( methodIndex < *(_DWORD *)(theDefgeneric + 32) );
+    while ( methodIndex < *(_DWORD *)(uintptr_t)(theDefgeneric + 32) );
   }
   return result;
 }
@@ -832,15 +832,15 @@ __int16 * Defgeneric_BsaveWriteRestrictionExpressions(__int16 *result, int fp)
   int theDefgeneric; // [esp+0h] [ebp-1Ch]
   unsigned int methodIndex; // [esp+4h] [ebp-18h]
 
-  theDefgeneric = (int)result;
+  theDefgeneric = (int)(intptr_t)result;
   methodIndex = 0;
   if ( *((_DWORD *)result + 8) )
   {
     methodOffset = 0;
     do
     {
-      theMethod = methodOffset + *(_DWORD *)(theDefgeneric + 28);
-      result = *(__int16 **)(theMethod + 8);
+      theMethod = methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28);
+      result = *(__int16 **)(uintptr_t)(theMethod + 8);
       restrictionIndex = 0;
       if ( result )
       {
@@ -848,15 +848,15 @@ __int16 * Defgeneric_BsaveWriteRestrictionExpressions(__int16 *result, int fp)
         do
         {
           ++restrictionIndex;
-          result = Rules_BsaveWriteExpression(*(__int16 **)(restrictionOffset + *(_DWORD *)(theMethod + 28) + 4), fp);
+          result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(restrictionOffset + *(_DWORD *)(uintptr_t)(theMethod + 28) + 4), fp);
           restrictionOffset = v7 + 12;
         }
-        while ( restrictionIndex < *(_DWORD *)(theMethod + 8) );
+        while ( restrictionIndex < *(_DWORD *)(uintptr_t)(theMethod + 8) );
       }
       methodOffset += 40;
       ++methodIndex;
     }
-    while ( methodIndex < *(_DWORD *)(theDefgeneric + 32) );
+    while ( methodIndex < *(_DWORD *)(uintptr_t)(theDefgeneric + 32) );
   }
   return result;
 }
@@ -911,8 +911,8 @@ int  Defgeneric_BsaveWriteConstructs(int fp, int a2)
   {
     do
     {
-      theItem = Module_FindItemByName((int)aDefgeneric_2);
-      theModuleItem = (_DWORD *)Module_GetItem(v4, *(_DWORD *)(theItem + 4));
+      theItem = Module_FindItemByName((int)(intptr_t)aDefgeneric_2);
+      theModuleItem = (_DWORD *)(uintptr_t)Module_GetItem(v4, *(_DWORD *)(uintptr_t)(theItem + 4));
       Module_AssignBsaveItemHeaderIndices(dummyModule, theModuleItem);
       Rules_BsaveWriteBlock(12, fp, dummyModule);
     }
@@ -956,11 +956,11 @@ const void * Defgeneric_BsaveWriteGenericRecord(int theDefgeneric, int fp, int a
 
   v9 = a3;
   AST_ExtractPatternBindingInfo(dummyGeneric, theDefgeneric);
-  methodCount = *(_DWORD *)(v4 + 32);
-  if ( *(_DWORD *)(v4 + 28) )
+  methodCount = *(_DWORD *)(uintptr_t)(v4 + 32);
+  if ( *(_DWORD *)(uintptr_t)(v4 + 28) )
   {
     methodsIndex = g_Defgeneric_RestrictionRecordCount;
-    g_Defgeneric_RestrictionRecordCount += *(_DWORD *)(v4 + 32);
+    g_Defgeneric_RestrictionRecordCount += *(_DWORD *)(uintptr_t)(v4 + 32);
   }
   else
   {
@@ -983,14 +983,14 @@ _DWORD * Defgeneric_BsaveWriteMethodRecord(_DWORD *result, int fp)
   int restrictionsIndex; // [esp+18h] [ebp-1Ch]
   int actionsIndex; // [esp+1Ch] [ebp-18h]
 
-  theDefgeneric = (int)result;
+  theDefgeneric = (int)(intptr_t)result;
   methodIndex = 0;
   if ( result[8] )
   {
     methodOffset = 0;
     do
     {
-      theMethod = (_DWORD *)(methodOffset + *(_DWORD *)(theDefgeneric + 28));
+      theMethod = (_DWORD *)(uintptr_t)(methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28));
       dummyMethod[0] = *theMethod;
       dummyMethod[1] = theMethod[2];
       dummyMethod[2] = theMethod[3];
@@ -1019,7 +1019,7 @@ _DWORD * Defgeneric_BsaveWriteMethodRecord(_DWORD *result, int fp)
       ++methodIndex;
       methodOffset = v7 + 40;
     }
-    while ( methodIndex < *(_DWORD *)(theDefgeneric + 32) );
+    while ( methodIndex < *(_DWORD *)(uintptr_t)(theDefgeneric + 32) );
   }
   return result;
 }
@@ -1057,10 +1057,10 @@ _DWORD * Defgeneric_BsaveWriteRestrictionRecord(_DWORD *result, int fp)
       v15 = methodOffset;
       while ( 1 )
       {
-        result = (_DWORD *)(v15 + theDefgeneric[7]);
+        result = (_DWORD *)(uintptr_t)(v15 + theDefgeneric[7]);
         if ( restrictionIndex >= result[2] )
           break;
-        theRestriction = (_DWORD *)(restrictionOffset + result[7]);
+        theRestriction = (_DWORD *)(uintptr_t)(restrictionOffset + result[7]);
         typeCount = theRestriction[2];
         if ( *theRestriction )
         {
@@ -1127,18 +1127,18 @@ _DWORD * Defgeneric_BsaveWriteRestrictionTypeRecord(_DWORD *result, int fp)
       restrictionOffset = 0;
       while ( 1 )
       {
-        result = (_DWORD *)(v13 + theDefgeneric[7]);
+        result = (_DWORD *)(uintptr_t)(v13 + theDefgeneric[7]);
         if ( restrictionIndex >= result[2] )
           break;
-        theRestriction = (_DWORD *)(restrictionOffset + result[7]);
+        theRestriction = (_DWORD *)(uintptr_t)(restrictionOffset + result[7]);
         if ( theRestriction[2] )
         {
           typeOffset = 0;
           do
           {
             typeAddr = typeOffset + *theRestriction;
-            if ( *(_DWORD *)typeAddr )
-              classIndex = *(_DWORD *)(*(_DWORD *)typeAddr + 12);
+            if ( *(_DWORD *)(uintptr_t)typeAddr )
+              classIndex = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)typeAddr + 12);
             else
               classIndex = -1;
             dummyClassIndex = classIndex;
@@ -1181,27 +1181,27 @@ int Defgeneric_BloadAllocateBinaryStorage(void)
     if ( counts[0] )
     {
       space[0] = 12 * counts[0];
-      result = Mem_HeapAllocWithRetry((_DWORD *)(12 * counts[0]));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * counts[0]));
       g_DefgenericBloadModuleRefArray = result;
       if ( g_Defgeneric_MethodRecordCount )
       {
         space[0] = 40 * g_Defgeneric_MethodRecordCount;
-        result = Mem_HeapAllocWithRetry((_DWORD *)(40 * g_Defgeneric_MethodRecordCount));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(40 * g_Defgeneric_MethodRecordCount));
         g_DefgenericMethodArray = result;
         if ( g_Defgeneric_RestrictionRecordCount )
         {
           space[0] = 40 * g_Defgeneric_RestrictionRecordCount;
-          result = Mem_HeapAllocWithRetry((_DWORD *)(40 * g_Defgeneric_RestrictionRecordCount));
+          result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(40 * g_Defgeneric_RestrictionRecordCount));
           g_DefgenericRestrictionRecords = result;
           if ( g_Defgeneric_RestrictionTypeCount )
           {
             space[0] = 12 * g_Defgeneric_RestrictionTypeCount;
-            result = Mem_HeapAllocWithRetry((_DWORD *)(12 * g_Defgeneric_RestrictionTypeCount));
+            result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * g_Defgeneric_RestrictionTypeCount));
             g_ClipsDefgenericBloadRestrictionTypeArray = result;
             if ( g_Defgeneric_PackedExpressionCount )
             {
               space[0] = 4 * g_Defgeneric_PackedExpressionCount;
-              result = Mem_HeapAllocWithRetry((_DWORD *)(4 * g_Defgeneric_PackedExpressionCount));
+              result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * g_Defgeneric_PackedExpressionCount));
               g_DefgenericBloadRestrictionTypeArray = result;
             }
           }
@@ -1252,7 +1252,7 @@ int __thiscall Defgeneric_BloadRefreshConstructs(void *this)
 //----- (004C4B20) --------------------------------------------------------
 _DWORD * Defgeneric_BloadRefreshGenericRecord(_DWORD *buf, int obji)
 {
-  return Module_UpdateItemHeader(buf, (_DWORD *)(12 * obji + g_DefgenericBloadModuleRefArray), g_DefgenericMethodArray, 40);
+  return Module_UpdateItemHeader(buf, (_DWORD *)(uintptr_t)(12 * obji + g_DefgenericBloadModuleRefArray), g_DefgenericMethodArray, 40);
 }
 // 51B378: using guessed type int dword_51B378;
 // 51B390: using guessed type int dword_51B390;
@@ -1266,18 +1266,18 @@ int  Defgeneric_BloadRefreshMethodRecord(int buf, int obji)
   int result; // eax
 
   methodOffset = 40 * obji;
-  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)(g_DefgenericMethodArray + 40 * obji), g_DefgenericBloadModuleRefArray, 12, 40, g_DefgenericMethodArray);
-  *(_DWORD *)(g_DefgenericMethodArray + methodOffset + 20) = 0;
-  *(_DWORD *)(g_DefgenericMethodArray + methodOffset + 24) = g_Rules_WatchGenericFunctions;
-  restrictionsIndex = *(_DWORD *)(buf + 12);
+  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)(uintptr_t)(g_DefgenericMethodArray + 40 * obji), g_DefgenericBloadModuleRefArray, 12, 40, g_DefgenericMethodArray);
+  *(_DWORD *)(uintptr_t)(g_DefgenericMethodArray + methodOffset + 20) = 0;
+  *(_DWORD *)(uintptr_t)(g_DefgenericMethodArray + methodOffset + 24) = g_Rules_WatchGenericFunctions;
+  restrictionsIndex = *(_DWORD *)(uintptr_t)(buf + 12);
   if ( restrictionsIndex == -1 )
     restrictionsPtr = 0;
   else
     restrictionsPtr = 40 * restrictionsIndex + g_DefgenericRestrictionRecords;
   result = 5 * obji;
-  *(_DWORD *)(g_DefgenericMethodArray + 8 * result + 28) = restrictionsPtr;
-  *(_DWORD *)(g_DefgenericMethodArray + 8 * result + 32) = *(_DWORD *)(buf + 16);
-  *(_DWORD *)(g_DefgenericMethodArray + 8 * result + 36) = 0;
+  *(_DWORD *)(uintptr_t)(g_DefgenericMethodArray + 8 * result + 28) = restrictionsPtr;
+  *(_DWORD *)(uintptr_t)(g_DefgenericMethodArray + 8 * result + 32) = *(_DWORD *)(uintptr_t)(buf + 16);
+  *(_DWORD *)(uintptr_t)(g_DefgenericMethodArray + 8 * result + 36) = 0;
   return result;
 }
 // 51B378: using guessed type int dword_51B378;
@@ -1300,34 +1300,34 @@ int  Defgeneric_BloadRefreshRestrictionRecord(_DWORD *buf, int obji)
   int result; // eax
 
   restrictionOffset = 40 * obji;
-  *(_DWORD *)(restrictionOffset + g_DefgenericRestrictionRecords) = *buf;
-  *(_DWORD *)(g_DefgenericRestrictionRecords + restrictionOffset + 4) = 0;
+  *(_DWORD *)(uintptr_t)(restrictionOffset + g_DefgenericRestrictionRecords) = *buf;
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + restrictionOffset + 4) = 0;
   recordsBase = g_DefgenericRestrictionRecords;
   watchFlag = g_Rules_WatchMethods;
-  *(_BYTE *)(g_DefgenericRestrictionRecords + restrictionOffset + 24) &= ~2u;
-  *(_DWORD *)(recordsBase + restrictionOffset + 24) |= 2 * (watchFlag & 1);
-  *(_DWORD *)(g_DefgenericRestrictionRecords + restrictionOffset + 8) = buf[1];
-  *(_DWORD *)(restrictionOffset + g_DefgenericRestrictionRecords + 12) = buf[2];
-  *(_DWORD *)(g_DefgenericRestrictionRecords + restrictionOffset + 16) = buf[3];
-  *(_DWORD *)(g_DefgenericRestrictionRecords + restrictionOffset + 20) = buf[4];
+  *(_BYTE *)(uintptr_t)(g_DefgenericRestrictionRecords + restrictionOffset + 24) &= ~2u;
+  *(_DWORD *)(uintptr_t)(recordsBase + restrictionOffset + 24) |= 2 * (watchFlag & 1);
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + restrictionOffset + 8) = buf[1];
+  *(_DWORD *)(uintptr_t)(restrictionOffset + g_DefgenericRestrictionRecords + 12) = buf[2];
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + restrictionOffset + 16) = buf[3];
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + restrictionOffset + 20) = buf[4];
   recordPtr = g_DefgenericRestrictionRecords + restrictionOffset;
   v7 = buf[5];
-  *(_BYTE *)(recordPtr + 24) &= ~1u;
-  *(_DWORD *)(recordPtr + 24) |= v7 & 1;
+  *(_BYTE *)(uintptr_t)(recordPtr + 24) &= ~1u;
+  *(_DWORD *)(uintptr_t)(recordPtr + 24) |= v7 & 1;
   typesIndex = buf[6];
   if ( typesIndex == -1 )
     typesPtr = 0;
   else
     typesPtr = 12 * typesIndex + g_ClipsDefgenericBloadRestrictionTypeArray;
-  *(_DWORD *)(g_DefgenericRestrictionRecords + 40 * obji + 28) = typesPtr;
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + 40 * obji + 28) = typesPtr;
   queryIndex = buf[7];
   if ( queryIndex == -1 )
     queryPtr = 0;
   else
     queryPtr = 14 * queryIndex + g_ClipsPackedExpressionArray;
   result = 5 * obji;
-  *(_DWORD *)(g_DefgenericRestrictionRecords + 8 * result + 32) = queryPtr;
-  *(_DWORD *)(g_DefgenericRestrictionRecords + 8 * result + 36) = 0;
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + 8 * result + 32) = queryPtr;
+  *(_DWORD *)(uintptr_t)(g_DefgenericRestrictionRecords + 8 * result + 36) = 0;
   return result;
 }
 // 51B394: using guessed type int dword_51B394;
@@ -1343,19 +1343,19 @@ int  Defgeneric_BloadRefreshRestrictionTypeRecord(_DWORD *buf, int obji)
   int exprPtr; // ecx
   int result; // eax
 
-  *(_DWORD *)(12 * obji + g_ClipsDefgenericBloadRestrictionTypeArray + 8) = buf[2];
+  *(_DWORD *)(uintptr_t)(12 * obji + g_ClipsDefgenericBloadRestrictionTypeArray + 8) = buf[2];
   if ( *buf == -1 )
     typesPtr = 0;
   else
     typesPtr = g_DefgenericBloadRestrictionTypeArray + 4 * *buf;
-  *(_DWORD *)(g_ClipsDefgenericBloadRestrictionTypeArray + 12 * obji) = typesPtr;
+  *(_DWORD *)(uintptr_t)(g_ClipsDefgenericBloadRestrictionTypeArray + 12 * obji) = typesPtr;
   exprIndex = buf[1];
   if ( exprIndex == -1 )
     exprPtr = 0;
   else
     exprPtr = 14 * exprIndex + g_ClipsPackedExpressionArray;
   result = 3 * obji;
-  *(_DWORD *)(g_ClipsDefgenericBloadRestrictionTypeArray + 12 * obji + 4) = exprPtr;
+  *(_DWORD *)(uintptr_t)(g_ClipsDefgenericBloadRestrictionTypeArray + 12 * obji + 4) = exprPtr;
   return result;
 }
 // 51B398: using guessed type int dword_51B398;
@@ -1370,12 +1370,12 @@ int  Defgeneric_BloadRefreshExpressionPointer(_DWORD *buf, int obji)
   if ( *buf == -1 )
   {
     result = 0;
-    *(_DWORD *)(g_DefgenericBloadRestrictionTypeArray + 4 * obji) = 0;
+    *(_DWORD *)(uintptr_t)(g_DefgenericBloadRestrictionTypeArray + 4 * obji) = 0;
   }
   else
   {
     result = g_Clips_DefclassArrayBase + 124 * *buf;
-    *(_DWORD *)(g_DefgenericBloadRestrictionTypeArray + 4 * obji) = result;
+    *(_DWORD *)(uintptr_t)(g_DefgenericBloadRestrictionTypeArray + 4 * obji) = result;
   }
   return result;
 }
@@ -1398,7 +1398,7 @@ signed int Defgeneric_ClearBinaryData(void)
     methodIndex = 0;
     g_DefgenericBloadModuleRefArray = 0;
     for ( g_DefgenericBloadCount = 0; methodIndex < g_Defgeneric_MethodRecordCount; recordOffset = v3 + 40 )
-      Rules_ReleaseSymbolReference((int *)(recordOffset + g_DefgenericMethodArray), methodIndex + 1);
+      Rules_ReleaseSymbolReference((int *)(uintptr_t)(recordOffset + g_DefgenericMethodArray), methodIndex + 1);
     result = g_Defgeneric_MethodRecordCount;
     if ( 40 * g_Defgeneric_MethodRecordCount )
     {
@@ -1446,15 +1446,15 @@ signed int Defgeneric_ClearBinaryData(void)
 signed int Deffunction_RegisterBinaryItem(void)
 {
   return Rules_RegisterBinaryItem(
-           (int)aDeffunctions_0,
+           (int)(intptr_t)aDeffunctions_0,
            0,
-           (int)Deffunction_BsaveWriteExpressions,
-           (int)Deffunction_CountBsaveEntries,
-           (int)Deffunction_BsaveWriteBinaryHeader,
-           (int)Deffunction_BsaveWriteConstructs,
-           (int)Deffunction_BloadAllocateBinaryStorage,
-           (int)Deffunction_BloadRefreshConstructs,
-           (int)Deffunction_ClearBinaryData);
+           (int)(intptr_t)Deffunction_BsaveWriteExpressions,
+           (int)(intptr_t)Deffunction_CountBsaveEntries,
+           (int)(intptr_t)Deffunction_BsaveWriteBinaryHeader,
+           (int)(intptr_t)Deffunction_BsaveWriteConstructs,
+           (int)(intptr_t)Deffunction_BloadAllocateBinaryStorage,
+           (int)(intptr_t)Deffunction_BloadRefreshConstructs,
+           (int)(intptr_t)Deffunction_ClearBinaryData);
 }
 
 //----- (004C4F90) --------------------------------------------------------

@@ -36,8 +36,8 @@ __int16  Deffunction_CountAndMarkExpressions(_DWORD *theDeffunction)
 
   bsaveId = g_Deffunction_Count++;
   AST_MarkNodeFieldBound(theDeffunction, bsaveId);
-  g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(v2 + 30));
-  return Rules_MarkReferencedFunctions(*(__int16 **)(v3 + 30));
+  g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v2 + 30));
+  return Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v3 + 30));
 }
 // 4C5018: variable 'v2' is possibly undefined
 // 4C5026: variable 'v3' is possibly undefined
@@ -54,7 +54,7 @@ signed int Deffunction_BsaveWriteExpressions(void)
 //----- (004C5050) --------------------------------------------------------
 __int16 * Deffunction_BsaveWriteBodyExpression(int theDeffunction, int fp)
 {
-  return Rules_BsaveWriteExpression(*(__int16 **)(theDeffunction + 30), fp);
+  return Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(theDeffunction + 30), fp);
 }
 
 //----- (004C5060) --------------------------------------------------------
@@ -94,8 +94,8 @@ int  Deffunction_BsaveWriteConstructs(int fp, int a2)
   {
     do
     {
-      theItem = Module_FindItemByName((int)aDeffunction_2);
-      theModuleItem = (_DWORD *)Module_GetItem(v4, *(_DWORD *)(theItem + 4));
+      theItem = Module_FindItemByName((int)(intptr_t)aDeffunction_2);
+      theModuleItem = (_DWORD *)(uintptr_t)Module_GetItem(v4, *(_DWORD *)(uintptr_t)(theItem + 4));
       Module_AssignBsaveItemHeaderIndices(dummyModule, theModuleItem);
       Rules_BsaveWriteBlock(12, fp, dummyModule);
     }
@@ -126,13 +126,13 @@ const void * Deffunction_BsaveWriteRecord(int theDeffunction, int fp, int a3)
 
   v8 = a3;
   AST_ExtractPatternBindingInfo(dummyDeffunction, theDeffunction);
-  dummyDeffunction[3] = *(_DWORD *)(v4 + 34);
-  dummyDeffunction[4] = *(_DWORD *)(v4 + 38);
-  dummyDeffunction[5] = *(_DWORD *)(v4 + 42);
-  if ( *(_DWORD *)(v4 + 30) )
+  dummyDeffunction[3] = *(_DWORD *)(uintptr_t)(v4 + 34);
+  dummyDeffunction[4] = *(_DWORD *)(uintptr_t)(v4 + 38);
+  dummyDeffunction[5] = *(_DWORD *)(uintptr_t)(v4 + 42);
+  if ( *(_DWORD *)(uintptr_t)(v4 + 30) )
   {
     codeIndex = g_ClipsExpressionNodeIndex;
-    g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(v4 + 30));
+    g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v4 + 30));
   }
   else
   {
@@ -158,12 +158,12 @@ int __thiscall Deffunction_BloadAllocateBinaryStorage(void *this)
     if ( g_Clips_DeffunctionCount )
     {
       space[0] = 12 * g_Clips_DeffunctionCount;
-      result = Mem_HeapAllocWithRetry((_DWORD *)(12 * g_Clips_DeffunctionCount));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * g_Clips_DeffunctionCount));
       g_Clips_DeffunctionRecordArray = result;
       if ( g_Deffunction_Count )
       {
         space[0] = 46 * g_Deffunction_Count;
-        result = Mem_HeapAllocWithRetry((_DWORD *)(46 * g_Deffunction_Count));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(46 * g_Deffunction_Count));
         g_DeffunctionBloadRecordArray = result;
       }
       else
@@ -199,7 +199,7 @@ signed int Deffunction_BloadRefreshConstructs(void)
 //----- (004C52F0) --------------------------------------------------------
 _DWORD * Deffunction_BloadRefreshRecord(_DWORD *buf, int obji)
 {
-  return Module_UpdateItemHeader(buf, (_DWORD *)(12 * obji + g_Clips_DeffunctionRecordArray), g_DeffunctionBloadRecordArray, 46);
+  return Module_UpdateItemHeader(buf, (_DWORD *)(uintptr_t)(12 * obji + g_Clips_DeffunctionRecordArray), g_DeffunctionBloadRecordArray, 46);
 }
 // 51B3A0: using guessed type int dword_51B3A0;
 // 54E894: using guessed type int dword_54E894;
@@ -213,20 +213,20 @@ int  Deffunction_BloadRefreshBodyRecord(_DWORD *buf, int obji)
   int result; // eax
 
   theDeffunction = g_DeffunctionBloadRecordArray + 46 * obji;
-  Rules_BuildIndexedSlotDescriptor((int)buf, (_DWORD *)theDeffunction, g_Clips_DeffunctionRecordArray, 12, 46, g_DeffunctionBloadRecordArray);
+  Rules_BuildIndexedSlotDescriptor((int)(intptr_t)buf, (_DWORD *)(uintptr_t)theDeffunction, g_Clips_DeffunctionRecordArray, 12, 46, g_DeffunctionBloadRecordArray);
   codeIndex = buf[7];
   if ( codeIndex == -1 )
     codeExpr = 0;
   else
     codeExpr = g_ClipsPackedExpressionArray + 14 * codeIndex;
-  *(_DWORD *)(theDeffunction + 20) = 0;
-  *(_DWORD *)(theDeffunction + 24) = 0;
-  *(_DWORD *)(theDeffunction + 30) = codeExpr;
-  *(_WORD *)(theDeffunction + 28) = g_Rules_WatchDeffunctions;
-  *(_DWORD *)(theDeffunction + 34) = buf[3];
-  *(_DWORD *)(theDeffunction + 38) = buf[4];
+  *(_DWORD *)(uintptr_t)(theDeffunction + 20) = 0;
+  *(_DWORD *)(uintptr_t)(theDeffunction + 24) = 0;
+  *(_DWORD *)(uintptr_t)(theDeffunction + 30) = codeExpr;
+  *(_WORD *)(uintptr_t)(theDeffunction + 28) = g_Rules_WatchDeffunctions;
+  *(_DWORD *)(uintptr_t)(theDeffunction + 34) = buf[3];
+  *(_DWORD *)(uintptr_t)(theDeffunction + 38) = buf[4];
   result = buf[5];
-  *(_DWORD *)(theDeffunction + 42) = result;
+  *(_DWORD *)(uintptr_t)(theDeffunction + 42) = result;
   return result;
 }
 // 51AAE8: using guessed type int dword_51AAE8;
@@ -253,7 +253,7 @@ signed int Deffunction_ClearBinaryData(void)
       recordOffset = 0;
       do
       {
-        result = Rules_ReleaseSymbolReference((int *)(recordOffset + g_DeffunctionBloadRecordArray), recordOffset);
+        result = Rules_ReleaseSymbolReference((int *)(uintptr_t)(recordOffset + g_DeffunctionBloadRecordArray), recordOffset);
         recordOffset = v2 + 46;
       }
       while ( v3 < g_Deffunction_Count );
@@ -277,17 +277,17 @@ signed int Deffunction_ClearBinaryData(void)
 //----- (004C5450) --------------------------------------------------------
 signed int Class_RegisterBinaryItem(void)
 {
-  Rules_AddAbortBloadFunction((int)aDefclass_0, (int)Class_CreateSystemClasses, 0);
+  Rules_AddAbortBloadFunction((int)(intptr_t)aDefclass_0, (int)(intptr_t)Class_CreateSystemClasses, 0);
   return Rules_RegisterBinaryItem(
-           (int)aDefclass_0,
+           (int)(intptr_t)aDefclass_0,
            0,
-           (int)Class_BsaveWriteExpressions,
-           (int)Class_CountBsaveEntries,
-           (int)Class_BsaveWriteHeader,
-           (int)Class_BsaveWriteData,
-           (int)Class_BloadStorage,
-           (int)Class_BloadBinaryItem,
-           (int)Class_ClearBloadedData);
+           (int)(intptr_t)Class_BsaveWriteExpressions,
+           (int)(intptr_t)Class_CountBsaveEntries,
+           (int)(intptr_t)Class_BsaveWriteHeader,
+           (int)(intptr_t)Class_BsaveWriteData,
+           (int)(intptr_t)Class_BloadStorage,
+           (int)(intptr_t)Class_BloadBinaryItem,
+           (int)(intptr_t)Class_ClearBloadedData);
 }
 
 //----- (004C54A0) --------------------------------------------------------
@@ -326,14 +326,14 @@ _DWORD *Class_CountBsaveEntries(void)
   g_DefclassNameTableCount = Rules_DoForAllConstructs((void (*)(void))Class_CountSlotsAndMarkExpressions, 0);
   for ( i = 0; i != 668; i += 4 )
   {
-    for ( result = *(_DWORD **)(i + g_Defclass_SlotNameHashTablePtr); result; result = (_DWORD *)result[5] )
+    for ( result = *(_DWORD **)(uintptr_t)(i + g_Defclass_SlotNameHashTablePtr); result; result = (_DWORD *)(uintptr_t)result[5] )
     {
       if ( result[2] >= 2u )
       {
         slotNameId = g_Defclass_SlotRecordCount++;
         result[6] = slotNameId;
-        *(_DWORD *)(result[3] + 12) |= 2u;
-        *(_DWORD *)(result[4] + 12) |= 2u;
+        *(_DWORD *)(uintptr_t)(result[3] + 12) |= 2u;
+        *(_DWORD *)(uintptr_t)(result[4] + 12) |= 2u;
       }
     }
   }
@@ -374,30 +374,30 @@ int  Class_CountSlotsAndMarkExpressions(int theDefclass)
   int v19; // edx
 
   bsaveId = g_ClipsBloadDefclassCount++;
-  AST_MarkNodeFieldBound((_DWORD *)theDefclass, bsaveId);
-  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(theDefclass + 40) + *(unsigned __int16 *)(theDefclass + 34) + *(unsigned __int16 *)(theDefclass + 46);
-  *(_BYTE *)(*(_DWORD *)(theDefclass + 104) + 12) |= 2u;
+  AST_MarkNodeFieldBound((_DWORD *)(uintptr_t)theDefclass, bsaveId);
+  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(theDefclass + 40) + *(unsigned __int16 *)(uintptr_t)(theDefclass + 34) + *(unsigned __int16 *)(uintptr_t)(theDefclass + 46);
+  *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theDefclass + 104) + 12) |= 2u;
   slotIndex = 0;
-  if ( *(_DWORD *)(theDefclass + 64) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 64) )
   {
     slotOffset = 0;
     do
     {
       slotBsaveId = g_ClipsDefclassBsaveHandlerCount++;
-      *(_DWORD *)(classPtr[13] + slotOffset + 28) = slotBsaveId;
-      slotNameSym = *(_DWORD *)(slotOffset + classPtr[13] + 12);
-      *(_BYTE *)(slotNameSym + 12) |= 2u;
+      *(_DWORD *)(uintptr_t)(classPtr[13] + slotOffset + 28) = slotBsaveId;
+      slotNameSym = *(_DWORD *)(uintptr_t)(slotOffset + classPtr[13] + 12);
+      *(_BYTE *)(uintptr_t)(slotNameSym + 12) |= 2u;
       theSlot = slotOffset + classPtr[13];
-      if ( *(_DWORD *)(theSlot + 16) )
+      if ( *(_DWORD *)(uintptr_t)(theSlot + 16) )
       {
-        if ( (*(_BYTE *)theSlot & 0x40) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)theSlot & 0x40) != 0 )
         {
-          g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(theSlot + 16));
-          Rules_MarkReferencedFunctions(*(__int16 **)(slotOffset + *(_DWORD *)(v9 + 52) + 16));
+          g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(theSlot + 16));
+          Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(v9 + 52) + 16));
         }
         else
         {
-          defaultExpr = AST_BuildExpressionFromValue(*(_DWORD **)(theSlot + 16));
+          defaultExpr = AST_BuildExpressionFromValue(*(_DWORD **)(uintptr_t)(theSlot + 16));
           g_ClipsExpressionNodeIndex += AST_CountTreeNodes(defaultExpr);
           Rules_MarkReferencedFunctions(v18);
           AST_Free(v19);
@@ -417,11 +417,11 @@ int  Class_CountSlotsAndMarkExpressions(int theDefclass)
     handlerOffset = 0;
     do
     {
-      handlerNameSym = *(_DWORD *)(handlerOffset + classPtr[22] + 8);
-      *(_BYTE *)(handlerNameSym + 12) |= 2u;
-      g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(handlerOffset + classPtr[22] + 28));
+      handlerNameSym = *(_DWORD *)(uintptr_t)(handlerOffset + classPtr[22] + 8);
+      *(_BYTE *)(uintptr_t)(handlerNameSym + 12) |= 2u;
+      g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(handlerOffset + classPtr[22] + 28));
       ++handlerIndex;
-      Rules_MarkReferencedFunctions(*(__int16 **)(v14 + *(_DWORD *)(v13 + 88) + 28));
+      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v14 + *(_DWORD *)(uintptr_t)(v13 + 88) + 28));
       handlerOffset = v15 + 36;
     }
     while ( handlerIndex < classPtr[24] );
@@ -474,7 +474,7 @@ __int16 * Class_BsaveHandlerExpressions(__int16 *result, int fp)
     slotOffset = 0;
     do
     {
-      result = (__int16 *)(slotOffset + *((_DWORD *)theDefclass + 13));
+      result = (__int16 *)(uintptr_t)(slotOffset + *((_DWORD *)theDefclass + 13));
       if ( *((_DWORD *)result + 4) )
       {
         if ( (*(_BYTE *)result & 0x40) != 0 )
@@ -483,9 +483,9 @@ __int16 * Class_BsaveHandlerExpressions(__int16 *result, int fp)
         }
         else
         {
-          defaultExpr = (__int16 *)AST_BuildExpressionFromValue(*((_DWORD **)result + 4));
+          defaultExpr = (__int16 *)(uintptr_t)AST_BuildExpressionFromValue(*((_DWORD **)result + 4));
           Rules_BsaveWriteExpression(defaultExpr, fp);
-          result = (__int16 *)AST_Free(v7);
+          result = (__int16 *)(uintptr_t)AST_Free(v7);
         }
       }
       ++slotIndex;
@@ -505,7 +505,7 @@ __int16 * Class_BsaveSlotExpressions(__int16 *result, int fp)
   int handlerOffset; // ecx
   int v6; // ecx
 
-  theDefclass = (int)result;
+  theDefclass = (int)(intptr_t)result;
   handlerIndex = 0;
   if ( *((_DWORD *)result + 24) )
   {
@@ -513,10 +513,10 @@ __int16 * Class_BsaveSlotExpressions(__int16 *result, int fp)
     do
     {
       ++handlerIndex;
-      result = Rules_BsaveWriteExpression(*(__int16 **)(handlerOffset + *(_DWORD *)(theDefclass + 88) + 28), fp);
+      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(theDefclass + 88) + 28), fp);
       handlerOffset = v6 + 36;
     }
-    while ( handlerIndex < *(_DWORD *)(theDefclass + 96) );
+    while ( handlerIndex < *(_DWORD *)(uintptr_t)(theDefclass + 96) );
   }
   return result;
 }
@@ -614,8 +614,8 @@ const void * Class_BsaveWriteData(int fp)
     {
       do
       {
-        theItem = Module_FindItemByName((int)aDefclass_0);
-        theModuleItem = (_DWORD *)Module_GetItem(v3, *(_DWORD *)(theItem + 4));
+        theItem = Module_FindItemByName((int)(intptr_t)aDefclass_0);
+        theModuleItem = (_DWORD *)(uintptr_t)Module_GetItem(v3, *(_DWORD *)(uintptr_t)(theItem + 4));
         Module_AssignBsaveItemHeaderIndices(dummyModule, theModuleItem);
         Rules_BsaveWriteBlock(12, fp, dummyModule);
       }
@@ -627,14 +627,14 @@ const void * Class_BsaveWriteData(int fp)
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteSuperclassLists, 0);
     do
     {
-      for ( i = *(_DWORD **)(g_Defclass_SlotNameHashTablePtr + bucketOffset); i; i = (_DWORD *)i[5] )
+      for ( i = *(_DWORD **)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + bucketOffset); i; i = (_DWORD *)(uintptr_t)i[5] )
       {
         if ( i[2] >= 2u )
         {
           dummySlotName[0] = i[2];
           dummySlotName[1] = *i;
-          dummySlotName[2] = *(_DWORD *)(i[3] + 12) << 16 >> 18;
-          dummySlotName[3] = *(_DWORD *)(i[4] + 12) << 16 >> 18;
+          dummySlotName[2] = *(_DWORD *)(uintptr_t)(i[3] + 12) << 16 >> 18;
+          dummySlotName[3] = *(_DWORD *)(uintptr_t)(i[4] + 12) << 16 >> 18;
           Rules_BsaveWriteBlock(16, fp, dummySlotName);
         }
       }
@@ -646,7 +646,7 @@ const void * Class_BsaveWriteData(int fp)
     Rules_DoForAllConstructs((void (*)(void))&g_Class_BsaveWriteUnknownSectionFn, 0);
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteSlotRecords, 0);
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteHandlerDispatchTable, 0);
-    result = (const void *)Rules_IsBloaded();
+    result = (const void *)(uintptr_t)Rules_IsBloaded();
     if ( result )
     {
       Rules_ConstructQueuePop(&g_DefclassNameTableCount);
@@ -656,7 +656,7 @@ const void * Class_BsaveWriteData(int fp)
       Rules_ConstructQueuePop(&g_Defclass_SlotRecordCount);
       Rules_ConstructQueuePop(&g_Defclass_SlotNameLinkCount);
       Rules_ConstructQueuePop(&g_ClipsDefclassBsaveIndexArrayCount);
-      return (const void *)Rules_ConstructQueuePop(&g_ClipsBloadSlotRecordCount);
+      return (const void *)(uintptr_t)Rules_ConstructQueuePop(&g_ClipsBloadSlotRecordCount);
     }
   }
   else
@@ -710,82 +710,82 @@ const void * Class_BsaveWriteClassRecord(int theDefclass, int fp)
   int scopeMapIndex; // [esp+48h] [ebp-18h]
 
   AST_ExtractPatternBindingInfo(dummyClass, theDefclass);
-  v5 = *(_DWORD *)(classPtr + 20) << 29;
+  v5 = *(_DWORD *)(uintptr_t)(classPtr + 20) << 29;
   LOBYTE(flagsWord) = flagsWord & 0xFE;
   flagsWord |= v5 >> 31;
-  v6 = *(_DWORD *)(classPtr + 20) << 28 >> 31;
+  v6 = *(_DWORD *)(uintptr_t)(classPtr + 20) << 28 >> 31;
   LOBYTE(flagsWord) = flagsWord & 0xFD;
   flagsWord |= 2 * (v6 & 1);
-  v7 = *(_DWORD *)(classPtr + 20) << 30 >> 31;
+  v7 = *(_DWORD *)(uintptr_t)(classPtr + 20) << 30 >> 31;
   LOBYTE(flagsWord) = flagsWord & 0xFB;
   flagsWord |= 4 * (v7 & 1);
-  classId = *(_WORD *)(classPtr + 24);
-  slotCount = *(_DWORD *)(classPtr + 64);
-  v20 = *(_DWORD *)(classPtr + 72);
-  v19 = *(_DWORD *)(classPtr + 68);
-  maxSlotNameID = *(_DWORD *)(classPtr + 76);
-  handlerCount = *(_DWORD *)(classPtr + 96);
-  directSuperclassCount = *(_WORD *)(classPtr + 34);
-  directSubclassCount = *(_WORD *)(classPtr + 40);
-  allSuperclassCount = *(_WORD *)(classPtr + 46);
-  if ( *(_WORD *)(classPtr + 34) )
+  classId = *(_WORD *)(uintptr_t)(classPtr + 24);
+  slotCount = *(_DWORD *)(uintptr_t)(classPtr + 64);
+  v20 = *(_DWORD *)(uintptr_t)(classPtr + 72);
+  v19 = *(_DWORD *)(uintptr_t)(classPtr + 68);
+  maxSlotNameID = *(_DWORD *)(uintptr_t)(classPtr + 76);
+  handlerCount = *(_DWORD *)(uintptr_t)(classPtr + 96);
+  directSuperclassCount = *(_WORD *)(uintptr_t)(classPtr + 34);
+  directSubclassCount = *(_WORD *)(uintptr_t)(classPtr + 40);
+  allSuperclassCount = *(_WORD *)(uintptr_t)(classPtr + 46);
+  if ( *(_WORD *)(uintptr_t)(classPtr + 34) )
   {
     superclassListIndex = g_ClipsBloadClassLinkCount;
-    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(classPtr + 34);
+    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(classPtr + 34);
   }
   else
   {
     superclassListIndex = -1;
   }
-  if ( *(_WORD *)(theDefclass + 40) )
+  if ( *(_WORD *)(uintptr_t)(theDefclass + 40) )
   {
     subclassListIndex = g_ClipsBloadClassLinkCount;
-    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(theDefclass + 40);
+    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(theDefclass + 40);
   }
   else
   {
     subclassListIndex = -1;
   }
-  if ( *(_WORD *)(theDefclass + 46) )
+  if ( *(_WORD *)(uintptr_t)(theDefclass + 46) )
   {
     allSuperclassListIndex = g_ClipsBloadClassLinkCount;
-    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(theDefclass + 46);
+    g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(theDefclass + 46);
   }
   else
   {
     allSuperclassListIndex = -1;
   }
-  if ( *(_DWORD *)(theDefclass + 52) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 52) )
   {
     slotsIndex = g_ClipsDefclassBsaveHandlerCount;
-    g_ClipsDefclassBsaveHandlerCount += *(_DWORD *)(theDefclass + 64);
+    g_ClipsDefclassBsaveHandlerCount += *(_DWORD *)(uintptr_t)(theDefclass + 64);
   }
   else
   {
     slotsIndex = -1;
   }
-  if ( *(_DWORD *)(theDefclass + 56) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 56) )
   {
     instanceTemplateIndex = g_Defclass_SlotNameLinkCount;
-    g_Defclass_SlotNameLinkCount += *(_DWORD *)(theDefclass + 72);
+    g_Defclass_SlotNameLinkCount += *(_DWORD *)(uintptr_t)(theDefclass + 72);
     slotNameMapIndex = g_ClipsDefclassBsaveIndexArrayCount;
-    g_ClipsDefclassBsaveIndexArrayCount += *(_DWORD *)(theDefclass + 76) + 1;
+    g_ClipsDefclassBsaveIndexArrayCount += *(_DWORD *)(uintptr_t)(theDefclass + 76) + 1;
   }
   else
   {
     instanceTemplateIndex = -1;
     slotNameMapIndex = -1;
   }
-  if ( *(_DWORD *)(theDefclass + 88) )
+  if ( *(_DWORD *)(uintptr_t)(theDefclass + 88) )
   {
     handlersIndex = g_ClipsBloadSlotRecordCount;
-    g_ClipsBloadSlotRecordCount += *(_DWORD *)(theDefclass + 96);
+    g_ClipsBloadSlotRecordCount += *(_DWORD *)(uintptr_t)(theDefclass + 96);
   }
   else
   {
     handlersIndex = -1;
   }
-  scopeMapIndex = *(_DWORD *)(*(_DWORD *)(theDefclass + 104) + 12) << 16 >> 18;
+  scopeMapIndex = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theDefclass + 104) + 12) << 16 >> 18;
   return Rules_BsaveWriteBlock(76, fp, dummyClass);
 }
 // 4C5C2B: variable 'v4' is possibly undefined
@@ -817,11 +817,11 @@ unsigned __int16  Class_BsaveWriteSuperclassLists(int theDefclass, int fp)
   classPtr = theDefclass;
   superclassIndex = 0;
   superclassOffset = 0;
-  while ( superclassIndex < *(unsigned __int16 *)(classPtr + 34) )
+  while ( superclassIndex < *(unsigned __int16 *)(uintptr_t)(classPtr + 34) )
   {
-    v12 = superclassOffset + *(_DWORD *)(classPtr + 36);
-    if ( *(_DWORD *)v12 )
-      v13 = *(_DWORD *)(*(_DWORD *)v12 + 12);
+    v12 = superclassOffset + *(_DWORD *)(uintptr_t)(classPtr + 36);
+    if ( *(_DWORD *)(uintptr_t)v12 )
+      v13 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v12 + 12);
     else
       v13 = -1;
     dummyClassIndex[0] = v13;
@@ -831,12 +831,12 @@ unsigned __int16  Class_BsaveWriteSuperclassLists(int theDefclass, int fp)
   }
   subclassIndex = 0;
   subclassOffset = 0;
-  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(classPtr + 34);
-  while ( subclassIndex < *(unsigned __int16 *)(classPtr + 40) )
+  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(classPtr + 34);
+  while ( subclassIndex < *(unsigned __int16 *)(uintptr_t)(classPtr + 40) )
   {
-    v14 = subclassOffset + *(_DWORD *)(classPtr + 42);
-    if ( *(_DWORD *)v14 )
-      v15 = *(_DWORD *)(*(_DWORD *)v14 + 12);
+    v14 = subclassOffset + *(_DWORD *)(uintptr_t)(classPtr + 42);
+    if ( *(_DWORD *)(uintptr_t)v14 )
+      v15 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v14 + 12);
     else
       v15 = -1;
     dummyClassIndex[0] = v15;
@@ -845,13 +845,13 @@ unsigned __int16  Class_BsaveWriteSuperclassLists(int theDefclass, int fp)
     Rules_BsaveWriteBlock(4, fp, dummyClassIndex);
   }
   allSuperclassIndex = 0;
-  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(classPtr + 40);
+  g_ClipsBloadClassLinkCount += *(unsigned __int16 *)(uintptr_t)(classPtr + 40);
   allSuperclassOffset = 0;
-  while ( allSuperclassIndex < *(unsigned __int16 *)(classPtr + 46) )
+  while ( allSuperclassIndex < *(unsigned __int16 *)(uintptr_t)(classPtr + 46) )
   {
-    v10 = allSuperclassOffset + *(_DWORD *)(classPtr + 48);
-    if ( *(_DWORD *)v10 )
-      v11 = *(_DWORD *)(*(_DWORD *)v10 + 12);
+    v10 = allSuperclassOffset + *(_DWORD *)(uintptr_t)(classPtr + 48);
+    if ( *(_DWORD *)(uintptr_t)v10 )
+      v11 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v10 + 12);
     else
       v11 = -1;
     dummyClassIndex[0] = v11;
@@ -859,7 +859,7 @@ unsigned __int16  Class_BsaveWriteSuperclassLists(int theDefclass, int fp)
     ++allSuperclassIndex;
     Rules_BsaveWriteBlock(4, fp, dummyClassIndex);
   }
-  result = *(_WORD *)(classPtr + 46);
+  result = *(_WORD *)(uintptr_t)(classPtr + 46);
   g_ClipsBloadClassLinkCount += result;
   return result;
 }
@@ -899,12 +899,12 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
 
   theDefclass = result;
   slotIndex = 0;
-  if ( *(_DWORD *)(result + 64) )
+  if ( *(_DWORD *)(uintptr_t)(result + 64) )
   {
     slotOffset = 0;
     do
     {
-      theSlot = (int *)(slotOffset + *(_DWORD *)(theDefclass + 52));
+      theSlot = (int *)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(theDefclass + 52));
       slotFlags = *theSlot;
       LOBYTE(dummySlot[0]) &= ~0x40u;
       dummySlot[0] |= slotFlags & 0x40;
@@ -943,12 +943,12 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
       dummySlot[0] |= (v17 & 1) << 11;
       slotClass = theSlot[1];
       if ( slotClass )
-        slotClassBsaveId = *(_DWORD *)(slotClass + 12);
+        slotClassBsaveId = *(_DWORD *)(uintptr_t)(slotClass + 12);
       else
         slotClassBsaveId = -1;
       dummySlot[1] = slotClassBsaveId;
-      dummySlot[2] = *(_DWORD *)(theSlot[2] + 24);
-      slotNameIndex = *(_DWORD *)(theSlot[3] + 12) << 16 >> 18;
+      dummySlot[2] = *(_DWORD *)(uintptr_t)(theSlot[2] + 24);
+      slotNameIndex = *(_DWORD *)(uintptr_t)(theSlot[3] + 12) << 16 >> 18;
       if ( theSlot[4] )
       {
         defaultValueIndex = g_ClipsExpressionNodeIndex;
@@ -958,7 +958,7 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
         }
         else
         {
-          defaultExpr = AST_BuildExpressionFromValue((_DWORD *)theSlot[4]);
+          defaultExpr = AST_BuildExpressionFromValue((_DWORD *)(uintptr_t)theSlot[4]);
           g_ClipsExpressionNodeIndex += AST_CountTreeNodes(defaultExpr);
           AST_Free(v23);
         }
@@ -967,8 +967,8 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
       {
         defaultValueIndex = -1;
       }
-      if ( Rules_DynamicConstraintCheckingEnabled() && (theConstraint = *(_DWORD *)(v20 + 20)) != 0 )
-        constraintBsaveIndex = *(unsigned __int16 *)(theConstraint + 4);
+      if ( Rules_DynamicConstraintCheckingEnabled() && (theConstraint = *(_DWORD *)(uintptr_t)(v20 + 20)) != 0 )
+        constraintBsaveIndex = *(unsigned __int16 *)(uintptr_t)(theConstraint + 4);
       else
         constraintBsaveIndex = -1;
       constraintIndex = constraintBsaveIndex;
@@ -977,7 +977,7 @@ int  Class_BsaveWriteHandlerRecords(int result, int fp)
       ++slotIndex;
       slotOffset += 44;
     }
-    while ( slotIndex < *(_DWORD *)(theDefclass + 64) );
+    while ( slotIndex < *(_DWORD *)(uintptr_t)(theDefclass + 64) );
   }
   return result;
 }
@@ -996,16 +996,16 @@ _DWORD * Class_BsaveWriteSlotNameTable(_DWORD *result, int fp)
   int v8; // ecx
   int indexBuffer[6]; // [esp+0h] [ebp-18h] BYREF
 
-  theDefclass = (int)result;
+  theDefclass = (int)(intptr_t)result;
   linkIndex = 0;
   if ( result[18] )
   {
     linkOffset = 0;
     do
     {
-      v6 = linkOffset + *(_DWORD *)(theDefclass + 56);
-      if ( *(_DWORD *)v6 )
-        slotNameId = *(_DWORD *)(*(_DWORD *)v6 + 28);
+      v6 = linkOffset + *(_DWORD *)(uintptr_t)(theDefclass + 56);
+      if ( *(_DWORD *)(uintptr_t)v6 )
+        slotNameId = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v6 + 28);
       else
         slotNameId = -1;
       indexBuffer[0] = slotNameId;
@@ -1013,7 +1013,7 @@ _DWORD * Class_BsaveWriteSlotNameTable(_DWORD *result, int fp)
       result = Rules_BsaveWriteBlock(4, fp, indexBuffer);
       linkOffset = v8 + 4;
     }
-    while ( linkIndex < *(_DWORD *)(theDefclass + 72) );
+    while ( linkIndex < *(_DWORD *)(uintptr_t)(theDefclass + 72) );
   }
   return result;
 }
@@ -1034,14 +1034,14 @@ _DWORD * Class_BsaveWriteSlotRecords(_DWORD *result, int fp)
   _DWORD dummyHandler[6]; // [esp+0h] [ebp-30h] BYREF
   int actionsIndex; // [esp+18h] [ebp-18h]
 
-  theDefclass = (int)result;
+  theDefclass = (int)(intptr_t)result;
   handlerIndex = 0;
   if ( result[24] )
   {
     handlerOffset = 0;
     do
     {
-      theHandler = (int *)(handlerOffset + *(_DWORD *)(theDefclass + 88));
+      theHandler = (int *)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(theDefclass + 88));
       v7 = *theHandler;
       LOBYTE(dummyHandler[0]) &= ~1u;
       dummyHandler[0] |= v7 & 1;
@@ -1053,11 +1053,11 @@ _DWORD * Class_BsaveWriteSlotRecords(_DWORD *result, int fp)
       dummyHandler[3] = theHandler[6];
       handlerClass = theHandler[3];
       if ( handlerClass )
-        classIndex = *(_DWORD *)(handlerClass + 12);
+        classIndex = *(_DWORD *)(uintptr_t)(handlerClass + 12);
       else
         classIndex = -1;
       dummyHandler[5] = classIndex;
-      dummyHandler[4] = *(_DWORD *)(theHandler[2] + 12) << 16 >> 18;
+      dummyHandler[4] = *(_DWORD *)(uintptr_t)(theHandler[2] + 12) << 16 >> 18;
       if ( theHandler[7] )
       {
         actionsIndex = g_ClipsExpressionNodeIndex;
@@ -1071,7 +1071,7 @@ _DWORD * Class_BsaveWriteSlotRecords(_DWORD *result, int fp)
       ++handlerIndex;
       handlerOffset = v11 + 36;
     }
-    while ( handlerIndex < *(_DWORD *)(theDefclass + 96) );
+    while ( handlerIndex < *(_DWORD *)(uintptr_t)(theDefclass + 96) );
   }
   return result;
 }
@@ -1081,7 +1081,7 @@ _DWORD * Class_BsaveWriteSlotRecords(_DWORD *result, int fp)
 //----- (004C62F0) --------------------------------------------------------
 const void * Class_BsaveWriteHandlerDispatchTable(int theDefclass, int fp)
 {
-  return Rules_BsaveWriteBlock(4 * *(_DWORD *)(theDefclass + 96), fp, *(const void **)(theDefclass + 92));
+  return Rules_BsaveWriteBlock(4 * *(_DWORD *)(uintptr_t)(theDefclass + 96), fp, *(const void **)(uintptr_t)(theDefclass + 92));
 }
 
 //----- (004C6310) --------------------------------------------------------
@@ -1094,10 +1094,10 @@ _DWORD *__thiscall Class_BloadStorage(void *this)
 
   if ( g_ClipsDefclassIdTable || g_ClipsDefclassIdCount )
   {
-    Rules_ReportSystemError((int)this, 1);
+    Rules_ReportSystemError((int)(intptr_t)this, 1);
     IO_RunRouterExitCallbacks();
   }
-  result = (_DWORD *)Rules_BloadReadBlock((uintptr_t)space, 4u);
+  result = (_DWORD *)(uintptr_t)Rules_BloadReadBlock((uintptr_t)space, 4u);
   if ( space[0] )
   {
     Rules_BloadReadBlock((uintptr_t)counts, space[0]);
@@ -1110,57 +1110,57 @@ _DWORD *__thiscall Class_BloadStorage(void *this)
     g_ClipsDefclassBsaveIndexArrayCount = counts[6];
     g_ClipsBloadSlotRecordCount = counts[7];
     result = maxClassId;
-    g_ClipsDefclassIdCount = (__int16)maxClassId;
+    g_ClipsDefclassIdCount = (__int16)(intptr_t)maxClassId;
     if ( counts[0] )
     {
       space[0] = 12 * counts[0];
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(12 * counts[0]));
-      g_Class_BloadModuleArray = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(12 * counts[0]));
+      g_Class_BloadModuleArray = (int)(intptr_t)result;
     }
     if ( g_ClipsBloadDefclassCount )
     {
       space[0] = 124 * g_ClipsBloadDefclassCount;
-      g_Clips_DefclassArrayBase = Mem_HeapAllocWithRetry((_DWORD *)(124 * g_ClipsBloadDefclassCount));
+      g_Clips_DefclassArrayBase = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(124 * g_ClipsBloadDefclassCount));
       result = Mem_SmallBlockAlloc(4 * (unsigned __int16)g_ClipsDefclassIdCount);
-      g_ClipsDefclassIdTable = (int)result;
+      g_ClipsDefclassIdTable = (int)(intptr_t)result;
     }
     if ( g_ClipsBloadClassLinkCount )
     {
       space[0] = 4 * g_ClipsBloadClassLinkCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * g_ClipsBloadClassLinkCount));
-      g_DefclassLinkTable = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * g_ClipsBloadClassLinkCount));
+      g_DefclassLinkTable = (int)(intptr_t)result;
     }
     if ( g_ClipsDefclassBsaveHandlerCount )
     {
       space[0] = 44 * g_ClipsDefclassBsaveHandlerCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(44 * g_ClipsDefclassBsaveHandlerCount));
-      g_DefclassSlotDescriptorArrayPtr = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(44 * g_ClipsDefclassBsaveHandlerCount));
+      g_DefclassSlotDescriptorArrayPtr = (int)(intptr_t)result;
     }
     if ( g_Defclass_SlotRecordCount )
     {
       space[0] = 28 * g_Defclass_SlotRecordCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(28 * g_Defclass_SlotRecordCount));
-      g_DefclassSlotTable = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(28 * g_Defclass_SlotRecordCount));
+      g_DefclassSlotTable = (int)(intptr_t)result;
     }
     if ( g_Defclass_SlotNameLinkCount )
     {
       space[0] = 4 * g_Defclass_SlotNameLinkCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * g_Defclass_SlotNameLinkCount));
-      g_DefclassBloadSlotNameLinkArray = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * g_Defclass_SlotNameLinkCount));
+      g_DefclassBloadSlotNameLinkArray = (int)(intptr_t)result;
     }
     if ( g_ClipsDefclassBsaveIndexArrayCount )
     {
       space[0] = 4 * g_ClipsDefclassBsaveIndexArrayCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * g_ClipsDefclassBsaveIndexArrayCount));
-      g_Class_BloadClassLinkArray = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * g_ClipsDefclassBsaveIndexArrayCount));
+      g_Class_BloadClassLinkArray = (int)(intptr_t)result;
     }
     if ( g_ClipsBloadSlotRecordCount )
     {
       space[0] = 36 * g_ClipsBloadSlotRecordCount;
-      g_DefclassBloadTemplateSlotArray = Mem_HeapAllocWithRetry((_DWORD *)(36 * g_ClipsBloadSlotRecordCount));
+      g_DefclassBloadTemplateSlotArray = Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(36 * g_ClipsBloadSlotRecordCount));
       space[0] = 4 * g_ClipsBloadSlotRecordCount;
-      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * g_ClipsBloadSlotRecordCount));
-      g_Class_BloadSlotNameMapArray = (int)result;
+      result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)(uintptr_t)(4 * g_ClipsBloadSlotRecordCount));
+      g_Class_BloadSlotNameMapArray = (int)(intptr_t)result;
     }
   }
   else
@@ -1261,7 +1261,7 @@ int Class_BloadFixupNameTable(void)
 //----- (004C6680) --------------------------------------------------------
 _DWORD * Class_BloadRefreshNameTable(_DWORD *buf, int obji)
 {
-  return Module_UpdateItemHeader(buf, (_DWORD *)(12 * obji + g_Class_BloadModuleArray), g_Clips_DefclassArrayBase, 124);
+  return Module_UpdateItemHeader(buf, (_DWORD *)(uintptr_t)(12 * obji + g_Class_BloadModuleArray), g_Clips_DefclassArrayBase, 124);
 }
 // 51B3AC: using guessed type int dword_51B3AC;
 // 54E8B8: using guessed type int dword_54E8B8;
@@ -1296,90 +1296,90 @@ int  Class_BloadRefreshClassRecords(int buf, int obji)
   int scopeMap; // eax
 
   theDefclass = g_Clips_DefclassArrayBase + 124 * obji;
-  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)theDefclass, g_Class_BloadModuleArray, 12, 124, g_Clips_DefclassArrayBase);
-  v4 = *(_DWORD *)(buf + 12) & 1;
-  *(_BYTE *)(theDefclass + 20) &= ~4u;
-  *(_DWORD *)(theDefclass + 20) |= 4 * v4;
-  v5 = *(_DWORD *)(buf + 12) << 30 >> 31;
-  *(_BYTE *)(theDefclass + 20) &= ~8u;
-  *(_DWORD *)(theDefclass + 20) |= 8 * (v5 & 1);
-  v6 = *(_DWORD *)(buf + 12) << 29 >> 31;
-  *(_BYTE *)(theDefclass + 20) &= ~2u;
-  *(_DWORD *)(theDefclass + 20) |= 2 * (v6 & 1);
-  *(_WORD *)(theDefclass + 24) = *(_WORD *)(buf + 16);
-  *(_DWORD *)(4 * *(unsigned __int16 *)(theDefclass + 24) + g_ClipsDefclassIdTable) = theDefclass;
+  Rules_BuildIndexedSlotDescriptor(buf, (_DWORD *)(uintptr_t)theDefclass, g_Class_BloadModuleArray, 12, 124, g_Clips_DefclassArrayBase);
+  v4 = *(_DWORD *)(uintptr_t)(buf + 12) & 1;
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) &= ~4u;
+  *(_DWORD *)(uintptr_t)(theDefclass + 20) |= 4 * v4;
+  v5 = *(_DWORD *)(uintptr_t)(buf + 12) << 30 >> 31;
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) &= ~8u;
+  *(_DWORD *)(uintptr_t)(theDefclass + 20) |= 8 * (v5 & 1);
+  v6 = *(_DWORD *)(uintptr_t)(buf + 12) << 29 >> 31;
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) &= ~2u;
+  *(_DWORD *)(uintptr_t)(theDefclass + 20) |= 2 * (v6 & 1);
+  *(_WORD *)(uintptr_t)(theDefclass + 24) = *(_WORD *)(uintptr_t)(buf + 16);
+  *(_DWORD *)(uintptr_t)(4 * *(unsigned __int16 *)(uintptr_t)(theDefclass + 24) + g_ClipsDefclassIdTable) = theDefclass;
   watchInstances = g_Rules_WatchInstances & 1;
-  *(_BYTE *)(theDefclass + 20) &= ~0x10u;
-  *(_DWORD *)(theDefclass + 20) |= 16 * watchInstances;
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) &= ~0x10u;
+  *(_DWORD *)(uintptr_t)(theDefclass + 20) |= 16 * watchInstances;
   watchSlots = g_Class_WatchSlots[0] & 1;
-  *(_BYTE *)(theDefclass + 20) &= ~0x20u;
-  *(_DWORD *)(theDefclass + 20) |= 32 * watchSlots;
-  *(_DWORD *)(theDefclass + 64) = *(_DWORD *)(buf + 36);
-  *(_DWORD *)(theDefclass + 72) = *(_DWORD *)(buf + 44);
-  *(_DWORD *)(theDefclass + 68) = *(_DWORD *)(buf + 40);
-  *(_DWORD *)(theDefclass + 76) = *(_DWORD *)(buf + 48);
-  *(_DWORD *)(theDefclass + 96) = *(_DWORD *)(buf + 52);
-  *(_WORD *)(theDefclass + 34) = *(_WORD *)(buf + 18);
-  superclassListIndex = *(_DWORD *)(buf + 20);
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) &= ~0x20u;
+  *(_DWORD *)(uintptr_t)(theDefclass + 20) |= 32 * watchSlots;
+  *(_DWORD *)(uintptr_t)(theDefclass + 64) = *(_DWORD *)(uintptr_t)(buf + 36);
+  *(_DWORD *)(uintptr_t)(theDefclass + 72) = *(_DWORD *)(uintptr_t)(buf + 44);
+  *(_DWORD *)(uintptr_t)(theDefclass + 68) = *(_DWORD *)(uintptr_t)(buf + 40);
+  *(_DWORD *)(uintptr_t)(theDefclass + 76) = *(_DWORD *)(uintptr_t)(buf + 48);
+  *(_DWORD *)(uintptr_t)(theDefclass + 96) = *(_DWORD *)(uintptr_t)(buf + 52);
+  *(_WORD *)(uintptr_t)(theDefclass + 34) = *(_WORD *)(uintptr_t)(buf + 18);
+  superclassListIndex = *(_DWORD *)(uintptr_t)(buf + 20);
   bufPtr = buf;
   if ( superclassListIndex == -1 )
     superclassListPtr = 0;
   else
     superclassListPtr = g_DefclassLinkTable + 4 * superclassListIndex;
-  *(_DWORD *)(theDefclass + 36) = superclassListPtr;
-  *(_WORD *)(theDefclass + 40) = *(_WORD *)(buf + 24);
-  subclassListIndex = *(_DWORD *)(buf + 26);
+  *(_DWORD *)(uintptr_t)(theDefclass + 36) = superclassListPtr;
+  *(_WORD *)(uintptr_t)(theDefclass + 40) = *(_WORD *)(uintptr_t)(buf + 24);
+  subclassListIndex = *(_DWORD *)(uintptr_t)(buf + 26);
   if ( subclassListIndex == -1 )
     subclassListPtr = 0;
   else
     subclassListPtr = g_DefclassLinkTable + 4 * subclassListIndex;
-  *(_DWORD *)(theDefclass + 42) = subclassListPtr;
-  *(_WORD *)(theDefclass + 46) = *(_WORD *)(bufPtr + 30);
-  allSuperclassListIndex = *(_DWORD *)(bufPtr + 32);
+  *(_DWORD *)(uintptr_t)(theDefclass + 42) = subclassListPtr;
+  *(_WORD *)(uintptr_t)(theDefclass + 46) = *(_WORD *)(uintptr_t)(bufPtr + 30);
+  allSuperclassListIndex = *(_DWORD *)(uintptr_t)(bufPtr + 32);
   if ( allSuperclassListIndex == -1 )
     allSuperclassListPtr = 0;
   else
     allSuperclassListPtr = g_DefclassLinkTable + 4 * allSuperclassListIndex;
-  *(_DWORD *)(theDefclass + 48) = allSuperclassListPtr;
-  slotsIndex = *(_DWORD *)(bufPtr + 56);
+  *(_DWORD *)(uintptr_t)(theDefclass + 48) = allSuperclassListPtr;
+  slotsIndex = *(_DWORD *)(uintptr_t)(bufPtr + 56);
   if ( slotsIndex == -1 )
     slotsPtr = 0;
   else
     slotsPtr = g_DefclassSlotDescriptorArrayPtr + 44 * slotsIndex;
-  *(_DWORD *)(theDefclass + 52) = slotsPtr;
-  instanceTemplateIndex = *(_DWORD *)(bufPtr + 60);
+  *(_DWORD *)(uintptr_t)(theDefclass + 52) = slotsPtr;
+  instanceTemplateIndex = *(_DWORD *)(uintptr_t)(bufPtr + 60);
   if ( instanceTemplateIndex == -1 )
     instanceTemplatePtr = 0;
   else
     instanceTemplatePtr = g_DefclassBloadSlotNameLinkArray + 4 * instanceTemplateIndex;
-  *(_DWORD *)(theDefclass + 56) = instanceTemplatePtr;
-  slotNameMapIndex = *(_DWORD *)(bufPtr + 64);
+  *(_DWORD *)(uintptr_t)(theDefclass + 56) = instanceTemplatePtr;
+  slotNameMapIndex = *(_DWORD *)(uintptr_t)(bufPtr + 64);
   if ( slotNameMapIndex == -1 )
     slotNameMapPtr = 0;
   else
     slotNameMapPtr = g_Class_BloadClassLinkArray + 4 * slotNameMapIndex;
-  *(_DWORD *)(theDefclass + 80) = 0;
-  *(_DWORD *)(theDefclass + 60) = slotNameMapPtr;
-  handlersIndex = *(_DWORD *)(bufPtr + 68);
+  *(_DWORD *)(uintptr_t)(theDefclass + 80) = 0;
+  *(_DWORD *)(uintptr_t)(theDefclass + 60) = slotNameMapPtr;
+  handlersIndex = *(_DWORD *)(uintptr_t)(bufPtr + 68);
   if ( handlersIndex == -1 )
     handlersPtr = 0;
   else
     handlersPtr = 36 * handlersIndex + g_DefclassBloadTemplateSlotArray;
-  *(_DWORD *)(theDefclass + 88) = handlersPtr;
-  handlerMapIndex = *(_DWORD *)(bufPtr + 68);
+  *(_DWORD *)(uintptr_t)(theDefclass + 88) = handlersPtr;
+  handlerMapIndex = *(_DWORD *)(uintptr_t)(bufPtr + 68);
   if ( handlerMapIndex == -1 )
     handlerMapPtr = 0;
   else
     handlerMapPtr = 4 * handlerMapIndex + g_Class_BloadSlotNameMapArray;
-  *(_DWORD *)(theDefclass + 26) = 0;
-  *(_DWORD *)(theDefclass + 80) = 0;
-  *(_DWORD *)(theDefclass + 84) = 0;
-  flagsByte = *(_BYTE *)(theDefclass + 20);
-  *(_DWORD *)(theDefclass + 92) = handlerMapPtr;
-  *(_BYTE *)(theDefclass + 20) = flagsByte | 1;
-  scopeMap = *(_DWORD *)(g_ClipsBloadBitmapPointerTable + 4 * *(_DWORD *)(bufPtr + 72));
-  *(_DWORD *)(theDefclass + 104) = scopeMap;
-  ++*(_DWORD *)(scopeMap + 4);
+  *(_DWORD *)(uintptr_t)(theDefclass + 26) = 0;
+  *(_DWORD *)(uintptr_t)(theDefclass + 80) = 0;
+  *(_DWORD *)(uintptr_t)(theDefclass + 84) = 0;
+  flagsByte = *(_BYTE *)(uintptr_t)(theDefclass + 20);
+  *(_DWORD *)(uintptr_t)(theDefclass + 92) = handlerMapPtr;
+  *(_BYTE *)(uintptr_t)(theDefclass + 20) = flagsByte | 1;
+  scopeMap = *(_DWORD *)(uintptr_t)(g_ClipsBloadBitmapPointerTable + 4 * *(_DWORD *)(uintptr_t)(bufPtr + 72));
+  *(_DWORD *)(uintptr_t)(theDefclass + 104) = scopeMap;
+  ++*(_DWORD *)(uintptr_t)(scopeMap + 4);
   return Class_AddToHashTable(theDefclass);
 }
 // 51AD64: using guessed type int dword_51AD64;
@@ -1403,12 +1403,12 @@ int  Class_BloadRefreshSuperclassLink(_DWORD *buf, int obji)
   if ( *buf == -1 )
   {
     result = 0;
-    *(_DWORD *)(g_DefclassLinkTable + 4 * obji) = 0;
+    *(_DWORD *)(uintptr_t)(g_DefclassLinkTable + 4 * obji) = 0;
   }
   else
   {
     result = g_Clips_DefclassArrayBase + 124 * *buf;
-    *(_DWORD *)(g_DefclassLinkTable + 4 * obji) = result;
+    *(_DWORD *)(uintptr_t)(g_DefclassLinkTable + 4 * obji) = result;
   }
   return result;
 }

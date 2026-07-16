@@ -41,27 +41,27 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
   messageText = messageTextPtr;
   iconIndex = iconChar;
   playSoundFlag = playSound;
-  spriteSetPtr = (_DWORD *)Mem_Alloc(4112, a3, playSound, gameContext);
+  spriteSetPtr = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a3, playSound, gameContext);
   if ( spriteSetPtr )
     spriteSetPtr = DLXSpriteSet_Load(spriteSetPtr, playSound);
   spriteSet = spriteSetPtr;
   Render_Pump();
-  RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
-  DLX_GetSpriteWidth((int)spriteSet, 0x17u);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)spriteSet, 0x16u);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, g_ActiveCursorDescriptor);
+  DLX_GetSpriteWidth((int)(intptr_t)spriteSet, 0x17u);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)(intptr_t)spriteSet, 0x16u);
   maxExtent = v7 + 6;
   if ( (unsigned __int16)SpriteWidth > v7 + 6 )
     maxExtent = SpriteWidth;
   popupHeight = maxExtent;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, playSound, gameContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v7, playSound, gameContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, SCREEN_WIDTH, popupHeight);
-  surface = (int)Surface;
+    Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, popupHeight);
+  surface = (int)(intptr_t)Surface;
   Render_FillRect(0, Surface, 150, 0, SCREEN_MAX_X, popupHeight + 149, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 22);
+  SpriteForChar = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, 22);
   deviceMethods = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethods + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceMethods + 52))(
     150,
     SpriteForChar,
     -1,
@@ -71,11 +71,11 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
     1,
     0,
     0);
-  DLX_GetSpriteHeight((int)spriteSet, 0x16u);
-  v12 = DLX_GetSpriteForChar((int)spriteSet, 23);
+  DLX_GetSpriteHeight((int)(intptr_t)spriteSet, 0x16u);
+  v12 = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, 23);
   deviceMethods = *((_DWORD *)g_RenderDevice + 46);
   deviceMethodsPtr = deviceMethods;
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethods + 52))(
+  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceMethods + 52))(
     156,
     v12,
     -1,
@@ -87,9 +87,9 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
     0);
   if ( iconIndex != -1 )
   {
-    iconSprite = DLX_GetSpriteForChar((int)spriteSet, iconIndex);
+    iconSprite = DLX_GetSpriteForChar((int)(intptr_t)spriteSet, iconIndex);
     deviceMethodsPtr = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(deviceMethodsPtr + 52))(
+    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(deviceMethodsPtr + 52))(
       285,
       iconSprite,
       -1,
@@ -102,11 +102,11 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
   }
   Render_ReleaseSurface(17, deviceMethodsPtr);
   UI_DrawTextFmt(surface, 70, 569, 210, 6, messageText);
-  Render_Present((int)g_RenderState);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Present((int)(intptr_t)g_RenderState);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   while ( !DD_IsFlipping(v14) && !DD_IsLost(v15) )
     DD_Pump(v19, 0);
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   if ( playSoundFlag )
   {
     artifactSoundId = iconIndex;
@@ -115,10 +115,10 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
     Audio_PlayArtifactSound(artifactSoundId);
   }
   Render_Pump();
-  Render_FillRect((_DWORD *)surface, 0, 0, 0, SCREEN_MAX_X, popupHeight - 1, 0, 0x96u);
-  Render_Present((int)g_RenderState);
+  Render_FillRect((_DWORD *)(uintptr_t)surface, 0, 0, 0, SCREEN_MAX_X, popupHeight - 1, 0, 0x96u);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( surface )
-    (**(void (***)(void))(surface + 184))();
+    (**(void (***)(void))(uintptr_t)(surface + 184))();
   return DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
 }
 // 43FF56: variable 'v7' is possibly undefined
@@ -145,7 +145,7 @@ DWORD a4;
   signed int cumulative; // edx
   _DWORD *result; // eax
 
-  Debug_Log(a2, a3, a4, (int)aTemple_random);
+  Debug_Log(a2, a3, a4, (int)(intptr_t)aTemple_random);
   totalWeight = 0;
   scanPtr = outcomeTable;
   if ( *outcomeTable != -1 )
@@ -160,7 +160,7 @@ DWORD a4;
     while ( entrySentinel != -1 );
   }
   roll = Rng_RandRange(0, totalWeight - 1);
-  Debug_Log(v11, roll, a4, (int)a__RDSum_probD);
+  Debug_Log(v11, roll, a4, (int)(intptr_t)a__RDSum_probD);
   for ( result = outcomeTable; ; result += 6 )
   {
     cumulative += result[1];
@@ -191,7 +191,7 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
   int v20; // ecx
   int v21; // ecx
 
-  Debug_Log(tileY, tileX, giftType, (int)aTemple_process);
+  Debug_Log(tileY, tileX, giftType, (int)(intptr_t)aTemple_process);
   switch ( giftType )
   {
     case TEMPLE_GIFT_SPAWN_UNITS:
@@ -199,15 +199,15 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
       return;
     case TEMPLE_GIFT_KILL_STACK:
       UI_StartTileBlinkFlash(*unitStack, unitStack[1], v8);
-      Unit_Kill((int)unitStack, tileX, giftType, gameTime);
+      Unit_Kill((int)(intptr_t)unitStack, tileX, giftType, gameTime);
       return;
     case TEMPLE_GIFT_REST:
       UnitStack_AdjustFatigueByPredicate(unitStack, -100, UnitSlot_PredicateAlways, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v9);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v9);
       return;
     case TEMPLE_GIFT_BLESS_MORALE:
       UnitStack_AdjustMoraleByPredicate(unitStack, 20, UnitSlot_PredicateAlways, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v10);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v10);
       return;
     case TEMPLE_GIFT_HEAL_FULL:
       slotPtr = unitStack;
@@ -239,7 +239,7 @@ void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int tileY, char til
       while ( slotIndex < 10 );
 LABEL_9:
       Rules_SyncArmyFactStrength(unitStack, slotIndex, slotUnitType, tileX, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v14);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v14);
       return;
     case TEMPLE_GIFT_CYCLE_ORDERS_3:
       do
@@ -248,14 +248,14 @@ LABEL_9:
       goto LABEL_15;
     case TEMPLE_GIFT_BLESS_MORALE_MINOR:
       UnitStack_AdjustMoraleByPredicate(unitStack, 2, UnitSlot_PredicateAlways, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), unitStack[1], v18);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), unitStack[1], v18);
       return;
     case TEMPLE_GIFT_CYCLE_ORDERS_2:
       do
         UnitStack_CycleAllSlotOrders(unitStack, giftType, gameTime);
       while ( v19 < 2 );
 LABEL_15:
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), gameData + 200 * *unitStack, v16);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), gameData + 200 * *unitStack, v16);
       break;
     case TEMPLE_GIFT_GOLD_100:
       Temple_SpawnGiftGoldCargoStack(100, tileX, *((_BYTE *)unitStack + 4), v7, gameTime);
@@ -271,12 +271,12 @@ LABEL_15:
       break;
     case TEMPLE_GIFT_CURSE_MORALE:
       UnitStack_AdjustMoraleByPredicate(unitStack, -20, UnitSlot_PredicateAlways, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v20);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v20);
       break;
     case TEMPLE_GIFT_CURSE_MORALE_FATIGUE:
       UnitStack_AdjustMoraleByPredicate(unitStack, -1, UnitSlot_PredicateAlways, giftType, gameTime);
       UnitStack_AdjustFatigueByPredicate(unitStack, 50, UnitSlot_PredicateAlways, giftType, gameTime);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v21);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v21);
       break;
     default:
       return;
@@ -328,18 +328,18 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
 
   siteX = tile_x;
   siteY = tile_y;
-  Debug_Log(tile_x, tile_y, gameContext, (int)aTemple_unitget);
-  unitStack = (__int16 *)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
+  Debug_Log(tile_x, tile_y, gameContext, (int)(intptr_t)aTemple_unitget);
+  unitStack = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
   Diagnostics_TraceWorldMapActionEvent("temple_unit_getinto_enter", stack_index, tile_x, tile_y, MapTile_GetReligiousSiteCategory(tile_x, tile_y));
   playerData = gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-  if ( *(_DWORD *)(playerData + 140063) )
+  if ( *(_DWORD *)(uintptr_t)(playerData + 140063) )
   {
-    if ( *(_DWORD *)(playerData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
       outcomeTable = &g_TempleGiftOutcomeTable_OwnCultActive;
     else
       outcomeTable = &g_TempleGiftOutcomeTable_OwnCultInactive;
   }
-  else if ( *(_DWORD *)(playerData + 140051) )
+  else if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
   {
     outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultActive;
   }
@@ -349,22 +349,22 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   }
   siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
   playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-  ownCultFlag = *(_DWORD *)(gameData + playerDataOffset + 140063);
+  ownCultFlag = *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140063);
   if ( ownCultFlag && (siteCategory == 3 || siteCategory == 4)
-    || (LOBYTE(playerDataOffset) = gameData, !*(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
+    || (LOBYTE(playerDataOffset) = gameData, !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
     && (siteCategory == 1 || siteCategory == 2) )
   {
-    Debug_Log(ownCultFlag, playerDataOffset, (DWORD)unitStack, (int)aTemple_unitg_0);
-    sacrilegeTexts[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
-    sacrilegeTexts[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
-    sacrilegeTexts[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
-    if ( *(_DWORD *)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + 140051) )
+    Debug_Log(ownCultFlag, playerDataOffset, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_0);
+    sacrilegeTexts[0] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[0];
+    sacrilegeTexts[1] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[1];
+    sacrilegeTexts[2] = (int)(intptr_t)g_TempleSacrilegeUnitKilledTexts[2];
+    if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + 140051) )
     {
       LOBYTE(playerDataOffset) = 1;
-      Temple_ShowOutcomePopup(sacrilegeTexts[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)unitStack);
+      Temple_ShowOutcomePopup(sacrilegeTexts[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)(intptr_t)unitStack);
     }
     UI_StartTileBlinkFlash(*unitStack, unitStack[1], v13);
-    return Unit_Kill((int)unitStack, playerDataOffset, (DWORD)unitStack, gameTime);
+    return Unit_Kill((int)(intptr_t)unitStack, playerDataOffset, (DWORD)(intptr_t)unitStack, gameTime);
   }
   else
   {
@@ -372,7 +372,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
     if ( missionIndex == 1 || missionIndex == 11 )
     {
       result = 14 * siteY;
-      ++*(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * siteX + TILE_TERRAIN_RECORD_STRIDE * siteY + 2);
+      ++*(_WORD *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * siteX + TILE_TERRAIN_RECORD_STRIDE * siteY + 2);
       Diagnostics_TraceWorldMapActionEvent(
         "temple_unit_getinto_mission_site_increment",
         stack_index,
@@ -382,30 +382,30 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
     }
     else if ( siteCategory == 2 || siteCategory == 4 )
     {
-      Debug_Log(missionIndex, gameData, (DWORD)unitStack, (int)aTemple_unitg_2);
-      giftRewardTexts[0] = (int)g_TempleGiftRewardText[0];
-      giftRewardTexts[1] = (int)g_TempleGiftRewardText[1];
-      giftRewardTexts[2] = (int)g_TempleGiftRewardText[2];
-      giftEmptyTexts[0] = (int)g_TempleGiftEmptyText[0];
-      giftEmptyTexts[1] = (int)g_TempleGiftEmptyText[1];
-      giftEmptyTexts[2] = (int)g_TempleGiftEmptyText[2];
+      Debug_Log(missionIndex, gameData, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_2);
+      giftRewardTexts[0] = (int)(intptr_t)g_TempleGiftRewardText[0];
+      giftRewardTexts[1] = (int)(intptr_t)g_TempleGiftRewardText[1];
+      giftRewardTexts[2] = (int)(intptr_t)g_TempleGiftRewardText[2];
+      giftEmptyTexts[0] = (int)(intptr_t)g_TempleGiftEmptyText[0];
+      giftEmptyTexts[1] = (int)(intptr_t)g_TempleGiftEmptyText[1];
+      giftEmptyTexts[2] = (int)(intptr_t)g_TempleGiftEmptyText[2];
       result = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData;
-      if ( *(_DWORD *)(result + 140051) )
+      if ( *(_DWORD *)(uintptr_t)(result + 140051) )
       {
-        ownCultFlagValue = *(_DWORD *)(result + 140063);
+        ownCultFlagValue = *(_DWORD *)(uintptr_t)(result + 140063);
         if ( ownCultFlagValue )
-          return Temple_ShowOutcomePopup(giftRewardTexts[(unsigned __int8)g_LanguageIndex], -1, ownCultFlagValue, 0, (DWORD)unitStack);
+          return Temple_ShowOutcomePopup(giftRewardTexts[(unsigned __int8)g_LanguageIndex], -1, ownCultFlagValue, 0, (DWORD)(intptr_t)unitStack);
         else
-          return Temple_ShowOutcomePopup(giftEmptyTexts[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)unitStack);
+          return Temple_ShowOutcomePopup(giftEmptyTexts[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)(intptr_t)unitStack);
       }
     }
     else
     {
       outcomeTablePtr = outcomeTable;
-      outcomePtr = Temple_Random(outcomeTable, missionIndex, gameData, (DWORD)unitStack);
+      outcomePtr = Temple_Random(outcomeTable, missionIndex, gameData, (DWORD)(intptr_t)unitStack);
       activeMission = ACTIVE_MISSION_INDEX;
       if ( (activeMission == 2 || activeMission == 6 || activeMission == 12 || activeMission == 16)
-        && *(_DWORD *)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
+        && *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
       {
         if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
           || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
@@ -415,27 +415,27 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
         else
         {
           while ( *outcomePtr && *outcomePtr != 15 )
-            outcomePtr = Temple_Random(outcomeTablePtr, v17, playerDataOffset, (DWORD)unitStack);
+            outcomePtr = Temple_Random(outcomeTablePtr, v17, playerDataOffset, (DWORD)(intptr_t)unitStack);
         }
       }
-      Debug_Log(v17, playerDataOffset, (DWORD)unitStack, (int)aTemple_unitg_1);
+      Debug_Log(v17, playerDataOffset, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_1);
       playerDataOffset2 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-      cultActiveFlag = *(_DWORD *)(playerDataOffset2 + gameData + 140051);
+      cultActiveFlag = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140051);
       if ( cultActiveFlag )
       {
-        isOwnCult = *(_DWORD *)(playerDataOffset2 + gameData + 140063);
+        isOwnCult = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140063);
         if ( isOwnCult )
           transitionName = aSw_chs;
         else
           transitionName = aSw_pog;
-        Win_PlayModeChangeFrameTransition(transitionName, 1, cultActiveFlag, isOwnCult, (DWORD)unitStack);
-        Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)unitStack);
+        Win_PlayModeChangeFrameTransition(transitionName, 1, cultActiveFlag, isOwnCult, (DWORD)(intptr_t)unitStack);
+        Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)(intptr_t)unitStack);
       }
       Temple_ProcessGift(*outcomePtr, unitStack, siteY, siteX, gameTime);
       siteRowBase = gameData + TILE_TERRAIN_ROW_STRIDE * siteX;
-      LOWORD(siteOverlayWord) = *(_WORD *)(siteRowBase + 14 * siteY + 2);
-      *(_WORD *)(siteRowBase + 14 * siteY + 2) = ++siteOverlayWord;
-      return (int)Rules_RetractTempleFact(siteX, siteOverlayWord, siteRowBase, (DWORD)unitStack);
+      LOWORD(siteOverlayWord) = *(_WORD *)(uintptr_t)(siteRowBase + 14 * siteY + 2);
+      *(_WORD *)(uintptr_t)(siteRowBase + 14 * siteY + 2) = ++siteOverlayWord;
+      return (int)(intptr_t)Rules_RetractTempleFact(siteX, siteOverlayWord, siteRowBase, (DWORD)(intptr_t)unitStack);
     }
   }
   return result;
@@ -514,7 +514,7 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int widget, int delayTicks, doub
   selectedSlots[selectedWriteIdx] = -1;
   if ( selectedSlots[0] != -1 )
   {
-    Building_UnitsLeave((unsigned __int8 *)g_BuildingUIRecordPtr, selectedSlots, gameTime);
+    Building_UnitsLeave((unsigned __int8 *)(uintptr_t)g_BuildingUIRecordPtr, selectedSlots, gameTime);
     Audio_PlaySoundEffectByName(aDclose_1, 64);
     spriteFrame = 12;
     g_RenderDevice = &g_MainRenderDevice;
@@ -532,7 +532,7 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int widget, int delayTicks, doub
           SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, animFrame);
           v18 = 0;
           v20 = *((_DWORD *)g_RenderDevice + 46);
-          (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v20 + 52))(
+          (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v20 + 52))(
             v16 + 148,
             SpriteForChar,
             -1,
@@ -586,7 +586,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
   int spriteSetIndex; // [esp+78h] [ebp-20h]
 
   savedRenderDevice = g_RenderDevice;
-  Surface = (_DWORD *)Mem_Alloc(188, a1, a2, renderContext);
+  Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, a1, a2, renderContext);
   if ( Surface )
   {
     surfaceWidth = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) + 1;
@@ -596,7 +596,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
   surface = Surface;
   g_RenderDevice = Surface;
   SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 0);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
     0,
     SpriteForChar,
     -1,
@@ -611,10 +611,10 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
   spriteSetIndex = 0;
   do
   {
-    if ( *(__int16 *)(slotOffset + g_BuildingUIRecordPtr + 18) == -1 )
+    if ( *(__int16 *)(uintptr_t)(slotOffset + g_BuildingUIRecordPtr + 18) == -1 )
     {
       DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 5);
-      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
+      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
         -1,
         -1,
         -1,
@@ -627,12 +627,12 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
     {
       DLX_GetSpriteForChar(g_BuildingUnitsPopupSlotSpriteSets[spriteSetIndex], 0);
       renderVtable = *((_DWORD *)g_RenderDevice + 46);
-      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(renderVtable + 52))(-1, -1, -1, -1, 1, 0, 0);
+      (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderVtable + 52))(-1, -1, -1, -1, 1, 0, 0);
       if ( g_BuildingUnitsPopupSelectedSlots[slotIndex] )
       {
         v9 = DLX_GetSpriteForChar(g_MarksSpriteSet, 5);
         renderVtable = *((_DWORD *)g_RenderDevice + 46);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderVtable + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderVtable + 52))(
           78 * (slotIndex / 5) + 50,
           v9,
           -1,
@@ -643,11 +643,11 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
           0,
           0);
       }
-      if ( *(_BYTE *)(slotOffset + g_BuildingUIRecordPtr + 28) )
+      if ( *(_BYTE *)(uintptr_t)(slotOffset + g_BuildingUIRecordPtr + 28) )
       {
         v10 = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 3);
         renderVtable = *((_DWORD *)g_RenderDevice + 46);
-        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(renderVtable + 52))(
+        (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderVtable + 52))(
           v11 + 49,
           v10,
           -1,
@@ -665,7 +665,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
         (unsigned __int16)g_DemoTextColumnXOffsets[slotIndex % 5] + 32,
         78 * (slotIndex / 5) + 98,
         3,
-        (int)aD_78);
+        (int)(intptr_t)aD_78);
     }
     slotOffset += 31;
     ++slotIndex;
@@ -676,9 +676,9 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
   spriteWidthMinus1 = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) - 1;
   spriteHeight = DLX_GetSpriteHeight(g_DemoTextDLXSpriteSet, 0);
   Render_BlitSurfaceRect(surface, 0, 0, 0, spriteHeight - 1, spriteWidthMinus1, 0xC8u, 0x64u);
-  Render_Present((int)g_RenderState);
+  Render_Present((int)(intptr_t)g_RenderState);
   if ( surface )
-    (*(void (**)(void))surface[46])();
+    (*(void (**)(void))(uintptr_t)surface[46])();
   result = savedRenderDevice;
   g_RenderDevice = savedRenderDevice;
   return result;
@@ -723,23 +723,23 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
   savedRenderDevice = g_RenderDevice;
   g_BuildingUIRecordPtr = UNIT_RECORD(unitStackId);
   g_TempleOutcomePopupCloseFlag = 0;
-  dlxSpriteSet = (_DWORD *)Mem_Alloc(4112, a2, spriteVariant, renderContext);
+  dlxSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a2, spriteVariant, renderContext);
   if ( dlxSpriteSet )
     dlxSpriteSet = DLXSpriteSet_Load(dlxSpriteSet, spriteVariant);
-  g_DemoTextDLXSpriteSet = (int)dlxSpriteSet;
+  g_DemoTextDLXSpriteSet = (int)(intptr_t)dlxSpriteSet;
   slotOffset = 0;
   memset_(0, 0);
   do
   {
     slotRecordPtr = slotOffset + g_BuildingUIRecordPtr;
-    if ( *(__int16 *)(slotOffset + g_BuildingUIRecordPtr + 18) != -1 )
+    if ( *(__int16 *)(uintptr_t)(slotOffset + g_BuildingUIRecordPtr + 18) != -1 )
     {
-      slotVariantDigit = *(_BYTE *)(slotRecordPtr + 20);
-      UI_BeginUnitInfo(unitInfoBuffer, *(_BYTE *)(slotRecordPtr + 18), slotVariantDigit);
-      slotSpriteSet = (_DWORD *)Mem_Alloc(4112, v10, slotVariantDigit, renderContext);
+      slotVariantDigit = *(_BYTE *)(uintptr_t)(slotRecordPtr + 20);
+      UI_BeginUnitInfo(unitInfoBuffer, *(_BYTE *)(uintptr_t)(slotRecordPtr + 18), slotVariantDigit);
+      slotSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v10, slotVariantDigit, renderContext);
       if ( slotSpriteSet )
         slotSpriteSet = DLXSpriteSet_Load(slotSpriteSet, slotVariantDigit);
-      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)slotSpriteSet;
+      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)(intptr_t)slotSpriteSet;
     }
     spriteSetOffset += 4;
     slotOffset += 31;
@@ -748,12 +748,12 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
   LOBYTE(selectedSlot) = 10;
   memset_(40, 0);
   RenderHook_DemoText(v13, 10, renderContext);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
   g_RenderDevice = v14;
-  Render_Begin((int)g_RenderState, 0);
+  Render_Begin((int)(intptr_t)g_RenderState, 0);
   while ( !g_TempleOutcomePopupCloseFlag )
   {
-    DD_Pump((int)g_RenderState, (char)selectedSlot);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)selectedSlot);
     selectedSlot = 0;
     hoverRow = ((g_MouseCursorRawY >> g_CursorCoordShift) - 148) / 78;
     columnIndex = 0;
@@ -767,22 +767,22 @@ int  UI_DemoTextPresent(int unitStackId, int a2, char spriteVariant, DWORD rende
       ++selectedSlot;
     }
     while ( columnIndex < 5 );
-    if ( hoverRow <= 1 && (unsigned int)selectedSlot <= 4 )
+    if ( hoverRow <= 1 && (unsigned int)(intptr_t)selectedSlot <= 4 )
     {
       selectedSlot += 5 * hoverRow;
-      if ( *(__int16 *)(31 * (_DWORD)selectedSlot + g_BuildingUIRecordPtr + 18) != -1 )
+      if ( *(__int16 *)(uintptr_t)(31 * (_DWORD)(intptr_t)selectedSlot + g_BuildingUIRecordPtr + 18) != -1 )
       {
-        if ( DD_IsFlipping((int)g_RenderState) )
+        if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
         {
-          g_BuildingUnitsPopupSelectedSlots[(_DWORD)selectedSlot] ^= 1u;
+          g_BuildingUnitsPopupSelectedSlots[(_DWORD)(intptr_t)selectedSlot] ^= 1u;
           Audio_PlaySoundEffectByName(aMarker, 64);
-          RenderHook_DemoText(v22, (char)selectedSlot, renderContext);
-          Render_Begin((int)g_RenderState, 0);
+          RenderHook_DemoText(v22, (char)(intptr_t)selectedSlot, renderContext);
+          Render_Begin((int)(intptr_t)g_RenderState, 0);
         }
-        else if ( DD_IsLost((int)g_RenderState) )
+        else if ( DD_IsLost((int)(intptr_t)g_RenderState) )
         {
           hasSpecialPersonage = Building_HasSpecialPersonageGarrisonEntries(g_BuildingUIRecordPtr);
-          selectedSlot = (unsigned __int8 *)(g_BuildingUIRecordPtr + 18 + v24);
+          selectedSlot = (unsigned __int8 *)(uintptr_t)(g_BuildingUIRecordPtr + 18 + v24);
           Unit_Info(100, 100, hasSpecialPersonage, selectedSlot, renderContext, 0);
         }
       }
@@ -839,12 +839,12 @@ void  BattleMapFileName(char *outPath, int tileX, int tileY)
   const char *suffix;
   int tile;
 
-  Debug_Log(tileX, tileY, (DWORD)outPath, (int)aBattlemapfilen);
+  Debug_Log(tileX, tileY, (DWORD)(intptr_t)outPath, (int)(intptr_t)aBattlemapfilen);
   strcpy(outPath, aMaps);
   tile = gameData + TILE_TERRAIN_ROW_STRIDE * tileX + TILE_TERRAIN_RECORD_STRIDE * tileY;
-  primary = *(_WORD *)tile;
-  secondary = *(_WORD *)(tile + 2);
-  tertiary = *(_WORD *)(tile + 4);
+  primary = *(_WORD *)(uintptr_t)tile;
+  secondary = *(_WORD *)(uintptr_t)(tile + 2);
+  tertiary = *(_WORD *)(uintptr_t)(tile + 4);
   if ( secondary != 0xFFFF && secondary < 7 && g_BattleMapFileSuffixByFactionTable[secondary] )
   {
     suffix = g_BattleMapFileSuffixByFactionTable[secondary] + 1;
@@ -861,7 +861,7 @@ void  BattleMapFileName(char *outPath, int tileX, int tileY)
   outPath[strlen(outPath) + 1] = 0;
   outPath[strlen(outPath)] = Rng_RandRange(0, 1) + 48;
   strcat(outPath, a_mab);
-  Debug_Log((int)outPath, 0, 0, (int)aBattlemapfil_0);
+  Debug_Log((int)(intptr_t)outPath, 0, 0, (int)(intptr_t)aBattlemapfil_0);
 }
 // 4413AA: variable 'v5' is possibly undefined
 // 516410: using guessed type char *off_516410[7];
@@ -960,7 +960,7 @@ char  BattleMap_GetOutcomeVariantFileName(char *outPath, int tileX, int tileY)
 //----- (004415A0) --------------------------------------------------------
 int  BattleMap_GetMoveSoundSurfaceClass(int tileRow, int tileCol)
 {
-  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * tileRow + g_MapData + 2 * tileCol)];
+  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(uintptr_t)(40 * tileRow + g_MapData + 2 * tileCol)];
 }
 // 532048: using guessed type int g_MapData;
 
@@ -1071,7 +1071,7 @@ int  Sound_PlayNamedSfxFile(char *soundName, int volume)
     suffixWriteCursor += 2;
   }
   while ( suffixNextChar );
-  soundHandle = CSS_PlaySound((int)pathBuffer, volume, 0, 0);
+  soundHandle = CSS_PlaySound((int)(intptr_t)pathBuffer, volume, 0, 0);
   Audio_SetSoundLoopIfMusicActive(soundHandle, 0, -1);
   g_Audio_ActiveSoundHandle = soundHandle;
   return soundHandle;
@@ -1118,7 +1118,7 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD gameContext)
       sprintf_(sourcePath, "sfx\\music\\mainmap%d.wav", v15);
       loadFileSusp(sourcePath, wavPath);
     }
-    g_MainMapMusicHandle = CSS_PlaySound((int)wavPath, 64, 0, 2000);
+    g_MainMapMusicHandle = CSS_PlaySound((int)(intptr_t)wavPath, 64, 0, 2000);
     CSS_SetSoundLoop(g_MainMapMusicHandle, 0, -1);
     result = g_MainMapMusicHandle;
     g_Audio_ActiveSoundHandle = g_MainMapMusicHandle;
@@ -1154,7 +1154,7 @@ int  Audio_PauseMusicAndPlayLoopedSound(char *trackName, int trackNumber)
     return 0;
   CSS_PauseSound(g_MainMapMusicHandle, 2000);
   Sound_BuildMusicTrackPath(pathBuffer, trackName, trackNumber);
-  soundHandle = CSS_PlaySound((int)pathBuffer, 64, 0, 2000);
+  soundHandle = CSS_PlaySound((int)(intptr_t)pathBuffer, 64, 0, 2000);
   CSS_SetSoundLoop(soundHandle, 0, -1);
   g_Audio_ActiveSoundHandle = soundHandle;
   return soundHandle;
@@ -1248,7 +1248,7 @@ int  Audio_StartMainMusicIfStopped(int a1, DWORD gameContext)
   if ( !g_Audio_MusicActiveFlag )
   {
     g_Audio_MusicActiveFlag = 1;
-    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET), a1, 1, gameContext);
+    return Music_PlayMainMapTrack(*(unsigned __int8 *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET), a1, 1, gameContext);
   }
   return result;
 }
@@ -1345,7 +1345,7 @@ int  Audio_PlayUnitActivateSound(int result)
     }
     while ( suffixNextChar );
     digitSlot[strlen(soundPath)] = Rng_RandRange(49, 50);
-    result = CSS_PlaySound((int)soundPath, 64, 0, 0);
+    result = CSS_PlaySound((int)(intptr_t)soundPath, 64, 0, 0);
     g_LastUnitActivateSoundHandle = result;
   }
   return result;
@@ -1403,7 +1403,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
     }
     while ( suffixNextChar );
     digitSlot[strlen(soundPath)] = Rng_RandRange(49, 50);
-    return CSS_PlaySound((int)soundPath, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPath, 64, 0, 0);
   }
   return result;
 }
@@ -1455,7 +1455,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
       suffixWriteCursor += 2;
     }
     while ( suffixNextChar );
-    return CSS_PlaySound((int)soundPath, 64, 0, 0);
+    return CSS_PlaySound((int)(intptr_t)soundPath, 64, 0, 0);
   }
   return result;
 }

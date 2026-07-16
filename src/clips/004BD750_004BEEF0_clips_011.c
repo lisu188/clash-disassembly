@@ -26,7 +26,7 @@ signed int  Parser_ValidateFunctionCallArgs(int theExpression, int restrictions,
   argPosition = 1;
   if ( !restrictions )
     return 0;
-  argCount = AST_CountListNodes(*(_DWORD *)(theExpression + 6));
+  argCount = AST_CountListNodes(*(_DWORD *)(uintptr_t)(theExpression + 6));
   if ( (IsTable[(unsigned __int8)(*restrictionPtr + 1)] & 0x20) != 0 )
   {
     minArgs = atoi_(argCount);
@@ -68,7 +68,7 @@ LABEL_22:
 LABEL_11:
   if ( restrictionPtr[2] )
     restrictionIndex = 3;
-  argNode = *(_DWORD *)(theExpression + 6);
+  argNode = *(_DWORD *)(uintptr_t)(theExpression + 6);
   if ( !argNode )
     return 0;
   v12 = &restrictionPtr[restrictionIndex];
@@ -79,15 +79,15 @@ LABEL_11:
       ++v12;
       ++restrictionIndex;
     }
-    if ( Rules_ExpressionConstraintsCompatible((__int16 *)argNode) )
+    if ( Rules_ExpressionConstraintsCompatible((__int16 *)(uintptr_t)argNode) )
       break;
-    argNode = *(_DWORD *)(argNode + 10);
+    argNode = *(_DWORD *)(uintptr_t)(argNode + 10);
     ++argPosition;
     if ( !argNode )
       return 0;
   }
   v14 = Rules_GetArgTypeName(v13);
-  Parser_ReportError(argPosition, (int)v14);
+  Parser_ReportError(argPosition, (int)(intptr_t)v14);
   return 1;
 }
 // 4BD789: variable 'v6' is possibly undefined
@@ -118,9 +118,9 @@ int  Parser_CollectFunctionArguments(int exprNode, int readSource, int context)
     if ( !argNode )
       break;
     if ( lastArg )
-      *(_DWORD *)(lastArg + 10) = argNode;
+      *(_DWORD *)(uintptr_t)(lastArg + 10) = argNode;
     else
-      *(_DWORD *)(exprNode + 6) = argNode;
+      *(_DWORD *)(uintptr_t)(exprNode + 6) = argNode;
   }
   IO_OutNewline();
   IO_OutNewline();
@@ -140,7 +140,7 @@ signed int  Parser_ParseArgument(int readSource, _DWORD *errorFlag, int context)
   _DWORD token[5]; // [esp+0h] [ebp-14h] BYREF
 
   token[4] = context;
-  Parser_NextToken(readSource, (int)token);
+  Parser_NextToken(readSource, (int)(intptr_t)token);
   if ( token[0] == 101 )
     return 0;
   if ( token[0] == 15 || token[0] == 16 || token[0] == 2 || token[0] == 3 || token[0] == 13 || token[0] == 14 || token[0] == 8 || token[0] < 2u )
@@ -153,8 +153,8 @@ signed int  Parser_ParseArgument(int readSource, _DWORD *errorFlag, int context)
   }
   else
   {
-    Rules_PrintErrorID((int)aExprnpsr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAConst, v6);
+    Rules_PrintErrorID((int)(intptr_t)aExprnpsr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAConst, v6);
     *errorFlag = 1;
     return 0;
   }
@@ -182,15 +182,15 @@ int  Parser_ParseSingleExpression(int readSource, __int16 *theToken, int context
   if ( !theToken )
   {
     tokenPtr = (__int16 *)token;
-    Parser_NextToken(readSource, (int)token);
+    Parser_NextToken(readSource, (int)(intptr_t)token);
   }
   tokenType = *(_DWORD *)tokenPtr;
   if ( *(_DWORD *)tokenPtr == 2 || tokenType == 3 || tokenType < 2 || tokenType == 8 || tokenType == 13 || tokenType == 14 || tokenType == 15 || tokenType == 16 )
     return AST_NewNode(*(_DWORD *)tokenPtr, *((_DWORD *)tokenPtr + 1));
   if ( tokenType != 100 )
   {
-    Rules_PrintErrorID((int)aExprnpsr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAConst, v8);
+    Rules_PrintErrorID((int)(intptr_t)aExprnpsr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAConst, v8);
     return 0;
   }
   result = Parser_ParseExpression(v3, v3);
@@ -221,11 +221,11 @@ int  Parser_ParseProgram(int readSource, unsigned int *theToken, signed int read
 
   Symbol = Rules_MakeSymbol(aProgn_2);
   lastNode = 0;
-  topNode = AST_NewNode(10, (int)Symbol);
+  topNode = AST_NewNode(10, (int)(intptr_t)Symbol);
   while ( 1 )
   {
     if ( readFirstToken )
-      Parser_NextToken(readSource, (int)theToken);
+      Parser_NextToken(readSource, (int)(intptr_t)theToken);
     else
       readFirstToken = 1;
     if ( *theToken == 2 && v8 && !strcmp_(v8, v8) )
@@ -248,20 +248,20 @@ LABEL_10:
     }
     if ( lastNode )
     {
-      *(_DWORD *)(lastNode + 10) = argNode;
+      *(_DWORD *)(uintptr_t)(lastNode + 10) = argNode;
       lastNode = argNode;
       AST_Append(v12, v11);
     }
     else
     {
-      *(_DWORD *)(topNode + 6) = argNode;
+      *(_DWORD *)(uintptr_t)(topNode + 6) = argNode;
       lastNode = argNode;
       AST_Append(v12, topNode);
     }
   }
   Rules_MakeSymbol(aExpand_0);
   v14 = Rules_MakeSymbol(aExpansionCal_0);
-  if ( !Parser_ParseExpansion(topNode, v15, v16, (int)v14) )
+  if ( !Parser_ParseExpansion(topNode, v15, v16, (int)(intptr_t)v14) )
     return topNode;
   AST_Free(topNode);
   return 0;
@@ -297,14 +297,14 @@ const char * Parser_ParseCLIPSFunctionArgString(const char *result, _DWORD *erro
   *errorFlag = 0;
   if ( result )
   {
-    if ( IO_OpenStringSource((int)aClipsfnxargs, result, 0) )
+    if ( IO_OpenStringSource((int)(intptr_t)aClipsfnxargs, result, 0) )
     {
-      Parser_NextToken((int)aClipsfnxargs, (int)token);
+      Parser_NextToken((int)(intptr_t)aClipsfnxargs, (int)(intptr_t)token);
       if ( token[0] == 102 )
       {
 LABEL_11:
-        IO_CloseStringRouter((int)aClipsfnxargs);
-        return (const char *)v6;
+        IO_CloseStringRouter((int)(intptr_t)aClipsfnxargs);
+        return (const char *)(uintptr_t)v6;
       }
       else
       {
@@ -312,24 +312,24 @@ LABEL_11:
         {
           argNode = AST_NewNode(token[0], token[1]);
           if ( v5 )
-            *(_DWORD *)(lastNode + 10) = argNode;
+            *(_DWORD *)(uintptr_t)(lastNode + 10) = argNode;
           lastNode = argNode;
-          Parser_NextToken((int)aClipsfnxargs, (int)token);
+          Parser_NextToken((int)(intptr_t)aClipsfnxargs, (int)(intptr_t)token);
           if ( token[0] == 102 )
             goto LABEL_11;
         }
-        Rules_PrintErrorID((int)aExprnpsr, 7, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOnlyConstantAr, v8);
+        Rules_PrintErrorID((int)(intptr_t)aExprnpsr, 7, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOnlyConstantAr, v8);
         AST_Free(v9);
         *errorFlag = 1;
-        IO_CloseStringRouter((int)aClipsfnxargs);
+        IO_CloseStringRouter((int)(intptr_t)aClipsfnxargs);
         return 0;
       }
     }
     else
     {
-      Rules_PrintErrorID((int)aExprnpsr, 6, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotReadArgu, v7);
+      Rules_PrintErrorID((int)(intptr_t)aExprnpsr, 6, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotReadArgu, v7);
       *errorFlag = 1;
       return 0;
     }
@@ -366,10 +366,10 @@ signed int Parser_AddFunctionParser(_BYTE *function_name, int handler)
   {
     *(int **)((char *)symbol + 17) = 0;
     *(_WORD *)((char *)symbol + 21) = 0;
-    *(int **)((char *)symbol + 13) = (int *)handler;
+    *(int **)((char *)symbol + 13) = (int *)(uintptr_t)handler;
     return 1;
   }
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionParser, v3);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunctionParser, v3);
   return 0;
 }
 // 51A614: using guessed type char *off_51A614[5];
@@ -377,21 +377,21 @@ signed int Parser_AddFunctionParser(_BYTE *function_name, int handler)
 //----- (004BDD40) --------------------------------------------------------
 int Parser_RegisterProceduralFunctionParsers()
 {
-  if ( !Parser_AddFunctionParser(aBind, (int)Parser_ParseBind) )
+  if ( !Parser_AddFunctionParser(aBind, (int)(intptr_t)Parser_ParseBind) )
     return 0;
-  if ( !Parser_AddFunctionParser(aProgn, (int)Parser_ParseProgn) )
+  if ( !Parser_AddFunctionParser(aProgn, (int)(intptr_t)Parser_ParseProgn) )
     return 0;
-  if ( !Parser_AddFunctionParser(aIf, (int)Parser_ParseIf) )
+  if ( !Parser_AddFunctionParser(aIf, (int)(intptr_t)Parser_ParseIf) )
     return 0;
-  if ( !Parser_AddFunctionParser(aWhile, (int)Parser_ParseWhile) )
+  if ( !Parser_AddFunctionParser(aWhile, (int)(intptr_t)Parser_ParseWhile) )
     return 0;
-  if ( !Parser_AddFunctionParser(aLoopForCount, (int)Parser_ParseLoopForCount) )
+  if ( !Parser_AddFunctionParser(aLoopForCount, (int)(intptr_t)Parser_ParseLoopForCount) )
     return 0;
-  if ( !Parser_AddFunctionParser(aReturn, (int)Parser_ParseReturn) )
+  if ( !Parser_AddFunctionParser(aReturn, (int)(intptr_t)Parser_ParseReturn) )
     return 0;
-  if ( !Parser_AddFunctionParser(aBreak, (int)Parser_ParseBreak) )
+  if ( !Parser_AddFunctionParser(aBreak, (int)(intptr_t)Parser_ParseBreak) )
     return 0;
-  return Parser_AddFunctionParser(aSwitch, (int)Parser_ParseSwitch);
+  return Parser_AddFunctionParser(aSwitch, (int)(intptr_t)Parser_ParseSwitch);
 }
 
 //----- (004BDDC0) --------------------------------------------------------
@@ -419,11 +419,11 @@ int Parser_FreeLoopContextStack(void)
   {
     do
     {
-      AST_DecrementNodeRefCount(*(_DWORD **)(g_ClipsLoopContextStackTop + 4));
+      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(g_ClipsLoopContextStackTop + 4));
       g_ClipsMemFreeListTemp = g_ClipsLoopContextStackTop;
-      *(_DWORD *)g_ClipsLoopContextStackTop = *(_DWORD *)(g_ClipsMemoryTable + 48);
+      *(_DWORD *)(uintptr_t)g_ClipsLoopContextStackTop = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
       g_ClipsLoopContextStackTop = nextEntry;
     }
     while ( nextEntry );
@@ -458,10 +458,10 @@ int  Parser_ParseWhile(int topNode, int readSource)
 
   IO_OutWriteToken(asc_50A54C);
   testExpr = Parser_ParseSingleExpression(readSource, 0, v4);
-  *(_DWORD *)(topNode + 6) = testExpr;
+  *(_DWORD *)(uintptr_t)(topNode + 6) = testExpr;
   if ( !testExpr )
     goto LABEL_10;
-  Parser_NextToken(readSource, (int)&token);
+  Parser_NextToken(readSource, (int)(intptr_t)&token);
   if ( token == 2 && !strcmp_(v6, aDo) )
   {
     IO_OutNewline();
@@ -487,11 +487,11 @@ LABEL_10:
     readFirstToken = 0;
     IO_OutWriteToken(indentToken);
   }
-  if ( *(_DWORD *)g_ClipsParseContextSaveStack == 1 )
+  if ( *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack == 1 )
     g_ClipsParseReturnContext = 1;
   g_ParserBreakContextFlag = 1;
-  *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = Parser_ParseProgram(readSource, &token, readFirstToken);
-  if ( !*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) )
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseProgram(readSource, &token, readFirstToken);
+  if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
     goto LABEL_10;
   IO_OutNewline();
   IO_OutNewline();
@@ -546,13 +546,13 @@ int  Parser_ParseLoopForCount(int topNode, int readSource)
   loopVar = 0;
   if ( token == 100 )
   {
-    Parser_NextToken(readSource, (int)&token);
+    Parser_NextToken(readSource, (int)(intptr_t)&token);
     if ( token == 15 )
     {
       loopVar = tokenValue;
       IO_OutWriteToken(asc_50A54C);
-      rangeExpr = (__int16 *)Parser_ParseSingleExpression(readSource, 0, v16);
-      *(_DWORD *)(topNode + 6) = rangeExpr;
+      rangeExpr = (__int16 *)(uintptr_t)Parser_ParseSingleExpression(readSource, 0, v16);
+      *(_DWORD *)(uintptr_t)(topNode + 6) = rangeExpr;
       if ( !rangeExpr )
         goto LABEL_23;
       if ( Rules_ExpressionConstraintsCompatible(rangeExpr) )
@@ -565,16 +565,16 @@ int  Parser_ParseLoopForCount(int topNode, int readSource)
         IO_OutNewline();
         IO_OutWriteToken(indentToken);
         lowerBoundValue = Rules_AddIntegerValue(1);
-        lowerBoundNode = AST_NewNode(1, (int)lowerBoundValue);
-        *(_DWORD *)(lowerBoundNode + 10) = *(_DWORD *)(topNode + 6);
-        *(_DWORD *)(topNode + 6) = lowerBoundNode;
+        lowerBoundNode = AST_NewNode(1, (int)(intptr_t)lowerBoundValue);
+        *(_DWORD *)(uintptr_t)(lowerBoundNode + 10) = *(_DWORD *)(uintptr_t)(topNode + 6);
+        *(_DWORD *)(uintptr_t)(topNode + 6) = lowerBoundNode;
       }
       else
       {
-        *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = Parser_ParseSingleExpression(readSource, (__int16 *)&token, v19);
-        if ( !*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) )
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseSingleExpression(readSource, (__int16 *)&token, v19);
+        if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
           goto LABEL_23;
-        Parser_NextToken(readSource, (int)&token);
+        Parser_NextToken(readSource, (int)(intptr_t)&token);
         if ( token != 101 )
           goto LABEL_18;
       }
@@ -584,23 +584,23 @@ int  Parser_ParseLoopForCount(int topNode, int readSource)
     if ( token != 2 )
       goto LABEL_18;
     v14 = Rules_AddIntegerValue(1);
-    *(_DWORD *)(topNode + 6) = AST_NewNode(1, (int)v14);
-    *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = Parser_ParseFunctionCallExpr(readSource, *(_BYTE **)(tokenValue + 16));
-    if ( *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) )
+    *(_DWORD *)(uintptr_t)(topNode + 6) = AST_NewNode(1, (int)(intptr_t)v14);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseFunctionCallExpr(readSource, *(_BYTE **)(uintptr_t)(tokenValue + 16));
+    if ( *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
       goto LABEL_3;
 LABEL_23:
     AST_Free(topNode);
     return 0;
   }
   defaultLowerBound = Rules_AddIntegerValue(1);
-  *(_DWORD *)(topNode + 6) = AST_NewNode(1, (int)defaultLowerBound);
-  *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = Parser_ParseSingleExpression(readSource, (__int16 *)&token, v7);
-  if ( !*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) )
+  *(_DWORD *)(uintptr_t)(topNode + 6) = AST_NewNode(1, (int)(intptr_t)defaultLowerBound);
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseSingleExpression(readSource, (__int16 *)&token, v7);
+  if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
     goto LABEL_23;
 LABEL_3:
-  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(*(_DWORD *)(topNode + 6) + 10)) )
+  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10)) )
     goto LABEL_18;
-  Parser_NextToken(readSource, (int)&token);
+  Parser_NextToken(readSource, (int)(intptr_t)&token);
   if ( token == 2 && !strcmp_(v8, aDo) )
   {
     IO_OutNewline();
@@ -623,14 +623,14 @@ LABEL_18:
   readFirstToken = 0;
   IO_OutWriteToken(indentToken);
 LABEL_7:
-  if ( *(_DWORD *)g_ClipsParseContextSaveStack == 1 )
+  if ( *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack == 1 )
     g_ClipsParseReturnContext = 1;
   g_ParserBreakContextFlag = 1;
   savedLoopStack = g_ClipsLoopContextStackTop;
   loopScope = g_ClipsLoopContextStackTop;
   g_ClipsLoopContextStackTop = 0;
-  *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) + 10) = Parser_ParseProgram(readSource, &token, readFirstToken);
-  if ( !*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) + 10) )
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) + 10) = Parser_ParseProgram(readSource, &token, readFirstToken);
+  if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) + 10) )
   {
     g_ClipsLoopContextStackTop = savedLoopStack;
     AST_Free(topNode);
@@ -642,11 +642,11 @@ LABEL_7:
   {
 LABEL_13:
     if ( prevContext )
-      *(_DWORD *)(prevContext + 8) = loopScope;
+      *(_DWORD *)(uintptr_t)(prevContext + 8) = loopScope;
     else
       g_ClipsLoopContextStackTop = loopScope;
     if ( loopVar )
-      Parser_ReplaceLoopCountVars(loopVar, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) + 10), 0);
+      Parser_ReplaceLoopCountVars(loopVar, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) + 10), 0);
     IO_OutNewline();
     IO_OutNewline();
     IO_OutWriteToken(indentToken);
@@ -657,17 +657,17 @@ LABEL_13:
     }
     goto LABEL_18;
   }
-  while ( !loopVar || strcmp_(scanContext, *(_DWORD *)(loopVar + 16)) )
+  while ( !loopVar || strcmp_(scanContext, *(_DWORD *)(uintptr_t)(loopVar + 16)) )
   {
     prevContext = scanContext;
-    scanContext = *(_DWORD *)(scanContext + 8);
+    scanContext = *(_DWORD *)(uintptr_t)(scanContext + 8);
     if ( !scanContext )
       goto LABEL_13;
   }
   Parser_FreeLoopContextStack();
   g_ClipsLoopContextStackTop = loopScope;
-  Rules_PrintErrorID((int)aPrcdrpsr, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindLo, v24);
+  Rules_PrintErrorID((int)(intptr_t)aPrcdrpsr, 1, 1);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotRebindLo, v24);
   AST_Free(topNode);
   return 0;
 }
@@ -709,24 +709,24 @@ int  Parser_ReplaceLoopCountVars(int result, int exprNode, signed int depth)
     innerDepth = depth + 1;
     do
     {
-      if ( *(_WORD *)currentNode == 15 && (result = strcmp_(currentNode, *(_DWORD *)(loopVar + 16)) == 0) != 0 )
+      if ( *(_WORD *)(uintptr_t)currentNode == 15 && (result = strcmp_(currentNode, *(_DWORD *)(uintptr_t)(loopVar + 16)) == 0) != 0 )
       {
-        *(_WORD *)currentNode = 10;
+        *(_WORD *)(uintptr_t)currentNode = 10;
         Symbol = Rules_MakeSymbol(aGetLoopCount_0);
-        *(_DWORD *)(v9 + 2) = Symbol;
+        *(_DWORD *)(uintptr_t)(v9 + 2) = Symbol;
         v10 = Rules_AddIntegerValue(depth);
-        result = AST_NewNode(1, (int)v10);
-        *(_DWORD *)(currentNode + 6) = result;
+        result = AST_NewNode(1, (int)(intptr_t)v10);
+        *(_DWORD *)(uintptr_t)(currentNode + 6) = result;
       }
-      else if ( *(_DWORD *)(currentNode + 6) )
+      else if ( *(_DWORD *)(uintptr_t)(currentNode + 6) )
       {
-        if ( *(_WORD *)currentNode == 10 && (v11 = Rules_MakeSymbol(aLoopForCount_0), v11 == *(int ***)(currentNode + 2)) )
+        if ( *(_WORD *)(uintptr_t)currentNode == 10 && (v11 = Rules_MakeSymbol(aLoopForCount_0), v11 == *(int ***)(uintptr_t)(currentNode + 2)) )
           childDepth = innerDepth;
         else
           childDepth = depth;
-        result = Parser_ReplaceLoopCountVars(loopVar, *(_DWORD *)(currentNode + 6), childDepth);
+        result = Parser_ReplaceLoopCountVars(loopVar, *(_DWORD *)(uintptr_t)(currentNode + 6), childDepth);
       }
-      currentNode = *(_DWORD *)(currentNode + 10);
+      currentNode = *(_DWORD *)(uintptr_t)(currentNode + 10);
     }
     while ( currentNode );
   }
@@ -754,7 +754,7 @@ int  Parser_ParseIf(int topNode, int readSource)
 
   IO_OutWriteToken(asc_50A54C);
   testExpr = Parser_ParseSingleExpression(readSource, 0, v4);
-  *(_DWORD *)(topNode + 6) = testExpr;
+  *(_DWORD *)(uintptr_t)(topNode + 6) = testExpr;
   if ( !testExpr )
     goto LABEL_15;
   Rules_IncrementIndentDepth(3);
@@ -763,19 +763,19 @@ int  Parser_ParseIf(int topNode, int readSource)
   if ( token[0] != 2 || strcmp_(v9, aThen) )
     goto LABEL_14;
   AST_Append(v11, v10);
-  if ( *(_DWORD *)g_ClipsParseContextSaveStack == 1 )
+  if ( *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack == 1 )
     g_ClipsParseReturnContext = 1;
-  if ( *(_DWORD *)(g_ClipsParseContextSaveStack + 4) == 1 )
+  if ( *(_DWORD *)(uintptr_t)(g_ClipsParseContextSaveStack + 4) == 1 )
     g_ParserBreakContextFlag = 1;
-  *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = Parser_ParseProgram(readSource, token, 1);
-  if ( !*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) )
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseProgram(readSource, token, 1);
+  if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
     goto LABEL_15;
   if ( token[0] == 101 )
   {
     Rules_DecrementIndentDepth(3);
     IO_OutNewline();
     IO_OutNewline();
-    IO_OutWriteToken((char *)token[2]);
+    IO_OutWriteToken((char *)(uintptr_t)token[2]);
     return topNode;
   }
   else
@@ -783,8 +783,8 @@ int  Parser_ParseIf(int topNode, int readSource)
     if ( token[0] != 2 || strcmp_(v12, aElse_0) )
       goto LABEL_14;
     AST_Append(v14, v13);
-    *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) + 10) = Parser_ParseProgram(readSource, token, 1);
-    if ( !*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) + 10) )
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) + 10) = Parser_ParseProgram(readSource, token, 1);
+    if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) + 10) )
     {
 LABEL_15:
       AST_Free(topNode);
@@ -828,8 +828,8 @@ int  Parser_ParseProgn(int topNode, int readSource)
   char *indentToken; // [esp+0h] [ebp-10h]
 
   AST_Free(topNode);
-  g_ParserBreakContextFlag = *(_DWORD *)(g_ClipsParseContextSaveStack + 4);
-  g_ClipsParseReturnContext = *(_DWORD *)g_ClipsParseContextSaveStack;
+  g_ParserBreakContextFlag = *(_DWORD *)(uintptr_t)(g_ClipsParseContextSaveStack + 4);
+  g_ClipsParseReturnContext = *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack;
   Rules_IncrementIndentDepth(3);
   AST_Append(v4, v3);
   Parser_ParseProgram(readSource, theToken, 1);
@@ -872,12 +872,12 @@ int  Parser_ParseBind(int topNode, int readSource)
     AST_Free(topNode);
     return 0;
   }
-  *(_DWORD *)(topNode + 6) = AST_NewNode(2, varSymbol);
+  *(_DWORD *)(uintptr_t)(topNode + 6) = AST_NewNode(2, varSymbol);
   boundVar = varSymbol;
-  if ( tokenType == 13 && (v6 = Rules_FindImportExportConstruct(aDefglobal_4, &v14, *(_BYTE **)(varSymbol + 16), 1, 0)) != 0 )
+  if ( tokenType == 13 && (v6 = Rules_FindImportExportConstruct(aDefglobal_4, &v14, *(_BYTE **)(uintptr_t)(varSymbol + 16), 1, 0)) != 0 )
   {
-    **(_WORD **)(topNode + 6) = 60;
-    *(_DWORD *)(*(_DWORD *)(topNode + 6) + 2) = v6;
+    **(_WORD **)(uintptr_t)(topNode + 6) = 60;
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 2) = v6;
   }
   else if ( tokenType == 13 )
   {
@@ -886,30 +886,30 @@ LABEL_19:
     AST_Free(topNode);
     return 0;
   }
-  v7 = *(_DWORD **)(g_ClipsMemoryTable + 56);
+  v7 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( v7 )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 56);
-    *(_DWORD *)(g_ClipsMemoryTable + 56) = *v7;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *v7;
     v8 = g_ClipsMemFreeListTemp;
   }
   else
   {
     v8 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_DWORD *)(v8 + 10) = 0;
-  *(_DWORD *)(v8 + 6) = *(_DWORD *)(v8 + 10);
+  *(_DWORD *)(uintptr_t)(v8 + 10) = 0;
+  *(_DWORD *)(uintptr_t)(v8 + 6) = *(_DWORD *)(uintptr_t)(v8 + 10);
   if ( !Parser_CollectFunctionArguments(v8, readSource, v8) )
     goto LABEL_19;
-  *(_DWORD *)(*(_DWORD *)(topNode + 6) + 10) = *(_DWORD *)((char *)v9 + 6);
-  g_ClipsMemFreeListTemp = (int)v9;
-  *v9 = *(_DWORD *)(g_ClipsMemoryTable + 56);
-  *(_DWORD *)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
-  varNode = *(_DWORD *)(topNode + 6);
-  if ( *(_WORD *)varNode != 60 )
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = *(_DWORD *)((char *)v9 + 6);
+  g_ClipsMemFreeListTemp = (int)(intptr_t)v9;
+  *v9 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
+  varNode = *(_DWORD *)(uintptr_t)(topNode + 6);
+  if ( *(_WORD *)(uintptr_t)varNode != 60 )
   {
-    if ( *(_DWORD *)(varNode + 10) )
-      varConstraint = Rules_BuildLHSNodeFromToken(*(__int16 **)(varNode + 10));
+    if ( *(_DWORD *)(uintptr_t)(varNode + 10) )
+      varConstraint = Rules_BuildLHSNodeFromToken(*(__int16 **)(uintptr_t)(varNode + 10));
     Rules_PushNamedContextEntry(boundVar, varConstraint);
   }
   return topNode;
@@ -936,21 +936,21 @@ int __fastcall Parser_ParseReturn(int topNode, int readSource)
   int v12; // ecx
   int tokenType; // [esp+0h] [ebp-1Ch]
 
-  if ( *(_DWORD *)g_ClipsParseContextSaveStack == 1 )
+  if ( *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack == 1 )
   {
     g_ClipsParseReturnContext = 1;
   }
   else if ( !g_ClipsParseReturnContext )
   {
-    Rules_PrintErrorID((int)aPrcdrpsr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheReturnFunct, v9);
+    Rules_PrintErrorID((int)(intptr_t)aPrcdrpsr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheReturnFunct, v9);
     AST_Free(v10);
     return 0;
   }
   g_ClipsParseReturnContext = 0;
   IO_OutWriteToken(asc_50A54C);
   argExpr = Parser_ParseArgument(readSource, v3, v4);
-  *(_DWORD *)(v6 + 6) = argExpr;
+  *(_DWORD *)(uintptr_t)(v6 + 6) = argExpr;
   if ( !argExpr || (IO_OutWriteToken(asc_50A54C), Parser_NextToken(readSource, v11), tokenType == 101) )
   {
     IO_OutNewline();
@@ -988,10 +988,10 @@ int __fastcall Parser_ParseBreak(int topNode, int readSource)
   int v7; // ecx
   int tokenType; // [esp+0h] [ebp-14h]
 
-  if ( !*(_DWORD *)(g_ClipsParseContextSaveStack + 4) )
+  if ( !*(_DWORD *)(uintptr_t)(g_ClipsParseContextSaveStack + 4) )
   {
-    Rules_PrintErrorID((int)aPrcdrpsr, 2, 1);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheBreakFuncti, v6);
+    Rules_PrintErrorID((int)(intptr_t)aPrcdrpsr, 2, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aTheBreakFuncti, v6);
     goto LABEL_4;
   }
   IO_OutWriteToken(asc_50A54C);
@@ -1049,10 +1049,10 @@ int  Parser_ParseSwitch(int topNode, int readSource)
   caseCount = 0;
   sawDefault = 0;
   caseNode = Parser_ParseSingleExpression(readSource, v4, v5);
-  *(_DWORD *)(switchNode + 6) = caseNode;
+  *(_DWORD *)(uintptr_t)(switchNode + 6) = caseNode;
   if ( !caseNode )
     goto LABEL_5;
-  Parser_NextToken(readSource, (int)&token);
+  Parser_NextToken(readSource, (int)(intptr_t)&token);
   while ( token != 101 )
   {
     IO_OutNewline();
@@ -1060,22 +1060,22 @@ int  Parser_ParseSwitch(int topNode, int readSource)
     IO_OutWriteToken(indentToken);
     if ( token != 100 )
       goto LABEL_4;
-    Parser_NextToken(readSource, (int)&token);
+    Parser_NextToken(readSource, (int)(intptr_t)&token);
     IO_OutWriteToken(asc_50A54C);
     if ( token == 2 && !strcmp_(v10, aCase) )
     {
       if ( sawDefault )
         goto LABEL_4;
-      *(_DWORD *)(caseNode + 10) = Parser_ParseSingleExpression(readSource, 0, v11);
+      *(_DWORD *)(uintptr_t)(caseNode + 10) = Parser_ParseSingleExpression(readSource, 0, v11);
       IO_OutWriteToken(asc_50A54C);
-      if ( !*(_DWORD *)(caseNode + 10) )
+      if ( !*(_DWORD *)(uintptr_t)(caseNode + 10) )
         goto LABEL_5;
-      existingCaseValue = *(__int16 **)(*(_DWORD *)(switchNode + 6) + 10);
-      if ( existingCaseValue != *(__int16 **)(caseNode + 10) )
+      existingCaseValue = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(switchNode + 6) + 10);
+      if ( existingCaseValue != *(__int16 **)(uintptr_t)(caseNode + 10) )
       {
         while ( 1 )
         {
-          newCaseValue = *(__int16 **)(caseNode + 10);
+          newCaseValue = *(__int16 **)(uintptr_t)(caseNode + 10);
           if ( *existingCaseValue == *newCaseValue
             && *(_DWORD *)(existingCaseValue + 1) == *(_DWORD *)(newCaseValue + 1)
             && AST_NodeListsEqual(*(__int16 **)(existingCaseValue + 3), *(__int16 **)(newCaseValue + 3)) )
@@ -1083,15 +1083,15 @@ int  Parser_ParseSwitch(int topNode, int readSource)
             break;
           }
           existingCaseValue = *(__int16 **)(existingCaseValue + 5);
-          if ( existingCaseValue == *(__int16 **)(caseNode + 10) )
+          if ( existingCaseValue == *(__int16 **)(uintptr_t)(caseNode + 10) )
             goto LABEL_15;
         }
-        Rules_PrintErrorID((int)aPrcdrpsr, 3, 1);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateCaseF, v21);
+        Rules_PrintErrorID((int)(intptr_t)aPrcdrpsr, 3, 1);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDuplicateCaseF, v21);
         goto LABEL_5;
       }
 LABEL_15:
-      Parser_NextToken(readSource, (int)&token);
+      Parser_NextToken(readSource, (int)(intptr_t)&token);
       if ( token != 2 || strcmp_(v14, aThen) )
         goto LABEL_4;
       ++caseCount;
@@ -1100,23 +1100,23 @@ LABEL_15:
     {
       if ( token != 2 || strcmp_(2, aDefault_1) || caseCount < v22 || sawDefault )
         goto LABEL_4;
-      *(_DWORD *)(caseNode + 10) = AST_NewNode(105, 0);
+      *(_DWORD *)(uintptr_t)(caseNode + 10) = AST_NewNode(105, 0);
       sawDefault = 1;
     }
-    caseBody = *(_DWORD *)(caseNode + 10);
-    if ( *(_DWORD *)g_ClipsParseContextSaveStack == 1 )
+    caseBody = *(_DWORD *)(uintptr_t)(caseNode + 10);
+    if ( *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack == 1 )
       g_ClipsParseReturnContext = 1;
-    if ( *(_DWORD *)(g_ClipsParseContextSaveStack + 4) == 1 )
+    if ( *(_DWORD *)(uintptr_t)(g_ClipsParseContextSaveStack + 4) == 1 )
       g_ParserBreakContextFlag = 1;
     Rules_IncrementIndentDepth(3);
     AST_Append(v17, v16);
-    *(_DWORD *)(caseBody + 10) = Parser_ParseProgram(readSource, v18, 1);
+    *(_DWORD *)(uintptr_t)(caseBody + 10) = Parser_ParseProgram(readSource, v18, 1);
     Rules_DecrementIndentDepth(3);
     g_ClipsParseReturnContext = v19;
     g_ParserBreakContextFlag = v19;
-    if ( !*(_DWORD *)(caseBody + 10) )
+    if ( !*(_DWORD *)(uintptr_t)(caseBody + 10) )
       goto LABEL_5;
-    caseNode = *(_DWORD *)(caseBody + 10);
+    caseNode = *(_DWORD *)(uintptr_t)(caseBody + 10);
     IO_OutNewline();
     IO_OutNewline();
     IO_OutWriteToken(indentToken);
@@ -1161,13 +1161,13 @@ signed int  Rules_FindNamedContextDepth(int contextName)
   _DWORD *entry; // eax
   int depth; // edx
 
-  entry = (_DWORD *)g_ClipsLoopContextStackTop;
+  entry = (_DWORD *)(uintptr_t)g_ClipsLoopContextStackTop;
   depth = 1;
   if ( !g_ClipsLoopContextStackTop )
     return 0;
   while ( contextName != *entry )
   {
-    entry = (_DWORD *)entry[2];
+    entry = (_DWORD *)(uintptr_t)entry[2];
     ++depth;
     if ( !entry )
       return 0;
@@ -1181,12 +1181,12 @@ int  Rules_GetNamedContextValue(int contextName)
 {
   _DWORD *entry; // eax
 
-  entry = (_DWORD *)g_ClipsLoopContextStackTop;
+  entry = (_DWORD *)(uintptr_t)g_ClipsLoopContextStackTop;
   if ( !g_ClipsLoopContextStackTop )
     return 0;
   while ( contextName != *entry )
   {
-    entry = (_DWORD *)entry[2];
+    entry = (_DWORD *)(uintptr_t)entry[2];
     if ( !entry )
       return 0;
   }
@@ -1202,7 +1202,7 @@ int Rules_CountNamedContextEntries(void)
 
   entry = g_ClipsLoopContextStackTop;
   for ( i = 0; entry; ++i )
-    entry = *(_DWORD *)(entry + 8);
+    entry = *(_DWORD *)(uintptr_t)(entry + 8);
   return i;
 }
 // 54E880: using guessed type int dword_54E880;
@@ -1220,23 +1220,23 @@ signed int  Rules_PushNamedContextEntry(int contextName, _DWORD *constraint)
   _DWORD *newEntry; // eax
 
   depth = 1;
-  entry = (_DWORD *)g_ClipsLoopContextStackTop;
+  entry = (_DWORD *)(uintptr_t)g_ClipsLoopContextStackTop;
   prevEntry = 0;
   if ( g_ClipsLoopContextStackTop )
   {
     while ( contextName != *entry )
     {
       prevEntry = entry;
-      entry = (_DWORD *)entry[2];
+      entry = (_DWORD *)(uintptr_t)entry[2];
       ++depth;
       if ( !entry )
         goto LABEL_7;
     }
     if ( constraint )
     {
-      oldConstraint = (_DWORD *)entry[1];
-      v8 = Rules_UnionConstraints((int)constraint, (int)oldConstraint);
-      *(_DWORD *)(v9 + 4) = v8;
+      oldConstraint = (_DWORD *)(uintptr_t)entry[1];
+      v8 = Rules_UnionConstraints((int)(intptr_t)constraint, (int)(intptr_t)oldConstraint);
+      *(_DWORD *)(uintptr_t)(v9 + 4) = v8;
       AST_DecrementNodeRefCount(oldConstraint);
       AST_DecrementNodeRefCount(constraint);
     }
@@ -1245,16 +1245,16 @@ signed int  Rules_PushNamedContextEntry(int contextName, _DWORD *constraint)
   else
   {
 LABEL_7:
-    freeBlock = *(_DWORD **)(g_ClipsMemoryTable + 48);
+    freeBlock = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
     if ( freeBlock )
     {
-      g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-      *(_DWORD *)(g_ClipsMemoryTable + 48) = *freeBlock;
-      newEntry = (_DWORD *)g_ClipsMemFreeListTemp;
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *freeBlock;
+      newEntry = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
     }
     else
     {
-      newEntry = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+      newEntry = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0xC);
     }
     newEntry[2] = 0;
     *newEntry = contextName;
@@ -1262,7 +1262,7 @@ LABEL_7:
     if ( prevEntry )
       prevEntry[2] = newEntry;
     else
-      g_ClipsLoopContextStackTop = (int)newEntry;
+      g_ClipsLoopContextStackTop = (int)(intptr_t)newEntry;
     return depth;
   }
 }
@@ -1281,24 +1281,24 @@ int  Rules_RemoveNamedContextEntry(int result)
 
   nameKey = result;
   entry = g_ClipsLoopContextStackTop;
-  for ( i = 0; entry; entry = *(_DWORD *)(entry + 8) )
+  for ( i = 0; entry; entry = *(_DWORD *)(uintptr_t)(entry + 8) )
   {
-    result = nameKey != *(_DWORD *)entry;
-    if ( nameKey == *(_DWORD *)entry )
+    result = nameKey != *(_DWORD *)(uintptr_t)entry;
+    if ( nameKey == *(_DWORD *)(uintptr_t)entry )
       break;
     i = entry;
   }
   if ( entry )
   {
     if ( i )
-      *(_DWORD *)(i + 8) = *(_DWORD *)(entry + 8);
+      *(_DWORD *)(uintptr_t)(i + 8) = *(_DWORD *)(uintptr_t)(entry + 8);
     else
-      g_ClipsLoopContextStackTop = *(_DWORD *)(entry + 8);
-    AST_DecrementNodeRefCount(*(_DWORD **)(entry + 4));
-    g_ClipsMemFreeListTemp = (int)v4;
-    *v4 = *(_DWORD *)(g_ClipsMemoryTable + 48);
+      g_ClipsLoopContextStackTop = *(_DWORD *)(uintptr_t)(entry + 8);
+    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(entry + 4));
+    g_ClipsMemFreeListTemp = (int)(intptr_t)v4;
+    *v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     result = g_ClipsMemFreeListTemp;
-    *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
   }
   return result;
 }
@@ -1310,24 +1310,24 @@ int  Rules_RemoveNamedContextEntry(int result)
 //----- (004BECC0) --------------------------------------------------------
 signed int Rules_RegisterRuleCommands(void)
 {
-  Rules_RegisterHostFunction(aRun, 118, (int)aRuncommand, (int)Rules_RunCommand, (int)a1i);
-  Rules_RegisterHostFunction(aHalt, 118, (int)aHaltcommand, (int)Rules_HaltCommand, (int)a00_9);
-  Rules_RegisterHostFunction(aFocus_2, 98, (int)aFocuscommand, (int)Rules_FocusCommand, (int)a1W_1);
-  Rules_RegisterHostFunction(aClearFocusStac, 118, (int)aClearfocusstac, (int)Rules_ClearFocusStackCommand, (int)a00_9);
-  Rules_RegisterHostFunction(aGetFocusStack, 109, (int)aGetfocusstackf, (int)Rules_GetFocusStackFunction, (int)a00_9);
-  Rules_RegisterHostFunction(aPopFocus, 119, (int)aPopfocusfuncti, (int)Rules_PopFocusFunction, (int)a00_9);
-  Rules_RegisterHostFunction(aGetFocus, 119, (int)aGetfocusfuncti, (int)Rules_GetFocusFunction, (int)a00_9);
-  Rules_RegisterHostFunction(aSetBreak, 118, (int)aSetbreakcomman, (int)Rules_SetBreakCommand, (int)a11w_8);
-  Rules_RegisterHostFunction(aRemoveBreak, 118, (int)aRemovebreakcom, (int)Rules_RemoveBreakCommand, (int)a1w);
-  Rules_RegisterHostFunction(aShowBreaks, 118, (int)aShowbreakscomm, (int)Rules_ShowBreaksCommand, (int)a01w_5);
-  Rules_RegisterHostFunction(aMatches, 118, (int)aMatchescommand, (int)Rules_MatchesCommand, (int)a11w_8);
-  Rules_RegisterHostFunction(aListFocusStack, 118, (int)aListfocusstack, (int)Rules_ListFocusStackCommand, (int)a00_9);
-  Rules_RegisterHostFunction(aDependencies, 118, (int)aDependenciesco, (int)Rules_Dependencies, (int)a11h);
-  Rules_RegisterHostFunction(aDependents, 118, (int)aDependentscomm, (int)Rules_Dependents, (int)a11h);
-  Rules_RegisterHostFunction(aGetIncremental, 98, (int)aGetincremental, (int)Rules_GetIncrementalResetCommand, (int)a00_9);
-  Rules_RegisterHostFunction(aSetIncremental, 98, (int)aSetincremental, (int)Rules_SetIncrementalResetCommand, (int)a11_4);
-  Rules_RegisterHostFunction(aGetStrategy, 119, (int)aGetstrategycom, (int)Rules_GetStrategyCommand, (int)a00_9);
-  return Rules_RegisterHostFunction(aSetStrategy, 119, (int)aSetstrategycom, (int)Rules_SetStrategyCommand, (int)a11w_8);
+  Rules_RegisterHostFunction(aRun, 118, (int)(intptr_t)aRuncommand, (int)(intptr_t)Rules_RunCommand, (int)(intptr_t)a1i);
+  Rules_RegisterHostFunction(aHalt, 118, (int)(intptr_t)aHaltcommand, (int)(intptr_t)Rules_HaltCommand, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aFocus_2, 98, (int)(intptr_t)aFocuscommand, (int)(intptr_t)Rules_FocusCommand, (int)(intptr_t)a1W_1);
+  Rules_RegisterHostFunction(aClearFocusStac, 118, (int)(intptr_t)aClearfocusstac, (int)(intptr_t)Rules_ClearFocusStackCommand, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aGetFocusStack, 109, (int)(intptr_t)aGetfocusstackf, (int)(intptr_t)Rules_GetFocusStackFunction, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aPopFocus, 119, (int)(intptr_t)aPopfocusfuncti, (int)(intptr_t)Rules_PopFocusFunction, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aGetFocus, 119, (int)(intptr_t)aGetfocusfuncti, (int)(intptr_t)Rules_GetFocusFunction, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aSetBreak, 118, (int)(intptr_t)aSetbreakcomman, (int)(intptr_t)Rules_SetBreakCommand, (int)(intptr_t)a11w_8);
+  Rules_RegisterHostFunction(aRemoveBreak, 118, (int)(intptr_t)aRemovebreakcom, (int)(intptr_t)Rules_RemoveBreakCommand, (int)(intptr_t)a1w);
+  Rules_RegisterHostFunction(aShowBreaks, 118, (int)(intptr_t)aShowbreakscomm, (int)(intptr_t)Rules_ShowBreaksCommand, (int)(intptr_t)a01w_5);
+  Rules_RegisterHostFunction(aMatches, 118, (int)(intptr_t)aMatchescommand, (int)(intptr_t)Rules_MatchesCommand, (int)(intptr_t)a11w_8);
+  Rules_RegisterHostFunction(aListFocusStack, 118, (int)(intptr_t)aListfocusstack, (int)(intptr_t)Rules_ListFocusStackCommand, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aDependencies, 118, (int)(intptr_t)aDependenciesco, (int)(intptr_t)Rules_Dependencies, (int)(intptr_t)a11h);
+  Rules_RegisterHostFunction(aDependents, 118, (int)(intptr_t)aDependentscomm, (int)(intptr_t)Rules_Dependents, (int)(intptr_t)a11h);
+  Rules_RegisterHostFunction(aGetIncremental, 98, (int)(intptr_t)aGetincremental, (int)(intptr_t)Rules_GetIncrementalResetCommand, (int)(intptr_t)a00_9);
+  Rules_RegisterHostFunction(aSetIncremental, 98, (int)(intptr_t)aSetincremental, (int)(intptr_t)Rules_SetIncrementalResetCommand, (int)(intptr_t)a11_4);
+  Rules_RegisterHostFunction(aGetStrategy, 119, (int)(intptr_t)aGetstrategycom, (int)(intptr_t)Rules_GetStrategyCommand, (int)(intptr_t)a00_9);
+  return Rules_RegisterHostFunction(aSetStrategy, 119, (int)(intptr_t)aSetstrategycom, (int)(intptr_t)Rules_SetStrategyCommand, (int)(intptr_t)a11w_8);
 }
 
 //----- (004BEEF0) --------------------------------------------------------
@@ -1339,14 +1339,14 @@ _BYTE * Rules_MatchesCommand(int a1, double a2)
   int v5; // edx
   int v6; // ecx
 
-  result = (_BYTE *)Rules_GetConstructNameArg((int)aRuleName_0, a1, a2);
+  result = (_BYTE *)(uintptr_t)Rules_GetConstructNameArg((int)(intptr_t)aRuleName_0, a1, a2);
   if ( result )
   {
-    theDefrule = (_DWORD *)Rules_FindDefruleByName(result, v3);
+    theDefrule = (_DWORD *)(uintptr_t)Rules_FindDefruleByName(result, v3);
     if ( theDefrule )
-      return (_BYTE *)Rules_ListDefruleMatches(theDefrule, v6);
+      return (_BYTE *)(uintptr_t)Rules_ListDefruleMatches(theDefrule, v6);
     else
-      return (_BYTE *)Rules_ReportCantFindItem(v6, v5);
+      return (_BYTE *)(uintptr_t)Rules_ReportCantFindItem(v6, v5);
   }
   return result;
 }

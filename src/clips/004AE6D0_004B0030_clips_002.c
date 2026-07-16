@@ -27,9 +27,9 @@ signed int  MessageHandler_RemoveByNameAndType(_DWORD *theClass, int handlerName
   success = 1;
   if ( theClass[24] )
   {
-    if ( MessageHandler_AnyHandlerBusy((int)theClass) )
+    if ( MessageHandler_AnyHandlerBusy((int)(intptr_t)theClass) )
     {
-      Rules_GetConstructNameString((int)theClass);
+      Rules_GetConstructNameString((int)(intptr_t)theClass);
       MessageHandler_ReportUnableToDelete();
       return 0;
     }
@@ -44,8 +44,8 @@ signed int  MessageHandler_RemoveByNameAndType(_DWORD *theClass, int handlerName
           found = 1;
           if ( (*(_BYTE *)handlerRecord & 1) != 0 )
           {
-            Rules_PrintErrorID((int)aMsgpsr_0, 3, 0);
-            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSystemMessag_0, v13);
+            Rules_PrintErrorID((int)(intptr_t)aMsgpsr_0, 3, 0);
+            Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSystemMessag_0, v13);
             success = 0;
           }
           else
@@ -63,7 +63,7 @@ signed int  MessageHandler_RemoveByNameAndType(_DWORD *theClass, int handlerName
           i = 0;
           do
           {
-            flagsPtr = (_BYTE *)(i + theClass[22]);
+            flagsPtr = (_BYTE *)(uintptr_t)(i + theClass[22]);
             if ( (*flagsPtr & 1) == 0 )
               *flagsPtr |= 8u;
             ++scanIndex;
@@ -73,7 +73,7 @@ signed int  MessageHandler_RemoveByNameAndType(_DWORD *theClass, int handlerName
         }
       }
 LABEL_19:
-      Class_PurgeMarkedMessageHandlers((signed int)theClass, i);
+      Class_PurgeMarkedMessageHandlers((signed int)(intptr_t)theClass, i);
       return success;
     }
     handler = Class_FindMessageHandler(theClass, handlerName, handlerType);
@@ -82,13 +82,13 @@ LABEL_19:
       if ( (*(_BYTE *)handler & 1) == 0 )
       {
         *(_BYTE *)handler |= 8u;
-        Class_PurgeMarkedMessageHandlers((signed int)theClass, v15);
+        Class_PurgeMarkedMessageHandlers((signed int)(intptr_t)theClass, v15);
         return 1;
       }
       if ( v15 )
       {
-        Rules_PrintErrorID((int)aMsgpsr_0, 3, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSystemMessag_0, v18);
+        Rules_PrintErrorID((int)(intptr_t)aMsgpsr_0, 3, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSystemMessag_0, v18);
       }
     }
     else
@@ -101,7 +101,7 @@ LABEL_19:
           recordOffset = 0;
           do
           {
-            recordFlags = (_BYTE *)(recordOffset + theClass[22]);
+            recordFlags = (_BYTE *)(uintptr_t)(recordOffset + theClass[22]);
             if ( *(_DWORD *)recordFlags << 29 >> 30 == handlerType && (*recordFlags & 1) == 0 )
               *recordFlags |= 8u;
             ++i;
@@ -113,16 +113,16 @@ LABEL_19:
       }
       if ( v15 )
       {
-        Rules_GetConstructNameString((int)theClass);
+        Rules_GetConstructNameString((int)(intptr_t)theClass);
         MessageHandler_ReportUnableToDelete();
       }
     }
-    Class_PurgeMarkedMessageHandlers((signed int)theClass, v15);
+    Class_PurgeMarkedMessageHandlers((signed int)(intptr_t)theClass, v15);
     return 0;
   }
   if ( !indicateMissing )
     return 1;
-  Rules_GetConstructNameString((int)theClass);
+  Rules_GetConstructNameString((int)(intptr_t)theClass);
   MessageHandler_ReportUnableToDelete();
   return 0;
 }
@@ -163,53 +163,53 @@ signed int  Class_PurgeMarkedMessageHandlers(signed int result, unsigned int a2)
   theClass = result;
   handlerIndex = 0;
   deletedCount = 0;
-  if ( *(_DWORD *)(result + 96) )
+  if ( *(_DWORD *)(uintptr_t)(result + 96) )
   {
     recordOffset = 0;
     do
     {
-      handlerRecord = recordOffset + *(_DWORD *)(theClass + 88);
-      if ( (*(_BYTE *)handlerRecord & 8) != 0 )
+      handlerRecord = recordOffset + *(_DWORD *)(uintptr_t)(theClass + 88);
+      if ( (*(_BYTE *)(uintptr_t)handlerRecord & 8) != 0 )
       {
-        Rules_DecrementSymbolCount(*(_DWORD *)(handlerRecord + 8), a2);
-        AST_DeinstallNodeChain(*(__int16 **)(v14 + 28));
-        AST_FreePackedNodeChain(*(_DWORD *)(v15 + 28));
-        ppForm = *(const char **)(v16 + 32);
+        Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(handlerRecord + 8), a2);
+        AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v14 + 28));
+        AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(v15 + 28));
+        ppForm = *(const char **)(uintptr_t)(v16 + 32);
         ++deletedCount;
         if ( ppForm )
-          Mem_SmallBlockFree(*(_DWORD **)(v16 + 32), strlen(ppForm) + 1);
+          Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(v16 + 32), strlen(ppForm) + 1);
       }
       else
       {
-        *(_DWORD *)(handlerRecord + 4) = deletedCount;
+        *(_DWORD *)(uintptr_t)(handlerRecord + 4) = deletedCount;
       }
       result = theClass;
       ++handlerIndex;
-      a2 = *(_DWORD *)(theClass + 96);
+      a2 = *(_DWORD *)(uintptr_t)(theClass + 96);
       recordOffset += 36;
     }
     while ( handlerIndex < a2 );
   }
   if ( deletedCount )
   {
-    totalCount = *(_DWORD *)(theClass + 96);
+    totalCount = *(_DWORD *)(uintptr_t)(theClass + 96);
     if ( deletedCount == totalCount )
     {
-      Mem_SmallBlockFree(*(_DWORD **)(theClass + 88), 36 * totalCount);
-      Mem_SmallBlockFree(*(_DWORD **)(theClass + 92), 4 * *(_DWORD *)(theClass + 96));
+      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theClass + 88), 36 * totalCount);
+      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theClass + 92), 4 * *(_DWORD *)(uintptr_t)(theClass + 96));
       result = theClass;
-      *(_DWORD *)(theClass + 88) = 0;
-      *(_DWORD *)(theClass + 92) = 0;
-      *(_DWORD *)(theClass + 96) = 0;
+      *(_DWORD *)(uintptr_t)(theClass + 88) = 0;
+      *(_DWORD *)(uintptr_t)(theClass + 92) = 0;
+      *(_DWORD *)(uintptr_t)(theClass + 96) = 0;
     }
     else
     {
       remainingCount = totalCount - deletedCount;
-      oldHandlerArray = *(_DWORD **)(theClass + 88);
-      oldIndexArray = *(_DWORD **)(theClass + 92);
+      oldHandlerArray = *(_DWORD **)(uintptr_t)(theClass + 88);
+      oldIndexArray = *(_DWORD **)(uintptr_t)(theClass + 92);
       newHandlerArray = (char *)Mem_SmallBlockAlloc(36 * remainingCount);
       newIndexCursor = Mem_SmallBlockAlloc(4 * remainingCount);
-      newIndexArray = (signed int)newIndexCursor;
+      newIndexArray = (signed int)(intptr_t)newIndexCursor;
       if ( remainingCount )
       {
         indexCursor = oldIndexArray;
@@ -244,12 +244,12 @@ signed int  Class_PurgeMarkedMessageHandlers(signed int result, unsigned int a2)
         }
         while ( remainingCount > copiedCount );
       }
-      Mem_SmallBlockFree(oldHandlerArray, 36 * *(_DWORD *)(theClass + 96));
-      Mem_SmallBlockFree(oldIndexArray, 4 * *(_DWORD *)(theClass + 96));
-      *(_DWORD *)(theClass + 88) = newHandlerArray;
-      *(_DWORD *)(theClass + 96) = remainingCount;
+      Mem_SmallBlockFree(oldHandlerArray, 36 * *(_DWORD *)(uintptr_t)(theClass + 96));
+      Mem_SmallBlockFree(oldIndexArray, 4 * *(_DWORD *)(uintptr_t)(theClass + 96));
+      *(_DWORD *)(uintptr_t)(theClass + 88) = newHandlerArray;
+      *(_DWORD *)(uintptr_t)(theClass + 96) = remainingCount;
       result = newIndexArray;
-      *(_DWORD *)(theClass + 92) = newIndexArray;
+      *(_DWORD *)(uintptr_t)(theClass + 92) = newIndexArray;
     }
   }
   return result;
@@ -277,10 +277,10 @@ signed int  MessageHandler_TypeIndexFromKeyword(int typeName)
     ++typeIndex;
     if ( tableOffset > 12 )
     {
-      Rules_PrintErrorID((int)aMsgfun, 7, 0);
-      Output_Write((int)aWerror, (int)aUnrecognizedMe, v5);
-      Output_Write((int)aWerror, typeName, v6);
-      Output_Write((int)aWerror, (int)a__20, v7);
+      Rules_PrintErrorID((int)(intptr_t)aMsgfun, 7, 0);
+      Output_Write((int)(intptr_t)aWerror, (int)(intptr_t)aUnrecognizedMe, v5);
+      Output_Write((int)(intptr_t)aWerror, typeName, v6);
+      Output_Write((int)(intptr_t)aWerror, (int)(intptr_t)a__20, v7);
       return 4;
     }
   }
@@ -305,15 +305,15 @@ signed int __fastcall MessageHandler_CheckCurrentMessage(int functionName, int i
   if ( g_CurrentMessageHandler )
   {
     firstArgument = MessageHandler_GetNthArgument(0);
-    if ( instanceRequired == 1 && *(_DWORD *)(firstArgument + 4) != 7 )
+    if ( instanceRequired == 1 && *(_DWORD *)(uintptr_t)(firstArgument + 4) != 7 )
     {
-      Rules_PrintErrorID((int)aMsgfun, 5, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v7);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOperatesOnlyOn, v8);
+      Rules_PrintErrorID((int)(intptr_t)aMsgfun, 5, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v7, v7);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOperatesOnlyOn, v8);
       Lexer_ErrorRecover(1);
       return 0;
     }
-    else if ( *(_DWORD *)(firstArgument + 4) == 7 && (*(_BYTE *)(*(_DWORD *)(firstArgument + 8) + 24) & 2) != 0 )
+    else if ( *(_DWORD *)(uintptr_t)(firstArgument + 4) == 7 && (*(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(firstArgument + 8) + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       Lexer_ErrorRecover(1);
@@ -326,9 +326,9 @@ signed int __fastcall MessageHandler_CheckCurrentMessage(int functionName, int i
   }
   else
   {
-    Rules_PrintErrorID((int)aMsgfun, 4, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], v5, v5);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMayOnlyBeCalle, v6);
+    Rules_PrintErrorID((int)(intptr_t)aMsgfun, 4, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v5, v5);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMayOnlyBeCalle, v6);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -347,10 +347,10 @@ signed int  MessageHandler_PrintNameTypeAndClass(int logicalName, _DWORD *theHan
   int v5; // ecx
   int v6; // ecx
 
-  Output_Write(logicalName, *(_DWORD *)(theHandler[2] + 16), logicalName);
-  Output_Write(v4, (int)asc_5092EC, v4);
-  Output_Write(v5, (int)g_MessageHandlerTypeNames[*theHandler << 29 >> 30], v5);
-  Output_Write(v6, (int)aInClass_0, v6);
+  Output_Write(logicalName, *(_DWORD *)(uintptr_t)(theHandler[2] + 16), logicalName);
+  Output_Write(v4, (int)(intptr_t)asc_5092EC, v4);
+  Output_Write(v5, (int)(intptr_t)g_MessageHandlerTypeNames[*theHandler << 29 >> 30], v5);
+  Output_Write(v6, (int)(intptr_t)aInClass_0, v6);
   return Class_PrintName(theHandler[3], crtn);
 }
 // 4AEC48: variable 'v4' is possibly undefined
@@ -372,10 +372,10 @@ _DWORD * Class_FindMessageHandler(_DWORD *theClass, int handlerName, int handler
     searchIndex = groupStart;
     if ( groupStart < theClass[24] )
     {
-      indexCursor = (_DWORD *)(theClass[23] + 4 * groupStart);
+      indexCursor = (_DWORD *)(uintptr_t)(theClass[23] + 4 * groupStart);
       do
       {
-        result = (_DWORD *)(theClass[22] + 36 * *indexCursor);
+        result = (_DWORD *)(uintptr_t)(theClass[22] + 36 * *indexCursor);
         if ( handlerName != result[2] )
           break;
         if ( *result << 29 >> 30 == handlerType )
@@ -406,11 +406,11 @@ unsigned int  Class_FindMessageHandlerIndex(_DWORD *theClass, int handlerName, i
       indexEntry = theClass[23] + 4 * result;
       do
       {
-        handlerRecord = (_DWORD *)(theClass[22] + 36 * *(_DWORD *)indexEntry);
+        handlerRecord = (_DWORD *)(uintptr_t)(theClass[22] + 36 * *(_DWORD *)(uintptr_t)indexEntry);
         if ( handlerName != handlerRecord[2] )
           break;
         if ( *handlerRecord << 29 >> 30 == handlerType )
-          return *(_DWORD *)indexEntry;
+          return *(_DWORD *)(uintptr_t)indexEntry;
         ++searchIndex;
         indexEntry += 4;
       }
@@ -448,8 +448,8 @@ int  Class_FindMessageHandlerNameGroup(_DWORD *theClass, int handlerName)
   while ( 1 )
   {
     mid = (searchLow + searchHigh) / 2;
-    midNameBucket = *(_DWORD *)(*(_DWORD *)(36 * *(_DWORD *)(indexArray + 4 * mid) + handlerArray + 8) + 12) << 16 >> 18;
-    targetBucket = *(_DWORD *)(handlerName + 12) << 16 >> 18;
+    midNameBucket = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(36 * *(_DWORD *)(uintptr_t)(indexArray + 4 * mid) + handlerArray + 8) + 12) << 16 >> 18;
+    targetBucket = *(_DWORD *)(uintptr_t)(handlerName + 12) << 16 >> 18;
     if ( targetBucket == midNameBucket )
       break;
     if ( targetBucket >= midNameBucket )
@@ -462,12 +462,12 @@ int  Class_FindMessageHandlerNameGroup(_DWORD *theClass, int handlerName)
   scanIndex = (searchLow + searchHigh) / 2;
   if ( mid >= searchLow )
   {
-    backCursor = (_DWORD *)(indexArray + 4 * mid);
+    backCursor = (_DWORD *)(uintptr_t)(indexArray + 4 * mid);
     do
     {
-      if ( handlerName == *(_DWORD *)(handlerArray + 36 * *backCursor + 8) )
+      if ( handlerName == *(_DWORD *)(uintptr_t)(handlerArray + 36 * *backCursor + 8) )
         foundIndex = scanIndex;
-      if ( *(_DWORD *)(*(_DWORD *)(handlerArray + 36 * *backCursor + 8) + 12) << 16 >> 18 != *(_DWORD *)(*(_DWORD *)(36 * *(_DWORD *)(indexArray + 4 * mid)
+      if ( *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(handlerArray + 36 * *backCursor + 8) + 12) << 16 >> 18 != *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(36 * *(_DWORD *)(uintptr_t)(indexArray + 4 * mid)
                                                                                                   + handlerArray
                                                                                                   + 8)
                                                                                       + 12) << 16 >> 18 )
@@ -482,12 +482,12 @@ int  Class_FindMessageHandlerNameGroup(_DWORD *theClass, int handlerName)
   result = mid + 1;
   if ( result > searchHigh )
     return -1;
-  for ( i = (_DWORD *)(indexArray + 4 * result); ; ++i )
+  for ( i = (_DWORD *)(uintptr_t)(indexArray + 4 * result); ; ++i )
   {
-    cursorName = *(_DWORD *)(handlerArray + 36 * *i + 8);
+    cursorName = *(_DWORD *)(uintptr_t)(handlerArray + 36 * *i + 8);
     if ( handlerName == cursorName )
       break;
-    if ( *(_DWORD *)(cursorName + 12) << 16 >> 18 != *(_DWORD *)(handlerName + 12) << 16 >> 18 )
+    if ( *(_DWORD *)(uintptr_t)(cursorName + 12) << 16 >> 18 != *(_DWORD *)(uintptr_t)(handlerName + 12) << 16 >> 18 )
       return -1;
     if ( ++result > searchHigh )
       return -1;
@@ -502,10 +502,10 @@ signed int MessageHandler_ReportUnableToDelete(void)
   int v1; // ecx
   int v2; // ecx
 
-  Rules_PrintErrorID((int)aMsgfun, 8, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDele_2, v0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__20, v2);
+  Rules_PrintErrorID((int)(intptr_t)aMsgfun, 8, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToDele_2, v0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__20, v2);
 }
 // 4AEED0: variable 'v0' is possibly undefined
 // 4AEEDC: variable 'v1' is possibly undefined
@@ -521,43 +521,43 @@ int  MessageHandler_PrintHandlerPreview(int logicalName, int *handlerLink, int i
 
   currentLink = handlerLink;
   result = *handlerLink;
-  if ( (*(_BYTE *)*handlerLink & 6) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)*handlerLink & 6) != 0 )
   {
     while ( currentLink )
     {
-      result = (*(_DWORD *)*currentLink & 6) == 2;
-      if ( (*(_DWORD *)*currentLink & 6) != 2 )
+      result = (*(_DWORD *)(uintptr_t)*currentLink & 6) == 2;
+      if ( (*(_DWORD *)(uintptr_t)*currentLink & 6) != 2 )
         break;
-      MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)asc_5094A8, indentDepth);
-      result = MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)asc_5094AC, indentDepth);
-      currentLink = (int *)currentLink[1];
+      MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)(intptr_t)asc_5094A8, indentDepth);
+      result = MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)(intptr_t)asc_5094AC, indentDepth);
+      currentLink = (int *)(uintptr_t)currentLink[1];
     }
     if ( currentLink )
     {
-      result = (*(_DWORD *)*currentLink & 6) == 4;
-      if ( (*(_DWORD *)*currentLink & 6) == 4 )
+      result = (*(_DWORD *)(uintptr_t)*currentLink & 6) == 4;
+      if ( (*(_DWORD *)(uintptr_t)*currentLink & 6) == 4 )
       {
         result = MessageHandler_PrintAroundHandlerNesting(logicalName, currentLink, indentDepth);
-        currentLink = (int *)result;
+        currentLink = (int *)(uintptr_t)result;
       }
     }
     while ( currentLink )
     {
-      result = (*(_DWORD *)*currentLink & 6) == 6;
-      if ( (*(_DWORD *)*currentLink & 6) != 6 )
+      result = (*(_DWORD *)(uintptr_t)*currentLink & 6) == 6;
+      if ( (*(_DWORD *)(uintptr_t)*currentLink & 6) != 6 )
         break;
-      MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)asc_5094A8, indentDepth);
-      result = MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)asc_5094AC, indentDepth);
-      currentLink = (int *)currentLink[1];
+      MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)(intptr_t)asc_5094A8, indentDepth);
+      result = MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)(intptr_t)asc_5094AC, indentDepth);
+      currentLink = (int *)(uintptr_t)currentLink[1];
     }
   }
   else
   {
-    MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)asc_5094A8, indentDepth);
-    nextLink = (int *)currentLink[1];
+    MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)(intptr_t)asc_5094A8, indentDepth);
+    nextLink = (int *)(uintptr_t)currentLink[1];
     if ( nextLink )
       MessageHandler_PrintHandlerPreview(logicalName, nextLink, indentDepth + 1);
-    return MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)asc_5094AC, indentDepth);
+    return MessageHandler_PrintIndentedHandlerMarker(logicalName, currentLink, (int)(intptr_t)asc_5094AC, indentDepth);
   }
   return result;
 }
@@ -577,12 +577,12 @@ int  MessageHandler_BuildPreviewHandlerCore(int theClass, int messageName)
     bots[++i] = 0;
   classIndex = 0;
   classOffset = 0;
-  while ( classIndex < *(unsigned __int16 *)(cls + 46) )
+  while ( classIndex < *(unsigned __int16 *)(uintptr_t)(cls + 46) )
   {
     classOffset += 4;
     ++classIndex;
     MessageHandler_CollectClassHandlersIntoCore(
-      (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(classOffset + *(_DWORD *)(cls + 48) - 4),
+      (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(classOffset + *(_DWORD *)(uintptr_t)(cls + 48) - 4),
       (uintptr_t)tops,
       messageName,
       (uintptr_t)&bots[1]);
@@ -600,11 +600,11 @@ signed int  MessageHandler_TraceMessageSend(int logicalName, int traceString)
   int v7; // ecx
   int v8; // ecx
 
-  Output_Write(logicalName, (int)aMsg, logicalName);
+  Output_Write(logicalName, (int)(intptr_t)aMsg, logicalName);
   Output_Write(v3, traceString, v3);
-  Output_Write(v4, (int)asc_5092EC, v4);
-  Output_Write(v5, *(_DWORD *)(g_CurrentMessageHandler + 16), v5);
-  Output_Write(v6, (int)aEd_0, v6);
+  Output_Write(v4, (int)(intptr_t)asc_5092EC, v4);
+  Output_Write(v5, *(_DWORD *)(uintptr_t)(g_CurrentMessageHandler + 16), v5);
+  Output_Write(v6, (int)(intptr_t)aEd_0, v6);
   Rules_PrintLongInteger(v7, g_ClipsCurrentEvaluationDepth);
   return ProcParam_PrintArguments(v8);
 }
@@ -626,11 +626,11 @@ signed int  MessageHandler_TraceHandlerCall(int logicalName, int *handlerLink, i
   int v7; // ecx
   int v8; // ecx
 
-  Output_Write(logicalName, (int)aHnd, logicalName);
+  Output_Write(logicalName, (int)(intptr_t)aHnd, logicalName);
   Output_Write(v4, traceString, v4);
-  Output_Write(v5, (int)asc_5092EC, v5);
-  MessageHandler_PrintNameTypeAndClass((int)g_IO_LogicalNameTable_WTrace[0], (_DWORD *)*handlerLink, 1);
-  Output_Write(v6, (int)aEd, v6);
+  Output_Write(v5, (int)(intptr_t)asc_5092EC, v5);
+  MessageHandler_PrintNameTypeAndClass((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (_DWORD *)(uintptr_t)*handlerLink, 1);
+  Output_Write(v6, (int)(intptr_t)aEd, v6);
   Rules_PrintLongInteger(v7, g_ClipsCurrentEvaluationDepth);
   return ProcParam_PrintArguments(v8);
 }
@@ -649,14 +649,14 @@ int  MessageHandler_PrintAroundHandlerNesting(int logicalName, int *handlerLink,
   int nextLink; // eax
   int savedNext; // [esp+0h] [ebp-14h]
 
-  MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)asc_5094A8, indentDepth);
-  innerLink = (int *)handlerLink[1];
-  if ( innerLink && (*(_DWORD *)*innerLink & 6) == 4 )
+  MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)(intptr_t)asc_5094A8, indentDepth);
+  innerLink = (int *)(uintptr_t)handlerLink[1];
+  if ( innerLink && (*(_DWORD *)(uintptr_t)*innerLink & 6) == 4 )
     nextLink = MessageHandler_PrintAroundHandlerNesting(logicalName, innerLink, indentDepth + 1);
   else
     nextLink = handlerLink[1];
   savedNext = nextLink;
-  MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)asc_5094AC, indentDepth);
+  MessageHandler_PrintIndentedHandlerMarker(logicalName, handlerLink, (int)(intptr_t)asc_5094AC, indentDepth);
   return savedNext;
 }
 
@@ -666,11 +666,11 @@ signed int  MessageHandler_PrintIndentedHandlerMarker(int logicalName, int *hand
   int i; // ecx
   int v8; // ecx
 
-  for ( i = 0; i < indentDepth; Output_Write(logicalName, (int)asc_5094D4, i + 1) )
+  for ( i = 0; i < indentDepth; Output_Write(logicalName, (int)(intptr_t)asc_5094D4, i + 1) )
     ;
   Output_Write(logicalName, markerString, i);
-  Output_Write(logicalName, (int)asc_5092EC, v8);
-  return MessageHandler_PrintNameTypeAndClass(logicalName, (_DWORD *)*handlerLink, 1);
+  Output_Write(logicalName, (int)(intptr_t)asc_5092EC, v8);
+  return MessageHandler_PrintNameTypeAndClass(logicalName, (_DWORD *)(uintptr_t)*handlerLink, 1);
 }
 // 4AF196: variable 'i' is possibly undefined
 // 4AF1B5: variable 'v8' is possibly undefined
@@ -708,8 +708,8 @@ int  MessageHandler_FreeHandlerCore(int result)
     current = (uintptr_t)(unsigned int)*(_DWORD *)(node + 4);
     Class_ReleaseBusyReference(*(_DWORD *)(handler + 12));
     g_ClipsMemFreeListTemp = (int)node;
-    *(_DWORD *)node = *(_DWORD *)(g_ClipsMemoryTable + 32);
-    *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+    *(_DWORD *)node = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
     result = g_ClipsMemFreeListTemp;
   }
   return result;
@@ -734,10 +734,10 @@ signed int  MessageHandler_ParseAndSend(_DWORD *returnValue, int a2, double a3)
   result = Lexer_ParseValueList(2, argBuffer, 2, a3);
   if ( result )
   {
-    exprType = **(_WORD **)(g_ClipsCurrentExpression + 6);
-    exprValue = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2);
-    exprNext = *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 6);
-    exprArgList = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10) + 10);
+    exprType = **(_WORD **)(uintptr_t)(g_ClipsCurrentExpression + 6);
+    exprValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2);
+    exprNext = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 6);
+    exprArgList = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10) + 10);
     return MessageHandler_Send(returnValue, &exprType, argBuffer[2], a3);
   }
   return result;
@@ -757,10 +757,10 @@ BOOL MessageHandler_HasNextHandler(void)
 {
   if ( !g_ClipsCurrentHandlerCore )
     return 0;
-  if ( (**(_BYTE **)g_ClipsCurrentHandlerCore & 6) != 0 )
+  if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 6) != 0 )
   {
-    if ( (**(_DWORD **)g_ClipsCurrentHandlerCore & 6) == 4 && g_ClipsMessageHandlerCursor )
-      return (**(_DWORD **)g_ClipsMessageHandlerCursor & 6) == 4;
+    if ( (**(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore & 6) == 4 && g_ClipsMessageHandlerCursor )
+      return (**(_DWORD **)(uintptr_t)g_ClipsMessageHandlerCursor & 6) == 4;
     return 0;
   }
   return g_ClipsMessageHandlerCursor != 0;
@@ -788,31 +788,31 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *returnValue, double a2)
   int argFramePushed; // [esp+10h] [ebp-1Ch]
 
   returnValue[1] = 2;
-  result = (_DWORD *)g_ClipsFalseSymbol;
+  result = (_DWORD *)(uintptr_t)g_ClipsFalseSymbol;
   returnValue[2] = g_ClipsFalseSymbol;
   g_ClipsEvaluationError = 0;
   if ( !g_ClipsHaltExecution )
   {
     if ( !MessageHandler_HasNextHandler() )
     {
-      Rules_PrintErrorID((int)aMsgpass, 1, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aShadowedMessag, v12);
-      return (_DWORD *)Lexer_ErrorRecover(1);
+      Rules_PrintErrorID((int)(intptr_t)aMsgpass, 1, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aShadowedMessag, v12);
+      return (_DWORD *)(uintptr_t)Lexer_ErrorRecover(1);
     }
     Symbol = Rules_MakeSymbol(aOverrideNext_0);
-    if ( Symbol == *(int ***)(v5 + 2) )
+    if ( Symbol == *(int ***)(uintptr_t)(v5 + 2) )
     {
-      firstArgType = *(_WORD *)(g_ClipsProcParamArray + 4);
+      firstArgType = *(_WORD *)(uintptr_t)(g_ClipsProcParamArray + 4);
       argFramePushed = 1;
       exprType = firstArgType;
       if ( firstArgType == 4 )
         exprValue = g_ClipsProcParamArray;
       else
-        exprValue = *(_DWORD *)(g_ClipsProcParamArray + 8);
-      exprArgList = *(_DWORD *)(g_ClipsCurrentExpression + 6);
+        exprValue = *(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8);
+      exprArgList = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
       exprNext = 0;
-      messageName = *(_DWORD *)(g_CurrentMessageHandler + 16);
-      argCount = AST_CountListNodes((int)&exprType);
+      messageName = *(_DWORD *)(uintptr_t)(g_CurrentMessageHandler + 16);
+      argCount = AST_CountListNodes((int)(intptr_t)&exprType);
       result = ProcParam_PushEvaluatedArgumentFrame(&exprType, argCount, v9, messageName, a2, (int (*)(void))Rules_ReportUndefinedMessageHandlerName);
       if ( g_ClipsEvaluationError )
       {
@@ -825,33 +825,33 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *returnValue, double a2)
       argFramePushed = 0;
     }
     savedHandlerCore = g_ClipsCurrentHandlerCore;
-    savedCursor = (int *)g_ClipsMessageHandlerCursor;
-    if ( (**(_BYTE **)g_ClipsCurrentHandlerCore & 6) == 0 && (**(_BYTE **)g_ClipsMessageHandlerCursor & 6) != 0 )
+    savedCursor = (int *)(uintptr_t)g_ClipsMessageHandlerCursor;
+    if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 6) == 0 && (**(_BYTE **)(uintptr_t)g_ClipsMessageHandlerCursor & 6) != 0 )
     {
       result = MessageHandler_CallHandlers(returnValue, a2);
     }
     else
     {
       g_ClipsCurrentHandlerCore = g_ClipsMessageHandlerCursor;
-      g_ClipsMessageHandlerCursor = *(_DWORD *)(g_ClipsMessageHandlerCursor + 4);
-      if ( (*(_BYTE *)*savedCursor & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], savedCursor, (int)asc_509548);
+      g_ClipsMessageHandlerCursor = *(_DWORD *)(uintptr_t)(g_ClipsMessageHandlerCursor + 4);
+      if ( (*(_BYTE *)(uintptr_t)*savedCursor & 0x10) != 0 )
+        MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], savedCursor, (int)(intptr_t)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
-          **(_DWORD **)(*(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 12) + 8),
-          *(__int16 **)(*(_DWORD *)g_ClipsCurrentHandlerCore + 28),
+          **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
+          *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
           returnValue,
-          *(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 24),
+          *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 24),
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
-      result = *(_DWORD **)g_ClipsCurrentHandlerCore;
-      if ( (**(_BYTE **)g_ClipsCurrentHandlerCore & 0x10) != 0 )
-        result = (_DWORD *)MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)g_ClipsCurrentHandlerCore, (int)asc_50954C);
+      result = *(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore;
+      if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+        result = (_DWORD *)(uintptr_t)MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_50954C);
     }
-    g_ClipsMessageHandlerCursor = (int)savedCursor;
+    g_ClipsMessageHandlerCursor = (int)(intptr_t)savedCursor;
     g_ClipsCurrentHandlerCore = savedHandlerCore;
     if ( argFramePushed )
-      result = (_DWORD *)ProcParam_PopFrame();
+      result = (_DWORD *)(uintptr_t)ProcParam_PopFrame();
     g_ClipsHaltExecutionFlag = 0;
   }
   return result;
@@ -896,11 +896,11 @@ int  MessageHandler_CollectClassHandlersIntoCore(_DWORD *theClass, uintptr_t top
   {
     if ( handlerName != *(_DWORD *)(handler_base + 36 * *(_DWORD *)index_cursor + 8) )
       return result_index;
-    node = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsMemoryTable + 32);
+    node = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     if ( node )
     {
       g_ClipsMemFreeListTemp = (int)(uintptr_t)node;
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = *node;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *node;
       node = (_DWORD *)(uintptr_t)(unsigned int)g_ClipsMemFreeListTemp;
     }
     else
@@ -958,15 +958,15 @@ int  MessageHandler_JoinHandlerLinks(int *tops, _DWORD *bots)
     result = tops[2];
     if ( tops[1] )
     {
-      *(_DWORD *)(bots[1] + 4) = primaryHead;
+      *(_DWORD *)(uintptr_t)(bots[1] + 4) = primaryHead;
       result = tops[1];
     }
     if ( *tops )
     {
-      *(_DWORD *)(*bots + 4) = result;
+      *(_DWORD *)(uintptr_t)(*bots + 4) = result;
       result = *tops;
     }
-    *(_DWORD *)(bots[2] + 4) = tops[3];
+    *(_DWORD *)(uintptr_t)(bots[2] + 4) = tops[3];
   }
   else
   {
@@ -1098,43 +1098,43 @@ int * MessageHandler_DynamicGetSlot(int returnValue, int a2, double a3)
   _DWORD slotNameValue[11]; // [esp-4h] [ebp-2Ch] BYREF
 
   slotNameValue[9] = a2;
-  *(_DWORD *)(returnValue + 4) = 2;
-  *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = (int *)MessageHandler_CheckCurrentMessage(returnValue, 1);
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+  *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
+  result = (int *)(uintptr_t)MessageHandler_CheckCurrentMessage(returnValue, 1);
   if ( result )
   {
-    Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), slotNameValue, v4, a3);
+    Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), slotNameValue, v4, a3);
     if ( slotNameValue[1] == 2 )
     {
-      result = (int *)Instance_GetSlotValueBySymbol(*(_DWORD *)(g_ClipsProcParamArray + 8), slotNameValue[2]);
+      result = (int *)(uintptr_t)Instance_GetSlotValueBySymbol(*(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8), slotNameValue[2]);
       if ( result )
       {
-        if ( (*(_BYTE *)(*result + 1) & 4) != 0 || *(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 12) == *(_DWORD *)(*result + 4) )
+        if ( (*(_BYTE *)(uintptr_t)(*result + 1) & 4) != 0 || *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) == *(_DWORD *)(uintptr_t)(*result + 4) )
         {
           v5[1] = (unsigned int)(result[1] << 24) >> 26;
           v5[2] = result[2];
           if ( (result[1] & 0xFC) == 0x10 )
           {
             v5[3] = 0;
-            result = (int *)(*(_DWORD *)(result[2] + 6) - 1);
+            result = (int *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result[2] + 6) - 1);
             v5[4] = result;
           }
         }
         else
         {
           MessageHandler_ReportPrivateSlotAccessDenied(*result);
-          return (int *)Lexer_ErrorRecover(1);
+          return (int *)(uintptr_t)Lexer_ErrorRecover(1);
         }
       }
       else
       {
-        return (int *)Instance_ReportNoSuchSlotError((int)v5, (int)aDynamicGet_0);
+        return (int *)(uintptr_t)Instance_ReportNoSuchSlotError((int)(intptr_t)v5, (int)(intptr_t)aDynamicGet_0);
       }
     }
     else
     {
-      Parser_ReportError(1, (int)aSymbol_5);
-      return (int *)Lexer_ErrorRecover(1);
+      Parser_ReportError(1, (int)(intptr_t)aSymbol_5);
+      return (int *)(uintptr_t)Lexer_ErrorRecover(1);
     }
   }
   return result;
@@ -1169,26 +1169,26 @@ signed int  MessageHandler_DynamicPutSlot(_DWORD *returnValue, int a2, double a3
   result = MessageHandler_CheckCurrentMessage(a2, 1);
   if ( result )
   {
-    Parser_ParseForm(*(__int16 **)(g_ClipsCurrentExpression + 6), &tempValue, v5, a3);
+    Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &tempValue, v5, a3);
     if ( tempType == 2 )
     {
-      instancePtr = *(_DWORD **)(g_ClipsProcParamArray + 8);
-      slotLookup = (int *)Instance_GetSlotValueBySymbol((int)instancePtr, tempData);
+      instancePtr = *(_DWORD **)(uintptr_t)(g_ClipsProcParamArray + 8);
+      slotLookup = (int *)(uintptr_t)Instance_GetSlotValueBySymbol((int)(intptr_t)instancePtr, tempData);
       slotPtr = slotLookup;
       if ( slotLookup )
       {
-        slotFlags = *(_BYTE *)*slotLookup;
+        slotFlags = *(_BYTE *)(uintptr_t)*slotLookup;
         if ( (slotFlags & 0x10) != 0 && ((slotFlags & 0x20) == 0 || !g_Instance_SlotInitInProgress ? (writeDenied = 1) : (writeDenied = 0), writeDenied) )
         {
-          MessageHandler_ReportSlotWriteAccessDenied(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*slotPtr + 8) + 12) + 16), 1);
+          MessageHandler_ReportSlotWriteAccessDenied(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 12) + 16), 1);
           return Lexer_ErrorRecover(1);
         }
         else
         {
           slotDesc = *slotPtr;
-          if ( (*(_BYTE *)(*slotPtr + 1) & 4) != 0 || *(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 12) == *(_DWORD *)(slotDesc + 4) )
+          if ( (*(_BYTE *)(uintptr_t)(*slotPtr + 1) & 4) != 0 || *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) == *(_DWORD *)(uintptr_t)(slotDesc + 4) )
           {
-            result = Parser_ParseSlotDefaultOrRestriction(*(_DWORD *)*slotPtr << 30 >> 31, *(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10), &tempValue, a3);
+            result = Parser_ParseSlotDefaultOrRestriction(*(_DWORD *)(uintptr_t)*slotPtr << 30 >> 31, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10), &tempValue, a3);
             if ( result )
             {
               result = Instance_PutSlotValue(instancePtr, slotPtr, &tempValue, a3);
@@ -1211,12 +1211,12 @@ signed int  MessageHandler_DynamicPutSlot(_DWORD *returnValue, int a2, double a3
       }
       else
       {
-        return Instance_ReportNoSuchSlotError(v8, (int)aDynamicPut_0);
+        return Instance_ReportNoSuchSlotError(v8, (int)(intptr_t)aDynamicPut_0);
       }
     }
     else
     {
-      Parser_ReportError(1, (int)aSymbol_5);
+      Parser_ReportError(1, (int)(intptr_t)aSymbol_5);
       return Lexer_ErrorRecover(1);
     }
   }
@@ -1269,7 +1269,7 @@ int  MessageHandler_Send(_DWORD *returnValue, _DWORD *argExprs, int messageSymbo
   savedMessageHandler = g_CurrentMessageHandler;
   g_CurrentMessageHandler = messageSymbol;
   ++g_ClipsCurrentEvaluationDepth;
-  messageNameStr = *(_DWORD *)(messageSymbol + 16);
+  messageNameStr = *(_DWORD *)(uintptr_t)(messageSymbol + 16);
   argCount = AST_CountListNodes((uintptr_t)argExprs);
   ProcParam_PushEvaluatedArgumentFrame(argExprs, argCount, (int)(uintptr_t)"message", messageNameStr, a4, (int (*)(void))Rules_ReportUndefinedMessageHandlerName);
   if ( g_ClipsEvaluationError )
@@ -1279,10 +1279,10 @@ int  MessageHandler_Send(_DWORD *returnValue, _DWORD *argExprs, int messageSymbo
     Rules_RunPeriodicCleanup(0, 1);
     return Rules_SetReentryGuardFlag(savedReentryFlag);
   }
-  firstArgType = *(_DWORD *)(g_ClipsProcParamArray + 4);
+  firstArgType = *(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 4);
   if ( firstArgType == 7 )
   {
-    instancePtr = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsProcParamArray + 8);
+    instancePtr = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8);
     if ( (instancePtr[6] & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
@@ -1298,7 +1298,7 @@ LABEL_7:
     }
     else
     {
-      Instance_ReportNoSuchInstanceError(*(_DWORD *)(instancePtr[7] + 16), (int)aSend_0);
+      Instance_ReportNoSuchInstanceError(*(_DWORD *)(uintptr_t)(instancePtr[7] + 16), (int)(intptr_t)aSend_0);
     }
   }
   else
@@ -1308,23 +1308,23 @@ LABEL_7:
       classPtr = g_ClipsPrimitiveTypeClassMap[firstArgType];
       if ( !classPtr )
       {
-        Rules_ReportSystemError((int)aMsgpass, 1);
+        Rules_ReportSystemError((int)(intptr_t)aMsgpass, 1);
         IO_RunRouterExitCallbacks(2);
       }
       goto LABEL_8;
     }
-    namedInstance = Instance_FindByName(*(_DWORD *)(g_ClipsProcParamArray + 8));
+    namedInstance = Instance_FindByName(*(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8));
     instancePtr = namedInstance;
     if ( !namedInstance )
     {
-      Rules_PrintErrorID((int)aMsgpass, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchInstan_0, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsProcParamArray + 8) + 16), 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionSend, 0);
+      Rules_PrintErrorID((int)(intptr_t)aMsgpass, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoSuchInstan_0, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8) + 16), 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunctionSend, 0);
       goto LABEL_7;
     }
-    *(_DWORD *)(g_ClipsProcParamArray + 8) = (int)(uintptr_t)namedInstance;
-    *(_DWORD *)(g_ClipsProcParamArray + 4) = 7;
+    *(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 8) = (int)(uintptr_t)namedInstance;
+    *(_DWORD *)(uintptr_t)(g_ClipsProcParamArray + 4) = 7;
     classPtr = namedInstance[11];
     ++namedInstance[10];
   }
@@ -1346,35 +1346,35 @@ LABEL_8:
     {
       savedHandlerCore = g_ClipsCurrentHandlerCore;
       savedCursor = g_ClipsMessageHandlerCursor;
-      if ( (**(_BYTE **)handlerCore & 6) != 0 )
+      if ( (**(_BYTE **)(uintptr_t)handlerCore & 6) != 0 )
       {
         g_ClipsMessageHandlerCursor = handlerCore;
         g_ClipsCurrentHandlerCore = 0;
         if ( g_MessageHandler_WatchMessages )
-          MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_509548);
+          MessageHandler_TraceMessageSend((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_509548);
         MessageHandler_CallHandlers(returnValue, a4);
       }
       else
       {
         g_ClipsCurrentHandlerCore = handlerCore;
-        g_ClipsMessageHandlerCursor = *(_DWORD *)(handlerCore + 4);
+        g_ClipsMessageHandlerCursor = *(_DWORD *)(uintptr_t)(handlerCore + 4);
         if ( g_MessageHandler_WatchMessages )
-          MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_509548);
-        if ( (**(_BYTE **)g_ClipsCurrentHandlerCore & 0x10) != 0 )
-          MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)g_ClipsCurrentHandlerCore, (int)asc_509548);
+          MessageHandler_TraceMessageSend((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_509548);
+        if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+          MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_509548);
         if ( MessageHandler_CheckArgCount() )
           Rules_ExecuteRuleActions(
-            **(_DWORD **)(*(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 12) + 8),
-            *(__int16 **)(*(_DWORD *)g_ClipsCurrentHandlerCore + 28),
+            **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
+            *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
             returnValue,
-            *(_DWORD *)(*(_DWORD *)g_ClipsCurrentHandlerCore + 24),
+            *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 24),
             a4,
             (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
-        if ( (**(_BYTE **)g_ClipsCurrentHandlerCore & 0x10) != 0 )
-          MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)g_ClipsCurrentHandlerCore, (int)asc_50954C);
+        if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+          MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_50954C);
       }
       if ( g_MessageHandler_WatchMessages )
-        MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50954C);
+        MessageHandler_TraceMessageSend((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_50954C);
       MessageHandler_FreeHandlerCore(g_MessageHandler_CurrentDispatchCore);
       g_ClipsMessageHandlerCursor = savedCursor;
       g_ClipsCurrentHandlerCore = savedHandlerCore;
@@ -1436,12 +1436,12 @@ int  MessageHandler_BuildSendHandlerCore(int theClass, int messageName)
     bots[++i] = 0;
   classIndex = 0;
   classOffset = 0;
-  while ( classIndex < *(unsigned __int16 *)(cls + 46) )
+  while ( classIndex < *(unsigned __int16 *)(uintptr_t)(cls + 46) )
   {
     classOffset += 4;
     ++classIndex;
     MessageHandler_CollectClassHandlersIntoCore(
-      (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(classOffset + *(_DWORD *)(cls + 48) - 4),
+      (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(classOffset + *(_DWORD *)(uintptr_t)(cls + 48) - 4),
       (uintptr_t)tops,
       messageName,
       (uintptr_t)&bots[1]);

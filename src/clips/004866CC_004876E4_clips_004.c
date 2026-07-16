@@ -22,11 +22,11 @@ char * CRT_DetachThreadDataAndMaybeCloseHandle(char *result)
     {
       threadHandle = *(void **)(result + 222);
       _RemoveThreadData_();
-      result = (char *)TlsSetValue(dwTlsIndex, 0);
+      result = (char *)(uintptr_t)TlsSetValue(dwTlsIndex, 0);
       if ( threadHandle )
       {
         if ( closeHandleFlag )
-          return (char *)CloseHandle(threadHandle);
+          return (char *)(uintptr_t)CloseHandle(threadHandle);
       }
     }
   }
@@ -42,7 +42,7 @@ char *CRT_DestroyTlsIndexAndThreadData(void)
   result = CRT_DetachThreadDataAndMaybeCloseHandle((char *)1);
   if ( dwTlsIndex != -1 )
   {
-    result = (char *)TlsFree(dwTlsIndex);
+    result = (char *)(uintptr_t)TlsFree(dwTlsIndex);
     dwTlsIndex = -1;
   }
   return result;
@@ -66,8 +66,8 @@ void CRT_InitializeThreadAndFileHandleHooks(void)
   g_CRT_StaticLock3AcquireHookTable[0] = (int (*)())CRT_AcquireStaticLock3;
   g_CRT_StaticLock2ReleaseHook = (_DWORD (*)())CRT_ReleaseStaticLock2;
   g_CRT_StaticLock3ReleaseHookTable[0] = (int (*)())CRT_ReleaseStaticLock3;
-  g_CRT_LockInitCriticalSection = (int)CRT_AllocateLockSlot(CRT_LockLeave);
-  InitializeCriticalSection((LPCRITICAL_SECTION)g_CRT_LockInitCriticalSection);
+  g_CRT_LockInitCriticalSection = (int)(intptr_t)CRT_AllocateLockSlot(CRT_LockLeave);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(uintptr_t)g_CRT_LockInitCriticalSection);
   g_CRT_ThreadLockSystemInitialized = 1;
   g_CRT_ThreadDataDestroyHookTable[0] = CRT_DestroyThreadDataBlock;
   g_CRT_TlsIndexDestroyHook = (_DWORD (*)())CRT_DestroyTlsIndexAndThreadData;
@@ -181,11 +181,11 @@ int  Surface_DDCopyBitmapToNewSurface(int directDraw, const CHAR *bitmapName, _D
   surface_height = bitmap_height;
   surface_desc[0] = 108;
   surface_caps = 64;
-  if ( (*(int (__stdcall **)(int, _DWORD *, int *, _DWORD))(*(_DWORD *)directDraw + 24))(directDraw, surface_desc, &new_surface, 0) )
+  if ( (*(int (__stdcall **)(int, _DWORD *, int *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)directDraw + 24))(directDraw, surface_desc, &new_surface, 0) )
     return 0;
   Surface_DDCopyBitmap(new_surface, ImageA, 0, 0, 0, 0);
   image_handle = ImageA;
-  width_ptr = (_DWORD *)v21;
+  width_ptr = (_DWORD *)(uintptr_t)v21;
   DeleteObject(image_handle);
   *width_ptr = surface_width;
   *height_ptr = surface_height;
@@ -238,7 +238,7 @@ signed int  Surface_DDCopyBitmap(int surface, void *bitmap, int x, int y, int dx
   ySrc = x;
   if ( !bitmap || !surface )
     return -2147467259;
-  (*(void (__stdcall **)(int))(*(_DWORD *)surface + 108))(surface);
+  (*(void (__stdcall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 108))(surface);
   CompatibleDC = CreateCompatibleDC(0);
   if ( !CompatibleDC )
     OutputDebugStringA(OutputString);
@@ -255,12 +255,12 @@ signed int  Surface_DDCopyBitmap(int surface, void *bitmap, int x, int y, int dx
     copy_height = hSrc;
   surface_desc[0] = 108;
   surface_desc[1] = 6;
-  (*(void (__stdcall **)(int, _DWORD *))(*(_DWORD *)surface + 88))(surface, surface_desc);
-  hr = (*(int (__stdcall **)(int, HDC *))(*(_DWORD *)surface + 68))(surface, &hdcDest);
+  (*(void (__stdcall **)(int, _DWORD *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 88))(surface, surface_desc);
+  hr = (*(int (__stdcall **)(int, HDC *))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 68))(surface, &hdcDest);
   if ( !hr )
   {
     StretchBlt(hdcDest, 0, 0, surface_desc[3], surface_desc[2], CompatibleDC, y, ySrc, wSrc, copy_height, 0xCC0020u);
-    (*(void (__stdcall **)(int, HDC))(*(_DWORD *)surface + 104))(surface, hdcDest);
+    (*(void (__stdcall **)(int, HDC))(uintptr_t)(*(_DWORD *)(uintptr_t)surface + 104))(surface, hdcDest);
   }
   DeleteDC(CompatibleDC);
   return hr;
@@ -369,7 +369,7 @@ int  Surface_BuildPaletteFromBitmap(int pdd, const CHAR *bitmapName)
       }
     }
   }
-  (*(void (__stdcall **)(int, int, char *, int *, _DWORD))(*(_DWORD *)pdd + 20))(pdd, 4, paletteEntries, &ddPalette, 0);
+  (*(void (__stdcall **)(int, int, char *, int *, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)pdd + 20))(pdd, 4, paletteEntries, &ddPalette, 0);
   return ddPalette;
 }
 // 486CE0: too many cbuild loops
@@ -384,25 +384,25 @@ int  Surface_MatchColorToNativePixel(int pdds, COLORREF rgb, COLORREF Pixel)
   HDC hdc[6]; // [esp+6Ch] [ebp-18h] BYREF
 
   matchedPixel = -1;
-  if ( rgb != -1 && !(*(int (__stdcall **)(int, HDC *))(*(_DWORD *)pdds + 68))(pdds, hdc) )
+  if ( rgb != -1 && !(*(int (__stdcall **)(int, HDC *))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 68))(pdds, hdc) )
   {
     Pixel = GetPixel(hdc[0], 0, 0);
     SetPixel(hdc[0], 0, 0, rgb);
-    (*(void (__stdcall **)(int, HDC))(*(_DWORD *)pdds + 104))(pdds, hdc[0]);
+    (*(void (__stdcall **)(int, HDC))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 104))(pdds, hdc[0]);
   }
   surfaceDesc[0] = 108;
   do
-    hres = (*(int (__stdcall **)(int, _DWORD, _DWORD *, _DWORD, _DWORD))(*(_DWORD *)pdds + 100))(pdds, 0, surfaceDesc, 0, 0);
+    hres = (*(int (__stdcall **)(int, _DWORD, _DWORD *, _DWORD, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 100))(pdds, 0, surfaceDesc, 0, 0);
   while ( hres == -2005532132 );
   if ( !hres )
   {
-    matchedPixel = ((1 << rgbBitCount) - 1) & *(_DWORD *)surfaceDesc[9];
-    (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)pdds + 128))(pdds, 0);
+    matchedPixel = ((1 << rgbBitCount) - 1) & *(_DWORD *)(uintptr_t)surfaceDesc[9];
+    (*(void (__stdcall **)(int, _DWORD))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 128))(pdds, 0);
   }
-  if ( rgb == -1 || (*(int (__stdcall **)(int, HDC *))(*(_DWORD *)pdds + 68))(pdds, hdc) )
+  if ( rgb == -1 || (*(int (__stdcall **)(int, HDC *))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 68))(pdds, hdc) )
     return matchedPixel;
   SetPixel(hdc[0], 0, 0, Pixel);
-  (*(void (__stdcall **)(int, HDC))(*(_DWORD *)pdds + 104))(pdds, hdc[0]);
+  (*(void (__stdcall **)(int, HDC))(uintptr_t)(*(_DWORD *)(uintptr_t)pdds + 104))(pdds, hdc[0]);
   return matchedPixel;
 }
 
@@ -419,11 +419,11 @@ int __fastcall CRT_RunRegisteredFinalizers(int a1, __lock *lock)
   {
     __lock_p(v4);
     if ( g_CrtFinalizerListHead )
-      g_CrtFinalizerListHead = *(_DWORD *)g_CrtFinalizerListHead;
+      g_CrtFinalizerListHead = *(_DWORD *)(uintptr_t)g_CrtFinalizerListHead;
     __lock_v(v5);
     if ( !finalizerEntry )
       break;
-    (*(void (**)(void))(*(_DWORD *)(finalizerEntry + 4) + 4))();
+    (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(finalizerEntry + 4) + 4))();
   }
   return result;
 }
@@ -442,7 +442,7 @@ int  CRT_RegisterFinalizer(int a1, __lock *lock, int a3)
   g_CrtThreadDataAccessor(a3, a1);
   __lock_p(lock);
   *newEntry = g_CrtFinalizerListHead;
-  g_CrtFinalizerListHead = (int)newEntry;
+  g_CrtFinalizerListHead = (int)(intptr_t)newEntry;
   __lock_v(v6);
   return result;
 }
@@ -501,7 +501,7 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
     if ( *format_ptr == 37 )
     {
       argCursor = *argList;
-      spec_ptr = CRT_ParseWidthPrecisionSpec(format_ptr + 1, &argCursor, (int)&outputStream);
+      spec_ptr = CRT_ParseWidthPrecisionSpec(format_ptr + 1, &argCursor, (int)(intptr_t)&outputStream);
       *argList = argCursor;
       specChar = *spec_ptr;
       conversion_char = specChar;
@@ -517,21 +517,21 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
             v8 = *argList + 8;
             *argList = v8;
             farPtrArgSlot = v8 - 8;
-            nFarPtr = *(_DWORD **)(v8 - 8);
-            __ES__ = *(_WORD *)(farPtrArgSlot + 4);
+            nFarPtr = *(_DWORD **)(uintptr_t)(v8 - 8);
+            __ES__ = *(_WORD *)(uintptr_t)(farPtrArgSlot + 4);
             goto LABEL_7;
           }
           if ( (flags & 0x40) != 0 )
           {
             v11 = *argList + 4;
             *argList = v11;
-            nDwordPtr = *(_DWORD **)(v11 - 4);
+            nDwordPtr = *(_DWORD **)(uintptr_t)(v11 - 4);
             goto LABEL_11;
           }
 LABEL_10:
           v13 = *argList + 4;
           *argList = v13;
-          nDwordPtr = *(_DWORD **)(v13 - 4);
+          nDwordPtr = *(_DWORD **)(uintptr_t)(v13 - 4);
           goto LABEL_11;
         }
         if ( (flags & 0x10) != 0 )
@@ -542,13 +542,13 @@ LABEL_10:
             {
               v15 = *argList + 4;
               *argList = v15;
-              nWordPtr = *(_WORD **)(v15 - 4);
+              nWordPtr = *(_WORD **)(uintptr_t)(v15 - 4);
             }
             else
             {
               v17 = *argList + 4;
               *argList = v17;
-              nWordPtr = *(_WORD **)(v17 - 4);
+              nWordPtr = *(_WORD **)(uintptr_t)(v17 - 4);
             }
             *nWordPtr = char_count;
           }
@@ -556,7 +556,7 @@ LABEL_10:
           {
             v14 = *argList + 8;
             *argList = v14;
-            *(_DWORD *)MK_FP(*(_WORD *)(v14 - 8 + 4), *(_DWORD *)(v14 - 8)) = char_count;
+            *(_DWORD *)MK_FP(*(_WORD *)(v14 - 8 + 4), *(_DWORD *)(uintptr_t)(v14 - 8)) = char_count;
           }
         }
         else if ( (flags & 0x80u) == 0 )
@@ -565,7 +565,7 @@ LABEL_10:
             goto LABEL_10;
           v19 = *argList + 4;
           *argList = v19;
-          nDwordPtr = *(_DWORD **)(v19 - 4);
+          nDwordPtr = *(_DWORD **)(uintptr_t)(v19 - 4);
 LABEL_11:
           *nDwordPtr = char_count;
         }
@@ -573,8 +573,8 @@ LABEL_11:
         {
           v18 = *argList + 8;
           *argList = v18;
-          nFarPtr = *(_DWORD **)(v18 - 8);
-          __ES__ = *(_WORD *)(v18 - 8 + 4);
+          nFarPtr = *(_DWORD **)(uintptr_t)(v18 - 8);
+          __ES__ = *(_WORD *)(uintptr_t)(v18 - 8 + 4);
 LABEL_7:
           *nFarPtr = char_count;
         }
@@ -582,7 +582,7 @@ LABEL_7:
       else
       {
         convArgCursor = *argList;
-        converted_text = CRT_ConvertPrintfArgument(conversion_buffer, &convArgCursor, (int)&outputStream);
+        converted_text = CRT_ConvertPrintfArgument(conversion_buffer, &convArgCursor, (int)(intptr_t)&outputStream);
         __ES__ = wideStrSegment;
         *argList = convArgCursor;
         field_width -= v36 + v35 + v34 + text_len + zero_pad_len + prefix_len;
@@ -622,7 +622,7 @@ LABEL_7:
           if ( conversion_char == 83 )
           {
 LABEL_37:
-            CRT_OutputWideStringAsMultiByte(converted_text, __ES__, (unsigned __int8 *)outputFn, (int)&outputStream);
+            CRT_OutputWideStringAsMultiByte(converted_text, __ES__, (unsigned __int8 *)outputFn, (int)(intptr_t)&outputStream);
             goto LABEL_43;
           }
           while ( text_len > 0 )
@@ -682,20 +682,20 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
   int v11; // edx
   char modifierChar; // dl
 
-  *(_BYTE *)(spec + 22) = 32;
+  *(_BYTE *)(uintptr_t)(spec + 22) = 32;
   result = CRT_ParsePrintfFlags(formatPtr, spec);
-  *(_DWORD *)(spec + 4) = 0;
+  *(_DWORD *)(uintptr_t)(spec + 4) = 0;
   if ( *result == 42 )
   {
     v5 = *args + 4;
     *args = v5;
-    widthValue = *(_DWORD *)(v5 - 4);
-    *(_DWORD *)(spec + 4) = widthValue;
+    widthValue = *(_DWORD *)(uintptr_t)(v5 - 4);
+    *(_DWORD *)(uintptr_t)(spec + 4) = widthValue;
     if ( widthValue < 0 )
     {
-      v7 = *(_BYTE *)(spec + 30) | 8;
-      *(_DWORD *)(spec + 4) = -widthValue;
-      *(_BYTE *)(spec + 30) = v7;
+      v7 = *(_BYTE *)(uintptr_t)(spec + 30) | 8;
+      *(_DWORD *)(uintptr_t)(spec + 4) = -widthValue;
+      *(_BYTE *)(uintptr_t)(spec + 30) = v7;
     }
     ++result;
   }
@@ -704,22 +704,22 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
     while ( (unsigned __int8)*result >= 0x30u && (unsigned __int8)*result <= 0x39u )
     {
       v8 = (unsigned __int8)*result++ - 48;
-      *(_DWORD *)(spec + 4) = v8 + 10 * *(_DWORD *)(spec + 4);
+      *(_DWORD *)(uintptr_t)(spec + 4) = v8 + 10 * *(_DWORD *)(uintptr_t)(spec + 4);
     }
   }
-  *(_DWORD *)(spec + 8) = -1;
+  *(_DWORD *)(uintptr_t)(spec + 8) = -1;
   if ( *result == 46 )
   {
     ++result;
-    *(_DWORD *)(spec + 8) = 0;
+    *(_DWORD *)(uintptr_t)(spec + 8) = 0;
     if ( *result == 42 )
     {
       v9 = *args + 4;
       *args = v9;
-      precisionValue = *(_DWORD *)(v9 - 4);
-      *(_DWORD *)(spec + 8) = precisionValue;
+      precisionValue = *(_DWORD *)(uintptr_t)(v9 - 4);
+      *(_DWORD *)(uintptr_t)(spec + 8) = precisionValue;
       if ( precisionValue < 0 )
-        *(_DWORD *)(spec + 8) = -1;
+        *(_DWORD *)(uintptr_t)(spec + 8) = -1;
       ++result;
     }
     else
@@ -727,18 +727,18 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
       while ( (unsigned __int8)*result >= 0x30u && (unsigned __int8)*result <= 0x39u )
       {
         v11 = (unsigned __int8)*result++ - 48;
-        *(_DWORD *)(spec + 8) = v11 + 10 * *(_DWORD *)(spec + 8);
+        *(_DWORD *)(uintptr_t)(spec + 8) = v11 + 10 * *(_DWORD *)(uintptr_t)(spec + 8);
       }
     }
-    if ( *(_DWORD *)(spec + 8) != -1 )
-      *(_BYTE *)(spec + 22) = 32;
+    if ( *(_DWORD *)(uintptr_t)(spec + 8) != -1 )
+      *(_BYTE *)(uintptr_t)(spec + 22) = 32;
   }
   modifierChar = *result;
   if ( (unsigned __int8)*result >= 0x4Eu )
   {
     if ( (unsigned __int8)*result <= 0x4Eu )
     {
-      *(_BYTE *)(spec + 30) |= 0x40u;
+      *(_BYTE *)(uintptr_t)(spec + 30) |= 0x40u;
     }
     else
     {
@@ -747,13 +747,13 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
         if ( (unsigned __int8)modifierChar <= 0x6Cu || modifierChar == 119 )
         {
           ++result;
-          *(_BYTE *)(spec + 30) |= 0x20u;
+          *(_BYTE *)(uintptr_t)(spec + 30) |= 0x20u;
         }
         return result;
       }
       if ( modifierChar != 104 )
         return result;
-      *(_BYTE *)(spec + 30) |= 0x10u;
+      *(_BYTE *)(uintptr_t)(spec + 30) |= 0x10u;
     }
     return ++result;
   }
@@ -761,7 +761,7 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
   {
     if ( modifierChar != 70 )
       return result;
-    *(_BYTE *)(spec + 30) |= 0x80u;
+    *(_BYTE *)(uintptr_t)(spec + 30) |= 0x80u;
     return ++result;
   }
   if ( (unsigned __int8)modifierChar <= 0x49u )
@@ -769,13 +769,13 @@ char * CRT_ParseWidthPrecisionSpec(char *formatPtr, int *args, int spec)
     if ( result[1] == 54 && result[2] == 52 )
     {
       result += 3;
-      *(_BYTE *)(spec + 31) |= 1u;
+      *(_BYTE *)(uintptr_t)(spec + 31) |= 1u;
     }
   }
   else if ( modifierChar == 76 )
   {
     ++result;
-    *(_BYTE *)(spec + 31) |= 1u;
+    *(_BYTE *)(uintptr_t)(spec + 31) |= 1u;
   }
   return result;
 }
@@ -787,38 +787,38 @@ char * CRT_ParsePrintfFlags(char *result, int spec)
   char v3; // ch
   char v4; // bh
 
-  *(_WORD *)(spec + 30) = 0;
+  *(_WORD *)(uintptr_t)(spec + 30) = 0;
   while ( 1 )
   {
     flagChar = *result;
     if ( *result == 45 )
     {
-      *(_BYTE *)(spec + 30) |= 8u;
+      *(_BYTE *)(uintptr_t)(spec + 30) |= 8u;
       goto LABEL_13;
     }
     if ( flagChar == 35 )
     {
-      *(_BYTE *)(spec + 30) |= 1u;
+      *(_BYTE *)(uintptr_t)(spec + 30) |= 1u;
       goto LABEL_13;
     }
     if ( flagChar == 43 )
     {
-      v3 = *(_BYTE *)(spec + 30) | 4;
-      *(_BYTE *)(spec + 30) = v3;
-      *(_BYTE *)(spec + 30) = v3 & 0xFD;
+      v3 = *(_BYTE *)(uintptr_t)(spec + 30) | 4;
+      *(_BYTE *)(uintptr_t)(spec + 30) = v3;
+      *(_BYTE *)(uintptr_t)(spec + 30) = v3 & 0xFD;
       goto LABEL_13;
     }
     if ( flagChar != 32 )
       break;
-    v4 = *(_BYTE *)(spec + 30);
+    v4 = *(_BYTE *)(uintptr_t)(spec + 30);
     if ( (v4 & 4) == 0 )
-      *(_BYTE *)(spec + 30) = v4 | 2;
+      *(_BYTE *)(uintptr_t)(spec + 30) = v4 | 2;
 LABEL_13:
     ++result;
   }
   if ( flagChar == 48 )
   {
-    *(_BYTE *)(spec + 22) = 48;
+    *(_BYTE *)(uintptr_t)(spec + 22) = 48;
     goto LABEL_13;
   }
   return result;
@@ -919,18 +919,18 @@ char  CRT_FormatFixedDecimal(char *buffer, int value, int spec)
     *buffer = 45;
     absValue = -value;
   }
-  if ( *(_DWORD *)(spec + 8) == -1 )
-    *(_DWORD *)(spec + 8) = 4;
+  if ( *(_DWORD *)(uintptr_t)(spec + 8) == -1 )
+    *(_DWORD *)(uintptr_t)(spec + 8) = 4;
   LOBYTE(v5) = Str_FormatSignedRadixDigits(HIWORD(absValue), digitsDest, 0xAu);
   digitsStart = digitPtr;
   while ( *digitPtr )
     ++digitPtr;
-  if ( *(_DWORD *)(spec + 8) )
+  if ( *(_DWORD *)(uintptr_t)(spec + 8) )
   {
     *digitPtr = 46;
     v5 = 0;
     ++digitPtr;
-    while ( (int)v5 < *(_DWORD *)(spec + 8) )
+    while ( (int)(intptr_t)v5 < *(_DWORD *)(uintptr_t)(spec + 8) )
     {
       absValue = 10 * (unsigned __int16)absValue;
       ++v5;
@@ -947,8 +947,8 @@ char  CRT_FormatFixedDecimal(char *buffer, int value, int spec)
       LOBYTE(v5) = *digitPtr;
       if ( *digitPtr != 57 )
       {
-        *digitPtr = (_BYTE)v5 + 1;
-        return (char)v5;
+        *digitPtr = (_BYTE)(intptr_t)v5 + 1;
+        return (char)(intptr_t)v5;
       }
       *digitPtr = 48;
     }
@@ -972,7 +972,7 @@ char  CRT_FormatFixedDecimal(char *buffer, int value, int spec)
     *roundPtr = 48;
     roundPtr[1] = 0;
   }
-  return (char)v5;
+  return (char)(intptr_t)v5;
 }
 // 4875FB: variable 'v6' is possibly undefined
 
@@ -992,14 +992,14 @@ int  CRT_ApplyZeroPadWidth(int result)
   int v3; // ebp
   int v4; // ebx
 
-  if ( (*(_BYTE *)(result + 30) & 8) == 0 && *(_BYTE *)(result + 22) == 48 )
+  if ( (*(_BYTE *)(uintptr_t)(result + 30) & 8) == 0 && *(_BYTE *)(uintptr_t)(result + 22) == 48 )
   {
-    v1 = *(_DWORD *)(result + 40);
-    v2 = *(_DWORD *)(result + 44);
-    v3 = *(_DWORD *)(result + 48);
-    v4 = *(_DWORD *)(result + 52);
-    if ( *(_DWORD *)(result + 4) - *(_DWORD *)(result + 32) - *(_DWORD *)(result + 36) - v1 - v2 - v3 - v4 > 0 )
-      *(_DWORD *)(result + 36) = *(_DWORD *)(result + 4) - *(_DWORD *)(result + 32) - v1 - v2 - v3 - v4;
+    v1 = *(_DWORD *)(uintptr_t)(result + 40);
+    v2 = *(_DWORD *)(uintptr_t)(result + 44);
+    v3 = *(_DWORD *)(uintptr_t)(result + 48);
+    v4 = *(_DWORD *)(uintptr_t)(result + 52);
+    if ( *(_DWORD *)(uintptr_t)(result + 4) - *(_DWORD *)(uintptr_t)(result + 32) - *(_DWORD *)(uintptr_t)(result + 36) - v1 - v2 - v3 - v4 > 0 )
+      *(_DWORD *)(uintptr_t)(result + 36) = *(_DWORD *)(uintptr_t)(result + 4) - *(_DWORD *)(uintptr_t)(result + 32) - v1 - v2 - v3 - v4;
   }
   return result;
 }
@@ -1020,24 +1020,24 @@ unsigned __int16 * CRT_OutputWideStringAsMultiByte(
   __ES__ = segment;
   widePtr = result;
   putcFn = (void (__fastcall *)(unsigned __int8 *, _DWORD))a3;
-  while ( *(int *)(spec + 40) > 0 )
+  while ( *(int *)(uintptr_t)(spec + 40) > 0 )
   {
-    result = (unsigned __int16 *)wctomb_(a3, *widePtr++);
-    mbLength = (int)result;
+    result = (unsigned __int16 *)(uintptr_t)wctomb_(a3, *widePtr++);
+    mbLength = (int)(intptr_t)result;
     if ( result != (unsigned __int16 *)-1 )
     {
-      if ( (int)result > *(_DWORD *)(spec + 40) )
+      if ( (int)(intptr_t)result > *(_DWORD *)(uintptr_t)(spec + 40) )
       {
-        *(_DWORD *)(spec + 40) = 0;
+        *(_DWORD *)(uintptr_t)(spec + 40) = 0;
         return result;
       }
       a3 = (unsigned __int8 *)&mbBuffer;
       while ( --mbLength != -1 )
       {
         putcFn(a3, *a3);
-        result = (unsigned __int16 *)(*(_DWORD *)(spec + 40) - 1);
-        a3 = (unsigned __int8 *)(v7 + 1);
-        *(_DWORD *)(spec + 40) = result;
+        result = (unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(spec + 40) - 1);
+        a3 = (unsigned __int8 *)(uintptr_t)(v7 + 1);
+        *(_DWORD *)(uintptr_t)(spec + 40) = result;
       }
     }
   }

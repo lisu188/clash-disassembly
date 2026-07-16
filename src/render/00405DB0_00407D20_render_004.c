@@ -39,7 +39,7 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
   char path[276]; // [esp+0h] [ebp-114h] BYREF
 
   HIBYTE(v22) = HIBYTE(a2);
-  Debug_Log(63, a3, (DWORD)sprite_set, (int)aDlxspritesetSa);
+  Debug_Log(63, a3, (DWORD)(intptr_t)sprite_set, (int)(intptr_t)aDlxspritesetSa);
   qmemcpy(path, aGfx_2, 4 * v4);
   v6 = &aGfx_2[4 * v4];
   v5 = &path[4 * v4];
@@ -61,17 +61,17 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
     append_cursor += 2;
   }
   while ( next_char );
-  open_handle = IO_FOpen(path, (unsigned __int8 *)aWb, ~prefix_length, (DWORD)sprite_set);
+  open_handle = IO_FOpen(path, (unsigned __int8 *)aWb, ~prefix_length, (DWORD)(intptr_t)sprite_set);
   data_offset = 4096;
   file_handle = open_handle;
   entry_index = 0;
   if ( sprite_set[1025] > 0 )
   {
-    entry_cursor = (DWORD)sprite_set;
+    entry_cursor = (DWORD)(intptr_t)sprite_set;
     do
     {
       g_DlxSpriteSetOffsetTable[entry_index++] = data_offset;
-      data_offset += *(_DWORD *)(*(_DWORD *)entry_cursor + 14);
+      data_offset += *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)entry_cursor + 14);
       entry_cursor += 4;
     }
     while ( entry_index < sprite_set[1025] );
@@ -102,26 +102,26 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
 //----- (00405EC0) --------------------------------------------------------
 int  DLX_GetSpriteForChar(int sprite_set, int char_index)
 {
-  return *(_DWORD *)(sprite_set + 4 * char_index);
+  return *(_DWORD *)(uintptr_t)(sprite_set + 4 * char_index);
 }
 
 //----- (00405ED0) --------------------------------------------------------
 int  DLXSpriteSet_GetLastCharIndex(int sprite_set)
 {
-  LOWORD(sprite_set) = *(_WORD *)(sprite_set + 4100);
+  LOWORD(sprite_set) = *(_WORD *)(uintptr_t)(sprite_set + 4100);
   return sprite_set - 1;
 }
 
 //----- (00405EE0) --------------------------------------------------------
 __int16  DLX_GetSpriteWidth(int sprite_set, unsigned __int16 char_index)
 {
-  return *(_WORD *)(DLX_GetSpriteForChar(sprite_set, char_index) + 2);
+  return *(_WORD *)(uintptr_t)(DLX_GetSpriteForChar(sprite_set, char_index) + 2);
 }
 
 //----- (00405EF0) --------------------------------------------------------
 __int16  DLX_GetSpriteHeight(int sprite_set, unsigned __int16 char_index)
 {
-  return *(_WORD *)DLX_GetSpriteForChar(sprite_set, char_index);
+  return *(_WORD *)(uintptr_t)DLX_GetSpriteForChar(sprite_set, char_index);
 }
 
 //----- (00405F00) --------------------------------------------------------
@@ -187,9 +187,9 @@ int  DLXSpriteSet_DrawFormattedText(DWORD sprite_set, int char_index, int dest_p
 {
   unsigned __int8 *loaded_palette; // eax
 
-  loaded_palette = (unsigned __int8 *)Mem_Alloc(1024, (int)(uintptr_t)palette_name, 0, sprite_set);
+  loaded_palette = (unsigned __int8 *)(uintptr_t)Mem_Alloc(1024, (int)(uintptr_t)palette_name, 0, sprite_set);
   if ( loaded_palette )
-    loaded_palette = (unsigned __int8 *)Palette_LoadFromQueryHandle((intptr_t)loaded_palette, (intptr_t)palette_name);
+    loaded_palette = (unsigned __int8 *)(uintptr_t)Palette_LoadFromQueryHandle((intptr_t)loaded_palette, (intptr_t)palette_name);
   DLXSpriteSet_DrawText(sprite_set, char_index, dest_palette, loaded_palette);
   return j__nfree_();
 }
@@ -204,7 +204,7 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
   unsigned int payload_handle;
   char path[256]; // [esp+0h] [ebp-11Ch] BYREF
 
-  *(_DWORD *)(sprite + 10) = 0;
+  *(_DWORD *)(uintptr_t)(sprite + 10) = 0;
   strcpy(path, aGfx_3);
   strcat(path, file_name);
   query_handle = FileSystem_ResolveReadPath(path, 1);
@@ -216,19 +216,19 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
     entry_end_offset = g_DlxDirectoryEntryEndOffsets[entry_index];
   else
     entry_end_offset = IO_QueryVTableStreamSize(query_handle);
-  *(_DWORD *)(sprite + 14) = entry_end_offset - entry_offset;
+  *(_DWORD *)(uintptr_t)(sprite + 14) = entry_end_offset - entry_offset;
   Compat_QuerySeek(query_handle, entry_offset);
   Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)sprite, 10);
-  payload_size = *(_DWORD *)(sprite + 14) - 10;
+  payload_size = *(_DWORD *)(uintptr_t)(sprite + 14) - 10;
   payload_handle = (unsigned int)nmalloc_(payload_size, 4);
-  *(_DWORD *)(sprite + 10) = payload_handle;
-  if ( !*(_DWORD *)(sprite + 10) )
+  *(_DWORD *)(uintptr_t)(sprite + 10) = payload_handle;
+  if ( !*(_DWORD *)(uintptr_t)(sprite + 10) )
   {
-    Debug_Log(0, 10, payload_size, (int)aNotEnoughMem_7);
-    App_RequestQuit((int)aNotEnoughMem_8);
+    Debug_Log(0, 10, payload_size, (int)(intptr_t)aNotEnoughMem_7);
+    App_RequestQuit((int)(intptr_t)aNotEnoughMem_8);
   }
   Compat_QueryRead(query_handle, (void *)(uintptr_t)payload_handle, payload_size);
-  Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
+  Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
   return sprite;
 }
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
@@ -238,11 +238,11 @@ DWORD  DLXSprite_LoadCachedEntry(DWORD sprite, char *file_name, int entry_index)
 //----- (00406260) --------------------------------------------------------
 int  DLXSprite_ConstructFromBuffer(int result, int source_buffer, int data_size)
 {
-  *(_DWORD *)(result + 18) = 0;
-  *(_DWORD *)(result + 14) = data_size;
-  qmemcpy((void *)result, (const void *)source_buffer, 8u);
-  qmemcpy((void *)(result + 8), (const void *)(source_buffer + 8), 2u);
-  *(_DWORD *)(result + 10) = source_buffer + 10;
+  *(_DWORD *)(uintptr_t)(result + 18) = 0;
+  *(_DWORD *)(uintptr_t)(result + 14) = data_size;
+  qmemcpy((void *)(uintptr_t)result, (const void *)(uintptr_t)source_buffer, 8u);
+  qmemcpy((void *)(uintptr_t)(result + 8), (const void *)(uintptr_t)(source_buffer + 8), 2u);
+  *(_DWORD *)(uintptr_t)(result + 10) = source_buffer + 10;
   return result;
 }
 
@@ -251,8 +251,8 @@ int  DLXSprite_ConstructOwningCopy(int sprite, DWORD source_sprite)
 {
   int v2; // ecx
 
-  *(_DWORD *)(sprite + 10) = 0;
-  *(_DWORD *)(sprite + 18) = 1;
+  *(_DWORD *)(uintptr_t)(sprite + 10) = 0;
+  *(_DWORD *)(uintptr_t)(sprite + 18) = 1;
   DLXSprite_CopyFrom(sprite, source_sprite);
   return v2;
 }
@@ -263,9 +263,9 @@ int  DLXSprite_Destroy(int result)
 {
   int v2; // ecx
 
-  if ( *(_DWORD *)(result + 10) )
+  if ( *(_DWORD *)(uintptr_t)(result + 10) )
   {
-    if ( *(_DWORD *)(result + 18) )
+    if ( *(_DWORD *)(uintptr_t)(result + 18) )
     {
       j__nfree_();
       return v2;
@@ -284,17 +284,17 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
   _DWORD alloc_buffer[6]; // [esp+0h] [ebp-18h] BYREF
 
   DLXSprite_Destroy(sprite);
-  qmemcpy((void *)sprite, (const void *)source_sprite, v6);
-  *(_DWORD *)(sprite + 14) = *(_DWORD *)(source_sprite + 14);
-  *(_DWORD *)(sprite + 18) = 1;
+  qmemcpy((void *)(uintptr_t)sprite, (const void *)(uintptr_t)source_sprite, v6);
+  *(_DWORD *)(uintptr_t)(sprite + 14) = *(_DWORD *)(uintptr_t)(source_sprite + 14);
+  *(_DWORD *)(uintptr_t)(sprite + 18) = 1;
   alloc_buffer[0] = nmalloc_(4, v7);
-  qmemcpy((void *)(sprite + 10), alloc_buffer, v8);
-  if ( !*(_DWORD *)(sprite + 10) )
+  qmemcpy((void *)(uintptr_t)(sprite + 10), alloc_buffer, v8);
+  if ( !*(_DWORD *)(uintptr_t)(sprite + 10) )
   {
-    Debug_Log(0, sprite, source_sprite, (int)aNotEnoughMe_15);
-    App_RequestQuit((int)aNotEnoughMe_16);
+    Debug_Log(0, sprite, source_sprite, (int)(intptr_t)aNotEnoughMe_15);
+    App_RequestQuit((int)(intptr_t)aNotEnoughMe_16);
   }
-  qmemcpy(*(void **)(sprite + 10), *(const void **)(source_sprite + 10), *(_DWORD *)(sprite + 14) - 10);
+  qmemcpy(*(void **)(uintptr_t)(sprite + 10), *(const void **)(uintptr_t)(source_sprite + 10), *(_DWORD *)(uintptr_t)(sprite + 14) - 10);
   return sprite;
 }
 // 4063B2: variable 'v6' is possibly undefined
@@ -305,8 +305,8 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
 //----- (00406460) --------------------------------------------------------
 int  DLXSprite_Save(int sprite, int file_handle)
 {
-  fwrite_((const void *)sprite, 10, file_handle, 1);
-  return fwrite_(*(const void **)(sprite + 10), *(_DWORD *)(sprite + 14) - 10, file_handle, 1);
+  fwrite_((const void *)(uintptr_t)sprite, 10, file_handle, 1);
+  return fwrite_(*(const void **)(uintptr_t)(sprite + 10), *(_DWORD *)(uintptr_t)(sprite + 14) - 10, file_handle, 1);
 }
 
 //----- (004064A0) --------------------------------------------------------
@@ -318,10 +318,10 @@ char  DLXSprite_RemapPalette(int sprite, const unsigned __int8 *remap_table)
   int pixel_value; // ebx
   int i; // [esp+0h] [ebp-18h]
 
-  sprite_header = (unsigned __int16 *)sprite;
-  pixel_cursor = (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)(sprite + 10);
-  if ( *(_WORD *)(sprite + 4) )
-    App_RequestQuit((int)aConvertsprUnsu);
+  sprite_header = (unsigned __int16 *)(uintptr_t)sprite;
+  pixel_cursor = (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sprite + 10);
+  if ( *(_WORD *)(uintptr_t)(sprite + 4) )
+    App_RequestQuit((int)(intptr_t)aConvertsprUnsu);
   for ( i = 0; sprite_header[1] > i; ++i )
   {
     x = 0;
@@ -331,7 +331,7 @@ char  DLXSprite_RemapPalette(int sprite, const unsigned __int8 *remap_table)
       if ( (sprite & 0x80u) == 0 )
       {
         if ( !(_BYTE)sprite )
-          App_RequestQuit((int)aCannotConform2);
+          App_RequestQuit((int)(intptr_t)aCannotConform2);
         x += (unsigned __int8)sprite;
         while ( (_BYTE)sprite )
         {
@@ -538,7 +538,7 @@ int Menu_DrawFrameBackdrop()
 {
   int result; // eax
 
-  g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+  g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 0), 1u);
   result = Compat_RenderDeviceDrawMenuSprite(314, 0, DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 1), 1u);
   result = Compat_RenderDeviceDrawMenuSprite(0, 237, DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 2), 1u);
@@ -591,21 +591,21 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     g_UnitStackSlotSelectedFlags[0],
     0);
   if ( g_SelectedUnitIndex == -1 )
-    return (void *)Tooltip_RestoreBackdrop();
+    return (void *)(uintptr_t)Tooltip_RestoreBackdrop();
   if ( UnitStack_HasLowMoraleUnit(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex) )
   {
     Tooltip_SetResourceHandle(13);
     Tooltip_ShowText(3, g_Text_LowMorale[(unsigned __int8)g_LanguageIndex]);
-    return (void *)Tooltip_SetResourceHandle(7);
+    return (void *)(uintptr_t)Tooltip_SetResourceHandle(7);
   }
   else
   {
     Tooltip_ShowText(
       1,
       aS,
-      UnitType_GetLocalizedName((unit_type)*(__int16 *)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180)));
+      UnitType_GetLocalizedName((unit_type)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147180)));
     saved_render_device = g_RenderDevice;
-    g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
+    g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_before_pump_rect",
       g_SelectedUnitIndex,
@@ -638,14 +638,14 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       g_UnitStackSelectionActiveUnitIndex,
       g_UnitStackSlotSelectedFlags[0],
       ap_percent);
-    Surface = (_DWORD *)Mem_Alloc(188, 0, v4, ap_percent);
+    Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, 0, v4, ap_percent);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_surface_alloc",
       (int)(uintptr_t)Surface,
       g_UnitStackSelectionActiveUnitIndex,
       g_UnitStackSlotSelectedFlags[0],
       ap_percent);
-    surface_addr = (int)Surface;
+    surface_addr = (int)(intptr_t)Surface;
     if ( Surface )
     {
       SpriteWidth = DLX_GetSpriteWidth(g_ActiveUiSpriteSet, 7u);
@@ -696,7 +696,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       g_UnitStackSelectionActiveUnitIndex,
       g_UnitStackSlotSelectedFlags[0],
       0);
-    Render_Present((int)g_RenderState);
+    Render_Present((int)(intptr_t)g_RenderState);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_present",
       g_SelectedUnitIndex,
@@ -838,25 +838,25 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
   }
   else
   {
-    saved_render_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
-    for ( i = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET); i < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7; ++i )
+    saved_render_handle = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, 0);
+    for ( i = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET); i < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7; ++i )
     {
       row_offset = 14 * i;
-      DD_Pump((int)&g_RenderState, ii, i);
-      ii = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+      DD_Pump((int)(intptr_t)&g_RenderState, ii, i);
+      ii = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
       next_row_index = i + 1;
       for ( j = TILE_TERRAIN_ROW_STRIDE * ii; ; j += TILE_TERRAIN_ROW_STRIDE )
       {
-        col_right_bound = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
+        col_right_bound = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
         if ( ii >= col_right_bound )
           break;
-        tile_ptr = (unsigned __int16 *)(row_offset + j + gameData);
+        tile_ptr = (unsigned __int16 *)(uintptr_t)(row_offset + j + gameData);
         if ( *tile_ptr != 0xFFFF && *tile_ptr < TERRAIN_ANIMATION_REMAP_COUNT )
         {
           next_frame = *(__int16 *)((char *)&g_TerrainAnimationRemapTable + 3 * *tile_ptr);
           if ( next_frame != 0xFFFF )
           {
-            now = Time_Now(j, (int)tile_ptr);
+            now = Time_Now(j, (int)(intptr_t)tile_ptr);
             if ( now > *(_DWORD *)((char *)tile_ptr + 6) )
             {
               anim_frame_duration = (unsigned __int8)g_TerrainAnimFrameDurationTable[3 * *tile_ptr];
@@ -864,9 +864,9 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               *(_DWORD *)((char *)tile_ptr + 6) = anim_now + anim_frame_duration;
               *tile_ptr = next_frame;
               WorldMap_RedrawTileIfVisible(ii, i);
-              if ( !*(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) && next_frame == 36 )
+              if ( !*(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) && next_frame == 36 )
               {
-                next_row_tile = (_WORD *)(14 * next_row_index + j + gameData);
+                next_row_tile = (_WORD *)(uintptr_t)(14 * next_row_index + j + gameData);
                 if ( *next_row_tile == 36 )
                 {
                   *next_row_tile = 771;
@@ -880,10 +880,10 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           }
         }
         tile_addr = row_offset + j + gameData;
-        overlay_frame = *(unsigned __int16 *)(tile_addr + 2);
+        overlay_frame = *(unsigned __int16 *)(uintptr_t)(tile_addr + 2);
         if ( overlay_frame == 0xFFFE )
         {
-          *(_WORD *)(tile_addr + 2) = -1;
+          *(_WORD *)(uintptr_t)(tile_addr + 2) = -1;
           WorldMap_RedrawTileIfVisible(ii, i);
         }
         else if ( overlay_frame != 0xFFFF && overlay_frame < TERRAIN_ANIMATION_REMAP_COUNT )
@@ -926,26 +926,26 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         cycle_remap_offset_c = 3 * (unsigned __int16)g_Font_GlyphRemapTable[n++];
       palette_now = Time_Now(v23, (unsigned __int8)g_Render_SpriteAnimDelayBytes[3 * (unsigned __int16)g_ColorCycleDelayLookupIndex]);
       g_WorldMap_NextPaletteAnimTime = v31 + palette_now;
-      anim_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      anim_row = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
       v22 = 2 * anim_row;
       anim_row_offset = 14 * anim_row;
-      while ( anim_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+      while ( anim_row < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
       {
-        DD_Pump((int)&g_RenderState, ii, anim_row);
-        anim_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+        DD_Pump((int)(intptr_t)&g_RenderState, ii, anim_row);
+        anim_col = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
         for ( ii = TILE_TERRAIN_ROW_STRIDE * anim_col; ; ii += TILE_TERRAIN_ROW_STRIDE )
         {
-          v22 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
+          v22 = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( anim_col >= v22 )
             break;
           HIWORD(v35) = 0;
-          tile_code = *(_WORD *)(ii + gameData + anim_row_offset);
+          tile_code = *(_WORD *)(uintptr_t)(ii + gameData + anim_row_offset);
           LOWORD(v35) = tile_code;
           if ( tile_code >= 0xDFu && v35 <= 234
-            || (HIWORD(v36) = 0, tile_code >= 0x19Fu) && (LOWORD(v36) = *(_WORD *)(ii + gameData + anim_row_offset), v36 <= 422)
-            || *(_WORD *)(ii + gameData + anim_row_offset) == 587
-            || *(unsigned __int16 *)(ii + gameData + anim_row_offset) >= 0x283u
-            && *(unsigned __int16 *)(ii + gameData + anim_row_offset) <= 0x2A2u )
+            || (HIWORD(v36) = 0, tile_code >= 0x19Fu) && (LOWORD(v36) = *(_WORD *)(uintptr_t)(ii + gameData + anim_row_offset), v36 <= 422)
+            || *(_WORD *)(uintptr_t)(ii + gameData + anim_row_offset) == 587
+            || *(unsigned __int16 *)(uintptr_t)(ii + gameData + anim_row_offset) >= 0x283u
+            && *(unsigned __int16 *)(uintptr_t)(ii + gameData + anim_row_offset) <= 0x2A2u )
           {
             WorldMap_RedrawTileIfVisible(anim_col, anim_row);
           }
@@ -958,23 +958,23 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
     }
     if ( Time_Now(v23, v22) > (unsigned int)g_WorldMap_NextTileStateAnimTime )
     {
-      map_theme = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
+      map_theme = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
       if ( map_theme )
       {
         if ( map_theme <= 1u )
         {
-          setB_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+          setB_row = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
           setB_row_offset = 14 * setB_row;
-          while ( setB_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+          while ( setB_row < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            setB_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+            setB_col = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
             setB_col_offset = TILE_TERRAIN_ROW_STRIDE * setB_col;
-            while ( setB_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+            while ( setB_col < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
-              setB_tile = (_WORD *)(setB_row_offset + setB_col_offset + gameData);
+              setB_tile = (_WORD *)(uintptr_t)(setB_row_offset + setB_col_offset + gameData);
               if ( *setB_tile == 7 && (unsigned __int16)setB_tile[1] == 0xFFFF && (unsigned int)rand_() < 0x333 )
               {
-                *(_WORD *)(setB_col_offset + gameData + setB_row_offset + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_() / 0x7FFFuLL)];
+                *(_WORD *)(uintptr_t)(setB_col_offset + gameData + setB_row_offset + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_() / 0x7FFFuLL)];
                 WorldMap_RedrawTileIfVisible(v48, setB_row);
               }
               setB_col_offset += TILE_TERRAIN_ROW_STRIDE;
@@ -986,21 +986,21 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         }
         else if ( map_theme == 2 )
         {
-          setC_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+          setC_row = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
           setC_row_offset = 14 * setC_row;
-          while ( setC_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+          while ( setC_row < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
           {
-            setC_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+            setC_col = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
             setC_col_offset = TILE_TERRAIN_ROW_STRIDE * setC_col;
-            while ( setC_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+            while ( setC_col < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
             {
-              setC_tile = (_WORD *)(setC_row_offset + setC_col_offset + gameData);
+              setC_tile = (_WORD *)(uintptr_t)(setC_row_offset + setC_col_offset + gameData);
               if ( *setC_tile == 7 && (unsigned __int16)setC_tile[1] == 0xFFFF )
               {
                 random_value = rand_();
                 if ( (unsigned int)random_value < 0x333 )
                 {
-                  *(_WORD *)(setC_col_offset + gameData + setC_row_offset + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_() / 0x7FFF];
+                  *(_WORD *)(uintptr_t)(setC_col_offset + gameData + setC_row_offset + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_() / 0x7FFF];
                   WorldMap_RedrawTileIfVisible(v54, setC_row);
                 }
               }
@@ -1014,18 +1014,18 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       }
       else
       {
-        setA_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+        setA_row = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
         setA_row_offset = 14 * setA_row;
-        while ( setA_row < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+        while ( setA_row < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
         {
-          setA_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+          setA_col = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
           setA_col_offset = TILE_TERRAIN_ROW_STRIDE * setA_col;
-          while ( setA_col < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+          while ( setA_col < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
           {
-            setA_tile = (_WORD *)(setA_row_offset + setA_col_offset + gameData);
+            setA_tile = (_WORD *)(uintptr_t)(setA_row_offset + setA_col_offset + gameData);
             if ( *setA_tile == 7 && (unsigned __int16)setA_tile[1] == 0xFFFF && (unsigned int)rand_() < 0x333 )
             {
-              *(_WORD *)(setA_row_offset + setA_col_offset + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_() / 0x7FFFu];
+              *(_WORD *)(uintptr_t)(setA_row_offset + setA_col_offset + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_() / 0x7FFFu];
               WorldMap_RedrawTileIfVisible(v43, setA_row);
             }
             setA_col_offset += TILE_TERRAIN_ROW_STRIDE;
@@ -1035,27 +1035,27 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
           setA_row_offset += 14;
         }
       }
-      row_cursor = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      row_cursor = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
       smoke_row_offset = 14 * row_cursor;
       next_row_offset = 14 * row_cursor + 14;
-      while ( row_cursor < *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
+      while ( row_cursor < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 )
       {
-        col_cursor = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+        col_cursor = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
         col_offset = TILE_TERRAIN_ROW_STRIDE * col_cursor;
-        while ( col_cursor < *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
+        while ( col_cursor < *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 )
         {
-          smoke_tile = (_WORD *)(col_offset + gameData + smoke_row_offset);
-          if ( *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET) )
+          smoke_tile = (_WORD *)(uintptr_t)(col_offset + gameData + smoke_row_offset);
+          if ( *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET) )
           {
             if ( *smoke_tile == 771 && (unsigned int)rand_() < 0x199 )
             {
-              *(_WORD *)(smoke_row_offset + col_offset + gameData) = 772;
+              *(_WORD *)(uintptr_t)(smoke_row_offset + col_offset + gameData) = 772;
               WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);
             }
           }
-          else if ( *smoke_tile == 36 && *(_WORD *)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_() < 0x28 )
+          else if ( *smoke_tile == 36 && *(_WORD *)(uintptr_t)(next_row_offset + col_offset + gameData) == 36 && (unsigned int)rand_() < 0x28 )
           {
-            *(_WORD *)(smoke_row_offset + col_offset + gameData) = 771;
+            *(_WORD *)(uintptr_t)(smoke_row_offset + col_offset + gameData) = 771;
             WorldMap_RedrawTileIfVisible(col_cursor, row_cursor);
           }
           col_offset += TILE_TERRAIN_ROW_STRIDE;
@@ -1065,22 +1065,22 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
         smoke_row_offset += 14;
         next_row_offset += 14;
       }
-      deco_row = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      deco_row = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
       for ( jj = 14 * deco_row; ; jj += 14 )
       {
-        row_bottom_bound = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7;
+        row_bottom_bound = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7;
         if ( row_bottom_bound <= deco_row )
           break;
-        deco_col = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+        deco_col = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
         for ( kk = TILE_TERRAIN_ROW_STRIDE * deco_col; ; kk += TILE_TERRAIN_ROW_STRIDE )
         {
-          deco_col_right_bound = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
+          deco_col_right_bound = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9;
           if ( deco_col >= deco_col_right_bound )
             break;
-          tile_frame = *(_WORD *)(jj + kk + gameData);
+          tile_frame = *(_WORD *)(uintptr_t)(jj + kk + gameData);
           if ( tile_frame >= 0x2Du && tile_frame <= 0x51u && (unsigned int)rand_() < 0xA3 )
           {
-            map_theme_byte = *(_BYTE *)(gameData + MAP_THEME_INDEX_OFFSET);
+            map_theme_byte = *(_BYTE *)(uintptr_t)(gameData + MAP_THEME_INDEX_OFFSET);
             decoration_code = tile_frame - 46;
             if ( map_theme_byte )
             {
@@ -1090,43 +1090,43 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                 {
                   case 0:
                     v68 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v68 + 2) == 0xFFFF )
-                      *(_WORD *)(v68 + 2) = 97;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v68 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v68 + 2) = 97;
                     break;
                   case 1:
                     v69 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v69 + 2) == 0xFFFF )
-                      *(_WORD *)(v69 + 2) = 105;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v69 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v69 + 2) = 105;
                     break;
                   case 3:
                     v71 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v71 + 2) == 0xFFFF )
-                      *(_WORD *)(v71 + 2) = 121;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v71 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v71 + 2) = 121;
                     break;
                   case 8:
                     v72 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v72 + 2) == 0xFFFF )
-                      *(_WORD *)(v72 + 2) = 129;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v72 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v72 + 2) = 129;
                     break;
                   case 9:
                     v74 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v74 + 2) == 0xFFFF )
-                      *(_WORD *)(v74 + 2) = 145;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v74 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v74 + 2) = 145;
                     break;
                   case 10:
                     v73 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v73 + 2) == 0xFFFF )
-                      *(_WORD *)(v73 + 2) = 137;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v73 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v73 + 2) = 137;
                     break;
                   case 11:
                     v75 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v75 + 2) == 0xFFFF )
-                      *(_WORD *)(v75 + 2) = 153;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v75 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v75 + 2) = 153;
                     break;
                   case 12:
                     v70 = jj + kk + gameData;
-                    if ( *(unsigned __int16 *)(v70 + 2) == 0xFFFF )
-                      *(_WORD *)(v70 + 2) = 113;
+                    if ( *(unsigned __int16 *)(uintptr_t)(v70 + 2) == 0xFFFF )
+                      *(_WORD *)(uintptr_t)(v70 + 2) = 113;
                     break;
                   default:
                     break;
@@ -1138,39 +1138,39 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               switch ( decoration_code )
               {
                 case 0:
-                  if ( *(unsigned __int16 *)(kk + gameData + jj + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 97;
+                  if ( *(unsigned __int16 *)(uintptr_t)(kk + gameData + jj + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 97;
                   break;
                 case 1:
-                  if ( *(unsigned __int16 *)(jj + kk + gameData + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 105;
+                  if ( *(unsigned __int16 *)(uintptr_t)(jj + kk + gameData + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 105;
                   break;
                 case 3:
                 case 4:
                   v67 = jj + kk + gameData;
-                  if ( *(unsigned __int16 *)(v67 + 2) == 0xFFFF )
-                    *(_WORD *)(v67 + 2) = 121;
+                  if ( *(unsigned __int16 *)(uintptr_t)(v67 + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(v67 + 2) = 121;
                   break;
                 case 8:
-                  if ( *(unsigned __int16 *)(jj + kk + gameData + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 129;
+                  if ( *(unsigned __int16 *)(uintptr_t)(jj + kk + gameData + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 129;
                   break;
                 case 9:
-                  if ( *(unsigned __int16 *)(jj + kk + gameData + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 145;
+                  if ( *(unsigned __int16 *)(uintptr_t)(jj + kk + gameData + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 145;
                   break;
                 case 10:
-                  if ( *(unsigned __int16 *)(jj + kk + gameData + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 137;
+                  if ( *(unsigned __int16 *)(uintptr_t)(jj + kk + gameData + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 137;
                   break;
                 case 11:
-                  if ( *(unsigned __int16 *)(jj + kk + gameData + 2) == 0xFFFF )
-                    *(_WORD *)(jj + kk + gameData + 2) = 153;
+                  if ( *(unsigned __int16 *)(uintptr_t)(jj + kk + gameData + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(jj + kk + gameData + 2) = 153;
                   break;
                 case 12:
                   v66 = jj + kk + gameData;
-                  if ( *(unsigned __int16 *)(v66 + 2) == 0xFFFF )
-                    *(_WORD *)(v66 + 2) = 113;
+                  if ( *(unsigned __int16 *)(uintptr_t)(v66 + 2) == 0xFFFF )
+                    *(_WORD *)(uintptr_t)(v66 + 2) = 113;
                   break;
                 default:
                   break;
@@ -1184,7 +1184,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
       }
       g_WorldMap_NextTileStateAnimTime = Time_Now(deco_row, row_bottom_bound) + 10;
     }
-    Render_SetResourceHandle((int)&g_MainRenderDevice, saved_render_handle);
+    Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, saved_render_handle);
   }
 }
 // 407065: variable 'v8' is possibly undefined
@@ -1242,8 +1242,8 @@ unsigned int  WorldMap_TickPaletteFlashEffect(int reset_flag, int a2, int a3)
   result = Time_Now(a3, a2);
   if ( result >= g_PaletteCrossfadeNextStepTime && g_WorldMap_PaletteFlashStep <= 10 )
   {
-    flash_step = (__lock *)g_WorldMap_PaletteFlashStep++;
-    Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)g_MapPalettePtr, flash_step, 10);
+    flash_step = (__lock *)(uintptr_t)g_WorldMap_PaletteFlashStep++;
+    Palette_CrossfadeStep((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr, flash_step, 10);
     result = Time_Now(v6, v5) + 5;
     g_PaletteCrossfadeNextStepTime = result;
   }
@@ -1269,10 +1269,10 @@ int Render_RestoreLostSurfaces(void)
   Render_Pump();
   last_cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
   last_cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
-  while ( DD_IsLost((int)g_RenderState) )
+  while ( DD_IsLost((int)(intptr_t)g_RenderState) )
   {
     WorldMap_RedrawFrame(last_cursor_y);
-    DD_Pump((int)g_RenderState, last_cursor_y);
+    DD_Pump((int)(intptr_t)g_RenderState, last_cursor_y);
     cursor_delta_x = (g_MouseCursorRawX >> g_CursorCoordShift) - last_cursor_x;
     if ( cursor_delta_x <= 0 )
       cursor_delta_x = last_cursor_x - (g_MouseCursorRawX >> g_CursorCoordShift);
@@ -1291,30 +1291,30 @@ int Render_RestoreLostSurfaces(void)
     else
     {
 LABEL_7:
-      *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) += ((g_MouseCursorRawX >> g_CursorCoordShift)
+      *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) += ((g_MouseCursorRawX >> g_CursorCoordShift)
                                        - last_cursor_x
                                        - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - last_cursor_x) >> 31, 3)
                                         + 8 * (((g_MouseCursorRawX >> g_CursorCoordShift) - last_cursor_x) >> 31))) >> 3;
-      *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) += ((g_MouseCursorRawY >> g_CursorCoordShift)
+      *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) += ((g_MouseCursorRawY >> g_CursorCoordShift)
                                        - last_cursor_y
                                        - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - last_cursor_y) >> 31, 3)
                                         + 8 * (((g_MouseCursorRawY >> g_CursorCoordShift) - last_cursor_y) >> 31))) >> 3;
-      if ( *(int *)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
-        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
-      map_width = *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET);
-      if ( *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 > map_width )
-        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = map_width - 9;
-      if ( *(int *)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
-        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
-      map_height = *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET);
-      if ( *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) + 7 > map_height )
-        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = map_height - 7;
+      if ( *(int *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
+      map_width = *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET);
+      if ( *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) + 9 > map_width )
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = map_width - 9;
+      if ( *(int *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = 0;
+      map_height = *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET);
+      if ( *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) + 7 > map_height )
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = map_height - 7;
       WorldMap_RedrawViewport(1);
       last_cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
       last_cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
     }
   }
-  return Render_Present((int)g_RenderState);
+  return Render_Present((int)(intptr_t)g_RenderState);
 }
 // 5202E4: using guessed type int gameData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -1343,15 +1343,15 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
   int tile_y; // ecx
   unsigned int unit_id; // edx
 
-  time_now = Time_Now(g_WorldMapKeyScrollRepeatTime, 16 - *(unsigned __int8 *)(gameData + 147171) + g_WorldMapKeyScrollRepeatTime);
+  time_now = Time_Now(g_WorldMapKeyScrollRepeatTime, 16 - *(unsigned __int8 *)(uintptr_t)(gameData + 147171) + g_WorldMapKeyScrollRepeatTime);
   if ( time_now > next_scroll_time && !g_WorldMap_KeyboardInputDisabled && !Input_IsKeyPressed(56) )
   {
     if ( Input_IsKeyPressed(203) )
     {
-      viewport_left = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
+      viewport_left = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
       if ( viewport_left > 0 )
       {
-        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = viewport_left - 1;
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = viewport_left - 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v6, v5);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = 1;
@@ -1359,10 +1359,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(205) )
     {
-      a1 = *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-      if ( *(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET) - 9 > a1 )
+      a1 = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
+      if ( *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) - 9 > a1 )
       {
-        *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET) = a1 + 1;
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v8, a1 + 1);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = v9;
@@ -1370,10 +1370,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(200) )
     {
-      viewport_top = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+      viewport_top = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
       if ( viewport_top > 0 )
       {
-        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = viewport_top - 1;
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = viewport_top - 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v11, v10);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = 1;
@@ -1381,10 +1381,10 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(208) )
     {
-      a1 = *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
-      if ( *(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7 > a1 )
+      a1 = *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
+      if ( *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 7 > a1 )
       {
-        *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET) = a1 + 1;
+        *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = a1 + 1;
         g_WorldMapKeyScrollRepeatTime = Time_Now(v13, a1 + 1);
         WorldMap_RedrawViewport(1);
         g_WorldMapViewportScrolledFlag = v14;
@@ -1394,19 +1394,19 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     {
       MiniMap_ToggleVisibility();
       while ( Input_IsKeyPressed(50) )
-        DD_Pump((int)g_RenderState, 50);
+        DD_Pump((int)(intptr_t)g_RenderState, 50);
     }
     if ( Input_IsKeyPressed(59) )
     {
       Noop_DebugHotkeyF1Handler();
       while ( Input_IsKeyPressed(59) )
-        DD_Pump((int)g_RenderState, (char)g_RenderState);
+        DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
     }
     if ( Input_IsKeyPressed(60) )
     {
-      Debug_Log(v15, (char)g_RenderState, a1, (int)asc_4EC5AC);
+      Debug_Log(v15, (char)(intptr_t)g_RenderState, a1, (int)(intptr_t)asc_4EC5AC);
       while ( Input_IsKeyPressed(60) )
-        DD_Pump((int)g_RenderState, (char)g_RenderState);
+        DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
     }
   }
   result = MiniMap_IsCursorInside();
@@ -1416,23 +1416,23 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
           - 32
           - (__CFSHL__(((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31, 6)
            + (((g_MouseCursorRawX >> g_CursorCoordShift) - 32) >> 31 << 6))) >> 6)
-        + *(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET);
-    result = DD_IsLost((int)g_RenderState);
+        + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET);
+    result = DD_IsLost((int)(intptr_t)g_RenderState);
     if ( result )
     {
       tile_y = (((g_MouseCursorRawY >> g_CursorCoordShift)
             - 16
             - (__CFSHL__(((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31, 6)
              + (((g_MouseCursorRawY >> g_CursorCoordShift) - 16) >> 31 << 6))) >> 6)
-          + *(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET);
+          + *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET);
       result = TILE_INDEX(tile_x, tile_y);
-      unit_id = *(unsigned __int16 *)result;
+      unit_id = *(unsigned __int16 *)(uintptr_t)result;
       if ( (unsigned __int16)unit_id == 0xFFFF )
         return Render_RestoreLostSurfaces();
       if ( unit_id < 0x8000 )
       {
         result = UNIT_STACK_STRIDE * unit_id;
-        if ( *(_BYTE *)(gameData + UNIT_STACK_STRIDE * unit_id + 147894) )
+        if ( *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unit_id + 147894) )
           return Render_RestoreLostSurfaces();
       }
     }

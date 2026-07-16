@@ -18,14 +18,14 @@ int  Rules_CountJoinNetworkEntryNodes(int theJoin)
     return count;
   do
   {
-    while ( (*(_BYTE *)theJoin & 4) != 0 )
+    while ( (*(_BYTE *)(uintptr_t)theJoin & 4) != 0 )
     {
-      theJoin = *(_DWORD *)(theJoin + 16);
+      theJoin = *(_DWORD *)(uintptr_t)(theJoin + 16);
       if ( !theJoin )
         return count;
     }
     ++count;
-    theJoin = *(_DWORD *)(theJoin + 24);
+    theJoin = *(_DWORD *)(uintptr_t)(theJoin + 24);
   }
   while ( theJoin );
   return count;
@@ -60,9 +60,9 @@ signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int linePref
     {
       *(_BYTE *)node |= 0x20u;
       rule_name = Rules_GetConstructNameString(*(_DWORD *)(node + 36));
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], linePrefix, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], rule_name, 0);
-      result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5083B4, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], linePrefix, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], rule_name, 0);
+      result = Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_5083B4, 0);
       node = (uintptr_t)(unsigned int)*(_DWORD *)(node + 28);
     }
     else
@@ -92,14 +92,14 @@ int Rules_ClearJoinNetworkMarkedFlags(void)
     theDefrule = Rules_GetNextDefrule(0);
     while ( theDefrule )
     {
-      node = (uintptr_t)(unsigned int)*(_DWORD *)(theDefrule + 44);
+      node = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(theDefrule + 44);
       while ( node )
       {
         flags = *(_DWORD *)node & 0xFFFFFFDF;
         *(_DWORD *)node = flags;
         node = (uintptr_t)(unsigned int)*(_DWORD *)(node + ((*(_BYTE *)node & 4) != 0 ? 16 : 24));
       }
-      next_rule = *(_DWORD *)(theDefrule + 48);
+      next_rule = *(_DWORD *)(uintptr_t)(theDefrule + 48);
       if ( next_rule )
         theDefrule = next_rule;
       else
@@ -129,7 +129,7 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
   {
     ++*moduleCount;
     Module_SetCurrent(i);
-    theDefrule = (_DWORD *)Rules_GetNextDefrule(0);
+    theDefrule = (_DWORD *)(uintptr_t)Rules_GetNextDefrule(0);
     while ( theDefrule )
     {
       currentRuleId = *ruleCount;
@@ -140,25 +140,25 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
       {
         do
         {
-          if ( (*(_BYTE *)joinPtr & 0x20) == 0 )
+          if ( (*(_BYTE *)(uintptr_t)joinPtr & 0x20) == 0 )
           {
-            *(_BYTE *)joinPtr |= 0x20u;
+            *(_BYTE *)(uintptr_t)joinPtr |= 0x20u;
             currentJoinId = *joinCount;
-            *(_DWORD *)(joinPtr + 4) = *joinCount;
+            *(_DWORD *)(uintptr_t)(joinPtr + 4) = *joinCount;
             *joinCount = currentJoinId + 1;
           }
-          if ( (*(_BYTE *)joinPtr & 4) != 0 )
-            nextJoin = *(_DWORD *)(joinPtr + 16);
+          if ( (*(_BYTE *)(uintptr_t)joinPtr & 4) != 0 )
+            nextJoin = *(_DWORD *)(uintptr_t)(joinPtr + 16);
           else
-            nextJoin = *(_DWORD *)(joinPtr + 24);
+            nextJoin = *(_DWORD *)(uintptr_t)(joinPtr + 24);
           joinPtr = nextJoin;
         }
         while ( nextJoin );
       }
       if ( theDefrule[12] )
-        theDefrule = (_DWORD *)theDefrule[12];
+        theDefrule = (_DWORD *)(uintptr_t)theDefrule[12];
       else
-        theDefrule = (_DWORD *)Rules_GetNextDefrule((int)theDefrule);
+        theDefrule = (_DWORD *)(uintptr_t)Rules_GetNextDefrule((int)(intptr_t)theDefrule);
     }
     result = Module_NextEnum(i);
   }
@@ -168,17 +168,17 @@ int  Rules_JoinNetworkAssignCodeGenIds(_DWORD *moduleCount, int *ruleCount, int 
 //----- (004A87A0) --------------------------------------------------------
 int Rules_DefruleCommandDefinitions(void)
 {
-  Rules_AddResetFunction((int)aDefrule_0, (int)Rules_ResetDefrules, 70);
-  Rules_AddSaveFunction((int)aDefrule_0, (int)Rules_SaveDefrules, 0);
-  Rules_AddClearReadyFunction((int)aDefrule_0, (int)Rules_ClearDefrulesReady, 0);
-  Rules_AddClearFunction((int)aDefrule_0, (int)Rules_ClearDefrules, 0);
-  Rules_AddWatchItem((int)aRules, 0, 70, (int)&g_WatchRulesFlag, (int)Rules_DefruleWatchAccess, (int)Rules_DefruleWatchPrint);
-  Rules_RegisterHostFunction(aGetDefruleList, 109, (int)aGetdefrulelist, (int)Rules_GetDefruleListFunction, (int)a01w_4);
-  Rules_RegisterHostFunction(aUndefrule, 118, (int)aUndefrulecomma, (int)Rules_UndefruleCommand, (int)a11w_7);
-  Rules_RegisterHostFunction(aDefruleModule, 119, (int)aDefrulemodulef, (int)Rules_DefruleModuleFunction, (int)a11w_7);
-  Rules_RegisterHostFunction(aRules, 118, (int)aListdefrulesco, (int)Rules_ListDefrulesCommand, (int)a01w_4);
-  Rules_RegisterHostFunction(aListDefrules, 118, (int)aListdefrulesco, (int)Rules_ListDefrulesCommand, (int)a01w_4);
-  Rules_RegisterHostFunction(aPpdefrule, 118, (int)aPpdefrulecomma, (int)Rules_PPDefruleCommand, (int)a11w_7);
+  Rules_AddResetFunction((int)(intptr_t)aDefrule_0, (int)(intptr_t)Rules_ResetDefrules, 70);
+  Rules_AddSaveFunction((int)(intptr_t)aDefrule_0, (int)(intptr_t)Rules_SaveDefrules, 0);
+  Rules_AddClearReadyFunction((int)(intptr_t)aDefrule_0, (int)(intptr_t)Rules_ClearDefrulesReady, 0);
+  Rules_AddClearFunction((int)(intptr_t)aDefrule_0, (int)(intptr_t)Rules_ClearDefrules, 0);
+  Rules_AddWatchItem((int)(intptr_t)aRules, 0, 70, (int)(intptr_t)&g_WatchRulesFlag, (int)(intptr_t)Rules_DefruleWatchAccess, (int)(intptr_t)Rules_DefruleWatchPrint);
+  Rules_RegisterHostFunction(aGetDefruleList, 109, (int)(intptr_t)aGetdefrulelist, (int)(intptr_t)Rules_GetDefruleListFunction, (int)(intptr_t)a01w_4);
+  Rules_RegisterHostFunction(aUndefrule, 118, (int)(intptr_t)aUndefrulecomma, (int)(intptr_t)Rules_UndefruleCommand, (int)(intptr_t)a11w_7);
+  Rules_RegisterHostFunction(aDefruleModule, 119, (int)(intptr_t)aDefrulemodulef, (int)(intptr_t)Rules_DefruleModuleFunction, (int)(intptr_t)a11w_7);
+  Rules_RegisterHostFunction(aRules, 118, (int)(intptr_t)aListdefrulesco, (int)(intptr_t)Rules_ListDefrulesCommand, (int)(intptr_t)a01w_4);
+  Rules_RegisterHostFunction(aListDefrules, 118, (int)(intptr_t)aListdefrulesco, (int)(intptr_t)Rules_ListDefrulesCommand, (int)(intptr_t)a01w_4);
+  Rules_RegisterHostFunction(aPpdefrule, 118, (int)(intptr_t)aPpdefrulecomma, (int)(intptr_t)Rules_PPDefruleCommand, (int)(intptr_t)a11w_7);
   Rules_RegisterDefruleBinaryItem();
   return Rules_SetupDefruleCodeGenerator();
 }
@@ -194,7 +194,7 @@ int Rules_ResetDefrules(void)
   g_Rules_EntityTimeTagCounter = 0;
   Rules_ClearFocusStack();
   mainModule = Module_FindByName(aMain_4);
-  return Rules_PushFocus((int)mainModule);
+  return Rules_PushFocus((int)(intptr_t)mainModule);
 }
 // 4A88D0: using guessed type int sub_4A88D0();
 // 51A998: using guessed type int dword_51A998;
@@ -226,7 +226,7 @@ int Rules_ClearDefrules(void)
   int *mainModule; // eax
 
   mainModule = Module_FindByName(aMain_4);
-  return Rules_PushFocus((int)mainModule);
+  return Rules_PushFocus((int)(intptr_t)mainModule);
 }
 // 4A8920: using guessed type int sub_4A8920();
 
@@ -240,7 +240,7 @@ int  Rules_SaveDefrules(signed int logicalName)
 //----- (004A8940) --------------------------------------------------------
 int __thiscall Rules_UndefruleCommand(void *this)
 {
-  return Rules_UndefconstructCommand((int)this, g_DefruleConstructTypePtr);
+  return Rules_UndefconstructCommand((int)(intptr_t)this, g_DefruleConstructTypePtr);
 }
 // 54E648: using guessed type int dword_54E648;
 
@@ -261,14 +261,14 @@ _DWORD * Rules_GetDefruleListFunction(int returnValue, double a2)
 //----- (004A89B0) --------------------------------------------------------
 int __thiscall Rules_DefruleModuleFunction(void *this)
 {
-  return Rules_GetConstructModuleCommand((int)this, (const char **)g_DefruleConstructTypePtr);
+  return Rules_GetConstructModuleCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_DefruleConstructTypePtr);
 }
 // 54E648: using guessed type int dword_54E648;
 
 //----- (004A89D0) --------------------------------------------------------
 int __thiscall Rules_PPDefruleCommand(void *this)
 {
-  return Rules_PPConstructCommand((int)this, (const char **)g_DefruleConstructTypePtr);
+  return Rules_PPConstructCommand((int)(intptr_t)this, (const char **)(uintptr_t)g_DefruleConstructTypePtr);
 }
 // 54E648: using guessed type int dword_54E648;
 
@@ -284,9 +284,9 @@ int  Rules_TestInheritedFlagBit4(int theDefrule)
 {
   if ( !theDefrule )
     return 0;
-  while ( (*(_BYTE *)(theDefrule + 29) & 0x10) == 0 )
+  while ( (*(_BYTE *)(uintptr_t)(theDefrule + 29) & 0x10) == 0 )
   {
-    theDefrule = *(_DWORD *)(theDefrule + 48);
+    theDefrule = *(_DWORD *)(uintptr_t)(theDefrule + 48);
     if ( !theDefrule )
       return 0;
   }
@@ -298,9 +298,9 @@ int  Rules_TestInheritedFlagBit5(int theDefrule)
 {
   if ( !theDefrule )
     return 0;
-  while ( (*(_BYTE *)(theDefrule + 29) & 0x20) == 0 )
+  while ( (*(_BYTE *)(uintptr_t)(theDefrule + 29) & 0x20) == 0 )
   {
-    theDefrule = *(_DWORD *)(theDefrule + 48);
+    theDefrule = *(_DWORD *)(uintptr_t)(theDefrule + 48);
     if ( !theDefrule )
       return 0;
   }
@@ -312,10 +312,10 @@ int  Rules_SetInheritedFlagBit4(char newState, int theDefrule)
 {
   int result; // eax
 
-  for ( result = theDefrule; result; result = *(_DWORD *)(result + 48) )
+  for ( result = theDefrule; result; result = *(_DWORD *)(uintptr_t)(result + 48) )
   {
-    *(_BYTE *)(result + 29) &= ~0x10u;
-    *(_DWORD *)(result + 28) |= (newState & 1) << 12;
+    *(_BYTE *)(uintptr_t)(result + 29) &= ~0x10u;
+    *(_DWORD *)(uintptr_t)(result + 28) |= (newState & 1) << 12;
   }
   return result;
 }
@@ -325,10 +325,10 @@ int  Rules_SetInheritedFlagBit5(char newState, int theDefrule)
 {
   int result; // eax
 
-  for ( result = theDefrule; result; result = *(_DWORD *)(result + 48) )
+  for ( result = theDefrule; result; result = *(_DWORD *)(uintptr_t)(result + 48) )
   {
-    *(_BYTE *)(result + 29) &= ~0x20u;
-    *(_DWORD *)(result + 28) |= (newState & 1) << 13;
+    *(_BYTE *)(uintptr_t)(result + 29) &= ~0x20u;
+    *(_DWORD *)(uintptr_t)(result + 28) |= (newState & 1) << 13;
   }
   return result;
 }
@@ -337,9 +337,9 @@ int  Rules_SetInheritedFlagBit5(char newState, int theDefrule)
 signed int  Rules_DefruleWatchAccess(int code, int newState, int argExprs, double a4)
 {
   if ( code )
-    return Rules_ApplyWatchFlagCommand(g_DefruleConstructTypePtr, newState, (int)Rules_TestInheritedFlagBit4, argExprs, a4, (void (*)(void))Rules_SetInheritedFlagBit4);
+    return Rules_ApplyWatchFlagCommand(g_DefruleConstructTypePtr, newState, (int)(intptr_t)Rules_TestInheritedFlagBit4, argExprs, a4, (void (*)(void))Rules_SetInheritedFlagBit4);
   else
-    return Rules_ApplyWatchFlagCommand(g_DefruleConstructTypePtr, newState, (int)Rules_TestInheritedFlagBit5, argExprs, a4, (void (*)(void))Rules_SetInheritedFlagBit5);
+    return Rules_ApplyWatchFlagCommand(g_DefruleConstructTypePtr, newState, (int)(intptr_t)Rules_TestInheritedFlagBit5, argExprs, a4, (void (*)(void))Rules_SetInheritedFlagBit5);
 }
 // 4A8A40: using guessed type int sub_4A8A40();
 // 4A8A60: using guessed type int sub_4A8A60();
@@ -348,7 +348,7 @@ signed int  Rules_DefruleWatchAccess(int code, int newState, int argExprs, doubl
 //----- (004A8B20) --------------------------------------------------------
 signed int  Rules_DefruleWatchPrint(int logicalName, int argExprs, double a3)
 {
-  return Rules_ListWatchFlagStatus(g_DefruleConstructTypePtr, logicalName, (int)Rules_TestInheritedFlagBit4, argExprs, a3, (void (*)(void))Rules_SetInheritedFlagBit4);
+  return Rules_ListWatchFlagStatus(g_DefruleConstructTypePtr, logicalName, (int)(intptr_t)Rules_TestInheritedFlagBit4, argExprs, a3, (void (*)(void))Rules_SetInheritedFlagBit4);
 }
 // 4A8A40: using guessed type int sub_4A8A40();
 // 54E648: using guessed type int dword_54E648;
@@ -359,14 +359,14 @@ int  Rules_AppendConstructToModuleList(int result)
   int theModuleItem; // edx
   int lastItem; // ecx
 
-  theModuleItem = *(_DWORD *)(result + 8);
-  lastItem = *(_DWORD *)(theModuleItem + 8);
+  theModuleItem = *(_DWORD *)(uintptr_t)(result + 8);
+  lastItem = *(_DWORD *)(uintptr_t)(theModuleItem + 8);
   if ( lastItem )
-    *(_DWORD *)(lastItem + 16) = result;
+    *(_DWORD *)(uintptr_t)(lastItem + 16) = result;
   else
-    *(_DWORD *)(theModuleItem + 4) = result;
-  *(_DWORD *)(*(_DWORD *)(result + 8) + 8) = result;
-  *(_DWORD *)(result + 16) = 0;
+    *(_DWORD *)(uintptr_t)(theModuleItem + 4) = result;
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 8) = result;
+  *(_DWORD *)(uintptr_t)(result + 16) = 0;
   return result;
 }
 
@@ -377,11 +377,11 @@ int __fastcall Rules_TryDeleteConstruct(int theConstruct, int constructClass)
 
   if ( Rules_IsBloaded() == 1 )
     return 0;
-  if ( (*(int (__cdecl **)(int))(constructClass + 12))(theConstruct) )
-    return (*(int (**)(void))(constructClass + 40))();
+  if ( (*(int (__cdecl **)(int))(uintptr_t)(constructClass + 12))(theConstruct) )
+    return (*(int (**)(void))(uintptr_t)(constructClass + 40))();
   if ( strcmp_(v4, v4) )
     return 0;
-  (*(void (**)(void))(constructClass + 40))();
+  (*(void (**)(void))(uintptr_t)(constructClass + 40))();
   return 1;
 }
 // 4A8BA5: variable 'v4' is possibly undefined
@@ -397,18 +397,18 @@ int  Rules_FindConstructByNameGeneric(_BYTE *constructName, int constructClass)
   int current_item; // edx
 
   Module_BeginEnum();
-  local_name = (_BYTE *)Rules_ExtractModuleAndConstructName(constructName);
+  local_name = (_BYTE *)(uintptr_t)Rules_ExtractModuleAndConstructName(constructName);
   if ( local_name )
   {
     target_symbol = Rules_FindSymbolEntry(local_name);
     if ( target_symbol )
     {
-      get_name_func = *(_DWORD *)(constructClass + 16);
-      next_func = *(_DWORD *)(constructClass + 28);
+      get_name_func = *(_DWORD *)(uintptr_t)(constructClass + 16);
+      next_func = *(_DWORD *)(uintptr_t)(constructClass + 28);
       current_item = ((int (*)(int))(uintptr_t)(unsigned int)next_func)(0);
       while ( current_item )
       {
-        if ( target_symbol == (int *)((int (*)(int))(uintptr_t)(unsigned int)get_name_func)(current_item) )
+        if ( target_symbol == (int *)(uintptr_t)((int (*)(int))(uintptr_t)(unsigned int)get_name_func)(current_item) )
         {
           Module_EndEnum();
           return current_item;
@@ -434,12 +434,12 @@ int __fastcall Rules_UndefconstructCommand(int a1, int constructClass)
   int v11; // [esp+54h] [ebp-8h]
 
   v11 = a1;
-  v4 = sprintf_(argNameBuffer, "%s name", (const char *)*(_DWORD *)constructClass);
-  result = Rules_GetConstructNameArg((int)argNameBuffer, v5, v4);
+  v4 = sprintf_(argNameBuffer, "%s name", (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)constructClass);
+  result = Rules_GetConstructNameArg((int)(intptr_t)argNameBuffer, v5, v4);
   theConstruct = result;
   if ( result )
   {
-    if ( (*(int (__thiscall **)(int))(constructClass + 12))(result) || !strcmp_(v8, v8) )
+    if ( (*(int (__thiscall **)(int))(uintptr_t)(constructClass + 12))(result) || !strcmp_(v8, v8) )
     {
       result = Rules_TryDeleteConstruct(v8, constructClass);
       if ( !result )
@@ -470,10 +470,10 @@ int __fastcall Rules_PPConstructCommand(int a1, const char **constructClass)
 
   v9 = a1;
   v4 = sprintf_(argNameBuffer, "%s name", *constructClass);
-  result = Rules_GetConstructNameArg((int)argNameBuffer, v5, v4);
+  result = Rules_GetConstructNameArg((int)(intptr_t)argNameBuffer, v5, v4);
   if ( result )
   {
-    result = Rules_PrintConstructPPForm((int)g_IO_LogicalName_WDisplay, result, (int)constructClass);
+    result = Rules_PrintConstructPPForm((int)(intptr_t)g_IO_LogicalName_WDisplay, result, (int)(intptr_t)constructClass);
     if ( !result )
       return Rules_ReportCantFindItem(v7, v7);
   }
@@ -491,12 +491,12 @@ int  Rules_PrintConstructPPForm(int logicalName, int constructName, int construc
   char *ppForm; // eax
   signed int v5; // ecx
 
-  result = (*(int (__thiscall **)(int, int))(constructType + 12))(logicalName, constructName);
+  result = (*(int (__thiscall **)(int, int))(uintptr_t)(constructType + 12))(logicalName, constructName);
   if ( result )
   {
-    if ( (*(int (**)(void))(constructType + 20))() )
+    if ( (*(int (**)(void))(uintptr_t)(constructType + 20))() )
     {
-      ppForm = (char *)(*(int (**)(void))(constructType + 20))();
+      ppForm = (char *)(uintptr_t)(*(int (**)(void))(uintptr_t)(constructType + 20))();
       Output_WriteLongString(v5, ppForm);
     }
     return 1;
@@ -518,10 +518,10 @@ int __fastcall Rules_GetConstructModuleCommand(int a1, const char **constructCla
 
   v10 = a1;
   v3 = sprintf_(argNameBuffer, "%s name", *constructClass);
-  constructName = (_BYTE *)Rules_GetConstructNameArg((int)argNameBuffer, v4, v3);
+  constructName = (_BYTE *)(uintptr_t)Rules_GetConstructNameArg((int)(intptr_t)argNameBuffer, v4, v3);
   if ( !constructName )
     return g_ClipsFalseSymbol;
-  theModule = Rules_GetConstructModuleName(constructName, (int)constructName);
+  theModule = Rules_GetConstructModuleName(constructName, (int)(intptr_t)constructName);
   if ( theModule )
     return *theModule;
   Rules_ReportCantFindItem(v8, v8);
@@ -547,11 +547,11 @@ int * Rules_GetConstructModuleName(_BYTE *constructName, int a2)
   {
     moduleName = Rules_ExtractModuleName(separatorPosition);
     if ( moduleName )
-      return Module_FindByName((_BYTE *)moduleName[4]);
+      return Module_FindByName((_BYTE *)(uintptr_t)moduleName[4]);
   }
-  result = (int *)Rules_FindImportExportConstruct(*v4, countBuffer, constructName, 1, 0);
+  result = (int *)(uintptr_t)Rules_FindImportExportConstruct(*v4, countBuffer, constructName, 1, 0);
   if ( result )
-    return *(int **)result[2];
+    return *(int **)(uintptr_t)result[2];
   return result;
 }
 // 4A8DCF: variable 'v4' is possibly undefined
@@ -573,11 +573,11 @@ int  Rules_DeleteConstructOrAll(int theConstruct, int constructClass, int a3)
 
   if ( theConstruct )
   {
-    result = (*(int (__cdecl **)(int))(constructClass + 36))(a3);
+    result = (*(int (__cdecl **)(int))(uintptr_t)(constructClass + 36))(a3);
     if ( result )
     {
       Rules_UnlinkListNode(theConstruct);
-      (*(void (**)(void))(v14 + 44))();
+      (*(void (**)(void))(uintptr_t)(v14 + 44))();
       if ( !g_ClipsCurrentEvaluationDepth && !g_ClipsCommandEvalInProgress && !g_ClipsCurrentExpression )
         Rules_RunPeriodicCleanup(1, 0);
       return 1;
@@ -586,21 +586,21 @@ int  Rules_DeleteConstructOrAll(int theConstruct, int constructClass, int a3)
   else
   {
     success = 1;
-    if ( (*(int (**)(void))(constructClass + 28))() )
+    if ( (*(int (**)(void))(uintptr_t)(constructClass + 28))() )
     {
       do
       {
-        nextConstruct = ((__int64 (*)(void))*(_DWORD *)(v4 + 28))();
-        if ( (*(int (**)(void))(v7 + 36))() )
+        nextConstruct = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 28))();
+        if ( (*(int (**)(void))(uintptr_t)(v7 + 36))() )
         {
           Rules_UnlinkListNode(v8);
-          (*(void (**)(void))(v10 + 44))();
+          (*(void (**)(void))(uintptr_t)(v10 + 44))();
         }
         else
         {
-          v12 = (*(int (**)(void))(v9 + 16))();
+          v12 = (*(int (**)(void))(uintptr_t)(v9 + 16))();
           success = 0;
-          Rules_ReportCantDeleteItem(v13, *(_DWORD *)(v12 + 16));
+          Rules_ReportCantDeleteItem(v13, *(_DWORD *)(uintptr_t)(v12 + 16));
         }
       }
       while ( nextConstruct );
@@ -633,13 +633,13 @@ int  Rules_SaveConstruct(signed int logicalName, int constructClass)
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(i) )
   {
     Module_SetCurrent(i);
-    while ( (*(int (**)(void))(constructClass + 28))() )
+    while ( (*(int (**)(void))(uintptr_t)(constructClass + 28))() )
     {
-      ppForm = (char *)(*(int (**)(void))(constructClass + 20))();
+      ppForm = (char *)(uintptr_t)(*(int (**)(void))(uintptr_t)(constructClass + 20))();
       if ( ppForm )
       {
         Output_WriteLongString(logicalName, ppForm);
-        Output_Write(logicalName, (int)asc_50849C, v6);
+        Output_Write(logicalName, (int)(intptr_t)asc_50849C, v6);
       }
     }
   }
@@ -650,13 +650,13 @@ int  Rules_SaveConstruct(signed int logicalName, int constructClass)
 //----- (004A8F40) --------------------------------------------------------
 int  Rules_GetConstructNameString(int theConstruct)
 {
-  return *(_DWORD *)(*(_DWORD *)theConstruct + 16);
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theConstruct + 16);
 }
 
 //----- (004A8F50) --------------------------------------------------------
 int  Rules_GetConstructNameSymbol(int theConstruct)
 {
-  return *(_DWORD *)theConstruct;
+  return *(_DWORD *)(uintptr_t)theConstruct;
 }
 
 //----- (004A8F60) --------------------------------------------------------
@@ -679,17 +679,17 @@ _DWORD * Rules_GetConstructListCommand(int returnValue, int constructClass, doub
   {
     Rules_RtnUnknown(1, argValue, a3);
     if ( argValue[1] != 2
-      || (theModule = Module_FindByName(*(_BYTE **)(v10 + 16))) == 0 && (theModule = (int *)strcmp_(v6, *(_DWORD *)(v10 + 16))) != 0 )
+      || (theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(v10 + 16))) == 0 && (theModule = (int *)(uintptr_t)strcmp_(v6, *(_DWORD *)(uintptr_t)(v10 + 16))) != 0 )
     {
-      Rules_SetMultifieldErrorValue((int)v6);
-      return (_DWORD *)Parser_ReportError(v8, (int)aDefmoduleNam_2);
+      Rules_SetMultifieldErrorValue((int)(intptr_t)v6);
+      return (_DWORD *)(uintptr_t)Parser_ReportError(v8, (int)(intptr_t)aDefmoduleNam_2);
     }
   }
   else
   {
-    theModule = (int *)Module_GetCurrent();
+    theModule = (int *)(uintptr_t)Module_GetCurrent();
   }
-  return (_DWORD *)Rules_BuildConstructNameList(v6, constructClass, (int)theModule);
+  return (_DWORD *)(uintptr_t)Rules_BuildConstructNameList(v6, constructClass, (int)(intptr_t)theModule);
 }
 // 4A8F90: variable 'v6' is possibly undefined
 // 4A8F9E: variable 'v4' is possibly undefined
@@ -749,7 +749,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
   for ( i = Enum; i; i = Module_NextEnum(v7) )
   {
     Module_SetCurrent(i);
-    while ( (*(int (**)(void))(savedConstructClass + 28))() )
+    while ( (*(int (**)(void))(uintptr_t)(savedConstructClass + 28))() )
       ++constructCount;
     if ( !allModules )
       break;
@@ -769,17 +769,17 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
     while ( 1 )
     {
       constructClassRec = savedConstructClass;
-      nextConstruct = (*(int (__fastcall **)(int, int))(savedConstructClass + 28))(v11, v13);
+      nextConstruct = (*(int (__fastcall **)(int, int))(uintptr_t)(savedConstructClass + 28))(v11, v13);
       if ( !nextConstruct )
         break;
-      constructPtr = ((__int64 (*)(void))*(_DWORD *)(constructClassRec + 16))();
+      constructPtr = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(constructClassRec + 16))();
       useModulePrefix = allModules;
       theConstruct = constructPtr;
-      *(_WORD *)(HIDWORD(constructPtr) + 14) = 2;
+      *(_WORD *)(uintptr_t)(HIDWORD(constructPtr) + 14) = 2;
       if ( useModulePrefix )
       {
         moduleNameDst = qualifiedName;
-        Name = (char *)Module_GetName(moduleCursor);
+        Name = (char *)(uintptr_t)Module_GetName(moduleCursor);
         do
         {
           moduleNameChar = *Name;
@@ -806,7 +806,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
           separatorDst += 2;
         }
         while ( separatorChar2 );
-        constructNameSrc = *(char **)(theConstruct + 16);
+        constructNameSrc = *(char **)(uintptr_t)(theConstruct + 16);
         nameLength = strlen(qualifiedName) + 1;
         constructNameDst = &qualifiedName[nameLength - 1];
         do
@@ -822,14 +822,14 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
         }
         while ( constructNameChar2 );
         qualifiedSymbol = Str_Intern(qualifiedName, ~nameLength);
-        *(_DWORD *)(v33 + 16) = qualifiedSymbol;
+        *(_DWORD *)(uintptr_t)(v33 + 16) = qualifiedSymbol;
         v13 = v33 + 6;
         ++fieldPosition;
       }
       else
       {
         nameSymbol = Str_Intern(*(char **)(constructPtr + 16), v16);
-        *(_DWORD *)(v35 + 16) = nameSymbol;
+        *(_DWORD *)(uintptr_t)(v35 + 16) = nameSymbol;
         v13 = v35 + 6;
         ++fieldPosition;
       }
@@ -865,20 +865,20 @@ int  Rules_ListConstructsCommand(int constructClass, int a2, double a3)
     {
       Rules_RtnUnknown(1, argValue, a3);
       if ( argValue[1] != 2 )
-        return Parser_ReportError(1, (int)aDefmoduleNam_2);
-      theModule = Module_FindByName(*(_BYTE **)(v8 + 16));
+        return Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_2);
+      theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(v8 + 16));
       if ( !theModule )
       {
-        theModule = (int *)strcmp_(v6, *(_DWORD *)(v8 + 16));
+        theModule = (int *)(uintptr_t)strcmp_(v6, *(_DWORD *)(uintptr_t)(v8 + 16));
         if ( theModule )
-          return Parser_ReportError(1, (int)aDefmoduleNam_2);
+          return Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_2);
       }
     }
     else
     {
-      theModule = (int *)Module_GetCurrent();
+      theModule = (int *)(uintptr_t)Module_GetCurrent();
     }
-    return Rules_PrintConstructNamesByModule(constructClass, (int)g_IO_LogicalName_WDisplay, (int)theModule);
+    return Rules_PrintConstructNamesByModule(constructClass, (int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)theModule);
   }
   return result;
 }
@@ -914,17 +914,17 @@ int  Rules_PrintConstructNamesByModule(int constructClass, int logicalName, int 
     if ( !Enum )
     {
 LABEL_14:
-      Rules_PrintTally((int)g_IO_LogicalName_WDisplay, constructCount, *(_DWORD *)(constructClass + 4), *(_DWORD *)constructClass);
+      Rules_PrintTally((int)(intptr_t)g_IO_LogicalName_WDisplay, constructCount, *(_DWORD *)(uintptr_t)(constructClass + 4), *(_DWORD *)(uintptr_t)constructClass);
       return Module_EndEnum();
     }
     if ( allModules )
     {
       Name = Module_GetName(Enum);
       Output_Write(logicalName, Name, v11);
-      Output_Write(logicalName, (int)asc_5084B4, v12);
+      Output_Write(logicalName, (int)(intptr_t)asc_5084B4, v12);
     }
     Module_SetCurrent(Enum);
-    result = (*(int (**)(void))(constructClass + 28))();
+    result = (*(int (**)(void))(uintptr_t)(constructClass + 28))();
     if ( result )
       break;
 LABEL_13:
@@ -934,16 +934,16 @@ LABEL_13:
   }
   while ( g_ClipsHaltExecution != 1 )
   {
-    theConstruct = (*(int (**)(void))(constructClass + 16))();
+    theConstruct = (*(int (**)(void))(uintptr_t)(constructClass + 16))();
     if ( theConstruct )
     {
       if ( allModules )
-        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5084B8, v7);
-      Output_Write(logicalName, *(_DWORD *)(theConstruct + 16), v7);
-      Output_Write(logicalName, (int)asc_50849C, v9);
+        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_5084B8, v7);
+      Output_Write(logicalName, *(_DWORD *)(uintptr_t)(theConstruct + 16), v7);
+      Output_Write(logicalName, (int)(intptr_t)asc_50849C, v9);
     }
     ++constructCount;
-    result = (*(int (**)(void))(constructClass + 28))();
+    result = (*(int (**)(void))(uintptr_t)(constructClass + 28))();
     if ( !result )
       goto LABEL_13;
   }
@@ -959,20 +959,20 @@ LABEL_13:
 //----- (004A9390) --------------------------------------------------------
 int  Rules_SetConstructNextInModule(int result, int nextConstruct)
 {
-  *(_DWORD *)(result + 16) = nextConstruct;
+  *(_DWORD *)(uintptr_t)(result + 16) = nextConstruct;
   return result;
 }
 
 //----- (004A93A0) --------------------------------------------------------
 int  Rules_GetConstructOwnerModule(int theConstruct)
 {
-  return *(_DWORD *)(theConstruct + 8);
+  return *(_DWORD *)(uintptr_t)(theConstruct + 8);
 }
 
 //----- (004A93B0) --------------------------------------------------------
 int  Rules_GetModuleConstructListHead(int theModuleItem)
 {
-  return *(_DWORD *)(theModuleItem + 4);
+  return *(_DWORD *)(uintptr_t)(theModuleItem + 4);
 }
 
 //----- (004A93C0) --------------------------------------------------------
@@ -981,7 +981,7 @@ int  Class_Enum(int theConstruct, int moduleItemIndex)
   int result; // eax
 
   if ( theConstruct )
-    return *(_DWORD *)(theConstruct + 16);
+    return *(_DWORD *)(uintptr_t)(theConstruct + 16);
   result = Module_GetItem(0, moduleItemIndex);
   if ( result )
     return Rules_GetModuleConstructListHead(result);
@@ -1005,11 +1005,11 @@ int  Rules_ClearModuleConstructList(int theModuleItem, int constructClass, int a
   int cleanup; // ecx
 
   (void)a3;
-  result = *(_DWORD *)(theModuleItem + 4);
+  result = *(_DWORD *)(uintptr_t)(theModuleItem + 4);
   while ( result )
   {
-    next = *(_DWORD *)(result + 16);
-    cleanup = *(_DWORD *)(constructClass + 44);
+    next = *(_DWORD *)(uintptr_t)(result + 16);
+    cleanup = *(_DWORD *)(uintptr_t)(constructClass + 44);
     ((void (*)(int))(uintptr_t)(unsigned int)cleanup)(result);
     result = next;
   }
@@ -1040,7 +1040,7 @@ CLASH95_INTERNAL signed int sub_4A9430_Impl(int (*callback)(int, intptr_t), int 
     {
       Module_SetCurrent(module);
       construct_data = Module_GetItem(module, construct_index);
-      item = *(_DWORD *)(construct_data + 4);
+      item = *(_DWORD *)(uintptr_t)(construct_data + 4);
       if ( item )
         break;
 LABEL_6:
@@ -1052,7 +1052,7 @@ LABEL_6:
     while ( !stop_on_watch || Rules_GetEvaluationErrorFlag() != 1 )
     {
       callback(item, callback_context);
-      item = *(_DWORD *)(item + 16);
+      item = *(_DWORD *)(uintptr_t)(item + 16);
       if ( !item )
         goto LABEL_6;
     }
@@ -1074,12 +1074,12 @@ CLASH95_INTERNAL int sub_4A94D0_Impl(int construct_name, int construct_data, int
   int module_data; // eax
 
   construct_record = Module_FindItemByName(construct_name);
-  module_data = Module_GetItem(0, *(_DWORD *)(construct_record + 4));
-  *(_DWORD *)(construct_data + 4) = 0;
-  *(_DWORD *)(construct_data + 12) = 0;
-  *(_DWORD *)(construct_data + 16) = 0;
-  *(_DWORD *)(construct_data + 8) = module_data;
-  *(_DWORD *)construct_data = owner_symbol;
+  module_data = Module_GetItem(0, *(_DWORD *)(uintptr_t)(construct_record + 4));
+  *(_DWORD *)(uintptr_t)(construct_data + 4) = 0;
+  *(_DWORD *)(uintptr_t)(construct_data + 12) = 0;
+  *(_DWORD *)(uintptr_t)(construct_data + 16) = 0;
+  *(_DWORD *)(uintptr_t)(construct_data + 8) = module_data;
+  *(_DWORD *)(uintptr_t)construct_data = owner_symbol;
   return module_data;
 }
 
@@ -1095,15 +1095,15 @@ signed int  Rules_ReplaceConstructPPForm(signed int result, int ppForm)
   const char *oldPPForm; // edx
 
   theConstruct = result;
-  oldPPForm = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(result + 4);
+  oldPPForm = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(result + 4);
   if ( oldPPForm )
   {
-    result = Mem_SmallBlockFree((_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(result + 4), strlen(oldPPForm) + 1);
-    *(_DWORD *)(theConstruct + 4) = ppForm;
+    result = Mem_SmallBlockFree((_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(result + 4), strlen(oldPPForm) + 1);
+    *(_DWORD *)(uintptr_t)(theConstruct + 4) = ppForm;
   }
   else
   {
-    *(_DWORD *)(result + 4) = ppForm;
+    *(_DWORD *)(uintptr_t)(result + 4) = ppForm;
   }
   return result;
 }
@@ -1117,7 +1117,7 @@ signed int  Rules_ListWatchFlagStatus(
         double a5,
         void (*setFunction)(void))
 {
-  return Rules_ProcessWatchFlagRequest(constructClass, (int)aListWatchIte_0, argExprs, logicalName, a5, 0, 0, accessFunc, setFunction);
+  return Rules_ProcessWatchFlagRequest(constructClass, (int)(intptr_t)aListWatchIte_0, argExprs, logicalName, a5, 0, 0, accessFunc, setFunction);
 }
 
 //----- (004A9560) --------------------------------------------------------
@@ -1129,7 +1129,7 @@ signed int  Rules_ApplyWatchFlagCommand(
         double a5,
         void (*setFunction)(void))
 {
-  return Rules_ProcessWatchFlagRequest(constructClass, (int)aWatch_0, argExprs, (int)g_IO_LogicalNameTable_WError[0], a5, 1, newState, accessFunc, setFunction);
+  return Rules_ProcessWatchFlagRequest(constructClass, (int)(intptr_t)aWatch_0, argExprs, (int)(intptr_t)g_IO_LogicalNameTable_WError[0], a5, 1, newState, accessFunc, setFunction);
 }
 // 51A614: using guessed type char *off_51A614[5];
 
@@ -1163,18 +1163,18 @@ signed int  Rules_ProcessWatchFlagRequest(
     {
       if ( !argPtr )
         return 1;
-      if ( Parser_ParseForm((__int16 *)argPtr, argValue, argExprs, a5) )
+      if ( Parser_ParseForm((__int16 *)(uintptr_t)argPtr, argValue, argExprs, a5) )
         return 0;
-      if ( argValue[1] != 2 || !Symbol_LookupInModule((char **)constructType, *(_BYTE **)(argValue[2] + 16), 1) )
+      if ( argValue[1] != 2 || !Symbol_LookupInModule((char **)(uintptr_t)constructType, *(_BYTE **)(uintptr_t)(argValue[2] + 16), 1) )
         break;
       if ( setMode )
         setWatchFunc();
       else
         Rules_PrintWatchFlagState(logicalName, constructType);
-      argPtr = *(_DWORD *)(argPtr + 10);
+      argPtr = *(_DWORD *)(uintptr_t)(argPtr + 10);
       ++argIndex;
     }
-    Parser_ReportError(argIndex, *(_DWORD *)constructType);
+    Parser_ReportError(argIndex, *(_DWORD *)(uintptr_t)constructType);
     return 0;
   }
   else
@@ -1187,9 +1187,9 @@ signed int  Rules_ProcessWatchFlagRequest(
       {
         Name = Module_GetName(i);
         Output_Write(logicalName, Name, v14);
-        Output_Write(logicalName, (int)asc_5084B4, v15);
+        Output_Write(logicalName, (int)(intptr_t)asc_5084B4, v15);
       }
-      while ( (*(int (**)(void))(constructType + 28))() )
+      while ( (*(int (**)(void))(uintptr_t)(constructType + 28))() )
       {
         if ( setMode )
         {
@@ -1197,7 +1197,7 @@ signed int  Rules_ProcessWatchFlagRequest(
         }
         else
         {
-          Output_Write(logicalName, (int)asc_5084B8, getWatchFunc);
+          Output_Write(logicalName, (int)(intptr_t)asc_5084B8, getWatchFunc);
           Rules_PrintWatchFlagState(logicalName, constructType);
         }
       }
@@ -1219,12 +1219,12 @@ signed int  Rules_PrintWatchFlagState(int logicalName, int constructType)
   int (*getWatchFunc)(void); // ecx
   int v6; // ecx
 
-  theConstruct = (*(int (**)(void))(constructType + 16))();
-  Output_Write(logicalName, *(_DWORD *)(theConstruct + 16), v4);
+  theConstruct = (*(int (**)(void))(uintptr_t)(constructType + 16))();
+  Output_Write(logicalName, *(_DWORD *)(uintptr_t)(theConstruct + 16), v4);
   if ( getWatchFunc() )
-    return Output_Write(logicalName, (int)aOn_2, v6);
+    return Output_Write(logicalName, (int)(intptr_t)aOn_2, v6);
   else
-    return Output_Write(logicalName, (int)aOff_2, v6);
+    return Output_Write(logicalName, (int)(intptr_t)aOff_2, v6);
 }
 // 4A971D: variable 'v4' is possibly undefined
 // 4A9724: variable 'v5' is possibly undefined
@@ -1247,7 +1247,7 @@ int  Symbol_LookupInModule(char **constructType, _BYTE *constructName, int modul
   {
     if ( count > 1 )
     {
-      Rules_ReportAmbiguousReferenceError((int)typeName, (int)constructName);
+      Rules_ReportAmbiguousReferenceError((int)(intptr_t)typeName, (int)(intptr_t)constructName);
       return 0;
     }
   }
@@ -1271,18 +1271,18 @@ _DWORD * Instance_ActiveInitializeInstanceFunction(uintptr_t returnValue, double
   out = returnValue;
   *(_DWORD *)(out + 4) = 2;
   *(_DWORD *)(out + 8) = g_ClipsFalseSymbol;
-  result = Instance_ResolveArgumentToInstance((int)aInitializeIn_0, (int)out, a2);
+  result = Instance_ResolveArgumentToInstance((int)(intptr_t)aInitializeIn_0, (int)out, a2);
   theInstance = result;
   if ( result )
   {
-    result = (_DWORD *)Instance_InitializeSlots(
-                         (int)result,
-                         *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10),
+    result = (_DWORD *)(uintptr_t)Instance_InitializeSlots(
+                         (int)(intptr_t)result,
+                         *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
                          a2);
     if ( result == (_DWORD *)1 )
     {
       *(_DWORD *)(out + 4) = 8;
-      result = (_DWORD *)theInstance[7];
+      result = (_DWORD *)(uintptr_t)theInstance[7];
       *(_DWORD *)(out + 8) = result;
     }
   }
@@ -1308,12 +1308,12 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t returnValue, uintptr_t a2
   memset(parsed, 0, 24);
   *(_DWORD *)(returnValue + 4) = 2;
   *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
-  expression = (uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsCurrentExpression + 6);
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   Parser_ParseForm((__int16 *)expression, parsed, (int)a2, a3);
   if ( parsed[1] != 2 && parsed[1] != 8 )
   {
-    Rules_PrintErrorID((int)aInsmngr, 1, 0);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_2, 0);
+    Rules_PrintErrorID((int)(intptr_t)aInsmngr, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAVal_2, 0);
     result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
     goto done;
   }
@@ -1328,16 +1328,16 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t returnValue, uintptr_t a2
     Parser_ParseForm((__int16 *)expression, parsed, instance_name, a3);
     if ( parsed[1] != 2 )
     {
-      Rules_PrintErrorID((int)aInsmngr, 2, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_3, 0);
+      Rules_PrintErrorID((int)(intptr_t)aInsmngr, 2, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAVal_3, 0);
       result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
       goto done;
     }
-    class_record = (int)Class_LookupInScope(*(_BYTE **)((uintptr_t)(unsigned int)parsed[2] + 16));
+    class_record = (int)(intptr_t)Class_LookupInScope(*(_BYTE **)((uintptr_t)(unsigned int)parsed[2] + 16));
     if ( !class_record )
     {
       Class_ReportLookupError(
-        *(_DWORD *)(*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(g_ClipsCurrentExpression + 2)) + 16),
+        *(_DWORD *)(uintptr_t)(*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2)) + 16),
         *(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16));
       result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
       goto done;
@@ -1346,15 +1346,15 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t returnValue, uintptr_t a2
   result = Instance_BuildInstance(instance_name, class_record, 1, a3);
   if ( result )
   {
-    if ( Instance_InitializeSlots((int)result, *(_DWORD *)(expression + 10), a3) )
+    if ( Instance_InitializeSlots((int)(intptr_t)result, *(_DWORD *)(expression + 10), a3) )
     {
       *(_DWORD *)(returnValue + 4) = 8;
-      result = Instance_GetQualifiedName((int)result, (int)result);
+      result = Instance_GetQualifiedName((int)(intptr_t)result, (int)(intptr_t)result);
       *(_DWORD *)(returnValue + 8) = result;
     }
     else
     {
-      result = (_DWORD *)(uintptr_t)(unsigned int)Instance_DeleteInstance((int)result, a3);
+      result = (_DWORD *)(uintptr_t)(unsigned int)Instance_DeleteInstance((int)(intptr_t)result, a3);
       *(_DWORD *)(returnValue + 4) = 2;
       *(_DWORD *)(returnValue + 8) = g_ClipsFalseSymbol;
       goto done;
@@ -1405,10 +1405,10 @@ signed int * Instance_GetQualifiedName(int theInstance, int a2)
   module_record = (uintptr_t)(unsigned int)*(_DWORD *)(class_record + 8);
   if ( Module_GetCurrent() == *(_DWORD *)module_record )
     return (signed int *)instance_name_symbol;
-  module_name = (const char *)Module_GetName(*(_DWORD *)module_record);
+  module_name = (const char *)(uintptr_t)Module_GetName(*(_DWORD *)module_record);
   instance_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(instance_name_symbol + 16);
   buffer_size = (unsigned int)(strlen(instance_name) + strlen(module_name) + 3);
-  qualified_name = (char *)(uintptr_t)(unsigned int)Mem_SmallBlockAlloc(buffer_size);
+  qualified_name = (char *)(uintptr_t)(unsigned int)(intptr_t)Mem_SmallBlockAlloc(buffer_size);
   sprintf_(qualified_name, "%s::%s", module_name, instance_name);
   symbol = Str_Intern(qualified_name, buffer_size);
   Mem_SmallBlockFree(qualified_name, buffer_size);

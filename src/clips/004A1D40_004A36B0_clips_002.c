@@ -38,20 +38,20 @@ int  Rules_ParsePrognMultifieldForm(int top, int infile)
   if ( tkn != 100 )
   {
     parsedArg = Parser_ParseSingleExpression(infile, (__int16 *)&tkn, v5);
-    *(_DWORD *)(top + 6) = parsedArg;
+    *(_DWORD *)(uintptr_t)(top + 6) = parsedArg;
     if ( parsedArg )
       goto LABEL_3;
 LABEL_17:
     AST_Free(top);
     return 0;
   }
-  Parser_NextToken(infile, (int)&tkn);
+  Parser_NextToken(infile, (int)(intptr_t)&tkn);
   if ( tkn != 15 )
   {
     if ( tkn != 2 )
       goto LABEL_25;
-    fnCallExpr = Parser_ParseFunctionCallExpr(infile, *(_BYTE **)(tknValue + 16));
-    *(_DWORD *)(top + 6) = fnCallExpr;
+    fnCallExpr = Parser_ParseFunctionCallExpr(infile, *(_BYTE **)(uintptr_t)(tknValue + 16));
+    *(_DWORD *)(uintptr_t)(top + 6) = fnCallExpr;
     if ( fnCallExpr )
       goto LABEL_3;
     goto LABEL_17;
@@ -59,17 +59,17 @@ LABEL_17:
   fieldVar = tknValue;
   IO_OutWriteToken(asc_5070CC);
   parsedExpr = Parser_ParseSingleExpression(infile, 0, v16);
-  *(_DWORD *)(top + 6) = parsedExpr;
+  *(_DWORD *)(uintptr_t)(top + 6) = parsedExpr;
   if ( !parsedExpr )
     goto LABEL_17;
-  Parser_NextToken(infile, (int)&tkn);
+  Parser_NextToken(infile, (int)(intptr_t)&tkn);
   if ( tkn != 101 )
     goto LABEL_25;
   IO_OutNewline();
   IO_OutWriteToken(tknPrintForm);
   IO_OutWriteToken(asc_5070CC);
 LABEL_3:
-  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(top + 6)) )
+  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(uintptr_t)(top + 6)) )
   {
 LABEL_25:
     Parser_ReportSyntaxError();
@@ -81,36 +81,36 @@ LABEL_25:
   Parser_SetLoopContextStack(0);
   Rules_IncrementIndentDepth(3);
   g_ParserBreakContextFlag = 1;
-  g_ClipsParseReturnContext = *(_DWORD *)g_ClipsParseContextSaveStack;
-  AST_Append(0, (int)&tkn);
-  *(_DWORD *)(*(_DWORD *)(top + 6) + 10) = Parser_ParseProgram(infile, v8, 1);
+  g_ClipsParseReturnContext = *(_DWORD *)(uintptr_t)g_ClipsParseContextSaveStack;
+  AST_Append(0, (int)(intptr_t)&tkn);
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(top + 6) + 10) = Parser_ParseProgram(infile, v8, 1);
   Rules_DecrementIndentDepth(3);
   IO_OutNewline();
   IO_OutNewline();
   IO_OutWriteToken(tknPrintForm);
-  argList = *(_DWORD *)(top + 6);
-  argListNext = *(_DWORD *)(argList + 10);
+  argList = *(_DWORD *)(uintptr_t)(top + 6);
+  argListNext = *(_DWORD *)(uintptr_t)(argList + 10);
   if ( argListNext )
   {
-    tmp = *(_DWORD *)(argList + 10);
-    *(_DWORD *)(argList + 10) = *(_DWORD *)(argListNext + 6);
-    *(_DWORD *)(tmp + 6) = 0;
+    tmp = *(_DWORD *)(uintptr_t)(argList + 10);
+    *(_DWORD *)(uintptr_t)(argList + 10) = *(_DWORD *)(uintptr_t)(argListNext + 6);
+    *(_DWORD *)(uintptr_t)(tmp + 6) = 0;
     AST_Free(tmp);
     newBindList = Parser_GetLoopContextStack();
     prev = 0;
     if ( newBindList )
     {
-      while ( !fieldVar || strcmp_(newBindList, *(_DWORD *)(fieldVar + 16)) )
+      while ( !fieldVar || strcmp_(newBindList, *(_DWORD *)(uintptr_t)(fieldVar + 16)) )
       {
         prev = newBindList;
-        newBindList = *(_DWORD *)(newBindList + 8);
+        newBindList = *(_DWORD *)(uintptr_t)(newBindList + 8);
         if ( !newBindList )
           goto LABEL_8;
       }
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(savedBindList);
-      Rules_PrintErrorID((int)aMultifun, v18, 0);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindFi, v19);
+      Rules_PrintErrorID((int)(intptr_t)aMultifun, v18, 0);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCannotRebindFi, v19);
       AST_Free(top);
       return 0;
     }
@@ -118,11 +118,11 @@ LABEL_25:
     {
 LABEL_8:
       if ( prev )
-        *(_DWORD *)(prev + 8) = savedBindList;
+        *(_DWORD *)(uintptr_t)(prev + 8) = savedBindList;
       else
         Parser_SetLoopContextStack(savedBindList);
       if ( fieldVar )
-        Rules_RewritePrognFieldRefs(fieldVar, *(_DWORD *)(*(_DWORD *)(top + 6) + 10), 0);
+        Rules_RewritePrognFieldRefs(fieldVar, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(top + 6) + 10), 0);
       return top;
     }
   }
@@ -160,54 +160,54 @@ int  Rules_RewritePrognFieldRefs(int fieldVar, int theExp, signed int depth)
   int *indexDepthConstant; // eax
 
   currentExp = theExp;
-  fieldVarName = *(const char **)(fieldVar + 16);
+  fieldVarName = *(const char **)(uintptr_t)(fieldVar + 16);
   result = 0;
   flen = strlen(fieldVarName);
   if ( theExp )
   {
     nextDepth = depth + 1;
-    while ( *(_WORD *)currentExp == 15 )
+    while ( *(_WORD *)(uintptr_t)currentExp == 15 )
     {
-      result = strncmp_(flen, *(_DWORD *)(fieldVar + 16)) == 0;
+      result = strncmp_(flen, *(_DWORD *)(uintptr_t)(fieldVar + 16)) == 0;
       if ( !result )
         break;
-      if ( *(_BYTE *)(flen + *(_DWORD *)(*(_DWORD *)(currentExp + 2) + 16)) )
+      if ( *(_BYTE *)(uintptr_t)(flen + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(currentExp + 2) + 16)) )
       {
         result = strcmp_(flen, aIndex);
         if ( result )
         {
 LABEL_9:
-          currentExp = *(_DWORD *)(currentExp + 10);
+          currentExp = *(_DWORD *)(uintptr_t)(currentExp + 10);
           if ( !currentExp )
             return result;
         }
         else
         {
-          *(_WORD *)currentExp = 10;
-          *(_DWORD *)(currentExp + 2) = Rules_MakeSymbol(aGetPrognIndex);
+          *(_WORD *)(uintptr_t)currentExp = 10;
+          *(_DWORD *)(uintptr_t)(currentExp + 2) = Rules_MakeSymbol(aGetPrognIndex);
           indexDepthConstant = Rules_AddIntegerValue(depth);
-          result = AST_NewNode(1, (int)indexDepthConstant);
-          *(_DWORD *)(currentExp + 6) = result;
-          currentExp = *(_DWORD *)(currentExp + 10);
+          result = AST_NewNode(1, (int)(intptr_t)indexDepthConstant);
+          *(_DWORD *)(uintptr_t)(currentExp + 6) = result;
+          currentExp = *(_DWORD *)(uintptr_t)(currentExp + 10);
           if ( !currentExp )
             return result;
         }
       }
       else
       {
-        *(_WORD *)currentExp = 10;
-        *(_DWORD *)(currentExp + 2) = Rules_MakeSymbol(aGetPrognField);
+        *(_WORD *)(uintptr_t)currentExp = 10;
+        *(_DWORD *)(uintptr_t)(currentExp + 2) = Rules_MakeSymbol(aGetPrognField);
         fieldDepthConstant = Rules_AddIntegerValue(depth);
-        result = AST_NewNode(1, (int)fieldDepthConstant);
-        *(_DWORD *)(currentExp + 6) = result;
-        currentExp = *(_DWORD *)(currentExp + 10);
+        result = AST_NewNode(1, (int)(intptr_t)fieldDepthConstant);
+        *(_DWORD *)(uintptr_t)(currentExp + 6) = result;
+        currentExp = *(_DWORD *)(uintptr_t)(currentExp + 10);
         if ( !currentExp )
           return result;
       }
     }
-    if ( *(_DWORD *)(currentExp + 6) )
+    if ( *(_DWORD *)(uintptr_t)(currentExp + 6) )
     {
-      if ( *(_WORD *)currentExp == 10 && Rules_MakeSymbol(aProgn_0) == *(int ***)(currentExp + 2) )
+      if ( *(_WORD *)(uintptr_t)currentExp == 10 && Rules_MakeSymbol(aProgn_0) == *(int ***)(uintptr_t)(currentExp + 2) )
       {
         fieldVarArg = fieldVar;
         childDepth = nextDepth;
@@ -217,7 +217,7 @@ LABEL_9:
         fieldVarArg = fieldVar;
         childDepth = depth;
       }
-      result = Rules_RewritePrognFieldRefs(fieldVarArg, *(_DWORD *)(currentExp + 6), childDepth);
+      result = Rules_RewritePrognFieldRefs(fieldVarArg, *(_DWORD *)(uintptr_t)(currentExp + 6), childDepth);
     }
     goto LABEL_9;
   }
@@ -244,21 +244,21 @@ int  Rules_EvalPrognMultifieldBuiltin(_DWORD *returnValue, double a2)
   int argvalEnd; // [esp+10h] [ebp-24h]
   int endIndex; // [esp+18h] [ebp-1Ch]
 
-  freeListNode = *(_DWORD **)(g_ClipsMemoryTable + 64);
+  freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListNode )
   {
-    g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 64);
-    *(_DWORD *)(g_ClipsMemoryTable + 64) = *freeListNode;
-    tmpField = (_DWORD *)g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = *freeListNode;
+    tmpField = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
   }
   else
   {
-    tmpField = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
+    tmpField = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   *tmpField = 2;
   tmpField[1] = g_ClipsFalseSymbol;
   tmpField[3] = g_PrognFieldBindingStack;
-  g_PrognFieldBindingStack = (int)tmpField;
+  g_PrognFieldBindingStack = (int)(intptr_t)tmpField;
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
   tmpFieldPtr = tmpField;
@@ -276,10 +276,10 @@ LABEL_18:
       fieldOffset = 6 * fieldIndex - 6;
       while ( 1 )
       {
-        *tmpFieldPtr = *(__int16 *)(argvalValue + fieldOffset + 14);
-        tmpFieldPtr[1] = *(_DWORD *)(argvalValue + fieldOffset + 16);
+        *tmpFieldPtr = *(__int16 *)(uintptr_t)(argvalValue + fieldOffset + 14);
+        tmpFieldPtr[1] = *(_DWORD *)(uintptr_t)(argvalValue + fieldOffset + 16);
         tmpFieldPtr[2] = fieldIndex;
-        theExp = *(__int16 **)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 10);
+        theExp = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
         if ( theExp )
           break;
 LABEL_17:
@@ -290,10 +290,10 @@ LABEL_17:
       }
       while ( 1 )
       {
-        Parser_ParseForm(theExp, returnValue, (int)theExp, a2);
+        Parser_ParseForm(theExp, returnValue, (int)(intptr_t)theExp, a2);
         if ( g_ClipsHaltExecution || g_ClipsBreakFlag || g_ClipsHaltExecutionFlag )
           break;
-        theExp = *(__int16 **)(exprNode + 10);
+        theExp = *(__int16 **)(uintptr_t)(exprNode + 10);
         if ( !theExp )
           goto LABEL_17;
       }
@@ -305,17 +305,17 @@ LABEL_17:
       }
     }
     g_PrognFieldBindingStack = tmpFieldPtr[3];
-    g_ClipsMemFreeListTemp = (int)tmpFieldPtr;
-    *tmpFieldPtr = *(_DWORD *)(g_ClipsMemoryTable + 64);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)tmpFieldPtr;
+    *tmpFieldPtr = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   }
   else
   {
     g_PrognFieldBindingStack = tmpField[3];
-    g_ClipsMemFreeListTemp = (int)tmpField;
-    *tmpField = *(_DWORD *)(g_ClipsMemoryTable + 64);
+    g_ClipsMemFreeListTemp = (int)(intptr_t)tmpField;
+    *tmpField = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   }
   result = g_ClipsMemoryTable;
-  *(_DWORD *)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
+  *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64) = g_ClipsMemFreeListTemp;
   return result;
 }
 // 4A2266: variable 'v9' is possibly undefined
@@ -335,12 +335,12 @@ int  Rules_EvalGetPrognFieldBuiltin(int returnValue)
   _DWORD *i; // edx
   int result; // eax
 
-  depth = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2) + 16);
-  for ( i = (_DWORD *)g_PrognFieldBindingStack; depth > 0; i = (_DWORD *)i[3] )
+  depth = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2) + 16);
+  for ( i = (_DWORD *)(uintptr_t)g_PrognFieldBindingStack; depth > 0; i = (_DWORD *)(uintptr_t)i[3] )
     --depth;
-  *(_DWORD *)(returnValue + 4) = *i;
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = *i;
   result = i[1];
-  *(_DWORD *)(returnValue + 8) = result;
+  *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   return result;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -352,10 +352,10 @@ int Rules_EvalGetPrognIndexBuiltin(void)
   int depth; // eax
   int i; // edx
 
-  depth = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(g_ClipsCurrentExpression + 6) + 2) + 16);
-  for ( i = g_PrognFieldBindingStack; depth > 0; i = *(_DWORD *)(i + 12) )
+  depth = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2) + 16);
+  for ( i = g_PrognFieldBindingStack; depth > 0; i = *(_DWORD *)(uintptr_t)(i + 12) )
     --depth;
-  return *(_DWORD *)(i + 8);
+  return *(_DWORD *)(uintptr_t)(i + 8);
 }
 // 4A22D0: using guessed type int sub_4A22D0();
 // 51A960: using guessed type int dword_51A960;
@@ -423,7 +423,7 @@ signed int  Rules_MultifieldReplaceRange(
     dstByteOffset = 0;
     dst[2] = Rules_CreateEphemeralMultifield(combinedLength - replaceCount);
     dst[4] = dstLength - 1;
-    srcIndex = *(_DWORD *)(v14 + 12);
+    srcIndex = *(_DWORD *)(uintptr_t)(v14 + 12);
     absBeginByteOffset = 6 * absBegin;
     dstIndex = 0;
     srcByteOffset = 6 * srcIndex;
@@ -434,12 +434,12 @@ signed int  Rules_MultifieldReplaceRange(
         break;
       srcMultifield = src[2];
       dstMultifield = dst[2];
-      fieldType = *(_WORD *)(srcByteOffset + srcMultifield + 14);
+      fieldType = *(_WORD *)(uintptr_t)(srcByteOffset + srcMultifield + 14);
       srcByteOffset += 6;
-      *(_WORD *)(dstByteOffset + dstMultifield + 14) = fieldType;
+      *(_WORD *)(uintptr_t)(dstByteOffset + dstMultifield + 14) = fieldType;
       dstByteOffset += 6;
       ++srcIndex;
-      *(_DWORD *)(dstByteOffset + dstMultifield + 10) = *(_DWORD *)(srcByteOffset + srcMultifield + 10);
+      *(_DWORD *)(uintptr_t)(dstByteOffset + dstMultifield + 10) = *(_DWORD *)(uintptr_t)(srcByteOffset + srcMultifield + 10);
       dstIndex = nextDstIndex;
     }
     if ( field[1] == 4 )
@@ -453,8 +453,8 @@ signed int  Rules_MultifieldReplaceRange(
         {
           dstWritePtr = dst[2] + 14 + dstFieldByteOffset;
           srcReadPtr = fieldByteOffset + field[2] + 14;
-          *(_WORD *)dstWritePtr = *(_WORD *)srcReadPtr;
-          *(_DWORD *)(dstWritePtr + 2) = *(_DWORD *)(srcReadPtr + 2);
+          *(_WORD *)(uintptr_t)dstWritePtr = *(_WORD *)(uintptr_t)srcReadPtr;
+          *(_DWORD *)(uintptr_t)(dstWritePtr + 2) = *(_DWORD *)(uintptr_t)(srcReadPtr + 2);
           dstFieldByteOffset += 6;
           ++fieldIndex;
           ++dstIndex;
@@ -466,9 +466,9 @@ signed int  Rules_MultifieldReplaceRange(
     else
     {
       dstFieldPtr = dst[2] + 14 + dstByteOffset;
-      *(_WORD *)dstFieldPtr = *((_WORD *)field + 2);
+      *(_WORD *)(uintptr_t)dstFieldPtr = *((_WORD *)field + 2);
       ++dstIndex;
-      *(_DWORD *)(dstFieldPtr + 2) = field[2];
+      *(_DWORD *)(uintptr_t)(dstFieldPtr + 2) = field[2];
     }
     while ( srcIndex < absEnd )
       ++srcIndex;
@@ -480,10 +480,10 @@ signed int  Rules_MultifieldReplaceRange(
       {
         srcFieldsBase = src[2];
         dstFieldsBase = dst[2];
-        *(_WORD *)(tailDstByteOffset + dstFieldsBase + 14) = *(_WORD *)(tailSrcByteOffset + srcFieldsBase + 14);
+        *(_WORD *)(uintptr_t)(tailDstByteOffset + dstFieldsBase + 14) = *(_WORD *)(uintptr_t)(tailSrcByteOffset + srcFieldsBase + 14);
         tailDstByteOffset += 6;
         ++dstIndex;
-        *(_DWORD *)(tailDstByteOffset + dstFieldsBase + 10) = *(_DWORD *)(tailSrcByteOffset + srcFieldsBase + 16);
+        *(_DWORD *)(uintptr_t)(tailDstByteOffset + dstFieldsBase + 10) = *(_DWORD *)(uintptr_t)(tailSrcByteOffset + srcFieldsBase + 16);
         tailSrcByteOffset += 6;
       }
       while ( tailDstByteOffset < 6 * dstLength );
@@ -562,10 +562,10 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
         {
           dstFieldPtr = dst[2] + 14 + headDstByteOffset;
           srcReadPtr = srcByteOffset + src[2] + 14;
-          *(_WORD *)dstFieldPtr = *(_WORD *)srcReadPtr;
+          *(_WORD *)(uintptr_t)dstFieldPtr = *(_WORD *)(uintptr_t)srcReadPtr;
           ++dstIndex;
           ++srcIndex;
-          *(_DWORD *)(dstFieldPtr + 2) = *(_DWORD *)(srcReadPtr + 2);
+          *(_DWORD *)(uintptr_t)(dstFieldPtr + 2) = *(_DWORD *)(uintptr_t)(srcReadPtr + 2);
           srcByteOffset += 6;
           headDstByteOffset += 6;
         }
@@ -582,8 +582,8 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
           {
             fieldReadPtr = theField[2] + 14 + fieldByteOffset;
             fieldCopyDstPtr = dst[2] + 14 + fieldCopyDstByteOffset;
-            *(_WORD *)fieldCopyDstPtr = *(_WORD *)fieldReadPtr;
-            *(_DWORD *)(fieldCopyDstPtr + 2) = *(_DWORD *)(fieldReadPtr + 2);
+            *(_WORD *)(uintptr_t)fieldCopyDstPtr = *(_WORD *)(uintptr_t)fieldReadPtr;
+            *(_DWORD *)(uintptr_t)(fieldCopyDstPtr + 2) = *(_DWORD *)(uintptr_t)(fieldReadPtr + 2);
             fieldByteOffset += 6;
             ++fieldIndex;
             fieldCopyDstByteOffset += 6;
@@ -595,9 +595,9 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
       else
       {
         insertFieldPtr = dst[2] + 14 + 6 * insertSlot;
-        *(_WORD *)insertFieldPtr = *((_WORD *)theField + 2);
+        *(_WORD *)(uintptr_t)insertFieldPtr = *((_WORD *)theField + 2);
         ++dstIndex;
-        *(_DWORD *)(insertFieldPtr + 2) = theField[2];
+        *(_DWORD *)(uintptr_t)(insertFieldPtr + 2) = theField[2];
       }
       tailSrcByteOffset = 6 * srcIndex;
       tailDstByteOffset = 6 * dstIndex;
@@ -605,9 +605,9 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
       {
         tailDstFieldPtr = dst[2] + 14 + tailDstByteOffset;
         v26 = tailSrcByteOffset + src[2] + 14;
-        *(_WORD *)tailDstFieldPtr = *(_WORD *)v26;
+        *(_WORD *)(uintptr_t)tailDstFieldPtr = *(_WORD *)(uintptr_t)v26;
         ++dstIndex;
-        *(_DWORD *)(tailDstFieldPtr + 2) = *(_DWORD *)(v26 + 2);
+        *(_DWORD *)(uintptr_t)(tailDstFieldPtr + 2) = *(_DWORD *)(uintptr_t)(v26 + 2);
         ++srcIndex;
         tailSrcByteOffset += 6;
         tailDstByteOffset += 6;
@@ -615,7 +615,7 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
     }
     else if ( theField[1] == 4 )
     {
-      Rules_AssignMultifieldRangeCopy(dst, (int)theField);
+      Rules_AssignMultifieldRangeCopy(dst, (int)(intptr_t)theField);
       Rules_RegisterEphemeralMultifield(dst[2]);
     }
     else
@@ -623,8 +623,8 @@ signed int  Rules_MultifieldInsertRange(_DWORD *dst, _DWORD *src, _DWORD *theFie
       dst[2] = Rules_CreateEphemeralMultifield(0);
       dst[4] = 0;
       dstMultifield = dst[2];
-      *(_WORD *)(dstMultifield + 14) = *((_WORD *)theField + 2);
-      *(_DWORD *)(dstMultifield + 16) = theField[2];
+      *(_WORD *)(uintptr_t)(dstMultifield + 14) = *((_WORD *)theField + 2);
+      *(_DWORD *)(uintptr_t)(dstMultifield + 16) = theField[2];
     }
     return 1;
   }
@@ -645,27 +645,27 @@ signed int  Rules_MultifieldIndexRangeError(int rangeBegin, int rangeEnd, int fi
   int v14; // ecx
   int v15; // ecx
 
-  Rules_PrintErrorID((int)aMultifun, 1, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMultifieldInde, v5);
+  Rules_PrintErrorID((int)(intptr_t)aMultifun, 1, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMultifieldInde, v5);
   if ( rangeBegin == rangeEnd )
   {
     indexToPrint = rangeBegin;
   }
   else
   {
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRange, v6);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aRange, v6);
     Rules_PrintLongInteger(v7, rangeBegin);
-    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__, v8);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__, v8);
     indexToPrint = rangeEnd;
   }
   Rules_PrintLongInteger(v6, indexToPrint);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfRange1__, v10);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aOutOfRange1__, v10);
   Rules_PrintLongInteger(v11, fieldCount);
   if ( !v12 )
-    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__16, 0);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_0, v12);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], v14, v14);
-  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__16, v15);
+    return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__16, 0);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunction_0, v12);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v14, v14);
+  return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__16, v15);
 }
 // 4A2834: variable 'v5' is possibly undefined
 // 4A2847: variable 'v6' is possibly undefined
@@ -724,7 +724,7 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
   dstLength = srcLength - (rangeEnd + src[3] - absBegin);
   dst[4] = dstLength - 1;
   dst[2] = Rules_CreateEphemeralMultifield(dstLength);
-  srcIndex = *(_DWORD *)(v9 + 12);
+  srcIndex = *(_DWORD *)(uintptr_t)(v9 + 12);
   dstIndex = 0;
   if ( srcIndex < absBegin )
   {
@@ -735,10 +735,10 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
       headDstFieldPtr = dstByteOffset + dst[2] + 14;
       headSrcFieldPtr = srcByteOffset + src[2] + 14;
       ++dstIndex;
-      *(_WORD *)headDstFieldPtr = *(_WORD *)headSrcFieldPtr;
+      *(_WORD *)(uintptr_t)headDstFieldPtr = *(_WORD *)(uintptr_t)headSrcFieldPtr;
       ++srcIndex;
       srcByteOffset += 6;
-      *(_DWORD *)(headDstFieldPtr + 2) = *(_DWORD *)(headSrcFieldPtr + 2);
+      *(_DWORD *)(uintptr_t)(headDstFieldPtr + 2) = *(_DWORD *)(uintptr_t)(headSrcFieldPtr + 2);
       dstByteOffset += 6;
     }
     while ( srcByteOffset < 6 * absBegin );
@@ -753,10 +753,10 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
     {
       dstFieldPtr = dst[2] + 14 + tailDstByteOffset;
       srcMultifield = src[2];
-      *(_WORD *)dstFieldPtr = *(_WORD *)(tailSrcByteOffset + srcMultifield + 14);
-      fieldValue = *(_DWORD *)(tailSrcByteOffset + srcMultifield + 16);
+      *(_WORD *)(uintptr_t)dstFieldPtr = *(_WORD *)(uintptr_t)(tailSrcByteOffset + srcMultifield + 14);
+      fieldValue = *(_DWORD *)(uintptr_t)(tailSrcByteOffset + srcMultifield + 16);
       tailSrcByteOffset += 6;
-      *(_DWORD *)(dstFieldPtr + 2) = fieldValue;
+      *(_DWORD *)(uintptr_t)(dstFieldPtr + 2) = fieldValue;
       ++dstIndex;
       tailDstByteOffset += 6;
     }
@@ -769,16 +769,16 @@ signed int  Rules_MultifieldDeleteRange(_DWORD *dst, _DWORD *src, int rangeEnd, 
 //----- (004A2AB0) --------------------------------------------------------
 signed int Rules_RegisterStringBuiltins(void)
 {
-  Rules_RegisterHostFunction(aStrCat, 107, (int)aStrcatfunction, (int)Rules_StrCatBuiltin, (int)a1_1);
-  Rules_RegisterHostFunction(aSymCat, 107, (int)aSymcatfunction, (int)Rules_SymCatBuiltin, (int)a1_1);
-  Rules_RegisterHostFunction(aStrLength, 108, (int)aStrlengthfunct, (int)Rules_StrLengthBuiltin, (int)a11j);
-  Rules_RegisterHostFunction(aStrCompare, 108, (int)aStrcomparefunc, (int)Rules_StrCompareBuiltin, (int)a23Jji);
-  Rules_RegisterHostFunction(aUpcase, 106, (int)aUpcasefunction, (int)Rules_UpcaseBuiltin, (int)a11j);
-  Rules_RegisterHostFunction(aLowcase, 106, (int)aLowcasefunctio, (int)Rules_LowcaseBuiltin, (int)a11j);
-  Rules_RegisterHostFunction(aSubString, 115, (int)aSubstringfunct, (int)Rules_SubStringBuiltin, (int)a33Iij);
-  Rules_RegisterHostFunction(aStrIndex, 117, (int)aStrindexfuncti, (int)Rules_StrIndexBuiltin, (int)a22j);
-  Rules_RegisterHostFunction(aEval, 117, (int)aEvalfunction, (int)Rules_EvalBuiltin, (int)a11k_1);
-  return Rules_RegisterHostFunction(aBuild, 98, (int)aBuildfunction, (int)Rules_BuildBuiltin, (int)a11k_1);
+  Rules_RegisterHostFunction(aStrCat, 107, (int)(intptr_t)aStrcatfunction, (int)(intptr_t)Rules_StrCatBuiltin, (int)(intptr_t)a1_1);
+  Rules_RegisterHostFunction(aSymCat, 107, (int)(intptr_t)aSymcatfunction, (int)(intptr_t)Rules_SymCatBuiltin, (int)(intptr_t)a1_1);
+  Rules_RegisterHostFunction(aStrLength, 108, (int)(intptr_t)aStrlengthfunct, (int)(intptr_t)Rules_StrLengthBuiltin, (int)(intptr_t)a11j);
+  Rules_RegisterHostFunction(aStrCompare, 108, (int)(intptr_t)aStrcomparefunc, (int)(intptr_t)Rules_StrCompareBuiltin, (int)(intptr_t)a23Jji);
+  Rules_RegisterHostFunction(aUpcase, 106, (int)(intptr_t)aUpcasefunction, (int)(intptr_t)Rules_UpcaseBuiltin, (int)(intptr_t)a11j);
+  Rules_RegisterHostFunction(aLowcase, 106, (int)(intptr_t)aLowcasefunctio, (int)(intptr_t)Rules_LowcaseBuiltin, (int)(intptr_t)a11j);
+  Rules_RegisterHostFunction(aSubString, 115, (int)(intptr_t)aSubstringfunct, (int)(intptr_t)Rules_SubStringBuiltin, (int)(intptr_t)a33Iij);
+  Rules_RegisterHostFunction(aStrIndex, 117, (int)(intptr_t)aStrindexfuncti, (int)(intptr_t)Rules_StrIndexBuiltin, (int)(intptr_t)a22j);
+  Rules_RegisterHostFunction(aEval, 117, (int)(intptr_t)aEvalfunction, (int)(intptr_t)Rules_EvalBuiltin, (int)(intptr_t)a11k_1);
+  return Rules_RegisterHostFunction(aBuild, 98, (int)(intptr_t)aBuildfunction, (int)(intptr_t)Rules_BuildBuiltin, (int)(intptr_t)a11k_1);
 }
 
 //----- (004A2BC0) --------------------------------------------------------
@@ -825,10 +825,10 @@ signed int  Rules_ConcatBuiltinCore(int returnValue, int returnType, int a3, dou
   int numArgs; // [esp+28h] [ebp-18h]
 
   v28 = returnValue;
-  *(_DWORD *)(returnValue + 4) = returnType;
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = returnType;
   if ( returnType == 3 )
   {
-    v4 = Str_Intern(g_Rules_EmptyStringLiteral, (int)aStrCat);
+    v4 = Str_Intern(g_Rules_EmptyStringLiteral, (int)(intptr_t)aStrCat);
     functionName = v23;
   }
   else
@@ -836,7 +836,7 @@ signed int  Rules_ConcatBuiltinCore(int returnValue, int returnType, int a3, dou
     functionName = aSymCat;
     v4 = Str_Intern(aNil_4, a3);
   }
-  *(_DWORD *)(v5 + 8) = v4;
+  *(_DWORD *)(uintptr_t)(v5 + 8) = v4;
   numArgs = Rules_RtnArgCount();
   v6 = Mem_SmallBlockAllocZeroed(4 * numArgs);
   totalSize = 1;
@@ -861,7 +861,7 @@ LABEL_11:
       while ( stringIndex < numArgs );
     }
     v20 = Str_Intern(theString, segmentLength);
-    *(_DWORD *)(v21 + 8) = v20;
+    *(_DWORD *)(uintptr_t)(v21 + 8) = v20;
     Mem_SmallBlockFree(theString, totalSize);
   }
   else
@@ -873,22 +873,22 @@ LABEL_11:
       switch ( theArgType )
       {
         case 0:
-          symbolString = (char *)Rules_FloatToSymbol(theArgType, *(double *)(theArgValue + 16));
+          symbolString = (char *)(uintptr_t)Rules_FloatToSymbol(theArgType, *(double *)(uintptr_t)(theArgValue + 16));
           goto LABEL_7;
         case 1:
-          symbolString = (char *)Rules_LongIntegerToSymbol(*(_DWORD *)(theArgValue + 16));
+          symbolString = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(theArgValue + 16));
 LABEL_7:
           internedSymbol = Str_Intern(symbolString, v11);
           goto LABEL_8;
         case 2:
         case 3:
         case 8:
-          internedSymbol = (signed int *)theArgValue;
+          internedSymbol = (signed int *)(uintptr_t)theArgValue;
 LABEL_8:
           *((_DWORD *)stringArrayCursor - 1) = internedSymbol[4];
           break;
         default:
-          Parser_ReportError(argIndex, (int)aStringInstance);
+          Parser_ReportError(argIndex, (int)(intptr_t)aStringInstance);
           Lexer_ErrorRecover(1);
           break;
       }
@@ -926,7 +926,7 @@ int  Rules_StrLengthBuiltin(int returnValue, double a2)
   if ( result != -1 )
   {
     if ( Lexer_ParseValueList(1, theValue, 111, a2) )
-      return strlen(*(const char **)(theValue[2] + 16));
+      return strlen(*(const char **)(uintptr_t)(theValue[2] + 16));
     else
       return -1;
   }
@@ -950,13 +950,13 @@ signed int * Rules_UpcaseBuiltin(int returnValue, double a2)
 
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
   {
-    *(_DWORD *)(returnValue + 4) = 3;
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
     result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
-    *(_DWORD *)(returnValue + 8) = result;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else
   {
-    slen = strlen(*(const char **)(item[2] + 16)) + 1;
+    slen = strlen(*(const char **)(uintptr_t)(item[2] + 16)) + 1;
     charIndex = 0;
     nsptr = (char *)Mem_SmallBlockAlloc(slen);
     newString = nsptr;
@@ -980,9 +980,9 @@ signed int * Rules_UpcaseBuiltin(int returnValue, double a2)
       }
       while ( charIndex < slen );
     }
-    *(_DWORD *)(returnValue + 4) = item[1];
-    *(_DWORD *)(returnValue + 8) = Str_Intern(newString, (int)writePtr);
-    return (signed int *)Mem_SmallBlockFree(newString, v10);
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = item[1];
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = Str_Intern(newString, (int)(intptr_t)writePtr);
+    return (signed int *)(uintptr_t)Mem_SmallBlockFree(newString, v10);
   }
   return result;
 }
@@ -1009,13 +1009,13 @@ signed int * Rules_LowcaseBuiltin(int returnValue, double a2)
 
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
   {
-    *(_DWORD *)(returnValue + 4) = 3;
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
     result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
-    *(_DWORD *)(returnValue + 8) = result;
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else
   {
-    slen = strlen(*(const char **)(item[2] + 16)) + 1;
+    slen = strlen(*(const char **)(uintptr_t)(item[2] + 16)) + 1;
     charIndex = 0;
     nsptr = (char *)Mem_SmallBlockAlloc(slen);
     newString = nsptr;
@@ -1039,9 +1039,9 @@ signed int * Rules_LowcaseBuiltin(int returnValue, double a2)
       }
       while ( charIndex < slen );
     }
-    *(_DWORD *)(returnValue + 4) = item[1];
-    *(_DWORD *)(returnValue + 8) = Str_Intern(newString, (int)writePtr);
-    return (signed int *)Mem_SmallBlockFree(newString, v10);
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = item[1];
+    *(_DWORD *)(uintptr_t)(returnValue + 8) = Str_Intern(newString, (int)(intptr_t)writePtr);
+    return (signed int *)(uintptr_t)Mem_SmallBlockFree(newString, v10);
   }
   return result;
 }
@@ -1069,7 +1069,7 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
   int v14; // [esp+50h] [ebp-8h]
 
   v14 = returnValue;
-  numArgs = Rules_ArgRangeCheck((int)aStrCompare, 3);
+  numArgs = Rules_ArgRangeCheck((int)(intptr_t)aStrCompare, 3);
   if ( numArgs == -1 )
     return 0;
   result = Lexer_ParseValueList(1, &arg1, 111, a2);
@@ -1085,19 +1085,19 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
           return result;
         if ( arg3Type == 1 )
         {
-          maxChars = *(_DWORD *)(arg3Value + 16);
+          maxChars = *(_DWORD *)(uintptr_t)(arg3Value + 16);
         }
         else
         {
-          maxCharsFloat = *(double *)(arg3Value + 16);
+          maxCharsFloat = *(double *)(uintptr_t)(arg3Value + 16);
           _CHP(arg3, arg3Type);
           maxChars = (int)maxCharsFloat;
         }
-        result = strncmp_(v5, *(_DWORD *)(arg2Value + 16));
+        result = strncmp_(v5, *(_DWORD *)(uintptr_t)(arg2Value + 16));
       }
       else
       {
-        result = strcmp_(v4, *(_DWORD *)(arg2Value + 16));
+        result = strcmp_(v4, *(_DWORD *)(uintptr_t)(arg2Value + 16));
       }
       if ( result < 0 )
       {
@@ -1139,11 +1139,11 @@ signed int * Rules_SubStringBuiltin(double a1)
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( argType == 1 )
   {
-    startRaw = *(_DWORD *)(argValue + 16);
+    startRaw = *(_DWORD *)(uintptr_t)(argValue + 16);
   }
   else
   {
-    a1 = *(double *)(argValue + 16);
+    a1 = *(double *)(uintptr_t)(argValue + 16);
     _CHP(theArgument, argType);
     startRaw = (int)a1;
   }
@@ -1152,11 +1152,11 @@ signed int * Rules_SubStringBuiltin(double a1)
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( argType == 1 )
   {
-    endRaw = *(_DWORD *)(argValue + 16);
+    endRaw = *(_DWORD *)(uintptr_t)(argValue + 16);
   }
   else
   {
-    a1 = *(double *)(argValue + 16);
+    a1 = *(double *)(uintptr_t)(argValue + 16);
     _CHP(theArgument, argType);
     endRaw = (int)a1;
   }
@@ -1165,10 +1165,10 @@ signed int * Rules_SubStringBuiltin(double a1)
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( start < 0 )
     start = 0;
-  sourceLength = strlen(*(const char **)(argValue + 16));
+  sourceLength = strlen(*(const char **)(uintptr_t)(argValue + 16));
   if ( end > sourceLength )
   {
-    sourceLength = strlen(*(const char **)(argValue + 16));
+    sourceLength = strlen(*(const char **)(uintptr_t)(argValue + 16));
     end = sourceLength;
   }
   if ( start > end )
@@ -1176,7 +1176,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   tempPtr = Mem_SmallBlockAlloc(end - start + 2);
   charIndex = start;
   returnString = (char *)tempPtr;
-  sourcePtr = (char *)(start + *(_DWORD *)(argValue + 16));
+  sourcePtr = (char *)(uintptr_t)(start + *(_DWORD *)(uintptr_t)(argValue + 16));
   do
   {
     tempPtr = (_DWORD *)((char *)tempPtr + 1);
@@ -1188,7 +1188,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   *(_BYTE *)tempPtr = 0;
   Str_Intern(returnString, charIndex);
   Mem_SmallBlockFree(returnString, v9 - start + 2);
-  return (signed int *)internedString;
+  return (signed int *)(uintptr_t)internedString;
 }
 // 4A323C: variable 'v9' is possibly undefined
 // 4A324A: variable 'v10' is possibly undefined
@@ -1214,19 +1214,19 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
   int v17; // [esp+30h] [ebp-1Ch]
 
   v17 = returnValue;
-  *(_DWORD *)(returnValue + 4) = 2;
-  *(_DWORD *)(v17 + 8) = g_ClipsFalseSymbol;
-  result = (int *)Lexer_TokenExpect(2);
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
+  *(_DWORD *)(uintptr_t)(v17 + 8) = g_ClipsFalseSymbol;
+  result = (int *)(uintptr_t)Lexer_TokenExpect(2);
   if ( result != (int *)-1 )
   {
-    result = (int *)Lexer_ParseValueList(1, &theArgument1, 111, a2);
+    result = (int *)(uintptr_t)Lexer_ParseValueList(1, &theArgument1, 111, a2);
     if ( result )
     {
-      result = (int *)Lexer_ParseValueList(2, &theArgument2, 111, a2);
+      result = (int *)(uintptr_t)Lexer_ParseValueList(2, &theArgument2, 111, a2);
       if ( result )
       {
-        strg1 = *(const char **)(arg1Value + 16);
-        strg2 = *(_BYTE **)(arg2Value + 16);
+        strg1 = *(const char **)(uintptr_t)(arg1Value + 16);
+        strg2 = *(_BYTE **)(uintptr_t)(arg2Value + 16);
         result = 0;
         if ( strlen(strg1) )
         {
@@ -1236,7 +1236,7 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
           {
             while ( 1 )
             {
-              result = *(int **)(arg1Value + 16);
+              result = *(int **)(uintptr_t)(arg1Value + 16);
               strg2Ptr = strg2;
               matchLength = 0;
               if ( *strg1 )
@@ -1258,17 +1258,17 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
               if ( !*++strg2 )
                 return result;
             }
-            *(_DWORD *)(v17 + 4) = 1;
+            *(_DWORD *)(uintptr_t)(v17 + 4) = 1;
             result = Rules_AddIntegerValue(position);
-            *(_DWORD *)(v12 + 8) = result;
+            *(_DWORD *)(uintptr_t)(v12 + 8) = result;
           }
         }
         else
         {
-          searchString = *(const char **)(arg2Value + 16);
-          *(_DWORD *)(v17 + 4) = 1;
+          searchString = *(const char **)(uintptr_t)(arg2Value + 16);
+          *(_DWORD *)(uintptr_t)(v17 + 4) = 1;
           result = Rules_AddIntegerValue(strlen(searchString) + 1);
-          *(_DWORD *)(v11 + 8) = result;
+          *(_DWORD *)(uintptr_t)(v11 + 8) = result;
         }
       }
     }
@@ -1317,13 +1317,13 @@ BOOL __fastcall Rules_EvalStringCore(_DWORD theString, _DWORD *returnValue)
   _BYTE logicalNameBuffer[40]; // [esp+0h] [ebp-28h] BYREF
 
   v3 = sprintf_(logicalNameBuffer, "Eval-%d", ++g_EvalStringRouterCounter);
-  if ( IO_OpenStringSource((int)logicalNameBuffer, v4, 0) )
+  if ( IO_OpenStringSource((int)(intptr_t)logicalNameBuffer, v4, 0) )
   {
     ppBufferStatus = Rules_GetPPBufferStatus();
     Rules_SetPPBufferStatus(0);
     oldBindList = Parser_GetLoopContextStack();
     Parser_SetLoopContextStack(0);
-    top = Parser_ParseSingleExpression((int)logicalNameBuffer, v8, v9);
+    top = Parser_ParseSingleExpression((int)(intptr_t)logicalNameBuffer, v8, v9);
     Rules_SetPPBufferStatus(ppBufferStatus);
     Parser_FreeLoopContextStack();
     Parser_SetLoopContextStack(oldBindList);
@@ -1331,22 +1331,22 @@ BOOL __fastcall Rules_EvalStringCore(_DWORD theString, _DWORD *returnValue)
     {
       if ( *v11 == 14 || *v11 == 16 )
       {
-        Rules_PrintErrorID((int)aMiscfun_0, 1, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpandMustBe_0, v14);
+        Rules_PrintErrorID((int)(intptr_t)aMiscfun_0, 1, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpandMustBe_0, v14);
         Lexer_ErrorRecover(1);
-        IO_CloseStringRouter((int)logicalNameBuffer);
+        IO_CloseStringRouter((int)(intptr_t)logicalNameBuffer);
         returnValue[1] = 2;
         returnValue[2] = g_ClipsFalseSymbol;
         AST_Free(top);
         result = 0;
         --g_EvalStringRouterCounter;
       }
-      else if ( AST_TreeContainsSpecialTag((int)v11, 0) )
+      else if ( AST_TreeContainsSpecialTag((int)(intptr_t)v11, 0) )
       {
-        Rules_PrintErrorID((int)aStrngfun, 2, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSomeVariablesC, v15);
+        Rules_PrintErrorID((int)(intptr_t)aStrngfun, 2, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSomeVariablesC, v15);
         Lexer_ErrorRecover(1);
-        IO_CloseStringRouter((int)logicalNameBuffer);
+        IO_CloseStringRouter((int)(intptr_t)logicalNameBuffer);
         returnValue[1] = 2;
         returnValue[2] = g_ClipsFalseSymbol;
         AST_Free(v16);
@@ -1355,17 +1355,17 @@ BOOL __fastcall Rules_EvalStringCore(_DWORD theString, _DWORD *returnValue)
       }
       else
       {
-        Parser_ParseForm(v12, returnValue, (int)v12, v3);
+        Parser_ParseForm(v12, returnValue, (int)(intptr_t)v12, v3);
         --g_EvalStringRouterCounter;
         AST_Free(v13);
-        IO_CloseStringRouter((int)logicalNameBuffer);
+        IO_CloseStringRouter((int)(intptr_t)logicalNameBuffer);
         return Rules_GetHaltExecutionFlag() == 0;
       }
     }
     else
     {
       Lexer_ErrorRecover(1);
-      IO_CloseStringRouter((int)logicalNameBuffer);
+      IO_CloseStringRouter((int)(intptr_t)logicalNameBuffer);
       returnValue[1] = 2;
       returnValue[2] = g_ClipsFalseSymbol;
       result = 0;
@@ -1406,7 +1406,7 @@ signed int  Rules_BuildBuiltin(int returnValue, double a2)
     return 0;
   result = Lexer_ParseValueList(1, theArg, 111, a2);
   if ( result )
-    return Rules_BuildConstructFromString(*(const char **)(theArg[2] + 16));
+    return Rules_BuildConstructFromString(*(const char **)(uintptr_t)(theArg[2] + 16));
   return result;
 }
 
@@ -1423,23 +1423,23 @@ signed int  Rules_BuildConstructFromString(const char *theString)
 
   if ( g_Rules_JoinOperationInProgress )
     return 0;
-  result = IO_OpenStringSource((int)aBuild, theString, 0);
+  result = IO_OpenStringSource((int)(intptr_t)aBuild, theString, 0);
   if ( result )
   {
-    Parser_NextToken((int)aBuild, (int)&theToken);
-    if ( theToken != 100 || (Parser_NextToken((int)aBuild, (int)&theToken), theToken != 2) )
+    Parser_NextToken((int)(intptr_t)aBuild, (int)(intptr_t)&theToken);
+    if ( theToken != 100 || (Parser_NextToken((int)(intptr_t)aBuild, (int)(intptr_t)&theToken), theToken != 2) )
     {
-      IO_CloseStringRouter((int)aBuild);
+      IO_CloseStringRouter((int)(intptr_t)aBuild);
       return 0;
     }
     errorFlag = Rules_ParseConstruct();
-    IO_CloseStringRouter((int)aBuild);
+    IO_CloseStringRouter((int)(intptr_t)aBuild);
     if ( v4 == 1 )
     {
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_3, v3);
-      ppBuffer = (char *)Rules_GetPPBuffer();
-      Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], ppBuffer);
-      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_507374, v6);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aError_3, v3);
+      ppBuffer = (char *)(uintptr_t)Rules_GetPPBuffer();
+      Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalNameTable_WError[0], ppBuffer);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_507374, v6);
     }
     Rules_DestroyPPBuffer();
     return !errorFlag;

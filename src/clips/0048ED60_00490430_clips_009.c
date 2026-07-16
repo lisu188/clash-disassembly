@@ -86,17 +86,17 @@ int  Rules_RemoveEntityDependencies(_DWORD *theBinds)
   _DWORD *v5; // ecx
   int result; // eax
 
-  dependencyPtr = (_DWORD *)theBinds[(*theBinds << 29 >> 31) + 2 + (*theBinds << 17 >> 23)];
+  dependencyPtr = (_DWORD *)(uintptr_t)theBinds[(*theBinds << 29 >> 31) + 2 + (*theBinds << 17 >> 23)];
   if ( dependencyPtr )
   {
     do
     {
       theBind = *dependencyPtr;
-      nextDependency = (_DWORD *)dependencyPtr[1];
-      *(_DWORD *)(theBind + 4) = Rules_RemoveDependencyLink(*(_DWORD **)(*dependencyPtr + 4), (int)theBinds);
-      g_ClipsMemFreeListTemp = (int)v5;
-      *v5 = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      nextDependency = (_DWORD *)(uintptr_t)dependencyPtr[1];
+      *(_DWORD *)(uintptr_t)(theBind + 4) = Rules_RemoveDependencyLink(*(_DWORD **)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
+      g_ClipsMemFreeListTemp = (int)(intptr_t)v5;
+      *v5 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
       dependencyPtr = nextDependency;
     }
     while ( nextDependency );
@@ -119,28 +119,28 @@ int  Rules_RemovePMDependencies(int result)
   _DWORD *updatedList; // eax
   _DWORD *v6; // ecx
 
-  theBinds = (_DWORD *)result;
-  if ( (*(_BYTE *)result & 8) != 0 )
+  theBinds = (_DWORD *)(uintptr_t)result;
+  if ( (*(_BYTE *)(uintptr_t)result & 8) != 0 )
   {
-    dependencyPtr = *(_DWORD **)(result + 4 * ((*(_DWORD *)result << 17 >> 23) + (*(_DWORD *)result << 29 >> 31)) + 8);
+    dependencyPtr = *(_DWORD **)(uintptr_t)(result + 4 * ((*(_DWORD *)(uintptr_t)result << 17 >> 23) + (*(_DWORD *)(uintptr_t)result << 29 >> 31)) + 8);
     if ( dependencyPtr )
     {
       do
       {
         theBind = *dependencyPtr;
-        nextDependency = (_DWORD *)dependencyPtr[1];
-        updatedList = Rules_RemoveDependencyLink(*(_DWORD **)(*dependencyPtr + 4), (int)theBinds);
-        *(_DWORD *)(theBind + 4) = updatedList;
+        nextDependency = (_DWORD *)(uintptr_t)dependencyPtr[1];
+        updatedList = Rules_RemoveDependencyLink(*(_DWORD **)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
+        *(_DWORD *)(uintptr_t)(theBind + 4) = updatedList;
         if ( updatedList )
         {
-          g_ClipsMemFreeListTemp = (int)v6;
-          *v6 = *(_DWORD *)(g_ClipsMemoryTable + 32);
-          *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = (int)(intptr_t)v6;
+          *v6 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
         }
         else
         {
           v6[1] = g_ClipsPendingDependencyDestructorList;
-          g_ClipsPendingDependencyDestructorList = (int)v6;
+          g_ClipsPendingDependencyDestructorList = (int)(intptr_t)v6;
         }
         dependencyPtr = nextDependency;
       }
@@ -167,13 +167,13 @@ void Rules_FlushPendingDependencyDestructors(void)
     g_Rules_FlushingDependencyDestructors = 1;
     while ( g_ClipsPendingDependencyDestructorList )
     {
-      dependencyPtr = (_DWORD *)g_ClipsPendingDependencyDestructorList;
-      theEntity = *(_DWORD *)g_ClipsPendingDependencyDestructorList;
-      g_ClipsPendingDependencyDestructorList = *(_DWORD *)(g_ClipsPendingDependencyDestructorList + 4);
-      g_ClipsMemFreeListTemp = (int)dependencyPtr;
-      *dependencyPtr = *(_DWORD *)(g_ClipsMemoryTable + 32);
-      *(_DWORD *)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
-      (*(void (**)(void))(*(_DWORD *)theEntity + 12))();
+      dependencyPtr = (_DWORD *)(uintptr_t)g_ClipsPendingDependencyDestructorList;
+      theEntity = *(_DWORD *)(uintptr_t)g_ClipsPendingDependencyDestructorList;
+      g_ClipsPendingDependencyDestructorList = *(_DWORD *)(uintptr_t)(g_ClipsPendingDependencyDestructorList + 4);
+      g_ClipsMemFreeListTemp = (int)(intptr_t)dependencyPtr;
+      *dependencyPtr = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)theEntity + 12))();
     }
     g_Rules_FlushingDependencyDestructors = 0;
   }
@@ -191,14 +191,14 @@ signed int  Rules_PrintDependencyList(signed int result, int a2)
   signed int v4; // eax
   int v5; // ecx
 
-  if ( !*(_DWORD *)(result + 4) )
-    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone, a2);
-  dependencyPtr = *(_DWORD ***)(result + 4);
+  if ( !*(_DWORD *)(uintptr_t)(result + 4) )
+    return Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aNone, a2);
+  dependencyPtr = *(_DWORD ***)(uintptr_t)(result + 4);
   do
   {
-    Rules_PrintArgumentValueList((int)g_IO_LogicalName_WDisplay, *dependencyPtr);
-    v4 = Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504880, v3);
-    dependencyPtr = *(_DWORD ***)(v5 + 4);
+    Rules_PrintArgumentValueList((int)(intptr_t)g_IO_LogicalName_WDisplay, *dependencyPtr);
+    v4 = Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_504880, v3);
+    dependencyPtr = *(_DWORD ***)(uintptr_t)(v5 + 4);
   }
   while ( dependencyPtr );
   return v4;
@@ -225,27 +225,27 @@ signed int  Rules_PrintDependentList(int theEntity, int a2)
   found = 0;
   while ( entityPtr )
   {
-    dependencyPtr = (_DWORD **)entityPtr[1];
+    dependencyPtr = (_DWORD **)(uintptr_t)entityPtr[1];
     if ( dependencyPtr )
     {
       while ( Rules_ArrayContainsValue(theEntity, *dependencyPtr) != 1 )
       {
-        dependencyPtr = *(_DWORD ***)(v7 + 4);
+        dependencyPtr = *(_DWORD ***)(uintptr_t)(v7 + 4);
         if ( !dependencyPtr )
           goto LABEL_7;
       }
       if ( found )
-        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504884, v7);
+        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_504884, v7);
       found = 1;
-      (*(void (**)(void))(*entityPtr + 4))();
+      (*(void (**)(void))(uintptr_t)(*entityPtr + 4))();
     }
 LABEL_7:
     Rules_FindPatternParser(traversalBuffer, &entityPtr);
   }
   if ( found )
-    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504880, v4);
+    return Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_504880, v4);
   else
-    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone, v4);
+    return Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aNone, v4);
 }
 // 48F06D: variable 'v7' is possibly undefined
 // 48F0A6: variable 'v4' is possibly undefined
@@ -258,7 +258,7 @@ signed int  Rules_ArrayContainsValue(int theEntity, _DWORD *theMatch)
 
   for ( i = 0; i < *theMatch << 17 >> 23; ++i )
   {
-    if ( theEntity == *(_DWORD *)theMatch[i + 2] )
+    if ( theEntity == *(_DWORD *)(uintptr_t)theMatch[i + 2] )
       return 1;
   }
   return 0;
@@ -272,12 +272,12 @@ _DWORD * Rules_Dependencies(double a1)
   int v3; // ecx
   int itemBuffer; // [esp-1Ch] [ebp-20h] BYREF
 
-  result = (_DWORD *)Lexer_TokenExpect(1);
+  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect(1);
   if ( result != (_DWORD *)-1 )
   {
     result = Rules_ResolveFactOrInstanceArg(&itemBuffer, aDependencies_0, v2, a1);
     if ( result )
-      return (_DWORD *)Rules_PrintDependencyList((signed int)result, v3);
+      return (_DWORD *)(uintptr_t)Rules_PrintDependencyList((signed int)(intptr_t)result, v3);
   }
   return result;
 }
@@ -292,12 +292,12 @@ _DWORD * Rules_Dependents(double a1)
   int v3; // ecx
   int itemBuffer; // [esp-1Ch] [ebp-20h] BYREF
 
-  result = (_DWORD *)Lexer_TokenExpect(1);
+  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect(1);
   if ( result != (_DWORD *)-1 )
   {
     result = Rules_ResolveFactOrInstanceArg(&itemBuffer, aDependents_0, v2, a1);
     if ( result )
-      return (_DWORD *)Rules_PrintDependentList((int)result, v3);
+      return (_DWORD *)(uintptr_t)Rules_PrintDependentList((int)(intptr_t)result, v3);
   }
   return result;
 }
@@ -318,15 +318,15 @@ _DWORD * Rules_ResolveFactOrInstanceArg(_DWORD *item, _BYTE *functionName, int a
 
   v13 = a3;
   Rules_RtnUnknown(1, item, a4);
-  theType = *(_DWORD *)(v5 + 4);
+  theType = *(_DWORD *)(uintptr_t)(v5 + 4);
   if ( theType == 6 || theType == 7 )
-    return *(_DWORD **)(v5 + 8);
+    return *(_DWORD **)(uintptr_t)(v5 + 8);
   if ( theType == 1 )
   {
-    foundEntity = (_DWORD *)Rules_FindFactByIndex();
+    foundEntity = (_DWORD *)(uintptr_t)Rules_FindFactByIndex();
     if ( foundEntity )
       return foundEntity;
-    sprintf_(numberBuffer, "f-%ld", *(_DWORD *)(*(_DWORD *)(v11 + 8) + 16));
+    sprintf_(numberBuffer, "f-%ld", *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v11 + 8) + 16));
     itemName = numberBuffer;
     goto LABEL_8;
   }
@@ -335,12 +335,12 @@ _DWORD * Rules_ResolveFactOrInstanceArg(_DWORD *item, _BYTE *functionName, int a
     Rules_ReportSymbolTypeError(functionName, 1);
     return 0;
   }
-  foundEntity = Instance_FindByName(*(_DWORD *)(v5 + 8));
+  foundEntity = Instance_FindByName(*(_DWORD *)(uintptr_t)(v5 + 8));
   if ( !foundEntity )
   {
-    itemName = *(_BYTE **)(*(_DWORD *)(v7 + 8) + 16);
+    itemName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 8) + 16);
 LABEL_8:
-    Rules_ReportCantFindItem(v7, (int)itemName);
+    Rules_ReportCantFindItem(v7, (int)(intptr_t)itemName);
   }
   return foundEntity;
 }
@@ -391,17 +391,17 @@ int  Parser_ParseForm(__int16 *problem, _DWORD *returnValue, int a3, double a4)
         goto LABEL_4;
       case 4:
         returnValue[1] = 4;
-        returnValue[2] = *(_DWORD *)(*(_DWORD *)(problem + 1) + 8);
-        returnValue[3] = *(_DWORD *)(*(_DWORD *)(problem + 1) + 12);
-        returnValue[4] = *(_DWORD *)(*(_DWORD *)(problem + 1) + 16);
+        returnValue[2] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(problem + 1) + 8);
+        returnValue[3] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(problem + 1) + 12);
+        returnValue[4] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(problem + 1) + 16);
         Rules_PropagateReturnValueDepth((uintptr_t)returnValue);
         return g_ClipsEvaluationError;
       case 10:
         oldArgument = g_ClipsCurrentExpression;
-        g_ClipsCurrentExpression = (int)problem;
+        g_ClipsCurrentExpression = (int)(intptr_t)problem;
         theFunction = *(_DWORD *)(problem + 1);
-        function_ptr = (uintptr_t)(unsigned int)*(_DWORD *)(theFunction + 9);
-        switch ( *(_BYTE *)(theFunction + 8) )
+        function_ptr = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(theFunction + 9);
+        switch ( *(_BYTE *)(uintptr_t)(theFunction + 8) )
         {
           case 'a':
             valuePtr[1] = 5;
@@ -410,7 +410,7 @@ int  Parser_ParseForm(__int16 *problem, _DWORD *returnValue, int a3, double a4)
             valuePtr[1] = 2;
             if ( !((int (*)(void))function_ptr)() )
               goto LABEL_13;
-            theValue = (void *)g_ClipsTrueSymbol;
+            theValue = (void *)(uintptr_t)g_ClipsTrueSymbol;
             goto LABEL_10;
           case 'c':
             charBuffer[0] = ((int (*)(_DWORD *))function_ptr)(valuePtr);
@@ -422,7 +422,7 @@ int  Parser_ParseForm(__int16 *problem, _DWORD *returnValue, int a3, double a4)
           case 'f':
             valuePtr[1] = 0;
             doubleResult = ((double (*)(void))function_ptr)();
-            theValue = (void *)Rules_AddDoubleValue(doubleResult);
+            theValue = (void *)(uintptr_t)Rules_AddDoubleValue(doubleResult);
             goto LABEL_10;
           case 'i':
           case 'l':
@@ -447,7 +447,7 @@ int  Parser_ParseForm(__int16 *problem, _DWORD *returnValue, int a3, double a4)
             ((void (*)(void))function_ptr)();
             valuePtr[1] = 105;
 LABEL_13:
-            theValue = (void *)g_ClipsFalseSymbol;
+            theValue = (void *)(uintptr_t)g_ClipsFalseSymbol;
             goto LABEL_10;
           case 'w':
             valuePtr[1] = 2;
@@ -460,7 +460,7 @@ LABEL_10:
             valuePtr[2] = (int)(uintptr_t)theValue;
             break;
           default:
-            Rules_ReportSystemError((int)valuePtr, 2);
+            Rules_ReportSystemError((int)(intptr_t)valuePtr, 2);
             IO_RunRouterExitCallbacks(5);
             break;
         }
@@ -471,10 +471,10 @@ LABEL_10:
       case 16:
         if ( Rules_FindBoundVariable(returnValue, *(_DWORD *)(problem + 1)) )
           goto LABEL_5;
-        Rules_PrintErrorID((int)aEvaluatn, 1, 0);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable, v14);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(problem + 1) + 16), v15);
-        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUnbound, v16);
+        Rules_PrintErrorID((int)(intptr_t)aEvaluatn, 1, 0);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aVariable, v14);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(problem + 1) + 16), v15);
+        Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aIsUnbound, v16);
         valuePtr[1] = 2;
         valuePtr[2] = g_ClipsFalseSymbol;
         g_ClipsEvaluationError = 1;
@@ -485,12 +485,12 @@ LABEL_10:
       default:
         if ( !g_Clips_PrimitiveEntityTable[*problem] )
         {
-          Rules_ReportSystemError((int)returnValue, 3);
+          Rules_ReportSystemError((int)(intptr_t)returnValue, 3);
           IO_RunRouterExitCallbacks(5);
         }
         theType = *problem;
         entityRecord = g_Clips_PrimitiveEntityTable[theType];
-        if ( (*(_BYTE *)(entityRecord + 1) & 0x20) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)(entityRecord + 1) & 0x20) != 0 )
         {
 LABEL_4:
           valuePtr[1] = theType;
@@ -501,14 +501,14 @@ LABEL_5:
         }
         else
         {
-          if ( !*(_DWORD *)(entityRecord + 16) )
+          if ( !*(_DWORD *)(uintptr_t)(entityRecord + 16) )
           {
-            Rules_ReportSystemError((int)valuePtr, 4);
+            Rules_ReportSystemError((int)(intptr_t)valuePtr, 4);
             IO_RunRouterExitCallbacks(5);
           }
           savedExpression = g_ClipsCurrentExpression;
-          g_ClipsCurrentExpression = (int)problem;
-          evaluator = (uintptr_t)(unsigned int)*(_DWORD *)(g_Clips_PrimitiveEntityTable[*problem] + 16);
+          g_ClipsCurrentExpression = (int)(intptr_t)problem;
+          evaluator = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_Clips_PrimitiveEntityTable[*problem] + 16);
           ((void (*)(int, _DWORD *, double))evaluator)(*(_DWORD *)(problem + 1), valuePtr, a4);
           g_ClipsCurrentExpression = savedExpression;
           Rules_PropagateReturnValueDepth((uintptr_t)valuePtr);
@@ -608,11 +608,11 @@ int  Rules_DeinstallValueChain(int result)
   {
     do
     {
-      Rules_ValueDeinstall(currentValue, *(_DWORD *)(currentValue + 20));
-      g_ClipsMemFreeListTemp = (int)v2;
-      *v2 = *(_DWORD *)(g_ClipsMemoryTable + 96);
+      Rules_ValueDeinstall(currentValue, *(_DWORD *)(uintptr_t)(currentValue + 20));
+      g_ClipsMemFreeListTemp = (int)(intptr_t)v2;
+      *v2 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
       currentValue = v3;
     }
     while ( v3 );
@@ -632,16 +632,16 @@ signed int  Rules_PrintDataObject(int logicalName, int argPtr)
   int v5; // ecx
   int v6; // ecx
 
-  theType = *(_DWORD *)(argPtr + 4);
+  theType = *(_DWORD *)(uintptr_t)(argPtr + 4);
   if ( theType < 4 )
-    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(argPtr + 4), *(int **)(argPtr + 8));
+    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), *(int **)(uintptr_t)(argPtr + 8));
   if ( theType <= 4 )
-    return Lexer_OutputFieldRange(logicalName, *(_DWORD *)(argPtr + 8), *(_DWORD *)(argPtr + 16), *(_DWORD *)(argPtr + 12), 1);
+    return Lexer_OutputFieldRange(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 8), *(_DWORD *)(uintptr_t)(argPtr + 16), *(_DWORD *)(uintptr_t)(argPtr + 12), 1);
   if ( theType <= 8 || theType == 105 )
-    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(argPtr + 4), *(int **)(argPtr + 8));
-  Output_Write(logicalName, (int)aUnknownprintty, argPtr);
-  Rules_PrintLongInteger(v5, *(_DWORD *)(v5 + 4));
-  result = Output_Write(logicalName, (int)asc_5048FC, v6);
+    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), *(int **)(uintptr_t)(argPtr + 8));
+  Output_Write(logicalName, (int)(intptr_t)aUnknownprintty, argPtr);
+  Rules_PrintLongInteger(v5, *(_DWORD *)(uintptr_t)(v5 + 4));
+  result = Output_Write(logicalName, (int)(intptr_t)asc_5048FC, v6);
   g_ClipsEvaluationError = 1;
   g_ClipsHaltExecution = 1;
   return result;
@@ -659,7 +659,7 @@ _DWORD * Rules_SetMultifieldErrorValue(int returnValue)
   _DWORD *result; // eax
   _DWORD *v2; // edx
 
-  *(_DWORD *)(returnValue + 4) = 4;
+  *(_DWORD *)(uintptr_t)(returnValue + 4) = 4;
   result = Rules_CreateEphemeralMultifield(0);
   v2[3] = 1;
   v2[4] = 0;
@@ -671,19 +671,19 @@ _DWORD * Rules_SetMultifieldErrorValue(int returnValue)
 //----- (0048F750) --------------------------------------------------------
 __int16 * Rules_ValueInstall(int vPtr, int a2)
 {
-  if ( *(_DWORD *)(vPtr + 4) == 4 )
-    return Rules_InstallMultifield(*(__int16 **)(vPtr + 8));
+  if ( *(_DWORD *)(uintptr_t)(vPtr + 4) == 4 )
+    return Rules_InstallMultifield(*(__int16 **)(uintptr_t)(vPtr + 8));
   else
-    return (__int16 *)Rules_AtomInstall(*(_DWORD *)(vPtr + 4), *(_DWORD *)(vPtr + 8), a2);
+    return (__int16 *)(uintptr_t)Rules_AtomInstall(*(_DWORD *)(uintptr_t)(vPtr + 4), *(_DWORD *)(uintptr_t)(vPtr + 8), a2);
 }
 
 //----- (0048F770) --------------------------------------------------------
 __int16 * Rules_ValueDeinstall(int vPtr, int a2)
 {
-  if ( *(_DWORD *)(vPtr + 4) == 4 )
-    return Rules_DeinstallMultifield(*(__int16 **)(vPtr + 8));
+  if ( *(_DWORD *)(uintptr_t)(vPtr + 4) == 4 )
+    return Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(vPtr + 8));
   else
-    return (__int16 *)Rules_AtomDeinstall(*(_DWORD *)(vPtr + 4), *(__int16 **)(vPtr + 8), a2);
+    return (__int16 *)(uintptr_t)Rules_AtomDeinstall(*(_DWORD *)(uintptr_t)(vPtr + 4), *(__int16 **)(uintptr_t)(vPtr + 8), a2);
 }
 
 //----- (0048F790) --------------------------------------------------------
@@ -707,21 +707,21 @@ unsigned int  Rules_AtomInstall(unsigned int result, int vPtr, int a3)
   }
   else if ( result == 4 )
   {
-    return (unsigned int)Rules_InstallMultifield((__int16 *)vPtr);
+    return (unsigned int)(intptr_t)Rules_InstallMultifield((__int16 *)(uintptr_t)vPtr);
   }
   result *= 4;
   entityRecord = *(int *)((char *)g_Clips_PrimitiveEntityTable + result);
   if ( !entityRecord )
     return result;
   result = *(int *)((char *)g_Clips_PrimitiveEntityTable + result);
-  if ( (*(_BYTE *)(entityRecord + 1) & 0x40) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(entityRecord + 1) & 0x40) != 0 )
   {
 LABEL_15:
-    ++*(_DWORD *)(vPtr + 4);
+    ++*(_DWORD *)(uintptr_t)(vPtr + 4);
     return result;
   }
-  if ( *(_DWORD *)(entityRecord + 28) )
-    return (*(int (__cdecl **)(int))(entityRecord + 28))(a3);
+  if ( *(_DWORD *)(uintptr_t)(entityRecord + 28) )
+    return (*(int (__cdecl **)(int))(uintptr_t)(entityRecord + 28))(a3);
   return result;
 }
 // 48F795: simplified comparisons for 'eax.4': >=3u && >=4u became >=4u
@@ -735,21 +735,21 @@ unsigned int  Rules_AtomDeinstall(unsigned int result, __int16 *vPtr, int a3)
   if ( result < 3 )
   {
     if ( !result )
-      return Rules_DecrementFloatCount((int)vPtr, a3);
+      return Rules_DecrementFloatCount((int)(intptr_t)vPtr, a3);
     if ( result <= 1 )
-      return Rules_DecrementIntegerCount((int)vPtr, a3);
-    return Rules_DecrementSymbolCount((int)vPtr, a3);
+      return Rules_DecrementIntegerCount((int)(intptr_t)vPtr, a3);
+    return Rules_DecrementSymbolCount((int)(intptr_t)vPtr, a3);
   }
   if ( result <= 3 )
-    return Rules_DecrementSymbolCount((int)vPtr, a3);
+    return Rules_DecrementSymbolCount((int)(intptr_t)vPtr, a3);
   if ( result < 8 )
   {
     if ( result == 4 )
-      return (unsigned int)Rules_DeinstallMultifield(vPtr);
+      return (unsigned int)(intptr_t)Rules_DeinstallMultifield(vPtr);
     goto LABEL_4;
   }
   if ( result <= 8 )
-    return Rules_DecrementSymbolCount((int)vPtr, a3);
+    return Rules_DecrementSymbolCount((int)(intptr_t)vPtr, a3);
   if ( result >= 0xD )
   {
     if ( result > 0xD )
@@ -758,7 +758,7 @@ unsigned int  Rules_AtomDeinstall(unsigned int result, __int16 *vPtr, int a3)
         return result;
       goto LABEL_4;
     }
-    return Rules_DecrementSymbolCount((int)vPtr, a3);
+    return Rules_DecrementSymbolCount((int)(intptr_t)vPtr, a3);
   }
 LABEL_4:
   result *= 4;
@@ -766,13 +766,13 @@ LABEL_4:
   if ( entityRecord )
   {
     result = *(int *)((char *)g_Clips_PrimitiveEntityTable + result);
-    if ( (*(_BYTE *)(entityRecord + 1) & 0x40) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)(entityRecord + 1) & 0x40) != 0 )
     {
-      return Rules_DecrementBitmapCount((int)vPtr, entityRecord);
+      return Rules_DecrementBitmapCount((int)(intptr_t)vPtr, entityRecord);
     }
-    else if ( *(_DWORD *)(entityRecord + 24) )
+    else if ( *(_DWORD *)(uintptr_t)(entityRecord + 24) )
     {
-      return (*(int (__cdecl **)(int))(entityRecord + 24))(a3);
+      return (*(int (__cdecl **)(int))(uintptr_t)(entityRecord + 24))(a3);
     }
   }
   return result;
@@ -867,9 +867,9 @@ signed int  AST_BuildExpressionFromValue(_DWORD *theValue)
   fieldOffset = 6 * fieldIndex - 6;
   while ( fieldIndex <= theValue[4] + 1 )
   {
-    newNode = AST_NewNode(*(_WORD *)(fieldOffset + theValue[2] + 14), *(_DWORD *)(fieldOffset + theValue[2] + 16));
+    newNode = AST_NewNode(*(_WORD *)(uintptr_t)(fieldOffset + theValue[2] + 14), *(_DWORD *)(uintptr_t)(fieldOffset + theValue[2] + 16));
     if ( lastNode )
-      *(_DWORD *)(lastNode + 10) = newNode;
+      *(_DWORD *)(uintptr_t)(lastNode + 10) = newNode;
     else
       topNode = newNode;
     lastNode = newNode;
@@ -879,7 +879,7 @@ signed int  AST_BuildExpressionFromValue(_DWORD *theValue)
   if ( topNode )
     return topNode;
   Symbol = Rules_MakeSymbol(aCreate_1);
-  return AST_NewNode(10, (int)Symbol);
+  return AST_NewNode(10, (int)(intptr_t)Symbol);
 }
 // 48FB80: variable 'v8' is possibly undefined
 
@@ -892,15 +892,15 @@ int  Rules_ComputeFieldHashValue(int theType, int value, int position)
   switch ( theType )
   {
     case CLIPS_TYPE_FLOAT:
-      result = *(_DWORD *)(value + 16);
+      result = *(_DWORD *)(uintptr_t)(value + 16);
       goto LABEL_3;
     case CLIPS_TYPE_INTEGER:
-      result = *(_DWORD *)(value + 16);
+      result = *(_DWORD *)(uintptr_t)(value + 16);
       goto LABEL_3;
     case CLIPS_TYPE_SYMBOL:
     case CLIPS_TYPE_STRING:
     case CLIPS_TYPE_INSTANCE_NAME:
-      result = *(_DWORD *)(value + 12) << 16 >> 18;
+      result = *(_DWORD *)(uintptr_t)(value + 12) << 16 >> 18;
       goto LABEL_3;
     case CLIPS_TYPE_EXTERNAL_ADDRESS:
     case CLIPS_TYPE_FACT_ADDRESS:
@@ -1047,68 +1047,68 @@ _DWORD * Rules_UpdateBetaMemoryOnRetract(_DWORD *result, int theBind, int deferJ
   int v10; // ecx
   _DWORD *v11; // ecx
 
-  theJoin = (int)result;
+  theJoin = (int)(intptr_t)result;
   currentMatch = result[2];
   if ( currentMatch )
   {
     while ( 1 )
     {
-      if ( (*(_BYTE *)currentMatch & 0x20) == 0 )
+      if ( (*(_BYTE *)(uintptr_t)currentMatch & 0x20) == 0 )
         goto LABEL_3;
-      result = (_DWORD *)(currentMatch + 4 * (*(_DWORD *)currentMatch << 17 >> 23));
+      result = (_DWORD *)(uintptr_t)(currentMatch + 4 * (*(_DWORD *)(uintptr_t)currentMatch << 17 >> 23));
       v7 = result[1];
       if ( theBind != v7 )
         goto LABEL_3;
       result[1] = 0;
-      result = (_DWORD *)Rules_EvaluateJoinTest((_WORD *)currentMatch, *(_DWORD *)(v7 + 4), theJoin, a4);
+      result = (_DWORD *)(uintptr_t)Rules_EvaluateJoinTest((_WORD *)(uintptr_t)currentMatch, *(_DWORD *)(uintptr_t)(v7 + 4), theJoin, a4);
       if ( result )
         goto LABEL_3;
-      *(_BYTE *)currentMatch &= ~0x20u;
-      v8 = *(_DWORD **)(g_ClipsMemoryTable + 48);
+      *(_BYTE *)(uintptr_t)currentMatch &= ~0x20u;
+      v8 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
       if ( v8 )
       {
-        g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-        *(_DWORD *)(g_ClipsMemoryTable + 48) = *v8;
-        result = (_DWORD *)g_ClipsMemFreeListTemp;
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *v8;
+        result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
       }
       else
       {
-        result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+        result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
       result[2] = 0;
       *result = 0;
       result[1] = 0;
-      *(_DWORD *)(currentMatch + 4 * (*(_DWORD *)currentMatch << 17 >> 23) + 4) = result;
-      if ( *(_DWORD *)(theJoin + 36) )
-        result = Rules_AddActivation(*(_DWORD *)(theJoin + 36), currentMatch, a4);
-      childJoin = *(_DWORD *)(theJoin + 20);
+      *(_DWORD *)(uintptr_t)(currentMatch + 4 * (*(_DWORD *)(uintptr_t)currentMatch << 17 >> 23) + 4) = result;
+      if ( *(_DWORD *)(uintptr_t)(theJoin + 36) )
+        result = Rules_AddActivation(*(_DWORD *)(uintptr_t)(theJoin + 36), currentMatch, a4);
+      childJoin = *(_DWORD *)(uintptr_t)(theJoin + 20);
       if ( !childJoin )
         goto LABEL_3;
-      if ( theJoin == *(_DWORD *)(childJoin + 16) )
+      if ( theJoin == *(_DWORD *)(uintptr_t)(childJoin + 16) )
       {
-        result = (_DWORD *)Rules_DriveJoinNetwork(currentMatch, *(_DWORD *)(theJoin + 20), 1, a4);
-        currentMatch = *(_DWORD *)(currentMatch + 4);
+        result = (_DWORD *)Rules_DriveJoinNetwork(currentMatch, *(_DWORD *)(uintptr_t)(theJoin + 20), 1, a4);
+        currentMatch = *(_DWORD *)(uintptr_t)(currentMatch + 4);
         if ( !currentMatch )
           return result;
       }
       else if ( deferJoinDrive )
       {
-        v11 = *(_DWORD **)(g_ClipsMemoryTable + 48);
+        v11 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
         if ( v11 )
         {
-          g_ClipsMemFreeListTemp = *(_DWORD *)(g_ClipsMemoryTable + 48);
-          *(_DWORD *)(g_ClipsMemoryTable + 48) = *v11;
-          result = (_DWORD *)g_ClipsMemFreeListTemp;
+          g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
+          *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = *v11;
+          result = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
         }
         else
         {
-          result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
+          result = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0xC);
         }
         *result = currentMatch;
-        result[1] = *(_DWORD *)(theJoin + 20);
+        result[1] = *(_DWORD *)(uintptr_t)(theJoin + 20);
         result[2] = g_ClipsDeferredJoinDriveListHead;
-        g_ClipsDeferredJoinDriveListHead = (int)result;
-        currentMatch = *(_DWORD *)(currentMatch + 4);
+        g_ClipsDeferredJoinDriveListHead = (int)(intptr_t)result;
+        currentMatch = *(_DWORD *)(uintptr_t)(currentMatch + 4);
         if ( !currentMatch )
           return result;
       }
@@ -1117,10 +1117,10 @@ _DWORD * Rules_UpdateBetaMemoryOnRetract(_DWORD *result, int theBind, int deferJ
         while ( childJoin )
         {
           result = (_DWORD *)Rules_DriveJoinNetwork(currentMatch, childJoin, 0, a4);
-          childJoin = *(_DWORD *)(v10 + 28);
+          childJoin = *(_DWORD *)(uintptr_t)(v10 + 28);
         }
 LABEL_3:
-        currentMatch = *(_DWORD *)(currentMatch + 4);
+        currentMatch = *(_DWORD *)(uintptr_t)(currentMatch + 4);
         if ( !currentMatch )
           return result;
       }
@@ -1141,16 +1141,16 @@ signed int  Rules_EvaluateJoinTest(_WORD *theBind, int listOfMatches, int theJoi
   int i; // eax
   signed int testResult; // [esp+0h] [ebp-14h]
 
-  if ( (*(_BYTE *)theJoin & 4) != 0 )
-    listOfMatches = *(_DWORD *)(*(_DWORD *)(theJoin + 16) + 8);
+  if ( (*(_BYTE *)(uintptr_t)theJoin & 4) != 0 )
+    listOfMatches = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theJoin + 16) + 8);
   while ( listOfMatches )
   {
     testResult = 0;
-    if ( (*(_BYTE *)listOfMatches & 0x20) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)listOfMatches & 0x20) == 0 )
     {
-      if ( *(_DWORD *)(theJoin + 12) )
+      if ( *(_DWORD *)(uintptr_t)(theJoin + 12) )
       {
-        testResult = Rules_EvaluateJoinExpression((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(theJoin + 12), theBind, (_BYTE *)(uintptr_t)(unsigned int)theJoin, listOfMatches, a4);
+        testResult = Rules_EvaluateJoinExpression((__int16 *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(theJoin + 12), theBind, (_BYTE *)(uintptr_t)(unsigned int)theJoin, listOfMatches, a4);
         if ( g_ClipsEvaluationError )
         {
           g_ClipsEvaluationError = 0;
@@ -1162,13 +1162,13 @@ LABEL_15:
       else
       {
         testResult = 1;
-        if ( (*(_BYTE *)theJoin & 4) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)theJoin & 4) != 0 )
         {
           bindFieldPtr = theBind;
           matchFieldPtr = listOfMatches;
           for ( i = 0; i < (*(_DWORD *)theBind << 17 >> 23) - 1; ++i )
           {
-            if ( *(_DWORD *)(matchFieldPtr + 8) != *((_DWORD *)bindFieldPtr + 2) )
+            if ( *(_DWORD *)(uintptr_t)(matchFieldPtr + 8) != *((_DWORD *)bindFieldPtr + 2) )
               goto LABEL_6;
             bindFieldPtr += 2;
             matchFieldPtr += 4;
@@ -1179,7 +1179,7 @@ LABEL_15:
     if ( testResult )
       goto LABEL_15;
 LABEL_6:
-    listOfMatches = *(_DWORD *)(listOfMatches + 4);
+    listOfMatches = *(_DWORD *)(uintptr_t)(listOfMatches + 4);
   }
   return 0;
 }
@@ -1366,13 +1366,13 @@ int  Rules_FlushDeferredRetractQueue(double a1)
   {
     do
     {
-      for ( i = *(char **)(g_ClipsDeferredJoinDriveListHead + 4); i; i = *(char **)(v2 + 28) )
-        Rules_DriveJoinNetwork(*(int **)g_ClipsDeferredJoinDriveListHead, i, 0, a1);
-      nextEntry = *(_DWORD *)(g_ClipsDeferredJoinDriveListHead + 8);
+      for ( i = *(char **)(uintptr_t)(g_ClipsDeferredJoinDriveListHead + 4); i; i = *(char **)(uintptr_t)(v2 + 28) )
+        Rules_DriveJoinNetwork(*(int **)(uintptr_t)g_ClipsDeferredJoinDriveListHead, i, 0, a1);
+      nextEntry = *(_DWORD *)(uintptr_t)(g_ClipsDeferredJoinDriveListHead + 8);
       g_ClipsMemFreeListTemp = g_ClipsDeferredJoinDriveListHead;
-      *(_DWORD *)g_ClipsDeferredJoinDriveListHead = *(_DWORD *)(g_ClipsMemoryTable + 48);
+      *(_DWORD *)(uintptr_t)g_ClipsDeferredJoinDriveListHead = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
       result = g_ClipsMemFreeListTemp;
-      *(_DWORD *)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
       g_ClipsDeferredJoinDriveListHead = nextEntry;
     }
     while ( nextEntry );
@@ -1433,9 +1433,9 @@ BOOL  Lexer_AppendCharToPendingToken(int inchar)
   int oldLength; // esi
 
   oldLength = g_Lexer_PendingLineCharIndex;
-  g_Lexer_PendingTokenBuffer = (int)Str_AppendCharEscaping(
+  g_Lexer_PendingTokenBuffer = (int)(intptr_t)Str_AppendCharEscaping(
                         inchar,
-                        (char *)g_Lexer_PendingTokenBuffer,
+                        (char *)(uintptr_t)g_Lexer_PendingTokenBuffer,
                         (unsigned int *)&g_Lexer_TokenBufferCapacity,
                         &g_Lexer_PendingLineCharIndex,
                         g_Lexer_TokenBufferCapacity + 80);
@@ -1451,7 +1451,7 @@ signed int Lexer_ResetPendingTokenBuffer(void)
   signed int result; // eax
 
   if ( g_Lexer_PendingTokenBuffer )
-    result = Mem_SmallBlockFree((_DWORD *)g_Lexer_PendingTokenBuffer, g_Lexer_TokenBufferCapacity);
+    result = Mem_SmallBlockFree((_DWORD *)(uintptr_t)g_Lexer_PendingTokenBuffer, g_Lexer_TokenBufferCapacity);
   g_Lexer_PendingTokenBuffer = 0;
   g_Lexer_TokenBufferCapacity = 0;
   g_Lexer_PendingLineCharIndex = 0;
