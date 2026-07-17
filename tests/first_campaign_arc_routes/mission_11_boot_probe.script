@@ -1,0 +1,6 @@
+wait_log 60 mission_load_done selected=-1 a=11
+wait 3.0
+screenshot mission11-start
+nonblank mission11-start
+world_pan_viewport 0 41 120
+screenshot mission11-shrine-area

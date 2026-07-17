@@ -1467,6 +1467,13 @@ execute_route_script() {
         fi
         write_world_script key "key $1 ${2:-4}" "${3:-0.40}" "" "" "${4:-world-key-${line_number}}"
         ;;
+      world_select_stack)
+        set -- $args
+        if [ "$#" -lt 1 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_select_stack requires a stack index"
+        fi
+        write_world_script select_stack "select_stack $1" "${2:-0.40}" "" "" "${3:-world-select-stack-${line_number}}"
+        ;;
       world_pan_viewport)
         set -- $args
         if [ "$#" -lt 2 ]; then

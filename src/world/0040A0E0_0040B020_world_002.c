@@ -1215,6 +1215,33 @@ CLASH95_INTERNAL void WorldMap_RunInputScriptStep(void)
       Platform_DebugPrimeInputFallbackMousePulse(a, b, c, d, e);
       return;
     }
+    /* Route-harness convenience: select an own stack by table index directly,
+       reproducing the click handler's core selection assignment (world_001.c:52)
+       without needing the stack's screen position. Test instrumentation only;
+       reached solely via CLASH95_WORLD_INPUT_SCRIPT. Lets a multi-turn march
+       re-select a queued-path stack each turn (which the next-unit cycle skips)
+       without per-turn tile discovery. */
+    if ( strcmp(command, "select_stack") == 0 && fields >= 2 )
+    {
+      if ( a >= 0 && a < UNIT_STACK_TABLE_COUNT
+        && *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a + UNIT_STACK_SLOT_BASE_OFFSET) != -1 )
+      {
+        int slot_index;
+        g_SelectedUnitIndex = a;
+        g_UnitStackSelectionActiveUnitIndex = -1;
+        for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+          g_UnitStackSlotSelectedFlags[slot_index] = 0;
+        Diagnostics_TraceWorldMapActionEvent(
+          "selected_stack_changed",
+          a,
+          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a),
+          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * a + 2),
+          0);
+      }
+      if ( trace_enabled )
+        fprintf(stderr, "[world_input] command=select_stack index=%d selected=%d cursor=%d,%d\n", a, g_SelectedUnitIndex, cursor_x, cursor_y);
+      return;
+    }
   }
   if ( script_file && feof(script_file) )
     clearerr(script_file);

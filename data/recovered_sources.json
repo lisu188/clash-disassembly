@@ -65853,7 +65853,7 @@
       "original_line": 2374,
       "source": "src/world/0040A0E0_0040B020_world_002.c",
       "linkage": "internal",
-      "body_sha256": "70911e2c84ec674ecc1d1ee9890f1b57fcbc6c03766b8b4fabf24743e71daa58",
+      "body_sha256": "431df999f4d6255d3e7e0663a25338180b8368594fee1658026ed98527fdeaf5",
       "original_address_range": {
         "start": "0x0040B020",
         "end_exclusive": "0x0040B0A0"
