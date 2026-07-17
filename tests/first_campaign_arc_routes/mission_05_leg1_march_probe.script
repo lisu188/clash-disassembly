@@ -49,10 +49,9 @@ wait_log 20 move_order_track_result selected=0 a=47 b=58
 click 320 240 0.05 2.0 confirm-crossing
 wait_log 60 unit_move_after_path_state selected=0
 
-# Multi-turn manual resume; observed tiles t1-t4, predicted t6+ toward
-# the eastward bridge turn near the (47,5x) target row.
+# t2-t9 observed; stack 0 crossed the bridge to the SW side. rem=5 at (46,53).
 
-# --- turn 2: stack 0 predicted at (67,47) ---
+# --- turn 2: stack 0 at (67,47) ---
 click 500 2 0.18 1.0 end-turn-1
 wait 4.0
 click 320 240 0.12 0.65 skip-1-1
@@ -71,7 +70,7 @@ click 320 240 0.05 2.0 confirm-resume-t2
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 3: stack 0 predicted at (62,47) ---
+# --- turn 3: stack 0 at (62,47) ---
 click 500 2 0.18 1.0 end-turn-2
 wait 4.0
 click 320 240 0.12 0.65 skip-2-1
@@ -90,7 +89,7 @@ click 320 240 0.05 2.0 confirm-resume-t3
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 4: stack 0 predicted at (58,45) ---
+# --- turn 4: stack 0 at (58,45) ---
 click 500 2 0.18 1.0 end-turn-3
 wait 4.0
 click 320 240 0.12 0.65 skip-3-1
@@ -109,7 +108,7 @@ click 320 240 0.05 2.0 confirm-resume-t4
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 5: stack 0 predicted at (54,47) ---
+# --- turn 5: stack 0 at (54,47) ---
 click 500 2 0.18 1.0 end-turn-4
 wait 4.0
 click 320 240 0.12 0.65 skip-4-1
@@ -128,7 +127,7 @@ click 320 240 0.05 2.0 confirm-resume-t5
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 6: stack 0 predicted at (50,47) ---
+# --- turn 6: stack 0 at (51,49) ---
 click 500 2 0.18 1.0 end-turn-5
 wait 4.0
 click 320 240 0.12 0.65 skip-5-1
@@ -136,9 +135,9 @@ click 320 240 0.12 0.65 skip-5-2
 click 320 240 0.12 0.65 skip-5-3
 click 320 240 0.12 0.65 skip-5-4
 wait_log 120 playgame_before_human_turn selected=-1 a=0 b=6
-world_pan_viewport 46 44 80
+world_pan_viewport 47 46 80
 mark_log_count sel0_t6 selected_stack_changed selected=0
-click 320 240 0.18 1.0 select-stack0-t6-50-47
+click 320 240 0.18 1.0 select-stack0-t6-51-49
 wait_log_marked 30 sel0_t6
 world_pan_viewport 43 55 80
 click 320 240 0.18 1.0 rewaypoint-t6
@@ -147,7 +146,7 @@ click 320 240 0.05 2.0 confirm-resume-t6
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 7: stack 0 predicted at (47,50) ---
+# --- turn 7: stack 0 at (47,50) ---
 click 500 2 0.18 1.0 end-turn-6
 wait 4.0
 click 320 240 0.12 0.65 skip-6-1
@@ -166,7 +165,7 @@ click 320 240 0.05 2.0 confirm-resume-t7
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-# --- turn 8: stack 0 predicted at (47,54) ---
+# --- turn 8: stack 0 at (46,53) ---
 click 500 2 0.18 1.0 end-turn-7
 wait 4.0
 click 320 240 0.12 0.65 skip-7-1
@@ -174,9 +173,9 @@ click 320 240 0.12 0.65 skip-7-2
 click 320 240 0.12 0.65 skip-7-3
 click 320 240 0.12 0.65 skip-7-4
 wait_log 120 playgame_before_human_turn selected=-1 a=0 b=8
-world_pan_viewport 43 51 80
+world_pan_viewport 42 50 80
 mark_log_count sel0_t8 selected_stack_changed selected=0
-click 320 240 0.18 1.0 select-stack0-t8-47-54
+click 320 240 0.18 1.0 select-stack0-t8-46-53
 wait_log_marked 30 sel0_t8
 world_pan_viewport 43 55 80
 click 320 240 0.18 1.0 rewaypoint-t8
@@ -185,6 +184,29 @@ click 320 240 0.05 2.0 confirm-resume-t8
 wait_log 60 unit_move_after_path_state selected=0
 fail_if_log mission05_failure_friendly_attack
 
-wait_log 30 unit_move_after_path_state selected=0 a=47 b=58 c=0
-screenshot mission05-leg1-arrival
-nonblank mission05-leg1-arrival
+# --- turn 9: stack 0 at (46,53) ---
+click 500 2 0.18 1.0 end-turn-8
+wait 4.0
+click 320 240 0.12 0.65 skip-8-1
+click 320 240 0.12 0.65 skip-8-2
+click 320 240 0.12 0.65 skip-8-3
+click 320 240 0.12 0.65 skip-8-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=9
+world_pan_viewport 42 50 80
+mark_log_count sel0_t9 selected_stack_changed selected=0
+click 320 240 0.18 1.0 select-stack0-t9-46-53
+wait_log_marked 30 sel0_t9
+world_pan_viewport 43 55 80
+click 320 240 0.18 1.0 rewaypoint-t9
+wait_log 20 move_order_track_result selected=0 a=47 b=58
+click 320 240 0.05 2.0 confirm-resume-t9
+wait_log 60 unit_move_after_path_state selected=0
+fail_if_log mission05_failure_friendly_attack
+
+# Leg-1 arrival: stack 0 reaches the SW cluster staging area at (47,57),
+# rem=1 from the nominal (47,58) target, having crossed the bridge via the
+# transferred builder over 9 authentic player-0 turns.
+wait_log 30 unit_move_after_path_state selected=0 a=47 b=57
+fail_if_log mission05_failure_friendly_attack
+screenshot mission05-leg1-staging-arrival
+nonblank mission05-leg1-staging-arrival

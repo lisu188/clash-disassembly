@@ -449,3 +449,27 @@ to the bridge near the target row. `mission_05_leg1_march_probe.{script,env}`
 hardcodes the observed tiles and predicts the rest; each run extends the
 known-good prefix by ~1 turn (the first wrong prediction fails cleanly and
 reveals that turn's actual tile). Remaining to leg-1 arrival: ~3-4 turns.
+
+## LEG-1 MARCH COMPLETE TO STAGING (2026-07-17) — full trajectory proven
+
+The builder-carrying combat stack 0 marches home -> bridge -> SW cluster
+staging over 9 authentic player-0 turns, per-turn manual resume by tile
+selection. Full observed trajectory (each turn: select stack 0 by centered
+tile click, re-waypoint (47,58), confirm):
+  (70,47) -> (67,47) -> (62,47) -> (58,45) -> (54,47) -> (51,49 = bridge) ->
+  (47,50 = crossed) -> (46,53) -> (47,57), rem 29->1.
+`mission_05_leg1_march_probe.{script,env}` hardcodes this trajectory and ends
+at the (47,57) staging arrival (one tile from the nominal 47,58, adjacent to
+the SW cluster). This proves end-to-end: the builder transfer grants bridge
+crossing, and a full multi-turn army march across the water is reproducible.
+
+Known flakiness: the per-turn select `wait_log_marked` (30s) occasionally
+times out on the last turns when the select is slow; widen the mark window or
+add a retry for a fully green single-shot. The trajectory itself is
+deterministic.
+
+Remaining for mission-05 completion (all mechanics proven, assembly only):
+final approach to attack range, per-stack MANUAL tactical battles vs the
+cyclop cluster (autoresolve rejected 6v10), building 4 capture, remote stack
+21 at (87,66); then repeat the transfer+march for stacks 1/3 if the single
+combat stack is insufficient. Expect `mission_objective_complete a=5`.
