@@ -31,36 +31,41 @@ in uninterruptible I/O), `bootflop.img` (El Torito 1.44M CDBOOT image extracted
 from the ISO at LBA 21), `hda.qcow2` (2 GB Win98 target), `game.img` (FAT32
 game drive), `qmp.sock`, `qemu.log`.
 
-## Status / known blocker (2026-07-17, native QEMU path exhausted)
+## Status (2026-07-17): headless install SOLVED on native QEMU
 
-Rig fully built; recovered reference frames captured under
-`artifacts/original-captures/recovered-ref/`. The Win98 **guest boot** hangs in
-real-mode IO.SYS before the installer menu, on **every** configuration tried.
+The "IO.SYS boot hang" was **misdiagnosed** — it was never an emulation bug.
+Root cause: the Win98 CD-ROM Startup Menu auto-selects "Boot from Hard Disk"
+after a ~3 s timeout, and with an **empty/unbootable hard disk** that jumps into
+a blank MBR and executes zeros → the blinking-cursor "hang" (`nonblack` 0↔18).
+It reproduced identically on QEMU 8.2.2 (WSL) and 11.0 (native), floppy and CD,
+every CPU — because the trigger was the empty disk, not the host.
 
-Native-Windows QEMU (`qemu-w64` 11.0, driven by `qmp_win.ps1` over TCP:4444)
-was installed to escape the WSL process-lifecycle issues — it runs stably, but
-reproduces the WSL hang exactly, because no WHPX is available on this host so
-both are **TCG-only** (same interpreter core).
+Fixes that unblocked a full headless install (native QEMU 11.0 / TCG):
+1. **Boot the CD, not the empty disk.** Send `2` at the CD-ROM Startup Menu
+   ("Boot from CD-ROM"). Do it early after boot/reset so the keystroke buffers
+   into the menu; a trailing `ret` cascades through the second menu's default.
+2. **Use the authentic MS compilation ISO** `C:\clash95-vm\WINDOWS_98_1.iso`
+   (extracted from `C:\WindowsIso\...Collection (v6)\Windows 98 Collection\
+   Windows 98 Collection - 1.7z`; Volume WIN98_1, MS CDIMAGE, EL TORITO boot,
+   `WIN98\WIN98\SETUP.EXE` + CABs, product key **pre-filled**). Its custom boot
+   menu even exposes Run-FDISK / Format-C / Run-Setup options directly.
+3. **Durable writethrough cache** (`cache=writethrough` on the hda drive):
+   a hard `Stop-Process` on QEMU otherwise drops the writeback cache and loses
+   the FDISK partition + FORMAT. Prefer QMP `system_reset` (warm) between the
+   FDISK→FORMAT→SETUP steps so one process holds the writes.
+4. **Keyboard-drive the GUI wizard.** The `usb-tablet` absolute pointer is NOT
+   honoured during setup (pre-USB-driver; setup reads the PS/2 relative mouse),
+   so clicks miss. Use Tab/Space/Enter/Esc instead — e.g. License = Tab, Space
+   (select "I accept"), Enter (Next); every subsequent page's default is Next
+   (Enter); skip the Startup-Disk floppy step with Esc (Cancel) then Enter.
 
-Definitive diagnosis from a SeaBIOS debug console (`-debugcon file:...
--global isa-debugcon.iobase=0x402`):
-- Clean BIOS hand-off — `Booting from Floppy/DVDCD... Booting from 0000:7c00`.
-- Guest runs: `set VGA mode 3` ×2 (IO.SYS starts, re-inits text mode), then a
-  black screen with a lone blinking cursor at (0,0): screendumps oscillate
-  `nonblack=0` ↔ `nonblack=18` forever, no menu text. Timer IRQ alive, boot
-  thread wedged on an early hardware probe (A20 / device detect) under TCG.
-- Same signature across QEMU 8.2.2 (WSL) **and** 11.0 (native); floppy
-  (`-boot a`) **and** CD El-Torito (`-boot d`); default CPU **and**
-  `-cpu pentium2`.
+Install recipe (all headless, `qmp_win.ps1` over TCP:4444):
+`qemu-img create -f qcow2 hda.qcow2 2G` → `vm_launch.ps1 -Boot d` → cascade `2`
+into the boot menu → at DOS: `fdisk` (Enter×… primary max+active), Esc,
+`system_reset` → cascade `2` → `format c: /u`, `y` → `d:`, `cd \win98\win98`,
+`setup /is` → keyboard through the wizard → let post-copy reboots time out to
+"Boot from Hard Disk". Product key pre-filled (W7XTC-…); user name required.
 
-Full evidence in `../../artifacts/original-captures/COMPARISON_NOTES.md`.
-
-Remaining options (each needs a decision/input, so parked pending the user):
-1. A one-off **visible** VM console to watch/steer the boot — precluded by the
-   headless/no-popup constraint unless the user relaxes it.
-2. A **different guest image** — a stock Microsoft Win9x boot disk (this ISO is
-   a custom repack whose boot image is the finicky element) or a pre-installed
-   Win9x `qcow2` to skip the install boot entirely.
-3. Hardware acceleration (WHPX/KVM) — unavailable on this host.
-
-The rig will drive capture unchanged the moment a guest reaches a desktop.
+Full narrative + per-screen captures in
+`../../artifacts/original-captures/COMPARISON_NOTES.md` and
+`../../artifacts/original-captures/qemu-native/`.
