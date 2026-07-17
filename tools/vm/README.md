@@ -87,3 +87,36 @@ Full narrative + per-screen captures in
   unexplored-black in the all-AI view); campaign direct-boot camera starts at
   the scenario viewport with no selection (original multiplayer path
   auto-selects and follows AI stacks — different code path).
+
+## Tile-by-tile comparison (2026-07-17, `tile_compare.py`)
+
+Per-absolute-tile atlas comparison of the world view (64x64 cells, grid origin
+(32,16); exact per-frame viewport recovered from the minimap's white box via
+the MiniMap_* formulas — see the tool docstring). Verification: selftest
+(recovered run-A vs run-B) = **34/34 tiles identical**; a one-tile shift
+negative control collapses matching to 25% (only repeating plain grass
+survives); the wedge frame is auto-rejected.
+
+Original (13 frames, viewports (0,20)..(82,32)) vs recovered (481 frames):
+16 tiles covered by both. Result — zero unexplained differences; every tile
+falls into one of three *root-caused* buckets:
+
+1. **sparse-pixel-mismatch (9 tiles):** ~3% of pixels per tile where the
+   ORIGINAL draws a green ramp (95,135,63 / 103,151,71 / 87,127,55 ...) and
+   the RECOVERED engine draws BLACK (0,0,0) — isolated speckles inside grass
+   textures, consistent across frames. A recovered-engine palette/render bug
+   (suspect: terrain sprite-code cycling tables or an uninitialized palette
+   ramp), NOT a capture artifact. Follow-up task filed.
+2. **fog-black-mismatch (3) + content-mismatch (4):** the recovered all-AI
+   game keeps fog-of-war black tiles (and omits multi-tile rock overhangs
+   anchored on fogged neighbors) where the original reveals the whole map
+   (`Map_RevealAllTilesForPlayer`, world_003.c:254-258). Related: the
+   recovered all-AI camera NEVER moves (230 frames at (4,22)) while the
+   original's AI-follow camera roams the map — the recovered all-AI game's
+   AI/reveal path is not executing as recovered. Follow-up task filed.
+   The content-mismatch bucket also contains AI units present in one engine's
+   samples only (expected, different game moments).
+
+Terrain pixels outside these buckets match exactly (selftest-grade identity).
+Artifacts: `artifacts/tile-compare/m05/` (tiles.csv, heatmap.png,
+worst_montage.png, summary.txt, maskaudit.png, frame indexes).
