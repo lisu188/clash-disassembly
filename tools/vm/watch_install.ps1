@@ -15,8 +15,13 @@ $pi = '/mnt/c/Users/andrz/AppData/Local/Temp/claude/C--Users-andrz-git-clash-dis
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 $prevNb = -1; $prevW = -1; $snap = 0
 for ($i = 1; $i -le $Iterations; $i++) {
-  & $qmp -Port $Port -Op shot -Arg "$Vm\watch.ppm" | Out-Null
+  if (Test-Path "$Vm\watch.ppm") { Remove-Item "$Vm\watch.ppm" -Force -ErrorAction SilentlyContinue }
+  & $qmp -Port $Port -Op shot -Arg "$Vm\watch.ppm" 2>$null | Out-Null
   Start-Sleep -Milliseconds 700
+  if (-not (Test-Path "$Vm\watch.ppm")) {
+    Write-Output ("t+{0}s: QEMU-DEAD (no screendump; QMP refused)" -f ($i * $IntervalSec))
+    break
+  }
   $r = wsl -e bash -c "python3 $pi /mnt/c/clash95-vm/watch.ppm 2>/dev/null"
   $parts = "$r" -split ' '
   $w = 0; $nb = -1
