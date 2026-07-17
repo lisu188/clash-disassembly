@@ -35,6 +35,12 @@ switch ($Op) {
   'key' {
     Send-Qmp $stream $reader @{ execute = 'send-key'; arguments = @{ keys = @(@{ type = 'qcode'; data = $Arg }); 'hold-time' = 60 } }
   }
+  'chord' {
+    # Send multiple qcodes as ONE chord, e.g. -Arg 'ctrl,esc' or 'alt,f4'
+    $codes = @()
+    foreach ($k in ($Arg -split ',')) { $codes += @{ type = 'qcode'; data = $k.Trim() } }
+    Send-Qmp $stream $reader @{ execute = 'send-key'; arguments = @{ keys = $codes; 'hold-time' = 80 } }
+  }
   'keys' {
     foreach ($k in ($Arg -split ',')) {
       Send-Qmp $stream $reader @{ execute = 'send-key'; arguments = @{ keys = @(@{ type = 'qcode'; data = $k.Trim() }); 'hold-time' = 60 } } | Out-Null

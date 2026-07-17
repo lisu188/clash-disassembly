@@ -14,7 +14,9 @@ param(
   [int]$Port = 4444,
   [string]$Cpu = 'pentium2',
   [string]$Vga = 'cirrus',
-  [switch]$WithGame          # also attach game.img as a second disk (index=1)
+  [switch]$WithGame,         # also attach game.img as a second disk (index=1)
+  [switch]$NoUsb             # drop -usb/usb-tablet (Win98 first-boot PnP of the
+                             # UHCI controller can wedge under TCG; PS/2 only)
 )
 $qemu = 'C:\Program Files\qemu\qemu-system-i386.exe'
 Stop-Process -Name qemu-system-i386 -Force -ErrorAction SilentlyContinue
@@ -23,13 +25,13 @@ if (Test-Path "$Vm\seabios.txt") { Clear-Content "$Vm\seabios.txt" }
 
 $qargs = @(
   '-machine','pc','-cpu',$Cpu,'-m','256','-vga',$Vga,'-display','none',
-  '-usb','-device','usb-tablet',
   '-qmp',"tcp:127.0.0.1:$Port,server,nowait",'-rtc','base=2000-01-01',
   '-debugcon',"file:$Vm\seabios.txt",'-global','isa-debugcon.iobase=0x402',
   '-drive',"file=$Hda,format=qcow2,if=ide,index=0,media=disk,cache=writethrough",
   '-drive',"file=$Cd,format=raw,if=ide,index=2,media=cdrom"
 )
 if ($WithGame) { $qargs += @('-drive',"file=$Vm/game.img,format=raw,if=ide,index=1,media=disk") }
+if (-not $NoUsb) { $qargs += @('-usb','-device','usb-tablet') }
 $qargs += @('-boot',"order=$Boot,menu=off")
 
 Start-Process -FilePath $qemu -ArgumentList $qargs -WindowStyle Hidden -RedirectStandardError "$Vm\qemu.err.txt"
