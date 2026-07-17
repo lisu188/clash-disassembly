@@ -112,6 +112,27 @@ than a copy kept in sync by hand.
 - A live process or dummy window is not sufficient proof; inspect actual
   presented frames for visual milestones.
 
+## 9a. Mandatory Frame Comparison Against the Original
+
+- Any visual-fidelity claim (title, menus, world map, battle, dialogs) must be
+  backed by a side-by-side frame comparison between the reconstruction and the
+  ORIGINAL `clash95.exe` rendering the same state.
+- The original runs headless under Wine inside WSL Xvfb (32-bit prefix with a
+  dosdevices drive mapping so `DetectGameCDPath` finds the install; capture via
+  ImageMagick `import`/`xwd` against the Xvfb display). Never launch either
+  binary on the host desktop and never open image viewers; all captures stay
+  headless files under `artifacts/`.
+- The reconstruction side uses the existing
+  `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX` presented-frame dumps from its own
+  Xvfb runs.
+- Record for every comparison: both frame files, the pixel metrics
+  (`tests/frame_metrics.py` or an equivalent mean-abs-diff/nonmatching-pixel
+  count), the game state markers proving both sides show the same state, and
+  the exact commands. Known acceptable differences (palette timing, cursor,
+  AVI frames) must be listed explicitly, not glossed over.
+- New route promotions and startup/rendering recoveries that touch presented
+  output should include at least one fresh comparison pair as evidence.
+
 ## 10. Workflow
 
 - Work on one explicit track and frontier per batch.
