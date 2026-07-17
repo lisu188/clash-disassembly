@@ -69,3 +69,21 @@ into the boot menu → at DOS: `fdisk` (Enter×… primary max+active), Esc,
 Full narrative + per-screen captures in
 `../../artifacts/original-captures/COMPARISON_NOTES.md` and
 `../../artifacts/original-captures/qemu-native/`.
+
+## Comparison results (2026-07-17)
+
+- **Main menu** (same state both sides): `mad=2.17/255`, **0.7% differing
+  pixels** — ALL localized to the six button labels (original=English,
+  bootstrap=Polish → `g_LanguageIndex` config-read gap, task flagged) and the
+  cursor. Dragons/banner/shield/knight/background pixel-identical.
+- **All-AI multiplayer map 5** (`/A5` — NOTE: in the ORIGINAL this arg loads a
+  multiplayer map, not campaign mission 5; the campaign direct-boot is a
+  bootstrap harness addition gated by `CLASH95_DIRECT_CAMPAIGN_MISSION`):
+  full frames diverge by AI-game moment, so the viewport-independent oracle is
+  the overview-minimap panel (whole map rendered by each engine):
+  `mad=2.38/255`, **0.6% differing** — residual is just the two viewport
+  rectangles and moving unit dots. Terrain render pixel-identical.
+- Noted for later: observer-mode fog display differs (original shows no
+  unexplored-black in the all-AI view); campaign direct-boot camera starts at
+  the scenario viewport with no selection (original multiplayer path
+  auto-selects and follows AI stacks — different code path).
