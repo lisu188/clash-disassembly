@@ -31,22 +31,36 @@ in uninterruptible I/O), `bootflop.img` (El Torito 1.44M CDBOOT image extracted
 from the ISO at LBA 21), `hda.qcow2` (2 GB Win98 target), `game.img` (FAT32
 game drive), `qmp.sock`, `qemu.log`.
 
-## Status / known blocker (2026-07-17)
+## Status / known blocker (2026-07-17, native QEMU path exhausted)
 
 Rig fully built; recovered reference frames captured under
-`artifacts/original-captures/recovered-ref/`. The Win98 **guest boot** under
-QEMU 8.2.2 in this WSL2 environment did not reach the installer menu headlessly:
-screendumps show only a 720x400 blinking-cursor text screen (18 nonblack px, no
-menu text, no `cpu_reset` in `-d cpu_reset` traces), and the QEMU process is
-unstable under WSL background supervision (a harness relay respawns it; detached
-launches are reaped by WSL session teardown after ~30-70 s).
+`artifacts/original-captures/recovered-ref/`. The Win98 **guest boot** hangs in
+real-mode IO.SYS before the installer menu, on **every** configuration tried.
 
-Next options to break the blocker:
-1. Run QEMU on **native Windows** (qemu-w64) instead of WSL — avoids the WSL
-   process-lifecycle and drvfs issues entirely; same scripts, Windows paths.
-2. `wsl --shutdown` to clear the respawn loop, then a single foreground-logged
-   boot with `-vga std -serial file` and a longer settle before the first shot
-   (SeaBIOS + CDBOOT driver load can take 30-60 s in TCG).
-3. Verify the boot visually with a one-off `-display gtk` run to confirm the
-   floppy reaches the Win98 CD-ROM startup menu, then translate the keystrokes
-   to the headless QMP loop.
+Native-Windows QEMU (`qemu-w64` 11.0, driven by `qmp_win.ps1` over TCP:4444)
+was installed to escape the WSL process-lifecycle issues — it runs stably, but
+reproduces the WSL hang exactly, because no WHPX is available on this host so
+both are **TCG-only** (same interpreter core).
+
+Definitive diagnosis from a SeaBIOS debug console (`-debugcon file:...
+-global isa-debugcon.iobase=0x402`):
+- Clean BIOS hand-off — `Booting from Floppy/DVDCD... Booting from 0000:7c00`.
+- Guest runs: `set VGA mode 3` ×2 (IO.SYS starts, re-inits text mode), then a
+  black screen with a lone blinking cursor at (0,0): screendumps oscillate
+  `nonblack=0` ↔ `nonblack=18` forever, no menu text. Timer IRQ alive, boot
+  thread wedged on an early hardware probe (A20 / device detect) under TCG.
+- Same signature across QEMU 8.2.2 (WSL) **and** 11.0 (native); floppy
+  (`-boot a`) **and** CD El-Torito (`-boot d`); default CPU **and**
+  `-cpu pentium2`.
+
+Full evidence in `../../artifacts/original-captures/COMPARISON_NOTES.md`.
+
+Remaining options (each needs a decision/input, so parked pending the user):
+1. A one-off **visible** VM console to watch/steer the boot — precluded by the
+   headless/no-popup constraint unless the user relaxes it.
+2. A **different guest image** — a stock Microsoft Win9x boot disk (this ISO is
+   a custom repack whose boot image is the finicky element) or a pre-installed
+   Win9x `qcow2` to skip the install boot entirely.
+3. Hardware acceleration (WHPX/KVM) — unavailable on this host.
+
+The rig will drive capture unchanged the moment a guest reaches a desktop.
