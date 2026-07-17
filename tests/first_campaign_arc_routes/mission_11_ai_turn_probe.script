@@ -1,0 +1,17 @@
+# Verify player 2 takes an AI turn after the case-11 human-controller fix.
+# End-turn uses the proven mission-13 triple-click top-menu pattern.
+wait_log 60 mission_load_done selected=-1 a=11
+wait 3.0
+
+world_click 500 2 2 0.5 turn-01-position-top
+world_click 500 2 4 0.5 turn-01-open-top-menu
+world_click 500 2 4 1.0 turn-01-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-01-skip-1
+world_click 320 240 2 0.35 turn-01-skip-2
+wait 7.0
+
+wait_log 200 playgame_before_human_turn selected=-1 a=1 b=2
+screenshot mission11-turn2-reached
+nonblank mission11-turn2-reached
+expect_log playgame_after_ai_turn

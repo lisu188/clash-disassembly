@@ -596,11 +596,18 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       ACTIVE_MISSION_INDEX = 10;
       for ( player_index = 0; player_index < 5; ++player_index )
         Game_ResetPlayerRuntimeStateByIndex(player_index);
+      /* Original store sequence at 0x45CF60..0x45CFB6: gameData +22887/+22E16/
+         +228A2/+228AE/+22E31/+2289E = active(1)=1, active(2)=1, human(1)=1,
+         religion(1)=0, human(2)=0, minimap(1)=1. A prior recovery replaced the
+         religion(1)=0 and human(2)=0 stores with a spurious minimap(2)=0
+         (+22E2D), leaving the AI opponent flagged human (ResetDefaults default)
+         so its turn stalled waiting for input. */
       PLAYER_IS_ACTIVE(1) = 1;
       PLAYER_IS_ACTIVE(2) = 1;
-      PLAYER_MINIMAP_VISIBLE(1) = 1;
-      PLAYER_MINIMAP_VISIBLE(2) = 0;
       PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
       strcpy((char *)(uintptr_t)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
       strcpy((char *)(uintptr_t)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
       MiniMap_CreateSurface(a2);
@@ -627,10 +634,19 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       ACTIVE_MISSION_INDEX = 11;
       for ( player_index = 0; player_index < 5; ++player_index )
         Game_ResetPlayerRuntimeStateByIndex(player_index);
+      /* Store order and the religion(1)=0 / human(2)=0 clears mirror the
+         original at 0x45D290..0x45D2F0 (stores to gameData +22887/+22E16/
+         +228A2/+228AE/+22E31/+2289E). PlayerRuntimeState_ResetDefaults defaults
+         PLAYER_IS_HUMAN_OFFSET to 1 for every player (0x44AD60), so the AI
+         opponent (player 2) MUST be cleared here or its turn stalls waiting for
+         human input. A prior recovery of this case dropped the religion(1)=0 and
+         human(2)=0 stores. */
       PLAYER_IS_ACTIVE(1) = 1;
       PLAYER_IS_ACTIVE(2) = 1;
-      PLAYER_MINIMAP_VISIBLE(1) = 1;
       PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
       strcpy((char *)(uintptr_t)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
       strcpy((char *)(uintptr_t)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
       MiniMap_CreateSurface(a2);
