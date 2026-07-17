@@ -387,3 +387,31 @@ per-turn tiles are deterministic for a fixed AP budget - discover them once
 by logging `human_turn_enter idx=0` each turn, then hardcode the pan+click.
 (Observed so far with retained-path resume: 70,47 -> 67,47 -> 51,49 ->
 47,50, then stalled.)
+
+## QUEUED-PATH / READY-FLAG SEMANTICS FULLY TRACED (2026-07-17) — authentic, not a bug
+
+Why a player-moved stack's multi-turn path stalls (does NOT auto-resume):
+
+- Slot flag byte is at slot offset +13. Bit 0 (0x01) = "auto-execute queued
+  path this turn" (the "ready" bit); bit 1 = UNIT_SLOT_FLAG_SPENT_TURN (0x02).
+- `Unit_NewTurn` (units_002.c:166): clears the SPENT bit
+  (`UnitStack_ClearSpentTurnFlag`, only bit 1), refreshes AP, then at line 262
+  `if (!UnitStack_HasReadyUnits(stackPtr)) goto next-stack;` — the queued-path
+  auto-execute (lines 286-294, `UnitStack_ExecuteQueuedPath`) is GATED on
+  `HasReadyUnits`, which tests slot+13 bit 0 (units_001.c:249-263).
+- `UnitStack_SetReadyFlags` (units_001.c:284, sets bit 0) is called from EXACTLY
+  ONE site: `buildings_002.c:178` — a stack SPAWNED from a building with a path
+  (castle reinforcements auto-walk their queued path). New-turn never re-sets
+  bit 0.
+- Observation (run 20260717T062901Z-207470): stack 0 at (67,47) each turn shows
+  `unit_new_turn_stack ... c=29` (queued-path field +316 still set = 29) but the
+  sequence ends at `unit_new_turn_after_plague` and jumps to the next stack — NO
+  `after_ready_check`/`before_path`. So the path persists yet HasReadyUnits is
+  false → no auto-resume.
+
+Consequence (authentic, obj_diff-gated so identical in the original): only
+castle-spawned pathed stacks auto-walk. A player who queues a long march must
+re-select the stack and continue it every turn. The mission-05 army route
+therefore MUST do per-turn manual resume: select stack 0 by tile center-click
+(ready-state-independent), then re-issue/continue the path. There is no code
+fix — this is the original's design.
