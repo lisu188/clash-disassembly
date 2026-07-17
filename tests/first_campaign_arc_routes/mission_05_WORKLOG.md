@@ -415,3 +415,23 @@ re-select the stack and continue it every turn. The mission-05 army route
 therefore MUST do per-turn manual resume: select stack 0 by tile center-click
 (ready-state-independent), then re-issue/continue the path. There is no code
 fix — this is the original's design.
+
+## PER-TURN MANUAL RESUME VALIDATED (2026-07-17, run 20260717T063617Z-209052)
+
+`mission_05_manual_resume_probe.{script,env}` proves the resume pattern the
+ready-flag semantics require:
+  each turn -> world_pan_viewport so stack 0's tile is centered ->
+  click 320 240 (selects it: selected_stack_changed selected=0, ready-state
+  independent) -> pan to target, click 320 240 (re-issues waypoint) -> confirm.
+Turn 2 selected stack 0 at its stall tile (67,47) and advanced it to (62,47)
+(`unit_move_after_path_state selected=0 a=62 b=47 c=24`). Trajectory so far:
+(70,47) -> (67,47) [t1] -> (62,47) [t2], ~5 tiles/turn (20 AP, terrain-limited).
+
+Full leg-1 assembly = repeat this per turn, updating the pan-center to stack
+0's current tile each turn (deterministic per run since re-waypointing is
+deterministic; discover the next tile from each run's
+`unit_move_after_path_state selected=0` and hardcode the following turn).
+Curve toward the bridge near (51,49)/(47,50) per the earlier army-crossing
+run, arriving (47,58). Then: repeat the builder transfer + march for stacks
+1/3, per-stack manual tactical battles at the cyclop cluster (autoresolve
+rejected), building 4 capture, remote stack 21.

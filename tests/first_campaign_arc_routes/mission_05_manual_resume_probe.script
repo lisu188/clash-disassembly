@@ -1,0 +1,72 @@
+# Mission 05 stack-transfer, iteration 12: center-click idiom throughout.
+# Every targeted click = world_pan_viewport (row-4) (col-3) so the target
+# tile sits at screen center, then click 320 240. The view follows moving
+# units after orders, so re-pin before every coordinate click. This is the
+# same idiom the proven stack-19 attack chain uses.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+
+click 496 416 0.18 0.55 next-unit-1
+click 496 416 0.18 0.55 next-unit-2
+click 496 416 0.18 0.55 next-unit-3
+click 496 416 0.18 0.55 next-unit-4
+mark_log_count sel4 next_unit_selected selected=4
+click 496 416 0.18 0.8 next-unit-5
+wait_log_marked 30 sel4
+
+# Move stack 4 to (70,46): pan so (70,46) is centered, click center twice.
+world_pan_viewport 66 43 80
+click 320 240 0.18 0.8 waypoint-stack4-70-46
+wait_log 20 move_order_track_result selected=4 a=70 b=46
+click 320 240 0.05 2.0 confirm-waypoint-stack4
+wait_log 60 unit_move_after_path_state selected=4 a=70 b=46 c=0
+screenshot mission05-at-70-46
+
+# Toggle builder slot 5, then split-click stack 0's tile (70,47) centered.
+click 40 400 0.18 0.8 toggle-slot0
+wait_log 10 selection_slot_toggle selected=4 a=0 b=1
+world_pan_viewport 66 44 80
+click 320 240 0.18 2.0 split-click-stack0
+wait_log 20 selection_split_attempt selected=4 a=70 b=47
+wait_log 20 selection_split_done selected=4 a=70 b=47
+screenshot mission05-split-done
+
+# Same-turn verification: with stack 4 still selected (mask cleared after
+# split_done), clicking stack 0's tile selects it (iteration-1 semantics),
+# then the cross-water waypoint proves builder presence via
+# bridge_pathing_enable_move.
+world_pan_viewport 66 44 80
+mark_log_count sel0 selected_stack_changed selected=0
+click 320 240 0.18 1.0 select-stack0-center
+wait_log_marked 30 sel0
+world_pan_viewport 43 55 80
+click 320 240 0.18 1.0 waypoint-stack0-47-58
+wait_log 20 bridge_pathing_enable_move selected=0
+wait_log 20 move_order_track_result selected=0 a=47 b=58
+
+# Confirm the crossing waypoint, then bare end-turns (NO manual resume)
+# to observe stack 0 auto-run trajectory each turn.
+click 320 240 0.05 2.0 confirm-crossing
+wait_log 60 unit_move_after_path_state selected=0
+
+# Turn 2: manual tile-based resume. Stack 0 stalls at (67,47); select it
+# by center-clicking its tile, re-issue the waypoint to (47,58), confirm.
+# Proves per-turn manual resume advances the march past the stall.
+click 500 2 0.18 1.0 end-turn-1
+wait 4.0
+click 320 240 0.12 0.65 skip-1-1
+click 320 240 0.12 0.65 skip-1-2
+click 320 240 0.12 0.65 skip-1-3
+click 320 240 0.12 0.65 skip-1-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+world_pan_viewport 63 44 80
+mark_log_count sel0_t2 selected_stack_changed selected=0
+click 320 240 0.18 1.0 select-stack0-at-67-47
+wait_log_marked 30 sel0_t2
+world_pan_viewport 43 55 80
+click 320 240 0.18 1.0 rewaypoint-47-58
+wait_log 20 move_order_track_result selected=0 a=47 b=58
+click 320 240 0.05 2.0 confirm-resume
+wait_log 60 unit_move_after_path_state selected=0
+screenshot mission05-turn2-resumed
+nonblank mission05-turn2-resumed
