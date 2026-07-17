@@ -35,6 +35,57 @@ switch ($Op) {
   'key' {
     Send-Qmp $stream $reader @{ execute = 'send-key'; arguments = @{ keys = @(@{ type = 'qcode'; data = $Arg }); 'hold-time' = 60 } }
   }
+  'clickrel' {
+    # PS/2 relative-mouse click at absolute pixel px,py: saturate the cursor to
+    # (0,0) with large negative moves, then walk to the target in small steps
+    # (sub-acceleration-threshold), then left click. Arg = 'px,py'.
+    $parts = $Arg -split ','
+    $px = [int]$parts[0]; $py = [int]$parts[1]
+    for ($j = 0; $j -lt 12; $j++) {
+      Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(
+        @{ type='rel'; data=@{ axis='x'; value=-300 } },
+        @{ type='rel'; data=@{ axis='y'; value=-300 } }) } } | Out-Null
+      Start-Sleep -Milliseconds 30
+    }
+    $cx = 0; $cy = 0
+    while ($cx -lt $px -or $cy -lt $py) {
+      $dx = [math]::Min(8, $px - $cx); $dy = [math]::Min(8, $py - $cy)
+      if ($dx -lt 0) { $dx = 0 }; if ($dy -lt 0) { $dy = 0 }
+      Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(
+        @{ type='rel'; data=@{ axis='x'; value=$dx } },
+        @{ type='rel'; data=@{ axis='y'; value=$dy } }) } } | Out-Null
+      $cx += $dx; $cy += $dy
+      Start-Sleep -Milliseconds 15
+    }
+    Start-Sleep -Milliseconds 200
+    Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(@{ type='btn'; data=@{ button='left'; down=$true } }) } } | Out-Null
+    Start-Sleep -Milliseconds 120
+    Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(@{ type='btn'; data=@{ button='left'; down=$false } }) } } | Out-Null
+    'ok'
+  }
+  'moverel' {
+    # Stepped relative move by (dx,dy) total, 8px sub-steps, no click. Arg='dx,dy'
+    $parts = $Arg -split ','
+    $tx = [int]$parts[0]; $ty = [int]$parts[1]
+    $cx = 0; $cy = 0
+    while ($cx -ne $tx -or $cy -ne $ty) {
+      $dx = [math]::Sign($tx - $cx) * [math]::Min(8, [math]::Abs($tx - $cx))
+      $dy = [math]::Sign($ty - $cy) * [math]::Min(8, [math]::Abs($ty - $cy))
+      Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(
+        @{ type='rel'; data=@{ axis='x'; value=$dx } },
+        @{ type='rel'; data=@{ axis='y'; value=$dy } }) } } | Out-Null
+      $cx += $dx; $cy += $dy
+      Start-Sleep -Milliseconds 15
+    }
+    'ok'
+  }
+  'btn' {
+    # left click at current position
+    Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(@{ type='btn'; data=@{ button='left'; down=$true } }) } } | Out-Null
+    Start-Sleep -Milliseconds 120
+    Send-Qmp $stream $reader @{ execute='input-send-event'; arguments=@{ events=@(@{ type='btn'; data=@{ button='left'; down=$false } }) } } | Out-Null
+    'ok'
+  }
   'chord' {
     # Send multiple qcodes as ONE chord, e.g. -Arg 'ctrl,esc' or 'alt,f4'
     $codes = @()

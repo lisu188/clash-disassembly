@@ -24,7 +24,8 @@ Start-Sleep -Seconds 2
 if (Test-Path "$Vm\seabios.txt") { Clear-Content "$Vm\seabios.txt" }
 
 $qargs = @(
-  '-machine','pc','-cpu',$Cpu,'-m','256','-vga',$Vga,'-display','none',
+  # acpi=off: Win98 SE's ACPI driver wedges TCG at the boot splash (found 2026-07-17)
+  '-machine','pc,acpi=off','-cpu',$Cpu,'-m','256','-vga',$Vga,'-display','none',
   '-qmp',"tcp:127.0.0.1:$Port,server,nowait",'-rtc','base=2000-01-01',
   '-debugcon',"file:$Vm\seabios.txt",'-global','isa-debugcon.iobase=0x402',
   '-drive',"file=$Hda,format=qcow2,if=ide,index=0,media=disk,cache=writethrough",
