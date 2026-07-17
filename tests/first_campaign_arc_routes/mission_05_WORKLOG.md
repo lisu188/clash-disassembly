@@ -435,3 +435,17 @@ Curve toward the bridge near (51,49)/(47,50) per the earlier army-crossing
 run, arriving (47,58). Then: repeat the builder transfer + march for stacks
 1/3, per-stack manual tactical battles at the cyclop cluster (autoresolve
 rejected), building 4 capture, remote stack 21.
+
+## LEG-1 MARCH TRAJECTORY (accumulating, 2026-07-17)
+
+Deterministic per-turn manual-resume march of builder-carrying stack 0 to the
+crossing. Observed stack-0 end tiles (each turn: select by centered tile
+click, re-waypoint (47,58), confirm):
+  t1 (67,47) rem=29 -> t2 (62,47) rem=24 -> t3 (58,45) rem=20 ->
+  t4 (54,47) rem=16 -> ...
+`rem` = queued-path nodes remaining to (47,58). ~4-5 tiles/turn (20 AP,
+terrain-limited); path runs ~straight north along col ~46, then must turn east
+to the bridge near the target row. `mission_05_leg1_march_probe.{script,env}`
+hardcodes the observed tiles and predicts the rest; each run extends the
+known-good prefix by ~1 turn (the first wrong prediction fails cleanly and
+reveals that turn's actual tile). Remaining to leg-1 arrival: ~3-4 turns.
