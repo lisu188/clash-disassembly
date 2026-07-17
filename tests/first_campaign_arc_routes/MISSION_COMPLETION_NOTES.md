@@ -57,3 +57,19 @@ and 2 active, target castle = building 0 at (59,14) garrison 1, eight
 player-2 stacks (min_ap 20..26). Mission 12 is an ordinary capture route.
 The July-13 `first_ap=255` metadata smell on unit types 15/16 remains a
 separate open item for the unit-metadata tail recovery.
+
+## Mission 10/11 AI-opponent unblock (2026-07-17, commit d8259eb)
+
+Missions 10 and 11 hung after the human ended turn 1: the recovered
+Scenario_LoadMissionByIndex cases 10/11 had dropped the asm's
+PLAYER_HAS_HUMAN_CONTROLLER(2)=0 store (and religion(1)=0), and since
+PlayerRuntimeState_ResetDefaults defaults every player to human=1, the AI
+opponent (player 2) was treated as human and its turn waited for input
+forever (world_003.c:339 -> WorldMap_RunHumanTurnLoop). Fixed to mirror the
+asm store sequence; runtime-verified that player 2 now takes an AI turn.
+Missions 10/11 are now PLAYABLE. Completing mission 11 (march the builder-led
+stack from (22,15) to the cult place (2,44) and enter it -> EMPTY_CULT_PLACE)
+is now route-tuning: use world_select_stack 0 per-turn resume
+(mission_11_shrine_route), but each turn now includes player-2's AI turn, so
+full runs take ~40 min wall-clock. Note case 12-19 already had their clears
+(audited); only 10 and 11 were affected.
