@@ -189,6 +189,12 @@ def mad(a, b):
 
 
 def classify(best, maxd, pct, sa, sb, t):
+    # The terrain textures are dithered noise: individual pixels differ by a
+    # full palette step between the DirectDraw original (6-bit DAC) and the SDL
+    # recovery (8-bit), so per-pixel maxd is large (~175) even on visually
+    # identical tiles. MEAN abs diff is the robust identity metric -
+    # empirically ~2-5 on matching grass/rock, >15 on real structural changes
+    # (fog strips, units, different terrain).
     black_a = [is_black(s) for s, _ in sa]
     black_b = [is_black(s) for s, _ in sb]
     if any(black_a) != any(black_b):
@@ -199,12 +205,10 @@ def classify(best, maxd, pct, sa, sb, t):
         return max(mad(a, b) for i, (a, _) in enumerate(ss)
                    for (b, _) in [x for x in ss[i + 1:]])
     da, db = dyn(sa), dyn(sb)
-    if maxd <= t['maxd']:
-        if da <= t['anim'] and db <= t['anim']:
-            return 'identical-terrain'
-        return 'animated-terrain-matched'
-    if pct <= t['sparse_pct']:
-        return 'sparse-pixel-mismatch'
+    if best <= t['ident_mad']:
+        if maxd <= t['maxd']:
+            return 'identical-pixel'          # equal modulo 6-bit DAC rounding
+        return 'identical-terrain'            # same terrain, dither/DAC variance
     if da > t['unit'] or db > t['unit']:
         return 'unit-occupied'
     return 'content-mismatch'
@@ -353,9 +357,8 @@ CLASS_COLORS = {
     'unobserved': (60, 60, 60),
     'orig-only': (60, 90, 200),
     'rec-only': (0, 190, 190),
-    'identical-terrain': (40, 200, 40),
-    'animated-terrain-matched': (20, 140, 120),
-    'sparse-pixel-mismatch': (230, 220, 40),
+    'identical-pixel': (40, 220, 40),
+    'identical-terrain': (60, 170, 60),
     'unit-occupied': (240, 140, 30),
     'content-mismatch': (230, 40, 40),
     'fog-black-mismatch': (0, 0, 0),
@@ -377,7 +380,7 @@ def cmd_score(args):
     atlas_b, drop_b = build_atlas(frames_b, masks_b, args.include_row6, args.k_cap,
                                   shift=shift, normalize=args.dac_normalize)
     t = {'anim': args.t_anim, 'unit': args.t_unit,
-         'maxd': args.t_maxd, 'sparse_pct': args.t_sparse_pct}
+         'maxd': args.t_maxd, 'ident_mad': args.t_ident_mad}
     os.makedirs(args.out_dir, exist_ok=True)
 
     both = sorted(set(atlas_a) & set(atlas_b))
@@ -422,8 +425,7 @@ def cmd_score(args):
 
     # worst montage
     bad = [r for r in results if r['class'] in
-           ('fog-black-mismatch', 'content-mismatch', 'sparse-pixel-mismatch',
-            'unit-occupied')]
+           ('fog-black-mismatch', 'content-mismatch', 'unit-occupied')]
     bad.sort(key=lambda r: (r['class'] != 'fog-black-mismatch', -r['best_mad']))
     bad = bad[:24]
     if bad:
@@ -448,7 +450,7 @@ def cmd_score(args):
     from collections import Counter
     counts = Counter(r['class'] for r in results)
     static = [r for r in results
-              if r['class'] in ('identical-terrain', 'animated-terrain-matched')]
+              if r['class'] in ('identical-pixel', 'identical-terrain')]
     denom = [r for r in results if r['class'] != 'unit-occupied']
     lines = []
     lines.append('tile_compare score summary')
@@ -560,9 +562,9 @@ def main():
     ps.add_argument('--t-anim', type=float, default=8.0)
     ps.add_argument('--t-unit', type=float, default=20.0)
     ps.add_argument('--t-maxd', type=int, default=6,
-                    help='max per-channel diff for identity modulo VGA 6-bit DAC')
-    ps.add_argument('--t-sparse-pct', type=float, default=0.05,
-                    help='max differing-pixel fraction for sparse-pixel-mismatch')
+                    help='max per-channel diff for pixel-perfect identity (DAC)')
+    ps.add_argument('--t-ident-mad', type=float, default=8.0,
+                    help='max mean-abs-diff for terrain identity (dither/DAC tolerant)')
     ps.add_argument('--out-dir', required=True)
     ps.set_defaults(func=cmd_score)
 

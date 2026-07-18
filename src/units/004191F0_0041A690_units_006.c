@@ -215,7 +215,6 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
   _DWORD *surface;
   unsigned char *surface_pixels;
   unsigned char *stream;
-  unsigned char *stream_base;
   unsigned char *stream_end;
   int pitch;
   int surface_width;
@@ -236,12 +235,29 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
     return 0;
 
   /*
-   * Several recovered callers still reach the generic `sub_402E80` decoder,
-   * but that path is polluted by x86-sized helper objects that are unsafe on
-   * x86-64. The reached menu/frame/glyph sprites use the simple format-0
-   * stream: literal runs, compressed back-references to prior literal runs,
-   * and high-bit transparent skips. Decode that narrow shape directly into the
-   * SDL-backed linear surface until the broader decoder scaffolding is safe.
+   * Several recovered callers still reach the generic `sub_402E80`
+   * (`Render_BlitCompressedSpriteRLE`) decoder, but that path is polluted by
+   * x86-sized helper objects that are unsafe on x86-64. This seam decodes the
+   * format-0 stream byte-exactly per the recovered reference
+   * (render_002.c:358-381, 577-580, 643-712):
+   *  - opcode & 0x80: transparent run of (opcode & 0x7F); opaque mode fills
+   *    g_Render_BackgroundColorIndex (ref :691); consumes no stream bytes.
+   *  - opcode 1..0x7F: literal run; consumes the FULL run of pixel bytes and
+   *    advances the column by the full length (ref :580,706) - clipping only
+   *    affects drawing, never stream position or column arithmetic.
+   *  - opcode 0: back-reference; the NEXT byte is a one-byte offset measured
+   *    backwards from its own position to a prior literal run's length byte
+   *    (ref :378-381); decode that run's pixels, then resume at the byte after
+   *    the offset byte (ref :577-578). References may reach before this
+   *    record into earlier bytes of the loaded DLX file - no floor.
+   *  - rows that fall off the surface still consume their runs (the original
+   *    clips via its blit cursor, never aborting the stream); row overshoot
+   *    pixels are written like the original's linear cursor and are
+   *    overdrawn by the following tile.
+   * The earlier partial decoder desynchronized the stream (4-byte offset
+   * guess + clamped consumption), which misread data bytes >= 0x80 as
+   * transparent runs and produced black speckles in world terrain tiles
+   * (proven by the tile-by-tile comparison vs the original on real Win98).
    */
   width = *(unsigned __int16 *)(uintptr_t)sprite_for_char;
   height = *(unsigned __int16 *)(uintptr_t)(sprite_for_char + 2);
@@ -255,7 +271,6 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
   entry_size = *(int *)(uintptr_t)(sprite_for_char + 14);
   if ( entry_size <= 10 )
     return 0;
-  stream_base = stream;
   stream_end = stream + (entry_size - 10);
   pitch = *(unsigned __int16 *)surface;
   surface_width = *(unsigned __int16 *)surface;
@@ -264,26 +279,29 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
   for ( row = 0; row < height; ++row )
   {
     int column;
+    int row_y;
+    int row_visible;
     unsigned char *destination_row;
 
-    if ( top + row < 0 || top + row >= surface_height )
-      return 0;
-    destination_row = surface_pixels + (top + row) * pitch;
+    row_y = top + row;
+    row_visible = row_y >= 0 && row_y < surface_height;
+    destination_row = row_visible ? surface_pixels + row_y * pitch : 0;
     column = 0;
     while ( column < width )
     {
       unsigned char opcode;
       unsigned int run_length;
+      const unsigned char *run_pixels;
 
-      if ( stream >= stream_end )
+      if ( stream >= stream_end )   /* crash guard only; the original never
+                                     * bounds the stream - a hit means
+                                     * malformed data, draw what we have */
         return 0;
       opcode = *stream++;
       if ( (opcode & 0x80u) != 0 )
       {
         run_length = opcode & 0x7F;
-        if ( run_length > (unsigned int)(width - column) )
-          run_length = width - column;
-        if ( !draw_mode )
+        if ( !draw_mode && row_visible )
         {
           unsigned int i;
 
@@ -302,58 +320,36 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
 
       if ( opcode )
       {
-        unsigned int i;
-
         run_length = opcode;
-        if ( run_length > (unsigned int)(width - column) )
-          run_length = width - column;
-        if ( stream + run_length > stream_end )
-          return 0;
-        for ( i = 0; i < run_length; ++i )
-        {
-          int destination_x;
-
-          destination_x = left + column + (int)i;
-          if ( destination_x >= 0 && destination_x < surface_width )
-            destination_row[destination_x] = stream[i];
-        }
-        stream += run_length;
-        column += run_length;
-        continue;
+        run_pixels = stream;
+        stream += run_length;               /* consume the FULL run */
       }
-
+      else
       {
-        unsigned int back_offset;
-        unsigned char *copy_source;
+        /* back-reference: one-byte offset, measured backwards from the offset
+         * byte itself, to a prior literal run's length byte (ref
+         * render_002.c:378-381); resume after the offset byte (:577-578). */
+        const unsigned char *referenced_run;
+
+        referenced_run = stream - *stream;
+        run_length = *referenced_run;
+        run_pixels = referenced_run + 1;
+        ++stream;                           /* resume past the offset byte */
+      }
+      if ( row_visible )
+      {
         unsigned int i;
 
-        if ( stream + 4 > stream_end )
-          return 0;
-        back_offset = (unsigned int)stream[0]
-                    | ((unsigned int)stream[1] << 8)
-                    | ((unsigned int)stream[2] << 16)
-                    | ((unsigned int)stream[3] << 24);
-        if ( back_offset == 0 || back_offset > (unsigned int)(stream - stream_base) )
-          return 0;
-        copy_source = stream - back_offset;
-        stream += 4;
-        run_length = *copy_source++;
-        if ( !run_length )
-          return 0;
-        if ( run_length > (unsigned int)(width - column) )
-          run_length = width - column;
-        if ( copy_source + run_length > stream_end )
-          return 0;
         for ( i = 0; i < run_length; ++i )
         {
           int destination_x;
 
           destination_x = left + column + (int)i;
           if ( destination_x >= 0 && destination_x < surface_width )
-            destination_row[destination_x] = copy_source[i];
+            destination_row[destination_x] = run_pixels[i];
         }
-        column += run_length;
       }
+      column += run_length;
     }
   }
 
