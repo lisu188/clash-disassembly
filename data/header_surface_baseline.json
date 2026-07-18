@@ -84,7 +84,7 @@
   "strategic->buildings": 46,
   "strategic->clips": 4,
   "strategic->media": 20,
-  "strategic->persistence": 21,
+  "strategic->persistence": 22,
   "strategic->render": 15,
   "strategic->runtime": 9,
   "strategic->units": 35,
@@ -109,5 +109,5 @@
   "world->units": 43
  },
  "schema_version": 1,
- "shared_global_count": 240
+ "shared_global_count": 244
 }

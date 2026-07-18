@@ -3,7 +3,7 @@
   "language": "GNU C17",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
   "source_file_count": 140,
-  "function_count": 4156,
+  "function_count": 4157,
   "functions": [
     {
       "name": "UnitBattle_HandleBattlefieldInteraction",
@@ -52213,6 +52213,23 @@
       "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
     },
     {
+      "name": "Rules_HostDigTreasure",
+      "original_address": "0x0045279F",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 22,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "c6e92ca528cbd6c22a99d6010e2095c96355e777bbf9a129aaf7819b3c663a81",
+      "original_address_range": {
+        "start": "0x0045279F",
+        "end_exclusive": "0x004528AB"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
       "name": "Rules_HostRoadExists",
       "original_address": "0x004528AB",
       "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
@@ -70660,5 +70677,5 @@
   ],
   "cutover": "canonical-split",
   "legacy_manifest": "clash95.c",
-  "address_marker_count": 4006
+  "address_marker_count": 4007
 }

@@ -35,7 +35,6 @@ int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))();
 int (* ProcParam_PushEvaluatedArgumentFrame(_DWORD *a1, int a2, int a3, int a4, double a5, int (*a6)(void)))(void);
 
 
-_UNKNOWN Rules_HostDigTreasure;
 
 
 
@@ -577,6 +576,70 @@ char aBuilding_bui_1[31] = "Building_BuildSmiths() - %d,%d";
 char aBuilding_bui_0[31] = "Building_BuildSchool() - %d,%d";
 
 char aTrap_newDDD[19] = "Trap_New(%d,%d,%d)";
+
+/* --- DigTreasure outcome data (byte-exact from clash95.exe .rodata; the
+   32-bit record pointer slots are bound at runtime, see Rules_HostDigTreasure) --- */
+char aTreasure_dighe[21] = "Treasure_DigHere(%d)";
+char aTreasure_dig_0[39] = "Treasure_DigHere() - wylosowano 0x%08x";
+char aKop_bud[8] = "kop_bud";
+static char aTreasureEmpty[1] = "";
+static char aTreasureMsg_00[179] = "G\222uchy d\246wi\221k wydoby\222 si\221 przy kolejnym uderzeniu \222opat\206. Natrafi\222e\236 na bardzo zmursza\222\206 skrzyni\221. Gdy ju\247 j\206 otwar\222e\236 Twoim oczom ukaza\222y si\221 kosztowno\236ci warte 200 sztuk z\222ota.";
+static char aTreasureMsg_01[142] = "A dull sound could be heard when you were digging. You came across an old trunk. When you opened it you saw trasure worth 200 pieces of gold.";
+static char aTreasureMsg_02[185] = "Bei Deinem letzten Spatenstich dringt ein dumpfes Ger\204usch hervor. Du bist auf eine v\224llig morsche Truhe gesto\341en. Als Du sie \224ffnest, erblickst Du Sch\204tze im Wert von 200 Goldst\201cken.";
+static char aTreasureMsg_03[157] = "Mia\222e\236 ju\247 zrezygnowa\215 z poszukiwa\244, gdy nagle \222opata uderzy\222a w wieko starego kufra. Wprawnym ruchem wy\222ama\222e\236 k\222\242dk\221 i znalaz\222e\236 w \236rodku 300 sztuk z\222ota.";
+static char aTreasureMsg_04[118] = "You were about to quit the excavation when your spade hit the lid of an old trunk. You have found 300 pieces of gold.";
+static char aTreasureMsg_05[198] = "Du willst schon aufgeben zu suchen, als Dein Spaten auf den Deckel eines alten Koffers trifft. Mit einem ge\201bten Schlag hast Du das Vorh\204ngeschlo\341 zertr\201mmert und im Koffer 300 Goldst\201cke gefunden.";
+static char aTreasureMsg_06[147] = "W grudach ziemi co\236 zal\236ni\222o. Jeszcze kilka uderze\244 \222opaty i stajesz si\221 posiadaczem szkatu\222y wype\222nionej kosztowno\236ciami wartymi 100 sztuk z\222ota.";
+static char aTreasureMsg_07[78] = " You have found 100 pieces of gold in the dirt where an old trunk was buried.";
+static char aTreasureMsg_08[160] = "Zwischen den Erdklumpen hat irgend etwas gegl\204nzt. Noch einige Spatenstiche und Du bist Besitzer einer Schatulle mit Kostbarkeiten im Wert von 100 Goldst\201cken.";
+static char aTreasureMsg_09[100] = "Ca\222y dzie\244 zmarnowa\222e\236 na kopaniu. Jedynym skarbem jaki znalaz\222e\236 okaza\222 si\221 zbutwia\222y pie\244 drzewa.";
+static char aTreasureMsg_10[88] = " You have wasted all day on digging. The only thing you came across was a rotten trunk.";
+static char aTreasureMsg_11[131] = "Du hast einen ganzen Tag bei der Schatzsuche verschwendet. Der einzige Schatz, den Du gefunden hast war ein vermoderter Baumstamm.";
+static char aTreasureMsg_12[76] = "Niestety, kto\236 wprowadzi\222 ci\221 w b\222\206d. W tym miejscu nie ma \247adnych skarb\242w.";
+static char aTreasureMsg_13[46] = "You were taken in. There is no treasure here.";
+static char aTreasureMsg_14[74] = "Jemand hat Dich in die Irre gef\201hrt. An diesem Ort gibt es keine Sch\204tze.";
+static char aTreasureMsg_15[109] = "Kto\236 by\222 szybszy, miejsce zosta\222o ju\247 dok\222adnie przeszukane, a to co ukryte ju\247 dawno ma nowego w\222a\236ciciela.";
+static char aTreasureMsg_16[71] = " Somebody has already been here before you and has searched the place.";
+static char aTreasureMsg_17[151] = "Irgend jemand war schneller als Du. Diese Stelle ist schon genau abgesucht worden und das, was versteckt war, hat schon l\204ngst einen anderen Besitzer.";
+static char aTreasureMsg_18[99] = "Twoje wysi\222ki nie posz\222y na marne. Na dnie do\222u znalaz\222e\236 mieszek z monetami, a jest ich oko\222o 50.";
+static char aTreasureMsg_19[62] = " Your work was not in vain. You have found 50 pieces of gold.";
+static char aTreasureMsg_20[119] = "Deine Anstrengungen waren nicht umsonst. Auf dem Grund der Grube hast Du einen Beutel mit ungef\204hr 50 M\201nzen gefunden.";
+static char aTreasureMsg_21[115] = "Znalaz\222e\236 zbutwia\222\206 skrzyni\221. Mocne uderzenie \222opat\206 w k\222\242dk\221 i Twoim oczom ukaza\222 si\221 skarb warty 50 sztuk z\222ota.";
+static char aTreasureMsg_22[85] = " You have come across an old trunk. You have found treasure worth 50 pieces of gold.";
+static char aTreasureMsg_23[135] = "Du hast eine morsche Truhe gefunden. Ein kr\204ftiger Spatenstich ins Vorh\204ngeschlo\341 und Du erblickst Sch\204tze im Wert von 50 Goldst\201cken.";
+static char aTreasureMsg_24[174] = "Biada Ci!!! Odkopa\222e\236 szcz\206tki pradawnego w\222adcy tych ziem (Boghute Ara, lub kogo\236 z jego rodziny). Czeka Ci\221 teraz surowa kara, gdy\247 otwieraj\206c wieko jamy uwolni\222e\236 kl\206tw\221.";
+static char aTreasureMsg_25[163] = "Beware!!! You have unearthed the remains of an ancient king of this land - Boghute Ara. You will be punished for you have released the curse by opening the trunk.";
+static char aTreasureMsg_26[239] = "Weh Dir! Du hast die \232berreste eines uralten Herrschers Deines Landes ausgegraben - Boghute Ara oder jemand aus seiner Familie. Auf Dich wartet eine harte Strafe, weil Du, als Du den Deckel der Gruft ge\224ffnet hast, den Fluch befreit hast.";
+static char aTreasureMsg_27[153] = "Odnalaz\222e\236 magiczny diament Dahar'khu. \234\206cz\206c go z pozosta\222ymi uzyskasz ogromn\206 moc, dzi\221ki kt\242rej b\221dziesz m\242g\222 zg\222aci\215 wszystkich swoich przeciwnik\242w.";
+static char aTreasureMsg_28[136] = "You have found Dahar'khu diamond. If you match it with others you will get the great power wchih helps you to destroy all your enemies.";
+static char aTreasureMsg_29[148] = "Du hast den magischen Dahar'khu Diamanten gefunden. Wenn du die Anderen benutzt, bekommst du Energie, die dir helfen wird alle Gegner zu zerst\224ren.";
+static char aTreasureMsg_30[147] = "Odnalaz\222e\236 magiczny diament Xye. \234\206cz\206c go z pozosta\222ymi uzyskasz ogromn\206 moc, dzi\221ki kt\242rej b\221dziesz m\242g\222 zg\222aci\215 wszystkich swoich przeciwnik\242w.";
+static char aTreasureMsg_31[130] = "You have found Xye diamond. If you match it with others you will get the great power wchih helps you to destroy all your enemies.";
+static char aTreasureMsg_32[142] = "Du hast den magischen Xye Diamanten gefunden. Wenn du die Anderen benutzt, bekommst du Energie, die dir helfen wird alle Gegner zu zerst\224ren.";
+
+unsigned char g_TreasureDigOutcomeTable_TempleActive[240] = { 10, 0, 0, 0, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 3, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 10, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 10, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned char g_TreasureDigOutcomeTable_TempleInactive[216] = { 10, 0, 0, 0, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 3, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 10, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 10, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 10, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned char g_Mission7ScriptedTreasureEventData[24] = { 3, 0, 0, 0, 10, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned char g_Mission17ScriptedTreasureEventData[24] = { 3, 0, 0, 0, 10, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+char *const g_TreasureOutcomeStringPtrs[57] = {
+  aTreasureMsg_00, aTreasureMsg_01, aTreasureMsg_02, aTreasureMsg_03,
+  aTreasureMsg_04, aTreasureMsg_05, aTreasureMsg_06, aTreasureMsg_07,
+  aTreasureMsg_08, aTreasureMsg_09, aTreasureMsg_10, aTreasureMsg_11,
+  aTreasureMsg_12, aTreasureMsg_13, aTreasureMsg_14, aTreasureMsg_15,
+  aTreasureMsg_16, aTreasureMsg_17, aTreasureMsg_18, aTreasureMsg_19,
+  aTreasureMsg_20, aTreasureMsg_21, aTreasureMsg_22, aTreasureMsg_23,
+  aTreasureMsg_24, aTreasureMsg_25, aTreasureMsg_26, aTreasureMsg_00,
+  aTreasureMsg_01, aTreasureEmpty, aTreasureMsg_03, aTreasureMsg_04,
+  aTreasureEmpty, aTreasureMsg_06, aTreasureMsg_07, aTreasureEmpty,
+  aTreasureMsg_09, aTreasureMsg_10, aTreasureEmpty, aTreasureMsg_12,
+  aTreasureMsg_13, aTreasureEmpty, aTreasureMsg_15, aTreasureMsg_16,
+  aTreasureEmpty, aTreasureMsg_18, aTreasureMsg_19, aTreasureEmpty,
+  aTreasureMsg_21, aTreasureMsg_22, aTreasureEmpty, aTreasureMsg_27,
+  aTreasureMsg_28, aTreasureMsg_29, aTreasureMsg_30, aTreasureMsg_31,
+  aTreasureMsg_32,
+};
+
 
 char aBuildingFindFreePlaceNear[37] = "Building_FindFreePlaceNear() - %d,%d";
 

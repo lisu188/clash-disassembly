@@ -71,7 +71,7 @@
   "strategic->buildings": 46,
   "strategic->clips": 4,
   "strategic->media": 20,
-  "strategic->persistence": 21,
+  "strategic->persistence": 22,
   "strategic->render": 15,
   "strategic->runtime": 9,
   "strategic->units": 35,
@@ -251,6 +251,8 @@
   "g_MarksSpriteSet",
   "g_MessageHandlerTypeNames",
   "g_MessageHandler_SelfSymbol",
+  "g_Mission17ScriptedTreasureEventData",
+  "g_Mission7ScriptedTreasureEventData",
   "g_MissionDefeatVideoPlayedGuard",
   "g_Module_ChangeGeneration",
   "g_Module_MainRedefinable",
@@ -302,6 +304,8 @@
   "g_TerrainAnimationRemapTable",
   "g_TextSprite_StyleFlag",
   "g_TilePassabilityMask",
+  "g_TreasureDigOutcomeTable_TempleActive",
+  "g_TreasureDigOutcomeTable_TempleInactive",
   "g_TreeSpriteSet",
   "g_UnitAnimFrameIndex",
   "g_UnitBattleActionWidgetTable",
@@ -1239,7 +1243,7 @@
     "Building_ShowPrisonerManagementPanel"
    ],
    "internal_function_count": 77,
-   "state_globals": 277
+   "state_globals": 273
   },
   "render": {
    "api_functions": [
@@ -1566,7 +1570,7 @@
     "Device_SetParamA",
     "Device_UpdateRect"
    ],
-   "internal_function_count": 216,
+   "internal_function_count": 217,
    "state_globals": 299
   },
   "units": {

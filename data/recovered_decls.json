@@ -22104,6 +22104,11 @@
    "class": "manifest",
    "decl": "int Rules_HostBuildCastle(int a1, double a2);",
    "home": "strategic"
+  },
+  "Rules_HostDigTreasure": {
+   "class": "manifest",
+   "decl": "int Rules_HostDigTreasure(int a1, double a2);",
+   "home": "strategic"
   }
  },
  "globals": {
@@ -22213,10 +22218,6 @@
   },
   "ProcName": {
    "decl": "extern CHAR ProcName[];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostDigTreasure": {
-   "decl": "extern _UNKNOWN Rules_HostDigTreasure;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Text": {
@@ -43529,6 +43530,10 @@
   },
   "unit_stats": {
    "decl": "extern char unit_stats[];",
+   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
+  },
+  "g_TreasureOutcomeStringPtrs": {
+   "decl": "extern char *const g_TreasureOutcomeStringPtrs[57];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   }
  },

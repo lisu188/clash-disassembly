@@ -5,7 +5,6 @@
 
 #include "../recovered_types.h"
 
-extern _UNKNOWN Rules_HostDigTreasure;
 extern char a00i[4];
 extern char a00i_0[4];
 extern char a11i[4];
@@ -301,6 +300,7 @@ extern int g_RenderStateNextRefreshTick;
 extern CLASH95_INTERNAL CompatRenderStateTail g_RenderStateTail;
 extern CLASH95_INTERNAL _DWORD g_RenderVideoInitCursorDescriptor[9];
 extern int g_RulesArmyFactCreatedCount;
+extern char *const g_TreasureOutcomeStringPtrs[57];
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */

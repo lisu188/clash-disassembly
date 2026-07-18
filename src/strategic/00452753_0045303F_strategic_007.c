@@ -6,6 +6,7 @@
 #include "../state/state_shared.h"
 #include "../units/units_api.h"
 #include "../buildings/buildings_api.h"
+#include "../persistence/persistence_api.h"
 #include "../media/media_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -16,6 +17,35 @@ int Rules_HostTemple(int a1, double a2)
   int tileY = Rules_RtnLong(2, 0, a2);
   (void)a1;
   return MapTile_GetReligiousSiteCategory(tileX, tileY);
+}
+
+//----- (0045279F) --------------------------------------------------------
+int Rules_HostDigTreasure(int a1, double a2)
+{
+  static int bound;
+
+  (void)a1;
+  if ( !bound )
+  {
+    /* 64-bit host seam: each 24-byte outcome record stores three 32-bit string
+       pointers that cannot be static initializers under -no-pie; bind them once
+       from the recovered pointer list. Treasure_TryDigHere is reached only from
+       this handler (the world_002 builder-dig path is gc-removed). */
+    static const struct { unsigned char *table; int records; } outcome_tables[4] = {
+      { g_TreasureDigOutcomeTable_TempleActive, 9 },
+      { g_TreasureDigOutcomeTable_TempleInactive, 8 },
+      { g_Mission7ScriptedTreasureEventData, 1 },
+      { g_Mission17ScriptedTreasureEventData, 1 },
+    };
+    int slot = 0;
+    for ( int t = 0; t < 4; ++t )
+      for ( int r = 0; r < outcome_tables[t].records; ++r )
+        for ( int k = 0; k < 3; ++k )
+          *(int *)(outcome_tables[t].table + 24 * r + 12 + 4 * k) =
+              (int)(intptr_t)g_TreasureOutcomeStringPtrs[slot++];
+    bound = 1;
+  }
+  return Treasure_TryDigHere(Rules_RtnLong(1, 0, a2), 0, 0, 0, 0, a2);
 }
 
 //----- (004528AB) --------------------------------------------------------
