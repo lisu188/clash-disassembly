@@ -120,7 +120,7 @@ int  UI_DrawSpecialUnitInfoPane(
   UI_DrawTextFmt(renderSpriteObj2, screenLeft + 120, screenLeft + 173, screenTop + 30, 2, (int)(intptr_t)aD_19);
   Render_ReleaseSurface(7, renderSpriteObj);
   UI_DrawTextFmt(renderSpriteObj2, screenLeft + 15, screenLeft + 88, screenTop + 32, 2, (int)(intptr_t)aD_20);
-  unitName = (**(&g_UnitTypeMetadataRecords + 22 * *(__int16 *)unitRecord))[(unsigned __int8)g_LanguageIndex];
+  unitName = (**(&g_UnitTypeMetadataRecords + 22 * UNIT_STACK_TILE_ROW(unitRecord)))[(unsigned __int8)g_LanguageIndex];
   UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, (int)(intptr_t)unitName);
   if ( (unitRecord[13] & 8) != 0 )
   {
@@ -909,7 +909,7 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
   {
     while ( 1 )
     {
-      unitType = *(__int16 *)slotArray;
+      unitType = UNIT_SLOT_TYPE(slotArray);
       if ( unitType <= 0x28 )
         break;
       slotArray += 31;
@@ -1180,7 +1180,7 @@ int  CalculateBattleResult(
       selected_priority = 0;
       for ( i = 0; i < attackerCount && i < (int)sizeof(slotProcessed); ++i )
       {
-        slot_priority = (unsigned __int8)unit_stats[88 * *(__int16 *)((char *)winnerSlots + 31 * i)];
+        slot_priority = (unsigned __int8)unit_stats[88 * UNIT_SLOT_TYPE((char *)winnerSlots + 31 * i)];
         if ( slot_priority > selected_priority && !slotProcessed[i] )
         {
           selected_priority = slot_priority;
@@ -1336,9 +1336,9 @@ signed int  UI_PromptLeadTroopsPersonally(
     attackerGridTop = panelTop + 18;
     do
     {
-      if ( *(__int16 *)attackerSlotPtr != -1 )
+      if ( UNIT_SLOT_TYPE(attackerSlotPtr) != -1 )
       {
-        attackerOwner = *(_BYTE *)(uintptr_t)(attackerSlotsBase + 2);
+        attackerOwner = UNIT_SLOT_OWNER(attackerSlotsBase);
         UI_BeginUnitInfo(v45, *attackerSlotPtr, attackerOwner);
         attackerUnitSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v18, attackerOwner, a5);
         if ( attackerUnitSpriteSet )
@@ -1366,9 +1366,9 @@ signed int  UI_PromptLeadTroopsPersonally(
     defenderGridTop = panelTop + 371;
     do
     {
-      if ( *(__int16 *)defenderSlotPtr != -1 )
+      if ( UNIT_SLOT_TYPE(defenderSlotPtr) != -1 )
       {
-        defenderOwner = *(_BYTE *)(uintptr_t)(defenderSlotsBase + 2);
+        defenderOwner = UNIT_SLOT_OWNER(defenderSlotsBase);
         UI_BeginUnitInfo(v46, *defenderSlotPtr, defenderOwner);
         defenderUnitSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v24, defenderOwner, a5);
         if ( defenderUnitSpriteSet )

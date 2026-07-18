@@ -989,7 +989,7 @@ int  Font_SetGlyphFallbackEntry(int tableBase, unsigned __int16 glyphId, char fl
 
   result = 3 * glyphId;
   *(_WORD *)(uintptr_t)(tableBase + result) = fallbackValue;
-  *(_BYTE *)(uintptr_t)(tableBase + result + 2) = flagByte;
+  UNIT_SLOT_OWNER(tableBase + result) = flagByte;
   return result;
 }
 

@@ -1415,7 +1415,7 @@ int  Unit_Info(
   screenLeft = leftArg;
   screenTop = topArg;
   Debug_Log(topArg, (char)(intptr_t)unitRecord, allocContext, (int)(intptr_t)aUnit_infoDD0x0);
-  unitType = *(__int16 *)unitRecord;
+  unitType = UNIT_STACK_TILE_ROW(unitRecord);
   if ( unitType == UNIT_TYPE_PEASANT_CARGO
     || unitType == UNIT_TYPE_GOLD_CARGO
     || unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE

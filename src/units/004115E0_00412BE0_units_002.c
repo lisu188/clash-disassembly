@@ -64,7 +64,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
   while ( slotIndex < 10 );
   if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * (unsigned __int8)stackPtr[4] + 140051) )
   {
-    stackRow = *(__int16 *)stackPtr;
+    stackRow = UNIT_STACK_TILE_ROW(stackPtr);
     UI_CenterWorldMapViewportOnRectIfFit(stackRow, *((__int16 *)stackPtr + 1), *((__int16 *)stackPtr + 1) - 5, stackRow);
     v16[0] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[0];
     v16[1] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[1];
@@ -73,7 +73,7 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
     UI_StartWorldMapUnitAttentionFlash(
       *(unsigned __int16 *)(uintptr_t)(gameData + TILE_ROW_STRIDE * *(__int16 *)stackPtr + 2 * *((__int16 *)stackPtr + 1) + TILE_MAP_OFFSET),
       *((__int16 *)stackPtr + 1),
-      *(__int16 *)stackPtr);
+      UNIT_STACK_TILE_ROW(stackPtr));
     while ( UI_IsWorldMapUnitAttentionFlashActive() )
       WorldMap_RedrawFrame(stackRow);
   }
@@ -147,13 +147,13 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 //----- (004118A0) --------------------------------------------------------
 BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
 {
-  return *(unsigned __int8 *)(uintptr_t)(slotPtr + 8) <= 3u && (*(_BYTE *)(uintptr_t)(slotPtr + 13) & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
+  return *(unsigned __int8 *)(uintptr_t)(slotPtr + 8) <= 3u && (UNIT_SLOT_FLAGS(slotPtr) & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
 }
 
 //----- (004118C0) --------------------------------------------------------
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
 {
-  return (*(_BYTE *)(uintptr_t)(slotPtr + 13) & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
+  return (UNIT_SLOT_FLAGS(slotPtr) & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
 }
 
 //----- (004118D0) --------------------------------------------------------
@@ -278,7 +278,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
       buildingRecord = UNIT_RECORD(buildingIndex);
       if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
         && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1
-        && *(_BYTE *)(uintptr_t)(slotIndex + gameData + 509676) != *(_BYTE *)(uintptr_t)(stackPtr + 4) )
+        && *(_BYTE *)(uintptr_t)(slotIndex + gameData + 509676) != UNIT_STACK_OWNER_INDEX(stackPtr) )
       {
         break;
       }
@@ -589,7 +589,7 @@ void * UnitSlots_ExtractSpecialEntries(char *slotArray, int slotCount, char *ext
   slotIndex = 0;
   while ( slotIndex < remainingCount )
   {
-    slotType = *(__int16 *)slotArray;
+    slotType = UNIT_SLOT_TYPE(slotArray);
     if ( slotType == -1 )
       break;
     if ( slotType == UNIT_TYPE_GOLD_CARGO
@@ -639,10 +639,10 @@ int  UnitSlots_AppendEntries(char *destSlots, char *srcSlots)
   int result; // eax
 
   srcStart = srcSlots;
-  while ( *(__int16 *)destSlots != -1 )
+  while ( UNIT_SLOT_TYPE(destSlots) != -1 )
     destSlots += 31;
   srcCount = 0;
-  while ( *(__int16 *)srcSlots != -1 )
+  while ( UNIT_SLOT_TYPE(srcSlots) != -1 )
   {
     srcSlots += 31;
     ++srcCount;
@@ -954,7 +954,7 @@ __int16 * UnitStack_CaptureDefeatedStack(
     for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
     {
       char *slot = (char *)(uintptr_t)UNIT_STACK_SLOT((int)(intptr_t)defeated_stack, slot_index);
-      if ( *(__int16 *)slot == -1 )
+      if ( UNIT_SLOT_TYPE(slot) == -1 )
         break;
       slot[2] = winner_owner;
     }
@@ -1025,7 +1025,7 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
         {
           neighborColumnArg = Map_NeighborDY[neighborIndex] + originColumn;
           LOBYTE(sourceSlots) = Rng_RandRange(0, 7);
-          createSucceeded = Unit_Create(*(__int16 *)sourceSlotsPtr, sourceSlotsPtr[2], v13, (char)(intptr_t)sourceSlots, neighborColumnArg);
+          createSucceeded = Unit_Create(UNIT_SLOT_TYPE(sourceSlotsPtr), sourceSlotsPtr[2], v13, (char)(intptr_t)sourceSlots, neighborColumnArg);
           if ( createSucceeded )
             break;
         }
@@ -1095,7 +1095,7 @@ int  UnitSlot_AdjustFatigueByPredicate(int slotPtr, int fatigueDelta, BOOL ( *pr
       && result != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       newFatigue = fatigueDelta + *(char *)(uintptr_t)(slotPtr + 10);
-      *(_BYTE *)(uintptr_t)(slotPtr + 10) = newFatigue;
+      UNIT_SLOT_FATIGUE(slotPtr) = newFatigue;
       if ( newFatigue < 0 )
         *(_BYTE *)(uintptr_t)(slotPtr + 10) = 0;
       if ( *(char *)(uintptr_t)(slotPtr + 10) > 100 )
@@ -1176,7 +1176,7 @@ int  UnitSlot_AdjustMoraleByPredicate(int slotPtr, int moraleDelta, BOOL ( *pred
       && unit_type != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       morale = *(char *)(uintptr_t)(slotPtr + 11) + moraleDelta;
-      *(_BYTE *)(uintptr_t)(slotPtr + 11) = morale;
+      UNIT_SLOT_MORALE(slotPtr) = morale;
       if ( moraleDelta > 0 )
         *(_BYTE *)(uintptr_t)(slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
       if ( *(char *)(uintptr_t)(slotPtr + 11) < 0 )
@@ -1243,17 +1243,17 @@ int  UnitSlot_CycleOrderState(int result)
   char updatedFlags; // bl
 
   nextOrderState = (UNIT_SLOT_ORDER_STATE(result) + 1) & 3;
-  clearedFlags = *(_BYTE *)(uintptr_t)(result + 12) & 0xF3;
-  *(_BYTE *)(uintptr_t)(result + 12) = clearedFlags;
+  clearedFlags = UNIT_SLOT_STANCE_BITS(result) & 0xF3;
+  UNIT_SLOT_STANCE_BITS(result) = clearedFlags;
   updatedFlags = (4 * nextOrderState) | clearedFlags;
-  *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags;
+  UNIT_SLOT_STANCE_BITS(result) = updatedFlags;
   if ( (unsigned __int8)((unsigned __int8)(16 * updatedFlags) >> 6) > 2u )
   {
-    *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags & 0xF3;
+    UNIT_SLOT_STANCE_BITS(result) = updatedFlags & 0xF3;
     if ( (clearedFlags & 3u) < 3 )
     {
-      *(_BYTE *)(uintptr_t)(result + 12) = updatedFlags & 0xF0;
-      *(_BYTE *)(uintptr_t)(result + 12) = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
+      UNIT_SLOT_STANCE_BITS(result) = updatedFlags & 0xF0;
+      UNIT_SLOT_STANCE_BITS(result) = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
     }
   }
   return result;
@@ -1440,7 +1440,7 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *slotArray,
     {
       if ( hasSpecialPersonage )
         break;
-      slotType = *(__int16 *)slotCursor;
+      slotType = UNIT_SLOT_TYPE(slotCursor);
       if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         hasSpecialPersonage = 1;
       ++slotIndex;

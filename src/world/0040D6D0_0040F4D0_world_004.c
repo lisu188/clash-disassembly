@@ -1191,9 +1191,9 @@ int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
   UNIT_SLOT_AUX_STATE(result) = 0;
   auxFlagsByte = *(_BYTE *)(uintptr_t)(result + 17);
   UNIT_SLOT_STANCE_BITS(result) = stanceBits & 0x80;
-  stateBitsByte = *(_BYTE *)(uintptr_t)(result + 22);
+  stateBitsByte = UNIT_SLOT_STATE_BITS(result);
   *(_BYTE *)(uintptr_t)(result + 17) = auxFlagsByte & 0xF8;
-  flagsByte = *(_BYTE *)(uintptr_t)(result + 13);
+  flagsByte = UNIT_SLOT_FLAGS(result);
   UNIT_SLOT_STATE_BITS(result) = stateBitsByte & 0xFE;
   UNIT_SLOT_FLAGS(result) = flagsByte & 0xF0;
   return result;

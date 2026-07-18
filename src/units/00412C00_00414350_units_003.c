@@ -92,8 +92,8 @@ int  UnitStack_CopyFromTemplate(int destStack, int srcStack, int a3)
 
   *(_WORD *)(uintptr_t)destStack = *(_WORD *)(uintptr_t)srcStack;
   *(_WORD *)(uintptr_t)(destStack + 2) = *(_WORD *)(uintptr_t)(srcStack + 2);
-  *(_BYTE *)(uintptr_t)(destStack + 4) = *(_BYTE *)(uintptr_t)(srcStack + 4);
-  *(_BYTE *)(uintptr_t)(destStack + 5) = *(_BYTE *)(uintptr_t)(srcStack + 5);
+  UNIT_STACK_OWNER_INDEX(destStack) = UNIT_STACK_OWNER_INDEX(srcStack);
+  UNIT_STACK_FACING(destStack) = UNIT_STACK_FACING(srcStack);
   *(_DWORD *)(uintptr_t)(_wcpp_4_copy_array__(a3) + 310) = *(_DWORD *)(uintptr_t)(srcStack + 316);
   v4 = _wcpp_4_copy_array__(v7);
   *(_BYTE *)(uintptr_t)(v4 + 400) = *(_BYTE *)(uintptr_t)(srcStack + 720);
@@ -124,49 +124,49 @@ int  BattleUnitEntry_CopyMergingPackedFlags(int result, int srcEntry)
   char dstByte22Base; // bh
 
   *(_WORD *)(uintptr_t)result = *(_WORD *)(uintptr_t)srcEntry;
-  *(_BYTE *)(uintptr_t)(result + 2) = *(_BYTE *)(uintptr_t)(srcEntry + 2);
+  UNIT_SLOT_OWNER(result) = UNIT_SLOT_OWNER(srcEntry);
   *(_BYTE *)(uintptr_t)(result + 3) = *(_BYTE *)(uintptr_t)(srcEntry + 3);
   *(_WORD *)(uintptr_t)(result + 4) = *(_WORD *)(uintptr_t)(srcEntry + 4);
   *(_WORD *)(uintptr_t)(result + 6) = *(_WORD *)(uintptr_t)(srcEntry + 6);
-  *(_BYTE *)(uintptr_t)(result + 8) = *(_BYTE *)(uintptr_t)(srcEntry + 8);
-  *(_BYTE *)(uintptr_t)(result + 9) = *(_BYTE *)(uintptr_t)(srcEntry + 9);
-  *(_BYTE *)(uintptr_t)(result + 10) = *(_BYTE *)(uintptr_t)(srcEntry + 10);
-  *(_BYTE *)(uintptr_t)(result + 11) = *(_BYTE *)(uintptr_t)(srcEntry + 11);
-  dstByte12Base = *(_BYTE *)(uintptr_t)(result + 12) & 0xFC;
-  srcField12Low = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 3;
-  *(_BYTE *)(uintptr_t)(result + 12) = dstByte12Base;
+  UNIT_SLOT_ACTION_POINTS(result) = UNIT_SLOT_ACTION_POINTS(srcEntry);
+  UNIT_SLOT_HEALTH_PERCENT(result) = UNIT_SLOT_HEALTH_PERCENT(srcEntry);
+  UNIT_SLOT_FATIGUE(result) = UNIT_SLOT_FATIGUE(srcEntry);
+  UNIT_SLOT_MORALE(result) = UNIT_SLOT_MORALE(srcEntry);
+  dstByte12Base = UNIT_SLOT_STANCE_BITS(result) & 0xFC;
+  srcField12Low = UNIT_SLOT_STANCE_BITS(srcEntry) & 3;
+  UNIT_SLOT_STANCE_BITS(result) = dstByte12Base;
   byte12Merged = srcField12Low | dstByte12Base;
-  *(_BYTE *)(uintptr_t)(result + 12) = srcField12Low | dstByte12Base;
-  srcField12Mid = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 0xC;
-  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged & 0xF3;
+  UNIT_SLOT_STANCE_BITS(result) = srcField12Low | dstByte12Base;
+  srcField12Mid = UNIT_SLOT_STANCE_BITS(srcEntry) & 0xC;
+  UNIT_SLOT_STANCE_BITS(result) = byte12Merged & 0xF3;
   byte12Merged2 = srcField12Mid | byte12Merged & 0xF3;
-  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged2;
-  srcField12High = *(_BYTE *)(uintptr_t)(srcEntry + 12) & 0x70;
-  *(_BYTE *)(uintptr_t)(result + 12) = byte12Merged2 & 0x8F;
+  UNIT_SLOT_STANCE_BITS(result) = byte12Merged2;
+  srcField12High = UNIT_SLOT_STANCE_BITS(srcEntry) & 0x70;
+  UNIT_SLOT_STANCE_BITS(result) = byte12Merged2 & 0x8F;
   byte12Final = srcField12High | byte12Merged2 & 0x8F;
-  dstByte13Base = *(_BYTE *)(uintptr_t)(result + 13);
-  *(_BYTE *)(uintptr_t)(result + 12) = byte12Final;
+  dstByte13Base = UNIT_SLOT_FLAGS(result);
+  UNIT_SLOT_STANCE_BITS(result) = byte12Final;
   srcFlags13 = *(_DWORD *)(uintptr_t)(srcEntry + 13);
-  *(_BYTE *)(uintptr_t)(result + 13) = dstByte13Base & 0xFE;
+  UNIT_SLOT_FLAGS(result) = dstByte13Base & 0xFE;
   *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13 & 1;
   srcFlags13b = *(_DWORD *)(uintptr_t)(srcEntry + 13);
-  *(_BYTE *)(uintptr_t)(result + 13) &= ~2u;
+  UNIT_SLOT_FLAGS(result) &= ~2u;
   *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13b & 2;
   srcFlags13c = *(_DWORD *)(uintptr_t)(srcEntry + 13);
-  *(_BYTE *)(uintptr_t)(result + 13) &= ~4u;
+  UNIT_SLOT_FLAGS(result) &= ~4u;
   *(_DWORD *)(uintptr_t)(result + 13) |= srcFlags13c & 4;
   v13 = *(_DWORD *)(uintptr_t)(srcEntry + 13);
-  *(_BYTE *)(uintptr_t)(result + 13) &= ~8u;
+  UNIT_SLOT_FLAGS(result) &= ~8u;
   *(_DWORD *)(uintptr_t)(result + 13) |= v13 & 8;
   LOBYTE(v13) = *(_BYTE *)(uintptr_t)(srcEntry + 17) & 7;
   dstByte17Base = *(_BYTE *)(uintptr_t)(result + 17) & 0xF8;
   *(_BYTE *)(uintptr_t)(result + 17) = dstByte17Base;
   *(_BYTE *)(uintptr_t)(result + 17) = v13 | dstByte17Base;
-  *(_DWORD *)(uintptr_t)(result + 18) = *(_DWORD *)(uintptr_t)(srcEntry + 18);
-  dstByte22Base = *(_BYTE *)(uintptr_t)(result + 22) & 0xFE;
-  LOBYTE(v13) = *(_BYTE *)(uintptr_t)(srcEntry + 22) & 1;
-  *(_BYTE *)(uintptr_t)(result + 22) = dstByte22Base;
-  *(_BYTE *)(uintptr_t)(result + 22) = v13 | dstByte22Base;
+  UNIT_SLOT_AUX_STATE(result) = UNIT_SLOT_AUX_STATE(srcEntry);
+  dstByte22Base = UNIT_SLOT_STATE_BITS(result) & 0xFE;
+  LOBYTE(v13) = UNIT_SLOT_STATE_BITS(srcEntry) & 1;
+  UNIT_SLOT_STATE_BITS(result) = dstByte22Base;
+  UNIT_SLOT_STATE_BITS(result) = v13 | dstByte22Base;
   *(_DWORD *)(uintptr_t)(result + 23) = *(_DWORD *)(uintptr_t)(srcEntry + 23);
   *(_DWORD *)(uintptr_t)(result + 27) = *(_DWORD *)(uintptr_t)(srcEntry + 27);
   return result;
@@ -1381,7 +1381,7 @@ signed int  UnitStack_GetTileMoveCostFromMergedProfileOrZero(__int16 *stackPtr, 
   {
     if ( occupant_stack_index > 0x7FFF
       || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
-      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || UNIT_STACK_OWNER_INDEX(occupant_stack + UNIT_STACK_TABLE_OFFSET) == *((_BYTE *)stackPtr + 4) )
     {
       if ( *stackPtr != tileRow || stackPtr[1] != tileColumn )
         return 0;
@@ -1394,7 +1394,7 @@ signed int  UnitStack_GetTileMoveCostFromMergedProfileOrZero(__int16 *stackPtr, 
       return 0;
     occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index;
     if ( !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
-      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || UNIT_STACK_OWNER_INDEX(occupant_stack + UNIT_STACK_TABLE_OFFSET) == *((_BYTE *)stackPtr + 4) )
       return 0;
   }
   if ( ((1 << *((_BYTE *)stackPtr + 4)) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << *((_BYTE *)stackPtr + 4)
@@ -1435,7 +1435,7 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *stackPtr, int tileRow, int 
   {
     if ( occupant_stack_index > 0x7FFF
       || (occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index, !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720))
-      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || UNIT_STACK_OWNER_INDEX(occupant_stack + UNIT_STACK_TABLE_OFFSET) == *((_BYTE *)stackPtr + 4) )
     {
       if ( *stackPtr != tileRow || stackPtr[1] != tileColumn )
         return 0;
@@ -1449,7 +1449,7 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *stackPtr, int tileRow, int 
       return 0;
     occupant_stack = gameData + UNIT_STACK_STRIDE * occupant_stack_index;
     if ( !*(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 720)
-      || *(_BYTE *)(uintptr_t)(occupant_stack + UNIT_STACK_TABLE_OFFSET + 4) == *((_BYTE *)stackPtr + 4) )
+      || UNIT_STACK_OWNER_INDEX(occupant_stack + UNIT_STACK_TABLE_OFFSET) == *((_BYTE *)stackPtr + 4) )
       return 0;
   }
   if ( ((1 << *((_BYTE *)stackPtr + 4)) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << *((_BYTE *)stackPtr + 4)

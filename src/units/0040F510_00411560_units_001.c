@@ -596,7 +596,7 @@ int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
   {
     if ( *(__int16 *)(uintptr_t)slotPtr == -1 )
       break;
-    *(_BYTE *)(uintptr_t)(slotPtr + 8) -= spendAmount;
+    UNIT_SLOT_ACTION_POINTS(slotPtr) -= spendAmount;
     slotPtr += 31;
     ++slotIndex;
   }
@@ -1266,7 +1266,7 @@ int  UnitStats_CalcEffectiveMeleeAttack(char *slotPtr, int forceMaxLevel)
     level = 3;
   else
     level = UNIT_SLOT_STATUS_LEVEL(slotPtr);
-  return (level + (unsigned __int8)g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)slotPtr] + slotPtr[11] / 5) * slotPtr[9] / 100;
+  return (level + (unsigned __int8)g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * UNIT_SLOT_TYPE(slotPtr)] + slotPtr[11] / 5) * slotPtr[9] / 100;
 }
 
 //----- (00411180) --------------------------------------------------------
@@ -1281,7 +1281,7 @@ int  UnitStats_CalcEffectiveDefensePower(char *slotPtr, int forceMaxLevel)
   int baseDefense; // ebx
   int level; // esi
 
-  baseDefense = (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)slotPtr];
+  baseDefense = (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * UNIT_SLOT_TYPE(slotPtr)];
   if ( (slotPtr[22] & 1) != 0 )
     baseDefense = (320 * baseDefense - (__CFSHL__((320 * baseDefense) >> 31, 8) + ((320 * baseDefense) >> 31 << 8))) >> 8;
   if ( forceMaxLevel )
@@ -1318,7 +1318,7 @@ int  UnitStats_CalcEffectiveWallAttack(char *slotPtr, int forceMaxLevel)
     level = 3;
   else
     level = UNIT_SLOT_STATUS_LEVEL(slotPtr);
-  return (level + (unsigned __int8)g_UnitTypeBaseWallAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)slotPtr] + slotPtr[11] / 5) * slotPtr[9] / 100;
+  return (level + (unsigned __int8)g_UnitTypeBaseWallAttack[UNIT_TYPE_METADATA_STRIDE * UNIT_SLOT_TYPE(slotPtr)] + slotPtr[11] / 5) * slotPtr[9] / 100;
 }
 
 //----- (00411350) --------------------------------------------------------
