@@ -72,6 +72,20 @@ the original (`tools/vm/README.md`, "Fix B"). Landing C-B2 (at minimum the full
 dependency set of one movement rule: the road/distance/army queries + `maszeruj`)
 is what will make the recovered AI visibly play.
 
+**C-B2 is MECHANICAL, not deep RE (asm-verified 2026-07-18).** Every handler is
+the same thin shape as the recovered template `Rules_HostArmyHasBuilder`
+(strategic_001.c:1464): read N args with `Rules_RtnLong(k, …)` and tail-call an
+**already-recovered, already-named** inner game function. Verified from
+`clash95.asm`:
+- `Rules_HostUnitCanMove` (loc_45303F) = `Unit_AttemptNeighborMove(Rules_RtnLong(1,…))`
+- `Rules_HostMarch` (loc_452C9F, maszeruj) = `Move_CommitIfWithinCost(Rules_RtnLong(1,…), Rules_RtnLong(2,…), Rules_RtnLong(3,…))`
+Both inner functions already exist as recovered C. So the C-B2 work per handler
+is a 1-3 line wrapper; the effort is in the byte-identity + re-baseline
+coordination (data→function link-surface migration, manifest function entry +
+body hash, decl-DB global→function, header regen, obj_diff add/remove review —
+per the plan's C-B2 gate flow), NOT in decoding logic. This makes C-B2 a
+low-risk mechanical batch series once the re-baseline harness is set up.
+
 ## Terrain, roads, and movement
 
 | H/L name | C-name | ret | args | addr | Meaning |
