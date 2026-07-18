@@ -86,6 +86,14 @@ body hash, decl-DB global→function, header regen, obj_diff add/remove review �
 per the plan's C-B2 gate flow), NOT in decoding logic. This makes C-B2 a
 low-risk mechanical batch series once the re-baseline harness is set up.
 
+**Full recovery spec: [`AI_HOST_RECOVERY_SPEC.md`](AI_HOST_RECOVERY_SPEC.md)**
+— byte-identity-ready wrapper C for all 87 handlers (produced + adversarially
+verified by a 20-agent pass): 79 clean thin-wrappers, 8 flagged for manual
+review (float/string/swapped-arg cases + one verify-caught 4th-arg subtlety),
+compile prerequisites (`Rules_RtnDouble`/`Rules_RtnLexeme` header exposure,
+collapsed inner prototypes), and the minimal movement-rule dependency set to
+recover first so the AI visibly plays.
+
 ## Terrain, roads, and movement
 
 | H/L name | C-name | ret | args | addr | Meaning |
