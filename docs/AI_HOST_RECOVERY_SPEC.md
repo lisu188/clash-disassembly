@@ -14,9 +14,16 @@ verify flag). This turns C-B2 from open-ended RE into mechanical application
 under the re-baseline gate flow (obj_diff add-only + link-surface
 data→function; see the roadmap plan's C-B2 section).
 
-**STATUS: 81/87 recovered — both the strategic_001 movement blob AND the
-strategic_003 economy/building/army blob are done; the all-AI engine now moves
-units and runs its economic decision layer, crash-free.** Landed:
+**STATUS: 87/87 — C-B2 COMPLETE. Every CLIPS AI host function has a recovered
+body; `grep -c '^_UNKNOWN Rules_Host' recovered_state.c` = 0; AI_SCRIPTING_API.md
+is body-complete.** The final 6 (2026-07-18, commits b352307 + 8e5ff4f): the
+5 remaining thin-wrappers (RoadExistsNearCastle, ChangeTax, BuySchool, BuildTrap,
+BuildCastle — into the existing TU gaps; prereqs = 2 debug strings +
+Rules_RtnDouble/Lexeme auto-promotion + a Rules_BuildCastle 4→5 prototype widen),
+then `Rules_HostDigTreasure` via a byte-exact recovery of 4 treasure-outcome data
+tables + ~60 localized PL/EN/DE strings from clash95.exe, whose 24-byte records'
+32-bit string pointers are bound at runtime (a documented -no-pie 64-bit seam,
+verified with a link probe). The earlier milestone:** Landed:
 `Rules_HostUnitCountInTroop` (`fef99dd`), 22 movement handlers (`b13a724`,
 strategic_001 0x452753..0x45303F → TU `strategic_007.c`), and 58
 economy/building/army handlers (`b9d1536`, strategic_003 0x456706..0x457789 → TU

@@ -37,54 +37,42 @@ decompiler did not split into standalone functions; they are documented here by
 their registration only. Recovering their bodies is a natural follow-up (the
 C-name and arity below define the target contract).
 
-## Current recovery status (2026-07-18) — registration done, 87 bodies not
+## Current recovery status (2026-07-18) — COMPLETE: all 92 host functions body-recovered
 
-The `addr` column below (the `loc_XXXXXX` labels) predates the naming/split
-work. Since then the registration table is **fully recovered and wired**:
-`Rules_RegisterStrategicActionHostFunctions` /
-`Rules_RegisterArmyHostFunctions` / `Rules_RegisterBuildingHostFunctions`
-(`src/strategic/004506B0_004530D0_strategic_001.c:1411`,
-`src/strategic/00455740_004582B0_strategic_003.c`) register every host function
-under a **named** `Rules_Host*` symbol (e.g. `maszeruj` → `&Rules_HostMarch`,
-`jest_droga` → `&Rules_HostRoadExists`, `odleglosc_od_obiektu` →
-`&Rules_HostDistanceFromObject`). But **87 of those 92 symbols are still
-`_UNKNOWN` one-byte DATA placeholders** in
-`src/state/00000000_0054FFFF_recovered_state.c` (`grep -c '^_UNKNOWN
-Rules_Host'` = 87); only 5 have recovered C bodies (`Rules_HostArmyHasBuilder`,
-`Rules_HostArmyHasNormalCombatUnits`, `Rules_HostArmyHasOnlyUnitType`,
-`Rules_HostCollectPortSupply`, `Rules_HostPortHasSupplyReady`). Body recovery is
-**workstream C-B2**: turn each `_UNKNOWN Rules_HostX;` (data) into
-`int Rules_HostX(...) { ... }` (function), carving the body from its `loc_`
-address; template = `Rules_HostArmyHasBuilder` (strategic_001.c:1464), a thin
-`Rules_RtnLong`-based arg-read + inner-recovered-fn wrapper.
+The AI scripting API is **body-complete**. The registration table was already
+fully recovered and wired (`Rules_RegisterStrategicActionHostFunctions` /
+`Rules_RegisterArmyHostFunctions` / `Rules_RegisterBuildingHostFunctions`), and
+as of 2026-07-18 **workstream C-B2 is finished: every `Rules_Host*` symbol now
+has a recovered C body** — `grep -c '^_UNKNOWN Rules_Host'
+src/state/00000000_0054FFFF_recovered_state.c` = 0. The 87 formerly-`_UNKNOWN`
+one-byte DATA placeholders are now functions carved at their `loc_` addresses,
+each a thin `Rules_RtnLong`-based arg-read + inner-recovered-fn wrapper (template
+`Rules_HostArmyHasBuilder`, strategic_001.c). They live in two dedicated TUs
+(`src/strategic/00452753_0045303F_strategic_007.c` for the 0x452xxx movement
+blob, `src/strategic/00456706_00457789_strategic_008.c` for the 0x456xxx
+economy/building/army blob) plus `Rules_HostDigTreasure`'s data tables in the
+state TU. Full history and per-handler mechanics: [`AI_HOST_RECOVERY_SPEC.md`].
 
-**Runtime consequence (proven 2026-07-18, all-AI `/A5` diagnostic):** the
-strategic AI is **inert**. A 90 s all-AI map-5 run showed the turn loop running
-(138 `ai_turn_*` markers), the CLIPS rulebase alive (8220 `oddzial` fact
-asserts with correct unit positions), and **no crash** — but **zero unit
-moves**. Because every decision/action rule's LHS or RHS calls an unrecovered
-query/action handler (`jest_droga`, `jest_armia`, `odleglosc_od_obiektu`,
-`maszeruj`, `atakuj_oddzial`, …) and those are data placeholders that would
-crash on call, no such rule ever completes: the agenda fires nothing that
-touches the world. This is why the QEMU tile comparison sees the recovered
-all-AI camera frozen at the start viewport and fog-edge tiles diverging from
-the original (`tools/vm/README.md`, "Fix B"). Landing C-B2 (at minimum the full
-dependency set of one movement rule: the road/distance/army queries + `maszeruj`)
-is what will make the recovered AI visibly play.
+**Runtime effect (proven, all-AI `/A5`):** the strategic AI is now **live**.
+Where a pre-C-B2 run asserted ~8200 `oddzial` facts but made ZERO unit moves
+(every decision rule bottomed out in an `_UNKNOWN` handler), the recovered
+engine now fires its agenda and **relocates every player's units across turns**
+and asserts castle/building/economy facts, crash-free. The QEMU all-AI
+fog/camera divergence that motivated this work is resolved for the recovered
+handlers.
 
-**C-B2 is MECHANICAL, not deep RE (asm-verified 2026-07-18).** Every handler is
-the same thin shape as the recovered template `Rules_HostArmyHasBuilder`
-(strategic_001.c:1464): read N args with `Rules_RtnLong(k, …)` and tail-call an
-**already-recovered, already-named** inner game function. Verified from
-`clash95.asm`:
-- `Rules_HostUnitCanMove` (loc_45303F) = `Unit_AttemptNeighborMove(Rules_RtnLong(1,…))`
-- `Rules_HostMarch` (loc_452C9F, maszeruj) = `Move_CommitIfWithinCost(Rules_RtnLong(1,…), Rules_RtnLong(2,…), Rules_RtnLong(3,…))`
-Both inner functions already exist as recovered C. So the C-B2 work per handler
-is a 1-3 line wrapper; the effort is in the byte-identity + re-baseline
-coordination (data→function link-surface migration, manifest function entry +
-body hash, decl-DB global→function, header regen, obj_diff add/remove review —
-per the plan's C-B2 gate flow), NOT in decoding logic. This makes C-B2 a
-low-risk mechanical batch series once the re-baseline harness is set up.
+Notable per-handler subtleties captured during recovery (all asm-verified):
+- **Register swaps** in some `__usercall` inners (param3=ecx, param4=ebx): CLIPS
+  arg4→param3, arg3→param4 for `Map_IsCastleSiteDistanceMinimal`,
+  `Building_Transfer`, `AI_FindBestStrategicTargetNearTile`.
+- **Compile prerequisites**: `Rules_HostChangeTax` reads a float via
+  `Rules_RtnDouble`, `Rules_HostBuildCastle` a string via `Rules_RtnLexeme` (both
+  auto-promoted `media_internal.h`→`media_api.h` on first cross-subsystem use);
+  `Rules_BuildCastle`'s collapsed 4-param prototype widened to the true 5.
+- **`Rules_HostDigTreasure`** needed a byte-exact recovery of 4 outcome data
+  tables + ~60 localized PL/EN/DE popup strings from `clash95.exe`; its 24-byte
+  records embed 32-bit string pointers that can't be static under `-no-pie`, so
+  the pointer slots are bound once at runtime (documented 64-bit seam).
 
 **Full recovery spec: [`AI_HOST_RECOVERY_SPEC.md`](AI_HOST_RECOVERY_SPEC.md)**
 — byte-identity-ready wrapper C for all 87 handlers (produced + adversarially
