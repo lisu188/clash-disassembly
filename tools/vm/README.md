@@ -120,3 +120,43 @@ falls into one of three *root-caused* buckets:
 Terrain pixels outside these buckets match exactly (selftest-grade identity).
 Artifacts: `artifacts/tile-compare/m05/` (tiles.csv, heatmap.png,
 worst_montage.png, summary.txt, maskaudit.png, frame indexes).
+
+## Fix pass (2026-07-18) — findings from the tile comparison
+
+**Fix A LANDED (commit c3791b1): DLX seam decoder.** The "black speckle" bug
+was `Compat_RenderDeviceDrawMenuSprite`
+(src/units/004191F0_0041A690_units_006.c) desynchronizing the format-0 sprite
+stream (clamped run consumption + a 4-byte back-reference guess + mid-sprite
+aborts), so data bytes >=0x80 were misread as transparent runs and black-filled
+into terrain. Rewrote it byte-exact vs `Render_BlitCompressedSpriteRLE`
+(full-run consumption, 1-byte back-reference per render_002.c:378-381,577-580,
+no aborts). Result vs the original: 50k px changed (terrain detail restored),
+fully-black fog tiles 3->0, **9/16 shared m05 tiles now pixel-identical**;
+grass tiles visually confirmed identical (the residual is 6-bit-DAC + dither
+pixel variance, so `tile_compare.py` now uses mean-abs-diff for identity, not
+per-pixel max). Tool re-validated: same-binary selftest 34/34 identical,
+1-tile-shift negative control collapses to 7%.
+
+**Fix B (all-AI fog + no AI movement) = workstream C-B2, NOT a small bug.**
+Diagnostic `/A5` run (CLASH95_TRACE_WORLD_ACTION_VERBOSE + RULES_ASSERT_FACT):
+AI turns DO run (138 `ai_turn_*` markers), the CLIPS rulebase IS alive (8220
+`oddzial` fact asserts with correct unit positions), no crash, all players
+non-human (`c=0`) — but **zero unit moves**. The AI evaluates its agenda and
+issues no movement, because the strategic-AI action host functions (`maszeruj`
+etc.) are among the 87 unrecovered `Rules_Host*` handlers (`_UNKNOWN` data
+placeholders; docs/AI_SCRIPTING_API.md). The parked camera and the 7
+content-mismatch tiles (fog/black-strip edges at the frozen viewport) are all
+downstream of this. Recovering the handlers is the already-planned C-B2 batch;
+until it lands, the all-AI mode renders a static start position and the fog/
+coverage tiles stay in the mismatch bucket.
+
+**Fix C (menu language) = deferred, needs asset analysis.** Source + built
+binary both have `g_LanguageIndex = 1`, yet the recovered menu renders POLISH
+while the original (same-named data, in the VM) renders ENGLISH. Decisive clue:
+the middle-right slot is "multi player" (original) vs "misje"/missions
+(recovered) — **different menu items, not a translation** — which points to
+different retail menu assets (a Polish `menu\main.s32` with a missions button
+vs an English one with multiplayer), i.e. an asset/data-provenance question,
+not a `+g_LanguageIndex` index bug. Not touched per the "don't fix asset-layout
+divergences" rule; needs verifying whether the VM's `menu\main.s32` is byte-
+identical to `/mnt/c/clash`'s and whether that s32 is multi-language.
