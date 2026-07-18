@@ -2,8 +2,8 @@
   "schema_version": 2,
   "language": "GNU C17",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
-  "source_file_count": 138,
-  "function_count": 4071,
+  "source_file_count": 139,
+  "function_count": 4093,
   "functions": [
     {
       "name": "UnitBattle_HandleBattlefieldInteraction",
@@ -52196,10 +52196,316 @@
       "legacy_body_sha256": "997211a4c504b1e28ec1a20c3ca1561c0b5092b9b96f89f67d52cb24248616a2"
     },
     {
+      "name": "Rules_HostTemple",
+      "original_address": "0x00452753",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1448,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "e6a7325b121c0d98f02807798541d383ba2d882c5b28d879aaac8616c118fc61",
+      "original_address_range": {
+        "start": "0x00452753",
+        "end_exclusive": "0x0045279F"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostRoadExists",
+      "original_address": "0x004528AB",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1457,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "32cd2beb919924c0d484c6a4135c5c2b8b1d155edeac3279d3ab470c096e62c7",
+      "original_address_range": {
+        "start": "0x004528AB",
+        "end_exclusive": "0x00452907"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostRoadExistsNearby",
+      "original_address": "0x00452907",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1467,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "276703238faf7377832840b7561325b999796ce0f91bebf105c133b533833747",
+      "original_address_range": {
+        "start": "0x00452907",
+        "end_exclusive": "0x00452963"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostRoadExistsToPort",
+      "original_address": "0x004529BF",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1477,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "eb9adf271f44aee95f61e2e8ef6bed3a29a2771998a179ec64ad8a24c8e8e34e",
+      "original_address_range": {
+        "start": "0x004529BF",
+        "end_exclusive": "0x00452A1B"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostRoadExistsToCastle",
+      "original_address": "0x00452A1B",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1487,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "7dd981894384641bc8655c800cb273412cd14f13a8a9d405b41673fe50a10dc9",
+      "original_address_range": {
+        "start": "0x00452A1B",
+        "end_exclusive": "0x00452A77"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostRoadExistsToTemple",
+      "original_address": "0x00452A77",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1497,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "75da6f1e086936b8f1a878ca9a76d5ad9070eceb9161b45db2ef93fa9685cb44",
+      "original_address_range": {
+        "start": "0x00452A77",
+        "end_exclusive": "0x00452AD3"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostTroopInArmyRange",
+      "original_address": "0x00452AD3",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1507,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "879a269c88799f16e0c3eddd42be771c66ee3103ed6a06503b2c85fb881a4212",
+      "original_address_range": {
+        "start": "0x00452AD3",
+        "end_exclusive": "0x00452B2F"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostBuildingInArmyRange",
+      "original_address": "0x00452B2F",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1517,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "b028ae06cbe80e004911c1992ac9782bf7893f81077c186d987b9aad7661288f",
+      "original_address_range": {
+        "start": "0x00452B2F",
+        "end_exclusive": "0x00452B8B"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostDistanceFromObject",
+      "original_address": "0x00452B8B",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1527,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "fcead9c08736e8396c20a821c8dad03748e92d6fe7fe3b1c2921e099444cabe0",
+      "original_address_range": {
+        "start": "0x00452B8B",
+        "end_exclusive": "0x00452BE7"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostTempleInArmyRange",
+      "original_address": "0x00452BE7",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1537,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "12cf2b944e3aaee5725c6bcdeb141f14b54e6a2620c93b336dfc75d0755f3b7d",
+      "original_address_range": {
+        "start": "0x00452BE7",
+        "end_exclusive": "0x00452C43"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostTempleOk",
+      "original_address": "0x00452C43",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1547,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "853b9f939132b107ba617c4aadfb762508fab36ee3a18e1b00bab66eda98f82b",
+      "original_address_range": {
+        "start": "0x00452C43",
+        "end_exclusive": "0x00452C9F"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostMarch",
+      "original_address": "0x00452C9F",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1557,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "193fde7196f39ac2199cd3e9387b91996fb969985c2c49250ed7c39dfa561ee7",
+      "original_address_range": {
+        "start": "0x00452C9F",
+        "end_exclusive": "0x00452CFB"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostMarchToTemple",
+      "original_address": "0x00452CFB",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1567,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "f8db950fcc6dab16e02a60f63481c3bbb23286a8fa1659250cdfc16e3fb85556",
+      "original_address_range": {
+        "start": "0x00452CFB",
+        "end_exclusive": "0x00452D57"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostMarchNear",
+      "original_address": "0x00452D57",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1581,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "34b016c859f90a61691251e331a0df5e8f2f00593835f6c101b6e71d4b7c7951",
+      "original_address_range": {
+        "start": "0x00452D57",
+        "end_exclusive": "0x00452DB3"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostAttackTroop",
+      "original_address": "0x00452DB3",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1591,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "34d10597121fb3857fc5e3c54ca47559344cce048428abcc938f02779043962c",
+      "original_address_range": {
+        "start": "0x00452DB3",
+        "end_exclusive": "0x00452DFF"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostCaptureTroop",
+      "original_address": "0x00452DFF",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1600,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "5c9f48cec7a5422d6a5000f32be43f8063f89d13a606cba7370d7e3bac1aa795",
+      "original_address_range": {
+        "start": "0x00452DFF",
+        "end_exclusive": "0x00452E4B"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostHideTroop",
+      "original_address": "0x00452E4B",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1609,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "cd6ae68d36478e60aa22cc466c7a276fcdefbb4bf76518ba3c3446f086ac6b50",
+      "original_address_range": {
+        "start": "0x00452E4B",
+        "end_exclusive": "0x00452EA7"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostArmyExists",
+      "original_address": "0x00452EA7",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1619,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "f740faaacd2f99dbc0aeba1cd05c0418bfab23b48ef452d4057e3949a1a8347a",
+      "original_address_range": {
+        "start": "0x00452EA7",
+        "end_exclusive": "0x00452EE3"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
       "name": "Rules_HostUnitCountInTroop",
       "original_address": "0x00452EE3",
       "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
-      "source": "src/strategic/004506B0_004530D0_strategic_001.c",
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
       "linkage": "external",
       "body_sha256": "e3e8f2438e3d456d1a5053baeb7018c55046896cf45fbebe134a70490028e410",
       "original_address_range": {
@@ -52211,6 +52517,74 @@
       "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
       "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a",
       "original_line": 1452
+    },
+    {
+      "name": "Rules_HostAttackBuilding",
+      "original_address": "0x00452F1F",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1637,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "674f1781d398df567d266ff60fa5294b2bab943d8ab1e94cb3e8f151e975ce4e",
+      "original_address_range": {
+        "start": "0x00452F1F",
+        "end_exclusive": "0x00452F6B"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostFordExists",
+      "original_address": "0x00452F6B",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1646,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "ee518e560c50c9284b10509de5c8d975c46143471880a85f2698a7f5785f7079",
+      "original_address_range": {
+        "start": "0x00452F6B",
+        "end_exclusive": "0x00452FA7"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostBuildRoad",
+      "original_address": "0x00452FA7",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1653,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "4d89b0942ee5c2f8973450183808d060a44aff7a07e8da5ee839b6a9f4ac64ff",
+      "original_address_range": {
+        "start": "0x00452FA7",
+        "end_exclusive": "0x00452FE3"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostUnitCanMove",
+      "original_address": "0x0045303F",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 1660,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "2d36bb9c9707748e0415c0a396832e961dc1b5ff059ec55074e003f70d83168a",
+      "original_address_range": {
+        "start": "0x0045303F",
+        "end_exclusive": "0x004530A0"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
     },
     {
       "name": "Rules_PortCollectSupply",
@@ -69215,5 +69589,5 @@
   ],
   "cutover": "canonical-split",
   "legacy_manifest": "clash95.c",
-  "address_marker_count": 3921
+  "address_marker_count": 3943
 }

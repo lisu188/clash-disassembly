@@ -34,56 +34,34 @@ int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))();
 
 int (* ProcParam_PushEvaluatedArgumentFrame(_DWORD *a1, int a2, int a3, int a4, double a5, int (*a6)(void)))(void);
 
-_UNKNOWN Rules_HostTemple;
 
 _UNKNOWN Rules_HostDigTreasure;
 
-_UNKNOWN Rules_HostRoadExists;
 
-_UNKNOWN Rules_HostRoadExistsNearby;
 
 _UNKNOWN Rules_HostRoadExistsNearCastle;
 
-_UNKNOWN Rules_HostRoadExistsToPort;
-
-_UNKNOWN Rules_HostRoadExistsToCastle;
-
-_UNKNOWN Rules_HostRoadExistsToTemple;
-
-_UNKNOWN Rules_HostTroopInArmyRange;
-
-_UNKNOWN Rules_HostBuildingInArmyRange;
-
-_UNKNOWN Rules_HostDistanceFromObject;
-
-_UNKNOWN Rules_HostTempleInArmyRange;
-
-_UNKNOWN Rules_HostTempleOk;
-
-_UNKNOWN Rules_HostMarch;
-
-_UNKNOWN Rules_HostMarchToTemple;
-
-_UNKNOWN Rules_HostMarchNear;
-
-_UNKNOWN Rules_HostAttackTroop;
-
-_UNKNOWN Rules_HostCaptureTroop;
-
-_UNKNOWN Rules_HostHideTroop;
-
-_UNKNOWN Rules_HostArmyExists;
 
 
-_UNKNOWN Rules_HostAttackBuilding;
 
-_UNKNOWN Rules_HostFordExists;
 
-_UNKNOWN Rules_HostBuildRoad;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 _UNKNOWN Rules_HostBuildTrap;
 
-_UNKNOWN Rules_HostUnitCanMove;
 
 _UNKNOWN Rules_HostHealing;
 

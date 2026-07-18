@@ -74,7 +74,7 @@
   "strategic->persistence": 21,
   "strategic->render": 15,
   "strategic->runtime": 9,
-  "strategic->units": 34,
+  "strategic->units": 35,
   "strategic->world": 6,
   "units->battle": 1,
   "units->buildings": 29,
@@ -1562,8 +1562,8 @@
     "Device_SetParamA",
     "Device_UpdateRect"
    ],
-   "internal_function_count": 131,
-   "state_globals": 384
+   "internal_function_count": 153,
+   "state_globals": 362
   },
   "units": {
    "api_functions": [

@@ -21679,6 +21679,116 @@
    "class": "manifest",
    "decl": "int Rules_HostUnitCountInTroop(int a1, double a2);",
    "home": "strategic"
+  },
+  "Rules_HostTemple": {
+   "class": "manifest",
+   "decl": "int Rules_HostTemple(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostRoadExists": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExists(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostRoadExistsNearby": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExistsNearby(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostRoadExistsToPort": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExistsToPort(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostRoadExistsToCastle": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExistsToCastle(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostRoadExistsToTemple": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExistsToTemple(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostTroopInArmyRange": {
+   "class": "manifest",
+   "decl": "int Rules_HostTroopInArmyRange(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostBuildingInArmyRange": {
+   "class": "manifest",
+   "decl": "int Rules_HostBuildingInArmyRange(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostDistanceFromObject": {
+   "class": "manifest",
+   "decl": "int Rules_HostDistanceFromObject(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostTempleInArmyRange": {
+   "class": "manifest",
+   "decl": "int Rules_HostTempleInArmyRange(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostTempleOk": {
+   "class": "manifest",
+   "decl": "int Rules_HostTempleOk(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostMarch": {
+   "class": "manifest",
+   "decl": "int Rules_HostMarch(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostMarchToTemple": {
+   "class": "manifest",
+   "decl": "int Rules_HostMarchToTemple(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostMarchNear": {
+   "class": "manifest",
+   "decl": "int Rules_HostMarchNear(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostAttackTroop": {
+   "class": "manifest",
+   "decl": "int Rules_HostAttackTroop(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostCaptureTroop": {
+   "class": "manifest",
+   "decl": "int Rules_HostCaptureTroop(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostHideTroop": {
+   "class": "manifest",
+   "decl": "int Rules_HostHideTroop(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostArmyExists": {
+   "class": "manifest",
+   "decl": "int Rules_HostArmyExists(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostAttackBuilding": {
+   "class": "manifest",
+   "decl": "int Rules_HostAttackBuilding(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostFordExists": {
+   "class": "manifest",
+   "decl": "int Rules_HostFordExists(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostBuildRoad": {
+   "class": "manifest",
+   "decl": "int Rules_HostBuildRoad(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostUnitCanMove": {
+   "class": "manifest",
+   "decl": "int Rules_HostUnitCanMove(int a1, double a2);",
+   "home": "strategic"
   }
  },
  "globals": {
@@ -21790,10 +21900,6 @@
    "decl": "extern CHAR ProcName[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostArmyExists": {
-   "decl": "extern _UNKNOWN Rules_HostArmyExists;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostArmyHasUnitsOfType": {
    "decl": "extern _UNKNOWN Rules_HostArmyHasUnitsOfType;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -21802,28 +21908,12 @@
    "decl": "extern _UNKNOWN Rules_HostArmyHeadcount;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostAttackBuilding": {
-   "decl": "extern _UNKNOWN Rules_HostAttackBuilding;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostAttackTroop": {
-   "decl": "extern _UNKNOWN Rules_HostAttackTroop;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostBuildCastle": {
    "decl": "extern _UNKNOWN Rules_HostBuildCastle;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostBuildRoad": {
-   "decl": "extern _UNKNOWN Rules_HostBuildRoad;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostBuildTrap": {
    "decl": "extern _UNKNOWN Rules_HostBuildTrap;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostBuildingInArmyRange": {
-   "decl": "extern _UNKNOWN Rules_HostBuildingInArmyRange;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostBuildingType": {
@@ -21866,10 +21956,6 @@
    "decl": "extern _UNKNOWN Rules_HostCanUpgradeWall;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostCaptureTroop": {
-   "decl": "extern _UNKNOWN Rules_HostCaptureTroop;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostCastleFreeSlotCount": {
    "decl": "extern _UNKNOWN Rules_HostCastleFreeSlotCount;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -21898,10 +21984,6 @@
    "decl": "extern _UNKNOWN Rules_HostDigTreasure;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostDistanceFromObject": {
-   "decl": "extern _UNKNOWN Rules_HostDistanceFromObject;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostEnemyPowerAtWalls": {
    "decl": "extern _UNKNOWN Rules_HostEnemyPowerAtWalls;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -21922,10 +22004,6 @@
    "decl": "extern _UNKNOWN Rules_HostFindRoadNearCastle;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostFordExists": {
-   "decl": "extern _UNKNOWN Rules_HostFordExists;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostGoToHealing": {
    "decl": "extern _UNKNOWN Rules_HostGoToHealing;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -21940,10 +22018,6 @@
   },
   "Rules_HostHealing": {
    "decl": "extern _UNKNOWN Rules_HostHealing;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostHideTroop": {
-   "decl": "extern _UNKNOWN Rules_HostHideTroop;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostIsLicence": {
@@ -21986,20 +22060,8 @@
    "decl": "extern _UNKNOWN Rules_HostLicenceIndex;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostMarch": {
-   "decl": "extern _UNKNOWN Rules_HostMarch;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostMarchAlongRoad": {
    "decl": "extern _UNKNOWN Rules_HostMarchAlongRoad;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostMarchNear": {
-   "decl": "extern _UNKNOWN Rules_HostMarchNear;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostMarchToTemple": {
-   "decl": "extern _UNKNOWN Rules_HostMarchToTemple;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostMaxTroopCount": {
@@ -22038,28 +22100,8 @@
    "decl": "extern _UNKNOWN Rules_HostRemoveLicence;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostRoadExists": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExists;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostRoadExistsNearCastle": {
    "decl": "extern _UNKNOWN Rules_HostRoadExistsNearCastle;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostRoadExistsNearby": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExistsNearby;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostRoadExistsToCastle": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExistsToCastle;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostRoadExistsToPort": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExistsToPort;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostRoadExistsToTemple": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExistsToTemple;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostStartHealing": {
@@ -22082,18 +22124,6 @@
    "decl": "extern _UNKNOWN Rules_HostTechLevel;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostTemple": {
-   "decl": "extern _UNKNOWN Rules_HostTemple;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostTempleInArmyRange": {
-   "decl": "extern _UNKNOWN Rules_HostTempleInArmyRange;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostTempleOk": {
-   "decl": "extern _UNKNOWN Rules_HostTempleOk;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostTraining": {
    "decl": "extern _UNKNOWN Rules_HostTraining;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -22102,16 +22132,8 @@
    "decl": "extern _UNKNOWN Rules_HostTroopCount;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostTroopInArmyRange": {
-   "decl": "extern _UNKNOWN Rules_HostTroopInArmyRange;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostTurnNumber": {
    "decl": "extern _UNKNOWN Rules_HostTurnNumber;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostUnitCanMove": {
-   "decl": "extern _UNKNOWN Rules_HostUnitCanMove;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostUnitInCastleExists": {
