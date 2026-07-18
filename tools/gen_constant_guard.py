@@ -31,6 +31,7 @@ HEADER = """\
 #define CLASH95_RECOVERED_LAYOUT_H
 
 #include "recovered_types.h"
+#include "recovered_structs.h"
 """
 
 FOOTER = """
