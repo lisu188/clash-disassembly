@@ -31,6 +31,55 @@ data→function; see the roadmap plan's C-B2 section).
   `check_link_surface.py --mode update` (data→function; reviewed) → dual
   builds + ratchet. Batch ~12/commit per the plan.
 
+## Execution mechanics (verified 2026-07-18) — this is manifest surgery
+
+The 87 handlers are NOT standalone in the recovered build; they are packed
+INSIDE two dispatcher blobs the decompiler lumped together (no direct calls to
+the handler entries — only data refs from the registration table), and the
+manifest currently mis-attributes each whole blob to its registration function:
+- `Rules_RegisterStrategicActionHostFunctions` — manifest range
+  **[0x452390..0x4530A0]**, but the registration calls only occupy
+  0x452390..**0x452753**; the 26 strategic handlers (loc_452753..loc_45303F)
+  fill the rest.
+- `Rules_RegisterBuildingHostFunctions` — manifest range **[0x4561B0..0x4570E3]**,
+  registration calls first, then the building handlers (loc_456706..loc_457789).
+
+The recovered C for those two "functions" (the `Rules_RegisterHostFunction(...)`
+calls) reproduces only the FIRST part of each blob; the handler bytes are NOT in
+the recovered binary — each handler exists solely as a 1-byte `_UNKNOWN
+Rules_HostX;` DATA global in the state TU (decl-DB `globals`, owner =
+recovered_state.c). Recovery is therefore **purely additive** (the plan's
+"add-only obj_diff sections"):
+
+1. Add each handler function body (from this spec) into the owning strategic TU
+   (`004506B0_004530D0_strategic_001.c` for the 0x452xxx set,
+   `00455740_004582B0_strategic_003.c` for the 0x456xxx set), ordered by
+   address so they compile at their original offsets.
+2. **Shrink the registration function's manifest range** to end at the first
+   handler (strategic: `end_exclusive` 0x4530A0 → 0x452753) and **add a manifest
+   `functions` entry per handler** (name, original_address, range to the next
+   handler, source, linkage external, subsystem, state_owner, body_sha256 via
+   `update_split_manifest_hashes.py`).
+3. **Move each symbol from decl-DB `globals` → `functions`** (drop the
+   `extern _UNKNOWN Rules_HostX;` global, add
+   `int Rules_HostX(int, double);` under functions with `home: strategic`),
+   and delete the `_UNKNOWN Rules_HostX;` definition from recovered_state.c.
+4. `gen_subsystem_headers.py --write`; build.
+5. **obj_diff** — reviewed re-baseline: the strategic TU gains handler function
+   sections (add-only), the registration function's compiled range shrinks; the
+   state TU loses the `_UNKNOWN` bytes. Re-snapshot after review.
+6. **`check_link_surface.py --mode update`** — each handler symbol migrates
+   data (D, state TU) → text (T, strategic TU); reviewed.
+7. Dual builds + warning ratchet + ctest.
+
+Byte-identity to the ORIGINAL is verified MANUALLY (the per-handler asm analysis
+in this spec) — obj_diff is snapshot-relative (guards refactors), it does NOT
+compare against the original binary. The registration-function split point
+(0x452753 strategic) must be confirmed by building and checking where the
+recovered registration function's code actually ends. Do this SEQUENTIALLY (the
+manifest / link-surface / obj_diff snapshot are shared global state — not
+parallelizable); one dispatcher blob (strategic first) per batch.
+
 ## First batch to make the AI visibly move
 
 One movement rule (`maszeruj`) needs its whole dependency set recovered
