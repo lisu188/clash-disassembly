@@ -14,6 +14,18 @@ verify flag). This turns C-B2 from open-ended RE into mechanical application
 under the re-baseline gate flow (obj_diff add-only + link-surface
 data→function; see the roadmap plan's C-B2 section).
 
+**STATUS: flow PROVEN, 1/87 recovered.** `Rules_HostUnitCountInTroop` landed
+(commit `fef99dd`) validating the full execution playbook below end-to-end:
+split audit PASS, full build links clean, gcc link-surface diffs=0, direct-a +
+/A5 no-crash. The scripted steps (move decl-DB global→function, add manifest
+entry + shrink the registration range, migrate link-surface data→text) are in
+`scratchpad/`. Two caveats confirmed live: (1) the audit TOLERATES partial-blob
+recovery (gaps for still-unrecovered handlers are fine — recover incrementally),
+and (2) link-surface `--mode update` is blocked locally by a pre-existing
+83-error manifest crosscheck (a build-config artifact on the clean tree), so the
+baseline is hand-migrated locally and must be reverified in CI's production
+build config. Remaining: 86 handlers, same flow.
+
 ## Compile prerequisites (do these first)
 
 - **`Rules_RtnDouble`** (float/double arg reader, `sub_4811C0`) is declared
