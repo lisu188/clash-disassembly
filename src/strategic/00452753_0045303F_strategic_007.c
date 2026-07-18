@@ -38,6 +38,16 @@ int Rules_HostRoadExistsNearby(int a1, double a2)
   return Rules_QueuePathNearTile(stack_index, target_x, target_y, 0);
 }
 
+//----- (00452963) --------------------------------------------------------
+int Rules_HostRoadExistsNearCastle(int a1, double a2)
+{
+  int stack_index = Rules_RtnLong(1, 0, a2);
+  int castle_x = Rules_RtnLong(2, 0, a2);
+  int castle_y = Rules_RtnLong(3, 0, a2);
+  (void)a1;
+  return Rules_QueuePathNearCastle(stack_index, castle_x, castle_y, 0);
+}
+
 //----- (004529BF) --------------------------------------------------------
 int Rules_HostRoadExistsToPort(int a1, double a2)
 {
@@ -219,6 +229,16 @@ int Rules_HostBuildRoad(int a1, double a2)
 {
   (void)a1;
   return Rules_BuildRoadOrStepTowardQueuedPath(Rules_RtnLong(1, 0, a2), 0, a2);
+}
+
+//----- (00452FE3) --------------------------------------------------------
+int Rules_HostBuildTrap(int a1, double a2)
+{
+  int target_x = Rules_RtnLong(1, 0, a2);
+  int target_y = Rules_RtnLong(2, 0, a2);
+  int stack_index = Rules_RtnLong(3, 0, a2);
+  (void)a1;
+  return Rules_BuildTrapNearTile(target_x, target_y, stack_index, a2);
 }
 
 //----- (0045303F) --------------------------------------------------------

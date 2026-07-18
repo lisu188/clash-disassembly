@@ -36,6 +36,18 @@ void Rules_HostUpgradeWall(int a1, double a2)
     Building_TryStartUpgradeByIndex(Rules_RtnLong(1, 0, a2));
 }
 
+//----- (004567C6) ----------------------------------------------------------
+void Rules_HostChangeTax(int a1, double a2)
+{
+  int building_index;
+  float tax_delta;
+
+  (void)a1;
+  building_index = Rules_RtnLong(1, 0, a2);
+  tax_delta = Rules_RtnDouble(2, 0, a2);
+  Building_AdjustTaxRateByIndex(building_index, 0, tax_delta);
+}
+
 //----- (00456806) ----------------------------------------------------------
 void Rules_HostRemoveLicence(int a1, double a2)
 {
@@ -101,6 +113,13 @@ int Rules_HostIsLicence(int a1, double a2)
   return Building_HasUnitLicenceByIndex(building_index, licence_type);
 }
 
+//----- (0045696E) ----------------------------------------------------------
+int Rules_HostBuySchool(int a1, double a2)
+{
+  (void)a1;
+  return Building_BuildSchoolByIndex(Rules_RtnLong(1, 0, a2), 0, 0);
+}
+
 //----- (004569A4) ----------------------------------------------------------
 int Rules_HostBuyForge(int a1, double a2)
 {
@@ -135,6 +154,17 @@ int Rules_HostTurnNumber(int a1, double a2)
     (void)a1;
     (void)a2;
     return Game_GetTurnNumber();
+}
+
+//----- (00456AA8) ----------------------------------------------------------
+int Rules_HostBuildCastle(int a1, double a2)
+{
+  int p1 = Rules_RtnLong(1, 0, a2);
+  int p2 = Rules_RtnLong(2, 0, a2);
+  int p3 = Rules_RtnLong(3, 0, a2);
+  int p4 = Rules_RtnLong(4, 0, a2);
+  (void)a1;
+  return Rules_BuildCastle(p1, p2, p3, p4, (char *)Rules_RtnLexeme(5, 0, a2));
 }
 
 //----- (00456B0D) ----------------------------------------------------------

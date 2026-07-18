@@ -57,9 +57,9 @@ BOOL  Building_CanBuyUnitLicenceByIndex(int building_index, unit_type licence_ty
 // 5202E4: using guessed type int gameData;
 
 //----- (00455830) --------------------------------------------------------
-BOOL  Rules_BuildCastle(int building_type, DWORD a2, double a3, char *castle_name)
+BOOL  Rules_BuildCastle(int building_type, int a2, int a3, int a4, char *castle_name)
 {
-  return Building_New(building_type, a2, a3, castle_name, 0);
+  return Building_New(building_type, a2, a3, a4, castle_name, 0);
 }
 
 //----- (00455850) --------------------------------------------------------

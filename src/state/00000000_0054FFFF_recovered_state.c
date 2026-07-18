@@ -39,7 +39,6 @@ _UNKNOWN Rules_HostDigTreasure;
 
 
 
-_UNKNOWN Rules_HostRoadExistsNearCastle;
 
 
 
@@ -60,14 +59,6 @@ _UNKNOWN Rules_HostRoadExistsNearCastle;
 
 
 
-_UNKNOWN Rules_HostBuildTrap;
-
-
-
-
-
-
-_UNKNOWN Rules_HostChangeTax;
 
 
 
@@ -75,14 +66,18 @@ _UNKNOWN Rules_HostChangeTax;
 
 
 
-_UNKNOWN Rules_HostBuySchool;
 
 
 
 
 
 
-_UNKNOWN Rules_HostBuildCastle;
+
+
+
+
+
+
 
 
 
@@ -578,6 +573,10 @@ char aBuilding_bui_2[33] = "Building_BuildBarracks() - %d,%d";
 char aBuilding_bui_3[33] = "Building_BuildHospital() - %d,%d";
 
 char aBuilding_bui_1[31] = "Building_BuildSmiths() - %d,%d";
+
+char aBuilding_bui_0[31] = "Building_BuildSchool() - %d,%d";
+
+char aTrap_newDDD[19] = "Trap_New(%d,%d,%d)";
 
 char aBuildingFindFreePlaceNear[37] = "Building_FindFreePlaceNear() - %d,%d";
 

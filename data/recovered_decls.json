@@ -12682,7 +12682,7 @@
   },
   "Rules_BuildCastle": {
    "class": "manifest",
-   "decl": "BOOL  Rules_BuildCastle(int building_type, DWORD a2, double a3, char *castle_name);",
+   "decl": "BOOL  Rules_BuildCastle(int building_type, int a2, int a3, int a4, char *castle_name);",
    "home": "strategic"
   },
   "Rules_BuildClassListForSave": {
@@ -22079,6 +22079,31 @@
    "class": "manifest",
    "decl": "int Rules_HostFindBest(int a1, double a2);",
    "home": "strategic"
+  },
+  "Rules_HostRoadExistsNearCastle": {
+   "class": "manifest",
+   "decl": "int Rules_HostRoadExistsNearCastle(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostBuildTrap": {
+   "class": "manifest",
+   "decl": "int Rules_HostBuildTrap(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostBuySchool": {
+   "class": "manifest",
+   "decl": "int Rules_HostBuySchool(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostChangeTax": {
+   "class": "manifest",
+   "decl": "void Rules_HostChangeTax(int a1, double a2);",
+   "home": "strategic"
+  },
+  "Rules_HostBuildCastle": {
+   "class": "manifest",
+   "decl": "int Rules_HostBuildCastle(int a1, double a2);",
+   "home": "strategic"
   }
  },
  "globals": {
@@ -22190,28 +22215,8 @@
    "decl": "extern CHAR ProcName[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "Rules_HostBuildCastle": {
-   "decl": "extern _UNKNOWN Rules_HostBuildCastle;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostBuildTrap": {
-   "decl": "extern _UNKNOWN Rules_HostBuildTrap;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostBuySchool": {
-   "decl": "extern _UNKNOWN Rules_HostBuySchool;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostChangeTax": {
-   "decl": "extern _UNKNOWN Rules_HostChangeTax;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "Rules_HostDigTreasure": {
    "decl": "extern _UNKNOWN Rules_HostDigTreasure;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostRoadExistsNearCastle": {
-   "decl": "extern _UNKNOWN Rules_HostRoadExistsNearCastle;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Text": {

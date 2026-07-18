@@ -70,7 +70,7 @@
   "state->strategic": 6,
   "strategic->buildings": 46,
   "strategic->clips": 4,
-  "strategic->media": 18,
+  "strategic->media": 20,
   "strategic->persistence": 21,
   "strategic->render": 15,
   "strategic->runtime": 9,
@@ -1170,6 +1170,8 @@
     "Rules_GetArgRestrictionType",
     "Rules_GetFunctionDefinitionListHead",
     "Rules_MakeSymbol",
+    "Rules_RtnLexeme",
+    "Rules_RtnDouble",
     "Rules_RtnLong",
     "Rules_RtnUnknown",
     "Rules_RtnArgCount",
@@ -1177,7 +1179,7 @@
     "Rules_ArgRangeCheck",
     "Mem_SetAllocFlag"
    ],
-   "internal_function_count": 493,
+   "internal_function_count": 491,
    "state_globals": 661
   },
   "persistence": {
@@ -1564,8 +1566,8 @@
     "Device_SetParamA",
     "Device_UpdateRect"
    ],
-   "internal_function_count": 211,
-   "state_globals": 304
+   "internal_function_count": 216,
+   "state_globals": 299
   },
   "units": {
    "api_functions": [

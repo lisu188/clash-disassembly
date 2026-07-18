@@ -97,7 +97,7 @@ TEST(cov07_castle, build_castle) {
   int saved = gameData;
   memset(gd, 0, sizeof gd);
   gameData = (int)(intptr_t)gd;
-  TOUCH(Rules_BuildCastle(0, 0, 0.0, namebuf));
+  TOUCH(Rules_BuildCastle(0, 0, 0, 0, namebuf));
   gameData = saved;
 }
 

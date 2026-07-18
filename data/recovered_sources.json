@@ -3,7 +3,7 @@
   "language": "GNU C17",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
   "source_file_count": 140,
-  "function_count": 4151,
+  "function_count": 4156,
   "functions": [
     {
       "name": "UnitBattle_HandleBattlefieldInteraction",
@@ -52247,6 +52247,23 @@
       "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
     },
     {
+      "name": "Rules_HostRoadExistsNearCastle",
+      "original_address": "0x00452963",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 42,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "ae459962cd4846af463bee610f38ab00463b883206a4d1524c2bca52a664e050",
+      "original_address_range": {
+        "start": "0x00452963",
+        "end_exclusive": "0x004529BF"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
       "name": "Rules_HostRoadExistsToPort",
       "original_address": "0x004529BF",
       "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
@@ -52563,6 +52580,23 @@
       "original_address_range": {
         "start": "0x00452FA7",
         "end_exclusive": "0x00452FE3"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostBuildTrap",
+      "original_address": "0x00452FE3",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "original_line": 235,
+      "source": "src/strategic/00452753_0045303F_strategic_007.c",
+      "linkage": "external",
+      "body_sha256": "e5c13fae1eeebadc5fe70b781a2d705e3c52d49661768c467e24d53577d34972",
+      "original_address_range": {
+        "start": "0x00452FE3",
+        "end_exclusive": "0x0045303F"
       },
       "subsystem": "strategic",
       "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
@@ -53800,7 +53834,7 @@
       "original_line": 2943,
       "source": "src/strategic/00455740_004582B0_strategic_003.c",
       "linkage": "external",
-      "body_sha256": "3ad0de9fd69aa7f628d49d95598788d7353f9668b4901f89fd120087fc73a954",
+      "body_sha256": "58d3104f34d001344e4da95d337cc0beb5dba30b2d68e639aa516d0be3ce8661",
       "original_address_range": {
         "start": "0x00455830",
         "end_exclusive": "0x00455850"
@@ -54627,6 +54661,23 @@
       "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
     },
     {
+      "name": "Rules_HostChangeTax",
+      "original_address": "0x004567C6",
+      "original_source": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "original_line": 40,
+      "source": "src/strategic/00456706_00457789_strategic_008.c",
+      "linkage": "external",
+      "body_sha256": "2d0fb0dd66757b9695e2562dee21f82ba9acad3de9179b06f1a6664f73c7f7c5",
+      "original_address_range": {
+        "start": "0x004567C6",
+        "end_exclusive": "0x00456806"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
       "name": "Rules_HostRemoveLicence",
       "original_address": "0x00456806",
       "original_source": "src/recovered/rules/strategic/00455740_strategic.inc.c",
@@ -54729,6 +54780,23 @@
       "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
     },
     {
+      "name": "Rules_HostBuySchool",
+      "original_address": "0x0045696E",
+      "original_source": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "original_line": 117,
+      "source": "src/strategic/00456706_00457789_strategic_008.c",
+      "linkage": "external",
+      "body_sha256": "fd2486346375dcd57034ad3f9da1dc0c8a9f38820be65a938a9312f29cddf717",
+      "original_address_range": {
+        "start": "0x0045696E",
+        "end_exclusive": "0x004569A4"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
       "name": "Rules_HostBuyForge",
       "original_address": "0x004569A4",
       "original_source": "src/recovered/rules/strategic/00455740_strategic.inc.c",
@@ -54806,6 +54874,23 @@
       "body_sha256": "91da94e44ca4dac083de59faf593565be1e5902bfd1c0ce497637434f514d58d",
       "original_address_range": {
         "start": "0x00456A7C",
+        "end_exclusive": "0x00456B0D"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a"
+    },
+    {
+      "name": "Rules_HostBuildCastle",
+      "original_address": "0x00456AA8",
+      "original_source": "src/recovered/rules/strategic/00455740_strategic.inc.c",
+      "original_line": 160,
+      "source": "src/strategic/00456706_00457789_strategic_008.c",
+      "linkage": "external",
+      "body_sha256": "d9eb01c45645c748d444168b552bfcc0eb44802be3b6235585faef8db184d25e",
+      "original_address_range": {
+        "start": "0x00456AA8",
         "end_exclusive": "0x00456B0D"
       },
       "subsystem": "strategic",
@@ -70575,5 +70660,5 @@
   ],
   "cutover": "canonical-split",
   "legacy_manifest": "clash95.c",
-  "address_marker_count": 4001
+  "address_marker_count": 4006
 }
