@@ -37,6 +37,41 @@ decompiler did not split into standalone functions; they are documented here by
 their registration only. Recovering their bodies is a natural follow-up (the
 C-name and arity below define the target contract).
 
+## Current recovery status (2026-07-18) — registration done, 87 bodies not
+
+The `addr` column below (the `loc_XXXXXX` labels) predates the naming/split
+work. Since then the registration table is **fully recovered and wired**:
+`Rules_RegisterStrategicActionHostFunctions` /
+`Rules_RegisterArmyHostFunctions` / `Rules_RegisterBuildingHostFunctions`
+(`src/strategic/004506B0_004530D0_strategic_001.c:1411`,
+`src/strategic/00455740_004582B0_strategic_003.c`) register every host function
+under a **named** `Rules_Host*` symbol (e.g. `maszeruj` → `&Rules_HostMarch`,
+`jest_droga` → `&Rules_HostRoadExists`, `odleglosc_od_obiektu` →
+`&Rules_HostDistanceFromObject`). But **87 of those 92 symbols are still
+`_UNKNOWN` one-byte DATA placeholders** in
+`src/state/00000000_0054FFFF_recovered_state.c` (`grep -c '^_UNKNOWN
+Rules_Host'` = 87); only 5 have recovered C bodies (`Rules_HostArmyHasBuilder`,
+`Rules_HostArmyHasNormalCombatUnits`, `Rules_HostArmyHasOnlyUnitType`,
+`Rules_HostCollectPortSupply`, `Rules_HostPortHasSupplyReady`). Body recovery is
+**workstream C-B2**: turn each `_UNKNOWN Rules_HostX;` (data) into
+`int Rules_HostX(...) { ... }` (function), carving the body from its `loc_`
+address; template = `Rules_HostArmyHasBuilder` (strategic_001.c:1464), a thin
+`Rules_RtnLong`-based arg-read + inner-recovered-fn wrapper.
+
+**Runtime consequence (proven 2026-07-18, all-AI `/A5` diagnostic):** the
+strategic AI is **inert**. A 90 s all-AI map-5 run showed the turn loop running
+(138 `ai_turn_*` markers), the CLIPS rulebase alive (8220 `oddzial` fact
+asserts with correct unit positions), and **no crash** — but **zero unit
+moves**. Because every decision/action rule's LHS or RHS calls an unrecovered
+query/action handler (`jest_droga`, `jest_armia`, `odleglosc_od_obiektu`,
+`maszeruj`, `atakuj_oddzial`, …) and those are data placeholders that would
+crash on call, no such rule ever completes: the agenda fires nothing that
+touches the world. This is why the QEMU tile comparison sees the recovered
+all-AI camera frozen at the start viewport and fog-edge tiles diverging from
+the original (`tools/vm/README.md`, "Fix B"). Landing C-B2 (at minimum the full
+dependency set of one movement rule: the road/distance/army queries + `maszeruj`)
+is what will make the recovered AI visibly play.
+
 ## Terrain, roads, and movement
 
 | H/L name | C-name | ret | args | addr | Meaning |
