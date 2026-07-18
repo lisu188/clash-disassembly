@@ -63,127 +63,69 @@ _UNKNOWN Rules_HostRoadExistsNearCastle;
 _UNKNOWN Rules_HostBuildTrap;
 
 
-_UNKNOWN Rules_HostHealing;
 
-_UNKNOWN Rules_HostTraining;
 
-_UNKNOWN Rules_HostBurnBuildings;
 
-_UNKNOWN Rules_HostUpgradeWall;
 
 _UNKNOWN Rules_HostChangeTax;
 
-_UNKNOWN Rules_HostRemoveLicence;
 
-_UNKNOWN Rules_HostStartHealing;
 
-_UNKNOWN Rules_HostStartTraining;
 
-_UNKNOWN Rules_HostStartProduction;
 
-_UNKNOWN Rules_HostTax;
 
-_UNKNOWN Rules_HostIsLicence;
 
 _UNKNOWN Rules_HostBuySchool;
 
-_UNKNOWN Rules_HostBuyForge;
 
-_UNKNOWN Rules_HostMoney;
 
-_UNKNOWN Rules_HostWallStrength;
 
-_UNKNOWN Rules_HostCastleStrength;
 
-_UNKNOWN Rules_HostTurnNumber;
 
 _UNKNOWN Rules_HostBuildCastle;
 
-_UNKNOWN Rules_HostBuyLicence;
 
-_UNKNOWN Rules_HostBuyBarracks;
 
-_UNKNOWN Rules_HostBuyHospital;
 
-_UNKNOWN Rules_HostTechLevel;
 
-_UNKNOWN Rules_HostBuildingType;
 
-_UNKNOWN Rules_HostPlayerStrength;
 
-_UNKNOWN Rules_HostBuyWorkshop;
 
-_UNKNOWN Rules_HostHappiness;
 
-_UNKNOWN Rules_HostIsProduction;
 
-_UNKNOWN Rules_HostPeasantCount;
 
-_UNKNOWN Rules_HostIsMinimal;
 
-_UNKNOWN Rules_HostCanBuyLicence;
 
-_UNKNOWN Rules_HostLicenceIndex;
 
-_UNKNOWN Rules_HostLicenceInd;
 
-_UNKNOWN Rules_HostCanUpgradeWall;
 
-_UNKNOWN Rules_HostTroopCount;
 
-_UNKNOWN Rules_HostIsProductionAny;
 
-_UNKNOWN Rules_HostLeadOutPeasants;
 
-_UNKNOWN Rules_HostUnitsToSchool;
 
-_UNKNOWN Rules_HostMaxTroopCount;
 
-_UNKNOWN Rules_HostUnitInCastleExists;
 
-_UNKNOWN Rules_HostUnitsToHospital;
 
-_UNKNOWN Rules_HostLeadOutTroop;
 
-_UNKNOWN Rules_HostLeadOutTroops;
 
-_UNKNOWN Rules_HostCastleName;
 
-_UNKNOWN Rules_HostEnterCastle;
 
-_UNKNOWN Rules_HostJoinTroop;
 
-_UNKNOWN Rules_HostRegroupTroops;
 
-_UNKNOWN Rules_HostRegroupCastle;
 
-_UNKNOWN Rules_HostArmyHeadcount;
 
-_UNKNOWN Rules_HostArmyHasUnitsOfType;
 
-_UNKNOWN Rules_HostCastleFreeSlotCount;
 
-_UNKNOWN Rules_HostEnemyPowerAtWalls;
 
-_UNKNOWN Rules_HostFindRoadNearCastle;
 
-_UNKNOWN Rules_HostHasUnitsToHeal;
 
-_UNKNOWN Rules_HostFindCastleForHealing;
 
-_UNKNOWN Rules_HostGoToHealing;
 
-_UNKNOWN Rules_HostPlagueInCastleExists;
 
-_UNKNOWN Rules_HostPlagueInTroopExists;
 
-_UNKNOWN Rules_HostDetachWeakUnits;
 
-_UNKNOWN Rules_HostDetachUnitsOfType;
 
-_UNKNOWN Rules_HostMarchAlongRoad;
 
-_UNKNOWN Rules_HostFindBest;
 
 _UNKNOWN Audio_MixMonoVoiceDispatch;
 

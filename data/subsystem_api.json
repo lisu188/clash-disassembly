@@ -68,7 +68,7 @@
   "state->render": 62,
   "state->runtime": 10,
   "state->strategic": 6,
-  "strategic->buildings": 44,
+  "strategic->buildings": 46,
   "strategic->clips": 4,
   "strategic->media": 18,
   "strategic->persistence": 21,
@@ -394,6 +394,7 @@
     "Building_BuildBarracks",
     "Building_BuildHospital",
     "Building_BuildSmiths",
+    "Building_Transfer",
     "Building_CanStartUpgrade",
     "Building_TryStartUpgrade",
     "Unit_CaptureBuilding",
@@ -483,6 +484,7 @@
     "Battle_DeploySideUnitsByRoleBuckets",
     "Building_HasFreeAdjacentExitTile",
     "Building_UnitsLeave",
+    "Building_CountFreeGarrisonSlots",
     "Building_UnitGetInto",
     "Building_CanAcceptUnitStack",
     "Building_HasUnitLicence",
@@ -535,7 +537,7 @@
     "Audio_PlayUnitActivateSound",
     "Audio_PlayUnitMoveOrderSound"
    ],
-   "internal_function_count": 198,
+   "internal_function_count": 196,
    "state_globals": 492
   },
   "clips": {
@@ -1562,8 +1564,8 @@
     "Device_SetParamA",
     "Device_UpdateRect"
    ],
-   "internal_function_count": 153,
-   "state_globals": 362
+   "internal_function_count": 211,
+   "state_globals": 304
   },
   "units": {
    "api_functions": [
