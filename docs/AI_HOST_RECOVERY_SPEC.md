@@ -14,39 +14,62 @@ verify flag). This turns C-B2 from open-ended RE into mechanical application
 under the re-baseline gate flow (obj_diff add-only + link-surface
 data→function; see the roadmap plan's C-B2 section).
 
-**STATUS: 23/87 recovered — the strategic_001 movement blob is done; all-AI
-now moves.** `Rules_HostUnitCountInTroop` landed first (commit `fef99dd`),
-then 22 more in commit `b13a724`: the whole strategic_001 0x452753..0x45303F
-blob except 3 (see deferred, below). These are exactly the movement/query/action
-handlers the all-AI engine calls — `maszeruj` (Rules_HostMarch), the
-road/ford/distance/army-range queries, attack/capture/hide, temple queries,
-build-road. **Runtime effect proven:** a headless /A5 run shows the engine now
-firing its agenda and relocating every player's units across turns (previously
-~8200 fact asserts but ZERO moves), no crash.
+**STATUS: 81/87 recovered — both the strategic_001 movement blob AND the
+strategic_003 economy/building/army blob are done; the all-AI engine now moves
+units and runs its economic decision layer, crash-free.** Landed:
+`Rules_HostUnitCountInTroop` (`fef99dd`), 22 movement handlers (`b13a724`,
+strategic_001 0x452753..0x45303F → TU `strategic_007.c`), and 58
+economy/building/army handlers (`b9d1536`, strategic_003 0x456706..0x457789 → TU
+`strategic_008.c`). **Runtime proven each time** via headless /A5: was ~8200 fact
+asserts + ZERO moves; now every player relocates units across turns and
+castle/building/economy facts flow, no crash.
 
-Two mechanics learned in the 22-batch:
-- **TU split is mandatory once the owning TU hits the 1500-line cap.** The blob
-  moved into a new dedicated TU `src/strategic/00452753_0045303F_strategic_007.c`
-  (origin comment copied verbatim so `original_source` matches; add to
-  `src/sources.cmake`; bump manifest `source_file_count`; repoint each moved
-  function's `source`; `gen_subsystem_headers.py --write-tu-includes strategic`
-  fills the include block; strategic_001.c keeps its filename because its
-  first/last marker span is unchanged). The other 0x456xxx blob (strategic_003)
-  will need the same split.
-- **link-surface `--mode update` now works** (the earlier 83-error crosscheck was
-  a stale build-config artifact; on a full gcc-13 + clang-18 build
-  crosscheck_errors=0). Regenerate each profile from its own build — do NOT
-  hand-migrate, because a batch pulls in newly gc-kept inner functions AND the
-  rodata they reference, whose address ordering differs per compiler.
+Mechanics proven across the batches:
+- **TU split once the owning TU hits the 1500-line cap.** New dedicated TU
+  `<first>_<last>_strategic_00N.c`: copy the origin comment verbatim so
+  `original_source` matches; add to `src/sources.cmake`; bump manifest
+  `source_file_count`; set each handler entry's `source`; shrink the
+  over-claiming registration function(s) to the first handler thunk (asm-confirm
+  `loc_XXXX: ; DATA XREF: sub_REG+..`); `gen --write-tu-includes strategic` fills
+  the include block. The old TU keeps its filename if its first/last marker span
+  is unchanged. strategic_003 has TWO registration fns (Building 0x4561B0→shrink
+  to 0x456706; Army 0x4570E3→shrink to 0x457351) with a gap between the two
+  handler sub-blobs — fine, the new TU tolerates the gap.
+- **Deterministic link-reachability PRE-FLIGHT eliminates the recover→link-fail→
+  restart cycle.** `scratchpad/preflight.py`: `ar x` the recovered archive,
+  build the call/data-reference graph from `objdump -dr`, compute the
+  genuinely-undefined symbol set (referenced but defined nowhere in archive ∪
+  final-binary-defined ∪ dynamic-imports), then per candidate inner report if its
+  transitive closure reaches an undefined symbol. Caught exactly the data-blocked
+  handlers up front (strategic_003: only BuySchool). Watch the false positives:
+  strip `.`-prefixed section targets, and add the final binary's `nm` defined +
+  `nm -D -u` dynamic imports to the "provided" universe.
+- **Adversarial reconstruct→verify workflow is worth it** (`scratchpad/
+  wf_verify003.js`, 60 handlers × 2 stages vs asm + inner prototype). The verify
+  stage caught two genuine __usercall register swaps (`ecx`=param3, `ebx`=param4)
+  the reconstruction normalized away — Map_IsCastleSiteDistanceMinimal and
+  Building_Transfer both take CLIPS arg4→param3, arg3→param4. These are
+  compilable-but-wrong; only the asm distinguishes them.
+- **link-surface `--mode update` works** (crosscheck=0 on a full gcc-13 + clang-18
+  build); regenerate each profile from its OWN build.
+- **Cross-subsystem call promotion re-seeds the header surface.** When a handler
+  calls a function previously internal to another subsystem (LeadOutPeasants→
+  Building_Transfer, CastleFreeSlotCount→Building_CountFreeGarrisonSlots), the
+  generator promotes it to that subsystem's `_api.h`; run
+  `audit_header_surface.py --mode update` to re-seed and stage the changed
+  `<sub>_api.h`/`_internal.h` + `data/header_surface_baseline.json`.
 
-**Deferred (blocked on unrecovered data), do NOT batch until the data lands:**
-`Rules_HostDigTreasure` (inner `Treasure_TryDigHere` → `g_Mission7/17Scripted­
-TreasureEventData`, treasure outcome tables, `aTreasure_dig*`) and
-`Rules_HostBuildTrap` (inner chain → `Trap_New` → `aTrap_newDDD`). Also still
-skipped: `Rules_HostRoadExistsNearCastle` (verify-flagged 4th-arg, line 282).
-
-Remaining: 64 handlers (the strategic_003 0x456xxx economy/building blob + the
-3 above + the 8 manual-review complex ones), same flow.
+**Remaining 6, each needing prerequisite work (NOT plain thin-wrapper batches):**
+- data-blocked (unrecovered rodata): `Rules_HostBuySchool`
+  (`aBuilding_bui_0`), `Rules_HostDigTreasure` (`Treasure_TryDigHere` →
+  `g_Mission7/17ScriptedTreasureEventData`), `Rules_HostBuildTrap` (`Trap_New` →
+  `aTrap_newDDD`).
+- compile-prereq: `Rules_HostChangeTax` (promote `Rules_RtnDouble`
+  media_internal→media_api), `Rules_HostBuildCastle` (promote `Rules_RtnLexeme`
+  + correct `Rules_BuildCastle` 4→5 param prototype).
+- verify-flagged: `Rules_HostRoadExistsNearCastle` (strategic_001, 4th-arg, this
+  file's Notes ~line 282 — likely a trailing DWORD=0 per the established
+  convention).
 
 ## Compile prerequisites (do these first)
 
