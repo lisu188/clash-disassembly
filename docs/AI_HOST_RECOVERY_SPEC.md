@@ -14,17 +14,39 @@ verify flag). This turns C-B2 from open-ended RE into mechanical application
 under the re-baseline gate flow (obj_diff add-only + link-surface
 data→function; see the roadmap plan's C-B2 section).
 
-**STATUS: flow PROVEN, 1/87 recovered.** `Rules_HostUnitCountInTroop` landed
-(commit `fef99dd`) validating the full execution playbook below end-to-end:
-split audit PASS, full build links clean, gcc link-surface diffs=0, direct-a +
-/A5 no-crash. The scripted steps (move decl-DB global→function, add manifest
-entry + shrink the registration range, migrate link-surface data→text) are in
-`scratchpad/`. Two caveats confirmed live: (1) the audit TOLERATES partial-blob
-recovery (gaps for still-unrecovered handlers are fine — recover incrementally),
-and (2) link-surface `--mode update` is blocked locally by a pre-existing
-83-error manifest crosscheck (a build-config artifact on the clean tree), so the
-baseline is hand-migrated locally and must be reverified in CI's production
-build config. Remaining: 86 handlers, same flow.
+**STATUS: 23/87 recovered — the strategic_001 movement blob is done; all-AI
+now moves.** `Rules_HostUnitCountInTroop` landed first (commit `fef99dd`),
+then 22 more in commit `b13a724`: the whole strategic_001 0x452753..0x45303F
+blob except 3 (see deferred, below). These are exactly the movement/query/action
+handlers the all-AI engine calls — `maszeruj` (Rules_HostMarch), the
+road/ford/distance/army-range queries, attack/capture/hide, temple queries,
+build-road. **Runtime effect proven:** a headless /A5 run shows the engine now
+firing its agenda and relocating every player's units across turns (previously
+~8200 fact asserts but ZERO moves), no crash.
+
+Two mechanics learned in the 22-batch:
+- **TU split is mandatory once the owning TU hits the 1500-line cap.** The blob
+  moved into a new dedicated TU `src/strategic/00452753_0045303F_strategic_007.c`
+  (origin comment copied verbatim so `original_source` matches; add to
+  `src/sources.cmake`; bump manifest `source_file_count`; repoint each moved
+  function's `source`; `gen_subsystem_headers.py --write-tu-includes strategic`
+  fills the include block; strategic_001.c keeps its filename because its
+  first/last marker span is unchanged). The other 0x456xxx blob (strategic_003)
+  will need the same split.
+- **link-surface `--mode update` now works** (the earlier 83-error crosscheck was
+  a stale build-config artifact; on a full gcc-13 + clang-18 build
+  crosscheck_errors=0). Regenerate each profile from its own build — do NOT
+  hand-migrate, because a batch pulls in newly gc-kept inner functions AND the
+  rodata they reference, whose address ordering differs per compiler.
+
+**Deferred (blocked on unrecovered data), do NOT batch until the data lands:**
+`Rules_HostDigTreasure` (inner `Treasure_TryDigHere` → `g_Mission7/17Scripted­
+TreasureEventData`, treasure outcome tables, `aTreasure_dig*`) and
+`Rules_HostBuildTrap` (inner chain → `Trap_New` → `aTrap_newDDD`). Also still
+skipped: `Rules_HostRoadExistsNearCastle` (verify-flagged 4th-arg, line 282).
+
+Remaining: 64 handlers (the strategic_003 0x456xxx economy/building blob + the
+3 above + the 8 manual-review complex ones), same flow.
 
 ## Compile prerequisites (do these first)
 
