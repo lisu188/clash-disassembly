@@ -3,7 +3,7 @@
   "language": "GNU C17",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
   "source_file_count": 138,
-  "function_count": 4070,
+  "function_count": 4071,
   "functions": [
     {
       "name": "UnitBattle_HandleBattlefieldInteraction",
@@ -52188,12 +52188,29 @@
       "body_sha256": "890cf1feb299b53b3b8191c89127cc7fb1cc6221d2a3fec3239f7440d0f6513d",
       "original_address_range": {
         "start": "0x00452390",
-        "end_exclusive": "0x004530A0"
+        "end_exclusive": "0x00452753"
       },
       "subsystem": "strategic",
       "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
       "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
       "legacy_body_sha256": "997211a4c504b1e28ec1a20c3ca1561c0b5092b9b96f89f67d52cb24248616a2"
+    },
+    {
+      "name": "Rules_HostUnitCountInTroop",
+      "original_address": "0x00452EE3",
+      "original_source": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "source": "src/strategic/004506B0_004530D0_strategic_001.c",
+      "linkage": "external",
+      "body_sha256": "e3e8f2438e3d456d1a5053baeb7018c55046896cf45fbebe134a70490028e410",
+      "original_address_range": {
+        "start": "0x00452EE3",
+        "end_exclusive": "0x00452F1F"
+      },
+      "subsystem": "strategic",
+      "state_owner": "src/state/00000000_0054FFFF_recovered_state.c",
+      "legacy_path": "src/recovered/rules/strategic/004506B0_strategic.inc.c",
+      "legacy_body_sha256": "612b62ec104e24887146659addf80e0e34da7581ac31b2439666477718c6893a",
+      "original_line": 1452
     },
     {
       "name": "Rules_PortCollectSupply",
@@ -69198,5 +69215,5 @@
   ],
   "cutover": "canonical-split",
   "legacy_manifest": "clash95.c",
-  "address_marker_count": 3920
+  "address_marker_count": 3921
 }

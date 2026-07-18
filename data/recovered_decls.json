@@ -21674,6 +21674,11 @@
    "class": "legacy-import",
    "decl": "int __fastcall wctomb_();",
    "home": "legacy"
+  },
+  "Rules_HostUnitCountInTroop": {
+   "class": "manifest",
+   "decl": "int Rules_HostUnitCountInTroop(int a1, double a2);",
+   "home": "strategic"
   }
  },
  "globals": {
@@ -22107,10 +22112,6 @@
   },
   "Rules_HostUnitCanMove": {
    "decl": "extern _UNKNOWN Rules_HostUnitCanMove;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "Rules_HostUnitCountInTroop": {
-   "decl": "extern _UNKNOWN Rules_HostUnitCountInTroop;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "Rules_HostUnitInCastleExists": {

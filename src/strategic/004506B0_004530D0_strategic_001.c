@@ -1444,6 +1444,17 @@ signed int Rules_RegisterStrategicActionHostFunctions(void)
 }
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
+//----- (00452EE3) --------------------------------------------------------
+// CLIPS host fn `liczba_jednostek_w_oddziale` (registered above at
+// aLiczba_jedno_0 -> &Rules_HostUnitCountInTroop, a11i). Recovered from the
+// loc_452EE3 handler thunk in clash95.asm (reads 1 CLIPS int arg via
+// Rules_RtnLong, tail-calls UnitStack_GetSquadCountByIndex).
+int Rules_HostUnitCountInTroop(int a1, double a2)
+{
+  (void)a1;
+  return UnitStack_GetSquadCountByIndex(Rules_RtnLong(1, 0, a2));
+}
+
 //----- (004530A0) --------------------------------------------------------
 signed int  Rules_PortCollectSupply(int a1, char a2, DWORD a3, double a4)
 {

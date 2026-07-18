@@ -74,7 +74,6 @@ _UNKNOWN Rules_HostHideTroop;
 
 _UNKNOWN Rules_HostArmyExists;
 
-_UNKNOWN Rules_HostUnitCountInTroop;
 
 _UNKNOWN Rules_HostAttackBuilding;
 

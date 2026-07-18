@@ -2,8 +2,8 @@
  "profiles": {
   "clang": {
    "counts": {
-    "data": 5137,
-    "text": 3820
+    "data": 5136,
+    "text": 3822
    },
    "data_ordered": {
     "b": [
@@ -379,7 +379,6 @@
      "Rules_HostCaptureTroop B 1",
      "Rules_HostHideTroop B 1",
      "Rules_HostArmyExists B 1",
-     "Rules_HostUnitCountInTroop B 1",
      "Rules_HostAttackBuilding B 1",
      "Rules_HostFordExists B 1",
      "Rules_HostBuildRoad B 1",
@@ -7812,6 +7811,7 @@
     "Rules_HostSetSequenceOperatorRecognition T",
     "Rules_HostStringp T",
     "Rules_HostSymbolp T",
+    "Rules_HostUnitCountInTroop T",
     "Rules_IfFunction T",
     "Rules_ImplodeFunction T",
     "Rules_ImportExportConflictMessage T",
@@ -8748,6 +8748,7 @@
     "UnitStack_GetMinCurrentActionPoints T",
     "UnitStack_GetMoveCostToTile T",
     "UnitStack_GetMoveCostToTileIgnoringOccupancy T",
+    "UnitStack_GetSquadCountByIndex T",
     "UnitStack_GetTileMoveCostFromMergedProfileOrZero T",
     "UnitStack_GetTileMoveCostOrZero T",
     "UnitStack_GetVisionRadius T",
@@ -8975,8 +8976,8 @@
   },
   "gcc": {
    "counts": {
-    "data": 5136,
-    "text": 3820
+    "data": 5135,
+    "text": 3822
    },
    "data_ordered": {
     "b": [
@@ -9060,7 +9061,6 @@
      "Rules_HostCaptureTroop B 1",
      "Rules_HostHideTroop B 1",
      "Rules_HostArmyExists B 1",
-     "Rules_HostUnitCountInTroop B 1",
      "Rules_HostAttackBuilding B 1",
      "Rules_HostFordExists B 1",
      "Rules_HostBuildRoad B 1",
@@ -16784,6 +16784,7 @@
     "Rules_HostSetSequenceOperatorRecognition T",
     "Rules_HostStringp T",
     "Rules_HostSymbolp T",
+    "Rules_HostUnitCountInTroop T",
     "Rules_IfFunction T",
     "Rules_ImplodeFunction T",
     "Rules_ImportExportConflictMessage T",
@@ -17720,6 +17721,7 @@
     "UnitStack_GetMinCurrentActionPoints T",
     "UnitStack_GetMoveCostToTile T",
     "UnitStack_GetMoveCostToTileIgnoringOccupancy T",
+    "UnitStack_GetSquadCountByIndex T",
     "UnitStack_GetTileMoveCostFromMergedProfileOrZero T",
     "UnitStack_GetTileMoveCostOrZero T",
     "UnitStack_GetVisionRadius T",

@@ -1562,8 +1562,8 @@
     "Device_SetParamA",
     "Device_UpdateRect"
    ],
-   "internal_function_count": 130,
-   "state_globals": 385
+   "internal_function_count": 131,
+   "state_globals": 384
   },
   "units": {
    "api_functions": [
