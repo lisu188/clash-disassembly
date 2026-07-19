@@ -76,9 +76,9 @@ signed int  Treasure_TryDigHere(
   else
   {
     if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
-      outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleActive;
+      outcomeTablePtr = &g_TreasureDigOutcomeTable_Human;
     else
-      outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleInactive;
+      outcomeTablePtr = &g_TreasureDigOutcomeTable_AI;
     digOutcome = Temple_Random((int)(intptr_t)outcomeTablePtr, v11, v6, (DWORD)(intptr_t)stackTileRecord, a4);
     Debug_Log(digOutcome, v6, (DWORD)(intptr_t)stackTileRecord, (int)(intptr_t)aTreasure_dig_0, digOutcome);
   }

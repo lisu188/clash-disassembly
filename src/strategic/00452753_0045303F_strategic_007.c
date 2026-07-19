@@ -32,8 +32,8 @@ int Rules_HostDigTreasure(int a1, double a2)
        from the recovered pointer list. Treasure_TryDigHere is reached only from
        this handler (the world_002 builder-dig path is gc-removed). */
     static const struct { unsigned char *table; int records; } outcome_tables[4] = {
-      { g_TreasureDigOutcomeTable_TempleActive, 9 },
-      { g_TreasureDigOutcomeTable_TempleInactive, 8 },
+      { g_TreasureDigOutcomeTable_Human, 9 },
+      { g_TreasureDigOutcomeTable_AI, 8 },
       { g_Mission7ScriptedTreasureEventData, 1 },
       { g_Mission17ScriptedTreasureEventData, 1 },
     };

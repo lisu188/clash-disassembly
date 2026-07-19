@@ -3591,3 +3591,96 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
   queued-path boundary, reaches stack `10` at `(41,45)`, and autoresolves the
   attack on owner-3 stack `3`. Evidence is retained at
   `artifacts/first-campaign/mission-00/20260714T144043Z-43697/summary.txt`.
+
+## 2026-07-19 - Axis correction: temple-gift / treasure-dig outcome tables are human-vs-AI, not cult state
+
+Six committed data-table symbols and one local were named on the wrong
+semantic axis. The values they select were always correct; only the labels
+were wrong. This is the same failure shape as the batch-B5 `SCREEN_MAX_Y`
+mislabel (right value, wrong axis) recorded above.
+
+### Evidence
+
+The player record's field at `gameData + 140024 + 27` (stride `1423` =
+`0x58F`), i.e. absolute delta `140051` / `PLAYER_IS_HUMAN_OFFSET`, is
+**IS_HUMAN**. This is fixed by the developer's own Polish debug string in
+`Rules_LogGameInfo` (`0x451F00`,
+`src/strategic/004506B0_004530D0_strategic_001.c:1228-1234`), which formats
+`"(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)"` and passes
+`1 - *(player_record + 140051)` for **komputer** ("computer"). The religion
+state is a *different* field, `140063` (delta `+39`,
+`PLAYER_RELIGION_FLAG_OFFSET`), logged as **chrzesc** ("christian").
+
+`Temple_UnitGetInto` (`0x440600`, `clash95.asm`) selects the outcome table on
+two independent fields:
+
+```
+mov     ebx, [eax+2231Fh]        ; 140063 - religion -> Own vs Foreign  (correct)
+test    ebx, ebx
+jz      loc_440720
+cmp     dword ptr [eax+22313h], 0 ; 140051 - IS_HUMAN -> "Active" leg   (MISLABELED)
+jz      loc_440716
+mov     esi, offset unk_515D50    ; ...OwnCultActive
+```
+
+So the `Own`/`Foreign` half of each name does track the religion field, but the
+`Active`/`Inactive` half is the human/AI axis, not a cult-active state.
+
+`Treasure_TryDigHere` (`sub_443C20`, `loc_443E57`) is worse - its selection
+reads **only** `140051`, with no `140063` participating anywhere:
+
+```
+imul    edx, eax, 58Fh
+cmp     dword ptr [edx+eax+22313h], 0 ; 140051 - IS_HUMAN
+jz      short loc_443E90              ; -> unk_517CE0  (...TempleInactive)
+mov     eax, offset unk_517BF0        ; -> ...TempleActive
+```
+
+Both the `Temple` prefix and the `Active`/`Inactive` suffix were therefore on
+the wrong axis; the split is purely human vs AI.
+
+### Renames
+
+| Old | New |
+| --- | --- |
+| `g_TempleGiftOutcomeTable_OwnCultActive` | `g_TempleGiftOutcomeTable_OwnCultHuman` |
+| `g_TempleGiftOutcomeTable_OwnCultInactive` | `g_TempleGiftOutcomeTable_OwnCultAI` |
+| `g_TempleGiftOutcomeTable_ForeignCultActive` | `g_TempleGiftOutcomeTable_ForeignCultHuman` |
+| `g_TempleGiftOutcomeTable_ForeignCultInactive` | `g_TempleGiftOutcomeTable_ForeignCultAI` |
+| `g_TreasureDigOutcomeTable_TempleActive` | `g_TreasureDigOutcomeTable_Human` |
+| `g_TreasureDigOutcomeTable_TempleInactive` | `g_TreasureDigOutcomeTable_AI` |
+| `cultActiveFlag` (local, `Temple_UnitGetInto`) | `isHumanPlayer` |
+
+Applied with `tools/apply_renames.py`, followed by
+`tools/gen_subsystem_headers.py --write`. `Human`/`AI` follows the existing
+vocabulary (`PLAYER_IS_HUMAN_OFFSET`, `g_TempleGiftUnitPool_HumanTroops`,
+`PLAYER_AI_INTELLIGENCE_OFFSET`).
+
+### Byte-identity validation
+
+`tools/obj_diff_gate.sh` cannot return `ok:true` for a *global* rename: its
+normalized `objdump -dr` text embeds relocation target names, so renaming a
+global necessarily perturbs the snapshot. (That gate returns `ok:true` for
+purely local renames, which is why the local `cultActiveFlag` contributed no
+delta at all.) The diff against the pre-edit snapshot was exactly **14 lines -
+7 `-` and 7 `+`, every one an `R_X86_64_32S` relocation-symbol record**, in
+1:1 correspondence with the six global renames. No instruction, offset, or
+immediate changed.
+
+Byte-identity was then proven directly: the reverse mapping was applied to a
+fresh post-edit snapshot and diffed against the pre-edit snapshot.
+
+```
+487249 /tmp/kf_before.asm
+487249 /tmp/kf_after_unrenamed.asm
+diff -> 0 differing lines
+```
+
+`tools/pp_token_gate.sh` differs by construction (renames change the token
+stream) and is not the gate of record here.
+
+### Out of scope, noted
+
+`140063` is literally "is christian" (`chrzesc`), so `OwnCult`/`ForeignCult`
+is a loose label for a christian/pagan flag. It is on the *right* axis, so it
+was left alone in this correction.
