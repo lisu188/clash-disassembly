@@ -179,7 +179,7 @@ signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4)
   Debug_Log(a1, a2, a3, (int)(intptr_t)aUnit_newturn);
   Diagnostics_TraceWorldMapActionEvent("unit_new_turn_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, (unsigned __int8)a2);
   stackIndex = 0;
-  for ( i = 0; ; i += 725 )
+  for ( i = 0; ; i += UNIT_STACK_STRIDE )
   {
     if ( *(__int16 *)(uintptr_t)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(uintptr_t)(gameData + i + 147178) != g_CurrentPlayerIndex )
       goto LABEL_16;
@@ -488,7 +488,7 @@ void Map_UpdateIdleAnimatedUnits(void)
       }
     }
     ++stackIndex;
-    stackPtr += 725;
+    stackPtr += UNIT_STACK_STRIDE;
   }
   while ( stackIndex < UNIT_STACK_TABLE_COUNT );
   UI_UpdateWorldMapUnitAttentionFlash();
