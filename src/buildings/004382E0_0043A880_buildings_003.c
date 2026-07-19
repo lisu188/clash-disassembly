@@ -262,7 +262,7 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int unitIndex, int side, int a3,
           {
             v153 = 0;
 LABEL_278:
-            LOBYTE(v153) = *(_BYTE *)(uintptr_t)(actingUnitPtr + 8);
+            LOBYTE(v153) = BATTLE_UNIT_ACTION_POINTS(actingUnitPtr);
             goto LABEL_279;
           }
           v154 = trackTargetCol;
@@ -305,9 +305,9 @@ LABEL_289:
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v160 + 852)]
             && (*(_BYTE *)(uintptr_t)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v160 + 864)) >> 5) > 0 )
           {
-            v176 = *(_WORD *)(uintptr_t)(actingUnitPtr + 4);
+            v176 = BATTLE_UNIT_GRID_X(actingUnitPtr);
             HIWORD(v174) = 0;
-            v169 = *(_WORD *)(uintptr_t)(actingUnitPtr + 6);
+            v169 = BATTLE_UNIT_GRID_Y(actingUnitPtr);
             if ( *v158 )
             {
               while ( !UnitBattle_IsTileWithinRange(unitIndex, targetRow, trackTargetCol) )
@@ -317,13 +317,13 @@ LABEL_289:
                 v174 = v162[v165 + 1];
                 if ( HIWORD(v174) > (int)*(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8) )
                   goto LABEL_317;
-                *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = (unsigned __int8)v174;
-                *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = BYTE1(v174);
+                BATTLE_UNIT_GRID_X(actingUnitPtr) = (unsigned __int8)v174;
+                BATTLE_UNIT_GRID_Y(actingUnitPtr) = BYTE1(v174);
                 if ( !*v162 )
                   goto LABEL_314;
               }
-              *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
-              *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
+              BATTLE_UNIT_GRID_X(actingUnitPtr) = v176;
+              BATTLE_UNIT_GRID_Y(actingUnitPtr) = v169;
               j__nfree_();
               LOWORD(v163) = HIWORD(v174);
               v164 = *(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8);
@@ -340,13 +340,13 @@ LABEL_314:
             if ( !UnitBattle_IsTileWithinRange(unitIndex, targetRow, trackTargetCol) )
             {
 LABEL_317:
-              *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
-              *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
+              BATTLE_UNIT_GRID_X(actingUnitPtr) = v176;
+              BATTLE_UNIT_GRID_Y(actingUnitPtr) = v169;
               j__nfree_();
               goto LABEL_280;
             }
-            *(_WORD *)(uintptr_t)(actingUnitPtr + 4) = v176;
-            *(_WORD *)(uintptr_t)(actingUnitPtr + 6) = v169;
+            BATTLE_UNIT_GRID_X(actingUnitPtr) = v176;
+            BATTLE_UNIT_GRID_Y(actingUnitPtr) = v169;
             if ( *(unsigned __int8 *)(uintptr_t)(actingUnitPtr + 8) > (int)HIWORD(v174) )
             {
               j__nfree_();
@@ -369,7 +369,7 @@ LABEL_294:
           {
             v173 = v158[1];
             j__nfree_();
-            LOBYTE(v161) = *(_BYTE *)(uintptr_t)(actingUnitPtr + 8);
+            LOBYTE(v161) = BATTLE_UNIT_ACTION_POINTS(actingUnitPtr);
             if ( v161 <= HIWORD(v173) )
             {
               v153 = 0;
@@ -516,7 +516,7 @@ LABEL_29:
     {
       moveScoreDelta = 0;
 LABEL_35:
-      LOBYTE(moveScoreDelta) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
+      LOBYTE(moveScoreDelta) = BATTLE_UNIT_ACTION_POINTS(unitRecordPtr);
       goto LABEL_36;
     }
     trackRowArg = enemyRow;
@@ -563,9 +563,9 @@ LABEL_88:
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(v89 + 852)]
       && (*(_BYTE *)(uintptr_t)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(v89 + 864)) >> 5) > 0 )
     {
-      savedUnitRow = *(_WORD *)(uintptr_t)(unitRecordPtr + 4);
+      savedUnitRow = BATTLE_UNIT_GRID_X(unitRecordPtr);
       HIWORD(pathEntry) = 0;
-      savedUnitCol = *(_WORD *)(uintptr_t)(unitRecordPtr + 6);
+      savedUnitCol = BATTLE_UNIT_GRID_Y(unitRecordPtr);
       if ( *trackPathPtr )
       {
         while ( !UnitBattle_IsTileWithinRange(unitIndex, enemyRow, a3) )
@@ -575,15 +575,15 @@ LABEL_88:
           pathEntry = v91[v93 + 1];
           if ( HIWORD(pathEntry) > (int)*(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) )
             goto LABEL_111;
-          *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = (unsigned __int8)pathEntry;
-          *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = BYTE1(pathEntry);
+          BATTLE_UNIT_GRID_X(unitRecordPtr) = (unsigned __int8)pathEntry;
+          BATTLE_UNIT_GRID_Y(unitRecordPtr) = BYTE1(pathEntry);
           if ( !*v91 )
             goto LABEL_108;
         }
-        *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
-        *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
+        BATTLE_UNIT_GRID_X(unitRecordPtr) = savedUnitRow;
+        BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedUnitCol;
         j__nfree_();
-        LOBYTE(v92) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
+        LOBYTE(v92) = BATTLE_UNIT_ACTION_POINTS(unitRecordPtr);
         if ( v92 <= HIWORD(pathEntry) )
           goto LABEL_105;
         moveScoreDelta = v92 - HIWORD(pathEntry);
@@ -594,13 +594,13 @@ LABEL_108:
         if ( !UnitBattle_IsTileWithinRange(unitIndex, enemyRow, a3) )
         {
 LABEL_111:
-          *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
-          *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
+          BATTLE_UNIT_GRID_X(unitRecordPtr) = savedUnitRow;
+          BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedUnitCol;
           j__nfree_();
           goto LABEL_37;
         }
-        *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedUnitRow;
-        *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedUnitCol;
+        BATTLE_UNIT_GRID_X(unitRecordPtr) = savedUnitRow;
+        BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedUnitCol;
         if ( *(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) <= (int)HIWORD(pathEntry) )
         {
 LABEL_104:
@@ -619,7 +619,7 @@ LABEL_105:
         goto LABEL_104;
       pathCost = trackPathPtr[1];
       j__nfree_();
-      LOBYTE(v90) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
+      LOBYTE(v90) = BATTLE_UNIT_ACTION_POINTS(unitRecordPtr);
       if ( v90 <= HIWORD(pathCost) )
       {
         moveScoreDelta = 0;

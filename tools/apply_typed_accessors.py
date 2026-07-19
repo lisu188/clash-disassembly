@@ -267,7 +267,8 @@ def all_hinted_families(base_text):
 
 
 # ---- site scan + proof ----------------------------------------------------
-def scan_file(path, mac_idx, by_name, families, objvals, select=None):
+def scan_file(path, mac_idx, by_name, families, objvals, select=None,
+              ignore_hints=False):
     # newline="" keeps bytes faithful (files are CRLF in-tree) so char offsets
     # match --apply's read/write exactly and line endings survive the rewrite.
     text = open(path, encoding="utf-8", errors="surrogateescape", newline="").read()
@@ -293,28 +294,48 @@ def scan_file(path, mac_idx, by_name, families, objvals, select=None):
             i = end + 1
             continue
         base_text = text[base[0].start:base[-1].end]
-        # disambiguation
-        chosen = cands
-        if len(cands) > 1:
-            hinted = [c for c in cands if c[1] in base_hint_family(base_text, families)]
-            chosen = hinted if len(hinted) == 1 else cands
-        if len(chosen) != 1:
-            refused.append({
-                "file": os.path.relpath(path, lc.REPO), "line": text[:site_start].count("\n") + 1,
-                "site": site_txt, "reason": "ambiguous",
-                "candidates": [c[0] for c in chosen]})
-            i = end + 1
-            continue
-        name, fam, param = chosen[0]
-        # cross-family mislabel guard: base name hints a DIFFERENT record family
-        hinted = all_hinted_families(base_text)
-        if hinted and fam not in hinted:
-            refused.append({
-                "file": os.path.relpath(path, lc.REPO), "line": text[:site_start].count("\n") + 1,
-                "site": site_txt, "reason": "cross_family", "macro": name,
-                "base": base_text, "hints": sorted(hinted)})
-            i = end + 1
-            continue
+        line_no = text[:site_start].count("\n") + 1
+        relp = os.path.relpath(path, lc.REPO).replace("\\", "/")
+        if select is not None:
+            # curated whitelist: the (file,line,macro) list IS the semantic
+            # verification, so force its macro and skip the hint/cross-family
+            # guards. The byte-identity proof below still gates every rewrite.
+            sel_macro = next((mc for (f, ln, mc) in select
+                              if relp.endswith(f) and ln == line_no), None)
+            if sel_macro is None:
+                i = end + 1
+                continue
+            chosen = [c for c in cands if c[0] == sel_macro]
+            if not chosen:
+                refused.append({
+                    "file": relp, "line": line_no, "site": site_txt,
+                    "reason": "select_shape_mismatch", "macro": sel_macro,
+                    "candidates": [c[0] for c in cands]})
+                i = end + 1
+                continue
+            name, fam, param = chosen[0]
+        else:
+            # auto mode: disambiguate a multi-candidate key by base-name hint
+            chosen = cands
+            if len(cands) > 1:
+                hinted_f = [c for c in cands if c[1] in base_hint_family(base_text, families)]
+                chosen = hinted_f if len(hinted_f) == 1 else cands
+            if len(chosen) != 1:
+                refused.append({
+                    "file": relp, "line": line_no, "site": site_txt,
+                    "reason": "ambiguous", "candidates": [c[0] for c in chosen]})
+                i = end + 1
+                continue
+            name, fam, param = chosen[0]
+            # cross-family mislabel guard: base name hints a DIFFERENT family
+            hinted = all_hinted_families(base_text)
+            if not ignore_hints and hinted and fam not in hinted:
+                refused.append({
+                    "file": relp, "line": line_no, "site": site_txt,
+                    "reason": "cross_family", "macro": name,
+                    "base": base_text, "hints": sorted(hinted)})
+                i = end + 1
+                continue
         body, mparam, mwidth, muintptr, mK = by_name[name]
         # PROOF: expand macro body with param := base code tokens, compare norm
         body_ct = macro_body_code_tokens(body)
@@ -327,19 +348,10 @@ def scan_file(path, mac_idx, by_name, families, objvals, select=None):
         site_ct = ct[i:end + 1]
         if norm(expanded, objvals) != norm([t.text for t in site_ct], objvals):
             refused.append({
-                "file": os.path.relpath(path, lc.REPO), "line": text[:site_start].count("\n") + 1,
+                "file": relp, "line": line_no,
                 "site": site_txt, "reason": "proof_mismatch", "macro": name})
             i = end + 1
             continue
-        # optional site-level whitelist (curated batches): keep only approved
-        # (file-suffix, line, macro) sites
-        if select is not None:
-            line_no = text[:site_start].count("\n") + 1
-            relp = os.path.relpath(path, lc.REPO).replace("\\", "/")
-            if not any(relp.endswith(f) and line_no == ln and name == mc
-                       for (f, ln, mc) in select):
-                i = end + 1
-                continue
         before_toks, after_toks = pp_hunk(site_txt, body, param, base_text, objvals)
         accepted.append({
             "file": os.path.relpath(path, lc.REPO),
@@ -380,6 +392,8 @@ def main():
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--select", default=None,
                     help="JSON list of {file,line,macro} to whitelist (curated batch)")
+    ap.add_argument("--ignore-hints", action="store_true",
+                    help="disable the base-name cross-family refusal (candidate generation)")
     args = ap.parse_args()
 
     select = None
@@ -398,7 +412,8 @@ def main():
 
     all_acc, all_ref = [], []
     for path in iter_source_files(args.only, args.exclude):
-        acc, ref = scan_file(path, mac_idx, by_name, args.family, objvals, select)
+        acc, ref = scan_file(path, mac_idx, by_name, args.family, objvals, select,
+                             args.ignore_hints)
         all_acc.extend(acc)
         all_ref.extend(ref)
 

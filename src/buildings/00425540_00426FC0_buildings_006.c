@@ -1148,7 +1148,7 @@ int  UnitBattle_CountAdjacentEnemies(int unit_record)
       if ( neighbor_col >= 0 && neighbor_col < *(_DWORD *)(uintptr_t)(g_MapData + 800) )
       {
         occupant_index = *(__int16 *)(uintptr_t)(g_MapData + 40 * neighbor_row + 2 * neighbor_col + 1534);
-        if ( occupant_index != -1 && *(_BYTE *)(uintptr_t)(31 * occupant_index + g_MapData + 854) != *(_BYTE *)(uintptr_t)(unit_record + 2) )
+        if ( occupant_index != -1 && *(_BYTE *)(uintptr_t)(31 * occupant_index + g_MapData + 854) != BATTLE_UNIT_OWNER(unit_record) )
           ++enemy_count;
       }
     }

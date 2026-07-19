@@ -203,13 +203,13 @@ LABEL_58:
                 pathNode = trackPath[pathTopIndex + 1];
                 if ( HIWORD(pathNode) > (int)*(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) )
                   goto LABEL_86;
-                *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = (unsigned __int8)pathNode;
-                *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = BYTE1(pathNode);
+                BATTLE_UNIT_GRID_X(unitRecordPtr) = (unsigned __int8)pathNode;
+                BATTLE_UNIT_GRID_Y(unitRecordPtr) = BYTE1(pathNode);
                 if ( !*trackPath )
                   goto LABEL_80;
               }
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedRow;
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedCol;
+              BATTLE_UNIT_GRID_X(unitRecordPtr) = savedRow;
+              BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedCol;
               j__nfree_();
               LOWORD(moveCost) = HIWORD(pathNode);
               moveAllowance = *(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8);
@@ -221,8 +221,8 @@ LABEL_58:
 LABEL_80:
             if ( UnitBattle_IsTileWithinRange(unitIndexSaved, targetRow, targetCol) )
             {
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedRow;
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedCol;
+              BATTLE_UNIT_GRID_X(unitRecordPtr) = savedRow;
+              BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedCol;
               if ( *(unsigned __int8 *)(uintptr_t)(unitRecordPtr + 8) > (int)HIWORD(pathNode) )
               {
                 j__nfree_();
@@ -384,15 +384,15 @@ LABEL_123:
             else
             {
 LABEL_86:
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 4) = savedRow;
-              *(_WORD *)(uintptr_t)(unitRecordPtr + 6) = savedCol;
+              BATTLE_UNIT_GRID_X(unitRecordPtr) = savedRow;
+              BATTLE_UNIT_GRID_Y(unitRecordPtr) = savedCol;
             }
           }
           else if ( *trackPath )
           {
             pathNode = trackPath[1];
             j__nfree_();
-            LOBYTE(maxMove) = *(_BYTE *)(uintptr_t)(unitRecordPtr + 8);
+            LOBYTE(maxMove) = BATTLE_UNIT_ACTION_POINTS(unitRecordPtr);
             if ( maxMove <= HIWORD(pathNode) )
               goto LABEL_63;
             remainingMove = maxMove - HIWORD(pathNode);

@@ -514,7 +514,7 @@ LABEL_57:
 LABEL_62:
   if ( target_unit )
   {
-    if ( (g_UnitTypeFlags[22 * *(__int16 *)target_unit] & 1) != 0 )
+    if ( (g_UnitTypeFlags[22 * BATTLE_UNIT_TYPE(target_unit)] & 1) != 0 )
     {
       targetFacing = target_unit[17] & 7;
       newTargetFacing = (targetFacing + Rng_RandRange(2, 5)) & 7;
@@ -529,7 +529,7 @@ LABEL_62:
   }
   g_UnitBattleHitAnimFrame = Rng_RandRange(3, 7);
   if ( target_unit )
-    Audio_PlayUnitHitSound(*(__int16 *)target_unit);
+    Audio_PlayUnitHitSound(BATTLE_UNIT_TYPE(target_unit));
   hitAnimTime = Time_Now(v83, v82);
   projAnimStartTime = Time_Now(v86, v85);
   while ( v87 && (unsigned __int16)DLXSpriteSet_GetLastCharIndex(g_UnitBattleProjectileSpriteSet) >= g_BattleShotAnimFrameIndex || target_unit && g_UnitBattleHitAnimFrame )
@@ -797,17 +797,17 @@ LABEL_18:
   unit_ap_before = *(unsigned __int8 *)(uintptr_t)(unitRecord + 8);
   if ( unit_ap_before < 5u )
     return 0;
-  *(_BYTE *)(uintptr_t)(unitRecord + 8) -= 5;
-  unitCol = *(_WORD *)(uintptr_t)(unitRecord + 6);
-  unitRow = *(_WORD *)(uintptr_t)(unitRecord + 4);
-  *(_BYTE *)(uintptr_t)(unitRecord + 22) &= ~1u;
+  BATTLE_UNIT_ACTION_POINTS(unitRecord) -= 5;
+  unitCol = BATTLE_UNIT_GRID_Y(unitRecord);
+  unitRow = BATTLE_UNIT_GRID_X(unitRecord);
+  BATTLE_UNIT_STATE_BITS(unitRecord) &= ~1u;
   if ( !UnitBattle_IsTileInViewport(unitRow, unitCol) || !UnitBattle_IsTileInViewport(wallRow, wallCol) )
   {
     UnitBattle_CenterViewOnUnit(unitSlot);
     UnitBattle_RedrawVisibleGrid();
   }
   HIWORD(v12) = 0;
-  *(_BYTE *)(uintptr_t)(unitRecord + 3) = Facing_DirectionFromDelta8(wallRow - *(unsigned __int16 *)(uintptr_t)(unitRecord + 4), wallCol - *(unsigned __int16 *)(uintptr_t)(unitRecord + 6));
+  BATTLE_UNIT_FACING(unitRecord) = Facing_DirectionFromDelta8(wallRow - *(unsigned __int16 *)(uintptr_t)(unitRecord + 4), wallCol - *(unsigned __int16 *)(uintptr_t)(unitRecord + 6));
   UnitBattle_PlayAttackAnimation(unitSlot, -1, 0, 0, (unsigned __int16 *)(uintptr_t)wallRow);
   UnitBattle_RedrawTile(wallRow, wallCol);
   gateSpriteBefore = g_BattleWallGateLastSpriteChar;
@@ -904,9 +904,9 @@ int  UnitBattle_ShotWall(int unitSlot, int targetRow)
   if ( colDist < 0 )
     colDist = targetCol - *(unsigned __int16 *)(unitRecord + 6);
   distance = Math_CeilSqrt(rowDist * rowDist + colDist * colDist);
-  if ( *(__int16 *)unitRecord == UNIT_TYPE_CANNON && distance > 4 )
+  if ( BATTLE_UNIT_TYPE(unitRecord) == UNIT_TYPE_CANNON && distance > 4 )
     effectiveDamage = 9 * effectiveDamage / 10;
-  if ( *(__int16 *)unitRecord == UNIT_TYPE_CATAPULT && distance > 3 )
+  if ( BATTLE_UNIT_TYPE(unitRecord) == UNIT_TYPE_CATAPULT && distance > 3 )
     effectiveDamage = 9 * effectiveDamage / 10;
   wallRowBase = g_MapData + 40 * targetRow;
   LOWORD(v12) = g_WallKindDefenseFactor[2 * *(_DWORD *)(uintptr_t)(g_MapData + 820)];
