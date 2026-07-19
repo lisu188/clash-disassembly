@@ -5027,7 +5027,7 @@
       "original_line": 2778,
       "source": "src/buildings/004382E0_0043A880_buildings_003.c",
       "linkage": "external",
-      "body_sha256": "830e9db3bd1f0ba2e67e374ba4bb339920dd790d5a5ed06b59d8b018305682c4",
+      "body_sha256": "ea34bcb776f77f60070e841ae469adb00ce3151581bf0a65d84122eed23fe04a",
       "original_address_range": {
         "start": "0x004382E0",
         "end_exclusive": "0x0043A800"
@@ -5095,7 +5095,7 @@
       "original_line": 4646,
       "source": "src/buildings/0043A8B0_0043CC50_buildings_004.c",
       "linkage": "external",
-      "body_sha256": "3543c3d2ff9cbe76c299641e25865955eff6afcafb8e430aee98689cc8d4b19d",
+      "body_sha256": "f384b8057586584c70c433da6b4202b0858d0ef95f9d4c28899bd57b9c1004ea",
       "original_address_range": {
         "start": "0x0043B740",
         "end_exclusive": "0x0043BE50"
@@ -5146,7 +5146,7 @@
       "original_line": 5355,
       "source": "src/buildings/0043A8B0_0043CC50_buildings_004.c",
       "linkage": "external",
-      "body_sha256": "ce7cd5e8d15f1e1a1607428be6fa7d917d35d3e457e238f0d68a4c7db42c4cd8",
+      "body_sha256": "9a52d640b862d62ca8bc2cb9123e0ab4d7fff4c802d51be1b4b4ddd0fc059973",
       "original_address_range": {
         "start": "0x0043C6B0",
         "end_exclusive": "0x0043CB80"

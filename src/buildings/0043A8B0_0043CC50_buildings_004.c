@@ -618,7 +618,7 @@ LABEL_35:
     {
       v20 = 0;
 LABEL_33:
-      LOBYTE(v20) = *(_BYTE *)(uintptr_t)(enemyRecordPtr + 8);
+      LOBYTE(v20) = BATTLE_UNIT_ACTION_POINTS(enemyRecordPtr);
 LABEL_34:
       v9 = v20 / 5;
       goto LABEL_35;
@@ -668,9 +668,9 @@ LABEL_44:
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(uintptr_t)(enemyRecordBase + 852)]
       && (*(_BYTE *)(uintptr_t)(enemyRecordBase + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(enemyRecordBase + 864)) >> 5) > 0 )
     {
-      savedRow = *(_WORD *)(uintptr_t)(enemyRecordPtr + 4);
+      savedRow = BATTLE_UNIT_GRID_X(enemyRecordPtr);
       HIWORD(pathStep) = 0;
-      savedCol = *(_WORD *)(uintptr_t)(enemyRecordPtr + 6);
+      savedCol = BATTLE_UNIT_GRID_Y(enemyRecordPtr);
       if ( *enemyTrackPath )
       {
         while ( 1 )
@@ -683,13 +683,13 @@ LABEL_44:
           pathStep = v27[v30 + 1];
           if ( HIWORD(pathStep) > (int)*(unsigned __int8 *)(uintptr_t)(enemyRecordPtr + 8) )
             goto LABEL_72;
-          *(_WORD *)(uintptr_t)(enemyRecordPtr + 4) = (unsigned __int8)pathStep;
-          *(_WORD *)(uintptr_t)(enemyRecordPtr + 6) = BYTE1(pathStep);
+          BATTLE_UNIT_GRID_X(enemyRecordPtr) = (unsigned __int8)pathStep;
+          BATTLE_UNIT_GRID_Y(enemyRecordPtr) = BYTE1(pathStep);
           if ( !*v27 )
             goto LABEL_69;
         }
-        *(_WORD *)(uintptr_t)(enemyRecordPtr + 4) = savedRow;
-        *(_WORD *)(uintptr_t)(enemyRecordPtr + 6) = savedCol;
+        BATTLE_UNIT_GRID_X(enemyRecordPtr) = savedRow;
+        BATTLE_UNIT_GRID_Y(enemyRecordPtr) = savedCol;
         j__nfree_();
         LOWORD(v28) = HIWORD(pathStep);
         v29 = *(unsigned __int8 *)(uintptr_t)(enemyRecordPtr + 8);
@@ -707,13 +707,13 @@ LABEL_69:
       if ( !UnitBattle_IsTileWithinRange(enemyIndex, a4, BYTE1(trackStep)) )
       {
 LABEL_72:
-        *(_WORD *)(uintptr_t)(enemyRecordPtr + 4) = savedRow;
-        *(_WORD *)(uintptr_t)(enemyRecordPtr + 6) = savedCol;
+        BATTLE_UNIT_GRID_X(enemyRecordPtr) = savedRow;
+        BATTLE_UNIT_GRID_Y(enemyRecordPtr) = savedCol;
         j__nfree_();
         goto LABEL_34;
       }
-      *(_WORD *)(uintptr_t)(enemyRecordPtr + 4) = savedRow;
-      *(_WORD *)(uintptr_t)(enemyRecordPtr + 6) = savedCol;
+      BATTLE_UNIT_GRID_X(enemyRecordPtr) = savedRow;
+      BATTLE_UNIT_GRID_Y(enemyRecordPtr) = savedCol;
       if ( *(unsigned __int8 *)(uintptr_t)(enemyRecordPtr + 8) > (int)HIWORD(pathStep) )
       {
         j__nfree_();
@@ -725,7 +725,7 @@ LABEL_72:
     {
       enemyPathStep = enemyTrackPath[1];
       j__nfree_();
-      LOBYTE(v26) = *(_BYTE *)(uintptr_t)(enemyRecordPtr + 8);
+      LOBYTE(v26) = BATTLE_UNIT_ACTION_POINTS(enemyRecordPtr);
       if ( v26 <= HIWORD(enemyPathStep) )
         v20 = 0;
       else
@@ -1290,7 +1290,7 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
     {
       nfree_((int)(uintptr_t)track);
 LABEL_17:
-      if ( *(_BYTE *)(uintptr_t)(enemyRecord + 8) )
+      if ( BATTLE_UNIT_ACTION_POINTS(enemyRecord) )
         return 0;
       goto LABEL_23;
     }
@@ -1308,23 +1308,23 @@ LABEL_17:
         return 0;
       goto LABEL_23;
     }
-    savedTileRow = *(_WORD *)(uintptr_t)(enemyRecord + 4);
+    savedTileRow = BATTLE_UNIT_GRID_X(enemyRecord);
     HIWORD(trackEntry) = 0;
-    savedTileCol = *(_WORD *)(uintptr_t)(enemyRecord + 6);
+    savedTileCol = BATTLE_UNIT_GRID_Y(enemyRecord);
     if ( *track )
       break;
 LABEL_50:
     if ( !UnitBattle_IsTileWithinRange(enemyUnitIndex, targetRow, targetCol) )
     {
 LABEL_58:
-      *(_WORD *)(uintptr_t)(enemyRecord + 4) = savedTileRow;
-      *(_WORD *)(uintptr_t)(enemyRecord + 6) = savedTileCol;
+      BATTLE_UNIT_GRID_X(enemyRecord) = savedTileRow;
+      BATTLE_UNIT_GRID_Y(enemyRecord) = savedTileCol;
 LABEL_59:
       nfree_((int)(uintptr_t)track);
       goto LABEL_23;
     }
-    *(_WORD *)(uintptr_t)(enemyRecord + 4) = savedTileRow;
-    *(_WORD *)(uintptr_t)(enemyRecord + 6) = savedTileCol;
+    BATTLE_UNIT_GRID_X(enemyRecord) = savedTileRow;
+    BATTLE_UNIT_GRID_Y(enemyRecord) = savedTileCol;
     if ( *(unsigned __int8 *)(uintptr_t)(enemyRecord + 8) <= (int)HIWORD(trackEntry) )
       goto LABEL_59;
     nfree_((int)(uintptr_t)track);
@@ -1342,13 +1342,13 @@ LABEL_23:
     trackEntry = track[trackIndex + 1];
     if ( HIWORD(trackEntry) > (int)*(unsigned __int8 *)(uintptr_t)(enemyRecord + 8) )
       goto LABEL_58;
-    *(_WORD *)(uintptr_t)(enemyRecord + 4) = (unsigned __int8)trackEntry;
-    *(_WORD *)(uintptr_t)(enemyRecord + 6) = BYTE1(trackEntry);
+    BATTLE_UNIT_GRID_X(enemyRecord) = (unsigned __int8)trackEntry;
+    BATTLE_UNIT_GRID_Y(enemyRecord) = BYTE1(trackEntry);
     if ( !*track )
       goto LABEL_50;
   }
-  *(_WORD *)(uintptr_t)(enemyRecord + 4) = savedTileRow;
-  *(_WORD *)(uintptr_t)(enemyRecord + 6) = savedTileCol;
+  BATTLE_UNIT_GRID_X(enemyRecord) = savedTileRow;
+  BATTLE_UNIT_GRID_Y(enemyRecord) = savedTileCol;
   nfree_((int)(uintptr_t)track);
   unitRange = *(unsigned __int8 *)(uintptr_t)(enemyRecord + 8);
   if ( unitRange <= HIWORD(trackEntry) || unitRange - HIWORD(trackEntry) <= 0 )
