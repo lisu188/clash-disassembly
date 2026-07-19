@@ -264,6 +264,53 @@ right.
 Evidence: `/tmp/mn/gdb3.log` (229 turn samples), `/tmp/mn/gdb4.log` (controls),
 scripts `/tmp/mn/p2.gdb` and `/tmp/mn/p3.gdb`.
 
+## Save-data proof (2026-07-19) — +1417 is SETTLED
+
+The strongest evidence needed no VM and no engine run at all: it was already on
+disk in the shipped save games, from real 1997-era playthroughs.
+
+`docs/SAVE_DAT_FORMAT.md` records that a `.dat` is a 16-byte label followed by a
+**verbatim `gameData` image**, so a player field is simply
+`0x10 + 140024 + 1423*n + delta`. For +1417 that is `0x10 + 141441 + 1423*n`,
+read as `int16`. All six installed saves are exactly 586414 bytes and decode
+cleanly.
+
+| save | turn | +1417 p0..p4 | sum | active | human |
+|---|---|---|---|---|---|
+| 0, 1 | 1 | `0 0 0 0 0` | 0 | p0..p3 | p0, p4 |
+| 2, 3 | 34 | `3 -3 0 0 0` | 0 | p0, p1 | p0 |
+| 4 | 1 | `0 0 0 0 0` | 0 | all 5 | p0 |
+| **5** | **69** | **`-1 0 1 0 0`** | **0** | **all 5** | **p0** |
+
+Three independent properties fall out, and together they close the question:
+
+1. **NEGATIVE.** In slot 5 the value is **-1 for player 0** — who is the *human*
+   player (`+27 == 1`), still *active* (`+0 == 1`), 69 turns into the game with a
+   castle and units. A population cannot be negative. This alone refutes
+   `PLAYER_POPULATION`, and it is exactly what the `movsx` sign-extension and the
+   negative-aware bar normalisation predicted.
+2. **ZERO-SUM.** Every save sums to **exactly 0** across all five players — the
+   conserved invariant implied by the 16 matched `++`/`--` mutation sites, now
+   observed on real data rather than argued from code.
+3. **ACCUMULATES.** Slots 2/3 show `+3 / -3` split between precisely the two
+   active players, so the field tallies repeatedly rather than tracking a
+   momentary state.
+
+**Verdict: +1417 is a signed, zero-sum, accumulating per-player tally of battle
+outcomes.** `PLAYER_POPULATION` is refuted three independent ways — the static
+adversarial panel, the recovered-engine run, and now real save data. The real
+population statistic is a separate per-*building* 12-bit unsigned field at
+building offset +430.
+
+**Still deliberately not minted.** The evidence fixes what the field *is not* and
+its mechanical shape, but "battle tally" versus "net conquest/holdings tally"
+remains open, and the panel declined to endorse a specific spelling. A name still
+needs its own panel round. Recording the shape is more valuable than guessing the
+label — and per §3.4 of the RE guide, conservative names beat wrong names.
+
+Reproduce with: decode each `C:\clash\save\*.dat` at `0x10 + 141441 + 1423*n` as
+`int16`, alongside `+0` (active), `+27` (is-human) and `140022` (turn, u16).
+
 ## Consequences for the batch
 
 **D1 must not mint yet.** The panel reviewed 4 of 13 values; the other 9 rest on
