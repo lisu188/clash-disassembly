@@ -52,6 +52,7 @@ jobs:
           python3 tools/audit_split_sources.py
           python3 tools/migrate_pure_coverage_metadata.py --check
           python3 tools/check_save_format_contract.py
+          python3 tools/gen_constant_guard.py --check
 
       - name: Audit header surface and coupling ratchet
         run: python3 tools/audit_header_surface.py --mode check

@@ -1372,7 +1372,7 @@ signed int  LogAllUnits(int a1, char a2, DWORD a3)
     if ( result != -1 )
       result = Unit_DebugDumpFormationSizes(stackPtr, a3);
     ++stackIndex;
-    stackPtr += 725;
+    stackPtr += UNIT_STACK_STRIDE;
   }
   while ( stackIndex < UNIT_STACK_TABLE_COUNT );
   return result;

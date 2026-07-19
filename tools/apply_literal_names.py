@@ -107,8 +107,17 @@ def validate_rules(rules, entries_by_name, prelude, enums):
                 norm_spelling(entry["spelling"]):
             errors.append("%s: prelude spelling %r != manifest spelling %r"
                           % (name, macro["body"], entry["spelling"]))
+        # A manifest tier with no TIER_CLASSES row makes literal_common.eligible()
+        # return False for every site, so the batch would report zero matches with
+        # no diagnostic. Fail loudly instead of silently under-delivering.
+        tier = entry.get("tier", 3)
+        if tier not in lc.TIER_CLASSES:
+            errors.append(
+                "%s: manifest tier %r has no TIER_CLASSES row, so every site would "
+                "be silently ineligible (valid tiers: %s)"
+                % (name, tier, sorted(lc.TIER_CLASSES)))
         if kind == "name":
-            tier_ok = lc.TIER_CLASSES.get(entry.get("tier", 3), set())
+            tier_ok = lc.TIER_CLASSES.get(tier, set())
             bad = set(r.get("classes", ())) - tier_ok
             if bad:
                 errors.append("%s: classes %s not allowed for tier %s"
