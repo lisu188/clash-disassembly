@@ -326,15 +326,26 @@ CLASH95_INTERNAL int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sp
       }
       else
       {
-        /* back-reference: one-byte offset, measured backwards from the offset
-         * byte itself, to a prior literal run's length byte (ref
-         * render_002.c:378-381); resume after the offset byte (:577-578). */
+        /* back-reference: opcode 0 is followed by a 32-bit little-endian offset
+         * field; the referenced run's length byte sits at (offset_field -
+         * offset) and its pixels follow. The original reads the offset as a
+         * DWORD (`sub esi,[ecx]` at 0x403492) and resumes 4 bytes past it (the
+         * render_002.c reference types backref_len_ptr _DWORD*, :378,577). The
+         * earlier 1-byte reimplementation desynced every back-reference sprite
+         * (water / mountains / textured edges) -> the horizontal black bands on
+         * mission terrain; verified: all 959 backgr1.s32 64x64 entries decode
+         * with every row summing to width under the 4-byte rule (0 corrupted). */
         const unsigned char *referenced_run;
+        unsigned int back_offset;
 
-        referenced_run = stream - *stream;
+        back_offset = (unsigned int)stream[0]
+                    | ((unsigned int)stream[1] << 8)
+                    | ((unsigned int)stream[2] << 16)
+                    | ((unsigned int)stream[3] << 24);
+        referenced_run = stream - back_offset;
         run_length = *referenced_run;
         run_pixels = referenced_run + 1;
-        ++stream;                           /* resume past the offset byte */
+        stream += 4;                        /* resume past the 4-byte offset field */
       }
       if ( row_visible )
       {
