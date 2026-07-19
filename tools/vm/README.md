@@ -137,6 +137,44 @@ Back up `hda.qcow2` before doing this, and shut the VM down first — editing a
 disk under a running QEMU corrupts it. Verified: the guest now boots straight
 into the game's world map with no interaction.
 
+### Loading an arbitrary save with no menu interaction — `clash95.exe a`
+
+Any command line whose **first character** is `a`/`A` (i.e. `a`, not `/a`) routes
+`WinMain` to `WorldMap_Initialize` -> `SaveSlot_LoadGame(10)` -> `PlayGame`: a
+direct auto-load of `save\10.dat`, bypassing the menu entirely. This is the only
+way to put the original into an arbitrary game state headlessly.
+
+Verified 2026-07-19: dropping a pristine `5.dat` in as `10.dat` (plus its `.fac`)
+and launching `clash95.exe a` loads it — `turn=69`, `turn_owner=0` read live.
+
+Distinguish the arg forms carefully:
+- `a…`  -> load save slot 10
+- `/A<d>` / `/a<d>` -> multiplayer map, **all five players AI**
+- `r…`  -> boot/render smoke test, skips the game entirely
+- no args -> main menu
+
+So `/A5` is **not** campaign mission 5. `vm_runbat.sh`'s `A5` comment says
+"direct campaign mission 5" — that is true only of the recovered bootstrap
+harness (gated by `CLASH95_DIRECT_CAMPAIGN_MISSION`), never of the original.
+
+**Timing (measured, and much faster than previously assumed):** with the WIN.INI
+auto-launch, `gameData` becomes non-zero at about **t+48 s** for `/A5` and
+**t+60 s** for the `a` save-load path, timed from QEMU start. Poll for
+`x/1xw 0x5202E4` returning something **other than 0x00000000** — the page is
+mapped and reads as zero for tens of seconds before the game initialises, so a
+"can I read it" test gives a false positive. Earlier work here waited ~150 s,
+which lands *inside* the ~2-minute wedge window rather than before it.
+
+**Editing a save is not free.** A hand-crafted `10.dat` — pristine slot 5 with one
+unit stack relocated (record row/col at `147174 + 725*i`, plus the occupancy word
+at `556374 + 200*row + 2*col` set to the stack index and the old tile cleared to
+`0xFFFF`) — **wedged the guest on load, reproducibly**, while the pristine file
+loaded fine from the same image and the same launch path. So the two edits above
+are *not* sufficient to keep a save consistent; something else (the `.fac`
+sidecar, an army-fact invariant, or a checksum) also has to agree. Do not assume
+a save edit is safe because the byte offsets look right — always A/B it against
+the pristine file, which is what isolated this.
+
 **Known open issue:** with `/A5` the original loads the multiplayer map and
 renders it, but the turn counter stayed at 2 across several minutes of wall
 clock, i.e. its turn loop is not advancing unattended. Whatever drives turn

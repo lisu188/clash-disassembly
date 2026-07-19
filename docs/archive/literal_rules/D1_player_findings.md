@@ -311,6 +311,33 @@ label — and per §3.4 of the RE guide, conservative names beat wrong names.
 Reproduce with: decode each `C:\clash\save\*.dat` at `0x10 + 141441 + 1423*n` as
 `int16`, alongside `+0` (active), `+27` (is-human) and `140022` (turn, u16).
 
+## Live confirmation in the ORIGINAL binary (2026-07-19)
+
+Read out of the original `clash95.exe`'s own RAM, running under the headless QEMU
+Win98 rig, via QMP `human-monitor-command`:
+
+```
+LIVE +1417 p0..p4 = 65535  0  1  0  0     (65535 = 0xFFFF = -1 as int16)
+turn=69  owner=0  viewed=0
+is_human p0..p4  = 1  0  0  0  0
+```
+
+The human player (`+27 == 1`), on their **own turn**, 69 turns into a live game,
+holds **-1**. Same values as the on-disk save, now observed in the original
+engine's live memory rather than inferred from a file or from the recovered
+reimplementation.
+
+`PLAYER_POPULATION` is therefore refuted **four independent ways**: the static
+adversarial panel, the recovered-engine run, the save files, and the original
+binary's live RAM.
+
+**What is still NOT observed:** the +/-1 transfer itself. No battle was made to
+occur, so the mutation was never caught in the act. The tally reading rests on
+the code (16 matched `++`/`--` sites), the conserved zero-sum across all six
+saves, and the `+3/-3` accumulation — all strong, but the live transfer remains
+the one piece of evidence not yet collected. See `tools/vm/README.md` for how far
+the VM route got and what blocked it.
+
 ## Consequences for the batch
 
 **D1 must not mint yet.** The panel reviewed 4 of 13 values; the other 9 rest on
