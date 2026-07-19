@@ -180,3 +180,40 @@ vs an English one with multiplayer), i.e. an asset/data-provenance question,
 not a `+g_LanguageIndex` index bug. Not touched per the "don't fix asset-layout
 divergences" rule; needs verifying whether the VM's `menu\main.s32` is byte-
 identical to `/mnt/c/clash`'s and whether that s32 is multi-language.
+
+## Tactical-battle comparison (2026-07-19) — comparator built; recovered capture blocked by a striped-terrain artifact
+
+**New comparator `tools/vm/battle_compare.py`** (sibling of `tile_compare.py` for
+the battle view). Battle geometry from recovered source: 64x64 cells, origin
+(32,16), a 7x7 window, board x[32,479] y[16,463], AXIS-TRANSPOSED vs the world
+map (tileRow->screen X, tileCol->screen Y; `battle_002.c:898-899`), camCol always
+0 (map width `+800` fixed at 7). No minimap -> camRow supplied via `--cam-row`.
+Reuses tile_compare's MAD + 6-bit-DAC identity buckets; masks the right HUD
+`x[480,639]` (always) + the conditional selected-unit info panel `x[335,479]`.
+Only the RNG-free OPENING battle frame is comparable (combat is time-seeded RNG,
+`units_004.c:1062-1064`). Subcommands index/score/exhibit; selftest = score of
+two same-engine index sets + `--shift` negative control.
+
+**Recovered opening-battle capture works** — `bash
+tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 05
+tests/first_campaign_arc_routes/mission_05_stack19_tactical_entry_probe.env`
+(with `CLASH95_KEEP_SMOKE_ARTIFACTS=1`) marches player-0 stack 4 through 9 turns,
+attacks player-3 stack 19, picks manual battle, and saves the checkpoint
+`checkpoint-mission05-stack19-tactical-open.bmp` — a genuine 7x7 tactical board
+(units, "Builder" nameplate, per-unit AP "2" row, right HUD).
+
+**BLOCKER (finding, needs classification):** the recovered CAMPAIGN-direct-boot
+frames — both the `march-arrival` and the `tactical-open` checkpoints, and the
+late frame-000239 (persistent, not mid-draw) — render terrain with **black
+horizontal stripes** across grass/water rows (trees/edges clean). The `/A5`
+all-AI MULTIPLAYER capture path is CLEAN (its tile_compare score produced
+identical-terrain tiles, impossible if striped), so the stripes are specific to
+the campaign-route capture path, NOT universal. This must be classified — a
+recovered-engine render defect in the campaign/battle terrain blit (candidate:
+the same class as the Fix-A DLX decoder, or a scroll/dirty-rect present) vs a
+frame-DUMP/present-timing artifact of the route harness — BEFORE an
+original-vs-recovered battle pixel-comparison is meaningful (a striped recovered
+frame vs a clean original would diff everywhere). Filed as a follow-up.
+Recovered artifacts: `artifacts/campaign-routes/mission-05/recbattle-postcb2/`.
+Next: resolve the stripes -> capture the ORIGINAL opening battle in the VM (shared
+reserved-slot-10 save, two QMP clicks) -> `battle_compare.py score`.
