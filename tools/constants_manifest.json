@@ -96,6 +96,18 @@
     {"name": "UNIT_SLOT_FLAG_SPENT_TURN", "value": 2, "spelling": "0x02", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
     {"name": "UNIT_SLOT_FLAG_LOW_MORALE", "value": 4, "spelling": "0x04", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
     {"name": "UNIT_SLOT_FLAG_PLAGUE", "value": 8, "spelling": "0x08", "kind": "flag", "family": "unit_slot_flags", "tier": 3, "deferred": true},
-    {"name": "QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING", "value": 9, "spelling": "9", "kind": "value", "family": "player", "tier": 3, "deferred": true}
+    {"name": "QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING", "value": 9, "spelling": "9", "kind": "value", "family": "player", "tier": 3, "deferred": true},
+
+    {"name": "DIRECTION8_COUNT", "value": 8, "spelling": "8", "kind": "count", "family": "direction8", "tier": 3, "deferred": true},
+    {"name": "UNIT_TYPE_COUNT", "value": 35, "spelling": "35", "kind": "count", "family": "unit_types", "tier": 3, "deferred": true},
+    {"name": "BATTLE_UNIT_ENTRIES_OFFSET", "value": 852, "spelling": "852", "kind": "offset", "family": "battle_unit", "tier": 3, "deferred": true},
+    {"name": "BATTLE_UNIT_ENTRY_STRIDE", "value": 31, "spelling": "31", "kind": "stride", "family": "battle_unit", "tier": 3, "deferred": true, "collision_note": "value 31 also spells UNIT_STACK_SLOT_STRIDE; the records are distinct (g_MapData BattleUnitEntry vs the gameData unit-stack slot), which is why UNIT_STACK_SLOT_STRIDE carries forbid_anchors g_MapData. Never auto-substitute either by bare value."},
+    {"name": "UNIT_SPRITE_CACHE_RECORD_STRIDE", "value": 15, "spelling": "15", "kind": "stride", "family": "unit_sprite_cache", "tier": 3, "deferred": true},
+    {"name": "UNIT_SPRITE_CACHE_RECORD_COUNT", "value": 100, "spelling": "100", "kind": "count", "family": "unit_sprite_cache", "tier": 3, "deferred": true},
+    {"name": "BUILDING_SPRITE_CACHE_RECORD_STRIDE", "value": 13, "spelling": "13", "kind": "stride", "family": "building_sprite_cache", "tier": 3, "deferred": true},
+    {"name": "BUILDING_SPRITE_CACHE_RECORD_COUNT", "value": 50, "spelling": "50", "kind": "count", "family": "building_sprite_cache", "tier": 3, "deferred": true},
+    {"name": "WORLD_MAP_ACTION_WIDGET_RECORD_SIZE", "value": 53, "spelling": "53", "kind": "size", "family": "world_map_widgets", "tier": 3, "deferred": true},
+    {"name": "WORLD_MAP_ACTION_WIDGET_COUNT", "value": 6, "spelling": "6", "kind": "count", "family": "world_map_widgets", "tier": 3, "deferred": true},
+    {"name": "UNIT_BATTLE_ACTION_WIDGET_COUNT", "value": 6, "spelling": "6", "kind": "count", "family": "unit_battle_widgets", "tier": 3, "deferred": true}
   ]
 }
