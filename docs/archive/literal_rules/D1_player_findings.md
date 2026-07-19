@@ -92,6 +92,40 @@ Rejected alternatives, each with a distinct owner: "is alive/active" is delta
 `world_002.c:784-785`; the 3-way `controller_mode` reading was already retracted
 in the rename log.
 
+### +15 / +19 `PLAYER_CAMERA_LEFT` / `PLAYER_CAMERA_TOP` — CONFIRMED (1 site each)
+
+A LEFT/TOP pair on two adjacent lines (`world_003.c:294-295`) is the most
+swappable naming in the batch and the exact B5 shape, so this got a dedicated
+axis check. The verifier deliberately refused to use `MAP_VIEW_LEFT_OFFSET` /
+`MAP_VIEW_TOP_OFFSET` as evidence, since those are prior work that could itself
+carry a transposition, and instead found arithmetic binding the axis **on the
+player fields themselves**:
+
+`src/persistence/0044AE90_0044E850_persistence_005.c:544-555` clamps +15 against
+`MAP_WIDTH_TILES - 9` and +19 against `MAP_HEIGHT_TILES - 7`. Width bounds the
+one, height bounds the other. The centering biases corroborate: `-4` on the axis
+whose span is 9, `-3` on the axis whose span is 7.
+
+Three further independent confirmations: the viewport tile loop is 9 wide x 6
+tall stepping `screenX += 64` / `screenY += 64` (`units_005.c:668-690`), and
+9 x 64 = 576 fits 640 horizontally but cannot fit 480 vertically; the minimap
+click handler derives +15 from `g_MouseCursorRawX` and +19 from
+`g_MouseCursorRawY` (`world_004.c:251-275`); and the asm pairing
+`0x22307 <-> 0x222E8` / `0x2230B <-> 0x222EC` never crosses across all 22 sites.
+
+Both are int32, matching `RECOVERED_STRUCTURES.json` and packing cleanly after
+`display_name char[11]` at +4..+14.
+
+**Precision nit, not an axis error:** these are *tile* coordinates, not pixels.
+`PLAYER_VIEW_ORIGIN_COL` / `_ROW` would be strictly better than `CAMERA_*`.
+Accept as-is if the batch keeps the established `camera_*` convention.
+
+**Correction to the census:** only two *folded-literal* sites remain, but the
+field already has ~20 accessor uses via the existing `PLAYER_CAMERA_LEFT_OFFSET`
+/ `PLAYER_CAMERA_TOP_OFFSET` macros. The two lines under test are stragglers
+being brought in line with established naming, which raises confidence rather
+than lowering it.
+
 ### +1417 — REFUTED. Proposed `PLAYER_POPULATION`; do not use.
 
 Two of three lenses refuted; the third confirmed the *structure* but dissented on
@@ -214,3 +248,12 @@ reading the same code — is not sufficient for this campaign.
 4. **Two undocumented player fields**: `RECOVERED_STRUCTURES.json` jumps
    1357 -> 1419 with nothing at +1417, and `recovered_types.h` jumps +31 -> +39
    with nothing at +35 or +43.
+5. **A latent transposition trap.** At `src/units/00416850_00419120_units_005.c:681-682`,
+   `TILE_TERRAIN_ROW_STRIDE` (1400) multiplies the **column** index while
+   `TILE_TERRAIN_RECORD_STRIDE` (14) multiplies the **row** index — the terrain
+   array is column-major, so `TILE_TERRAIN_ROW_STRIDE` is arguably misnamed (it
+   is a per-*column* stride). Read naively, that line appears to prove
+   `MAP_VIEW_LEFT` is a row, which would argue for transposing the camera pair.
+   It does not — the `screenX += 64` / `colIndex < 9` loop structure settles the
+   axis — but the trap is live and should be defused before someone "corrects" a
+   correct pair.
