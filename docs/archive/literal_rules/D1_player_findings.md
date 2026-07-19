@@ -216,6 +216,54 @@ enabled" from any other always-true predicate. The name records what is proven,
 not intent. The missing evidence is a store of 0, which — if it exists — lives in
 scenario `.dat` data, not in the executable.
 
+## Dynamic confirmation (2026-07-19, recovered binary under gdb)
+
+The static panel verdicts above were re-tested by *running* the recovered engine
+and sampling the player records live, which turned two of them from
+argued-from-code into observed.
+
+Method: `clash95_bootstrap /A5` (all-AI multiplayer map) under Xvfb, driven by
+`gdb -batch` with a breakpoint on `Unit_NewTurn` printing the five player records
+each turn. `gameData` is `int gameData;`
+(`src/state/00000000_0054FFFF_recovered_state.c:12298`), so player *n*'s field at
+delta D is `*(gameData + 140024 + n*1423 + D)`.
+
+**Controls first** — without these, an all-zero reading could just mean the
+address arithmetic is wrong:
+
+| field | observed | expected |
+|---|---|---|
+| +15 camera left, p0 | **4** | tile column |
+| +19 camera top, p0 | **22** | tile row |
+| +27 is-human, p0..p4 | **0 0 0 0 0** | all-AI game, so every player AI |
+| +39 religion, p0 | **1** | `ResetDefaults` default of 1 |
+
+The camera pair is the strong one: **(4, 22)** matches exactly the camera
+position independently recorded by the tile-comparison work in
+`tools/vm/README.md` ("the recovered all-AI camera NEVER moves (230 frames at
+(4,22))"). That is an independent measurement, taken for an unrelated purpose,
+agreeing to the tile. It confirms both the address arithmetic **and** that +15 is
+the column and +19 the row — the axis assignment the panel established statically.
+The all-AI zeros likewise confirm +27 = is-human empirically.
+
+**Result for +1417: `0` for all five players, on every one of 229 samples across
+46 game turns.**
+
+Since the controls read true, this is a real observation rather than an artifact,
+and it independently refutes `PLAYER_POPULATION`: a population cannot be zero for
+five players who are running castles and buildings for 46 turns.
+
+**Honest limitation:** the run produced **zero battles**, so this *falsifies the
+population reading* without *positively confirming* the win/loss-tally reading —
+the +/-1 transfer was never exercised. Confirming the tally needs a run in which
+`Unit_Attack` actually fires. Note the absence of battles across 46 all-AI turns
+is itself consistent with the known "recovered all-AI AI path is not fully
+executing" issue recorded in `tools/vm/README.md`, and is worth a look in its own
+right.
+
+Evidence: `/tmp/mn/gdb3.log` (229 turn samples), `/tmp/mn/gdb4.log` (controls),
+scripts `/tmp/mn/p2.gdb` and `/tmp/mn/p3.gdb`.
+
 ## Consequences for the batch
 
 **D1 must not mint yet.** The panel reviewed 4 of 13 values; the other 9 rest on
