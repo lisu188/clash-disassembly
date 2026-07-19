@@ -356,6 +356,28 @@ typedef enum Direction8
   (UNIT_SLOT_STANCE_BITS(slotPtr) = (UNIT_SLOT_STANCE_BITS(slotPtr) & 0x8F) | (((volleysUsed) & 0x07) << 4))
 #define UNIT_SLOT_AUX_STATE(slotPtr) (*(_DWORD *)(uintptr_t)((slotPtr) + 18))
 #define UNIT_SLOT_STATE_BITS(slotPtr) (*(_BYTE *)(uintptr_t)((slotPtr) + 22))
+
+/* BattleUnitEntry (RECOVERED_STRUCTURES.json): the 31-byte tactical-battle unit
+ * slot in BattleRuntimeState.battle_unit_entries[22], based at g_MapData + 852
+ * with stride 31. Mirrors the world UNIT_SLOT core (type/owner/AP/health/stance/
+ * state at the same offsets) and adds battle-only facing/grid/animation fields.
+ * entryPtr = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE*i.
+ * Field casts match the decompiler's actual site casts (grid_x/y are _WORD). */
+#define BATTLE_UNIT_ENTRIES_OFFSET 852
+#define BATTLE_UNIT_ENTRY_STRIDE 31
+#define BATTLE_UNIT_ENTRY(mapDataBase, entryIndex) \
+  ((mapDataBase) + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * (entryIndex))
+#define BATTLE_UNIT_TYPE(entryPtr) (*(__int16 *)(entryPtr))
+#define BATTLE_UNIT_OWNER(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 2))
+#define BATTLE_UNIT_FACING(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 3))
+#define BATTLE_UNIT_GRID_X(entryPtr) (*(_WORD *)(uintptr_t)((entryPtr) + 4))
+#define BATTLE_UNIT_GRID_Y(entryPtr) (*(_WORD *)(uintptr_t)((entryPtr) + 6))
+#define BATTLE_UNIT_ACTION_POINTS(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 8))
+#define BATTLE_UNIT_HEALTH_PERCENT(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 9))
+#define BATTLE_UNIT_STANCE_BITS(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 12))
+#define BATTLE_UNIT_ANIM_BITS(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 17))
+#define BATTLE_UNIT_LAST_ANIM_TICK(entryPtr) (*(_DWORD *)(uintptr_t)((entryPtr) + 18))
+#define BATTLE_UNIT_STATE_BITS(entryPtr) (*(_BYTE *)(uintptr_t)((entryPtr) + 22))
 #define BUILDING_PRISONER_SLOT(buildingPtr, slotIndex) \
   ((buildingPtr) + BUILDING_PRISONER_SLOT_BASE_OFFSET + BUILDING_PRISONER_SLOT_STRIDE * (slotIndex))
 #define BUILDING_PRISONER_TYPE(slotPtr) (*(char *)(uintptr_t)(slotPtr))

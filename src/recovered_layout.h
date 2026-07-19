@@ -12,6 +12,8 @@
 #include "recovered_types.h"
 #include "recovered_structs.h"
 _Static_assert((ACTIVE_MISSION_INDEX_OFFSET) == (140017), "ACTIVE_MISSION_INDEX_OFFSET changed");
+_Static_assert((BATTLE_UNIT_ENTRIES_OFFSET) == (852), "BATTLE_UNIT_ENTRIES_OFFSET changed");
+_Static_assert((BATTLE_UNIT_ENTRY_STRIDE) == (31), "BATTLE_UNIT_ENTRY_STRIDE changed");
 _Static_assert((BUILDING_ADDON_FLAGS_OFFSET) == (416), "BUILDING_ADDON_FLAGS_OFFSET changed");
 _Static_assert((BUILDING_ADDON_FLAG_BARRACKS) == (0x02), "BUILDING_ADDON_FLAG_BARRACKS changed");
 _Static_assert((BUILDING_ADDON_FLAG_HOSPITAL) == (0x01), "BUILDING_ADDON_FLAG_HOSPITAL changed");
