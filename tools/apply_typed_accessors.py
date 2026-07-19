@@ -267,7 +267,7 @@ def all_hinted_families(base_text):
 
 
 # ---- site scan + proof ----------------------------------------------------
-def scan_file(path, mac_idx, by_name, families, objvals):
+def scan_file(path, mac_idx, by_name, families, objvals, select=None):
     # newline="" keeps bytes faithful (files are CRLF in-tree) so char offsets
     # match --apply's read/write exactly and line endings survive the rewrite.
     text = open(path, encoding="utf-8", errors="surrogateescape", newline="").read()
@@ -331,6 +331,15 @@ def scan_file(path, mac_idx, by_name, families, objvals):
                 "site": site_txt, "reason": "proof_mismatch", "macro": name})
             i = end + 1
             continue
+        # optional site-level whitelist (curated batches): keep only approved
+        # (file-suffix, line, macro) sites
+        if select is not None:
+            line_no = text[:site_start].count("\n") + 1
+            relp = os.path.relpath(path, lc.REPO).replace("\\", "/")
+            if not any(relp.endswith(f) and line_no == ln and name == mc
+                       for (f, ln, mc) in select):
+                i = end + 1
+                continue
         before_toks, after_toks = pp_hunk(site_txt, body, param, base_text, objvals)
         accepted.append({
             "file": os.path.relpath(path, lc.REPO),
@@ -369,7 +378,15 @@ def main():
     ap.add_argument("--plan", action="store_true")
     ap.add_argument("--plan-out", default=None)
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--select", default=None,
+                    help="JSON list of {file,line,macro} to whitelist (curated batch)")
     args = ap.parse_args()
+
+    select = None
+    if args.select:
+        rows = json.load(open(args.select))
+        select = {(r["file"].replace("\\", "/"), int(r["line"]), r["macro"])
+                  for r in rows}
 
     objvals = obj_macro_values()
     mac_idx, by_name = build_macro_index(args.family, objvals)
@@ -381,7 +398,7 @@ def main():
 
     all_acc, all_ref = [], []
     for path in iter_source_files(args.only, args.exclude):
-        acc, ref = scan_file(path, mac_idx, by_name, args.family, objvals)
+        acc, ref = scan_file(path, mac_idx, by_name, args.family, objvals, select)
         all_acc.extend(acc)
         all_ref.extend(ref)
 

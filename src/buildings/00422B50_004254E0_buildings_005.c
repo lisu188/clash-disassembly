@@ -255,7 +255,7 @@ BOOL  Unit_MoveSelectionFromGroupToTile(int unitIndex, _DWORD *selectedSlots, in
     source_slot = (unsigned char *)(uintptr_t)UNIT_STACK_SLOT(current_stack, selectedSlots[slot_list_index]);
     qmemcpy(dest_slot, source_slot, UNIT_STACK_SLOT_STRIDE);
     dest_slot[8] -= 4;
-    *(__int16 *)source_slot = -1;
+    UNIT_SLOT_TYPE(source_slot) = -1;
     dest_slot += UNIT_STACK_SLOT_STRIDE;
   }
   Unit_CompactSquad((__int16 *)(uintptr_t)current_stack, targetRow, gameTime);

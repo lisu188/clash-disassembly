@@ -951,7 +951,7 @@ int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *buildingPtr, doub
   garrisonChanged = 0;
   for ( i = 0; i < 12; ++i )
   {
-    result = *(__int16 *)slotPtr;
+    result = UNIT_SLOT_TYPE(slotPtr);
     if ( result != -1 )
     {
       UnitSlot_AdjustFatigueByPredicate((int)(intptr_t)slotPtr, -50, UnitSlot_PredicateAlways);

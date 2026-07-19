@@ -116,7 +116,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       LODWORD(amount64) = partialSquadFill;
       HIDWORD(amount64) = v17 >> 31;
       LOBYTE(partialSquadFill) = (int)(100 * (amount64 % 100)) / 100;
-      *(_BYTE *)(uintptr_t)(squadWritePtr + 9) = partialSquadFill;
+      UNIT_SLOT_HEALTH_PERCENT(squadWritePtr) = partialSquadFill;
       if ( !(_BYTE)partialSquadFill )
         *(_WORD *)(uintptr_t)squadWritePtr = -1;
     }
