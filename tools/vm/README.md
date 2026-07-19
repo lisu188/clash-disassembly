@@ -70,6 +70,80 @@ Full narrative + per-screen captures in
 `../../artifacts/original-captures/COMPARISON_NOTES.md` and
 `../../artifacts/original-captures/qemu-native/`.
 
+## Live memory inspection of the ORIGINAL (2026-07-19)
+
+The rig can now be used as a **debugger** on the original binary, not just a
+frame-capture jig. This settles semantic questions that static analysis of the
+recovered C cannot.
+
+**Use HMP-over-QMP, not gdb, and not OllyDbg.**
+
+- `-gdb tcp:0.0.0.0:1234` does work and QEMU listens, but **WSL cannot reach it**
+  — the Windows host blocks the inbound connection and opening a firewall rule
+  is a system security change. Don't go down this road.
+- OllyDbg is the wrong shape for this rig: it is a GUI debugger that would have
+  to run *inside* the guest and be driven by relative-mouse clicks over QMP.
+- **QMP `human-monitor-command` works from PowerShell on 127.0.0.1:4444** and
+  gives `x/` (virtual, current CR3), `xp/` (physical) and `info registers`. That
+  is everything needed for memory sampling, with no firewall change.
+
+Worked example, verified 2026-07-19:
+
+```powershell
+# read the gameData base pointer, then a player-record field
+x/1xw 0x5202E4          # -> 0x00d00030   (gameData, per clash95.map 0004:000032E4)
+x/8xb 0x41AD20          # -> 53 51 56 57 55 81 ec 44  (Unit_Attack prologue)
+x/1hd 0xd228b1          # -> player 0's +1417 field (gameData + 0x22881)
+```
+
+Address arithmetic: player *n*'s field at record delta D is
+`gameData + 140024 + n*1423 + D`. Sanity-check any session by reading known
+fields first — `+140051` is-human (0 for every player in an all-AI game),
+`+140039`/`+140043` camera column/row, `+140022` the turn counter (a **u16**;
+reading it as a word picks up the neighbouring field).
+
+Useful anchors: `gameData` at **0x5202E4**, `Unit_Attack` at **0x41AD20**
+(clash95.map `0001:00019D20` + 0x401000).
+
+## Guest auto-launch (fixed 2026-07-19)
+
+The claim above that "the guest's StartUp runs `D:\RUN.BAT`" was **not true** of
+`hda.qcow2` — `C:\WINDOWS\Start Menu\Programs\StartUp` was empty, so the VM just
+booted to a bare desktop and nothing launched.
+
+Fixed by setting the Win9x `WIN.INI` run hook instead of creating a shortcut
+(one INI line, no `.lnk` authoring):
+
+```
+[windows]
+run=D:\RUN.BAT
+```
+
+Applied offline. `qemu-nbd` is unusable here (WSL2 has no `/dev/nbd*`), so the
+route is convert → mtools → convert back. Note the C: partition starts at LBA
+**63** (offset 32256), and the conversion is near-instant because the image is
+sparse:
+
+```bash
+qemu-img convert -f qcow2 -O raw /mnt/c/clash95-vm/hda.qcow2 /tmp/hda.raw
+mtype  -i /tmp/hda.raw@@32256 ::/WINDOWS/WIN.INI > win.ini
+#   edit: replace the empty "run=" line with "run=D:\RUN.BAT", keeping CRLF
+mcopy  -i /tmp/hda.raw@@32256 -o win.ini ::/WINDOWS/WIN.INI
+qemu-img convert -f raw -O qcow2 /tmp/hda.raw /tmp/hda_new.qcow2
+qemu-img check /tmp/hda_new.qcow2 && cp /tmp/hda_new.qcow2 /mnt/c/clash95-vm/hda.qcow2
+```
+
+Back up `hda.qcow2` before doing this, and shut the VM down first — editing a
+disk under a running QEMU corrupts it. Verified: the guest now boots straight
+into the game's world map with no interaction.
+
+**Known open issue:** with `/A5` the original loads the multiplayer map and
+renders it, but the turn counter stayed at 2 across several minutes of wall
+clock, i.e. its turn loop is not advancing unattended. Whatever drives turn
+advance in the original's MP path has not been identified. Until that is
+understood, the rig is good for *static-state* memory inspection of the original
+but not for observing state evolve over turns.
+
 ## Comparison results (2026-07-17)
 
 - **Main menu** (same state both sides): `mad=2.17/255`, **0.7% differing
