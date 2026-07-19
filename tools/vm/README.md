@@ -150,6 +150,26 @@ downstream of this. Recovering the handlers is the already-planned C-B2 batch;
 until it lands, the all-AI mode renders a static start position and the fog/
 coverage tiles stay in the mismatch bucket.
 
+**Fix B RE-VERIFIED post-C-B2 (2026-07-19) — NOT resolved; deeper AI-behaviour
+gap.** C-B2 landed (all 87 `Rules_Host*` handlers recovered, `_UNKNOWN` count 0).
+Re-ran `/A5` on a fresh HEAD build (120 s, STRIDE=4, 231 frames). The handlers
+now DO run — 370 `ai_turn` markers, 185 `ai_turn_before/after_agenda`, 10,280
+`ODDZIAL` fact asserts, 10,827 `world_action` — **but the camera is STILL frozen
+at viewport (4,22) for all 231/231 frames** (identical to pre-C-B2), while the
+original roams (8,25)..(82,32). Root cause is sharper than "no handlers":
+every `world_action` is a repeated identical `unit_kill selected=1 a=9 b=25 c=1
+cursor=400,300` (≈10 k times) and the march count is **`maszeruj`/`Unit_MoveTrack`
+= 0** — the strategic AI issues combat/kill actions in a degenerate loop and
+never MARCHES a unit, so nothing relocates and the camera has nothing to follow.
+So C-B2 made the handlers callable but did not produce normal all-AI play; the
+world-map fidelity comparison stays coverage-limited (post-C-B2 `score` vs the 13
+original frames: 18 shared tiles = 0.2% of map, 9 identical-terrain / 9
+content-mismatch; **fog-black-mismatch now 0** — Fix A resolved that bucket). The
+all-AI camera/movement divergence is a distinct GAMEPLAY-track item (degenerate
+strategic-AI agenda: kills-without-marches), NOT a capture-rig or handler-body
+issue — hand off to the mission/gameplay track. Artifacts:
+`artifacts/tile-compare/m05/cross-postcb2/` (heatmap, worst_montage, summary).
+
 **Fix C (menu language) = deferred, needs asset analysis.** Source + built
 binary both have `g_LanguageIndex = 1`, yet the recovered menu renders POLISH
 while the original (same-named data, in the VM) renders ENGLISH. Decisive clue:
