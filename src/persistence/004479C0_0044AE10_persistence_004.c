@@ -25,7 +25,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v18 CLASH95_UNUSED; // ecx
   char *v19 CLASH95_UNUSED; // edi
   char *v20 CLASH95_UNUSED; // esi
-  int mainMenuSecondLabelOffset; // ecx
+  int mainMenuSecondLabelOffset CLASH95_UNUSED; // ecx
   int v24 CLASH95_UNUSED; // ecx
   _DWORD *campaignSpriteSet; // eax
   bool i; // zf
@@ -64,15 +64,26 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   unsigned int loadSlotRow; // eax
   int ( *defaultRenderHook)(int, char, DWORD); // [esp-4h] [ebp-2140h]
   _BYTE v112[7112]; // [esp+4h] [ebp-2138h] BYREF
-  char optionsWidgetTable[8]; // [esp+1BCCh] [ebp-570h] BYREF
-  int configFlag0CValue; // [esp+1BD4h] [ebp-568h]
-  _DWORD v115[11]; // [esp+1BDCh] [ebp-560h]
-  int configBaseValue; // [esp+1C09h] [ebp-533h]
-  int musicToggleValue; // [esp+1C3Eh] [ebp-4FEh]
-  int unitSoundsToggleValue; // [esp+1C73h] [ebp-4C9h]
-  _DWORD v119[8]; // [esp+1D1Fh] [ebp-41Dh]
-  char mainMenuWidgetTable[16]; // [esp+1D40h] [ebp-3FCh] BYREF
-  _DWORD v121[89]; // [esp+1D50h] [ebp-3ECh]
+  /* Options-menu widget table: 4 records x 53 (0x35) bytes, 371 bytes
+   * total, filled from g_OptionsMenuWidgetTemplateBlob. In the original
+   * stack frame (clash95.asm PlayGame_Dispatch, table = var_570) the
+   * decompiler emitted named locals that were ALIASES into this table:
+   * var_568 = +0x08 (record-0 checkbox state), var_560 = +0x10 (sprite
+   * base), var_55C = +0x14 (selected base), var_533/var_4FE/var_4C9 =
+   * +0x3D/+0x72/+0xA7 (+0x08 of records 1..3), var_591 = table-0x21.
+   * Rebuilt as independent C locals those reads/writes MISSED the table
+   * (language column stuck at Polish column 0, checkbox states unbound),
+   * so the table is declared at its real extent and indexed directly
+   * (asm: rep movsd x92 + movsw + movsb = 371; add eax,35h; cmp eax,0D4h).
+   */
+  char optionsWidgetTable[371]; // [esp+1BCCh] [ebp-570h] BYREF
+  /*
+   * Original frame: v119[8] at ebp-41Dh, mainMenuWidgetTable[16] at
+   * ebp-3FCh, v121[89] at ebp-3ECh together held the 371-byte main-menu
+   * widget table plus the aliases used by the language-column loop. The
+   * rebuild owns the whole table as one array and indexes it directly.
+   */
+  char mainMenuWidgetTable[371]; // [esp+1D40h] [ebp-3FCh] BYREF
   char multiplayerWidgetTable[268]; // [esp+1EB4h] [ebp-288h] BYREF
   _DWORD loadMenuWidgetTable[40]; // [esp+1FC0h] [ebp-17Ch] BYREF
   char campaignWidgetTable[160]; // [esp+2060h] [ebp-DCh] BYREF
@@ -128,17 +139,22 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
     Debug_Log(0, 0, (DWORD)(intptr_t)a3, (int)(intptr_t)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
-    mainMenuWidgetOffset = 0;
     qmemcpy(mainMenuWidgetTable, g_MainMenuButtonWidgetsTemplate, sizeof(g_MainMenuButtonWidgetsTemplate));
-    do
+    /*
+     * The original 004479C0 loop adds g_LanguageIndex to each 0x35-byte
+     * widget record's +0x10 (label sprite base) and +0x14 (pressed sprite
+     * base) so the PL/EN/DE column of menu\main.s32 is selected. The raw
+     * decompile expressed those stores through frame-offset aliases
+     * (`v121` = table+0x10, `v119` = table-0x21) that only held for the
+     * original stack layout; with compiler-chosen local placement the adds
+     * landed outside the table and the menu stayed on the Polish column.
+     * Index the widget table directly instead.
+     */
+    for ( mainMenuWidgetOffset = 0; mainMenuWidgetOffset != 371; mainMenuWidgetOffset += 53 )
     {
-      a3 = (char *)(uintptr_t)((unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v121 + mainMenuWidgetOffset));
-      *(_DWORD *)((char *)v121 + mainMenuWidgetOffset) = a3;
-      mainMenuSecondLabelOffset = *(_DWORD *)((char *)&v121[1] + mainMenuWidgetOffset);
-      mainMenuWidgetOffset += 53;
-      *(_DWORD *)((char *)v119 + mainMenuWidgetOffset) = (unsigned __int8)g_LanguageIndex + mainMenuSecondLabelOffset;
+      *(_DWORD *)(void *)&mainMenuWidgetTable[mainMenuWidgetOffset + 16] += (unsigned __int8)g_LanguageIndex;
+      *(_DWORD *)(void *)&mainMenuWidgetTable[mainMenuWidgetOffset + 20] += (unsigned __int8)g_LanguageIndex;
     }
-    while ( mainMenuWidgetOffset != 371 );
     a2 = (signed int)(intptr_t)&g_MainRenderDevice;
     g_RenderDevice = &g_MainRenderDevice;
     UIWidgetTable_InitDrawStates(mainMenuWidgetTable);
@@ -483,21 +499,21 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         qmemcpy(optionsWidgetTable, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
         {
-          optionsFirstLabelOffset = (unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v115 + optionsWidgetOffset);
-          *(_DWORD *)((char *)v115 + optionsWidgetOffset) = optionsFirstLabelOffset;
-          optionsSecondLabelOffset = *(_DWORD *)((char *)&v115[1] + optionsWidgetOffset);
+          optionsFirstLabelOffset = (unsigned __int8)g_LanguageIndex + *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x10];
+          *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x10] = optionsFirstLabelOffset;
+          optionsSecondLabelOffset = *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset + 0x14];
           optionsWidgetOffset += 53;
-          *(_DWORD *)&v112[optionsWidgetOffset + 7079] = (unsigned __int8)g_LanguageIndex + optionsSecondLabelOffset;
+          *(_DWORD *)&optionsWidgetTable[optionsWidgetOffset - 0x21] = (unsigned __int8)g_LanguageIndex + optionsSecondLabelOffset;
         }
         while ( optionsWidgetOffset != 212 );
         if ( g_OptionsConfigRecordFlag0C )
-          configFlag0CValue = 2;
+          *(_DWORD *)&optionsWidgetTable[0x08] = 2;
         if ( g_OptionsConfigRecordBase )
-          configBaseValue = 2;
+          *(_DWORD *)&optionsWidgetTable[0x3D] = 2;
         if ( g_Options_MusicEnabledFlag )
-          musicToggleValue = 2;
+          *(_DWORD *)&optionsWidgetTable[0x72] = 2;
         if ( g_Options_UnitSoundsEnabledFlag )
-          unitSoundsToggleValue = 2;
+          *(_DWORD *)&optionsWidgetTable[0xA7] = 2;
         g_Options_BrightnessSliderValue = ((g_OptionsMainMenuMusicVolumeRaw << 8)
                       + 0x4000
                       - (__CFSHL__(((g_OptionsMainMenuMusicVolumeRaw << 8) + 0x4000) >> 31, 7)
@@ -527,10 +543,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           while ( !g_PlayGameMenuExitRequested );
         }
         a2 = g_Options_MusicEnabledFlag;
-        g_OptionsConfigRecordFlag0C = configFlag0CValue == 2;
-        g_OptionsConfigRecordBase = configBaseValue == 2;
-        g_Options_MusicEnabledFlag = musicToggleValue == 2;
-        g_Options_UnitSoundsEnabledFlag = unitSoundsToggleValue == 2;
+        g_OptionsConfigRecordFlag0C = *(_DWORD *)&optionsWidgetTable[0x08] == 2;
+        g_OptionsConfigRecordBase = *(_DWORD *)&optionsWidgetTable[0x3D] == 2;
+        g_Options_MusicEnabledFlag = *(_DWORD *)&optionsWidgetTable[0x72] == 2;
+        g_Options_UnitSoundsEnabledFlag = *(_DWORD *)&optionsWidgetTable[0xA7] == 2;
         g_OptionsMainMenuMusicVolumeRaw = ((unsigned __int16)(((_WORD)g_Options_BrightnessSliderValue << 7)
                                         - (__CFSHL__(g_Options_BrightnessSliderValue << 7 >> 31, 8)
                                          + ((__int16)((unsigned int)g_Options_BrightnessSliderValue >> 9) >> 15 << 8))) >> 8)
@@ -541,7 +557,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_OptionsMainMenuSoundVolumeRaw = (unsigned __int16)(16 * g_Options_MouseSpeedSliderValue
                                        - (__CFSHL__((16 * g_Options_MouseSpeedSliderValue) >> 31, 8)
                                         + ((__int16)((unsigned int)g_Options_MouseSpeedSliderValue >> 12) >> 15 << 8))) >> 8;
-        if ( musicToggleValue == 2 )
+        if ( *(_DWORD *)&optionsWidgetTable[0x72] == 2 )
         {
           Audio_SetMusicActiveFlag();
           if ( !a2 )
