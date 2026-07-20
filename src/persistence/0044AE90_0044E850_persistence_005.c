@@ -12,6 +12,7 @@
 #include "../strategic/strategic_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -1384,10 +1385,10 @@ BOOL  UI_RunHoverTooltipZones(__int16 *tooltipZoneTable)
       }
       Render_FillRect((_DWORD *)(uintptr_t)savedBackgroundSurface, 0, 0, 0, fadeOutWidth, fadeOutHeight, tooltipLeft, tooltipTop);
       if ( savedBackgroundSurface )
-        (**(void (***)(void))(uintptr_t)(savedBackgroundSurface + 184))();
+        RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)savedBackgroundSurface, 2);
       if ( tooltipSurface )
       {
-        (**(void (***)(void))(uintptr_t)(tooltipSurface + 184))();
+        RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)tooltipSurface, 2);
         tooltipZoneTable += 10;
       }
       else

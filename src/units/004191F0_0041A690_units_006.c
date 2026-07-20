@@ -718,9 +718,9 @@ BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t widget, DWORD allocContext)
   }
   Render_FillRect((_DWORD *)(uintptr_t)backgroundSurface, 0, 0, 0, rectWidthOut, rectHeightOut, rectLeft, cursorY);
   if ( backgroundSurface )
-    (**(void (__cdecl ***)(int))(uintptr_t)(backgroundSurface + 184))(savedTextSlot);
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)backgroundSurface, 2);
   if ( textSurfaceHandle )
-    (**(void (***)(void))(uintptr_t)(textSurfaceHandle + 184))();
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)textSurfaceHandle, 2);
   Render_ReleaseSurface(savedTextSlot, fadeOutDeadline);
   g_RenderDevice = savedRenderDevice;
   return Render_Begin((int)(intptr_t)&g_RenderState, 0);
@@ -1496,7 +1496,7 @@ int  Unit_Info(
   Render_FillRect(surface, 0, 0, 0, 0xC8u, 0x73u, screenLeft, screenTop);
   Render_Present((int)(intptr_t)g_RenderState);
   if ( v25 )
-    (**(void (***)(void))(uintptr_t)(v25 + 184))();
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)v25, 2);
   return DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
 }
 // 41A6FD: variable 'v11' is possibly undefined

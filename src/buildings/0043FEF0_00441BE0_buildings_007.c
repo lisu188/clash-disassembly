@@ -11,6 +11,7 @@
 #include "../strategic/strategic_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -118,7 +119,7 @@ int  Temple_ShowOutcomePopup(int messageTextPtr, int iconChar, int a3, int playS
   Render_FillRect((_DWORD *)(uintptr_t)surface, 0, 0, 0, SCREEN_MAX_X, popupHeight - 1, 0, 0x96u);
   Render_Present((int)(intptr_t)g_RenderState);
   if ( surface )
-    (**(void (***)(void))(uintptr_t)(surface + 184))();
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)surface, 2);
   return DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
 }
 // 43FF56: variable 'v7' is possibly undefined
@@ -678,7 +679,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
   Render_BlitSurfaceRect(surface, 0, 0, 0, spriteHeight - 1, spriteWidthMinus1, 0xC8u, 0x64u);
   Render_Present((int)(intptr_t)g_RenderState);
   if ( surface )
-    (*(void (**)(void))(uintptr_t)surface[46])();
+    RenderSurface_InvokeSlot0(surface, 2);
   result = savedRenderDevice;
   g_RenderDevice = savedRenderDevice;
   return result;

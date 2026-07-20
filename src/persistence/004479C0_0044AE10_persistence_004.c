@@ -260,12 +260,16 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           multiplayerSpriteSet = DLXSpriteSet_Load(multiplayerSpriteSet, aMenuMultipl_s32);
         g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)multiplayerSpriteSet;
         a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
-        (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuMultipl_gf);
+        RenderSurface_InvokeSlot48LoadPCX(
+          (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+          aMenuMultipl_gf,
+          0,
+          (uintptr_t)g_MenuScreenPaletteBuffer);
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
         g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
         MultiplayerSetup_RedrawPlayerSlotIcons();
-        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
+        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
         for ( j = 0; j < 5; ++j )
           MultiplayerSetup_RepaintPlayerSlotRow(j, j + 1, 0);
         MultiplayerSetup_RedrawOpponentNameList();
@@ -478,24 +482,37 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           if ( (unsigned __int8)g_LanguageIndex <= 1u )
           {
             a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
-            (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_a_gfx);
+            RenderSurface_InvokeSlot48LoadPCX(
+              (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+              aMenuOpt_a_gfx,
+              0,
+              (uintptr_t)g_MenuScreenPaletteBuffer);
           }
           else if ( g_LanguageIndex == 2 )
           {
             a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
-            (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_g_gfx);
+            RenderSurface_InvokeSlot48LoadPCX(
+              (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+              aMenuOpt_g_gfx,
+              0,
+              (uintptr_t)g_MenuScreenPaletteBuffer);
           }
         }
         else
         {
           a2 = (signed int)(intptr_t)g_MenuScreenPaletteBuffer;
-          (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuOpt_p_gfx);
+          RenderSurface_InvokeSlot48LoadPCX(
+            (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+            aMenuOpt_p_gfx,
+            0,
+            (uintptr_t)g_MenuScreenPaletteBuffer);
         }
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
         g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
-        (*(void (__thiscall **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))(92);
+        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
         optionsWidgetOffset = 0;
+        Options_RebuildMainMenuWidgetTemplates();
         qmemcpy(optionsWidgetTable, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
         {
@@ -526,7 +543,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                        + 16 * ((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31))) >> 4;
         g_RenderDevice = &g_MainRenderDevice;
         UIWidgetTable_InitDrawStates(optionsWidgetTable);
-        Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, optionsFirstLabelOffset);
+        Options_DrawAllSliderThumbs((unsigned __int16 *)g_OptionsMenuSliderThumbPositions, a2, optionsFirstLabelOffset);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)g_MenuScreenPaletteBuffer, 0, 0);
         RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
@@ -537,7 +554,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           do
           {
             DD_Pump((int)(intptr_t)g_RenderState, 0);
-            Options_AnimateAllSliderThumbs(g_OptionsMenuSliderThumbPositions);
+            Options_AnimateAllSliderThumbs((_DWORD *)g_OptionsMenuSliderThumbPositions);
             UIWidgetTable_PollHoverAndActions(optionsWidgetTable, 0);
           }
           while ( !g_PlayGameMenuExitRequested );
@@ -571,7 +588,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         }
         Options_ApplyRecordSettings((int)(intptr_t)&g_OptionsConfigRecordBase, 0, 0);
         Options_SaveConfigToFile(0, 0);
-        Options_DestroySliderThumbList(g_OptionsMenuSliderThumbPositions);
+        Options_DestroySliderThumbList((_DWORD *)g_OptionsMenuSliderThumbPositions);
         Render_Pump();
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         break;
@@ -581,10 +598,14 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         if ( loadMenuSpriteSet )
           loadMenuSpriteSet = DLXSpriteSet_Load(loadMenuSpriteSet, aMenuLoad_s32);
         g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)loadMenuSpriteSet;
-        (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aMenuLoad_gfx);
+        RenderSurface_InvokeSlot48LoadPCX(
+          (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+          aMenuLoad_gfx,
+          0,
+          (uintptr_t)g_MenuScreenPaletteBuffer);
         Render_LoadResourceSprite_v4(18, g_MenuScreenPaletteBuffer, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, g_MenuScreenPaletteBuffer, 0, 0, 0);
-        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
+        RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
         for ( k = 0; k < 10; ++k )
           LoadMenu_RedrawSaveSlotRow(k, (DWORD)(intptr_t)a3);
         LoadMenu_RebuildButtonWidgetTemplate();
@@ -955,48 +976,60 @@ void  Options_ApplyMainMenuSliders(int a1, DWORD a2)
 // 5188CA: using guessed type char byte_5188CA;
 
 //----- (00449C80) --------------------------------------------------------
-int  PlayGameMenu_HandleCloseButton(int widgetRecord)
+int  PlayGameMenu_HandleCloseButton(uintptr_t widgetRecord)
 {
   int result; // eax
-  int v3; // edx
 
+  /*
+   * Widget records live on the caller's stack; the callback must keep the
+   * full pointer (like the other converted widget callbacks). Original
+   * 00449C80: `mov edx, 1; call sub_419ED0; mov ds:dword_543D78, edx` — the
+   * exit flag is the constant 1, which the raw decompile left undefined.
+   */
   result = UIWidget_PlayPressedReleaseAnimation(widgetRecord);
-  g_PlayGameMenuExitRequested = v3;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
 // 449C8B: variable 'v3' is possibly undefined
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
 
 //----- (00449CA0) --------------------------------------------------------
-unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int widgetRecord, int a2, DWORD a3)
+unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(uintptr_t widgetRecord, int a2, DWORD a3)
 {
-  int widgetContextBase; // ecx
+  uintptr_t widgetContextBase; // ecx
 
+  /*
+   * Original 00449CA0: `mov ecx, eax` — the reset-button offsets are all
+   * relative to the CLICKED widget record (the last table entry, which
+   * lives on the caller's stack — keep the full pointer). The raw decompile
+   * left `widgetContextBase` undefined; bind it to the argument.
+   */
+  widgetContextBase = widgetRecord;
   UIWidget_PlayPressedReleaseAnimation(widgetRecord);
-  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 98) & 2) == 0 )
+  if ( (*(_BYTE *)(widgetContextBase - 98) & 2) == 0 )
   {
-    *(_DWORD *)(uintptr_t)(widgetContextBase - 98) = 2;
-    UIWidget_RefreshActionButtonState(widgetContextBase - 106, widgetContextBase);
+    *(_DWORD *)(widgetContextBase - 98) = 2;
+    UIWidget_RefreshActionButtonState(widgetContextBase - 106, (int)widgetContextBase);
   }
-  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 151) & 2) == 0 )
+  if ( (*(_BYTE *)(widgetContextBase - 151) & 2) == 0 )
   {
-    *(_DWORD *)(uintptr_t)(widgetContextBase - 151) = 2;
-    UIWidget_RefreshActionButtonState(widgetContextBase - 159, widgetContextBase);
+    *(_DWORD *)(widgetContextBase - 151) = 2;
+    UIWidget_RefreshActionButtonState(widgetContextBase - 159, (int)widgetContextBase);
   }
-  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 204) & 2) == 0 )
+  if ( (*(_BYTE *)(widgetContextBase - 204) & 2) == 0 )
   {
-    *(_DWORD *)(uintptr_t)(widgetContextBase - 204) = 2;
-    UIWidget_RefreshActionButtonState(widgetContextBase - 212, widgetContextBase);
+    *(_DWORD *)(widgetContextBase - 204) = 2;
+    UIWidget_RefreshActionButtonState(widgetContextBase - 212, (int)widgetContextBase);
   }
-  if ( (*(_BYTE *)(uintptr_t)(widgetContextBase - 257) & 1) == 0 )
+  if ( (*(_BYTE *)(widgetContextBase - 257) & 1) == 0 )
   {
-    *(_DWORD *)(uintptr_t)(widgetContextBase - 257) = 1;
-    UIWidget_RefreshActionButtonState(widgetContextBase - 265, widgetContextBase);
+    *(_DWORD *)(widgetContextBase - 257) = 1;
+    UIWidget_RefreshActionButtonState(widgetContextBase - 265, (int)widgetContextBase);
   }
   g_Options_BrightnessSliderValue = 128;
   g_Options_ScrollSpeedSliderValue = 128;
   g_Options_MouseSpeedSliderValue = 128;
-  return Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, a3);
+  return Options_DrawAllSliderThumbs((unsigned __int16 *)g_OptionsMenuSliderThumbPositions, a2, a3);
 }
 // 449CA9: variable 'v4' is possibly undefined
 // 518600: using guessed type unsigned __int16 word_518600[6];
@@ -1005,14 +1038,16 @@ unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int widgetRecord, int a
 // 518654: using guessed type int dword_518654;
 
 //----- (00449D60) --------------------------------------------------------
-BOOL  Options_ToggleCheckboxMainMenu(int widgetRecord)
+BOOL  Options_ToggleCheckboxMainMenu(uintptr_t widgetRecord)
 {
   char toggledState; // dl
 
-  toggledState = *(_BYTE *)(uintptr_t)(widgetRecord + 8) ^ 1;
-  *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState;
-  *(_BYTE *)(uintptr_t)(widgetRecord + 8) = toggledState ^ 2;
-  Audio_PlayButtonSound(*(char **)(uintptr_t)(widgetRecord + 49));
+  /* Stack-resident widget record: keep the full pointer, and load the
+   * 4-byte compact sound-name pointer at +49 (not an 8-byte field). */
+  toggledState = *(_BYTE *)(widgetRecord + 8) ^ 1;
+  *(_BYTE *)(widgetRecord + 8) = toggledState;
+  *(_BYTE *)(widgetRecord + 8) = toggledState ^ 2;
+  Audio_PlayButtonSound((char *)(uintptr_t)(unsigned int)*(_DWORD *)(widgetRecord + 49));
   return Render_Begin((int)(intptr_t)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -1103,43 +1138,65 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
   {
     trackTopY = sliderRecord[4];
     trackLeftX = *sliderRecord;
-    spriteWidthExtent = DLX_GetSpriteWidth(**((_DWORD **)sliderRecord + 5), sliderRecord[12]) - 1;
+    spriteWidthExtent = DLX_GetSpriteWidth(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]) - 1;
     thumbTravel16 = sliderRecord[2] - *sliderRecord;
-    fillRightExtent = thumbTravel16 + DLX_GetSpriteHeight(**((_DWORD **)sliderRecord + 5), sliderRecord[12]) - 1;
-    Render_FillRect(*((_DWORD **)sliderRecord + 8), 0, 0, 0, fillRightExtent, spriteWidthExtent, trackLeftX, trackTopY);
+    fillRightExtent = thumbTravel16 + DLX_GetSpriteHeight(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]) - 1;
+    Render_FillRect(
+      (_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 8),
+      0,
+      0,
+      0,
+      fillRightExtent,
+      spriteWidthExtent,
+      trackLeftX,
+      trackTopY);
   }
   else
   {
     Surface = (_DWORD *)(uintptr_t)Mem_Alloc(188, v4, a2, a3);
     if ( Surface )
     {
-      SpriteWidth = DLX_GetSpriteWidth(**((_DWORD **)sliderRecord + 5), sliderRecord[12]);
+      SpriteWidth = DLX_GetSpriteWidth(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]);
       thumbTravel = sliderRecord[2] - *sliderRecord;
-      SpriteHeight = DLX_GetSpriteHeight(**((_DWORD **)sliderRecord + 5), sliderRecord[12]);
-      Surface = Render_CreateSurface(v9, thumbTravel + SpriteHeight, SpriteWidth);
+      SpriteHeight = DLX_GetSpriteHeight(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]);
+      /* Original 0044A510: `mov eax, ecx` — the Mem_Alloc result is the
+       * surface buffer argument; the raw decompile left `v9` undefined. */
+      Surface = Render_CreateSurface((int)(intptr_t)Surface, thumbTravel + SpriteHeight, SpriteWidth);
     }
-    *((_DWORD *)sliderRecord + 8) = Surface;
-    fillBottomExtent = sliderRecord[4] + DLX_GetSpriteWidth(**((_DWORD **)sliderRecord + 5), sliderRecord[12]) - 1;
-    thumbSpriteHeight = DLX_GetSpriteHeight(**((_DWORD **)sliderRecord + 5), sliderRecord[12]);
-    Render_FillRect(0, *((_DWORD **)sliderRecord + 8), sliderRecord[4], *sliderRecord, sliderRecord[2] + thumbSpriteHeight - 1, fillBottomExtent, 0, 0);
+    *((_DWORD *)sliderRecord + 8) = (int)(uintptr_t)Surface;
+    fillBottomExtent = sliderRecord[4] + DLX_GetSpriteWidth(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]) - 1;
+    thumbSpriteHeight = DLX_GetSpriteHeight(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), sliderRecord[12]);
+    Render_FillRect(
+      0,
+      (_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 8),
+      sliderRecord[4],
+      *sliderRecord,
+      sliderRecord[2] + thumbSpriteHeight - 1,
+      fillBottomExtent,
+      0,
+      0);
   }
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar(**((_DWORD **)sliderRecord + 5), *((_DWORD *)sliderRecord + 6));
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 52))(
+  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 5), *((_DWORD *)sliderRecord + 6));
+  /*
+   * Original 0044A510 draws the thumb through render-device slot +52
+   * (Render_BlitCompressedSpriteRLE) with ebx = track_min + travel*value/256
+   * (the position along the horizontal track) and ecx = the record's
+   * cross-track row; the raw decompile dropped the ebx computation and used
+   * a 64-bit-wide slot load. Route through the sanctioned native seam like
+   * the other converted +52 callers.
+   */
+  Compat_RenderDeviceDrawMenuSprite(
+    *(_DWORD *)sliderRecord
+      + ((*((_DWORD *)sliderRecord + 1) - *(_DWORD *)sliderRecord) * *((_DWORD *)sliderRecord + 3) >> 8),
     *((_DWORD *)sliderRecord + 2),
     SpriteForChar,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
+    1);
   g_RenderDevice = previousRenderDevice;
   Render_Present((int)(intptr_t)g_RenderState);
   result = Render_SetResourceHandle((int)(intptr_t)&g_MainRenderDevice, previousResourceHandle);
   if ( *((_DWORD *)sliderRecord + 7) )
-    return (*((int (**)(void))sliderRecord + 7))();
+    return ((int (*)(void))(uintptr_t)(unsigned int)*((_DWORD *)sliderRecord + 7))();
   return result;
 }
 // 44A54B: variable 'v4' is possibly undefined
@@ -1171,20 +1228,20 @@ unsigned int  Options_AnimateSliderThumbDrag(int sliderRecord)
     result = g_MouseCursorRawY >> g_CursorCoordShift;
     if ( g_MouseCursorRawY >> g_CursorCoordShift >= *(_DWORD *)(uintptr_t)(sliderRecord + 8) )
     {
-      sliderBottomY = (unsigned __int16)DLX_GetSpriteWidth(**(_DWORD **)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24)) + *(_DWORD *)(uintptr_t)(sliderRecord + 8);
+      sliderBottomY = (unsigned __int16)DLX_GetSpriteWidth(*(_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24)) + *(_DWORD *)(uintptr_t)(sliderRecord + 8);
       result = g_MouseCursorRawY >> g_CursorCoordShift;
       if ( g_MouseCursorRawY >> g_CursorCoordShift <= sliderBottomY )
       {
         if ( thumbLeftEdge > g_MouseCursorRawX >> g_CursorCoordShift
           || g_MouseCursorRawX >> g_CursorCoordShift > (unsigned __int16)DLX_GetSpriteHeight(
-                                                               **(_DWORD **)(uintptr_t)(sliderRecord + 20),
+                                                               *(_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sliderRecord + 20),
                                                                *(_WORD *)(uintptr_t)(sliderRecord + 24))
                                          + thumbLeftEdge )
         {
           mouseCursorRawX = g_MouseCursorRawX;
           sliderMinX = *(_DWORD *)(uintptr_t)sliderRecord;
-          SpriteHeight = DLX_GetSpriteHeight(**(_DWORD **)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24));
-          result = (int)(((mouseCursorRawX >> v13) - sliderMinX - SpriteHeight / 2) << 8) / (*(_DWORD *)(uintptr_t)(sliderRecord + 4) - *(_DWORD *)(uintptr_t)sliderRecord);
+          SpriteHeight = DLX_GetSpriteHeight(*(_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(sliderRecord + 20), *(_WORD *)(uintptr_t)(sliderRecord + 24));
+          result = (int)(((mouseCursorRawX >> g_CursorCoordShift) - sliderMinX - SpriteHeight / 2) << 8) / (*(_DWORD *)(uintptr_t)(sliderRecord + 4) - *(_DWORD *)(uintptr_t)sliderRecord);
           if ( result <= 0x100 )
           {
             *(_DWORD *)(uintptr_t)(sliderRecord + 12) = result;
@@ -1242,9 +1299,14 @@ unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2,
   {
     do
     {
+      /*
+       * Original 0044A880 walk: `mov ebx,[edx+24h]; add edx,24h` — the next
+       * pointer is the CURRENT record plus 36; the raw decompile routed it
+       * through an undefined temporary (`v4`).
+       */
       result = (unsigned __int16 *)(uintptr_t)Options_DrawSliderThumb(currentSlider, a2, a3);
-      a2 = *(_DWORD *)(uintptr_t)(v4 + 36);
-      currentSlider = (unsigned __int16 *)(uintptr_t)(v4 + 36);
+      a2 = *(_DWORD *)(void *)((char *)currentSlider + 36);
+      currentSlider = (unsigned __int16 *)(void *)((char *)currentSlider + 36);
     }
     while ( a2 != -1 );
   }
@@ -1264,9 +1326,10 @@ _DWORD * Options_AnimateAllSliderThumbs(_DWORD *result)
   {
     do
     {
+      /* Same undefined-temporary repair as Options_DrawAllSliderThumbs. */
       result = (_DWORD *)(uintptr_t)Options_AnimateSliderThumbDrag(currentSlider);
-      nextLink = *(_DWORD *)(uintptr_t)(v2 + 36);
-      currentSlider = v2 + 36;
+      nextLink = *(_DWORD *)(uintptr_t)(currentSlider + 36);
+      currentSlider = currentSlider + 36;
     }
     while ( nextLink != -1 );
   }
@@ -1288,7 +1351,9 @@ _DWORD * Options_DestroySliderThumbList(_DWORD *result)
     {
       thumbSurface = currentSlider[8];
       if ( thumbSurface )
-        result = (_DWORD *)(uintptr_t)(**(int (***)(void))(uintptr_t)(thumbSurface + 184))();
+        result = (_DWORD *)(uintptr_t)(unsigned int)RenderSurface_InvokeSlot0(
+                                                     (_DWORD *)(uintptr_t)(unsigned int)thumbSurface,
+                                                     2);
       currentSlider[8] = 0;
       nextLink = currentSlider[9];
       currentSlider += 9;
@@ -1346,9 +1411,16 @@ void  Options_ApplyRecordSettings(int configRecord, int a2, DWORD a3)
   int v5; // edx
   _DWORD paletteArray[260]; // [esp-40Ch] [ebp-410h] BYREF
 
-  paletteArray[258] = a2;
+  (void)a2;
   Palette_SetBrightnessOffset((int)(intptr_t)&g_MainRenderDevice, *(char *)(uintptr_t)(configRecord + 26));
-  _wcpp_4_copy_array__(paletteArray[0]);
+  /*
+   * Original 0044A9C0: `mov edx, offset unk_51D59C; mov eax, esp;
+   * call __wcpp_4_copy_array__` — copy the device's staged palette
+   * (g_MainRenderDevice+0xDC, 256 dwords) into the stack array, then
+   * re-apply it with the new brightness offset. The raw decompile dropped
+   * the copy source and applied an uninitialized stack buffer to the DAC.
+   */
+  qmemcpy(paletteArray, (unsigned char *)&g_MainRenderDevice + 0xDC, 1024);
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, paletteArray);
   RenderState_SetMouseSpeed((int)(intptr_t)g_RenderState, 8 * *(unsigned __int8 *)(uintptr_t)(configRecord + 25) + 20, a3);
   if ( (int *)(uintptr_t)configRecord == &g_OptionsConfigRecordBase )

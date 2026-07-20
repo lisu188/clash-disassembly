@@ -10,6 +10,7 @@
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -636,7 +637,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *buildingPtr, char spriteSetI
   surfacePtr = surface;
   Render_FillRect(surface, 0, 0, 0, fillHeight - 1, fillRight, fillTop, fillLeft);
   if ( surfacePtr )
-    (*(void (**)(void))(uintptr_t)surfacePtr[46])();
+    RenderSurface_InvokeSlot0(surfacePtr, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
   Render_Present((int)(intptr_t)g_RenderState);
   result = savedRenderDevice;
@@ -818,7 +819,7 @@ int  Building_ShowConstructionProgressDialog(DWORD buildingRecord, char spriteSe
   teardownSpriteHeight = DLX_GetSpriteHeight((int)(intptr_t)spriteSet, 0);
   Render_FillRect(surface, 0, 0, 0, teardownSpriteHeight - 1, spriteWidthMinus1, spriteTopY, spriteLeftX);
   if ( surface )
-    (*(void (**)(void))(uintptr_t)surface[46])();
+    RenderSurface_InvokeSlot0(surface, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
   Render_Present((int)(intptr_t)g_RenderState);
   g_RenderDevice = savedRenderDevice;

@@ -10461,15 +10461,23 @@ char *g_MultiplayerDefaultRulerNamesTable = &g_MultiplayerPlayerNameEditTable;
 
 _UNKNOWN g_MultiplayerSetupWidgetTemplateBlob;
 
-unsigned __int16 g_OptionsMenuSliderThumbPositions[6] = { 323u, 0u, 473u, 0u, 140u, 0u };
+/*
+ * Original `word_518600`: three 36-byte main-menu option slider records plus
+ * a -1 terminator dword (112 bytes). The earlier recovery kept only the
+ * first 12 bytes as a word array and split the per-record value fields
+ * (+12/+48/+84) into standalone ints, which broke the 36-byte record walk in
+ * Options_DrawAllSliderThumbs. Rebuilt at runtime by
+ * Options_RebuildMainMenuWidgetTemplates (persistence_003.c).
+ */
+_BYTE g_OptionsMenuSliderThumbPositions[112];
 
-int g_Options_BrightnessSliderValue = 128;
-
-int g_Options_ScrollSpeedSliderValue = 128;
-
-int g_Options_MouseSpeedSliderValue = 128;
-
-_UNKNOWN g_OptionsMenuWidgetTemplateBlob;
+/*
+ * Original `unk_518690`: seven 0x35-byte options-menu widget records
+ * (4 checkboxes, OK, reset, -1 terminator). Rebuilt at runtime with live
+ * callback addresses by Options_RebuildMainMenuWidgetTemplates, matching the
+ * MainMenu/CampaignMenu/LoadMenu template convention.
+ */
+_BYTE g_OptionsMenuWidgetTemplateBlob[371];
 
 _BYTE g_LoadMenuButtonWidgetsTemplate[159];
 

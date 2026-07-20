@@ -12,6 +12,7 @@
 #include "../strategic/strategic_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -51,7 +52,11 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext
     else
       backgroundPath = aCastle_pogD_15;
     resourceHandle = g_BuildingGarrisonDialogResourceHandle;
-    (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, backgroundPath);
+    RenderSurface_InvokeSlot48LoadPCX(
+      (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+      backgroundPath,
+      0,
+      (uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
     if ( g_BuildingGarrisonDialogUseChrTheme )
       palettePath = aCastle_chrD_16;
     else
@@ -64,7 +69,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext
     g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
     BuildingGarrisonDialog_EnsureActionWidgets(g_BuildingGarrisonDialogActiveBuilding);
     UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
-    (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
+    RenderSurface_InvokeSlot36((_DWORD *)g_RenderDevice);
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, renderContext);
@@ -1019,8 +1024,12 @@ int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, ch
   Render_Pump();
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   Unit_BuildBigInfoGraphicPath(infoGraphicPath, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v5);
-  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, infoGraphicPath);
-  (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))();
+  RenderSurface_InvokeSlot48LoadPCX(
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+    infoGraphicPath,
+    0,
+    (uintptr_t)(unsigned int)g_CastleProductionPaletteBuffer);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_CastleProductionPaletteBuffer, 20);
   Render_Begin((int)(intptr_t)g_RenderState, 0);
   while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
@@ -1031,11 +1040,15 @@ int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, ch
   else
     backgroundPath = aCastle_pogD_23;
   renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(renderSurface + 48))(0, backgroundPath);
+  RenderSurface_InvokeSlot48LoadPCX(
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+    backgroundPath,
+    0,
+    (uintptr_t)(unsigned int)g_CastleProductionPaletteBuffer);
   Palette_QuantizeChannelsInPlace((_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, 6);
   g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
-  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  RenderSurface_InvokeSlot36((_DWORD *)g_RenderDevice);
   CastleProduction_RedrawSelectedUnitPanel(v8, 20, gameContext, actionBoxArg, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(gameContext);
@@ -1243,7 +1256,11 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int ac
     panelBackgroundPath = aCastle_pogD_17;
   renderSurface = *(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184);
   v11 = g_CastleProductionPaletteBuffer;
-  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(renderSurface + 48))(0, panelBackgroundPath);
+  RenderSurface_InvokeSlot48LoadPCX(
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+    panelBackgroundPath,
+    0,
+    (uintptr_t)(unsigned int)g_CastleProductionPaletteBuffer);
   Palette_QuantizeChannelsInPlace((_BYTE *)(uintptr_t)g_CastleProductionPaletteBuffer, 6);
   dlxSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v12, v11, useChrTheme);
   if ( dlxSpriteSet )
@@ -1264,7 +1281,7 @@ int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD renderContext, int ac
   g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, v21);
-  (*(void (**)(void))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  RenderSurface_InvokeSlot36((_DWORD *)g_RenderDevice);
   CastleProduction_RedrawSelectedUnitPanel(v22, 20, useChrTheme, actionBoxArg, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(useChrTheme);

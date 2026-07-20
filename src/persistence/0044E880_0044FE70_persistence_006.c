@@ -10,6 +10,7 @@
 #include "../buildings/buildings_api.h"
 #include "../strategic/strategic_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -976,13 +977,17 @@ int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3
     spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)a2);
   g_StatScreenSpriteSet = (int)(intptr_t)spriteSet;
   paletteBufferByte = g_StatScreenPaletteBuffer;
-  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 48))(0, aStat_gfx);
+  RenderSurface_InvokeSlot48LoadPCX(
+    (_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface,
+    aStat_gfx,
+    0,
+    (uintptr_t)(unsigned int)g_StatScreenPaletteBuffer);
   Palette_LoadOrBuildBlendLookupTable(aStat, g_StatScreenPaletteBuffer, v12, a3);
   Render_LoadResourceSprite_v4(8, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v13, paletteBufferByte, a3);
   Render_LoadResourceSprite_v4(18, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v14, paletteBufferByte, a3);
   Render_LoadResourceSprite_v4(17, (_BYTE *)(uintptr_t)g_StatScreenPaletteBuffer, v15, paletteBufferByte, a3);
   RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, g_StatScreenPaletteBuffer, v16, a3);
-  (*(void (__thiscall **)(void *))(uintptr_t)(*(_DWORD *)(uintptr_t)(g_PrimaryRenderSurface + 184) + 36))(&g_MainRenderDevice);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)g_PrimaryRenderSurface);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
   if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_RUNTIME_STATE_OFFSET) )

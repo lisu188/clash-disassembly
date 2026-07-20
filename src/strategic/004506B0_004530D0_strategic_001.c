@@ -11,6 +11,7 @@
 #include "../persistence/persistence_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -1003,8 +1004,8 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
     Surface = Render_CreateSurface((int)(intptr_t)Surface, SCREEN_WIDTH, SCREEN_HEIGHT);
   team_surface = Surface;
   saved_surface = Surface;
-  (*(void (__fastcall **)(_DWORD, char *))(uintptr_t)(Surface[46] + 48))(0, aTeam1_gfx);
-  (*(void (**)(void))(uintptr_t)(team_surface[46] + 36))();
+  RenderSurface_InvokeSlot48LoadPCX(Surface, aTeam1_gfx, 0, (uintptr_t)palette);
+  RenderSurface_InvokeSlot36(team_surface);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, palette, 20);
   Render_Begin((int)(intptr_t)g_RenderState, 0);
   while ( !DD_IsFlipping((int)(intptr_t)g_RenderState) )
@@ -1014,7 +1015,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)(uintptr_t)g_MapPalettePtr, 20);
   if ( saved_surface )
-    (*(void (**)(void))(uintptr_t)saved_surface[46])();
+    RenderSurface_InvokeSlot0(saved_surface, 2);
   return j__nfree_();
 }
 // 451B1C: variable 'v2' is possibly undefined

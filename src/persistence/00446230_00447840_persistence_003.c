@@ -1143,6 +1143,115 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
   *(_DWORD *)(g_LoadMenuButtonWidgetsTemplate + 53 * 2) = -1;
 }
 
+CLASH95_TEST_VISIBLE void Options_WriteSliderThumbRecord(
+        unsigned char *record,
+        int track_min,
+        int track_max,
+        int track_cross,
+        int value,
+        int draw_arg,
+        int apply_callback)
+{
+  memset(record, 0, 36);
+  *(_DWORD *)(record + 0) = track_min;
+  *(_DWORD *)(record + 4) = track_max;
+  *(_DWORD *)(record + 8) = track_cross;
+  *(_DWORD *)(record + 12) = value;
+  *(_DWORD *)(record + 16) = draw_arg;
+  *(_DWORD *)(record + 20) = (int)(uintptr_t)&g_PlayGameMenuSpriteSetHandle;
+  *(_DWORD *)(record + 24) = 28;
+  *(_DWORD *)(record + 28) = apply_callback;
+  *(_DWORD *)(record + 32) = 0;
+}
+
+void Options_RebuildMainMenuWidgetTemplates(void)
+{
+  static const char aOptionsMenuButtonClickSound[] = "menmale";
+
+  /*
+   * The original PE stores the options-menu widget table as a 0x35-byte
+   * record blob at `unk_518690` (4 checkboxes, OK, reset, -1 terminator) and
+   * the three option slider records as 36-byte entries at `word_518600`.
+   * Rebuild both with live symbol addresses so the recovered runtime sees
+   * the real layout instead of the one-byte weak-data stubs (same
+   * convention as MainMenu/CampaignMenu/LoadMenu_RebuildButtonWidgetTemplate).
+   * Field values decoded from the original image (see the blob dumps in the
+   * repo history): checkboxes at x=180 y=246/280/312/344 with sprite pairs
+   * (3,0)/(9,6)/(15,12)/(21,18) and the slow icon transition; OK at
+   * (248,392) sprites (24,25); reset at (329,408) sprites (26,27).
+   */
+  memset(g_OptionsMenuWidgetTemplateBlob, 0, sizeof(g_OptionsMenuWidgetTemplateBlob));
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 0,
+    180,
+    246,
+    3,
+    0,
+    (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
+    aOptionsMenuButtonClickSound);
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 1,
+    180,
+    280,
+    9,
+    6,
+    (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
+    aOptionsMenuButtonClickSound);
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 2,
+    180,
+    312,
+    15,
+    12,
+    (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
+    aOptionsMenuButtonClickSound);
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 3,
+    180,
+    344,
+    21,
+    18,
+    (int)(uintptr_t)&Options_ToggleCheckboxMainMenu,
+    aOptionsMenuButtonClickSound);
+  MainMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 4,
+    248,
+    392,
+    24,
+    25,
+    (int)(uintptr_t)&PlayGameMenu_HandleCloseButton,
+    aOptionsMenuButtonClickSound);
+  MainMenu_WriteButtonWidgetTemplateRecord(
+    g_OptionsMenuWidgetTemplateBlob + 53 * 5,
+    329,
+    408,
+    26,
+    27,
+    (int)(uintptr_t)&Options_InitMainMenuSlidersAndWidgets,
+    aOptionsMenuButtonClickSound);
+  *(_DWORD *)(void *)(g_OptionsMenuWidgetTemplateBlob + 53 * 6) = -1;
+
+  /*
+   * Slider records (original values: min=323 max=473, cross rows 140/166/192,
+   * value 128, draw args 4/-1/-1, sprite char 28, sprite-set holder
+   * `dword_543D74`, apply callback only on the first record). The value
+   * fields at +12/+48/+84 are the storage behind the recovered
+   * g_Options_*SliderValue names and are refreshed from the saved config on
+   * every options-screen entry.
+   */
+  Options_WriteSliderThumbRecord(
+    (unsigned char *)g_OptionsMenuSliderThumbPositions + 36 * 0,
+    323,
+    473,
+    140,
+    128,
+    4,
+    (int)(uintptr_t)&Options_ApplyMainMenuSliders);
+  Options_WriteSliderThumbRecord((unsigned char *)g_OptionsMenuSliderThumbPositions + 36 * 1, 323, 473, 166, 128, -1, 0);
+  Options_WriteSliderThumbRecord((unsigned char *)g_OptionsMenuSliderThumbPositions + 36 * 2, 323, 473, 192, 128, -1, 0);
+  *(_DWORD *)(void *)&g_OptionsMenuSliderThumbPositions[108] = -1;
+}
+
 //----- (00447700) --------------------------------------------------------
 int  MainMenu_RequestCampaignMenu(uintptr_t widget)
 {

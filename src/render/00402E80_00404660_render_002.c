@@ -722,7 +722,7 @@ LABEL_180:
   {
     result = Render_FillRect(offscreen_surface, &g_MainRenderDevice, 0, 0, *sprite_header - 1, sprite_header[1] - 1, var2, draw_y_saved);
     if ( offscreen_surface )
-      return (*(int (**)(void))(uintptr_t)offscreen_surface[46])();
+      return RenderSurface_InvokeSlot0(offscreen_surface, 2);
   }
   return result;
 }

@@ -820,7 +820,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int messageStrings, char spriteNam
   Render_Pump();
   Render_FillRect((_DWORD *)(uintptr_t)dialogSurface, 0, 0, 0, windowBottom - windowTop, windowRight - windowLeft, windowTop, windowLeft);
   if ( dialogSurface )
-    (**(void (***)(void))(uintptr_t)(dialogSurface + 184))();
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)dialogSurface, 2);
   RenderState_WarpCursorAndPump(g_RenderState, 0x140u, 0xF0u);
   Render_Present((int)(intptr_t)g_RenderState);
   g_RenderDevice = savedRenderDevice;

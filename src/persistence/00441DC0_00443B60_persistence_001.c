@@ -11,6 +11,7 @@
 #include "../strategic/strategic_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -1449,7 +1450,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   spriteHeightRedraw = DLX_GetSpriteHeight((int)(intptr_t)portSpriteSet, 0);
   Render_FillRect((_DWORD *)(uintptr_t)panelSurface, 0, 0, 0, spriteHeightRedraw - 1, spriteWidthMax, leftEdge, topEdge);
   if ( panelSurface )
-    (**(void (__cdecl ***)(int, int, int, int, int, int))(uintptr_t)(panelSurface + 184))(emptyTexts[0], emptyTexts[1], emptyTexts[2], arrivedTexts[0], arrivedTexts[1], arrivedTexts[2]);
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)panelSurface, 2);
   DLXSpriteSet_ReleaseAndClear((int *)&portSpriteSet);
   Render_Present((int)(intptr_t)g_RenderState);
   result = previousRenderDevice;

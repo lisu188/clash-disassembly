@@ -1380,7 +1380,7 @@ char  Building_ShowConstructionFinishedDialog(int building, int a2, char spriteS
   Render_FillRect((_DWORD *)(uintptr_t)backdropSurface, 0, 0, 0, SCREEN_MAX_X, panelWidth - 1, 0, panelLeft);
   Render_Present((int)(intptr_t)g_RenderState);
   if ( backdropSurface )
-    (**(void (__cdecl ***)(int, int, int, int, int, int))(uintptr_t)(backdropSurface + 184))(buildingCompleteAltText[0], buildingCompleteAltText[1], buildingCompleteAltText[2], buildingCompleteText[0], buildingCompleteText[1], buildingCompleteText[2]);
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)backdropSurface, 2);
   copyBackSrc = g_CheatEntryTextBuffer;
   copyBackDst = (char *)(uintptr_t)(buildingRecord + 5);
   DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
