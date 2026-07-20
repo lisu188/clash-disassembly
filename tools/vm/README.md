@@ -329,3 +329,51 @@ frame vs a clean original would diff everywhere). Filed as a follow-up.
 Recovered artifacts: `artifacts/campaign-routes/mission-05/recbattle-postcb2/`.
 Next: resolve the stripes -> capture the ORIGINAL opening battle in the VM (shared
 reserved-slot-10 save, two QMP clicks) -> `battle_compare.py score`.
+
+## Fidelity milestone (2026-07-20): stripes fixed, DAC quantized, menus English — re-scored
+
+Three landed fixes (all adversarially verified by worktree agents before commit):
+
+- **Striped terrain RESOLVED (commit d353ad5).** The blocker above was a second
+  DLX format-0 decoder defect: the opcode-0 back-reference offset was read as
+  ONE byte (advance 1) where the original reads a 32-bit LE DWORD (advance 4;
+  asm `sub esi,[ecx]` at 0x403492). Every back-reference sprite (water,
+  mountains, textured edges — cross-tile delta compression) desynced into the
+  black bands; literal-only grass never did, which is why /A5 grass looked
+  clean. Offline decode: 486/959 backgr1.s32 tiles corrupt under 1-byte -> 0
+  under 4-byte. Fresh captures confirmed stripe-free.
+- **6-bit VGA DAC quantization (commit bde2940).** The SDL present now
+  quantizes each palette channel with the VM-verified expansion
+  `(c & 0xFC) | (3 * ((c >> 2) & 1))` — the textbook `(c&0xFC)|(c>>6)` was
+  REFUTED by the rig (9.11% fixed-points; would worsen the match) while the
+  implemented form is a fixed-point for 100.0% of VM-original menu pixels.
+  Menu vs original: MAD 2.254 -> 0.835, differing pixels **94.70% -> 0.83%**
+  (any-channel metric); art bit-exact except the sub-band.
+- **Menu + options language/toggles (commit df32b73).** PlayGame_Dispatch's
+  widget tables were qmemcpy'd 371 bytes into tiny arrays while the original's
+  same-address stack ALIASES (main: v121=+0x10, v119=-0x21; options:
+  var_568/560/55C/533/4FE/4C9/591) were rebuilt as independent locals — the
+  `+g_LanguageIndex` column adds and checkbox states missed the tables. Both
+  tables are now declared at their real 371-byte extent and indexed directly.
+  Main menu renders ENGLISH (load/campain/exit/options/multi player/credits);
+  mad vs original 2.17 -> 1.43, pctdiff 0.7 -> 0.1. The Polish render was NOT
+  a stale binary and NOT asset-provenance (main.s32 is one multi-language set,
+  PL/EN/DE columns) — the earlier "Fix C deferred" conclusion is corrected.
+
+**Post-fix world-map re-score** (tile_compare, --dac-normalize; recovered
+captures at d353ad5, STRIDE=4 LIMIT=400):
+- m05 selftest (runA vs runB): **34/34 identical-pixel = 100%**; `--shift 1,0`
+  negative control collapses to 14.3%.
+- m05 original(13f) vs recovered: **matched 15/18 = 83.3%** (1 identical-pixel,
+  14 identical-terrain, 3 content-mismatch, fog-black 0) — up from 9/16 =
+  56.2% pre-fix. Residual = the frozen all-AI camera/units (degenerate-AI
+  follow-up).
+- **m11 first-ever comparison** (map 100x100; original 8/9 frames indexed):
+  **matched 26/27 = 96.3%** (1 identical-pixel, 25 identical-terrain, 1
+  content-mismatch). Artifacts: `artifacts/tile-compare/m05/cross-poststripe/`,
+  `artifacts/tile-compare/m11/cross/`.
+
+Remaining to the "100% match, VM-verified" goal: options-screen runtime verify
+(in flight), the tactical-battle opening-frame comparison (now unblocked), the
+degenerate all-AI march/camera fix, and the residual menu 0.83% (cursor +
+animated elements).
