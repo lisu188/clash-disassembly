@@ -274,6 +274,21 @@ static HRESULT CompatDirectDrawSurfaceEnsurePixels(CompatDirectDrawSurface *surf
   return 0;
 }
 
+/*
+ * The original Win98 8bpp DirectDraw output runs through a 6-bit VGA DAC:
+ * the driver truncates each 8-bit palette channel to 6 bits (c >> 2) and
+ * the reference VM display re-expands the 6-bit value s as
+ * (s << 2) | (3 * (s & 1)), i.e. the 6-bit LSB is replicated into the two
+ * low output bits (verified bit-exact against the QEMU Win98 menu capture;
+ * the textbook (s << 2) | (s >> 4) form does NOT match that rig).
+ * Quantize only at the final palette->ARGB present seam so the in-game
+ * 8-bit palette math (blends/offsets in runtime_001.c) stays untouched.
+ */
+static Uint32 PlatformDac6Channel(Uint32 channel)
+{
+  return (channel & 0xFCu) | (3u * ((channel >> 2) & 1u));
+}
+
 static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurface *surface, int *out_pitch)
 {
   const unsigned char *src_base;
@@ -310,13 +325,16 @@ static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurfac
           const CompatPaletteEntry *entry;
 
           entry = &palette->entries[index];
-          dst_row[x] = 0xFF000000u | ((Uint32)entry->red << 16) | ((Uint32)entry->green << 8) | (Uint32)entry->blue;
+          dst_row[x] = 0xFF000000u
+                     | (PlatformDac6Channel(entry->red) << 16)
+                     | (PlatformDac6Channel(entry->green) << 8)
+                     | PlatformDac6Channel(entry->blue);
         }
         else
         {
           Uint32 value;
 
-          value = index;
+          value = PlatformDac6Channel(index);
           dst_row[x] = 0xFF000000u | (value << 16) | (value << 8) | value;
         }
       }
@@ -369,9 +387,15 @@ static Uint32 CompatPaletteIndexToArgb32(const CompatDirectDrawSurface *surface,
     const CompatPaletteEntry *entry;
 
     entry = &palette->entries[index];
-    return 0xFF000000u | ((Uint32)entry->red << 16) | ((Uint32)entry->green << 8) | (Uint32)entry->blue;
+    return 0xFF000000u
+         | (PlatformDac6Channel(entry->red) << 16)
+         | (PlatformDac6Channel(entry->green) << 8)
+         | PlatformDac6Channel(entry->blue);
   }
-  return 0xFF000000u | ((Uint32)index << 16) | ((Uint32)index << 8) | (Uint32)index;
+  return 0xFF000000u
+       | (PlatformDac6Channel(index) << 16)
+       | (PlatformDac6Channel(index) << 8)
+       | PlatformDac6Channel(index);
 }
 
 static unsigned short CompatPaletteIndexToRgb565(const CompatDirectDrawSurface *surface, unsigned char index)
@@ -585,9 +609,9 @@ void Platform_PresentRecoveredIndexedSurfaceHandle(void *surface_handle, const u
 
       entry = palette_entries[src_row[x]];
       dst_row[x] = 0xFF000000u
-                 | ((entry & 0xFFu) << 16)
-                 | (entry & 0xFF00u)
-                 | ((entry >> 16) & 0xFFu);
+                 | (PlatformDac6Channel(entry & 0xFFu) << 16)
+                 | (PlatformDac6Channel((entry >> 8) & 0xFFu) << 8)
+                 | PlatformDac6Channel((entry >> 16) & 0xFFu);
     }
   }
 
