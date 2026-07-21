@@ -1474,6 +1474,13 @@ execute_route_script() {
         fi
         write_world_script select_stack "select_stack $1" "${2:-0.40}" "" "" "${3:-world-select-stack-${line_number}}"
         ;;
+      world_save_slot)
+        set -- $args
+        if [ "$#" -lt 1 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_save_slot requires a slot index"
+        fi
+        write_world_script save_slot "save_slot $1" "${2:-0.40}" "" "" "${3:-world-save-slot-${line_number}}"
+        ;;
       world_pan_viewport)
         set -- $args
         if [ "$#" -lt 2 ]; then

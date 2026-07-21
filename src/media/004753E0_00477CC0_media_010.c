@@ -363,6 +363,11 @@ unsigned int  IO_OpenFileDescriptorBinaryMode(const CHAR *file_path, DWORD a2)
 }
 
 //----- (00476301) --------------------------------------------------------
+/* compatibility/decomp_runtime_stubs.c; renders Watcom printf output for
+   compat file streams (the recovered CRT putc bridge is a no-op, so without
+   this the fast-save facts stream received nothing). */
+int Compat_StreamWriteFormat32(int stream_ptr, const char *format, const unsigned int *arg_slots, int arg_count);
+
 int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, ...)
 {
   const char *format;
@@ -370,6 +375,7 @@ int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, 
   int args_ptr;
   int cursor;
   int result;
+  int direct_result;
   int i;
   va_list args;
 
@@ -382,6 +388,9 @@ int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, 
   arg_count = Compat_CountPrintfArgs32(format);
   if ( arg_count <= 0 )
   {
+    direct_result = Compat_StreamWriteFormat32(output_stream, format, 0, 0);
+    if ( direct_result >= 0 )
+      return direct_result;
     cursor = 0;
     return CRT_VfprintfLockedWrite(output_stream, format_string, &cursor);
   }
@@ -394,6 +403,17 @@ int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, 
   for ( i = 0; i < arg_count; ++i )
     *(_DWORD *)(uintptr_t)(unsigned int)(args_ptr + 4 * i) = va_arg(args, int);
   va_end(args);
+
+  direct_result = Compat_StreamWriteFormat32(
+    output_stream,
+    format,
+    (const unsigned int *)(uintptr_t)(unsigned int)args_ptr,
+    arg_count);
+  if ( direct_result >= 0 )
+  {
+    Compat_FreeLow32Bytes(args_ptr);
+    return direct_result;
+  }
 
   cursor = args_ptr;
   result = CRT_VfprintfLockedWrite(output_stream, format_string, &cursor);

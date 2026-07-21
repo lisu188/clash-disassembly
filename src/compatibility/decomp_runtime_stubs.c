@@ -1559,6 +1559,168 @@ int Compat_StreamWrite(int stream_ptr, const void *buffer, int byte_count)
   return (int)bytes_written;
 }
 
+/*
+ * Text-mode write for the formatter below: the original opened these streams
+ * with fopen("w") and Watcom's text mode translated '\n' to "\r\n" on disk
+ * (the shipped save/<n>.fac sidecars are CRLF). Returns the logical (source)
+ * byte count, like the Watcom text-mode writer did.
+ */
+static int CompatStreamWriteTextTranslated(int stream_ptr, const char *data, int len)
+{
+  int start = 0;
+  int i;
+
+  for ( i = 0; i < len; ++i )
+  {
+    if ( data[i] == '\n' )
+    {
+      if ( i > start )
+        Compat_StreamWrite(stream_ptr, data + start, i - start);
+      Compat_StreamWrite(stream_ptr, "\r\n", 2);
+      start = i + 1;
+    }
+  }
+  if ( len > start )
+    Compat_StreamWrite(stream_ptr, data + start, len - start);
+  return len;
+}
+
+/*
+ * Host-side renderer for the Watcom printf paths that target compat file
+ * streams (fast-save facts files and friends). The recovered
+ * CRT_PrintfFormatEngine lost its register-based output callback convention
+ * (CRT_PutcToStream is a no-op bridge), so formatted output aimed at a
+ * compat stream silently vanished. Arguments arrive as packed 32-bit slots
+ * exactly as Output_WriteFormatted collects them; 16/32-bit-era length
+ * modifiers are stripped because the host int already matches Watcom long.
+ * Returns bytes written, or -1 when the target is not a compat stream (the
+ * caller then falls back to the legacy CRT path).
+ */
+int Compat_StreamWriteFormat32(int stream_ptr, const char *format, const unsigned int *arg_slots, int arg_count)
+{
+  int written;
+  int slot_index;
+
+  if ( !format || !CompatIsRegisteredStreamHandle(stream_ptr) )
+    return -1;
+  written = 0;
+  slot_index = 0;
+  while ( *format )
+  {
+    if ( *format != '%' )
+    {
+      const char *run_start = format;
+      while ( *format && *format != '%' )
+        ++format;
+      CompatStreamWriteTextTranslated(stream_ptr, run_start, (int)(format - run_start));
+      written += (int)(format - run_start);
+      continue;
+    }
+    if ( format[1] == '%' )
+    {
+      CompatStreamWriteTextTranslated(stream_ptr, "%", 1);
+      ++written;
+      format += 2;
+      continue;
+    }
+    {
+      char spec[64];
+      char rendered[1024];
+      size_t spec_len;
+      const char *cursor;
+      char conversion;
+      int rendered_len;
+
+      spec_len = 0;
+      cursor = format + 1;
+      rendered_len = -1;
+      spec[spec_len++] = '%';
+      while ( *cursor && strchr("#0- +.0123456789", (unsigned char)*cursor) )
+      {
+        if ( spec_len < sizeof(spec) - 3 )
+          spec[spec_len++] = *cursor;
+        ++cursor;
+      }
+      while ( *cursor == 'h' || *cursor == 'l' || *cursor == 'L'
+           || *cursor == 'N' || *cursor == 'F' || *cursor == 'w' )
+        ++cursor;
+      conversion = *cursor;
+      if ( conversion )
+        ++cursor;
+      switch ( conversion )
+      {
+        case 's':
+        {
+          const char *text = 0;
+
+          if ( slot_index < arg_count )
+            text = (const char *)(uintptr_t)arg_slots[slot_index++];
+          if ( !text )
+            text = "";
+          spec[spec_len++] = 's';
+          spec[spec_len] = 0;
+          rendered_len = snprintf(rendered, sizeof(rendered), spec, text);
+          break;
+        }
+        case 'c':
+        case 'd':
+        case 'i':
+        case 'o':
+        case 'u':
+        case 'x':
+        case 'X':
+        case 'p':
+        {
+          unsigned int value = 0;
+
+          if ( slot_index < arg_count )
+            value = arg_slots[slot_index++];
+          spec[spec_len++] = (conversion == 'p') ? 'x' : conversion;
+          spec[spec_len] = 0;
+          rendered_len = snprintf(rendered, sizeof(rendered), spec, value);
+          break;
+        }
+        case 'f':
+        case 'e':
+        case 'E':
+        case 'g':
+        case 'G':
+        {
+          double value = 0.0;
+
+          if ( slot_index + 1 < arg_count )
+          {
+            unsigned long long bits;
+
+            bits = ((unsigned long long)arg_slots[slot_index + 1] << 32) | arg_slots[slot_index];
+            memcpy(&value, &bits, sizeof(value));
+            slot_index += 2;
+          }
+          spec[spec_len++] = conversion;
+          spec[spec_len] = 0;
+          rendered_len = snprintf(rendered, sizeof(rendered), spec, value);
+          break;
+        }
+        default:
+          /* Unknown conversion: emit the raw spec text verbatim. */
+          CompatStreamWriteTextTranslated(stream_ptr, format, (int)(cursor - format));
+          written += (int)(cursor - format);
+          format = cursor;
+          continue;
+      }
+      if ( rendered_len > 0 )
+      {
+        if ( rendered_len > (int)sizeof(rendered) - 1 )
+          rendered_len = (int)sizeof(rendered) - 1;
+        CompatStreamWriteTextTranslated(stream_ptr, rendered, rendered_len);
+        written += rendered_len;
+      }
+      format = cursor;
+    }
+  }
+  return written;
+}
+
 int Compat_StreamSeek(int stream_ptr, int offset, int whence)
 {
   CompatFileRuntimeStream *stream;

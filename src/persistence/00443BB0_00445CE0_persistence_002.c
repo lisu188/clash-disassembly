@@ -346,7 +346,7 @@ signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3)
 {
   int v5; // ecx
   int fileHandle; // esi
-  int v7; // ecx
+  int v7 CLASH95_UNUSED; // ecx
   int v8 CLASH95_UNUSED; // edx
   CHAR filePathBuffer[120]; // [esp+0h] [ebp-78h] BYREF
 
@@ -356,7 +356,10 @@ signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3)
   fileHandle = IO_FOpen(filePathBuffer, (unsigned __int8 *)aWb_4, v5, headerBuffer);
   fwrite_((const void *)(uintptr_t)headerBuffer, 16, fileHandle, 1);
   fwrite_((const void *)(uintptr_t)gameData, GAMEDATA_SAVE_IMAGE_BYTES, fileHandle, 1);
-  fclose_(v7);
+  /* Decompiler artifact repair: the original 0x4443E0 closes the stream it
+     opened (ecx == fileHandle); the undefined v7 temp leaked the stream slot
+     on every save under the recovered runtime. */
+  fclose_(fileHandle);
   SaveSlot_FormatFactsFilePath(slotIndex, filePathBuffer);
   return Rules_SaveFactsToFile(filePathBuffer, 2, 0, a3);
 }

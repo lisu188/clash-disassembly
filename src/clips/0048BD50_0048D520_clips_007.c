@@ -1187,7 +1187,6 @@ int  Rules_PrintMultifieldRange(int result, int theSegment, int end, int begin, 
   int fieldsBase; // edi
   int fieldIndex; // ecx
   __int16 *fieldPtr; // edi
-  int v10; // ecx
 
   logicalName = result;
   fieldsBase = theSegment + 14;
@@ -1199,8 +1198,12 @@ int  Rules_PrintMultifieldRange(int result, int theSegment, int end, int begin, 
     fieldPtr = (__int16 *)(uintptr_t)(6 * begin + fieldsBase);
     do
     {
-      result = Rules_PrintAtomValue(logicalName, *fieldPtr, *(int **)(fieldPtr + 1));
-      fieldIndex = v10 + 1;
+      /* 64-bit host repair (save-facts path): the field value cell is a
+         32-bit low32-arena pointer (8-byte load faulted), and the loop
+         counter lived in ecx across the call ('v10' == fieldIndex in the
+         original 0x48D0C0), so advance fieldIndex directly. */
+      result = Rules_PrintAtomValue(logicalName, *fieldPtr, (int *)(uintptr_t)*(_DWORD *)(fieldPtr + 1));
+      ++fieldIndex;
       fieldPtr += 3;
       if ( fieldIndex <= end )
         result = Output_Write(logicalName, (int)(intptr_t)asc_5045BC, fieldIndex);

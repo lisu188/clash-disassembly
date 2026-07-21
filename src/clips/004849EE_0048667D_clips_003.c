@@ -426,7 +426,11 @@ signed int  Rules_PrintFloat(int logicalName, double number)
 //----- (00485770) --------------------------------------------------------
 signed int __fastcall Rules_PrintLongInteger(int logicalName, int number)
 {
-  _BYTE printBuffer[32]; // [esp+0h] [ebp-24h] BYREF
+  /* Host repair: Output_Write carries the text pointer through a 32-bit int,
+     so a 64-bit host stack buffer gets truncated en route to the writer.
+     A static buffer lives in the low-32 no-pie image and survives the trip.
+     The engine is single-threaded, matching the original's semantics. */
+  static _BYTE printBuffer[32];
   int v5; // [esp+20h] [ebp-4h]
 
   v5 = logicalName;
@@ -438,21 +442,19 @@ signed int __fastcall Rules_PrintLongInteger(int logicalName, int number)
 //----- (004857A0) --------------------------------------------------------
 unsigned int  Rules_PrintAtomValue(int logicalName, unsigned int type, int *value)
 {
+  /* Decompiler artifact repair (exercised by the save-facts path): the
+     original 0x4857A0 keeps the logical name in ecx across every
+     Output_Write call, so the 'possibly undefined' v7..v16 register temps
+     are all logName; leaving them uninitialized routed float/string/fact
+     text to a garbage logical name and dropped it from the output. */
   int logName; // ecx
   unsigned int result; // eax
   int entityRecord; // edi
   int escapedText; // eax
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
-  int v10; // ecx
   int floatText; // eax
-  int v12; // ecx
-  int v13; // ecx
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // ecx
-  _BYTE addressBuffer[32]; // [esp+8h] [ebp-20h] BYREF
+  /* Host repair: static, not stack -- the pointer travels through a 32-bit
+     Output_Write argument (see Rules_PrintLongInteger). */
+  static _BYTE addressBuffer[32];
 
   logName = logicalName;
   result = type;
@@ -468,7 +470,7 @@ unsigned int  Rules_PrintAtomValue(int logicalName, unsigned int type, int *valu
     else
     {
       floatText = Rules_FloatToSymbol(logName, *((double *)value + 2));
-      return Output_Write(v12, floatText, v12);
+      return Output_Write(logName, floatText, logName);
     }
   }
   if ( type <= 3 )
@@ -476,13 +478,13 @@ unsigned int  Rules_PrintAtomValue(int logicalName, unsigned int type, int *valu
     if ( g_Print_PreserveEscapedCharactersFlag )
     {
       escapedText = Str_InternQuotedEscapedString((int *)(uintptr_t)value[4], logName);
-      return Output_Write(v7, escapedText, v7);
+      return Output_Write(logName, escapedText, logName);
     }
     else
     {
       Output_Write(logName, (int)(intptr_t)asc_503EA4, logName);
-      Output_Write(v13, value[4], v13);
-      return Output_Write(v14, (int)(intptr_t)asc_503EA4, v14);
+      Output_Write(logName, value[4], logName);
+      return Output_Write(logName, (int)(intptr_t)asc_503EA4, logName);
     }
   }
   if ( type < 8 )
@@ -493,10 +495,10 @@ unsigned int  Rules_PrintAtomValue(int logicalName, unsigned int type, int *valu
         Output_Write(logName, (int)(intptr_t)asc_503EA4, logName);
       Output_Write(logName, (int)(intptr_t)aPointer, logName);
       sprintf_(addressBuffer, "%p", value);
-      Output_Write(v8, (int)(intptr_t)addressBuffer, v8);
-      result = Output_Write(v9, (int)(intptr_t)asc_503EB8, v9);
+      Output_Write(logName, (int)(intptr_t)addressBuffer, logName);
+      result = Output_Write(logName, (int)(intptr_t)asc_503EB8, logName);
       if ( g_Print_AddressesToStringsFlag )
-        return Output_Write(v10, (int)(intptr_t)asc_503EA4, v10);
+        return Output_Write(logName, (int)(intptr_t)asc_503EA4, logName);
       return result;
     }
     goto LABEL_4;
@@ -504,8 +506,8 @@ unsigned int  Rules_PrintAtomValue(int logicalName, unsigned int type, int *valu
   if ( type <= 8 )
   {
     Output_Write(logName, (int)(intptr_t)asc_503EBC, logName);
-    Output_Write(v15, value[4], v15);
-    return Output_Write(v16, (int)(intptr_t)asc_503EC0, v16);
+    Output_Write(logName, value[4], logName);
+    return Output_Write(logName, (int)(intptr_t)asc_503EC0, logName);
   }
   if ( type != 105 )
   {

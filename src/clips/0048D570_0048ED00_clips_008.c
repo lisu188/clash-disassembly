@@ -214,7 +214,10 @@ signed int  Rules_PrintTemplateFactSlots(int logicalName, int theFact, int a3)
   int theSegment; // ebx
 
   fieldPtr = (__int16 *)(uintptr_t)(theFact + 54);
-  theDeftemplate = *(_DWORD **)(uintptr_t)(theFact + 16);
+  /* 64-bit host repair (save-facts path): the deftemplate pointer at
+     (fact + 16) is a 32-bit low32-arena pointer; an 8-byte load here reads
+     into the neighbouring field and faults. */
+  theDeftemplate = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFact + 16);
   Output_Write(logicalName, (int)(intptr_t)asc_504720, a3);
   Output_Write(logicalName, *(_DWORD *)(uintptr_t)(*theDeftemplate + 16), v6);
   if ( theDeftemplate[5] )
@@ -238,7 +241,8 @@ signed int  Rules_PrintTemplateFactSlots(int logicalName, int theFact, int a3)
       else
       {
         Output_Write(logicalName, (int)(intptr_t)asc_5046F0, v10);
-        Rules_PrintAtomValue(logicalName, *fieldPtr, *(int **)(fieldPtr + 1));
+        /* 64-bit host repair: the field value cell is a 32-bit pointer. */
+        Rules_PrintAtomValue(logicalName, *fieldPtr, (int *)(uintptr_t)*(_DWORD *)(fieldPtr + 1));
       }
       Output_Write(logicalName, (int)(intptr_t)asc_504724, v10);
       slotPtr = *(_DWORD *)(uintptr_t)(slotPtr + 16);
@@ -266,9 +270,22 @@ int Lexer_MarkImpliedTemplates(void)
   result = Module_NextEnum(0);
   for ( i = result; result; i = result )
   {
-    for ( j = *(_BYTE **)(uintptr_t)(Module_GetItem(i, g_ClipsDeftemplateModuleItemId) + 4); j; j = (_BYTE *)(uintptr_t)Rules_GetNextDeftemplate((int)(intptr_t)j) )
+    /* 64-bit host repair (save-facts path): the deftemplate list head at
+       (module item + 4) and the construct name at (*deftemplate + 16) are
+       32-bit low32-arena pointers; the raw decompile read them with 8-byte
+       loads, concatenating two neighbouring 32-bit pointers into one bogus
+       64-bit address (SIGSEGV in the first save-facts enumeration). */
+    for ( j = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(Module_GetItem(i, g_ClipsDeftemplateModuleItemId) + 4); j; j = (_BYTE *)(uintptr_t)Rules_GetNextDeftemplate((int)(intptr_t)j) )
     {
-      if ( Rules_FindImportExportConstruct(aDeftemplate_6, v3, *(_BYTE **)(uintptr_t)(*(_DWORD *)j + 16), 1, 0) )
+      int visible = Rules_FindImportExportConstruct(aDeftemplate_6, v3, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)j + 16), 1, 0) != 0;
+
+      if ( getenv("CLASH95_TRACE_SAVE_FACTS") )
+        fprintf(
+          stderr,
+          "[savefacts] mark deftemplate=%s visible=%d\n",
+          (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)j + 16),
+          visible);
+      if ( visible )
         j[24] |= 4u;
       else
         j[24] &= ~4u;

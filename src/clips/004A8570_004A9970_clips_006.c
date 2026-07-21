@@ -408,7 +408,20 @@ int  Rules_FindConstructByNameGeneric(_BYTE *constructName, int constructClass)
       current_item = ((int (*)(int))(uintptr_t)(unsigned int)next_func)(0);
       while ( current_item )
       {
-        if ( target_symbol == (int *)(uintptr_t)((int (*)(int))(uintptr_t)(unsigned int)get_name_func)(current_item) )
+        int item_name_symbol = ((int (*)(int))(uintptr_t)(unsigned int)get_name_func)(current_item);
+
+        /* Host repair: the original compares interned symbol pointers, which
+           assumes the symbol table never holds duplicates. Under the
+           recovered runtime the ephemeral-symbol purge can drop a construct's
+           name node from the hash table, so a later lookup re-interns the
+           same text as a NEW node and the pointer test never matches (this
+           silently emptied save-facts output). Fall back to text equality,
+           which is exactly the answer the original would give with an intact
+           intern table. */
+        if ( target_symbol == (int *)(uintptr_t)(unsigned int)item_name_symbol
+          || !strcmp(
+                (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(unsigned int)(item_name_symbol + 16),
+                (const char *)(uintptr_t)(unsigned int)*(_DWORD *)((char *)target_symbol + 16)) )
         {
           Module_EndEnum();
           return current_item;

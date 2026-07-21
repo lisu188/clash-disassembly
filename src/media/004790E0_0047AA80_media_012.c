@@ -909,24 +909,32 @@ int  Rules_IncrementFactRefCount(int result)
 //----- (00479EE0) --------------------------------------------------------
 signed int  Rules_PrintFact(int logicalName, int fact)
 {
-  int v3; // ecx
-  int v4; // ecx
+  /* Decompiler artifact repair (exercised by the save-facts path): the
+     original 0x479EE0 keeps the fact pointer in ecx across the Output_Write
+     calls, so the 'possibly undefined' v3/v4 register temps are simply
+     `fact`. Leaving them uninitialized segfaulted the recovered
+     Rules_SaveFactsToFile on the first ordered (non-deftemplate) fact. */
   int multifield; // edi
 
   if ( (*(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fact + 16) + 24) & 1) == 0 )
     return Rules_PrintTemplateFactSlots(logicalName, fact, fact);
   Output_Write(logicalName, (int)(intptr_t)asc_502544, fact);
-  Output_Write(logicalName, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(v3 + 16) + 16), v3);
-  multifield = *(_DWORD *)(uintptr_t)(v4 + 56);
+  /* 64-bit host repair: (fact + 16) holds a 32-bit low32-arena deftemplate
+     pointer; keep every hop a 32-bit load. */
+  Output_Write(
+    logicalName,
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(fact + 16) + 16),
+    fact);
+  multifield = *(_DWORD *)(uintptr_t)(fact + 56);
   if ( *(_DWORD *)(uintptr_t)(multifield + 6) )
   {
-    Output_Write(logicalName, (int)(intptr_t)asc_502548, v4);
+    Output_Write(logicalName, (int)(intptr_t)asc_502548, fact);
     Lexer_OutputFieldRange(logicalName, multifield, *(_DWORD *)(uintptr_t)(multifield + 6) - 1, 0, 0);
   }
-  return Output_Write(logicalName, (int)(intptr_t)asc_50254C, v4);
+  return Output_Write(logicalName, (int)(intptr_t)asc_50254C, fact);
 }
-// 479EFC: variable 'v3' is possibly undefined
-// 479F0B: variable 'v4' is possibly undefined
+// 479EFC: variable 'v3' is possibly undefined (was ecx == fact; fixed above)
+// 479F0B: variable 'v4' is possibly undefined (was ecx == fact; fixed above)
 
 //----- (00479F50) --------------------------------------------------------
 int  Rules_NetworkAssertFact(int fact, double a2)

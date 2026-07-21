@@ -1,0 +1,12 @@
+# Mission 05 arrival-save probe: replays the proven 9-turn multi-turn march
+# (stack 4 ends turn 9 at tile 47,58, the authentic stack-19 pre-attack
+# arrival), then asks the engine to write that live world state into save
+# slot 10 via the recovered saveGame writer (world-input token save_slot).
+# The resulting save/10.dat + save/10.fac pair is an engine-authored save
+# suitable for the original clash95.exe `a` slot-10 auto-load.
+include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
+
+world_save_slot 10 2.0
+wait_log 60 debug-save-written slot=10 ok=1
+screenshot mission05-arrival-save-written
+nonblank mission05-arrival-save-written

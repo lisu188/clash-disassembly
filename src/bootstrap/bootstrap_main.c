@@ -1304,6 +1304,14 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
     const char direct_game_resource_context = 16;
 
     WorldMap_Initialize(direct_game_resource_context, 0);
+    /* The slot-10 auto-load parses the save's facts sidecar through the
+       recovered CLIPS parser, which needs the same rules-slab/atom-table/
+       string-router bootstrap the load-menu confirm path performs before
+       SaveSlot_LoadGame (Parser_NextToken faults without it). */
+    if ( !g_ClipsMemoryTable )
+      Mem_InitReserveBlock(0, 0);
+    Rules_InitAtomTables();
+    IO_RegisterStringRouter();
     SaveSlot_LoadReservedSlot10(0, 0.0);
     PlayGame(0, direct_game_resource_context, 0, 0, 0.0);
   }

@@ -20,6 +20,10 @@
 CLASH95_LOCAL void WorldMap_WriteActionWidgetRecord (unsigned char *record, int left, int top, int flags, int sprite_index_base, int sprite_index_selected_base, int action_callback, const char *polish_label, const char *english_label, const char *german_label, const char *sound_name);
 CLASH95_TEST_VISIBLE int WorldMap_DeferBuildingActionCallback (uintptr_t widget);
 CLASH95_LOCAL void UnitBattle_WriteActionWidgetRecord (unsigned char *record, int left, int top, int flags, int sprite_index_base, int sprite_index_selected_base, int overlay_sprite_index, int action_callback, const char *polish_label, const char *english_label, const char *german_label, const char *sound_name);
+/* Recovered save writer (persistence_002.c); intentionally absent from the
+   generated persistence_api.h, so declare it here for the route-harness
+   save_slot input-script token below. */
+signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3);
 
 //----- (0040A0E0) --------------------------------------------------------
 int  WorldMap_HandleBuilderActionMenu(int widget, int delayTicks, int a3, DWORD a4, double st7_0)
@@ -1240,6 +1244,23 @@ CLASH95_INTERNAL void WorldMap_RunInputScriptStep(void)
       }
       if ( trace_enabled )
         fprintf(stderr, "[world_input] command=select_stack index=%d selected=%d cursor=%d,%d\n", a, g_SelectedUnitIndex, cursor_x, cursor_y);
+      return;
+    }
+    /* Route-harness convenience: write an engine-authored save via the
+       recovered saveGame writer (persistence_002.c) into slot <a>. Test
+       instrumentation only; dead by default and reached solely via
+       CLASH95_WORLD_INPUT_SCRIPT. Lets a route capture a mid-campaign world
+       state as a real save/<n>.dat + save/<n>.fac pair that the original
+       clash95.exe can load (e.g. slot 10 for the `clash95.exe a` auto-load). */
+    if ( strcmp(command, "save_slot") == 0 && fields >= 2 && a >= 0 )
+    {
+      static char save_label[16] = "route-save";
+      signed int save_ok;
+
+      save_ok = saveGame(a, (DWORD)(uintptr_t)save_label, 0.0);
+      fprintf(stderr, "[bootstrap] debug-save-written slot=%d ok=%d\n", a, save_ok);
+      if ( trace_enabled )
+        fprintf(stderr, "[world_input] command=save_slot slot=%d ok=%d cursor=%d,%d\n", a, save_ok, cursor_x, cursor_y);
       return;
     }
   }

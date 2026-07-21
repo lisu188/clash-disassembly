@@ -519,8 +519,6 @@ signed int  Rules_SaveFactsToFile(const CHAR *fileName, int saveScope, _DWORD *i
   int v5; // eax
   int v6; // ecx
   int file; // esi
-  int v8; // ecx
-  int v9; // ecx
   int i; // ebx
   int v12; // ecx
   int matchIndex; // eax
@@ -552,7 +550,10 @@ signed int  Rules_SaveFactsToFile(const CHAR *fileName, int saveScope, _DWORD *i
       g_Print_PreserveEscapedCharactersFlag = savedPreserveEscapedFlag;
       g_Print_AddressesToStringsFlag = savedAddressesToStringsFlag;
       g_Print_InstanceAddressesToNamesFlag = savedInstanceAddressesFlag;
-      fclose_(v8);
+      /* Decompiler artifact repair: the original 0x47B4C0 closes the fast-save
+         stream it opened (ecx == file); the undefined temp closed a garbage
+         handle and leaked the stream. */
+      fclose_(file);
       IO_SetFastSaveFile(0);
       return 0;
     }
@@ -585,7 +586,9 @@ LABEL_6:
       g_Print_PreserveEscapedCharactersFlag = savedPreserveEscapedFlag;
       g_Print_AddressesToStringsFlag = savedAddressesToStringsFlag;
       g_Print_InstanceAddressesToNamesFlag = savedInstanceAddressesFlag;
-      fclose_(v9);
+      /* Decompiler artifact repair: same as above -- close the stream that
+         was opened, not an undefined register temp. */
+      fclose_(file);
       IO_SetFastSaveFile(0);
       if ( importList )
         Mem_SmallBlockRelease(deftemplateArray, 24 * arrayCount);
@@ -725,7 +728,10 @@ BOOL  Rules_LoadFactsFromFile(const CHAR *fileName, int a2, DWORD a3, double a4)
   int v9; // ecx
   int v10; // ecx
   int v12; // [esp-18h] [ebp-34h] BYREF
-  _DWORD v13[7]; // [esp+0h] [ebp-1Ch] BYREF
+  /* Host repair: this token record's address is squeezed through 32-bit int
+     arguments on its way to Parser_NextToken, so it must live in the low-32
+     no-pie image rather than on the 64-bit stack. Single-threaded engine. */
+  static _DWORD v13[7];
 
   v13[5] = a2;
   v5 = IO_FOpen(fileName, (unsigned __int8 *)aR_0, (int)(intptr_t)fileName, a3);
