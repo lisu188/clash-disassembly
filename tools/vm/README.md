@@ -377,3 +377,50 @@ Remaining to the "100% match, VM-verified" goal: options-screen runtime verify
 (in flight), the tactical-battle opening-frame comparison (now unblocked), the
 degenerate all-AI march/camera fix, and the residual menu 0.83% (cursor +
 animated elements).
+
+## Battle-parity VM session (2026-07-22): original menu = English; slot-10 load path wedges
+
+Attempted the original-side capture for the tactical-battle comparison (inject an
+engine-written slot-10 arrival save into `game.img`, boot the original, click
+into the mission-5 stack-19 battle, `battle_compare.py score` vs the clean
+recovered opening frame). Two independent original-binary/rig limitations block
+the original-side battle; the attempt produced one strong new positive result.
+
+- **NEW positive: the ORIGINAL main menu renders in ENGLISH** — `load / campain /
+  exit / options / multi player / credits` — the EXACT labels the recovered engine
+  now produces after the df32b73 stack-alias fix. This is the first *direct
+  original-side* confirmation of the language fix (prior comparisons were only vs
+  a Polish recovered-ref). Frame: `bat_06` (no-args boot). Confirms recovered ==
+  original for the menu language, not just "English is plausible."
+- **The `clash95.exe a` slot-10 campaign auto-load render path WEDGES** (black
+  primary surface + busy hourglass, ~0.5% non-black, stable across 2+ min).
+  Proven NOT to be the save via a 3-way control, all identical wedges:
+  (1) my engine-written arrival save (`10.dat` 586,414 B + real 750-B `10.fac`);
+  (2) my `.dat` + the 16-byte stub `.fac`; (3) the concurrent session's OWN
+  slot-10 pair. gameData *does* populate (`0x5202E4` -> `0x00d00030`) then the
+  process stops drawing. So the original loads the save into memory but never
+  presents the campaign world map in this rig — consistent with the prior
+  "static-state inspection only" note; a rendered `a`-path frame was never
+  actually achieved.
+- **Positive control: `/A5` renders perfectly** — full world map (castle,
+  terrain, roads, selected unit, minimap, "Der" nameplate; `bat_08` under /A5),
+  gameData stable at `0x00d00030` across the whole window. So the rig and the
+  original's DirectDraw are healthy; the wedge is specific to the campaign
+  slot-load render path, not the VM.
+- **Menu-Load fallback blocked by input**: the menu renders (see English result
+  above), but QMP mouse injection — both `clickabs` (usb-tablet, not enumerated
+  under this TCG boot) and `clickrel` (PS/2 saturate-then-walk) — does NOT open
+  the Load-Game dialog; the original's menu widget hit-testing isn't driven by
+  the injected events here. So the menu -> Load -> slot -> battle route can't be
+  scripted in this rig without input-path R&D.
+
+**Net:** the original-side tactical-battle frame is not capturable in this rig
+(campaign-load render wedge + unusable menu click input — both original-binary/
+rig issues, not reconstruction bugs). The engine-written arrival save itself is
+valid (reload-verified in the recovered engine; commit 367f46c) and is preserved
+at `%LOCALAPPDATA%\Temp\battlesave\10.{dat,fac}` for if/when the wedge is
+resolved. The recovered-side opening-battle frame is clean and geometrically
+validated (`battle_compare.py`, stripe-fix confirmed band-free). VM-verified
+fidelity therefore rests on: **menu** (English match + 6-bit-DAC 0.83% differing)
+and **world map** (m05 83.3%, m11 96.3%) — both genuine original-vs-recovered.
+Rig left at the concurrent session's baseline (`a` RUN.BAT + their slot-10 pair).
