@@ -18,7 +18,10 @@ Authoritative geometry (recovered source):
   ppt = 4 if W*H<=2500 else 2; panel left = 608-(ppt*W+14), top 16; a pure
   white (255,255,255) viewport-box OUTLINE at boxLeft = panelLeft+6+ppt*VL,
   boxTop = 22+ppt*VT, outer (ppt*9+2) x (ppt*7+2). Detected by exact-length
-  white run + full outline verification.
+  white run + full outline verification; on SNOW/WINTER maps the minimap
+  terrain is itself pure white, so the run test is defeated (the top edge runs
+  on into the background) and the box is found instead by a grid-aligned SHAPE
+  scan with the same four-edge verification (see detect_viewport).
 - Fog: unexplored tiles are a solid black 64x64 fill (units_005.c:137-142);
   all-AI mode reveals the whole map (world_003.c:254-258), so black cells in
   only one engine are a divergence -> classified 'fog-black-mismatch'.
@@ -59,18 +62,16 @@ def minimap_geometry(map_w, map_h):
     return ppt, panel_left, panel_top, panel_w, panel_h, box_w, box_h
 
 
-def detect_viewport(img, map_w, map_h):
-    """Return (VL, VT) or (None, reason). Exact-outline detector."""
-    ppt, pl, pt, pw, ph, bw, bh = minimap_geometry(map_w, map_h)
-    px = img.load()
-    W, H = img.size
+def _outline_verified(white, x, y, bw, bh):
+    """True when the full (bw x bh) rectangle outline at (x,y) is pure white."""
+    return (all(white(x + i, y) for i in range(bw))
+            and all(white(x + i, y + bh - 1) for i in range(bw))
+            and all(white(x, y + j) for j in range(bh))
+            and all(white(x + bw - 1, y + j) for j in range(bh)))
 
-    def white(x, y):
-        if x < 0 or y < 0 or x >= W or y >= H:
-            return False
-        r, g, b = px[x, y][:3]
-        return r == 255 and g == 255 and b == 255
 
+def _run_candidates(white, pl, pt, pw, ph, bw, bh):
+    """Exact-length white-run seeds on the box top edge (original detector)."""
     cands = []
     for y in range(pt, pt + ph - bh + 1):
         x = pl
@@ -84,13 +85,70 @@ def detect_viewport(img, map_w, map_h):
                 x += max(run, 1)
             else:
                 x += 1
-    verified = []
-    for (x, y) in cands:
-        ok = all(white(x + i, y + bh - 1) for i in range(bw))
-        ok = ok and all(white(x, y + j) for j in range(bh))
-        ok = ok and all(white(x + bw - 1, y + j) for j in range(bh))
-        if ok:
-            verified.append((x, y))
+    return [(x, y) for (x, y) in cands if _outline_verified(white, x, y, bw, bh)]
+
+
+def _shape_candidates(white, ppt, pl, pt, map_w, map_h, bw, bh):
+    """Shape-based seeds: every grid-aligned box position the minimap could
+    legally draw (VL in [0, W-9], VT in [0, H-7]), verified as a full four-edge
+    outline.  This is the SNOW/WINTER case: on a map whose minimap terrain is
+    itself pure white the outline merges into the background, so its top-edge
+    run is longer than the box and the exact-run seed never fires - but the
+    rectangle is still there, and still grid-aligned.
+
+    Whiteness stays exactly as strict as the run detector.  The extra
+    requirement is that the box be DISTINGUISHABLE from its local background:
+    both the 1px ring immediately outside the outline and the interior must
+    contain at least one non-white pixel.  A box floating in a solid white void
+    carries no information (any aligned position would 'verify'), so such a
+    frame is left unindexed rather than guessed at."""
+    out = []
+    for vt in range(0, map_h - VIEW_ROWS + 1):
+        y = pt + 6 + ppt * vt
+        for vl in range(0, map_w - VIEW_COLS + 1):
+            x = pl + 6 + ppt * vl
+            if not _outline_verified(white, x, y, bw, bh):
+                continue
+            outer = ([(x + i, y - 1) for i in range(-1, bw + 1)]
+                     + [(x + i, y + bh) for i in range(-1, bw + 1)]
+                     + [(x - 1, y + j) for j in range(bh)]
+                     + [(x + bw, y + j) for j in range(bh)])
+            if all(white(px_, py_) for (px_, py_) in outer):
+                continue
+            inner = [(x + i, y + j)
+                     for j in range(1, bh - 1) for i in range(1, bw - 1)]
+            if all(white(px_, py_) for (px_, py_) in inner):
+                continue
+            out.append((x, y))
+    return out
+
+
+def detect_viewport(img, map_w, map_h):
+    """Return ((VL, VT), 'ok') or (None, reason).
+
+    Two seeding strategies, strictest first; both end in the same full
+    four-edge pure-white outline verification, so an accepted box is always a
+    real (ppt*9+2) x (ppt*7+2) rectangle at a legal grid-aligned offset.
+      1. exact-length white run on the top edge (original behaviour - this is
+         what rejects wedge/boot/black frames, and it is tried first so its
+         results are bit-for-bit unchanged);
+      2. grid-aligned shape scan, used only when (1) seeds nothing, for maps
+         whose minimap terrain is pure white (snow/winter) and therefore
+         swallows the run-length signal.
+    """
+    ppt, pl, pt, pw, ph, bw, bh = minimap_geometry(map_w, map_h)
+    px = img.load()
+    W, H = img.size
+
+    def white(x, y):
+        if x < 0 or y < 0 or x >= W or y >= H:
+            return False
+        r, g, b = px[x, y][:3]
+        return r == 255 and g == 255 and b == 255
+
+    verified = _run_candidates(white, pl, pt, pw, ph, bw, bh)
+    if not verified:
+        verified = _shape_candidates(white, ppt, pl, pt, map_w, map_h, bw, bh)
     if not verified:
         return None, 'no-outline'
     if len(verified) > 1:
