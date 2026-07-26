@@ -521,6 +521,38 @@ cannot reach a battle; the world map does support keys (arrows scroll,
   sample. Confirms again that the ORIGINAL's all-AI camera roams the whole map,
   against the recovered engine's single frozen viewport (1 in 285 frames) — the
   quantified AI-inertness divergence now under repair.
+### The faulting blit is the TACTICAL BATTLE panel — and two workarounds are refuted
+
+Follow-up analysis identified the exact call site: **`UnitBattle_DrawSelectedUnitPanel`
+(0x430F80, `battle_003.c:268`)** — the battle unit-info panel restore blit
+`Render_FillRect(g_PrimaryRenderSurface, 0, 10, 498, 0x270, 0x162, 0x1F2, 0xA)`.
+**This proves the original really does enter an unattended AI-vs-AI tactical
+battle on `/A5`** (as the `g_ManualTacticalBattleEnabled=1` reading predicted):
+the guest dies *while drawing the battle screen*, which is why the capture window
+always ends ~60 s in and why no battle frame has ever been captured.
+
+Mechanism: `Render_FillRect` performs **no clipping at all** on Win9x — both blit
+cursor classes' "available contiguous run" method returns `0x7FFFFFFF`, so the
+127-byte-per-row copy walks straight off the end of the LFB. On period hardware
+the PCI aperture was far larger than the installed VRAM, so the overrun landed on
+mapped pages and was harmless; QEMU's Cirrus maps exactly 4 MiB and nothing after
+it. The fault is fully deterministic — two independent boots produced identical
+`EDI=0xd3c1fffe  ECX=0x1c  EBX=0x7f  ESI=0x00fd002e`.
+
+Refuted workarounds (both tried, both recorded so nobody repeats them):
+- **`-device cirrus-vga,vgamem_mb=8` is a NO-OP.** The guest still faults at the
+  identical `EDI=0xd3c1fffe`; the in-box Win98 Cirrus driver keeps mapping 4 MiB
+  regardless of what QEMU reports (real CL-GD5446 caps at 4 MB).
+- **`SYSTEM.INI [Display] SafeMode=1` is WRONG and breaks the guest** — it forces
+  a VGA safe mode (7 colours, game never starts), not the "hardware acceleration"
+  slider. That slider is registry-backed, so disabling DirectDraw HW acceleration
+  (which would move surfaces out of the LFB into system memory, where a 113-byte
+  overrun is harmless) still needs the offline SYSTEM.DAT edit. **That is the one
+  remaining untried workaround, and it is the most promising.**
+
+Banked meanwhile: `qemu-native/m05-a5run3/` — 13 more live original world-map
+frames from the 8 MiB-aperture boot.
+
 - `RUN.BAT` on `game.img` is now `if "%1"=="" goto def` -> `clash95.exe /A5`,
   else `clash95.exe %1`. Explicit `run.bat a` still works exactly as before; only
   the no-arg (WIN.INI autorun) default changed, from the permanently-black `a`
