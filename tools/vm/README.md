@@ -424,3 +424,105 @@ validated (`battle_compare.py`, stripe-fix confirmed band-free). VM-verified
 fidelity therefore rests on: **menu** (English match + 6-bit-DAC 0.83% differing)
 and **world map** (m05 83.3%, m11 96.3%) — both genuine original-vs-recovered.
 Rig left at the concurrent session's baseline (`a` RUN.BAT + their slot-10 pair).
+
+## Both wedges ROOT-CAUSED (2026-07-22b) — and both are original-binary bugs
+
+Live QMP memory/disassembly work on the running guest resolved both blockers
+above. Neither is a rig defect and neither is a reconstruction defect.
+
+### 1. The `clash95.exe a` black screen = the display never leaves 16 bpp
+
+`Render_SetPixelFormat` is called from exactly THREE sites in the whole binary:
+WinMain startup with `mov ebx,10h` (**16 bpp**, VA 0x4013E7 / file offset 0x7E7),
+and twice inside `Video_Avi_playIn` — "Init 16BPP" and, on close, `mov ebx,8`
+(**the only route to 8 bpp in the entire program**). The `a` branch
+(`loc_401555`) makes exactly three calls — `WorldMap_Initialize`,
+`SaveSlot_LoadReservedSlot10`, `PlayGame` — and **never calls `Video_Avi_playIn`**,
+so it stays at 16 bpp forever. At 16 bpp `Render_SetPixelFormat` NULLs the
+primary-surface pointer (`dev+188`) and creates no palette, and `Win_WndProc`
+gates the redraw hook on `bpp == 8`. The game therefore loads the save, runs its
+turn loop, and presents nothing — permanently. **`clash95.exe a` is a dev-only
+state-loading shortcut that can never display on any machine**; it also explains
+why the wedge was save-independent (the mode is decided before the save opens).
+Both known-good paths (`/A5`, and the no-args menu via `UI_StartAnims`) call
+`Video_Avi_playIn` first, which is what accidentally puts them in 8 bpp.
+
+Live confirmation on `/A5` (positive control, QMP `human-monitor-command`):
+`x/1xw 0x51D594` (bit depth) = **0x08**, `x/1xw 0x51D57C` (primary surface) =
+**0x00cf7e10** non-NULL, `x/1xw 0x5202E4` (gameData) = 0x00d00030.
+The AVI-stub hypothesis is **REFUTED**: the `a` path makes no video call at all,
+while the *working* `/A5` path plays the 0-byte `LOGO.AVI` stub happily. Do NOT
+restore real AVIs — `COMPARISON_NOTES.md:90` records that real cinematics wedge
+the guest under TCG. Asset inventory confirmed `game.img` is otherwise
+byte-identical to the retail install (DATA/, GFX/CACHE/, STRATEG/, clash95.exe).
+A one-byte patch of a COPY of the exe (file offset 0x7E8, `0x10` -> `0x08`) would
+make `a` render permanently, if that path is ever wanted.
+
+### 2. The "~2 min TCG wedge" = an unrecoverable page-fault loop in `Render_FillRect`
+
+Sampling the guest three times six seconds apart returned **byte-identical
+registers and EIP**, i.e. no forward progress at all:
+
+```
+EIP=0x0040269c  ECX=0000001c  ESI=00fd002e  EDI=d3c1fffe
+0x0040269c:  f2 a5   repne movsl (%esi), %es:(%edi)
+```
+
+0x40269C is inside `Render_FillRect` (0x4024E0, `render_001.c:486`). The blit
+destination `EDI=0xd3c1fffe` is a kernel-space surface pointer sitting **2 bytes
+before a page boundary**, and the 28-dword `rep movsd` runs off the end of its
+mapped region; Windows faults and retries the same instruction forever. During
+the black screen the process is otherwise healthy — bit depth still **8**,
+primary surface non-NULL, `g_AppIsActive = 1` — so this is NOT the 16-bpp bug and
+NOT a foreground/`WaitMessage` deactivation. It is an original-binary blit
+overrunning its surface allocation under this DirectDraw driver/VRAM layout, and
+it caps every capture window at roughly 60 s of live map.
+
+### 3. The original DOES enter tactical battles unattended on `/A5`
+
+`WinMain` (0x4014BA-0x4014CE) sets `g_ManualTacticalBattleEnabled` iff
+`cmdline[1]` is `A`/`a` AND `cmdline[2]` is non-empty — **verified live on `/A5`:
+`x/1xw 0x51D01C` = 0x00000001**. In `Unit_Attack` (`units_007.c:349-377`) the
+"lead troops personally?" prompt is only raised when a human is involved; in an
+all-AI game `eitherHuman == 0`, so `useManualBattle` is forced by the flag alone.
+**AI-vs-AI fights therefore open the manual tactical battle screen with no clicks
+and no keys** — an input-free route to the original-side battle frame, which
+sidesteps BOTH the slot-10 wedge and the unusable mouse. Not yet caught in a
+capture window (the `Render_FillRect` fault ends the window first, and the turn
+counter sits at 2); a battle-entry transition blit is itself a candidate trigger
+for that fault, which is worth testing next.
+
+### 4. Input path (why mouse injection fails) — for whoever picks this up
+
+The original uses **DirectInput, exclusive+foreground**, never Win32 mouse
+messages: it integrates *relative* deltas into its own cursor at
+`0x544CFC/0x544D00` (`cursor += sensitivity * raw_count`, sensitivity =
+`8*cfg[0x19]+20`, i.e. **>= 20 screen px per injected count**), and button state
+is a level test (`DD_IsFlipping` = left down, `DD_IsLost` = right down).
+Consequences: `clickabs`/usb-tablet is architecturally useless (no absolute
+position is ever read) and should be dropped; `clickrel`'s 8-count steps move the
+cursor ~160 px, overshooting every widget. The fix is a **closed-loop** clicker
+that reads the live cursor at `0x544CFC` and converges in units of `sensitivity`.
+There is **no keyboard path** through the menus or the battle (grep of
+`src/battle/` for key polling returns nothing), so keyboard-only automation
+cannot reach a battle; the world map does support keys (arrows scroll,
+`alt+up` moves the selected stack, `m` minimap, `esc` quit dialog).
+
+### Useful rig facts established
+
+- **Map dimensions are readable from guest memory** — `MAP_WIDTH_TILES` /
+  `MAP_HEIGHT_TILES` at `gameData+140000` / `+140004`; on `/A5` with gameData at
+  `0x00d00030` that is `x/1xw 0x00d22310` / `0x00d22314`, read live as
+  **100 x 100**. This removes the candidate-size sweeping that made the m11
+  sizing ambiguous, for every future map.
+- **New original capture banked**: `qemu-native/m05-a5run2/` — 12 live world-map
+  frames, **12/12 indexed, 12 DISTINCT viewports**
+  ((2,29),(6,66),(43,61),(85,28)...), roughly doubling the original-side m05
+  sample. Confirms again that the ORIGINAL's all-AI camera roams the whole map,
+  against the recovered engine's single frozen viewport (1 in 285 frames) — the
+  quantified AI-inertness divergence now under repair.
+- `RUN.BAT` on `game.img` is now `if "%1"=="" goto def` -> `clash95.exe /A5`,
+  else `clash95.exe %1`. Explicit `run.bat a` still works exactly as before; only
+  the no-arg (WIN.INI autorun) default changed, from the permanently-black `a`
+  path to the render-healthy `/A5`. A minimal QMP `human-monitor-command` client
+  lives in the session scratchpad as `hmp.ps1` (worth promoting to `tools/vm/`).
