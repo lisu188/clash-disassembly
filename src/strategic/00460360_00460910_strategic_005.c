@@ -1424,7 +1424,13 @@ unsigned int  DD_Pump(int render_state, int a2, ...)
           SpriteForChar = DLX_GetSpriteForChar(
                             *(_DWORD *)(uintptr_t)(render_state + 64),
                             *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
-          (void)SpriteForChar;
+          /*
+           * Original DD_Pump, cursor-did-not-move branch: g_RenderDevice is
+           * the back surface ([esi+0Ch]) and the blit uses `xor ecx,ecx` /
+           * `xor ebx,ebx`, i.e. left = top = 0; stack args 0,0,1,-1,-1,-1,-1
+           * -> draw_mode 1.  `call dword ptr [edi+34h]` (edi = [device+0B8h]).
+           */
+          Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
           Render_FillRect(
             back_surface,
             0,
@@ -1459,7 +1465,17 @@ unsigned int  DD_Pump(int render_state, int a2, ...)
           v20 = DLX_GetSpriteForChar(
                   *(_DWORD *)(uintptr_t)(render_state + 64),
                   *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
-          (void)v20;
+          /*
+           * Original DD_Pump loc_46070A (cursor moved): `mov ebx,[esi+30h]` /
+           * `mov ecx,[esi+34h]` before `call dword ptr [edi+34h]`, so
+           * left = render_state+48, top = render_state+52; stack args
+           * 0,0,1,-1,-1,-1,-1 -> draw_mode 1.
+           */
+          Compat_RenderDeviceDrawMenuSprite(
+            *(_DWORD *)(uintptr_t)(render_state + 48),
+            *(_DWORD *)(uintptr_t)(render_state + 52),
+            v20,
+            1);
           *(_DWORD *)(uintptr_t)render_state = *(_DWORD *)(uintptr_t)(render_state + 48);
           *(_DWORD *)(uintptr_t)(render_state + 4) = *(_DWORD *)(uintptr_t)(render_state + 52);
         }

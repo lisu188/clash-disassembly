@@ -418,7 +418,20 @@ int  Render_Present(int render_state)
     SpriteForChar = DLX_GetSpriteForChar(
                       *(_DWORD *)(uintptr_t)(render_state + 64),
                       *(_DWORD *)((char *)cursor_descriptor + 32) + *cursor_descriptor);
-    (void)SpriteForChar;
+    /*
+     * Original 0x00460F32: `mov ebx,[esi+30h]` / `mov ecx,[esi+34h]` /
+     * `mov eax,ds:g_RenderDevice` / `mov ebp,[eax+0B8h]` /
+     * `call dword ptr [ebp+34h]` with stack args 0,0,1,-1,-1,-1,-1.
+     * ebx = render_state+48 (cursor x) -> left, ecx = render_state+52
+     * (cursor y) -> top, edx = the sprite, the `1` push -> draw_mode.
+     * The decompiler dropped the indirect call; route it through the
+     * sanctioned native seam like the other converted +0B8h/+34h callers.
+     */
+    Compat_RenderDeviceDrawMenuSprite(
+      *(_DWORD *)(uintptr_t)(render_state + 48),
+      *(_DWORD *)(uintptr_t)(render_state + 52),
+      SpriteForChar,
+      1);
     *(_DWORD *)(uintptr_t)render_state = *(_DWORD *)(uintptr_t)(render_state + 48);
     *(_DWORD *)(uintptr_t)(render_state + 4) = *(_DWORD *)(uintptr_t)(render_state + 52);
     g_RenderDevice = saved_render_device;
