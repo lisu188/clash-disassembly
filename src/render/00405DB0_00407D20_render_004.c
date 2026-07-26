@@ -18,10 +18,6 @@
 //----- (00405DB0) --------------------------------------------------------
 int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
 {
-  int v4; // ecx
-  char *v5; // edi
-  char *v6; // esi
-  char *v7; // edx
   char *v8; // esi
   unsigned int prefix_length; // kr04_4
   char *append_cursor; // edi
@@ -40,12 +36,18 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
 
   HIBYTE(v22) = HIBYTE(a2);
   Debug_Log(63, a3, (DWORD)(intptr_t)sprite_set, (int)(intptr_t)aDlxspritesetSa);
-  qmemcpy(path, aGfx_2, 4 * v4);
-  v6 = &aGfx_2[4 * v4];
-  v5 = &path[4 * v4];
-  *(_WORD *)v5 = *(_WORD *)v6;
-  v5[2] = v6[2];
-  v8 = v7;
+  // 00405DC1..00405DDE: mov ecx, 3Fh / (call log) / rep movsd / movsw / movsb.
+  // ecx is *not* an argument of log - log (00419135) pushes and pops ecx around its
+  // body and leaves it untouched on the disabled path - so the count is the
+  // compile-time constant 63 dwords + 1 word + 1 byte = 255 bytes copied from the
+  // aGfx_2 prefix literal into the 256-byte path buffer. Everything past that literal's
+  // NUL is unobservable (the strlen below stops there and the name is appended over it),
+  // so the in-bounds equivalent is a plain strcpy - the same repair already applied to
+  // the byte-identical DLXSpriteSet_Load prologue at 00405AA5.
+  strcpy(path, aGfx_2);
+  // 00405DE0: mov esi, edx -- edx is the second (register) argument, the sprite-set
+  // name; log preserves edx as well, so the append source is a2, not an unset local.
+  v8 = (char *)(intptr_t)a2;
   v22 = path;
   prefix_length = strlen(path) + 1;
   append_cursor = &path[prefix_length - 1];
@@ -92,8 +94,6 @@ int  DLXSpriteSet_Save(int *sprite_set, int a2, char a3)
   }
   return fclose_(write_index);
 }
-// 405DD9: variable 'v4' is possibly undefined
-// 405DE0: variable 'v7' is possibly undefined
 // 405E83: variable 'v20' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 // 51F290: using guessed type int dword_51F290[];
@@ -278,17 +278,25 @@ int  DLXSprite_Destroy(int result)
 //----- (00406390) --------------------------------------------------------
 int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
 {
-  unsigned int v6; // ecx
-  int v7; // edx
-  unsigned int v8; // ecx
   _DWORD alloc_buffer[6]; // [esp+0h] [ebp-18h] BYREF
 
   DLXSprite_Destroy(sprite);
-  qmemcpy((void *)(uintptr_t)sprite, (const void *)(uintptr_t)source_sprite, v6);
+  // 004063A0..004063B7: mov ecx, 0Ah / call sub_406370 / rep movsd / rep movsb.
+  // sub_406370 (DLXSprite_Destroy) pushes and pops ecx, so the count survives the call:
+  // the fixed 10-byte DLX sprite header (w, h, hotspot, size low word) is copied first.
+  qmemcpy((void *)(uintptr_t)sprite, (const void *)(uintptr_t)source_sprite, 10);
   *(_DWORD *)(uintptr_t)(sprite + 14) = *(_DWORD *)(uintptr_t)(source_sprite + 14);
   *(_DWORD *)(uintptr_t)(sprite + 18) = 1;
-  alloc_buffer[0] = nmalloc_(4, v7);
-  qmemcpy((void *)(uintptr_t)(sprite + 10), alloc_buffer, v8);
+  // 004063C7..004063EB: mov ecx, 4 / mov esi, esp / lea edi, [ebx+0Ah] /
+  //   mov eax, [ebx+0Eh] / sub eax, 0Ah / call _nmalloc_ / mov [esp+var_18], eax /
+  //   rep movsd (ecx = 4 -> exactly the one stored dword).
+  // The allocation size lives in eax and is (sprite->size - 10), i.e. the pixel payload
+  // that is memcpy'd in below; the decompiler mistook the movsd count (4) for the size
+  // argument, which under the size-driven nmalloc_ shim allocated 4 bytes and turned the
+  // payload copy into a heap overflow. The second nmalloc_ argument is dead register
+  // noise (edx was clobbered by DLXSprite_Destroy and the allocator ignores it).
+  alloc_buffer[0] = nmalloc_(*(_DWORD *)(uintptr_t)(sprite + 14) - 10, 0);
+  qmemcpy((void *)(uintptr_t)(sprite + 10), alloc_buffer, 4);
   if ( !*(_DWORD *)(uintptr_t)(sprite + 10) )
   {
     Debug_Log(0, sprite, source_sprite, (int)(intptr_t)aNotEnoughMe_15);
@@ -297,9 +305,6 @@ int  DLXSprite_CopyFrom(int sprite, DWORD source_sprite)
   qmemcpy(*(void **)(uintptr_t)(sprite + 10), *(const void **)(uintptr_t)(source_sprite + 10), *(_DWORD *)(uintptr_t)(sprite + 14) - 10);
   return sprite;
 }
-// 4063B2: variable 'v6' is possibly undefined
-// 4063D9: variable 'v7' is possibly undefined
-// 4063E7: variable 'v8' is possibly undefined
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (00406460) --------------------------------------------------------

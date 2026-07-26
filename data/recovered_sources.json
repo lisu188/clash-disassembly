@@ -20735,7 +20735,7 @@
       "original_line": 992,
       "source": "src/render/00402E80_00404660_render_002.c",
       "linkage": "external",
-      "body_sha256": "156dc3543dd2af05cfe5cad633996d601cba0d3ee5c4476712fae63206418167",
+      "body_sha256": "68240154481f5a862cd6345eb2e63aa4aa0af37cca9c0fe6011ae2ee1741a62f",
       "original_address_range": {
         "start": "0x00402E80",
         "end_exclusive": "0x00403D70"
@@ -22231,7 +22231,7 @@
       "original_line": 3738,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "c679f8000772cdd1f72c0bbf430980c0dadc2b1b9808696b8618234bd266d7f8",
+      "body_sha256": "1f3d4d828b8e528dac1aaddee56491ec1c5600e4a623dd5a2f31ed89fcad3cc3",
       "original_address_range": {
         "start": "0x00405DB0",
         "end_exclusive": "0x00405EC0"
@@ -22418,7 +22418,7 @@
       "original_line": 3998,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "b394a526c4acd64e48923c0f9ab4e73f6c1e9616e6d8eb8ef8b2cf902d631516",
+      "body_sha256": "514f7e67b27ea48c790bcdc3c7c2be3f61e5c3ae581f76f8a3fae6389409d6b9",
       "original_address_range": {
         "start": "0x00406390",
         "end_exclusive": "0x00406460"
