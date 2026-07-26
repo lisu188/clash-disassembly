@@ -31,6 +31,12 @@ source:
 - UI masks: right HUD panel x[480,639] (always); selected-unit info panel
   x[335,479] (conditional; --mask-info-panel); thin frame borders.
 
+Battle frames are MINED from a capture series with the sibling
+tools/vm/frame_classify.py (`classify` / `scan`), which labels each frame
+black / world-map / tactical-battle / menu structurally - the original opens
+this screen unattended in all-AI /A<n> runs, so battle frames can land anywhere
+in a window.
+
 Subcommands:
   index     - validate 640x480 battle frames + stamp cam_row -> CSV
   score     - per-cell atlas comparison of two index sets -> reports

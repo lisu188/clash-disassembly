@@ -526,3 +526,72 @@ cannot reach a battle; the world map does support keys (arrows scroll,
   the no-arg (WIN.INI autorun) default changed, from the permanently-black `a`
   path to the render-healthy `/A5`. A minimal QMP `human-monitor-command` client
   lives in the session scratchpad as `hmp.ps1` (worth promoting to `tools/vm/`).
+
+## Automatic battle-frame mining (2026-07-26, `frame_classify.py`)
+
+Because the original opens the manual tactical battle **unattended** on `/A<n>`
+(see "3. The original DOES enter tactical battles unattended on `/A5`"), a
+battle frame can appear anywhere in a capture window and must not be missed by
+eye. `tools/vm/frame_classify.py` labels every frame in a directory - or a whole
+capture tree - as `black`, `blank`, `world-map`, `tactical-battle`, `menu` or
+`unknown`. PIL + numpy only; it reads PNG/BMP/PPM alike, so it works on the
+QEMU screendumps and on `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX` dumps.
+
+```
+python3 tools/vm/frame_classify.py classify --frames DIR [--csv out.csv] [--verbose]
+python3 tools/vm/frame_classify.py scan --root artifacts/original-captures/qemu-native
+python3 tools/vm/frame_classify.py confusion --truth world-map=DIR black=DIR ...
+```
+
+The battle test is **structural**, not "no minimap": it verifies all four edges
+of the 448x448 = 7x64 board box at x[32,479] y[16,463] (`battle_002.c:898-899`,
+redraw bounds `battle_002.c:1259-1266`), requires a non-degenerate HUD strip at
+x[480,639], and requires the **absence** of the world map's 9-column playfield
+edge at x=607 (`units_005.c:668-707`) and of the minimap viewport outline
+(`world_003.c:1352-1439`, detected map-size agnostically for both ppt=2 and
+ppt=4). Two details matter:
+
+- edges are measured on **4px block means**, not raw neighbour diffs - Win9x
+  chrome and the game's terrain are both 1px-dithered, so a raw neighbour diff
+  saturates everywhere (the Win98 Setup "blue" is literally a blue/black
+  checkerboard);
+- the frame is **contrast-normalised** (gain <= 4x onto a fixed p99) before the
+  edge pass, so the half-faded frames of the battle fade-in are still caught.
+
+Validation (`confusion`), 40 ground-truth frames, **40/40 = 100%**:
+
+| truth | frames | source | predicted |
+|---|---|---|---|
+| world-map | 33 | `m05-frames` f01-13, `m05-a5run2` f01-12, `m11-frames` f01-08 | 33 world-map |
+| black | 2 | `m05-frames/f14`, `m11-frames/f09` | 2 black |
+| menu | 1 | `original-menu.png` | 1 menu |
+| tactical-battle | 4 | recovered `mission_05_stack19_tactical_probe` frames 7-10 | 4 tactical-battle |
+
+Scan of every original capture directory (133 frames):
+
+```
+.              79  black=7 menu=4 unknown=68
+install-watch   7  unknown=7
+m05-a5run2     12  world-map=12
+m05-frames     14  black=1 world-map=13
+m05-seq        12  unknown=12
+m11-frames      9  black=1 world-map=8
+TOTAL         133  black=9 world-map=33 menu=4 unknown=87
+```
+
+**No original tactical-battle frame exists yet** - confirmed, not assumed. 47 of
+the 87 unknowns are 720x400/640x400 DOS-or-text captures (the game only runs
+640x480, so they cannot be battle frames); the other 40 are Win98 desktop and
+Setup chrome. The closest any non-battle frame comes to the battle box is a
+world-map frame at `R479=0.53 / R607=0.71`, against gates of `R479>=0.55` and
+`R607<0.45` - i.e. the decisive gate is missed by 0.26, not by a hair.
+
+Note on the checkpoint harness: `screenshot <label>` in a route script copies
+the *latest dumped presented frame*, so a checkpoint taken after
+`CLASH95_DUMP_PRESENTED_FRAMES_LIMIT` is exhausted silently reproduces a stale
+world-map frame (this is why
+`mission_05_stack19_tactical_entry_probe`'s `checkpoint-mission05-stack19-tactical-open.bmp`
+classifies as `world-map`). Use an env with
+`CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_BATTLE_ENTER=1` - e.g.
+`mission_05_stack19_tactical_probe.env` - when a battle frame is the goal; that
+route yields genuine 7x7-board frames (indices 7-10 of the reset series).
