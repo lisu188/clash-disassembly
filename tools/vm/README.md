@@ -521,6 +521,65 @@ cannot reach a battle; the world map does support keys (arrows scroll,
   sample. Confirms again that the ORIGINAL's all-AI camera roams the whole map,
   against the recovered engine's single frozen viewport (1 in 285 frames) — the
   quantified AI-inertness divergence now under repair.
+## MILESTONE (2026-07-22c): the MAIN MENU is a 100% pixel-exact match to the original
+
+`clash95_bootstrap`'s settled main menu now differs from the ORIGINAL
+`clash95.exe` — captured on real Win98 DirectDraw in this rig — by **0 pixels**:
+MAD 0.000000, max channel delta 0, over the full 640x480. Commit `dd78ae0`.
+
+How the last 261 px fell. After the 6-bit DAC fix the residual was measured at
+"~0.83%, animated menu elements" — that turned out to be **two errors**: the
+measurement was taken on a not-yet-settled fade-in frame, and the animation
+explanation was wrong (two ORIGINAL captures minutes apart are pixel-identical;
+the menu is static). The true residual was 261 px (0.085%), and outside the
+mouse-cursor footprint the recovered frame was ALREADY byte-identical to the
+original. So the entire gap was one missing element: the game's own **software
+cursor**, a mace sprite from `mouse.s32` that the original blits into the
+primary surface.
+
+The decompiler had dropped that indirect blit at THREE sites, each reduced to a
+`(void)sprite;` discard — `Render_Present` (0x00460EA0) and **both** branches of
+`DD_Pump` (0x004605D0). Restored through the sanctioned
+`Compat_RenderDeviceDrawMenuSprite` seam with the register->argument mapping read
+off `clash95.asm`, not assumed:
+
+```
+0x00460F32:  mov ebx,[esi+30h]      ; left = render_state+48  (cursor X)
+             mov ecx,[esi+34h]      ; top  = render_state+52  (cursor Y)
+             mov edx,eax            ; sprite handle
+             mov ebp,[eax+0B8h]     ; device method table
+             call dword ptr [ebp+34h]   ; slot 13 = Render_BlitCompressedSpriteRLE
+             ; stack args 0,0,1,-1,-1,-1,-1  -> the `1` is draw_mode
+```
+
+The `DD_Pump` cursor-did-not-move branch instead composites into the BACK surface
+with `xor ebx,ebx` / `xor ecx,ecx`, i.e. (0,0).
+
+**The cursor is drawn by the restored code path, not hardcoded to the
+reference.** With the host pointer at the Xvfb default (screen centre) the mace
+renders at (400,300) and 526 px differ; pre-positioned at the top-left — where
+the original capture's pointer demonstrably sits (verified by cropping
+`original-menu.png`) — the frames match exactly. Note the harness detail: the
+recovered engine stops presenting once the menu settles, so pointer warps
+injected AFTER launch never reach it; the pointer must be pre-positioned
+(`Xvfb -noreset` + `XWarpPointer` before launch).
+
+Adversarially verified in independent worktrees: BEFORE 261 px and AFTER 0 px
+each reproduced twice, with the fix re-derived from the asm rather than
+copy-pasted, and closure cross-checked — baseline-vs-patched differs by exactly
+those same 261 px, so the change contributes precisely the cursor and nothing
+else.
+
+**This was not an isolated defect.** A follow-up sweep of 3,874 call sites found
+11 more dropped calls of the same class (7 high-severity, all reachable),
+including the generic widget-icon painter `UI_DrawWidgetIcon` (behind every menu,
+dialog, castle screen and world-map button), the world-map top menu bar (both its
+sprite blit AND the strip blit to the visible surface), and both greyscale
+transition helpers. A parallel sweep found 24 never-assigned variables that are
+actually used — several feeding `qmemcpy` lengths, and three battle functions
+computing `31 * <never-assigned> + g_MapData + 852`, i.e. arbitrary reads into
+the battle unit table. Those repairs are tracked separately.
+
 ### The faulting blit is the TACTICAL BATTLE panel — and two workarounds are refuted
 
 Follow-up analysis identified the exact call site: **`UnitBattle_DrawSelectedUnitPanel`
