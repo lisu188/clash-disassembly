@@ -50,7 +50,7 @@ LABEL_17:
   {
     if ( tkn != 2 )
       goto LABEL_25;
-    fnCallExpr = Parser_ParseFunctionCallExpr(infile, *(_BYTE **)(uintptr_t)(tknValue + 16));
+    fnCallExpr = Parser_ParseFunctionCallExpr(infile, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(tknValue + 16));
     *(_DWORD *)(uintptr_t)(top + 6) = fnCallExpr;
     if ( fnCallExpr )
       goto LABEL_3;
@@ -69,7 +69,7 @@ LABEL_17:
   IO_OutWriteToken(tknPrintForm);
   IO_OutWriteToken(asc_5070CC);
 LABEL_3:
-  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(uintptr_t)(top + 6)) )
+  if ( Rules_ExpressionConstraintsCompatible((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(top + 6)) )
   {
 LABEL_25:
     Parser_ReportSyntaxError();
@@ -160,7 +160,7 @@ int  Rules_RewritePrognFieldRefs(int fieldVar, int theExp, signed int depth)
   int *indexDepthConstant; // eax
 
   currentExp = theExp;
-  fieldVarName = *(const char **)(uintptr_t)(fieldVar + 16);
+  fieldVarName = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldVar + 16);
   result = 0;
   flen = strlen(fieldVarName);
   if ( theExp )
@@ -238,13 +238,13 @@ int  Rules_EvalPrognMultifieldBuiltin(_DWORD *returnValue, double a2)
   __int16 *theExp; // ecx
   int exprNode; // ecx
   int result; // eax
-  int argval; // [esp+0h] [ebp-34h] BYREF
-  int argvalValue; // [esp+8h] [ebp-2Ch]
-  int argvalBegin; // [esp+Ch] [ebp-28h]
-  int argvalEnd; // [esp+10h] [ebp-24h]
+  _DWORD argval[6]; // [esp+0h] [ebp-34h] BYREF
+  /* stack alias of argval[2]: the DATA_OBJECT value slot */
+  /* stack alias of argval[3] */
+  /* stack alias of argval[4] */
   int endIndex; // [esp+18h] [ebp-1Ch]
 
-  freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+  freeListNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
@@ -262,11 +262,11 @@ int  Rules_EvalPrognMultifieldBuiltin(_DWORD *returnValue, double a2)
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
   tmpFieldPtr = tmpField;
-  if ( Lexer_ParseValueList(1, &argval, 4, a2) )
+  if ( Lexer_ParseValueList(1, argval, 4, a2) )
   {
-    fieldIndex = argvalBegin + 1;
-    endIndex = argvalEnd + 1;
-    if ( argvalBegin + 1 > argvalEnd + 1 )
+    fieldIndex = argval[3] + 1;
+    endIndex = argval[4] + 1;
+    if ( argval[3] + 1 > argval[4] + 1 )
     {
 LABEL_18:
       g_ClipsBreakFlag = 0;
@@ -276,10 +276,10 @@ LABEL_18:
       fieldOffset = 6 * fieldIndex - 6;
       while ( 1 )
       {
-        *tmpFieldPtr = *(__int16 *)(uintptr_t)(argvalValue + fieldOffset + 14);
-        tmpFieldPtr[1] = *(_DWORD *)(uintptr_t)(argvalValue + fieldOffset + 16);
+        *tmpFieldPtr = *(__int16 *)(uintptr_t)(argval[2] + fieldOffset + 14);
+        tmpFieldPtr[1] = *(_DWORD *)(uintptr_t)(argval[2] + fieldOffset + 16);
         tmpFieldPtr[2] = fieldIndex;
-        theExp = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
+        theExp = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
         if ( theExp )
           break;
 LABEL_17:
@@ -293,7 +293,7 @@ LABEL_17:
         Parser_ParseForm(theExp, returnValue, (int)(intptr_t)theExp, a2);
         if ( g_ClipsHaltExecution || g_ClipsBreakFlag || g_ClipsHaltExecutionFlag )
           break;
-        theExp = *(__int16 **)(uintptr_t)(exprNode + 10);
+        theExp = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(exprNode + 10);
         if ( !theExp )
           goto LABEL_17;
       }
@@ -815,9 +815,9 @@ signed int  Rules_ConcatBuiltinCore(int returnValue, int returnType, int a3, dou
   signed int *v20; // eax
   int v21; // edx
   char *v23; // ecx
-  int theArg; // [esp+0h] [ebp-40h] BYREF
-  int theArgType; // [esp+4h] [ebp-3Ch]
-  int theArgValue; // [esp+8h] [ebp-38h]
+  _DWORD theArg[6]; // [esp+0h] [ebp-40h] BYREF
+  /* stack alias of theArg[1] */
+  /* stack alias of theArg[2]: the DATA_OBJECT value slot */
   const char **arrayOfStrings; // [esp+18h] [ebp-28h]
   int v28 CLASH95_UNUSED; // [esp+1Ch] [ebp-24h]
   char *functionName CLASH95_UNUSED; // [esp+20h] [ebp-20h]
@@ -869,21 +869,21 @@ LABEL_11:
     stringArrayCursor = v6 + 4;
     while ( 1 )
     {
-      Rules_RtnUnknown(argIndex, &theArg, a4);
-      switch ( theArgType )
+      Rules_RtnUnknown(argIndex, theArg, a4);
+      switch ( theArg[1] )
       {
         case 0:
-          symbolString = (char *)(uintptr_t)Rules_FloatToSymbol(theArgType, *(double *)(uintptr_t)(theArgValue + 16));
+          symbolString = (char *)(uintptr_t)Rules_FloatToSymbol(theArg[1], *(double *)(uintptr_t)(theArg[2] + 16));
           goto LABEL_7;
         case 1:
-          symbolString = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(theArgValue + 16));
+          symbolString = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(theArg[2] + 16));
 LABEL_7:
           internedSymbol = Str_Intern(symbolString, v11);
           goto LABEL_8;
         case 2:
         case 3:
         case 8:
-          internedSymbol = (signed int *)(uintptr_t)theArgValue;
+          internedSymbol = (signed int *)(uintptr_t)theArg[2];
 LABEL_8:
           *((_DWORD *)stringArrayCursor - 1) = internedSymbol[4];
           break;
@@ -922,11 +922,11 @@ int  Rules_StrLengthBuiltin(int returnValue, double a2)
   _DWORD theValue[9]; // [esp-8h] [ebp-24h] BYREF
 
   theValue[7] = returnValue;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aStrLength, 0, 1);
   if ( result != -1 )
   {
     if ( Lexer_ParseValueList(1, theValue, 111, a2) )
-      return strlen(*(const char **)(uintptr_t)(theValue[2] + 16));
+      return strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue[2] + 16));
     else
       return -1;
   }
@@ -948,7 +948,7 @@ signed int * Rules_UpcaseBuiltin(int returnValue, double a2)
   _DWORD item[7]; // [esp+0h] [ebp-30h] BYREF
   char *newString; // [esp+1Ch] [ebp-14h]
 
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aUpcase, 0, 1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
   {
     *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
     result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
@@ -956,7 +956,7 @@ signed int * Rules_UpcaseBuiltin(int returnValue, double a2)
   }
   else
   {
-    slen = strlen(*(const char **)(uintptr_t)(item[2] + 16)) + 1;
+    slen = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(item[2] + 16)) + 1;
     charIndex = 0;
     nsptr = (char *)Mem_SmallBlockAlloc(slen);
     newString = nsptr;
@@ -1007,7 +1007,7 @@ signed int * Rules_LowcaseBuiltin(int returnValue, double a2)
   _DWORD item[7]; // [esp+0h] [ebp-30h] BYREF
   char *newString; // [esp+1Ch] [ebp-14h]
 
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aLowcase, 0, 1) == -1 || !Lexer_ParseValueList(1, item, 111, a2) )
   {
     *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
     result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
@@ -1015,7 +1015,7 @@ signed int * Rules_LowcaseBuiltin(int returnValue, double a2)
   }
   else
   {
-    slen = strlen(*(const char **)(uintptr_t)(item[2] + 16)) + 1;
+    slen = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(item[2] + 16)) + 1;
     charIndex = 0;
     nsptr = (char *)Mem_SmallBlockAlloc(slen);
     newString = nsptr;
@@ -1059,45 +1059,45 @@ signed int  Rules_StrCompareBuiltin(int returnValue, double a2)
   int v4; // ecx
   int v5; // ecx
   double maxCharsFloat; // st7
-  int arg3; // [esp-4h] [ebp-5Ch] BYREF
-  int arg3Type; // [esp+0h] [ebp-58h]
-  int arg3Value; // [esp+4h] [ebp-54h]
+  _DWORD arg3[6]; // [esp-4h] [ebp-5Ch] BYREF
+  /* stack alias of arg3[1] */
+  /* stack alias of arg3[2]: the DATA_OBJECT value slot */
   int arg1; // [esp+14h] [ebp-44h] BYREF
-  int arg2; // [esp+2Ch] [ebp-2Ch] BYREF
-  int arg2Value; // [esp+34h] [ebp-24h]
+  _DWORD arg2[6]; // [esp+2Ch] [ebp-2Ch] BYREF
+  /* stack alias of arg2[2]: the DATA_OBJECT value slot */
   int maxChars CLASH95_UNUSED; // [esp+44h] [ebp-14h]
   int v14 CLASH95_UNUSED; // [esp+50h] [ebp-8h]
 
   v14 = returnValue;
-  numArgs = Rules_ArgRangeCheck((int)(intptr_t)aStrCompare, 3);
+  numArgs = Rules_ArgRangeCheck((int)(intptr_t)aStrCompare, 2, 3);
   if ( numArgs == -1 )
     return 0;
   result = Lexer_ParseValueList(1, &arg1, 111, a2);
   if ( result )
   {
-    result = Lexer_ParseValueList(2, &arg2, 111, a2);
+    result = Lexer_ParseValueList(2, arg2, 111, a2);
     if ( result )
     {
       if ( numArgs == 3 )
       {
-        result = Lexer_ParseValueList(3, &arg3, 1, a2);
+        result = Lexer_ParseValueList(3, arg3, 1, a2);
         if ( !result )
           return result;
-        if ( arg3Type == 1 )
+        if ( arg3[1] == 1 )
         {
-          maxChars = *(_DWORD *)(uintptr_t)(arg3Value + 16);
+          maxChars = *(_DWORD *)(uintptr_t)(arg3[2] + 16);
         }
         else
         {
-          maxCharsFloat = *(double *)(uintptr_t)(arg3Value + 16);
-          _CHP(arg3, arg3Type);
+          maxCharsFloat = *(double *)(uintptr_t)(arg3[2] + 16);
+          _CHP(arg3, arg3[1]);
           maxChars = (int)maxCharsFloat;
         }
-        result = strncmp_(v5, *(_DWORD *)(uintptr_t)(arg2Value + 16));
+        result = strncmp_(v5, *(_DWORD *)(uintptr_t)(arg2[2] + 16));
       }
       else
       {
-        result = strcmp_(v4, *(_DWORD *)(uintptr_t)(arg2Value + 16));
+        result = strcmp_(v4, *(_DWORD *)(uintptr_t)(arg2[2] + 16));
       }
       if ( result < 0 )
       {
@@ -1129,46 +1129,46 @@ signed int * Rules_SubStringBuiltin(double a1)
   char ch; // bl
   int v9; // edx
   int internedString; // ecx
-  int theArgument; // [esp+0h] [ebp-38h] BYREF
-  int argType; // [esp+4h] [ebp-34h]
-  int argValue; // [esp+8h] [ebp-30h]
+  _DWORD theArgument[6]; // [esp+0h] [ebp-38h] BYREF
+  /* stack alias of theArgument[1] */
+  /* stack alias of theArgument[2]: the DATA_OBJECT value slot */
   int endRaw; // [esp+18h] [ebp-20h]
   int startRaw; // [esp+1Ch] [ebp-1Ch]
 
-  if ( Lexer_TokenExpect(3) == -1 || !Lexer_ParseValueList(1, &theArgument, 1, a1) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSubString, 0, 3) == -1 || !Lexer_ParseValueList(1, theArgument, 1, a1) )
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
-  if ( argType == 1 )
+  if ( theArgument[1] == 1 )
   {
-    startRaw = *(_DWORD *)(uintptr_t)(argValue + 16);
+    startRaw = *(_DWORD *)(uintptr_t)(theArgument[2] + 16);
   }
   else
   {
-    a1 = *(double *)(uintptr_t)(argValue + 16);
-    _CHP(theArgument, argType);
+    a1 = *(double *)(uintptr_t)(theArgument[2] + 16);
+    _CHP(theArgument, theArgument[1]);
     startRaw = (int)a1;
   }
   start = startRaw - 1;
-  if ( !Lexer_ParseValueList(2, &theArgument, 1, a1) )
+  if ( !Lexer_ParseValueList(2, theArgument, 1, a1) )
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
-  if ( argType == 1 )
+  if ( theArgument[1] == 1 )
   {
-    endRaw = *(_DWORD *)(uintptr_t)(argValue + 16);
+    endRaw = *(_DWORD *)(uintptr_t)(theArgument[2] + 16);
   }
   else
   {
-    a1 = *(double *)(uintptr_t)(argValue + 16);
-    _CHP(theArgument, argType);
+    a1 = *(double *)(uintptr_t)(theArgument[2] + 16);
+    _CHP(theArgument, theArgument[1]);
     endRaw = (int)a1;
   }
   end = endRaw - 1;
-  if ( !Lexer_ParseValueList(3, &theArgument, 111, a1) )
+  if ( !Lexer_ParseValueList(3, theArgument, 111, a1) )
     return Str_Intern(g_Rules_EmptyStringLiteral, sourceLength);
   if ( start < 0 )
     start = 0;
-  sourceLength = strlen(*(const char **)(uintptr_t)(argValue + 16));
+  sourceLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument[2] + 16));
   if ( end > sourceLength )
   {
-    sourceLength = strlen(*(const char **)(uintptr_t)(argValue + 16));
+    sourceLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument[2] + 16));
     end = sourceLength;
   }
   if ( start > end )
@@ -1176,7 +1176,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   tempPtr = Mem_SmallBlockAlloc(end - start + 2);
   charIndex = start;
   returnString = (char *)tempPtr;
-  sourcePtr = (char *)(uintptr_t)(start + *(_DWORD *)(uintptr_t)(argValue + 16));
+  sourcePtr = (char *)(uintptr_t)(start + *(_DWORD *)(uintptr_t)(theArgument[2] + 16));
   do
   {
     tempPtr = (_DWORD *)((char *)tempPtr + 1);
@@ -1207,26 +1207,26 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
   const char *searchString; // edi
   int v11; // edx
   int v12; // edx
-  int theArgument1; // [esp+0h] [ebp-4Ch] BYREF
-  int arg1Value; // [esp+8h] [ebp-44h]
-  int theArgument2; // [esp+18h] [ebp-34h] BYREF
-  int arg2Value; // [esp+20h] [ebp-2Ch]
+  _DWORD theArgument1[6]; // [esp+0h] [ebp-4Ch] BYREF
+  /* stack alias of theArgument1[2]: the DATA_OBJECT value slot */
+  _DWORD theArgument2[6]; // [esp+18h] [ebp-34h] BYREF
+  /* stack alias of theArgument2[2]: the DATA_OBJECT value slot */
   int v17; // [esp+30h] [ebp-1Ch]
 
   v17 = returnValue;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(v17 + 8) = g_ClipsFalseSymbol;
-  result = (int *)(uintptr_t)Lexer_TokenExpect(2);
+  result = (int *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aStrIndex, 0, 2);
   if ( result != (int *)-1 )
   {
-    result = (int *)(uintptr_t)Lexer_ParseValueList(1, &theArgument1, 111, a2);
+    result = (int *)(uintptr_t)Lexer_ParseValueList(1, theArgument1, 111, a2);
     if ( result )
     {
-      result = (int *)(uintptr_t)Lexer_ParseValueList(2, &theArgument2, 111, a2);
+      result = (int *)(uintptr_t)Lexer_ParseValueList(2, theArgument2, 111, a2);
       if ( result )
       {
-        strg1 = *(const char **)(uintptr_t)(arg1Value + 16);
-        strg2 = *(_BYTE **)(uintptr_t)(arg2Value + 16);
+        strg1 = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument1[2] + 16);
+        strg2 = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument2[2] + 16);
         result = 0;
         if ( strlen(strg1) )
         {
@@ -1236,7 +1236,7 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
           {
             while ( 1 )
             {
-              result = *(int **)(uintptr_t)(arg1Value + 16);
+              result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument1[2] + 16);
               strg2Ptr = strg2;
               matchLength = 0;
               if ( *strg1 )
@@ -1265,7 +1265,7 @@ int * Rules_StrIndexBuiltin(int returnValue, double a2)
         }
         else
         {
-          searchString = *(const char **)(uintptr_t)(arg2Value + 16);
+          searchString = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArgument2[2] + 16);
           *(_DWORD *)(uintptr_t)(v17 + 4) = 1;
           result = Rules_AddIntegerValue(strlen(searchString) + 1);
           *(_DWORD *)(uintptr_t)(v11 + 8) = result;
@@ -1287,7 +1287,7 @@ int  Rules_EvalBuiltin(_DWORD *returnValue, int a2, double a3)
   _DWORD item[10]; // [esp-8h] [ebp-28h] BYREF
 
   item[8] = a2;
-  if ( Lexer_TokenExpect(1) != -1 && Lexer_ParseValueList(1, item, 111, a3) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aEval, 0, 1) != -1 && Lexer_ParseValueList(1, item, 111, a3) )
     return Rules_EvalStringCore(v6, returnValue);
   returnValue[1] = 2;
   result = g_ClipsFalseSymbol;
@@ -1402,11 +1402,11 @@ signed int  Rules_BuildBuiltin(int returnValue, double a2)
   _DWORD theArg[9]; // [esp-8h] [ebp-24h] BYREF
 
   theArg[7] = returnValue;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aBuild, 0, 1) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, theArg, 111, a2);
   if ( result )
-    return Rules_BuildConstructFromString(*(const char **)(uintptr_t)(theArg[2] + 16));
+    return Rules_BuildConstructFromString((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theArg[2] + 16));
   return result;
 }
 

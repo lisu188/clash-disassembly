@@ -28,7 +28,7 @@ int __fastcall Rules_ReportMultifieldAssertIntoSingleSlotError(int a1 CLASH95_UN
   if ( v5 )
   {
     v7 = g_IO_LogicalNameTable_WError[0];
-    slotName = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 16);
+    slotName = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 16);
   }
   else
   {
@@ -40,7 +40,7 @@ int __fastcall Rules_ReportMultifieldAssertIntoSingleSlotError(int a1 CLASH95_UN
   if ( theDeftemplate )
   {
     v10 = g_IO_LogicalNameTable_WError[0];
-    deftemplateName = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)theDeftemplate + 16);
+    deftemplateName = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theDeftemplate + 16);
   }
   else
   {
@@ -187,7 +187,7 @@ signed int  Lexer_FindSymbolIndex(int theDeftemplate, int slotName)
   _DWORD *slotPtr; // eax
   int position; // edx
 
-  slotPtr = *(_DWORD **)(uintptr_t)(theDeftemplate + 20);
+  slotPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 20);
   position = 1;
   if ( !slotPtr )
     return 0;
@@ -302,7 +302,7 @@ _DWORD * Lexer_FindSlotWithIndex(int theDeftemplate, int slotName, _DWORD *which
   _DWORD *result; // eax
 
   *whichOne = 1;
-  result = *(_DWORD **)(uintptr_t)(theDeftemplate + 20);
+  result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 20);
   if ( result )
   {
     while ( slotName != *result )
@@ -455,7 +455,7 @@ int  Rules_MatchMultifieldWildcardInPattern(int theNode, int markers, int offset
   _DWORD *theMark; // [esp+Ch] [ebp-10h]
 
   theSegment = *(_DWORD *)(uintptr_t)(g_CurrentPatternFact + 6 * (*(_DWORD *)(uintptr_t)(theNode + 20) << 16 >> 24) + 56);
-  freeMark = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
+  freeMark = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
   if ( freeMark )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
@@ -722,10 +722,10 @@ signed int  Rules_ReportPatternNetworkError(signed int patternPtr)
   else
   {
     v14 = v6;
-    slotPtr = *(_DWORD **)(uintptr_t)(theDeftemplate + 20);
+    slotPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 20);
     for ( i = 0; i < *(_DWORD *)(uintptr_t)(patternPtr + 20) << 16 >> 24; ++i )
       slotPtr = (_DWORD *)(uintptr_t)slotPtr[4];
-    sprintf_(messageBuffer, "   Problem resides in slot %s\n", *(const char **)(uintptr_t)(*slotPtr + 16));
+    sprintf_(messageBuffer, "   Problem resides in slot %s\n", (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*slotPtr + 16));
     v10 = v14;
   }
   Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)messageBuffer, v10);
@@ -758,7 +758,7 @@ signed int  Rules_ReportPatternNetworkRules(signed int result, int processSiblin
   {
     if ( (*(_BYTE *)(uintptr_t)(i + 12) & 4) != 0 )
     {
-      for ( j = *(_DWORD *)(uintptr_t)(i + 8); j; j = *(_DWORD *)(uintptr_t)(v7 + 32) )
+      for ( j = *(_DWORD *)(uintptr_t)(i + 8); j; j = *(_DWORD *)(uintptr_t)(j + 32) )
       {
         patternCount = Rules_CountJoinNetworkEntryNodes(j);
         sprintf_(messageBuffer, "      Of pattern #%d in rule(s):\n", patternCount);
@@ -1243,7 +1243,7 @@ int  Rules_ProcessJoinMemoryMatches(int result, _BYTE *theBind, int newAlphaMatc
     childJoin = theJoin[5];
     if ( childJoin )
     {
-      if ( theJoin == *(_DWORD **)(uintptr_t)(childJoin + 16) )
+      if ( theJoin == (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(childJoin + 16) )
       {
         Rules_UpdateBetaMemoryOnRetract((_DWORD *)(uintptr_t)theJoin[5], (int)(intptr_t)theBind, 0, a4);
       }
@@ -1396,7 +1396,7 @@ int  Rules_AddLogicalDependencyLink(int theEntity, int existingEntity)
   theBind = (_DWORD *)(uintptr_t)result;
   if ( result )
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1410,7 +1410,7 @@ int  Rules_AddLogicalDependencyLink(int theEntity, int existingEntity)
     *newDependency = v3;
     newDependency[1] = theBind[(*theBind << 17 >> 23) + 2 + (*theBind << 29 >> 31)];
     theBind[(*theBind << 29 >> 31) + 2 + (*theBind << 17 >> 23)] = newDependency;
-    v7 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+    v7 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     if ( v7 )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1442,7 +1442,7 @@ _DWORD * Rules_FindLogicalDependencyEntry(int theJoin, int theBinds)
   _DWORD *compFieldPtr; // eax
   unsigned int i; // edx
 
-  compPtr = *(_DWORD **)(uintptr_t)(theJoin + 8);
+  compPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theJoin + 8);
   if ( compPtr )
   {
     while ( 2 )

@@ -114,7 +114,7 @@ signed int  Rules_CEValidateLiteralAgainstConstraints(int theNode, int whichCE, 
   fieldPosition = *(_DWORD *)(uintptr_t)(theNode + 32);
   theConstraints = *(_DWORD *)(uintptr_t)(theNode + 16);
   slotName = *(_DWORD *)(uintptr_t)(theNode + 36);
-  orField = *(unsigned int **)(uintptr_t)(theNode + 68);
+  orField = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 68);
   if ( !orField )
     return 0;
   while ( 2 )
@@ -182,7 +182,7 @@ int  Rules_CEFindUnboundVariableReference(int exprPtr, int theExpression, int sl
     {
       if ( !*(_DWORD *)(uintptr_t)(currentExpr + 20) )
         break;
-      if ( Rules_ConstraintIsUnmatchable(*(char **)(uintptr_t)(currentExpr + 16)) && Rules_StaticConstraintCheckingEnabled() )
+      if ( Rules_ConstraintIsUnmatchable((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentExpr + 16)) && Rules_StaticConstraintCheckingEnabled() )
       {
         Rules_PrintVariableBindingConstraintViolation(*(_DWORD *)(uintptr_t)(currentExpr + 4), savedExpression, whichCE, argNumber, slotName, theField);
         return currentExpr;
@@ -194,7 +194,7 @@ int  Rules_CEFindUnboundVariableReference(int exprPtr, int theExpression, int sl
     nodeType = *(_DWORD *)(uintptr_t)currentExpr;
     if ( *(_DWORD *)(uintptr_t)currentExpr == 13 )
     {
-      if ( !Rules_FindImportExportConstruct(aDefglobal_6, &count, *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(currentExpr + 4) + 16), 1, 0) )
+      if ( !Rules_FindImportExportConstruct(aDefglobal_6, &count, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(currentExpr + 4) + 16), 1, 0) )
         break;
     }
     else if ( nodeType == 10 || nodeType == 11 || nodeType == 12 )
@@ -303,7 +303,7 @@ int Rules_CheckAndReportUnmatchableFieldConstraint(void)
   result = Rules_StaticConstraintCheckingEnabled();
   if ( result )
   {
-    result = (int)(intptr_t)Rules_ConstraintIsUnmatchable(*(char **)(uintptr_t)(v1 + 16));
+    result = (int)(intptr_t)Rules_ConstraintIsUnmatchable((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v1 + 16));
     if ( result )
     {
       Rules_ReportConstraintReferenceConflict(*(_DWORD *)(uintptr_t)(v3 + 4), v2, *(_DWORD *)(uintptr_t)(v3 + 32));
@@ -389,7 +389,7 @@ int  Rules_DeriveCEFieldCardinalityConstraint(int theNode)
   posInfinity = 0;
   if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 4) == 0 )
     return 0;
-  for ( i = *(_DWORD **)(uintptr_t)(theNode + 68); i; i = (_DWORD *)(uintptr_t)i[16] )
+  for ( i = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 68); i; i = (_DWORD *)(uintptr_t)i[16] )
   {
     if ( *i == 15 || *i == 17 )
     {
@@ -415,7 +415,7 @@ LABEL_22:
     }
   }
   if ( *(_DWORD *)(uintptr_t)(theNode + 16) )
-    constraintNode = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(theNode + 16));
+    constraintNode = Rules_CloneLHSParseNode((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 16));
   else
     constraintNode = Rules_CreateLHSParseNode();
   newConstraint = (_DWORD *)(uintptr_t)constraintNode;
@@ -436,7 +436,7 @@ LABEL_22:
   *(_DWORD *)((char *)newConstraint + 22) = AST_NewNode(maxType, (int)(intptr_t)maxValueNode);
   Rules_IntersectConstraints(*(_DWORD *)(uintptr_t)(theNode + 16), (int)(intptr_t)newConstraint);
   if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 0x10) != 0 )
-    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(theNode + 16));
+    AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 16));
   AST_DecrementNodeRefCount(newConstraint);
   nodeFlags = *(_BYTE *)(uintptr_t)(theNode + 8);
   *(_DWORD *)(uintptr_t)(theNode + 16) = v13;
@@ -490,7 +490,7 @@ signed int  Rules_ComputeConnectedCEConstraintGroup(int theNode, int *multifield
         goto LABEL_8;
       if ( *(_DWORD *)(uintptr_t)andField == 94 )
       {
-        if ( **(_DWORD **)(uintptr_t)(andField + 56) != 10 )
+        if ( *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(andField + 56) != 10 )
           goto LABEL_8;
         returnConstraint = Rules_ApplyCEKeywordFlags();
         oldBranchConstraint = (_DWORD *)(uintptr_t)v6;
@@ -541,7 +541,7 @@ LABEL_15:
   if ( accumConstraints )
   {
     if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 0x10) != 0 )
-      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(theNode + 16));
+      AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 16));
     *(_DWORD *)(uintptr_t)(theNode + 16) = accumConstraints;
     *(_BYTE *)(uintptr_t)(theNode + 8) |= 0x10u;
   }
@@ -657,7 +657,7 @@ _DWORD * Rules_MergeConstraintListsByFieldIndex(_DWORD *theList, _DWORD *newItem
             goto LABEL_5;
         }
         Rules_IntersectConstraints(tempList[4], theItem[4]);
-        AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(v6 + 16));
+        AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 16));
         *(_DWORD *)(uintptr_t)(v8 + 16) = v7;
         AST_FreeNode((int)(intptr_t)theItem);
       }
@@ -752,14 +752,14 @@ _DWORD * Rules_ClonePatternPositionConstraintList(int *theExpression)
     if ( *expPtr == 15 )
     {
       newNode = AST_AllocNode();
-      referringNode = *(int **)(uintptr_t)(v5 + 20);
+      referringNode = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 20);
       theConstraint = (_DWORD *)(uintptr_t)newNode;
       if ( referringNode )
         nodeType = *referringNode;
       *(_DWORD *)(uintptr_t)newNode = nodeType;
       *(_DWORD *)(uintptr_t)(newNode + 4) = *(_DWORD *)(uintptr_t)(v5 + 4);
       *(_BYTE *)(uintptr_t)(newNode + 8) |= 0x10u;
-      *(_DWORD *)(uintptr_t)(newNode + 16) = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(v5 + 16));
+      *(_DWORD *)(uintptr_t)(newNode + 16) = Rules_CloneLHSParseNode((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 16));
       i = Rules_MergeConstraintListsByFieldIndex(theConstraint, v8);
     }
   }
@@ -796,7 +796,7 @@ signed int  Rules_IntersectConnectedCEConstraints(int theNode)
       {
         if ( *(_DWORD *)(uintptr_t)andField == 94 || *(_DWORD *)(uintptr_t)andField == 93 )
         {
-          clonedList = Rules_ClonePatternPositionConstraintList(*(int **)(uintptr_t)(andField + 56));
+          clonedList = Rules_ClonePatternPositionConstraintList((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(andField + 56));
           list2 = Rules_MergeConstraintListsByFieldIndex(list2, clonedList);
         }
         andField = *(_DWORD *)(uintptr_t)(andField + 64);
@@ -1094,7 +1094,7 @@ _DWORD * Rules_MergeRedundantFieldAccessNodes(_DWORD *result, _DWORD *lastNode)
     }
     while ( scanNode )
     {
-      result = *(_DWORD **)(uintptr_t)(scanNode + 44);
+      result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(scanNode + 44);
       if ( result != (_DWORD *)(uintptr_t)i[11] || (*(_DWORD *)(uintptr_t)(scanNode + 8) & 1) != 0 )
       {
         lastNode = (_DWORD *)(uintptr_t)scanNode;
@@ -1106,7 +1106,7 @@ _DWORD * Rules_MergeRedundantFieldAccessNodes(_DWORD *result, _DWORD *lastNode)
           break;
         if ( *(_DWORD *)(uintptr_t)scanNode == 84 )
         {
-          i[13] = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)i[13], *(_DWORD **)(uintptr_t)(scanNode + 52));
+          i[13] = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)i[13], (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(scanNode + 52));
           testCE[13] = 0;
           v5 = testCE[17];
           testCE[17] = 0;
@@ -1186,7 +1186,7 @@ BOOL  Rules_JoinTestNodeMatches(
   if ( firstJoin != (*(_DWORD *)(uintptr_t)theJoin & 1)
     || *(_DWORD *)(uintptr_t)theJoin << 28 >> 31 != negatedRHS
     || a3 == 1 && (*(_BYTE *)(uintptr_t)theJoin & 2) == 0 && *(_DWORD *)(uintptr_t)(theJoin + 8)
-    || AST_NodeListsEqual(*(__int16 **)(uintptr_t)(theJoin + 12), joinTest) != 1 )
+    || AST_NodeListsEqual((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theJoin + 12), joinTest) != 1 )
   {
     return 0;
   }
@@ -1221,7 +1221,7 @@ int  Rules_InternJoinTestNode(int joinTest, _DWORD *lhsEntry, int joinFromTheRig
 
   if ( Rules_GetWatchItemState((int)(intptr_t)aCompilations) == 1 && Rules_GetLoadInProgress() )
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WDialog[0], (int)(intptr_t)aJ_0, v16);
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 160);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
   if ( freeListEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
@@ -1295,7 +1295,7 @@ int ** Defgeneric_InitializeFromRestrictionString(int theDefgeneric, int a2)
   int v8 CLASH95_UNUSED; // [esp+10h] [ebp-4h]
 
   v8 = a2;
-  result = Rules_MakeSymbol(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)theDefgeneric + 16));
+  result = Rules_MakeSymbol((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theDefgeneric + 16));
   if ( result )
   {
     actionExpr = 10;

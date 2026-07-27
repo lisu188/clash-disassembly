@@ -235,13 +235,13 @@ void  Rules_FreeDefruleDisjunctChain(int theDefrule)
       {
         if ( *(_DWORD *)(uintptr_t)(currentDisjunct + 32) )
         {
-          AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(currentDisjunct + 32));
+          AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentDisjunct + 32));
           AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(currentDisjunct + 32));
           *(_DWORD *)(uintptr_t)(currentDisjunct + 32) = 0;
         }
         if ( *(_DWORD *)(uintptr_t)(currentDisjunct + 4) )
         {
-          Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(currentDisjunct + 4), strlen(*(const char **)(uintptr_t)(currentDisjunct + 4)) + 1);
+          Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentDisjunct + 4), strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentDisjunct + 4)) + 1);
           *(_DWORD *)(uintptr_t)(currentDisjunct + 4) = 0;
         }
         v2 = 0;
@@ -249,7 +249,7 @@ void  Rules_FreeDefruleDisjunctChain(int theDefrule)
       Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)currentDisjunct, v2);
       if ( *(_DWORD *)(uintptr_t)(currentDisjunct + 36) )
       {
-        AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(currentDisjunct + 36));
+        AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentDisjunct + 36));
         AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(currentDisjunct + 36));
       }
       nextDisjunct = *(_DWORD *)(uintptr_t)(currentDisjunct + 48);
@@ -283,7 +283,7 @@ int  Rules_RemoveJoinNetworkNodes(int result)
   _DWORD *currentLink; // eax
   _DWORD *prevLink; // ecx
 
-  theJoin = *(_DWORD **)(uintptr_t)(result + 44);
+  theJoin = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 44);
   *(_DWORD *)(uintptr_t)(result + 44) = 0;
   if ( theJoin )
   {
@@ -301,7 +301,7 @@ int  Rules_RemoveJoinNetworkNodes(int result)
         if ( theJoin[4] && (*(_BYTE *)theJoin & 4) == 0 )
           Rules_UnlinkJoinNetworkNode(theJoin);
         Rules_ReleaseJoinNetworkNodeChain(theJoin[2]);
-        networkTest = *(__int16 **)(uintptr_t)(v5 + 12);
+        networkTest = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 12);
         *(_DWORD *)(uintptr_t)(v5 + 8) = 0;
         AST_RemoveHashedNodeChain(networkTest, v7);
         g_ClipsMemFreeListTemp = (int)(intptr_t)joinToFree;
@@ -585,7 +585,7 @@ _DWORD * Rules_AllocDefruleDisjunct(int ruleName, int localVarCnt, __int16 compl
   _DWORD *disjunctPtr; // ecx
   int theJoin; // eax
 
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 208);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208);
@@ -740,7 +740,7 @@ int  Rules_SumCEListComplexity(int theLHS)
   lhsNode = theLHS;
   for ( i = 0; lhsNode; lhsNode = *(_DWORD *)(uintptr_t)(lhsNode + 68) )
   {
-    testComplexity = Rules_ComputeExpressionComplexity(*(__int16 **)(uintptr_t)(lhsNode + 52));
+    testComplexity = Rules_ComputeExpressionComplexity((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(lhsNode + 52));
     fieldNode = *(_DWORD *)(uintptr_t)(lhsNode + 64);
     for ( i = testComplexity + v5; fieldNode; fieldNode = *(_DWORD *)(uintptr_t)(fieldNode + 64) )
     {
@@ -748,13 +748,13 @@ int  Rules_SumCEListComplexity(int theLHS)
       {
         for ( j = *(_DWORD *)(uintptr_t)(fieldNode + 68); j; i = subComplexity + v9 )
         {
-          subComplexity = Rules_ComputeExpressionComplexity(*(__int16 **)(uintptr_t)(j + 52));
+          subComplexity = Rules_ComputeExpressionComplexity((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 52));
           j = *(_DWORD *)(uintptr_t)(v8 + 64);
         }
       }
       else
       {
-        fieldComplexity = Rules_ComputeExpressionComplexity(*(__int16 **)(uintptr_t)(fieldNode + 52));
+        fieldComplexity = Rules_ComputeExpressionComplexity((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldNode + 52));
         i = fieldComplexity + v12;
       }
     }
@@ -944,7 +944,7 @@ _DWORD * Rules_AddConstructToModuleList(_DWORD *result)
   moduleHeader = result[2];
   if ( *(_DWORD *)(uintptr_t)(moduleHeader + 8) )
   {
-    result = *(_DWORD **)(uintptr_t)(moduleHeader + 8);
+    result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(moduleHeader + 8);
     do
     {
       result[4] = theConstruct;
@@ -1081,7 +1081,7 @@ LABEL_15:
            defruleArrayVersion,
            v32,
            (char)(intptr_t)aStructDefrule,
-           *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 4),
+           (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 4),
            0,
            0);
     defruleFileHandle = defruleFileOpenResult;
@@ -1127,7 +1127,7 @@ LABEL_9:
           joinArrayVersion,
           v32,
           (char)(intptr_t)aStructJoinnode,
-          *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 8),
+          (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 8),
           0,
           0);
   joinFileHandle = joinFileOpenResult;
@@ -1212,11 +1212,11 @@ int  Rules_WriteDefruleStructEntry(int theFile, int theDefrule, int maxIndices, 
   char v24; // [esp+0h] [ebp-10h]
 
   Output_WriteFormatted(maxIndices, theDefrule, theFile, (int)(intptr_t)asc_50AAE8, imageID);
-  Rules_WriteConstructHeaderToCode(theFile, theDefrule, maxIndices, moduleCount, **(_DWORD **)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 4));
+  Rules_WriteConstructHeaderToCode(theFile, theDefrule, maxIndices, moduleCount, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20) + 4));
   Output_WriteFormatted(v8, *(_DWORD *)(uintptr_t)(theDefrule + 20), theFile, (int)(intptr_t)aDDDDDDDD, *(_DWORD *)(uintptr_t)(theDefrule + 20));
-  Rules_ExpressionToCode(theFile, *(__int16 **)(uintptr_t)(theDefrule + 32), v9, maxIndices);
+  Rules_ExpressionToCode(theFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefrule + 32), v9, maxIndices);
   Output_WriteFormatted(v11, v10, theFile, (int)(intptr_t)asc_50AB10, v22);
-  Rules_ExpressionToCode(theFile, *(__int16 **)(uintptr_t)(theDefrule + 36), v12, maxIndices);
+  Rules_ExpressionToCode(theFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefrule + 36), v12, maxIndices);
   Output_WriteFormatted(v14, v13, theFile, (int)(intptr_t)asc_50AB10, v23);
   v16 = *(_DWORD *)(uintptr_t)(theDefrule + 40);
   if ( v16 )
@@ -1297,7 +1297,7 @@ int  Rules_WriteJoinNodeStructEntry(int theFile, int theJoin, int maxIndices, ch
   *(_BYTE *)(uintptr_t)theJoin &= ~0x20u;
   Output_WriteFormatted(maxIndices, theJoin, theFile, (int)(intptr_t)aDDDD00DD0, *(_BYTE *)(uintptr_t)theJoin & 1);
   Output_WriteFormatted(v7, v6, theFile, (int)(intptr_t)aNull_23, imageID);
-  Rules_WriteExpressionRefToCode(theFile, *(__int16 **)(uintptr_t)(v8 + 12), v9, imageID);
+  Rules_WriteExpressionRefToCode(theFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 + 12), v9, imageID);
   Output_WriteFormatted(v11, v10, theFile, (int)(intptr_t)asc_50AB10, v30);
   rightSideEntry = *(_DWORD *)(uintptr_t)(theJoin + 16);
   if ( !rightSideEntry )
@@ -1397,7 +1397,7 @@ LABEL_5:
 //----- (004C0510) --------------------------------------------------------
 int  Rules_WriteJoinHashStructRef(int theFile, int count)
 {
-  return Output_WriteFormatted(count, **(_DWORD **)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_4, **(_DWORD **)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20));
+  return Output_WriteFormatted(count, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_4, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefruleCodeGenItem + 20));
 }
 // 54E884: using guessed type int dword_54E884;
 
@@ -1418,7 +1418,7 @@ int Rules_CreateLHSParseNode(void)
   signed int maxFieldsExpr; // eax
   int newNode; // ecx
 
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 168);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168);

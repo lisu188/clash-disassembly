@@ -517,7 +517,7 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
             v8 = *argList + 8;
             *argList = v8;
             farPtrArgSlot = v8 - 8;
-            nFarPtr = *(_DWORD **)(uintptr_t)(v8 - 8);
+            nFarPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 - 8);
             __ES__ = *(_WORD *)(uintptr_t)(farPtrArgSlot + 4);
             goto LABEL_7;
           }
@@ -525,13 +525,13 @@ int  CRT_PrintfFormatEngine(int stream, _BYTE *format, void (*outputFn)(void), i
           {
             v11 = *argList + 4;
             *argList = v11;
-            nDwordPtr = *(_DWORD **)(uintptr_t)(v11 - 4);
+            nDwordPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v11 - 4);
             goto LABEL_11;
           }
 LABEL_10:
           v13 = *argList + 4;
           *argList = v13;
-          nDwordPtr = *(_DWORD **)(uintptr_t)(v13 - 4);
+          nDwordPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v13 - 4);
           goto LABEL_11;
         }
         if ( (flags & 0x10) != 0 )
@@ -542,13 +542,13 @@ LABEL_10:
             {
               v15 = *argList + 4;
               *argList = v15;
-              nWordPtr = *(_WORD **)(uintptr_t)(v15 - 4);
+              nWordPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v15 - 4);
             }
             else
             {
               v17 = *argList + 4;
               *argList = v17;
-              nWordPtr = *(_WORD **)(uintptr_t)(v17 - 4);
+              nWordPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v17 - 4);
             }
             *nWordPtr = char_count;
           }
@@ -565,7 +565,7 @@ LABEL_10:
             goto LABEL_10;
           v19 = *argList + 4;
           *argList = v19;
-          nDwordPtr = *(_DWORD **)(uintptr_t)(v19 - 4);
+          nDwordPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v19 - 4);
 LABEL_11:
           *nDwordPtr = char_count;
         }
@@ -573,7 +573,7 @@ LABEL_11:
         {
           v18 = *argList + 8;
           *argList = v18;
-          nFarPtr = *(_DWORD **)(uintptr_t)(v18 - 8);
+          nFarPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v18 - 8);
           __ES__ = *(_WORD *)(uintptr_t)(v18 - 8 + 4);
 LABEL_7:
           *nFarPtr = char_count;

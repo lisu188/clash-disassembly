@@ -51,7 +51,7 @@ LABEL_6:
     {
       Module_SetCurrent(targetModule);
       theCItem = (*(int (**)(void))(uintptr_t)(theConstruct + 16))();
-      Rules_FindImportExportConstruct(*(char **)(uintptr_t)thePCItem, &count, *(_BYTE **)(uintptr_t)(theCItem + 16), 0, 0);
+      Rules_FindImportExportConstruct((char *)(uintptr_t)*(_DWORD *)(uintptr_t)thePCItem, &count, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theCItem + 16), 0, 0);
       if ( count > 1 )
         break;
       Module_SetCurrent(Enum);
@@ -229,7 +229,7 @@ LABEL_12:
       AST_Free(v11);
       return 0;
     }
-    if ( !Lexer_CheckValueList(*(int **)(uintptr_t)(newSlotExpr + 6), (int)(intptr_t)aAssert_0) )
+    if ( !Lexer_CheckValueList((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(newSlotExpr + 6), (int)(intptr_t)aAssert_0) )
     {
       *error = 1;
       AST_Free(firstSlot);
@@ -248,7 +248,7 @@ LABEL_12:
   }
   else
   {
-    Rules_ReorderAssertSlotValues(*(_DWORD **)(uintptr_t)(theDeftemplate + 20), firstSlot, error);
+    Rules_ReorderAssertSlotValues((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 20), firstSlot, error);
     AST_Free(firstSlot);
     return v14;
   }
@@ -272,7 +272,7 @@ _DWORD * Rules_ParseSlotLabel(int readSource, int theToken, _DWORD *error, int t
     return (_DWORD *)(uintptr_t)(endType ^ *(_DWORD *)(uintptr_t)theToken);
   IO_OutNewline();
   IO_OutWriteToken(asc_50AD10);
-  IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+  IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
   if ( *(_DWORD *)(uintptr_t)theToken == 100 && (Parser_NextToken(readSource, theToken), *(_DWORD *)(uintptr_t)theToken == 2) )
   {
     result = Lexer_FindTemplateSlot(theDeftemplate, *(_DWORD *)(uintptr_t)(theToken + 4), position);
@@ -372,7 +372,7 @@ LABEL_11:
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_50AD10);
-    IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
     nextField = Rules_ParseAssertArgument(readSource, (unsigned int *)(uintptr_t)(unsigned int)theToken, error, 101, constantsOnly, &printError);
     if ( *error )
       break;
@@ -418,7 +418,7 @@ int  Rules_ReorderAssertSlotValues(_DWORD *slotList, int firstSlot, _DWORD *erro
         firstValue = newValue;
       lastValue = newValue;
     }
-    slotPtr = *(_DWORD **)(uintptr_t)(currentSlot + 16);
+    slotPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentSlot + 16);
     if ( !slotPtr )
       return firstValue;
   }
@@ -467,7 +467,7 @@ signed int  Rules_GetSlotAssertValues(_DWORD *slotPtr, int firstSlot, int a3, _D
     }
     else
     {
-      Rules_DeriveDefaultFromConstraints(*(char **)(uintptr_t)(slotDesc + 8), theValueBuffer, *(_DWORD *)(uintptr_t)(slotDesc + 4) & 1);
+      Rules_DeriveDefaultFromConstraints((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotDesc + 8), theValueBuffer, *(_DWORD *)(uintptr_t)(slotDesc + 4) & 1);
       defaultExpr = AST_BuildExpressionFromValue(theValueBuffer);
     }
     newArgument = defaultExpr;
@@ -565,7 +565,7 @@ _DWORD * Rules_ModifyOrDuplicateFact(int retractIt, int returnValue, double a3)
   resultValue = returnValue;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = (_DWORD *)(uintptr_t)Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &computeResult, *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), a3);
+  result = (_DWORD *)(uintptr_t)Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), &computeResult, *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), a3);
   if ( resultType != 1 )
   {
     if ( resultType == 6 )
@@ -626,7 +626,7 @@ LABEL_6:
       }
       while ( fieldIndex < *(_DWORD *)((char *)i + 46) );
     }
-    for ( j = *(_DWORD *)(uintptr_t)(v8 + 10); j; j = *(_DWORD *)(uintptr_t)(v17 + 10) )
+    for ( j = *(_DWORD *)(uintptr_t)(v8 + 10); j; j = *(_DWORD *)(uintptr_t)(j + 10) )
     {
       if ( *(_WORD *)(uintptr_t)j == 1 )
       {
@@ -634,7 +634,7 @@ LABEL_6:
       }
       else
       {
-        slotPtr = *(_DWORD **)(uintptr_t)(theDeftemplate + 20);
+        slotPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 20);
         position = 0;
         if ( !slotPtr )
         {
@@ -666,7 +666,7 @@ LABEL_46:
           Rules_ReportMultifieldAssertIntoSingleSlotError(v24, theDeftemplate);
           return Rules_ReturnFact(newFact);
         }
-        Parser_ParseForm(*(__int16 **)(uintptr_t)(j + 6), &computeResult, j, a3);
+        Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 6), &computeResult, j, a3);
         Lexer_ErrorRecover(0);
         if ( resultType == 4 )
         {
@@ -746,7 +746,7 @@ signed int  Lexer_ValidateMessageHandler(int top, int name, int theLHS)
   templateName = Rules_FindTemplateForFactAddress(*(_DWORD *)(uintptr_t)(functionArgs + 2), theLHS);
   if ( !templateName )
     return 1;
-  v7 = Symbol_LookupInModule((char **)(uintptr_t)g_DeftemplateConstructType, *(_BYTE **)(uintptr_t)(templateName + 16), 0);
+  v7 = Symbol_LookupInModule((char **)(uintptr_t)g_DeftemplateConstructType, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(templateName + 16), 0);
   theDeftemplate = v7;
   if ( !v7 )
     return 1;
@@ -774,7 +774,7 @@ signed int  Lexer_ValidateMessageHandler(int top, int name, int theLHS)
         break;
       }
     }
-    result = Lexer_CheckValueList(*(int **)(uintptr_t)(currentArg + 6), name);
+    result = Lexer_CheckValueList((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentArg + 6), name);
     if ( !result )
       return result;
     v15 = *(_DWORD *)(uintptr_t)(v14 + 2);
@@ -814,7 +814,7 @@ int  Rules_FindTemplateForFactAddress(int factAddress, int theLHS)
     thePattern = theLHS;
   }
 LABEL_4:
-  if ( thePattern && (rightNode = *(_DWORD **)(uintptr_t)(thePattern + 64), *rightNode == 17) && (templateNode = (_DWORD *)(uintptr_t)rightNode[17]) != 0 && *templateNode == 2 && !templateNode[16] && !templateNode[17] )
+  if ( thePattern && (rightNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(thePattern + 64), *rightNode == 17) && (templateNode = (_DWORD *)(uintptr_t)rightNode[17]) != 0 && *templateNode == 2 && !templateNode[16] && !templateNode[17] )
     return templateNode[1];
   else
     return 0;
@@ -1112,7 +1112,7 @@ int  Rules_IntersectAllowedValueExpressions(int constraint1, int constraint2, in
   int result; // eax
   signed int tmpExpr2; // eax
 
-  theList1 = *(__int16 **)(uintptr_t)(constraint1 + 6);
+  theList1 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 6);
   for ( i = 0; theList1; theList1 = *(__int16 **)(theList1 + 5) )
   {
     if ( Method_QueryRestrictionAllowsType(*theList1, *(_DWORD *)(theList1 + 1), constraint1) && Method_QueryRestrictionAllowsType(*theList1, *(_DWORD *)(theList1 + 1), constraint2) )
@@ -1122,7 +1122,7 @@ int  Rules_IntersectAllowedValueExpressions(int constraint1, int constraint2, in
       i = (__int16 *)(uintptr_t)tmpExpr;
     }
   }
-  for ( j = *(__int16 **)(uintptr_t)(constraint2 + 6); j; j = *(__int16 **)(j + 5) )
+  for ( j = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 6); j; j = *(__int16 **)(j + 5) )
   {
     if ( !Rules_FindItemInExpression(*j, *(_DWORD *)(j + 1), i, 1)
       && Method_QueryRestrictionAllowsType(*j, *(_DWORD *)(j + 1), constraint1)
@@ -1170,13 +1170,13 @@ int  Rules_IntersectNumericExpressions(int constraint1, int constraint2, int ran
   theMaxList = 0;
   if ( range )
   {
-    tmpmin1 = *(__int16 **)(uintptr_t)(constraint1 + 10);
-    v5 = *(__int16 **)(uintptr_t)(constraint1 + 14);
+    tmpmin1 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 10);
+    v5 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 14);
   }
   else
   {
-    tmpmin1 = *(__int16 **)(uintptr_t)(constraint1 + 18);
-    v5 = *(__int16 **)(uintptr_t)(constraint1 + 22);
+    tmpmin1 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 18);
+    v5 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 22);
   }
   while ( 1 )
   {
@@ -1185,13 +1185,13 @@ int  Rules_IntersectNumericExpressions(int constraint1, int constraint2, int ran
       break;
     if ( range )
     {
-      tmpmin2 = *(__int16 **)(uintptr_t)(constraint2 + 10);
-      tmpmax2 = *(__int16 **)(uintptr_t)(constraint2 + 14);
+      tmpmin2 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 10);
+      tmpmax2 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 14);
     }
     else
     {
-      tmpmin2 = *(__int16 **)(uintptr_t)(constraint2 + 18);
-      tmpmax2 = *(__int16 **)(uintptr_t)(constraint2 + 22);
+      tmpmin2 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 18);
+      tmpmax2 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 22);
     }
     while ( tmpmin2 )
     {
@@ -1303,35 +1303,35 @@ int  Rules_UpdateRestrictionFlags(int result)
   }
   if ( (*(_BYTE *)(uintptr_t)(theConstraint + 1) & 4) != 0 && (*(_BYTE *)(uintptr_t)theConstraint & 2) != 0 )
   {
-    symbolFound = Rules_FindItemInExpression(2, 0, *(__int16 **)(uintptr_t)(theConstraint + 6), 0);
+    symbolFound = Rules_FindItemInExpression(2, 0, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6), 0);
     *(_BYTE *)(uintptr_t)theConstraint &= ~2u;
     result = 2 * (symbolFound & 1);
     *(_DWORD *)(uintptr_t)theConstraint |= result;
   }
   if ( (*(_BYTE *)(uintptr_t)(theConstraint + 1) & 8) != 0 && (*(_BYTE *)(uintptr_t)theConstraint & 4) != 0 )
   {
-    stringFound = Rules_FindItemInExpression(3, 0, *(__int16 **)(uintptr_t)(theConstraint + 6), 0);
+    stringFound = Rules_FindItemInExpression(3, 0, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6), 0);
     *(_BYTE *)(uintptr_t)theConstraint &= ~4u;
     result = 4 * (stringFound & 1);
     *(_DWORD *)(uintptr_t)theConstraint |= result;
   }
   if ( (*(_BYTE *)(uintptr_t)(theConstraint + 1) & 0x10) != 0 && (*(_BYTE *)(uintptr_t)theConstraint & 8) != 0 )
   {
-    floatFound = Rules_FindItemInExpression(0, 0, *(__int16 **)(uintptr_t)(theConstraint + 6), 0);
+    floatFound = Rules_FindItemInExpression(0, 0, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6), 0);
     *(_BYTE *)(uintptr_t)theConstraint &= ~8u;
     result = 8 * (floatFound & 1);
     *(_DWORD *)(uintptr_t)theConstraint |= result;
   }
   if ( (*(_BYTE *)(uintptr_t)(theConstraint + 1) & 0x20) != 0 && (*(_BYTE *)(uintptr_t)theConstraint & 0x10) != 0 )
   {
-    integerFound = Rules_FindItemInExpression(1, 0, *(__int16 **)(uintptr_t)(theConstraint + 6), 0);
+    integerFound = Rules_FindItemInExpression(1, 0, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6), 0);
     *(_BYTE *)(uintptr_t)theConstraint &= ~0x10u;
     result = 16 * (integerFound & 1);
     *(_DWORD *)(uintptr_t)theConstraint |= result;
   }
   if ( (*(_BYTE *)(uintptr_t)(theConstraint + 1) & 0x40) != 0 && (*(_BYTE *)(uintptr_t)theConstraint & 0x20) != 0 )
   {
-    instanceNameFound = Rules_FindItemInExpression(8, 0, *(__int16 **)(uintptr_t)(theConstraint + 6), 0);
+    instanceNameFound = Rules_FindItemInExpression(8, 0, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6), 0);
     *(_BYTE *)(uintptr_t)theConstraint &= ~0x20u;
     result = 32 * (instanceNameFound & 1);
     *(_DWORD *)(uintptr_t)theConstraint |= result;

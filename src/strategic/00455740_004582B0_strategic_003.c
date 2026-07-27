@@ -16,22 +16,28 @@ void  Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delt
 {
   double new_rate; // st7
   double applied_rate; // st7
-  int v5; // edx
+  int building_record; // edx
   char tax_byte_upper; // ah
   float new_rate_float; // [esp+0h] [ebp-10h]
 
-  new_rate = (double)(*(_BYTE *)(uintptr_t)(BUILDING_RECORD_SIZE * building_index + gameData + 510110) & 0x3F) + tax_delta;
+  /* 00455740.  EDX is loaded once at 455749 (`imul eax,1D3h; mov edx,gameData;
+     add edx,eax`) and is the building record base for the whole routine - the
+     tax byte lives at [edx+7C89Eh] and is re-read/written from EDX at 455791,
+     455796 and 45579C.  The decompiler kept the folded expression for the first
+     read but dropped the register itself, leaving the never-assigned v5 that
+     IDA flags at 455791; the write-back then went to a wild address. */
+  building_record = BUILDING_RECORD_SIZE * building_index + gameData;
+  new_rate = (double)(*(_BYTE *)(uintptr_t)(building_record + 510110) & 0x3F) + tax_delta;
   new_rate_float = new_rate;
   if ( new_rate <= g_Building_MaxTaxRate )
   {
     applied_rate = new_rate_float;
     _CHP(ebx0, LODWORD(new_rate_float));
-    tax_byte_upper = *(_BYTE *)(uintptr_t)(v5 + 510110) & 0xC0;
-    *(_BYTE *)(uintptr_t)(v5 + 510110) = tax_byte_upper;
-    *(_BYTE *)(uintptr_t)(v5 + 510110) = (int)applied_rate & 0x3F | tax_byte_upper;
+    tax_byte_upper = *(_BYTE *)(uintptr_t)(building_record + 510110) & 0xC0;
+    *(_BYTE *)(uintptr_t)(building_record + 510110) = tax_byte_upper;
+    *(_BYTE *)(uintptr_t)(building_record + 510110) = (int)applied_rate & 0x3F | tax_byte_upper;
   }
 }
-// 455791: variable 'v5' is possibly undefined
 // 5000C6: using guessed type float flt_5000C6;
 // 5202E4: using guessed type int gameData;
 
@@ -559,8 +565,11 @@ int  Building_OnGarrisonChange(int building_index, int instance_record, double a
   int building_offset; // esi
   int result; // eax
   int previous_strength; // ebx
-  _DWORD moc_value[2]; // [esp-4h] [ebp-28h] BYREF
-  int *strength_value_ptr; // [esp+4h] [ebp-20h]
+  /* `sub esp,18h` then `mov ebx,esp`: the DATA_OBJECT buffer IS the 24-byte local
+     area, and var_20 ([esp+8]) is its value slot - i.e. `strength_value_ptr` was a
+     stack alias for moc_value[2], not a separate local. Same repair already applied
+     to the sibling Rules_LinkArmyFact (strategic_002.c:994-1006). */
+  _DWORD moc_value[6]; // [esp+0h] BYREF
   int v11 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v11 = instance_record;
@@ -570,11 +579,13 @@ int  Building_OnGarrisonChange(int building_index, int instance_record, double a
   {
     moc_value[1] = 1;
     Rules_GetInstanceSlotValue(*(_DWORD *)(uintptr_t)(result + 510137), aMoc_1, building_index, moc_value);
-    previous_strength = strength_value_ptr[4];
+    /* 456172: `mov eax,[esp+var_20]; mov ebx,[eax+10h]` */
+    previous_strength = *(_DWORD *)((uintptr_t)(unsigned int)moc_value[2] + 16);
     result = Building_CalcGarrisonFactStrength(building_index);
     if ( previous_strength != result )
     {
-      strength_value_ptr = Rules_AddIntegerValue(result);
+      /* 456181: `call sub_482000; mov [esp+var_20], eax` */
+      moc_value[2] = (int)(uintptr_t)Rules_AddIntegerValue(result);
       return Rules_PutInstanceSlotValue(*(_DWORD *)(uintptr_t)(building_offset + gameData + 510137), aMoc_2, instance_record, moc_value, a3);
     }
   }

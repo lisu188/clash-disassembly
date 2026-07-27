@@ -272,7 +272,7 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
         {
           while ( 1 )
           {
-            nextMin = *(_DWORD **)(uintptr_t)(minCursor + 10);
+            nextMin = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(minCursor + 10);
             nextMax = *(_DWORD *)(maxCursor + 5);
             if ( !nextMin )
               break;
@@ -295,7 +295,7 @@ __int16 * Rules_UnionRangeMinMaxValueWithList(__int16 *theMin, __int16 *theMax, 
             }
             else
             {
-              result = *(__int16 **)(uintptr_t)(minCursor + 10);
+              result = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(minCursor + 10);
               maxCursor = *(__int16 **)(maxCursor + 5);
               minCursor = (signed int)(intptr_t)result;
               if ( !result )
@@ -328,8 +328,8 @@ __int16 * Rules_UnionAllowedValueExpressions(int constraint1, int constraint2, i
   __int16 *result; // eax
   int v7; // ecx
 
-  theHead = Rules_AddToUnionList(*(__int16 **)(uintptr_t)(constraint1 + 6), 0, newConstraint);
-  result = Rules_AddToUnionList(*(__int16 **)(uintptr_t)(constraint2 + 6), theHead, v5);
+  theHead = Rules_AddToUnionList((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint1 + 6), 0, newConstraint);
+  result = Rules_AddToUnionList((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraint2 + 6), theHead, v5);
   *(_DWORD *)(uintptr_t)(v7 + 6) = result;
   return result;
 }
@@ -358,7 +358,7 @@ LABEL_8:
         result = (__int16 *)(uintptr_t)AST_NewNode(*theItem, *(_DWORD *)(theItem + 1));
         *(_DWORD *)(result + 5) = theHead;
         theHead = result;
-        theItem = *(__int16 **)(uintptr_t)(v7 + 10);
+        theItem = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 10);
         if ( !theItem )
           return result;
       }
@@ -394,7 +394,7 @@ int  Rules_RemoveConstantFromConstraint(int result, int theValue, int theConstra
   lastOne = 0;
   if ( theConstraint )
   {
-    theList = *(__int16 **)(uintptr_t)(theConstraint + 6);
+    theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 6);
     *(_DWORD *)(uintptr_t)(theConstraint + 6) = 0;
     while ( theList )
     {
@@ -523,7 +523,7 @@ int  Rules_BsaveDefglobals(int fp)
     for ( k = Defglobal_EnumNext(0); k; k = Defglobal_EnumNext(v9) )
     {
       AST_ExtractPatternBindingInfo(dummyGlobal, k);
-      dummyGlobal[3] = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v8 + 52));
+      dummyGlobal[3] = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 + 52));
       Rules_BsaveWriteBlock(16, fp, dummyGlobal);
     }
   }
@@ -646,7 +646,7 @@ signed int Rules_ClearDefglobalBload(void)
       Rules_ReleaseSymbolReference((int *)(uintptr_t)(recordOffset + g_DefglobalBloadRecords), globalIndex);
       Rules_ValueDeinstall(v2 + g_DefglobalBloadRecords + 28, v3);
       if ( *(_DWORD *)(uintptr_t)(v4 + g_DefglobalBloadRecords + 32) == 4 )
-        Rules_ReturnMultifieldToPool(*(_DWORD **)(uintptr_t)(v4 + g_DefglobalBloadRecords + 36));
+        Rules_ReturnMultifieldToPool((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + g_DefglobalBloadRecords + 36));
       globalIndex = v5 + 1;
       recordOffset = v4 + 56;
     }
@@ -762,7 +762,7 @@ int  Defgeneric_CountMethodsAndMarkExpressions(_DWORD *theDefgeneric)
         do
         {
           g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(restrictionOffset + theMethod[7] + 4));
-          Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v10 + v9 + 4));
+          Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + v9 + 4));
           g_Defgeneric_PackedExpressionCount += *(_DWORD *)(uintptr_t)(v12 + v11 + 8);
           ++restrictionIndex;
           restrictionOffset = v12 + 12;
@@ -812,7 +812,7 @@ __int16 * Defgeneric_BsaveWriteMethodActionExpressions(__int16 *result, int fp)
     do
     {
       ++methodIndex;
-      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28) + 32), fp);
+      result = Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28) + 32), fp);
       methodOffset = v6 + 40;
     }
     while ( methodIndex < *(_DWORD *)(uintptr_t)(theDefgeneric + 32) );
@@ -840,7 +840,7 @@ __int16 * Defgeneric_BsaveWriteRestrictionExpressions(__int16 *result, int fp)
     do
     {
       theMethod = methodOffset + *(_DWORD *)(uintptr_t)(theDefgeneric + 28);
-      result = *(__int16 **)(uintptr_t)(theMethod + 8);
+      result = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theMethod + 8);
       restrictionIndex = 0;
       if ( result )
       {
@@ -848,7 +848,7 @@ __int16 * Defgeneric_BsaveWriteRestrictionExpressions(__int16 *result, int fp)
         do
         {
           ++restrictionIndex;
-          result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(restrictionOffset + *(_DWORD *)(uintptr_t)(theMethod + 28) + 4), fp);
+          result = Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(restrictionOffset + *(_DWORD *)(uintptr_t)(theMethod + 28) + 4), fp);
           restrictionOffset = v7 + 12;
         }
         while ( restrictionIndex < *(_DWORD *)(uintptr_t)(theMethod + 8) );

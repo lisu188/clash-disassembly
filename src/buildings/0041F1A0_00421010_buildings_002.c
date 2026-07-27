@@ -1139,7 +1139,10 @@ int  Castle_BuildSchoolWithAnimation(char a1, DWORD runtime_context)
   int result; // eax
   _BYTE *recordCopy; // eax
   int recordBase; // esi
-  int recordDwordCount; // ecx
+  /* 420F17: `mov ecx, 74h` - 116 dwords, then the trailing `movsw; movsb`
+     completes the 467-byte record.  IDA never initialised this counter
+     (flagged at 420F25), so the copy length was garbage. */
+  int recordDwordCount = 116; // ecx
   _BYTE *tailDst; // edi
   int tailSrc; // esi
   int recordCopyPtr; // ebx
@@ -1178,7 +1181,8 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD runtime_context)
   int tailSrc; // esi
   int recordCopyPtr; // ebx
 
-  Building_BuildWorkshop(a1, runtime_context);
+  /* sub_420D50: `mov eax, ds:dword_526A64` - the selected building record. */
+  Building_BuildWorkshop(g_SelectedBuildingRecord, a1, runtime_context);
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
   {
@@ -1202,7 +1206,7 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD runtime_context)
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420DD0) --------------------------------------------------------
-int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD runtime_context)
+int  Castle_BuildBarracksWithAnimation(int a1 CLASH95_UNUSED, char a2, DWORD runtime_context)
 {
   int result; // eax
   _BYTE *recordCopy; // eax
@@ -1212,7 +1216,7 @@ int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD runtime_context)
   int tailSrc; // esi
   int recordCopyPtr; // ebx
 
-  Building_BuildBarracks(a1, a2, runtime_context);
+  Building_BuildBarracks(g_SelectedBuildingRecord, a2, runtime_context);
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
@@ -1247,7 +1251,8 @@ int  Castle_BuildHospitalWithAnimation(char a1, DWORD runtime_context)
   int recordCopyPtr; // ebx
   char *soundName; // eax
 
-  Building_BuildHospital(a1, runtime_context);
+  /* same __usercall: eax = the selected building record. */
+  Building_BuildHospital(g_SelectedBuildingRecord, a1, runtime_context);
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
   {
@@ -1286,7 +1291,9 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD runtime_context)
   int tailSrc; // esi
   int recordCopyPtr; // ebx
 
-  Building_BuildSmiths(a1, runtime_context);
+  /* 420EF0: `mov eax, ds:dword_526A64; call sub_41F020` - the selected
+     building record is the EAX argument. */
+  Building_BuildSmiths(g_SelectedBuildingRecord, a1, runtime_context);
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
   {
@@ -1306,7 +1313,6 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD runtime_context)
   }
   return result;
 }
-// 420F25: variable 'v5' is possibly undefined
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420F70) --------------------------------------------------------

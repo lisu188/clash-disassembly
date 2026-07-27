@@ -90,7 +90,7 @@ int  Rules_CloneLHSParseNode(int *theConstraint)
   sourceNode = theConstraint;
   if ( !theConstraint )
     return 0;
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 168);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 168);
@@ -731,7 +731,7 @@ int Module_ListDefmodulesCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect((int)(intptr_t)aListDefmodules, 0, 0);
   if ( result != -1 )
     return Module_PrintAllNamesWithTally((int)(intptr_t)g_IO_LogicalName_WDisplay);
   return result;
@@ -796,7 +796,7 @@ int * Module_RegisterImportExportConstructType(int theName, int theType)
   int *result; // eax
 
   v2 = theName;
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -874,7 +874,7 @@ signed int  Module_ParseDefmoduleConstruct(int readSource)
   }
   else
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 128);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
@@ -977,7 +977,7 @@ signed int  Module_ParseDefmoduleConstruct(int readSource)
           {
             newItemHeader = (*(int (**)(void))(uintptr_t)(itemDescriptor + 8))();
             *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v26 + 8) + arrayOffset) = newItemHeader;
-            itemHeaderPtr = *(_DWORD **)(uintptr_t)(arrayOffset + *(_DWORD *)(uintptr_t)(v26 + 8));
+            itemHeaderPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(arrayOffset + *(_DWORD *)(uintptr_t)(v26 + 8));
             itemHeaderPtr[1] = 0;
             itemHeaderPtr[2] = 0;
             *itemHeaderPtr = v26;
@@ -1020,7 +1020,7 @@ signed int  Module_ParseDefmoduleConstruct(int readSource)
     *(_DWORD *)(uintptr_t)(v21 + 24) = moduleIndex;
   }
   Module_SetCurrent(v21);
-  for ( k = g_Module_AfterDefineCallbackList; k; k = *(_DWORD *)(uintptr_t)(v24 + 12) )
+  for ( k = g_Module_AfterDefineCallbackList; k; k = *(_DWORD *)(uintptr_t)(k + 12) )
     (*(void (**)(void))(uintptr_t)(k + 4))();
   return 0;
 }
@@ -1140,7 +1140,7 @@ int  Module_ParseImportClause(int readSource, _DWORD *theToken, int newModule)
     Parser_ReportSyntaxError();
     return 1;
   }
-  theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(theToken[1] + 16));
+  theModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken[1] + 16));
   sourceModule = theModule;
   savedModule = theModule;
   if ( !theModule )
@@ -1194,7 +1194,7 @@ LABEL_16:
     {
       v12 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(newModule + 12) + 8);
       if ( v12 )
-        errorConstructName = *(char **)(uintptr_t)(v12 + 16);
+        errorConstructName = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v12 + 16);
       else
         errorConstructName = 0;
       theModule = savedModule;
@@ -1203,7 +1203,7 @@ LABEL_16:
   }
   Module_BeginEnum();
   Module_SetCurrent(newModule);
-  theImport = *(_DWORD **)(uintptr_t)(newModule + 12);
+  theImport = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(newModule + 12);
   if ( theImport )
   {
     while ( 1 )
@@ -1212,9 +1212,9 @@ LABEL_16:
       {
         if ( theImport[2] )
         {
-          importModule = Module_FindByName(*(_BYTE **)(uintptr_t)(*theImport + 16));
+          importModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*theImport + 16));
           Module_SetCurrent((int)(intptr_t)importModule);
-          if ( !Rules_FindImportExportConstruct(*(char **)(uintptr_t)(theImport[1] + 16), v21, *(_BYTE **)(uintptr_t)(theImport[2] + 16), 1, 0) )
+          if ( !Rules_FindImportExportConstruct((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theImport[1] + 16), v21, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theImport[2] + 16), 1, 0) )
             break;
         }
       }
@@ -1222,7 +1222,7 @@ LABEL_16:
       if ( !theImport )
         goto LABEL_31;
     }
-    failedConstructName = *(char **)(uintptr_t)(theImport[2] + 16);
+    failedConstructName = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theImport[2] + 16);
     importModuleName = Module_GetName((int)(intptr_t)importModule);
     Rules_ReportConstructNotExported(importModuleName, failedConstructName);
     Module_EndEnum();
@@ -1374,7 +1374,7 @@ int  Module_ParsePortItemSpecList(int readSource, int theToken, int *importModul
 LABEL_23:
     IO_OutNewline();
     IO_OutWriteToken(asc_50AC58);
-    IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
     goto LABEL_24;
   }
   if ( *(_DWORD *)(uintptr_t)theToken == 101 )
@@ -1387,7 +1387,7 @@ LABEL_24:
   {
     if ( *(_DWORD *)(uintptr_t)theToken != *(_DWORD *)(uintptr_t)(thePortConstruct + 4) )
       goto LABEL_24;
-    v9 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+    v9 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
     if ( v9 )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);

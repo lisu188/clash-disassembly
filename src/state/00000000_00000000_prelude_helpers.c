@@ -399,8 +399,15 @@ CLASH95_INTERNAL void Rules_EnsureObjectPatternVTable(void)
   g_Rules_ObjectPatternVTable[5] = (int)(uintptr_t)Rules_GetNextInstance;
   g_Rules_ObjectPatternVTable[6] = (int)(uintptr_t)Instance_DecrementBusyCount;
   g_Rules_ObjectPatternVTable[7] = (int)(uintptr_t)Rules_IncrementRefCountField40;
-  g_Rules_ObjectPatternVTable[8] = (int)(uintptr_t)Instance_ReleaseSlotValueContainer;
-  g_Rules_ObjectPatternVTable[9] = (int)(uintptr_t)Instance_AcquireLocalSlotArray;
-  g_Rules_ObjectPatternVTable[10] = (int)(uintptr_t)Instance_NotifyCreated;
+  /*
+   * clash95.asm:432514 unk_51A290 - after +28 the record has an `align 20h`
+   * hole (+32..+47) and the last three hooks live at BYTE offsets 48/52/56,
+   * i.e. indices 12/13/14. They were being written at 32/36/40, so the
+   * decrement/increment-basis slots the agenda loop calls read as NULL.
+   */
+  g_Rules_ObjectPatternVTable[12] = (int)(uintptr_t)Instance_ReleaseSlotValueContainer;
+  g_Rules_ObjectPatternVTable[13] = (int)(uintptr_t)Instance_AcquireLocalSlotArray;
+  g_Rules_ObjectPatternVTable[14] = (int)(uintptr_t)Instance_NotifyCreated;
+
   initialized = 1;
 }

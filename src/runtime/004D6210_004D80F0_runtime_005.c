@@ -165,14 +165,14 @@ int  Class_SlotRangeQuery(int theDefclass, _BYTE *slotName, _DWORD *a3)
   result = Class_ResolveNamedSlot((int)(intptr_t)a3, theDefclass, slotName);
   if ( result )
   {
-    theConstraint = *(char **)(uintptr_t)(result + 20);
+    theConstraint = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 20);
     if ( theConstraint && ((constraintFlags = *theConstraint, (*theConstraint & 1) != 0) || (constraintFlags & 8) != 0 || (constraintFlags & 0x10) != 0 ? (hasRange = 1) : (hasRange = 0), hasRange) )
     {
       a3[4] = 1;
       a3[2] = Rules_CreateEphemeralMultifield(2);
-      *(_WORD *)(uintptr_t)(a3[2] + 14) = **(_WORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 10);
+      *(_WORD *)(uintptr_t)(a3[2] + 14) = *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 10);
       *(_DWORD *)(uintptr_t)(a3[2] + 16) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 10) + 2);
-      *(_WORD *)(uintptr_t)(a3[2] + 20) = **(_WORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 14);
+      *(_WORD *)(uintptr_t)(a3[2] + 20) = *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 14);
       result = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v8 + 20) + 14) + 2);
       *(_DWORD *)(uintptr_t)(a3[2] + 22) = result;
     }
@@ -207,10 +207,10 @@ _DWORD * Class_SlotCardinalityQuery(int theDefclass, _BYTE *slotName, int a3)
       theConstraint = *(_DWORD *)(uintptr_t)(v5 + 20);
       if ( theConstraint )
       {
-        *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 14) = **(_WORD **)(uintptr_t)(theConstraint + 18);
+        *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 14) = *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraint + 18);
         *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 16) = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 20) + 18) + 2);
-        *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 20) = **(_WORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 20) + 22);
-        result = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 20) + 22) + 2);
+        *(_WORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 20) = *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 20) + 22);
+        result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 20) + 22) + 2);
         *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(a3 + 8) + 22) = result;
       }
       else
@@ -1354,15 +1354,15 @@ int  Compiler_WriteConstraintTableFile(const char *fileName, int fileId, DWORD i
       }
       Output_WriteFormatted(v13, v15, outputFile, (int)(intptr_t)aDDDDDDDDDDDDDD, *(_BYTE *)(uintptr_t)k & 1);
       Output_WriteFormatted(v18, v17, outputFile, (int)(intptr_t)a0, savedFileId);
-      Rules_WriteExpressionRefToCode(outputFile, *(__int16 **)(uintptr_t)(k + 6), maxIndices, imageId);
+      Rules_WriteExpressionRefToCode(outputFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 6), maxIndices, imageId);
       Output_WriteFormatted(v20, v19, outputFile, (int)(intptr_t)asc_50D54C, v38);
-      Rules_WriteExpressionRefToCode(outputFile, *(__int16 **)(uintptr_t)(k + 10), maxIndices, imageId);
+      Rules_WriteExpressionRefToCode(outputFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 10), maxIndices, imageId);
       Output_WriteFormatted(v22, v21, outputFile, (int)(intptr_t)asc_50D54C, v39);
-      Rules_WriteExpressionRefToCode(outputFile, *(__int16 **)(uintptr_t)(k + 14), maxIndices, imageId);
+      Rules_WriteExpressionRefToCode(outputFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 14), maxIndices, imageId);
       Output_WriteFormatted(v24, v23, outputFile, (int)(intptr_t)asc_50D54C, v40);
-      Rules_WriteExpressionRefToCode(outputFile, *(__int16 **)(uintptr_t)(k + 18), maxIndices, imageId);
+      Rules_WriteExpressionRefToCode(outputFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 18), maxIndices, imageId);
       Output_WriteFormatted(v26, v25, outputFile, (int)(intptr_t)asc_50D54C, v41);
-      Rules_WriteExpressionRefToCode(outputFile, *(__int16 **)(uintptr_t)(k + 22), maxIndices, imageId);
+      Rules_WriteExpressionRefToCode(outputFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 22), maxIndices, imageId);
       Output_WriteFormatted(v28, v27, outputFile, (int)(intptr_t)aNull_10, v42);
       if ( *(_DWORD *)(uintptr_t)(k + 30) )
       {

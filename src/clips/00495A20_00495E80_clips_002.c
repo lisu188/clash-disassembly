@@ -86,10 +86,10 @@ signed int  Rules_PackConstraintRecord(int *constraints, int bc)
   *(_BYTE *)(uintptr_t)(bc + 1) &= ~0x80u;
   *(_DWORD *)(uintptr_t)bc |= (v19 & 1) << 15;
   *(_DWORD *)(uintptr_t)(bc + 4) = AST_GetHashedNodeIndex(*(__int16 **)((char *)constraints + 6));
-  *(_DWORD *)(uintptr_t)(bc + 8) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v20 + 10));
-  *(_DWORD *)(uintptr_t)(bc + 12) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v21 + 14));
-  *(_DWORD *)(uintptr_t)(bc + 16) = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v22 + 18));
-  result = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v23 + 22));
+  *(_DWORD *)(uintptr_t)(bc + 8) = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v20 + 10));
+  *(_DWORD *)(uintptr_t)(bc + 12) = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v21 + 14));
+  *(_DWORD *)(uintptr_t)(bc + 16) = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v22 + 18));
+  result = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v23 + 22));
   *(_DWORD *)(uintptr_t)(bc + 20) = result;
   return result;
 }
@@ -265,7 +265,7 @@ BOOL  Rules_BsaveCommand(DWORD a1, double a2)
   int v5; // ecx
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect(0, 0, 1) != -1 )
   {
     fileName = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, a2);
     if ( fileName )

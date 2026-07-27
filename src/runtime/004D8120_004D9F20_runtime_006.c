@@ -138,12 +138,12 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
   if ( result )
   {
     Output_WriteFormatted(
-      **(_DWORD **)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20),
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20),
       *(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20),
       result,
       (int)(intptr_t)aStructDefmodul,
-      **(_DWORD **)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
-    Output_WriteFormatted(v9, v8, headerFP, (int)(intptr_t)aExternStructDe, **(_DWORD **)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
+    Output_WriteFormatted(v9, v8, headerFP, (int)(intptr_t)aExternStructDe, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
     Enum = (int *)(uintptr_t)Module_NextEnum(0);
     if ( Enum )
     {
@@ -158,7 +158,7 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
                 arrayVersion,
                 headerFP,
                 (char)(intptr_t)aStructDefmod_0,
-                *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 4),
+                (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 4),
                 0,
                 0);
         v13 = v10;
@@ -168,7 +168,7 @@ signed int  Compiler_WriteModuleTableFile(const char *fileName, const char *path
         Output_WriteFormatted(v12, v11, v10, (int)(intptr_t)asc_50D6C8, itemsInFile);
         Compiler_WriteSymbolReference(v13, *Enum, v14);
         Output_WriteFormatted(v16, v15, v13, (int)(intptr_t)aNull_30, itemsInFile);
-        Output_WriteFormatted(fileIdLocal, itemsWritten, v13, (int)(intptr_t)aSD_1D, **(_DWORD **)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
+        Output_WriteFormatted(fileIdLocal, itemsWritten, v13, (int)(intptr_t)aSD_1D, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20));
         itemList = Module_GetItemList();
         itemIndex = 0;
         theItem = itemList;
@@ -346,7 +346,7 @@ signed int  Compiler_WritePortItemTableFile(
              arrayVersion,
              headerFPLocal,
              (char)(intptr_t)aStructPortitem,
-             *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 8),
+             (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsDefmoduleCompilerItem + 20) + 8),
              0,
              0);
       portItemFile = filePtr;
@@ -478,7 +478,7 @@ int __cdecl Rules_RegisterObjectPatternConstraintEvaluators(void)
 }
 
 //----- (004D89B0) --------------------------------------------------------
-unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult, int a3, double a4)
+unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, _DWORD *theResult, int a3, double a4)
 {
   int compareInfo; // ecx
   __int16 *boundField; // esi
@@ -496,12 +496,14 @@ unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult
   compareInfo = *(_DWORD *)(uintptr_t)(theValue + 16);
   if ( (*(_BYTE *)(uintptr_t)(compareInfo + 1) & 2) != 0 )
   {
-    Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &v12, compareInfo, a4);
-    boundField = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
+    /* 4D89xx: `mov esi,[esi+6]` etc. are 32-BIT loads out of emulated memory. */
+    Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), &v12, compareInfo, a4);
+    boundField = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
   }
   else
   {
-    boundField = *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6);
+    /* 4D89C8: `mov esi, ds:dword_51A960; mov esi,[esi+6]` - 32-bit load. */
+    boundField = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
     if ( (*(_DWORD *)(uintptr_t)(g_ObjectPatternActiveClassNode + 4) & 0xFC) == 0x10 )
     {
       theSegment = *(_DWORD *)(uintptr_t)(g_ObjectPatternActiveClassNode + 8);
@@ -529,11 +531,11 @@ unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult
   else
     resultBits = *(_DWORD *)(uintptr_t)compareInfo << 23;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 4D8A2F: variable 'v5' is possibly undefined
@@ -592,18 +594,18 @@ signed int  Rules_FetchObjectSlotFieldSimple(int theValue, _DWORD *theResult, in
 // 51B478: using guessed type int dword_51B478;
 
 //----- (004D8C00) --------------------------------------------------------
-signed int  Rules_EvalObjectSlotIndexInRange(int theValue, int theResult)
+signed int  Rules_EvalObjectSlotIndexInRange(int theValue, _DWORD *theResult)
 {
   int rangeBitmap; // ecx
   unsigned int minLength; // eax
 
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
-  *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+  theResult[1] = 2;
+  theResult[2] = g_ClipsFalseSymbol;
   rangeBitmap = *(_DWORD *)(uintptr_t)(theValue + 16);
   minLength = *(_DWORD *)(uintptr_t)rangeBitmap & 0x7FFF;
   if ( minLength > g_ObjectPatternMatchFieldCount || *(char *)(uintptr_t)(rangeBitmap + 1) < 0 && minLength < g_ObjectPatternMatchFieldCount )
     return 0;
-  *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+  theResult[2] = g_ClipsTrueSymbol;
   return 1;
 }
 // 51B480: using guessed type int dword_51B480;
@@ -611,7 +613,7 @@ signed int  Rules_EvalObjectSlotIndexInRange(int theValue, int theResult)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D8C60) --------------------------------------------------------
-unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, int theResult)
+unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, _DWORD *theResult)
 {
   unsigned int *compareInfo; // eax
   int slotNameMap; // esi
@@ -621,7 +623,7 @@ unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, int theResult)
   unsigned int resultBits; // eax
   unsigned int result; // eax
 
-  compareInfo = *(unsigned int **)(uintptr_t)(theValue + 16);
+  compareInfo = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
   slotNameMap = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 44) + 60);
   slotArray = *(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 72);
   firstSlot = *(_DWORD *)(uintptr_t)(slotArray + 4 * *(_DWORD *)(uintptr_t)(slotNameMap + 4 * (*compareInfo & 0x7FFF)) - 4);
@@ -631,11 +633,11 @@ unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, int theResult)
   else
     resultBits = *compareInfo;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 51B478: using guessed type int dword_51B478;
@@ -643,7 +645,7 @@ unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, int theResult)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D8CF0) --------------------------------------------------------
-unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, int theResult)
+unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, _DWORD *theResult)
 {
   unsigned int *compareInfo; // esi
   int fieldPtr; // eax
@@ -651,7 +653,7 @@ unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, int theResult)
   unsigned int resultBits; // eax
   unsigned int result; // eax
 
-  compareInfo = *(unsigned int **)(uintptr_t)(theValue + 16);
+  compareInfo = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
   fieldPtr = Rules_ResolveObjectSlotFieldPointer(g_ClipsObjectReteCurrentInstance, *compareInfo & 0x7FFF, compareInfo[1] & 0x7F, compareInfo[1] << 24 >> 31);
   secondSlot = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 72)
                  + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsObjectReteCurrentInstance + 44) + 60) + 4 * ((2 * *compareInfo) >> 17))
@@ -661,11 +663,11 @@ unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, int theResult)
   else
     resultBits = *compareInfo;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 51B478: using guessed type int dword_51B478;
@@ -673,7 +675,7 @@ unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, int theResult)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D8D90) --------------------------------------------------------
-unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, int theResult)
+unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, _DWORD *theResult)
 {
   unsigned int *compareInfo; // esi
   __int16 *firstField; // ebp
@@ -681,7 +683,7 @@ unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, int theResult)
   unsigned int resultBits; // eax
   unsigned int result; // eax
 
-  compareInfo = *(unsigned int **)(uintptr_t)(theValue + 16);
+  compareInfo = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
   firstField = (__int16 *)(uintptr_t)Rules_ResolveObjectSlotFieldPointer(g_ClipsObjectReteCurrentInstance, *compareInfo & 0x7FFF, compareInfo[1] & 0x7F, compareInfo[1] << 24 >> 31);
   secondField = (__int16 *)(uintptr_t)Rules_ResolveObjectSlotFieldPointer(g_ClipsObjectReteCurrentInstance, (2 * *compareInfo) >> 17, compareInfo[1] << 17 >> 25, compareInfo[1] << 16 >> 31);
   if ( *firstField == *secondField && *(_DWORD *)(firstField + 1) == *(_DWORD *)(secondField + 1) )
@@ -689,11 +691,11 @@ unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, int theResult)
   else
     resultBits = *compareInfo;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 51B478: using guessed type int dword_51B478;
@@ -701,11 +703,12 @@ unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, int theResult)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D8E30) --------------------------------------------------------
-unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, int theResult, int theBinds)
+unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, _DWORD *theResult, int theBinds)
 {
-  _DWORD *v4; // ecx
+  /* 4D8E3D: `mov ecx,[eax+10h]` - a 32-BIT load whose result stays live in ecx
+     across both sub_4D90D0 calls; IDA split it into two undefined temps v4/v6. */
+  unsigned int *compareInfo; // ecx
   int firstSlot; // edi
-  unsigned int *v6; // ecx
   int secondSlot; // eax
   unsigned int resultBits; // eax
   unsigned int result; // eax
@@ -714,24 +717,25 @@ unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, int theResult, i
   _DWORD marksBuffer[5]; // [esp+8h] [ebp-14h] BYREF
 
   marksBuffer[3] = theBinds;
-  Rules_ResolveJoinBindingRecord((unsigned __int8)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theValue + 16) + 4) - 1, &firstInstance, marksBuffer);
-  firstSlot = *(_DWORD *)(uintptr_t)(4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(firstInstance + 44) + 60) + 4 * (*v4 & 0x7FFF))
+  compareInfo = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
+  Rules_ResolveJoinBindingRecord((unsigned __int8)compareInfo[1] - 1, &firstInstance, marksBuffer);
+  firstSlot = *(_DWORD *)(uintptr_t)(4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(firstInstance + 44) + 60) + 4 * (*compareInfo & 0x7FFF))
                  + *(_DWORD *)(uintptr_t)(firstInstance + 72)
                  - 4);
-  Rules_ResolveJoinBindingRecord((v4[1] << 16 >> 24) - 1, &secondInstance, marksBuffer);
+  Rules_ResolveJoinBindingRecord((compareInfo[1] << 16 >> 24) - 1, &secondInstance, marksBuffer);
   secondSlot = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(secondInstance + 72)
-                 + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(secondInstance + 44) + 60) + 4 * ((2 * *v6) >> 17))
+                 + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(secondInstance + 44) + 60) + 4 * ((2 * *compareInfo) >> 17))
                  - 4);
   if ( *(_DWORD *)(uintptr_t)(firstSlot + 4) << 24 >> 26 == *(_DWORD *)(uintptr_t)(secondSlot + 4) << 24 >> 26 && *(_DWORD *)(uintptr_t)(firstSlot + 8) == *(_DWORD *)(uintptr_t)(secondSlot + 8) )
-    resultBits = *v6 << 16;
+    resultBits = *compareInfo << 16;
   else
-    resultBits = *v6;
+    resultBits = *compareInfo;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 4D8E53: variable 'v4' is possibly undefined
@@ -740,7 +744,7 @@ unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, int theResult, i
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D8F10) --------------------------------------------------------
-unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, int theResult, int theBinds)
+unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, _DWORD *theResult, int theBinds)
 {
   _DWORD *compareInfo; // esi
   int firstFieldPtr; // ecx
@@ -752,9 +756,10 @@ unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, int theRes
   _DWORD marksBuffer[5]; // [esp+8h] [ebp-14h] BYREF
 
   marksBuffer[3] = theBinds;
-  compareInfo = *(_DWORD **)(uintptr_t)(theValue + 16);
+  compareInfo = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
   Rules_ResolveJoinBindingRecord((unsigned __int8)compareInfo[1] - 1, &firstInstance, marksBuffer);
-  Rules_ResolveObjectSlotFieldPointer(firstInstance, *compareInfo & 0x7FFF, compareInfo[1] << 9 >> 25, *compareInfo >> 31);
+  /* 4D8F4B: `call sub_4D9430; mov ecx, eax` - IDA dropped the returned pointer. */
+  firstFieldPtr = Rules_ResolveObjectSlotFieldPointer(firstInstance, *compareInfo & 0x7FFF, compareInfo[1] << 9 >> 25, *compareInfo >> 31);
   Rules_ResolveJoinBindingRecord((compareInfo[1] << 16 >> 24) - 1, &secondInstance, marksBuffer);
   secondSlot = *(_DWORD *)(uintptr_t)(4 * *(_DWORD *)(uintptr_t)(4 * ((unsigned int)(2 * *compareInfo) >> 17) + *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(secondInstance + 44) + 60))
                  + *(_DWORD *)(uintptr_t)(secondInstance + 72)
@@ -764,11 +769,11 @@ unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, int theRes
   else
     resultBits = compareInfo[1] << 8;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 4D8F9C: variable 'v5' is possibly undefined
@@ -776,7 +781,7 @@ unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, int theRes
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004D9000) --------------------------------------------------------
-unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, int theResult)
+unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, _DWORD *theResult)
 {
   unsigned int *compareInfo; // esi
   __int16 *firstField; // ebp
@@ -787,7 +792,7 @@ unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, int theResult)
   int secondInstance; // [esp+4h] [ebp-1Ch] BYREF
   _DWORD marksBuffer[6]; // [esp+8h] [ebp-18h] BYREF
 
-  compareInfo = *(unsigned int **)(uintptr_t)(theValue + 16);
+  compareInfo = (unsigned int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16);
   Rules_ResolveJoinBindingRecord((unsigned __int8)compareInfo[1] - 1, &firstInstance, marksBuffer);
   firstField = (__int16 *)(uintptr_t)Rules_ResolveObjectSlotFieldPointer(firstInstance, *compareInfo & 0x7FFF, compareInfo[1] << 9 >> 25, compareInfo[1] << 8 >> 31);
   Rules_ResolveJoinBindingRecord((compareInfo[1] << 16 >> 24) - 1, &secondInstance, marksBuffer);
@@ -797,11 +802,11 @@ unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, int theResult)
   else
     resultBits = *compareInfo;
   result = resultBits >> 31;
-  *(_DWORD *)(uintptr_t)(theResult + 4) = 2;
+  theResult[1] = 2;
   if ( result )
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsTrueSymbol;
+    theResult[2] = g_ClipsTrueSymbol;
   else
-    *(_DWORD *)(uintptr_t)(theResult + 8) = g_ClipsFalseSymbol;
+    theResult[2] = g_ClipsFalseSymbol;
   return result;
 }
 // 54DD64: using guessed type int dword_54DD64;
@@ -880,7 +885,7 @@ _DWORD * Rules_FetchObjectSlotFieldRecordCore(_DWORD *returnValue, _DWORD *theIn
       if ( (*(_BYTE *)(uintptr_t)(matchVar + 4) & 1) != 0 )
       {
         returnValue[1] = *(_DWORD *)(uintptr_t)(*slotPtr + 4) << 24 >> 26;
-        result = *(_DWORD **)(uintptr_t)(*slotPtr + 8);
+        result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*slotPtr + 8);
         fieldType = returnValue[1];
         returnValue[2] = result;
         if ( fieldType == 4 )
@@ -897,15 +902,15 @@ _DWORD * Rules_FetchObjectSlotFieldRecordCore(_DWORD *returnValue, _DWORD *theIn
         if ( extentSize == -1 )
         {
           slotValue = *slotPtr;
-          if ( (**(_BYTE **)(uintptr_t)*slotPtr & 2) != 0 )
+          if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)*slotPtr & 2) != 0 )
           {
             returnValue[1] = *(__int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotValue + 8) + 6 * fieldIndex + 14);
-            result = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 6 * fieldIndex + 16);
+            result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*slotPtr + 8) + 6 * fieldIndex + 16);
           }
           else
           {
             returnValue[1] = *(_DWORD *)(uintptr_t)(slotValue + 4) << 24 >> 26;
-            result = *(_DWORD **)(uintptr_t)(*slotPtr + 8);
+            result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*slotPtr + 8);
           }
           returnValue[2] = result;
         }
@@ -1279,7 +1284,7 @@ unsigned int * Lexer_ParseSlotValueList(int readSource, int theToken, _DWORD *er
   Parser_NextToken(readSource, v7);
   if ( (*(_BYTE *)(uintptr_t)(theSlot + 4) & 1) != 0 )
   {
-    nextSlot = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, v8, 1, position - 1, *(int **)(uintptr_t)(theSlot + 8), 1);
+    nextSlot = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, v8, 1, position - 1, (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 8), 1);
     if ( !nextSlot )
     {
       *error = 1;
@@ -1288,7 +1293,7 @@ unsigned int * Lexer_ParseSlotValueList(int readSource, int theToken, _DWORD *er
   }
   else
   {
-    restrictionNode = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, *(_DWORD *)(uintptr_t)theSlot, 0, position - 1, *(int **)(uintptr_t)(theSlot + 8), 0);
+    restrictionNode = Rules_ParsePatternFieldList(readSource, (int *)(uintptr_t)theToken, *(_DWORD *)(uintptr_t)theSlot, 0, position - 1, (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 8), 0);
     nextSlot = restrictionNode;
     if ( !restrictionNode )
     {
@@ -1317,7 +1322,7 @@ unsigned int * Lexer_ParseSlotValueList(int readSource, int theToken, _DWORD *er
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_50D750);
-    IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
     Parser_ReportSyntaxError();
     *error = 1;
     AST_FreeNode(v13);

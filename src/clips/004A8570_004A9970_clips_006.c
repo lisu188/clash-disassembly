@@ -564,7 +564,7 @@ int * Rules_GetConstructModuleName(_BYTE *constructName, int a2)
   }
   result = (int *)(uintptr_t)Rules_FindImportExportConstruct(*v4, countBuffer, constructName, 1, 0);
   if ( result )
-    return *(int **)(uintptr_t)result[2];
+    return (int *)(uintptr_t)*(_DWORD *)(uintptr_t)result[2];
   return result;
 }
 // 4A8DCF: variable 'v4' is possibly undefined
@@ -685,14 +685,14 @@ _DWORD * Rules_GetConstructListCommand(int returnValue, int constructClass, doub
   int v11 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v11 = returnValue;
-  numArgs = Lexer_TokenExpect(1);
+  numArgs = Lexer_TokenExpect(0, 2, 1);
   if ( numArgs == -1 )
     return Rules_SetMultifieldErrorValue(v4);
   if ( numArgs == 1 )
   {
     Rules_RtnUnknown(1, argValue, a3);
     if ( argValue[1] != 2
-      || (theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(v10 + 16))) == 0 && (theModule = (int *)(uintptr_t)strcmp_(v6, *(_DWORD *)(uintptr_t)(v10 + 16))) != 0 )
+      || (theModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + 16))) == 0 && (theModule = (int *)(uintptr_t)strcmp_(v6, *(_DWORD *)(uintptr_t)(v10 + 16))) != 0 )
     {
       Rules_SetMultifieldErrorValue((int)(intptr_t)v6);
       return (_DWORD *)(uintptr_t)Parser_ReportError(v8, (int)(intptr_t)aDefmoduleNam_2);
@@ -819,7 +819,7 @@ int  Rules_BuildConstructNameList(_DWORD *returnValue, int constructClass, int E
           separatorDst += 2;
         }
         while ( separatorChar2 );
-        constructNameSrc = *(char **)(uintptr_t)(theConstruct + 16);
+        constructNameSrc = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstruct + 16);
         nameLength = strlen(qualifiedName) + 1;
         constructNameDst = &qualifiedName[nameLength - 1];
         do
@@ -871,7 +871,7 @@ int  Rules_ListConstructsCommand(int constructClass, int a2, double a3)
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v9 = a2;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect(0, 2, 1);
   if ( result != -1 )
   {
     if ( result == 1 )
@@ -879,7 +879,7 @@ int  Rules_ListConstructsCommand(int constructClass, int a2, double a3)
       Rules_RtnUnknown(1, argValue, a3);
       if ( argValue[1] != 2 )
         return Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_2);
-      theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(v8 + 16));
+      theModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 + 16));
       if ( !theModule )
       {
         theModule = (int *)(uintptr_t)strcmp_(v6, *(_DWORD *)(uintptr_t)(v8 + 16));
@@ -1178,7 +1178,7 @@ signed int  Rules_ProcessWatchFlagRequest(
         return 1;
       if ( Parser_ParseForm((__int16 *)(uintptr_t)argPtr, argValue, argExprs, a5) )
         return 0;
-      if ( argValue[1] != 2 || !Symbol_LookupInModule((char **)(uintptr_t)constructType, *(_BYTE **)(uintptr_t)(argValue[2] + 16), 1) )
+      if ( argValue[1] != 2 || !Symbol_LookupInModule((char **)(uintptr_t)constructType, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argValue[2] + 16), 1) )
         break;
       if ( setMode )
         setWatchFunc();

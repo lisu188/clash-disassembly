@@ -11,18 +11,18 @@
 double  Rules_CoerceFormToNumericArg(__int16 *theArgument, int convertToFloat, _DWORD *returnValue, double result, int whichArgument)
 {
   unsigned int theType; // edx
-  int theValue; // eax
+  int valueBuffer_alias; // eax
 
   if ( (unsigned __int16)*theArgument > 1u )
   {
     Parser_ParseForm(theArgument, returnValue, convertToFloat, result);
     theType = returnValue[1];
-    theValue = returnValue[2];
+    valueBuffer_alias = returnValue[2];
   }
   else
   {
     theType = *theArgument;
-    theValue = *(_DWORD *)(theArgument + 1);
+    valueBuffer_alias = *(_DWORD *)(theArgument + 1);
   }
   if ( theType > 1 )
   {
@@ -37,10 +37,10 @@ double  Rules_CoerceFormToNumericArg(__int16 *theArgument, int convertToFloat, _
     if ( convertToFloat )
     {
       if ( theType == 1 )
-        theValue = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(theValue + 16));
+        valueBuffer_alias = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(valueBuffer_alias + 16));
     }
     returnValue[1] = theType;
-    returnValue[2] = theValue;
+    returnValue[2] = valueBuffer_alias;
   }
   return result;
 }
@@ -58,24 +58,24 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   int v9; // ecx
   char *integerSymbol; // eax
   int v11; // ecx
-  int valueBuffer; // [esp-4h] [ebp-20h] BYREF
-  int theType; // [esp+0h] [ebp-1Ch]
-  int theValue; // [esp+4h] [ebp-18h]
+  _DWORD valueBuffer[6]; // [esp-4h] [ebp-20h] BYREF
+  /* stack alias of valueBuffer[1] */
+  /* stack alias of valueBuffer[2]: the DATA_OBJECT value slot */
   int v15 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v15 = a3;
-  Rules_RtnUnknown(whichArgument, &valueBuffer, a4);
-  if ( theType == 2 || theType == 3 || theType == 8 )
+  Rules_RtnUnknown(whichArgument, valueBuffer, a4);
+  if ( valueBuffer[1] == 2 || valueBuffer[1] == 3 || valueBuffer[1] == 8 )
   {
-    if ( !strcmp_(*(_DWORD *)(uintptr_t)(theValue + 16), aT) || !strcmp_(v5, aT_0) )
+    if ( !strcmp_(*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16), aT) || !strcmp_(v5, aT_0) )
       return defaultLogicalName;
     return v6;
   }
-  else if ( theType )
+  else if ( valueBuffer[1] )
   {
-    if ( theType == 1 )
+    if ( valueBuffer[1] == 1 )
     {
-      integerSymbol = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(theValue + 16));
+      integerSymbol = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16));
       return Str_Intern(integerSymbol, v11)[4];
     }
     else
@@ -85,7 +85,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   }
   else
   {
-    floatSymbol = (char *)(uintptr_t)Rules_FloatToSymbol(*(_DWORD *)(uintptr_t)(theValue + 16), *(double *)(uintptr_t)(theValue + 16));
+    floatSymbol = (char *)(uintptr_t)Rules_FloatToSymbol(*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16), *(double *)(uintptr_t)(valueBuffer[2] + 16));
     return Str_Intern(floatSymbol, v9)[4];
   }
 }
@@ -99,15 +99,15 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
 int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
 {
   int v3; // ecx
-  int valueBuffer; // [esp-4h] [ebp-20h] BYREF
-  int theType; // [esp+0h] [ebp-1Ch]
-  int theValue; // [esp+4h] [ebp-18h]
+  _DWORD valueBuffer[6]; // [esp-4h] [ebp-20h] BYREF
+  /* stack alias of valueBuffer[1] */
+  /* stack alias of valueBuffer[2]: the DATA_OBJECT value slot */
   int v8 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v8 = functionName;
-  Rules_RtnUnknown(whichArgument, &valueBuffer, a3);
-  if ( theType == 3 || theType == 2 )
-    return *(_DWORD *)(uintptr_t)(theValue + 16);
+  Rules_RtnUnknown(whichArgument, valueBuffer, a3);
+  if ( valueBuffer[1] == 3 || valueBuffer[1] == 2 )
+    return *(_DWORD *)(uintptr_t)(valueBuffer[2] + 16);
   Parser_ReportError(v3, (int)(intptr_t)aFileName);
   return 0;
 }
@@ -142,8 +142,8 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   int v4; // ecx
   int *result; // eax
   int v6; // ecx
-  _DWORD valueBuffer[2]; // [esp-4h] [ebp-24h] BYREF
-  int theValue; // [esp+4h] [ebp-1Ch]
+  _DWORD valueBuffer[6]; // [esp-4h] [ebp-24h] BYREF
+  /* stack alias of valueBuffer[2]: the DATA_OBJECT value slot */
   int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v9 = functionName;
@@ -151,10 +151,10 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   Rules_RtnUnknown(whichArgument, valueBuffer, a4);
   if ( valueBuffer[1] == 2 )
   {
-    result = Module_FindByName(*(_BYTE **)(uintptr_t)(theValue + 16));
+    result = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16));
     if ( !result )
     {
-      if ( strcmp_(v6, *(_DWORD *)(uintptr_t)(theValue + 16)) )
+      if ( strcmp_(v6, *(_DWORD *)(uintptr_t)(valueBuffer[2] + 16)) )
       {
         Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_0);
         *error = 1;
@@ -542,7 +542,7 @@ int __stdcall Rules_AddDoubleValue(double number)
   else
   {
 LABEL_4:
-    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeListHead )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -633,7 +633,7 @@ int * Rules_FindIntegerValue(signed int number)
   int *result; // eax
   int searchValue; // ecx
 
-  result = *(int **)(uintptr_t)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, 167));
+  result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, 167));
   if ( !result )
     return 0;
   while ( searchValue != result[4] )
@@ -1072,7 +1072,7 @@ _DWORD * Rules_RemoveHashNode(int theValue, int theTable, int type, int size)
   _DWORD *prevEntry; // edi
   _DWORD *result; // eax
 
-  curEntry = *(_DWORD **)(uintptr_t)(theTable + 4 * (*(_DWORD *)(uintptr_t)(theValue + 12) << 16 >> 18));
+  curEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theTable + 4 * (*(_DWORD *)(uintptr_t)(theValue + 12) << 16 >> 18));
   prevEntry = 0;
   while ( curEntry != (_DWORD *)(uintptr_t)theValue )
   {
@@ -1090,11 +1090,11 @@ _DWORD * Rules_RemoveHashNode(int theValue, int theTable, int type, int size)
     *(_DWORD *)(uintptr_t)(4 * (*(_DWORD *)(uintptr_t)(theValue + 12) << 16 >> 18) + theTable) = *(_DWORD *)(uintptr_t)theValue;
   if ( type == 2 )
   {
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theValue + 16), strlen(*(const char **)(uintptr_t)(theValue + 16)) + 1);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16), strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16)) + 1);
   }
   else if ( type == 19 )
   {
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theValue + 16), *(unsigned __int16 *)(uintptr_t)(theValue + 20));
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16), *(unsigned __int16 *)(uintptr_t)(theValue + 20));
   }
   g_ClipsMemFreeListTemp = theValue;
   *(_DWORD *)(uintptr_t)theValue = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 4 * size);

@@ -15,12 +15,18 @@
 //----- (00453110) --------------------------------------------------------
 signed int  Rules_QueuePathToTile(int stack_index, int target_x, int target_y, DWORD a4)
 {
-  int v5; // ecx
   int *track; // ebx
-  int v7; // ecx
-  int v8; // edx
   int queued_target_xy; // [esp+0h] [ebp-10h]
 
+  /* Whole-family __usercall loss (sub_453110 / sub_4532A0 / sub_453600 /
+     Move_IsAtTargetOrCanStay / Move_TryApproachTarget all open with
+     `mov ecx, eax`): ECX carries the stack index for the entire body and
+     is callee-saved across the Unit_MoveTrack family, Path_GenerateTrack and
+     Port_GenerateApproachTrack (each pushes and pops ECX), while the
+     generated track is kept in EBX and tested through the EDX copy made
+     by `mov edx, eax; mov ebx, eax`.  IDA dropped every one of those
+     registers and emitted never-assigned temps, so the queued path was
+     written at a wild stack offset (or not at all). */
   if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
   {
     queued_target_xy = *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + 320);
@@ -28,16 +34,16 @@ signed int  Rules_QueuePathToTile(int stack_index, int target_x, int target_y, D
       return 1;
   }
   if ( UnitStack_HasBuilder(stack_index) )
-    Pathing_EnableBridgeCrossings(v5, target_y, a4);
+    Pathing_EnableBridgeCrossings(stack_index, target_y, a4);
   track = Unit_MoveTrack(
          stack_index,
          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
-         v5,
+         stack_index,
          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
          a4,
          target_y);
-  Pathing_DisableBridgeCrossings(v7, (char)(intptr_t)track, a4);
-  if ( !v8 )
+  Pathing_DisableBridgeCrossings(stack_index, (char)(intptr_t)track, a4);
+  if ( !track )
     return 0;
   if ( *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + 147490) )
     *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
@@ -45,27 +51,27 @@ signed int  Rules_QueuePathToTile(int stack_index, int target_x, int target_y, D
   j__nfree_();
   return 1;
 }
-// 453152: variable 'v5' is possibly undefined
-// 453191: variable 'v7' is possibly undefined
-// 453198: variable 'v8' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (004532A0) --------------------------------------------------------
 signed int  Rules_QueuePathNearTile(int stack_index, int target_x, int target_y, DWORD a4)
 {
-  int v5; // ecx
-  int v6; // edx
-  int v7; // ecx
   _DWORD *track; // ebx
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // edx
   int queued_target_xy; // [esp+0h] [ebp-14h]
 
+  /* Whole-family __usercall loss (sub_453110 / sub_4532A0 / sub_453600 /
+     Move_IsAtTargetOrCanStay / Move_TryApproachTarget all open with
+     `mov ecx, eax`): ECX carries the stack index for the entire body and
+     is callee-saved across the Unit_MoveTrack family, Path_GenerateTrack and
+     Port_GenerateApproachTrack (each pushes and pops ECX), while the
+     generated track is kept in EBX and tested through the EDX copy made
+     by `mov edx, eax; mov ebx, eax`.  IDA dropped every one of those
+     registers and emitted never-assigned temps, so the queued path was
+     written at a wild stack offset (or not at all). */
   Debug_Log(stack_index, target_y, a4, (int)(intptr_t)aJest_droga_w_3);
-  if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v6 + UNIT_STACK_PATH_OFFSET) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET) )
   {
-    queued_target_xy = *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * v5 + gameData + UNIT_STACK_TABLE_OFFSET + 320);
+    queued_target_xy = *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 320);
     if ( (int)abs32(target_x - (unsigned __int8)queued_target_xy) < 2 )
     {
       a4 = BYTE1(queued_target_xy);
@@ -78,36 +84,26 @@ signed int  Rules_QueuePathNearTile(int stack_index, int target_x, int target_y,
       }
     }
   }
-  if ( UnitStack_HasBuilder(v5) )
-    Pathing_EnableBridgeCrossings(v7, target_y, a4);
-  track = Unit_MoveTrackNearTile(v7, target_x, v7, target_y, a4);
-  Pathing_DisableBridgeCrossings(v9, (char)(intptr_t)track, a4);
-  if ( v11 )
+  if ( UnitStack_HasBuilder(stack_index) )
+    Pathing_EnableBridgeCrossings(stack_index, target_y, a4);
+  track = Unit_MoveTrackNearTile(stack_index, target_x, stack_index, target_y, a4);
+  Pathing_DisableBridgeCrossings(stack_index, (char)(intptr_t)track, a4);
+  if ( track )
   {
-    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v10 + 147490) )
-      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v10 + 147490) = 0;
-    qmemcpy((void *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v10 + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
+    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
+      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+    qmemcpy((void *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
   return 0;
 }
-// 4532D7: variable 'v6' is possibly undefined
-// 4532F3: variable 'v5' is possibly undefined
-// 4532FC: variable 'v7' is possibly undefined
-// 45330E: variable 'v9' is possibly undefined
-// 453315: variable 'v11' is possibly undefined
-// 453338: variable 'v10' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00453440) --------------------------------------------------------
 signed int  Rules_QueuePathNearCastle(int stack_index, int castle_x, int castle_y, DWORD a4)
 {
-  int v5; // ecx
   const void *track; // ebx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // edx
   int queued_target_xy; // [esp+0h] [ebp-14h]
 
   if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
@@ -122,15 +118,18 @@ signed int  Rules_QueuePathNearCastle(int stack_index, int castle_x, int castle_
         return 1;
     }
   }
+  /* sub_453440: `mov ecx, eax` - ecx holds stack_index for the whole body, and
+     `mov edx, eax; mov ebx, eax` after sub_415970 keeps the returned track. IDA
+     lost both and emitted the undefined temps v5/v7/v8/v9. */
   if ( UnitStack_HasBuilder(stack_index) )
-    Pathing_EnableBridgeCrossings(v5, castle_y, a4);
-  track = (const void *)(uintptr_t)Building_GenerateNearApproachTrack(v5, *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(castle_x, castle_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v5, castle_y, a4);
-  Pathing_DisableBridgeCrossings(v7, (char)(intptr_t)track, a4);
-  if ( v9 )
+    Pathing_EnableBridgeCrossings(stack_index, castle_y, a4);
+  track = (const void *)(uintptr_t)Building_GenerateNearApproachTrack(stack_index, *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(castle_x, castle_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE, stack_index, castle_y, a4);
+  Pathing_DisableBridgeCrossings(stack_index, (char)(intptr_t)track, a4);
+  if ( track )
   {
-    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
-      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
+    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
+      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -146,11 +145,16 @@ signed int  Rules_QueuePathNearCastle(int stack_index, int castle_x, int castle_
 signed int  Rules_QueuePathToPort(int army_index, int target_x, int queued_dest, DWORD a4)
 {
   int target_y; // esi
-  int v5; // ecx
   int *move_track; // ebx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // edx
+  /* Whole-family __usercall loss (sub_453110 / sub_4532A0 / sub_453600 /
+     Move_IsAtTargetOrCanStay / Move_TryApproachTarget all open with
+     `mov ecx, eax`): ECX carries the stack index for the entire body and
+     is callee-saved across the Unit_MoveTrack family, Path_GenerateTrack and
+     Port_GenerateApproachTrack (each pushes and pops ECX), while the
+     generated track is kept in EBX and tested through the EDX copy made
+     by `mov edx, eax; mov ebx, eax`.  IDA dropped every one of those
+     registers and emitted never-assigned temps, so the queued path was
+     written at a wild stack offset (or not at all). */
 
   target_y = queued_dest;
   LOBYTE(queued_dest) = gameData;
@@ -161,31 +165,23 @@ signed int  Rules_QueuePathToPort(int army_index, int target_x, int queued_dest,
       return 1;
   }
   if ( UnitStack_HasBuilder(army_index) )
-    Pathing_EnableBridgeCrossings(v5, queued_dest, a4);
-  move_track = Port_GenerateApproachTrack(v5);
-  Pathing_DisableBridgeCrossings(v7, (char)(intptr_t)move_track, a4);
-  if ( !v9 )
+    Pathing_EnableBridgeCrossings(army_index, queued_dest, a4);
+  move_track = Port_GenerateApproachTrack(army_index);
+  Pathing_DisableBridgeCrossings(army_index, (char)(intptr_t)move_track, a4);
+  if ( !move_track )
     return 0;
-  if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v8 + UNIT_STACK_PATH_OFFSET) )
-    *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-  qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), move_track, UNIT_STACK_PATH_BYTES);
+  if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * army_index + UNIT_STACK_PATH_OFFSET) )
+    *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * army_index + 147490) = 0;
+  qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * army_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), move_track, UNIT_STACK_PATH_BYTES);
   j__nfree_();
   return 1;
 }
-// 453641: variable 'v5' is possibly undefined
-// 453651: variable 'v7' is possibly undefined
-// 453658: variable 'v9' is possibly undefined
-// 45367B: variable 'v8' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00453770) --------------------------------------------------------
 signed int  Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y, DWORD a4)
 {
-  int v5; // ecx
   const void *track; // ebx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // edx
   int queued_target_xy; // [esp+0h] [ebp-14h]
 
   if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
@@ -201,19 +197,21 @@ signed int  Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y,
     }
   }
   if ( UnitStack_HasBuilder(stack_index) )
-    Pathing_EnableBridgeCrossings(v5, castle_y, a4);
+    Pathing_EnableBridgeCrossings(stack_index, castle_y, a4);
   track = (const void *)Building_GenerateApproachTrack(
-                       v5,
+                       stack_index,
                        *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(castle_x, castle_y)) - TILE_OCCUPANT_BUILDING_INDEX_BASE,
-                       v5,
+                       stack_index,
                        castle_y,
                        a4);
-  Pathing_DisableBridgeCrossings(v7, (char)(intptr_t)track, a4);
-  if ( v9 )
+  Pathing_DisableBridgeCrossings(stack_index, (char)(intptr_t)track, a4);
+  /* sub_453770: same __usercall shape as sub_453440 - ecx keeps stack_index and
+     the returned track is tested directly. */
+  if ( track )
   {
-    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v8 + 147490) )
-      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v8 + 147490) = 0;
-    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * v8 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
+    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
+      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
@@ -229,7 +227,6 @@ signed int  Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y,
 signed int  Move_IsAtTargetOrCanStay(int stack_index, int target_x, int target_y)
 {
   signed int result; // eax
-  int v4; // ecx
   int queued_target_xy; // [esp+0h] [ebp-10h]
 
   if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
@@ -241,34 +238,35 @@ signed int  Move_IsAtTargetOrCanStay(int stack_index, int target_x, int target_y
   result = (signed int)(intptr_t)Temple_GenerateApproachTrack(stack_index, target_x, stack_index, target_y);
   if ( result )
   {
-    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * v4 + UNIT_STACK_PATH_OFFSET) )
-      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * v4 + 147490) = 0;
-    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)(uintptr_t)result, UNIT_STACK_PATH_BYTES);
+    /* 453977: ECX still holds the stack index - Path_GenerateTrack preserves it. */
+    if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_PATH_OFFSET) )
+      *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) = 0;
+    qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), (const void *)(uintptr_t)result, UNIT_STACK_PATH_BYTES);
     j__nfree_();
     return 1;
   }
   return result;
 }
-// 453993: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00453A90) --------------------------------------------------------
 signed int  Move_TryApproachTarget(int stack_index, DWORD target_x, int target_y)
 {
   signed int result; // eax
-  int v4; // ecx
   const void *track; // ebp
   signed int min_action_points; // eax
   signed int queued_move_cost; // edx
   int stack_offset; // ebx
   unsigned __int16 required_move_cost; // di
-  int v10; // ecx
   int queued_target_xy; // [esp+4h] [ebp-14h]
 
   if ( *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490)
     && (queued_target_xy = *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 320), (int)abs32(target_x - (unsigned __int8)queued_target_xy) <= 2)
     && (int)abs32(target_y - BYTE1(queued_target_xy)) <= 2 )
   {
+    /* 453B85: `xor edx,edx; mov dx, word ptr [esp+18h+var_14+2]` - the cost is
+       the zero-extended HIWORD of the queued step, which IDA dropped. */
+    queued_move_cost = HIWORD(queued_target_xy);
     min_action_points = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET);
     return min_action_points >= queued_move_cost;
   }
@@ -278,9 +276,9 @@ signed int  Move_TryApproachTarget(int stack_index, DWORD target_x, int target_y
     track = (const void *)(uintptr_t)result;
     if ( result )
     {
-      stack_offset = UNIT_STACK_STRIDE * v4;
+      stack_offset = UNIT_STACK_STRIDE * stack_index;
       required_move_cost = HIWORD(*(_DWORD *)(uintptr_t)(result + 4));
-      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * v4 + gameData + UNIT_STACK_TABLE_OFFSET) < required_move_cost )
+      if ( UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET) < required_move_cost )
       {
         j__nfree_();
         return 0;
@@ -288,8 +286,8 @@ signed int  Move_TryApproachTarget(int stack_index, DWORD target_x, int target_y
       else
       {
         if ( *(_DWORD *)(uintptr_t)(stack_offset + gameData + 147490) )
-          *(_DWORD *)(uintptr_t)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
-        qmemcpy((void *)(uintptr_t)(UNIT_STACK_STRIDE * v10 + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
+          *(_DWORD *)(uintptr_t)(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET) = 0;
+        qmemcpy((void *)(uintptr_t)(stack_offset + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_PATH_OFFSET), track, UNIT_STACK_PATH_BYTES);
         j__nfree_();
         return 1;
       }
@@ -298,8 +296,6 @@ signed int  Move_TryApproachTarget(int stack_index, DWORD target_x, int target_y
   return result;
 }
 // 453B90: variable 'v7' is possibly undefined
-// 453BCF: variable 'v4' is possibly undefined
-// 453C5D: variable 'v10' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00453C90) --------------------------------------------------------
@@ -468,40 +464,53 @@ signed int  Move_CommitIfWithinCost(
   int stack_record; // eax
   int prev_x; // esi
   int prev_y; // edi
-  unsigned int v10; // ecx
-  int v11; // ecx
-  int v12; // eax
-  int v13; // edx
-  int v14; // ecx
+  int stack_record_after; // eax
   _DWORD pa_value[9]; // [esp-4h] [ebp-24h] BYREF
 
-  pa_value[8] = a2;
+  /* 00454210.  Only EAX (stack_index) is a real parameter: 454216 'mov ecx,eax'
+     overwrites the ECX that IDA guessed was arg2, and EBP is never read, so a2
+     and a3 are phantoms.  ECX then holds stack_index for the WHOLE body and EBX
+     holds stack_index*725; sub_410330 (UnitStack_ExecuteQueuedPath) saves and
+     restores both (its prologue is 'push ebx; push ecx; push esi; push ebp'),
+     which is why 454284 can range-check ECX right after the call.  The
+     decompiler lost every one of those live registers and emitted the
+     never-assigned v10/v11/v13/v14 - IDA flags all four at 454284/4542BD/
+     454313/45431F.  Recovered verbatim from the asm. */
+  pa_value[8] = a2;                                   /* 454210: push ecx */
   if ( !*(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147490) )
     return 0;
-  stack_offset = UNIT_STACK_STRIDE * stack_index;
+  stack_offset = UNIT_STACK_STRIDE * stack_index;     /* ebx */
   stack_record = gameData + UNIT_STACK_STRIDE * stack_index;
   prev_x = *(__int16 *)(uintptr_t)(stack_record + 147174);
   prev_y = *(__int16 *)(uintptr_t)(stack_record + 147176);
-  UnitStack_ExecuteQueuedPath(stack_index, 1, -43 * stack_index, a3, a4);
-  if ( v10 > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(stack_offset + gameData + 147180) > 0x28 )
+  /* 45427D: `mov eax,ecx; call sub_410330` with edx=1, ebx=stack_offset and
+     ecx=stack_index still live. */
+  UnitStack_ExecuteQueuedPath(stack_index, 1, (char)stack_offset, stack_index, a4);
+  /* 454284: `test ecx,ecx; jl` + `cmp ecx,1F4h; jg` - the surviving ECX, i.e.
+     the stack index, bounded by the 500-entry stack table. */
+  if ( stack_index > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(stack_offset + gameData + 147180) > 0x28 )
     return 1;
-  if ( Rules_IsQueuedPathTargetBridgeCrossing(v10) )
-    Rules_BuildRoadOrStepTowardQueuedPath(v11, a3, a4);
-  v12 = gameData + UNIT_STACK_STRIDE * v11;
-  if ( prev_x == *(__int16 *)(uintptr_t)(v12 + 147174) && prev_y == *(__int16 *)(uintptr_t)(v12 + 147176) )
+  if ( Rules_IsQueuedPathTargetBridgeCrossing(stack_index) )   /* 4542B0: mov eax,ecx */
+    Rules_BuildRoadOrStepTowardQueuedPath(stack_index, a3, a4);/* 4542BB: mov eax,ecx */
+  stack_record_after = gameData + UNIT_STACK_STRIDE * stack_index;
+  if ( prev_x == *(__int16 *)(uintptr_t)(stack_record_after + 147174)
+    && prev_y == *(__int16 *)(uintptr_t)(stack_record_after + 147176) )
   {
+    /* 454303: `mov ecx,1` - that same 1 is stored into the argument block AND
+       is the ECX register argument of sub_480160 at 45431F. */
     pa_value[1] = 1;
     pa_value[2] = Rules_AddIntegerValue(0);
-    Rules_PutInstanceSlotValue(*(_DWORD *)(uintptr_t)(v13 + gameData + 147895), aPa, v14, pa_value, a4);
+    Rules_PutInstanceSlotValue(
+      *(_DWORD *)(uintptr_t)(stack_offset + gameData + 147895),
+      aPa,
+      1,
+      pa_value,
+      a4);
   }
   return 1;
 }
 // 454284: simplified comparisons for 'ecx.4': <0 || >=1F5 became >=1F5u
 // 45429D: simplified comparisons for 'eax.4': >=0 && <29 became <29u
-// 454284: variable 'v10' is possibly undefined
-// 4542BD: variable 'v11' is possibly undefined
-// 454313: variable 'v13' is possibly undefined
-// 45431F: variable 'v14' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00454330) --------------------------------------------------------
@@ -1302,9 +1311,13 @@ signed int  Building_BuildSchoolByIndex(int building_index, char a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004554B0) --------------------------------------------------------
-signed int  Building_BuildSmithsByIndex(char a1, DWORD a2)
+signed int  Building_BuildSmithsByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_BuildSmiths(a1, a2);
+  /* 004554B0: `imul eax,1D3h; mov edx,gameData; add edx,7C6EAh; add eax,edx;
+     call sub_41F020` - the wrapper turns the building INDEX into the record
+     pointer, exactly like Building_BuildSchoolByIndex.  IDA's signature lost
+     the index entirely. */
+  return Building_BuildSmiths(BUILDING_RECORD(building_index), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -1332,14 +1345,18 @@ int  Building_GetCastleStrengthByIndex(int building_index)
 //----- (00455530) --------------------------------------------------------
 signed int  Building_BuildBarracksByIndex(int building_index, char a2, DWORD a3)
 {
-  return Building_BuildBarracks(building_index, a2, a3);
+  /* sub_455530: `imul eax,1D3h; mov edx, gameData; add edx,7C6EAh; add eax,edx`
+     - the wrapper converts the index into a building-record pointer before the
+     call; the recovery forwarded the raw index. */
+  return Building_BuildBarracks(BUILDING_RECORD(building_index), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455550) --------------------------------------------------------
-signed int  Building_BuildHospitalByIndex(char a1, DWORD a2)
+signed int  Building_BuildHospitalByIndex(int building_index, char a1, DWORD a2)
 {
-  return Building_BuildHospital(a1, a2);
+  /* sub_455550: same index -> building-record conversion as sub_455530. */
+  return Building_BuildHospital(BUILDING_RECORD(building_index), a1, a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -1358,9 +1375,10 @@ int  Building_GetTypeByIndex(int building_index)
 // 5202E4: using guessed type int gameData;
 
 //----- (004555C0) --------------------------------------------------------
-signed int  Building_BuildWorkshopByIndex(char a1, DWORD a2)
+signed int  Building_BuildWorkshopByIndex(int building_index, char a1, DWORD a2)
 {
-  return Building_BuildWorkshop(a1, a2);
+  /* sub_4555C0: same index -> building-record conversion as sub_455530. */
+  return Building_BuildWorkshop(BUILDING_RECORD(building_index), a1, a2);
 }
 // 5202E4: using guessed type int gameData;
 

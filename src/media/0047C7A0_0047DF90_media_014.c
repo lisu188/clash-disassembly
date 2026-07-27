@@ -27,7 +27,7 @@ _DWORD * Rules_RegisterConstructType(
   _DWORD *block; // edi
   _DWORD *result; // eax
 
-  block = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 208);
+  block = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208);
   if ( block )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 208);
@@ -519,7 +519,7 @@ int  Rules_BloadCommand(DWORD a1, double a2)
   int v2; // ecx
   int result; // eax
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aBload, 0, 1) == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v2, a2);
   if ( result )
@@ -603,16 +603,16 @@ int  Rules_SystemCommand(double frame)
   int argCount; // ebp
   int argIndex; // esi
   int v5; // edx
-  int v6; // [esp+0h] [ebp-38h] BYREF
-  int v7; // [esp+4h] [ebp-34h]
-  int v8; // [esp+8h] [ebp-30h]
+  _DWORD v6[6]; // [esp+0h] [ebp-38h] BYREF
+  /* stack alias of v6[1] */
+  /* stack alias of v6[2]: the DATA_OBJECT value slot */
   int v9; // [esp+18h] [ebp-20h] BYREF
   unsigned int v10[7]; // [esp+1Ch] [ebp-1Ch] BYREF
 
   commandBuffer = 0;
   v9 = 0;
   v10[0] = 0;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aSystem_0, 1, 1);
   argCount = result;
   if ( result != -1 )
   {
@@ -636,11 +636,11 @@ LABEL_6:
     {
       while ( 1 )
       {
-        Rules_RtnUnknown(argIndex, &v6, frame);
-        if ( v7 != 3 && v7 != 2 )
+        Rules_RtnUnknown(argIndex, v6, frame);
+        if ( v6[1] != 3 && v6[1] != 2 )
           break;
         ++argIndex;
-        result = (int)(intptr_t)Str_Append(*(const char **)(uintptr_t)(v8 + 16), commandBuffer, v10, &v9);
+        result = (int)(intptr_t)Str_Append((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6[2] + 16), commandBuffer, v10, &v9);
         commandBuffer = (char *)(uintptr_t)result;
         if ( argIndex > argCount )
           goto LABEL_6;
@@ -864,7 +864,7 @@ _DWORD * Rules_PlaceInLexList(_DWORD *listHead, int newActivation)
 
   current = listHead;
   if ( !*(_DWORD *)(uintptr_t)(newActivation + 16) )
-    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(newActivation + 4));
+    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(newActivation + 4));
   timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
   salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
   insertAfter = 0;
@@ -911,7 +911,7 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
 
   current = listHead;
   if ( !*(_DWORD *)(uintptr_t)(newActivation + 16) )
-    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(newActivation + 4));
+    *(_DWORD *)(uintptr_t)(newActivation + 16) = Rules_BuildLexBasisOrder((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(newActivation + 4));
   timeTag = *(_DWORD *)(uintptr_t)(newActivation + 12);
   insertAfter = 0;
   salience = *(_DWORD *)(uintptr_t)(newActivation + 8);
@@ -929,7 +929,7 @@ _DWORD * Rules_PlaceInMeaList(_DWORD *listHead, int newActivation)
     nodeFirstTag = -1;
     if ( *(_DWORD *)(uintptr_t)newBasisList )
       newFirstTag = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)newBasisList + 12);
-    nodeFirstMatch = **(_DWORD **)(uintptr_t)(current[1] + 8);
+    nodeFirstMatch = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(current[1] + 8);
     if ( nodeFirstMatch )
       nodeFirstTag = *(_DWORD *)(uintptr_t)(nodeFirstMatch + 12);
     if ( nodeFirstTag < newFirstTag )
@@ -1151,13 +1151,13 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
 
   if ( !*(_DWORD *)(uintptr_t)(activation + 16) )
   {
-    lexBasisOrder = Rules_BuildLexBasisOrder(*(int **)(uintptr_t)(activation + 4));
+    lexBasisOrder = Rules_BuildLexBasisOrder((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(activation + 4));
     *(_DWORD *)(uintptr_t)(v16 + 16) = lexBasisOrder;
   }
   count2 = *candidate[4] << 17 >> 23;
-  count1 = **(_DWORD **)(uintptr_t)(activation + 16) << 17 >> 23;
+  count1 = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(activation + 16) << 17 >> 23;
   if ( count1 <= count2 )
-    minCount = **(_DWORD **)(uintptr_t)(activation + 16) << 17 >> 23;
+    minCount = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(activation + 16) << 17 >> 23;
   else
     minCount = *candidate[4] << 17 >> 23;
   index = 0;
@@ -1167,7 +1167,7 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
     candBasisEntry = candidate[4];
     do
     {
-      actMatchSlot = *(int **)(uintptr_t)(actBasisEntry + 8);
+      actMatchSlot = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(actBasisEntry + 8);
       if ( *actMatchSlot && (candMatchSlot = (int *)(uintptr_t)candidate[4][index + 2], (candMatch = *candMatchSlot) != 0) )
       {
         actMatch = *actMatchSlot;
@@ -1181,7 +1181,7 @@ signed int  Rules_CompareActivationBasis(int activation, _DWORD **candidate)
       {
         if ( *(_DWORD *)(uintptr_t)candBasisEntry[2] )
           return 1;
-        if ( **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(activation + 16) + 4 * index + 8) )
+        if ( *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(activation + 16) + 4 * index + 8) )
           return 0;
       }
       actBasisEntry += 4;
@@ -1229,7 +1229,7 @@ signed int *Rules_GetStrategyCommand(void)
   char *strategyName; // eax
   int v1; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect(0, 0, 0);
   strategyName = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
   return Str_Intern(strategyName, v1);
 }
@@ -1244,7 +1244,7 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
   int argString; // ecx
   int reportedStrategy; // eax
   char *strategyName; // eax
-  int v8; // ecx
+  int v6_alias; // ecx
   int v10; // ecx
   int v11; // ecx
   int v12; // ecx
@@ -1256,7 +1256,7 @@ signed int * Rules_SetStrategyCommand(int a1, double frame)
 
   argValue[8] = a1;
   oldStrategy = g_Rules_ConflictResolutionStrategy;
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, argValue, 2, frame) )
+  if ( Lexer_TokenExpect(0, 0, 1) == -1 || !Lexer_ParseValueList(1, argValue, 2, frame) )
   {
     reportedStrategy = g_Rules_ConflictResolutionStrategy;
     goto LABEL_5;
@@ -1269,7 +1269,7 @@ LABEL_4:
     reportedStrategy = oldStrategy;
 LABEL_5:
     strategyName = Rules_GetStrategyName(reportedStrategy);
-    return Str_Intern(strategyName, v8);
+    return Str_Intern(strategyName, v6_alias);
   }
   if ( !strcmp_(argString, aBreadth) )
   {
@@ -1305,7 +1305,7 @@ LABEL_5:
   currentStrategyName = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
   return Str_Intern(currentStrategyName, v16);
 }
-// 47DC70: variable 'v8' is possibly undefined
+// 47DC70: variable 'v6_alias' is possibly undefined
 // 47DC8B: variable 'v5' is possibly undefined
 // 47DCA2: variable 'v10' is possibly undefined
 // 47DCB9: variable 'v11' is possibly undefined
@@ -1430,7 +1430,7 @@ int  Rules_ClearActivationsForRule(int result)
   int v2; // edi
   _DWORD *nextActivation; // esi
 
-  activation = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 12);
+  activation = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 12);
   v2 = result;
   if ( activation )
   {

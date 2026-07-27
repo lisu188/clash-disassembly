@@ -235,7 +235,7 @@ int  IO_OpenNamedFile(
   filePtr = result;
   if ( result )
   {
-    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+    freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     if ( freeListHead )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -292,7 +292,7 @@ signed int  IO_CloseNamedFile(int logicalName)
       return 0;
   }
   fclose_(v1);
-  Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)fileEntry, strlen(*(const char **)(uintptr_t)fileEntry) + 1);
+  Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)fileEntry, strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)fileEntry) + 1);
   if ( previousEntry )
     *(_DWORD *)(uintptr_t)(previousEntry + 8) = *(_DWORD *)(uintptr_t)(fileEntry + 8);
   else
@@ -1022,7 +1022,8 @@ int Rules_RegisterPatternConstraintEvaluators()
   g_EvalDesc_TestPatternNestedField[1] = (int)(uintptr_t)Runtime_DescriptorNoop;
   g_EvalDesc_TestPatternNestedField[2] = (int)(uintptr_t)Runtime_DescriptorNoop;
   g_EvalDesc_TestPatternNestedField[4] = (int)(uintptr_t)Rules_TestPatternNestedField;
-  Rules_RegisterEvaluationHandler((int)(intptr_t)&g_Rules_FactPatternEntityRecord, 6);
+  Rules_EnsureFactPatternEntityRecord();
+  Rules_RegisterEvaluationHandler((int)(intptr_t)g_Rules_FactPatternEntityRecord, 6);
   Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingFieldRecord, 29);
   Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingFieldSimple, 30);
   Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDesc_FetchJoinBindingNestedField, 31);

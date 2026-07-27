@@ -124,7 +124,7 @@ int Rules_HostBuySchool(int a1, double a2)
 int Rules_HostBuyForge(int a1, double a2)
 {
   (void)a1;
-  return Building_BuildSmithsByIndex(Rules_RtnLong(1, 0, a2), 0);
+  return Building_BuildSmithsByIndex(Rules_RtnLong(1, 0, a2), 0, 0);
 }
 
 //----- (004569DA) ----------------------------------------------------------
@@ -191,7 +191,7 @@ int Rules_HostBuyBarracks(int a1, double a2)
 int Rules_HostBuyHospital(int a1, double a2)
 {
   (void)a1;
-  return Building_BuildHospitalByIndex(Rules_RtnLong(1, 0, a2), 0);
+  return Building_BuildHospitalByIndex(Rules_RtnLong(1, 0, a2), 0, 0);
 }
 
 //----- (00456BBB) ----------------------------------------------------------
@@ -219,7 +219,7 @@ int Rules_HostPlayerStrength(int a1, double a2)
 int Rules_HostBuyWorkshop(int a1, double a2)
 {
   (void)a1;
-  return Building_BuildWorkshopByIndex(Rules_RtnLong(1, 0, a2), 0);
+  return Building_BuildWorkshopByIndex(Rules_RtnLong(1, 0, a2), 0, 0);
 }
 
 //----- (00456C93) ----------------------------------------------------------

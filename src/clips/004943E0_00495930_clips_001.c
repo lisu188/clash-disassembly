@@ -16,7 +16,7 @@ signed int  AST_NewNode(__int16 type, int value)
   signed int result; // eax
 
   nodeType = type;
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -70,13 +70,13 @@ signed int  Rules_PrintFieldExprList(signed int result, __int16 *theExpression)
         case 15:
           Output_Write(fileid, (int)(intptr_t)aQuestion_PrintSingleFieldVarPrefix, fileid);
           v8 = v6;
-          printString = *(char **)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
+          printString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
           goto LABEL_7;
         case 14:
         case 16:
           Output_Write(fileid, (int)(intptr_t)aQuestion_PrintMultiFieldVarPrefix, fileid);
           v8 = v6;
-          printString = *(char **)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
+          printString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(exprPtr + 1) + 16);
 LABEL_7:
           result = Output_Write(v8, (int)(intptr_t)printString, v6);
           break;
@@ -1147,9 +1147,9 @@ int Rules_CountHashedExpressions(void)
   for ( i = 0; i != 2012; i += 4 )
   {
     result = g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v4 + 12) )
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(j + 12) )
     {
-      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(j + 8));
+      Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 8));
       *(_DWORD *)(uintptr_t)(exphash + 16) = g_ClipsExpressionNodeIndex;
       result = AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(exphash + 8));
       g_ClipsExpressionNodeIndex += result;
@@ -1174,8 +1174,8 @@ __int16 * Rules_AssignHashedExpressionIndices(int fp)
   for ( i = 0; i != 2012; i += 4 )
   {
     result = (__int16 *)(uintptr_t)g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v5 + 12) )
-      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(j + 8), fp);
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(j + 12) )
+      result = Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 8), fp);
   }
   return result;
 }
@@ -1189,7 +1189,7 @@ int Rules_InvokeConstructCallbacks(void)
   int result; // eax
   int v2; // edx
 
-  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(v2 + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(i + 36) )
   {
     while ( !*(_DWORD *)(uintptr_t)(i + 20) )
     {
@@ -1223,7 +1223,7 @@ __int16 * Rules_BsaveWriteExpression(__int16 *result, int fp)
   int newTestArgList CLASH95_UNUSED; // [esp+6h] [ebp-1Eh]
   int newTestNextArg CLASH95_UNUSED; // [esp+Ah] [ebp-1Ah]
 
-  for ( i = result; i; i = *(__int16 **)(uintptr_t)(v7 + 10) )
+  for ( i = result; i; i = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 10) )
   {
     currentIndex = ++g_ClipsExpressionNodeIndex;
     newTestType = *i;
@@ -1325,7 +1325,7 @@ LABEL_9:
     }
 LABEL_10:
     Rules_BsaveWriteBlock(14, fp, &newTestType);
-    result = *(__int16 **)(uintptr_t)(v7 + 6);
+    result = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 6);
     if ( result )
       result = (__int16 *)Rules_BsaveWriteExpression((int)(intptr_t)result, fp);
   }
@@ -1380,7 +1380,7 @@ const void * Rules_BsaveWriteConstraints(int fp)
     for ( j = 0; j != 668; j += 4 )
     {
       result = (const void *)(uintptr_t)g_ConstraintHashTable;
-      for ( k = *(int **)(uintptr_t)(j + g_ConstraintHashTable); k; k = *(int **)(uintptr_t)(v10 + 30) )
+      for ( k = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + g_ConstraintHashTable); k; k = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + 30) )
       {
         Rules_PackConstraintRecord(k, (int)(intptr_t)bsaveRecord);
         result = Rules_BsaveWriteBlock(24, fp, bsaveRecord);

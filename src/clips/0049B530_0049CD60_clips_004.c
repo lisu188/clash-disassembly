@@ -183,7 +183,7 @@ const CHAR * Rules_DribbleOnCommand(DWORD a1, double context)
   int v2; // ecx
   const CHAR *result; // eax
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aDribbleOn, 0, 1) == -1 )
     return 0;
   result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
@@ -226,7 +226,7 @@ signed int  Dribble_TurnOn(const CHAR *fileName, DWORD a2)
 //----- (0049B890) --------------------------------------------------------
 signed int Rules_DribbleOffCommand(void)
 {
-  if ( Lexer_TokenExpect(0) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aDribbleOff, 0, 0) == -1 )
     return 0;
   else
     return Dribble_TurnOff();
@@ -312,7 +312,7 @@ int  Rules_BatchReadChar(int logicalName, unsigned int returnOnEOF)
     else
     {
       remainingChars = *(_DWORD *)(uintptr_t)(g_CurrentStringInputSource + 4);
-      if ( remainingChars > 0 && (returnOnEOF = **(unsigned __int8 **)(uintptr_t)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
+      if ( remainingChars > 0 && (returnOnEOF = *(unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)g_CurrentStringInputSource - 13, returnOnEOF > 0xFD) )
       {
         *(_DWORD *)(uintptr_t)(g_CurrentStringInputSource + 4) = remainingChars - 1;
         returnOnEOF = g_CurrentStringInputSource;
@@ -412,7 +412,7 @@ const CHAR * Rules_BatchCommand(DWORD a1, double context)
   const CHAR *result; // eax
   int v4; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aBatch, 0, 1) == -1 )
     return 0;
   result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
@@ -451,7 +451,7 @@ _DWORD * Rules_AddBatchEntry(int placeAtEnd, int theSource, int theString, int s
   _DWORD *freeListHead; // edi
   _DWORD *result; // eax
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
@@ -512,7 +512,7 @@ signed int Rules_CloseBatch(void)
   if ( *(_DWORD *)(uintptr_t)g_Rules_BatchStackTop )
   {
     IO_CloseStringRouter(*(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 4));
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(g_Rules_BatchStackTop + 8), strlen(*(const char **)(uintptr_t)(g_Rules_BatchStackTop + 8)) + 1);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 8), strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_BatchStackTop + 8)) + 1);
   }
   else
   {
@@ -593,7 +593,7 @@ const CHAR * Rules_BatchStarCommand(DWORD a1, double context)
   int v2; // ecx
   const CHAR *result; // eax
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aBatch_0, 0, 1) == -1 )
     return 0;
   result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v2, context);
   if ( result )
@@ -687,7 +687,7 @@ int  Rules_LoadCommand(DWORD a1, double context)
   int v7; // edx
   int v8; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aLoad, 0, 1) == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v2, context);
   if ( result )
@@ -724,7 +724,7 @@ const CHAR * Rules_LoadStarCommand(DWORD a1, double context)
   signed int loadResult; // eax
   int v7; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aLoad_0, 0, 1) == -1 )
     return 0;
   result = (const CHAR *)Rules_GetFileNameArg(1, v2, context);
   fileName = (int)result;
@@ -756,7 +756,7 @@ int  Rules_SaveCommand(DWORD a1, double context)
   int fileName; // edx
   int v6; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSave, 0, 1) == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v2, context);
   fileName = result;
@@ -1014,7 +1014,7 @@ int  Rules_GetConstructNameAndComment(
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aConstruct, v33);
     return 0;
   }
-  moduleSeparator = Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16));
+  moduleSeparator = Rules_FindModuleSeparator((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16));
   separatorPosition = moduleSeparator;
   if ( moduleSeparator )
   {
@@ -1031,7 +1031,7 @@ int  Rules_GetConstructNameAndComment(
       return 0;
     }
     Module_SetCurrent((int)(intptr_t)theModule);
-    constructNameSymbol = Rules_ExtractConstructName(separatorPosition, *(char **)(uintptr_t)(v18 + 16), v18);
+    constructNameSymbol = Rules_ExtractConstructName(separatorPosition, (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v18 + 16), v18);
     if ( !constructNameSymbol )
     {
 LABEL_23:
@@ -1048,7 +1048,7 @@ LABEL_23:
       Name = (char *)(uintptr_t)Module_GetName(v34);
       IO_OutWriteToken(Name);
       IO_OutWriteToken(asc_505F2C);
-      IO_OutWriteToken(*(char **)(uintptr_t)(v36 + 16));
+      IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v36 + 16));
     }
   }
   if ( Rules_FindImportExportConflict(constructName, savedModule, (_BYTE *)(uintptr_t)constructNameSymbol[4]) )
@@ -1103,14 +1103,14 @@ LABEL_15:
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_505F44);
-    IO_OutWriteToken(*(char **)(uintptr_t)(inputToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(inputToken + 8));
     Parser_NextToken(readSource, v29);
   }
   if ( *(_DWORD *)(uintptr_t)inputToken != 101 )
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_505F7C);
-    IO_OutWriteToken(*(char **)(uintptr_t)(inputToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(inputToken + 8));
   }
   return v28;
 }
@@ -1240,15 +1240,15 @@ int  Rules_WhileFunction(double context)
 {
   _DWORD *returnValue; // ecx
   int result; // eax
-  int theResult; // [esp+0h] [ebp-30h] BYREF
-  int resultType; // [esp+4h] [ebp-2Ch]
-  int resultValue; // [esp+8h] [ebp-28h]
-  int resultBegin; // [esp+Ch] [ebp-24h]
-  int resultEnd; // [esp+10h] [ebp-20h]
+  _DWORD theResult[6]; // [esp+0h] [ebp-30h] BYREF
+  /* stack alias of theResult[1] */
+  /* stack alias of theResult[2]: the DATA_OBJECT value slot */
+  /* stack alias of theResult[3] */
+  /* stack alias of theResult[4] */
 
   ++g_ClipsCurrentEvaluationDepth;
-  Rules_RtnUnknown(1, &theResult, context);
-  while ( resultValue != g_ClipsFalseSymbol || resultType != 2 )
+  Rules_RtnUnknown(1, theResult, context);
+  while ( theResult[2] != g_ClipsFalseSymbol || theResult[1] != 2 )
   {
     if ( g_ClipsHaltExecution == 1 )
       break;
@@ -1256,23 +1256,23 @@ int  Rules_WhileFunction(double context)
       break;
     if ( g_ClipsHaltExecutionFlag == 1 )
       break;
-    Rules_RtnUnknown(2, &theResult, context);
+    Rules_RtnUnknown(2, theResult, context);
     --g_ClipsCurrentEvaluationDepth;
     Rules_RunPeriodicCleanup(0, 1);
     ++g_ClipsCurrentEvaluationDepth;
     if ( g_ClipsBreakFlag == 1 || g_ClipsHaltExecutionFlag == 1 )
       break;
-    Rules_RtnUnknown(1, &theResult, context);
+    Rules_RtnUnknown(1, theResult, context);
   }
   g_ClipsBreakFlag = 0;
   --g_ClipsCurrentEvaluationDepth;
   if ( g_ClipsHaltExecutionFlag == 1 )
   {
-    returnValue[1] = resultType;
-    returnValue[2] = resultValue;
-    returnValue[3] = resultBegin;
-    result = resultEnd;
-    returnValue[4] = resultEnd;
+    returnValue[1] = theResult[1];
+    returnValue[2] = theResult[2];
+    returnValue[3] = theResult[3];
+    result = theResult[4];
+    returnValue[4] = theResult[4];
   }
   else
   {
@@ -1303,7 +1303,7 @@ int  Rules_LoopForCountFunction(_DWORD *returnValue, double context)
   int resultBegin; // [esp+Ch] [ebp-24h]
   int resultEnd; // [esp+10h] [ebp-20h]
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1414,14 +1414,15 @@ int Rules_GetLoopCountFunction(void)
 // 51ACC8: using guessed type int dword_51ACC8;
 
 //----- (0049CD60) --------------------------------------------------------
-int  Rules_IfFunction(double context)
+int  Rules_IfFunction(_DWORD *returnValue, double context)
 {
   int result; // eax
-  _DWORD *returnValue; // ecx
   int argCount; // ebx
-  _DWORD *resultValue; // ecx
 
-  result = Rules_ArgRangeCheck((int)(intptr_t)aIf, 3);
+  /* sub_49CD60: `mov ecx, eax` - eax is the DATA_OBJECT the caller wants filled
+     (Parser_ParseForm passes valuePtr). IDA dropped the parameter entirely and
+     left the undefined temps v2/v4 in its place. */
+  result = Rules_ArgRangeCheck((int)(intptr_t)aIf, 2, 3);
   argCount = result;
   if ( result == -1 )
   {
@@ -1433,24 +1434,22 @@ int  Rules_IfFunction(double context)
     result = Rules_RtnUnknown(1, returnValue, context);
     if ( g_ClipsBreakFlag != 1 && g_ClipsHaltExecutionFlag != 1 )
     {
-      if ( g_ClipsFalseSymbol == resultValue[2] && resultValue[1] == 2 && argCount == 3 )
+      if ( g_ClipsFalseSymbol == returnValue[2] && returnValue[1] == 2 && argCount == 3 )
       {
-        return Rules_RtnUnknown(3, resultValue, context);
+        return Rules_RtnUnknown(3, returnValue, context);
       }
-      else if ( g_ClipsFalseSymbol == resultValue[2] && resultValue[1] == 2 )
+      else if ( g_ClipsFalseSymbol == returnValue[2] && returnValue[1] == 2 )
       {
-        resultValue[2] = g_ClipsFalseSymbol;
+        returnValue[2] = g_ClipsFalseSymbol;
       }
       else
       {
-        return Rules_RtnUnknown(2, resultValue, context);
+        return Rules_RtnUnknown(2, returnValue, context);
       }
     }
   }
   return result;
 }
-// 49CD81: variable 'v2' is possibly undefined
-// 49CDBA: variable 'v4' is possibly undefined
 // 51ACC0: using guessed type int dword_51ACC0;
 // 51ACC4: using guessed type int dword_51ACC4;
 // 54DD70: using guessed type int dword_54DD70;

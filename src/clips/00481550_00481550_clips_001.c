@@ -11,13 +11,11 @@
 //----- (00481550) --------------------------------------------------------
 signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int expectedType, double a4)
 {
-  int v7; // ecx
   int lexemeType; // ecx
   int instanceType; // ecx
   int instanceRefType; // edx
   char *expectedTypeName; // ebx
   int integerNode; // eax
-  int v14; // edx
   int floatNode; // eax
   double floatValue; // st7
   int v17; // [esp+8h] [ebp-10h]
@@ -26,7 +24,9 @@ signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int e
   Rules_RtnUnknown(argumentPosition, returnValue, a4);
   if ( g_ClipsEvaluationError )
     return 0;
-  if ( expectedType == *(_DWORD *)(uintptr_t)(v7 + 4) || expectedType == 110 && returnValue[1] < 2u )
+  /* 481581: `cmp ebp, [ecx+4]` - ecx is the returnValue DATA_OBJECT that was just
+     filled by sub_4813B0; IDA left it as the undefined temp v7. */
+  if ( expectedType == (int)returnValue[1] || expectedType == 110 && returnValue[1] < 2u )
     return 1;
   if ( expectedType == 111 )
   {
@@ -53,7 +53,7 @@ signed int Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int e
     integerNode = returnValue[2];
     returnValue[1] = 0;
     returnValue[2] = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(integerNode + 16));
-    return v14;
+    return 1;   /* loc_48163D: `mov eax, 1` */
   }
   else
   {

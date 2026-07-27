@@ -533,7 +533,7 @@ int * File_CacheClearEntryTree(int a1)
   int *result; // eax
 
   fflush_(a1);
-  result = *(int **)(uintptr_t)(v1 + 36);
+  result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v1 + 36);
   if ( result )
   {
     File_CacheNodeFreeTree(result);
@@ -1022,40 +1022,44 @@ signed int  Rules_RetractFact(int fact_ptr, double a2)
 //----- (0047A120) --------------------------------------------------------
 _DWORD *Rules_RemoveGarbageFacts(void)
 {
-  _DWORD *result; // eax
-  int v1; // edx
-  _DWORD *v2; // edx
-  int v3; // ecx
+  _DWORD *factPtr;  // eax
+  _DWORD *lastFact; // ecx
+  _DWORD *nextPtr;  // edx
 
-  result = (_DWORD *)(uintptr_t)g_Rules_GarbageFactListHead;
-  if ( g_Rules_GarbageFactListHead )
+  /* 0047A120 (IDA: sub_47A120). The decompiler dropped BOTH list cursors:
+     edx (nextPtr, loaded at 47A132 'mov edx,[eax+24h]') BEFORE the fact
+     is returned to the pool, and ecx (lastFact, zeroed at 47A12A
+     'xor ecx,ecx' and re-loaded at 47A186 'mov ecx,eax' on the keep path).  It emitted them
+     as the never-assigned locals v2/v3 - IDA flags exactly that at 47A16E and
+     47A170 - so the unlink wrote a garbage pointer into the garbage-fact list
+     head / predecessor and the walk then dereferenced freed memory.  Recovered
+     verbatim from the asm. */
+  factPtr = (_DWORD *)(uintptr_t)g_Rules_GarbageFactListHead;
+  lastFact = 0;                                       /* 47A12A: xor ecx, ecx */
+  while ( factPtr )
   {
-    do
+    nextPtr = (_DWORD *)(uintptr_t)factPtr[9];        /* 47A132: mov edx, [eax+24h] */
+    /* 47A12F: 'mov ebx,[eax+8]; test ebx,ebx; jnz' (busyCount != 0 -> keep)
+       and 47A139: 'mov ebx,[eax+1Ch]; and ebx,7FFFh; cmp ebx,esi; jle'
+       (depth <= CurrentEvaluationDepth -> keep). */
+    if ( !factPtr[2] && (factPtr[7] & 0x7FFF) > g_ClipsCurrentEvaluationDepth )
     {
-      while ( 1 )
-      {
-        v1 = result[9];
-        if ( !result[2] && (result[7] & 0x7FFF) > g_ClipsCurrentEvaluationDepth )
-          break;
-        result = (_DWORD *)(uintptr_t)result[9];
-        if ( !v1 )
-          return result;
-      }
       --g_ClipsEphemeralItemCount;
-      g_ClipsEphemeralItemBytes -= 6 * *(_DWORD *)((char *)result + 46) + 60;
-      Rules_ReturnFact(result);
-      if ( v3 )
-        *(_DWORD *)(uintptr_t)(v3 + 36) = v2;
+      g_ClipsEphemeralItemBytes -= 6 * *(_DWORD *)((char *)factPtr + 46) + 60;
+      Rules_ReturnFact(factPtr);
+      if ( lastFact )
+        lastFact[9] = (int)(intptr_t)nextPtr;         /* 47A181: mov [ecx+24h], edx */
       else
-        g_Rules_GarbageFactListHead = (int)(intptr_t)v2;
-      result = v2;
+        g_Rules_GarbageFactListHead = (int)(intptr_t)nextPtr; /* 47A173 */
     }
-    while ( v2 );
+    else
+    {
+      lastFact = factPtr;                             /* 47A186: mov ecx, eax */
+    }
+    factPtr = nextPtr;                                /* 47A176 / 47A188: mov eax, edx */
   }
-  return result;
+  return factPtr;                                     /* always 0 on exit */
 }
-// 47A16E: variable 'v3' is possibly undefined
-// 47A170: variable 'v2' is possibly undefined
 // 51A154: using guessed type int dword_51A154;
 // 51A934: using guessed type int dword_51A934;
 // 51A938: using guessed type int dword_51A938;
@@ -1229,6 +1233,38 @@ int  Lexer_EmitSlotBinding(int fact, char *slot_name, int a3, _DWORD *result_val
 }
 // 47A45D: variable 'v9' is possibly undefined
 
+/*
+ * clash95.asm:432420 unk_51A8EC - the fact patternEntityRecord. Original layout:
+ *   +0  dd 00002006h
+ *   +4  sub_479E20 (print label)      +8  sub_479E50 (print id)
+ *   +12 sub_479F70 (retract)          +16 <align 10h hole>
+ *   +20 sub_47A9A0 (get next)         +24 sub_479ED0 (incr ref)
+ *   +28 sub_479EC0 (decr ref)         +32..+47 zero
+ *   +48 sub_479EC0 (decrement basis)  +52 sub_479ED0 (increment basis)
+ *   +56 sub_479F50 (network assert)
+ * The recovery left the whole record as a zeroed _UNKNOWN, so Rules_RunAgendaLoop
+ * dispatched NULL through +48/+52 on the very first rule fire.
+ */
+CLASH95_INTERNAL void Rules_EnsureFactPatternEntityRecord(void)
+{
+  static int initialized;
+
+  if ( initialized )
+    return;
+  g_Rules_FactPatternEntityRecord[0] = 0x00002006;
+  g_Rules_FactPatternEntityRecord[1] = (int)(uintptr_t)Rules_PrintFactLabel;
+  g_Rules_FactPatternEntityRecord[2] = (int)(uintptr_t)Rules_PrintFactIdentifier;
+  g_Rules_FactPatternEntityRecord[3] = (int)(uintptr_t)Rules_RetractFact;
+  g_Rules_FactPatternEntityRecord[4] = 0;
+  g_Rules_FactPatternEntityRecord[5] = (int)(uintptr_t)Rules_GetNextFact;
+  g_Rules_FactPatternEntityRecord[6] = (int)(uintptr_t)Rules_IncrementFactRefCount;
+  g_Rules_FactPatternEntityRecord[7] = (int)(uintptr_t)Rules_DecrementFactRefCount;
+  g_Rules_FactPatternEntityRecord[12] = (int)(uintptr_t)Rules_DecrementFactRefCount;
+  g_Rules_FactPatternEntityRecord[13] = (int)(uintptr_t)Rules_IncrementFactRefCount;
+  g_Rules_FactPatternEntityRecord[14] = (int)(uintptr_t)Rules_NetworkAssertFact;
+  initialized = 1;
+}
+
 //----- (0047A730) --------------------------------------------------------
 _DWORD * Rules_CreateFact(signed int slot_count)
 {
@@ -1260,7 +1296,7 @@ _DWORD * Rules_CreateFact(signed int slot_count)
   eval_depth = g_ClipsCurrentEvaluationDepth;
   result[6] = 0;
   result[2] = 0;
-  *result = &g_Rules_FactPatternEntityRecord;
+  *result = g_Rules_FactPatternEntityRecord;
   result[1] = 0;
   result[4] = 0;
   v6 = *((_WORD *)result + 14);
@@ -1376,7 +1412,7 @@ int  Rules_DeinstallFact(int fact)
     slot_cursor = slot_base;
     do
     {
-      Rules_AtomDeinstall(*(__int16 *)(uintptr_t)(slot_cursor + 14), *(__int16 **)(uintptr_t)(slot_cursor + 16), slot_cursor);
+      Rules_AtomDeinstall(*(__int16 *)(uintptr_t)(slot_cursor + 14), (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(slot_cursor + 16), slot_cursor);
       ++slot_index;
       result = *(_DWORD *)(uintptr_t)(slot_base + 6);
       slot_cursor = v6 + 6;

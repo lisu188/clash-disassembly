@@ -68,7 +68,7 @@ LABEL_12:
       {
         IO_OutNewline();
         IO_OutWriteToken(asc_50A248);
-        IO_OutWriteToken(*(char **)(uintptr_t)(v10 + 8));
+        IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + 8));
       }
       if ( *v4 == 101 )
         goto LABEL_12;
@@ -134,7 +134,7 @@ LABEL_8:
           {
             v15 = *(_BYTE *)(uintptr_t)(v14 + 4);
             if ( ((v15 & 4) != 0 || (v15 & 8) != 0)
-              && Rules_CheckFieldExprListAgainstConstraint(*(int **)(uintptr_t)(theSlot + 12), *(_DWORD *)(uintptr_t)(theSlot + 8))
+              && Rules_CheckFieldExprListAgainstConstraint((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 12), *(_DWORD *)(uintptr_t)(theSlot + 8))
               && Rules_StaticConstraintCheckingEnabled() )
             {
               if ( (*(_BYTE *)(uintptr_t)(theSlot + 4) & 8) != 0 )
@@ -220,7 +220,7 @@ int  Rules_ParseTemplateSlotAttributes(char *readSource, int slotName, int input
 
   savedSlotName = slotName;
   savedMultifieldSlot = multifieldSlot;
-  freeSlotNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
+  freeSlotNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
   defaultParsed = 0;
   if ( freeSlotNode )
   {
@@ -255,7 +255,7 @@ int  Rules_ParseTemplateSlotAttributes(char *readSource, int slotName, int input
   {
     IO_OutNewline();
     IO_OutWriteToken(asc_50A27C);
-    IO_OutWriteToken(*(char **)(uintptr_t)(inputToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(inputToken + 8));
     if ( *(_DWORD *)(uintptr_t)inputToken != 100 || (Parser_NextToken((int)(intptr_t)readSource, inputToken), *(_DWORD *)(uintptr_t)inputToken != 2) )
     {
       Parser_ReportSyntaxError();
@@ -265,7 +265,7 @@ int  Rules_ParseTemplateSlotAttributes(char *readSource, int slotName, int input
     }
     if ( Rules_IsConstraintAttributeKeyword(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16)) )
     {
-      if ( !Rules_ParseStandardConstraintAttribute(readSource, *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16), &parsedConstraints, *(_DWORD *)(uintptr_t)(theSlot + 8), savedMultifieldSlot) )
+      if ( !Rules_ParseStandardConstraintAttribute(readSource, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(inputToken + 4) + 16), &parsedConstraints, *(_DWORD *)(uintptr_t)(theSlot + 8), savedMultifieldSlot) )
       {
         g_DeftemplateSlotParseErrorFlag = 1;
         Rules_FreeTemplateSlotList(theSlot);
@@ -352,7 +352,7 @@ signed int  Rules_FetchPatternFieldRecord(int fieldNode, _DWORD *returnValue)
   __int16 *elementPtr; // edi
   int v14[6]; // [esp+0h] [ebp-18h] BYREF
 
-  fieldDescriptor = *(_DWORD **)(uintptr_t)(fieldNode + 16);
+  fieldDescriptor = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldNode + 16);
   factAddress = g_CurrentPatternFact;
   if ( (*(_BYTE *)fieldDescriptor & 1) != 0 )
   {
@@ -540,18 +540,18 @@ signed int  Rules_FetchJoinBindingFieldRecord(int fieldNode, _DWORD *returnValue
   int slotByteOffset; // [esp+8h] [ebp-1Ch]
   _WORD *v22; // [esp+Ch] [ebp-18h]
 
-  fieldDescriptor = *(_DWORD **)(uintptr_t)(fieldNode + 16);
+  fieldDescriptor = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldNode + 16);
   if ( g_Rules_GlobalRHSBinds )
   {
     bindingIndex = *fieldDescriptor << 22 >> 24;
     if ( (*(_DWORD *)(uintptr_t)g_CurrentPatternEntityPtr << 16 >> 25) - 1 == bindingIndex )
-      bindingEntry = *(int **)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
+      bindingEntry = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
     else
-      bindingEntry = *(int **)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * bindingIndex + 8);
+      bindingEntry = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * bindingIndex + 8);
   }
   else
   {
-    bindingEntry = *(int **)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * (*fieldDescriptor << 22 >> 24) + 8);
+    bindingEntry = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * (*fieldDescriptor << 22 >> 24) + 8);
   }
   factAddress = *bindingEntry;
   matchMarkers = bindingEntry[1];
@@ -629,18 +629,18 @@ signed int  Rules_FetchJoinBindingFieldSimple(int fieldNode, int returnValue)
   int slotOffset; // ebx
   int slotBase; // eax
 
-  fieldDescriptor = *(_DWORD **)(uintptr_t)(fieldNode + 16);
+  fieldDescriptor = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldNode + 16);
   if ( g_Rules_GlobalRHSBinds )
   {
     bindingIndex = (unsigned __int8)*fieldDescriptor;
     if ( (*(_DWORD *)(uintptr_t)g_CurrentPatternEntityPtr << 16 >> 25) - 1 == bindingIndex )
-      bindingEntry = *(_DWORD **)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
+      bindingEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
     else
-      bindingEntry = *(_DWORD **)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * bindingIndex + 8);
+      bindingEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * bindingIndex + 8);
   }
   else
   {
-    bindingEntry = *(_DWORD **)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * (unsigned __int8)*fieldDescriptor + 8);
+    bindingEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * (unsigned __int8)*fieldDescriptor + 8);
   }
   slotOffset = 6 * (*fieldDescriptor << 16 >> 24);
   slotBase = *bindingEntry + 54;
@@ -747,13 +747,13 @@ int  Rules_TestJoinBindingFieldsEqual(int testNode)
   int leftField; // esi
   int rightField; // ebx
 
-  payload = *(_DWORD **)(uintptr_t)(testNode + 16);
+  payload = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(testNode + 16);
   compareIndex = (*payload << 15 >> 24) - 1;
   if ( (*(_DWORD *)(uintptr_t)g_CurrentPatternEntityPtr << 16 >> 25) - 1 == compareIndex )
-    matchBase = **(_DWORD **)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
+    matchBase = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
   else
-    matchBase = **(_DWORD **)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * compareIndex + 8);
-  leftField = 6 * (*payload << 23 >> 25) + **(_DWORD **)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
+    matchBase = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_CurrentPartialMatch + 4 * compareIndex + 8);
+  leftField = 6 * (*payload << 23 >> 25) + *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_GlobalRHSBinds + 8);
   rightField = 6 * (*payload << 8 >> 25) + matchBase;
   if ( *(__int16 *)(uintptr_t)(leftField + 54) == *(__int16 *)(uintptr_t)(rightField + 54) && *(_DWORD *)(uintptr_t)(leftField + 56) == *(_DWORD *)(uintptr_t)(rightField + 56) )
     return *payload & 1;
@@ -841,7 +841,7 @@ int  Rules_EvalPatternFieldsEqual(int testNode, int returnValue)
   __int16 *rightField; // eax
   int result; // eax
 
-  payload = *(_DWORD **)(uintptr_t)(testNode + 16);
+  payload = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(testNode + 16);
   leftField = (__int16 *)(uintptr_t)(g_CurrentPatternFact + 54 + 6 * (*payload << 23 >> 25));
   rightField = (__int16 *)(uintptr_t)(g_CurrentPatternFact + 54 + 6 * (*payload << 16 >> 25));
   if ( *leftField == *rightField && *(_DWORD *)(leftField + 1) == *(_DWORD *)(rightField + 1) )
@@ -909,7 +909,7 @@ int  Rules_RunIncrementalReset(int result, double context)
   {
     Rules_ToggleJoinNetworkResetMark(result, 1);
     g_IncrementalResetInProgress = 1;
-    for ( i = v2; i; i = *(_DWORD *)(uintptr_t)(v4 + 48) )
+    for ( i = v2; i; i = *(_DWORD *)(uintptr_t)(i + 48) )
       Rules_DriveIncrementalResetForModule(i, context);
     for ( j = g_PatternParserListHead; j; j = *(_DWORD *)(uintptr_t)(j + 92) )
     {
@@ -997,14 +997,14 @@ int  Rules_DriveIncrementalResetForModule(int result, double context)
           }
           else
           {
-            v5 = (**(_BYTE **)(uintptr_t)(joinNode + 24) & 0x10) == 0;
+            v5 = (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(joinNode + 24) & 0x10) == 0;
           }
           if ( v5 )
             Rules_DriveIncrementalResetJoin((int *)(uintptr_t)joinNode, context);
         }
         else if ( module == *(_DWORD *)(uintptr_t)(joinNode + 36) )
         {
-          for ( i = *(_DWORD *)(uintptr_t)(joinNode + 8); i; i = *(_DWORD *)(uintptr_t)(v7 + 4) )
+          for ( i = *(_DWORD *)(uintptr_t)(joinNode + 8); i; i = *(_DWORD *)(uintptr_t)(i + 4) )
             Rules_AddActivation(module, i, context);
         }
         if ( (*(_BYTE *)(uintptr_t)joinNode & 4) == 0 )
@@ -1035,12 +1035,12 @@ int * Rules_DriveIncrementalResetJoin(int *result, double context)
   joinPtr = (char *)result;
   if ( (*result & 1) == 1 )
   {
-    for ( i = *(int **)(uintptr_t)result[4]; i; i = *(int **)(uintptr_t)(v4 + 4) )
+    for ( i = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)result[4]; i; i = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 4) )
       result = Rules_DriveJoinNetwork(i, joinPtr, 1, context);
   }
   else if ( !result[2] )
   {
-    for ( j = *(int **)(uintptr_t)(result[6] + 8); j; j = *(int **)(uintptr_t)(v6 + 4) )
+    for ( j = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(result[6] + 8); j; j = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 4) )
       result = Rules_DriveJoinNetwork(j, joinPtr, 0, context);
   }
   return result;
@@ -1095,7 +1095,7 @@ int  Rules_SetIncrementalResetCommand(int returnValue, double context)
   _DWORD argValue[10]; // [esp-4h] [ebp-28h] BYREF
 
   argValue[8] = returnValue;
-  v3 = Lexer_TokenExpect(1);
+  v3 = Lexer_TokenExpect(0, 0, 1);
   v5 = v4;
   if ( v3 == -1 )
     return v4;
@@ -1125,7 +1125,7 @@ int Rules_GetIncrementalResetCommand(void)
 {
   int v0; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect(0, 0, 0);
   return v0;
 }
 // 4BD27A: variable 'v0' is possibly undefined
@@ -1379,7 +1379,7 @@ LABEL_13:
   }
   Rules_PrintErrorID((int)(intptr_t)aExprnpsr, 4, 0);
   Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aSequenceOperat, v13);
-  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(topNode + 2) + 16), v14);
+  Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(topNode + 2) + 16), v14);
   Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDotNewline_ParserError, v15);
   return 1;
 }
@@ -1395,7 +1395,7 @@ _DWORD *Parser_PushFunctionParseState(void)
   _DWORD *freeBlock; // edx
   _DWORD *result; // eax
 
-  freeBlock = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeBlock = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeBlock )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);

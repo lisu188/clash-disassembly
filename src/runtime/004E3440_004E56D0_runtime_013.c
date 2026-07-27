@@ -186,7 +186,7 @@ int * Class_ParseSlot(
         {
           if ( !Rules_IsConstraintAttributeKeyword(*(_DWORD *)(uintptr_t)(g_ClipsParserTokenValue + 16)) )
             goto LABEL_11;
-          parseStatus = Rules_ParseStandardConstraintAttribute(readSource, *(const char **)(uintptr_t)(g_ClipsParserTokenValue + 16), &parsedConstraint, *(_DWORD *)(uintptr_t)(slot + 20), 1);
+          parseStatus = Rules_ParseStandardConstraintAttribute(readSource, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsParserTokenValue + 16), &parsedConstraint, *(_DWORD *)(uintptr_t)(slot + 20), 1);
           goto LABEL_19;
         }
         overrideFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 10, (int)(intptr_t)aOverrideMessag, 0, 0, 0, (int)(intptr_t)aDefault_3, &overrideMessageSymbol);
@@ -232,7 +232,7 @@ LABEL_12:
   slotFlagsByte = *(_BYTE *)(uintptr_t)slot;
   if ( (*(_BYTE *)(uintptr_t)slot & 0x40) == 0 && (slotFlagsByte & 0x10) != 0 && (slotFlagsByte & 0x20) == 0 )
     *(_BYTE *)(uintptr_t)slot = slotFlagsByte | 1;
-  *(_DWORD *)(uintptr_t)(slot + 20) = AST_InternNode(*(_DWORD **)(uintptr_t)(slot + 20));
+  *(_DWORD *)(uintptr_t)(slot + 20) = AST_InternNode((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(slot + 20));
   Rules_DecrementIndentDepth(3);
   return (int *)(uintptr_t)insertedList;
 }
@@ -270,13 +270,13 @@ int  Class_DeleteSlotList(int result)
 
   for ( i = result; i; *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp )
   {
-    Class_ReleaseSlotName(*(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)i + 8));
+    Class_ReleaseSlotName((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)i + 8));
     Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v2 + 12), v3);
-    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)v4 + 20));
+    AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v4 + 20));
     theSlot = *(_DWORD *)(uintptr_t)v5;
-    if ( (**(_BYTE **)(uintptr_t)v5 & 0x40) != 0 )
+    if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)v5 & 0x40) != 0 )
     {
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(theSlot + 16));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 16));
       AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v7 + 16));
     }
     else if ( *(_DWORD *)(uintptr_t)(theSlot + 16) )
@@ -317,7 +317,7 @@ int  Class_NewSlot(_DWORD *slotNameSymbol)
   int v9; // ecx
   unsigned int overrideMessage; // eax
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 176);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
   if ( freeListEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
@@ -362,7 +362,7 @@ int * Class_InsertSlot(_DWORD *slotList, int theSlot)
   int v10; // ecx
 
   v3 = theSlot;
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeListEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -508,7 +508,7 @@ signed int  Class_ParseDefaultFacet(int readSource, _BYTE *specbits, int a3, int
   {
     *(_DWORD *)(uintptr_t)(theSlot + 16) = AST_PackNodeChain(defaultList);
     AST_Free(v9);
-    AST_InstallNodeChain(*(__int16 **)(uintptr_t)(theSlot + 16));
+    AST_InstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 16));
     *(_BYTE *)(uintptr_t)theSlot |= 0x80u;
   }
   return 1;
@@ -586,7 +586,7 @@ __int16  Class_BuildCompositeFacets(int slot, unsigned __int16 *precedenceList, 
         }
         else
         {
-          freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+          freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
           if ( freeListEntry )
           {
             g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -772,7 +772,7 @@ signed int  Class_EvaluateSlotDefaultValue(int *slotDesc, char *specBits, double
     {
       if ( *(char *)slotDesc < 0 )
         return 1;
-      freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+      freeListNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
       if ( freeListNode )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -803,7 +803,7 @@ LABEL_10:
     {
       AST_DeinstallNodeChain((__int16 *)(uintptr_t)slotDesc[4]);
       AST_FreePackedNodeChain(slotDesc[4]);
-      freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+      freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
       if ( freeNode )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -1157,7 +1157,7 @@ _DWORD * AST_BuildClassHierarchyFieldAccessTest(_DWORD *fieldNode, int patternNo
     }
   }
   fieldNodeCopy[13] = pnTestHead;
-  result = AST_MergeFieldAccessNodes(*(_DWORD **)(uintptr_t)(patternNodeCopy + 52), i);
+  result = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(patternNodeCopy + 52), i);
   *(_DWORD *)(uintptr_t)(patternNodeCopy + 52) = result;
   return result;
 }
@@ -1224,7 +1224,7 @@ int  AST_DispatchFieldAccessNodeBuild(int theNode, int homogeneousFlag, _DWORD *
     switch ( nodeType )
     {
       case 0x5Du:
-        if ( result == 1 && AST_IsFieldPositionConsistent(*(_DWORD **)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
+        if ( result == 1 && AST_IsFieldPositionConsistent((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
         {
           result = AST_BuildNegatedFieldAccessNodeJN(theNode);
           *pnTestOut = result;
@@ -1236,7 +1236,7 @@ int  AST_DispatchFieldAccessNodeBuild(int theNode, int homogeneousFlag, _DWORD *
         }
         break;
       case 0x5Eu:
-        if ( result == 1 && AST_IsFieldPositionConsistent(*(_DWORD **)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
+        if ( result == 1 && AST_IsFieldPositionConsistent((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
         {
           result = AST_BuildFieldAccessComparisonNodeJN(theNode);
           *pnTestOut = result;
@@ -1427,7 +1427,7 @@ int  AST_CloneFieldAccessSubtreePN(int result)
   currentNode = result;
   if ( result )
   {
-    freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+    freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
     if ( freeListEntry )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);

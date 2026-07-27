@@ -56,7 +56,7 @@ signed int  Rules_MathParseSingleArg(double *theNumber, int a2, double a3)
   _DWORD item[10]; // [esp-8h] [ebp-28h] BYREF
 
   item[8] = a2;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect(0, 0, 1) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, item, 0, a3);
   if ( result )
@@ -164,8 +164,8 @@ double  Rules_SinBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_TanBuiltin(int a1, int a2, int a3, double a4)
 {
   int v5; // edx
-  long double theNumber; // [esp+0h] [ebp-20h] BYREF
-  long double cosValue; // [esp+8h] [ebp-18h]
+  double theNumber; // [esp+0h] [ebp-20h] BYREF
+  double cosValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
   int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
@@ -190,8 +190,8 @@ double  Rules_TanBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_SecBuiltin(int a1, int a2, int a3, double a4)
 {
   int v5; // edx
-  long double theNumber; // [esp+0h] [ebp-20h] BYREF
-  long double cosValue; // [esp+8h] [ebp-18h]
+  double theNumber; // [esp+0h] [ebp-20h] BYREF
+  double cosValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
   int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
@@ -216,8 +216,8 @@ double  Rules_SecBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_CscBuiltin(int a1, int a2, int a3, double a4)
 {
   int v5; // edx
-  long double theNumber; // [esp+0h] [ebp-20h] BYREF
-  long double sinValue; // [esp+8h] [ebp-18h]
+  double theNumber; // [esp+0h] [ebp-20h] BYREF
+  double sinValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
   int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
@@ -242,8 +242,8 @@ double  Rules_CscBuiltin(int a1, int a2, int a3, double a4)
 double  Rules_CotBuiltin(int a1, int a2, int a3, double a4)
 {
   int v5; // edx
-  long double theNumber; // [esp+0h] [ebp-20h] BYREF
-  long double sinValue; // [esp+8h] [ebp-18h]
+  double theNumber; // [esp+0h] [ebp-20h] BYREF
+  double sinValue; // [esp+8h] [ebp-18h]
   double v8; // [esp+10h] [ebp-10h]
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
   int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
@@ -665,7 +665,7 @@ double  Rules_MathLog10(int a1, int a2, int a3, double a4)
 double  Rules_MathSqrt(int a1, int a2, int a3, double a4)
 {
   int v5; // edx
-  long double theNumber; // [esp+0h] [ebp-18h] BYREF
+  double theNumber; // [esp+0h] [ebp-18h] BYREF
   double v7; // [esp+8h] [ebp-10h]
   int v8 CLASH95_UNUSED; // [esp+10h] [ebp-8h]
   int v9 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
@@ -687,24 +687,24 @@ double  Rules_MathSqrt(int a1, int a2, int a3, double a4)
 double  Rules_MathPow(double a1)
 {
   signed int parseOk; // eax
-  int value1; // [esp+0h] [ebp-58h] BYREF
-  int value1Value; // [esp+8h] [ebp-50h]
-  int value2; // [esp+18h] [ebp-40h] BYREF
-  int value2Value; // [esp+20h] [ebp-38h]
+  _DWORD value1[6]; // [esp+0h] [ebp-58h] BYREF
+  /* stack alias of value1[2]: the DATA_OBJECT value slot */
+  _DWORD value2[6]; // [esp+18h] [ebp-40h] BYREF
+  /* stack alias of value2[2]: the DATA_OBJECT value slot */
   double num1; // [esp+30h] [ebp-28h]
   double num2; // [esp+38h] [ebp-20h]
   double intPart; // [esp+40h] [ebp-18h]
 
-  if ( Lexer_TokenExpect(2) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)asc_507678, 0, 2) == -1 )
     return 0.0;
-  parseOk = Lexer_ParseValueList(1, &value1, 0, a1);
+  parseOk = Lexer_ParseValueList(1, value1, 0, a1);
   if ( !parseOk )
     return 0.0;
-  parseOk = Lexer_ParseValueList(2, &value2, 0, a1);
+  parseOk = Lexer_ParseValueList(2, value2, 0, a1);
   if ( !parseOk )
     return 0.0;
-  num1 = *(double *)(uintptr_t)(value1Value + 16);
-  num2 = *(double *)(uintptr_t)(value2Value + 16);
+  num1 = *(double *)(uintptr_t)(value1[2] + 16);
+  num2 = *(double *)(uintptr_t)(value2[2] + 16);
   if ( num1 == 0.0 && num2 <= 0.0 )
     goto LABEL_10;
   if ( num1 < 0.0 )
@@ -730,19 +730,19 @@ int * Rules_MathMod(int returnValue, double a2)
   signed int parseStatus; // eax
   int *result; // eax
   signed int intRemainder; // eax
-  int item2; // [esp+8h] [ebp-78h] BYREF
-  int item2Type; // [esp+Ch] [ebp-74h]
-  int item2Value; // [esp+10h] [ebp-70h]
-  int item1; // [esp+20h] [ebp-60h] BYREF
-  int item1Type; // [esp+24h] [ebp-5Ch]
-  int item1Value; // [esp+28h] [ebp-58h]
+  _DWORD item2[6]; // [esp+8h] [ebp-78h] BYREF
+  /* stack alias of item2[1] */
+  /* stack alias of item2[2]: the DATA_OBJECT value slot */
+  _DWORD item1[6]; // [esp+20h] [ebp-60h] BYREF
+  /* stack alias of item1[1] */
+  /* stack alias of item1[2]: the DATA_OBJECT value slot */
   double fnum2; // [esp+38h] [ebp-48h]
   double quotient; // [esp+40h] [ebp-40h]
   double truncatedQuotient; // [esp+48h] [ebp-38h]
   double fnum1; // [esp+50h] [ebp-30h]
   double floatRemainder; // [esp+58h] [ebp-28h]
 
-  if ( Lexer_TokenExpect(2) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aMod, 0, 2) == -1 )
   {
     parseStatus = 0;
 LABEL_20:
@@ -751,13 +751,13 @@ LABEL_20:
     *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
     return result;
   }
-  parseStatus = Lexer_ParseValueList(1, &item1, 110, a2);
+  parseStatus = Lexer_ParseValueList(1, item1, 110, a2);
   if ( !parseStatus )
     goto LABEL_20;
-  parseStatus = Lexer_ParseValueList(2, &item2, 110, a2);
+  parseStatus = Lexer_ParseValueList(2, item2, 110, a2);
   if ( !parseStatus )
     goto LABEL_20;
-  if ( item2Type == 1 && !*(_DWORD *)(uintptr_t)(item2Value + 16) || item2Type != 1 && *(double *)(uintptr_t)(item2Value + 16) == 0.0 )
+  if ( item2[1] == 1 && !*(_DWORD *)(uintptr_t)(item2[2] + 16) || item2[1] != 1 && *(double *)(uintptr_t)(item2[2] + 16) == 0.0 )
   {
     Rules_ReportDivideByZeroError();
     Lexer_ErrorRecover(1);
@@ -765,23 +765,23 @@ LABEL_20:
     result = Rules_AddIntegerValue(0);
     *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
-  else if ( item1Type && item2Type )
+  else if ( item1[1] && item2[1] )
   {
-    intRemainder = *(_DWORD *)(uintptr_t)(item1Value + 16) % *(_DWORD *)(uintptr_t)(item2Value + 16);
+    intRemainder = *(_DWORD *)(uintptr_t)(item1[2] + 16) % *(_DWORD *)(uintptr_t)(item2[2] + 16);
     *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;
     result = Rules_AddIntegerValue(intRemainder);
     *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else
   {
-    if ( item1Type == 1 )
-      fnum1 = (double)*(int *)(uintptr_t)(item1Value + 16);
+    if ( item1[1] == 1 )
+      fnum1 = (double)*(int *)(uintptr_t)(item1[2] + 16);
     else
-      fnum1 = *(double *)(uintptr_t)(item1Value + 16);
-    if ( item2Type == 1 )
-      fnum2 = (double)*(int *)(uintptr_t)(item2Value + 16);
+      fnum1 = *(double *)(uintptr_t)(item1[2] + 16);
+    if ( item2[1] == 1 )
+      fnum2 = (double)*(int *)(uintptr_t)(item2[2] + 16);
     else
-      fnum2 = *(double *)(uintptr_t)(item2Value + 16);
+      fnum2 = *(double *)(uintptr_t)(item2[2] + 16);
     quotient = fnum1 / fnum2;
     *(_DWORD *)(uintptr_t)(returnValue + 4) = 0;
     if ( quotient >= 0.0 )
@@ -798,7 +798,7 @@ LABEL_20:
 //----- (004A4D20) --------------------------------------------------------
 double Rules_MathPi(void)
 {
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aPi, 0, 0);
   return acos(g_Rules_MathPiAcosArgument);
 }
 // 507788: using guessed type double dbl_507788;
@@ -873,20 +873,20 @@ double  Rules_MathGradToDeg(int a1, int a2, int a3, double a4)
 signed int  Rules_MathRound(int returnValue, double a2)
 {
   signed int result; // eax
-  int theValue; // [esp+8h] [ebp-28h] BYREF
-  int theValueType; // [esp+Ch] [ebp-24h]
-  int theValueContents; // [esp+10h] [ebp-20h]
+  _DWORD theValue[6]; // [esp+8h] [ebp-28h] BYREF
+  /* stack alias of theValue[1] */
+  /* stack alias of theValue[2]: the DATA_OBJECT value slot */
   int v8 CLASH95_UNUSED; // [esp+28h] [ebp-8h]
 
   v8 = returnValue;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aRound, 0, 1) == -1 )
     return 0;
-  result = Lexer_ParseValueList(1, &theValue, 110, a2);
+  result = Lexer_ParseValueList(1, theValue, 110, a2);
   if ( !result )
     return result;
-  if ( theValueType == 1 )
-    return *(_DWORD *)(uintptr_t)(theValueContents + 16);
-  return (int)ceil(*(double *)(uintptr_t)(theValueContents + 16) + g_Rules_MathRoundHalfOffset);
+  if ( theValue[1] == 1 )
+    return *(_DWORD *)(uintptr_t)(theValue[2] + 16);
+  return (int)ceil(*(double *)(uintptr_t)(theValue[2] + 16) + g_Rules_MathRoundHalfOffset);
 }
 // 5077C0: using guessed type double dbl_5077C0;
 
@@ -1033,7 +1033,7 @@ signed int  Help_UnloadTopicFile(int fileName)
   }
   if ( !topicFile )
     return 0;
-  Help_FreeTopicTree(*(_DWORD **)(uintptr_t)(topicFile + 80));
+  Help_FreeTopicTree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(topicFile + 80));
   if ( (_DWORD *)(uintptr_t)prevFile == foundFile )
     g_HelpLoadedTopicFileList = foundFile[22];
   else

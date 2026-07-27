@@ -428,7 +428,7 @@ signed int Rules_AllocateDefruleModule(void)
   _DWORD *freeListEntry; // edx
   signed int result; // eax
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   if ( freeListEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
@@ -469,9 +469,9 @@ int  Rules_GetDefruleModuleItem(int theModule)
 // 54E64C: using guessed type int dword_54E64C;
 
 //----- (00490D40) --------------------------------------------------------
-int  Rules_FindDefruleByName(_BYTE *defruleName, int a2)
+int  Rules_FindDefruleByName(_BYTE *defruleName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(defruleName, a2);
+  return Rules_FindConstructByNameGeneric(defruleName, g_DefruleConstructTypePtr);
 }
 // 54E648: using guessed type int dword_54E648;
 
@@ -672,7 +672,7 @@ int * Rules_DeriveNumericDefaultFromRange(int theType, int theConstraints, int s
   double theValue; // st7
   int v8; // [esp+8h] [ebp-Ch]
 
-  theList = *(__int16 **)(uintptr_t)(theConstraints + 6);
+  theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraints + 6);
   if ( theList )
   {
     while ( *theList != theType )
@@ -686,7 +686,7 @@ int * Rules_DeriveNumericDefaultFromRange(int theType, int theConstraints, int s
 LABEL_4:
   if ( theType == 1 )
   {
-    theList = *(__int16 **)(uintptr_t)(theConstraints + 10);
+    theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraints + 10);
     if ( *theList != 1 )
     {
       if ( !*theList )
@@ -696,7 +696,7 @@ LABEL_11:
         _CHP(v8, a4);
         return Rules_AddIntegerValue((int)theValue);
       }
-      theList = *(__int16 **)(uintptr_t)(theConstraints + 14);
+      theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraints + 14);
       if ( *theList != 1 )
       {
         if ( *theList )
@@ -708,12 +708,12 @@ LABEL_11:
   }
   if ( theType )
     return (int *)(uintptr_t)standardValue;
-  theList = *(__int16 **)(uintptr_t)(theConstraints + 10);
+  theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraints + 10);
   if ( !*theList )
     return *(int **)(theList + 1);
   if ( *theList != 1 )
   {
-    theList = *(__int16 **)(uintptr_t)(theConstraints + 14);
+    theList = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstraints + 14);
     if ( !*theList )
       return *(int **)(theList + 1);
     if ( *theList != 1 )
@@ -932,7 +932,7 @@ int  Module_RegisterItem(int theItem, int allocateFunction, int bloadModuleRefer
   _DWORD *newModuleItem; // eax
   int moduleIndex; // edx
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 128);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
   if ( freeListEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);

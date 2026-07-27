@@ -13,9 +13,9 @@ double  Rules_RtnDouble(int argumentPosition, int a2, double a3)
   int argExpr; // eax
   int i; // edx
   int v7; // eax
-  int v8; // [esp+0h] [ebp-30h] BYREF
-  int resultType; // [esp+4h] [ebp-2Ch]
-  int resultValue; // [esp+8h] [ebp-28h]
+  _DWORD v8[6]; // [esp+0h] [ebp-30h] BYREF
+  /* stack alias of v8[1] */
+  /* stack alias of v8[2]: the DATA_OBJECT value slot */
   double returnValue; // [esp+18h] [ebp-18h]
 
   argExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
@@ -27,23 +27,23 @@ double  Rules_RtnDouble(int argumentPosition, int a2, double a3)
   }
   if ( !argExpr )
   {
-    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     returnValue = 1.0;
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return returnValue;
   }
-  Parser_ParseForm((__int16 *)(uintptr_t)argExpr, &v8, a2, a3);
-  if ( !resultType )
+  Parser_ParseForm((__int16 *)(uintptr_t)argExpr, v8, a2, a3);
+  if ( !v8[1] )
   {
-    v7 = *(_DWORD *)(uintptr_t)(resultValue + 20);
-    LODWORD(returnValue) = *(_DWORD *)(uintptr_t)(resultValue + 16);
+    v7 = *(_DWORD *)(uintptr_t)(v8[2] + 20);
+    LODWORD(returnValue) = *(_DWORD *)(uintptr_t)(v8[2] + 16);
     HIDWORD(returnValue) = v7;
     return returnValue;
   }
-  if ( resultType == 1 )
-    return (double)*(int *)(uintptr_t)(resultValue + 16);
-  Rules_ExpectedTypeError((int)(intptr_t)aRtndouble, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+  if ( v8[1] == 1 )
+    return (double)*(int *)(uintptr_t)(v8[2] + 16);
+  Rules_ExpectedTypeError((int)(intptr_t)aRtndouble, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
   HIDWORD(returnValue) = 1072693248;
   Rules_SetEvaluationErrorFlag(1);
   Lexer_ErrorRecover(1);
@@ -114,7 +114,7 @@ int  Rules_RtnUnknown(int argumentPosition, _DWORD *returnValue, double a3)
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;
@@ -137,11 +137,14 @@ int Rules_RtnArgCount(void)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00481450) --------------------------------------------------------
-int Lexer_TokenExpect(int expectedNumber)
+/* Lexer_TokenExpect (= CLIPS EnvArgCountCheck) is __usercall:
+   eax = functionName, edx = countRelation (0 EXACTLY / 1 AT_LEAST / 2 NO_MORE_THAN),
+   ebx = expectedNumber. IDA modelled only ebx as a parameter, so every call ran with
+   an undefined relation and name - which made e.g. printout's check fail and latch
+   HaltExecution, stopping the agenda after a single rule fire. */
+int Lexer_TokenExpect(int functionName, int countRelation, int expectedNumber)
 {
   int result; // eax
-  int countRelation; // edx
-  int functionName; // ecx
 
   result = Rules_RtnArgCount();
   if ( !countRelation )
@@ -169,10 +172,11 @@ LABEL_9:
 // 481478: variable 'v3' is possibly undefined
 
 //----- (004814A0) --------------------------------------------------------
-int  Rules_ArgRangeCheck(int functionName, int maxArgs)
+/* sub_4814A0 is __usercall: eax=functionName, edx=minArgs, ebx=maxArgs.
+   IDA kept only two parameters and left minArgs undefined. */
+int  Rules_ArgRangeCheck(int functionName, int minArgs, int maxArgs)
 {
   int result; // eax
-  int minArgs; // edx
   int v5; // ecx
   int v6; // ecx
   int v7; // ecx
@@ -188,7 +192,7 @@ int  Rules_ArgRangeCheck(int functionName, int maxArgs)
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFunction, v5);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v6);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAtLeas, v7);
-    Rules_PrintLongInteger(v8, v8);
+    Rules_PrintLongInteger(v8, minArgs);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aAndNoMoreThan, v9);
     Rules_PrintLongInteger(v10, maxArgs);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aArguments_, v11);

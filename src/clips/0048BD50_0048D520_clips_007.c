@@ -19,7 +19,7 @@ int  Lexer_ParseSlotConstraint(_DWORD *returnValue, int a2, double a3)
   slotNameArg[9] = a2;
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Lexer_TokenExpect(2);
+  result = Lexer_TokenExpect(0, 0, 2);
   if ( result != -1 )
   {
     result = Rules_ResolveFactArgument(1, v5, 1, a3);
@@ -28,7 +28,7 @@ int  Lexer_ParseSlotConstraint(_DWORD *returnValue, int a2, double a3)
     {
       result = Lexer_ParseValueList(2, slotNameArg, 2, a3);
       if ( result )
-        return Lexer_BuildSlotNode(theFact, *(char **)(uintptr_t)(slotNameArg[2] + 16), returnValue);
+        return Lexer_BuildSlotNode(theFact, (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotNameArg[2] + 16), returnValue);
     }
   }
   return result;
@@ -51,7 +51,7 @@ int  Lexer_BuildSlotNode(int theFact, char *slotName, _DWORD *returnValue)
     if ( strcmp_(slotName, aImplied) )
     {
       Lexer_ErrorRecover(1);
-      return Rules_ReportInvalidSlotError(v7, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(theFact + 16) + 16));
+      return Rules_ReportInvalidSlotError(v7, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFact + 16) + 16));
     }
   }
   else
@@ -61,7 +61,7 @@ int  Lexer_BuildSlotNode(int theFact, char *slotName, _DWORD *returnValue)
     if ( !Lexer_FindTemplateSlot(theDeftemplate, (int)(intptr_t)slotSymbol, &slotPosition) )
     {
       Lexer_ErrorRecover(1);
-      return Rules_ReportInvalidSlotError(v9, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(theFact + 16) + 16));
+      return Rules_ReportInvalidSlotError(v9, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFact + 16) + 16));
     }
   }
   if ( (*(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theFact + 16) + 24) & 1) != 0 )
@@ -83,7 +83,7 @@ int  Lexer_ParseFieldSpec(int returnValue, double a2)
 
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect(0, 0, 1);
   if ( result != -1 )
   {
     result = Rules_ResolveFactArgument(1, v3, 1, a2);
@@ -134,7 +134,7 @@ int  Rules_BuildFactSlotNameList(int theFact, _DWORD *returnValue)
     theList = Rules_CreateEphemeralMultifield(i);
     *(_DWORD *)(uintptr_t)(v8 + 8) = theList;
     theMultifield = theList;
-    currentSlot = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theFact + 16) + 20);
+    currentSlot = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theFact + 16) + 20);
     result = 1;
     if ( currentSlot )
     {
@@ -164,22 +164,21 @@ _DWORD * Rules_GetFactListFunction(int returnValue, double a2)
   int v4; // ecx
   int v6; // ecx
   int v7; // ecx
-  int v8; // edx
-  _DWORD argValue[2]; // [esp-4h] [ebp-24h] BYREF
-  int v10; // [esp+4h] [ebp-1Ch]
+  _DWORD v8[6]; // [esp-4h] [ebp-24h] BYREF
+  /* stack alias of v8[2]: the DATA_OBJECT value slot */
   int v11 CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   v11 = returnValue;
-  numArgs = Lexer_TokenExpect(1);
+  numArgs = Lexer_TokenExpect((int)(intptr_t)aGetFactList, 2, 1);
   if ( numArgs == -1 )
     return Rules_SetMultifieldErrorValue(v4);
   if ( numArgs == 1 )
   {
-    Rules_RtnUnknown(1, argValue, a2);
-    if ( argValue[1] != 2 || !Module_FindByName(*(_BYTE **)(uintptr_t)(v10 + 16)) && strcmp_(v7, *(_DWORD *)(uintptr_t)(v10 + 16)) )
+    Rules_RtnUnknown(1, v8, a2);
+    if ( v8[1] != 2 || !Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)((uintptr_t)(unsigned int)v8[2] + 16)) && strcmp_(v7, *(_DWORD *)(uintptr_t)((uintptr_t)(unsigned int)v8[2] + 16)) )
     {
       Rules_SetMultifieldErrorValue(v6);
-      return (_DWORD *)(uintptr_t)Parser_ReportError(v8, (int)(intptr_t)aDefmoduleNam_1);
+      return (_DWORD *)(uintptr_t)Parser_ReportError(1, (int)(intptr_t)aDefmoduleNam_1);
     }
   }
   else
@@ -273,23 +272,24 @@ int  Rules_ResolveFactArgument(int argumentPosition, int theFunction, int noFact
   int result; // eax
   int factIndex; // edx
   int v7; // ecx
-  int v8; // [esp-4h] [ebp-34h] BYREF
-  int argType; // [esp+0h] [ebp-30h]
-  int argValue; // [esp+4h] [ebp-2Ch]
+  _DWORD v8[6]; // [esp-4h] [ebp-34h] BYREF
+  /* stack alias of v8[1] */
+  /* stack alias of v8[2]: the DATA_OBJECT value slot */
   _BYTE tempBuffer[24]; // [esp+14h] [ebp-1Ch] BYREF
   int v12 CLASH95_UNUSED; // [esp+2Ch] [ebp-4h]
 
   v12 = theFunction;
-  Rules_RtnUnknown(argumentPosition, &v8, a4);
-  if ( argType == 6 )
+  Rules_RtnUnknown(argumentPosition, v8, a4);
+  if ( v8[1] == 6 )
   {
-    result = argValue;
-    if ( *(char *)(uintptr_t)(argValue + 29) < 0 )
+    result = v8[2];
+    if ( *(char *)(uintptr_t)(v8[2] + 29) < 0 )
       return 0;
   }
-  else if ( argType == 1 && *(int *)(uintptr_t)(argValue + 16) >= 0 )
+  else if ( v8[1] == 1 && *(int *)(uintptr_t)(v8[2] + 16) >= 0 )
   {
-    result = Rules_FindFactByIndex();
+    factIndex = *(int *)(uintptr_t)(v8[2] + 16);
+    result = Rules_FindFactByIndex(factIndex);
     if ( !result && noFactError )
     {
       sprintf_(tempBuffer, "f-%ld", factIndex);
@@ -340,7 +340,7 @@ int Rules_FactPatternNetworkBsaveFind(void)
   {
     Module_SetCurrent(i);
     for ( j = Rules_GetNextDeftemplate(0); j; j = Rules_GetNextDeftemplate(v3) )
-      Rules_FactPatternNetworkAssignNodeIds(0, 0, *(_DWORD **)(uintptr_t)(j + 32));
+      Rules_FactPatternNetworkAssignNodeIds(0, 0, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 32));
     result = Module_NextEnum(i);
   }
   return result;
@@ -417,7 +417,7 @@ int  Rules_FactPatternNetworkBsaveStorage(int theFile)
   {
     Module_SetCurrent(i);
     for ( j = Rules_GetNextDeftemplate(0); j; j = Rules_GetNextDeftemplate(v4) )
-      Rules_FactPatternNetworkAssignNodeIds((const void *)1, theFile, *(_DWORD **)(uintptr_t)(j + 32));
+      Rules_FactPatternNetworkAssignNodeIds((const void *)1, theFile, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 32));
   }
   result = Rules_IsBloaded();
   if ( result )
@@ -461,7 +461,7 @@ const void * Rules_FactPatternNetworkWriteNodeRecord(int thePattern, int theFile
   v6 = *(_DWORD *)(uintptr_t)(v3 + 20) << 16;
   LOBYTE(packedFields) = 0;
   packedFields |= HIBYTE(v6);
-  networkTestIndex = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(v3 + 24));
+  networkTestIndex = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 24));
   nextLevelPtr = v7[7];
   if ( nextLevelPtr )
     v9 = *(_DWORD *)(uintptr_t)(nextLevelPtr + 16);
@@ -611,7 +611,7 @@ int Rules_FactPatternNetworkAssignCodeGenIds(void)
     Module_SetCurrent(i);
     for ( j = Rules_GetNextDeftemplate(0); j; j = Rules_GetNextDeftemplate(j) )
     {
-      thePattern = *(_DWORD **)(uintptr_t)(j + 32);
+      thePattern = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 32);
       for ( *(_DWORD *)(uintptr_t)(j + 12) = deftemplateIndex++; thePattern; nodeIndex = v6 + 1 )
       {
         thePattern[4] = nodeIndex;
@@ -682,7 +682,7 @@ LABEL_7:
     }
     while ( 1 )
     {
-      thePattern = *(_DWORD **)(uintptr_t)(theDeftemplate + 32);
+      thePattern = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeftemplate + 32);
       if ( thePattern )
         break;
 LABEL_6:
@@ -762,23 +762,23 @@ int  Rules_FactPatternNetworkNodeToCode(int theFile, int thePattern, int maxIndi
   Output_WriteFormatted(maxIndices, thePattern, theFile, (int)(intptr_t)asc_504530, imageID);
   Rules_PrintPatternNetworkNodeTrace(theFile, v7, v8);
   Output_WriteFormatted(maxIndices, v9, theFile, (int)(intptr_t)a0DDD, *(_DWORD *)(uintptr_t)(thePattern + 20));
-  Rules_WriteExpressionRefToCode(theFile, *(__int16 **)(uintptr_t)(thePattern + 24), v10, v20);
+  Rules_WriteExpressionRefToCode(theFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(thePattern + 24), v10, v20);
   v12 = *(_DWORD *)(uintptr_t)(thePattern + 28);
   if ( v12 )
-    Output_WriteFormatted(v20, *(_DWORD *)(uintptr_t)(v12 + 16) % maxIndices, theFile, (int)(intptr_t)aSD_LdLd_1, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
+    Output_WriteFormatted(v20, *(_DWORD *)(uintptr_t)(v12 + 16) % maxIndices, theFile, (int)(intptr_t)aSD_LdLd_1, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
   else
     Output_WriteFormatted(v11, 0, theFile, (int)(intptr_t)aNull_14, v20);
   if ( *(_DWORD *)(uintptr_t)(thePattern + 32) )
-    Output_WriteFormatted(**(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), v20, theFile, (int)(intptr_t)aSD_LdLd_2, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
+    Output_WriteFormatted(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), v20, theFile, (int)(intptr_t)aSD_LdLd_2, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
   else
     Output_WriteFormatted(v14, v13, theFile, (int)(intptr_t)aNull_12, v20);
   if ( *(_DWORD *)(uintptr_t)(thePattern + 36) )
-    Output_WriteFormatted(v16, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), theFile, (int)(intptr_t)aSD_LdLd_2, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
+    Output_WriteFormatted(v16, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), theFile, (int)(intptr_t)aSD_LdLd_2, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
   else
     Output_WriteFormatted(v16, v15, theFile, (int)(intptr_t)aNull_12, v20);
   v18 = *(_DWORD *)(uintptr_t)(thePattern + 40);
   if ( v18 )
-    return Output_WriteFormatted(v18, *(_DWORD *)(uintptr_t)(v18 + 16) % maxIndices, theFile, (int)(intptr_t)aSD_LdLd_3, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
+    return Output_WriteFormatted(v18, *(_DWORD *)(uintptr_t)(v18 + 16) % maxIndices, theFile, (int)(intptr_t)aSD_LdLd_3, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
   else
     return Output_WriteFormatted(0, v17, theFile, (int)(intptr_t)aNull_13, v20);
 }
@@ -801,7 +801,7 @@ int  Rules_FactPatternNetworkWriteNodeRefToCode(int thePattern, int theFile, int
   char v4; // [esp+0h] [ebp-8h]
 
   if ( thePattern )
-    return Output_WriteFormatted(imageID, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), theFile, (int)(intptr_t)aSD_LdLd_4, **(_DWORD **)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
+    return Output_WriteFormatted(imageID, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20), theFile, (int)(intptr_t)aSD_LdLd_4, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsFactPatternNetworkCodeGenItem + 20));
   else
     return Output_WriteFormatted(imageID, theFile, theFile, (int)(intptr_t)aNull_16, v4);
 }

@@ -14,7 +14,7 @@ _DWORD *Module_BeginEnum(void)
   _DWORD *freeListNode; // edx
   _DWORD *result; // eax
 
-  freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeListNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -374,9 +374,9 @@ signed int *Module_GetCurrentCommand(void)
 {
   int v0; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetCurrentModu, 0, 0);
   if ( g_Clips_CurrentModule )
-    return Str_Intern(*(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_Clips_CurrentModule + 16), v0);
+    return Str_Intern((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_Clips_CurrentModule + 16), v0);
   else
     return (signed int *)(uintptr_t)g_ClipsFalseSymbol;
 }
@@ -396,12 +396,12 @@ signed int * Module_SetCurrentCommand(int a1, double a2)
   argPtr[8] = a1;
   if ( !g_Clips_CurrentModule )
     return (signed int *)(uintptr_t)g_ClipsFalseSymbol;
-  defaultReturn = Str_Intern(*(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_Clips_CurrentModule + 16), a1);
-  if ( Lexer_TokenExpect(1) == -1 )
+  defaultReturn = Str_Intern((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_Clips_CurrentModule + 16), a1);
+  if ( Lexer_TokenExpect((int)(intptr_t)aSetCurrentModu, 0, 1) == -1 )
     return defaultReturn;
   if ( !Lexer_ParseValueList(1, argPtr, 2, a2) )
     return defaultReturn;
-  theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(argPtr[2] + 16));
+  theModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argPtr[2] + 16));
   if ( theModule )
     Module_SetCurrent((int)(intptr_t)theModule);
   else
@@ -543,7 +543,7 @@ signed int  IO_OpenTextSource(int name, const void *str, int maximumPosition, in
   routerName = (const char *)(uintptr_t)name;
   if ( IO_FindStringRouter(name) )
     return 0;
-  newStringRouter = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+  newStringRouter = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
   if ( newStringRouter )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -630,7 +630,7 @@ signed int  IO_OpenStringDestination(int name, const void *str, int maximumPosit
   routerName = (const char *)(uintptr_t)name;
   if ( IO_FindStringRouter(name) )
     return 0;
-  newStringRouter = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+  newStringRouter = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
   if ( newStringRouter )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -877,7 +877,7 @@ LABEL_20:
     {
       IO_OutNewline();
       IO_OutNewline();
-      IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+      IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
       bitmapValue = Rules_AddBitmapValue(g_Rules_DefaultZeroBitmapValue, v24);
       multifieldExpr = AST_NewNode(34, bitmapValue);
       *(_DWORD *)(uintptr_t)(firstOne + 10) = multifieldExpr;

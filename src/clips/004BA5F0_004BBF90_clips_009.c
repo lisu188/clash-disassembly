@@ -238,7 +238,7 @@ LABEL_9:
               recordArrayVersion,
               headerFilePtr,
               (char)(intptr_t)aStructDeftem_0,
-              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
+              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4),
               0,
               0);
       recordFilePtr = v12;
@@ -272,7 +272,7 @@ LABEL_8:
               slotArrayVersion,
               headerFilePtr,
               (char)(intptr_t)aStructTemplate,
-              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
+              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8),
               0,
               0);
       slotFilePtr = v18;
@@ -367,7 +367,7 @@ int  Rules_DeftemplateWriteRecordToCode(int filePtr, int theDeftemplate, int max
   int v22; // [esp+0h] [ebp-10h]
 
   Output_WriteFormatted(maxIndices, theDeftemplate, filePtr, (int)(intptr_t)asc_50A17C, a4);
-  Rules_WriteConstructHeaderToCode(filePtr, theDeftemplate, maxIndices, moduleCount, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
+  Rules_WriteConstructHeaderToCode(filePtr, theDeftemplate, maxIndices, moduleCount, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 4));
   Output_WriteFormatted(v10, v9, filePtr, (int)(intptr_t)asc_50A184, v21);
   if ( *(_DWORD *)(uintptr_t)(theDeftemplate + 20) )
     Output_WriteFormatted(
@@ -422,7 +422,7 @@ int  Rules_DeftemplateWriteSlotToCode(int filePtr, int theSlot, int maxIndices, 
   Output_WriteFormatted(v11, v10, filePtr, (int)(intptr_t)aDDDD, *(_BYTE *)(uintptr_t)(theSlot + 4) & 1);
   Compiler_WriteConstraintReference(filePtr, *(_DWORD *)(uintptr_t)(theSlot + 8), v12, a4);
   Output_WriteFormatted(maxIndices, v13, filePtr, (int)(intptr_t)asc_50A184, v19);
-  Rules_WriteExpressionRefToCode(filePtr, *(__int16 **)(uintptr_t)(theSlot + 12), v14, v20);
+  Rules_WriteExpressionRefToCode(filePtr, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 12), v14, v20);
   Output_WriteFormatted(v16, v15, filePtr, (int)(intptr_t)asc_50A184, v20);
   if ( *(_DWORD *)(uintptr_t)(theSlot + 16) )
     return Output_WriteFormatted(v21, (slotIndex + 1) % maxIndices, filePtr, (int)(intptr_t)aSD_DD_6, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20) + 8));
@@ -447,7 +447,7 @@ int  Rules_DeftemplateWriteSlotToCode(int filePtr, int theSlot, int maxIndices, 
 //----- (004BADD0) --------------------------------------------------------
 int  Rules_DeftemplateWriteModuleHeaderRef(int filePtr, int maxIndices)
 {
-  return Output_WriteFormatted(maxIndices, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), filePtr, (int)(intptr_t)aMihsSD_DD_3, **(_DWORD **)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20));
+  return Output_WriteFormatted(maxIndices, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20), filePtr, (int)(intptr_t)aMihsSD_DD_3, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeftemplateCodeGenItem + 20));
 }
 // 54E858: using guessed type int dword_54E858;
 
@@ -510,11 +510,11 @@ int Rules_DefruleBsaveFind(void)
     {
       AST_MarkNodeFieldBound(j, j[3]);
       g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v2 + 32));
-      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v3 + 32));
-      for ( k = v4; k; k = *(_DWORD *)(uintptr_t)(v7 + 48) )
+      Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 32));
+      for ( k = v4; k; k = *(_DWORD *)(uintptr_t)(k + 48) )
       {
         g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(k + 36));
-        Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v6 + 36));
+        Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 36));
       }
     }
   }
@@ -543,9 +543,9 @@ int  Rules_DefruleBsaveWriteExpressions(int a1)
     Module_SetCurrent(i);
     for ( j = Rules_GetNextDefrule(0); j; j = Rules_GetNextDefrule(j) )
     {
-      Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(j + 32), a1);
-      for ( k = j; k; k = *(_DWORD *)(uintptr_t)(v5 + 48) )
-        Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(k + 36), a1);
+      Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 32), a1);
+      for ( k = j; k; k = *(_DWORD *)(uintptr_t)(k + 48) )
+        Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(k + 36), a1);
     }
   }
   return Rules_ClearJoinNetworkMarkedFlags();
@@ -729,7 +729,7 @@ int  Rules_BsaveJoinNetworkForModules(int filePtr)
     theDefrule = Rules_GetNextDefrule(0);
     while ( theDefrule )
     {
-      joinNode = *(int **)(uintptr_t)(theDefrule + 44);
+      joinNode = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefrule + 44);
       if ( joinNode )
       {
         do
@@ -1340,7 +1340,7 @@ int  Rules_ParseDeftemplate(char *readSource, double a2)
     }
     else
     {
-      freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 144);
+      freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144);
       if ( freeNode )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144);
@@ -1410,7 +1410,7 @@ _DWORD * Rules_DeftemplateInstallSlots(_DWORD *result, int a2)
     ++*((_DWORD *)*i + 1);
     AST_AddHashedNodeChain(i[3], (int)(intptr_t)i, a2);
     AST_Free(*(_DWORD *)(uintptr_t)(v3 + 12));
-    v5 = *(_DWORD **)(uintptr_t)(v4 + 8);
+    v5 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 8);
     *(_DWORD *)(uintptr_t)(v4 + 12) = v6;
     result = AST_InternNode(v5);
     *(_DWORD *)(uintptr_t)(v7 + 8) = result;

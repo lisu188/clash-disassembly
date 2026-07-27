@@ -13,7 +13,7 @@ signed int Rules_AllocDeftemplateHashNode(void)
 {
   _DWORD *freeListNode; // edx
 
-  freeListNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListNode )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -346,7 +346,7 @@ int AST_FreeNode(int result)
   AST_FreeNode(*(_DWORD *)(uintptr_t)(node + 68));
   AST_FreeNode(*(_DWORD *)(uintptr_t)(node + 56));
   if ( *(_BYTE *)(uintptr_t)(node + 8) & 0x10 )
-    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(node + 16));
+    AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(node + 16));
 
   if ( *(_DWORD *)(uintptr_t)(node + 60) )
   {
@@ -407,7 +407,7 @@ __int16 * AST_FindHashedNodeChain(__int16 *result, _DWORD *hashInfo)
     hashEntry = *(_DWORD *)(uintptr_t)(g_ExpressionHashTable + 4 * *v5);
     if ( hashEntry )
     {
-      while ( !AST_NodeListsEqual(*(__int16 **)(uintptr_t)(hashEntry + 8), theExpression) )
+      while ( !AST_NodeListsEqual((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(hashEntry + 8), theExpression) )
       {
         *hashInfo = v7;
         hashEntry = *(_DWORD *)(uintptr_t)(v7 + 12);
@@ -513,7 +513,7 @@ __int16 * AST_AddHashedNodeChain(__int16 *result, int a2, int a3)
     }
     else
     {
-      freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
+      freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
       if ( freeListEntry )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
@@ -714,19 +714,19 @@ LABEL_14:
           *(_DWORD *)(uintptr_t)(theToken + 4) = Lexer_ReadToken(readSource, 0, &scannedType, v16);
           sfVarSymbol = *(_DWORD *)(uintptr_t)(theToken + 4);
           *(_DWORD *)(uintptr_t)theToken = 15;
-          sfVarName = *(const char **)(uintptr_t)(sfVarSymbol + 16);
+          sfVarName = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(sfVarSymbol + 16);
           if ( *sfVarName != 42
             || (sfNameLength = strlen(sfVarName), sfNameLength <= 1)
             || (sfNameSymbol = *(_DWORD *)(uintptr_t)(theToken + 4),
-                sfNameLength = strlen(*(const char **)(uintptr_t)(sfNameSymbol + 16)),
+                sfNameLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(sfNameSymbol + 16)),
                 *(_BYTE *)(uintptr_t)(sfNameLength + *(_DWORD *)(uintptr_t)(sfNameSymbol + 16) - 1) != 42) )
           {
-            printForm = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16), sfNameLength);
+            printForm = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16), sfNameLength);
             goto LABEL_14;
           }
           sfFinalSymbol = *(_DWORD *)(uintptr_t)(theToken + 4);
           *(_DWORD *)(uintptr_t)theToken = 13;
-          *(_DWORD *)(uintptr_t)(theToken + 8) = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, *(const char **)(uintptr_t)(sfFinalSymbol + 16), sfNameLength);
+          *(_DWORD *)(uintptr_t)(theToken + 8) = Str_Concat(aQuestion_LexerSingleFieldVarPrefix, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(sfFinalSymbol + 16), sfNameLength);
           sfBufferLength = strlen((const char *)(uintptr_t)g_TokenBuf) + 1;
           *(_BYTE *)(uintptr_t)(sfBufferLength - 1 + g_TokenBuf - 1) = 0;
           *(_DWORD *)(uintptr_t)(theToken + 4) = Str_Intern((char *)(uintptr_t)(g_TokenBuf + 1), sfBufferLength - 1);
@@ -789,7 +789,7 @@ LABEL_30:
     *(_DWORD *)(uintptr_t)(theToken + 4) = Lexer_ReadQuotedString(readSource, v4);
     stringSymbol = *(_DWORD *)(uintptr_t)(theToken + 4);
     *(_DWORD *)(uintptr_t)theToken = 3;
-    printForm = Str_InternQuotedEscapedString(*(int **)(uintptr_t)(stringSymbol + 16), v38);
+    printForm = Str_InternQuotedEscapedString((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(stringSymbol + 16), v38);
     goto LABEL_14;
   }
   if ( i >= 38 )
@@ -836,19 +836,19 @@ LABEL_30:
     *(_DWORD *)(uintptr_t)(theToken + 4) = Lexer_ReadToken(readSource, 0, &scannedType, v27);
     mfVarSymbol = *(_DWORD *)(uintptr_t)(theToken + 4);
     *(_DWORD *)(uintptr_t)theToken = 16;
-    mfVarName = *(const char **)(uintptr_t)(mfVarSymbol + 16);
+    mfVarName = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(mfVarSymbol + 16);
     if ( *mfVarName != 42
       || (mfNameLength = strlen(mfVarName), mfNameLength <= 1)
       || (mfNameSymbol = *(_DWORD *)(uintptr_t)(theToken + 4),
-          mfNameLength = strlen(*(const char **)(uintptr_t)(mfNameSymbol + 16)),
+          mfNameLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(mfNameSymbol + 16)),
           *(_BYTE *)(uintptr_t)(mfNameLength + *(_DWORD *)(uintptr_t)(mfNameSymbol + 16) - 1) != 42) )
     {
-      printForm = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16), mfNameLength);
+      printForm = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16), mfNameLength);
       goto LABEL_14;
     }
     mfFinalSymbol = *(_DWORD *)(uintptr_t)(theToken + 4);
     *(_DWORD *)(uintptr_t)theToken = 14;
-    *(_DWORD *)(uintptr_t)(theToken + 8) = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, *(const char **)(uintptr_t)(mfFinalSymbol + 16), mfNameLength);
+    *(_DWORD *)(uintptr_t)(theToken + 8) = Str_Concat(aQuestion_LexerMultiFieldVarPrefix, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(mfFinalSymbol + 16), mfNameLength);
     mfBufferLength = strlen((const char *)(uintptr_t)g_TokenBuf) + 1;
     *(_BYTE *)(uintptr_t)(mfBufferLength - 1 + g_TokenBuf - 1) = 0;
     *(_DWORD *)(uintptr_t)(theToken + 4) = Str_Intern((char *)(uintptr_t)(g_TokenBuf + 1), mfBufferLength - 1);
@@ -866,12 +866,12 @@ LABEL_15:
   if ( *(_DWORD *)(uintptr_t)theToken == 8 )
   {
     IO_OutWriteToken(asc_504D70);
-    IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+    IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
     printText = asc_504D74;
   }
   else
   {
-    printText = *(char **)(uintptr_t)(theToken + 8);
+    printText = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8);
   }
   result = IO_OutWriteToken(printText);
   if ( g_TokenBuf )
@@ -1394,7 +1394,7 @@ int  AST_NodeListsEqual(__int16 *firstList, __int16 *secondList)
     result = AST_NodeListsEqual(*(_DWORD *)(i + 3), *(_DWORD *)(secondList + 3));
     if ( !result )
       return result;
-    i = *(__int16 **)(uintptr_t)(v5 + 10);
+    i = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 10);
   }
   return i == secondList;
 }

@@ -44,7 +44,7 @@ __int16 * Rules_BindFunction(_DWORD *returnValue, double context)
   valueExpr = *(_DWORD *)(uintptr_t)(v7 + 10);
   if ( valueExpr )
   {
-    v15 = *(__int16 **)(uintptr_t)(v7 + 10);
+    v15 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 10);
     if ( *(_DWORD *)(uintptr_t)(valueExpr + 10) )
       Rules_StoreEvaluatedNodesAsMultifield(returnValue, (int)(intptr_t)v15, 1, context);
     else
@@ -90,7 +90,7 @@ LABEL_21:
       returnValue[2] = g_ClipsFalseSymbol;
       return result;
     }
-    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeListHead )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -174,25 +174,31 @@ int  Rules_PrognFunction(_DWORD *returnValue, double context)
 {
   int v3; // eax
   int argCount; // esi
-  int v5; // ecx
-  int v6; // ecx
+  int argIndex; // ecx
   int result; // eax
 
   v3 = Rules_RtnArgCount();
   argCount = v3;
   if ( !v3 )
     goto LABEL_8;
+  /* 49D043: `mov ecx,1` ... 49D06E: `inc ecx; cmp ecx,esi; jle` - ecx is the
+     1-based argument index; IDA dropped its initialisation and increment,
+     leaving the undefined temps v5/v6 and a garbage argument position. */
+  argIndex = 1;
   if ( v3 >= 1 )
   {
     do
     {
       if ( Rules_GetEvaluationErrorFlag() == 1 )
         break;
-      Rules_RtnUnknown(v5, returnValue, context);
+      Rules_RtnUnknown(argIndex, returnValue, context);
       if ( g_ClipsBreakFlag == 1 )
         break;
+      if ( g_ClipsHaltExecutionFlag == 1 )
+        break;
+      ++argIndex;
     }
-    while ( g_ClipsHaltExecutionFlag != 1 && v6 + 1 <= argCount );
+    while ( argIndex <= argCount );
   }
   result = Rules_GetEvaluationErrorFlag();
   if ( result == 1 )
@@ -245,18 +251,18 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
 {
   int result; // eax
   int caseExpr; // ecx
-  int caseData; // [esp-4h] [ebp-40h] BYREF
-  int caseType; // [esp+0h] [ebp-3Ch]
-  int caseValue; // [esp+4h] [ebp-38h]
-  int switchData; // [esp+14h] [ebp-28h] BYREF
-  int switchType; // [esp+18h] [ebp-24h]
-  int switchValue; // [esp+1Ch] [ebp-20h]
+  _DWORD caseData[6]; // [esp-4h] [ebp-40h] BYREF
+  /* stack alias of caseData[1] */
+  /* stack alias of caseData[2]: the DATA_OBJECT value slot */
+  _DWORD switchData[6]; // [esp+14h] [ebp-28h] BYREF
+  /* stack alias of switchData[1] */
+  /* stack alias of switchData[2]: the DATA_OBJECT value slot */
   int v13 CLASH95_UNUSED; // [esp+34h] [ebp-8h]
 
   v13 = a2;
   returnValue[1] = 2;
   returnValue[2] = g_ClipsFalseSymbol;
-  result = Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &switchData, a2, context);
+  result = Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), switchData, a2, context);
   if ( !g_ClipsEvaluationError )
   {
     caseExpr = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
@@ -264,13 +270,13 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
     {
       while ( *(_WORD *)(uintptr_t)caseExpr != 105 )
       {
-        result = Parser_ParseForm((__int16 *)(uintptr_t)caseExpr, &caseData, caseExpr, context);
+        result = Parser_ParseForm((__int16 *)(uintptr_t)caseExpr, caseData, caseExpr, context);
         if ( g_ClipsEvaluationError )
           return result;
-        result = switchType;
-        if ( switchType == caseType )
+        result = switchData[1];
+        if ( switchData[1] == caseData[1] )
         {
-          result = caseType == 4 ? Rules_MultifieldRangesEqual(&switchData, &caseData) : switchValue == caseValue;
+          result = caseData[1] == 4 ? Rules_MultifieldRangesEqual(switchData, caseData) : switchData[2] == caseData[2];
           if ( result )
             break;
         }
@@ -278,7 +284,7 @@ int  Rules_SwitchFunction(_DWORD *returnValue, int a2, double context)
         if ( !caseExpr )
           return result;
       }
-      return Parser_ParseForm(*(__int16 **)(uintptr_t)(caseExpr + 10), returnValue, caseExpr, context);
+      return Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(caseExpr + 10), returnValue, caseExpr, context);
     }
   }
   return result;
@@ -332,14 +338,14 @@ _DWORD * Rules_CreateMultifieldFunction(_DWORD *returnValue, double context)
 signed int  Rules_SetGenFunction(int a1, double context)
 {
   signed int result; // eax
-  int argData; // [esp-8h] [ebp-24h] BYREF
-  int argValue; // [esp+0h] [ebp-1Ch]
+  _DWORD argData[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
   int v5 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v5 = a1;
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &argData, 1, context) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSetgen, 0, 1) == -1 || !Lexer_ParseValueList(1, argData, 1, context) )
     return g_ClipsGensymCounter;
-  result = *(_DWORD *)(uintptr_t)(argValue + 16);
+  result = *(_DWORD *)(uintptr_t)(argData[2] + 16);
   if ( result < 1 )
   {
     Parser_ReportError(1, (int)(intptr_t)aNumberGreaterT);
@@ -347,7 +353,7 @@ signed int  Rules_SetGenFunction(int a1, double context)
   }
   else
   {
-    g_ClipsGensymCounter = *(_DWORD *)(uintptr_t)(argValue + 16);
+    g_ClipsGensymCounter = *(_DWORD *)(uintptr_t)(argData[2] + 16);
   }
   return result;
 }
@@ -360,7 +366,7 @@ signed int *__fastcall Rules_GensymFunction(int a1, int a2 CLASH95_UNUSED)
   int v4 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v4 = a1;
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGensym, 0, 0);
   sprintf_(symbolBuffer, "gen%ld", g_ClipsGensymCounter);
   return Str_Intern(symbolBuffer, ++g_ClipsGensymCounter);
 }
@@ -375,7 +381,7 @@ signed int *__thiscall Rules_GensymStarFunction(void *this)
   void *v4 CLASH95_UNUSED; // [esp+14h] [ebp-4h]
 
   v4 = this;
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGensym_0, 0, 0);
   do
   {
     sprintf_(symbolBuffer, "gen%ld", g_ClipsGensymCounter);
@@ -391,7 +397,7 @@ signed int *__thiscall Rules_GensymStarFunction(void *this)
 //----- (0049D5B0) --------------------------------------------------------
 int Rules_HostRandom(void)
 {
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aRandom, 0, 0);
   return j_rand_();
 }
 // 47D520: using guessed type int j_rand_(void);
@@ -403,7 +409,7 @@ int  Rules_HostSeed(int a1, double context)
   _DWORD argData[9]; // [esp-8h] [ebp-24h] BYREF
 
   argData[7] = a1;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aSeed, 0, 1);
   if ( result != -1 )
   {
     result = Lexer_ParseValueList(1, argData, 1, context);
@@ -419,23 +425,23 @@ int  Rules_HostLength(double context)
 {
   int result; // eax
   int v2; // edx
-  int argData; // [esp-4h] [ebp-20h] BYREF
-  int argType; // [esp+0h] [ebp-1Ch]
-  int argValue; // [esp+4h] [ebp-18h]
-  int rangeBegin; // [esp+8h] [ebp-14h]
-  int rangeEnd; // [esp+Ch] [ebp-10h]
+  _DWORD argData[6]; // [esp-4h] [ebp-20h] BYREF
+  /* stack alias of argData[1] */
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
+  /* stack alias of argData[3] */
+  /* stack alias of argData[4] */
 
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aLength_0, 0, 1);
   if ( result != -1 )
   {
-    Rules_RtnUnknown(1, &argData, context);
-    if ( argType == 3 || argType == 2 )
+    Rules_RtnUnknown(1, argData, context);
+    if ( argData[1] == 3 || argData[1] == 2 )
     {
-      return strlen(*(const char **)(uintptr_t)(argValue + 16));
+      return strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16));
     }
-    else if ( argType == 4 )
+    else if ( argData[1] == 4 )
     {
-      return rangeEnd - rangeBegin + 1;
+      return argData[4] - argData[3] + 1;
     }
     else
     {
@@ -453,7 +459,7 @@ int Rules_HostReleaseMem(void)
 {
   int v0; // ecx
 
-  if ( Lexer_TokenExpect(0) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aReleaseMem, 0, 0) == -1 )
     return 0;
   else
     return Mem_PurgeFreeListsForSpace(-1, 0, v0);
@@ -469,7 +475,7 @@ int  Rules_HostConserveMem(int a1, double context)
   _DWORD argData[9]; // [esp-8h] [ebp-24h] BYREF
 
   argData[7] = a1;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aConserveMem, 0, 1);
   if ( result != -1 )
   {
     result = Lexer_ParseValueList(1, argData, 2, context);
@@ -491,7 +497,7 @@ int  Rules_HostConserveMem(int a1, double context)
 //----- (0049D780) --------------------------------------------------------
 int Rules_HostMemUsed(void)
 {
-  if ( Lexer_TokenExpect(0) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aMemUsed, 0, 0) == -1 )
     return 0;
   else
     return Mem_GetTotalAllocatedBytes();
@@ -500,7 +506,7 @@ int Rules_HostMemUsed(void)
 //----- (0049D7B0) --------------------------------------------------------
 int Rules_HostMemRequests(void)
 {
-  if ( Lexer_TokenExpect(0) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aMemRequests, 0, 0) == -1 )
     return 0;
   else
     return Mem_GetTotalAllocationCount();
@@ -517,14 +523,14 @@ int ** Rules_HostApropos(double context)
   int v6; // ecx
   _DWORD argData[12]; // [esp+0h] [ebp-30h] BYREF
 
-  result = (int **)(uintptr_t)Lexer_TokenExpect(1);
+  result = (int **)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aApropos, 0, 1);
   symbolEntry = 0;
   if ( result != (int **)-1 )
   {
     result = (int **)(uintptr_t)Lexer_ParseValueList(1, argData, 2, context);
     if ( result )
     {
-      searchString = *(char **)(uintptr_t)(argData[2] + 16);
+      searchString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16);
       searchLength = strlen(searchString) + 1;
       while ( 1 )
       {
@@ -626,7 +632,7 @@ int Rules_HostOptionsCommand(void)
   int v77; // ecx
   int v78; // ecx
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect((int)(intptr_t)aOptions, 0, 0);
   if ( result != -1 )
   {
     Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)aMachineType, v1);
@@ -809,7 +815,7 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   v15[0] = AST_CloneNodeList(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 6));
   Symbol = Rules_MakeSymbol(aExpand);
   Rules_ExpandFuncCallForm((int **)(uintptr_t)returnValue, (_DWORD *)(uintptr_t)v15[0], (int)(intptr_t)Symbol, v15, context);
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -820,7 +826,7 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   {
     newExpr = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
-  *(_WORD *)(uintptr_t)newExpr = **(_WORD **)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  *(_WORD *)(uintptr_t)newExpr = *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   nodeValue = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2);
   *(_DWORD *)(uintptr_t)(newExpr + 10) = 0;
   *(_DWORD *)(uintptr_t)(newExpr + 2) = nodeValue;
@@ -832,7 +838,7 @@ int  Rules_HostExpansionCall(int returnValue, double context)
   {
     theFunction = *(_DWORD *)(uintptr_t)(newExpr + 2);
     argCount = AST_CountListNodes((int)(intptr_t)argList);
-    if ( !Rules_CheckFunctionArgCount(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theFunction + 16), *(_BYTE **)(uintptr_t)(theFunction + 17), argCount) )
+    if ( !Rules_CheckFunctionArgCount(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theFunction + 16), (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFunction + 17), argCount) )
     {
       *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
       *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
@@ -918,7 +924,7 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
       fieldOffset = 6 * expandFuncSymbol - 6;
       while ( expandFuncSymbol <= (int)(intptr_t)returnValue[4] + 1 )
       {
-        freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+        freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
         if ( freeListHead )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -950,7 +956,7 @@ int ** Rules_ExpandFuncCallForm(int **result, _DWORD *theExp, int expandFuncSymb
         *exprCursor = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
         *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = g_ClipsMemFreeListTemp;
         result = (int **)(uintptr_t)(lastNode + 10);
-        exprCursor = *(_DWORD **)(uintptr_t)(lastNode + 10);
+        exprCursor = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(lastNode + 10);
         stoPtr = (int *)(uintptr_t)(lastNode + 10);
         if ( !exprCursor )
           return result;
@@ -1012,20 +1018,20 @@ signed int * Rules_HostGetFunctionRestrictions(int returnValue, double context)
   int v3; // ecx
   int **Symbol; // eax
   char *restrictionString; // eax
-  int argData; // [esp-8h] [ebp-24h] BYREF
-  int argValue; // [esp+0h] [ebp-1Ch]
+  _DWORD argData[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
   int v9 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v9 = returnValue;
-  if ( !Lexer_ParseValueList(1, &argData, 2, context) )
+  if ( !Lexer_ParseValueList(1, argData, 2, context) )
   {
     restrictionString = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(restrictionString, v3);
   }
-  Symbol = Rules_MakeSymbol(*(_BYTE **)(uintptr_t)(argValue + 16));
+  Symbol = Rules_MakeSymbol((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16));
   if ( !Symbol )
   {
-    Rules_ReportCantFindItem(v3, *(_DWORD *)(uintptr_t)(argValue + 16));
+    Rules_ReportCantFindItem(v3, *(_DWORD *)(uintptr_t)(argData[2] + 16));
     Lexer_ErrorRecover(1);
     restrictionString = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(restrictionString, v3);
@@ -1064,13 +1070,13 @@ int  Rules_HostPrintout(int returnValue, double context)
   char *outputString; // edx
   int v9 CLASH95_UNUSED; // eax
   int logical_name; // ecx
-  int argData; // [esp-4h] [ebp-2Ch] BYREF
-  unsigned int argType; // [esp+0h] [ebp-28h]
-  int argValue; // [esp+4h] [ebp-24h]
+  _DWORD argData[6]; // [esp-4h] [ebp-2Ch] BYREF
+  /* stack alias of argData[1] */
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
   int v13 CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   v13 = returnValue;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aPrintout, 1, 1);
   argCount = result;
   lastArgIndex = result;
   if ( result != -1 )
@@ -1090,17 +1096,17 @@ int  Rules_HostPrintout(int returnValue, double context)
     {
       while ( 1 )
       {
-        result = Rules_RtnUnknown(argIndex, &argData, context);
+        result = Rules_RtnUnknown(argIndex, argData, context);
         if ( g_ClipsHaltExecution )
           return result;
-        if ( argType < 2 )
+        if ( argData[1] < 2 )
           goto LABEL_26;
-        if ( argType > 2 )
+        if ( argData[1] > 2 )
         {
-          if ( argType == 3 )
+          if ( argData[1] == 3 )
             goto LABEL_17;
 LABEL_26:
-          result = Rules_PrintDataObject(argString, (int)(intptr_t)&argData);
+          result = Rules_PrintDataObject(argString, (int)(intptr_t)argData);
           if ( ++argIndex > lastArgIndex )
             return result;
         }
@@ -1127,7 +1133,7 @@ LABEL_26:
             {
 LABEL_17:
               v9 = argString;
-              outputString = *(char **)(uintptr_t)(argValue + 16);
+              outputString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16);
               goto LABEL_12;
             }
           }
@@ -1168,7 +1174,7 @@ signed int * Rules_HostRead(int returnValue, double context)
   int v16 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v16 = returnValue;
-  argCount = Lexer_TokenExpect(1);
+  argCount = Lexer_TokenExpect((int)(intptr_t)aRead, 2, 1);
   logicalName = 0;
   if ( argCount == -1 )
     goto LABEL_14;
@@ -1310,7 +1316,7 @@ const CHAR * Rules_HostOpen(double context)
   int v12; // ecx
   _DWORD argData[12]; // [esp+0h] [ebp-30h] BYREF
 
-  argCount = Rules_ArgRangeCheck((int)(intptr_t)aOpen, 3);
+  argCount = Rules_ArgRangeCheck((int)(intptr_t)aOpen, 2, 3);
   if ( argCount == -1 )
     return 0;
   result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, 0, context);
@@ -1344,7 +1350,7 @@ const CHAR * Rules_HostOpen(double context)
       result = (const CHAR *)(uintptr_t)Lexer_ParseValueList(3, argData, 3, context);
       if ( !result )
         return result;
-      accessMode = *(char **)(uintptr_t)(argData[2] + 16);
+      accessMode = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16);
     }
     if ( !strcmp_(accessMode, aR_3) || !strcmp_(v7, aR_4) || !strcmp_(v7, aW_4) || !strcmp_(v7, aA_2) )
     {
@@ -1378,7 +1384,7 @@ signed int  Rules_HostClose(double context)
   void *v2; // ecx
   int logicalName; // eax
 
-  argCount = Lexer_TokenExpect(1);
+  argCount = Lexer_TokenExpect((int)(intptr_t)aClose, 2, 1);
   if ( argCount == -1 )
     return 0;
   if ( !argCount )
@@ -1403,7 +1409,7 @@ int  Rules_HostRemoveFile(double context)
   int v3; // edx
   int v4; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aRemove, 0, 1) == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v1, context);
   if ( result )
@@ -1421,7 +1427,7 @@ const CHAR * Rules_HostRenameFile(double context)
   const CHAR *result; // eax
   const CHAR *oldFileName; // ecx
 
-  if ( Lexer_TokenExpect(2) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aRename, 0, 2) == -1 )
     return 0;
   result = (const CHAR *)(uintptr_t)Rules_GetFileNameArg(1, v1, context);
   if ( result )

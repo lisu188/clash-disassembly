@@ -96,7 +96,7 @@ int  Class_BloadRefreshHandlerRecord(int *buf, int obji, double a3)
   }
   else
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -615,7 +615,7 @@ signed int  Deffacts_ParseAndInstall(int readSource)
   {
     IO_OutWriteToken(asc_50AFC8);
     AST_InstallNodeChain(v6);
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -702,7 +702,7 @@ int Deffacts_BsaveFind(void)
       bsaveId = g_DeffactsBsaveCount++;
       AST_MarkNodeFieldBound(j, bsaveId);
       g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v4 + 20));
-      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v5 + 20));
+      Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 20));
     }
     result = Module_NextEnum(i);
   }
@@ -728,7 +728,7 @@ int  Deffacts_BsaveExpressions(int fp)
   {
     Module_SetCurrent(i);
     for ( j = Rules_DeffactsGetNextItem(0); j; j = Rules_DeffactsGetNextItem(v5) )
-      Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(j + 20), fp);
+      Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 20), fp);
     result = Module_NextEnum(i);
   }
   return result;
@@ -1031,7 +1031,7 @@ LABEL_6:
               deffactsArrayVersion,
               savedHeaderFP,
               (char)(intptr_t)aStructDeffac_0,
-              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20) + 4),
+              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20) + 4),
               0,
               0);
       deffactsFP = v11;
@@ -1125,11 +1125,11 @@ int  Deffacts_SingleToCode(int theFile, int theDeffacts, int maxIndices, int mod
   char v17; // [esp+0h] [ebp-Ch]
 
   Output_WriteFormatted(maxIndices, theDeffacts, theFile, (int)(intptr_t)asc_50B024, v15);
-  prefixArray = *(int **)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20);
+  prefixArray = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20);
   modulePrefix = *prefixArray;
   Rules_WriteConstructHeaderToCode(theFile, theDeffacts, v8, moduleCount, *prefixArray, prefixArray[1]);
   Output_WriteFormatted(v10, v9, theFile, (int)(intptr_t)asc_50B02C, v16);
-  Rules_ExpressionToCode(theFile, *(__int16 **)(uintptr_t)(theDeffacts + 20), v11, modulePrefix);
+  Rules_ExpressionToCode(theFile, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeffacts + 20), v11, modulePrefix);
   return Output_WriteFormatted(v13, v12, theFile, (int)(intptr_t)asc_50B028, v17);
 }
 // 4C7D9D: variable 'v15' is possibly undefined
@@ -1146,7 +1146,7 @@ int  Deffacts_SingleToCode(int theFile, int theDeffacts, int maxIndices, int mod
 //----- (004C7DF0) --------------------------------------------------------
 int  Deffacts_PrintModuleReference(int theFile, int count)
 {
-  return Output_WriteFormatted(count, **(_DWORD **)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_5, **(_DWORD **)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20));
+  return Output_WriteFormatted(count, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_5, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Clips_DeffactsCodeGeneratorItem + 20));
 }
 // 54E8C4: using guessed type int dword_54E8C4;
 
@@ -1162,7 +1162,7 @@ signed int Defgeneric_AllocateModule(void)
 {
   _DWORD *freeNode; // edx
 
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeNode )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1270,14 +1270,14 @@ signed int  Defgeneric_RemoveAllExplicitMethods(int theDefgeneric)
       }
       while ( copyIndex < *(_DWORD *)(uintptr_t)(theDefgeneric + 32) );
     }
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theDefgeneric + 28), 40 * *(_DWORD *)(uintptr_t)(theDefgeneric + 32));
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefgeneric + 28), 40 * *(_DWORD *)(uintptr_t)(theDefgeneric + 32));
     *(_DWORD *)(uintptr_t)(theDefgeneric + 32) = systemMethodCount;
     *(_DWORD *)(uintptr_t)(theDefgeneric + 28) = narr;
     return 1;
   }
   oldMethodCount = *(_DWORD *)(uintptr_t)(theDefgeneric + 32);
   if ( oldMethodCount )
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theDefgeneric + 28), 40 * oldMethodCount);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefgeneric + 28), 40 * oldMethodCount);
   *(_DWORD *)(uintptr_t)(theDefgeneric + 32) = 0;
   *(_DWORD *)(uintptr_t)(theDefgeneric + 28) = 0;
   return 1;
@@ -1312,7 +1312,7 @@ int  Defgeneric_RemoveDefgeneric(int theDefgeneric)
   }
   methodCount = *(_DWORD *)(uintptr_t)(genericPtr + 32);
   if ( methodCount )
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(genericPtr + 28), 40 * methodCount);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(genericPtr + 28), 40 * methodCount);
   nameSymbol = Rules_GetConstructNameSymbol(genericPtr);
   Rules_DecrementSymbolCount(nameSymbol, v6);
   Rules_ReplaceConstructPPForm(v7, 0);
@@ -1402,10 +1402,10 @@ int  Defgeneric_DeleteMethodInfo(int gfunc, int meth)
   int result; // eax
 
   g_Defgeneric_SavedBusyCount = *(_DWORD *)(uintptr_t)(gfunc + 20);
-  AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(meth + 32));
+  AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(meth + 32));
   AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(v3 + 32));
   if ( *(_DWORD *)(uintptr_t)(v4 + 36) )
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(meth + 36), strlen(*(const char **)(uintptr_t)(meth + 36)) + 1);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(meth + 36), strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(meth + 36)) + 1);
   restrictionIndex = 0;
   if ( *(int *)(uintptr_t)(meth + 8) > 0 )
   {
@@ -1424,8 +1424,8 @@ int  Defgeneric_DeleteMethodInfo(int gfunc, int meth)
         while ( typeIndex < *(_DWORD *)(uintptr_t)(theRestriction + 8) );
       }
       if ( *(_DWORD *)(uintptr_t)theRestriction )
-        Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)theRestriction, 4 * *(_DWORD *)(uintptr_t)(theRestriction + 8));
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(theRestriction + 4));
+        Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)theRestriction, 4 * *(_DWORD *)(uintptr_t)(theRestriction + 8));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theRestriction + 4));
       ++restrictionIndex;
       AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(theRestriction + 4));
       restrictionOffset += 12;
@@ -1433,7 +1433,7 @@ int  Defgeneric_DeleteMethodInfo(int gfunc, int meth)
     while ( restrictionIndex < *(_DWORD *)(uintptr_t)(meth + 8) );
   }
   if ( *(_DWORD *)(uintptr_t)(meth + 28) )
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(meth + 28), 12 * *(_DWORD *)(uintptr_t)(meth + 8));
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(meth + 28), 12 * *(_DWORD *)(uintptr_t)(meth + 8));
   result = g_Defgeneric_SavedBusyCount;
   *(_DWORD *)(uintptr_t)(gfunc + 20) = g_Defgeneric_SavedBusyCount;
   return result;

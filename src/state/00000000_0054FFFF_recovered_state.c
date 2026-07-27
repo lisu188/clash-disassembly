@@ -1708,7 +1708,10 @@ char aPa_2[3] = "PA";
 
 char aPa_3[3] = "PA";
 
-wchar_t aXxyy[4] = L"xxyy";
+/* clash95.asm:390075  aXxyy: text "UTF-16LE", 'xxyy'  = 8 bytes 78 00 78 00 79 00 79 00.
+   Call sites index it by BYTE offset +0/+2/+4/+6 to get "x","x","y","y".
+   GCC's 4-byte wchar_t made L"xxyy" 16 bytes, so +2/+6 were empty strings. */
+char aXxyy[8] = { 'x', 0, 'x', 0, 'y', 0, 'y', 0 };
 
 char aMoc[4] = "moc";
 
@@ -11122,7 +11125,7 @@ char g_FileSystem_CurrentDirectoryBuffer[116] =
 
 int g_Rules_FactListChangedFlag = 0;
 
-void *g_Rules_DummyFactPtr = &g_Rules_FactPatternEntityRecord;
+void *g_Rules_DummyFactPtr = g_Rules_FactPatternEntityRecord;
 
 int g_Rules_WatchFactsFlag = 0;
 
@@ -11236,7 +11239,7 @@ int g_Instance_InstancesChangedFlag = 0;
 
 int g_Instance_DeletedListHead = 0;
 
-_DWORD g_Rules_ObjectPatternVTable[11];
+_DWORD g_Rules_ObjectPatternVTable[15];
 
 _UNKNOWN g_IO_FileGetcSentinelAddr;
 
@@ -11411,7 +11414,7 @@ int g_CRT_WinVersion = 0;
 
 int (*g_CRT_InitHookPtr)() = &Noop_CrtIoInitHook;
 
-_UNKNOWN g_Rules_FactPatternEntityRecord;
+_DWORD g_Rules_FactPatternEntityRecord[15];
 
 int g_Rules_FactDuplicationEnabled = 0;
 
@@ -11537,7 +11540,9 @@ _UNKNOWN g_EvalDescriptor_Defgeneric;
 
 int g_Rules_WatchDeffunctions = 0;
 
-_UNKNOWN g_EvalDescriptor_Deffunction;
+/* clash95.asm:434254 unk_51AAEC: dd 0000800Ch, locret_498CC0, locret_498CC0, 0,
+   dd offset sub_498CE0 (the evaluate hook at +16). */
+EvalNodeDescriptorCompact g_EvalDescriptor_Deffunction = { 0x0000800C };
 
 int g_Defglobal_ChangedFlag = 0;
 

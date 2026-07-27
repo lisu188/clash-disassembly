@@ -176,11 +176,11 @@ signed int  MessageHandler_PrettyPrintCommand(double a1)
   classPtr = 0;
   if ( result )
   {
-    classNameSymbol = Rules_FindSymbolEntry(*(_BYTE **)(uintptr_t)(v16 + 16));
+    classNameSymbol = Rules_FindSymbolEntry((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v16 + 16));
     result = Lexer_ParseValueList(2, v4, 2, a1);
     if ( result )
     {
-      handlerNameSymbol = Rules_FindSymbolEntry(*(_BYTE **)(uintptr_t)(v16 + 16));
+      handlerNameSymbol = Rules_FindSymbolEntry((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v16 + 16));
       if ( Rules_RtnArgCount() != 3 || (result = Lexer_ParseValueList(3, parseBuffer, 2, a1)) != 0 )
       {
         handlerType = MessageHandler_TypeIndexFromKeyword((int)(intptr_t)aPpdefmessageHa);
@@ -257,11 +257,11 @@ int * MessageHandler_PreviewSendCommand(int a1, double a2)
   result = (int *)(uintptr_t)Lexer_ParseValueList(1, parseBuffer, 2, a2);
   if ( result )
   {
-    if ( Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argSlot + 16)) )
+    if ( Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argSlot + 16)) )
     {
       result = (int *)(uintptr_t)Lexer_ParseValueList(2, parseBuffer, 2, a2);
       if ( result )
-        return MessageHandler_PreviewSendForSymbol((int)(intptr_t)g_IO_LogicalName_WDisplay, *(_BYTE **)(uintptr_t)(argSlot + 16));
+        return MessageHandler_PreviewSendForSymbol((int)(intptr_t)g_IO_LogicalName_WDisplay, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argSlot + 16));
     }
     else
     {
@@ -457,9 +457,9 @@ BOOL  MessageHandler_DispatchWatchCommand(
   __int16 *v17; // eax
   int v18; // ebx
   int v19; // ecx
-  int v20; // [esp+0h] [ebp-40h] BYREF
-  int valueType; // [esp+4h] [ebp-3Ch]
-  int valueNode; // [esp+8h] [ebp-38h]
+  _DWORD v20[6]; // [esp+0h] [ebp-40h] BYREF
+  /* stack alias of v20[1] */
+  /* stack alias of v20[2]: the DATA_OBJECT value slot */
   int v23; // [esp+18h] [ebp-28h]
   int *theClass; // [esp+1Ch] [ebp-24h]
   int handlerName; // [esp+20h] [ebp-20h]
@@ -479,9 +479,9 @@ BOOL  MessageHandler_DispatchWatchCommand(
     {
       if ( !currentArg )
         return 1;
-      if ( Parser_ParseForm((__int16 *)(uintptr_t)currentArg, &v20, (int)(intptr_t)printFunction, a5) )
+      if ( Parser_ParseForm((__int16 *)(uintptr_t)currentArg, v20, (int)(intptr_t)printFunction, a5) )
         return 0;
-      if ( valueType != 2 || (theClass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(valueNode + 16))) == 0 )
+      if ( v20[1] != 2 || (theClass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v20[2] + 16))) == 0 )
       {
         Parser_ReportError(argIndex, (int)(intptr_t)aClassName);
         return 0;
@@ -489,25 +489,25 @@ BOOL  MessageHandler_DispatchWatchCommand(
       nextArg = *(_DWORD *)(uintptr_t)(currentArg + 10);
       if ( nextArg )
       {
-        v17 = *(__int16 **)(uintptr_t)(currentArg + 10);
+        v17 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentArg + 10);
         ++argIndex;
         currentArg = nextArg;
-        if ( Parser_ParseForm(v17, &v20, v14, a5) )
+        if ( Parser_ParseForm(v17, v20, v14, a5) )
           return 0;
-        if ( valueType != 2 )
+        if ( v20[1] != 2 )
         {
           Parser_ReportError(argIndex, (int)(intptr_t)aHandlerName);
           return 0;
         }
         v18 = *(_DWORD *)(uintptr_t)(nextArg + 10);
-        handlerName = *(_DWORD *)(uintptr_t)(valueNode + 16);
+        handlerName = *(_DWORD *)(uintptr_t)(v20[2] + 16);
         if ( v18 )
         {
           currentArg = *(_DWORD *)(uintptr_t)(currentArg + 10);
           ++argIndex;
-          if ( Parser_ParseForm((__int16 *)(uintptr_t)currentArg, &v20, 2, a5) )
+          if ( Parser_ParseForm((__int16 *)(uintptr_t)currentArg, v20, 2, a5) )
             return 0;
-          if ( v19 != valueType )
+          if ( v19 != v20[1] )
           {
             Parser_ReportError(argIndex, (int)(intptr_t)aHandlerType);
             return 0;
@@ -703,9 +703,9 @@ int  Definstances_GetNextRecord(int previousRecord)
 // 54E8F0: using guessed type int dword_54E8F0;
 
 //----- (004CDF50) --------------------------------------------------------
-int  Definstances_FindByName(_BYTE *constructName, int a2)
+int  Definstances_FindByName(_BYTE *constructName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(constructName, a2);
+  return Rules_FindConstructByNameGeneric(constructName, g_ClipsDefinstancesConstructType);
 }
 // 54E8F4: using guessed type int dword_54E8F4;
 
@@ -816,7 +816,7 @@ signed int  Definstances_ParseAndCreate(int readSource)
   constructName = Definstances_ParseHeaderAndActiveFlag(readSource, &activeFlag);
   if ( !constructName )
     return 1;
-  v4 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 112);
+  v4 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
   if ( v4 )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
@@ -891,7 +891,7 @@ LABEL_13:
       AST_Free(v17);
       nameSymbol = Rules_GetConstructNameSymbol(v18);
       ++*(_DWORD *)(uintptr_t)(nameSymbol + 4);
-      AST_InstallNodeChain(*(__int16 **)(uintptr_t)(v20 + 24));
+      AST_InstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v20 + 24));
       Rules_AppendConstructToModuleList(v21);
       return 0;
     }
@@ -1106,7 +1106,7 @@ signed int Definstances_AllocModuleData(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1260,7 +1260,7 @@ int  InstanceQuery_ResolveBoundSlotValue(int returnValue, int a2, double a3)
   queryFrame = (_DWORD *)(uintptr_t)InstanceQuery_GetQueryFrameAtDepth(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 2) + 16));
   v5 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10);
   theInstance = *(_DWORD *)(uintptr_t)(*queryFrame + 4 * *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 2) + 16));
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(v5 + 10), slotNameValue, returnValue, a3);
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 10), slotNameValue, returnValue, a3);
   if ( slotNameValue[1] == 2 )
   {
     result = Instance_GetSlotValueBySymbol(theInstance, slotNameValue[2]);
@@ -1307,7 +1307,7 @@ int * InstanceQuery_AnyInstancep(int returnValue, double a2)
   if ( result )
   {
     InstanceQuery_PushQueryFrame();
-    v3 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 128);
+    v3 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
     if ( v3 )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
@@ -1323,7 +1323,7 @@ int * InstanceQuery_AnyInstancep(int returnValue, double a2)
     *(_DWORD *)(uintptr_t)(g_ClipsQueryCore + 4) = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
     testResult = InstanceQuery_TestClassRestriction(v5, 0, a2);
     g_InstanceQuery_AbortFlag = 0;
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)g_ClipsQueryCore, 4 * varCount[0]);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsQueryCore, 4 * varCount[0]);
     g_ClipsMemFreeListTemp = g_ClipsQueryCore;
     *(_DWORD *)(uintptr_t)g_ClipsQueryCore = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
     *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128) = g_ClipsMemFreeListTemp;
@@ -1363,7 +1363,7 @@ int * InstanceQuery_FindInstance(_DWORD *returnValue, double a2)
   if ( restrictionList )
   {
     InstanceQuery_PushQueryFrame();
-    v4 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 128);
+    v4 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
     if ( v4 )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
@@ -1403,7 +1403,7 @@ int * InstanceQuery_FindInstance(_DWORD *returnValue, double a2)
       returnValue[2] = Rules_CreateEphemeralMultifield(0);
     }
     g_InstanceQuery_AbortFlag = 0;
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)g_ClipsQueryCore, 4 * varCount[0]);
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsQueryCore, 4 * varCount[0]);
     g_ClipsMemFreeListTemp = g_ClipsQueryCore;
     *(_DWORD *)(uintptr_t)g_ClipsQueryCore = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128);
     *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 128) = g_ClipsMemFreeListTemp;

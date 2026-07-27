@@ -84,7 +84,7 @@ int  Compiler_WriteConstraintTableFile(const char *fileName, int fileId, DWORD i
 int  Compiler_WriteConstraintReference(int codeFile, int constraintPtr, int maxIndices, char imageId);
 int Compiler_RegisterModuleCodeItem(void);
 int  Compiler_WriteModuleReference(int fp, int theModule);
-unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult, int a3, double a4);
+unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, _DWORD *theResult, int a3, double a4);
 unsigned int  Str_DecodeMultibyteChar(_WORD *wideChar, unsigned __int8 *mbChar, unsigned int count);
 void Fpu_ClearExceptions(void);
 int  Rules_ParseDeftemplateFactPattern(int readSource, _DWORD *theDeftemplate);

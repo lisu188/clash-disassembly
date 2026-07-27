@@ -54,7 +54,7 @@ int  CRT_WatcomEHTraverseUnwindState(int a1, int a2)
   v4 = v2;
   if ( v2 && !*(_DWORD *)(uintptr_t)v2 && *(_DWORD *)(uintptr_t)(v3 + 4) != *(_DWORD *)(uintptr_t)(v3 + 8) )
   {
-    switch ( **(_BYTE **)(uintptr_t)(v2 + 4) )
+    switch ( *(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v2 + 4) )
     {
       case 2:
       case 3:
@@ -858,7 +858,7 @@ int  Lexer_PeekChar(int logicalName, unsigned int a2)
 
   if ( logicalName == g_IO_FastLoadFilePtr )
   {
-    if ( *(int *)(uintptr_t)(g_IO_FastLoadFilePtr + 4) > 0 && (a2 = **(unsigned __int8 **)(uintptr_t)g_IO_FastLoadFilePtr - 13, a2 > 0xFD) )
+    if ( *(int *)(uintptr_t)(g_IO_FastLoadFilePtr + 4) > 0 && (a2 = *(unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)g_IO_FastLoadFilePtr - 13, a2 > 0xFD) )
     {
       --*(_DWORD *)(uintptr_t)(g_IO_FastLoadFilePtr + 4);
       buffer_ptr = (unsigned __int8 *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_IO_FastLoadFilePtr)++;
@@ -932,7 +932,7 @@ int Rules_ExitCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect((int)(intptr_t)aExit, 0, 0);
   if ( result != -1 )
     return IO_RunRouterExitCallbacks();
   return result;
@@ -976,7 +976,7 @@ signed int  IO_AddRouter(int routerName, int priority, int printFunction, int qu
   int current_router; // eax
   int previous_router; // ecx
 
-  free_entry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 144);
+  free_entry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144);
   if ( free_entry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 144);

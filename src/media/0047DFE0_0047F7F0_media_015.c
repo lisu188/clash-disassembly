@@ -5,6 +5,8 @@
 #include "media_state.h"
 #include "../state/state_shared.h"
 #include "../clips/clips_api.h"
+#include <stdio.h>
+#include <stdlib.h>
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0047DFE0) --------------------------------------------------------
@@ -24,7 +26,9 @@ int  Rules_GetNextActivation(int activation)
 //----- (0047E000) --------------------------------------------------------
 int  Rules_GetActivationRuleName(int activation)
 {
-  return *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)activation + 16);
+  /* sub_47E000: `mov eax,[eax]; mov eax,[eax]; mov eax,[eax+10h]` - three 32-BIT
+     loads. The outer `*(_DWORD **)` read an 8-byte pointer out of emulated memory. */
+  return *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)activation + 16);
 }
 
 //----- (0047E0D0) --------------------------------------------------------
@@ -40,7 +44,7 @@ signed int  Rules_DetachActivation(_DWORD *activation)
   if ( !activation )
     Rules_ReportSystemError(0, 1);
   v2 = *(_DWORD *)(uintptr_t)(*v1 + 8);
-  agendaHead = *(_DWORD **)(uintptr_t)(v2 + 12);
+  agendaHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v2 + 12);
   if ( v1 == agendaHead )
     *(_DWORD *)(uintptr_t)(v2 + 12) = agendaHead[7];
   prevActivation = v1[6];
@@ -70,9 +74,9 @@ signed int __fastcall Rules_PrintActivation(int logicalName, int activation)
   v9 = logicalName;
   sprintf_(buffer, "%-6d ", *(_DWORD *)(uintptr_t)(activation + 8));
   Output_Write(v3, (int)(intptr_t)buffer, v3);
-  Output_Write(v4, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)activation + 16), v4);
+  Output_Write(v4, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)activation + 16), v4);
   Output_Write(v5, (int)(intptr_t)asc_502D44, v5);
-  return Rules_PrintArgumentValueList(v6, *(_DWORD **)(uintptr_t)(activation + 4));
+  return Rules_PrintArgumentValueList(v6, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(activation + 4));
 }
 // 47E163: variable 'v3' is possibly undefined
 // 47E171: variable 'v4' is possibly undefined
@@ -171,7 +175,7 @@ _DWORD *Rules_ClearActivationsForModule(void)
   _DWORD *result; // eax
   _DWORD *nextActivation; // ecx
 
-  result = *(_DWORD **)(uintptr_t)(Rules_GetDefruleModuleItem(0) + 12);
+  result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(Rules_GetDefruleModuleItem(0) + 12);
   if ( result )
   {
     do
@@ -347,7 +351,7 @@ int * Rules_RefreshAgendaCommand(double a1)
   int v2; // ecx
   _DWORD v3[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  result = (int *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (int *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aRefreshAgenda, 2, 1);
   if ( result != (int *)-1 )
   {
     if ( result == (int *)1 )
@@ -416,7 +420,7 @@ signed int * Rules_SetSalienceEvaluationCommand(int context, double a2)
 
   v9[9] = context;
   currentModeName = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v9, 2, a2) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSetSalienceEva, 0, 1) == -1 || !Lexer_ParseValueList(1, v9, 2, a2) )
   {
     v5 = currentModeName;
     return Str_Intern(v5, v4);
@@ -453,7 +457,7 @@ signed int *Rules_GetSalienceEvaluationCommand(void)
   char *modeName; // eax
   int v1; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetSalienceEva, 0, 0);
   modeName = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
   return Str_Intern(modeName, v1);
 }
@@ -494,25 +498,23 @@ int __fastcall Rules_SetSalienceEvaluationMode(int mode)
 signed int  Rules_EvaluateSalience(int defrule, double a2)
 {
   signed int result; // eax
-  int v4; // ecx
-  _DWORD *v5; // edx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // ecx
-  int tokenType; // [esp+0h] [ebp-20h]
-  int valueNode; // [esp+4h] [ebp-1Ch]
+  /* sub_47E7C0: `mov ecx, eax; mov ebx, eax` (both are `defrule`) and
+     `mov edx, esp` - the DATA_OBJECT is this frame's own local area, with
+     var_20 = buf[1] (type) and var_1C = buf[2] (value). IDA turned all of
+     that into the undefined temps v4..v9. */
+  _DWORD parsed[6]; // [esp+0h] BYREF
 
   if ( !g_Rules_SalienceEvaluationMode || !*(_DWORD *)(uintptr_t)(defrule + 32) )
     return *(_DWORD *)(uintptr_t)(defrule + 20);
   Lexer_ErrorRecover(0);
-  if ( Parser_ParseForm(*(__int16 **)(uintptr_t)(v4 + 32), v5, v4, a2) )
+  if ( Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(defrule + 32), parsed, defrule, a2) )
   {
     Rules_SalienceInformationError();
-    return *(_DWORD *)(uintptr_t)(v7 + 20);
+    return *(_DWORD *)(uintptr_t)(defrule + 20);
   }
-  else if ( tokenType == 1 )
+  else if ( parsed[1] == 1 )
   {
-    result = *(_DWORD *)(uintptr_t)(valueNode + 16);
+    result = *(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16);
     if ( result > 10000 || result < -10000 )
     {
       Rules_SalienceRangeError();
@@ -522,7 +524,7 @@ signed int  Rules_EvaluateSalience(int defrule, double a2)
     }
     else
     {
-      *(_DWORD *)(uintptr_t)(v6 + 20) = result;
+      *(_DWORD *)(uintptr_t)(defrule + 20) = result;
     }
   }
   else
@@ -530,17 +532,10 @@ signed int  Rules_EvaluateSalience(int defrule, double a2)
     Rules_SalienceNonIntegerError();
     Rules_SalienceInformationError();
     Lexer_ErrorRecover(1);
-    return *(_DWORD *)(uintptr_t)(v8 + 20);
+    return *(_DWORD *)(uintptr_t)(defrule + 20);
   }
   return result;
 }
-// 47E7EC: variable 'v4' is possibly undefined
-// 47E7EF: variable 'v5' is possibly undefined
-// 47E7FD: variable 'v9' is possibly undefined
-// 47E803: variable 'v10' is possibly undefined
-// 47E814: variable 'v6' is possibly undefined
-// 47E828: variable 'v7' is possibly undefined
-// 47E84B: variable 'v8' is possibly undefined
 // 51A1EC: using guessed type int dword_51A1EC;
 
 //----- (0047E880) --------------------------------------------------------
@@ -552,7 +547,7 @@ int * Rules_AgendaCommand(int a1, double a2)
   _DWORD v5[4]; // [esp+0h] [ebp-10h] BYREF
 
   v5[2] = a1;
-  result = (int *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (int *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aAgenda_0, 2, 1);
   if ( result != (int *)-1 )
   {
     if ( result == (int *)1 )
@@ -579,6 +574,38 @@ int __fastcall IO_PrintfToStdout(int format, int a2 CLASH95_UNUSED, int a3 CLASH
 
   args[0] = (int)(intptr_t)&firstArg;
   return CRT_VfprintfLockedWrite((int)(intptr_t)&g_CRT_StdoutStream, format, args);
+}
+
+/* --- diagnostic seam (CLASH95_TRACE_RULE_FIRE): names the rules the agenda
+   actually activates and fires.  Not part of the recovered binary. --- */
+static int Diagnostics_IsRuleFireTraceEnabled(void)
+{
+  static int cached = -1;
+  if ( cached < 0 )
+  {
+    const char *value = getenv("CLASH95_TRACE_RULE_FIRE");
+    cached = value && *value && *value != '0';
+  }
+  return cached;
+}
+
+static void Diagnostics_DumpAgenda(const char *tag)
+{
+  int activation;
+  int count = 0;
+
+  if ( !Diagnostics_IsRuleFireTraceEnabled() )
+    return;
+  for ( activation = Rules_GetNextActivation(0); activation; activation = Rules_GetNextActivation(activation) )
+  {
+    const char *name = (const char *)(uintptr_t)Rules_GetActivationRuleName(activation);
+    fprintf(stderr, "[rule_agenda] %s #%d salience=%d %s\n", tag, count,
+            *(int *)(uintptr_t)(activation + 8), name ? name : "(null)");
+    ++count;
+    if ( count > 400 )
+      break;
+  }
+  fprintf(stderr, "[rule_agenda] %s total=%d\n", tag, count);
 }
 
 //----- (0047E910) --------------------------------------------------------
@@ -674,6 +701,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     Rules_SetEvaluationErrorFlag(0);
   v50 = a2;
   g_Rules_HaltRulesFlag = 0;
+  Diagnostics_DumpAgenda("enter");
   activation = (int *)(uintptr_t)Rules_NextActivationToFire();
   while ( activation )
   {
@@ -681,11 +709,15 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
       break;
     Rules_DetachActivation(activation);
     ruleName = Rules_GetActivationRuleName((int)(intptr_t)activation);
+    if ( Diagnostics_IsRuleFireTraceEnabled() )
+      fprintf(stderr, "[rule_fire] %d %s\n", fireCount + 1,
+              (const char *)(uintptr_t)ruleName);
     binds = (_DWORD *)(uintptr_t)activation[1];
     g_Rules_CurrentlyExecutingRule = *activation;
     ++fireCount;
-    if ( v5 > 0 )
-      remainingFires = v5 - 1;
+    /* 47E9FD: `test edx,edx; jle; lea ecx,[edx-1]` - edx is remainingFires. */
+    if ( remainingFires > 0 )
+      remainingFires = remainingFires - 1;
     if ( (*(_BYTE *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
       a3 = sprintf_(fireTraceBuffer, "FIRE %4ld ", fireCount);
@@ -705,7 +737,11 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     {
       matchEntity = *(_DWORD *)(uintptr_t)bindWalker[2];
       if ( matchEntity )
-        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)matchEntity + 52))();
+        /* loc_47EB1E: `mov ecx,[eax]; call dword ptr [ecx+34h]` - the vtable slot is
+           a 32-BIT function address, so it must be loaded as a _DWORD. */
+        /* loc_47EB1E: `mov ecx,[eax]; call dword ptr [ecx+34h]` - eax (the pattern
+           entity) is still live and is the callee's register argument. */
+        (*(void (*)(int))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)matchEntity + 52))(matchEntity);
       ++bindWalker;
       ++bindIndex;
     }
@@ -713,16 +749,17 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     ++g_ClipsCurrentEvaluationDepth;
     Lexer_ErrorRecover(0);
     *(_BYTE *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 29) |= 0x80u;
+    /* 47EB4A: `mov eax,[eax+8]; mov eax,[eax]` and `mov edx,[eax+24h]` - 32-BIT loads. */
     Rules_ExecuteRuleActions(
-      **(_DWORD **)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 8),
-      *(__int16 **)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 36),
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 8),
+      (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 36),
       returnValue,
       *(_DWORD *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 24),
       a3,
       0);
     *(_BYTE *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 29) &= ~0x80u;
     Lexer_ErrorRecover(0);
-    g_Rules_CurrentLogicalJoin = v16;
+    g_Rules_CurrentLogicalJoin = 0;   /* 47EB92: `xor ecx,ecx ... mov ds:dword_51A1F8, ecx` */
     --g_ClipsCurrentEvaluationDepth;
     if ( g_ClipsHaltExecution || g_Rules_HaltRulesFlag && (*(_BYTE *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
@@ -741,7 +778,8 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
         break;
       cleanupEntity = *(_DWORD *)(uintptr_t)bindPtr[2];
       if ( cleanupEntity )
-        (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)cleanupEntity + 48))();
+        /* loc_47EC1A: `mov ecx,[eax]; call dword ptr [ecx+30h]` */
+        (*(void (*)(int))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)cleanupEntity + 48))(cleanupEntity);
       ++bindPtr;
       ++cleanupIndex;
     }
@@ -749,7 +787,9 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     {
       finalEntity = *(_DWORD *)(uintptr_t)binds[lastBindIndex + 2];
       if ( finalEntity )
-        (*(void (__cdecl **)(int))(uintptr_t)(*(_DWORD *)(uintptr_t)finalEntity + 48))(v50);
+        /* 47EC33: `call dword ptr [edx+30h]` - no argument is set up. */
+        /* 47EC31: `mov edx,[eax]; call dword ptr [edx+30h]` */
+        (*(void (*)(int))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)finalEntity + 48))(finalEntity);
     }
     Rules_RemoveActivation(activation, 0, 0);
     Rules_FlushPendingNetworkGarbage();
@@ -774,10 +814,11 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
     }
     if ( Rules_GetSalienceEvaluation() == 2 )
       Rules_RefreshAgenda(a3);
-    for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(uintptr_t)(callbackNode + 12) )
-      (*(void (**)(void))(uintptr_t)(i + 4))();
+    /* list-walk cursor advances from the node itself, as in Rules_RunPeriodicCleanup */
+    for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(uintptr_t)(i + 12) )
+      (*(void (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(i + 4))();
     if ( g_ClipsHaltExecutionFlag == 1 )
-      Rules_RemoveModuleFocus(**(_DWORD **)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 8));
+      Rules_RemoveModuleFocus(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Rules_CurrentlyExecutingRule + 8));
     g_ClipsHaltExecutionFlag = 0;
     nextActivation = Rules_NextActivationToFire();
     v3 = nextActivation;
@@ -969,7 +1010,7 @@ int  Rules_RemoveModuleFocus(int module)
     if ( g_Rules_FocusStackTop && removedTop )
     {
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)aTo_0, v8);
-      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)g_Rules_FocusStackTop + 16), v9);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_Rules_FocusStackTop + 16), v9);
     }
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int)(intptr_t)asc_502E94, v8);
   }
@@ -1054,7 +1095,7 @@ int Rules_ClearFocusStackCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect(0, 0, 0);
   if ( result != -1 )
     return Rules_ClearFocusStack();
   return result;
@@ -1087,19 +1128,19 @@ int  Rules_RunCommand(int a1, double a2)
 {
   int result; // eax
   int v3; // ecx
-  int v4; // [esp-8h] [ebp-24h] BYREF
-  int argValue; // [esp+0h] [ebp-1Ch]
+  _DWORD v4[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of v4[2]: the DATA_OBJECT value slot */
   int savedContext CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   savedContext = a1;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect(0, 2, 1);
   if ( result != v3 )
   {
     if ( result == 1 )
     {
-      result = Lexer_ParseValueList(1, &v4, 1, a2);
+      result = Lexer_ParseValueList(1, v4, 1, a2);
       if ( result )
-        return Rules_RunAgendaLoop(*(_DWORD *)(uintptr_t)(argValue + 16), *(_DWORD *)(uintptr_t)(argValue + 16), a2);
+        return Rules_RunAgendaLoop(*(_DWORD *)(uintptr_t)(v4[2] + 16), *(_DWORD *)(uintptr_t)(v4[2] + 16), a2);
     }
     else
     {
@@ -1116,7 +1157,7 @@ int Rules_HaltCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect(0, 0, 0);
   g_Rules_HaltRulesFlag = 1;
   return result;
 }
@@ -1207,13 +1248,13 @@ int  Rules_SetBreakCommand(int a1, double a2)
   _DWORD v7[9]; // [esp-8h] [ebp-24h] BYREF
 
   v7[7] = a1;
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect(0, 0, 1);
   if ( result != -1 )
   {
     result = Lexer_ParseValueList(1, v7, 2, a2);
     if ( result )
     {
-      defrule = Rules_FindDefruleByName(*(_BYTE **)(uintptr_t)(v7[2] + 16), v3);
+      defrule = Rules_FindDefruleByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7[2] + 16), v3);
       if ( defrule )
         return Rules_SetBreakFlag(defrule);
       else
@@ -1235,21 +1276,21 @@ void  Rules_RemoveBreakCommand(int a1, double a2, int a3)
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
-  int v9; // [esp-8h] [ebp-24h] BYREF
-  int v10; // [esp+0h] [ebp-1Ch]
+  _DWORD v9[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of v9[2]: the DATA_OBJECT value slot */
   int v11 CLASH95_UNUSED; // [esp+10h] [ebp-Ch]
   int v12 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v12 = a1;
   v11 = a3;
-  tokenType = Lexer_TokenExpect(1);
+  tokenType = Lexer_TokenExpect(0, 2, 1);
   if ( tokenType != -1 )
   {
     if ( tokenType )
     {
-      if ( Lexer_ParseValueList(1, &v9, 2, a2) )
+      if ( Lexer_ParseValueList(1, v9, 2, a2) )
       {
-        defrule = Rules_FindDefruleByName(*(_BYTE **)(uintptr_t)(v10 + 16), *(_DWORD *)(uintptr_t)(v10 + 16));
+        defrule = Rules_FindDefruleByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9[2] + 16), *(_DWORD *)(uintptr_t)(v9[2] + 16));
         if ( defrule )
         {
           if ( !Rules_ClearBreakFlag(defrule) )
@@ -1286,7 +1327,7 @@ int * Rules_ShowBreaksCommand(int a1, double a2)
   _DWORD v5[4]; // [esp+0h] [ebp-10h] BYREF
 
   v5[2] = a1;
-  result = (int *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (int *)(uintptr_t)Lexer_TokenExpect(0, 2, 1);
   if ( result != (int *)-1 )
   {
     if ( result == (int *)1 )
@@ -1311,7 +1352,7 @@ int Rules_ListFocusStackCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect(0, 0, 0);
   if ( result != -1 )
     return Rules_PrintFocusStack((signed int)(intptr_t)g_IO_LogicalName_WDisplay);
   return result;
@@ -1337,7 +1378,7 @@ signed int  Rules_PrintFocusStack(signed int result)
       Name = Module_GetName(*focusEntry);
       Output_Write(logicalName_copy, Name, v4);
       result = Output_Write(logicalName_copy, (int)(intptr_t)asc_502E94, v5);
-      focusEntry = *(int **)(uintptr_t)(v6 + 8);
+      focusEntry = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 8);
     }
     while ( focusEntry );
   }
@@ -1354,7 +1395,7 @@ int Rules_GetFocusStackFunction(void)
   int result; // eax
   _DWORD *returnValue; // ecx
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect(0, 0, 0);
   if ( result != -1 )
     return Rules_BuildFocusStackList(returnValue);
   return result;
@@ -1372,7 +1413,7 @@ signed int  Rules_BuildFocusStackList(_DWORD *returnValue)
   int focusEntry_walk; // edx
   signed int result; // eax
   _DWORD *element; // ecx
-  int v10; // ecx
+  int v9_alias; // ecx
 
   focusEntry = g_Rules_FocusStackTop;
   count = 0;
@@ -1398,7 +1439,7 @@ signed int  Rules_BuildFocusStackList(_DWORD *returnValue)
       do
       {
         *((_WORD *)element + 7) = 2;
-        element[4] = **(_DWORD **)(uintptr_t)focusEntry_walk;
+        element[4] = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)focusEntry_walk;
         element = (_DWORD *)((char *)element + 6);
         focusEntry_walk = *(_DWORD *)(uintptr_t)(focusEntry_walk + 8);
         ++result;
@@ -1412,12 +1453,12 @@ signed int  Rules_BuildFocusStackList(_DWORD *returnValue)
     returnValue[4] = -1;
     returnValue[3] = 0;
     result = (signed int)(intptr_t)Rules_CreateEphemeralMultifield(0);
-    *(_DWORD *)(uintptr_t)(v10 + 8) = result;
+    *(_DWORD *)(uintptr_t)(v9_alias + 8) = result;
   }
   return result;
 }
 // 47F759: variable 'v5' is possibly undefined
-// 47F7AA: variable 'v10' is possibly undefined
+// 47F7AA: variable 'v9_alias' is possibly undefined
 // 51A200: using guessed type int dword_51A200;
 
 //----- (0047F7C0) --------------------------------------------------------
@@ -1425,7 +1466,7 @@ int Rules_PopFocusFunction(void)
 {
   int focusModule; // eax
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect(0, 0, 0);
   focusModule = Rules_PopFocus();
   if ( focusModule )
     return *(_DWORD *)(uintptr_t)focusModule;
@@ -1439,7 +1480,7 @@ int Rules_GetFocusFunction(void)
 {
   int focusModule; // eax
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect(0, 0, 0);
   focusModule = Rules_GetCurrentFocus();
   if ( focusModule )
     return *(_DWORD *)(uintptr_t)focusModule;

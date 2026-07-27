@@ -6,6 +6,7 @@
 #include "../state/state_shared.h"
 #include "../media/media_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */
+#include "../state/state_api.h"
 
 //----- (00497C80) --------------------------------------------------------
 int  Defgeneric_ListDefmethodsCommand(int returnValue, double context)
@@ -20,7 +21,7 @@ int  Defgeneric_ListDefmethodsCommand(int returnValue, double context)
   result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
-    result = Defgeneric_CheckGenericExists((int)(intptr_t)aListDefmethods, *(_BYTE **)(uintptr_t)(argData[2] + 16));
+    result = Defgeneric_CheckGenericExists((int)(intptr_t)aListDefmethods, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16));
     if ( result )
       return Defgeneric_ListMethodsAndTally((int)(intptr_t)g_IO_LogicalName_WDisplay, result, (int)(intptr_t)g_IO_LogicalName_WDisplay);
   }
@@ -81,7 +82,7 @@ _DWORD * Defgeneric_GetDefmethodListCommand(_DWORD *returnValue, int a2, double 
   theGeneric = Rules_RtnArgCount();
   if ( !theGeneric )
     return Defgeneric_BuildMethodListValue(theGeneric, returnValue);
-  if ( Lexer_ParseValueList(1, argData, 2, context) && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetDefmethodLi, *(_BYTE **)(uintptr_t)(argData[2] + 16))) != 0 )
+  if ( Lexer_ParseValueList(1, argData, 2, context) && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetDefmethodLi, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16))) != 0 )
     return Defgeneric_BuildMethodListValue(theGeneric, returnValue);
   else
     return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
@@ -177,7 +178,7 @@ int * Defgeneric_GetMethodRestrictionsCommand(_DWORD *returnValue, int a2, doubl
 
   v9 = a2;
   if ( Lexer_ParseValueList(1, argData, 2, context)
-    && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetMethodRestr, *(_BYTE **)(uintptr_t)(argValue + 16))) != 0
+    && (theGeneric = Defgeneric_CheckGenericExists((int)(intptr_t)aGetMethodRestr, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argValue + 16))) != 0
     && Lexer_ParseValueList(2, argData, 1, context)
     && Defgeneric_CheckMethodExists((int)(intptr_t)aGetMethodRestr, theGeneric, *(_DWORD *)(uintptr_t)(argValue + 16)) != -1 )
   {
@@ -323,7 +324,7 @@ int  Defgeneric_EvaluateGenericFunctionCall(int theGeneric, _DWORD *returnValue,
 {
   int v4; // eax
 
-  Method_DispatchGenericCall(theGeneric, 0, *(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 6), 0, context, returnValue);
+  Method_DispatchGenericCall(theGeneric, 0, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), 0, context, returnValue);
   if ( returnValue[1] == 2 && (v4 = returnValue[2], v4 == g_ClipsFalseSymbol) )
     return g_ClipsFalseSymbol ^ v4;
   else
@@ -381,7 +382,7 @@ signed int  Defgeneric_WriteMethodPPForms(signed int result, signed int logicalN
     do
     {
       result = methodOffset + *(_DWORD *)(uintptr_t)(theGeneric + 28);
-      ppForm = *(char **)(uintptr_t)(result + 36);
+      ppForm = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 36);
       if ( ppForm )
       {
         Output_WriteLongString(logName, ppForm);
@@ -430,7 +431,7 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
     methodCount = *(_DWORD *)(uintptr_t)(theGeneric + 32);
     if ( methodCount == 1 )
     {
-      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theGeneric + 28), 40);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theGeneric + 28), 40);
       result = theGeneric;
       *(_DWORD *)(uintptr_t)(theGeneric + 32) = 0;
       *(_DWORD *)(uintptr_t)(theGeneric + 28) = 0;
@@ -455,7 +456,7 @@ signed int  Defgeneric_DeleteMethod(int theGeneric, int methodIndex)
         }
         while ( copyIndex < *(_DWORD *)(uintptr_t)(theGeneric + 32) );
       }
-      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theGeneric + 28), 40 * (*(_DWORD *)(uintptr_t)(theGeneric + 32) + 1));
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theGeneric + 28), 40 * (*(_DWORD *)(uintptr_t)(theGeneric + 32) + 1));
       result = newArrayAddr;
       *(_DWORD *)(uintptr_t)(theGeneric + 28) = newArrayAddr;
     }
@@ -578,7 +579,7 @@ signed int  Defgeneric_WatchMethodsDispatch(
         return 1;
       if ( Parser_ParseForm((__int16 *)(uintptr_t)argExprs, argData, v9, context) )
         return 0;
-      if ( argData[1] != 2 || (theGeneric = Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, *(_BYTE **)(uintptr_t)(argData[2] + 16), 1)) == 0 )
+      if ( argData[1] != 2 || (theGeneric = Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16), 1)) == 0 )
       {
         Parser_ReportError(argIndex, (int)(intptr_t)aGenericFunct_4);
         return 0;
@@ -689,6 +690,10 @@ int Deffunction_InitConstructType(void)
 {
   int v0; // ecx
 
+  /* unk_51AAEC is a statically-initialised entity record whose +4/+8 are a
+     locret no-op and whose +16 is sub_498CE0; the recovery left the blob zeroed,
+     so Parser_ParseForm dispatched a NULL evaluate for primitive type 12. */
+  Runtime_InitCompactEvalDescriptor(g_EvalDescriptor_Deffunction, (uintptr_t)Deffunction_CallForBooleanResult);
   Rules_RegisterEvaluationHandler((int)(intptr_t)&g_EvalDescriptor_Deffunction, 12);
   g_Clips_DeffunctionModuleItemIndex = Module_RegisterItem(
                    (int)(intptr_t)aDeffunction,
@@ -729,9 +734,9 @@ int Deffunction_InitConstructType(void)
 // 54E6AC: using guessed type int dword_54E6AC;
 
 //----- (00498A80) --------------------------------------------------------
-int  Deffunction_FindByName(_BYTE *deffunctionName, int a2)
+int  Deffunction_FindByName(_BYTE *deffunctionName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(deffunctionName, a2);
+  return Rules_FindConstructByNameGeneric(deffunctionName, g_ClipsDeffunctionConstructType);
 }
 // 54E6AC: using guessed type int dword_54E6AC;
 
@@ -796,7 +801,7 @@ int  Deffunction_Free(int result)
   {
     v1 = Rules_GetConstructNameSymbol(result);
     Rules_DecrementSymbolCount(v1, v2);
-    AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v3 + 30));
+    AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 30));
     AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(v4 + 30));
     Rules_ReplaceConstructPPForm(v6, v5);
     g_ClipsMemFreeListTemp = (int)(intptr_t)v7;
@@ -882,11 +887,12 @@ LABEL_5:
 //----- (00498CE0) --------------------------------------------------------
 int  Deffunction_CallForBooleanResult(int theDeffunction, _DWORD *returnValue, double context)
 {
-  int v3; // ecx
   int resultValue; // eax
 
-  Deffunction_CallDeffunction(theDeffunction, *(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 6), returnValue, context);
-  if ( *(_DWORD *)(uintptr_t)(v3 + 4) == 2 && (resultValue = *(_DWORD *)(uintptr_t)(v3 + 8), resultValue == g_ClipsFalseSymbol) )
+  /* 498CE4: `mov ecx, edx` - ecx is a copy of returnValue and survives the call;
+     498CEB: `mov edx,[edx+6]` is a 32-BIT load of the argument list. */
+  Deffunction_CallDeffunction(theDeffunction, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), returnValue, context);
+  if ( returnValue[1] == 2 && (resultValue = returnValue[2], resultValue == g_ClipsFalseSymbol) )
     return g_ClipsFalseSymbol ^ resultValue;
   else
     return 1;
@@ -916,7 +922,7 @@ signed int Deffunction_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -984,7 +990,7 @@ signed int Deffunction_ClearAll(void)
     }
     else
     {
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(i + 30));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + 30));
       v15 = *(_DWORD *)(uintptr_t)(v14 + 30);
       *(_DWORD *)(uintptr_t)(v14 + 20) = v16;
       AST_FreePackedNodeChain(v15);
@@ -1179,7 +1185,7 @@ signed int Defglobal_AllocateModule(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1207,9 +1213,9 @@ int  Defglobal_FreeModule(int theModuleItem)
 // 54E6B4: using guessed type int dword_54E6B4;
 
 //----- (00499190) --------------------------------------------------------
-int  Defglobal_FindByName(_BYTE *defglobalName, int a2)
+int  Defglobal_FindByName(_BYTE *defglobalName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(defglobalName, a2);
+  return Rules_FindConstructByNameGeneric(defglobalName, g_ClipsDefglobalConstructType);
 }
 // 54E6B4: using guessed type int dword_54E6B4;
 
@@ -1241,8 +1247,8 @@ int  Defglobal_Free(int result)
   {
     Rules_ValueDeinstall(result + 28, result);
     if ( *(_DWORD *)(uintptr_t)(v1 + 32) == 4 )
-      Rules_ReturnMultifieldToPool(*(_DWORD **)(uintptr_t)(v1 + 36));
-    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v2 + 52), v2);
+      Rules_ReturnMultifieldToPool((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v1 + 36));
+    AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v2 + 52), v2);
     Rules_FreeConstructHeaderString(v3, (int)(intptr_t)v3);
     g_ClipsMemFreeListTemp = (int)(intptr_t)v4;
     *v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 224);
@@ -1341,7 +1347,7 @@ signed int  Defglobal_EvaluateReference(int theValue, _DWORD *returnValue, int a
   _DWORD countBuf[5]; // [esp+0h] [ebp-14h] BYREF
 
   countBuf[3] = a3;
-  theGlobal = (_DWORD *)(uintptr_t)Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(uintptr_t)(theValue + 16), 1, 0);
+  theGlobal = (_DWORD *)(uintptr_t)Rules_FindImportExportConstruct(aDefglobal, countBuf, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue + 16), 1, 0);
   if ( !theGlobal )
   {
     Rules_PrintErrorID((int)(intptr_t)aGlobldef, 1, 0);
@@ -1426,9 +1432,9 @@ int Class_RefreshWatchFlags(void)
   result = Module_NextEnum(0);
   for ( i = result; result; i = result )
   {
-    for ( j = *(_BYTE **)(uintptr_t)(Module_GetItem(i, g_ClipsDefglobalModuleItemId) + 4); j; j = (_BYTE *)(uintptr_t)Class_Enum((int)(intptr_t)j, g_ClipsDefglobalModuleItemId) )
+    for ( j = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(Module_GetItem(i, g_ClipsDefglobalModuleItemId) + 4); j; j = (_BYTE *)(uintptr_t)Class_Enum((int)(intptr_t)j, g_ClipsDefglobalModuleItemId) )
     {
-      if ( Rules_FindImportExportConstruct(aDefglobal, countBuf, *(_BYTE **)(uintptr_t)(*(_DWORD *)j + 16), 1, 0) )
+      if ( Rules_FindImportExportConstruct(aDefglobal, countBuf, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)j + 16), 1, 0) )
         j[20] |= 2u;
       else
         j[20] &= ~2u;

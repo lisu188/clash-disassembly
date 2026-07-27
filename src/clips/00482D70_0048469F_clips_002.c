@@ -307,7 +307,7 @@ int  Instance_PrintClassInstanceSummary(double a1)
   {
     do
     {
-      Module_SetCurrent(**(_DWORD **)(uintptr_t)(i[11] + 8));
+      Module_SetCurrent(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(i[11] + 8));
       MessageHandler_SendToInstanceAddress(g_ClipsDeleteMessageSymbol, v3, v4, 0, a1);
       for ( i = (_DWORD *)(uintptr_t)i[17]; i; i = (_DWORD *)(uintptr_t)i[17] )
       {
@@ -604,7 +604,7 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *ins, int *sp, __int16 a3, ui
         *(_DWORD *)(uintptr_t)(savedSlotEntry + 4) |= sourceSlotFlags & 0xFC;
         *(_DWORD *)(uintptr_t)(savedSlotEntry + 8) = sp[2];
         if ( (*(_BYTE *)(uintptr_t)*sp & 2) != 0 )
-          Rules_InstallMultifield(*(__int16 **)(uintptr_t)(savedSlotEntry + 8));
+          Rules_InstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(savedSlotEntry + 8));
         else
           Rules_AtomInstall(*(_DWORD *)(uintptr_t)(savedSlotEntry + 4) << 24 >> 26, *(_DWORD *)(uintptr_t)(savedSlotEntry + 8), a3);
       }
@@ -786,17 +786,17 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
-  int valueBuffer; // [esp-4h] [ebp-20h] BYREF
-  int theType; // [esp+0h] [ebp-1Ch]
-  int theValue; // [esp+4h] [ebp-18h]
+  _DWORD valueBuffer[6]; // [esp-4h] [ebp-20h] BYREF
+  /* stack alias of valueBuffer[1] */
+  /* stack alias of valueBuffer[2]: the DATA_OBJECT value slot */
   int v13 CLASH95_UNUSED; // [esp+18h] [ebp-4h]
 
   v13 = functionName;
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &valueBuffer, a1, a3);
-  if ( theType == 7 )
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), valueBuffer, a1, a3);
+  if ( valueBuffer[1] == 7 )
   {
-    ins = (_DWORD *)(uintptr_t)theValue;
-    if ( (*(_BYTE *)(uintptr_t)(theValue + 24) & 2) != 0 )
+    ins = (_DWORD *)(uintptr_t)valueBuffer[2];
+    if ( (*(_BYTE *)(uintptr_t)(valueBuffer[2] + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       Lexer_ErrorRecover(1);
@@ -805,7 +805,7 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
   }
   else
   {
-    if ( theType != 8 && theType != 2 )
+    if ( valueBuffer[1] != 8 && valueBuffer[1] != 2 )
     {
       Rules_PrintErrorID((int)(intptr_t)aInsfun, 1, 0);
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpectedAVal_1, v7);
@@ -814,7 +814,7 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int functionName, double a3)
       Lexer_ErrorRecover(1);
       return 0;
     }
-    ins = Instance_FindByName(theValue);
+    ins = Instance_FindByName(valueBuffer[2]);
     if ( !ins )
     {
       Instance_ReportNoSuchInstanceError(v6, v6);
@@ -934,7 +934,7 @@ LABEL_5:
   if ( v10 )
     return Output_Write(logicalName, v10, v10);
   else
-    return MessageHandler_PrintNameTypeAndClass(logicalName, *(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore, 0);
+    return MessageHandler_PrintNameTypeAndClass(logicalName, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore, 0);
 }
 // 483CFB: variable 'v6' is possibly undefined
 // 483D11: variable 'v7' is possibly undefined
@@ -971,7 +971,7 @@ _DWORD * Instance_FindInSubclasses(int theModule, _DWORD *startInstance)
 
   if ( *(_DWORD *)(uintptr_t)(theModule + 20) )
     return 0;
-  importList = *(_DWORD **)(uintptr_t)(theModule + 12);
+  importList = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theModule + 12);
   *(_DWORD *)(uintptr_t)(theModule + 20) = 1;
   if ( !importList )
   {
@@ -988,7 +988,7 @@ LABEL_10:
   while ( 1 )
   {
     ins = startInstance;
-    importedModule = Module_FindByName(*(_BYTE **)(uintptr_t)(*importList + 16));
+    importedModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*importList + 16));
     if ( startInstance )
     {
       while ( ins[7] == startInstance[7] )
@@ -1139,7 +1139,7 @@ signed int  Rules_MarkObjectPatternNetworkTraversal(signed int traversalID, sign
       {
         if ( sd == *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theClass + 56) + 4 * slotIndex - 4) )
         {
-          for ( i = *(_DWORD **)(uintptr_t)(theClass + 80); i; i = *(_DWORD **)(uintptr_t)(v13 + 52) )
+          for ( i = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theClass + 80); i; i = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v13 + 52) )
             Rules_ObjectMatchAction((unsigned __int16 *)3, i, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(sd + 8) + 8), a4);
         }
       }
@@ -1186,17 +1186,17 @@ int  Instance_ReleaseSlotValueContainer(int result)
         if ( slotIndex >= slotCount )
           break;
         slotEntry = i + *(_DWORD *)(uintptr_t)(theInstance + 20);
-        slotValue = *(__int16 **)(uintptr_t)(slotEntry + 8);
+        slotValue = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotEntry + 8);
         if ( slotValue )
         {
-          if ( (**(_BYTE **)(uintptr_t)slotEntry & 2) != 0 )
-            Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(slotEntry + 8));
+          if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)slotEntry & 2) != 0 )
+            Rules_DeinstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotEntry + 8));
           else
             Rules_AtomDeinstall(*(_DWORD *)(uintptr_t)(slotEntry + 4) << 24 >> 26, slotValue, i);
         }
         ++slotIndex;
       }
-      result = Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theInstance + 20), 12 * slotCount);
+      result = Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theInstance + 20), 12 * slotCount);
       *(_DWORD *)(uintptr_t)(theInstance + 20) = 0;
     }
   }
@@ -1210,10 +1210,13 @@ _DWORD * Instance_AcquireLocalSlotArray(_DWORD *result)
   _DWORD *theInstance; // edx
   int sharedSlotCount; // esi
   int srcOffset; // ebx
-  _DWORD *slotArray; // eax
-  int v6; // ecx
+  int slotArray; // eax
   unsigned int slotIndex; // ecx
+  int dstOffset; // eax
 
+  /* sub_484130: `mov [ecx+14h], eax` stores the freshly allocated array into
+     theInstance[5] (ecx is the instance); IDA emitted an undefined `v6` there and
+     folded the destination byte offset into the returned pointer. */
   theInstance = result;
   if ( !result[2] )
   {
@@ -1221,25 +1224,26 @@ _DWORD * Instance_AcquireLocalSlotArray(_DWORD *result)
     if ( sharedSlotCount )
     {
       srcOffset = 0;
-      slotArray = Mem_SmallBlockAlloc(12 * sharedSlotCount);
-      *(_DWORD *)(uintptr_t)(v6 + 20) = slotArray;
+      slotArray = (int)(uintptr_t)Mem_SmallBlockAlloc(12 * sharedSlotCount);
+      theInstance[5] = slotArray;
       slotIndex = 0;
-      result = 0;
+      dstOffset = 0;
       while ( slotIndex < *(_DWORD *)(uintptr_t)(theInstance[11] + 72) )
       {
-        *(_DWORD *)((char *)result + theInstance[5]) = **(_DWORD **)(uintptr_t)(theInstance[18] + srcOffset);
-        result += 3;
+        /* loc_484173: `mov esi,[edx+48h]; mov esi,[esi+ebx]; mov esi,[esi];
+                        mov edi,[edx+14h]; mov [edi+eax], esi` */
+        *(_DWORD *)(uintptr_t)((unsigned int)theInstance[5] + dstOffset) =
+            *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theInstance[18] + srcOffset);
+        dstOffset += 12;
         srcOffset += 4;
         ++slotIndex;
-        *(_DWORD *)((char *)result + theInstance[5] - 4) = 0;
+        *(_DWORD *)(uintptr_t)((unsigned int)theInstance[5] + dstOffset - 4) = 0;
       }
     }
   }
   ++theInstance[2];
   return result;
 }
-// 48414A: variable 'v2' is possibly undefined
-// 48416C: variable 'v6' is possibly undefined
 
 //----- (004841A0) --------------------------------------------------------
 void  Instance_NotifyCreated(_DWORD *theInstance, double a2)

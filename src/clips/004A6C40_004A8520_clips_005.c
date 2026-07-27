@@ -441,9 +441,9 @@ signed int  Rules_WriteHashedExpressionsToCode(DWORD reopenOldFile)
   for ( i = 0; i != 2012; i += 4 )
   {
     result = g_ExpressionHashTable;
-    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(v5 + 12) )
+    for ( j = *(_DWORD *)(uintptr_t)(i + g_ExpressionHashTable); j; j = *(_DWORD *)(uintptr_t)(j + 12) )
     {
-      exprPtr = *(__int16 **)(uintptr_t)(j + 8);
+      exprPtr = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(j + 8);
       *(_DWORD *)(uintptr_t)(j + 16) = g_ClipsCodeMaxIndicesPerArray * g_ClipsExpressionCodeFileVersion + g_ClipsConstructCodeEntryIndexInFile;
       result = Rules_ExpressionToCode(0, exprPtr, j, reopenOldFile);
     }
@@ -752,7 +752,7 @@ int  Rules_AddCodeGeneratorItem(int itemName, int priority, int initFunction, in
   char prefixBuffer[16]; // [esp+Ch] [ebp-10h] BYREF
 
   construct_code_count = arrayCount;
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 112);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
   prevItem = 0;
   if ( freeNode )
   {
@@ -887,7 +887,7 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
     }
     if ( !*(_DWORD *)(uintptr_t)codeFileInfo )
       return 0;
-    curFile = Rules_OpenConstructCodeFile(*(const char **)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion);
+    curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion);
     if ( !curFile )
     {
       Rules_ReportSystemError(codeFileInfo, 4);
@@ -1290,7 +1290,7 @@ signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression,
   int v13; // ecx
   signed int listTail; // esi
 
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1306,7 +1306,7 @@ signed int  Rules_AppendExpressionValueNode(int theValue, _DWORD *theExpression,
   *(_DWORD *)(uintptr_t)(listNode + 4) = 0;
   *(_BYTE *)(uintptr_t)listNode = v7 | 0x40;
   newNode = listNode;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1417,7 +1417,7 @@ _DWORD * Rules_CopyExpressionChain(_DWORD *theExpression)
   copyHead = 0;
   for ( i = 0; srcNode; i = newNode )
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 80);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 80);

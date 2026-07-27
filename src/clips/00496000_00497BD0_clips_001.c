@@ -25,7 +25,7 @@ int Event_InitHandlers(void)
   int result; // eax
   int currentItem; // edx
 
-  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(currentItem + 36) )
+  for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(i + 36) )
   {
     while ( !*(_DWORD *)(uintptr_t)(i + 4) )
     {
@@ -76,7 +76,7 @@ const void * Rules_BsaveWriteFunctionNames(int fp)
     do
     {
       if ( *(__int16 *)(uintptr_t)(functionCursor + 25) >= 0 )
-        result = Rules_BsaveWriteBlock(strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16)) + 1, fp, *(const void **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16));
+        result = Rules_BsaveWriteBlock(strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16)) + 1, fp, *(const void **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionCursor + 16));
       functionCursor = *(_DWORD *)(uintptr_t)(functionCursor + 27);
     }
     while ( functionCursor );
@@ -102,7 +102,7 @@ int Rules_BsaveFunctionNamesLength(void)
       if ( !functionDef )
         return totalLength;
     }
-    totalLength += strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)functionDef + 16)) + 1;
+    totalLength += strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)functionDef + 16)) + 1;
     functionDef = *(_DWORD *)(uintptr_t)(functionDef + 27);
   }
   while ( functionDef );
@@ -116,7 +116,7 @@ _DWORD * Rules_ConstructQueuePush(int item)
   _DWORD *result; // eax
   _DWORD *newNode; // ecx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -255,7 +255,7 @@ signed int  Rules_RegisterBinaryItem(
   int newItemAddr; // ebx
   int currentItem; // eax
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 160);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 160);
   prevItem = 0;
   if ( freeListHead )
   {
@@ -393,20 +393,20 @@ __int16 * AST_ReleaseNodeChildSlots(int constraints, int hashBucket)
   {
     while ( *(int *)(uintptr_t)(constraints + 34) < 0 )
     {
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(constraints + 6));
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v3 + 14));
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v4 + 10));
-      AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v5 + 18));
-      result = AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(v6 + 22));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 6));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 14));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 10));
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 18));
+      result = AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 22));
       if ( !*(_DWORD *)(uintptr_t)(v8 + 26) )
         return result;
       constraints = *(_DWORD *)(uintptr_t)(v8 + 26);
     }
-    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(constraints + 6), hashBucket);
-    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v9 + 14), v10);
-    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v11 + 10), v12);
-    AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v13 + 18), v14);
-    result = AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(v15 + 22), v16);
+    AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 6), hashBucket);
+    AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9 + 14), v10);
+    AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v11 + 10), v12);
+    AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v13 + 18), v14);
+    result = AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v15 + 22), v16);
     if ( !*(_DWORD *)(uintptr_t)(v17 + 26) )
       break;
     constraints = *(_DWORD *)(uintptr_t)(v17 + 26);
@@ -449,7 +449,7 @@ _DWORD * AST_DecrementNodeRefCount(_DWORD *result)
     }
     else
     {
-      result = *(_DWORD **)(uintptr_t)(g_ConstraintHashTable + 4 * bucketIndex);
+      result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ConstraintHashTable + 4 * bucketIndex);
       if ( result )
       {
         while ( result != (_DWORD *)(uintptr_t)v1 )
@@ -702,13 +702,13 @@ _DWORD * AST_InternNode(_DWORD *result)
   if ( result )
   {
     hashValue = AST_HashNodeChildren(result);
-    existingConstraint = *(_DWORD **)(uintptr_t)(g_ConstraintHashTable + 4 * hashValue);
+    existingConstraint = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ConstraintHashTable + 4 * hashValue);
     savedHash = hashValue;
     if ( existingConstraint )
     {
       while ( !AST_NodesStructurallyEqual(theConstraint, existingConstraint) )
       {
-        existingConstraint = *(_DWORD **)(uintptr_t)(v5 + 30);
+        existingConstraint = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 30);
         if ( !existingConstraint )
           goto LABEL_5;
       }
@@ -759,21 +759,21 @@ int  AST_CollapseNodeChildSlots(int constraints, int hashBucket)
 
   while ( 1 )
   {
-    AST_AddHashedNodeChain(*(__int16 **)(uintptr_t)(constraints + 6), constraints, hashBucket);
+    AST_AddHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 6), constraints, hashBucket);
     AST_Free(*(_DWORD *)(uintptr_t)(v3 + 6));
-    childNode1 = *(__int16 **)(uintptr_t)(v4 + 14);
+    childNode1 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 14);
     *(_DWORD *)(uintptr_t)(v4 + 6) = v6;
     AST_AddHashedNodeChain(childNode1, v4, v6);
     AST_Free(*(_DWORD *)(uintptr_t)(v7 + 14));
-    childNode2 = *(__int16 **)(uintptr_t)(v8 + 10);
+    childNode2 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 + 10);
     *(_DWORD *)(uintptr_t)(v8 + 14) = v10;
     AST_AddHashedNodeChain(childNode2, v8, v10);
     AST_Free(*(_DWORD *)(uintptr_t)(v11 + 10));
-    childNode3 = *(__int16 **)(uintptr_t)(v12 + 18);
+    childNode3 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v12 + 18);
     *(_DWORD *)(uintptr_t)(v12 + 10) = v14;
     AST_AddHashedNodeChain(childNode3, v12, v14);
     AST_Free(*(_DWORD *)(uintptr_t)(v15 + 18));
-    childNode4 = *(__int16 **)(uintptr_t)(v16 + 22);
+    childNode4 = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v16 + 22);
     *(_DWORD *)(uintptr_t)(v16 + 18) = v18;
     AST_AddHashedNodeChain(childNode4, v16, v18);
     result = AST_Free(*(_DWORD *)(uintptr_t)(v19 + 22));
@@ -808,16 +808,16 @@ int  Rules_SetDynamicConstraintCheckingCommand(int returnValue, double context)
   int v4; // ecx
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
-  __int64 argValue; // [esp+0h] [ebp-24h]
+  __int64 argData[2]; // [esp+0h] [ebp-24h]
   int savedReturnValue CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   savedReturnValue = returnValue;
-  argCheck = Lexer_TokenExpect(1);
+  argCheck = Lexer_TokenExpect((int)(intptr_t)aSetDynamicCons, 0, 1);
   v5 = v4;
   if ( argCheck == -1 )
     return v4;
   Rules_RtnUnknown(1, &argBuffer, context);
-  g_CLIPS_DynamicConstraintCheckingFlag = argValue != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_CLIPS_DynamicConstraintCheckingFlag = argData[2] != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49707E: variable 'v4' is possibly undefined
@@ -829,7 +829,7 @@ int Rules_GetDynamicConstraintCheckingCommand(void)
 {
   int currentFlag; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetDynamicCons, 0, 0);
   return currentFlag;
 }
 // 4970FA: variable 'v0' is possibly undefined
@@ -842,16 +842,16 @@ int  Rules_SetStaticConstraintCheckingCommand(int returnValue, double context)
   int v4; // ecx
   int v5; // esi
   int argBuffer; // [esp-4h] [ebp-28h] BYREF
-  __int64 argValue; // [esp+0h] [ebp-24h]
+  __int64 argData[2]; // [esp+0h] [ebp-24h]
   int savedReturnValue CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   savedReturnValue = returnValue;
-  argCheck = Lexer_TokenExpect(1);
+  argCheck = Lexer_TokenExpect((int)(intptr_t)aSetStaticConst, 0, 1);
   v5 = v4;
   if ( argCheck == -1 )
     return v4;
   Rules_RtnUnknown(1, &argBuffer, context);
-  g_CLIPS_StaticConstraintCheckingFlag = argValue != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_CLIPS_StaticConstraintCheckingFlag = argData[2] != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49711E: variable 'v4' is possibly undefined
@@ -863,7 +863,7 @@ int Rules_GetStaticConstraintCheckingCommand(void)
 {
   int currentFlag; // ecx
 
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetStaticConst, 0, 0);
   return currentFlag;
 }
 // 49719A: variable 'v0' is possibly undefined
@@ -943,7 +943,7 @@ signed int Rules_AllocDeffactsModuleData(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -976,9 +976,9 @@ int  Rules_GetDeffactsModuleItem(int theModule)
 // 54E698: using guessed type int dword_54E698;
 
 //----- (004972F0) --------------------------------------------------------
-int  Rules_ParseDeffactsConstruct(_BYTE *constructName, int a2)
+int  Rules_ParseDeffactsConstruct(_BYTE *constructName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(constructName, a2);
+  return Rules_FindConstructByNameGeneric(constructName, g_ClipsDeffactsConstructType);
 }
 // 54E69C: using guessed type int dword_54E69C;
 
@@ -1099,9 +1099,9 @@ int Defgeneric_SetupConstruct(void)
 // 54E6A4: using guessed type int dword_54E6A4;
 
 //----- (004976F0) --------------------------------------------------------
-int  Defgeneric_ParseConstruct(_BYTE *genericName, int a2)
+int  Defgeneric_ParseConstruct(_BYTE *genericName, int a2 CLASH95_UNUSED)
 {
-  return Rules_FindConstructByNameGeneric(genericName, a2);
+  return Rules_FindConstructByNameGeneric(genericName, g_Clips_DefgenericConstructType);
 }
 // 54E6A0: using guessed type int dword_54E6A0;
 
@@ -1185,19 +1185,19 @@ signed int  Defgeneric_UndefmethodCommand(int returnValue, double context)
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
-  int argData; // [esp-4h] [ebp-24h] BYREF
-  int argType; // [esp+0h] [ebp-20h]
-  int argValue; // [esp+4h] [ebp-1Ch]
+  _DWORD argData[6]; // [esp-4h] [ebp-24h] BYREF
+  /* stack alias of argData[1] */
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
   int savedReturnValue CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   savedReturnValue = returnValue;
-  result = Lexer_ParseValueList(1, &argData, 2, context);
+  result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
-    if ( Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, *(_BYTE **)(uintptr_t)(argValue + 16), 1) || !strcmp_(0, asc_50529C) )
+    if ( Symbol_LookupInModule((char **)(uintptr_t)g_Clips_DefgenericConstructType, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16), 1) || !strcmp_(0, asc_50529C) )
     {
-      Rules_RtnUnknown(2, &argData, context);
-      if ( argType == 2 )
+      Rules_RtnUnknown(2, argData, context);
+      if ( argData[1] == 2 )
       {
         methodIndex = strcmp_(theGeneric, asc_50529C);
         if ( methodIndex )
@@ -1209,9 +1209,9 @@ LABEL_7:
       }
       else
       {
-        if ( argType != 1 )
+        if ( argData[1] != 1 )
           goto LABEL_7;
-        methodIndex = *(_DWORD *)(uintptr_t)(argValue + 16);
+        methodIndex = *(_DWORD *)(uintptr_t)(argData[2] + 16);
         if ( !methodIndex )
           goto LABEL_7;
       }
@@ -1221,7 +1221,7 @@ LABEL_7:
     {
       Rules_PrintErrorID((int)(intptr_t)aGenrccom, 1, 0);
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoSuchGenericF, v6);
-      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(argValue + 16), v7);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(argData[2] + 16), v7);
       return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunctionUnde, v8);
     }
   }
@@ -1411,28 +1411,28 @@ int  Defgeneric_PpdefmethodCommand(int returnValue, double context)
   _BYTE *genericName; // esi
   int v4; // ecx
   int methodPtr; // edx
-  _DWORD argData[2]; // [esp-8h] [ebp-28h] BYREF
-  int argValue; // [esp+0h] [ebp-20h]
+  _DWORD argData[6]; // DATA_OBJECT BYREF
+  /* stack alias of argData[2]: the value slot */
   int savedReturnValue CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   savedReturnValue = returnValue;
   result = Lexer_ParseValueList(1, argData, 2, context);
   if ( result )
   {
-    genericName = *(_BYTE **)(uintptr_t)(argValue + 16);
+    genericName = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16);
     result = Lexer_ParseValueList(2, argData, 1, context);
     if ( result )
     {
       result = Defgeneric_CheckGenericExists((int)(intptr_t)aPpdefmethod, genericName);
       if ( result )
       {
-        result = Defgeneric_CheckMethodExists((int)(intptr_t)aPpdefmethod, result, *(_DWORD *)(uintptr_t)(argValue + 16));
+        result = Defgeneric_CheckMethodExists((int)(intptr_t)aPpdefmethod, result, *(_DWORD *)(uintptr_t)(argData[2] + 16));
         if ( result != -1 )
         {
           result *= 40;
           methodPtr = result + *(_DWORD *)(uintptr_t)(v4 + 28);
           if ( *(_DWORD *)(uintptr_t)(methodPtr + 36) )
-            return Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalName_WDisplay, *(char **)(uintptr_t)(methodPtr + 36));
+            return Output_WriteLongString((signed int)(intptr_t)g_IO_LogicalName_WDisplay, (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(methodPtr + 36));
         }
       }
     }

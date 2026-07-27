@@ -33,7 +33,7 @@ signed int  Rules_FocusCommand(int a1, double a2)
   _DWORD v8[10]; // [esp-8h] [ebp-28h] BYREF
 
   v8[8] = a1;
-  v2 = Lexer_TokenExpect(1);
+  v2 = Lexer_TokenExpect((int)(intptr_t)aFocus_1, 1, 1);
   if ( v2 == -1 )
     return 0;
   argCount = v2;
@@ -44,7 +44,7 @@ signed int  Rules_FocusCommand(int a1, double a2)
     result = Lexer_ParseValueList(argCount, v8, 2, a2);
     if ( !result )
       break;
-    module = Module_FindByName(*(_BYTE **)(uintptr_t)(v8[2] + 16));
+    module = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8[2] + 16));
     if ( !module )
     {
       Rules_ReportCantFindItem(v7, v6);
@@ -196,7 +196,7 @@ void  Rules_InstancesCommand(double context)
     goto LABEL_16;
   if ( !Lexer_ParseValueList(1, temp, 2, context) )
     return;
-  if ( !Module_FindByName(*(_BYTE **)(uintptr_t)(v11 + 16)) && strcmp_(moduleName, asc_5033CC) )
+  if ( !Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v11 + 16)) && strcmp_(moduleName, asc_5033CC) )
   {
     Lexer_ErrorRecover(1);
     Parser_ReportError(v5, (int)(intptr_t)aDefmoduleName);
@@ -206,7 +206,7 @@ void  Rules_InstancesCommand(double context)
     goto LABEL_16;
   if ( !Lexer_ParseValueList(2, temp, 2, context) )
     return;
-  className = *(_BYTE **)(uintptr_t)(v11 + 16);
+  className = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v11 + 16);
   if ( !Class_LookupByModule(v4, className) )
   {
     if ( strcmp_(v6, asc_5033CC) )
@@ -613,20 +613,20 @@ int  Rules_ClassCommand(int returnValue, int a2, double a3)
   int v9; // ecx
   int v10; // ecx
   int v11; // ecx
-  int temp; // [esp-4h] [ebp-24h] BYREF
-  int valueType; // [esp+0h] [ebp-20h]
-  int valueField; // [esp+4h] [ebp-1Ch]
+  _DWORD temp[6]; // [esp-4h] [ebp-24h] BYREF
+  /* stack alias of temp[1] */
+  /* stack alias of temp[2]: the DATA_OBJECT value slot */
   int v15 CLASH95_UNUSED; // [esp+1Ch] [ebp-4h]
 
   v15 = a2;
-  argName = *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16);
+  argName = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16);
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &temp, returnValue, a3);
-  if ( valueType == 7 )
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), temp, returnValue, a3);
+  if ( temp[1] == 7 )
   {
-    instance = (_DWORD *)(uintptr_t)valueField;
-    if ( (*(_BYTE *)(uintptr_t)(valueField + 24) & 2) != 0 )
+    instance = (_DWORD *)(uintptr_t)temp[2];
+    if ( (*(_BYTE *)(uintptr_t)(temp[2] + 24) & 2) != 0 )
     {
       Instance_ReportInvalidInstanceAddressError();
       return Lexer_ErrorRecover(1);
@@ -636,14 +636,14 @@ LABEL_5:
     *(_DWORD *)(uintptr_t)(v6 + 8) = result;
     return result;
   }
-  if ( valueType == 8 )
+  if ( temp[1] == 8 )
   {
-    instance = Instance_FindByName(valueField);
+    instance = Instance_FindByName(temp[2]);
     if ( !instance )
       return Instance_ReportNoSuchInstanceError(v8, argName);
     goto LABEL_5;
   }
-  switch ( valueType )
+  switch ( temp[1] )
   {
     case 0:
     case 1:
@@ -652,7 +652,7 @@ LABEL_5:
     case 4:
     case 5:
     case 6:
-      result = Rules_GetConstructNameSymbol(g_ClipsPrimitiveTypeClassMap[valueType]);
+      result = Rules_GetConstructNameSymbol(g_ClipsPrimitiveTypeClassMap[temp[1]]);
       *(_DWORD *)(uintptr_t)(v7 + 8) = result;
       break;
     default:
@@ -698,9 +698,9 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
   int argExpr; // ebx
   int returnCode; // edi
   _DWORD *instance; // ecx
-  int v8; // [esp-4h] [ebp-2Ch] BYREF
-  int resultType; // [esp+0h] [ebp-28h]
-  int resultValue; // [esp+4h] [ebp-24h]
+  _DWORD v8[6]; // [esp-4h] [ebp-2Ch] BYREF
+  /* stack alias of v8[1] */
+  /* stack alias of v8[2]: the DATA_OBJECT value slot */
   int v11 CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   v11 = a1;
@@ -711,10 +711,10 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
   {
     while ( 1 )
     {
-      Parser_ParseForm((__int16 *)(uintptr_t)argExpr, &v8, a1, a2);
-      if ( resultType == 8 || resultType == 2 )
+      Parser_ParseForm((__int16 *)(uintptr_t)argExpr, v8, a1, a2);
+      if ( v8[1] == 8 || v8[1] == 2 )
       {
-        instance = Instance_FindByName(resultValue);
+        instance = Instance_FindByName(v8[2]);
         if ( !instance && strcmp_(0, asc_5033CC) )
         {
           Instance_ReportNoSuchInstanceError((int)(intptr_t)instance, (int)(intptr_t)aUnmakeInstance);
@@ -723,14 +723,14 @@ signed int  Rules_UnmakeInstanceCommand(int a1, double a2)
       }
       else
       {
-        if ( resultType != 7 )
+        if ( v8[1] != 7 )
         {
           Parser_ReportError(argumentIndex, (int)(intptr_t)aInstanceAddr_4);
           Lexer_ErrorRecover(1);
           return 0;
         }
-        instance = (_DWORD *)(uintptr_t)resultValue;
-        if ( (*(_BYTE *)(uintptr_t)(resultValue + 24) & 2) != 0 )
+        instance = (_DWORD *)(uintptr_t)v8[2];
+        if ( (*(_BYTE *)(uintptr_t)(v8[2] + 24) & 2) != 0 )
         {
           Instance_ReportInvalidInstanceAddressError();
           Lexer_ErrorRecover(1);
@@ -799,7 +799,7 @@ _DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
   int v7; // eax
   int v8; // ecx
   _DWORD v9[2]; // [esp+0h] [ebp-30h] BYREF
-  int resultValue; // [esp+8h] [ebp-28h]
+  int v8_alias; // [esp+8h] [ebp-28h]
 
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
@@ -810,7 +810,7 @@ _DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
     {
       if ( v9[1] == 7 )
       {
-        if ( (*(_BYTE *)(uintptr_t)(resultValue + 24) & 2) != 0 )
+        if ( (*(_BYTE *)(uintptr_t)(v8_alias + 24) & 2) != 0 )
         {
           Instance_ReportInvalidInstanceAddressError();
           return (_DWORD *)(uintptr_t)Lexer_ErrorRecover(1);
@@ -818,13 +818,13 @@ _DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
         else
         {
           *(_DWORD *)(uintptr_t)(returnValue + 4) = 7;
-          result = (_DWORD *)(uintptr_t)resultValue;
-          *(_DWORD *)(uintptr_t)(returnValue + 8) = resultValue;
+          result = (_DWORD *)(uintptr_t)v8_alias;
+          *(_DWORD *)(uintptr_t)(returnValue + 8) = v8_alias;
         }
       }
       else
       {
-        result = Instance_FindByName(resultValue);
+        result = Instance_FindByName(v8_alias);
         if ( !result )
           return (_DWORD *)(uintptr_t)Instance_ReportNoSuchInstanceError(v8, (int)(intptr_t)aInstanceAddres);
         *(_DWORD *)(uintptr_t)(returnValue + 4) = 7;
@@ -837,7 +837,7 @@ _DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
     result = (_DWORD *)(uintptr_t)Lexer_ParseValueList(1, v9, 2, a2);
     if ( result )
     {
-      theModule = Module_FindByName(*(_BYTE **)(uintptr_t)(resultValue + 16));
+      theModule = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8_alias + 16));
       if ( !theModule && strcmp_(v4, asc_5033CC) )
       {
         Parser_ReportError(1, (int)(intptr_t)aModuleName);
@@ -856,7 +856,7 @@ _DWORD * Rules_InstanceAddressCommand(int returnValue, double a2)
       if ( result )
       {
         v7 = Module_GetCurrent();
-        result = Instance_LookupInHashBucket(resultValue, (int)(intptr_t)theModule, (_DWORD *)(uintptr_t)searchImports, v7);
+        result = Instance_LookupInHashBucket(v8_alias, (int)(intptr_t)theModule, (_DWORD *)(uintptr_t)searchImports, v7);
         if ( result )
         {
           *(_DWORD *)(uintptr_t)(returnValue + 4) = 7;
@@ -881,7 +881,7 @@ int  Rules_InstanceNameCommand(int returnValue, int a2, double a3)
   _DWORD *instance; // edx
   int v6; // ecx
   _DWORD v7[2]; // [esp-4h] [ebp-28h] BYREF
-  int resultValue; // [esp+4h] [ebp-20h]
+  int v8_alias; // [esp+4h] [ebp-20h]
   int v9 CLASH95_UNUSED; // [esp+1Ch] [ebp-8h]
 
   v9 = a2;
@@ -892,8 +892,8 @@ int  Rules_InstanceNameCommand(int returnValue, int a2, double a3)
   {
     if ( v7[1] == 7 )
     {
-      instance = (_DWORD *)(uintptr_t)resultValue;
-      if ( (*(_BYTE *)(uintptr_t)(resultValue + 24) & 2) != 0 )
+      instance = (_DWORD *)(uintptr_t)v8_alias;
+      if ( (*(_BYTE *)(uintptr_t)(v8_alias + 24) & 2) != 0 )
       {
         Instance_ReportInvalidInstanceAddressError();
         return Lexer_ErrorRecover(1);
@@ -901,7 +901,7 @@ int  Rules_InstanceNameCommand(int returnValue, int a2, double a3)
     }
     else
     {
-      instance = Instance_FindByName(resultValue);
+      instance = Instance_FindByName(v8_alias);
       if ( !instance )
         return Instance_ReportNoSuchInstanceError(v6, (int)(intptr_t)aInstanceName);
     }
@@ -919,7 +919,7 @@ BOOL  Rules_InstanceAddressPCommand(int a1, double a2)
 {
   _DWORD theResult[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
   return theResult[1] == 7;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -929,7 +929,7 @@ BOOL  Rules_InstanceNamePCommand(int a1, double a2)
 {
   _DWORD theResult[7]; // [esp-4h] [ebp-1Ch] BYREF
 
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
   return theResult[1] == 8;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -940,7 +940,7 @@ BOOL  Rules_InstancePCommand(int a1, double a2)
   int theResult; // [esp-4h] [ebp-1Ch] BYREF
   int resultType; // [esp+0h] [ebp-18h]
 
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &theResult, a1, a2);
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
   return resultType == 8 || resultType == 7;
 }
 // 51A960: using guessed type int dword_51A960;
@@ -949,19 +949,19 @@ BOOL  Rules_InstancePCommand(int a1, double a2)
 int  Rules_InstanceExistPCommand(int a1, double a2)
 {
   int result; // eax
-  int theResult; // [esp-4h] [ebp-1Ch] BYREF
-  int resultType; // [esp+0h] [ebp-18h]
-  int resultValue; // [esp+4h] [ebp-14h]
+  _DWORD theResult[6]; // [esp-4h] [ebp-1Ch] BYREF
+  /* stack alias of theResult[1] */
+  /* stack alias of theResult[2]: the DATA_OBJECT value slot */
 
-  Parser_ParseForm(*(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6), &theResult, a1, a2);
-  if ( resultType == 7 )
+  Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6), theResult, a1, a2);
+  if ( theResult[1] == 7 )
   {
-    LOBYTE(result) = (*(_BYTE *)(uintptr_t)(resultValue + 24) & 2) == 0;
+    LOBYTE(result) = (*(_BYTE *)(uintptr_t)(theResult[2] + 24) & 2) == 0;
     return (unsigned __int8)result;
   }
-  if ( resultType == 8 || resultType == 2 )
+  if ( theResult[1] == 8 || theResult[1] == 2 )
   {
-    LOBYTE(result) = Instance_FindByName(resultValue) != 0;
+    LOBYTE(result) = Instance_FindByName(theResult[2]) != 0;
     return (unsigned __int8)result;
   }
   Parser_ReportError(1, (int)(intptr_t)aInstanceNameIn);
@@ -1101,7 +1101,7 @@ signed int  Rules_PrintInstanceSlots(int logicalName, int instance, int separato
     else
     {
       Output_Write(logicalName, (int)(intptr_t)asc_503458, v9);
-      Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(v10 + 4) << 24 >> 26, *(int **)(uintptr_t)(v10 + 8));
+      Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(v10 + 4) << 24 >> 26, (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + 8));
     }
     result = Output_Write(logicalName, (int)(intptr_t)asc_503500, v9);
     slotOffset += 4;
@@ -1166,7 +1166,7 @@ signed int  Rules_RegisterHostFunction(
   {
     return 0;
   }
-  free_node = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 124);
+  free_node = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 124);
   if ( free_node )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 124);
@@ -1334,7 +1334,7 @@ signed int  Rules_GetArgRestrictionType(int theFunction, int position)
     return 117;
   if ( !*(_DWORD *)(uintptr_t)(theFunction + 17) )
     return 117;
-  v4 = strlen(*(const char **)(uintptr_t)(theFunction + 17)) + 1;
+  v4 = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFunction + 17)) + 1;
   if ( (int)(v4 - 1) < 3 )
     return 117;
   result = *(unsigned __int8 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theFunction + 17) + 2);
@@ -1398,7 +1398,7 @@ int * Rules_InsertFunctionHashEntry(int functionDef)
 
   if ( !g_ClipsFunctionNameHashTable )
     Rules_InitFunctionNameHashTable();
-  free_node = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+  free_node = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( free_node )
   {
     g_ClipsMemFreeListTemp = (int)(intptr_t)free_node;
@@ -1428,9 +1428,9 @@ int  Rules_RtnLexeme(int argumentPosition, int a2, double a3)
 {
   int argExpr; // eax
   int i; // edx
-  int v8; // [esp-4h] [ebp-20h] BYREF
-  int resultType; // [esp+0h] [ebp-1Ch]
-  int resultValue; // [esp+4h] [ebp-18h]
+  _DWORD v8[6]; // [esp-4h] [ebp-20h] BYREF
+  /* stack alias of v8[1] */
+  /* stack alias of v8[2]: the DATA_OBJECT value slot */
 
   argExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 1; argExpr; ++i )
@@ -1441,14 +1441,14 @@ int  Rules_RtnLexeme(int argumentPosition, int a2, double a3)
   }
   if ( argExpr )
   {
-    Parser_ParseForm((__int16 *)(uintptr_t)argExpr, &v8, a2, a3);
-    if ( resultType == 2 || resultType == 8 || resultType == 3 )
+    Parser_ParseForm((__int16 *)(uintptr_t)argExpr, v8, a2, a3);
+    if ( v8[1] == 2 || v8[1] == 8 || v8[1] == 3 )
     {
-      return *(_DWORD *)(uintptr_t)(resultValue + 16);
+      return *(_DWORD *)(uintptr_t)(v8[2] + 16);
     }
     else
     {
-      Rules_ExpectedTypeError((int)(intptr_t)aRtnlexeme, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+      Rules_ExpectedTypeError((int)(intptr_t)aRtnlexeme, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       return 0;
@@ -1456,7 +1456,7 @@ int  Rules_RtnLexeme(int argumentPosition, int a2, double a3)
   }
   else
   {
-    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
+    Rules_NonexistentArgError(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), argumentPosition);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return 0;

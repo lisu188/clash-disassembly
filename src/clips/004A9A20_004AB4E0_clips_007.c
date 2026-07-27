@@ -398,7 +398,7 @@ signed int Instance_AllocateInstanceRecord(void)
   int evalDepth; // edx
 
   Rules_EnsureObjectPatternVTable();
-  freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 320);
+  freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 320);
   if ( freeNode )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 320);
@@ -957,18 +957,18 @@ int __fastcall Rules_ParseObjectInstanceFunctionCall(int top, int readSource)
   IO_OutWriteToken(asc_508954);
   if ( !callType )
   {
-    if ( **(_WORD **)(uintptr_t)(v26 + 6) == 2 && !strcmp_(v26, aOf_0) )
+    if ( *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v26 + 6) == 2 && !strcmp_(v26, aOf_0) )
     {
       v32 = Parser_ParseArgument(readSource, errorFlag, v31);
       *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v28 + 6) + 10) = v32;
       if ( errorFlag[0] == 1 )
         goto LABEL_8;
-      parsedArgNode = *(_WORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v28 + 6) + 10);
+      parsedArgNode = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v28 + 6) + 10);
       if ( !parsedArgNode )
         goto LABEL_7;
       if ( *parsedArgNode != 2 || strcmp_(v28, aOf_0) )
       {
-        **(_WORD **)(uintptr_t)(v28 + 6) = 10;
+        *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v28 + 6) = 10;
         v34 = Rules_MakeSymbol(aGensym_1);
         *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v30 + 6) + 2) = v34;
 LABEL_33:
@@ -1369,7 +1369,7 @@ _DWORD * Instance_ActiveModifyInstanceFunction(int *returnValue, double a2)
   }
   else
   {
-    if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) )
+    if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) )
     {
       savedGuardState = g_InstanceDirectMessageGuardActive;
       g_InstanceDirectMessageGuardActive = 1;
@@ -1415,7 +1415,7 @@ _DWORD * Instance_ActiveMessageModifyInstanceFunction(int *returnValue, double a
   }
   else
   {
-    if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) )
+    if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) )
     {
       savedGuardState = g_InstanceDirectMessageGuardActive;
       g_InstanceDirectMessageGuardActive = 1;
@@ -1460,7 +1460,7 @@ _DWORD * Instance_ActiveDuplicateInstanceFunction(int *returnValue, double a2)
     result = (_DWORD *)(uintptr_t)g_ClipsFalseSymbol;
     returnValue[2] = g_ClipsFalseSymbol;
   }
-  else if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) && Lexer_ParseValueList(2, &newNameValue, 8, a2) )
+  else if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) && Lexer_ParseValueList(2, &newNameValue, 8, a2) )
   {
     savedGuardState = g_InstanceDirectMessageGuardActive;
     g_InstanceDirectMessageGuardActive = 1;

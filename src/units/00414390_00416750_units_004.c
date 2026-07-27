@@ -864,7 +864,6 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   int *reversePath; // edx
   int poppedCount; // ebx
   int occupantNextRowByteOffset; // eax
-  int result; // ecx
   int forwardRawCount; // eax
   int reverseCount; // ebx
   int candidateStep; // eax
@@ -880,13 +879,15 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   HIDWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + BUILDING_TABLE_OFFSET);
   buildingKind = *(char *)(uintptr_t)(gameData + buildingRecordOffset + 509678);
   LODWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + 509675);
-  *(_WORD *)(TILE_INDEX(HIDWORD(buildingRowCol), buildingRowCol)) = -1;
+  /* buildingRowCol is a register PAIR: HIDWORD = row, LODWORD = column.
+     Using the whole 64-bit value as the column made the tile address explode. */
+  *(_WORD *)(TILE_INDEX(HIDWORD(buildingRowCol), (unsigned int)buildingRowCol)) = -1;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
     nextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
-    *(_WORD *)(nextRowByteOffset + gameData + 2 * buildingRowCol + TILE_MAP_OFFSET) = -1;
-    *(_WORD *)(gameData + nextRowByteOffset + 2 * buildingRowCol + 556376) = -1;
-    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * buildingRowCol + 556376) = -1;
+    *(_WORD *)(nextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = -1;
+    *(_WORD *)(gameData + nextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = -1;
+    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = -1;
   }
   /*
    * asm loc_415A4D (clash95.asm, sub_415970):
@@ -901,6 +902,8 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
    * an unassigned local and the unit-stack record was read from garbage.
    */
   WorldMap_DisableFrameRedraw();
+  /* loc_415A4D: `mov edx,[esp+var_2C]` then edx*145 - the cursor is the stack
+     index; IDA never initialised stackRecordIndex. */
   stackRecordIndex = stackIndex;
   stackRecordIndex *= 145;
   sourceColumn = *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + 147176);
@@ -914,11 +917,13 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
    * the path array was walked and returned through wild pointers.
    */
   forwardPath = rawPath;
-  result = (int)(intptr_t)rawPath;
   if ( rawPath )
   {
     reverseBuffer = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)rawPath, sourceColumn, buildingKind);
     reversePath = reverseBuffer;
+    /* 415A96: `mov ecx, eax` after Unit_MoveTrack - the forward cursor is the
+       raw path that was just returned. */
+    forwardPath = rawPath;
     if ( reverseBuffer )
       *reverseBuffer = 0;
     for ( ; *forwardPath; reversePath[reverseCount + 1] = stepForward )
@@ -972,16 +977,27 @@ LABEL_8:
     }
     j__nfree_();
   }
-  *(_WORD *)(2 * buildingRowCol + gameData + TILE_ROW_STRIDE * HIDWORD(buildingRowCol) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  *(_WORD *)(2 * (unsigned int)buildingRowCol + gameData + TILE_ROW_STRIDE * HIDWORD(buildingRowCol) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
     occupantNextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
-    *(_WORD *)(occupantNextRowByteOffset + gameData + 2 * buildingRowCol + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + occupantNextRowByteOffset + 2 * buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(occupantNextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + occupantNextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   }
   Render_LoadResourceSprite_v2();
-  return result;
+  /* 415B9B: 'call Render_LoadResourceSprite_v2; mov eax, ecx; ... retn' - the
+     return value is ECX, and ECX was loaded at 415A94 ('mov ecx, eax')
+     immediately after 'call Unit_MoveTrack', i.e. it is the raw forward track
+     the pathfinder returned (0 when Unit_MoveTrack failed - loc_415AEA is
+     reached with ecx = eax = 0).  Nothing between 415A94 and 415BA0 writes ecx.
+     The decompiler dropped that assignment and emitted a never-initialised
+     'result' (IDA flags it at 415BA0), so this routine returned a stale
+     register.  Its callers memcpy 0x194 bytes FROM that value straight into the
+     unit stack's queued-path buffer, which is why the queued path's step count
+     came back as a heap pointer and UnitStack_ExecuteQueuedPath segfaulted on
+     'pathBuffer[*pathBuffer]'. */
+  return (int)(intptr_t)rawPath;
 }
 // 415A64/415AAD/415BA0: decompiler 'possibly undefined' notes for v9/v13/v17 --
 //   v9 is edx = stackIndex across the WorldMap_DisableFrameRedraw call, and

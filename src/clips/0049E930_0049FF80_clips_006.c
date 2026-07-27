@@ -50,7 +50,7 @@ signed int * Rules_HostFormat(double context)
   emptyResult = Str_Intern(g_Rules_HostFormatEmptyResult, 0);
   fallbackResult = emptyResult;
   outputString = 0;
-  argCount = Lexer_TokenExpect(2);
+  argCount = Lexer_TokenExpect((int)(intptr_t)aFormat, 1, 2);
   if ( argCount == -1 )
     return emptyResult;
   logicalName = Rules_GetLogicalNameArg(1, (int)(intptr_t)aStdout_0, v3, context);
@@ -317,9 +317,9 @@ signed int  Rules_FormatConvertArg(
   int v17; // eax
   _DWORD *floatBuffer; // eax
   double floatValue; // [esp+0h] [ebp-30h]
-  int argData; // [esp+8h] [ebp-28h] BYREF
-  int argType; // [esp+Ch] [ebp-24h]
-  int argValue; // [esp+10h] [ebp-20h]
+  _DWORD argData[6]; // [esp+8h] [ebp-28h] BYREF
+  /* stack alias of argData[1] */
+  /* stack alias of argData[2]: the DATA_OBJECT value slot */
   int intValue; // [esp+20h] [ebp-10h]
 
   if ( conversionChar >= 0x67 )
@@ -330,11 +330,11 @@ signed int  Rules_FormatConvertArg(
     {
       if ( conversionChar <= 0x73 )
       {
-        result = Lexer_ParseValueList(argIndex, &argData, 111, context);
+        result = Lexer_ParseValueList(argIndex, argData, 111, context);
         if ( !result )
           return result;
-        stringBuffer = Mem_SmallBlockAlloc(strlen(*(const char **)(uintptr_t)(argValue + 16)) + strlen(formatSpec) + 200);
-        sprintf_(stringBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argValue + 16));
+        stringBuffer = Mem_SmallBlockAlloc(strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16)) + strlen(formatSpec) + 200);
+        sprintf_(stringBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argData[2] + 16));
         goto LABEL_6;
       }
       if ( conversionChar < 0x75 || conversionChar > 0x75 && conversionChar != 120 )
@@ -345,17 +345,17 @@ signed int  Rules_FormatConvertArg(
       goto LABEL_17;
     }
 LABEL_11:
-    result = Lexer_ParseValueList(argIndex, &argData, 110, context);
+    result = Lexer_ParseValueList(argIndex, argData, 110, context);
     if ( !result )
       return result;
     numberBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
-    if ( argType )
+    if ( argData[1] )
     {
-      sprintf_(numberBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argValue + 16));
+      sprintf_(numberBuffer, formatSpec, *(_DWORD *)(uintptr_t)(argData[2] + 16));
     }
     else
     {
-      intValue = (int)*(double *)(uintptr_t)(argValue + 16);
+      intValue = (int)*(double *)(uintptr_t)(argData[2] + 16);
       sprintf_(v17, formatSpec, intValue);
     }
 LABEL_6:
@@ -367,11 +367,11 @@ LABEL_6:
   {
     if ( conversionChar == 99 )
     {
-      result = Lexer_ParseValueList(argIndex, &argData, 111, context);
+      result = Lexer_ParseValueList(argIndex, argData, 111, context);
       if ( !result )
         return result;
       charBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
-      sprintf_(charBuffer, formatSpec, **(unsigned __int8 **)(uintptr_t)(argValue + 16));
+      sprintf_(charBuffer, formatSpec, *(unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)(argData[2] + 16));
       goto LABEL_6;
     }
 LABEL_17:
@@ -382,18 +382,18 @@ LABEL_17:
   if ( conversionChar <= 0x64 )
     goto LABEL_11;
 LABEL_19:
-  result = Lexer_ParseValueList(argIndex, &argData, 110, context);
+  result = Lexer_ParseValueList(argIndex, argData, 110, context);
   if ( result )
   {
     floatBuffer = Mem_SmallBlockAlloc(strlen(formatSpec) + 200);
-    if ( argType )
+    if ( argData[1] )
     {
-      floatValue = (double)*(int *)(uintptr_t)(argValue + 16);
+      floatValue = (double)*(int *)(uintptr_t)(argData[2] + 16);
       sprintf_(floatBuffer, formatSpec, floatValue);
     }
     else
     {
-      sprintf_(floatBuffer, formatSpec, *(double *)(uintptr_t)(argValue + 16));
+      sprintf_(floatBuffer, formatSpec, *(double *)(uintptr_t)(argData[2] + 16));
     }
     goto LABEL_6;
   }
@@ -431,7 +431,7 @@ signed int * Rules_HostReadline(int returnValue, unsigned int a2, double context
   bufferSize[3] = a2;
   bufferSize[0] = 0;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 3;
-  argCount = Lexer_TokenExpect(1);
+  argCount = Lexer_TokenExpect((int)(intptr_t)aReadline, 2, 1);
   if ( argCount == -1 )
   {
     result = Str_Intern(aReadError, v4);
@@ -667,7 +667,7 @@ BOOL  Rules_HostStringp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aStringp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] == 3 )
@@ -683,7 +683,7 @@ BOOL  Rules_HostSymbolp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSymbolp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] == 2 )
@@ -700,9 +700,9 @@ BOOL  Rules_HostLexemep(double context)
   int argType; // [esp+0h] [ebp-1Ch]
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aLexemep, 0, 1) != -1 )
   {
-    Rules_RtnUnknown(1, &argData, context);
+    Rules_RtnUnknown(1, argData, context);
     if ( argType == 2 || argType == 3 )
       return 1;
   }
@@ -716,7 +716,7 @@ BOOL  Rules_HostNumberp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aNumberp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] <= 1u )
@@ -733,7 +733,7 @@ BOOL  Rules_HostFloatp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aFloatp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( !argData[1] )
@@ -749,7 +749,7 @@ BOOL  Rules_HostIntegerp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aIntegerp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] == 1 )
@@ -765,7 +765,7 @@ BOOL  Rules_HostMultifieldp(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aMultifieldp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] == 4 )
@@ -781,7 +781,7 @@ BOOL  Rules_PointerpFunction(double context)
   _DWORD argData[8]; // [esp-4h] [ebp-20h] BYREF
 
   result = 0;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aPointerp, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, argData, context);
     if ( argData[1] == 5 )
@@ -851,67 +851,61 @@ int  Rules_OrFunction(int returnValue, double context)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0049FB00) --------------------------------------------------------
-double  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
+int  Rules_LessThanOrEqualFunction(int a1, double result, int a3)
 {
-  int firstExpr; // esi
-  int firstArgValid; // eax
-  int currentExpr; // esi
-  int i; // edi
-  int argValid; // eax
-  int previousData; // [esp+0h] [ebp-44h] BYREF
-  int previousType; // [esp+4h] [ebp-40h]
-  int previousValue; // [esp+8h] [ebp-3Ch]
-  int currentData; // [esp+18h] [ebp-2Ch] BYREF
-  int currentType; // [esp+1Ch] [ebp-28h]
-  int currentValue; // [esp+20h] [ebp-24h]
-  int v14 CLASH95_UNUSED; // [esp+38h] [ebp-Ch]
-  int v15 CLASH95_UNUSED; // [esp+3Ch] [ebp-8h]
+  uintptr_t expression; // esi
+  int argument_index; // edi
+  _DWORD previous[6]; // [esp+0h] [ebp-44h] BYREF
+  _DWORD current[6]; // [esp+18h] [ebp-2Ch] BYREF
 
-  v15 = a1;
-  v14 = a3;
-  firstExpr = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
-  if ( firstExpr )
+  /* sub_49FB00 returns eax (1/0), not st0: loc_49FB15 `mov eax,1`, loc_49FBA3
+     `xor eax,eax`. IDA modelled the st0 pass-through as the return and dropped
+     the eax validity flag of each sub_481720 call (`test eax,eax; jz'), and it
+     split the two 24-byte DATA_OBJECT buffers at var_44/var_2C into separate
+     scalars. Repaired to match the already-verified siblings below
+     (Rules_GreaterThanOrEqualFunction / LessThan / GreaterThan / NumericEqual). */
+  (void)a1;
+  (void)a3;
+
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_ClipsCurrentExpression + 6);
+  if ( !expression )
+    return 1;
+  if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, previous, result, 1) )
+    return 0;
+
+  expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
+  for ( argument_index = 2; expression; ++argument_index )
   {
-    result = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)firstExpr, 0, &previousData, result, 1);
-    if ( firstArgValid )
+    if ( !Parser_ParseNumericFormCompat((__int16 *)expression, 0, current, result, argument_index) )
+      return 0;
+    if ( previous[1] == 1 )
     {
-      currentExpr = *(_DWORD *)(uintptr_t)(firstExpr + 10);
-      for ( i = 2; currentExpr; ++i )
+      if ( current[1] == 1 )
       {
-        result = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)currentExpr, 0, &currentData, result, i);
-        if ( !argValid )
-          break;
-        if ( previousType == 1 )
-        {
-          if ( currentType == 1 )
-          {
-            if ( *(_DWORD *)(uintptr_t)(previousValue + 16) > *(_DWORD *)(uintptr_t)(currentValue + 16) )
-              return result;
-          }
-          else if ( (double)*(int *)(uintptr_t)(previousValue + 16) > *(double *)(uintptr_t)(currentValue + 16) )
-          {
-            return result;
-          }
-        }
-        else if ( currentType == 1 )
-        {
-          if ( (double)*(int *)(uintptr_t)(currentValue + 16) < *(double *)(uintptr_t)(previousValue + 16) )
-            return result;
-        }
-        else if ( *(double *)(uintptr_t)(previousValue + 16) > *(double *)(uintptr_t)(currentValue + 16) )
-        {
-          return result;
-        }
-        previousType = currentType;
-        previousValue = currentValue;
-        currentExpr = *(_DWORD *)(uintptr_t)(currentExpr + 10);
+        /* loc_49FB6D: `cmp ebx,[eax+10h]; jg` - integer/integer compare. */
+        if ( Parser_NumberValueAsInt(previous[2]) > Parser_NumberValueAsInt(current[2]) )
+          return 0;
+      }
+      else if ( (double)Parser_NumberValueAsInt(previous[2]) > Parser_NumberValueAsDouble(current[2]) )
+      {
+        return 0;
       }
     }
+    else if ( current[1] == 1 )
+    {
+      if ( (double)Parser_NumberValueAsInt(current[2]) < Parser_NumberValueAsDouble(previous[2]) )
+        return 0;
+    }
+    else if ( Parser_NumberValueAsDouble(previous[2]) > Parser_NumberValueAsDouble(current[2]) )
+    {
+      return 0;
+    }
+    previous[1] = current[1];
+    previous[2] = current[2];
+    expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
   }
-  return result;
+  return 1;
 }
-// 49FB39: variable 'v4' is possibly undefined
-// 49FB5C: variable 'v7' is possibly undefined
 // 51A960: using guessed type int dword_51A960;
 
 CLASH95_INTERNAL int Parser_ParseNumericFormCompat(__int16 *expression, int coerce_integer_to_float, _DWORD *parsed, double context, int argument_index)

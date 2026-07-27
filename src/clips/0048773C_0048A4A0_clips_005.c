@@ -1106,7 +1106,7 @@ signed int Rules_RegisterFactsConstruct(void)
            (int)(intptr_t)aFacts_2,
            0,
            (int)(intptr_t)CSyncObject_Unlock,
-           (int)(intptr_t)&g_Rules_FactPatternEntityRecord,
+           (int)(intptr_t)g_Rules_FactPatternEntityRecord,
            (int)(intptr_t)Rules_ParseFactPatternRelation,
            0,
            (int)(intptr_t)Rules_ParseDeftemplateSlotList,
@@ -1145,7 +1145,7 @@ _DWORD * Rules_ParseDeftemplateSlotList(int thePattern, _DWORD *theSlot)
   int savedNode; // [esp+Ch] [ebp-1Ch]
 
   parseTree = *(_DWORD *)(uintptr_t)(thePattern + 64);
-  deftemplateName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(parseTree + 68) + 4) + 16);
+  deftemplateName = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(parseTree + 68) + 4) + 16);
   prunedTree = Rules_PruneDeftemplateParseTree(parseTree);
   *(_DWORD *)(uintptr_t)(thePattern + 64) = prunedTree;
   nextNode = *(_DWORD *)(uintptr_t)(prunedTree + 64);
@@ -1212,7 +1212,7 @@ int  Rules_FindDuplicateDeftemplateSlot(int slotList, int *fieldNode, int within
           && *(_DWORD *)(uintptr_t)(curSlot + 12) << 25 >> 31 == withinMultifield
           && (unsigned __int8)*(_DWORD *)(uintptr_t)(curSlot + 20) == fieldNode[8]
           && *(_DWORD *)(uintptr_t)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
-          && AST_NodeListsEqual(*(__int16 **)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
+          && AST_NodeListsEqual((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
         {
           return curSlot;
         }
@@ -1225,7 +1225,7 @@ int  Rules_FindDuplicateDeftemplateSlot(int slotList, int *fieldNode, int within
         && *(_DWORD *)(uintptr_t)(curSlot + 20) << 8 >> 24 == (unsigned int)(fieldNode[3] << 18) >> 25
         && (unsigned __int8)*(_DWORD *)(uintptr_t)(curSlot + 20) == fieldNode[8]
         && *(_DWORD *)(uintptr_t)(curSlot + 20) << 16 >> 24 == fieldNode[10] - 1
-        && AST_NodeListsEqual(*(__int16 **)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
+        && AST_NodeListsEqual((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(curSlot + 24), (__int16 *)(uintptr_t)fieldNode[13]) )
       {
         return curSlot;
       }
@@ -1348,7 +1348,7 @@ LABEL_41:
           return listHead;
       }
       ShouldEmit = (_DWORD *)(uintptr_t)PP_ShouldEmit(*(_DWORD *)(uintptr_t)(curNode + 68));
-      v10 = AST_MergeFieldAccessNodes(ShouldEmit, *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v9 + 68) + 52));
+      v10 = AST_MergeFieldAccessNodes(ShouldEmit, (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v9 + 68) + 52));
       *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v11 + 68) + 52) = v10;
       prunedChild = Rules_PruneDeftemplateParseTree(*(_DWORD *)(uintptr_t)(v11 + 68));
       *(_DWORD *)(uintptr_t)(v7 + 68) = prunedChild;

@@ -93,7 +93,7 @@ int  Rules_RemoveEntityDependencies(_DWORD *theBinds)
     {
       theBind = *dependencyPtr;
       nextDependency = (_DWORD *)(uintptr_t)dependencyPtr[1];
-      *(_DWORD *)(uintptr_t)(theBind + 4) = Rules_RemoveDependencyLink(*(_DWORD **)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
+      *(_DWORD *)(uintptr_t)(theBind + 4) = Rules_RemoveDependencyLink((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
       g_ClipsMemFreeListTemp = (int)(intptr_t)v5;
       *v5 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
       *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp;
@@ -122,14 +122,14 @@ int  Rules_RemovePMDependencies(int result)
   theBinds = (_DWORD *)(uintptr_t)result;
   if ( (*(_BYTE *)(uintptr_t)result & 8) != 0 )
   {
-    dependencyPtr = *(_DWORD **)(uintptr_t)(result + 4 * ((*(_DWORD *)(uintptr_t)result << 17 >> 23) + (*(_DWORD *)(uintptr_t)result << 29 >> 31)) + 8);
+    dependencyPtr = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 4 * ((*(_DWORD *)(uintptr_t)result << 17 >> 23) + (*(_DWORD *)(uintptr_t)result << 29 >> 31)) + 8);
     if ( dependencyPtr )
     {
       do
       {
         theBind = *dependencyPtr;
         nextDependency = (_DWORD *)(uintptr_t)dependencyPtr[1];
-        updatedList = Rules_RemoveDependencyLink(*(_DWORD **)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
+        updatedList = Rules_RemoveDependencyLink((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*dependencyPtr + 4), (int)(intptr_t)theBinds);
         *(_DWORD *)(uintptr_t)(theBind + 4) = updatedList;
         if ( updatedList )
         {
@@ -272,7 +272,7 @@ _DWORD * Rules_Dependencies(double a1)
   int v3; // ecx
   int itemBuffer; // [esp-1Ch] [ebp-20h] BYREF
 
-  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aDependencies_0, 0, 1);
   if ( result != (_DWORD *)-1 )
   {
     result = Rules_ResolveFactOrInstanceArg(&itemBuffer, aDependencies_0, v2, a1);
@@ -292,7 +292,7 @@ _DWORD * Rules_Dependents(double a1)
   int v3; // ecx
   int itemBuffer; // [esp-1Ch] [ebp-20h] BYREF
 
-  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aDependents_0, 0, 1);
   if ( result != (_DWORD *)-1 )
   {
     result = Rules_ResolveFactOrInstanceArg(&itemBuffer, aDependents_0, v2, a1);
@@ -320,10 +320,10 @@ _DWORD * Rules_ResolveFactOrInstanceArg(_DWORD *item, _BYTE *functionName, int a
   Rules_RtnUnknown(1, item, a4);
   theType = *(_DWORD *)(uintptr_t)(v5 + 4);
   if ( theType == 6 || theType == 7 )
-    return *(_DWORD **)(uintptr_t)(v5 + 8);
+    return (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 8);
   if ( theType == 1 )
   {
-    foundEntity = (_DWORD *)(uintptr_t)Rules_FindFactByIndex();
+    foundEntity = (_DWORD *)(uintptr_t)Rules_FindFactByIndex(*(int *)((uintptr_t)(unsigned int)item[2] + 16));
     if ( foundEntity )
       return foundEntity;
     sprintf_(numberBuffer, "f-%ld", *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v11 + 8) + 16));
@@ -338,7 +338,7 @@ _DWORD * Rules_ResolveFactOrInstanceArg(_DWORD *item, _BYTE *functionName, int a
   foundEntity = Instance_FindByName(*(_DWORD *)(uintptr_t)(v5 + 8));
   if ( !foundEntity )
   {
-    itemName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 8) + 16);
+    itemName = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 8) + 16);
 LABEL_8:
     Rules_ReportCantFindItem(v7, (int)(intptr_t)itemName);
   }
@@ -634,11 +634,11 @@ signed int  Rules_PrintDataObject(int logicalName, int argPtr)
 
   theType = *(_DWORD *)(uintptr_t)(argPtr + 4);
   if ( theType < 4 )
-    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), *(int **)(uintptr_t)(argPtr + 8));
+    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(argPtr + 8));
   if ( theType <= 4 )
     return Lexer_OutputFieldRange(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 8), *(_DWORD *)(uintptr_t)(argPtr + 16), *(_DWORD *)(uintptr_t)(argPtr + 12), 1);
   if ( theType <= 8 || theType == 105 )
-    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), *(int **)(uintptr_t)(argPtr + 8));
+    return Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(argPtr + 4), (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(argPtr + 8));
   Output_Write(logicalName, (int)(intptr_t)aUnknownprintty, argPtr);
   Rules_PrintLongInteger(v5, *(_DWORD *)(uintptr_t)(v5 + 4));
   result = Output_Write(logicalName, (int)(intptr_t)asc_5048FC, v6);
@@ -672,7 +672,7 @@ _DWORD * Rules_SetMultifieldErrorValue(int returnValue)
 __int16 * Rules_ValueInstall(int vPtr, int a2)
 {
   if ( *(_DWORD *)(uintptr_t)(vPtr + 4) == 4 )
-    return Rules_InstallMultifield(*(__int16 **)(uintptr_t)(vPtr + 8));
+    return Rules_InstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(vPtr + 8));
   else
     return (__int16 *)(uintptr_t)Rules_AtomInstall(*(_DWORD *)(uintptr_t)(vPtr + 4), *(_DWORD *)(uintptr_t)(vPtr + 8), a2);
 }
@@ -681,9 +681,9 @@ __int16 * Rules_ValueInstall(int vPtr, int a2)
 __int16 * Rules_ValueDeinstall(int vPtr, int a2)
 {
   if ( *(_DWORD *)(uintptr_t)(vPtr + 4) == 4 )
-    return Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(vPtr + 8));
+    return Rules_DeinstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(vPtr + 8));
   else
-    return (__int16 *)(uintptr_t)Rules_AtomDeinstall(*(_DWORD *)(uintptr_t)(vPtr + 4), *(__int16 **)(uintptr_t)(vPtr + 8), a2);
+    return (__int16 *)(uintptr_t)Rules_AtomDeinstall(*(_DWORD *)(uintptr_t)(vPtr + 4), (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(vPtr + 8), a2);
 }
 
 //----- (0048F790) --------------------------------------------------------
@@ -1064,7 +1064,7 @@ _DWORD * Rules_UpdateBetaMemoryOnRetract(_DWORD *result, int theBind, int deferJ
       if ( result )
         goto LABEL_3;
       *(_BYTE *)(uintptr_t)currentMatch &= ~0x20u;
-      v8 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+      v8 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
       if ( v8 )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1093,7 +1093,7 @@ _DWORD * Rules_UpdateBetaMemoryOnRetract(_DWORD *result, int theBind, int deferJ
       }
       else if ( deferJoinDrive )
       {
-        v11 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+        v11 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
         if ( v11 )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1366,8 +1366,9 @@ int  Rules_FlushDeferredRetractQueue(double a1)
   {
     do
     {
-      for ( i = *(char **)(uintptr_t)(g_ClipsDeferredJoinDriveListHead + 4); i; i = *(char **)(uintptr_t)(v2 + 28) )
-        Rules_DriveJoinNetwork(*(int **)(uintptr_t)g_ClipsDeferredJoinDriveListHead, i, 0, a1);
+      /* loc_4902DC: `mov ecx,[ecx+1Ch]` - the cursor advances from itself. */
+      for ( i = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsDeferredJoinDriveListHead + 4); i; i = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)((uintptr_t)i + 28) )
+        Rules_DriveJoinNetwork((int *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsDeferredJoinDriveListHead, i, 0, a1);
       nextEntry = *(_DWORD *)(uintptr_t)(g_ClipsDeferredJoinDriveListHead + 8);
       g_ClipsMemFreeListTemp = g_ClipsDeferredJoinDriveListHead;
       *(_DWORD *)(uintptr_t)g_ClipsDeferredJoinDriveListHead = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);

@@ -34,11 +34,12 @@ BOOL  Rules_ClearFacts(double a1)
 // 51A160: using guessed type int dword_51A160;
 
 //----- (0047AB20) --------------------------------------------------------
-int Rules_FindFactByIndex(void)
+int Rules_FindFactByIndex(int target_index)
 {
   int result; // eax
-  int target_index; // ecx
 
+  /* sub_47AB20: `mov ecx, eax` - the fact index arrives in eax; IDA lost the
+     parameter and left target_index undefined. */
   result = Rules_GetNextFact(0);
   if ( !result )
     return 0;
@@ -141,71 +142,63 @@ _DWORD * Rules_AssertCommand(uintptr_t returnValue, uintptr_t a2, double eval_co
 //----- (0047ADD0) --------------------------------------------------------
 void  Rules_RetractCommand(int a1, int a2, double a3)
 {
-  __int16 *argExpr; // ecx
+  uintptr_t argExpr; // ecx
   int i; // esi
-  int valueString; // ecx
   int fact; // eax
   int factIndex; // edx
-  int curArg; // ecx
-  int v9; // ecx
-  int v10; // ecx
-  int resultObj; // [esp-4h] [ebp-3Ch] BYREF
-  int arg_type; // [esp+0h] [ebp-38h]
-  int arg_value; // [esp+4h] [ebp-34h]
+  /* var_3C/var_38/var_34 are ONE 24-byte DATA_OBJECT (`mov edx, esp` at 47ADE9);
+     IDA split it into resultObj/arg_type/arg_value and lost the list cursor. */
+  _DWORD parsed[6]; // [esp+0h] BYREF
   _BYTE buffer[24]; // [esp+14h] [ebp-24h] BYREF
   int v15 CLASH95_UNUSED; // [esp+2Ch] [ebp-Ch]
   int v16 CLASH95_UNUSED; // [esp+30h] [ebp-8h]
 
   v16 = a2;
   v15 = a1;
-  argExpr = *(__int16 **)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  /* 47ADD9: `mov ecx, ds:dword_51A960; mov ecx,[ecx+6]` - 32-BIT load. */
+  argExpr = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 1; argExpr; ++i )
   {
-    while ( 1 )
+    Parser_ParseForm((__int16 *)argExpr, parsed, (int)argExpr, a3);
+    if ( parsed[1] == 1 )
     {
-      Parser_ParseForm(argExpr, &resultObj, (int)(intptr_t)argExpr, a3);
-      if ( arg_type != 1 )
-        break;
-      if ( *(int *)(uintptr_t)(arg_value + 16) < 0 )
+      factIndex = *(int *)((uintptr_t)(unsigned int)parsed[2] + 16);
+      if ( factIndex < 0 )
       {
         Parser_ReportError(i, (int)(intptr_t)aFactAddressFac);
         return;
       }
-      fact = Rules_FindFactByIndex();
-      if ( !fact )
+      fact = Rules_FindFactByIndex(factIndex);
+      if ( fact )
       {
-        a3 = sprintf_(buffer, "f-%ld", factIndex);
-        Rules_ReportCantFindItem(v9, (int)(intptr_t)buffer);
-        goto LABEL_6;
+        Rules_RetractFact(fact, a3);
       }
-LABEL_5:
-      Rules_RetractFact(fact, a3);
-LABEL_6:
-      argExpr = *(__int16 **)(uintptr_t)(curArg + 10);
-      ++i;
-      if ( !argExpr )
-        return;
+      else
+      {
+        /* loc_47AE39: sprintf(buf,"f-%ld",idx); ReportCantFindItem("fact", buf) */
+        a3 = sprintf_(buffer, "f-%ld", factIndex);
+        Rules_ReportCantFindItem((int)(intptr_t)aFact, (int)(intptr_t)buffer);
+      }
     }
-    if ( arg_type == 6 )
+    else if ( parsed[1] == 6 )
     {
-      fact = arg_value;
-      goto LABEL_5;
+      Rules_RetractFact(parsed[2], a3);   /* loc_47AEB2 */
     }
-    if ( arg_type == 2 && !strcmp_(valueString, asc_502790) )
+    else if ( parsed[1] == 2
+           && !strcmp_(*(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16), asc_502790) )
     {
       Rules_RemoveAllFacts(a3);
       return;
     }
-    Parser_ReportError(i, (int)(intptr_t)aFactAddressFac);
-    Lexer_ErrorRecover(1);
-    argExpr = *(__int16 **)(uintptr_t)(v10 + 10);
+    else
+    {
+      Parser_ReportError(i, (int)(intptr_t)aFactAddressFac);
+      Lexer_ErrorRecover(1);
+    }
+    /* loc_47AE16 / 47AE9E: `mov ecx,[ecx+0Ah]` - the cursor advances from itself. */
+    argExpr = (uintptr_t)(unsigned int)*(_DWORD *)(argExpr + 10);
   }
 }
-// 47AE16: variable 'v8' is possibly undefined
-// 47AE44: variable 'v7' is possibly undefined
-// 47AE55: variable 'v9' is possibly undefined
-// 47AE72: variable 'v5' is possibly undefined
-// 47AE9E: variable 'v10' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A960: using guessed type int dword_51A960;
@@ -220,7 +213,7 @@ int  Rules_SetFactDuplicationCommand(int a1, double a2)
 
   v6[8] = a1;
   old_flag = Rules_GetFactDuplicationFlag();
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSetFactDuplica, 0, 1) == -1 )
     return v4;
   Rules_RtnUnknown(1, v6, a2);
   new_flag = 1;
@@ -239,7 +232,7 @@ int Rules_GetFactDuplicationCommand(void)
   int v0; // ecx
 
   Rules_GetFactDuplicationFlag();
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetFactDuplica, 0, 0);
   return v0;
 }
 // 47AF6B: variable 'v0' is possibly undefined
@@ -251,7 +244,7 @@ int  Rules_FactIndexFunction(double a1)
   _DWORD v2[2]; // [esp-4h] [ebp-20h] BYREF
   int fact; // [esp+4h] [ebp-18h]
 
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aFactIndex, 0, 1);
   if ( result != -1 )
   {
     Rules_RtnUnknown(1, v2, a1);
@@ -283,11 +276,11 @@ signed int  Rules_FactsCommand(double frame)
   int end; // ecx
   int moduleName; // ecx
   int v9; // ecx
-  int theValue; // [esp+0h] [ebp-30h] BYREF
-  int arg_type; // [esp+4h] [ebp-2Ch]
-  int argValue; // [esp+8h] [ebp-28h]
+  _DWORD theValue[6]; // [esp+0h] [ebp-30h] BYREF
+  /* stack alias of theValue[1] */
+  /* stack alias of theValue[2]: the DATA_OBJECT value slot */
 
-  result = Lexer_TokenExpect(4);
+  result = Lexer_TokenExpect((int)(intptr_t)aFacts_1, 2, 4);
   v2 = result;
   argumentCount = result;
   if ( result == -1 )
@@ -295,10 +288,10 @@ signed int  Rules_FactsCommand(double frame)
   Module_GetCurrent();
   if ( !v2 )
     return Rules_PrintFactRange((int)(intptr_t)g_IO_LogicalName_WDisplay, -1, -1, -1);
-  Rules_RtnUnknown(1, &theValue, frame);
-  if ( arg_type != 2 )
+  Rules_RtnUnknown(1, theValue, frame);
+  if ( theValue[1] != 2 )
   {
-    if ( arg_type != 1 || (start = *(_DWORD *)(uintptr_t)(argValue + 16), start < 0) )
+    if ( theValue[1] != 1 || (start = *(_DWORD *)(uintptr_t)(theValue[2] + 16), start < 0) )
     {
       Parser_ReportError(1, (int)(intptr_t)aSymbolOrPositi);
       Rules_SetEvaluationErrorFlag(1);
@@ -307,10 +300,10 @@ signed int  Rules_FactsCommand(double frame)
     arg_offset = 0;
     goto LABEL_8;
   }
-  if ( !Module_FindByName(*(_BYTE **)(uintptr_t)(argValue + 16)) && strcmp_(moduleName, asc_502790) )
+  if ( !Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(theValue[2] + 16)) && strcmp_(moduleName, asc_502790) )
   {
     Lexer_ErrorRecover(1);
-    return Rules_ReportCantFindItem(v9, *(_DWORD *)(uintptr_t)(argValue + 16));
+    return Rules_ReportCantFindItem(v9, *(_DWORD *)(uintptr_t)(theValue[2] + 16));
   }
   result = Rules_ParsePositiveIntArg(2, argumentCount, moduleName, frame);
   start = result;
@@ -422,13 +415,13 @@ _DWORD * Rules_AssertStringFunction(int returnValue, int a2, double a3)
   v6[8] = a2;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect(1);
+  result = (_DWORD *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aAssertString, 0, 1);
   if ( result != (_DWORD *)-1 )
   {
     result = (_DWORD *)(uintptr_t)Lexer_ParseValueList(1, v6, 3, a3);
     if ( result )
     {
-      result = Rules_Log(*(const char **)(uintptr_t)(v6[2] + 16), v5, a3);
+      result = Rules_Log((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6[2] + 16), v5, a3);
       if ( result )
       {
         *(_DWORD *)(uintptr_t)(returnValue + 4) = 6;
@@ -456,7 +449,7 @@ int  Rules_ParseSaveFactsCommand(double a1)
 
   save_scope = 1;
   template_list = 0;
-  v3 = Lexer_TokenExpect(1);
+  v3 = Lexer_TokenExpect((int)(intptr_t)aSaveFacts, 0, 1);
   arg_count = v3;
   if ( v3 == -1 )
     return 0;
@@ -480,7 +473,7 @@ int  Rules_ParseSaveFactsCommand(double a1)
       }
     }
     if ( arg_count > 2 )
-      template_list = *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10) + 10);
+      template_list = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10) + 10);
     result = Rules_SaveFactsToFile(filename, save_scope, template_list, a1);
     if ( result )
       return 1;
@@ -499,7 +492,7 @@ signed int  Rules_ParseLoadFactsCommand(DWORD a1, double a2)
   signed int result; // eax
   int v4; // ecx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aLoadFacts, 0, 1) == -1 )
     return 0;
   result = Rules_GetFileNameArg(1, v2, a2);
   if ( result )
@@ -562,7 +555,7 @@ signed int  Rules_SaveFactsToFile(const CHAR *fileName, int saveScope, _DWORD *i
       currentModule = Module_GetCurrent();
       for ( i = Rules_GetNextFactInModule(0); i; i = Rules_GetNextFactInModule(i) )
       {
-        if ( v21 == 1 && currentModule != **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(i + 16) + 8) )
+        if ( v21 == 1 && currentModule != *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(i + 16) + 8) )
           continue;
         if ( importList )
         {
@@ -681,7 +674,7 @@ _DWORD * Rules_CollectFactsToArray(
     }
     if ( v20 != 1 )
       break;
-    deftemplate = Rules_FindDeftemplateByName(*(_BYTE **)(uintptr_t)(arrayEntry[2] + 16), 1);
+    deftemplate = Rules_FindDeftemplateByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(arrayEntry[2] + 16), 1);
     if ( !deftemplate )
     {
       v15 = exprIndex;
@@ -705,7 +698,7 @@ LABEL_11:
   }
   if ( v20 != 2 )
     goto LABEL_11;
-  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_4, &tmpCnt, *(_BYTE **)(uintptr_t)(arrayEntry[2] + 16), 1, g_ClipsEvaluationError);
+  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_4, &tmpCnt, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(arrayEntry[2] + 16), 1, g_ClipsEvaluationError);
   if ( deftemplate )
     goto LABEL_11;
   v16 = exprIndex;
@@ -1158,7 +1151,7 @@ int Rules_FindConstructByName(void)
     return 0;
   while ( strcmp_(current, *current) )
   {
-    current = *(_DWORD **)(uintptr_t)(v1 + 48);
+    current = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v1 + 48);
     if ( !current )
       return 0;
   }
@@ -1180,7 +1173,7 @@ signed int  Rules_Save(const CHAR *fileName, int a2, DWORD a3)
   if ( result )
   {
     IO_SetFastSaveFile(result);
-    for ( i = g_Rules_SaveFunctionListHead; i; i = *(_DWORD *)(uintptr_t)(v6 + 12) )
+    for ( i = g_Rules_SaveFunctionListHead; i; i = *(_DWORD *)(uintptr_t)(i + 12) )
       (*(void (**)(void))(uintptr_t)(i + 4))();
     fclose_(v4);
     IO_SetFastSaveFile(0);
@@ -1229,7 +1222,7 @@ int Rules_ClearCommand(void)
 {
   int result; // eax
 
-  result = Lexer_TokenExpect(0);
+  result = Lexer_TokenExpect((int)(intptr_t)aClear, 0, 0);
   if ( result != -1 )
     return Rules_Clear();
   return result;
@@ -1238,7 +1231,7 @@ int Rules_ClearCommand(void)
 //----- (0047C3F0) --------------------------------------------------------
 void Rules_ResetCommand(void)
 {
-  if ( Lexer_TokenExpect(0) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aReset, 0, 0) != -1 )
     Rules_Reset();
 }
 

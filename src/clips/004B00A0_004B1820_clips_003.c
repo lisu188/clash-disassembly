@@ -26,7 +26,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
     while ( 1 )
     {
       handlerLink = (int *)(uintptr_t)g_ClipsMessageHandlerCursor;
-      handlerType = **(_DWORD **)(uintptr_t)g_ClipsMessageHandlerCursor & 6;
+      handlerType = *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsMessageHandlerCursor & 6;
       if ( handlerType != 2 )
         break;
       g_ClipsCurrentHandlerCore = g_ClipsMessageHandlerCursor;
@@ -35,13 +35,13 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
         MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], handlerLink, (int)(intptr_t)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
-          **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
-          *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
+          *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
+          (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
           tempResult,
           *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 24),
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
-      if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
         MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_50954C);
       result = 0;
       g_ClipsHaltExecutionFlag = 0;
@@ -56,21 +56,21 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
         MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], handlerLink, (int)(intptr_t)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
-          **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
-          *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
+          *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
+          (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
           returnBuffer,
           *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 24),
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
-      result = *(_DWORD **)(uintptr_t)g_ClipsCurrentHandlerCore;
-      if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+      result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore;
+      if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
         result = (_DWORD *)(uintptr_t)MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_50954C);
       g_ClipsHaltExecutionFlag = 0;
       if ( !g_ClipsMessageHandlerCursor || g_ClipsHaltExecution )
         goto LABEL_14;
-      while ( (**(_DWORD **)(uintptr_t)g_ClipsMessageHandlerCursor & 6) == 4 )
+      while ( (*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsMessageHandlerCursor & 6) == 4 )
       {
-        result = *(_DWORD **)(uintptr_t)(g_ClipsMessageHandlerCursor + 4);
+        result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMessageHandlerCursor + 4);
         g_ClipsMessageHandlerCursor = (int)(intptr_t)result;
         if ( !result )
           goto LABEL_14;
@@ -79,7 +79,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
     do
     {
       afterLink = (int *)(uintptr_t)g_ClipsMessageHandlerCursor;
-      result = (_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)g_ClipsMessageHandlerCursor & 6);
+      result = (_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsMessageHandlerCursor & 6);
       if ( result != (_DWORD *)6 )
         break;
       g_ClipsCurrentHandlerCore = g_ClipsMessageHandlerCursor;
@@ -88,13 +88,13 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
         MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], afterLink, (int)(intptr_t)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
-          **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
-          *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
+          *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 12) + 8),
+          (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 28),
           tempResult,
           *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore + 24),
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
-      if ( (**(_BYTE **)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)g_ClipsCurrentHandlerCore & 0x10) != 0 )
         MessageHandler_TraceHandlerCall((int)(intptr_t)g_IO_LogicalNameTable_WTrace[0], (int *)(uintptr_t)g_ClipsCurrentHandlerCore, (int)(intptr_t)asc_50954C);
       result = (_DWORD *)(uintptr_t)g_ClipsMessageHandlerCursor;
       g_ClipsHaltExecutionFlag = 0;
@@ -160,7 +160,7 @@ int Class_LookupCurrentScopedName(void)
   result = *(_DWORD *)(uintptr_t)(4 * Class_HashClassName(v3) + g_DefclassHashTable);
   if ( !result )
     return 0;
-  while ( nameSymbol != *(int **)(uintptr_t)result || (*(_BYTE *)(uintptr_t)(result + 20) & 2) == 0 && v5 != **(_DWORD **)(uintptr_t)(result + 8) )
+  while ( nameSymbol != (int *)(uintptr_t)*(_DWORD *)(uintptr_t)result || (*(_BYTE *)(uintptr_t)(result + 20) & 2) == 0 && v5 != *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 8) )
   {
     result = *(_DWORD *)(uintptr_t)(result + 100);
     if ( !result )
@@ -196,7 +196,7 @@ int * Class_LookupByQualifiedName(_BYTE *qualifiedName)
   result = Rules_FindSymbolEntry(v4);
   if ( result )
   {
-    result = *(int **)(uintptr_t)(g_DefclassHashTable + 4 * Class_HashClassName((int)(intptr_t)result));
+    result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefclassHashTable + 4 * Class_HashClassName((int)(intptr_t)result));
     if ( !result )
       return 0;
     while ( v6 != *result || theModule != *(_DWORD *)(uintptr_t)result[2] )
@@ -253,7 +253,7 @@ int *__fastcall Class_LookupByModule(int a1 CLASH95_UNUSED, _BYTE *className)
   nameSymbol = result;
   if ( result )
   {
-    result = *(int **)(uintptr_t)(4 * Class_HashClassName((int)(intptr_t)result) + g_DefclassHashTable);
+    result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(4 * Class_HashClassName((int)(intptr_t)result) + g_DefclassHashTable);
     if ( !result )
       return 0;
     while ( nameSymbol != (int *)(uintptr_t)*result || v4 && v4 != *(_DWORD *)(uintptr_t)result[2] )
@@ -433,7 +433,7 @@ signed int  Class_ParseClassReference(int **classOut, int a2, double a3)
   result = Lexer_ParseValueList(1, argBuffer, 2, a3);
   if ( result )
   {
-    classPtr = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argValue + 16));
+    classPtr = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argValue + 16));
     *classOut = classPtr;
     if ( classPtr )
     {
@@ -519,6 +519,9 @@ BOOL  Class_PrepareUndefineCheck(double a1)
   int v1; // edx
 
   Instance_PrintClassInstanceSummary(a1);
+  /* 4B0906: `mov edx, ds:dword_51A96C` saves the depth BEFORE the zero-test;
+     IDA dropped the load and left v1 undefined (see 4B0926 note below). */
+  v1 = g_ClipsCurrentEvaluationDepth;
   if ( !g_ClipsCurrentEvaluationDepth )
     g_ClipsCurrentEvaluationDepth = -1;
   Instance_PurgeDeletedInstances();
@@ -619,7 +622,7 @@ signed int  Class_PrintName(int theDefclass, int linefeedFlag)
   currentModule = Module_GetCurrent();
   if ( currentModule != *v5 && (*(_BYTE *)(uintptr_t)(theDefclass + 20) & 2) == 0 )
   {
-    Name = Module_GetName(**(_DWORD **)(uintptr_t)(theDefclass + 8));
+    Name = Module_GetName(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefclass + 8));
     Output_Write(v7, Name, v7);
     Output_Write(v8, (int)(intptr_t)asc_50964C, v8);
   }
@@ -931,7 +934,7 @@ unsigned int * Class_InternSlotName(_DWORD *slotNameSymbol, int newSlotID, int u
   _DWORD *putNameAlloc; // [esp+0h] [ebp-14h]
 
   slotNameID = newSlotID;
-  existingEntry = *(_DWORD **)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + 4 * (11329 * (slotNameSymbol[3] << 16 >> 18) % 0xA7u));
+  existingEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + 4 * (11329 * (slotNameSymbol[3] << 16 >> 18) % 0xA7u));
   for ( i = 11329 * (slotNameSymbol[3] << 16 >> 18) % 0xA7u; existingEntry; existingEntry = (_DWORD *)(uintptr_t)existingEntry[5] )
   {
     if ( slotNameSymbol == (_DWORD *)(uintptr_t)existingEntry[3] )
@@ -952,7 +955,7 @@ unsigned int * Class_InternSlotName(_DWORD *slotNameSymbol, int newSlotID, int u
   }
   else
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 112);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
@@ -1114,7 +1117,7 @@ int  Class_DestroyRecord(int theClass)
   if ( count )
   {
     Mem_SmallBlockFree((_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(theClass + 56), 4 * count);
-    Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(theClass + 60), 4 * (*(_DWORD *)(uintptr_t)(theClass + 76) + 1));
+    Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theClass + 60), 4 * (*(_DWORD *)(uintptr_t)(theClass + 76) + 1));
   }
   count = *(_DWORD *)(uintptr_t)(theClass + 64);
   if ( count )
@@ -1280,7 +1283,7 @@ int  Class_DeleteRecursive(int theClass)
   {
     while ( 1 )
     {
-      Class_DeleteRecursive(**(_DWORD **)(uintptr_t)(theClass + 42));
+      Class_DeleteRecursive(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theClass + 42));
       subclassCount = *(unsigned __int16 *)(uintptr_t)(theClass + 40);
       if ( (unsigned __int16)subclassCount == v2 )
         return v2 ^ subclassCount;

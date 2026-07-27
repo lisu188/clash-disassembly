@@ -419,7 +419,7 @@ int Parser_FreeLoopContextStack(void)
   {
     do
     {
-      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(g_ClipsLoopContextStackTop + 4));
+      AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsLoopContextStackTop + 4));
       g_ClipsMemFreeListTemp = g_ClipsLoopContextStackTop;
       *(_DWORD *)(uintptr_t)g_ClipsLoopContextStackTop = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
       result = g_ClipsMemFreeListTemp;
@@ -585,7 +585,7 @@ int  Parser_ParseLoopForCount(int topNode, int readSource)
       goto LABEL_18;
     v14 = Rules_AddIntegerValue(1);
     *(_DWORD *)(uintptr_t)(topNode + 6) = AST_NewNode(1, (int)(intptr_t)v14);
-    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseFunctionCallExpr(readSource, *(_BYTE **)(uintptr_t)(tokenValue + 16));
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) = Parser_ParseFunctionCallExpr(readSource, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(tokenValue + 16));
     if ( *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
       goto LABEL_3;
 LABEL_23:
@@ -598,7 +598,7 @@ LABEL_23:
   if ( !*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10) )
     goto LABEL_23;
 LABEL_3:
-  if ( Rules_ExpressionConstraintsCompatible(*(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10)) )
+  if ( Rules_ExpressionConstraintsCompatible((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 10)) )
     goto LABEL_18;
   Parser_NextToken(readSource, (int)(intptr_t)&token);
   if ( token == 2 && !strcmp_(v8, aDo) )
@@ -874,9 +874,9 @@ int  Parser_ParseBind(int topNode, int readSource)
   }
   *(_DWORD *)(uintptr_t)(topNode + 6) = AST_NewNode(2, varSymbol);
   boundVar = varSymbol;
-  if ( tokenType == 13 && (v6 = Rules_FindImportExportConstruct(aDefglobal_4, &v14, *(_BYTE **)(uintptr_t)(varSymbol + 16), 1, 0)) != 0 )
+  if ( tokenType == 13 && (v6 = Rules_FindImportExportConstruct(aDefglobal_4, &v14, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(varSymbol + 16), 1, 0)) != 0 )
   {
-    **(_WORD **)(uintptr_t)(topNode + 6) = 60;
+    *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(topNode + 6) = 60;
     *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(topNode + 6) + 2) = v6;
   }
   else if ( tokenType == 13 )
@@ -886,7 +886,7 @@ LABEL_19:
     AST_Free(topNode);
     return 0;
   }
-  v7 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+  v7 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( v7 )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -909,7 +909,7 @@ LABEL_19:
   if ( *(_WORD *)(uintptr_t)varNode != 60 )
   {
     if ( *(_DWORD *)(uintptr_t)(varNode + 10) )
-      varConstraint = Rules_BuildLHSNodeFromToken(*(__int16 **)(uintptr_t)(varNode + 10));
+      varConstraint = Rules_BuildLHSNodeFromToken((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(varNode + 10));
     Rules_PushNamedContextEntry(boundVar, varConstraint);
   }
   return topNode;
@@ -1070,12 +1070,12 @@ int  Parser_ParseSwitch(int topNode, int readSource)
       IO_OutWriteToken(asc_50A54C);
       if ( !*(_DWORD *)(uintptr_t)(caseNode + 10) )
         goto LABEL_5;
-      existingCaseValue = *(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(switchNode + 6) + 10);
-      if ( existingCaseValue != *(__int16 **)(uintptr_t)(caseNode + 10) )
+      existingCaseValue = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(switchNode + 6) + 10);
+      if ( existingCaseValue != (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(caseNode + 10) )
       {
         while ( 1 )
         {
-          newCaseValue = *(__int16 **)(uintptr_t)(caseNode + 10);
+          newCaseValue = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(caseNode + 10);
           if ( *existingCaseValue == *newCaseValue
             && *(_DWORD *)(existingCaseValue + 1) == *(_DWORD *)(newCaseValue + 1)
             && AST_NodeListsEqual(*(__int16 **)(existingCaseValue + 3), *(__int16 **)(newCaseValue + 3)) )
@@ -1083,7 +1083,7 @@ int  Parser_ParseSwitch(int topNode, int readSource)
             break;
           }
           existingCaseValue = *(__int16 **)(existingCaseValue + 5);
-          if ( existingCaseValue == *(__int16 **)(uintptr_t)(caseNode + 10) )
+          if ( existingCaseValue == (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(caseNode + 10) )
             goto LABEL_15;
         }
         Rules_PrintErrorID((int)(intptr_t)aPrcdrpsr, 3, 1);
@@ -1245,7 +1245,7 @@ signed int  Rules_PushNamedContextEntry(int contextName, _DWORD *constraint)
   else
   {
 LABEL_7:
-    freeBlock = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+    freeBlock = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     if ( freeBlock )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -1294,7 +1294,7 @@ int  Rules_RemoveNamedContextEntry(int result)
       *(_DWORD *)(uintptr_t)(i + 8) = *(_DWORD *)(uintptr_t)(entry + 8);
     else
       g_ClipsLoopContextStackTop = *(_DWORD *)(uintptr_t)(entry + 8);
-    AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(entry + 4));
+    AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(entry + 4));
     g_ClipsMemFreeListTemp = (int)(intptr_t)v4;
     *v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     result = g_ClipsMemFreeListTemp;

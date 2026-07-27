@@ -19,7 +19,7 @@ signed int  Method_FindByIndex(int gfunc, int theIndex)
   result = 0;
   if ( !methodCount )
     return -1;
-  for ( i = *(_DWORD **)(uintptr_t)(gfunc + 28); theIndex != *i; i += 10 )
+  for ( i = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(gfunc + 28); theIndex != *i; i += 10 )
   {
     if ( (unsigned int)++result >= *(_DWORD *)(uintptr_t)(gfunc + 32) )
       return -1;
@@ -38,15 +38,15 @@ signed int  Defgeneric_PreviewGenericCommand(double a1)
   int v6; // ecx
   int v7; // ecx
   int v8; // ecx
-  int v9; // [esp+0h] [ebp-34h] BYREF
-  int v10; // [esp+8h] [ebp-2Ch]
+  _DWORD v9[6]; // [esp+0h] [ebp-34h] BYREF
+  /* stack alias of v9[2]: the DATA_OBJECT value slot */
   int oldGeneric; // [esp+18h] [ebp-1Ch]
 
   g_ClipsEvaluationError = 0;
-  result = Lexer_ParseValueList(1, &v9, 2, a1);
+  result = Lexer_ParseValueList(1, v9, 2, a1);
   if ( result )
   {
-    generic = Defgeneric_LookupWithImports(*(_BYTE **)(uintptr_t)(v10 + 16));
+    generic = Defgeneric_LookupWithImports((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9[2] + 16));
     if ( generic )
     {
       oldReentryFlag = Rules_GetReentryGuardFlag();
@@ -57,7 +57,7 @@ signed int  Defgeneric_PreviewGenericCommand(double a1)
       genericName = Rules_GetConstructNameString(generic);
       argCount = AST_CountListNodes(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10));
       ProcParam_PushEvaluatedArgumentFrame(
-        *(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
+        (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10),
         argCount,
         (int)(intptr_t)aGenericFunct_1,
         genericName,
@@ -78,7 +78,7 @@ signed int  Defgeneric_PreviewGenericCommand(double a1)
     {
       Rules_PrintErrorID((int)(intptr_t)aGenrcfun, 3, 0);
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aUnableToFindGe, v6);
-      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v10 + 16), v7);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(uintptr_t)(v9[2] + 16), v7);
       return Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunctionPrev, v8);
     }
   }
@@ -233,7 +233,7 @@ signed int  Defgeneric_CheckMethodExists(int functionName, int generic, int meth
   int v7; // eax
   int v8; // ecx
   int v9; // ecx
-  int v10; // ecx
+  int v9_alias; // ecx
   int v11; // ecx
   int v12; // ecx
   int v13; // ecx
@@ -246,7 +246,7 @@ signed int  Defgeneric_CheckMethodExists(int functionName, int generic, int meth
     v7 = Rules_GetConstructNameString(generic);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v7, v8);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50B158, v9);
-    Rules_PrintLongInteger(v10, v10);
+    Rules_PrintLongInteger(v9_alias, v9_alias);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aInFunction_2, v11);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], functionName, v12);
     Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)a__23, v13);
@@ -258,7 +258,7 @@ signed int  Defgeneric_CheckMethodExists(int functionName, int generic, int meth
 // 4C878C: variable 'v6' is possibly undefined
 // 4C87A2: variable 'v8' is possibly undefined
 // 4C87B1: variable 'v9' is possibly undefined
-// 4C87BD: variable 'v10' is possibly undefined
+// 4C87BD: variable 'v9_alias' is possibly undefined
 // 4C87CC: variable 'v11' is possibly undefined
 // 4C87D8: variable 'v12' is possibly undefined
 // 4C87E7: variable 'v13' is possibly undefined
@@ -275,7 +275,7 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
-  int v10; // ecx
+  int v9_alias; // ecx
   int v11; // ecx
   int v12; // ecx
   int v13; // eax
@@ -297,7 +297,7 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
         Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, v6, v7);
         Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_50B158, v8);
         Defgeneric_AppendMethodSignatureText(buf, 255, v9, methodOffset + *(_DWORD *)(uintptr_t)(v9 + 28));
-        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)buf, v10);
+        Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)buf, v9_alias);
         foundApplicable = 1;
         Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)asc_50B160, v11);
       }
@@ -321,7 +321,7 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
 // 4C88B4: variable 'v7' is possibly undefined
 // 4C88C3: variable 'v8' is possibly undefined
 // 4C88D4: variable 'v9' is possibly undefined
-// 4C88E0: variable 'v10' is possibly undefined
+// 4C88E0: variable 'v9_alias' is possibly undefined
 // 4C88F4: variable 'v11' is possibly undefined
 // 4C890C: variable 'v12' is possibly undefined
 // 4C892A: variable 'v14' is possibly undefined
@@ -359,7 +359,7 @@ int  Defgeneric_PrintModuleIndexOrNull(int fp, int theModule, int imageID)
 //----- (004C89C0) --------------------------------------------------------
 int  Defgeneric_PrintModuleReference(int fp, int imageID)
 {
-  return Output_WriteFormatted(imageID, **(_DWORD **)(uintptr_t)(g_DefgenericCodeGenItem + 20), fp, (int)(intptr_t)aMihsSD_DD, **(_DWORD **)(uintptr_t)(g_DefgenericCodeGenItem + 20));
+  return Output_WriteFormatted(imageID, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20), fp, (int)(intptr_t)aMihsSD_DD, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20));
 }
 // 54E8CC: using guessed type int dword_54E8CC;
 
@@ -479,7 +479,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                genericArrayVersion,
                headerFPLocal,
                (char)(intptr_t)aDefgeneric_5,
-               *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4),
+               (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4),
                genericReopen,
                genericNameBuf);
         genericFile = openedGenericFile;
@@ -493,7 +493,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
           nameBuffer = methodNameBuf;
           structNamesForMethod = *(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20);
           v24 = methodReopen;
-          methodFile = Rules_ConstructCodeFileOpen(methodFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, methodArrayVersion, headerFPLocal, (char)(intptr_t)aDefmethod_2, *(const char **)(uintptr_t)(structNamesForMethod + 8), methodReopen, methodNameBuf);
+          methodFile = Rules_ConstructCodeFileOpen(methodFile, fileNameLocal, imageIDLocal, pathNameLocal, &version, methodArrayVersion, headerFPLocal, (char)(intptr_t)aDefmethod_2, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(structNamesForMethod + 8), methodReopen, methodNameBuf);
           if ( !methodFile )
             goto LABEL_34;
           numMethods = *(_DWORD *)(uintptr_t)(i + 32);
@@ -521,7 +521,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                         restrictionArrayVersion,
                         headerFPLocal,
                         (char)(intptr_t)aRestriction,
-                        *(const char **)(uintptr_t)(structNamesForRestriction + 12),
+                        (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(structNamesForRestriction + 12),
                         restrictionReopen,
                         restrictionNameBuf);
                 if ( !restrictionFile )
@@ -548,7 +548,7 @@ int  Defgeneric_DefgenericsToCode(const char *fileName, const char *pathName, in
                               typeArrayVersion,
                               headerFPLocal,
                               (char)(intptr_t)aVoid_1,
-                              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 16),
+                              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 16),
                               typeReopen,
                               typeNameBuf);
                       if ( !typeFile )
@@ -619,20 +619,20 @@ int  Defgeneric_CloseCodeFiles(int *fileHandles, _DWORD *versions, int a3, int a
   int v7; // eax
   int result; // eax
   int v9; // [esp+0h] [ebp-1Ch] BYREF
-  int v10; // [esp+4h] [ebp-18h] BYREF
+  int v9b; // [esp+4h] [ebp-18h] BYREF
   _DWORD *versionEnd; // [esp+8h] [ebp-14h]
   int offset; // [esp+Ch] [ebp-10h]
 
   v9 = a3;
   versionPtr = versions;
   offset = a4;
-  v10 = 0;
+  v9b = 0;
   versionEnd = versions + 5;
   do
   {
     v9 = a3;
     v7 = *fileHandles++;
-    *(fileHandles - 1) = Rules_ConstructCodeFileClose(v7, &v9, a3, &v10, versionPtr, offset);
+    *(fileHandles - 1) = Rules_ConstructCodeFileClose(v7, v9, a3, &v9b, versionPtr, offset);
     result = offset + 12;
     ++versionPtr;
     offset += 12;
@@ -649,18 +649,18 @@ int  Defgeneric_ModuleToCode(int fp, int theModule, int imageID)
   int v6; // edx
   int v7; // ecx
   char v9; // [esp+0h] [ebp-Ch]
-  char v10; // [esp+0h] [ebp-Ch]
+  char v9b; // [esp+0h] [ebp-Ch]
 
   Output_WriteFormatted(imageID, theModule, fp, (int)(intptr_t)asc_50B214, v9);
   Rules_WriteConstructModuleItemHeaderToCode(fp, v4, v5, g_DefgenericModuleItemIndex, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4));
-  return Output_WriteFormatted(v7, v6, fp, (int)(intptr_t)asc_50B218, v10);
+  return Output_WriteFormatted(v7, v6, fp, (int)(intptr_t)asc_50B218, v9b);
 }
 // 4C90DB: variable 'v9' is possibly undefined
 // 4C90F8: variable 'v4' is possibly undefined
 // 4C90F8: variable 'v5' is possibly undefined
 // 4C9103: variable 'v7' is possibly undefined
 // 4C9103: variable 'v6' is possibly undefined
-// 4C9103: variable 'v10' is possibly undefined
+// 4C9103: variable 'v9b' is possibly undefined
 // 54E6A4: using guessed type int dword_54E6A4;
 // 54E8CC: using guessed type int dword_54E8CC;
 
@@ -668,7 +668,7 @@ int  Defgeneric_ModuleToCode(int fp, int theModule, int imageID)
 int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndices, int moduleIndex, int a6 CLASH95_UNUSED, int methodArrayIndex)
 {
   int v9; // edx
-  int v10; // ecx
+  int v9_alias; // ecx
   int v11; // ecx
   int v12; // edx
   int v13; // edx
@@ -678,8 +678,8 @@ int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndic
   char v18; // [esp+0h] [ebp-Ch]
 
   Output_WriteFormatted(gfunc, imageID, fp, (int)(intptr_t)asc_50B214, v16);
-  Rules_WriteConstructHeaderToCode(fp, gfunc, maxIndices, moduleIndex, **(_DWORD **)(uintptr_t)(g_DefgenericCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4));
-  Output_WriteFormatted(v10, v9, fp, (int)(intptr_t)a00_15, v17);
+  Rules_WriteConstructHeaderToCode(fp, gfunc, maxIndices, moduleIndex, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 4));
+  Output_WriteFormatted(v9_alias, v9, fp, (int)(intptr_t)a00_15, v17);
   v12 = *(_DWORD *)(uintptr_t)(gfunc + 28);
   if ( v12 )
     Output_WriteFormatted(methodArrayIndex, v12, fp, (int)(intptr_t)aSD_DD, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefgenericCodeGenItem + 20) + 8));
@@ -688,7 +688,7 @@ int  Defgeneric_SingleToCode(int fp, int imageID, int gfunc, signed int maxIndic
   return Output_WriteFormatted(v14, v13, fp, (int)(intptr_t)aU0, *(_DWORD *)(uintptr_t)(gfunc + 32));
 }
 // 4C911F: variable 'v16' is possibly undefined
-// 4C914E: variable 'v10' is possibly undefined
+// 4C914E: variable 'v9_alias' is possibly undefined
 // 4C914E: variable 'v9' is possibly undefined
 // 4C914E: variable 'v17' is possibly undefined
 // 4C9163: variable 'v11' is possibly undefined
@@ -704,7 +704,7 @@ int  Defgeneric_MethodToCode(int fp, int imageID, int restrictionArrayIndex, int
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
-  int v10; // edx
+  int v9_alias; // edx
   int v11; // ecx
   int v13; // edx
   char v14; // [esp+0h] [ebp-Ch]
@@ -721,15 +721,15 @@ int  Defgeneric_MethodToCode(int fp, int imageID, int restrictionArrayIndex, int
   {
     Output_WriteFormatted(v8, v7, fp, (int)(intptr_t)aNull_25, v14);
   }
-  Rules_ExpressionToCode(fp, *(__int16 **)(uintptr_t)(theMethod + 32), v9, restrictionArrayName);
-  return Output_WriteFormatted(v11, v10, fp, (int)(intptr_t)aNull_26, v14);
+  Rules_ExpressionToCode(fp, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theMethod + 32), v9, restrictionArrayName);
+  return Output_WriteFormatted(v11, v9_alias, fp, (int)(intptr_t)aNull_26, v14);
 }
 // 4C91EA: variable 'v8' is possibly undefined
 // 4C91EA: variable 'v7' is possibly undefined
 // 4C91EA: variable 'v14' is possibly undefined
 // 4C91F7: variable 'v9' is possibly undefined
 // 4C9202: variable 'v11' is possibly undefined
-// 4C9202: variable 'v10' is possibly undefined
+// 4C9202: variable 'v9_alias' is possibly undefined
 // 54E8CC: using guessed type int dword_54E8CC;
 
 //----- (004C9240) --------------------------------------------------------
@@ -738,7 +738,7 @@ int  Defgeneric_RestrictionToCode(int fp, int imageID, int typeArrayIndex, int t
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
-  int v10; // ecx
+  int v9_alias; // ecx
   char v12; // [esp+0h] [ebp-Ch]
   char v13; // [esp+0h] [ebp-Ch]
 
@@ -752,15 +752,15 @@ int  Defgeneric_RestrictionToCode(int fp, int imageID, int typeArrayIndex, int t
   {
     Output_WriteFormatted(v8, v7, fp, (int)(intptr_t)aNull_25, v13);
   }
-  Rules_ExpressionToCode(fp, *(__int16 **)(uintptr_t)(theRestriction + 4), v9, a5);
-  return Output_WriteFormatted(v10, *(_DWORD *)(uintptr_t)(theRestriction + 8), fp, (int)(intptr_t)aU, *(_DWORD *)(uintptr_t)(theRestriction + 8));
+  Rules_ExpressionToCode(fp, (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theRestriction + 4), v9, a5);
+  return Output_WriteFormatted(v9_alias, *(_DWORD *)(uintptr_t)(theRestriction + 8), fp, (int)(intptr_t)aU, *(_DWORD *)(uintptr_t)(theRestriction + 8));
 }
 // 4C924B: variable 'v12' is possibly undefined
 // 4C925F: variable 'v8' is possibly undefined
 // 4C925F: variable 'v7' is possibly undefined
 // 4C925F: variable 'v13' is possibly undefined
 // 4C926C: variable 'v9' is possibly undefined
-// 4C927B: variable 'v10' is possibly undefined
+// 4C927B: variable 'v9_alias' is possibly undefined
 // 54E8CC: using guessed type int dword_54E8CC;
 
 //----- (004C92B0) --------------------------------------------------------
@@ -1045,10 +1045,10 @@ unsigned int * Defgeneric_AddMethod(
   g_Defgeneric_SavedBusyCount = gfunc[5];
   if ( existingMethod )
   {
-    AST_DeinstallNodeChain(*(__int16 **)(uintptr_t)(existingMethod + 32));
+    AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(existingMethod + 32));
     AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(v33 + 32));
     if ( *(_DWORD *)(uintptr_t)(v34 + 36) )
-      Mem_SmallBlockFree((_DWORD *)(uintptr_t)methodSlot[9], strlen(*(const char **)(uintptr_t)(v34 + 36)) + 1);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)methodSlot[9], strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(v34 + 36)) + 1);
   }
   else if ( methodIndex && (existingIndex = Method_FindByIndex((int)(intptr_t)gfunc, methodIndex), foundIndex = existingIndex, existingIndex != -1) )
   {
@@ -1129,7 +1129,7 @@ unsigned int * Defgeneric_AddMethod(
       do
       {
         restrictionPtr = restrictionOffset + methodSlot[7];
-        *(_DWORD *)(uintptr_t)(restrictionPtr + 4) = AST_PackNodeChain(*(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(restrictions + 6) + 4));
+        *(_DWORD *)(uintptr_t)(restrictionPtr + 4) = AST_PackNodeChain((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(restrictions + 6) + 4));
         typeCount = sourceRestriction[2];
         *(_DWORD *)(uintptr_t)(restrictionPtr + 8) = typeCount;
         if ( copyRestrictions )
@@ -1152,7 +1152,7 @@ unsigned int * Defgeneric_AddMethod(
           sourceRestriction[2] = 0;
           *sourceRestriction = 0;
         }
-        AST_InstallNodeChain(*(__int16 **)(uintptr_t)(restrictionPtr + 4));
+        AST_InstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(restrictionPtr + 4));
         if ( *(_DWORD *)(uintptr_t)(restrictionPtr + 8) )
         {
           typeOffset = 0;
@@ -1244,7 +1244,7 @@ int  Method_FreeRestrictionChain(int result)
     AST_Free(*(_DWORD *)(uintptr_t)(restriction + 4));
     typeCount = *(_DWORD *)(uintptr_t)(v4 + 8);
     if ( typeCount )
-      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)v4, 4 * typeCount);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)v4, 4 * typeCount);
     g_ClipsMemFreeListTemp = v4;
     *(_DWORD *)(uintptr_t)v4 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     result = g_ClipsMemFreeListTemp;
@@ -1316,7 +1316,7 @@ signed int Defgeneric_ParseDeclaration(void)
   int v7; // eax
   int v8; // ecx
   int v9; // ecx
-  int v10; // ecx
+  int v9_alias; // ecx
   int Name; // eax
   int v12; // ecx
   int v14; // ecx
@@ -1354,7 +1354,7 @@ signed int Defgeneric_ParseDeclaration(void)
         v7 = Rules_GetConstructNameString(deffunction);
         Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], v7, v8);
         Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aImportedFromMo, v9);
-        Name = Module_GetName(v10);
+        Name = Module_GetName(v9_alias);
         Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], Name, (int)(intptr_t)g_IO_LogicalNameTable_WError[0]);
         Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aConflictsWithT, v12);
       }
@@ -1392,7 +1392,7 @@ signed int Defgeneric_ParseDeclaration(void)
 // 4C9C73: variable 'v6' is possibly undefined
 // 4C9C89: variable 'v8' is possibly undefined
 // 4C9C98: variable 'v9' is possibly undefined
-// 4C9C9F: variable 'v10' is possibly undefined
+// 4C9C9F: variable 'v9_alias' is possibly undefined
 // 4C9CBD: variable 'v12' is possibly undefined
 // 4C9CE4: variable 'v14' is possibly undefined
 // 4C9D0B: variable 'v15' is possibly undefined

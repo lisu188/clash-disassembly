@@ -255,7 +255,7 @@ signed int  Rules_MergeConstraintValueList(signed int result, int cdst, int csrc
   int v6; // ecx
 
   theType = result;
-  for ( i = *(__int16 **)(uintptr_t)(csrc + 6); i; i = *(__int16 **)(uintptr_t)(v6 + 10) )
+  for ( i = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(csrc + 6); i; i = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 10) )
   {
     while ( 1 )
     {
@@ -784,10 +784,10 @@ signed int  Rules_ParseRangeOrCardinalityAttribute(
     if ( v14 )
     {
       if ( Rules_CompareBoundedCEValues(
-             **(__int16 **)(uintptr_t)(constraints + 10),
+             *(__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 10),
              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(constraints + 10) + 2),
              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(constraints + 14) + 2),
-             **(__int16 **)(uintptr_t)(constraints + 14)) != 1 )
+             *(__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 14)) != 1 )
         return 1;
       Rules_PrintErrorID((int)(intptr_t)aCstrnpsr, 2, 1);
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMinimumRangeVa, v18);
@@ -797,10 +797,10 @@ signed int  Rules_ParseRangeOrCardinalityAttribute(
     else
     {
       if ( Rules_CompareBoundedCEValues(
-             **(__int16 **)(uintptr_t)(constraints + 18),
+             *(__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 18),
              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(constraints + 18) + 2),
              *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(constraints + 22) + 2),
-             **(__int16 **)(uintptr_t)(constraints + 22)) != 1 )
+             *(__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 22)) != 1 )
         return 1;
       Rules_PrintErrorID((int)(intptr_t)aCstrnpsr, 2, 1);
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aMinimumCardina, v20);
@@ -1327,11 +1327,11 @@ signed int  Rules_CEBindPatternAddressVariable(int thePattern, int *multifieldHe
     theValue = *(_DWORD *)(uintptr_t)(thePattern + 4);
     theType = 15;
     if ( (*(_BYTE *)(uintptr_t)(thePattern + 8) & 0x10) != 0 )
-      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(thePattern + 16));
+      AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(thePattern + 16));
     theConstraints = (_BYTE *)(uintptr_t)Rules_CreateLHSParseNode();
     *(_DWORD *)(uintptr_t)(thePattern + 16) = theConstraints;
     *theConstraints &= ~1u;
-    **(_BYTE **)(uintptr_t)(thePattern + 16) |= 0x40u;
+    *(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(thePattern + 16) |= 0x40u;
     *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(thePattern + 16) + 1) |= 1u;
     *(_BYTE *)(uintptr_t)(thePattern + 8) |= 0x10u;
   }

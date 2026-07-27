@@ -64,7 +64,7 @@ int * Rules_NormalizeNestedConnectives(int *ceNode, _DWORD *changedFlagPtr, int 
             v12 = Rules_NormalizeNestedConnectives((int)(intptr_t)child, (int)(intptr_t)&v14, mode);
             *(_DWORD *)(uintptr_t)(v13 + 68) = v12;
             *(_DWORD *)(uintptr_t)(v12 + 68) = nextChild;
-            prevChild = *(_DWORD **)(uintptr_t)(v13 + 68);
+            prevChild = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v13 + 68);
           }
           else
           {
@@ -108,7 +108,7 @@ _DWORD * Rules_FinalizeConjunctionChain(_DWORD *result)
   node = result;
   if ( *result == 82 )
   {
-    for ( i = result[16]; i; i = *(_DWORD *)(uintptr_t)(v3 + 68) )
+    for ( i = result[16]; i; i = *(_DWORD *)(uintptr_t)(i + 68) )
       result = (_DWORD *)Rules_FinalizeConjunctionChain(i);
   }
   else
@@ -245,7 +245,7 @@ int  Rules_CECollapseNotWrapper(int ceNode, _DWORD *changedFlag)
 LABEL_2:
   while ( 1 )
   {
-    child = *(_DWORD **)(uintptr_t)(ceNode + 64);
+    child = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(ceNode + 64);
     if ( !child )
       return ceNode;
     while ( 1 )
@@ -285,7 +285,7 @@ LABEL_2:
     child[16] = 0;
     child[17] = 0;
     AST_FreeNode((int)(intptr_t)child);
-    Rules_CECountPatternNodes(*(int **)(uintptr_t)(ceNode + 64), v11);
+    Rules_CECountPatternNodes((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(ceNode + 64), v11);
   }
 }
 // 4B925B: variable 'v5' is possibly undefined
@@ -314,7 +314,7 @@ _DWORD * Rules_CEMultiplyAndOverOr(_DWORD *andNode, int orList, int branchIndex)
       ++v5;
     AST_FreeNode(*(_DWORD *)(uintptr_t)(j + 64));
     Rules_CECopyNodeFields(v7, (_DWORD *)(uintptr_t)orBranch, 1);
-    v8 = Rules_CECloneNode(*(_DWORD **)(uintptr_t)(orBranch + 64));
+    v8 = Rules_CECloneNode((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(orBranch + 64));
     *(_DWORD *)(uintptr_t)(v9 + 64) = v8;
     if ( i )
       *(_DWORD *)(uintptr_t)(i + 68) = clone;
@@ -402,7 +402,7 @@ LABEL_2:
         }
         if ( *(_DWORD *)(uintptr_t)ceNode == 81
           && *(_DWORD *)(uintptr_t)i == 84
-          && (v9 = *(_DWORD **)(uintptr_t)(i + 68)) != 0
+          && (v9 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + 68)) != 0
           && *v9 == 84
           && (v10 = *(_DWORD *)(uintptr_t)(i + 44), v10 == *(_DWORD *)(uintptr_t)(i + 48))
           && v10 == *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(i + 68) + 44) )
@@ -425,7 +425,7 @@ LABEL_2:
         {
           if ( *(_DWORD *)(uintptr_t)ceNode == 81 && *(_DWORD *)(uintptr_t)i == 84 )
           {
-            firstChild = *(_DWORD **)(uintptr_t)(ceNode + 64);
+            firstChild = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(ceNode + 64);
             if ( (_DWORD *)(uintptr_t)i == firstChild && !firstChild[17] )
             {
               *changedFlag = 1;
@@ -471,7 +471,7 @@ int  Rules_CECloneNode(_DWORD *node)
   srcNode = node;
   if ( !node )
     return 0;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 288);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
@@ -576,7 +576,7 @@ int  Rules_CECopyNodeFields(int dest, _DWORD *src, int deepCopy)
     }
     clonedNode = Rules_CECloneNode(v17[14]);
     *(_DWORD *)(uintptr_t)(v21 + 56) = clonedNode;
-    result = Rules_CloneLHSParseNode(*(int **)(uintptr_t)(v22 + 16));
+    result = Rules_CloneLHSParseNode((int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v22 + 16));
     *(_DWORD *)(uintptr_t)(v23 + 16) = result;
     if ( result )
       *(_BYTE *)(uintptr_t)(v23 + 8) |= 0x10u;
@@ -609,7 +609,7 @@ signed int Rules_CEAllocDefaultNode()
   int v2; // ecx
   __int16 v3; // dx
 
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 288);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 288);
@@ -664,7 +664,7 @@ int  Rules_CEFreeNode(int result)
     AST_FreeNode(*(_DWORD *)(uintptr_t)(v2 + 68));
     AST_FreeNode(*(_DWORD *)(uintptr_t)(v3 + 56));
     if ( (*(_BYTE *)(uintptr_t)(v4 + 8) & 0x10) != 0 )
-      AST_DecrementNodeRefCount(*(_DWORD **)(uintptr_t)(v4 + 16));
+      AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 16));
     if ( *(_DWORD *)(uintptr_t)(v4 + 60) )
     {
       handler = *(_DWORD *)(uintptr_t)(v4 + 24);
@@ -755,7 +755,7 @@ int  Rules_CECloneBindingList(int bindingList)
   src = bindingList;
   if ( !bindingList )
     return 0;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -805,14 +805,14 @@ int * Rules_CECountPatternNodes(int *result, int isTail)
         else
           v5 = 0;
         result = (int *)Rules_CECountPatternNodes(node[16], v5);
-        node = *(int **)(uintptr_t)(v6 + 68);
+        node = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 68);
         if ( !node )
           return result;
       }
       else if ( nodeType == 82 )
       {
         result = (int *)(uintptr_t)Rules_ReportSystemError((int)(intptr_t)node, 1);
-        node = *(int **)(uintptr_t)(v7 + 68);
+        node = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 68);
         if ( !node )
           return result;
       }
@@ -1192,7 +1192,7 @@ int Rules_DeftemplateBsaveFind(void)
     {
       bsaveIndex = g_DeftemplateBsaveCount++;
       AST_MarkNodeFieldBound(j, bsaveIndex);
-      for ( k = *(_DWORD **)(uintptr_t)(v4 + 20); k; k = (_DWORD *)(uintptr_t)k[4] )
+      for ( k = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 20); k; k = (_DWORD *)(uintptr_t)k[4] )
       {
         ++g_Deftemplate_SlotCount;
         *(_DWORD *)(uintptr_t)(*k + 12) |= 2u;
@@ -1333,7 +1333,7 @@ int  Rules_DeftemplateBsaveWriteData(int fileID)
           v21 = *(_DWORD *)(uintptr_t)(slot + 4);
           LOBYTE(slotBsaveFlags) = slotBsaveFlags & 0xF7;
           slotBsaveFlags |= v21 & 8;
-          slotNameIndex = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(slot + 12));
+          slotNameIndex = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(slot + 12));
           defaultValueIndex = (*(_DWORD *)(uintptr_t)(v22 + 16) != 0) - 1;
           Rules_BsaveWriteBlock(20, fileID, &bsaveSlot);
         }

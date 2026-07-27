@@ -26,7 +26,7 @@ int  AST_CloneFieldAccessSubtreeJN(int result)
   currentNode = result;
   if ( result )
   {
-    freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+    freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
     if ( freeListEntry )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -137,7 +137,7 @@ LABEL_6:
       break;
     if ( nodeType == 93 || nodeType == 94 )
     {
-      result = AST_IsFieldPositionConsistent(*(_DWORD **)(uintptr_t)(fieldNode + 56), whichPattern);
+      result = AST_IsFieldPositionConsistent((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(fieldNode + 56), whichPattern);
       if ( !result )
         return result;
     }
@@ -167,7 +167,7 @@ int  AST_IsFieldPositionConsistent(_DWORD *theNode, int whichPattern)
     result = AST_IsFieldPositionConsistent(currentNode[17], whichPattern);
     if ( !result )
       return result;
-    currentNode = *(_DWORD **)(uintptr_t)(v5 + 64);
+    currentNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 64);
     if ( !currentNode )
       return 1;
   }

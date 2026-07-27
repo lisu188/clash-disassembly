@@ -186,7 +186,7 @@ LABEL_11:
       *(_WORD *)(uintptr_t)(cls + 34) = *superclasses;
       *(_DWORD *)(uintptr_t)(cls + 36) = *(_DWORD *)(superclasses + 1);
       classRecord = cls;
-      **(_DWORD **)(uintptr_t)(precedenceList + 2) = cls;
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(precedenceList + 2) = cls;
       *(_WORD *)(uintptr_t)(classRecord + 46) = *(_WORD *)(uintptr_t)precedenceList;
       *(_DWORD *)(uintptr_t)(cls + 48) = *(_DWORD *)(uintptr_t)(precedenceList + 2);
       g_ClipsMemFreeListTemp = (int)(intptr_t)superclasses;
@@ -619,7 +619,7 @@ int * Class_AppendNonPrivateSlotLinks(int *linkList, int theDefclass, int inheri
         }
         if ( !i )
         {
-          v9 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+          v9 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
           if ( v9 )
           {
             g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -709,7 +709,7 @@ signed int  Class_BuildModuleScopeBitmap(_DWORD *theDefclass)
   _BYTE *className; // [esp+Ch] [ebp-20h]
   _BYTE *scopeMap; // [esp+10h] [ebp-1Ch]
 
-  className = *(_BYTE **)(uintptr_t)(*theDefclass + 16);
+  className = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*theDefclass + 16);
   moduleCount = Module_GetModuleCount();
   bitmapSize = ((moduleCount - (__CFSHL__(moduleCount >> 31, 3) + 8 * (moduleCount >> 31))) >> 3) + 1;
   scopeMap = Mem_SmallBlockAlloc(bitmapSize);
@@ -790,7 +790,7 @@ int  Class_BrowseClassesCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(v6 + 16));
+    theDefclass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 16));
     if ( !theDefclass )
       return Class_ReportLookupError(v4, *(_DWORD *)(uintptr_t)(v6 + 16));
     return Class_PrintClassBrowse((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)theDefclass, 0);
@@ -872,14 +872,14 @@ signed int  Class_PrintClassDescription(int logicalName, int theDefclass)
       slotOffset = 0;
       do
       {
-        slotNameLength = strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theDefclass + 56) + slotOffset) + 8) + 12) + 16))
+        slotNameLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theDefclass + 56) + slotOffset) + 8) + 12) + 16))
             + 1;
         if ( (int)(slotNameLength - 1) > maxSlotNameLength )
           maxSlotNameLength = slotNameLength - 1;
         slotDesc = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theDefclass + 56) + slotOffset);
         if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x10) == 0 )
         {
-          overrideMessageLength = strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 12) + 16)) + 1;
+          overrideMessageLength = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 12) + 16)) + 1;
           if ( (int)(overrideMessageLength - 1) > maxOverrideMessageLength )
             maxOverrideMessageLength = overrideMessageLength - 1;
         }
@@ -1005,7 +1005,7 @@ signed int  Class_SlotExistPCommand(int *a1, double a2)
       }
       inheritFlag = 1;
     }
-    if ( v7[0] == *(int **)(uintptr_t)(slotDesc + 4) )
+    if ( v7[0] == (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotDesc + 4) )
       return 1;
     else
       return inheritFlag;
@@ -1030,7 +1030,7 @@ signed int  Class_MessageHandlerExistPCommand(double a1)
   result = Lexer_ParseValueList(1, argValue, 2, a1);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(v7 + 16));
+    theDefclass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 16));
     if ( !theDefclass )
     {
       Class_ReportLookupError(v3, *(_DWORD *)(uintptr_t)(v7 + 16));
@@ -1109,7 +1109,7 @@ signed int  Class_SlotDirectAccessPCommand(int *a1, double a2)
   classBuffer[2] = a1;
   result = Class_CheckSlotExists((int)(intptr_t)aSlotDirectAc_0, classBuffer, 1, 1, a2);
   if ( result )
-    return (*(_BYTE *)(uintptr_t)(result + 1) & 4) != 0 || classBuffer[0] == *(int **)(uintptr_t)(result + 4);
+    return (*(_BYTE *)(uintptr_t)(result + 1) & 4) != 0 || classBuffer[0] == (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 4);
   return result;
 }
 
@@ -1122,7 +1122,7 @@ signed int  Class_ClassExistPCommand(int a1, double a2)
   argValue[7] = a1;
   result = Lexer_ParseValueList(1, argValue, 2, a2);
   if ( result )
-    return Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argValue[2] + 16)) != 0;
+    return Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argValue[2] + 16)) != 0;
   return result;
 }
 
@@ -1139,14 +1139,14 @@ signed int  Class_ParseTwoClassNameArgs(int **c1, int **c2, double a3)
   result = Lexer_ParseValueList(1, argValue, 2, a3);
   if ( result )
   {
-    firstClass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(v9 + 16));
+    firstClass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9 + 16));
     *c1 = firstClass;
     if ( firstClass )
     {
       result = Lexer_ParseValueList(2, argValue, 2, a3);
       if ( !result )
         return result;
-      secondClass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(v9 + 16));
+      secondClass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9 + 16));
       *c2 = secondClass;
       if ( secondClass )
         return 1;
@@ -1190,7 +1190,7 @@ signed int  Class_CheckSlotExists(int functionName, int **classBuffer, int inher
     {
       cls = *classBuffer;
       slotDesc = *(_DWORD *)(uintptr_t)((*classBuffer)[14] + 4 * slotIndex);
-      if ( cls == *(int **)(uintptr_t)(slotDesc + 4) || inheritFlag )
+      if ( cls == (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotDesc + 4) || inheritFlag )
       {
         return slotDesc;
       }
@@ -1234,7 +1234,7 @@ int * Class_ResolveSlotBySymbolName(_BYTE *slotName, int inheritFlag)
     slotIndex = Instance_ResolveSlotIndex(v3, (int)(intptr_t)result);
     if ( slotIndex == -1 )
       return 0;
-    result = *(int **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 56) + 4 * slotIndex);
+    result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 56) + 4 * slotIndex);
     if ( v5 != result[1] && !inheritFlag )
       return 0;
   }

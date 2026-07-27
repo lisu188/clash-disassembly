@@ -866,7 +866,11 @@ signed int  Mem_InitPool(unsigned int requested_bytes, char a2)
   available_size = 8 * ((g_HeapChunkHeaderSize + block_header_bytes + requested_bytes - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
   if ( request_size < 0x3E800 && (unsigned int)available_size <= request_size + g_MemPoolBlockHeaderSize )
     available_size = 8 * ((g_HeapChunkHeaderSize + request_size + block_header_bytes - 1) >> 3) + 8 - block_header_bytes - g_HeapChunkHeaderSize;
-  g_MemPoolListHead = nmalloc_(available_size, 0);
+  /* loc_472BD4 calls _nmalloc_ with EAX = the ROUNDED TOTAL (available_size
+     + 2*g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize); ECX (= available_size)
+     is only what gets stored at [pool+0Ch]. The recovery passed ECX as the size,
+     under-allocating by 48 bytes and putting the tail sentinel out of bounds. */
+  g_MemPoolListHead = nmalloc_(available_size + block_header_bytes + g_HeapChunkHeaderSize, 0);
   if ( g_MemPoolListHead )
   {
     *(_DWORD *)(uintptr_t)g_MemPoolListHead = 0;
@@ -910,7 +914,9 @@ int  Mem_GrowPoolChain(int pool, unsigned int requested_bytes)
   if ( requested_bytes < 0x3E800 )
     requested_bytes = 256000;
   available_size = 8 * ((requested_bytes + 2 * g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize - 1) >> 3) + 8 - g_HeapChunkHeaderSize - 2 * g_MemPoolBlockHeaderSize;
-  new_pool = nmalloc_(available_size, 0);
+  /* sub_472CB0: same as sub_472B50 - _nmalloc_ receives EAX = the rounded total;
+     EDX (= available_size) is only the value stored at [pool+0Ch]. */
+  new_pool = nmalloc_(available_size + 2 * g_MemPoolBlockHeaderSize + g_HeapChunkHeaderSize, 0);
   if ( new_pool )
   {
     *(_DWORD *)(uintptr_t)new_pool = 0;

@@ -25,7 +25,7 @@ _DWORD * Rules_CreateDeftemplateSlot(int *fieldNode, int precedingSlot, char wit
   int prevChild; // eax
   int existingHeadSlot; // ebx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 176);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
   if ( freeListHead )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
@@ -149,7 +149,7 @@ int  Rules_FreeDeftemplateSlotList(int slotList)
       {
         Rules_PatchDeftemplateSlotModuleRef(0, 0);
       }
-      AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(nodeToFree + 24), parentNode);
+      AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(nodeToFree + 24), parentNode);
       g_ClipsMemFreeListTemp = nodeToFree;
       *(_DWORD *)(uintptr_t)nodeToFree = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
       result = g_ClipsMemoryTable;
@@ -165,7 +165,7 @@ int  Rules_FreeDeftemplateSlotList(int slotList)
       *(_DWORD *)(uintptr_t)(prevNode + 40) = nextNode;
       if ( nextNode )
         *(_DWORD *)(uintptr_t)(nextNode + 36) = *(_DWORD *)(uintptr_t)(currentNode + 36);
-      AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(currentNode + 24), currentNode);
+      AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentNode + 24), currentNode);
       g_ClipsMemFreeListTemp = (int)(intptr_t)freedNode;
       *freedNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
       result = g_ClipsMemFreeListTemp;
@@ -180,7 +180,7 @@ int  Rules_FreeDeftemplateSlotList(int slotList)
       else
         Rules_PatchDeftemplateSlotModuleRef(0, *(_DWORD *)(uintptr_t)(lastNode + 40));
       *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(lastNode + 40) + 36) = 0;
-      AST_RemoveHashedNodeChain(*(__int16 **)(uintptr_t)(lastNode + 24), ownerNode);
+      AST_RemoveHashedNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(lastNode + 24), ownerNode);
       g_ClipsMemFreeListTemp = lastNode;
       *(_DWORD *)(uintptr_t)lastNode = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
       result = g_ClipsMemoryTable;
@@ -244,7 +244,7 @@ int  Rules_PurgeDeftemplateSlotReferences(int patternNode)
   result = Rules_GetNextFact(0);
   for ( i = result; result; i = result )
   {
-    matchLink = *(_DWORD **)(uintptr_t)(i + 20);
+    matchLink = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + 20);
     prevLink = 0;
     while ( matchLink )
     {
@@ -264,7 +264,7 @@ int  Rules_PurgeDeftemplateSlotReferences(int patternNode)
           g_ClipsMemFreeListTemp = (int)(intptr_t)matchLink;
           *matchLink = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
           *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48) = g_ClipsMemFreeListTemp;
-          matchLink = *(_DWORD **)(uintptr_t)(i + 20);
+          matchLink = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + 20);
         }
       }
       else
@@ -394,7 +394,7 @@ int * Rules_InsertFactHashEntry(int theFact, int hashValue)
   int oldBucketHead; // ecx
 
   v2 = theFact;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -512,14 +512,12 @@ int  Rules_RunPeriodicCleanup(int result, int useHeuristics)
   int cleanupAllDepths; // ecx
   int cleanupFnNode; // edx
   int i; // esi
-  int v6; // edx
   int j; // edx
-  int v8; // edx
-  int v9; // ecx
 
   cleanupAllDepths = result;
   cleanupFnNode = g_Rules_PeriodicFunctionListHead;
-  for ( i = -1; cleanupFnNode; cleanupFnNode = *(_DWORD *)(uintptr_t)(v6 + 12) )
+  /* loc_48ACF8: `mov edx, [edx+0Ch]` - the cursor advances from the node itself. */
+  for ( i = -1; cleanupFnNode; cleanupFnNode = *(_DWORD *)(uintptr_t)(cleanupFnNode + 12) )
     result = (*(int (__fastcall **)(int))(uintptr_t)(cleanupFnNode + 4))(cleanupAllDepths);
   if ( g_Rules_LastCleanupEvalDepth > g_ClipsCurrentEvaluationDepth )
   {
@@ -536,10 +534,13 @@ int  Rules_RunPeriodicCleanup(int result, int useHeuristics)
       g_ClipsCurrentEvaluationDepth = -1;
     }
     Rules_FreeUnusedEphemeralMultifields();
-    for ( j = g_CLIPS_PeriodicFunctionListHead; j; j = *(_DWORD *)(uintptr_t)(v8 + 12) )
+    /* loc_48AD83: `mov edx, [edx+0Ch]` - same list-walk cursor. */
+    for ( j = g_CLIPS_PeriodicFunctionListHead; j; j = *(_DWORD *)(uintptr_t)(j + 12) )
       (*(void (**)(void))(uintptr_t)(j + 4))();
     Rules_RemoveEphemeralAtoms();
-    if ( v9 )
+    /* loc_48AD9A: `test ecx, ecx` - ecx is the first argument (cleanupAllDepths),
+       the same flag that saved the depth above. */
+    if ( cleanupAllDepths )
       g_ClipsCurrentEvaluationDepth = i;
     result = g_Rules_EphemeralCountGCThreshold;
     if ( g_ClipsEphemeralItemCount + 1000 > (unsigned int)g_Rules_EphemeralCountGCThreshold )
@@ -579,7 +580,7 @@ signed int  Rules_InsertPriorityCallbackByRef(int name, int theFunction, int *li
   _DWORD *v9; // edi
   int currentNode; // eax
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   lastNode = 0;
   if ( freeListEntry )
   {
@@ -840,7 +841,7 @@ _DWORD * Rules_InsertPriorityCallbackReturningHead(int name, int priority, signe
   _DWORD *newNode; // edi
   signed int currentNode; // eax
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
   lastNode = 0;
   if ( freeListEntry )
   {
@@ -1065,7 +1066,7 @@ int  Rules_AddWatchItem(int name, int flag, int priority, int code, int accessFu
   else
   {
 LABEL_6:
-    freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 112);
+    freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
     if ( freeListEntry )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 112);
@@ -1120,7 +1121,7 @@ signed int  Rules_SetWatchItemState(unsigned int newState, int itemName, int arg
     while ( 1 )
     {
       if ( !argExprs )
-        **(_DWORD **)(uintptr_t)(currentItem + 4) = newState;
+        *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentItem + 4) = newState;
       if ( *(_DWORD *)(uintptr_t)(currentItem + 16) && !(*(int (__fastcall **)(int, unsigned int))(uintptr_t)(currentItem + 16))(currentItem, newState) )
         break;
       currentItem = *(_DWORD *)(uintptr_t)(currentItem + 24);
@@ -1135,12 +1136,12 @@ signed int  Rules_SetWatchItemState(unsigned int newState, int itemName, int arg
       return 0;
     while ( strcmp_(namedItem, *namedItem) )
     {
-      namedItem = *(_DWORD **)(uintptr_t)(v7 + 24);
+      namedItem = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 24);
       if ( !namedItem )
         return 0;
     }
     if ( !argExprs )
-      **(_DWORD **)(uintptr_t)(v7 + 4) = newState;
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 4) = newState;
     if ( !*(_DWORD *)(uintptr_t)(v7 + 16) || (*(int (__fastcall **)(int, unsigned int))(uintptr_t)(v7 + 16))(v7, newState) )
       return 1;
   }
@@ -1190,7 +1191,7 @@ int __fastcall Rules_FindWatchItem(int itemName, _DWORD *recognized)
     {
       while ( strcmp_(currentItem, *currentItem) )
       {
-        currentItem = *(_DWORD **)(uintptr_t)(v5 + 24);
+        currentItem = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 24);
         if ( !currentItem )
           goto LABEL_5;
       }
@@ -1322,7 +1323,7 @@ signed int  Rules_ListWatchItemsCommand(int returnValue, double a2)
         else
         {
           Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, *theItem, (int)(intptr_t)theItem);
-          if ( **(_DWORD **)(uintptr_t)(v9 + 4) )
+          if ( *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v9 + 4) )
             itemStateText = aOn;
           else
             itemStateText = aOff;
@@ -1350,12 +1351,12 @@ signed int  Rules_ListWatchItemsCommand(int returnValue, double a2)
       do
       {
         Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, *currentItem, (int)(intptr_t)currentItem);
-        if ( **(_DWORD **)(uintptr_t)(v4 + 4) )
+        if ( *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v4 + 4) )
           stateText = aOn;
         else
           stateText = aOff;
         result = Output_Write((int)(intptr_t)g_IO_LogicalName_WDisplay, (int)(intptr_t)stateText, v4);
-        currentItem = *(int **)(uintptr_t)(v6 + 24);
+        currentItem = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 24);
       }
       while ( currentItem );
     }
@@ -1415,13 +1416,13 @@ int  Rules_GetFactRelationName(double a1)
   int v1; // ecx
   int theFact; // eax
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aFactRelation, 0, 1) == -1 )
     return g_ClipsFalseSymbol;
   theFact = Rules_ResolveFactArgument(1, v1, 0, a1);
   if ( !theFact )
     return g_ClipsFalseSymbol;
   else
-    return **(_DWORD **)(uintptr_t)(theFact + 16);
+    return *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theFact + 16);
 }
 // 48BCCC: variable 'v1' is possibly undefined
 // 54DD70: using guessed type int dword_54DD70;
@@ -1433,7 +1434,7 @@ int  Rules_CheckFactExistp(double a1)
   int v2; // ecx
   int theFact; // eax
 
-  result = Lexer_TokenExpect(1);
+  result = Lexer_TokenExpect((int)(intptr_t)aFactExistp, 0, 1);
   if ( result != -1 )
   {
     theFact = Rules_ResolveFactArgument(1, v2, 0, a1);

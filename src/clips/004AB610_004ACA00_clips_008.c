@@ -29,7 +29,7 @@ _DWORD * Instance_ActiveMessageDuplicateInstanceFunction(int *returnValue, doubl
     result = (_DWORD *)(uintptr_t)g_ClipsFalseSymbol;
     returnValue[2] = g_ClipsFalseSymbol;
   }
-  else if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) && Lexer_ParseValueList(2, &newNameValue, 8, a2) )
+  else if ( Instance_ResolveArgumentToInstance(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 2) + 16), v3, a2) && Lexer_ParseValueList(2, &newNameValue, 8, a2) )
   {
     savedGuardState = g_InstanceDirectMessageGuardActive;
     g_InstanceDirectMessageGuardActive = 1;
@@ -285,7 +285,7 @@ LABEL_12:
       if ( !slotOverride )
         goto LABEL_13;
     }
-    if ( (**(_BYTE **)(uintptr_t)v6 & 2) == 0 || *(_DWORD *)(uintptr_t)(slotOverride + 4) == 4 )
+    if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)v6 & 2) == 0 || *(_DWORD *)(uintptr_t)(slotOverride + 4) == 4 )
     {
       putValue = (int *)(uintptr_t)slotOverride;
     }
@@ -498,7 +498,7 @@ LABEL_24:
       else if ( msgpassFlag )
       {
         sendResultType = *(_DWORD *)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 4) << 24 >> 26;
-        srcSlotValue = *(_DWORD **)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 8);
+        srcSlotValue = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 8);
         sendResultValue = srcSlotValue;
         if ( sendResultType == 4 )
         {
@@ -520,7 +520,7 @@ LABEL_24:
       else
       {
         sendResultType = *(_DWORD *)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 4) << 24 >> 26;
-        sendResultValue = *(_DWORD **)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 8);
+        sendResultValue = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 8);
         if ( (*(_DWORD *)(uintptr_t)(localSlotOffset + *(_DWORD *)(uintptr_t)(srcInstance + 76) + 4) & 0xFC) == 0x10 )
         {
           multifieldBegin = 0;
@@ -571,15 +571,15 @@ signed int  Rules_LoadInstancesCommand(int a1, DWORD a2, double a3)
   signed int result; // eax
   int v4; // ecx
   signed int instancesLoaded; // ebx
-  int fileArgValue; // [esp-8h] [ebp-24h] BYREF
-  int fileNameSymbol; // [esp+0h] [ebp-1Ch]
+  _DWORD fileArgValue[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of fileArgValue[2]: the DATA_OBJECT value slot */
   int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v8 = a1;
-  result = Lexer_ParseValueList(1, &fileArgValue, 111, a3);
+  result = Lexer_ParseValueList(1, fileArgValue, 111, a3);
   if ( result )
   {
-    instancesLoaded = Rules_ReadInstancesTextFile(*(const CHAR **)(uintptr_t)(fileNameSymbol + 16), 1, *(_DWORD *)(uintptr_t)(fileNameSymbol + 16), a2, a3);
+    instancesLoaded = Rules_ReadInstancesTextFile(*(const CHAR **)(uintptr_t)(fileArgValue[2] + 16), 1, *(_DWORD *)(uintptr_t)(fileArgValue[2] + 16), a2, a3);
     if ( g_ClipsEvaluationError )
       Rules_ReportInstanceFileProcessError(v4, v4);
     return instancesLoaded;
@@ -595,15 +595,15 @@ signed int  Rules_RestoreInstancesCommand(int a1, DWORD a2, double a3)
   signed int result; // eax
   int v4; // ecx
   signed int instancesLoaded; // ebx
-  int fileArgValue; // [esp-8h] [ebp-24h] BYREF
-  int fileNameSymbol; // [esp+0h] [ebp-1Ch]
+  _DWORD fileArgValue[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of fileArgValue[2]: the DATA_OBJECT value slot */
   int v8 CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   v8 = a1;
-  result = Lexer_ParseValueList(1, &fileArgValue, 111, a3);
+  result = Lexer_ParseValueList(1, fileArgValue, 111, a3);
   if ( result )
   {
-    instancesLoaded = Rules_ReadInstancesTextFile(*(const CHAR **)(uintptr_t)(fileNameSymbol + 16), 0, *(_DWORD *)(uintptr_t)(fileNameSymbol + 16), a2, a3);
+    instancesLoaded = Rules_ReadInstancesTextFile(*(const CHAR **)(uintptr_t)(fileArgValue[2] + 16), 0, *(_DWORD *)(uintptr_t)(fileArgValue[2] + 16), a2, a3);
     if ( g_ClipsEvaluationError )
       Rules_ReportInstanceFileProcessError(v4, v4);
     return instancesLoaded;
@@ -909,7 +909,7 @@ _DWORD * Rules_BuildClassListForSave(int functionName, int classExprs, int inher
     return classListHead;
   while ( !Parser_ParseForm((__int16 *)(uintptr_t)classExprs, argValue, v8, a5) && argValue[1] == 2 )
   {
-    v13 = v26 == 1 ? Class_LookupByModule(v10, *(_BYTE **)(uintptr_t)(argSymbol + 16)) : Class_LookupInScope(*(_BYTE **)(uintptr_t)(argSymbol + 16));
+    v13 = v26 == 1 ? Class_LookupByModule(v10, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argSymbol + 16)) : Class_LookupInScope((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argSymbol + 16));
     theDefclass = (int)(intptr_t)v13;
     if ( !v13 || (v13[5] & 4) != 0 && !inheritFlag )
       break;
@@ -921,7 +921,7 @@ _DWORD * Rules_BuildClassListForSave(int functionName, int classExprs, int inher
         goto LABEL_3;
       i = listCursor;
     }
-    freeNode = *(int **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeNode = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     memoryTable = g_ClipsMemoryTable;
     if ( freeNode )
     {
@@ -1019,7 +1019,7 @@ int  Rules_ForEachInstanceForSave(int saveCode, int inheritFlag, int classList, 
     {
       while ( g_ClipsHaltExecution != 1 )
       {
-        if ( saveCode == 2 || **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 8) == currentModule )
+        if ( saveCode == 2 || *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 8) == currentModule )
         {
           if ( saveFunction )
             saveFunction(theInstance, theInstance);
@@ -1059,7 +1059,7 @@ int  Rules_ForEachInstanceInClassSubtree(
   if ( (*(_BYTE *)(uintptr_t)(traversalMarkAddr + 108) & (unsigned __int8)traversalMask) != 0 )
     return 0;
   *(_BYTE *)(uintptr_t)(traversalMarkAddr + 108) |= traversalMask;
-  if ( saveCode == 1 && currentModule == **(_DWORD **)(uintptr_t)(theDefclass + 8) || saveCode == 2 && Class_IsInScope(theDefclass, currentModule) )
+  if ( saveCode == 1 && currentModule == *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefclass + 8) || saveCode == 2 && Class_IsInScope(theDefclass, currentModule) )
   {
     for ( i = Rules_GetNextInstanceInClass(theDefclass, 0); i; i = Rules_GetNextInstanceInClass(theDefclass, i) )
     {
@@ -1102,7 +1102,7 @@ signed int  Rules_WriteInstanceTextRecord(int logicalName, int theInstance)
   Output_Write(v4, (int)(intptr_t)aOf_1, v4);
   slotIndex = 0;
   slotOffset = 0;
-  Output_Write(v7, *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(theInstance + 44) + 16), v7);
+  Output_Write(v7, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theInstance + 44) + 16), v7);
   while ( slotIndex < *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 44) + 72) )
   {
     Output_Write(logicalName, (int)(intptr_t)asc_508EBC, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theInstance + 72) + slotOffset));
@@ -1118,7 +1118,7 @@ signed int  Rules_WriteInstanceTextRecord(int logicalName, int theInstance)
     else
     {
       Output_Write(logicalName, (int)(intptr_t)asc_508EC4, v11);
-      Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(v12 + 4) << 24 >> 26, *(int **)(uintptr_t)(v12 + 8));
+      Rules_PrintAtomValue(logicalName, *(_DWORD *)(uintptr_t)(v12 + 4) << 24 >> 26, (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v12 + 8));
     }
     Output_Write(logicalName, (int)(intptr_t)asc_508EC8, v11);
     slotOffset += 4;

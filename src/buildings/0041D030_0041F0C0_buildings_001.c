@@ -724,6 +724,9 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
         {
           Debug_Log(a2, a3, a4, (int)(intptr_t)aBuilding_produ);
           result = 0;
+          /* loc_41E44A: `mov edx, esi` - the garrison scan starts at the building
+             record itself; IDA left the cursor (v7) undefined. */
+          garrisonSlotPtr = (int)(intptr_t)buildingPtr;
           while ( *(__int16 *)(uintptr_t)(garrisonSlotPtr + 18) != -1 )
           {
             ++result;
@@ -1246,7 +1249,9 @@ char  Building_GetInto(int buildingIndex, char a2, DWORD a3)
 //----- (0041EDD0) --------------------------------------------------------
 signed int  Building_BuildSchool(char *a1, char a2, DWORD a3)
 {
-  int buildingPtr; // edx
+  /* 0041EDD0: `mov edx, eax` - the building record pointer arrives in EAX (it
+     is `a1`); IDA left `buildingPtr` undefined (flagged at 41EDEF). */
+  int buildingPtr = (int)(intptr_t)a1; // edx
   int ownerPlayer; // ecx
   unsigned int goldCost; // eax
   unsigned int availableGold; // edi
@@ -1255,7 +1260,13 @@ signed int  Building_BuildSchool(char *a1, char a2, DWORD a3)
   char addonFlags; // bh
 
   Debug_Log(0, a2, a3, (int)(intptr_t)aBuilding_bui_0, *a1);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
+  /* 41EDF2 / 41EEA2 / 41EFA2 / 41F042: `xor ecx,ecx` (issued before the
+     `call log`) followed by `mov cl,[edx+2]` - ECX is fully zero-extended,
+     so the owner index is a plain unsigned byte.  IDA emitted only the
+     partial LOBYTE store and left the top 24 bits of `ownerPlayer`
+     undefined, which turned PLAYER_DATA_STRIDE*ownerPlayer into a wild
+     offset. */
+  ownerPlayer = *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2);
   goldCost = 400;
   if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 300;
@@ -1272,14 +1283,13 @@ signed int  Building_BuildSchool(char *a1, char a2, DWORD a3)
   *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
-// 41EDEF: variable 'v3' is possibly undefined
-// 41EDF2: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (0041EE70) --------------------------------------------------------
-signed int  Building_BuildWorkshop(char a1, DWORD a2)
+signed int  Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2)
 {
-  int buildingPtr; // edx
+  /* same __usercall loss as Building_BuildHospital */
+  int buildingPtr = buildingRecord; // edx
   int ownerPlayer; // ecx
   unsigned int goldCost; // eax
   unsigned int availableGold; // edi
@@ -1288,7 +1298,13 @@ signed int  Building_BuildWorkshop(char a1, DWORD a2)
   char addonFlags; // bh
 
   Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_4);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
+  /* 41EDF2 / 41EEA2 / 41EFA2 / 41F042: `xor ecx,ecx` (issued before the
+     `call log`) followed by `mov cl,[edx+2]` - ECX is fully zero-extended,
+     so the owner index is a plain unsigned byte.  IDA emitted only the
+     partial LOBYTE store and left the top 24 bits of `ownerPlayer`
+     undefined, which turned PLAYER_DATA_STRIDE*ownerPlayer into a wild
+     offset. */
+  ownerPlayer = *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2);
   goldCost = 190;
   if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 90;
@@ -1312,7 +1328,9 @@ signed int  Building_BuildWorkshop(char a1, DWORD a2)
 //----- (0041EF10) --------------------------------------------------------
 signed int  Building_BuildBarracks(int a1, char a2, DWORD a3)
 {
-  int buildingPtr; // edx
+  /* sub_41EF10: `mov edx, eax` - the first register argument IS the building
+     record pointer; IDA left `buildingPtr` undefined. */
+  int buildingPtr = a1; // edx
   unsigned int availableGold; // ecx
   signed int result; // eax
 
@@ -1331,9 +1349,11 @@ signed int  Building_BuildBarracks(int a1, char a2, DWORD a3)
 // 41EF29: variable 'v4' is possibly undefined
 
 //----- (0041EF80) --------------------------------------------------------
-signed int  Building_BuildHospital(char a1, DWORD a2)
+signed int  Building_BuildHospital(int buildingRecord, char a1, DWORD a2)
 {
-  int buildingPtr; // edx
+  /* sub_41EF80: `mov edx, eax` - the building record pointer arrives in eax and
+     was dropped from IDA's __usercall signature entirely. */
+  int buildingPtr = buildingRecord; // edx
   int ownerPlayer; // ecx
   unsigned int goldCost; // eax
   unsigned int availableGold; // edi
@@ -1341,8 +1361,14 @@ signed int  Building_BuildHospital(char a1, DWORD a2)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_3);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
+  Debug_Log(buildingRecord, a1, a2, (int)(intptr_t)aBuilding_bui_3);
+  /* 41EDF2 / 41EEA2 / 41EFA2 / 41F042: `xor ecx,ecx` (issued before the
+     `call log`) followed by `mov cl,[edx+2]` - ECX is fully zero-extended,
+     so the owner index is a plain unsigned byte.  IDA emitted only the
+     partial LOBYTE store and left the top 24 bits of `ownerPlayer`
+     undefined, which turned PLAYER_DATA_STRIDE*ownerPlayer into a wild
+     offset. */
+  ownerPlayer = *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2);
   goldCost = 200;
   if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 100;
@@ -1359,14 +1385,18 @@ signed int  Building_BuildHospital(char a1, DWORD a2)
   *(_BYTE *)(uintptr_t)(buildingPtr + 420) = buildLockFlags | 1;
   return result;
 }
-// 41EF9F: variable 'v3' is possibly undefined
-// 41EFA2: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (0041F020) --------------------------------------------------------
-signed int  Building_BuildSmiths(char a1, DWORD a2)
+signed int  Building_BuildSmiths(int buildingRecord, char a1, DWORD a2)
 {
-  int buildingPtr; // edx
+  /* 0041F020: `mov edx, eax` - exactly the same __usercall loss as
+     Building_BuildHospital: the building record pointer is the EAX argument and
+     IDA dropped it from the signature, leaving `buildingPtr` never assigned
+     (flagged at 41EF9F).  Both call sites do pass it: sub_4554B0 computes
+     gameData+7C6EAh+index*1D3h into EAX, and sub_420EF0 loads
+     g_SelectedBuildingRecord into EAX. */
+  int buildingPtr = buildingRecord; // edx
   int ownerPlayer; // ecx
   unsigned int goldCost; // eax
   unsigned int availableGold; // edi
@@ -1374,8 +1404,14 @@ signed int  Building_BuildSmiths(char a1, DWORD a2)
   char buildLockFlags; // cl
   char addonFlags; // bh
 
-  Debug_Log(0, a1, a2, (int)(intptr_t)aBuilding_bui_1);
-  LOBYTE(ownerPlayer) = *(_BYTE *)(uintptr_t)(buildingPtr + 2);
+  Debug_Log(buildingRecord, a1, a2, (int)(intptr_t)aBuilding_bui_1);
+  /* 41EDF2 / 41EEA2 / 41EFA2 / 41F042: `xor ecx,ecx` (issued before the
+     `call log`) followed by `mov cl,[edx+2]` - ECX is fully zero-extended,
+     so the owner index is a plain unsigned byte.  IDA emitted only the
+     partial LOBYTE store and left the top 24 bits of `ownerPlayer`
+     undefined, which turned PLAYER_DATA_STRIDE*ownerPlayer into a wild
+     offset. */
+  ownerPlayer = *(unsigned __int8 *)(uintptr_t)(buildingPtr + 2);
   goldCost = 230;
   if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * ownerPlayer + gameData + 140051) )
     goldCost = 130;

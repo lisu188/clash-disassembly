@@ -437,7 +437,7 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
 
   bsaveSpace[0] = 32 * g_ObjectPatternNetworkBloadCount + 28 * g_ReactiveRuleBloadCount;
   Rules_BsaveWriteBlock(4, outFile, bsaveSpace);
-  for ( i = Rules_GetReactiveRuleList(); i; i = *(_DWORD *)(uintptr_t)(v11 + 36) )
+  for ( i = Rules_GetReactiveRuleList(); i; i = *(_DWORD *)(uintptr_t)(i + 36) )
   {
     Rules_BsavePackSharedRecordHeader((int)(intptr_t)bsaveAlphaRecord, i);
     classBitmapIndex = *(_DWORD *)(uintptr_t)(alphaNode[5] + 12) << 16 >> 18;
@@ -480,7 +480,7 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
     LOBYTE(bsavePatternRecord[0]) &= ~2u;
     bsavePatternRecord[0] |= 2 * (endSlotFlag & 1);
     bsavePatternRecord[1] = *(_DWORD *)(uintptr_t)(currentPattern + 8);
-    bsavePatternRecord[2] = AST_GetHashedNodeIndex(*(__int16 **)(uintptr_t)(currentPattern + 12));
+    bsavePatternRecord[2] = AST_GetHashedNodeIndex((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentPattern + 12));
     nextLevelPtr = patternNode[4];
     if ( nextLevelPtr )
       nextLevelIndex = *(_DWORD *)(uintptr_t)(nextLevelPtr + 36);
@@ -829,7 +829,7 @@ LABEL_23:
         IO_OutNewline();
         IO_OutNewline();
         IO_OutWriteToken(asc_50E7F8);
-        freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 24);
+        freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
         if ( freeNode )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
@@ -860,7 +860,7 @@ LABEL_23:
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
-        if ( Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(className + 16)) )
+        if ( Rules_FindModuleSeparator((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(className + 16)) )
         {
           Module_ReportIllegalSpecifierError();
           Mem_ReturnListToFreePool(linkHead);
@@ -877,7 +877,7 @@ LABEL_23:
         if ( linkHead )
           break;
 LABEL_14:
-        superclass = Class_LookupInScope(*(_BYTE **)(uintptr_t)(g_ClipsParserTokenValue + 16));
+        superclass = Class_LookupInScope((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsParserTokenValue + 16));
         theClass = superclass;
         if ( !superclass )
         {
@@ -896,7 +896,7 @@ LABEL_14:
           Mem_ReturnListToFreePool(linkHead);
           return 0;
         }
-        freeLink = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+        freeLink = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
         if ( freeLink )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -998,7 +998,7 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   partialOrderList = allSuperclasses;
   if ( theClass )
   {
-    freeOrderNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+    freeOrderNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
     if ( freeOrderNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
@@ -1088,7 +1088,7 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
         else
           partialOrderList = (_DWORD *)(uintptr_t)currentNode[3];
         progressMarker = prevNode;
-        freePrecedenceLink = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+        freePrecedenceLink = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
         currentNode = (_DWORD *)(uintptr_t)currentNode[3];
         if ( freePrecedenceLink )
         {
@@ -1146,7 +1146,7 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
   {
     if ( !theClass )
     {
-      freeLinkNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+      freeLinkNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
       if ( freeLinkNode )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1162,7 +1162,7 @@ int  Class_BuildPrecedenceList(int theClass, unsigned __int16 *superclassLinks)
       *(_DWORD *)(uintptr_t)(sentinelNode + 4) = oldListHead;
     }
     *precedenceList = 0;
-    freePackedLinks = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 24);
+    freePackedLinks = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
     if ( freePackedLinks )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 24);
@@ -1251,7 +1251,7 @@ _DWORD * Class_CollectAllSuperclasses(_DWORD *orderList, unsigned __int16 *super
     }
     else
     {
-      freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 64);
+      freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
       if ( freeListEntry )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 64);
@@ -1299,7 +1299,7 @@ __int16  Class_AddPrecedenceDependency(_DWORD *classList, int theClass, unsigned
     result = *superclassLinks;
     if ( startIndex >= *superclassLinks )
       break;
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     if ( freeNode )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1367,10 +1367,10 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *orderList)
     }
     while ( supportList )
     {
-      supportedOrder = Class_FindClassLinkNode(i, **(_DWORD **)(uintptr_t)supportList);
+      supportedOrder = Class_FindClassLinkNode(i, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)supportList);
       if ( !supportedOrder[1] )
       {
-        freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+        freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
         if ( freeListEntry )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
@@ -1395,7 +1395,7 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *orderList)
   }
   for ( k = i; k; k = (_DWORD *)(uintptr_t)k[3] )
     k[1] = 0;
-  for ( m = i; !m[1]; m = *(int **)(uintptr_t)m[2] )
+  for ( m = i; !m[1]; m = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)m[2] )
     m[1] = 1;
   Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aPrecedenceLoop, (int)(intptr_t)i);
   if ( m[1] == 1 )
@@ -1406,7 +1406,7 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *orderList)
       Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)asc_50E6E8, v11);
       Class_PrintName(*m, v12);
       m[1] = v11;
-      m = *(int **)(uintptr_t)m[2];
+      m = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)m[2];
     }
     while ( m[1] == 1 );
   }

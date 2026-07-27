@@ -238,7 +238,7 @@ signed int Class_AllocRecord(void)
 {
   _DWORD *freeListHead; // edx
 
-  freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( !freeListHead )
     return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -301,7 +301,7 @@ signed int Class_RefreshWatchExpressions(void)
   scopeBitMask = 1 << (v2 % 8);
   do
   {
-    theClass = *(int **)(uintptr_t)(bucketOffset + g_DefclassHashTable);
+    theClass = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(bucketOffset + g_DefclassHashTable);
     if ( theClass )
     {
       v4 = bitmapBuffer;
@@ -309,7 +309,7 @@ signed int Class_RefreshWatchExpressions(void)
       {
         v5 = *theClass;
         v12 = *(_DWORD *)(uintptr_t)theClass[2];
-        className = *(_BYTE **)(uintptr_t)(v5 + 16);
+        className = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 16);
         Mem_AllocArray(bitmapBuffer, bitmapSize);
         qmemcpy(v4, *(const void **)(uintptr_t)(theClass[26] + 16), *(unsigned __int16 *)(uintptr_t)(theClass[26] + 20));
         Rules_DecrementBitmapCount(theClass[26], 0);
@@ -631,13 +631,13 @@ LABEL_6:
   }
   if ( !Parser_ReplaceProcVars(savedBodyType, wildcardSymbol, savedWildcard, savedParamList, (int (__fastcall *)(_DWORD, _DWORD))altVarFunc, specData) )
   {
-    if ( Rules_MakeSymbol(aBind_1) == *(int ***)(uintptr_t)(actionExpr + 2) && **(_WORD **)(uintptr_t)(actionExpr + 6) == 2 )
+    if ( Rules_MakeSymbol(aBind_1) == *(int ***)(uintptr_t)(actionExpr + 2) && *(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(actionExpr + 6) == 2 )
     {
       bindExpr = *(_DWORD *)(uintptr_t)(actionExpr + 6);
       *(_WORD *)(uintptr_t)actionExpr = 68;
       bindIndex = Rules_FindNamedContextDepth(*(_DWORD *)(uintptr_t)(bindExpr + 2));
       *(_DWORD *)(uintptr_t)(actionExpr + 2) = Rules_AddBitmapValue(&bindIndex, v23);
-      v24 = *(_DWORD **)(uintptr_t)(actionExpr + 6);
+      v24 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(actionExpr + 6);
       wildcardSymbol = *(_DWORD *)((char *)v24 + 10);
       g_ClipsMemFreeListTemp = (int)(intptr_t)v24;
       *v24 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -688,7 +688,7 @@ int (* ProcParam_PushEvaluatedArgumentFrame(
   _DWORD *v9; // esi
   int (*result)(void); // eax
 
-  v7 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+  v7 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
   if ( v7 )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -753,7 +753,7 @@ int ProcParam_PopFrame(void)
   g_Clips_ProcParamArgChain = frameNode[1];
   if ( g_ClipsProcParamWildcardValue )
   {
-    Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
+    Rules_DeinstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
     Rules_RegisterEphemeralMultifield(*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
     g_ClipsMemFreeListTemp = g_ClipsProcParamWildcardValue;
     *(_DWORD *)(uintptr_t)g_ClipsProcParamWildcardValue = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -880,7 +880,7 @@ int  Rules_ExecuteRuleActions(
   wildcardValue = g_ClipsProcParamWildcardValue;
   if ( g_ClipsProcParamWildcardValue && returnValue[2] == *(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8) )
   {
-    Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
+    Rules_DeinstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
     Rules_RegisterEphemeralMultifield(*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
     g_ClipsMemFreeListTemp = g_ClipsProcParamWildcardValue;
     *(_DWORD *)(uintptr_t)g_ClipsProcParamWildcardValue = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -975,16 +975,16 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
     if ( theIndex == g_ProcParamCachedWildcardArgIndex )
     {
       returnValue[4] = *(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 16);
-      result = *(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8);
+      result = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8);
       returnValue[2] = result;
       return result;
     }
-    Rules_DeinstallMultifield(*(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
+    Rules_DeinstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
     Rules_RegisterEphemeralMultifield(*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
   }
   else
   {
-    freeListHead = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 96);
+    freeListHead = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
     if ( freeListHead )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
@@ -1008,7 +1008,7 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
     emptyMultifield = Rules_CreateMultifield(0);
     *(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8) = emptyMultifield;
     returnValue[2] = emptyMultifield;
-    return Rules_InstallMultifield(*(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
+    return Rules_InstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
   }
   else
   {
@@ -1066,7 +1066,7 @@ __int16 * ProcParam_BuildWildcardMultifield(_DWORD *returnValue, int theIndex)
       }
       while ( paramIndex < g_ClipsProcParamCount );
     }
-    return Rules_InstallMultifield(*(__int16 **)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
+    return Rules_InstallMultifield((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsProcParamWildcardValue + 8));
   }
 }
 // 51ABB8: using guessed type int dword_51ABB8;

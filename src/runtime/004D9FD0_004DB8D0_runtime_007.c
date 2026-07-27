@@ -463,7 +463,7 @@ LABEL_5:
       v29 = AST_AllocNode();
       v30 = savedRightNode;
       *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v31 + 64) + 64) + 68) = v29;
-      **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v31 + 64) + 64) + 68) = 83;
+      *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v31 + 64) + 64) + 68) = 83;
       v32 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v31 + 64) + 64) + 68);
       *(_BYTE *)(uintptr_t)(v32 + 8) &= ~2u;
       *(_DWORD *)(uintptr_t)(v32 + 8) |= logicalBits;
@@ -498,7 +498,7 @@ LABEL_5:
   {
     v39 = AST_AllocNode();
     *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v40 + 64) + 64) = v39;
-    **(_DWORD **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v40 + 64) + 64) = 81;
+    *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v40 + 64) + 64) = 81;
     v41 = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v40 + 64) + 64);
     *(_BYTE *)(uintptr_t)(v41 + 8) &= ~2u;
     *(_DWORD *)(uintptr_t)(v41 + 8) |= logicalBits;
@@ -789,7 +789,7 @@ _DWORD * AST_ExtractPatternBindingInfo(_DWORD *result, int theConstruct)
   int nextConstruct; // ecx
 
   *result = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)theConstruct + 12) << 16 >> 18;
-  result[1] = *(_DWORD *)(uintptr_t)(**(_DWORD **)(uintptr_t)(theConstruct + 8) + 24);
+  result[1] = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theConstruct + 8) + 24);
   nextConstruct = *(_DWORD *)(uintptr_t)(theConstruct + 16);
   if ( nextConstruct )
     result[2] = *(_DWORD *)(uintptr_t)(nextConstruct + 12);
@@ -1037,7 +1037,7 @@ int  Module_BsaveWriteModuleRecords(int filePtr)
   g_ClipsBloadPortItemCount = 0;
   for ( m = Module_NextEnum(0); m; m = Module_NextEnum(m) )
   {
-    for ( n = *(_DWORD **)(uintptr_t)(m + 12); n; n = *(_DWORD **)(uintptr_t)(v11 + 12) )
+    for ( n = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(m + 12); n; n = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v11 + 12) )
     {
       ++g_ClipsBloadPortItemCount;
       if ( *n )
@@ -1060,7 +1060,7 @@ int  Module_BsaveWriteModuleRecords(int filePtr)
         portNextIndex = -1;
       Rules_BsaveWriteBlock(16, filePtr, &portModuleName);
     }
-    for ( ii = *(_DWORD **)(uintptr_t)(m + 16); ii; ii = *(_DWORD **)(uintptr_t)(v15 + 12) )
+    for ( ii = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(m + 16); ii; ii = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v15 + 12) )
     {
       ++g_ClipsBloadPortItemCount;
       if ( *ii )
@@ -1291,7 +1291,7 @@ int Module_ClearBloadData(void)
     do
     {
       Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(moduleOffset + g_ClipsModuleArrayBase), moduleOffset);
-      for ( i = *(int **)(uintptr_t)(v2 + g_ClipsModuleArrayBase + 12); i; i = (int *)(uintptr_t)i[3] )
+      for ( i = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v2 + g_ClipsModuleArrayBase + 12); i; i = (int *)(uintptr_t)i[3] )
       {
         if ( *i )
           Rules_DecrementSymbolCount(*i, v2);
@@ -1301,7 +1301,7 @@ int Module_ClearBloadData(void)
         if ( i[2] )
           Rules_DecrementSymbolCount(i[2], v2);
       }
-      for ( j = *(int **)(uintptr_t)(v2 + g_ClipsModuleArrayBase + 16); j; j = (int *)(uintptr_t)j[3] )
+      for ( j = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v2 + g_ClipsModuleArrayBase + 16); j; j = (int *)(uintptr_t)j[3] )
       {
         if ( *j )
           Rules_DecrementSymbolCount(*j, v2);
@@ -1313,7 +1313,7 @@ int Module_ClearBloadData(void)
       }
       itemCount = Module_GetItemCount();
       ++moduleIndex;
-      Mem_SmallBlockFree(*(_DWORD **)(uintptr_t)(v8 + g_ClipsModuleArrayBase + 8), 4 * itemCount);
+      Mem_SmallBlockFree((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(v8 + g_ClipsModuleArrayBase + 8), 4 * itemCount);
       moduleOffset = v9 + 32;
     }
     while ( moduleIndex < g_ClipsBsaveModuleCount );
@@ -1371,11 +1371,11 @@ signed int  Rules_CheckConstraintParseConflicts(int constraints, __int16 *theExp
     Rules_ReportAttributeConflict((int)(intptr_t)theExp, (int)(intptr_t)aAllowedInstanc);
     return 0;
   }
-  if ( (*(_BYTE *)(uintptr_t)(constraints + 1) & 2) != 0 && (theExp = *(__int16 **)(uintptr_t)(constraints + 6)) != 0 )
+  if ( (*(_BYTE *)(uintptr_t)(constraints + 1) & 2) != 0 && (theExp = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 6)) != 0 )
   {
     while ( !Rules_CheckValueAgainstConstraint(*theExp, *(_DWORD *)(theExp + 1), constraints) )
     {
-      theExp = *(__int16 **)(uintptr_t)(v5 + 10);
+      theExp = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v5 + 10);
       if ( !theExp )
         goto LABEL_2;
     }
@@ -1385,14 +1385,14 @@ signed int  Rules_CheckConstraintParseConflicts(int constraints, __int16 *theExp
   else
   {
 LABEL_2:
-    maxValue = *(_WORD **)(uintptr_t)(constraints + 14);
+    maxValue = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 14);
     if ( (!maxValue
        || (*(_BYTE *)(uintptr_t)constraints & 1) != 0
-       || (*maxValue != 1 || (*(_BYTE *)(uintptr_t)constraints & 0x10) != 0) && (**(_WORD **)(uintptr_t)(constraints + 14) || (*(_BYTE *)(uintptr_t)constraints & 8) != 0))
+       || (*maxValue != 1 || (*(_BYTE *)(uintptr_t)constraints & 0x10) != 0) && (*(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 14) || (*(_BYTE *)(uintptr_t)constraints & 8) != 0))
       && (!*(_DWORD *)(uintptr_t)(constraints + 10)
        || (*(_BYTE *)(uintptr_t)constraints & 1) != 0
-       || (**(_WORD **)(uintptr_t)(constraints + 10) != 1 || (*(_BYTE *)(uintptr_t)constraints & 0x10) != 0)
-       && (**(_WORD **)(uintptr_t)(constraints + 10) || (*(_BYTE *)(uintptr_t)constraints & 8) != 0)) )
+       || (*(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 10) != 1 || (*(_BYTE *)(uintptr_t)constraints & 0x10) != 0)
+       && (*(_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(constraints + 10) || (*(_BYTE *)(uintptr_t)constraints & 8) != 0)) )
     {
       return 1;
     }

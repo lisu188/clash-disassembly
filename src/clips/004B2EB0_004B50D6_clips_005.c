@@ -22,7 +22,7 @@ signed int  Rules_CheckFieldExprListAgainstConstraint(int *theExpression, int th
 
   exprCursor = theExpression;
   minFields = 0;
-  for ( i = 0; exprCursor; exprCursor = *(int **)(uintptr_t)(v7 + 10) )
+  for ( i = 0; exprCursor; exprCursor = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v7 + 10) )
   {
     if ( Rules_TagIsConstantType(*(__int16 *)exprCursor)
       || *(_WORD *)(uintptr_t)v7 == 10 && (returnTypeChar = *(_BYTE *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v7 + 2) + 8), returnTypeChar != 109) && returnTypeChar != 117 )
@@ -46,7 +46,7 @@ signed int  Rules_CheckFieldExprListAgainstConstraint(int *theExpression, int th
     result = Rules_CheckValueAgainstConstraint(*(__int16 *)checkCursor, *(int *)((char *)checkCursor + 2), theConstraint);
     if ( result )
       break;
-    checkCursor = *(int **)(uintptr_t)(v10 + 10);
+    checkCursor = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(v10 + 10);
     if ( !checkCursor )
       return 0;
   }
@@ -74,7 +74,7 @@ signed int  Rules_CheckExprTreeAgainstConstraint(__int16 *theExpression, int the
       result = Rules_CheckExprTreeAgainstConstraint(*(_DWORD *)(uintptr_t)(v5 + 6), theConstraint);
       if ( result )
         break;
-      theExpression = *(__int16 **)(uintptr_t)(v6 + 10);
+      theExpression = (__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v6 + 10);
     }
     while ( theExpression );
   }
@@ -433,7 +433,7 @@ int  IO_ScanfReadCharField(int streamContext, int *argList, _WORD *destBuffer)
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destBuffer = *(_WORD **)(uintptr_t)(farArgPtr - 8);
+      destBuffer = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr - 8);
       __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
@@ -441,14 +441,14 @@ int  IO_ScanfReadCharField(int streamContext, int *argList, _WORD *destBuffer)
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_WORD **)(uintptr_t)(nearArgPtr - 4);
+      destBuffer = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_WORD **)(uintptr_t)(defaultArgPtr - 4);
+      destBuffer = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
     }
   }
   fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
@@ -517,7 +517,7 @@ void  IO_ScanfReadStringField(int streamContext, int *argList, unsigned __int8 *
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destBuffer = *(unsigned __int8 **)(uintptr_t)(farArgPtr - 8);
+      destBuffer = (unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr - 8);
       __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
@@ -525,14 +525,14 @@ void  IO_ScanfReadStringField(int streamContext, int *argList, unsigned __int8 *
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(unsigned __int8 **)(uintptr_t)(nearArgPtr - 4);
+      destBuffer = (unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(unsigned __int8 **)(uintptr_t)(defaultArgPtr - 4);
+      destBuffer = (unsigned __int8 *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
     }
   }
   for ( i = 0; ; ++i )
@@ -613,7 +613,7 @@ int  IO_ScanfStoreScanCount(int result, int *argList, int charCount)
     {
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
-      destPtr = *(_WORD **)(uintptr_t)(farArgPtr - 8);
+      destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr - 8);
       __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
     }
     else if ( (flagsByte & 8) != 0 )
@@ -621,14 +621,14 @@ int  IO_ScanfStoreScanCount(int result, int *argList, int charCount)
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destPtr = *(_WORD **)(uintptr_t)(nearArgPtr - 4);
+      destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destPtr = *(_WORD **)(uintptr_t)(defaultArgPtr - 4);
+      destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
     }
     if ( (*(_BYTE *)(uintptr_t)(result + 16) & 0x10) != 0 )
       *destPtr = charCount;
@@ -700,7 +700,7 @@ int  IO_ScanfReadScansetField(int *argList, int *formatPtr, _BYTE *destBuffer)
       farArgPtr = *argList + 8;
       *argList = farArgPtr;
       farArgBase = farArgPtr - 8;
-      destBuffer = *(_BYTE **)(uintptr_t)(farArgPtr - 8);
+      destBuffer = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr - 8);
       __ES__ = *(_WORD *)(uintptr_t)(farArgBase + 4);
     }
     else if ( (flagsByte & 8) != 0 )
@@ -708,14 +708,14 @@ int  IO_ScanfReadScansetField(int *argList, int *formatPtr, _BYTE *destBuffer)
       nearArgPtr = *argList + 4;
       *argList = nearArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_BYTE **)(uintptr_t)(nearArgPtr - 4);
+      destBuffer = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr - 4);
     }
     else
     {
       defaultArgPtr = *argList + 4;
       *argList = defaultArgPtr;
       __ES__ = __DS__;
-      destBuffer = *(_BYTE **)(uintptr_t)(defaultArgPtr - 4);
+      destBuffer = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
     }
   }
   fieldWidth = *(_DWORD *)(uintptr_t)(streamContext + 12);
@@ -839,7 +839,7 @@ LABEL_42:
           {
             farArgPtr = *argCursor + 8;
             *argCursor = farArgPtr;
-            destPtr = *(int **)(uintptr_t)(farArgPtr - 8);
+            destPtr = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr - 8);
             __ES__ = *(_WORD *)(uintptr_t)(farArgPtr - 8 + 4);
           }
           else if ( (flagsByte & 8) != 0 )
@@ -847,14 +847,14 @@ LABEL_42:
             nearArgPtr = *argCursor + 4;
             *argCursor = nearArgPtr;
             __ES__ = __DS__;
-            destPtr = *(int **)(uintptr_t)(nearArgPtr - 4);
+            destPtr = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr - 4);
           }
           else
           {
             defaultArgPtr = *argCursor + 4;
             *argCursor = defaultArgPtr;
             __ES__ = __DS__;
-            destPtr = *(int **)(uintptr_t)(defaultArgPtr - 4);
+            destPtr = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr - 4);
           }
           sizeFlags = *(_BYTE *)(uintptr_t)(streamContext + 16);
           if ( (sizeFlags & 0x10) != 0 )
@@ -1185,7 +1185,7 @@ LABEL_44:
         {
           farArgPtr32 = *argList + 8;
           *argList = farArgPtr32;
-          destPtr = *(_WORD **)(uintptr_t)(farArgPtr32 - 8);
+          destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(farArgPtr32 - 8);
           __ES__ = *(_WORD *)(uintptr_t)(farArgPtr32 - 8 + 4);
         }
         else if ( (flagsByte32 & 8) != 0 )
@@ -1193,14 +1193,14 @@ LABEL_44:
           nearArgPtr32 = *argList + 4;
           *argList = nearArgPtr32;
           __ES__ = __DS__;
-          destPtr = *(_WORD **)(uintptr_t)(nearArgPtr32 - 4);
+          destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(nearArgPtr32 - 4);
         }
         else
         {
           defaultArgPtr32 = *argList + 4;
           *argList = defaultArgPtr32;
           __ES__ = __DS__;
-          destPtr = *(_WORD **)(uintptr_t)(defaultArgPtr32 - 4);
+          destPtr = (_WORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(defaultArgPtr32 - 4);
         }
         if ( (*(_BYTE *)(uintptr_t)(streamContext + 16) & 0x10) != 0 )
           *destPtr = intValue;

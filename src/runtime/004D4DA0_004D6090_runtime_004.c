@@ -335,7 +335,7 @@ int  Class_PrintSlotBasicInfoTable(
       if ( (*(_BYTE *)(uintptr_t)slotDesc & 0x10) != 0 )
         overrideMessage = aNil_6;
       else
-        overrideMessage = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 12) + 16);
+        overrideMessage = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 12) + 16);
       sprintf_(buf, overrideMessagePrintFormat, overrideMessage);
       Output_Write(logicalName, (int)(intptr_t)buf, 0);
       Class_PrintSlotSourceClasses(logicalName, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 12), v69, (unsigned __int16 *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 4) + 46), 1);
@@ -471,13 +471,13 @@ signed int  Class_PrintSlotConstraintTable(
     for ( i = 0; ; i += 4 )
     {
       slotDesc = *(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56));
-      theConstraint = *(char **)(uintptr_t)(slotDesc + 20);
+      theConstraint = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotDesc + 20);
       sprintf_(buf, slotNamePrintFormat, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 8) + 12) + 16));
       if ( theConstraint )
         break;
       IO_OpenStringDestination((int)(intptr_t)aDescribeClas_1, (const void *)(uintptr_t)v13, bufferSize);
       Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)aRngOo__Oo, v14);
-      if ( (**(_BYTE **)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) != 0 )
+      if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) != 0 )
       {
         cardinalityMarker = aCrd0__Oo;
 LABEL_9:
@@ -612,7 +612,7 @@ LABEL_10:
       Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 14));
       Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)asc_50CF34, v53);
     }
-    if ( (**(_BYTE **)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) == 0 )
+    if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + *(_DWORD *)(uintptr_t)(theDefclass + 56)) & 2) == 0 )
       goto LABEL_10;
     Output_Write((int)(intptr_t)aDescribeClas_1, (int)(intptr_t)aCrd, v15);
     Rules_PrintFieldExprList((signed int)(intptr_t)aDescribeClas_1, *(__int16 **)(theConstraint + 18));
@@ -657,7 +657,7 @@ unsigned int  Class_ClassAbstractPCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
+    theDefclass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argDataObject + 16));
     if ( theDefclass )
     {
       return (unsigned int)(theDefclass[5] << 29) >> 31;
@@ -686,7 +686,7 @@ unsigned int  Class_ClassReactivePCommand(int a1, double a2)
   result = Lexer_ParseValueList(1, &argValue, 2, a2);
   if ( result )
   {
-    theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
+    theDefclass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argDataObject + 16));
     if ( theDefclass )
     {
       return (unsigned int)(theDefclass[5] << 28) >> 31;
@@ -717,7 +717,7 @@ int * Class_ParseClassNameAndInheritFlag(int functionName, _DWORD *inheritFlag, 
     result = (int *)(uintptr_t)Lexer_ParseValueList(1, argValue, 2, a3);
     if ( result )
     {
-      theDefclass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(argDataObject + 16));
+      theDefclass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(argDataObject + 16));
       if ( theDefclass )
       {
         if ( Rules_RtnArgCount() == 2 )
@@ -993,7 +993,7 @@ int  Class_MessageHandlerListFunction(int theDefclass, int inheritFlag)
     superclassIndex = 0;
     if ( precedenceCount > 0 )
     {
-      precedenceList = *(int **)(uintptr_t)(currentClass + 48);
+      precedenceList = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(currentClass + 48);
       do
       {
         precClass = *precedenceList++;
@@ -1308,7 +1308,7 @@ _DWORD * Class_SlotSourcesQuery(int theDefclass, _BYTE *slotName, int a3)
   slotDesc = result;
   if ( result )
   {
-    freeNode = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+    freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
     classCount = 1;
     if ( freeNode )
     {
@@ -1339,7 +1339,7 @@ _DWORD * Class_SlotSourcesQuery(int theDefclass, _BYTE *slotName, int a3)
         {
           if ( (*foundSlot & 8) == 0 )
           {
-            v14 = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 32);
+            v14 = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
             if ( v14 )
             {
               g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);

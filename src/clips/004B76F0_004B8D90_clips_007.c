@@ -338,7 +338,7 @@ int  Rules_ParseOrderedFactPattern(int readSource, int theToken)
       {
         IO_OutNewline();
         IO_OutWriteToken(asc_509EB8);
-        IO_OutWriteToken(*(char **)(uintptr_t)(theToken + 8));
+        IO_OutWriteToken((char *)(uintptr_t)*(_DWORD *)(uintptr_t)(theToken + 8));
         Parser_ReportSyntaxError();
         AST_FreeNode(patternNode);
         return 0;
@@ -415,12 +415,12 @@ int  Rules_ParseFactPatternRelation(int readSource, int theToken, int a3)
   _DWORD v10[5]; // [esp+0h] [ebp-14h] BYREF
 
   v10[3] = a3;
-  if ( Rules_FindModuleSeparator(*(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16)) )
+  if ( Rules_FindModuleSeparator((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16)) )
   {
     Module_ReportIllegalSpecifierError();
     return 0;
   }
-  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_7, v10, *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 4) + 16), 1, 0);
+  deftemplate = Rules_FindImportExportConstruct(aDeftemplate_7, v10, (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 4) + 16), 1, 0);
   if ( v10[0] > 1 )
   {
     Rules_ReportAmbiguousReferenceError((int)(intptr_t)aDeftemplate_7, *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16));
@@ -428,7 +428,7 @@ int  Rules_ParseFactPatternRelation(int readSource, int theToken, int a3)
   }
   if ( !deftemplate )
   {
-    templateName = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16);
+    templateName = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(theToken + 4) + 16);
     currentModule = Module_GetCurrent();
     if ( Rules_FindImportExportConflict(aDeftemplate_7, currentModule, templateName) )
     {
@@ -452,7 +452,7 @@ int * Rules_AddReservedPatternSymbol(int symbolName, int constructName)
   int *result; // eax
 
   v2 = symbolName;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -633,7 +633,7 @@ signed int  Rules_AddPatternParser(
   prevNode = 0;
   if ( g_PatternParserCount >= 8 )
     return 0;
-  freeEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 384);
+  freeEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 384);
   if ( freeEntry )
   {
     g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 384);
@@ -857,7 +857,7 @@ LABEL_33:
         *(_DWORD *)(uintptr_t)(wrapperNode + 40) = slotNumber;
         *(_DWORD *)(uintptr_t)(wrapperNode + 32) = startIndex;
         fieldList = (unsigned int *)(uintptr_t)wrapperNode;
-        Rules_ComputePatternFieldPositions(*(_DWORD **)(uintptr_t)(wrapperNode + 68));
+        Rules_ComputePatternFieldPositions((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(wrapperNode + 68));
       }
       return fieldList;
     }

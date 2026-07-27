@@ -44,7 +44,7 @@ signed int  Help_InsertEntryIntoTopicTree(int fileRecord, _DWORD *entry, int err
   {
     do
     {
-      nextTopic = *(_DWORD **)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 96);
+      nextTopic = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsHelpCurrentTopicNode + 96);
       g_ClipsHelpCurrentTopicNode = (int)(intptr_t)nextTopic;
     }
     while ( nextTopic && *entry < *nextTopic );
@@ -466,7 +466,7 @@ signed int  Help_SetHelpFilePathCommand(int a1, double a2)
     result = Lexer_ParseValueList(1, item, 111, a2);
     if ( result )
     {
-      newPath = *(const char **)(uintptr_t)(item[2] + 16);
+      newPath = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(item[2] + 16);
       srcPtr = newPath;
       dstPtr = Mem_SmallBlockAlloc(strlen(newPath) + 1);
       g_ClipsHelpFilePath = (int)(intptr_t)dstPtr;
@@ -733,7 +733,7 @@ _DWORD * Rules_HelpBuildTopicListFromArgs(double a1)
       Rules_RtnUnknown(theIndex, v4, a1);
       if ( argType == 2 || argType == 3 )
       {
-        topicName = *(char **)(uintptr_t)(argValue + 16);
+        topicName = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(argValue + 16);
       }
       else if ( argType )
       {
@@ -1021,14 +1021,14 @@ int  Rules_ConstructsToCCommand(double a1)
   _DWORD item[2]; // [esp+0h] [ebp-30h] BYREF
   int itemValue; // [esp+8h] [ebp-28h]
 
-  result = Rules_ArgRangeCheck((int)(intptr_t)aConstructsToC, 3);
+  result = Rules_ArgRangeCheck((int)(intptr_t)aConstructsToC, 2, 3);
   argCount = result;
   if ( result != -1 )
   {
     result = Lexer_ParseValueList(1, item, 111, a1);
     if ( result )
     {
-      fileName = *(const char **)(uintptr_t)(itemValue + 16);
+      fileName = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(itemValue + 16);
       if ( (int)strlen(fileName) > 3 )
       {
         Rules_PrintWarningID((int)(intptr_t)aConscomp, 1, 0);

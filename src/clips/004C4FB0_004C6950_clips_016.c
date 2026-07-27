@@ -37,7 +37,7 @@ __int16  Deffunction_CountAndMarkExpressions(_DWORD *theDeffunction)
   bsaveId = g_Deffunction_Count++;
   AST_MarkNodeFieldBound(theDeffunction, bsaveId);
   g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v2 + 30));
-  return Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v3 + 30));
+  return Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 30));
 }
 // 4C5018: variable 'v2' is possibly undefined
 // 4C5026: variable 'v3' is possibly undefined
@@ -54,7 +54,7 @@ signed int Deffunction_BsaveWriteExpressions(void)
 //----- (004C5050) --------------------------------------------------------
 __int16 * Deffunction_BsaveWriteBodyExpression(int theDeffunction, int fp)
 {
-  return Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(theDeffunction + 30), fp);
+  return Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDeffunction + 30), fp);
 }
 
 //----- (004C5060) --------------------------------------------------------
@@ -326,7 +326,7 @@ _DWORD *Class_CountBsaveEntries(void)
   g_DefclassNameTableCount = Rules_DoForAllConstructs((void (*)(void))Class_CountSlotsAndMarkExpressions, 0);
   for ( i = 0; i != 668; i += 4 )
   {
-    for ( result = *(_DWORD **)(uintptr_t)(i + g_Defclass_SlotNameHashTablePtr); result; result = (_DWORD *)(uintptr_t)result[5] )
+    for ( result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(i + g_Defclass_SlotNameHashTablePtr); result; result = (_DWORD *)(uintptr_t)result[5] )
     {
       if ( result[2] >= 2u )
       {
@@ -393,11 +393,11 @@ int  Class_CountSlotsAndMarkExpressions(int theDefclass)
         if ( (*(_BYTE *)(uintptr_t)theSlot & 0x40) != 0 )
         {
           g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(theSlot + 16));
-          Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(v9 + 52) + 16));
+          Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(slotOffset + *(_DWORD *)(uintptr_t)(v9 + 52) + 16));
         }
         else
         {
-          defaultExpr = AST_BuildExpressionFromValue(*(_DWORD **)(uintptr_t)(theSlot + 16));
+          defaultExpr = AST_BuildExpressionFromValue((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 16));
           g_ClipsExpressionNodeIndex += AST_CountTreeNodes(defaultExpr);
           Rules_MarkReferencedFunctions(v18);
           AST_Free(v19);
@@ -421,7 +421,7 @@ int  Class_CountSlotsAndMarkExpressions(int theDefclass)
       *(_BYTE *)(uintptr_t)(handlerNameSym + 12) |= 2u;
       g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(handlerOffset + classPtr[22] + 28));
       ++handlerIndex;
-      Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v14 + *(_DWORD *)(uintptr_t)(v13 + 88) + 28));
+      Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v14 + *(_DWORD *)(uintptr_t)(v13 + 88) + 28));
       handlerOffset = v15 + 36;
     }
     while ( handlerIndex < classPtr[24] );
@@ -513,7 +513,7 @@ __int16 * Class_BsaveSlotExpressions(__int16 *result, int fp)
     do
     {
       ++handlerIndex;
-      result = Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(theDefclass + 88) + 28), fp);
+      result = Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(handlerOffset + *(_DWORD *)(uintptr_t)(theDefclass + 88) + 28), fp);
       handlerOffset = v6 + 36;
     }
     while ( handlerIndex < *(_DWORD *)(uintptr_t)(theDefclass + 96) );
@@ -627,7 +627,7 @@ const void * Class_BsaveWriteData(int fp)
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteSuperclassLists, 0);
     do
     {
-      for ( i = *(_DWORD **)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + bucketOffset); i; i = (_DWORD *)(uintptr_t)i[5] )
+      for ( i = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_Defclass_SlotNameHashTablePtr + bucketOffset); i; i = (_DWORD *)(uintptr_t)i[5] )
       {
         if ( i[2] >= 2u )
         {

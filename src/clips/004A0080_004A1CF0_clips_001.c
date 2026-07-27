@@ -42,16 +42,16 @@ int  Rules_NumericNotEqualFunction(int a1, double result, int a3)
 signed int  Rules_OddpFunction(int returnValue, double a2)
 {
   signed int result; // eax
-  int item; // [esp-8h] [ebp-24h] BYREF
-  int itemValue; // [esp+0h] [ebp-1Ch]
+  _DWORD item[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of item[2]: the DATA_OBJECT value slot */
   int returnValueCopy CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   returnValueCopy = returnValue;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aOddp, 0, 1) == -1 )
     return 0;
-  result = Lexer_ParseValueList(1, &item, 1, a2);
+  result = Lexer_ParseValueList(1, item, 1, a2);
   if ( result )
-    return *(_DWORD *)(uintptr_t)(itemValue + 16) != 2 * (*(_DWORD *)(uintptr_t)(itemValue + 16) / 2);
+    return *(_DWORD *)(uintptr_t)(item[2] + 16) != 2 * (*(_DWORD *)(uintptr_t)(item[2] + 16) / 2);
   return result;
 }
 
@@ -59,16 +59,16 @@ signed int  Rules_OddpFunction(int returnValue, double a2)
 signed int  Rules_EvenpFunction(int returnValue, double a2)
 {
   signed int result; // eax
-  int item; // [esp-8h] [ebp-24h] BYREF
-  int itemValue; // [esp+0h] [ebp-1Ch]
+  _DWORD item[6]; // [esp-8h] [ebp-24h] BYREF
+  /* stack alias of item[2]: the DATA_OBJECT value slot */
   int returnValueCopy CLASH95_UNUSED; // [esp+14h] [ebp-8h]
 
   returnValueCopy = returnValue;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aEvenp, 0, 1) == -1 )
     return 0;
-  result = Lexer_ParseValueList(1, &item, 1, a2);
+  result = Lexer_ParseValueList(1, item, 1, a2);
   if ( result )
-    return *(_DWORD *)(uintptr_t)(itemValue + 16) == 2 * (*(_DWORD *)(uintptr_t)(itemValue + 16) / 2);
+    return *(_DWORD *)(uintptr_t)(item[2] + 16) == 2 * (*(_DWORD *)(uintptr_t)(item[2] + 16) / 2);
   return result;
 }
 
@@ -144,269 +144,228 @@ int * Rules_AdditionFunction(uintptr_t returnValue, double a2)
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004A04A0) --------------------------------------------------------
-int * Rules_MultiplicationFunction(int returnValue, double a2)
+/* Repaired to match the already-verified sibling Rules_AdditionFunction (004A03B0):
+   sub_481720 returns its validity flag in eax (IDA dropped it -> 'parseOk' undefined),
+   and var_44/var_40/var_3C are ONE 24-byte DATA_OBJECT, not three scalars. The
+   'returnValue' argument is the caller's native DATA_OBJECT pointer (Parser_ParseForm
+   passes valuePtr), so it must not be truncated to int. */
+int * Rules_MultiplicationFunction(uintptr_t returnValue, double a2)
 {
   signed int ltotal; // ebp
   int useFloatTotal; // edi
-  int theExpression; // esi
-  int parseOk; // eax
+  uintptr_t theExpression; // esi
   double newFtotal; // st6
-  int resultTarget; // ebx
-  int *result; // eax
-  double floatResultValue; // [esp-8h] [ebp-4Ch]
-  _DWORD theArgument[2]; // [esp+0h] [ebp-44h] BYREF
-  int argValuePtr; // [esp+8h] [ebp-3Ch]
+  int result; // eax
   double ftotal; // [esp+18h] [ebp-2Ch]
-  int returnValueCopy; // [esp+20h] [ebp-24h]
+  _DWORD parsed[6]; // [esp+0h] [ebp-44h] BYREF
   int i; // [esp+24h] [ebp-20h]
-  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
-  returnValueCopy = returnValue;
   ltotal = 1;
   useFloatTotal = 0;
   ftotal = 1.0;
-  theExpression = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   for ( i = 1; theExpression; ++i )
   {
-    a2 = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)theExpression, useFloatTotal, theArgument, a2, i);
-    if ( parseOk )
-      theExpression = *(_DWORD *)(uintptr_t)(theExpression + 10);
-    else
+    if ( !Parser_ParseNumericFormCompat((__int16 *)theExpression, useFloatTotal, parsed, a2, i) )
       theExpression = 0;
     if ( useFloatTotal )
     {
-      newFtotal = ftotal * *(double *)(uintptr_t)(argValuePtr + 16);
+      newFtotal = ftotal * Parser_NumberValueAsDouble(parsed[2]);
     }
     else
     {
-      if ( theArgument[1] == 1 )
+      if ( parsed[1] == 1 )
       {
-        ltotal *= *(_DWORD *)(uintptr_t)(argValuePtr + 16);
+        ltotal *= Parser_NumberValueAsInt(parsed[2]);
+        if ( theExpression )
+          theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
         continue;
       }
-      savedLtotal = ltotal;
-      newFtotal = (double)ltotal * *(double *)(uintptr_t)(argValuePtr + 16);
+      newFtotal = (double)ltotal * Parser_NumberValueAsDouble(parsed[2]);
       useFloatTotal = 1;
     }
     ftotal = newFtotal;
+    if ( theExpression )
+      theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
   }
   if ( useFloatTotal )
   {
-    floatResultValue = ftotal;
-    resultTarget = returnValueCopy;
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 0;
-    result = (int *)(uintptr_t)Rules_AddDoubleValue(floatResultValue);
+    *(_DWORD *)(returnValue + 4) = 0;
+    result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 1;
-    resultTarget = returnValueCopy;
-    result = Rules_AddIntegerValue(ltotal);
+    *(_DWORD *)(returnValue + 4) = 1;
+    result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(uintptr_t)(resultTarget + 8) = result;
-  return result;
+  *(_DWORD *)(returnValue + 8) = result;
+  return (int *)(uintptr_t)(unsigned int)result;
 }
 // 4A04ED: variable 'v5' is possibly undefined
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004A0590) --------------------------------------------------------
-int * Rules_SubtractionFunction(int returnValue, double a2)
+/* Repaired to match the already-verified sibling Rules_AdditionFunction (004A03B0):
+   sub_481720 returns its validity flag in eax (IDA dropped it -> 'parseOk' undefined),
+   and var_44/var_40/var_3C are ONE 24-byte DATA_OBJECT, not three scalars. The
+   'returnValue' argument is the caller's native DATA_OBJECT pointer (Parser_ParseForm
+   passes valuePtr), so it must not be truncated to int. */
+int * Rules_SubtractionFunction(uintptr_t returnValue, double a2)
 {
   signed int ltotal; // ebp
   int useFloatTotal; // edi
-  int theExpression; // esi
-  int parseOk; // eax
-  int firstParseOk; // eax
-  int floatHighBits; // eax
-  int resultTarget; // ebx
-  int *result; // eax
-  double floatResultValue; // [esp-8h] [ebp-4Ch]
-  int theArgument; // [esp+0h] [ebp-44h] BYREF
-  int argType; // [esp+4h] [ebp-40h]
-  int argValuePtr; // [esp+8h] [ebp-3Ch]
+  uintptr_t theExpression; // esi
+  int result; // eax
   double ftotal; // [esp+18h] [ebp-2Ch]
-  int returnValueCopy; // [esp+20h] [ebp-24h]
+  _DWORD parsed[6]; // [esp+0h] [ebp-44h] BYREF
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
-  returnValueCopy = returnValue;
   ltotal = 0;
   useFloatTotal = 0;
   ftotal = 0.0;
-  theExpression = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   argIndex = 1;
   if ( theExpression )
   {
-    a2 = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)theExpression, 0, &theArgument, a2, 1);
-    if ( firstParseOk )
-      theExpression = *(_DWORD *)(uintptr_t)(theExpression + 10);
+    if ( Parser_ParseNumericFormCompat((__int16 *)theExpression, 0, parsed, a2, 1) )
+      theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( argType == 1 )
+    if ( parsed[1] == 1 )
     {
-      ltotal = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
+      ltotal = Parser_NumberValueAsInt(parsed[2]);
     }
     else
     {
       useFloatTotal = 1;
-      floatHighBits = *(_DWORD *)(uintptr_t)(argValuePtr + 20);
-      LODWORD(ftotal) = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
-      HIDWORD(ftotal) = floatHighBits;
+      ftotal = Parser_NumberValueAsDouble(parsed[2]);
     }
     ++argIndex;
   }
   while ( theExpression )
   {
-    a2 = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)theExpression, useFloatTotal, &theArgument, a2, argIndex);
-    if ( parseOk )
-      theExpression = *(_DWORD *)(uintptr_t)(theExpression + 10);
+    if ( Parser_ParseNumericFormCompat((__int16 *)theExpression, useFloatTotal, parsed, a2, argIndex) )
+      theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
     if ( useFloatTotal )
     {
-      ftotal = ftotal - *(double *)(uintptr_t)(argValuePtr + 16);
-      ++argIndex;
+      ftotal = ftotal - Parser_NumberValueAsDouble(parsed[2]);
+    }
+    else if ( parsed[1] == 1 )
+    {
+      ltotal -= Parser_NumberValueAsInt(parsed[2]);
     }
     else
     {
-      if ( argType == 1 )
-      {
-        ltotal -= *(_DWORD *)(uintptr_t)(argValuePtr + 16);
-      }
-      else
-      {
-        savedLtotal = ltotal;
-        useFloatTotal = 1;
-        ftotal = (double)ltotal - *(double *)(uintptr_t)(argValuePtr + 16);
-      }
-      ++argIndex;
+      useFloatTotal = 1;
+      ftotal = (double)ltotal - Parser_NumberValueAsDouble(parsed[2]);
     }
+    ++argIndex;
   }
   if ( useFloatTotal )
   {
-    floatResultValue = ftotal;
-    resultTarget = returnValueCopy;
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 0;
-    result = (int *)(uintptr_t)Rules_AddDoubleValue(floatResultValue);
+    *(_DWORD *)(returnValue + 4) = 0;
+    result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 1;
-    resultTarget = returnValueCopy;
-    result = Rules_AddIntegerValue(ltotal);
+    *(_DWORD *)(returnValue + 4) = 1;
+    result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(uintptr_t)(resultTarget + 8) = result;
-  return result;
+  *(_DWORD *)(returnValue + 8) = result;
+  return (int *)(uintptr_t)(unsigned int)result;
 }
 // 4A05E0: variable 'v5' is possibly undefined
 // 4A0616: variable 'v6' is possibly undefined
 // 51A960: using guessed type int dword_51A960;
 
 //----- (004A06E0) --------------------------------------------------------
-int * Rules_DivisionFunction(int returnValue, double a2)
+/* Repaired to match the already-verified sibling Rules_AdditionFunction (004A03B0):
+   sub_481720 returns its validity flag in eax (IDA dropped it -> 'parseOk' undefined),
+   and var_44/var_40/var_3C are ONE 24-byte DATA_OBJECT, not three scalars. The
+   'returnValue' argument is the caller's native DATA_OBJECT pointer (Parser_ParseForm
+   passes valuePtr), so it must not be truncated to int. */
+int * Rules_DivisionFunction(uintptr_t returnValue, double a2)
 {
   signed int ltotal; // esi
   int useFloatTotal; // ebp
-  int theExpression; // edi
-  int resultTarget; // ebx
-  int *result; // eax
-  int firstParseOk; // eax
-  int floatHighBits; // eax
-  int parseOk; // eax
+  uintptr_t theExpression; // edi
+  int result; // eax
   BOOL isDivideByZero; // eax
-  int divZeroResultTarget; // ebx
-  double floatResultValue; // [esp-8h] [ebp-4Ch]
-  int theArgument; // [esp+0h] [ebp-44h] BYREF
-  int argType; // [esp+4h] [ebp-40h]
-  int argValuePtr; // [esp+8h] [ebp-3Ch]
   double ftotal; // [esp+18h] [ebp-2Ch]
-  int returnValueCopy; // [esp+20h] [ebp-24h]
+  _DWORD parsed[6]; // [esp+0h] [ebp-44h] BYREF
   int argIndex; // [esp+24h] [ebp-20h]
-  signed int savedLtotal CLASH95_UNUSED; // [esp+28h] [ebp-1Ch]
 
-  returnValueCopy = returnValue;
   ltotal = 1;
   useFloatTotal = g_Rules_AutoFloatDividendEnabled;
   ftotal = 1.0;
-  theExpression = *(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
+  theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6);
   argIndex = 1;
   if ( theExpression )
   {
-    a2 = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)theExpression, g_Rules_AutoFloatDividendEnabled, &theArgument, a2, 1);
-    if ( firstParseOk )
-      theExpression = *(_DWORD *)(uintptr_t)(theExpression + 10);
+    if ( Parser_ParseNumericFormCompat((__int16 *)theExpression, g_Rules_AutoFloatDividendEnabled, parsed, a2, 1) )
+      theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( argType == 1 )
+    if ( parsed[1] == 1 )
     {
-      ltotal = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
+      ltotal = Parser_NumberValueAsInt(parsed[2]);
     }
     else
     {
       useFloatTotal = 1;
-      floatHighBits = *(_DWORD *)(uintptr_t)(argValuePtr + 20);
-      LODWORD(ftotal) = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
-      HIDWORD(ftotal) = floatHighBits;
+      ftotal = Parser_NumberValueAsDouble(parsed[2]);
     }
     ++argIndex;
   }
   while ( theExpression )
   {
-    a2 = Rules_CoerceFormToNumericArg((__int16 *)(uintptr_t)theExpression, useFloatTotal, &theArgument, a2, argIndex);
-    if ( parseOk )
-      theExpression = *(_DWORD *)(uintptr_t)(theExpression + 10);
+    if ( Parser_ParseNumericFormCompat((__int16 *)theExpression, useFloatTotal, parsed, a2, argIndex) )
+      theExpression = (uintptr_t)(unsigned int)*(_DWORD *)(theExpression + 10);
     else
       theExpression = 0;
-    if ( argType == 1 )
-      isDivideByZero = *(_DWORD *)(uintptr_t)(argValuePtr + 16) == 0;
+    if ( parsed[1] == 1 )
+      isDivideByZero = Parser_NumberValueAsInt(parsed[2]) == 0;
     else
-      isDivideByZero = !argType && (*(_DWORD *)(uintptr_t)(argValuePtr + 20) & 0x7FFFFFFF) == 0 && !*(_DWORD *)(uintptr_t)(argValuePtr + 16);
+      isDivideByZero = parsed[1] == 0 && Parser_NumberValueAsDouble(parsed[2]) == 0.0;
     if ( isDivideByZero )
     {
       Rules_ReportDivideByZeroError();
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
-      divZeroResultTarget = returnValueCopy;
-      *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 0;
-      result = (int *)(uintptr_t)Rules_AddDoubleValue(1.0);
-      *(_DWORD *)(uintptr_t)(divZeroResultTarget + 8) = result;
-      return result;
+      *(_DWORD *)(returnValue + 4) = 0;
+      result = (int)(uintptr_t)Rules_AddDoubleValue(1.0);
+      *(_DWORD *)(returnValue + 8) = result;
+      return (int *)(uintptr_t)(unsigned int)result;
     }
     if ( useFloatTotal )
     {
-      ftotal = ftotal / *(double *)(uintptr_t)(argValuePtr + 16);
-      ++argIndex;
+      ftotal = ftotal / Parser_NumberValueAsDouble(parsed[2]);
+    }
+    else if ( parsed[1] == 1 )
+    {
+      ltotal /= Parser_NumberValueAsInt(parsed[2]);
     }
     else
     {
-      if ( argType == 1 )
-      {
-        ltotal /= *(int *)(uintptr_t)(argValuePtr + 16);
-      }
-      else
-      {
-        savedLtotal = ltotal;
-        useFloatTotal = 1;
-        ftotal = (double)ltotal / *(double *)(uintptr_t)(argValuePtr + 16);
-      }
-      ++argIndex;
+      useFloatTotal = 1;
+      ftotal = (double)ltotal / Parser_NumberValueAsDouble(parsed[2]);
     }
+    ++argIndex;
   }
   if ( useFloatTotal )
   {
-    floatResultValue = ftotal;
-    resultTarget = returnValueCopy;
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 0;
-    result = (int *)(uintptr_t)Rules_AddDoubleValue(floatResultValue);
+    *(_DWORD *)(returnValue + 4) = 0;
+    result = (int)(uintptr_t)Rules_AddDoubleValue(ftotal);
   }
   else
   {
-    *(_DWORD *)(uintptr_t)(returnValueCopy + 4) = 1;
-    resultTarget = returnValueCopy;
-    result = Rules_AddIntegerValue(ltotal);
+    *(_DWORD *)(returnValue + 4) = 1;
+    result = (int)(uintptr_t)Rules_AddIntegerValue(ltotal);
   }
-  *(_DWORD *)(uintptr_t)(resultTarget + 8) = result;
-  return result;
+  *(_DWORD *)(returnValue + 8) = result;
+  return (int *)(uintptr_t)(unsigned int)result;
 }
 // 4A0762: variable 'v7' is possibly undefined
 // 4A07B6: variable 'v9' is possibly undefined
@@ -425,7 +384,7 @@ double  Rules_DivFunction(double result)
   double divisorFloat; // st6
   int theArgument; // [esp+0h] [ebp-3Ch] BYREF
   int argType; // [esp+4h] [ebp-38h]
-  int argValuePtr; // [esp+8h] [ebp-34h]
+  int argValue_alias; // [esp+8h] [ebp-34h]
   int v11 CLASH95_UNUSED; // [esp+18h] [ebp-24h]
   int theNumber; // [esp+1Ch] [ebp-20h]
   int total; // [esp+20h] [ebp-1Ch]
@@ -442,11 +401,11 @@ double  Rules_DivFunction(double result)
       theExpression = 0;
     if ( argType == 1 )
     {
-      total = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
+      total = *(_DWORD *)(uintptr_t)(argValue_alias + 16);
     }
     else
     {
-      firstFloatValue = *(double *)(uintptr_t)(argValuePtr + 16);
+      firstFloatValue = *(double *)(uintptr_t)(argValue_alias + 16);
       _CHP(theArgument, argType);
       total = (int)firstFloatValue;
     }
@@ -461,13 +420,13 @@ double  Rules_DivFunction(double result)
       theExpression = 0;
     if ( argType == 1 )
     {
-      theNumber = *(_DWORD *)(uintptr_t)(argValuePtr + 16);
+      theNumber = *(_DWORD *)(uintptr_t)(argValue_alias + 16);
     }
     else
     {
       if ( argType )
         goto LABEL_16;
-      divisorFloatCheck = *(double *)(uintptr_t)(argValuePtr + 16);
+      divisorFloatCheck = *(double *)(uintptr_t)(argValue_alias + 16);
       _CHP(theArgument, 0);
       theNumber = (int)divisorFloatCheck;
     }
@@ -481,11 +440,11 @@ double  Rules_DivFunction(double result)
 LABEL_16:
     if ( argType == 1 )
     {
-      total /= *(int *)(uintptr_t)(argValuePtr + 16);
+      total /= *(int *)(uintptr_t)(argValue_alias + 16);
     }
     else
     {
-      divisorFloat = *(double *)(uintptr_t)(argValuePtr + 16);
+      divisorFloat = *(double *)(uintptr_t)(argValue_alias + 16);
       _CHP(theArgument, argType);
       v11 = (int)divisorFloat;
       total /= (int)divisorFloat;
@@ -507,7 +466,7 @@ int  Rules_SetAutoFloatDividendCommand(int returnValue, double a2)
   int returnValueCopy CLASH95_UNUSED; // [esp+18h] [ebp-8h]
 
   returnValueCopy = returnValue;
-  if ( Lexer_TokenExpect(1) != -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSetAutoFloatDi, 0, 1) != -1 )
   {
     Rules_RtnUnknown(1, &theValue, a2);
     g_Rules_AutoFloatDividendEnabled = typeValuePair != __PAIR64__(g_ClipsFalseSymbol, 2);
@@ -521,7 +480,7 @@ int  Rules_SetAutoFloatDividendCommand(int returnValue, double a2)
 //----- (004A0A80) --------------------------------------------------------
 int Rules_GetAutoFloatDividendCommand(void)
 {
-  Lexer_TokenExpect(0);
+  Lexer_TokenExpect((int)(intptr_t)aGetAutoFloatDi, 0, 0);
   return g_Rules_AutoFloatDividendEnabled;
 }
 // 51ACD4: using guessed type int dword_51ACD4;
@@ -533,7 +492,7 @@ signed int  Rules_IntegerFunction(int returnValue, double a2)
   _DWORD item[9]; // [esp-8h] [ebp-24h] BYREF
 
   item[7] = returnValue;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aInteger, 0, 1) == -1 )
     return 0;
   result = Lexer_ParseValueList(1, item, 1, a2);
   if ( result )
@@ -545,8 +504,8 @@ signed int  Rules_IntegerFunction(int returnValue, double a2)
 double  Rules_FloatFunction(int a1, int a2, int a3, double a4)
 {
   int valueHigh; // eax
-  int item; // [esp-8h] [ebp-30h] BYREF
-  int itemValue; // [esp+0h] [ebp-28h]
+  _DWORD item[6]; // [esp-8h] [ebp-30h] BYREF
+  /* stack alias of item[2]: the DATA_OBJECT value slot */
   double floatValue; // [esp+10h] [ebp-18h]
   int v9 CLASH95_UNUSED; // [esp+18h] [ebp-10h]
   int v10 CLASH95_UNUSED; // [esp+1Ch] [ebp-Ch]
@@ -555,15 +514,15 @@ double  Rules_FloatFunction(int a1, int a2, int a3, double a4)
   v11 = a1;
   v10 = a3;
   v9 = a2;
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aFloat, 0, 1) == -1 )
   {
     floatValue = 0.0;
     return 0.0;
   }
-  else if ( Lexer_ParseValueList(1, &item, 0, a4) )
+  else if ( Lexer_ParseValueList(1, item, 0, a4) )
   {
-    valueHigh = *(_DWORD *)(uintptr_t)(itemValue + 20);
-    LODWORD(floatValue) = *(_DWORD *)(uintptr_t)(itemValue + 16);
+    valueHigh = *(_DWORD *)(uintptr_t)(item[2] + 20);
+    LODWORD(floatValue) = *(_DWORD *)(uintptr_t)(item[2] + 16);
     HIDWORD(floatValue) = valueHigh;
     return floatValue;
   }
@@ -581,7 +540,7 @@ void  Rules_AbsFunction(_DWORD *returnValue, double a2)
   int longValue; // ecx
   int valuePtr; // edx
 
-  if ( Lexer_TokenExpect(1) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aAbs, 0, 1) == -1 )
   {
     parseOk = 0;
     goto LABEL_7;
@@ -614,11 +573,11 @@ void  Rules_MinFunction(_DWORD *returnValue, double a2)
   int numberOfArguments; // ebp
   signed int parseOk; // eax
   int argIndex; // edi
-  int argValue; // [esp+0h] [ebp-30h] BYREF
-  int argType; // [esp+4h] [ebp-2Ch]
-  int argValuePtr; // [esp+8h] [ebp-28h]
+  _DWORD argValue[6]; // [esp+0h] [ebp-30h] BYREF
+  /* stack alias of argValue[1] */
+  /* stack alias of argValue[2]: the DATA_OBJECT value slot */
 
-  numberOfArguments = Lexer_TokenExpect(1);
+  numberOfArguments = Lexer_TokenExpect((int)(intptr_t)aMin, 1, 1);
   if ( numberOfArguments == -1 )
   {
     parseOk = 0;
@@ -637,40 +596,40 @@ LABEL_13:
   {
     while ( 1 )
     {
-      if ( !Lexer_ParseValueList(argIndex, &argValue, 110, a2) )
+      if ( !Lexer_ParseValueList(argIndex, argValue, 110, a2) )
         return;
       if ( returnValue[1] != 1 )
         break;
-      if ( argType != 1 )
+      if ( argValue[1] != 1 )
       {
         a2 = (double)*(int *)(uintptr_t)(returnValue[2] + 16);
-        if ( a2 <= *(double *)(uintptr_t)(argValuePtr + 16) )
+        if ( a2 <= *(double *)(uintptr_t)(argValue[2] + 16) )
           goto LABEL_10;
-        returnValue[1] = argType;
+        returnValue[1] = argValue[1];
         goto LABEL_9;
       }
-      if ( *(_DWORD *)(uintptr_t)(returnValue[2] + 16) > *(_DWORD *)(uintptr_t)(argValuePtr + 16) )
+      if ( *(_DWORD *)(uintptr_t)(returnValue[2] + 16) > *(_DWORD *)(uintptr_t)(argValue[2] + 16) )
         goto LABEL_8;
 LABEL_10:
       if ( ++argIndex > numberOfArguments )
         return;
     }
-    if ( argType == 1 )
+    if ( argValue[1] == 1 )
     {
-      a2 = (double)*(int *)(uintptr_t)(argValuePtr + 16);
+      a2 = (double)*(int *)(uintptr_t)(argValue[2] + 16);
       if ( a2 >= *(double *)(uintptr_t)(returnValue[2] + 16) )
         goto LABEL_10;
     }
     else
     {
       a2 = *(double *)(uintptr_t)(returnValue[2] + 16);
-      if ( a2 <= *(double *)(uintptr_t)(argValuePtr + 16) )
+      if ( a2 <= *(double *)(uintptr_t)(argValue[2] + 16) )
         goto LABEL_10;
     }
 LABEL_8:
-    returnValue[1] = argType;
+    returnValue[1] = argValue[1];
 LABEL_9:
-    returnValue[2] = argValuePtr;
+    returnValue[2] = argValue[2];
     goto LABEL_10;
   }
 }
@@ -681,11 +640,11 @@ void  Rules_MaxFunction(_DWORD *returnValue, double a2)
   int numberOfArguments; // ebp
   signed int parseOk; // eax
   int argIndex; // edi
-  int argValue; // [esp+0h] [ebp-30h] BYREF
-  int argType; // [esp+4h] [ebp-2Ch]
-  int argValuePtr; // [esp+8h] [ebp-28h]
+  _DWORD argValue[6]; // [esp+0h] [ebp-30h] BYREF
+  /* stack alias of argValue[1] */
+  /* stack alias of argValue[2]: the DATA_OBJECT value slot */
 
-  numberOfArguments = Lexer_TokenExpect(1);
+  numberOfArguments = Lexer_TokenExpect((int)(intptr_t)aMax, 1, 1);
   if ( numberOfArguments == -1 )
   {
     parseOk = 0;
@@ -704,40 +663,40 @@ LABEL_13:
   {
     while ( 1 )
     {
-      if ( !Lexer_ParseValueList(argIndex, &argValue, 110, a2) )
+      if ( !Lexer_ParseValueList(argIndex, argValue, 110, a2) )
         return;
       if ( returnValue[1] != 1 )
         break;
-      if ( argType != 1 )
+      if ( argValue[1] != 1 )
       {
         a2 = (double)*(int *)(uintptr_t)(returnValue[2] + 16);
-        if ( a2 >= *(double *)(uintptr_t)(argValuePtr + 16) )
+        if ( a2 >= *(double *)(uintptr_t)(argValue[2] + 16) )
           goto LABEL_10;
-        returnValue[1] = argType;
+        returnValue[1] = argValue[1];
         goto LABEL_9;
       }
-      if ( *(_DWORD *)(uintptr_t)(returnValue[2] + 16) < *(_DWORD *)(uintptr_t)(argValuePtr + 16) )
+      if ( *(_DWORD *)(uintptr_t)(returnValue[2] + 16) < *(_DWORD *)(uintptr_t)(argValue[2] + 16) )
         goto LABEL_8;
 LABEL_10:
       if ( ++argIndex > numberOfArguments )
         return;
     }
-    if ( argType == 1 )
+    if ( argValue[1] == 1 )
     {
-      a2 = (double)*(int *)(uintptr_t)(argValuePtr + 16);
+      a2 = (double)*(int *)(uintptr_t)(argValue[2] + 16);
       if ( a2 <= *(double *)(uintptr_t)(returnValue[2] + 16) )
         goto LABEL_10;
     }
     else
     {
       a2 = *(double *)(uintptr_t)(returnValue[2] + 16);
-      if ( a2 >= *(double *)(uintptr_t)(argValuePtr + 16) )
+      if ( a2 >= *(double *)(uintptr_t)(argValue[2] + 16) )
         goto LABEL_10;
     }
 LABEL_8:
-    returnValue[1] = argType;
+    returnValue[1] = argValue[1];
 LABEL_9:
-    returnValue[2] = argValuePtr;
+    returnValue[2] = argValue[2];
     goto LABEL_10;
   }
 }
@@ -800,14 +759,14 @@ _DWORD * Rules_MVDeleteFunction(_DWORD *returnValue, int a2, double a3)
 {
   _DWORD *result; // eax
   _DWORD multifieldValue[6]; // [esp+0h] [ebp-40h] BYREF
-  int indexValue; // [esp+18h] [ebp-28h] BYREF
-  int indexValuePtr; // [esp+20h] [ebp-20h]
+  _DWORD indexValue[6]; // [esp+18h] [ebp-28h] BYREF
+  /* stack alias of indexValue[2]: the DATA_OBJECT value slot */
   int v8 CLASH95_UNUSED; // [esp+38h] [ebp-8h]
 
   v8 = a2;
-  if ( !Lexer_ParseValueList(1, &indexValue, 1, a3)
+  if ( !Lexer_ParseValueList(1, indexValue, 1, a3)
     || !Lexer_ParseValueList(2, multifieldValue, 4, a3)
-    || (result = (_DWORD *)(uintptr_t)Rules_MultifieldDeleteRange(returnValue, multifieldValue, *(_DWORD *)(uintptr_t)(indexValuePtr + 16), *(_DWORD *)(uintptr_t)(indexValuePtr + 16), (int)(intptr_t)aMvDelete)) == 0 )
+    || (result = (_DWORD *)(uintptr_t)Rules_MultifieldDeleteRange(returnValue, multifieldValue, *(_DWORD *)(uintptr_t)(indexValue[2] + 16), *(_DWORD *)(uintptr_t)(indexValue[2] + 16), (int)(intptr_t)aMvDelete)) == 0 )
   {
     Lexer_ErrorRecover(1);
     return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
@@ -856,15 +815,15 @@ _DWORD * Rules_MVReplaceFunction(_DWORD *returnValue, int a2, double a3)
   int v4; // ecx
   _DWORD *result; // eax
   _DWORD multifieldValue[6]; // [esp+0h] [ebp-58h] BYREF
-  int indexValue; // [esp+18h] [ebp-40h] BYREF
-  int indexValuePtr; // [esp+20h] [ebp-38h]
+  _DWORD indexValue[6]; // [esp+18h] [ebp-40h] BYREF
+  /* stack alias of indexValue[2]: the DATA_OBJECT value slot */
   _DWORD fieldValue[10]; // [esp+30h] [ebp-28h] BYREF
 
   fieldValue[8] = a2;
-  if ( !Lexer_ParseValueList(1, &indexValue, 1, a3)
+  if ( !Lexer_ParseValueList(1, indexValue, 1, a3)
     || !Lexer_ParseValueList(2, multifieldValue, 4, a3)
-    || (Parser_ParseForm(*(__int16 **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10) + 10), fieldValue, v4, a3),
-        (result = (_DWORD *)(uintptr_t)Rules_MultifieldReplaceRange(returnValue, multifieldValue, *(_DWORD *)(uintptr_t)(indexValuePtr + 16), *(_DWORD *)(uintptr_t)(indexValuePtr + 16), fieldValue, (int)(intptr_t)aMvReplace)) == 0) )
+    || (Parser_ParseForm((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_ClipsCurrentExpression + 6) + 10) + 10), fieldValue, v4, a3),
+        (result = (_DWORD *)(uintptr_t)Rules_MultifieldReplaceRange(returnValue, multifieldValue, *(_DWORD *)(uintptr_t)(indexValue[2] + 16), *(_DWORD *)(uintptr_t)(indexValue[2] + 16), fieldValue, (int)(intptr_t)aMvReplace)) == 0) )
   {
     Lexer_ErrorRecover(1);
     return Rules_SetMultifieldErrorValue((int)(intptr_t)returnValue);
@@ -914,7 +873,7 @@ _DWORD * Rules_ExplodeFunction(_DWORD *returnValue, int a2, double a3)
   _DWORD value[10]; // [esp-8h] [ebp-28h] BYREF
 
   value[8] = a2;
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, value, 3, a3) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aExplode, 0, 1) == -1 || !Lexer_ParseValueList(1, value, 3, a3) )
   {
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
@@ -922,7 +881,7 @@ _DWORD * Rules_ExplodeFunction(_DWORD *returnValue, int a2, double a3)
   }
   else
   {
-    explodedMultifield = Rules_CreateMultifieldFromString(*(const char **)(uintptr_t)(value[2] + 16));
+    explodedMultifield = Rules_CreateMultifieldFromString((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(value[2] + 16));
     theMultifield = explodedMultifield;
     if ( explodedMultifield )
     {
@@ -981,21 +940,21 @@ signed int * Rules_ImplodeFunction(double a1)
   int instCloseIndex; // eax
   char *symbolString; // eax
   int internedSymbol; // ecx
-  int value; // [esp+0h] [ebp-3Ch] BYREF
-  int multifieldBase; // [esp+8h] [ebp-34h]
-  int beginIndex; // [esp+Ch] [ebp-30h]
-  int endIndex; // [esp+10h] [ebp-2Ch]
+  _DWORD value[6]; // [esp+0h] [ebp-3Ch] BYREF
+  /* stack alias of value[2]: the DATA_OBJECT value slot */
+  /* stack alias of value[3] */
+  /* stack alias of value[4] */
   char *afterBracketPtr; // [esp+18h] [ebp-24h]
   int fieldPos; // [esp+1Ch] [ebp-20h]
   int curField; // [esp+20h] [ebp-1Ch]
 
   totalSize = 0;
-  if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &value, 4, a1) )
+  if ( Lexer_TokenExpect((int)(intptr_t)aImplode, 0, 1) == -1 || !Lexer_ParseValueList(1, value, 4, a1) )
     return Str_Intern(g_Rules_ImplodeEmptyResult, v1);
-  fieldIndex = beginIndex + 1;
-  theMultifield = multifieldBase;
-  fieldPtr = multifieldBase + 6 * (beginIndex + 1) - 6;
-  while ( fieldIndex <= endIndex + 1 )
+  fieldIndex = value[3] + 1;
+  theMultifield = value[2];
+  fieldPtr = value[2] + 6 * (value[3] + 1) - 6;
+  while ( fieldIndex <= value[4] + 1 )
   {
     fieldType = *(_WORD *)(uintptr_t)(fieldPtr + 14);
     switch ( fieldType )
@@ -1012,8 +971,8 @@ LABEL_8:
         numberString = Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16));
         goto LABEL_7;
       case 3:
-        v1 = strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16)) + 3;
-        quoteScanPtr = *(_BYTE **)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16);
+        v1 = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16)) + 3;
+        quoteScanPtr = (_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16);
         totalSize += v1;
         if ( *quoteScanPtr )
         {
@@ -1035,33 +994,33 @@ LABEL_9:
         }
         break;
       case 8:
-        v1 = strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16)) + 3;
+        v1 = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16)) + 3;
         totalSize += v1;
         fieldPtr += 6;
         ++fieldIndex;
         break;
       case 7:
-        v1 = strlen(*(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 28) + 16)) + 3;
+        v1 = strlen((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 28) + 16)) + 3;
         totalSize += v1;
         fieldPtr += 6;
         ++fieldIndex;
         break;
       default:
-        fieldString = *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16);
+        fieldString = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(fieldPtr + 16) + 16);
         goto LABEL_8;
     }
   }
   if ( !totalSize )
     return Str_Intern(g_Rules_ImplodeEmptyResult, v1);
   retStr = (char *)Mem_SmallBlockAlloc(totalSize);
-  fieldPos = beginIndex + 1;
-  fieldCursor = theMultifield + 6 * (beginIndex + 1) - 6;
+  fieldPos = value[3] + 1;
+  fieldCursor = theMultifield + 6 * (value[3] + 1) - 6;
   bufOffset = 0;
   while ( 1 )
   {
     curField = fieldCursor;
     writePtr = &retStr[bufOffset];
-    if ( endIndex + 1 < fieldPos )
+    if ( value[4] + 1 < fieldPos )
       break;
     curFieldType = *(_WORD *)(uintptr_t)(curField + 14);
     if ( curFieldType )
@@ -1082,7 +1041,7 @@ LABEL_9:
       else if ( curFieldType == 3 )
       {
         strOffset = bufOffset + 1;
-        srcString = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
+        srcString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
         *writePtr = 34;
         while ( 1 )
         {
@@ -1109,7 +1068,7 @@ LABEL_9:
         lexemeType = *(_WORD *)(uintptr_t)(curField + 14);
         if ( lexemeType == 8 )
         {
-          wordString = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
+          wordString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
           retStr[bufOffset] = 91;
           writeIndex = bufOffset + 1;
           if ( *wordString )
@@ -1128,7 +1087,7 @@ LABEL_9:
         }
         else if ( lexemeType == 7 )
         {
-          instanceNameString = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 28) + 16);
+          instanceNameString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 28) + 16);
           retStr[bufOffset] = 91;
           instWriteIndex = bufOffset + 1;
           if ( *instanceNameString )
@@ -1147,7 +1106,7 @@ LABEL_9:
         }
         else
         {
-          symbolString = *(char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
+          symbolString = (char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(curField + 16) + 16);
           if ( *symbolString )
           {
             do
@@ -1261,7 +1220,7 @@ _DWORD * Rules_MVSubseqFunction(_DWORD *subValue, double a2)
   if ( !Lexer_ParseValueList(3, theValue, 4, a2) )
     return Rules_SetMultifieldErrorValue((int)(intptr_t)subValue);
   theList = valueField;
-  result = *(_DWORD **)(uintptr_t)(valueField + 6);
+  result = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(valueField + 6);
   offset = valueBegin + 1;
   if ( start > (int)(intptr_t)result )
     return Rules_SetMultifieldErrorValue((int)(intptr_t)subValue);
@@ -1346,22 +1305,22 @@ signed int * Rules_NthFunction(int returnValue, int a2, double a3)
   int theMultifield; // ebx
   signed int *result; // eax
   _DWORD value1[6]; // [esp-8h] [ebp-40h] BYREF
-  int value2; // [esp+10h] [ebp-28h] BYREF
-  int multifieldPtr; // [esp+18h] [ebp-20h]
-  int begin; // [esp+1Ch] [ebp-1Ch]
-  int end; // [esp+20h] [ebp-18h]
+  _DWORD value2[6]; // [esp+10h] [ebp-28h] BYREF
+  /* stack alias of value2[2]: the DATA_OBJECT value slot */
+  /* stack alias of value2[3] */
+  /* stack alias of value2[4] */
   int v14 CLASH95_UNUSED; // [esp+30h] [ebp-8h]
 
   v14 = a2;
-  if ( Lexer_TokenExpect(2) != -1
+  if ( Lexer_TokenExpect((int)(intptr_t)aNth, 0, 2) != -1
     && Lexer_ParseValueList(1, value1, 1, a3)
-    && Lexer_ParseValueList(2, &value2, 4, a3)
-    && (beginCopy = begin, n = *(_DWORD *)(uintptr_t)(value1[2] + 16), n <= end - begin + 1)
+    && Lexer_ParseValueList(2, value2, 4, a3)
+    && (beginCopy = value2[3], n = *(_DWORD *)(uintptr_t)(value1[2] + 16), n <= value2[4] - value2[3] + 1)
     && n >= 1 )
   {
-    theMultifield = multifieldPtr;
-    *(_DWORD *)(uintptr_t)(returnValue + 4) = *(__int16 *)(uintptr_t)(multifieldPtr + 6 * (begin + n - 1) + 14);
-    result = *(signed int **)(uintptr_t)(theMultifield + 6 * (begin + n - 1) + 16);
+    theMultifield = value2[2];
+    *(_DWORD *)(uintptr_t)(returnValue + 4) = *(__int16 *)(uintptr_t)(value2[2] + 6 * (value2[3] + n - 1) + 14);
+    result = *(signed int **)(uintptr_t)(theMultifield + 6 * (value2[3] + n - 1) + 16);
     *(_DWORD *)(uintptr_t)(returnValue + 8) = result;
   }
   else
@@ -1382,26 +1341,26 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
   int fieldOffset; // esi
   int curFieldIndex; // ecx
   _DWORD item2[6]; // [esp-18h] [ebp-40h] BYREF
-  int item1; // [esp+0h] [ebp-28h] BYREF
-  int item1Value; // [esp+8h] [ebp-20h]
-  int item1Begin; // [esp+Ch] [ebp-1Ch]
-  int item1End; // [esp+10h] [ebp-18h]
+  _DWORD item1[6]; // [esp+0h] [ebp-28h] BYREF
+  /* stack alias of item1[2]: the DATA_OBJECT value slot */
+  /* stack alias of item1[3] */
+  /* stack alias of item1[4] */
   int returnValueCopy CLASH95_UNUSED; // [esp+20h] [ebp-8h]
 
   returnValueCopy = returnValue;
-  if ( Lexer_TokenExpect(2) == -1 )
+  if ( Lexer_TokenExpect((int)(intptr_t)aSubsetp, 0, 2) == -1 )
     return 0;
-  result = Lexer_ParseValueList(1, &item1, 4, a2);
+  result = Lexer_ParseValueList(1, item1, 4, a2);
   if ( result )
   {
     result = Lexer_ParseValueList(2, item2, 4, a2);
     if ( result )
     {
-      fieldIndex = item1Begin + 1;
-      fieldOffset = 6 * (item1Begin + 1) - 6;
-      while ( fieldIndex <= item1End + 1 )
+      fieldIndex = item1[3] + 1;
+      fieldOffset = 6 * (item1[3] + 1) - 6;
+      while ( fieldIndex <= item1[4] + 1 )
       {
-        result = Rules_MultifieldFindElementPosition(*(__int16 *)(uintptr_t)(fieldOffset + item1Value + 14), *(_DWORD *)(uintptr_t)(fieldOffset + item1Value + 16), item2);
+        result = Rules_MultifieldFindElementPosition(*(__int16 *)(uintptr_t)(fieldOffset + item1[2] + 14), *(_DWORD *)(uintptr_t)(fieldOffset + item1[2] + 16), item2);
         if ( !result )
           return result;
         fieldOffset += 6;
@@ -1418,24 +1377,24 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
 int * Rules_MemberFunction(int returnValue, int a2, double a3)
 {
   int *result; // eax
-  int item1; // [esp-4h] [ebp-40h] BYREF
-  int item1Type; // [esp+0h] [ebp-3Ch]
-  int item1Value; // [esp+4h] [ebp-38h]
+  _DWORD item1[6]; // [esp-4h] [ebp-40h] BYREF
+  /* stack alias of item1[1] */
+  /* stack alias of item1[2]: the DATA_OBJECT value slot */
   _DWORD item2[10]; // [esp+14h] [ebp-28h] BYREF
 
   item2[8] = a2;
   *(_DWORD *)(uintptr_t)(returnValue + 4) = 2;
   *(_DWORD *)(uintptr_t)(returnValue + 8) = g_ClipsFalseSymbol;
-  result = (int *)(uintptr_t)Lexer_TokenExpect(2);
+  result = (int *)(uintptr_t)Lexer_TokenExpect((int)(intptr_t)aMember, 0, 2);
   if ( result != (int *)-1 )
   {
-    Rules_RtnUnknown(1, &item1, a3);
-    if ( item1Type == 2 || item1Type == 3 || item1Type == 1 || item1Type == 5 || item1Type == 8 || item1Type == 7 || !item1Type )
+    Rules_RtnUnknown(1, item1, a3);
+    if ( item1[1] == 2 || item1[1] == 3 || item1[1] == 1 || item1[1] == 5 || item1[1] == 8 || item1[1] == 7 || !item1[1] )
     {
       result = (int *)(uintptr_t)Lexer_ParseValueList(2, item2, 4, a3);
       if ( result )
       {
-        result = (int *)(uintptr_t)Rules_MultifieldFindElementPosition(item1Type, item1Value, item2);
+        result = (int *)(uintptr_t)Rules_MultifieldFindElementPosition(item1[1], item1[2], item2);
         if ( result )
         {
           *(_DWORD *)(uintptr_t)(returnValue + 4) = 1;

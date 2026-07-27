@@ -132,7 +132,7 @@ int  Method_ParseWildcardRestrictionString(_DWORD *theDefgeneric, char *restrict
         }
         curChar = reqTypeChar;
         typeInfo = Method_BuildTypeRestrictionRecordFromFlags();
-        reqFreeRestriction = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+        reqFreeRestriction = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
         if ( reqFreeRestriction )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -165,7 +165,7 @@ int  Method_ParseWildcardRestrictionString(_DWORD *theDefgeneric, char *restrict
       while ( charPtr[1] || argPosition != maxArgs )
       {
         optionalTypeInfo = Method_BuildTypeRestrictionRecordFromFlags();
-        optFreeRestriction = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+        optFreeRestriction = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
         if ( optFreeRestriction )
         {
           g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -227,7 +227,7 @@ LABEL_28:
         countNode = AST_NewNode(1, (int)(intptr_t)wildcardCountValue);
         *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v38 + 4) + 6) + 10) = countNode;
       }
-      wildcardFreeRestriction = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+      wildcardFreeRestriction = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
       if ( wildcardFreeRestriction )
       {
         g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -267,7 +267,7 @@ LABEL_28:
   }
   else
   {
-    freeRestriction = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 56);
+    freeRestriction = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
     if ( freeRestriction )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
@@ -279,7 +279,7 @@ LABEL_28:
       restrictionMem = Mem_HeapAllocWithRetry((_DWORD *)0xE);
     }
     defaultRestriction = restrictionMem;
-    freeTypeInfo = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+    freeTypeInfo = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
     if ( freeTypeInfo )
     {
       g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
@@ -336,7 +336,7 @@ _DWORD *Method_BuildTypeRestrictionRecordFromFlags(void)
   int addressTypeCode; // ebx
   int v17; // eax
 
-  freeListEntry = *(_DWORD **)(uintptr_t)(g_ClipsMemoryTable + 48);
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 48);
   typeExprList = 0;
   if ( freeListEntry )
   {
@@ -524,7 +524,7 @@ signed int  MessageHandler_ParseDefinition(int readSource)
   classNameSymbol = Rules_GetConstructNameAndComment(readSource, (int)(intptr_t)&g_ParserCurrentTokenType, 0, aDefmessageHa_2, 0, asc_50E0A8, 1, 0, 1);
   if ( !classNameSymbol )
     return 1;
-  lookupClass = Class_LookupByQualifiedName(*(_BYTE **)(uintptr_t)(classNameSymbol + 16));
+  lookupClass = Class_LookupByQualifiedName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(classNameSymbol + 16));
   handlerClass = lookupClass;
   if ( !lookupClass )
   {
@@ -730,8 +730,8 @@ signed int  Class_GeneratePublicSlotHandlers(signed int result)
   slotFlags = *(_BYTE *)(uintptr_t)(result + 1);
   if ( (slotFlags & 8) != 0 || (slotFlags & 0x10) != 0 )
   {
-    className = *(const char **)(uintptr_t)(**(_DWORD **)(uintptr_t)(result + 4) + 16);
-    slotName = *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 12) + 16);
+    className = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(result + 4) + 16);
+    slotName = (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(result + 8) + 12) + 16);
     bufferSize = strlen(className) + 2 * strlen(slotName) + 80;
     Mem_SmallBlockAlloc(bufferSize);
     savedLoadInProgress = Rules_GetLoadInProgress();
@@ -864,7 +864,7 @@ signed int  MessageHandler_ResolveSelfSlotBindRef(int bindExpr, int theClass)
              IO_CloseStringRouter((int)(intptr_t)aHndVar),
              tokenType != 102) )
   {
-    valueExprChain = *(int **)(uintptr_t)(*(_DWORD *)(uintptr_t)(bindExpr + 6) + 10);
+    valueExprChain = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(bindExpr + 6) + 10);
     slotDesc = MessageHandler_BuildSlotAccessNode(theClass, tokenType, 1, tokenValue, valueExprChain);
     if ( slotDesc )
     {
@@ -1050,7 +1050,7 @@ __int16  Rules_MarkDefinstancesExpressionUsage(_DWORD *theDefinstances)
   bsaveIndex = g_Definstances_Count++;
   AST_MarkNodeFieldBound(theDefinstances, bsaveIndex);
   g_ClipsExpressionNodeIndex += AST_CountTreeNodes(*(_DWORD *)(uintptr_t)(v2 + 24));
-  return Rules_MarkReferencedFunctions(*(__int16 **)(uintptr_t)(v3 + 24));
+  return Rules_MarkReferencedFunctions((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(v3 + 24));
 }
 // 4DFCA8: variable 'v2' is possibly undefined
 // 4DFCB6: variable 'v3' is possibly undefined
@@ -1067,7 +1067,7 @@ signed int Rules_FindDefinstancesBsaveExpressions(void)
 //----- (004DFCE0) --------------------------------------------------------
 __int16 * Rules_BsaveWriteDefinstancesExpression(int theDefinstances, int filePtr)
 {
-  return Rules_BsaveWriteExpression(*(__int16 **)(uintptr_t)(theDefinstances + 24), filePtr);
+  return Rules_BsaveWriteExpression((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theDefinstances + 24), filePtr);
 }
 
 //----- (004DFCF0) --------------------------------------------------------
@@ -1295,7 +1295,7 @@ int Rules_RegisterDefinstancesCodeGenerator(void)
 //----- (004E0120) --------------------------------------------------------
 int  Rules_WriteDefinstancesModuleReference(int theFile, int count)
 {
-  return Output_WriteFormatted(count, **(_DWORD **)(uintptr_t)(g_DefinstancesCodeGenItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_7, **(_DWORD **)(uintptr_t)(g_DefinstancesCodeGenItem + 20));
+  return Output_WriteFormatted(count, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefinstancesCodeGenItem + 20), theFile, (int)(intptr_t)aMihsSD_DD_7, *(_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_DefinstancesCodeGenItem + 20));
 }
 // 54E918: using guessed type int dword_54E918;
 
@@ -1392,7 +1392,7 @@ LABEL_6:
               definstancesArrayVersion,
               savedImageID,
               (char)(intptr_t)aDefinstances_3,
-              *(const char **)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefinstancesCodeGenItem + 20) + 4),
+              (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(g_DefinstancesCodeGenItem + 20) + 4),
               0,
               0);
       openedDefinstancesFile = v11;
