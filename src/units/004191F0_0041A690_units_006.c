@@ -32,6 +32,9 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
   int sprite_index;
   int overlay_sprite_index;
   int sprite_for_char;
+  int cursorOverlayPresented;
+  __int16 eraseSpriteHeight;
+  unsigned __int16 eraseRight;
 
   widget = (unsigned char *)result;
   left = *(_DWORD *)(widget + 0);
@@ -43,6 +46,32 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
   overlay_sprite_index = *(_DWORD *)(widget + 24);
   if ( sprite_set && sprite_index != -1 )
   {
+    /*
+     * Original sub_4191F0 loc_41920B (clash95.asm 39089-39112) latches
+     * dword_544D10 (g_CursorOverlayPresented) once and, when the live device
+     * is the main render device, erases the software mouse cursor over the
+     * icon rect before repainting it:
+     *   call DLX_GetSpriteWidth / add ax,[esi+4] / dec eax / push eax
+     *   call DLX_GetSpriteHeight / mov bx,[esi] / add eax,ebx / dec eax
+     *   mov dx,[esi] / mov cx,ax / mov bx,[esi+4]
+     *   mov eax, offset dword_544CD8 / call sub_460BB0
+     * i.e. RenderState_PumpIfRectInViewBounds(g_RenderState, widget[0],
+     * widget[0] + height - 1, widget[4], widget[4] + width - 1).
+     * The raw decompile dropped both this call and its twin below; the
+     * sibling UI_DrawWidgetIconWithTransition kept them.
+     */
+    cursorOverlayPresented = g_CursorOverlayPresented;
+    if ( g_RenderDevice == &g_MainRenderDevice && cursorOverlayPresented )
+    {
+      eraseRight = (unsigned __int16)(result[2] + DLX_GetSpriteWidth(sprite_set, (unsigned __int16)sprite_index) - 1);
+      eraseSpriteHeight = DLX_GetSpriteHeight(sprite_set, (unsigned __int16)sprite_index);
+      RenderState_PumpIfRectInViewBounds(
+        g_RenderState,
+        *result,
+        (unsigned __int16)(*result + eraseSpriteHeight - 1),
+        result[2],
+        eraseRight);
+    }
     sprite_for_char = DLX_GetSpriteForChar(sprite_set, sprite_index);
     Compat_RenderDeviceDrawMenuSprite(left, top, sprite_for_char, 0);
     if ( (flags & 4) != 0 && overlay_sprite_index != -1 )
@@ -50,8 +79,26 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
       sprite_for_char = DLX_GetSpriteForChar(sprite_set, overlay_sprite_index);
       Compat_RenderDeviceDrawMenuSprite(left, top, sprite_for_char, 1);
     }
+    if ( g_RenderDevice == &g_MainRenderDevice && cursorOverlayPresented )
+      return (unsigned __int16 *)(uintptr_t)Render_Present((int)(intptr_t)g_RenderState);
     if ( doRefresh && g_RenderDevice != &g_MainRenderDevice )
     {
+      /*
+       * Original sub_4191F0 loc_419316->39203: the same cursor erase runs
+       * again on the offscreen-device refresh path, guarded only by the
+       * latched dword_544D10, before the slot blit below.
+       */
+      if ( cursorOverlayPresented )
+      {
+        eraseRight = (unsigned __int16)(result[2] + DLX_GetSpriteWidth(sprite_set, (unsigned __int16)sprite_index) - 1);
+        eraseSpriteHeight = DLX_GetSpriteHeight(sprite_set, (unsigned __int16)sprite_index);
+        RenderState_PumpIfRectInViewBounds(
+          g_RenderState,
+          *result,
+          (unsigned __int16)(*result + eraseSpriteHeight - 1),
+          result[2],
+          eraseRight);
+      }
       Render_FillRect(
         g_RenderDevice,
         0,
@@ -61,9 +108,11 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
         (unsigned __int16)(left + DLX_GetSpriteWidth(sprite_set, sprite_index) - 1),
         (unsigned __int16)left,
         (unsigned __int16)top);
+      /* asm loc_4193F0: the offscreen path presents too when the cursor
+       * overlay is up. */
+      if ( cursorOverlayPresented )
+        return (unsigned __int16 *)(uintptr_t)Render_Present((int)(intptr_t)g_RenderState);
     }
-    if ( g_RenderDevice == &g_MainRenderDevice && g_CursorOverlayPresented )
-      return (unsigned __int16 *)(uintptr_t)Render_Present((int)(intptr_t)g_RenderState);
   }
   return result;
 }

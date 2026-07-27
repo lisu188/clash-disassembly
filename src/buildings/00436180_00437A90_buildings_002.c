@@ -519,6 +519,24 @@ signed int  UnitBattle_RetreatUnit(int unitIndex, int a2, char a3, DWORD a4)
   int candidateX; // [esp+24h] [ebp-14h]
 
   Debug_Log(a2, a3, a4, (int)(intptr_t)aCofnij_oddzial);
+  /*
+   * asm sub_436D10 (clash95.asm 00436D10):
+   *     mov  edi, eax          ; edi = unitIndex (param 1)
+   *     ...
+   *     mov  edx, edi          ; edx = unitIndex, set BEFORE the log call
+   *     call log               ; `log` (00419150) does push edx/ecx/ebx ... pop
+   *                            ; edx/ecx/ebx, i.e. it PRESERVES edx
+   *     mov  eax, edx          ; eax = unitIndex
+   *     mov  ecx, ds:dword_532048
+   *     shl  eax, 5            ; 32 * unitIndex
+   *     add  ecx, 354h         ; g_MapData + 852
+   *     sub  eax, edx          ; 31 * unitIndex
+   *     add  ecx, eax
+   * The decompiler assumed the call clobbered edx and emitted an unassigned
+   * `movingUnitIndex`, so the battle unit record was addressed from garbage.
+   * The moving unit is the function's own unitIndex argument.
+   */
+  movingUnitIndex = unitIndex;
   unitRecord = (__int16 *)(uintptr_t)(31 * movingUnitIndex + g_MapData + 852);
   searchRadius = 0;
   originX = (unsigned __int16)unitRecord[2];
@@ -579,6 +597,15 @@ signed int  UnitBattle_RetreatUnit(int unitIndex, int a2, char a3, DWORD a4)
                   goto LABEL_14;
               }
               UnitBattle_Move(unitIndex, (int)(intptr_t)unitRecord, candidateY, j);
+              /*
+               * asm 00436F3B..00436F52: the move-path slot freed and cleared
+               * here is [ecx+17h], and ecx has held the moving unit's battle
+               * record (g_MapData+852+31*unitIndex) since 00436D34 -- every
+               * intervening call preserves ecx (Watcom register convention:
+               * callees push/pop ebx/ecx/edx). The decompiler split it into an
+               * unassigned `unitRecordAddr`.
+               */
+              unitRecordAddr = (int)(intptr_t)unitRecord;
               if ( *(_DWORD *)(uintptr_t)(unitRecordAddr + 23) )
                 j__nfree_();
               result = 1;
@@ -633,32 +660,21 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   int movingUnitIndex; // edx
   DWORD unitRecordOffset; // ebp
   int unitRecord; // esi
-  int v7; // ecx
-  int v8; // ecx
   int scanRowBase; // edx
   int targetOccupant; // eax
   int targetUnitIndex; // ebx
   int targetRecordOffset; // esi
-  int v13; // ecx
   int shotResult; // edx
   signed int result; // eax
-  int v16; // ecx
   int movePath; // eax
-  int v18; // ecx
-  int v19; // ecx
   int reachedRange; // edi
   int *pathArray; // eax
   int stepIndex; // ebx
   int pathToFree; // edi
-  int v24; // ecx
   int occupantUnitIndex; // ebx
-  int v26; // ecx
   int shooterRecordOffset; // esi
-  int v28; // ecx
-  int v29; // ecx
   int shotTargetUnitIndex; // esi
   int shotShooterRecordOffset; // ebx
-  int v32; // ecx
   int secondShotResult; // edx
   int wallShotResult; // edx
   __int16 savedRow; // [esp+0h] [ebp-2Ch]
@@ -666,10 +682,32 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
   int pathStep; // [esp+14h] [ebp-18h]
 
   Debug_Log(attackerIndex, a3, gameContext, (int)(intptr_t)aRuch_oddzialem);
+  /*
+   * asm sub_4370B0 (clash95.asm 004370B0):
+   *     mov  ecx, eax          ; ecx = attackerIndex (param 1) -- and ecx keeps
+   *                            ; it for the WHOLE function: every callee here
+   *                            ; is Watcom-register-convention and pushes/pops
+   *                            ; ebx/ecx/edx (see `log` at 00419150), so ecx is
+   *                            ; preserved across all of them.
+   *     mov  edx, ecx
+   *     call log
+   *     mov  ebp, edx          ; ebp = attackerIndex
+   *     mov  ebx, ds:dword_532048
+   *     shl  ebp, 5            ; 32 * attackerIndex
+   *     add  ebx, 354h         ; g_MapData + 852
+   *     sub  ebp, edx          ; 31 * attackerIndex
+   *     lea  esi, [ebx+ebp]
+   * The decompiler treated ecx/edx as clobbered by the calls and emitted a
+   * family of unassigned locals (movingUnitIndex, v7, v8, v13, v16, v18, v19,
+   * v24, v26, v28, v29, v32); every one of them is this same attackerIndex,
+   * and three of them (v16, v19, v26/v29) are multiplied by the 31-byte battle
+   * unit-record stride, so the shooter's record was addressed from garbage.
+   */
+  movingUnitIndex = attackerIndex;
   unitRecordOffset = 31 * movingUnitIndex;
   unitRecord = g_MapData + 852 + 31 * movingUnitIndex;
   g_BattleShootingUnitMoveActiveFlag = 1;
-  if ( UnitBattle_IsTileWithinRange(v7, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+  if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
     scanRowBase = g_MapData + 40 * g_UnitBattleScanTileRow;
     targetOccupant = *(__int16 *)(uintptr_t)(scanRowBase + 2 * g_BattleTargetTileCol + 1534);
@@ -680,7 +718,7 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
       while ( 1 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        shotResult = UnitBattle_Shot(v13, targetUnitIndex);
+        shotResult = UnitBattle_Shot(attackerIndex, targetUnitIndex);
         if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + 860) < 5u )
           break;
         if ( !shotResult && *(unsigned __int8 *)(uintptr_t)(unitRecordOffset + g_MapData + 860) >= 5u )
@@ -693,27 +731,27 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
       return 0;
     }
   }
-  if ( UnitBattle_IsTileWithinMinRange(v8, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+  if ( UnitBattle_IsTileWithinMinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
-    result = UnitBattle_RetreatUnit(v16, v16, g_BattleTargetTileCol, unitRecordOffset);
+    result = UnitBattle_RetreatUnit(attackerIndex, attackerIndex, g_BattleTargetTileCol, unitRecordOffset);
     if ( !result )
       return result;
   }
   if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
-    && *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * v16 + 854) == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
+    && *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * attackerIndex + 854) == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
   {
-    movePath = UnitBattle_MoveTrackNearWall(v16, g_UnitBattleScanTileRow, g_BattleTargetTileCol, unitRecordOffset);
+    movePath = UnitBattle_MoveTrackNearWall(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol, unitRecordOffset);
   }
   else
   {
-    movePath = (int *)UnitBattle_MoveTrackNear(v16, v16, g_BattleTargetTileCol, unitRecordOffset);
+    movePath = (int *)UnitBattle_MoveTrackNear(attackerIndex, attackerIndex, g_BattleTargetTileCol, unitRecordOffset);
   }
   *(_DWORD *)(uintptr_t)(unitRecord + 23) = movePath;
   if ( !*(_DWORD *)(uintptr_t)(unitRecord + 23) )
-    *(_DWORD *)(uintptr_t)(unitRecord + 23) = UnitBattle_MoveTrackForce(v18, g_BattleTargetTileCol, unitRecordOffset);
+    *(_DWORD *)(uintptr_t)(unitRecord + 23) = UnitBattle_MoveTrackForce(attackerIndex, g_BattleTargetTileCol, unitRecordOffset);
   if ( !*(_DWORD *)(uintptr_t)(unitRecord + 23) )
     return 0;
-  if ( UnitBattle_IsTileWithinRange(v18, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+  if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
   {
     if ( !*(_DWORD *)(uintptr_t)(unitRecord + 23) )
       goto LABEL_41;
@@ -727,7 +765,7 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
     LOBYTE(pathStep) = *(_BYTE *)(uintptr_t)(unitRecord + 4);
     while ( HIWORD(pathStep) <= *(unsigned __int8 *)(uintptr_t)(unitRecord + 8) - 5 && **(_DWORD **)(uintptr_t)(unitRecord + 23) && reachedRange == -1 )
     {
-      if ( UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+      if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
       {
         reachedRange = 1;
       }
@@ -756,8 +794,8 @@ signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, cha
     BATTLE_UNIT_GRID_Y(unitRecord) = savedCol;
     if ( pathToFree )
       j__nfree_();
-    *(_DWORD *)(uintptr_t)(unitRecord + 23) = UnitBattle_MoveTrack(v19, (unsigned __int8)pathStep, v19, BYTE1(pathStep), 0xFFFFFFFF);
-    UnitBattle_Move(v24, v24, BYTE1(pathStep), 0xFFFFFFFF);
+    *(_DWORD *)(uintptr_t)(unitRecord + 23) = UnitBattle_MoveTrack(attackerIndex, (unsigned __int8)pathStep, attackerIndex, BYTE1(pathStep), 0xFFFFFFFF);
+    UnitBattle_Move(attackerIndex, attackerIndex, BYTE1(pathStep), 0xFFFFFFFF);
     if ( !*(_DWORD *)(uintptr_t)(unitRecord + 23) )
       goto LABEL_40;
   }
@@ -766,18 +804,18 @@ LABEL_40:
   *(_DWORD *)(uintptr_t)(unitRecord + 23) = 0;
 LABEL_41:
   if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) <= 0
-    || *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * v19 + 854) != *(_DWORD *)(uintptr_t)(g_MapData + 836)
+    || *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * attackerIndex + 854) != *(_DWORD *)(uintptr_t)(g_MapData + 836)
     || (occupantUnitIndex = *(__int16 *)(uintptr_t)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), occupantUnitIndex != -1)
     && *(unsigned __int8 *)(uintptr_t)(31 * occupantUnitIndex + g_MapData + 854) != defenderSide )
   {
-    if ( UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+    if ( UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     {
       shotTargetUnitIndex = *(__int16 *)(uintptr_t)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534);
-      shotShooterRecordOffset = 31 * v29;
+      shotShooterRecordOffset = 31 * attackerIndex;
       while ( 1 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        secondShotResult = UnitBattle_Shot(v32, shotTargetUnitIndex);
+        secondShotResult = UnitBattle_Shot(attackerIndex, shotTargetUnitIndex);
         if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + 860) < 5u )
           break;
         if ( !secondShotResult && *(unsigned __int8 *)(uintptr_t)(shotShooterRecordOffset + g_MapData + 860) >= 5u )
@@ -790,34 +828,24 @@ LABEL_41:
     }
     return 0;
   }
-  if ( !UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+  if ( !UnitBattle_IsTileWithinRange(attackerIndex, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     return 0;
-  shooterRecordOffset = 31 * v26;
+  shooterRecordOffset = 31 * attackerIndex;
   do
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     if ( *(char *)(uintptr_t)(g_BattleTargetTileCol + 20 * g_UnitBattleScanTileRow + g_MapData + 3134) <= 0 )
       return 1;
-    wallShotResult = UnitBattle_ShotWall(v28, g_UnitBattleScanTileRow);
+    wallShotResult = UnitBattle_ShotWall(attackerIndex, g_UnitBattleScanTileRow);
     if ( !wallShotResult && *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + 860) < 5u )
       return 0;
   }
   while ( wallShotResult || *(unsigned __int8 *)(uintptr_t)(shooterRecordOffset + g_MapData + 860) < 5u );
   return 1;
 }
-// 4370DD: variable 'v4' is possibly undefined
-// 4370FE: variable 'v7' is possibly undefined
-// 437160: variable 'v13' is possibly undefined
-// 4371E9: variable 'v8' is possibly undefined
-// 437200: variable 'v16' is possibly undefined
-// 437283: variable 'v18' is possibly undefined
-// 437343: variable 'v19' is possibly undefined
-// 4373BF: variable 'v38' is possibly undefined
-// 4373D1: variable 'v24' is possibly undefined
-// 43748A: variable 'v26' is possibly undefined
-// 437545: variable 'v29' is possibly undefined
-// 437552: variable 'v32' is possibly undefined
-// 4375CE: variable 'v28' is possibly undefined
+// 4370DD/4370FE/437160/4371E9/437200/437283/437343/4373D1/43748A/437545/437552/4375CE:
+//   decompiler 'possibly undefined' notes (v4/v7/v13/v8/v16/v18/v19/v24/v26/v29/v32/v28)
+//   -- every one is the ecx copy of attackerIndex made at 004370BF; repaired above.
 // 429740: using guessed type int __fastcall UnitBattle_Shot(_DWORD, _DWORD);
 // 429BD0: using guessed type int __fastcall UnitBattle_ShotWall(_DWORD, _DWORD);
 // 532048: using guessed type int g_MapData;

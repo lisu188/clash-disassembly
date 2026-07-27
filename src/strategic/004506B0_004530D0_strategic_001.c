@@ -667,12 +667,18 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   int v15; // ecx
   _BYTE v17[29]; // [esp+1h] [ebp-1B1h]
   int ( *render_hook_fn)(int, char, DWORD); // [esp+1Eh] [ebp-194h]
-  char widget_table[8]; // [esp+22h] [ebp-190h] BYREF
-  int v20; // [esp+2Ah] [ebp-188h]
-  _DWORD widget_text_ptrs[11]; // [esp+32h] [ebp-180h]
-  int v22; // [esp+5Fh] [ebp-153h]
-  int v23; // [esp+94h] [ebp-11Eh]
-  int v24; // [esp+C9h] [ebp-E9h]
+  /*
+   * In-game settings widget table: 371 bytes (asm 00451383..004513BA:
+   * `mov ecx, 5Ch` + `rep movsd` = 92 dwords = 368, then `movsw` + `movsb`).
+   * The decompiler declared it char[8] and emitted the neighbouring stack slots
+   * as INDEPENDENT locals that are really ALIASES into the table (frame base
+   * ebp-190h): var_188 = +0x08, var_180 = +0x10, var_17C = +0x14,
+   * var_153 = +0x3D, var_11E = +0x72, var_E9 = +0xA7, var_1B1 = table-0x21.
+   * Same defect and same repair as PlayGame_Dispatch's menu tables (df32b73).
+   * Declaring the table at its real extent also makes the restored 4*92-byte
+   * qmemcpy below land inside the object instead of smashing the frame.
+   */
+  char widget_table[371]; // [esp+22h] [ebp-190h] BYREF
   int (*prev_render_hook)(); // [esp+196h] [ebp-1Ch]
 
   sprite_set = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a1, a2, a3);
@@ -686,6 +692,9 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(92, a2, prev_resource_handle, (int)(intptr_t)aSetrhS08x_24);
   field_offset = 0;
+  /* asm 00451383: `mov ecx, 5Ch` -> `rep movsd` copies 92 dwords. The
+   * decompiler left v7 unassigned, so the template copy length was garbage. */
+  v7 = 92;
   qmemcpy(widget_table, &g_InGameSettingsButtonWidgetsTemplate, 4 * v7);
   copy_src = (char *)&g_InGameSettingsButtonWidgetsTemplate + 4 * v7;
   copy_dest = &widget_table[4 * v7];
@@ -693,20 +702,23 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   copy_dest[2] = copy_src[2];
   do
   {
-    *(_DWORD *)((char *)widget_text_ptrs + field_offset) += (unsigned __int8)g_LanguageIndex;
-    button_text = *(_DWORD *)((char *)&widget_text_ptrs[1] + field_offset);
+    /* +0x10 / +0x14 of each 0x35-byte widget record = the localized label and
+     * pressed-label sprite bases (asm loc_4513BD, var_180 / var_17C, and the
+     * store through var_1B1 = table-0x21 after `add eax, 35h`). */
+    *(_DWORD *)(void *)&widget_table[field_offset + 0x10] += (unsigned __int8)g_LanguageIndex;
+    button_text = *(_DWORD *)(void *)&widget_table[field_offset + 0x14];
     field_offset += 53;
-    *(_DWORD *)&v17[field_offset] = (unsigned __int8)g_LanguageIndex + button_text;
+    *(_DWORD *)(void *)&widget_table[field_offset - 0x21] = (unsigned __int8)g_LanguageIndex + button_text;
   }
   while ( field_offset != 212 );
   if ( *(_DWORD *)(uintptr_t)(gameData + 147159) )
-    v20 = 2;
+    *(_DWORD *)(void *)&widget_table[0x08] = 2;
   if ( *(_DWORD *)(uintptr_t)(gameData + 147147) )
-    v22 = 2;
+    *(_DWORD *)(void *)&widget_table[0x3D] = 2;
   if ( *(_DWORD *)(uintptr_t)(gameData + 147163) )
-    v23 = 2;
+    *(_DWORD *)(void *)&widget_table[0x72] = 2;
   if ( *(_DWORD *)(uintptr_t)(gameData + 147167) )
-    v24 = 2;
+    *(_DWORD *)(void *)&widget_table[0xA7] = 2;
   music_volume_raw = (*(char *)(uintptr_t)(gameData + 147173) << 8) + 0x4000;
   g_OptionsInGameMusicVolumeRaw = (music_volume_raw - (__CFSHL__(music_volume_raw >> 31, 7) + (music_volume_raw >> 31 << 7))) >> 7;
   g_OptionsInGameScrollSpeedRaw = ((*(unsigned __int8 *)(uintptr_t)(gameData + 147171) << 8)
@@ -737,10 +749,10 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     Options_AnimateAllSliderThumbs(g_InGameSliderThumbPositions);
   }
   while ( v14 == g_InGameOptionsDialogExitSignal );
-  *(_DWORD *)(uintptr_t)(gameData + 147159) = v20 == 2;
-  *(_DWORD *)(uintptr_t)(gameData + 147147) = v22 == 2;
-  *(_DWORD *)(uintptr_t)(gameData + 147163) = v23 == 2;
-  *(_DWORD *)(uintptr_t)(gameData + 147167) = v24 == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147159) = *(_DWORD *)(void *)&widget_table[0x08] == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147147) = *(_DWORD *)(void *)&widget_table[0x3D] == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147163) = *(_DWORD *)(void *)&widget_table[0x72] == 2;
+  *(_DWORD *)(uintptr_t)(gameData + 147167) = *(_DWORD *)(void *)&widget_table[0xA7] == 2;
   *(_BYTE *)(uintptr_t)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
                                                     - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
                                                      + ((unsigned __int16)(g_OptionsInGameMusicVolumeRaw << 7 >> 31) << 8))) >> 8)
@@ -760,7 +772,7 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   WorldMap_RedrawViewport(1);
   return DLXSpriteSet_ReleaseAndClear(&g_InGameOptionsSpriteSet);
 }
-// 4513B8: variable 'v7' is possibly undefined
+// 4513B8: v7 is the `mov ecx, 5Ch` block-copy length; repaired above.
 // 4514FE: variable 'v13' is possibly undefined
 // 451524: variable 'v14' is possibly undefined
 // 45161B: variable 'v15' is possibly undefined

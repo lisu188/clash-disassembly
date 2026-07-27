@@ -50,7 +50,23 @@ signed int  Treasure_TryDigHere(
   _BYTE mission7EventBuffer[40]; // [esp+18h] [ebp-28h] BYREF
 
   Debug_Log(a1, a2, a3, (int)(intptr_t)aTreasure_dighe, a1);
+  /*
+   * asm sub_443C20 (clash95.asm 00443C20):
+   *     mov  ecx, eax          ; ecx = a1 (the digging stack index)
+   *     push eax / push offset aTreasure_dighe
+   *     mov  edx, ecx          ; edx = a1, set BEFORE the call
+   *     call log               ; `log` (00419150) preserves edx/ecx/ebx
+   *     lea  eax, [edx*8] / add eax, edx / shl eax, 4 / add eax, edx  ; 145*a1
+   *     mov  edx, eax / lea eax, [eax*4] / add eax, edx               ; 725*a1
+   *     lea  ebp, [ebx+23EE6h] / add ebp, eax
+   * i.e. gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE(725) * a1, and
+   * `mov eax, ecx / call sub_411AB0` feeds the same a1 to UnitStack_HasBuilder.
+   * The decompiler left unitStackIndex and v9 unassigned, so the treasure dig
+   * addressed a unit-stack record computed from garbage.
+   */
   v6 = gameData;
+  unitStackIndex = a1;
+  v9 = a1;
   stackTileRecord = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * unitStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
   if ( !MapTile_HasHiddenTreasure(*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176))
     || !UnitStack_HasBuilder(v9) )
@@ -79,9 +95,26 @@ signed int  Treasure_TryDigHere(
       outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleActive;
     else
       outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleInactive;
+    /* asm loc_443E57..443E76: nothing writes ecx between 00443C2C
+     * (`mov ecx, eax`) and this call on the non-scripted path, so Temple_Random
+     * is entered with ecx still holding a1. */
+    v11 = a1;
     digOutcome = Temple_Random((int)(intptr_t)outcomeTablePtr, v11, v6, (DWORD)(intptr_t)stackTileRecord, a4);
     Debug_Log(digOutcome, v6, (DWORD)(intptr_t)stackTileRecord, (int)(intptr_t)aTreasure_dig_0, digOutcome);
+    /* asm loc_443E76: `call Temple_Random / push eax / push fmt / mov ecx, eax
+     * / call log` -- the drawn outcome record lands in ecx, the same register
+     * the two scripted branches load with `lea ecx, [esp+..+var_28/var_40]`. */
+    scriptedEventData = (_BYTE *)(uintptr_t)digOutcome;
   }
+  /*
+   * asm loc_443CD0 onwards reads the outcome record through that single ecx:
+   *   `mov edi, [ecx]`, `mov edx, [ecx+8]`, `mov eax, [ecx+eax*4+0Ch]` (eax =
+   *   g_LanguageIndex) and, unconditionally at loc_443D71, `mov esi, [ecx]`.
+   * The decompiler split it into unassigned `outcomeRecord` / `v16`, so the
+   * popup text was indexed off a wild pointer.
+   */
+  outcomeRecord = (_DWORD *)scriptedEventData;
+  v16 = (DWORD *)scriptedEventData;
   if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
   {
     Win_PlayModeChangeFrameTransition((int)(intptr_t)aKop_bud, 1, (int)(intptr_t)scriptedEventData, v6, (DWORD)(intptr_t)stackTileRecord, (char)(intptr_t)a5);
@@ -105,11 +138,11 @@ signed int  Treasure_TryDigHere(
   Temple_ProcessGift(*v16, (int)(intptr_t)stackTileRecord, stackTileRecord[1], *stackTileRecord, a6);
   return 1;
 }
-// 443C53: variable 'v7' is possibly undefined
-// 443C85: variable 'v9' is possibly undefined
+// 443C53/443C85: v7/v9 are the ecx copy of a1 (the digging stack index).
+// 443CF5/443D10/443D88: v12/v13/v16 are the ecx outcome-record pointer.
+//   Both families repaired above.
 // 443CF5: variable 'v12' is possibly undefined
 // 443D10: variable 'v13' is possibly undefined
-// 443D88: variable 'v16' is possibly undefined
 // 443E76: variable 'v11' is possibly undefined
 // 511130: using guessed type char byte_511130;
 // 5202E4: using guessed type int gameData;

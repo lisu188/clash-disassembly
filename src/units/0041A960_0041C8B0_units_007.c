@@ -258,7 +258,7 @@ void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, doubl
   char attackerSpecialEntries[404]; // [esp+0h] [ebp-358h] BYREF
   unsigned __int8 defenderSpecialEntries[404]; // [esp+194h] [ebp-1C4h] BYREF
   int defenderStackIndex; // [esp+328h] [ebp-30h]
-  unsigned __int8 *bothPlayersHuman CLASH95_UNUSED; // [esp+32Ch] [ebp-2Ch]
+  unsigned __int8 *bothPlayersHuman; // [esp+32Ch] [ebp-2Ch]
   int defenderHasSpecial; // [esp+330h] [ebp-28h]
   int manualBattleFought; // [esp+334h] [ebp-24h]
   __int16 *defenderStack; // [esp+338h] [ebp-20h]
@@ -569,6 +569,21 @@ LABEL_52:
             Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
             Palette_LoadOrBuildBlendLookupTable(aMainmap_0, g_MapPalettePtr, 1, (DWORD)(intptr_t)attackerStack);
             manualBattleFought = 1;
+            /*
+             * Original Unit_Attack (clash95.asm 42155-42163):
+             *   mov ebx,[esp+358h+var_2C]   ; both players human
+             *   call sub_435ED0             ; Palette_LoadOrBuildBlendLookupTable
+             *   mov [esp+358h+var_24], ecx  ; manualBattleFought = 1
+             *   test ebx, ebx
+             *   jz short loc_41B1F7
+             *   call UI_LoadTurnBannerGfx   ; __usercall(char@<bl>, DWORD@<ebp>)
+             * i.e. after a hot-seat manual battle the turn-intro banner screen
+             * is repainted.  The raw decompile dropped the call and left
+             * bothPlayersHuman unused; the sibling Unit_AttackBuilding
+             * (asm 42968-42974) kept it.
+             */
+            if ( bothPlayersHuman )
+              UI_LoadTurnBannerGfx(1, (DWORD)(intptr_t)attackerStack);
             goto LABEL_48;
           }
         }

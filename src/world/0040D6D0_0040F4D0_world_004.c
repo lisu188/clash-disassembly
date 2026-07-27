@@ -836,7 +836,17 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   g_RenderDevice = surface;
   RenderSurface_InvokeSlot56(surface);
   menu_sprite = DLX_GetSpriteForChar(g_MapPanelSpriteSet, (unsigned __int8)g_LanguageIndex % 3);
-  (void)menu_sprite;
+  /*
+   * Original sub_40E8B0 (clash95.asm 21690-21706): straight after
+   * DLX_GetSpriteForChar the localized top-menu-bar panel is blitted through
+   * render-device slot +52:
+   *   mov esi, ds:g_RenderDevice / mov ebx, 20h / mov edi,[esi+0B8h]
+   *   mov edx, eax / mov eax, esi / call dword ptr [edi+34h]
+   * with ecx = 0, i.e. x = 0x20, y = 0 and stack args 0,0,1,-1,-1,-1,-1
+   * (draw_mode 1, the same idiom as every other converted +52 caller).
+   * The raw decompile discarded the sprite handle and never drew the panel.
+   */
+  Compat_RenderDeviceDrawMenuSprite(0x20, 0, menu_sprite, 1);
   Render_ReleaseSurface(2, 0);
   TextSprite_SetStyleFlag(76);
   mission_index = ACTIVE_MISSION_INDEX;
@@ -847,6 +857,16 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   else
     UI_DrawTextFmt(0, 570, 11, 0, 2, (const char *)aD, GAME_TURN_COUNTER);
   Render_Pump();
+  /*
+   * Original sub_40E8B0 loc_40EA33 (clash95.asm 21744-21760): between
+   * Render_Pump and Render_Present the composed 640x36 menu strip is copied
+   * from the offscreen menu surface to the visible surface:
+   *   push 0 / push 0 / push 23h / xor ecx,ecx / xor ebx,ebx / push 27Fh
+   *   xor edx,edx / mov eax, ds:dword_523F60 / call sub_402850
+   * i.e. Render_BlitSurfaceRect(g_WorldMapTargetSurface, 0, 0, 0, 0x27F,
+   * 0x23, 0, 0).  The raw decompile omitted the blit entirely.
+   */
+  Render_BlitSurfaceRect((_DWORD *)(uintptr_t)g_WorldMapTargetSurface, 0, 0, 0, 0x27Fu, 0x23u, 0, 0);
   Render_Present((int)(intptr_t)g_RenderState);
   should_hide_menu = 0;
   menu_callback = 0;

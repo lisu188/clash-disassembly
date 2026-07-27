@@ -721,7 +721,7 @@ int  Render_BlitSurfaceRect(
 {
   _DWORD *src_resolved; // esi
   _DWORD *dest_resolved; // edi
-  int src_backend; // edx
+  int src_backend CLASH95_UNUSED; // edx
   int *v11; // ecx
   int v12; // ebx
   __int64 v13; // rax
@@ -768,6 +768,8 @@ int  Render_BlitSurfaceRect(
   int src_left_saved; // [esp+108h] [ebp-8h]
   int src_top_saved; // [esp+10Ch] [ebp-4h]
 
+  source_surface = (_DWORD *)(uintptr_t)(unsigned int)(uintptr_t)source_surface;
+  dest_surface = (_DWORD *)(uintptr_t)(unsigned int)(uintptr_t)dest_surface;
   src_resolved = source_surface;
   dest_resolved = dest_surface;
   src_left_saved = src_left;
@@ -776,12 +778,143 @@ int  Render_BlitSurfaceRect(
     src_resolved = &g_MainRenderDevice;
   if ( !dest_surface )
     dest_resolved = &g_MainRenderDevice;
+  src_resolved = RenderSurface_ResolvePrimaryCompanion(src_resolved);
+  dest_resolved = RenderSurface_ResolvePrimaryCompanion(dest_resolved);
   src_right_saved = src_right;
   span_width = src_right - (unsigned __int16)src_left_saved + 1;
   src_top_u16 = (unsigned __int16)src_top_saved;
   src_backend = src_resolved[46];
   span_height = src_bottom - (unsigned __int16)src_top_saved + 1;
-  if ( (*(int (**)(void))(uintptr_t)(src_backend + 60))() && (*(int (**)(void))(uintptr_t)(dest_resolved[46] + 64))() )
+  /*
+   * 0x00402850 is the register-allocation twin of Render_FillRect
+   * (0x004024E0): identical prologue, identical slot +60/+64 probe, identical
+   * blit-cursor fallback - with exactly ONE semantic difference in the
+   * software path.  Where Render_FillRect's inner run copy is
+   * "rep movsd / rep movsb" (clash95.asm 2494-2502, an opaque copy),
+   * 0x00402850 calls Str_CompactSkippingZeroBytes / sub_401D60
+   * (clash95.asm 2846), which advances the destination cursor without writing
+   * wherever the SOURCE byte is 0.  So Render_FillRect = opaque rect copy,
+   * Render_BlitSurfaceRect = the same rect blit with palette index 0 as the
+   * transparent key.
+   *
+   * The port already replaced Render_FillRect's 32-bit blit-cursor machinery
+   * with a native linear-software seam; 0x00402850 kept the raw decompile,
+   * whose "(*(int (**)(void))(uintptr_t)(table + 60))()" loads an 8-byte
+   * function pointer out of the recovered 4-byte-entry method tables
+   * (g_Surface_Vtable et al are int[]) and jumps into two packed slot values.
+   * That is a guaranteed SIGSEGV the first time this function is actually
+   * reached - observed as rax=0x40b0310040b022 when the restored world-map
+   * top-menu-bar strip blit finally called it.  Give it the same seam, with
+   * the transparent skip the original's copy helper performs.
+   */
+  if ( RenderSurface_IsLinearSoftware(src_resolved) && RenderSurface_IsLinearSoftware(dest_resolved) )
+  {
+    unsigned char *source_pixels;
+    unsigned char *destination_pixels;
+    int source_x;
+    int source_y;
+    int destination_x;
+    int destination_y;
+    int source_width;
+    int source_height;
+    int destination_width;
+    int destination_height;
+    int source_pitch;
+    int destination_pitch;
+    int copy_width;
+    int copy_height;
+    int row_index;
+    int column_index;
+
+    source_pixels = (unsigned char *)(uintptr_t)(unsigned int)src_resolved[1];
+    destination_pixels = (unsigned char *)(uintptr_t)(unsigned int)dest_resolved[1];
+    if ( !source_pixels || !destination_pixels )
+      return 0;
+    source_x = (short)(unsigned __int16)src_left_saved;
+    source_y = (short)(unsigned __int16)src_top_saved;
+    destination_x = (short)dest_x;
+    destination_y = (short)dest_y;
+    source_pitch = *(unsigned __int16 *)src_resolved;
+    destination_pitch = *(unsigned __int16 *)dest_resolved;
+    source_width = source_pitch;
+    source_height = HIWORD(src_resolved[0]);
+    destination_width = destination_pitch;
+    destination_height = HIWORD(dest_resolved[0]);
+    copy_width = span_width;
+    copy_height = span_height;
+    if ( copy_width <= 0 || copy_height <= 0 )
+      return 0;
+    if ( source_x < 0 )
+    {
+      destination_x -= source_x;
+      copy_width += source_x;
+      source_x = 0;
+    }
+    if ( source_y < 0 )
+    {
+      destination_y -= source_y;
+      copy_height += source_y;
+      source_y = 0;
+    }
+    if ( destination_x < 0 )
+    {
+      source_x -= destination_x;
+      copy_width += destination_x;
+      destination_x = 0;
+    }
+    if ( destination_y < 0 )
+    {
+      source_y -= destination_y;
+      copy_height += destination_y;
+      destination_y = 0;
+    }
+    if ( source_x >= source_width || source_y >= source_height
+      || destination_x >= destination_width || destination_y >= destination_height )
+    {
+      return 0;
+    }
+    if ( source_x + copy_width > source_width )
+      copy_width = source_width - source_x;
+    if ( destination_x + copy_width > destination_width )
+      copy_width = destination_width - destination_x;
+    if ( source_y + copy_height > source_height )
+      copy_height = source_height - source_y;
+    if ( destination_y + copy_height > destination_height )
+      copy_height = destination_height - destination_y;
+    if ( copy_width <= 0 || copy_height <= 0 )
+      return 0;
+    for ( row_index = 0; row_index < copy_height; ++row_index )
+    {
+      const unsigned char *source_row;
+      unsigned char *destination_row;
+
+      source_row = source_pixels + (source_y + row_index) * source_pitch + source_x;
+      destination_row = destination_pixels + (destination_y + row_index) * destination_pitch + destination_x;
+      for ( column_index = 0; column_index < copy_width; ++column_index )
+      {
+        if ( source_row[column_index] )
+          destination_row[column_index] = source_row[column_index];
+      }
+    }
+    return 0;
+  }
+  /*
+   * Original sub_402850 (clash95.asm 2731-2741):
+   *   mov edx,[esi+0B8h] / mov eax,esi / call dword ptr [edx+3Ch]
+   *   test eax,eax / jz  loc_4028C8
+   *   mov edx,[edi+0B8h] / mov eax,edi / call dword ptr [edx+40h]
+   *   test eax,eax / jnz loc_402A51
+   * i.e. surface method-table slots +60 (src) and +64 (dest), each called
+   * with the surface itself as the `this` pointer.  The raw decompile turned
+   * both into `(*(int (**)(void))(uintptr_t)(table + N))()`, which loads an
+   * 8-byte function pointer out of the recovered 4-byte-entry method tables
+   * (`g_Surface_Vtable` et al are `int[]`) and jumps to two packed slot
+   * values - a guaranteed SIGSEGV, observed as rax=0x40b0310040b022 the first
+   * time this function was actually reached.  Route through the sanctioned
+   * RenderSurface_InvokeSlot60/64 seams, the same repair applied to the other
+   * 32-bit surface-vtable call sites.
+   */
+  if ( RenderSurface_InvokeSlot60(src_resolved) && RenderSurface_InvokeSlot64(dest_resolved) )
   {
     colorkey_surface = (*(int (**)(void))(uintptr_t)(src_resolved[46] + 60))();
     Surface_SetSrcColorKey(colorkey_surface, 0, v29);

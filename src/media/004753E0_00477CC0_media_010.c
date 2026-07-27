@@ -1265,16 +1265,11 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***file_system)(void), int d
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00477950) --------------------------------------------------------
-signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem CLASH95_UNUSED, int a2)
+signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem, int a2)
 {
   int (__fastcall ***v3)(_DWORD, const char *); // ecx
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // ecx
   int *v8; // ecx
   int *v9; // eax
-  int v10; // ecx
   bool recurse_failed; // bl
   int callback_result; // ebx
   int v14; // esi
@@ -1288,13 +1283,34 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem CLASH
   const char *pattern_holder; // [esp+24h] [ebp-1Ch] BYREF
   int (**v23)(); // [esp+28h] [ebp-18h]
 
+  /*
+   * asm sub_477950 (clash95.asm 00477950):
+   *     mov  ecx, eax          ; ecx = fileSystem (the this-pointer)
+   *     mov  edi, edx          ; edi = a2
+   *     ... two Compat_StringHolder helpers (sub_471BF0, sub_471D10) -- both
+   *     ... push/pop ecx, as does every virtual callee reached from here
+   *     mov  ebx, [ecx]        ; ebx = fileSystem vtable
+   *     mov  eax, ecx          ; this
+   *     call dword ptr [ebx]   ; vtable[0](this, pattern) -> enumerator
+   *     mov  [esp+40h+var_3C], ecx   ; queryHandle = the same this-pointer
+   *   loc_477A7F:
+   *     mov  ebx, [ecx] / mov edx, edi / mov eax, ecx / call [ebx+1Ch]
+   *   loc_477AEB:
+   *     mov  esi, [ecx] / ... / mov eax, ecx / call [esi+20h]
+   * ecx is never reloaded, so v3/v4/v5/v8/v10 are all fileSystem; the
+   * decompiler emitted them unassigned, which made the very first call a jump
+   * through an uninitialised vtable pointer. The two strcmp_ calls likewise
+   * take eax = entry_name_holder, not ecx.
+   */
+  v3 = (int (__fastcall ***)(_DWORD, const char *))(uintptr_t)fileSystem;
+  v8 = (int *)(uintptr_t)fileSystem;
   pattern_holder = 0;
   v23 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&pattern_holder);
   v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&pattern_holder, asc_5024CE);
   enumerator = (**v3)(v3, pattern_holder);
-  queryHandle = v4;
+  queryHandle = fileSystem;
   v17 = 0;
   FileSystem_WalkEntryListInvokingCleanup((int)(intptr_t)&enumerator);
   if ( enumerator )
@@ -1306,12 +1322,13 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem CLASH
       v21 = &g_CompatStringHolder_Vtable;
       Compat_StringHolderDestructor(&entry_name_holder);
       v21 = &g_PathEntry_Vtable;
-      if ( strcmp_(v6, a__35) && strcmp_(v7, a___2) )
+      if ( strcmp_((_DWORD)(uintptr_t)entry_name_holder, a__35)
+        && strcmp_((_DWORD)(uintptr_t)entry_name_holder, a___2) )
       {
         if ( ((*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)enumerator + 4))() & 0x10) != 0 )
         {
           v9 = Compat_StringHolderConstructJoined(subdir_path_holder, (int)(intptr_t)v8, entry_name_holder);
-          recurse_failed = Compat_FileSystemWalkDirectoryEntries(v10, *v9) == -1;
+          recurse_failed = Compat_FileSystemWalkDirectoryEntries(fileSystem, *v9) == -1;
           Compat_StringHolderScalarDeletingDtor((int)(intptr_t)subdir_path_holder, 1);
           if ( recurse_failed )
           {
@@ -1336,18 +1353,14 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int fileSystem CLASH
         break;
     }
   }
-  callback_result = (*(int (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 28))(v5, a2);
+  callback_result = (*(int (__fastcall **)(int, int))(uintptr_t)(*(_DWORD *)(uintptr_t)fileSystem + 28))(fileSystem, a2);
   (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)queryHandle + 4))();
   Compat_StringHolderScalarDeletingDtor((int)(intptr_t)&pattern_holder, 1);
   return callback_result;
 }
-// 477991: variable 'v3' is possibly undefined
-// 47799C: variable 'v4' is possibly undefined
-// 4779FB: variable 'v6' is possibly undefined
-// 477A0D: variable 'v7' is possibly undefined
-// 477A32: variable 'v8' is possibly undefined
-// 477A3B: variable 'v10' is possibly undefined
-// 477A7F: variable 'v5' is possibly undefined
+// 477991/47799C/477A32/477A3B/477A7F: v3/v4/v8/v10/v5 are all the ecx copy of
+//   the fileSystem this-pointer; 4779FB/477A0D (v6/v7) are the eax argument of
+//   strcmp_, i.e. entry_name_holder. Repaired above.
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();

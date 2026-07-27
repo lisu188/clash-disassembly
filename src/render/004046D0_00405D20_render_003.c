@@ -712,6 +712,14 @@ void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD
     if ( (unsigned __int8)*pixel_ptr <= 0x1Fu )
       *pixel_ptr = g_Video_LowColorRemapTable[(unsigned __int8)*pixel_ptr];
   }
+  /*
+   * Original sub_4050F0, right after the <=0x1F remap sweep (clash95.asm
+   * 7317-7325, loc_40520E tail):
+   *   mov eax, ds:g_RenderDevice / mov edx,[eax+0B8h] / call dword ptr [edx+24h]
+   * i.e. render-device slot +36 (RenderSurface_InvokeSlot36) is invoked on the
+   * live device before the grey ramp is built.  The raw decompile dropped it.
+   */
+  RenderSurface_InvokeSlot36((_DWORD *)g_RenderDevice);
   ramp_cursor = (unsigned int)(intptr_t)g_PaletteScratchSurfaceBuffer;
   ramp_end = (unsigned int)(intptr_t)&g_PaletteScratchSurfaceBuffer[128];
   gray_accum = 0;
@@ -736,7 +744,13 @@ void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD
   }
   while ( pixel_index < 307200 );
   Palette_ApplyWithBrightnessOffset(render_device, g_PaletteScratchSurfaceBuffer);
-  (void)g_RenderDevice;
+  /*
+   * Original sub_4050F0 tail (clash95.asm 7367-7370):
+   *   mov eax, ds:g_RenderDevice / mov edx,[eax+0B8h] / call dword ptr [edx+24h]
+   * The raw decompile turned the slot +36 invocation into a bare read of
+   * g_RenderDevice.
+   */
+  RenderSurface_InvokeSlot36((_DWORD *)g_RenderDevice);
   if ( temp_surface )
     j__nfree_(temp_surface);
   result = saved_render_device;
@@ -782,7 +796,8 @@ void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target
       *pixel_cursor = (int)(unsigned __int8)g_PaletteScratchSurfaceBuffer[4 * (unsigned __int8)*pixel_cursor] >> 3;
     ++pixel_cursor;
   }
-  (void)pixel_cursor;
+  /* asm 7515-7517: mov edx,[esi+0B8h] / mov eax,esi / call dword ptr [edx+24h] */
+  RenderSurface_InvokeSlot36(snapshot_surface);
   Palette_ApplyWithBrightnessOffset(render_device, g_PaletteScratchSurfaceBuffer);
   Render_FillRect(g_RenderDevice, snapshot_surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
   for ( k = 0; k < 307200; ++k )
@@ -792,11 +807,14 @@ void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target
     if ( pixel_value <= 0x1F )
       *pixel_byte_ptr = g_Video_LowColorRemapTable[pixel_value];
   }
-  (void)pixel_value;
+  /* asm 7549-7551: mov edx,[esi+0B8h] / mov eax,esi / call dword ptr [edx+24h] */
+  RenderSurface_InvokeSlot36(snapshot_surface);
   LoadPalPCX((int)(intptr_t)g_PaletteScratchSurfaceBuffer, aPal_grey_pcx, 0);
   Palette_ApplyWithBrightnessOffset(render_device, g_PaletteScratchSurfaceBuffer);
   Render_FillRect(g_RenderDevice, snapshot_surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
-  (void)snapshot_surface;
+  /* asm 7568-7571: mov edx,[esi+0B8h] / mov eax,esi / mov ebx,14h /
+   * call dword ptr [edx+24h] (ebx=20 is the crossfade step that follows). */
+  RenderSurface_InvokeSlot36(snapshot_surface);
   Palette_CrossfadeToTarget(render_device, target_palette, 20);
   if ( snapshot_surface )
     j__nfree_(snapshot_surface);

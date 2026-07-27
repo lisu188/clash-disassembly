@@ -94,7 +94,6 @@ int  Render_BlitCompressedSpriteRLE(
   int copy_run_length; // ecx
   unsigned int copy_chunk_length; // ebx
   unsigned __int8 *copy_read_ptr; // esi
-  unsigned int v79; // ecx
   int v80; // ebx
   int v81; // ecx
   int v82; // edx
@@ -114,7 +113,6 @@ int  Render_BlitCompressedSpriteRLE(
   int offset_chunk_length; // ebx
   unsigned __int8 *copy_src_ptr; // esi
   int *offset_rgb_table; // edx
-  unsigned int v99; // ecx
   int v100; // ecx
   int v101; // ebx
   int v102; // ecx
@@ -493,7 +491,10 @@ LABEL_40:
               copy_src_ptr = run_pixel_ptr;
               dest_write_ptr = (unsigned __int8 *)(uintptr_t)(*(int (__thiscall **)(int))(uintptr_t)(*(_DWORD *)offset_write_cursor + 16))(offset_chunk_length);
               offset_rgb_table = *offset_clip_ctx;
-              qmemcpy(dest_write_ptr, copy_src_ptr, v99);
+              // 004038CE: mov ecx, ebx / shr ecx, 2 / rep movsd / mov cl, al / and cl, 3 / rep movsb
+              // -> the byte count is the per-chunk run length in ebx (offset_chunk_length), the same
+              // value handed to Palette_OffsetIndexedPixelsRGB (sub_462B0B) two instructions later.
+              qmemcpy(dest_write_ptr, copy_src_ptr, offset_chunk_length);
               if ( offset_chunk_length > 1 || *run_start_ptr != offset_rgb_table[3] )
                 Palette_OffsetIndexedPixelsRGB(dest_write_ptr, offset_chunk_length, *offset_rgb_table, offset_rgb_table[1], offset_rgb_table[2]);
               (*(void (**)(void))(uintptr_t)(*(_DWORD *)offset_write_cursor + 12))();
@@ -555,7 +556,10 @@ LABEL_86:
                 (*(void (**)(void))(uintptr_t)(g_ActiveBlitCursor + 16))();
                 copy_read_ptr = run_pixel_ptr;
                 copy_dest_ptr = (unsigned __int8 *)(uintptr_t)(*(int (__thiscall **)(unsigned int))(uintptr_t)(*(_DWORD *)v172 + 16))(copy_chunk_length);
-                qmemcpy(copy_dest_ptr, copy_read_ptr, v79);
+                // 00403578: mov ecx, ebx / shr ecx, 2 / rep movsd / mov cl, al / and cl, 3 / rep movsb
+                // -> the byte count is the per-chunk run length in ebx (copy_chunk_length), i.e. the
+                // same value just passed to the destination lock (vtable+16) and added to the cursors.
+                qmemcpy(copy_dest_ptr, copy_read_ptr, copy_chunk_length);
                 (*(void (**)(void))(uintptr_t)(*(_DWORD *)v172 + 12))();
                 run_pixel_ptr += copy_chunk_length;
                 (*(void (__fastcall **)(int, unsigned int))(uintptr_t)(g_ActiveBlitCursor + 12))(g_ActiveBlitCursor, copy_chunk_length);

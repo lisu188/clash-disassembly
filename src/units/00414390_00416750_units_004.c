@@ -888,10 +888,33 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
     *(_WORD *)(gameData + nextRowByteOffset + 2 * buildingRowCol + 556376) = -1;
     *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * buildingRowCol + 556376) = -1;
   }
+  /*
+   * asm loc_415A4D (clash95.asm, sub_415970):
+   *     mov  edx, [esp+30h+var_2C]   ; edx = stackIndex (param 1)
+   *     call sub_40AEB0              ; WorldMap_DisableFrameRedraw -- Watcom
+   *                                  ; register convention, pushes/pops edx
+   *     lea  eax, [edx*8] / add eax, edx / shl eax, 4 / add eax, edx  ; 145*s
+   *     mov  edx, eax / lea eax, [eax*4] / add eax, edx               ; 725*s
+   *     mov  ecx, ds:gameData / add eax, ecx
+   * i.e. gameData + UNIT_STACK_STRIDE(725) * stackIndex. The decompiler treated
+   * edx as clobbered by the call, so `stackRecordIndex` was multiplied out of
+   * an unassigned local and the unit-stack record was read from garbage.
+   */
   WorldMap_DisableFrameRedraw();
+  stackRecordIndex = stackIndex;
   stackRecordIndex *= 145;
   sourceColumn = *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + 147176);
   rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + UNIT_STACK_TABLE_OFFSET), SHIDWORD(buildingRowCol), sourceColumn, buildingKind, buildingRowCol);
+  /*
+   * asm 00415A97: `mov ecx, eax` right after the Unit_MoveTrack call -- ecx
+   * holds the returned path for the rest of the routine (Mem_Alloc and every
+   * other callee preserve ecx) and is what the epilogue returns
+   * (loc_415B9B: `mov eax, ecx`). The decompiler split that single register
+   * into rawPath / forwardPath / result and left the latter two unassigned, so
+   * the path array was walked and returned through wild pointers.
+   */
+  forwardPath = rawPath;
+  result = (int)(intptr_t)rawPath;
   if ( rawPath )
   {
     reverseBuffer = (int *)(uintptr_t)Mem_Alloc(404, (int)(intptr_t)rawPath, sourceColumn, buildingKind);
@@ -960,9 +983,9 @@ LABEL_8:
   Render_LoadResourceSprite_v2();
   return result;
 }
-// 415A64: variable 'v9' is possibly undefined
-// 415AAD: variable 'v13' is possibly undefined
-// 415BA0: variable 'v17' is possibly undefined
+// 415A64/415AAD/415BA0: decompiler 'possibly undefined' notes for v9/v13/v17 --
+//   v9 is edx = stackIndex across the WorldMap_DisableFrameRedraw call, and
+//   v13/v17 are ecx = the Unit_MoveTrack result; repaired above.
 // 5202E4: using guessed type int gameData;
 
 //----- (00415C90) --------------------------------------------------------

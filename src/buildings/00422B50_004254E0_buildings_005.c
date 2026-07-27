@@ -736,6 +736,13 @@ int  Map_RebuildRoadOverlayAtTile(int row, int column)
   int columnByteOffset; // ecx
   int result; // eax
 
+  /* asm 00423E90: `mov ecx, edx` holds `column` for the whole routine -- it is
+   * reloaded into edx before each of the four probes and finally scaled to
+   * 14*column for the tile offset (all four callees push/pop ecx). */
+  v4 = column;
+  v6 = column;
+  v8 = column;
+  v10 = column;
   maskWest = 8 * MapTile_HasWestRoadConnection(row, column);
   maskWestSouth = (4 * MapTile_HasSouthRoadConnection(row, v4)) | maskWest;
   maskWestSouthEast = (2 * MapTile_HasEastRoadConnection(row, v6)) | maskWestSouth;
@@ -914,12 +921,17 @@ signed int  Road_Build(int unitIndex, int direction, char a3, DWORD a4, double a
   int originColumn; // [esp+28h] [ebp-18h]
 
   Debug_Log(unitIndex, a3, a4, (int)(intptr_t)aRoad_buildDD);
+  /* asm 00424400: `mov ecx, eax` before the log call (which preserves ecx),
+   * then `mov eax, ecx` scaled 145*u then 725*u: gameData + 725*unitIndex. */
+  v5 = unitIndex;
   unitStackRecordBase = gameData + UNIT_STACK_STRIDE * v5;
   originRow = *(__int16 *)(uintptr_t)(unitStackRecordBase + 147174);
   originColumn = *(__int16 *)(uintptr_t)(unitStackRecordBase + 147176);
   hasNorthRoad = MapTile_HasNorthRoadConnection(originRow, originColumn);
   hasSouthRoad = MapTile_HasSouthRoadConnection(originRow, originColumn);
-  MapTile_HasWestRoadConnection(originRow, originColumn);
+  /* asm 00424474: `call sub_423CF0 / mov ecx, eax` -- the west result IS kept
+   * and drives the per-direction overlay choice; the decompiler dropped it. */
+  hasWestRoad = MapTile_HasWestRoadConnection(originRow, originColumn);
   hasEastRoad = MapTile_HasEastRoadConnection(originRow, originColumn);
   switch ( direction )
   {
@@ -1163,6 +1175,8 @@ LABEL_14:
       result = moveCost;
       if ( moveCost )
       {
+        /* asm loc_424B38: edx = moveCost + 1 across sub_410010 (preserves edx). */
+        v21 = moveCost + 1;
         minActionPoints = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * unitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
         if ( minActionPoints >= v21 )
         {
@@ -1178,6 +1192,8 @@ LABEL_14:
             Map_RebuildRoadOverlayAtTile(targetRow, targetColumn);
             if ( neighborPrevOverlay != 0xFFFF )
             {
+              /* asm loc_424B9B: ecx = 1400*targetRow, live across sub_423E90. */
+              v23 = TILE_TERRAIN_ROW_STRIDE * targetRow;
               targetOverlayRecordBase = v23 + gameData + 14 * targetColumn;
               if ( *(unsigned __int16 *)(uintptr_t)(targetOverlayRecordBase + 4) == 0xFFFF )
                 *(_WORD *)(uintptr_t)(targetOverlayRecordBase + 4) = neighborPrevOverlay;
@@ -1202,6 +1218,8 @@ LABEL_14:
             {
               qmemcpy((void *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + unitStackByteOffset + UNIT_STACK_PATH_OFFSET), (const void *)(uintptr_t)result, UNIT_STACK_PATH_BYTES);
               j__nfree_();
+              /* asm loc_424E62: `mov edx, 1` is live into sub_410330. */
+              v27 = 1;
               UnitStack_ExecuteQueuedPath(unitIndex, v27, unitCurrentColumn, unitStackByteOffset, a5);
               UnitStack_SpendActionPointsClamped((__int16 *)(uintptr_t)(unitStackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET), 1, unitStackByteOffset, a5);
               WorldMap_RefreshUnitStatusPanel(unitStackByteOffset);
@@ -1438,9 +1456,18 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn)
 //----- (004254E0) --------------------------------------------------------
 int  RoadBuildMode_BuildInSelectedDirection(int widget, DWORD a2, double a3)
 {
-  int direction; // edx
+  /* asm 004254E0 picks `direction` (edx) from a jump table covering widget ids
+   * 0x1B..0x1E only; its default arm falls through with whatever edx held on
+   * entry, and edx is not a parameter of this __usercall -- indeterminate in
+   * the original. Only the four road buttons reach this handler, so that arm is
+   * unreachable; seed a value Road_Build's switch rejects (it returns 0 outside
+   * {0,2,4,6}) instead of reading an uninitialised local. AMBIGUOUS-BY-ORIGINAL. */
+  int direction = -1; // edx
   int widgetRecord; // ecx
 
+  /* asm 004254E0: `mov ecx, eax` (= widget); after the animation call (which
+   * pushes/pops ecx) `mov ecx, [ecx+10h]` reads widget->id as the selector. */
+  widgetRecord = widget;
   UIWidget_PlayPressedReleaseAnimationWithDelay(widget, widget);
   switch ( *(_DWORD *)(uintptr_t)(widgetRecord + 16) )
   {

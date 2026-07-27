@@ -485,6 +485,25 @@ int  UnitBattle_ApproachToSafeDistance(int unitIndex, int a2, char a3, int a4)
   unsigned __int8 destCol; // [esp+2Ch] [ebp-18h]
 
   Debug_Log(a2, a3, a4, (int)(intptr_t)aPodejdz_na_bez);
+  /*
+   * asm sub_43B740 (clash95.asm 0043B740):
+   *     mov  [esp+44h+var_44], eax   ; save unitIndex (param 1)
+   *     push edx / push eax / push offset aPodejdz_na_bez
+   *     mov  edx, eax                ; edx = unitIndex, set BEFORE the call
+   *     call log                     ; `log` (00419150) pushes/pops edx,ecx,ebx
+   *                                  ; -- it PRESERVES edx
+   *     mov  ebx, edx
+   *     mov  eax, edx                ; eax = unitIndex
+   *     mov  ecx, ds:dword_532048
+   *     shl  eax, 5                  ; 32 * unitIndex
+   *     lea  edx, [ecx+354h]         ; g_MapData + 852
+   *     sub  eax, ebx                ; 31 * unitIndex
+   *     add  edx, eax
+   * The decompiler assumed the call clobbered edx and left `v4` unassigned, so
+   * the battle unit record (stride 31 from g_MapData+852) was computed from
+   * garbage. The record belongs to this call's own unitIndex argument.
+   */
+  v4 = unitIndex;
   v5 = 31 * v4 + g_MapData + 852;
   movePoints = *(unsigned __int8 *)(uintptr_t)(v5 + 8);
   unitRecordPtr = v5;

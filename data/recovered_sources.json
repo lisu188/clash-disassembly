@@ -2919,7 +2919,7 @@
       "original_line": 5867,
       "source": "src/buildings/00422B50_004254E0_buildings_005.c",
       "linkage": "external",
-      "body_sha256": "5bb0ab91ec461b34f0f23457ba33b6c1870251a99064291b284de3927dd32863",
+      "body_sha256": "1bed639bbbdb3037833eea5a6f5e88ffd035d5f80fead9a1c21554fab488350e",
       "original_address_range": {
         "start": "0x00423E90",
         "end_exclusive": "0x00423FC0"
@@ -3004,7 +3004,7 @@
       "original_line": 6023,
       "source": "src/buildings/00422B50_004254E0_buildings_005.c",
       "linkage": "external",
-      "body_sha256": "b7c41c2cf170923dca796851ed8a55d8d5af519aa409d7a8bbc60d07cf88e7ea",
+      "body_sha256": "e4683e18d8378b53df8c4c2bfa7baf18dcced6eaf2331d2ec2eab92983c2c883",
       "original_address_range": {
         "start": "0x00424400",
         "end_exclusive": "0x00424EC0"
@@ -3123,7 +3123,7 @@
       "original_line": 6580,
       "source": "src/buildings/00422B50_004254E0_buildings_005.c",
       "linkage": "external",
-      "body_sha256": "040024492b88cda7bba539182f824318b596c22ebba3b12b0a673c5ebc79eccf",
+      "body_sha256": "0ca86863be139bd9d7fa2412e833d510938e3581b96da5ef3913f5a399abfd08",
       "original_address_range": {
         "start": "0x004254E0",
         "end_exclusive": "0x00425540"
@@ -4942,7 +4942,7 @@
       "original_line": 1926,
       "source": "src/buildings/00436180_00437A90_buildings_002.c",
       "linkage": "external",
-      "body_sha256": "b80b00d08420073601b60dbca1005ef2f466acc00b42a9a3515d8b60122a67e0",
+      "body_sha256": "53bf4ad482a0e90122837825211b8c5129519215901e115d6445803a02231d30",
       "original_address_range": {
         "start": "0x00436D10",
         "end_exclusive": "0x00437050"
@@ -4976,7 +4976,7 @@
       "original_line": 2057,
       "source": "src/buildings/00436180_00437A90_buildings_002.c",
       "linkage": "external",
-      "body_sha256": "0c2b7c1db51072eda82cee5f39aad81da17196880f0aafcf204853f43d577aeb",
+      "body_sha256": "7732cc16180d149babca117c56697884f7182a51873d28075ba8a8866b9243ae",
       "original_address_range": {
         "start": "0x004370B0",
         "end_exclusive": "0x00437630"
@@ -5095,7 +5095,7 @@
       "original_line": 4646,
       "source": "src/buildings/0043A8B0_0043CC50_buildings_004.c",
       "linkage": "external",
-      "body_sha256": "f384b8057586584c70c433da6b4202b0858d0ef95f9d4c28899bd57b9c1004ea",
+      "body_sha256": "aed783895cf40ac27e96295a7eb8297be540c11e8c01a2a714beaea6129c9fdd",
       "original_address_range": {
         "start": "0x0043B740",
         "end_exclusive": "0x0043BE50"
@@ -14394,7 +14394,7 @@
       "original_line": 13460,
       "source": "src/media/004753E0_00477CC0_media_010.c",
       "linkage": "external",
-      "body_sha256": "1a6c0a6088c9ed5f8c7b32d5516802bfe7cf1c2e8b2cef9d8d0561ea78b6f315",
+      "body_sha256": "72651c5910b39307eb9cfc0b7013e89015301784ea5e55901d1173cea65d20bb",
       "original_address_range": {
         "start": "0x00477950",
         "end_exclusive": "0x00477B20"
@@ -20701,7 +20701,7 @@
       "original_line": 700,
       "source": "src/render/00401A40_00402BB0_render_001.c",
       "linkage": "external",
-      "body_sha256": "a7097e320f7f26694afee3176ce2c4e458698210740e063638cbbc9b50b6cd40",
+      "body_sha256": "155692364b0dbe59364b5e3c139a5753527ed0f51a40864371925ce5280eabd3",
       "original_address_range": {
         "start": "0x00402850",
         "end_exclusive": "0x00402BB0"
@@ -20735,7 +20735,7 @@
       "original_line": 992,
       "source": "src/render/00402E80_00404660_render_002.c",
       "linkage": "external",
-      "body_sha256": "156dc3543dd2af05cfe5cad633996d601cba0d3ee5c4476712fae63206418167",
+      "body_sha256": "68240154481f5a862cd6345eb2e63aa4aa0af37cca9c0fe6011ae2ee1741a62f",
       "original_address_range": {
         "start": "0x00402E80",
         "end_exclusive": "0x00403D70"
@@ -21466,7 +21466,7 @@
       "original_line": 2966,
       "source": "src/render/004046D0_00405D20_render_003.c",
       "linkage": "external",
-      "body_sha256": "4c646eecac5c6f4d2d1cd11ddaf0b5990c1dc78f35a598c08696b4a1bfbc7a59",
+      "body_sha256": "ec69dca1821435a11b767a24f64add84ebb2ebdefa9e40824808cd4664bd0b90",
       "original_address_range": {
         "start": "0x004050F0",
         "end_exclusive": "0x00405330"
@@ -21483,7 +21483,7 @@
       "original_line": 3074,
       "source": "src/render/004046D0_00405D20_render_003.c",
       "linkage": "external",
-      "body_sha256": "b247de1bc8173b22a1d3cc2e2f3289ca7afd335367a84ef3742c484de20a3d13",
+      "body_sha256": "c3d1afad8a9d2db03ba0a7da09265379ce5c2b3d037bf91bdce3860499d15e77",
       "original_address_range": {
         "start": "0x00405330",
         "end_exclusive": "0x00405510"
@@ -22231,7 +22231,7 @@
       "original_line": 3738,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "c679f8000772cdd1f72c0bbf430980c0dadc2b1b9808696b8618234bd266d7f8",
+      "body_sha256": "1f3d4d828b8e528dac1aaddee56491ec1c5600e4a623dd5a2f31ed89fcad3cc3",
       "original_address_range": {
         "start": "0x00405DB0",
         "end_exclusive": "0x00405EC0"
@@ -22418,7 +22418,7 @@
       "original_line": 3998,
       "source": "src/render/00405DB0_00407D20_render_004.c",
       "linkage": "external",
-      "body_sha256": "b394a526c4acd64e48923c0f9ab4e73f6c1e9616e6d8eb8ef8b2cf902d631516",
+      "body_sha256": "514f7e67b27ea48c790bcdc3c7c2be3f61e5c3ae581f76f8a3fae6389409d6b9",
       "original_address_range": {
         "start": "0x00406390",
         "end_exclusive": "0x00406460"
@@ -51828,7 +51828,7 @@
       "original_line": 641,
       "source": "src/strategic/004506B0_004530D0_strategic_001.c",
       "linkage": "external",
-      "body_sha256": "b5ae4e23b7d4dbc5b231411c545100ccaa2ac2300d0048efe3970660c0e43032",
+      "body_sha256": "f3ba5c21cb3419f926918e2d751c7856a6cfcf4a780d06b15ac6aa75d8b7ee8e",
       "original_address_range": {
         "start": "0x00451340",
         "end_exclusive": "0x00451690"
@@ -65411,7 +65411,7 @@
       "original_line": 5206,
       "source": "src/units/00414390_00416750_units_004.c",
       "linkage": "external",
-      "body_sha256": "0d6a50c790dba5cf7d4c459cf8837a902da029fa6028d4b30e46ec2dc48f6f98",
+      "body_sha256": "5d8702e2371769da0953b72585ec9bbae2a10f745f90536f4a67bae7efba1717",
       "original_address_range": {
         "start": "0x00415970",
         "end_exclusive": "0x00415C90"
@@ -66023,7 +66023,7 @@
       "original_line": 6977,
       "source": "src/units/004191F0_0041A690_units_006.c",
       "linkage": "external",
-      "body_sha256": "c4f0482c876b84e03e58e82b7ee0545878b13cf512cd03de56d2f767487bc56b",
+      "body_sha256": "10790513a68b5fc373405aee8cf2d89851db01553933c6f63f68461ff7e63dc8",
       "original_address_range": {
         "start": "0x004191F0",
         "end_exclusive": "0x00419410"
@@ -66465,7 +66465,7 @@
       "original_line": 8645,
       "source": "src/units/0041A960_0041C8B0_units_007.c",
       "linkage": "external",
-      "body_sha256": "bb335d99d1b98437d8b06862d319e5f1fb389068a55a1a5135a15ce4b969e923",
+      "body_sha256": "a4bff195a53a59f0bb305d093e55d85e3a4eb5884d8318099417fa4937fadec5",
       "original_address_range": {
         "start": "0x0041AD20",
         "end_exclusive": "0x0041B7D0"
@@ -68165,7 +68165,7 @@
       "original_line": 4843,
       "source": "src/world/0040D6D0_0040F4D0_world_004.c",
       "linkage": "external",
-      "body_sha256": "46f6c2281aa2312c304e3deadc8d6a70246fe976f4ca17e5029a9638f2abbd21",
+      "body_sha256": "f938f346ce68113b30daf00bb4499958dc06f278b79e2c646f9a7aff46cac467",
       "original_address_range": {
         "start": "0x0040E8B0",
         "end_exclusive": "0x0040ECF0"
@@ -68811,7 +68811,7 @@
       "original_line": 1490,
       "source": "src/persistence/00443BB0_00445CE0_persistence_002.c",
       "linkage": "external",
-      "body_sha256": "44269d86b3cb8ac795bbfa778f1a0eb589427568d3ea64e6f96c0dc994925f58",
+      "body_sha256": "efa7f096689d0ad58bc68b5e6e8b0853a4b0a7624c13063bcc8121d590e1360f",
       "original_address_range": {
         "start": "0x00443C20",
         "end_exclusive": "0x00443EB0"
