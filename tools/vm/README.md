@@ -686,3 +686,39 @@ classifies as `world-map`). Use an env with
 `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_BATTLE_ENTER=1` - e.g.
 `mission_05_stack19_tactical_probe.env` - when a battle frame is the goal; that
 route yields genuine 7x7-board frames (indices 7-10 of the reset series).
+
+## MILESTONE (2026-07-27): the strategic AI marches — adversarially confirmed, world map re-scored
+
+Commit dcfb469 lands the CLIPS un-freeze + march-path repairs (90 files). The
+inert all-AI engine now genuinely plays: the land run showed 8 distinct
+viewports / 9 of 23 stacks marching; the ADVERSARIAL verifier's independent
+1500-frame run found 47 distinct minimap-verified viewports and 8 marching
+stacks, faithfulness spot-audits of 4 repaired functions pass against
+clash95.asm, no direct march/camera calls were added (marches issue from the
+rulebase: 500 firings/60s incl. maszerowanie x11), the menu is still a 0-pixel
+match, and ctest is identical to pristine HEAD. The AI-intelligence seeding
+asymmetry (only players 1-2 get intel=2) was checked against the asm and is
+AUTHENTIC original behavior — deliberately not fixed.
+
+Post-AI world-map re-score at dcfb469 (all artifacts in the session scratchpad
+rescore/ dir):
+
+- m05 shared tiles: 18 -> 212 (original sample 38 frames / 25 viewports /
+  632 tiles; recovered roams 9 viewports / 250 tiles).
+- m05 matched: 86.9% raw; 92.5% after excluding one forensically-proven
+  transition-blip frame (the minimap viewport box updates one present ahead
+  of the main-view redraw — both engines' map data proven pixel-identical at
+  the contested cells). Every residual mismatch is transient gameplay state
+  (AI units below the unit-classifier threshold, battle debris, per-run
+  item/flag ownership); ZERO static-terrain or render mismatches.
+- The original's own cross-run noise floor, same methodology: 98.1% with the
+  SAME mismatch categories — i.e. the recovered engine now scores within ~6
+  points of what the original scores against itself.
+- Trust: same-engine selftest 250/250 = 100.0%; --shift 1,0 collapses to
+  29.6%. Caveat: recovered /A5 is fully deterministic under headless timing
+  (three runs -> bit-identical viewport schedules), so the selftest is a
+  reproducibility check, not independent-wander agreement.
+- m11: 96.3% but on the pre-AI 27-tile sample only — /a1 crashes during
+  mission-start AI setup on current main. PRE-EXISTING, not the march patch:
+  also core-dumps at 8e02204, hangs at 551eb93; last known-good /a1 was
+  d353ad5. Bisect chip filed (d353ad5..8e02204).
