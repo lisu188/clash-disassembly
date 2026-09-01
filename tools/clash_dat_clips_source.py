@@ -191,16 +191,14 @@ def _positive_object_order(raw_pattern: int, slot_name: str | None, conditions: 
 
 
 def _rule_local_name(rule: dict, ir: dict) -> str | None:
-    """Recover the sole local variable name retained by PROC_GET_BIND.
+    """Recover a rule local variable name retained by PROC_GET_BIND.
 
-    Every retail CLASH.DAT rule which has a local has local_var_count == 1.
-    PROC_BIND stores only the compiled local-frame index, while PROC_GET_BIND
-    retains the original symbol as its argument. Recover that symbol once per
-    rule and use it for both forms so `(bind ?name ...)` and later `?name`
-    references round-trip together.
+    In retail CLASH.DAT every rule containing PROC_BIND has exactly one local.
+    The LHS recovery object does not carry bsave local_var_count, so the action
+    tree itself is authoritative here: PROC_GET_BIND retains the original symbol
+    as its argument. If the tree contains exactly one such name, use it for the
+    corresponding PROC_BIND target.
     """
-    if int(rule.get("local_var_count", 0)) != 1:
-        return None
     expressions = ir["expressions"]
     symbols = ir["symbols"]
     walker = SourceExpressionRenderer(ir)
