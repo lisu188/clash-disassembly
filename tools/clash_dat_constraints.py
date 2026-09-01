@@ -22,12 +22,15 @@ class ConstraintTranslation:
         return self.translated is not None
 
 
+_FACT_FIELD_END = re.compile(r"fact\[p(\d+)\]\.slot\[(\d+)\]\.field-from-end\[(\d+)\]")
 _FACT_FIELD = re.compile(r"fact\[p(\d+)\]\.slot\[(\d+)\]\.field\[(\d+)\]")
 _FACT_ALL = re.compile(r"fact\[p(\d+)\]\.slot\[(\d+)\](?!\.)")
 _FACT_ADDR = re.compile(r"fact\[p(\d+)\](?!\.)")
 _FACT_MULTI = re.compile(
     r"fact\[p(\d+)\]\.slot\[(\d+)\]\.multifield\(begin\+(\d+),end-(\d+)\)"
 )
+_CURRENT_FIELD_END = re.compile(r"current-fact\.slot\[(\d+)\]\.field-from-end\[(\d+)\]")
+_CURRENT_FIELD = re.compile(r"current-fact\.slot\[(\d+)\]\.field\[(\d+)\]")
 _CURRENT_MULTI = re.compile(
     r"current-fact\.slot\[(\d+)\]\.multifield\(begin\+(\d+),end-(\d+)\)"
 )
@@ -58,12 +61,6 @@ def _fact_binding(order: int, conditions: list[dict]) -> dict | None:
 
 
 def _object_binding(raw_pattern: int, slot: str | None, conditions: list[dict]) -> int | None:
-    """Resolve CLIPS object pattern numbering conservatively.
-
-    Historical object primitives use a compiled pattern index whose base differs
-    from the fact accessor representation. Try both raw and raw+1; accept only one
-    candidate that is a positive object CE and (when known) exposes the named slot.
-    """
     by_order = _condition_map(conditions)
     candidates = []
     for order in (raw_pattern, raw_pattern + 1):
@@ -80,7 +77,6 @@ def _object_binding(raw_pattern: int, slot: str | None, conditions: list[dict]) 
 
 
 def _fact_pattern_binding(raw_pattern: int, conditions: list[dict]) -> int | None:
-    """Resolve a raw join pattern number by uniqueness across raw/raw+1."""
     by_order = _condition_map(conditions)
     candidates = []
     for order in (raw_pattern, raw_pattern + 1):
@@ -93,6 +89,10 @@ def _fact_pattern_binding(raw_pattern: int, conditions: list[dict]) -> int | Non
 
 def _nth(fields: str, zero_based: int) -> str:
     return f"(nth$ {zero_based + 1} {fields})"
+
+
+def _nth_from_end(fields: str, zero_based: int) -> str:
+    return f"(nth$ (- (length$ {fields}) {zero_based}) {fields})"
 
 
 def _slice(fields: str, begin_offset: int, end_offset: int) -> str:
@@ -136,6 +136,15 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
     text = _CURRENT_MULTI.sub(current_multi, text)
 
+    def fact_field_end(match: re.Match[str]) -> str:
+        order, slot, field = map(int, match.groups())
+        if slot != 0 or _fact_binding(order, conditions) is None:
+            fail(f"unresolved fact field-from-end accessor p{order}/slot{slot}")
+            return match.group(0)
+        return _nth_from_end(f"$?f{order}_fields", field)
+
+    text = _FACT_FIELD_END.sub(fact_field_end, text)
+
     def fact_field(match: re.Match[str]) -> str:
         order, slot, field = map(int, match.groups())
         if slot != 0 or _fact_binding(order, conditions) is None:
@@ -144,6 +153,26 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
         return _nth(f"$?f{order}_fields", field)
 
     text = _FACT_FIELD.sub(fact_field, text)
+
+    def current_field_end(match: re.Match[str]) -> str:
+        slot, field = map(int, match.groups())
+        current = _condition_map(conditions).get(current_order)
+        if slot != 0 or current is None or current["kind"] != "fact":
+            fail(f"unresolved current-fact field-from-end accessor slot{slot}")
+            return match.group(0)
+        return _nth_from_end(f"$?f{current_order}_fields", field)
+
+    text = _CURRENT_FIELD_END.sub(current_field_end, text)
+
+    def current_field(match: re.Match[str]) -> str:
+        slot, field = map(int, match.groups())
+        current = _condition_map(conditions).get(current_order)
+        if slot != 0 or current is None or current["kind"] != "fact":
+            fail(f"unresolved current-fact field accessor slot{slot}")
+            return match.group(0)
+        return _nth(f"$?f{current_order}_fields", field)
+
+    text = _CURRENT_FIELD.sub(current_field, text)
 
     def fact_all(match: re.Match[str]) -> str:
         order, slot = map(int, match.groups())
@@ -191,7 +220,6 @@ def _replace_accessors(text: str, current_order: int, conditions: list[dict]) ->
 
 
 def translate_test(source: str, current_order: int, conditions: list[dict]) -> ConstraintTranslation:
-    """Translate one rendered compiled matcher test to a CLIPS boolean expression."""
     source = source.strip()
 
     length_match = _FACT_LENGTH.match(source)
@@ -216,10 +244,7 @@ def translate_test(source: str, current_order: int, conditions: list[dict]) -> C
         if slot != 0 or current is None or current["kind"] != "fact":
             return ConstraintTranslation(source, None, "fact constant test is not ordered slot 0")
         fields = f"$?f{current_order}_fields"
-        if direction == "begin":
-            lhs = _nth(fields, offset)
-        else:
-            lhs = f"(nth$ (- (length$ {fields}) {offset}) {fields})"
+        lhs = _nth(fields, offset) if direction == "begin" else _nth_from_end(fields, offset)
         clips_op = "eq" if op == "==" else "neq"
         replaced_arg, reason = _replace_accessors(argument, current_order, conditions)
         if replaced_arg is None:
@@ -246,11 +271,8 @@ def translate_test(source: str, current_order: int, conditions: list[dict]) -> C
         op = _comparison(passed, failed)
         if op is None:
             return ConstraintTranslation(source, None, "object compare pass/fail mode unresolved")
-        # Numeric slot ids are not source slot names in this rendered primitive.
         return ConstraintTranslation(source, None, f"object compare needs slot-id mapping ({slot1},{slot2})")
 
-    # Generic FCALL trees already resemble CLIPS. Replace every semantic accessor;
-    # reject the expression if any opaque primitive survives.
     replaced, reason = _replace_accessors(source, current_order, conditions)
     if replaced is None:
         return ConstraintTranslation(source, None, reason)
