@@ -12,10 +12,11 @@ from __future__ import annotations
 import re
 
 from clash_dat_constraints import ConstraintTranslation
-from clash_dat_message_handlers import render_handler
+from clash_dat_handler_slots import decode_handler_reference
+from clash_dat_primitives import decode_primitive
+from clash_dat_source_expr import SourceExpressionRenderer
+from decompile_clash_dat import bitmap_int
 
-_PROC_PARAM = re.compile(r"(?<![$A-Za-z0-9_])\?p(\d+)\b")
-_PROC_WILD_PARAM = re.compile(r"\$\?p(\d+)\b")
 _SCALAR_HEAD = re.compile(r"^\((?:=|<>|neq|eq|>|<|>=|<=|\+|-|\*|/|integer|abs|min|max)\b")
 
 
@@ -23,23 +24,18 @@ def source_fact_pattern(condition: dict) -> tuple[str, dict]:
     order = int(condition["order"])
     template = condition["pattern"].split("(", 1)[1].split(None, 1)[0]
     fact_var = f"?f{order}"
-
-    # initial-fact is the sole explicit deftemplate in this image and has no
-    # slots. The other strategic relations are implied ordered facts.
     if template == "initial-fact":
         inner = "(initial-fact)"
         fields_var = None
     else:
         fields_var = f"$?f{order}_fields"
         inner = f"({template} {fields_var})"
-
     if condition["negated"]:
         form = f"(not {inner})"
         address = None
     else:
         form = f"{fact_var} <- {inner}"
         address = fact_var
-
     return form, {
         "condition": order,
         "kind": "fact",
@@ -57,7 +53,6 @@ def source_object_pattern(condition: dict) -> tuple[str, dict]:
     evidence_slots = list(condition.get("tested_slots") or [])
     source_slots = [name for name in evidence_slots if not name.startswith("system-slot#")]
     slot_bindings = {slot: f"?o{order}_{slot}" for slot in source_slots}
-
     pieces = ["(object"]
     if len(classes) == 1:
         pieces.append(f" (is-a {classes[0]})")
@@ -67,14 +62,12 @@ def source_object_pattern(condition: dict) -> tuple[str, dict]:
         pieces.append(f" ({slot} {variable})")
     pieces.append(")")
     inner = "".join(pieces)
-
     if condition["negated"]:
         form = f"(not {inner})"
         address = None
     else:
         form = f"{object_var} <- {inner}"
         address = object_var
-
     return form, {
         "condition": order,
         "kind": "object",
@@ -88,15 +81,6 @@ def source_object_pattern(condition: dict) -> tuple[str, dict]:
 
 
 def legalize_constraint_translations(items: list[ConstraintTranslation]) -> list[ConstraintTranslation]:
-    """Reject translations which are readable evidence but not legal CLIPS expressions.
-
-    Standalone fact-slot-length primitives have a dedicated translator. When the
-    semantic debug spelling survives inside a larger FCALL tree, the original
-    source expression is still unknown and must remain an evidence comment.
-    Similarly a recovered multifield slice cannot be fed to a scalar arithmetic
-    or comparison function without knowing whether the original accessor selected
-    a field or a multifield value.
-    """
     result: list[ConstraintTranslation] = []
     for item in items:
         translated = item.translated
@@ -104,59 +88,51 @@ def legalize_constraint_translations(items: list[ConstraintTranslation]) -> list
             result.append(item)
             continue
         if "fact-slot-length" in translated or "slot=" in translated:
-            result.append(
-                ConstraintTranslation(item.source, None, "nested compiled fact-slot-length has no safe source form")
-            )
+            result.append(ConstraintTranslation(item.source, None, "nested compiled fact-slot-length has no safe source form"))
             continue
         if "(subseq$ " in translated and _SCALAR_HEAD.match(translated):
-            result.append(
-                ConstraintTranslation(item.source, None, "multifield accessor is used by a scalar expression")
-            )
+            result.append(ConstraintTranslation(item.source, None, "multifield accessor is used by a scalar expression"))
             continue
         result.append(item)
     return result
 
 
-def _shift_handler_proc_params(source: str) -> str:
-    """Map compiled handler procedure indices to explicit source parameters.
+def _handler_params(handler: dict) -> list[str]:
+    explicit_count = max(0, int(handler["min_params"]) - 1)
+    result = [f"?p{i}" for i in range(1, explicit_count + 1)]
+    if int(handler["max_params"]) == -1:
+        result.append(f"$?p{explicit_count + 1}")
+    return result
 
-    Handler procedure index 1 is the implicit `?self`; explicit source
-    parameters therefore start at compiled index 2. This differs from
-    deffunction procedure indexing, where index 1 is the first explicit arg.
-    """
-    lines = source.splitlines()
-    if not lines:
-        return source
 
-    # Do not rewrite the synthetic declaration line itself; its ?p1..?pN list
-    # is already source-level and excludes implicit ?self.
-    body = "\n".join(lines[1:])
-
-    def wild(match: re.Match[str]) -> str:
-        index = int(match.group(1))
-        if index <= 1:
-            return "$?self"
-        return f"$?p{index - 1}"
-
-    def scalar(match: re.Match[str]) -> str:
-        index = int(match.group(1))
-        if index == 1:
-            return "?self"
-        if index > 1:
-            return f"?p{index - 1}"
-        return match.group(0)
-
-    body = _PROC_WILD_PARAM.sub(wild, body)
-    body = _PROC_PARAM.sub(scalar, body)
-    return lines[0] + ("\n" + body if body else "")
+def _handler_resolver(ir: dict, class_report: dict):
+    def resolve(index: int, type_id: int, value: int, args: list[int], renderer: SourceExpressionRenderer) -> str | None:
+        if type_id == 57:
+            if 0 <= value < len(class_report["classes"]):
+                return class_report["classes"][value]["name"]
+            return None
+        if type_id == 65:
+            decoded = bitmap_int(ir["bitmaps"], value)
+            if decoded in (0, 1):
+                return "?self"
+            if decoded is not None and decoded > 1:
+                return f"?p{decoded - 1}"
+        if type_id == 66:
+            decoded = bitmap_int(ir["bitmaps"], value)
+            if decoded is not None and decoded > 1:
+                return f"$?p{decoded - 1}"
+        if type_id in (58, 59):
+            ref = decode_handler_reference(index, ir["expressions"][index], ir, class_report)
+            if ref is None:
+                return None
+            if type_id == 58:
+                return ref.clips_target
+            return "(bind " + " ".join([ref.clips_target] + [renderer.node(item) for item in args]) + ")"
+        return None
+    return resolve
 
 
 def render_source_message_handlers(report: dict, ir: dict) -> str:
-    """Render only user-authored handlers as legal CLIPS source.
-
-    System handlers are preserved in the BSAVE report but omitted from textual
-    source. CLIPS creates built-in handlers and slot accessor handlers itself.
-    """
     user_handlers = [item for item in report["handlers"] if not item["system"]]
     header = [
         ";;; DEFMESSAGE-HANDLERS",
@@ -164,8 +140,126 @@ def render_source_message_handlers(report: dict, ir: dict) -> str:
         f";;; bsave-handlers={report['count']} system-omitted={report['system_count']} user-emitted={len(user_handlers)}",
         "",
     ]
-    rendered = []
+    renderer = SourceExpressionRenderer(ir, _handler_resolver(ir, report["class_report"]))
+    rendered: list[str] = []
     for item in user_handlers:
-        source = render_handler(item, ir, report["class_report"])
-        rendered.append(_shift_handler_proc_params(source))
+        params = " ".join(_handler_params(item))
+        lines = [f"(defmessage-handler {item['class_name']} {item['name']} {item['handler_type']} ({params})"]
+        lines.append(
+            f"  ;;; bsave handler#{item['index']} actions={item['actions_expr']} "
+            f"locals={item['local_var_count']} dispatch-order={item['dispatch_order']}"
+        )
+        actions = renderer.action_list(int(item["actions_expr"]))
+        if actions:
+            lines.extend("  " + action for action in actions)
+        else:
+            lines.append("  ;;; no action expression")
+        lines.append(")")
+        rendered.append("\n".join(lines))
     return "\n\n".join(["\n".join(header)] + rendered) + "\n"
+
+
+def _condition_map(conditions: list[dict]) -> dict[int, dict]:
+    return {int(item["order"]): item for item in conditions}
+
+
+def _positive_object_order(raw_pattern: int, slot_name: str | None, conditions: list[dict]) -> int | None:
+    by_order = _condition_map(conditions)
+    candidates: list[int] = []
+    for order in (raw_pattern, raw_pattern + 1):
+        condition = by_order.get(order)
+        if condition is None or condition["kind"] != "object" or condition["negated"]:
+            continue
+        if slot_name is not None:
+            tested = set(condition.get("tested_slots") or ())
+            if tested and slot_name not in tested:
+                continue
+        candidates.append(order)
+    unique = sorted(set(candidates))
+    return unique[0] if len(unique) == 1 else None
+
+
+def _rule_rhs_resolver(ir: dict, conditions: list[dict], class_report: dict):
+    by_order = _condition_map(conditions)
+
+    def resolve(index: int, type_id: int, value: int, args: list[int], renderer: SourceExpressionRenderer) -> str | None:
+        decoded = decode_primitive(ir["expressions"][index], ir, index)
+        if decoded is None:
+            return None
+        fields = decoded.fields
+        if type_id == 29:
+            order = int(fields["source_pattern_ordinal"])
+            condition = by_order.get(order)
+            if condition is None or condition["kind"] != "fact" or condition["negated"]:
+                return None
+            if fields["fact_address"]:
+                return f"?f{order}"
+            if fields["all_fields"]:
+                return f"$?f{order}_fields"
+            if int(fields["which_slot"]) == 0:
+                return f"(nth$ {int(fields['which_field']) + 1} $?f{order}_fields)"
+            return None
+        if type_id == 31:
+            order = int(fields["source_pattern_ordinal"])
+            condition = by_order.get(order)
+            if condition is None or condition["kind"] != "fact" or condition["negated"] or int(fields["which_slot"]) != 0:
+                return None
+            seq = f"$?f{order}_fields"
+            begin = int(fields["begin_offset"])
+            end = int(fields["end_offset"])
+            from_beginning = bool(fields["from_beginning"])
+            from_end = bool(fields["from_end"])
+            if from_beginning and from_end:
+                return f"(subseq$ {seq} {begin + 1} (- (length$ {seq}) {end}))"
+            if from_beginning:
+                return f"(nth$ {begin + 1} {seq})"
+            if from_end:
+                return f"(nth$ (- (length$ {seq}) {end}) {seq})"
+            return None
+        if type_id == 47:
+            slot_id = int(fields["which_slot"])
+            slot_name = class_report["slot_name_by_id"].get(slot_id)
+            raw_pattern = int(fields["which_pattern"])
+            order = _positive_object_order(raw_pattern, None if fields["object_address"] else slot_name, conditions)
+            if order is None:
+                return None
+            if fields["object_address"]:
+                return f"?o{order}"
+            if slot_name is None or slot_name.startswith("system-slot#"):
+                return None
+            base = f"?o{order}_{slot_name}"
+            if fields["all_fields"]:
+                return base
+            field = int(fields["which_field"])
+            return base if field == 0 else f"(nth$ {field + 1} {base})"
+        return None
+
+    return resolve
+
+
+def render_rule_rhs(rule: dict, ir: dict, class_report: dict) -> list[str]:
+    renderer = SourceExpressionRenderer(ir, _rule_rhs_resolver(ir, rule["conditions"], class_report))
+    return renderer.action_list(int(rule["actions_expr"]))
+
+
+def render_source_prelude(ir: dict, class_source: str) -> str:
+    renderer = SourceExpressionRenderer(ir)
+    lines = [";;; DEFGLOBALS", "(defglobal"]
+    for item in ir["globals"]:
+        lines.append(f"  ?*{item['name']}* = {renderer.node(int(item['initial_expr']))}")
+    lines.extend([")", "", ";;; DEFTEMPLATES"])
+    for item in ir["templates"]:
+        lines.append(f";;; (deftemplate {item['name']})")
+    lines.extend(["", class_source, "", ";;; DEFFUNCTIONS"])
+    for item in ir["deffunctions"]:
+        max_params = int(item["max_params"])
+        min_params = int(item["min_params"])
+        if max_params == -1:
+            params = [f"?p{i}" for i in range(1, min_params + 1)] + [f"$?p{min_params + 1}"]
+        else:
+            params = [f"?p{i}" for i in range(1, max_params + 1)]
+        lines.append(f"(deffunction {item['name']} ({' '.join(params)})")
+        actions = renderer.action_list(int(item["code_expr"]))
+        lines.extend("  " + action for action in actions)
+        lines.extend([")", ""])
+    return "\n".join(lines).rstrip()
