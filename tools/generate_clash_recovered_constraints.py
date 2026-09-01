@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+"""Generate CLASH_recovered.clp with conservative compiled-test translation."""
+from __future__ import annotations
+
+import argparse
+import json
+from collections import Counter
+from pathlib import Path
+
+from clash_dat_constraints import translate_condition_tests
+from clash_dat_lhs import recover_rule_lhs
+from decompile_clash_dat import parse_bsave, render_clips
+from generate_clash_recovered_clp import (
+    GAME_CLASS_NAMES,
+    _extract_rhs_blocks,
+    _fact_pattern,
+    _object_pattern,
+    _render_recovered_classes,
+    _unique_rule_names,
+)
+
+
+def _unwrap_not(form: str) -> str:
+    prefix = "(not "
+    if not form.startswith(prefix) or not form.endswith(")"):
+        raise ValueError(f"expected normalized not CE, got {form!r}")
+    return form[len(prefix) : -1]
+
+
+def _render_condition(condition: dict, all_conditions: list[dict]) -> tuple[list[str], dict]:
+    if condition["kind"] == "fact":
+        form, binding = _fact_pattern(condition)
+    else:
+        form, binding = _object_pattern(condition)
+
+    translated = translate_condition_tests(condition, all_conditions)
+    resolved = [item.translated for item in translated if item.translated is not None]
+    unresolved = [item for item in translated if item.translated is None]
+
+    # A multi-class object alpha bitmap is exact BSAVE evidence. The normalized
+    # object CE binds is-a to a synthetic variable and this test restores the
+    # bitmap restriction in source form.
+    classes = list(condition.get("classes") or [])
+    class_test = None
+    if condition["kind"] == "object" and len(classes) > 1:
+        class_var = binding["class_variable"]
+        class_test = "(or " + " ".join(f"(eq {class_var} {name})" for name in classes) + ")"
+        resolved.insert(0, class_test)
+
+    if not resolved:
+        lines = [form]
+    elif condition["negated"]:
+        inner = _unwrap_not(form)
+        lines = ["(not (and", "  " + inner]
+        lines.extend("  (test " + expr + ")" for expr in resolved)
+        lines.append("))")
+    else:
+        lines = ["(and", "  " + form]
+        lines.extend("  (test " + expr + ")" for expr in resolved)
+        lines.append(")")
+
+    for item in unresolved:
+        reason = item.reason or "unresolved"
+        lines.append(f";;; unresolved compiled-test ({reason}): {item.source}")
+
+    detail = {
+        "condition": condition["order"],
+        "binding": binding,
+        "compiled_test_count": len(translated),
+        "translated_test_count": sum(item.resolved for item in translated),
+        "unresolved_test_count": len(unresolved),
+        "class_bitmap_test_emitted": class_test is not None,
+        "translations": [
+            {
+                "source": item.source,
+                "translated": item.translated,
+                "reason": item.reason,
+            }
+            for item in translated
+        ],
+    }
+    return lines, detail
+
+
+def _render_rule(rule: dict, output_name: str, rhs_actions: list[str]) -> tuple[str, dict]:
+    lines = [f"(defrule {output_name}"]
+    if output_name != rule["name"]:
+        lines.append(f"  ;;; original BSAVE rule/disjunct name: {rule['name']}")
+    lines.append(f"  (declare (salience {rule['salience']}))")
+    if rule["dynamic_salience_expr"] != -1:
+        lines.append(f"  ;;; dynamic-salience expression root: {rule['dynamic_salience_expr']}")
+    lines.append(f"  ;;; terminal RETE join: J{rule['last_join']}")
+
+    condition_manifest = []
+    for condition in rule["conditions"]:
+        condition_lines, detail = _render_condition(condition, rule["conditions"])
+        lines.extend("  " + line for line in condition_lines)
+        condition_manifest.append(detail)
+
+    lines.append("  =>")
+    if rhs_actions:
+        lines.extend("  " + action for action in rhs_actions)
+    else:
+        lines.append("  ;;; no RHS actions")
+    lines.append(")")
+
+    return "\n".join(lines), {
+        "record_index": rule["index"],
+        "original_name": rule["name"],
+        "output_name": output_name,
+        "terminal_join": rule["last_join"],
+        "condition_count": len(rule["conditions"]),
+        "conditions": condition_manifest,
+        "compiled_test_count": sum(item["compiled_test_count"] for item in condition_manifest),
+        "translated_test_count": sum(item["translated_test_count"] for item in condition_manifest),
+        "unresolved_test_count": sum(item["unresolved_test_count"] for item in condition_manifest),
+        "class_bitmap_tests_emitted": sum(item["class_bitmap_test_emitted"] for item in condition_manifest),
+        "actions_expr": rule["actions_expr"],
+        "rhs_action_count": len(rhs_actions),
+    }
+
+
+def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
+    lhs = recover_rule_lhs(path, ir)
+    rhs_blocks = _extract_rhs_blocks(ir)
+    output_names = _unique_rule_names(lhs["rules"])
+
+    base = render_clips(ir)
+    prefix = base.split(";;; DEFRULES", 1)[0].rstrip()
+    class_source = _render_recovered_classes(lhs["class_report"])
+    if ";;; DEFFUNCTIONS" in prefix:
+        before, after = prefix.split(";;; DEFFUNCTIONS", 1)
+        prefix = before.rstrip() + "\n\n" + class_source + "\n\n;;; DEFFUNCTIONS" + after
+    else:
+        prefix += "\n\n" + class_source
+
+    rule_sources = []
+    rule_manifest = []
+    for rule, output_name, rhs in zip(lhs["rules"], output_names, rhs_blocks):
+        source, manifest = _render_rule(rule, output_name, rhs)
+        rule_sources.append(source)
+        rule_manifest.append(manifest)
+
+    translated = sum(item["translated_test_count"] for item in rule_manifest)
+    unresolved = sum(item["unresolved_test_count"] for item in rule_manifest)
+    compiled = sum(item["compiled_test_count"] for item in rule_manifest)
+    class_tests = sum(item["class_bitmap_tests_emitted"] for item in rule_manifest)
+
+    header = "\n".join([
+        ";;; CLASH_recovered.clp",
+        ";;; Unified normalized source reconstructed from retail CLASH.DAT (CLIPS 6.00 BSAVE).",
+        ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
+        ";;; Unresolved compiled primitives remain evidence comments; no guessed constraint is emitted.",
+        ";;; Synthetic ?fN/?oN variables are stable generator names, not recovered original spelling.",
+        f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
+        "",
+    ])
+    program = header + prefix + "\n\n;;; DEFRULES — recovered constraints + RHS\n\n" + "\n\n".join(rule_sources) + "\n"
+
+    duplicate_source_names = {
+        name: count for name, count in Counter(r["name"] for r in lhs["rules"]).items() if count > 1
+    }
+    manifest = {
+        "source": path.name,
+        "version": ir["version"],
+        "rules": len(rule_manifest),
+        "conditions": lhs["condition_occurrence_count"],
+        "defglobals": len(ir["globals"]),
+        "deffunctions": len(ir["deffunctions"]),
+        "game_defclasses_emitted": [
+            name for name in GAME_CLASS_NAMES
+            if name in {c["name"] for c in lhs["class_report"]["classes"]}
+        ],
+        "duplicate_bsave_rule_names": duplicate_source_names,
+        "synthetic_rule_renames": {
+            item["output_name"]: item["original_name"]
+            for item in rule_manifest if item["output_name"] != item["original_name"]
+        },
+        "compiled_test_count": compiled,
+        "translated_test_count": translated,
+        "unresolved_test_count": unresolved,
+        "class_bitmap_tests_emitted": class_tests,
+        "rules_manifest": rule_manifest,
+        "recompilation_status": "partial semantic constraints restored; unresolved primitives retained as evidence comments",
+    }
+    return program, manifest
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate CLASH_recovered.clp with restored matcher constraints")
+    parser.add_argument("input", nargs="?", default="CLASH.DAT")
+    parser.add_argument("--clp", default="CLASH_recovered.clp")
+    parser.add_argument("--manifest", default="CLASH_recovered_manifest.json")
+    args = parser.parse_args()
+
+    source = Path(args.input)
+    ir = parse_bsave(source)
+    program, manifest = render_recovered_program(source, ir)
+    Path(args.clp).write_text(program, encoding="utf-8")
+    Path(args.manifest).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(
+        f"generated {args.clp}: rules={manifest['rules']} conditions={manifest['conditions']} "
+        f"compiled-tests={manifest['compiled_test_count']} translated={manifest['translated_test_count']} "
+        f"unresolved={manifest['unresolved_test_count']}"
+    )
+    print(args.manifest)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
