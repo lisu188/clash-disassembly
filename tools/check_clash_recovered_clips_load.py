@@ -13,8 +13,17 @@ from pathlib import Path
 from decompile_clash_dat import parse_bsave
 from generate_clash_recovered_constraints import render_recovered_program
 
-LOAD_RESULT_RE = re.compile(r"^CLASH_LOAD_RESULT=(TRUE|FALSE)$", re.MULTILINE)
+DONE_RE = re.compile(r"^CLASH_LOAD_DONE$", re.MULTILINE)
 COUNT_RE = re.compile(r"^CLASH_(DEFRULES|DEFGLOBALS|DEFFUNCTIONS|DEFCLASSES)=([0-9]+)$", re.MULTILINE)
+ERROR_MARKERS = (
+    "\nERROR:\n",
+    "[PRNTUTIL",
+    "[EXPRNPSR",
+    "[PRCCODE",
+    "[OBJRTBLD",
+    "[ARGACCES",
+    "[MSGPSR",
+)
 
 
 def _clips_string(path: Path) -> str:
@@ -33,8 +42,9 @@ def run_load_test(source: Path, clips_exe: str) -> tuple[str, dict[str, int]]:
         batch.write_text(
             "\n".join([
                 "(clear)",
-                f'(bind ?clash-load-result (load "{recovered_arg}"))',
-                '(printout t "CLASH_LOAD_RESULT=" ?clash-load-result crlf)',
+                '(printout t "CLASH_LOAD_BEGIN" crlf)',
+                f'(load "{recovered_arg}")',
+                '(printout t "CLASH_LOAD_DONE" crlf)',
                 '(printout t "CLASH_DEFRULES=" (length$ (get-defrule-list)) crlf)',
                 '(printout t "CLASH_DEFGLOBALS=" (length$ (get-defglobal-list)) crlf)',
                 '(printout t "CLASH_DEFFUNCTIONS=" (length$ (get-deffunction-list)) crlf)',
@@ -58,11 +68,11 @@ def run_load_test(source: Path, clips_exe: str) -> tuple[str, dict[str, int]]:
         output = proc.stdout
         if proc.returncode != 0:
             raise AssertionError(f"CLIPS exited with {proc.returncode}\n{output}")
-        match = LOAD_RESULT_RE.search(output)
-        if not match:
-            raise AssertionError(f"CLIPS did not emit load sentinel\n{output}")
-        if match.group(1) != "TRUE":
-            raise AssertionError(f"CLIPS rejected generated CLASH_recovered.clp\n{output}")
+        if not DONE_RE.search(output):
+            raise AssertionError(f"CLIPS did not finish the load command\n{output}")
+        if any(marker in output for marker in ERROR_MARKERS):
+            raise AssertionError(f"CLIPS reported parser/construct diagnostics\n{output}")
+
         counts = {name.lower(): int(value) for name, value in COUNT_RE.findall(output)}
         expected = {
             "defrules": manifest["rules"],
