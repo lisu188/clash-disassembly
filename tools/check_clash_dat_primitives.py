@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
+from clash_dat_classes import parse_defclass
+from clash_dat_handler_slots import handler_reference_report
 from clash_dat_primitives import (
     DECODED_BITMAP_TYPES,
     bitmap_primitive_report,
@@ -38,7 +40,8 @@ EXPECTED_SAMPLES = {
 
 
 def main() -> int:
-    ir = parse_bsave(Path("CLASH.DAT"))
+    source = Path("CLASH.DAT")
+    ir = parse_bsave(source)
     report = bitmap_primitive_report(ir)
 
     assert report["decoded_expression_count"] == 1273
@@ -76,6 +79,16 @@ def main() -> int:
     assert all(len(ir["bitmaps"][e[1]]) == 6 for e in handler_get + handler_put)
     assert len(report["handler_slot_references"]) == 70
 
+    classes = parse_defclass(source, ir)
+    handlers = handler_reference_report(ir, classes)
+    assert handlers["count"] == 70
+    assert handlers["get_count"] == 47
+    assert handlers["put_count"] == 23
+    assert all(not item["class_name"].startswith("class#") for item in handlers["references"])
+    assert all(not item["slot_name"].startswith("system-slot#") for item in handlers["references"])
+    assert {"id", "gracz", "x", "y"}.issubset(set(handlers["slots"]))
+    assert all(item["clips_target"].startswith("?self:") for item in handlers["references"])
+
     templates = deftemplate_report(ir)
     assert templates["count"] == 25
     assert templates["implied_count"] == 24
@@ -87,9 +100,10 @@ def main() -> int:
     assert all(item["implied"] for item in templates["templates"][1:])
 
     print("CLASH.DAT primitive decoder contract: PASS")
-    print("decoded=1273 bitmap primitives across 9 types")
+    print("decoded=1273 matcher bitmap primitives across 9 types")
     print("deftemplates=25 implied=24 serialized-slots=0 (ordered facts)")
-    print("HANDLER_GET/PUT 6-byte direct-slot layout remains deferred")
+    print("HANDLER_GET/PUT=70 decoded as uint16 class_id + uint32 slot_name_id")
+    print(f"handler-classes={len(handlers['classes'])} handler-slots={len(handlers['slots'])}")
     return 0
 
 
