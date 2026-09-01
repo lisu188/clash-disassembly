@@ -49,6 +49,11 @@ def main() -> int:
     assert manifest["conditions"] == 425
     assert manifest["defglobals"] == 6
     assert manifest["deffunctions"] == 7
+    assert manifest["defclass_slots"] == 23
+    slot_report = manifest["defclass_slot_facets"]
+    assert slot_report["slot_count"] == 23
+    assert slot_report["constraint_count"] == 0
+    assert slot_report["single_slot_count"] + slot_report["multislot_count"] == 23
     assert manifest["defmessage_handlers"] == 69
     assert manifest["system_message_handlers"] + manifest["user_message_handlers"] == 69
     assert manifest["system_message_handlers"] > 0
@@ -97,8 +102,17 @@ def main() -> int:
     assert "produkcja_main_1" in program
     assert "postaw_zamek" in program
     assert "(defclass oddzial" in program
-    assert "(slot x)" in program
-    assert "(slot y)" in program
+    assert "  (slot x\n" in program or "  (multislot x\n" in program
+    assert "  (slot y\n" in program or "  (multislot y\n" in program
+    assert program.count("    (storage ") == 23
+    assert program.count("    (access ") == 23
+    assert program.count("    (propagation ") == 23
+    assert program.count("    (source ") == 23
+    assert program.count("    (pattern-match ") == 23
+    assert program.count("    (visibility ") == 23
+    assert program.count("    (create-accessor ") == 23
+    assert program.count("    (override-message ") == 23
+    assert "No constraint records were serialized" in program
 
     duplicate_names = manifest["duplicate_bsave_rule_names"]
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
@@ -107,11 +121,13 @@ def main() -> int:
     assert program.count(";;; unresolved compiled-test") == unresolved
     assert_balanced_clips(program)
 
-    print("CLASH_recovered.clp constraint + message-handler recovery contract: PASS")
+    print("CLASH_recovered.clp slot + constraint + message-handler recovery contract: PASS")
     print(
-        f"rules={manifest['rules']} conditions={manifest['conditions']} handlers={manifest['defmessage_handlers']} "
-        f"system-handlers={manifest['system_message_handlers']} user-handlers={manifest['user_message_handlers']} "
-        f"compiled-tests={compiled} translated={translated} unresolved={unresolved} "
+        f"rules={manifest['rules']} conditions={manifest['conditions']} slots={manifest['defclass_slots']} "
+        f"multislots={slot_report['multislot_count']} constraints={slot_report['constraint_count']} "
+        f"handlers={manifest['defmessage_handlers']} system-handlers={manifest['system_message_handlers']} "
+        f"user-handlers={manifest['user_message_handlers']} compiled-tests={compiled} "
+        f"translated={translated} unresolved={unresolved} "
         f"object-joins={manifest['object_join_translated_count']} "
         f"object-constants={manifest['object_constant_translated_count']}"
     )
