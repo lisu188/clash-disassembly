@@ -4,7 +4,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from decompile_clash_dat import parse_bsave
-from generate_clash_recovered_clp import GAME_CLASS_NAMES, render_recovered_program
+from generate_clash_recovered_clp import GAME_CLASS_NAMES
+from generate_clash_recovered_constraints import render_recovered_program
 
 
 def assert_balanced_clips(text: str) -> None:
@@ -56,14 +57,27 @@ def main() -> int:
     assert sum(item["condition_count"] for item in rules) == 425
     assert all(item["terminal_join"] >= 0 for item in rules)
 
+    compiled = manifest["compiled_test_count"]
+    translated = manifest["translated_test_count"]
+    unresolved = manifest["unresolved_test_count"]
+    assert compiled > 0
+    assert translated > 0
+    assert translated + unresolved == compiled
+    assert manifest["class_bitmap_tests_emitted"] > 0
+    assert sum(item["compiled_test_count"] for item in rules) == compiled
+    assert sum(item["translated_test_count"] for item in rules) == translated
+    assert sum(item["unresolved_test_count"] for item in rules) == unresolved
+
     assert program.count("(defrule ") == 95
     assert program.count("(deffunction ") == 7
     assert program.count("(defclass ") == 7
     assert program.count("  =>") == 95
     assert ";;; LHS unavailable as original source" not in program
-    assert ";;; DEFRULES — unified recovered LHS + RHS" in program
+    assert ";;; DEFRULES — recovered constraints + RHS" in program
     assert "?f1 <- (gracz $?f1_fields)" in program
     assert "(not (" in program
+    assert "(test " in program
+    assert "(length$ $?f" in program or "(nth$ " in program
     assert "Buduj-Zamek" in program
     assert "produkcja_main_1" in program
     assert "postaw_zamek" in program
@@ -74,15 +88,16 @@ def main() -> int:
     duplicate_names = manifest["duplicate_bsave_rule_names"]
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
     assert manifest["synthetic_rule_renames"], "duplicate rule/disjunct names must be made unique"
-    assert manifest["commented_compiled_test_count"] > 0
 
+    # Every unresolved compiled matcher operation must remain visible as evidence.
+    assert program.count(";;; unresolved compiled-test") == unresolved
     assert_balanced_clips(program)
 
-    print("CLASH_recovered.clp unified program contract: PASS")
+    print("CLASH_recovered.clp constraint recovery contract: PASS")
     print(
         f"rules={manifest['rules']} conditions={manifest['conditions']} "
-        f"defclasses={len(manifest['game_defclasses_emitted'])} "
-        f"compiled-tests-commented={manifest['commented_compiled_test_count']}"
+        f"compiled-tests={compiled} translated={translated} unresolved={unresolved} "
+        f"class-bitmap-tests={manifest['class_bitmap_tests_emitted']}"
     )
     print(f"synthetic-disjunct-renames={len(manifest['synthetic_rule_renames'])}")
     return 0
