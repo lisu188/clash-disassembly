@@ -9,7 +9,9 @@ from pathlib import Path
 
 from clash_dat_clips_source import (
     legalize_constraint_translations,
+    render_rule_rhs,
     render_source_message_handlers,
+    render_source_prelude,
     source_fact_pattern,
     source_object_pattern,
 )
@@ -18,8 +20,8 @@ from clash_dat_object_constraints import translate_condition_tests
 from clash_dat_lhs import recover_rule_lhs
 from clash_dat_rete import rete_report
 from clash_dat_slot_facets import render_recovered_classes
-from decompile_clash_dat import parse_bsave, render_clips
-from generate_clash_recovered_clp import GAME_CLASS_NAMES, _extract_rhs_blocks, _unique_rule_names
+from decompile_clash_dat import parse_bsave
+from generate_clash_recovered_clp import GAME_CLASS_NAMES, _unique_rule_names
 
 
 def _unwrap_not(form: str) -> str:
@@ -140,20 +142,13 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     class_source, slot_report = render_recovered_classes(ir, class_report, GAME_CLASS_NAMES)
     handler_report = recover_message_handlers(path, ir)
     handler_source = render_source_message_handlers(handler_report, ir).rstrip()
-    rhs_blocks = _extract_rhs_blocks(ir)
     output_names = _unique_rule_names(lhs["rules"])
-
-    base = render_clips(ir)
-    prefix = base.split(";;; DEFRULES", 1)[0].rstrip()
-    if ";;; DEFFUNCTIONS" in prefix:
-        before, after = prefix.split(";;; DEFFUNCTIONS", 1)
-        prefix = before.rstrip() + "\n\n" + class_source + "\n\n;;; DEFFUNCTIONS" + after
-    else:
-        prefix += "\n\n" + class_source
+    prefix = render_source_prelude(ir, class_source)
 
     rule_sources = []
     rule_manifest = []
-    for rule, output_name, rhs in zip(lhs["rules"], output_names, rhs_blocks):
+    for rule, output_name in zip(lhs["rules"], output_names):
+        rhs = render_rule_rhs(rule, ir, class_report)
         source, manifest = _render_rule(rule, output_name, rhs, class_report, object_nodes)
         rule_sources.append(source)
         rule_manifest.append(manifest)
@@ -180,12 +175,12 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     header = "\n".join([
         ";;; CLASH_recovered.clp",
         ";;; Unified normalized source reconstructed from retail CLASH.DAT (CLIPS 6.00 BSAVE).",
+        ";;; Packed IF/PROGN trees are restored to CLIPS then/else source syntax.",
         ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
-        ";;; Object JN comparisons use recovered global slot-name ids; object PN constants use pattern-node slot context.",
         ";;; Defclass slot form/facets/default values are restored from compact BSAVE slot descriptors.",
         ";;; Only user-authored message handlers are emitted; CLIPS recreates system/implicit handlers from classes.",
-        ";;; Direct handler slot primitives are restored as ?self:<slot> and (bind ?self:<slot> ...).",
-        ";;; Unresolved compiled primitives remain evidence comments; no guessed matcher constraint is emitted.",
+        ";;; Rule RHS fact/object accessors are rebound to recovered ?fN/?oN source variables when exact.",
+        ";;; Unresolved compiled primitives remain evidence comments/placeholders rather than guessed semantics.",
         ";;; Synthetic ?fN/?oN and handler ?pN variables are stable generator names, not recovered original spelling.",
         f";;; slots={slot_report['slot_count']} multislots={slot_report['multislot_count']} dynamic-defaults={slot_report['dynamic_default_count']} no-defaults={slot_report['no_default_count']} constraints={slot_report['constraint_count']}",
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
@@ -234,7 +229,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "object_join_translated_count": object_join_translations,
         "object_constant_translated_count": object_constant_translations,
         "rules_manifest": rule_manifest,
-        "recompilation_status": "legal source projection now omits CLIPS system constructs; remaining action/matcher primitives stay explicit",
+        "recompilation_status": "source expression special forms and RHS accessors restored; external host functions still require the game runtime or test stubs",
     }
     return program, manifest
 
