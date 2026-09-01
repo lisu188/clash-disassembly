@@ -164,25 +164,80 @@ def _condition_map(conditions: list[dict]) -> dict[int, dict]:
 
 
 def _positive_object_order(raw_pattern: int, slot_name: str | None, conditions: list[dict]) -> int | None:
+    """Resolve OBJ_GET_SLOT_JNVAR1.whichPattern to its source CE.
+
+    In the retail image whichPattern is already the one-based rule-condition
+    ordinal. Earlier recovery treated raw_pattern+1 as an equal candidate, which
+    made adjacent object CEs falsely ambiguous (for example p3/p4 in the combat
+    rules). Keep +1 only as a compatibility fallback for other images.
+    """
     by_order = _condition_map(conditions)
-    candidates: list[int] = []
-    for order in (raw_pattern, raw_pattern + 1):
+
+    def matches(order: int) -> bool:
         condition = by_order.get(order)
         if condition is None or condition["kind"] != "object" or condition["negated"]:
-            continue
+            return False
         if slot_name is not None:
             tested = set(condition.get("tested_slots") or ())
             if tested and slot_name not in tested:
-                continue
-        candidates.append(order)
-    unique = sorted(set(candidates))
-    return unique[0] if len(unique) == 1 else None
+                return False
+        return True
+
+    if matches(raw_pattern):
+        return raw_pattern
+    if matches(raw_pattern + 1):
+        return raw_pattern + 1
+    return None
 
 
-def _rule_rhs_resolver(ir: dict, conditions: list[dict], class_report: dict):
+def _rule_local_name(rule: dict, ir: dict) -> str | None:
+    """Recover the sole local variable name retained by PROC_GET_BIND.
+
+    Every retail CLASH.DAT rule which has a local has local_var_count == 1.
+    PROC_BIND stores only the compiled local-frame index, while PROC_GET_BIND
+    retains the original symbol as its argument. Recover that symbol once per
+    rule and use it for both forms so `(bind ?name ...)` and later `?name`
+    references round-trip together.
+    """
+    if int(rule.get("local_var_count", 0)) != 1:
+        return None
+    expressions = ir["expressions"]
+    symbols = ir["symbols"]
+    walker = SourceExpressionRenderer(ir)
+    seen: set[int] = set()
+    names: set[str] = set()
+
+    def visit(index: int) -> None:
+        if index == -1 or index in seen:
+            return
+        if not 0 <= index < len(expressions):
+            return
+        seen.add(index)
+        type_id, _value, arg, _next = expressions[index]
+        if type_id == 67 and arg != -1:
+            args = walker.siblings(arg)
+            if args:
+                first_type, first_value, _first_arg, _first_next = expressions[args[0]]
+                if first_type == 2 and 0 <= first_value < len(symbols):
+                    names.add(symbols[first_value])
+        if arg != -1:
+            for child in walker.siblings(arg):
+                visit(child)
+
+    visit(int(rule["actions_expr"]))
+    if len(names) == 1:
+        return next(iter(names))
+    return None
+
+
+def _rule_rhs_resolver(ir: dict, conditions: list[dict], class_report: dict, local_name: str | None):
     by_order = _condition_map(conditions)
 
     def resolve(index: int, type_id: int, value: int, args: list[int], renderer: SourceExpressionRenderer) -> str | None:
+        if type_id == 68 and local_name is not None:
+            target = f"?{local_name}"
+            return "(bind " + " ".join([target] + [renderer.node(item) for item in args]) + ")"
+
         decoded = decode_primitive(ir["expressions"][index], ir, index)
         if decoded is None:
             return None
@@ -238,7 +293,11 @@ def _rule_rhs_resolver(ir: dict, conditions: list[dict], class_report: dict):
 
 
 def render_rule_rhs(rule: dict, ir: dict, class_report: dict) -> list[str]:
-    renderer = SourceExpressionRenderer(ir, _rule_rhs_resolver(ir, rule["conditions"], class_report))
+    local_name = _rule_local_name(rule, ir)
+    renderer = SourceExpressionRenderer(
+        ir,
+        _rule_rhs_resolver(ir, rule["conditions"], class_report, local_name),
+    )
     return renderer.action_list(int(rule["actions_expr"]))
 
 
