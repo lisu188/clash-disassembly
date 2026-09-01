@@ -90,18 +90,18 @@ jobs:
     timeout-minutes: 20
     strategy:
       fail-fast: false
-    matrix:
-      include:
-        - compiler: GCC 13
-          cc: gcc-13
-          package: gcc-13
-          compiler_id: gcc
-          warning_mode: check
-        - compiler: Clang 18
-          cc: clang-18
-          package: clang-18
-          compiler_id: clang
-          warning_mode: check
+      matrix:
+        include:
+          - compiler: GCC 13
+            cc: gcc-13
+            package: gcc-13
+            compiler_id: gcc
+            warning_mode: check
+          - compiler: Clang 18
+            cc: clang-18
+            package: clang-18
+            compiler_id: clang
+            warning_mode: check
 
     steps:
       - name: Check out repository
