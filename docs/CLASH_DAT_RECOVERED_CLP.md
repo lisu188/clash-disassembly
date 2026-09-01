@@ -2,47 +2,93 @@
 
 ## Purpose
 
-`tools/generate_clash_recovered_clp.py` combines the independently recovered
-parts of the retail `CLASH.DAT` CLIPS 6.00 BSAVE image into one normalized,
-source-like program.
+`tools/generate_clash_recovered_constraints.py` is the current source-projection
+generator for the retail `CLASH.DAT` CLIPS 6.00 BSAVE image. It combines the
+independently recovered construct, object, RETE, message-handler, slot-facet, and
+expression evidence into one normalized CLIPS program.
 
-The generator consumes only the checked-in retail binary and the evidence-backed
-parsers already used by CI. It does not treat a hand-edited `.clp` file as a new
-source of truth.
+The generator consumes only the checked-in retail binary and evidence-backed
+parsers used by CI. Generated `.clp` output is never treated as a new source of
+truth.
 
 ```sh
-python3 tools/generate_clash_recovered_clp.py CLASH.DAT \
+python3 tools/generate_clash_recovered_constraints.py CLASH.DAT \
   --clp /tmp/CLASH_recovered.clp \
   --manifest /tmp/CLASH_recovered_manifest.json
 python3 tools/check_clash_recovered_clp.py
 ```
 
+`tools/generate_clash_recovered_clp.py` remains the older, less-semantic scaffold
+generator. New recovery work should target the constraint-aware generator above.
+
 ## What is combined
 
-The generated file contains, in one artifact:
+The generated file contains:
 
-- the six recovered `defglobal` values;
-- the seven recovered `deffunction` bodies;
-- recovered game `defclass` names, direct inheritance, and declared slot names;
+- 6 recovered `defglobal` values;
+- 7 recovered `deffunction` bodies;
+- 7 game `defclass` constructs with direct inheritance;
+- all 23 serialized game slot descriptors rendered with recovered slot/multislot
+  form, defaults, storage, access, propagation, source, pattern-match,
+  visibility, create-accessor, and override-message facets;
+- all 69 recovered `defmessage-handler` constructs;
 - all 95 BSAVE rule/disjunct records;
 - all 425 recovered LHS condition occurrences in RETE source order;
 - `not` conditions recovered from join flags;
-- the RHS action expression trees already reconstructed by
-  `tools/decompile_clash_dat.py`;
-- comments containing the decoded alpha-network and join-network tests for every
-  condition where those compiled tests exist.
+- translated alpha/join tests where compiled accessors are unambiguous;
+- recovered RHS action expression trees.
 
-The rule records are deliberately kept one-for-one with the binary image. CLIPS
-can serialize multiple disjunct records with the same source rule name. A source
-file cannot safely contain duplicate construct names, so the first record keeps
+The rule records remain one-for-one with the binary image. CLIPS can serialize
+multiple disjunct records with the same source rule name. The first record keeps
 the recovered name and later records receive deterministic suffixes such as
-`__disjunct2`. The manifest records every such synthetic rename.
+`__disjunct2`; the manifest records every synthetic rename.
 
-## Synthetic variables
+## Defclass slots
 
-Original pattern-variable spellings are not stored by BSAVE. The generator
-therefore uses deterministic names that describe their recovered role rather
-than pretending to know the original source text.
+Slot facets are recovered by `tools/clash_dat_slot_facets.py`. For example the
+source projection now has the full normalized shape:
+
+```clips
+(slot x
+  (default 0)
+  (storage local)
+  (access read-write)
+  (propagation inherit)
+  (source exclusive)
+  (pattern-match reactive)
+  (visibility private)
+  (create-accessor NONE)
+  (override-message DEFAULT)
+)
+```
+
+The exact facet values come from the compact CLIPS BSAVE slot flag word and the
+serialized default/override fields. See `CLASH_DAT_SLOT_FACETS.md`.
+
+The retail image contains zero serialized constraint records, so original
+`type`, allowed-value, `range`, and `cardinality` source restrictions are not in
+`CLASH.DAT` and are deliberately not invented.
+
+## Message handlers
+
+All 69 serialized handlers are rendered as `defmessage-handler` constructs with
+recovered class, message name, handler type, arity, local-variable count, and
+action expression root. Direct slot operations are restored as source forms such
+as:
+
+```clips
+?self:x
+(bind ?self:x <value>)
+```
+
+Parameter spellings remain stable synthetic names because BSAVE preserves
+positions/arity, not the original identifier text. See
+`CLASH_DAT_MESSAGE_HANDLERS.md`.
+
+## Synthetic pattern variables
+
+Original rule pattern-variable spellings are not stored by BSAVE. The generator
+uses deterministic names describing recovered roles.
 
 For ordered facts:
 
@@ -56,54 +102,37 @@ For object patterns:
 ?o2 <- (object (is-a oddzial) (x ?o2_x) (y ?o2_y))
 ```
 
-Negative patterns are rendered without exporting an address binding:
+Negative patterns do not export an address binding.
+
+## Compiled matcher constraints
+
+A growing subset of alpha/join primitive expressions is emitted as real CLIPS
+`(test ...)` conditions. This includes fact field accessors and selected named
+object slot comparisons/constants.
+
+Operations that are still ambiguous remain explicit comments:
 
 ```clips
-(not (budowanie $?f4_fields))
+;;; unresolved compiled-test (...): ...
 ```
 
-These names are stable across runs as long as the BSAVE rule condition order is
-unchanged. `CLASH_recovered_manifest.json` records the binding chosen for every
-condition.
-
-## Recompilation status
-
-The current artifact is a **recompilation-oriented source scaffold**, not yet a
-semantic round-trip replacement for `CLASH.DAT`.
-
-The important remaining boundary is the translation of compiled alpha/join
-primitive expressions back into source constraints. Those expressions are now
-decoded and readable, but the generator keeps them as evidence comments instead
-of inventing source syntax. This avoids silently changing AI behavior.
-
-For example, a condition may be emitted as a broad pattern followed by comments
-such as:
-
-```clips
-?f2 <- (gracz $?f2_fields)
-  ;;; recovered alpha-test: ...
-  ;;; recovered join-test: ...
-```
-
-The next recovery stage should translate those accessor expressions to actual
-CLIPS constraints using the synthetic bindings. For ordered facts that means
-mapping recovered field offsets to operations over `$?fN_fields`; for object
-patterns it means substituting the recovered named slot bindings such as
-`?oN_x`, `?oN_gracz`, and `?oN_PA`.
+The manifest tracks `compiled_test_count`, `translated_test_count`, and
+`unresolved_test_count`; CI requires translated + unresolved to equal the exact
+compiled count.
 
 ## Validation contract
 
-`tools/check_clash_recovered_clp.py` is run by CI and currently locks:
+`tools/check_clash_recovered_clp.py` is run by CI and locks, among other things:
 
 - CLIPS binary version `V6.00`;
-- 95 generated `defrule` constructs;
-- 425 LHS condition occurrences;
-- 6 `defglobal` values and 7 `deffunction` bodies;
-- 7 recovered game `defclass` constructs;
-- unique generated rule names even when BSAVE contains several disjunct records
-  with the same original name;
-- preservation of known recovered RHS calls such as `Buduj-Zamek`;
-- absence of the old `LHS unavailable` placeholder;
+- 95 `defrule` constructs and 425 LHS condition occurrences;
+- 6 globals and 7 deffunctions;
+- 7 recovered game classes and 23 recovered slot descriptors;
+- all normalized slot facets and the zero-constraint boundary;
+- 69 recovered message handlers;
+- unique generated rule/disjunct names;
+- preservation of known RHS calls such as `Buduj-Zamek`;
+- exact accounting for translated/unresolved compiled matcher tests;
 - balanced source-level parentheses outside comments and strings.
 
 ## Evidence policy
@@ -112,10 +141,10 @@ patterns it means substituting the recovered named slot bindings such as
 
 1. `CLASH.DAT`;
 2. exact BSAVE record parsers;
-3. decoded expression/RETE/class IR;
+3. decoded expression/RETE/class/slot/handler IR;
 4. recovered Win95 CLIPS loader/evaluator behavior;
 5. CI contracts over the retail image.
 
-Do not manually edit a generated recovered program and then use the edit as
-proof of the original AI logic. Improvements belong in the decoder/generator and
-must remain reproducible from `CLASH.DAT`.
+Do not manually edit generated source and use that edit as evidence of the
+original AI logic. Improvements belong in the decoder/generator and must remain
+reproducible from `CLASH.DAT`.

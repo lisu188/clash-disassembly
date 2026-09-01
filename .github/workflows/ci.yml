@@ -41,6 +41,9 @@ jobs:
       - name: Validate strategic AI defclass recovery
         run: python3 tools/check_clash_dat_classes.py
 
+      - name: Validate strategic AI slot facet recovery
+        run: python3 tools/check_clash_dat_slot_facets.py
+
       - name: Validate strategic AI message-handler recovery
         run: python3 tools/check_clash_dat_message_handlers.py
 
