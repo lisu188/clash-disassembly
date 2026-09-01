@@ -32,6 +32,9 @@ jobs:
       - name: Compile Python tooling
         run: python3 -m py_compile tools/*.py
 
+      - name: Validate strategic AI BSAVE contract
+        run: python3 tools/check_clash_dat_bsave.py
+
       - name: Validate JSON files
         shell: bash
         run: |

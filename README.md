@@ -8,6 +8,10 @@ Evidence-driven recovery of the original Win95 Clash binary.
   under SDL build, runtime, and campaign-route validation.
 - `data/recovered_sources.json` maps all 4,070 recovered functions to 138
   independently compiled translation units.
+- `CLASH.DAT` is now identified and structurally decoded as a CLIPS 6.00 BSAVE
+  strategic-AI image; `tools/decompile_clash_dat.py` reconstructs its atom
+  tables, packed expressions, rule metadata, deffunction bodies, defglobals,
+  and partial rule RHS source.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
 
@@ -26,6 +30,7 @@ Metadata and documentation checks:
 ```sh
 python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
 python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
+python3 tools/check_clash_dat_bsave.py
 python3 tools/audit_split_sources.py
 python3 tests/check_markdown_links.py
 git diff --check
@@ -55,6 +60,7 @@ source-boundary and validation rules.
 - [docs/REVERSE_ENGINEERING.md](docs/REVERSE_ENGINEERING.md) - source-of-truth, naming, and patch policy.
 - [docs/STRUCTURES.md](docs/STRUCTURES.md) - structure/data recovery policy and metadata links.
 - [docs/AI_SCRIPTING_API.md](docs/AI_SCRIPTING_API.md) - the strategic-AI CLIPS host-function API used by `strateg\\clash.dat`.
+- [docs/CLASH_DAT_BSAVE.md](docs/CLASH_DAT_BSAVE.md) - decoded CLIPS 6.00 BSAVE layout, strategic-AI rule-image findings, `PRIOR` weights, and current decompilation limits.
 - [docs/ARTIFACTS.md](docs/ARTIFACTS.md) - artifact retention and pruning policy.
 - [docs/archive/](docs/archive/) - preserved historical logs, reports, and old navigation notes.
 - [docs/probes/](docs/probes/) - focused probe and route-runner notes.
