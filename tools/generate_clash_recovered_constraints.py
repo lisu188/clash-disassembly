@@ -8,6 +8,7 @@ from collections import Counter
 from pathlib import Path
 
 from clash_dat_clips_source import (
+    legalize_constraint_translations,
     render_source_message_handlers,
     source_fact_pattern,
     source_object_pattern,
@@ -18,11 +19,7 @@ from clash_dat_lhs import recover_rule_lhs
 from clash_dat_rete import rete_report
 from clash_dat_slot_facets import render_recovered_classes
 from decompile_clash_dat import parse_bsave, render_clips
-from generate_clash_recovered_clp import (
-    GAME_CLASS_NAMES,
-    _extract_rhs_blocks,
-    _unique_rule_names,
-)
+from generate_clash_recovered_clp import GAME_CLASS_NAMES, _extract_rhs_blocks, _unique_rule_names
 
 
 def _unwrap_not(form: str) -> str:
@@ -43,12 +40,12 @@ def _render_condition(
     else:
         form, binding = source_object_pattern(condition)
 
-    translated = translate_condition_tests(condition, all_conditions, class_report, object_nodes)
+    translated = legalize_constraint_translations(
+        translate_condition_tests(condition, all_conditions, class_report, object_nodes)
+    )
     resolved = [item.translated for item in translated if item.translated is not None]
     unresolved = [item for item in translated if item.translated is None]
 
-    # initial-fact has no field multifield in source. Any compiled test requiring
-    # such a binding must remain evidence rather than create an illegal pattern.
     if binding["kind"] == "fact" and binding.get("fields") is None and resolved:
         unresolved.extend(item for item in translated if item.translated is not None)
         resolved = []
@@ -84,11 +81,7 @@ def _render_condition(
         "unresolved_test_count": len(unresolved),
         "class_bitmap_test_emitted": class_test is not None,
         "translations": [
-            {
-                "source": item.source,
-                "translated": item.translated,
-                "reason": item.reason,
-            }
+            {"source": item.source, "translated": item.translated, "reason": item.reason}
             for item in translated
         ],
     }
@@ -112,9 +105,7 @@ def _render_rule(
 
     condition_manifest = []
     for condition in rule["conditions"]:
-        condition_lines, detail = _render_condition(
-            condition, rule["conditions"], class_report, object_nodes
-        )
+        condition_lines, detail = _render_condition(condition, rule["conditions"], class_report, object_nodes)
         lines.extend("  " + line for line in condition_lines)
         condition_manifest.append(detail)
 
@@ -203,13 +194,9 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "",
     ])
     program = (
-        header
-        + prefix
-        + "\n\n"
-        + handler_source
+        header + prefix + "\n\n" + handler_source
         + "\n\n;;; DEFRULES — recovered constraints + RHS\n\n"
-        + "\n\n".join(rule_sources)
-        + "\n"
+        + "\n\n".join(rule_sources) + "\n"
     )
 
     duplicate_source_names = {
@@ -233,8 +220,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "message_handler_class_counts": handler_report["class_counts"],
         "message_handlers_manifest": handler_report["handlers"],
         "game_defclasses_emitted": [
-            name for name in GAME_CLASS_NAMES
-            if name in {c["name"] for c in class_report["classes"]}
+            name for name in GAME_CLASS_NAMES if name in {c["name"] for c in class_report["classes"]}
         ],
         "duplicate_bsave_rule_names": duplicate_source_names,
         "synthetic_rule_renames": {
