@@ -2,8 +2,8 @@
 """CLIPS-source compatibility layer for normalized CLASH.DAT recovery.
 
 The binary evidence model deliberately keeps system matcher slots and system
-message handlers.  A textual CLIPS source file must not emit those objects
-literally: CLIPS recreates them from class declarations.  This module converts
+message handlers. A textual CLIPS source file must not emit those objects
+literally: CLIPS recreates them from class declarations. This module converts
 that exact binary evidence into legal source-level forms without changing the
 underlying recovery report.
 """
@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import re
 
+from clash_dat_constraints import ConstraintTranslation
 from clash_dat_message_handlers import render_handler
 
 _PROC_PARAM = re.compile(r"(?<![$A-Za-z0-9_])\?p(\d+)\b")
 _PROC_WILD_PARAM = re.compile(r"\$\?p(\d+)\b")
+_SCALAR_HEAD = re.compile(r"^\((?:=|<>|neq|eq|>|<|>=|<=|\+|-|\*|/|integer|abs|min|max)\b")
 
 
 def source_fact_pattern(condition: dict) -> tuple[str, dict]:
@@ -23,7 +25,7 @@ def source_fact_pattern(condition: dict) -> tuple[str, dict]:
     fact_var = f"?f{order}"
 
     # initial-fact is the sole explicit deftemplate in this image and has no
-    # slots.  The other strategic relations are implied ordered facts.
+    # slots. The other strategic relations are implied ordered facts.
     if template == "initial-fact":
         inner = "(initial-fact)"
         fields_var = None
@@ -85,11 +87,41 @@ def source_object_pattern(condition: dict) -> tuple[str, dict]:
     }
 
 
+def legalize_constraint_translations(items: list[ConstraintTranslation]) -> list[ConstraintTranslation]:
+    """Reject translations which are readable evidence but not legal CLIPS expressions.
+
+    Standalone fact-slot-length primitives have a dedicated translator. When the
+    semantic debug spelling survives inside a larger FCALL tree, the original
+    source expression is still unknown and must remain an evidence comment.
+    Similarly a recovered multifield slice cannot be fed to a scalar arithmetic
+    or comparison function without knowing whether the original accessor selected
+    a field or a multifield value.
+    """
+    result: list[ConstraintTranslation] = []
+    for item in items:
+        translated = item.translated
+        if translated is None:
+            result.append(item)
+            continue
+        if "fact-slot-length" in translated or "slot=" in translated:
+            result.append(
+                ConstraintTranslation(item.source, None, "nested compiled fact-slot-length has no safe source form")
+            )
+            continue
+        if "(subseq$ " in translated and _SCALAR_HEAD.match(translated):
+            result.append(
+                ConstraintTranslation(item.source, None, "multifield accessor is used by a scalar expression")
+            )
+            continue
+        result.append(item)
+    return result
+
+
 def _shift_handler_proc_params(source: str) -> str:
     """Map compiled handler procedure indices to explicit source parameters.
 
     Handler procedure index 1 is the implicit `?self`; explicit source
-    parameters therefore start at compiled index 2.  This differs from
+    parameters therefore start at compiled index 2. This differs from
     deffunction procedure indexing, where index 1 is the first explicit arg.
     """
     lines = source.splitlines()
