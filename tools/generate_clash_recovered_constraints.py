@@ -7,7 +7,12 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from clash_dat_message_handlers import recover_message_handlers, render_message_handlers
+from clash_dat_clips_source import (
+    render_source_message_handlers,
+    source_fact_pattern,
+    source_object_pattern,
+)
+from clash_dat_message_handlers import recover_message_handlers
 from clash_dat_object_constraints import translate_condition_tests
 from clash_dat_lhs import recover_rule_lhs
 from clash_dat_rete import rete_report
@@ -16,8 +21,6 @@ from decompile_clash_dat import parse_bsave, render_clips
 from generate_clash_recovered_clp import (
     GAME_CLASS_NAMES,
     _extract_rhs_blocks,
-    _fact_pattern,
-    _object_pattern,
     _unique_rule_names,
 )
 
@@ -36,13 +39,19 @@ def _render_condition(
     object_nodes: list[dict],
 ) -> tuple[list[str], dict]:
     if condition["kind"] == "fact":
-        form, binding = _fact_pattern(condition)
+        form, binding = source_fact_pattern(condition)
     else:
-        form, binding = _object_pattern(condition)
+        form, binding = source_object_pattern(condition)
 
     translated = translate_condition_tests(condition, all_conditions, class_report, object_nodes)
     resolved = [item.translated for item in translated if item.translated is not None]
     unresolved = [item for item in translated if item.translated is None]
+
+    # initial-fact has no field multifield in source. Any compiled test requiring
+    # such a binding must remain evidence rather than create an illegal pattern.
+    if binding["kind"] == "fact" and binding.get("fields") is None and resolved:
+        unresolved.extend(item for item in translated if item.translated is not None)
+        resolved = []
 
     classes = list(condition.get("classes") or [])
     class_test = None
@@ -64,14 +73,14 @@ def _render_condition(
         lines.append(")")
 
     for item in unresolved:
-        reason = item.reason or "unresolved"
+        reason = item.reason or "source form lacks a legal binding"
         lines.append(f";;; unresolved compiled-test ({reason}): {item.source}")
 
     detail = {
         "condition": condition["order"],
         "binding": binding,
         "compiled_test_count": len(translated),
-        "translated_test_count": sum(item.resolved for item in translated),
+        "translated_test_count": len(resolved) - (1 if class_test is not None else 0),
         "unresolved_test_count": len(unresolved),
         "class_bitmap_test_emitted": class_test is not None,
         "translations": [
@@ -139,7 +148,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     class_report = lhs["class_report"]
     class_source, slot_report = render_recovered_classes(ir, class_report, GAME_CLASS_NAMES)
     handler_report = recover_message_handlers(path, ir)
-    handler_source = render_message_handlers(handler_report, ir).rstrip()
+    handler_source = render_source_message_handlers(handler_report, ir).rstrip()
     rhs_blocks = _extract_rhs_blocks(ir)
     output_names = _unique_rule_names(lhs["rules"])
 
@@ -183,14 +192,14 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
         ";;; Object JN comparisons use recovered global slot-name ids; object PN constants use pattern-node slot context.",
         ";;; Defclass slot form/facets/default values are restored from compact BSAVE slot descriptors.",
-        ";;; Defmessage-handler class/name/type/arity/actions are recovered from 28-byte BSAVE handler records.",
+        ";;; Only user-authored message handlers are emitted; CLIPS recreates system/implicit handlers from classes.",
         ";;; Direct handler slot primitives are restored as ?self:<slot> and (bind ?self:<slot> ...).",
         ";;; Unresolved compiled primitives remain evidence comments; no guessed matcher constraint is emitted.",
         ";;; Synthetic ?fN/?oN and handler ?pN variables are stable generator names, not recovered original spelling.",
         f";;; slots={slot_report['slot_count']} multislots={slot_report['multislot_count']} dynamic-defaults={slot_report['dynamic_default_count']} no-defaults={slot_report['no_default_count']} constraints={slot_report['constraint_count']}",
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
         f";;; object-join-tests={object_join_translations} object-constant-tests={object_constant_translations}",
-        f";;; message-handlers={handler_report['count']} system={handler_report['system_count']} user={handler_report['user_count']} variadic={handler_report['variadic_count']}",
+        f";;; message-handlers-bsave={handler_report['count']} system-omitted={handler_report['system_count']} user-emitted={handler_report['user_count']} variadic={handler_report['variadic_count']}",
         "",
     ])
     program = (
@@ -216,6 +225,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "defclass_slots": slot_report["slot_count"],
         "defclass_slot_facets": slot_report,
         "defmessage_handlers": handler_report["count"],
+        "source_message_handlers": handler_report["user_count"],
         "system_message_handlers": handler_report["system_count"],
         "user_message_handlers": handler_report["user_count"],
         "variadic_message_handlers": handler_report["variadic_count"],
@@ -238,7 +248,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "object_join_translated_count": object_join_translations,
         "object_constant_translated_count": object_constant_translations,
         "rules_manifest": rule_manifest,
-        "recompilation_status": "slot facets/defaults, message handlers and named object comparisons restored; unsaved slot constraints and remaining matcher primitives stay explicit",
+        "recompilation_status": "legal source projection now omits CLIPS system constructs; remaining action/matcher primitives stay explicit",
     }
     return program, manifest
 
@@ -257,7 +267,7 @@ def main() -> int:
     Path(args.manifest).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
         f"generated {args.clp}: rules={manifest['rules']} conditions={manifest['conditions']} "
-        f"slots={manifest['defclass_slots']} handlers={manifest['defmessage_handlers']} "
+        f"slots={manifest['defclass_slots']} handlers={manifest['source_message_handlers']}/{manifest['defmessage_handlers']} "
         f"compiled-tests={manifest['compiled_test_count']} translated={manifest['translated_test_count']} "
         f"unresolved={manifest['unresolved_test_count']} object-joins={manifest['object_join_translated_count']} "
         f"object-constants={manifest['object_constant_translated_count']}"
