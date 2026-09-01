@@ -7,6 +7,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from clash_dat_message_handlers import recover_message_handlers, render_message_handlers
 from clash_dat_object_constraints import translate_condition_tests
 from clash_dat_lhs import recover_rule_lhs
 from clash_dat_rete import rete_report
@@ -43,9 +44,6 @@ def _render_condition(
     resolved = [item.translated for item in translated if item.translated is not None]
     unresolved = [item for item in translated if item.translated is None]
 
-    # A multi-class object alpha bitmap is exact BSAVE evidence. The normalized
-    # object CE binds is-a to a synthetic variable and this test restores the
-    # bitmap restriction in source form.
     classes = list(condition.get("classes") or [])
     class_test = None
     if condition["kind"] == "object" and len(classes) > 1:
@@ -139,6 +137,8 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     rete = rete_report(path, ir)
     object_nodes = rete["object_patterns"]
     class_report = lhs["class_report"]
+    handler_report = recover_message_handlers(path, ir)
+    handler_source = render_message_handlers(handler_report, ir).rstrip()
     rhs_blocks = _extract_rhs_blocks(ir)
     output_names = _unique_rule_names(lhs["rules"])
 
@@ -182,13 +182,24 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         ";;; Unified normalized source reconstructed from retail CLASH.DAT (CLIPS 6.00 BSAVE).",
         ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
         ";;; Object JN comparisons use recovered global slot-name ids; object PN constants use pattern-node slot context.",
+        ";;; Defmessage-handler class/name/type/arity/actions are recovered from 28-byte BSAVE handler records.",
+        ";;; Direct handler slot primitives are restored as ?self:<slot> and (bind ?self:<slot> ...).",
         ";;; Unresolved compiled primitives remain evidence comments; no guessed constraint is emitted.",
-        ";;; Synthetic ?fN/?oN variables are stable generator names, not recovered original spelling.",
+        ";;; Synthetic ?fN/?oN and handler ?pN variables are stable generator names, not recovered original spelling.",
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
         f";;; object-join-tests={object_join_translations} object-constant-tests={object_constant_translations}",
+        f";;; message-handlers={handler_report['count']} system={handler_report['system_count']} user={handler_report['user_count']} variadic={handler_report['variadic_count']}",
         "",
     ])
-    program = header + prefix + "\n\n;;; DEFRULES — recovered constraints + RHS\n\n" + "\n\n".join(rule_sources) + "\n"
+    program = (
+        header
+        + prefix
+        + "\n\n"
+        + handler_source
+        + "\n\n;;; DEFRULES — recovered constraints + RHS\n\n"
+        + "\n\n".join(rule_sources)
+        + "\n"
+    )
 
     duplicate_source_names = {
         name: count for name, count in Counter(r["name"] for r in lhs["rules"]).items() if count > 1
@@ -200,6 +211,13 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "conditions": lhs["condition_occurrence_count"],
         "defglobals": len(ir["globals"]),
         "deffunctions": len(ir["deffunctions"]),
+        "defmessage_handlers": handler_report["count"],
+        "system_message_handlers": handler_report["system_count"],
+        "user_message_handlers": handler_report["user_count"],
+        "variadic_message_handlers": handler_report["variadic_count"],
+        "message_handler_type_counts": handler_report["type_counts"],
+        "message_handler_class_counts": handler_report["class_counts"],
+        "message_handlers_manifest": handler_report["handlers"],
         "game_defclasses_emitted": [
             name for name in GAME_CLASS_NAMES
             if name in {c["name"] for c in class_report["classes"]}
@@ -216,7 +234,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "object_join_translated_count": object_join_translations,
         "object_constant_translated_count": object_constant_translations,
         "rules_manifest": rule_manifest,
-        "recompilation_status": "named object comparisons restored where unambiguous; remaining primitives retained as evidence comments",
+        "recompilation_status": "message handlers and named object comparisons restored; remaining matcher primitives retained as evidence comments",
     }
     return program, manifest
 
@@ -235,8 +253,9 @@ def main() -> int:
     Path(args.manifest).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
         f"generated {args.clp}: rules={manifest['rules']} conditions={manifest['conditions']} "
-        f"compiled-tests={manifest['compiled_test_count']} translated={manifest['translated_test_count']} "
-        f"unresolved={manifest['unresolved_test_count']} object-joins={manifest['object_join_translated_count']} "
+        f"handlers={manifest['defmessage_handlers']} compiled-tests={manifest['compiled_test_count']} "
+        f"translated={manifest['translated_test_count']} unresolved={manifest['unresolved_test_count']} "
+        f"object-joins={manifest['object_join_translated_count']} "
         f"object-constants={manifest['object_constant_translated_count']}"
     )
     print(args.manifest)

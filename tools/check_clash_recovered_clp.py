@@ -49,6 +49,13 @@ def main() -> int:
     assert manifest["conditions"] == 425
     assert manifest["defglobals"] == 6
     assert manifest["deffunctions"] == 7
+    assert manifest["defmessage_handlers"] == 69
+    assert manifest["system_message_handlers"] + manifest["user_message_handlers"] == 69
+    assert manifest["system_message_handlers"] > 0
+    assert manifest["user_message_handlers"] > 0
+    assert len(manifest["message_handlers_manifest"]) == 69
+    assert sum(manifest["message_handler_type_counts"].values()) == 69
+    assert sum(manifest["message_handler_class_counts"].values()) == 69
     assert set(manifest["game_defclasses_emitted"]) == GAME_CLASS_NAMES
 
     rules = manifest["rules_manifest"]
@@ -72,8 +79,10 @@ def main() -> int:
 
     assert program.count("(defrule ") == 95
     assert program.count("(deffunction ") == 7
+    assert program.count("(defmessage-handler ") == 69
     assert program.count("(defclass ") == 7
     assert program.count("  =>") == 95
+    assert ";;; DEFMESSAGE-HANDLERS" in program
     assert ";;; LHS unavailable as original source" not in program
     assert ";;; DEFRULES — recovered constraints + RHS" in program
     assert "?f1 <- (gracz $?f1_fields)" in program
@@ -81,6 +90,9 @@ def main() -> int:
     assert "(test " in program
     assert "(length$ $?f" in program or "(nth$ " in program
     assert "?o" in program and "_x" in program
+    assert "?self:" in program
+    assert "handler-get(" not in program
+    assert "handler-put(" not in program
     assert "Buduj-Zamek" in program
     assert "produkcja_main_1" in program
     assert "postaw_zamek" in program
@@ -92,18 +104,18 @@ def main() -> int:
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
     assert manifest["synthetic_rule_renames"], "duplicate rule/disjunct names must be made unique"
 
-    # Every unresolved compiled matcher operation must remain visible as evidence.
     assert program.count(";;; unresolved compiled-test") == unresolved
     assert_balanced_clips(program)
 
-    print("CLASH_recovered.clp constraint recovery contract: PASS")
+    print("CLASH_recovered.clp constraint + message-handler recovery contract: PASS")
     print(
-        f"rules={manifest['rules']} conditions={manifest['conditions']} "
+        f"rules={manifest['rules']} conditions={manifest['conditions']} handlers={manifest['defmessage_handlers']} "
+        f"system-handlers={manifest['system_message_handlers']} user-handlers={manifest['user_message_handlers']} "
         f"compiled-tests={compiled} translated={translated} unresolved={unresolved} "
-        f"class-bitmap-tests={manifest['class_bitmap_tests_emitted']} "
         f"object-joins={manifest['object_join_translated_count']} "
         f"object-constants={manifest['object_constant_translated_count']}"
     )
+    print(f"handler-types={manifest['message_handler_type_counts']}")
     print(f"synthetic-disjunct-renames={len(manifest['synthetic_rule_renames'])}")
     return 0
 
