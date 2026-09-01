@@ -47,6 +47,9 @@ jobs:
       - name: Validate strategic AI LHS recovery
         run: python3 tools/check_clash_dat_lhs.py
 
+      - name: Validate unified recovered CLP program
+        run: python3 tools/check_clash_recovered_clp.py
+
       - name: Validate JSON files
         shell: bash
         run: |
