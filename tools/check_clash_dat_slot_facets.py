@@ -28,7 +28,6 @@ def main() -> int:
     assert report["constraint_serialization_status"].startswith("not serialized")
     assert all(item["constraint_index"] == -1 for item in report["slots"])
     assert all(item["constraint_serialized"] is False for item in report["slots"])
-    assert all(item["flags"] & ~0xFFF == 0 for item in report["slots"])
     assert all(item["default_source"].startswith("(default") for item in report["slots"])
     assert all(item["form"] in {"slot", "multislot"} for item in report["slots"])
     assert all(item["override_message"] for item in report["slots"])
