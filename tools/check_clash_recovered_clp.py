@@ -64,6 +64,8 @@ def main() -> int:
     assert translated > 0
     assert translated + unresolved == compiled
     assert manifest["class_bitmap_tests_emitted"] > 0
+    assert manifest["object_join_translated_count"] > 0
+    assert manifest["object_constant_translated_count"] > 0
     assert sum(item["compiled_test_count"] for item in rules) == compiled
     assert sum(item["translated_test_count"] for item in rules) == translated
     assert sum(item["unresolved_test_count"] for item in rules) == unresolved
@@ -78,6 +80,7 @@ def main() -> int:
     assert "(not (" in program
     assert "(test " in program
     assert "(length$ $?f" in program or "(nth$ " in program
+    assert "?o" in program and "_x" in program
     assert "Buduj-Zamek" in program
     assert "produkcja_main_1" in program
     assert "postaw_zamek" in program
@@ -97,7 +100,9 @@ def main() -> int:
     print(
         f"rules={manifest['rules']} conditions={manifest['conditions']} "
         f"compiled-tests={compiled} translated={translated} unresolved={unresolved} "
-        f"class-bitmap-tests={manifest['class_bitmap_tests_emitted']}"
+        f"class-bitmap-tests={manifest['class_bitmap_tests_emitted']} "
+        f"object-joins={manifest['object_join_translated_count']} "
+        f"object-constants={manifest['object_constant_translated_count']}"
     )
     print(f"synthetic-disjunct-renames={len(manifest['synthetic_rule_renames'])}")
     return 0
