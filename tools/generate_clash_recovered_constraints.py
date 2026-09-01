@@ -7,8 +7,9 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from clash_dat_constraints import translate_condition_tests
+from clash_dat_object_constraints import translate_condition_tests
 from clash_dat_lhs import recover_rule_lhs
+from clash_dat_rete import rete_report
 from decompile_clash_dat import parse_bsave, render_clips
 from generate_clash_recovered_clp import (
     GAME_CLASS_NAMES,
@@ -27,13 +28,18 @@ def _unwrap_not(form: str) -> str:
     return form[len(prefix) : -1]
 
 
-def _render_condition(condition: dict, all_conditions: list[dict]) -> tuple[list[str], dict]:
+def _render_condition(
+    condition: dict,
+    all_conditions: list[dict],
+    class_report: dict,
+    object_nodes: list[dict],
+) -> tuple[list[str], dict]:
     if condition["kind"] == "fact":
         form, binding = _fact_pattern(condition)
     else:
         form, binding = _object_pattern(condition)
 
-    translated = translate_condition_tests(condition, all_conditions)
+    translated = translate_condition_tests(condition, all_conditions, class_report, object_nodes)
     resolved = [item.translated for item in translated if item.translated is not None]
     unresolved = [item for item in translated if item.translated is None]
 
@@ -82,7 +88,13 @@ def _render_condition(condition: dict, all_conditions: list[dict]) -> tuple[list
     return lines, detail
 
 
-def _render_rule(rule: dict, output_name: str, rhs_actions: list[str]) -> tuple[str, dict]:
+def _render_rule(
+    rule: dict,
+    output_name: str,
+    rhs_actions: list[str],
+    class_report: dict,
+    object_nodes: list[dict],
+) -> tuple[str, dict]:
     lines = [f"(defrule {output_name}"]
     if output_name != rule["name"]:
         lines.append(f"  ;;; original BSAVE rule/disjunct name: {rule['name']}")
@@ -93,7 +105,9 @@ def _render_rule(rule: dict, output_name: str, rhs_actions: list[str]) -> tuple[
 
     condition_manifest = []
     for condition in rule["conditions"]:
-        condition_lines, detail = _render_condition(condition, rule["conditions"])
+        condition_lines, detail = _render_condition(
+            condition, rule["conditions"], class_report, object_nodes
+        )
         lines.extend("  " + line for line in condition_lines)
         condition_manifest.append(detail)
 
@@ -122,12 +136,15 @@ def _render_rule(rule: dict, output_name: str, rhs_actions: list[str]) -> tuple[
 
 def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     lhs = recover_rule_lhs(path, ir)
+    rete = rete_report(path, ir)
+    object_nodes = rete["object_patterns"]
+    class_report = lhs["class_report"]
     rhs_blocks = _extract_rhs_blocks(ir)
     output_names = _unique_rule_names(lhs["rules"])
 
     base = render_clips(ir)
     prefix = base.split(";;; DEFRULES", 1)[0].rstrip()
-    class_source = _render_recovered_classes(lhs["class_report"])
+    class_source = _render_recovered_classes(class_report)
     if ";;; DEFFUNCTIONS" in prefix:
         before, after = prefix.split(";;; DEFFUNCTIONS", 1)
         prefix = before.rstrip() + "\n\n" + class_source + "\n\n;;; DEFFUNCTIONS" + after
@@ -137,7 +154,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     rule_sources = []
     rule_manifest = []
     for rule, output_name, rhs in zip(lhs["rules"], output_names, rhs_blocks):
-        source, manifest = _render_rule(rule, output_name, rhs)
+        source, manifest = _render_rule(rule, output_name, rhs, class_report, object_nodes)
         rule_sources.append(source)
         rule_manifest.append(manifest)
 
@@ -145,14 +162,30 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     unresolved = sum(item["unresolved_test_count"] for item in rule_manifest)
     compiled = sum(item["compiled_test_count"] for item in rule_manifest)
     class_tests = sum(item["class_bitmap_tests_emitted"] for item in rule_manifest)
+    object_join_translations = sum(
+        1
+        for rule in rule_manifest
+        for condition in rule["conditions"]
+        for item in condition["translations"]
+        if item["translated"] is not None and item["source"].startswith("object-join-compare(")
+    )
+    object_constant_translations = sum(
+        1
+        for rule in rule_manifest
+        for condition in rule["conditions"]
+        for item in condition["translations"]
+        if item["translated"] is not None and item["source"].startswith("object-pn-constant(")
+    )
 
     header = "\n".join([
         ";;; CLASH_recovered.clp",
         ";;; Unified normalized source reconstructed from retail CLASH.DAT (CLIPS 6.00 BSAVE).",
         ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
+        ";;; Object JN comparisons use recovered global slot-name ids; object PN constants use pattern-node slot context.",
         ";;; Unresolved compiled primitives remain evidence comments; no guessed constraint is emitted.",
         ";;; Synthetic ?fN/?oN variables are stable generator names, not recovered original spelling.",
         f";;; compiled-tests={compiled} translated={translated} unresolved={unresolved} class-bitmap-tests={class_tests}",
+        f";;; object-join-tests={object_join_translations} object-constant-tests={object_constant_translations}",
         "",
     ])
     program = header + prefix + "\n\n;;; DEFRULES — recovered constraints + RHS\n\n" + "\n\n".join(rule_sources) + "\n"
@@ -169,7 +202,7 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "deffunctions": len(ir["deffunctions"]),
         "game_defclasses_emitted": [
             name for name in GAME_CLASS_NAMES
-            if name in {c["name"] for c in lhs["class_report"]["classes"]}
+            if name in {c["name"] for c in class_report["classes"]}
         ],
         "duplicate_bsave_rule_names": duplicate_source_names,
         "synthetic_rule_renames": {
@@ -180,8 +213,10 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
         "translated_test_count": translated,
         "unresolved_test_count": unresolved,
         "class_bitmap_tests_emitted": class_tests,
+        "object_join_translated_count": object_join_translations,
+        "object_constant_translated_count": object_constant_translations,
         "rules_manifest": rule_manifest,
-        "recompilation_status": "partial semantic constraints restored; unresolved primitives retained as evidence comments",
+        "recompilation_status": "named object comparisons restored where unambiguous; remaining primitives retained as evidence comments",
     }
     return program, manifest
 
@@ -201,7 +236,8 @@ def main() -> int:
     print(
         f"generated {args.clp}: rules={manifest['rules']} conditions={manifest['conditions']} "
         f"compiled-tests={manifest['compiled_test_count']} translated={manifest['translated_test_count']} "
-        f"unresolved={manifest['unresolved_test_count']}"
+        f"unresolved={manifest['unresolved_test_count']} object-joins={manifest['object_join_translated_count']} "
+        f"object-constants={manifest['object_constant_translated_count']}"
     )
     print(args.manifest)
     return 0
