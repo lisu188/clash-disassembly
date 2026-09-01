@@ -176,6 +176,29 @@ DECODERS: dict[int, Callable[[bytes], dict[str, int | bool]]] = {
 }
 
 
+def _fact_var_semantic(prefix: str, fields: dict[str, int | bool]) -> str:
+    """Describe the exact FactGetVar3 selector mode.
+
+    CLIPS factgen.c uses the two direction bits as a three-way selector:
+    beginning-only and end-only are single-field references, while both bits set
+    denotes a multifield segment. Treating every Var3 as a multifield loses the
+    scalar/multifield distinction and produces invalid source comparisons.
+    """
+    slot = fields["which_slot"]
+    from_beginning = bool(fields["from_beginning"])
+    from_end = bool(fields["from_end"])
+    if from_beginning and from_end:
+        return (
+            f"{prefix}.slot[{slot}]"
+            f".multifield(begin+{fields['begin_offset']},end-{fields['end_offset']})"
+        )
+    if from_beginning:
+        return f"{prefix}.slot[{slot}].field[{fields['begin_offset']}]"
+    if from_end:
+        return f"{prefix}.slot[{slot}].field-from-end[{fields['end_offset']}]"
+    return f"{prefix}.slot[{slot}].selector-invalid"
+
+
 def semantic_text(type_id: int, fields: dict[str, int | bool]) -> str:
     if type_id == 29:
         p = int(fields["source_pattern_ordinal"])
@@ -185,15 +208,9 @@ def semantic_text(type_id: int, fields: dict[str, int | bool]) -> str:
             return f"fact[p{p}].slot[{fields['which_slot']}]"
         return f"fact[p{p}].slot[{fields['which_slot']}].field[{fields['which_field']}]"
     if type_id == 31:
-        return (
-            f"fact[p{fields['source_pattern_ordinal']}].slot[{fields['which_slot']}]"
-            f".multifield(begin+{fields['begin_offset']},end-{fields['end_offset']})"
-        )
+        return _fact_var_semantic(f"fact[p{fields['source_pattern_ordinal']}]​".replace("\u200b", ""), fields)
     if type_id == 28:
-        return (
-            f"current-fact.slot[{fields['which_slot']}]"
-            f".multifield(begin+{fields['begin_offset']},end-{fields['end_offset']})"
-        )
+        return _fact_var_semantic("current-fact", fields)
     if type_id == 47:
         p = fields["which_pattern"]
         if fields["object_address"]:
