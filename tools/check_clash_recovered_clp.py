@@ -120,6 +120,21 @@ def main() -> int:
     assert program.count("    (override-message ") == 23
     assert "No constraint records were serialized" in program
 
+    # The retail image has 12 rules with one local variable. PROC_GET_BIND
+    # retains the original symbol name while PROC_BIND stores the compiled frame
+    # index. These names must be used consistently in reconstructed source.
+    assert "(bind ?odleglosc " in program
+    assert "(bind ?lic " in program
+    assert "(bind ?odd " in program
+    assert "(bind ?id2 " in program
+    assert "?local1" not in program
+
+    # OBJ_GET_SLOT_JNVAR1.whichPattern is a direct one-based CE ordinal in this
+    # image; object RHS reads must resolve to LHS bindings, not placeholders.
+    assert "?prim47_" not in program
+    assert "(odleglosc_od_obiektu ?o3_id ?o4_x ?o4_y)" in program
+    assert "(wejdz-do-zamku ?o2_id ?o3_id)" in program
+
     duplicate_names = manifest["duplicate_bsave_rule_names"]
     assert duplicate_names, "expected BSAVE disjunct records sharing source rule names"
     assert manifest["synthetic_rule_renames"], "duplicate rule/disjunct names must be made unique"
