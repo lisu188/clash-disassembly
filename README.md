@@ -12,7 +12,9 @@ Evidence-driven recovery of the original Win95 Clash binary.
   strategic-AI image. The tooling now recovers atom/expression tables, 95 rule
   records, 295 RETE joins, 64 fact-pattern nodes, 20 object alpha records,
   14 object-pattern nodes, game `defclass`/slot metadata, source-order LHS
-  condition skeletons, deffunction bodies, defglobals, and partial RHS source.
+  conditions, deffunction bodies, defglobals, and RHS source projections. A
+  unified `CLASH_recovered.clp` scaffold can now be generated reproducibly from
+  the retail image.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
 
@@ -36,6 +38,7 @@ python3 tools/check_clash_dat_primitives.py
 python3 tools/check_clash_dat_classes.py
 python3 tools/check_clash_dat_rete.py
 python3 tools/check_clash_dat_lhs.py
+python3 tools/check_clash_recovered_clp.py
 python3 tools/audit_split_sources.py
 python3 tests/check_markdown_links.py
 git diff --check
@@ -55,6 +58,10 @@ python3 tools/analyze_clash_dat_rete.py CLASH.DAT \
 python3 tools/analyze_clash_dat_lhs.py CLASH.DAT \
   --json /tmp/clash-lhs.json \
   --clp /tmp/clash-lhs.clp
+
+python3 tools/generate_clash_recovered_clp.py CLASH.DAT \
+  --clp /tmp/CLASH_recovered.clp \
+  --manifest /tmp/CLASH_recovered_manifest.json
 ```
 
 ## Source organization
@@ -84,6 +91,7 @@ source-boundary and validation rules.
 - [docs/CLASH_DAT_BSAVE.md](docs/CLASH_DAT_BSAVE.md) - decoded CLIPS 6.00 BSAVE layout, strategic-AI rule-image findings, `PRIOR` weights, and base decompilation limits.
 - [docs/CLASH_DAT_PRIMITIVES.md](docs/CLASH_DAT_PRIMITIVES.md) - decoded compiled fact/object primitive accessors and predicates.
 - [docs/CLASH_DAT_LHS.md](docs/CLASH_DAT_LHS.md) - decoded game classes/slots, class and slot bitmaps, RETE topology, and source-like recovery of all rule LHS paths.
+- [docs/CLASH_DAT_RECOVERED_CLP.md](docs/CLASH_DAT_RECOVERED_CLP.md) - unified recovered CLP generator, synthetic binding policy, recompilation boundary, and validation contract.
 - [docs/ARTIFACTS.md](docs/ARTIFACTS.md) - artifact retention and pruning policy.
 - [docs/archive/](docs/archive/) - preserved historical logs, reports, and old navigation notes.
 - [docs/probes/](docs/probes/) - focused probe and route-runner notes.
