@@ -9,6 +9,7 @@ from clash_dat_primitives import (
     typed_joins,
     typed_rules,
 )
+from clash_dat_templates import deftemplate_report
 from decompile_clash_dat import parse_bsave
 
 EXPECTED_COUNTS = {
@@ -75,9 +76,20 @@ def main() -> int:
     assert all(len(ir["bitmaps"][e[1]]) == 6 for e in handler_get + handler_put)
     assert len(report["handler_slot_references"]) == 70
 
+    templates = deftemplate_report(ir)
+    assert templates["count"] == 25
+    assert templates["implied_count"] == 24
+    assert templates["explicit_count"] == 1
+    assert templates["serialized_slot_count"] == 0
+    assert templates["all_slot_lists_null"] is True
+    assert templates["templates"][0]["name"] == "initial-fact"
+    assert templates["templates"][0]["implied"] is False
+    assert all(item["implied"] for item in templates["templates"][1:])
+
     print("CLASH.DAT primitive decoder contract: PASS")
     print("decoded=1273 bitmap primitives across 9 types")
-    print("fact/object accessors and predicates decoded; HANDLER_GET/PUT 6-byte layout deferred")
+    print("deftemplates=25 implied=24 serialized-slots=0 (ordered facts)")
+    print("HANDLER_GET/PUT 6-byte direct-slot layout remains deferred")
     return 0
 
 
