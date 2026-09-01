@@ -8,10 +8,11 @@ Evidence-driven recovery of the original Win95 Clash binary.
   under SDL build, runtime, and campaign-route validation.
 - `data/recovered_sources.json` maps all 4,070 recovered functions to 138
   independently compiled translation units.
-- `CLASH.DAT` is now identified and structurally decoded as a CLIPS 6.00 BSAVE
-  strategic-AI image; `tools/decompile_clash_dat.py` reconstructs its atom
-  tables, packed expressions, rule metadata, deffunction bodies, defglobals,
-  and partial rule RHS source.
+- `CLASH.DAT` is identified and structurally decoded as a CLIPS 6.00 BSAVE
+  strategic-AI image. The tooling now recovers atom/expression tables, 95 rule
+  records, 295 RETE joins, 64 fact-pattern nodes, 20 object alpha records,
+  14 object-pattern nodes, game `defclass`/slot metadata, source-order LHS
+  condition skeletons, deffunction bodies, defglobals, and partial RHS source.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
 
@@ -31,9 +32,29 @@ Metadata and documentation checks:
 python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
 python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
 python3 tools/check_clash_dat_bsave.py
+python3 tools/check_clash_dat_primitives.py
+python3 tools/check_clash_dat_classes.py
+python3 tools/check_clash_dat_rete.py
+python3 tools/check_clash_dat_lhs.py
 python3 tools/audit_split_sources.py
 python3 tests/check_markdown_links.py
 git diff --check
+```
+
+Strategic-AI decompilation examples:
+
+```sh
+python3 tools/decompile_clash_dat.py CLASH.DAT \
+  --clp /tmp/CLASH_decompiled.clp \
+  --json /tmp/CLASH_decompiled_ir.json
+
+python3 tools/analyze_clash_dat_rete.py CLASH.DAT \
+  --json /tmp/clash-rete.json \
+  --dot /tmp/clash-rete.dot
+
+python3 tools/analyze_clash_dat_lhs.py CLASH.DAT \
+  --json /tmp/clash-lhs.json \
+  --clp /tmp/clash-lhs.clp
 ```
 
 ## Source organization
@@ -60,7 +81,9 @@ source-boundary and validation rules.
 - [docs/REVERSE_ENGINEERING.md](docs/REVERSE_ENGINEERING.md) - source-of-truth, naming, and patch policy.
 - [docs/STRUCTURES.md](docs/STRUCTURES.md) - structure/data recovery policy and metadata links.
 - [docs/AI_SCRIPTING_API.md](docs/AI_SCRIPTING_API.md) - the strategic-AI CLIPS host-function API used by `strateg\\clash.dat`.
-- [docs/CLASH_DAT_BSAVE.md](docs/CLASH_DAT_BSAVE.md) - decoded CLIPS 6.00 BSAVE layout, strategic-AI rule-image findings, `PRIOR` weights, and current decompilation limits.
+- [docs/CLASH_DAT_BSAVE.md](docs/CLASH_DAT_BSAVE.md) - decoded CLIPS 6.00 BSAVE layout, strategic-AI rule-image findings, `PRIOR` weights, and base decompilation limits.
+- [docs/CLASH_DAT_PRIMITIVES.md](docs/CLASH_DAT_PRIMITIVES.md) - decoded compiled fact/object primitive accessors and predicates.
+- [docs/CLASH_DAT_LHS.md](docs/CLASH_DAT_LHS.md) - decoded game classes/slots, class and slot bitmaps, RETE topology, and source-like recovery of all rule LHS paths.
 - [docs/ARTIFACTS.md](docs/ARTIFACTS.md) - artifact retention and pruning policy.
 - [docs/archive/](docs/archive/) - preserved historical logs, reports, and old navigation notes.
 - [docs/probes/](docs/probes/) - focused probe and route-runner notes.
