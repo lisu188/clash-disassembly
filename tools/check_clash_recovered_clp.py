@@ -55,9 +55,10 @@ def main() -> int:
     assert slot_report["constraint_count"] == 0
     assert slot_report["single_slot_count"] + slot_report["multislot_count"] == 23
     assert manifest["defmessage_handlers"] == 69
+    assert manifest["source_message_handlers"] == 16
+    assert manifest["system_message_handlers"] == 53
+    assert manifest["user_message_handlers"] == 16
     assert manifest["system_message_handlers"] + manifest["user_message_handlers"] == 69
-    assert manifest["system_message_handlers"] > 0
-    assert manifest["user_message_handlers"] > 0
     assert len(manifest["message_handlers_manifest"]) == 69
     assert sum(manifest["message_handler_type_counts"].values()) == 69
     assert sum(manifest["message_handler_class_counts"].values()) == 69
@@ -84,17 +85,22 @@ def main() -> int:
 
     assert program.count("(defrule ") == 95
     assert program.count("(deffunction ") == 7
-    assert program.count("(defmessage-handler ") == 69
+    assert program.count("(defmessage-handler ") == 16
     assert program.count("(defclass ") == 7
     assert program.count("  =>") == 95
     assert ";;; DEFMESSAGE-HANDLERS" in program
+    assert "system-omitted=53 user-emitted=16" in program
     assert ";;; LHS unavailable as original source" not in program
     assert ";;; DEFRULES — recovered constraints + RHS" in program
     assert "?f1 <- (gracz $?f1_fields)" in program
+    assert "(initial-fact $?" not in program
     assert "(not (" in program
     assert "(test " in program
     assert "(length$ $?f" in program or "(nth$ " in program
     assert "?o" in program and "_x" in program
+    assert "system-slot#" not in "\n".join(
+        line for line in program.splitlines() if not line.lstrip().startswith(";;;")
+    )
     assert "?self:" in program
     assert "handler-get(" not in program
     assert "handler-put(" not in program
@@ -121,12 +127,12 @@ def main() -> int:
     assert program.count(";;; unresolved compiled-test") == unresolved
     assert_balanced_clips(program)
 
-    print("CLASH_recovered.clp slot + constraint + message-handler recovery contract: PASS")
+    print("CLASH_recovered.clp source-projection contract: PASS")
     print(
         f"rules={manifest['rules']} conditions={manifest['conditions']} slots={manifest['defclass_slots']} "
         f"multislots={slot_report['multislot_count']} constraints={slot_report['constraint_count']} "
-        f"handlers={manifest['defmessage_handlers']} system-handlers={manifest['system_message_handlers']} "
-        f"user-handlers={manifest['user_message_handlers']} compiled-tests={compiled} "
+        f"handlers={manifest['source_message_handlers']}/{manifest['defmessage_handlers']} "
+        f"system-omitted={manifest['system_message_handlers']} compiled-tests={compiled} "
         f"translated={translated} unresolved={unresolved} "
         f"object-joins={manifest['object_join_translated_count']} "
         f"object-constants={manifest['object_constant_translated_count']}"
