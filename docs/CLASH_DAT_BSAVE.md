@@ -16,16 +16,16 @@ Confidence: **high**. The identification is supported independently by:
 - successful structure-by-structure parsing through both CLIPS binary
   separators to the end of the file.
 
-The current parser/decompiler is `tools/decompile_clash_dat.py`. Its readable
-output is committed as `data/strategic_ai/CLASH_decompiled.clp`; a lossless-ish
-JSON IR can be regenerated locally and is intentionally not committed because
-it is generated data (~0.7 MB for this image).
+The current parser/decompiler is `tools/decompile_clash_dat.py`. It generates a
+readable partial CLIPS reconstruction and a machine-readable JSON IR. Both are
+derived artifacts and are intentionally not committed; the checked-in
+`CLASH.DAT` is their source of truth.
 
 ## Reproduction
 
 ```sh
 python3 tools/decompile_clash_dat.py CLASH.DAT \
-  --clp data/strategic_ai/CLASH_decompiled.clp \
+  --clp /tmp/CLASH_decompiled.clp \
   --json /tmp/CLASH_decompiled_ir.json
 ```
 
@@ -199,6 +199,11 @@ The generated CLP contains the recovered bodies. Parameter names are synthetic
 (`?p1`, `?p2`, ...), because BSAVE preserves positional access rather than the
 original source spelling.
 
+For example, `atakowanie_oddzialu` reconstructs into ordinary CLIPS control
+flow using the recovered globals, including the comparison against
+`?*atak_oddzialu_waga*` and `?*waga_komputer*`. This is executable-expression
+evidence rather than a semantic guess from symbol names.
+
 ### Defrules and RETE network
 
 The image contains 95 `defrule` records and 295 join records. Rule metadata
@@ -208,6 +213,8 @@ action roots, terminal join indices, and disjunct links is decoded.
 The RHS expression trees are substantially recoverable. For example the
 `postaw_zamek` rule has salience 991 and its actions include the diagnostic
 `"Wykonuje sie regula postaw_zamek"`, three retracts, and a `Buduj-Zamek` call.
+Production rules reconstruct calls through `Licence-Product`, `Licencja-Index`,
+`Zacznij-Produkcje`, `Poziom-Tech`, and the existing recovered host API.
 
 The original LHS text is **not** currently reconstructed. CLIPS BSAVE stores the
 compiled pattern/join network rather than the pretty-printed source form, so the
