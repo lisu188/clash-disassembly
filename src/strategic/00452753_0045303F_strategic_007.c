@@ -171,11 +171,14 @@ int Rules_HostMarch(int unused, double clips_context)
 //----- (00452CFB) --------------------------------------------------------
 int Rules_HostMarchToTemple(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
-  int temple_x = Rules_RtnLong(2, 0, clips_context);
-  int temple_y = Rules_RtnLong(3, 0, clips_context);
+  int stack_index;
+  int temple_x;
+  int temple_y;
 
   (void)unused;
+  stack_index = Rules_RtnLong(1, 0, clips_context);
+  temple_x = Rules_RtnLong(2, 0, clips_context);
+  temple_y = Rules_RtnLong(3, 0, clips_context);
   return Rules_MarchToTemple(stack_index, temple_x, temple_y, clips_context);
 }
 
@@ -220,9 +223,8 @@ int Rules_HostHideTroop(int unused, double clips_context)
 //----- (00452EA7) --------------------------------------------------------
 int Rules_HostArmyExists(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
   (void)unused;
-  return UnitStack_HasNormalCombatUnitsByIndex(stack_index);
+  return UnitStack_HasNormalCombatUnitsByIndex(Rules_RtnLong(1, 0, clips_context));
 }
 
 //----- (00452EE3) --------------------------------------------------------
@@ -232,9 +234,8 @@ int Rules_HostArmyExists(int unused, double clips_context)
 // Rules_RtnLong, tail-calls UnitStack_GetSquadCountByIndex).
 int Rules_HostUnitCountInTroop(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
   (void)unused;
-  return UnitStack_GetSquadCountByIndex(stack_index);
+  return UnitStack_GetSquadCountByIndex(Rules_RtnLong(1, 0, clips_context));
 }
 
 //----- (00452F1F) --------------------------------------------------------
@@ -249,17 +250,15 @@ int Rules_HostAttackBuilding(int unused, double clips_context)
 //----- (00452F6B) --------------------------------------------------------
 int Rules_HostFordExists(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
   (void)unused;
-  return Rules_IsQueuedPathTargetBridgeCrossing(stack_index);
+  return Rules_IsQueuedPathTargetBridgeCrossing(Rules_RtnLong(1, 0, clips_context));
 }
 
 //----- (00452FA7) --------------------------------------------------------
 int Rules_HostBuildRoad(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
   (void)unused;
-  return Rules_BuildRoadOrStepTowardQueuedPath(stack_index, 0, clips_context);
+  return Rules_BuildRoadOrStepTowardQueuedPath(Rules_RtnLong(1, 0, clips_context), 0, clips_context);
 }
 
 //----- (00452FE3) --------------------------------------------------------
@@ -275,8 +274,7 @@ int Rules_HostBuildTrap(int unused, double clips_context)
 //----- (0045303F) --------------------------------------------------------
 int Rules_HostUnitCanMove(int unused, double clips_context)
 {
-  int stack_index = Rules_RtnLong(1, 0, clips_context);
   (void)unused;
-  return Unit_AttemptNeighborMove(stack_index);
+  return Unit_AttemptNeighborMove(Rules_RtnLong(1, 0, clips_context));
 }
 
