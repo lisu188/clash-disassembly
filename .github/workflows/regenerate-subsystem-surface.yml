@@ -1,4 +1,4 @@
-name: Regenerate subsystem surface
+name: Fix packed typed access
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  regenerate:
+  fix:
     if: github.head_ref == 'readability/unit-stack-record'
     runs-on: ubuntu-latest
     steps:
@@ -18,23 +18,48 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Regenerate narrowed headers and TU include blocks
+      - name: Rewrite alignment-safe typed access
         run: |
-          python3 tools/gen_subsystem_headers.py --write
-          python3 tools/gen_subsystem_headers.py --write-tu-includes clips
-          python3 tools/gen_subsystem_headers.py --write-tu-includes media
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('src/clips/00497C80_004995B0_clips_002.c')
-          s = p.read_text(encoding='latin-1')
-          s = s.replace('/* CLASH95_GENERATED_INCLUDES_END */\n#include "../state/state_api.h"\n', '/* CLASH95_GENERATED_INCLUDES_END */\n')
-          p.write_text(s, encoding='latin-1')
+
+          def rewrite(path, old, new, expected):
+              p = Path(path)
+              s = p.read_text(encoding='latin-1')
+              count = s.count(old)
+              if count != expected:
+                  raise SystemExit(f'{path}: expected {expected} occurrences, found {count}: {old!r}')
+              p.write_text(s.replace(old, new), encoding='latin-1')
+
+          p1 = 'src/units/0040F510_00411560_units_001.c'
+          rewrite(p1,
+                  'Rules_RetractArmyFact((_DWORD *)stack, 0, stackRecord, a4);',
+                  'Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackRecord, 0, stackRecord, a4);', 1)
+          rewrite(p1,
+                  'Rules_RetractArmyFact((_DWORD *)stackRecord, column, stackPtr, a2);',
+                  'Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackPtr, column, stackPtr, a2);', 1)
+          rewrite(p1,
+                  'return (__int16 *)stack;',
+                  'return (__int16 *)(uintptr_t)stackPtr;', 2)
+
+          p2 = 'src/units/004115E0_00412BE0_units_002.c'
+          rewrite(p2,
+                  'return (__int16 *)slot;',
+                  'return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);', 2)
+
+          p4 = 'src/units/00414390_00416750_units_004.c'
+          rewrite(p4,
+                  'UnitStack_GetTileMoveCostOrZero((__int16 *)stack,',
+                  'UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)stackRecord,', 4)
+          rewrite(p4,
+                  'UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)stackRecord,',
+                  'UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)(uintptr_t)UNIT_STACK(stackIndex_l),', 1)
           PY
-      - name: Commit generated surface
+      - name: Commit fixes
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src data/subsystem_api.json
+          git add src/units
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Regenerate subsystem header surface'
+          git commit -m 'Avoid unaligned packed pointer conversions'
           git push origin HEAD:${{ github.head_ref }}
