@@ -25,7 +25,21 @@ The readability track turns evidence-backed decompiler output into ordinary main
 
 The remaining five bytes stay `unknown_tail`. Unit-slot internals remain opaque until their individual fields are migrated with equivalent evidence.
 
-The intended migration is incremental: replace `int stackPtr`, `__int16 *stackPtr`, `UNIT_STACK_*` field macros, and raw `stack + offset` expressions with `UnitStackRecord *` access where doing so is layout-equivalent and does not alter ABI-facing function signatures prematurely.
+The migration is incremental: replace `int stackPtr`, `__int16 *stackPtr`, `UNIT_STACK_*` field macros, and raw `stack + offset` expressions with `UnitStackRecord *` access where doing so is layout-equivalent and does not alter ABI-facing function signatures prematurely.
+
+### First migrated call sites
+
+The first typed-access batch covers the pathing frontier in `src/units/00414390_00416750_units_004.c`:
+
+- `Path_InsertBridgeCornerWaypoints`
+- `Unit_MoveTrack`
+- `Unit_MoveTrackNearTile`
+- `Building_GenerateApproachTrack`
+- `Building_GenerateNearApproachTrack`
+
+These functions now obtain strategic stack position through `UnitStack_RecordAt()` and `stack->tile_row` / `stack->tile_column` instead of repeating 725-byte record arithmetic or raw `+0` / `+2` accesses. Existing ABI-facing signatures are deliberately retained; casts remain only at boundaries that have not yet been migrated.
+
+`data/recovered_sources.json` retains the legacy body hashes and records the new canonical hashes for these readability-preserving bodies, so the split-source audit continues to detect unrelated drift.
 
 ## Readability audit
 
@@ -39,7 +53,7 @@ The audit counts common decompiler debt and ranks the highest-debt source files.
 
 ## Next migration batches
 
-1. Adopt `UnitStackRecord` inside `src/units/` function bodies while preserving external signatures.
+1. Extend `UnitStackRecord` use through the remaining `src/units/` position/owner/facing accessors while preserving external signatures.
 2. Recover typed fields inside `UnitStackSlotRecord` and pin each offset.
 3. Introduce equivalent evidence-backed overlays for `Player` and `Building`.
 4. Convert gameplay APIs to typed pointers only after all cross-subsystem call sites are understood.
