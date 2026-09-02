@@ -6,6 +6,8 @@
 
 #include "../recovered_types.h"
 
+#pragma pack(push, 1)
+
 typedef struct UnitStackSlotRecord
 {
   uint8_t raw[UNIT_STACK_SLOT_STRIDE];
@@ -22,6 +24,8 @@ typedef struct UnitStackRecord
   uint8_t unknown_tail[UNIT_STACK_STRIDE - UNIT_STACK_PATH_OFFSET - UNIT_STACK_PATH_BYTES];
 } UnitStackRecord;
 
+#pragma pack(pop)
+
 _Static_assert(sizeof(UnitStackSlotRecord) == UNIT_STACK_SLOT_STRIDE, "UnitStackSlotRecord layout drift");
 _Static_assert(offsetof(UnitStackRecord, tile_row) == 0, "UnitStackRecord.tile_row offset drift");
 _Static_assert(offsetof(UnitStackRecord, tile_column) == 2, "UnitStackRecord.tile_column offset drift");
@@ -34,6 +38,11 @@ _Static_assert(sizeof(UnitStackRecord) == UNIT_STACK_STRIDE, "UnitStackRecord si
 static inline UnitStackRecord *UnitStack_RecordAt(int stack_index)
 {
   return (UnitStackRecord *)(uintptr_t)UNIT_STACK(stack_index);
+}
+
+static inline const UnitStackRecord *UnitStack_RecordAtConst(int stack_index)
+{
+  return (const UnitStackRecord *)(uintptr_t)UNIT_STACK(stack_index);
 }
 
 static inline UnitStackSlotRecord *UnitStack_SlotAt(UnitStackRecord *stack, int slot_index)
