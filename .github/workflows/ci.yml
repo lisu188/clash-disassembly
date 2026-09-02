@@ -236,7 +236,6 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
           replacements = {
               Path('src/units/0040F510_00411560_units_001.c'): [
                   ('Rules_RetractArmyFact((_DWORD *)stack,', 'Rules_RetractArmyFact((_DWORD *)(void *)stack,', 1),
@@ -271,6 +270,17 @@ jobs:
           python3 tools/gen_subsystem_headers.py --write
           python3 tools/gen_subsystem_headers.py --write-tu-includes clips
           python3 tools/gen_subsystem_headers.py --write-tu-includes media
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('src/clips/00497C80_004995B0_clips_002.c')
+          text = path.read_text(encoding='latin-1')
+          needle = '#include "../state/state_api.h"\n'
+          count = text.count(needle)
+          if count != 1:
+              raise SystemExit(f'{path}: expected one stale state_api include, found {count}')
+          path.write_text(text.replace(needle, '', 1), encoding='latin-1', newline='')
+          print('removed stale manual state_api include')
+          PY
           python3 tools/audit_header_surface.py --mode update
           python3 tools/audit_header_surface.py --mode check
 
