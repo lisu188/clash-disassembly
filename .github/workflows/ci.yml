@@ -189,7 +189,21 @@ jobs:
         run: cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
 
       - name: Build independently compiled unit harness
-        run: cmake --build build/coverage --target clash95_unit_tests -j2
+        id: unit-build
+        shell: bash
+        run: |
+          if ! cmake --build build/coverage --target clash95_unit_tests -j2 >unit-compiler.log 2>&1; then
+            tail -n 200 unit-compiler.log
+            exit 1
+          fi
+
+      - name: Upload unit harness compiler diagnostics
+        if: always() && steps.unit-build.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-unit-compiler-diagnostics
+          path: unit-compiler.log
+          if-no-files-found: warn
 
       - name: Run split unit suite
         run: ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure
