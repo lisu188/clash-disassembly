@@ -210,3 +210,35 @@ jobs:
 
       - name: Enforce frozen coverage floor
         run: python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10
+
+  readability-migration:
+    name: Apply typed UnitStack batch 3
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: readability/unit-stack-record
+          fetch-depth: 0
+
+      - name: Apply migration and refresh evidence
+        shell: bash
+        run: |
+          python3 tools/readability_batch3.py
+          python3 tools/update_split_manifest_hashes.py --update
+          python3 tools/audit_split_sources.py
+          python3 tools/migrate_pure_coverage_metadata.py --check
+          git diff --check
+
+      - name: Commit migration
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/units/004115E0_00412BE0_units_002.c data/recovered_sources.json tests/unit/cases/test_cov10.c
+          git diff --cached --quiet && exit 0
+          git commit -m "Migrate low morale and plague slot logic"
+          git push origin HEAD:readability/unit-stack-record
