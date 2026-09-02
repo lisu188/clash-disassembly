@@ -86,17 +86,40 @@ jobs:
         if: github.event_name == 'pull_request' && github.head_ref == 'readability/unitstack-player-building'
         env:
           GH_TOKEN: ${{ github.token }}
-        shell: bash
         run: |
-          set -euo pipefail
-          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/data/recovered_sources.json"
-          current_sha="$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "${api}?ref=${GITHUB_HEAD_REF}" | jq -r .sha)"
-          generated_sha="$(git hash-object data/recovered_sources.json)"
-          if [ "${current_sha}" != "${generated_sha}" ]; then
-            content="$(base64 -w0 data/recovered_sources.json)"
-            jq -n --arg message 'Refresh split manifest hashes for readability pass' --arg content "${content}" --arg sha "${current_sha}" --arg branch "${GITHUB_HEAD_REF}" '{message:$message,content:$content,sha:$sha,branch:$branch}' > /tmp/manifest-update.json
-            curl -fsSL -X PUT -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' -H 'Content-Type: application/json' --data-binary @/tmp/manifest-update.json "${api}" >/dev/null
-          fi
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import os
+          import urllib.request
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          branch = os.environ["GITHUB_HEAD_REF"]
+          token = os.environ["GH_TOKEN"]
+          path = "data/recovered_sources.json"
+          raw = open(path, "rb").read()
+          generated_sha = hashlib.sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest()
+          api = f"https://api.github.com/repos/{repository}/contents/{path}"
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          request = urllib.request.Request(f"{api}?ref={branch}", headers=headers)
+          with urllib.request.urlopen(request) as response:
+              current_sha = json.load(response)["sha"]
+          if current_sha != generated_sha:
+              payload = json.dumps({
+                  "message": "Refresh split manifest hashes for readability pass",
+                  "content": base64.b64encode(raw).decode("ascii"),
+                  "sha": current_sha,
+                  "branch": branch,
+              }).encode("utf-8")
+              request = urllib.request.Request(api, data=payload, headers={**headers, "Content-Type": "application/json"}, method="PUT")
+              with urllib.request.urlopen(request) as response:
+                  json.load(response)
+          PY
 
       - name: Audit split sources and frozen metadata
         run: |
