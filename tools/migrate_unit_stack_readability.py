@@ -8,6 +8,7 @@ from pathlib import Path
 SOURCE = Path("src/units/00414390_00416750_units_004.c")
 INCLUDE_MARKER = "/* CLASH95_GENERATED_INCLUDES_END */\n"
 TYPED_INCLUDE = '#include "unit_stack_record.h"\n'
+MIGRATION_SENTINEL = "/* CLASH95_UNIT_STACK_READABILITY_MIGRATED */"
 
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
@@ -18,12 +19,22 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 
 
 def migrate(text: str) -> str:
+    if MIGRATION_SENTINEL in text:
+        return text
+
     if TYPED_INCLUDE not in text:
         text = replace_once(
             text,
             INCLUDE_MARKER,
-            INCLUDE_MARKER + "\n" + TYPED_INCLUDE,
+            INCLUDE_MARKER + "\n" + TYPED_INCLUDE + MIGRATION_SENTINEL + "\n",
             "typed UnitStack include",
+        )
+    else:
+        text = replace_once(
+            text,
+            TYPED_INCLUDE,
+            TYPED_INCLUDE + MIGRATION_SENTINEL + "\n",
+            "UnitStack migration sentinel",
         )
 
     text = replace_once(
@@ -127,7 +138,7 @@ def main() -> None:
     migrated = migrate(original)
 
     if args.check:
-        if migrated != original:
+        if MIGRATION_SENTINEL not in original or migrated != original:
             raise SystemExit("UnitStack readability migration is not applied")
         return
 
