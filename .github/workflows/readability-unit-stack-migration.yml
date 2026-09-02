@@ -22,7 +22,9 @@ jobs:
           fetch-depth: 0
 
       - name: Apply typed UnitStack migration
-        run: python3 tools/migrate_unit_stack_readability.py
+        run: |
+          python3 tools/migrate_unit_stack_readability.py
+          python3 tools/update_split_manifest_hashes.py --update
 
       - name: Validate split-source contract and whitespace
         run: |
@@ -41,6 +43,6 @@ jobs:
           fi
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src/units/00414390_00416750_units_004.c .github/workflows/readability-unit-stack-migration.yml
+          git add src/units/00414390_00416750_units_004.c data/recovered_sources.json .github/workflows/readability-unit-stack-migration.yml
           git commit -m "Migrate movement paths to typed UnitStack access"
           git push origin HEAD:readability/unit-stack-record
