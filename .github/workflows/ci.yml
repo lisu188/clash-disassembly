@@ -288,7 +288,10 @@ jobs:
         shell: bash
         run: |
           CC=gcc-13 cmake -S . -B build/maintenance-gcc -G Ninja -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build/maintenance-gcc --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >gcc-maintenance.log 2>&1
+          if ! cmake --build build/maintenance-gcc --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >gcc-maintenance.log 2>&1; then
+            tail -n 200 gcc-maintenance.log
+            exit 1
+          fi
           python3 - <<'PY'
           from pathlib import Path
           from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
@@ -304,7 +307,10 @@ jobs:
         shell: bash
         run: |
           CC=clang-18 cmake -S . -B build/maintenance-clang -G Ninja -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build/maintenance-clang --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >clang-maintenance.log 2>&1
+          if ! cmake --build build/maintenance-clang --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >clang-maintenance.log 2>&1; then
+            tail -n 200 clang-maintenance.log
+            exit 1
+          fi
           python3 - <<'PY'
           from pathlib import Path
           from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
