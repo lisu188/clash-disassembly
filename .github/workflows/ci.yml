@@ -231,6 +231,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev gcc-13 clang-18
 
+      - name: Repair canonical recovered declarations
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('data/recovered_decls.json')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              'signed int Building_BuildWorkshop(char a1, DWORD a2);':
+                  'signed int Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2);',
+              'signed int Building_BuildHospital(char a1, DWORD a2);':
+                  'signed int Building_BuildHospital(int buildingRecord, char a1, DWORD a2);',
+              'signed int Building_BuildSmiths(char a1, DWORD a2);':
+                  'signed int Building_BuildSmiths(int buildingRecord, char a1, DWORD a2);',
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{old}: expected one canonical declaration, found {count}')
+              text = text.replace(old, new, 1)
+          path.write_text(text, encoding='utf-8', newline='')
+          print('repaired 3 canonical recovered building declarations')
+          PY
+
       - name: Remove packed-overlay ABI cast warnings
         shell: bash
         run: |
@@ -292,16 +316,11 @@ jobs:
             tail -n 200 gcc-maintenance.log
             exit 1
           fi
-          python3 - <<'PY'
-          from pathlib import Path
-          from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
-          counts, _ = warning_counts(Path('gcc-maintenance.log').read_text(errors='replace'), 'gcc', DEFAULT_SOURCE_PREFIXES)
-          packed = counts.get('-Waddress-of-packed-member', 0)
-          print(f'gcc packed-member warnings: {packed}; total={sum(counts.values())}')
-          if packed > 2:
-              raise SystemExit(f'packed-member warning regression remains: {packed} > 2')
-          PY
-          python3 tools/check_recovered_warnings.py gcc-maintenance.log --compiler gcc --mode update
+          if ! python3 tools/check_recovered_warnings.py gcc-maintenance.log --compiler gcc --mode check; then
+            echo '--- new GCC warning sites ---'
+            grep -E 'address-of-packed-member|sign-compare|stringop-overread|unused-but-set-variable|unused-variable|warning:' gcc-maintenance.log | tail -n 240 || true
+            exit 1
+          fi
 
       - name: Build reviewed Clang warning profile
         shell: bash
@@ -311,23 +330,16 @@ jobs:
             tail -n 200 clang-maintenance.log
             exit 1
           fi
-          python3 - <<'PY'
-          from pathlib import Path
-          from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
-          counts, _ = warning_counts(Path('clang-maintenance.log').read_text(errors='replace'), 'clang', DEFAULT_SOURCE_PREFIXES)
-          packed = counts.get('-Waddress-of-packed-member', 0)
-          print(f'clang packed-member warnings: {packed}; total={sum(counts.values())}')
-          if packed > 2:
-              raise SystemExit(f'packed-member warning regression remains: {packed} > 2')
-          PY
-          python3 tools/check_recovered_warnings.py clang-maintenance.log --compiler clang --mode update
+          if ! python3 tools/check_recovered_warnings.py clang-maintenance.log --compiler clang --mode check; then
+            echo '--- new Clang warning sites ---'
+            grep -E 'packed|sign-compare|stringop-overread|unused|warning:' clang-maintenance.log | tail -n 240 || true
+            exit 1
+          fi
 
       - name: Verify refreshed ratchets
         run: |
           python3 tools/audit_split_sources.py
           python3 tools/audit_header_surface.py --mode check
-          python3 tools/check_recovered_warnings.py gcc-maintenance.log --compiler gcc --mode check
-          python3 tools/check_recovered_warnings.py clang-maintenance.log --compiler clang --mode check
           git diff --check
 
       - name: Commit reviewed maintenance state
@@ -341,5 +353,5 @@ jobs:
             exit 0
           fi
           git diff --cached --check
-          git commit -m 'Refresh recovered CI maintenance baselines'
+          git commit -m 'Refresh recovered CI maintenance state'
           git push origin HEAD:readability/unit-stack-record
