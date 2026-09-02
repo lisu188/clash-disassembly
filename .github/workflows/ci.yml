@@ -235,24 +235,36 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          import json
           from pathlib import Path
+
           path = Path('data/recovered_decls.json')
-          text = path.read_text(encoding='utf-8')
+          raw = path.read_text(encoding='utf-8')
+          entries = json.loads(raw)
           replacements = {
-              'signed int Building_BuildWorkshop(char a1, DWORD a2);':
-                  'signed int Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2);',
-              'signed int Building_BuildHospital(char a1, DWORD a2);':
-                  'signed int Building_BuildHospital(int buildingRecord, char a1, DWORD a2);',
-              'signed int Building_BuildSmiths(char a1, DWORD a2);':
-                  'signed int Building_BuildSmiths(int buildingRecord, char a1, DWORD a2);',
+              'Building_BuildWorkshop': 'signed int Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2);',
+              'Building_BuildHospital': 'signed int Building_BuildHospital(int buildingRecord, char a1, DWORD a2);',
+              'Building_BuildSmiths': 'signed int Building_BuildSmiths(int buildingRecord, char a1, DWORD a2);',
           }
-          for old, new in replacements.items():
-              count = text.count(old)
+
+          for name, new_decl in replacements.items():
+              matches = [entry for entry in entries if isinstance(entry, dict) and entry.get('name') == name]
+              if len(matches) != 1:
+                  raise SystemExit(f'{name}: expected one declaration entry, found {len(matches)}')
+              old_decl = matches[0].get('decl')
+              if not isinstance(old_decl, str) or name not in old_decl:
+                  raise SystemExit(f'{name}: invalid old declaration {old_decl!r}')
+              old_token = json.dumps(old_decl, ensure_ascii=False)
+              new_token = json.dumps(new_decl, ensure_ascii=False)
+              count = raw.count(old_token)
               if count != 1:
-                  raise SystemExit(f'{old}: expected one canonical declaration, found {count}')
-              text = text.replace(old, new, 1)
-          path.write_text(text, encoding='utf-8', newline='')
-          print('repaired 3 canonical recovered building declarations')
+                  raise SystemExit(f'{name}: expected one serialized declaration token, found {count}; old={old_decl!r}')
+              print(f'{name}: {old_decl} -> {new_decl}')
+              raw = raw.replace(old_token, new_token, 1)
+
+          path.write_text(raw, encoding='utf-8', newline='')
+          json.loads(path.read_text(encoding='utf-8'))
+          print('repaired 3 canonical recovered building declarations without reformatting JSON')
           PY
 
       - name: Remove packed-overlay ABI cast warnings
