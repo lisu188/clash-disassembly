@@ -147,19 +147,22 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
 //----- (004118A0) --------------------------------------------------------
 BOOL  UnitSlot_ShouldGainFatigueFromLowActionPoints(int slotPtr)
 {
-  return *(unsigned __int8 *)(uintptr_t)(slotPtr + 8) <= 3u && (UNIT_SLOT_FLAGS(slotPtr) & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
+  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
+  return slot->current_action_points <= 3u && (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) == 0;
 }
 
 //----- (004118C0) --------------------------------------------------------
 BOOL  UnitSlot_CanRecoverFatigue(int slotPtr)
 {
-  return (UNIT_SLOT_FLAGS(slotPtr) & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
+  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
+  return (slot->state_flags & UNIT_SLOT_FLAG_SPENT_TURN) == 0;
 }
 
 //----- (004118D0) --------------------------------------------------------
 BOOL  UnitSlot_HasSevereFatigue(int slotPtr)
 {
-  return *(char *)(uintptr_t)(slotPtr + 10) >= 80;
+  UnitSlotRecord *slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
+  return (int8_t)slot->fatigue >= 80;
 }
 
 //----- (004118E0) --------------------------------------------------------
@@ -1082,25 +1085,27 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
 //----- (004127A0) --------------------------------------------------------
 int  UnitSlot_AdjustFatigueByPredicate(int slotPtr, int fatigueDelta, BOOL ( *predicate)(int slotPtr))
 {
-  int result; // eax
-  signed char newFatigue; // cl
+  UnitSlotRecord *slot;
+  int result;
+  signed char newFatigue;
 
+  slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
   result = predicate(slotPtr);
   if ( result )
   {
-    result = *(__int16 *)(uintptr_t)slotPtr;
+    result = slot->unit_type_id;
     if ( result != UNIT_TYPE_GOLD_CARGO
       && result != UNIT_TYPE_PEASANT_CARGO
       && result != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
       && result != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      newFatigue = fatigueDelta + *(char *)(uintptr_t)(slotPtr + 10);
-      UNIT_SLOT_FATIGUE(slotPtr) = newFatigue;
+      newFatigue = fatigueDelta + (int8_t)slot->fatigue;
+      slot->fatigue = (uint8_t)newFatigue;
       if ( newFatigue < 0 )
-        *(_BYTE *)(uintptr_t)(slotPtr + 10) = 0;
-      if ( *(char *)(uintptr_t)(slotPtr + 10) > 100 )
-        *(_BYTE *)(uintptr_t)(slotPtr + 10) = 100;
-      return *(char *)(uintptr_t)(slotPtr + 10);
+        slot->fatigue = 0;
+      if ( (int8_t)slot->fatigue > 100 )
+        slot->fatigue = 100;
+      return (int8_t)slot->fatigue;
     }
   }
   return result;
@@ -1120,41 +1125,43 @@ signed int  UnitStack_AdjustFatigueByPredicate(
         DWORD a4,
         double a5)
 {
-  __int16 *slotPtr; // edx
-  int slotIndex; // ecx
-  int slotType; // eax
-  signed int result; // eax
-  char fatigueDeltaByte; // [esp+0h] [ebp-8h]
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+  int slotType;
+  signed int result;
+  char fatigueDeltaByte;
 
   fatigueDeltaByte = fatigueDelta;
   if ( fatigueDelta <= 0 || (result = UnitStack_HasSpecialPersonageUnits((intptr_t)stackPtr)) == 0 )
   {
-    slotPtr = stackPtr + 3;
+    stack = (UnitStackRecord *)stackPtr;
+    slot = &stack->unit_slots[0];
     slotIndex = 0;
-    while ( slotIndex < 10 )
+    while ( slotIndex < UNIT_STACK_SLOT_COUNT )
     {
-      if ( *slotPtr == -1 )
+      if ( slot->unit_type_id == -1 )
         break;
-      if ( predicate((int)(intptr_t)slotPtr) )
+      if ( predicate((int)(intptr_t)slot) )
       {
-        slotType = *slotPtr;
+        slotType = slot->unit_type_id;
         if ( slotType != UNIT_TYPE_GOLD_CARGO
           && slotType != UNIT_TYPE_PEASANT_CARGO
           && slotType != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
           && slotType != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         {
-          int fatigue = (signed char)*((char *)slotPtr + 10) + (signed char)fatigueDeltaByte;
-          *((_BYTE *)slotPtr + 10) = (unsigned char)fatigue;
+          int fatigue = (int8_t)slot->fatigue + (int8_t)fatigueDeltaByte;
+          slot->fatigue = (uint8_t)fatigue;
           if ( fatigue < 0 )
-            *((_BYTE *)slotPtr + 10) = 0;
-          if ( *((char *)slotPtr + 10) > 100 )
-            *((_BYTE *)slotPtr + 10) = 100;
+            slot->fatigue = 0;
+          if ( (int8_t)slot->fatigue > 100 )
+            slot->fatigue = 100;
         }
       }
       ++slotIndex;
-      slotPtr = (__int16 *)((char *)slotPtr + 31);
+      ++slot;
     }
-    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slotPtr, slotIndex, (char)(intptr_t)predicate, a4, a5);
+    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slot, slotIndex, (char)(intptr_t)predicate, a4, a5);
   }
   return result;
 }
@@ -1162,28 +1169,30 @@ signed int  UnitStack_AdjustFatigueByPredicate(
 //----- (00412880) --------------------------------------------------------
 int  UnitSlot_AdjustMoraleByPredicate(int slotPtr, int moraleDelta, BOOL ( *predicate)(int slotPtr))
 {
-  int result; // eax
-  int unit_type; // eax
-  int morale; // eax
+  UnitSlotRecord *slot;
+  int result;
+  int unitType;
+  int morale;
 
+  slot = (UnitSlotRecord *)(uintptr_t)slotPtr;
   result = predicate(slotPtr);
   if ( result )
   {
-    unit_type = *(__int16 *)(uintptr_t)slotPtr;
-    if ( unit_type != UNIT_TYPE_GOLD_CARGO
-      && unit_type != UNIT_TYPE_PEASANT_CARGO
-      && unit_type != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
-      && unit_type != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+    unitType = slot->unit_type_id;
+    if ( unitType != UNIT_TYPE_GOLD_CARGO
+      && unitType != UNIT_TYPE_PEASANT_CARGO
+      && unitType != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+      && unitType != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      morale = *(char *)(uintptr_t)(slotPtr + 11) + moraleDelta;
-      UNIT_SLOT_MORALE(slotPtr) = morale;
+      morale = (int8_t)slot->morale + moraleDelta;
+      slot->morale = (uint8_t)morale;
       if ( moraleDelta > 0 )
-        *(_BYTE *)(uintptr_t)(slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
-      if ( *(char *)(uintptr_t)(slotPtr + 11) < 0 )
-        *(_BYTE *)(uintptr_t)(slotPtr + 11) = 0;
-      if ( *(char *)(uintptr_t)(slotPtr + 11) > 20 )
-        *(_BYTE *)(uintptr_t)(slotPtr + 11) = 20;
-      return *(char *)(uintptr_t)(slotPtr + 11);
+        slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_LOW_MORALE;
+      if ( (int8_t)slot->morale < 0 )
+        slot->morale = 0;
+      if ( (int8_t)slot->morale > 20 )
+        slot->morale = 20;
+      return (int8_t)slot->morale;
     }
   }
   return result;
@@ -1197,40 +1206,42 @@ signed int  UnitStack_AdjustMoraleByPredicate(
         DWORD a4,
         double a5)
 {
-  __int16 *slotPtr; // edx
-  int slotIndex; // ecx
-  int slotType; // eax
-  signed int result; // eax
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+  int slotType;
+  signed int result;
 
   if ( moraleDelta >= 0 || (result = UnitStack_HasSpecialPersonageUnits((intptr_t)stackPtr)) == 0 )
   {
-    slotPtr = stackPtr + 3;
+    stack = (UnitStackRecord *)stackPtr;
+    slot = &stack->unit_slots[0];
     slotIndex = 0;
-    while ( slotIndex < 10 )
+    while ( slotIndex < UNIT_STACK_SLOT_COUNT )
     {
-      if ( *slotPtr == -1 )
+      if ( slot->unit_type_id == -1 )
         break;
-      if ( predicate((int)(intptr_t)slotPtr) )
+      if ( predicate((int)(intptr_t)slot) )
       {
-        slotType = *slotPtr;
+        slotType = slot->unit_type_id;
         if ( slotType != UNIT_TYPE_GOLD_CARGO
           && slotType != UNIT_TYPE_PEASANT_CARGO
           && slotType != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
           && slotType != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         {
-          *((_BYTE *)slotPtr + 11) += moraleDelta;
+          slot->morale = (uint8_t)((int8_t)slot->morale + moraleDelta);
           if ( moraleDelta > 0 )
-            *((_BYTE *)slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
-          if ( *((char *)slotPtr + 11) < 0 )
-            *((_BYTE *)slotPtr + 11) = 0;
-          if ( *((char *)slotPtr + 11) > 20 )
-            *((_BYTE *)slotPtr + 11) = 20;
+            slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_LOW_MORALE;
+          if ( (int8_t)slot->morale < 0 )
+            slot->morale = 0;
+          if ( (int8_t)slot->morale > 20 )
+            slot->morale = 20;
         }
       }
       ++slotIndex;
-      slotPtr = (__int16 *)((char *)slotPtr + 31);
+      ++slot;
     }
-    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slotPtr, slotIndex, (char)(intptr_t)predicate, a4, a5);
+    return Rules_SyncArmyFactStrength(stackPtr, (int)(intptr_t)slot, slotIndex, (char)(intptr_t)predicate, a4, a5);
   }
   return result;
 }
@@ -1238,22 +1249,24 @@ signed int  UnitStack_AdjustMoraleByPredicate(
 //----- (00412970) --------------------------------------------------------
 int  UnitSlot_CycleOrderState(int result)
 {
-  char nextOrderState; // dl
-  char clearedFlags; // dh
-  char updatedFlags; // bl
+  UnitSlotRecord *slot;
+  char nextOrderState;
+  char clearedFlags;
+  char updatedFlags;
 
-  nextOrderState = (UNIT_SLOT_ORDER_STATE(result) + 1) & 3;
-  clearedFlags = UNIT_SLOT_STANCE_BITS(result) & 0xF3;
-  UNIT_SLOT_STANCE_BITS(result) = clearedFlags;
+  slot = (UnitSlotRecord *)(uintptr_t)result;
+  nextOrderState = ((slot->stance_bits >> 2) + 1) & 3;
+  clearedFlags = slot->stance_bits & 0xF3;
+  slot->stance_bits = clearedFlags;
   updatedFlags = (4 * nextOrderState) | clearedFlags;
-  UNIT_SLOT_STANCE_BITS(result) = updatedFlags;
+  slot->stance_bits = updatedFlags;
   if ( (unsigned __int8)((unsigned __int8)(16 * updatedFlags) >> 6) > 2u )
   {
-    UNIT_SLOT_STANCE_BITS(result) = updatedFlags & 0xF3;
+    slot->stance_bits = updatedFlags & 0xF3;
     if ( (clearedFlags & 3u) < 3 )
     {
-      UNIT_SLOT_STANCE_BITS(result) = updatedFlags & 0xF0;
-      UNIT_SLOT_STANCE_BITS(result) = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
+      slot->stance_bits = updatedFlags & 0xF0;
+      slot->stance_bits = ((clearedFlags & 3) + 1) & 3 | ((4 * nextOrderState) | clearedFlags) & 0xF0;
     }
   }
   return result;
@@ -1262,122 +1275,118 @@ int  UnitSlot_CycleOrderState(int result)
 //----- (004129E0) --------------------------------------------------------
 signed int  UnitStack_CycleAllSlotOrders(__int16 *stackPtr, DWORD a2, double a3)
 {
-  int stack_record; // edi
-  int slot_index; // edx
-  int slot_cursor; // ecx
-  int slot_type; // ebx
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
+  int slotType;
 
-  stack_record = (int)(uintptr_t)stackPtr;
-  slot_index = 0;
-  slot_cursor = stack_record;
+  stack = (UnitStackRecord *)stackPtr;
+  slot = &stack->unit_slots[0];
+  slotIndex = 0;
   do
   {
-    slot_type = *(__int16 *)(uintptr_t)(unsigned int)(slot_cursor + UNIT_STACK_SLOT_BASE_OFFSET);
-    if ( slot_type == -1 )
-      return Rules_SyncArmyFactStrength(stackPtr, slot_index, slot_cursor, -1, a2, a3);
-    UnitSlot_CycleOrderState(UNIT_STACK_SLOT(stack_record, slot_index));
-    ++slot_index;
-    slot_cursor += UNIT_STACK_SLOT_STRIDE;
+    slotType = slot->unit_type_id;
+    if ( slotType == -1 )
+      return Rules_SyncArmyFactStrength(stackPtr, slotIndex, (int)(intptr_t)slot, -1, a2, a3);
+    UnitSlot_CycleOrderState((int)(intptr_t)slot);
+    ++slotIndex;
+    ++slot;
   }
-  while ( slot_index < UNIT_STACK_SLOT_COUNT );
-  return Rules_SyncArmyFactStrength(stackPtr, slot_index, slot_cursor, slot_type, a2, a3);
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT );
+  return Rules_SyncArmyFactStrength(stackPtr, slotIndex, (int)(intptr_t)slot, slotType, a2, a3);
 }
 
 //----- (00412A30) --------------------------------------------------------
 __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
 {
-  __int16 *result; // eax
-  int i; // edx
-  char slotFlags; // bl
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
 
-  result = (__int16 *)(uintptr_t)(stackPtr + 6);
-  for ( i = 0; i < 10; ++i )
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *result == -1 )
+    if ( slot->unit_type_id == -1 )
       break;
-    slotFlags = *((_BYTE *)result + 13);
-    result = (__int16 *)((char *)result + 31);
-    *((_BYTE *)result - 18) = slotFlags | UNIT_SLOT_FLAG_SPENT_TURN;
+    slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
+    ++slot;
   }
-  return result;
+  return (__int16 *)slot;
 }
 
 //----- (00412A60) --------------------------------------------------------
 __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
 {
-  __int16 *result; // eax
-  int i; // edx
-  char slotFlags; // bl
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
 
-  result = (__int16 *)(uintptr_t)(stackPtr + 6);
-  for ( i = 0; i < 10; ++i )
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *result == -1 )
+    if ( slot->unit_type_id == -1 )
       break;
-    slotFlags = *((_BYTE *)result + 13);
-    result = (__int16 *)((char *)result + 31);
-    *((_BYTE *)result - 18) = slotFlags & ~UNIT_SLOT_FLAG_SPENT_TURN;
+    slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
+    ++slot;
   }
-  return result;
+  return (__int16 *)slot;
 }
 
 //----- (00412A90) --------------------------------------------------------
 int  UnitStack_SetPlagueFlag(int result)
 {
-  int i; // edx
-  char slotFlags; // bl
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
+  int slotIndex;
 
-  for ( i = 0; i < 10; ++i )
+  stack = (UnitStackRecord *)(uintptr_t)result;
+  slot = &stack->unit_slots[0];
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *(__int16 *)(uintptr_t)(result + 6) == -1 )
+    if ( slot->unit_type_id == -1 )
       break;
-    slotFlags = *(_BYTE *)(uintptr_t)(result + 19);
-    result += 31;
-    *(_BYTE *)(uintptr_t)(result - 12) = slotFlags | 8;
+    slot->state_flags |= UNIT_SLOT_FLAG_PLAGUE;
+    ++slot;
   }
-  return result;
+  return (int)(intptr_t)slot;
 }
 
 //----- (00412AC0) --------------------------------------------------------
 signed int  UnitStack_HasPlague(int stackPtr)
 {
-  int slotIndex; // edx
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotIndex = 0;
-  while ( 1 )
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *(__int16 *)(uintptr_t)(stackPtr + 6) == -1 )
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
       return 0;
-    if ( (*(_BYTE *)(uintptr_t)(stackPtr + 19) & UNIT_SLOT_FLAG_PLAGUE) != 0 )
-      break;
-    ++slotIndex;
-    stackPtr += 31;
-    if ( slotIndex >= 10 )
-      return 0;
+    if ( (slot->state_flags & UNIT_SLOT_FLAG_PLAGUE) != 0 )
+      return 1;
   }
-  return 1;
+  return 0;
 }
 
 //----- (00412AF0) --------------------------------------------------------
 signed int  UnitStack_HasLowMoraleUnit(int stackPtr)
 {
-  __int16 *slotPtr; // eax
-  int slotIndex; // edx
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotPtr = (__int16 *)(uintptr_t)(stackPtr + 6);
-  slotIndex = 0;
-  while ( 1 )
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *slotPtr == -1 )
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
       return 0;
-    if ( (*((_BYTE *)slotPtr + 13) & UNIT_SLOT_FLAG_LOW_MORALE) != 0 )
-      break;
-    ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
-    if ( slotIndex >= 10 )
-      return 0;
+    if ( (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) != 0 )
+      return 1;
   }
-  return 1;
+  return 0;
 }
 
 //----- (00412B20) --------------------------------------------------------
@@ -1404,23 +1413,19 @@ int  UnitStackSelection_BuildSelectedSlotIndexList(int result, int slotCount, in
 //----- (00412B60) --------------------------------------------------------
 signed int  UnitStack_HasSpecialPersonageUnits(intptr_t stackPtr)
 {
-  int slotIndex; // ecx
-  int slotType; // eax
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotIndex = 0;
-  while ( 1 )
+  stack = (UnitStackRecord *)stackPtr;
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    slotType = *(__int16 *)(stackPtr + 6);
+    int slotType = stack->unit_slots[slotIndex].unit_type_id;
     if ( slotType == -1 )
       return 0;
     if ( slotType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || slotType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
-      break;
-    ++slotIndex;
-    stackPtr += 31;
-    if ( slotIndex >= 10 )
-      return 0;
+      return 1;
   }
-  return 1;
+  return 0;
 }
 
 //----- (00412B90) --------------------------------------------------------
