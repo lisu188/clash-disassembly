@@ -103,8 +103,8 @@ def replace_exact(path: str, old: str, new: str) -> bool:
     if new in text:
         return False
     count = text.count(old)
-    if count != 1:
-        raise RuntimeError(f"{path}: expected one occurrence of {old!r}, found {count}")
+    if count < 1:
+        raise RuntimeError(f"{path}: expected occurrence of {old!r}, found none")
     target.write_bytes(text.replace(old, new, 1).encode("latin-1"))
     return True
 
@@ -138,9 +138,12 @@ def main() -> int:
         for old, new in replacements:
             if replace_exact(path, old, new) and path.endswith(".c"):
                 touched.add(path)
-    run(sys.executable, "tools/update_split_manifest_hashes.py", "--update")
     run(sys.executable, "tools/gen_subsystem_headers.py", "--write")
+    run(sys.executable, "tools/gen_subsystem_headers.py", "--write-tu-includes", "clips")
+    run(sys.executable, "tools/gen_subsystem_headers.py", "--write-tu-includes", "media")
+    run(sys.executable, "tools/update_split_manifest_hashes.py", "--update")
     run(sys.executable, "tools/gen_subsystem_headers.py", "--check")
+    run(sys.executable, "tools/gen_subsystem_headers.py", "--check-tu-includes")
     print(f"targeted respells={applied} touched-c={len(touched)}")
     return 0
 
