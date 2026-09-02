@@ -14,8 +14,10 @@
 //----- (004115E0) --------------------------------------------------------
 void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
 {
+  UnitStackRecord *stack = (UnitStackRecord *)(void *)stackPtr;
+  UnitStackRecord *stackCopy;
+  UnitSlotRecord *slot;
   int anyDisbanded; // esi
-  __int16 *slotPtr; // ecx
   int slotIndex; // ebx
   int wasLowMorale; // eax
   int disbandRollMax; // eax
@@ -27,18 +29,19 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
   int v17[7]; // [esp+2E4h] [ebp-1Ch] BYREF
 
   qmemcpy(v15, stackPtr, UNIT_STACK_STRIDE);
+  stackCopy = (UnitStackRecord *)(void *)v15;
   v17[0] = 0;
   anyDisbanded = 0;
-  slotPtr = (__int16 *)&v15[6];
+  slot = stackCopy->unit_slots;
   slotIndex = 0;
   do
   {
-    if ( *slotPtr == -1 )
+    if ( slot->unit_type_id == -1 )
       break;
-    if ( !*((_BYTE *)slotPtr + 11) )
+    if ( !slot->morale )
     {
-      wasLowMorale = (*((_BYTE *)slotPtr + 13) & UNIT_SLOT_FLAG_LOW_MORALE) != 0;
-      *((_BYTE *)slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
+      wasLowMorale = (slot->state_flags & UNIT_SLOT_FLAG_LOW_MORALE) != 0;
+      slot->state_flags &= ~UNIT_SLOT_FLAG_LOW_MORALE;
       disbandRollMax = wasLowMorale ? 200 : 100;
       if ( Rng_RandRange(0, disbandRollMax) < 0x32 )
       {
@@ -46,34 +49,34 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
         {
           anyDisbanded = 1;
           Debug_Log(0, slotIndex, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)aUnit_checklo_0);
-          *slotPtr = -1;
+          slot->unit_type_id = -1;
           v17[0] = 1;
         }
         else
         {
           Debug_Log(0, slotIndex, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)aUnit_checklowm);
-          slotFlags = *((_BYTE *)slotPtr + 13);
-          *((_BYTE *)slotPtr + 8) = 0;
-          *((_BYTE *)slotPtr + 13) = slotFlags | UNIT_SLOT_FLAG_LOW_MORALE;
+          slotFlags = slot->state_flags;
+          slot->current_action_points = 0;
+          slot->state_flags = slotFlags | UNIT_SLOT_FLAG_LOW_MORALE;
         }
       }
     }
     ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    ++slot;
   }
   while ( slotIndex < 10 );
-  if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * (unsigned __int8)stackPtr[4] + 140051) )
+  if ( anyDisbanded && *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * stack->owner_player_index + 140051) )
   {
-    stackRow = UNIT_STACK_TILE_ROW(stackPtr);
-    UI_CenterWorldMapViewportOnRectIfFit(stackRow, *((__int16 *)stackPtr + 1), *((__int16 *)stackPtr + 1) - 5, stackRow);
+    stackRow = stack->tile_row;
+    UI_CenterWorldMapViewportOnRectIfFit(stackRow, stack->tile_column, stack->tile_column - 5, stackRow);
     v16[0] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[0];
     v16[1] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[1];
     v16[2] = (int)(intptr_t)g_Text_UnitDisbandedLowMoraleMessages[2];
     UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, 0, (DWORD)(intptr_t)stackPtr, (int)(intptr_t)v17, (int)(intptr_t)&g_Text_UnitDisbandedLowMoraleMessages[3]);
     UI_StartWorldMapUnitAttentionFlash(
-      *(unsigned __int16 *)(uintptr_t)(gameData + TILE_ROW_STRIDE * *(__int16 *)stackPtr + 2 * *((__int16 *)stackPtr + 1) + TILE_MAP_OFFSET),
-      *((__int16 *)stackPtr + 1),
-      UNIT_STACK_TILE_ROW(stackPtr));
+      *(unsigned __int16 *)(uintptr_t)(gameData + TILE_ROW_STRIDE * stack->tile_row + 2 * stack->tile_column + TILE_MAP_OFFSET),
+      stack->tile_column,
+      stack->tile_row);
     while ( UI_IsWorldMapUnitAttentionFlashActive() )
       WorldMap_RedrawFrame(stackRow);
   }
@@ -100,7 +103,8 @@ void  Unit_CheckLowMorale(_BYTE *stackPtr, double a2)
 //----- (00411810) --------------------------------------------------------
 signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWORD a2, double a3)
 {
-  __int16 *slotPtr; // ecx
+  UnitStackRecord *stack = (UnitStackRecord *)(void *)stackPtr;
+  UnitSlotRecord *slot;
   int anyRemoved; // esi
   int i; // ebx
   signed int result; // eax
@@ -109,32 +113,32 @@ signed int  UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *stackPtr, DWOR
   int v10; // edx
   int v11; // ecx
 
-  slotPtr = stackPtr + 3;
+  slot = stack->unit_slots;
   anyRemoved = 0;
   for ( i = 0; i < 10; ++i )
   {
-    result = *slotPtr;
+    result = slot->unit_type_id;
     if ( result == -1 )
       break;
-    if ( result == UNIT_TYPE_PEASANT_CARGO && (*((_BYTE *)slotPtr + 13) & UNIT_SLOT_FLAG_PLAGUE) != 0 )
+    if ( result == UNIT_TYPE_PEASANT_CARGO && (slot->state_flags & UNIT_SLOT_FLAG_PLAGUE) != 0 )
     {
       attritionLoss = Rng_RandRange(15, 25);
-      newQuantity = *((_BYTE *)slotPtr + 9) - attritionLoss;
+      newQuantity = slot->current_health_percent - attritionLoss;
       result = newQuantity;
-      *((_BYTE *)slotPtr + 9) = newQuantity;
+      slot->current_health_percent = newQuantity;
       if ( newQuantity <= 0 )
       {
         anyRemoved = 1;
-        *slotPtr = -1;
+        slot->unit_type_id = -1;
       }
     }
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    ++slot;
   }
   if ( anyRemoved )
   {
-    Unit_CompactSquad(stackPtr, (int)(intptr_t)slotPtr, a3);
+    Unit_CompactSquad(stackPtr, (int)(intptr_t)slot, a3);
     Rules_LinkArmyFinalize(stackPtr, a3);
-    if ( stackPtr[3] != -1 )
+    if ( stack->unit_slots[0].unit_type_id != -1 )
       Rules_LinkArmyFact(stackPtr, v10, v11, a3, i, a2);
     return Rules_SyncArmyFactStrength(stackPtr, v10, v11, i, a2, a3);
   }
