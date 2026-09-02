@@ -14,18 +14,22 @@ The readability track turns evidence-backed decompiler output into ordinary main
 
 ## Current first target: UnitStack
 
-`src/units/unit_stack_record.h` introduces the first typed overlay for the 725-byte strategic unit-stack record. Only fields whose offsets are already established are named:
+The canonical typed model already lives in generated `src/recovered_structs.h`, sourced from `RECOVERED_STRUCTURES.json`. Readability work must reuse that model rather than create subsystem-local duplicate overlays.
+
+The recovered `UnitStackRecord` is a packed 725-byte record with layout pins for:
 
 - `tile_row` at `+0`
 - `tile_column` at `+2`
-- `owner_index` at `+4`
-- `facing` at `+5`
-- ten 31-byte unit slots at `+6`
-- the 404-byte queued-path region at `+316`
+- `owner_player_index` at `+4`
+- `facing_direction` at `+5`
+- ten typed `UnitSlotRecord` entries at `+6`
+- typed `QueuedPathBuffer` at `+316`
+- `is_hidden_on_world_map` at `+720`
+- four unrecovered tail bytes at `+721..+724`
 
-The remaining five bytes stay `unknown_tail`. Unit-slot internals remain opaque until their individual fields are migrated with equivalent evidence.
+`UnitSlotRecord` is also already partially recovered: unit type, owner, action points, health, fatigue, morale, stance/state flags and selected runtime state fields have pinned offsets. Unknown spans remain explicit byte arrays.
 
-The migration is incremental: replace `int stackPtr`, `__int16 *stackPtr`, `UNIT_STACK_*` field macros, and raw `stack + offset` expressions with `UnitStackRecord *` access where doing so is layout-equivalent and does not alter ABI-facing function signatures prematurely.
+The migration is incremental: replace `int stackPtr`, `__int16 *stackPtr`, `UNIT_STACK_*` field macros, and raw `stack + offset` expressions with `UnitStackRecord *` and `UnitSlotRecord *` access where doing so is layout-equivalent. ABI-facing signatures stay unchanged until all cross-subsystem callers are understood.
 
 ### First migrated call sites
 
@@ -37,9 +41,9 @@ The first typed-access batch covers the pathing frontier in `src/units/00414390_
 - `Building_GenerateApproachTrack`
 - `Building_GenerateNearApproachTrack`
 
-These functions now obtain strategic stack position through `UnitStack_RecordAt()` and `stack->tile_row` / `stack->tile_column` instead of repeating 725-byte record arithmetic or raw `+0` / `+2` accesses. Existing ABI-facing signatures are deliberately retained; casts remain only at boundaries that have not yet been migrated.
+These functions now obtain strategic stack position through a local typed accessor and `stack->tile_row` / `stack->tile_column` instead of repeating 725-byte record arithmetic or raw `+0` / `+2` accesses. Existing ABI-facing signatures are deliberately retained; casts remain only at boundaries that have not yet been migrated.
 
-`data/recovered_sources.json` retains the legacy body hashes and records the new canonical hashes for these readability-preserving bodies, so the split-source audit continues to detect unrelated drift.
+`data/recovered_sources.json` records the new canonical hashes for these readability-preserving bodies, so the split-source audit continues to detect unrelated drift.
 
 ## Readability audit
 
@@ -53,8 +57,8 @@ The audit counts common decompiler debt and ranks the highest-debt source files.
 
 ## Next migration batches
 
-1. Extend `UnitStackRecord` use through the remaining `src/units/` position/owner/facing accessors while preserving external signatures.
-2. Recover typed fields inside `UnitStackSlotRecord` and pin each offset.
-3. Introduce equivalent evidence-backed overlays for `Player` and `Building`.
+1. Extend `UnitStackRecord` use through the remaining `src/units/` position/owner/facing accesses while preserving external signatures.
+2. Replace raw unit-slot offsets with the already recovered `UnitSlotRecord` fields where the field semantics are pinned.
+3. Extend the same approach to the existing typed `PlayerRuntimeState` and building overlays.
 4. Convert gameplay APIs to typed pointers only after all cross-subsystem call sites are understood.
 5. Replace second-generation mechanical function names and decompiler locals after the underlying state model is stable.
