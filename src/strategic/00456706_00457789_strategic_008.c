@@ -164,7 +164,7 @@ int Rules_HostBuildCastle(int a1, double a2)
   int p3 = Rules_RtnLong(3, 0, a2);
   int p4 = Rules_RtnLong(4, 0, a2);
   (void)a1;
-  return Rules_BuildCastle(p1, p2, p3, p4, (char *)Rules_RtnLexeme(5, 0, a2));
+  return Rules_BuildCastle(p1, p2, p3, p4, (char *)(uintptr_t)Rules_RtnLexeme(5, 0, a2));
 }
 
 //----- (00456B0D) ----------------------------------------------------------

@@ -23,7 +23,7 @@ int Event_InitHandlers(void)
 {
   int i; // edx
   int result; // eax
-  int currentItem; // edx
+  int currentItem CLASH95_UNUSED; // edx
 
   for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(i + 36) )
   {
@@ -817,7 +817,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int returnValue, double context)
   if ( argCheck == -1 )
     return v4;
   Rules_RtnUnknown(1, &argBuffer, context);
-  g_CLIPS_DynamicConstraintCheckingFlag = argData[2] != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_CLIPS_DynamicConstraintCheckingFlag = argData[0] != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49707E: variable 'v4' is possibly undefined
@@ -851,7 +851,7 @@ int  Rules_SetStaticConstraintCheckingCommand(int returnValue, double context)
   if ( argCheck == -1 )
     return v4;
   Rules_RtnUnknown(1, &argBuffer, context);
-  g_CLIPS_StaticConstraintCheckingFlag = argData[2] != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_CLIPS_StaticConstraintCheckingFlag = argData[0] != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49711E: variable 'v4' is possibly undefined

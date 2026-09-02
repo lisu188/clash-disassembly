@@ -1358,7 +1358,7 @@ _DWORD * Rules_FreeValueRecordChain(_DWORD *result)
 int  Rules_FlushDeferredRetractQueue(double a1)
 {
   char *i; // ecx
-  int v2; // ecx
+  int v2 CLASH95_UNUSED; // ecx
   int nextEntry; // ecx
   int result; // eax
 

@@ -1167,7 +1167,7 @@ signed int  Rules_Save(const CHAR *fileName, int a2, DWORD a3)
   signed int result; // eax
   int v4; // ecx
   int i; // edx
-  int v6; // edx
+  int v6 CLASH95_UNUSED; // edx
 
   result = IO_FOpen(fileName, (unsigned __int8 *)aW_1, a2, a3);
   if ( result )

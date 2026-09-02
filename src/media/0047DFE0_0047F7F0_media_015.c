@@ -5,8 +5,6 @@
 #include "media_state.h"
 #include "../state/state_shared.h"
 #include "../clips/clips_api.h"
-#include <stdio.h>
-#include <stdlib.h>
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0047DFE0) --------------------------------------------------------
@@ -613,7 +611,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
 {
   int v3; // ecx
   int *activation; // edi
-  int v5; // edx
+  int v5 CLASH95_UNUSED; // edx
   int ruleName; // ebp
   _DWORD *binds; // esi
   unsigned int bindIndex; // ebx
@@ -624,7 +622,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int v13; // ecx
   int v14; // ecx
   int v15; // ecx
-  int v16; // ecx
+  int v16 CLASH95_UNUSED; // ecx
   int v17; // ecx
   int v18; // ecx
   int v19; // ecx
@@ -641,7 +639,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int activationCount; // eax
   int v31; // ecx
   int i; // edx
-  int callbackNode; // edx
+  int callbackNode CLASH95_UNUSED; // edx
   int nextActivation; // eax
   int v35; // ecx
   int nextRuleName; // eax
@@ -657,7 +655,7 @@ int  Rules_RunAgendaLoop(int runLimit, int a2, double a3)
   int v47; // ecx
   double rulesPerSecond; // [esp+0h] [ebp-ECh]
   int v49 CLASH95_UNUSED; // [esp+4h] [ebp-E8h]
-  int v50; // [esp+8h] [ebp-E4h]
+  int v50 CLASH95_UNUSED; // [esp+8h] [ebp-E4h]
   int v51 CLASH95_UNUSED; // [esp+8h] [ebp-E4h]
   int v52 CLASH95_UNUSED; // [esp+8h] [ebp-E4h]
   _DWORD fireTraceBuffer[15]; // [esp+Ch] [ebp-E0h] BYREF

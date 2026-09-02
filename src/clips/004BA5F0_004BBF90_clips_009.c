@@ -494,7 +494,7 @@ int Rules_DefruleBsaveFind(void)
   int v4; // ecx
   int k; // edx
   int v6; // edx
-  int v7; // edx
+  int v7 CLASH95_UNUSED; // edx
 
   if ( Rules_IsBloaded() )
   {
@@ -536,7 +536,7 @@ int  Rules_DefruleBsaveWriteExpressions(int a1)
   int i; // edi
   int j; // esi
   int k; // ecx
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
 
   for ( i = Module_NextEnum(0); i; i = Module_NextEnum(i) )
   {
