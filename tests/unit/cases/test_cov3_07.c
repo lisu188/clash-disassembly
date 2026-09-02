@@ -289,7 +289,7 @@ TEST(cov3_07_lexer, token_expect_retry_for_leftover_register_luck) {
   int i;
   for (i = 0; i < 6; ++i) {
     memset(pad, i + 3, (size_t)(19 + i * 17));
-    TOUCH(Lexer_TokenExpect(i));
+    TOUCH(Lexer_TokenExpect(0, 0, i));
   }
 }
 

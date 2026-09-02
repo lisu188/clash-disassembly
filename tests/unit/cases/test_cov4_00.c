@@ -285,7 +285,7 @@ TEST(cov4_00_classsubclasses, class_subclasses_command_attempt) {
 TEST(cov4_00_tokenexpect, token_expect_attempt) {
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  TOUCH(Lexer_TokenExpect(1));
+  TOUCH(Lexer_TokenExpect(0, 0, 1));
 }
 
 /* =========================================================================

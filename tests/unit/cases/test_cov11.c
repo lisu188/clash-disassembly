@@ -100,9 +100,9 @@ TEST(cov11_lexer, token_expect_match_and_mismatch) {
   int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
   g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
-  TOUCH(Lexer_TokenExpect(0));
-  TOUCH(Lexer_TokenExpect(1));
-  TOUCH(Lexer_TokenExpect(-1));
+  TOUCH(Lexer_TokenExpect(0, 0, 0));
+  TOUCH(Lexer_TokenExpect(0, 0, 1));
+  TOUCH(Lexer_TokenExpect(0, 0, -1));
   g_ClipsCurrentExpression = saved;
 }
 

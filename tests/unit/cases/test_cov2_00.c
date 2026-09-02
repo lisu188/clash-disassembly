@@ -272,7 +272,7 @@ TEST(cov2_00_lexer, token_expect_fresh_site) {
   int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
   g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
-  TOUCH(Lexer_TokenExpect(2));
+  TOUCH(Lexer_TokenExpect(0, 0, 2));
   g_ClipsCurrentExpression = saved;
 }
 
