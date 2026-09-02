@@ -12,11 +12,6 @@
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
-static inline UnitStackRecord *UnitStack_RecordAt(int stack_index)
-{
-  return (UnitStackRecord *)(uintptr_t)UNIT_STACK(stack_index);
-}
-
 //----- (00414390) --------------------------------------------------------
 signed int  UnitStack_GetMoveCostToTileIgnoringOccupancy(__int16 *stackPtr, int tileRow, int tileColumn)
 {
@@ -272,7 +267,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
     *(_WORD *)(uintptr_t)(sourceTilePtr + 556374) = -1;
     stackIndexArg = stackIndex_l;
     savedOccupant = sourceTileOccupant;
-    stackRecord = UnitStack_RecordAt(stackIndex_l);
+    stackRecord = UNIT_STACK_RECORD(stackIndex_l);
     UnitStack_BuildMergedTerrainMoveProfile((intptr_t)mergedProfile, (intptr_t)stackRecord);
     distanceGrid = nmalloc_(0x4E20, 4);
     if ( !distanceGrid )
@@ -647,7 +642,7 @@ _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targe
   if ( targetRow < 0 || targetRow >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) || targetColumn < 0 || targetColumn >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     return 0;
 
-  stack = UnitStack_RecordAt(stackIndex);
+  stack = UNIT_STACK_RECORD(stackIndex);
   source_row = stack->tile_row;
   source_column = stack->tile_column;
   row_delta = source_row - targetRow;
@@ -760,7 +755,7 @@ int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, 
   }
 
   WorldMap_DisableFrameRedraw();
-  stack = UnitStack_RecordAt(stackIndex);
+  stack = UNIT_STACK_RECORD(stackIndex);
   source_row = stack->tile_row;
   source_column = stack->tile_column;
   raw_path = Unit_MoveTrack(stackIndex, source_row, building_row, source_column, building_kind, building_column);
@@ -900,7 +895,7 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
      the stack row and column. The typed overlay expresses that recovered layout
      directly while preserving the original call sequence. */
   WorldMap_DisableFrameRedraw();
-  stack = UnitStack_RecordAt(stackIndex);
+  stack = UNIT_STACK_RECORD(stackIndex);
   sourceColumn = stack->tile_column;
   rawPath = Unit_MoveTrack(
               stackIndex,
