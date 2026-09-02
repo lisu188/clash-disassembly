@@ -274,12 +274,12 @@ jobs:
           from pathlib import Path
           path = Path('src/clips/00497C80_004995B0_clips_002.c')
           text = path.read_text(encoding='latin-1')
-          needle = '#include "../state/state_api.h"\n'
-          count = text.count(needle)
+          marker = '/* CLASH95_GENERATED_INCLUDES_END */\n#include "../state/state_api.h"\n'
+          count = text.count(marker)
           if count != 1:
-              raise SystemExit(f'{path}: expected one stale state_api include, found {count}')
-          path.write_text(text.replace(needle, '', 1), encoding='latin-1', newline='')
-          print('removed stale manual state_api include')
+              raise SystemExit(f'{path}: expected one manual state_api include after generated block, found {count}')
+          path.write_text(text.replace(marker, '/* CLASH95_GENERATED_INCLUDES_END */\n', 1), encoding='latin-1', newline='')
+          print('removed duplicate manual state_api include; generated dependency retained')
           PY
           python3 tools/audit_header_surface.py --mode update
           python3 tools/audit_header_surface.py --mode check
