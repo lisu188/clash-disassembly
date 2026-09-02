@@ -18,6 +18,13 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
     return text.replace(old, new, 1)
 
 
+def replace_first(text: str, old: str, new: str, label: str) -> str:
+    count = text.count(old)
+    if count < 1:
+        raise SystemExit(f"{label}: expected at least one match, found {count}")
+    return text.replace(old, new, 1)
+
+
 def migrate(text: str) -> str:
     if MIGRATION_SENTINEL in text:
         return text
@@ -91,7 +98,7 @@ def migrate(text: str) -> str:
         "_DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targetColumn, DWORD a5)\n{\n  UnitStackRecord *stack;",
         "Unit_MoveTrackNearTile typed local",
     )
-    text = replace_once(
+    text = replace_first(
         text,
         "  stack_record = UNIT_STACK(stackIndex);\n  source_row = UNIT_STACK_TILE_ROW(stack_record);\n  source_column = UNIT_STACK_TILE_COLUMN(stack_record);",
         "  stack = UnitStack_RecordAt(stackIndex);\n  source_row = stack->tile_row;\n  source_column = stack->tile_column;",
@@ -104,7 +111,7 @@ def migrate(text: str) -> str:
         "int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, char a4, DWORD a5)\n{\n  int building_record;\n  int building_row;\n  int building_column;\n  int building_kind;\n  UnitStackRecord *stack;",
         "Building_GenerateApproachTrack typed local",
     )
-    text = replace_once(
+    text = replace_first(
         text,
         "  stack_record = UNIT_STACK(stackIndex);\n  source_row = UNIT_STACK_TILE_ROW(stack_record);\n  source_column = UNIT_STACK_TILE_COLUMN(stack_record);",
         "  stack = UnitStack_RecordAt(stackIndex);\n  source_row = stack->tile_row;\n  source_column = stack->tile_column;",
@@ -117,8 +124,40 @@ def migrate(text: str) -> str:
         "  UnitStackRecord *stack;\n  int sourceColumn; // ebx",
         "Building_GenerateNearApproachTrack typed local",
     )
-    old_near_block = """  /*\n   * asm loc_415A4D (clash95.asm, sub_415970):\n   *     mov  edx, [esp+30h+var_2C]   ; edx = stackIndex (param 1)\n   *     call sub_40AEB0              ; WorldMap_DisableFrameRedraw -- Watcom\n   *                                  ; register convention, pushes/pops edx\n   *     lea  eax, [edx*8] / add eax, edx / shl eax, 4 / add eax, edx  ; 145*s\n   *     mov  edx, eax / lea eax, [eax*4] / add eax, edx               ; 725*s\n   *     mov  ecx, ds:gameData / add eax, ecx\n   * i.e. gameData + UNIT_STACK_STRIDE(725) * stackIndex. The decompiler treated\n   * edx as clobbered by the call, so `stackRecordIndex` was multiplied out of\n   * an unassigned local and the unit-stack record was read from garbage.\n   */\n  WorldMap_DisableFrameRedraw();\n  /* loc_415A4D: `mov edx,[esp+var_2C]` then edx*145 - the cursor is the stack\n     index; IDA never initialised stackRecordIndex. */\n  stackRecordIndex = stackIndex;\n  stackRecordIndex *= 145;\n  sourceColumn = *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + 147176);\n  rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + UNIT_STACK_TABLE_OFFSET), SHIDWORD(buildingRowCol), sourceColumn, buildingKind, buildingRowCol);\n"""
-    new_near_block = """  /* 00415A4D computes gameData + 725 * stackIndex before reading\n     the stack row and column. The typed overlay expresses that recovered layout\n     directly while preserving the original call sequence. */\n  WorldMap_DisableFrameRedraw();\n  stack = UnitStack_RecordAt(stackIndex);\n  sourceColumn = stack->tile_column;\n  rawPath = Unit_MoveTrack(\n              stackIndex,\n              stack->tile_row,\n              SHIDWORD(buildingRowCol),\n              sourceColumn,\n              buildingKind,\n              (int)buildingRowCol);\n"""
+    old_near_block = """  /*
+   * asm loc_415A4D (clash95.asm, sub_415970):
+   *     mov  edx, [esp+30h+var_2C]   ; edx = stackIndex (param 1)
+   *     call sub_40AEB0              ; WorldMap_DisableFrameRedraw -- Watcom
+   *                                  ; register convention, pushes/pops edx
+   *     lea  eax, [edx*8] / add eax, edx / shl eax, 4 / add eax, edx  ; 145*s
+   *     mov  edx, eax / lea eax, [eax*4] / add eax, edx               ; 725*s
+   *     mov  ecx, ds:gameData / add eax, ecx
+   * i.e. gameData + UNIT_STACK_STRIDE(725) * stackIndex. The decompiler treated
+   * edx as clobbered by the call, so `stackRecordIndex` was multiplied out of
+   * an unassigned local and the unit-stack record was read from garbage.
+   */
+  WorldMap_DisableFrameRedraw();
+  /* loc_415A4D: `mov edx,[esp+var_2C]` then edx*145 - the cursor is the stack
+     index; IDA never initialised stackRecordIndex. */
+  stackRecordIndex = stackIndex;
+  stackRecordIndex *= 145;
+  sourceColumn = *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + 147176);
+  rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + UNIT_STACK_TABLE_OFFSET), SHIDWORD(buildingRowCol), sourceColumn, buildingKind, buildingRowCol);
+"""
+    new_near_block = """  /* 00415A4D computes gameData + 725 * stackIndex before reading
+     the stack row and column. The typed overlay expresses that recovered layout
+     directly while preserving the original call sequence. */
+  WorldMap_DisableFrameRedraw();
+  stack = UnitStack_RecordAt(stackIndex);
+  sourceColumn = stack->tile_column;
+  rawPath = Unit_MoveTrack(
+              stackIndex,
+              stack->tile_row,
+              SHIDWORD(buildingRowCol),
+              sourceColumn,
+              buildingKind,
+              (int)buildingRowCol);
+"""
     text = replace_once(
         text,
         old_near_block,
