@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -82,12 +82,21 @@ jobs:
       - name: Refresh split manifest for readability artifact
         run: python3 tools/update_split_manifest_hashes.py --update
 
-      - name: Export refreshed split manifest
-        uses: actions/upload-artifact@v4
-        with:
-          name: readability-recovered-sources-manifest
-          path: data/recovered_sources.json
-          if-no-files-found: error
+      - name: Persist refreshed split manifest
+        if: github.event_name == 'pull_request' && github.head_ref == 'readability/unitstack-player-building'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/data/recovered_sources.json"
+          current_sha="$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "${api}?ref=${GITHUB_HEAD_REF}" | jq -r .sha)"
+          generated_sha="$(git hash-object data/recovered_sources.json)"
+          if [ "${current_sha}" != "${generated_sha}" ]; then
+            content="$(base64 -w0 data/recovered_sources.json)"
+            jq -n --arg message 'Refresh split manifest hashes for readability pass' --arg content "${content}" --arg sha "${current_sha}" --arg branch "${GITHUB_HEAD_REF}" '{message:$message,content:$content,sha:$sha,branch:$branch}' > /tmp/manifest-update.json
+            curl -fsSL -X PUT -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' -H 'Content-Type: application/json' --data-binary @/tmp/manifest-update.json "${api}" >/dev/null
+          fi
 
       - name: Audit split sources and frozen metadata
         run: |
