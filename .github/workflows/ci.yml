@@ -210,3 +210,120 @@ jobs:
 
       - name: Enforce frozen coverage floor
         run: python3 tools/measure_pure_coverage.py build/coverage --minimum 89.7 --require-functions 718 --require-zero-uncovered --worst 10
+
+  refresh-maintenance-artifacts:
+    name: Refresh recovered maintenance artifacts
+    if: github.event_name == 'pull_request' && github.head_ref == 'readability/unit-stack-record'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: readability/unit-stack-record
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev gcc-13 clang-18
+
+      - name: Remove packed-overlay ABI cast warnings
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('src/units/0040F510_00411560_units_001.c'): [
+                  ('Rules_RetractArmyFact((_DWORD *)stack,', 'Rules_RetractArmyFact((_DWORD *)(void *)stack,', 1),
+                  ('Rules_RetractArmyFact((_DWORD *)stackRecord,', 'Rules_RetractArmyFact((_DWORD *)(void *)stackRecord,', 1),
+                  ('return (__int16 *)stack;', 'return (__int16 *)(void *)stack;', 2),
+              ],
+              Path('src/units/004115E0_00412BE0_units_002.c'): [
+                  ('return (__int16 *)slot;', 'return (__int16 *)(void *)slot;', 2),
+              ],
+              Path('src/units/00414390_00416750_units_004.c'): [
+                  ('UnitStack_GetTileMoveCostOrZero((__int16 *)stack,', 'UnitStack_GetTileMoveCostOrZero((__int16 *)(void *)stack,', 4),
+                  ('UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)stackRecord,', 'UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)(void *)stackRecord,', 1),
+              ],
+          }
+          total = 0
+          for path, rules in replacements.items():
+              text = path.read_text(encoding='latin-1')
+              for old, new, expected in rules:
+                  count = text.count(old)
+                  if count != expected:
+                      raise SystemExit(f'{path}: expected {expected} occurrences of {old!r}, found {count}')
+                  text = text.replace(old, new)
+                  total += count
+              path.write_text(text, encoding='latin-1', newline='')
+          if total != 11:
+              raise SystemExit(f'expected 11 packed ABI cast fixes, applied {total}')
+          print(f'applied {total} packed ABI cast fixes')
+          PY
+
+      - name: Regenerate header surface
+        run: |
+          python3 tools/gen_subsystem_headers.py --write
+          python3 tools/gen_subsystem_headers.py --write-tu-includes clips
+          python3 tools/gen_subsystem_headers.py --write-tu-includes media
+          python3 tools/audit_header_surface.py --mode update
+          python3 tools/audit_header_surface.py --mode check
+
+      - name: Build reviewed GCC warning profile
+        shell: bash
+        run: |
+          CC=gcc-13 cmake -S . -B build/maintenance-gcc -G Ninja -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build/maintenance-gcc --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >gcc-maintenance.log 2>&1
+          python3 - <<'PY'
+          from pathlib import Path
+          from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
+          counts, _ = warning_counts(Path('gcc-maintenance.log').read_text(errors='replace'), 'gcc', DEFAULT_SOURCE_PREFIXES)
+          packed = counts.get('-Waddress-of-packed-member', 0)
+          print(f'gcc packed-member warnings: {packed}; total={sum(counts.values())}')
+          if packed > 2:
+              raise SystemExit(f'packed-member warning regression remains: {packed} > 2')
+          PY
+          python3 tools/check_recovered_warnings.py gcc-maintenance.log --compiler gcc --mode update
+
+      - name: Build reviewed Clang warning profile
+        shell: bash
+        run: |
+          CC=clang-18 cmake -S . -B build/maintenance-clang -G Ninja -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build/maintenance-clang --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >clang-maintenance.log 2>&1
+          python3 - <<'PY'
+          from pathlib import Path
+          from tools.check_recovered_warnings import DEFAULT_SOURCE_PREFIXES, warning_counts
+          counts, _ = warning_counts(Path('clang-maintenance.log').read_text(errors='replace'), 'clang', DEFAULT_SOURCE_PREFIXES)
+          packed = counts.get('-Waddress-of-packed-member', 0)
+          print(f'clang packed-member warnings: {packed}; total={sum(counts.values())}')
+          if packed > 2:
+              raise SystemExit(f'packed-member warning regression remains: {packed} > 2')
+          PY
+          python3 tools/check_recovered_warnings.py clang-maintenance.log --compiler clang --mode update
+
+      - name: Verify refreshed ratchets
+        run: |
+          python3 tools/audit_split_sources.py
+          python3 tools/audit_header_surface.py --mode check
+          python3 tools/check_recovered_warnings.py gcc-maintenance.log --compiler gcc --mode check
+          python3 tools/check_recovered_warnings.py clang-maintenance.log --compiler clang --mode check
+          git diff --check
+
+      - name: Commit reviewed maintenance state
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src data
+          if git diff --cached --quiet; then
+            echo 'No maintenance changes to commit'
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m 'Refresh recovered CI maintenance baselines'
+          git push origin HEAD:readability/unit-stack-record
