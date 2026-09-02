@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -78,48 +78,6 @@ jobs:
           python3 -m json.tool data/header_surface_baseline.json >/dev/null
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
-
-      - name: Refresh split manifest for readability artifact
-        run: python3 tools/update_split_manifest_hashes.py --update
-
-      - name: Persist refreshed split manifest
-        if: github.event_name == 'pull_request' && github.head_ref == 'readability/unitstack-player-building'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          python3 - <<'PY'
-          import base64
-          import hashlib
-          import json
-          import os
-          import urllib.request
-
-          repository = os.environ["GITHUB_REPOSITORY"]
-          branch = os.environ["GITHUB_HEAD_REF"]
-          token = os.environ["GH_TOKEN"]
-          path = "data/recovered_sources.json"
-          raw = open(path, "rb").read()
-          generated_sha = hashlib.sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest()
-          api = f"https://api.github.com/repos/{repository}/contents/{path}"
-          headers = {
-              "Authorization": f"Bearer {token}",
-              "Accept": "application/vnd.github+json",
-              "X-GitHub-Api-Version": "2022-11-28",
-          }
-          request = urllib.request.Request(f"{api}?ref={branch}", headers=headers)
-          with urllib.request.urlopen(request) as response:
-              current_sha = json.load(response)["sha"]
-          if current_sha != generated_sha:
-              payload = json.dumps({
-                  "message": "Refresh split manifest hashes for readability pass",
-                  "content": base64.b64encode(raw).decode("ascii"),
-                  "sha": current_sha,
-                  "branch": branch,
-              }).encode("utf-8")
-              request = urllib.request.Request(api, data=payload, headers={**headers, "Content-Type": "application/json"}, method="PUT")
-              with urllib.request.urlopen(request) as response:
-                  json.load(response)
-          PY
 
       - name: Audit split sources and frozen metadata
         run: |
