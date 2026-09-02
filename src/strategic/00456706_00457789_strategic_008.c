@@ -3,7 +3,6 @@
 #include "../recovered_layout.h"
 #include "strategic_internal.h"
 #include "strategic_state.h"
-#include "../state/state_shared.h"
 #include "../buildings/buildings_api.h"
 #include "../media/media_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */

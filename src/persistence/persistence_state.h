@@ -212,17 +212,12 @@ extern int g_OptionsConfigRecordFlag0C;
 extern char g_OptionsMainMenuMusicVolumeRaw;
 extern char g_OptionsMainMenuScrollSpeedRaw;
 extern char g_OptionsMainMenuSoundVolumeRaw;
-extern _BYTE g_OptionsMenuSliderThumbPositions[112];
-extern _BYTE g_OptionsMenuWidgetTemplateBlob[371];
-/*
- * The main-menu option slider values live INSIDE the 36-byte slider records
- * (original word_518600+12/+48/+84); alias the recovered names back into the
- * table so record walks and the named accesses stay coherent.
- */
-#define g_Options_BrightnessSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[12])
-#define g_Options_ScrollSpeedSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[48])
-#define g_Options_MouseSpeedSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[84])
+extern unsigned __int16 g_OptionsMenuSliderThumbPositions[6];
+extern _UNKNOWN g_OptionsMenuWidgetTemplateBlob;
+extern int g_Options_BrightnessSliderValue;
+extern int g_Options_MouseSpeedSliderValue;
 extern int g_Options_MusicEnabledFlag;
+extern int g_Options_ScrollSpeedSliderValue;
 extern int g_Options_UnitSoundsEnabledFlag;
 extern char *g_PlagueOutbreakNoticeFmtText[12];
 extern int g_PlayGameMenuExitRequested;

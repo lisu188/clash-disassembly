@@ -235,7 +235,7 @@ extern char aWyprowadzeni_0[23];
 extern char aWyprowadzeni_1[24];
 extern char aWyprowadzenieO[23];
 extern char aWyprowadzenieo[22];
-extern char aXxyy[8];   /* UTF-16LE "xxyy", byte-indexed +0/+2/+4/+6 */
+extern wchar_t aXxyy[4];
 extern char aZacznijLeczeni[17];
 extern char aZacznijProdukc[18];
 extern char aZacznijSzkolen[18];
