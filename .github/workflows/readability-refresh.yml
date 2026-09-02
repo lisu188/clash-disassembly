@@ -21,6 +21,8 @@ jobs:
         run: |
           python3 tools/gen_subsystem_headers.py --write
           python3 tools/gen_subsystem_headers.py --write-tu-includes strategic
+          python3 tools/gen_subsystem_headers.py --write-tu-includes clips
+          python3 tools/gen_subsystem_headers.py --write-tu-includes media
           python3 tools/gen_subsystem_headers.py --check
           python3 tools/gen_subsystem_headers.py --check-tu-includes
       - name: Commit generated outputs
