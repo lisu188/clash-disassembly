@@ -240,7 +240,11 @@ jobs:
 
           path = Path('data/recovered_decls.json')
           raw = path.read_text(encoding='utf-8')
-          entries = json.loads(raw)
+          payload = json.loads(raw)
+          functions = payload.get('functions')
+          if not isinstance(functions, dict):
+              raise SystemExit('recovered_decls.json: missing functions map')
+
           replacements = {
               'Building_BuildWorkshop': 'signed int Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2);',
               'Building_BuildHospital': 'signed int Building_BuildHospital(int buildingRecord, char a1, DWORD a2);',
@@ -248,10 +252,10 @@ jobs:
           }
 
           for name, new_decl in replacements.items():
-              matches = [entry for entry in entries if isinstance(entry, dict) and entry.get('name') == name]
-              if len(matches) != 1:
-                  raise SystemExit(f'{name}: expected one declaration entry, found {len(matches)}')
-              old_decl = matches[0].get('decl')
+              entry = functions.get(name)
+              if not isinstance(entry, dict):
+                  raise SystemExit(f'{name}: missing canonical declaration entry')
+              old_decl = entry.get('decl')
               if not isinstance(old_decl, str) or name not in old_decl:
                   raise SystemExit(f'{name}: invalid old declaration {old_decl!r}')
               old_token = json.dumps(old_decl, ensure_ascii=False)
