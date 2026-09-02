@@ -79,6 +79,16 @@ jobs:
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
 
+      - name: Refresh split manifest for readability artifact
+        run: python3 tools/update_split_manifest_hashes.py --update
+
+      - name: Export refreshed split manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: readability-recovered-sources-manifest
+          path: data/recovered_sources.json
+          if-no-files-found: error
+
       - name: Audit split sources and frozen metadata
         run: |
           python3 tools/audit_split_sources.py
