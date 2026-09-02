@@ -12,8 +12,10 @@
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
-#include "unit_stack_record.h"
-/* CLASH95_UNIT_STACK_READABILITY_MIGRATED */
+static inline UnitStackRecord *UnitStack_RecordAt(int stack_index)
+{
+  return (UnitStackRecord *)(uintptr_t)UNIT_STACK(stack_index);
+}
 
 //----- (00414390) --------------------------------------------------------
 signed int  UnitStack_GetMoveCostToTileIgnoringOccupancy(__int16 *stackPtr, int tileRow, int tileColumn)
