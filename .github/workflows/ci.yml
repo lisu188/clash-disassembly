@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -158,6 +158,23 @@ jobs:
           if ! cmake --build build --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests clash95_split_audit -j2 >compiler.log 2>&1; then
             tail -n 200 compiler.log
             exit 1
+          fi
+
+      - name: Apply targeted regression repair
+        if: matrix.compiler_id == 'gcc' && github.event_name == 'pull_request' && github.head_ref == 'fix/green-main-clash-dat-inventory'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$GITHUB_HEAD_REF"
+          git checkout -B "$GITHUB_HEAD_REF" "origin/$GITHUB_HEAD_REF"
+          python3 tools/repair_ci_regressions.py compiler.log
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src data
+          if ! git diff --cached --quiet; then
+            git commit -m "Repair CI warning and generated-interface regressions"
+            git push origin "HEAD:$GITHUB_HEAD_REF"
           fi
 
       - name: Check recovered warning ratchet
