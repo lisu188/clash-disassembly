@@ -87,8 +87,8 @@ int * Path_InsertBridgeCornerWaypoints(int stackRecord, char a2, int *pathBuffer
       && TILE_TERRAIN_RECORD(current_row, current_column)[2] != 0xFFFF
       && (TILE_TERRAIN_RECORD(current_row, previous_column)[2] != 0xFFFF
        || TILE_TERRAIN_RECORD(previous_row, current_column)[2] != 0xFFFF)
-      && (UnitStack_GetTileMoveCostOrZero((__int16 *)stack, current_row, 0, previous_column)
-       || UnitStack_GetTileMoveCostOrZero((__int16 *)stack, previous_row, 0, current_column)) )
+      && (UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)stackRecord, current_row, 0, previous_column)
+       || UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)stackRecord, previous_row, 0, current_column)) )
     {
       if ( *pathBuffer < 100 )
         pathBuffer[++*pathBuffer] = current_waypoint;
@@ -99,12 +99,12 @@ int * Path_InsertBridgeCornerWaypoints(int stackRecord, char a2, int *pathBuffer
       }
       corner_waypoint = current_waypoint;
       if ( TILE_TERRAIN_RECORD(current_row, previous_column)[2] != 0xFFFF
-        && UnitStack_GetTileMoveCostOrZero((__int16 *)stack, current_row, 0, previous_column) )
+        && UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)stackRecord, current_row, 0, previous_column) )
       {
         BYTE1(corner_waypoint) = previous_column;
       }
       else if ( TILE_TERRAIN_RECORD(previous_row, current_column)[2] != 0xFFFF
-             && UnitStack_GetTileMoveCostOrZero((__int16 *)stack, previous_row, 0, current_column) )
+             && UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)stackRecord, previous_row, 0, current_column) )
       {
         LOBYTE(corner_waypoint) = previous_row;
       }
@@ -293,7 +293,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
       while ( gridInitColumn < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         *(_WORD *)(uintptr_t)(distColByteOffset + distGridRowOffset + distanceGrid) = -2;
-        tileMoveCost = UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)stackRecord, (intptr_t)mergedProfile, gridInitColumn++, gridInitRow);
+        tileMoveCost = UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)(uintptr_t)UNIT_STACK(stackIndex_l), (intptr_t)mergedProfile, gridInitColumn++, gridInitRow);
         distColByteOffset += 2;
         *(_BYTE *)(uintptr_t)(gridInitColumn + costGridRowOffset + tileCostGrid - 1) = tileMoveCost;
       }

@@ -1316,7 +1316,7 @@ __int16 * UnitStack_SetSpentTurnFlag(int stackPtr)
     slot->state_flags |= UNIT_SLOT_FLAG_SPENT_TURN;
     ++slot;
   }
-  return (__int16 *)slot;
+  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
 }
 
 //----- (00412A60) --------------------------------------------------------
@@ -1335,7 +1335,7 @@ __int16 * UnitStack_ClearSpentTurnFlag(int stackPtr)
     slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_SPENT_TURN;
     ++slot;
   }
-  return (__int16 *)slot;
+  return (__int16 *)(uintptr_t)(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * slotIndex);
 }
 
 //----- (00412A90) --------------------------------------------------------

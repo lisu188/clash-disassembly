@@ -104,7 +104,7 @@ int  Unit_Kill(int stackRecord, char killReason, DWORD a3, double a4)
   stack = (UnitStackRecord *)(uintptr_t)stackRecord;
   Debug_Log(stackRecord, killReason, a3, (int)(intptr_t)aUnit_kill0x08x);
   Unit_DebugDumpFormationSizes(stackRecord, a3);
-  Rules_RetractArmyFact((_DWORD *)stack, 0, stackRecord, a4);
+  Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackRecord, 0, stackRecord, a4);
   row = stack->tile_row;
   column = stack->tile_column;
   Diagnostics_TraceWorldMapActionEvent(
@@ -149,7 +149,7 @@ __int16 * UnitStack_RemoveFromTile(__int16 *stack, double a2)
     column = stackRecord->tile_column;
     if ( column >= 0 && column <= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     {
-      Rules_RetractArmyFact((_DWORD *)stackRecord, column, stackPtr, a2);
+      Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackPtr, column, stackPtr, a2);
       *(_WORD *)(uintptr_t)(TILE_INDEX(row, column)) = -1;
       MiniMap_DrawTileCell((void *)(uintptr_t)row, column);
       return (__int16 *)(uintptr_t)MiniMap_RedrawTileRect(row, column, column, row);
@@ -268,7 +268,7 @@ __int16 * UnitStack_ClearReadyFlags(int stackPtr)
       break;
     slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_READY;
   }
-  return (__int16 *)stack;
+  return (__int16 *)(uintptr_t)stackPtr;
 }
 
 //----- (0040FA50) --------------------------------------------------------
@@ -285,7 +285,7 @@ __int16 * UnitStack_SetReadyFlags(int stackPtr)
       break;
     slot->state_flags |= UNIT_SLOT_FLAG_READY;
   }
-  return (__int16 *)stack;
+  return (__int16 *)(uintptr_t)stackPtr;
 }
 
 //----- (0040FA80) --------------------------------------------------------
