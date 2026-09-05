@@ -1,0 +1,52 @@
+name: Strategic insights validation
+
+on:
+  push:
+    branches:
+      - fix/strategic-ai-insights-20260905
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect original strategic assembly and source manifest schema
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          lines = Path('clash95.asm').read_text(errors='replace').splitlines()
+          addresses = re.compile(r'(?:\.text:|^\s*)(004[0-9A-Fa-f]{5})\b')
+          ranges = ((0x458D60, 0x459150), (0x4594C0, 0x459570))
+          for line in lines:
+              match = addresses.search(line)
+              if match and any(start <= int(match[1], 16) < end for start, end in ranges):
+                  print(line)
+          for index, line in enumerate(lines):
+              if 'CHP' in line and re.search(r'\bproc\b', line):
+                  print('\nCHP DEFINITION\n' + '\n'.join(lines[index:index+65]))
+          data = json.loads(Path('data/recovered_sources.json').read_text())
+          print('MANIFEST TYPE', type(data).__name__)
+          if isinstance(data, dict):
+              print('MANIFEST KEYS', list(data))
+          def visit(value):
+              if isinstance(value, dict):
+                  if any(isinstance(item, str) and item in ('AI_EvaluateStrategicTargetAtTile', 'UnitStack_RegroupWithBuildingGarrisonByHealth') for item in value.values()):
+                      print('MANIFEST ENTRY', json.dumps(value, indent=2))
+                  for child in value.values():
+                      visit(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      visit(child)
+          visit(data)
+          print('AUDIT HASH CODE')
+          lines = Path('tools/audit_split_sources.py').read_text().splitlines()
+          for index, line in enumerate(lines):
+              if 'hash' in line.lower() or 'digest' in line.lower():
+                  print(index+1, '\n'.join(lines[max(0,index-3):index+5]))
+          PY
