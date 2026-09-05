@@ -677,7 +677,7 @@ TEST(cov3_02_findfactbyindex, real_fact_chain) {
   fact2[6] = 222;
 
   g_Rules_FactListHead = (int)(intptr_t)fact1;
-  TOUCH(Rules_FindFactByIndex());
+  TOUCH(Rules_FindFactByIndex(222));
   g_Rules_FactListHead = saved;
 }
 

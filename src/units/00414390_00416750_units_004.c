@@ -33,6 +33,7 @@ signed int  UnitStack_GetMoveCostToTileIgnoringOccupancy(__int16 *stackPtr, int 
 //----- (00414400) --------------------------------------------------------
 int * Path_InsertBridgeCornerWaypoints(int stackRecord, char a2, int *pathBuffer)
 {
+  UnitStackRecord *stack;
   int scratch_path[101];
   int scratch_waypoint;
   int current_waypoint;
@@ -47,12 +48,13 @@ int * Path_InsertBridgeCornerWaypoints(int stackRecord, char a2, int *pathBuffer
   int overflow;
 
   (void)a2;
+  stack = (UnitStackRecord *)(uintptr_t)stackRecord;
   if ( !pathBuffer || UnitStack_HasOnlyFlyingUnits(stackRecord) )
     return pathBuffer;
   scratch_path[0] = 0;
   scratch_waypoint = 0;
-  LOBYTE(scratch_waypoint) = *(_BYTE *)(uintptr_t)stackRecord;
-  BYTE1(scratch_waypoint) = *(_BYTE *)(uintptr_t)(stackRecord + 2);
+  LOBYTE(scratch_waypoint) = (unsigned __int8)stack->tile_row;
+  BYTE1(scratch_waypoint) = (unsigned __int8)stack->tile_column;
   HIWORD(scratch_waypoint) = 0;
   if ( scratch_path[0] < 100 )
     scratch_path[++scratch_path[0]] = scratch_waypoint;
@@ -194,7 +196,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
   BOOL cursorWasNotBusy; // [esp+6Ch] [ebp-98h]
   int distanceGrid; // [esp+70h] [ebp-94h] BYREF
   int tileCostGrid; // [esp+74h] [ebp-90h] BYREF
-  __int16 *stackRecord; // [esp+78h] [ebp-8Ch]
+  UnitStackRecord *stackRecord; // recovered 725-byte strategic stack record
   int rowWindowMin; // [esp+7Ch] [ebp-88h]
   int rowWindowMax; // [esp+80h] [ebp-84h]
   int colWindowMin; // [esp+84h] [ebp-80h]
@@ -265,7 +267,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
     *(_WORD *)(uintptr_t)(sourceTilePtr + 556374) = -1;
     stackIndexArg = stackIndex_l;
     savedOccupant = sourceTileOccupant;
-    stackRecord = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stackIndex_l + gameData + UNIT_STACK_TABLE_OFFSET);
+    stackRecord = UNIT_STACK_RECORD(stackIndex_l);
     UnitStack_BuildMergedTerrainMoveProfile((intptr_t)mergedProfile, (intptr_t)stackRecord);
     distanceGrid = nmalloc_(0x4E20, 4);
     if ( !distanceGrid )
@@ -291,7 +293,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
       while ( gridInitColumn < *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
       {
         *(_WORD *)(uintptr_t)(distColByteOffset + distGridRowOffset + distanceGrid) = -2;
-        tileMoveCost = UnitStack_GetTileMoveCostFromMergedProfileOrZero(stackRecord, (intptr_t)mergedProfile, gridInitColumn++, gridInitRow);
+        tileMoveCost = UnitStack_GetTileMoveCostFromMergedProfileOrZero((__int16 *)(uintptr_t)UNIT_STACK(stackIndex_l), (intptr_t)mergedProfile, gridInitColumn++, gridInitRow);
         distColByteOffset += 2;
         *(_BYTE *)(uintptr_t)(gridInitColumn + costGridRowOffset + tileCostGrid - 1) = tileMoveCost;
       }
@@ -574,7 +576,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
             1);
         }
       }
-      pathResult = Path_InsertBridgeCornerWaypoints(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stackIndex_l, sourceRowByte, pathResult);
+      pathResult = Path_InsertBridgeCornerWaypoints((int)(intptr_t)stackRecord, sourceRowByte, pathResult);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       {
         Diagnostics_TraceWorldMapActionEvent("unit_move_track_ready", stackIndex_l, targetRow_l, targetColumn, pathResult ? *pathResult : -1);
@@ -626,7 +628,7 @@ int * Unit_MoveTrack(int stackIndex, int sourceRow, int targetRow, int sourceCol
 //----- (00415210) --------------------------------------------------------
 _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targetColumn, DWORD a5)
 {
-  int stack_record;
+  UnitStackRecord *stack;
   int source_row;
   int source_column;
   int row_delta;
@@ -640,9 +642,9 @@ _DWORD * Unit_MoveTrackNearTile(int stackIndex, int targetRow, int a3, int targe
   if ( targetRow < 0 || targetRow >= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) || targetColumn < 0 || targetColumn >= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) )
     return 0;
 
-  stack_record = UNIT_STACK(stackIndex);
-  source_row = UNIT_STACK_TILE_ROW(stack_record);
-  source_column = UNIT_STACK_TILE_COLUMN(stack_record);
+  stack = UNIT_STACK_RECORD(stackIndex);
+  source_row = stack->tile_row;
+  source_column = stack->tile_column;
   row_delta = source_row - targetRow;
   if ( row_delta < 0 )
     row_delta = -row_delta;
@@ -714,7 +716,7 @@ int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, 
   int building_row;
   int building_column;
   int building_kind;
-  int stack_record;
+  UnitStackRecord *stack;
   int source_row;
   int source_column;
   __int16 saved_origin_surface;
@@ -753,9 +755,9 @@ int * Building_GenerateApproachTrack(int stackIndex, int buildingIndex, int a3, 
   }
 
   WorldMap_DisableFrameRedraw();
-  stack_record = UNIT_STACK(stackIndex);
-  source_row = UNIT_STACK_TILE_ROW(stack_record);
-  source_column = UNIT_STACK_TILE_COLUMN(stack_record);
+  stack = UNIT_STACK_RECORD(stackIndex);
+  source_row = stack->tile_row;
+  source_column = stack->tile_column;
   raw_path = Unit_MoveTrack(stackIndex, source_row, building_row, source_column, building_kind, building_column);
   if ( raw_path )
   {
@@ -856,7 +858,7 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   DWORD buildingKind; // ebp
   __int64 buildingRowCol; // rdi
   int nextRowByteOffset; // eax
-  int stackRecordIndex; // edx
+  UnitStackRecord *stack;
   int sourceColumn; // ebx
   int *rawPath; // ecx
   int *reverseBuffer; // eax
@@ -889,25 +891,19 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
     *(_WORD *)(gameData + nextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = -1;
     *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = -1;
   }
-  /*
-   * asm loc_415A4D (clash95.asm, sub_415970):
-   *     mov  edx, [esp+30h+var_2C]   ; edx = stackIndex (param 1)
-   *     call sub_40AEB0              ; WorldMap_DisableFrameRedraw -- Watcom
-   *                                  ; register convention, pushes/pops edx
-   *     lea  eax, [edx*8] / add eax, edx / shl eax, 4 / add eax, edx  ; 145*s
-   *     mov  edx, eax / lea eax, [eax*4] / add eax, edx               ; 725*s
-   *     mov  ecx, ds:gameData / add eax, ecx
-   * i.e. gameData + UNIT_STACK_STRIDE(725) * stackIndex. The decompiler treated
-   * edx as clobbered by the call, so `stackRecordIndex` was multiplied out of
-   * an unassigned local and the unit-stack record was read from garbage.
-   */
+  /* 00415A4D computes gameData + 725 * stackIndex before reading
+     the stack row and column. The typed overlay expresses that recovered layout
+     directly while preserving the original call sequence. */
   WorldMap_DisableFrameRedraw();
-  /* loc_415A4D: `mov edx,[esp+var_2C]` then edx*145 - the cursor is the stack
-     index; IDA never initialised stackRecordIndex. */
-  stackRecordIndex = stackIndex;
-  stackRecordIndex *= 145;
-  sourceColumn = *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + 147176);
-  rawPath = Unit_MoveTrack(stackIndex, *(__int16 *)(uintptr_t)(gameData + 5 * stackRecordIndex + UNIT_STACK_TABLE_OFFSET), SHIDWORD(buildingRowCol), sourceColumn, buildingKind, buildingRowCol);
+  stack = UNIT_STACK_RECORD(stackIndex);
+  sourceColumn = stack->tile_column;
+  rawPath = Unit_MoveTrack(
+              stackIndex,
+              stack->tile_row,
+              SHIDWORD(buildingRowCol),
+              sourceColumn,
+              buildingKind,
+              (int)buildingRowCol);
   /*
    * asm 00415A97: `mov ecx, eax` right after the Unit_MoveTrack call -- ecx
    * holds the returned path for the rest of the routine (Mem_Alloc and every

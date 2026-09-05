@@ -242,7 +242,7 @@ TEST(cov2_09_rules, find_fact_by_index_two_facts) {
   *(_DWORD *)((char *)fact1 + 36) = (_DWORD)(intptr_t)fact2; /* next fact */
   /* fact2 is all-zero: +24 == 0 and +36 == 0 (chain terminator). */
   g_Rules_FactListHead = (int)(intptr_t)fact1;
-  TOUCH(Rules_FindFactByIndex());
+  TOUCH(Rules_FindFactByIndex(0));
   g_Rules_FactListHead = saved;
 }
 
