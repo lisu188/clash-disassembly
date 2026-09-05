@@ -77,6 +77,11 @@ def _render_condition(
 
     detail = {
         "condition": condition["order"],
+        "join_index": condition.get("join_index"),
+        "depth": condition.get("depth"),
+        "negated": bool(condition["negated"]),
+        "alpha_test_indices": list(condition.get("alpha_test_indices", ())),
+        "join_test_index": condition.get("join_test_index", -1),
         "binding": binding,
         "compiled_test_count": len(translated),
         "translated_test_count": len(resolved) - (1 if class_test is not None else 0),
@@ -174,6 +179,8 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
 
     header = "\n".join([
         ";;; CLASH_recovered.clp",
+        ";;; SOURCE PROJECTION: matcher completeness and gameplay equivalence are separate properties.",
+        ";;; Loading successfully does not establish equivalence; unresolved tests under NOT can suppress activations.",
         ";;; Unified normalized source reconstructed from retail CLASH.DAT (CLIPS 6.00 BSAVE).",
         ";;; Packed IF/PROGN trees are restored to CLIPS then/else source syntax.",
         ";;; RETE alpha/join tests are emitted as real (test ...) CEs when accessors map unambiguously.",
@@ -223,6 +230,15 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
             for item in rule_manifest if item["output_name"] != item["original_name"]
         },
         "compiled_test_count": compiled,
+        "matcher_complete": unresolved == 0,
+        "fully_translated_rule_count": sum(item["unresolved_test_count"] == 0 for item in rule_manifest),
+        "unresolved_negated_test_count": sum(
+            condition["unresolved_test_count"]
+            for rule in rule_manifest
+            for condition in rule["conditions"]
+            if condition["negated"]
+        ),
+        "behavioral_equivalence_verified": False,
         "translated_test_count": translated,
         "unresolved_test_count": unresolved,
         "class_bitmap_tests_emitted": class_tests,
@@ -234,16 +250,35 @@ def render_recovered_program(path: Path, ir: dict) -> tuple[str, dict]:
     return program, manifest
 
 
+def require_complete_matchers(manifest: dict) -> None:
+    unresolved = manifest["unresolved_test_count"]
+    rule_total = sum(rule["unresolved_test_count"] for rule in manifest["rules_manifest"])
+    if unresolved != rule_total or manifest["compiled_test_count"] != manifest["translated_test_count"] + unresolved:
+        raise ValueError("inconsistent matcher completeness counts")
+    if unresolved:
+        raise ValueError(
+            f"matcher completeness required: {unresolved} compiled tests remain unresolved; "
+            "no output written. Use source-projection mode only for inspection, not a faithful AI replacement."
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate CLASH_recovered.clp with restored matcher constraints")
     parser.add_argument("input", nargs="?", default="CLASH.DAT")
     parser.add_argument("--clp", default="CLASH_recovered.clp")
     parser.add_argument("--manifest", default="CLASH_recovered_manifest.json")
+    parser.add_argument("--require-complete-matchers", action="store_true",
+                        help="refuse output while any compiled matcher test is unresolved; does not certify gameplay equivalence")
     args = parser.parse_args()
 
     source = Path(args.input)
     ir = parse_bsave(source)
     program, manifest = render_recovered_program(source, ir)
+    if args.require_complete_matchers:
+        try:
+            require_complete_matchers(manifest)
+        except ValueError as exc:
+            parser.error(str(exc))
     Path(args.clp).write_text(program, encoding="utf-8")
     Path(args.manifest).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(

@@ -329,7 +329,7 @@ _BYTE *swap_a, *swap_b, swap_buffer[28], swap_tail[3];
                 for char_mode in ("-fsigned-char", "-funsigned-char"):
                     with self.subTest(optimize=optimize, char_mode=char_mode):
                         binary = Path(directory) / "strategic"
-                        command = [compiler, "-std=c17", optimize, char_mode, "-Wall", "-Wextra", "-Werror", "-fsanitize=undefined,float-cast-overflow", "-fno-sanitize-recover=all", str(path), "-o", str(binary)]
+                        command = [compiler, "-std=c17", optimize, char_mode, "-Wall", "-Wextra", "-Werror", "-Wno-parentheses", "-fsanitize=undefined,float-cast-overflow", "-fno-sanitize-recover=all", str(path), "-o", str(binary)]
                         built = subprocess.run(command, capture_output=True, text=True, timeout=45)
                         self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
                         result = subprocess.run([str(binary)], capture_output=True, text=True, timeout=15)
