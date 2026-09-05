@@ -47,7 +47,7 @@ changes[manifest_path] = manifest_text
 
 lhs_path = Path('tools/clash_dat_lhs.py')
 text = lhs_path.read_text()
-text = replace_once(text, '    tested_slots: tuple[str, ...] = ()\n', '    tested_slots: tuple[str, ...] = ()\n    alpha_test_indices: tuple[int, ...] = ()\n    join_test_index: int = -1\n')
+text = replace_once(text, '\n    tested_slots: tuple[str, ...] = ()\n', '\n    tested_slots: tuple[str, ...] = ()\n    alpha_test_indices: tuple[int, ...] = ()\n    join_test_index: int = -1\n')
 text = replace_once(text, '            alpha_tests: list[str] = []\n', '            alpha_tests: list[str] = []\n            alpha_test_indices: list[int] = []\n')
 text, count = re.subn(r'^( +)alpha_tests.append\(render_expression\(ir, expr_index, classes\)\)$', r'\1alpha_test_indices.append(expr_index)\n\g<0>', text, flags=re.M)
 if count != 2:
