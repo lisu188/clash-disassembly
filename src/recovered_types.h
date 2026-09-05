@@ -111,6 +111,7 @@
 #define BUILDING_PRISONER_SLOT_COUNT 3
 #define BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building) (*((signed char *)(uintptr_t)(building) + 414))
 #define BUILDING_PRODUCTION_TURNS_REMAINING(building) (*((unsigned char *)(uintptr_t)(building) + 415))
+#define UNIT_SLOT_FLAG_READY 0x01
 #define UNIT_SLOT_FLAG_SPENT_TURN 0x02
 #define UNIT_SLOT_FLAG_LOW_MORALE 0x04
 #define UNIT_SLOT_FLAG_PLAGUE 0x08
@@ -318,6 +319,7 @@ typedef enum ClipsType
 #define TILE_INDEX(row, column) (gameData + TILE_MAP_OFFSET + TILE_ROW_STRIDE * (row) + 2 * (column))
 #define TILE_TRAP_OWNER_MASK(row, column) (*(_BYTE *)(uintptr_t)(gameData + TILE_TRAP_OWNER_MASK_OFFSET + TILE_TRAP_OWNER_MASK_ROW_STRIDE * (row) + (column)))
 #define UNIT_STACK(index) (gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * (index))
+#define UNIT_STACK_RECORD(index) ((UnitStackRecord *)(uintptr_t)UNIT_STACK(index))
 #define UNIT_STACK_SLOT(stackPtr, slotIndex) ((stackPtr) + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * (slotIndex))
 #define UNIT_STACK_TILE_ROW(stackPtr) (*(__int16 *)(stackPtr))
 #define UNIT_STACK_TILE_COLUMN(stackPtr) (*(__int16 *)((stackPtr) + 2))

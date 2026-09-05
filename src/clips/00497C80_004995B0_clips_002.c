@@ -7,7 +7,6 @@
 #include "../media/media_api.h"
 #include "../state/state_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */
-#include "../state/state_api.h"
 
 //----- (00497C80) --------------------------------------------------------
 int  Defgeneric_ListDefmethodsCommand(int returnValue, double context)
