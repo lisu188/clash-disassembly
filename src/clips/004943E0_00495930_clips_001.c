@@ -1142,7 +1142,7 @@ int Rules_CountHashedExpressions(void)
   int result; // eax
   int j; // edx
   int exphash; // edx
-  int v4; // edx
+  int v4 CLASH95_UNUSED; // edx
 
   for ( i = 0; i != 2012; i += 4 )
   {
@@ -1169,7 +1169,7 @@ __int16 * Rules_AssignHashedExpressionIndices(int fp)
   int i; // esi
   __int16 *result; // eax
   int j; // ecx
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
 
   for ( i = 0; i != 2012; i += 4 )
   {
@@ -1187,7 +1187,7 @@ int Rules_InvokeConstructCallbacks(void)
 {
   int i; // edx
   int result; // eax
-  int v2; // edx
+  int v2 CLASH95_UNUSED; // edx
 
   for ( i = g_BinaryItemListHead; i; i = *(_DWORD *)(uintptr_t)(i + 36) )
   {

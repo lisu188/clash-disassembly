@@ -542,7 +542,7 @@ _DWORD * Rules_ModifyOrDuplicateFact(int retractIt, int returnValue, double a3)
   int position; // ebx
   char *newFactField; // edi
   int valueExpr; // edx
-  int v17; // ecx
+  int v17 CLASH95_UNUSED; // ecx
   int copyIndex; // ebx
   _DWORD *newField; // edx
   _DWORD *copiedMultifield; // eax

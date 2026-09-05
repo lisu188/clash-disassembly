@@ -40857,7 +40857,7 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_InGameSettingsButtonWidgetsTemplate": {
-   "decl": "extern _UNKNOWN g_InGameSettingsButtonWidgetsTemplate;",
+   "decl": "extern _UNKNOWN g_InGameSettingsButtonWidgetsTemplate[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_InGameSliderThumbPositions": {

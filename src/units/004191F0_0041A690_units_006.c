@@ -61,7 +61,7 @@ unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int doRefresh)
      * sibling UI_DrawWidgetIconWithTransition kept them.
      */
     cursorOverlayPresented = g_CursorOverlayPresented;
-    if ( g_RenderDevice == &g_MainRenderDevice && cursorOverlayPresented )
+    if ( g_RenderDevice == (_UNKNOWN *)&g_MainRenderDevice && cursorOverlayPresented )
     {
       eraseRight = (unsigned __int16)(result[2] + DLX_GetSpriteWidth(sprite_set, (unsigned __int16)sprite_index) - 1);
       eraseSpriteHeight = DLX_GetSpriteHeight(sprite_set, (unsigned __int16)sprite_index);

@@ -883,13 +883,13 @@ int  Building_GenerateNearApproachTrack(int stackIndex, int buildingIndex, int a
   LODWORD(buildingRowCol) = *(unsigned __int8 *)(uintptr_t)(gameData + buildingRecordOffset + 509675);
   /* buildingRowCol is a register PAIR: HIDWORD = row, LODWORD = column.
      Using the whole 64-bit value as the column made the tile address explode. */
-  *(_WORD *)(TILE_INDEX(HIDWORD(buildingRowCol), (unsigned int)buildingRowCol)) = -1;
+  *(_WORD *)(uintptr_t)(TILE_INDEX(HIDWORD(buildingRowCol), (unsigned int)buildingRowCol)) = -1;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
     nextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
-    *(_WORD *)(nextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = -1;
-    *(_WORD *)(gameData + nextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = -1;
-    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = -1;
+    *(_WORD *)(uintptr_t)(nextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = -1;
+    *(_WORD *)(uintptr_t)(gameData + nextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = -1;
+    *(_WORD *)(uintptr_t)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = -1;
   }
   /* 00415A4D computes gameData + 725 * stackIndex before reading
      the stack row and column. The typed overlay expresses that recovered layout
@@ -973,13 +973,13 @@ LABEL_8:
     }
     j__nfree_();
   }
-  *(_WORD *)(2 * (unsigned int)buildingRowCol + gameData + TILE_ROW_STRIDE * HIDWORD(buildingRowCol) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+  *(_WORD *)(uintptr_t)(2 * (unsigned int)buildingRowCol + gameData + TILE_ROW_STRIDE * HIDWORD(buildingRowCol) + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   if ( buildingKind == 1 || buildingKind == 2 )
   {
     occupantNextRowByteOffset = 200 * (HIDWORD(buildingRowCol) + 1);
-    *(_WORD *)(occupantNextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + occupantNextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
-    *(_WORD *)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(occupantNextRowByteOffset + gameData + 2 * (unsigned int)buildingRowCol + TILE_MAP_OFFSET) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(gameData + occupantNextRowByteOffset + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
+    *(_WORD *)(uintptr_t)(gameData + 200 * HIDWORD(buildingRowCol) + 2 * (unsigned int)buildingRowCol + 556376) = buildingIndexWord + TILE_OCCUPANT_BUILDING_INDEX_BASE;
   }
   Render_LoadResourceSprite_v2();
   /* 415B9B: 'call Render_LoadResourceSprite_v2; mov eax, ecx; ... retn' - the

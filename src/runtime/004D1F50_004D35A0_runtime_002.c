@@ -406,7 +406,7 @@ int * Rules_UnlinkObjectPatternFromGlobalLists(int *result)
 {
   int alphaNodeAddr; // ebx
   int i; // ecx
-  int v3; // ecx
+  int v3 CLASH95_UNUSED; // ecx
   int *deletedInstance; // ecx
   int v5; // ecx
 

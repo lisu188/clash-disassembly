@@ -749,7 +749,7 @@ signed int  Rules_ReportPatternNetworkRules(signed int result, int processSiblin
   signed int i; // ebx
   int patternCount; // eax
   int v6; // ecx
-  int v7; // ecx
+  int v7 CLASH95_UNUSED; // ecx
   _BYTE messageBuffer[68]; // [esp+0h] [ebp-4Ch] BYREF
   int v9 CLASH95_UNUSED; // [esp+44h] [ebp-8h]
 

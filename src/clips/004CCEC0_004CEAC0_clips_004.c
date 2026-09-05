@@ -507,7 +507,7 @@ BOOL  MessageHandler_DispatchWatchCommand(
           ++argIndex;
           if ( Parser_ParseForm((__int16 *)(uintptr_t)currentArg, v20, 2, a5) )
             return 0;
-          if ( v19 != v20[1] )
+          if ( v19 != (int)v20[1] )
           {
             Parser_ReportError(argIndex, (int)(intptr_t)aHandlerType);
             return 0;

@@ -163,7 +163,7 @@ int Rules_HostBuildCastle(int unused, double clips_context)
   int arg3 = Rules_RtnLong(3, 0, clips_context);
   int arg4 = Rules_RtnLong(4, 0, clips_context);
   (void)unused;
-  return Rules_BuildCastle(building_type, arg2, arg3, arg4, (char *)Rules_RtnLexeme(5, 0, clips_context));
+  return Rules_BuildCastle(building_type, arg2, arg3, arg4, (char *)(uintptr_t)Rules_RtnLexeme(5, 0, clips_context));
 }
 
 //----- (00456B0D) ----------------------------------------------------------

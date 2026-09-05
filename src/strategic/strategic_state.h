@@ -282,7 +282,7 @@ extern int g_DeviceReplaySegmentBaseTick;
 extern int g_DeviceReplaySegmentTargetTick;
 extern int g_InGameOptionsDialogExitSignal;
 extern int g_InGameOptionsSpriteSet;
-extern _UNKNOWN g_InGameSettingsButtonWidgetsTemplate;
+extern _UNKNOWN g_InGameSettingsButtonWidgetsTemplate[];
 extern unsigned __int16 g_InGameSliderThumbPositions[6];
 extern int g_OptionsInGameMusicVolumeRaw;
 extern int g_OptionsInGameScrollSpeedRaw;

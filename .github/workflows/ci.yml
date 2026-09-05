@@ -58,6 +58,9 @@ jobs:
       - name: Validate strategic AI LHS recovery
         run: python3 tools/check_clash_dat_lhs.py
 
+      - name: Inventory unresolved strategic AI matcher tests
+        run: python3 tools/check_clash_dat_unresolved.py --json clash_dat_unresolved_inventory.json
+
       - name: Validate unified recovered CLP program
         run: python3 tools/check_clash_recovered_clp.py
 
@@ -78,6 +81,14 @@ jobs:
           python3 -m json.tool data/header_surface_baseline.json >/dev/null
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
+          python3 -m json.tool clash_dat_unresolved_inventory.json >/dev/null
+
+      - name: Upload unresolved matcher inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-dat-unresolved-matcher-inventory
+          path: clash_dat_unresolved_inventory.json
+          if-no-files-found: error
 
       - name: Audit split sources and frozen metadata
         run: |

@@ -436,7 +436,7 @@ signed int  Rules_WriteHashedExpressionsToCode(DWORD reopenOldFile)
   signed int result; // eax
   int j; // ecx
   __int16 *exprPtr; // edx
-  int v5; // ecx
+  int v5 CLASH95_UNUSED; // ecx
 
   for ( i = 0; i != 2012; i += 4 )
   {
