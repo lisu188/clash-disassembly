@@ -3,34 +3,31 @@ on:
   push:
     branches: [fix/strategic-ai-insights-20260905]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  evidence:
+  validation:
+    if: github.ref == 'refs/heads/fix/strategic-ai-insights-20260905'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect strategic assembly evidence
+      - name: Apply exact reviewed replacements
+        run: python3 tools/apply_strategic_insights_patch.py
+      - name: Run strategic and matcher regressions
+        run: python3 -m unittest discover -s tests/tools -p 'test_strategic_insights.py' -v
+      - name: Run all Python tool regressions
+        run: python3 -m unittest discover -s tests/tools -p 'test_*.py' -v
+      - name: Verify source and matcher contracts
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          text = Path('clash95.asm').read_text(errors='replace')
-          for name in ('sub_459230', 'sub_4592E0'):
-              match = re.search(r'^' + name + r'\s+proc\b.*?^' + name + r'\s+endp\b', text, re.M | re.S)
-              assert match, name
-              print(match[0])
-          start = re.search(r'^loc_459107:', text, re.M)
-          if start is None:
-              start = re.search(r'^loc_459138:', text, re.M)
-          end = re.search(r'^sub_4589C0\s+endp', text, re.M)
-          assert start and end
-          print(text[start.start():end.end()])
-          lines = text.splitlines()
-          for i, line in enumerate(lines):
-              if '__CHP' in line:
-                  print('CHP SITE', '\n'.join(lines[max(0,i-2):i+4]))
-                  break
-          print('INDEX API')
-          print(Path('tools/split_source_index.py').read_text()[:10000])
-          PY
+          python3 tools/audit_split_sources.py
+          python3 tools/check_clash_recovered_clp.py
+          python3 tools/check_clash_dat_unresolved.py --json /tmp/strategic-matcher-inventory.json
+          git diff --check
+          git diff --stat
+      - name: Commit only validated recovery changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/strategic/004589C0_004602F0_strategic_004.c data/recovered_sources.json tools/clash_dat_lhs.py tools/generate_clash_recovered_constraints.py
+          git commit -m 'fix: restore strategic priority dataflow and enforce matcher completeness'
+          git push origin HEAD:refs/heads/fix/strategic-ai-insights-20260905
