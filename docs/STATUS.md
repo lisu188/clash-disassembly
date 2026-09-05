@@ -2,6 +2,73 @@
 
 Last consolidated: 2026-09-05.
 
+## Modularization And Branch Integration
+
+Track: Win95 reconstruction, integration of the consumer shared-state headers
+with current upstream recovery. Local recovery and tooling are retained in
+`c7eb39d`; `9854c0c` merges upstream `870caee`, and `a2be4b7` merges the remaining
+human/AI outcome-table naming correction. All 14 local branch tips are now
+ancestors of main. The classifier and render repair history merges add no tree
+changes because their implementations were already present.
+
+The combined vision-radius function keeps upstream typed stack traversal and
+the recovered full unit metadata reads. Independent actual-parent source and
+assembly review confirms that composition. Eight other manifest mismatches
+were stale upstream hashes from the packed-pointer alignment repair; their
+bodies match upstream exactly. Only those nine reviewed canonical hashes were
+refreshed during upstream integration. Naming then changes six outcome-table
+globals and the `isHumanPlayer` local without changing storage or control flow;
+the link baseline changes symbol identities only. The religion-axis labels
+remain tentative. No warning, header or coverage limit was raised.
+
+Generated interfaces cover 4,157 functions in 140 TUs. Shared declaration
+exposure is now 11,965, with the same 241 shared globals. The small change from
+the rollout's 11,994 follows upstream strategic-local renaming that removes a
+false shared-name match. Generated headers, TU includes, ownership and visibility
+checks pass; the same two API and seven peer-edge ratchet failures remain.
+All 45 tooling tests and metadata/generator checks pass. Fresh GCC 13 and
+Clang 18 builds compile/link and pass all four asset-free gates each. Both
+warning ratchets now pass (9,345 GCC warnings; 9,387 Clang warnings). The link
+ratchets retain exactly the prior 205 GCC and 111 Clang differences, with zero
+manifest cross-check errors. Both complete linked profiles match the previous
+rollout after normalizing the six approved symbol renames; this comparison
+does not imply instruction parity with upstream recovery.
+
+The default headless GCC suite reports 10 passed, 3 failed and 8 skipped.
+Playability and attack again stop at `next_unit_selected selected=1 a=31 b=44`;
+castle economy stops at `human_turn_enter idx=1 owner=0 tile=31,44`. These exact
+first failure markers match retained pre-rollout logs; no additional parent
+runtime rerun was made in this integration. No new full-suite pass is claimed.
+The fresh unit harness reports 1,058 passed, zero assertion failures and 530
+isolated crashes. Its crash set is a subset of the rollout's 532: padded-hex
+formatting and the CRT thread case pass in this run. This is not evidence that
+their unresolved CRT behavior was repaired. The known timezone case still
+crashes, and the CTest wrapper's pass tolerates isolated crashes.
+Coverage passes the unchanged floor at 6,145/6,650 lines (92.41%) across all
+718 frozen functions, with zero uncovered functions. The unit registry still
+contains all 1,588 cases; the upstream extra index-222 assertion is retained.
+
+The incoming CLASH.DAT checks pass, including stock CLIPS loading of the
+recovered program: 95 rules, 6 globals, 89 deffunctions and 24 classes, with 82
+host stubs. The LHS recovery translates 420 of 753 matcher tests; 333 remain
+unresolved. These are decode/load checks, not gameplay-equivalence evidence.
+The existing upstream fixture is unchanged. Clean-checkout documentation links
+were repaired without weakening the checker or discarding private evidence.
+
+Campaign work remains separate: `1789aa5` retains the partial mission-11 probes
+and the mission-05 tactical boundary correction recovered from the unique
+stash. The old exchange choreography stays opt-in pending fresh validation.
+No route, campaign or visual-fidelity milestone advances in this integration.
+All stashes and secondary worktrees are preserved, including the unfinished
+HD/resizable-window feature and older diagnostic drafts. The retained campaign
+frontier remains the mission-05 route in "Next Target" below.
+
+Exact commands, conflict decisions, actual-parent body comparisons, naming
+proof and branch/worktree inventory are local evidence under
+`artifacts/integration/merge-all-20260905/`. Earlier batch results below remain
+historical; their object-parity claim does not extend to the incoming upstream
+recovery changes.
+
 ## Structure Recovery: Tactical Slot Consumers
 
 Track: Win95 reconstruction, the 31-byte unit record used by mission-05
