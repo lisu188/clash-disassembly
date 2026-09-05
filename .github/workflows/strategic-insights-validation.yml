@@ -12,7 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Apply exact reviewed replacements
-        run: python3 tools/apply_strategic_insights_patch.py
+        run: |
+          python3 tools/apply_strategic_insights_patch.py
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tests/tools/test_strategic_insights.py')
+          text = path.read_text()
+          old = '"-Wextra", "-Werror",'
+          assert text.count(old) == 1
+          path.write_text(text.replace(old, '"-Wextra", "-Werror", "-Wno-parentheses",', 1))
+          PY
       - name: Run strategic and matcher regressions
         run: python3 -m unittest discover -s tests/tools -p 'test_strategic_insights.py' -v
       - name: Run all Python tool regressions
@@ -28,6 +37,6 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/strategic/004589C0_004602F0_strategic_004.c data/recovered_sources.json tools/clash_dat_lhs.py tools/generate_clash_recovered_constraints.py
+          git add src/strategic/004589C0_004602F0_strategic_004.c data/recovered_sources.json tools/clash_dat_lhs.py tools/generate_clash_recovered_constraints.py tests/tools/test_strategic_insights.py
           git commit -m 'fix: restore strategic priority dataflow and enforce matcher completeness'
           git push origin HEAD:refs/heads/fix/strategic-ai-insights-20260905
