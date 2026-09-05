@@ -1,0 +1,66 @@
+# Mission 11 march diagnostic: 4 turns, generous AI-turn waits, confirm
+# the builder stack advances each turn toward (3,44) via select_stack.
+wait_log 60 mission_load_done selected=-1 a=11
+wait 3.0
+mark_log_count sel0_t1 selected_stack_changed selected=0
+world_select_stack 0 0.6 select-t1
+wait_log_marked 20 sel0_t1
+world_pan_viewport 0 41 120
+click 240 240 0.18 1.0 waypoint-3-44
+wait_log 20 move_order_track_result selected=0 a=3 b=44
+click 240 240 0.05 2.0 confirm
+wait_log 60 unit_move_after_path_state selected=0
+# turn 2
+world_click 500 2 2 0.5 t1-pos
+world_click 500 2 4 0.5 t1-menu
+world_click 500 2 4 1.0 t1-endturn
+wait 4.0
+world_click 320 240 2 0.35 t1-skip1
+world_click 320 240 2 0.35 t1-skip2
+wait 6.0
+wait_log 300 playgame_before_human_turn selected=-1 a=1 b=2
+mark_log_count sel0_t2 selected_stack_changed selected=0
+world_select_stack 0 0.6 select-t2
+wait_log_marked 20 sel0_t2
+world_pan_viewport 0 41 120
+click 240 240 0.18 1.0 rewaypoint-t2
+wait_log 20 move_order_track_result selected=0 a=3 b=44
+click 240 240 0.05 2.0 confirm-t2
+wait_log 60 unit_move_after_path_state selected=0
+# turn 3
+world_click 500 2 2 0.5 t2-pos
+world_click 500 2 4 0.5 t2-menu
+world_click 500 2 4 1.0 t2-endturn
+wait 4.0
+world_click 320 240 2 0.35 t2-skip1
+world_click 320 240 2 0.35 t2-skip2
+wait 6.0
+wait_log 300 playgame_before_human_turn selected=-1 a=1 b=3
+mark_log_count sel0_t3 selected_stack_changed selected=0
+world_select_stack 0 0.6 select-t3
+wait_log_marked 20 sel0_t3
+world_pan_viewport 0 41 120
+click 240 240 0.18 1.0 rewaypoint-t3
+wait_log 20 move_order_track_result selected=0 a=3 b=44
+click 240 240 0.05 2.0 confirm-t3
+wait_log 60 unit_move_after_path_state selected=0
+# turn 4
+world_click 500 2 2 0.5 t3-pos
+world_click 500 2 4 0.5 t3-menu
+world_click 500 2 4 1.0 t3-endturn
+wait 4.0
+world_click 320 240 2 0.35 t3-skip1
+world_click 320 240 2 0.35 t3-skip2
+wait 6.0
+wait_log 300 playgame_before_human_turn selected=-1 a=1 b=4
+mark_log_count sel0_t4 selected_stack_changed selected=0
+world_select_stack 0 0.6 select-t4
+wait_log_marked 20 sel0_t4
+world_pan_viewport 0 41 120
+click 240 240 0.18 1.0 rewaypoint-t4
+wait_log 20 move_order_track_result selected=0 a=3 b=44
+click 240 240 0.05 2.0 confirm-t4
+wait_log 60 unit_move_after_path_state selected=0
+screenshot mission11-diag-end
+nonblank mission11-diag-end
+expect_log unit_move_after_path_state

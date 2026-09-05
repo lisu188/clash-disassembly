@@ -1,7 +1,7 @@
 # Mission 05 stack-19 tactical revalidation after executable-backed unit
-# metadata recovery. Reuse the passing nine-turn strategic arrival, attack the
-# visible owner-3 stack at (44,56), then prove the first direct exchange returns
-# with type 17's authentic eight-frame attack animation.
+# metadata recovery. Reuse the retained nine-turn strategic arrival, attack the
+# visible owner-3 stack at (44,56), then probe responsive manual tactical entry
+# with type 17's executable-backed core metadata. Fresh revalidation is required.
 include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
 
 # Arrival tracking leaves the viewport at left=43/top=54, so (128,144) maps to
@@ -15,6 +15,17 @@ click 276 158 0.18 2.0 choose-manual-battle-stack19
 wait_log 60 unit_attack_battle_enter selected=4 a=19 b=6 c=10
 wait_log 60 battle_turn_loop_after_input_widgets selected=5 a=0 b=1
 
+# This retained diagnostic boundary requires fresh revalidation. Continuing is
+# opt-in because the pre-metadata staging below costs 45 AP while Builder type
+# 17 now has its authentic 26 AP; that choreography needs a multi-round repair.
+fail_if_log mission05_failure_friendly_attack
+screenshot mission05-stack19-authentic-tactical-entry
+nonblank mission05-stack19-authentic-tactical-entry
+stop_unless_env CLASH95_MISSION05_CONTINUE_AFTER_TACTICAL_ENTRY 1 mission05-authentic-tactical-entry-proven
+
+# Quarantined historical exchange choreography. Keep it available for
+# recalibration, but do not count it as current evidence: the move to (5,6)
+# correctly reports battle_move_insufficient_ap selected=5 a=45 b=26 c=-1.
 battle_key 203 80 1.0 pan-left-to-owner3-line
 mark_log_count squad5_approach battle_move_execute_return selected=5 a=5 b=6
 battle_click 384 400 4 2.0 move-squad5-to-5-6
