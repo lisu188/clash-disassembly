@@ -3,14 +3,14 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../media/media_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00441C80) --------------------------------------------------------
 int  Audio_PlayUnitHitSound(int result)
 {
-  char *resourceKey; // esi
+  const char *resourceKey; // esi
   char *writeCursor; // edi
   char keyChar; // al
   char keyNextChar; // al
@@ -23,7 +23,7 @@ int  Audio_PlayUnitHitSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPath, aSfxOddzialy_2, sizeof(soundPath));
-    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKey = g_UnitTypeRuntimePointers[result].resource_key;
     writeCursor = &soundPath[strlen(soundPath)];
     do
     {
@@ -61,7 +61,7 @@ int  Audio_PlayUnitHitSound(int result)
 //----- (00441D20) --------------------------------------------------------
 int  Audio_PlayUnitDeathSound(int result)
 {
-  char *resourceKey; // esi
+  const char *resourceKey; // esi
   char *writeCursor; // edi
   char keyChar; // al
   char keyNextChar; // al
@@ -74,7 +74,7 @@ int  Audio_PlayUnitDeathSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPath, aSfxOddzialy_3, sizeof(soundPath));
-    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKey = g_UnitTypeRuntimePointers[result].resource_key;
     writeCursor = &soundPath[strlen(soundPath)];
     do
     {

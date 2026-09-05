@@ -1,4 +1,12 @@
 {
+  "status": "historical",
+  "historical_notice": "This snapshot preserves an earlier startup-recovery milestone. Its phase, frontier, blockers, next_actions, and historical_resume_instructions describe that past state and are not the current work queue. See AGENTS.md, docs/PROJECT_TRACKS.md, and docs/STATUS.md for active instructions and evidence.",
+  "active_status_sources": [
+    "AGENTS.md",
+    "docs/PROJECT_TRACKS.md",
+    "docs/STATUS.md",
+    "tests/first_campaign_arc_routes/"
+  ],
   "phase": "default_full_route_main_menu_liveness",
   "current_frontier": "The default no-arg route now reaches recovered main-menu presentation and the main-menu wait loop under SDL. main compacts argv into the recovered command-line buffer and calls App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0); App_WinMain enters the recovered early startup, runtime/render init, intro AVI, UI_StartAnims, and PlayGame_Dispatch path. The previous loose-AVI/CD availability failure is removed, and the reached AVI constructor, event-handle, DirectDraw palette, compact render-surface, and main-menu widget scars were reduced. Lowercase r remains the first finite recovered startup/shutdown route.",
   "last_green_targets": [
@@ -23,5 +31,6 @@
     "Recover or quarantine the CSS_Init device-table path only when it is evidence-backed and x86-64 safe under the SDL runtime seam.",
     "Continue startup/runtime reductions without reintroducing host-side fake probe modes."
   ],
-  "resume_instructions": "On continue: reload AGENTS.md and the durable sidecars. Treat the current default milestone as main -> App_WinMain -> Bootstrap_RunRecoveredGameEntry -> PlayGame_Dispatch -> recovered main-menu wait loop under SDL, verified by clash95_full_route_smoke. Treat lowercase r as the finite startup/shutdown route for clash95_bootstrap. Validate with cmake --build build --target clash95_recovered clash95_bootstrap -j, tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap, ctest --test-dir build --output-on-failure, timing-sensitive repeat ctest --test-dir build --output-on-failure --repeat until-fail:3, JSON checks, and git diff --check. Remove any generated clash.log after smoke runs so it is not accidentally tracked. Do not rely on old --authentic-menu-probe, --authentic-video-init, --authentic-startup-prelude, --platform-window-only, or CLASH95 menu-probe env controls; those are no longer active bootstrap selectors."
+  "historical_resume_instructions": "On continue: reload AGENTS.md and the durable sidecars. Treat the current default milestone as main -> App_WinMain -> Bootstrap_RunRecoveredGameEntry -> PlayGame_Dispatch -> recovered main-menu wait loop under SDL, verified by clash95_full_route_smoke. Treat lowercase r as the finite startup/shutdown route for clash95_bootstrap. Validate with cmake --build build --target clash95_recovered clash95_bootstrap -j, tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap, ctest --test-dir build --output-on-failure, timing-sensitive repeat ctest --test-dir build --output-on-failure --repeat until-fail:3, JSON checks, and git diff --check. Remove any generated clash.log after smoke runs so it is not accidentally tracked. Do not rely on old --authentic-menu-probe, --authentic-video-init, --authentic-startup-prelude, --platform-window-only, or CLASH95 menu-probe env controls; those are no longer active bootstrap selectors.",
+  "resume_instructions": "Inspect Git state and preserve existing work. Read AGENTS.md, docs/PROJECT_TRACKS.md, and docs/STATUS.md, then select one track and the current Next Target. Use tests/first_campaign_arc_routes/mission_NN.env for canonical per-mission status and docs/BUILD_AND_TEST.md for Linux/WSL validation. All runtime and original/reconstruction frame work must remain headless. This file is historical evidence only; do not resume its old next_actions as the active frontier."
 }

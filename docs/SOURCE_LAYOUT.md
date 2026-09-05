@@ -5,7 +5,7 @@ This document defines the source-organization rules for the recovered Win95 impl
 ## Invariants
 
 - `data/recovered_sources.json` is the exhaustive recovered-function manifest.
-- The 138 C files in 12 recovered subsystem directories directly under `src/`
+- The 140 C files in 12 recovered subsystem directories directly under `src/`
   are canonical, independently
   compiled GNU C17 translation units.
 - Function order within each family follows original binary address order, even
@@ -42,6 +42,34 @@ unified/fragments/symlink paths are preserved in `docs/SOURCE_PATH_MAP.csv`.
 - `src/bootstrap/`: the host executable entrypoint.
 
 Gameplay semantics must not be moved into platform or compatibility code. Instrumentation must not become an alternative gameplay implementation.
+
+## Shared-state interfaces
+
+The active `"shared_state_layout": "consumer"` setting in
+`data/recovered_decls.json` generates a private shared-state header for each
+subsystem, such as `src/battle/battle_shared_state.h`, containing only
+the shared declarations referenced by that subsystem. A TU includes that slice
+only when its preprocessed body references shared state. The aggregate remains
+for the state definition group and the unit-test aggregate.
+
+`data/subsystem_api.json` records `shared_state_consumers` and
+`tu_shared_state_visibility`: sorted declaration-database keys for actual
+references and visible declarations. Visibility can exceed a TU's references
+because the slice belongs to its subsystem. These metrics measure exposure;
+the existing API, shared-global and peer-dependency ratchets still measure
+coupling and retain their baselines.
+
+The 2026-09-05 rollout added 11 slices and changed 136 generated include blocks.
+Shared-declaration exposure fell from 32,776 to 11,994 (63.41%); the same 241
+shared globals remain. Both compiler profiles preserve all 140 recovered
+object disassemblies and linked symbol addresses, sizes and order against the
+pre-rollout working tree. The rollout and verification procedure is in
+[BUILD_AND_TEST.md](BUILD_AND_TEST.md#shared-state-header-rollout).
+Storage, packed layouts, original addresses and function bodies do not move.
+Absent or `"aggregate"` mode remains supported for existing generator fixtures;
+production recovered consumers may not include the aggregate or another
+subsystem's slice. Evidence is under
+`artifacts/modularization/shared-state-20260905/rollout/`.
 
 ## Change policy
 

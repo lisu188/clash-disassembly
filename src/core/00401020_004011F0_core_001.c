@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "core_internal.h"
 #include "core_state.h"
-#include "../state/state_shared.h"
+#include "core_shared_state.h"
 #include "../render/render_api.h"
 #include "../persistence/persistence_api.h"
 #include "../strategic/strategic_api.h"

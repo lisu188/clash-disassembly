@@ -2,7 +2,7 @@
 
 ## 1. Overview
 - **Analyzed artifacts:** `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`.
-- **Primary reconstruction path:** the 88-byte `unit_stats` record family at `off_512568` / `unit_stats` in the data segment. `clash95.asm` exposes per-record xrefs to both the localized-name tables and resource-key pointers, while `clash95.exe` confirms the raw asset stems.
+- **Primary reconstruction path:** the 88-byte unit metadata record family at `off_512568` in the data segment; the public symbol `unit_stats` names its casualty-weight byte at +87. `clash95.asm` exposes per-record xrefs to both the localized-name tables and resource-key pointers, while `clash95.exe` confirms the raw asset stems.
 - **Reliability rule used here:** names and ids are only promoted when at least two independent signals align. Resource-key order alone was treated as insufficient after the asm pass exposed duplicated localized-name tables for the final special prisoner records.
 - **2026-06-15 maintenance note:** the documentation-tree consolidation batch did not promote new unit, category, stat, or relationship semantics. It moved this report under `docs/archive/` and added current metadata navigation in `docs/STRUCTURES.md`.
 - **2026-06-15 maintenance note:** the mission-04 post-breach probe batch did not promote new unit, category, stat, or relationship semantics. It only split minimap diagnostics and added quarantined route evidence for movement through the already breached gate.
@@ -11,6 +11,156 @@
 - **2026-06-15 maintenance note:** mission-04 wall-attack diagnostics exercised the already recovered wall-attack stat path but did not promote new unit, category, stat, or relationship semantics. The observed light-infantry gate hit is route evidence, not a roster/stat reinterpretation.
 - **2026-06-15 maintenance note:** the route-regression and artifact-retention batch did not promote new unit, category, stat, or relationship semantics. The first-mission playability and castle/economy probes exercise already recovered stack, slot, building, and UI paths.
 - **2026-07-14 metadata-core recovery:** the reconstruction's one-element `byte_512570+` placeholders were not valid stand-ins for the original strided globals. Direct PE initialized-data extraction restored record offsets `+8..+37` for all 35 unit types. The exact rows are recorded in `UNIT_TYPES_AND_STATS.json`; no values from the unrecovered `+38..+87` tail were inferred.
+
+## 2026-09-05: Tactical slot fields and icon consumers
+
+Track: Win95 reconstruction supporting mission-05 tactical panels. Recovered
+`BattleUnitEntry.fatigue` at +10 and `morale` at +11 with high confidence.
+`Battle_PlaceUnit` copies all 31 source bytes (assembly 77092..77097), and
+`HandleBattleResults` copies the complete survivor payload back
+(71327..71335 and 71378..71383). Independent panel loads sign-extend morale
+at 75483 and fatigue at 75501. The packed record retains its 31-byte size;
+the generated catalog now has 21 structures and 181 size/offset assertions.
+
+The selected panel's status, order and volley expressions and both icon-index
+helpers previously passed a short pointer to byte-offset macros, advancing to
++24 instead of +12. Typed slot fields restore the actual stance byte. The icon
+helpers also use typed unit metadata and retain the original signed morale
+division. Their independent assembly evidence is at 25913..25924 and
+26014..26025. No formulas, unit ids, names or enum meanings were invented.
+The regression deliberately varies byte +24 independently and checks signed
+morale, so it detects the former address error rather than merely covering it.
+
+Both compiler profiles compile/link and pass their four asset-free gates.
+Generated metadata, struct headers and subsystem/TU include freshness pass.
+These recorded checks precede a concurrently appearing consumer shared-state
+header rollout, whose files are preserved and require their own validation.
+The final unit run has 1058 passed, zero assertion failures and 530 isolated
+crashes. Coverage is 6144/6649 lines (92.40%) across all 718 frozen functions,
+with none uncovered. The crash count matches the prior run, but the set gains
+`cov5_02_crtbeginthread.normal_call_exercises_reachable_lines` and loses
+`cov20_crt.tz_year_starts_label6_a1_flag_set`; both existing cases are outside
+the changed unit consumers. This variation is retained for investigation.
+The initial packed-fixture alignment build failure remains retained;
+the fixture now provides explicitly aligned backing storage.
+
+The engine wrote a private mission05 turn1 DAT/FAC snapshot through `saveGame`.
+Original Wine loaded those exact bytes through the normal Load menu and reached
+the opening mission banner. This provides authentic diagnostic state, not
+Campaign-menu progression. The current reconstruction's initial world probe
+passes, but the tactical replay stops on turn 2 after a missed Next Unit click.
+No tactical panel equivalence or campaign promotion is claimed. The matching
+reconstruction opening-banner probes captured no presented frames; the loaded
+original banner cannot be compared as the same modal state with the successful
+initial-world capture.
+
+Deferred: battle bytes +13..+16 and +23..+30, stance bit 7, metadata +38..+69,
+the type-40 scoring boundary, the omitted battle text-surface blend and the
+unit-info wrapper/pane pointer and render defects. Full-payload copies alone
+do not establish new bit meanings. The audit checked 100 canonical C lines
+matching `UNIT_SLOT_`; it does not claim all recovered pointer arithmetic safe.
+Evidence and commands: `artifacts/structure-recovery/tactical-validation-20260905/`.
+
+## 2026-09-05: Linux validation of structure recovery
+
+Fresh GCC 13 and Clang 18 builds now compile/link and pass the four asset-free
+gates. The recovered metadata matches both original executable copies; all
+generated metadata/header checks and the split audit pass. The unit harness
+reports 1056 passed, zero assertion failures, and the same 530 isolated crashes
+as the preceding readiness run. Coverage is 92.43% across all 718 frozen
+functions, with none uncovered. Four production metadata indices now explicitly
+preserve the assembly's signed-byte extension. The new unsigned production-list
+sentinel assertion was corrected to `UINT32_MAX` without changing game behavior.
+
+Evidence is retained under
+`artifacts/structure-recovery/linux-validation-20260905/`. The reconstruction
+menu runs headlessly; same-state original tactical frames remain unproven.
+The earlier WSL-blocked notes below are historical. Header-surface, warning and
+linked-layout ratchets remain unresolved and their baselines are unchanged.
+
+## 2026-09-05: Unit metadata pointer recovery
+
+Track: Win95 reconstruction supporting mission-05 tactical panels and unit
+information. The original +0 field points to a 12-byte name triplet, with
+Polish, English and German string pointers at +0/+4/+8. The pool contains
+34 triplets and 102 strings; types 33 and 34 share the final triplet.
+Both original executables agree on every pointer and pointed-to byte string.
+`UnitTypeLocalizedNameTable` now records that original packed structure with
+size/offset assertions. A separate `UnitTypeRuntimePointerRecord` holds native
+name, resource-key and movement-stem pointers, preserving the packed metadata VAs.
+
+All 35 types now use the selected language. Original text is retained as font
+bytes, without UTF-8 conversion. Four English labels were corrected from the
+reconstructed helper: type 13 `Taran`, 16 `Highlander`, 20 `Cyklop`, and 27
+`Pegaz`. The decompiler's `[102]` type was a misleading flattened name pool,
+not one unit record. Its earlier ambiguity is resolved; old candidates remain
+in the JSON with a resolved status.
+
+Sixteen functions changed in this pointer batch. The remaining fake metadata
+and resource-key globals are removed, including the English-only helper table.
+Assembly also proves 28 missing numeric format arguments in four panel
+functions; these now pass their original values and native format pointers.
+The unit-info morale branch now reads its actual slot pointer instead of an
+uninitialized register surrogate. Native triplet sharing, exact names and
+reserved null pointers have regression assertions.
+
+Evidence: `clash95.asm:409287..409424` defines the triplets;
+`10315..10322`, `40714..40721`, and `41610..41620` prove the two dereferences;
+`17383..17393` proves unsigned font-byte rendering. Map spellings corroborate
+`Highlander`, `Pegaz` and `Cyklop` at lines 1224, 1260 and 1284.
+Exact panel-argument evidence and validation commands are retained under
+`artifacts/structure-recovery/unit-metadata-pointers-20260905/`.
+
+High confidence applies to the layouts, byte values and assembly-backed reads.
+Runtime and visual fidelity remain unverified while WSL returns
+`E_ACCESSDENIED`. Existing unsupported-selector helper fallbacks remain
+compatibility guards, not original validation behavior. Production-coordinate
+and render-call scars, the battle blend omission, opaque metadata +38..+69,
+and the type-40 combat-score boundary remain deferred. Full subsystem header
+regeneration still requires Linux preprocessing.
+
+## 2026-09-05: Unit metadata layout and consumer recovery
+
+Track: Win95 structure recovery supporting the mission-05 tactical frontier.
+The complete physical table has 40 records of 88 bytes, including 35 real
+types and five zero reserved records. Both original executables match all
+3,520 bytes (table SHA256 `2755d2c58c24a6c7337597a593456a03404850a4c666fd0493c2c372a1310963`).
+The next symbol is the language-directory table at `0x00513328`; the original
+castle production loop probes exactly 40 slots. The roster remains 35 types.
+
+New high-confidence fields are vision radius (+70), corpse sprite base (+78),
+and auto-resolve casualty weight (+87). `clash95.map:6984` identifies the last
+as public `unit_stats`; the old alias to +78 was wrong. Vision uses the maximum
+radius of occupied stack slots; corpse rendering adds reversed facing; casualty
+distribution selects the largest unprocessed weight and deducts it from quantity.
+All production, role, sound-frame and movement-audio tail fields retain the
+unsigned widths and initialized values proved by their assembly reads.
+
+`UnitTypeRuntimeCoreMetadataRecord` now holds the full initialized bytes, with
+compile-time offset pins. Its scalar consumers and movement-sound strings use
+the recovered backing. The fake tail globals and incorrect `unit_stats` alias
+were removed. The combat-strength scorer also uses the real typed metadata;
+the production roster tests original name-pointer presence in the five reserved
+records instead of reading beyond an isolated pointer variable.
+
+Rejected: tactical `role` comes from a unit metadata parser. The referenced
+literal belongs to CLIPS `Rules_ParseDefclass`, unrelated to unit types.
+Unresolved: +38..+69 remain 32 opaque initialized bytes; no terrain-modifier
+names are justified. Original +0/+4 name/resource pointers still require full
+native resolution in remaining consumers. The old combat-score predicate also
+accepts type 40, outside the physical table; no authentic producer of that type
+is proven, so this boundary was preserved and remains deferred.
+
+Evidence and repeatable static byte verification are under
+`artifacts/structure-recovery/unit-metadata-20260905/`; exact byte input is
+`data/unit_type_runtime_metadata.json`. `tools/gen_unit_type_runtime_metadata.py`
+regenerates the table and native movement-stem pointers without retail assets.
+The struct and constant headers were regenerated. Subsystem headers received
+only the necessary declaration synchronization; full usage regeneration still
+requires Linux preprocessing. Regression assertions were added for the original
+values, reserved roster slots, vision, corpse frames and production gates.
+Linux builds, executable tests, routes and a fresh original frame pair remain
+blocked by WSL `E_ACCESSDENIED`; runtime fidelity is not claimed.
 
 ## 2. Recovered Unit Roster
 
@@ -37,14 +187,14 @@
 | `17` | `UnitType17_Builder` | `budow` | high | `off_51245C` (`Budowniczy / Builder`) resolves to `budow`. |
 | `18` | `UnitType18_Worm` | `worm` | high | `off_5124BC` (`Czerw / Worm`) resolves to `worm`. |
 | `19` | `UnitType19_Elephant` | `slon` | high | `off_5124C8` (`Słoń / Elephant`) resolves to `slon`. |
-| `20` | `UnitType20_Cyclop` | `cykl` | high | `off_5124D4` (`Cyklop / Cyclop`) resolves to `cykl`. |
+| `20` | `UnitType20_Cyclop` | `cykl` | high | `off_5124D4` (`Cyklop / Cyklop / Zyklop`) resolves to `cykl`. |
 | `21` | `UnitType21_Troll` | `trol` | high | `off_5124E0` (`Troll`) resolves to `trol`. |
 | `22` | `UnitType22_Scorpion` | `scorp` | high | `off_5124EC` (`Skorpion / Scorpion`) resolves to `scorp`. |
 | `23` | `UnitType23_Skeleton` | `szk` | high | `off_5124F8` (`Szkielet / Skeleton`) resolves to `szk`. |
 | `24` | `UnitType24_Wizard` | `mag` | high | `off_512504` (`Mag / Wizard`) resolves to `mag`. |
 | `25` | `UnitType25_Ghost` | `duch` | high | `off_512510` (`Duch / Ghost`) resolves to `duch`. |
 | `26` | `UnitType26_Eagle` | `orzel` | high | `off_51251C` (`Orzeł / Eagle`) resolves to `orzel`. |
-| `27` | `UnitType27_Pegasus` | `pegaz` | high | `off_512474` (`Pegaz / Pegasus`) resolves to `pegaz`. |
+| `27` | `UnitType27_Pegasus` | `pegaz` | high | `off_512474` (`Pegaz / Pegaz / Pegasus`) resolves to `pegaz`. |
 | `28` | `UnitType28_Winger` | `skrz` | high | `off_512528` (`Skrzydlak / Winger`) resolves to `skrz`. |
 | `29` | `UnitType29_Fly` | `wazka` | high | `off_512534` (`Ważka / Fly / Riesenlibelle`) resolves to `wazka`. |
 | `30` | `UnitType30_Dragon` | `smok` | high | `off_512480` (`Smok / Dragon / Drachen`) resolves to `smok`. |
@@ -92,7 +242,7 @@
 | `production_requires_smiths` | high | Per-type production-licence gate that requires the smiths add-on before the unit may be licensed. | `Building_IsUnitLicenceEligible` scans `g_ProductionLicenceSmithsRequiredUnitTypes` only when the smiths bit `0x10` is absent in `BuildingRecord.castle_addon_flags`, so membership in that fixed unit-id table is a hard smiths prerequisite for licence eligibility. | `clash95.c:54726-54741`, `clash95.asm:409548-409567` | derived stat | buildable production units gated by smiths |
 | `production_requires_workshop` | high | Per-type production-licence gate that requires the workshop add-on before the unit may be licensed. | `Building_IsUnitLicenceEligible` returns early once the workshop bit `0x04` is present, and otherwise scans `g_ProductionLicenceWorkshopRequiredUnitTypes`, so membership in that fixed unit-id table is a hard workshop prerequisite for licence eligibility. | `clash95.c:54743-54752`, `clash95.asm:409570-409585` | derived stat | buildable production units gated by workshop |
 | `construction_progress_per_turn` | high | Fixed construction throughput contributed by each garrisoned builder to staged stronghold construction. | `Building_NewTurn` adds `g_BuilderConstructionProgressPerTurn` for every type-`17` garrison slot while reducing `BuildingRecord.construction_turns_remaining`, and `Building_CalcRemainingConstructionTurns` divides the pending timer by the same constant to estimate the remaining turns shown in the construction dialog. | `clash95.c:33458-33469`, `clash95.c:34142-34158`, `clash95.c:34483-34490` | derived stat | `UnitType17_Builder` |
-| `role` | high | Per-type tactical role class used by battle AI and healing eligibility. | The metadata parser loads the literal `role` field into `g_UnitTypeRole`; battle target-priority and ordering helpers index role-matchup tables through that byte, and `UnitStack_HasUnitsNeedingHealing` only flags low-health slots whose role class is at least `3`. | `clash95.c:8644-8647`, `clash95.c:49816-49834`, `clash95.c:50323-50335`, `clash95.c:50576-50584`, `clash95.c:51608-51618`, `clash95.c:52082-52090`, `clash95.c:52568-52631`, `clash95.c:53501-53651`, `clash95.c:69105-69118` | base stat | all combat-capable unit types |
+| `role` | high | Per-type tactical role class used by battle AI and healing eligibility. | The statically initialized byte at metadata +77 indexes battle priority/deployment tables, and the healing gate reads role >= 3. The former parser claim was rejected: `aRole` belongs to CLIPS class concrete/abstract parsing. | `clash95.asm:92815-92820`, `clash95.c:49816-49834`, `clash95.c:50323-50335`, `clash95.c:50576-50584`, `clash95.c:51608-51618`, `clash95.c:52082-52090`, `clash95.c:52568-52631`, `clash95.c:53501-53651`, `clash95.c:69105-69118` | base stat | all combat-capable unit types |
 | `move_pixel_speed` | medium | Per-frame displacement during movement animation. | Movement loops multiply direction vectors by `byte_512570`. | `clash95.c:38680-38720`, `clash95.c:39240-39330` | base stat | mobile units |
 | `move_tick_delay` | medium | Delay between movement animation ticks. | `Time_Now` gates movement animation advancement with `byte_512571`. | `clash95.c:38632-38705` | modifier | mobile units |
 | `animation_frame_interval` | high | Shared per-type frame delay for idle and attack animation loops. | World idle animation, battle idle animation, melee attack loops, and ranged attack loops all gate frame advancement with `byte_512572`. | `clash95.c:24096-24105`, `clash95.c:39393-39406`, `clash95.c:40211-40224`, `clash95.c:45849-45874` | modifier | animated units |

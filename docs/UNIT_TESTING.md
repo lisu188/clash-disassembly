@@ -21,7 +21,7 @@ depending on removed unified-source line ranges.
 ## Build and test layout
 
 With coverage enabled, CMake creates
-`clash95_recovered_coverage_objects` from all 138 recovered split translation
+`clash95_recovered_coverage_objects` from all 140 recovered split translation
 units. Recovered code and the test/support code are compiled separately as GNU
 C17:
 
@@ -98,9 +98,22 @@ artifact.
 
 ## Current result
 
-The latest split-profile measurement covers **5963 of 6636 executable lines
-(89.86%)** across all **718 frozen functions**. No frozen function is
-zero-covered.
+The 2026-09-05 tactical-slot measurement covers **6144 of 6649 executable lines
+(92.40%)** across all **718 frozen functions**. No frozen function is
+zero-covered. It supersedes the preceding 6144/6647-line (92.43%) structure
+measurement without changing the frozen function set or the 89.7% CI floor.
+The latest unit suite passed in 60.26 seconds: 1058 passed, zero failed
+assertions, and 530 isolated crashes. Both new regression cases pass. The crash
+count matches the prior run, but the set gains an existing CRT thread case and
+loses an existing timezone case; CTest success does not mean zero crashes.
+The first build's packed-fixture alignment failure is preserved under
+`coverage/first-build/`; the fixture now uses explicitly aligned storage.
+The full output, crash comparison and fresh-shard coverage logs are retained in
+`artifacts/structure-recovery/tactical-validation-20260905/coverage/`. See
+[STATUS.md](STATUS.md) for current limits and [ASTRA_READINESS.md](ASTRA_READINESS.md)
+for the preceding audit; other repository readiness gates remain blocked.
+This measurement precedes the concurrent consumer shared-state header rollout;
+it is not validation of that later interface change.
 
 The remaining gap is concentrated in decompiler artifacts such as values that
 the original binary held in registers but the recovered C leaves undefined,

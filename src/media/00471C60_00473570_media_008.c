@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "media_internal.h"
 #include "media_state.h"
-#include "../state/state_shared.h"
+#include "media_shared_state.h"
 #include "../clips/clips_api.h"
 #include "../recovered_legacy_imports.h"
 #include "../recovered_test_seams.h"

@@ -328,6 +328,30 @@ TEST(cov01_unitstack, subtract_action_points_floor_zero_subtract_and_full_loop) 
   TOUCH(UnitStack_SubtractActionPointsFloorZero((__int16 *)buf, 5, 0, 0.0));
 }
 
+TEST(cov01_unitstats, icon_indices_use_slot_stance_not_tail) {
+  _Alignas(__int16) unsigned char bytes[sizeof(UnitSlotRecord)] = {0};
+  UnitSlotRecord *slot = (UnitSlotRecord *)bytes;
+
+  /* Original type 1 metadata has melee 5 and defence 4 at +22/+23.
+   * 0x411180/0x411240 read stance at byte +12, not short index 12 (+24),
+   * and sign-extend the morale byte before dividing it by five. */
+  slot->unit_type_id = UNIT_TYPE_LIGHT_INFANTRY;
+  slot->morale = 10;
+  slot->stance_bits = 0xA7;
+  bytes[24] = 0;
+  CHECK_EQ(UnitStats_GetMeleeIconIndex((__int16 *)bytes), 10);
+  CHECK_EQ(UnitStats_GetDefenseIconIndex((__int16 *)bytes), 9);
+  bytes[24] = 3;
+  CHECK_EQ(UnitStats_GetMeleeIconIndex((__int16 *)bytes), 10);
+  CHECK_EQ(UnitStats_GetDefenseIconIndex((__int16 *)bytes), 9);
+  slot->stance_bits = 0xFC;
+  CHECK_EQ(UnitStats_GetMeleeIconIndex((__int16 *)bytes), 7);
+  CHECK_EQ(UnitStats_GetDefenseIconIndex((__int16 *)bytes), 6);
+  slot->morale = 0xFB;
+  CHECK_EQ(UnitStats_GetMeleeIconIndex((__int16 *)bytes), 4);
+  CHECK_EQ(UnitStats_GetDefenseIconIndex((__int16 *)bytes), 3);
+}
+
 TEST(cov01_unitstats, melee_attack_and_icon) {
   unsigned char buf[64];
 

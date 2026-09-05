@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "media_internal.h"
 #include "media_state.h"
-#include "../state/state_shared.h"
+#include "media_shared_state.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 

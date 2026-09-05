@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "persistence_internal.h"
 #include "persistence_state.h"
-#include "../state/state_shared.h"
+#include "persistence_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -18,7 +18,7 @@
 //----- (00441DC0) --------------------------------------------------------
 int  Audio_PlayUnitMeleeAttackSound(int result)
 {
-  char *resourceKeyChars; // esi
+  const char *resourceKeyChars; // esi
   char *stemCursor; // edi
   char stemChar; // al
   char stemNextChar; // al
@@ -31,7 +31,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPathBuffer, aSfxOddzialy_4, sizeof(soundPathBuffer));
-    resourceKeyChars = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKeyChars = g_UnitTypeRuntimePointers[result].resource_key;
     stemCursor = &soundPathBuffer[strlen(soundPathBuffer)];
     do
     {
@@ -69,7 +69,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
 //----- (00441E60) --------------------------------------------------------
 int  Audio_PlayUnitShotSound(int result)
 {
-  char *resourceKeyChars; // esi
+  const char *resourceKeyChars; // esi
   char *stemCursor; // edi
   char stemChar; // al
   char stemNextChar; // al
@@ -82,7 +82,7 @@ int  Audio_PlayUnitShotSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPathBuffer, aSfxOddzialy_5, sizeof(soundPathBuffer));
-    resourceKeyChars = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKeyChars = g_UnitTypeRuntimePointers[result].resource_key;
     stemCursor = &soundPathBuffer[strlen(soundPathBuffer)];
     do
     {
@@ -120,7 +120,7 @@ int  Audio_PlayUnitShotSound(int result)
 //----- (00441F00) --------------------------------------------------------
 void  Audio_PlayWorldMapUnitMoveSound(int tileRow, int tileColumn, signed int moveStepCounter, unsigned int unitTypeId)
 {
-  char *loopStemChars; // esi
+  const char *loopStemChars; // esi
   char *loopStemCursor; // edi
   char loopStemChar; // al
   char loopStemNextChar; // al
@@ -128,7 +128,7 @@ void  Audio_PlayWorldMapUnitMoveSound(int tileRow, int tileColumn, signed int mo
   char *loopExtCursor; // edi
   char loopExtChar; // al
   char loopExtNextChar; // al
-  char *stemChars; // esi
+  const char *stemChars; // esi
   char *stemCursor; // edi
   char stemChar; // al
   char stemNextChar; // al
@@ -163,7 +163,7 @@ void  Audio_PlayWorldMapUnitMoveSound(int tileRow, int tileColumn, signed int mo
     }
     CSS_StopSound(g_CurrentUnitMoveSoundHandle, 0);
     qmemcpy(soundPathBuffer, aSfxRuchy_0, sizeof(soundPathBuffer));
-    stemChars = (&g_UnitMoveSoundStems)[22 * unitTypeId];
+    stemChars = g_UnitTypeRuntimePointers[unitTypeId].move_sound_stem;
     stemCursor = &soundPathBuffer[strlen(soundPathBuffer)];
     do
     {
@@ -263,15 +263,15 @@ LABEL_25:
       extCursor += 2;
     }
     while ( extNextChar );
-    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
-    g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[volumeTableIndex];
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[volumeTableIndex / UNIT_TYPE_METADATA_STRIDE].move_sound_base_volume, 0, 0);
+    g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[volumeTableIndex / UNIT_TYPE_METADATA_STRIDE].move_sound_variant_count;
     return;
   }
   if ( unitTypeId != g_CurrentUnitMoveSoundTypeId )
   {
     g_CurrentUnitMoveSoundTypeId = unitTypeId;
     qmemcpy(loopSoundPathBuffer, aSfxRuchy, sizeof(loopSoundPathBuffer));
-    loopStemChars = (&g_UnitMoveSoundStems)[22 * unitTypeId];
+    loopStemChars = g_UnitTypeRuntimePointers[unitTypeId].move_sound_stem;
     loopStemCursor = &loopSoundPathBuffer[strlen(loopSoundPathBuffer)];
     do
     {
@@ -299,7 +299,7 @@ LABEL_25:
       loopExtCursor += 2;
     }
     while ( loopExtNextChar );
-    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[unitTypeId].move_sound_base_volume, 0, 0);
     if ( unitTypeId > 0xD )
     {
       if ( unitTypeId <= 0xE )
@@ -328,7 +328,7 @@ LABEL_25:
 //----- (00442290) --------------------------------------------------------
 void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int moveStepCounter, unsigned int unitTypeId)
 {
-  char *loopStemChars; // esi
+  const char *loopStemChars; // esi
   char *loopStemCursor; // edi
   char loopStemChar; // al
   char loopStemNextChar; // al
@@ -336,7 +336,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
   char *loopExtCursor; // edi
   char loopExtChar; // al
   char loopExtNextChar; // al
-  char *stemChars; // esi
+  const char *stemChars; // esi
   char *stemCursor; // edi
   char stemChar; // al
   char stemNextChar; // al
@@ -366,7 +366,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
       {
         g_CurrentUnitMoveSoundTypeId = unitTypeId;
         qmemcpy(loopSoundPathBuffer, aSfxRuchy_1, sizeof(loopSoundPathBuffer));
-        loopStemChars = (&g_UnitMoveSoundStems)[22 * unitTypeId];
+        loopStemChars = g_UnitTypeRuntimePointers[unitTypeId].move_sound_stem;
         loopStemCursor = &loopSoundPathBuffer[strlen(loopSoundPathBuffer)];
         do
         {
@@ -394,7 +394,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
           loopExtCursor += 2;
         }
         while ( loopExtNextChar );
-        g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * unitTypeId], 0, 0);
+        g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)loopSoundPathBuffer, (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[unitTypeId].move_sound_base_volume, 0, 0);
         if ( unitTypeId > 0xD )
         {
           if ( unitTypeId <= 0xE )
@@ -418,7 +418,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
       }
       CSS_StopSound(g_CurrentUnitMoveSoundHandle, 0);
       qmemcpy(soundPathBuffer, aSfxRuchy_2, sizeof(soundPathBuffer));
-      stemChars = (&g_UnitMoveSoundStems)[22 * unitTypeId];
+      stemChars = g_UnitTypeRuntimePointers[unitTypeId].move_sound_stem;
       stemCursor = &soundPathBuffer[strlen(soundPathBuffer)];
       do
       {
@@ -491,8 +491,8 @@ void  Audio_PlayBattleMapUnitMoveSound(int tileRow, int tileColumn, signed int m
         extCursor += 2;
       }
       while ( extNextChar );
-      g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitMoveSoundBaseVolumes[volumeTableIndex], 0, 0);
-      g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[volumeTableIndex];
+      g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)(intptr_t)soundPathBuffer, (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[volumeTableIndex / UNIT_TYPE_METADATA_STRIDE].move_sound_base_volume, 0, 0);
+      g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[volumeTableIndex / UNIT_TYPE_METADATA_STRIDE].move_sound_variant_count;
     }
   }
 }

@@ -14,7 +14,6 @@ int Port_UpdateShorelineVariantTiles(void);
 int Rules_RebuildTreasureFacts(void);
 int  SaveSlot_FormatDataFilePath(int slotIndex, char *outPath);
 int  SaveSlot_FormatFactsFilePath(int slotIndex, char *outPath);
-signed int  saveGame(int slotIndex, DWORD headerBuffer, double a3);
 char  SaveSlot_LoadLabelOrPlaceholder(int slotIndex, char *outLabelBuffer, DWORD a3);
 int  SaveSlot_HasDataFile(int slotIndex, DWORD a2);
 int  SaveSlotDialog_RepaintRow(int a1);
@@ -28,7 +27,6 @@ int  MainMenu_RequestExit(uintptr_t widget);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void CampaignMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
-void Options_RebuildMainMenuWidgetTemplates(void);
 int  MainMenu_RequestCampaignMenu(uintptr_t widget);
 int  MainMenu_RequestMultiplayerMenu(uintptr_t widget);
 int  MainMenu_RequestCreditsCinematic(uintptr_t widget);
@@ -83,5 +81,6 @@ char * BuildingPrisonerActionButton_SelectBribery(int widgetRecord);
 int  BuildingPrisonerPanel_BackButton(int widgetRecord);
 int  Building_DrawPrisonerRows(DWORD a1);
 int  Queen_DrawRelationshipPanel(DWORD a1, int a2);
+void Options_RebuildMainMenuWidgetTemplates(void);
 
 #endif /* CLASH95_PERSISTENCE_INTERNAL_H */

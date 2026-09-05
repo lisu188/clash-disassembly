@@ -4,14 +4,14 @@
 
 The source split reached final repository cutover on 2026-07-15. The recovered
 implementation used by `clash95_recovered` and `clash95_bootstrap` is canonical
-only as **138 independently compiled GNU C17 translation units** in 12 subsystem
+only as **140 independently compiled GNU C17 translation units** in 12 subsystem
 directories directly under `src/`:
 
-- 136 address-ordered function-family files;
+- 138 address-ordered function-family files;
 - one prelude/helper translation unit;
 - one quarantined recovered-state translation unit.
 
-`data/recovered_sources.json` records **4,070 recovered functions** and **3,920
+`data/recovered_sources.json` records **4,157 recovered functions** and **4,007
 original address-marker chunks**. Marker chunks and function records are
 related evidence sets, not a one-to-one count. The root unified source, GNU89
 oracle targets, recovered include-C fragments, and compatibility source symlinks
@@ -46,7 +46,8 @@ subsystem's internal header (which pulls the api header, the measured public
 surface — e.g. `src/battle/battle_internal.h` pulling
 `src/battle/battle_api.h`) and its state header (state-owned globals whose
 only consumer is that subsystem, e.g. `src/battle/battle_state.h`),
-`src/state/state_shared.h` where a multi-subsystem global is referenced, the
+its own shared-state slice (e.g. `src/battle/battle_shared_state.h`) where a
+multi-subsystem global is referenced, the
 api headers of exactly the peers it calls, `src/recovered_legacy_imports.h` where
 a legacy CRT/Win32 import is referenced, and `src/recovered_types.h` +
 `src/recovered_layout.h` via the block. All of this is generated from
@@ -60,6 +61,27 @@ remain production-only `static` functions, and 30 frozen pure helpers use
 `static` in production and external only when `CLASH95_TESTING` is enabled.
 
 ## Authoritative metadata
+
+`data/recovered_decls.json` also represents reconstruction helpers that have
+no original function address. These use `class: "helper"`, an explicit `home`,
+and a `source` in the existing manifest-backed TU set. The header generator
+validates that ownership and measures their callers in the same way as other
+functions; helpers follow manifest functions in alphabetical order. They do
+not acquire invented address records or become legacy imports. Focused checks
+run with `python3 -m unittest discover -s tests/tools -p 'test_*.py'`.
+
+Consumer-specific shared-state declaration slices are active through the
+declaration DB's `shared_state_layout: consumer` setting. The state definition
+group and unit-test aggregate retain `src/state/state_shared.h`.
+`data/subsystem_api.json` records each subsystem's slice and each TU's referenced
+versus visible declaration identities, while preserving the existing coupling
+metrics. See [SOURCE_LAYOUT.md](SOURCE_LAYOUT.md#shared-state-interfaces)
+for the boundaries and [BUILD_AND_TEST.md](BUILD_AND_TEST.md#shared-state-header-rollout)
+for validation. The rollout preserves recovered source ownership, function
+bodies, storage layout and the manifest. Both GCC 13 and Clang 18 produce
+identical normalized recovered object disassemblies and linked symbol layouts
+before and after this header-only change; evidence is under
+`artifacts/modularization/shared-state-20260905/rollout/`.
 
 `data/recovered_sources.json` is the source of truth for implementation
 identity. Each function record includes its name, original address/range,
@@ -127,7 +149,7 @@ ratchet, including diagnostics attributed to the private recovered headers
 `src/recovered_legacy_imports.h`, `src/recovered_test_seams.h`,
 `src/recovered_all.h`, and the generated per-subsystem headers under
 `src/<subsystem>/`) and the shared compatibility ABI definitions.
-The reviewed baselines are **9,766 GCC diagnostics** and **9,812 Clang 18
+The reviewed baselines are **9,763 GCC diagnostics** and **9,809 Clang 18
 diagnostics** (re-seeded downward from the original 146,171/147,027 by the
 `(void)`-prototype wave, the per-subsystem header narrowing, legacy-import
 typing from stub-definition evidence, explicit `(u)intptr_t` chains at ~27.4k
@@ -174,7 +196,7 @@ ctest --test-dir build/clang -R \
 CI captures the corresponding complete compiler logs before running the split,
 pure-metadata, save-contract, and mission-trace CTest gates.
 
-The coverage build instruments the same 138 split sources and compiles every
+The coverage build instruments the same 140 split sources and compiles every
 test case independently. See `docs/UNIT_TESTING.md` for its runner and
 per-worker coverage-shard design.
 

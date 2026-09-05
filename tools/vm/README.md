@@ -684,7 +684,7 @@ world-map frame (this is why
 `mission_05_stack19_tactical_entry_probe`'s `checkpoint-mission05-stack19-tactical-open.bmp`
 classifies as `world-map`). Use an env with
 `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_BATTLE_ENTER=1` - e.g.
-`mission_05_stack19_tactical_probe.env` - when a battle frame is the goal; that
+`tests/first_campaign_arc_routes/mission_05_stack19_tactical_probe.env` - when a battle frame is the goal; that
 route yields genuine 7x7-board frames (indices 7-10 of the reset series).
 
 ## MILESTONE (2026-07-27): the strategic AI marches — adversarially confirmed, world map re-scored

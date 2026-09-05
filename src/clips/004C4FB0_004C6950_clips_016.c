@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "clips_internal.h"
 #include "clips_state.h"
-#include "../state/state_shared.h"
+#include "clips_shared_state.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */

@@ -76,7 +76,10 @@ TEST(cov10_facts, log_bad_string) {
 /* ---- Rules_FindFactByIndex: with no facts asserted, Rules_GetNextFact(0)
  * returns 0 (empty list), so the function takes the early "!result" return. */
 TEST(cov10_facts, find_fact_by_index_empty) {
-  TOUCH(Rules_FindFactByIndex());
+  int saved = g_Rules_FactListHead;
+  g_Rules_FactListHead = 0;
+  CHECK_EQ(Rules_FindFactByIndex(0), 0);
+  g_Rules_FactListHead = saved;
 }
 
 /* ---- Rules_RegisterFactCommands: registers a batch of host functions/

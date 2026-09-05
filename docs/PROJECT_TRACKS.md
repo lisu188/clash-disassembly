@@ -42,8 +42,7 @@ Primary artifacts:
 
 - `docs/STATUS.md`
 - `docs/RUNTIME_MILESTONES.md`
-- `tests/first_campaign_arc_routes/`
-- `tests/second_campaign_arc_routes/`
+- `tests/first_campaign_arc_routes/` (all mission IDs `00..19`, both campaigns)
 - `artifacts/campaign-routes/`
 
 Current baseline:
@@ -55,10 +54,12 @@ Current baseline:
 - full Campaign-menu entry and automatic mission advancement remain unproven.
 
 Mission `05` requires eliminating every player-3 building and stack without
-attacking players `1` or `2`. The next route batch must first add enough turn,
-AI, building, stack, and objective observability to measure natural allied
-progress. It may then construct the smallest authentic player route that reaches
-`mission_objective_complete`.
+attacking players `1` or `2`. The retained route now reaches `(47,58)` with
+stack `4` through authentic multi-turn movement. The next batch must revalidate
+manual tactical entry against stack `19` and the first exchange, then measure
+and clear the surviving owner-3 targets. Follow `docs/STATUS.md` "Next Target"
+for the current evidence and starting point; the earlier one-turn tactical
+entry relied on invalid 255-AP state and is quarantined.
 
 A route may become `complete` only when it has:
 
@@ -74,7 +75,8 @@ entry, natural completion, and automatic advancement.
 ## Immediate priority sequence
 
 1. Keep public CI, the split-source audit, and the current SDL build green.
-2. Add mission-05 observability and recover its authentic completion route.
+2. Continue the retained mission-05 arrival route and recover authentic
+   completion, following `docs/STATUS.md` "Next Target".
 3. Prove Campaign-menu entry and at least one natural automatic mission advance.
 4. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.
 5. Continue structure and semantic recovery only where it supports these active

@@ -7,6 +7,10 @@
     "clash95.exe"
   ],
     "maintenance_notes": [
+        "2026-09-05 tactical slot validation: GCC13/Clang18 builds and four asset-free gates each pass; generated structures, metadata and subsystem/TU headers are current. Final unit results are 1058 passed, zero assertion failures, 530 crashes, with 6144/6649 covered lines (92.40%) over all 718 frozen functions. Both new cases pass. One existing CRT thread crash replaces a prior timezone crash; the set is not identical. Private engine-authored mission05 state loads through the original Load menu, but matching tactical/banner frames remain unproven. No baseline or campaign status changed.",
+        "2026-09-05 tactical slot recovery names BattleUnitEntry fatigue +10 and morale +11 from the 31-byte placement/survivor copies and independent signed panel loads. Three tactical-panel reads and both melee/defence icon helpers formerly scaled the stance offset through short pointers, reading +24 instead of +12; typed fields restore the original byte operands while preserving signed morale arithmetic. The record remains 31 bytes. Exact source/assembly evidence is retained under artifacts/structure-recovery/tactical-validation-20260905/; the popup/render defects and remaining opaque record spans are deferred.",
+        "2026-09-05 pointer recovery restores all original localized names and resource-key targets, preserving raw font bytes and the shared type-33/type-34 triplet. A native pointer companion replaces the fake metadata globals; original English labels are Taran, Highlander, Cyklop and Pegaz for types 13, 16, 20 and 27. Assembly-backed panel format arguments are also restored; runtime validation remains blocked by WSL E_ACCESSDENIED.",
+        "2026-09-05 structure recovery restores all 40 physical 88-byte metadata slots: 35 initialized types and five zero records. Vision, production/licence, tactical role, corpse/sound frames, movement audio and auto-resolve consumers now use typed fields. Map-backed unit_stats is casualty weight at +87, not corpse sprite at +78; the alleged tactical-role parser linkage was unrelated CLIPS class parsing. Both original PE copies agree on all 3520 bytes; Linux compilation, tests and original-frame comparison remain blocked by WSL E_ACCESSDENIED.",
         "Batch 261 replaced the false one-element unit metadata globals with the executable-backed 35-record, 88-byte-stride runtime core. Exact bytes at record offsets +8..+37 now restore animation, type flags, combat/AP/range, road, and eight world-surface move-cost fields; the +38..+87 tail is not claimed by this recovery. Mission 05 stack 4 consequently loads with an authentic 20-point mixed-stack AP floor instead of the host-memory artifact 255.",
         "Batch 258 stayed on repository documentation hygiene. No new unit-type or stat semantics were promoted; the human-readable report moved under docs/archive and current metadata navigation now lives in docs/STRUCTURES.md.",
         "Mission-04 post-breach recovery branch completed the authentic three-assault mission-04 Hopenberg route, proved the empty-garrison castle-capture/objective handoff, and recovered mission 05's language-dependent elimination and failure predicates. No new unit-type, stat, category, or relationship semantics were promoted; dynamic tactical deployment only required resolving the selected infantry slot from the clicked occupant record.",
@@ -233,7 +237,7 @@
       "id": 16,
       "name": "UnitType16_Goral",
       "folder": "goral",
-      "localized_names": "Góral / Highlander",
+      "localized_names": "Góral / Highlander / Bergbewohner",
       "confidence": "high",
       "evidence": "The asm xrefs for `off_5123E4` and `goral` land in the same unit_stats record."
     },
@@ -265,7 +269,7 @@
       "id": 20,
       "name": "UnitType20_Cyclop",
       "folder": "cykl",
-      "localized_names": "Cyklop / Cyclop",
+      "localized_names": "Cyklop / Cyklop / Zyklop",
       "confidence": "high",
       "evidence": "The asm xrefs for `off_5124D4` and `cykl` land in the same unit_stats record."
     },
@@ -321,7 +325,7 @@
       "id": 27,
       "name": "UnitType27_Pegasus",
       "folder": "pegaz",
-      "localized_names": "Pegaz / Pegasus",
+      "localized_names": "Pegaz / Pegaz / Pegasus",
       "confidence": "high",
       "evidence": "The asm xrefs for `off_512474` and `pegaz` land in the same unit_stats record."
     },
@@ -382,13 +386,37 @@
       "evidence": "This record reuses the same localized-name table, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The queen-turn path binds type `34` specifically to the daughter outcome before formatting `g_QueenDaughterBirthTexts`. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
+  "unit_type_pointer_recovery": {
+    "original_name_triplet_stride": 12,
+    "unique_triplets": 34,
+    "unique_string_pointers": 102,
+    "language_order": [
+      "Polish",
+      "English",
+      "German"
+    ],
+    "shared_triplet_types": [
+      33,
+      34
+    ],
+    "resource_key_count": 35,
+    "runtime_companion": "UnitTypeRuntimePointerRecord / g_UnitTypeRuntimePointers",
+    "byte_evidence": "data/unit_type_runtime_metadata.json",
+    "confidence": "high",
+    "evidence": "Both original PE images agree. Assembly 409287..409424 defines triplets; 10315..10322 and 40714..40721 prove the two dereferences. Text rendering consumes bytes, not UTF-8.",
+    "rejected": "The [102] decompiler type is not one metadata record or a 102-language name array. Non-peasant units are not English-only."
+  },
   "unit_type_runtime_core_table": {
     "confidence": "high",
-    "record_count": 35,
+    "record_count": 40,
+    "initialized_type_count": 35,
     "record_stride": 88,
     "original_base_va": "0x00512568",
-    "recovered_offset_band": "+8..+37",
-    "unrecovered_offset_band": "+38..+87",
+    "recovered_offset_band": "+8..+37, +70..+87",
+    "unresolved_semantics_offset_band": "+38..+69",
+    "physical_bytes_source": "data/unit_type_runtime_metadata.json",
+    "rows_describe": "Historical +8..+37 core for 35 initialized types; the linked byte artifact contains all 40 full records.",
+    "pointer_resolution": "Original VAs remain evidence-only. Movement stems have native resolution; localized-name/resource-key consumers still need recovery.",
     "source": "Raw initialized-data bytes in clash95.exe, mapped from DGROUP VMA 0x004EC000/file offset 0x000EA200 and corroborated by the 88-byte/22-dword indexing in clash95.asm and clash95.c.",
     "columns": [
       "unit_type_id",
@@ -487,6 +515,24 @@
   ],
   "stats": [
     {
+      "name": "vision_radius",
+      "confidence": "high",
+      "semantic_role": "per-type circular world-map reveal radius in tiles",
+      "evidence": "UnitStack_GetVisionRadius (0x40F8B0; asm 23383..23425) takes the maximum unsigned byte at record+70 across occupied slots; UnitStack_UpdateVision applies the circular reveal. Original types 26..30 have radius 5, all other initialized types 3."
+    },
+    {
+      "name": "corpse_sprite_base_index",
+      "confidence": "high",
+      "semantic_role": "per-type base frame for eight corpse facing variants",
+      "evidence": "UnitBattle_GetCorpseSpriteIndex at 0x4283D0 (asm 62172) adds unsigned record+78 to (facing+4)%8. Peasant base 0, catapult 32, dragon 48. This is distinct from the +87 casualty weight."
+    },
+    {
+      "name": "autoresolve_casualty_weight",
+      "confidence": "high",
+      "semantic_role": "winning-slot casualty selection weight and base quantity deduction in auto-resolve",
+      "evidence": "clash95.map:6984 places public unit_stats at VA 0x5125BF, record+87. CalculateBattleResult (asm 44022..44049) selects the largest unprocessed weight, subtracts it from slot quantity, then applies random extra loss and remaining budget. Peasant 50, catapult 100, dragon 60. Former alias to corpse byte +78 was incorrect."
+    },
+    {
       "name": "base_action_points",
       "confidence": "high",
       "semantic_role": "per-type maximum action-point budget before fatigue penalties",
@@ -508,13 +554,13 @@
       "name": "fatigue",
       "confidence": "high",
       "semantic_role": "runtime exhaustion counter that throttles action points and morale",
-      "evidence": "Lives at UnitSlotRecord +10, drops by 20 on recovery turns, and thresholds at 80/90/100 reduce available action points."
+      "evidence": "Lives at UnitSlotRecord +10, drops by 20 on recovery turns, and thresholds at 80/90/100 reduce available action points. BattleUnitEntry preserves the same fatigue byte through the full 31-byte placement and survivor copies; the tactical panel sign-extends +10 at clash95.asm:75501 before displaying tiredness."
     },
     {
       "name": "morale",
       "confidence": "high",
       "semantic_role": "runtime 0-20 morale/obedience score that boosts combat stats and can cause order refusal",
-      "evidence": "Lives at UnitSlotRecord +11, is clamped to 0..20, adds into attack and damage helpers, drives the low-morale refusal flag, and is shown in the selected-unit battle panel through the same five-tier 0..20 presentation bucket."
+      "evidence": "Lives at UnitSlotRecord +11, is clamped to 0..20, adds into attack and damage helpers, drives the low-morale refusal flag, and is shown in the selected-unit battle panel through the same five-tier 0..20 presentation bucket. BattleUnitEntry preserves it through both 31-byte copy directions; the tactical panel and icon helpers sign-extend the stored byte (clash95.asm:75483, :25917 and :26018)."
     },
     {
       "name": "stance_bits",
@@ -652,7 +698,7 @@
       "name": "role",
       "confidence": "high",
       "semantic_role": "per-type tactical role class used by battle target priorities, role-matchup ordering, and healing eligibility",
-      "evidence": "The metadata parser loads the literal `role` field into `g_UnitTypeRole`, battle helpers index role-priority tables through that byte, and `UnitStack_HasUnitsNeedingHealing` only counts low-health slots whose role class is at least `3`."
+      "evidence": "Original byte +77 is statically initialized and read by battle role-priority/deployment tables and the healing role>=3 gate. The earlier parser evidence is rejected: literal aRole is consumed by Rules_ParseDefclass for CLIPS concrete/abstract classes, not unit metadata."
     },
     {
       "name": "move_pixel_speed",
@@ -1111,6 +1157,25 @@
   ],
   "ambiguous": [
     {
+      "candidate": "BattleUnitEntry bytes +13..+16 and +23..+30",
+      "candidate_kind": "field_spans",
+      "possible_interpretations": [
+        "shared world-slot state retained across tactical copies",
+        "transient battle-specific state within the shared 31-byte payload"
+      ],
+      "evidence": "Battle_PlaceUnit and HandleBattleResults copy the full payload, but the confirmed fatigue/morale/stance panel reads do not establish the semantics of these remaining spans. See artifacts/structure-recovery/tactical-validation-20260905/unit-slot-access-audit.md.",
+      "blockers": "Copy width alone does not justify new field names or bit meanings; retain the generated opaque members until independent consumers align."
+    },
+    {
+      "candidate": "UnitTypeMetadataRecord +38..+69",
+      "candidate_kind": "opaque_initialized_span",
+      "possible_interpretations": [
+        "unidentified packed fields; boundaries and signedness are unproven"
+      ],
+      "evidence": "Both originals contain identical initialized bytes; types 0..16 include nonzero values and types 17..34 have zeros. No field-level reads or writes were identified.",
+      "blockers": "Numeric patterns alone do not establish terrain or combat modifiers. Exact bytes are retained without those semantics."
+    },
+    {
       "candidate": "UnitType33_SpecialFootPersonage / UnitType34_SpecialMountedPersonage",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
@@ -1178,8 +1243,9 @@
         "35 records with one duplicated localized-name triplet",
         "34 unique localized-name entries plus one reused special case"
       ],
-      "evidence": "The decompiler typed the header as `[102]`, but the asm/xref pass shows at least 35 records and a duplicated commander name pointer.",
-      "blockers": "Decompiler output alone is misleading here."
+      "evidence": "34 unique 12-byte language triplets contain 102 original pointers. The 35 real metadata rows reuse the final triplet for types 33/34; five reserved rows have null pointers.",
+      "blockers": "None for physical layout and byte values; old competing interpretations retained as historical candidates.",
+      "status": "resolved by original PE pointer extraction on 2026-09-05"
     }
   ]
 }

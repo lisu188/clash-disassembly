@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -316,7 +316,7 @@ __int16  UnitBattle_PlayShotAnimation(
       if ( now - last_tick >= v36 )
       {
         soundUnitType = *(__int16 *)(uintptr_t)(shooter_record_offset + g_MapData + 852);
-        soundFrameIndex = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * soundUnitType];
+        soundFrameIndex = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[soundUnitType].ranged_attack_sound_frame;
         if ( soundFrameIndex == g_UnitAnimFrameIndex )
           Audio_PlayUnitRangedAttackSound(soundUnitType);
         last_tick = Time_Now(v35, soundFrameIndex);
@@ -360,7 +360,7 @@ __int16  UnitBattle_PlayShotAnimation(
         {
           v51 = *(__int16 *)(uintptr_t)(frameCount + g_MapData + 852);
           v52 = g_UnitAnimFrameIndex;
-          v53 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v51];
+          v53 = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[v51].ranged_attack_sound_frame;
           if ( v53 == g_UnitAnimFrameIndex )
             Audio_PlayUnitRangedAttackSound(v51);
           last_tick = Time_Now(v52, v53);

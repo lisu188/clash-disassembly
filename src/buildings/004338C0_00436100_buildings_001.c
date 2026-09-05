@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -312,10 +312,12 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
   int v19 CLASH95_UNUSED; // ecx
   int v20 CLASH95_UNUSED; // ecx
   int v21 CLASH95_UNUSED; // ecx
-  int selectedUnitMetaOffset; // esi
+  int selectedUnitType; // esi
   int infoPanelSprite; // eax
   DWORD renderMethods; // ebp
-  char *unitMetadataPtr; // esi
+  const UnitTypeRuntimeCoreMetadataRecord *unitMetadataPtr; // esi
+  const char *selectedUnitName;
+  int baseMorale;
   DWORD v26; // ebp
   int v27; // edx
   int v28; // edx
@@ -387,7 +389,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
       UI_DrawText(
         45,
         rowY,
-        (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+        (int)(intptr_t)UnitType_GetLocalizedName((unit_type)unitType));
       Render_ReleaseSurface(5, 0x2Du);
       availableUnitByteOffset += 4;
       ++stripUnitIndex;
@@ -401,7 +403,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
         UI_DrawText(
           45,
           rowY,
-          (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+          (int)(intptr_t)UnitType_GetLocalizedName((unit_type)unitType));
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
@@ -409,31 +411,33 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
         UI_DrawText(
           45,
           rowY,
-          (int)(intptr_t)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
+          (int)(intptr_t)UnitType_GetLocalizedName((unit_type)unitType));
       }
       availableUnitByteOffset += 4;
       ++stripUnitIndex;
       rowY += 17;
     }
   }
-  selectedUnitMetaOffset = 88 * g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
+  selectedUnitType = g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
   infoPanelSprite = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 17);
   renderMethods = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int))(uintptr_t)(renderMethods + 52))(186, infoPanelSprite, -1, -1, -1);
-  unitMetadataPtr = (char *)&g_UnitTypeMetadataRecords + selectedUnitMetaOffset;
+  unitMetadataPtr = &g_UnitTypeRuntimeCoreMetadata[selectedUnitType];
   Render_ReleaseSurface(7, renderMethods);
-  v26 = *(_DWORD *)(uintptr_t)(*(_DWORD *)unitMetadataPtr + 4 * (unsigned __int8)g_LanguageIndex);
-  UI_DrawTextFmt(69, 133, 261, 191, 3, v26);
-  UI_DrawTextFmt(69, 201, 217, panelBaseY + 95, 2, (int)(intptr_t)aD_68);
-  UI_DrawTextFmt(69, 154, 174, panelBaseY + 50, 2, (int)(intptr_t)aD_69);
-  UI_DrawTextFmt(69, 201, 217, panelBaseY + 50, 2, (int)(intptr_t)aD_70);
+  selectedUnitName = UnitType_GetLocalizedName((unit_type)selectedUnitType);
+  v26 = (DWORD)(uintptr_t)selectedUnitName;
+  UI_DrawTextFmt(69, 133, 261, 191, 3, selectedUnitName);
+  baseMorale = (unitMetadataPtr->flags & 2) ? 6 : 10;
+  UI_DrawTextFmt(69, 201, 217, panelBaseY + 95, 2, aD_68, unitMetadataPtr->base_defense_power + baseMorale / 5);
+  UI_DrawTextFmt(69, 154, 174, panelBaseY + 50, 2, aD_69, unitMetadataPtr->base_action_points);
+  UI_DrawTextFmt(69, 201, 217, panelBaseY + 50, 2, aD_70, baseMorale);
   UI_DrawTextFmt(69, 229, 260, v27, 2, (int)(intptr_t)a0_3);
-  if ( unitMetadataPtr[25] )
+  if ( unitMetadataPtr->base_shot_power )
   {
-    if ( unitMetadataPtr[22] )
+    if ( unitMetadataPtr->base_melee_attack )
     {
-      UI_DrawTextFmt(154, 154, 174, panelBaseY + 74, 2, (int)(intptr_t)aD_73);
-      UI_DrawTextFmt(154, 154, v28, panelBaseY + 95, 2, (int)(intptr_t)aD_74);
+      UI_DrawTextFmt(154, 154, 174, panelBaseY + 74, 2, aD_73, unitMetadataPtr->base_melee_attack + baseMorale / 5);
+      UI_DrawTextFmt(154, 154, v28, panelBaseY + 95, 2, aD_74, unitMetadataPtr->base_shot_power);
     }
     else
     {
@@ -441,7 +445,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
       renderMethods2 = *((_DWORD *)g_RenderDevice + 46);
       v26 = renderMethods2;
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
-      UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)(intptr_t)aD_72);
+      UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, aD_72, unitMetadataPtr->base_shot_power);
     }
   }
   else
@@ -450,14 +454,14 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderCont
     renderMethods2 = *((_DWORD *)g_RenderDevice + 46);
     v26 = renderMethods2;
     (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(renderMethods2 + 52))(-1, -1, -1, -1, 1, 0, 0);
-    UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, (int)(intptr_t)aD_71);
+    UI_DrawTextFmt(154, 154, 174, panelBaseY + 95, 2, aD_71, unitMetadataPtr->base_melee_attack + baseMorale / 5);
   }
   Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 340, 72, 0x138u, 0x16Eu, 0x48u, 0x154u);
   g_RenderDevice = &g_MainRenderDevice;
   Render_ReleaseSurface(5, v26);
-  UI_DrawTextFmt(-1, 0, 119, 348, 2, (int)(intptr_t)aD_75);
-  UI_DrawTextFmt(-1, 0, 215, 348, 2, (int)(intptr_t)aD_76);
-  UI_DrawTextFmt(-1, 0, 311, 348, 2, (int)(intptr_t)aD_77);
+  UI_DrawTextFmt(-1, 0, 119, 348, 2, aD_75, unitMetadataPtr->production_licence_cost);
+  UI_DrawTextFmt(-1, 0, 215, 348, 2, aD_76, unitMetadataPtr->production_cost);
+  UI_DrawTextFmt(-1, 0, 311, 348, 2, aD_77, unitMetadataPtr->production_time);
   unitStripRight = DLX_GetSpriteWidth(g_BuildingUiDlxSpriteSet, 0x14u) + 28;
   SpriteHeight = DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x14u);
   Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 28, 40, SpriteHeight + 40, unitStripRight, 0x28u, 0x1Cu);
@@ -1070,25 +1074,22 @@ int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, ch
 //----- (004359B0) --------------------------------------------------------
 BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 {
-  int metadata_offset; // esi
   int out_index; // ebx
   unit_type unitType; // ecx
   BOOL result; // eax
 
   (void)this;
   memset(g_CastleProduction_AvailableUnitTypes, 0xFF, 0xA4);
-  metadata_offset = 0;
   out_index = 0;
   unitType = UNIT_TYPE_PEASANT;
   do
   {
     result = Building_IsUnitLicenceEligible((char *)(uintptr_t)g_CastleProductionBuildingPtr, unitType);
-    if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
+    if ( result && g_UnitTypeRuntimeCoreMetadata[unitType].original_localized_name_table_va )
       g_CastleProduction_AvailableUnitTypes[out_index++] = unitType;
     ++unitType;
-    metadata_offset += 88;
   }
-  while ( unitType < 40 );
+  while ( unitType < UNIT_TYPE_METADATA_CAPACITY );
   return result;
 }
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];

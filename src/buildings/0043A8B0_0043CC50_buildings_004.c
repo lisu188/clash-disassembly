@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../units/units_api.h"
 #include "../battle/battle_api.h"
 #include "../recovered_legacy_imports.h"
@@ -88,7 +88,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
   g_UnitBattleScanTileRow = -1;
   unitRecordAddr = g_MapData + 31 * unitIndex;
   bestScore = 0;
-  if ( g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(unitRecordAddr + 852)] == 4
+  if ( g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(unitRecordAddr + 852)].role == 4
     && (*(_BYTE *)(uintptr_t)(unitRecordAddr + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(unitRecordAddr + 864)) >> 5) <= 0 )
   {
     g_BattleCellStateGrid[801 * unitIndexCopy - 42] = 5;
@@ -580,7 +580,7 @@ LABEL_8:
         destRow = trackPath[a4 + 1];
       }
       occupantRecordOffset = 31 * *(__int16 *)(uintptr_t)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534);
-      v10 = (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(g_MapData + occupantRecordOffset + 852)];
+      v10 = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(g_MapData + occupantRecordOffset + 852)].role;
       if ( v10 != 4 )
         break;
 LABEL_35:
@@ -1066,7 +1066,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int side)
     for ( k = 0; k != 20; k += 2 )
     {
       role4UnitId = *(__int16 *)((char *)occupantUnitIds + k);
-      if ( role4UnitId != -1 && g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(31 * role4UnitId + g_MapData + 852)] == 4 )
+      if ( role4UnitId != -1 && g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(31 * role4UnitId + g_MapData + 852)].role == 4 )
       {
         role4Id = *(__int16 *)((char *)occupantUnitIds + k);
         WCIsvListBase_AppendValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, role4Id);
@@ -1091,7 +1091,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int side)
   for ( n = 0; n != 20; n += 2 )
   {
     role4UnitId2 = *(__int16 *)((char *)occupantUnitIds + n);
-    if ( role4UnitId2 != -1 && g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(31 * role4UnitId2 + g_MapData + 852)] == 4 )
+    if ( role4UnitId2 != -1 && g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(31 * role4UnitId2 + g_MapData + 852)].role == 4 )
     {
       planRole4Id = *(__int16 *)((char *)occupantUnitIds + n);
       WCIsvListBase_AppendValue((int)(intptr_t)&g_UnitBattleAiCandidateQueue, planRole4Id);
@@ -1129,7 +1129,7 @@ LABEL_45:
     }
     candidateRecordOffset = 31 * candidateId2;
     foundUnit = 1;
-    if ( g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(g_MapData + candidateRecordOffset + 852)] != 4 )
+    if ( g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(g_MapData + candidateRecordOffset + 852)].role != 4 )
     {
       if ( bestEffectiveness2 < Unit_CalcEffectivenessA((char *)(uintptr_t)(g_MapData + 852 + candidateRecordOffset), 0) )
       {

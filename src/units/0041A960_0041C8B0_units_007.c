@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "units_internal.h"
 #include "units_state.h"
-#include "../state/state_shared.h"
+#include "units_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../buildings/buildings_api.h"
@@ -12,6 +12,7 @@
 #include "../strategic/strategic_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"
+#include "../state/state_api.h"
 #include "../recovered_legacy_imports.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 
@@ -117,11 +118,11 @@ int  UI_DrawSpecialUnitInfoPane(
     0,
     0);
   Render_ReleaseSurface(15, renderSpriteObj);
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 120, screenLeft + 173, screenTop + 30, 2, (int)(intptr_t)aD_19);
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 120, screenLeft + 173, screenTop + 30, 2, aD_19, ((signed char *)unitRecord)[9]);
   Render_ReleaseSurface(7, renderSpriteObj);
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 15, screenLeft + 88, screenTop + 32, 2, (int)(intptr_t)aD_20);
-  unitName = (**(&g_UnitTypeMetadataRecords + 22 * UNIT_STACK_TILE_ROW(unitRecord)))[(unsigned __int8)g_LanguageIndex];
-  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, (int)(intptr_t)unitName);
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 15, screenLeft + 88, screenTop + 32, 2, aD_20, unitRecord[8]);
+  unitName = UnitType_GetLocalizedName((unit_type)UNIT_SLOT_TYPE(unitRecord));
+  UI_DrawTextFmt(renderSpriteObj2, screenLeft + 64, screenLeft + 162, screenTop + 8, 3, unitName);
   if ( (unitRecord[13] & 8) != 0 )
   {
     extraIconSprite = DLX_GetSpriteForChar((int)(intptr_t)iconSpriteSet, 27);
@@ -906,7 +907,7 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
 {
   unsigned int unitType; // eax
   int unitScore; // edi
-  char *(**unitMetadata)[102]; // ecx
+  const UnitTypeRuntimeCoreMetadataRecord *unitMetadata; // ecx
   int effectivenessD; // eax
   int orderTier; // ebp
   int effectivenessA; // eax
@@ -930,13 +931,13 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
       slotArray += 31;
     }
     unitScore = 0;
-    unitMetadata = &g_UnitTypeMetadataRecords + 22 * unitType;
+    unitMetadata = &g_UnitTypeRuntimeCoreMetadata[unitType];
     if ( unitType == 13 )
     {
       if ( wallDefenseBonus )
       {
         effectivenessD = Unit_CalcEffectivenessD(slotArray, statContext);
-        unitScore = effectivenessD * (*((unsigned __int8 *)unitMetadata + 24) / 5) / 2;
+        unitScore = effectivenessD * (unitMetadata->base_action_points / 5) / 2;
       }
       else
       {
@@ -944,24 +945,24 @@ int  UnitSlots_CalcCombatStrengthScore(char *slotArray, int slotCount, int statC
       }
       goto LABEL_8;
     }
-    if ( *((_BYTE *)unitMetadata + 22) && !*((_BYTE *)unitMetadata + 25) )
+    if ( unitMetadata->base_melee_attack && !unitMetadata->base_shot_power )
     {
-      adjustedRankCount = *((unsigned __int8 *)unitMetadata + 24) / 5 - 1;
-      if ( (*((_BYTE *)unitMetadata + 18) & 1) == 0 )
+      adjustedRankCount = unitMetadata->base_action_points / 5 - 1;
+      if ( (unitMetadata->flags & 1) == 0 )
         adjustedRankCount -= 2 * wallDefenseBonus / 100;
       v16 = Unit_CalcEffectivenessA(slotArray, statContext) * adjustedRankCount + totalScore;
       slotArray += 31;
       totalScore = v16;
     }
-    else if ( *((_BYTE *)unitMetadata + 22) || !*((_BYTE *)unitMetadata + 25) )
+    else if ( unitMetadata->base_melee_attack || !unitMetadata->base_shot_power )
     {
-      if ( !*((_BYTE *)unitMetadata + 22) || !*((_BYTE *)unitMetadata + 25) )
+      if ( !unitMetadata->base_melee_attack || !unitMetadata->base_shot_power )
         goto LABEL_8;
       orderTier = (slotArray[12] & 3) + 1;
-      if ( orderTier >= *((unsigned __int8 *)unitMetadata + 24) / 5 )
-        orderTier = *((unsigned __int8 *)unitMetadata + 24) / 5;
+      if ( orderTier >= unitMetadata->base_action_points / 5 )
+        orderTier = unitMetadata->base_action_points / 5;
       unitScore = Unit_CalcEffectivenessC((__int16 *)slotArray) * orderTier;
-      remainingRanks = *((unsigned __int8 *)unitMetadata + 24) / 5 - orderTier - 1;
+      remainingRanks = unitMetadata->base_action_points / 5 - orderTier - 1;
       if ( remainingRanks > 0 )
       {
         effectivenessA = Unit_CalcEffectivenessA(slotArray, statContext);
@@ -977,8 +978,8 @@ LABEL_8:
     }
     else
     {
-      v17 = 6 - *((unsigned __int8 *)unitMetadata + 26);
-      tierCount = *((unsigned __int8 *)unitMetadata + 24) / 5 - (((int)v17 - HIDWORD(v17)) >> 1);
+      v17 = 6 - unitMetadata->attack_range_max;
+      tierCount = unitMetadata->base_action_points / 5 - (((int)v17 - HIDWORD(v17)) >> 1);
       if ( (slotArray[12] & 3) + 1 < tierCount )
         tierCount = (slotArray[12] & 3) + 1;
       adjustedTier = tierCount;
@@ -992,7 +993,6 @@ LABEL_8:
   return totalScore;
 }
 // 41C143: simplified comparisons for 'eax.4': >=0 && <29 became <29u
-// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
 //----- (0041C300) --------------------------------------------------------
 int  UnitSlots_CalcDefenseScore(char *slotArray, int slotCount, int statContext)
@@ -1195,7 +1195,7 @@ int  CalculateBattleResult(
       selected_priority = 0;
       for ( i = 0; i < attackerCount && i < (int)sizeof(slotProcessed); ++i )
       {
-        slot_priority = (unsigned __int8)unit_stats[88 * UNIT_SLOT_TYPE((char *)winnerSlots + 31 * i)];
+        slot_priority = g_UnitTypeRuntimeCoreMetadata[UNIT_SLOT_TYPE((char *)winnerSlots + 31 * i)].autoresolve_casualty_weight;
         if ( slot_priority > selected_priority && !slotProcessed[i] )
         {
           selected_priority = slot_priority;

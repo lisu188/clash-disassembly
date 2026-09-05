@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "render_internal.h"
 #include "render_state.h"
-#include "../state/state_shared.h"
+#include "render_shared_state.h"
 #include "../units/units_api.h"
 #include "../media/media_api.h"
 #include "../runtime/runtime_api.h"

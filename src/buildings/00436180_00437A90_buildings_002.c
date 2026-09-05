@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -1097,7 +1097,7 @@ int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int unitIndex, int side, int a
   do
   {
     v3 = *(__int16 *)(uintptr_t)(g_MapData + scanOffset + 852);
-    if ( v3 != -1 && *(unsigned __int8 *)(uintptr_t)(g_MapData + scanOffset + 854) == side && g_UnitTypeRole[88 * v3] == 4 )
+    if ( v3 != -1 && *(unsigned __int8 *)(uintptr_t)(g_MapData + scanOffset + 854) == side && g_UnitTypeRuntimeCoreMetadata[v3].role == 4 )
     {
       Unit_CalcEffectivenessA((char *)(uintptr_t)(unitRecordOffset + g_MapData + 852), 0);
       v4 = Unit_CalcEffectivenessC((__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852));

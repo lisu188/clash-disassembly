@@ -351,14 +351,14 @@ CLASH95_INTERNAL char *UnitType_GetLocalizedName(unit_type unitType)
 {
   unsigned int language_index;
 
-  if ( unitType == UNIT_TYPE_PEASANT )
+  if ( unitType >= UNIT_TYPE_PEASANT && unitType < UNIT_TYPE_COUNT )
   {
     language_index = (unsigned __int8)g_LanguageIndex;
-    if ( language_index < 3 && g_UnitTypeMetadataRecordsStorage[language_index] )
-      return g_UnitTypeMetadataRecordsStorage[language_index];
+    /* Unsupported-language fallback is a reconstruction compatibility guard. */
+    if ( language_index >= 3 )
+      language_index = 1;
+    return g_UnitTypeRuntimePointers[unitType].localized_names[language_index];
   }
-  if ( unitType >= UNIT_TYPE_PEASANT && unitType < UNIT_TYPE_COUNT )
-    return g_RecoveredUnitTypeEnglishNames[unitType];
   return "Unknown unit";
 }
 

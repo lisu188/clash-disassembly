@@ -13,6 +13,22 @@
 See `docs/PROJECT_TRACKS.md` for the current boundaries, baselines, and completion
 language for each track.
 
+## 1a. Start Each Session
+
+1. Inspect `git status --short --branch` and `git diff --stat`; preserve existing
+   working changes, untracked diagnostics, stashes, and other agents' worktrees.
+2. Read `docs/PROJECT_TRACKS.md` and `docs/STATUS.md`, especially "Next Target".
+   Route env files in `tests/first_campaign_arc_routes/` are the machine-readable
+   campaign status. `.agent/state.json` is historical context, not a work queue.
+3. Select one explicit track and frontier before editing. Follow the current
+   evidence and validation requirements in `docs/BUILD_AND_TEST.md`.
+4. Run builds and tests in Linux/WSL from the repository root. On this Windows
+   checkout the WSL path is `/mnt/c/Users/andrz/git/clash-disassembly`. Runtime
+   work must remain headless as required in section 9a.
+
+The tracked `.codex/config.toml` selects GPT-6 Astra for trusted project sessions.
+Reasoning effort, permissions, and authentication remain user settings.
+
 ## 2. Current Repo Reality
 
 ### Win95 reconstruction
@@ -23,7 +39,7 @@ language for each track.
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The recovered implementation is canonical only in the 12 manifest-backed
-  subsystem directories directly under `src/`: 4,070 functions in 138 independently compiled GNU C17
+  subsystem directories directly under `src/`: 4,157 functions in 140 independently compiled GNU C17
   translation units. The unified source, recovered include-C fragments, and
   compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
@@ -40,8 +56,10 @@ language for each track.
 
 ## 3. Current Blocker Families
 
-- Mission `05` lacks enough strategic-turn and AI-state observability to recover
-  the smallest authentic owner-3 elimination route safely.
+- Mission `05` has an authentic multi-turn arrival at `(47,58)`; manual tactical
+  entry against stack `19`, the first exchange, and the remaining owner-3
+  elimination route still need validation. Follow `docs/STATUS.md` "Next Target"
+  for the retained route and current evidence.
 - Full-menu campaign progression and automatic mission advancement are not yet
   validated.
 - `CSS_Init` and its quarantined legacy audio/device table remain broader startup
@@ -136,6 +154,12 @@ than a copy kept in sync by hand.
 ## 10. Workflow
 
 - Work on one explicit track and frontier per batch.
+- Delegate independent evidence gathering, bounded audits, and validation when
+  useful. Give each editing agent disjoint file ownership before it writes;
+  never let concurrent agents modify the same files or shared Git index.
+- The coordinating agent owns integration, evidence review, and final relevant
+  gates. Subagent findings must retain source locations, commands, confidence,
+  and unresolved candidates; delegation does not establish behavioral proof.
 - Recover whole function families and contiguous state blocks rather than isolated
   names when practical.
 - Revisit earlier conclusions when stronger evidence appears.

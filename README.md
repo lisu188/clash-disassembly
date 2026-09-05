@@ -6,7 +6,7 @@ Evidence-driven recovery of the original Win95 Clash binary.
 - The 12 manifest-backed subsystem directories directly under `src/` are the
   canonical recovered GNU C17 implementation
   under SDL build, runtime, and campaign-route validation.
-- `data/recovered_sources.json` maps all 4,070 recovered functions to 138
+- `data/recovered_sources.json` maps all 4,157 recovered functions to 140
   independently compiled translation units.
 
 The repository tracks Win95 runtime reconstruction and campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting completion percentages.
@@ -15,11 +15,22 @@ Current validated campaign-route state: missions `00..04` and `13` are complete 
 
 ## Quick Start
 
+Run these commands in Linux or WSL with CMake 3.28+, GCC 13, Ninja, pkg-config,
+SDL2 and X11 development libraries, and Python 3 installed. See
+[build prerequisites and both compiler gates](docs/BUILD_AND_TEST.md).
+
 ```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --target clash95_bootstrap -j2
-ctest --test-dir build --output-on-failure
+CC=gcc-13 cmake -S . -B build/gcc-13 -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/gcc-13 --target clash95_recovered clash95_bootstrap \
+  runtime_mission_trace_tests clash95_split_audit -j2
+ctest --test-dir build/gcc-13 \
+  -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' \
+  --output-on-failure
 ```
+
+These four gates require no retail assets. The full local smoke suite and
+campaign routes require the installed game at `/mnt/c/clash`; run them headlessly
+as described in [docs/BUILD_AND_TEST.md](docs/BUILD_AND_TEST.md).
 
 Metadata and documentation checks:
 
@@ -30,6 +41,21 @@ python3 tools/audit_split_sources.py
 python3 tests/check_markdown_links.py
 git diff --check
 ```
+
+## Working with Astra
+
+The tracked `.codex/config.toml` selects `gpt-6-astra`. Codex loads project
+configuration for a trusted repository; see the
+[official configuration guidance](https://learn.chatgpt.com/docs/config-file/config-basic).
+Reasoning effort is inherited from the user's configuration, including an
+existing `ultra` preference. The project does not override authentication or
+permissions.
+
+Start with [AGENTS.md](AGENTS.md), inspect the working tree, then read the active
+track and next target in [docs/PROJECT_TRACKS.md](docs/PROJECT_TRACKS.md) and
+[docs/STATUS.md](docs/STATUS.md). Run builds and headless probes in WSL.
+The legacy `.agent/state.json` preserves historical startup evidence and is not
+the current resume authority.
 
 ## Source organization
 

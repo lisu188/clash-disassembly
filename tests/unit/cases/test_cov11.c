@@ -88,22 +88,51 @@ TEST(cov11_break, remove_all_break_flags_empty_module_list) {
   TOUCH(Rules_RemoveAllBreakFlags());
 }
 
-/* ---- Lexer_TokenExpect: exercises both the "matches" and "mismatch"
- * outcomes. Rules_RtnArgCount() unconditionally reads dword_51A960+6, so it
- * needs to be pointed at a real (zeroed => empty-list) node first; the
- * branch taken depends on the decompiled/undefined 'v2', so both calls just
- * drive different concrete a1 values and let whichever path executes go
- * through the safe error-report helpers. ---- */
+/* ---- Lexer_TokenExpect now takes a function name, count relation, and
+ * expected count. A real empty expression exercises exact-match and mismatch
+ * outcomes. The test router accepts diagnostics without dereferencing the
+ * still-unrecovered logical-name register in Rules_ExpectedCountError. ---- */
+
+static int __fastcall cov11_tokenexpect_router_query(int logical_name) {
+  (void)logical_name;
+  return 1;
+}
+
+static void __fastcall cov11_tokenexpect_router_write(int logical_name, int text) {
+  (void)logical_name;
+  (void)text;
+}
 
 TEST(cov11_lexer, token_expect_match_and_mismatch) {
+  static const char function_name[] = "cov11-token-expect";
   static _DWORD fake_expr[16];
+  static _DWORD router[9];
   int saved = g_ClipsCurrentExpression;
+  int saved_router = g_IO_RouterListHead;
+  int saved_fast_save = g_IO_FastSaveFilePtr;
+  int saved_error = g_ClipsEvaluationError;
+  int saved_halt = g_ClipsHaltExecution;
   memset(fake_expr, 0, sizeof fake_expr);
+  memset(router, 0, sizeof router);
+  router[1] = 1;
+  router[3] = (_DWORD)(uintptr_t)cov11_tokenexpect_router_query;
+  router[4] = (_DWORD)(uintptr_t)cov11_tokenexpect_router_write;
   g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
-  TOUCH(Lexer_TokenExpect(0));
-  TOUCH(Lexer_TokenExpect(1));
-  TOUCH(Lexer_TokenExpect(-1));
+  g_IO_RouterListHead = (int)(intptr_t)router;
+  g_IO_FastSaveFilePtr = 0;
+  g_ClipsEvaluationError = 0;
+  g_ClipsHaltExecution = 0;
+  CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name, 0, 0), 0);
+  CHECK_EQ(g_ClipsEvaluationError, 0);
+  CHECK_EQ(g_ClipsHaltExecution, 0);
+  CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name, 0, 1), -1);
+  CHECK_EQ(g_ClipsEvaluationError, 1);
+  CHECK_EQ(g_ClipsHaltExecution, 1);
   g_ClipsCurrentExpression = saved;
+  g_IO_RouterListHead = saved_router;
+  g_IO_FastSaveFilePtr = saved_fast_save;
+  g_ClipsEvaluationError = saved_error;
+  g_ClipsHaltExecution = saved_halt;
 }
 
 /* ---- Rules_ListInstancesForClassOrModule: only the a3==0 branches are

@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "media_internal.h"
 #include "media_state.h"
-#include "../state/state_shared.h"
+#include "media_shared_state.h"
 #include "../buildings/buildings_api.h"
 #include "../strategic/strategic_api.h"
 #include "../clips/clips_api.h"

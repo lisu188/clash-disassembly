@@ -9,8 +9,13 @@ deletion. Three passes:
    (tools/gen_subsystem_headers.py --check / --check-tu-includes).
 2. INCLUDE POLICY — production recovered TUs may include recovered headers
    only inside the generated block; no TU may include another subsystem's
-   <S>_internal.h or <S>_state.h; src/recovered_all.h is tests-only; the
-   deleted umbrella names must not return.
+   <S>_internal.h, <S>_state.h or <S>_shared_state.h. The shared-state aggregate
+   stays within the state definition group and tests; src/recovered_all.h is
+   tests-only; the deleted umbrella names must not return. Consumer and TU
+   shared-state visibility records must agree with their measured references.
+   Consumer-slice policy is enabled by recovered_decls.json's explicit
+   shared_state_layout=consumer setting; the default aggregate layout retains
+   its existing policy until a validated generator cutover.
 3. COUPLING RATCHET — per-subsystem public-surface size (api function count),
    shared-global count, and peer edges are compared against
    data/header_surface_baseline.json: any INCREASE fails (decreases pass and
@@ -26,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import posixpath
 import re
 import subprocess
 import sys
@@ -33,6 +39,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 SURFACE = REPO / "data" / "subsystem_api.json"
+DECLS = REPO / "data" / "recovered_decls.json"
 BASELINE = REPO / "data" / "header_surface_baseline.json"
 GEN = REPO / "tools" / "gen_subsystem_headers.py"
 
@@ -51,8 +58,14 @@ def run_gen(*flags: str) -> int:
     return proc.returncode
 
 
+def consumer_shared_state_enabled() -> bool:
+    decls = json.loads(DECLS.read_text(encoding="utf-8"))
+    return decls.get("shared_state_layout", "aggregate") == "consumer"
+
+
 def include_policy_errors() -> list[str]:
     errors = []
+    consumer_layout = consumer_shared_state_enabled()
     manifest = json.loads(
         (REPO / "data" / "recovered_sources.json").read_text(encoding="utf-8"))
     sources = sorted({r["source"] for r in manifest["functions"]}
@@ -80,7 +93,10 @@ def include_policy_errors() -> list[str]:
         for im in inc_re.finditer(text):
             inc = im.group(1)
             inside = block_span[0] <= im.start() < block_span[1]
-            base = inc.rsplit("/", 1)[-1]
+            # Treat source-relative, -I src, repository-root, and normalized
+            # ../ spellings alike. Header ownership is encoded in its basename,
+            # so a foreign slice cannot bypass policy by changing its path.
+            base = posixpath.basename(posixpath.normpath(inc.replace("\\", "/")))
             if base in FORBIDDEN_UMBRELLA:
                 errors.append(f"{rel}: deleted umbrella include returned: {inc}")
             if base == "recovered_all.h":
@@ -89,12 +105,94 @@ def include_policy_errors() -> list[str]:
                 continue  # support files: hard bans only
             if not inside and generated_basenames.search(base):
                 errors.append(f"{rel}: recovered include outside generated block: {inc}")
-            fm = re.match(r"(?:\.\./)?([a-z]+)/\1_(internal|state)\.h$", inc)
+            if consumer_layout and base == "state_shared.h" and sub != "state":
+                errors.append(f"{rel}: shared-state aggregate outside state group: {inc}")
+            if consumer_layout:
+                fm = re.fullmatch(
+                    r"([a-z][a-z0-9_]*?)_(internal|shared_state|state)\.h", base)
+            else:
+                fm = re.match(r"(?:\.\./)?([a-z]+)/\1_(internal|state)\.h$", inc)
             if fm and fm.group(1) != sub:
                 # the state group is the definition site of every global and
                 # includes ALL *_state.h slices so definitions stay decl-checked
                 if not (sub == "state" and fm.group(2) == "state"):
                     errors.append(f"{rel}: foreign {fm.group(2)} header: {inc}")
+    return errors
+
+
+def shared_state_surface_errors() -> list[str]:
+    """Check declaration visibility without changing the coupling ratchet.
+
+    References measure dependencies; visible declarations measure exposure.
+    Fresh generation checks the source evidence, while this check enforces the
+    relationship between those two explicitly separate sets.
+    """
+    if not consumer_shared_state_enabled():
+        return []
+    surface = json.loads(SURFACE.read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (REPO / "data" / "recovered_sources.json").read_text(encoding="utf-8"))
+    errors = []
+    shared = set(surface["shared_globals"])
+    expected_consumers = set(surface["subsystems"]) - {"state"}
+    sources = {r["source"] for r in manifest["functions"]} | {manifest["state_owner"]}
+    expected_sources = {rel for rel in sources if rel.split("/")[1] != "state"}
+
+    def mapping(field: str, expected: set[str]) -> dict:
+        value = surface.get(field)
+        if not isinstance(value, dict):
+            errors.append(f"{field}: required object missing or invalid")
+            return {}
+        missing, extra = expected - value.keys(), value.keys() - expected
+        if missing:
+            errors.append(f"{field}: missing entries: {', '.join(sorted(missing))}")
+        if extra:
+            errors.append(f"{field}: unexpected entries: {', '.join(sorted(extra))}")
+        return value
+
+    def names(value, label: str) -> set[str] | None:
+        if not isinstance(value, list) or not all(isinstance(n, str) for n in value):
+            errors.append(f"{label}: expected a sorted list of shared-global DB keys")
+            return None
+        result = set(value)
+        if value != sorted(result):
+            errors.append(f"{label}: keys must be sorted and unique")
+        if result - shared:
+            errors.append(f"{label}: keys are not shared globals: "
+                          f"{', '.join(sorted(result - shared))}")
+        return result
+
+    consumers = mapping("shared_state_consumers", expected_consumers)
+    visibility = mapping("tu_shared_state_visibility", expected_sources)
+    slices = {sub: names(value, f"shared_state_consumers.{sub}")
+              for sub, value in consumers.items()}
+    references = {sub: set() for sub in expected_consumers}
+    for rel, record in visibility.items():
+        label = f"tu_shared_state_visibility.{rel}"
+        if not isinstance(record, dict) or set(record) != {"referenced", "visible"}:
+            errors.append(f"{label}: expected referenced and visible fields")
+            continue
+        referenced = names(record["referenced"], f"{label}.referenced")
+        visible = names(record["visible"], f"{label}.visible")
+        if referenced is None or visible is None or rel not in expected_sources:
+            continue
+        sub = rel.split("/")[1]
+        if sub not in references:
+            errors.append(f"{label}: subsystem {sub!r} missing from surface")
+            continue
+        references[sub].update(referenced)
+        if referenced - visible:
+            errors.append(f"{label}: referenced globals are not visible")
+        consumer_slice = slices.get(sub)
+        if consumer_slice is not None:
+            expected_visible = consumer_slice if referenced else set()
+            if visible != expected_visible:
+                errors.append(f"{label}: visible globals must equal the consumer "
+                              "slice when referenced, otherwise be empty")
+    for sub, referenced in references.items():
+        if slices.get(sub) is not None and slices[sub] != referenced:
+            errors.append(f"shared_state_consumers.{sub}: slice differs from "
+                          "the union of TU references")
     return errors
 
 
@@ -122,6 +220,12 @@ def main() -> int:
     errors = include_policy_errors()
     for e in errors[:15]:
         print("POLICY:", e)
+    if errors:
+        ok = False
+
+    errors = shared_state_surface_errors()
+    for e in errors[:15]:
+        print("VISIBILITY:", e)
     if errors:
         ok = False
 

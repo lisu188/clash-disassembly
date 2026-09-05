@@ -36,20 +36,21 @@ typedef struct __attribute__((packed)) UnitTypeMetadataRecord {
   uint8_t base_wall_attack;
   uint8_t road_move_cost;
   uint8_t world_surface_move_costs[8];
-  unsigned char unrecovered_0x26_0x47[33];
+  uint8_t unrecovered_38_69[32];
+  uint8_t vision_radius;
   uint8_t production_time;
   uint8_t production_cost;
   uint16_t production_licence_cost;
   uint8_t production_required_tech_level_mode_2;
   uint8_t production_required_tech_level_other_modes;
   uint8_t role;
-  unsigned char unrecovered_0x4E_0x4F[1];
+  uint8_t corpse_sprite_base_index;
   uint8_t melee_attack_sound_frame;
   uint8_t ranged_attack_sound_frame;
   low32_ptr move_sound_stem;
   uint8_t move_sound_variant_count;
   uint8_t move_sound_base_volume;
-  unsigned char unrecovered_0x57_0x58[1];
+  uint8_t autoresolve_casualty_weight;
 } UnitTypeMetadataRecord;
 _Static_assert(sizeof(UnitTypeMetadataRecord) == 88, "UnitTypeMetadataRecord size");
 _Static_assert(offsetof(UnitTypeMetadataRecord, localized_name_table) == 0, "UnitTypeMetadataRecord.localized_name_table");
@@ -71,17 +72,31 @@ _Static_assert(offsetof(UnitTypeMetadataRecord, attack_range_min) == 27, "UnitTy
 _Static_assert(offsetof(UnitTypeMetadataRecord, base_wall_attack) == 28, "UnitTypeMetadataRecord.base_wall_attack");
 _Static_assert(offsetof(UnitTypeMetadataRecord, road_move_cost) == 29, "UnitTypeMetadataRecord.road_move_cost");
 _Static_assert(offsetof(UnitTypeMetadataRecord, world_surface_move_costs) == 30, "UnitTypeMetadataRecord.world_surface_move_costs");
+_Static_assert(offsetof(UnitTypeMetadataRecord, unrecovered_38_69) == 38, "UnitTypeMetadataRecord.unrecovered_38_69");
+_Static_assert(offsetof(UnitTypeMetadataRecord, vision_radius) == 70, "UnitTypeMetadataRecord.vision_radius");
 _Static_assert(offsetof(UnitTypeMetadataRecord, production_time) == 71, "UnitTypeMetadataRecord.production_time");
 _Static_assert(offsetof(UnitTypeMetadataRecord, production_cost) == 72, "UnitTypeMetadataRecord.production_cost");
 _Static_assert(offsetof(UnitTypeMetadataRecord, production_licence_cost) == 73, "UnitTypeMetadataRecord.production_licence_cost");
 _Static_assert(offsetof(UnitTypeMetadataRecord, production_required_tech_level_mode_2) == 75, "UnitTypeMetadataRecord.production_required_tech_level_mode_2");
 _Static_assert(offsetof(UnitTypeMetadataRecord, production_required_tech_level_other_modes) == 76, "UnitTypeMetadataRecord.production_required_tech_level_other_modes");
 _Static_assert(offsetof(UnitTypeMetadataRecord, role) == 77, "UnitTypeMetadataRecord.role");
+_Static_assert(offsetof(UnitTypeMetadataRecord, corpse_sprite_base_index) == 78, "UnitTypeMetadataRecord.corpse_sprite_base_index");
 _Static_assert(offsetof(UnitTypeMetadataRecord, melee_attack_sound_frame) == 79, "UnitTypeMetadataRecord.melee_attack_sound_frame");
 _Static_assert(offsetof(UnitTypeMetadataRecord, ranged_attack_sound_frame) == 80, "UnitTypeMetadataRecord.ranged_attack_sound_frame");
 _Static_assert(offsetof(UnitTypeMetadataRecord, move_sound_stem) == 81, "UnitTypeMetadataRecord.move_sound_stem");
 _Static_assert(offsetof(UnitTypeMetadataRecord, move_sound_variant_count) == 85, "UnitTypeMetadataRecord.move_sound_variant_count");
 _Static_assert(offsetof(UnitTypeMetadataRecord, move_sound_base_volume) == 86, "UnitTypeMetadataRecord.move_sound_base_volume");
+_Static_assert(offsetof(UnitTypeMetadataRecord, autoresolve_casualty_weight) == 87, "UnitTypeMetadataRecord.autoresolve_casualty_weight");
+
+typedef struct __attribute__((packed)) UnitTypeLocalizedNameTable {
+  low32_ptr polish_name;
+  low32_ptr english_name;
+  low32_ptr german_name;
+} UnitTypeLocalizedNameTable;
+_Static_assert(sizeof(UnitTypeLocalizedNameTable) == 12, "UnitTypeLocalizedNameTable size");
+_Static_assert(offsetof(UnitTypeLocalizedNameTable, polish_name) == 0, "UnitTypeLocalizedNameTable.polish_name");
+_Static_assert(offsetof(UnitTypeLocalizedNameTable, english_name) == 4, "UnitTypeLocalizedNameTable.english_name");
+_Static_assert(offsetof(UnitTypeLocalizedNameTable, german_name) == 8, "UnitTypeLocalizedNameTable.german_name");
 
 typedef struct __attribute__((packed)) UnitMoveSpriteCacheEntry {
   int32_t unit_type_id;
@@ -279,7 +294,8 @@ typedef struct __attribute__((packed)) BattleUnitEntry {
   int16_t grid_y;
   uint8_t action_points;
   uint8_t health_percent;
-  unsigned char unrecovered_0x0A_0x0C[2];
+  uint8_t fatigue;
+  uint8_t morale;
   uint8_t stance_bits;
   unsigned char unrecovered_0x0D_0x11[4];
   uint8_t anim_frame_and_effect_bits;
@@ -295,6 +311,8 @@ _Static_assert(offsetof(BattleUnitEntry, grid_x) == 4, "BattleUnitEntry.grid_x")
 _Static_assert(offsetof(BattleUnitEntry, grid_y) == 6, "BattleUnitEntry.grid_y");
 _Static_assert(offsetof(BattleUnitEntry, action_points) == 8, "BattleUnitEntry.action_points");
 _Static_assert(offsetof(BattleUnitEntry, health_percent) == 9, "BattleUnitEntry.health_percent");
+_Static_assert(offsetof(BattleUnitEntry, fatigue) == 10, "BattleUnitEntry.fatigue");
+_Static_assert(offsetof(BattleUnitEntry, morale) == 11, "BattleUnitEntry.morale");
 _Static_assert(offsetof(BattleUnitEntry, stance_bits) == 12, "BattleUnitEntry.stance_bits");
 _Static_assert(offsetof(BattleUnitEntry, anim_frame_and_effect_bits) == 17, "BattleUnitEntry.anim_frame_and_effect_bits");
 _Static_assert(offsetof(BattleUnitEntry, last_animation_tick) == 18, "BattleUnitEntry.last_animation_tick");

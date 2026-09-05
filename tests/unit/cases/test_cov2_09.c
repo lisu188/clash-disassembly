@@ -224,25 +224,18 @@ TEST(cov2_09_rules, remove_all_break_flags_one_module_one_rule) {
 /* ---- Rules_FindFactByIndex: dword_51A15C is the "first fact" global.
  * Point it at a fact whose byte+29 is >=0 (so Rules_GetNextFact doesn't
  * immediately bail) and whose +36 "next fact" chains onward, so any
- * loop-continuation the (decompiler-lost) comparison drives still safely
- * terminates. Empirically the loop's uninitialized comparator reads as 0
- * in a fresh forked test, so a single all-zero fact only exercises the
- * "match immediately" exit; give fact1 a non-zero +24 field so the first
- * comparison mismatches and drives the loop body (the re-entrant
- * Rules_GetNextFact call and its `!result` check) before chaining to an
- * all-zero fact2 that lets a subsequent comparison match and exit
- * normally. ---- */
+ * lookup safely terminates. The recovered explicit target index is 0:
+ * fact1 has a nonzero +24 index, then fact2 matches. ---- */
 TEST(cov2_09_rules, find_fact_by_index_two_facts) {
   static _DWORD fact1[16], fact2[16];
   int saved = g_Rules_FactListHead;
   memset(fact1, 0, sizeof fact1);
   memset(fact2, 0, sizeof fact2);
-  *(_DWORD *)((char *)fact1 + 24) = 0xdead;      /* likely mismatches the
-                                                     uninitialized comparator */
+  *(_DWORD *)((char *)fact1 + 24) = 0xdead; /* differs from target index 0 */
   *(_DWORD *)((char *)fact1 + 36) = (_DWORD)(intptr_t)fact2; /* next fact */
   /* fact2 is all-zero: +24 == 0 and +36 == 0 (chain terminator). */
   g_Rules_FactListHead = (int)(intptr_t)fact1;
-  TOUCH(Rules_FindFactByIndex());
+  CHECK_EQ(Rules_FindFactByIndex(0), (int)(intptr_t)fact2);
   g_Rules_FactListHead = saved;
 }
 

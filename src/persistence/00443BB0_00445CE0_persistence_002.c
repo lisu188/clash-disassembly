@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "persistence_internal.h"
 #include "persistence_state.h"
-#include "../state/state_shared.h"
+#include "persistence_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"

@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "units_internal.h"
 #include "units_state.h"
-#include "../state/state_shared.h"
+#include "units_shared_state.h"
 #include "../render/render_api.h"
 #include "../buildings/buildings_api.h"
 #include "../runtime/runtime_api.h"
@@ -343,47 +343,9 @@ int UnitSpriteCache_CountActiveEntries(void)
 
 CLASH95_TEST_VISIBLE const char *UnitType_GetResourceKey(int unit_type)
 {
-  static const char *resource_keys[35] = {
-    "peon",
-    "infl",
-    "infh",
-    "sprl",
-    "sprh",
-    "cavl",
-    "cavh",
-    "ryc",
-    "drag",
-    "arch",
-    "kusza",
-    "muszk",
-    "katap",
-    "taran",
-    "armat",
-    "lesn",
-    "goral",
-    "budow",
-    "worm",
-    "slon",
-    "cykl",
-    "trol",
-    "scorp",
-    "szk",
-    "mag",
-    "duch",
-    "orzel",
-    "pegaz",
-    "skrz",
-    "wazka",
-    "smok",
-    "gold",
-    "peas",
-    "specm",
-    "speck"
-  };
-
-  if ( unit_type < 0 || unit_type >= (int)(sizeof(resource_keys) / sizeof(resource_keys[0])) )
+  if ( unit_type < 0 || unit_type >= UNIT_TYPE_COUNT )
     return "peon";
-  return resource_keys[unit_type];
+  return g_UnitTypeRuntimePointers[unit_type].resource_key;
 }
 
 //----- (004131B0) --------------------------------------------------------

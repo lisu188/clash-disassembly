@@ -481,32 +481,42 @@ TEST(cov2_06_diag, should_trace_world_map_action_stage_rollover) {
   }
 }
 
-/* ---------------------------------------------------------------------
- * Building_IsUnitLicenceEligible (57535-57574): 19/20 covered. The
- * existing cov05 test always uses a2 == UNIT_TYPE_PEASANT (0) -- the only
- * value that stays in-bounds of the tech-level tables
- * (g_UnitTypeProductionRequiredTechLevelMode2/OtherModes are both
- * declared with just 1 element in this recovered source, so any other
- * unit_type indexes 88*a2 bytes past the end of a 1-byte global; still
- * mapped static data, not a crash, but its content is whatever
- * unrelated global happens to sit there and can't be predicted from
- * source alone). g_ProductionLicenceSmithsRequiredUnitTypes[0] is
- * UNIT_TYPE_HEAVY_INFANTRY (not PEASANT), so reaching the "smiths-
- * required unit type present -> return 0" line needs a2 !=
- * UNIT_TYPE_PEASANT, which unavoidably reads that out-of-bounds tech
- * byte first. Best-effort/TOUCH only (not asserting the return value,
- * since the tech-level gate might return 0 earlier via that
- * unpredictable byte instead of via the smiths branch we're targeting);
- * harmless either way and cannot regress existing coverage. */
-TEST(cov2_06_building, is_unit_licence_eligible_smiths_required_attempt) {
+/* Heavy infantry requires smiths and the original per-mode technology
+ * threshold: level 5 in mode 2, level 1 in the other production modes. */
+TEST(cov2_06_building, unit_licence_requires_smiths_and_mode_technology) {
   static unsigned char buf[512];
   memset(buf, 0, sizeof buf);
-  buf[4] = 1;   /* OtherModes tech-level table */
-  buf[444] = 7; /* max in-range tech level byte */
-  buf[416] = 0; /* smiths-required block not bypassed */
+  buf[4] = 1;
+  buf[444] = 1;
 
-  TOUCH(
-      Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY));
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 0);
+  buf[BUILDING_ADDON_FLAGS_OFFSET] = BUILDING_ADDON_FLAG_SMITHS;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 1);
+
+  buf[4] = 2;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 0);
+  buf[444] = 0xE4; /* Only the low three bits are the technology level. */
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 0);
+  buf[444] = 0xE5;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 1);
+
+  buf[4] = 0;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_HEAVY_INFANTRY), 0);
+}
+
+/* Archers require a workshop but no smiths; peasants require neither. */
+TEST(cov2_06_building, unit_licence_workshop_requirement_is_type_specific) {
+  static unsigned char buf[512];
+  memset(buf, 0, sizeof buf);
+  buf[4] = 1;
+  buf[444] = 1;
+
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_PEASANT), 1);
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_ARCHER), 0);
+  buf[BUILDING_ADDON_FLAGS_OFFSET] = BUILDING_ADDON_FLAG_SMITHS;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_ARCHER), 0);
+  buf[BUILDING_ADDON_FLAGS_OFFSET] = BUILDING_ADDON_FLAG_WORKSHOP;
+  CHECK_EQ(Building_IsUnitLicenceEligible((char *)buf, UNIT_TYPE_ARCHER), 1);
 }
 
 /* ---------------------------------------------------------------------

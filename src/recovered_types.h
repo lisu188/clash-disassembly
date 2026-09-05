@@ -6,6 +6,7 @@
 #define CLASH95_RECOVERED_TYPES_H
 
 #include "recovered_abi.h"
+#include <stddef.h>
 
 /* Shared recovered declarations, types, macros, globals, and data.
  * Private recovered declarations shared by split translation units. */
@@ -105,6 +106,8 @@
 #define UNIT_STACK_PATH_OFFSET 316
 #define UNIT_STACK_PATH_BYTES 0x194
 #define UNIT_TYPE_METADATA_STRIDE 88
+/* 35 real types followed by five zero records before VA 0x00513328. */
+#define UNIT_TYPE_METADATA_CAPACITY 40
 #define QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING 9
 #define BUILDING_PRISONER_SLOT_BASE_OFFSET 445
 #define BUILDING_PRISONER_SLOT_STRIDE 6
@@ -277,7 +280,11 @@ typedef enum ClipsType
 #define SCREEN_MAX_Y 0x1DF
 #define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)g_PortSpawnRingOffsetsTable)
 #define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
-#define unit_stats g_UnitTypeCorpseSpriteBaseIndex
+/* Main-menu slider values are fields of the original 36-byte records at
+ * VA 0x00518600, not separate globals. Keep aliases outside generated headers. */
+#define g_Options_BrightnessSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[12])
+#define g_Options_ScrollSpeedSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[48])
+#define g_Options_MouseSpeedSliderValue (*(int *)(void *)&g_OptionsMenuSliderThumbPositions[84])
 #define g_UnitBattleChargeModeActive_532060 g_UnitBattleChargeModeActive
 #define g_UnitBattleChargeModeStartTick_532074 g_UnitBattleChargeModeStartTick
 
@@ -717,10 +724,11 @@ typedef struct CompatRenderStateTail
  * The original globals at 0x512570..0x51258D are fields inside one packed
  * 88-byte record, not independent one-element arrays.  Retaining those
  * placeholders made every nonzero unit type index into unrelated host data.
- * The records below restore the executable-backed +8..+37 core band while
+ * The records below restore all 88 executable-backed bytes while
  * keeping the original 88-byte indexing used throughout the recovered C.
- * The two leading values are original Win32 VAs kept as evidence only; host
- * code resolves localized names and resource keys through recovered helpers.
+ * Original pointer values are Win32 VAs kept as evidence only; they must not
+ * be dereferenced as host addresses. The native pointer companion resolves
+ * their targets. The 32 bytes at +38 remain semantically unrecovered.
  */
 #pragma pack(push, 1)
 typedef struct UnitTypeRuntimeCoreMetadataRecord
@@ -744,11 +752,50 @@ typedef struct UnitTypeRuntimeCoreMetadataRecord
   unsigned char base_wall_attack;
   unsigned char road_move_cost;
   unsigned char world_surface_move_costs[8];
-  unsigned char unrecovered_tail[50];
+  unsigned char unrecovered_38_69[32];
+  unsigned char vision_radius;
+  unsigned char production_time;
+  unsigned char production_cost;
+  uint16_t production_licence_cost;
+  unsigned char production_required_tech_level_mode_2;
+  unsigned char production_required_tech_level_other_modes;
+  unsigned char role;
+  unsigned char corpse_sprite_base_index;
+  unsigned char melee_attack_sound_frame;
+  unsigned char ranged_attack_sound_frame;
+  _DWORD original_move_sound_stem_va;
+  unsigned char move_sound_variant_count;
+  unsigned char move_sound_base_volume;
+  unsigned char autoresolve_casualty_weight;
 } UnitTypeRuntimeCoreMetadataRecord;
 #pragma pack(pop)
 
+/* Host-only companion for the three pointer fields in the original packed
+ * record. Localized triplets retain original sharing and font-encoded bytes. */
+typedef struct UnitTypeRuntimePointerRecord
+{
+  char *const *localized_names;
+  const char *resource_key;
+  const char *move_sound_stem;
+} UnitTypeRuntimePointerRecord;
+
 typedef char UnitTypeRuntimeCoreMetadataRecord_size_check[
   sizeof(UnitTypeRuntimeCoreMetadataRecord) == UNIT_TYPE_METADATA_STRIDE ? 1 : -1];
+
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, unrecovered_38_69) == 38, "unit metadata raw span");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, vision_radius) == 70, "unit metadata vision");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_time) == 71, "unit metadata production time");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_cost) == 72, "unit metadata production cost");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_licence_cost) == 73, "unit metadata licence cost");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_mode_2) == 75, "unit metadata mode 2 tech");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_other_modes) == 76, "unit metadata other tech");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, role) == 77, "unit metadata tactical role");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, corpse_sprite_base_index) == 78, "unit metadata corpse sprite");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, melee_attack_sound_frame) == 79, "unit metadata melee sound");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, ranged_attack_sound_frame) == 80, "unit metadata ranged sound");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, original_move_sound_stem_va) == 81, "unit metadata movement stem VA");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_variant_count) == 85, "unit metadata movement variants");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_base_volume) == 86, "unit metadata movement volume");
+_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, autoresolve_casualty_weight) == 87, "unit metadata casualty weight");
 
 #endif /* CLASH95_RECOVERED_TYPES_H */

@@ -31,10 +31,9 @@
  *   post-Rules_RtnUnknown line unconditionally dereferences a decompiler-lost
  *   local ('v7') before it can ever return 1 (test_cov3_04.c / test_cov4_02.c
  *   already document this).
- * - Lexer_TokenExpect's own 'v2' is a genuinely lost register value (not
- *   derived from any argument or global we can set) -- verified via gdb that
- *   it holds arbitrary stack garbage unrelated to the arg-count machinery,
- *   so its {1,2}-valued branches cannot be steered from a normal C caller.
+ * - Lexer_TokenExpect's former lost relation register is now an explicit
+ *   parameter. Its direct test below uses a real argument-list fixture and
+ *   checks the NO_MORE_THAN relation deterministically.
  */
 
 /* =========================================================================
@@ -275,17 +274,19 @@ TEST(cov4_00_classsubclasses, class_subclasses_command_attempt) {
 }
 
 /* =========================================================================
- * Lexer_TokenExpect (99781-99813, uncovered 99800,99801,99807): its 'v2' is
- * a genuinely lost register value at this call site (verified via gdb to
- * hold arbitrary stack garbage, e.g. 4331149, completely unrelated to
- * Rules_RtnArgCount()'s return value or any global argument-count state) --
- * there is no argument or global reachable from a normal C caller that
- * steers it into the {1,2}-valued branches this function's remaining lines
- * need. Hard ceiling; attempted once. */
-TEST(cov4_00_tokenexpect, token_expect_attempt) {
-  Mem_InitReserveBlock(0, 0);
-  Rules_InitAtomTables();
-  TOUCH(Lexer_TokenExpect(1));
+ * Lexer_TokenExpect: one argument meets either a one-argument or a
+ * two-argument upper bound; successful checks return the actual count. */
+TEST(cov4_00_tokenexpect, token_expect_one_argument_upper_bound) {
+  static const char function_name[] = "cov4-00-token-expect";
+  static unsigned char expression[16], argument[16];
+  int saved_expression = g_ClipsCurrentExpression;
+  memset(expression, 0, sizeof expression);
+  memset(argument, 0, sizeof argument);
+  *(_DWORD *)(expression + 6) = (_DWORD)(uintptr_t)argument;
+  g_ClipsCurrentExpression = (int)(intptr_t)expression;
+  CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name, 2, 1), 1);
+  CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name, 2, 2), 1);
+  g_ClipsCurrentExpression = saved_expression;
 }
 
 /* =========================================================================

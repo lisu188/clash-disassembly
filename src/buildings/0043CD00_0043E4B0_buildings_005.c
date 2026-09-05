@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -722,7 +722,7 @@ int  Battle_BuildRoleDeploymentBuckets(int unitsPtr, int unitCount, unsigned __i
     bucket2Count = 0;
     do
     {
-      bucketCode = g_BattleRoleDeploymentBucketTable[7 * deployMode + (unsigned __int8)g_UnitTypeRole[88 * *unitRecord]];
+      bucketCode = g_BattleRoleDeploymentBucketTable[7 * deployMode + (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*unitRecord].role];
       if ( (bucketCode - bucketCode % 10) / 10 == 1 )
         g_BattleDeploymentBucketRole1[++bucket1Count] = (int)(intptr_t)unitRecord;
       if ( (bucketCode - bucketCode % 10) / 10 == 2 )
@@ -868,13 +868,13 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 deployMode, int placement
             bestCol = bucketColIndex;
           }
           candidate = BattleDeploymentBucketReadPointer(candidateReadByteOffset);
-          candidateTableIndex = 7 * deployModeCopy + (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)candidate];
+          candidateTableIndex = 7 * deployModeCopy + (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*(__int16 *)candidate].role;
           deployModeTableBase = 7 * deployModeCopy;
           best_candidate = BattleDeploymentBucketReadPointer(48 * bestRow + 4 * bestCol);
           bestUnitPtr = (char *)best_candidate;
           bestUnitTypeOffset = 88 * *(__int16 *)bestUnitPtr;
           candidateRankMod10 = (unsigned __int8)g_BattleRoleDeploymentBucketTable[candidateTableIndex] % 10;
-          bestBucketTableValue = (unsigned __int8)g_BattleRoleDeploymentBucketTable[(unsigned __int8)g_UnitTypeRole[bestUnitTypeOffset] + deployModeTableBase];
+          bestBucketTableValue = (unsigned __int8)g_BattleRoleDeploymentBucketTable[(unsigned __int8)g_UnitTypeRuntimeCoreMetadata[bestUnitTypeOffset / UNIT_TYPE_METADATA_STRIDE].role + deployModeTableBase];
           deployModeTableBase = 10;
           result = bestBucketTableValue / 10LL;
           if ( bestBucketTableValue % 10LL <= candidateRankMod10 )

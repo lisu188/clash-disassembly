@@ -10,6 +10,21 @@
 *.env      text eol=lf
 *.gdb      text eol=lf
 
+# Source and review metadata also cross Windows/WSL Git boundaries. Keep the
+# same bytes in both clients so autostash cannot create whole-file conflicts.
+# auto leaves existing CRLF blobs alone; do not mass-renormalize old evidence.
+*.c        text=auto eol=lf
+*.h        text=auto eol=lf
+*.cmake    text=auto eol=lf
+CMakeLists.txt text=auto eol=lf
+*.md       text=auto eol=lf
+*.json     text=auto eol=lf
+*.yml      text=auto eol=lf
+*.yaml     text=auto eol=lf
+*.toml     text=auto eol=lf
+.gitattributes text=auto eol=lf
+.gitignore text=auto eol=lf
+
 # Large generated reference dumps: never normalize line endings (avoid churn).
 *.asm      -text
 *.map      -text

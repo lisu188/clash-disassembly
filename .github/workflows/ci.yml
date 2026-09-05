@@ -53,6 +53,11 @@ jobs:
           python3 tools/migrate_pure_coverage_metadata.py --check
           python3 tools/check_save_format_contract.py
           python3 tools/gen_constant_guard.py --check
+          python3 tools/gen_recovered_structs.py --check
+          python3 tools/gen_unit_type_runtime_metadata.py --check
+
+      - name: Test declaration metadata and header boundaries
+        run: python3 -m unittest discover -s tests/tools -p 'test_*.py'
 
       - name: Audit header surface and coupling ratchet
         run: python3 tools/audit_header_surface.py --mode check

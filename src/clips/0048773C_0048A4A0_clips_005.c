@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "clips_internal.h"
 #include "clips_state.h"
-#include "../state/state_shared.h"
+#include "clips_shared_state.h"
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 #include "../recovered_test_seams.h"

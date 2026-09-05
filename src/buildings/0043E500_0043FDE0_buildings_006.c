@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -193,7 +193,7 @@ BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD ga
   if ( result )
   {
     nationData = gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(building + 2);
-    licenceCost = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * unitType];
+    licenceCost = (unsigned __int16)g_UnitTypeRuntimeCoreMetadata[unitType].production_licence_cost;
     if ( !*(_DWORD *)(uintptr_t)(nationData + 140051) && *(int *)(uintptr_t)(nationData + 140055) >= 2 )
       licenceCost = (int)(75 * licenceCost) / 100;
     if ( licenceCost > *(_DWORD *)(uintptr_t)(building + 438) )
@@ -255,7 +255,7 @@ int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContex
   Debug_Log(building, licenceSlot, gameContext, (int)(intptr_t)aBuildingSetUnitProduction);
   BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = slotIndex;
   result = PLAYER_DATA_STRIDE * buildingPtr[2];
-  BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[slotIndex + 402]];
+  BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeRuntimeCoreMetadata[(int)(signed __int8)buildingPtr[slotIndex + 402]].production_time;
   if ( !*(_DWORD *)(uintptr_t)(result + gameData + 140051)
     && *(int *)(uintptr_t)(result + gameData + 140055) >= 1
     && (char)BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) > 1 )
@@ -511,8 +511,8 @@ BOOL  Building_IsUnitLicenceEligible(char *building, unit_type unitType)
     return 0;
   v5 = 88 * unitType;
   requiredTechLevel = buildingType == 2
-     ? g_UnitTypeProductionRequiredTechLevelMode2[v5]
-     : g_UnitTypeProductionRequiredTechLevelOtherModes[v5];
+     ? g_UnitTypeRuntimeCoreMetadata[v5 / UNIT_TYPE_METADATA_STRIDE].production_required_tech_level_mode_2
+     : g_UnitTypeRuntimeCoreMetadata[v5 / UNIT_TYPE_METADATA_STRIDE].production_required_tech_level_other_modes;
   if ( (unsigned __int8)(building[444] & 7) < (unsigned __int8)requiredTechLevel )
     return 0;
   if ( (building[416] & BUILDING_ADDON_FLAG_SMITHS) == 0 )
@@ -795,7 +795,7 @@ int  Building_GetTotalValue(int building)
   {
     licenceType = *(char *)(uintptr_t)(licencePtr + 402);
     if ( licenceType != -1 )
-      totalValue += (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * licenceType];
+      totalValue += (unsigned __int16)g_UnitTypeRuntimeCoreMetadata[licenceType].production_licence_cost;
     ++licencePtr;
   }
   while ( licencePtr != licenceEnd );

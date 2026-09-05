@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../units/units_api.h"
 #include "../battle/battle_api.h"
 #include "../recovered_legacy_imports.h"
@@ -239,7 +239,7 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int unitIndex, int side, int a3,
           targetCol = *(unsigned __int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 858);
           v140 = 160 * targetRow + unitScoreBase * 4;
           v141 = 2 * targetCol + g_MapData + 40 * targetRow;
-          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 852)]];
+          *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * targetCol] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(g_MapData + enemyScanOffset + 852)].role];
           v142 = *(_WORD *)(uintptr_t)(v141 + 1534);
           *(_WORD *)(uintptr_t)(v141 + 1534) = -1;
           savedTileOccupant = v142;
@@ -492,8 +492,7 @@ LABEL_29:
     result = 0;
     scoreRowByteOffset = 160 * enemyRow + scoreGridBase * 4;
     occupantCellPtr = 40 * enemyRow + g_MapData + 2 * enemyCol;
-    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * enemyCol] + scoreRowByteOffset) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
-                                                                                               * *(__int16 *)(uintptr_t)(g_MapData + enemyRecordOffset + 852)]];
+    *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * enemyCol] + scoreRowByteOffset) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*(__int16 *)(uintptr_t)(g_MapData + enemyRecordOffset + 852)].role];
     v23 = *(_WORD *)(uintptr_t)(occupantCellPtr + 1534);
     *(_WORD *)(uintptr_t)(occupantCellPtr + 1534) = -1;
     savedOccupant = v23;

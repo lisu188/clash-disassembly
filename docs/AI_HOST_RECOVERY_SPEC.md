@@ -25,15 +25,16 @@ tables + ~60 localized PL/EN/DE strings from clash95.exe, whose 24-byte records'
 32-bit string pointers are bound at runtime (a documented -no-pie 64-bit seam,
 verified with a link probe). The earlier milestone:** Landed:
 `Rules_HostUnitCountInTroop` (`fef99dd`), 22 movement handlers (`b13a724`,
-strategic_001 0x452753..0x45303F → TU `strategic_007.c`), and 58
+strategic_001 0x452753..0x45303F → TU `src/strategic/00452753_0045303F_strategic_007.c`), and 58
 economy/building/army handlers (`b9d1536`, strategic_003 0x456706..0x457789 → TU
-`strategic_008.c`). **Runtime proven each time** via headless /A5: was ~8200 fact
+`src/strategic/00456706_00457789_strategic_008.c`). **Runtime proven each time** via headless /A5: was ~8200 fact
 asserts + ZERO moves; now every player relocates units across turns and
 castle/building/economy facts flow, no crash.
 
 Mechanics proven across the batches:
 - **TU split once the owning TU hits the 1500-line cap.** New dedicated TU
-  `<first>_<last>_strategic_00N.c`: copy the origin comment verbatim so
+  a C filename formed from the first/last addresses and strategic sequence number:
+  copy the origin comment verbatim so
   `original_source` matches; add to `src/sources.cmake`; bump manifest
   `source_file_count`; set each handler entry's `source`; shrink the
   over-claiming registration function(s) to the first handler thunk (asm-confirm
@@ -43,7 +44,8 @@ Mechanics proven across the batches:
   to 0x456706; Army 0x4570E3→shrink to 0x457351) with a gap between the two
   handler sub-blobs — fine, the new TU tolerates the gap.
 - **Deterministic link-reachability PRE-FLIGHT eliminates the recover→link-fail→
-  restart cycle.** `scratchpad/preflight.py`: `ar x` the recovered archive,
+  restart cycle.** The historical scratchpad preflight script (not retained):
+  `ar x` the recovered archive,
   build the call/data-reference graph from `objdump -dr`, compute the
   genuinely-undefined symbol set (referenced but defined nowhere in archive ∪
   final-binary-defined ∪ dynamic-imports), then per candidate inner report if its
@@ -62,9 +64,9 @@ Mechanics proven across the batches:
 - **Cross-subsystem call promotion re-seeds the header surface.** When a handler
   calls a function previously internal to another subsystem (LeadOutPeasants→
   Building_Transfer, CastleFreeSlotCount→Building_CountFreeGarrisonSlots), the
-  generator promotes it to that subsystem's `_api.h`; run
+  generator promotes it to that subsystem's API header; run
   `audit_header_surface.py --mode update` to re-seed and stage the changed
-  `<sub>_api.h`/`_internal.h` + `data/header_surface_baseline.json`.
+  subsystem API/internal headers + `data/header_surface_baseline.json`.
 
 **Remaining 6, each needing prerequisite work (NOT plain thin-wrapper batches):**
 - data-blocked (unrecovered rodata): `Rules_HostBuySchool`
@@ -82,7 +84,7 @@ Mechanics proven across the batches:
 
 - **`Rules_RtnDouble`** (float/double arg reader, `sub_4811C0`) is declared
   only in `src/media/media_internal.h`; the float-arg handlers need it in
-  `media_api.h` (or a local extern). Handlers: `Rules_HostChangeTax`.
+  `src/media/media_api.h` (or a local extern). Handlers: `Rules_HostChangeTax`.
 - **`Rules_RtnLexeme`** (string arg reader, `sub_481100`,
   `src/media/0047F820_00481100_media_016.c:1427`) is needed for string-arg
   handlers: `Rules_HostBuildCastle`.
@@ -90,7 +92,7 @@ Mechanics proven across the batches:
   corrected to accept the real arg count before the wrapper compiles
   (flagged per-handler below), e.g. `Rules_BuildCastle` 4→5 params.
 - Per-handler gate flow (each is a data→function migration): recover body →
-  `update_split_manifest_hashes.py --update` → `audit_split_sources.py` →
+  `python3 tools/update_split_manifest_hashes.py --update` → `tools/audit_split_sources.py` →
   obj_diff (add function section, remove the `_UNKNOWN` byte; reviewed) →
   `check_link_surface.py --mode update` (data→function; reviewed) → dual
   builds + ratchet. Batch ~12/commit per the plan.
@@ -116,14 +118,14 @@ recovered_state.c). Recovery is therefore **purely additive** (the plan's
 "add-only obj_diff sections"):
 
 1. Add each handler function body (from this spec) into the owning strategic TU
-   (`004506B0_004530D0_strategic_001.c` for the 0x452xxx set,
-   `00455740_004582B0_strategic_003.c` for the 0x456xxx set), ordered by
+   (`src/strategic/004506B0_004530D0_strategic_001.c` for the 0x452xxx set,
+   `src/strategic/00455740_004582B0_strategic_003.c` for the 0x456xxx set), ordered by
    address so they compile at their original offsets.
 2. **Shrink the registration function's manifest range** to end at the first
    handler (strategic: `end_exclusive` 0x4530A0 → 0x452753) and **add a manifest
    `functions` entry per handler** (name, original_address, range to the next
    handler, source, linkage external, subsystem, state_owner, body_sha256 via
-   `update_split_manifest_hashes.py`).
+   `tools/update_split_manifest_hashes.py`).
 3. **Move each symbol from decl-DB `globals` → `functions`** (drop the
    `extern _UNKNOWN Rules_HostX;` global, add
    `int Rules_HostX(int, double);` under functions with `home: strategic`),
@@ -1454,4 +1456,3 @@ int Rules_HostFindCastleForHealing(int a1, double a2)
 ```
 
 _Notes:_ Single-arg thin wrapper returning bool. sub_457860 recovered as BOOL UnitStack_FindPathToNearestHospitalCastle(DWORD stack_index) at src/strategic/00455740_004582B0_strategic_003.c:684 (same TU), declared strategic_internal.h:108. Registration: strategic_003.c:650 (aZnajdzZamekDoL -> &Rules_HostFindCastleForHealing, type 98='b', a11i_0).
-

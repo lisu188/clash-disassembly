@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../units/units_api.h"
 #include "../battle/battle_api.h"
@@ -377,7 +377,7 @@ LABEL_22:
     if ( v67 - v65 >= (unsigned int)v70 )
     {
       attacker_unit_type = *(__int16 *)(uintptr_t)(v64 + g_MapData + 852);
-      v70 = (unsigned __int8)g_UnitTypeAttackSoundFrameIndex[88 * attacker_unit_type];
+      v70 = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[attacker_unit_type].melee_attack_sound_frame;
       if ( v70 == g_UnitAnimFrameIndex )
         Audio_PlayUnitMeleeAttackSound(attacker_unit_type);
       v65 = Time_Now(v64, v70);
@@ -719,7 +719,7 @@ int  UnitBattle_PlayDeathAnimation(int unit_index, int a2, char a3, DWORD a4)
 //----- (004283D0) --------------------------------------------------------
 int  UnitBattle_GetCorpseSpriteIndex(__int16 *unit_ptr)
 {
-  return (unsigned __int8)g_UnitTypeCorpseSpriteBaseIndex[88 * *unit_ptr] + (*((unsigned __int8 *)unit_ptr + 3) + 4) % 8;
+  return (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[*unit_ptr].corpse_sprite_base_index + (*((unsigned __int8 *)unit_ptr + 3) + 4) % 8;
 }
 
 //----- (00428400) --------------------------------------------------------

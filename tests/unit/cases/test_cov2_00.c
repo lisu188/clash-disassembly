@@ -241,10 +241,8 @@ TEST(cov2_00_rules, print_fact_label) {
 
 /* ---- Rules_BatchCommand: cov15's existing test uses an empty arg chain
  * (count 0), landing on the Lexer_TokenExpect(1)==-1 early-return path.
- * Give it a single-node chain (count 1, matching a1==1) instead -- for
- * every UB branch shape observed so far (Lexer_TokenExpect's internal
- * decompiler-lost comparison), a matching result/a1 pair takes the success
- * path, letting this reach the Rules_GetFileNameArg() call and the
+ * Give it a single-node chain (count 1) instead. The recovered explicit
+ * exact-count check succeeds, letting this reach Rules_GetFileNameArg and the
  * if(result)/return lines after it. */
 TEST(cov2_00_rules, batch_command_matching_arg_count) {
   static _DWORD anchor[16];
@@ -261,18 +259,15 @@ TEST(cov2_00_rules, batch_command_matching_arg_count) {
   g_ClipsCurrentExpression = saved;
 }
 
-/* ---- Lexer_TokenExpect: cov11 already drives both the match and mismatch
- * outcomes at its own call site; the remaining two branches are gated by a
- * genuinely undefined local ('v2') with no argument to seed it from. Call
- * from a fresh site (different surrounding locals) on the chance the
- * decompiler-lost value differs here, same technique used for
- * Rules_HostStringp/Rules_BatchCommand above. ---- */
-TEST(cov2_00_lexer, token_expect_fresh_site) {
+/* ---- Lexer_TokenExpect: relation 1 means AT_LEAST. An empty argument list
+ * satisfies a zero minimum and returns the observed count. ---- */
+TEST(cov2_00_lexer, token_expect_empty_list_zero_minimum) {
+  static const char function_name[] = "cov2-00-token-expect";
   static _DWORD fake_expr[16];
   int saved = g_ClipsCurrentExpression;
   memset(fake_expr, 0, sizeof fake_expr);
   g_ClipsCurrentExpression = (int)(intptr_t)fake_expr;
-  TOUCH(Lexer_TokenExpect(2));
+  CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name, 1, 0), 0);
   g_ClipsCurrentExpression = saved;
 }
 

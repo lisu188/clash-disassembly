@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
 #include "../persistence/persistence_api.h"
@@ -719,7 +719,7 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
       BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = turnsRemaining;
       if ( !turnsRemaining )
       {
-        result = (unsigned __int8)g_UnitTypeProductionCost[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
+        result = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[(int)(signed __int8)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]].production_cost;
         if ( (unsigned int)result <= *(_DWORD *)(buildingPtr + 438) )
         {
           Debug_Log(a2, a3, a4, (int)(intptr_t)aBuilding_produ);
@@ -738,12 +738,12 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
             }
           }
           UnitSlot_InitFromType((int)(intptr_t)&buildingPtr[31 * result + 18], (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402], buildingPtr[2]);
-          remainingGold = *(_DWORD *)(buildingPtr + 438) - (unsigned __int8)g_UnitTypeProductionCost[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
+          remainingGold = *(_DWORD *)(buildingPtr + 438) - (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[(int)(signed __int8)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]].production_cost;
           playerDataOffset = PLAYER_DATA_STRIDE * buildingPtr[2];
           *(_DWORD *)(buildingPtr + 438) = remainingGold;
           if ( *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140051) )
           {
-            BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]];
+            BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeRuntimeCoreMetadata[(int)(signed __int8)buildingPtr[BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) + 402]].production_time;
           }
           else
           {

@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "buildings_internal.h"
 #include "buildings_state.h"
-#include "../state/state_shared.h"
+#include "buildings_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -1303,7 +1303,7 @@ void Audio_DisableUnitSounds(void)
 //----- (00441A30) --------------------------------------------------------
 int  Audio_PlayUnitActivateSound(int result)
 {
-  char *resourceKey; // esi
+  const char *resourceKey; // esi
   char *writeCursor; // edi
   char keyChar; // al
   char keyNextChar; // al
@@ -1317,7 +1317,7 @@ int  Audio_PlayUnitActivateSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPath, aSfxOddzialy, sizeof(soundPath));
-    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKey = g_UnitTypeRuntimePointers[result].resource_key;
     writeCursor = &soundPath[strlen(soundPath)];
     do
     {
@@ -1358,8 +1358,7 @@ int  Audio_PlayUnitActivateSound(int result)
 //----- (00441B00) --------------------------------------------------------
 int  Audio_PlayUnitMoveOrderSound(int result)
 {
-  int metadataOffset; // ebx
-  char *resourceKey; // esi
+  const char *resourceKey; // esi
   char *writeCursor; // edi
   char keyChar; // al
   char keyNextChar; // al
@@ -1372,10 +1371,9 @@ int  Audio_PlayUnitMoveOrderSound(int result)
 
   if ( g_UnitSoundsEnabled )
   {
-    metadataOffset = 22 * result;
     CSS_SetSoundVolume(g_LastUnitActivateSoundHandle, 0, 500);
     qmemcpy(soundPath, aSfxOddzialy_0, 0x64u);
-    resourceKey = (&g_UnitTypeResourceKeys)[metadataOffset];
+    resourceKey = g_UnitTypeRuntimePointers[result].resource_key;
     writeCursor = &soundPath[strlen(soundPath)];
     do
     {
@@ -1415,7 +1413,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
 //----- (00441BE0) --------------------------------------------------------
 int  Audio_PlayUnitRangedAttackSound(int result)
 {
-  char *resourceKey; // esi
+  const char *resourceKey; // esi
   char *writeCursor; // edi
   char keyChar; // al
   char keyNextChar; // al
@@ -1428,7 +1426,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(soundPath, aSfxOddzialy_1, sizeof(soundPath));
-    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    resourceKey = g_UnitTypeRuntimePointers[result].resource_key;
     writeCursor = &soundPath[strlen(soundPath)];
     do
     {

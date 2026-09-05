@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "battle_internal.h"
 #include "battle_state.h"
-#include "../state/state_shared.h"
+#include "battle_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"
@@ -18,6 +18,7 @@
 int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH95_UNUSED, int a4 CLASH95_UNUSED)
 {
   __int16 *unitRecord; // esi
+  const BattleUnitEntry *battleUnit;
   int SpriteForChar; // eax
   DWORD v6; // ebp
   int panelBottomFrameSprite; // eax
@@ -59,7 +60,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
   DWORD v42 CLASH95_UNUSED; // [esp+120h] [ebp-1Ch]
   int i; // [esp+124h] [ebp-18h]
   int orderMarkerIndex; // [esp+128h] [ebp-14h]
-  char *(**unitMetadata)[102]; // [esp+12Ch] [ebp-10h]
+  const UnitTypeRuntimeCoreMetadataRecord *unitMetadata; // [esp+12Ch] [ebp-10h]
   _DWORD *renderDeviceBackup; // [esp+130h] [ebp-Ch]
   int apTextSurface2Handle; // [esp+134h] [ebp-8h]
 
@@ -82,6 +83,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
     Diagnostics_TraceWorldMapActionEvent("battle_panel_after_slot_read", g_SelectedUnitIndex, result, (int)(uintptr_t)unitRecord, 0);
     if ( result != -1 )
     {
+      battleUnit = (const BattleUnitEntry *)unitRecord;
       Diagnostics_TraceWorldMapActionEvent("battle_panel_enter", result, *((unsigned __int8 *)unitRecord + 2), *((char *)unitRecord + 9), *((unsigned __int8 *)unitRecord + 12) & 3);
       savedRenderDevice = g_RenderDevice;
       g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
@@ -92,7 +94,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
       Compat_RenderDeviceDrawMenuSprite(335, 243, panelBottomFrameSprite, 1);
       Diagnostics_TraceWorldMapActionEvent("battle_panel_after_frame", *unitRecord, (int)(uintptr_t)g_RenderDevice, SpriteForChar, panelBottomFrameSprite);
       fatiguePercent = *((char *)unitRecord + 9);
-      unitMetadata = &g_UnitTypeMetadataRecords + 22 * *unitRecord;
+      unitMetadata = &g_UnitTypeRuntimeCoreMetadata[*unitRecord];
       g_BattlePanelUnitFatiguePercent = fatiguePercent;
       renderDeviceBackup = g_RenderDevice;
       if ( fatiguePercent < 100 )
@@ -134,7 +136,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
       Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, (_DWORD *)(uintptr_t)apTextSurfaceHandle, 69, 500, 0x26Au, 0x59u, 0, 0);
       Render_FillRect((_DWORD *)(uintptr_t)g_PrimaryRenderSurface, (_DWORD *)(uintptr_t)v19, 69, 500, 0x26Au, 0x59u, 0, 0);
       apTextSurface2Handle = v19;
-      UI_DrawTextFmt(v19, 0, 118, 0, 2, (int)(intptr_t)aD_48);
+      UI_DrawTextFmt(v19, 0, 118, 0, 2, aD_48, g_BattlePanelUnitFatiguePercent);
       /* The x86 iterator path in Render_BlendSurfaceRect is not yet safe on SDL/x86_64. */
       Render_FillRect((_DWORD *)(uintptr_t)v19, (_DWORD *)(uintptr_t)g_PrimaryRenderSurface, 0, 0, 0x76u, 0x14u, 0x1F4u, 0x45u);
       Compat_InvokeCompactSurfaceDestructor((int)(uintptr_t)apTextSurfaceHandle, 2);
@@ -142,15 +144,15 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
       g_RenderDevice = (_UNKNOWN *)(uintptr_t)g_PrimaryRenderSurface;
       Diagnostics_TraceWorldMapActionEvent("battle_panel_after_ap_surfaces", *unitRecord, (int)(uintptr_t)apTextSurfaceHandle, apTextSurface2Handle, (int)(uintptr_t)g_RenderDevice);
       Render_ReleaseSurface(15, 0);
-      UI_DrawTextFmt(v19, 500, 618, 106, 2, (int)(intptr_t)aD_49);
+      UI_DrawTextFmt(v19, 500, 618, 106, 2, aD_49, *((unsigned __int8 *)unitRecord + 8));
       Render_ReleaseSurface(14, 0);
       Diagnostics_TraceWorldMapActionEvent("battle_panel_after_quantity", *unitRecord, *((unsigned __int8 *)unitRecord + 8), g_BattlePanelUnitFatiguePercent, 0);
       if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
-        if ( *((_BYTE *)unitMetadata + 22) )
+        if ( unitMetadata->base_melee_attack )
         {
-          UI_IconIndexFromStats(unitRecord);
-          UI_DrawTextFmt(v19, 500, 618, 151, 2, (int)(intptr_t)aD_50);
+          int statValue = UI_IconIndexFromStats(unitRecord);
+          UI_DrawTextFmt(v19, 500, 618, 151, 2, aD_50, statValue);
         }
       }
       else
@@ -160,8 +162,8 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
       }
       if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
-        Unit_CalcIndexB(unitRecord);
-        UI_DrawTextFmt(v19, 500, 618, 219, 2, (int)(intptr_t)aD_51);
+        int statValue = Unit_CalcIndexB(unitRecord);
+        UI_DrawTextFmt(v19, 500, 618, 219, 2, aD_51, statValue);
       }
       else
       {
@@ -170,10 +172,10 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
       }
       if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
       {
-        if ( *((_BYTE *)unitMetadata + 25) )
+        if ( unitMetadata->base_shot_power )
         {
-          Unit_GetBaseC(unitRecord);
-          UI_DrawTextFmt(v19, 500, 618, 185, 2, (int)(intptr_t)aD_52);
+          int statValue = Unit_GetBaseC(unitRecord);
+          UI_DrawTextFmt(v19, 500, 618, 185, 2, aD_52, statValue);
         }
       }
       else
@@ -190,7 +192,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int restoreFlag, int a3 CLASH9
           if ( v29 < 16 || v29 > 20 )
           {
 LABEL_33:
-            statusLevel = UNIT_SLOT_STATUS_LEVEL(unitRecord);
+            statusLevel = battleUnit->stance_bits & 0x03;
             if ( statusLevel )
             {
               if ( statusLevel <= 1u )
@@ -205,7 +207,7 @@ LABEL_36:
                   v25 = 0;
                   orderMarkerIndex = 0;
                   orderMarkerX = 618 - (unsigned __int16)DLX_GetSpriteHeight(g_ActiveUiSpriteSet, 0xDu);
-                  while ( UNIT_SLOT_ORDER_STATE(unitRecord) >= orderMarkerIndex )
+                  while ( ((battleUnit->stance_bits >> 2) & 0x03) >= orderMarkerIndex )
                   {
                     orderMarkerSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 13);
                     Compat_RenderDeviceDrawMenuSprite(orderMarkerX, 255, orderMarkerSprite, 1);
@@ -215,9 +217,9 @@ LABEL_36:
                   v30 = 529;
                   if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
                   {
-                    for ( i = 0; *((_BYTE *)unitMetadata + 25); v30 += 12 )
+                    for ( i = 0; unitMetadata->base_shot_power; v30 += 12 )
                     {
-                      if ( UNIT_SLOT_REMAINING_VOLLEYS(unitRecord) <= i )
+                      if ( ((battleUnit->stance_bits & 0x03) + 1 - ((battleUnit->stance_bits >> 4) & 0x07)) <= i )
                         break;
                       volleyMarkerSprite = DLX_GetSpriteForChar(g_ActiveUiSpriteSet, 11);
                       Compat_RenderDeviceDrawMenuSprite(v30, 180, volleyMarkerSprite, 1);
@@ -231,7 +233,7 @@ LABEL_36:
                   }
                   if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + gameData + 140051) )
                   {
-                    UI_DrawTextFmt(v30, 500, 618, 287, 2, (int)(intptr_t)aD_53);
+                    UI_DrawTextFmt(v30, 500, 618, 287, 2, aD_53, (signed char)battleUnit->morale);
                   }
                   else
                   {
@@ -240,7 +242,7 @@ LABEL_36:
                   }
                   if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitRecord + 2) + 140051) )
                   {
-                    UI_DrawTextFmt(v30, 500, 618, 321, 2, (int)(intptr_t)aD_54);
+                    UI_DrawTextFmt(v30, 500, 618, 321, 2, aD_54, (signed char)battleUnit->fatigue);
                   }
                   else
                   {
@@ -1071,9 +1073,8 @@ void *BuildingGarrisonDialog_DrawSelectedUnitPanel(void)
   int placeholderSprite; // eax
   void *result; // eax
   char textColor; // al
-  int unitMetadataByteOffset; // edx
   int unitType; // eax
-  char *unitMetadata; // esi
+  const UnitTypeRuntimeCoreMetadataRecord *unitMetadata; // esi
   int frameSprite; // edx
   int SpriteForChar; // eax
   int fontContextPersonage; // edi
@@ -1144,10 +1145,9 @@ void *BuildingGarrisonDialog_DrawSelectedUnitPanel(void)
                     * g_BuildingGarrisonDialogSelectedSlotIndex
                     + g_BuildingGarrisonDialogActiveBuilding
                     + 18);
-    unitMetadataByteOffset = 88 * *unitRecord;
     panelY = 220;
     unitType = *(__int16 *)(uintptr_t)(g_BuildingGarrisonDialogActiveBuilding + 31 * g_BuildingGarrisonDialogSelectedSlotIndex + 18);
-    unitMetadata = (char *)&g_UnitTypeMetadataRecords + unitMetadataByteOffset;
+    unitMetadata = &g_UnitTypeRuntimeCoreMetadata[*unitRecord];
     if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       frameSprite = 33;
     else
@@ -1175,7 +1175,7 @@ void *BuildingGarrisonDialog_DrawSelectedUnitPanel(void)
         panelY + 8,
         3,
         selected_unit_name);
-      UI_DrawTextFmt(fontContextPersonage, panelX + 15, panelX + 88, panelY + 32, 2, (int)(intptr_t)aD_67, (unsigned char)unitMetadata[24]);
+      UI_DrawTextFmt(fontContextPersonage, panelX + 15, panelX + 88, panelY + 32, 2, aD_67, (unsigned char)unitMetadata->base_action_points);
       personageBadgeSprite = DLX_GetSpriteForChar(g_BuildingGarrisonDialogUiSpriteSet, 34);
       Compat_RenderDeviceDrawMenuSprite(panelX + 93, panelY + 20, personageBadgeSprite, 1);
 LABEL_10:
@@ -1229,7 +1229,7 @@ LABEL_10:
     UI_DrawTextFmt(fontContext, panelX + 64, panelX + 192, panelY + 5, 3, selected_unit_name);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(stderr, "[barracks] selected_panel_name_drawn name=%s\n", selected_unit_name);
-    UI_DrawTextFmt(fontContext, panelX + 85, panelX + 105, panelY + 50, 2, (int)(intptr_t)aD_59, (unsigned char)unitMetadata[24]);
+    UI_DrawTextFmt(fontContext, panelX + 85, panelX + 105, panelY + 50, 2, aD_59, (unsigned char)unitMetadata->base_action_points);
     statValue = Unit_CalcIndexB(unitRecord);
     UI_DrawTextFmt(fontContext, panelX + 132, panelX + 148, panelY + 95, 2, (int)(intptr_t)aD_60, statValue);
     if ( (unsigned int)*((char *)unitRecord + 11) > 4 )
@@ -1267,9 +1267,9 @@ LABEL_22:
     col2X = panelXCopy + 105;
     row3Y = panelY + 95;
     col1X = panelX + 85;
-    if ( unitMetadata[25] )
+    if ( unitMetadata->base_shot_power )
     {
-      if ( unitMetadata[22] )
+      if ( unitMetadata->base_melee_attack )
       {
         statValue = UI_IconIndexFromStats(unitRecord);
         col1XCopy = col1X;

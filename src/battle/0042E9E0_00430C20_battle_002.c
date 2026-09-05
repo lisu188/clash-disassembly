@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "battle_internal.h"
 #include "battle_state.h"
-#include "../state/state_shared.h"
+#include "battle_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"

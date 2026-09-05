@@ -1,0 +1,2 @@
+# Shared repository model; reasoning effort and permissions remain user choices.
+model = "gpt-6-astra"

@@ -3,7 +3,7 @@
 
 Consumes data/recovered_decls.json (verbatim declaration text, P3.2) +
 data/recovered_sources.json (function -> subsystem/source) + a usage scan of
-the 138 recovered TUs (comment/string-stripped identifier tokenization), and
+the manifest-backed recovered TUs (preprocessed identifier tokenization), and
 emits the narrowed header set that replaces the recovered_internal.h umbrella:
 
   src/<S>/<S>_api.h        functions DEFINED in S referenced from another
@@ -12,21 +12,31 @@ emits the narrowed header set that replaces the recovered_internal.h umbrella:
                            includes <S>_api.h
   src/<S>/<S>_state.h      state-owned globals whose only consuming subsystem
                            is S
-  src/state/state_shared.h globals consumed by 2+ subsystems
+  src/<S>/<S>_shared_state.h  shared globals actually consumed by S
+  src/state/state_shared.h globals consumed by 2+ subsystems; aggregate for
+                            the state definition group and tests only
   src/state/state_local.h  globals referenced only by the state group itself
                            (also carries the state group's own consumer slice)
   src/recovered_legacy_imports.h   legacy import decls (no manifest definition)
   src/recovered_test_seams.h       CLASH95_TEST_VISIBLE prototypes, guarded by
                                    #ifdef CLASH95_TESTING
   src/recovered_all.h      aggregate of everything above; for tests/unit ONLY
-  data/subsystem_api.json  machine-readable measured surface (feeds the
-                           header-surface ratchet)
+  data/subsystem_api.json  measured surface, shared-state consumer identities,
+                            and per-TU referenced/visible shared declarations
+
+The declaration DB's optional shared_state_layout setting selects 'aggregate'
+(the existing layout, also the default) or 'consumer' (the narrowed slices and
+visibility metrics). Set 'consumer' only as part of the Linux regeneration and
+validation batch; this keeps the active generated tree consistent until then.
 
 Determinism: functions are emitted in manifest (original address) order;
-globals alphabetically. Declaration text is copied VERBATIM from the decl DB.
-Because every recovered TU still compiles against the full umbrella until its
-include block is flipped (P3.4), these headers are additive and cannot change
-codegen; obj_diff_gate.sh is the oracle at every step.
+globals alphabetically. Reconstruction helpers without original addresses use
+class 'helper', with an explicit home and an existing manifest-backed source;
+they follow manifest functions in name order. Declaration text is copied
+VERBATIM from the decl DB.
+Storage remains in the state translation unit. Declaration narrowing does not
+move or resize globals; token/object comparisons and builds validate each
+rollout. The aggregate remains available for definition checks and unit tests.
 
 Support files (platform/compatibility/instrumentation/bootstrap) are excluded
 from the usage scan: their hand-maintained access pattern is out of scope.
@@ -35,7 +45,9 @@ Usage:
   python3 tools/gen_subsystem_headers.py --write            # regenerate all
   python3 tools/gen_subsystem_headers.py --check            # freshness (CI)
   python3 tools/gen_subsystem_headers.py --write-tu-includes S   # flip one
-        subsystem's TU include blocks (P3.4 migration stepper)
+        subsystem's TU include blocks, or use 'all' for the whole tree
+  python3 tools/gen_subsystem_headers.py --write --write-tu-includes all
+        # regenerate headers, surface, and includes from the same usage scan
   python3 tools/gen_subsystem_headers.py --report FILE      # usage report
 """
 
@@ -79,9 +91,17 @@ def load():
     decls = json.loads(DECLS.read_text(encoding="utf-8"))
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     subsystem_of = {r["name"]: r["subsystem"] for r in manifest["functions"]}
+    sources = {r["source"] for r in manifest["functions"]}
+    sources.add(manifest["state_owner"])
     problems = []
+    layout = decls.get("shared_state_layout", "aggregate")
+    if layout not in ("aggregate", "consumer"):
+        problems.append(f"unknown shared_state_layout {layout!r}")
     for name, rec in decls["functions"].items():
-        if rec["class"] in ("manifest", "test-seam"):
+        cls = rec.get("class")
+        if cls not in ("manifest", "test-seam", "legacy-import", "helper"):
+            problems.append(f"{name}: unknown declaration class {cls!r}")
+        elif cls in ("manifest", "test-seam"):
             want = subsystem_of.get(name)
             if want is None:
                 problems.append(f"{name}: class {rec['class']} but not in manifest")
@@ -90,6 +110,21 @@ def load():
                     f"{name}: home {rec['home']!r} != manifest subsystem {want!r}")
             elif want not in SUBSYSTEMS:
                 problems.append(f"{name}: unknown subsystem {want!r}")
+        elif cls == "helper":
+            # These are existing reconstruction functions, not invented
+            # original-address entries or legacy imports. Keep their source
+            # inside the same closed TU set that scan_usage preprocesses.
+            home, source = rec.get("home"), rec.get("source")
+            if name in subsystem_of:
+                problems.append(f"{name}: helper is already in manifest")
+            if home not in SUBSYSTEMS:
+                problems.append(f"{name}: unknown helper subsystem {home!r}")
+            if source not in sources:
+                problems.append(f"{name}: helper source {source!r} is not a recovered TU")
+            elif tu_subsystem(source) != home:
+                problems.append(f"{name}: helper source {source!r} does not belong to {home!r}")
+            elif not (REPO / source).is_file():
+                problems.append(f"{name}: helper source {source!r} is missing")
         if name not in rec["decl"]:
             problems.append(f"{name}: key does not appear in its decl text")
     if problems:
@@ -101,6 +136,24 @@ def load():
 
 def tu_subsystem(source: str) -> str:
     return source.split("/")[1]
+
+
+def replace_tu_include_block(text: str, block: str) -> str:
+    """Replace only the generated block, preserving surrounding source bytes.
+
+    Callers decode/encode latin-1 without universal-newline conversion. This
+    keeps a header-only rollout separate from line-ending or source edits.
+    """
+    if text.count(MARK_BEGIN) != 1 or text.count(MARK_END) != 1:
+        raise ValueError("expected exactly one begin marker and one end marker")
+    pattern = re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END)
+    matches = list(re.finditer(pattern, text, flags=re.DOTALL))
+    if len(matches) != 1:
+        raise ValueError(f"expected one generated include block, found {len(matches)}")
+    match = matches[0]
+    newline = "\r\n" if "\r\n" in match.group(0) else "\n"
+    replacement = block.replace("\r\n", "\n").replace("\n", newline)
+    return text[:match.start()] + replacement + text[match.end():]
 
 
 def scan_usage(manifest):
@@ -238,10 +291,13 @@ def main() -> int:
     args = ap.parse_args()
 
     decls, manifest = load()
+    consumer_layout = decls.get("shared_state_layout", "aggregate") == "consumer"
     fn_db = decls["functions"]
     gl_db = decls["globals"]
     man_fns = manifest["functions"]
     defining_tu = {r["name"]: r["source"] for r in man_fns}
+    defining_tu.update({name: rec["source"] for name, rec in fn_db.items()
+                        if rec["class"] == "helper"})
     man_order = {r["name"]: i for i, r in enumerate(man_fns)}
 
     tu_tokens = scan_usage(manifest)
@@ -288,8 +344,8 @@ def main() -> int:
         else:
             internal[home].append(name)
     for s in SUBSYSTEMS:
-        api[s].sort(key=lambda n: man_order.get(n, 1 << 30))
-        internal[s].sort(key=lambda n: man_order.get(n, 1 << 30))
+        api[s].sort(key=lambda n: (man_order.get(n, 1 << 30), n))
+        internal[s].sort(key=lambda n: (man_order.get(n, 1 << 30), n))
     legacy.sort()
     seams.sort(key=lambda n: man_order.get(n, 1 << 30))
 
@@ -313,6 +369,24 @@ def main() -> int:
             state_slice[only].append(name)
         else:
             shared.append(name)
+
+    # Consumer slices change declaration visibility, not storage ownership or
+    # measured coupling. Keep DB keys and verbatim declarations here: matching
+    # is against the same macro-expanded names used by the existing scan.
+    shared_consumers = {
+        s: [name for name in shared if s in gl_users.get(name, set())]
+        for s in SUBSYSTEMS if s != "state"
+    }
+    shared_visibility = {}
+    for rel, toks in sorted(tu_tokens.items()):
+        sub = tu_subsystem(rel)
+        if sub == "state":
+            continue
+        referenced = [name for name in shared if gl_xname[name] in toks]
+        shared_visibility[rel] = {
+            "referenced": referenced,
+            "visible": shared_consumers[sub] if referenced else [],
+        }
 
     # ---- render headers ----------------------------------------------------
     knr_re = re.compile(r"\(\s*\)")
@@ -367,6 +441,13 @@ def main() -> int:
                 [gl_db[n]["decl"] for n in state_slice[s]],
                 f"State-TU globals whose only consuming subsystem is '{s}' "
                 f"({len(state_slice[s])}).")
+            if consumer_layout:
+                files[REPO / "src" / s / f"{s}_shared_state.h"] = hdr(
+                    f"CLASH95_{s.upper()}_SHARED_STATE_H", [rel_types],
+                    [gl_db[n]["decl"] for n in shared_consumers[s]],
+                    f"Shared state-TU globals consumed by '{s}' "
+                    f"({len(shared_consumers[s])}); declarations only, "
+                    "private to this consuming subsystem.")
     files[REPO / "src" / "state" / "state_shared.h"] = hdr(
         "CLASH95_STATE_SHARED_H", ["../recovered_types.h"],
         [gl_db[n]["decl"] for n in shared],
@@ -415,6 +496,9 @@ def main() -> int:
         "legacy_import_count": len(legacy),
         "peer_edges": {},
     }
+    if consumer_layout:
+        surface["shared_state_consumers"] = shared_consumers
+        surface["tu_shared_state_visibility"] = shared_visibility
     # peer edges: for each TU, which OTHER subsystems' api functions it uses
     edges: dict[str, set] = {}
     api_home_x = {fn_xname[n]: (s, n) for s in SUBSYSTEMS for n in api[s]}
@@ -439,8 +523,9 @@ def main() -> int:
         else:
             incs += ["state_shared.h", "state_local.h"]
             incs += [f"../{t}/{t}_state.h" for t in SUBSYSTEMS if t != "state"]
-        if sub != "state" and any(gl_xname[n] in toks for n in shared):
-            incs.append("../state/state_shared.h")
+        if sub != "state" and shared_visibility[rel]["referenced"]:
+            incs.append(f"{sub}_shared_state.h" if consumer_layout
+                        else "../state/state_shared.h")
         for t in SUBSYSTEMS:
             if t == sub:
                 continue
@@ -475,30 +560,29 @@ def main() -> int:
 
     if args.write_tu_includes:
         s = args.write_tu_includes
-        if s not in SUBSYSTEMS:
+        if s not in (*SUBSYSTEMS, "all"):
             print(f"unknown subsystem {s!r}")
             return 2
-        flipped = 0
+        replacements = {}
         for rel in sorted(tu_tokens):
-            if tu_subsystem(rel) != s:
+            if s != "all" and tu_subsystem(rel) != s:
                 continue
             p = REPO / rel
-            text = p.read_text(encoding="latin-1")
+            text = p.read_bytes().decode("latin-1")
             block = tu_block(rel, tu_tokens[rel])
-            if MARK_BEGIN in text:
-                new = re.sub(
-                    re.escape(MARK_BEGIN) + r".*?" + re.escape(MARK_END),
-                    block, text, count=1, flags=re.DOTALL)
-            else:
-                needle = '#include "../recovered_internal.h"'
-                if needle not in text:
-                    print(f"SKIP {rel}: no umbrella include found")
-                    continue
-                new = text.replace(needle, block, 1)
-            p.write_text(new, encoding="latin-1", newline="")
-            flipped += 1
-        print(f"flipped {flipped} TUs in subsystem {s!r}")
-        return 0
+            try:
+                new = replace_tu_include_block(text, block)
+            except ValueError as exc:
+                print(f"INVALID {rel}: {exc}")
+                return 1
+            if new != text:
+                replacements[p] = new.encode("latin-1")
+        # Validate every selected block before writing any source file.
+        for path, content in replacements.items():
+            path.write_bytes(content)
+        print(f"updated {len(replacements)} TU include blocks in {s!r}")
+        if not args.write:
+            return 0
 
     if args.report:
         args.report.write_text(surface_text, encoding="utf-8")
@@ -509,6 +593,9 @@ def main() -> int:
                + f" | state slices total={sum(len(v) for v in state_slice.values())}"
                + f" shared={len(shared)} local={len(local)}"
                + f" | legacy={len(legacy)} seams={len(seams)}")
+    if consumer_layout:
+        summary += " | shared declarations visible=" + str(
+            sum(len(v["visible"]) for v in shared_visibility.values()))
     print(summary)
 
     if args.check:

@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "strategic_internal.h"
 #include "strategic_state.h"
-#include "../state/state_shared.h"
+#include "strategic_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../units/units_api.h"

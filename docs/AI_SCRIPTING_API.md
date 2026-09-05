@@ -67,7 +67,7 @@ Notable per-handler subtleties captured during recovery (all asm-verified):
   `Building_Transfer`, `AI_FindBestStrategicTargetNearTile`.
 - **Compile prerequisites**: `Rules_HostChangeTax` reads a float via
   `Rules_RtnDouble`, `Rules_HostBuildCastle` a string via `Rules_RtnLexeme` (both
-  auto-promoted `media_internal.h`→`media_api.h` on first cross-subsystem use);
+  auto-promoted `src/media/media_internal.h`→`src/media/media_api.h` on first cross-subsystem use);
   `Rules_BuildCastle`'s collapsed 4-param prototype widened to the true 5.
 - **`Rules_HostDigTreasure`** needed a byte-exact recovery of 4 outcome data
   tables + ~60 localized PL/EN/DE popup strings from `clash95.exe`; its 24-byte

@@ -4,13 +4,13 @@
   "kind": "type_metadata_entry",
   "base_offset": 512568,
   "stride": 88,
-  "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitTypeResourceKeys`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family. The reconstruction now materializes the executable-backed +8..+37 runtime core for all 35 records; later fields remain represented by older isolated globals until their full initialized bytes are restored.",
+  "description": "Recovered 88-byte unit-type metadata layout with 40 physical slots: 35 initialized unit types and five zero reserved slots before VA 0x00513328. The runtime backing preserves all 3520 original bytes. Offsets +38..+69 retain opaque bytes; original pointer VAs require host resolution. Scalar tail consumers and movement stems now use the recovered backing rather than isolated one-element globals. Original +0/+4/+81 targets are resolved through a separate native pointer companion; packed VAs remain unchanged.",
   "fields": [
    {
     "offset": 0,
     "name": "localized_name_table",
     "type": "char **",
-    "notes": "Pointer to the localized-name table used by battle logs and building/unit info screens. The decompiler emitted this header as `char *(*...)[102]`, but asm/xref evidence shows at least 35 type records and one duplicated commander localized-name triplet.",
+    "notes": "Original 32-bit pointer to a 12-byte UnitTypeLocalizedNameTable in Polish/English/German order. There are 34 unique triplets for 35 initialized types; types 33 and 34 share VA 0x00512558. Exact game-font bytes are resolved into native pointers without Unicode conversion.",
     "c_name": "localized_name_table",
     "c_type": "low32_ptr",
     "c_pointee": "char **"
@@ -161,6 +161,24 @@
     "c_type": "uint8_t[8]"
    },
    {
+    "offset": 38,
+    "name": "unrecovered_38_69",
+    "type": "raw_bytes[32]",
+    "c_name": "unrecovered_38_69",
+    "c_type": "uint8_t[32]",
+    "confidence": "low",
+    "notes": "Exact initialized bytes are preserved; internal boundaries, signedness and semantics are unproven. Do not infer terrain modifiers from value patterns."
+   },
+   {
+    "offset": 70,
+    "name": "vision_radius",
+    "type": "uint8",
+    "c_name": "vision_radius",
+    "c_type": "uint8_t",
+    "confidence": "high",
+    "notes": "UnitStack_GetVisionRadius takes the maximum across occupied slots; UnitStack_UpdateVision uses it as circular tile reveal radius. Original 0x40F8B0 reads VA0x5125AE +88*type; types26..30 have5, all other initialized types3."
+   },
+   {
     "offset": 71,
     "name": "production_time",
     "type": "uint8",
@@ -204,9 +222,18 @@
     "offset": 77,
     "name": "role",
     "type": "uint8",
-    "notes": "Per-type tactical role class loaded from the metadata parser's literal `role` field. Battle target-priority helpers, role-bucket ordering tables, and the temple healing gate all branch on this byte.",
+    "notes": "Static tactical role category used by battle AI priority/deployment tables and the temple healing gate. The prior association with a literal role metadata parser is rejected: that string belongs to CLIPS Rules_ParseDefclass concrete/abstract parsing, not unit metadata.",
     "c_name": "role",
     "c_type": "uint8_t"
+   },
+   {
+    "offset": 78,
+    "name": "corpse_sprite_base_index",
+    "type": "uint8",
+    "c_name": "corpse_sprite_base_index",
+    "c_type": "uint8_t",
+    "confidence": "high",
+    "notes": "UnitBattle_GetCorpseSpriteIndex at0x4283D0 adds this byte to (facing+4)%8. Distinct from public unit_stats at +87."
    },
    {
     "offset": 79,
@@ -248,6 +275,16 @@
     "notes": "Default playback volume passed into `CSS_PlaySound` for movement audio.",
     "c_name": "move_sound_base_volume",
     "c_type": "uint8_t"
+   },
+   {
+    "offset": 87,
+    "name": "autoresolve_casualty_weight",
+    "type": "uint8",
+    "c_name": "autoresolve_casualty_weight",
+    "c_type": "uint8_t",
+    "original_symbol": "unit_stats",
+    "confidence": "high",
+    "notes": "clash95.map:6984 maps unit_stats to VA0x5125BF, record+87. CalculateBattleResult selects the highest unprocessed winning-slot weight, deducts it from quantity, then applies its random0..9 additional loss and remaining casualty budget. This is not the corpse sprite byte."
    }
   ],
   "evidence": [
@@ -258,7 +295,60 @@
    "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and wall attack.",
    "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record.",
    "The original PE maps DGROUP VMA `0x004EC000` to file offset `0x000EA200`; applying that mapping to metadata VA `0x00512568` exposes 35 consecutive 88-byte initialized records. Their exact `+8..+37` bytes now populate `g_UnitTypeRuntimeCoreMetadata`, including type 17's `{step=3,tick=3,interval=10,attack_frames=8,defence=1,AP=26,road=3,surfaces={4,6,5,0,7,0,8,0}}` core.",
-   "`Building_SetUnitProduction` and `Building_ProcessUnitProductionTurn` index the same 88-byte record at offsets `+71` and `+72`, loading the selected unit's production-time countdown and production-cost deduction from the metadata family that also stores the combat, movement, and audio bytes."
+   "`Building_SetUnitProduction` and `Building_ProcessUnitProductionTurn` index the same 88-byte record at offsets `+71` and `+72`, loading the selected unit's production-time countdown and production-cost deduction from the metadata family that also stores the combat, movement, and audio bytes.",
+   "Both repository and installed PE images contain identical 3520 bytes at VA0x512568 through0x513327 (SHA2562755d2c58c24a6c7337597a593456a03404850a4c666fd0493c2c372a1310963); the final five slots are all zero. CastleProduction_RebuildAvailableUnitList scans ids0..39 (asm81676..81684).",
+   "Tail reads are assembly-backed: vision23383..23425; production46636..46716 and94769..94925; technology95421..95452; tactical role92815..92820 and133090..133093; corpse62172; sound frames61059..61064 and62903..62908; movement strings/volume/variants101018..101226; casualty weight44022..44049. All identified accesses are reads.",
+   "Rejected: +87 unit_stats aliases +78 corpse byte; literal role parser describes unit tactical metadata; bytes+38..+69 are terrain modifiers. The first two are contradicted, the third remains unsupported.",
+   "Pointer recovery: both PE images agree on 34 localized triplets (102 strings) and 35 ASCII resource keys. Assembly 409287..409424 defines the triplet pool; 10315..10322, 40714..40721 and 41610..41620 prove signed type and unsigned language indexing. Original rendering consumes unsigned glyph bytes directly (17383..17393). All fake metadata-base/resource-key consumers have been migrated."
+  ],
+  "typed_eligible": true,
+  "count": 40,
+  "initialized_count": 35
+ },
+ {
+  "name": "UnitTypeLocalizedNameTable",
+  "kind": "localized_name_triplet",
+  "base_symbol": "off_5123CC",
+  "base_va": "0x005123CC",
+  "stride": 12,
+  "count": 34,
+  "description": "Original packed triplet of 32-bit pointers to game-font-encoded unit names. The pool has 34 entries; metadata types 33/34 share its final entry. Native pointer storage is separate from this original layout.",
+  "fields": [
+   {
+    "offset": 0,
+    "name": "polish_name",
+    "type": "char *",
+    "c_name": "polish_name",
+    "c_type": "low32_ptr",
+    "c_pointee": "char *",
+    "confidence": "high",
+    "notes": "Selected by unsigned g_LanguageIndex == 0; preserve original string bytes."
+   },
+   {
+    "offset": 4,
+    "name": "english_name",
+    "type": "char *",
+    "c_name": "english_name",
+    "c_type": "low32_ptr",
+    "c_pointee": "char *",
+    "confidence": "high",
+    "notes": "Selected by unsigned g_LanguageIndex == 1; preserve original string bytes."
+   },
+   {
+    "offset": 8,
+    "name": "german_name",
+    "type": "char *",
+    "c_name": "german_name",
+    "c_type": "low32_ptr",
+    "c_pointee": "char *",
+    "confidence": "high",
+    "notes": "Selected by unsigned g_LanguageIndex == 2; preserve original string bytes."
+   }
+  ],
+  "evidence": [
+   "clash95.asm:409287..409424; VA 0x005123CC..0x00512563 consists of 34 consecutive 12-byte triplets.",
+   "Both original PEs match all 102 string VAs and exact byte strings; type 33/34 alias is VA 0x00512558.",
+   "TextSprite_DrawGlyphAndAdvance at clash95.asm:17383..17393 zero-extends each byte and subtracts 0x20 for sprite lookup."
   ],
   "typed_eligible": true
  },
@@ -1495,6 +1585,22 @@
     "c_type": "uint8_t"
    },
    {
+    "offset": 10,
+    "name": "fatigue",
+    "type": "uint8",
+    "notes": "Preserved from the source UnitSlotRecord by the 31-byte Battle_PlaceUnit copy and copied back by HandleBattleResults. The tactical panel displays this byte as tiredness, with original signed-byte extension at the numeric consumer.",
+    "c_name": "fatigue",
+    "c_type": "uint8_t"
+   },
+   {
+    "offset": 11,
+    "name": "morale",
+    "type": "uint8",
+    "notes": "Shared with UnitSlotRecord morale through tactical placement and survivor copyback. Tactical panel text and melee/defence icon helpers sign-extend the stored byte; the normal morale domain remains 0..20.",
+    "c_name": "morale",
+    "c_type": "uint8_t"
+   },
+   {
     "offset": 12,
     "name": "stance_bits",
     "type": "uint8",
@@ -1530,7 +1636,9 @@
   "evidence": [
    "`UnitBattle_CalcMeleeExchange` addresses both combatants as `dword_532048 + 852 + 31 * slotIndex`, seeds the outputs from byte `+9`, and applies the two-sided combat math over the same fixed-size entries.",
    "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout.",
-   "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveDefensePower` both use the low bit at byte `+22` as a prepared-defence state flag."
+   "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveDefensePower` both use the low bit at byte `+22` as a prepared-defence state flag.",
+   "2026-09-05: Battle_PlaceUnit copies all 31 source-slot bytes before changing tactical coordinates/AP/stance; HandleBattleResults copies all 31 bytes back. UnitBattle_DrawSelectedUnitPanel independently sign-extends morale +11 and fatigue +10 at clash95.asm:75483 and :75501. These facts promote the two formerly opaque bytes with high confidence, without interpreting +14..+16 or +23..+30.",
+   "2026-09-05: three panel stance/order/volley reads used a short pointer with byte-offset macros and incorrectly accessed +24. Typed stance_bits reads restore the assembly's +12 operands at clash95.asm:75231..75237, :75271..75278 and :75435..75448. The same scaled-pointer error is repaired in UnitStats_GetMeleeIconIndex and UnitStats_GetDefenseIconIndex, corroborated by :25913 and :26014. Evidence is retained under artifacts/structure-recovery/tactical-validation-20260905/."
   ],
   "typed_eligible": true
  },

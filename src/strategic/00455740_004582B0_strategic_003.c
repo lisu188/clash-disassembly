@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "strategic_internal.h"
 #include "strategic_state.h"
-#include "../state/state_shared.h"
+#include "strategic_shared_state.h"
 #include "../units/units_api.h"
 #include "../buildings/buildings_api.h"
 #include "../clips/clips_api.h"
@@ -684,7 +684,7 @@ signed int  UnitStack_HasUnitsNeedingHealing(int stack_index)
     slot_unit_type = *unit_slot;
     if ( slot_unit_type == -1 )
       break;
-    if ( *((char *)unit_slot + 9) <= 50 && (unsigned __int8)g_UnitTypeRole[88 * slot_unit_type] >= 3u )
+    if ( *((char *)unit_slot + 9) <= 50 && (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[slot_unit_type].role >= 3u )
       needs_healing = 1;
     unit_slot = (__int16 *)((char *)unit_slot + 31);
   }

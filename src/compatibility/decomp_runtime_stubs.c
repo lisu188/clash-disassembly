@@ -102,6 +102,23 @@ _UNKNOWN g_Audio_DriverModuleTableBase;
 #define COMPAT_WSL_GAME_ROOT "/mnt/c/clash"
 #define COMPAT_LOW32_ALLOC_MAGIC 0xC10A110Cu
 
+static const char *CompatGetGameRoot(int *overridden)
+{
+  const char *configured_root = getenv("CLASH95_GAME_ROOT");
+  struct stat st;
+  int saved_errno = errno;
+  int valid_override = configured_root && configured_root[0] == '/'
+    && strlen(configured_root) < PATH_MAX
+    && stat(configured_root, &st) == 0 && S_ISDIR(st.st_mode);
+
+  /* A diagnostic filesystem root changes path resolution only. Invalid or
+   * relative values retain the installed-game default and its error behavior. */
+  errno = saved_errno;
+  if ( overridden )
+    *overridden = valid_override;
+  return valid_override ? configured_root : COMPAT_WSL_GAME_ROOT;
+}
+
 /* Shared with platform_sdl_runtime.c, which owns GetLastError/SetLastError. */
 extern DWORD g_platform_last_error;
 static LPVOID g_compat_tls_slots[COMPAT_TLS_SLOT_COUNT];
@@ -895,15 +912,22 @@ static int CompatTranslatePathToWsl(const char *input, char *output, size_t outp
   char normalized[PATH_MAX];
   char current[PATH_MAX];
   const char *cursor;
+  const char *game_root;
   struct stat st;
   int current_is_dir;
+  int root_overridden;
 
   if ( !input || !*input || !output || !output_size )
     return 0;
   CompatNormalizePathSlashes(input, normalized, sizeof(normalized));
   if ( !normalized[0] )
     return 0;
-  if ( stat(normalized, &st) == 0 )
+  game_root = CompatGetGameRoot(&root_overridden);
+  /* An explicit root owns relative paths even when a same-named file exists
+   * in the process working directory, so isolated save writes stay isolated. */
+  if ( (!root_overridden || normalized[0] == '/'
+        || (isalpha((unsigned __int8)normalized[0]) && normalized[1] == ':'))
+    && stat(normalized, &st) == 0 )
   {
     Compat_CopyPrefixN(output, normalized, (unsigned int)strlen(normalized) + 1);
     return 1;
@@ -922,7 +946,7 @@ static int CompatTranslatePathToWsl(const char *input, char *output, size_t outp
   }
   else
   {
-    Compat_CopyPrefixN(current, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+    Compat_CopyPrefixN(current, game_root, (unsigned int)strlen(game_root) + 1);
     cursor = normalized;
   }
   current_is_dir = stat(current, &st) == 0 && S_ISDIR(st.st_mode);
@@ -2021,12 +2045,14 @@ HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFile
   char translated_directory[PATH_MAX];
   char *leaf_spec;
   char *slash;
+  const char *game_root;
 
   if ( !lpFileName || !*lpFileName || !lpFindFileData )
   {
     g_platform_last_error = (DWORD)EINVAL;
     return (HANDLE)-1;
   }
+  game_root = CompatGetGameRoot(0);
   CompatNormalizePathSlashes(lpFileName, normalized_search, sizeof(normalized_search));
   slash = strrchr(normalized_search, '/');
   if ( slash )
@@ -2036,12 +2062,12 @@ HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFile
     if ( normalized_search[0] )
       Compat_CopyPrefixN(directory_spec, normalized_search, (unsigned int)strlen(normalized_search) + 1);
     else
-      Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+      Compat_CopyPrefixN(directory_spec, game_root, (unsigned int)strlen(game_root) + 1);
   }
   else
   {
     leaf_spec = normalized_search;
-    Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+    Compat_CopyPrefixN(directory_spec, game_root, (unsigned int)strlen(game_root) + 1);
   }
   if ( !leaf_spec[0] )
     leaf_spec = "*";
@@ -3155,14 +3181,16 @@ int __fastcall findnext_(_DWORD a1, _DWORD a2)
 int __fastcall getcwd_(_DWORD a1, _DWORD a2)
 {
   char *buffer;
+  const char *game_root;
   struct stat st;
 
   buffer = (char *)(uintptr_t)a1;
   if ( !buffer || !a2 )
     return 0;
-  if ( stat(COMPAT_WSL_GAME_ROOT, &st) == 0 && S_ISDIR(st.st_mode) )
+  game_root = CompatGetGameRoot(0);
+  if ( stat(game_root, &st) == 0 && S_ISDIR(st.st_mode) )
   {
-    Compat_CopyPrefixN(buffer, COMPAT_WSL_GAME_ROOT, (unsigned int)a2);
+    Compat_CopyPrefixN(buffer, game_root, (unsigned int)a2);
     return (int)a1;
   }
   return (int)(intptr_t)getcwd(buffer, (size_t)(unsigned int)a2);

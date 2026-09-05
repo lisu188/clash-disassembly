@@ -1,4 +1,5 @@
 {
+ "shared_state_layout": "consumer",
  "functions": {
   "AI_CalcStrategicPriorityScore": {
    "class": "manifest",
@@ -1352,12 +1353,12 @@
   },
   "Building_BuildHospital": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildHospital(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildHospital(int buildingRecord, char a1, DWORD a2);",
    "home": "buildings"
   },
   "Building_BuildHospitalByIndex": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildHospitalByIndex(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildHospitalByIndex(int building_index, char a1, DWORD a2);",
    "home": "strategic"
   },
   "Building_BuildSchool": {
@@ -1372,22 +1373,22 @@
   },
   "Building_BuildSmiths": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildSmiths(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildSmiths(int buildingRecord, char a1, DWORD a2);",
    "home": "buildings"
   },
   "Building_BuildSmithsByIndex": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildSmithsByIndex(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildSmithsByIndex(int building_index, char a2, DWORD a3);",
    "home": "strategic"
   },
   "Building_BuildWorkshop": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildWorkshop(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildWorkshop(int buildingRecord, char a1, DWORD a2);",
    "home": "buildings"
   },
   "Building_BuildWorkshopByIndex": {
    "class": "manifest",
-   "decl": "signed int  Building_BuildWorkshopByIndex(char a1, DWORD a2);",
+   "decl": "signed int  Building_BuildWorkshopByIndex(int building_index, char a1, DWORD a2);",
    "home": "strategic"
   },
   "Building_BuyUnitLicence": {
@@ -8967,7 +8968,7 @@
   },
   "Lexer_TokenExpect": {
    "class": "manifest",
-   "decl": "int  Lexer_TokenExpect(int expectedNumber);",
+   "decl": "int  Lexer_TokenExpect(int functionName, int countRelation, int expectedNumber);",
    "home": "media"
   },
   "Lexer_ValidateMessageHandler": {
@@ -10602,8 +10603,14 @@
   },
   "Options_InitMainMenuSlidersAndWidgets": {
    "class": "manifest",
-   "decl": "unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int widgetRecord, int a2, DWORD a3);",
+   "decl": "unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(uintptr_t widgetRecord, int a2, DWORD a3);",
    "home": "persistence"
+  },
+  "Options_RebuildMainMenuWidgetTemplates": {
+   "class": "helper",
+   "decl": "void Options_RebuildMainMenuWidgetTemplates(void);",
+   "home": "persistence",
+   "source": "src/persistence/00446230_00447840_persistence_003.c"
   },
   "Options_RunInGameSettingsDialog": {
    "class": "manifest",
@@ -10622,7 +10629,7 @@
   },
   "Options_ToggleCheckboxMainMenu": {
    "class": "manifest",
-   "decl": "BOOL  Options_ToggleCheckboxMainMenu(int widgetRecord);",
+   "decl": "BOOL  Options_ToggleCheckboxMainMenu(uintptr_t widgetRecord);",
    "home": "persistence"
   },
   "Output_Write": {
@@ -11137,7 +11144,7 @@
   },
   "PlayGameMenu_HandleCloseButton": {
    "class": "manifest",
-   "decl": "int  PlayGameMenu_HandleCloseButton(int widgetRecord);",
+   "decl": "int  PlayGameMenu_HandleCloseButton(uintptr_t widgetRecord);",
    "home": "persistence"
   },
   "PlayGameMenu_HandleScrollButtonRelease": {
@@ -12217,7 +12224,7 @@
   },
   "Rules_ArgRangeCheck": {
    "class": "manifest",
-   "decl": "int  Rules_ArgRangeCheck(int functionName, int maxArgs);",
+   "decl": "int  Rules_ArgRangeCheck(int functionName, int minArgs, int maxArgs);",
    "home": "media"
   },
   "Rules_ArrayContainsValue": {
@@ -13732,7 +13739,7 @@
   },
   "Rules_DivisionFunction": {
    "class": "manifest",
-   "decl": "int * Rules_DivisionFunction(int returnValue, double a2);",
+   "decl": "int * Rules_DivisionFunction(uintptr_t returnValue, double a2);",
    "home": "clips"
   },
   "Rules_DoForAllConstructs": {
@@ -13790,6 +13797,12 @@
    "decl": "signed int  Rules_EnsureArmyFactForStack(__int16 *army_stack, int army_id, double a3, char a4, DWORD a5);",
    "home": "strategic"
   },
+  "Rules_EnsureFactPatternEntityRecord": {
+   "class": "helper",
+   "decl": "CLASH95_INTERNAL void Rules_EnsureFactPatternEntityRecord(void);",
+   "home": "media",
+   "source": "src/media/004790E0_0047AA80_media_012.c"
+  },
   "Rules_EnsureObjectPatternVTable": {
    "class": "manifest",
    "decl": "CLASH95_INTERNAL void Rules_EnsureObjectPatternVTable(void);",
@@ -13817,17 +13830,17 @@
   },
   "Rules_EvalJoinObjectSlotElementFieldEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, int theResult, int theBinds);",
+   "decl": "unsigned int  Rules_EvalJoinObjectSlotElementFieldEqual(int theValue, _DWORD *theResult, int theBinds);",
    "home": "runtime"
   },
   "Rules_EvalJoinObjectSlotElementsEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, int theResult);",
+   "decl": "unsigned int  Rules_EvalJoinObjectSlotElementsEqual(int theValue, _DWORD *theResult);",
    "home": "runtime"
   },
   "Rules_EvalJoinObjectSlotFieldsEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, int theResult, int theBinds);",
+   "decl": "unsigned int  Rules_EvalJoinObjectSlotFieldsEqual(int theValue, _DWORD *theResult, int theBinds);",
    "home": "runtime"
   },
   "Rules_EvalMultifieldIndexInRange": {
@@ -13837,27 +13850,27 @@
   },
   "Rules_EvalObjectSlotBoundVariableEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, int theResult, int a3, double a4);",
+   "decl": "unsigned int  Rules_EvalObjectSlotBoundVariableEqual(int theValue, _DWORD *theResult, int a3, double a4);",
    "home": "runtime"
   },
   "Rules_EvalObjectSlotElementFieldEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, int theResult);",
+   "decl": "unsigned int  Rules_EvalObjectSlotElementFieldEqual(int theValue, _DWORD *theResult);",
    "home": "runtime"
   },
   "Rules_EvalObjectSlotElementsEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, int theResult);",
+   "decl": "unsigned int  Rules_EvalObjectSlotElementsEqual(int theValue, _DWORD *theResult);",
    "home": "runtime"
   },
   "Rules_EvalObjectSlotFieldsEqual": {
    "class": "manifest",
-   "decl": "unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, int theResult);",
+   "decl": "unsigned int  Rules_EvalObjectSlotFieldsEqual(int theValue, _DWORD *theResult);",
    "home": "runtime"
   },
   "Rules_EvalObjectSlotIndexInRange": {
    "class": "manifest",
-   "decl": "signed int  Rules_EvalObjectSlotIndexInRange(int theValue, int theResult);",
+   "decl": "signed int  Rules_EvalObjectSlotIndexInRange(int theValue, _DWORD *theResult);",
    "home": "runtime"
   },
   "Rules_EvalPatternFieldsEqual": {
@@ -14182,7 +14195,7 @@
   },
   "Rules_FindFactByIndex": {
    "class": "manifest",
-   "decl": "int Rules_FindFactByIndex(void);",
+   "decl": "int Rules_FindFactByIndex(int target_index);",
    "home": "media"
   },
   "Rules_FindFactInHashTable": {
@@ -15097,7 +15110,7 @@
   },
   "Rules_IfFunction": {
    "class": "manifest",
-   "decl": "int  Rules_IfFunction(double context);",
+   "decl": "int  Rules_IfFunction(_DWORD *returnValue, double context);",
    "home": "clips"
   },
   "Rules_ImplodeFunction": {
@@ -15417,7 +15430,7 @@
   },
   "Rules_LessThanOrEqualFunction": {
    "class": "manifest",
-   "decl": "double  Rules_LessThanOrEqualFunction(int a1, double result, int a3);",
+   "decl": "int  Rules_LessThanOrEqualFunction(int a1, double result, int a3);",
    "home": "clips"
   },
   "Rules_LinkArmyFact": {
@@ -15932,7 +15945,7 @@
   },
   "Rules_MultiplicationFunction": {
    "class": "manifest",
-   "decl": "int * Rules_MultiplicationFunction(int returnValue, double a2);",
+   "decl": "int * Rules_MultiplicationFunction(uintptr_t returnValue, double a2);",
    "home": "clips"
   },
   "Rules_MvSlotDeleteCommand": {
@@ -17857,7 +17870,7 @@
   },
   "Rules_SubtractionFunction": {
    "class": "manifest",
-   "decl": "int * Rules_SubtractionFunction(int returnValue, double a2);",
+   "decl": "int * Rules_SubtractionFunction(uintptr_t returnValue, double a2);",
    "home": "clips"
   },
   "Rules_SumCEListComplexity": {
@@ -35561,7 +35574,7 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "aXxyy": {
-   "decl": "extern wchar_t aXxyy[4];",
+   "decl": "extern char aXxyy[8];   /* UTF-16LE \"xxyy\", byte-indexed +0/+2/+4/+6 */",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "aYesnowindowS": {
@@ -40469,7 +40482,7 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_EvalDescriptor_Deffunction": {
-   "decl": "extern _UNKNOWN g_EvalDescriptor_Deffunction;",
+   "decl": "extern EvalNodeDescriptorCompact g_EvalDescriptor_Deffunction;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_EvalDescriptor_Defgeneric": {
@@ -41397,27 +41410,15 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_OptionsMenuSliderThumbPositions": {
-   "decl": "extern unsigned __int16 g_OptionsMenuSliderThumbPositions[6];",
+   "decl": "extern _BYTE g_OptionsMenuSliderThumbPositions[112];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_OptionsMenuWidgetTemplateBlob": {
-   "decl": "extern _UNKNOWN g_OptionsMenuWidgetTemplateBlob;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_Options_BrightnessSliderValue": {
-   "decl": "extern int g_Options_BrightnessSliderValue;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_Options_MouseSpeedSliderValue": {
-   "decl": "extern int g_Options_MouseSpeedSliderValue;",
+   "decl": "extern _BYTE g_OptionsMenuWidgetTemplateBlob[371];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Options_MusicEnabledFlag": {
    "decl": "extern int g_Options_MusicEnabledFlag;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_Options_ScrollSpeedSliderValue": {
-   "decl": "extern int g_Options_ScrollSpeedSliderValue;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Options_UnitSoundsEnabledFlag": {
@@ -41770,10 +41771,6 @@
   },
   "g_ReactiveRuleListHead": {
    "decl": "extern int g_ReactiveRuleListHead;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_RecoveredUnitTypeEnglishNames": {
-   "decl": "extern CLASH95_INTERNAL char *g_RecoveredUnitTypeEnglishNames[UNIT_TYPE_COUNT];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_RenderBackbufferScanlineBuffer": {
@@ -42213,7 +42210,7 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Rules_FactPatternEntityRecord": {
-   "decl": "extern _UNKNOWN g_Rules_FactPatternEntityRecord;",
+   "decl": "extern _DWORD g_Rules_FactPatternEntityRecord[15];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Rules_FactsBloadedFlag": {
@@ -42329,7 +42326,7 @@
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Rules_ObjectPatternVTable": {
-   "decl": "extern _DWORD g_Rules_ObjectPatternVTable[11];",
+   "decl": "extern _DWORD g_Rules_ObjectPatternVTable[15];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_Rules_PPBackupTwicePos": {
@@ -42816,6 +42813,10 @@
    "decl": "extern unsigned char g_TreasureDigOutcomeTable_TempleInactive[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
+  "g_TreasureOutcomeStringPtrs": {
+   "decl": "extern char *const g_TreasureOutcomeStringPtrs[57];",
+   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
+  },
   "g_TreeSpriteSet": {
    "decl": "extern int g_TreeSpriteSet;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -43084,18 +43085,6 @@
    "decl": "extern int g_UnitMoveAnimTickParityCounter;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_UnitMoveSoundBaseVolumes": {
-   "decl": "extern char g_UnitMoveSoundBaseVolumes[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitMoveSoundStems": {
-   "decl": "extern char *g_UnitMoveSoundStems;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitMoveSoundVariantCounts": {
-   "decl": "extern char g_UnitMoveSoundVariantCounts[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "g_UnitMoveTrackPackedNodeScratch": {
    "decl": "extern int g_UnitMoveTrackPackedNodeScratch;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
@@ -43132,68 +43121,20 @@
    "decl": "extern _DWORD g_UnitStackSlotSelectedFlags[10];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_UnitTypeAttackSoundFrameIndex": {
-   "decl": "extern char g_UnitTypeAttackSoundFrameIndex[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "g_UnitTypeBattleMoveFlagsMinus1": {
    "decl": "extern char g_UnitTypeBattleMoveFlagsMinus1[];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeCorpseSpriteBaseIndex": {
-   "decl": "extern char g_UnitTypeCorpseSpriteBaseIndex[1];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_UnitTypeFlatMoveCostFlags": {
    "decl": "extern char g_UnitTypeFlatMoveCostFlags[40];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_UnitTypeMetadataRecords": {
-   "decl": "extern char *(*g_UnitTypeMetadataRecords)[102];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeMetadataRecordsStorage": {
-   "decl": "extern char *g_UnitTypeMetadataRecordsStorage[102];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeProductionCost": {
-   "decl": "extern char g_UnitTypeProductionCost[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeProductionLicenceCost": {
-   "decl": "extern __int16 g_UnitTypeProductionLicenceCost[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeProductionRequiredTechLevelMode2": {
-   "decl": "extern char g_UnitTypeProductionRequiredTechLevelMode2[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeProductionRequiredTechLevelOtherModes": {
-   "decl": "extern char g_UnitTypeProductionRequiredTechLevelOtherModes[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeProductionTime": {
-   "decl": "extern char g_UnitTypeProductionTime[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeResourceKeys": {
-   "decl": "extern char *g_UnitTypeResourceKeys;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeRole": {
-   "decl": "extern char g_UnitTypeRole[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
   "g_UnitTypeRuntimeCoreMetadata": {
-   "decl": "extern CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_COUNT];",
+   "decl": "extern CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_METADATA_CAPACITY];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_UnitTypeShotSoundFrameIndex": {
-   "decl": "extern char g_UnitTypeShotSoundFrameIndex[1];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_UnitTypeVisionRadius": {
-   "decl": "extern char g_UnitTypeVisionRadius[1];",
+  "g_UnitTypeRuntimePointers": {
+   "decl": "extern CLASH95_INTERNAL const UnitTypeRuntimePointerRecord g_UnitTypeRuntimePointers[UNIT_TYPE_METADATA_CAPACITY];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_UnitTypeWorldMoveCosts": {
@@ -43526,14 +43467,6 @@
   },
   "stru_54D49C": {
    "decl": "extern struct _RTL_CRITICAL_SECTION stru_54D49C;",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "unit_stats": {
-   "decl": "extern char unit_stats[];",
-   "owner": "src/state/00000000_0054FFFF_recovered_state.c"
-  },
-  "g_TreasureOutcomeStringPtrs": {
-   "decl": "extern char *const g_TreasureOutcomeStringPtrs[57];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   }
  },

@@ -66,8 +66,8 @@ Thumbs.db
 
 # Agent-local scratch worktrees and session state. Durable repo-side agent
 # evidence lives in tracked .agent/ and .agents/.
-/.codex
-/.codex/
+/.codex/*
+!/.codex/config.toml
 /.codex-loop/
 /.worktrees/
 

@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "runtime_internal.h"
 #include "runtime_state.h"
-#include "../state/state_shared.h"
+#include "runtime_shared_state.h"
 #include "../render/render_api.h"
 #include "../units/units_api.h"
 #include "../buildings/buildings_api.h"

@@ -661,8 +661,8 @@ TEST(cov3_02_subclasspcommand, real_two_class_lookup_success) {
  * dword_51A15C with a small real fact chain (two entries, offset+29 byte
  * non-negative so Rules_GetNextFact keeps walking, offset+36 the "next"
  * link) so the while-loop body and its Rules_GetNextFact() re-fetch line
- * execute at least once, regardless of which way the function's own
- * decompiler-lost `v1` comparison happens to land. ========================= */
+ * execute before the explicit missing index 999 reaches the end of the
+ * chain. =============================================================== */
 TEST(cov3_02_findfactbyindex, real_fact_chain) {
   static _DWORD fact1[16], fact2[16];
   int saved = g_Rules_FactListHead;
@@ -677,7 +677,7 @@ TEST(cov3_02_findfactbyindex, real_fact_chain) {
   fact2[6] = 222;
 
   g_Rules_FactListHead = (int)(intptr_t)fact1;
-  TOUCH(Rules_FindFactByIndex());
+  CHECK_EQ(Rules_FindFactByIndex(999), 0);
   g_Rules_FactListHead = saved;
 }
 

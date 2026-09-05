@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "units_internal.h"
 #include "units_state.h"
-#include "../state/state_shared.h"
+#include "units_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../buildings/buildings_api.h"
@@ -1148,7 +1148,6 @@ int  UI_DrawUnitInfoPane(
   int healthBarSpriteFrame; // eax
   __int16 v19; // ax
   int textRight; // esi
-  int v21; // edx
   int rankSpriteIndex; // edx
   int v23; // eax
   int v24; // eax
@@ -1162,6 +1161,7 @@ int  UI_DrawUnitInfoPane(
   int v32; // eax
   int v33; // eax
   int unitType; // eax
+  int displayedStat;
   unsigned __int16 specialSpriteIndex; // cx
   unsigned __int16 v36; // si
   int iconTop; // ebx
@@ -1175,7 +1175,7 @@ int  UI_DrawUnitInfoPane(
   DWORD v46; // [esp+80h] [ebp-24h]
   void *savedRenderDevice; // [esp+84h] [ebp-20h]
   int statLineBottom; // [esp+88h] [ebp-1Ch]
-  char *(**unitMetadata)[102]; // [esp+8Ch] [ebp-18h]
+  const UnitTypeRuntimeCoreMetadataRecord *unitMetadata; // [esp+8Ch] [ebp-18h]
   int panelLeft; // [esp+90h] [ebp-14h]
   __int16 *slotRecord; // [esp+94h] [ebp-10h]
 
@@ -1183,7 +1183,8 @@ int  UI_DrawUnitInfoPane(
   panelLeft = panelLeftArg;
   panelTop = panelTopArg;
   slotRecord = slotRecordArg;
-  unitMetadata = &g_UnitTypeMetadataRecords + 22 * *slotRecordArg;
+  unitType = UNIT_SLOT_TYPE(slotRecordArg);
+  unitMetadata = &g_UnitTypeRuntimeCoreMetadata[unitType];
   spriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, a3, (char)(intptr_t)slotRecordArg, allocContext);
   if ( spriteSet )
     spriteSet = DLXSpriteSet_Load(spriteSet, (char)(intptr_t)slotRecordArg);
@@ -1245,21 +1246,21 @@ int  UI_DrawUnitInfoPane(
     if ( Surface )
       (*(void (**)(void))(uintptr_t)Surface[46])();
   }
-  UI_DrawTextFmt(drawContext, panelLeft + 64, panelLeft + 192, panelTop + 5, 3, (int)(intptr_t)(**unitMetadata)[(unsigned __int8)g_LanguageIndex]);
+  UI_DrawTextFmt(drawContext, panelLeft + 64, panelLeft + 192, panelTop + 5, 3, UnitType_GetLocalizedName((unit_type)unitType));
   if ( *((unsigned __int8 *)slotRecord + 2) == g_CurrentPlayerIndex )
   {
     statLineBottom = panelTop + 95;
     textLeft = panelLeft + 85;
     textRight = panelLeft + 105;
-    if ( *((_BYTE *)unitMetadata + 25) )
+    if ( unitMetadata->base_shot_power )
     {
-      if ( *((_BYTE *)unitMetadata + 22) )
+      if ( unitMetadata->base_melee_attack )
       {
-        UI_IconIndexFromStats(slotRecord);
-        UI_DrawTextFmt(drawContext, textLeft, textRight, panelTop + 74, 2, (int)(intptr_t)aD_12);
-        Unit_GetBaseC(slotRecord);
+        displayedStat = UI_IconIndexFromStats(slotRecord);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, panelTop + 74, 2, aD_12, displayedStat);
+        displayedStat = Unit_GetBaseC(slotRecord);
         v13 = statLineBottom;
-        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_13);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, aD_13, displayedStat);
       }
       else
       {
@@ -1267,8 +1268,8 @@ int  UI_DrawUnitInfoPane(
         v46 = *((_DWORD *)g_RenderDevice + 46);
         v13 = v46;
         (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)(v46 + 52))(-1, -1, -1, -1, 1, 0, 0);
-        Unit_GetBaseC(slotRecord);
-        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_2);
+        displayedStat = Unit_GetBaseC(slotRecord);
+        UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, aD_2, displayedStat);
       }
     }
     else
@@ -1282,12 +1283,12 @@ int  UI_DrawUnitInfoPane(
         1,
         0,
         0);
-      UI_IconIndexFromStats(slotRecord);
+      displayedStat = UI_IconIndexFromStats(slotRecord);
       v13 = statLineBottom;
-      UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, (int)(intptr_t)aD_1);
+      UI_DrawTextFmt(drawContext, textLeft, textRight, statLineBottom, 2, aD_1, displayedStat);
     }
-    UI_DrawTextFmt(drawContext, panelLeft + 85, panelLeft + 105, panelTop + 50, 2, (int)(intptr_t)aD_14);
-    if ( (unsigned int)*(char *)(uintptr_t)(v21 + 11) > 4 )
+    UI_DrawTextFmt(drawContext, panelLeft + 85, panelLeft + 105, panelTop + 50, 2, aD_14, ((unsigned char *)slotRecord)[8]);
+    if ( (unsigned int)((signed char *)slotRecord)[11] > 4 )
     {
       v32 = *((char *)slotRecord + 11);
       if ( v32 < 11 || v32 > 15 )
@@ -1323,16 +1324,16 @@ LABEL_19:
     else
       v24 = 13;
     Render_ReleaseSurface(v24, v13);
-    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 50, 2, (int)(intptr_t)aD_15);
+    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 50, 2, aD_15, ((signed char *)slotRecord)[11]);
     if ( *((char *)slotRecord + 10) <= 90 )
       v25 = 7;
     else
       v25 = 13;
     Render_ReleaseSurface(v25, v13);
-    UI_DrawTextFmt(drawContext, panelLeft + 160, panelLeft + 191, panelTop + 50, 2, (int)(intptr_t)aD_16);
+    UI_DrawTextFmt(drawContext, panelLeft + 160, panelLeft + 191, panelTop + 50, 2, aD_16, ((signed char *)slotRecord)[10]);
     Render_ReleaseSurface(7, v13);
-    Unit_CalcIndexB(slotRecord);
-    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 95, 2, (int)(intptr_t)aD_17);
+    displayedStat = Unit_CalcIndexB(slotRecord);
+    UI_DrawTextFmt(drawContext, panelLeft + 132, panelLeft + 148, panelTop + 95, 2, aD_17, displayedStat);
     orderStateFlags = slotRecord[6] & 3;
     if ( orderStateFlags )
     {
@@ -1400,7 +1401,7 @@ LABEL_47:
   }
   else
   {
-    if ( (*((_BYTE *)unitMetadata + 18) & 1) == 0 )
+    if ( (unitMetadata->flags & 1) == 0 )
       goto LABEL_50;
     specialSpriteIndex = 13;
   }
@@ -1421,7 +1422,7 @@ LABEL_47:
     0);
 LABEL_50:
   Render_ReleaseSurface(7, v13);
-  UI_DrawTextFmt(v6, panelLeft + 41, panelLeft + 70, panelTop + 98, 3, (int)(intptr_t)aD_18);
+  UI_DrawTextFmt(v6, panelLeft + 41, panelLeft + 70, panelTop + 98, 3, aD_18, ((signed char *)slotRecord)[9]);
   Render_ReleaseSurface(7, v13);
   return DLXSpriteSet_ReleaseAndClear((int *)&v42);
 }
@@ -1429,7 +1430,6 @@ LABEL_50:
 // 419FBC: variable 'v9' is possibly undefined
 // 419FCD: variable 'v8' is possibly undefined
 // 41A031: variable 'v14' is possibly undefined
-// 41A234: variable 'v21' is possibly undefined
 // 41A5E6: variable 'v38' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;

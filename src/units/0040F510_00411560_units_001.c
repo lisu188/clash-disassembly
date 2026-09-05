@@ -3,7 +3,7 @@
 #include "../recovered_layout.h"
 #include "units_internal.h"
 #include "units_state.h"
-#include "../state/state_shared.h"
+#include "units_shared_state.h"
 #include "../render/render_api.h"
 #include "../world/world_api.h"
 #include "../buildings/buildings_api.h"
@@ -187,22 +187,22 @@ __int16 * Rules_LinkArmyFinalize(__int16 *result, double a2)
 //----- (0040F8B0) --------------------------------------------------------
 int  UnitStack_GetVisionRadius(int stackPtr)
 {
-  int unitMetadataOffset; // edx
+  int firstSlotType; // edx
   __int16 *slotPtr; // eax
   int maxRadius; // ebx
   int i; // edx
   int slotType; // ecx
   int slotRadius; // ecx
 
-  unitMetadataOffset = 88 * *(__int16 *)(uintptr_t)(stackPtr + 6);
+  firstSlotType = *(__int16 *)(uintptr_t)(stackPtr + 6);
   slotPtr = (__int16 *)(uintptr_t)(stackPtr + 37);
-  maxRadius = (unsigned __int8)g_UnitTypeVisionRadius[unitMetadataOffset];
+  maxRadius = g_UnitTypeRuntimeCoreMetadata[firstSlotType].vision_radius;
   for ( i = 1; i < 10; ++i )
   {
     slotType = *slotPtr;
     if ( slotType == -1 )
       break;
-    slotRadius = (unsigned __int8)g_UnitTypeVisionRadius[88 * slotType];
+    slotRadius = g_UnitTypeRuntimeCoreMetadata[slotType].vision_radius;
     if ( slotRadius > maxRadius )
       maxRadius = slotRadius;
     slotPtr = (__int16 *)((char *)slotPtr + 31);
@@ -1272,7 +1272,8 @@ int  UnitStats_CalcEffectiveMeleeAttack(char *slotPtr, int forceMaxLevel)
 //----- (00411180) --------------------------------------------------------
 int  UnitStats_GetMeleeIconIndex(__int16 *slotPtr)
 {
-  return UNIT_SLOT_STATUS_LEVEL(slotPtr) + (unsigned __int8)g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * *slotPtr] + *((char *)slotPtr + 11) / 5;
+  const UnitSlotRecord *slot = (const UnitSlotRecord *)slotPtr;
+  return (slot->stance_bits & 0x03) + g_UnitTypeRuntimeCoreMetadata[slot->unit_type_id].base_melee_attack + (signed char)slot->morale / 5;
 }
 
 //----- (004111C0) --------------------------------------------------------
@@ -1294,7 +1295,8 @@ int  UnitStats_CalcEffectiveDefensePower(char *slotPtr, int forceMaxLevel)
 //----- (00411240) --------------------------------------------------------
 int  UnitStats_GetDefenseIconIndex(__int16 *slotPtr)
 {
-  return UNIT_SLOT_STATUS_LEVEL(slotPtr) + (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * *slotPtr] + *((char *)slotPtr + 11) / 5;
+  const UnitSlotRecord *slot = (const UnitSlotRecord *)slotPtr;
+  return (slot->stance_bits & 0x03) + g_UnitTypeRuntimeCoreMetadata[slot->unit_type_id].base_defense_power + (signed char)slot->morale / 5;
 }
 
 //----- (00411280) --------------------------------------------------------

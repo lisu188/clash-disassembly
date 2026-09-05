@@ -276,21 +276,65 @@ TEST(cov3_07_ruleslog, log_treasure_fact_again) {
 }
 
 /* =======================================================================
- * Lexer_TokenExpect: `if (!v2)` / `if (v2 == 1)` / the trailing "v2==2"
- * path all key off a genuinely undefined register ('v2') that pass one's
- * many indirect callers already happened to exercise two of the three
- * branches for. Call it directly several more times with varied `a1` and
- * varied preceding stack contents in case the leftover garbage lands on
- * the still-missing shapes (v2==1 with result<a1, or v2==2 with
- * result<=a1 falling through to the final `return result`). TOUCH-only:
- * outcome is unpredictable by construction. ============================== */
-TEST(cov3_07_lexer, token_expect_retry_for_leftover_register_luck) {
-  char pad[256];
-  int i;
-  for (i = 0; i < 6; ++i) {
-    memset(pad, i + 3, (size_t)(19 + i * 17));
-    TOUCH(Lexer_TokenExpect(i));
+ * Lexer_TokenExpect: its recovered relation parameter selects EXACTLY (0),
+ * AT_LEAST (1), or NO_MORE_THAN (2). Count a real two-node argument list
+ * and check acceptance/rejection at each boundary. A permissive test router
+ * isolates diagnostics from the unrecovered error-printer logical name.
+ * ======================================================================= */
+static int __fastcall cov3_07_tokenexpect_router_query(int logical_name) {
+  (void)logical_name;
+  return 1;
+}
+
+static void __fastcall cov3_07_tokenexpect_router_write(int logical_name, int text) {
+  (void)logical_name;
+  (void)text;
+}
+
+TEST(cov3_07_lexer, token_expect_all_count_relations) {
+  static const char function_name[] = "cov3-07-token-expect";
+  static unsigned char expression[16], arguments[2][16];
+  static _DWORD router[9];
+  static const struct {
+    int relation;
+    int expected_count;
+    int result;
+  } cases[] = {
+    { 0, 2, 2 }, { 0, 1, -1 },
+    { 1, 2, 2 }, { 1, 3, -1 },
+    { 2, 2, 2 }, { 2, 1, -1 }
+  };
+  int saved_expression = g_ClipsCurrentExpression;
+  int saved_router = g_IO_RouterListHead;
+  int saved_fast_save = g_IO_FastSaveFilePtr;
+  int saved_error = g_ClipsEvaluationError;
+  int saved_halt = g_ClipsHaltExecution;
+  size_t i;
+  memset(expression, 0, sizeof expression);
+  memset(arguments, 0, sizeof arguments);
+  memset(router, 0, sizeof router);
+  *(_DWORD *)(expression + 6) = (_DWORD)(uintptr_t)arguments[0];
+  *(_DWORD *)(arguments[0] + 10) = (_DWORD)(uintptr_t)arguments[1];
+  router[1] = 1;
+  router[3] = (_DWORD)(uintptr_t)cov3_07_tokenexpect_router_query;
+  router[4] = (_DWORD)(uintptr_t)cov3_07_tokenexpect_router_write;
+  g_ClipsCurrentExpression = (int)(intptr_t)expression;
+  g_IO_RouterListHead = (int)(intptr_t)router;
+  g_IO_FastSaveFilePtr = 0;
+  for (i = 0; i < sizeof cases / sizeof cases[0]; ++i) {
+    g_ClipsEvaluationError = 0;
+    g_ClipsHaltExecution = 0;
+    CHECK_EQ(Lexer_TokenExpect((int)(intptr_t)function_name,
+                              cases[i].relation, cases[i].expected_count),
+             cases[i].result);
+    CHECK_EQ(g_ClipsEvaluationError, cases[i].result == -1);
+    CHECK_EQ(g_ClipsHaltExecution, cases[i].result == -1);
   }
+  g_ClipsCurrentExpression = saved_expression;
+  g_IO_RouterListHead = saved_router;
+  g_IO_FastSaveFilePtr = saved_fast_save;
+  g_ClipsEvaluationError = saved_error;
+  g_ClipsHaltExecution = saved_halt;
 }
 
 /* =======================================================================
