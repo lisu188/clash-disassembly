@@ -29,8 +29,43 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install CLIPS runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends clips
+
       - name: Compile Python tooling
         run: python3 -m py_compile tools/*.py
+
+      - name: Validate strategic AI BSAVE contract
+        run: python3 tools/check_clash_dat_bsave.py
+
+      - name: Validate strategic AI compiled primitives
+        run: python3 tools/check_clash_dat_primitives.py
+
+      - name: Validate strategic AI defclass recovery
+        run: python3 tools/check_clash_dat_classes.py
+
+      - name: Validate strategic AI slot facet recovery
+        run: python3 tools/check_clash_dat_slot_facets.py
+
+      - name: Validate strategic AI message-handler recovery
+        run: python3 tools/check_clash_dat_message_handlers.py
+
+      - name: Validate strategic AI RETE topology
+        run: python3 tools/check_clash_dat_rete.py
+
+      - name: Validate strategic AI LHS recovery
+        run: python3 tools/check_clash_dat_lhs.py
+
+      - name: Inventory unresolved strategic AI matcher tests
+        run: python3 tools/check_clash_dat_unresolved.py --json clash_dat_unresolved_inventory.json
+
+      - name: Validate unified recovered CLP program
+        run: python3 tools/check_clash_recovered_clp.py
+
+      - name: Load unified recovered CLP in CLIPS
+        run: python3 tools/check_clash_recovered_clips_load.py
 
       - name: Validate JSON files
         shell: bash
@@ -46,6 +81,14 @@ jobs:
           python3 -m json.tool data/header_surface_baseline.json >/dev/null
           python3 -m json.tool tests/unit/pure_function_aliases.json >/dev/null
           python3 -m json.tool tests/unit/pure_set.json >/dev/null
+          python3 -m json.tool clash_dat_unresolved_inventory.json >/dev/null
+
+      - name: Upload unresolved matcher inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: clash-dat-unresolved-matcher-inventory
+          path: clash_dat_unresolved_inventory.json
+          if-no-files-found: error
 
       - name: Audit split sources and frozen metadata
         run: |
@@ -162,7 +205,21 @@ jobs:
         run: cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
 
       - name: Build independently compiled unit harness
-        run: cmake --build build/coverage --target clash95_unit_tests -j2
+        id: unit-build
+        shell: bash
+        run: |
+          if ! cmake --build build/coverage --target clash95_unit_tests -j2 >unit-compiler.log 2>&1; then
+            tail -n 200 unit-compiler.log
+            exit 1
+          fi
+
+      - name: Upload unit harness compiler diagnostics
+        if: always() && steps.unit-build.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-unit-compiler-diagnostics
+          path: unit-compiler.log
+          if-no-files-found: warn
 
       - name: Run split unit suite
         run: ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure

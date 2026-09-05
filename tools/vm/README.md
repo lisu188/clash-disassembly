@@ -2,10 +2,12 @@
 
 Purpose: run the **original** `clash95.exe` on real Win9x DirectDraw inside a
 headless QEMU VM (no host window), capture the same game states the recovered
-`clash95_bootstrap` renders, and produce pixel comparisons. The original faults
-in its own DirectDraw startup under Wine (see
-`../../artifacts/original-captures/COMPARISON_NOTES.md`), so a real Win9x guest
-is required.
+`clash95_bootstrap` renders, and produce pixel comparisons. Earlier Wine runs
+faulted in the original's DirectDraw startup; that history is retained in the
+private local notes at ../../artifacts/original-captures/COMPARISON_NOTES.md,
+which are absent from clean checkouts. This rig provides a Win9x comparison
+environment; later Wine capture progress is recorded in
+[the build guide](../../docs/BUILD_AND_TEST.md#original-wine-capture-environment).
 
 No retail media lives in the repo. These scripts operate on a local Win98 ISO
 and the local `/mnt/c/clash` install only.
@@ -66,8 +68,8 @@ into the boot menu → at DOS: `fdisk` (Enter×… primary max+active), Esc,
 `setup /is` → keyboard through the wizard → let post-copy reboots time out to
 "Boot from Hard Disk". Product key pre-filled (W7XTC-…); user name required.
 
-Full narrative + per-screen captures in
-`../../artifacts/original-captures/COMPARISON_NOTES.md` and
+The full narrative is retained privately at
+../../artifacts/original-captures/COMPARISON_NOTES.md, with local per-screen captures in
 `../../artifacts/original-captures/qemu-native/`.
 
 ## Live memory inspection of the ORIGINAL (2026-07-19)

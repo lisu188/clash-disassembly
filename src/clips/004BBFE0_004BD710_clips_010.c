@@ -902,7 +902,7 @@ int  Rules_RunIncrementalReset(int result, double context)
 {
   int v2; // ecx
   int i; // edx
-  int v4; // edx
+  int v4 CLASH95_UNUSED; // edx
   int j; // edx
 
   if ( g_Rules_IncrementalResetEnabled )
@@ -978,7 +978,7 @@ int  Rules_DriveIncrementalResetForModule(int result, double context)
   int v4; // eax
   bool v5; // zf
   int i; // ecx
-  int v7; // ecx
+  int v7 CLASH95_UNUSED; // ecx
 
   module = result;
   joinNode = *(_DWORD *)(uintptr_t)(result + 44);

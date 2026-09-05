@@ -63,7 +63,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int k; // edx
   unsigned int loadSlotRow; // eax
   int ( *defaultRenderHook)(int, char, DWORD); // [esp-4h] [ebp-2140h]
-  _BYTE v112[7112]; // [esp+4h] [ebp-2138h] BYREF
+  _BYTE v112[7112] CLASH95_UNUSED; // [esp+4h] [ebp-2138h] BYREF
   /* Options-menu widget table: 4 records x 53 (0x35) bytes, 371 bytes
    * total, filled from g_OptionsMenuWidgetTemplateBlob. In the original
    * stack frame (clash95.asm PlayGame_Dispatch, table = var_570) the
@@ -1118,7 +1118,7 @@ int  Options_DrawSliderThumb(unsigned __int16 *sliderRecord, char a2, DWORD a3)
   _DWORD *Surface; // eax
   __int16 SpriteWidth; // bx
   __int16 SpriteHeight; // ax
-  int v9; // ecx
+  int v9 CLASH95_UNUSED; // ecx
   __int16 thumbSpriteHeight; // ax
   int SpriteForChar; // eax
   int result; // eax
@@ -1218,7 +1218,7 @@ unsigned int  Options_AnimateSliderThumbDrag(int sliderRecord)
   int mouseCursorRawX; // esi
   DWORD sliderMinX; // ebp
   unsigned __int16 SpriteHeight; // ax
-  char v13; // cl
+  char v13 CLASH95_UNUSED; // cl
 
   result = DD_IsFlipping((int)(intptr_t)g_RenderState);
   if ( result )
@@ -1292,7 +1292,7 @@ unsigned int  Options_AnimateSliderThumbDrag(int sliderRecord)
 unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2, DWORD a3)
 {
   unsigned __int16 *currentSlider; // edx
-  int v4; // edx
+  int v4 CLASH95_UNUSED; // edx
 
   currentSlider = result;
   if ( *(_DWORD *)result != -1 )
@@ -1318,7 +1318,7 @@ unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2,
 _DWORD * Options_AnimateAllSliderThumbs(_DWORD *result)
 {
   int currentSlider; // edx
-  int v2; // edx
+  int v2 CLASH95_UNUSED; // edx
   int nextLink; // ebx
 
   currentSlider = (int)(intptr_t)result;

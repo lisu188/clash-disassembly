@@ -21,17 +21,18 @@ int tileRow;
 char facing;
 int tileColumn;
 {
-  int stackScanCount; // esi
-  int foundFreeStack; // edx
-  int stackScanOffset; // eax
-  int stackTypeWord; // ecx
-  int stackIndex; // esi
-  int v12; // ecx
-  int stackPtr; // edi
-  int tileRowBase; // ecx
-  int v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
+  int stackScanCount;
+  int foundFreeStack;
+  int stackScanOffset;
+  int stackTypeWord;
+  int stackIndex;
+  int v12;
+  UnitStackRecord *candidateStack;
+  UnitStackRecord *stack;
+  int tileRowBase;
+  int v15;
+  int v16;
+  int v17;
 
   stackScanCount = 0;
   Debug_Log(tileRow, facing, unitType, (int)(intptr_t)aUnit_createDDD);
@@ -39,80 +40,73 @@ int tileColumn;
   stackScanOffset = 0;
   do
   {
-    stackTypeWord = *(__int16 *)(uintptr_t)(gameData + stackScanOffset + 147180);
+    candidateStack = (UnitStackRecord *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + stackScanOffset);
+    stackTypeWord = candidateStack->unit_slots[0].unit_type_id;
     if ( stackTypeWord == -1 )
       foundFreeStack = 1;
-    stackScanOffset += 725;
+    stackScanOffset += UNIT_STACK_STRIDE;
     ++stackScanCount;
   }
-  while ( stackScanOffset < 362500 && !foundFreeStack );
+  while ( stackScanOffset < UNIT_STACK_STRIDE * UNIT_STACK_TABLE_COUNT && !foundFreeStack );
   stackIndex = stackScanCount - 1;
   if ( foundFreeStack )
   {
     if ( UnitStack_IsIndexOnMap(stackIndex) )
       Debug_Log(v12, facing, unitType, (int)(intptr_t)aUnit_createErr);
-    stackPtr = (int)UNIT_STACK(stackIndex);
-    tileRowBase = 200 * tileRow + gameData;
-    if ( *(unsigned __int16 *)(uintptr_t)(tileRowBase + 2 * tileColumn + 556374) == 0xFFFF )
+    stack = UNIT_STACK_RECORD(stackIndex);
+    tileRowBase = TILE_ROW_STRIDE * tileRow + gameData;
+    if ( *(unsigned __int16 *)(uintptr_t)(tileRowBase + 2 * tileColumn + TILE_MAP_OFFSET) == 0xFFFF )
     {
       if ( unitType == -1 || Map_GetUnitTileMoveCostOrZero(unitType, ownerIndex, tileColumn, tileRow) )
       {
-        UnitStack_ResetRecord(stackPtr, unitType, ownerIndex);
-        UNIT_STACK_TILE_ROW(stackPtr) = tileRow;
-        UNIT_STACK_TILE_COLUMN(stackPtr) = tileColumn;
-        UNIT_STACK_FACING(stackPtr) = facing;
+        UnitStack_ResetRecord((int)(intptr_t)stack, unitType, ownerIndex);
+        stack->tile_row = tileRow;
+        stack->tile_column = tileColumn;
+        stack->facing_direction = facing;
         v16 = gameData;
         *(_WORD *)(uintptr_t)(TILE_INDEX(tileRow, tileColumn)) = stackIndex;
         UnitStack_UpdateVision(stackIndex);
-        Rules_CreateArmyFact((__int16 *)(uintptr_t)stackPtr, stackIndex, v16, ownerIndex, unitType);
+        Rules_CreateArmyFact((__int16 *)stack, stackIndex, v16, ownerIndex, unitType);
         Debug_Log(v17, ownerIndex, unitType, (int)(intptr_t)aUnit_createOk0);
         return 1;
       }
-      else
-      {
-        Debug_Log(v15, tileRow, unitType, (int)(intptr_t)aUnit_createE_2);
-        return 0;
-      }
-    }
-    else
-    {
-      Debug_Log(tileRowBase, facing, unitType, (int)(intptr_t)aUnit_createE_1);
+      Debug_Log(v15, tileRow, unitType, (int)(intptr_t)aUnit_createE_2);
       return 0;
     }
-  }
-  else
-  {
-    Debug_Log(stackTypeWord, facing, unitType, (int)(intptr_t)aUnit_createE_0);
+    Debug_Log(tileRowBase, facing, unitType, (int)(intptr_t)aUnit_createE_1);
     return 0;
   }
+  Debug_Log(stackTypeWord, facing, unitType, (int)(intptr_t)aUnit_createE_0);
+  return 0;
 }
-// 40F510: could not find valid save-restore pair for ebx
-// 40F56A: variable 'v8' is possibly undefined
-// 40F586: variable 'v12' is possibly undefined
-// 40F678: variable 'v17' is possibly undefined
-// 40F6C3: variable 'v15' is possibly undefined
-// 5202E4: using guessed type int gameData;
 
 //----- (0040F6E0) --------------------------------------------------------
 unsigned int  UnitStack_LinkArmyFact(__int16 *stackPtr, char a2, DWORD a3)
 {
-  return Rules_CreateArmyFact(stackPtr, *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*stackPtr, stackPtr[1])), (int)(intptr_t)stackPtr, a2, a3);
+  UnitStackRecord *stack = (UnitStackRecord *)stackPtr;
+  return Rules_CreateArmyFact(
+    stackPtr,
+    *(unsigned __int16 *)(uintptr_t)TILE_INDEX(stack->tile_row, stack->tile_column),
+    (int)(intptr_t)stackPtr,
+    a2,
+    a3);
 }
-// 5202E4: using guessed type int gameData;
 
 //----- (0040F730) --------------------------------------------------------
 int  Unit_Kill(int stackRecord, char killReason, DWORD a3, double a4)
 {
+  UnitStackRecord *stack;
+  UnitSlotRecord *slot;
   int row;
   int column;
   int slot_ordinal;
-  _WORD *slot_type;
 
+  stack = (UnitStackRecord *)(uintptr_t)stackRecord;
   Debug_Log(stackRecord, killReason, a3, (int)(intptr_t)aUnit_kill0x08x);
   Unit_DebugDumpFormationSizes(stackRecord, a3);
   Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackRecord, 0, stackRecord, a4);
-  row = UNIT_STACK_TILE_ROW(stackRecord);
-  column = UNIT_STACK_TILE_COLUMN(stackRecord);
+  row = stack->tile_row;
+  column = stack->tile_column;
   Diagnostics_TraceWorldMapActionEvent(
     "unit_kill",
     Diagnostics_UnitStackIndexFromRecord(stackRecord),
@@ -121,37 +115,38 @@ int  Unit_Kill(int stackRecord, char killReason, DWORD a3, double a4)
     Unit_GetSquadCount(stackRecord));
   *(_WORD *)(uintptr_t)(TILE_INDEX(row, column)) = -1;
   slot_ordinal = 1;
-  slot_type = (_WORD *)(uintptr_t)UNIT_STACK_SLOT(stackRecord, 0);
+  slot = &stack->unit_slots[0];
   do
   {
     ++slot_ordinal;
-    *slot_type = -1;
-    slot_type = (_WORD *)((char *)slot_type + UNIT_STACK_SLOT_STRIDE);
+    slot->unit_type_id = -1;
+    ++slot;
   }
   while ( slot_ordinal < UNIT_STACK_SLOT_COUNT );
   MiniMap_DrawTileCell((void *)(uintptr_t)row, column);
   return MiniMap_RedrawTileRect(row, column, column, row);
 }
-// 5202E4: using guessed type int gameData;
 
 //----- (0040F7C0) --------------------------------------------------------
 int  UnitStack_KillByIndex(int stackIndex, char killReason, DWORD a3, double a4)
 {
-  return Unit_Kill((int)UNIT_STACK(stackIndex), killReason, a3, a4);
+  return Unit_Kill((int)(intptr_t)UNIT_STACK_RECORD(stackIndex), killReason, a3, a4);
 }
 
 //----- (0040F800) --------------------------------------------------------
 __int16 * UnitStack_RemoveFromTile(__int16 *stack, double a2)
 {
-  int stackPtr; // ecx
-  int row; // edx
-  int column; // edx
+  UnitStackRecord *stackRecord;
+  int stackPtr;
+  int row;
+  int column;
 
+  stackRecord = (UnitStackRecord *)stack;
   stackPtr = (int)(intptr_t)stack;
-  row = UNIT_STACK_TILE_ROW(stackPtr);
+  row = stackRecord->tile_row;
   if ( row >= 0 && row <= *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 )
   {
-    column = UNIT_STACK_TILE_COLUMN(stackPtr);
+    column = stackRecord->tile_column;
     if ( column >= 0 && column <= *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     {
       Rules_RetractArmyFact((_DWORD *)(uintptr_t)stackPtr, column, stackPtr, a2);
@@ -167,14 +162,12 @@ __int16 * Rules_UnlinkArmyFact(__int16 *result, double a2)
 {
   return UnitStack_RemoveFromTile(result, a2);
 }
-// 40F83A: variable 'v5' is possibly undefined
-// 40F87B: variable 'v6' is possibly undefined
-// 5202E4: using guessed type int gameData;
 
 //----- (0040F890) --------------------------------------------------------
 __int16 * UnitStack_UnlinkIfEmpty(__int16 *result, double a2)
 {
-  if ( result[3] == -1 )
+  UnitStackRecord *stack = (UnitStackRecord *)result;
+  if ( stack->unit_slots[0].unit_type_id == -1 )
     return Rules_UnlinkArmyFact(result, a2);
   return result;
 }
@@ -187,25 +180,23 @@ __int16 * Rules_LinkArmyFinalize(__int16 *result, double a2)
 //----- (0040F8B0) --------------------------------------------------------
 int  UnitStack_GetVisionRadius(int stackPtr)
 {
-  int firstSlotType; // edx
-  __int16 *slotPtr; // eax
-  int maxRadius; // ebx
-  int i; // edx
-  int slotType; // ecx
-  int slotRadius; // ecx
+  UnitStackRecord *stack;
+  int maxRadius;
+  int slotIndex;
+  int unitType;
+  int slotRadius;
 
-  firstSlotType = *(__int16 *)(uintptr_t)(stackPtr + 6);
-  slotPtr = (__int16 *)(uintptr_t)(stackPtr + 37);
-  maxRadius = g_UnitTypeRuntimeCoreMetadata[firstSlotType].vision_radius;
-  for ( i = 1; i < 10; ++i )
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
+  unitType = stack->unit_slots[0].unit_type_id;
+  maxRadius = g_UnitTypeRuntimeCoreMetadata[unitType].vision_radius;
+  for ( slotIndex = 1; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    slotType = *slotPtr;
-    if ( slotType == -1 )
+    unitType = stack->unit_slots[slotIndex].unit_type_id;
+    if ( unitType == -1 )
       break;
-    slotRadius = g_UnitTypeRuntimeCoreMetadata[slotType].vision_radius;
+    slotRadius = g_UnitTypeRuntimeCoreMetadata[unitType].vision_radius;
     if ( slotRadius > maxRadius )
       maxRadius = slotRadius;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
   }
   return maxRadius;
 }
@@ -213,23 +204,23 @@ int  UnitStack_GetVisionRadius(int stackPtr)
 //----- (0040F900) --------------------------------------------------------
 signed int  UnitStack_UpdateVision(int stackIndex)
 {
-  int stackPtr; // esi
-  int originRow; // edi
-  int originColumn; // ebx
-  int radius; // ebp
-  int previousPlayer; // ecx
-  int updated; // edx
-  int row; // ecx
-  int column; // eax
+  UnitStackRecord *stack;
+  int originRow;
+  int originColumn;
+  int radius;
+  int previousPlayer;
+  int updated;
+  int row;
+  int column;
 
-  stackPtr = (int)UNIT_STACK(stackIndex);
-  if ( *(__int16 *)(uintptr_t)UNIT_STACK_SLOT(stackPtr, 0) == -1 )
+  stack = UNIT_STACK_RECORD(stackIndex);
+  if ( stack->unit_slots[0].unit_type_id == -1 )
     return 0;
-  originRow = UNIT_STACK_TILE_ROW(stackPtr);
-  originColumn = UNIT_STACK_TILE_COLUMN(stackPtr);
-  radius = UnitStack_GetVisionRadius(stackPtr);
+  originRow = stack->tile_row;
+  originColumn = stack->tile_column;
+  radius = UnitStack_GetVisionRadius((int)(intptr_t)stack);
   previousPlayer = g_CurrentPlayerIndex;
-  g_CurrentPlayerIndex = UNIT_STACK_OWNER_INDEX(stackPtr);
+  g_CurrentPlayerIndex = stack->owner_player_index;
   updated = 0;
   for ( row = originRow - radius; row < originRow + radius; ++row )
   {
@@ -248,17 +239,17 @@ signed int  UnitStack_UpdateVision(int stackIndex)
 //----- (0040F9F0) --------------------------------------------------------
 signed int  UnitStack_HasReadyUnits(int stackPtr)
 {
-  char *slotPtr; // edx
-  int slotIndex; // ecx
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotPtr = (char *)(uintptr_t)UNIT_STACK_SLOT(stackPtr, 0);
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *(_WORD *)slotPtr == -1 )
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
       return 0;
-    if ( (slotPtr[13] & 1) != 0 )
+    if ( (slot->state_flags & UNIT_SLOT_FLAG_READY) != 0 )
       return 1;
-    slotPtr += UNIT_STACK_SLOT_STRIDE;
   }
   return 0;
 }
@@ -266,16 +257,16 @@ signed int  UnitStack_HasReadyUnits(int stackPtr)
 //----- (0040FA20) --------------------------------------------------------
 __int16 * UnitStack_ClearReadyFlags(int stackPtr)
 {
-  char *slotPtr; // edx
-  int slotIndex; // ecx
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotPtr = (char *)(uintptr_t)UNIT_STACK_SLOT(stackPtr, 0);
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *(_WORD *)slotPtr == -1 )
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
       break;
-    slotPtr[13] &= ~1u;
-    slotPtr += UNIT_STACK_SLOT_STRIDE;
+    slot->state_flags &= (uint8_t)~UNIT_SLOT_FLAG_READY;
   }
   return (__int16 *)(uintptr_t)stackPtr;
 }
@@ -283,16 +274,16 @@ __int16 * UnitStack_ClearReadyFlags(int stackPtr)
 //----- (0040FA50) --------------------------------------------------------
 __int16 * UnitStack_SetReadyFlags(int stackPtr)
 {
-  char *slotPtr; // edx
-  int slotIndex; // ecx
+  UnitStackRecord *stack;
+  int slotIndex;
 
-  slotPtr = (char *)(uintptr_t)UNIT_STACK_SLOT(stackPtr, 0);
+  stack = (UnitStackRecord *)(uintptr_t)stackPtr;
   for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *(_WORD *)slotPtr == -1 )
+    UnitSlotRecord *slot = &stack->unit_slots[slotIndex];
+    if ( slot->unit_type_id == -1 )
       break;
-    slotPtr[13] |= 1u;
-    slotPtr += UNIT_STACK_SLOT_STRIDE;
+    slot->state_flags |= UNIT_SLOT_FLAG_READY;
   }
   return (__int16 *)(uintptr_t)stackPtr;
 }
@@ -343,13 +334,13 @@ signed int  Facing_DirectionFromDelta8(int deltaRow, int deltaColumn)
 //----- (0040FAD0) --------------------------------------------------------
 int  Camera_CenterOnUnit(int stackIndex)
 {
-  int stackByteOffset; // eax
-  int mapWidthTiles; // ebx
-  int mapHeightTiles; // esi
+  UnitStackRecord *stack;
+  int mapWidthTiles;
+  int mapHeightTiles;
 
-  stackByteOffset = UNIT_STACK_STRIDE * stackIndex;
-  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = *(__int16 *)(uintptr_t)(gameData + stackByteOffset + UNIT_STACK_TABLE_OFFSET) - 4;
-  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = *(__int16 *)(uintptr_t)(gameData + stackByteOffset + 147176) - 3;
+  stack = UNIT_STACK_RECORD(stackIndex);
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = stack->tile_row - 4;
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = stack->tile_column - 3;
   if ( *(int *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) < 0 )
     *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = 0;
   if ( *(int *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) < 0 )
@@ -362,27 +353,26 @@ int  Camera_CenterOnUnit(int stackIndex)
     *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = mapHeightTiles - 7;
   return WorldMap_RedrawViewport(1);
 }
-// 5202E4: using guessed type int gameData;
 
 //----- (0040FDB0) --------------------------------------------------------
 int  UnitSlot_CalcActionPointsFromFatigue(__int16 *slotPtr)
 {
-  int unit_type; // eax
-  int fatigueLevel; // ecx
-  int result; // eax
-  int v4; // ecx
+  UnitSlotRecord *slot;
+  int unitType;
+  int fatigueLevel;
+  int result;
 
-  unit_type = *slotPtr;
-  if ( unit_type < 0 || unit_type >= UNIT_TYPE_COUNT )
+  slot = (UnitSlotRecord *)slotPtr;
+  unitType = slot->unit_type_id;
+  if ( unitType < 0 || unitType >= UNIT_TYPE_COUNT )
     return 0;
-  fatigueLevel = *((char *)slotPtr + 10);
-  result = (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unit_type];
+  fatigueLevel = slot->fatigue;
+  result = (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
   if ( fatigueLevel >= 80 && fatigueLevel <= 89 )
     return (192 * result - (__CFSHL__((192 * result) >> 31, 8) + ((192 * result) >> 31 << 8))) >> 8;
-  v4 = *((char *)slotPtr + 10);
-  if ( v4 >= 90 && v4 <= 99 )
+  if ( fatigueLevel >= 90 && fatigueLevel <= 99 )
     return ((result << 7) - (__CFSHL__(result << 7 >> 31, 8) + (result << 7 >> 31 << 8))) >> 8;
-  if ( *((_BYTE *)slotPtr + 10) == 100 )
+  if ( fatigueLevel == 100 )
     return 0;
   return result;
 }

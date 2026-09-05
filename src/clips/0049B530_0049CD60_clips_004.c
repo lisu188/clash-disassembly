@@ -1248,7 +1248,7 @@ int  Rules_WhileFunction(double context)
 
   ++g_ClipsCurrentEvaluationDepth;
   Rules_RtnUnknown(1, theResult, context);
-  while ( theResult[2] != g_ClipsFalseSymbol || theResult[1] != 2 )
+  while ( (int)theResult[2] != g_ClipsFalseSymbol || theResult[1] != 2 )
   {
     if ( g_ClipsHaltExecution == 1 )
       break;

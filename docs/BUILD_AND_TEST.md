@@ -33,8 +33,9 @@ even when a matching cwd path exists. Unset or invalid values retain the
 `/mnt/c/clash` default. Explicit absolute paths and symlinks retain their usual
 meaning; the selector is not a filesystem sandbox. Do not symlink writable
 saves into the retail installation. The asset-free regression and verified
-engine-authored mission05 snapshot are documented under
-`artifacts/structure-recovery/tactical-validation-20260905/asset-root.md`.
+engine-authored mission05 snapshot are documented in the private local report at
+artifacts/structure-recovery/tactical-validation-20260905/asset-root.md
+(absent from clean checkouts).
 
 On this WSL installation, run an unchanged copy of the original executable
 from a unique Linux-native directory, with an isolated 32-bit Wine prefix and
@@ -47,9 +48,10 @@ Xvfb also avoids the observed `DDERR_UNSUPPORTED` mode-switch failure.
 The proven capture setup, executable hashes, cleanup and actual game-client
 captures are recorded in
 `artifacts/structure-recovery/linux-validation-20260905/original/`, particularly
-the capture script
-`artifacts/structure-recovery/linux-validation-20260905/original/capture_original_virtual_desktop.sh`.
-That script makes a fresh native session,
+the capture script at
+artifacts/structure-recovery/linux-validation-20260905/original/capture_original_virtual_desktop.sh.
+That private local script is absent from clean checkouts. It makes a fresh
+native session,
 retains its path, restores the owned prefix's `C:\clash` mapping on exit, and
 leaves installed executable bytes unchanged. Preserve the retail installation
 and prior evidence when adapting it for another state. A displayed menu alone

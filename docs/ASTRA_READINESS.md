@@ -36,10 +36,11 @@ warning, header-surface and linked-layout ratchets still require review.
 - Repaired stale unit-test callers of already recovered explicit parameters;
   no production function, global, table, type, or field was renamed or recovered.
 
-The backup and exact recovery script are in `artifacts/astra-readiness/before/`
-and `artifacts/astra-readiness/recover_checkout.py`. Preservation proof is in
-`artifacts/astra-readiness/preservation.json`; Codex validation is in
-`artifacts/astra-readiness/codex-config-check.json`.
+These private local artifacts are absent from clean checkouts. The backup is
+under `artifacts/astra-readiness/before/`, and the exact recovery script is
+artifacts/astra-readiness/recover_checkout.py. Preservation proof is in
+artifacts/astra-readiness/preservation.json; Codex validation is in
+artifacts/astra-readiness/codex-config-check.json.
 
 ## Validation results
 
@@ -105,7 +106,8 @@ accepted visual difference. Comparison metrics remain null; historical original
 captures have not been substituted for the required fresh pair.
 
 Exact commands, both original failures, input/state markers, hashes, and frame
-paths are in `artifacts/astra-readiness/runtime/README.md`. The original prefix
+paths are in the private local report at
+artifacts/astra-readiness/runtime/README.md. The original prefix
 copy, session files, retail assets and captures remain ignored and unpublished.
 No binary or image viewer was launched on the host desktop.
 
@@ -113,9 +115,9 @@ No binary or image viewer was launched on the host desktop.
 
 The declaration comparison identifies 31 mismatched records and two existing
 helpers absent from metadata. The review-only proposal and dedicated backup
-are `artifacts/astra-readiness/declaration-sync.json`,
-`artifacts/astra-readiness/recovered_decls.proposed.json`, and
-`artifacts/astra-readiness/recovered_decls.before.json`. Missing helpers still
+are private local outputs at artifacts/astra-readiness/declaration-sync.json,
+artifacts/astra-readiness/recovered_decls.proposed.json, and
+artifacts/astra-readiness/recovered_decls.before.json. Missing helpers still
 need proper metadata representation; the proposal is not a complete migration.
 
 Automatic approval review rejected modifying the canonical declaration database
@@ -131,7 +133,7 @@ others identify genuine DATA_OBJECT buffer/range defects and an incomplete
 in-game settings widget table. They require their own assembly-backed recovery,
 not blanket warning suppression. Exact source sites, assembly addresses and
 rejected shortcuts are recorded in
-`artifacts/astra-readiness/deferred-warning-recovery.md`.
+the private local report at artifacts/astra-readiness/deferred-warning-recovery.md.
 The mission-00 expectation mismatch and
 original Wine startup also remain unresolved. No speculative cause is claimed.
 

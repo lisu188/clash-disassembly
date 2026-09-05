@@ -843,7 +843,7 @@ int  Rules_EvaluatePatternConstraint(int objectSlotField, int selfSlotMarker, _B
         g_ClipsHaltExecution = 0;
         return 0;
       }
-      else if ( evalResult[2] == g_ClipsFalseSymbol && evalResult[1] == 2 )
+      else if ( (int)evalResult[2] == g_ClipsFalseSymbol && evalResult[1] == 2 )
       {
         return g_ClipsFalseSymbol ^ evalResult[2];
       }
@@ -1013,7 +1013,7 @@ int  Rules_PrintObjectPatternErrorDetail(int result, int *patternNode, int j)
   int alphaNode; // edx
   _DWORD *v6; // ecx
   int v7; // ecx
-  int v8; // ecx
+  int v8 CLASH95_UNUSED; // ecx
 
   stopAfterFirst = result;
   for ( i = patternNode; i; i = (int *)(uintptr_t)i[7] )

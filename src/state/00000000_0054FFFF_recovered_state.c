@@ -10818,7 +10818,7 @@ int g_OptionsInGameScrollSpeedRaw = 128;
 
 int g_OptionsInGameSoundVolumeRaw = 128;
 
-_UNKNOWN g_InGameSettingsButtonWidgetsTemplate;
+_UNKNOWN g_InGameSettingsButtonWidgetsTemplate[1];
 
 char *g_CheatTable = "VH[S^]";
 

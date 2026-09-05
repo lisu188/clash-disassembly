@@ -954,7 +954,7 @@ signed int * Rules_ImplodeFunction(double a1)
   fieldIndex = value[3] + 1;
   theMultifield = value[2];
   fieldPtr = value[2] + 6 * (value[3] + 1) - 6;
-  while ( fieldIndex <= value[4] + 1 )
+  while ( fieldIndex <= (int)value[4] + 1 )
   {
     fieldType = *(_WORD *)(uintptr_t)(fieldPtr + 14);
     switch ( fieldType )
@@ -1020,7 +1020,7 @@ LABEL_9:
   {
     curField = fieldCursor;
     writePtr = &retStr[bufOffset];
-    if ( value[4] + 1 < fieldPos )
+    if ( (int)value[4] + 1 < fieldPos )
       break;
     curFieldType = *(_WORD *)(uintptr_t)(curField + 14);
     if ( curFieldType )
@@ -1315,7 +1315,7 @@ signed int * Rules_NthFunction(int returnValue, int a2, double a3)
   if ( Lexer_TokenExpect((int)(intptr_t)aNth, 0, 2) != -1
     && Lexer_ParseValueList(1, value1, 1, a3)
     && Lexer_ParseValueList(2, value2, 4, a3)
-    && (beginCopy = value2[3], n = *(_DWORD *)(uintptr_t)(value1[2] + 16), n <= value2[4] - value2[3] + 1)
+    && (beginCopy = value2[3], n = *(_DWORD *)(uintptr_t)(value1[2] + 16), n <= (int)value2[4] - (int)value2[3] + 1)
     && n >= 1 )
   {
     theMultifield = value2[2];
@@ -1358,7 +1358,7 @@ signed int  Rules_SubsetpFunction(int returnValue, double a2)
     {
       fieldIndex = item1[3] + 1;
       fieldOffset = 6 * (item1[3] + 1) - 6;
-      while ( fieldIndex <= item1[4] + 1 )
+      while ( fieldIndex <= (int)item1[4] + 1 )
       {
         result = Rules_MultifieldFindElementPosition(*(__int16 *)(uintptr_t)(fieldOffset + item1[2] + 14), *(_DWORD *)(uintptr_t)(fieldOffset + item1[2] + 16), item2);
         if ( !result )

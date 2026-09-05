@@ -98,7 +98,7 @@ _DWORD * Rules_FinalizeConjunctionChain(_DWORD *result)
 {
   _DWORD *node; // ecx
   int i; // edx
-  int v3; // edx
+  int v3 CLASH95_UNUSED; // edx
   _DWORD *j; // edx
   int firstChild; // edx
   int testNode; // esi

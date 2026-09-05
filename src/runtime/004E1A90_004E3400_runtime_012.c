@@ -408,7 +408,7 @@ const void * Rules_BsaveObjectPatternNetworkRecords(int outFile)
   int nextAlphaIdx; // eax
   int nextTerminalPtr; // eax
   int nextTerminalIdx; // eax
-  int v11; // ecx
+  int v11 CLASH95_UNUSED; // ecx
   int currentPattern; // ecx
   unsigned int multifieldNodeFlag; // eax
   int whichField; // eax

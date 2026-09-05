@@ -842,7 +842,7 @@ signed int  Module_ParseDefmoduleConstruct(int readSource)
   int v21; // ecx
   int moduleIndex; // eax
   int k; // edx
-  int v24; // edx
+  int v24 CLASH95_UNUSED; // edx
   _DWORD *itemsArray; // eax
   int v26; // ecx
   int itemIndex; // esi

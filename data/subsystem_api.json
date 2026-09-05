@@ -15802,8 +15802,6 @@
   },
   "src/strategic/00452753_0045303F_strategic_007.c": {
    "referenced": [
-    "a1",
-    "a2",
     "g_Mission17ScriptedTreasureEventData",
     "g_Mission7ScriptedTreasureEventData",
     "g_TreasureDigOutcomeTable_TempleActive",
@@ -15920,41 +15918,8 @@
    ]
   },
   "src/strategic/00456706_00457789_strategic_008.c": {
-   "referenced": [
-    "a1",
-    "a2"
-   ],
-   "visible": [
-    "a1",
-    "a2",
-    "aArama1",
-    "aGfx",
-    "aKon_por1",
-    "aMap_pal_1",
-    "g_ActiveCursorDescriptorPtr",
-    "g_CurrentPlayerIndex",
-    "g_CursorCoordShift",
-    "g_CursorDesc_Busy",
-    "g_CursorOverlayPresented",
-    "g_FileSystemMountTable",
-    "g_InputBackendState",
-    "g_LanguageIndex",
-    "g_MainRenderDevice",
-    "g_MapPalettePtr",
-    "g_Mission17ScriptedTreasureEventData",
-    "g_Mission7ScriptedTreasureEventData",
-    "g_PrimaryRenderSurface",
-    "g_RenderDevice",
-    "g_RenderHook",
-    "g_RenderState",
-    "g_Runtime_PaletteArrayCtorDescriptor",
-    "g_SelectedUnitIndex",
-    "g_TreasureDigOutcomeTable_TempleActive",
-    "g_TreasureDigOutcomeTable_TempleInactive",
-    "g_UnitTypeRuntimeCoreMetadata",
-    "g_WorldMapBackgroundSpriteSet",
-    "gameData"
-   ]
+   "referenced": [],
+   "visible": []
   },
   "src/strategic/004589C0_004602F0_strategic_004.c": {
    "referenced": [
