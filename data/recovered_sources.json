@@ -6608,7 +6608,7 @@
       "original_line": 8724,
       "source": "src/buildings/0043FEF0_00441BE0_buildings_007.c",
       "linkage": "external",
-      "body_sha256": "5ff07e1f91e0b6100d0156944a075e9e6aef1761ab61cb7184d55d557644625e",
+      "body_sha256": "86b720715aca77385e7fd114ca0c05b02199b568b3a7b15cab2f71118b033a3a",
       "original_address_range": {
         "start": "0x00440600",
         "end_exclusive": "0x00440A20"
@@ -52219,7 +52219,7 @@
       "original_line": 22,
       "source": "src/strategic/00452753_0045303F_strategic_007.c",
       "linkage": "external",
-      "body_sha256": "46a523b1824c369b68822cdb711928b408d146d04ab0490546cfe1ebb690d0ba",
+      "body_sha256": "b628aa7fa1597fadaf98dc21913ba94a4c025150c2df19a8ce0240f72b8325da",
       "original_address_range": {
         "start": "0x0045279F",
         "end_exclusive": "0x004528AB"
@@ -68811,7 +68811,7 @@
       "original_line": 1490,
       "source": "src/persistence/00443BB0_00445CE0_persistence_002.c",
       "linkage": "external",
-      "body_sha256": "efa7f096689d0ad58bc68b5e6e8b0853a4b0a7624c13063bcc8121d590e1360f",
+      "body_sha256": "40dbf2eedbf8ba96d22f2c79168f5a942e87817c0f5ee8672b12a5d5e5e0c2c1",
       "original_address_range": {
         "start": "0x00443C20",
         "end_exclusive": "0x00443EB0"

@@ -42649,20 +42649,20 @@
    "decl": "extern char *g_TempleGiftEmptyText[3];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TempleGiftOutcomeTable_ForeignCultActive": {
-   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_ForeignCultActive;",
+  "g_TempleGiftOutcomeTable_ForeignCultHuman": {
+   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_ForeignCultHuman;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TempleGiftOutcomeTable_ForeignCultInactive": {
-   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_ForeignCultInactive;",
+  "g_TempleGiftOutcomeTable_ForeignCultAI": {
+   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_ForeignCultAI;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TempleGiftOutcomeTable_OwnCultActive": {
-   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_OwnCultActive;",
+  "g_TempleGiftOutcomeTable_OwnCultHuman": {
+   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_OwnCultHuman;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TempleGiftOutcomeTable_OwnCultInactive": {
-   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_OwnCultInactive;",
+  "g_TempleGiftOutcomeTable_OwnCultAI": {
+   "decl": "extern _UNKNOWN g_TempleGiftOutcomeTable_OwnCultAI;",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_TempleGiftRewardText": {
@@ -42805,12 +42805,12 @@
    "decl": "extern char *g_TrapPitfallDiscoveryMessageStrings[2];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TreasureDigOutcomeTable_TempleActive": {
-   "decl": "extern unsigned char g_TreasureDigOutcomeTable_TempleActive[];",
+  "g_TreasureDigOutcomeTable_Human": {
+   "decl": "extern unsigned char g_TreasureDigOutcomeTable_Human[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
-  "g_TreasureDigOutcomeTable_TempleInactive": {
-   "decl": "extern unsigned char g_TreasureDigOutcomeTable_TempleInactive[];",
+  "g_TreasureDigOutcomeTable_AI": {
+   "decl": "extern unsigned char g_TreasureDigOutcomeTable_AI[];",
    "owner": "src/state/00000000_0054FFFF_recovered_state.c"
   },
   "g_TreasureOutcomeStringPtrs": {

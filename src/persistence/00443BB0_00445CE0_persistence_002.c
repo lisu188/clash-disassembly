@@ -92,9 +92,9 @@ signed int  Treasure_TryDigHere(
   else
   {
     if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
-      outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleActive;
+      outcomeTablePtr = &g_TreasureDigOutcomeTable_Human;
     else
-      outcomeTablePtr = &g_TreasureDigOutcomeTable_TempleInactive;
+      outcomeTablePtr = &g_TreasureDigOutcomeTable_AI;
     /* asm loc_443E57..443E76: nothing writes ecx between 00443C2C
      * (`mov ecx, eax`) and this call on the non-scripted path, so Temple_Random
      * is entered with ecx still holding a1. */

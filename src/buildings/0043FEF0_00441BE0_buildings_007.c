@@ -314,7 +314,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   DWORD *outcomePtr; // esi
   int activeMission; // edx
   int playerDataOffset2; // edx
-  int cultActiveFlag; // ecx
+  int isHumanPlayer; // ecx
   int isOwnCult; // ebx
   const char *transitionName; // eax
   int v24; // ecx
@@ -336,17 +336,17 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
   if ( *(_DWORD *)(uintptr_t)(playerData + 140063) )
   {
     if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
-      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultActive;
+      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultHuman;
     else
-      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultInactive;
+      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultAI;
   }
   else if ( *(_DWORD *)(uintptr_t)(playerData + 140051) )
   {
-    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultActive;
+    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultHuman;
   }
   else
   {
-    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultInactive;
+    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultAI;
   }
   siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
   playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
@@ -411,7 +411,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
         if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
           || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
         {
-          outcomePtr = (DWORD *)&g_TempleGiftOutcomeTable_OwnCultActive;
+          outcomePtr = (DWORD *)&g_TempleGiftOutcomeTable_OwnCultHuman;
         }
         else
         {
@@ -421,15 +421,15 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD gameConte
       }
       Debug_Log(v17, playerDataOffset, (DWORD)(intptr_t)unitStack, (int)(intptr_t)aTemple_unitg_1);
       playerDataOffset2 = PLAYER_DATA_STRIDE * *((unsigned __int8 *)unitStack + 4);
-      cultActiveFlag = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140051);
-      if ( cultActiveFlag )
+      isHumanPlayer = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140051);
+      if ( isHumanPlayer )
       {
         isOwnCult = *(_DWORD *)(uintptr_t)(playerDataOffset2 + gameData + 140063);
         if ( isOwnCult )
           transitionName = aSw_chs;
         else
           transitionName = aSw_pog;
-        Win_PlayModeChangeFrameTransition(transitionName, 1, cultActiveFlag, isOwnCult, (DWORD)(intptr_t)unitStack);
+        Win_PlayModeChangeFrameTransition(transitionName, 1, isHumanPlayer, isOwnCult, (DWORD)(intptr_t)unitStack);
         Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)(intptr_t)unitStack);
       }
       Temple_ProcessGift(*outcomePtr, unitStack, siteY, siteX, gameTime);
