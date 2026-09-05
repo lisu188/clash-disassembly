@@ -152,7 +152,7 @@ _DWORD * Rules_ReturnFact(_DWORD *fact);
 int  Rules_GetNextFact(int fact);
 int  Rules_GetNextFactInModule(int fact);
 _DWORD * Rules_Log(const char *string, int a2, double a3);
-int Rules_FindFactByIndex(int target_index);
+int Rules_FindFactByIndex(void);
 signed int  Rules_SaveFactsToFile(const CHAR *fileName, int saveScope, _DWORD *importList, double frame);
 BOOL  Rules_LoadFactsFromFile(const CHAR *fileName, int a2, DWORD a3, double a4);
 signed int  IO_SeekStreamGuarded(int stream, int offset, unsigned int whence, int a4);
@@ -246,9 +246,8 @@ double  Rules_RtnDouble(int argumentPosition, int a2, double a3);
 signed int  Rules_RtnLong(int argumentPosition, int a2, double a3);
 int  Rules_RtnUnknown(int argumentPosition, _DWORD *returnValue, double a3);
 int Rules_RtnArgCount(void);
-int  Lexer_TokenExpect(int functionName, int countRelation, int expectedNumber);
-int  Rules_ArgRangeCheck(int functionName, int minArgs, int maxArgs);
+int  Lexer_TokenExpect(int expectedNumber);
+int  Rules_ArgRangeCheck(int functionName, int maxArgs);
 extern int Mem_SetAllocFlag (int new_alloc_flag, int a2);
-CLASH95_INTERNAL void Rules_EnsureFactPatternEntityRecord(void);
 
 #endif /* CLASH95_MEDIA_API_H */

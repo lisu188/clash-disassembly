@@ -5,6 +5,7 @@
 #include "clips_state.h"
 #include "../state/state_shared.h"
 #include "../media/media_api.h"
+#include "../state/state_api.h"
 /* CLASH95_GENERATED_INCLUDES_END */
 #include "../state/state_api.h"
 

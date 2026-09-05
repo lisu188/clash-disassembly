@@ -2158,7 +2158,7 @@ extern EvalNodeDescriptorCompact g_EvalDesc_TestJoinBindingFieldsEqualRanged;
 extern EvalNodeDescriptorCompact g_EvalDesc_TestPatternFieldSimple;
 extern EvalNodeDescriptorCompact g_EvalDesc_TestPatternNestedField;
 extern _UNKNOWN g_EvalDescriptor_Defclass;
-extern EvalNodeDescriptorCompact g_EvalDescriptor_Deffunction;
+extern _UNKNOWN g_EvalDescriptor_Deffunction;
 extern _UNKNOWN g_EvalDescriptor_Defgeneric;
 extern EvalNodeDescriptor g_EvalDescriptor_Deftemplate;
 extern EvalNodeDescriptor g_EvalDescriptor_ProcArgument;
