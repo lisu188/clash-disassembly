@@ -10,21 +10,27 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect strategic assembly text
+      - name: Inspect strategic assembly evidence
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          raw = Path('clash95.asm').read_bytes()
-          print('prefix', repr(raw[:100]))
-          encoding = 'utf-16' if 0 in raw[:50] else 'utf-8-sig'
-          lines = raw.decode(encoding, errors='replace').splitlines()
-          print('\n'.join(lines[:25]))
-          positions = [i for i, line in enumerate(lines) if '459230' in line.lower() or '4589c0' in line.lower() or ('chp' in line.lower() and 'proc' in line.lower())]
-          for index in positions[:12]:
-              print('LOCATION', index+1)
-              print('\n'.join(lines[max(0,index-3):index+250]))
-          print('AUDIT IMPORTS')
-          print('\n'.join(Path('tools/audit_split_sources.py').read_text().splitlines()[:65]))
-          print('AUDIT INDEX')
-          print('\n'.join(Path('tools/audit_split_sources.py').read_text().splitlines()[310:350]))
+          import re
+          text = Path('clash95.asm').read_text(errors='replace')
+          for name in ('sub_459230', 'sub_4592E0'):
+              match = re.search(r'^' + name + r'\s+proc\b.*?^' + name + r'\s+endp\b', text, re.M | re.S)
+              assert match, name
+              print(match[0])
+          start = re.search(r'^loc_459107:', text, re.M)
+          if start is None:
+              start = re.search(r'^loc_459138:', text, re.M)
+          end = re.search(r'^sub_4589C0\s+endp', text, re.M)
+          assert start and end
+          print(text[start.start():end.end()])
+          lines = text.splitlines()
+          for i, line in enumerate(lines):
+              if '__CHP' in line:
+                  print('CHP SITE', '\n'.join(lines[max(0,i-2):i+4]))
+                  break
+          print('INDEX API')
+          print(Path('tools/split_source_index.py').read_text()[:10000])
           PY
