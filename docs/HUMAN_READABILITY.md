@@ -110,6 +110,10 @@ cross-check errors. No baseline is raised.
 Before/after linked symbol names/classes and data sizes/order match, as do all
 4157 recovered archive entries. Only the reviewed function changes size
 (GCC 299 to 227 bytes; Clang 360 to 289), shifting later text addresses.
+The default headless GCC smoke retains 10 passes, three documented first-marker
+failures and eight skips. Playability/attack still wait for
+`next_unit_selected selected=1 a=31 b=44`; castle economy still waits for
+`human_turn_enter idx=1 owner=0 tile=31,44`.
 
 Normalized object comparison covers all 35 text sections in the touched TU for
 four compiler profiles. Only this predicate changes, plus its existing inlined
@@ -121,9 +125,10 @@ not claimed for a structured rewrite.
 Exact local commands, source freezes, compiler snapshots and diffs are retained
 under `artifacts/readability/road-functions-20260906/`, including the baseline
 source freeze and batch-01 validation/build scripts. The comparison script is
-`artifacts/readability/road-functions-20260906/batch-01/compare_objects.py`;
+artifacts/readability/road-functions-20260906/batch-01/compare_objects.py;
 the check runner is
-`artifacts/readability/road-functions-20260906/batch-01/validate.sh`.
+artifacts/readability/road-functions-20260906/batch-01/validate.sh.
+These private local scripts are absent from clean checkouts.
 Reproduce the focused gate from the WSL repository root with:
 
 ```sh
@@ -139,6 +144,45 @@ Row/column names remain unchanged because UI-axis terminology is inconsistent.
 The proposed selector parameter name `delayTicks` was rejected: the called
 animation helper ignores that argument and uses a fixed 20-tick delay. No new
 visual-fidelity, mission-arrival or campaign-completion claim follows.
+
+### Batch 2: `Map_GetBridgeCrossingCostOrZero`
+
+The helper at `0x424370` now reads the existing `MapTileRecord::terrain_tile_id`
+once and returns its unchanged cost: five for terrain `603..610`, zero otherwise.
+This replaces decompiler byte-offset temporaries and a repeated raw word read.
+The field is terrain at offset zero; historical references to an overlay do not
+justify renaming it. One canonical body hash changes; ABI and layouts stay fixed.
+
+The original routine and two alignment bytes at `0x424370..0x4243D8` are byte-identical
+in the installed and repository executables, despite different whole-PE hashes.
+It ran at its original address in a freestanding 32-bit adapter with no replaced
+callees. All 65,536 terrain values at eight valid map positions produce 524,288
+original results. Both the frozen prior body and the new typed body match every
+result under GCC 13 and Clang 18 at O0/O2. The map arena is read-only during
+calls; the game-data pointer and the C++ arena contents remain unchanged.
+
+Confidence is high for valid map positions and signed-low32 game-data addresses.
+The proof covers the entire terrain-word domain, not invalid pointers, coordinate
+overflow or full gameplay. Original bytes and outputs remain private artifacts.
+Their code SHA256 is
+`4c91b72f92a5e530563ac24931828e38371a7b37e38ac77e69e2fe9fce98b6a1`.
+The actual-source equivalence check, frozen bodies, original adapter, exhaustive
+results and exact compiler commands are retained under
+`artifacts/readability/road-functions-20260906/batch-02/`.
+
+All 35 TU text sections are compared at O0/O2 in both compilers; only this
+function changes. Both incremental builds and the four public CTests pass.
+Linked symbol/data profiles and all 4157 archive identities match batch 1;
+the rebuilt TU's warning categories are unchanged (19 GCC / 39 Clang), without
+claiming incremental logs as a fresh whole-build warning count. Manifest,
+split-source, headers/includes and the existing builder regression pass.
+Changed non-archive Markdown passes the path check; the whole-tree check flags
+the preceding integration report's private history-audit path in this worktree.
+No baseline is raised, and no new runtime milestone is claimed.
+
+No public rename, new constant or new semantic layout is introduced. The next
+candidates are the Road normalization and connection helpers; larger
+input/rendering functions remain separately scoped.
 
 ## Next migration batches
 

@@ -863,15 +863,10 @@ BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int row, int column)
 //----- (00424370) --------------------------------------------------------
 signed int  Map_GetBridgeCrossingCostOrZero(int row, int column)
 {
-  int rowBase; // ebx
-  int colOffset; // edx
-
-  rowBase = gameData + TILE_TERRAIN_ROW_STRIDE * row;
-  colOffset = 2 * column;
-  if ( *(unsigned __int16 *)(uintptr_t)(rowBase + 7 * colOffset) < 0x25Bu || *(unsigned __int16 *)(uintptr_t)(rowBase + 7 * colOffset) > 0x262u )
-    return 0;
-  else
-    return 5;
+  const MapTileRecord *tile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
+  const int terrainTileId = tile->terrain_tile_id;
+  return terrainTileId >= 603 && terrainTileId <= 610 ? 5 : 0;
 }
 // 5202E4: using guessed type int gameData;
 

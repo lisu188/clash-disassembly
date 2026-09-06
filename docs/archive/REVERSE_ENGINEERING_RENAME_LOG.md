@@ -1,5 +1,17 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: bridge crossing cost
+
+Track: Win95 reconstruction, mission-05 Road helpers. Reviewed
+`Map_GetBridgeCrossingCostOrZero` (`0x424370`) individually; replaced raw terrain
+offset arithmetic with the pinned `MapTileRecord::terrain_tile_id` and one named
+word read. Original return values stay five for `603..610`, zero otherwise.
+No public rename, new semantic layout or gameplay milestone; one canonical body
+hash changes. Confidence: high within valid map/low-address inputs, supported by
+524,288 actual-original cases matching old/new bodies in four compiler profiles.
+Evidence and limitations are in
+[HUMAN_READABILITY.md](../HUMAN_READABILITY.md#batch-2-map_getbridgecrossingcostorzero).
+
 ## 2026-09-06 - Road readability: aligned bridge approach predicate
 
 Track: Win95 reconstruction, mission-05 Road helpers. Reviewed function
