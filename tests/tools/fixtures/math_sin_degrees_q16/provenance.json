@@ -1,0 +1,15 @@
+{
+  "name": "Math_SinDegreesQ16",
+  "original_address": "0x00415D80",
+  "source": "src/units/00414390_00416750_units_004.cpp",
+  "before_body_sha256": "035e909953f9b915e9c16b6b863b43a66a85bf37604b96bc3799aca6f0d26a41",
+  "repaired_body_sha256": "5e336b247d2ba8b79e744e0d9df0c018089b871b33a7fa5b2b48646f0ed3735a",
+  "canonical_table_words": 363,
+  "table_min": -65536,
+  "table_max": 65536,
+  "table_first": 0,
+  "reference_commit": "f7d0f262dc36934e938c4cfcb20902ed14df026e",
+  "fixture": "Math_SinDegreesQ16.before.cpp",
+  "file_sha256": "6c6ebff86836fc04c92635da2fbe0474650f6b8e3cb557a82c036a100ac2c51e",
+  "table_file_sha256": "6f3392504ff3e2a22234ef88f6c526c26af4ce17d4335d94bc7c106ba0e16425"
+}
