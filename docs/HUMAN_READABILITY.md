@@ -567,6 +567,60 @@ builds, public gates and tooling suite. Reproduce the focused public test with:
 python3 -m unittest discover -s tests/tools -p test_road_direction_dispatch.py -v
 ```
 
+### Batch 9: Road exit callbacks
+
+Reviewed `RoadBuildMode_RequestExitAfterWidgetPress` (`0x4250F0`) and
+`RoadBuildMode_RequestExit` (`0x425110`) individually. The pressed callback now
+names its widget and animation result, initializes that result directly and
+retains the call, exit-request store and return in their original order. The
+direct callback already expresses its single flag assignment clearly and is
+unchanged. These bring the Road family review to twelve functions.
+
+The declaration database and generated headers now carry the pressed callback's
+`widget` name and the previously reviewed normalizer's `overlayTileId` name.
+Only these two parameter identifiers change; types, signatures and the complete
+remaining declaration payload are unchanged. The normalizer body is unchanged.
+One canonical body hash changes; all 4157 identities and legacy hashes remain.
+
+Track: Win95 reconstruction, the reached Road handler family. Original bytes at
+both entries and animation's EDX save/restore establish that the pressed callback
+writes one after animation and returns its EAX result. This preserves the flag
+write even if animation callbacks change it during the call. The exact reviewed
+source operations and target code bytes, relocations and normalized disassembly
+are identical before/after on GCC 13 and Clang 18 at O0/O2. No new behavioral
+harness is warranted for these local names and direct initialization.
+
+Both supported builds, all eight public asset-free gates and 52 targeted
+declaration/header/tooling tests pass. All 146 objects retain identical
+instructions and relocations; loaded code/data bytes and all defined symbol
+addresses, sizes and classes remain identical. Only debug/source metadata,
+the build ID and ELF section-table offset differ. Warnings do not increase
+across the 140 rebuilt canonical sources; this TU retains 24 GCC / 35 Clang
+warnings. Manifest, split-source and generated metadata/header/include checks
+pass. Raw link differences remain 428 GCC / 680 Clang, and the header ratchet
+retains its 14 known failures without baseline changes.
+
+Confidence is high for this bounded contract. The forwarded `a2` meaning is
+still unresolved: the animation currently ignores it and uses a fixed 20-tick
+deadline, so naming it as a delay would exceed the evidence. No ABI or layout
+changes, or runtime/campaign blocker removal, are claimed. Batch 6 remains the first-Road runtime
+baseline; the turn-7 continuation frontier is unchanged. No new coverage, route
+replay, rendering or visual-fidelity claim is made.
+
+Private original extraction, source freezes, compile commands and declaration
+comparisons are retained under
+artifacts/readability/road-functions-20260906/batch-09/original-proof/.
+Build commands and results are in that batch's build-validation directory;
+static gate commands are in
+artifacts/readability/road-functions-20260906/batch-09/run-metadata.sh.
+The private scripts are absent from clean checkouts. Public generation checks:
+
+```sh
+python3 tools/update_split_manifest_hashes.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-06.
 
+## Road Exit Callback Readability
+
+Track: Win95 reconstruction, the reached Road handler family. Reviewed both
+Road exit callbacks. The pressed callback names its widget and animation result with
+direct initialization; the direct flag setter is already readable and remains
+unchanged. Two declaration parameter names now match their reviewed definitions.
+Original assembly confirms call/store/return order, and GCC/Clang O0/O2 target
+code and relocations are identical before/after. Types and ABI are unchanged.
+Both builds, eight public gates and 52 targeted tooling tests pass; all compiled
+instructions, loaded code/data and symbol layouts remain identical. Existing
+link/header ratchet failures remain without baseline changes.
+No runtime or campaign milestone advances; the first-Road baseline and turn-7
+blocker remain. Evidence, commands and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-9-road-exit-callbacks).
+
 ## Road Direction Dispatch Readability
 
 Track: Win95 reconstruction, the reached Road handler family.
@@ -91,9 +106,10 @@ exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
-Ten functions have been reviewed individually: bridge approach, crossing cost,
+Twelve functions have been reviewed individually: bridge approach, crossing cost,
 overlay normalization input, connection-mask rebuild, all four directional
-Road queries, the bare bridge candidate and the direction-dispatch callback.
+Road queries, the bare bridge candidate, direction-dispatch callback and both
+exit callbacks (the direct flag setter needed no edit).
 Reused pinned tile/widget fields and removed redundant decompiler state.
 The separately identified `819..861` normalization defect is now repaired using
 the original shared Road backing and guarded initialization. All 65,536 tile IDs

@@ -1,5 +1,21 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: exit callbacks
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_RequestExitAfterWidgetPress`
+(`0x4250F0`) and `RoadBuildMode_RequestExit` (`0x425110`). Named the pressed
+callback's widget and animation result, merging declaration and initialization;
+the direct flag setter remains unchanged. Propagated the widget parameter and
+the previously reviewed normalizer's overlayTileId parameter to declaration
+metadata and generated headers. Original call/store/return order is preserved,
+with identical target code and relocations in four compiler profiles. Confidence:
+high within this bounded contract. No public symbol rename, type/layout change
+or new runtime milestone; the forwarded a2 meaning remains unresolved. All 4157
+identities remain and one canonical body hash changes.
+Both builds, eight public gates and 52 targeted tooling tests pass; linked code
+and data remain identical, with existing ratchet failures retained.
+[Commands and limitations](../HUMAN_READABILITY.md#batch-9-road-exit-callbacks).
+
 ## 2026-09-06 - Road readability: selected-direction callback
 
 Track: Win95 reconstruction. Reviewed `RoadBuildMode_BuildInSelectedDirection`

@@ -88,7 +88,7 @@ signed int  Road_Build(int unitIndex, int direction, char a3, DWORD a4, double a
 signed int  UnitStack_MoveOneTileInDirection(int unitIndex, int direction, double a3);
 BOOL  Map_TileHasOwner(int row, int column);
 int Map_AutoUpgradeVillages(void);
-int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2);
+int  RoadBuildMode_RequestExitAfterWidgetPress(int widget, int a2);
 void RoadBuildMode_RequestExit(void);
 int  RoadBuildMode_BuildInSelectedDirection(int widget, DWORD a2, double a3);
 signed int  Builder_StartRoadBuildMode(DWORD a1, double a2);

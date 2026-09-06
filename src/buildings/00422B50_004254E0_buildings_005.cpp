@@ -1311,13 +1311,11 @@ int Map_AutoUpgradeVillages(void)
 // 5202E4: using guessed type int gameData;
 
 //----- (004250F0) --------------------------------------------------------
-int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2)
+int  RoadBuildMode_RequestExitAfterWidgetPress(int widget, int a2)
 {
-  int result; // eax
-
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  const int animationResult = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, a2);
   g_RoadBuildModeExitRequested = 1;
-  return result;
+  return animationResult;
 }
 // 527C30: using guessed type int g_RoadBuildModeExitRequested;
 

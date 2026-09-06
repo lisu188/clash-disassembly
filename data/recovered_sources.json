@@ -3072,7 +3072,7 @@
       "original_line": 6467,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "eb019575fce1a95805fa476fb1aac2a1db3263ee8fdc21b0c94e9f6a836791c1",
+      "body_sha256": "1d05b9c848e1c1e7b078e68a396afef97895864493dfd196920eb0cc9992d5b4",
       "original_address_range": {
         "start": "0x004250F0",
         "end_exclusive": "0x00425110"

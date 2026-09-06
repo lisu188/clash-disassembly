@@ -9303,7 +9303,7 @@
     },
     "Map_NormalizeRoadOverlayTileId": {
       "class": "manifest",
-      "decl": "int  Map_NormalizeRoadOverlayTileId(int result);",
+      "decl": "int  Map_NormalizeRoadOverlayTileId(int overlayTileId);",
       "home": "buildings"
     },
     "Map_RebuildCastleSiteAnchorCache": {
@@ -12054,7 +12054,7 @@
     },
     "RoadBuildMode_RequestExitAfterWidgetPress": {
       "class": "manifest",
-      "decl": "int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2);",
+      "decl": "int  RoadBuildMode_RequestExitAfterWidgetPress(int widget, int a2);",
       "home": "buildings"
     },
     "Road_Build": {
