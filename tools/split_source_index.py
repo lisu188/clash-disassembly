@@ -13,6 +13,14 @@ TOKEN_RE = re.compile(
     r"==|!=|<=|>=|->|<<|>>|&&|\|\||\+\+|--|[^\s]"
 )
 CALL_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(")
+QUALIFIED_CALL_RE = re.compile(
+    r"(?<![A-Za-z0-9_:])((?:::)?[A-Za-z_][A-Za-z0-9_]*"
+    r"(?:\s*::\s*[A-Za-z_][A-Za-z0-9_]*)*)\s*\("
+)
+NAMESPACE_RE = re.compile(
+    r"\s*(?:inline\s+)?namespace(?:\s+"
+    r"([A-Za-z_][A-Za-z0-9_]*(?:\s*::\s*[A-Za-z_][A-Za-z0-9_]*)*))?\s*\Z"
+)
 
 
 @dataclass(frozen=True)
@@ -110,12 +118,15 @@ def _balanced_end(masked: str, opening: int) -> int | None:
     return cursor if depth == 0 else None
 
 
-def scan_definitions(text: str, known_names: set[str]) -> list[Definition]:
-    """Return file/linkage-scope definitions whose names are in known_names.
+def scan_definitions(text: str, known_names: set[str] | None) -> list[Definition]:
+    """Return exact free or qualified out-of-line definitions in known_names.
 
     C++ language-linkage blocks do not introduce a declaration scope. Mask
-    only their braces so ordinary function and object bodies retain the
-    existing balanced scanner's behavior and every source offset stays exact.
+    their braces while visiting named namespace scopes explicitly. A leaf
+    target never matches a qualified method with the same leaf: callers must
+    request the method's qualified name. Class bodies (including inline member
+    definitions) are deliberately not indexed. Recovered methods are unique,
+    non-overloaded, out-of-line definitions; consumers reject duplicate matches.
     """
     masked = mask_c(text)
     linkage_braces = []
@@ -133,58 +144,80 @@ def scan_definitions(text: str, known_names: set[str]) -> list[Definition]:
             chars[offset] = " "
         masked = "".join(chars)
     definitions: list[Definition] = []
-    segment_start = 0
-    cursor = 0
-    depth = 0
-    while cursor < len(masked):
-        char = masked[cursor]
-        if char == "{" and depth == 0:
-            prefix = masked[segment_start:cursor]
-            candidates = [
-                match for match in CALL_RE.finditer(prefix)
-                if match.group(1) in known_names
-            ]
-            if candidates:
-                match = candidates[0]
-                start = segment_start + match.start()
-                line_start = masked.rfind("\n", segment_start, start) + 1
-                start = line_start
+
+    def candidates(prefix: str, scope: str):
+        for match in QUALIFIED_CALL_RE.finditer(prefix):
+            spelling = re.sub(r"\s+", "", match.group(1))
+            name = spelling[2:] if spelling.startswith("::") else scope + spelling
+            if known_names is None:
+                # General inventories include reconstruction helpers too.
+                # These are ordinary definitions, not constructors, lambdas,
+                # initializer calls or compiler annotation expressions.
+                before = prefix[:match.start()]
+                if (not before.strip() or "=" in before
+                        or spelling in {"__attribute__", "__declspec", "alignas",
+                                        "decltype", "noexcept", "static_assert"}
+                        or spelling.startswith("CLASH95_")):
+                    continue
+            if known_names is None or name in known_names:
+                yield match, name
+
+    def visit(begin: int, limit: int, scope: str) -> None:
+        segment_start = begin
+        cursor = begin
+        while cursor < limit:
+            char = masked[cursor]
+            if char == "{":
+                prefix = masked[segment_start:cursor]
                 end = _balanced_end(masked, cursor)
+                namespace = NAMESPACE_RE.fullmatch(prefix)
+                matches = list(candidates(prefix, scope))
                 if end is None:
-                    raise ValueError(
-                        f"unbalanced definition for {match.group(1)} at line "
-                        f"{text.count(chr(10), 0, start) + 1}"
-                    )
-                definitions.append(
-                    Definition(
-                        name=match.group(1),
-                        start=start,
-                        opening_brace=cursor,
-                        end=end,
-                        line=text.count("\n", 0, start) + 1,
-                    )
-                )
+                    if namespace or matches:
+                        raise ValueError("unbalanced definition or namespace at line "
+                                         f"{text.count(chr(10), 0, cursor) + 1}")
+                    return
+                if namespace:
+                    component = re.sub(r"\s+", "", namespace.group(1) or "")
+                    child_scope = scope + (component + "::" if component else "")
+                    visit(cursor + 1, end - 1, child_scope)
+                elif matches:
+                    match, name = matches[0]
+                    start = segment_start + match.start()
+                    start = max(segment_start, masked.rfind("\n", segment_start, start) + 1)
+                    definitions.append(Definition(
+                        name=name, start=start, opening_brace=cursor, end=end,
+                        line=text.count("\n", 0, start) + 1))
                 cursor = end
                 segment_start = end
                 continue
-            depth = 1
-        elif char == "{" and depth > 0:
-            depth += 1
-        elif char == "}" and depth > 0:
-            depth -= 1
-            if depth == 0:
-                segment_start = cursor + 1
-        elif char == ";" and depth == 0:
-            segment = masked[segment_start:cursor]
-            has_pending_definition = any(
-                match.group(1) in known_names for match in CALL_RE.finditer(segment)
-            )
-            # K&R definitions place parameter declarations (and semicolons)
-            # between Name(args) and the opening brace. A prototype or a
-            # call-based initializer ends directly after its closing paren.
-            if not has_pending_definition or segment.rstrip().endswith(")"):
-                segment_start = cursor + 1
-        cursor += 1
+            if char == ";":
+                segment = masked[segment_start:cursor]
+                # K&R definitions retain parameter declarations between the
+                # parameter list and `{`. C++ trailing qualifiers/attributes
+                # must not make an ordinary prototype consume the next body.
+                pending_knr = False
+                for match, _ in candidates(segment, scope):
+                    opening = segment.find("(", match.start(), match.end())
+                    closing = segment.find(")", opening)
+                    parameters = segment[opening + 1:closing].strip()
+                    identifiers = re.fullmatch(
+                        r"[A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*",
+                        parameters)
+                    parameter_names = {part.strip() for part in parameters.split(",")}
+                    tail = segment[closing + 1:].strip()
+                    if (closing >= 0 and identifiers and tail
+                            and not parameter_names.intersection({"void", "int", "char", "long",
+                                                                 "short", "float", "double",
+                                                                 "unsigned", "signed", "bool"})
+                            and not tail.startswith(("const", "noexcept", "volatile", "__asm__",
+                                                     "__attribute__", "CLASH95_", "&", ")"))):
+                        pending_knr = True
+                if not pending_knr:
+                    segment_start = cursor + 1
+            cursor += 1
+
+    visit(0, len(masked), "")
     return definitions
 
 

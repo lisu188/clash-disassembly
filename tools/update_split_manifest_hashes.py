@@ -6,10 +6,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from collections import defaultdict
 from pathlib import Path
 
-from split_source_index import body_sha256, scan_definitions
+from recovered_implementation import (
+    ImplementationError,
+    index_manifest_definitions,
+    manifest_sources,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,46 +37,34 @@ def main() -> int:
     if not isinstance(records, list):
         raise SystemExit("manifest functions must be an array")
 
-    names = {record["name"] for record in records}
-    sources = sorted({record["source"] for record in records})
-    owner = payload.get("state_owner")
-    if owner:
-        sources.append(owner)
-    indexed: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    try:
+        sources = manifest_sources(payload)
+        indexed = index_manifest_definitions(payload, ROOT)
+    except ImplementationError as error:
+        print(error)
+        return 1
     marker_count = 0
-    for source in sorted(set(sources)):
+    for source in sources:
         path = ROOT / source
         text = path.read_text(encoding="utf-8")
         marker_count += len(MARKER_RE.findall(text))
-        for definition in scan_definitions(text, names):
-            indexed[definition.name].append(
-                (source, body_sha256(text, definition))
-            )
 
     errors: list[str] = []
     for record in records:
         name = record["name"]
-        matches = indexed.get(name, [])
-        if len(matches) != 1:
-            errors.append(f"{name}: found {len(matches)} canonical definitions")
-            continue
-        source, digest = matches[0]
-        if source != record["source"]:
-            errors.append(
-                f"{name}: definition is in {source}, manifest says {record['source']}"
-            )
-            continue
+        digest = indexed[(name, "canonical")].body_sha256
         if args.update:
             if "legacy_body_sha256" not in record:
                 record["legacy_body_sha256"] = record.get("body_sha256")
             record["body_sha256"] = digest
         elif record.get("body_sha256") != digest:
             errors.append(f"{name}: canonical body hash differs")
-
-    if len(indexed) != len(records):
-        errors.append(
-            f"indexed {len(indexed)} names for {len(records)} manifest records"
-        )
+        if "adapter" in record:
+            adapter_digest = indexed[(name, "adapter")].body_sha256
+            if args.update:
+                record["adapter"]["body_sha256"] = adapter_digest
+            elif record["adapter"].get("body_sha256") != adapter_digest:
+                errors.append(f"{name}: adapter body hash differs")
     if errors:
         for error in errors[:50]:
             print(error)
@@ -82,7 +73,7 @@ def main() -> int:
         return 1
 
     if args.update:
-        payload["schema_version"] = 2
+        payload["schema_version"] = 3 if payload.get("schema_version") == 3 else 2
         payload["cutover"] = "canonical-split"
         payload["legacy_manifest"] = payload.pop(
             "oracle_manifest", payload.get("legacy_manifest", "clash95.c")
@@ -96,8 +87,8 @@ def main() -> int:
             f"preserved legacy hashes; markers={marker_count}"
         )
     else:
-        if payload.get("schema_version") != 2:
-            raise SystemExit("manifest is not canonical split schema 2")
+        if payload.get("schema_version") not in (2, 3):
+            raise SystemExit("manifest is not canonical split schema 2 or 3")
         if payload.get("address_marker_count") != marker_count:
             raise SystemExit(
                 f"address_marker_count differs: {payload.get('address_marker_count')} "

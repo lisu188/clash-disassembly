@@ -17,7 +17,8 @@ import os
 import re
 import sys
 
-from split_source_index import mask_c
+from split_source_index import mask_c, scan_definitions
+from recovered_implementation import manifest_sources, manifest_targets
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE_MANIFEST = os.path.join(REPO, "data", "recovered_sources.json")
@@ -30,8 +31,8 @@ DEF_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_ *\[\]]*?\b([A-Za-z_][A-Za-z0-9_]*)\s
 def load_source_manifest(path=SOURCE_MANIFEST):
     with open(path, encoding="utf-8") as stream:
         document = json.load(stream)
-    if document.get("schema_version") != 2:
-        raise ValueError("recovered source manifest must use schema_version 2")
+    if document.get("schema_version") not in (2, 3):
+        raise ValueError("recovered source manifest must use schema_version 2 or 3")
     functions = document.get("functions")
     if not isinstance(functions, list):
         raise ValueError("recovered source manifest has no function list")
@@ -41,16 +42,7 @@ def load_source_manifest(path=SOURCE_MANIFEST):
 def recovered_source_files(document=None):
     """Return canonical manifest-owned C/C++ files in stable path order."""
     document = document or load_source_manifest()
-    sources = {record.get("source") for record in document["functions"]}
-    state_owner = document.get("state_owner")
-    if state_owner:
-        sources.add(state_owner)
-    invalid = sorted(
-        source for source in sources
-        if not isinstance(source, str) or not source.endswith((".c", ".cpp"))
-    )
-    if invalid:
-        raise ValueError("invalid canonical source paths: %r" % invalid)
+    sources = manifest_sources(document)
     missing = [source for source in sorted(sources)
                if not os.path.isfile(os.path.join(REPO, source))]
     if missing:
@@ -59,55 +51,27 @@ def recovered_source_files(document=None):
 
 
 def find_defs(lines):
-    lines = mask_c("".join(lines)).splitlines(keepends=True)
-    defs = []
-    for i, ln in enumerate(lines):
-        m = re.match(r"^[A-Za-z_][A-Za-z0-9_ *]*?\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", ln)
-        if not m:
-            continue
-        name = m.group(1)
-        if name in ("if", "while", "for", "switch", "return", "sizeof"):
-            continue
-        j = i
-        depth = 0
-        isdef = False
-        sc = 0
-        while j < len(lines) and sc < 60:
-            done = False
-            for ch in lines[j]:
-                if ch == "(":
-                    depth += 1
-                elif ch == ")":
-                    depth -= 1
-                elif ch == ";" and depth <= 0:
-                    done = True
-                    break
-                elif ch == "{" and depth <= 0:
-                    isdef = True
-                    done = True
-                    break
-            if done:
-                break
-            j += 1
-            sc += 1
-        if isdef:
-            defs.append((name, i))
-    return defs
+    """Return qualified definitions and zero-based lines, including helpers."""
+    return [(definition.name, definition.line - 1)
+            for definition in scan_definitions("".join(lines), None)]
 
 
 def main():
     info = {}
-    sources = recovered_source_files()
+    document = load_source_manifest()
+    sources = recovered_source_files(document)
+    identity_names = {target.name: target.identity for target in manifest_targets(document)}
     for rel in sources:
         with open(os.path.join(REPO, rel), errors="replace") as stream:
             lines = stream.readlines()
-        code_lines = mask_c("".join(lines)).splitlines(keepends=True)
-        defs = find_defs(code_lines)
+        text = "".join(lines)
+        code_lines = mask_c(text).splitlines(keepends=True)
+        defs = scan_definitions(text, None)
         fn_at = [None] * (len(lines) + 1)
-        for k, (name, start) in enumerate(defs):
-            end = defs[k + 1][1] if k + 1 < len(defs) else len(lines)
-            for line_index in range(start, end):
-                fn_at[line_index] = name
+        for definition in defs:
+            end = text.count("\n", 0, definition.end) + 1
+            for line_index in range(definition.line - 1, end):
+                fn_at[line_index] = identity_names.get(definition.name, definition.name)
 
         for i, (ln, code_line) in enumerate(zip(lines, code_lines)):
             for match in GLOBAL_RE.finditer(code_line):
