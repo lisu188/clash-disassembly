@@ -1,4 +1,4 @@
-name: Construct code evidence
+name: Construct code recovery preparation
 
 on:
   push:
@@ -6,60 +6,99 @@ on:
       - diagnostics/construct-code-file-evidence
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  extract:
+  prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
+          path: preparation
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
           ref: e81f17e263c6d7c7386a37e525125bac5d393f72
           persist-credentials: false
-      - name: Extract protected assembly and source metadata
+      - name: Install fixture compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++-13 clang-18
+      - name: Apply hash-pinned recovery patch
+        working-directory: source
         shell: bash
         run: |
           python3 - <<'PY'
-          import hashlib, json, re
+          import gzip, hashlib, subprocess
           from pathlib import Path
-          assembly = Path('clash95.asm').read_bytes()
-          lines = assembly.decode('latin-1').splitlines()
-          start = next(i for i, line in enumerate(lines) if re.search(r'\bsub_4A7140\s+proc\b', line))
-          end = next(i for i in range(start + 1, len(lines)) if re.search(r'\bsub_4A7140\s+endp\b', lines[i]))
-          print('ASSEMBLY_SHA256', hashlib.sha256(assembly).hexdigest())
-          print('PROCEDURE_START_LINE', start + 1)
-          print('\n'.join(lines[start:end+1]))
-          metadata = json.loads(Path('data/recovered_sources.json').read_text())
-          def inspect(value):
-              if isinstance(value, dict):
-                  if value.get('name') == 'Rules_OpenConstructCodeFile':
-                      print('MANIFEST_ENTRY', json.dumps(value, sort_keys=True))
-                  for child in value.values():
-                      inspect(child)
-              elif isinstance(value, list):
-                  for child in value:
-                      inspect(child)
-          inspect(metadata)
+          compressed = b''.join(Path(f'../preparation/.diagnostics/construct-recovery.gz.{i}').read_bytes() for i in range(3))
+          patch = gzip.decompress(compressed)
+          assert hashlib.sha256(patch).hexdigest() == 'f4c2f434b7694fd5bf252df42386f3cecf4b1e67aa2dab16a45e5fd13bbcf835'
+          before = hashlib.sha256(Path('clash95.asm').read_bytes()).hexdigest()
+          subprocess.run(['git', 'apply', '--check'], input=patch, check=True)
+          subprocess.run(['git', 'apply'], input=patch, check=True)
+          assert hashlib.sha256(Path('clash95.asm').read_bytes()).hexdigest() == before
+          print('Applied exact local patch; protected assembly unchanged:', before)
           PY
-      - name: Package tracked source-only inputs
+      - name: Compare original instructions and production bodies
+        working-directory: source
         shell: bash
         run: |
           set -o pipefail
+          python3 -m unittest discover -s tests/tools -p test_construct_code_file.py -v 2>&1 | tee construct-focused.log
+      - name: Audit recovered source and declarations
+        working-directory: source
+        run: |
+          python3 tools/audit_split_sources.py
+          python3 tools/gen_subsystem_headers.py --check
+          python3 tools/gen_subsystem_headers.py --check-tu-includes
+          git diff --check
+      - name: Publish validated Git objects without changing branches
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
           python3 - <<'PY'
-          import subprocess, tarfile
+          import base64, hashlib, json, subprocess
           from pathlib import Path
-          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
-          allowed = {'.asm', '.cpp', '.c', '.h', '.py', '.json', '.md', '.sh', '.cmake', '.env', '.script', '.yml', '.toml'}
-          with tarfile.open('recovery-source.tar.gz', 'w:gz') as archive:
-              for name in names:
-                  path = Path(name)
-                  if name and path.is_file() and (path.suffix in allowed or path.name in {'CMakeLists.txt', '.gitignore'}):
-                      archive.add(path, arcname=name, recursive=False)
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == 'e81f17e263c6d7c7386a37e525125bac5d393f72'
+          paths = [
+              'data/recovered_decls.json', 'data/recovered_sources.json',
+              'docs/CONSTRUCT_CODE_FILE_RECOVERY.md', 'docs/STATUS.md',
+              'src/clips/004A6C40_004A8520_clips_005.cpp', 'src/clips/clips_api.h',
+              'src/runtime/004D6210_004D80F0_runtime_005.cpp',
+              'src/runtime/004D8120_004D9F20_runtime_006.cpp',
+              'src/runtime/004E03F0_004E1A40_runtime_011.cpp',
+              'tests/tools/test_construct_code_file.py',
+          ]
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
+          assert sorted(changed) == sorted(paths), changed
+          def post(endpoint, payload):
+              return json.loads(subprocess.check_output(
+                  ['gh', 'api', '--method', 'POST', 'repos/lisu188/clash-disassembly/git/' + endpoint, '--input', '-'],
+                  input=json.dumps(payload).encode()))
+          entries = []
+          for name in paths:
+              data = Path(name).read_bytes()
+              expected = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+              blob = post('blobs', {'encoding': 'base64', 'content': base64.b64encode(data).decode()})
+              assert blob['sha'] == expected, name
+              entries.append({'path': name, 'mode': '100644', 'type': 'blob', 'sha': expected})
+          tree = post('trees', {'base_tree': '8a7ea62f2b73a0a6e6b183736205d3983d156883', 'tree': entries})
+          result = {'tree_sha': tree['sha'], 'files': entries}
+          Path('../publication.json').write_text(json.dumps(result, indent=2) + '\n')
+          print('PUBLISHED_TREE', json.dumps(result, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: construct-code-recovery-source
-          path: recovery-source.tar.gz
+          name: construct-code-preparation
+          path: |
+            publication.json
+            source/construct-focused.log
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn
