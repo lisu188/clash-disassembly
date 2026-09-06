@@ -66,7 +66,7 @@ static int check_path(unsigned char *stack, int alignment, int row, int column,
   unsigned char snapshot[UNIT_STACK_STRIDE + 32];
   memcpy(snapshot, stack - 16, sizeof(snapshot));
   _DWORD *path = (_DWORD *)(stack + UNIT_STACK_PATH_OFFSET);
-  const clash95::QueuedPath view(path);
+  const clash95::QueuedPath view(path, gameData);
   int failed = 0;
 #define CHECK_PATH(label, expression) \
   do { const int result = (expression); \

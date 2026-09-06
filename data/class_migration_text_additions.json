@@ -5,18 +5,18 @@
     "gcc": {
       "linked_text": [
         {
-          "name": "_ZN7clash9510QueuedPathC1EPj",
+          "name": "_ZN7clash9510QueuedPathC1EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
-          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
           "name": "_ZN7clash959UnitStackC1El",
@@ -59,22 +59,29 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
         }
       ],
       "archive_text": [
         {
-          "name": "_ZN7clash9510QueuedPathC1EPj",
+          "name": "_ZN7clash9510QueuedPathC1EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
-          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
           "name": "_ZN7clash959UnitStackC1El",
@@ -117,17 +124,24 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
         }
       ]
     },
     "clang": {
       "linked_text": [
         {
-          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
           "name": "_ZN7clash959UnitStackC2El",
@@ -163,15 +177,22 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
         }
       ],
       "archive_text": [
         {
-          "name": "_ZN7clash9510QueuedPathC2EPj",
+          "name": "_ZN7clash9510QueuedPathC2EPjRi",
           "class": "W",
           "count": 1,
           "kind": "accessor",
-          "reason": "Trivial borrowing constructor; stores only its supplied address and performs no game action."
+          "reason": "Trivial borrowing constructor binds the supplied path address and live gameData reference; no game action or cached state pointer."
         },
         {
           "name": "_ZN7clash959UnitStackC2El",
@@ -207,6 +228,13 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical out-of-line body for one of the four explicitly mapped pilot identities."
+        },
+        {
+          "name": "_ZNK7clash9510QueuedPath36QueuedPath_StartsInBuildingFootprintEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
         }
       ]
     }

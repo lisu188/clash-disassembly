@@ -1021,25 +1021,34 @@ void  Pathing_DisableBridgeCrossings(int a1, char a2, DWORD a3)
 __attribute__((used, retain))
 BOOL  QueuedPath_StartsAtTile(_DWORD *pathBuffer, int tileRow, int tileColumn)
 {
-  return clash95::QueuedPath(pathBuffer).QueuedPath_StartsAtTile(tileRow, tileColumn);
+  return clash95::QueuedPath(pathBuffer, gameData).QueuedPath_StartsAtTile(tileRow, tileColumn);
 }
 
 
 
 //----- (00415D00) --------------------------------------------------------
+__attribute__((used, retain))
 BOOL  QueuedPath_StartsInBuildingFootprint(_DWORD *pathBuffer, int buildingIndex)
 {
+  return clash95::QueuedPath(pathBuffer, gameData).QueuedPath_StartsInBuildingFootprint(buildingIndex);
+}
+
+BOOL clash95::QueuedPath::QueuedPath_StartsInBuildingFootprint(int buildingIndex) const
+{
+  typedef _DWORD PathWord __attribute__((aligned(1), may_alias));
+  typedef _WORD BuildingWord __attribute__((aligned(1), may_alias));
+  PathWord *pathBuffer = (PathWord *)bytes_;
   unsigned __int8 *buildingRecord; // eax
   int firstStep; // edx
   BOOL result; // eax
   unsigned __int8 buildingColumn; // bh
 
-  buildingRecord = (unsigned __int8 *)(uintptr_t)(UNIT_RECORD(buildingIndex));
+  buildingRecord = (unsigned __int8 *)(uintptr_t)(state_ + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (buildingIndex));
   if ( !*pathBuffer )
     return 0;
   firstStep = pathBuffer[1];
   if ( !buildingRecord[4] )
-    return (_WORD)firstStep == *(_WORD *)buildingRecord;
+    return (_WORD)firstStep == *(BuildingWord *)buildingRecord;
   result = 0;
   if ( (unsigned __int8)firstStep >= *buildingRecord && (unsigned __int8)firstStep <= *buildingRecord + 1 )
   {

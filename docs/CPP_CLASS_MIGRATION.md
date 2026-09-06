@@ -82,6 +82,27 @@ so future source synchronization rejects that reorder before compiling.
 
 ## Evidence and current limits
 
+The next extraction completes `QueuedPath` with
+`QueuedPath_StartsInBuildingFootprint`. Its body remains in the original source
+until relocation is independently checked. The object now borrows a live
+`gameData` reference as well as the path bytes; holding an object across state
+rebinding observes the new building table. The original 1x1/2x2 footprint
+branches, byte comparisons and early-return order remain intact.
+
+The actual canonical method and adapter match a hashed frozen reference on
+26,880 cases per GCC 13 / Clang 18 optimization profile. Checks cover all 16
+alignments, guarded full state images, signed indices, coordinate extremes,
+path-count/high-bit cases and every state rebinding. Alignment traps are enabled.
+Both production builds, exact migration surface comparisons and all eight
+asset-free gates pass before relocation. The only newly reviewed text changes
+are the second query and its two-argument borrowing constructor. Evidence is in
+`pilot/*queued-path-extraction*`; the expanded tooling run passes 244 tests.
+This fifth identity is outside the unchanged 718-function coverage set.
+
+The remaining stack family has four assembly-confirmed recovery blockers;
+see [CPP_CLASS_MIGRATION_BLOCKERS.md](CPP_CLASS_MIGRATION_BLOCKERS.md).
+Those repairs must remain separate from architectural extraction.
+
 Private evidence lives under `artifacts/cpp-classes/20260906/` (not present in
 clean checkouts). Frozen baseline inputs and hashes, both compiler builds,
 per-gate outputs, complete native outcomes and failed attempts are retained.

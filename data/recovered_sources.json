@@ -90138,7 +90138,7 @@
       "class_owner": "clash95::QueuedPath",
       "adapter": {
         "source": "src/units/00414390_00416750_units_004.cpp",
-        "body_sha256": "09c1794fcd90d329736a0530fbc7c446e09c96bb06e7e0a4a80d056a3f926449"
+        "body_sha256": "e0981b6972a0a9c1802bd34965594a6604f5cbed322bae04ac40d923b67d97a0"
       },
       "disposition": "game-method",
       "disposition_reason": "QueuedPath_StartsAtTile is assigned to the QueuedPath behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter."
@@ -90150,7 +90150,7 @@
       "original_line": 5349,
       "source": "src/units/00414390_00416750_units_004.cpp",
       "linkage": "external",
-      "body_sha256": "5b9265afc4f9ae9ae335313e6ded38f75160422d757c384d80fa1da74d273251",
+      "body_sha256": "3d10703c8d122f1fe14b330c534de5a9c48815e7005ba93e0c9f4f9a02bded5d",
       "original_address_range": {
         "start": "0x00415D00",
         "end_exclusive": "0x00415D80"
@@ -90160,12 +90160,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "3d63cc0d31654ce3447f549bf21a27e2fdea7f47a3d4ad0ce649f3f092bfd54d",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "QueuedPath_StartsInBuildingFootprint"
+        "kind": "method",
+        "qualified_name": "clash95::QueuedPath::QueuedPath_StartsInBuildingFootprint",
+        "header": "src/units/QueuedPath.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "QueuedPath_StartsInBuildingFootprint is assigned to the QueuedPath behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::QueuedPath"
+      "class_owner": "clash95::QueuedPath",
+      "adapter": {
+        "source": "src/units/00414390_00416750_units_004.cpp",
+        "body_sha256": "84aecbe552c30329836eb212c11f73d9a81e9264bf0641895b6f00693dd2632a"
+      }
     },
     {
       "name": "Math_SinDegreesQ16",
