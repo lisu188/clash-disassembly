@@ -746,12 +746,21 @@ int  Map_RebuildRoadOverlayAtTile(int row, int column)
 int  Map_NormalizeRoadOverlayTileId(int overlayTileId)
 {
   if ( overlayTileId >= 819 && overlayTileId <= 861 )
-    return *((unsigned __int16 *)UI_Locale_BuildingNames_I + overlayTileId + 1);
+  {
+    WorldMap_EnsureBuilderWidgetTables();
+    // Original 0x42400E reads WORDs at 0x51423C..0x514290 in shared Road data.
+    constexpr int normalizationTableOffset = 0x30;
+    const int tableIndex = overlayTileId - 819;
+    uint16_t normalizedTileId;
+    memcpy(&normalizedTileId,
+           g_RoadBuildData + normalizationTableOffset + sizeof(normalizedTileId) * tableIndex,
+           sizeof(normalizedTileId));
+    return normalizedTileId;
+  }
   if ( overlayTileId >= 877 && overlayTileId <= 949 )
     return ((overlayTileId - 877) % 6 / 3 == 0) + 866;
   return overlayTileId;
 }
-// 513BD4: using guessed type char *off_513BD4[26];
 
 //----- (00424020) --------------------------------------------------------
 signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColumn, int column, int row)

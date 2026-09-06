@@ -1015,7 +1015,7 @@
    "gameData"
   ]
  },
- "state_local_global_count": 74,
+ "state_local_global_count": 75,
  "subsystems": {
   "battle": {
    "api_functions": [
@@ -1218,7 +1218,7 @@
     "Audio_PlayUnitMoveOrderSound"
    ],
    "internal_function_count": 194,
-   "state_globals": 472
+   "state_globals": 471
   },
   "clips": {
    "api_functions": [

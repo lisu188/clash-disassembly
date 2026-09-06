@@ -291,6 +291,76 @@ build, metadata and independent static reviews are under
 evidence files are preserved unchanged. Four canonical body hashes change;
 public identities and declarations remain fixed.
 
+### Batch 6: shared Road normalization backing
+
+Revisited `Map_NormalizeRoadOverlayTileId` (`0x423FC0`) to repair the separate
+storage defect recorded in batches 3 and 5. Original instruction `0x42400E`
+loads 43 unsigned words from `0x51423C..0x514290`. Those bytes are already in
+the canonical shared `g_RoadBuildData` region at offset `0x30`; the old locale
+pointer-array expression instead reads outside a separate 208-byte C++ object.
+The corrected branch uses a named table offset/index and `memcpy` into a
+`uint16_t`, retaining unsigned results and the existing live backing.
+
+Only IDs `819..861` call the existing guarded builder/Road initializer. Its
+templates and relocations use static bytes and addresses; no asset load,
+callback, renderer or game-state read occurs. Pointer relocations start beyond
+the lookup slice. Repeated calls preserve live lookup, widget and marker
+mutations, including the lookup's overlap with the approach scan. Other
+normalization branches retain their original expressions. No duplicate table,
+locale interpretation or speculative animation semantics are introduced.
+
+The actual corrected normalizer matches all 65,536 original uint16-domain
+results in GCC 13 and Clang 18 at O0/O2. All 1,057,292 directional-query cases
+now pass without the previous 688 sweep/84 west exclusions. Additional original
+instruction probes cover 2,818,048 live unsigned-word mutations and 8,256
+overlapping DWORD writes per profile. Real-initializer checks cover all 43 cold
+lookup entries, cold nonlookup boundaries and warm-state preservation across
+both complete backing arrays. All 91 preceding query-proof files remain intact.
+Confidence is high for these measured contracts; arbitrary invalid pointers,
+general overflow and broader construction behavior are outside the fixture.
+
+The new asset-free regression executes the canonical normalizer and initializer,
+checks the original full-domain output digest, all 112 pointer relocations,
+43 cold lookups, 344 warm mutations and live sprite-holder indirection. It
+reuses existing data fixtures and publishes only new measurement provenance.
+Run from the repository root in WSL:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_normalization.py -v
+python3 tools/update_split_manifest_hashes.py
+python3 tools/gen_subsystem_headers.py --check
+python3 tools/gen_subsystem_headers.py --check-tu-includes
+```
+
+Both compiler builds and all four public CTests pass. All 4157 recovered
+identities remain. Removing the last false locale reference moves its generated
+declaration to the state-local header and lets the linker discard exactly the
+unused 208-byte pointer array; its canonical storage definition remains.
+Surviving data names, classes, sizes and relative order are preserved. Raw link
+ratchets therefore report 428 GCC / 680 Clang differences, one more than before;
+no baseline is raised. Rebuilt-source warning categories do not increase. The
+fresh default GCC headless suite retains 10 passes, three known failures and
+eight skips, with the same selection/human-turn failure markers.
+
+Both fresh first-Road replays retain the highest validated endpoint: turn 6,
+stack 4 at `(49,50)`, 2 AP, empty path, roads 867/879 and 228 visible tiles.
+All ten raw unit slots, checked state fields, the complete visibility bitmap,
+six Road words and same-turn construction invariants match the fresh original.
+Each run preserves 238 frozen inputs, nine route scripts, 20 engine-authored
+DAT/FAC files and 15 frame checkpoints. The original uses real Load of the
+unchanged turn-6 checkpoint; continuous original turn-1 replay is not claimed.
+
+Fresh 640x480 pairs use viewport `(47,48)`, cursor `(192,176)` and selected
+stack 4. Full unmasked MAD is 11.086158854 GCC / 11.312281901 Clang, with
+285647 / 287265 differing pixels. Bridge placement aligns; missing coordinates,
+displaced badges, absent unit/status panels, lower-text/map corruption and
+fog/water differences remain. Both pairs were inspected. These route runs do
+not establish that IDs `819..861` were reached; the original-instruction fixture
+provides the direct branch proof. No route, visual or campaign milestone advances.
+
+Private exact commands, hashes, initializer review, original measurements and
+all attempts are retained under artifacts/readability/road-functions-20260906/batch-06/.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

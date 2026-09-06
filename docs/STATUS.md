@@ -7,13 +7,15 @@ Last consolidated: 2026-09-06.
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
 Eight functions have been reviewed individually: bridge approach, crossing cost,
 overlay normalization input, connection-mask rebuild and all four directional
-Road queries. Reused pinned tile
-fields, removed redundant decompiler state, and preserved original return/call
-semantics. Both compiler builds and public asset-free gates pass; bounded
-original-instruction fixtures support the structured rewrites. Existing
-link/header ratchets remain red; no baseline is raised. The normalization
-lookup for IDs `819..861` still uses incorrect legacy backing and is explicitly
-deferred. Runtime/campaign milestones and the turn-7 frontier remain unchanged.
+Road queries. Reused pinned tile fields and removed redundant decompiler state.
+The separately identified `819..861` normalization defect is now repaired using
+the original shared Road backing and guarded initialization. All 65,536 tile IDs
+and previously excluded directional queries match original instructions in four
+compiler profiles. Both builds/public gates and fresh first-Road state comparisons
+pass. The known HUD/fog defects remain in fresh original frame pairs. Link/header
+ratchets remain red; removing the false locale reference drops one unused
+208-byte table, with no baseline increase. Runtime/campaign milestones and the
+turn-7 frontier remain unchanged.
 See [HUMAN_READABILITY.md](HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06)
 for per-function evidence, exact commands and validation limits.
 

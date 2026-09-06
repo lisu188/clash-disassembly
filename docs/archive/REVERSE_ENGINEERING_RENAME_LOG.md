@@ -1,5 +1,20 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road normalization: original shared backing restored
+
+Track: Win95 reconstruction. Revisited `Map_NormalizeRoadOverlayTileId`
+(`0x423FC0`) after identifying the legacy locale-array overread. Original load
+`0x42400E` selects unsigned words in the existing shared Road region, so the
+corrected branch uses its guarded initializer, a named offset/index and a
+`uint16_t` copy. No duplicate data or speculative locale semantics are added.
+One body hash changes; all 4157 identities and canonical layouts remain.
+All 65,536 tile IDs and all 1,057,292 directional cases match original code per
+compiler profile, with no former lookup exclusions. Public regression covers
+initialization and shared mutations. Both builds and fresh first-Road state/frame
+comparisons pass within the documented limits; no campaign milestone advances.
+Confidence: high for the measured lookup and initialization contracts.
+[Commands, evidence and limits](../HUMAN_READABILITY.md#batch-6-shared-road-normalization-backing).
+
 ## 2026-09-06 - Road readability: four directional queries
 
 Track: Win95 reconstruction. Reviewed North (`0x423BB0`), South (`0x423C50`),
