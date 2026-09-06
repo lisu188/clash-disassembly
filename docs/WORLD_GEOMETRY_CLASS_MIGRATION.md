@@ -18,6 +18,16 @@ relocation below are validated preparation; their production integration gates
 follow the recovery commit. No native or runtime outcome is inferred from the
 focused arithmetic fixture.
 
+Production extraction now passes all four differential profiles, both compiler
+builds, both exact migration surface comparisons and all eight asset-free
+gates. The three canonical methods remain at their original translation-unit
+anchors for this commit. Only their three method symbols and the trivial
+table-borrowing constructor are added; all legacy identities, named storage,
+data order and initialization profiles are unchanged. Evidence is in
+`world-geometry/extraction-*` and `pilot/*world-geometry-extraction*` beneath
+the private artifact root. The class fixture now pins the actual separate
+recovery commit `dd54ee075b2b16b174eef0f910a23ccd81400bca`.
+
 ## Review order
 
 1. 01-sine-recovery.patch changes exactly the INT_MIN case in the existing free Math_SinDegreesQ16 body and adds its focused test, frozen original, exact table and shared compiler plumbing.

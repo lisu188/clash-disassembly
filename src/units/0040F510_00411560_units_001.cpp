@@ -12,6 +12,7 @@
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 #include "../units/UnitStack.hpp"
+#include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (0040F510) --------------------------------------------------------
@@ -277,7 +278,13 @@ __int16 * UnitStack_SetReadyFlags(int stackPtr)
 }
 
 //----- (0040FA80) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Facing_DirectionFromDelta8(int deltaRow, int deltaColumn)
+{
+  return clash95::WorldGeometry(g_MathSinTableQ16).Facing_DirectionFromDelta8(deltaRow, deltaColumn);
+}
+
+signed int  clash95::WorldGeometry::Facing_DirectionFromDelta8(int deltaRow, int deltaColumn) const
 {
   if ( deltaRow <= 0 )
   {

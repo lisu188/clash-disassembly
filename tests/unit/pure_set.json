@@ -571,8 +571,9 @@
    "original_line": 290,
    "source": "src/units/0040F510_00411560_units_001.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "Facing_DirectionFromDelta8"
+    "kind": "method",
+    "qualified_name": "clash95::WorldGeometry::Facing_DirectionFromDelta8",
+    "header": "src/world/WorldGeometry.hpp"
    }
   },
   {
@@ -1001,8 +1002,9 @@
    "original_line": 5427,
    "source": "src/units/00414390_00416750_units_004.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "Math_CeilSqrt"
+    "kind": "method",
+    "qualified_name": "clash95::WorldGeometry::Math_CeilSqrt",
+    "header": "src/world/WorldGeometry.hpp"
    }
   },
   {

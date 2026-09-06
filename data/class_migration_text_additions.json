@@ -66,6 +66,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC1ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
         }
       ],
       "archive_text": [
@@ -131,6 +166,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC1ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
         }
       ]
     },
@@ -184,6 +254,34 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
         }
       ],
       "archive_text": [
@@ -235,6 +333,34 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical second queued-path query; preserves 1x1/2x2 footprint tests and borrows live gameData through a reference."
+        },
+        {
+          "name": "_ZN7clash9513WorldGeometryC2ERA363_Ki",
+          "class": "W",
+          "count": 2,
+          "kind": "accessor",
+          "reason": "Trivial constructor borrows the existing 363-word sine table through a const reference; no allocation, mutation or game action."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry13Math_CeilSqrtEi",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry18Math_SinDegreesQ16Ei",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZNK7clash9513WorldGeometry26Facing_DirectionFromDelta8Eii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
         }
       ]
     }

@@ -11,6 +11,7 @@
 #include "../runtime/runtime_api.h"
 #include "../recovered_legacy_imports.h"
 #include "../units/QueuedPath.hpp"
+#include "../world/WorldGeometry.hpp"
 /* CLASH95_GENERATED_INCLUDES_END */
 
 //----- (00414390) --------------------------------------------------------
@@ -1037,14 +1038,20 @@ BOOL  QueuedPath_StartsInBuildingFootprint(_DWORD *pathBuffer, int buildingIndex
 // 5202E4: using guessed type int gameData;
 
 //----- (00415D80) --------------------------------------------------------
+__attribute__((used, retain))
 int  Math_SinDegreesQ16(signed int degrees)
+{
+  return clash95::WorldGeometry(g_MathSinTableQ16).Math_SinDegreesQ16(degrees);
+}
+
+int  clash95::WorldGeometry::Math_SinDegreesQ16(signed int degrees) const
 {
   int angle; // edx
   int absAngle; // edx
 
   // x86 NEG preserves INT_MIN; its scaled DWORD address wraps to table[0].
   if ( degrees == INT32_MIN )
-    return -g_MathSinTableQ16[0];
+    return -state_[0];
 
   angle = degrees;
   if ( degrees < 0 )
@@ -1052,13 +1059,13 @@ int  Math_SinDegreesQ16(signed int degrees)
     absAngle = -degrees;
     if ( -degrees >= 360 )
       absAngle %= 360;
-    return -g_MathSinTableQ16[absAngle];
+    return -state_[absAngle];
   }
   else
   {
     if ( degrees >= 360 )
       angle = degrees % 360;
-    return g_MathSinTableQ16[angle];
+    return state_[angle];
   }
 }
 // 513434: using guessed type int dword_513434[363];
@@ -1094,7 +1101,13 @@ unsigned int  Rng_RandRange(int minValue, int maxValue)
 // 525578: using guessed type int dword_525578;
 
 //----- (00415E40) --------------------------------------------------------
+__attribute__((used, retain))
 signed int  Math_CeilSqrt(signed int value)
+{
+  return clash95::WorldGeometry(g_MathSinTableQ16).Math_CeilSqrt(value);
+}
+
+signed int  clash95::WorldGeometry::Math_CeilSqrt(signed int value) const
 {
   int quotient; // eax
   int estimate; // ecx

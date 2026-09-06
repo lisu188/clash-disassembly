@@ -87577,12 +87577,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "258fb5f9a31813792a38e434ed8015726ea303758daedbc3d726ae5c6c8bab74",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Facing_DirectionFromDelta8"
+        "kind": "method",
+        "qualified_name": "clash95::WorldGeometry::Facing_DirectionFromDelta8",
+        "header": "src/world/WorldGeometry.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Facing_DirectionFromDelta8 is assigned to the WorldGeometry behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldGeometry"
+      "class_owner": "clash95::WorldGeometry",
+      "adapter": {
+        "source": "src/units/0040F510_00411560_units_001.cpp",
+        "body_sha256": "8d3a120b6fe9035bf2303b5c568401da596924562cd8d13f6b4a1fb59d5dacc5"
+      }
     },
     {
       "name": "Camera_CenterOnUnit",
@@ -90179,7 +90184,7 @@
       "original_line": 5374,
       "source": "src/units/00414390_00416750_units_004.cpp",
       "linkage": "external",
-      "body_sha256": "5e336b247d2ba8b79e744e0d9df0c018089b871b33a7fa5b2b48646f0ed3735a",
+      "body_sha256": "e294f8e85748902a1542d1b97e69668ce039270f037f2eb7557b08b3009d231b",
       "original_address_range": {
         "start": "0x00415D80",
         "end_exclusive": "0x00415DD0"
@@ -90189,12 +90194,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "e00c5cc3e32a57c76bdf5023d6ae6453d53d67d9afdf880498771061868b6ac1",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Math_SinDegreesQ16"
+        "kind": "method",
+        "qualified_name": "clash95::WorldGeometry::Math_SinDegreesQ16",
+        "header": "src/world/WorldGeometry.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Math_SinDegreesQ16 is assigned to the WorldGeometry behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldGeometry"
+      "class_owner": "clash95::WorldGeometry",
+      "adapter": {
+        "source": "src/units/00414390_00416750_units_004.cpp",
+        "body_sha256": "90664af11744f714a2efa08bea320ea1241ab29e2f716908b7eda530b382e84e"
+      }
     },
     {
       "name": "initRandomSeed",
@@ -90261,12 +90271,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "0eb61bd95f338eae632ef79f5d0606d0e536548a01ddd12c122df85c78bd9709",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Math_CeilSqrt"
+        "kind": "method",
+        "qualified_name": "clash95::WorldGeometry::Math_CeilSqrt",
+        "header": "src/world/WorldGeometry.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Math_CeilSqrt is assigned to the WorldGeometry behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::WorldGeometry"
+      "class_owner": "clash95::WorldGeometry",
+      "adapter": {
+        "source": "src/units/00414390_00416750_units_004.cpp",
+        "body_sha256": "115a7719245ee66afe2baca9a9aaa307790b060e2eeb94c040afe74baa5e092b"
+      }
     },
     {
       "name": "WorldMap_DrawUnitStackOverlayGlyph",
