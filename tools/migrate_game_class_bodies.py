@@ -66,12 +66,14 @@ class Plan:
     snapshots: dict[str, bytes | None] = field(default_factory=dict)
     macro_expansions: list[dict] = field(default_factory=list)
     call_boundaries: list[dict] = field(default_factory=list)
+    type_proofs: list[dict] = field(default_factory=list)
 
     def summary(self) -> dict:
         return {"class": self.owner, "stage": self.stage, "identities": self.identities,
                 "borrowed_globals": self.bindings, "files": sorted(self.changes),
                 "macro_expansions": self.macro_expansions,
                 "retained_same_class_boundaries": self.call_boundaries,
+                "binding_type_proofs": self.type_proofs,
                 "source_inventory_policy": "preserve existing order; append new class sources explicitly after parity",
                 "written": False, "requires": "compiler, identity, storage and behavioral parity gates"}
 
@@ -212,15 +214,170 @@ def _verify_declaration(name: str, declaration: str, types: list[str]) -> None:
             raise MigrationError(f"{name}: definition/canonical parameter type differs: {parameter}")
 
 
-def _global_type(name: str, declaration: str) -> str:
-    match = re.fullmatch(r"extern\s+(.+?)\b" + re.escape(name) + r"\s*((?:\[\s*(?:0[xX][0-9A-Fa-f]+|[0-9]+)\s*\])*)\s*;", declaration.strip())
+def _positive_integer(text: str) -> int | None:
+    text = text.strip()
+    while text.startswith("(") and text.endswith(")"):
+        text = text[1:-1].strip()
+    if not re.fullmatch(r"(?:0[xX][0-9A-Fa-f]+|0[0-7]*|[1-9][0-9]*)(?:[uU](?:ll|LL|[lL])?|(?:ll|LL|[lL])[uU]?)?", text):
+        return None
+    literal = re.sub(r"[uUlL]+$", "", text)
+    base = 16 if literal.lower().startswith("0x") else 8 if literal.startswith("0") else 10
+    value = int(literal, base)
+    return value if value > 0 else None
+
+
+def _shared_enum_value(plan: Plan, name: str) -> int | None:
+    text = mask_c(_read(plan, "src/recovered_types.h"))
+    values = [match[1].strip() for enum in re.finditer(r"\benum(?:\s+[A-Za-z_]\w*)?\s*\{([^{}]*)\}", text)
+              for match in re.finditer(r"(?:^|,)\s*" + re.escape(name) + r"\s*=\s*([^,]+)", enum[1])]
+    return _positive_integer(values[0]) if len(values) == 1 else None
+
+
+def _shared_bound(plan: Plan, name: str, seen: set[str] | None = None) -> int:
+    """Admit literal object macros and explicit literal shared enumerators."""
+    seen = set() if seen is None else seen
+    if name in seen:
+        raise MigrationError(f"{name}: cyclic shared array capacity")
+    seen.add(name)
+    text = _read(plan, "src/recovered_types.h")
+    values = {value.strip() for value in re.findall(
+        r"(?m)^\s*#\s*define[ \t]+" + re.escape(name) + r"[ \t]+([^\n]+)", text)}
+    if not values and (value := _shared_enum_value(plan, name)) is not None:
+        return value
+    if len(values) != 1:
+        raise MigrationError(f"{name}: array capacity requires one shared literal macro or explicit enumerator")
+    value = re.sub(r"/\*.*?\*/|//[^\n]*", " ", values.pop(), flags=re.S).strip()
+    result = _positive_integer(value)
+    if result is not None:
+        return result
+    if IDENTIFIER.fullmatch(value):
+        return _shared_bound(plan, value, seen)
+    raise MigrationError(f"{name}: shared array capacity must resolve to a positive integer literal, not an expression or call")
+
+
+def _global_type(name: str, declaration: str, plan: Plan | None = None) -> str:
+    # This one known visibility annotation is not part of an object type. Its
+    # exact original declaration remains at the factory/storage anchor.
+    plain = re.sub(r"\bCLASH95_INTERNAL\b", "", declaration)
+    bound = r"(?:0[xX][0-9A-Fa-f]+|[0-9]+|[A-Za-z_][A-Za-z_0-9]*)"
+    match = re.fullmatch(r"extern\s+(.+?)\b" + re.escape(name) + r"\s*((?:\[\s*" + bound + r"\s*\])*)\s*;", plain.strip())
     if not match:
-        raise MigrationError(f"{name}: unsupported global declaration (need external scalar/pointer/fixed numeric array)")
+        raise MigrationError(f"{name}: unsupported global declaration (need external scalar/pointer/fixed literal or shared-capacity array)")
     base, dimensions = match.groups()
     if (any(character in base for character in "(){}[]=<>;&,")
-            or re.search(r"\b(?:static|thread_local|_UNKNOWN|auto|decltype)\b", base)):
+            or re.search(r"\b(?:static|thread_local|auto|decltype)\b", base)):
         raise MigrationError(f"{name}: unsupported global binding type")
+    for capacity in re.findall(r"\[\s*([^\]]+?)\s*\]", dimensions):
+        if IDENTIFIER.fullmatch(capacity):
+            if plan is None:
+                raise MigrationError(f"{name}: named array capacity requires shared declaration proof")
+            _shared_bound(plan, capacity)
+        elif _positive_integer(capacity) is None:
+            raise MigrationError(f"{name}: array capacity must be positive and fixed")
     return base.strip() + dimensions
+
+
+def _compiler_profiles() -> list[tuple[str, str, bool]]:
+    compilers = [shutil.which(name) for name in ("g++-13", "clang++-18")]
+    if not all(compilers):
+        raise MigrationError("binding type proof requires both g++-13 and clang++-18")
+    return [(compiler, optimization, testing) for compiler in compilers
+            for optimization in ("-O0", "-O2") for testing in (False, True)]
+
+
+def _syntax_check(plan: Plan, source: str, text: str, compiler: str, optimization: str, testing: bool) -> None:
+    """Compile probes without producing or linking any executable/storage."""
+    with tempfile.TemporaryDirectory(prefix="clash-class-type-proof-") as temporary:
+        dependencies = Path(temporary) / "dependencies.d"
+        command = [compiler, "-std=gnu++20", "-U_GNU_SOURCE", "-fno-exceptions", "-fno-rtti",
+                   "-fno-pie", "-D_REENTRANT", optimization, "-fsyntax-only", "-x", "c++",
+                   "-MMD", "-MF", str(dependencies), "-iquote", str((plan.root / source).parent)]
+        for include in ("src/platform", "src/compatibility", "src/instrumentation", "src", "."):
+            command += ["-I", str(plan.root / include)]
+        if testing:
+            command.append("-DCLASH95_TESTING=1")
+        command.append("-")
+        try:
+            process = subprocess.run(command, input=text, cwd=plan.root, capture_output=True, text=True, timeout=45)
+        except subprocess.TimeoutExpired as error:
+            raise MigrationError(f"{source}: binding type proof timed out for {compiler}") from error
+        if dependencies.exists():
+            for dependency in shlex.split(dependencies.read_text().replace("\\\n", " ").partition(":")[2]):
+                path = Path(dependency).resolve()
+                if path.is_relative_to(plan.root) and path.is_file():
+                    _read(plan, path.relative_to(plan.root).as_posix())
+        if process.returncode:
+            raise MigrationError(f"{source}: binding type proof failed for {Path(compiler).name}{optimization}: {process.stderr[-2500:]}")
+
+
+def _prove_binding_types(plan: Plan, globals_: dict[str, str], declarations: dict,
+                         uses: dict[str, set[str]], foundation: str) -> None:
+    extended = {name for name, type_ in globals_.items()
+                if re.search(r"\b(?:CLASH95_INTERNAL|_UNKNOWN)\b", declarations[name]["decl"])
+                or any(IDENTIFIER.fullmatch(bound.strip()) for bound in re.findall(r"\[([^]]+)\]", type_))}
+    if not extended:
+        return
+    capacities = {bound.strip(): _shared_bound(plan, bound.strip()) for name in extended
+                  for bound in re.findall(r"\[([^]]+)\]", globals_[name]) if IDENTIFIER.fullmatch(bound.strip())}
+    profiles = _compiler_profiles()
+    contexts = {"src/__binding_shared_proof.cpp": (f'#include "{PurePosixPath(foundation).name}"\n', set(extended))}
+    for name in sorted(extended):
+        owner = declarations[name].get("owner")
+        sources = set(uses[name])
+        if not isinstance(owner, str) or not owner:
+            raise MigrationError(f"{name}: binding type proof requires a canonical storage owner")
+        owner = str(PurePosixPath(owner).with_suffix(".cpp")) if owner.endswith(".c") else owner
+        if not _inside(plan.root, owner).is_file():
+            raise MigrationError(f"{name}: binding type proof requires the canonical storage owner {owner}")
+        sources.add(owner)
+        for source in sources:
+            if source not in contexts:
+                contexts[source] = (_read(plan, source), set())
+            contexts[source][1].add(name)
+    marker = "CLASH95_MIGRATION_TYPE_PROOF"
+    for source, (original, names) in contexts.items():
+        if marker in original:
+            raise MigrationError(f"{source}: reserved binding type evidence marker already exists")
+        proof, captures = [], {}
+        for index, name in enumerate(sorted(names)):
+            type_ = globals_[name]
+            numeric_type = re.sub(r"\[\s*([A-Za-z_][A-Za-z_0-9]*)\s*\]",
+                                  lambda match: f"[{capacities[match[1]]}]", type_)
+            alias = marker + "_type_" + str(index)
+            proof += [declarations[name]["decl"], f"using {alias} = {numeric_type};",
+                      f'static_assert(__is_same(decltype(::{name}), {alias}), "original binding type changed");',
+                      f'static_assert(__is_same(decltype((::{name})), {alias}&), "binding must be an exact reference");',
+                      f'static_assert(sizeof(::{name}) == sizeof({alias}), "binding extent changed");',
+                      f'static_assert(__alignof__(::{name}) == __alignof__({alias}), "binding alignment changed");']
+            if "_UNKNOWN" in IDENTIFIERS.findall(type_):
+                proof.append('static_assert(__is_same(_UNKNOWN, unsigned char), "opaque type must retain its existing byte typedef");')
+            for capacity in re.findall(r"\[\s*([A-Za-z_][A-Za-z_0-9]*)\s*\]", type_):
+                captures[capacity] = capacities[capacity]
+                proof.append(f'static_assert(({capacity}) == {capacities[capacity]}, "shared array capacity changed");')
+            if "CLASH95_INTERNAL" in declarations[name]["decl"]:
+                captures["CLASH95_INTERNAL"] = None
+        candidate = original + "\n" + "\n".join(proof) + "\n"
+        compile_text = candidate
+        for index, token in enumerate(captures):
+            candidate += f"{marker}_{index}_BEGIN {token} {marker}_{index}_END\n"
+        for compiler, optimization, testing in profiles:
+            expanded = _preprocess(plan, source, candidate, compiler, optimization, testing)
+            for index, (token, value) in enumerate(captures.items()):
+                tag = marker + "_" + str(index)
+                actual = _marked_capture(expanded, tag)
+                if value is None:
+                    if re.sub(r"\s+", "", actual) not in {"", '__attribute__((visibility("hidden")))'}:
+                        raise MigrationError(f"{source}: CLASH95_INTERNAL is not the known visibility-only attribute")
+                elif (_positive_integer(actual) != value
+                      and not (actual == token and _shared_enum_value(plan, token) == value)):
+                    raise MigrationError(f"{source}: {token} capacity expansion differs from its shared literal declaration")
+            # Compile original includes, retaining system-header treatment;
+            # feeding flattened -P output back to Clang changes diagnostics.
+            _syntax_check(plan, source, compile_text, compiler, optimization, testing)
+        plan.type_proofs.append({"source": source, "globals": sorted(names), "shared_header": foundation,
+                                 "capacities": capacities,
+                                 "verified_profiles": [Path(compiler).name + optimization + ("-testing" if testing else "-runtime")
+                                                       for compiler, optimization, testing in profiles]})
 
 
 def _macro_inventory(plan: Plan, sources: list[str]) -> dict[str, set[str]]:
@@ -538,9 +695,10 @@ def _direct_globals(code: str, candidates: set[str], parameters: list[str]) -> s
     return result
 
 
-def _header(owner: str, relative: str, methods: list[tuple], globals_: dict[str, str]) -> str:
+def _header(owner: str, relative: str, methods: list[tuple], globals_: dict[str, str],
+            foundation: str = "src/recovered_types.h") -> str:
     lines = ["// Generated by tools/migrate_game_class_bodies.py; borrowed state only.\n", "#pragma once\n",
-             _include_for(relative, "src/recovered_layout.h"), "\n"]
+             _include_for(relative, foundation), "\n"]
     lines += ["namespace clash95 {\n", f"class CLASH95_INTERNAL {owner} final {{\n"]
     for index, type_ in enumerate(globals_.values()):
         lines.append(f"  using state_type_{index} = {type_};\n")
@@ -564,6 +722,23 @@ def _header(owner: str, relative: str, methods: list[tuple], globals_: dict[str,
         lines.append(f"  state_type_{index} &state_field_{index}_;\n")
     lines += ["};\n", "} // namespace clash95\n"]
     return "".join(lines)
+
+
+def _proven_header(plan: Plan, relative: str, methods: list[tuple], globals_: dict[str, str]) -> tuple[str, str]:
+    # Most game records already live in recovered_types.h. Pull in layout and
+    # the larger struct surface only when the actual public types require it.
+    profiles = [(compiler, optimization, testing) for compiler, optimization, testing in _compiler_profiles()
+                if optimization == "-O0" and not testing]
+    errors = []
+    for foundation in ("src/recovered_types.h", "src/recovered_layout.h"):
+        text = _header(plan.owner, relative, methods, globals_, foundation)
+        try:
+            for compiler, optimization, testing in profiles:
+                _syntax_check(plan, relative, text, compiler, optimization, testing)
+            return text, foundation
+        except MigrationError as error:
+            errors.append(str(error))
+    raise MigrationError("generated class header lacks a proven shared type context:\n" + "\n".join(errors))
 
 
 def make_plan(root: Path, owner: str, stage: str = "extract", max_lines: int = MAX_LINES) -> Plan:
@@ -621,6 +796,7 @@ def make_plan(root: Path, owner: str, stage: str = "extract", max_lines: int = M
     local_context = {source: _local_context(text) for source, text in texts.items()}
     replacements: dict[str, list[tuple[int, int, str]]] = {source: [] for source in sources}
     methods, bodies, globals_ = [], [], {}
+    global_uses: dict[str, set[str]] = {}
     extracted = []
     failure_list = []
     for item in selected:
@@ -667,7 +843,8 @@ def make_plan(root: Path, owner: str, stage: str = "extract", max_lines: int = M
                     normalized_owner = str(PurePosixPath(storage_owner).with_suffix(".cpp")) if storage_owner else ""
                     if normalized_owner in sources:
                         raise MigrationError(f"{name}: {global_name} has TU-owned storage; its linkage needs a manual binding")
-                    globals_[global_name] = _global_type(global_name, global_db[global_name]["decl"])
+                    globals_[global_name] = _global_type(global_name, global_db[global_name]["decl"], plan)
+                    global_uses.setdefault(global_name, set()).add(source)
                 unknown_state = {token for token in expanded if token.startswith("g_")} - set(global_db) - set(macros) - set(arguments)
                 if unknown_state:
                     raise MigrationError(f"{name}: state lacks canonical declarations: {', '.join(sorted(unknown_state))}")
@@ -710,7 +887,9 @@ def make_plan(root: Path, owner: str, stage: str = "extract", max_lines: int = M
             method_parameters = ", ".join(part for part in _parts(parameters) if part != "...")
             method = f"{result} clash95::{owner}::{name}({method_parameters})\n{rewritten}"
             replacements[source].append((definition.start, definition.end, signature + "\n" + adapter_body + "\n\n" + method))
-        _new_output(plan, header, _header(owner, header, methods, globals_))
+        generated_header, foundation = _proven_header(plan, header, methods, globals_)
+        _prove_binding_types(plan, globals_, global_db, global_uses, foundation)
+        _new_output(plan, header, generated_header)
     for source, edits in replacements.items():
         text = texts[source]
         for start, end, replacement in sorted(edits, reverse=True):

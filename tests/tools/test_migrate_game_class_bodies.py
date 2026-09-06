@@ -91,6 +91,226 @@ class ClassBodyMigrationTests(unittest.TestCase):
               mock.patch.object(header_generation, "REPO", self.root)):
             self.assertEqual(header_audit.class_header_policy_errors(manifest), [])
 
+    def copy_shared_headers(self):
+        pending, seen = [Path("src/recovered_layout.h")], set()
+        while pending:
+            relative = pending.pop()
+            if relative in seen:
+                continue
+            seen.add(relative)
+            source = REPO / relative
+            text = source.read_text()
+            destination = self.root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(text)
+            for include in re.findall(r'(?m)^\s*#\s*include\s+"([^"\n]+)"', text):
+                target = (source.parent / include).resolve()
+                if target.is_file() and target.is_relative_to(REPO):
+                    pending.append(target.relative_to(REPO))
+
+    def typed_storage_fixture(self, bodies, declarations, definitions, shared=""):
+        self.fixture(bodies, {})
+        types = self.root / "src/recovered_types.h"
+        types.write_text(types.read_text() + shared)
+        source = self.root / "src/units/original.cpp"
+        source.write_text(source.read_text().replace('#include "public.h"\n',
+                          '#include "public.h"\n' + "\n".join(declarations.values()) + "\n"))
+        (self.root / "src/units/storage.cpp").write_text('#include "public.h"\n' +
+                         "\n".join(declarations.values()) + "\n" + definitions + "\n")
+        self.declarations["globals"] = {name: {"decl": declaration, "owner": "src/units/storage.c"}
+                                        for name, declaration in declarations.items()}
+        self.manifest["state_owner"] = "src/units/storage.cpp"
+        self.save_metadata()
+
+    def test_real_metadata_declaration_and_all_storage_bytes_survive_both_stages(self):
+        name = "g_UnitTypeRuntimeCoreMetadata"
+        declarations = json.loads((REPO / "data/recovered_decls.json").read_text())["globals"]
+        declaration = declarations[name]["decl"]
+        storage = (REPO / "src/state/00000000_0054FFFF_recovered_state.cpp").read_text()
+        match = re.search(r"(?ms)^const UnitTypeRuntimeCoreMetadataRecord " + name + r"\[UNIT_TYPE_METADATA_CAPACITY\] =\n\{.*?^\};", storage)
+        self.assertIsNotNone(match, "the real packed metadata initializer must be retained verbatim")
+        self.typed_storage_fixture({"Probe_Read": "int Probe_Read(int index)\n{ return g_UnitTypeRuntimeCoreMetadata[index].base_action_points; }"},
+                                   {name: declaration}, match[0])
+        self.copy_shared_headers()
+        frozen_storage = (self.root / "src/units/storage.cpp").read_bytes()
+        harness = '''
+#include <cstdio>
+#include <cstring>
+#include <type_traits>
+#if __has_include("src/units/Probe.hpp")
+#include "src/units/Probe.hpp"
+#endif
+''' + declaration + '''
+using Original = const UnitTypeRuntimeCoreMetadataRecord[40];
+static_assert(std::is_same_v<decltype(g_UnitTypeRuntimeCoreMetadata), Original>);
+static_assert(std::is_same_v<decltype((g_UnitTypeRuntimeCoreMetadata)), Original&>);
+static_assert(sizeof(g_UnitTypeRuntimeCoreMetadata)==3520);
+int main() {
+  unsigned char before[3520]; memcpy(before,g_UnitTypeRuntimeCoreMetadata,sizeof(before));
+  unsigned checksum=0;
+  for (int index=0; index<40; ++index) {
+    int expected=g_UnitTypeRuntimeCoreMetadata[index].base_action_points;
+    if (Probe_Read(index)!=expected) return 1;
+#if __has_include("src/units/Probe.hpp")
+    if (clash95::Probe::borrow().Probe_Read(index)!=expected) return 2;
+#endif
+  }
+  if (memcmp(before,g_UnitTypeRuntimeCoreMetadata,sizeof(before))) return 3;
+  for (unsigned char value:before) checksum=checksum*33+value;
+  std::printf("%u\\n",checksum); return 0;
+}
+'''
+        baseline = {}
+        for stage in ("before", "extract", "relocate"):
+            if stage != "before":
+                plan = migration.make_plan(self.root, "Probe", stage)
+                if stage == "extract":
+                    self.assertEqual(len(plan.type_proofs), 3)
+                    self.assertTrue(all(len(item["verified_profiles"]) == 8 for item in plan.type_proofs))
+                    self.assertIn("const UnitTypeRuntimeCoreMetadataRecord[UNIT_TYPE_METADATA_CAPACITY]", plan.changes["src/units/Probe.hpp"])
+                    self.assertIn('#include "../recovered_types.h"', plan.changes["src/units/Probe.hpp"])
+                    self.assertIn(declaration, plan.changes["src/units/original.cpp"])
+                plan.apply()
+                self.assert_header_policy()
+            self.assertEqual((self.root / "src/units/storage.cpp").read_bytes(), frozen_storage)
+            for compiler in ("g++-13", "clang++-18"):
+                for optimization in ("-O0", "-O2"):
+                    with self.subTest(stage=stage, compiler=compiler, optimization=optimization):
+                        output = self.compile_run(compiler, harness, optimization,
+                                                  ("-Wno-comment", "-Wno-missing-braces", "-Wno-missing-field-initializers"))
+                        if stage == "before":
+                            baseline[compiler, optimization] = output
+                        else:
+                            self.assertEqual(output, baseline[compiler, optimization])
+
+    def test_existing_opaque_byte_types_borrow_live_cells_without_widening_storage(self):
+        declarations = {"opaque": "extern CLASH95_INTERNAL _UNKNOWN opaque;",
+                        "opaqueBytes": "extern _UNKNOWN opaqueBytes[BYTE_CAPACITY];",
+                        "opaquePointer": "extern _UNKNOWN *opaquePointer;"}
+        self.typed_storage_fixture({"Probe_Write": "int Probe_Write(int index, int value)\n{ opaque=(unsigned char)value; opaqueBytes[index]=opaque; *opaquePointer=opaque; return opaque; }"},
+                                   declarations, "_UNKNOWN opaque=0; _UNKNOWN opaqueBytes[BYTE_CAPACITY]={1,2,3}; _UNKNOWN *opaquePointer=opaqueBytes;",
+                                   "typedef unsigned char _UNKNOWN;\n#define BYTE_CAPACITY 3\n")
+        harness = '\n'.join(declarations.values()) + '''
+#include <cstring>
+#if __has_include("src/units/Probe.hpp")
+#include "src/units/Probe.hpp"
+#endif
+int main() {
+  unsigned char a[32],b[32],expectedA[32],expectedB[32];
+#if __has_include("src/units/Probe.hpp")
+  auto borrowed=clash95::Probe::borrow();
+#endif
+  for (int offset=0; offset<16; ++offset) {
+    memset(a,0xA5,32); memset(b,0x5A,32); memcpy(expectedA,a,32); memcpy(expectedB,b,32);
+    opaqueBytes[0]=1; opaqueBytes[1]=2; opaqueBytes[2]=3;
+    opaquePointer=a+offset; if (Probe_Write(1,255)!=255) return 1; expectedA[offset]=255;
+    opaquePointer=b+offset;
+#if __has_include("src/units/Probe.hpp")
+    if (borrowed.Probe_Write(1,0)!=0) return 2;
+#else
+    if (Probe_Write(1,0)!=0) return 2;
+#endif
+    expectedB[offset]=0;
+    if (memcmp(a,expectedA,32) || memcmp(b,expectedB,32) || opaqueBytes[0]!=1 || opaqueBytes[1]!=0 || opaqueBytes[2]!=3 || opaque!=0) return 3;
+  }
+  return 0;
+}
+'''
+        for stage in ("before", "extract", "relocate"):
+            if stage != "before":
+                plan = migration.make_plan(self.root, "Probe", stage)
+                if stage == "extract":
+                    self.assertEqual(plan.bindings, sorted(declarations))
+                    self.assertIn("state_type_0 = _UNKNOWN;", plan.changes["src/units/Probe.hpp"])
+                    self.assertNotIn("CLASH95_INTERNAL _UNKNOWN", plan.changes["src/units/Probe.hpp"])
+                plan.apply()
+            for compiler in ("g++-13", "clang++-18"):
+                for optimization in ("-O0", "-O2"):
+                    self.compile_run(compiler, harness, optimization)
+
+    def test_unsafe_or_nonfixed_capacity_forms_refuse_without_writes(self):
+        for bound, shared in (("0", ""), ("-1", ""), ("", ""), ("3+1", ""), ("sizeof(int)", ""),
+                              ("CAPACITY", "#define CAPACITY getCapacity()\n"),
+                              ("CAPACITY", "constexpr int CAPACITY=3;\n"),
+                              ("CAPACITY", "#define CAPACITY (1+2)\n"),
+                              ("CAPACITY", "#define CAPACITY 0\n"),
+                              ("CAPACITY", "#if defined(__clang__)\n#define CAPACITY 3\n#else\n#define CAPACITY 4\n#endif\n")):
+            with self.subTest(bound=bound, shared=shared):
+                self.typed_storage_fixture({"Probe_Read": "int Probe_Read(void)\n{ return bytes[0]; }"},
+                                           {"bytes": "extern char bytes[" + bound + "];"}, "char bytes[3]={};", shared)
+                before = self.snapshot()
+                with self.assertRaises(migration.MigrationError):
+                    migration.make_plan(self.root, "Probe")
+                self.assertEqual(self.snapshot(), before)
+
+    def test_changed_source_capacity_and_hidden_calls_cannot_pass_type_proof(self):
+        for replacement in ("4", "capacity()", "3\n#ifdef CLASH95_TESTING\n#undef CAPACITY\n#define CAPACITY 4\n#endif"):
+            with self.subTest(replacement=replacement):
+                self.typed_storage_fixture({"Probe_Read": "int Probe_Read(void)\n{ return bytes[0]; }"},
+                                           {"bytes": "extern char bytes[CAPACITY];"}, "char bytes[CAPACITY]={};",
+                                           "#define CAPACITY 3\n")
+                source = self.root / "src/units/original.cpp"
+                source.write_text(source.read_text().replace('#include "public.h"\n',
+                                  '#include "public.h"\nconstexpr int capacity() { return 3; }\n#undef CAPACITY\n#define CAPACITY ' + replacement + '\n'))
+                before = self.snapshot()
+                with self.assertRaisesRegex(migration.MigrationError, "capacity expansion differs"):
+                    migration.make_plan(self.root, "Probe")
+                self.assertEqual(self.snapshot(), before)
+
+    def test_storage_extent_opaque_typedef_and_unknown_attributes_are_proven(self):
+        cases = [("extern char bytes[CAPACITY];", "char bytes[4]={};", "#define CAPACITY 3\n", "bytes[0]"),
+                 ("extern _UNKNOWN opaque;", "_UNKNOWN opaque=0;", "typedef unsigned int _UNKNOWN;\n", "opaque"),
+                 ("extern CLASH95_INTERNAL int counter;", "int counter=0;",
+                  "#undef CLASH95_INTERNAL\n#define CLASH95_INTERNAL __attribute__((aligned(64)))\n", "counter")]
+        for declaration, definition, shared, expression in cases:
+            with self.subTest(declaration=declaration):
+                name = "bytes" if "bytes" in declaration else "opaque" if "opaque" in declaration else "counter"
+                self.typed_storage_fixture({"Probe_Read": "int Probe_Read(void)\n{ return " + expression + "; }"},
+                                           {name: declaration}, definition, shared)
+                before = self.snapshot()
+                with self.assertRaises(migration.MigrationError):
+                    migration.make_plan(self.root, "Probe")
+                self.assertEqual(self.snapshot(), before)
+
+    def test_narrow_header_keeps_layout_only_when_a_real_signature_type_needs_it(self):
+        self.fixture({"Probe_Read": "int Probe_Read(void)\n{ return 1; }"}, {})
+        self.assertIn('#include "../recovered_types.h"', migration.make_plan(self.root, "Probe").changes["src/units/Probe.hpp"])
+        layout = self.root / "src/recovered_layout.h"
+        layout.write_text(layout.read_text() + "struct LayoutOnly { int value; };\n")
+        self.fixture({"Probe_Read": "int Probe_Read(LayoutOnly *value)\n{ return value->value; }"}, {})
+        plan = migration.make_plan(self.root, "Probe")
+        self.assertIn('#include "../recovered_layout.h"', plan.changes["src/units/Probe.hpp"])
+        plan.apply()
+        for compiler in ("g++-13", "clang++-18"):
+            self.compile_run(compiler, "int main() { LayoutOnly value{7}; return Probe_Read(&value)!=7; }\n")
+
+    def test_shared_literal_alias_and_canonical_storage_owner_are_required(self):
+        self.typed_storage_fixture({"Probe_Read": "int Probe_Read(void)\n{ return bytes[0]; }"},
+                                   {"bytes": "extern char bytes[CAPACITY];"}, "char bytes[CAPACITY]={};",
+                                   "#define CAPACITY CAPACITY_VALUE\n#define CAPACITY_VALUE (3)\n")
+        plan = migration.make_plan(self.root, "Probe")
+        self.assertEqual(plan.type_proofs[0]["capacities"], {"CAPACITY": 3})
+        del self.declarations["globals"]["bytes"]["owner"]
+        self.save_metadata()
+        before = self.snapshot()
+        with self.assertRaisesRegex(migration.MigrationError, "canonical storage owner"):
+            migration.make_plan(self.root, "Probe")
+        self.assertEqual(self.snapshot(), before)
+
+    def test_shared_explicit_enum_capacity_retains_exact_extent(self):
+        self.typed_storage_fixture({"Probe_Read": "int Probe_Read(void)\n{ return bytes[2]; }"},
+                                   {"bytes": "extern char bytes[CAPACITY];"}, "char bytes[CAPACITY]={1,2,7};",
+                                   "enum { CAPACITY = 3 };\n")
+        for stage in ("extract", "relocate"):
+            plan = migration.make_plan(self.root, "Probe", stage)
+            if stage == "extract":
+                self.assertEqual(plan.type_proofs[0]["capacities"], {"CAPACITY": 3})
+                self.assertIn("char[CAPACITY]", plan.changes["src/units/Probe.hpp"])
+            plan.apply()
+            for compiler in ("g++-13", "clang++-18"):
+                for optimization in ("-O0", "-O2"):
+                    self.compile_run(compiler, "extern char bytes[CAPACITY]; static_assert(sizeof(bytes)==3); int main() { return Probe_Read()!=7 || bytes[0]!=1 || bytes[1]!=2; }\n", optimization)
+
     def test_default_cli_is_read_only_and_global_bindings_compile_on_both_profiles(self):
         self.fixture()
         before = self.snapshot()
