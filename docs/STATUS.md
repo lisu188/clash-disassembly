@@ -2,6 +2,32 @@
 
 Last consolidated: 2026-09-06.
 
+## Game-System Classes: Foundation and Unit Query Pilot
+
+Track: Win95 reconstruction; frontier: the requested behavior-preserving class
+migration. The inventory explicitly assigns all 4,157 identities, including
+1,849 intended game methods across 116 classes. Four unit/path query bodies
+have been extracted into borrowing classes and relocated to class-named files;
+their original ABI adapters remain. The source inventory is now 142 files.
+This work is in progress, separate from the completed GNU++20 language cutover.
+
+The four-method differential gate passes GCC 13 and Clang 18 at both optimization
+levels. Extracted production builds preserve legacy identities, named storage,
+data order and initialization profiles. GCC native outcomes match the frozen
+reference exactly at 1,059 passes, zero assertion failures and 530 crashes.
+Coverage is 6,168/6,663 (92.57%), retaining all 718 required identities.
+
+Both relocated compiler builds now pass storage/symbol comparisons and all
+eight asset-free gates. Both compilers also pass first-Road and ordinary-water
+rejection probes; all raw unit slots and visibility bytes match the bounded
+original references. The final expanded tooling/native matrix remains pending.
+A WSL restart recovered disk I/O; production validation now
+uses persistent scratch paths. The first relocated comparison caught an
+accidental source-order change; restoring source order passes both repeats.
+No campaign or visual milestone advances. Detailed
+scope, failure records, baseline differences and remaining stages are in
+[CPP_CLASS_MIGRATION.md](CPP_CLASS_MIGRATION.md).
+
 ## Main Integration: GNU++20 Recovery and Strategic AI
 
 Track: Win95 reconstruction; frontier: integrate completed work into `main`.

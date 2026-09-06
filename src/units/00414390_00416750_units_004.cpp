@@ -1024,18 +1024,6 @@ BOOL  QueuedPath_StartsAtTile(_DWORD *pathBuffer, int tileRow, int tileColumn)
   return clash95::QueuedPath(pathBuffer).QueuedPath_StartsAtTile(tileRow, tileColumn);
 }
 
-BOOL clash95::QueuedPath::QueuedPath_StartsAtTile(int tileRow, int tileColumn) const
-{
-  typedef _DWORD PathWord __attribute__((aligned(1), may_alias));
-  PathWord *pathBuffer = (PathWord *)bytes_;
-  int firstStep; // eax
-
-  if ( !*pathBuffer )
-    return 0;
-  firstStep = pathBuffer[1];
-  return (unsigned __int8)firstStep == tileRow && BYTE1(firstStep) == tileColumn;
-}
-
 
 
 //----- (00415D00) --------------------------------------------------------

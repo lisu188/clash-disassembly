@@ -16471,6 +16471,14 @@
     "gameData"
    ]
   },
+  "src/units/QueuedPath.cpp": {
+   "referenced": [],
+   "visible": []
+  },
+  "src/units/UnitStack.cpp": {
+   "referenced": [],
+   "visible": []
+  },
   "src/world/00408030_0040A0A0_world_001.cpp": {
    "referenced": [
     "a1",

@@ -338,30 +338,6 @@ signed int  UnitStack_HasBuilder(int stackIndex)
   return clash95::UnitStack((intptr_t)(UNIT_STACK_STRIDE * stackIndex + gameData + UNIT_STACK_TABLE_OFFSET)).UnitStack_HasBuilder();
 }
 
-signed int clash95::UnitStack::UnitStack_HasBuilder() const
-{
-  typedef __int16 SlotTypeWord __attribute__((aligned(1), may_alias));
-  SlotTypeWord *slotPtr; // edx
-  int slotIndex; // eax
-  int slotType; // ecx
-
-  slotPtr = (SlotTypeWord *)(uintptr_t)(address_ + 6);
-  slotIndex = 0;
-  while ( 1 )
-  {
-    slotType = *slotPtr;
-    if ( slotType == -1 )
-      return 0;
-    if ( slotType == UNIT_TYPE_BUILDER )
-      break;
-    ++slotIndex;
-    slotPtr = (SlotTypeWord *)((char *)slotPtr + 31);
-    if ( slotIndex >= 10 )
-      return 0;
-  }
-  return 1;
-}
-
 
 // 5202E4: using guessed type int gameData;
 

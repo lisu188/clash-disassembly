@@ -2,7 +2,7 @@
   "schema_version": 3,
   "language": "GNU C++20",
   "state_owner": "src/state/00000000_0054FFFF_recovered_state.cpp",
-  "source_file_count": 140,
+  "source_file_count": 142,
   "function_count": 4157,
   "functions": [
     {
@@ -87488,7 +87488,7 @@
       "original_address": "0x0040F9F0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 238,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
       "body_sha256": "2ee590bd71799f147cb19404491ab40e6eb64d14ca623d997f4c98bd4cc32536",
       "original_address_range": {
@@ -87733,7 +87733,7 @@
       "original_address": "0x00410010",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 488,
-      "source": "src/units/0040F510_00411560_units_001.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
       "body_sha256": "5c2b43a7f063ed9206aa12c8d8a50707524bec5be48a422a04c46667e40b6c79",
       "original_address_range": {
@@ -88434,7 +88434,7 @@
       "original_address": "0x00411AB0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 1764,
-      "source": "src/units/004115E0_00412BE0_units_002.cpp",
+      "source": "src/units/UnitStack.cpp",
       "linkage": "external",
       "body_sha256": "9f156986d1b1adaab0f16e2cbf96d88802c55af754ac64dc71b6f8f01dd01d9c",
       "original_address_range": {
@@ -90119,7 +90119,7 @@
       "original_address": "0x00415CD0",
       "original_source": "src/recovered/units/0040F510_units.inc.c",
       "original_line": 5338,
-      "source": "src/units/00414390_00416750_units_004.cpp",
+      "source": "src/units/QueuedPath.cpp",
       "linkage": "external",
       "body_sha256": "023a3ca7540d3cabc351c15b06975a551d7b989f52b28345fed6e288ac1a89ff",
       "original_address_range": {
@@ -97679,7 +97679,9 @@
         "src/units/00414390_00416750_units_004.cpp",
         "src/units/00416850_00419120_units_005.cpp",
         "src/units/004191F0_0041A690_units_006.cpp",
-        "src/units/0041A960_0041C8B0_units_007.cpp"
+        "src/units/0041A960_0041C8B0_units_007.cpp",
+        "src/units/QueuedPath.cpp",
+        "src/units/UnitStack.cpp"
       ]
     },
     {
