@@ -32,6 +32,7 @@ extern void __gcov_dump(void);
 
 static sigjmp_buf g_crash_jmp;
 static volatile sig_atomic_t g_in_test = 0;
+static const char *g_test_filter = NULL;
 
 static void clash_crash_handler(int sig) {
   if (g_in_test) {
@@ -43,9 +44,8 @@ static void clash_crash_handler(int sig) {
 static int run_one(int idx) {
   pid_t pid = fork();
   if (pid < 0) {
-    g_clash_cur_failed = 0;
-    g_clash_tests[idx].fn();
-    return g_clash_cur_failed ? 1 : 0;
+    perror("test fork");
+    return 3;
   }
   if (pid == 0) {
     int sig;
@@ -63,18 +63,25 @@ static int run_one(int idx) {
       alarm(0);
       g_in_test = 0;
       __gcov_dump();
-      _exit(g_clash_cur_failed ? 100 : 0);
+      _exit(g_clash_cur_failed ? 100 : 102);
     }
     g_in_test = 0;
     __gcov_dump();
-    _exit(101);
+    _exit(g_clash_cur_failed ? 100 : 101);
   }
   {
     int status = 0;
-    waitpid(pid, &status, 0);
+    pid_t waited;
+    do {
+      waited = waitpid(pid, &status, 0);
+    } while (waited < 0 && errno == EINTR);
+    if (waited != pid) {
+      perror("test waitpid");
+      return 3;
+    }
     if (WIFEXITED(status)) {
       int rc = WEXITSTATUS(status);
-      return rc == 0 ? 0 : (rc == 100 ? 1 : 2);
+      return rc == 102 ? 0 : (rc == 100 ? 1 : 2);
     }
     return 2;
   }
@@ -92,6 +99,10 @@ static clash_test_stats run_shard(int shard_index, int shard_count) {
   int i;
 
   for (i = shard_index; i < g_clash_test_count; i += shard_count) {
+    if (g_test_filter != NULL &&
+        strstr(g_clash_tests[i].name, g_test_filter) == NULL) {
+      continue;
+    }
     int result = run_one(i);
     ++stats.total;
     if (result == 0) {
@@ -99,6 +110,9 @@ static clash_test_stats run_shard(int shard_index, int shard_count) {
     } else if (result == 1) {
       ++stats.failed;
       fprintf(stderr, "FAIL  %s\n", g_clash_tests[i].name);
+    } else if (result == 3) {
+      ++stats.failed;
+      fprintf(stderr, "ERROR %s: test isolation failed\n", g_clash_tests[i].name);
     } else {
       ++stats.crashed;
       fprintf(stderr, "CRASH %s\n", g_clash_tests[i].name);
@@ -114,12 +128,43 @@ static void add_stats(clash_test_stats *total, const clash_test_stats *part) {
   total->total += part->total;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
   enum { worker_count = 16 };
   int result_pipes[worker_count][2];
   pid_t workers[worker_count];
   clash_test_stats total = {0, 0, 0, 0};
   int worker;
+  int strict_crashes = 0;
+  int selected_count = 0;
+
+  for (int arg = 1; arg < argc; ++arg) {
+    if (strcmp(argv[arg], "--strict-crashes") == 0) {
+      strict_crashes = 1;
+    } else if (strcmp(argv[arg], "--filter") == 0 &&
+               g_test_filter == NULL && arg + 1 < argc &&
+               argv[arg + 1][0] != '\0' && argv[arg + 1][0] != '-') {
+      g_test_filter = argv[++arg];
+    } else if (strcmp(argv[arg], "--help") == 0 && argc == 2) {
+      printf("Usage: %s [--strict-crashes] [--filter SUBSTRING]\n", argv[0]);
+      return 0;
+    } else {
+      fprintf(stderr, "Invalid argument: %s\n", argv[arg]);
+      fprintf(stderr, "Usage: %s [--strict-crashes] [--filter SUBSTRING]\n", argv[0]);
+      return 2;
+    }
+  }
+  for (int i = 0; i < g_clash_test_count; ++i) {
+    if (g_test_filter == NULL ||
+        strstr(g_clash_tests[i].name, g_test_filter) != NULL) {
+      ++selected_count;
+    }
+  }
+  if (selected_count == 0) {
+    fprintf(stderr, "No tests selected%s%s\n",
+            g_test_filter == NULL ? "" : " by filter: ",
+            g_test_filter == NULL ? "" : g_test_filter);
+    return 2;
+  }
 
   for (worker = 0; worker < worker_count; ++worker) {
     workers[worker] = -1;
@@ -185,5 +230,6 @@ int main(void) {
 
   fprintf(stderr, "\n== %d passed, %d failed, %d crashed, %d total ==\n",
           total.passed, total.failed, total.crashed, total.total);
-  return total.failed ? 1 : 0;
+  return total.failed || total.total != selected_count ||
+                 (strict_crashes && total.crashed) ? 1 : 0;
 }
