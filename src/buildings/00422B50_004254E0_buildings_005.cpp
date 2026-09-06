@@ -1329,95 +1329,93 @@ void RoadBuildMode_RequestExit(void)
 //----- (00425120) --------------------------------------------------------
 int  RoadBuildMode_HighlightBuildableAdjacentTile(int tileRow, int tileColumn)
 {
-  int unitStackRecordBase; // eax
-  int northMarkerScreenY; // eax
-  int directionIndex; // ebp
-  int result; // eax
-  int selectedUnitRecord; // eax
-  int eastMarkerScreenX; // edx
-  int unitStackEntry; // eax
-  int southMarkerScreenY; // eax
-  int westMarkerScreenY; // ecx
-  int moveCost; // ecx
-
   WorldMap_EnsureBuilderWidgetTables();
-  unitStackRecordBase = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-  if ( tileRow == *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TABLE_OFFSET) && tileColumn - *(__int16 *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) == -1 )
+
+  const int unitStackRecordBase = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
+  const UnitStackRecord *selectedStack =
+      (const UnitStackRecord *)(uintptr_t)(unitStackRecordBase + UNIT_STACK_TABLE_OFFSET);
+  int directionIndex;
+
+  // Marker writes precede eligibility checks: their storage overlaps the
+  // live bridge-approach scan and can also be read through the bounce view.
+  if ( tileRow == selectedStack->tile_row && tileColumn - selectedStack->tile_column == -1 )
   {
-    northMarkerScreenY = (tileColumn - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
-    g_RoadBuildModeNorthMarkerX = ((tileRow - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6) + 57;
+    const int northMarkerScreenY = (tileColumn - MAP_VIEW_TOP) << 6;
+    g_RoadBuildModeNorthMarkerX = ((tileRow - MAP_VIEW_LEFT) << 6) + 57;
     directionIndex = 0;
     g_RoadBuildModeNorthMarkerY = northMarkerScreenY + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
   }
+  else if ( tileRow - selectedStack->tile_row == 1 && tileColumn == selectedStack->tile_column )
+  {
+    directionIndex = 1;
+    const int eastMarkerScreenX = ((tileRow - MAP_VIEW_LEFT) << 6)
+        + 42
+        - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
+    g_RoadBuildModeEastMarkerY = ((tileColumn - MAP_VIEW_TOP) << 6) + 41;
+    g_RoadBuildModeEastMarkerX = eastMarkerScreenX;
+  }
+  else if ( tileRow == selectedStack->tile_row && tileColumn - selectedStack->tile_column == 1 )
+  {
+    const int southMarkerScreenY = (tileColumn - MAP_VIEW_TOP) << 6;
+    g_RoadBuildModeSouthMarkerX = ((tileRow - MAP_VIEW_LEFT) << 6) + 57;
+    directionIndex = 2;
+    g_RoadBuildModeSouthMarkerY = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + southMarkerScreenY + 26;
+  }
   else
   {
-    selectedUnitRecord = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-    if ( tileRow - *(__int16 *)(uintptr_t)(selectedUnitRecord + UNIT_STACK_TABLE_OFFSET) == 1 && tileColumn == *(__int16 *)(uintptr_t)(selectedUnitRecord + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) )
-    {
-      directionIndex = 1;
-      eastMarkerScreenX = ((tileRow - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
-          + 42
-          - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
-      g_RoadBuildModeEastMarkerY = ((tileColumn - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET)) << 6) + 41;
-      g_RoadBuildModeEastMarkerX = eastMarkerScreenX;
-    }
-    else
-    {
-      unitStackEntry = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-      if ( tileRow == *(__int16 *)(uintptr_t)(unitStackEntry + UNIT_STACK_TABLE_OFFSET) && tileColumn - *(__int16 *)(uintptr_t)(unitStackEntry + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) == 1 )
-      {
-        southMarkerScreenY = (tileColumn - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
-        g_RoadBuildModeSouthMarkerX = ((tileRow - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6) + 57;
-        directionIndex = 2;
-        g_RoadBuildModeSouthMarkerY = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + southMarkerScreenY + 26;
-      }
-      else
-      {
-        result = gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex;
-        if ( tileRow - *(__int16 *)(uintptr_t)(result + UNIT_STACK_TABLE_OFFSET) != -1 )
-          return result;
-        result = *(__int16 *)(uintptr_t)(result + 147176);
-        if ( tileColumn != result )
-          return result;
-        directionIndex = 3;
-        westMarkerScreenY = (tileColumn - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET)) << 6;
-        g_RoadBuildModeWestMarkerX = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
-                     + ((tileRow - *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET)) << 6)
-                     + 75;
-        g_RoadBuildModeWestMarkerY = westMarkerScreenY + 41;
-      }
-    }
+    // Preserve both raw nonadjacent returns from the original callback.
+    if ( tileRow - selectedStack->tile_row != -1 )
+      return unitStackRecordBase;
+    const int selectedColumn = selectedStack->tile_column;
+    if ( tileColumn != selectedColumn )
+      return selectedColumn;
+
+    directionIndex = 3;
+    const int westMarkerScreenY = (tileColumn - MAP_VIEW_TOP) << 6;
+    g_RoadBuildModeWestMarkerX = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
+                 + ((tileRow - MAP_VIEW_LEFT) << 6)
+                 + 75;
+    g_RoadBuildModeWestMarkerY = westMarkerScreenY + 41;
   }
-  if ( (MapTile_HasAlignedBridgeApproachRoadOverlay(
-          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET),
-          *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
-          tileColumn,
-          tileRow)
-     || MapTile_IsBareBridgeCrossingRoadOverlayCandidate(tileRow, tileColumn))
-    && UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET) >= ROAD_BUILD_BRIDGE_HIGHLIGHT_MIN_ACTION_POINTS
-    || (moveCost = result = UnitStack_GetTileMoveCostOrZero((__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET), tileRow, gameData, tileColumn)) != 0
-    && (result = MapTile_IsCastleFoundationTile(tileRow, tileColumn, 2)) == 0
-    && (result = UnitStack_GetMinCurrentActionPoints(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET), result >= moveCost + ROAD_BUILD_CONSTRUCTION_ACTION_POINTS)
-    && (result = Map_GetTileSurfaceClassOrUnexplored(tileRow, tileColumn), result != 185) )
+
+  bool hasBridgeActionPoints = false;
+  if ( MapTile_HasAlignedBridgeApproachRoadOverlay(
+           UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_row,
+           UNIT_STACK_RECORD(g_SelectedUnitIndex)->tile_column,
+           tileColumn,
+           tileRow)
+       || MapTile_IsBareBridgeCrossingRoadOverlayCandidate(tileRow, tileColumn) )
   {
-    g_RoadBuildModeHasBuildTarget = 1;
-    return UIWidget_RefreshActionButtonState((int)(intptr_t)&g_RoadBuildModeNorthMarkerX + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * directionIndex, 0);
+    hasBridgeActionPoints = UnitStack_GetMinCurrentActionPoints(UNIT_STACK(g_SelectedUnitIndex))
+        >= ROAD_BUILD_BRIDGE_HIGHLIGHT_MIN_ACTION_POINTS;
   }
-  return result;
+
+  // A failed bridge AP check still falls through to ordinary movement checks.
+  // Reload selected-stack state at each call boundary, as in the original.
+  if ( !hasBridgeActionPoints )
+  {
+    const int moveCost = UnitStack_GetTileMoveCostOrZero(
+        (__int16 *)(uintptr_t)UNIT_STACK(g_SelectedUnitIndex), tileRow, gameData, tileColumn);
+    if ( moveCost == 0 )
+      return moveCost;
+
+    const int castleResult = MapTile_IsCastleFoundationTile(tileRow, tileColumn, 2);
+    if ( castleResult != 0 )
+      return castleResult;
+
+    const int actionPoints = UnitStack_GetMinCurrentActionPoints(UNIT_STACK(g_SelectedUnitIndex));
+    if ( actionPoints < moveCost + ROAD_BUILD_CONSTRUCTION_ACTION_POINTS )
+      return actionPoints;
+
+    const int surfaceClass = Map_GetTileSurfaceClassOrUnexplored(tileRow, tileColumn);
+    if ( surfaceClass == 185 )
+      return surfaceClass;
+  }
+
+  g_RoadBuildModeHasBuildTarget = 1;
+  return UIWidget_RefreshActionButtonState(
+      (int)(intptr_t)&g_RoadBuildModeNorthMarkerX + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * directionIndex, 0);
 }
-// 511B58: using guessed type int g_SelectedUnitIndex;
-// 514294: using guessed type int g_RoadBuildModeMarkerBounceOffsets[9];
-// 5142B8: using guessed type int dword_5142B8;
-// 5142BC: using guessed type int dword_5142BC;
-// 5142ED: using guessed type int dword_5142ED;
-// 5142F1: using guessed type int dword_5142F1;
-// 514322: using guessed type int dword_514322;
-// 514326: using guessed type int dword_514326;
-// 514357: using guessed type int dword_514357;
-// 51435B: using guessed type int dword_51435B;
-// 5202E4: using guessed type int gameData;
-// 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int g_RoadBuildModeAnimationFrameIndex;
 
 //----- (004254E0) --------------------------------------------------------
 int  RoadBuildMode_BuildInSelectedDirection(int widget, DWORD a2, double a3)

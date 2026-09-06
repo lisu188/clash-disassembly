@@ -1,5 +1,22 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: adjacent-tile highlight callback
+
+Track: Win95 reconstruction. Reviewed `RoadBuildMode_HighlightBuildableAdjacentTile`
+(`0x425120`) individually. Reused signed stack fields and DWORD viewport macros,
+flattened adjacency branches and replaced the combined logical expression with
+named eligibility stages and raw early returns. Marker/bounce order, bridge AP
+fallback, selected-state rereads and the shared success tail remain. Stale
+decompiler diagnostics are removed. One canonical body hash changes; all 4157
+identities, signatures and layouts remain. Both builds and eight public gates
+pass; only the target executable section changes, with one fewer GCC and two
+fewer Clang warnings. No runtime/campaign milestone is promoted.
+All 291 original traces match both bodies in four compiler profiles. Confidence
+is high within the documented call contract and defined arithmetic domain;
+instrumented callees do not prove new gameplay or rendering behavior.
+The final full tooling suite passes all 143 tests with the measured public cases.
+[Evidence, commands and limits](../HUMAN_READABILITY.md#batch-10-roadbuildmode_highlightbuildableadjacenttile).
+
 ## 2026-09-06 - Road readability: exit callbacks
 
 Track: Win95 reconstruction. Reviewed `RoadBuildMode_RequestExitAfterWidgetPress`

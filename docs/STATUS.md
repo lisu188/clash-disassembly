@@ -2,6 +2,21 @@
 
 Last consolidated: 2026-09-06.
 
+## Road Adjacent Highlight Readability
+
+Track: Win95 reconstruction, reached mission-05 Road helpers. The adjacent-tile
+highlight callback now uses typed coordinates, flat directional branches and
+explicit bridge/ordinary eligibility stages. It preserves raw failure returns,
+fresh selected-stack reads and marker/bounce ordering in the shared Road data.
+All 291 original traces match before/after bodies in four compiler profiles,
+including every return category and the eight-call bridge fallback sequence.
+Both builds, all eight public gates and 143 tooling tests pass; only its
+executable section changes.
+Warnings decrease by one under GCC and two under Clang. The first-Road runtime
+baseline and normal turn-7 continuation blocker remain unchanged. Evidence,
+commands and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-10-roadbuildmode_highlightbuildableadjacenttile).
+
 ## Road Exit Callback Readability
 
 Track: Win95 reconstruction, the reached Road handler family. Reviewed both
@@ -106,10 +121,12 @@ exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
-Twelve functions have been reviewed individually: bridge approach, crossing cost,
+Thirteen functions have been reviewed individually: bridge approach, crossing cost,
 overlay normalization input, connection-mask rebuild, all four directional
 Road queries, the bare bridge candidate, direction-dispatch callback and both
 exit callbacks (the direct flag setter needed no edit).
+The adjacent-tile highlight callback is also reviewed with its shared-state
+ordering and distinct return values preserved.
 Reused pinned tile/widget fields and removed redundant decompiler state.
 The separately identified `819..861` normalization defect is now repaired using
 the original shared Road backing and guarded initialization. All 65,536 tile IDs

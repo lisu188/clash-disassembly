@@ -621,6 +621,104 @@ python3 tools/gen_subsystem_headers.py --check
 python3 tools/gen_subsystem_headers.py --check-tu-includes
 ```
 
+### Batch 10: `RoadBuildMode_HighlightBuildableAdjacentTile`
+
+The callback at `0x425120` now has four flat adjacency branches, typed signed
+stack-coordinate reads and explicit eligibility stages. It reuses the existing
+DWORD viewport and stack-address macros, names each stage's result and removes
+the combined assignment/short-circuit expression and stale decompiler comments.
+The bridge AP check still falls through to ordinary movement checks when it
+fails. Every selected-stack/game-state read after a callee remains fresh.
+
+Its return is deliberately not a boolean. Nonadjacent inputs return either
+the original game-state-plus-stack-stride base or the signed selected column.
+Other failures return zero movement cost, the castle query result, insufficient
+AP or surface class 185. Success returns the widget refresh result after setting
+the accumulated target flag. Rejections never clear that flag, and mutations
+made by refresh remain visible after return.
+
+Marker coordinates are still written before eligibility checks. The north X/Y
+fields alias entries 43/44 of the live approach scan. The bounce view also shares
+this backing, so each direction retains the original bounce-read and marker-store
+order. No early screen/bounce reads, independent marker storage, frame clamp or
+new direction convention is introduced. The guarded table initializer remains
+the first operation. Unsigned viewport subtraction/shift and the subsequent
+signed marker expressions preserve their existing types.
+
+Track: Win95 reconstruction, reached mission-05 Road helpers. This is the
+thirteenth individually reviewed function. The original instructions, pinned
+stack/widget layouts and shared Road aliases support these changes; only this
+function's canonical body hash changes. Signatures, layouts, all 4157 identities
+and legacy hashes remain unchanged. Surface class 185 and the castle query's
+mode 2 are retained without assigning richer semantics.
+
+All 291 original-instruction traces match the frozen before and actual after
+bodies under GCC 13 and Clang 18 at O0/O2: 2328 comparisons, each covering the
+full call contract and shared state. The unchanged 938 original instruction
+bytes execute against explicit recording/mutating eligibility, AP, movement,
+castle, surface and refresh boundaries. All seven return categories and twelve
+call sequences are covered, including the eight-call bare-bridge AP fallback.
+The original uses static PE tables; the native fixture executes the actual
+guarded initializer and verifies every relocated pointer identity.
+
+Each 427-word trace retains boundary arguments/order, selected unit/game-state
+changes, accumulated target state, marker/approach words and the complete Road
+and Builder table bytes. Both game arenas must remain unchanged. Cases cover
+the four marker choices, signed coordinate limits, DWORD viewport wrapping,
+live bounce frames including overlapping north 9/10, east 23, south 36 and west
+49, cold/warm initialization and protected viewport pages for nonadjacent exits.
+Only genuine pointer returns are normalized; raw helper returns resembling
+addresses remain integers and have dedicated cases. The complete measured
+497028-byte trace hashes to
+`1d8e6f8a84eb8a9295750490b2d82598f8da63eb8924793216de98d6bf0e56cd`.
+Two south/frame-36 cases use distinct high X bits so that moving the bounce
+read before the X store would change its value by 4660; this makes that access
+order observable in the permanent regression.
+
+Confidence is high within the tested call contract and defined arithmetic
+domain. The probes exclude invalid pointers, out-of-backing frame reads, signed
+coordinate/marker overflow and overflowing move-cost-plus-one arithmetic.
+Instrumented callees do not establish their gameplay or rendering behavior.
+The former body retains its existing logical-parentheses warning in the private
+comparison; the refactored body compiles with strict warnings and trapping UBSan
+apart from the established packed-alignment exception.
+
+Both supported builds and all eight public asset-free gates pass. Only the
+target's executable section changes: GCC 1147 to 1086 bytes and Clang 1137 to
+1084. The other 35 executable sections in the TU and all 145 other compiled
+objects remain identical. Ordinary object data and linked data classes, sizes
+and order remain unchanged, with all 4157 recovered identities and zero library
+crosscheck errors. Scoped warnings fall from 24 to 23 under GCC and 35 to 33
+under Clang as the combined logical expression disappears. Manifest, split-source
+and generated metadata/header/include checks pass. Existing link/header ratchet
+failures remain without baseline changes.
+
+Private candidate review, frozen before/after bodies, original evidence and
+validation commands are retained under
+artifacts/readability/road-functions-20260906/batch-10/.
+The candidate-audit, original-proof, test-audit and build-validation directories
+record their respective evidence and limits. These private scripts are absent
+from clean checkouts. Batch 6 remains the first-Road runtime baseline and normal
+turn-7 refresh/continuation remains the campaign frontier; this refactor adds no
+route, rendering or visual-fidelity claim.
+
+The final full tooling suite passes all 143 tests in 27.007 seconds, including
+the 291-case public regression in four strict compiler profiles. Its provenance
+stores 59 deduplicated table states and reconstructs the exact measured stream;
+every boundary field and table byte is still compared. All 348 production/tooling
+input hashes and final binary bindings remain stable through validation.
+The host drive filled after those checks. In-place NTFS compression preserved
+the build/evidence files, and an already-authorized Ubuntu restart restored
+writable WSL. Post-recovery checks confirm all 348 input hashes, both binaries
+and archives, and all eight private probe/trace pairs remain exact; all eight
+public gates pass again. Recovery commands and integrity results are retained
+under this batch's disk-recovery directory and check-after-recovery scripts.
+The public regression extracts the actual production body:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_road_adjacent_highlight.py -v
+```
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
