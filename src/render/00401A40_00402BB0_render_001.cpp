@@ -20,10 +20,10 @@ __int16 Render_LoadResourceBackbuffer(void)
   Render_InitRecoveredVtableStorage();
   g_ActiveBlitCursor = (int)(intptr_t)g_NullBlitCursor_Vtable;
   Surface_ConstructBackbufferInstance((int)(intptr_t)&g_MainRenderDevice);
-  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderBackbufferScanlineBuffer, 640);
-  Render_ConstructSurfaceObject((int)(intptr_t)&g_RenderDeviceStorage, 640, SCREEN_HEIGHT);
-  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderPaletteRemapBuffer, 256);
-  _wcpp_4_ctor_array__((int)(intptr_t)&g_DefaultPaletteTable, 256);
+  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderBackbufferScanlineBuffer, SCREEN_WIDTH);
+  Render_ConstructSurfaceObject((int)(intptr_t)&g_RenderDeviceStorage, SCREEN_WIDTH, SCREEN_HEIGHT);
+  CRT_RegisterFinalizableObject((int)(intptr_t)&g_RenderPaletteRemapBuffer, PALETTE_COLOR_COUNT);
+  _wcpp_4_ctor_array__((int)(intptr_t)&g_DefaultPaletteTable, PALETTE_COLOR_COUNT);
   g_Render_BackgroundColorIndex = 0;
   return (unsigned __int8)Palette_BuildGrayscaleIdentityTable((int)(intptr_t)g_PaletteScratchSurfaceBuffer);
 }
@@ -40,7 +40,7 @@ _BYTE * Palette_QuantizeChannelsInPlace(_BYTE *result, char bits_per_channel)
   int channel_mask; // edx
   char blue_value; // bl
 
-  palette_end = result + 1024;
+  palette_end = result + PALETTE_TABLE_BYTES;
   channel_mask = ~((1 << (8 - bits_per_channel)) - 1);
   do
   {
@@ -76,13 +76,13 @@ int  Palette_ExpandRGBTripletsToTable(int palette_table, int query_handle, int c
   unsigned __int8 red;
   unsigned __int8 green;
   unsigned __int8 blue;
-  char palette_bytes[768]; // [esp+0h] [ebp-310h]
+  char palette_bytes[PALETTE_RGB_DATA_BYTES]; // [esp+0h] [ebp-310h]
 
   (void)context;
-  Compat_QueryRead(query_handle, palette_bytes, 0x300);
+  Compat_QueryRead(query_handle, palette_bytes, PALETTE_RGB_READ_BYTES);
   write_ptr = palette_table;
   palette_offset = 0;
-  while ( write_ptr != palette_table + 1024 )
+  while ( write_ptr != palette_table + PALETTE_TABLE_BYTES )
   {
     red = (unsigned __int8)palette_bytes[palette_offset];
     green = (unsigned __int8)palette_bytes[palette_offset + 1];
@@ -106,7 +106,7 @@ int  LoadPalPCX(int palette_table, const char *palette_name, DWORD context)
   strcpy(path, aGfx_7);
   strcat(path, palette_name);
   query_handle = FileSystem_ResolveReadPath(path, 1);
-  Compat_QuerySkipBytes(query_handle, -0x300);
+  Compat_QuerySkipBytes(query_handle, -PALETTE_RGB_READ_BYTES);
   Palette_ExpandRGBTripletsToTable(palette_table, query_handle, 0);
   return Compat_FileSystemQueryRelease((int)(intptr_t)&g_FileSystemMountTable, &query_handle);
 }
@@ -131,7 +131,7 @@ int  LoadPalCOL(int palette_table, intptr_t palette_name_addr, DWORD context)
 CLASH95_INTERNAL int Compat_LoadPalCOLIntoTable(int *palette_table, const char *palette_name, DWORD context)
 {
   char path[256];
-  unsigned char palette_bytes[768];
+  unsigned char palette_bytes[PALETTE_RGB_DATA_BYTES];
   int query_handle;
   int palette_index;
 
@@ -143,7 +143,7 @@ CLASH95_INTERNAL int Compat_LoadPalCOLIntoTable(int *palette_table, const char *
   query_handle = FileSystem_ResolveReadPath(path, 1);
   Compat_QuerySkipBytes(query_handle, 8);
   Compat_QueryRead(query_handle, palette_bytes, sizeof(palette_bytes));
-  for ( palette_index = 0; palette_index < 256; ++palette_index )
+  for ( palette_index = 0; palette_index < PALETTE_COLOR_COUNT; ++palette_index )
   {
     unsigned char red = palette_bytes[3 * palette_index];
     unsigned char green = palette_bytes[3 * palette_index + 1];
@@ -167,9 +167,9 @@ int  Palette_BuildGrayscaleIdentityTable(int palette_table)
   int i; // eax
   int packed_entry; // [esp+0h] [ebp-10h]
 
-  write_ptr = _wcpp_4_ctor_array__(palette_table, 256);
+  write_ptr = _wcpp_4_ctor_array__(palette_table, PALETTE_COLOR_COUNT);
   table_base = write_ptr;
-  for ( i = 0; i < 256; ++i )
+  for ( i = 0; i < PALETTE_COLOR_COUNT; ++i )
   {
     LOBYTE(packed_entry) = i;
     BYTE1(packed_entry) = i;
@@ -463,11 +463,11 @@ int  Render_LoadPCXImage(int surface, char *file_name, int transparent, uintptr_
     ++decode_cursor;
     ++file_offset;
   }
-  if ( palette_out_addr && file_offset + 768 <= file_size )
+  if ( palette_out_addr && file_offset + PALETTE_RGB_DATA_BYTES <= file_size )
   {
     palette_out = (unsigned int *)palette_out_addr;
     palette_bytes = decode_cursor;
-    for ( palette_offset = 0; palette_offset != 768; palette_offset += 3 )
+    for ( palette_offset = 0; palette_offset != PALETTE_RGB_DATA_BYTES; palette_offset += 3 )
     {
       packed_rgb = palette_bytes[palette_offset]
                  | (palette_bytes[palette_offset + 1] << 8)

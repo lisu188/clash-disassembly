@@ -1,0 +1,102 @@
+[
+  {
+    "name": "UNIT_SLOT_RECORD_BYTES",
+    "value": 31,
+    "spelling": "31",
+    "kind": "size",
+    "family": "unit_slot",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "src/recovered_structs.h:135-160 sizeof(UnitSlotRecord)==31; RECOVERED_STRUCTURES.json:1135 BuildingRecord.garrison_slots[12] uses 31-byte UnitSlot records copied by Building_UnitsLeave."
+  },
+  {
+    "name": "UNIT_STACK_PATH_ALLOCATION_BYTES",
+    "value": 404,
+    "spelling": "404",
+    "kind": "size",
+    "family": "unit_stack_path",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "src/recovered_structs.h:171-178 QueuedPathBuffer is 404 bytes; Unit_MoveTrack 00414390 allocates 404 and stores count plus up to 100 four-byte waypoints, later copied as UNIT_STACK_PATH_BYTES."
+  },
+  {
+    "name": "BATTLE_UNIT_ENTRIES_BYTES",
+    "value": 682,
+    "spelling": "682",
+    "kind": "size",
+    "family": "battle_unit",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:1476 battle_unit_entries[22] starts at 852 and occupancy begins 1534 (difference682); Battle_PlaceUnit 004327B0 and HandleBattleResults traverse offsets 0..682 by31."
+  },
+  {
+    "name": "BUILDING_TABLE_BYTES",
+    "value": 46700,
+    "spelling": "46700",
+    "kind": "size",
+    "family": "buildings",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:4518 BuildingRecord[100] and BuildingRecord size467; Building_New scans records by467 until46700 and the table at509674 ends556374."
+  },
+  {
+    "name": "UNIT_STACK_TABLE_BYTES",
+    "value": 362500,
+    "spelling": "362500",
+    "kind": "size",
+    "family": "unit_stack",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:4510 UnitStackRecord[500] and src/recovered_structs.h sizeof725; gameData stack region147174 ends509674 and AI_TickNationPostTurn traverses362500 bytes by725."
+  },
+  {
+    "name": "BUILDING_GARRISON_SLOTS_BYTES",
+    "value": 372,
+    "spelling": "372",
+    "kind": "size",
+    "family": "building_garrison",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:1135 garrison_slots[12] begins18, next service state begins390 (difference372); Building_New, Building_NewTurn and Building_CalcGarrisonFactStrength traverse12 slots by31."
+  },
+  {
+    "name": "UNIT_STACK_SLOTS_BYTES",
+    "value": 310,
+    "spelling": "310",
+    "kind": "size",
+    "family": "unit_stack",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "src/recovered_structs.h:185 embeds10 UnitSlotRecord entries size31; slots start6 and queued_path begins316 (difference310), with AI_TickNationPostTurn traversing j<310 by31."
+  },
+  {
+    "name": "BATTLE_UNIT_ENTRY_COUNT",
+    "value": 22,
+    "spelling": "22",
+    "kind": "count",
+    "family": "battle_unit",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:1476 battle_unit_entries[22]; Battle_RestoreSavedActionPointsBeforeResultCopy advances31 bytes and restores22 saved AP entries, matching Battle_PlaceUnit byte bound682."
+  },
+  {
+    "name": "BUILDING_GARRISON_SLOT_COUNT",
+    "value": 12,
+    "spelling": "12",
+    "kind": "count",
+    "family": "building_garrison",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "RECOVERED_STRUCTURES.json:1135 garrison_slots[12] stores31-byte entries; Building_Destroy/Building_CountFreeGarrisonSlots bound slot-index traversal at12 with base+18."
+  },
+  {
+    "name": "UNIT_TYPE_METADATA_DWORD_STRIDE",
+    "value": 22,
+    "spelling": "22",
+    "kind": "stride",
+    "family": "unit_metadata",
+    "tier": 3,
+    "deferred": true,
+    "evidence": "src/recovered_structs.h UnitTypeMetadataRecord is88 bytes; g_UnitTypeFlags is int/DWORD-addressed at type_flags offset18, and 22*unit_type selects the same 88-byte table entry. Only g_UnitTypeFlags indexing is matched."
+  }
+]

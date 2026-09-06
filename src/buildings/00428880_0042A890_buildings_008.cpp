@@ -151,7 +151,7 @@ __int16  UnitBattle_PlayShotAnimation(
 
   target_row = a4;
   RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Busy);
-  shooter_unit = (__int16 *)(uintptr_t)(g_MapData + 852 + 31 * shooter_index);
+  shooter_unit = (__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * shooter_index);
   if ( target_unit_index == -1 )
   {
     LOBYTE(a4) = 0;
@@ -159,7 +159,7 @@ __int16  UnitBattle_PlayShotAnimation(
   }
   else
   {
-    target_unit = (unsigned __int8 *)(uintptr_t)(31 * target_unit_index + g_MapData + 852);
+    target_unit = (unsigned __int8 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * target_unit_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   }
   Debug_Log(target_unit_index, a4, (DWORD)(intptr_t)v111, (int)(intptr_t)a_shotanimDDDDD);
   if ( !UnitBattle_IsTileInViewport((unsigned __int16)shooter_unit[2], (unsigned __int16)shooter_unit[3]) || !UnitBattle_IsTileInViewport(target_row, target_col) )
@@ -190,7 +190,7 @@ __int16  UnitBattle_PlayShotAnimation(
   g_ActiveUnitMoveTileIndex = shooter_index;
   g_UnitMoveAnimOffsetY = 0;
   g_UnitAnimFrameIndex = 0;
-  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeShotAnimationFrameCount[88 * *shooter_unit];
+  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeShotAnimationFrameCount[UNIT_TYPE_METADATA_STRIDE * *shooter_unit];
   if ( target_unit_index != -1 )
   {
     target_owner = target_unit[2];
@@ -306,21 +306,21 @@ __int16  UnitBattle_PlayShotAnimation(
   last_tick = Time_Now(v28, v26);
   if ( v31 >= g_UnitAnimFrameIndex )
   {
-    shooter_record_offset = 31 * shooter_index;
+    shooter_record_offset = BATTLE_UNIT_ENTRY_STRIDE * shooter_index;
     do
     {
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)(intptr_t)g_RenderState, v25);
       v25 = last_tick;
-      now = Time_Now(v33, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(uintptr_t)(shooter_record_offset + g_MapData + 852)]);
+      now = Time_Now(v33, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(shooter_record_offset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET)]);
       if ( now - last_tick >= v36 )
       {
-        soundUnitType = *(__int16 *)(uintptr_t)(shooter_record_offset + g_MapData + 852);
+        soundUnitType = *(__int16 *)(uintptr_t)(shooter_record_offset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
         soundFrameIndex = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[soundUnitType].ranged_attack_sound_frame;
         if ( soundFrameIndex == g_UnitAnimFrameIndex )
           Audio_PlayUnitRangedAttackSound(soundUnitType);
         last_tick = Time_Now(v35, soundFrameIndex);
-        UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(shooter_record_offset + g_MapData + 856), *(unsigned __int16 *)(uintptr_t)(shooter_record_offset + g_MapData + 858));
+        UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(shooter_record_offset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET), *(unsigned __int16 *)(uintptr_t)(shooter_record_offset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET));
         ++g_UnitAnimFrameIndex;
       }
     }
@@ -330,7 +330,7 @@ __int16  UnitBattle_PlayShotAnimation(
   {
     projHalfHeight = (unsigned __int16)DLX_GetSpriteHeight(projectile_sprite_set, sprite_frame_base) / 2;
     SpriteWidth = DLX_GetSpriteWidth(projectile_sprite_set, v40);
-    spriteVerticalOffset = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *shooter_unit];
+    spriteVerticalOffset = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[UNIT_TYPE_METADATA_STRIDE * *shooter_unit];
     source_px_x = (((unsigned __int16)shooter_unit[2] - *(_DWORD *)(uintptr_t)(g_MapData + 808)) << 6)
          + 32
          + *(_DWORD *)((char *)&a7 + 2)
@@ -345,7 +345,7 @@ __int16  UnitBattle_PlayShotAnimation(
     shot_start_time = Time_Now(v45, shooter_index);
     travelDeltaX = v46;
     travelDeltaY = target_px_y - proj_px_y;
-    unitRecordOffset = 31 * v47;
+    unitRecordOffset = BATTLE_UNIT_ENTRY_STRIDE * v47;
     while ( 1 )
     {
       UnitBattle_UpdateIdleAnimatedUnits();
@@ -355,16 +355,16 @@ __int16  UnitBattle_PlayShotAnimation(
       g_UnitAnimFrameIndex = frameIndex;
       if ( frameIndex )
       {
-        frameNow = Time_Now(unitRecordOffset, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 852)]);
+        frameNow = Time_Now(unitRecordOffset, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET)]);
         if ( frameNow - last_tick >= frameIndex )
         {
-          v51 = *(__int16 *)(uintptr_t)(frameCount + g_MapData + 852);
+          v51 = *(__int16 *)(uintptr_t)(frameCount + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
           v52 = g_UnitAnimFrameIndex;
           v53 = (unsigned __int8)g_UnitTypeRuntimeCoreMetadata[v51].ranged_attack_sound_frame;
           if ( v53 == g_UnitAnimFrameIndex )
             Audio_PlayUnitRangedAttackSound(v51);
           last_tick = Time_Now(v52, v53);
-          UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 856), *(unsigned __int16 *)(uintptr_t)(unitRecordOffset + g_MapData + 858));
+          UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET), *(unsigned __int16 *)(uintptr_t)(unitRecordOffset + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET));
           frameCount = g_UnitBattleAnimFrameCount;
           frameIndex = (g_UnitAnimFrameIndex + 1) % g_UnitBattleAnimFrameCount;
           g_UnitAnimFrameIndex = frameIndex;
@@ -467,7 +467,7 @@ __int16  UnitBattle_PlayShotAnimation(
     }
   }
   g_UnitAnimFrameIndex %= g_UnitBattleAnimFrameCount;
-  UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * shooter_index + 856), *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * shooter_index + 858));
+  UnitBattle_RedrawTile(*(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * shooter_index + BATTLE_UNIT_GRID_X_TABLE_OFFSET), *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * shooter_index + BATTLE_UNIT_GRID_Y_TABLE_OFFSET));
   v72 = *shooter_unit;
   isProjectileUnit = v72 == UNIT_TYPE_CATAPULT
      || v72 == UNIT_TYPE_CANNON
@@ -501,7 +501,7 @@ LABEL_57:
         g_UnitBattleShotProjectileTileX = target_row;
         g_UnitBattleShotProjectileTileY = target_col;
         g_BattleShotAnimFrameIndex = 0;
-        Audio_PlayUnitShotSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * shooter_index + 852));
+        Audio_PlayUnitShotSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * shooter_index + BATTLE_UNIT_ENTRIES_OFFSET));
         goto LABEL_62;
       }
       battleProjectileSpriteSet = (_DWORD *)(uintptr_t)Mem_Alloc(4112, v74, v25, (DWORD)(intptr_t)v111);
@@ -514,7 +514,7 @@ LABEL_57:
 LABEL_62:
   if ( target_unit )
   {
-    if ( (g_UnitTypeFlags[22 * BATTLE_UNIT_TYPE(target_unit)] & 1) != 0 )
+    if ( (g_UnitTypeFlags[UNIT_TYPE_METADATA_DWORD_STRIDE * BATTLE_UNIT_TYPE(target_unit)] & 1) != 0 )
     {
       targetFacing = target_unit[17] & 7;
       newTargetFacing = (targetFacing + Rng_RandRange(2, 5)) & 7;
@@ -641,8 +641,8 @@ int  UnitBattle_CalcShotTargetHealthAfterHit(int shooter_index, int target_index
   int damage; // ecx
   int result; // eax
 
-  shooter_record = g_MapData + 852 + 31 * shooter_index;
-  target_unit = (__int16 *)(uintptr_t)(31 * target_index + g_MapData + 852);
+  shooter_record = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * shooter_index;
+  target_unit = (__int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * target_index + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET);
   Unit_CalcEffectivenessC((__int16 *)(uintptr_t)shooter_record);
   Math_CeilSqrt(
     (*(unsigned __int16 *)(uintptr_t)(shooter_record + 4) - (unsigned __int16)target_unit[2])
@@ -663,7 +663,7 @@ LABEL_2:
   }
   damage = 4 * base_damage;
 LABEL_3:
-  result = *(char *)(uintptr_t)(g_MapData + 31 * target_index + 861) - damage;
+  result = *(char *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * target_index + BATTLE_UNIT_HEALTH_PERCENT_TABLE_OFFSET) - damage;
   if ( result < 0 )
     return 0;
   return result;
@@ -683,8 +683,8 @@ int  UnitBattle_Shot(int shooter_index, int target_index)
   unsigned __int16 target_col; // ax
 
   Debug_Log(shooter_index, target_index, 0, (int)(intptr_t)aUnitbattle_sho, shooter_index, target_index);
-  shooter_unit = (char *)(uintptr_t)(g_MapData + 852 + 31 * shooter_index);
-  target_unit = (char *)(uintptr_t)(g_MapData + 852 + 31 * target_index);
+  shooter_unit = (char *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * shooter_index);
+  target_unit = (char *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * target_index);
   if ( !UnitBattle_IsUnitWithinRange(shooter_index, target_index) )
     return 0;
   volleys_used = UNIT_SLOT_VOLLEYS_USED(shooter_unit);
@@ -724,7 +724,7 @@ int  UnitBattle_Shot(int shooter_index, int target_index)
     *(_WORD *)target_unit = -1;
     *(_WORD *)(uintptr_t)(40 * target_row + g_MapData + 2 * target_col + 1534) = -1;
   }
-  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(shooter_unit + 2) + gameData + 140073) = 1;
+  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(shooter_unit + 2) + gameData + PLAYER_BATTLE_ACTION_TAKEN_FLAG_TABLE_OFFSET) = 1;
   UnitBattle_RedrawVisibleGrid();
   return UnitBattle_DrawSelectedUnitPanel(0, 1, target_index, 0), 1;
 }
@@ -756,10 +756,10 @@ int  UnitBattle_AttackWall(int unitSlot, DWORD wallRow, int a3, int wallCol)
   int wall_damage;
 
   Debug_Log(a3, wallCol, wallRow, (int)(intptr_t)aUnitbattle_a_0);
-  if ( !g_UnitTypeBaseMeleeAttack_51257E[88 * *(__int16 *)(uintptr_t)(g_MapData + 31 * unitSlot + 852)] || !*(_BYTE *)(uintptr_t)(wallCol + g_MapData + 20 * wallRow + 3134) )
+  if ( !g_UnitTypeBaseMeleeAttack_51257E[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * unitSlot + BATTLE_UNIT_ENTRIES_OFFSET)] || !*(_BYTE *)(uintptr_t)(wallCol + g_MapData + 20 * wallRow + 3134) )
     return 0;
   g_SelectedUnitIndex = unitSlot;
-  unitRecord = g_MapData + 852 + 31 * unitSlot;
+  unitRecord = g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * unitSlot;
   UnitBattle_RefreshSelectedUnitUI();
   rowDist = *(unsigned __int16 *)(uintptr_t)(unitRecord + 4) - wallRow;
   if ( rowDist <= 0 )
@@ -850,7 +850,7 @@ LABEL_18:
   if ( gateSpriteBefore != g_BattleWallGateLastSpriteChar )
     Audio_PlaySoundEffectByName(aBattleMurek, 64);
   UnitBattle_RedrawTile(wallRow + 1, wallCol);
-  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(unitRecord + 2) + gameData + 140073) = 1;
+  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(unitRecord + 2) + gameData + PLAYER_BATTLE_ACTION_TAKEN_FLAG_TABLE_OFFSET) = 1;
   UnitBattle_DrawSelectedUnitPanel(0, 1, v12, wallCol);
   return 1;
 }
@@ -882,7 +882,7 @@ int  UnitBattle_ShotWall(int unitSlot, int targetRow)
 
   targetCol = g_BattleTargetTileCol;
   Debug_Log(unitSlot, targetRow, targetCol, (int)(intptr_t)aUnitbattle_s_0, unitSlot, targetRow, targetCol);
-  unitRecord = (char *)(uintptr_t)(g_MapData + 852 + 31 * unitSlot);
+  unitRecord = (char *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * unitSlot);
   if ( !UnitBattle_IsTileWithinRange(unitSlot, targetRow, targetCol) )
     return 0;
   volleysUsed = UNIT_SLOT_VOLLEYS_USED(unitRecord);
@@ -922,7 +922,7 @@ int  UnitBattle_ShotWall(int unitSlot, int targetRow)
   if ( gateSpriteBefore != g_BattleWallGateLastSpriteChar )
     Audio_PlaySoundEffectByName((char*)(intptr_t)((int)(intptr_t)aBattleMurek_0), 64);
   UnitBattle_RedrawTile(targetRow + 1, targetCol);
-  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(unitRecord + 2) + gameData + 140073) = 1;
+  *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(unitRecord + 2) + gameData + PLAYER_BATTLE_ACTION_TAKEN_FLAG_TABLE_OFFSET) = 1;
   UnitBattle_DrawSelectedUnitPanel(0, 1, targetRow, targetCol);
   UnitBattle_RedrawUnitFootprint(unitSlot);
   return 1;
@@ -934,11 +934,11 @@ signed int  UnitBattle_Defence(int unitSlot, char a2, DWORD a3)
   int recordOffset; // edx
 
   Debug_Log(unitSlot, a2, a3, (int)(intptr_t)aUnitbattle_def);
-  recordOffset = 31 * unitSlot;
-  if ( *(unsigned __int8 *)(uintptr_t)(g_MapData + recordOffset + 860) < 5u )
+  recordOffset = BATTLE_UNIT_ENTRY_STRIDE * unitSlot;
+  if ( *(unsigned __int8 *)(uintptr_t)(g_MapData + recordOffset + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) < 5u )
     return 0;
-  *(_BYTE *)(uintptr_t)(g_MapData + recordOffset + 860) = 0;
-  *(_BYTE *)(uintptr_t)(recordOffset + g_MapData + 874) |= 1u;
+  *(_BYTE *)(uintptr_t)(g_MapData + recordOffset + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) = 0;
+  *(_BYTE *)(uintptr_t)(recordOffset + g_MapData + BATTLE_UNIT_BATTLE_STATE_BITS_TABLE_OFFSET) |= 1u;
   return 1;
 }
 // 532048: using guessed type int g_MapData;
@@ -988,7 +988,7 @@ int  BuildCursor_DrawPlacementOverlay(__int64 result)
       {
         if ( BuildCursor_IsPlacementValid(tilePos64, SHIDWORD(g_BuildPlacementTileXY), g_BuildCursorBuildingType, g_SelectedUnitIndex)
           && tilePos64 != __PAIR64__(
-                     *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176),
+                     *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
                      *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)) )
         {
           LODWORD(result) = (*(int (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(uintptr_t)(*((_DWORD *)g_RenderDevice + 46) + 24))(
@@ -1254,7 +1254,7 @@ int  BuildBuilding(int buildingType, int a2, char a3, double a4)
   BuildCursor_EnsureWidgetTable();
   Debug_Log(a2, a3, buildingType, (int)(intptr_t)aBuildbuildingD, buildingType);
   g_BuildCursorBuildingType = buildingType;
-  widgetSlotOffset = 53 * (buildingType + 2);
+  widgetSlotOffset = WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (buildingType + 2);
   g_BuildPlacementLoopDone = 0;
   coordShift = g_CursorCoordShift;
   cursorPixelX = g_MouseCursorRawX >> g_CursorCoordShift;
@@ -1355,7 +1355,7 @@ int  BuildBuilding(int buildingType, int a2, char a3, double a4)
       }
     }
   }
-  widgetSlotOffsetEnd = 53 * (buildingType + 2);
+  widgetSlotOffsetEnd = WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (buildingType + 2);
   *(int *)((char *)&g_BuildBuildingActionWidgetStateBase + widgetSlotOffsetEnd) = 1;
   *(_DWORD *)((char *)&g_BuildBuildingActionWidgetHandlerBase + widgetSlotOffsetEnd) = (_DWORD)(uintptr_t)&BuildCursor_RequestExit;
   UIWidget_RefreshActionButtonState((int)(intptr_t)&g_BuildBuildingActionWidgetTable + widgetSlotOffsetEnd, 1);

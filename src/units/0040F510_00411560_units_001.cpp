@@ -415,12 +415,12 @@ __int16 * UnitStack_ClearRemainingActionPoints(__int16 *result, DWORD a2, double
   if ( result )
   {
     slotPtr = result + 3;
-    for ( i = 0; i < 10; ++i )
+    for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
     {
       slotType = *slotPtr;
       if ( slotType == -1 )
         break;
-      slotPtr = (__int16 *)((char *)slotPtr + 31);
+      slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
       *((_BYTE *)slotPtr - 23) = 0;
     }
     return (__int16 *)(uintptr_t)Rules_LinkArmyFact(stackPtr, i, slotType, a3, (char)(intptr_t)stackPtr, a2);
@@ -498,9 +498,9 @@ signed int  UnitStack_GetMinCurrentActionPoints(intptr_t stackPtr)
     if ( minActionPoints > *((unsigned __int8 *)slotPtr + 8) )
       minActionPoints = *((unsigned __int8 *)slotPtr + 8);
     ++slotIndex;
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
   }
-  while ( slotIndex < 10 );
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT );
   return minActionPoints;
 }
 
@@ -539,8 +539,8 @@ signed int  UnitStack_HasPlagueFlag(int stackPtr)
     if ( (*(_BYTE *)(uintptr_t)(stackPtr + 19) & UNIT_SLOT_FLAG_PLAGUE) != 0 )
       break;
     ++slotIndex;
-    stackPtr += 31;
-    if ( slotIndex >= 10 )
+    stackPtr += UNIT_SLOT_RECORD_BYTES;
+    if ( slotIndex >= UNIT_STACK_SLOT_COUNT )
       return 0;
   }
   return 1;
@@ -555,7 +555,7 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
   char currentActionPoints; // bl
 
   slotPtr = stackPtr + 3;
-  for ( i = 0; i < 10; ++i )
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
     slotType = *slotPtr;
     if ( slotType == -1 )
@@ -563,7 +563,7 @@ signed int  UnitStack_SpendActionPointsClamped(__int16 *stackPtr, int spendAmoun
     if ( *((unsigned __int8 *)slotPtr + 8) < spendAmount )
       spendAmount = *((unsigned __int8 *)slotPtr + 8);
     currentActionPoints = *((_BYTE *)slotPtr + 8);
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
     LOBYTE(slotType) = currentActionPoints - spendAmount;
     *((_BYTE *)slotPtr - 23) = slotType;
   }
@@ -578,12 +578,12 @@ int  UnitStack_SpendActionPointsUnchecked(int stackPtr, char spendAmount)
 
   slotPtr = stackPtr + 6;
   slotIndex = 0;
-  while ( slotIndex < 10 )
+  while ( slotIndex < UNIT_STACK_SLOT_COUNT )
   {
     if ( *(__int16 *)(uintptr_t)slotPtr == -1 )
       break;
     UNIT_SLOT_ACTION_POINTS(slotPtr) -= spendAmount;
-    slotPtr += 31;
+    slotPtr += UNIT_SLOT_RECORD_BYTES;
     ++slotIndex;
   }
   return slotPtr;
@@ -597,7 +597,7 @@ signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtr
   int currentActionPoints; // ebx
 
   slotPtr = stackPtr + 3;
-  for ( i = 0; i < 10; ++i )
+  for ( i = 0; i < UNIT_STACK_SLOT_COUNT; ++i )
   {
     currentActionPoints = *slotPtr;
     if ( currentActionPoints == -1 )
@@ -612,7 +612,7 @@ signed int  UnitStack_SubtractActionPointsFloorZero(__int16 *stackPtr, int subtr
       LOBYTE(currentActionPoints) = currentActionPoints - subtractAmount;
       *((_BYTE *)slotPtr + 8) = currentActionPoints;
     }
-    slotPtr = (__int16 *)((char *)slotPtr + 31);
+    slotPtr = (__int16 *)((char *)slotPtr + UNIT_SLOT_RECORD_BYTES);
   }
   return Rules_LinkArmyFact(stackPtr, i, subtractAmount, a4, currentActionPoints, a3);
 }
@@ -912,7 +912,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         moveCost = UnitStack_GetTileMoveCostOrZero(stackPtr, destRow, 0, destCol);
         if ( !moveCost )
         {
-          if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackPtr + 4) + gameData + 140051) || !Map_GetBridgeCrossingCostOrZero(destRow, destCol) )
+          if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackPtr + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) || !Map_GetBridgeCrossingCostOrZero(destRow, destCol) )
           {
             *((_DWORD *)stackPtr + 79) = 0;
           }
@@ -948,7 +948,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
               v62 = (unsigned __int8)pathStep;
               curRow = *(__int16 *)(uintptr_t)(stackByteOffset + gameData + UNIT_STACK_TABLE_OFFSET);
               targetOffsetX = (v62 - curRow) << 6;
-              targetOffsetY = (v61 - *(__int16 *)(uintptr_t)(stackByteOffset + gameData + 147176)) << 6;
+              targetOffsetY = (v61 - *(__int16 *)(uintptr_t)(stackByteOffset + gameData + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET)) << 6;
               now = Time_Now(v62, curRow);
               while ( 1 )
               {
@@ -975,7 +975,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
                 else
                 {
                   WorldMap_RedrawFrame(now);
-                  moveAnimInterval = 88 * stackPtr[3];
+                  moveAnimInterval = UNIT_TYPE_METADATA_STRIDE * stackPtr[3];
                   LOBYTE(moveAnimInterval) = g_UnitTypeMoveAnimationTickIntervalMs[moveAnimInterval];
                   v75 = Time_Now(v74, moveAnimInterval);
                   if ( v75 - now >= (unsigned int)(unsigned __int8)moveAnimInterval )
@@ -1036,10 +1036,10 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
                           break;
                       }
                     }
-                    g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * stackPtr[3]]
+                    g_UnitMoveAnimOffsetX += (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * stackPtr[3]]
                                   * Map_NeighborDX[2 * *((unsigned __int8 *)stackPtr + 5)];
                     v81 = *((unsigned __int8 *)stackPtr + 5);
-                    g_UnitMoveAnimOffsetY += Map_NeighborDY[2 * v81] * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * stackPtr[3]];
+                    g_UnitMoveAnimOffsetY += Map_NeighborDY[2 * v81] * (unsigned __int8)g_UnitTypeBattleMoveStepPx[UNIT_TYPE_METADATA_STRIDE * stackPtr[3]];
                     now = Time_Now(v78, v81);
                     isFirstAnimStep = 0;
                   }
@@ -1071,10 +1071,10 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         if ( v45 <= 0x1F4 )
         {
           v44 = UNIT_STACK_STRIDE * v45;
-          if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * v45 + gameData + 147180) <= 0x28 )
+          if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * v45 + gameData + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
           {
             UnitStack_RevealHiddenEnemiesAndAttackAdjacent(v45, a5);
-            if ( v45 <= 0x1F4 && (unsigned int)*(__int16 *)(uintptr_t)(v44 + gameData + 147180) <= 0x28 )
+            if ( v45 <= 0x1F4 && (unsigned int)*(__int16 *)(uintptr_t)(v44 + gameData + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
             {
               v46 = v103;
               visionChanged = UnitStack_UpdateVision(v45);
@@ -1128,7 +1128,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         }
         goto LABEL_21;
       }
-      if ( *(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + 509676) != *((_BYTE *)stackPtr + 4) || *pathBuffer )
+      if ( *(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != *((_BYTE *)stackPtr + 4) || *pathBuffer )
       {
         *((_DWORD *)stackPtr + 79) = 0;
         UnitStack_ClearReadyFlags((int)(intptr_t)stackPtr);
@@ -1139,14 +1139,14 @@ void  UnitStack_ExecuteQueuedPath(unsigned int stackIndexArg, int animateArg, ch
         if ( Building_CanAcceptUnitStack(stackIndex, *(unsigned __int16 *)(uintptr_t)(v13 + gameData + destColByteOffset + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE) )
           Building_UnitGetInto(stackIndex, *(unsigned __int16 *)(uintptr_t)(v13 + gameData + destColByteOffset + TILE_MAP_OFFSET) - TILE_OCCUPANT_BUILDING_INDEX_BASE, v13, destColByteOffset, a5);
         else
-          *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + 147490) = 0;
+          *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stackIndex + UNIT_STACK_QUEUED_PATH_TABLE_OFFSET) = 0;
       }
     }
 LABEL_21:
     stackRecordBase = gameData + UNIT_STACK_STRIDE * stackIndex;
     v15 = originRow;
-    v16 = *(__int16 *)(uintptr_t)(stackRecordBase + 147174);
-    if ( v16 != originRow || (v16 = originColumn, *(__int16 *)(uintptr_t)(stackRecordBase + 147176) != originColumn) )
+    v16 = *(__int16 *)(uintptr_t)(stackRecordBase + UNIT_STACK_TABLE_OFFSET);
+    if ( v16 != originRow || (v16 = originColumn, *(__int16 *)(uintptr_t)(stackRecordBase + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) != originColumn) )
       Rules_LinkArmyFact(stackPtr, v16, gameData, a5, v13, originRow);
     Audio_StopUnitMoveSound();
     g_UnitMoveAnimOffsetY = 0;
@@ -1421,21 +1421,21 @@ _WORD * UnitSlots_RemoveGaps(_WORD *result, int slotCount)
     if ( *slotCursor == -1 )
     {
       shiftIndex = keptCount;
-      result = (_WORD *)((char *)slotArrayBase + 31 * keptCount);
+      result = (_WORD *)((char *)slotArrayBase + UNIT_SLOT_RECORD_BYTES * keptCount);
       while ( shiftIndex < lastIndex )
       {
         shiftDst = result;
         ++shiftIndex;
-        result = (_WORD *)((char *)result + 31);
+        result = (_WORD *)((char *)result + UNIT_SLOT_RECORD_BYTES);
         qmemcpy(shiftDst, result, 0x1Fu);
       }
       *result = -1;
     }
     else
     {
-      result = (_WORD*)((__int16 *)((char *)slotCursor + 31));
+      result = (_WORD*)((__int16 *)((char *)slotCursor + UNIT_SLOT_RECORD_BYTES));
       ++keptCount;
-      slotCursor = (__int16 *)((char *)slotCursor + 31);
+      slotCursor = (__int16 *)((char *)slotCursor + UNIT_SLOT_RECORD_BYTES);
     }
   }
   return result;

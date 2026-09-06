@@ -821,12 +821,12 @@ signed int  UIWidget_PollHitHoverAndClick(uintptr_t widget, DWORD a2)
   sprite_set_handle = Compat_WidgetSpriteSetHandle(widget);
   if ( g_QueenMarriageProposalWidgetTableBase
     && widget >= g_QueenMarriageProposalWidgetTableBase
-    && widget < g_QueenMarriageProposalWidgetTableBase + 2 * 53
+    && widget < g_QueenMarriageProposalWidgetTableBase + 2 * WORLD_MAP_ACTION_WIDGET_RECORD_SIZE
     && (DD_IsFlipping((int)(intptr_t)g_RenderState) || DD_IsLost((int)(intptr_t)g_RenderState)) )
   {
     queen_cursor_x = g_MouseCursorRawX >> g_CursorCoordShift;
     queen_cursor_y = g_MouseCursorRawY >> g_CursorCoordShift;
-    queen_widget_index = (int)((widget - g_QueenMarriageProposalWidgetTableBase) / 53);
+    queen_widget_index = (int)((widget - g_QueenMarriageProposalWidgetTableBase) / WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
     queen_widget_sprite = *(_DWORD *)(widget + 20) == -1 ? *(_DWORD *)(widget + 16) : *(_DWORD *)(widget + 20);
     queen_widget_width = sprite_set_handle ? (unsigned __int16)DLX_GetSpriteWidth(sprite_set_handle, queen_widget_sprite) : 0;
     queen_widget_height = sprite_set_handle ? (unsigned __int16)DLX_GetSpriteHeight(sprite_set_handle, queen_widget_sprite) : 0;
@@ -939,11 +939,11 @@ LABEL_23:
     }
     if ( g_QueenMarriageProposalWidgetTableBase
       && widget >= g_QueenMarriageProposalWidgetTableBase
-      && widget < g_QueenMarriageProposalWidgetTableBase + 2 * 53 )
+      && widget < g_QueenMarriageProposalWidgetTableBase + 2 * WORLD_MAP_ACTION_WIDGET_RECORD_SIZE )
     {
       Diagnostics_TraceWorldMapActionEvent(
         "queen_widget_action",
-        (int)((widget - g_QueenMarriageProposalWidgetTableBase) / 53),
+        (int)((widget - g_QueenMarriageProposalWidgetTableBase) / WORLD_MAP_ACTION_WIDGET_RECORD_SIZE),
         *(_DWORD *)widget,
         *(_DWORD *)(widget + 4),
         *(_DWORD *)(widget + 32));
@@ -1015,12 +1015,12 @@ _DWORD * UIWidgetTable_InitDrawStates(_DWORD *result)
   {
     while ( *(int *)widget >= 640 )
     {
-      widget += 53;
+      widget += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
       if ( *(_DWORD *)widget == -1 )
         return result;
     }
     UI_InvokeWidgetTransitionCallback((uintptr_t)widget, 0);
-    widget += 53;
+    widget += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
   }
   while ( *(_DWORD *)widget != -1 );
   return result;
@@ -1050,7 +1050,7 @@ signed int  UIWidgetTable_PollHoverAndActions(_DWORD *widgetTable, DWORD allocCo
         result = widget_result;
       if ( (*(_BYTE *)(widget + 8) & 4) != 0 )
         has_tooltip = 1;
-      widget += 53;
+      widget += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
     }
     while ( *(_DWORD *)widget != -1 );
   }

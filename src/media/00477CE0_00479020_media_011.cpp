@@ -52,7 +52,7 @@ _DWORD * Compat_FileStreamRelease(_DWORD *result, char flags)
   int v5; // ecx
   int v7; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(result)), ((_DWORD)(uintptr_t)(&g_CompatFileStream_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -63,11 +63,11 @@ _DWORD * Compat_FileStreamRelease(_DWORD *result, char flags)
   if ( stream_handle )
   {
     fclose_(stream_handle);
-    if ( (flags & 2) == 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) == 0 )
       return (_DWORD *)(uintptr_t)v5;
     goto LABEL_8;
   }
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
 LABEL_8:
     j__nfree_();
@@ -195,7 +195,7 @@ _DWORD * Compat_FileFinderRelease(_DWORD *result, char flags)
   char v6; // dl
   int v7; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(result)), ((_DWORD)(uintptr_t)(&g_CompatFileFinder_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -210,7 +210,7 @@ _DWORD * Compat_FileFinderRelease(_DWORD *result, char flags)
       return (_DWORD *)(uintptr_t)v5;
     goto LABEL_8;
   }
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
 LABEL_8:
     j__nfree_();
@@ -312,7 +312,7 @@ int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *mount, char flags)
   int v5; // ecx
   int v6; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(mount)), ((_DWORD)(uintptr_t)(&g_FileSystemDiskMount_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -322,7 +322,7 @@ int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *mount, char flags)
   {
     *mount = ((_DWORD)(uintptr_t)(g_FileSystemDiskMount_VTable));
     v3 = Compat_StringHolderScalarDeletingDtor((int)(intptr_t)(mount + 1), 0);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v6;
@@ -519,7 +519,7 @@ int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *mount, char flags)
   int v4; // ecx
   int v5; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(mount)), ((_DWORD)(uintptr_t)(&g_FileSystemDiskMountVariant_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -528,7 +528,7 @@ int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *mount, char flags)
   else
   {
     result = FileSystem_DiskMountScalarDeletingDtor(mount, 1);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v5;
@@ -1193,7 +1193,7 @@ int  File_DirNodeScalarDtor(_DWORD *node, char flags, DWORD a3)
   int v4; // ecx
   int v6; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(node)), ((_DWORD)(uintptr_t)(&g_FileDirNode_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -1203,7 +1203,7 @@ int  File_DirNodeScalarDtor(_DWORD *node, char flags, DWORD a3)
   {
     *node = ((_DWORD)(uintptr_t)(g_FileDirNode_VTable));
     File_ApplyResolvedEntryFlag(node[4], node[3], a3);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
       j__nfree_();
     return v4;
   }
@@ -1276,7 +1276,7 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *node, char flags)
   int v7; // ecx
   int v8; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(((_DWORD)(uintptr_t)(node)), ((_DWORD)(uintptr_t)(&g_FileCacheNode_DtorArrayDescriptor)));
     j_j__nfree_();
@@ -1288,10 +1288,10 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *node, char flags)
   {
     FileSystem_ArchiveEntryReaderScalarDeletingDtor(entry_reader);
     j__nfree_();
-    if ( (flags & 2) == 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) == 0 )
       return (_DWORD *)(uintptr_t)v7;
   }
-  else if ( (flags & 2) == 0 )
+  else if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) == 0 )
   {
     return node;
   }

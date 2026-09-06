@@ -292,8 +292,8 @@ int  PlayGame(int a1, char a2, DWORD allocContext, char a4, double st0_runtime, 
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   UI_SetActiveWidgetTable(8);
-  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140039);
-  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + 140043);
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_LEFT_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + PLAYER_CAMERA_LEFT_TABLE_OFFSET);
+  *(_DWORD *)(uintptr_t)(gameData + MAP_VIEW_TOP_OFFSET) = *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *(_DWORD *)(uintptr_t)(gameData + VIEWED_PLAYER_INDEX_OFFSET) + gameData + PLAYER_CAMERA_TOP_TABLE_OFFSET);
   Locale_DrawInteger();
   Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, allocContext);
   Render_DrawSprite();

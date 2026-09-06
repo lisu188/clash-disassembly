@@ -34,7 +34,7 @@ int  Rules_SetAtomicValueIndices(int setAll)
 
   symbolIndex = 0;
   symbolBucket = (int **)(uintptr_t)g_Clips_SymbolHashTable;
-  symbolTableEnd = g_Clips_SymbolHashTable + 4052;
+  symbolTableEnd = g_Clips_SymbolHashTable + CLIPS_SYMBOL_TABLE_BYTES;
   do
   {
     for ( i = *symbolBucket; i; i = (int *)(uintptr_t)*i )
@@ -52,7 +52,7 @@ int  Rules_SetAtomicValueIndices(int setAll)
   while ( symbolBucket != (int **)(uintptr_t)symbolTableEnd );
   floatIndex = 0;
   floatBucket = (int **)(uintptr_t)g_ClipsFloatHashTable;
-  floatTableEnd = g_ClipsFloatHashTable + 2012;
+  floatTableEnd = g_ClipsFloatHashTable + CLIPS_FLOAT_TABLE_BYTES;
   do
   {
     for ( j = *floatBucket; j; j = (int *)(uintptr_t)*j )
@@ -70,7 +70,7 @@ int  Rules_SetAtomicValueIndices(int setAll)
   while ( floatBucket != (int **)(uintptr_t)floatTableEnd );
   integerIndex = 0;
   integerBucket = (int **)(uintptr_t)g_ClipsIntegerHashTable;
-  integerTableEnd = g_ClipsIntegerHashTable + 668;
+  integerTableEnd = g_ClipsIntegerHashTable + CLIPS_INTEGER_TABLE_BYTES;
   do
   {
     for ( k = *integerBucket; k; k = (int *)(uintptr_t)*k )
@@ -88,7 +88,7 @@ int  Rules_SetAtomicValueIndices(int setAll)
   while ( integerBucket != (int **)(uintptr_t)integerTableEnd );
   bitmapIndex = 0;
   bitmapBucket = (int *)(uintptr_t)g_ClipsBitmapHashTable;
-  bitmapTableEnd = g_ClipsBitmapHashTable + 668;
+  bitmapTableEnd = g_ClipsBitmapHashTable + CLIPS_BITMAP_TABLE_BYTES;
   do
   {
     for ( result = *bitmapBucket; result; result = *(_DWORD *)(uintptr_t)result )
@@ -132,7 +132,7 @@ int *Rules_RestoreAtomicValueBuckets(void)
   unsigned int bitmapFlags; // ebp
 
   symbolBucket = (_DWORD *)(uintptr_t)g_Clips_SymbolHashTable;
-  for ( i = 0; i < 1013; ++i )
+  for ( i = 0; i < CLIPS_SYMBOL_BUCKET_COUNT; ++i )
   {
     symbolNode = (_DWORD *)(uintptr_t)*symbolBucket;
     if ( *symbolBucket )
@@ -149,7 +149,7 @@ int *Rules_RestoreAtomicValueBuckets(void)
     ++symbolBucket;
   }
   floatBucket = (_DWORD *)(uintptr_t)g_ClipsFloatHashTable;
-  for ( j = 0; j < 503; ++j )
+  for ( j = 0; j < CLIPS_FLOAT_BUCKET_COUNT; ++j )
   {
     floatNode = (_DWORD *)(uintptr_t)*floatBucket;
     if ( *floatBucket )
@@ -166,7 +166,7 @@ int *Rules_RestoreAtomicValueBuckets(void)
     ++floatBucket;
   }
   integerBucket = (_DWORD *)(uintptr_t)g_ClipsIntegerHashTable;
-  for ( k = 0; k < 167; ++k )
+  for ( k = 0; k < CLIPS_INTEGER_BUCKET_COUNT; ++k )
   {
     integerNode = (_DWORD *)(uintptr_t)*integerBucket;
     if ( *integerBucket )
@@ -183,7 +183,7 @@ int *Rules_RestoreAtomicValueBuckets(void)
     ++integerBucket;
   }
   bitmapBucket = (int *)(uintptr_t)g_ClipsBitmapHashTable;
-  for ( m = 0; m < 167; ++m )
+  for ( m = 0; m < CLIPS_BITMAP_BUCKET_COUNT; ++m )
   {
     result = (int *)(uintptr_t)*bitmapBucket;
     if ( *bitmapBucket )

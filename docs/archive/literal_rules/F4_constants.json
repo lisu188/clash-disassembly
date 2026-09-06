@@ -1,0 +1,50 @@
+[
+  {
+    "name": "ROAD_BUILD_CONSTRUCTION_ACTION_POINTS",
+    "value": 1,
+    "spelling": "1",
+    "kind": "cost",
+    "family": "road_build",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "high",
+    "evidence": "clash95.asm loc_424B38: inc edx adds one to tile movement cost before sub_410010 minimum-AP comparison; loc_424E62: mov edx,1 followed by sub_410130 spends construction AP after sub_410330 queued movement. UnitStack_SpendActionPointsClamped (0x410130) subtracts spendAmount from occupied UnitSlot AP bytes. Highlight loc_425445 independently increments movement cost before the same minimum-AP comparison."
+  },
+  {
+    "name": "ROAD_BUILD_BRIDGE_HIGHLIGHT_MIN_ACTION_POINTS",
+    "value": 6,
+    "spelling": "6",
+    "kind": "threshold",
+    "family": "road_build",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "high",
+    "evidence": "clash95.asm loc_4251B2 calls sub_424020/sub_424120 bridge-overlay predicates; loc_425201 calls sub_410010 then cmp eax,6 and jge loc_425425 to mark and refresh an available Road target. Recovered MapTile_HasAlignedBridgeApproachRoadOverlay/MapTile_IsBareBridgeCrossingRoadOverlayCandidate and UnitStack_GetMinCurrentActionPoints corroborate bridge-highlight-specific AP threshold; this is not asserted to be the total construction cost."
+  },
+  {
+    "name": "ROAD_BUILD_MARKER_ANIMATION_FRAME_MASK",
+    "value": 7,
+    "spelling": "7",
+    "kind": "mask",
+    "family": "road_build_animation",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "high",
+    "evidence": "clash95.asm loc_4255D3 increments dword_527C38 then and ebx,7 and stores the frame index. sub_425120 consumes that index to address dword_514294 bounce offsets for four direction marker positions. Original table at00514294 and fixture original-road.bin offset0x88 contain first-eight offsets -8,-4,0,4,8,4,0,-4; mask names eight-frame wrap, not the nine-DWORD backing region capacity."
+  },
+  {
+    "name": "ROAD_BUILD_MARKER_ANIMATION_INTERVAL_TICKS",
+    "value": 10,
+    "spelling": "10",
+    "kind": "interval",
+    "family": "road_build_animation",
+    "tier": 3,
+    "deferred": true,
+    "regex_only": true,
+    "confidence": "high",
+    "evidence": "clash95.asm loc_4255D3 calls Time_Now then sub eax,0Ah and unsigned cmp/jbe against dword_527C28; eligible branch saves a fresh Time_Now value, advances the masked marker frame, and redraws four adjacent tiles. Builder_StartRoadBuildMode reproduces this exact subtraction/comparison and RoadBuildMode_HighlightBuildableAdjacentTile consumes the resulting bounce index; ticks deliberately avoids imposing an unverified wall-clock unit or changing strict comparison behavior."
+  }
+]

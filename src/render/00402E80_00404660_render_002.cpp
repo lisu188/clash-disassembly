@@ -782,7 +782,7 @@ int  Surface_DestructRawBuffer(int surface, char flags)
 {
   int result; // eax
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(surface, (_DWORD)(uintptr_t)(&g_SurfaceRawBuffer_DtorArrayTag));
     j_j__nfree_();
@@ -792,7 +792,7 @@ int  Surface_DestructRawBuffer(int surface, char flags)
   nfree_(*(_DWORD *)(uintptr_t)(surface + 4));
   *(_DWORD *)(uintptr_t)(surface + 4) = 0;
   result = Surface_Destruct(surface + 8) - 8;
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return result;
@@ -1088,7 +1088,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
   int owned_buffer; // edx
   int result; // eax
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)(surface), (_DWORD)(uintptr_t)(&g_ScratchSurface_DtorArrayTag));
     j_j__nfree_();
@@ -1102,7 +1102,7 @@ int  Render_DestructScratchSurface(_DWORD *surface, char flags)
     j__nfree_();
   }
   result = Surface_Destruct((int)(intptr_t)(surface + 2)) - 8;
-  if ( (flags & 2) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return result;
@@ -1353,14 +1353,14 @@ int  Surface_ConstructBackbufferInstance(int surface_addr)
 {
   int palette_array;
 
-  palette_array = (int)(intptr_t)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, 480) + 0xDC;
+  palette_array = (int)(intptr_t)Render_ConstructScratchSurface(surface_addr, 0x280u, 0, SCREEN_HEIGHT) + 0xDC;
   *(_DWORD *)(uintptr_t)(palette_array - 24) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 20) = 1;
   *(_DWORD *)(uintptr_t)(palette_array - 16) = 1;
   *(_DWORD *)(uintptr_t)(palette_array - 12) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 8) = 0;
   *(_DWORD *)(uintptr_t)(palette_array - 4) = 0;
-  palette_array = _wcpp_4_ctor_array__(palette_array, 256);
+  palette_array = _wcpp_4_ctor_array__(palette_array, PALETTE_COLOR_COUNT);
   *(_DWORD *)(uintptr_t)(palette_array - 36) = (_DWORD)(uintptr_t)(g_Surface_Vtable);
   return palette_array - 0xDC;
 }

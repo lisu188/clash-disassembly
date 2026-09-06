@@ -219,8 +219,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 56, 71, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       stack_index = *(unsigned __int16 *)(uintptr_t)(gameData + 567716);
       Building_UnitGetInto(stack_index, castle_index, 56, 71, a2);
-      for ( slot_index = 0; slot_index < 12; ++slot_index )
-        *(_BYTE *)(uintptr_t)(building_record + 31 * slot_index + 30) |= 3u;
+      for ( slot_index = 0; slot_index < BUILDING_GARRISON_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(uintptr_t)(building_record + UNIT_SLOT_RECORD_BYTES * slot_index + 30) |= 3u;
       BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
       BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
       BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 1)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
@@ -773,9 +773,9 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 52, 26, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       stack_index = *(unsigned __int16 *)(uintptr_t)(TILE_INDEX(52, 26));
       Building_UnitGetInto(stack_index, castle_index, 52, 26, a2);
-      for ( slot_index = 0; slot_index < 12; ++slot_index )
-        *(_BYTE *)(uintptr_t)(building_record + 31 * slot_index + 30) =
-          (*(_BYTE *)(uintptr_t)(building_record + 31 * slot_index + 30) & 0xFC) | 1;
+      for ( slot_index = 0; slot_index < BUILDING_GARRISON_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(uintptr_t)(building_record + UNIT_SLOT_RECORD_BYTES * slot_index + 30) =
+          (*(_BYTE *)(uintptr_t)(building_record + UNIT_SLOT_RECORD_BYTES * slot_index + 30) & 0xFC) | 1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
       BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;

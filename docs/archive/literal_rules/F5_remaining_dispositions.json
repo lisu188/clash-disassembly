@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "wall-sprite-404-is-not-path-size",
+      "classification": "unresolved",
+      "match": {
+        "file": "src/battle/0042E9E0_00430C20_battle_002.cpp",
+        "fn": "UnitBattle_DrawTileContents",
+        "raw": "404",
+        "expr_regex": "^wallSpriteChar \\+= 404;$"
+      },
+      "reason": "This selects a wall-sprite range alongside 412 and 420 before DLX_GetSpriteForChar. Reject UNIT_STACK_PATH_BYTES; the complete theme-to-sprite mapping still needs review.",
+      "evidence": [
+        "src/battle/0042E9E0_00430C20_battle_002.cpp:935-951",
+        "docs/archive/literal_rules/F1_gameplay_findings.md:42",
+        "clash95.asm UnitBattle_DrawTileContents original function sub_42FFB0"
+      ],
+      "expected_count": 1
+    },
+    {
+      "id": "cheat-damage-flags-compensating-31",
+      "classification": "unresolved",
+      "match": {
+        "file": "src/strategic/004506B0_004530D0_strategic_001.cpp",
+        "fn": "Cheat_ClearSelectedSquadDamageFlags",
+        "raw": "31",
+        "expr_regex": "slot_offset \\+ 31 \\+"
+      },
+      "reason": "The added 31 compensates the absolute base 147161 to reach 147192. A forward slot-step role is not proven; keep the original address decomposition until its full data flow is reviewed.",
+      "evidence": [
+        "src/strategic/004506B0_004530D0_strategic_001.cpp:840-843",
+        "docs/archive/literal_rules/F1_gameplay_findings.md:41",
+        "clash95.asm sub_451730 and shared epilogue loc_4517A0"
+      ],
+      "expected_count": 1
+    },
+    {
+      "id": "cheat-healing-compensating-31",
+      "classification": "unresolved",
+      "match": {
+        "file": "src/strategic/004506B0_004530D0_strategic_001.cpp",
+        "fn": "Cheat_HealSelectedSquadAndClearDamage",
+        "raw": "31",
+        "expr_regex": "slot_offset \\+ 31 \\+"
+      },
+      "reason": "The added 31 compensates the absolute base 147158 to reach 147189. A forward slot-step role is not proven; preserve the original expression and defer effective-address recovery.",
+      "evidence": [
+        "src/strategic/004506B0_004530D0_strategic_001.cpp:874",
+        "docs/archive/literal_rules/F1_gameplay_findings.md:41",
+        "clash95.asm sub_4517C0 and shared epilogue loc_4517A0"
+      ],
+      "expected_count": 1
+    },
+    {
+      "id": "named-avi-decompressor-timebase-definition",
+      "classification": "legitimate",
+      "match": {
+        "file": "src/state/00000000_0054FFFF_recovered_state.cpp",
+        "fn": null,
+        "raw": "1000.0",
+        "kind": "float",
+        "expr_regex": "^double g_CAviDecompressor_MillisecondsPerSecond = 1000\\.0;$"
+      },
+      "reason": "Already-named scalar timebase definition. Keep its double literal and double storage unchanged rather than naming the numeric definition again.",
+      "evidence": [
+        "src/state/00000000_0054FFFF_recovered_state.cpp:2103",
+        "src/media/00465DD0_00466C60_media_002.cpp:290 CAviDecompressor_RenderLoop"
+      ],
+      "expected_count": 1
+    },
+    {
+      "id": "named-avi-player-timebase-definition",
+      "classification": "legitimate",
+      "match": {
+        "file": "src/state/00000000_0054FFFF_recovered_state.cpp",
+        "fn": null,
+        "raw": "1000.0",
+        "kind": "float",
+        "expr_regex": "^float g_AviPlayer_MillisecondsPerSecond = 1000\\.0;$"
+      },
+      "reason": "Already-named scalar timebase definition. Preserve the original double literal initializing float storage, including its implicit conversion.",
+      "evidence": [
+        "src/state/00000000_0054FFFF_recovered_state.cpp:2105",
+        "src/media/00465DD0_00466C60_media_002.cpp:626 AviPlayer_UpdateTargetFrameFromClock"
+      ],
+      "expected_count": 1
+    },
+    {
+      "id": "named-rules-timebase-definition",
+      "classification": "legitimate",
+      "match": {
+        "file": "src/state/00000000_0054FFFF_recovered_state.cpp",
+        "fn": null,
+        "raw": "1000.0",
+        "kind": "float",
+        "expr_regex": "^double g_Rules_MillisecondsPerSecond = 1000\\.0;$"
+      },
+      "reason": "Already-named scalar timebase definition; its consumer divides the milliseconds field by this value. Preserve the exact double initialization.",
+      "evidence": [
+        "src/state/00000000_0054FFFF_recovered_state.cpp:2571",
+        "src/media/0047C7A0_0047DF90_media_014.cpp:594 Rules_TimeCommand"
+      ],
+      "expected_count": 1
+    }
+  ]
+}

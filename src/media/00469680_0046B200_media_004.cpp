@@ -70,7 +70,7 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
   int i; // eax
   int v5; // ecx
   _BYTE v6[2] CLASH95_UNUSED; // [esp+0h] [ebp-5BEh]
-  char paletteEntries[1024]; // [esp+2h] [ebp-5BCh] BYREF
+  char paletteEntries[PALETTE_TABLE_BYTES]; // [esp+2h] [ebp-5BCh] BYREF
   int (**v8)(); // [esp+466h] [ebp-158h]
   int (**v9)(); // [esp+4CEh] [ebp-F0h]
   _DWORD ehFrame[3]; // [esp+59Ah] [ebp-24h] BYREF
@@ -83,7 +83,7 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int self, int ddInterface)
   ehState = 0;
   if ( (*(_BYTE *)(uintptr_t)(self + 2120) & 2) != 0 )
   {
-    for ( i = 0; i != 1024; v6[i + 1] = 0 )
+    for ( i = 0; i != PALETTE_TABLE_BYTES; v6[i + 1] = 0 )
     {
       paletteEntries[i] = *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 151) + *(_DWORD *)(uintptr_t)(self + 151) + i + 2);
       paletteEntries[i + 1] = *(_BYTE *)(uintptr_t)(**(_DWORD **)(uintptr_t)(self + 151) + *(_DWORD *)(uintptr_t)(self + 151) + i + 1);

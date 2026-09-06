@@ -24,19 +24,19 @@ double  Rules_CoerceFormToNumericArg(__int16 *theArgument, int convertToFloat, _
     theType = *theArgument;
     valueBuffer_alias = *(_DWORD *)(theArgument + 1);
   }
-  if ( theType > 1 )
+  if ( theType > CLIPS_TYPE_INTEGER )
   {
     Parser_ReportError(whichArgument, (int)(intptr_t)aIntegerOrFlo_0);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
-    returnValue[1] = 1;
+    returnValue[1] = CLIPS_TYPE_INTEGER;
     returnValue[2] = Rules_AddIntegerValue(0);
   }
   else
   {
     if ( convertToFloat )
     {
-      if ( theType == 1 )
+      if ( theType == CLIPS_TYPE_INTEGER )
         valueBuffer_alias = Rules_AddDoubleValue((double)*(int *)(uintptr_t)(valueBuffer_alias + 16));
     }
     returnValue[1] = theType;
@@ -65,7 +65,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
 
   v15 = a3;
   Rules_RtnUnknown(whichArgument, valueBuffer, a4);
-  if ( valueBuffer[1] == 2 || valueBuffer[1] == 3 || valueBuffer[1] == 8 )
+  if ( valueBuffer[1] == CLIPS_TYPE_SYMBOL || valueBuffer[1] == CLIPS_TYPE_STRING || valueBuffer[1] == CLIPS_TYPE_INSTANCE_NAME )
   {
     if ( !strcmp_(*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16), (_DWORD)(uintptr_t)(aT)) || !strcmp_(v5, (_DWORD)(uintptr_t)(aT_0)) )
       return defaultLogicalName;
@@ -73,7 +73,7 @@ int  Rules_GetLogicalNameArg(int whichArgument, int defaultLogicalName, int a3, 
   }
   else if ( valueBuffer[1] )
   {
-    if ( valueBuffer[1] == 1 )
+    if ( valueBuffer[1] == CLIPS_TYPE_INTEGER )
     {
       integerSymbol = (char *)(uintptr_t)Rules_LongIntegerToSymbol(*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16));
       return Str_Intern(integerSymbol, v11)[4];
@@ -106,7 +106,7 @@ int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3)
 
   v8 = functionName;
   Rules_RtnUnknown(whichArgument, valueBuffer, a3);
-  if ( valueBuffer[1] == 3 || valueBuffer[1] == 2 )
+  if ( valueBuffer[1] == CLIPS_TYPE_STRING || valueBuffer[1] == CLIPS_TYPE_SYMBOL )
     return *(_DWORD *)(uintptr_t)(valueBuffer[2] + 16);
   Parser_ReportError(v3, (int)(intptr_t)aFileName);
   return 0;
@@ -149,7 +149,7 @@ int * Rules_GetModuleNameArg(int whichArgument, int functionName, _DWORD *error,
   v9 = functionName;
   *error = 0;
   Rules_RtnUnknown(whichArgument, valueBuffer, a4);
-  if ( valueBuffer[1] == 2 )
+  if ( valueBuffer[1] == CLIPS_TYPE_SYMBOL )
   {
     result = Module_FindByName((_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)(valueBuffer[2] + 16));
     if ( !result )
@@ -421,7 +421,7 @@ signed int * Str_Intern(char *str, int a2)
     Rules_ReportSystemError(a2, 1);
     IO_RunRouterExitCallbacks(5);
   }
-  hashValue = Rules_HashSymbolName((_BYTE*)(srcPtr), 0x3F5u);
+  hashValue = Rules_HashSymbolName((_BYTE*)(srcPtr), CLIPS_SYMBOL_HASH_RANGE);
   curEntry = *(_DWORD *)((uintptr_t)(unsigned int)g_Clips_SymbolHashTable + 4 * hashValue);
   if ( curEntry )
   {
@@ -499,7 +499,7 @@ int * Rules_FindSymbolEntry(_BYTE *str)
       fprintf(stderr, "[menu-probe] symbol-lookup-missing-table %s\n", str);
     return 0;
   }
-  bucket_index = Rules_HashSymbolName(str, 0x3F5u);
+  bucket_index = Rules_HashSymbolName(str, CLIPS_SYMBOL_HASH_RANGE);
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] symbol-lookup table=%08x bucket=%d key=%s\n", g_Clips_SymbolHashTable, bucket_index, str);
   bucket_entry = *(_DWORD *)(uintptr_t)(g_Clips_SymbolHashTable + 4 * bucket_index);
@@ -525,7 +525,7 @@ int __stdcall Rules_AddDoubleValue(double number)
   signed int newFloat; // esi
   __int16 flagsWord; // dx
 
-  hashValue = Rules_HashDoubleValue(LODWORD(number), SHIDWORD(number), 0x1F7u);
+  hashValue = Rules_HashDoubleValue(LODWORD(number), SHIDWORD(number), CLIPS_FLOAT_HASH_RANGE);
   curEntry = *(_DWORD *)(uintptr_t)(4 * hashValue + g_ClipsFloatHashTable);
   prevEntry = 0;
   if ( curEntry )
@@ -586,7 +586,7 @@ int  Rules_AddIntegerValue(int number)
   int new_node; // eax
   __int16 flags; // bx
 
-  bucket_index = Rules_HashIntegerValue(number, 167);
+  bucket_index = Rules_HashIntegerValue(number, CLIPS_INTEGER_BUCKET_COUNT);
   node = *(_DWORD *)((uintptr_t)(unsigned int)g_ClipsIntegerHashTable + 4 * bucket_index);
   previous_node = 0;
   while ( node )
@@ -633,7 +633,7 @@ int * Rules_FindIntegerValue(signed int number)
   int *result; // eax
   int searchValue; // ecx
 
-  result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, 167));
+  result = (int *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsIntegerHashTable + 4 * Rules_HashIntegerValue(number, CLIPS_INTEGER_BUCKET_COUNT));
   if ( !result )
     return 0;
   while ( searchValue != result[4] )
@@ -672,7 +672,7 @@ int  Rules_AddBitmapValue(_BYTE *theBitMap, signed int size)
     Rules_ReportSystemError(0, 2);
     IO_RunRouterExitCallbacks(5);
   }
-  hashValue = Rules_HashBitmapValue((int)(intptr_t)theBitMap, 0xA7u, size);
+  hashValue = Rules_HashBitmapValue((int)(intptr_t)theBitMap, CLIPS_BITMAP_HASH_RANGE, size);
   curEntry = *(_DWORD *)(uintptr_t)(g_ClipsBitmapHashTable + 4 * hashValue);
   prevEntry = 0;
   savedHash = hashValue;
@@ -772,17 +772,17 @@ int *Rules_InitAtomTables(void)
   int v7; // ecx
   int *result; // eax
 
-  g_Clips_SymbolHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0xFD4u);
-  g_ClipsFloatHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x7DCu);
-  g_ClipsIntegerHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x29Cu);
-  g_ClipsBitmapHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(0x29Cu);
-  for ( i = 0; i != 4052; i += 4 )
+  g_Clips_SymbolHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(CLIPS_SYMBOL_ALLOCATION_BYTES);
+  g_ClipsFloatHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(CLIPS_FLOAT_ALLOCATION_BYTES);
+  g_ClipsIntegerHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(CLIPS_INTEGER_ALLOCATION_BYTES);
+  g_ClipsBitmapHashTable = (int)(intptr_t)Mem_SmallBlockAlloc(CLIPS_BITMAP_ALLOCATION_BYTES);
+  for ( i = 0; i != CLIPS_SYMBOL_TABLE_BYTES; i += 4 )
     *(_DWORD *)(uintptr_t)(g_Clips_SymbolHashTable + i) = 0;
-  for ( j = 0; j != 2012; j += 4 )
+  for ( j = 0; j != CLIPS_FLOAT_TABLE_BYTES; j += 4 )
     *(_DWORD *)(uintptr_t)(g_ClipsFloatHashTable + j) = 0;
-  for ( k = 0; k != 668; k += 4 )
+  for ( k = 0; k != CLIPS_INTEGER_TABLE_BYTES; k += 4 )
     *(_DWORD *)(uintptr_t)(g_ClipsIntegerHashTable + k) = 0;
-  for ( m = 0; m != 668; m += 4 )
+  for ( m = 0; m != CLIPS_BITMAP_TABLE_BYTES; m += 4 )
     *(_DWORD *)(uintptr_t)(g_ClipsBitmapHashTable + m) = 0;
   g_ClipsTrueSymbol = (int)(intptr_t)Str_Intern(aTrue, v0);
   ++*(_DWORD *)(uintptr_t)(g_ClipsTrueSymbol + 4);
@@ -1302,7 +1302,7 @@ int ** Rules_GetNextSymbolMatch(int **searchString, int length, int anywhere, in
       nextBucketOffset = bucketOffset + 4;
       bucketOffset = nextBucketOffset;
       ++bucketIndex;
-      if ( nextBucketOffset >= 4052 )
+      if ( nextBucketOffset >= CLIPS_SYMBOL_TABLE_BYTES )
         return 0;
       curSymbol = *(int ***)(uintptr_t)(nextBucketOffset + g_Clips_SymbolHashTable);
     }

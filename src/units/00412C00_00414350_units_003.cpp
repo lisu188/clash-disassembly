@@ -49,7 +49,7 @@ LABEL_2:
   v4 = UNIT_RECORD(buildingIndex);
   if ( (unsigned int)*(char *)(uintptr_t)(v4 + 4) < 4
     && *(__int16 *)(uintptr_t)(v4 + 16) != -1
-    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * buildingIndex + 509676) == playerIndex )
+    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * buildingIndex + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex )
   {
     buildingStrength = Building_CalcGarrisonStrength(UNIT_RECORD(buildingIndex), playerIndex);
     totalStrength = buildingStrength + v6;
@@ -59,10 +59,10 @@ LABEL_2:
     if ( buildingIndex >= 0 )
       goto LABEL_2;
   }
-  for ( i = 0; i < 500; ++i )
+  for ( i = 0; i < UNIT_STACK_TABLE_COUNT; ++i )
   {
     stackRecordBase = gameData + UNIT_STACK_STRIDE * i;
-    if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(stackRecordBase + 147178) && *(__int16 *)(uintptr_t)(stackRecordBase + 147180) != -1 )
+    if ( playerIndex == *(unsigned __int8 *)(uintptr_t)(stackRecordBase + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) && *(__int16 *)(uintptr_t)(stackRecordBase + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) != -1 )
     {
       stackStrength = UnitStack_CalcMilitaryStrength(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * i);
       totalStrength = stackStrength + v10;
@@ -95,7 +95,7 @@ int  UnitStack_CopyFromTemplate(int destStack, int srcStack, int a3)
   *(_WORD *)(uintptr_t)(destStack + 2) = *(_WORD *)(uintptr_t)(srcStack + 2);
   UNIT_STACK_OWNER_INDEX(destStack) = UNIT_STACK_OWNER_INDEX(srcStack);
   UNIT_STACK_FACING(destStack) = UNIT_STACK_FACING(srcStack);
-  *(_DWORD *)(uintptr_t)(_wcpp_4_copy_array__(a3) + 310) = *(_DWORD *)(uintptr_t)(srcStack + 316);
+  *(_DWORD *)(uintptr_t)(_wcpp_4_copy_array__(a3) + 310) = *(_DWORD *)(uintptr_t)(srcStack + UNIT_STACK_PATH_OFFSET);
   v4 = _wcpp_4_copy_array__(v7);
   *(_BYTE *)(uintptr_t)(v4 + 400) = *(_BYTE *)(uintptr_t)(srcStack + 720);
   result = v4 - 320;
@@ -1310,12 +1310,12 @@ int  Map_GetUnitTileMoveCostOrZero(int playerIndex, int unitType, int tileColumn
     if ( tileOccupant >= 0x8000 )
       return 0;
     occupantStackRecord = gameData + UNIT_STACK_STRIDE * tileOccupant;
-    if ( !*(_BYTE *)(uintptr_t)(occupantStackRecord + 147894) || *(unsigned __int8 *)(uintptr_t)(occupantStackRecord + 147178) == playerIndex )
+    if ( !*(_BYTE *)(uintptr_t)(occupantStackRecord + UNIT_STACK_IS_HIDDEN_ON_WORLD_MAP_TABLE_OFFSET) || *(unsigned __int8 *)(uintptr_t)(occupantStackRecord + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerIndex )
       return 0;
   }
   if ( ((1 << playerIndex) & TILE_TRAP_OWNER_MASK(tileRow, tileColumn)) == 1 << playerIndex || MapTile_GetReligiousSiteCategory(tileRow, tileColumn) )
     return 0;
-  unitMetadataOffset = 88 * unitType;
+  unitMetadataOffset = UNIT_TYPE_METADATA_STRIDE * unitType;
   terrainRecord = TILE_TERRAIN_RECORD(tileRow, tileColumn);
   if ( terrainRecord[2] != 0xFFFF )
     return UnitType_GetRoadMoveCost(unitType);

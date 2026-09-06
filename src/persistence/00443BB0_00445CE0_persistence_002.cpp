@@ -68,7 +68,7 @@ signed int  Treasure_TryDigHere(
   unitStackIndex = a1;
   v9 = a1;
   stackTileRecord = (__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * unitStackIndex + gameData + UNIT_STACK_TABLE_OFFSET);
-  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + 147176))
+  if ( !MapTile_HasHiddenTreasure(*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TABLE_OFFSET), *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * unitStackIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET))
     || !UnitStack_HasBuilder(v9) )
   {
     return 0;
@@ -91,7 +91,7 @@ signed int  Treasure_TryDigHere(
   }
   else
   {
-    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       outcomeTablePtr = &g_TreasureDigOutcomeTable_Human;
     else
       outcomeTablePtr = &g_TreasureDigOutcomeTable_AI;
@@ -115,7 +115,7 @@ signed int  Treasure_TryDigHere(
    */
   outcomeRecord = (_DWORD *)scriptedEventData;
   v16 = (DWORD *)scriptedEventData;
-  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + 140051) )
+  if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackTileRecord + 4) + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
   {
     Win_PlayModeChangeFrameTransition((const char*)(intptr_t)((int)(intptr_t)aKop_bud), 1, (int)(intptr_t)scriptedEventData, v6, (DWORD)(intptr_t)stackTileRecord, (char)(intptr_t)a5);
     Temple_ShowOutcomePopup(outcomeRecord[(unsigned __int8)g_LanguageIndex + 3], outcomeRecord[2], (int)(intptr_t)outcomeRecord, *outcomeRecord != 15, (DWORD)(intptr_t)stackTileRecord);
@@ -172,7 +172,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
     return 0;
   if ( UnitStack_GetMaxOrderTier((intptr_t)stackRecord) < 2 )
   {
-    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
     {
       lowRankMessageTable[0] = (int)(intptr_t)g_UnitHideFailedLowRankText[0];
       lowRankMessageTable[1] = (int)(intptr_t)g_UnitHideFailedLowRankText[1];
@@ -200,7 +200,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
           {
             neighborStackByteOffset = UNIT_STACK_STRIDE * neighborStackIndex;
             if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + neighborStackByteOffset + 6) <= 0x28
-              && *(_BYTE *)(uintptr_t)(gameData + neighborStackByteOffset + 147178) != *((_BYTE *)stackRecord + 4) )
+              && *(_BYTE *)(uintptr_t)(gameData + neighborStackByteOffset + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != *((_BYTE *)stackRecord + 4) )
             {
               break;
             }
@@ -213,7 +213,7 @@ signed int  UnitStack_TryHide(int unitStackIndex, unsigned __int16 neighborStack
             buildingRecord = buildingByteOffset + gameData + BUILDING_TABLE_OFFSET;
             if ( (unsigned int)*(char *)(uintptr_t)(buildingRecord + 4) < 4
               && *(__int16 *)(uintptr_t)(buildingRecord + 16) != -1
-              && *(_BYTE *)(uintptr_t)(gameData + buildingByteOffset + 509676) != *((_BYTE *)stackRecord + 4) )
+              && *(_BYTE *)(uintptr_t)(gameData + buildingByteOffset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) != *((_BYTE *)stackRecord + 4) )
             {
               break;
             }
@@ -231,7 +231,7 @@ LABEL_16:
   while ( columnDelta < 8 );
   if ( spotBlocked )
   {
-    if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + 140051) )
+    if ( !*(_DWORD *)(uintptr_t)(PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4) + gameData + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       return 0;
     noSpotMessageTable[0] = (int)(intptr_t)g_UnitHideFailedNoSpotText[0];
     noSpotMessageTable[1] = (int)(intptr_t)g_UnitHideFailedNoSpotText[1];
@@ -245,7 +245,7 @@ LABEL_16:
     UnitStack_ClearRemainingActionPoints(stackRecord, 0, a4);
     playerDataOffset = PLAYER_DATA_STRIDE * *((unsigned __int8 *)stackRecord + 4);
     *((_BYTE *)stackRecord + 720) = 1;
-    if ( *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + 140051) )
+    if ( *(_DWORD *)(uintptr_t)(gameData + playerDataOffset + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       Win_PlayModeChangeFrameTransition(aUkrycie, 1, v14, neighborStackIndex, 0);
     WorldMap_RedrawTileIfVisible(*stackRecord, stackRecord[1]);
     return 1;
@@ -434,24 +434,24 @@ signed int  SaveSlot_LoadGame(int slotIndex, DWORD a2, double a3)
     Rules_ResetEngineOnLoad();
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-fact-reset\n");
-    for ( stack_index = 0; stack_index < 500; ++stack_index )
+    for ( stack_index = 0; stack_index < UNIT_STACK_TABLE_COUNT; ++stack_index )
     {
-      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
+      if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
       {
         if ( trace_load_save )
           fprintf(
             stderr,
             "[menu-probe] load-save-link-army stack=%d type=%d x=%d y=%d owner=%u\n",
             stack_index,
-            *(unsigned __int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180),
+            *(unsigned __int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET),
             *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TABLE_OFFSET),
-            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147176),
-            *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178));
+            *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET),
+            *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET));
         UnitStack_LinkArmyFact((__int16 *)(uintptr_t)(gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * stack_index), 1, a2);
       }
       for ( slot_index = 0; slot_index < 10; ++slot_index )
       {
-        *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 31 * slot_index + 147198) = 0;
+        *(_DWORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_SLOT_RECORD_BYTES * slot_index + UNIT_STACK_SLOT_AUX_RUNTIME_STATE_TABLE_OFFSET) = 0;
       }
     }
     if ( trace_load_save )
@@ -1134,7 +1134,7 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
   do
   {
     result = buildingRecordOffset + gameData;
-    if ( (*(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + 510109) & 7) == 5 )
+    if ( (*(_BYTE *)(uintptr_t)(buildingRecordOffset + gameData + BUILDING_PLAGUE_STATE_TABLE_OFFSET) & 7) == 5 )
     {
       result = *(unsigned __int8 *)(uintptr_t)(result + 509676);
       if ( result == g_CurrentPlayerIndex )
@@ -1151,7 +1151,7 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
     }
     buildingRecordOffset += BUILDING_RECORD_SIZE;
   }
-  while ( buildingRecordOffset != 46700 );
+  while ( buildingRecordOffset != BUILDING_TABLE_BYTES );
   return result;
 }
 // 445949: variable 'v6' is possibly undefined

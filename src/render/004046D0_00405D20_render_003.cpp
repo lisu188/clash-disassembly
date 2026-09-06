@@ -69,7 +69,7 @@ int  Render_SetPixelFormat(int render_device, int a2, int bits_per_pixel, DWORD 
       palette_entries[entry_offset - 2] = gray_level++;
       palette_entries[entry_offset - 1] = 0;
     }
-    while ( gray_level < 256 );
+    while ( gray_level < PALETTE_COLOR_COUNT );
     render_context = *(_DWORD *)(uintptr_t)(render_device + 196);
     if ( render_context )
     {
@@ -455,44 +455,44 @@ int  Palette_SetBrightnessOffset(int result, int brightness_offset)
 int  Palette_ApplyWithBrightnessOffset(int *render_device, const void *new_palette)
 {
   unsigned char *palette_bytes;
-  unsigned int converted_palette[256];
+  unsigned int converted_palette[PALETTE_COLOR_COUNT];
   int base_color;
   int channel_value;
   unsigned int palette_index;
 
   palette_bytes = (unsigned char *)(render_device + 55);
-  qmemcpy(palette_bytes, new_palette, 0x400u);
+  qmemcpy(palette_bytes, new_palette, PALETTE_TABLE_COPY_BYTES);
   base_color = render_device[54];
-  for ( palette_index = 0; palette_index < 256; ++palette_index )
+  for ( palette_index = 0; palette_index < PALETTE_COLOR_COUNT; ++palette_index )
   {
     unsigned int converted_entry;
 
     channel_value = base_color + palette_bytes[4 * palette_index];
     if ( channel_value < 0 )
       channel_value = 0;
-    if ( channel_value > 255 )
-      channel_value = 255;
+    if ( channel_value > PALETTE_CHANNEL_MAX )
+      channel_value = PALETTE_CHANNEL_MAX;
     converted_entry = (unsigned char)channel_value;
 
     channel_value = base_color + palette_bytes[4 * palette_index + 1];
     if ( channel_value < 0 )
       channel_value = 0;
-    if ( channel_value > 255 )
-      channel_value = 255;
+    if ( channel_value > PALETTE_CHANNEL_MAX )
+      channel_value = PALETTE_CHANNEL_MAX;
     converted_entry |= (unsigned int)(unsigned char)channel_value << 8;
 
     channel_value = base_color + palette_bytes[4 * palette_index + 2];
     if ( channel_value < 0 )
       channel_value = 0;
-    if ( channel_value > 255 )
-      channel_value = 255;
+    if ( channel_value > PALETTE_CHANNEL_MAX )
+      channel_value = PALETTE_CHANNEL_MAX;
     converted_entry |= (unsigned int)(unsigned char)channel_value << 16;
 
     converted_palette[palette_index] = converted_entry;
   }
   if ( render_device == (int *)&g_MainRenderDevice || !render_device[49] || (render_device[49] & 3) != 0 )
     return 0;
-  return IO_StreamWrite(render_device[49], 0, (int)(intptr_t)converted_palette, 256);
+  return IO_StreamWrite(render_device[49], 0, (int)(intptr_t)converted_palette, PALETTE_COLOR_COUNT);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
@@ -524,7 +524,7 @@ int  Palette_CrossfadeStep(int *render_device, unsigned __int8 *target_palette, 
   int blended_entry; // [esp+18h] [ebp-14h]
 
   if ( !step )
-    qmemcpy(&g_PaletteCrossfadeSourceBuffer, render_device + 55, 0x400u);
+    qmemcpy(&g_PaletteCrossfadeSourceBuffer, render_device + 55, PALETTE_TABLE_COPY_BYTES);
   target_ptr = target_palette;
   write_ptr = render_device + 55;
   source_ptr = (unsigned __int8 *)&g_PaletteCrossfadeSourceBuffer;
@@ -538,7 +538,7 @@ int  Palette_CrossfadeStep(int *render_device, unsigned __int8 *target_palette, 
     target_ptr += 4;
     *(write_ptr - 1) = blended_entry;
   }
-  while ( target_ptr != target_palette + 1024 );
+  while ( target_ptr != target_palette + PALETTE_TABLE_BYTES );
   Palette_ApplyWithBrightnessOffset(render_device, render_device + 55);
   return Render_SaveBackbuffer((int)(intptr_t)render_device);
 }
@@ -554,7 +554,7 @@ int  Palette_FadeOutToBlack(int *render_device, signed int step_count)
   int green_scaled; // edx
   __int64 v9; // rtt
   int red_scaled; // edx
-  unsigned int source_palette[256]; // [esp+0h] [ebp-428h] BYREF
+  unsigned int source_palette[PALETTE_COLOR_COUNT]; // [esp+0h] [ebp-428h] BYREF
   int *device; // [esp+400h] [ebp-28h] BYREF
   int packed_entry; // [esp+404h] [ebp-24h]
   _DWORD *write_base; // [esp+408h] [ebp-20h]
@@ -626,7 +626,7 @@ int * Palette_FadeInFromBlack(int *result, unsigned __int8 *target_palette, sign
         target_ptr += 4;
         *(write_ptr - 1) = packed_entry;
       }
-      while ( target_ptr != target_palette + 1024 );
+      while ( target_ptr != target_palette + PALETTE_TABLE_BYTES );
       Palette_ApplyWithBrightnessOffset(device, device_palette);
       ++step;
       result = (int *)(uintptr_t)Render_SaveBackbuffer((int)(intptr_t)device);
@@ -701,12 +701,12 @@ void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD
       ++candidate_index;
       candidate_ptr += 4;
     }
-    while ( candidate_index < 256 );
+    while ( candidate_index < PALETTE_COLOR_COUNT );
     g_PaletteShadowRemapTableMinus1[++remap_index] = best_index;
     palette_cursor += 4;
   }
   while ( remap_index < 32 );
-  for ( i = 0; i < 307200; ++i )
+  for ( i = 0; i < SCREEN_PIXEL_COUNT; ++i )
   {
     pixel_ptr = (_BYTE *)(uintptr_t)(i + temp_surface[1]);
     if ( (unsigned __int8)*pixel_ptr <= 0x1Fu )
@@ -742,7 +742,7 @@ void * Video_EnterGreyscaleTransition(int *render_device, int a2, char a3, DWORD
     ++pixel_index;
     ++pixel_cursor;
   }
-  while ( pixel_index < 307200 );
+  while ( pixel_index < SCREEN_PIXEL_COUNT );
   Palette_ApplyWithBrightnessOffset(render_device, g_PaletteScratchSurfaceBuffer);
   /*
    * Original sub_4050F0 tail (clash95.asm 7367-7370):
@@ -783,14 +783,14 @@ void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target
   current_render_device = g_RenderDevice;
   snapshot_surface = Surface;
   Render_FillRect((_DWORD*)(g_RenderDevice), Surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
-  for ( i = 0; i < 307200; ++i )
+  for ( i = 0; i < SCREEN_PIXEL_COUNT; ++i )
   {
     pixel_ptr = (_BYTE *)(uintptr_t)(i + snapshot_surface[1]);
     if ( (unsigned __int8)*pixel_ptr <= 0x1Fu )
       *pixel_ptr = g_Video_LowColorRemapTable[(unsigned __int8)*pixel_ptr];
   }
   pixel_cursor = (_BYTE *)(uintptr_t)snapshot_surface[1];
-  for ( j = 0; j < 307200; ++j )
+  for ( j = 0; j < SCREEN_PIXEL_COUNT; ++j )
   {
     if ( (unsigned __int8)*pixel_cursor > 0x1Fu )
       *pixel_cursor = (int)(unsigned __int8)g_PaletteScratchSurfaceBuffer[4 * (unsigned __int8)*pixel_cursor] >> 3;
@@ -800,7 +800,7 @@ void * Video_ExitGreyscaleTransition(int *render_device, unsigned __int8 *target
   RenderSurface_InvokeSlot36(snapshot_surface);
   Palette_ApplyWithBrightnessOffset(render_device, g_PaletteScratchSurfaceBuffer);
   Render_FillRect((_DWORD*)(g_RenderDevice), snapshot_surface, 0, 0, SCREEN_MAX_X, SCREEN_MAX_Y, 0, 0);
-  for ( k = 0; k < 307200; ++k )
+  for ( k = 0; k < SCREEN_PIXEL_COUNT; ++k )
   {
     pixel_byte_ptr = (_BYTE *)(uintptr_t)(k + snapshot_surface[1]);
     pixel_value = (unsigned __int8)*pixel_byte_ptr;
@@ -956,7 +956,7 @@ int  Surface_Destroy(_DWORD *surface, char flags)
   int v4; // ecx
   int v5; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)(surface), (_DWORD)(uintptr_t)(&g_Surface_DtorArrayTag));
     j_j__nfree_();
@@ -965,7 +965,7 @@ int  Surface_Destroy(_DWORD *surface, char flags)
   else
   {
     result = Render_DestructScratchSurface(surface, 1);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v5;
@@ -983,13 +983,13 @@ int  SurfaceCursor_Destroy(int result, char flags)
   int v3; // ecx
   int v4; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, (_DWORD)(uintptr_t)(&g_SurfaceCursor_DtorArrayTag));
     j_j__nfree_();
     return v3;
   }
-  else if ( (flags & 2) != 0 )
+  else if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return v4;
@@ -1025,7 +1025,7 @@ int  RenderSurface_Destroy(int surface, char flags)
   int v5; // ecx
   int v6; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(surface, (_DWORD)(uintptr_t)(&g_RenderSurface_DtorArrayTag));
     j_j__nfree_();
@@ -1034,7 +1034,7 @@ int  RenderSurface_Destroy(int surface, char flags)
   else
   {
     v3 = Surface_Destruct(surface + 8);
-    if ( (flags & 2) != 0 )
+    if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
     {
       j__nfree_();
       return v6;
@@ -1081,7 +1081,7 @@ int  RenderSurface_DestroyLinkedBlitCursor(_DWORD *cursor, char flags)
   char v3; // dl
   int v5; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__((_DWORD)(uintptr_t)(cursor), (_DWORD)(uintptr_t)(&g_LinkedBlitCursor_DtorArrayTag));
     j_j__nfree_();
@@ -1133,13 +1133,13 @@ int  RenderSurface_DestroyBlitCursor(int result, char flags)
   int v3; // ecx
   int v4; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(result, (_DWORD)(uintptr_t)(&g_BlitCursor_DtorArrayTag));
     j_j__nfree_();
     return v3;
   }
-  else if ( (flags & 2) != 0 )
+  else if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) != 0 )
   {
     j__nfree_();
     return v4;
@@ -1178,7 +1178,7 @@ _BYTE * RenderSurface_CopyFourByteFields(_BYTE *result, _BYTE *source)
 //----- (00405900) --------------------------------------------------------
 _DWORD * RenderSurface_ConstructFullScreenBuffer(int surface_addr)
 {
-  return Render_ConstructSurfaceObject(surface_addr, 640, SCREEN_HEIGHT);
+  return Render_ConstructSurfaceObject(surface_addr, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 //----- (00405920) --------------------------------------------------------
@@ -1284,34 +1284,34 @@ _DWORD * DLXSpriteSet_Load(_DWORD *sprite_set, const void *file_name)
   int query_handle; // [esp+100h] [ebp-1Ch] BYREF
 
   resource_name = file_name ? (const char *)file_name : "";
-  sprite_set[1024] = 0;
-  sprite_set[1027] = (_DWORD)(uintptr_t)&g_DLXSpriteSet_Vtable;
+  sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] = 0;
+  sprite_set[DLX_SPRITE_SET_VTABLE_DWORD_INDEX] = (_DWORD)(uintptr_t)&g_DLXSpriteSet_Vtable;
   Debug_Log(63, 0, (DWORD)(intptr_t)resource_name, (int)(intptr_t)aDlxspritesetDl);
   strcpy(path, aGfx);
   strcat(path, resource_name);
   query_handle = FileSystem_ResolveReadPath(path, 0);
-  sprite_set[1026] = IO_QueryVTableStreamSize(query_handle);
-  if ( !query_handle || sprite_set[1026] <= 4096 )
+  sprite_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX] = IO_QueryVTableStreamSize(query_handle);
+  if ( !query_handle || sprite_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX] <= DLX_DIRECTORY_BYTES )
   {
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(
         stderr,
         "[dlx] load failed path=%s size=%d caller=%p\n",
         path,
-        sprite_set[1026],
+        sprite_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX],
         __builtin_return_address(0));
     App_RequestQuit((int)(intptr_t)aIOCouldnTOpenF);
     return sprite_set;
   }
-  Compat_QueryRead(query_handle, g_DlxSpriteSetOffsetTable, 4096);
-  data_size = sprite_set[1026] - 4096;
-  sprite_set[1024] = (unsigned int)nmalloc_(data_size, 4);
-  if ( !sprite_set[1024] )
+  Compat_QueryRead(query_handle, g_DlxSpriteSetOffsetTable, DLX_DIRECTORY_BYTES);
+  data_size = sprite_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX] - DLX_DIRECTORY_BYTES;
+  sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] = (unsigned int)nmalloc_(data_size, 4);
+  if ( !sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] )
   {
     Debug_Log(0, 0, data_size, (int)(intptr_t)aNotEnoughMem_1);
     App_RequestQuit((int)(intptr_t)aNotEnoughMem_2);
   }
-  Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)sprite_set[1024], data_size);
+  Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX], data_size);
   entry_index = 0;
   while ( entry_index < 1023 && g_DlxSpriteSetOffsetTable[entry_index] )
   {
@@ -1322,10 +1322,10 @@ _DWORD * DLXSpriteSet_Load(_DWORD *sprite_set, const void *file_name)
       entry_size = IO_QueryVTableStreamSize(query_handle) - g_DlxSpriteSetOffsetTable[entry_index];
     sprite_set[entry_index] = Mem_Alloc(22, entry_index, entry_size, (DWORD)(intptr_t)sprite_set);
     if ( sprite_set[entry_index] )
-      sprite_set[entry_index] = DLXSprite_ConstructFromBuffer(sprite_set[entry_index], g_DlxSpriteSetOffsetTable[entry_index] + sprite_set[1024] - 4096, entry_size);
+      sprite_set[entry_index] = DLXSprite_ConstructFromBuffer(sprite_set[entry_index], g_DlxSpriteSetOffsetTable[entry_index] + sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] - DLX_DIRECTORY_BYTES, entry_size);
     ++entry_index;
   }
-  sprite_set[1025] = entry_index;
+  sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] = entry_index;
   Compat_FileSystemQueryRelease(entry_index, &query_handle);
   return sprite_set;
 }
@@ -1340,15 +1340,15 @@ int * DLXSpriteSet_Destroy(int *sprite_set, char flags, int a3)
   int entry_index; // ebx
   int *entry_ptr; // ecx
 
-  if ( (flags & 4) != 0 )
+  if ( (flags & CRT_DTOR_FLAG_ARRAY_STORAGE) != 0 )
   {
     _wcpp_4_dtor_array_store__(a3, (_DWORD)(uintptr_t)(&g_DLXSpriteSet_DtorArrayTag));
     j_j__nfree_();
     return sprite_set;
   }
-  sprite_set[1027] = (int)(intptr_t)&g_DLXSpriteSet_Vtable;
+  sprite_set[DLX_SPRITE_SET_VTABLE_DWORD_INDEX] = (int)(intptr_t)&g_DLXSpriteSet_Vtable;
   entry_index = 0;
-  if ( sprite_set[1025] > 0 )
+  if ( sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] > 0 )
   {
     entry_ptr = sprite_set;
     do
@@ -1361,11 +1361,11 @@ int * DLXSpriteSet_Destroy(int *sprite_set, char flags, int a3)
       ++entry_index;
       ++entry_ptr;
     }
-    while ( entry_index < sprite_set[1025] );
+    while ( entry_index < sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] );
   }
-  if ( sprite_set[1024] )
+  if ( sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] )
     j__nfree_();
-  if ( (flags & 2) == 0 )
+  if ( (flags & CRT_DTOR_FLAG_RELEASE_STORAGE) == 0 )
     return sprite_set;
   j__nfree_();
   return sprite_set;
@@ -1379,7 +1379,7 @@ int  DLXSpriteSet_ConstructCopy(int *sprite_set, DWORD *source_set, signed int e
 {
   int v3; // ecx
 
-  sprite_set[1027] = (int)(intptr_t)&g_DLXSpriteSet_Vtable;
+  sprite_set[DLX_SPRITE_SET_VTABLE_DWORD_INDEX] = (int)(intptr_t)&g_DLXSpriteSet_Vtable;
   DLXSpriteSet_CopyEntriesFrom(sprite_set, source_set, (int)(intptr_t)sprite_set, entry_count);
   return v3;
 }
@@ -1395,11 +1395,11 @@ int * DLXSpriteSet_CopyEntriesFrom(int *sprite_set, DWORD *source_set, int a3, s
   int new_sprite; // eax
 
   DLXSpriteSet_Destroy(sprite_set, 0, a3);
-  sprite_set[1026] = source_set[1026];
-  sprite_set[1025] = source_set[1025];
+  sprite_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX] = source_set[DLX_SPRITE_SET_FILE_SIZE_DWORD_INDEX];
+  sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX] = source_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX];
   entry_index = 0;
-  v7 = sprite_set[1025];
-  sprite_set[1024] = 0;
+  v7 = sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX];
+  sprite_set[DLX_SPRITE_SET_DATA_POINTER_DWORD_INDEX] = 0;
   if ( v7 > 0 )
   {
     dest_entry = sprite_set;
@@ -1418,7 +1418,7 @@ int * DLXSpriteSet_CopyEntriesFrom(int *sprite_set, DWORD *source_set, int a3, s
       }
       ++source_set;
       ++entry_index;
-      entry_count = sprite_set[1025];
+      entry_count = sprite_set[DLX_SPRITE_SET_ENTRY_COUNT_DWORD_INDEX];
       ++dest_entry;
     }
     while ( entry_index < entry_count );

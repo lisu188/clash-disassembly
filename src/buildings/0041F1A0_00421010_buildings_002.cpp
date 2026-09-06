@@ -102,7 +102,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
       v12 = 0;
       *(_WORD *)(uintptr_t)(squadWritePtr + 28) = *squadTemplatePtr;
       *(_BYTE *)(uintptr_t)(squadWritePtr + 30) = *((_BYTE *)squadTemplatePtr + 2);
-      squadWritePtr += 31;
+      squadWritePtr += UNIT_SLOT_RECORD_BYTES;
     }
     if ( i <= 10 )
     {
@@ -197,7 +197,7 @@ signed int  Building_Transfer(int buildingIndex, int targetStackIndex, int trans
     if ( (buildingPtrFlags[435] & 7) != 0 && !transferGoldFlag )
       UnitStack_SetPlagueFlag((int)(intptr_t)newStackPtr);
     Rules_LinkArmyFact(newStackPtr, (int)(intptr_t)newStackPtr, v33, a5, (char)(intptr_t)buildingPtrFlags, (DWORD)(intptr_t)savedregs);
-    if ( !*(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)newStackForFact + 4) + 140051) )
+    if ( !*(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *((unsigned __int8 *)newStackForFact + 4) + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
       Rules_LogBuildingTransferFact(*(unsigned __int16 *)(uintptr_t)(TILE_INDEX(*newStackForFact, newStackPtr[1])), savedBuildingIndex, savedTargetStack);
     return 1;
   }
@@ -293,12 +293,12 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   v13 = buildingByteOffset;
   Debug_Log(a3, -45 * buildingIndex, buildingIndex, (int)(intptr_t)aUnit_capturebu);
   buildingPtr = buildingByteOffset + gameData + BUILDING_TABLE_OFFSET;
-  if ( *(_WORD *)(uintptr_t)(buildingByteOffset + gameData + 509690) )
+  if ( *(_WORD *)(uintptr_t)(buildingByteOffset + gameData + BUILDING_CONSTRUCTION_TURNS_REMAINING_TABLE_OFFSET) )
     return Building_Destroy(buildingByteOffset + gameData + BUILDING_TABLE_OFFSET, buildingByteOffset, buildingIndex, a5);
-  *(_BYTE *)(uintptr_t)(buildingByteOffset + gameData + 509676) = *(_BYTE *)(uintptr_t)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178);
+  *(_BYTE *)(uintptr_t)(buildingByteOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) = *(_BYTE *)(uintptr_t)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET);
   buildingBase = buildingByteOffset + gameData;
-  buildingTechLevel = *(_BYTE *)(uintptr_t)(buildingByteOffset + gameData + 510118) & 7;
-  playerTechLevel = *(_BYTE *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + 147178) + gameData + 140071);
+  buildingTechLevel = *(_BYTE *)(uintptr_t)(buildingByteOffset + gameData + BUILDING_TECH_LEVEL_BITS_TABLE_OFFSET) & 7;
+  playerTechLevel = *(_BYTE *)(uintptr_t)(PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(UNIT_STACK_STRIDE * capturingStackIndex + gameData + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) + gameData + PLAYER_TECH_LEVEL_TABLE_OFFSET);
   if ( buildingTechLevel < playerTechLevel )
   {
     preservedNonTechBits = *(_BYTE *)(uintptr_t)(buildingBase + 510118) & 0xF8;
@@ -308,8 +308,8 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   Rules_SyncCastleFactOwner(UNIT_RECORD(buildingIndex), buildingPtr, a5);
   savedBuildingOffset = v13;
   turnCounter = *(unsigned __int16 *)(uintptr_t)(gameData + GAME_TURN_COUNTER_OFFSET);
-  Rules_LogBuildingCapturedFact(*(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * capturingStackIndex + 147178), buildingIndex, turnCounter);
-  ownerPlayerDataOffset = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(savedBuildingOffset + gameData + 509676) + gameData;
+  Rules_LogBuildingCapturedFact(*(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * capturingStackIndex + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET), buildingIndex, turnCounter);
+  ownerPlayerDataOffset = PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(savedBuildingOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) + gameData;
   if ( buildingIndex == *(_DWORD *)(uintptr_t)(ownerPlayerDataOffset + 140067) )
     *(_DWORD *)(uintptr_t)(ownerPlayerDataOffset + 140067) = -1;
   Building_UnitGetInto(capturingStackIndex, buildingIndex, turnCounter, buildingIndex, a5);
@@ -335,7 +335,7 @@ _DWORD * Unit_CaptureBuilding(int capturingStackIndex, DWORD buildingIndex, int 
   buildingRecordOffset2 = BUILDING_RECORD_SIZE * buildingIndex;
   for ( m = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * buildingIndex + BUILDING_TABLE_OFFSET); m <= *(unsigned __int8 *)(uintptr_t)(buildingRecordOffset + gameData + BUILDING_TABLE_OFFSET) + 1; ++m )
   {
-    for ( j = *(unsigned __int8 *)(uintptr_t)(buildingRecordOffset + gameData + 509675); j <= *(unsigned __int8 *)(uintptr_t)(buildingRecordOffset2 + gameData + 509675) + 1; ++j )
+    for ( j = *(unsigned __int8 *)(uintptr_t)(buildingRecordOffset + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET); j <= *(unsigned __int8 *)(uintptr_t)(buildingRecordOffset2 + gameData + BUILDING_TILE_COLUMN_TABLE_OFFSET) + 1; ++j )
       MiniMap_DrawTileCell((void *)(uintptr_t)m, j);
   }
   return (_DWORD *)(uintptr_t)MiniMap_RedrawTileRect(m, j, j + 1, m + 1);
@@ -365,9 +365,9 @@ _DWORD * Building_Destroy(int a1, char a2, DWORD a3, double a4)
   {
     slotIndex = 0;
     outCount = 0;
-    while ( slotIndex < 12 && outCount < 10 )
+    while ( slotIndex < BUILDING_GARRISON_SLOT_COUNT && outCount < 10 )
     {
-      if ( *(__int16 *)(uintptr_t)(buildingPtr + 31 * slotIndex + 18) != -1 )
+      if ( *(__int16 *)(uintptr_t)(buildingPtr + UNIT_SLOT_RECORD_BYTES * slotIndex + 18) != -1 )
       {
         writeIndex = outCount++;
         occupiedSlots[writeIndex] = slotIndex;
@@ -377,12 +377,12 @@ _DWORD * Building_Destroy(int a1, char a2, DWORD a3, double a4)
     if ( outCount < 10 )
       occupiedSlots[outCount] = -1;
     Building_UnitsLeave((unsigned __int8 *)(uintptr_t)buildingPtr, occupiedSlots, a4);
-    if ( slotIndex < 12 && *(__int16 *)(uintptr_t)(buildingPtr + 31 * slotIndex + 18) != -1 )
+    if ( slotIndex < BUILDING_GARRISON_SLOT_COUNT && *(__int16 *)(uintptr_t)(buildingPtr + UNIT_SLOT_RECORD_BYTES * slotIndex + 18) != -1 )
     {
       outCount = 0;
-      while ( slotIndex < 12 )
+      while ( slotIndex < BUILDING_GARRISON_SLOT_COUNT )
       {
-        if ( *(__int16 *)(uintptr_t)(buildingPtr + 31 * slotIndex + 18) != -1 )
+        if ( *(__int16 *)(uintptr_t)(buildingPtr + UNIT_SLOT_RECORD_BYTES * slotIndex + 18) != -1 )
         {
           writeIndex2 = outCount++;
           occupiedSlots[writeIndex2] = slotIndex;
@@ -427,13 +427,13 @@ int  Building_CalcRemainingConstructionTurns(int buildingPtr)
   buildingBase = buildingPtr;
   if ( !*(_WORD *)(uintptr_t)(buildingPtr + 16) )
     return 0;
-  slotsEnd = buildingPtr + 372;
+  slotsEnd = buildingPtr + BUILDING_GARRISON_SLOTS_BYTES;
   progressPerTurn = 0;
   do
   {
     if ( *(_WORD *)(uintptr_t)(buildingPtr + 18) == UNIT_TYPE_BUILDER )
       progressPerTurn += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
-    buildingPtr += 31;
+    buildingPtr += UNIT_SLOT_RECORD_BYTES;
   }
   while ( buildingPtr != slotsEnd );
   if ( progressPerTurn )
@@ -460,10 +460,10 @@ signed int  Building_FindRandomOwnedCompletedCastle(int ownerPlayer, int a2)
   do
   {
     recordBase = buildingByteOffset + gameData;
-    if ( *(unsigned __int8 *)(uintptr_t)(buildingByteOffset + gameData + 509676) == ownerPlayer && *(_BYTE *)(uintptr_t)(recordBase + 509678) == 2 && !*(_WORD *)(uintptr_t)(recordBase + 509690) )
+    if ( *(unsigned __int8 *)(uintptr_t)(buildingByteOffset + gameData + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == ownerPlayer && *(_BYTE *)(uintptr_t)(recordBase + 509678) == 2 && !*(_WORD *)(uintptr_t)(recordBase + 509690) )
       matchList[++matchCount] = buildingIndex;
     ++buildingIndex;
-    buildingByteOffset += 467;
+    buildingByteOffset += BUILDING_RECORD_SIZE;
   }
   while ( buildingIndex < 100 );
   if ( matchCount )
@@ -1149,7 +1149,7 @@ int  Castle_BuildSchoolWithAnimation(char a1, DWORD runtime_context)
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SCHOOL) != 0 )
   {
-    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(467, 116, a1, runtime_context);
+    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(BUILDING_RECORD_SIZE, 116, a1, runtime_context);
     recordBase = g_SelectedBuildingRecord;
     qmemcpy(recordCopy, (const void *)(uintptr_t)g_SelectedBuildingRecord, 4 * recordDwordCount);
     tailSrc = recordBase + 4 * recordDwordCount;
@@ -1184,7 +1184,7 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD runtime_context)
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_WORKSHOP) != 0 )
   {
-    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(467, 116, a1, runtime_context);
+    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(BUILDING_RECORD_SIZE, 116, a1, runtime_context);
     recordBase = g_SelectedBuildingRecord;
     qmemcpy(recordCopy, (const void *)(uintptr_t)g_SelectedBuildingRecord, 4 * recordDwordCount);
     tailSrc = recordBase + 4 * recordDwordCount;
@@ -1218,7 +1218,7 @@ int  Castle_BuildBarracksWithAnimation(int a1 CLASH95_UNUSED, char a2, DWORD run
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_BARRACKS) != 0 )
   {
-    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(467, 116, a2, runtime_context);
+    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(BUILDING_RECORD_SIZE, 116, a2, runtime_context);
     recordBase = g_SelectedBuildingRecord;
     qmemcpy(recordCopy, (const void *)(uintptr_t)g_SelectedBuildingRecord, 4 * recordDwordCount);
     tailSrc = recordBase + 4 * recordDwordCount;
@@ -1254,7 +1254,7 @@ int  Castle_BuildHospitalWithAnimation(char a1, DWORD runtime_context)
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_HOSPITAL) != 0 )
   {
-    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(467, 116, a1, runtime_context);
+    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(BUILDING_RECORD_SIZE, 116, a1, runtime_context);
     recordBase = g_SelectedBuildingRecord;
     qmemcpy(recordCopy, (const void *)(uintptr_t)g_SelectedBuildingRecord, 4 * recordDwordCount);
     tailSrc = recordBase + 4 * recordDwordCount;
@@ -1295,7 +1295,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD runtime_context)
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(uintptr_t)(g_SelectedBuildingRecord + 416) & BUILDING_ADDON_FLAG_SMITHS) != 0 )
   {
-    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(467, 116, a1, runtime_context);
+    recordCopy = (_BYTE *)(uintptr_t)Mem_Alloc(BUILDING_RECORD_SIZE, 116, a1, runtime_context);
     recordBase = g_SelectedBuildingRecord;
     qmemcpy(recordCopy, (const void *)(uintptr_t)g_SelectedBuildingRecord, 4 * recordDwordCount);
     tailSrc = recordBase + 4 * recordDwordCount;

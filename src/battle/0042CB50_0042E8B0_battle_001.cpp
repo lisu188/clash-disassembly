@@ -68,29 +68,29 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
       }
       else
       {
-        Unit_Info(100, 100, 0, (unsigned __int8 *)(uintptr_t)(g_MapData + 852 + 31 * hoveredUnitIndex), localTileRow, 0);
+        Unit_Info(100, 100, 0, (unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * hoveredUnitIndex), localTileRow, 0);
       }
     }
     targetUnitIndex = *(__int16 *)(uintptr_t)(g_MapData + 40 * tileRow + 2 * tileCol + 1534);
     if ( DD_IsLost((int)(intptr_t)g_RenderState) || DD_IsFlipping((int)(intptr_t)g_RenderState) )
       Diagnostics_TraceBattlefieldClickEvent("tile_input", localTileRow, localTileCol, tileRow, tileCol, targetUnitIndex);
-    if ( targetUnitIndex == -1 || *(unsigned __int8 *)(uintptr_t)(31 * targetUnitIndex + g_MapData + 854) != g_CurrentPlayerIndex )
+    if ( targetUnitIndex == -1 || *(unsigned __int8 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * targetUnitIndex + g_MapData + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) != g_CurrentPlayerIndex )
     {
-      if ( !g_Battle_ShootModeEnabled || targetUnitIndex == -1 || *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * targetUnitIndex + 854) == g_CurrentPlayerIndex )
+      if ( !g_Battle_ShootModeEnabled || targetUnitIndex == -1 || *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * targetUnitIndex + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex )
       {
-        if ( targetUnitIndex == -1 || *(_WORD *)(uintptr_t)(31 * g_SelectedUnitIndex + g_MapData + 852) == UNIT_TYPE_RAM )
+        if ( targetUnitIndex == -1 || *(_WORD *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) == UNIT_TYPE_RAM )
         {
           if ( *(_BYTE *)(uintptr_t)(g_MapData + 20 * tileRow + tileCol + 3134) )
           {
             if ( g_Battle_ShootModeEnabled )
             {
               if ( UnitBattle_IsTileWithinRange(g_SelectedUnitIndex, tileRow, tileCol)
-                && (wallShooterUnitRecord = g_MapData + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(uintptr_t)(wallShooterUnitRecord + 860) >= 5u)
+                && (wallShooterUnitRecord = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex, *(unsigned __int8 *)(uintptr_t)(wallShooterUnitRecord + 860) >= 5u)
                 && (unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(wallShooterUnitRecord + 864)) >> 5 < (*(_BYTE *)(uintptr_t)(wallShooterUnitRecord + 864) & 3) + 1 )
               {
                 if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
                 {
-                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
                   g_BattleTargetTileCol = tileCol;
                   Diagnostics_TraceWorldMapActionEvent("battle_wall_shot_enter", g_SelectedUnitIndex, tileRow, tileCol, 0);
                   UnitBattle_ShotWall(g_SelectedUnitIndex, tileRow);
@@ -105,10 +105,10 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
             }
             else
             {
-              rowDelta = *(unsigned __int16 *)(uintptr_t)(31 * g_SelectedUnitIndex + g_MapData + 856) - tileRow;
+              rowDelta = *(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET) - tileRow;
               if ( rowDelta <= 0 )
-                rowDelta = tileRow - *(unsigned __int16 *)(uintptr_t)(31 * g_SelectedUnitIndex + g_MapData + 856);
-              if ( rowDelta != 1 || *(unsigned __int16 *)(uintptr_t)(31 * g_SelectedUnitIndex + g_MapData + 858) != tileCol )
+                rowDelta = tileRow - *(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + BATTLE_UNIT_GRID_X_TABLE_OFFSET);
+              if ( rowDelta != 1 || *(unsigned __int16 *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + BATTLE_UNIT_GRID_Y_TABLE_OFFSET) != tileCol )
               {
                 BattleLog_Disable();
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_move_track_enter", g_SelectedUnitIndex, tileRow, tileCol, targetUnitIndex);
@@ -118,7 +118,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
                 if ( moveTrackResult )
                 {
                   pathCostPacked = moveTrackResult[1];
-                  if ( HIWORD(pathCostPacked) + 5 <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
+                  if ( HIWORD(pathCostPacked) + 5 <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) )
                     cursorDesc = &g_CursorDesc_Attack;
                   else
                     cursorDesc = &g_CursorDesc_Blocked;
@@ -133,7 +133,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
               else
               {
                 pathCostPacked = 0;
-                if ( *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860) >= 5u )
+                if ( *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) >= 5u )
                   cursorDesc = &g_CursorDesc_Attack;
                 else
                   cursorDesc = &g_CursorDesc_Blocked;
@@ -141,19 +141,19 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
               Diagnostics_TraceWorldMapActionEvent(
                 "battle_wall_selected_state",
                 g_SelectedUnitIndex,
-                *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852),
-                (*(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 856) << 8)
-                  | *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 858),
-                *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 864));
+                *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET),
+                (*(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_GRID_X_TABLE_OFFSET) << 8)
+                  | *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_GRID_Y_TABLE_OFFSET),
+                *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET));
               Diagnostics_TraceWorldMapActionEvent(
                 "battle_wall_move_track_cost",
                 g_SelectedUnitIndex,
                 HIWORD(pathCostPacked),
-                *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860),
+                *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET),
                 targetUnitIndex);
               if ( DD_IsFlipping((int)(intptr_t)g_RenderState) && cursorDesc == &g_CursorDesc_Attack )
               {
-                Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_enter", g_SelectedUnitIndex, tileRow, tileCol, 0);
                 UnitBattle_AttackWall(g_SelectedUnitIndex, tileRow, 0, tileCol);
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_return", g_SelectedUnitIndex, tileRow, tileCol, 0);
@@ -181,9 +181,9 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
               "battle_move_track_cost",
               g_SelectedUnitIndex,
               HIWORD(pathCostPacked),
-              *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860),
+              *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET),
               targetUnitIndex);
-            if ( HIWORD(pathCostPacked) <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
+            if ( HIWORD(pathCostPacked) <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) )
             {
               if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
               {
@@ -191,8 +191,8 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
                 moveTrackPath = UnitBattle_MoveTrack(g_SelectedUnitIndex, tileRow, tileRow, tileCol, targetUnitIndex);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_track_return", g_SelectedUnitIndex, tileRow, tileCol, targetUnitIndex);
                 v22 = g_MapData;
-                *(_DWORD *)(uintptr_t)(31 * g_SelectedUnitIndex + g_MapData + 875) = (_DWORD)(uintptr_t)(moveTrackPath);
-                Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+                *(_DWORD *)(uintptr_t)(BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData + 875) = (_DWORD)(uintptr_t)(moveTrackPath);
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_enter", g_SelectedUnitIndex, tileRow, tileCol, targetUnitIndex);
                 UnitBattle_Move(g_SelectedUnitIndex, 0, 0, 0);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_return", g_SelectedUnitIndex, tileRow, tileCol, targetUnitIndex);
@@ -206,20 +206,20 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
             else
             {
               cursorDesc = &g_CursorDesc_Blocked;
-              Diagnostics_TraceWorldMapActionEvent("battle_move_insufficient_ap", g_SelectedUnitIndex, HIWORD(pathCostPacked), *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860), targetUnitIndex);
+              Diagnostics_TraceWorldMapActionEvent("battle_move_insufficient_ap", g_SelectedUnitIndex, HIWORD(pathCostPacked), *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET), targetUnitIndex);
             }
           }
           goto LABEL_13;
         }
         if ( DD_IsLost((int)(intptr_t)g_RenderState) )
-          Unit_Info(100, 100, 0, (unsigned __int8 *)(uintptr_t)(g_MapData + 852 + 31 * targetUnitIndex), targetUnitIndex, 0);
+          Unit_Info(100, 100, 0, (unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * targetUnitIndex), targetUnitIndex, 0);
         BattleLog_Disable();
         moveTrackResult = UnitBattle_MoveTrackNear(g_SelectedUnitIndex, tileRow, tileCol, targetUnitIndex);
         BattleLog_Enable();
         if ( moveTrackResult )
         {
           pathCostPacked = moveTrackResult[0] ? moveTrackResult[1] : 0;
-          if ( HIWORD(pathCostPacked) + 5 <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
+          if ( HIWORD(pathCostPacked) + 5 <= (int)*(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET) )
             cursorDesc = &g_CursorDesc_Attack;
           else
             cursorDesc = &g_CursorDesc_Blocked;
@@ -227,7 +227,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
           if ( DD_IsFlipping((int)(intptr_t)g_RenderState) && cursorDesc == &g_CursorDesc_Attack )
           {
             UnitBattle_Attack(g_SelectedUnitIndex, targetUnitIndex, g_UnitBattleChargeModeActive_532060);
-            if ( *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
+            if ( *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
               UnitBattle_SelectNextControllableUnit(0, v12, tileCol);
             Render_Begin((int)(intptr_t)g_RenderState, 0);
           }
@@ -236,7 +236,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
       }
       else if ( UnitBattle_IsUnitWithinRange(g_SelectedUnitIndex, targetUnitIndex) )
       {
-        shooterUnitRecord = g_MapData + 31 * g_SelectedUnitIndex;
+        shooterUnitRecord = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
         if ( *(unsigned __int8 *)(uintptr_t)(shooterUnitRecord + 860) >= 5u
           && (unsigned __int8)(2 * *(_BYTE *)(uintptr_t)(shooterUnitRecord + 864)) >> 5 < (*(_BYTE *)(uintptr_t)(shooterUnitRecord + 864) & 3) + 1 )
         {
@@ -253,7 +253,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
     else if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
     {
       currentPlayer = g_CurrentPlayerIndex;
-      if ( *(unsigned __int8 *)(uintptr_t)(targetUnitRecordOffset + g_MapData + 854) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(uintptr_t)(targetUnitRecordOffset + g_MapData + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex )
       {
         prevSelectedUnitIndex = g_SelectedUnitIndex;
         if ( targetUnitIndex != g_SelectedUnitIndex )
@@ -263,7 +263,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction(void)
           UnitBattle_RedrawUnitFootprint(prevSelectedUnitIndex);
           UnitBattle_RedrawUnitFootprint(targetUnitIndex);
           UnitBattle_DrawSelectedUnitPanel(0, 1, currentPlayer, tileCol);
-          Audio_PlayUnitActivateSound(*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+          Audio_PlayUnitActivateSound(*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
         }
       }
     }
@@ -336,7 +336,7 @@ int UnitBattle_RefreshSelectedActionButtons(void)
   g_RenderDevice = (_UNKNOWN*)(&g_MainRenderDevice);
   if ( g_UnitBattleChargeModeActive_532060 )
     UnitBattle_RefreshSelectedUnitUI();
-  selected_type_offset = 88 * *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852);
+  selected_type_offset = UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET);
   if ( !g_UnitTypeMaxRange_512582[selected_type_offset] )
   {
     g_Battle_ShootModeEnabled = 0;
@@ -378,10 +378,10 @@ int  UnitBattle_SelectNextControllableUnit(int widget, int a2, char a3)
   Diagnostics_TraceWorldMapActionEvent("battle_action_next_unit_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, widget, a2);
   if ( widget )
     UIWidget_PlayPressedReleaseAnimationWithDelay(widget, a2);
-  for ( i = (g_SelectedUnitIndex + 1) % 22; i != g_SelectedUnitIndex; i = (i + 1) % 22 )
+  for ( i = (g_SelectedUnitIndex + 1) % BATTLE_UNIT_ENTRY_COUNT; i != g_SelectedUnitIndex; i = (i + 1) % BATTLE_UNIT_ENTRY_COUNT )
   {
-    unitRecord = 31 * i + g_MapData;
-    if ( *(__int16 *)(uintptr_t)(unitRecord + 852) != -1 && *(unsigned __int8 *)(uintptr_t)(unitRecord + 854) == g_CurrentPlayerIndex )
+    unitRecord = BATTLE_UNIT_ENTRY_STRIDE * i + g_MapData;
+    if ( *(__int16 *)(uintptr_t)(unitRecord + BATTLE_UNIT_ENTRIES_OFFSET) != -1 && *(unsigned __int8 *)(uintptr_t)(unitRecord + 854) == g_CurrentPlayerIndex )
       break;
   }
   mapData = g_MapData;
@@ -389,18 +389,18 @@ int  UnitBattle_SelectNextControllableUnit(int widget, int a2, char a3)
   Diagnostics_TraceWorldMapActionEvent(
     "battle_action_next_unit_selected",
     g_SelectedUnitIndex,
-    *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 856),
-    *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 858),
+    *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_GRID_X_TABLE_OFFSET),
+    *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_GRID_Y_TABLE_OFFSET),
     0);
   if ( !UnitBattle_IsTileInViewport(
-          *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * i + 856),
-          *(unsigned __int16 *)(uintptr_t)(g_MapData + 31 * i + 858)) )
+          *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * i + BATTLE_UNIT_GRID_X_TABLE_OFFSET),
+          *(unsigned __int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * i + BATTLE_UNIT_GRID_Y_TABLE_OFFSET)) )
     UnitBattle_CenterViewOnUnit(i);
   UnitBattle_RefreshSelectedActionButtons();
   UnitBattle_RedrawVisibleGrid();
   UnitBattle_DrawSelectedUnitPanel(0, 1, mapData, a3);
-  selectedUnitRecord = g_MapData + 31 * g_SelectedUnitIndex;
-  result = *(__int16 *)(uintptr_t)(selectedUnitRecord + 852);
+  selectedUnitRecord = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
+  result = *(__int16 *)(uintptr_t)(selectedUnitRecord + BATTLE_UNIT_ENTRIES_OFFSET);
   if ( result != -1 )
   {
     if ( *(_DWORD *)(uintptr_t)(gameData + PLAYER_DATA_STRIDE * *(unsigned __int8 *)(uintptr_t)(selectedUnitRecord + 854) + 140051) )
@@ -426,7 +426,7 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
   (void)a5;
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_shoot_toggle_enter", g_SelectedUnitIndex, g_Battle_ShootModeEnabled, (int)widget, 0);
-  type_offset = 88 * *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852);
+  type_offset = UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET);
   result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
   if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
@@ -494,7 +494,7 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
   (void)a5;
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_charge_toggle_enter", g_SelectedUnitIndex, g_UnitBattleChargeModeActive_532060, (int)widget, 0);
-  type_offset = 88 * *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852);
+  type_offset = UNIT_TYPE_METADATA_STRIDE * *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET);
   result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
   if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
@@ -547,8 +547,8 @@ int  UnitBattle_HandlePrepareDefenceAction(int widget, int a2, DWORD a3, char a4
   Diagnostics_TraceWorldMapActionEvent("battle_action_prepare_defence_enter", g_SelectedUnitIndex, widget, a2, 0);
   defenceMessageStrings[4] = a2;
   mapData = g_MapData;
-  result = 31 * g_SelectedUnitIndex;
-  if ( (*(_BYTE *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 874) & 1) == 0 )
+  result = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex;
+  if ( (*(_BYTE *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_BATTLE_STATE_BITS_TABLE_OFFSET) & 1) == 0 )
   {
     UIWidget_PlayPressedReleaseAnimationWithDelay(widget, g_SelectedUnitIndex);
     if ( !UnitBattle_Defence(g_SelectedUnitIndex, 0, a3) )
@@ -562,8 +562,8 @@ int  UnitBattle_HandlePrepareDefenceAction(int widget, int a2, DWORD a3, char a4
     Diagnostics_TraceWorldMapActionEvent(
       "battle_action_prepare_defence_done",
       g_SelectedUnitIndex,
-      *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 860),
-      *(unsigned __int8 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 864),
+      *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ACTION_POINTS_TABLE_OFFSET),
+      *(unsigned __int8 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET),
       0);
     return UnitBattle_DrawSelectedUnitPanel(0, 1, mapData, a4);
   }
@@ -864,7 +864,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int aiMode, int a2, int a3)
   int j; // [esp+24h] [ebp-1Ch]
 
   Diagnostics_TraceWorldMapActionEvent("battle_panel_anim_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, aiMode, 0);
-  UnitBattle_DrawSelectedUnitPanel(g_MapData + 852 + 31 * g_SelectedUnitIndex, 0, a2, a3);
+  UnitBattle_DrawSelectedUnitPanel(g_MapData + BATTLE_UNIT_ENTRIES_OFFSET + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex, 0, a2, a3);
   Diagnostics_TraceWorldMapActionEvent("battle_panel_anim_after_panel", g_SelectedUnitIndex, g_CurrentPlayerIndex, aiMode, 0);
   Render_Pump();
   g_RenderDevice = (_UNKNOWN*)(&g_MainRenderDevice);
@@ -875,7 +875,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int aiMode, int a2, int a3)
     v5 = -(char)i;
     g_UnitBattlePanelStatAnimCounters[v4] = v5;
   }
-  unitRecord = 31 * g_SelectedUnitIndex + g_MapData;
+  unitRecord = BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + g_MapData;
   volleyCount = *(_BYTE *)(uintptr_t)(unitRecord + 864) & 3;
   g_UnitBattlePanelVolleyIconChar = 9 * volleyCount;
   moraleValue = *(char *)(uintptr_t)(unitRecord + 863);
@@ -1093,24 +1093,24 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD phaseFlag)
   g_SelectedUnitIndex = *(_DWORD *)(uintptr_t)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_restore_selected", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceBattleUnitSnapshot("turn_loop_after_restore_selected");
-  if ( *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
+  if ( *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET) == -1 )
   {
-    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_selected_empty", g_SelectedUnitIndex, *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852), 0, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_selected_empty", g_SelectedUnitIndex, *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET), 0, 0);
     slotIndex = g_SelectedUnitIndex + 1;
     if ( g_SelectedUnitIndex + 1 != g_SelectedUnitIndex )
     {
       a1 = g_SelectedUnitIndex;
       do
       {
-        unitRecord = g_MapData + 31 * slotIndex;
-        if ( *(__int16 *)(uintptr_t)(unitRecord + 852) != -1 && *(unsigned __int8 *)(uintptr_t)(unitRecord + 854) == g_CurrentPlayerIndex )
+        unitRecord = g_MapData + BATTLE_UNIT_ENTRY_STRIDE * slotIndex;
+        if ( *(__int16 *)(uintptr_t)(unitRecord + BATTLE_UNIT_ENTRIES_OFFSET) != -1 && *(unsigned __int8 *)(uintptr_t)(unitRecord + 854) == g_CurrentPlayerIndex )
           break;
-        slotIndex = (slotIndex + 1) % 22;
+        slotIndex = (slotIndex + 1) % BATTLE_UNIT_ENTRY_COUNT;
       }
       while ( slotIndex != g_SelectedUnitIndex );
     }
     g_SelectedUnitIndex = slotIndex;
-    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_find_selected", g_SelectedUnitIndex, a1, *(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852), 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_find_selected", g_SelectedUnitIndex, a1, *(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET), 0);
   }
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_action_buttons", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   UnitBattle_RefreshSelectedActionButtons();
@@ -1154,7 +1154,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD phaseFlag)
       if ( UIWidgetTable_PollHoverAndActions((_DWORD*)(g_UnitBattleActionWidgetTable), loopExitCode) == 1 )
       {
         v4 = (int)(uintptr_t)UnitType_GetLocalizedName(
-          (unit_type)*(__int16 *)(uintptr_t)(g_MapData + 31 * g_SelectedUnitIndex + 852));
+          (unit_type)*(__int16 *)(uintptr_t)(g_MapData + BATTLE_UNIT_ENTRY_STRIDE * g_SelectedUnitIndex + BATTLE_UNIT_ENTRIES_OFFSET));
         Tooltip_ShowText(3, (char *)(uintptr_t)v4, bannerTexts[0]);
       }
       if ( !Battle_HasUnitsForBothSides() )
@@ -1210,7 +1210,7 @@ void  HandleBattleResults(
   for ( i = 0; i < 10; ++i )
   {
     *attackerSentinelPtr = -1;
-    attackerSentinelPtr = (_WORD *)((char *)attackerSentinelPtr + 31);
+    attackerSentinelPtr = (_WORD *)((char *)attackerSentinelPtr + UNIT_SLOT_RECORD_BYTES);
   }
   if ( defenderFormation )
   {
@@ -1218,7 +1218,7 @@ void  HandleBattleResults(
     for ( j = 0; j < 10; ++j )
     {
       *defenderSentinelPtr = -1;
-      defenderSentinelPtr = (_WORD *)((char *)defenderSentinelPtr + 31);
+      defenderSentinelPtr = (_WORD *)((char *)defenderSentinelPtr + UNIT_SLOT_RECORD_BYTES);
     }
   }
   else
@@ -1229,7 +1229,7 @@ void  HandleBattleResults(
     {
       ++sentinelIndex;
       *buildingSentinelPtr = -1;
-      buildingSentinelPtr = (_WORD *)((char *)buildingSentinelPtr + 31);
+      buildingSentinelPtr = (_WORD *)((char *)buildingSentinelPtr + UNIT_SLOT_RECORD_BYTES);
     }
     while ( sentinelIndex < 12 );
   }
@@ -1238,23 +1238,23 @@ void  HandleBattleResults(
     defenderDest = (unsigned __int8 *)(uintptr_t)(defenderFormation + 6);
   else
     defenderDest = buildingRecord + 18;
-  for ( k = 0; k != 682; k += 31 )
+  for ( k = 0; k != BATTLE_UNIT_ENTRIES_BYTES; k += UNIT_SLOT_RECORD_BYTES )
   {
     v12 = g_MapData;
     unitRecord = k + g_MapData;
-    if ( *(__int16 *)(uintptr_t)(k + g_MapData + 852) != -1 )
+    if ( *(__int16 *)(uintptr_t)(k + g_MapData + BATTLE_UNIT_ENTRIES_OFFSET) != -1 )
     {
       if ( *(unsigned __int8 *)(uintptr_t)(unitRecord + 854) == *(_DWORD *)(uintptr_t)(g_MapData + 836) )
       {
         destRecord = attackerDest;
-        srcRecord = (char *)(uintptr_t)(unitRecord + 852);
-        attackerDest += 31;
+        srcRecord = (char *)(uintptr_t)(unitRecord + BATTLE_UNIT_ENTRIES_OFFSET);
+        attackerDest += UNIT_SLOT_RECORD_BYTES;
       }
       else
       {
         destRecord = (char *)defenderDest;
-        srcRecord = (char *)(uintptr_t)(unitRecord + 852);
-        defenderDest += 31;
+        srcRecord = (char *)(uintptr_t)(unitRecord + BATTLE_UNIT_ENTRIES_OFFSET);
+        defenderDest += UNIT_SLOT_RECORD_BYTES;
       }
       qmemcpy(destRecord, srcRecord, 0x1Cu);
       srcTail = srcRecord + 28;
@@ -1321,14 +1321,14 @@ int  UnitBattle_OverrideControllerOrderBits(int playerAIndex, int overrideA, int
   do
   {
     mapData = g_MapData;
-    *(_DWORD *)&g_BattleUnitOrderBitsBackup[backupIndex] = *(_BYTE *)(uintptr_t)(g_MapData + result + 864) & 3;
+    *(_DWORD *)&g_BattleUnitOrderBitsBackup[backupIndex] = *(_BYTE *)(uintptr_t)(g_MapData + result + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET) & 3;
     if ( *(unsigned __int8 *)(uintptr_t)(mapData + result + 854) == playerAIndex && overrideA
-      || *(unsigned __int8 *)(uintptr_t)(g_MapData + result + 854) == playerBIndex && overrideB )
+      || *(unsigned __int8 *)(uintptr_t)(g_MapData + result + BATTLE_UNIT_OWNER_PLAYER_INDEX_TABLE_OFFSET) == playerBIndex && overrideB )
     {
-      *(_BYTE *)(uintptr_t)(g_MapData + result + 864) |= 3u;
+      *(_BYTE *)(uintptr_t)(g_MapData + result + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET) |= 3u;
     }
     backupIndex += 4;
-    result += 31;
+    result += BATTLE_UNIT_ENTRY_STRIDE;
   }
   while ( backupIndex != 88 );
   return result;
@@ -1351,8 +1351,8 @@ int UnitBattle_RestoreControllerOrderBits(void)
   {
     result = g_MapData;
     savedOrderBits = g_BattleUnitOrderBitsBackup[backupIndex] & 3;
-    currentBits = *(_BYTE *)(uintptr_t)(recordOffset + g_MapData + 864);
-    recordOffset += 31;
+    currentBits = *(_BYTE *)(uintptr_t)(recordOffset + g_MapData + BATTLE_UNIT_STANCE_BITS_TABLE_OFFSET);
+    recordOffset += BATTLE_UNIT_ENTRY_STRIDE;
     currentBits &= 0xFCu;
     *(_BYTE *)(uintptr_t)(recordOffset + g_MapData + 833) = currentBits;
     backupIndex += 4;

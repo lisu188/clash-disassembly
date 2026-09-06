@@ -2,6 +2,28 @@
 
 Last consolidated: 2026-09-06.
 
+## Recovered Numeric Constants: All Canonical Subsystems Reviewed
+
+Track: Win95 reconstruction, behavior-preserving numeric naming. Replaced 1,988
+numeric occurrences in 62 TUs, adding 90 private constants and reusing existing
+macros/enums. The complete census covers all 140 canonical TUs, including small
+integers and floats; remaining data/arithmetic and evidence deferrals retain
+locations and context. All 4,157 function identities and historical hashes remain.
+
+Both GCC 13 and Clang 18 preserve normalized object code, linked symbol layouts
+and `.text`/`.rodata`/`.data` bytes exactly. Macro expansions retain exact tokens;
+173 reviewed existing-enum substitutions account for the token differences.
+Both builds, four public asset-free gates, 135 tooling tests and generator checks
+pass. Existing link/header ratchet differences and native isolated crashes remain
+unchanged; no baseline is raised. Both headless first-Road replays reach the
+accepted turn-6 endpoint, and the final stack-helper supplement retains identical
+linked code and data to the route-tested binaries.
+
+No campaign or behavioral frontier is advanced: normal turn refresh and Road
+continuation remain next, mission 05 remains partial, and direct-route completion
+stays 6/20. Evidence, before/after counts, confidence, rejected candidates and
+exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
+
 ## Builder Road Menu: Original-Matching First Construction
 
 Track: Win95 reconstruction, the actual Building → Road action reached by

@@ -27,8 +27,8 @@ LABEL_2:
   building_record = UNIT_RECORD(building_index);
   if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
   {
-    building_type = *(char *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509678);
-    if ( (building_type == 2 || building_type == 1) && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
+    building_type = *(char *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET);
+    if ( (building_type == 2 || building_type == 1) && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == player_index )
       return UNIT_RECORD(building_index);
   }
   while ( ++building_index < 100 )
@@ -165,7 +165,7 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               if ( theft_castle_index != -1 )
               {
                 theft_castle_offset = BUILDING_RECORD_SIZE * theft_castle_index;
-                *(_DWORD *)(uintptr_t)(gameData + theft_castle_offset + 510112) = 0;
+                *(_DWORD *)(uintptr_t)(gameData + theft_castle_offset + BUILDING_STORED_MONEY_TABLE_OFFSET) = 0;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleTreasuryTheftTexts[(unsigned __int8)g_LanguageIndex],
@@ -179,9 +179,9 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
               {
                 poison_castle_offset = BUILDING_RECORD_SIZE * poison_castle_index;
                 poison_castle_record = gameData + BUILDING_RECORD_SIZE * poison_castle_index;
-                plague_state_byte = *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) & 0xF8;
-                *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) = plague_state_byte;
-                *(_BYTE *)(uintptr_t)(poison_castle_record + 510109) = plague_state_byte | 5;
+                plague_state_byte = *(_BYTE *)(uintptr_t)(poison_castle_record + BUILDING_PLAGUE_STATE_TABLE_OFFSET) & 0xF8;
+                *(_BYTE *)(uintptr_t)(poison_castle_record + BUILDING_PLAGUE_STATE_TABLE_OFFSET) = plague_state_byte;
+                *(_BYTE *)(uintptr_t)(poison_castle_record + BUILDING_PLAGUE_STATE_TABLE_OFFSET) = plague_state_byte | 5;
                 sprintf_(
                   g_QueenDepartureEventMessageBuffer,
                   g_QueenCastleWellPoisoningTexts[(unsigned __int8)g_LanguageIndex],
@@ -278,14 +278,14 @@ LABEL_18:
           player_offset = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
           if ( proposal_accepted )
           {
-            *(_BYTE *)(uintptr_t)(player_offset + gameData + 141443) = 5;
+            *(_BYTE *)(uintptr_t)(player_offset + gameData + PLAYER_QUEEN_RELATIONSHIP_STATE_TABLE_OFFSET) = 5;
             result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
             PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(g_CurrentPlayerIndex) = GAME_TURN_COUNTER + Rng_RandRange(5, 8);
           }
           else
           {
             result = gameData;
-            *(_BYTE *)(uintptr_t)(player_offset + gameData + 141443) = -1;
+            *(_BYTE *)(uintptr_t)(player_offset + gameData + PLAYER_QUEEN_RELATIONSHIP_STATE_TABLE_OFFSET) = -1;
           }
         }
       }
@@ -334,7 +334,7 @@ LABEL_2:
   building_record = UNIT_RECORD(building_index);
   if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4
     && *(__int16 *)(uintptr_t)(building_record + 16) != -1
-    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676) == player_index )
+    && *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == player_index )
   {
     Building_Destroy(UNIT_RECORD(building_index), player_index, a3, a4);
   }
@@ -345,12 +345,12 @@ LABEL_2:
   }
   stack_index = 0;
 LABEL_10:
-  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28
-    && *(unsigned __int8 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + 147178) == player_index )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28
+    && *(unsigned __int8 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) == player_index )
   {
     UnitStack_KillByIndex(stack_index, player_index, a3, a4);
   }
-  while ( ++stack_index < 500 )
+  while ( ++stack_index < UNIT_STACK_TABLE_COUNT )
   {
     if ( stack_index >= 0 )
       goto LABEL_10;
@@ -409,10 +409,10 @@ LABEL_2:
     stack_index = 0;
 LABEL_10:
     if ( (unsigned int)*(__int16 *)(uintptr_t)(UNIT_STACK_STRIDE * stack_index + gameData + UNIT_STACK_TABLE_OFFSET + 6) > 0x28
-      || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178) != nation
+      || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET) != nation
       || (result = UnitStack_HasBuilder(stack_index)) == 0 )
     {
-      while ( ++stack_index < 500 )
+      while ( ++stack_index < UNIT_STACK_TABLE_COUNT )
       {
         if ( stack_index >= 0 )
           goto LABEL_10;
@@ -435,7 +435,7 @@ LABEL_10:
         for ( result = 0; result < 5; ++result )
         {
           player_record = gameData + PLAYER_DATA_STRIDE * result;
-          if ( *(_DWORD *)(uintptr_t)(player_record + 140051) && *(_DWORD *)(uintptr_t)(player_record + 140024) )
+          if ( *(_DWORD *)(uintptr_t)(player_record + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) && *(_DWORD *)(uintptr_t)(player_record + 140024) )
             human_ally_alive = 1;
         }
         if ( human_ally_alive )
@@ -479,13 +479,13 @@ int  Player_CheckForDefeatAndHandleElimination(int player_index, DWORD a2)
 
   stack_index = 0;
 LABEL_2:
-  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147180) <= 0x28 )
+  if ( (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) <= 0x28 )
   {
-    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + 147178);
+    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * stack_index + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET);
     if ( owner_index == player_index )
       return player_index ^ owner_index;
   }
-  while ( ++stack_index < 500 )
+  while ( ++stack_index < UNIT_STACK_TABLE_COUNT )
   {
     if ( stack_index >= 0 )
       goto LABEL_2;
@@ -495,9 +495,9 @@ LABEL_9:
   building_record = UNIT_RECORD(building_index);
   if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4
     && *(__int16 *)(uintptr_t)(building_record + 16) != -1
-    && (*(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509678) || Building_CountGarrison(UNIT_RECORD(building_index))) )
+    && (*(_BYTE *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) || Building_CountGarrison(UNIT_RECORD(building_index))) )
   {
-    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + 509676);
+    owner_index = *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * building_index + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET);
     if ( owner_index == player_index )
       return player_index ^ owner_index;
   }
@@ -516,7 +516,7 @@ LABEL_9:
     survivor_record = gameData + PLAYER_DATA_STRIDE * survivor_index;
     if ( *(_DWORD *)(uintptr_t)(survivor_record + 140024) )
     {
-      if ( *(_DWORD *)(uintptr_t)(survivor_record + 140051) )
+      if ( *(_DWORD *)(uintptr_t)(survivor_record + PLAYER_CONTROLLER_MODE_TABLE_OFFSET) )
         break;
     }
     if ( ++survivor_index >= 5 )
@@ -707,7 +707,7 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
      * store through var_1B1 = table-0x21 after `add eax, 35h`). */
     *(_DWORD *)(void *)&widget_table[field_offset + 0x10] += (unsigned __int8)g_LanguageIndex;
     button_text = *(_DWORD *)(void *)&widget_table[field_offset + 0x14];
-    field_offset += 53;
+    field_offset += WORLD_MAP_ACTION_WIDGET_RECORD_SIZE;
     *(_DWORD *)(void *)&widget_table[field_offset - 0x21] = (unsigned __int8)g_LanguageIndex + button_text;
   }
   while ( field_offset != 212 );
@@ -805,7 +805,7 @@ void Cheat_FillSelectedSquadWithCannons(void)
 
   if ( g_SelectedUnitIndex != -1 )
   {
-    for ( i = 0; ; i += 31 )
+    for ( i = 0; ; i += UNIT_SLOT_RECORD_BYTES )
     {
       squad_count = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
       if ( slot_index >= squad_count )
@@ -813,7 +813,7 @@ void Cheat_FillSelectedSquadWithCannons(void)
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
         UNIT_TYPE_CANNON,
-        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
+        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET));
     }
     WorldMap_RedrawViewport(1);
   }
@@ -836,11 +836,11 @@ signed int Cheat_ClearSelectedSquadDamageFlags(void)
       result = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
       if ( slot_index >= result )
         break;
-      *(_BYTE *)(uintptr_t)(slot_offset + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147192) |= 3u;
+      *(_BYTE *)(uintptr_t)(slot_offset + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_SLOT_STANCE_BITS_TABLE_OFFSET) |= 3u;
       *(_BYTE *)(uintptr_t)(slot_offset + 31 + UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(uintptr_t)(slot_offset
                                                                               + UNIT_STACK_STRIDE * g_SelectedUnitIndex
                                                                               + gameData
-                                                                              + 147192) & 0xF3;
+                                                                              + UNIT_STACK_SLOT_STANCE_BITS_TABLE_OFFSET) & 0xF3;
     }
   }
   return result;
@@ -907,7 +907,7 @@ int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
                            + TILE_MAP_OFFSET);
   if ( (unsigned __int16)tile_occupant_id != 0xFFFF )
   {
-    if ( tile_occupant_id > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * tile_occupant_id + 147180) > 0x28 )
+    if ( tile_occupant_id > 0x1F4 || (unsigned int)*(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * tile_occupant_id + UNIT_STACK_UNIT_SLOTS_TABLE_OFFSET) > 0x28 )
     {
       Building_Destroy(BUILDING_RECORD_SIZE * (tile_occupant_id - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET, gameData, a1, a2);
       return WorldMap_RedrawViewport(1);
@@ -948,11 +948,11 @@ int Cheat_TeleportSelectedUnitToCursor(void)
   {
     *(_WORD *)(uintptr_t)(TILE_ROW_STRIDE * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET)
              + gameData
-             + 2 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176)
+             + 2 * *(__int16 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET)
              + TILE_MAP_OFFSET) = -1;
     *(_WORD *)(uintptr_t)(TILE_INDEX(tile_x, tile_y)) = g_SelectedUnitIndex;
     *(_WORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TABLE_OFFSET) = tile_x;
-    *(_WORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147176) = tile_y;
+    *(_WORD *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_TILE_COLUMN_TABLE_OFFSET) = tile_y;
     return WorldMap_RedrawViewport(1);
   }
   return result;
@@ -972,7 +972,7 @@ signed int Cheat_FillSelectedSquadWithPegasi(void)
 
   if ( g_SelectedUnitIndex != -1 )
   {
-    for ( i = 0; ; i += 31 )
+    for ( i = 0; ; i += UNIT_SLOT_RECORD_BYTES )
     {
       result = Unit_GetSquadCount(UNIT_STACK_STRIDE * g_SelectedUnitIndex + gameData + UNIT_STACK_TABLE_OFFSET);
       if ( slot_index >= result )
@@ -980,7 +980,7 @@ signed int Cheat_FillSelectedSquadWithPegasi(void)
       UnitSlot_InitFromType(
         i + gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 6,
         UNIT_TYPE_PEGASUS,
-        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + 147178));
+        *(_BYTE *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * g_SelectedUnitIndex + UNIT_STACK_OWNER_PLAYER_INDEX_TABLE_OFFSET));
     }
   }
   return result;
@@ -1059,11 +1059,11 @@ void Cheat_SetFactionColorAndCastleFlags(void)
     if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
     {
       building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
-      if ( *(unsigned __int8 *)(uintptr_t)(building_offset + 509676) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(uintptr_t)(building_offset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex )
       {
-        color_flags = *(_BYTE *)(uintptr_t)(building_offset + 510118) & 0xF8;
-        *(_BYTE *)(uintptr_t)(building_offset + 510118) = color_flags;
-        *(_BYTE *)(uintptr_t)(building_offset + 510118) = color_flags | 3;
+        color_flags = *(_BYTE *)(uintptr_t)(building_offset + BUILDING_TECH_LEVEL_BITS_TABLE_OFFSET) & 0xF8;
+        *(_BYTE *)(uintptr_t)(building_offset + BUILDING_TECH_LEVEL_BITS_TABLE_OFFSET) = color_flags;
+        *(_BYTE *)(uintptr_t)(building_offset + BUILDING_TECH_LEVEL_BITS_TABLE_OFFSET) = color_flags | 3;
       }
     }
     do
@@ -1248,7 +1248,7 @@ int Rules_LogMissionSetupInfo(void)
       Rules_Log(log_line, 0, formatted);
     }
     ++player_index;
-    player_offset += 1423;
+    player_offset += PLAYER_DATA_STRIDE;
   }
   return 0;
 }
@@ -1286,7 +1286,7 @@ LABEL_2:
   if ( (unsigned int)*(char *)(uintptr_t)(building_record + 4) < 4 && *(__int16 *)(uintptr_t)(building_record + 16) != -1 )
   {
     building_offset = gameData + BUILDING_RECORD_SIZE * building_index;
-    if ( *(unsigned __int8 *)(uintptr_t)(building_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(building_offset + 509678) == 2 )
+    if ( *(unsigned __int8 *)(uintptr_t)(building_offset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(building_offset + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) == 2 )
       ++castle_count;
   }
   while ( ++building_index < 100 )
@@ -1303,7 +1303,7 @@ LABEL_11:
   if ( (unsigned int)*(char *)(uintptr_t)(fortress_record + 4) < 4 && *(__int16 *)(uintptr_t)(fortress_record + 16) != -1 )
   {
     fortress_offset = gameData + BUILDING_RECORD_SIZE * fortress_scan_index;
-    if ( *(unsigned __int8 *)(uintptr_t)(fortress_offset + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(fortress_offset + 509678) == 1 )
+    if ( *(unsigned __int8 *)(uintptr_t)(fortress_offset + BUILDING_OWNER_PLAYER_INDEX_TABLE_OFFSET) == g_CurrentPlayerIndex && *(_BYTE *)(uintptr_t)(fortress_offset + BUILDING_FOOTPRINT_CLASS_TABLE_OFFSET) == 1 )
       ++fortress_count;
   }
   while ( ++fortress_scan_index < 100 )

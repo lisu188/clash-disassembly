@@ -12305,9 +12305,9 @@ CLASH95_TENTATIVE RenderPrimarySurfaceStorage g_MainRenderDevice;
 
 CLASH95_TENTATIVE RenderSurfaceStorage g_RenderDeviceStorage;
 
-CLASH95_TENTATIVE _BYTE g_DefaultPaletteTable[1024];
+CLASH95_TENTATIVE _BYTE g_DefaultPaletteTable[PALETTE_TABLE_BYTES];
 
-CLASH95_TENTATIVE _BYTE g_PaletteScratchSurfaceBuffer[1024];
+CLASH95_TENTATIVE _BYTE g_PaletteScratchSurfaceBuffer[PALETTE_TABLE_BYTES];
 
 CLASH95_TENTATIVE _BYTE g_PaletteRegionUnusedBuffer5[5];
 
@@ -12513,7 +12513,7 @@ CLASH95_TENTATIVE int g_SelectedBuildingRecord;
 
 CLASH95_TENTATIVE int g_CastleScreenSurface;
 
-CLASH95_TENTATIVE _BYTE g_CastleScreenPaletteBuffer[1024];
+CLASH95_TENTATIVE _BYTE g_CastleScreenPaletteBuffer[PALETTE_TABLE_BYTES];
 
 CLASH95_TENTATIVE int g_ActiveCastleOwnerIsChristian;
 
@@ -12883,7 +12883,7 @@ CLASH95_TENTATIVE int g_PlayGameMenuExitRequested;
 
 CLASH95_TENTATIVE int g_MainMenuRequestedScreen;
 
-CLASH95_TENTATIVE unsigned __int8 g_MenuScreenPaletteBuffer[1024];
+CLASH95_TENTATIVE unsigned __int8 g_MenuScreenPaletteBuffer[PALETTE_TABLE_BYTES];
 
 CLASH95_TENTATIVE int g_MainMenuMusicHandle;
 
@@ -13649,8 +13649,8 @@ _BYTE g_PaletteCrossfadeSourceBuffer[0x408];
 int g_ActiveBlitCursor;
 RenderPrimarySurfaceStorage g_MainRenderDevice;
 RenderSurfaceStorage g_RenderDeviceStorage;
-_BYTE g_DefaultPaletteTable[1024];
-_BYTE g_PaletteScratchSurfaceBuffer[1024];
+_BYTE g_DefaultPaletteTable[PALETTE_TABLE_BYTES];
+_BYTE g_PaletteScratchSurfaceBuffer[PALETTE_TABLE_BYTES];
 _BYTE g_PaletteRegionUnusedBuffer5[5];
 char g_Render_BackgroundColorIndex;
 char g_PaletteRemapRegionUnusedByte;
@@ -13744,7 +13744,7 @@ int g_SavedCursorDescriptor;
 LARGE_INTEGER Frequency;
 int g_SelectedBuildingRecord;
 int g_CastleScreenSurface;
-_BYTE g_CastleScreenPaletteBuffer[1024];
+_BYTE g_CastleScreenPaletteBuffer[PALETTE_TABLE_BYTES];
 int g_ActiveCastleOwnerIsChristian;
 int g_CastleSceneIconSpriteSet;
 int g_CastleAmbientSpriteSet;
@@ -13929,7 +13929,7 @@ int g_DecisionDialogConfirmDisabled;
 int g_PlayGameMenuSpriteSetHandle;
 int g_PlayGameMenuExitRequested;
 int g_MainMenuRequestedScreen;
-unsigned __int8 g_MenuScreenPaletteBuffer[1024];
+unsigned __int8 g_MenuScreenPaletteBuffer[PALETTE_TABLE_BYTES];
 int g_MainMenuMusicHandle;
 int g_PlayGameMenuSelectedAction;
 char g_MultiplayerPlayerSlotTypes[1];
