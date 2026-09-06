@@ -1,0 +1,65 @@
+name: Construct code evidence
+
+on:
+  push:
+    branches:
+      - diagnostics/construct-code-file-evidence
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e81f17e263c6d7c7386a37e525125bac5d393f72
+          persist-credentials: false
+      - name: Extract protected assembly and source metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, re
+          from pathlib import Path
+          assembly = Path('clash95.asm').read_bytes()
+          lines = assembly.decode('latin-1').splitlines()
+          start = next(i for i, line in enumerate(lines) if re.search(r'\bsub_4A7140\s+proc\b', line))
+          end = next(i for i in range(start + 1, len(lines)) if re.search(r'\bsub_4A7140\s+endp\b', lines[i]))
+          print('ASSEMBLY_SHA256', hashlib.sha256(assembly).hexdigest())
+          print('PROCEDURE_START_LINE', start + 1)
+          print('\n'.join(lines[start:end+1]))
+          metadata = json.loads(Path('data/recovered_sources.json').read_text())
+          def inspect(value):
+              if isinstance(value, dict):
+                  if value.get('name') == 'Rules_OpenConstructCodeFile':
+                      print('MANIFEST_ENTRY', json.dumps(value, sort_keys=True))
+                  for child in value.values():
+                      inspect(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      inspect(child)
+          inspect(metadata)
+          PY
+      - name: Package tracked source-only inputs
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 - <<'PY'
+          import subprocess, tarfile
+          from pathlib import Path
+          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          allowed = {'.asm', '.cpp', '.c', '.h', '.py', '.json', '.md', '.sh', '.cmake', '.env', '.script', '.yml', '.toml'}
+          with tarfile.open('recovery-source.tar.gz', 'w:gz') as archive:
+              for name in names:
+                  path = Path(name)
+                  if name and path.is_file() and (path.suffix in allowed or path.name in {'CMakeLists.txt', '.gitignore'}):
+                      archive.add(path, arcname=name, recursive=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: construct-code-recovery-source
+          path: recovery-source.tar.gz
+          retention-days: 7
+          if-no-files-found: error
