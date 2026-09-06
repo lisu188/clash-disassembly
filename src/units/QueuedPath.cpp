@@ -17,3 +17,29 @@ BOOL clash95::QueuedPath::QueuedPath_StartsAtTile(int tileRow, int tileColumn) c
   firstStep = pathBuffer[1];
   return (unsigned __int8)firstStep == tileRow && BYTE1(firstStep) == tileColumn;
 }
+
+BOOL clash95::QueuedPath::QueuedPath_StartsInBuildingFootprint(int buildingIndex) const
+{
+  typedef _DWORD PathWord __attribute__((aligned(1), may_alias));
+  typedef _WORD BuildingWord __attribute__((aligned(1), may_alias));
+  PathWord *pathBuffer = (PathWord *)bytes_;
+  unsigned __int8 *buildingRecord; // eax
+  int firstStep; // edx
+  BOOL result; // eax
+  unsigned __int8 buildingColumn; // bh
+
+  buildingRecord = (unsigned __int8 *)(uintptr_t)(state_ + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (buildingIndex));
+  if ( !*pathBuffer )
+    return 0;
+  firstStep = pathBuffer[1];
+  if ( !buildingRecord[4] )
+    return (_WORD)firstStep == *(BuildingWord *)buildingRecord;
+  result = 0;
+  if ( (unsigned __int8)firstStep >= *buildingRecord && (unsigned __int8)firstStep <= *buildingRecord + 1 )
+  {
+    buildingColumn = buildingRecord[1];
+    if ( BYTE1(firstStep) >= buildingColumn && BYTE1(firstStep) <= buildingColumn + 1 )
+      return 1;
+  }
+  return result;
+}

@@ -6,10 +6,15 @@ Last consolidated: 2026-09-06.
 
 Track: Win95 reconstruction; frontier: the requested behavior-preserving class
 migration. The inventory explicitly assigns all 4,157 identities, including
-1,849 intended game methods across 116 classes. Four unit/path query bodies
+1,849 intended game methods across 116 classes. Five unit/path query bodies
 have been extracted into borrowing classes and relocated to class-named files;
 their original ABI adapters remain. The source inventory is now 142 files.
-This work is in progress, separate from the completed GNU++20 language cutover.
+`QueuedPath` is complete at 2/2 methods; `UnitStack` remains partial at three
+validated queries. The footprint query additionally checks live state rebinding
+and packed alignment on 26,880 cases per compiler/optimization profile. Both
+its extraction and relocation pass production builds, storage comparisons and
+all eight asset-free gates. This work is in progress, separate from the
+completed GNU++20 language cutover.
 
 The four-method differential gate passes GCC 13 and Clang 18 at both optimization
 levels. Extracted production builds preserve legacy identities, named storage,
