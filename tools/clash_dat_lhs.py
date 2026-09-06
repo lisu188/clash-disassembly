@@ -24,6 +24,8 @@ class RecoveredCondition:
     join_test: str | None
     classes: tuple[str, ...] = ()
     tested_slots: tuple[str, ...] = ()
+    alpha_test_indices: tuple[int, ...] = ()
+    join_test_index: int = -1
 
     def as_json(self) -> dict:
         return asdict(self)
@@ -189,6 +191,7 @@ def recover_rule_lhs(path: Path, ir: dict) -> dict:
         for order, join in enumerate(rule["join_path"], start=1):
             rhs = join["rhs"]
             alpha_tests: list[str] = []
+            alpha_test_indices: list[int] = []
             class_names: tuple[str, ...] = ()
             tested_slots: tuple[str, ...] = ()
 
@@ -196,6 +199,7 @@ def recover_rule_lhs(path: Path, ir: dict) -> dict:
                 pattern = f"({rhs['template']} ...)"
                 pattern_node = rhs["pattern_node"]
                 for expr_index in _pattern_test_indices(pattern_node, fact_nodes):
+                    alpha_test_indices.append(expr_index)
                     alpha_tests.append(render_expression(ir, expr_index, classes))
             else:
                 class_bitmap = decode_class_bitmap(ir, rhs["class_bitmap"], classes)
@@ -207,6 +211,7 @@ def recover_rule_lhs(path: Path, ir: dict) -> dict:
                 pattern_node = rhs["pattern_node"]
                 if pattern_node != -1:
                     for expr_index in _pattern_test_indices(pattern_node, object_nodes):
+                        alpha_test_indices.append(expr_index)
                         alpha_tests.append(render_expression(ir, expr_index, classes))
 
             join_test = None
@@ -223,6 +228,8 @@ def recover_rule_lhs(path: Path, ir: dict) -> dict:
                     pattern=pattern,
                     pattern_node=pattern_node,
                     alpha_tests=tuple(alpha_tests),
+                    alpha_test_indices=tuple(alpha_test_indices),
+                    join_test_index=join["network_test"],
                     join_test=join_test,
                     classes=class_names,
                     tested_slots=tested_slots,

@@ -181,7 +181,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
         compare_offset = outer_offset;
         do
         {
-          if ( merged_units[31 * compare_index + 9] > merged_units[compare_offset + 9] )
+          if ( (signed char)merged_units[31 * compare_index + 9] > (signed char)merged_units[compare_offset + 9] )
           {
             sorted_flag = 0;
             swap_a = &merged_units[31 * compare_index];
@@ -208,7 +208,7 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int bu
   {
     do
     {
-      if ( (char)merged_units[healthy_scan_offset + 9] >= 8 )
+      if ( (signed char)merged_units[healthy_scan_offset + 9] >= 8 )
         ++keep_count;
       healthy_scan_offset += 31;
     }
@@ -316,7 +316,6 @@ void  AI_EvaluateStrategicTargetAtTile(
   unsigned int building_id; // eax
   int building_record; // edx
   double score; // st7
-  int v16; // [esp+0h] [ebp-20h]
   float score_float; // [esp+8h] [ebp-18h]
 
   target_id = -1;
@@ -359,8 +358,7 @@ void  AI_EvaluateStrategicTargetAtTile(
        || (target_type != 1 || *(unsigned __int8 *)(uintptr_t)(gameData + BUILDING_RECORD_SIZE * target_id + 509676) == filter_owner)
        && (target_type != 2 || *(unsigned __int8 *)(uintptr_t)(gameData + UNIT_STACK_STRIDE * target_id + 147178) == filter_owner)) )
     {
-      AI_CalcStrategicPriorityScore(target_type, tile_x, origin_x, tile_y, origin_y);
-      score = (double)(int)_CHP(v16, filter_type);
+      score = (double)(int)AI_CalcStrategicPriorityScore(target_type, tile_x, origin_x, tile_y, origin_y);
       if ( score > *best_score_out )
       {
         *best_type_out = target_type;
@@ -374,7 +372,6 @@ void  AI_EvaluateStrategicTargetAtTile(
 // 459389: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
 // 459481: simplified comparisons for 'eax.4': <0 || >=65 became >=65u
 // 45949C: simplified comparisons for 'eax.4': <0 || >=4 became >=4u
-// 459529: variable 'v16' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00459570) --------------------------------------------------------
