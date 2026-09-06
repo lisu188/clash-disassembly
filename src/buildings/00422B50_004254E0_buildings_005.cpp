@@ -725,40 +725,20 @@ BOOL  MapTile_HasEastRoadConnection(int row, int column)
 //----- (00423E90) --------------------------------------------------------
 int  Map_RebuildRoadOverlayAtTile(int row, int column)
 {
-  int maskWest; // esi
-  int v4; // ecx
-  int maskWestSouth; // esi
-  int v6; // ecx
-  int maskWestSouthEast; // esi
-  int v8; // ecx
-  int overlaySprite; // edx
-  int v10; // ecx
-  int columnByteOffset; // ecx
-  int result; // eax
+  // Original 0x423E90 probes west, south, east, then north using the same tile.
+  int connectionMask = 8 * MapTile_HasWestRoadConnection(row, column);
+  connectionMask |= 4 * MapTile_HasSouthRoadConnection(row, column);
+  connectionMask |= 2 * MapTile_HasEastRoadConnection(row, column);
+  connectionMask |= MapTile_HasNorthRoadConnection(row, column);
+  const int overlaySprite = g_RoadOverlaySpriteByConnectionMask[connectionMask];
 
-  /* asm 00423E90: `mov ecx, edx` holds `column` for the whole routine -- it is
-   * reloaded into edx before each of the four probes and finally scaled to
-   * 14*column for the tile offset (all four callees push/pop ecx). */
-  v4 = column;
-  v6 = column;
-  v8 = column;
-  v10 = column;
-  maskWest = 8 * MapTile_HasWestRoadConnection(row, column);
-  maskWestSouth = (4 * MapTile_HasSouthRoadConnection(row, v4)) | maskWest;
-  maskWestSouthEast = (2 * MapTile_HasEastRoadConnection(row, v6)) | maskWestSouth;
-  overlaySprite = g_RoadOverlaySpriteByConnectionMask[maskWestSouthEast | MapTile_HasNorthRoadConnection(row, v8)];
-  columnByteOffset = 14 * v10;
-  result = gameData + TILE_TERRAIN_ROW_STRIDE * row;
-  if ( overlaySprite )
-    *(_WORD *)(uintptr_t)(columnByteOffset + result + 4) = overlaySprite;
-  else
-    *(_WORD *)(uintptr_t)(columnByteOffset + result + 4) = -1;
-  return result;
+  // Preserve the original row-base return, distinct from the updated tile.
+  const int rowBaseAddress = gameData + TILE_TERRAIN_ROW_STRIDE * row;
+  MapTileRecord *tile = (MapTileRecord *)(uintptr_t)(
+      rowBaseAddress + TILE_TERRAIN_RECORD_STRIDE * column);
+  tile->road_or_bridge_tile_id = overlaySprite ? overlaySprite : 0xFFFF;
+  return rowBaseAddress;
 }
-// 423EA7: variable 'v4' is possibly undefined
-// 423EB9: variable 'v6' is possibly undefined
-// 423EC6: variable 'v8' is possibly undefined
-// 423EDF: variable 'v10' is possibly undefined
 // 5141A0: using guessed type int dword_5141A0[27];
 // 5202E4: using guessed type int gameData;
 

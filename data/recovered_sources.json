@@ -2919,7 +2919,7 @@
       "original_line": 5867,
       "source": "src/buildings/00422B50_004254E0_buildings_005.cpp",
       "linkage": "external",
-      "body_sha256": "1bed639bbbdb3037833eea5a6f5e88ffd035d5f80fead9a1c21554fab488350e",
+      "body_sha256": "576396451b97ad36d3143c18757c9e976070af7b68b2a5452b20d7713e42af1c",
       "original_address_range": {
         "start": "0x00423E90",
         "end_exclusive": "0x00423FC0"

@@ -2,6 +2,20 @@
 
 Last consolidated: 2026-09-06.
 
+## Road Function Readability Review
+
+Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
+Four functions have been reviewed individually: bridge approach, crossing cost,
+overlay normalization input and connection-mask rebuild. Reused pinned tile
+fields, removed redundant decompiler state, and preserved original return/call
+semantics. Both compiler builds and public asset-free gates pass; bounded
+original-instruction fixtures support the structured rewrites. Existing
+link/header ratchets remain red; no baseline is raised. The normalization
+lookup for IDs `819..861` still uses incorrect legacy backing and is explicitly
+deferred. Runtime/campaign milestones and the turn-7 frontier remain unchanged.
+See [HUMAN_READABILITY.md](HUMAN_READABILITY.md#function-review-road-helpers-2026-09-06)
+for per-function evidence, exact commands and validation limits.
+
 ## Main Integration: GNU++20 Recovery and Strategic AI
 
 Track: Win95 reconstruction; frontier: integrate completed work into `main`.

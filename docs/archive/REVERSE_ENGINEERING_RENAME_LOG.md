@@ -1,5 +1,16 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: connection-mask rebuild
+
+Track: Win95 reconstruction. Reviewed `Map_RebuildRoadOverlayAtTile` (`0x423E90`)
+individually: one connection mask, original W/S/E/N order, typed road-word write,
+explicit row-base return, and removal of obsolete register-local diagnostics.
+No public name, constant, layout or behavior change; one canonical hash changes.
+Original full-callee probe covers 1,024 input/table cases in four compiler
+profiles, with exact return/write and remaining-memory comparisons. Confidence:
+high for the bounded refactor. Known normalization backing debt remains deferred.
+[Validation and limits](../HUMAN_READABILITY.md#batch-4-map_rebuildroadoverlayattile).
+
 ## 2026-09-06 - Road readability: normalized overlay input
 
 Track: Win95 reconstruction, mission-05 Road helpers. Reviewed

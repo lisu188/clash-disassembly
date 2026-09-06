@@ -211,6 +211,41 @@ lookup fidelity. Names implying localized strings, immutable Road constants or
 animation semantics were rejected. Recover this storage relationship separately
 with original-backed evidence; retain the current campaign/runtime milestones.
 
+### Batch 4: `Map_RebuildRoadOverlayAtTile`
+
+Reviewed `0x423E90` against its original instruction sequence and complete
+27-entry connection table. Replaced four redundant column copies and staged
+decompiler masks with one named mask, preserving separate west, south, east,
+north calls and weights `8/4/2/1`. The existing `MapTileRecord` exposes the
+road/bridge word. The function still loads the table and then `gameData` after
+the probes, writes the low 16 bits of a nonzero sprite (or `0xFFFF` for zero),
+and returns the row base rather than the tile address. Removed obsolete
+undefined-local comments. Confidence is high for this bounded refactor.
+
+Unchanged original rebuild, four directional queries and normalizer run
+together in a native 32-bit adapter at their original addresses. Both PEs have
+identical code/table bytes. The 1,024 cases cover 16 input connection masks at
+eight interior positions, using the retail table and seven uniform replacement
+profiles, including negative and nonzero high-word values. Frozen-before and
+actual-after bodies match original returns and tile words in GCC/Clang O0/O2.
+All remaining arena bytes, all 27 table entries and the game-data pointer stay
+unchanged. Static assembly/source review supplies the call-order proof; there
+is no instrumented call trace. The known `819..861` lookup defect and building
+shortcut are outside this fixture's scope.
+
+Both builds and four public CTests pass; manifest, header/include freshness and
+the existing builder regression pass. All 4157 archive identities and linked
+profiles remain unchanged; scoped warnings stay 28 GCC / 39 Clang. Only this
+function changes in the Debug objects (219 to 181 bytes GCC, 216 to 192 Clang).
+Existing link/header and private-artifact Markdown failures remain separate.
+No new route, visual or campaign milestone is claimed.
+
+Exact commands, source freezes, original binaries, comparisons and independent
+reviews remain under `artifacts/readability/road-functions-20260906/batch-04/`.
+The original probe's first Clang attempt lacked the optional UBSan runtime;
+the retained final run uses trap-mode UBSan in both compilers. No sanitizer
+check is removed except the already documented packed-alignment exclusion.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
