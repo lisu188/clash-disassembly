@@ -2,6 +2,33 @@
 
 Last consolidated: 2026-09-06.
 
+## Main Integration: GNU++20 Recovery and Strategic AI
+
+Track: Win95 reconstruction; frontier: integrate completed work into `main`.
+The GNU++20 migration and first-Road recovery are committed together with
+upstream PR #87's strategic-priority return-value repair, signed regrouping
+comparisons and matcher-completeness tooling. The incoming production-body
+regression now runs as GNU++20 on both supported compilers.
+
+Fresh GCC 13 and Clang 18 builds and all eight asset-free gates pass. The final
+tooling suite passes 120/120; coverage is 6169/6662 lines (92.60%) across all 718
+required functions. The final native run has 1061 passes, zero assertion failures
+and 528 isolated crashes out of 1589; the initial 1059/530 run is also retained,
+without claiming new recovered contracts. Warning checks pass at 6618/6628; existing
+raw link/header failures remain at 427/679 and 14 differences. No baseline is
+raised, and full GitHub CI is not green. The load-sensitive first tooling
+attempt and unfinished work are preserved.
+
+The final default headless suite reports 11 passes, two existing first-mission
+selection failures and eight skips. Menu Exit and castle economy pass in this
+run; historical timing failures are not declared fixed. Restored-header
+rebuilds reproduce both production executable/archive hashes exactly.
+
+No campaign endpoint or visual-fidelity claim advances. The first-Road endpoint
+below remains the highest compared C++ state. Integration commits, exact
+commands, history audit, preserved worktrees and validation limits are recorded
+in [INTEGRATION_20260906.md](INTEGRATION_20260906.md).
+
 ## Builder Road Menu: Original-Matching First Construction
 
 Track: Win95 reconstruction, the actual Building → Road action reached by
