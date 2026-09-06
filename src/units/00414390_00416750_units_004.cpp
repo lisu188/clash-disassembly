@@ -1044,30 +1044,7 @@ int  Math_SinDegreesQ16(signed int degrees)
   return clash95::WorldGeometry(g_MathSinTableQ16).Math_SinDegreesQ16(degrees);
 }
 
-int  clash95::WorldGeometry::Math_SinDegreesQ16(signed int degrees) const
-{
-  int angle; // edx
-  int absAngle; // edx
 
-  // x86 NEG preserves INT_MIN; its scaled DWORD address wraps to table[0].
-  if ( degrees == INT32_MIN )
-    return -state_[0];
-
-  angle = degrees;
-  if ( degrees < 0 )
-  {
-    absAngle = -degrees;
-    if ( -degrees >= 360 )
-      absAngle %= 360;
-    return -state_[absAngle];
-  }
-  else
-  {
-    if ( degrees >= 360 )
-      angle = degrees % 360;
-    return state_[angle];
-  }
-}
 // 513434: using guessed type int dword_513434[363];
 
 //----- (00415DD0) --------------------------------------------------------
@@ -1107,30 +1084,7 @@ signed int  Math_CeilSqrt(signed int value)
   return clash95::WorldGeometry(g_MathSinTableQ16).Math_CeilSqrt(value);
 }
 
-signed int  clash95::WorldGeometry::Math_CeilSqrt(signed int value) const
-{
-  int quotient; // eax
-  int estimate; // ecx
 
-  if ( value < 4 )
-    return 1;
-  quotient = value / 20 + 2;
-  estimate = quotient;
-  do
-  {
-    while ( 1 )
-    {
-      estimate = (estimate + quotient) / 2;
-      quotient = value / estimate;
-      if ( estimate - value / estimate <= 0 )
-        break;
-      if ( estimate - value / estimate <= 1 )
-        return estimate;
-    }
-  }
-  while ( value / estimate - estimate > 1 );
-  return estimate;
-}
 
 //----- (00415EA0) --------------------------------------------------------
 __int16  WorldMap_DrawUnitStackOverlayGlyph(int screenX, int screenY, unsigned __int16 *tilePtr)

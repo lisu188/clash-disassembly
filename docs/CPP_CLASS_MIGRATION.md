@@ -1,7 +1,7 @@
 # Game-system class migration
 
-Track: Win95 reconstruction. Frontier: manifest/tooling foundation and the unit
-query pilot. This migration is in progress. The completed GNU++20 language
+Track: Win95 reconstruction. Frontier: unit queries, world geometry and unit-turn
+extraction. This migration is in progress. The completed GNU++20 language
 cutover is documented separately in [CPP_MIGRATION.md](CPP_MIGRATION.md).
 
 The reference is `6f7537268e784c538133b714e3ccb77cf54052e4`. Original packed
@@ -19,6 +19,12 @@ rationale. Four declaration-database helpers are tracked separately without
 invented addresses. The five rendering helpers historically filed under `clips`
 are game functions; CLIPS implementations filed under `media` remain procedural.
 Assignment is architectural intent, not proof that a family has migrated.
+
+The separate support audit finds 457 additional definitions outside this
+historical registry, including at least 155 application/SDL behavior candidates.
+Their exact support registry remains to be materialized; the 4,157-identity
+inventory alone cannot establish completion of the entire requested scope.
+See [CPP_CLASS_PLATFORM_INVENTORY.md](CPP_CLASS_PLATFORM_INVENTORY.md).
 
 Schema 3 of `data/recovered_sources.json` retains historical identities,
 addresses, linkage and hashes. The canonical body has its own qualified name,
@@ -186,6 +192,15 @@ runtime with package/header provenance in `baseline/README.md`; no system
 dependency installation or coverage stripping was used.
 
 ## Remaining sequence
+
+`WorldGeometry` adds three extracted and relocated methods after its separately
+committed sine-addressing recovery. Eight historical bodies are now class
+methods in three class-named sources, with 143 ordered translation units.
+Its production differential, build, storage and asset-free gates pass at both
+stages. See [WORLD_GEOMETRY_CLASS_MIGRATION.md](WORLD_GEOMETRY_CLASS_MIGRATION.md).
+The separate [unit-turn logging recovery](UNIT_NEW_TURN_LOGGING_CONTEXT.md)
+prepares that next family. Native/runtime results above describe their stated
+query-pilot snapshots, not untested later changes.
 
 1. Continue class-boundary tooling and validate the next complete families.
 2. Expand unit turns, world movement/visibility/selection and Road families.

@@ -14,19 +14,26 @@ all eight asset-free gates pass without new allowances. Commands and logs are
 `artifacts/cpp-classes/20260906/pilot/*sine-recovery*`. The initial test invocation
 selected the wrong filename and correctly reported zero tests; the corrected
 `test_math_sin_degrees_q16.py` run is recorded separately. Class extraction and
-relocation below are validated preparation; their production integration gates
-follow the recovery commit. No native or runtime outcome is inferred from the
-focused arithmetic fixture.
+relocation now also pass their separate production gates below. No native or
+runtime outcome is inferred from the focused arithmetic fixture.
 
 Production extraction now passes all four differential profiles, both compiler
 builds, both exact migration surface comparisons and all eight asset-free
-gates. The three canonical methods remain at their original translation-unit
-anchors for this commit. Only their three method symbols and the trivial
+gates before source relocation. Only their three method symbols and the trivial
 table-borrowing constructor are added; all legacy identities, named storage,
 data order and initialization profiles are unchanged. Evidence is in
 `world-geometry/extraction-*` and `pilot/*world-geometry-extraction*` beneath
 the private artifact root. The class fixture now pins the actual separate
 recovery commit `dd54ee075b2b16b174eef0f910a23ccd81400bca`.
+
+The unchanged methods are now in `src/world/WorldGeometry.cpp`; relocation
+repeats all four differential profiles, both production builds, both exact
+surface comparisons and all eight asset-free gates successfully. The ordered
+source inventory grows from 142 to 143 by appending this class source to the
+world group. No original source is reordered. Evidence is in
+`world-geometry/relocation-*` and `pilot/*world-geometry-relocation*`.
+Fresh native and headless route validation of the expanded class build remain
+integration gates; the frozen eight-method runtime replay is tracked separately.
 
 ## Review order
 

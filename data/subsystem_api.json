@@ -16792,6 +16792,10 @@
     "g_WorldMap_KeyboardInputDisabled",
     "gameData"
    ]
+  },
+  "src/world/WorldGeometry.cpp": {
+   "referenced": [],
+   "visible": []
   }
  }
 }

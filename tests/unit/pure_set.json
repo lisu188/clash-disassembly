@@ -569,7 +569,7 @@
    "original_address": "0x0040FA80",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 290,
-   "source": "src/units/0040F510_00411560_units_001.cpp",
+   "source": "src/world/WorldGeometry.cpp",
    "implementation": {
     "kind": "method",
     "qualified_name": "clash95::WorldGeometry::Facing_DirectionFromDelta8",
@@ -1000,7 +1000,7 @@
    "original_address": "0x00415E40",
    "original_source": "src/recovered/units/0040F510_units.inc.c",
    "original_line": 5427,
-   "source": "src/units/00414390_00416750_units_004.cpp",
+   "source": "src/world/WorldGeometry.cpp",
    "implementation": {
     "kind": "method",
     "qualified_name": "clash95::WorldGeometry::Math_CeilSqrt",
