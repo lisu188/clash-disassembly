@@ -2,6 +2,24 @@
 
 Last consolidated: 2026-09-06.
 
+## Bare Bridge Candidate Readability
+
+Track: Win95 reconstruction, the reached mission-05 Road helper family.
+The ninth individually reviewed helper, `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+(`0x424120`), now uses named tile fields, single neighbor reads and explicit
+border/terrain checks. Its exact `877..948` remainder rules and raw low-value
+acceptance remain unchanged. Two signed-comparison warnings are removed per
+compiler. All 1,677,926 original-instruction cases match both the frozen before
+and actual after bodies across four compiler profiles.
+
+Both builds, all eight public asset-free gates and 139 tooling tests pass; only
+the reviewed function's executable section changes. All 4157 identities and data layouts
+remain. Existing link/header ratchet failures are retained without baseline
+changes. The first-Road runtime baseline and turn-7 continuation blocker remain
+unchanged; no route or visual milestone is promoted. Exact commands, public
+regression, confidence and limits:
+[HUMAN_READABILITY.md](HUMAN_READABILITY.md#batch-7-maptile_isbarebridgecrossingroadoverlaycandidate).
+
 ## Road Normalization and Numeric Cleanup: Combined Validation
 
 Integrated the shared Road lookup repair `8df94c4` with numeric cleanup merge
@@ -58,9 +76,10 @@ exact validation commands: [MAGIC_NUMBER_RECOVERY.md](MAGIC_NUMBER_RECOVERY.md).
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
-Eight functions have been reviewed individually: bridge approach, crossing cost,
-overlay normalization input, connection-mask rebuild and all four directional
-Road queries. Reused pinned tile fields and removed redundant decompiler state.
+Nine functions have been reviewed individually: bridge approach, crossing cost,
+overlay normalization input, connection-mask rebuild, all four directional
+Road queries and the bare bridge candidate. Reused pinned tile fields and removed
+redundant decompiler state.
 The separately identified `819..861` normalization defect is now repaired using
 the original shared Road backing and guarded initialization. All 65,536 tile IDs
 and previously excluded directional queries match original instructions in four

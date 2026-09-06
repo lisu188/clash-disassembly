@@ -1,5 +1,19 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: bare bridge crossing candidate
+
+Track: Win95 reconstruction. Reviewed `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+(`0x424120`) individually. Reused pinned tile fields, loaded each neighbor once,
+made existing unsigned border conversions explicit and removed register/result
+scaffolding. Preserved the original `877..948` reduction, raw low-value matches,
+directional sets and overlay/terrain checks. No public rename, new layout or
+behavioral blocker removal; one canonical body hash changes and all 4157
+identities remain. Original/before/after comparisons pass 1,677,926 cases per
+body set in each of four compiler profiles. Both builds and eight public gates
+pass; two signed-comparison warnings disappear per compiler. Confidence: high
+within the documented domains, with campaign/runtime milestones unchanged.
+[Commands, regression and limitations](../HUMAN_READABILITY.md#batch-7-maptile_isbarebridgecrossingroadoverlaycandidate).
+
 ## 2026-09-06 - Road normalization: original shared backing restored
 
 Track: Win95 reconstruction. Revisited `Map_NormalizeRoadOverlayTileId`

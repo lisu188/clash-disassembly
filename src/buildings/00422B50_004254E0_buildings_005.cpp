@@ -803,50 +803,46 @@ signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int refRow, int refColum
 //----- (00424120) --------------------------------------------------------
 BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int row, int column)
 {
-  int southOverlay; // ebp
-  int v3; // eax
-  int westOverlay; // ecx
-  unsigned int northOverlay; // edi
-  int eastOverlay; // ebx
-  unsigned __int16 *tilePtr; // eax
-  int baseTileId; // eax
-  BOOL result; // eax
-
-  if ( !row || *(_DWORD *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 == row || !column || column == *(_DWORD *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
+  if ( row == 0
+    || *(const uint32_t *)(uintptr_t)(gameData + MAP_WIDTH_TILES_OFFSET) - 1 == static_cast<uint32_t>(row)
+    || column == 0
+    || static_cast<uint32_t>(column) == *(const uint32_t *)(uintptr_t)(gameData + MAP_HEIGHT_TILES_OFFSET) - 1 )
     return 0;
-  southOverlay = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4);
-  v3 = gameData + TILE_TERRAIN_ROW_STRIDE * row;
-  westOverlay = *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column - 1) + v3 + 4);
-  northOverlay = *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4);
-  eastOverlay = *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column + 1) + v3 + 4);
-  if ( northOverlay >= 0x36D && *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) <= 0x3B4u )
-    northOverlay = (int)(northOverlay - 877) % 6;
-  if ( *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) >= 0x36Du
-    && *(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4) <= 0x3B4u )
-  {
+
+  const MapTileRecord *northTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column);
+  const MapTileRecord *southTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column);
+  const MapTileRecord *westTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column - 1));
+  const MapTileRecord *eastTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column + 1));
+  int northOverlay = northTile->road_or_bridge_tile_id;
+  int southOverlay = southTile->road_or_bridge_tile_id;
+  int westOverlay = westTile->road_or_bridge_tile_id;
+  int eastOverlay = eastTile->road_or_bridge_tile_id;
+
+  // Original 0x42422F..0x4242BD reduces only 877..948 to six remainder values.
+  // Raw values 0..5 also remain eligible for the directional checks below.
+  if ( northOverlay >= 877 && northOverlay <= 948 )
+    northOverlay = (northOverlay - 877) % 6;
+  if ( southOverlay >= 877 && southOverlay <= 948 )
     southOverlay = (southOverlay - 877) % 6;
-  }
-  if ( *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column - 1) + v3 + 4) >= 0x36Du
-    && *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column - 1) + v3 + 4) <= 0x3B4u )
-  {
+  if ( westOverlay >= 877 && westOverlay <= 948 )
     westOverlay = (westOverlay - 877) % 6;
-  }
-  if ( *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column + 1) + v3 + 4) >= 0x36Du
-    && *(unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * (column + 1) + v3 + 4) <= 0x3B4u )
-  {
+  if ( eastOverlay >= 877 && eastOverlay <= 948 )
     eastOverlay = (eastOverlay - 877) % 6;
-  }
-  tilePtr = (unsigned __int16 *)(uintptr_t)(TILE_TERRAIN_RECORD_STRIDE * column + TILE_TERRAIN_ROW_STRIDE * row + gameData);
-  result = 0;
-  if ( tilePtr[1] == 0xFFFF )
-  {
-    baseTileId = *tilePtr;
-    if ( baseTileId >= 603 && baseTileId <= 610 && (northOverlay <= 1 || southOverlay == 1 || southOverlay == 2 || westOverlay == 3 || westOverlay == 4 || eastOverlay == 4 || eastOverlay == 5) )
-      return 1;
-  }
-  return result;
+
+  const MapTileRecord *tile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * column);
+  if ( tile->overlay_tile_id != 0xFFFF )
+    return 0;
+
+  const int terrainTileId = tile->terrain_tile_id;
+  return terrainTileId >= 603 && terrainTileId <= 610
+      && (northOverlay == 0 || northOverlay == 1 || southOverlay == 1 || southOverlay == 2
+          || westOverlay == 3 || westOverlay == 4 || eastOverlay == 4 || eastOverlay == 5);
 }
-// 424328: simplified comparisons for 'edi.4': !=0 && !=1 became >=2u
 // 5202E4: using guessed type int gameData;
 
 //----- (00424370) --------------------------------------------------------

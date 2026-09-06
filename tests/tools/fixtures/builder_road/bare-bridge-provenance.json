@@ -1,0 +1,42 @@
+{
+  "original_function": {
+    "name": "MapTile_IsBareBridgeCrossingRoadOverlayCandidate",
+    "start": "0x424120",
+    "end_exclusive": "0x42436a",
+    "bytes": 586,
+    "sha256": "b80e8472d49fd7b58d6aa5b0237bf4a59f5e9ba7f9419744f48bdfca75b19dc8"
+  },
+  "cases": 600,
+  "input_encoding": "Little-endian uint32 count, then 12 words per case: signed int32 width,height,row,column; uint32 terrain,overlay,centerRoad,north,south,west,east,poisonByte.",
+  "input_bytes": 28804,
+  "input_sha256": "0d81199adb5e4bac1a5fc8c061fa5e544e6e33cdd03d9db376f289d7ffc6442f",
+  "original_output_encoding": "600 signed little-endian int32 returns in input record order",
+  "original_output_bytes": 2400,
+  "original_output_sha256": "b715290deb1e09eb0fa48b5d3c358c33c9e2a8e02f3c5bc9e3e3b0ee03230b8d",
+  "measurement": {
+    "directory": "artifacts/readability/road-functions-20260906/batch-07/original-proof/public-measurement",
+    "commands": "artifacts/readability/road-functions-20260906/batch-07/original-proof/public-measurement/commands.json",
+    "original_probe_sha256": "a14ce7d02d59d1015468649aed833dd47e66affffb0765d0e4e12df4a4483548",
+    "method": "The native i386 adapter fills an arena with each poison byte, sets gameData to arena+4096, writes only the supplied descriptor fields, and invokes unchanged original entry 0x424120. Arena and gameData page are read-only during every call; there are no callees or substituted behaviors.",
+    "retail_executable_provenance": "provenance.json"
+  },
+  "boundary_encoding": "width uint32,height uint32,row int32,column int32,readable dimension pages,null gameData; width occupies the last DWORD of page34, height begins page35, and all tile pages are inaccessible",
+  "boundary_evidence": "Expected zero returns and skipped accesses are assembly-backed by the ordered guards at 0x424120 and return path 0x424338. These 13 protected-page cases are separate from the 600 measured result records above; the measured records also include ordinary zero-dimension and unsigned-wrap border cases.",
+  "boundary_expected_return": 0,
+  "boundary_cases": [
+    [100, 100, 0, -2147483648, 0, 1],
+    [100, 100, 0, 2147483647, 0, 1],
+    [100, 100, 99, 37, 1, 0],
+    [0, 100, -1, 37, 1, 0],
+    [4294967295, 100, -2, 37, 1, 0],
+    [2147483648, 100, 2147483647, 37, 1, 0],
+    [2147483649, 100, -2147483648, 37, 1, 0],
+    [100, 100, 1, 0, 1, 0],
+    [100, 100, 1, 99, 2, 0],
+    [100, 0, 1, -1, 2, 0],
+    [100, 4294967295, 1, -2, 2, 0],
+    [100, 2147483648, 1, 2147483647, 2, 0],
+    [100, 2147483649, 1, -2147483648, 2, 0]
+  ],
+  "limits": "Public files contain no original instructions or new retail data. This compact original-measured set covers the reached predicate and successful boundary guards, not every combination, arbitrary invalid pointers, general coordinate overflow, rendering, or route completion. The private full-domain original oracle is retained separately."
+}

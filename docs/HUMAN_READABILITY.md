@@ -399,6 +399,102 @@ Integration commands and raw results are under this batch's build-validation/
 integration/, integration-audit/ and integration-metadata/ directories. The
 parent gate script is artifacts/readability/road-functions-20260906/batch-06/integration-metadata.sh.
 
+### Batch 7: `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+
+The predicate at `0x424120` now reads four named `MapTileRecord` neighbors,
+reduces the loaded values directly and checks the center's named overlay and
+terrain fields. Removed repeated raw reads, register temporaries and a redundant
+result variable. The original north/south/west/east load order and center checks
+remain explicit. Both dimension comparisons now spell out their existing
+unsigned conversion, removing signed-comparison warnings without widening the
+original equality-only border checks.
+
+Original instructions at `0x42422F..0x4242BD` reduce only `877..948` modulo six.
+Raw values `0..5` still qualify through the direction-specific sets; `949` stays
+outside the reduction. The center's empty sentinel belongs to overlay field
+`+2`, independently of its Road field `+4`; terrain remains `603..610`.
+Reusing `Map_NormalizeRoadOverlayTileId`, strengthening the border checks or
+inventing graphical names for the six remainders would alter or overstate the
+recovered contract, so those alternatives remain rejected.
+
+Track: Win95 reconstruction, the reached mission-05 Road helper family.
+Evidence is the original `sub_424120` assembly, matching local PE instruction
+bytes, existing tile layout assertions and its two recovered Road callers.
+No public symbol, ABI, layout, constant, initializer or legacy hash changes.
+The manifest still contains 4157 identities; this is its only changed body hash.
+No behavioral blocker or campaign milestone is claimed by this readability edit.
+
+Unchanged original instructions run directly in a freestanding i386 probe,
+without replacement callees. The frozen before and actual after bodies match
+all 1,677,926 original results on GCC 13 and Clang 18 at O0/O2. This includes
+all uint16 values independently in each neighbor at four positions, all center
+terrain/overlay values with each connecting direction, 38,416 mixed-neighbor
+tuples and all center Road values. Poisoned unrelated fields, nonsquare and
+synthetic uint32 dimensions, protected border pages and a null `gameData` on
+the first short-circuit path also pass. The arena stays read-only during calls
+and the `gameData` value remains unchanged.
+
+Confidence is high within those tested domains and the reviewed original
+control flow. The test does not exhaust every simultaneous field combination
+or establish arbitrary invalid-address/overflow behavior. Original load order
+is separately visible in the assembly. The exact 586 instruction bytes end at
+`0x42436A`; the six following padding bytes are identified separately.
+
+The asset-free regression in `tests/tools/test_bare_bridge_candidate.py` runs
+the actual body against a digest of 600 original-measured results, with field
+isolation, range boundaries, all six remainder classes and nonsquare maps.
+Thirteen separate protected-page guard cases use assembly-backed zero returns;
+the provenance distinguishes them from the measured stream. Those cases cover
+null `gameData`, skipped height reads, unsigned subtraction wraparound and both
+signed integer extremes. All four strict compiler profiles pass with warnings
+as errors and trapping UBSan, excluding only packed-record alignment. Complete
+arena contents and the global pointer remain unchanged. Public tests require
+neither retail assets nor original instruction bytes.
+The private supplement also executes all 13 guard cases against the original,
+with identical zero returns. Four bounded original instruction traces confirm
+the neighbor and center-field read order, including the row-zero short circuit.
+
+Both incremental GCC 13 and Clang 18 builds and all four public asset-free CTest
+gates per compiler pass. The compile commands are unchanged, only the intended
+object changes, and all other 145 compiled objects retain their hashes. In the
+affected TU, the other 35 executable sections retain identical instructions and
+relocations. The predicate shrinks from 829 to 694 bytes under GCC and 780 to 700
+under Clang in the supported Debug builds. All recovered archive identities and
+data names, classes, sizes and relative order remain unchanged. Scoped warnings
+decrease from 26 to 24 GCC and 37 to 35 Clang, exactly the two explicit unsigned
+comparisons; no warning, link or header baseline is raised.
+Raw link checks retain 428 GCC / 680 Clang differences, and the header ratchet
+retains its existing 14 failures. Manifest, split-source, generated metadata,
+header/include freshness and whitespace checks pass.
+The final full tooling suite passes all 139 tests in 16.437 seconds, with both
+new public regression files unchanged throughout the run.
+
+The existing batch-6 first-Road replay and frame comparisons remain the runtime
+baseline. This predicate is outside the frozen 718-function native coverage set;
+no native fixture or shared-state header changes. The bounded original-function
+proof and collateral-object checks validate this refactor without another
+coverage run or route/frame capture. No fresh runtime or visual result is claimed.
+
+Private source freezes, original measurements, scope review, compiler checks
+and exact commands are retained under
+artifacts/readability/road-functions-20260906/batch-07/.
+
+Reproduce from the WSL repository root:
+
+```sh
+python3 -m unittest discover -s tests/tools -p test_bare_bridge_candidate.py -v
+python3 tools/update_split_manifest_hashes.py
+python3 tools/audit_split_sources.py
+```
+
+The private original probe is at
+artifacts/readability/road-functions-20260906/batch-07/original-proof/validate_original.py.
+Its case, result and command files record the measured phases and exact commands.
+Build commands and comparisons are in that batch's build-validation directory;
+metadata commands are at
+artifacts/readability/road-functions-20260906/batch-07/run-metadata.sh.
+These private local scripts are absent from clean checkouts.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.
