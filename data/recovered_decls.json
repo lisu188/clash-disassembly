@@ -16550,7 +16550,7 @@
     },
     "Rules_OpenConstructCodeFile": {
       "class": "manifest",
-      "decl": "int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD reopenOldFile);",
+      "decl": "int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD allocContext, int reopenOldFile);",
       "home": "clips"
     },
     "Rules_OpenFileErrorMessage": {

@@ -254,7 +254,7 @@ signed int Rules_RegisterMultifieldFunctions(void);
 signed int Rules_RegisterStringBuiltins(void);
 signed int Rules_RegisterMathBuiltins(void);
 signed int Rules_RegisterHelpFunctions(void);
-int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD reopenOldFile);
+int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD allocContext, int reopenOldFile);
 int  Rules_WriteExpressionRefToCode(int theFile, __int16 *theExpression, int maxIndices, char imageID);
 signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, DWORD reopenOldFile);
 signed int Rules_RegisterConstructsToCFunction(void);

@@ -61,7 +61,7 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
     *(_WORD *)(uintptr_t)(functionList + 25) = bsaveIndex;
     functionList = *(_DWORD *)(uintptr_t)(functionList + 27);
   }
-  result = Rules_OpenConstructCodeFile(fileName, 2, 1, 1u);
+  result = Rules_OpenConstructCodeFile(fileName, 2, 1, 1u, 0);
   if ( result )
   {
     Output_WriteFormatted(result, result, result, (int)(intptr_t)asc_507E94, (char)(intptr_t)fileName);
@@ -104,7 +104,7 @@ signed int  Rules_WriteFunctionDefinitionRecordsToCode(const char *fileName)
         entryCount = 1;
         if ( fctnPtr )
         {
-          result = Rules_OpenConstructCodeFile(v37, 2, version, i);
+          result = Rules_OpenConstructCodeFile(v37, 2, version, i, 0);
           v14 = result;
           if ( !result )
             return result;
@@ -388,44 +388,26 @@ signed int  Rules_WriteConstructsToCDriverFile(const char *fileName, char a2, DW
 // 54E6E8: using guessed type int dword_54E6E8;
 
 //----- (004A7140) --------------------------------------------------------
-int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD reopenOldFile)
+int  Rules_OpenConstructCodeFile(const char *fileName, int fileID, int version, DWORD allocContext, int reopenOldFile)
 {
-  char v4; // si
-  int v5; // ecx
-  char *fileMode; // edx
-  int v7; // eax
-  int v8; // ecx
-  int fp; // ebx
-  int v10; // edx
-  int v11; // ecx
-  CHAR fileNameBuffer[84]; // [esp+0h] [ebp-54h] BYREF
+  CHAR fileNameBuffer[84];
 
-  v4 = (char)(intptr_t)fileName;
   sprintf_(fileNameBuffer, "%s%d_%d.c", fileName, fileID, version);
-  if ( v5 )
-    fileMode = aA_0;
-  else
-    fileMode = aW_2;
-  v7 = IO_FOpen(fileNameBuffer, (unsigned __int8 *)fileMode, v5, reopenOldFile);
-  fp = v7;
-  if ( v7 )
+  char *fileMode = reopenOldFile ? aA_0 : aW_2;
+  int fp = IO_FOpen(fileNameBuffer, (unsigned __int8 *)fileMode, reopenOldFile, allocContext);
+  if ( !fp )
   {
-    if ( !v8 )
-    {
-      Output_WriteFormatted(0, v7, v7, (int)(intptr_t)aIncludeS_h, v4);
-      Output_WriteFormatted(v11, v10, v10, (int)(intptr_t)asc_507D2C, fileNameBuffer[0]);
-    }
-    return fp;
-  }
-  else
-  {
-    Rules_OpenFileErrorMessage(v8, (int)(intptr_t)fileNameBuffer);
+    Rules_OpenFileErrorMessage((int)(intptr_t)aConstructsToC, (int)(intptr_t)fileNameBuffer);
     return 0;
   }
+  if ( !reopenOldFile )
+  {
+    Output_WriteFormatted(0, fp, fp, (int)(intptr_t)aIncludeS_h, (int)(intptr_t)fileName);
+    Output_WriteFormatted(0, fp, fp, (int)(intptr_t)asc_507D2C);
+  }
+  return fp;
 }
-// 4A715D: variable 'v5' is possibly undefined
 // 4A7175: variable 'v8' is possibly undefined
-// 4A718C: variable 'v11' is possibly undefined
 // 4A718C: variable 'v10' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
@@ -487,7 +469,7 @@ signed int  Rules_ExpressionToCode(int theFile, __int16 *theExpression, int a3, 
       Output_WriteFormatted(g_ClipsExpressionCodeFileVersion, g_ClipsConstructCodeEntryIndexInFile, theFile, (int)(intptr_t)aED_DLd, g_ConstructsToCImageId);
     if ( g_Rules_ExprCodeNeedNewFileFlag == 1 )
     {
-      dataFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile);
+      dataFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)g_Rules_ConstructsToCodeBaseName, 3, g_ClipsExpressionCodeFileVersion, reopenOldFile, 0);
       g_ClipsCodeDataFile = dataFile;
       if ( !dataFile )
         return -1;
@@ -887,7 +869,7 @@ int  Rules_ConstructCodeFileClose(int result, int *theCount, int maxIndices, _DW
     }
     if ( !*(_DWORD *)(uintptr_t)codeFileInfo )
       return 0;
-    curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion);
+    curFile = Rules_OpenConstructCodeFile((const char *)(uintptr_t)*(_DWORD *)(uintptr_t)codeFileInfo, *(_DWORD *)(uintptr_t)(codeFileInfo + 4), *(_DWORD *)(uintptr_t)(codeFileInfo + 8), (DWORD)(intptr_t)arrayVersion, 1);
     if ( !curFile )
     {
       Rules_ReportSystemError(codeFileInfo, 4);
@@ -968,7 +950,7 @@ int  Rules_ConstructCodeFileOpen(
   }
   else
   {
-    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName);
+    result = Rules_OpenConstructCodeFile(curFileName, curFileID, curVersion, (DWORD)(intptr_t)fileName, reopenOldFile);
     if ( result )
     {
       if ( reopenOldFile )
