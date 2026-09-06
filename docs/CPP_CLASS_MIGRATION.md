@@ -83,8 +83,8 @@ so future source synchronization rejects that reorder before compiling.
 ## Evidence and current limits
 
 The next extraction completes `QueuedPath` with
-`QueuedPath_StartsInBuildingFootprint`. Its body remains in the original source
-until relocation is independently checked. The object now borrows a live
+`QueuedPath_StartsInBuildingFootprint`. After its independent extraction gate,
+the unchanged body was relocated into `QueuedPath.cpp`. The object borrows a live
 `gameData` reference as well as the path bytes; holding an object across state
 rebinding observes the new building table. The original 1x1/2x2 footprint
 branches, byte comparisons and early-return order remain intact.
@@ -98,6 +98,11 @@ asset-free gates pass before relocation. The only newly reviewed text changes
 are the second query and its two-argument borrowing constructor. Evidence is in
 `pilot/*queued-path-extraction*`; the expanded tooling run passes 244 tests.
 This fifth identity is outside the unchanged 718-function coverage set.
+The relocation repeat passes the same differential, both production builds,
+both exact surface comparisons and all eight asset-free gates. It adds no
+translation unit; the ordered inventory remains 142. `QueuedPath` is the first
+fully extracted and relocated class (2/2 assigned identities); the three
+`UnitStack` queries remain a partial family.
 
 The remaining stack family has four assembly-confirmed recovery blockers;
 see [CPP_CLASS_MIGRATION_BLOCKERS.md](CPP_CLASS_MIGRATION_BLOCKERS.md).
@@ -159,7 +164,7 @@ dependency installation or coverage stripping was used.
 
 ## Remaining sequence
 
-1. Complete foundation and pilot extraction/relocation validation and commits.
+1. Continue class-boundary tooling and validate the next complete families.
 2. Expand unit turns, world movement/visibility/selection and Road families.
 3. Migrate buildings, special actions and tactical battle families.
 4. Migrate strategic rules bridges, mission logic, persistence and menus.
