@@ -104,6 +104,29 @@ translation unit; the ordered inventory remains 142. `QueuedPath` is the first
 fully extracted and relocated class (2/2 assigned identities); the three
 `UnitStack` queries remain a partial family.
 
+A fresh five-method native matrix now passes both compiler builds. Clang's
+1,059 passes, one existing assertion failure and 529 crashes match the frozen
+baseline exactly. GCC records 1,060 passes, zero assertions and 529 crashes;
+the unchanged excluded `cov23_strtoulongradix.hex_digit_expect_crash` happens
+to pass in this run, with no new crash identities. This is not a claimed
+behavioral recovery. GCC coverage is 6,170/6,663 (92.60%); only the covered
+`QueuedPath_StartsAtTile` receiver-binding line differs from the frozen line
+counts. All 718 identities have coverage. Exact commands, failed initial
+build-directory/CLI attempts, source hashes and full native outcomes are in
+`queued-path-native/`. The full tooling suite now passes 245 tests.
+The unchanged raw link ratchets remain red at 432 GCC / 684 Clang differences:
+each is its historical 427/679 plus exactly the five reviewed canonical method
+symbols. `pilot/queued-path-raw-link-delta.json` enumerates those additions.
+The stronger migration comparison passes with explicit method/constructor
+allowances and no storage, initialization, legacy identity or order changes.
+The header ratchet still has exactly 14 historical differences.
+
+Borrowing factories are now audited separately from recovered identities.
+The registry records their source, ordered canonical globals and body hash;
+catalog and source audits reject duplicates, unregistered qualified methods,
+relocated storage anchors, stale hashes and factories that do more than bind
+the recorded references. Factories never count toward recovered coverage.
+
 The remaining stack family has four assembly-confirmed recovery blockers;
 see [CPP_CLASS_MIGRATION_BLOCKERS.md](CPP_CLASS_MIGRATION_BLOCKERS.md).
 Those repairs must remain separate from architectural extraction.

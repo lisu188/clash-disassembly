@@ -16,6 +16,8 @@ from pathlib import Path, PurePosixPath
 import re
 import sys
 
+from class_binding_inventory import validate_binding_metadata, validate_binding_sources
+
 
 REPO = Path(__file__).resolve().parents[1]
 REGISTRY = REPO / "data/game_class_registry.json"
@@ -210,6 +212,7 @@ def validate_registry(registry: dict, manifest: dict, declarations: dict | None 
         if expected_helpers is not None:
             for name in sorted(set(expected_helpers) - helper_seen):
                 errors.append(f"unclassified support helper {name}")
+    errors.extend(validate_binding_metadata(registry, manifest, declarations))
     return errors
 
 
@@ -235,6 +238,8 @@ def main(argv: list[str] | None = None) -> int:
         manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
         declarations = json.loads(args.declarations.read_text(encoding="utf-8"))
         errors = validate_registry(registry, manifest, declarations)
+        if not errors:
+            errors.extend(validate_binding_sources(registry, manifest, declarations, REPO))
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(f"game class catalog: {exc}", file=sys.stderr)
         return 1

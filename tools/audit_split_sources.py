@@ -15,6 +15,8 @@ from typing import Any
 from split_source_index import Definition, body_sha256, scan_definitions
 from recovered_implementation import manifest_sources
 from class_source_inventory import SourceInventoryError, resolve_source_inventory
+from class_binding_inventory import validate_binding_sources
+from game_class_catalog import validate_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -216,6 +218,17 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     if manifest is None:
         return audit
     audit.require(manifest.get("schema_version") in (2, 3), "manifest must use schema 2 or 3")
+    if manifest.get("schema_version") == 3:
+        try:
+            registry = json.loads((ROOT / "data/game_class_registry.json").read_text(encoding="utf-8"))
+            declarations = json.loads((ROOT / "data/recovered_decls.json").read_text(encoding="utf-8"))
+            inventory_errors = validate_registry(registry, manifest, declarations)
+            if not inventory_errors:
+                inventory_errors = validate_binding_sources(registry, manifest, declarations, ROOT)
+            audit.errors.extend(inventory_errors)
+            audit.check("registered class bindings", len(registry.get("class_bindings", [])))
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            audit.errors.append(f"class inventory: {error}")
     audit.require(manifest.get("cutover") == "canonical-split", "manifest is not split-only")
     language = manifest.get("language")
     valid_suffixes = LANGUAGE_SUFFIXES.get(language, set()) if isinstance(language, str) else set()

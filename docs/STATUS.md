@@ -22,6 +22,14 @@ data order and initialization profiles. GCC native outcomes match the frozen
 reference exactly at 1,059 passes, zero assertion failures and 530 crashes.
 Coverage is 6,168/6,663 (92.57%), retaining all 718 required identities.
 
+The later complete-QueuedPath run retains all 718 identities at 6,170/6,663
+(92.60%). Clang matches its frozen native outcomes exactly: 1,059 passes,
+one existing assertion and 529 crashes. GCC has 1,060 passes, zero assertions
+and 529 crashes; only an unchanged excluded CRT fixture changes from crash to
+pass, without a claimed recovery. Full per-case results are retained. Current
+raw link differences are 432/684: historical 427/679 plus the five explicitly
+reviewed method symbols. Header differences remain 14; no ratchet is reseeded.
+
 Both relocated compiler builds now pass storage/symbol comparisons and all
 eight asset-free gates. Both compilers also pass first-Road and ordinary-water
 rejection probes; all raw unit slots and visibility bytes match the bounded

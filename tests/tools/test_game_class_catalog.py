@@ -10,6 +10,7 @@ import unittest
 
 
 REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "tools"))
 SPEC = importlib.util.spec_from_file_location("game_class_catalog", REPO / "tools/game_class_catalog.py")
 catalog = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(catalog)
