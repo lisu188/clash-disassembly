@@ -5,10 +5,14 @@
 
 #include "runtime_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int Input_MouseInit(void);
 BOOL Input_MousePresent(void);
 BOOL Input_MouseAcquire(void);
-LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+LRESULT __thiscall Platform_MainWindowProc(void *this_, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 HWND  Platform_CreateMainWindow(HINSTANCE a1, int nCmdShow);
 BOOL  Video_CanContinuePlayback(char a1);
 signed int  Win_BeginModeChange(const char *aviName, char *pathBuffer);
@@ -25,7 +29,7 @@ int  CAviDecompressor_CopyPixelRow16bpp(void *dest, const void *src, int pixelCo
 int  CAviDecompressor_CopyPixelRow24bpp(void *dest, const void *src, int pixelCount);
 int  CAviDecompressor_CopyPixelRow32bpp(void *dest, const void *src, int pixelCount);
 unsigned int  CAviDecompressor_NormalizeColorMask(unsigned int mask);
-BOOL __thiscall Rules_IsObjectPatternKeyword(void *this);
+BOOL __thiscall Rules_IsObjectPatternKeyword(void *this_);
 _DWORD * Rules_ParseObjectPattern(int readSource);
 int  Rules_AnalyzeObjectPatternRestrictions(int topNode);
 _DWORD * Rules_AddObjectPatternNode(int thePattern);
@@ -200,7 +204,7 @@ __int16 * Rules_BsaveWriteDefinstancesExpression(int theDefinstances, int filePt
 const void * Rules_BsaveWriteDefinstancesCounts(int filePtr, int a2);
 int  Rules_BsaveWriteDefinstancesData(int filePtr, int a2);
 const void * Rules_BsaveWriteDefinstancesRecord(int theDefinstances, int filePtr, int a3);
-int __thiscall Rules_BloadAllocateDefinstancesArrays(void *this);
+int __thiscall Rules_BloadAllocateDefinstancesArrays(void *this_);
 signed int Rules_BloadRefreshDefinstances(void);
 _DWORD * Rules_BloadRefreshDefinstancesRecord(_DWORD *bsaveData, int itemIndex);
 int  Rules_BloadRefreshDefinstancesExpression(int bsaveBuffer, int itemIndex);
@@ -301,5 +305,9 @@ signed int  CRT_GetOsHandleFromFd(int fd, int a2);
 unsigned int  CRT_MbcsBackUpOverLeadByte(unsigned int stringStart, unsigned int currentPos);
 int  CRT_IsExtendedMbcsLeadByte(int a1, int a2);
 char * CRT_StrNCpyMbcsSafe(char *dest, const char *src, unsigned int count);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RUNTIME_INTERNAL_H */

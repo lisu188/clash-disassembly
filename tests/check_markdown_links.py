@@ -22,7 +22,7 @@ SKIP_PREFIXES = (
     "docs/archive/",
 )
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
-BACKTICK_PATH_RE = re.compile(r"`([^`\s]+?\.(?:md|json|sh|py|c|h|csv|env|script))`")
+BACKTICK_PATH_RE = re.compile(r"`([^`\s]+?\.(?:md|json|sh|py|cpp|c|h|csv|env|script))`")
 URL_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
 
 

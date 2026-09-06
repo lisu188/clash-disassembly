@@ -1,0 +1,1466 @@
+/* Generated from src/recovered/runtime/004D0560_legacy_runtime.inc.c; original address order retained. */
+/* CLASH95_GENERATED_INCLUDES_BEGIN -- tools/gen_subsystem_headers.py; do not edit */
+#include "../recovered_layout.h"
+#include "runtime_internal.h"
+#include "runtime_state.h"
+#include "runtime_shared_state.h"
+#include "../clips/clips_api.h"
+#include "../media/media_api.h"
+#include "../recovered_legacy_imports.h"
+/* CLASH95_GENERATED_INCLUDES_END */
+
+//----- (004E3440) --------------------------------------------------------
+int * Class_ParseSlot(
+        char *readSource,
+        _DWORD *slotList,
+        int multiSlot,
+        unsigned __int16 *precedenceList,
+        double a5,
+        int fieldSlot)
+{
+  int slot; // esi
+  int *result; // eax
+  _BYTE *slotFlagsPtr; // ecx
+  int insertedList; // ebp
+  int v13; // edx
+  int v14; // ecx
+  int v15; // edx
+  int v16; // ecx
+  int v17; // ecx
+  int v18; // ebx
+  char *v19; // eax
+  int parseStatus; // eax
+  __int16 *v21; // ecx
+  char slotFlagsByte; // cl
+  int v23; // ecx
+  signed int accessFacet; // eax
+  int v25; // ecx
+  signed int storageFacet; // eax
+  int v27; // ecx
+  signed int propagationFacet; // eax
+  int v29; // ecx
+  signed int sourceFacet; // eax
+  int v31; // ecx
+  signed int matchFacet; // eax
+  int v33; // ecx
+  signed int visibilityFacet; // eax
+  int v35; // ecx
+  signed int createAccessorFacet; // eax
+  signed int overrideFacet; // eax
+  int v38; // ecx
+  int overrideMsgSymNode; // eax
+  __int16 parsedConstraint; // [esp+0h] [ebp-1Ch] BYREF
+  int overrideMessageSymbol; // [esp+4h] [ebp-18h] BYREF
+  unsigned __int16 *savedPrecList; // [esp+8h] [ebp-14h]
+  char specbits[16]; // [esp+Ch] [ebp-10h] BYREF
+
+  savedPrecList = precedenceList;
+  IO_OutWriteToken(asc_50E844);
+  specbits[1] = 0;
+  specbits[0] = 0;
+  Parser_NextToken((int)(intptr_t)readSource, (int)(intptr_t)&g_ParserCurrentTokenType);
+  if ( g_ParserCurrentTokenType != 2 || g_ClipsParserTokenValue == g_Symbol_IsA || g_ClipsParserTokenValue == g_Clips_NameSymbol )
+  {
+    Class_DeleteSlotList((int)(intptr_t)slotList);
+    Parser_ReportSyntaxError();
+    return 0;
+  }
+  slot = Class_NewSlot((_DWORD *)(uintptr_t)g_ClipsParserTokenValue);
+  result = Class_InsertSlot(slotList, slot);
+  insertedList = (int)(intptr_t)result;
+  if ( !result )
+    return result;
+  if ( multiSlot )
+    *slotFlagsPtr |= 2u;
+  if ( fieldSlot )
+    specbits[0] |= 2u;
+  Parser_NextToken((int)(intptr_t)readSource, (int)(intptr_t)&g_ParserCurrentTokenType);
+  Rules_IncrementIndentDepth(3);
+  Rules_ResetConstraintParsedFlags(((_WORD*)(&parsedConstraint)));
+  if ( g_ParserCurrentTokenType == 100 )
+  {
+    while ( 1 )
+    {
+      IO_OutNewline();
+      AST_Append(v14, v13);
+      IO_OutWriteToken(asc_50E858);
+      Parser_NextToken((int)(intptr_t)readSource, v15);
+      if ( g_ParserCurrentTokenType != 2 )
+        goto LABEL_11;
+      if ( !strcmp_(v16, ((_DWORD)(uintptr_t)(aDefault_2))) )
+        break;
+      if ( !strcmp_(v17, ((_DWORD)(uintptr_t)(aDefaultDynam_1))) )
+      {
+        v18 = slot;
+        BYTE1(v17) = specbits[0] | 0x80;
+        v19 = readSource;
+        specbits[0] |= 0x80u;
+        goto LABEL_18;
+      }
+      if ( !strcmp_(v17, ((_DWORD)(uintptr_t)(aAccess))) )
+      {
+        accessFacet = Class_ParseSimpleFacet(
+                (int)(intptr_t)readSource,
+                (int)(intptr_t)specbits,
+                2,
+                (int)(intptr_t)aAccess,
+                (int)(intptr_t)aReadWrite,
+                (int)(intptr_t)aReadOnly,
+                (int)(intptr_t)aInitializeOnly,
+                0,
+                0);
+        switch ( accessFacet )
+        {
+          case -1:
+            goto LABEL_12;
+          case 1:
+            *(_BYTE *)(uintptr_t)slot |= 0x10u;
+            break;
+          case 2:
+            *(_BYTE *)(uintptr_t)slot |= 0x20u;
+            break;
+        }
+      }
+      else if ( !strcmp_(v23, ((_DWORD)(uintptr_t)(aStorage))) )
+      {
+        storageFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 0, (int)(intptr_t)aStorage, (int)(intptr_t)aLocal_0, (int)(intptr_t)aShared, 0, 0, 0);
+        if ( storageFacet == -1 )
+          goto LABEL_12;
+        *(_BYTE *)(uintptr_t)slot &= ~1u;
+        *(_DWORD *)(uintptr_t)slot |= storageFacet & 1;
+      }
+      else if ( !strcmp_(v25, ((_DWORD)(uintptr_t)(aPropagation))) )
+      {
+        propagationFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 3, (int)(intptr_t)aPropagation, (int)(intptr_t)aInherit_2, (int)(intptr_t)aNoInherit, 0, 0, 0);
+        if ( propagationFacet == -1 )
+          goto LABEL_12;
+        *(_BYTE *)(uintptr_t)slot &= ~8u;
+        *(_DWORD *)(uintptr_t)slot |= 8 * (propagationFacet & 1);
+      }
+      else if ( !strcmp_(v27, ((_DWORD)(uintptr_t)(aSource))) )
+      {
+        sourceFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 4, (int)(intptr_t)aSource, (int)(intptr_t)aExclusive, (int)(intptr_t)aComposite, 0, 0, 0);
+        if ( sourceFacet == -1 )
+          goto LABEL_12;
+        *(_BYTE *)(uintptr_t)slot &= ~4u;
+        *(_DWORD *)(uintptr_t)slot |= 4 * (sourceFacet & 1);
+      }
+      else if ( !strcmp_(v29, ((_DWORD)(uintptr_t)(aPatternMatch_1))) )
+      {
+        matchFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 5, (int)(intptr_t)aPatternMatch_1, (int)(intptr_t)aNonReactive_0, (int)(intptr_t)aReactive_0, 0, 0, 0);
+        if ( matchFacet == -1 )
+          goto LABEL_12;
+        *(_BYTE *)(uintptr_t)(slot + 1) &= ~2u;
+        *(_DWORD *)(uintptr_t)slot |= (matchFacet & 1) << 9;
+      }
+      else if ( !strcmp_(v31, ((_DWORD)(uintptr_t)(aVisibility))) )
+      {
+        visibilityFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 8, (int)(intptr_t)aVisibility, (int)(intptr_t)aPrivate, (int)(intptr_t)aPublic, 0, 0, 0);
+        if ( visibilityFacet == -1 )
+          goto LABEL_12;
+        *(_BYTE *)(uintptr_t)(slot + 1) &= ~4u;
+        *(_DWORD *)(uintptr_t)slot |= (visibilityFacet & 1) << 10;
+      }
+      else if ( !strcmp_(v33, ((_DWORD)(uintptr_t)(aCreateAccessor))) )
+      {
+        createAccessorFacet = Class_ParseSimpleFacet(
+                (int)(intptr_t)readSource,
+                (int)(intptr_t)specbits,
+                9,
+                (int)(intptr_t)aCreateAccessor,
+                (int)(intptr_t)aRead_0,
+                (int)(intptr_t)aWrite,
+                (int)(intptr_t)aReadWrite,
+                (int)(intptr_t)aNone_2,
+                0);
+        if ( createAccessorFacet == -1 )
+          goto LABEL_12;
+        if ( !createAccessorFacet || createAccessorFacet == 2 )
+          *(_BYTE *)(uintptr_t)(slot + 1) |= 8u;
+        if ( createAccessorFacet == 1 || createAccessorFacet == 2 )
+          *(_BYTE *)(uintptr_t)(slot + 1) |= 0x10u;
+      }
+      else
+      {
+        if ( strcmp_(v35, ((_DWORD)(uintptr_t)(aOverrideMessag))) )
+        {
+          if ( !Rules_IsConstraintAttributeKeyword(*(_DWORD *)(uintptr_t)(g_ClipsParserTokenValue + 16)) )
+            goto LABEL_11;
+          parseStatus = Rules_ParseStandardConstraintAttribute(readSource, (const char *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsParserTokenValue + 16), ((_BYTE*)(&parsedConstraint)), *(_DWORD *)(uintptr_t)(slot + 20), 1);
+          goto LABEL_19;
+        }
+        overrideFacet = Class_ParseSimpleFacet((int)(intptr_t)readSource, (int)(intptr_t)specbits, 10, (int)(intptr_t)aOverrideMessag, 0, 0, 0, (int)(intptr_t)aDefault_3, ((_DWORD*)(&overrideMessageSymbol)));
+        if ( overrideFacet == -1 )
+          goto LABEL_12;
+        if ( overrideFacet == 4 )
+        {
+          Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(slot + 12), v38);
+          overrideMsgSymNode = overrideMessageSymbol;
+          *(_DWORD *)(uintptr_t)(slot + 12) = overrideMessageSymbol;
+          ++*(_DWORD *)(uintptr_t)(overrideMsgSymNode + 4);
+        }
+        *(_BYTE *)(uintptr_t)(slot + 1) |= 0x20u;
+      }
+LABEL_20:
+      Parser_NextToken((int)(intptr_t)readSource, (int)(intptr_t)&g_ParserCurrentTokenType);
+      if ( g_ParserCurrentTokenType != 100 )
+        goto LABEL_21;
+    }
+    v18 = slot;
+    v19 = readSource;
+LABEL_18:
+    parseStatus = Class_ParseDefaultFacet((int)(intptr_t)v19, ((_BYTE*)(specbits)), v17, v18, a5);
+LABEL_19:
+    if ( !parseStatus )
+      goto LABEL_12;
+    goto LABEL_20;
+  }
+LABEL_21:
+  if ( g_ParserCurrentTokenType != 101 )
+  {
+LABEL_11:
+    Parser_ReportSyntaxError();
+LABEL_12:
+    Rules_DecrementIndentDepth(3);
+    Class_DeleteSlotList(insertedList);
+    return 0;
+  }
+  if ( (*(_BYTE *)(uintptr_t)slot & 4) != 0 )
+    Class_BuildCompositeFacets(slot, savedPrecList, (int)(intptr_t)&parsedConstraint, ((_BYTE*)(specbits)));
+  if ( !Class_CheckForFacetConflicts(slot, (int)(intptr_t)&parsedConstraint) || !Rules_CheckConstraintParseConflicts(*(_DWORD *)(uintptr_t)(slot + 20), v21) || !Class_EvaluateSlotDefaultValue((int *)(uintptr_t)slot, specbits, a5) )
+    goto LABEL_12;
+  slotFlagsByte = *(_BYTE *)(uintptr_t)slot;
+  if ( (*(_BYTE *)(uintptr_t)slot & 0x40) == 0 && (slotFlagsByte & 0x10) != 0 && (slotFlagsByte & 0x20) == 0 )
+    *(_BYTE *)(uintptr_t)slot = slotFlagsByte | 1;
+  *(_DWORD *)(uintptr_t)(slot + 20) = ((_DWORD)(uintptr_t)(AST_InternNode((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(slot + 20))));
+  Rules_DecrementIndentDepth(3);
+  return (int *)(uintptr_t)insertedList;
+}
+// 4E34BA: variable 'v11' is possibly undefined
+// 4E34F8: variable 'v14' is possibly undefined
+// 4E34F8: variable 'v13' is possibly undefined
+// 4E350E: variable 'v15' is possibly undefined
+// 4E3562: variable 'v16' is possibly undefined
+// 4E3577: variable 'v17' is possibly undefined
+// 4E35D0: variable 'v21' is possibly undefined
+// 4E36C8: variable 'v23' is possibly undefined
+// 4E3713: variable 'v25' is possibly undefined
+// 4E376C: variable 'v27' is possibly undefined
+// 4E37C5: variable 'v29' is possibly undefined
+// 4E381C: variable 'v31' is possibly undefined
+// 4E3873: variable 'v33' is possibly undefined
+// 4E38E5: variable 'v35' is possibly undefined
+// 4E3924: variable 'v38' is possibly undefined
+// 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
+// 54E6F8: using guessed type int dword_54E6F8;
+// 54E6FC: using guessed type int dword_54E6FC;
+// 54E8FC: using guessed type int dword_54E8FC;
+// 54E900: using guessed type int dword_54E900;
+
+//----- (004E3970) --------------------------------------------------------
+int  Class_DeleteSlotList(int result)
+{
+  int i; // ecx
+  int v2; // edx
+  int v3; // ecx
+  int v4; // edx
+  int v5; // edx
+  int theSlot; // eax
+  int v7; // edx
+
+  for ( i = result; i; *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = g_ClipsMemFreeListTemp )
+  {
+    Class_ReleaseSlotName((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)i + 8));
+    Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v2 + 12), v3);
+    AST_DecrementNodeRefCount((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v4 + 20));
+    theSlot = *(_DWORD *)(uintptr_t)v5;
+    if ( (*(_BYTE *)(uintptr_t)*(_DWORD *)(uintptr_t)v5 & 0x40) != 0 )
+    {
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 16));
+      AST_FreePackedNodeChain(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v7 + 16));
+    }
+    else if ( *(_DWORD *)(uintptr_t)(theSlot + 16) )
+    {
+      Rules_ValueDeinstall(*(_DWORD *)(uintptr_t)(theSlot + 16), i);
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)v5 + 16);
+      *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = g_ClipsMemFreeListTemp;
+    }
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)v5;
+    *(_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = g_ClipsMemFreeListTemp;
+    g_ClipsMemFreeListTemp = v5;
+    *(_DWORD *)(uintptr_t)v5 = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+    result = g_ClipsMemFreeListTemp;
+  }
+  return result;
+}
+// 4E397F: variable 'i' is possibly undefined
+// 4E398C: variable 'v2' is possibly undefined
+// 4E3991: variable 'v3' is possibly undefined
+// 4E3996: variable 'v4' is possibly undefined
+// 4E39A0: variable 'v5' is possibly undefined
+// 4E3A3E: variable 'v7' is possibly undefined
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (004E3A50) --------------------------------------------------------
+int  Class_NewSlot(_DWORD *slotNameSymbol)
+{
+  _DWORD *freeListEntry; // edx
+  signed int slot; // ecx
+  __int16 v4; // dx
+  int parseNode; // eax
+  int v6; // ecx
+  int v7; // edx
+  unsigned int *slotNameRecord; // eax
+  int v9; // ecx
+  unsigned int overrideMessage; // eax
+
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
+  if ( freeListEntry )
+  {
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 176) = *freeListEntry;
+    slot = g_ClipsMemFreeListTemp;
+  }
+  else
+  {
+    slot = Mem_HeapAllocWithRetry((_DWORD *)0x2C);
+  }
+  *(_DWORD *)(uintptr_t)(slot + 24) = 0;
+  v4 = *(_WORD *)(uintptr_t)slot;
+  *(_DWORD *)(uintptr_t)(slot + 4) = 0;
+  *(_DWORD *)(uintptr_t)(slot + 16) = 0;
+  *(_WORD *)(uintptr_t)slot = v4 | 0x240;
+  *(_WORD *)(uintptr_t)slot = v4 & 0xC000 | 0x240;
+  parseNode = Rules_CreateLHSParseNode();
+  *(_DWORD *)(uintptr_t)(v6 + 20) = parseNode;
+  slotNameRecord = Class_InternSlotName(slotNameSymbol, v7, 0);
+  *(_DWORD *)(uintptr_t)(v9 + 8) = ((_DWORD)(uintptr_t)(slotNameRecord));
+  overrideMessage = slotNameRecord[4];
+  *(_DWORD *)(uintptr_t)(v9 + 12) = overrideMessage;
+  ++*(_DWORD *)(uintptr_t)(overrideMessage + 4);
+  return v9;
+}
+// 4E3AAF: variable 'v6' is possibly undefined
+// 4E3AB4: variable 'v7' is possibly undefined
+// 4E3AB9: variable 'v9' is possibly undefined
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (004E3AE0) --------------------------------------------------------
+int * Class_InsertSlot(_DWORD *slotList, int theSlot)
+{
+  int v3; // ecx
+  _DWORD *freeListEntry; // edx
+  int *result; // eax
+  int newLink; // esi
+  _DWORD *scanLink; // eax
+  _DWORD *prevLink; // edx
+  int v9; // edx
+  int v10; // ecx
+
+  v3 = theSlot;
+  freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+  if ( freeListEntry )
+  {
+    g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32);
+    *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 32) = *freeListEntry;
+    result = (int *)(uintptr_t)g_ClipsMemFreeListTemp;
+  }
+  else
+  {
+    result = (int *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)8);
+  }
+  result[1] = 0;
+  newLink = (int)(intptr_t)result;
+  *result = v3;
+  if ( slotList )
+  {
+    scanLink = slotList;
+    while ( *(_DWORD *)(uintptr_t)(v3 + 8) != *(_DWORD *)(uintptr_t)(*scanLink + 8) )
+    {
+      prevLink = scanLink;
+      scanLink = (_DWORD *)(uintptr_t)scanLink[1];
+      if ( !scanLink )
+      {
+        prevLink[1] = newLink;
+        return ((int*)(slotList));
+      }
+    }
+    *(_DWORD *)(uintptr_t)(newLink + 4) = ((_DWORD)(uintptr_t)(slotList));
+    Class_DeleteSlotList(newLink);
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, v9, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDuplicateSlots, v10);
+    return 0;
+  }
+  return result;
+}
+// 4E3B0D: variable 'v3' is possibly undefined
+// 4E3B63: variable 'v9' is possibly undefined
+// 4E3B72: variable 'v10' is possibly undefined
+// 51A614: using guessed type char *off_51A614[5];
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (004E3B80) --------------------------------------------------------
+signed int  Class_ParseSimpleFacet(
+        int readSource,
+        int specbits,
+        signed int facetBit,
+        int facetName,
+        int value1,
+        int value2,
+        int value3,
+        int varName,
+        _DWORD *facetSymbolicValue)
+{
+  _BYTE *specbitBytePtr; // ebx
+  int bitMask; // eax
+  int v13; // edx
+  int v14; // ecx
+  int rtnCode; // ecx
+  int v17; // ecx
+  int v18; // ecx
+  int v19; // ecx
+  int v20; // ecx
+
+  specbitBytePtr = (_BYTE *)(uintptr_t)(((facetBit - (__CFSHL__(facetBit >> 31, 3) + 8 * (facetBit >> 31))) >> 3) + specbits);
+  bitMask = 1 << (facetBit % 8);
+  if ( (*specbitBytePtr & (unsigned __int8)bitMask) != 0 )
+  {
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], facetName, v17);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aFacetAlreadySp, v18);
+    return -1;
+  }
+  *specbitBytePtr |= bitMask;
+  IO_OutWriteToken(asc_50E844);
+  Parser_NextToken(readSource, v13);
+  if ( g_ParserCurrentTokenType == 15 )
+  {
+    if ( varName && !strcmp_(v14, varName) )
+      goto LABEL_5;
+  }
+  else if ( g_ParserCurrentTokenType == 2 )
+  {
+    if ( facetSymbolicValue )
+    {
+      *facetSymbolicValue = g_ClipsParserTokenValue;
+      goto LABEL_5;
+    }
+    if ( !strcmp_(v14, value1) || !strcmp_(v19, value2) || value3 && !strcmp_(v20, value3) )
+    {
+LABEL_5:
+      Parser_NextToken(readSource, (int)(intptr_t)&g_ParserCurrentTokenType);
+      if ( g_ParserCurrentTokenType == 101 )
+        return rtnCode;
+    }
+  }
+  Parser_ReportSyntaxError();
+  return -1;
+}
+// 4E3BDA: variable 'v13' is possibly undefined
+// 4E3C02: variable 'v14' is possibly undefined
+// 4E3C35: variable 'v15' is possibly undefined
+// 4E3C58: variable 'v17' is possibly undefined
+// 4E3C67: variable 'v18' is possibly undefined
+// 4E3CC2: variable 'v19' is possibly undefined
+// 4E3CE8: variable 'v20' is possibly undefined
+// 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
+// 51A614: using guessed type char *off_51A614[5];
+// 54E8FC: using guessed type int dword_54E8FC;
+// 54E900: using guessed type int dword_54E900;
+
+//----- (004E3D20) --------------------------------------------------------
+signed int  Class_ParseDefaultFacet(int readSource, _BYTE *specbits, int a3, int theSlot, double a5)
+{
+  _DWORD *defaultList; // eax
+  int v8; // ecx
+  int v9; // edx
+  int parseError; // [esp+0h] [ebp-18h] BYREF
+  int noneExists; // [esp+4h] [ebp-14h] BYREF
+  _DWORD deriveExists[4]; // [esp+8h] [ebp-10h] BYREF
+
+  deriveExists[3] = a3;
+  if ( (*specbits & 0x40) != 0 )
+  {
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 2, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aDefaultFacetAl, v8);
+    return 0;
+  }
+  *specbits |= 0x40u;
+  parseError = 0;
+  defaultList = (_DWORD *)(uintptr_t)Rules_ParseDefaultAttribute(readSource, 1, 0, *specbits & 0x80, a5, ((_DWORD*)(&noneExists)), deriveExists, ((_DWORD*)(&parseError)));
+  if ( parseError == 1 )
+    return 0;
+  if ( noneExists || deriveExists[0] )
+  {
+    if ( !noneExists )
+    {
+      *specbits &= ~0x40u;
+      return 1;
+    }
+    *(_WORD *)(uintptr_t)theSlot |= 0x180u;
+  }
+  else
+  {
+    *(_DWORD *)(uintptr_t)(theSlot + 16) = ((_DWORD)(uintptr_t)(AST_PackNodeChain(defaultList)));
+    AST_Free(v9);
+    AST_InstallNodeChain((__int16 *)(uintptr_t)*(_DWORD *)(uintptr_t)(theSlot + 16));
+    *(_BYTE *)(uintptr_t)theSlot |= 0x80u;
+  }
+  return 1;
+}
+// 4E3D9D: variable 'v8' is possibly undefined
+// 4E3DB7: variable 'v9' is possibly undefined
+// 51A614: using guessed type char *off_51A614[5];
+
+//----- (004E3DE0) --------------------------------------------------------
+__int16  Class_BuildCompositeFacets(int slot, unsigned __int16 *precedenceList, int parsedConstraint, _BYTE *specbits)
+{
+  unsigned int superIndex; // ecx
+  int arrayOffset; // ebx
+  int result; // eax
+  int v9; // eax
+  int v10; // eax
+  __int16 *packedDefault; // eax
+  int v12; // eax
+  int v13; // eax
+  int v14; // eax
+  int v15; // eax
+  int v16; // eax
+  int v17; // eax
+  int v18; // eax
+  int v19; // eax
+  int inheritedSlotValue; // eax
+  _BYTE *candidateSlot; // eax
+  _DWORD *freeListEntry; // edi
+  void *defaultCopy; // eax
+  _BYTE *compositeSlot; // [esp+8h] [ebp-Ch]
+
+  superIndex = 1;
+  arrayOffset = 4;
+  while ( 1 )
+  {
+    LOWORD(result) = *precedenceList;
+    if ( superIndex >= *precedenceList )
+      break;
+    candidateSlot = (_BYTE *)(uintptr_t)Class_FindSlotBySymbol(*(_DWORD *)(uintptr_t)(arrayOffset + *(_DWORD *)(precedenceList + 1)), *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slot + 8) + 12));
+    compositeSlot = candidateSlot;
+    if ( candidateSlot )
+    {
+      result = (*candidateSlot & 8) == 0;
+      if ( result )
+        break;
+      arrayOffset += 4;
+      ++superIndex;
+    }
+    else
+    {
+      arrayOffset += 4;
+      ++superIndex;
+    }
+  }
+  if ( compositeSlot )
+  {
+    if ( *(char *)(uintptr_t)slot >= 0 && (char)*compositeSlot < 0 )
+    {
+      v9 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)slot &= ~0x40u;
+      *(_DWORD *)(uintptr_t)slot |= v9 & 0x40;
+      LOBYTE(superIndex) = *(_BYTE *)(uintptr_t)(slot + 1) & 0xFE;
+      v10 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)(slot + 1) = superIndex;
+      *(_DWORD *)(uintptr_t)slot |= v10 & 0x100;
+      BYTE1(superIndex) = *(_BYTE *)(uintptr_t)slot | 0x80;
+      *(_BYTE *)(uintptr_t)slot = BYTE1(superIndex);
+      if ( *((_DWORD *)compositeSlot + 4) )
+      {
+        if ( (superIndex & 0x4000) != 0 )
+        {
+          packedDefault = (__int16 *)AST_PackNodeChain(*((_DWORD **)compositeSlot + 4));
+          *(_DWORD *)(uintptr_t)(slot + 16) = ((_DWORD)(uintptr_t)(packedDefault));
+          AST_InstallNodeChain(packedDefault);
+        }
+        else
+        {
+          freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+          if ( freeListEntry )
+          {
+            g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+            *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = *freeListEntry;
+            defaultCopy = (void *)(uintptr_t)g_ClipsMemFreeListTemp;
+          }
+          else
+          {
+            defaultCopy = (void *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x18);
+          }
+          *(_DWORD *)(uintptr_t)(slot + 16) = ((_DWORD)(uintptr_t)(defaultCopy));
+          qmemcpy(defaultCopy, *((const void **)compositeSlot + 4), 0x18u);
+          Rules_ValueInstall(*(_DWORD *)(uintptr_t)(slot + 16), 0);
+        }
+      }
+    }
+    if ( (*specbits & 2) == 0 )
+    {
+      v12 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)slot &= ~2u;
+      *(_DWORD *)(uintptr_t)slot |= v12 & 2;
+    }
+    if ( (*specbits & 1) == 0 )
+    {
+      v13 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)slot &= ~1u;
+      *(_DWORD *)(uintptr_t)slot |= v13 & 1;
+    }
+    if ( (*specbits & 4) == 0 )
+    {
+      BYTE1(superIndex) = *(_BYTE *)(uintptr_t)slot & 0xEF;
+      v14 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)slot = BYTE1(superIndex);
+      *(_DWORD *)(uintptr_t)slot |= v14 & 0x10;
+      v15 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)slot &= ~0x20u;
+      *(_DWORD *)(uintptr_t)slot |= v15 & 0x20;
+    }
+    if ( (*specbits & 0x20) == 0 )
+    {
+      v16 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)(slot + 1) &= ~2u;
+      *(_DWORD *)(uintptr_t)slot |= v16 & 0x200;
+    }
+    if ( (specbits[1] & 1) == 0 )
+    {
+      LOBYTE(superIndex) = *(_BYTE *)(uintptr_t)(slot + 1) & 0xFB;
+      v17 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)(slot + 1) = superIndex;
+      *(_DWORD *)(uintptr_t)slot |= v17 & 0x400;
+    }
+    if ( (specbits[1] & 2) == 0 )
+    {
+      v18 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)(slot + 1) &= ~8u;
+      *(_DWORD *)(uintptr_t)slot |= v18 & 0x800;
+      v19 = *(_DWORD *)compositeSlot;
+      *(_BYTE *)(uintptr_t)(slot + 1) &= ~0x10u;
+      *(_DWORD *)(uintptr_t)slot |= v19 & 0x1000;
+    }
+    if ( (specbits[1] & 4) == 0 && (compositeSlot[1] & 0x20) != 0 )
+    {
+      Rules_DecrementSymbolCount(*(_DWORD *)(uintptr_t)(slot + 12), superIndex);
+      inheritedSlotValue = *((_DWORD *)compositeSlot + 3);
+      *(_DWORD *)(uintptr_t)(slot + 12) = inheritedSlotValue;
+      ++*(_DWORD *)(uintptr_t)(inheritedSlotValue + 4);
+      *(_BYTE *)(uintptr_t)(slot + 1) |= 0x20u;
+    }
+    LOWORD(result) = Rules_OverlayConstraint(parsedConstraint, *(_DWORD *)(uintptr_t)(slot + 20), *((int **)compositeSlot + 5));
+  }
+  return result;
+}
+// 4E3E0C: variable 'v27' is possibly undefined
+// 4E3F75: variable 'v6' is possibly undefined
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (004E4040) --------------------------------------------------------
+signed int  Class_CheckForFacetConflicts(int slotDesc, int parsedConstraints)
+{
+  int v2; // ecx
+  int v3; // ecx
+  int *minIntValue; // eax
+  signed int minExprNode; // eax
+  int v6; // ecx
+  int *maxIntValue; // eax
+  signed int maxExprNode; // eax
+  char accessBits; // dl
+  int v11; // ecx
+  int v12; // ecx
+  int v13; // ecx
+  int v14; // ecx
+
+  v2 = slotDesc;
+  if ( (*(_BYTE *)(uintptr_t)slotDesc & 2) == 0 )
+  {
+    if ( (*(_BYTE *)(uintptr_t)(parsedConstraints + 1) & 4) != 0 )
+    {
+      Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 3, 1);
+      Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aCardinalityFac, v11);
+      return 0;
+    }
+    AST_Free(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(slotDesc + 20) + 18));
+    AST_Free(*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v3 + 20) + 22));
+    minIntValue = ((int*)(intptr_t)(Rules_AddIntegerValue(1)));
+    minExprNode = AST_NewNode(1, (int)(intptr_t)minIntValue);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v6 + 20) + 18) = minExprNode;
+    maxIntValue = ((int*)(intptr_t)(Rules_AddIntegerValue(1)));
+    maxExprNode = AST_NewNode(1, (int)(intptr_t)maxIntValue);
+    *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v2 + 20) + 22) = maxExprNode;
+  }
+  if ( (*(_BYTE *)(uintptr_t)(v2 + 1) & 1) != 0 && (*(_BYTE *)(uintptr_t)v2 & 0x10) != 0 )
+  {
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 4, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReadOnlySlotsM, v12);
+    return 0;
+  }
+  else if ( (*(_BYTE *)(uintptr_t)v2 & 0x10) != 0 && ((accessBits = *(_BYTE *)(uintptr_t)(v2 + 1), (accessBits & 0x10) != 0) || (accessBits & 0x20) != 0) )
+  {
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 5, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aReadOnlySlotsC, v13);
+    return 0;
+  }
+  else if ( (*(_BYTE *)(uintptr_t)v2 & 8) != 0 && (*(_BYTE *)(uintptr_t)(v2 + 1) & 4) != 0 )
+  {
+    Rules_PrintErrorID((int)(intptr_t)aClsltpsr, 6, 1);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aNoInheritSlots, v14);
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}
+// 4E405E: variable 'v3' is possibly undefined
+// 4E407F: variable 'v6' is possibly undefined
+// 4E409B: variable 'v2' is possibly undefined
+// 4E40F3: variable 'v11' is possibly undefined
+// 4E411B: variable 'v12' is possibly undefined
+// 4E4143: variable 'v13' is possibly undefined
+// 4E416B: variable 'v14' is possibly undefined
+// 51A614: using guessed type char *off_51A614[5];
+
+//----- (004E4180) --------------------------------------------------------
+signed int  Class_EvaluateSlotDefaultValue(int *slotDesc, char *specBits, double a3)
+{
+  _DWORD *freeListNode; // ecx
+  _DWORD *defaultBuffer; // eax
+  int slotFlags; // ebx
+  int v7; // ecx
+  int savedGuardFlag; // edi
+  int v10; // edx
+  int v11; // ecx
+  int evalStatus; // edx
+  int v13; // ecx
+  int v14; // edx
+  _DWORD *freeNode; // ebx
+  void *valueCopy; // eax
+  signed int violationCode; // esi
+  int v18; // ecx
+  _DWORD defaultValue[11]; // [esp+0h] [ebp-2Ch] BYREF
+
+  if ( *specBits >= 0 )
+    *(_BYTE *)slotDesc &= ~0x40u;
+  if ( (*((_BYTE *)slotDesc + 1) & 1) != 0 )
+    return 1;
+  if ( (*(_BYTE *)slotDesc & 0x40) != 0 )
+  {
+    if ( !Rules_StaticConstraintCheckingEnabled() )
+      return 1;
+    violationCode = Rules_CheckFieldExprListAgainstConstraint((int *)(uintptr_t)slotDesc[4], slotDesc[5]);
+    if ( !violationCode )
+      return 1;
+    Rules_PrintErrorID((int)(intptr_t)aCstrnchk_3, 1, 0);
+    Output_Write((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)aExpressionFo_0, (int)(intptr_t)aDynamicDefault);
+    Instance_PrintSlotErrorContext((int)(intptr_t)g_IO_LogicalNameTable_WError[0], (int)(intptr_t)slotDesc, v18, 0);
+    Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, violationCode, slotDesc[5], 0);
+    return 0;
+  }
+  else
+  {
+    if ( (*specBits & 0x40) == 0 )
+    {
+      if ( *(char *)slotDesc < 0 )
+        return 1;
+      freeListNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+      if ( freeListNode )
+      {
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = *freeListNode;
+        defaultBuffer = (_DWORD *)(uintptr_t)g_ClipsMemFreeListTemp;
+      }
+      else
+      {
+        defaultBuffer = (_DWORD *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x18);
+      }
+      slotFlags = *slotDesc;
+      slotDesc[4] = (int)(intptr_t)defaultBuffer;
+      Rules_DeriveDefaultFromConstraints((char *)(uintptr_t)slotDesc[5], defaultBuffer, (unsigned int)(slotFlags << 30) >> 31);
+LABEL_10:
+      Rules_ValueInstall(slotDesc[4], v7);
+      return 1;
+    }
+    savedGuardFlag = Rules_GetReentryGuardFlag();
+    Rules_SetReentryGuardFlag(1);
+    Rules_StaticConstraintCheckingEnabled();
+    Rules_SetDynamicConstraintChecking(v11, v10);
+    evalStatus = Parser_ParseSlotDefaultOrRestriction((unsigned int)(*slotDesc << 30) >> 31, slotDesc[4], defaultValue, a3);
+    if ( evalStatus )
+      evalStatus = Instance_ValidateSlotValueConstraints(defaultValue, (int)(intptr_t)slotDesc, 0);
+    Rules_SetDynamicConstraintChecking(v13, evalStatus);
+    Rules_SetReentryGuardFlag(savedGuardFlag);
+    if ( v14 )
+    {
+      AST_DeinstallNodeChain((__int16 *)(uintptr_t)slotDesc[4]);
+      AST_FreePackedNodeChain(slotDesc[4]);
+      freeNode = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+      if ( freeNode )
+      {
+        g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96);
+        *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 96) = *freeNode;
+        valueCopy = (void *)(uintptr_t)g_ClipsMemFreeListTemp;
+      }
+      else
+      {
+        valueCopy = (void *)(uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x18);
+      }
+      slotDesc[4] = (int)(intptr_t)valueCopy;
+      qmemcpy(valueCopy, defaultValue, 0x18u);
+      v7 = 0;
+      goto LABEL_10;
+    }
+    *(_BYTE *)slotDesc |= 0x40u;
+    return 0;
+  }
+}
+// 4E41E0: variable 'v7' is possibly undefined
+// 4E420F: variable 'v11' is possibly undefined
+// 4E420F: variable 'v10' is possibly undefined
+// 4E4243: variable 'v13' is possibly undefined
+// 4E4251: variable 'v14' is possibly undefined
+// 4E4320: variable 'v18' is possibly undefined
+// 4971A0: using guessed type int __fastcall unknown_libname_10(_DWORD, _DWORD);
+// 51A614: using guessed type char *off_51A614[5];
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (004E4C6D) --------------------------------------------------------
+_DWORD * CRT_ResizeHeapBlockLocked(_DWORD *heapBlock, unsigned int newSize, unsigned int a3)
+{
+  unsigned int v6[4]; // [esp-Ch] [ebp-10h] BYREF
+
+  v6[2] = a3;
+  g_CRT_StaticLock2AcquireHook();
+  if ( CRT_ResizeHeapBlockInPlace(__DS__, heapBlock, v6, newSize, heapBlock) )
+  {
+    g_CRT_StaticLock2ReleaseHook();
+    return 0;
+  }
+  else
+  {
+    g_CRT_StaticLock2ReleaseHook();
+    return heapBlock;
+  }
+}
+// 485379: using guessed type _DWORD nullsub_8();
+// 51A584: using guessed type _DWORD (*off_51A584)();
+// 51A58C: using guessed type _DWORD (*off_51A58C)();
+
+//----- (004E4CA7) --------------------------------------------------------
+signed int  CRT_ResizeHeapBlockInPlace(
+        __int16 dataSegment,
+        _DWORD *blockPtr,
+        unsigned int *bytesNeededPtr,
+        unsigned int requestedSize,
+        _DWORD *i)
+{
+  unsigned int alignedSize; // eax
+  unsigned int blockSize; // edx
+  unsigned int growAmount; // eax
+  unsigned int *j; // ebx
+  unsigned int neighborSize; // ebp
+  int v11; // ebp
+  unsigned int *heapRover; // edx
+  unsigned int leftoverSize; // eax
+  unsigned int *splitBlock; // ebx
+  unsigned int shrinkAmount; // edx
+  unsigned int newHeaderSize; // ebx
+  unsigned int *blockHeader; // [esp+4h] [ebp-18h]
+  unsigned int prevFreeLink; // [esp+8h] [ebp-14h]
+  unsigned int nextFreeLink; // [esp+Ch] [ebp-10h]
+
+  alignedSize = requestedSize + 11;
+  LOBYTE(alignedSize) = (requestedSize + 11) & 0xF8;
+  if ( alignedSize >= requestedSize )
+  {
+    if ( alignedSize < 0x10 )
+      alignedSize = 16;
+  }
+  else
+  {
+    alignedSize = -1;
+  }
+  blockHeader = blockPtr - 1;
+  blockSize = *(blockPtr - 1);
+  LOBYTE(blockSize) = blockSize & 0xFE;
+  if ( alignedSize <= blockSize )
+  {
+    shrinkAmount = blockSize - alignedSize;
+    if ( shrinkAmount >= 0x10 )
+    {
+      newHeaderSize = alignedSize;
+      LOBYTE(newHeaderSize) = alignedSize | 1;
+      LOBYTE(shrinkAmount) = shrinkAmount | 1;
+      *blockHeader = newHeaderSize;
+      *(unsigned int *)((char *)blockHeader + alignedSize) = shrinkAmount;
+      if ( __DS__ == dataSegment )
+      {
+        for ( i = (_DWORD *)(uintptr_t)g_CRT_HeapSegmentListHead; i[2] && (i > blockPtr || (_DWORD *)((char *)i + *i) <= blockPtr); i = (_DWORD *)(uintptr_t)i[2] )
+          ;
+      }
+      ++i[6];
+      nfree_(((_DWORD)(uintptr_t)(blockHeader)));
+    }
+    return 0;
+  }
+  else
+  {
+    growAmount = alignedSize - blockSize;
+    for ( j = (unsigned int *)((char *)blockHeader + blockSize); ; j = (unsigned int *)((char *)j + neighborSize) )
+    {
+      *bytesNeededPtr = growAmount;
+      neighborSize = *j;
+      if ( *j == -1 )
+        return 2;
+      if ( (neighborSize & 1) != 0 )
+        break;
+      nextFreeLink = j[2];
+      prevFreeLink = j[1];
+      if ( __DS__ == dataSegment )
+      {
+        for ( i = (_DWORD *)(uintptr_t)g_CRT_HeapSegmentListHead; i[2] && (i > blockPtr || (_DWORD *)((char *)i + *i) <= blockPtr); i = (_DWORD *)(uintptr_t)i[2] )
+          ;
+      }
+      heapRover = (unsigned int *)(uintptr_t)i[3];
+      if ( j == heapRover )
+        i[3] = heapRover[1];
+      if ( neighborSize >= *bytesNeededPtr )
+      {
+        leftoverSize = neighborSize - *bytesNeededPtr;
+        if ( leftoverSize >= 0x10 )
+        {
+          splitBlock = (unsigned int *)((char *)j + *bytesNeededPtr);
+          *splitBlock = leftoverSize;
+          splitBlock[1] = prevFreeLink;
+          splitBlock[2] = nextFreeLink;
+          *(_DWORD *)(uintptr_t)(prevFreeLink + 8) = ((_DWORD)(uintptr_t)(splitBlock));
+          *(_DWORD *)(uintptr_t)(nextFreeLink + 4) = ((_DWORD)(uintptr_t)(splitBlock));
+          v11 = 0;
+          *blockHeader += *bytesNeededPtr;
+          g_CRT_HeapCoalesceStateByte = 0;
+          return v11;
+        }
+      }
+      *(_DWORD *)(uintptr_t)(prevFreeLink + 8) = nextFreeLink;
+      *(_DWORD *)(uintptr_t)(nextFreeLink + 4) = prevFreeLink;
+      *blockHeader += neighborSize;
+      --i[7];
+      g_CRT_HeapCoalesceStateByte = 0;
+      if ( neighborSize >= *bytesNeededPtr )
+        return 0;
+      growAmount = *bytesNeededPtr - neighborSize;
+    }
+    return 1;
+  }
+}
+// 4740DD: using guessed type int __thiscall nfree_(_DWORD);
+// 519F14: using guessed type int dword_519F14;
+// 54E511: using guessed type char byte_54E511;
+
+//----- (004E4F71) --------------------------------------------------------
+BOOL __cdecl CRT_ThreadStartTrampoline(LPVOID lpThreadParameter)
+{
+  int v1; // ecx
+  int threadDataMgmtDisabled; // edx
+  int alignedDataSize; // eax
+  void *v4 CLASH95_UNUSED; // esp
+  int threadDataBlock; // ecx
+  HANDLE ownThreadHandle; // ebx
+  int v8; // ecx
+  _BYTE sehFrame[8]; // [esp+0h] [ebp-10h] BYREF
+  void (*startAddress)(void); // [esp+8h] [ebp-8h]
+  HANDLE hObject; // [esp+Ch] [ebp-4h]
+
+  startAddress = *(void (**)(void))lpThreadParameter;
+  threadDataMgmtDisabled = g_CrtThreadDataMgmtDisabledFlag;
+  hObject = (HANDLE)(uintptr_t)**((_DWORD **)lpThreadParameter + 4);
+  if ( g_CrtThreadDataMgmtDisabledFlag
+    || (alignedDataSize = g_CRT_ThreadDataBlockSize + 3,
+        LOBYTE(alignedDataSize) = (g_CRT_ThreadDataBlockSize + 3) & 0xFC,
+        v4 = alloca(alignedDataSize),
+        memset_(((_DWORD)(uintptr_t)(sehFrame)), 0),
+        *(_DWORD *)(uintptr_t)(threadDataBlock + 240) = g_CRT_ThreadDataBlockSize,
+        CRT_CreateAndAttachThreadData(threadDataBlock, threadDataBlock)) )
+  {
+    ownThreadHandle = hObject;
+    *(_DWORD *)(g_CrtThreadDataAccessor(v1, threadDataMgmtDisabled) + 222) = ((_DWORD)(uintptr_t)(ownThreadHandle));
+    SetEvent(*((HANDLE *)lpThreadParameter + 3));
+    CRT_InstallUnhandledExceptionFilter((int)(intptr_t)sehFrame, v8);
+    g_CRT_ThreadStartupHook();
+    startAddress();
+    endthread_();
+  }
+  return CloseHandle(hObject);
+}
+// 4E4FBC: variable 'v5' is possibly undefined
+// 4E4FDD: variable 'v1' is possibly undefined
+// 4E4FDD: variable 'v2' is possibly undefined
+// 4E4FF7: variable 'v8' is possibly undefined
+// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
+// 485379: using guessed type _DWORD nullsub_8();
+// 4D9788: using guessed type void __noreturn endthread_(void);
+// 51A568: using guessed type __int64 (__fastcall *g_CrtThreadDataAccessor)(_DWORD, _DWORD);
+// 51A5A8: using guessed type _DWORD (*off_51A5A8)();
+// 51AF00: using guessed type int dword_51AF00;
+
+//----- (004E5018) --------------------------------------------------------
+HANDLE  CRT_BeginThread(int startAddress, int stackSize, int argList)
+{
+  int v3; // ecx
+  HANDLE result; // eax
+  DWORD CurrentThreadId; // eax
+  CHAR eventName[32]; // [esp+0h] [ebp-50h] BYREF
+  _DWORD Parameter[3]; // [esp+20h] [ebp-30h] BYREF
+  HANDLE hHandle; // [esp+2Ch] [ebp-24h]
+  HANDLE *v10 CLASH95_UNUSED; // [esp+30h] [ebp-20h]
+  HANDLE Thread; // [esp+34h] [ebp-1Ch] BYREF
+  DWORD ThreadId[6]; // [esp+38h] [ebp-18h] BYREF
+
+  v3 = startAddress;
+  if ( dwTlsIndex == -1 )
+  {
+    result = (HANDLE)(uintptr_t)CRT_AllocateTlsIndex();
+    if ( !result )
+      return result;
+    CRT_InitializeThreadAndFileHandleHooks();
+  }
+  Parameter[0] = v3;
+  Parameter[1] = argList;
+  Parameter[2] = ((_DWORD)(uintptr_t)(GetCurrentThread()));
+  strcpy(eventName, "__bgnthd");
+  CurrentThreadId = GetCurrentThreadId();
+  Str_FormatSignedRadixDigits(CurrentThreadId, &eventName[8], 0x10u);
+  hHandle = CreateEventA(0, 0, 0, eventName);
+  v10 = &Thread;
+  Thread = CreateThread(0, (stackSize + 4095) & 0xFFFFF000, (LPTHREAD_START_ROUTINE)CRT_ThreadStartTrampoline, Parameter, 0, ThreadId);
+  if ( Thread )
+    WaitForSingleObject(hHandle, 0xFFFFFFFF);
+  else
+    ThreadId[0] = -1;
+  CloseHandle(hHandle);
+  return Thread;
+}
+// 4E503F: variable 'v3' is possibly undefined
+
+//----- (004E50F1) --------------------------------------------------------
+void __fastcall __noreturn CRT_EndThread(int a1, int a2)
+{
+  int v2; // edx
+  int v3; // ecx
+
+  g_CRT_ThreadEndHook(a2, a1);
+  CRT_RemoveUnhandledExceptionFilter(v3, v2);
+  if ( !g_CrtThreadDataMgmtDisabledFlag )
+    CRT_DetachThreadDataAndMaybeCloseHandle((char *)1);
+  ExitThread(0);
+}
+// 4E50F9: variable 'v3' is possibly undefined
+// 4E50F9: variable 'v2' is possibly undefined
+// 51A5AC: using guessed type int (__cdecl *off_51A5AC)(_DWORD, _DWORD);
+
+//----- (004E51E0) --------------------------------------------------------
+_DWORD * AST_BuildClassHierarchyFieldAccessTest(_DWORD *fieldNode, int patternNode)
+{
+  int bottomChain; // edi
+  _DWORD *pnTestTail; // ebp
+  _DWORD *jnTestTail; // edi
+  _DWORD *chainNode; // esi
+  int prevPnTestHead; // ecx
+  _DWORD *prevJnTestHead; // esi
+  int referringNode; // ecx
+  int referringNodeCopy; // edx
+  _DWORD *crossPatternTest; // eax
+  _DWORD *result; // eax
+  _DWORD *intraPatternTest; // eax
+  _DWORD *pnTests; // [esp+0h] [ebp-30h] BYREF
+  _DWORD *jnTests; // [esp+4h] [ebp-2Ch] BYREF
+  int patternNodeCopy; // [esp+8h] [ebp-28h]
+  _DWORD *fieldNodeCopy; // [esp+Ch] [ebp-24h]
+  int homogeneousFlag; // [esp+10h] [ebp-20h]
+  _DWORD *pnTestHead; // [esp+14h] [ebp-1Ch]
+  _DWORD *i; // [esp+18h] [ebp-18h]
+
+  fieldNodeCopy = fieldNode;
+  patternNodeCopy = patternNode;
+  homogeneousFlag = 1;
+  pnTests = 0;
+  jnTests = 0;
+  if ( !fieldNode )
+  {
+    Rules_ReportSystemError(0, 3);
+    IO_RunRouterExitCallbacks(4);
+  }
+  bottomChain = fieldNodeCopy[17];
+  if ( bottomChain && *(_DWORD *)(uintptr_t)(bottomChain + 68) )
+    homogeneousFlag = AST_IsFieldAccessHomogeneousAcrossHierarchy(fieldNodeCopy[17], fieldNodeCopy[7]);
+  pnTestTail = 0;
+  jnTestTail = 0;
+  pnTestHead = 0;
+  chainNode = (_DWORD *)(uintptr_t)fieldNodeCopy[17];
+  for ( i = 0; chainNode; chainNode = (_DWORD *)(uintptr_t)chainNode[17] )
+  {
+    AST_AccumulateFieldAccessTestChain(chainNode, homogeneousFlag, (signed int *)&jnTests, (signed int *)&pnTests);
+    if ( pnTests )
+    {
+      if ( pnTestTail )
+        *(_DWORD *)((char *)pnTestTail + 10) = ((_DWORD)(uintptr_t)(pnTests));
+      else
+        pnTestHead = pnTests;
+      pnTestTail = pnTests;
+    }
+    if ( jnTests )
+    {
+      if ( jnTestTail )
+        *(_DWORD *)((char *)jnTestTail + 10) = ((_DWORD)(uintptr_t)(jnTests));
+      else
+        i = jnTests;
+      jnTestTail = jnTests;
+    }
+  }
+  if ( pnTestHead && *(_DWORD *)((char *)pnTestHead + 10) )
+  {
+    pnTestHead = (_DWORD *)(uintptr_t)AST_NewNode(10, g_ClipsSymbolOr);
+    *(_DWORD *)((char *)pnTestHead + 6) = prevPnTestHead;
+  }
+  prevJnTestHead = i;
+  if ( i && *(_DWORD *)((char *)i + 10) )
+  {
+    i = (_DWORD *)(uintptr_t)AST_NewNode(10, g_ClipsSymbolOr);
+    *(_DWORD *)((char *)i + 6) = ((_DWORD)(uintptr_t)(prevJnTestHead));
+  }
+  if ( *fieldNodeCopy == 16 || *fieldNodeCopy == 15 )
+  {
+    referringNode = fieldNodeCopy[5];
+    if ( referringNode )
+    {
+      referringNodeCopy = fieldNodeCopy[5];
+      if ( *(_DWORD *)(uintptr_t)(referringNode + 28) == fieldNodeCopy[7] )
+      {
+        intraPatternTest = (_DWORD *)(uintptr_t)AST_InvokeFieldAccessValidator((int)(intptr_t)fieldNodeCopy, (int)(intptr_t)fieldNodeCopy);
+        pnTestHead = AST_MergeFieldAccessNodes(intraPatternTest, pnTestHead);
+      }
+      else if ( *(int *)(uintptr_t)(referringNodeCopy + 28) > 0 )
+      {
+        crossPatternTest = (_DWORD *)(uintptr_t)AST_BuildCrossClassFieldAccessTest((int)(intptr_t)fieldNodeCopy, referringNodeCopy);
+        i = AST_MergeFieldAccessNodes(crossPatternTest, i);
+      }
+    }
+  }
+  fieldNodeCopy[13] = ((_DWORD)(uintptr_t)(pnTestHead));
+  result = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(patternNodeCopy + 52), i);
+  *(_DWORD *)(uintptr_t)(patternNodeCopy + 52) = ((_DWORD)(uintptr_t)(result));
+  return result;
+}
+// 4E52B5: variable 'v6' is possibly undefined
+// 54E664: using guessed type int dword_54E664;
+
+//----- (004E53B0) --------------------------------------------------------
+_DWORD * AST_AccumulateFieldAccessTestChain(_DWORD *result, int homogeneousFlag, signed int *jnTests, signed int *pnTests)
+{
+  int currentNode; // esi
+  _DWORD *pnResult; // [esp+0h] [ebp-18h] BYREF
+  _DWORD *jnResult; // [esp+4h] [ebp-14h] BYREF
+  int homogeneousCopy; // [esp+8h] [ebp-10h]
+
+  currentNode = (int)(intptr_t)result;
+  homogeneousCopy = homogeneousFlag;
+  *pnTests = 0;
+  *jnTests = 0;
+  if ( result )
+  {
+    do
+    {
+      AST_DispatchFieldAccessNodeBuild(currentNode, homogeneousCopy, ((_DWORD*)(&jnResult)), ((_DWORD*)(&pnResult)));
+      *pnTests = (signed int)(intptr_t)AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)*pnTests, pnResult);
+      result = AST_MergeFieldAccessNodes((_DWORD *)(uintptr_t)*jnTests, jnResult);
+      *jnTests = (signed int)(intptr_t)result;
+      currentNode = *(_DWORD *)(uintptr_t)(currentNode + 64);
+    }
+    while ( currentNode );
+  }
+  return result;
+}
+
+//----- (004E5420) --------------------------------------------------------
+int  AST_DispatchFieldAccessNodeBuild(int theNode, int homogeneousFlag, _DWORD *jnTestOut, _DWORD *pnTestOut)
+{
+  int result; // eax
+  unsigned int nodeType; // edx
+  _DWORD *v7; // ecx
+  _DWORD *v8; // ecx
+  _DWORD *v9; // ecx
+  int referringNode; // eax
+  _DWORD *v11; // ecx
+
+  result = homogeneousFlag;
+  *pnTestOut = 0;
+  *jnTestOut = 0;
+  nodeType = *(_DWORD *)(uintptr_t)theNode;
+  if ( *(_DWORD *)(uintptr_t)theNode == 3 || nodeType == 2 || nodeType == 8 || nodeType < 2 )
+  {
+    if ( result == 1 )
+    {
+      result = AST_BuildFieldAccessNodePN(theNode);
+      *pnTestOut = result;
+    }
+    else
+    {
+      result = AST_BuildFieldAccessNodeJN(theNode);
+      *v7 = result;
+    }
+  }
+  else
+  {
+    switch ( nodeType )
+    {
+      case 0x5Du:
+        if ( result == 1 && AST_IsFieldPositionConsistent((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
+        {
+          result = AST_BuildNegatedFieldAccessNodeJN(theNode);
+          *pnTestOut = result;
+        }
+        else
+        {
+          result = AST_BuildNegatedFieldAccessNodePN(theNode);
+          *v8 = result;
+        }
+        break;
+      case 0x5Eu:
+        if ( result == 1 && AST_IsFieldPositionConsistent((_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(theNode + 56), *(_DWORD *)(uintptr_t)(theNode + 28)) == 1 )
+        {
+          result = AST_BuildFieldAccessComparisonNodeJN(theNode);
+          *pnTestOut = result;
+        }
+        else
+        {
+          result = AST_BuildFieldAccessComparisonNodePN(theNode);
+          *v9 = result;
+        }
+        break;
+      case 0xFu:
+      case 0x10u:
+        if ( result == 1 && (referringNode = *(_DWORD *)(uintptr_t)(theNode + 20)) != 0 && *(_DWORD *)(uintptr_t)(referringNode + 28) == *(_DWORD *)(uintptr_t)(theNode + 28) )
+        {
+          result = AST_InvokeFieldAccessValidator(theNode, (int)(intptr_t)jnTestOut);
+          *pnTestOut = result;
+        }
+        else
+        {
+          result = AST_BuildCrossClassFieldAccessTest(theNode, *(_DWORD *)(uintptr_t)(theNode + 20));
+          *v11 = result;
+        }
+        break;
+    }
+  }
+  return result;
+}
+// 4E5454: simplified comparisons for 'edx.4': ==0 || ==1 became <2u
+// 4E5487: variable 'v7' is possibly undefined
+// 4E5492: variable 'v8' is possibly undefined
+// 4E54C2: variable 'v9' is possibly undefined
+// 4E5506: variable 'v11' is possibly undefined
+
+//----- (004E5510) --------------------------------------------------------
+int  AST_BuildFieldAccessNodePN(int theNode)
+{
+  int patternType; // eax
+  int eqSymbol; // edx
+  signed int callNode; // ebx
+  int v5; // ecx
+  _DWORD *valueNode; // ecx
+
+  patternType = *(_DWORD *)(uintptr_t)(theNode + 24);
+  if ( *(_DWORD *)(uintptr_t)(patternType + 48) )
+    return (*(int (**)(void))(uintptr_t)(patternType + 48))();
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 1) != 0 )
+    eqSymbol = g_ClipsSymbolNeq;
+  else
+    eqSymbol = g_ClipsSymbolEq;
+  callNode = AST_NewNode(10, eqSymbol);
+  *(_DWORD *)(uintptr_t)(callNode + 6) = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 24) + 56))();
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(callNode + 6) + 10) = AST_NewNode(*valueNode, valueNode[1]);
+  return callNode;
+}
+// 4E5536: variable 'v5' is possibly undefined
+// 4E5544: variable 'v6' is possibly undefined
+// 54E658: using guessed type int dword_54E658;
+// 54E668: using guessed type int dword_54E668;
+
+//----- (004E5570) --------------------------------------------------------
+int  AST_BuildFieldAccessNodeJN(int theNode)
+{
+  int patternType; // eax
+  int eqSymbol; // edx
+  signed int callNode; // ebx
+  int v5; // ecx
+  _DWORD *valueNode; // ecx
+
+  patternType = *(_DWORD *)(uintptr_t)(theNode + 24);
+  if ( *(_DWORD *)(uintptr_t)(patternType + 32) )
+    return (*(int (**)(void))(uintptr_t)(patternType + 32))();
+  if ( (*(_BYTE *)(uintptr_t)(theNode + 8) & 1) != 0 )
+    eqSymbol = g_ClipsSymbolNeq;
+  else
+    eqSymbol = g_ClipsSymbolEq;
+  callNode = AST_NewNode(10, eqSymbol);
+  *(_DWORD *)(uintptr_t)(callNode + 6) = (*(int (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(v5 + 24) + 40))();
+  *(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(callNode + 6) + 10) = AST_NewNode(*valueNode, valueNode[1]);
+  return callNode;
+}
+// 4E5596: variable 'v5' is possibly undefined
+// 4E55A4: variable 'v6' is possibly undefined
+// 54E658: using guessed type int dword_54E658;
+// 54E668: using guessed type int dword_54E668;
+
+//----- (004E55D0) --------------------------------------------------------
+int  AST_BuildNegatedFieldAccessNodePN(int theNode)
+{
+  int result; // eax
+  int v2; // edx
+  int innerTest; // ecx
+
+  result = AST_CloneFieldAccessSubtreePN(*(_DWORD *)(uintptr_t)(theNode + 56));
+  if ( (*(_BYTE *)(uintptr_t)(v2 + 8) & 1) != 0 )
+  {
+    result = AST_NewNode(10, g_ClipsNotSymbol);
+    *(_DWORD *)(uintptr_t)(result + 6) = innerTest;
+  }
+  return result;
+}
+// 4E55DE: variable 'v2' is possibly undefined
+// 4E55F9: variable 'v3' is possibly undefined
+// 54E660: using guessed type int dword_54E660;
+
+//----- (004E5600) --------------------------------------------------------
+int  AST_BuildNegatedFieldAccessNodeJN(int theNode)
+{
+  int result; // eax
+  int v2; // edx
+  int innerTest; // ecx
+
+  result = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(uintptr_t)(theNode + 56));
+  if ( (*(_BYTE *)(uintptr_t)(v2 + 8) & 1) != 0 )
+  {
+    result = AST_NewNode(10, g_ClipsNotSymbol);
+    *(_DWORD *)(uintptr_t)(result + 6) = innerTest;
+  }
+  return result;
+}
+// 4E560E: variable 'v2' is possibly undefined
+// 4E5629: variable 'v3' is possibly undefined
+// 54E660: using guessed type int dword_54E660;
+
+//----- (004E5630) --------------------------------------------------------
+int  AST_BuildFieldAccessComparisonNodePN(int theField)
+{
+  int convertedExpr; // esi
+  int v2; // ecx
+  int compareSymbol; // edx
+  int v4; // ecx
+  __int64 v5; // rax
+
+  convertedExpr = AST_CloneFieldAccessSubtreePN(*(_DWORD *)(uintptr_t)(theField + 56));
+  if ( (*(_BYTE *)(uintptr_t)(v2 + 8) & 1) != 0 )
+    compareSymbol = g_ClipsSymbolNeq;
+  else
+    compareSymbol = g_ClipsSymbolEq;
+  AST_NewNode(10, compareSymbol);
+  v5 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v4 + 24) + 40))();
+  *(_DWORD *)(uintptr_t)(HIDWORD(v5) + 6) = v5;
+  *(_DWORD *)(v5 + 10) = convertedExpr;
+  return HIDWORD(v5);
+}
+// 4E5640: variable 'v2' is possibly undefined
+// 4E5658: variable 'v4' is possibly undefined
+// 54E658: using guessed type int dword_54E658;
+// 54E668: using guessed type int dword_54E668;
+
+//----- (004E5680) --------------------------------------------------------
+int  AST_BuildFieldAccessComparisonNodeJN(int theField)
+{
+  int convertedExpr; // esi
+  int v2; // ecx
+  int compareSymbol; // edx
+  int v4; // ecx
+  __int64 v5; // rax
+
+  convertedExpr = AST_CloneFieldAccessSubtreeJN(*(_DWORD *)(uintptr_t)(theField + 56));
+  if ( (*(_BYTE *)(uintptr_t)(v2 + 8) & 1) != 0 )
+    compareSymbol = g_ClipsSymbolNeq;
+  else
+    compareSymbol = g_ClipsSymbolEq;
+  AST_NewNode(10, compareSymbol);
+  v5 = ((__int64 (*)(void))(uintptr_t)*(_DWORD *)(uintptr_t)(*(_DWORD *)(uintptr_t)(v4 + 24) + 56))();
+  *(_DWORD *)(uintptr_t)(HIDWORD(v5) + 6) = v5;
+  *(_DWORD *)(v5 + 10) = convertedExpr;
+  return HIDWORD(v5);
+}
+// 4E5690: variable 'v2' is possibly undefined
+// 4E56A8: variable 'v4' is possibly undefined
+// 54E658: using guessed type int dword_54E658;
+// 54E668: using guessed type int dword_54E668;
+
+//----- (004E56D0) --------------------------------------------------------
+int  AST_CloneFieldAccessSubtreePN(int result)
+{
+  int currentNode; // edx
+  _DWORD *freeListEntry; // ebx
+  signed int newExpr; // ecx
+  int nextArgExpr; // eax
+  int v5; // ecx
+  int v6; // edx
+  int argListExpr; // eax
+  _DWORD *v8; // edx
+  int v9; // ecx
+  int resultExpr; // ebx
+
+  currentNode = result;
+  if ( result )
+  {
+    freeListEntry = (_DWORD *)(uintptr_t)*(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+    if ( freeListEntry )
+    {
+      g_ClipsMemFreeListTemp = *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56);
+      *(_DWORD *)(uintptr_t)(g_ClipsMemoryTable + 56) = *freeListEntry;
+      newExpr = g_ClipsMemFreeListTemp;
+    }
+    else
+    {
+      newExpr = Mem_HeapAllocWithRetry((_DWORD *)0xE);
+    }
+    *(_WORD *)(uintptr_t)newExpr = *(_WORD *)(uintptr_t)currentNode;
+    *(_DWORD *)(uintptr_t)(newExpr + 2) = *(_DWORD *)(uintptr_t)(currentNode + 4);
+    nextArgExpr = AST_CloneFieldAccessSubtreePN(*(_DWORD *)(uintptr_t)(currentNode + 64));
+    *(_DWORD *)(uintptr_t)(v5 + 10) = nextArgExpr;
+    argListExpr = AST_CloneFieldAccessSubtreePN(*(_DWORD *)(uintptr_t)(v6 + 68));
+    *(_DWORD *)(uintptr_t)(v9 + 6) = argListExpr;
+    resultExpr = v9;
+    if ( *v8 == 15 || *v8 == 16 )
+    {
+      (*(void (**)(void))(uintptr_t)(*(_DWORD *)(uintptr_t)(v8[5] + 24) + 36))();
+    }
+    else if ( *(_WORD *)(uintptr_t)v9 == 13 )
+    {
+      Defglobal_ResolveGlobalVariableReference(v9, v9);
+      return resultExpr;
+    }
+    return resultExpr;
+  }
+  return result;
+}
+// 4E570C: variable 'v5' is possibly undefined
+// 4E570F: variable 'v6' is possibly undefined
+// 4E5717: variable 'v9' is possibly undefined
+// 4E571A: variable 'v8' is possibly undefined
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;

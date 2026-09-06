@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 _BYTE * Palette_QuantizeChannelsInPlace(_BYTE *result, char bits_per_channel);
 int  Palette_LoadFromQueryHandle(intptr_t palette_addr, intptr_t palette_name);
 int  LoadPalCOL(int palette_table, intptr_t palette_name_addr, DWORD context);
@@ -113,5 +117,9 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1);
 void  WorldMap_TickAmbientMapAnimations(int);
 unsigned int  WorldMap_TickPaletteFlashEffect(int reset_flag, int a2, int a3);
 int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RENDER_API_H */

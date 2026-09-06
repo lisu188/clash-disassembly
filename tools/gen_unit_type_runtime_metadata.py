@@ -17,7 +17,9 @@ import struct
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data/unit_type_runtime_metadata.json"
-STATE = ROOT / "src/state/00000000_0054FFFF_recovered_state.c"
+STATE = ROOT / "src/state/00000000_0054FFFF_recovered_state.cpp"
+if not STATE.exists():
+    STATE = STATE.with_suffix(".c")
 BASE_VA = 0x00512568
 STRIDE = 88
 CAPACITY = 40
@@ -25,7 +27,7 @@ TYPE_COUNT = 35
 POINTERS_BEGIN = "/* UNIT_METADATA_POINTERS_BEGIN -- generated; do not edit */"
 POINTERS_END = "/* UNIT_METADATA_POINTERS_END */"
 TABLE_RE = re.compile(
-    r"CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord "
+    r"(?:CLASH95_INTERNAL )?const UnitTypeRuntimeCoreMetadataRecord "
     r"g_UnitTypeRuntimeCoreMetadata\[[^\]]+\] =\n\{.*?\n\};", re.S)
 
 
@@ -122,14 +124,14 @@ def array(values) -> str:
 
 
 def render_table(records: list[dict]) -> str:
-    lines = ["CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord "
+    # The generated prior extern declaration owns hidden visibility in C/C++.
+    lines = ["const UnitTypeRuntimeCoreMetadataRecord "
              "g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_METADATA_CAPACITY] =", "{"]
     for record in records:
         i = record["id"]
         row = bytes.fromhex(record["bytes_hex"])
         if i >= TYPE_COUNT:
-            lines.append(f"  [{i}] = {{ 0 }}, /* reserved original slot */")
-            continue
+            lines.append(f"  /* reserved original slot {i}; retain every zero byte */")
         dword = lambda off: f"0x{struct.unpack_from('<I', row, off)[0]:08X}"
         core = [dword(0), dword(4), *(str(v) for v in row[8:11]), array(row[11:15]),
                 *(str(v) for v in row[15:18]), dword(18), *(str(v) for v in row[22:30]),
@@ -137,7 +139,7 @@ def render_table(records: list[dict]) -> str:
         tail = [array(row[38:70]), *(str(v) for v in row[70:73]),
                 str(struct.unpack_from("<H", row, 73)[0]), *(str(v) for v in row[75:81]),
                 dword(81), *(str(v) for v in row[85:88])]
-        lines.append(f"  [{i}] = {{ " + ", ".join(core) + ",")
+        lines.append("  { " + ", ".join(core) + ",")
         lines.append("    " + ", ".join(tail) + " },")
     return "\n".join(lines + ["};"])
 
@@ -156,16 +158,17 @@ def render_pointers(records: list[dict]) -> str:
     for record in records:
         va = struct.unpack_from("<I", bytes.fromhex(record["bytes_hex"]))[0]
         if va and va not in emitted:
-            names = ', '.join(c_string(bytes.fromhex(text)) for text in record['localized_name_bytes_hex'])
-            lines.append(f'static char *const g_UnitTypeNames_{va:08X}[3] = {{ {names} }};')
+            names = ', '.join('(char *)' + c_string(bytes.fromhex(text)) for text in record['localized_name_bytes_hex'])
+            lines.append(f'static char *const g_UnitTypeNames_{va:08X}[3] '
+                         f'CLASH95_LOCAL_SYMBOL(g_UnitTypeNames_{va:08X}) = {{ {names} }};')
             emitted.add(va)
-    lines += ["CLASH95_INTERNAL const UnitTypeRuntimePointerRecord "
+    lines += ["const UnitTypeRuntimePointerRecord "
               "g_UnitTypeRuntimePointers[UNIT_TYPE_METADATA_CAPACITY] =", "{"]
     for record in records:
         va = struct.unpack_from("<I", bytes.fromhex(record["bytes_hex"]))[0]
         names = f'g_UnitTypeNames_{va:08X}' if va else 'NULL'
-        text = lambda name: c_string(record[name].encode('ascii')) if record[name] is not None else 'NULL'
-        lines.append(f"  [{record['id']}] = {{ {names}, {text('resource_key')}, {text('movement_sound_stem')} }},")
+        text = lambda name: '(char *)' + c_string(record[name].encode('ascii')) if record[name] is not None else 'NULL'
+        lines.append(f"  {{ {names}, {text('resource_key')}, {text('movement_sound_stem')} }},")
     return "\n".join(lines + ["};", POINTERS_END])
 
 

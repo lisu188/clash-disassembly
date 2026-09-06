@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int  Queen_NewTurn(int, int, char, double);
 int  Player_Surrender(int player_index, int a2, DWORD a3, double a4);
 int  AI_ComputeNationStrengthPercent(signed int player_index, int a2, DWORD a3, double a4);
@@ -17,8 +21,9 @@ int Rules_ResetEngineOnLoad(void);
 signed int Rules_RegisterAllHostFunctions(void);
 int Rules_LogMissionSetupInfo(void);
 signed int Rules_ExecuteAITurn(void);
-_DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4);
-signed int  Rules_LinkArmyFact(__int16 *stack, int army_id, int a3, double a4, char a5, DWORD a6);
+unsigned int  Rules_CreateArmyFact(clash95_unaligned_int16 *stack_record, int army_id, int a3, int a4_promoted, DWORD a5);
+clash95_unaligned_uint32 * Rules_RetractArmyFact(clash95_unaligned_uint32 *result, int a2, int a3, double a4);
+signed int  Rules_LinkArmyFact(clash95_unaligned_int16 *stack, int army_id, int a3, double a4, char a5, DWORD a6);
 signed int  Rules_SyncArmyFactStrength(__int16 *army_stack, int army_id, int a3, char a4, DWORD a5, double a6);
 signed int  Rules_SyncArmyFactOwner(__int16 *stack_record, char a2, DWORD a3, double a4);
 signed int  Rules_SyncCastleFactOwner(int castle_record, int a2, double a3);
@@ -26,6 +31,7 @@ _DWORD * Rules_LogTrapFact(int tile_x, int tile_y);
 _DWORD * Rules_RetractTrapFact(int tile_x, int tile_y);
 _DWORD * Rules_LogTempleFact(int tile_x, int tile_y);
 _DWORD * Rules_LogTreasureFact(int tile_x, int tile_y);
+_DWORD * Rules_RetractTreasureFact(int tile_x, int tile_y);
 _DWORD * Rules_RetractTempleFact(int tile_x, int tile_y, char a3, DWORD a4);
 int  Rules_AssertCastleFact(unsigned __int8 *castle_record, int building_index);
 _DWORD * Rules_RetractCastleFact(unsigned __int8 *castle_record, double a2);
@@ -36,8 +42,8 @@ _DWORD * Rules_LogBuildingCapturedFact(int a1, int a2, int a3);
 _DWORD * Rules_LogCastleUnderConstructionFact(int castle_id);
 _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int castle_id);
 int  Building_OnGarrisonChange(int building_index, int instance_record, double a3);
-signed int  createUnit(double a1, int tile_x, int tile_y, int player_index, unit_type first_unit_type, unit_type second_unit_type, ...);
-int  createCastle(double st7_0, int tile_x, int tile_y, int player_index, int building_type, char *castle_name, unit_type first_unit_type, unit_type second_unit_type, ...);
+signed int  createUnit(double a1, int tile_x, int tile_y, int player_index, unit_type first_unit_type, unsigned int second_unit_type_promoted, ...);
+int  createCastle(double st7_0, int tile_x, int tile_y, int player_index, int building_type, char *castle_name, unit_type first_unit_type, unsigned int second_unit_type_promoted, ...);
 int  WorldMap_DrawMission01ShrineMarker(int result, int tile_y, int screen_y, int screen_x);
 int  Mission05_MarkFailureOnFriendlyAttack(int result, int target_owner_index);
 int  WorldMap_DrawMission07TreasureMarker(int result, int tile_y);
@@ -74,12 +80,8 @@ __int16  Device_GetParamB(int render_state, DWORD a2, int a3, int a4);
 int  Device_SetParamA(int render_state, DWORD a2);
 int  Device_UpdateRect(_DWORD *render_state, int a2, int a3);
 
-/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
- * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-unsigned int  Rules_CreateArmyFact();
-_DWORD * Rules_RetractTreasureFact();
-#pragma GCC diagnostic pop
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STRATEGIC_API_H */

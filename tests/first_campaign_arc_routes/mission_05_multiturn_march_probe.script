@@ -1,4 +1,7 @@
-# Mission 05 authentic queued-path continuation probe. Establish the same first
+# Historical route: 2026-09-06 original-backed fog validation rejects its first
+# waypoint (47,58) in the verified turn-1 state. Keep these inputs as evidence;
+# this script is not a currently validated arrival route. See mission_05_WORKLOG.md.
+# Mission 05 queued-path continuation probe. Establish the same first
 # 20-point leg as mission_05_march_probe, then return to player 0 and reselect
 # stack 4 through the authentic Next Unit widget before clicking its centered
 # tile to resume the retained path. The original Unit_NewTurn checks, but does

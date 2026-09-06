@@ -5,15 +5,23 @@
 
 #include "core_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int  Game_Init(int a1, char a2, DWORD allocContext);
-char __thiscall DetectGameCDPath(void *this);
+char __thiscall DetectGameCDPath(void *this_);
 int  Str_ConstructHolderViaBaseCtor(_DWORD *holder);
 _DWORD * Str_ConstructHolderInline(_DWORD *result);
 _BYTE * Mem_ZeroFourByteGlobal(_BYTE *result);
-int __thiscall PathEntryArray_ConstructCapacity256(void *this);
+int __thiscall PathEntryArray_ConstructCapacity256(void *this_);
 int * PathEntryArray_CopyConstruct(int *dest, _DWORD *source, int a3);
 _DWORD * Mem_ZeroFieldOffset316(int objectBase);
 int  PathEntry_CopyConstruct(_DWORD *dest, _DWORD *source);
 int  PathEntry_ConstructDefault(_DWORD *entry);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CORE_INTERNAL_H */

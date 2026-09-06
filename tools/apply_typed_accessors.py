@@ -378,7 +378,7 @@ def iter_source_files(only, exclude):
         if "/clips" in "/" + rel:
             continue
         for f in files:
-            if f.endswith(".c"):
+            if f.endswith((".c", ".cpp")):
                 yield os.path.join(root, f)
 
 

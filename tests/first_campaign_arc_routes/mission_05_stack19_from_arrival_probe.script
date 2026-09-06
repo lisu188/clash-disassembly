@@ -1,10 +1,10 @@
-# Mission 05 stack-19 attack probe, rebased on the authentic turn-9 arrival.
-# Composes the proven 145-input multi-turn march (stack 4 ends turn 9 at tile
-# 47,58 with a zero-length retained path), then ends turn 9, reselects stack 4
-# on turn 10 with refreshed action points, pans to the player-3 SW cluster,
-# and attacks stack 19 at tile 44,56 with the forced-autoresolve branch.
-# Diagnostic calibration only: autoresolve viability vs manual tactical entry
-# is the decision this probe informs (complete routes avoid autoresolve).
+# Historical Mission 05 stack-19 calibration from a superseded turn-9 prefix.
+# The current original-backed fog gate rejects its first waypoint (47,58);
+# the retained 145-input march is not a currently validated arrival route.
+# Later steps retain the old turn-10 reselection, pan and stack-19 attack at
+# (44,56) through forced autoresolve. Their historical outcomes remain evidence.
+# No current arrival, battle acceptance or autoresolve viability is established;
+# revalidate the strategic prefix before using this diagnostic calibration.
 include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
 
 # --- turn 10: refresh AP, reselect stack 4 ---------------------------------

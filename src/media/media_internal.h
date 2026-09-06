@@ -5,6 +5,10 @@
 
 #include "media_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int * CAviDecompressor_ConstructEmpty(int *instanceOut, DWORD allocContext);
 int  CAviDecompressor_dtor(_DWORD *selfPtr);
 int * CAviDecompressor_ConstructAndInitCallbacks(int *a1, int (__stdcall ***a2)(_DWORD, void *, _DWORD *), int a3, int a4);
@@ -117,7 +121,7 @@ bool  AviPlayer_IsPlaybackRateInRange(int self);
 extern unsigned int Audio_MapDSoundHResultToErrorCode (unsigned int result);
 int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int scaledUpdateRate);
 signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *accelFlagOut);
-int __thiscall Audio_ComputeBytesPerFrame(void *this);
+int __thiscall Audio_ComputeBytesPerFrame(void *this_);
 signed int Audio_InitDSoundDevice(void);
 unsigned int Audio_ReleaseDSoundDevice(void);
 signed int __cdecl Audio_InitSoundSystem(int sampleRateHz, char formatFlags);
@@ -213,7 +217,7 @@ signed int CSS_CloseWaveOutDevice(void);
 int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *format_flags_out);
 int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int refill_rate);
 unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *chunk_completed_out);
-void __thiscall __noreturn CSS_FatalErrorExit(void *this);
+void __thiscall __noreturn CSS_FatalErrorExit(void *this_);
 int __cdecl CSS_GetFormatTableValue(int format_index);
 int __cdecl CSS_GetFormatSampleSize(int format_index);
 int __cdecl CSS_GetFormatSilenceValue(int format_index);
@@ -280,8 +284,8 @@ int  Mem_GrowPoolChain(int pool, unsigned int requested_bytes);
 signed int  Mem_PoolAllocBlock(unsigned int size, _DWORD *error_context);
 int  Mem_PoolSplitBlock(int result, _DWORD *block, int alloc_size);
 signed int  Mem_PoolFreeCoalesce(int block_ptr, int block_size);
-int __thiscall Mem_ReleaseAllPools(void *this);
-int __thiscall Mem_HeapExitHandler(void *this);
+int __thiscall Mem_ReleaseAllPools(void *this_);
+int __thiscall Mem_HeapExitHandler(void *this_);
 signed int  Surface_CreateDDSurface(_DWORD *surface, _DWORD *ddraw_obj, int height, int width);
 int  Surface_CreateFromBitmapFile(_DWORD *surface, int *ddraw_obj, const CHAR *bitmap_path);
 int  Surface_BltFastKeyedClippedTo(_DWORD *src_surface, int dest_x, int dest_surface, int dest_y, _DWORD *clip_bounds);
@@ -333,8 +337,8 @@ int  FileSystem_DiskMountOpenFileQuery(int mount, char mode_flags, DWORD alloc_c
 int __fastcall FileSystem_DiskMountDeleteFile(int mount, const char *file_name);
 int __fastcall FileSystem_DiskMountCreateDirectory(int mount, const char *dir_name);
 int __fastcall FileSystem_DiskMountRemoveDirectory(int mount, const char *dir_name);
-char *__thiscall FileSystem_DiskMountGetCurrentDirectory(void *this);
-int __thiscall FileSystem_DiskMountDirectoryExists(void *this);
+char *__thiscall FileSystem_DiskMountGetCurrentDirectory(void *this_);
+int __thiscall FileSystem_DiskMountDirectoryExists(void *this_);
 char  FileSystem_DiskMountResolveRegisteredRootPath(int mount, int mount_table);
 int  FileSystem_DiskMountRegisterNestedMount(int mount, int *mount_table, char a3, DWORD alloc_context);
 int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *mount, char flags);
@@ -477,7 +481,7 @@ signed int  Rules_PrintFocusStack(signed int result);
 signed int  Rules_BuildFocusStackList(_DWORD *returnValue);
 int Rules_GetCurrentFocus(void);
 void  Rules_InstancesCommand(double context);
-signed int __thiscall Rules_PPInstanceCommand(void *this);
+signed int __thiscall Rules_PPInstanceCommand(void *this_);
 void  Rules_PrintInstancesByModule(int logicalName, int a2, int className);
 int Rules_GetActiveInstanceCount(void);
 signed int  Rules_DeleteInstanceCommand(int a1, double a2);
@@ -496,5 +500,9 @@ signed int  Rules_PrintInstanceSlots(int logicalName, int instance, int separato
 int *__fastcall Rules_FindInstanceSlot(int instance, _BYTE *slotName);
 int Rules_InitFunctionNameHashTable(void);
 int * Rules_InsertFunctionHashEntry(int functionDef);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_MEDIA_INTERNAL_H */

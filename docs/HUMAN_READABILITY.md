@@ -1,12 +1,12 @@
-# Human-readable C recovery
+# Human-readable C++ recovery
 
-The readability track turns evidence-backed decompiler output into ordinary maintainable C without changing retail behavior.
+The readability track turns evidence-backed decompiler output into ordinary maintainable C++ without changing retail behavior.
 
 ## Rules
 
 1. Prefer recovered structs and enums over raw offsets and magic numbers.
 2. Keep unknown bytes explicitly unknown until evidence supports a semantic name.
-3. Pin every recovered binary layout with `_Static_assert` checks for size and important offsets.
+3. Pin every recovered binary layout with `CLASH95_STATIC_ASSERT` checks for size and important offsets.
 4. Rename locals and parameters only when data flow or call-site evidence supports the meaning.
 5. Preserve original control flow unless a structured rewrite is demonstrably equivalent.
 6. Keep SDL/platform adaptation separate from recovered gameplay semantics.
@@ -35,7 +35,7 @@ The migration is incremental: replace `int stackPtr`, `__int16 *stackPtr`, `UNIT
 
 ### Pathing batch
 
-The first typed-access batch covers the pathing frontier in `src/units/00414390_00416750_units_004.c`:
+The first typed-access batch covers the pathing frontier in `src/units/00414390_00416750_units_004.cpp`:
 
 - `Path_InsertBridgeCornerWaypoints`
 - `Unit_MoveTrack`
@@ -47,7 +47,7 @@ These functions obtain strategic stack position through `UnitStackRecord` and `s
 
 ### Core unit batch
 
-The second batch converts the reached core unit paths in `src/units/0040F510_00411560_units_001.c`:
+The second batch converts the reached core unit paths in `src/units/0040F510_00411560_units_001.cpp`:
 
 - stack allocation and initialization in `Unit_Create`
 - army-fact link/unlink helpers

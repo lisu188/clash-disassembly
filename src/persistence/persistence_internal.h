@@ -5,9 +5,13 @@
 
 #include "persistence_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int  FileSystem_InitRootMount(int a1, char a2, DWORD a3);
 int  FileSystem_MountArchiveAtIndex(int mountPrefix, const CHAR *archiveFileName, DWORD mountFlags);
-int __thiscall ResourceArchives_MountStartupArchives(int this);
+int __thiscall ResourceArchives_MountStartupArchives(int this_);
 int Port_FindAndInit(void);
 _DWORD *Rules_LogPortLocation(void);
 int Port_UpdateShorelineVariantTiles(void);
@@ -22,7 +26,7 @@ signed int  SaveSlotDialog_HandleConfirm(int widgetHandle, int delay, DWORD a3, 
 int  UI_CheatEditRepaint(DWORD backdropSurface, int a2);
 int  DecisionDialog_ConfirmIfAllowed(uintptr_t a1, int a2);
 int  DecisionDialog_Cancel(uintptr_t a1, int a2);
-int __thiscall Object_ConstructInt256Array(void *this);
+int __thiscall Object_ConstructInt256Array(void *this_);
 int  MainMenu_RequestExit(uintptr_t widget);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void CampaignMenu_RebuildButtonWidgetTemplate(void);
@@ -56,7 +60,7 @@ int  Options_SaveConfigToFile(int a1, DWORD a2);
 char  PlayerRuntimeState_ResetDefaults(uintptr_t playerState);
 char Scenario_SetupSirArthurRosterVariantA(void);
 char Scenario_SetupSirArthurRosterVariantB(void);
-_DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3);
+_DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this_, DWORD a2, double a3);
 signed int  SaveSlot_LoadReservedSlot10(DWORD a1, double a2);
 signed int  Scenario_LoadAllAiMultiplayerMapAndInitView(int mapIndex);
 DWORD  Battle_RunPresetScenarioByIndex(int scenarioIndex, DWORD a2, double a3);
@@ -82,5 +86,9 @@ int  BuildingPrisonerPanel_BackButton(int widgetRecord);
 int  Building_DrawPrisonerRows(DWORD a1);
 int  Queen_DrawRelationshipPanel(DWORD a1, int a2);
 void Options_RebuildMainMenuWidgetTemplates(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_PERSISTENCE_INTERNAL_H */

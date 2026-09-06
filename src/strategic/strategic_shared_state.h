@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char a1[3];
 extern char a2[3];
 extern char aArama1[7];
@@ -34,5 +38,9 @@ extern unsigned char g_TreasureDigOutcomeTable_Human[];
 extern CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_METADATA_CAPACITY];
 extern int g_WorldMapBackgroundSpriteSet;
 extern int gameData;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STRATEGIC_SHARED_STATE_H */

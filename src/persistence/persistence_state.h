@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char aBrakPlikuS[15];
 extern char aBuilding_creat[34];
 extern char aBuilding_setpr[41];
@@ -272,5 +276,9 @@ extern char *g_UnitHideFailedLowRankText[6];
 extern char *g_UnitHideFailedNoSpotText[3];
 extern __int16 g_WorldMapUnitMoveSoundSuffixCode;
 extern CLASH95_INTERNAL _DWORD *g_YesNoWindowWidgetSpriteSet;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_PERSISTENCE_STATE_H */

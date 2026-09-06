@@ -21,7 +21,7 @@ PATTERNS = {
 
 
 def source_files() -> list[Path]:
-    return sorted(path for path in SRC.rglob("*") if path.suffix in {".c", ".h"})
+    return sorted(path for path in SRC.rglob("*") if path.suffix in {".c", ".cpp", ".h"})
 
 
 def main() -> int:
@@ -36,7 +36,7 @@ def main() -> int:
         if score:
             per_file.append((score, path.relative_to(ROOT), counts))
 
-    print("Recovered C human-readability debt")
+    print("Recovered C/C++ human-readability debt")
     print("==================================")
     for name in PATTERNS:
         print(f"{name:24} {totals[name]:8d}")

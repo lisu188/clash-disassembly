@@ -1,0 +1,32 @@
+include_script tests/first_campaign_arc_routes/mission_05_visible_first_leg_probe.script
+# Normal turn processing. The banner chooses artwork independently of turn number.
+include_script tests/first_campaign_arc_routes/mission_05_end_turn_ready.script
+wait_log_any 120 tura1.gfx || tura2.gfx || tura3.gfx || tura4.gfx || tura5.gfx || tura6.gfx || tura7.gfx
+wait 1.0
+click 320 240 0.12 0.65 dismiss-observed-turn2-banner
+# Detect a proposal branch explicitly before sending ordinary human-loop input.
+# The prior uninitialized nation-score failure is retained as recovery evidence.
+wait_log_any 120 playgame_before_human_turn selected=-1 a=0 b=2 || queen_proposal_dialog_enter
+fail_unless_last_wait_log_any playgame_before_human_turn selected=-1 a=0 b=2
+world_pan_viewport 63 44 80
+click 320 240 0.18 1.0 select-stack4-at-67-47-turn2
+wait_log 20 selected_stack_changed selected=4 a=67 b=47
+world_save_slot 8 1.0 save-natural-turn2-refresh
+wait_log 30 debug-save-written slot=8 ok=1
+wait 5.0
+screenshot mission05-visible-leg-turn2-refresh
+nonblank mission05-visible-leg-turn2-refresh
+fail_if_log mission05_failure_friendly_attack
+# The original takes five nodes, costing 18 AP, and stops at (63,49) with 2 AP.
+click 64 368 0.18 0.8 set-frontier-waypoint-63-49
+wait_log 20 move_order_track_result selected=4 a=63 b=49 c=5
+wait_log 20 unit_move_track_first selected=4 a=63 b=49 c=18
+click 64 368 0.18 2.0 confirm-frontier-waypoint-63-49
+wait_log 60 unit_move_after_path_state selected=4 a=63 b=49 c=0
+wait_log 20 unit_move_after_path_ap selected=4 a=2 b=0 c=0
+world_save_slot 7 1.0 save-second-leg-observed-endpoint
+wait_log 30 debug-save-written slot=7 ok=1
+wait 5.0
+screenshot mission05-second-visible-leg
+nonblank mission05-second-visible-leg
+fail_if_log mission05_failure_friendly_attack

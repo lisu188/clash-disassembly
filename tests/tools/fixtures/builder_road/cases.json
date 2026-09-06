@@ -1,0 +1,10430 @@
+[
+  {
+    "name": "shore-544-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 544,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-544-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-544-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 544,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 549,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-549-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-549-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 549,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 564,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-564-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-564-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 564,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 569,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-569-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-569-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 569,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 576,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-576-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-576-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 576,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 581,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-581-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-581-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 581,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 546,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-546-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-546-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 546,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 547,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-547-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-547-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 547,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 566,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-566-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-566-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 566,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-567-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-567-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 578,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-578-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-578-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 578,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 0,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground602-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground602-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground602-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground602-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 602,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground603-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground603-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground603-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground603-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground604-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground604-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground604-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground604-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 604,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground609-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground609-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground609-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground609-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 609,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground610-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground610-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 579,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "shore-579-ground610-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground610-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 610,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground611-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground611-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground611-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground611-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 611,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "shore-579-ground65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 65535,
+    "overlay": 579,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 0,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 0,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 0,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 0,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-1-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 1,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-1-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 1,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-1-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 1,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-1-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 1,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-4-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 4,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-4-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 4,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-4-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 4,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-4-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 4,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-8-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 8,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-8-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 8,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-8-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 8,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-8-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 8,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-27-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 27,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-27-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 27,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-27-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 27,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-27-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 27,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-400-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 400,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-400-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 400,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-400-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 400,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-400-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 400,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-416-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 416,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-416-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 416,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-416-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 416,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-416-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 416,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-543-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 543,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-543-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 543,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-543-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 543,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-543-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 543,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-545-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 545,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-545-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 545,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-545-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 545,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-545-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 545,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-567-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-567-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-567-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-567-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-872-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 872,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-872-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 872,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "overlap-existing-872-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 872,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-872-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 872,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-65535-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-65535-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-65535-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "overlap-existing-65535-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "patched-index0-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64000,
+    "patches": [
+      [
+        0,
+        64000
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index0-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64000,
+    "patches": [
+      [
+        0,
+        64000
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index0-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64000,
+    "patches": [
+      [
+        0,
+        64000
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index0-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64000,
+    "patches": [
+      [
+        0,
+        64000
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index1-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64001,
+    "patches": [
+      [
+        4,
+        64001
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index1-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64001,
+    "patches": [
+      [
+        4,
+        64001
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index1-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64001,
+    "patches": [
+      [
+        4,
+        64001
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index1-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64001,
+    "patches": [
+      [
+        4,
+        64001
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index2-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64002,
+    "patches": [
+      [
+        8,
+        64002
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index2-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64002,
+    "patches": [
+      [
+        8,
+        64002
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index2-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64002,
+    "patches": [
+      [
+        8,
+        64002
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index2-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64002,
+    "patches": [
+      [
+        8,
+        64002
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index3-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64003,
+    "patches": [
+      [
+        12,
+        64003
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index3-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64003,
+    "patches": [
+      [
+        12,
+        64003
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index3-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64003,
+    "patches": [
+      [
+        12,
+        64003
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index3-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64003,
+    "patches": [
+      [
+        12,
+        64003
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index4-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64004,
+    "patches": [
+      [
+        16,
+        64004
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index4-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64004,
+    "patches": [
+      [
+        16,
+        64004
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index4-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64004,
+    "patches": [
+      [
+        16,
+        64004
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index4-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64004,
+    "patches": [
+      [
+        16,
+        64004
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index5-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64005,
+    "patches": [
+      [
+        20,
+        64005
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index5-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64005,
+    "patches": [
+      [
+        20,
+        64005
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index5-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64005,
+    "patches": [
+      [
+        20,
+        64005
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index5-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64005,
+    "patches": [
+      [
+        20,
+        64005
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index6-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64006,
+    "patches": [
+      [
+        24,
+        64006
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index6-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64006,
+    "patches": [
+      [
+        24,
+        64006
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index6-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64006,
+    "patches": [
+      [
+        24,
+        64006
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index6-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64006,
+    "patches": [
+      [
+        24,
+        64006
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index7-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64007,
+    "patches": [
+      [
+        28,
+        64007
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index7-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64007,
+    "patches": [
+      [
+        28,
+        64007
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index7-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64007,
+    "patches": [
+      [
+        28,
+        64007
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index7-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64007,
+    "patches": [
+      [
+        28,
+        64007
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index8-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64008,
+    "patches": [
+      [
+        32,
+        64008
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index8-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64008,
+    "patches": [
+      [
+        32,
+        64008
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index8-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64008,
+    "patches": [
+      [
+        32,
+        64008
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index8-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64008,
+    "patches": [
+      [
+        32,
+        64008
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index9-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64009,
+    "patches": [
+      [
+        36,
+        64009
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index9-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64009,
+    "patches": [
+      [
+        36,
+        64009
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index9-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64009,
+    "patches": [
+      [
+        36,
+        64009
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index9-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64009,
+    "patches": [
+      [
+        36,
+        64009
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index10-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64010,
+    "patches": [
+      [
+        40,
+        64010
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index10-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64010,
+    "patches": [
+      [
+        40,
+        64010
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index10-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64010,
+    "patches": [
+      [
+        40,
+        64010
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index10-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64010,
+    "patches": [
+      [
+        40,
+        64010
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index11-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64011,
+    "patches": [
+      [
+        44,
+        64011
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index11-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64011,
+    "patches": [
+      [
+        44,
+        64011
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index11-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64011,
+    "patches": [
+      [
+        44,
+        64011
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index11-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64011,
+    "patches": [
+      [
+        44,
+        64011
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index12-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64012,
+    "patches": [
+      [
+        48,
+        64012
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index12-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64012,
+    "patches": [
+      [
+        48,
+        64012
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index12-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64012,
+    "patches": [
+      [
+        48,
+        64012
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index12-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64012,
+    "patches": [
+      [
+        48,
+        64012
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index13-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64013,
+    "patches": [
+      [
+        52,
+        64013
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index13-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64013,
+    "patches": [
+      [
+        52,
+        64013
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index13-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64013,
+    "patches": [
+      [
+        52,
+        64013
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index13-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64013,
+    "patches": [
+      [
+        52,
+        64013
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index14-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64014,
+    "patches": [
+      [
+        56,
+        64014
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index14-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64014,
+    "patches": [
+      [
+        56,
+        64014
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index14-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64014,
+    "patches": [
+      [
+        56,
+        64014
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index14-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64014,
+    "patches": [
+      [
+        56,
+        64014
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index15-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64015,
+    "patches": [
+      [
+        60,
+        64015
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index15-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64015,
+    "patches": [
+      [
+        60,
+        64015
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index15-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64015,
+    "patches": [
+      [
+        60,
+        64015
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index15-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64015,
+    "patches": [
+      [
+        60,
+        64015
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index16-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64016,
+    "patches": [
+      [
+        64,
+        64016
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index16-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64016,
+    "patches": [
+      [
+        64,
+        64016
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index16-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64016,
+    "patches": [
+      [
+        64,
+        64016
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index16-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64016,
+    "patches": [
+      [
+        64,
+        64016
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index17-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64017,
+    "patches": [
+      [
+        68,
+        64017
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index17-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64017,
+    "patches": [
+      [
+        68,
+        64017
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index17-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64017,
+    "patches": [
+      [
+        68,
+        64017
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index17-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64017,
+    "patches": [
+      [
+        68,
+        64017
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index18-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64018,
+    "patches": [
+      [
+        72,
+        64018
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index18-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64018,
+    "patches": [
+      [
+        72,
+        64018
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index18-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64018,
+    "patches": [
+      [
+        72,
+        64018
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index18-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64018,
+    "patches": [
+      [
+        72,
+        64018
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index19-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64019,
+    "patches": [
+      [
+        76,
+        64019
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index19-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64019,
+    "patches": [
+      [
+        76,
+        64019
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index19-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64019,
+    "patches": [
+      [
+        76,
+        64019
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index19-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64019,
+    "patches": [
+      [
+        76,
+        64019
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index20-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64020,
+    "patches": [
+      [
+        80,
+        64020
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index20-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64020,
+    "patches": [
+      [
+        80,
+        64020
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index20-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64020,
+    "patches": [
+      [
+        80,
+        64020
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index20-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64020,
+    "patches": [
+      [
+        80,
+        64020
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index21-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64021,
+    "patches": [
+      [
+        84,
+        64021
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index21-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64021,
+    "patches": [
+      [
+        84,
+        64021
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index21-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64021,
+    "patches": [
+      [
+        84,
+        64021
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index21-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64021,
+    "patches": [
+      [
+        84,
+        64021
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index22-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64022,
+    "patches": [
+      [
+        88,
+        64022
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index22-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64022,
+    "patches": [
+      [
+        88,
+        64022
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index22-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64022,
+    "patches": [
+      [
+        88,
+        64022
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index22-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64022,
+    "patches": [
+      [
+        88,
+        64022
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index23-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64023,
+    "patches": [
+      [
+        92,
+        64023
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index23-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64023,
+    "patches": [
+      [
+        92,
+        64023
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index23-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64023,
+    "patches": [
+      [
+        92,
+        64023
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index23-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64023,
+    "patches": [
+      [
+        92,
+        64023
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index24-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64024,
+    "patches": [
+      [
+        96,
+        64024
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index24-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64024,
+    "patches": [
+      [
+        96,
+        64024
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index24-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64024,
+    "patches": [
+      [
+        96,
+        64024
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index24-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64024,
+    "patches": [
+      [
+        96,
+        64024
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index25-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64025,
+    "patches": [
+      [
+        100,
+        64025
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index25-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64025,
+    "patches": [
+      [
+        100,
+        64025
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index25-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64025,
+    "patches": [
+      [
+        100,
+        64025
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index25-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64025,
+    "patches": [
+      [
+        100,
+        64025
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index26-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64026,
+    "patches": [
+      [
+        104,
+        64026
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index26-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64026,
+    "patches": [
+      [
+        104,
+        64026
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index26-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64026,
+    "patches": [
+      [
+        104,
+        64026
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index26-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64026,
+    "patches": [
+      [
+        104,
+        64026
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index27-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64027,
+    "patches": [
+      [
+        108,
+        64027
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index27-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64027,
+    "patches": [
+      [
+        108,
+        64027
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index27-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64027,
+    "patches": [
+      [
+        108,
+        64027
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index27-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64027,
+    "patches": [
+      [
+        108,
+        64027
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index28-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64028,
+    "patches": [
+      [
+        112,
+        64028
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index28-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64028,
+    "patches": [
+      [
+        112,
+        64028
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index28-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64028,
+    "patches": [
+      [
+        112,
+        64028
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index28-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64028,
+    "patches": [
+      [
+        112,
+        64028
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index29-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64029,
+    "patches": [
+      [
+        116,
+        64029
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index29-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64029,
+    "patches": [
+      [
+        116,
+        64029
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index29-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64029,
+    "patches": [
+      [
+        116,
+        64029
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index29-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64029,
+    "patches": [
+      [
+        116,
+        64029
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index30-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64030,
+    "patches": [
+      [
+        120,
+        64030
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index30-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64030,
+    "patches": [
+      [
+        120,
+        64030
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index30-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64030,
+    "patches": [
+      [
+        120,
+        64030
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index30-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64030,
+    "patches": [
+      [
+        120,
+        64030
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index31-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64031,
+    "patches": [
+      [
+        124,
+        64031
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index31-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64031,
+    "patches": [
+      [
+        124,
+        64031
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index31-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64031,
+    "patches": [
+      [
+        124,
+        64031
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index31-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64031,
+    "patches": [
+      [
+        124,
+        64031
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index32-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64032,
+    "patches": [
+      [
+        128,
+        64032
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index32-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64032,
+    "patches": [
+      [
+        128,
+        64032
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index32-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64032,
+    "patches": [
+      [
+        128,
+        64032
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index32-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64032,
+    "patches": [
+      [
+        128,
+        64032
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index33-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64033,
+    "patches": [
+      [
+        132,
+        64033
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index33-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64033,
+    "patches": [
+      [
+        132,
+        64033
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index33-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64033,
+    "patches": [
+      [
+        132,
+        64033
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index33-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64033,
+    "patches": [
+      [
+        132,
+        64033
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index34-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64034,
+    "patches": [
+      [
+        136,
+        64034
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index34-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64034,
+    "patches": [
+      [
+        136,
+        64034
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index34-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64034,
+    "patches": [
+      [
+        136,
+        64034
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index34-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64034,
+    "patches": [
+      [
+        136,
+        64034
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index35-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64035,
+    "patches": [
+      [
+        140,
+        64035
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index35-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64035,
+    "patches": [
+      [
+        140,
+        64035
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index35-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64035,
+    "patches": [
+      [
+        140,
+        64035
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index35-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64035,
+    "patches": [
+      [
+        140,
+        64035
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index36-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64036,
+    "patches": [
+      [
+        144,
+        64036
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index36-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64036,
+    "patches": [
+      [
+        144,
+        64036
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index36-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64036,
+    "patches": [
+      [
+        144,
+        64036
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index36-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64036,
+    "patches": [
+      [
+        144,
+        64036
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index37-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64037,
+    "patches": [
+      [
+        148,
+        64037
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index37-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64037,
+    "patches": [
+      [
+        148,
+        64037
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index37-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64037,
+    "patches": [
+      [
+        148,
+        64037
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index37-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64037,
+    "patches": [
+      [
+        148,
+        64037
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index38-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64038,
+    "patches": [
+      [
+        152,
+        64038
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index38-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64038,
+    "patches": [
+      [
+        152,
+        64038
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index38-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64038,
+    "patches": [
+      [
+        152,
+        64038
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index38-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64038,
+    "patches": [
+      [
+        152,
+        64038
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index39-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64039,
+    "patches": [
+      [
+        156,
+        64039
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index39-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64039,
+    "patches": [
+      [
+        156,
+        64039
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index39-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64039,
+    "patches": [
+      [
+        156,
+        64039
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index39-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64039,
+    "patches": [
+      [
+        156,
+        64039
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index40-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64040,
+    "patches": [
+      [
+        160,
+        64040
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index40-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64040,
+    "patches": [
+      [
+        160,
+        64040
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index40-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64040,
+    "patches": [
+      [
+        160,
+        64040
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index40-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64040,
+    "patches": [
+      [
+        160,
+        64040
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index41-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64041,
+    "patches": [
+      [
+        164,
+        64041
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index41-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64041,
+    "patches": [
+      [
+        164,
+        64041
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index41-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64041,
+    "patches": [
+      [
+        164,
+        64041
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index41-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64041,
+    "patches": [
+      [
+        164,
+        64041
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index42-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64042,
+    "patches": [
+      [
+        168,
+        64042
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index42-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64042,
+    "patches": [
+      [
+        168,
+        64042
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index42-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64042,
+    "patches": [
+      [
+        168,
+        64042
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index42-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64042,
+    "patches": [
+      [
+        168,
+        64042
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index43-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64043,
+    "patches": [
+      [
+        172,
+        64043
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index43-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64043,
+    "patches": [
+      [
+        172,
+        64043
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index43-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64043,
+    "patches": [
+      [
+        172,
+        64043
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index43-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64043,
+    "patches": [
+      [
+        172,
+        64043
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index44-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64044,
+    "patches": [
+      [
+        176,
+        64044
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index44-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64044,
+    "patches": [
+      [
+        176,
+        64044
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index44-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64044,
+    "patches": [
+      [
+        176,
+        64044
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index44-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64044,
+    "patches": [
+      [
+        176,
+        64044
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index45-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64045,
+    "patches": [
+      [
+        180,
+        64045
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index45-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64045,
+    "patches": [
+      [
+        180,
+        64045
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index45-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64045,
+    "patches": [
+      [
+        180,
+        64045
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index45-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64045,
+    "patches": [
+      [
+        180,
+        64045
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index46-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64046,
+    "patches": [
+      [
+        184,
+        64046
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index46-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64046,
+    "patches": [
+      [
+        184,
+        64046
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index46-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64046,
+    "patches": [
+      [
+        184,
+        64046
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index46-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64046,
+    "patches": [
+      [
+        184,
+        64046
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index47-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64047,
+    "patches": [
+      [
+        188,
+        64047
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index47-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64047,
+    "patches": [
+      [
+        188,
+        64047
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "patched-index47-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64047,
+    "patches": [
+      [
+        188,
+        64047
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index47-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64047,
+    "patches": [
+      [
+        188,
+        64047
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index48-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64048,
+    "patches": [
+      [
+        192,
+        64048
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index48-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64048,
+    "patches": [
+      [
+        192,
+        64048
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index48-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64048,
+    "patches": [
+      [
+        192,
+        64048
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "patched-index48-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 64048,
+    "patches": [
+      [
+        192,
+        64048
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "first-match-before-existing-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [
+      [
+        0,
+        567
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "negative-entry-is-not-u16-alignment0",
+    "op": 0,
+    "args": [
+      23,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [
+      [
+        0,
+        4294967295
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "first-match-before-existing-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [
+      [
+        0,
+        567
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "negative-entry-is-not-u16-alignment1",
+    "op": 0,
+    "args": [
+      24,
+      41,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [
+      [
+        0,
+        4294967295
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "first-match-before-existing-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [
+      [
+        0,
+        567
+      ]
+    ],
+    "expected": 1
+  },
+  {
+    "name": "negative-entry-is-not-u16-alignment2",
+    "op": 0,
+    "args": [
+      23,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [
+      [
+        0,
+        4294967295
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "first-match-before-existing-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 567,
+    "patches": [
+      [
+        0,
+        567
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "negative-entry-is-not-u16-alignment3",
+    "op": 0,
+    "args": [
+      24,
+      42,
+      41,
+      23
+    ],
+    "ground": 603,
+    "overlay": 65535,
+    "patches": [
+      [
+        0,
+        4294967295
+      ]
+    ],
+    "expected": 0
+  },
+  {
+    "name": "selector-sprite0",
+    "op": 1,
+    "args": [
+      0,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -7
+  },
+  {
+    "name": "selector-sprite1",
+    "op": 1,
+    "args": [
+      1,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -7
+  },
+  {
+    "name": "selector-sprite2",
+    "op": 1,
+    "args": [
+      2,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -6
+  },
+  {
+    "name": "selector-sprite3",
+    "op": 1,
+    "args": [
+      3,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -6
+  },
+  {
+    "name": "selector-sprite4",
+    "op": 1,
+    "args": [
+      4,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -5
+  },
+  {
+    "name": "selector-sprite5",
+    "op": 1,
+    "args": [
+      5,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -5
+  },
+  {
+    "name": "selector-sprite6",
+    "op": 1,
+    "args": [
+      6,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -4
+  },
+  {
+    "name": "selector-sprite7",
+    "op": 1,
+    "args": [
+      7,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -4
+  },
+  {
+    "name": "selector-sprite8",
+    "op": 1,
+    "args": [
+      8,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -3
+  },
+  {
+    "name": "selector-sprite9",
+    "op": 1,
+    "args": [
+      9,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -3
+  },
+  {
+    "name": "selector-sprite10",
+    "op": 1,
+    "args": [
+      10,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -2
+  },
+  {
+    "name": "selector-sprite11",
+    "op": 1,
+    "args": [
+      11,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -2
+  },
+  {
+    "name": "selector-sprite12",
+    "op": 1,
+    "args": [
+      12,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -1
+  },
+  {
+    "name": "selector-sprite13",
+    "op": 1,
+    "args": [
+      13,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": -1
+  },
+  {
+    "name": "selector-sprite14",
+    "op": 1,
+    "args": [
+      14,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "selector-sprite15",
+    "op": 1,
+    "args": [
+      15,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "selector-sprite16",
+    "op": 1,
+    "args": [
+      16,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 0
+  },
+  {
+    "name": "selector-sprite17",
+    "op": 1,
+    "args": [
+      17,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "selector-sprite18",
+    "op": 1,
+    "args": [
+      18,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 1
+  },
+  {
+    "name": "selector-sprite19",
+    "op": 1,
+    "args": [
+      19,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 2
+  },
+  {
+    "name": "selector-sprite20",
+    "op": 1,
+    "args": [
+      20,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 2
+  },
+  {
+    "name": "selector-sprite21",
+    "op": 1,
+    "args": [
+      21,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 3
+  },
+  {
+    "name": "selector-sprite22",
+    "op": 1,
+    "args": [
+      22,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 3
+  },
+  {
+    "name": "selector-sprite23",
+    "op": 1,
+    "args": [
+      23,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 4
+  },
+  {
+    "name": "selector-sprite24",
+    "op": 1,
+    "args": [
+      24,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 4
+  },
+  {
+    "name": "selector-sprite25",
+    "op": 1,
+    "args": [
+      25,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 5
+  },
+  {
+    "name": "selector-sprite26",
+    "op": 1,
+    "args": [
+      26,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 5
+  },
+  {
+    "name": "selector-sprite27",
+    "op": 1,
+    "args": [
+      27,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 6
+  },
+  {
+    "name": "selector-sprite28",
+    "op": 1,
+    "args": [
+      28,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 6
+  },
+  {
+    "name": "selector-sprite29",
+    "op": 1,
+    "args": [
+      29,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 7
+  },
+  {
+    "name": "selector-sprite30",
+    "op": 1,
+    "args": [
+      30,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 7
+  },
+  {
+    "name": "selector-sprite31",
+    "op": 1,
+    "args": [
+      31,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 8
+  },
+  {
+    "name": "selector-sprite63",
+    "op": 1,
+    "args": [
+      63,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 24
+  },
+  {
+    "name": "selector-sprite127",
+    "op": 1,
+    "args": [
+      127,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 56
+  },
+  {
+    "name": "selector-sprite255",
+    "op": 1,
+    "args": [
+      255,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 120
+  },
+  {
+    "name": "selector-sprite65535",
+    "op": 1,
+    "args": [
+      65535,
+      7,
+      0,
+      0
+    ],
+    "ground": 0,
+    "overlay": 0,
+    "patches": [],
+    "expected": 32760
+  }
+]

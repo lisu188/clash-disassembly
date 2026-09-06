@@ -5,6 +5,10 @@
 
 #include "strategic_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int  Queen_FindEligibleBirthHostBuilding(int player_index);
 extern int Player_CheckSoleSurvivorAndShowVictoryBanner (int player_index);
 void  Options_ApplyInGameSliders(int a1, DWORD resource_handle);
@@ -80,7 +84,7 @@ signed int  Rules_IsQueuedPathTargetBridgeCrossing(int stack_index);
 signed int  Rules_BuildRoadOrStepTowardQueuedPath(int stack_index, DWORD a2, double a3);
 int  Rules_BuildTrapNearTile(DWORD target_x, int target_y, DWORD stack_index, double a4);
 int  UnitStack_CalcArmyFactStrength(int stack_record);
-signed int  Rules_EnsureArmyFactForStack(__int16 *army_stack, int army_id, double a3, char a4, DWORD a5);
+signed int  Rules_EnsureArmyFactForStack(clash95_unaligned_int16 *army_stack, int army_id, double a3, char a4, DWORD a5);
 int Game_GetTurnNumber(void);
 _DWORD * Rules_OnCastleUpdate(int building_index, char a2, DWORD a3, double a4);
 BOOL  Building_TryStartUpgradeByIndex(int building_index);
@@ -109,7 +113,7 @@ void  Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delt
 signed int  Building_HasUnitLicenceByIndex(int building_index, unit_type licence_type);
 BOOL  Building_BuyUnitLicenceByIndex(int building_index, unit_type licence_type, DWORD a3);
 BOOL  Building_CanBuyUnitLicenceByIndex(int building_index, unit_type licence_type);
-BOOL  Rules_BuildCastle(int building_type, int a2, int a3, int a4, char *castle_name);
+BOOL  Rules_BuildCastle(int unused_arg1, int unused_arg2, int stack_index, int building_type, char *castle_name, double clips_context);
 signed int  Building_FindUnitLicenceSlotIndexOrZero(int building_index, unit_type licence_type);
 signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int building_index);
 signed int  Building_UnitsLeaveReadyGarrisonSlots(int building_index, int a2, double a3);
@@ -213,7 +217,7 @@ double  AI_CalcStrategicPriorityScore(int target_type, DWORD tile_x, int origin_
 void  AI_EvaluateStrategicTargetAtTile(int filter_type, int filter_owner, int tile_y, int tile_x, int origin_x, int origin_y, int *best_type_out, int *best_target_out, float *best_score_out);
 int  AI_FindBestStrategicTargetNearTile(int type_filter, int owner_filter, int origin_x, int origin_y, signed int search_radius);
 void Scenario_LoadMissionByIndex(int mission_index, double a2);
-int __thiscall RenderState_ConstructGlobalInstance(void *this);
+int __thiscall RenderState_ConstructGlobalInstance(void *this_);
 CLASH95_INTERNAL void Compat_SyncRenderCursorGlobals (const _DWORD *render_state);
 CLASH95_INTERNAL void Compat_MenuProbeTraceRenderInput (const char *phase, int render_state, int arg0, int arg1, int extra0, int extra1);
 _DWORD * RenderState_ConstructDefault(int render_state, int a2);
@@ -222,5 +226,9 @@ CLASH95_INTERNAL void Compat_RenderStateInvokeMethod(int render_state, unsigned 
 CLASH95_INTERNAL _DWORD *Compat_RenderStateSurface (int render_state, unsigned int field_offset);
 CLASH95_INTERNAL _DWORD *Compat_RenderStateCursorDescriptor (int render_state);
 _DWORD * Device_GetParamA(int render_state, int a2);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STRATEGIC_INTERNAL_H */

@@ -38,6 +38,7 @@ SUPPORT_FILES = (
     "src/compatibility/decomp_runtime_stubs.c",
     "src/compatibility/defs.h",
 )
+SUPPORT_FILES += tuple(path[:-2] + ".cpp" for path in SUPPORT_FILES if path.endswith(".c"))
 
 
 def existing_files(paths):
@@ -50,6 +51,7 @@ test_files = [
     os.path.relpath(path, lc.REPO).replace(os.sep, "/")
     for path in (
         _glob.glob(os.path.join(lc.REPO, "tests", "unit", "**", "*.c"), recursive=True)
+        + _glob.glob(os.path.join(lc.REPO, "tests", "unit", "**", "*.cpp"), recursive=True)
         + _glob.glob(os.path.join(lc.REPO, "tests", "unit", "*.h"))
     )
 ]

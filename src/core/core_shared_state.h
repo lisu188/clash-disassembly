@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char a1[3];
 extern char a2[3];
 extern int g_CompatStringHolder_Vtable;
@@ -14,5 +18,9 @@ extern int g_PathEntry_Vtable;
 extern _DWORD g_RenderState[286];
 extern int g_WorldMapBackgroundSpriteSet;
 extern int gameData;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CORE_SHARED_STATE_H */

@@ -4,7 +4,7 @@ Evidence-driven recovery of the original Win95 Clash binary.
 
 - `clash95.asm` is the protected Win95 behavioral source of truth.
 - The 12 manifest-backed subsystem directories directly under `src/` are the
-  canonical recovered GNU C17 implementation
+  canonical recovered GNU++20 implementation
   under SDL build, runtime, and campaign-route validation.
 - `data/recovered_sources.json` maps all 4,157 recovered functions to 140
   independently compiled translation units.
@@ -22,12 +22,12 @@ Current validated campaign-route state: missions `00..04` and `13` are complete 
 
 ## Quick Start
 
-Run these commands in Linux or WSL with CMake 3.28+, GCC 13, Ninja, pkg-config,
+Run these commands in Linux or WSL with CMake 3.28+, GCC 13 with g++-13, Ninja, pkg-config,
 SDL2 and X11 development libraries, and Python 3 installed. See
 [build prerequisites and both compiler gates](docs/BUILD_AND_TEST.md).
 
 ```sh
-CC=gcc-13 cmake -S . -B build/gcc-13 -G Ninja -DCMAKE_BUILD_TYPE=Debug
+CXX=g++-13 cmake -S . -B build/gcc-13 -G Ninja -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/gcc-13 --target clash95_recovered clash95_bootstrap \
   runtime_mission_trace_tests clash95_split_audit -j2
 ctest --test-dir build/gcc-13 \
@@ -93,7 +93,7 @@ the current resume authority.
 ## Source organization
 
 The recovered implementation is compiled as 12 subsystem object libraries from
-the manifest-backed C files in subsystem directories directly under `src/`.
+the manifest-backed C++ files in subsystem directories directly under `src/`.
 SDL, compatibility, instrumentation,
 and bootstrap code remain in their own `src/` areas. The former unified source,
 recovered include-C fragments, and compatibility symlinks were removed at the

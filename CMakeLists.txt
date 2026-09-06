@@ -1,6 +1,21 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(clash95_recovered LANGUAGES C)
+project(clash95_recovered LANGUAGES CXX)
+
+# The runtime and native test harness use GNU++20 throughout.
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS YES)
+# These are ordinary translation units; no C++ module scanner is required.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+add_compile_options(
+  # Match GNU C17's libc feature profile; the C++ drivers otherwise enable
+  # _GNU_SOURCE and silently select glibc's C23 scanf/strtol entry points.
+  "$<$<COMPILE_LANGUAGE:CXX>:-U_GNU_SOURCE>"
+  "$<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>"
+  "$<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>"
+  "$<$<COMPILE_LANGUAGE:CXX>:-Werror=write-strings>"
+)
 
 enable_testing()
 
@@ -59,15 +74,15 @@ foreach(subsystem IN LISTS CLASH95_SPLIT_SUBSYSTEMS)
 endforeach()
 
 add_library(clash95_platform_objects OBJECT
-  src/platform/platform_sdl_runtime.c
+  src/platform/platform_sdl_runtime.cpp
 )
 
 add_library(clash95_instrumentation_objects OBJECT
-  src/instrumentation/runtime_mission_trace.c
+  src/instrumentation/runtime_mission_trace.cpp
 )
 
 add_library(clash95_compatibility_objects OBJECT
-  src/compatibility/decomp_runtime_stubs.c
+  src/compatibility/decomp_runtime_stubs.cpp
 )
 
 set(CLASH95_SUPPORT_OBJECT_TARGETS
@@ -80,19 +95,15 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
   target_include_directories(${target} PRIVATE ${CLASH95_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(${target} PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads)
   set_target_properties(${target} PROPERTIES
-    C_STANDARD 17
-    C_STANDARD_REQUIRED YES
-    C_EXTENSIONS YES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS YES
   )
-  if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${target} PRIVATE
       -Wall
       -Wextra
       -Wformat=2
-      -Wstrict-prototypes
-      -Wmissing-prototypes
-      -Werror=implicit-function-declaration
-      -Werror=implicit-int
       -Werror=return-type
       # Promoted after the warning-drawdown campaign zeroed the category on
       # both compilers (was 214): it can never return.
@@ -102,27 +113,17 @@ foreach(target IN LISTS CLASH95_SPLIT_OBJECT_TARGETS)
       -fno-pie
     )
   endif()
-  # Recovered calls and fields intentionally preserve the original 32-bit ABI.
-  # Clang diagnoses unresolved pointer/integer signatures as constraint errors;
-  # keep them visible as ratcheted warnings until each signature is proven.
-  if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${target} PRIVATE
-      -Wno-error=int-conversion
-      -Wno-error=incompatible-pointer-types
-      -Wno-error=incompatible-function-pointer-types
-    )
-  endif()
 endforeach()
 
 foreach(target IN LISTS CLASH95_SUPPORT_OBJECT_TARGETS)
   target_include_directories(${target} PRIVATE ${CLASH95_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(${target} PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads)
   set_target_properties(${target} PROPERTIES
-    C_STANDARD 17
-    C_STANDARD_REQUIRED YES
-    C_EXTENSIONS YES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS YES
   )
-  if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${target} PRIVATE
       -Wall
       -Wextra
@@ -143,7 +144,7 @@ add_library(clash95_recovered STATIC
 )
 
 add_executable(clash95_bootstrap
-  src/bootstrap/bootstrap_main.c
+  src/bootstrap/bootstrap_main.cpp
   ${CLASH95_SPLIT_OBJECTS}
   $<TARGET_OBJECTS:clash95_platform_objects>
   $<TARGET_OBJECTS:clash95_instrumentation_objects>
@@ -152,12 +153,12 @@ add_executable(clash95_bootstrap
 
 target_include_directories(clash95_bootstrap PRIVATE ${CLASH95_PRIVATE_INCLUDE_DIRS})
 set_target_properties(clash95_bootstrap PROPERTIES
-  C_STANDARD 17
-  C_STANDARD_REQUIRED YES
-  C_EXTENSIONS YES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED YES
+  CXX_EXTENSIONS YES
 )
 
-if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_bootstrap PRIVATE
     -Wall
     -Wextra
@@ -391,8 +392,8 @@ add_campaign_route_regression_test(03 900)
 add_campaign_route_regression_test(04 3900)
 
 add_executable(runtime_mission_trace_tests
-  tests/runtime_mission_trace_test.c
-  src/instrumentation/runtime_mission_trace.c
+  tests/runtime_mission_trace_test.cpp
+  src/instrumentation/runtime_mission_trace.cpp
 )
 target_include_directories(runtime_mission_trace_tests PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/instrumentation
@@ -400,15 +401,15 @@ target_include_directories(runtime_mission_trace_tests PRIVATE
 target_compile_definitions(runtime_mission_trace_tests PRIVATE
   RUNTIME_MISSION_TRACE_DISABLE_CONSTRUCTOR=1
 )
-if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(runtime_mission_trace_tests PRIVATE
     -Wall -Wextra -Wpedantic -Werror)
 endif()
 target_link_libraries(runtime_mission_trace_tests PRIVATE Threads::Threads)
 set_target_properties(runtime_mission_trace_tests PROPERTIES
-  C_STANDARD 17
-  C_STANDARD_REQUIRED YES
-  C_EXTENSIONS YES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED YES
+  CXX_EXTENSIONS YES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 add_test(
@@ -429,7 +430,7 @@ option(CLASH95_COVERAGE "Build instrumented clash95 unit tests" OFF)
 
 if(CLASH95_COVERAGE)
   file(GLOB CLASH95_UNIT_CASE_SOURCES CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/cases/test_*.c)
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/cases/test_*.cpp)
 
   add_library(clash95_recovered_coverage_objects OBJECT
     ${CLASH95_SPLIT_ALL_SOURCES})
@@ -438,24 +439,23 @@ if(CLASH95_COVERAGE)
   target_compile_definitions(clash95_recovered_coverage_objects PRIVATE
     CLASH95_TESTING=1)
   set_target_properties(clash95_recovered_coverage_objects PROPERTIES
-    C_STANDARD 17
-    C_STANDARD_REQUIRED YES
-    C_EXTENSIONS YES)
-  if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS YES)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(clash95_recovered_coverage_objects PRIVATE
-      -Wall -Wextra -Wformat=2 -Wstrict-prototypes -Wmissing-prototypes
-      -Werror=implicit-function-declaration -Werror=implicit-int
+      -Wall -Wextra -Wformat=2
       -Werror=return-type -g -O0 --coverage -fprofile-abs-path
       -ffunction-sections -fdata-sections -fno-pie)
   endif()
 
   add_executable(clash95_unit_tests
-    tests/unit/test_runner.c
-    tests/unit/test_compat_stubs.c
+    tests/unit/test_runner.cpp
+    tests/unit/test_compat_stubs.cpp
     ${CLASH95_UNIT_CASE_SOURCES}
-    src/platform/platform_sdl_runtime.c
-    src/instrumentation/runtime_mission_trace.c
-    src/compatibility/decomp_runtime_stubs.c
+    src/platform/platform_sdl_runtime.cpp
+    src/instrumentation/runtime_mission_trace.cpp
+    src/compatibility/decomp_runtime_stubs.cpp
     $<TARGET_OBJECTS:clash95_recovered_coverage_objects>
   )
   target_include_directories(clash95_unit_tests PRIVATE
@@ -478,9 +478,9 @@ if(CLASH95_COVERAGE)
     CLASH95_TESTING=1
     RUNTIME_MISSION_TRACE_DISABLE_CONSTRUCTOR=1)
   set_target_properties(clash95_unit_tests PROPERTIES
-    C_STANDARD 17
-    C_STANDARD_REQUIRED YES
-    C_EXTENSIONS YES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS YES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
   target_compile_options(clash95_unit_tests PRIVATE
     -Wall -Wextra -Wpedantic -Werror -g -O0 --coverage -fprofile-abs-path

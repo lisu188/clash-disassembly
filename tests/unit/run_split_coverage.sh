@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Asset-free native fixtures may reach SDL event initialization. Keep their
+# default backend headless; explicit driver overrides can use an owned Xvfb.
+export SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-dummy}"
+export SDL_AUDIODRIVER="${SDL_AUDIODRIVER:-dummy}"
+
 if [[ $# -ne 2 ]]; then
   echo "usage: $0 <unit-test-executable> <build-directory>" >&2
   exit 2

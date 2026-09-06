@@ -394,7 +394,13 @@ typedef enum Direction8
 #define BUILDING_PRISONER_ACTION(slotPtr) (*(_BYTE *)(uintptr_t)((slotPtr) + 3))
 #define BUILDING_PRISONER_RANSOM(slotPtr) (*(_WORD *)(uintptr_t)((slotPtr) + 4))
 
+/* C uses an unsigned 32-bit compatible type for this enum. Pin it in C++ too:
+ * the recovered calls also carry -1/0xFFFFFFFF sentinels through this type. */
+#ifdef __cplusplus
+typedef enum unit_type : unsigned int
+#else
 typedef enum unit_type
+#endif
 {
   UNIT_TYPE_PEASANT = 0,
   UNIT_TYPE_LIGHT_INFANTRY = 1,
@@ -561,6 +567,32 @@ enum
 };
 #define WORLD_MAP_ACTION_WIDGET_RECORD_SIZE 53
 #define WORLD_MAP_ACTION_WIDGET_COUNT 6
+
+/* Original builder records: [0x511BC0,0x511D02), six 53-byte records + sentinel.
+ * Road data: [0x51420C,0x5144CE), including the original overlapping scan. */
+#define BUILDER_ACTION_WIDGET_TABLE_BYTES 322
+
+/* BuildBuilding aliases point inside its own original packed table. */
+#define BUILD_CURSOR_WIDGET_TABLE_BYTES 322
+#define g_BuildBuildingActionWidgetStateBase (*(int *)(g_BuildBuildingActionWidgetTable + 8))
+#define g_BuildBuildingActionWidgetHandlerBase (*(_DWORD *)(g_BuildBuildingActionWidgetTable + 32))
+#define ROAD_BUILD_DATA_BYTES 706
+#define ROAD_BUILD_BOUNCE_OFFSETS_OFFSET 0x88
+#define ROAD_BUILD_DIRECTION_WIDGETS_OFFSET 0xAC
+#define ROAD_BUILD_CONTROL_WIDGETS_OFFSET 0x180
+#define g_BridgeApproachRoadOverlayTileIds ((int *)(g_RoadBuildData))
+#define g_RoadBuildModeMarkerBounceOffsets ((int *)(g_RoadBuildData + ROAD_BUILD_BOUNCE_OFFSETS_OFFSET))
+#define g_RoadBuildModeDirectionalWidgets (g_RoadBuildData + ROAD_BUILD_DIRECTION_WIDGETS_OFFSET)
+#define g_RoadBuildModeNorthMarkerX (*(int *)(g_RoadBuildData + 0xAC))
+#define g_RoadBuildModeNorthMarkerY (*(int *)(g_RoadBuildData + 0xB0))
+#define g_RoadBuildModeEastMarkerX (*(int *)(g_RoadBuildData + 0xE1))
+#define g_RoadBuildModeEastMarkerY (*(int *)(g_RoadBuildData + 0xE5))
+#define g_RoadBuildModeSouthMarkerX (*(int *)(g_RoadBuildData + 0x116))
+#define g_RoadBuildModeSouthMarkerY (*(int *)(g_RoadBuildData + 0x11A))
+#define g_RoadBuildModeWestMarkerX (*(int *)(g_RoadBuildData + 0x14B))
+#define g_RoadBuildModeWestMarkerY (*(int *)(g_RoadBuildData + 0x14F))
+#define g_RoadBuildModeControlWidgets ((_DWORD *)(g_RoadBuildData + ROAD_BUILD_CONTROL_WIDGETS_OFFSET))
+#define g_RoadBuildModeControlWidgetState (*(int *)(g_RoadBuildData + 0x188))
  // weak
 #define g_WorldMapMapModeWidgetFlags (*(int *)(g_WorldMapActionButtonWidgetTable + 8))
 #define g_WorldMapJoinUnitsWidgetRecord (*(unsigned char *)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3))
@@ -784,20 +816,20 @@ typedef struct UnitTypeRuntimePointerRecord
 typedef char UnitTypeRuntimeCoreMetadataRecord_size_check[
   sizeof(UnitTypeRuntimeCoreMetadataRecord) == UNIT_TYPE_METADATA_STRIDE ? 1 : -1];
 
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, unrecovered_38_69) == 38, "unit metadata raw span");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, vision_radius) == 70, "unit metadata vision");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_time) == 71, "unit metadata production time");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_cost) == 72, "unit metadata production cost");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_licence_cost) == 73, "unit metadata licence cost");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_mode_2) == 75, "unit metadata mode 2 tech");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_other_modes) == 76, "unit metadata other tech");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, role) == 77, "unit metadata tactical role");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, corpse_sprite_base_index) == 78, "unit metadata corpse sprite");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, melee_attack_sound_frame) == 79, "unit metadata melee sound");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, ranged_attack_sound_frame) == 80, "unit metadata ranged sound");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, original_move_sound_stem_va) == 81, "unit metadata movement stem VA");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_variant_count) == 85, "unit metadata movement variants");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_base_volume) == 86, "unit metadata movement volume");
-_Static_assert(offsetof(UnitTypeRuntimeCoreMetadataRecord, autoresolve_casualty_weight) == 87, "unit metadata casualty weight");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, unrecovered_38_69) == 38, "unit metadata raw span");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, vision_radius) == 70, "unit metadata vision");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_time) == 71, "unit metadata production time");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_cost) == 72, "unit metadata production cost");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_licence_cost) == 73, "unit metadata licence cost");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_mode_2) == 75, "unit metadata mode 2 tech");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, production_required_tech_level_other_modes) == 76, "unit metadata other tech");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, role) == 77, "unit metadata tactical role");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, corpse_sprite_base_index) == 78, "unit metadata corpse sprite");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, melee_attack_sound_frame) == 79, "unit metadata melee sound");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, ranged_attack_sound_frame) == 80, "unit metadata ranged sound");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, original_move_sound_stem_va) == 81, "unit metadata movement stem VA");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_variant_count) == 85, "unit metadata movement variants");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, move_sound_base_volume) == 86, "unit metadata movement volume");
+CLASH95_STATIC_ASSERT(offsetof(UnitTypeRuntimeCoreMetadataRecord, autoresolve_casualty_weight) == 87, "unit metadata casualty weight");
 
 #endif /* CLASH95_RECOVERED_TYPES_H */

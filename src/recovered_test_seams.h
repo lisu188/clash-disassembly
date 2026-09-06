@@ -6,13 +6,17 @@
 #include "recovered_types.h"
 
 #ifdef CLASH95_TESTING
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 CLASH95_TEST_VISIBLE int Castle_InvokePrisonerPanel (int building_record, int callback_context, DWORD runtime_context);
 CLASH95_TEST_VISIBLE int Castle_InvokeEconomyPanel (int building_record, int callback_context, DWORD runtime_context);
 CLASH95_TEST_VISIBLE void BuildingGarrisonDialog_WriteActionWidgetRecord (unsigned char *record, int left, int top, int flags, int sprite_index_base, int sprite_index_selected_base, void *action_callback, const char *text_pl, const char *text_en, const char *text_de, const char *sound);
 CLASH95_TEST_VISIBLE int Diagnostics_IsWorldMapActionVerbose (void);
 CLASH95_TEST_VISIBLE int Diagnostics_ShouldTraceWorldMapActionStage (const char *stage);
 CLASH95_TEST_VISIBLE void Diagnostics_TraceCastleHotspots (int surface_handle);
-CLASH95_TEST_VISIBLE WCCompatListBase *WCCompat_ListFromBase (WCIsvListBase *this);
+CLASH95_TEST_VISIBLE WCCompatListBase *WCCompat_ListFromBase (WCIsvListBase *this_);
 CLASH95_TEST_VISIBLE WCCompatListBase *WCCompat_ListFromHandle (int list_handle);
 CLASH95_TEST_VISIBLE WCCompatLink *WCCompat_LinkFromHandle (int link_handle);
 CLASH95_TEST_VISIBLE void Compat_StringHolderAssignJoined (_DWORD *holder, const char *prefix, const char *suffix);
@@ -36,6 +40,10 @@ CLASH95_TEST_VISIBLE void YesNoWindow_WriteButtonWidgetRecord (unsigned char *re
 CLASH95_TEST_VISIBLE void YesNoWindow_RebuildButtonWidgets (unsigned char *widgets, int confirm_left, int top, int cancel_left);
 CLASH95_TEST_VISIBLE void MainMenu_WriteButtonWidgetTemplateRecord (unsigned char *record, int left, int top, int sprite_index_base, int sprite_index_selected_base, int action_callback, const char *sound_name);
 CLASH95_TEST_VISIBLE void CampaignMenu_WriteButtonWidgetTemplateRecord (unsigned char *record, int left, int top, int sprite_index_base, int sprite_index_selected_base, int action_callback, const char *sound_name);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 #endif /* CLASH95_TESTING */
 
 #endif /* CLASH95_RECOVERED_TEST_SEAMS_H */

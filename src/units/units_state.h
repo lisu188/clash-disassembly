@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char a15sPl1dP[94];
 extern char aAs1D[];
 extern char aAs2D[];
@@ -132,5 +136,9 @@ extern int g_WorldMapAttentionFlashUnitIndex;
 extern int (*g_WorldMapDrawExtensionHook)(void);
 extern int g_WorldMapUnitWalkStepCounter;
 extern int logEnabled;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_UNITS_STATE_H */

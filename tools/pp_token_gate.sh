@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Compare recovered preprocessed token streams (tools/pp_token_diff.py).
 #
-# It preprocesses, in manifest order, each independently compiled GNU C17
+# It preprocesses each independently compiled GNU C17 / GNU C++20
 # source named by data/recovered_sources.json.
 #
 # Usage:
@@ -12,6 +12,8 @@
 #
 # A snapshot is the concurrency-safe workflow. Historical positional
 # snapshot/ref arguments remain accepted. --split remains a compatibility no-op.
+# Set CC/CXX to select matched C/C++ compilers. --normalize-cpp-paths approves
+# only .cpp -> .c translation-unit boundary labels during comparison.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -21,6 +23,7 @@ BASE_REF=""
 DIFF_ARGS=()
 PYTHON_BIN="${PYTHON:-python3}"
 CC_BIN="${CC:-gcc}"
+CXX_BIN="${CXX:-g++}"
 
 usage() {
   sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'
@@ -29,6 +32,10 @@ usage() {
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --split)
+      shift
+      ;;
+    --normalize-cpp-paths)
+      DIFF_ARGS+=("--normalize-cpp-paths")
       shift
       ;;
     --manifest)
@@ -108,6 +115,12 @@ preprocess() {
   local source
   local index=0
   local sources=()
+  local compiler="$CC_BIN"
+  local standard=gnu17
+  local language=c
+  local language_flags=()
+  local has_c=0
+  local has_cpp=0
   local flags=(
     -Isrc/platform -Isrc/compatibility -Isrc/instrumentation
     -Isrc -E -P
@@ -118,22 +131,52 @@ preprocess() {
     echo "no recovered sources selected" >&2
     return 1
   fi
-  # Feed one manifest-generated include stream to the preprocessor.  The split
+  for source in "${sources[@]}"; do
+    if [ ! -f "$tree/$source" ]; then
+      echo "manifest source does not exist: $source" >&2
+      return 1
+    fi
+    case "$source" in
+      *.c) has_c=1 ;;
+      *.cpp) has_cpp=1 ;;
+      *) echo "unsupported source language: $source" >&2; return 1 ;;
+    esac
+  done
+  if [ "$has_c" -eq 1 ] && [ "$has_cpp" -eq 1 ]; then
+    # Mixed stages need a separate preprocessing context per TU: __cplusplus
+    # and language-dependent headers must describe that source's compiler.
+    for source in "${sources[@]}"; do
+      if [[ "$source" == *.cpp ]]; then
+        compiler="$CXX_BIN"; standard=gnu++20; language=c++
+        language_flags=(-U_GNU_SOURCE)
+      else
+        compiler="$CC_BIN"; standard=gnu17; language=c
+        language_flags=()
+      fi
+      printf 'CLASH95_PP_TRANSLATION_UNIT_BOUNDARY_%04d "%s";\n' "$index" "$source"
+      printf '#include "%s"\n' "$source" \
+        | (cd "$tree" && "$compiler" "-std=$standard" "${language_flags[@]}" "${flags[@]}" -x "$language" -)
+      index=$((index + 1))
+    done
+    return
+  fi
+  if [ "$has_cpp" -eq 1 ]; then
+    compiler="$CXX_BIN"; standard=gnu++20; language=c++
+    language_flags=(-U_GNU_SOURCE)
+  fi
+  # Preserve the historical single-language manifest-generated include stream.
+  # The split
   # internal header is consequently expanded once instead of 138 times, while
   # every recovered source body and translation-unit boundary remains present
   # in the compared token stream.  Nothing generated here is compiled or
   # written into the production source tree.
   {
     for source in "${sources[@]}"; do
-      if [ ! -f "$tree/$source" ]; then
-        echo "manifest source does not exist: $source" >&2
-        return 1
-      fi
       printf 'CLASH95_PP_TRANSLATION_UNIT_BOUNDARY_%04d "%s";\n' "$index" "$source"
       printf '#include "%s"\n' "$source"
       index=$((index + 1))
     done
-  } | (cd "$tree" && "$CC_BIN" -std=gnu17 "${flags[@]}" -x c -)
+  } | (cd "$tree" && "$compiler" "-std=$standard" "${language_flags[@]}" "${flags[@]}" -x "$language" -)
 }
 
 if [ -n "$SNAPSHOT" ]; then

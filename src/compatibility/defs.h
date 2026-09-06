@@ -110,10 +110,14 @@ typedef int errno_t;
 
 #define qmemcpy memcpy
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern _WORD __ES__;
 extern _WORD __DS__;
 
-/* Watcom runtime helpers provided by decomp_runtime_stubs.c. */
+/* Watcom runtime helpers provided by decomp_runtime_stubs.cpp. */
 int __fastcall _wcpp_4_ctor_array__(_DWORD base, _DWORD count);
 int __fastcall _wcpp_4_dtor_array_store__(_DWORD base, _DWORD descriptor);
 int __cdecl _wcpp_4_copy_array__(int base);
@@ -143,6 +147,17 @@ int __thiscall toupper_(_DWORD character);
 int time_(void);
 /* The recovered CRT import has the standard no-argument signature. */
 int rand_(void);
+/* Match the native render-hook ABI while preserving the direct pointer API. */
+int Compat_WorldMapRenderHook(int first, char unused_char, _DWORD unused_context);
+int Compat_UnitBattleRenderHook(int unused_first, char unused_char, _DWORD unused_context);
+int Compat_DemoTextRenderHook(int first, char second, _DWORD context);
+int Compat_CastleRenderHook(int first, char second, _DWORD unused_context);
+int Compat_StreamWriteFormat32(int stream_ptr, const char *format,
+                             const unsigned int *arg_slots, int arg_count);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define BYTEn(x, n) (*((_BYTE *)&(x) + (n)))
 #define WORDn(x, n) (*((_WORD *)&(x) + (n)))
@@ -179,6 +194,12 @@ int rand_(void);
 #define __PAIR64__(high, low) ((((uint64_t)(uint32_t)(uintptr_t)(high)) << 32) | (uint32_t)(uintptr_t)(low))
 #define __CFSHL__(x, shift) ((((uint32_t)(x)) >> ((32 - ((shift) & 31)) & 31)) & ((shift) != 0))
 #define __OFSUB__(x, y) ((((x) ^ (y)) & ((x) ^ ((x) - (y)))) < 0)
+
+/* These existing inert inline seams retain their original local C names. */
+#ifdef __cplusplus
+static inline _DWORD ExcString_Ctor(void) __asm__("ExcString_Ctor");
+static inline _DWORD ExcString_CtorFromPtr(void *this_) __asm__("ExcString_CtorFromPtr");
+#endif
 
 static inline _DWORD ExcString_Ctor(void) {
   return 0;

@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 __int16 UnitBattle_EnableSelectedChargeMode(void);
 __int16 UnitBattle_RefreshSelectedUnitUI(void);
 int  UnitBattle_SelectNextControllableUnit(int widget, int a2, char a3);
@@ -33,7 +37,11 @@ void * BuildingGarrisonDialog_RebuildSlotSprites(int a1, DWORD a2);
 void * BuildingGarrisonDialog_TickExitCountdown(int a1, double a2);
 void *BuildingGarrisonDialog_DrawSelectedUnitPanel(void);
 void  BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(int a1, char a2, DWORD a3);
-void *__thiscall BuildingGarrisonDialog_AnimateSelectedUnit(void *this);
+void *__thiscall BuildingGarrisonDialog_AnimateSelectedUnit(void *this_);
 int BuildingGarrisonDialog_HitTestSlotGrid(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_BATTLE_API_H */

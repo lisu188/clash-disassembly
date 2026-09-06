@@ -5,10 +5,18 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char aClash[7];
 extern _UNKNOWN g_CDPathTemplate;
 extern _UNKNOWN g_PathEntryArray_DtorDescriptor;
 extern _UNKNOWN g_PathEntryArray_ElementDtorDescriptor;
 extern _UNKNOWN g_PathEntry_DtorDescriptor;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CORE_STATE_H */

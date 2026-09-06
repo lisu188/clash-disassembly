@@ -5,6 +5,10 @@
 
 #include "units_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern short int *UnitStack_RemoveFromTile (short int *stack, double a2);
 extern short int *UnitStack_UnlinkIfEmpty (short int *result, double a2);
 signed int  UnitStack_HasReadyUnits(int stackPtr);
@@ -69,5 +73,9 @@ int  Building_ApplySiegeDamageToWallSections(int buildingRecord, signed int sieg
 int  Building_CalcWallDefenseBonus(int buildingRecord, signed int weakestSection);
 int  CalculateBattleResult(_WORD *, int, _WORD *, int, DWORD, int, int, int, int);
 signed int  UI_PromptLeadTroopsPersonally(int attackerSlots, int attackerCount, int defenderCount, int defenderSlots, DWORD a5, int a6, int showThirdOption);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_UNITS_INTERNAL_H */

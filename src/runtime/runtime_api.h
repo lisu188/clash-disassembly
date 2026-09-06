@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int Input_Init(void);
 int Input_Shutdown(void);
 int  DD_GetSurfacePitch(int renderState);
@@ -47,11 +51,11 @@ signed int  ObjectsCompiler_WriteSlotDescPointerArray(int *theFilePtr, const cha
 int  ObjectsCompiler_WriteSlotIndexMapArray(int *theFilePtr, const char *fileName, int fileID, const char *pathName, int a5, int *fileCount, int imageID, _DWORD *theDefclass, int *arrayVersion, int *elementCount, int *a11, const char **codeFile);
 int  ObjectsCompiler_WriteHandlerArray(int *theFilePtr, const char *fileName, char fileID, const char *pathName, int a5, int *fileCount, int imageID, int theDefclass, int *arrayVersion, int *elementCount, int *a11, const char **codeFile);
 int  ObjectsCompiler_WriteHandlerIndexMapArray(int *theFilePtr, const char *fileName, int fileID, const char *pathName, int a5, int *fileCount, int imageID, int theDefclass, int *arrayVersion, int *elementCount, int *a11, const char **codeFile);
-signed int __thiscall Rules_RegisterObjectPatternType(void *this);
+signed int __thiscall Rules_RegisterObjectPatternType(void *this_);
 signed int  Rules_ParseDefclass(char *readSource, double a2);
 int  Class_BrowseClassesCommand(int a1, double a2);
 int * Class_DescribeClassCommand(int a1, double a2);
-int __thiscall Class_DefclassModuleCommand(void *this);
+int __thiscall Class_DefclassModuleCommand(void *this_);
 signed int  Class_SuperclassPCommand(double a1);
 signed int  Class_SubclassPCommand(double a1);
 signed int  Class_SlotExistPCommand(int *a1, double a2);
@@ -113,10 +117,18 @@ int  Rules_WriteDefinstancesModuleReference(int theFile, int count);
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))();
 __int16  CAviDecompressor_SetupBlitFormat(int (*a1)(), int a2, int a3, int a4, int a5);
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RUNTIME_API_H */

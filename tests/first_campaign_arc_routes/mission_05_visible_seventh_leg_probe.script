@@ -1,0 +1,46 @@
+# Original common-checkpoint restart accepts (50,50), turn 6: 14 AP, three nodes.
+# The (49,50) water target was rejected; it is not part of this route.
+include_script tests/first_campaign_arc_routes/mission_05_visible_sixth_leg_probe.script
+mark_log_count turn6_banner1 tura1.gfx
+mark_log_count turn6_banner2 tura2.gfx
+mark_log_count turn6_banner3 tura3.gfx
+mark_log_count turn6_banner4 tura4.gfx
+mark_log_count turn6_banner5 tura5.gfx
+mark_log_count turn6_banner6 tura6.gfx
+mark_log_count turn6_banner7 tura7.gfx
+include_script tests/first_campaign_arc_routes/mission_05_end_turn_ready.script
+wait_log_marked_any 120 turn6_banner1 || turn6_banner2 || turn6_banner3 || turn6_banner4 || turn6_banner5 || turn6_banner6 || turn6_banner7
+wait 1.0
+click 320 240 0.12 0.65 dismiss-observed-turn6-banner
+wait_log_any 120 playgame_before_human_turn selected=-1 a=0 b=6 || queen_proposal_dialog_enter
+fail_unless_last_wait_log_any playgame_before_human_turn selected=-1 a=0 b=6
+world_pan_viewport 49 48 80
+click 256 368 0.18 1.0 select-stack4-at-52-53-turn6
+wait_log 20 selected_stack_changed selected=4 a=52 b=53
+# Slots6/5/4 now hold turn6 refresh and this leg's preview/stop.
+mark_log_count seventh_refresh_save debug-save-written slot=6 ok=1
+world_save_slot 6 1.0 save-natural-turn6-refresh
+wait_log_marked 30 seventh_refresh_save
+wait 5.0
+screenshot mission05-visible-leg-turn6-refresh
+nonblank mission05-visible-leg-turn6-refresh
+click 128 176 0.18 0.8 preview-land-approach-50-50
+wait_log 20 move_order_track_result selected=4 a=50 b=50 c=3
+wait_log 20 unit_move_track_first selected=4 a=50 b=50 c=14
+mark_log_count seventh_preview_save debug-save-written slot=5 ok=1
+world_save_slot 5 1.0 save-seventh-leg-preview
+wait_log_marked 30 seventh_preview_save
+mark_log_count seventh_leg_move unit_move_after_path_state selected=4
+mark_log_count seventh_leg_ap unit_move_after_path_ap selected=4 a=6 b=0 c=0
+click 128 176 0.18 2.0 confirm-land-approach-50-50
+wait_log_marked 60 seventh_leg_move
+wait_log 20 unit_move_after_path_state selected=4 a=50 b=50 c=0
+wait_log_marked 20 seventh_leg_ap
+mark_log_count seventh_final_save debug-save-written slot=4 ok=1
+world_save_slot 4 1.0 save-seventh-leg-observed-stop
+wait_log_marked 30 seventh_final_save
+world_move 127 176 0.5 align-cursor-with-original-seventh-final
+wait 5.0
+screenshot mission05-seventh-visible-leg
+nonblank mission05-seventh-visible-leg
+fail_if_log mission05_failure_friendly_attack

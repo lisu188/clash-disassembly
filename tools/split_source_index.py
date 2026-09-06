@@ -111,8 +111,27 @@ def _balanced_end(masked: str, opening: int) -> int | None:
 
 
 def scan_definitions(text: str, known_names: set[str]) -> list[Definition]:
-    """Return top-level balanced definitions whose names are in known_names."""
+    """Return file/linkage-scope definitions whose names are in known_names.
+
+    C++ language-linkage blocks do not introduce a declaration scope. Mask
+    only their braces so ordinary function and object bodies retain the
+    existing balanced scanner's behavior and every source offset stays exact.
+    """
     masked = mask_c(text)
+    linkage_braces = []
+    for match in re.finditer(r'\bextern\s+"C(?:\+\+)?"\s*\{', text):
+        if masked[match.start():match.start() + 6] != "extern":
+            continue  # text in a comment, literal or preprocessor directive
+        opening = match.end() - 1
+        end = _balanced_end(masked, opening)
+        if end is None:
+            raise ValueError("unbalanced language-linkage block")
+        linkage_braces.extend((opening, end - 1))
+    if linkage_braces:
+        chars = list(masked)
+        for offset in linkage_braces:
+            chars[offset] = " "
+        masked = "".join(chars)
     definitions: list[Definition] = []
     segment_start = 0
     cursor = 0

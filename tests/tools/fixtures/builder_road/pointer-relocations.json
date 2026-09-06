@@ -1,0 +1,1102 @@
+{
+  "executables": [
+    {
+      "path": "/mnt/c/clash/clash95.exe",
+      "sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae"
+    },
+    {
+      "path": "/mnt/c/Users/andrz/git/clash-disassembly/clash95.exe",
+      "sha256": "fd5cdd10e77049cb1ba8450905022f1c0144110a3927693d5b1a821923414b3f"
+    }
+  ],
+  "road": {
+    "start": "0x51420c",
+    "end": "0x5144ce",
+    "bytes": 706,
+    "sha256": "15d52eae07b3ab1536c0183a8ab0a21b1396c08b3e5781ea15d4bc61c6d61c6c"
+  },
+  "builder": {
+    "start": "0x511bc0",
+    "end": "0x511d02",
+    "bytes": 322,
+    "sha256": "7dc6525bfa258b26ea66611a20aeecf4b27f3751fb34b45ff58f1775ab699909"
+  },
+  "relocations": [
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 12,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 28,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 32,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 36,
+      "original_pointer": "0x4ecb65",
+      "canonical_symbol": null,
+      "raw_hex": "44726f6761",
+      "text_latin1": "Droga"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 40,
+      "original_pointer": "0x4ecb6b",
+      "canonical_symbol": null,
+      "raw_hex": "526f6164",
+      "text_latin1": "Road"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 44,
+      "original_pointer": "0x4ecb70",
+      "canonical_symbol": null,
+      "raw_hex": "53747261e165",
+      "text_latin1": "Stra\u00e1e"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 0,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 49,
+      "original_pointer": "0x4ecb77",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 65,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 81,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 85,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 89,
+      "original_pointer": "0x4ecb7c",
+      "canonical_symbol": null,
+      "raw_hex": "50759261706b61",
+      "text_latin1": "Pu\u0092apka"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 93,
+      "original_pointer": "0x4ecb84",
+      "canonical_symbol": null,
+      "raw_hex": "54726170",
+      "text_latin1": "Trap"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 97,
+      "original_pointer": "0x4ecb89",
+      "canonical_symbol": null,
+      "raw_hex": "46616c6c65",
+      "text_latin1": "Falle"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 1,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 102,
+      "original_pointer": "0x4ecb8f",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 118,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 134,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 138,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 142,
+      "original_pointer": "0x4ecb94",
+      "canonical_symbol": null,
+      "raw_hex": "4b6f70616e696520736b617262a277",
+      "text_latin1": "Kopanie skarb\u00a2w"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 146,
+      "original_pointer": "0x4ecba4",
+      "canonical_symbol": null,
+      "raw_hex": "44696720666f72207472656173757265",
+      "text_latin1": "Dig for treasure"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 150,
+      "original_pointer": "0x4ecbb5",
+      "canonical_symbol": null,
+      "raw_hex": "53636861747a7375636865",
+      "text_latin1": "Schatzsuche"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 2,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 155,
+      "original_pointer": "0x4ecbc1",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 171,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 187,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 191,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 195,
+      "original_pointer": "0x4ecbc6",
+      "canonical_symbol": null,
+      "raw_hex": "576965a761",
+      "text_latin1": "Wie\u00a7a"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 199,
+      "original_pointer": "0x4ecbcc",
+      "canonical_symbol": null,
+      "raw_hex": "4b656570",
+      "text_latin1": "Keep"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 203,
+      "original_pointer": "0x4ecbd1",
+      "canonical_symbol": null,
+      "raw_hex": "5475726d",
+      "text_latin1": "Turm"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 3,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 208,
+      "original_pointer": "0x4ecbd6",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 224,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 240,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 244,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 248,
+      "original_pointer": "0x4ecbdb",
+      "canonical_symbol": null,
+      "raw_hex": "5477696572647a61",
+      "text_latin1": "Twierdza"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 252,
+      "original_pointer": "0x4ecbe4",
+      "canonical_symbol": null,
+      "raw_hex": "466f727472657373",
+      "text_latin1": "Fortress"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 256,
+      "original_pointer": "0x4ecbed",
+      "canonical_symbol": null,
+      "raw_hex": "46657374756e67",
+      "text_latin1": "Festung"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 4,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 261,
+      "original_pointer": "0x4ecbf5",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 277,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 293,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 297,
+      "original_pointer": "0x40a0a0",
+      "canonical_symbol": "WorldMap_ComputeBuildMenuActionFromCursor"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 301,
+      "original_pointer": "0x4ecbfa",
+      "canonical_symbol": null,
+      "raw_hex": "5a616d656b",
+      "text_latin1": "Zamek"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 305,
+      "original_pointer": "0x4ecc00",
+      "canonical_symbol": null,
+      "raw_hex": "436173746c65",
+      "text_latin1": "Castle"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 309,
+      "original_pointer": "0x4ecc07",
+      "canonical_symbol": null,
+      "raw_hex": "42757267",
+      "text_latin1": "Burg"
+    },
+    {
+      "table": "builder-widgets",
+      "index": 5,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 314,
+      "original_pointer": "0x4ecc0c",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 184,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 200,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 204,
+      "original_pointer": "0x4254e0",
+      "canonical_symbol": "RoadBuildMode_BuildInSelectedDirection"
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 208,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 212,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 216,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 0,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 221,
+      "original_pointer": "0x4eebda",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 237,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 253,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 257,
+      "original_pointer": "0x4254e0",
+      "canonical_symbol": "RoadBuildMode_BuildInSelectedDirection"
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 261,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 265,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 269,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 1,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 274,
+      "original_pointer": "0x4eebdf",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 290,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 306,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 310,
+      "original_pointer": "0x4254e0",
+      "canonical_symbol": "RoadBuildMode_BuildInSelectedDirection"
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 314,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 318,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 322,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 2,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 327,
+      "original_pointer": "0x4eebe4",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 343,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 359,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 363,
+      "original_pointer": "0x4254e0",
+      "canonical_symbol": "RoadBuildMode_BuildInSelectedDirection"
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 367,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 371,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 375,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-markers",
+      "index": 3,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 380,
+      "original_pointer": "0x4eebe9",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 396,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 412,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 416,
+      "original_pointer": "0x4250f0",
+      "canonical_symbol": "RoadBuildMode_RequestExitAfterWidgetPress"
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 420,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 424,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 428,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 0,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 433,
+      "original_pointer": "0x4eebee",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 449,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 465,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 469,
+      "original_pointer": "0x425110",
+      "canonical_symbol": "RoadBuildMode_RequestExit"
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 473,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 477,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 481,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 1,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 486,
+      "original_pointer": "0x4eebf3",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 502,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 518,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 522,
+      "original_pointer": "0x425110",
+      "canonical_symbol": "RoadBuildMode_RequestExit"
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 526,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 530,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 534,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 2,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 539,
+      "original_pointer": "0x4eebf8",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 555,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 571,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 575,
+      "original_pointer": "0x425110",
+      "canonical_symbol": "RoadBuildMode_RequestExit"
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 579,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 583,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 587,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 3,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 592,
+      "original_pointer": "0x4eebfd",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 608,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 624,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 628,
+      "original_pointer": "0x425110",
+      "canonical_symbol": "RoadBuildMode_RequestExit"
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 632,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 636,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 640,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 4,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 645,
+      "original_pointer": "0x4eec02",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "sprite_set_holder",
+      "field_offset": 12,
+      "region_offset": 661,
+      "original_pointer": "0x52030c",
+      "canonical_symbol": "g_ActionButtonSpriteSet"
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "draw_callback",
+      "field_offset": 28,
+      "region_offset": 677,
+      "original_pointer": "0x4191f0",
+      "canonical_symbol": "UI_DrawWidgetIcon"
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "action_callback",
+      "field_offset": 32,
+      "region_offset": 681,
+      "original_pointer": "0x425110",
+      "canonical_symbol": "RoadBuildMode_RequestExit"
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "polish_text",
+      "field_offset": 36,
+      "region_offset": 685,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "english_text",
+      "field_offset": 40,
+      "region_offset": 689,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "german_text",
+      "field_offset": 44,
+      "region_offset": 693,
+      "original_pointer": "0x0",
+      "canonical_symbol": null
+    },
+    {
+      "table": "road-controls",
+      "index": 5,
+      "field": "sound",
+      "field_offset": 49,
+      "region_offset": 698,
+      "original_pointer": "0x4eec07",
+      "canonical_symbol": null,
+      "raw_hex": "6d616c65",
+      "text_latin1": "male"
+    }
+  ]
+}

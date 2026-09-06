@@ -165,7 +165,7 @@ class SharedStateHeadersTest(unittest.TestCase):
             header = self.read(f"src/{sub}/{sub}_shared_state.h")
             with self.subTest(subsystem=sub):
                 declarations = [line for line in header.splitlines()
-                                if line.startswith("extern ")]
+                                if line.startswith("extern ") and line.endswith(";")]
                 self.assertEqual(declarations, [self.decls["globals"][name]["decl"]
                                                for name in expected.get(sub, [])])
                 self.assertNotIn("state_shared.h", header)
@@ -310,7 +310,7 @@ class SharedStateHeadersTest(unittest.TestCase):
             self.assertEqual(GEN.main(), 0)
         scan.assert_called_once_with(self.manifest)
         expanded.assert_called_once_with(
-            self.decls["functions"], self.decls["globals"])
+            self.decls["functions"], self.decls["globals"], cpp=False)
         self.assertEqual(self.generate("--check"), 0)
         self.assertEqual(self.generate("--check-tu-includes"), 0)
         for rel in self.sources.values():

@@ -1,0 +1,76 @@
+{
+  "executables": [
+    {
+      "path": "/mnt/c/clash/clash95.exe",
+      "sha256": "500055d77d03d514e8d3168506bd10f67cd8569bcc450604ff8192f46cdaf3ae"
+    },
+    {
+      "path": "/mnt/c/Users/andrz/git/clash-disassembly/clash95.exe",
+      "sha256": "fd5cdd10e77049cb1ba8450905022f1c0144110a3927693d5b1a821923414b3f"
+    }
+  ],
+  "blocks": {
+    "selector": {
+      "bytes": 32,
+      "sha256": "3c4b83dd678d4460d5270731e24d52d487b9d2d3fc54bc90a69958e79d0473ef"
+    },
+    "gate": {
+      "bytes": 256,
+      "sha256": "e33bcc22a7474cc8fafbc41f1cd8d76235f444f5eaa73a5d7ceaa339151ea51f"
+    },
+    "road": {
+      "bytes": 706,
+      "sha256": "15d52eae07b3ab1536c0183a8ab0a21b1396c08b3e5781ea15d4bc61c6d61c6c"
+    },
+    "builder": {
+      "bytes": 322,
+      "sha256": "7dc6525bfa258b26ea66611a20aeecf4b27f3751fb34b45ff58f1775ab699909"
+    },
+    "main": {
+      "bytes": 322,
+      "sha256": "b944aa60c15009e8085cdf111aa1f244eca44d15f23c4169befe4d85d436e96c"
+    }
+  },
+  "cases": 672,
+  "gate_cases": 636,
+  "selector_cases": 36,
+  "original_output_sha256": "dfdc248bbbee15c999058a1854ab57082dc944a9e3e7022e879bdb638bc239f7",
+  "commands": [
+    [
+      "gcc-13",
+      "-m32",
+      "-std=c11",
+      "-O2",
+      "-ffreestanding",
+      "-fno-pie",
+      "-fno-stack-protector",
+      "-fno-asynchronous-unwind-tables",
+      "-c",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original-harness.c",
+      "-o",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original-harness.o"
+    ],
+    [
+      "as",
+      "--32",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original.s",
+      "-o",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original.o"
+    ],
+    [
+      "ld",
+      "-m",
+      "elf_i386",
+      "-T",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original.ld",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original.o",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original-harness.o",
+      "-o",
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original-probe"
+    ],
+    [
+      "/mnt/c/Users/andrz/git/clash-disassembly/artifacts/runtime-recovery/builder-road-menu-20260906/tests/original-probe"
+    ]
+  ],
+  "limits": "Gate executes unchanged original bytes with original706-byte backing. Selector executes unchanged32-byte body with only UI animation at419E60 replaced by a recording return that preserves EDX. Return/menu writes and unchanged widget/game/backing/pointer are measured; rendering and animation implementation are outside this boundary."
+}

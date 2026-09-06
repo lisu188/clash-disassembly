@@ -5,6 +5,10 @@
 
 #include "battle_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 __int16 UnitBattle_HandleBattlefieldInteraction(void);
 int UnitBattle_RefreshSelectedActionButtons(void);
 int  UnitBattleDialog_SelectAffirmativeResponse(int widget, int unitIndex);
@@ -25,5 +29,9 @@ int  BuildingGarrisonDialog_HandleExitButtonPress(int widget, int unitIndex);
 __int16  Battle_PlaceReservedUnitSlotAtTile(int unitRecord, int tileRow, int tileCol);
 int Battle_ClearReservedUnitSlot(void);
 signed int Battle_RestoreSavedActionPointsBeforeResultCopy(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_BATTLE_INTERNAL_H */

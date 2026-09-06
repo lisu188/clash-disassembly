@@ -70,17 +70,19 @@ def include_policy_errors() -> list[str]:
         (REPO / "data" / "recovered_sources.json").read_text(encoding="utf-8"))
     sources = sorted({r["source"] for r in manifest["functions"]}
                      | {manifest["state_owner"]})
+    tu_local_basenames = {Path(source).stem + "_local.h" for source in sources}
     # Support files keep hand-maintained includes, but the hard bans (deleted
     # umbrella must not return; tests-only aggregate stays out of production)
-    # apply to every production .c under src/.
+    # apply to every production C/C++ source under src/.
     support = sorted(
         str(p.relative_to(REPO)).replace("\\", "/")
-        for p in (REPO / "src").rglob("*.c")
+        for p in (REPO / "src").rglob("*")
+        if p.suffix in {".c", ".cpp"}
         if str(p.relative_to(REPO)).replace("\\", "/") not in sources)
     # both quoted and angle-bracket forms resolve via -I flags; lint both
     inc_re = re.compile(r'^\s*#\s*include\s+["<]([^">]+)[">]', re.M)
     generated_basenames = re.compile(
-        r"(recovered_|_api\.h$|_internal\.h$|_state\.h$|"
+        r"(recovered_|_api\.h$|_internal\.h$|_state\.h$|_local\.h$|"
         r"^state_shared\.h$|^state_local\.h$)")
     for rel in sources + support:
         text = (REPO / rel).read_text(encoding="latin-1")
@@ -101,6 +103,16 @@ def include_policy_errors() -> list[str]:
                 errors.append(f"{rel}: deleted umbrella include returned: {inc}")
             if base == "recovered_all.h":
                 errors.append(f"{rel}: tests-only aggregate included in production")
+            if base in tu_local_basenames:
+                expected = posixpath.splitext(rel)[0] + "_local.h"
+                normalized = inc.replace("\\", "/")
+                resolved = {
+                    posixpath.normpath(posixpath.join(posixpath.dirname(rel), normalized)),
+                    posixpath.normpath(posixpath.join("src", normalized)),
+                    posixpath.normpath(normalized),
+                }
+                if not is_recovered_tu or expected not in resolved:
+                    errors.append(f"{rel}: foreign TU-local header: {inc}")
             if not is_recovered_tu:
                 continue  # support files: hard bans only
             if not inside and generated_basenames.search(base):

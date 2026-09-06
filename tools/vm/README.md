@@ -239,7 +239,7 @@ worst_montage.png, summary.txt, maskaudit.png, frame indexes).
 
 **Fix A LANDED (commit c3791b1): DLX seam decoder.** The "black speckle" bug
 was `Compat_RenderDeviceDrawMenuSprite`
-(src/units/004191F0_0041A690_units_006.c) desynchronizing the format-0 sprite
+(src/units/004191F0_0041A690_units_006.cpp) desynchronizing the format-0 sprite
 stream (clamped run consumption + a 4-byte back-reference guess + mid-sprite
 aborts), so data bytes >=0x80 were misread as transparent runs and black-filled
 into terrain. Rewrote it byte-exact vs `Render_BlitCompressedSpriteRLE`

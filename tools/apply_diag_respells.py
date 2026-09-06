@@ -71,7 +71,7 @@ def collect_sites(log_text: str, categories, subsystem: str | None):
         if idx == -1:
             continue
         rel = f[idx:]
-        if not rel.endswith(".c"):
+        if not rel.endswith((".c", ".cpp")):
             continue  # header/macro-definition site -> review separately
         parts = rel.split("/")
         if len(parts) < 3:
@@ -167,12 +167,17 @@ def apply_file(rel: str, positions):
 
 
 def syntax_check(rels) -> list[str]:
-    """gcc -fsyntax-only each touched TU; any failure names a mis-insert."""
+    """Compile each touched C/C++ TU; any failure names a mis-insert."""
     import subprocess
     bad = []
     for rel in rels:
+        cpp = Path(rel).suffix == ".cpp"
+        compiler = os.environ.get("CXX" if cpp else "CC", "g++" if cpp else "gcc")
+        standard = "gnu++20" if cpp else "gnu17"
         proc = subprocess.run(
-            ["gcc", "-std=gnu17", "-fsyntax-only", "-w",
+            [compiler, "-std=" + standard,
+             *(["-U_GNU_SOURCE", "-fno-exceptions", "-fno-rtti", "-Werror=write-strings"] if cpp else ["-w"]),
+             "-fsyntax-only",
              "-I", str(REPO / "src"), "-I", str(REPO),
              "-I", str(REPO / "src" / Path(rel).parent.name),
              str(REPO / rel)],

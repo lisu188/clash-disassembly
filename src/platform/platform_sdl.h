@@ -17,6 +17,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef __cdecl
 #define __cdecl
 #endif
@@ -125,7 +129,7 @@ typedef struct _GUID {
 typedef GUID IID;
 
 typedef union _LARGE_INTEGER {
-  struct {
+  __extension__ struct {
     DWORD LowPart;
     LONG HighPart;
   };
@@ -197,8 +201,8 @@ typedef struct tagBITMAPINFO {
 typedef struct _OVERLAPPED {
   ULONG_PTR Internal;
   ULONG_PTR InternalHigh;
-  union {
-    struct {
+  __extension__ union {
+    __extension__ struct {
       DWORD Offset;
       DWORD OffsetHigh;
     };
@@ -405,9 +409,22 @@ typedef struct _MEMORYSTATUS {
   SIZE_T dwAvailVirtual;
 } MEMORYSTATUS, *LPMEMORYSTATUS;
 
+/* This header precedes recovered_abi.h, so use direct GNU asm labels here. */
+#if defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
+static inline PTEB NtCurrentTeb(void) __asm__("NtCurrentTeb");
+#endif
+#ifndef CLASH95_FAKE_TEB_GCC_SYMBOL
+#define CLASH95_FAKE_TEB_GCC_SYMBOL "fake_teb.0"
+#endif
 static inline PTEB NtCurrentTeb(void)
 {
+#if defined(__cplusplus) && defined(__clang__)
+  static TEB fake_teb __asm__("NtCurrentTeb.fake_teb");
+#elif defined(__cplusplus) && defined(__GNUC__)
+  static TEB fake_teb __asm__(CLASH95_FAKE_TEB_GCC_SYMBOL);
+#else
   static TEB fake_teb;
+#endif
   return &fake_teb;
 }
 
@@ -559,5 +576,9 @@ void Platform_ReadInputFallbackState(
   signed char *keyboard_state,
   int keyboard_state_size,
   int *mouse_delta_is_host_pixels);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

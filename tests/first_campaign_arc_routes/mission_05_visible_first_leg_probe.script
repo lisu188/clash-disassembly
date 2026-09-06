@@ -1,0 +1,16 @@
+# Re-author the march through a destination already visible in the original.
+# No AP, visibility or objective mutation. Save through the recovered writer.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+click 320 176 0.18 0.8 select-stack4-at-71-44
+wait_log 20 selected_stack_changed selected=4 a=71 b=44
+click 64 368 0.18 0.8 set-visible-waypoint-67-47
+wait_log 20 move_order_track_result selected=4 a=67 b=47
+click 64 368 0.18 2.0 confirm-visible-waypoint-67-47
+wait_log 60 unit_move_after_path_state selected=4 a=67 b=47 c=0
+world_save_slot 9 1.0 save-first-leg-through-recovered-writer
+wait_log 30 debug-save-written slot=9 ok=1
+wait 5.0
+screenshot mission05-visible-first-leg
+nonblank mission05-visible-first-leg
+fail_if_log mission05_failure_friendly_attack

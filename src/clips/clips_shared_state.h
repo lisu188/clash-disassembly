@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char IsTable[256];
 extern char a1[3];
 extern char a2[3];
@@ -126,14 +130,22 @@ extern int g_WindowsVersionDword;
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern _DWORD (*g_CRT_StaticLock1AcquireHook)();
 extern _DWORD (*g_CRT_StaticLock1ReleaseHook)();
 extern _DWORD (*g_CRT_StaticLock2AcquireHook)();
 extern _DWORD (*g_CRT_StaticLock2ReleaseHook)();
 extern _DWORD (*g_CRT_ThreadStartupHook)();
 extern _DWORD (*g_CRT_TlsIndexDestroyHook)();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CLIPS_SHARED_STATE_H */

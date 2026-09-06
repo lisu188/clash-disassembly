@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern _UNKNOWN Audio_MixMonoVoiceDispatch;
 extern _UNKNOWN Audio_MixPannedVoiceDispatch;
 extern _UNKNOWN Audio_SelectMixFormat1MonoDispatch;
@@ -79,5 +83,9 @@ extern unsigned char g_WorldMapTopMenuHitTargetA;
 extern unsigned char g_WorldMapTopMenuHitTargetB;
 extern __int16 g_WorldMapTopMenuHitTop0[1];
 extern _UNKNOWN g_YesNoDialogButtonWidgetsTemplate;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STATE_LOCAL_H */

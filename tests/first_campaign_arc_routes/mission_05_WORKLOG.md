@@ -3,7 +3,236 @@
 Goal: recover an authentic route that reaches `mission_objective_complete` for mission
 05 (`Mission_CheckObjectiveComplete` case 5). Status: **in progress** (route authoring).
 
-## Current proven route milestone (2026-07-14)
+## Current frontier: continue verified first Road construction (2026-09-06)
+
+Both repaired GCC 13 and Clang 18 builds pass the chronological first-Road probe:
+`mission_05_first_road_probe.env`. After the seven-leg approach, the actual
+Building → Road action builds overlays 867/879 and moves stack 4 to `(49,50)` on
+turn 6, with 2 AP, an empty active path and 228 visible tiles. All ten raw unit
+slots and the full visibility bitmap match the original before/after action.
+The original uses real Load of an unchanged engine-authored turn-6 checkpoint.
+Inactive queue bytes and full world-memory differences remain retained.
+
+The restored callback, selector, packed data, highlight hook/AP gate and callback
+widths are original-backed; seven recovered bodies change and all 4157 identities
+remain. Both compiler/public gates and 107 tooling tests pass. Native results
+retain 1059/0/530/1589; the runtime suite retains its same three failures. Frame
+MAD is 11.223533/255 and 11.181731/255; substantial HUD/fog/water defects remain.
+Exact commands, complete failed/interrupted attempts, source freezes, 40 final
+DAT/FAC files, 30 checkpoints and paired frames:
+`artifacts/runtime-recovery/builder-road-menu-20260906/`.
+
+Next: normal turn-7 refresh, then Road west through x=48,47,46,45 at y=50.
+The original leaves 16/12/8/3 AP and reaches the west bank with 252 visible tiles.
+Its separate accepted land route reaches `(47,58)` on turn 10 with 6 AP and
+305 visible tiles. C++ continuation/arrival remains unproven. The original valid
+arrival capture precedes a failed Save attempt with an unintended later move;
+no engine-authored arrival save exists. The complete original evidence is under
+`artifacts/campaign-validation/mission05-bridge-20260906/original/`.
+Do not restore transfer shortcuts. Tactical entry, objective completion and menu
+advancement remain separate gates; mission 05 stays partial and completion 6/20.
+
+## Previous frontier: reproduce actual Road construction (2026-09-06)
+
+The seventh-leg chronological probe reaches `(50,50)`, turn 6, 6 AP, empty path
+and 222 visible tiles on GCC 13 and Clang 18. The sixth costs 14 AP to `(52,53)`;
+after ordinary refresh the seventh costs 14 AP via `(51,52)`, `(51,51)`.
+The original matches all checked unit fields, paths and visibility bytes after
+real Load of the unchanged engine-authored GCC turn-5 checkpoint. This extension
+does not claim a continuous original turn-1 replay or whole-world equality.
+
+The original rejects unbuilt water `(49,50)`, including from adjacent `(50,50)`.
+Both repaired builds now match that rejection without moving or spending AP.
+The old manual builder pathing brackets and queued-execution exception were
+absent from original instructions and have been removed. **The historical
+"bridge-crossing mechanic decoded", builder-transfer and army-crossing claims
+below are superseded as original-behavior claims.** Those runs exercised the
+reconstruction's unsupported exceptions. Their original logs remain retained.
+
+Original-only proof now establishes Building → Road → west: origin `(50,50)`
+gets road 867, target `(49,50)` gets road 879, and the engine moves stack 4 onto
+the bridge for four AP, reaching 2 AP and 228 visible tiles. Reproduce and compare
+this actual action in C++, then refresh AP normally. The next unbuilt-water
+Road highlight requires at least 6 AP; the actual build cost is movement plus one.
+Do not substitute a builder-transfer shortcut. Arrival, tactical entry and
+objective completion remain unproven; mission status remains partial, 6/20 direct
+routes complete. Frame comparisons still show substantial HUD/water/fog defects.
+
+Exact commands, all attempts, original construction captures and independent
+audits: `artifacts/campaign-validation/mission05-arrival-20260906/` and
+`artifacts/runtime-recovery/manual-crossing-20260906/`. The latter records fresh
+compiler, native and runtime gates; no warning/header/link baseline was raised.
+
+## Previous frontier: continue from (55,53), turn 5 (2026-09-06)
+
+`mission_05_visible_fifth_leg_probe.env` is the chronological partial prefix.
+Fresh original Wine and both compiler builds agree on the third path:
+`(62,49;4) -> (61,50;9) -> (60,51;14) -> (59,51;20)`, ending turn 3 with 0 AP
+and 149 visible tiles. The next original path is
+`(58,52;5) -> (57,52;11) -> (56,52;17) -> (55,53;22)`.
+It stops naturally at `(56,52)` in turn 4, with 3 AP and one 5-AP node retained.
+Visibility is 170 tiles. A proposed cheaper route through `(56,53)` was rejected
+because its cult-place overlay 736 blocks ordinary traversal.
+
+Normal turn 5 refresh restores 20 AP. One own-stack click at (128,304) selects
+stack 4; a second at the same location resumes the retained node. Both final
+compiler runs reach `(55,53)`, 15 AP and an empty path, matching the original's
+checked unit fields and all 1300 visibility bytes (179 tiles; SHA256
+`1a32b78649b3827fba276530d427ff72b066fc7f36e86eaa2243658c05c21e4b`).
+Four type 17 units have 21 AP and fatigue 0; two type 1 units have 15 AP and
+fatigue 40. All have health 100 and morale 10. No friendly attack or objective
+shortcut occurs.
+
+The shared `mission_05_end_turn_ready.script` waits for fresh menu entry and
+cursor-command consumption before the ordinary click. Original assembly and
+failed live traces show why this is necessary: a press received before menu
+entry cannot activate its later input loop. The two failed long replays, an
+earlier first-leg confirmation timeout and the initial outer-wrapper editing
+failure remain retained. The final two replays freeze all six recursive scripts
+and pass all four End Turn transitions. Reused events have pre-action count marks;
+slot 9 deliberately replaces the first-leg snapshot only at the final checkpoint.
+Nine checkpoint images and all later-phase saves remain available.
+
+All 105 tooling tests pass. No game code, symbols, driver or binaries change;
+the nation-score batch remains the compiler/native/runtime baseline. Final
+original/Clang and original/GCC pairs have unmasked MAD 10.234354/255 and
+10.230844/255. HUD defects, other-stack placement and fog appearance differences
+remain; full-world and visual equivalence are unproven. Continue from the 15-AP
+endpoint through original-accepted destinations. `(47,58)` arrival, stack 19
+tactical entry and owner 3 elimination still need proof; direct routes stay 6/20.
+
+Exact commands, original states, failed attempts, final runs and independent
+audits: `artifacts/campaign-validation/mission05-march-20260906/`.
+
+## Previous frontier: continue beyond the second visible leg (2026-09-06)
+
+The reached `AI_TickNationPostTurn` accumulator is repaired. Original assembly
+adds each building value to the running total; the former uninitialized local
+returned 490186406 for the exact Clang turn-2 input whose original result is
+510. Actual original instructions validate 1020 cases across eight compiler
+profiles, including 12 captured inputs; all eight repaired live returns match.
+Existing packed alignment and
+signed-overflow limitations are documented separately; this is a bounded repair.
+
+Fresh GCC and Clang replays both reach `(63,49)` in turn 2 via the same
+five-node, 18-AP path. All checked occupied-slot fields and all 1300 visibility bytes
+match the original: 121 tiles, minimum 2 AP and empty path. Every repaired
+live score matches the original on its own input; natural population changes
+mean the captures are not identical whole-game states. The spurious proposal
+is absent. No authentic proposal decision has yet been validated.
+
+Fresh original/reconstruction endpoint pairs still show missing labels,
+corrupt squad strip and displaced badges. RGB MAD is 10.798779/255 for Clang
+and 10.819302/255 for GCC, without masking or normalization. This is not
+visual equivalence. Continue with normal turn refresh and original-accepted
+visible destinations; full `(47,58)` arrival, stack-19 entry and elimination
+remain unproven. Mission status stays partial, direct routes 6/20.
+
+Exact commands, original bytes, live input/return captures, source/hash change,
+all tests and paired frames: `artifacts/runtime-recovery/nation-score-20260906/`.
+
+## Previous frontier: two visible legs validated; nation score (2026-09-06)
+
+`mission_05_visible_second_leg_probe.env` is the current opt-in prefix. The
+canonical driver releases each ordinary host arrow key before requesting a
+fresh acknowledged viewport sample, including a sample on entry. Read-only
+GDB evidence showed the former helper accepted `(63,44)` while Up was held;
+the camera had reached `(63,42)` and released Up before its completion line.
+Original idle scrolling is level-triggered. No game code or forced state
+changes accompany this driver repair. All 17 new driver tests and all 103
+tooling tests pass; the unchanged game's baseline remains the reveal batch.
+
+Normal end-turn processing restores 20 AP at `(67,47)`. The next path is
+`(66,47)`, `(65,47)`, `(64,47)`, `(63,48)`, `(63,49)` with cumulative costs
+3, 6, 9, 14, 18. Original and GCC agree on the final empty path, all occupied
+unit fields and all 1300 visibility bytes: 121 tiles, SHA-256
+`c8f54387e0b0a38ecdf47d57f867655ad86dc79b56adfae133e116d57d7fa510`.
+Four type-17 units finish with 8 AP and zero fatigue; two type-1 units finish
+with 2 AP and fatigue 10. Health is 100 and morale 10 for all six.
+
+Two private candidate runs and the canonical repeat pass. The first canonical
+attempt misses its initial selection click before the changed helper; it is
+retained and complete input determinism remains unproven. The original includes
+an extra unexecuted preview that the intended path replaces. The paired final
+frames have unmasked RGB MAD 10.701840/255 and 290967/307200 differing pixels;
+missing labels, corrupt squad strip and displaced badges remain real defects.
+
+The Clang repeat reaches a queen proposal before the expected human loop.
+`AI_TickNationPostTurn` uses uninitialized `v7` in both compiler builds and
+frozen C; original `0x43F3B5` adds each building value to a preserved running
+total. Threshold comparison precedes portrait RNG. Recover that dataflow and
+capture live threshold inputs before treating the modal as an authentic route
+branch. Stride-32 dumps do not prove a missing modal. No queen-choice shortcut
+has been added. Full march, stack-19 tactical entry and objective remain partial.
+
+Exact commands, run failures, saves, original frames, state comparisons, driver
+tests and score audit: `artifacts/campaign-validation/mission05-input-20260906/`.
+
+## Previous frontier: first visible leg validated; turn-2 viewport (2026-09-06)
+
+`mission_05_visible_first_leg_probe.env` is the current validated prefix.
+Original Wine and both repaired C++ compiler builds select stack 4 at `(71,44)`
+and take `(70,45)`, `(69,45)`, `(68,46)`, `(67,47)` through normal input.
+Cumulative costs are 5, 11, 16, 20 AP; four type-17 units finish at 6 AP and
+two type-1 units at zero. Turn remains 1, the path is empty, and health,
+fatigue and morale agree. No AP, reveal, objective or position shortcuts are
+used. The original reaches this state through its real Load menu.
+
+This leg exposed an existing propagation defect: parent `(65,46)` calls
+`(66,3)` through an uninitialized local instead of the original `(66,47)`.
+The eight recursive midpoint arguments are now recovered. Actual original
+instruction execution matches the repair across 51,270 cases and eight
+compiler profiles. The initial 72-tile player-0 bitmap now becomes exactly
+the original's 87-tile bitmap on both compilers, with 15 local additions and
+no distant tile. See `artifacts/runtime-recovery/reveal-20260906/`.
+
+Fresh original/C++ frame pairs at viewport `(67,42)` retain real squad-strip,
+coordinate/index-label and badge-placement defects. Unmasked RGB MAD for GCC
+is 9.983345/255 with 289192/307200 differing pixels. Matching state is not
+visual equivalence. Exact commands, frames, bitmaps, hashes and state markers
+are in `artifacts/campaign-validation/mission05-frontier-20260906/`, especially
+`original/` and `frame-comparison/`.
+
+In C++, normal end-turn input, one observed banner dismissal and turn-2 processing
+restore the 20-AP stack minimum. Route authoring must handle banner variants
+1..7, not assume the artwork index equals the turn number. Earlier extra
+center clicks opened castle UI; those attempts remain retained. A subsequent
+marked-pattern attempt also failed because the driver's awk pattern expands
+backslash-t. The explicit seven banner alternatives reach turn 2 correctly.
+However, `world_pan_viewport` reports `(63,44)` and the next click observes
+`(63,42)`, hitting `(67,45)` instead of stack 4. Establish stable input/viewport
+evidence before trying `(63,49)`: its visible-neighbor mask is 0x20, original
+fog overlay 10, plain ground and empty occupancy, but no second path has been
+ordered. `(64,49)` is water; `(62,49)` and `(63,50)` are all-hidden rejects.
+The old full march and tactical entry remain unproven; mission 05 stays partial.
+
+## Previous frontier: first waypoint rejected by the original (2026-09-06)
+
+Fresh C++ and frozen-C replays stop before the first movement order. The C++
+run targets `(47,58)`; the frozen-C replay overshoots the viewport by one row
+and targets `(47,59)`. Neither creates the expected 33-node path. This is not
+evidence of a new language-conversion defect: the fog classifier is identical
+in frozen C and pre-repair C++, including its discarded visibility results and
+uninitialized neighbor masks.
+
+The original x86 classifier builds all eight mask bits and rejects an unseen
+center with no visible neighbors. Fresh engine-authored pre/post C++ saves,
+the retained September-5 initial snapshot and the original's live memory have
+the same 1,300-byte player-0 visibility bitmap. Both targets and their complete
+3x3 neighborhoods are hidden. The repaired classifier matches unchanged
+original PE instruction execution across all 67,584 tested cases; the current
+route correctly still rejects `(47,58)`. No reveal or AP shortcut was added.
+
+The July arrival below remains historical evidence, but it no longer supplies
+a validated starting point for this state. Build a march from stack 4 at
+`(71,44)` using destinations accepted by the original visibility gate; only
+then revalidate stack-19 tactical entry and the first exchange. The original
+turn-1 save is verified; no retained original-compatible arrival save exists.
+Mission 05 remains partial. Evidence and exact commands:
+`artifacts/campaign-validation/mission05-cpp-20260906/` and
+`artifacts/runtime-recovery/fog-20260906/`.
+
+## Historical route milestone (2026-07-14; starting waypoint superseded above)
 
 The earlier one-turn tactical entry was diagnostic evidence built on a false
 unit-metadata reconstruction. The original `byte_512570+` globals are fields
@@ -47,7 +276,7 @@ replaced. After stack 19, the authentic route must still clear stacks
 `16..18`, `20`, owner-3 building 4, and remote stack `21` without attacking
 owners `1` or `2`.
 
-## Objective (from `src/strategic/004589C0_004602F0_strategic_004.c` case 5, nonzero-language branch)
+## Objective (from `src/strategic/004589C0_004602F0_strategic_004.cpp` case 5, nonzero-language branch)
 Eliminate **every player-3 (Agordeh) world stack and building**. Two loops:
 - LABEL_35 (`UNIT_RECORD` 0..99): a personage/stack record with `type<4`, alive
   (`+16 != -1`), owner==3 blocks.

@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern CHAR LibFileName[];
 extern CHAR OutputString[];
 extern CHAR ProcName[];
@@ -1934,7 +1938,7 @@ extern char asc_50C164[3];
 extern char asc_50C19C[4];
 extern char asc_50C2E4[3];
 extern char asc_50C2F4[2];
-extern _DWORD (__cdecl *g_BadException_VTable)(bad_exception *this);
+extern _DWORD (__cdecl *g_BadException_VTable)(bad_exception *this_);
 extern int g_BatchEchoBufferLength;
 extern int g_Batch_ListTail;
 extern char g_BitPositionMaskTable[8];
@@ -2311,8 +2315,10 @@ extern _UNKNOWN strncat_;
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern _DWORD (*g_CRT_AddFileHandleHook)();
 extern int (*g_CRT_FileHandleRemoveHookTable[14])();
 extern int (*g_CRT_LockEnterHookTable[3])();
@@ -2326,6 +2332,12 @@ extern int (*g_CRT_ThreadDataDestroyHookTable[4])();
 extern int (*g_FloatEfgFormatFn)();
 extern int (*g_FuncTable_511094[6])();
 extern int (*g_IOStreambuf_VTable[4])();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CLIPS_STATE_H */

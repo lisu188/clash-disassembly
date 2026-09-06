@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern _BYTE BuildingGarrisonDialogActions[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (BUILDING_GARRISON_DIALOG_WIDGET_COUNT + 1)] __attribute__((aligned(4)));
 extern int Map_NeighborDX[64];
 extern int Map_NeighborDY[63];
@@ -58,5 +62,9 @@ extern int g_WorldMapBackgroundSpriteSet;
 extern int (__fastcall *g_WorldMapTileOverlayDrawHook)(_DWORD, _DWORD);
 extern int g_WorldMapViewportScrolledFlag;
 extern int gameData;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_UNITS_SHARED_STATE_H */

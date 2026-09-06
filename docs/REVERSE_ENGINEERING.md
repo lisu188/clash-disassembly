@@ -11,7 +11,7 @@ It is intentionally practical. The goal is not to restate everything already kno
   be small, reached, and backed by
   assembly or live route evidence.
 - Platform portability belongs behind `src/platform/platform_sdl.h` and
-  `src/platform/platform_sdl_runtime.c`.
+  `src/platform/platform_sdl_runtime.cpp`.
 - Historical progress and rename evidence live in `docs/archive/`.
 - If a change would remove evidence, keep the file and document the deferred
   cleanup instead.
@@ -26,9 +26,9 @@ When two sources disagree, prefer them in this order:
    - Canonical for public symbol spellings and segment-relative addresses.
    - If a name exists here, preserve it somewhere even if a better semantic alias is introduced.
 
-2. **`clash95.asm` and the manifest-backed GNU C17 sources**
+2. **`clash95.asm` and the manifest-backed GNU++20 sources**
    - The 12 recovered subsystem directories directly under `src/` are canonical
-     for recovered C; use
+     for recovered C++; use
      `data/recovered_sources.json` to resolve function identity and provenance.
    - Together with the assembly, these are canonical for control flow,
      constants, strings, offsets, table walks, and calling patterns.
@@ -42,8 +42,8 @@ When two sources disagree, prefer them in this order:
 
 4. **Portability / compatibility seam**
    - `src/platform/platform_sdl.h`
-   - `src/platform/platform_sdl_runtime.c`
-   - `src/compatibility/decomp_runtime_stubs.c`
+   - `src/platform/platform_sdl_runtime.cpp`
+   - `src/compatibility/decomp_runtime_stubs.cpp`
    - `CMakeLists.txt`
 
 Rule of thumb:
@@ -175,7 +175,7 @@ Typical changes:
 
 Put non-original compatibility glue here:
 - `src/platform/platform_sdl.h`
-- `src/platform/platform_sdl_runtime.c`
+- `src/platform/platform_sdl_runtime.cpp`
 
 Typical changes:
 - Win32-to-SDL handle/type compatibility,
@@ -184,12 +184,12 @@ Typical changes:
 
 Current repo examples worth preserving:
 - `src/platform/platform_sdl.h` already maps old handle types like `HWND` to `SDL_Window *` and `HDC` to `SDL_Surface *`.
-- `src/platform/platform_sdl_runtime.c` already provides a Win32-like queue surface with `PeekMessageA`, `PostQuitMessage`, and queue timestamps sourced from `timeGetTime()`.
+- `src/platform/platform_sdl_runtime.cpp` already provides a Win32-like queue surface with `PeekMessageA`, `PostQuitMessage`, and queue timestamps sourced from `timeGetTime()`.
 
 ### 4.3 Inert stubs and compile unblockers
 
 Put placeholder-only scaffolding here:
-- `src/compatibility/decomp_runtime_stubs.c`
+- `src/compatibility/decomp_runtime_stubs.cpp`
 
 Typical changes:
 - dummy unresolved weak symbols,
@@ -512,7 +512,7 @@ historical anchors in the manifest and archive):
   external-function argument marker, `"\n*** CLIPS SYSTEM ERROR ***\n"`, and
   the `"   PeriodicCleanup(CLIPS_TRUE,CLIPS_FALSE);\n"` GC banner. Their
   canonical storage is in
-  `src/state/00000000_0054FFFF_recovered_state.c`; historical
+  `src/state/00000000_0054FFFF_recovered_state.cpp`; historical
   unified line anchors remain in the archived evidence.
 
 Practical consequence for future recovery: when a Queue F function's role is
@@ -671,8 +671,8 @@ These are good starter tasks because each unlocks multiple nearby symbols.
 - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
 - `docs/archive/COMPILATION_PROGRESS.md`
 - `src/platform/platform_sdl.h`
-- `src/platform/platform_sdl_runtime.c`
-- `src/compatibility/decomp_runtime_stubs.c`
+- `src/platform/platform_sdl_runtime.cpp`
+- `src/compatibility/decomp_runtime_stubs.cpp`
 - `CMakeLists.txt`
 
 If you only keep one mental model while disassembling, keep this one:

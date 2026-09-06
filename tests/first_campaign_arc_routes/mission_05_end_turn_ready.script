@@ -1,0 +1,10 @@
+# Hover first: the original top-menu handler refuses entry while the button is
+# held. A cursor command acknowledged inside its loop proves setup has finished
+# before the ordinary host click, including when file/render work is delayed.
+mark_log_count end_turn_menu_enter top_menu_enter
+world_move 500 2 0.1 hover-end-turn-menu
+wait_log_marked 20 end_turn_menu_enter
+mark_log_count end_turn_menu_cursor_ack [world_input] command=move target=499,2
+world_move 499 2 0.1 probe-open-end-turn-menu
+wait_log_marked 20 end_turn_menu_cursor_ack
+click 500 2 0.18 1.0 end-current-human-turn

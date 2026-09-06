@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char aBattleActiveTi[35];
 extern char aBattleBat_bkg1[20];
 extern char aBattleBat_bkg2[20];
@@ -89,5 +93,9 @@ extern int g_UnitFadeAnimTargetOffset;
 extern int g_UnitFadeAnimUnitIndex;
 extern char g_UnitPanelRow3FallbackIconChar;
 extern char *g_WallInfoPopupLabelTexts[2];
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_BATTLE_STATE_H */

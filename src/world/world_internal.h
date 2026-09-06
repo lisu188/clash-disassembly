@@ -5,6 +5,10 @@
 
 #include "world_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 BOOL  MapTile_HasOwnOrVisibleEnemyUnitStack(int tileX, int tileY);
 void  WorldMap_HandleTileHoverAndClick(double);
 int  WorldMap_ShowQuitConfirmDialog(int a1, char a2, DWORD a3);
@@ -18,7 +22,7 @@ int  WorldMap_HandleHideUnitAction(int widget, int a2, unsigned __int16 a3, DWOR
 char *WorldMap_ToggleSelectedUnitModeFlag(void);
 int  WorldMap_ComputeBuildMenuActionFromCursor(int widget, int a2);
 int  WorldMap_HandleBuilderActionMenu(int widget, int a2, int a3, DWORD a4, double a5);
-int __thiscall WorldMap_RefreshActionButtonBarState(void *this);
+int __thiscall WorldMap_RefreshActionButtonBarState(void *this_);
 int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3);
 int __fastcall WorldMap_UnloadActionButtonSprites(int a1, int a2);
 int  WorldMap_PollActionButtonWidgets(DWORD a1);
@@ -44,7 +48,7 @@ _WORD * Font_ResetGlyphFallbackTable(_WORD *result);
 int  Font_SetGlyphFallbackEntry(int tableBase, unsigned __int16 glyphId, char flagByte, __int16 fallbackValue);
 int __cdecl Font_BuildGlyphFallbackChain(int tableBase, char flagByte, unsigned __int16 firstGlyphId, ...);
 int  MiniMap_BuildTileColorTables(unsigned int themeIndex, int a2);
-int __thiscall MiniMap_DestroySurface(void *this);
+int __thiscall MiniMap_DestroySurface(void *this_);
 int MiniMap_UpdateViewportFromCursor(void);
 int MiniMap_ShowAllLayers(void);
 int MiniMap_ShowUnitsOnly(void);
@@ -57,11 +61,19 @@ int WorldMapTopMenu_FreeSpriteSet(void);
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern void WorldMap_EnableFrameRedraw();
 extern int Font_InitGlyphFallbackTablesForLanguage();
 extern void MiniMap_RedrawAllTiles();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_WORLD_INTERNAL_H */

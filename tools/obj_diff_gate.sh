@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Compare normalized recovered-code disassembly against a snapshot.
 #
-# Compiles every GNU C17 translation unit named by
+# Compiles every GNU C17 / GNU C++20 translation unit named by
 # data/recovered_sources.json.
 #
 # Usage:
@@ -10,13 +10,15 @@
 #   bash tools/obj_diff_gate.sh --manifest path/to/manifest.json ...
 #
 # The historical positional snapshot workflow remains valid. --split remains
-# a compatibility no-op. CC, OBJDUMP, and PYTHON may be set in the environment.
+# a compatibility no-op. CC, CXX, OBJDUMP, and PYTHON may be set in the environment.
+# --normalize-cpp-paths approves only .cpp -> .c TU-label normalization.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MANIFEST="data/recovered_sources.json"
 SNAPSHOT=""
 POSITIONAL=()
+NORMALIZE_CPP_PATHS=0
 
 usage() {
   sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
@@ -25,6 +27,10 @@ usage() {
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --split)
+      shift
+      ;;
+    --normalize-cpp-paths)
+      NORMALIZE_CPP_PATHS=1
       shift
       ;;
     --manifest)
@@ -63,10 +69,11 @@ if [ -z "$SNAPSHOT" ] && [ "${#POSITIONAL[@]}" -ne 1 ]; then
 fi
 
 CC_BIN="${CC:-gcc}"
+CXX_BIN="${CXX:-g++}"
 OBJDUMP_BIN="${OBJDUMP:-objdump}"
 PYTHON_BIN="${PYTHON:-python3}"
 COMMON_FLAGS=(
-  -w -ffunction-sections -fdata-sections -fno-pie
+  -ffunction-sections -fdata-sections -fno-pie
   -Isrc/platform -Isrc/compatibility -Isrc/instrumentation
   -Isrc -c
 )
@@ -113,6 +120,10 @@ capture() {
   local output="$1"
   local source
   local object
+  local compiler
+  local standard
+  local label
+  local language_flags=()
   local index=0
   local sources=()
   : > "$output"
@@ -129,8 +140,20 @@ capture() {
       return 1
     fi
     object="$(printf '%s/%04d.o' "$OBJECT_DIR" "$index")"
-    (cd "$ROOT" && "$CC_BIN" -std=gnu17 "${COMMON_FLAGS[@]}" "$source" -o "$object")
-    printf 'translation-unit %s\n' "$source" >> "$output"
+    case "$source" in
+      *.c) compiler="$CC_BIN"; standard=gnu17; language_flags=(-w) ;;
+      *.cpp)
+        compiler="$CXX_BIN"; standard=gnu++20
+        language_flags=(-U_GNU_SOURCE -fno-exceptions -fno-rtti -Werror=write-strings)
+        ;;
+      *) echo "unsupported source language: $source" >&2; return 1 ;;
+    esac
+    (cd "$ROOT" && "$compiler" "-std=$standard" "${language_flags[@]}" "${COMMON_FLAGS[@]}" "$source" -o "$object")
+    label="$source"
+    if [ "$NORMALIZE_CPP_PATHS" -eq 1 ] && [[ "$label" == *.cpp ]]; then
+      label="${label%.cpp}.c"
+    fi
+    printf 'translation-unit %s\n' "$label" >> "$output"
     normalize_object "$object" >> "$output"
     index=$((index + 1))
   done

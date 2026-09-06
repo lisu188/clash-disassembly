@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char aAutoMovesBegin[17];
 extern char aAutoMovesEnd[15];
 extern char aBagno7pa[12];
@@ -77,13 +81,13 @@ extern char aWrong_6[6];
 extern char aZwy02[6];
 extern char a_conformfont2p[21];
 extern char a_end[5];
-extern int g_ActionButtonSpriteSet;
 extern int g_AdvanceToNextPlayerFlag;
 extern CLASH95_INTERNAL FILE *g_BattleInputScriptFile;
 extern CLASH95_INTERNAL int g_BattleInputScriptInitialized;
 extern CLASH95_INTERNAL int g_BattleInputScriptTraceChecked;
 extern CLASH95_INTERNAL int g_BattleInputScriptTraceEnabled;
 extern CLASH95_INTERNAL int g_BattleInputScriptWaitReads;
+extern CLASH95_INTERNAL int g_BuilderRoadWidgetsInitialized;
 extern _UNKNOWN g_Building_FootprintTemplate_Type0;
 extern _UNKNOWN g_Building_FootprintTemplate_Type1;
 extern _UNKNOWN g_Building_FootprintTemplate_Type2;
@@ -123,7 +127,7 @@ extern char *g_Text_QuitConfirm[3];
 extern char *g_Text_SurrenderConfirm[3];
 extern int g_TurnEndedByCompletionFlag;
 extern int g_UITextCursorGlyphIndex;
-extern int g_UI_YesNoDims[3];
+extern _BYTE g_UI_YesNoDims[BUILDER_ACTION_WIDGET_TABLE_BYTES] __attribute__((aligned(4)));
 extern unsigned __int8 g_UiDrawTextBuffer[512];
 extern unsigned __int8 g_UiDrawTextFmtBuffer[516];
 extern int g_UnitSearchCursor;
@@ -140,5 +144,9 @@ extern int g_WorldMap_CursorTileEnterTime;
 extern int g_WorldMap_HoverTooltipActiveFlag;
 extern int g_WorldMap_LastCursorTileX;
 extern int g_WorldMap_LastCursorTileY;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_WORLD_STATE_H */

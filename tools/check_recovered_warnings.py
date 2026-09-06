@@ -57,9 +57,12 @@ DIAGNOSTIC_RE = re.compile(
     r"warning:\s*(?P<message>.*)$"
 )
 OPTION_RE = re.compile(r"\[(-W[^\]\s]+)\](?:\s|$)")
-GCC_DRIVER_RE = re.compile(r"(?:^|[/\\])(?:gcc|cc1)(?:\.exe)?$", re.IGNORECASE)
+GCC_DRIVER_RE = re.compile(
+    r"(?:^|[/\\])(?:gcc|g\+\+|cc1|cc1plus)(?:-\d+(?:\.\d+)*)?(?:\.exe)?$",
+    re.IGNORECASE,
+)
 CLANG_DRIVER_RE = re.compile(
-    r"(?:^|[/\\])clang(?:-[^/\\:]+)?(?:\.exe)?$", re.IGNORECASE
+    r"(?:^|[/\\])clang(?:\+\+)?(?:-[^/\\:]+)?(?:\.exe)?$", re.IGNORECASE
 )
 
 
@@ -92,9 +95,9 @@ def is_compiler_origin(origin: str, compiler: str) -> bool:
 def detect_compiler(text: str) -> str:
     """Detect a compiler only when the build output provides clear evidence."""
 
-    clang = bool(re.search(r"\bclang(?:\s+version|-\d+|\.exe)\b", text, re.IGNORECASE))
+    clang = bool(re.search(r"\bclang(?:\+\+)?(?:\s+version|-\d+|\.exe)\b", text, re.IGNORECASE))
     gcc = bool(
-        re.search(r"\b(?:gcc|GNU C)(?:\s+version|-\d+|\.exe)\b", text, re.IGNORECASE)
+        re.search(r"\b(?:gcc|g\+\+|GNU C(?:\+\+)?)(?:\s+version|-\d+|\.exe)\b", text, re.IGNORECASE)
     )
     if clang == gcc:
         raise BaselineError(

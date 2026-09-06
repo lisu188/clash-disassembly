@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char a1[3];
 extern char a10[3];
 extern char a11[3];
@@ -35,5 +39,9 @@ extern int g_WorldMapViewportScrolledFlag;
 extern int g_WorldMap_KeyboardInputDisabled;
 extern int gameData;
 extern HWND hWnd;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RENDER_SHARED_STATE_H */

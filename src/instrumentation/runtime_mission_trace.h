@@ -19,10 +19,18 @@ typedef struct RuntimeMissionTraceSummary
   unsigned int fingerprint;
 } RuntimeMissionTraceSummary;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int RuntimeMissionTrace_CollectSummary(
   const unsigned char *data,
   int target_player_index,
   int ap_player_index,
   RuntimeMissionTraceSummary *summary);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

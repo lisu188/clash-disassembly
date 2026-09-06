@@ -7,17 +7,25 @@ execution headless; never launch either game binary on the host desktop.
 ## Prerequisites
 
 The build requires CMake 3.28+, Ninja, pkg-config, Python 3, SDL2 and X11
-development libraries, and a GNU C17 compiler. Public CI checks GCC 13 and
-Clang 18. On Ubuntu 24.04/WSL the build packages are:
+development libraries, and a GNU++20 compiler. Public CI checks g++-13 and
+clang++-18. The runtime and native test targets are C++ only. On Ubuntu 24.04/WSL the build packages are:
 
 ```sh
 sudo apt-get update
 sudo apt-get install -y cmake ninja-build pkg-config python3 \
-  gcc-13 clang-18 libsdl2-dev libx11-dev
+  g++-13 clang-18 libsdl2-dev libx11-dev
 ```
 
 The current WSL environment has CMake 3.28.3, GCC 13.3.0, Clang 18.1.3,
 Ninja 1.11.1, SDL2 2.30.0, X11 1.8.7, and Python 3.12.3.
+Use fresh build directories when changing compilers or switching from the
+former mixed-language configuration. CMake selects the compiler through `CXX`;
+`CC` does not select the runtime compiler. GNU extensions remain enabled, while
+exceptions and RTTI are disabled. `-U_GNU_SOURCE` preserves the frozen C
+reference libc feature profile. Small C compiler fixtures in tooling tests
+remain supported for historical snapshots and C-linkage checks; they are not
+a maintained C runtime target.
+
 Runtime probes additionally use Xvfb, xauth, and xdotool; original-binary frame
 comparison uses Wine with 32-bit support, ImageMagick `import`, and `xwd`
 (`x11-apps`). These tools are installed locally. Actual boot, menu, and campaign
@@ -57,6 +65,14 @@ leaves installed executable bytes unchanged. Preserve the retail installation
 and prior evidence when adapting it for another state. A displayed menu alone
 does not prove tactical or campaign fidelity.
 
+Use a plain native directory path for the original session. A later capture
+under `/home/andrz/.cache/` faulted in the original `FileSystem_NormalizePath`
+at 0x476ea1, while the plain-directory repeat succeeded. The original's handling
+of leading-dot path components is environment-sensitive; do not assume every
+Linux cache path works through Wine. Both attempts and exact mappings are
+retained in `artifacts/runtime-recovery/radix-20260906/`. No path or palette
+workaround is applied to the game for that comparison.
+
 ## Build
 
 Build both supported compiler profiles, including the separate test executable.
@@ -65,10 +81,14 @@ warning check sees the full compiler output when reusing these directories.
 
 ```sh
 set -euo pipefail
-for cc in gcc-13 clang-18; do
-  build_dir="build/$cc"
-  compiler_id="${cc%-*}"
-  CC="$cc" cmake -S . -B "$build_dir" -G Ninja -DCMAKE_BUILD_TYPE=Debug
+for profile in gcc-13 clang-18; do
+  build_dir="build/$profile"
+  compiler_id="${profile%-*}"
+  case "$profile" in
+    gcc-13) cxx=g++-13 ;;
+    clang-18) cxx=clang++-18 ;;
+  esac
+  CXX="$cxx" cmake -S . -B "$build_dir" -G Ninja -DCMAKE_BUILD_TYPE=Debug
   if ! cmake --build "$build_dir" --clean-first \
     --target clash95_recovered clash95_bootstrap runtime_mission_trace_tests \
     clash95_split_audit -j2 >"$build_dir/compiler.log" 2>&1; then
@@ -94,8 +114,8 @@ does not include `runtime_mission_trace_tests`.
 
 ```sh
 set -euo pipefail
-for cc in gcc-13 clang-18; do
-  ctest --test-dir "build/$cc" \
+for profile in gcc-13 clang-18; do
+  ctest --test-dir "build/$profile" \
     -R '^(clash95_split_source_audit|clash95_pure_metadata_audit|clash95_save_format_contract|runtime_mission_trace_tests)$' \
     --output-on-failure
 done
@@ -108,7 +128,7 @@ function count, and zero-uncovered requirement:
 
 ```sh
 set -euo pipefail
-CC=gcc-13 cmake -S . -B build/coverage -G Ninja \
+CXX=g++-13 cmake -S . -B build/coverage -G Ninja \
   -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
 cmake --build build/coverage --target clash95_unit_tests -j2
 ctest --test-dir build/coverage -R '^clash95_unit_tests$' --output-on-failure
@@ -118,8 +138,20 @@ python3 tools/measure_pure_coverage.py build/coverage \
 
 Use the CTest wrapper to persist per-worker coverage shards. See
 [UNIT_TESTING.md](UNIT_TESTING.md) for the coverage model and evidence rules.
+The native wrapper defaults SDL video and audio to `dummy`, since some fixtures
+reach event initialization. Any explicit backend override must also stay
+headless, for example on an owned Xvfb display.
 
 ## Default Local Smoke Suite
+
+The campaign route command `world_pan_viewport LEFT TOP [ATTEMPTS]` uses
+ordinary host arrow keys, releases each key, then requires a fresh acknowledged
+cursor/viewport sample before choosing another direction or finishing. It also
+samples on entry, so cached cursor lines cannot satisfy a new pan. The hold
+and release gaps default to 0.10 seconds and can be set with
+`CLASH95_PAN_KEY_HOLD` and `CLASH95_PAN_KEY_GAP`. This helper no longer uses the
+old poll-count pulse setting. Its 17 asset-free regressions run with
+`python3 -m unittest discover -s tests/tools -p test_route_viewport.py -v`.
 
 With the retail installation and runtime tools available:
 

@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char a00i[4];
 extern char a00i_0[4];
 extern char a11i[4];
@@ -304,11 +308,19 @@ extern char *const g_TreasureOutcomeStringPtrs[57];
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern int (*g_CheatCodeHandlerTable)();
 extern int (*g_Device_Vtable[6])();
 extern int (*g_RenderState_Vtable[6])();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STRATEGIC_STATE_H */

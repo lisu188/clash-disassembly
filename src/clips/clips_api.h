@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 signed int  Lexer_ParseValueList(int argumentPosition, _DWORD *returnValue, int expectedType, double a4);
 int  Rules_GetFileNameArg(int whichArgument, int functionName, double a3);
 signed int __fastcall Rules_OpenFileErrorMessage(int functionName, int fileName);
@@ -66,6 +70,7 @@ signed int __fastcall Rules_ReportSystemError(int module, int errorID);
 int __fastcall Rules_FloatToSymbol(int a1, double number);
 signed int Rules_RegisterExitFunction(void);
 signed int  Output_Write(int logicalName, int str, int a3);
+int  IO_RunRouterExitCallbacks(int num);
 signed int  IO_AddRouter(int routerName, int priority, int printFunction, int queryFunction, int getcFunction, int ungetcFunction, int exitFunction);
 signed int  IO_DeactivateRouter(int routerName);
 signed int  IO_ActivateRouter(int routerName);
@@ -224,7 +229,7 @@ _DWORD *Rules_InitDeffactsConstruct(void);
 int Defgeneric_SetupConstruct(void);
 int Deffunction_InitConstructType(void);
 _DWORD *Defglobal_InitConstructType(void);
-signed int __thiscall Rules_InitObjectSystem(void *this);
+signed int __thiscall Rules_InitObjectSystem(void *this_);
 int __cdecl ProcParam_RegisterPrimitiveTypes(void);
 int  Parser_ParseProcParameters(int a1, _DWORD *a2, _DWORD *a3, int a4, _DWORD *a5, _DWORD *a6, _DWORD *a7, int (*a8)(void));
 _DWORD * Parser_ParseProcActions(int a1, int a2, int a3, int a4, int (*a5)(void), int (*a6)(void), int *a7, int a8);
@@ -236,7 +241,7 @@ signed int  ProcParam_GetBoundVariableValue(int theValue, _DWORD *returnValue, d
 signed int  ProcParam_BindLocalVariable(int theValue, _DWORD *returnValue, double context);
 signed int  ProcParam_GetWildcardArgumentValue(int theValue, _DWORD *returnValue);
 signed int Rules_RegisterFileIOCommands(void);
-signed int __thiscall Rules_CloseAllBatchSources(void *this);
+signed int __thiscall Rules_CloseAllBatchSources(void *this_);
 int  Rules_GetConstructNameAndComment(int a1, int a2, int (*a3)(void), char *a4, int (*a5)(void), char *a6, int a7, int a8, int a9);
 signed int Rules_RegisterControlFlowFunctions(void);
 signed int Rules_RegisterMiscFunctions(void);
@@ -379,11 +384,8 @@ int * InstanceQuery_DelayedDoForAllInstances(_DWORD *returnValue, double a2);
 int  ObjectsCompiler_WriteDefclassPointerRef(int imageID, int theDefclass, int fileID);
 int  ObjectsCompiler_WriteSlotNamePointerRef(int imageID, int slotNamePtr, int fileID);
 
-/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
- * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-int IO_RunRouterExitCallbacks();
-#pragma GCC diagnostic pop
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CLIPS_API_H */

@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void PlayAvi (char *fileName, IDirectDrawSurface *ddSurface, int x, int y, int (*continueCallback) (void), int openFlags);
 void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int (*a4)(void), int a5); // idb
 char * CAviDecompressor_DestroySourceInterface(int self, char dtorFlags);
@@ -86,7 +90,7 @@ int  IO_StreamWrite(int result, int a2, int a3, int a4);
 int  IO_FOpen(const CHAR *file_path, unsigned __int8 *mode_string, int a3, DWORD a4);
 int  Str_FormatSignedRadixDigits(signed int value, char *buffer, unsigned int radix);
 int Output_WriteFormatted(int a1, int a2, int output_stream, int format_string, ...);
-void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this);
+void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this_);
 int  FileSystem_ConstructMountTable(int mount_table, int file_system, const CHAR *log_file_path, DWORD alloc_context);
 int  FileSystem_DestructMountTable(_DWORD *mount_table, char flags);
 CLASH95_INTERNAL int Compat_FileSystemQuery(int filesystem, const char *requested_path, int expected_result, int (*callback)(int));
@@ -192,7 +196,7 @@ BOOL __fastcall Rules_BloadDeleteFile(int path, int a2);
 BOOL  Rules_RenameFile(const CHAR *oldFileName, const CHAR *newFileName, int a3);
 signed int  Rules_BloadOpenFile(const CHAR *fileName, DWORD a2);
 int  Rules_BloadReadBlock(uintptr_t buffer, unsigned int size);
-int __thiscall Rules_BloadCloseFile(void *this);
+int __thiscall Rules_BloadCloseFile(void *this_);
 int  Rules_SetStrategy(int strategy);
 signed int *Rules_GetStrategyCommand(void);
 signed int * Rules_SetStrategyCommand(int a1, double frame);
@@ -250,5 +254,9 @@ int  Lexer_TokenExpect(int functionName, int countRelation, int expectedNumber);
 int  Rules_ArgRangeCheck(int functionName, int minArgs, int maxArgs);
 extern int Mem_SetAllocFlag (int new_alloc_flag, int a2);
 CLASH95_INTERNAL void Rules_EnsureFactPatternEntityRecord(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_MEDIA_API_H */

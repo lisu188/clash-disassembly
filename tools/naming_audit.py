@@ -138,6 +138,7 @@ def main():
         "src/platform/platform_sdl_runtime.c",
         "src/instrumentation/runtime_mission_trace.c",
     )
+    support += tuple(path[:-2] + ".cpp" for path in support)
     win_files = [os.path.join(REPO, rel) for rel in recovered_source_files()]
     win_files.extend(os.path.join(REPO, rel) for rel in support)
     win_files = [f for f in win_files if os.path.exists(f)]

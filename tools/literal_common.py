@@ -757,7 +757,9 @@ def parse_prelude_macros(path=None):
     return macros
 
 
-ENUM_HEAD_RE = re.compile(r"\benum\b(?:\s+[A-Za-z_]\w*)?\s*\{")
+ENUM_HEAD_RE = re.compile(
+    r"\benum\b(?:\s+[A-Za-z_]\w*)?"
+    r"(?:\s*:\s*[A-Za-z_]\w*(?:[ \t]+[A-Za-z_]\w*)*)?\s*\{")
 
 
 def parse_prelude_enums(path=None):
@@ -770,6 +772,9 @@ def parse_prelude_enums(path=None):
         raw = f.read()
     # strip block comments so `/* ... */` inside an enum body is ignored
     text = re.sub(r"/\*.*?\*/", " ", raw, flags=re.DOTALL)
+    # C/C++ may share an enum body after conditional header spellings. Keep
+    # both source branches visible, as before, without treating #endif as C.
+    text = re.sub(r"^[ \t]*#[^\n]*", "", text, flags=re.MULTILINE)
     members = {}
     for hm in ENUM_HEAD_RE.finditer(text):
         # find the matching close brace of this enum body

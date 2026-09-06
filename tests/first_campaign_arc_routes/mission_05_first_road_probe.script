@@ -1,0 +1,31 @@
+include_script tests/first_campaign_arc_routes/mission_05_visible_seventh_leg_probe.script
+world_pan_viewport 47 48 80
+world_move 192 176 0.5 point-at-first-road-target
+mark_log_count road_before_save debug-save-written slot=3 ok=1
+world_save_slot 3 1.0 save-before-first-road
+wait_log_marked 30 road_before_save
+mark_log_count building_button action_widget_hit selected=4 a=480 b=432
+mark_log_count building_ready builder_menu_enter selected=4 a=-1
+click 496 448 0.18 1.0 open-authentic-building-menu
+wait_log_marked 20 building_button
+wait_log_marked 20 building_ready
+wait 3.0
+screenshot mission05-building-menu
+nonblank mission05-building-menu
+mark_log_count road_ready road_mode_enter selected=4 a=2
+click 432 416 0.18 1.0 enter-road-mode
+wait_log_marked 20 road_ready
+wait 3.0
+screenshot mission05-road-mode
+nonblank mission05-road-mode
+mark_log_count first_road_move unit_move_after_path_state selected=4 a=49 b=50 c=0
+click 192 176 0.18 2.0 build-first-road-segment-west
+wait_log_marked 60 first_road_move
+mark_log_count road_after_save debug-save-written slot=2 ok=1
+world_save_slot 2 1.0 save-after-first-road
+wait_log_marked 30 road_after_save
+world_move 192 176 0.5 align-original-first-road-cursor
+wait 5.0
+screenshot mission05-first-road-built
+nonblank mission05-first-road-built
+fail_if_log mission05_failure_friendly_attack

@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern CHAR ClassName[];
 extern UINT CodePage;
 extern char Lexer_ArrayClose[4];
@@ -562,11 +566,19 @@ extern int g_VideoModeSwitchStartTick;
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern int (*g_AviDecompressor_PixelCopyFnTable[7])();
 extern int (*g_CRT_InitHookPtr)();
 extern int (*g_IOStreamAdapter_Vtable[4])();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RUNTIME_STATE_H */

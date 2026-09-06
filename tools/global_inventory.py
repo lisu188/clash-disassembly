@@ -39,7 +39,7 @@ def load_source_manifest(path=SOURCE_MANIFEST):
 
 
 def recovered_source_files(document=None):
-    """Return canonical manifest-owned C files in stable path order."""
+    """Return canonical manifest-owned C/C++ files in stable path order."""
     document = document or load_source_manifest()
     sources = {record.get("source") for record in document["functions"]}
     state_owner = document.get("state_owner")
@@ -47,7 +47,7 @@ def recovered_source_files(document=None):
         sources.add(state_owner)
     invalid = sorted(
         source for source in sources
-        if not isinstance(source, str) or not source.endswith(".c")
+        if not isinstance(source, str) or not source.endswith((".c", ".cpp"))
     )
     if invalid:
         raise ValueError("invalid canonical source paths: %r" % invalid)

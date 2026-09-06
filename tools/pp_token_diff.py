@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Compare two preprocessed C files as token streams (gate G1/G2).
+"""Compare two preprocessed C/C++ files as token streams (gate G1/G2).
 
 Usage:
   python3 tools/pp_token_diff.py before.i after.i [--allow plan.json]
+      [--normalize-cpp-paths]
 
 Strict mode: exit 0 iff both files lex to the identical token sequence.
 Because a #define-name substitution expands back to the exact original
@@ -12,6 +13,9 @@ value-identical (stronger than the binary diff this repo does not have).
 --allow plan.json: tolerate exactly the token hunks the plan artifact
 declares (entries' "pp_allow": [[before...], [after...]] pairs, e.g. the
 0x194u -> 0x194 suffix drops). Any other divergence still fails.
+
+--normalize-cpp-paths approves only a .cpp -> .c suffix change in generated
+translation-unit boundary labels. Source string literals remain significant.
 """
 import json
 import re
@@ -28,9 +32,16 @@ TOK_RE = re.compile(
 )
 
 
-def lex(path):
+def lex(path, normalize_cpp_paths=False):
     with open(path, errors="replace") as f:
-        return TOK_RE.findall(f.read())
+        tokens = TOK_RE.findall(f.read())
+    if normalize_cpp_paths:
+        for index in range(1, len(tokens)):
+            if (re.fullmatch(r"CLASH95_PP_TRANSLATION_UNIT_BOUNDARY_\d+", tokens[index - 1])
+                    and tokens[index].startswith('"src/')
+                    and tokens[index].endswith('.cpp"')):
+                tokens[index] = tokens[index][:-5] + '.c"'
+    return tokens
 
 
 def context(toks, i, n=8):
@@ -42,8 +53,9 @@ def main():
     if len(args) < 2:
         print(__doc__)
         return 2
-    before = lex(args[0])
-    after = lex(args[1])
+    normalize_cpp_paths = "--normalize-cpp-paths" in args
+    before = lex(args[0], normalize_cpp_paths)
+    after = lex(args[1], normalize_cpp_paths)
     allow = []
     if "--allow" in args:
         with open(args[args.index("--allow") + 1]) as f:

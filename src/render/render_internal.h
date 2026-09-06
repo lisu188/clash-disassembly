@@ -5,6 +5,10 @@
 
 #include "render_api.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 __int16 Render_LoadResourceBackbuffer(void);
 int  Palette_ExpandRGBTripletsToTable(int palette_table, int query_handle, int context);
 int  LoadPalPCX(int palette_table, const char *palette_name, DWORD context);
@@ -16,7 +20,7 @@ int  Surface_ConstructBackbufferInstance(int surface_addr);
 extern int Surface_SwapDirtyTrackingFlag (int surface, int new_flag);
 int * Palette_CrossfadeToTarget(int *result, unsigned __int8 *target_palette, signed int step_count);
 _DWORD * RenderSurface_ConstructNullBlitCursor(_DWORD *result);
-int __thiscall RenderSurface_CloneInternalArray(void *this);
+int __thiscall RenderSurface_CloneInternalArray(void *this_);
 _BYTE * RenderSurface_CopyFourByteFields(_BYTE *result, _BYTE *source);
 _DWORD * RenderSurface_ConstructFullScreenBuffer(int surface_addr);
 int  DLXSpriteSet_ConstructCopy(int *sprite_set, DWORD *source_set, signed int entry_count);
@@ -31,9 +35,17 @@ int Render_RestoreLostSurfaces(void);
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern int Menu_DrawFrameBackdrop();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_RENDER_INTERNAL_H */

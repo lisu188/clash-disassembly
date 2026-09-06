@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 CLASH95_INTERNAL int Runtime_DescriptorNoop(void);
 CLASH95_INTERNAL void Runtime_InitCompactEvalDescriptor(EvalNodeDescriptorCompact descriptor, uintptr_t evaluator);
 CLASH95_INTERNAL void Render_InitRecoveredVtableStorage(void);
@@ -30,5 +34,9 @@ CLASH95_INTERNAL char *UnitType_GetLocalizedName(unit_type unitType);
 CLASH95_INTERNAL unsigned char UnitType_GetWorldMoveCost(int unit_type, int profile_offset);
 CLASH95_INTERNAL unsigned char UnitType_GetRoadMoveCost(int unit_type);
 CLASH95_INTERNAL void Rules_EnsureObjectPatternVTable(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_STATE_API_H */

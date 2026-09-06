@@ -5,6 +5,11 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+signed int  Unit_Create(unit_type unitType, int ownerIndex, int tileRow, int facing_promoted, int tileColumn);
 unsigned int  UnitStack_LinkArmyFact(__int16 *stackPtr, char a2, DWORD a3);
 int  Unit_Kill(int stackRecord, char killReason, DWORD a3, double a4);
 int  UnitStack_KillByIndex(int stackIndex, char killReason, DWORD a3, double a4);
@@ -84,9 +89,9 @@ BOOL  QueuedPath_StartsInBuildingFootprint(_DWORD *pathBuffer, int buildingIndex
 int  Math_SinDegreesQ16(signed int degrees);
 unsigned int  Rng_RandRange(int minValue, int maxValue);
 signed int  Math_CeilSqrt(signed int value);
-unsigned int __thiscall Map_InitBuildingSwayJitterOffsets(void *this);
-unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this);
-unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this);
+unsigned int __thiscall Map_InitBuildingSwayJitterOffsets(void *this_);
+unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this_);
+unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this_);
 int  WorldMap_RedrawViewport(int presentCursorOverlay);
 int  WorldMap_RedrawTileIfVisible(int result, int tileColumn);
 int  UI_CenterWorldMapViewportOnRectIfFit(int result, int rectColMin, int rectColMax, int rectRowMax);
@@ -96,7 +101,7 @@ int  UI_StartUnitBlinkFlash(int unitIndex, int a2, int a3);
 int  UI_StartTileBlinkFlash(int tileX, int tileY, int a3);
 void __fastcall UI_UpdateTileBlinkFlash(int a1, int a2);
 signed int  UI_HighlightTile(int tileX, int tileY);
-int __thiscall UI_ClearTileHighlight(void *this);
+int __thiscall UI_ClearTileHighlight(void *this_);
 void BattleLog_Disable(void);
 void BattleLog_Enable(void);
 int  Battle_StoreLastOutcomeValue(int result);
@@ -134,11 +139,8 @@ int  Unit_Info(int leftArg, int topArg, int a3, unsigned __int8 *unitRecord, DWO
 void  Unit_Attack(int attackerIndex, int defenderIndex, char a3, DWORD a4, double a5);
 void  Unit_AttackBuilding(int attackerIndex, int buildingIndexArg, char a3, DWORD a4, double a5);
 
-/* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
- * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-signed int  Unit_Create();
-#pragma GCC diagnostic pop
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_UNITS_API_H */

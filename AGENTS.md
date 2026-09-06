@@ -39,7 +39,7 @@ Reasoning effort, permissions, and authentication remain user settings.
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
 - The recovered implementation is canonical only in the 12 manifest-backed
-  subsystem directories directly under `src/`: 4,157 functions in 140 independently compiled GNU C17
+  subsystem directories directly under `src/`: 4,157 functions in 140 independently compiled GNU++20
   translation units. The unified source, recovered include-C fragments, and
   compatibility symlinks were removed after the recorded parity gate.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
@@ -56,10 +56,17 @@ Reasoning effort, permissions, and authentication remain user settings.
 
 ## 3. Current Blocker Families
 
-- Mission `05` has an authentic multi-turn arrival at `(47,58)`; manual tactical
-  entry against stack `19`, the first exchange, and the remaining owner-3
-  elimination route still need validation. Follow `docs/STATUS.md` "Next Target"
-  for the retained route and current evidence.
+- Mission `05` now has an original-matching C++ first Road endpoint `(49,50)`
+  on turn 6, with 2 AP, no active path, roads 867/879 and 228 visibility tiles.
+  Both supported builds replay the seven-leg approach and actual Building → Road
+  action. The original uses real Load restarts from unchanged engine-authored
+  turn-5/turn-6 checkpoints; continuous original turn-1 replay is not claimed.
+  Use `tests/first_campaign_arc_routes/mission_05_first_road_probe.env`.
+  Normal turn refresh and Road continuation
+  through `(48,50)` to `(45,50)` are the next C++ frontier. Do not revive removed
+  manual crossing exceptions or builder-transfer shortcuts. The separate original
+  reaches `(47,58)` on turn 10, but C++ arrival, stack-19 tactical entry and owner-3
+  elimination remain unproven. Follow `docs/STATUS.md` "Next Target".
 - Full-menu campaign progression and automatic mission advancement are not yet
   validated.
 - `CSS_Init` and its quarantined legacy audio/device table remain broader startup
@@ -123,9 +130,9 @@ than a copy kept in sync by hand.
 - SDL remains the final platform, window, render, timing, input, and audio layer.
 - Keep original gameplay behavior separate from platform glue.
 - Contain Win32-era assumptions behind `src/platform/platform_sdl.h` and
-  `src/platform/platform_sdl_runtime.c`.
+  `src/platform/platform_sdl_runtime.cpp`.
 - Put inert compile-only scaffolding in
-  `src/compatibility/decomp_runtime_stubs.c` and replace it only when reached
+  `src/compatibility/decomp_runtime_stubs.cpp` and replace it only when reached
   behavior is understood.
 - A live process or dummy window is not sufficient proof; inspect actual
   presented frames for visual milestones.

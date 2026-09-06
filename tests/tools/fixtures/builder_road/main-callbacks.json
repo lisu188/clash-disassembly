@@ -1,0 +1,42 @@
+{
+  "start": "0x511d40",
+  "record_bytes": 53,
+  "callbacks": [
+    {
+      "index": 0,
+      "field_address": "0x511d60",
+      "original_pointer": "0x409d80",
+      "canonical_symbol": "WorldMap_HandleDeselectUnitAction"
+    },
+    {
+      "index": 1,
+      "field_address": "0x511d95",
+      "original_pointer": "0x409df0",
+      "canonical_symbol": "WorldMap_SelectNextActiveUnitStack"
+    },
+    {
+      "index": 2,
+      "field_address": "0x511dca",
+      "original_pointer": "0x409f00",
+      "canonical_symbol": "WorldMap_CenterViewOnNextOwnedBuildingWithUnit"
+    },
+    {
+      "index": 3,
+      "field_address": "0x511dff",
+      "original_pointer": "0x40a040",
+      "canonical_symbol": "WorldMap_ToggleSelectedUnitModeFlag"
+    },
+    {
+      "index": 4,
+      "field_address": "0x511e34",
+      "original_pointer": "0x40a0e0",
+      "canonical_symbol": "WorldMap_HandleBuilderActionMenu"
+    },
+    {
+      "index": 5,
+      "field_address": "0x511e69",
+      "original_pointer": "0x40a000",
+      "canonical_symbol": "WorldMap_HandleHideUnitAction"
+    }
+  ]
+}

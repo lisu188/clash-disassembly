@@ -1,7 +1,7 @@
 # Source organization
 
-Production targets compile the canonical recovered implementation from 138 GNU
-C17 translation units in 12 subsystem directories directly under `src/`.
+Production targets compile the canonical recovered implementation from 140 GNU++20
+translation units in 12 subsystem directories directly under `src/`.
 `data/recovered_sources.json` is the authoritative function/source manifest.
 Tests link independently compiled coverage objects and do not include recovered
 implementation files directly.
@@ -27,7 +27,7 @@ implementation files directly.
 | `buildings/` | 18 | 370 | Buildings, economy, production, garrisons, and modal UI |
 | `battle/` | 3 | 50 | Tactical interaction, simulation, rendering, and outcomes |
 | `persistence/` | 6 | 136 | Special sites, saves, and persistence helpers |
-| `strategic/` | 6 | 204 | Campaign rules, strategic AI, and host functions |
+| `strategic/` | 8 | 291 | Campaign rules, strategic AI, and host functions |
 | `clips/` | 52 | 1,706 | Embedded CLIPS language and object/compiler runtime |
 | `media/` | 18 | 743 | Audio, music, AVI, and media support |
 | `runtime/` | 16 | 403 | Input-facing behavior and recovered legacy runtime |

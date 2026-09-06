@@ -48,8 +48,8 @@ src/state/00000000_0054FFFF_recovered_state.c` = 0. The 87 formerly-`_UNKNOWN`
 one-byte DATA placeholders are now functions carved at their `loc_` addresses,
 each a thin `Rules_RtnLong`-based arg-read + inner-recovered-fn wrapper (template
 `Rules_HostArmyHasBuilder`, strategic_001.c). They live in two dedicated TUs
-(`src/strategic/00452753_0045303F_strategic_007.c` for the 0x452xxx movement
-blob, `src/strategic/00456706_00457789_strategic_008.c` for the 0x456xxx
+(`src/strategic/00452753_0045303F_strategic_007.cpp` for the 0x452xxx movement
+blob, `src/strategic/00456706_00457789_strategic_008.cpp` for the 0x456xxx
 economy/building/army blob) plus `Rules_HostDigTreasure`'s data tables in the
 state TU. Full history and per-handler mechanics: [`AI_HOST_RECOVERY_SPEC.md`].
 

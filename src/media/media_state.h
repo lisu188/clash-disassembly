@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct _RTL_CRITICAL_SECTION CriticalSection;
 extern char a00[3];
 extern char a00_1[3];
@@ -630,7 +634,7 @@ extern int g_Rules_WatchFocusFlag;
 extern int g_Rules_WatchStatisticsFlag;
 extern int g_SampleCacheListHead;
 extern int g_SoundChannelArrayBase;
-extern char g_Str_RadixDigitCharacters[1];
+extern char g_Str_RadixDigitCharacters[37];
 extern int g_StreamServiceLockEntryCount;
 extern int g_WaveOutBufferRingIndex;
 extern int g_WaveOutFormatFlags;
@@ -653,8 +657,10 @@ extern struct _RTL_CRITICAL_SECTION stru_54D49C;
 
 /* Deliberate unprototyped residue: recovered call sites depend on K&R semantics
  * (varying arity) or the slot type is unrecovered; kept verbatim as provenance. */
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 extern int (*g_AviException_VTable[2])();
 extern int (*g_CAviDecompressor_Vtable)();
 extern int (*g_CAviSourceInterface_Vtable)();
@@ -671,6 +677,12 @@ extern int (*g_FileSystemDiskMount_VTable[4])();
 extern int (*g_FileSystemMountTable_VTable[13])();
 extern signed int (*g_Mem_OutOfMemoryHandler)();
 extern int (*g_Surface_BlitFunctionTable[3])();
+#if !defined(__cplusplus) && (defined(__GNUC__) || defined(__clang__))
 #pragma GCC diagnostic pop
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_MEDIA_STATE_H */

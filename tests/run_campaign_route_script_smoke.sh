@@ -1010,6 +1010,68 @@ write_world_script() {
   sleep "${3:-0.40}"
 }
 
+pan_world_viewport() {
+  local target_left="$1" target_top="$2" max_pan_attempts="$3" line_number="$4"
+  local pan_attempts=0 probe_baseline cursor_deadline viewport_line
+  local current_left current_top pan_key
+
+  if ! is_unsigned_integer "$target_left" ||
+     ! is_unsigned_integer "$target_top" ||
+     ! is_unsigned_integer "$max_pan_attempts" || [ "$max_pan_attempts" = 0 ]; then
+    fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires nonnegative left/top and positive max-attempts"
+  fi
+  while :; do
+    # A prior cursor event may predate a turn or a still-held arrow. Require
+    # this probe's command acknowledgment and a subsequent cursor event.
+    # The first move guarantees that the second changes the cursor, even
+    # when its starting position has not yet appeared in the log.
+    probe_baseline="$(wc -l < "$log_path")"
+    write_world_script move "move 312 239" 0.05 "" "" "world-pan-viewport-${line_number}-settle-${pan_attempts}"
+    write_world_script move "move 328 239" 0.10 "" "" "world-pan-viewport-${line_number}-probe-${pan_attempts}"
+    cursor_deadline=$((SECONDS + 5))
+    viewport_line=""
+    while [ "$SECONDS" -lt "$cursor_deadline" ]; do
+      viewport_line="$(awk -v baseline="$probe_baseline" '
+        NR <= baseline || index($0, "[campaign-route]") { next }
+        index($0, "[world_input] command=move target=328,239 ") { acknowledged=1; next }
+        acknowledged && index($0, "[world_cursor]") { latest=$0 }
+        END { if (latest != "") print latest }
+      ' "$log_path")"
+      if [ -n "$viewport_line" ]; then break; fi
+      if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+        fail_smoke "campaign route script smoke process exited during world_pan_viewport"
+      fi
+      sleep 0.1
+    done
+    if [[ "$viewport_line" != *" left="* ]] || [[ "$viewport_line" != *" top="* ]]; then
+      fail_smoke "campaign route script line ${line_number}: world_pan_viewport timed out waiting for its acknowledged cursor probe"
+    fi
+    current_left="${viewport_line#* left=}"
+    current_left="${current_left%% *}"
+    current_top="${viewport_line#* top=}"
+    current_top="${current_top%% *}"
+    if ! is_unsigned_integer "$current_left" || ! is_unsigned_integer "$current_top"; then
+      fail_smoke "campaign route script line ${line_number}: world_pan_viewport parsed invalid viewport: left=${current_left} top=${current_top}"
+    fi
+    if [ "$current_left" = "$target_left" ] && [ "$current_top" = "$target_top" ]; then
+      echo "[campaign-route] world-pan-viewport-done line=${line_number} left=${current_left} top=${current_top} attempts=${pan_attempts}" >>"$log_path"
+      return
+    fi
+    if [ "$pan_attempts" -ge "$max_pan_attempts" ]; then
+      fail_smoke "campaign route script line ${line_number}: world_pan_viewport exhausted ${max_pan_attempts} attempts at left=${current_left} top=${current_top}"
+    fi
+    if [ "$current_left" -lt "$target_left" ]; then pan_key=Right
+    elif [ "$current_left" -gt "$target_left" ]; then pan_key=Left
+    elif [ "$current_top" -lt "$target_top" ]; then pan_key=Down
+    else pan_key=Up
+    fi
+    pan_attempts=$((pan_attempts + 1))
+    # Complete an ordinary SDL host key-down/key-up cycle before sampling.
+    # Poll-count pulses can remain pressed after a cursor sample is emitted.
+    key_at "$pan_key" "${CLASH95_PAN_KEY_HOLD:-0.10}" "${CLASH95_PAN_KEY_GAP:-0.10}" "world-pan-viewport-${line_number}-key-${pan_attempts}"
+  done
+}
+
 write_platform_script() {
   log_route_input_step "platform" "$1" "${6:-platform-$1}"
   printf '%s\n' "$2" >>"$platform_input_script"
@@ -1486,78 +1548,7 @@ execute_route_script() {
         if [ "$#" -lt 2 ]; then
           fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires left top"
         fi
-        target_left="$1"
-        target_top="$2"
-        max_pan_attempts="${3:-160}"
-        if ! is_unsigned_integer "$target_left" ||
-           ! is_unsigned_integer "$target_top" ||
-           ! is_unsigned_integer "$max_pan_attempts" ||
-           [ "$max_pan_attempts" = "0" ]; then
-          fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires nonnegative left/top and positive max-attempts"
-        fi
-        pan_attempts=0
-        while [ "$pan_attempts" -lt "$max_pan_attempts" ]; do
-          viewport_line="$(grep -F "[world_cursor]" "$log_path" | grep -Fv "[campaign-route]" | tail -n 1 || true)"
-          if [[ "$viewport_line" != *" left="* ]] || [[ "$viewport_line" != *" top="* ]]; then
-            fail_smoke "campaign route script line ${line_number}: world_pan_viewport cannot read a world cursor viewport"
-          fi
-          current_left="${viewport_line#* left=}"
-          current_left="${current_left%% *}"
-          current_top="${viewport_line#* top=}"
-          current_top="${current_top%% *}"
-          if ! is_unsigned_integer "$current_left" || ! is_unsigned_integer "$current_top"; then
-            fail_smoke "campaign route script line ${line_number}: world_pan_viewport parsed invalid viewport: left=${current_left} top=${current_top}"
-          fi
-          if [ "$current_left" = "$target_left" ] && [ "$current_top" = "$target_top" ]; then
-            echo "[campaign-route] world-pan-viewport-done line=${line_number} left=${current_left} top=${current_top} attempts=${pan_attempts}" >>"$log_path"
-            break
-          fi
-          if [ "$current_left" -lt "$target_left" ]; then
-            scan_code=205
-          elif [ "$current_left" -gt "$target_left" ]; then
-            scan_code=203
-          elif [ "$current_top" -lt "$target_top" ]; then
-            scan_code=208
-          else
-            scan_code=200
-          fi
-          pan_attempts=$((pan_attempts + 1))
-          # The runtime consumes key-pulse reads on every input-fallback poll
-          # (~10 polls per presented frame measured 2026-07-16), so a pulse
-          # must budget several frames of reads for the arrow key to still be
-          # held when WorldMap_HandleScrollKeysAndIdle polls it after its
-          # 16-centisecond repeat gate.
-          write_world_script key "key ${scan_code} ${CLASH95_PAN_KEY_PULSE_READS:-48}" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
-          cursor_baseline="$(game_log_count "[world_cursor]")"
-          # SDL can round adjacent script coordinates back onto the current
-          # cursor, yielding a zero-delta move and therefore no world_cursor
-          # trace. Keep the probe near screen center, but move far enough that
-          # every pan attempt produces a fresh cursor sample.
-          if [ "$probe_x" = "312" ]; then
-            probe_x=328
-          else
-            probe_x=312
-          fi
-          write_world_script move "move ${probe_x} 239" 0.25 "" "" "world-pan-viewport-${line_number}-probe-${pan_attempts}"
-          cursor_deadline=$((SECONDS + 5))
-          cursor_count="$cursor_baseline"
-          while [ "$SECONDS" -lt "$cursor_deadline" ]; do
-            cursor_count="$(game_log_count "[world_cursor]")"
-            if [ "${cursor_count:-0}" -gt "${cursor_baseline:-0}" ]; then
-              break
-            fi
-            if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
-              fail_smoke "campaign route script smoke process exited during world_pan_viewport"
-            fi
-            sleep 0.1
-          done
-          if [ "${cursor_count:-0}" -le "${cursor_baseline:-0}" ]; then
-            fail_smoke "campaign route script line ${line_number}: world_pan_viewport timed out waiting for cursor probe"
-          fi
-        done
-        if [ "$current_left" != "$target_left" ] || [ "$current_top" != "$target_top" ]; then
-          fail_smoke "campaign route script line ${line_number}: world_pan_viewport exhausted ${max_pan_attempts} attempts at left=${current_left} top=${current_top}"
-        fi
+        pan_world_viewport "$1" "$2" "${3:-160}" "$line_number"
         ;;
       capture_battle_selected_unit)
         selected_line="$(grep -F "[battle_click] tile_input" "$log_path" |

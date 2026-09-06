@@ -1,7 +1,7 @@
 # Campaign mission completion notes
 
 Objectives decoded from `Mission_CheckObjectiveComplete`
-(`src/strategic/004589C0_004602F0_strategic_004.c`),
+(`src/strategic/004589C0_004602F0_strategic_004.cpp`),
 switch on `ACTIVE_MISSION_INDEX`. Difficulty and tractability of the 14 partial missions:
 
 | M | case | objective | tractable? |
@@ -24,7 +24,7 @@ switch on `ACTIVE_MISSION_INDEX`. Difficulty and tractability of the 14 partial 
 
 Second-campaign correction (source-verified): `Scenario_LoadMissionByIndex`
 cases 10..19 set `PLAYER_HAS_HUMAN_CONTROLLER(1) = 1`
-(`src/strategic/00460360_00460910_strategic_005.c:603+`) — the human is
+(`src/strategic/00460360_00460910_strategic_005.cpp:603+`) — the human is
 **player 1** in missions 10..19, so the "castle owned by player 1" objectives
 in 12/14/16 are ordinary human capture missions, not ally-AI-dependent ones.
 The 140024-region per-player dwords are the `PLAYER_IS_ACTIVE` flags
@@ -32,7 +32,7 @@ The 140024-region per-player dwords are the `PLAYER_IS_ACTIVE` flags
 mission 09/19 objectives to standard conquest: case 9 scans offsets
 1423..7115 (players 1..4); case 0x13 checks player 0 then 2846..7115
 (players 2..4), skipping the human at offset 1423
-(`src/strategic/004589C0_004602F0_strategic_004.c:933,1079`).
+(`src/strategic/004589C0_004602F0_strategic_004.cpp:933,1079`).
 
 **Completed this session: mission 13** (`mission_13_turn_survival_route.script`, adapted
 from the complete mission 03; key fix = replace racy `wait_log playgame_before_human_turn`
@@ -42,9 +42,37 @@ registers). Campaign: 6/20 complete.
 The remaining 14 are combat/capture routes (multi-session, iterative per
 `mission_05_WORKLOG.md`) except the two survival missions (03, 13) now both done.
 
+Mission 05 latest update (2026-09-06): both repaired compiler builds now
+replay the seven-leg approach and actual Building → Road action to `(49,50)`,
+turn 6, with 2 AP, roads 867/879 and 228 matching visibility tiles. The original
+uses real Load of an unchanged engine-authored turn-6 checkpoint. All ten unit
+slots and the complete visibility bitmap agree before/after construction.
+Use `mission_05_first_road_probe.env`; normal refresh and the remaining bridge
+are next. The separate original reaches `(47,58)` on turn 10; C++ arrival,
+tactical entry and objective remain unproven. Historical transfer-based crossing
+claims remain superseded. Mission 05 stays partial and direct-route completion
+stays 6/20. See `mission_05_WORKLOG.md`.
+
+Previous mission 05 update (2026-09-06): fresh original-backed fog validation rejects
+the historical march's first destination `(47,58)` from the verified turn-1
+state. The nine-turn arrival is retained as history, not a current validated
+starting point. The visible-first-leg probe reaches `(67,47)` for 20 AP, and
+the new visible-second-leg probe reaches `(63,49)` in turn 2 for 18 AP.
+Both legs match the original's path, occupied-unit state and complete
+visibility bitmap after the reveal and route-driver repairs. The reached
+nation-score accumulator is also repaired; exact live inputs match original
+instruction results, and both compiler builds complete this prefix. New partial
+third/fourth/fifth probes extend it to `(55,53)` in turn 5 with 15 AP, an empty
+path and 179 visible tiles matching the original. They include the natural
+turn 4 AP stop at `(56,52)` and ordinary turn 5 queued-path resumption. The End
+Turn fixture now waits for menu readiness before clicking; all failed earlier runs
+remain recorded. Continue through accepted destinations and normal turn refresh
+before tactical entry.
+The 6/20 direct-route completion count is unchanged.
+
 Mission 12 crash triage (2026-07-16, resolved): the reported turn-advance
 SIGSEGV was NOT game code. The mission-state sampler
-(`src/instrumentation/runtime_mission_trace.c`) still declared
+(`src/instrumentation/runtime_mission_trace.cpp`) still declared
 `extern unsigned char gameData[]` and walked tables from the symbol's own
 address, but the recovered state stores the game-state block as a 32-bit
 pointer (`int gameData;`); the sampler's building walk started 16 bytes past

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate the private C17 layout guard from recovered foundation constants.
+"""Generate the private C/C++ layout guard from recovered foundation constants.
 
-Emits one C17 ``_Static_assert`` per numeric object-like ``#define`` and enum
+Emits one ``CLASH95_STATIC_ASSERT`` per numeric object-like ``#define`` and enum
 member in ``recovered_types.h``. The committed header is a compile-time
 tripwire for recovered memory-map constants.
 
@@ -50,12 +50,12 @@ def generated_text():
             continue
         spelled = macro["body"].strip()
         lines.append(
-            '_Static_assert((%s) == (%s), "%s changed");'
+            'CLASH95_STATIC_ASSERT((%s) == (%s), "%s changed");'
             % (name, spelled, name)
         )
     for name, value in sorted(lc.parse_prelude_enums().items()):
         lines.append(
-            '_Static_assert((%s) == (%d), "%s changed");'
+            'CLASH95_STATIC_ASSERT((%s) == (%d), "%s changed");'
             % (name, value, name)
         )
     return "\n".join(lines) + FOOTER
@@ -80,7 +80,7 @@ def main():
         return 0
     with open(out, "w", newline="\n") as f:
         f.write(content)
-    guard_count = content.count("_Static_assert")
+    guard_count = content.count("CLASH95_STATIC_ASSERT")
     print("wrote %s (%d guards)" % (OUT_REL, guard_count))
     return 0
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Audit independently compiled unit/coverage case sources.
 
-The split build discovers ``tests/unit/cases/test_*.c`` directly in CMake;
+The split build discovers ``tests/unit/cases/test_*.c`` / ``test_*.cpp`` in CMake;
 there is no generated ``test_all.c`` include block anymore.  This command is
 therefore deliberately read-only: it inventories case files and verifies that
 the CMake registration remains independent and that no unit source includes a
-``.c`` implementation.
+``.c`` or ``.cpp`` implementation.
 
 Usage:
   python3 tools/wire_cov_cases.py [--json]
@@ -28,7 +28,7 @@ TEST_RE = re.compile(
     r"(?m)^\s*TEST\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*,\s*"
     r"([A-Za-z_][A-Za-z0-9_]*)\s*\)"
 )
-C_INCLUDE_RE = re.compile(r'(?m)^\s*#\s*include\s*[<\"]([^>\"]+\.c)[>\"]')
+C_INCLUDE_RE = re.compile(r'(?m)^\s*#\s*include\s*[<\"]([^>\"]+\.(?:c|cpp))[>\"]')
 
 
 def repo_path(path: Path) -> str:
@@ -43,21 +43,25 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
-    cases = sorted(CASE_DIR.glob("test_*.c"))
+    cases = sorted(path for path in CASE_DIR.glob("test_*") if path.suffix in {".c", ".cpp"})
     if not cases:
-        errors.append("no tests/unit/cases/test_*.c sources found")
+        errors.append("no tests/unit/cases/test_*.c or test_*.cpp sources found")
 
     cmake = CMAKE.read_text(encoding="utf-8")
-    if not re.search(
-        r"file\s*\(\s*GLOB\s+CLASH95_UNIT_CASE_SOURCES\b[\s\S]*?"
-        r"tests/unit/cases/test_\*\.c\s*\)",
-        cmake,
-    ):
-        errors.append("CMake does not glob test_*.c into CLASH95_UNIT_CASE_SOURCES")
+    glob = re.search(r"file\s*\(\s*GLOB\s+CLASH95_UNIT_CASE_SOURCES\b([^)]*)\)", cmake)
+    registered = set(re.findall(r'tests/unit/cases/test_\*\.(c|cpp)(?=[\s"]|$)',
+                                glob.group(1))) if glob else set()
+    required = {path.suffix[1:] for path in cases}
+    if not glob:
+        errors.append("CMake does not glob CLASH95_UNIT_CASE_SOURCES")
+    for suffix in sorted(required - registered):
+        errors.append(f"CMake does not glob test_*.{suffix} into CLASH95_UNIT_CASE_SOURCES")
     if "${CLASH95_UNIT_CASE_SOURCES}" not in cmake:
         errors.append("CMake does not add CLASH95_UNIT_CASE_SOURCES to the unit target")
     if LEGACY_AGGREGATE.exists():
         errors.append("legacy tests/unit/test_all.c aggregate still exists")
+    if LEGACY_AGGREGATE.with_suffix(".cpp").exists():
+        errors.append("legacy tests/unit/test_all.cpp aggregate still exists")
 
     inventory: list[dict[str, object]] = []
     owners: dict[str, str] = {}
@@ -66,7 +70,7 @@ def main() -> int:
         included_c = C_INCLUDE_RE.findall(text)
         if included_c:
             errors.append(
-                f"{repo_path(case)} includes C source(s): {', '.join(included_c)}"
+                f"{repo_path(case)} includes C/C++ source(s): {', '.join(included_c)}"
             )
 
         tests = [f"{suite}.{name}" for suite, name in TEST_RE.findall(text)]
@@ -84,7 +88,9 @@ def main() -> int:
 
     payload = {
         "ok": not errors,
-        "compilation_model": "independent-c17-translation-units",
+        "compilation_model": ("independent-c17-translation-units" if required == {"c"}
+                              else "independent-c++20-translation-units" if required == {"cpp"}
+                              else "independent-c17-c++20-translation-units"),
         "case_source_count": len(cases),
         "test_count": sum(int(item["test_count"]) for item in inventory),
         "cases": inventory,

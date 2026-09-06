@@ -1,6 +1,6 @@
 # Mission state trace
 
-`src/instrumentation/runtime_mission_trace.c` provides a read-only, opt-in sampler
+`src/instrumentation/runtime_mission_trace.cpp` provides a read-only, opt-in sampler
 for campaign route investigations. It does not modify objective state, ownership,
 units, buildings, turn progression, input, or rendering.
 

@@ -1,0 +1,39 @@
+include_script tests/first_campaign_arc_routes/mission_05_visible_fourth_leg_probe.script
+mark_log_count turn5_banner1 tura1.gfx
+mark_log_count turn5_banner2 tura2.gfx
+mark_log_count turn5_banner3 tura3.gfx
+mark_log_count turn5_banner4 tura4.gfx
+mark_log_count turn5_banner5 tura5.gfx
+mark_log_count turn5_banner6 tura6.gfx
+mark_log_count turn5_banner7 tura7.gfx
+include_script tests/first_campaign_arc_routes/mission_05_end_turn_ready.script
+wait_log_marked_any 120 turn5_banner1 || turn5_banner2 || turn5_banner3 || turn5_banner4 || turn5_banner5 || turn5_banner6 || turn5_banner7
+wait 1.0
+click 320 240 0.12 0.65 dismiss-observed-turn5-banner
+wait_log_any 120 playgame_before_human_turn selected=-1 a=0 b=5 || queen_proposal_dialog_enter
+fail_unless_last_wait_log_any playgame_before_human_turn selected=-1 a=0 b=5
+world_pan_viewport 55 48 80
+world_save_slot 0 1.0 save-natural-turn5-refresh-with-retained-path
+wait_log 30 debug-save-written slot=0 ok=1
+wait 5.0
+screenshot mission05-visible-leg-turn5-refresh
+nonblank mission05-visible-leg-turn5-refresh
+# The original first selects the stack, then resumes its existing5-AP node on
+# a second own-stack click. No new destination order is needed.
+click 128 304 0.18 1.0 select-stack4-at-56-52-turn5
+wait_log 20 selected_stack_changed selected=4 a=56 b=52
+mark_log_count fifth_leg_move unit_move_after_path_state selected=4
+click 128 304 0.18 2.0 resume-retained-node-to-55-53
+wait_log_marked 60 fifth_leg_move
+wait_log 20 unit_move_after_path_state selected=4 a=55 b=53 c=0
+wait_log 20 unit_move_after_path_ap selected=4 a=15 b=0 c=0
+# Slot9 intentionally replaces this run's first-leg snapshot. Slots0..8 retain
+# the later phases, and the included first-leg checkpoint/log remain available.
+mark_log_count fifth_leg_save debug-save-written slot=9 ok=1
+world_save_slot 9 1.0 save-fifth-leg-observed-endpoint
+wait_log_marked 30 fifth_leg_save
+world_move 63 368 0.5 align-cursor-with-original-fifth-final
+wait 5.0
+screenshot mission05-fifth-visible-leg
+nonblank mission05-fifth-visible-leg
+fail_if_log mission05_failure_friendly_attack

@@ -5,7 +5,7 @@ Byte-identity-ready wrapper C for the 87 unrecovered CLIPS AI host handlers
 20-agent workflow: 10 agents authored wrappers from `clash95.asm` + the PE,
 10 independently re-derived each from the asm to verify (adversarial).
 Every handler is the template shape
-(`src/strategic/004506B0_004530D0_strategic_001.c:1464`): read args with
+(`src/strategic/004506B0_004530D0_strategic_001.cpp:1464`): read args with
 `Rules_RtnLong(k, 0, a2)` and tail-call an already-recovered inner function.
 
 **Totals:** 87 handlers | 79 clean thin-wrappers,
@@ -25,9 +25,9 @@ tables + ~60 localized PL/EN/DE strings from clash95.exe, whose 24-byte records'
 32-bit string pointers are bound at runtime (a documented -no-pie 64-bit seam,
 verified with a link probe). The earlier milestone:** Landed:
 `Rules_HostUnitCountInTroop` (`fef99dd`), 22 movement handlers (`b13a724`,
-strategic_001 0x452753..0x45303F → TU `src/strategic/00452753_0045303F_strategic_007.c`), and 58
+strategic_001 0x452753..0x45303F → TU `src/strategic/00452753_0045303F_strategic_007.cpp`), and 58
 economy/building/army handlers (`b9d1536`, strategic_003 0x456706..0x457789 → TU
-`src/strategic/00456706_00457789_strategic_008.c`). **Runtime proven each time** via headless /A5: was ~8200 fact
+`src/strategic/00456706_00457789_strategic_008.cpp`). **Runtime proven each time** via headless /A5: was ~8200 fact
 asserts + ZERO moves; now every player relocates units across turns and
 castle/building/economy facts flow, no crash.
 
@@ -86,7 +86,7 @@ Mechanics proven across the batches:
   only in `src/media/media_internal.h`; the float-arg handlers need it in
   `src/media/media_api.h` (or a local extern). Handlers: `Rules_HostChangeTax`.
 - **`Rules_RtnLexeme`** (string arg reader, `sub_481100`,
-  `src/media/0047F820_00481100_media_016.c:1427`) is needed for string-arg
+  `src/media/0047F820_00481100_media_016.cpp:1427`) is needed for string-arg
   handlers: `Rules_HostBuildCastle`.
 - Some inner-function prototypes were collapsed by the decompiler and must be
   corrected to accept the real arg count before the wrapper compiles
@@ -118,8 +118,8 @@ recovered_state.c). Recovery is therefore **purely additive** (the plan's
 "add-only obj_diff sections"):
 
 1. Add each handler function body (from this spec) into the owning strategic TU
-   (`src/strategic/004506B0_004530D0_strategic_001.c` for the 0x452xxx set,
-   `src/strategic/00455740_004582B0_strategic_003.c` for the 0x456xxx set), ordered by
+   (`src/strategic/004506B0_004530D0_strategic_001.cpp` for the 0x452xxx set,
+   `src/strategic/00455740_004582B0_strategic_003.cpp` for the 0x456xxx set), ordered by
    address so they compile at their original offsets.
 2. **Shrink the registration function's manifest range** to end at the first
    handler (strategic: `end_exclusive` 0x4530A0 → 0x452753) and **add a manifest
@@ -264,7 +264,7 @@ void Rules_HostChangeTax(int a1, double a2)
 }
 ```
 
-_Notes:_ MANUAL REVIEW. Only handler in this batch that is NOT the uniform int-reader pattern. CLIPS arg2 is a FLOAT read via sub_4811C0 = Rules_RtnDouble (NOT sub_4812C0/Rules_RtnLong): asm does 'mov eax,2; call sub_4811C0; sub esp,4; fstp [esp] (store st0 as 4-byte float)', THEN 'mov eax,1; call sub_4812C0' for the int, so the float is read BEFORE the int -- wrapper preserves that order. Return type is void (v). Inner sub_455740 = Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delta) [src/strategic/00455740_004582B0_strategic_003.c:15/prototype strategic_internal.h:82; body at strategic_003 line ~15]; asm sig 'void __userpurge sub_455740(int@<eax>, int ebx0@<ebx>, float)'. The handler sets eax(building_index) and the stack float(tax_delta) but does NOT load ebx, so the middle 'ebx0' param is an uninitialized register passthrough (used inside the inner as _CHP(ebx0, ...), an x87 codegen artifact); padded to 0 here per house convention. argcount=1 counts only the single sub_4812C0 read; total CLIPS args = 2 (1 int + 1 float). COMPILE PREREQUISITE: Rules_RtnDouble is currently declared only in src/media/media_internal.h, NOT in media_api.h which strategic TUs include -- add its declaration to media_api.h (or a local extern) before this wrapper will build. Registration: strategic_003.c:593 aZmienPodatek/aZmienpodatek -> &Rules_HostChangeTax, a22iif.
+_Notes:_ MANUAL REVIEW. Only handler in this batch that is NOT the uniform int-reader pattern. CLIPS arg2 is a FLOAT read via sub_4811C0 = Rules_RtnDouble (NOT sub_4812C0/Rules_RtnLong): asm does 'mov eax,2; call sub_4811C0; sub esp,4; fstp [esp] (store st0 as 4-byte float)', THEN 'mov eax,1; call sub_4812C0' for the int, so the float is read BEFORE the int -- wrapper preserves that order. Return type is void (v). Inner sub_455740 = Building_AdjustTaxRateByIndex(int building_index, int ebx0, float tax_delta) [src/strategic/00455740_004582B0_strategic_003.cpp:15/prototype strategic_internal.h:82; body at strategic_003 line ~15]; asm sig 'void __userpurge sub_455740(int@<eax>, int ebx0@<ebx>, float)'. The handler sets eax(building_index) and the stack float(tax_delta) but does NOT load ebx, so the middle 'ebx0' param is an uninitialized register passthrough (used inside the inner as _CHP(ebx0, ...), an x87 codegen artifact); padded to 0 here per house convention. argcount=1 counts only the single sub_4812C0 read; total CLIPS args = 2 (1 int + 1 float). COMPILE PREREQUISITE: Rules_RtnDouble is currently declared only in src/media/media_internal.h, NOT in media_api.h which strategic TUs include -- add its declaration to media_api.h (or a local extern) before this wrapper will build. Registration: strategic_003.c:593 aZmienPodatek/aZmienpodatek -> &Rules_HostChangeTax, a22iif.
 
 ### `Rules_HostBuildCastle` (loc_456AA8, complex)
 
@@ -281,7 +281,7 @@ int Rules_HostBuildCastle(int a1, double a2)
 }
 ```
 
-_Notes:_ MANUAL REVIEW. 5 CLIPS args (registration 55iiiiis = 4 int + 1 string). Args 1-4 read via Rules_RtnLong (sub_4812C0) into eax/edx/ebx/ecx; arg 5 (the castle name string) read via a DIFFERENT reader, Rules_RtnLexeme (sub_481100, confirmed at 0x481100 in src/media/0047F820_00481100_media_016.c:1427), and pushed on the stack. argcount field = 4 (the count of Rules_RtnLong reads); total args = 5. Read/eval order in asm is right-to-left: arg5(lexeme) pushed first, then arg4->ecx, arg3->ebx, arg2->edx, arg1->eax; wrapper declares temporaries in that same order to preserve evaluation order, passing positionally. asm token 'call sub_455830'; recovered as Rules_BuildCastle at 0x455830 (strategic_003.c:60). CAVEAT: recovered prototype BOOL Rules_BuildCastle(int building_type, DWORD a2, double a3, char *castle_name) has only 4 params -- the decompiler collapsed the two middle int args (ebx+ecx = args 3&4, 8 bytes) into a phantom 'double a3'. To accept 5 distinct args the prototype must be corrected to (int, int, int, int, char*); wrapper will not compile against the current 4-param declaration. Frame probe push=24h.
+_Notes:_ MANUAL REVIEW. 5 CLIPS args (registration 55iiiiis = 4 int + 1 string). Args 1-4 read via Rules_RtnLong (sub_4812C0) into eax/edx/ebx/ecx; arg 5 (the castle name string) read via a DIFFERENT reader, Rules_RtnLexeme (sub_481100, confirmed at 0x481100 in src/media/0047F820_00481100_media_016.cpp:1427), and pushed on the stack. argcount field = 4 (the count of Rules_RtnLong reads); total args = 5. Read/eval order in asm is right-to-left: arg5(lexeme) pushed first, then arg4->ecx, arg3->ebx, arg2->edx, arg1->eax; wrapper declares temporaries in that same order to preserve evaluation order, passing positionally. asm token 'call sub_455830'; recovered as Rules_BuildCastle at 0x455830 (strategic_003.c:60). CAVEAT: recovered prototype BOOL Rules_BuildCastle(int building_type, DWORD a2, double a3, char *castle_name) has only 4 params -- the decompiler collapsed the two middle int args (ebx+ecx = args 3&4, 8 bytes) into a phantom 'double a3'. To accept 5 distinct args the prototype must be corrected to (int, int, int, int, char*); wrapper will not compile against the current 4-param declaration. Frame probe push=24h.
 
 ### `Rules_HostLeadOutPeasants` (loc_456EF7, complex)
 
@@ -297,7 +297,7 @@ int Rules_HostLeadOutPeasants(int a1, double a2)
 }
 ```
 
-_Notes:_ FLAG FOR MANUAL REVIEW - non-obvious arg mapping. asm at clash95.asm:132112. Register-only reverse read: arg4->ecx, arg3->ebx, arg2->edx, arg1->eax. sub_455820 is a bp-frame THUNK (jmp sub_41F1A0); sub_41F1A0 = recovered Building_Transfer(int buildingIndex, int targetStackIndex, int transferGold, int transferAmount, double a5) at src/buildings/0041F1A0_00421010_buildings_002.c:17, __usercall(int@eax,int@edx,int@ecx,int@ebx,double@st0). CRITICAL: the inner's register order is eax,edx,ECX,EBX (param3@ecx, param4@ebx), i.e. NON-standard for the 3rd/4th slots. The handler loads ecx=arg4 and ebx=arg3, so at runtime transferGold(param3)=CLIPS arg4 and transferAmount(param4)=CLIPS arg3 -- args 3 and 4 are SWAPPED relative to positional order. wrapper reproduces the actual register values; do NOT 'fix' it to Building_Transfer(...,arg3,arg4,...). double a5(st0) unset by handler -> threaded host a2. Registration: aWyprowadzchlop -> &Rules_HostLeadOutPeasants, code 105='i', a44i (strategic_003.c:628).
+_Notes:_ FLAG FOR MANUAL REVIEW - non-obvious arg mapping. asm at clash95.asm:132112. Register-only reverse read: arg4->ecx, arg3->ebx, arg2->edx, arg1->eax. sub_455820 is a bp-frame THUNK (jmp sub_41F1A0); sub_41F1A0 = recovered Building_Transfer(int buildingIndex, int targetStackIndex, int transferGold, int transferAmount, double a5) at src/buildings/0041F1A0_00421010_buildings_002.cpp:17, __usercall(int@eax,int@edx,int@ecx,int@ebx,double@st0). CRITICAL: the inner's register order is eax,edx,ECX,EBX (param3@ecx, param4@ebx), i.e. NON-standard for the 3rd/4th slots. The handler loads ecx=arg4 and ebx=arg3, so at runtime transferGold(param3)=CLIPS arg4 and transferAmount(param4)=CLIPS arg3 -- args 3 and 4 are SWAPPED relative to positional order. wrapper reproduces the actual register values; do NOT 'fix' it to Building_Transfer(...,arg3,arg4,...). double a5(st0) unset by handler -> threaded host a2. Registration: aWyprowadzchlop -> &Rules_HostLeadOutPeasants, code 105='i', a44i (strategic_003.c:628).
 
 ### `Rules_HostDetachUnitsOfType` (loc_457711, complex)
 
@@ -314,7 +314,7 @@ int Rules_HostDetachUnitsOfType(int a1, double a2)
 }
 ```
 
-_Notes:_ NEEDS MANUAL REVIEW. asm call target = sub_457FE0 (verified recovered at 00457FE0 = UnitStack_DetachUnitTypeToAdjacentTile(int army_index,unit_type type,int dest_tile_x,int dest_tile_y,double a5), src/strategic/00455740_004582B0_strategic_003.c:960). Registration: strategic_003.c:655 (&Rules_HostDetachUnitsOfType, aOdlaczjednos_0='OdlaczJednostkiTypu', a22i). The handler reads only 2 CLIPS args (22i, reverse: arg2->edx=type, arg1->eax=army_index) but the recovered inner has 5 params. Params 3/4 (dest_tile_x, dest_tile_y) correspond to unloaded scratch registers ebx/ecx and are ALWAYS overwritten before any read inside the inner (assigned in the offset_x/offset_y search loop), so passing 0,0 is behaviorally identical to the asm's undefined-register values. Param 5 'double a5' is the threaded context a2 (forwarded to Unit_MoveSelectionFromGroupToTile). Structurally a single inner call, but flagged complex due to the 2-read-vs-5-param reconstruction of the scratch middle args.
+_Notes:_ NEEDS MANUAL REVIEW. asm call target = sub_457FE0 (verified recovered at 00457FE0 = UnitStack_DetachUnitTypeToAdjacentTile(int army_index,unit_type type,int dest_tile_x,int dest_tile_y,double a5), src/strategic/00455740_004582B0_strategic_003.cpp:960). Registration: strategic_003.c:655 (&Rules_HostDetachUnitsOfType, aOdlaczjednos_0='OdlaczJednostkiTypu', a22i). The handler reads only 2 CLIPS args (22i, reverse: arg2->edx=type, arg1->eax=army_index) but the recovered inner has 5 params. Params 3/4 (dest_tile_x, dest_tile_y) correspond to unloaded scratch registers ebx/ecx and are ALWAYS overwritten before any read inside the inner (assigned in the offset_x/offset_y search loop), so passing 0,0 is behaviorally identical to the asm's undefined-register values. Param 5 'double a5' is the threaded context a2 (forwarded to Unit_MoveSelectionFromGroupToTile). Structurally a single inner call, but flagged complex due to the 2-read-vs-5-param reconstruction of the scratch middle args.
 
 ### `Rules_HostRoadExistsNearCastle` (loc_452963, thin-wrapper, VERIFY-FLAGGED)
 
@@ -333,7 +333,7 @@ int Rules_HostRoadExistsNearCastle(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_453440 (verified recovered at 00453440 = Rules_QueuePathNearCastle, src/strategic/00453110_00455720_strategic_002.c:104). Registration: strategic_001.c:1422 (&Rules_HostRoadExistsNearCastle, aJest_droga_w_1='jest_droga_w_poblize_zamku00', a33i). 33i: args read forward 1,2,3 into [ebp-0Ch],[ebp-8],[ebp-4]; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param 'DWORD a4' is the threaded context slot = a2; passing a2 (double) to a DWORD param yields a double->unsigned conversion (a4 is also overwritten/dead before use inside the inner) -- REVIEW: reviewer may prefer 0 instead of a2 for this DWORD trailing arg.
+_Notes:_ asm call target = sub_453440 (verified recovered at 00453440 = Rules_QueuePathNearCastle, src/strategic/00453110_00455720_strategic_002.cpp:104). Registration: strategic_001.c:1422 (&Rules_HostRoadExistsNearCastle, aJest_droga_w_1='jest_droga_w_poblize_zamku00', a33i). 33i: args read forward 1,2,3 into [ebp-0Ch],[ebp-8],[ebp-4]; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param 'DWORD a4' is the threaded context slot = a2; passing a2 (double) to a DWORD param yields a double->unsigned conversion (a4 is also overwritten/dead before use inside the inner) -- REVIEW: reviewer may prefer 0 instead of a2 for this DWORD trailing arg.
 
 _Verify flag:_ Structure (inner_fn=sub_453440=Rules_QueuePathNearCastle, 3 forward reads, order eax=stack_index/edx=castle_x/ebx=castle_y, int return) is correct, BUT the note's justification for the 4th arg is false. It claims 'a4 is overwritten/dead before use inside the inner'; in Rules_QueuePathNearCastle (strategic_002.c:104) a4 is only conditionally overwritten at line 116 (inside the if at line 113) and is read LIVE at lines 126-128 (Pathing_EnableBridgeCrossings/Building_GenerateNearApproachTrack/Pathing_DisableBridgeCrossings) on the flag-zero path. a4 is also a DWORD integer scratch, not a forwarded double context like the double-a4 siblings. The asm never loads ecx, so the 4th arg is an undefined register; passing a2 (double->DWORD narrowing) fabricates a defined value the asm lacks, under an incorrect safety rationale. Trailing arg needs conscious review, not the stated 'dead' claim.
 
@@ -399,7 +399,7 @@ int Rules_HostTemple(int a1, double a2)
 }
 ```
 
-_Notes:_ Registration confirmed in sub_452390 (mov ecx,offset aSwiatynia00 / mov ebx,offset loc_452753 / mov eax,offset aSwiatynia / call Rules_RegisterHostFunction) -> &Rules_HostTemple, a22i. The asm 'call _plib_malloc_' is an IDA-mislabeled 5-byte COLLAPSED jmp thunk at VA 0x453080 that does 'jmp 0x43FB10'. I resolved this by parsing C:\Clash\clash95.exe (PE imagebase 0x400000): thunk 0x453080 -> 0x43FB10. 0x43FB10 = MapTile_GetReligiousSiteCategory(int tileX, int tileY) [src/buildings/0043E500_0043FDE0_buildings_006.c:1185, prototype in buildings_api.h:154], asm sig 'signed int __usercall sub_43FB10@<eax>(int@<eax>, int@<edx>)'. Handler reads CLIPS arg1 then arg2 (forward order, spilled to [ebp-8]/[ebp-4]), then eax=arg1, edx=arg2 -> f(tileX=arg1, tileY=arg2). wrapper_c uses the resolved semantic name so it compiles; inner_fn field cites the literal asm call token '_plib_malloc_' as instructed.
+_Notes:_ Registration confirmed in sub_452390 (mov ecx,offset aSwiatynia00 / mov ebx,offset loc_452753 / mov eax,offset aSwiatynia / call Rules_RegisterHostFunction) -> &Rules_HostTemple, a22i. The asm 'call _plib_malloc_' is an IDA-mislabeled 5-byte COLLAPSED jmp thunk at VA 0x453080 that does 'jmp 0x43FB10'. I resolved this by parsing C:\Clash\clash95.exe (PE imagebase 0x400000): thunk 0x453080 -> 0x43FB10. 0x43FB10 = MapTile_GetReligiousSiteCategory(int tileX, int tileY) [src/buildings/0043E500_0043FDE0_buildings_006.cpp:1185, prototype in buildings_api.h:154], asm sig 'signed int __usercall sub_43FB10@<eax>(int@<eax>, int@<edx>)'. Handler reads CLIPS arg1 then arg2 (forward order, spilled to [ebp-8]/[ebp-4]), then eax=arg1, edx=arg2 -> f(tileX=arg1, tileY=arg2). wrapper_c uses the resolved semantic name so it compiles; inner_fn field cites the literal asm call token '_plib_malloc_' as instructed.
 
 ### `Rules_HostDistanceFromObject` (loc_452B8B, odleglosc_od_obiektu, i, 3 args)
 
@@ -414,7 +414,7 @@ int Rules_HostDistanceFromObject(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_453E60 = Rules_GetPathDistanceToObject(int stack_index, int target_x, int target_y, DWORD a4) [src/strategic/00453110_00455720_strategic_002.c:360, prototype strategic_internal.h:41]; asm sig 'signed int __usercall sub_453E60@<eax>(int@<eax>, int@<edx>, int@<ebx>, DWORD@<ebp>)'. Handler reads args 1,2,3 in order, passes eax=arg1, edx=arg2, ebx=arg3 (matches Rules_HostMarch 3-arg template). The 4th param (DWORD a4) is an ebp-frame IDA artifact not set by the handler; padded to 0 per house convention (cf. Rules_PortCollectSupply(0,0,0,0.0)).
+_Notes:_ sub_453E60 = Rules_GetPathDistanceToObject(int stack_index, int target_x, int target_y, DWORD a4) [src/strategic/00453110_00455720_strategic_002.cpp:360, prototype strategic_internal.h:41]; asm sig 'signed int __usercall sub_453E60@<eax>(int@<eax>, int@<edx>, int@<ebx>, DWORD@<ebp>)'. Handler reads args 1,2,3 in order, passes eax=arg1, edx=arg2, ebx=arg3 (matches Rules_HostMarch 3-arg template). The 4th param (DWORD a4) is an ebp-frame IDA artifact not set by the handler; padded to 0 per house convention (cf. Rules_PortCollectSupply(0,0,0,0.0)).
 
 ### `Rules_HostUnitCountInTroop` (loc_452EE3, liczba_jednostek_w_oddziale, i, 1 args)
 
@@ -426,7 +426,7 @@ int Rules_HostUnitCountInTroop(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_4549E0 = UnitStack_GetSquadCountByIndex(int stack_index) [src/strategic/00453110_00455720_strategic_002.c:695, prototype strategic_internal.h:52]; asm sig 'signed int __usercall sub_4549E0@<eax>(int@<eax>)'. Clean single-arg wrapper, byte-identical to the ArmyHasBuilder template.
+_Notes:_ sub_4549E0 = UnitStack_GetSquadCountByIndex(int stack_index) [src/strategic/00453110_00455720_strategic_002.cpp:695, prototype strategic_internal.h:52]; asm sig 'signed int __usercall sub_4549E0@<eax>(int@<eax>)'. Clean single-arg wrapper, byte-identical to the ArmyHasBuilder template.
 
 ### `Rules_HostWallStrength` (loc_456A10, Sila-Murow, i, 1 args)
 
@@ -438,7 +438,7 @@ int Rules_HostWallStrength(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_4554D0 = Building_GetWallStrengthByIndex(int building_index) [src/strategic/00453110_00455720_strategic_002.c:1311, prototype strategic_internal.h:64]; asm sig 'int __usercall sub_4554D0@<eax>(int@<eax>)'. Clean single-arg wrapper. Registration: strategic_003.c:616 -> &Rules_HostWallStrength, a11i.
+_Notes:_ sub_4554D0 = Building_GetWallStrengthByIndex(int building_index) [src/strategic/00453110_00455720_strategic_002.cpp:1311, prototype strategic_internal.h:64]; asm sig 'int __usercall sub_4554D0@<eax>(int@<eax>)'. Clean single-arg wrapper. Registration: strategic_003.c:616 -> &Rules_HostWallStrength, a11i.
 
 ### `Rules_HostBuyWorkshop` (loc_456C5D, Kup-Warsztat, b, 1 args)
 
@@ -450,7 +450,7 @@ int Rules_HostBuyWorkshop(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_4555C0 = Building_BuildWorkshopByIndex(char a1, DWORD a2) [src/strategic/00453110_00455720_strategic_002.c:1360, prototype strategic_internal.h:71]; asm sig 'signed int __usercall sub_4555C0@<eax>(char@<bl>, DWORD@<ebp>)'. Handler reads a single CLIPS int (mov eax,1; call sub_4812C0) and passes it; the inner's 1st param is char (low byte / bl) so the int value narrows on the call, and the 2nd param (DWORD a2) is an ebp IDA artifact padded to 0 per house convention. ret b -> int. Registration: strategic_003.c:605 -> &Rules_HostBuyWorkshop, a11i.
+_Notes:_ sub_4555C0 = Building_BuildWorkshopByIndex(char a1, DWORD a2) [src/strategic/00453110_00455720_strategic_002.cpp:1360, prototype strategic_internal.h:71]; asm sig 'signed int __usercall sub_4555C0@<eax>(char@<bl>, DWORD@<ebp>)'. Handler reads a single CLIPS int (mov eax,1; call sub_4812C0) and passes it; the inner's 1st param is char (low byte / bl) so the int value narrows on the call, and the 2nd param (DWORD a2) is an ebp IDA artifact padded to 0 per house convention. ret b -> int. Registration: strategic_003.c:605 -> &Rules_HostBuyWorkshop, a11i.
 
 ### `Rules_HostIsProductionAny` (loc_456EB5, Is-Production-Any, b, 2 args)
 
@@ -467,7 +467,7 @@ int Rules_HostIsProductionAny(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_455E80 = Building_SelectedUnitLicenceMatchesTypeByIndex(int building_index, unit_type licence_type) [src/strategic/00455740_004582B0_strategic_003.c:411, prototype strategic_internal.h:99]; asm sig 'BOOL __usercall sub_455E80@<eax>(int@<eax>, int@<edx>)'. Reverse read order: asm reads CLIPS arg2 first (mov eax,2; call; mov edx,eax) then arg1 (mov eax,1; call), passing eax=arg1, edx=arg2 -> f(building_index=arg1, licence_type=arg2). Wrapper mirrors the recovered Rules_HostArmyHasOnlyUnitType precedent (strategic_003.c:1078) exactly: named temps, arg2 read before arg1, unit_type cast on the 2nd param. Note the inner's semantic name (licence-matches-type) differs from the CLIPS name IsProductionAny; the loc->symbol mapping is registration-verified (strategic_003.c:609). ret b -> int (BOOL).
+_Notes:_ sub_455E80 = Building_SelectedUnitLicenceMatchesTypeByIndex(int building_index, unit_type licence_type) [src/strategic/00455740_004582B0_strategic_003.cpp:411, prototype strategic_internal.h:99]; asm sig 'BOOL __usercall sub_455E80@<eax>(int@<eax>, int@<edx>)'. Reverse read order: asm reads CLIPS arg2 first (mov eax,2; call; mov edx,eax) then arg1 (mov eax,1; call), passing eax=arg1, edx=arg2 -> f(building_index=arg1, licence_type=arg2). Wrapper mirrors the recovered Rules_HostArmyHasOnlyUnitType precedent (strategic_003.c:1078) exactly: named temps, arg2 read before arg1, unit_type cast on the 2nd param. Note the inner's semantic name (licence-matches-type) differs from the CLIPS name IsProductionAny; the loc->symbol mapping is registration-verified (strategic_003.c:609). ret b -> int (BOOL).
 
 ### `Rules_HostJoinTroop` (loc_457393, dolacz-do-oddzialu, b, 2 args)
 
@@ -481,7 +481,7 @@ int Rules_HostJoinTroop(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_457E50 = Script_UnitAddToGroup(unsigned int unit_index, int group_index, DWORD a3, double a4) [src/strategic/00455740_004582B0_strategic_003.c:884, prototype strategic_internal.h:116]; asm sig 'int __usercall sub_457E50@<eax>(unsigned int@<eax>, int@<edx>, DWORD@<ebp>, double@<st0>)'. Reverse read order: asm reads CLIPS arg2 first into edx (group_index) then arg1 into eax (unit_index); wrapper reads arg2 before arg1 to match. The trailing DWORD a3 (ebp) and double a4 (st0) are IDA frame/x87 artifacts not set by the handler; padded to 0 and 0.0 per house convention (cf. Rules_PortCollectSupply). ret b -> int. Registration: strategic_003.c:640 aDolaczDoOddzia/aDolaczdoarmii -> &Rules_HostJoinTroop, a22i.
+_Notes:_ sub_457E50 = Script_UnitAddToGroup(unsigned int unit_index, int group_index, DWORD a3, double a4) [src/strategic/00455740_004582B0_strategic_003.cpp:884, prototype strategic_internal.h:116]; asm sig 'int __usercall sub_457E50@<eax>(unsigned int@<eax>, int@<edx>, DWORD@<ebp>, double@<st0>)'. Reverse read order: asm reads CLIPS arg2 first into edx (group_index) then arg1 into eax (unit_index); wrapper reads arg2 before arg1 to match. The trailing DWORD a3 (ebp) and double a4 (st0) are IDA frame/x87 artifacts not set by the handler; padded to 0 and 0.0 per house convention (cf. Rules_PortCollectSupply). ret b -> int. Registration: strategic_003.c:640 aDolaczDoOddzia/aDolaczdoarmii -> &Rules_HostJoinTroop, a22i.
 
 ### `Rules_HostGoToHealing` (loc_457639, idz-do-leczenia, b, 1 args)
 
@@ -493,7 +493,7 @@ int Rules_HostGoToHealing(int a1, double a2)
 }
 ```
 
-_Notes:_ sub_4579B0 = UnitStack_ExecuteHealingPathAndCheckArrival(unsigned int stack_index, char a2, DWORD a3, double a4) [src/strategic/00455740_004582B0_strategic_003.c:747, prototype strategic_internal.h:109]; asm sig 'BOOL __usercall sub_4579B0@<eax>(unsigned int@<eax>, char@<bl>, DWORD@<ebp>, double@<st0>)'. Handler reads a single CLIPS int (eax=arg1 -> stack_index); the trailing char a2 (bl), DWORD a3 (ebp) and double a4 (st0) are register/frame/x87 IDA artifacts not set by the handler, padded to 0, 0, 0.0 per house convention. ret b -> int (BOOL). Registration: strategic_003.c:651 -> &Rules_HostGoToHealing, a11i.
+_Notes:_ sub_4579B0 = UnitStack_ExecuteHealingPathAndCheckArrival(unsigned int stack_index, char a2, DWORD a3, double a4) [src/strategic/00455740_004582B0_strategic_003.cpp:747, prototype strategic_internal.h:109]; asm sig 'BOOL __usercall sub_4579B0@<eax>(unsigned int@<eax>, char@<bl>, DWORD@<ebp>, double@<st0>)'. Handler reads a single CLIPS int (eax=arg1 -> stack_index); the trailing char a2 (bl), DWORD a3 (ebp) and double a4 (st0) are register/frame/x87 IDA artifacts not set by the handler, padded to 0, 0, 0.0 per house convention. ret b -> int (BOOL). Registration: strategic_003.c:651 -> &Rules_HostGoToHealing, a11i.
 
 ### `Rules_HostDigTreasure` (loc_45279F, kop_skarb, i, 1 args)
 
@@ -505,7 +505,7 @@ int Rules_HostDigTreasure(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:124445. Reads 1 CLIPS arg into eax and calls _plib_free_. _plib_free_ is a MISLABELED 5-byte thunk (jmp sub_443C20); sub_443C20 = recovered Treasure_TryDigHere(int a1, char a2, DWORD a3, char a4, char *a5, double a6) at src/persistence/00443BB0_00445CE0_persistence_002.c:29. Handler only sets eax=arg1; the inner's a2..a5 params (char@bl, DWORD@ebp [ebp is the frame pointer -> IDA-spurious], char@dil, char*@esi) are left UNSET by the handler, and st0=a6 carries the host double a2. Filler 0/NULL and trailing a2 supplied so it compiles against the current 6-param prototype; verify whether that prototype should be trimmed. wrapper_c calls the recovered target name, not the _plib_free_ thunk label.
+_Notes:_ asm at clash95.asm:124445. Reads 1 CLIPS arg into eax and calls _plib_free_. _plib_free_ is a MISLABELED 5-byte thunk (jmp sub_443C20); sub_443C20 = recovered Treasure_TryDigHere(int a1, char a2, DWORD a3, char a4, char *a5, double a6) at src/persistence/00443BB0_00445CE0_persistence_002.cpp:29. Handler only sets eax=arg1; the inner's a2..a5 params (char@bl, DWORD@ebp [ebp is the frame pointer -> IDA-spurious], char@dil, char*@esi) are left UNSET by the handler, and st0=a6 carries the host double a2. Filler 0/NULL and trailing a2 supplied so it compiles against the current 6-param prototype; verify whether that prototype should be trimmed. wrapper_c calls the recovered target name, not the _plib_free_ thunk label.
 
 ### `Rules_HostTempleInArmyRange` (loc_452BE7, swiatynia_w_zasiegu_armii, b, 3 args)
 
@@ -520,7 +520,7 @@ int Rules_HostTempleInArmyRange(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:124915. Clean 3-int handler, forward read order (args 1,2,3 spilled to locals then loaded eax=arg1, edx=arg2, ebx=arg3). sub_453FE0 = BOOL __usercall(int@eax,int@edx,int@ebx) = recovered Rules_IsTempleWithinArmyRange(int stack_index, int temple_x, int temple_y) at src/strategic/00453110_00455720_strategic_002.c:414. Register->param mapping is direct 1:1, no swap, no filler. Registration: aSwiatynia_w_za -> &Rules_HostTempleInArmyRange, code 98='b', a33i (strategic_001.c:1429).
+_Notes:_ asm at clash95.asm:124915. Clean 3-int handler, forward read order (args 1,2,3 spilled to locals then loaded eax=arg1, edx=arg2, ebx=arg3). sub_453FE0 = BOOL __usercall(int@eax,int@edx,int@ebx) = recovered Rules_IsTempleWithinArmyRange(int stack_index, int temple_x, int temple_y) at src/strategic/00453110_00455720_strategic_002.cpp:414. Register->param mapping is direct 1:1, no swap, no filler. Registration: aSwiatynia_w_za -> &Rules_HostTempleInArmyRange, code 98='b', a33i (strategic_001.c:1429).
 
 ### `Rules_HostAttackBuilding` (loc_452F1F, atakuj_budowle, i, 2 args)
 
@@ -534,7 +534,7 @@ int Rules_HostAttackBuilding(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:125261. Forward read (arg1->[ebp-8], arg2->[ebp-4]; call with eax=arg1, edx=arg2). sub_454990 = signed int __usercall(int@eax,int@edx,char@bl,DWORD@ebp,double@st0) = recovered Rules_HostUnitAttackBuilding(int army_index, int building_index, char a3, DWORD a4, double a5) at src/strategic/00453110_00455720_strategic_002.c:682. Handler sets only eax=arg1, edx=arg2; the inner's char a3 (bl), DWORD a4 (ebp = frame pointer -> IDA-spurious), and double a5 (st0) are UNSET. Filler 0/0 and trailing a2 supplied to compile against the current 5-param prototype; confirm the inner prototype/fillers. Registration: aAtakuj_budowle -> &Rules_HostAttackBuilding, code 105='i', a22i (strategic_001.c:1439).
+_Notes:_ asm at clash95.asm:125261. Forward read (arg1->[ebp-8], arg2->[ebp-4]; call with eax=arg1, edx=arg2). sub_454990 = signed int __usercall(int@eax,int@edx,char@bl,DWORD@ebp,double@st0) = recovered Rules_HostUnitAttackBuilding(int army_index, int building_index, char a3, DWORD a4, double a5) at src/strategic/00453110_00455720_strategic_002.cpp:682. Handler sets only eax=arg1, edx=arg2; the inner's char a3 (bl), DWORD a4 (ebp = frame pointer -> IDA-spurious), and double a5 (st0) are UNSET. Filler 0/0 and trailing a2 supplied to compile against the current 5-param prototype; confirm the inner prototype/fillers. Registration: aAtakuj_budowle -> &Rules_HostAttackBuilding, code 105='i', a22i (strategic_001.c:1439).
 
 ### `Rules_HostRemoveLicence` (loc_456806, Remove-Licence, v, 2 args)
 
@@ -548,7 +548,7 @@ void Rules_HostRemoveLicence(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:131264. VOID return (no eax stored/returned after the call). Register-only reverse read: arg2 computed first into edx, then arg1 into eax (no local spill) -> temporaries ordered to match. sub_455720 = int __usercall(int@eax,int@edx,DWORD@ebp) = recovered Building_RemoveUnitLicenceByIndex(int building_index, unit_type licence_type, DWORD a3) at src/strategic/00453110_00455720_strategic_002.c:1435. building_index=arg1(eax), licence_type=arg2(edx); DWORD a3 (ebp = frame pointer -> IDA-spurious) UNSET -> passed 0. unit_type cast mirrors the recovered sibling Rules_HostArmyHasOnlyUnitType (strategic_003.c:1084). Inner returns int but handler discards it (void). Registration: aRemovelicence -> &Rules_HostRemoveLicence, code 118='v', a22i (strategic_003.c:594).
+_Notes:_ asm at clash95.asm:131264. VOID return (no eax stored/returned after the call). Register-only reverse read: arg2 computed first into edx, then arg1 into eax (no local spill) -> temporaries ordered to match. sub_455720 = int __usercall(int@eax,int@edx,DWORD@ebp) = recovered Building_RemoveUnitLicenceByIndex(int building_index, unit_type licence_type, DWORD a3) at src/strategic/00453110_00455720_strategic_002.cpp:1435. building_index=arg1(eax), licence_type=arg2(edx); DWORD a3 (ebp = frame pointer -> IDA-spurious) UNSET -> passed 0. unit_type cast mirrors the recovered sibling Rules_HostArmyHasOnlyUnitType (strategic_003.c:1084). Inner returns int but handler discards it (void). Registration: aRemovelicence -> &Rules_HostRemoveLicence, code 118='v', a22i (strategic_003.c:594).
 
 ### `Rules_HostCastleStrength` (loc_456A46, Sila-Zamku, i, 1 args)
 
@@ -560,7 +560,7 @@ int Rules_HostCastleStrength(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:131541. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_455510 = int __usercall(int@eax) = recovered Building_GetCastleStrengthByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.c:1326. No filler, byte-identical to the ArmyHasBuilder template. Registration: aSilazamku -> &Rules_HostCastleStrength, code 105='i', a11i (strategic_003.c:617).
+_Notes:_ asm at clash95.asm:131541. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_455510 = int __usercall(int@eax) = recovered Building_GetCastleStrengthByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.cpp:1326. No filler, byte-identical to the ArmyHasBuilder template. Registration: aSilazamku -> &Rules_HostCastleStrength, code 105='i', a11i (strategic_003.c:617).
 
 ### `Rules_HostHappiness` (loc_456C93, Zadowolenie, i, 1 args)
 
@@ -572,7 +572,7 @@ int Rules_HostHappiness(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:131824. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_4555E0 = int __usercall(int@eax) = recovered Building_GetSatisfactionByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.c:1368. No filler, template-identical. Registration: aZadowolenie -> &Rules_HostHappiness, code 105='i', a11i (strategic_003.c:620).
+_Notes:_ asm at clash95.asm:131824. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_4555E0 = int __usercall(int@eax) = recovered Building_GetSatisfactionByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.cpp:1368. No filler, template-identical. Registration: aZadowolenie -> &Rules_HostHappiness, code 105='i', a11i (strategic_003.c:620).
 
 ### `Rules_HostRegroupTroops` (loc_4573D5, przegrupuj-oddzialy, b, 2 args)
 
@@ -586,7 +586,7 @@ int Rules_HostRegroupTroops(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:132563. Register-only reverse read: arg2->edx first, then arg1->eax (temporaries ordered to match). sub_4582B0 = int __usercall(int@eax,int@edx,char@bl,DWORD@ebp,double@st0) = recovered UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5) at src/strategic/00455740_004582B0_strategic_003.c:1135. param1(eax)=arg1, param2(edx)=arg2; char a3(bl), DWORD a4(ebp = frame pointer -> IDA-spurious) UNSET -> 0; double a5(st0) unset -> host a2 threaded. Fillers supplied to compile against current 5-param prototype. Registration: aPrzegrupujarmi -> &Rules_HostRegroupTroops, code 98='b', a22i_0 (strategic_003.c:641).
+_Notes:_ asm at clash95.asm:132563. Register-only reverse read: arg2->edx first, then arg1->eax (temporaries ordered to match). sub_4582B0 = int __usercall(int@eax,int@edx,char@bl,DWORD@ebp,double@st0) = recovered UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5) at src/strategic/00455740_004582B0_strategic_003.cpp:1135. param1(eax)=arg1, param2(edx)=arg2; char a3(bl), DWORD a4(ebp = frame pointer -> IDA-spurious) UNSET -> 0; double a5(st0) unset -> host a2 threaded. Fillers supplied to compile against current 5-param prototype. Registration: aPrzegrupujarmi -> &Rules_HostRegroupTroops, code 98='b', a22i_0 (strategic_003.c:641).
 
 ### `Rules_HostPlagueInCastleExists` (loc_45766F, jest-zaraza-w-zamku, b, 1 args)
 
@@ -598,7 +598,7 @@ int Rules_HostPlagueInCastleExists(int a1, double a2)
 }
 ```
 
-_Notes:_ asm at clash95.asm:132878. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_457DA0 = int __usercall(int@eax) = recovered Building_GetPlagueState(int building_index) at src/strategic/00455740_004582B0_strategic_003.c:860. No filler, template-identical. Registration: aJestzarazawzam -> &Rules_HostPlagueInCastleExists, code 98='b', a11i_0 (strategic_003.c:652).
+_Notes:_ asm at clash95.asm:132878. Textbook 1-arg thin wrapper (eax=arg1 -> call -> return eax). sub_457DA0 = int __usercall(int@eax) = recovered Building_GetPlagueState(int building_index) at src/strategic/00455740_004582B0_strategic_003.cpp:860. No filler, template-identical. Registration: aJestzarazawzam -> &Rules_HostPlagueInCastleExists, code 98='b', a11i_0 (strategic_003.c:652).
 
 ### `Rules_HostRoadExists` (loc_4528AB, jest_droga, int, 3 args)
 
@@ -613,7 +613,7 @@ int Rules_HostRoadExists(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Handler spills 3 args to stack locals [ebp-0Ch]/[ebp-8]/[ebp-4] then loads eax=arg1, edx=arg2, ebx=arg3 and calls sub_453110 -> recovered C Rules_QueuePathToTile (@0x453110, src/strategic/00453110_00455720_strategic_002.c:16), signed int __usercall(int@eax stack_index, int@edx target_x, int@ebx target_y, DWORD@ebp a4). The 4th DWORD param is NOT supplied by the handler (same convention as the Rules_HostMarch/Move_CommitIfWithinCost template which passes only the 3 read args against a 4-param signature). asm call token is sub_453110; wrapper uses the recovered C name so it compiles (matches template precedent: UnitStack_HasBuilder is likewise absent from clash95.asm).
+_Notes:_ ret letter b (98). Handler spills 3 args to stack locals [ebp-0Ch]/[ebp-8]/[ebp-4] then loads eax=arg1, edx=arg2, ebx=arg3 and calls sub_453110 -> recovered C Rules_QueuePathToTile (@0x453110, src/strategic/00453110_00455720_strategic_002.cpp:16), signed int __usercall(int@eax stack_index, int@edx target_x, int@ebx target_y, DWORD@ebp a4). The 4th DWORD param is NOT supplied by the handler (same convention as the Rules_HostMarch/Move_CommitIfWithinCost template which passes only the 3 read args against a 4-param signature). asm call token is sub_453110; wrapper uses the recovered C name so it compiles (matches template precedent: UnitStack_HasBuilder is likewise absent from clash95.asm).
 
 ### `Rules_HostTempleOk` (loc_452C43, swiatynia_OK, int, 3 args)
 
@@ -628,7 +628,7 @@ int Rules_HostTempleOk(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Same 3-arg shape as loc_4528AB: spills 3 args, loads eax=arg1/edx=arg2/ebx=arg3. asm call token Move_CanEnterTile is at 0x4541B0 and is recovered in C as Player_CanEnterReligiousSiteTile(int player_index, int tile_x, int tile_y) (src/strategic/00453110_00455720_strategic_002.c:450), BOOL __usercall(int@eax, int@edx, int@ebx). The 'temple OK' (swiatynia_OK) meaning aligns with the religious-site name — cross-check passes. wrapper_c uses the current C symbol Player_CanEnterReligiousSiteTile (the asm 'Move_CanEnterTile' name has been renamed in the C tree).
+_Notes:_ ret letter b (98). Same 3-arg shape as loc_4528AB: spills 3 args, loads eax=arg1/edx=arg2/ebx=arg3. asm call token Move_CanEnterTile is at 0x4541B0 and is recovered in C as Player_CanEnterReligiousSiteTile(int player_index, int tile_x, int tile_y) (src/strategic/00453110_00455720_strategic_002.cpp:450), BOOL __usercall(int@eax, int@edx, int@ebx). The 'temple OK' (swiatynia_OK) meaning aligns with the religious-site name — cross-check passes. wrapper_c uses the current C symbol Player_CanEnterReligiousSiteTile (the asm 'Move_CanEnterTile' name has been renamed in the C tree).
 
 ### `Rules_HostFordExists` (loc_452F6B, jest_brod, int, 1 args)
 
@@ -640,7 +640,7 @@ int Rules_HostFordExists(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Single-arg handler: reads arg1, calls sub_454A20 -> recovered C Rules_IsQueuedPathTargetBridgeCrossing(int stack_index) (@0x454A20, src/strategic/00453110_00455720_strategic_002.c:703), signed int __usercall(int@eax). Byte-identical form to the recovered Rules_HostArmyHasBuilder template.
+_Notes:_ ret letter b (98). Single-arg handler: reads arg1, calls sub_454A20 -> recovered C Rules_IsQueuedPathTargetBridgeCrossing(int stack_index) (@0x454A20, src/strategic/00453110_00455720_strategic_002.cpp:703), signed int __usercall(int@eax). Byte-identical form to the recovered Rules_HostArmyHasBuilder template.
 
 ### `Rules_HostStartHealing` (loc_456842, Zacznij-Leczenie, void, 2 args)
 
@@ -652,7 +652,7 @@ void Rules_HostStartHealing(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter v (118) -> void, result NOT stored. asm call token sub_4556C0 -> recovered C Building_RepairUnitByIndex(int building_index, int slot_index, DWORD a3) (@0x4556C0, src/strategic/00453110_00455720_strategic_002.c:1414), __int16 __usercall(int@eax, int@edx, DWORD@ebp). ATTENTION (differs from the standard multi-arg pattern): this 2-arg handler does NOT spill args to stack — it reads arg2 into edx FIRST (mov eax,2;call;mov edx,eax) then arg1 into eax (mov eax,1;call) and calls directly. That is the Watcom right-to-left evaluation of an INLINED nested call; using explicit ordered temporaries would spill both to stack (sub esp,8) and would NOT be byte-identical. Hence the inlined form is used here (relies on Rules_RtnLong preserving edx across the arg1 read, which the correct game requires). Only 2 of the 3 params are supplied (trailing DWORD a3 not passed). Flag the inline-vs-temporary choice for manual review at re-baseline.
+_Notes:_ ret letter v (118) -> void, result NOT stored. asm call token sub_4556C0 -> recovered C Building_RepairUnitByIndex(int building_index, int slot_index, DWORD a3) (@0x4556C0, src/strategic/00453110_00455720_strategic_002.cpp:1414), __int16 __usercall(int@eax, int@edx, DWORD@ebp). ATTENTION (differs from the standard multi-arg pattern): this 2-arg handler does NOT spill args to stack — it reads arg2 into edx FIRST (mov eax,2;call;mov edx,eax) then arg1 into eax (mov eax,1;call) and calls directly. That is the Watcom right-to-left evaluation of an INLINED nested call; using explicit ordered temporaries would spill both to stack (sub esp,8) and would NOT be byte-identical. Hence the inlined form is used here (relies on Rules_RtnLong preserving edx across the arg1 read, which the correct game requires). Only 2 of the 3 params are supplied (trailing DWORD a3 not passed). Flag the inline-vs-temporary choice for manual review at re-baseline.
 
 ### `Rules_HostTurnNumber` (loc_456A7C, Numer-Tury, int, 0 args)
 
@@ -663,7 +663,7 @@ int Rules_HostTurnNumber(void)
 }
 ```
 
-_Notes:_ ret letter i (105). Zero-arg handler: no Rules_RtnLong reads, does not reference a1/a2 — declared (void) to match the recovered 0-arg template Rules_HostPortHasSupplyReady(void). asm calls Game_GetTurnNumber which is recovered in C under the same name (src/strategic/00453110_00455720_strategic_002.c:1270), int(void). Handler spills the result to [ebp-4] before returning; 'return Game_GetTurnNumber();' is the equivalent source (the local is a compiler artifact, matching how the template inlines its return).
+_Notes:_ ret letter i (105). Zero-arg handler: no Rules_RtnLong reads, does not reference a1/a2 — declared (void) to match the recovered 0-arg template Rules_HostPortHasSupplyReady(void). asm calls Game_GetTurnNumber which is recovered in C under the same name (src/strategic/00453110_00455720_strategic_002.cpp:1270), int(void). Handler spills the result to [ebp-4] before returning; 'return Game_GetTurnNumber();' is the equivalent source (the local is a compiler artifact, matching how the template inlines its return).
 
 ### `Rules_HostIsProduction` (loc_456CC9, Is-Production, int, 1 args)
 
@@ -675,7 +675,7 @@ int Rules_HostIsProduction(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_455620 -> recovered C Building_HasProductionByIndex(int building_index) (@0x455620, src/strategic/00453110_00455720_strategic_002.c:1386), BOOL __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
+_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_455620 -> recovered C Building_HasProductionByIndex(int building_index) (@0x455620, src/strategic/00453110_00455720_strategic_002.cpp:1386), BOOL __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
 
 ### `Rules_HostUnitsToSchool` (loc_456F51, Jednostki-Do-Szkoly, int, 1 args)
 
@@ -687,7 +687,7 @@ int Rules_HostUnitsToSchool(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_4559D0 -> recovered C Building_HasTrainableIdleGarrisonUnit(int building_index) (@0x4559D0, src/strategic/00455740_004582B0_strategic_003.c:151), signed int __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
+_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_4559D0 -> recovered C Building_HasTrainableIdleGarrisonUnit(int building_index) (@0x4559D0, src/strategic/00455740_004582B0_strategic_003.cpp:151), signed int __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
 
 ### `Rules_HostRegroupCastle` (loc_457417, przegrupuj-zamek, int, 2 args)
 
@@ -699,7 +699,7 @@ int Rules_HostRegroupCastle(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). asm call token sub_4589C0 -> recovered C UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int building_index, char a3, DWORD a4, double a5) (@0x4589C0, first fn of src/strategic/004589C0_004602F0_strategic_004.c:20), signed int __usercall(int@eax, int@edx, char@bl, DWORD@ebp, double@st0). ATTENTION: same 2-arg no-spill codegen as loc_456842 — reads arg2 into edx FIRST then arg1 into eax and calls; only 2 of 5 params supplied (trailing char/DWORD/double not passed by the handler). The inlined nested form is required for byte-identity (explicit temporaries would spill to stack and diverge). Result is stored to [ebp-4] then returned (int). Flag inline-vs-temporary for manual review at re-baseline.
+_Notes:_ ret letter b (98). asm call token sub_4589C0 -> recovered C UnitStack_RegroupWithBuildingGarrisonByHealth(int army_index, int building_index, char a3, DWORD a4, double a5) (@0x4589C0, first fn of src/strategic/004589C0_004602F0_strategic_004.cpp:20), signed int __usercall(int@eax, int@edx, char@bl, DWORD@ebp, double@st0). ATTENTION: same 2-arg no-spill codegen as loc_456842 — reads arg2 into edx FIRST then arg1 into eax and calls; only 2 of 5 params supplied (trailing char/DWORD/double not passed by the handler). The inlined nested form is required for byte-identity (explicit temporaries would spill to stack and diverge). Result is stored to [ebp-4] then returned (int). Flag inline-vs-temporary for manual review at re-baseline.
 
 ### `Rules_HostPlagueInTroopExists` (loc_4576A5, jest-zaraza-w-oddziale, int, 1 args)
 
@@ -711,7 +711,7 @@ int Rules_HostPlagueInTroopExists(int a1, double a2)
 }
 ```
 
-_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_457DC0 -> recovered C UnitStack_HasPlagueByIndex(int stack_index) (@0x457DC0, src/strategic/00455740_004582B0_strategic_003.c:867), signed int __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
+_Notes:_ ret letter b (98). Single-arg handler: reads arg1 into eax, calls sub_457DC0 -> recovered C UnitStack_HasPlagueByIndex(int stack_index) (@0x457DC0, src/strategic/00455740_004582B0_strategic_003.cpp:867), signed int __usercall(int@eax). Byte-identical to the Rules_HostArmyHasBuilder template.
 
 ### `Rules_HostRoadExistsNearby` (loc_452907, jest_droga_w_poblize / jest_droga_w_poblize00, b (int), 3 args)
 
@@ -726,7 +726,7 @@ int Rules_HostRoadExistsNearby(int a1, double a2)
 }
 ```
 
-_Notes:_ Standard 3-arg spilled pattern: args 1,2,3 read into locals [ebp-0Ch],[ebp-8],[ebp-4] in order, then eax=arg1, edx=arg2, ebx=arg3 at the call. asm token is 'call sub_4532A0'; recovered in src as Rules_QueuePathNearTile at 0x4532A0 (src/strategic/00453110_00455720_strategic_002.c:54). Recovered prototype declares a 4th param (DWORD a4) that the handler never sets (ecx unloaded) -- decompiler artifact; wrapper passes the 3 register args the asm supplies, matching the March-template precedent. Frame probe push=2Ch.
+_Notes:_ Standard 3-arg spilled pattern: args 1,2,3 read into locals [ebp-0Ch],[ebp-8],[ebp-4] in order, then eax=arg1, edx=arg2, ebx=arg3 at the call. asm token is 'call sub_4532A0'; recovered in src as Rules_QueuePathNearTile at 0x4532A0 (src/strategic/00453110_00455720_strategic_002.cpp:54). Recovered prototype declares a 4th param (DWORD a4) that the handler never sets (ecx unloaded) -- decompiler artifact; wrapper passes the 3 register args the asm supplies, matching the March-template precedent. Frame probe push=2Ch.
 
 ### `Rules_HostMarch` (loc_452C9F, maszeruj / maszeruj00, i (int), 3 args)
 
@@ -741,7 +741,7 @@ int Rules_HostMarch(int a1, double a2)
 }
 ```
 
-_Notes:_ Byte-for-byte the supplied March template. asm call token is already the recovered name 'Move_CommitIfWithinCost' (src/strategic/00453110_00455720_strategic_002.c:461; declared strategic_internal.h:44 as 4-param with a trailing double a4 artifact -- handler supplies 3, same precedent as all others). eax=arg1, edx=arg2, ebx=arg3 spilled in order. Confirmed by AI_SCRIPTING_API.md line 81 which spells out this exact body. Frame probe push=2Ch.
+_Notes:_ Byte-for-byte the supplied March template. asm call token is already the recovered name 'Move_CommitIfWithinCost' (src/strategic/00453110_00455720_strategic_002.cpp:461; declared strategic_internal.h:44 as 4-param with a trailing double a4 artifact -- handler supplies 3, same precedent as all others). eax=arg1, edx=arg2, ebx=arg3 spilled in order. Confirmed by AI_SCRIPTING_API.md line 81 which spells out this exact body. Frame probe push=2Ch.
 
 ### `Rules_HostBuildRoad` (loc_452FA7, buduj_droge / buduj_droge00, b (int), 1 args)
 
@@ -753,7 +753,7 @@ int Rules_HostBuildRoad(int a1, double a2)
 }
 ```
 
-_Notes:_ Single-arg wrapper. asm token 'call sub_454AE0'; recovered as Rules_BuildRoadOrStepTowardQueuedPath at 0x454AE0 (src/strategic/00453110_00455720_strategic_002.c:721). Recovered prototype (int stack_index, DWORD a2, double a3) has 2 extra params; handler sets only eax=arg1 -- extra params are decompiler artifacts, wrapper passes 1 arg. Frame probe push=24h.
+_Notes:_ Single-arg wrapper. asm token 'call sub_454AE0'; recovered as Rules_BuildRoadOrStepTowardQueuedPath at 0x454AE0 (src/strategic/00453110_00455720_strategic_002.cpp:721). Recovered prototype (int stack_index, DWORD a2, double a3) has 2 extra params; handler sets only eax=arg1 -- extra params are decompiler artifacts, wrapper passes 1 arg. Frame probe push=24h.
 
 ### `Rules_HostStartTraining` (loc_45687E, Zacznij-Szkolenie / ZacznijSzkolenie, v (void), 2 args)
 
@@ -836,7 +836,7 @@ int Rules_HostMarchToTemple(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_454330 (verified recovered at 00454330 = Rules_MarchToTemple(unsigned int stack_index,int temple_x,int temple_y,double a4), src/strategic/00453110_00455720_strategic_002.c:508). Registration: strategic_001.c:1432 (&Rules_HostMarchToTemple, aMaszeruj_do_sw='maszeruj_do_swiatyni00', a33i). 33i forward read; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param is genuine 'double a4' = threaded context a2 -> clean pass of a2. stack_index param is unsigned int (implicit int->unsigned at call).
+_Notes:_ asm call target = sub_454330 (verified recovered at 00454330 = Rules_MarchToTemple(unsigned int stack_index,int temple_x,int temple_y,double a4), src/strategic/00453110_00455720_strategic_002.cpp:508). Registration: strategic_001.c:1432 (&Rules_HostMarchToTemple, aMaszeruj_do_sw='maszeruj_do_swiatyni00', a33i). 33i forward read; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param is genuine 'double a4' = threaded context a2 -> clean pass of a2. stack_index param is unsigned int (implicit int->unsigned at call).
 
 ### `Rules_HostBuildTrap` (loc_452FE3, buduj_pulapke, i, 3 args)
 
@@ -855,7 +855,7 @@ int Rules_HostBuildTrap(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_454D20 (verified recovered at 00454D20 = Rules_BuildTrapNearTile(DWORD target_x,int target_y,DWORD stack_index,double a4), src/strategic/00453110_00455720_strategic_002.c:837). Registration: strategic_001.c:1442 (&Rules_HostBuildTrap, aBuduj_pulapke0='buduj_pulapke00', a33i). 33i forward read; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param is genuine 'double a4' = threaded context a2 -> clean pass of a2. params 1/3 typed DWORD (implicit int->unsigned at call, matches registers holding CLIPS ints).
+_Notes:_ asm call target = sub_454D20 (verified recovered at 00454D20 = Rules_BuildTrapNearTile(DWORD target_x,int target_y,DWORD stack_index,double a4), src/strategic/00453110_00455720_strategic_002.cpp:837). Registration: strategic_001.c:1442 (&Rules_HostBuildTrap, aBuduj_pulapke0='buduj_pulapke00', a33i). 33i forward read; call passes eax=arg1,edx=arg2,ebx=arg3. Inner's 4th param is genuine 'double a4' = threaded context a2 -> clean pass of a2. params 1/3 typed DWORD (implicit int->unsigned at call, matches registers holding CLIPS ints).
 
 ### `Rules_HostStartProduction` (loc_4568BA, Zacznij-Produkcje, v, 2 args)
 
@@ -872,7 +872,7 @@ void Rules_HostStartProduction(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_455700 (verified recovered at 00455700 = Building_SetUnitProductionByIndex(int building_index,char a2,DWORD a3), src/strategic/00453110_00455720_strategic_002.c:1428). Registration: strategic_003.c:597 (&Rules_HostStartProduction, aZacznijprodukc='ZacznijProdukcje', 118='v', a22i). VOID return: asm has no [ebp-4] store after the call and discards eax -> wrapper returns void. 22i reverse read (arg2 into edx first, then arg1 into eax); call passes eax=arg1=building_index, edx=arg2=production char. Inner's 3rd param 'DWORD a3' is the threaded context = a2 (flows onward as Building_SetUnitProduction's 3rd arg) -- REVIEW: double a2 passed to a DWORD param (narrowing conversion). production_type (int temp) narrows to the inner's char param at the call boundary.
+_Notes:_ asm call target = sub_455700 (verified recovered at 00455700 = Building_SetUnitProductionByIndex(int building_index,char a2,DWORD a3), src/strategic/00453110_00455720_strategic_002.cpp:1428). Registration: strategic_003.c:597 (&Rules_HostStartProduction, aZacznijprodukc='ZacznijProdukcje', 118='v', a22i). VOID return: asm has no [ebp-4] store after the call and discards eax -> wrapper returns void. 22i reverse read (arg2 into edx first, then arg1 into eax); call passes eax=arg1=building_index, edx=arg2=production char. Inner's 3rd param 'DWORD a3' is the threaded context = a2 (flows onward as Building_SetUnitProduction's 3rd arg) -- REVIEW: double a2 passed to a DWORD param (narrowing conversion). production_type (int temp) narrows to the inner's char param at the call boundary.
 
 ### `Rules_HostBuyLicence` (loc_456B0D, Buy-Licence, b, 2 args)
 
@@ -889,7 +889,7 @@ int Rules_HostBuyLicence(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_4557E0 (verified recovered at 004557E0 = Building_BuyUnitLicenceByIndex(int building_index,unit_type licence_type,DWORD a3), src/strategic/00455740_004582B0_strategic_003.c:46). Registration: strategic_003.c:601 (&Rules_HostBuyLicence, aBuylicence='BuyLicence', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=building_index, edx=licence_type. Inner's 3rd param 'DWORD a3' is the threaded context = a2 (flows to Building_BuyUnitLicence's DWORD gameContext) -- REVIEW: double a2 passed to a DWORD param (narrowing conversion). unit_type cast matches recovered sibling Rules_HostArmyHasOnlyUnitType style.
+_Notes:_ asm call target = sub_4557E0 (verified recovered at 004557E0 = Building_BuyUnitLicenceByIndex(int building_index,unit_type licence_type,DWORD a3), src/strategic/00455740_004582B0_strategic_003.cpp:46). Registration: strategic_003.c:601 (&Rules_HostBuyLicence, aBuylicence='BuyLicence', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=building_index, edx=licence_type. Inner's 3rd param 'DWORD a3' is the threaded context = a2 (flows to Building_BuyUnitLicence's DWORD gameContext) -- REVIEW: double a2 passed to a DWORD param (narrowing conversion). unit_type cast matches recovered sibling Rules_HostArmyHasOnlyUnitType style.
 
 ### `Rules_HostIsMinimal` (loc_456D35, Czy-Minimalny, b, 4 args)
 
@@ -910,7 +910,7 @@ int Rules_HostIsMinimal(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_455F60 (verified recovered at 00455F60 = Map_IsCastleSiteDistanceMinimal(int candidate_row,int candidate_column,int site_column,int site_row), src/strategic/00455740_004582B0_strategic_003.c:476). Registration: strategic_003.c:607 (&Rules_HostIsMinimal, aCzyminimalny='CzyMinimalny', a44i). 44i reverse read (arg4->ecx first, then 3->ebx, 2->edx, 1->eax); call passes eax=arg1,edx=arg2,ebx=arg3,ecx=arg4 = (candidate_row,candidate_column,site_column,site_row). Inner has exactly 4 int params and no trailing context param -> a2 is NOT threaded to the inner (matches all 4 registers being loaded in the asm).
+_Notes:_ asm call target = sub_455F60 (verified recovered at 00455F60 = Map_IsCastleSiteDistanceMinimal(int candidate_row,int candidate_column,int site_column,int site_row), src/strategic/00455740_004582B0_strategic_003.cpp:476). Registration: strategic_003.c:607 (&Rules_HostIsMinimal, aCzyminimalny='CzyMinimalny', a44i). 44i reverse read (arg4->ecx first, then 3->ebx, 2->edx, 1->eax); call passes eax=arg1,edx=arg2,ebx=arg3,ecx=arg4 = (candidate_row,candidate_column,site_column,site_row). Inner has exactly 4 int params and no trailing context param -> a2 is NOT threaded to the inner (matches all 4 registers being loaded in the asm).
 
 ### `Rules_HostUnitInCastleExists` (loc_456FBD, Jest-Jednostka-W-Zamku, b, 2 args)
 
@@ -927,7 +927,7 @@ int Rules_HostUnitInCastleExists(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_455F20 (verified recovered at 00455F20 = Building_HasGarrisonUnitTypeByIndex(int building_index,unit_type sought_type), src/strategic/00455740_004582B0_strategic_003.c:458). Registration: strategic_003.c:613 (&Rules_HostUnitInCastleExists, aJestjednostkaw='JestJednostkaWZamku', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=building_index, edx=sought_type. Inner has exactly 2 params, no trailing context -> a2 not threaded. Clean thin-wrapper.
+_Notes:_ asm call target = sub_455F20 (verified recovered at 00455F20 = Building_HasGarrisonUnitTypeByIndex(int building_index,unit_type sought_type), src/strategic/00455740_004582B0_strategic_003.cpp:458). Registration: strategic_003.c:613 (&Rules_HostUnitInCastleExists, aJestjednostkaw='JestJednostkaWZamku', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=building_index, edx=sought_type. Inner has exactly 2 params, no trailing context -> a2 not threaded. Clean thin-wrapper.
 
 ### `Rules_HostArmyHasUnitsOfType` (loc_45749B, armia-ma-jednostki-typu, b, 2 args)
 
@@ -944,7 +944,7 @@ int Rules_HostArmyHasUnitsOfType(int a1, double a2)
 }
 ```
 
-_Notes:_ asm call target = sub_458160 (verified recovered at 00458160 = UnitStack_HasUnitType(int stack_index,unit_type sought_type), src/strategic/00455740_004582B0_strategic_003.c:1034). Registration: strategic_003.c:647 (&Rules_HostArmyHasUnitsOfType, aArmiamajednost='ArmiaMaJednostkiTypu', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=stack_index, edx=sought_type. Inner has exactly 2 params, no trailing context -> a2 not threaded. Byte-for-byte parallel to already-recovered sibling Rules_HostArmyHasOnlyUnitType (strategic_003.c:1078).
+_Notes:_ asm call target = sub_458160 (verified recovered at 00458160 = UnitStack_HasUnitType(int stack_index,unit_type sought_type), src/strategic/00455740_004582B0_strategic_003.cpp:1034). Registration: strategic_003.c:647 (&Rules_HostArmyHasUnitsOfType, aArmiamajednost='ArmiaMaJednostkiTypu', a22i). 22i reverse read (arg2->edx, arg1->eax); call passes eax=stack_index, edx=sought_type. Inner has exactly 2 params, no trailing context -> a2 not threaded. Byte-for-byte parallel to already-recovered sibling Rules_HostArmyHasOnlyUnitType (strategic_003.c:1078).
 
 ### `Rules_HostRoadExistsToPort` (loc_4529BF, jest_droga_do_portu, b, 3 args)
 
@@ -1078,7 +1078,7 @@ int Rules_HostRoadExistsToCastle(int a1, double a2)
 }
 ```
 
-_Notes:_ Doc: b/33i "Is there a road to the castle?". Reads args 1,2,3 left-to-right into locals ([ebp-0Ch],[ebp-8],[ebp-4]) then loads eax=arg1, edx=arg2, ebx=arg3 (Watcom reg convention) and calls sub_453770. sub_453770 is recovered as `signed int Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y, DWORD a4)` at src/strategic/00453110_00455720_strategic_002.c:182 -- wrapper_c calls it by that recovered name. Inner has a trailing 4th DWORD context param the handler leaves unset; omitted from the call exactly like the Move_CommitIfWithinCost template omits its trailing DWORD/double. Registered at strategic_001.c:1424 (&Rules_HostRoadExistsToCastle). Matches the 3-arg March template verbatim.
+_Notes:_ Doc: b/33i "Is there a road to the castle?". Reads args 1,2,3 left-to-right into locals ([ebp-0Ch],[ebp-8],[ebp-4]) then loads eax=arg1, edx=arg2, ebx=arg3 (Watcom reg convention) and calls sub_453770. sub_453770 is recovered as `signed int Rules_QueuePathToCastle(int stack_index, int castle_x, int castle_y, DWORD a4)` at src/strategic/00453110_00455720_strategic_002.cpp:182 -- wrapper_c calls it by that recovered name. Inner has a trailing 4th DWORD context param the handler leaves unset; omitted from the call exactly like the Move_CommitIfWithinCost template omits its trailing DWORD/double. Registered at strategic_001.c:1424 (&Rules_HostRoadExistsToCastle). Matches the 3-arg March template verbatim.
 
 ### `Rules_HostAttackTroop` (loc_452DB3, atakuj_oddzial (C-name atakuj_oddzial00), int, 2 args)
 
@@ -1369,7 +1369,7 @@ int Rules_HostBuildingInArmyRange(int a1, double a2)
 }
 ```
 
-_Notes:_ 3-arg handler, stored-to-locals asm shape (args written to ebp-0Ch/-8/-4 then reloaded), so explicit temporaries per convention. Reg mapping at the inner call: eax=[ebp-0Ch]=RtnLong(1), edx=[ebp-8]=RtnLong(2), ebx=[ebp-4]=RtnLong(3) -> Move_TryApproachTarget(stack_index, target_x, target_y). Inner recovered at src/strategic/00453110_00455720_strategic_002.c:256 (signed int Move_TryApproachTarget(int, DWORD, int)), declared strategic_internal.h:39. Registration verified in asm at clash95.asm:124285-124289 (aBudowla_w_zasi/'b'/a33i). Semantic note: this query handler ('is a building within the army's range?') calls a Move_-named inner returning signed int -- asm-faithful; the inner is evidently a dual-purpose reachability/approach routine. No double threading (inner takes only ints).
+_Notes:_ 3-arg handler, stored-to-locals asm shape (args written to ebp-0Ch/-8/-4 then reloaded), so explicit temporaries per convention. Reg mapping at the inner call: eax=[ebp-0Ch]=RtnLong(1), edx=[ebp-8]=RtnLong(2), ebx=[ebp-4]=RtnLong(3) -> Move_TryApproachTarget(stack_index, target_x, target_y). Inner recovered at src/strategic/00453110_00455720_strategic_002.cpp:256 (signed int Move_TryApproachTarget(int, DWORD, int)), declared strategic_internal.h:39. Registration verified in asm at clash95.asm:124285-124289 (aBudowla_w_zasi/'b'/a33i). Semantic note: this query handler ('is a building within the army's range?') calls a Move_-named inner returning signed int -- asm-faithful; the inner is evidently a dual-purpose reachability/approach routine. No double threading (inner takes only ints).
 
 ### `Rules_HostArmyExists` (loc_452EA7, jest_armia / jest_armia00, b (int), 1 args)
 
@@ -1381,7 +1381,7 @@ int Rules_HostArmyExists(int a1, double a2)
 }
 ```
 
-_Notes:_ Single-arg thin wrapper. asm: read arg1 (eax=1;call sub_4812C0)->[ebp-4], then mov eax,[ebp-4];call sub_4549A0. sub_4549A0 is recovered as BOOL UnitStack_HasNormalCombatUnitsByIndex(int stack_index) at src/strategic/00453110_00455720_strategic_002.c:688, declared strategic_internal.h:51 -- wrapper uses the recovered name. Registration: strategic_001.c:1437 (aJest_armia -> &Rules_HostArmyExists, a11i).
+_Notes:_ Single-arg thin wrapper. asm: read arg1 (eax=1;call sub_4812C0)->[ebp-4], then mov eax,[ebp-4];call sub_4549A0. sub_4549A0 is recovered as BOOL UnitStack_HasNormalCombatUnitsByIndex(int stack_index) at src/strategic/00453110_00455720_strategic_002.cpp:688, declared strategic_internal.h:51 -- wrapper uses the recovered name. Registration: strategic_001.c:1437 (aJest_armia -> &Rules_HostArmyExists, a11i).
 
 ### `Rules_HostUpgradeWall` (loc_456796, Upgrade-Wall / UpgradeWall, v (void), 1 args)
 
@@ -1393,7 +1393,7 @@ void Rules_HostUpgradeWall(int a1, double a2)
 }
 ```
 
-_Notes:_ Void return (registration type 118='v', strategic_003.c:592). asm reads arg1 then 'call sub_455450' with NO eax store afterward -> inner result discarded. sub_455450 recovered as BOOL Building_TryStartUpgradeByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.c:1283, declared strategic_internal.h:60.
+_Notes:_ Void return (registration type 118='v', strategic_003.c:592). asm reads arg1 then 'call sub_455450' with NO eax store afterward -> inner result discarded. sub_455450 recovered as BOOL Building_TryStartUpgradeByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.cpp:1283, declared strategic_internal.h:60.
 
 ### `Rules_HostMoney` (loc_4569DA, Pieniadze / Pieniadze, i (int), 1 args)
 
@@ -1405,7 +1405,7 @@ int Rules_HostMoney(int a1, double a2)
 }
 ```
 
-_Notes:_ Single-arg thin wrapper returning int. sub_4554F0 recovered as int Building_GetMoneyByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.c:1318, declared strategic_internal.h:65. Registration: strategic_003.c:615 (aPieniadze -> &Rules_HostMoney, type 105='i', a11i_3).
+_Notes:_ Single-arg thin wrapper returning int. sub_4554F0 recovered as int Building_GetMoneyByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.cpp:1318, declared strategic_internal.h:65. Registration: strategic_003.c:615 (aPieniadze -> &Rules_HostMoney, type 105='i', a11i_3).
 
 ### `Rules_HostPlayerStrength` (loc_456C27, Sila-Gracza / SilaGracza, i (int), 1 args)
 
@@ -1417,7 +1417,7 @@ int Rules_HostPlayerStrength(int a1, double a2)
 }
 ```
 
-_Notes:_ inner_fn cited as it appears in asm: 'call j_AI_TickNationPostTurn'. j_AI_TickNationPostTurn is a 5-byte jump thunk (COLLAPSED FUNCTION at clash95.asm:129206) that jmps to AI_TickNationPostTurn; C has no thunk, so wrapper calls the real target. AI_TickNationPostTurn(int playerIndex)->int recovered at src/buildings/0043E500_0043FDE0_buildings_006.c:807, declared buildings_api.h:146 (cross-TU decl present). The name 'TickNationPostTurn' is a mislabel: this fn computes a nation/player power score (used as basePower/nationScore in persistence_006.c and strategic_001.c:249), matching Sila-Gracza ('player's overall strength'). Registration: strategic_003.c:622 (aSilaGracza -> &Rules_HostPlayerStrength, type 105='i').
+_Notes:_ inner_fn cited as it appears in asm: 'call j_AI_TickNationPostTurn'. j_AI_TickNationPostTurn is a 5-byte jump thunk (COLLAPSED FUNCTION at clash95.asm:129206) that jmps to AI_TickNationPostTurn; C has no thunk, so wrapper calls the real target. AI_TickNationPostTurn(int playerIndex)->int recovered at src/buildings/0043E500_0043FDE0_buildings_006.cpp:807, declared buildings_api.h:146 (cross-TU decl present). The name 'TickNationPostTurn' is a mislabel: this fn computes a nation/player power score (used as basePower/nationScore in persistence_006.c and strategic_001.c:249), matching Sila-Gracza ('player's overall strength'). Registration: strategic_003.c:622 (aSilaGracza -> &Rules_HostPlayerStrength, type 105='i').
 
 ### `Rules_HostTroopCount` (loc_456E7F, Ilosc-Oddzialow / IloscOddzialow, i (int), 1 args)
 
@@ -1429,7 +1429,7 @@ int Rules_HostTroopCount(int a1, double a2)
 }
 ```
 
-_Notes:_ Single-arg thin wrapper returning int. sub_455670 recovered as int Building_GetGarrisonCountByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.c:1399, declared strategic_internal.h:76. Registration: strategic_003.c:626 (aIloscOddzialow -> &Rules_HostTroopCount, type 105='i', a11i_3). ('Number of squads' = garrison count of the building/castle.)
+_Notes:_ Single-arg thin wrapper returning int. sub_455670 recovered as int Building_GetGarrisonCountByIndex(int building_index) at src/strategic/00453110_00455720_strategic_002.cpp:1399, declared strategic_internal.h:76. Registration: strategic_003.c:626 (aIloscOddzialow -> &Rules_HostTroopCount, type 105='i', a11i_3). ('Number of squads' = garrison count of the building/castle.)
 
 ### `Rules_HostEnterCastle` (loc_457351, wejdz-do-zamku / WejdzDoZamku, b (int), 2 args)
 
@@ -1443,7 +1443,7 @@ int Rules_HostEnterCastle(int a1, double a2)
 }
 ```
 
-_Notes:_ REVIEW RECOMMENDED (a2-threading + pointer->int cast). 2-arg, DIRECT-REGISTER asm shape (no stack locals for args): asm does eax=2;call sub_4812C0;mov edx,eax (edx=RtnLong(2)=building_index); eax=1;call sub_4812C0 (eax=RtnLong(1)=stack_index); call sub_457A10. Inner recovered as const void *UnitStack_MoveToBuildingAndCheckArrival(unsigned int stack_index, int building_index, double a3) at src/strategic/00455740_004582B0_strategic_003.c:759 (same TU), declared strategic_internal.h:110. The inner's 3rd param (double a3) IS used (passed to UnitStack_ExecuteQueuedPath at line 779); the handler supplies no explicit double, so a2 is threaded implicitly (same mechanism as Rules_RtnLong's 3rd arg) -> pass a2 as the 3rd argument. Inner returns const void* that is really 0/1 (line 780), cast to int for the 'b' return. intptr_t is available in this TU (registration code already uses (int)(intptr_t)...). Explicit temporaries used per task convention; the original compiler emitted the inlined right-to-left form UnitStack_MoveToBuildingAndCheckArrival(Rules_RtnLong(1,0,a2), Rules_RtnLong(2,0,a2), a2) (semantically identical). Registration: strategic_003.c:639 (aWejdzDoZamku -> &Rules_HostEnterCastle, type 98='b', a22i_0).
+_Notes:_ REVIEW RECOMMENDED (a2-threading + pointer->int cast). 2-arg, DIRECT-REGISTER asm shape (no stack locals for args): asm does eax=2;call sub_4812C0;mov edx,eax (edx=RtnLong(2)=building_index); eax=1;call sub_4812C0 (eax=RtnLong(1)=stack_index); call sub_457A10. Inner recovered as const void *UnitStack_MoveToBuildingAndCheckArrival(unsigned int stack_index, int building_index, double a3) at src/strategic/00455740_004582B0_strategic_003.cpp:759 (same TU), declared strategic_internal.h:110. The inner's 3rd param (double a3) IS used (passed to UnitStack_ExecuteQueuedPath at line 779); the handler supplies no explicit double, so a2 is threaded implicitly (same mechanism as Rules_RtnLong's 3rd arg) -> pass a2 as the 3rd argument. Inner returns const void* that is really 0/1 (line 780), cast to int for the 'b' return. intptr_t is available in this TU (registration code already uses (int)(intptr_t)...). Explicit temporaries used per task convention; the original compiler emitted the inlined right-to-left form UnitStack_MoveToBuildingAndCheckArrival(Rules_RtnLong(1,0,a2), Rules_RtnLong(2,0,a2), a2) (semantically identical). Registration: strategic_003.c:639 (aWejdzDoZamku -> &Rules_HostEnterCastle, type 98='b', a22i_0).
 
 ### `Rules_HostFindCastleForHealing` (loc_457603, znajdz-zamek-do-leczenia / ZnajdzZamekDoLeczenia, b (int), 1 args)
 
@@ -1455,4 +1455,4 @@ int Rules_HostFindCastleForHealing(int a1, double a2)
 }
 ```
 
-_Notes:_ Single-arg thin wrapper returning bool. sub_457860 recovered as BOOL UnitStack_FindPathToNearestHospitalCastle(DWORD stack_index) at src/strategic/00455740_004582B0_strategic_003.c:684 (same TU), declared strategic_internal.h:108. Registration: strategic_003.c:650 (aZnajdzZamekDoL -> &Rules_HostFindCastleForHealing, type 98='b', a11i_0).
+_Notes:_ Single-arg thin wrapper returning bool. sub_457860 recovered as BOOL UnitStack_FindPathToNearestHospitalCastle(DWORD stack_index) at src/strategic/00455740_004582B0_strategic_003.cpp:684 (same TU), declared strategic_internal.h:108. Registration: strategic_003.c:650 (aZnajdzZamekDoL -> &Rules_HostFindCastleForHealing, type 98='b', a11i_0).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit the canonical GNU C17 recovered-source split without an oracle TU."""
+"""Audit the canonical C/C++ recovered-source split without an oracle TU."""
 
 from __future__ import annotations
 
@@ -28,12 +28,17 @@ ORIGIN_RE = re.compile(
     r"Generated from ([^;\r\n]+); original address order retained\."
 )
 C_INCLUDE_RE = re.compile(
-    r'^\s*#\s*include\s*[<"]([^>"\r\n]+\.c)[>"]', re.MULTILINE
+    r'^\s*#\s*include\s*[<"]([^>"\r\n]+\.(?:c|cpp))[>"]', re.MULTILINE
 )
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 CMAKE_SOURCE_RE = re.compile(
-    r"(?m)^\s+(?:\$\{CMAKE_CURRENT_SOURCE_DIR\}/)?(src/[^\s)]+\.c)\s*$"
+    r"(?m)^\s+(?:\$\{CMAKE_CURRENT_SOURCE_DIR\}/)?(src/[^\s)]+\.(?:c|cpp))\s*$"
 )
+LANGUAGE_SUFFIXES = {
+    "GNU C17": {".c"},
+    "GNU C++20": {".cpp"},
+    "mixed GNU C17/C++20": {".c", ".cpp"},
+}
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 C_KEYWORDS = {
     "auto", "break", "case", "char", "const", "continue", "default",
@@ -43,6 +48,18 @@ C_KEYWORDS = {
     "union", "unsigned", "void", "volatile", "while", "_Alignas",
     "_Alignof", "_Atomic", "_Bool", "_Complex", "_Generic", "_Imaginary",
     "_Noreturn", "_Static_assert", "_Thread_local",
+}
+CPP_KEYWORDS = C_KEYWORDS | {
+    "alignas", "alignof", "and", "and_eq", "asm", "bitand", "bitor",
+    "bool", "catch", "char8_t", "char16_t", "char32_t", "class", "compl",
+    "concept", "consteval", "constexpr", "constinit", "const_cast",
+    "co_await", "co_return", "co_yield", "decltype", "delete", "dynamic_cast",
+    "explicit", "export", "false", "friend", "mutable", "namespace", "new",
+    "noexcept", "not", "not_eq", "nullptr", "operator", "or", "or_eq",
+    "private", "protected", "public", "reinterpret_cast", "requires",
+    "static_assert", "static_cast", "template", "this", "thread_local",
+    "throw", "true", "try", "typeid", "typename", "using", "virtual",
+    "wchar_t", "xor", "xor_eq",
 }
 VALID_LINKAGE = {"internal", "external", "static", "test-visible-static"}
 
@@ -136,8 +153,9 @@ def has_dependency_exception(text: str) -> bool:
 
 
 def audit_production_layout(audit: Audit) -> None:
-    candidates = list(ROOT.glob("*.c")) + list(ROOT.glob("*.h"))
+    candidates = list(ROOT.glob("*.c")) + list(ROOT.glob("*.cpp")) + list(ROOT.glob("*.h"))
     candidates += list((ROOT / "src").rglob("*.c"))
+    candidates += list((ROOT / "src").rglob("*.cpp"))
     candidates += list((ROOT / "src").rglob("*.h"))
     for path in sorted(set(candidates)):
         try:
@@ -151,11 +169,15 @@ def audit_production_layout(audit: Audit) -> None:
                 f"production C inclusion: {rel(path)}:{line}: {match.group(1)}"
             )
     audit.require(not (ROOT / "clash95.c").exists(), "unified clash95.c still exists")
+    audit.require(not (ROOT / "clash95.cpp").exists(), "unified clash95.cpp still exists")
     audit.require(
         not (ROOT / "src" / "recovered").exists(),
         "canonical recovered sources remain nested under src/recovered",
     )
-    legacy_fragments = sorted((ROOT / "src").rglob("*.inc.c"))
+    legacy_fragments = sorted(
+        list((ROOT / "src").rglob("*.inc.c"))
+        + list((ROOT / "src").rglob("*.inc.cpp"))
+    )
     audit.require(
         not legacy_fragments,
         "legacy recovered fragments still exist: "
@@ -192,7 +214,9 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         return audit
     audit.require(manifest.get("schema_version") == 2, "manifest must use schema 2")
     audit.require(manifest.get("cutover") == "canonical-split", "manifest is not split-only")
-    audit.require(manifest.get("language") == "GNU C17", "manifest language must be GNU C17")
+    language = manifest.get("language")
+    valid_suffixes = LANGUAGE_SUFFIXES.get(language, set()) if isinstance(language, str) else set()
+    audit.require(bool(valid_suffixes), "unsupported manifest language: " + repr(language))
     audit.require("oracle_manifest" not in manifest, "live oracle_manifest field remains")
 
     records = manifest.get("functions")
@@ -216,9 +240,13 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
     actual_sources = {
         path
         for subsystem in RECOVERED_SUBSYSTEMS
-        for path in (SOURCE_ROOT / subsystem).rglob("*.c")
+        for path in (SOURCE_ROOT / subsystem).rglob("*")
+        if path.suffix in {".c", ".cpp"}
     }
-    audit.require(bool(generated), "canonical split contains no C sources")
+    audit.require(bool(generated), "canonical split contains no C/C++ sources")
+    for path in generated:
+        audit.require(path.suffix in valid_suffixes,
+                      f"{rel(path)} does not match manifest language {language!r}")
     audit.require(
         actual_sources == set(generated),
         "recovered subsystem directories differ from the manifest-backed source inventory",
@@ -265,7 +293,8 @@ def run(manifest_path: Path, max_lines: int, max_exception_lines: int) -> Audit:
         origin = value.get("original_source")
         legacy = value.get("legacy_path")
         line = value.get("original_line")
-        if not isinstance(name, str) or not IDENTIFIER_RE.fullmatch(name) or name in C_KEYWORDS:
+        keywords = C_KEYWORDS if language == "GNU C17" else CPP_KEYWORDS
+        if not isinstance(name, str) or not IDENTIFIER_RE.fullmatch(name) or name in keywords:
             audit.errors.append(f"functions[{index}].name is invalid: {name!r}")
             continue
         audit.require(name not in names, f"duplicate function name: {name}")

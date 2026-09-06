@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int Map_NeighborDX[64];
 extern int Map_NeighborDY[63];
 extern char a1[3];
@@ -38,5 +42,9 @@ extern int g_UnitSoundsEnabled;
 extern CLASH95_INTERNAL const UnitTypeRuntimeCoreMetadataRecord g_UnitTypeRuntimeCoreMetadata[UNIT_TYPE_METADATA_CAPACITY];
 extern CLASH95_INTERNAL const UnitTypeRuntimePointerRecord g_UnitTypeRuntimePointers[UNIT_TYPE_METADATA_CAPACITY];
 extern int gameData;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_PERSISTENCE_SHARED_STATE_H */

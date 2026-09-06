@@ -5,6 +5,10 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int  Audio_PlayUnitMeleeAttackSound(int result);
 int  Audio_PlayUnitShotSound(int result);
 void  Audio_PlayWorldMapUnitMoveSound(int tileRow, int tileColumn, signed int moveStepCounter, unsigned int unitTypeId);
@@ -59,5 +63,9 @@ int  Building_CreateSpecialPersonageGarrisonUnit(DWORD buildingRecord, unit_type
 char  Prisoner_NewTurn(DWORD buildingRecord, int a2, char a3, double a4);
 int  Building_CountPrisoners(int buildingRecord);
 int  Building_ShowPrisonerManagementPanel(int buildingRecord, void *a2, DWORD a3);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_PERSISTENCE_API_H */

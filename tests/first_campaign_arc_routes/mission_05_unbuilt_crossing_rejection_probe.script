@@ -1,0 +1,20 @@
+# Ordinary movement onto the original's unbuilt water tile must be rejected.
+# The real Load checkpoint in the original is documented in the arrival batch.
+include_script tests/first_campaign_arc_routes/mission_05_visible_seventh_leg_probe.script
+world_pan_viewport 47 48 80
+world_move 192 176 0.5 point-at-unbuilt-water-49-50
+mark_log_count crossing_before_save debug-save-written slot=3 ok=1
+world_save_slot 3 1.0 save-before-unbuilt-water-order
+wait_log_marked 30 crossing_before_save
+mark_log_count unbuilt_crossing_rejection move_order_track_result selected=4 a=49 b=50 c=-1
+click 192 176 0.18 1.0 order-unbuilt-water-49-50
+wait_log_marked 20 unbuilt_crossing_rejection
+# No confirmation follows a rejected preview. Slot2 is an observed engine save.
+mark_log_count crossing_after_save debug-save-written slot=2 ok=1
+world_save_slot 2 1.0 save-after-rejected-unbuilt-water-order
+wait_log_marked 30 crossing_after_save
+world_move 192 176 0.5 align-original-rejected-order-cursor
+wait 5.0
+screenshot mission05-unbuilt-crossing-rejection
+nonblank mission05-unbuilt-crossing-rejection
+fail_if_log mission05_failure_friendly_attack

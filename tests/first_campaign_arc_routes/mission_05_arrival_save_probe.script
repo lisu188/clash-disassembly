@@ -1,9 +1,9 @@
-# Mission 05 arrival-save probe: replays the proven 9-turn multi-turn march
-# (stack 4 ends turn 9 at tile 47,58, the authentic stack-19 pre-attack
-# arrival), then asks the engine to write that live world state into save
-# slot 10 via the recovered saveGame writer (world-input token save_slot).
-# The resulting save/10.dat + save/10.fac pair is an engine-authored save
-# suitable for the original clash95.exe `a` slot-10 auto-load.
+# Historical Mission 05 arrival-save probe with a superseded nine-turn prefix.
+# The current original-backed fog gate rejects its initial waypoint (47,58).
+# The old turn-9 arrival is retained evidence, not a validated starting point.
+# If reached, save_slot asks the recovered saveGame writer for a slot-10
+# DAT/FAC pair. This script currently proves neither arrival nor compatibility
+# with the original clash95.exe `a` slot-10 auto-load; both need fresh validation.
 include_script tests/first_campaign_arc_routes/mission_05_multiturn_march_probe.script
 
 world_save_slot 10 2.0

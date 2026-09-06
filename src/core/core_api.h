@@ -5,11 +5,19 @@
 
 #include "../recovered_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int App_Shutdown(void);
 int  PathEntryArray_Destruct(_DWORD *array, char dtorFlags);
 _DWORD * PathEntryArray_DestructElements(_DWORD *result);
 int  PathEntryArray_GrowByDelta(int *array, int delta);
 _DWORD * PathEntryArray_RemoveAt(_DWORD *result, int index, int destroyElement);
 int  PathEntry_Destruct(int entry, char dtorFlags);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* CLASH95_CORE_API_H */
