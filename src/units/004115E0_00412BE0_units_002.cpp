@@ -321,7 +321,7 @@ LABEL_16:
   }
   UnitStack_ClearReadyFlags(stackPtr);
   Diagnostics_TraceWorldMapActionEvent("unit_new_turn_done_enemy_contact", (int)stackIndex, *(__int16 *)(uintptr_t)stackPtr, *(__int16 *)(uintptr_t)(stackPtr + 2), slotIndex);
-  return LogAllUnits(nextStackOffset, slotIndex, 0xFFFFFFFF);
+  return LogAllUnits(0, slotIndex, 0xFFFFFFFF);
 }
 // 4119FD: simplified comparisons for 'edx.4': <0 || >=65 became >=65u
 // 411A18: simplified comparisons for 'edx.4': <0 || >=4 became >=4u
