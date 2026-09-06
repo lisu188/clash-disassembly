@@ -102,8 +102,9 @@ matches its upstream merge. Eighteen historical remote heads correspond to
 confirmed merged PRs; the other old refs contain superseded layouts, removed
 temporary workflows or an empty net change. Re-merging those old implementations
 would not recover missing completed work. The three stashes' route commands are
-already present. The detailed audit is
-`artifacts/integration/merge-main-20260906/history-audit.md`.
+already present. The detailed audit is ignored local evidence, absent from
+clean checkouts:
+artifacts/integration/merge-main-20260906/history-audit.md.
 
 At the user's direction, the unfinished HD/resizable-window experiment remains
 in `/home/andrz/wt-hd1`. Other diagnostic worktrees, all stashes and prior evidence
