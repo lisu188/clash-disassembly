@@ -101,6 +101,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC1ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
         }
       ],
       "archive_text": [
@@ -201,6 +243,48 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC1ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
         }
       ]
     },
@@ -282,6 +366,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
         }
       ],
       "archive_text": [
@@ -361,6 +480,41 @@
           "count": 1,
           "kind": "method",
           "reason": "Canonical WorldGeometry method; compared with the frozen independently repaired reference, preserving scalar arguments and the existing sine table."
+        },
+        {
+          "name": "_ZN7clash958UnitTurnC2ERA15_cRA4_sRiS5_S5_",
+          "class": "W",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Trivial constructor binds five existing globals by reference, including the live gameData variable; no initialization, allocation or gameplay action."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn6borrowEv",
+          "class": "T",
+          "count": 1,
+          "kind": "accessor",
+          "reason": "Registered and hash-checked borrowing factory at the original buildings adapter anchor; returns only a UnitTurn bound to five existing globals."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn12Unit_NewTurnEicjd",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn17Unit_NewTurnRegenEPh",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
+        },
+        {
+          "name": "_ZN7clash958UnitTurn18Unit_UpdatePerTurnEii",
+          "class": "T",
+          "count": 1,
+          "kind": "method",
+          "reason": "Canonical UnitTurn implementation compared against the separately repaired reference, preserving original parameters, complete affected bytes and callback/RNG order."
         }
       ]
     }

@@ -71664,5 +71664,20 @@
       "final_header": "src/buildings/RoadBuildMode.hpp",
       "final_source": "src/buildings/RoadBuildMode.cpp"
     }
+  ],
+  "class_bindings": [
+    {
+      "class_owner": "UnitTurn",
+      "qualified_name": "clash95::UnitTurn::borrow",
+      "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+      "referenced_globals": [
+        "aUnit_newturn",
+        "g_BuildingTypeMaxHitPoints",
+        "g_CurrentPlayerIndex",
+        "g_SelectedUnitIndex",
+        "gameData"
+      ],
+      "body_sha256": "3c6ebbe2a10f5920a9cd2fef132235b40bfe19bdc7492e8a8b344f789256b0ad"
+    }
   ]
 }

@@ -1212,8 +1212,9 @@
    "original_line": 848,
    "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
    "implementation": {
-    "kind": "free",
-    "qualified_name": "Unit_NewTurnRegen"
+    "kind": "method",
+    "qualified_name": "clash95::UnitTurn::Unit_NewTurnRegen",
+    "header": "src/units/UnitTurn.hpp"
    }
   },
   {

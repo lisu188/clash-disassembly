@@ -1213,7 +1213,7 @@
     "Audio_PlayUnitMoveOrderSound"
    ],
    "internal_function_count": 194,
-   "state_globals": 472
+   "state_globals": 473
   },
   "clips": {
    "api_functions": [
@@ -2366,7 +2366,7 @@
     "Unit_AttackBuilding"
    ],
    "internal_function_count": 64,
-   "state_globals": 127
+   "state_globals": 126
   },
   "world": {
    "api_functions": [
@@ -2730,6 +2730,7 @@
     "g_CurrentPlayerIndex",
     "g_MainRenderDevice",
     "g_RenderHook",
+    "g_SelectedUnitIndex",
     "g_UnitTypeRuntimeCoreMetadata",
     "gameData"
    ],
@@ -16028,9 +16029,7 @@
     "Map_NeighborDY",
     "a1",
     "a2",
-    "g_CurrentPlayerIndex",
     "g_LanguageIndex",
-    "g_SelectedUnitIndex",
     "g_UnitTypeRuntimeCoreMetadata",
     "gameData"
    ],

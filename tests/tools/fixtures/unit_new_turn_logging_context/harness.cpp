@@ -25,7 +25,7 @@ static void prepare() {
   memset(world,0,BYTES);
   for(int i=0;i<500;i++) p16(world+UNIT_STACK_TABLE_OFFSET+725*i+6,-1);
   auto *stack=stack0(); p16(stack,1); p16(stack+2,2); p16(stack+6,1); p16(stack+37,-1);
-  p32(stack+316,1); stack[320]=4; stack[321]=5; stack[28]=1;
+  p32(stack+316,1); stack[320]=4; stack[321]=5; stack[19]=1;
   p16(world+TILE_MAP_OFFSET+TILE_ROW_STRIDE*4+2*5,TILE_OCCUPANT_BUILDING_INDEX_BASE);
   auto *building=world+509674; building[2]=1; building[4]=0; p16(building+16,1);
   p16(world+140022,1);
@@ -45,8 +45,7 @@ int UnitSlot_CalcActionPointsFromFatigue(__int16 *p) { require((unsigned char *)
 signed int Rules_LinkArmyFact(clash95_unaligned_int16 *p,int,int,double context,char,DWORD) { require((unsigned char *)p==stack0() && context==1.25,"rule receiver/context"); calls.push_back("rules_link"); return 0; }
 void Unit_CheckLowMorale(_BYTE *p,double context) { require(p==stack0() && context==1.25,"morale receiver/context"); calls.push_back("low_morale"); }
 signed int UnitStack_ApplyPlagueAttritionToPeasantCargo(__int16 *p,DWORD,double context) { require((unsigned char *)p==stack0() && context==1.25,"plague receiver/context"); calls.push_back("plague"); return 0; }
-signed int UnitStack_HasReadyUnits(int p) { require(p==(int)(intptr_t)stack0(),"ready receiver"); calls.push_back("has_ready"); return 1; }
-__int16 *UnitStack_ClearReadyFlags(int p) { require(p==(int)(intptr_t)stack0(),"clear receiver"); calls.push_back("clear_ready"); stack0()[28]=0; return (__int16 *)(intptr_t)p; }
+__int16 *UnitStack_ClearReadyFlags(int p) { require(p==(int)(intptr_t)stack0(),"clear receiver"); calls.push_back("clear_ready"); stack0()[19]=0; return (__int16 *)(intptr_t)p; }
 void UnitStack_ExecuteQueuedPath(unsigned int,int,char,DWORD,double) { require(false,"enemy contact must skip path execution"); }
 signed int Unit_DebugDumpFormationSizes(int p,DWORD context) { require(p==(int)(intptr_t)stack0() && context==0xFFFFFFFF,"formation callback"); calls.push_back("formation"); stack0()[20]^=0x5A; return 91; }
 extern "C" signed int __real_LogAllUnits(int,char,DWORD);
@@ -59,12 +58,12 @@ extern "C" signed int __wrap_LogAllUnits(int context,char second,DWORD third) {
 int main() {
   world=(unsigned char *)mmap(nullptr,BYTES,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0);
   require(world!=MAP_FAILED && (uintptr_t)world+BYTES<INT_MAX,"low32 allocation"); gameData=(int)(intptr_t)world;
-  const std::vector<std::string> expected_calls={"unit_new_turn_enter","unit_new_turn_stack","fatigue","unit_new_turn_after_recover_fatigue","unit_new_turn_after_human_fatigue","clear_spent","unit_new_turn_after_clear_spent","calc_ap","unit_new_turn_after_ap","rules_link","unit_new_turn_after_rules_fact","low_morale","unit_new_turn_after_low_morale","plague","unit_new_turn_after_plague","has_ready","unit_new_turn_after_ready_check","clear_ready","unit_new_turn_done_enemy_contact","log_all","formation"};
+  const std::vector<std::string> expected_calls={"unit_new_turn_enter","unit_new_turn_stack","fatigue","unit_new_turn_after_recover_fatigue","unit_new_turn_after_human_fatigue","clear_spent","unit_new_turn_after_clear_spent","calc_ap","unit_new_turn_after_ap","rules_link","unit_new_turn_after_rules_fact","low_morale","unit_new_turn_after_low_morale","plague","unit_new_turn_after_plague","unit_new_turn_after_ready_check","clear_ready","unit_new_turn_done_enemy_contact","log_all","formation"};
   int cases=0;
   for(int flags=0;flags<4;flags++) {
     logEnabled=flags&1; battleLogEnabled=(flags>>1)&1;
     prepare(); std::vector<unsigned char> expected(world,world+BYTES);
-    expected[UNIT_STACK_TABLE_OFFSET+14]=17; expected[UNIT_STACK_TABLE_OFFSET+28]=0; expected[UNIT_STACK_TABLE_OFFSET+20]^=0x5A;
+    expected[UNIT_STACK_TABLE_OFFSET+14]=17; expected[UNIT_STACK_TABLE_OFFSET+19]=0; expected[UNIT_STACK_TABLE_OFFSET+20]^=0x5A;
     require(Unit_NewTurn(41,(char)0xD3,0xF1234567,1.25)==-1,"original LogAllUnits result");
     require(wrapped_calls==1 && calls==expected_calls,"enemy-exit callback order");
     require(expected==std::vector<unsigned char>(world,world+BYTES),"complete world state after first-stack exit");

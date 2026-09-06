@@ -1534,12 +1534,17 @@
       "legacy_path": "src/recovered/buildings/0041D030_buildings.inc.c",
       "legacy_body_sha256": "9ee4511e04d84d7bf44b6ea8cf9a67033d144479056cc1196d7cd1970e27d8c5",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Unit_NewTurnRegen"
+        "kind": "method",
+        "qualified_name": "clash95::UnitTurn::Unit_NewTurnRegen",
+        "header": "src/units/UnitTurn.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Unit_NewTurnRegen is assigned to the UnitTurn behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitTurn"
+      "class_owner": "clash95::UnitTurn",
+      "adapter": {
+        "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+        "body_sha256": "f4c770485d1583f7301a6b718388ec4adff595865a9c1ef4f830776e4d97e3ea"
+      }
     },
     {
       "name": "Unit_UpdatePerTurn",
@@ -1548,7 +1553,7 @@
       "original_line": 878,
       "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
       "linkage": "external",
-      "body_sha256": "98237f399991d8656bb45b4cd6292e9aca88e02438a076ca3839fe3d04dd88c2",
+      "body_sha256": "88ce19ce2d1e038f2bb85b980527f854a4a9ef3288e388b16fe0ebbb29938145",
       "original_address_range": {
         "start": "0x0041E730",
         "end_exclusive": "0x0041E7B0"
@@ -1558,12 +1563,17 @@
       "legacy_path": "src/recovered/buildings/0041D030_buildings.inc.c",
       "legacy_body_sha256": "8b87042309d7f4aca810575532c6130f6bbfe3d843504ecb5f7f30c3a1faec6b",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Unit_UpdatePerTurn"
+        "kind": "method",
+        "qualified_name": "clash95::UnitTurn::Unit_UpdatePerTurn",
+        "header": "src/units/UnitTurn.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Unit_UpdatePerTurn is assigned to the UnitTurn behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitTurn"
+      "class_owner": "clash95::UnitTurn",
+      "adapter": {
+        "source": "src/buildings/0041D030_0041F0C0_buildings_001.cpp",
+        "body_sha256": "979924d7dbb3bfc5cd57757ec561e203add8c5699ee30ed4c46675dc66de0571"
+      }
     },
     {
       "name": "UnitSlot_NeedsMoraleRecovery",
@@ -88417,7 +88427,7 @@
       "original_line": 1603,
       "source": "src/units/004115E0_00412BE0_units_002.cpp",
       "linkage": "external",
-      "body_sha256": "0a7fc74f0159f79e7a35b97785cf8d87f554cc0ac1b22ae3e91d111290212ad2",
+      "body_sha256": "d8c36d5dd375e5df2ee5d00d729b749c9173f2bd41ad2b3a8c080d86744e02cb",
       "original_address_range": {
         "start": "0x004118E0",
         "end_exclusive": "0x00411AB0"
@@ -88427,12 +88437,17 @@
       "legacy_path": "src/recovered/units/0040F510_units.inc.c",
       "legacy_body_sha256": "48566b9804b95dea389d72ffa4d843b9f3c45b4c09886bc2e9bcf9ae18b2764c",
       "implementation": {
-        "kind": "free",
-        "qualified_name": "Unit_NewTurn"
+        "kind": "method",
+        "qualified_name": "clash95::UnitTurn::Unit_NewTurn",
+        "header": "src/units/UnitTurn.hpp"
       },
       "disposition": "game-method",
       "disposition_reason": "Unit_NewTurn is assigned to the UnitTurn behavior family; the class borrows existing storage and preserves this recovered body, call order and legacy adapter.",
-      "class_owner": "clash95::UnitTurn"
+      "class_owner": "clash95::UnitTurn",
+      "adapter": {
+        "source": "src/units/004115E0_00412BE0_units_002.cpp",
+        "body_sha256": "5ab15c4b2638eb6f1f511cf46b6af244cabc476b43894947abc3ada5095c4489"
+      }
     },
     {
       "name": "UnitStack_HasBuilder",

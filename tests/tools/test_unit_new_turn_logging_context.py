@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Production-resolving regression for Unit_NewTurn's first-stack enemy exit.
 
-Actual Unit_NewTurn, LogAllUnits and Debug_Log bodies are compiled separately;
+Actual Unit_NewTurn, LogAllUnits, Debug_Log and the migrated readiness query
+are compiled separately;
 linker wrapping observes the boundary without rewriting the recovered body.
 Poisoned automatic locals make an omitted assignment fail deterministically.
 """
@@ -19,18 +20,24 @@ class UnitNewTurnLoggingContextTests(unittest.TestCase):
   if platform.system()!='Linux' or platform.machine() not in ('x86_64','amd64'):
    self.skipTest('supported low32 fixture requires Linux x86-64')
   manifest=json.loads((ROOT/'data/recovered_sources.json').read_text()); records={x['name']:x for x in manifest['functions']}
-  names={'Unit_NewTurn','LogAllUnits','Debug_Log'}
+  names={'Unit_NewTurn','LogAllUnits','Debug_Log','UnitStack_HasReadyUnits'}
   sources=set()
   for name in names:
    sources.add(records[name]['source'])
    if 'adapter' in records[name]: sources.add(records[name]['adapter']['source'])
   indexed=index_manifest_definitions(manifest,ROOT,sources)
-  includes=['#include "units/units_internal.h"','#include "units/units_state.h"','#include "units/units_shared_state.h"','#include "buildings/buildings_api.h"','#include "strategic/strategic_api.h"']
+  includes=['#include "units/units_internal.h"','#include "units/units_state.h"','#include "units/units_shared_state.h"','#include "buildings/buildings_api.h"','#include "strategic/strategic_api.h"','#include "units/UnitStack.hpp"','#include "recovered_structs.h"']
   registry=json.loads((ROOT/'data/game_class_registry.json').read_text())
+  declarations=json.loads((ROOT/'data/recovered_decls.json').read_text())
   parts={}; inputs={}; sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
   for name in sorted(names):
    record=records[name]; content=list(includes)
-   if record.get('implementation',{}).get('kind')=='method': content.append('#include "'+record['implementation']['header'].removeprefix('src/')+'"')
+   if record.get('implementation',{}).get('kind')=='method':
+    content.append('#include "'+record['implementation']['header'].removeprefix('src/')+'"')
+    owner=record['implementation']['qualified_name'].split('::')[-2]
+    for binding in registry.get('class_bindings',[]):
+     if binding['class_owner']==owner:
+      content.extend(declarations['globals'][global_name]['decl'] for global_name in binding['referenced_globals'])
    for role in ['canonical']+(['adapter'] if 'adapter' in record else []):
     item=indexed[(name,role)]; expected=record['body_sha256'] if role=='canonical' else record['adapter']['body_sha256']
     self.assertEqual(item.body_sha256,expected,f'{name} {role} recorded body')
@@ -38,9 +45,10 @@ class UnitNewTurnLoggingContextTests(unittest.TestCase):
    if record.get('implementation',{}).get('kind')=='method':
     owner=record['implementation']['qualified_name'].split('::')[-2]
     bindings=[x for x in registry.get('class_bindings',[]) if x['class_owner']==owner]
-    self.assertEqual(len(bindings),1)
-    binding=bindings[0]; p=ROOT/binding['source']; text=p.read_text(); defs=scan_definitions(text,{binding['qualified_name']}); self.assertEqual(len(defs),1)
-    d=defs[0]; self.assertEqual(body_sha256(text,d),binding['body_sha256']); content.append(text[d.start:d.end]); inputs[str(p)]=sha(p)
+    self.assertLessEqual(len(bindings),1)
+    if bindings:
+     binding=bindings[0]; p=ROOT/binding['source']; text=p.read_text(); defs=scan_definitions(text,{binding['qualified_name']}); self.assertEqual(len(defs),1)
+     d=defs[0]; self.assertEqual(body_sha256(text,d),binding['body_sha256']); content.append(text[d.start:d.end]); inputs[str(p)]=sha(p)
    parts[name]='\n\n'.join(content)+'\n'
   evidence=os.environ.get('CLASH95_RECOVERY_EVIDENCE')
   owner=tempfile.TemporaryDirectory(prefix='clash95-unit-turn-recovery-') if not evidence else None
