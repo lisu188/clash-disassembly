@@ -668,57 +668,57 @@ int  UnitStackSelection_RefreshForSelectedStack(DWORD a1)
 //----- (00423BB0) --------------------------------------------------------
 BOOL  MapTile_HasNorthRoadConnection(int row, int column)
 {
-  int roadTileId; // eax
-
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4));
-  return roadTileId == 867 || roadTileId == 869 || roadTileId == 871 || roadTileId == 872 || roadTileId == 874 || roadTileId == 875 || roadTileId == 868 || roadTileId == 952;
+  const MapTileRecord *neighborTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * (row - 1) + TILE_TERRAIN_RECORD_STRIDE * column);
+  const int roadTileId = Map_NormalizeRoadOverlayTileId(neighborTile->road_or_bridge_tile_id);
+  return roadTileId == 867 || roadTileId == 869 || roadTileId == 871 || roadTileId == 872
+      || roadTileId == 874 || roadTileId == 875 || roadTileId == 868 || roadTileId == 952;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423C50) --------------------------------------------------------
 BOOL  MapTile_HasSouthRoadConnection(int row, int column)
 {
-  int roadTileId; // eax
-
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column + 4));
-  return roadTileId == 867 || roadTileId == 869 || roadTileId == 870 || roadTileId == 872 || roadTileId == 873 || roadTileId == 875 || roadTileId == 876 || roadTileId == 951;
+  const MapTileRecord *neighborTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * (row + 1) + TILE_TERRAIN_RECORD_STRIDE * column);
+  const int roadTileId = Map_NormalizeRoadOverlayTileId(neighborTile->road_or_bridge_tile_id);
+  return roadTileId == 867 || roadTileId == 869 || roadTileId == 870 || roadTileId == 872
+      || roadTileId == 873 || roadTileId == 875 || roadTileId == 876 || roadTileId == 951;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423CF0) --------------------------------------------------------
 BOOL  MapTile_HasWestRoadConnection(int row, int column)
 {
-  int neighborBuildingMarker; // eax
-  unsigned __int8 *neighborBuildingPtr; // eax
-  int buildingType; // edx
-  int buildingRow; // edx
-  int buildingColumn; // edx
-  int roadTileId; // eax
-  BOOL result; // eax
-
-  neighborBuildingMarker = *(unsigned __int16 *)(uintptr_t)(gameData + 200 * row + 2 * column + 556370);
-  result = 1;
-  if ( neighborBuildingMarker < 0x8000
-    || neighborBuildingMarker > 65534
-    || (neighborBuildingPtr = (unsigned __int8 *)(uintptr_t)(BUILDING_RECORD_SIZE * (neighborBuildingMarker - TILE_OCCUPANT_BUILDING_INDEX_BASE) + gameData + BUILDING_TABLE_OFFSET), buildingType = (char)neighborBuildingPtr[4], buildingType != 2) && buildingType != 1
-    || (buildingRow = *neighborBuildingPtr, buildingRow != row)
-    || (buildingColumn = row ^ buildingRow, LOBYTE(buildingColumn) = neighborBuildingPtr[1], buildingColumn != column - 2) )
+  const int buildingMarker = *(const unsigned __int16 *)(uintptr_t)TILE_INDEX(row, column - 2);
+  if ( buildingMarker >= TILE_OCCUPANT_BUILDING_INDEX_BASE && buildingMarker <= 65534 )
   {
-    roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column - 1) + 4));
-    if ( roadTileId != 866 && roadTileId != 868 && roadTileId != 869 && roadTileId != 870 && roadTileId != 871 && roadTileId != 872 && roadTileId != 873 && roadTileId != 949 )
-      return 0;
+    const unsigned char *building = (const unsigned char *)(uintptr_t)BUILDING_RECORD(
+        buildingMarker - TILE_OCCUPANT_BUILDING_INDEX_BASE);
+    const int buildingType = (signed char)building[4];
+    // Original 0x423D53 accepts this building before reading the Road tile.
+    if ( (buildingType == 2 || buildingType == 1)
+      && building[0] == row && building[1] == column - 2 )
+    {
+      return 1;
+    }
   }
-  return result;
+
+  const MapTileRecord *neighborTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column - 1));
+  const int roadTileId = Map_NormalizeRoadOverlayTileId(neighborTile->road_or_bridge_tile_id);
+  return roadTileId == 866 || roadTileId == 868 || roadTileId == 869 || roadTileId == 870
+      || roadTileId == 871 || roadTileId == 872 || roadTileId == 873 || roadTileId == 949;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423E10) --------------------------------------------------------
 BOOL  MapTile_HasEastRoadConnection(int row, int column)
 {
-  int roadTileId; // eax
-
-  roadTileId = Map_NormalizeRoadOverlayTileId(*(unsigned __int16 *)(uintptr_t)(gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column + 1) + 4));
-  return roadTileId == 866 || roadTileId >= 871 && roadTileId <= 876 || roadTileId == 950;
+  const MapTileRecord *neighborTile = (const MapTileRecord *)(uintptr_t)(
+      gameData + TILE_TERRAIN_ROW_STRIDE * row + TILE_TERRAIN_RECORD_STRIDE * (column + 1));
+  const int roadTileId = Map_NormalizeRoadOverlayTileId(neighborTile->road_or_bridge_tile_id);
+  return roadTileId == 866 || (roadTileId >= 871 && roadTileId <= 876) || roadTileId == 950;
 }
 // 5202E4: using guessed type int gameData;
 

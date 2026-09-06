@@ -246,6 +246,51 @@ The original probe's first Clang attempt lacked the optional UBSan runtime;
 the retained final run uses trap-mode UBSan in both compilers. No sanitizer
 check is removed except the already documented packed-alignment exclusion.
 
+### Batch 5: four directional Road queries
+
+Reviewed each query against its own original routine and membership tests:
+
+| Function | Original | Refactor |
+| --- | --- | --- |
+| `MapTile_HasNorthRoadConnection` | `0x423BB0` | Typed road/bridge field at `(row-1,column)`; original accepted IDs retained. |
+| `MapTile_HasSouthRoadConnection` | `0x423C50` | Typed road/bridge field at `(row+1,column)`; original accepted IDs retained. |
+| `MapTile_HasWestRoadConnection` | `0x423CF0` | Explicit building shortcut, then typed fallback at `(row,column-1)`. |
+| `MapTile_HasEastRoadConnection` | `0x423E10` | Typed road/bridge field at `(row,column+1)` and explicit existing precedence. |
+
+The west marker address uses the existing `TILE_INDEX(row,column-2)` macro,
+equivalent to the former raw offset. Markers `0x8000..0xFFFE` alone permit a
+building read. Signed type 2/1, unsigned row and unsigned column checks retain
+their order. The original XOR clears equal row values before loading the column
+byte, so direct byte access removes that decompiler artifact. The building match
+returns before forming the fallback tile read. Building types remain numeric;
+no speculative record type or global coordinate-name change is introduced.
+
+The unchanged original queries and normalizer execute with their complete Road
+backing. Per compiler profile, frozen-before and actual-after query sets each
+match 1,056,520 original results; the shared unchanged normalizer matches 65,493.
+This includes road-ID sweeps, asymmetric neighbor masks, every building type and
+coordinate byte, and marker boundaries. The known `819..861` backing defect is
+excluded explicitly: 688 sweep, 43 normalizer and 84 west cases. Their original
+results are retained. Twelve successful building shortcuts run with both terrain
+pages and the legacy lookup page inaccessible, proving neither read occurs.
+The game arena is read-only during calls and the game-data pointer is unchanged.
+All four GCC/Clang O0/O2 profiles pass. Confidence is high for these bounded
+semantics; invalid pointers and arbitrary overflow are not covered.
+
+Both builds and four public CTests pass. All 4157 archive identities and linked
+profiles are preserved. Debug code differences are confined to these four
+functions. Complete affected-compilation warnings decrease from 28 to 26 GCC
+and 39 to 37 Clang, with no category increases. Manifest, headers/includes and
+the existing builder regression pass. Existing ratchet/private-artifact failures
+remain separate; no new runtime or campaign milestone is claimed.
+
+Exact original and before/after commands, hashes, guards and all exclusions are
+retained under `artifacts/readability/road-functions-20260906/batch-05-query-proof/`;
+build, metadata and independent static reviews are under
+`artifacts/readability/road-functions-20260906/batch-05/`. All 53 baseline query
+evidence files are preserved unchanged. Four canonical body hashes change;
+public identities and declarations remain fixed.
+
 ## Next migration batches
 
 1. Continue through the remaining `src/units/` functions that manually step `UnitSlotRecord` at 31-byte intervals.

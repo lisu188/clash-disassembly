@@ -1,5 +1,18 @@
 # Reverse Engineering Rename Log
 
+## 2026-09-06 - Road readability: four directional queries
+
+Track: Win95 reconstruction. Reviewed North (`0x423BB0`), South (`0x423C50`),
+West (`0x423CF0`) and East (`0x423E10`) separately. Reused the pinned tile
+road/bridge field and retained every membership test. West now expresses its
+marker/type/coordinate shortcut directly; removed comma/XOR register artifacts
+without eager Road reads. Building IDs remain numeric, with no new semantic
+record. Four canonical hashes change; public identities and layouts stay fixed.
+Original/frozen-before/actual-after comparisons pass 1,056,520 query cases per
+body set per compiler profile, with explicit legacy-lookup exclusions and guarded
+shortcut reads. Confidence: high within the recorded domain.
+[Evidence, per-function review and limits](../HUMAN_READABILITY.md#batch-5-four-directional-road-queries).
+
 ## 2026-09-06 - Road readability: connection-mask rebuild
 
 Track: Win95 reconstruction. Reviewed `Map_RebuildRoadOverlayAtTile` (`0x423E90`)

@@ -5,8 +5,9 @@ Last consolidated: 2026-09-06.
 ## Road Function Readability Review
 
 Track: Win95 reconstruction, helpers reached by mission-05 Road construction.
-Four functions have been reviewed individually: bridge approach, crossing cost,
-overlay normalization input and connection-mask rebuild. Reused pinned tile
+Eight functions have been reviewed individually: bridge approach, crossing cost,
+overlay normalization input, connection-mask rebuild and all four directional
+Road queries. Reused pinned tile
 fields, removed redundant decompiler state, and preserved original return/call
 semantics. Both compiler builds and public asset-free gates pass; bounded
 original-instruction fixtures support the structured rewrites. Existing
